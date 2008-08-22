@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-22 09:32 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * source/vm/debug.c
+   * source/vm/hvm.c
+   * source/vm/Makefile
+   + source/vm/debugold.c
+     + Added some HB_DBG_*() functions for compatibility 
+       with certain 3rd party libs. They are marked with 
+       HB_LEGACY_LEVEL, and will be removed (pbly at 1.1.0), 
+       so everyone is encouraged to use __DBG*() version 
+       for Harbour versions above 0x010000 (or not use 
+       them at all, if this is possible). If these functions 
+       are indeed needed for some functionality, it'd be 
+       good to hear about it, maybe there is a solution 
+       which doesn't require internals.
+
+   * utils/hbdoc/ft_funcs.prg
+   * utils/hbmake/ft_funcs.prg
+     * Using FS_* manifest constants.
+
 2008-08-22 08:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * make_b32.mak

@@ -9725,35 +9725,6 @@ HB_FUNC( __OPGETPRF ) /* profiler: It returns an array with an opcode called and
    }
 }
 
-#if 0
-
-HB_FUNC( __VMVARGLIST )
-{
-   HB_FUNC_EXEC( __DBGVMVARGLIST );
-}
-
-HB_FUNC( __VMVARSLIST )
-{
-   HB_FUNC_EXEC( __DBGVMVARSLIST );
-}
-
-HB_FUNC( __VMVARSLEN )
-{
-   HB_FUNC_EXEC( __DBGVMVARSLEN );
-}
-
-HB_FUNC( __VMVARSGET )
-{
-   HB_FUNC_EXEC( __DBGVMVARSGET );
-}
-
-HB_FUNC( __VMVARSSET )
-{
-   HB_FUNC_EXEC( __DBGVMVARSSET );
-}
-
-#endif
-
 HB_FUNC( ERRORLEVEL )
 {
    hb_retni( s_nErrorLevel );

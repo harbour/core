@@ -393,6 +393,7 @@ VM_COMMON_LIB_OBJS = \
     $(OBJ_DIR)\cmdarg$(OBJEXT)   \
     $(OBJ_DIR)\codebloc$(OBJEXT) \
     $(OBJ_DIR)\debug$(OBJEXT)    \
+    $(OBJ_DIR)\debugold$(OBJEXT) \
     $(OBJ_DIR)\dynlibhb$(OBJEXT) \
     $(OBJ_DIR)\dynsym$(OBJEXT)   \
     $(OBJ_DIR)\estack$(OBJEXT)   \

@@ -131,9 +131,9 @@ METHOD fskip( nRecords ) CLASS FileBase
    DEFAULT nRecords TO 1
 
    IF ::noDosError() .AND. ::nDosHandle > 0
-      FSEEK( ::nDosHandle, ( ::nSkipLength * nRecords ), 1 )
+      FSEEK( ::nDosHandle, ( ::nSkipLength * nRecords ), FS_RELATIVE )
       ::nLastDosMessage := FERROR()
-      ::nPosition       := FSEEK( ::nDosHandle, 0, 1 )
+      ::nPosition       := FSEEK( ::nDosHandle, 0, FS_RELATIVE )
       DO CASE
          CASE ::nPosition == ::nEndOfFile
             ::lAtBottom := .T.
@@ -156,7 +156,7 @@ METHOD fskip( nRecords ) CLASS FileBase
 METHOD fgotop() CLASS FileBase
 
    IF ::noDosError() .AND. ::nDosHandle > 0
-      ::nPosition       := FSEEK( ::nDosHandle, 0, 0 )
+      ::nPosition       := FSEEK( ::nDosHandle, 0, FS_SET )
       ::nLastDosMessage := FERROR()
       ::lAtTop          := .T.
       ::lAtBottom       := .F.
@@ -172,7 +172,7 @@ METHOD fgotop() CLASS FileBase
 METHOD fgoBottom() CLASS FileBase
 
    IF ::noDosError() .AND. ::nDosHandle > 0
-      ::nPosition       := FSEEK( ::nDosHandle, 0, 2 )
+      ::nPosition       := FSEEK( ::nDosHandle, 0, FS_END )
       ::nLastDosMessage := FERROR()
       ::lAtTop          := .F.
       ::lAtBottom       := .T.
@@ -212,7 +212,7 @@ METHOD retrieve() CLASS FileBase
       cReturn           := SPACE( ::nSkipLength )
       nMoved            := FREAD( ::nDosHandle, @cReturn, ::nSkipLength )
       ::nLastDosMessage := FERROR()
-      FSEEK( ::nDosHandle, - ( nMoved ), 1 )                // Re-position the pointer
+      FSEEK( ::nDosHandle, - ( nMoved ), FS_RELATIVE )      // Re-position the pointer
    ENDIF
 
    RETURN cReturn
@@ -230,7 +230,7 @@ METHOD FWRITE( cChar ) CLASS FileBase
          FWRITE( ::nDosHandle, cChar, 1 )
          ::nLastDosMessage := FERROR()
          IF ::noDosError()
-            FSEEK( ::nDosHandle, ::nPosition, 0 )           // Re-position the pointer
+            FSEEK( ::nDosHandle, ::nPosition, FS_SET )      // Re-position the pointer
          ENDIF
       ENDIF
    ENDIF
@@ -250,9 +250,9 @@ METHOD fgoto( nValue ) CLASS FileBase
       IF ISNUMBER( nValue )
          IF nValue > 0 .AND. ;
                     ( nValue * ::nSkipLength ) <= ::nEndOfFile
-            FSEEK( ::nDosHandle, ( nValue * ::nSkipLength ), 0 )
+            FSEEK( ::nDosHandle, ( nValue * ::nSkipLength ), FS_SET )
             ::nLastDosMessage := FERROR()
-            ::nPosition       := FSEEK( ::nDosHandle, 0, 1 )
+            ::nPosition       := FSEEK( ::nDosHandle, 0, FS_RELATIVE )
             DO CASE
                CASE ::nPosition == ::nEndOfFile
                   ::lAtBottom := .T.
@@ -298,8 +298,8 @@ METHOD FOPEN() CLASS FileBase
 
    IF ::noDosError()
       ::nDosHandle :=::openfile( ::cName, ::nOpenMode )
-      ::nEndOfFile := FSEEK( ::nDosHandle, 0, 2 )
-      ::nPosition  := FSEEK( ::nDosHandle, 0, 0 )
+      ::nEndOfFile := FSEEK( ::nDosHandle, 0, FS_END )
+      ::nPosition  := FSEEK( ::nDosHandle, 0, FS_SET )
       ::lAtTop     := .T.
       ::lAtBottom  := .F.
    ENDIF
@@ -312,10 +312,10 @@ METHOD fappendByte( cByte ) CLASS FileBase
 
    IF !EMPTY( cByte )                   // Valid line
       IF ::noDosError() .AND. ::nDosHandle > 0              // No error
-         FSEEK( ::nDosHandle, 0, 2 )
+         FSEEK( ::nDosHandle, 0, FS_END )
          FWRITE( ::nDosHandle, cByte, 1 )
-         ::nEndOfFile  := FSEEK( ::nDosHandle, 0, 2 )
-         ::nPosition   := FSEEK( ::nDosHandle, - ( LEN( cByte ) ), 2 )
+         ::nEndOfFile  := FSEEK( ::nDosHandle, 0, FS_END )
+         ::nPosition   := FSEEK( ::nDosHandle, - ( LEN( cByte ) ), FS_END )
          ::nSkipLength := LEN( cByte )
          ::lAtBottom   := ::lAtTop := .F.
       ENDIF
@@ -326,8 +326,8 @@ RETURN Self
 METHOD OPEN() CLASS FileBase
 
    Self:nDosHandle := Self:openfile( ::cName, ::nOpenMode )
-   ::nEndOfFile    := FSEEK( Self:nDosHandle, 0, 2 )
-   FSEEK( Self:nDosHandle, 0, 0 )
+   ::nEndOfFile    := FSEEK( Self:nDosHandle, 0, FS_END )
+   FSEEK( Self:nDosHandle, 0, FS_SET )
    ::nSkipLength := Self:Buffget()
    ::lAtTop      := .T.
    ::lAtBottom   := .F.
@@ -362,7 +362,7 @@ METHOD goBottom() CLASS FileBase
       ::fgobottom()
       // Now, back off from the end one line length and set the marker
       cBuffer := SPACE( pBUFFER_LENGTH )
-      FSEEK( Self:nDosHandle, - ( pBUFFER_LENGTH ), 2 )
+      FSEEK( Self:nDosHandle, - ( pBUFFER_LENGTH ), FS_END )
       FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
       IF RIGHT( cBuffer, 2 ) == hb_OSNewLine()   // We need to remove this extra one!
          cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - 2 )
@@ -370,9 +370,9 @@ METHOD goBottom() CLASS FileBase
       ENDIF
       cBuffer       := SUBSTR( cBuffer, RAT( hb_OSNewLine(), cBuffer ) + 2 )
       ::nSkipLength := LEN( cBuffer ) + iif( lWithCRLF, 2, 0 )
-      ::nposition   := FSEEK( Self:nDosHandle, - ( LEN( cBuffer ) ), 2 )
+      ::nposition   := FSEEK( Self:nDosHandle, - ( LEN( cBuffer ) ), FS_END )
       IF lWithCRLF
-         ::nposition := FSEEK( Self:nDosHandle, - 2, 1 )
+         ::nposition := FSEEK( Self:nDosHandle, - 2, FS_RELATIVE )
       ENDIF
    ENDIF
 
@@ -393,10 +393,10 @@ METHOD WRITE( cChar ) CLASS FileBase
          ELSE
             FWRITE( Self:nDosHandle, cChar, LEN( cChar ) )
          ENDIF
-         FSEEK( Self:nDosHandle, ::nposition, 0 )
+         FSEEK( Self:nDosHandle, ::nposition, FS_SET )
          Self:nLastDosMessage := FERROR()
          IF Self:noDosError()
-            FSEEK( Self:nDosHandle, Self:nPosition, 0 )     // Re-position the pointer
+            FSEEK( Self:nDosHandle, Self:nPosition, FS_SET )     // Re-position the pointer
          ENDIF
       ENDIF
    ENDIF
@@ -419,10 +419,10 @@ METHOD appendLine( cLine ) CLASS FileBase
          IF !( hb_OSNewLine() $ cLine )          // No CRLF, so add
             cLIne += hb_OSNewLine()
          ENDIF
-         FSEEK( Self:nDosHandle, 0, 2 )
+         FSEEK( Self:nDosHandle, 0, FS_END )
          FWRITE( Self:nDosHandle, cLine )
-         ::nEndOfFile  := FSEEK( Self:nDosHandle, 0, 2 )
-         ::nposition   := FSEEK( Self:nDosHandle, - ( LEN( cLine ) ), 2 )
+         ::nEndOfFile  := FSEEK( Self:nDosHandle, 0, FS_END )
+         ::nposition   := FSEEK( Self:nDosHandle, - ( LEN( cLine ) ), FS_END )
          ::nSkipLength := LEN( cLine )
          ::lAtBottom   := ::lAtTop := .F.
       ENDIF
@@ -487,7 +487,7 @@ METHOD GOTO( nValue ) CLASS FileBase
    IF Self:noDosError() .AND. Self:nDosHandle > 0
       IF ISNUMBER( nValue )
          IF nValue > 0                  // o.k. so far
-            FSEEK( Self:nDosHandle, 0, 0 )                  // start at the top
+            FSEEK( Self:nDosHandle, 0, FS_SET )                  // start at the top
             WHILE lContinue
                cBuffer   := SPACE( pBUFFER_LENGTH )
                lContinue := ( FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH ) == ;
@@ -503,13 +503,13 @@ METHOD GOTO( nValue ) CLASS FileBase
                cLine := cBuffer
             ENDDO
             IF nCount == nValue         // We have a match
-               FSEEK( Self:nDosHandle, - ( pBUFFER_LENGTH ), 1 )                // Back off from here
+               FSEEK( Self:nDosHandle, - ( pBUFFER_LENGTH ), FS_RELATIVE )                // Back off from here
                ::nposition := FSEEK( Self:nDosHandle, ;
                                      ( pBUFFER_LENGTH - LEN( cBuffer ) ), ;
-                                     1 )                    // Move
+                                     FS_RELATIVE )                    // Move
                ::nSkipLength := Self:Buffget()
             ELSE
-               FSEEK( Self:nDosHandle, ::nposition, 0 )
+               FSEEK( Self:nDosHandle, ::nposition, FS_SET )
                nCount := 0
             ENDIF
          ENDIF
@@ -533,7 +533,7 @@ METHOD BufferGet( lForward ) CLASS FileBase
                       - ( iif( ::nposition < pBUFFER_LENGTH, ;
                       ::nposition, ;
                       pBUFFER_LENGTH ) ), ;
-                      1 )               // rewind backwards
+                      FS_RELATIVE )               // rewind backwards
 
       cBuffer := SPACE( ::nposition - nRead )
       FREAD( Self:nDosHandle, @cBuffer, ( ::nposition - nRead ) )
@@ -548,7 +548,7 @@ METHOD BufferGet( lForward ) CLASS FileBase
       cBuffer := SPACE( pBUFFER_LENGTH )
       nRead   := FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
       FSEEK( Self:nDosHandle, - ( iif( nRead < pBUFFER_LENGTH, nRead, ;
-             pBUFFER_LENGTH ) ), 1 )    // Rewind
+             pBUFFER_LENGTH ) ), FS_RELATIVE )    // Rewind
 
       // Now, parse the string. and file
 
@@ -654,7 +654,7 @@ METHOD closeAll() CLASS FileMan
 METHOD rewindAll() CLASS FileMan
 
    IF ::nLastDosMessage == 0
-      AEVAL( ::aDosHandles, { | aFile | FSEEK( aFile[ pDOS_HANDLE ], 0, 0 ) } )
+      AEVAL( ::aDosHandles, { | aFile | FSEEK( aFile[ pDOS_HANDLE ], 0, FS_SET ) } )
    ENDIF
 
    RETURN Self
