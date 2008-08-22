@@ -510,7 +510,7 @@ $(CFLAGS)
 -e$(HBDOC_EXE)
 $(**: = ^
 )
-$(STANDARD_STATIC_HBLIBS) $(HBDOC_LIBS)
+$(MINIMAL_STATIC_HBLIBS) $(HBDOC_LIBS)
 !
 #**********************************************************
 # HBMAKE build rule
@@ -523,7 +523,7 @@ $(CFLAGS)
 -e$(HBMAKE_EXE)
 $(**: = ^
 )
-$(STANDARD_STATIC_HBLIBS)
+$(MINIMAL_STATIC_HBLIBS)
 !
 #**********************************************************
 

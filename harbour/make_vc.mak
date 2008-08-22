@@ -815,7 +815,7 @@ $(LDFLAGS)
 /OUT:$(HBDOC_EXE)
 $(**: = ^
 )
-$(STANDARD_STATIC_HBLIBS)
+$(MINIMAL_STATIC_HBLIBS)
 $(HBDOC_LIBS)
 user32.lib winspool.lib
 <<$(HB_KEEPSTATE)
@@ -829,7 +829,7 @@ $(LDFLAGS)
 /OUT:$(HBMAKE_EXE)
 $(**: = ^
 )
-$(STANDARD_STATIC_HBLIBS)
+$(MINIMAL_STATIC_HBLIBS)
 user32.lib winspool.lib
 <<$(HB_KEEPSTATE)
 #**********************************************************

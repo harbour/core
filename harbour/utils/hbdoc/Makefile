@@ -33,12 +33,10 @@ LIBS=\
 	hbdebug \
 	hbvm \
 	hbrtl \
-	hbrdd \
+	hbnulrdd \
 	hbrtl \
 	hbvm \
 	hbmacro \
-	hbpp \
-	hblang \
 	hbcommon \
 
 include $(TOP)$(ROOT)config/bin.cf

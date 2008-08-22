@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-22 08:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * make_b32.mak
+   * make_gcc.mak
+   * make_vc.mak
+   * make_vcce.mak
+   * utils/hbdoc/Makefile
+   * utils/hbdoc/bld_b32.bat
+   * utils/hbdoc/bld_vc.bat
+   * utils/hbdoc/hbdoc.prg
+   * utils/hbmake/Makefile
+   * utils/hbmake/bld_b32.bat
+   * utils/hbmake/bld_vc.bat
+   * utils/hbmake/hbmake.prg
+     % Reduced executable size of hbmake and hbdoc
+       (by 20%) by excluding unused libs and RDD stuff.
+     % Optimized local non-GNU make files to work 
+       faster and generate faster executables.
+
+   * utils/hbdoc/hbdocdef.ch
+     % Removed unused macro.
+     * minor formatting.
+
 2008-08-21 18:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * utils/hbdoc/Makefile

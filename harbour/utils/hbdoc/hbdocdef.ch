@@ -53,21 +53,19 @@
 #ifndef _HBDOCDEF_CH_
 #define _HBDOCDEF_CH_
 
-#define D_NORMAL  1
-#define D_ARG     2
-#define D_SYNTAX  3
-#define D_IGNORE  4
-#define D_SEEALSO 5
-#define D_INCLUDE 6
-#define D_ONELINE 7
-#define D_STATUS  8
-#define D_DATALINK 10
-#define D_METHODLINK 11
-#define D_EXAMPLE 12
+#define D_NORMAL      1
+#define D_ARG         2
+#define D_SYNTAX      3
+#define D_IGNORE      4
+#define D_SEEALSO     5
+#define D_INCLUDE     6
+#define D_ONELINE     7
+#define D_STATUS      8
+#define D_DATALINK    10
+#define D_METHODLINK  11
+#define D_EXAMPLE     12
 #define D_DESCRIPTION 13
-#define D_RETURN 14
-#define D_COMPLIANCE 15
-
-#define pBUFFER_LENGTH 4096
+#define D_RETURN      14
+#define D_COMPLIANCE  15
 
 #endif

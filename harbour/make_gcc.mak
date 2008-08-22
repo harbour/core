@@ -291,6 +291,7 @@ all : $(HB_DEST_DIRS) $(HB_BUILD_TARGETS)
 BasicLibs : $(COMMON_LIB) $(HBPP_EXE) $(PP_LIB) $(COMPILER_LIB)
 BasicExes : BasicLibs $(HB)
 StdLibs   : BasicExes $(STANDARD_STATIC_HBLIBS)
+MinLibs   : $(MINIMAL_STATIC_HBLIBS)
 #**********************************************************
 
 
@@ -424,11 +425,11 @@ $(HBTEST_EXE)   :: $(StdLibs)
 $(HBTEST_EXE)   :: $(HBTEST_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBDOC_EXE)    :: $(StdLibs)
+$(HBDOC_EXE)    :: $(MinLibs)
 $(HBDOC_EXE)    :: $(HBDOC_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBMAKE_EXE)   :: $(StdLibs)
+$(HBMAKE_EXE)   :: $(MinLibs)
 $(HBMAKE_EXE)   :: $(HBMAKE_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************

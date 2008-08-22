@@ -287,6 +287,16 @@ HB_GT_LIB = gtstd
 #**********************************************************
 #**********************************************************
 
+# Minimal Libs for HB-based executables
+MINIMAL_STATIC_HBLIBS = \
+    $(COMMON_LIB)        \
+    $(VM_LIB)            \
+    $(RTL_LIB)           \
+    $(HB_GT_LIBS)        \
+    $(NULSYS_LIB)        \
+    $(MACRO_LIB)         \
+    $(DEBUG_LIB)         \
+
 # Standard Libs for HB-based executables
 STANDARD_STATIC_HBLIBS = \
     $(COMMON_LIB)        \
