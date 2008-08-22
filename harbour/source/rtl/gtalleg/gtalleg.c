@@ -97,7 +97,7 @@ static int s_iGFXHeight = 0;
 /* update region in pixels */
 static HB_GT_RECT s_GFXUpd;
 
-/* current CLIP region in pixels (modified by GFX_SETCLIP) */
+/* current CLIP region in pixels (modified by HB_GFX_SETCLIP) */
 static HB_GT_RECT s_CLIP;
 
 /* cursor position and style */
@@ -940,35 +940,35 @@ static int hb_gt_alleg_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft
 
    switch( iType )
    {
-      case GFX_ACQUIRESCREEN:
+      case HB_GFX_ACQUIRESCREEN:
          al_acquire_bitmap(s_bmp);
          break;
 
-      case GFX_RELEASESCREEN:
+      case HB_GFX_RELEASESCREEN:
          al_release_bitmap(s_bmp);
          break;
 
-      case GFX_MAKECOLOR:
+      case HB_GFX_MAKECOLOR:
          iRet = al_make_color(iTop, iLeft, iBottom);
          break;
 
-      case GFX_CLIPTOP:
+      case HB_GFX_CLIPTOP:
          iRet = s_CLIP.iTop;
          break;
 
-      case GFX_CLIPLEFT:
+      case HB_GFX_CLIPLEFT:
          iRet = s_CLIP.iLeft;
          break;
 
-      case GFX_CLIPBOTTOM:
+      case HB_GFX_CLIPBOTTOM:
          iRet = s_CLIP.iBottom;
          break;
 
-      case GFX_CLIPRIGHT:
+      case HB_GFX_CLIPRIGHT:
          iRet = s_CLIP.iRight;
          break;
 
-      case GFX_SETCLIP:
+      case HB_GFX_SETCLIP:
          al_set_clip(s_bmp, iLeft, iTop, iRight, iBottom);
          s_CLIP.iTop = iTop;
          s_CLIP.iLeft = iLeft;
@@ -976,22 +976,22 @@ static int hb_gt_alleg_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft
          s_CLIP.iRight = iRight;
          break;
 
-      case GFX_DRAWINGMODE:
-         iRet = GFX_MODE_SOLID;
+      case HB_GFX_DRAWINGMODE:
+         iRet = HB_GFX_MODE_SOLID;
          break;
 
-      case GFX_GETPIXEL:
+      case HB_GFX_GETPIXEL:
          iRet = al_get_pixel(s_bmp, iLeft, iTop);
          break;
 
-      case GFX_PUTPIXEL:
+      case HB_GFX_PUTPIXEL:
          al_acquire_bitmap(s_bmp);
          al_put_pixel(s_bmp, iLeft, iTop, iBottom);
          al_release_bitmap(s_bmp);
          GT_UPD_GFXRECT(iTop,iLeft,iTop,iLeft);
          break;
 
-      case GFX_LINE:
+      case HB_GFX_LINE:
          al_acquire_bitmap(s_bmp);
          if( iLeft == iRight )
             al_draw_vline(s_bmp, iLeft, iTop, iBottom, iColor);
@@ -1003,49 +1003,49 @@ static int hb_gt_alleg_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft
          GT_UPD_GFXRECT(iTop,iLeft,iBottom,iRight);
          break;
 
-      case GFX_RECT:
+      case HB_GFX_RECT:
          al_acquire_bitmap(s_bmp);
          al_draw_rect(s_bmp, iLeft, iTop, iRight, iBottom, iColor);
          al_release_bitmap(s_bmp);
          GT_UPD_GFXRECT(iTop,iLeft,iBottom,iRight);
          break;
 
-      case GFX_FILLEDRECT:
+      case HB_GFX_FILLEDRECT:
          al_acquire_bitmap(s_bmp);
          al_draw_rect_fill(s_bmp, iLeft, iTop, iRight, iBottom, iColor);
          al_release_bitmap(s_bmp);
          GT_UPD_GFXRECT(iTop,iLeft,iBottom,iRight);
          break;
 
-      case GFX_CIRCLE:
+      case HB_GFX_CIRCLE:
          al_acquire_bitmap(s_bmp);
          al_draw_circle(s_bmp, iLeft, iTop, iBottom, iRight);
          al_release_bitmap(s_bmp);
          GT_UPD_GFXRECT(iTop-iBottom,iLeft-iBottom,iTop+iBottom,iLeft+iBottom);
          break;
 
-      case GFX_FILLEDCIRCLE:
+      case HB_GFX_FILLEDCIRCLE:
          al_acquire_bitmap(s_bmp);
          al_draw_circle_fill(s_bmp, iLeft, iTop, iBottom, iRight);
          al_release_bitmap(s_bmp);
          GT_UPD_GFXRECT(iTop-iBottom,iLeft-iBottom,iTop+iBottom,iLeft+iBottom);
          break;
 
-      case GFX_ELLIPSE:
+      case HB_GFX_ELLIPSE:
          al_acquire_bitmap(s_bmp);
          al_draw_ellipse(s_bmp, iLeft, iTop, iRight, iBottom, iColor);
          al_release_bitmap(s_bmp);
          GT_UPD_GFXRECT(iTop-iBottom,iLeft-iRight,iTop+iBottom,iLeft+iRight);
          break;
 
-      case GFX_FILLEDELLIPSE:
+      case HB_GFX_FILLEDELLIPSE:
          al_acquire_bitmap(s_bmp);
          al_draw_ellipse_fill(s_bmp, iLeft, iTop, iRight, iBottom, iColor);
          al_release_bitmap(s_bmp);
          GT_UPD_GFXRECT(iTop-iBottom,iLeft-iRight,iTop+iBottom,iLeft+iRight);
          break;
 
-      case GFX_FLOODFILL:
+      case HB_GFX_FLOODFILL:
          al_acquire_bitmap(s_bmp);
          al_floodfill(s_bmp, iLeft, iTop, iBottom);
          al_release_bitmap(s_bmp);

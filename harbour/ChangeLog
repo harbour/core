@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-22 11:30 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtalleg/gtalleg.c
+     * GFX_* -> HB_GFX_*
+     ; (untested)
 
 2008-08-22 11:20 UTC+0100 JF Lefebvre (MAFACT) (jfl at mafact dot com)
    * utils/hbdoc/hbdoc.prg 
@@ -17,8 +21,6 @@
        causing some problem with msvc linking.
    * debug/debugger.prg 
      % changing all GTI_ by HB_GTI_
-
-
 
 2008-08-22 09:32 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
