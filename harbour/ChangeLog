@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-22 14:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtalleg/ssf.h
+     ! Fixed to compile with BCC.
+
+   * source/rtl/gtalleg/Makefile
+     ! Missing SVN header.
+     % Removed obsolete HB_MULTI_GT #define.
+
+   * source/rtl/gtalleg/gtalleg.c
+   * utils/hbmake/hbmake.prg
+     ! Typos.
+
 2008-08-22 11:30 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtalleg/gtalleg.c
      * GFX_* -> HB_GFX_*

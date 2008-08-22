@@ -4,7 +4,7 @@
 
 /*
 * xHarbour Project source code:
-* Allegro based virtual gt with graphic extensions.
+* Allegro based virtual GT with graphic extensions.
 *
 * Copyright 2004 Mauricio Abre <maurifull@datafull.com>
 * www - http://www.xharbour.org
@@ -1229,7 +1229,7 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
 
 /*
 * this is necessary if you want to link with .so allegro libs
-* or when link staticalt and your linker will force to link main()
+* or when link statically and your linker will force to link main()
 * from allegro library not the harbour one
 */
 int _mangled_main( int argc, char * argv[] )

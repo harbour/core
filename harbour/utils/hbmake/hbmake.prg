@@ -52,7 +52,7 @@
 
 /*
  * Modified By Sandro Freire sandrorrfreire at yahoo.com.br
- * added suport to OS Unix
+ * added support for Unix OS
  */
 
 #include "fileio.ch"

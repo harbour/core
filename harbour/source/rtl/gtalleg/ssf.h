@@ -62,6 +62,11 @@
 #ifndef _SSF_H_
 #define _SSF_H_
 
+#if defined(__BORLANDC__)
+   #define ALLEGRO_NO_ASM
+   #define ALLEGRO_BCC32
+#endif
+
 #include <allegro.h>
 
 /* Hack to use old Allegro branches */
