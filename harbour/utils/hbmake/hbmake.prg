@@ -55,8 +55,6 @@
  * added suport to OS Unix
  */
 
-ANNOUNCE RDDSYS
-
 #include "fileio.ch"
 #include "common.ch"
 #include "inkey.ch"

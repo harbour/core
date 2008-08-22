@@ -108,8 +108,6 @@
  *    Fixed the help text when hbdoc is called with out any parameter
  */
 
-ANNOUNCE RDDSYS
-
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"

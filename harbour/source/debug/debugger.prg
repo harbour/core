@@ -408,13 +408,13 @@ METHOD New() CLASS HBDebugger
 METHOD OpenDebuggerWindow() CLASS HBDebugger
 
    IF !::lDebuggerWindowIsOpen
-      ::hUserWindow := hb_gtInfo( GTI_GETWIN )
+      ::hUserWindow := hb_gtInfo( HB_GTI_GETWIN )
       IF ::hDebuggerWindow == NIL
-         ::hDebuggerWindow := hb_gtInfo( GTI_GETWIN, ;
+         ::hDebuggerWindow := hb_gtInfo( HB_GTI_GETWIN, ;
                                  { "Debugger", DEBUGGER_MINROW, DEBUGGER_MINCOL, ;
                                    DEBUGGER_MAXROW, DEBUGGER_MAXCOL } )
       ELSE
-         hb_gtInfo( GTI_SETWIN, ::hDebuggerWindow )
+         hb_gtInfo( HB_GTI_SETWIN, ::hDebuggerWindow )
       ENDIF
       ::lDebuggerWindowIsOpen := .T.
    ENDIF
@@ -425,8 +425,8 @@ METHOD OpenDebuggerWindow() CLASS HBDebugger
 METHOD CloseDebuggerWindow() CLASS HBDebugger
 
    IF ::lDebuggerWindowIsOpen
-      ::hDebuggerWindow := hb_gtInfo( GTI_GETWIN )
-      hb_gtInfo( GTI_SETWIN, ::hUserWindow )
+      ::hDebuggerWindow := hb_gtInfo( HB_GTI_GETWIN )
+      hb_gtInfo( HB_GTI_SETWIN, ::hUserWindow )
       ::lDebuggerWindowIsOpen := .F.
    ENDIF
 
