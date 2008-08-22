@@ -28,6 +28,7 @@ LIB_OBJS = \
     $(OBJ_DIR)hbcomprs$(OBJEXT) \
     $(OBJ_DIR)xstrdel$(OBJEXT) \
     \
+    $(OBJ_DIR)arrayblk$(OBJEXT) \
     $(OBJ_DIR)txml$(OBJEXT) \
     $(OBJ_DIR)hblog$(OBJEXT) \
     $(OBJ_DIR)hblognet$(OBJEXT) \

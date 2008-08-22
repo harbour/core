@@ -502,7 +502,7 @@ FUNCTION ReadLN( lEof )
 *----------------------
 
    LOCAL cBuffer := ""
-   cBuffer := FT_FREADLN()
+   cBuffer := FReadLn()
    cBuffer := STRTRAN( cBuffer, CHR( 13 ), "" )
    cBuffer := STRTRAN( cBuffer, CHR( 10 ), "" )
    FT_FSKIP( 1 )

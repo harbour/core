@@ -907,9 +907,6 @@ FUNCTION FT_FEOF()
 FUNCTION FReadLn()
    RETURN s_oFileBase:retrieve()
 
-FUNCTION FT_FReadLn()
-   RETURN StrTran( FReadLn(), Chr( 13 ), "" )
-
 PROCEDURE FT_FGotop()
    s_oFileBase:Gotop()
    RETURN
@@ -983,7 +980,7 @@ FUNCTION FREADline( nH, cB, nMaxLine )
       cB := cLine
    ELSE
       cB := SUBSTR( cLine, 1, nEol - 1 )
-      FSEEK( nH, nSavePos + nEol + 1, FS_SET )
+      FSEEK( nH, nSavePos + Len( hb_OSNewLine() ) - 1, FS_SET )
    ENDIF
 
    RETURN nNumRead != 0

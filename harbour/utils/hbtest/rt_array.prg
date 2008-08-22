@@ -359,7 +359,19 @@ PROCEDURE Main_ARRAY()
    TEST_LINE( AScan( saAllTypes, scStringZ  ) , 3           )
    SET EXACT OFF
 
+   TEST_LINE( TAEVSM()                        , "N10N 9N 8N 7N 6N 5N 4N 3N 2N 1         0" )
+
    RETURN
+
+STATIC FUNCTION TAEVSM()
+
+   LOCAL cString := ""
+   LOCAL aArray := Array( 10 )
+
+   AFill( aArray, 0 )
+   AEval( aArray, {| x | cString += ValType( x ) + Str( Len( aArray ), 2 ), ASize( aArray, Len( aArray ) - 1 ) } )
+
+   RETURN cString + Str( Len( aArray ) )
 
 STATIC FUNCTION TANew( cChar, nLen )
    LOCAL aArray

@@ -23,6 +23,7 @@ C_HEADERS=\
 	hbcompat.h \
 
 PRG_SOURCES=\
+	arrayblk.prg \
 	txml.prg \
 	hblog.prg \
 	hblognet.prg \

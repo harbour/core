@@ -1562,7 +1562,7 @@ FUNCTION ReadLN( leof )
 
    LOCAL cBuffer := ""
 
-   cBuffer := FT_FREADLN()
+   cBuffer := FReadLn()
    FT_FSKIP( 1 )
    lEof := FT_FEOF()
 
