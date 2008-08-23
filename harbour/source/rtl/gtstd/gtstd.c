@@ -553,10 +553,10 @@ static BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
          char *pszHostLetters = ( char * ) hb_xgrab( cdpHost->nChars * 2 + 1 );
          char *pszTermLetters = ( char * ) hb_xgrab( cdpTerm->nChars * 2 + 1 );
 
-         strncpy( pszHostLetters, cdpHost->CharsUpper, cdpHost->nChars + 1 );
-         strncat( pszHostLetters, cdpHost->CharsLower, cdpHost->nChars + 1 );
-         strncpy( pszTermLetters, cdpTerm->CharsUpper, cdpTerm->nChars + 1 );
-         strncat( pszTermLetters, cdpTerm->CharsLower, cdpTerm->nChars + 1 );
+         hb_strncpy( pszHostLetters, cdpHost->CharsUpper, cdpHost->nChars * 2 );
+         hb_strncat( pszHostLetters, cdpHost->CharsLower, cdpHost->nChars * 2 );
+         hb_strncpy( pszTermLetters, cdpTerm->CharsUpper, cdpTerm->nChars * 2 );
+         hb_strncat( pszTermLetters, cdpTerm->CharsLower, cdpTerm->nChars * 2 );
 
          hb_gt_std_setKeyTrans( HB_GTSTD_GET( pGT ), pszTermLetters, pszHostLetters );
 

@@ -164,9 +164,9 @@ HB_FUNC( FT_GETE )
          if( rettype == CHARTYPE )
          {
             /* tack string onto end of buffer */
-            strcat( buffer, environ[x] );
+            hb_strncat( buffer, environ[x], buffsize );
             /* add crlf at end of each string */
-            strcat( buffer, CRLF );
+            hb_strncat( buffer, CRLF, buffsize );
          }
          else if( rettype == ARRAYTYPE )
             /* store string to next array element */
@@ -204,29 +204,26 @@ HB_FUNC( FT_GETE )
       {
          for( sCurEnv = ( LPSTR ) lpEnviron; *sCurEnv; sCurEnv++ )
          {
+            if( !*sCurEnv )
+               /* null string, we're done */
+               break;
 
-            {
-               if( !*sCurEnv )
-                  /* null string, we're done */
-                  break;
-               /* add length of this string plus 2 for the crlf */
-               buffsize += ( strlen( ( char * ) sCurEnv ) + 2 );
-            }
-            /* add 1 more byte for final nul character */
-            buffsize++;
+            /* add length of this string plus 2 for the crlf */
+            buffsize += ( strlen( ( char * ) sCurEnv ) + 2 );
 
-            /* now allocate that much memory and make sure 1st byte is a nul */
-            buffer = ( char * ) hb_xalloc( buffsize );
-            strcpy( buffer, "\0" );
             while( *sCurEnv )
                sCurEnv++;
          }
+         /* add 1 more byte for final nul character */
+         buffsize++;
+
+         /* now allocate that much memory and make sure 1st byte is a nul */
+         buffer = ( char * ) hb_xalloc( buffsize + 1 );
+         buffer[0] = '\0';
       }
       x = 0;
       for( sCurEnv = ( LPSTR ) lpEnviron; *sCurEnv; sCurEnv++ )
       {
-
-
          if( !*sCurEnv )
             /* null string, we're done */
             break;
@@ -234,9 +231,9 @@ HB_FUNC( FT_GETE )
          if( rettype == CHARTYPE )
          {
             /* tack string onto end of buffer */
-            strcat( buffer, ( char * ) sCurEnv );
+            hb_strncat( buffer, ( char * ) sCurEnv, buffsize );
             /* add crlf at end of each string */
-            strcat( buffer, CRLF );
+            hb_strncat( buffer, CRLF, buffsize );
          }
 
          if( rettype == ARRAYTYPE )

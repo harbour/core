@@ -226,8 +226,7 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 
                ulLen = pszEnd > pszNext ? pszEnd - pszNext : 0;
                pszRetVal = ( char * ) hb_xgrab( ulLen + 1 );
-               strncpy( pszRetVal, pszNext, ulLen );
-               pszRetVal[ ulLen ] = '\0';
+               hb_strncpy( pszRetVal, pszNext, ulLen );
             }
             else
                pszRetVal = "";

@@ -146,7 +146,7 @@ HB_FUNC( HB_OUTDEBUGNAME )
 
    if ( s_iDebugFd == 0 && pName != NULL)
    {
-      strncpy( s_szDebugName, hb_itemGetCPtr( pName ), 127 );
+      hb_strncpy( s_szDebugName, hb_itemGetCPtr( pName ), sizeof( s_szDebugName ) - 1 );
       s_iUseDebugName = 1;
 
       hb_retl( TRUE );

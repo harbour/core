@@ -2749,7 +2749,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    }
    else
    {
-      hb_strncpy( ( char * ) szFileName, ( char * ) pCreateInfo->abName, _POSIX_PATH_MAX );
+      hb_strncpy( ( char * ) szFileName, ( char * ) pCreateInfo->abName, sizeof( szFileName ) - 1 );
    }
    hb_xfree( pFileName );
 
@@ -2883,8 +2883,8 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    for( uiCount = 0; uiCount < pArea->uiFieldCount; uiCount++ )
    {
       LPFIELD pField = pArea->lpFields + uiCount;
-      strncpy( ( char * ) pThisField->bName,
-               hb_dynsymName( ( PHB_DYNS ) pField->sym ), 10 );
+      hb_strncpy( ( char * ) pThisField->bName,
+                  hb_dynsymName( ( PHB_DYNS ) pField->sym ), 10 );
       pArea->pFieldOffset[ uiCount ] = pArea->uiRecordLen;
       /* field offset */
       if( pArea->bTableType == DB_DBF_VFP )

@@ -1935,8 +1935,7 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
       {
          if ( ( i = ptr - term ) >= sizeof( buf ) )
             i = sizeof( buf ) - 1;
-         strncpy( buf, term, i );
-         buf[i] = '\0';
+         hb_strncpy( buf, term, i );
          if ( i )
             crsterm = buf;
       }
@@ -2824,10 +2823,10 @@ static BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP,
             char *pszHostLetters = ( char * ) hb_xgrab( cdpHost->nChars * 2 + 1 );
             char *pszTermLetters = ( char * ) hb_xgrab( cdpTerm->nChars * 2 + 1 );
 
-            strncpy( pszHostLetters, cdpHost->CharsUpper, cdpHost->nChars + 1 );
-            strncat( pszHostLetters, cdpHost->CharsLower, cdpHost->nChars + 1 );
-            strncpy( pszTermLetters, cdpTerm->CharsUpper, cdpTerm->nChars + 1 );
-            strncat( pszTermLetters, cdpTerm->CharsLower, cdpTerm->nChars + 1 );
+            hb_strncpy( pszHostLetters, cdpHost->CharsUpper, cdpHost->nChars * 2 );
+            hb_strncat( pszHostLetters, cdpHost->CharsLower, cdpHost->nChars * 2 );
+            hb_strncpy( pszTermLetters, cdpTerm->CharsUpper, cdpTerm->nChars * 2 );
+            hb_strncat( pszTermLetters, cdpTerm->CharsLower, cdpTerm->nChars * 2 );
 
             setDispTrans( s_ioBase, pszHostLetters, pszTermLetters, fBox ? 1 : 0 );
 
@@ -2868,10 +2867,10 @@ static BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
          char *pszHostLetters = ( char * ) hb_xgrab( cdpHost->nChars * 2 + 1 );
          char *pszTermLetters = ( char * ) hb_xgrab( cdpTerm->nChars * 2 + 1 );
 
-         strncpy( pszHostLetters, cdpHost->CharsUpper, cdpHost->nChars + 1 );
-         strncat( pszHostLetters, cdpHost->CharsLower, cdpHost->nChars + 1 );
-         strncpy( pszTermLetters, cdpTerm->CharsUpper, cdpTerm->nChars + 1 );
-         strncat( pszTermLetters, cdpTerm->CharsLower, cdpTerm->nChars + 1 );
+         hb_strncpy( pszHostLetters, cdpHost->CharsUpper, cdpHost->nChars * 2 );
+         hb_strncat( pszHostLetters, cdpHost->CharsLower, cdpHost->nChars * 2 );
+         hb_strncpy( pszTermLetters, cdpTerm->CharsUpper, cdpTerm->nChars * 2 );
+         hb_strncat( pszTermLetters, cdpTerm->CharsLower, cdpTerm->nChars * 2 );
 
          setKeyTrans( s_ioBase, ( unsigned char * ) pszTermLetters,
                       ( unsigned char * ) pszHostLetters );

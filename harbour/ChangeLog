@@ -8,11 +8,71 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-23 11:38 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/pp/hbpp.c
+   * source/vm/cmdarg.c
+   * source/vm/memvars.c
+   * source/rtl/dates.c
+   * source/rtl/fstemp.c
+   * source/rtl/gtchrmap.c
+   * source/rtl/gtcrs/gtcrs.c
+   * source/rtl/gtpca/gtpca.c
+   * source/rtl/gtstd/gtstd.c
+   * source/rdd/dbf1.c
+   * source/rdd/dbfntx/dbfntx1.c
+   * contrib/hbct/disk.c
+   * contrib/hbfbird/firebird.c
+   * contrib/hbw32/w32_ole.c
+   * contrib/xhb/hboutdbg.c
+   * contrib/examples/pp/hbppcore.c
+     * strncpy() -> hb_strncpy()
+     * strncat() -> hb_strncat()
+     ! In most of these places the terminating zero 
+       was not explicitly set by the caller before.
+
+   * contrib/hbnf/getenvrn.c
+   * contrib/hbw32/dllcall.c
+   * contrib/hbw32/w32_ole.c
+   * contrib/hbwhat32/_wincdlg.c
+   * contrib/hbwhat32/_windll.c
+   * contrib/hbwhat32/_winmain.c
+   * contrib/hbziparch/hbzipnew.cpp
+     ! strcpy() -> hb_strncpy()
+     ! strcat() -> hb_strncat()
+     ; TOFIX1: There are still two strcpy()s left in SQL_SPRINTF().
+               Xavi, could you pls take a look at it?
+     ; TOFIX2: There are still a few strcpy()s in hbwince.c and 
+               dbgentry.c.
+
+   * source/pp/hbpp.c
+   * source/rtl/gtcrs/gtcrs.c
+   * source/rtl/gtpca/gtpca.c
+   * source/rtl/gtstd/gtstd.c
+   * contrib/hbfbird/firebird.c
+   * contrib/hbwhat32/_wincdlg.c
+   * contrib/hbwhat32/_windll.c
+     ! Fixed wrong buffer sizes (or no buffer limits) in some 
+       string copy operations (potential buffer overruns).
+
+   * contrib/hbnf/getenvrn.c
+     ! Fixed bad leak in FT_GETE() on Win32 systems.
+
+   * source/rtl/fstemp.c
+     ! hb_fsTempName(): Fixed potential buffer overrun by one byte.
+     * Minor formatting.
+
+   * source/rtl/fstemp.c
+   * source/rtl/hbffind.c
+   * contrib/xhb/hboutdbg.c
+     * Using sizeof() instead of explicit size in string copy operations.
+     ; TODO: There is a lot more to fix like this.
+
 2008-08-22 22:51 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * utils/hbtest/rt_array.prg
      + Added failing test case of doing AEval() 
        and resizing the evaluated array in the 
        eval codeblock.
+     ; TOFIX
 
    * utils/hbdoc/ft_funcs.prg
    * utils/hbdoc/hbdoc.prg
@@ -25,7 +85,7 @@
    * contrib/xhb/Makefile
    * contrib/xhb/common.mak
    + contrib/xhb/arrayblk.prg
-     + Added HB_ARRAYBLOCK()
+     + Added HB_ARRAYBLOCK() from xhb.
 
 2008-08-22 17:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/make_gcc_all.sh

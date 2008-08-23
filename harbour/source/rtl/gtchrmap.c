@@ -382,8 +382,7 @@ static int hb_gt_chrmapread( const char *pszFile, const char *pszTerm, int *nTra
 
    if( fp != NULL )
    {
-      strncpy( buf, pszTerm, sizeof( buf ) );
-      buf[ sizeof( buf ) - 1 ] = '\0';
+      hb_strncpy( buf, pszTerm, sizeof( buf ) - 1 );
       isTerm = 0;
       pTerm = buf;
       while( pTerm )
@@ -431,8 +430,8 @@ int hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, BOOL fSetACSC )
          if( pszFile != NULL && sizeof( szFile ) >
                         strlen( pszFile ) + strlen( s_szDefaultCharMapFile ) )
          {
-            hb_strncpy( szFile, pszFile, _POSIX_PATH_MAX );
-            hb_strncat( szFile, s_szDefaultCharMapFile, _POSIX_PATH_MAX );
+            hb_strncpy( szFile, pszFile, sizeof( szFile ) - 1 );
+            hb_strncat( szFile, s_szDefaultCharMapFile, sizeof( szFile ) - 1 );
             nRet = hb_gt_chrmapread( szFile, pszTerm, piTransTbl );
          }
       }

@@ -84,7 +84,7 @@ HB_FUNC( FREELIBRARYANDEXITTHREAD )
 HB_FUNC( GETPROCADDRESS )
 {
   ULONG dwProcAddr;
-  char  cFuncName[MAX_PATH];
+  char  cFuncName[ MAX_PATH + 1 ];
 
     if ((dwProcAddr = (ULONG) GetProcAddress( (HMODULE) hb_parnl(1),
                                               ISCHAR( 2 ) ? (LPCSTR) hb_parcx(2) :
@@ -92,10 +92,10 @@ HB_FUNC( GETPROCADDRESS )
     {
        if ( ISCHAR( 2 ) )
        {
-            // try forced ANSI flavour ?
-           strcpy(cFuncName, hb_parcx(2));
-           strcat(cFuncName, "A");
-           dwProcAddr = (ULONG) GetProcAddress((HMODULE) hb_parnl(1), cFuncName);
+          // try forced ANSI flavour ?
+          hb_strncpy( cFuncName, hb_parcx( 2 ), sizeof( cFuncName ) - 2 );
+          hb_strncat( cFuncName, "A", sizeof( cFuncName ) - 1 );
+          dwProcAddr = (ULONG) GetProcAddress((HMODULE) hb_parnl(1), cFuncName);
        }
     }
 

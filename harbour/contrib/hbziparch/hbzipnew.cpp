@@ -876,7 +876,7 @@ const char * hb_GetZipComment( char * szFile )
       szReturn = "";
 
    szTempR = ( char * ) hb_xgrab( strlen( ( const char * ) szReturn ) + 1 );
-   strcpy( szTempR, ( char * ) szReturn );
+   hb_strncpy( szTempR, ( char * ) szReturn, strlen( ( const char * ) szReturn ) );
 
    szZip.Close();
 

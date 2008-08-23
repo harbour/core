@@ -1600,7 +1600,7 @@ static void hb_ntxIndexTagAdd( LPNTXINDEX pIndex, LPTAGINFO pTag )
    {
       ++iTags;
       HB_PUT_LE_UINT16( lpCTX->ntags, iTags );
-      strncpy( ( char * ) pTagItem->tag_name, pTag->TagName, NTX_MAX_TAGNAME );
+      hb_strncpy( ( char * ) pTagItem->tag_name, pTag->TagName, NTX_MAX_TAGNAME );
    }
    HB_PUT_LE_UINT32( pTagItem->tag_header, pTag->HeadBlock );
    pIndex->Update = TRUE;
@@ -1708,11 +1708,11 @@ static ERRCODE hb_ntxTagHeaderSave( LPTAGINFO pTag )
       Header.unique[0]  = pTag->UniqueKey ? 1 : 0;
       Header.descend[0] = pTag->AscendKey ? 0 : 1;
       Header.custom[0]  = pTag->Custom    ? 1 : 0;
-      strncpy( ( char * ) Header.key_expr, pTag->KeyExpr, NTX_MAX_EXP );
+      hb_strncpy( ( char * ) Header.key_expr, pTag->KeyExpr, NTX_MAX_EXP );
       if( pTag->ForExpr )
-         strncpy( ( char * ) Header.for_expr, pTag->ForExpr, NTX_MAX_EXP );
+         hb_strncpy( ( char * ) Header.for_expr, pTag->ForExpr, NTX_MAX_EXP );
       if( pTag->fTagName )
-         strncpy( ( char * ) Header.tag_name, pTag->TagName, NTX_MAX_TAGNAME );
+         hb_strncpy( ( char * ) Header.tag_name, pTag->TagName, NTX_MAX_TAGNAME );
       iSize = sizeof( NTXHEADER );
    }
 

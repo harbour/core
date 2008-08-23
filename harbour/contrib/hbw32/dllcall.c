@@ -755,7 +755,7 @@ HB_FUNC( DLLPREPARECALL )
       xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? ( LPCSTR ) xec->cProc : ( LPCSTR ) ( HB_PTRDIFF ) xec->wOrdinal );
       
       if( ! xec->lpFunc && xec->cProc ) /* try with ANSI suffix? */
-         xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, ( LPCSTR ) strcat( xec->cProc, "A" ) );
+         xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, ( LPCSTR ) hb_strncat( xec->cProc, "A", hb_parclen( 3 ) + 1 ) );
       
       if( xec->lpFunc )
       {
@@ -810,7 +810,7 @@ static LPVOID hb_getprocaddress( HMODULE hDLL, int i )
    {
       char * pszFuncName = ( char * ) hb_xgrab( hb_parclen( i ) + 2 );
       hb_strncpy( pszFuncName, hb_parc( i ), hb_parclen( i ) );
-      lpFunction = ( LPVOID ) GetProcAddress( hDLL, strcat( pszFuncName, "A" ) );
+      lpFunction = ( LPVOID ) GetProcAddress( hDLL, hb_strncat( pszFuncName, "A", hb_parclen( i ) + 1 ) );
       hb_xfree( pszFuncName );
    }
 

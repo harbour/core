@@ -2376,13 +2376,13 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
                      if( ! com_or_tra )
                      {
                         /* translate */
-                           strncpy( s_expreal + 1, *ptri, lenreal );
-                           s_expreal[0] = '&';
-                           s_expreal[lenreal + 1] = '\0';
-                           *ptri += lenreal;
-                           SearnRep( exppatt, s_expreal, lenreal + 1, ptro, lenres );
-                           rezrestr = 1;
-                           break;
+                        hb_strncpy( s_expreal + 1, *ptri, lenreal );
+                        s_expreal[0] = '&';
+                        s_expreal[lenreal + 1] = '\0';
+                        *ptri += lenreal;
+                        SearnRep( exppatt, s_expreal, lenreal + 1, ptro, lenres );
+                        rezrestr = 1;
+                        break;
                      }
                      else
                      {
@@ -2406,7 +2406,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
                          * is preprocessed into:
                          * &a ++( b )
                         */
-                           strncpy( s_expreal + 1, *ptri, lenreal );
+                           hb_strncpy( s_expreal + 1, *ptri, lenreal );
                            s_expreal[0] = '&';
                            s_expreal[lenreal + 1] = '\0';
                            *ptri += lenreal;

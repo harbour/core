@@ -197,9 +197,9 @@ HB_FUNC( CHOOSECOLOR )
 HB_FUNC( _GETOPENFILENAME )
 {
    OPENFILENAME ofn;
-   char *szFileName =(char*) hb_xgrab( hb_parcsiz(2));
+   char *szFileName = ( char * ) hb_xgrab( hb_parclen( 2 ) + 1 );
 
-   strcpy( szFileName, hb_parcx( 2 ) );
+   hb_strncpy( szFileName, hb_parcx( 2 ), hb_parclen( 2 ) );
 
    ZeroMemory( &ofn, sizeof(ofn) );
    ofn.hInstance       = GetModuleHandle(NULL)  ;
@@ -236,10 +236,10 @@ HB_FUNC( _GETOPENFILENAME )
 HB_FUNC( _GETSAVEFILENAME )
 {
     OPENFILENAME ofn;
-    char szFileName[MAX_PATH+1] ;
-    strcpy( szFileName, hb_parc (2) );
-    ZeroMemory(&ofn, sizeof(ofn));
-    ofn.hInstance       = GetModuleHandle(NULL)  ;
+    char szFileName[ MAX_PATH + 1 ];
+    hb_strncpy( szFileName, hb_parc( 2 ), MAX_PATH );
+    ZeroMemory( &ofn, sizeof( ofn ) );
+    ofn.hInstance       = GetModuleHandle(NULL);
     ofn.lStructSize     = sizeof(ofn);
     ofn.hwndOwner       = ISNIL   (1)  ? GetActiveWindow() : (HWND) hb_parnl(1);
     ofn.lpstrTitle      = hb_parc (3);

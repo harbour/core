@@ -218,7 +218,7 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
    {
       /* Not a valid date string, so return a blank date with separators */
       format_count = size; /* size is either 8 or 10 */
-      strncpy( szFormattedDate, szDateFormat, size );
+      hb_strncpy( szFormattedDate, szDateFormat, size );
 
       for( digit_count = 0; digit_count < size; digit_count++ )
       {

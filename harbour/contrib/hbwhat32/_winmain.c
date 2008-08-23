@@ -76,7 +76,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    hb_hPrevInstance = hPrevInstance;
    hb_iCmdShow = iCmdShow;
 
-   strcpy( pArgs, lpCmdLine );
+   hb_strncpy( pArgs, lpCmdLine, strlen( lpCmdLine ) );
 
    HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow));
 

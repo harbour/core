@@ -118,12 +118,12 @@ HB_FUNC( FBCONNECT )
    dpb[ i++ ] = isc_dpb_user_name;
    len = strlen( user );
    dpb[ i++ ] = ( char ) len;
-   strncpy( &( dpb[ i ] ), user, len );
+   hb_strncpy( &( dpb[ i ] ), user, len );
    i += len;
    dpb[ i++ ] = isc_dpb_password;
    len = strlen( passwd );
    dpb[ i++ ] = len;
-   strncpy( &( dpb[ i ] ), passwd, len );
+   hb_strncpy( &( dpb[ i ] ), passwd, len );
    i += len;
 
    if( isc_attach_database( status, 0, db_connect, &db, i, dpb ) )
@@ -253,7 +253,7 @@ HB_FUNC( FBQUERY )
    PHB_ITEM aTemp;
    PHB_ITEM aNew;
 
-   strncpy( sel_str, hb_parcx( 2 ), sizeof( sel_str ) );
+   hb_strncpy( sel_str, hb_parcx( 2 ), sizeof( sel_str ) - 1 );
 
    if( ISPOINTER( 4 ) )
    {

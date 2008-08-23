@@ -217,12 +217,12 @@ HB_FUNC( VOLUME )
          {
             if( fname->szPath )
             {
-               strncpy( sRootBuf, fname->szPath, 3 );
+               hb_strncpy( sRootBuf, fname->szPath, 3 );
                sRoot = sRootBuf;
             }
             if( fname->szName )
             {
-               strncpy( sVolNameBuf, fname->szName, 11 );
+               hb_strncpy( sVolNameBuf, fname->szName, 11 );
                sVolName = sVolNameBuf;
             }
 
@@ -230,7 +230,7 @@ HB_FUNC( VOLUME )
          }
          else
          {
-            strncpy( sVolNameBuf, ( char * ) sDiskName, 11 );
+            hb_strncpy( sVolNameBuf, ( char * ) sDiskName, 11 );
             sVolName = sVolNameBuf;
          }
          if( fFree )

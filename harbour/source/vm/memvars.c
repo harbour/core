@@ -1299,8 +1299,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
          memset( buffer, 0, HB_MEM_REC_LEN );
 
          /* NOTE: Save only the first 10 characters of the name */
-         strncpy( ( char * ) buffer, pDynSymbol->pSymbol->szName, 10 );
-         buffer[ 10 ] = '\0';
+         hb_strncpy( ( char * ) buffer, pDynSymbol->pSymbol->szName, 10 );
 
          if( HB_IS_STRING( pItem ) && ( hb_itemGetCLen( pItem ) + 1 ) <= SHRT_MAX )
          {

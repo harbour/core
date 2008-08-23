@@ -466,7 +466,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       if( bFound )
       {
-         hb_strncpy( ffind->szName, info->entry.ff_name, _POSIX_PATH_MAX );
+         hb_strncpy( ffind->szName, info->entry.ff_name, sizeof( ffind->szName ) - 1 );
          ffind->size = info->entry.ff_fsize;
 
          raw_attr = info->entry.ff_attrib;
@@ -531,7 +531,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       
          stat( info->entry.achName, &sStat );
       
-         hb_strncpy( ffind->szName, info->entry.achName, _POSIX_PATH_MAX );
+         hb_strncpy( ffind->szName, info->entry.achName, sizeof( ffind->szName ) - 1 );
          ffind->size = sStat.st_size;
       
          raw_attr = info->entry.attrFile;
@@ -601,7 +601,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
          if( bFound )
          {
-            hb_strncpy( ffind->szName, info->pFindFileData.cFileName, _POSIX_PATH_MAX );
+            hb_strncpy( ffind->szName, info->pFindFileData.cFileName, sizeof( ffind->szName ) - 1 );
 
             if( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
                ffind->size = 0;
@@ -715,7 +715,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             if( stat( dirname, &sStat ) == 0 )
 #endif
             {
-               hb_strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
+               hb_strncpy( ffind->szName, info->entry->d_name, sizeof( ffind->szName ) - 1 );
                ffind->size = sStat.st_size;
 
                raw_attr = sStat.st_mode;

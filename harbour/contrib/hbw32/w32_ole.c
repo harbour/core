@@ -1660,7 +1660,7 @@ static void OleThrowError( void )
       // Intentional to avoid report of memory leak if fatal error.
       char *sTemp = hb_oleWideToAnsi( excep.bstrDescription );
       sDescription = (char *) malloc( strlen( sTemp ) + 1 );
-      strcpy( sDescription, sTemp );
+      hb_strncpy( sDescription, sTemp, strlen( sTemp ) );
       hb_xfree( sTemp );
    }
    else
@@ -1967,9 +1967,9 @@ OleGetID:
 
          sOleClassName = (char *) hb_xgrab( iClassNameLen + 1 + iMsgNameLen + 1 );
 
-         strncpy( sOleClassName, hb_parc( - 1 ), iClassNameLen );
+         hb_strncpy( sOleClassName, hb_parc( - 1 ), iClassNameLen );
          sOleClassName[ iClassNameLen ] = ':';
-         strcpy( sOleClassName + iClassNameLen + 1, hb_itemGetSymbol( hb_stackBaseItem() )->szName );
+         hb_strncpy( sOleClassName + iClassNameLen + 1, hb_itemGetSymbol( hb_stackBaseItem() )->szName, iMsgNameLen );
 
          //HB_TRACE(HB_TR_INFO, ("Class: '%s'\n", sOleClassName));
 
