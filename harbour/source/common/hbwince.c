@@ -204,7 +204,7 @@ DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
    LONG lret;
    LPBYTE lpData;
    DWORD dwType = REG_SZ, cbData;
-   TCHAR buf[MAX_PATH] = { 0 };
+   TCHAR buf[ MAX_PATH ] = { 0 };
    LPWSTR wname;
    LPSTR avalue;
 
@@ -213,7 +213,7 @@ DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
    if( lret != ERROR_SUCCESS )
    {
       if( value && size )
-         value[0] = '\0';
+         value[ 0 ] = '\0';
       return 0;
    }
 
@@ -227,7 +227,7 @@ DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
    if( lret != ERROR_SUCCESS )
    {
       if( value && size )
-         value[0] = '\0';
+         value[ 0 ] = '\0';
       hb_xfree( wname );
       return 0;
    }
@@ -260,7 +260,7 @@ BOOL WINAPI GetProcessTimes( HANDLE hprocess,
 BOOL WINAPI GetUserNameA( LPSTR buffer, LPDWORD len )
 {
    if( len && buffer )
-      buffer[0] = '\0';
+      buffer[ 0 ] = '\0';
 
    return FALSE;
 }
@@ -268,7 +268,7 @@ BOOL WINAPI GetUserNameA( LPSTR buffer, LPDWORD len )
 BOOL WINAPI GetComputerNameA( LPSTR buffer, LPDWORD len )
 {
    if( len && buffer )
-      buffer[0] = '\0';
+      buffer[ 0 ] = '\0';
 
    return FALSE;
 }
@@ -276,7 +276,7 @@ BOOL WINAPI GetComputerNameA( LPSTR buffer, LPDWORD len )
 DWORD WINAPI GetCurrentDirectoryA( DWORD len, LPSTR buffer )
 {
    if( len && buffer )
-      buffer[0] = '\0';
+      buffer[ 0 ] = '\0';
 
    return FALSE;
 }
@@ -466,7 +466,7 @@ HANDLE WINAPI FindFirstFileA( LPCSTR path, WIN32_FIND_DATAA * data )
    hb_xfree( wpath );
 
    mb = hb_wctomb( wdata.cFileName );
-   strcpy( data->cFileName, mb );
+   hb_strncpy( data->cFileName, mb, sizeof( data->cFileName ) - 1 );
    hb_xfree( mb );
    data->dwFileAttributes = wdata.dwFileAttributes;
    data->ftCreationTime = wdata.ftCreationTime;
@@ -486,7 +486,7 @@ BOOL WINAPI FindNextFileA( HANDLE handle, WIN32_FIND_DATAA * data )
 
    b = FindNextFileW( handle, &wdata );
    mb = hb_wctomb( wdata.cFileName );
-   strcpy( data->cFileName, mb );
+   hb_strncpy( data->cFileName, mb, sizeof( data->cFileName ) - 1 );
    hb_xfree( mb );
    data->dwFileAttributes = wdata.dwFileAttributes;
    data->ftCreationTime = wdata.ftCreationTime;
@@ -537,7 +537,7 @@ BOOL WINAPI GetVersionExA( OSVERSIONINFOA * v )
 
    b = GetVersionExW( &wv );
    mb = hb_wctomb( wv.szCSDVersion );
-   strcpy( v->szCSDVersion, mb );
+   hb_strncpy( v->szCSDVersion, mb, sizeof( v->szCSDVersion ) - 1 );
    hb_xfree( mb );
    v->dwOSVersionInfoSize = wv.dwOSVersionInfoSize;
    v->dwMajorVersion = wv.dwMajorVersion;
@@ -605,7 +605,7 @@ DWORD WINAPI GetTempPathA( DWORD size, LPSTR buffer )
 UINT WINAPI GetTempFileNameA( LPCSTR tmpdir, LPCSTR prefix, UINT unique, LPSTR filename )
 {
    LPWSTR wtmpdir, wprefix;
-   WCHAR wfilename[MAX_PATH] = { 0 };
+   WCHAR wfilename[ MAX_PATH ] = { 0 };
    UINT u;
 
    wtmpdir = hb_mbtowc( tmpdir );
