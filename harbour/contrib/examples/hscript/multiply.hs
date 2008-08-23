@@ -1,5 +1,9 @@
 <%
 /*
+ * $Id$
+ */
+
+/*
 *
 *  multiply.hs
 *  HarbourScript Test

@@ -25,8 +25,8 @@
 ######################################################################
 
 %define name      harbour-w32
-%define version   1.0.0
-%define releasen  0
+%define version   1.0.1
+%define releasen  dev
 %define hb_pref   hbw
 %define hb_ccpath /opt/xmingw/bin
 %define hb_ccpref i386-mingw32-

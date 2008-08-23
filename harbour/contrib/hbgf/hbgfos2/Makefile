@@ -14,7 +14,7 @@ C_SOURCES=\
 PRG_SOURCES=\
 	tform.prg \
 	tmenu.prg \
-	tmenuitm.prg \
+	tmenuit.prg \
 	winctrl.prg \
 	button.prg \
 	edit.prg \

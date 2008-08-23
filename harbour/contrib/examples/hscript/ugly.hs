@@ -1,4 +1,7 @@
 <% FUNCTION Start()
+/*
+ * $Id$
+ */
 
 /* Written by Felipe Coury <fcoury@flexsys-ci.com>
 * www - http://www.harbour-project.org

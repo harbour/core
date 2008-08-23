@@ -5,11 +5,11 @@
 ROOT = ../../
 
 C_SOURCES=\
-	asciisum.c \
-	ascpos.c \
+	asciisgt.c \
+	ascposgt.c \
 	atdiff.c \
 	chareven.c \
-	charmix.c \
+	charmixg.c \
 	charodd.c \
 	chrcount.c \
 	chrfirst.c \
@@ -17,7 +17,7 @@ C_SOURCES=\
 	strasint.c \
 	strcount.c \
 	strcspn.c \
-	strdiff.c \
+	strdiffg.c \
 	strexpan.c \
 	strleft.c \
 	strpbrk.c \

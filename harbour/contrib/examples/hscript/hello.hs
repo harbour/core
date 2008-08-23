@@ -1,5 +1,9 @@
 <%
 /*
+ * $Id$
+ */
+
+/*
 *
 *  hello.hs
 *  Famous "Hello World"!

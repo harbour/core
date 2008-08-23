@@ -8,6 +8,53 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-23 16:40 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbgt/Makefile
+   * contrib/hbgt/common.mak
+   - contrib/hbgt/strdiff.c
+   + contrib/hbgt/strdiffg.c
+   - contrib/hbgt/charmix.c
+   + contrib/hbgt/charmixg.c
+   - contrib/hbgt/asciisum.c
+   + contrib/hbgt/asciisgt.c
+   - contrib/hbgt/ascpos.c
+   + contrib/hbgt/ascposgt.c
+   * contrib/hbgf/hbgfos2/Makefile
+   - contrib/hbgf/hbgfos2/tmenuitm.prg
+   + contrib/hbgf/hbgfos2/tmenuit.prg
+     ! Some files renamed to collide with each other on 
+       non-GNU make systems.
+
+   * contrib/examples/hscript/cgi.ch
+   * contrib/examples/hscript/dir.hs
+   * contrib/examples/hscript/multiply.hs
+   * contrib/examples/hscript/ugly.hs
+   * contrib/examples/hscript/hello.hs
+   * contrib/examples/guestbk/guestbk.ini
+     + Added SVN headers.
+
+   + source/rtl/gtalleg/common.mak
+   + source/rtl/gtalleg/make_gcc.sh
+   + source/rtl/gtalleg/make_b32.bat
+   + source/rtl/gtalleg/make_vc.bat
+     + Added non-GNU make file as an ugly hack to 
+       build them on Windows systems.
+
+   - tests/altd.prg
+   + tests/altdtest.prg
+     * Rename.
+
+   * include/hbver.h
+   * harbour-ce-spec
+   * harbour-w32-spec
+   * harbour.spec
+     * Version changed to '1.0.1dev'.
+       Trunk will need to be synced to tag/1.0.
+
+   * common.mak
+     + Added version to harbour.dll: harbour-101-b32/vc.dll
+     ; Work in progress. Pls comment.
+
 2008-08-23 13:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    + contrib/hbnf/tests/ftgete.prg
      + Added test.
