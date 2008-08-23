@@ -645,6 +645,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbgt.a
 %{_libdir}/%{name}/libhbbmcdx.a
 %{_libdir}/%{name}/libhbclipsm.a
+%{_libdir}/%{name}/libhbmsql.a
+%{_libdir}/%{name}/libhbsqlit3.a
+%{_libdir}/%{name}/libhbtpathy.a
 
 %files lib
 %defattr(755,root,root,755)

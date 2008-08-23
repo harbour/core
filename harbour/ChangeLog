@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-23 12:52 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * harbour.spec
+    * added missing contrib libs needed to build rpm packages:
+      libhbmsql.a, libhbsqlit3.a, libhbtpathy.a
+
 2008-08-23 19:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/common/hbwince.c
      ! strcpy() -> hb_strncpy()
