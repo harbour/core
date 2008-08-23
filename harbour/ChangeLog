@@ -47,8 +47,8 @@
    * contrib/hbgf/hbgfos2/Makefile
    - contrib/hbgf/hbgfos2/tmenuitm.prg
    + contrib/hbgf/hbgfos2/tmenuit.prg
-     ! Some files renamed to collide with each other on 
-       non-GNU make systems.
+     ! Some files renamed to not collide with each other 
+       on non-GNU make systems.
 
    * contrib/examples/hscript/cgi.ch
    * contrib/examples/hscript/dir.hs
