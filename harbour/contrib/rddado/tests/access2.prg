@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 // Testing DbCreate() with Access database engine
 
 #include "adordd.ch"

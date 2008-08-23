@@ -80,7 +80,6 @@ PRG_HEADERS= \
 	wingdi.ch \
 	wininet.ch \
 	winstruc.ch \
-	wintypes.ch \
 	winuser.ch \
 
 # This lib needs xhb headers to compile, and this is 

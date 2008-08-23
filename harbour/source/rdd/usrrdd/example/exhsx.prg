@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include "dbinfo.ch"
 
 REQUEST HSXRDD

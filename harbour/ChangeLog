@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-23 16:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * tests/multifnc/t0.prg
+   * tests/multifnc/t1.prg
+   * tests/multifnc/t2.prg
+   * source/rdd/usrrdd/example/exmemo.prg
+   * source/rdd/usrrdd/example/exhsx.prg
+   * source/rdd/usrrdd/example/exfcm.prg
+   * source/rdd/usrrdd/example/exrlx.prg
+   * contrib/xhb/hbsyslog.c
+   * contrib/rddado/tests/mysql3.prg
+   * contrib/rddado/tests/access1.prg
+   * contrib/rddado/tests/access2.prg
+   * contrib/rddado/tests/mysql1.prg
+   * contrib/hbpgsql/tests/tstpgrdd.prg
+     ! SVN headers.
+
+   * contrib/hbwhat32/Makefile
+   * contrib/hbwhat32/common.mak
+   - contrib/hbwhat32/wintypes.ch
+     - Removed wintypes.ch, as it collides with a header with 
+       the same name (and similar content) in xhb. It will 
+       now use the xhb one, since it already relied on other 
+       xhb headers anyway.
+       If anyone wants to sort this out properly, pls do.
+
 2008-08-23 16:40 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbgt/Makefile
    * contrib/hbgt/common.mak

@@ -16,7 +16,6 @@ PRG_HEADERS = \
     wingdi.ch \
     wininet.ch \
     winstruc.ch \
-    wintypes.ch \
     winuser.ch \
 
 LIB_OBJS = \

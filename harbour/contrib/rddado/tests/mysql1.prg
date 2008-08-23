@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include "adordd.ch"
 
 REQUEST ADORDD

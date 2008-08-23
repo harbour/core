@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 // Testing LOCATE and CONTINUE
 
 #include "adordd.ch"
