@@ -8,6 +8,109 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-23 13:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/hbnf/tests/ftgete.prg
+     + Added test.
+
+   * contrib/hbwhat32/Makefile
+   * contrib/hbwhat32/common.mak
+   + contrib/hbwhat32/whtbmp.c
+   + contrib/hbwhat32/whtbrsh.c
+   + contrib/hbwhat32/whtcall.c
+   + contrib/hbwhat32/whtcdlg.c
+   + contrib/hbwhat32/whtclpb.c
+   + contrib/hbwhat32/whtcomm.c
+   + contrib/hbwhat32/whtcret.c
+   + contrib/hbwhat32/whtdate.c
+   + contrib/hbwhat32/whtdc.c
+   + contrib/hbwhat32/whtdir.c
+   + contrib/hbwhat32/whtdlg.c
+   + contrib/hbwhat32/whtdll.c
+   + contrib/hbwhat32/whtdraw.c
+   + contrib/hbwhat32/whtfont.c
+   + contrib/hbwhat32/whtgdi.c
+   + contrib/hbwhat32/whthead.c
+   + contrib/hbwhat32/whticon.c
+   + contrib/hbwhat32/whtilst.c
+   + contrib/hbwhat32/whtinet.c
+   + contrib/hbwhat32/whtini.c
+   + contrib/hbwhat32/whtkbrd.c
+   + contrib/hbwhat32/whtlv.c
+   + contrib/hbwhat32/whtmain.c
+   + contrib/hbwhat32/whtmapi.c
+   + contrib/hbwhat32/whtmem.c
+   + contrib/hbwhat32/whtmenu.c
+   + contrib/hbwhat32/whtmeta.c
+   + contrib/hbwhat32/whtmisc.c
+   + contrib/hbwhat32/whtmmcap.c
+   + contrib/hbwhat32/whtmous.c
+   + contrib/hbwhat32/whtmsg.c
+   + contrib/hbwhat32/whtpen.c
+   + contrib/hbwhat32/whtprn.c
+   + contrib/hbwhat32/whtrect.c
+   + contrib/hbwhat32/whtreg.c
+   + contrib/hbwhat32/whtrgn.c
+   + contrib/hbwhat32/whtscrlb.c
+   + contrib/hbwhat32/whtseria.c
+   + contrib/hbwhat32/whtshell.c
+   + contrib/hbwhat32/whtsock.c
+   + contrib/hbwhat32/whtsys.c
+   + contrib/hbwhat32/whttab.c
+   + contrib/hbwhat32/whttbar.c
+   + contrib/hbwhat32/whttext.c
+   + contrib/hbwhat32/whttree.c
+   + contrib/hbwhat32/whtview.c
+   + contrib/hbwhat32/whtwnd.c
+   - contrib/hbwhat32/_winbmp.c
+   - contrib/hbwhat32/_winbrsh.c
+   - contrib/hbwhat32/_wincall.c
+   - contrib/hbwhat32/_wincdlg.c
+   - contrib/hbwhat32/_winclpb.c
+   - contrib/hbwhat32/_wincomm.c
+   - contrib/hbwhat32/_wincret.c
+   - contrib/hbwhat32/_windate.c
+   - contrib/hbwhat32/_windc.c
+   - contrib/hbwhat32/_windir.c
+   - contrib/hbwhat32/_windlg.c
+   - contrib/hbwhat32/_windll.c
+   - contrib/hbwhat32/_windraw.c
+   - contrib/hbwhat32/_winfont.c
+   - contrib/hbwhat32/_wingdi.c
+   - contrib/hbwhat32/_winhead.c
+   - contrib/hbwhat32/_winicon.c
+   - contrib/hbwhat32/_winilst.c
+   - contrib/hbwhat32/_wininet.c
+   - contrib/hbwhat32/_winini.c
+   - contrib/hbwhat32/_winkbrd.c
+   - contrib/hbwhat32/_winlv.c
+   - contrib/hbwhat32/_winmain.c
+   - contrib/hbwhat32/_winmapi.c
+   - contrib/hbwhat32/_winmem.c
+   - contrib/hbwhat32/_winmenu.c
+   - contrib/hbwhat32/_winmeta.c
+   - contrib/hbwhat32/_winmisc.c
+   - contrib/hbwhat32/_winmmcap.c
+   - contrib/hbwhat32/_winmous.c
+   - contrib/hbwhat32/_winmsg.c
+   - contrib/hbwhat32/_winpen.c
+   - contrib/hbwhat32/_winprn.c
+   - contrib/hbwhat32/_winrect.c
+   - contrib/hbwhat32/_winreg.c
+   - contrib/hbwhat32/_winrgn.c
+   - contrib/hbwhat32/_winscrlb.c
+   - contrib/hbwhat32/_winserial.c
+   - contrib/hbwhat32/_winshell.c
+   - contrib/hbwhat32/_winsock.c
+   - contrib/hbwhat32/_winsys.c
+   - contrib/hbwhat32/_wintab.c
+   - contrib/hbwhat32/_wintbar.c
+   - contrib/hbwhat32/_wintext.c
+   - contrib/hbwhat32/_wintree.c
+   - contrib/hbwhat32/_winview.c
+   - contrib/hbwhat32/_winwnd.c
+     * Renamed hbwhat32 files to not have a leading underscore 
+       and long filenames.
+
 2008-08-23 11:38 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/pp/hbpp.c
    * source/vm/cmdarg.c
