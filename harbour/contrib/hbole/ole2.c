@@ -293,7 +293,7 @@ static void RetValue( void )
          break;
 
       case VT_DISPATCH:
-         hb_retnl( ( LONG ) s_RetVal.pdispVal );
+         hb_retptr( s_RetVal.pdispVal );
          break;
 
       case VT_I4:
@@ -333,7 +333,7 @@ static void RetValue( void )
          break;
 
       case VT_DISPATCH:
-         hb_retnl( ( LONG ) s_RetVal.n1.n2.n3.pdispVal );
+         hb_retptr( s_RetVal.n1.n2.n3.pdispVal );
          break;
 
       case VT_I4:
@@ -370,9 +370,9 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    void * pDisp = NULL; /* IDispatch */
    /* 'void *' used intentionally to inform compiler that there is no strict-aliasing */
 
-   if( s_bInitialized )
-      s_nOleError = S_OK;
-   else
+   s_nOleError = S_OK;
+
+   if( ! s_bInitialized )
    {
       s_nOleError = OleInitialize( NULL );
       s_bInitialized = TRUE;

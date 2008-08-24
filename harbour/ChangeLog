@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-24 20:40 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbole/ole2.c
+     ! Fixed GPF reported by Guillermo.
+       (introduced in 1.0.0rc2 when switching from parnl to 
+       parptr as 64-bit cleanup, two calls were missed from 
+       the update).
+     ! Fixed another potential problem.
+
 2008-08-24 18:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/compiler/cmdcheck.c
    * source/compiler/hbusage.c
