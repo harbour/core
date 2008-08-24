@@ -141,7 +141,7 @@ static DISPID lPropPut = DISPID_PROPERTYPUT;
 static UINT uArgErr;
 
 HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant );
-static PHB_ITEM SafeArrayToArray( SAFEARRAY *parray, UINT iDim, long* rgIndices, VARTYPE vt );
+static PHB_ITEM SafeArrayToArray( SAFEARRAY * parray, UINT iDim, long * rgIndices, VARTYPE vt );
 
 //---------------------------------------------------------------------------//
 HB_EXPORT BSTR hb_oleAnsiToSysString( const char * cString )
@@ -168,7 +168,7 @@ HB_EXPORT LPWSTR hb_oleAnsiToWide( LPSTR cString )
 
    if( nConvertedLen )
    {
-      LPWSTR wString = (LPWSTR) hb_xgrab( nConvertedLen * 2 + 1 );
+      LPWSTR wString = ( LPWSTR ) hb_xgrab( nConvertedLen * 2 + 1 );
 
       if( MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cString, -1, wString, nConvertedLen ) )
          return wString;
@@ -243,7 +243,7 @@ HB_FUNC( ANSITOWIDE )  // ( cAnsiStr ) -> cWideStr
       BSTR wString = hb_oleAnsiToWide( cString );
 
       if( wString )
-         hb_retclen_buffer( (char *) wString, SysStringLen( wString ) );
+         hb_retclen_buffer( ( char * ) wString, SysStringLen( wString ) );
    }
 }
 
@@ -254,7 +254,7 @@ HB_EXPORT LPSTR hb_oleWideToAnsi( BSTR wString )
 
    if( nConvertedLen )
    {
-      char *cString = (char *) hb_xgrab( nConvertedLen + 1 );
+      char * cString = ( char * ) hb_xgrab( nConvertedLen + 1 );
 
       if( WideCharToMultiByte( CP_ACP, 0, wString, -1, cString, nConvertedLen + 1, NULL, NULL ) )
          return cString;
@@ -317,7 +317,7 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
         sString = hb_itemGetCPtr( pItem );
 
         // Check for hidden signature of SafeArrayToArray().
-        if( (int) (pItem->item.asString.allocated - ulLen) >= 5 && // TOFIX
+        if( ( int ) ( pItem->item.asString.allocated - ulLen ) >= 5 && // TOFIX
             sString[ ulLen ] == 0x7A && sString[ ulLen + 1 ] == 0x7B && sString[ ulLen + 2 ] == 0x7C && sString[ ulLen + 3 ] == 0x7D )
         {
            vt = (VARTYPE) sString[ ulLen + 4 ];
@@ -326,10 +326,10 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
 
         if( bByRef )
         {
-           hb_itemPutCLConst( pItem, (char *) hb_oleAnsiToSysString( sString ), ulLen * 2 + 1 );
+           hb_itemPutCLConst( pItem, ( char * ) hb_oleAnsiToSysString( sString ), ulLen * 2 + 1 );
 
            pVariant->n1.n2.vt   = VT_BYREF | VT_BSTR;
-           pVariant->n1.n2.n3.pbstrVal = (BSTR *) &( pItem->item.asString.value ); // TOFIX
+           pVariant->n1.n2.n3.pbstrVal = ( BSTR * ) &( pItem->item.asString.value ); // TOFIX
            //wprintf( L"*** BYREF >%s<\n", *pVariant->n1.n2.n3.bstrVal );
         }
         else
@@ -345,7 +345,7 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
         if( bByRef )
         {
            pVariant->n1.n2.vt = VT_BYREF | VT_BOOL;
-           pVariant->n1.n2.n3.pboolVal = (short *) &( pItem->item.asLogical.value ) ; // TOFIX
+           pVariant->n1.n2.n3.pboolVal = ( short * ) &( pItem->item.asLogical.value ) ; // TOFIX
            *pVariant->n1.n2.n3.pboolVal = hb_itemGetL( pItem ) ? VARIANT_TRUE : VARIANT_FALSE;
            //pItem->type = HB_IT_LONG;
         }
@@ -373,7 +373,7 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
          if( bByRef )
          {
             pVariant->n1.n2.vt = VT_BYREF | VT_I4;
-            pVariant->n1.n2.n3.plVal = (long *) &( pItem->item.asInteger.value ) ; // TOFIX
+            pVariant->n1.n2.n3.plVal = ( long * ) &( pItem->item.asInteger.value ) ; // TOFIX
          }
          else
          {
@@ -387,7 +387,7 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
          if( bByRef )
          {
             pVariant->n1.n2.vt = VT_BYREF | VT_I4;
-            pVariant->n1.n2.n3.plVal = (long *) &( pItem->item.asLong.value ) ; // TOFIX
+            pVariant->n1.n2.n3.plVal = ( long * ) &( pItem->item.asLong.value ) ; // TOFIX
          }
          else
          {
@@ -460,7 +460,7 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
                hb_vmPush( pItem );
                hb_vmSend( 0 );
 
-               pDisp = (IDispatch *) hb_parnl( -1 );
+               pDisp = ( IDispatch * ) hb_parnl( -1 );
                pDisp->lpVtbl->AddRef( pDisp );
 
                //HB_TRACE(HB_TR_INFO, ("Dispatch: in: %s(%i)%ld\n", pDisp, __FILE__, __LINE__));
@@ -469,8 +469,8 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
                {
                   pVariant->n1.n2.vt = ( VT_DISPATCH | VT_BYREF );
                   // Hack!!! Using high 4 bytes of the union (llVal)
-                  *( (IDispatch **) ( &pVariant->n1.n2.n3.lVal ) + 1 ) = pDisp;
-                  pVariant->n1.n2.n3.ppdispVal = (IDispatch **) (&pVariant->n1.n2.n3.lVal ) + 1;
+                  *( ( IDispatch ** ) ( &pVariant->n1.n2.n3.lVal ) + 1 ) = pDisp;
+                  pVariant->n1.n2.n3.ppdispVal = ( IDispatch ** ) ( &pVariant->n1.n2.n3.lVal ) + 1;
                }
                else
                {
@@ -513,8 +513,8 @@ ItemToVariant_StringArray:
                   {
                      pVariant->n1.n2.vt = ( VT_ARRAY | VT_BYREF | vt );
                      // Hack!!! Using high 4 bytes of the union (llVal)
-                     *( (SAFEARRAY **) ( &pVariant->n1.n2.n3.lVal ) + 1 ) = parray;
-                     pVariant->n1.n2.n3.pparray = (SAFEARRAY **) (&pVariant->n1.n2.n3.lVal ) + 1;
+                     *( ( SAFEARRAY ** ) ( &pVariant->n1.n2.n3.lVal ) + 1 ) = parray;
+                     pVariant->n1.n2.n3.pparray = ( SAFEARRAY ** ) ( &pVariant->n1.n2.n3.lVal ) + 1;
                   }
                   else
                   {
@@ -523,7 +523,7 @@ ItemToVariant_StringArray:
                   }
 
                   for( i = 0; i < rgsabound.cElements; i++ )
-                     SafeArrayPutElement( parray, (LONG *) &i, &( sString[i]) );
+                     SafeArrayPutElement( parray, ( LONG * ) &i, &( sString[ i ] ) );
 
                   break;
                }
@@ -550,13 +550,13 @@ ItemToVariant_StringArray:
                switch( pVariant->n1.n2.vt )
                {
                   case VT_UNKNOWN:
-                     pVariant->n1.n2.n3.punkVal = (IUnknown *) hb_parptr( -1 );
+                     pVariant->n1.n2.n3.punkVal = ( IUnknown * ) hb_parptr( -1 );
                      break;
 
                   case ( VT_UNKNOWN | VT_BYREF ):
                      // Hack!!! Using high 4 bytes of the union (llVal)
-                     *( (IUnknown **) ( &pVariant->n1.n2.n3.lVal ) + 1 ) = (IUnknown *) hb_parptr( -1 );
-                     pVariant->n1.n2.n3.ppunkVal = (IUnknown **) (&pVariant->n1.n2.n3.lVal ) + 1;
+                     *( ( IUnknown ** ) ( &pVariant->n1.n2.n3.lVal ) + 1 ) = ( IUnknown * ) hb_parptr( -1 );
+                     pVariant->n1.n2.n3.ppunkVal = ( IUnknown ** ) ( &pVariant->n1.n2.n3.lVal ) + 1;
                      break;
 
                   default:
@@ -592,8 +592,8 @@ ItemToVariant_ProcessArray:
             {
                pVariant->n1.n2.vt = ( VT_ARRAY | VT_BYREF | vt );
                // Hack!!! Using high 4 bytes of the union (llVal)
-               *( (SAFEARRAY **) ( &pVariant->n1.n2.n3.lVal ) + 1 ) = parray;
-               pVariant->n1.n2.n3.pparray = (SAFEARRAY **) (&pVariant->n1.n2.n3.lVal ) + 1;
+               *( ( SAFEARRAY ** ) ( &pVariant->n1.n2.n3.lVal ) + 1 ) = parray;
+               pVariant->n1.n2.n3.pparray = ( SAFEARRAY ** ) ( &pVariant->n1.n2.n3.lVal ) + 1;
             }
             else
             {
@@ -604,7 +604,7 @@ ItemToVariant_ProcessArray:
             for( i = 0; i < rgsabound.cElements; i++ )
             {
                hb_oleItemToVariant( &mVariant, hb_arrayGetItemPtr( pItem, i + 1 ) );
-               SafeArrayPutElement( parray, (LONG *) &i, pSource );
+               SafeArrayPutElement( parray, ( LONG * ) &i, pSource );
                VariantClear( &mVariant );
             }
          }
@@ -800,11 +800,11 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
                  break;
 
                case VT_BYREF | VT_DATE:
-                 hb_itemPutDL( pItem, (long) ( *( pVariant->n1.n2.n3.pdblVal ) ) + 2415019 );
+                 hb_itemPutDL( pItem, ( long ) ( *( pVariant->n1.n2.n3.pdblVal ) ) + 2415019 );
                  break;
 
                case VT_DATE:
-                 hb_itemPutDL( pItem, (long) (pVariant->n1.n2.n3.dblVal) + 2415019 );
+                 hb_itemPutDL( pItem, ( long ) ( pVariant->n1.n2.n3.dblVal ) + 2415019 );
                  break;
 
                case VT_BYREF | VT_EMPTY:
@@ -822,7 +822,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
                     VARTYPE vt;
                     PHB_ITEM pArray;
                     UINT iDims = SafeArrayGetDim( *pVariant->n1.n2.n3.pparray );
-                    long *rgIndices = (long *) hb_xgrab( sizeof(long) * iDims );
+                    long * rgIndices = ( long * ) hb_xgrab( sizeof( long ) * iDims );
 
                     vt = pVariant->n1.n2.vt;
                     vt &= ~VT_ARRAY;
@@ -830,7 +830,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
 
                     pArray = SafeArrayToArray( *pVariant->n1.n2.n3.pparray, iDims, rgIndices, vt );
 
-                    hb_xfree( (void *) rgIndices );
+                    hb_xfree( ( void * ) rgIndices );
 
                     hb_itemForwardValue( pItem, pArray );
                     hb_itemRelease( pArray );
@@ -858,7 +858,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
 }
 
 //---------------------------------------------------------------------------//
-static PHB_ITEM SafeArrayToArray( SAFEARRAY *parray, UINT iDim, long* rgIndices, VARTYPE vt )
+static PHB_ITEM SafeArrayToArray( SAFEARRAY * parray, UINT iDim, long * rgIndices, VARTYPE vt )
 {
    long iFrom, iTo, iLen, i;
    PHB_ITEM pArray = hb_itemNew( NULL );
@@ -894,8 +894,8 @@ static PHB_ITEM SafeArrayToArray( SAFEARRAY *parray, UINT iDim, long* rgIndices,
    else
    {
       VARIANT mElem;
-      void *pTarget;
-      char *sArray = NULL;
+      void * pTarget;
+      char * sArray = NULL;
 
       VariantInit( &mElem );
 
@@ -911,7 +911,7 @@ static PHB_ITEM SafeArrayToArray( SAFEARRAY *parray, UINT iDim, long* rgIndices,
          {
             // Ugly hack, but needed to allocate our signature as hidden bytes!
             hb_itemPutC( pArray, NULL );
-            HB_STRING_ALLOC( pArray, (ULONG)(iLen + 5) );
+            HB_STRING_ALLOC( pArray, ( ULONG )( iLen + 5 ) );
             pArray->item.asString.length = iLen; // TOFIX
 
             sArray = hb_itemGetCPtr( pArray );
@@ -920,7 +920,7 @@ static PHB_ITEM SafeArrayToArray( SAFEARRAY *parray, UINT iDim, long* rgIndices,
             sArray[ iLen + 1 ] = 0x7B;
             sArray[ iLen + 2 ] = 0x7C;
             sArray[ iLen + 3 ] = 0x7D;
-            sArray[ iLen + 4 ] = (char)(vt);
+            sArray[ iLen + 4 ] = ( char ) vt;
 
             pTarget = NULL;
          }
@@ -965,7 +965,7 @@ static PHB_ITEM SafeArrayToArray( SAFEARRAY *parray, UINT iDim, long* rgIndices,
    // Wrap our array with VTArrayWrapper() class ( aArray := VTArrayWrapper( vt, aArray) )
    if( HB_IS_ARRAY( pArray ) && vt != VT_VARIANT )
    {
-      PHB_ITEM pVT = hb_itemPutNL( hb_itemNew( NULL ), (LONG) vt );
+      PHB_ITEM pVT = hb_itemPutNL( hb_itemNew( NULL ), ( LONG ) vt );
 
       hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_VTArrayWrapper ) );
       hb_vmPushNil();
@@ -1034,7 +1034,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
          if( pUnk )
          {
             IDispatch ** pDispPtr = &pDisp;
-            pUnk->lpVtbl->QueryInterface( pUnk, HB_ID_REF( REFIID, IID_IDispatch ), (void **) pDispPtr );
+            pUnk->lpVtbl->QueryInterface( pUnk, HB_ID_REF( REFIID, IID_IDispatch ), ( void ** ) pDispPtr );
          }
          // Intentionally fall through
 
@@ -1051,8 +1051,8 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
          {
             if( pUnk )
             {
-               PHB_ITEM pVT = hb_itemPutNL( hb_itemNew( NULL ), (LONG) pVariant->n1.n2.vt );
-               PHB_ITEM pUnknown = hb_itemPutPtr( hb_itemNew( NULL ), (void *) pUnk );
+               PHB_ITEM pVT = hb_itemPutNL( hb_itemNew( NULL ), ( LONG ) pVariant->n1.n2.vt );
+               PHB_ITEM pUnknown = hb_itemPutPtr( hb_itemNew( NULL ), ( void * ) pUnk );
 
                hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_VTWrapper ) );
                hb_vmPushNil();
@@ -1182,11 +1182,11 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
       }
 
       case VT_DATE | VT_BYREF:
-         hb_itemPutDL( pItem, (long) ( *pVariant->n1.n2.n3.pdblVal ) + 2415019 );
+         hb_itemPutDL( pItem, ( long ) ( *pVariant->n1.n2.n3.pdblVal ) + 2415019 );
          break;
 
       case VT_DATE:
-         hb_itemPutDL( pItem, (long) ( pVariant->n1.n2.n3.dblVal ) + 2415019 );
+         hb_itemPutDL( pItem, ( long ) ( pVariant->n1.n2.n3.dblVal ) + 2415019 );
          break;
 
       case VT_EMPTY | VT_BYREF:
@@ -1221,7 +1221,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
             if( parray )
             {
                iDims = SafeArrayGetDim( parray );
-               rgIndices = (long *) hb_xgrab( sizeof(long) * iDims );
+               rgIndices = ( long * ) hb_xgrab( sizeof( long ) * iDims );
 
                vt = pVariant->n1.n2.vt;
                vt &= ~VT_ARRAY;
@@ -1231,7 +1231,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
 
                pArray = SafeArrayToArray( parray, iDims, rgIndices, vt );
 
-               hb_xfree( (void *) rgIndices );
+               hb_xfree( ( void * ) rgIndices );
 
                hb_itemForwardValue( pItem, pArray );
                hb_itemRelease( pArray );
@@ -1285,7 +1285,7 @@ HB_FUNC( __OLEENUMSTOP )
 //---------------------------------------------------------------------------//
 HB_FUNC( OLESHOWEXCEPTION )
 {
-   if( (LONG) s_nOleError == DISP_E_EXCEPTION )
+   if( ( LONG ) s_nOleError == DISP_E_EXCEPTION )
    {
 #if defined( UNICODE )
       MessageBox( NULL, excep.bstrDescription, excep.bstrSource, MB_ICONHAND );
@@ -1306,14 +1306,14 @@ HB_FUNC( OLESHOWEXCEPTION )
 //---------------------------------------------------------------------------//
 HB_FUNC( OLEEXCEPTIONSOURCE )
 {
-   if( (LONG) s_nOleError == DISP_E_EXCEPTION )
+   if( ( LONG ) s_nOleError == DISP_E_EXCEPTION )
       hb_retc_buffer( hb_oleWideToAnsi( excep.bstrSource ) );
 }
 
 //---------------------------------------------------------------------------//
 HB_FUNC( OLEEXCEPTIONDESCRIPTION )
 {
-   if( (LONG) s_nOleError == DISP_E_EXCEPTION )
+   if( ( LONG ) s_nOleError == DISP_E_EXCEPTION )
       hb_retc_buffer( hb_oleWideToAnsi( excep.bstrDescription ) );
 }
 
@@ -1326,84 +1326,37 @@ HB_FUNC( OLEERROR )
 //---------------------------------------------------------------------------//
 static char * Ole2TxtError( void )
 {
-   switch( (LONG) s_nOleError )
+   switch( ( LONG ) s_nOleError )
    {
-      case S_OK:
-         return "S_OK";
+      case S_OK:                     return "S_OK";
+      case CO_E_CLASSSTRING:         return "CO_E_CLASSSTRING";
+      case OLE_E_WRONGCOMPOBJ:       return "OLE_E_WRONGCOMPOBJ";
+      case REGDB_E_CLASSNOTREG:      return "REGDB_E_CLASSNOTREG";
+      case REGDB_E_WRITEREGDB:       return "REGDB_E_WRITEREGDB";
+      case E_FAIL:                   return "E_FAIL";
+      case E_OUTOFMEMORY:            return "E_OUTOFMEMORY";
+      case E_NOTIMPL:                return "E_NOTIMPL";
+      case E_INVALIDARG:             return "E_INVALIDARG";
+      case E_UNEXPECTED:             return "E_UNEXPECTED";
+      case DISP_E_UNKNOWNNAME:       return "DISP_E_UNKNOWNNAME";
+      case DISP_E_UNKNOWNLCID:       return "DISP_E_UNKNOWNLCID";
+      case DISP_E_BADPARAMCOUNT:     return "DISP_E_BADPARAMCOUNT";
+      case DISP_E_BADVARTYPE:        return "DISP_E_BADVARTYPE";
+      case DISP_E_EXCEPTION:         return "DISP_E_EXCEPTION";
+      case DISP_E_MEMBERNOTFOUND:    return "DISP_E_MEMBERNOTFOUND";
+      case DISP_E_NONAMEDARGS:       return "DISP_E_NONAMEDARGS";
+      case DISP_E_OVERFLOW:          return "DISP_E_OVERFLOW";
+      case DISP_E_PARAMNOTFOUND:     return "DISP_E_PARAMNOTFOUND";
+      case DISP_E_TYPEMISMATCH:      return "DISP_E_TYPEMISMATCH";
+      case DISP_E_UNKNOWNINTERFACE:  return "DISP_E_UNKNOWNINTERFACE";
+      case DISP_E_PARAMNOTOPTIONAL:  return "DISP_E_PARAMNOTOPTIONAL";
+      case CO_E_SERVER_EXEC_FAILURE: return "CO_E_SERVER_EXEC_FAILURE";
+      case MK_E_UNAVAILABLE:         return "MK_E_UNAVAILABLE";
+   }
 
-      case CO_E_CLASSSTRING:
-         return "CO_E_CLASSSTRING";
+   HB_TRACE(HB_TR_INFO, ("TOleAuto Error %p\n", s_nOleError));
 
-      case OLE_E_WRONGCOMPOBJ:
-         return "OLE_E_WRONGCOMPOBJ";
-
-      case REGDB_E_CLASSNOTREG:
-         return "REGDB_E_CLASSNOTREG";
-
-      case REGDB_E_WRITEREGDB:
-         return "REGDB_E_WRITEREGDB";
-
-      case E_FAIL:
-         return "E_FAIL";
-
-      case E_OUTOFMEMORY:
-         return "E_OUTOFMEMORY";
-
-      case E_NOTIMPL:
-         return "E_NOTIMPL";
-
-      case E_INVALIDARG:
-         return "E_INVALIDARG";
-
-      case E_UNEXPECTED:
-         return "E_UNEXPECTED";
-
-      case DISP_E_UNKNOWNNAME:
-         return "DISP_E_UNKNOWNNAME";
-
-      case DISP_E_UNKNOWNLCID:
-         return "DISP_E_UNKNOWNLCID";
-
-      case DISP_E_BADPARAMCOUNT:
-         return "DISP_E_BADPARAMCOUNT";
-
-      case DISP_E_BADVARTYPE:
-         return "DISP_E_BADVARTYPE";
-
-      case DISP_E_EXCEPTION:
-         return "DISP_E_EXCEPTION";
-
-      case DISP_E_MEMBERNOTFOUND:
-         return "DISP_E_MEMBERNOTFOUND";
-
-      case DISP_E_NONAMEDARGS:
-         return "DISP_E_NONAMEDARGS";
-
-      case DISP_E_OVERFLOW:
-         return "DISP_E_OVERFLOW";
-
-      case DISP_E_PARAMNOTFOUND:
-         return "DISP_E_PARAMNOTFOUND";
-
-      case DISP_E_TYPEMISMATCH:
-         return "DISP_E_TYPEMISMATCH";
-
-      case DISP_E_UNKNOWNINTERFACE:
-         return "DISP_E_UNKNOWNINTERFACE";
-
-      case DISP_E_PARAMNOTOPTIONAL:
-         return "DISP_E_PARAMNOTOPTIONAL";
-
-      case CO_E_SERVER_EXEC_FAILURE:
-         return "CO_E_SERVER_EXEC_FAILURE";
-
-      case MK_E_UNAVAILABLE:
-         return "MK_E_UNAVAILABLE";
-
-      default:
-         HB_TRACE(HB_TR_INFO, ("TOleAuto Error %p\n", s_nOleError));
-         return "Unknown error";
-   };
+   return "Unknown error";
 }
 
 //---------------------------------------------------------------------------//
@@ -1415,19 +1368,19 @@ HB_FUNC( OLE2TXTERROR )
 //---------------------------------------------------------------------------//
 HB_FUNC( MESSAGEBOX )
 {
-   LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) ),
-          lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), lpStr1, lpStr2, hb_parni( 4 ) ) );
+   LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
+   LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   hb_retni( MessageBox( ( HWND ) hb_parnint( 1 ), lpStr1, lpStr2, hb_parni( 4 ) ) );
    HB_TCHAR_FREE( lpStr1 );
    HB_TCHAR_FREE( lpStr2 );
 }
 
 //---------------------------------------------------------------------------//
-HB_FUNC( CREATEOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
+HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 {
    BSTR bstrClassID;
    IID ClassID, iid;
-   LPIID riid = (LPIID) &IID_IDispatch;
+   LPIID riid = ( LPIID ) &IID_IDispatch;
    void *pDisp = NULL; // IDispatch
    /* void *
     * used intentionally to inform compiler that there is no
@@ -1436,9 +1389,9 @@ HB_FUNC( CREATEOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
    bstrClassID = hb_oleAnsiToSysString( hb_parcx( 1 ) );
 
    if( hb_parcx( 1 )[ 0 ] == '{' )
-      s_nOleError = CLSIDFromString( bstrClassID, (LPCLSID) &ClassID );
+      s_nOleError = CLSIDFromString( bstrClassID, ( LPCLSID ) &ClassID );
    else
-      s_nOleError = CLSIDFromProgID( bstrClassID, (LPCLSID) &ClassID );
+      s_nOleError = CLSIDFromProgID( bstrClassID, ( LPCLSID ) &ClassID );
 
    SysFreeString( bstrClassID );
 
@@ -1473,7 +1426,7 @@ HB_FUNC( GETOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
 {
    BSTR bstrClassID;
    IID ClassID, iid;
-   LPIID riid = (LPIID) &IID_IDispatch;
+   LPIID riid = ( LPIID ) &IID_IDispatch;
    IUnknown *pUnk = NULL;
    void *pDisp = NULL; // IDispatch
    /* void *
@@ -1484,9 +1437,9 @@ HB_FUNC( GETOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
    bstrClassID = hb_oleAnsiToSysString( hb_parcx( 1 ) );
 
    if( hb_parcx( 1 )[ 0 ] == '{' )
-      s_nOleError = CLSIDFromString( bstrClassID, (LPCLSID) &ClassID );
+      s_nOleError = CLSIDFromString( bstrClassID, ( LPCLSID ) &ClassID );
    else
-      s_nOleError = CLSIDFromProgID( bstrClassID, (LPCLSID) &ClassID );
+      s_nOleError = CLSIDFromProgID( bstrClassID, ( LPCLSID ) &ClassID );
 
    //s_nOleError = ProgIDFromCLSID( &ClassID, &pOleStr );
    //wprintf( L"Result %i ProgID: '%s'\n", s_nOleError, pOleStr );
@@ -1524,7 +1477,7 @@ HB_FUNC( GETOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
 }
 
 //---------------------------------------------------------------------------//
-HB_FUNC( OLEADDREF ) // (hOleObject, szMethodName, uParams...)
+HB_FUNC( OLEADDREF ) /* ( hOleObject, szMethodName, uParams... ) */
 {
    IDispatch *pDisp = ( IDispatch * ) hb_parnl( 1 );
 
@@ -1536,7 +1489,7 @@ HB_FUNC( OLEADDREF ) // (hOleObject, szMethodName, uParams...)
 }
 
 //---------------------------------------------------------------------------//
-HB_FUNC( OLERELEASEOBJECT ) // (hOleObject, szMethodName, uParams...)
+HB_FUNC( OLERELEASEOBJECT ) /* ( hOleObject, szMethodName, uParams... ) */
 {
    IDispatch *pDisp = ( IDispatch * ) hb_parnl( 1 );
 
@@ -1556,7 +1509,7 @@ static HRESULT OleSetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDis
    // 1 Based!!!
    if( ( ISBYREF( 1 ) ) || ISARRAY( 1 ) )
    {
-      memset( (LPBYTE) &excep, 0, sizeof( excep ) );
+      memset( ( LPBYTE ) &excep, 0, sizeof( excep ) );
 
       s_nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                            DispID,
@@ -1572,7 +1525,7 @@ static HRESULT OleSetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDis
          return s_nOleError;
    }
 
-   memset( (LPBYTE) &excep, 0, sizeof( excep ) );
+   memset( ( LPBYTE ) &excep, 0, sizeof( excep ) );
 
    s_nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                         DispID,
@@ -1593,7 +1546,7 @@ static HRESULT OleSetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDis
 //---------------------------------------------------------------------------//
 static HRESULT OleInvoke( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDispParams )
 {
-   memset( (LPBYTE) &excep, 0, sizeof( excep ) );
+   memset( ( LPBYTE ) &excep, 0, sizeof( excep ) );
 
    s_nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                         DispID,
@@ -1611,7 +1564,7 @@ static HRESULT OleInvoke( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDispPara
 //---------------------------------------------------------------------------//
 static HRESULT OleGetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDispParams )
 {
-   memset( (LPBYTE) &excep, 0, sizeof( excep ) );
+   memset( ( LPBYTE ) &excep, 0, sizeof( excep ) );
 
    s_nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                         DispID,
@@ -1658,8 +1611,8 @@ static void OleThrowError( void )
    if( s_nOleError == DISP_E_EXCEPTION )
    {
       // Intentional to avoid report of memory leak if fatal error.
-      char *sTemp = hb_oleWideToAnsi( excep.bstrDescription );
-      sDescription = (char *) malloc( strlen( sTemp ) + 1 );
+      char * sTemp = hb_oleWideToAnsi( excep.bstrDescription );
+      sDescription = ( char * ) malloc( strlen( sTemp ) + 1 );
       hb_strncpy( sDescription, sTemp, strlen( sTemp ) );
       hb_xfree( sTemp );
    }
@@ -1672,7 +1625,7 @@ static void OleThrowError( void )
 
    if( s_nOleError == DISP_E_EXCEPTION )
    {
-      free( (void *) sDescription );
+      free( ( void * ) sDescription );
    }
 
    if( pReturn )
@@ -1737,7 +1690,7 @@ HB_FUNC( TOLEAUTO__OLEVALUE )
 
 //---------------------------------------------------------------------------//
 
-HB_FUNC( TOLEAUTO_OLENEWENUMERATOR ) // (hOleObject, szMethodName, uParams...)
+HB_FUNC( TOLEAUTO_OLENEWENUMERATOR ) /* ( hOleObject, szMethodName, uParams... ) */
 {
    IDispatch *pDisp;
 
@@ -1791,7 +1744,7 @@ static HRESULT OleGetID( IDispatch *pDisp, const char *szName, DISPID *pDispID, 
    else*/ if( szName[0] == '_' && szName[1] && hb_pcount() >= 1 )
    {
       bstrMessage = hb_oleAnsiToSysString( szName + 1 );
-      s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ), (wchar_t **) &bstrMessage, 1, LOCALE_SYSTEM_DEFAULT, pDispID );
+      s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ), ( wchar_t ** ) &bstrMessage, 1, LOCALE_SYSTEM_DEFAULT, pDispID );
       SysFreeString( bstrMessage );
       //HB_TRACE(HB_TR_INFO, ("1. ID of: '%s' -> %i Result: %p\n", hb_itemGetSymbol( hb_stackBaseItem() )->szName + 1, DispID, s_nOleError));
 
@@ -1808,7 +1761,7 @@ static HRESULT OleGetID( IDispatch *pDisp, const char *szName, DISPID *pDispID, 
    {
       // Try again without removing the assign prefix (_).
       bstrMessage = hb_oleAnsiToSysString( szName );
-      s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ), (wchar_t **) &bstrMessage, 1, 0, pDispID );
+      s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ), ( wchar_t ** ) &bstrMessage, 1, 0, pDispID );
       SysFreeString( bstrMessage );
       //HB_TRACE(HB_TR_INFO, ("2. ID of: '%s' -> %i Result: %p\n", szName, *pDispID, s_nOleError));
    }
@@ -1965,7 +1918,7 @@ OleGetID:
          iClassNameLen = hb_parclen( -1 );
          iMsgNameLen = strlen( hb_itemGetSymbol( hb_stackBaseItem() )->szName );
 
-         sOleClassName = (char *) hb_xgrab( iClassNameLen + 1 + iMsgNameLen + 1 );
+         sOleClassName = ( char * ) hb_xgrab( iClassNameLen + 1 + iMsgNameLen + 1 );
 
          hb_strncpy( sOleClassName, hb_parc( - 1 ), iClassNameLen );
          sOleClassName[ iClassNameLen ] = ':';

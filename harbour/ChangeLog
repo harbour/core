@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-24 21:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbw32/w32_ole.c
+   * contrib/hbole/ole2.c
+     ! 64-bit fix for MessageBox() Harbour level functions.
+     * Formatting.
+
 2008-08-24 20:40 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbole/ole2.c
      ! Fixed GPF reported by Guillermo.

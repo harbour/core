@@ -131,7 +131,7 @@ static LPSTR WideToAnsi( LPWSTR cWide )
 
    wLen = WideCharToMultiByte( CP_ACP, 0, ( LPWSTR ) cWide, -1,
                                NULL, 0, NULL, NULL );
-   cString = ( LPSTR ) hb_xgrab( (!wLen) ? 2 : wLen );
+   cString = ( LPSTR ) hb_xgrab( wLen ? wLen : 2 );
    WideCharToMultiByte( CP_ACP, 0, ( LPWSTR ) cWide, -1,
                         cString, wLen, NULL, NULL );
    return cString;
@@ -163,9 +163,9 @@ static void GetParams( DISPPARAMS * dParams )
          {
             case '\0':
 #if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
-               pArgs[ n ].vt   = VT_EMPTY;
+               pArgs[ n ].vt = VT_EMPTY;
 #else
-               pArgs[ n ].n1.n2.vt   = VT_EMPTY;
+               pArgs[ n ].n1.n2.vt = VT_EMPTY;
 #endif
                break;
 
@@ -175,22 +175,22 @@ static void GetParams( DISPPARAMS * dParams )
                LPWSTR cString;
 
 #if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
-               pArgs[ n ].vt   = VT_BSTR;
+               pArgs[ n ].vt = VT_BSTR;
 #else
-               pArgs[ n ].n1.n2.vt   = VT_BSTR;
+               pArgs[ n ].n1.n2.vt = VT_BSTR;
 #endif
                cString = AnsiToWide( hb_parc( nArg ) );
 #if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
-               pArgs[ n ].bstrVal = SysAllocString( (OLECHAR *) cString );
+               pArgs[ n ].bstrVal = SysAllocString( ( OLECHAR * ) cString );
 #else
-               pArgs[ n ].n1.n2.n3.bstrVal = SysAllocString( (OLECHAR *) cString );
+               pArgs[ n ].n1.n2.n3.bstrVal = SysAllocString( ( OLECHAR * ) cString );
 #endif
                hb_xfree( cString );
                break;
             }
             case HB_IT_LOGICAL:
 #if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
-               pArgs[ n ].vt   = VT_BOOL;
+               pArgs[ n ].vt = VT_BOOL;
                pArgs[ n ].boolVal = hb_parl( nArg );
 #else
                pArgs[ n ].n1.n2.vt   = VT_BOOL;
@@ -202,29 +202,29 @@ static void GetParams( DISPPARAMS * dParams )
             case HB_IT_LONG:
             case HB_IT_NUMERIC:
 #if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
-               pArgs[ n ].vt   = VT_I4;
+               pArgs[ n ].vt = VT_I4;
                pArgs[ n ].lVal = hb_parnl( nArg );
 #else
-               pArgs[ n ].n1.n2.vt   = VT_I4;
+               pArgs[ n ].n1.n2.vt = VT_I4;
                pArgs[ n ].n1.n2.n3.lVal = hb_parnl( nArg );
 #endif
                break;
 
             case HB_IT_DOUBLE:
 #if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
-               pArgs[ n ].vt   = VT_R8;
+               pArgs[ n ].vt = VT_R8;
                pArgs[ n ].dblVal = hb_parnd( nArg );
 #else
-               pArgs[ n ].n1.n2.vt   = VT_R8;
+               pArgs[ n ].n1.n2.vt = VT_R8;
                pArgs[ n ].n1.n2.n3.dblVal = hb_parnd( nArg );
 #endif
                break;
             case HB_IT_DATE:
 #if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
-               pArgs[ n ].vt   = VT_DATE;
+               pArgs[ n ].vt = VT_DATE;
                pArgs[ n ].dblVal = DateToDbl( hb_pards( nArg ) );
 #else
-               pArgs[ n ].n1.n2.vt   = VT_DATE;
+               pArgs[ n ].n1.n2.vt = VT_DATE;
                pArgs[ n ].n1.n2.n3.dblVal = DateToDbl( hb_pards( nArg ) );
 #endif
                break;
@@ -273,7 +273,7 @@ static void FreeParams( DISPPARAMS * dParams )
       int n;
 
       for( n = 0; n < ( int ) dParams->cArgs; n++ )
-         VariantClear( &(dParams->rgvarg[ n ]) );
+         VariantClear( &( dParams->rgvarg[ n ] ) );
 
       hb_xfree( ( LPVOID ) dParams->rgvarg );
    }
@@ -315,7 +315,7 @@ static void RetValue( void )
 
       default:
          if( s_nOleError == S_OK )
-            s_nOleError = (HRESULT) -1;
+            s_nOleError = ( HRESULT ) -1;
            break;
    }
 
@@ -355,7 +355,7 @@ static void RetValue( void )
 
       default:
          if( s_nOleError == S_OK )
-            s_nOleError = (HRESULT) -1;
+            s_nOleError = ( HRESULT ) -1;
          break;
    }
 
@@ -383,13 +383,13 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    {
       LPWSTR cCLSID;
       GUID ClassID, iid;
-      LPIID riid = (LPIID) &IID_IDispatch;
+      LPIID riid = ( LPIID ) &IID_IDispatch;
 
       cCLSID = AnsiToWide( hb_parc( 1 ) );
       if( hb_parc( 1 )[ 0 ] == '{' )
-         s_nOleError = CLSIDFromString( ( LPOLESTR ) cCLSID, (LPCLSID) &ClassID );
+         s_nOleError = CLSIDFromString( ( LPOLESTR ) cCLSID, ( LPCLSID ) &ClassID );
       else
-         s_nOleError = CLSIDFromProgID( ( LPCOLESTR ) cCLSID, (LPCLSID) &ClassID );
+         s_nOleError = CLSIDFromProgID( ( LPCOLESTR ) cCLSID, ( LPCLSID ) &ClassID );
       hb_xfree( cCLSID );
 
       if( hb_pcount() == 2 )
@@ -416,13 +416,13 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 
 HB_FUNC( OLESHOWEXCEPTION )
 {
-   if( (LONG) s_nOleError == DISP_E_EXCEPTION )
+   if( ( LONG ) s_nOleError == DISP_E_EXCEPTION )
    {
 #if defined( UNICODE )
       MessageBox( NULL, s_excep.bstrDescription, s_excep.bstrSource, MB_ICONHAND );
 #else
-      LPSTR source = WideToAnsi( (LPWSTR) s_excep.bstrSource );
-      LPSTR description = WideToAnsi( (LPWSTR) s_excep.bstrDescription );
+      LPSTR source = WideToAnsi( ( LPWSTR ) s_excep.bstrSource );
+      LPSTR description = WideToAnsi( ( LPWSTR ) s_excep.bstrDescription );
       MessageBox( NULL, description, source, MB_ICONHAND );
       hb_xfree( source );
       hb_xfree( description );
@@ -430,7 +430,7 @@ HB_FUNC( OLESHOWEXCEPTION )
    }
 }
 
-HB_FUNC( OLEINVOKE ) /* (hOleObject, szMethodName, uParams...) */
+HB_FUNC( OLEINVOKE ) /* ( hOleObject, szMethodName, uParams... ) */
 {
    IDispatch * pDisp = ( IDispatch * ) hb_parptr( 1 );
    LPWSTR cMember;
@@ -439,7 +439,7 @@ HB_FUNC( OLEINVOKE ) /* (hOleObject, szMethodName, uParams...) */
    UINT uArgErr;
 
    VariantInit( &s_RetVal );
-   memset( (LPBYTE) &s_excep, 0, sizeof( s_excep ) );
+   memset( ( LPBYTE ) &s_excep, 0, sizeof( s_excep ) );
 
    cMember = AnsiToWide( hb_parc( 2 ) );
    s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ),
@@ -465,7 +465,7 @@ HB_FUNC( OLEINVOKE ) /* (hOleObject, szMethodName, uParams...) */
    RetValue();
 }
 
-HB_FUNC( OLESETPROPERTY ) /* (hOleObject, cPropName, uValue, uParams...) */
+HB_FUNC( OLESETPROPERTY ) /* ( hOleObject, cPropName, uValue, uParams... ) */
 {
    IDispatch * pDisp = ( IDispatch * ) hb_parptr( 1 );
    LPWSTR cMember;
@@ -475,7 +475,7 @@ HB_FUNC( OLESETPROPERTY ) /* (hOleObject, cPropName, uValue, uParams...) */
    UINT uArgErr;
 
    VariantInit( &s_RetVal );
-   memset( (LPBYTE) &s_excep, 0, sizeof( s_excep ) );
+   memset( ( LPBYTE ) &s_excep, 0, sizeof( s_excep ) );
 
    cMember = AnsiToWide( hb_parc( 2 ) );
 
@@ -505,7 +505,7 @@ HB_FUNC( OLESETPROPERTY ) /* (hOleObject, cPropName, uValue, uParams...) */
    }
 }
 
-HB_FUNC( OLEGETPROPERTY )  /* (hOleObject, cPropName, uParams...) */
+HB_FUNC( OLEGETPROPERTY ) /* ( hOleObject, cPropName, uParams... ) */
 {
    IDispatch * pDisp = ( IDispatch * ) hb_parptr( 1 );
    LPWSTR cMember;
@@ -514,7 +514,7 @@ HB_FUNC( OLEGETPROPERTY )  /* (hOleObject, cPropName, uParams...) */
    UINT uArgErr;
 
    VariantInit( &s_RetVal );
-   memset( (LPBYTE) &s_excep, 0, sizeof( s_excep ) );
+   memset( ( LPBYTE ) &s_excep, 0, sizeof( s_excep ) );
 
    cMember = AnsiToWide( hb_parc( 2 ) );
 
@@ -549,7 +549,7 @@ HB_FUNC( OLEERROR )
 
 HB_FUNC( OLE2TXTERROR )
 {
-   switch( (LONG) s_nOleError)
+   switch( ( LONG ) s_nOleError )
    {
       case S_OK:                      hb_retc( "S_OK" );                    break;
       case CO_E_CLASSSTRING:          hb_retc( "CO_E_CLASSSTRING" );        break;
@@ -597,7 +597,7 @@ HB_FUNC( GETOLEOBJECT )
 {
    BSTR wCLSID;
    IID ClassID, iid;
-   LPIID riid = (LPIID) &IID_IDispatch;
+   LPIID riid = ( LPIID ) &IID_IDispatch;
    IUnknown * pUnk = NULL;
    char * cOleName = hb_parc( 1 );
    void * pDisp = NULL; /* IDispatch */
@@ -605,12 +605,12 @@ HB_FUNC( GETOLEOBJECT )
 
    s_nOleError = S_OK;
 
-   wCLSID = (BSTR) AnsiToWide( (LPSTR)cOleName );
+   wCLSID = ( BSTR ) AnsiToWide( ( LPSTR ) cOleName );
 
    if( cOleName[ 0 ] == '{' )
-      s_nOleError = CLSIDFromString( wCLSID, (LPCLSID) &ClassID );
+      s_nOleError = CLSIDFromString( wCLSID, ( LPCLSID ) &ClassID );
    else
-      s_nOleError = CLSIDFromProgID( wCLSID, (LPCLSID) &ClassID );
+      s_nOleError = CLSIDFromProgID( wCLSID, ( LPCLSID ) &ClassID );
 
    hb_xfree( wCLSID );
 
@@ -619,7 +619,7 @@ HB_FUNC( GETOLEOBJECT )
       char * cID = hb_parc( 2 );
       if( cID[ 0 ] == '{' )
       {
-         wCLSID = (BSTR)AnsiToWide( (LPSTR)cID );
+         wCLSID = ( BSTR ) AnsiToWide( ( LPSTR ) cID );
          s_nOleError = CLSIDFromString( wCLSID, &iid );
          hb_xfree( wCLSID );
       }
@@ -644,7 +644,7 @@ HB_FUNC( MESSAGEBOX )
 {
    LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), lpStr1, lpStr2, hb_parni( 4 ) ) );
+   hb_retni( MessageBox( ( HWND ) hb_parnint( 1 ), lpStr1, lpStr2, hb_parni( 4 ) ) );
    HB_TCHAR_FREE( lpStr1 );
    HB_TCHAR_FREE( lpStr2 );
 }
