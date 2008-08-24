@@ -138,7 +138,7 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 /*******************************************************************************
 * ANSI C sprintf() for ANSI SQL with DATE, DATETIME, LOGICAL, NIL, NUMERIC
 * ------------------------------------------------------------------------
-*       cRes := Sql_sprintf( cFrm, ... ) or cRes := _Spd( cFrm, ... )
+*                      cRes := Sql_sprintf( cFrm, ... )
 *
 * Full compatible ANSI C99 formats with C,S converters wchar_t (UNICODE)
 * Integer & Floating point converters with Width and Precision for NUMERIC & STRING
@@ -330,7 +330,7 @@ HB_FUNC( SQL_SPRINTF )
                ulMaxBuf += f + DK_INCBUF;
                cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
             }
-            strcpy( cBuffer, cParFrm ); s = i;
+            hb_strncpy( cBuffer, cParFrm, i ); s = i;
 
          }else{   /* Par Item sprintf() Out */
 
@@ -451,7 +451,7 @@ HB_FUNC( SQL_SPRINTF )
             ulMaxRes += f + DK_INCRES;
             cRes = (char *)hb_xrealloc( cRes, ulMaxRes );
          }
-         strcpy( cRes + ulResPos, cBuffer ); ulResPos += s;
+         hb_strncpy( cRes + ulResPos, cBuffer, s ); ulResPos += s;
 
          if( (ulParPos = c - cItmFrm) >= ulItmFrm ){
             break;   /* No more Par Format */
