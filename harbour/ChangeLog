@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-24 18:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/compiler/cmdcheck.c
+   * source/compiler/hbusage.c
+     * Changed default .c code generation option to -gc0 (from -gc2).
+       So now the default is 'compact' (faster/smaller) instead of 
+       'verbose' (good to inspect/debug how Harbour pcode works).
+
+   * make_b32.mak
+   * make_gcc.mak
+   * make_vc.mak
+   * make_vcce.mak
+   * contrib/mtpl_b32.mak
+   * contrib/mtpl_gcc.mak
+   * contrib/mtpl_vc.mak
+     % Removed explicit -gc0 switches from Harbour command lines.
+
+   * make_vcce.mak
+     % Removed unnecessary -DHB_WINCE from Harbour command line.
+
 2008-08-24 13:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/runner.c
    * source/vm/fm.c

@@ -71,7 +71,7 @@ void hb_compPrintUsage( HB_COMP_DECL, char * szSelf )
            "\n          %cfs[-]           turn filename space trimming on or off (default)",
            "\n          %cg<type>         output type generated is <type> (see below)",
            "\n          %cgc[<type>]      output type: C source (.c) (default)",
-           "\n                           <type>: 0=compact 1=normal 2=verbose (default)",
+           "\n                           <type>: 0=compact (default) 1=normal 2=verbose",
            "\n                                   3=generate real C code",
            "\n          %cgo              output type: Platform dependant object module",
 #ifdef HB_GEN_W32_OBJ

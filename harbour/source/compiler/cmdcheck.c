@@ -264,7 +264,6 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
                            HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_REALCODE;
                            break;
 
-                        case '\0':
                         case '2':
                            HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_VERBOSE;
                            break;
@@ -273,6 +272,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
                            HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_NORMAL;
                            break;
 
+                        case '\0':
                         case '0':
                            HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_COMPACT;
                            break;
