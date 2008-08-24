@@ -167,7 +167,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       /* writes the symbol table */
       /* Generate the wrapper that will initialize local symbol table
        */
-      hb_strncpyUpper( szModulname, pFileName->szName, _POSIX_PATH_MAX );
+      hb_strncpyUpper( szModulname, pFileName->szName, sizeof( szModulname ) - 1 );
       /* replace non ID characters in name of local symbol table by '_' */
       {
          int iLen = strlen( szModulname ), i;

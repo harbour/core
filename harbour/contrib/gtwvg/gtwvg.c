@@ -2182,7 +2182,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                {
                   pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
 
-                  hb_strncpy( pWVT->fontFace, hb_arrayGetCPtr( pInfo->pNewVal, 1 ), LF_FACESIZE - 1 );
+                  hb_strncpy( pWVT->fontFace, hb_arrayGetCPtr( pInfo->pNewVal, 1 ), sizeof( pWVT->fontFace ) - 1 );
                   pWVT->fontHeight  = hb_arrayGetNI( pInfo->pNewVal, 2 );
                   pWVT->fontWidth   = hb_arrayGetNI( pInfo->pNewVal, 3 );
                   pWVT->fontWeight  = hb_arrayGetNI( pInfo->pNewVal, 4 );
@@ -2230,7 +2230,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutC( pInfo->pResult, pWVT->fontFace );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            hb_strncpy( pWVT->fontFace, hb_itemGetCPtr( pInfo->pNewVal ), LF_FACESIZE - 1 );
+            hb_strncpy( pWVT->fontFace, hb_itemGetCPtr( pInfo->pNewVal ), sizeof( pWVT->fontFace ) - 1 );
          }
          break;
 

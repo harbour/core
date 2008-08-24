@@ -7495,7 +7495,7 @@ static ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_
          hb_itemPutC( pItem, pData->szIndexExt[ 0 ] ? pData->szIndexExt : NTX_INDEXEXT );
          if( szNew )
          {
-            hb_strncpy( pData->szIndexExt, szNew, HB_MAX_FILE_EXT );
+            hb_strncpy( pData->szIndexExt, szNew, sizeof( pData->szIndexExt ) - 1 );
             hb_xfree( szNew );
          }
          break;

@@ -3076,7 +3076,7 @@ static int hb_gt_FindEntry( const char * pszID )
 
 HB_EXPORT void hb_gtSetDefault( const char * szGtName )
 {
-   hb_strncpy( s_gtNameBuf, szGtName, HB_GT_NAME_MAX_ );
+   hb_strncpy( s_gtNameBuf, szGtName, sizeof( s_gtNameBuf ) - 1 );
    s_defaultGT = s_gtNameBuf;
 }
 

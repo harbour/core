@@ -8,6 +8,40 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-24 13:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/vm/runner.c
+   * source/vm/fm.c
+   * source/common/hbver.c
+   * source/rtl/hbgtcore.c
+   * source/rtl/gtwvt/gtwvt.c
+   * source/rdd/dbfntx/dbfntx1.c
+   * source/rdd/workarea.c
+   * source/rdd/wacore.c
+   * source/rdd/sdf1.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/delim1.c
+   * source/rdd/dbf1.c
+   * source/rdd/wafunc.c
+   * source/rdd/dbffpt/dbffpt1.c
+   * source/compiler/hbmain.c
+   * source/compiler/fixflex.c
+   * source/compiler/gencobj.c
+   * source/compiler/genc.c
+   * source/compiler/harbour.yyc
+   * source/compiler/harbour.y
+   * contrib/hbct/disk.c
+   * contrib/hbwhat32/whtcdlg.c
+   * contrib/gtwvg/gtwvg.c
+   * contrib/rddads/adsfunc.c
+   * contrib/rddads/ads1.c
+   * contrib/hbbmcdx/bmdbfcdx.c
+   * contrib/examples/pp/hbppcomp.c
+     * hb_strncpy()/hb_strncat() size parameter changed from 
+       CONSTANT to 'sizeof( dest ) - 1', where applicable.
+     ! hbct/VOLUME() buffer overrun fixed.
+     ; NOTE: dbfntx1.c has a couple of places where I wasn't 
+             sure of the intention, so I left them unchanged.
+
 2008-08-24 11:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmisc/spd.c
      ! strcpy() -> hb_strncpy()

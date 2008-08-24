@@ -3434,7 +3434,7 @@ static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
          /* ADS can't handle a space-padded string--we have to trim it */
          hb_strncpyUpperTrim( ( char * ) pucTagName,
                               hb_itemGetCPtr( pOrderInfo->itmOrder ),
-                              ADS_MAX_TAG_NAME );
+                              sizeof( pucTagName ) - 1 );
          if( !pucTagName[ 0 ] )
          {
             pArea->hOrdCurrent = 0;
@@ -3623,7 +3623,7 @@ static ERRCODE adsOrderDestroy( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
 
       hb_strncpyUpperTrim( ( char * ) pucTagName,
                            hb_itemGetCPtr( pOrderInfo->itmOrder ),
-                           ADS_MAX_TAG_NAME );
+                           sizeof( pucTagName ) - 1 );
       u32RetVal = AdsGetIndexHandle( pArea->hTable, pucTagName, &hIndex );
 
       if( u32RetVal != AE_SUCCESS )
@@ -3670,7 +3670,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
 
          hb_strncpyUpperTrim( ( char * ) pucTagName,
                               hb_itemGetCPtr( pOrderInfo->itmOrder ),
-                              ADS_MAX_TAG_NAME );
+                              sizeof( pucTagName ) - 1 );
          u32RetVal = AdsGetIndexHandle( pArea->hTable, pucTagName, &hIndex );
       }
       else if( HB_IS_NUMERIC( pOrderInfo->itmOrder ) )

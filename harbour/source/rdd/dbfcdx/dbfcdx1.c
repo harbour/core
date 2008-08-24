@@ -3628,7 +3628,7 @@ static LPCDXTAG hb_cdxTagNew( LPCDXINDEX pIndex, char *szTagName, ULONG TagHdr )
 
    pTag = ( LPCDXTAG ) hb_xgrab( sizeof( CDXTAG ) );
    memset( pTag, 0, sizeof( CDXTAG ) );
-   hb_strncpyUpperTrim( szName, szTagName, CDX_MAXTAGNAMELEN );
+   hb_strncpyUpperTrim( szName, szTagName, sizeof( szName ) - 1 );
    pTag->szName = hb_strdup( szName );
    pTag->pIndex = pIndex;
    pTag->AscendKey = pTag->UsrAscend = TRUE;
@@ -5063,7 +5063,7 @@ static LPCDXTAG hb_cdxFindTag( CDXAREAP pArea, PHB_ITEM pTagItem,
    LPCDXINDEX pIndex = pArea->lpIndexes;
    BOOL fBag;
 
-   hb_strncpyUpperTrim( szTag, hb_itemGetCPtr( pTagItem ), CDX_MAXTAGNAMELEN );
+   hb_strncpyUpperTrim( szTag, hb_itemGetCPtr( pTagItem ), sizeof( szTag ) - 1 );
    if( ! szTag[0] )
       iFind = hb_itemGetNI( pTagItem );
 
@@ -7485,12 +7485,12 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 
    if ( pOrderInfo->atomBagName && pOrderInfo->atomBagName[0] )
    {
-      hb_strncpyUpperTrim( szTagName, ( char * ) pOrderInfo->atomBagName, CDX_MAXTAGNAMELEN );
+      hb_strncpyUpperTrim( szTagName, ( char * ) pOrderInfo->atomBagName, sizeof( szTagName ) - 1 );
       fNewFile = FALSE;
    }
    else
    {
-      hb_strncpy( szTagName, szCpndTagName, CDX_MAXTAGNAMELEN );
+      hb_strncpy( szTagName, szCpndTagName, sizeof( szTagName ) - 1 );
       fNewFile = TRUE;
    }
 
@@ -8541,7 +8541,7 @@ static ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
          hb_itemPutC( pItem, pData->szIndexExt[ 0 ] ? pData->szIndexExt : CDX_INDEXEXT );
          if( szNew )
          {
-            hb_strncpy( pData->szIndexExt, szNew, HB_MAX_FILE_EXT );
+            hb_strncpy( pData->szIndexExt, szNew, sizeof( pData->szIndexExt ) - 1 );
             hb_xfree( szNew );
          }
          break;

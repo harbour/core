@@ -220,7 +220,7 @@ HB_EXPORT USHORT hb_rddFieldIndex( AREAP pArea, const char * szName )
    if( *szName )
    {
       char szSym[ HB_SYMBOL_NAME_LEN + 1 ];
-      hb_strncpyUpperTrim( szSym, szName, HB_SYMBOL_NAME_LEN );
+      hb_strncpyUpperTrim( szSym, szName, sizeof( szSym ) - 1 );
 
       pField = pArea->lpFields;
       while( pField )
@@ -619,7 +619,7 @@ ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
     */
    if( szDriver && szDriver[ 0 ] )
    {
-      hb_strncpyUpper( szDriverBuffer, szDriver, HB_RDD_MAX_DRIVERNAME_LEN );
+      hb_strncpyUpper( szDriverBuffer, szDriver, sizeof( szDriverBuffer ) - 1 );
       szDriver = szDriverBuffer;
    }
    else
@@ -690,7 +690,7 @@ ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
 
    if( szDriver && szDriver[ 0 ] )
    {
-      hb_strncpyUpper( szDriverBuffer, szDriver, HB_RDD_MAX_DRIVERNAME_LEN );
+      hb_strncpyUpper( szDriverBuffer, szDriver, sizeof( szDriverBuffer ) - 1 );
       szDriver = szDriverBuffer;
    }
    else

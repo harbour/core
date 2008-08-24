@@ -100,15 +100,17 @@
 
 /* NOTE: The caller must free the returned buffer. [vszakats] */
 
+/* NOTE: Must be larger than 128, which is the maximum size of
+         osVer.szCSDVersion (Win32). [vszakats] */
+#define PLATFORM_BUF_SIZE 255
+
 char * hb_verPlatform( void )
 {
    char * pszPlatform;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_verPlatform()"));
 
-   /* NOTE: Must be larger than 128, which is the maximum size of
-            osVer.szCSDVersion (Win32). [vszakats] */
-   pszPlatform = ( char * ) hb_xgrab( 256 );
+   pszPlatform = ( char * ) hb_xgrab( PLATFORM_BUF_SIZE + 1 );
 
 #if defined(HB_OS_DOS)
 
@@ -135,7 +137,7 @@ char * hb_verPlatform( void )
             else
                snprintf( szHost, sizeof( szHost ), " (Windows %d.%02d)", regs.h.al, regs.h.ah );
 
-            hb_strncat( pszPlatform, szHost, 255 );
+            hb_strncat( pszPlatform, szHost, PLATFORM_BUF_SIZE );
          }
       }
 
@@ -146,7 +148,7 @@ char * hb_verPlatform( void )
          HB_DOS_INT86( 0x21, &regs, &regs );
 
          if( regs.HB_XREGS.bx == 0x3205 )
-            hb_strncat( pszPlatform, " (Windows NT/2000)", 255 );
+            hb_strncat( pszPlatform, " (Windows NT/2000)", PLATFORM_BUF_SIZE );
       }
 
       /* Host OS detection: OS/2 */
@@ -164,7 +166,7 @@ char * hb_verPlatform( void )
             else
                snprintf( szHost, sizeof( szHost ), " (OS/2 %d.%02d)", regs.h.al / 10, regs.h.ah );
 
-            hb_strncat( pszPlatform, szHost, 255 );
+            hb_strncat( pszPlatform, szHost, PLATFORM_BUF_SIZE );
          }
       }
    }
@@ -280,8 +282,8 @@ char * hb_verPlatform( void )
 
             if( osVer.szCSDVersion[ i ] != '\0' )
             {
-               hb_strncat( pszPlatform, " ", 255 );
-               hb_strncat( pszPlatform, osVer.szCSDVersion + i, 255 );
+               hb_strncat( pszPlatform, " ", PLATFORM_BUF_SIZE );
+               hb_strncat( pszPlatform, osVer.szCSDVersion + i, PLATFORM_BUF_SIZE );
             }
          }
       }
@@ -305,13 +307,13 @@ char * hb_verPlatform( void )
 #elif defined(HB_OS_MAC)
 
    {
-      hb_strncpy( pszPlatform, "MacOS compatible", 255 );
+      hb_strncpy( pszPlatform, "MacOS compatible", PLATFORM_BUF_SIZE );
    }
 
 #else
 
    {
-      hb_strncpy( pszPlatform, "(unknown)", 255 );
+      hb_strncpy( pszPlatform, "(unknown)", PLATFORM_BUF_SIZE );
    }
 
 #endif
@@ -350,6 +352,8 @@ HB_EXPORT BOOL hb_iswince( void )
 
 /* NOTE: The caller must free the returned buffer. [vszakats] */
 
+#define COMPILER_BUF_SIZE 79
+
 char * hb_verCompiler( void )
 {
    char * pszCompiler;
@@ -361,7 +365,7 @@ char * hb_verCompiler( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_verCompiler()"));
 
-   pszCompiler = ( char * ) hb_xgrab( 80 );
+   pszCompiler = ( char * ) hb_xgrab( COMPILER_BUF_SIZE + 1 );
    szSub[ 0 ] = '\0';
 
 #if defined(__IBMC__) || defined(__IBMCPP__)
@@ -528,21 +532,21 @@ char * hb_verCompiler( void )
          snprintf( pszCompiler, 80, "%s%s", pszName, szSub );
    }
    else
-      hb_strncpy( pszCompiler, "(unknown)", 79 );
+      hb_strncpy( pszCompiler, "(unknown)", COMPILER_BUF_SIZE );
 
 #if defined(__DJGPP__)
 
    snprintf( szSub, sizeof( szSub ), " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );
-   hb_strncat( pszCompiler, szSub, 79 );
+   hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE );
 
 #elif defined(__BORLANDC__) || defined(__WATCOMC__) || defined(__GNUC__)
 
    #if defined( HB_ARCH_16BIT )
-      hb_strncat( pszCompiler, " (16 bit)", 79 );
+      hb_strncat( pszCompiler, " (16 bit)", COMPILER_BUF_SIZE );
    #elif defined( HB_ARCH_32BIT )
-      hb_strncat( pszCompiler, " (32 bit)", 79 );
+      hb_strncat( pszCompiler, " (32 bit)", COMPILER_BUF_SIZE );
    #elif defined( HB_ARCH_64BIT )
-      hb_strncat( pszCompiler, " (64 bit)", 79 );
+      hb_strncat( pszCompiler, " (64 bit)", COMPILER_BUF_SIZE );
    #endif
 
 #endif
@@ -552,6 +556,11 @@ char * hb_verCompiler( void )
 
 /* NOTE: The caller must free the returned buffer. [vszakats] */
 
+/* NOTE: 
+   CA-Cl*pper 5.2e returns: "Clipper (R) 5.2e Intl. (x216)  (1995.02.07)"
+   CA-Cl*pper 5.3b returns: "Clipper (R) 5.3b Intl. (Rev. 338) (1997.04.25)"
+*/
+
 char * hb_verHarbour( void )
 {
    char * pszVersion;
@@ -559,12 +568,6 @@ char * hb_verHarbour( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_verHarbour()"));
 
    pszVersion = ( char * ) hb_xgrab( 80 );
-
-   /* NOTE: 
-      CA-Cl*pper 5.2e returns: "Clipper (R) 5.2e Intl. (x216)  (1995.02.07)"
-      CA-Cl*pper 5.3b returns: "Clipper (R) 5.3b Intl. (Rev. 338) (1997.04.25)"
-   */
-
    snprintf( pszVersion, 80, "Harbour %d.%d.%d%s Intl. (Rev. %d)",
              HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_STATUS,
              hb_verSvnID() );
@@ -579,7 +582,6 @@ char * hb_verPCode( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_verPCode()"));
 
    pszPCode = ( char * ) hb_xgrab( 24 );
-
    snprintf( pszPCode, 24, "PCode version: %d.%d",
              HB_PCODE_VER >> 8, HB_PCODE_VER & 0xff );
 

@@ -90,12 +90,12 @@ void fixup( char * inbuf, char * outbuf, int c_plus_plus )
    if( c_plus_plus )
    {
       /* If compiling for C++, the arrays need to be extern "C" in both modules */
-      static char tempbuf[ BUF_SIZE + 1 ];
-      hb_strncpy( tempbuf, "extern \"C\" ", BUF_SIZE );
-      hb_strncpy( outbuf, tempbuf, BUF_SIZE );
+      static char s_tempbuf[ BUF_SIZE + 1 ];
+      hb_strncpy( s_tempbuf, "extern \"C\" ", BUF_SIZE );
+      hb_strncpy( outbuf, s_tempbuf, BUF_SIZE );
       hb_strncat( outbuf, inbuf + 7, BUF_SIZE );
-      hb_strncat( tempbuf, inbuf + 7, BUF_SIZE );
-      hb_strncpy( inbuf, tempbuf, BUF_SIZE );
+      hb_strncat( s_tempbuf, inbuf + 7, BUF_SIZE );
+      hb_strncpy( inbuf, s_tempbuf, BUF_SIZE );
    }
    else
    {

@@ -524,16 +524,16 @@ static void pp_StreamBlockFinish( void )
    s_szLine[ 0 ] = '\0';
    if( s_TextStartFunc )
    {
-      hb_strncat( s_szLine, s_TextStartFunc, HB_PP_STR_SIZE - 1 );
+      hb_strncat( s_szLine, s_TextStartFunc, sizeof( s_szLine ) - 1 );
       hb_xfree( (void *)s_TextStartFunc );
       s_TextStartFunc = NULL;
    }
-   hb_strncat( s_szLine, "[", HB_PP_STR_SIZE - 1 );
-   hb_strncat( s_szLine, s_szOutLine, HB_PP_STR_SIZE - 1 );
-   hb_strncat( s_szLine, "]", HB_PP_STR_SIZE - 1 );
+   hb_strncat( s_szLine, "[", sizeof( s_szLine ) - 1 );
+   hb_strncat( s_szLine, s_szOutLine, sizeof( s_szLine ) - 1 );
+   hb_strncat( s_szLine, "]", sizeof( s_szLine ) - 1 );
    if( s_TextEndFunc )
    {
-      hb_strncat( s_szLine, s_TextEndFunc, HB_PP_STR_SIZE - 1 );
+      hb_strncat( s_szLine, s_TextEndFunc, sizeof( s_szLine ) - 1 );
       hb_xfree( (void *)s_TextEndFunc );
       s_TextEndFunc = NULL;
    }

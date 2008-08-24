@@ -1172,7 +1172,7 @@ HB_FUNC( ADSCREATESQLSTATEMENT )
                char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
 
                hb_strncpy( szAlias, ISCHAR( 1 ) ? hb_parc( 1 ) : "ADSSQL",
-                           HB_RDD_MAX_ALIAS_LEN );
+                           sizeof( szAlias ) - 1 );
                pArea->atomAlias = hb_rddAllocWorkAreaAlias( szAlias,
                                                             pArea->uiArea );
                if( pArea->atomAlias )

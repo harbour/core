@@ -105,15 +105,15 @@ static void hb_substenvvar( char * szLine )
          {
             ptr[ 0 ] = 0;
             ptr[ i ] = 0;
-            hb_strncpy( szBuf, szLine, HB_CFG_LINE_LEN );
+            hb_strncpy( szBuf, szLine, sizeof( szBuf ) - 1 );
             szVar = hb_getenv( ptr + 2 );
             if( szVar )
             {
-               hb_strncat( szBuf, szVar, HB_CFG_LINE_LEN );
+               hb_strncat( szBuf, szVar, sizeof( szBuf ) - 1 );
                hb_xfree( szVar );
             }
             j = strlen( szBuf );
-            hb_strncat( szBuf, &ptr[ i + 1 ], HB_CFG_LINE_LEN );
+            hb_strncat( szBuf, &ptr[ i + 1 ], sizeof( szBuf ) - 1 );
             hb_strncpy( szLine, szBuf, HB_CFG_LINE_LEN );
             ptr = szLine + j;
          }

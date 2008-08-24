@@ -231,7 +231,7 @@ HB_EXPORT void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
       * hb_xalloc/hb_xgrab
       */
       pMem->uiProcLine = hb_tr_line_; /* C line number */
-      hb_strncpy( pMem->szProcName, hb_tr_file_, HB_SYMBOL_NAME_LEN );
+      hb_strncpy( pMem->szProcName, hb_tr_file_, sizeof( pMem->szProcName ) - 1 );
    }
    else
    {
@@ -296,7 +296,7 @@ HB_EXPORT void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
       * hb_xalloc/hb_xgrab
       */
       pMem->uiProcLine = hb_tr_line_; /* C line number */
-      hb_strncpy( pMem->szProcName, hb_tr_file_, HB_SYMBOL_NAME_LEN );
+      hb_strncpy( pMem->szProcName, hb_tr_file_, sizeof( pMem->szProcName ) - 1 );
    }
    else
    {

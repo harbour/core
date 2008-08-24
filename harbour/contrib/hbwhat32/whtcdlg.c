@@ -237,7 +237,7 @@ HB_FUNC( _GETSAVEFILENAME )
 {
     OPENFILENAME ofn;
     char szFileName[ MAX_PATH + 1 ];
-    hb_strncpy( szFileName, hb_parc( 2 ), MAX_PATH );
+    hb_strncpy( szFileName, hb_parc( 2 ), sizeof( szFileName ) - 1 );
     ZeroMemory( &ofn, sizeof( ofn ) );
     ofn.hInstance       = GetModuleHandle(NULL);
     ofn.lStructSize     = sizeof(ofn);

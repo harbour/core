@@ -250,7 +250,7 @@ static ERRCODE hb_waAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    {
       ++szPtr;
    }
-   hb_strncpyUpperTrim( szFieldName, szPtr, HB_SYMBOL_NAME_LEN );
+   hb_strncpyUpperTrim( szFieldName, szPtr, sizeof( szFieldName ) - 1 );
    if( strlen( szFieldName ) == 0 )
       return FAILURE;
 
@@ -2180,7 +2180,7 @@ HB_EXPORT int hb_rddRegister( const char * szDriver, USHORT uiType )
    memset( pRddNewNode, 0, sizeof( RDDNODE ) );
 
    /* Fill the new RDD node */
-   hb_strncpy( pRddNewNode->szName, szDriver, HB_RDD_MAX_DRIVERNAME_LEN );
+   hb_strncpy( pRddNewNode->szName, szDriver, sizeof( pRddNewNode->szName ) - 1 );
    pRddNewNode->uiType = uiType;
    pRddNewNode->rddID = s_uiRddMax;
 
@@ -2242,7 +2242,7 @@ HB_EXPORT ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, 
    else
    {
       char szSuperName[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
-      hb_strncpyUpper( szSuperName, szDrvName, HB_RDD_MAX_DRIVERNAME_LEN );
+      hb_strncpyUpper( szSuperName, szDrvName, sizeof( szSuperName ) - 1 );
       pRddNode = hb_rddFindNode( szSuperName, NULL );
 
       if( !pRddNode )

@@ -349,10 +349,10 @@ HB_EXPORT const char * hb_rddDefaultDrv( const char * szDriver )
    {
       char szNewDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
 
-      hb_strncpyUpper( szNewDriver, szDriver, HB_RDD_MAX_DRIVERNAME_LEN );
+      hb_strncpyUpper( szNewDriver, szDriver, sizeof( szNewDriver ) - 1 );
       if( !hb_rddFindNode( szNewDriver, NULL ) )
          return NULL;
-      hb_strncpy( s_szDefDriver, szNewDriver, HB_RDD_MAX_DRIVERNAME_LEN );
+      hb_strncpy( s_szDefDriver, szNewDriver, sizeof( s_szDefDriver ) - 1 );
    }
    else if( !s_fInit && !s_szDefDriver[ 0 ] && hb_rddGetNode( 0 ) )
    {
@@ -363,7 +363,7 @@ HB_EXPORT const char * hb_rddDefaultDrv( const char * szDriver )
       {
          if( hb_rddFindNode( szDrvTable[ i ], NULL ) )
          {
-            hb_strncpy( s_szDefDriver, szDrvTable[ i ], HB_RDD_MAX_DRIVERNAME_LEN );
+            hb_strncpy( s_szDefDriver, szDrvTable[ i ], sizeof( s_szDefDriver ) - 1 );
             break;
          }
       }

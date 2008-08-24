@@ -459,7 +459,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
             {
                char szName[ HB_SYMBOL_NAME_LEN + 1 ];
 
-               hb_strncpy( szName, pSymRead[ ul ].szName, HB_SYMBOL_NAME_LEN );
+               hb_strncpy( szName, pSymRead[ ul ].szName, sizeof( szName ) - 1 );
                hb_hrbFreeSymbols( pSymRead, pHrbBody->ulSymbols );
                hb_hrbUnLoad( pHrbBody );
                hb_errRT_BASE( EG_ARG, 6101, "Unknown or unregistered symbol", szName, 0 );

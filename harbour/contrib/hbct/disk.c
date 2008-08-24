@@ -206,7 +206,7 @@ HB_FUNC( VOLUME )
       BYTE *sDiskName;
       char *sRoot = NULL;
       char *sVolName = NULL;
-      char sRootBuf[3], sVolNameBuf[12];
+      char sRootBuf[4], sVolNameBuf[12];
       BOOL fFree;
 
       if( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 )
@@ -217,12 +217,12 @@ HB_FUNC( VOLUME )
          {
             if( fname->szPath )
             {
-               hb_strncpy( sRootBuf, fname->szPath, 3 );
+               hb_strncpy( sRootBuf, fname->szPath, sizeof( sRootBuf ) - 1 );
                sRoot = sRootBuf;
             }
             if( fname->szName )
             {
-               hb_strncpy( sVolNameBuf, fname->szName, 11 );
+               hb_strncpy( sVolNameBuf, fname->szName, sizeof( sVolNameBuf ) - 1 );
                sVolName = sVolNameBuf;
             }
 
@@ -230,7 +230,7 @@ HB_FUNC( VOLUME )
          }
          else
          {
-            hb_strncpy( sVolNameBuf, ( char * ) sDiskName, 11 );
+            hb_strncpy( sVolNameBuf, ( char * ) sDiskName, sizeof( sVolNameBuf ) - 1 );
             sVolName = sVolNameBuf;
          }
          if( fFree )
@@ -255,7 +255,7 @@ HB_FUNC( VOLUME )
 /*
  * GetVolInfo() is a new function. It returns the volume name of a Floppy, CD,
  * Hard-disk or mapped network drive.
- * Sintax is: GetVolInfo("x:\")
+ * Syntax is: GetVolInfo("x:\")
  * Note that the trailing backslash is required.
  */
 HB_FUNC( GETVOLINFO )
