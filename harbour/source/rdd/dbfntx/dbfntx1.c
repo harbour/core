@@ -1588,7 +1588,7 @@ static LPTAGINFO hb_ntxTagLoad( LPNTXINDEX pIndex, ULONG ulBlock,
 static void hb_ntxIndexTagAdd( LPNTXINDEX pIndex, LPTAGINFO pTag )
 {
    LPCTXHEADER lpCTX = ( LPCTXHEADER ) pIndex->HeaderBuff;
-   int iTags = HB_GET_LE_UINT16( lpCTX->ntags ), i;
+   int iTags = HB_GET_LE_UINT16( lpCTX->ntags ), iLen, i;
    LPCTXTAGITEM pTagItem = ( LPCTXTAGITEM ) lpCTX->tags;
 
    for( i = 0; i < iTags; pTagItem++, i++ )
@@ -1600,7 +1600,11 @@ static void hb_ntxIndexTagAdd( LPNTXINDEX pIndex, LPTAGINFO pTag )
    {
       ++iTags;
       HB_PUT_LE_UINT16( lpCTX->ntags, iTags );
-      hb_strncpy( ( char * ) pTagItem->tag_name, pTag->TagName, NTX_MAX_TAGNAME );
+      iLen = ( int ) strlen( pTag->TagName );
+      if( iLen > NTX_MAX_TAGNAME )
+         iLen = NTX_MAX_TAGNAME;
+      memcpy( pTagItem->tag_name, pTag->TagName, iLen );
+      memset( pTagItem->tag_name + iLen, 0, sizeof( pTagItem->tag_name ) - iLen );
    }
    HB_PUT_LE_UINT32( pTagItem->tag_header, pTag->HeadBlock );
    pIndex->Update = TRUE;
@@ -1652,7 +1656,7 @@ static ERRCODE hb_ntxTagHeaderSave( LPTAGINFO pTag )
 {
    LPNTXINDEX pIndex = pTag->Owner;
    NTXHEADER Header;
-   int iSize = 12, type, version = 0;
+   int iSize = 12, type, version = 0, iLen;
    ULONG next = 0;
 
    if( pIndex->Compound )
@@ -1708,11 +1712,24 @@ static ERRCODE hb_ntxTagHeaderSave( LPTAGINFO pTag )
       Header.unique[0]  = pTag->UniqueKey ? 1 : 0;
       Header.descend[0] = pTag->AscendKey ? 0 : 1;
       Header.custom[0]  = pTag->Custom    ? 1 : 0;
-      hb_strncpy( ( char * ) Header.key_expr, pTag->KeyExpr, NTX_MAX_EXP );
+      iLen = ( int ) strlen( pTag->KeyExpr );
+      if( iLen > NTX_MAX_EXP )
+         iLen = NTX_MAX_EXP;
+      memcpy( Header.key_expr, pTag->KeyExpr, iLen );
       if( pTag->ForExpr )
-         hb_strncpy( ( char * ) Header.for_expr, pTag->ForExpr, NTX_MAX_EXP );
+      {
+         iLen = ( int ) strlen( pTag->ForExpr );
+         if( iLen > NTX_MAX_EXP )
+            iLen = NTX_MAX_EXP;
+         memcpy( Header.for_expr, pTag->ForExpr, iLen );
+      }
       if( pTag->fTagName )
-         hb_strncpy( ( char * ) Header.tag_name, pTag->TagName, NTX_MAX_TAGNAME );
+      {
+         iLen = ( int ) strlen( pTag->TagName );
+         if( iLen > NTX_MAX_TAGNAME )
+            iLen = NTX_MAX_TAGNAME;
+         memcpy( Header.tag_name, pTag->TagName, iLen );
+      }
       iSize = sizeof( NTXHEADER );
    }
 

@@ -1605,6 +1605,7 @@ static void OleThrowError( void )
 {
    PHB_ITEM pReturn;
    char *sDescription;
+   BOOL fFree = FALSE;
 
    hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_cClassName ) );
    hb_vmPush( hb_stackSelfItem() );
@@ -1612,11 +1613,8 @@ static void OleThrowError( void )
 
    if( s_nOleError == DISP_E_EXCEPTION )
    {
-      // Intentional to avoid report of memory leak if fatal error.
-      char * sTemp = hb_oleWideToAnsi( excep.bstrDescription );
-      sDescription = ( char * ) malloc( strlen( sTemp ) + 1 );
-      hb_strncpy( sDescription, sTemp, strlen( sTemp ) );
-      hb_xfree( sTemp );
+      sDescription = hb_oleWideToAnsi( excep.bstrDescription );
+      fFree = TRUE;
    }
    else
       sDescription = Ole2TxtError();
@@ -1625,9 +1623,9 @@ static void OleThrowError( void )
 
    pReturn = hb_errRT_SubstParams( hb_parcx( -1 ), EG_OLEEXECPTION, (ULONG) s_nOleError, sDescription, hb_itemGetSymbol( hb_stackBaseItem() )->szName );
 
-   if( s_nOleError == DISP_E_EXCEPTION )
+   if( fFree )
    {
-      free( ( void * ) sDescription );
+      hb_xfree( ( void * ) sDescription );
    }
 
    if( pReturn )

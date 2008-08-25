@@ -151,7 +151,7 @@ HB_FUNC( FT_GETE )
          /* add 1 more byte for final nul character */
          buffsize++;
          /* now allocate that much memory and make sure 1st byte is a nul */
-         buffer = ( char * ) hb_xalloc( buffsize + 1 );
+         buffer = ( char * ) hb_xgrab( buffsize + 1 );
          buffer[0] = '\0';
       }
 
@@ -218,7 +218,7 @@ HB_FUNC( FT_GETE )
          buffsize++;
 
          /* now allocate that much memory and make sure 1st byte is a nul */
-         buffer = ( char * ) hb_xalloc( buffsize + 1 );
+         buffer = ( char * ) hb_xgrab( buffsize + 1 );
          buffer[0] = '\0';
       }
       x = 0;

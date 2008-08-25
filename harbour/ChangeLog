@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-25 20:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbw32/w32_ole.c
+    * removed hack with malloc()/free() directly used to avoid
+      memory leak reports - it's not necessary in Harbour.
+
+  * harbour/contrib/hbfbird/firebird.c
+  * harbour/contrib/examples/pp/hbppcore.c
+    ! fixed buffer size calculation in hbstrnc*() functions
+
+  * harbour/contrib/hbziparch/hbzipnew.cpp
+    % use hb_strdup() instead of hb_xgrab()/hb_strncpy()
+
+  * harbour/contrib/hbnf/getenvrn.c
+    ! use hb_xgrab() instead of hb_xalloc() - the returned value
+      was not checked and internal error is for sure better then
+      GPF on NULL pointer
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    ! use memcpy() instead of hb_strncpy() to avoid problems when
+      there is no place for tailing 0
+
 2008-08-25 19:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbsetup.h
      ! Fixed problem where Darwin autodetection went wrong 

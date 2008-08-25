@@ -117,11 +117,15 @@ HB_FUNC( FBCONNECT )
    dpb[ i++ ] = isc_dpb_version1;
    dpb[ i++ ] = isc_dpb_user_name;
    len = strlen( user );
+   if( len > ( int ) ( sizeof( dpb ) - i - 4 ) )
+      len = ( int ) ( sizeof( dpb ) - i - 4 );
    dpb[ i++ ] = ( char ) len;
    hb_strncpy( &( dpb[ i ] ), user, len );
    i += len;
    dpb[ i++ ] = isc_dpb_password;
    len = strlen( passwd );
+   if( len > ( int ) ( sizeof( dpb ) - i - 2 ) )
+      len = ( int ) ( sizeof( dpb ) - i - 2 );
    dpb[ i++ ] = len;
    hb_strncpy( &( dpb[ i ] ), passwd, len );
    i += len;

@@ -2178,7 +2178,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
    
    maxlenreal = HB_PP_STR_SIZE;
    if( s_expreal == NULL )
-      s_expreal = ( char * ) hb_xgrab( maxlenreal );
+      s_expreal = ( char * ) hb_xgrab( maxlenreal + 1 );
       
    /* Copying a match pattern to 'exppatt' */
    lenpatt = stroncpy( exppatt, *ptrmp, 4 );
@@ -2376,7 +2376,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
                      if( ! com_or_tra )
                      {
                         /* translate */
-                        hb_strncpy( s_expreal + 1, *ptri, lenreal );
+                        hb_strncpy( s_expreal + 1, *ptri, HB_PP_STR_SIZE - 1 );
                         s_expreal[0] = '&';
                         s_expreal[lenreal + 1] = '\0';
                         *ptri += lenreal;
@@ -2406,7 +2406,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
                          * is preprocessed into:
                          * &a ++( b )
                         */
-                           hb_strncpy( s_expreal + 1, *ptri, lenreal );
+                           hb_strncpy( s_expreal + 1, *ptri, HB_PP_STR_SIZE - 1 );
                            s_expreal[0] = '&';
                            s_expreal[lenreal + 1] = '\0';
                            *ptri += lenreal;
