@@ -105,8 +105,10 @@
        wants to compile a mingw build using cygwin, this option 
        should be explicitly specified as C_USR/L_USR and 'gcc' 
        should be used as a compiler. But this setup is barely 
-       supported in Harbour, so don't expect it work.
-       (Rather, install MinGW)
+       supported in Harbour, so don't expect it to work.
+       This option may also be needed to compile Harbour using 
+       Cygnus MinGW32 2.95.
+       (Rather, install MinGW 3.x or newer)
 
 2008-08-25 20:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * utils/hbmake/hbmake.prg
