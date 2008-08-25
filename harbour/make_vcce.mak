@@ -195,7 +195,7 @@ LDFLAGS        = /DEBUG $(LDFLAGS)
 LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 !endif
 
-STANDARD_SYSLIBS = coredll.lib corelibc.lib winsock.lib ws2.lib gdi32.lib
+STANDARD_SYSLIBS = coredll.lib corelibc.lib winsock.lib ws2.lib
 
 #**********************************************************
 # COMPILE Rules

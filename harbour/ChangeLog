@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-25 21:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_vcce.mak
+     ! Fixed system library list to not contain gdi32.lib.
+       This lib was previously used for harbour.dll generation, 
+       so I wonder if it was correct, but probably not.
+       It would be great if someone could try an MSVC WinCE .dll
+       build using the option:
+       set HB_BUILD_DLL=yes
+
 2008-08-25 20:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * config/w32/mingw32.cf
      % -mno-cygwin options removed. No longer needed. If someone 
