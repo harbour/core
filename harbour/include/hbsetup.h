@@ -312,12 +312,6 @@
    #endif
 #endif
 
-#ifndef HB_OS_MAC
-   #if defined(__MPW__)
-      #define HB_OS_MAC
-   #endif
-#endif
-
 #ifndef HB_OS_DARWIN
    #if defined(__APPLE__)
       #define HB_OS_DARWIN

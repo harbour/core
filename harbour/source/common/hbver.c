@@ -299,12 +299,6 @@ char * hb_verPlatform( void )
       snprintf( pszPlatform, 256, "%s %s %s", un.sysname, un.release, un.machine );
    }
 
-#elif defined(HB_OS_MAC)
-
-   {
-      hb_strncpy( pszPlatform, "MacOS compatible", PLATFORM_BUF_SIZE );
-   }
-
 #else
 
    {
