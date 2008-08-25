@@ -36,8 +36,8 @@
 
 #if defined( HB_OS_UNIX_COMPATIBLE )
    #define HB_NULL_STR " > /dev/null"
-#elif defined( OS_DOS_COMPATIBLE )
-   #define HB_NULL_STR " >nul"      
+#else
+   #define HB_NULL_STR " >nul"
 #endif
 
 /*--------------------------------------------------------------------------*/
@@ -135,10 +135,8 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    char buffer[ HB_CFG_LINE_LEN * 2 + 1024 ];
 #if defined( HB_OS_UNIX_COMPATIBLE )
    char * pszEnv = hb_strdup( "/etc:/usr/local/etc" );
-#elif defined( OS_DOS_COMPATIBLE )
-   char * pszEnv = hb_getenv( "PATH" );
 #else
-   char * pszEnv = NULL;
+   char * pszEnv = hb_getenv( "PATH" );
 #endif
    char * pszCfgFileName = hb_getenv( "HB_CFG_FILE" );
    FILE * filecfg;

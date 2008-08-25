@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-25 19:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbsetup.h
+     ! Fixed problem where Darwin autodetection went wrong 
+       between 1.0.0rc2 -> 1.0.0.
+     * HB_OS_DARWIN added to the HB_OS_UNIX detection list.
+       (no functional difference, just makes it more clear.)
+     % HB_OS_OS2_EMX removed. It was unused.
+
+   * source/compiler/gencobj.c
+   * include/hbsetup.h
+     % Removed OS_DOS_COMPATIBLE.
+       It's equivalent to !defined(HB_OS_UNIX_COMPATIBLE).
+
 2008-08-25 18:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/common/hbver.c
      ! Fix to commit '2008-07-11 18:20 UTC+0200' which 

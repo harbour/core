@@ -212,7 +212,6 @@
    #define HB_OS_EOL_LEN                1
 #else
    /* we are assuming here the DOS compatible OS */
-   #define OS_DOS_COMPATIBLE
    #define HB_OS_PATH_LIST_SEP_CHR      ';'
    #define HB_OS_PATH_DELIM_CHR         '\\'
    #define HB_OS_PATH_DELIM_CHR_STRING  "\\"
@@ -268,19 +267,12 @@
    #endif
 #endif
 
-/* ***********************************************************************
- *  Detect GCC/OS2
- */
 #if defined(__EMX__) && ! defined(__RSXNT__)
    #define HB_OS_OS2_GCC
 #endif
-
 #ifndef HB_OS_OS2
    #if defined(OS2) || defined(__OS2__) || defined(OS_2) || defined(HB_OS_OS2_GCC)
       #define HB_OS_OS2
-      #if defined(__EMX__)
-         #define HB_OS_OS2_EMX
-      #endif
    #endif
 #endif
 
@@ -320,9 +312,14 @@
    #endif
 #endif
 
+#ifndef HB_OS_MAC
+   #if defined(__MPW__)
+      #define HB_OS_MAC
+   #endif
+#endif
+
 #ifndef HB_OS_DARWIN
-   #if defined(__APPLE__) && \
-       ( defined(unix) || defined(__unix) || defined(__unix__) )
+   #if defined(__APPLE__)
       #define HB_OS_DARWIN
    #endif
 #endif
@@ -335,15 +332,13 @@
 #endif
 
 #ifndef HB_OS_UNIX
-   #if defined(HB_OS_UNIX_COMPATIBLE) || defined(HB_OS_LINUX) || \
-       defined(HB_OS_BSD) || defined(HB_OS_SUNOS) || defined(HB_OS_HPUX)
+   #if defined(HB_OS_UNIX_COMPATIBLE) || \
+       defined(HB_OS_LINUX) || \
+       defined(HB_OS_DARWIN) || \
+       defined(HB_OS_BSD) || \
+       defined(HB_OS_SUNOS) || \
+       defined(HB_OS_HPUX)
       #define HB_OS_UNIX
-   #endif
-#endif
-
-#ifndef HB_OS_MAC
-   #if defined(__MPW__)
-      #define HB_OS_MAC
    #endif
 #endif
 
