@@ -1370,7 +1370,9 @@ HB_FUNC( MESSAGEBOX )
 {
    LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    LPTSTR lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
-   hb_retni( MessageBox( ( HWND ) hb_parnint( 1 ), lpStr1, lpStr2, hb_parni( 4 ) ) );
+   HWND hWnd = ISNUM( 1 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) :
+                            ( HWND ) hb_parptr( 1 );
+   hb_retni( MessageBox( hWnd, lpStr1, lpStr2, hb_parni( 4 ) ) );
    HB_TCHAR_FREE( lpStr1 );
    HB_TCHAR_FREE( lpStr2 );
 }

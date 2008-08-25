@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-25 16:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/hvm.c
+    ! fixed _FIELD indirectly used as alias, f.e.:
+         ? ("_FIELD")->NAME
+      or:
+         M->var := "_FIELD"
+         ? ("&var")->NAME
+
+  * harbour/include/hbclass.ch
+  * harbour/include/common.ch
+    * use a little bit simpler form for HB_SYMBOL_UNUSED()
+
+  * harbour/contrib/hbw32/w32_ole.c
+  * harbour/contrib/hbole/ole2.c
+    ! fixed numeric to pointer casting
+    * accept both pointer and numeric values as window handle
+      for easier code migration
+
 2008-08-25 14:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/cmdarg.c
      ! hb_hInstance, hb_hPrevInstance, s_iCmdShow, s_WinMainParam

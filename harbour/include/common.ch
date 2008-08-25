@@ -82,7 +82,7 @@
    optimized out by the compiler, so it won't cause any overhead. 
    It can be used in codeblocks, too. */
 /* Please keep it synced with the similar #define in hbclass.ch */
-#define HB_SYMBOL_UNUSED( symbol )  ( symbol := ( symbol ) )
+#define HB_SYMBOL_UNUSED( symbol )  ( ( symbol ) )
 
 /* HASH autoadd options */
 #define HB_HAUTOADD_NEVER       0x00

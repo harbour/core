@@ -207,7 +207,7 @@
 #endif
 
 /* Please keep it synced with the similar #define in common.ch */
-#define __HB_CLS_SYMBOL_UNUSED( symbol )  ( symbol := ( symbol ) )
+#define __HB_CLS_SYMBOL_UNUSED( symbol )  ( ( symbol ) )
 
 #xtranslate __HB_CLS_VARERR(<var>) => __HB_CLS_ERR( Invalid instance variable name: <var> )
 

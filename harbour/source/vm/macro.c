@@ -1281,7 +1281,9 @@ void hb_macroGenPopAliasedVar( char * szVarName,
             /* TODO: memvars created inside TYPE() function should have PUBLIC scope */
             hb_macroMemvarGenPCode( HB_P_MPOPMEMVAR, szVarName, HB_COMP_PARAM );
          }
-         else if( iLen >= 4 && iLen <= 5 && strncmp( szAlias, "FIELD", iLen ) == 0 )
+         else if( iLen >= 4 && iLen <= 6 && 
+                  ( strncmp( szAlias, "FIELD", iLen ) == 0 ||
+                    strncmp( szAlias, "_FIELD", iLen ) == 0 ) )
          {  /* FIELD-> */
             hb_macroMemvarGenPCode( HB_P_MPOPFIELD, szVarName, HB_COMP_PARAM );
          }
@@ -1374,7 +1376,9 @@ void hb_macroGenPushAliasedVar( char * szVarName,
          {  /* M-> or MEMV-> or MEMVA-> or MEMVAR-> variable */
             hb_macroMemvarGenPCode( HB_P_MPUSHMEMVAR, szVarName, HB_COMP_PARAM );
          }
-         else if( iLen >= 4 && iLen <= 5 && strncmp( szAlias, "FIELD", iLen ) == 0 )
+         else if( iLen >= 4 && iLen <= 6 && 
+                  ( strncmp( szAlias, "FIELD", iLen ) == 0 ||
+                    strncmp( szAlias, "_FIELD", iLen ) == 0 ) )
          {  /* FIELD-> */
             hb_macroMemvarGenPCode( HB_P_MPUSHFIELD, szVarName, HB_COMP_PARAM );
          }
