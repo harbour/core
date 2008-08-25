@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-25 14:09 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/rddtest/rddmktst.prg
+  * harbour/tests/rddtest/adscl52.prg
+  * harbour/tests/rddtest/adscl53.prg
+  * harbour/tests/rddtest/ntxcl52.prg
+  * harbour/tests/rddtest/ntxcl53.prg
+  * harbour/tests/rddtest/cdxcl52.prg
+  * harbour/tests/rddtest/rddtst.prg
+  * harbour/tests/rddtest/cdxcl53.prg
+    * added copyright note. It's my code.
+
+  * harbour/source/debug/dbgentry.c
+    ! strip function name from module name used to initialize
+      global and file wide variables. It fixes presenting file
+      wide static variables in debugger.
+
+  * harbour/source/debug/debugger.prg
+    % minor optimization
+
 2008-08-24 21:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32/w32_ole.c
    * contrib/hbole/ole2.c

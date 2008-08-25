@@ -380,11 +380,11 @@ hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame )
 
          hb_procinfo( 0, szProcName, NULL, NULL );
          if ( !strncmp( szProcName, "(_INITSTATICS", 13 ) )
-             info->bInitStatics = TRUE;
+            info->bInitStatics = TRUE;
          else if ( !strncmp( szProcName, "(_INITGLOBALS", 13 ) )
-             info->bInitGlobals = TRUE;
+            info->bInitGlobals = TRUE;
          else if ( !strncmp( szProcName, "(_INITLINES", 11 ) )
-             info->bInitLines = TRUE;
+            info->bInitLines = TRUE;
 
          if ( info->bInitStatics || info->bInitGlobals )
             hb_dbgAddModule( info, szName );
@@ -601,16 +601,28 @@ hb_dbgAddLocal( HB_DEBUGINFO *info, char *szName, int nIndex, int nFrame )
 static void
 hb_dbgAddModule( HB_DEBUGINFO *info, char *szName )
 {
+   char * szModuleName;
+   char * szFuncName;
+   int iLen;
+
    szName = hb_dbgStripModuleName( szName );
-   if( !info->nModules || strcmp( info->aModules[ info->nModules - 1 ].szModule, szName ) )
+   szFuncName = strrchr( szName, ':' );
+   iLen = szFuncName ? ( int ) ( szFuncName - szName ) : ( int ) strlen( szName );
+   STRNDUP( szModuleName, szName, iLen );
+
+   if( !info->nModules || strcmp( info->aModules[ info->nModules - 1 ].szModule, szModuleName ) )
    {
       HB_MODULEINFO *pModule;
 
       pModule = ARRAY_ADD( HB_MODULEINFO, info->aModules, info->nModules );
-      pModule->szModule = szName;
+      pModule->szModule = szModuleName;
       pModule->nStatics = 0;
       pModule->nGlobals = 0;
       pModule->nExternGlobals = 0;
+   }
+   else
+   {
+      FREE( szModuleName );
    }
 }
 
@@ -1022,7 +1034,7 @@ hb_dbgEvalSubstituteVar( HB_WATCHPOINT *watch, char *szWord, int nStart, int nLe
    {
       FREE( szWord );
    }
-   
+
    t = (char *) ALLOC( strlen( watch->szExpr ) - nLen + 9 + 1 );
    memmove( t, watch->szExpr, nStart );
    memmove( t + nStart, "__dbg[", 6 );
@@ -1453,6 +1465,10 @@ hb_dbgQuit( HB_DEBUGINFO *info )
       if ( module->nStatics )
       {
          FREE( module->aStatics );
+      }
+      if ( module->szModule )
+      {
+         FREE( module->szModule );
       }
       ARRAY_DEL( HB_MODULEINFO, info->aModules, info->nModules, nModules );
    }

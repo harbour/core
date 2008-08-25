@@ -1229,11 +1229,10 @@ METHOD GetExprValue( xExpr, lValid ) CLASS HBDebugger
 
    LOCAL xResult
    LOCAL oErr
-   LOCAL bOldErrorBlock := ErrorBlock( { | oErr | Break( oErr ) } )
 
    lValid := .F.
 
-   BEGIN SEQUENCE
+   BEGIN SEQUENCE WITH { | oErr | Break( oErr ) }
       xResult := __dbgGetExprValue( ::pInfo, xExpr, @lValid )
       IF !lValid
          xResult := "Syntax error"
@@ -1246,8 +1245,6 @@ METHOD GetExprValue( xExpr, lValid ) CLASS HBDebugger
       ENDIF
       lValid := .F.
    END SEQUENCE
-
-   ErrorBlock( bOldErrorBlock )
 
    RETURN xResult
 
@@ -2031,7 +2028,6 @@ METHOD OSShell() CLASS HBDebugger
    LOCAL cColors := SetColor()
    LOCAL cOs := Upper( OS() )
    LOCAL cShell
-   LOCAL bLastHandler := ErrorBlock( { | objErr | Break( objErr ) } )
    LOCAL oE
 
    SetColor( "W/N" )
@@ -2039,7 +2035,7 @@ METHOD OSShell() CLASS HBDebugger
    ? "Type 'exit' to RETURN to the Debugger"
    SetCursor( SC_NORMAL )
 
-   BEGIN SEQUENCE
+   BEGIN SEQUENCE WITH { | objErr | Break( objErr ) }
 
       IF At( "WINDOWS", cOs ) != 0 .OR. At( "DOS", cOs ) != 0 .OR. At( "OS/2", cOs ) != 0
          cShell := GetEnv( "COMSPEC" )
@@ -2056,8 +2052,6 @@ METHOD OSShell() CLASS HBDebugger
       Alert( "Error: " + oE:description )
 
    END SEQUENCE
-
-   ErrorBlock( bLastHandler )
 
    SetCursor( SC_NONE )
    RestScreen( ,,,, cImage )
