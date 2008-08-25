@@ -41,14 +41,17 @@
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build
 #       HB_BUILD_MODE     - If set to cpp causes to compile in C++ mode
+#       HB_BUILD_WINCE    - If set to yes, a WinCE build will be created.
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
 #       HB_BUILD_VERBOSE  - enables echoing commands being executed
+#       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
+#                           bison (you must use bison 2.3 or later)
 #       HB_INSTALL_PREFIX - Path to instalation directory into which
 #                           Harbour will be installed when the command
 #                           "make_vc.bat install" is lauched. Defaults
 #                           to current directory
-#       HB_VISUALC_VER    - Version of Visual C++ compiler (defaults to 60).
-#                           Possible values are : 60, 70, 71, 80, 90
+#       HB_VISUALC_VER    - Version of Visual C++ compiler.
+#                           Possible values are : 60, 70, 71, 80 (default), 90
 
 #**********************************************************
 
@@ -61,19 +64,37 @@ HB_ARCHITECTURE = w32
 #**********************************************************
 
 !if "$(HB_GT_LIB)" == ""
+!if "$(HB_BUILD_WINCE)" == "yes"
+HB_GT_LIB = gtwvt
+!else
 HB_GT_LIB = gtwin
+!endif
+!endif
+
+!if "$(HB_GT_DEFAULT)" == ""
+!if "$(HB_BUILD_WINCE)" == "yes"
+HB_GT_DEFAULT = wvt
+!endif
 !endif
 
 #**********************************************************
 
 # Visual C++ version
 !ifndef HB_VISUALC_VER
-HB_VISUALC_VER = 60
+HB_VISUALC_VER = 80
 !endif
 
 #**********************************************************
 
+!if "$(HB_BUILD_WINCE)" == "yes"
+!if $(HB_VISUALC_VER) >= 80
 CC     = cl.exe
+!else
+CC     = clarm.exe
+!endif
+!else
+CC     = cl.exe
+!endif
 LINKER = link.exe
 MKLIB  = lib.exe
 
@@ -117,19 +138,51 @@ HB_BUILD_MODE  = C
 #**********************************************************
 
 # C Compiler Flags
+!if "$(HB_BUILD_WINCE)" == "yes"
+
+!if $(HB_VISUALC_VER) >= 80
+CFLAGS_VER     = -Od -Os -Gy -GS- -EHsc- -fp:fast -Gm -Zi -GR- -FD -D_CRT_SECURE_NO_DEPRECATE
+!else
+CFLAGS_VER     = -Oxsb1 -EHsc -YX -GF
+!endif
+
+CFLAGS         = -nologo -W3 -I$(INCLUDE_DIR) -I$(CFLAGS_VER) -T$(HB_BUILD_MODE) \
+                 -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -D"WIN32_PLATFORM_PSPC" \
+                 -D"WINCE" -D"_WINCE" -D"_WINDOWS" -D"ARM" -D"_ARM_" -D"ARMV4" \
+                 -D"POCKETPC2003_UI_MODEL" -D"_M_ARM" -D"UNICODE" -D"_UNICODE" \
+                 $(C_USR) $(CFLAGS) -D_UWIN -I$(OBJ_DIR)
+
+#-----------
+!ifndef HB_WINCE_COMPILE_WITH_GTWIN
+CFLAGS    = $(CFLAGS) -DHB_NO_WIN_CONSOLE
+!endif
+#-----------
+!if "$(HB_BUILD_DEBUG)" == "yes"
+CFLAGS    = $(CFLAGS) -D "_DEBUG" -D "DEBUG"
+DBGMARKER = d
+!else
+CFLAGS    = $(CFLAGS) -D "NDEBUG"
+!endif
+
+!else
+
 !if $(HB_VISUALC_VER) >= 80
 CFLAGS_VER     = -Ot2b1 -EHs-c- -FD -Gs -D_CRT_SECURE_NO_DEPRECATE
 !else
 CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX -FD -Gs
 !endif
 
-CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) \
-                 -W3 -nologo $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
+CFLAGS         = -nologo -W3 -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) \
+                 $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
+
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
 CFLAGS         = -Zi $(CFLAGS)
 DBGMARKER      =  d
 !endif
+
+!endif
+
 #-----------
 !if "$(HB_BUILD_ST)" != "yes"
 CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
@@ -149,31 +202,60 @@ CFLAGS         = -D"HB_GT_LIB=$(HB_GT_LIB:gt=)" $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSxxx   =  $(CLIBFLAGS: -MT= )
 CLIBFLAGSxxx   =  $(CLIBFLAGSxxx: -MTd= )
+!if "$(HB_BUILD_WINCE)" == "yes"
+CLIBFLAGSDLL   = -DHB_DYNLIB $(CLIBFLAGS) $(CLIBFLAGSDLL)
+CEXEFLAGSDLL   =  $(CLIBFLAGS) $(CEXEFLAGSDLL)
+!else
 CLIBFLAGSDLL   = -DHB_DYNLIB -MT$(DBGMARKER) $(CLIBFLAGS) $(CLIBFLAGSDLL)
 CEXEFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS) $(CEXEFLAGSDLL)
+!endif
 
 #**********************************************************
 
 # Harbour Compiler Flags
 HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -km $(PRG_USR)
+!if "$(HB_BUILD_WINCE)" == "yes"
+HBFLAGSCMN     = $(HBFLAGSCMN) -D__PLATFORM__WINCE
+!endif
 HARBOURFLAGS   = -n $(HBFLAGSCMN) $(HARBOURFLAGS)
 HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 
 #**********************************************************
 
 # Linker Flags
+!if "$(HB_BUILD_WINCE)" == "yes"
+LDFLAGS        = /NOLOGO /SUBSYSTEM:WINDOWSCE,4.20 /MACHINE:ARM /ARMPADCODE \
+                 /STACK:65536,4096 /NODEFAULTLIB:"oldnames.lib" \
+                 /NODEFAULTLIB:"kernel32.lib" /ALIGN:4096 /OPT:REF /OPT:ICF \
+                 /LIBPATH:$(LIB_DIR) $(LDFLAGS)
+#                /ERRORREPORT:PROMPT /ENTRY:"mainWCRTStartup"
+!if $(HB_VISUALC_VER) >= 80
+LDFLAGS        = $(LDFLAGS) /MANIFEST:NO
+!endif
+LDFLAGSDLL     = /DLL \
+                 /NOLOGO /SUBSYSTEM:WINDOWSCE,4.20 /MACHINE:ARM /ARMPADCODE \
+                 /STACK:65536,4096 /NODEFAULTLIB:"oldnames.lib" \
+                 /LIBPATH:$(LIB_DIR) $(LDFLAGSDLL)
+!else
 LDFLAGS        = /NOLOGO /SUBSYSTEM:console /LIBPATH:$(LIB_DIR) $(LDFLAGS)
-LDFLAGSDLL     = /NOLOGO /DLL /LIBPATH:$(LIB_DIR) $(LDFLAGSDLL)
+LDFLAGSDLL     = /DLL \
+                 /NOLOGO /LIBPATH:$(LIB_DIR) $(LDFLAGSDLL)
+!endif
+
 !if "$(HB_BUILD_DEBUG)" == "yes"
 LDFLAGS        = /DEBUG $(LDFLAGS)
 LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 !endif
 
+!if "$(HB_BUILD_WINCE)" == "yes"
+STANDARD_SYSLIBS = coredll.lib corelibc.lib winsock.lib ws2.lib
+!else
 # user32.lib: *Clipboard*(), MessageBox(), CharToOemBuff(), OemToCharBuff(), GetKeyState(), GetKeyboardState(), SetKeyboardState()
 # wsock32.lib: hbinet
 # advapi32.lib: GetUserName()
 # gdi32.lib: gtwvt
 STANDARD_SYSLIBS = user32.lib wsock32.lib advapi32.lib gdi32.lib
+!endif
 
 #**********************************************************
 # COMPILE Rules

@@ -113,7 +113,7 @@ HB_BUILD_MODE  = C
 
 # Visual C++ version
 !ifndef HB_VISUALC_VER
-HB_VISUALC_VER = 60
+HB_VISUALC_VER = 80
 !endif
 
 # C Compiler Flags

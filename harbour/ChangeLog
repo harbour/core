@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-26 00:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_vc.bat
+   * make_vcce.bat
+   * make_vc.mak
+   - make_vcce.mak
+     % make_vcce functionality merged into make_vc.
+     * make_vcce.bat changed to a stub calling make_vc.bat.
+     ; WinCE builds can be triggered using envvars:
+       set HB_BUILD_WINCE=yes
+       set HB_CC_NAME=vcce
+       Please update your environment and test WinCE builds 
+       after this change.
+
+   * make_vc.mak
+   * contrib/mtpl_vc.mak
+     * Changed HB_VISUALC_VER default to 80.
+       It was 60 for non-WinCE builds and contribs, 
+       80 for WinCE builds. Now it is 80 for all 
+       these cases.
+
+   * make_b32.mak
+     * Minor comment visual sync with make_vc.mak.
+
 2008-08-25 23:30 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/cmdline.txt
    * doc/hrb_faq.txt

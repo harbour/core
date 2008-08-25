@@ -44,12 +44,12 @@
 #       HB_BUILD_VERBOSE  - enables echoing commands being executed
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
 #                           bison (you must use bison 2.3 or later)
-#       BCCDLL_WITH_DYNRT - If set to -tWR causes that harbour-bc.dll
-#                           will use dynamic runtime library (recommended)
 #       HB_INSTALL_PREFIX - Path to instalation directory into which
 #                           Harbour will be installed when the command
 #                           "make_bc.bat install" is lauched. Defaults
 #                           to current directory
+#       BCCDLL_WITH_DYNRT - If set to -tWR causes that harbour-bc.dll
+#                           will use dynamic runtime library (recommended)
 
 #**********************************************************
 

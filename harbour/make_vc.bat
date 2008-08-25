@@ -20,6 +20,7 @@ rem    set HB_MAKE_PROGRAM=
 rem    set HB_SHOW_ERRORS=
 rem    set HB_MAKE_FLAGS=
 rem    set HB_CC_NAME=
+rem    set HB_BUILD_WINCE=yes
 rem ---------------------------------------------------------------
 
 set _HB_CC_NAME=%HB_CC_NAME%
@@ -46,6 +47,36 @@ if "%1" == "CLEAN" goto CLEAN
 if "%1" == "install" goto INSTALL
 if "%1" == "Install" goto INSTALL
 if "%1" == "INSTALL" goto INSTALL
+
+rem ---------------------------------------------------------------
+
+if not "%HB_BUILD_WINCE%" == "yes" goto BUILD
+
+rem Checking if HB and HBPP are set
+
+if not "%HB%" == "" if exist %HB% goto CHECK_HBPP
+   echo.
+   echo. *******************************************
+   echo. You must set HB environment variable to a
+   echo. working copy of Harbour compiler executable
+   echo. harbour.exe.
+   echo. Example: set HB=C:\harbour\harbour.exe
+   echo. *******************************************
+   echo.
+   goto EXIT
+
+:CHECK_HBPP
+if not "%HBPP%" == "" if exist %HBPP% goto BUILD
+   echo.
+   echo. **********************************************
+   echo. You must set HBPP environment variable to a
+   echo. working copy of hbpp.exe helper executable
+   echo. Example: set HBPP=C:\harbour\hbpp.exe
+   echo. **********************************************
+   echo.
+   goto EXIT
+
+rem ---------------------------------------------------------------
 
 :BUILD
 
