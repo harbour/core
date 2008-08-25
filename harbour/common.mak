@@ -1092,6 +1092,7 @@ HBDOC_EXE_OBJS = \
     $(OBJ_DIR)\rtf$(OBJEXT)      \
     $(OBJ_DIR)\troff$(OBJEXT)    \
     $(OBJ_DIR)\ft_funcs$(OBJEXT) \
+    $(OBJ_DIR)\hbdfrdln$(OBJEXT) \
 
 #**********************************************************
 
@@ -1099,8 +1100,6 @@ HBMAKE_EXE_OBJS = \
     $(OBJ_DIR)\hbmake$(OBJEXT)   \
     $(OBJ_DIR)\hbmutils$(OBJEXT) \
     $(OBJ_DIR)\pickarry$(OBJEXT) \
-    $(OBJ_DIR)\tmake$(OBJEXT)    \
-    $(OBJ_DIR)\ft_funcs$(OBJEXT) \
     $(OBJ_DIR)\hbmgauge$(OBJEXT) \
     $(OBJ_DIR)\hbmfrdln$(OBJEXT) \
     $(OBJ_DIR)\hbmlang$(OBJEXT)  \

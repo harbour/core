@@ -222,19 +222,19 @@ FUNCTION GetHarbourDir()
     LOCAL cEnv    := GETE( "PATH" )
     LOCAL lLinux  := "LINUX" $ upper(OS())
     LOCAL lUnix   := iif( "UNIX" $ upper(OS()) .OR. "HP-UX" $ upper(OS()), .T., .F. )
-    LOCAL aEnv     
+    LOCAL aEnv
     LOCAL cCurEnv := ""
     LOCAL cBar    := iif( lLinux .or. lUnix, "/" , "\" )
     LOCAL HBSTRG  := ""
     LOCAL cPathUni:= GETE( "PATH_HARBOUR" )
 
     hbstrg := IIF ( lLinux .or. lUnix,  "harbour" , "harbour.exe" )
-    
-    If lUnix 
+
+    If lUnix
        If cPathUni == Nil
           cPathUni := ""
-       EndIF   
-       cEnv += ":" + cPathUni 
+       EndIF
+       cEnv += ":" + cPathUni
     EndIf
 
     aEnv    := HB_ATokens( cEnv, iif(lLinux .or. lUnix,":",";") )
@@ -497,19 +497,6 @@ FUNCTION c( CSTRING )
 
 RETURN MAX( ( MAXCOL() / 2 ) - INT( LEN( CSTRING ) / 2 ), 0 )
 
-*----------------------
-FUNCTION ReadLN( lEof )
-*----------------------
-
-   LOCAL cBuffer := ""
-   cBuffer := FReadLn()
-   cBuffer := STRTRAN( cBuffer, CHR( 13 ), "" )
-   cBuffer := STRTRAN( cBuffer, CHR( 10 ), "" )
-   FT_FSKIP( 1 )
-   lEof := ft_FEOF()
-
-RETURN cBuffer
-
 *--------------------------------------
 FUNCTION GetInstaledLibs( clibs, lGcc )
 *--------------------------------------
@@ -658,7 +645,7 @@ FUNCTION CreateLink()
 *--------------------
 
     LOCAL nHandle := FCreate("hbtemp.c")
-    
+
     FWrite( nHandle, '#include "hbapi.h"' + HB_OsNewLine())
     FWrite( nHandle, "extern HB_FUNC( HB_GT_CRS );" + HB_OsNewLine())
     FWrite( nHandle, "void hb_lnk_ForceLink_build( void )" + HB_OsNewLine())
@@ -666,7 +653,7 @@ FUNCTION CreateLink()
     FWrite( nHandle, "   HB_FUNCNAME( HB_GT_CRS )();" + HB_OsNewLine())
     FWrite( nHandle, "}" + HB_OsNewLine())
     FClose( nHandle )
-    
+
 
 RETURN NIL
 

@@ -25,6 +25,8 @@ echo rtf.c        >> build.tmp
 echo teeasc.c     >> build.tmp
 echo troff.c      >> build.tmp
 
+echo hbdfrdln.c   >> build.tmp
+
 echo hbvm.lib     >> build.tmp
 echo hbrtl.lib    >> build.tmp
 echo gtwin.lib    >> build.tmp

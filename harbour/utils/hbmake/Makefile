@@ -10,16 +10,13 @@ ROOT = ../../
 
 PRG_SOURCES=\
 	hbmake.prg \
-	tmake.prg \
 	hbmutils.prg \
-	ft_funcs.prg \
 	pickarry.prg \
 
 C_SOURCES=\
 	hbmfrdln.c \
 	hbmgauge.c \
 	hbmlang.c \
-
 
 PRG_MAIN=hbmake.prg
 

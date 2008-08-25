@@ -27,6 +27,9 @@ PRG_SOURCES=\
 	troff.prg \
 	ft_funcs.prg \
 
+C_SOURCES=\
+	hbdfrdln.c \
+
 PRG_MAIN=hbdoc.prg
 
 LIBS=\
