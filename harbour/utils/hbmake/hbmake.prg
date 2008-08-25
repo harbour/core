@@ -6790,38 +6790,33 @@ RETURN aDir
 FUNCTION GetHarbourDir()
 *-----------------------
 
-    LOCAL cPath   := ""
-    LOCAL cEnv    := GETE( "PATH" )
-    LOCAL lLinux  := "LINUX" $ upper(OS())
-    LOCAL lUnix   := iif( "UNIX" $ upper(OS()) .OR. "HP-UX" $ upper(OS()), .T., .F. )
-    LOCAL aEnv
-    LOCAL cCurEnv := ""
-    LOCAL cBar    := iif( lLinux .or. lUnix, "/" , "\" )
-    LOCAL HBSTRG  := ""
-    LOCAL cPathUni:= GETE( "PATH_HARBOUR" )
+   LOCAL lUnix    := "LINUX" $ Upper( OS() ) .OR. ;
+                     "UNIX" $ Upper( OS() ) .OR. ;
+                     "HP-UX" $ Upper( OS() ) .OR. ;
+                     "DARWIN" $ Upper( OS() )
 
-    hbstrg := IIF ( lLinux .or. lUnix,  "harbour" , "harbour.exe" )
+   LOCAL cBar     := iif( lUnix, "/" , "\" )
+   LOCAL HBSTRG   := iif( lUnix, "harbour", "harbour.exe" )
+   LOCAL cPathUni := GetEnv( "PATH_HARBOUR" )
+   LOCAL aEnv     := hb_ATokens( GetEnv( "PATH" ), iif( lUnix, ":", ";" ) )
+   LOCAL cCurEnv
 
-    If lUnix
-       If cPathUni == Nil
-          cPathUni := ""
-       EndIF
-       cEnv += ":" + cPathUni
-    EndIf
+   AAdd( aEnv, "." + cBar )
 
-    aEnv    := HB_ATokens( cEnv, iif(lLinux .or. lUnix,":",";") )
+   IF !Empty( cPathUni )
+      AAdd( aEnv, cPathUni )
+   ENDIF
 
-    FOR EACH cCurEnv IN aEnv
+   FOR EACH cCurEnv IN aEnv
 
-        IF FILE( cCurEnv + cBar + hbstrg ) .OR. FILE( UPPER( cCurEnv ) + cBar + upper(hbstrg) )
-           cPath := cCurEnv
-           cPath := LEFT( cPath, RAT( cBar, cPath ) - 1 )
-           EXIT
-        ENDIF
+      IF File( cCurEnv + cBar + hbstrg ) .OR. ;
+         File( Upper( cCurEnv + cBar + hbstrg ) )
 
-    NEXT
+         RETURN Left( cCurEnv, RAt( cBar, cCurEnv ) - 1 )
+      ENDIF
+   NEXT
 
-RETURN cPath
+   RETURN ""
 
 *-------------------
 FUNCTION GetBccDir()

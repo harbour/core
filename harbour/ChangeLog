@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-25 20:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * utils/hbmake/hbmake.prg
+     ! Harbour executable detection cleanups and fix to look 
+       into current dir and detect Darwin as a Unix platform.
+       (usable state is still very far)
+
 2008-08-25 20:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbw32/w32_ole.c
     * removed hack with malloc()/free() directly used to avoid
