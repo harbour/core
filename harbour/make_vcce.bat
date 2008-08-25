@@ -15,6 +15,7 @@ rem    set HB_BUILD_MODE=C
 rem    set HB_BUILD_DLL=yes
 rem    set HB_BUILD_DEBUG=yes
 rem    set HB_BUILD_VERBOSE=yes
+rem    set HB_REBUILD_PARSER=yes
 rem    set HB_MAKE_PROGRAM=
 rem    set HB_SHOW_ERRORS=
 rem    set HB_MAKE_FLAGS=
@@ -52,23 +53,23 @@ rem Checking if HB and HBPP are set
 
 if not "%HB%" == "" if exist %HB% goto CHECK_HBPP
    echo.
-   echo *******************************************
-   echo You must set HB environment variable to a
-   echo working copy of Harbour compiler executable
-   echo harbour.exe.
-   echo. Example : set HB=C:\Harbour\harbour.exe
-   echo *******************************************
+   echo. *******************************************
+   echo. You must set HB environment variable to a
+   echo. working copy of Harbour compiler executable
+   echo. harbour.exe.
+   echo. Example: set HB=C:\harbour\harbour.exe
+   echo. *******************************************
    echo.
    goto EXIT
 
 :CHECK_HBPP
 if not "%HBPP%" == "" if exist %HBPP% goto BUILD
    echo.
-   echo **********************************************
-   echo You must set HBPP environment variable to a
-   echo working copy of hbpp.exe helper executable
-   echo. Example : set HBPP=C:\Harbour\hbpp.exe
-   echo **********************************************
+   echo. **********************************************
+   echo. You must set HBPP environment variable to a
+   echo. working copy of hbpp.exe helper executable
+   echo. Example: set HBPP=C:\harbour\hbpp.exe
+   echo. **********************************************
    echo.
    goto EXIT
 

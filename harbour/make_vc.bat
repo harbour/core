@@ -19,6 +19,7 @@ rem    set HB_REBUILD_PARSER=yes
 rem    set HB_MAKE_PROGRAM=
 rem    set HB_SHOW_ERRORS=
 rem    set HB_MAKE_FLAGS=
+rem    set HB_CC_NAME=
 rem ---------------------------------------------------------------
 
 set _HB_CC_NAME=%HB_CC_NAME%

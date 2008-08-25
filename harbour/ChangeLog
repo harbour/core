@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-25 22:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_vcce.mak
+     ! Attempt to fix /MANIFEST:NO warnings for MSVC 6.0.
+     ! Attempt to fix WinCE .dll linking error.
+     ; Jose, another test would be great.
+
+   * make_vc.bat
+   * make_vc.mak
+   * make_vcce.bat
+   * make_vcce.mak
+     * Some syncing and minor fixes in comments.
+
 2008-08-25 21:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_vcce.mak
      ! Fixed system library list to not contain gdi32.lib.

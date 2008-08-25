@@ -33,6 +33,8 @@
 #       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #       PRG_USR           - Extra Harbour compiler options
 #                           (GNU make compatible envvar)
+#       HB_GT_DEFAULT     - The default GT driver, Choose between:
+#                           gtstd (default), gtcgi, gtwin, gtwvt
 #       HB_GT_LIB         - To override the default GT driver
 #                           (search for HB_GT_LIBS for a list of values)
 #       HB_BUILD_ST       - If set to yes builds harbour in SingleThread mode
@@ -46,7 +48,7 @@
 #                           "make_vc.bat install" is lauched. Defaults
 #                           to current directory
 #       HB_VISUALC_VER    - Version of Visual C++ compiler (defaults to 80).
-#                           Possible values are : 60, 70, 71, 80
+#                           Possible values are : 60, 70, 71, 80, 90
 
 #**********************************************************
 
@@ -177,17 +179,18 @@ HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 #**********************************************************
 
 # Linker Flags
-LDFLAGS        = /NOLOGO /SUBSYSTEM:windowsce,4.20 /MACHINE:ARM /ARMPADCODE \
-                 /STACK:65536,4096 /ALIGN:4096 /NODEFAULTLIB:"oldnames.lib" \
-                 /NODEFAULTLIB:"kernel32.lib" /MANIFEST:NO /LIBPATH:$(LIB_DIR) \
-                 /OPT:REF /OPT:ICF $(LDFLAGS)
+LDFLAGS        = /NOLOGO /SUBSYSTEM:WINDOWSCE,4.20 /MACHINE:ARM /ARMPADCODE \
+                 /STACK:65536,4096 /NODEFAULTLIB:"oldnames.lib" \
+                 /NODEFAULTLIB:"kernel32.lib" /ALIGN:4096 /OPT:REF /OPT:ICF \
+                 /LIBPATH:$(LIB_DIR) $(LDFLAGS)
 #                /ERRORREPORT:PROMPT /ENTRY:"mainWCRTStartup"
 !if $(HB_VISUALC_VER) >= 80
 LDFLAGS        = $(LDFLAGS) /MANIFEST:NO
 !endif
 
-LDFLAGSDLL     = /NOLOGO /DLL /MACHINE:ARM /ARMPADCODE \
-                 /STACK:65536,4096 /ALIGN:4096 /NODEFAULTLIB:"oldnames.lib" \
+LDFLAGSDLL     = /DLL \
+                 /NOLOGO /SUBSYSTEM:WINDOWSCE,4.20 /MACHINE:ARM /ARMPADCODE \
+                 /STACK:65536,4096 /NODEFAULTLIB:"oldnames.lib" \
                  /LIBPATH:$(LIB_DIR) $(LDFLAGSDLL)
 
 !if "$(HB_BUILD_DEBUG)" == "yes"

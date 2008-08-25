@@ -33,8 +33,8 @@
 #       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #       PRG_USR           - Extra Harbour compiler options
 #                           (GNU make compatible envvar)
-#       HB_GT_DEFAULT     - The default GT driver, Choose between :
-#                           gtstd (default),gtcgi,gtwin,gtwvt
+#       HB_GT_DEFAULT     - The default GT driver, Choose between:
+#                           gtstd (default), gtcgi, gtwin, gtwvt
 #       HB_GT_LIB         - To override the default GT driver
 #                           (search for HB_GT_LIBS for a list of values)
 #       HB_BUILD_ST       - If set to yes builds harbour in SingleThread mode
@@ -48,7 +48,7 @@
 #                           "make_vc.bat install" is lauched. Defaults
 #                           to current directory
 #       HB_VISUALC_VER    - Version of Visual C++ compiler (defaults to 60).
-#                           Possible values are : 60, 70, 71, 80
+#                           Possible values are : 60, 70, 71, 80, 90
 
 #**********************************************************
 
