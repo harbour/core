@@ -53,94 +53,35 @@
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
-#include "hbvm.h"
 
 #if defined(HB_OS_WIN_32)
 
-int argc = 0;
-char * argv[ 20 ];
-
-HANDLE hb_hInstance = 0;
-HANDLE hb_hPrevInstance = 0;
-int    hb_iCmdShow = 0;
-
-int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
-                    HINSTANCE hPrevInstance,  /* handle to previous instance */
-                    LPSTR lpCmdLine,          /* pointer to command line */
-                    int iCmdShow )            /* show state of window */
-{
-   LPSTR pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( lpCmdLine ) + 1 ), pArg = pArgs;
-   char szAppName[ 250 ];
-
-   hb_hInstance = hInstance;
-   hb_hPrevInstance = hPrevInstance;
-   hb_iCmdShow = iCmdShow;
-
-   hb_strncpy( pArgs, lpCmdLine, strlen( lpCmdLine ) );
-
-   HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow));
-
-   HB_SYMBOL_UNUSED( hPrevInstance );
-   HB_SYMBOL_UNUSED( iCmdShow );
-
-   hb_hInstance = hInstance;
-   hb_hPrevInstance = hPrevInstance;
-   hb_iCmdShow = iCmdShow;
-
-   GetModuleFileName( hInstance, szAppName, 249 );
-   argv[ 0 ] = szAppName;
-
-   if( * pArgs != 0 )
-      argv[ ++argc ] = pArgs;
-
-   while( *pArg != 0 )
-   {
-      if( *pArg == ' ' )
-      {
-         *pArg++ = 0;
-         argc++;
-
-         while( *pArg == ' ' )
-            pArg++;
-
-         if( *pArg != 0 )
-            argv[ argc ] = pArg++;
-         else
-            argc--;
-      }
-      else
-         pArg++;
-   }
-   argc++;
-
-   hb_cmdargInit( argc, argv );
-   hb_vmInit( TRUE );
-   hb_vmQuit();
-
-   LocalFree( pArgs );  /* QUESTION: It seems we never reach here,
-                                     so how may we free it ? */
-
-   /* NOTE: The exit value is set by exit() */
-   /* NOTE: This point is never reached */
-
-   return 0;
-}
-
-// don not use GetInstance(), because it is an API, which means something else
+// don't not use GETINSTANCE(), because it is an API, which means something else
 HB_FUNC( HINSTANCE )
 {
-  hb_retnl( (LONG) hb_hInstance );
+   HANDLE hInstance;
+
+   hb_winmainArgGet( &hInstance, NULL, NULL );
+
+   hb_retnl( ( LONG ) hInstance );
 }
 
 HB_FUNC( HPREVINSTANCE )
 {
-  hb_retnl( (LONG) hb_hPrevInstance );
+   HANDLE hPrevInstance;
+
+   hb_winmainArgGet( NULL, &hPrevInstance, NULL );
+
+   hb_retnl( ( LONG ) hPrevInstance );
 }
 
 HB_FUNC( NCMDSHOW )
 {
-  hb_retni( hb_iCmdShow );
-}
+   int iCmdShow;
 
+   hb_winmainArgGet( NULL, NULL, &iCmdShow );
+
+   hb_retni( iCmdShow );
+}
 
 #endif

@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-25 14:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/vm/cmdarg.c
+     ! hb_hInstance, hb_hPrevInstance, s_iCmdShow, s_WinMainParam
+       vars marked as 'static', hb_ prefix changed to s_.
+       NOTE: This may pose a problem if some 3rd party code 
+             was relying on the names or the fact that these 
+             vars were exported by incident (since they were 
+             not declared in any Harbour headers.)
+             [INCOMPATIBLE]
+
+   * contrib/hbwhat32/whtmain.c
+     ! Removed WinMain() function and some global vars colliding 
+       with some Harbour core ones.
+     * HINSTANCE(), HPREVINSTANCE(), NCMDSHOW() functions now 
+       use Harbour API calls to retrieve values.
+
 2008-08-25 14:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_vc.mak
    * make_vcce.mak
