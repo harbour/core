@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-25 18:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/common/hbver.c
+     ! Fix to commit '2008-07-11 18:20 UTC+0200' which 
+       effectively disabled Vista/2008 detection for 
+       everything but MSVC (>1400) compilers.
+
 2008-08-25 17:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * utils/hbmake/Makefile
