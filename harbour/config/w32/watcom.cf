@@ -51,7 +51,7 @@ endef
 
 define link_exe_file
 echo. $(LDFLAGS) NAME $@ > __link__.tmp
-echo. LIB kernel32.lib, user32.lib, winspool.lib, oleaut32.lib, uuid.lib, comctl32.lib, mapi32.lib, wsock32.lib >> __link__.tmp
+echo. LIB kernel32.lib, user32.lib, wsock32.lib, winspool.lib, oleaut32.lib, uuid.lib, comctl32.lib, mapi32.lib >> __link__.tmp
 $(foreach file, $(^F), $(link_file))
 $(foreach lib, $(LINKLIBS), $(link_lib))
 $(foreach lib, $(RDDLIBS), $(link_lib))

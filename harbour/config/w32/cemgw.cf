@@ -58,8 +58,6 @@ ifneq ($(LNK_USR_LIB),)
 LDLIBS += $(foreach lib, $(LNK_USR_LIB), -l$(lib))
 endif
 
-#SYSLIBS = -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 \
-#          -lole32 -loleaut32 -luuid -lmpr -lwsock32 -lws2_32 -lmapi32
 SYSLIBS = -lwininet -lws2
 # for contribs
 SYSLIBS += -lcommdlg -lcommctrl -luuid -lole32

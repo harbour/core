@@ -61,7 +61,7 @@
 
 /*
  * library functions used by PP core code
- * necessary to create stand alone binries
+ * necessary to create standalone binaries
  */
 void * hb_xgrab( ULONG ulSize ) { return malloc( ulSize ); }
 void * hb_xrealloc( void * pMem, ULONG ulSize ) { return realloc( pMem, ulSize ); }

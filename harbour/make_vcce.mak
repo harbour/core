@@ -195,6 +195,8 @@ LDFLAGS        = /DEBUG $(LDFLAGS)
 LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 !endif
 
+STANDARD_SYSLIBS = coredll.lib corelibc.lib winsock.lib ws2.lib gdi32.lib
+
 #**********************************************************
 # COMPILE Rules
 #**********************************************************
@@ -792,7 +794,7 @@ $(**: = ^
 $(COMMON_LIB)
 $(COMPILER_LIB)
 $(PP_LIB)
-coredll.lib corelibc.lib
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 # HBPP build rule
@@ -805,7 +807,7 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(COMMON_LIB)
-coredll.lib corelibc.lib
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 # HBRUN build rule
@@ -818,7 +820,7 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
-coredll.lib corelibc.lib winsock.lib ws2.lib
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 # HBTEST build rule
@@ -831,7 +833,7 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
-coredll.lib corelibc.lib winsock.lib ws2.lib
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 # HBDOC build rule
@@ -845,7 +847,7 @@ $(**: = ^
 )
 $(MINIMAL_STATIC_HBLIBS)
 $(HBDOC_LIBS)
-coredll.lib corelibc.lib winsock.lib ws2.lib
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 # HBMAKE build rule
@@ -858,7 +860,7 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(MINIMAL_STATIC_HBLIBS)
-coredll.lib corelibc.lib winsock.lib ws2.lib
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 
@@ -871,7 +873,7 @@ $(LDFLAGSDLL) /OUT:$(@)
 /IMPLIB:$(@:.dll=.lib)
 $(DLL_OBJS: = ^
 )
-coredll.lib gdi32.lib
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 # DLL EXECUTABLE Targets

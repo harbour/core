@@ -169,6 +169,12 @@ LDFLAGS        = /DEBUG $(LDFLAGS)
 LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 !endif
 
+# user32.lib: *Clipboard*(), MessageBox(), CharToOemBuff(), OemToCharBuff(), GetKeyState(), GetKeyboardState(), SetKeyboardState()
+# wsock32.lib: hbinet
+# advapi32.lib: GetUserName()
+# gdi32.lib: gtwvt
+STANDARD_SYSLIBS = user32.lib wsock32.lib advapi32.lib gdi32.lib
+
 #**********************************************************
 # COMPILE Rules
 #**********************************************************
@@ -766,6 +772,7 @@ $(**: = ^
 $(COMMON_LIB)
 $(COMPILER_LIB)
 $(PP_LIB)
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 # HBPP build rule
@@ -778,6 +785,7 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(COMMON_LIB)
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 # HBRUN build rule
@@ -790,7 +798,7 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
-user32.lib winspool.lib wsock32.lib advapi32.lib
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 # HBTEST build rule
@@ -803,7 +811,7 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
-user32.lib winspool.lib
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 # HBDOC build rule
@@ -817,7 +825,7 @@ $(**: = ^
 )
 $(MINIMAL_STATIC_HBLIBS)
 $(HBDOC_LIBS)
-user32.lib winspool.lib
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 # HBMAKE build rule
@@ -830,7 +838,7 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(MINIMAL_STATIC_HBLIBS)
-user32.lib winspool.lib
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 
@@ -843,7 +851,7 @@ $(LDFLAGSDLL) /OUT:$(@)
 /IMPLIB:$(@:.dll=.lib)
 $(DLL_OBJS: = ^
 )
-advapi32.lib gdi32.lib user32.lib winspool.lib wsock32.lib
+$(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 # DLL EXECUTABLE Targets

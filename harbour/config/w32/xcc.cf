@@ -45,10 +45,9 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
 
-LDFLAGS = $(LINKPATHS) kernel32.lib user32.lib \
-          winspool.lib ole32.lib oleaut32.lib uuid.lib \
-          comctl32.lib mapi32.lib advapi32.lib \
-          gdi32.lib mpr.lib wsock32.lib
+LDFLAGS = $(LINKPATHS) kernel32.lib user32.lib gdi32.lib wsock32.lib advapi32.lib
+LDFLAGS += winspool.lib ole32.lib oleaut32.lib uuid.lib \
+           comctl32.lib mapi32.lib mpr.lib
 
 ifeq ($(HB_GT_DEFAULT),gtgui)
 LDFLAGS += /SUBSYSTEM:WINDOWS
@@ -57,8 +56,6 @@ ifeq ($(HB_GT_LIB),gtgui)
 LDFLAGS += /SUBSYSTEM:WINDOWS
 endif
 endif
-
-# mpr wsock32 ws2_32 mapi32
 
 AR = xlib.exe
 ARFLAGS = $(A_USR)

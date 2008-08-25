@@ -33,7 +33,8 @@ LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(subst lib,,$(lib)))
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
 # This library is needed for CharToOemBuff() and OemToCharBuff() support.
-LINKLIBS += -luser32 -lwinspool
+LINKLIBS += -luser32 -lwsock32
+LINKLIBS += -lwinspool
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)

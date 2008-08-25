@@ -66,7 +66,7 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 
-#if !defined( HB_NO_ASM ) && defined( HB_OS_WIN_32 )
+#if !defined( HB_NO_ASM ) && defined( HB_OS_WIN_32 ) && !defined(__CYGWIN__)
 
 #ifdef __XHARBOUR__
 
