@@ -2344,8 +2344,8 @@ Endif // Create and compile
 
    IF s_lBcc
 
-      AAdd( s_aCommands, { ".cpp.obj:", "$(CC_DIR)\BIN\bcc32 $(CFLAG1) $(CFLAG2) -o$* $**" } )
-      AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\BIN\bcc32 -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -o$* $**" } )
+      AAdd( s_aCommands, { ".cpp.obj:", "$(CC_DIR)\bin\bcc32 $(CFLAG1) $(CFLAG2) -o$* $**" } )
+      AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\bin\bcc32 -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -o$* $**" } )
 
       IF s_lExtended
          AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n"+iif(s_lasdll,"1","")+" -go" + iif(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) ) )+IIF( lWhoo," -I$(WHOO)\include ","")+  IIF( lMediator," -I$(MEDIATOR)\include ","")+" -o$* $**" } )
@@ -2353,7 +2353,7 @@ Endif // Create and compile
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) )) + " -o$* $**" } )
       ENDIF
 
-      AAdd( s_aCommands, { ".rc.res:", "$(CC_DIR)\BIN\brcc32 $(RFLAGS) $<" } )
+      AAdd( s_aCommands, { ".rc.res:", "$(CC_DIR)\bin\brcc32 $(RFLAGS) $<" } )
 
    ELSEIF s_lGcc
 
@@ -2395,8 +2395,8 @@ Endif // Create and compile
 
    ELSEIF s_lPocc
 
-      AAdd( s_aCommands, { ".cpp.obj:", "$(CC_DIR)\BIN\pocc $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
-      AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\BIN\pocc -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
+      AAdd( s_aCommands, { ".cpp.obj:", "$(CC_DIR)\bin\pocc $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
+      AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\bin\pocc -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
 
       IF s_lExtended
          AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n"+iif(s_lasdll,"1","")+" -go" + iif(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) ) )+IIF( lWhoo," -I$(WHOO)\include ","")+  IIF( lMediator," -I$(MEDIATOR)\include ","")+" -o$** $**" } )
@@ -2404,7 +2404,7 @@ Endif // Create and compile
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) )) + " -o$** $**" } )
       ENDIF
 
-      AAdd( s_aCommands, { ".rc.res:", "$(CC_DIR)\BIN\porc $(RFLAGS) $<" } )
+      AAdd( s_aCommands, { ".rc.res:", "$(CC_DIR)\bin\porc $(RFLAGS) $<" } )
 
    ENDIF
 
@@ -3110,7 +3110,7 @@ Endif // Create and compile
       FWrite( s_nMakeFileHandle, "CFLAG1 = $(SHELL)  /Ze /Go /Ot /Tx86-coff /I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)" +IIF( s_lMt, ' /D"HB_THREAD_SUPPORT" /MT' , "" ) + s_cEOL )
       FWrite( s_nMakeFileHandle, "CFLAG2 = " + s_cEOL )
       FWrite( s_nMakeFileHandle, "RFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LFLAGS = /LIBPATH:$(CC_DIR)\LIB /LIBPATH:$(CC_DIR)\LIB\WIN /LIBPATH:$(HB_DIR)\LIB /MACHINE:IX86"+IIF(!s_lGui," /SUBSYSTEM:CONSOLE"," /SUBSYSTEM:WINDOWS") + s_cEOL )
+      FWrite( s_nMakeFileHandle, "LFLAGS = /LIBPATH:$(CC_DIR)\lib /LIBPATH:$(CC_DIR)\lib\win /LIBPATH:$(HB_DIR)\lib /MACHINE:IX86"+IIF(!s_lGui," /SUBSYSTEM:CONSOLE"," /SUBSYSTEM:WINDOWS") + s_cEOL )
       FWrite( s_nMakeFileHandle, "IFLAGS = " + s_cEOL )
       FWrite( s_nMakeFileHandle, "LINKER = polink" + s_cEOL )
       FWrite( s_nMakeFileHandle, " " + s_cEOL )
@@ -3180,7 +3180,7 @@ Endif // Create and compile
       FWrite( s_nMakeFileHandle, "#BUILD" + s_cEOL )
       FWrite( s_nMakeFileHandle, " " + s_cEOL )
       FWrite( s_nMakeFileHandle, "$(PROJECT): $(CFILES) $(OBJFILES) $(RESDEPEN) $(DEFFILE)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(CC_DIR)\BIN\$(LINKER) @&&!  " + s_cEOL )
+      FWrite( s_nMakeFileHandle, "    $(CC_DIR)\bin\$(LINKER) @&&!  " + s_cEOL )
       FWrite( s_nMakeFileHandle, "    $(LFLAGS) +" + s_cEOL )
       FWrite( s_nMakeFileHandle, "    $(ALLOBJ), +" + s_cEOL )
       FWrite( s_nMakeFileHandle, "    $(PROJECT),, +" + s_cEOL )
@@ -4266,8 +4266,8 @@ FUNCTION CreateLibMakeFile( cFile )
    ENDIF
 
    IF s_lBcc
-      AAdd( s_aCommands, { ".cpp.obj:", "$(CC_DIR)\BIN\bcc32 $(CFLAG1) $(CFLAG2) -o$* $**" } )
-      AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\BIN\bcc32 -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -o$* $**" } )
+      AAdd( s_aCommands, { ".cpp.obj:", "$(CC_DIR)\bin\bcc32 $(CFLAG1) $(CFLAG2) -o$* $**" } )
+      AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\bin\bcc32 -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -o$* $**" } )
 
       IF s_lExtended
          AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n -go" + iif(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(FWH)\include -o$* $**" } )
@@ -4275,7 +4275,7 @@ FUNCTION CreateLibMakeFile( cFile )
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(FWH)\include -o$* $**" } )
       ENDIF
 
-      AAdd( s_aCommands, { ".rc.res:", "$(CC_DIR)\BIN\brcc32 $(RFLAGS) $<" } )
+      AAdd( s_aCommands, { ".rc.res:", "$(CC_DIR)\bin\brcc32 $(RFLAGS) $<" } )
 
    ELSEIF s_lGcc
 
@@ -4311,11 +4311,11 @@ FUNCTION CreateLibMakeFile( cFile )
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(C4W)\include -o$* $**" } )
       ENDIF
 
-      AAdd( s_aCommands, { ".rc.res:", "$(CC_DIR)\BIN\rc $(RFLAGS) $<" } )
+      AAdd( s_aCommands, { ".rc.res:", "$(CC_DIR)\bin\rc $(RFLAGS) $<" } )
 
    ELSEIF s_lPocc
-      AAdd( s_aCommands, { ".cpp.obj:", "$(CC_DIR)\BIN\pocc $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
-      AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\BIN\pocc -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
+      AAdd( s_aCommands, { ".cpp.obj:", "$(CC_DIR)\bin\pocc $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
+      AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\bin\pocc -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
 
       IF s_lExtended
          AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n -go" + iif(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(FWH)\include -o$** $**" } )
@@ -4323,7 +4323,7 @@ FUNCTION CreateLibMakeFile( cFile )
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(FWH)\include -o$** $**" } )
       ENDIF
 
-      AAdd( s_aCommands, { ".rc.res:", "$(CC_DIR)\BIN\porc $(RFLAGS) $<" } )
+      AAdd( s_aCommands, { ".rc.res:", "$(CC_DIR)\bin\porc $(RFLAGS) $<" } )
 
    ENDIF
 
@@ -4594,7 +4594,7 @@ FUNCTION CreateLibMakeFile( cFile )
       FWrite( s_nMakeFileHandle, "#BUILD" + s_cEOL )
       FWrite( s_nMakeFileHandle, " " + s_cEOL )
       FWrite( s_nMakeFileHandle, "$(PROJECT): $(CFILES) $(OBJFILES)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(CC_DIR)\BIN\$(LINKER) @&&!" + s_cEOL )
+      FWrite( s_nMakeFileHandle, "    $(CC_DIR)\bin\$(LINKER) @&&!" + s_cEOL )
       FWrite( s_nMakeFileHandle, "    $(ALLOBJ)" + s_cEOL )
       FWrite( s_nMakeFileHandle, "!" + s_cEOL )
 
@@ -4603,7 +4603,7 @@ FUNCTION CreateLibMakeFile( cFile )
       FWrite( s_nMakeFileHandle, "#BUILD" + s_cEOL )
       FWrite( s_nMakeFileHandle, " " + s_cEOL )
       FWrite( s_nMakeFileHandle, "$(PROJECT): $(CFILES) $(OBJFILES)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(CC_DIR)\BIN\$(LINKER) @&&!" + s_cEOL )
+      FWrite( s_nMakeFileHandle, "    $(CC_DIR)\bin\$(LINKER) @&&!" + s_cEOL )
       FWrite( s_nMakeFileHandle, "    $(PROJECT)" + s_cEOL )
       FWrite( s_nMakeFileHandle, "    $(ALLOBJ)" + s_cEOL )
       FWrite( s_nMakeFileHandle, "!" + s_cEOL )

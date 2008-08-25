@@ -53,7 +53,7 @@
 
 FUNCTION Main()
 
-   LOCAL oIni  := TIniFile():New( "c:\inetpub\wwwroot\guestbk.ini" )
+   LOCAL oIni  := TIniFile():New( "C:\inetpub\wwwroot\guestbk.ini" )
    LOCAL oHTML := THTML():New()
    LOCAL aEntr := {}
    LOCAL cOddColor, cEvenColor
@@ -92,7 +92,7 @@ FUNCTION Main()
    ELSE
 
       // Sets the metahtml file
-      oHTML:SetHTMLFile( "c:\inetpub\wwwroot\guestbk.htm" )
+      oHTML:SetHTMLFile( "C:\inetpub\wwwroot\guestbk.htm" )
 
       // Retrieves odd and even entries color
       cOddColor := oIni:ReadString( "Header", "OddColor", "#FFFFFF" )

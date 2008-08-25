@@ -1020,7 +1020,7 @@ The runtime modules
             will change Alt-c into Alt-b for cancelling (Alt-c is used
             to insert polish diactric letter)
 - Fixed to release PUBLIC variables correctly
-- Fixed bug in Directory( "c:\*.*" ) that returned 0 when hidden files
+- Fixed bug in Directory( "C:\*.*" ) that returned 0 when hidden files
   were present.
 - Alert() Fixed bug with messages longer than 60 bytes.
 - TGet:display() fixed to always evaluate the get block before

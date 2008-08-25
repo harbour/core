@@ -79,7 +79,7 @@
  *      The Harbour switches are always case insensitive.
  *      
  *      In the Harbour commandline the two style can be used together:  </par>
- *      HARBOUR -wnes2 /gc0/q0 -ic:\hello
+ *      harbour -wnes2 /gc0/q0 -iC:\hello
  *      
  *      Exceptions: 
  *      
@@ -95,16 +95,16 @@
  *        quote char to specify path containing space, negative sign, slash,
  *        or any other chars with special meaning.
  *      
- *        /i"c:/hello/"   </par>
- *        -i"c:/hello-n"  </par>
- *        /i"c:/program files/" </par>
- *        -i"c:/program files/" </par>
+ *        /i"C:/hello/"   </par>
+ *        -i"C:/hello-n"  </par>
+ *        /i"C:/Program Files/" </par>
+ *        -i"C:/Program Files/" </par>
  *      
  *      <fixed>
  *        Just some examples for the various accepted forms:
  *        //F20 == /F20 == F20 == F:20 == F20X
- *        //TMPPATH:C:\HELLO
- *        F20//TMPPATH:/TEMP///F:30000000 NOIDLE
+ *        //TMPPATH:C:\hello
+ *        F20//TMPPATH:/temp///F:30000000 NOIDLE
  *        F0NOIDLEX10
  *        SQUAWKNOIDLE
  *         </fixed>

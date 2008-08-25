@@ -8,6 +8,48 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-25 23:30 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/cmdline.txt
+   * doc/hrb_faq.txt
+   * doc/en/cmdline.txt
+   * doc/en/dir.txt
+   * doc/en/file.txt
+   * doc/en/set.txt
+   * doc/es/cmdline.txt
+   * doc/es/dir.txt
+   * doc/es/file.txt
+   * doc/whatsnew.txt
+   * contrib/hbct/disk.c
+   * contrib/hbodbc/odbc.txt
+   * contrib/hbwhat32/whtmapi.c
+   * contrib/hbwhat32/whtsys.c
+   * contrib/hbwhat32/whtinet.c
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbnf/chdir.c
+   * contrib/hbnf/tempfile.prg
+   * contrib/hbnf/ftisprn.c
+   * contrib/hbnf/getenvrn.c
+   * contrib/hbnf/mkdir.c
+   * contrib/hbnf/rmdir.c
+   * contrib/hbpgsql/readme.txt
+   * contrib/hbclipsm/environ.c
+   * contrib/hbclipsm/tests/testenv.prg
+   * contrib/hbgd/tests/gdtest.prg
+   * contrib/hbgd/tests/test_out.prg
+   * contrib/hbgd/tests/gdtestcl.prg
+   * contrib/hbgd/tests/testdpi.prg
+   * contrib/hbgd/tests/counter.prg
+   * contrib/hbtip/thtml.prg
+   * contrib/hbvpdf/hbvpdf.prg
+   * contrib/hbvpdf/tests/pdf_demo.prg
+   * contrib/hbvpdf/hbvpdft.prg
+   * contrib/examples/guestbk/guestbk.prg
+   * contrib/examples/pe/editorlo.c
+   * utils/hbdoc/genos2.prg
+   * utils/hbdoc/hbdoc.prg
+   * utils/hbmake/hbmake.prg
+     ! Filename casing fixes. (nothing critical)
+
 2008-08-25 22:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbsetup.h
      ! Fixed OS_UNIX_COMPATIBLE

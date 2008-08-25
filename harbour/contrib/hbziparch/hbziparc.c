@@ -493,15 +493,15 @@ static void ZipCreateArray( PHB_ITEM pParam, BYTE *pCurDir, BOOL bFullPath )    
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_ZIPFILE( "test1.zip", { "test.prg", "c:\windows\win.ini" } )
+ *      IF HB_ZIPFILE( "test1.zip", { "test.prg", "C:\windows\win.ini" } )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_ZIPFILE( "test2.zip", { "test.prg", "c:\windows\win.ini" }, 9, {|cFile,nPos,| qout(cFile) } )
+ *      IF HB_ZIPFILE( "test2.zip", { "test.prg", "C:\windows\win.ini" }, 9, {|cFile,nPos,| qout(cFile) } )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      aFiles := { "test.prg", "c:\windows\win.ini" }
+ *      aFiles := { "test.prg", "C:\windows\win.ini" }
  *      nLen   := Len( aFiles )
  *      aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B" , "²" )
  *      GaugeDisplay( aGauge )
@@ -715,15 +715,15 @@ HB_FUNC( HB_GETFILECOUNT )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_ZIPFILEBYTDSPAN( "test1.zip", { "test.prg", "c:\windows\win.ini" } )
+ *      IF HB_ZIPFILEBYTDSPAN( "test1.zip", { "test.prg", "C:\windows\win.ini" } )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_ZIPFILEBYTDSPAN( "test2.zip", { "test.prg", "c:\windows\win.ini" }, 9, {|nPos,cFile| qout(cFile) }, "hello",, 521421 )
+ *      IF HB_ZIPFILEBYTDSPAN( "test2.zip", { "test.prg", "C:\windows\win.ini" }, 9, {|nPos,cFile| qout(cFile) }, "hello",, 521421 )
  *         qout("File was successfully created" )
  *      ENDIF
  *
- *      aFiles := { "test.prg", "c:\windows\win.ini" }
+ *      aFiles := { "test.prg", "C:\windows\win.ini" }
  *      nLen   := Len( aFiles )
  *      aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "²" )
  *      GaugeDisplay( aGauge )
@@ -890,20 +890,20 @@ HB_FUNC( HB_ZIPFILEBYTDSPAN )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_ZIPFILEBYPKSPAN( "A:\test1.zip", { "test.prg", "c:\windows\win.ini" } )
+ *      IF HB_ZIPFILEBYPKSPAN( "A:\test1.zip", { "test.prg", "C:\windows\win.ini" } )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_ZIPFILEBYPKSPAN( "test2.zip", { "test.prg", "c:\windows\win.ini"}, 9, {|nPos,cFile| qout(cFile) } )
+ *      IF HB_ZIPFILEBYPKSPAN( "test2.zip", { "test.prg", "C:\windows\win.ini"}, 9, {|nPos,cFile| qout(cFile) } )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      aFiles := { "test.prg", "c:\windows\win.ini" }
+ *      aFiles := { "test.prg", "C:\windows\win.ini" }
  *      nLen   := Len( aFiles )
  *      aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "²" )
  *      GaugeDisplay( aGauge )
- *      HB_ZIPFILEBYPKSPAN( "f:\test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen ) },, "hello" )
- *      // assuming f:\ is a Zip Drive
+ *      HB_ZIPFILEBYPKSPAN( "F:\test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen ) },, "hello" )
+ *      // assuming F:\ is a Zip Drive
  *      Return NIL
  * $STATUS$
  *      R

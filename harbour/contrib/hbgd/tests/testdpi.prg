@@ -23,7 +23,7 @@ PROCEDURE Main()
  black := oI:SetColor( 0, 0, 0 )
 
  oI:SetColor( black )
- oI:SetFontName("c:\windows\fonts\arial.ttf")
+ oI:SetFontName("C:\windows\fonts\arial.ttf")
  oI:SetFontPitch( 10 )
 
  // Resolution = 96 dpi, default

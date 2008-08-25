@@ -6,7 +6,7 @@
 
 function Test( cParam )
 
-   LOCAL cFile := "c:\harbour\bin\harbour.exe"
+   LOCAL cFile := "C:\harbour\bin\harbour.exe"
 
    DEFAULT cParam TO cFile
 

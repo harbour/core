@@ -51,9 +51,9 @@
 *     SEGMENT directives, and also the ENDP and ENDS directives (a very
 *     minor task).
 *  $EXAMPLES$
-*     FT_RMDIR( "C:\CLIPPER" )
-*     FT_RMDIR( "\EXAMPLE" )
-*     FT_RMDIR( "..\SOURCE" )
+*     FT_RMDIR( "C:\clipper" )
+*     FT_RMDIR( "\example" )
+*     FT_RMDIR( "..\source" )
 *  $END$
 */
 /*This  is the Original FT_RMDIR() code

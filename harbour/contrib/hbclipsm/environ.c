@@ -55,7 +55,7 @@
 
 /* FilePath( <cFile> ) --> cFilePath
    Extract the full path name from a complete file name
-   * FilePath( "c:\harbour\bin\harbour.exe" ) --> "c:\harbour\bin\"
+   * FilePath( "C:\harbour\bin\harbour.exe" ) --> "C:\harbour\bin\"
 */
 HB_FUNC( FILEPATH )
 {

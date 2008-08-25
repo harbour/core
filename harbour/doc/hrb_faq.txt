@@ -11,17 +11,17 @@ Runner (also known as TugBoat, Stubbing Executables (not yet) )
 
 To create a runner :
 
-        c:..> bld32exe runner
+        C:..> bld32exe runner
 
 Once the runner is created,
 To create a .hrb and run it :
 
-        c:..> hbrun <filename>
+        C:..> hbrun <filename>
 
 
 If you just want to run a .hrb file :
 
-        c:..> runner <filename with .hrb>
+        C:..> runner <filename with .hrb>
 
 If you just want to create a .hrb file :
 
@@ -29,9 +29,9 @@ If you just want to create a .hrb file :
 
 To see the contents of a .hrb file :
 
-        c:...> clipper readhrb /n/a/w           {I am sorry}
-        c:...> blinker @readhrb
-        c:...> readhrb <filename without .hrb>  {What do mean consistent}
+        C:..> clipper readhrb /n/a/w           {I am sorry}
+        C:..> blinker @readhrb
+        C:..> readhrb <filename without .hrb>  {What do mean consistent}
 
         If it goes too fast a readhrb.out is created containing the screen
         output.

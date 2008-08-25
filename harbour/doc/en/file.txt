@@ -546,8 +546,8 @@
  *      no more paths to search. The DOS PATH is never searched and the
  *      current drive/directory is only searched if SET DEFAULT is blank.
  *  $EXAMPLES$
- *      ? file('c:\harbour\doc\compiler.txt")
- *      ? file('c:/harbour/doc/subcodes.txt")
+ *      ? file('C:\harbour\doc\compiler.txt")
+ *      ? file('C:/harbour/doc/subcodes.txt")
  *  </fixed>
  *  $STATUS$
  *      S (wild card support is missing)

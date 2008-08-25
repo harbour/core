@@ -313,7 +313,7 @@ RETURN ::oIterator:Find( cName, cAttrib, cValue, cData )
 /*
  * Abstract super class for THtmlIteratorScan and THtmlIteratorScanRegEx
  *
- * (Adopted from TXMLIterator -> source\rtl\TXml.prg)
+ * (Adopted from TXMLIterator -> source\rtl\txml.prg)
  */
 CLASS THtmlIterator MODULE FRIENDLY
    METHOD New( oNodeTop )           CONSTRUCTOR

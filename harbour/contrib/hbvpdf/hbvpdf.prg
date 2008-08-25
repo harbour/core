@@ -2551,7 +2551,7 @@ FUNCTION FilePos( nHandle )
 RETURN ( FSEEK( nHandle, 0, FS_RELATIVE ) )
 
 FUNCTION pdfFilePrint( cFile )
-LOCAL cRun := "d:\progra~2\Adobe\Acroba~2.0\Reader\AcroRd32.exe /t " + cFile + " " + chr(34) + "HP LaserJet 5/5M PostScript" + chr(34) + " " + chr(34) + "LPT1" + chr(34)
+LOCAL cRun := "D:\progra~2\Adobe\Acroba~2.0\Reader\AcroRd32.exe /t " + cFile + " " + chr(34) + "HP LaserJet 5/5M PostScript" + chr(34) + " " + chr(34) + "LPT1" + chr(34)
 
 IF (!SWPRUNCMD( cRun, 0, "", ""))
    alert("Error printing to PDF reader.")

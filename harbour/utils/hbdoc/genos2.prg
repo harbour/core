@@ -180,7 +180,7 @@ FUNCTION ProcessOs2()
    @ INFILELINE, 20 SAY "Extracting: "          
    @ MODULELINE, 20 SAY "Documenting: "         
    //  loop through all of the files
-   oOs2 := tOS2():new( "ipf\Harbour.ipf" )
+   oOs2 := tOS2():new( "ipf\harbour.ipf" )
    FOR i := 1 TO nFiles
 
       //  Open file for input

@@ -84,7 +84,7 @@
  *
  *     Create a unique file on another drive, but do not hide it:
  *
- *            myFile := FT_TEMPFIL("e:\nanfor\src\")
+ *            myFile := FT_TEMPFIL("E:\nanfor\src\")
  *  $END$
  */
 

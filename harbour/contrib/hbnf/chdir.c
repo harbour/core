@@ -48,9 +48,9 @@
 *     SEGMENT directives, and also the ENDP and ENDS directives (a very
 *     minor task).
 *  $EXAMPLES$
-*     FT_CHDIR( "C:\CLIPPER" )
+*     FT_CHDIR( "C:\clipper" )
 *     FT_CHDIR( "\" )
-*     FT_CHDIR( "..\SOURCE" )
+*     FT_CHDIR( "..\source" )
 *  $END$
 */
 

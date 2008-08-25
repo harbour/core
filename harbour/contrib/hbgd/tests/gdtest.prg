@@ -20,10 +20,10 @@ PROCEDURE Main()
    LOCAL black, white, blue, red, green, cyan
    LOCAL aClip, color, font, aRect
 
-   // SET GDFONTPATH=c:\windows\fonts
+   // SET GDFONTPATH=C:\windows\fonts
    IF GetEnv( "GDFONTPATH" ) == ""
       ? "Please set GDFONTPATH"
-      ? "On Windows: SET GDFONTPATH=c:\windows\fonts"
+      ? "On Windows: SET GDFONTPATH=C:\windows\fonts"
       ? "On Linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType"
       ?
    ENDIF

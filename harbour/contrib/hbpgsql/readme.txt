@@ -19,7 +19,7 @@ Postgres Library.
 
 Go to postgres directory \postgresql-7.4.5\src\interfaces\libpq
 
-Edit bcc32.mak and change the default borland directory for your needs. Example: BCB=c:\Borland\Bcc55
+Edit bcc32.mak and change the default borland directory for your needs. Example: BCB=C:\borland\bcc55
 
 change postgresql-7.4.5\src\include\pg_config.h.win32 to pg_config.h
 
@@ -27,7 +27,7 @@ after this
 
 make -f bcc32.mak
 
-Now look at \postgresql-7.4.5\src\interfaces\libpq\Release, you will find the all .libs and .dlls
+Now look at \postgresql-7.4.5\src\interfaces\libpq\release, you will find the all .libs and .dlls
 
 If want use the dll, link in your aplication blibpqdll.lib and send blibpq.dll together with your aplication
 

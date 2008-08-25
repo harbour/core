@@ -89,8 +89,8 @@
  *
  *        aEnvArray := ARRAY(FT_GETE())
  *        FT_GETE(aEnvArray)
- *        ? aEnvArray[1]       // "COMSPEC=C:\COMMAND.COM"
- *        ? aEnvArray[2]       // "PATH=C:\;C:\DOS;C:\UTIL;C:\CLIP50\BIN"
+ *        ? aEnvArray[1]       // "COMSPEC=C:\command.com"
+ *        ? aEnvArray[2]       // "PATH=C:\;C:\windows;C:\util;C:\harbour"
  *          ... etc ...
  *  $END$
  */

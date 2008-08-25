@@ -14,7 +14,7 @@
                'vouchcac@hotmail.com', ;   // Sender's Address
                'Pritpal',              ;   // Recipient's Name
                'info@vouchcac.com',    ;   // Recipient's Address
-               'c:\autoexec.bat'       )   // File attached
+               'C:\autoexec.bat'       )   // File attached
 
 */
 

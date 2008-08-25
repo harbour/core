@@ -59,7 +59,7 @@
  *
  *      // Lista todos los PRG de la librer¡a de ejecuci¢n (RTL) de Harbour
  *      // para sistemas operativos compatibles con DOS
- *      __Dir( "c:\harbour\source\rtl\*.prg" )
+ *      __Dir( "C:\harbour\source\rtl\*.prg" )
  *
  *      // Lista todos los archivos de la secci¢n p£blica sobre una m quina
  *      // tipo Unix
@@ -125,7 +125,7 @@
  *
  *      // Lista todos los PRG de la librer¡a de ejecuci¢n (RTL) de Harbour
  *      // para sistemas operativos compatibles con DOS
- *      __Dir( "c:\harbour\source\rtl\*.prg" )
+ *      __Dir( "C:\harbour\source\rtl\*.prg" )
  *
  *      // Lista todos los archivos de la secci¢n p£blica sobre una m quina
  *      // tipo Unix

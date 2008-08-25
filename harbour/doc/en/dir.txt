@@ -50,7 +50,7 @@
  *
  *      // list all PRG files in Harbour Run-Time library
  *      // for DOS compatible operating systems
- *      __Dir( "c:\harbour\source\rtl\*.prg" )
+ *      __Dir( "C:\harbour\source\rtl\*.prg" )
  *
  *      // list all files in the public section on a Unix like machine
  *      __Dir( "/pub" )
@@ -107,7 +107,7 @@
  *
  *      // list all PRG files in Harbour Run-Time library
  *      // for DOS compatible operating systems
- *        Dir  "c:\harbour\source\rtl\*.prg"
+ *        Dir  "C:\harbour\source\rtl\*.prg"
  *
  *      // list all files in the public section on a Unix like machine
  *        Dir  "/pub"

@@ -354,7 +354,7 @@
  *                   Specifies a path of directories to search through to
  *                   locate a file that can't be located in the DEFAULT
  *                   directory. Defaults to no path (""). Directories must
- *                   be separated by a semicolon (e.g., "C:\DATA;C:\MORE").
+ *                   be separated by a semicolon (e.g., "C:\data;C:\more").
  *
  *              _SET_PRINTER     <lFlag> | <cOnOff>
  *
@@ -845,7 +845,7 @@
  *      parameters with this command will default the operation to the
  *      current logged drive and directory.
  *  $EXAMPLES$
- *      SET DEFAULT to c:\TEMP
+ *      SET DEFAULT to C:\temp
  *  </fixed>
  *  $STATUS$
  *      R

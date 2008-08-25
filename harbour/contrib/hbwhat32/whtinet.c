@@ -161,7 +161,7 @@ HB_FUNC( INTERNETCONNECT )
    );
 */
 //
-//    if FtpOpenFile( hInternet, 'Temp/Config.sys', GENERIC_WRITE )
+//    if FtpOpenFile( hInternet, 'temp/config.sys', GENERIC_WRITE )
 //       // take next step
 //    endif
 //
@@ -497,7 +497,7 @@ HB_FUNC( FTPREMOVEDIRECTORY )
    );
 */
 //
-//   if FtpDeleteFile( hInternet, 'Temp\Config.sys' )
+//   if FtpDeleteFile( hInternet, 'temp\config.sys' )
 //      ? 'Sucess'
 //   endif
 //

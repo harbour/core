@@ -133,7 +133,7 @@
 *        Qout( "Check the device on COM2.  Something is wrong." )
 *     ENDIF
 *
-*     IF ! FT_ISPRINT( "A:\NUL" )
+*     IF ! FT_ISPRINT( "A:\nul" )
 *        Qout( "Oops, better check drive A!" )
 *     ENDIF
 *  $END$

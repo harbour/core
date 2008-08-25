@@ -121,7 +121,7 @@ PROCEDURE EndHTML( cTitle )
    WRITE "</html>"
 RETURN
 
-   // per windows: SET GDFONTPATH=c:\windows\fonts
+   // per windows: SET GDFONTPATH=C:\windows\fonts
    // per linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType
 
 PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
@@ -158,7 +158,7 @@ RETURN
 
 PROCEDURE OutJpg( cText, nPitch )
    LOCAL cOS := OS()
-   LOCAL cPath := IIF( Left( cOS, 10 ) == "Windows NT", "c:\winnt\fonts\", "c:\windows\fonts\" )
+   LOCAL cPath := IIF( Left( cOS, 10 ) == "Windows NT", "C:\winnt\fonts\", "C:\windows\fonts\" )
    LOCAL oI, cyan, blue
    LOCAL aSize, nWidth, nHeight, nX, nY
    LOCAL cFont := cPath + "verdana.ttf"

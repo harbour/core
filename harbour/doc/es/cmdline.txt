@@ -102,7 +102,7 @@
  *      En la l¡nea de comandos de Harbour los dos estilos pueden ser usados
  *      conjuntamente:   
  *
- *      HARBOUR -wnes2 /gc0/q0 -ic:\hello
+ *      harbour -wnes2 /gc0/q0 -iC:\hello
  *      
  *      Excepciones: 
  *      
@@ -120,16 +120,16 @@
  *        conteniendo espacios, signo negativo, barras u otros caracteres
  *        con un significado especial.
  *      
- *        /i"c:/hello/"   </par>
- *        -i"c:/hello-n"  </par>
- *        /i"c:/program files/" </par>
- *        -i"c:/program files/" </par>
+ *        /i"C:/hello/"   </par>
+ *        -i"C:/hello-n"  </par>
+ *        /i"C:/Program Files/" </par>
+ *        -i"C:/Program Files/" </par>
  *      
  *      <fixed>
  *      S¢lo algunos ejemplos para las varias formas aceptadas:
  *      //F20 == /F20 == F20 == F:20 == F20X
- *      //TMPPATH:C:\HELLO
- *      F20//TMPPATH:/TEMP///F:30000000 NOIDLE
+ *      //TMPPATH:C:\hello
+ *      F20//TMPPATH:/temp///F:30000000 NOIDLE
  *      F0NOIDLEX10
  *      SQUAWKNOIDLE
  *      </fixed>

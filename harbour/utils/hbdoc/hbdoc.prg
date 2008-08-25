@@ -1181,8 +1181,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          SET ALTERNATE ON
          SET CONSOLE OFF
          ? "Copy ngi\overview.ngi ."
-         ? "Copy ngi\License.ngi  ."
-         ? "Copy ngi\Funcam.txt   ."
+         ? "Copy ngi\license.ngi  ."
+         ? "Copy ngi\funcam.txt   ."
          ? "Copy ngi\funcn_.txt   ."
          ? "copy ngi\comm.txt     ."
          ? "Compiling Sources"

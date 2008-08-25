@@ -193,7 +193,7 @@ procedure main()
 //   pdfFilePrint( "test.pdf" ) // print .pdf file WITHOUT opening acrobat
 
 /*
-   cRun := "d:\progra~2\Adobe\Acroba~2.0\Reader\AcroRd32.exe " + "test.pdf"
+   cRun := "D:\progra~2\Adobe\Acroba~2.0\Reader\AcroRd32.exe " + "test.pdf"
 
    IF (!SWPRUNCMD( cRun, 0, "", ""))
       alert(" Error running Acrobat Reader.")

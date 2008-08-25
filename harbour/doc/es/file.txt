@@ -745,7 +745,7 @@
  *      Si ocurre un error, consulte el valor que devuelve la funci¢n
  *      FERROR(), por las causas posibles del error.
  *  $EXAMPLES$
- *      RENAME c:\autoexec.bat TO c:\autoexec.old
+ *      RENAME C:\autoexec.bat TO C:\autoexec.old
  *      </fixed>
  *  $STATUS$
  *      R
@@ -782,8 +782,8 @@
  *      El archivo debe ser considerado cerrado por el sistema operativo,
  *      antes de que ‚ste pueda ser borrado.
  *  $EXAMPLES$
- *      ERASE c:\autoexec.bat     // s¢lo es una broma, no lo intente!
- *      ERASE c:/temp/read.txt
+ *      ERASE C:\autoexec.bat     // s¢lo es una broma, no lo intente!
+ *      ERASE C:/temp/read.txt
  *      </fixed>
  *  $STATUS$
  *      R
@@ -818,8 +818,8 @@
  *      El archivo debe ser considerado cerrado por el sistema operativo,
  *      antes de que ‚ste pueda ser borrado.
  *  $EXAMPLES$
- *      ERASE c:\autoexec.bat     // s¢lo es una broma, no lo intente!
- *      ERASE c:/temp/read.txt
+ *      ERASE C:\autoexec.bat     // s¢lo es una broma, no lo intente!
+ *      ERASE C:/temp/read.txt
  *      </fixed>
  *  $STATUS$
  *      R
@@ -1130,7 +1130,7 @@
  *      ocurrido.
  *      Consulte la funci¢n FERROR() por una descripci¢n del error.
  *  $EXAMPLES$
- *      cDir   := ".\Backup"
+ *      cDir   := ".\backup"
  *      nError := DIRREMOVE( cDir )
  *
  *      IF nError == 0

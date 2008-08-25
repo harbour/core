@@ -51,9 +51,9 @@
 *     SEGMENT directives, and also the ENDP and ENDS directives (a very
 *     minor task).
 *  $EXAMPLES$
-*     FT_MKDIR( "C:\CLIPPER" )
-*     FT_MKDIR( "\EXAMPLE" )
-*     FT_MKDIR( "..\SOURCE" )
+*     FT_MKDIR( "C:\clipper" )
+*     FT_MKDIR( "\example" )
+*     FT_MKDIR( "..\source" )
 *  $END$
 */
 

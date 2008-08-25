@@ -894,10 +894,10 @@ HB_FUNC( WINHELP )
 //
 //
 //  HtmlHelp( hWndCaller,        ;  // Handle of caller window, can be GetDeskTopWindow()
-//            cFullPathAndTopic  )  // C:\Creative.acp\Help\VVouch.htm::default.htm
+//            cFullPathAndTopic  )  // C:\creative.acp\help\vvouch.htm::default.htm
 //                                  // If topic is not given, default topic will appear
 //
-//  HtmlHelp( GetDeskTopWindow(), 'c:\help\vvouch.chm::de_windo.htm' )
+//  HtmlHelp( GetDeskTopWindow(), 'C:\help\vvouch.chm::de_windo.htm' )
 //
 //  To create a .chm file, you need to work with Microsoft's
 //  free HtmlHelp Workshop doanloadable from MSDN

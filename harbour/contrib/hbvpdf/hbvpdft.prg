@@ -2362,7 +2362,7 @@ METHOD tPdf:FilePrint( cFile )
 #else
 METHOD FilePrint( cFile ) 
 #endif
-local cPathAcro := "c:\progra~1\Adobe\Acroba~1.0\Reader"
+local cPathAcro := "C:\progra~1\Adobe\Acroba~1.0\Reader"
 local cRun := cPathAcro + "\AcroRd32.exe /t " + cFile + " " + ;
             chr(34) + "HP LaserJet 5/5M PostScript" + chr(34) + " " + ;
             chr(34) + "LPT1" + chr(34)
@@ -2382,7 +2382,7 @@ METHOD tPdf:Execute( cFile )
 METHOD Execute( cFile ) 
 #endif
 //  Replace cPathAcro with the path at your system
-local cPathAcro := "c:\progra~1\Adobe\Acroba~1.0\Reader"
+local cPathAcro := "C:\progra~1\Adobe\Acroba~1.0\Reader"
 local cRun := cPathAcro + "\AcroRd32.exe /t " + cFile + " " + chr(34) + "HP LaserJet 5/5M PostScript" + chr(34) + " " + chr(34) + "LPT1" + chr(34)
 
 IF (! RunExternal( cRun, "open", cFile ) )

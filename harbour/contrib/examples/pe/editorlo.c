@@ -898,7 +898,7 @@ char *HB_ED_GETTEXT(int nEdit, int Case, int mietka )
    #else
       bufor = calloc((unsigned int) dl,1);
 
-      strcpy(name,"c:\\out.txt");
+      strcpy(name,"C:\\out.txt");
       p     = open(name,O_CREAT+O_WRONLY+O_BINARY);
    #endif
 
