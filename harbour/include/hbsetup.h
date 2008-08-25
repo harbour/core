@@ -229,13 +229,6 @@
 
 #define HB_ISOPTSEP( c ) ( strchr( HB_OS_OPT_DELIM_LIST, ( c ) ) != NULL )
 
-/* Compatibility #defines. These will be removed, so 
-   please use the new names in your code. */
-#ifdef HB_LEGACY_LEVEL
-   #define OS_UNIX_COMPATIBLE           HB_OS_UNIX_COMPATIBLE
-   #define OS_PATH_DELIMITER            HB_OS_PATH_DELIM_CHR
-#endif
-
 /* ***********************************************************************
  * Platform detection
  */
@@ -282,12 +275,14 @@
    #endif
 #endif
 
+/* Sub-option inside HB_OS_WIN_32 */
 #ifndef HB_OS_WIN_64
    #if defined(_WIN64)
       #define HB_OS_WIN_64
    #endif
 #endif
 
+/* Sub-option inside HB_OS_WIN_32 */
 #ifndef HB_WINCE
    #if defined(_WINCE) || defined(__CEGCC__) || defined(__MINGW32CE__)
       #define HB_WINCE
@@ -346,6 +341,15 @@
 #ifdef HB_EOL_CRLF
    #undef HB_OS_EOL_LEN
    #define HB_OS_EOL_LEN 2
+#endif
+
+/* Compatibility #defines. These will be removed, so 
+   please use the new names in your code. */
+#ifdef HB_LEGACY_LEVEL
+   #define OS_PATH_DELIMITER            HB_OS_PATH_DELIM_CHR
+   #ifdef HB_OS_UNIX_COMPATIBLE
+      #define OS_UNIX_COMPATIBLE
+   #endif
 #endif
 
 /* ***********************************************************************

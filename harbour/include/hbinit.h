@@ -60,7 +60,7 @@ HB_EXTERN_BEGIN
 extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* old module symbols initialization */
 extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, USHORT uiPcodeVer ); /* module symbols initialization with extended information */
 
-#if defined(_MSC_VER) && !defined(_WIN64) && \
+#if defined(_MSC_VER) && !defined(HB_OS_WIN_64) && \
     !defined(__LCC__) && !defined(__POCC__) && !defined(__XCC__) && \
     !defined(HB_STRICT_ANSI_C) && !defined(HB_STATIC_STARTUP) && \
     !defined(HB_PRAGMA_STARTUP) && !defined(HB_MSC_STARTUP)

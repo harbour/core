@@ -9,6 +9,20 @@
 */
 
 2008-08-25 22:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbsetup.h
+     ! Fixed OS_UNIX_COMPATIBLE
+     + Small comments added.
+     ; NOTE: I'd like to do the following global renames:
+             HB_WINCE     -> HB_OS_WIN_CE
+             HB_OS_WIN_32 -> HB_OS_WIN
+             Opinions? Especially on the latter.
+
+   * include/hbdefs.h
+   * include/hbinit.h
+   * contrib/hbodbc/odbc.c
+     * _WIN64 -> HB_OS_WIN_64
+
+2008-08-25 22:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_vcce.mak
      ! Do not explicitly #define HB_WINCE. This should be 
        autodetected in hbsetup.h.

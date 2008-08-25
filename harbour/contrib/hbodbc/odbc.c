@@ -97,14 +97,14 @@
 #endif
 
 #ifndef SQLLEN
-   #ifdef _WIN64
+   #ifdef HB_OS_WIN_64
       typedef INT64           SQLLEN;
    #else
       #define SQLLEN          SQLINTEGER
    #endif
 #endif
 #ifndef SQLULEN
-   #ifdef _WIN64
+   #ifdef HB_OS_WIN_64
       typedef UINT64          SQLULEN;
    #else
       #define SQLULEN         SQLUINTEGER

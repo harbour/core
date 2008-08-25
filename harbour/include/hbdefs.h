@@ -84,8 +84,8 @@
 #define HB_LONG_LONG_OFF
 */
 
-#if defined( HB_OS_WIN_32 ) || defined( _WIN64 )
-   #if defined( _WIN64 )
+#if defined( HB_OS_WIN_32 ) || defined( HB_OS_WIN_64 )
+   #if defined( HB_OS_WIN_64 )
       #undef HB_LONG_LONG_OFF
       #define HB_STRICT_ALIGNMENT
       #if !defined( HB_OS_WIN_32 )
@@ -286,7 +286,7 @@
  * below are some hacks which don't have to be true on some machines
  * please update it if necessary
  */
-#if defined( _WIN64 )
+#if defined( HB_OS_WIN_64 )
 #  define HB_ARCH_64BIT
 #elif ULONG_MAX > UINT_MAX && UINT_MAX > USHRT_MAX
 #  define HB_ARCH_64BIT
@@ -361,7 +361,7 @@
 #  define INT24_MIN     -8388608L
 #endif
 
-#if defined( HB_ARCH_64BIT ) && !defined( _WIN64 )
+#if defined( HB_ARCH_64BIT ) && !defined( HB_OS_WIN_64 )
 #  if !defined( UINT64 )
      typedef ULONG        UINT64;
 #  endif
@@ -531,7 +531,7 @@ typedef unsigned long HB_COUNTER;
 #endif
 
 /* type for memory pointer diff */
-#if defined( _WIN64 )
+#if defined( HB_OS_WIN_64 )
    typedef LONGLONG HB_PTRDIFF;
 #else
    typedef long HB_PTRDIFF;
