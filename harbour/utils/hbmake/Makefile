@@ -10,7 +10,6 @@ ROOT = ../../
 
 PRG_SOURCES=\
 	hbmake.prg \
-	hbmutils.prg \
 
 C_SOURCES=\
 	hbmfrdln.c \

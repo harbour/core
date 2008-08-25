@@ -58,8 +58,9 @@
 #include "hbclass.ch"
 
 #include "achoice.ch"
-#include "fileio.ch"
 #include "common.ch"
+#include "directry.ch"
+#include "fileio.ch"
 #include "inkey.ch"
 
 #define HB_FEOF  -1        // hb_FReadLine() returns -1 on End-of-File (EOF)
@@ -436,18 +437,18 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
    setpos(9,0)
    Outstd( s_cLinkCommands + s_cEOL )
    SET CURSOR OFF
-   __RUN( (s_cLinkCommands) )
+   hb_run( s_cLinkCommands )
 
    IF s_lCompress .AND. !s_lLibrary
       SET CURSOR ON
       setpos(9,0)
-      __Run( " upx -9 "+ (s_cAppName) )
+      hb_run( " upx -9 "+ (s_cAppName) )
       SET CURSOR OFF
    ENDIF
 
 
    IF s_lasdll .or. lower(right(s_cAppName,3)) == "dll"
-       __Run( ReplaceMacros("implib $(HB_DIR)\lib\" + left(s_cAppName,at(".",s_cAppName)-1)+".lib " +s_cAppName ))
+       hb_run( ReplaceMacros("implib $(HB_DIR)\lib\" + left(s_cAppName,at(".",s_cAppName)-1)+".lib " +s_cAppName ))
    ENDIF
 
 
@@ -672,7 +673,7 @@ FUNCTION ParseMakeFile( cFile )
                         NEXT
                      elseif  aTemp[ 1 ] == "SHELL"
                              if !empty( Atemp[ 2 ] )
-                                __run( (Atemp[ 2 ]) + " > e.txt")
+                                hb_run( Atemp[ 2 ] + " > e.txt")
                                 Atemp[ 2 ] := alltrim( memoread( "e.txt" ) )
                                 aTemp[ 2 ] := strtran( aTemp[ 2 ],chr(13),"")
                                 aTemp[ 2 ] := strtran( aTemp[ 2 ],chr(10),"")
@@ -1239,12 +1240,12 @@ FUNCTION CompileFiles()
                   Outstd( cComm )
                   Outstd( s_cEOL )
                   setpos(9,0)
-                  __RUN( (cComm) )
+                  hb_run( cComm )
                   cErrText := Memoread( (s_cLog) )
                   lEnd     := "C2006" $ cErrText .OR. "No code generated" $ cErrText
 
                   IF ! s_lIgnoreErrors .AND. lEnd
-                     __run( s_cEditor +" "+(s_cLog) )
+                     hb_run( s_cEditor + " " + s_cLog )
                      SET CURSOR ON
                      QUIT
                   ELSE
@@ -1317,7 +1318,7 @@ FUNCTION CompileFiles()
                   Outstd( cComm )
                   Outstd( s_cEOL )
                   setpos(9,0)
-                  __RUN( (cComm) )
+                  hb_run( cComm )
                   cComm := cOld
                ENDIF
 
@@ -1384,11 +1385,11 @@ FUNCTION CompileFiles()
                      if s_lMingw
                      cComm := strtran(cComm ,"\","/")
                      endif
-                     __RUN( (cComm) )
-                     cErrText := Memoread( (s_cLog) )
+                     hb_run( cComm )
+                     cErrText := Memoread( s_cLog )
                      lEnd     := "Error E" $   cErrText
                      IF ! s_lIgnoreErrors .AND. lEnd
-                        __run( s_cEditor + " "+(s_cLog) )
+                        hb_run( s_cEditor + " "+ s_cLog )
                         SET CURSOR ON
                         QUIT
                      ELSE
@@ -1458,12 +1459,12 @@ FUNCTION CompileFiles()
                   // Outstd( s_cEOL )
                   nFile ++
                   setpos(9,0)
-                  __RUN( (cComm) )
+                  hb_run( cComm )
                   cErrText := Memoread( (s_cLog) )
                   lEnd     := "C2006" $ cErrText .OR. "No code generated" $ cErrText .or. "Error E" $ cErrText .or. "Error F" $ cErrText
 
                   IF ! s_lIgnoreErrors .AND. lEnd
-                     __run( s_cEditor + " "+(s_cLog) )
+                     hb_run( s_cEditor + " " + s_cLog )
                      SET CURSOR ON
                      QUIT
                   ELSE
@@ -1495,7 +1496,7 @@ FUNCTION CompileFiles()
                outstd( " " )
                ? cComm
                setpos(9,0)
-               __RUN( (cComm) )
+               hb_run( cComm )
             ENDIF
 
             cComm := cOld
@@ -3497,12 +3498,12 @@ FUNCTION CompileUpdatedFiles()
                      //Outstd( cComm )
                      //Outstd( s_cEOL )
                      setpos(9,0)
-                     __RUN( (cComm) )
+                     hb_run( cComm )
                      cErrText := Memoread( (s_cLog) )
                      lEnd     := "C2006" $ cErrText .OR. "No code generated" $ cErrText
 
                      IF ! s_lIgnoreErrors .AND. lEnd
-                        __run( s_cEditor +" "+ (s_cLog) )
+                        hb_run( s_cEditor + " " + s_cLog )
                         set cursor on
                         QUIT
                      ELSE
@@ -3562,7 +3563,7 @@ FUNCTION CompileUpdatedFiles()
                   Outstd( cComm )
                   Outstd( s_cEOL )
                   setpos(9,0)
-                  __RUN( (cComm) )
+                  hb_run( cComm )
                   cComm := cOld
                ENDIF
 
@@ -3620,12 +3621,12 @@ FUNCTION CompileUpdatedFiles()
                      //Outstd( cComm )
                      //Outstd( s_cEOL )
                      setpos(9,0)
-                     __RUN( (cComm) )
+                     hb_run( cComm )
                      cErrText := Memoread( (s_cLog) )
                      lEnd     := "Error E" $ cErrText
 
                      IF ! s_lIgnoreErrors .AND. lEnd
-                        __run( s_cEditor +" "+ (s_cLog) )
+                        hb_run( s_cEditor + " " + s_cLog )
                         set cursor on
                         QUIT
                      ELSE
@@ -3696,12 +3697,12 @@ FUNCTION CompileUpdatedFiles()
                      nFile ++     // moved from outside "FOR EACH", Ath 2004-06-08
 
                      setpos(9,0)
-                     __RUN( (cComm) )
-                     cErrText := Memoread( (s_cLog) )
+                     hb_run( cComm )
+                     cErrText := Memoread( s_cLog )
                      lEnd     := "C2006" $ cErrText .OR. "No code generated" $ cErrText .or. "Error E" $ cErrText .or. "Error F" $ cErrText
 
                      IF ! s_lIgnoreErrors .AND. lEnd
-                        __run( s_cEditor +" "+ (s_cLog) )
+                        hb_run( s_cEditor + " " + s_cLog )
                         set cursor on
                         QUIT
                      ELSE
@@ -3736,7 +3737,7 @@ FUNCTION CompileUpdatedFiles()
                cComm := Strtran( cComm, "$<", s_aResources[ nFiles ] )
                outstd( " " )
                setpos(9,0)
-               __RUN( (cComm) )
+               hb_run( cComm )
             ENDIF
 
             cComm := cOld
@@ -6428,6 +6429,8 @@ METHOD FindMacro( cMacro, cRead ) CLASS THBMAKE
    RETURN cRead
 
 *-------------------------------------------------------------------
+* Former pickarry.prg
+*-------------------------------------------------------------------
 
 FUNCTION PICKARRY( T, L, b, r, IN_ARRAY, OUT_ARRAY, aDefault, lAllowAll, cTitle, lLib )
 
@@ -6617,3 +6620,616 @@ STATIC FUNCTION PICKARRY_Keys( MODE, someitems, lAdd )
    ENDIF
 
    RETURN RETVAL
+
+*-------------------------------------------------------------------
+* Former hbmutils.prg
+*-------------------------------------------------------------------
+
+*--------------------------------------------
+FUNCTION GetSourceFiles( lSubDir, lGcc, cOs )
+*--------------------------------------------
+
+   LOCAL aDirs
+   LOCAL aRet      := {}
+   LOCAL lLinux    := AT( "linux", LOWER( cOs ) ) > 0 .OR. lGcc
+   LOCAL cDir      := IIF( ! lLinux, "\" + CURDIR() + "\", "/" + CURDIR() + "/" )
+   LOCAL aStru     := { cDir }
+   LOCAL aData
+   LOCAL nCounter  := 0
+   LOCAL nArrayLen
+   LOCAL nDatalen
+   LOCAL y
+   LOCAL cItem
+   LOCAL cExt
+   LOCAL cPath
+   LOCAL cDrive
+   LOCAL nPos
+   LOCAL xItem
+   LOCAL nLen
+   LOCAL cFile
+   LOCAL nPadr
+
+   DEFAULT lSubDir TO .t.
+
+   WHILE ++ nCounter <= LEN( aStru )
+
+      IF ! EMPTY( aDirs := GetDirs( aStru[ nCounter ], lGcc ) )                  // There are elements!
+         AEVAL( aDirs, { | xItem | AADD( aStru, xItem ) } )
+      ENDIF
+
+   ENDDO
+
+   aDirs := {}
+
+   ASort( aStru )
+   nArrayLen := LEN( aStru )
+
+   FOR nCounter := 1 TO nArrayLen
+
+      IF LEN( aData := DIR_MULTI( aStru[ nCounter ] + "*.prg |" + aStru[ nCounter ] + "*.c |" + aStru[ nCounter ] + "*.cpp" ) ) != 0
+
+         nDataLen := LEN( aData )
+
+         nPadr := 12 // maximum Clipper/DOS source file name length with extension.
+         // if this lenght is greater than 12, then reset nPadr.
+         FOR y := 1 TO nDataLen
+             nPadr := Max( AT(".prg", Lower( aData[ y, 1 ] ) )+3 , nPadr )
+             nPadr := Max( AT(".c",   Lower( aData[ y, 1 ] ) )+1 , nPadr )
+             nPadr := Max( AT(".cpp", Lower( aData[ y, 1 ] ) )+3 , nPadr )
+         NEXT
+
+         FOR y := 1 TO nDataLen
+
+            IF AT( ".prg", Lower( aData[ y, 1 ] ) ) > 0 .OR. AT( ".c", Lower( aData[ y, 1 ] ) ) > 0 .OR. AT( ".cpp", Lower( aData[ y, 1 ] ) ) > 0
+
+               IF lSubDir
+
+                  nLen := AT( " ", aData[ y, 1 ] ) + 1
+
+                  AADD( aRet, STRTRAN( aStru[ nCounter ], cDir, "" ) +;
+                        PadR(aData[ y,1 ] ,nPadr) + ;         // prg name
+                        STR(aData[ y, 2 ] , 8 ) + "  " + ;    // prg size
+                        DTOC(aData[ y, 3 ] ) + "  " + ;       // prg date
+                        aData[ y, 4 ] )                       // prg time
+
+               ELSEIF ! lSubDir .AND. AT( IIF( lLinux, "/", "\" ), STRTRAN( aStru[ nCounter ], cDir, "" ) ) == 0
+
+                  AADD( aRet, PadR(aData[ y, 1 ],nPadr) + ;   // prg name
+                        STR( aData[ y, 2 ], 8 ) + "  " + ;    // prg size
+                        DTOC( aData[ y, 3 ] ) + "  " + ;      // prg date
+                        aData[ y, 4 ] )                       // prg time
+
+               ENDIF
+
+            ENDIF
+
+         NEXT
+
+      ENDIF
+
+   NEXT
+
+   //     For nCounter := 1 To Len( aRet )
+   FOR EACH cFile IN aRet
+
+      xItem := SUBSTR( cFile, RAT( IIF( lLinux, "/", "\" ), cFile ) + 1 )
+      nPos  := ASCAN( aStru, { | x | x := SUBSTR( x, RAT( IIF( lLinux, "/", "\" ), x ) + 1 ), LEFT( x, AT( ".", x ) ) == LEFT( xitem, AT( ".", xitem ) ) } )
+
+      IF nPos > 0
+         ADEL( aStru, nPos )
+         ASIZE( aStru, LEN( aStru ) - 1 )
+      ENDIF
+
+   NEXT
+
+   FOR EACH cFile IN aStru
+
+      HB_FNAMESPLIT( LEFT( cFile, AT( " ", cFile ) - 1 ), @cPath, @cItem, @cExt, @cDrive )
+
+      IF ( cExt == ".C" ) .OR. ( cExt == ".c" ) .OR. ( cExt == ".CPP" ) .OR. ( cExt == ".cpp" )
+         AADD( aRet, cFile )
+      ENDIF
+
+   NEXT
+RETURN aRet
+
+*-------------------------------
+FUNCTION ExtenPrg( cExt, nType )
+*-------------------------------
+
+   LOCAL aExt   := { "C", "c" }
+   LOCAL nPos
+   LOCAL cTemp  := ""
+
+   nPos := ASCAN( aExt, { | a | a == cExt } )
+
+   IF nPos > 0
+      SWITCH nType
+      CASE 1
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "prg" )
+         EXIT
+      CASE  2
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "prG" )
+         EXIT
+      CASE  3
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "pRg" )
+         EXIT
+      CASE  4
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "Prg" )
+         EXIT
+      CASE  5
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "PRg" )
+         EXIT
+      CASE  6
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "PrG" )
+         EXIT
+      CASE  7
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "PRG" )
+         EXIT
+      END
+   ENDIF
+
+RETURN cTemp
+
+*----------------------------------------
+STATIC FUNCTION GetDirs( cPattern, lGcc )
+*----------------------------------------
+
+   LOCAL aDir   := {}
+   LOCAL lLinux := AT( "linux", LOWER( OS() ) ) > 0 .OR. lGcc
+
+   AEVAL( DIRECTORY( cPattern + IIF( lLinux, "*", "*.*" ), "D" ), ;
+          { | xItem | IIF( xItem[ F_ATTR ] == "D" .AND. ;
+          ( !( xItem[ F_NAME ] == "." ) .AND. !( xItem[ F_NAME ] == ".." ) ), ;
+          AADD( aDir, cPattern + xItem[ F_NAME ] + IIF( lLinux, "/", "\" ) ), ;
+          ) } )
+
+RETURN aDir
+
+*-----------------------
+FUNCTION GetHarbourDir()
+*-----------------------
+
+    LOCAL cPath   := ""
+    LOCAL cEnv    := GETE( "PATH" )
+    LOCAL lLinux  := "LINUX" $ upper(OS())
+    LOCAL lUnix   := iif( "UNIX" $ upper(OS()) .OR. "HP-UX" $ upper(OS()), .T., .F. )
+    LOCAL aEnv
+    LOCAL cCurEnv := ""
+    LOCAL cBar    := iif( lLinux .or. lUnix, "/" , "\" )
+    LOCAL HBSTRG  := ""
+    LOCAL cPathUni:= GETE( "PATH_HARBOUR" )
+
+    hbstrg := IIF ( lLinux .or. lUnix,  "harbour" , "harbour.exe" )
+
+    If lUnix
+       If cPathUni == Nil
+          cPathUni := ""
+       EndIF
+       cEnv += ":" + cPathUni
+    EndIf
+
+    aEnv    := HB_ATokens( cEnv, iif(lLinux .or. lUnix,":",";") )
+
+    FOR EACH cCurEnv IN aEnv
+
+        IF FILE( cCurEnv + cBar + hbstrg ) .OR. FILE( UPPER( cCurEnv ) + cBar + upper(hbstrg) )
+           cPath := cCurEnv
+           cPath := LEFT( cPath, RAT( cBar, cPath ) - 1 )
+           EXIT
+        ENDIF
+
+    NEXT
+
+RETURN cPath
+
+*-------------------
+FUNCTION GetBccDir()
+*-------------------
+
+   LOCAL cPath   := ""
+   LOCAL cEnv    := GETE( "PATH" )
+   LOCAL aEnv    := HB_ATokens( cEnv, ";" )
+   LOCAL cCurEnv := ""
+
+   FOR EACH cCurEnv IN aEnv
+
+      IF FILE( cCurEnv + "\bcc32.exe" ) .OR. FILE( Lower( cCurEnv ) + "\bcc32.exe" )
+         cPath := cCurEnv
+         cPath := LEFT( cPath, RAT( "\", cPath ) - 1 )
+         EXIT
+      ENDIF
+
+   NEXT
+
+RETURN cPath
+
+*-------------------
+FUNCTION GetVccDir()
+*-------------------
+
+   LOCAL cPath   := ""
+   LOCAL cEnv    := GETE( "PATH" )
+   LOCAL aEnv    := HB_ATokens( cEnv, ";" )
+   LOCAL cCurEnv := ""
+
+   FOR EACH cCurEnv IN aEnv
+
+      IF FILE( cCurEnv + "\cl.exe" ) .OR. FILE( Lower( cCurEnv ) + "\cl.exe" )
+         cPath := cCurEnv
+         cPath := LEFT( cPath, RAT( "\", cPath ) - 1 )
+         EXIT
+      ENDIF
+
+   NEXT
+
+RETURN cPath
+
+*--------------------
+FUNCTION GetPoccDir()
+*--------------------
+
+   LOCAL cPath   := ""
+   LOCAL cEnv    := GETE( "PATH" )
+   LOCAL aEnv    := HB_ATokens( cEnv, ";" )
+   LOCAL cCurEnv := ""
+
+   FOR EACH cCurEnv IN aEnv
+
+      IF FILE( cCurEnv + "\pocc.exe" ) .OR. FILE( Lower( cCurEnv ) + "\pocc.exe" )
+         cPath := cCurEnv
+         cPath := LEFT( cPath, RAT( "\", cPath ) - 1 )
+         EXIT
+      ENDIF
+
+   NEXT
+
+RETURN cPath
+
+*----------------------------
+FUNCTION Exten( cExt, nType )
+*----------------------------
+
+   LOCAL aExt    := { "C", "c", "CPP", "cpp" }
+   LOCAL nPos
+   LOCAL cTemp   := ""
+
+   nPos := ASCAN( aExt, { | a | a == cExt } )
+   IF nPos > 0
+
+      SWITCH  nType
+      CASE 1
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "o" )
+         EXIT
+
+      CASE 2
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "obj" )
+         EXIT
+
+      END
+
+   ENDIF
+
+RETURN cTemp
+
+*--------------------
+FUNCTION GetMakeDir()
+*--------------------
+
+   LOCAL cPath := ""
+   LOCAL cExe  := HB_ARGV( 0 )
+
+   cExe  := STRTRAN( cExe, "/", "\" )
+   cPath := LEFT( cexe, RAT( "\", cexe ) - 1 )
+   cPath := LEFT( cPath, RAT( "\", cPath ) - 1 )
+
+RETURN cPath
+
+*----------------------------
+FUNCTION GetSourceDirMacros()
+*----------------------------
+
+   LOCAL aDirs
+   LOCAL lLinux    := AT( "linux", LOWER( OS() ) ) > 0
+   LOCAL cDir      := IIF( lLinux, "/" + CURDIR() + "/", "\" + CURDIR() + "\" )
+   LOCAL aStru     := { cDir }
+
+   LOCAL nCounter  := 0
+   LOCAL aMacros   := {}
+
+   WHILE ++ nCounter <= LEN( aStru )
+
+      IF ! EMPTY( aDirs := GetDirs( aStru[ nCounter ], lLinux ) )                // There are elements!
+         AEVAL( aDirs, { | xItem | AADD( aStru, xItem ) } )
+      ENDIF
+
+   ENDDO
+
+   FOR nCounter := 1 TO LEN( aStru )
+      AADD( aMacros, { "SRC" + STRZERO( nCounter, 2, 0 ), STRTRAN( aStru[ nCounter ], cDir, "" ), .f. } )
+   NEXT
+
+RETURN aMacros
+
+*------------------------------------
+FUNCTION HbMake_FileDate( cFileName )
+*------------------------------------
+
+   LOCAL aFiles := DIRECTORY( cFileName )
+
+RETURN IIF( LEN( aFiles ) == 1, aFiles[ 1, 3 ], CTOD( "" ) )
+
+*------------------------------------
+FUNCTION HbMake_FileTime( cFileName )
+*------------------------------------
+
+   LOCAL aFiles := DIRECTORY( cFileName )
+
+RETURN IIF( LEN( aFiles ) == 1, aFiles[ 1, 4 ], "" )
+
+*------------------------------
+FUNCTION TD2JUL( CTIME, DDATE )
+*------------------------------
+RETURN DDATE - CTOD( "01/01/1900" ) + ( PRB_INT( TTOS( CTIME ) / 100000,, 5 ) )
+
+*---------------------
+STATIC FUNCTION TTOS( CTIME )
+*---------------------
+
+RETURN ( VAL( SUBSTR( CTIME, 7, 2 ) ) ) + ;
+         ( VAL( SUBSTR( CTIME, 4, 2 ) ) * 60 ) + ;
+         ( VAL( SUBSTR( CTIME, 1, 2 ) ) * 3600 )
+
+*---------------------------------------------------
+FUNCTION PRB_INT( SOMENUMBER, length, NUM_DECIMALS )
+*---------------------------------------------------
+
+   LOCAL NEGATIVE   := ( SOMENUMBER < 0 )
+   LOCAL SOMESTRING
+   LOCAL dotat
+
+   DEFAULT NUM_DECIMALS TO 0
+   DEFAULT length TO 19
+
+   IF NEGATIVE
+      SOMENUMBER := ABS( SOMENUMBER )
+   ENDIF
+
+   SOMENUMBER += .0000000000000005
+
+   SOMESTRING := ALLTRIM( STR( SOMENUMBER ) )
+
+   dotat := AT( ".", somestring )
+
+   DO CASE
+      CASE NUM_DECIMALS == 0
+         IF dotat > 0
+            somestring := LEFT( somestring, dotat - 1 )
+         ENDIF
+
+      CASE NUM_DECIMALS > 0
+         IF dotat > 0
+            somestring := LEFT( somestring, dotat + num_decimals )
+         ENDIF
+
+   ENDCASE
+
+   IF NEGATIVE
+      SOMESTRING := "-" + SOMESTRING
+   ENDIF
+
+RETURN VAL( SOMESTRING )
+
+*---------------------------
+FUNCTION Exte( cExt, nType )
+*---------------------------
+
+   LOCAL aExt  := { "prg", "prG", "pRg", "Prg", "PRg", "PrG", "PRG" }
+   LOCAL nPos
+   LOCAL cTemp := ""
+
+   nPos := ASCAN( aExt, { | a | a == cExt } )
+   IF nPos > 0
+      IF nType == 1
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "c" )
+      ELSEIF nType == 2
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "obj" )
+      ELSEIF nType == 3
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "o" )
+      ENDIF
+
+   ENDIF
+
+RETURN cTemp
+
+*-----------------------------------------------
+PROCEDURE ATTENTION( CSTRING, NLINENUM, CCOLOR )
+*-----------------------------------------------
+
+   LOCAL COLDCOLOR
+
+   DEFAULT NLINENUM TO 24
+   DEFAULT CCOLOR TO "GR+/R"
+
+   COLDCOLOR := SETCOLOR( CCOLOR )
+
+   CSTRING := "  " + ALLTRIM( CSTRING ) + "  "
+
+   DEVPOS( NLINENUM, c( CSTRING ) )
+
+   DEVOUT( CSTRING )
+
+   SETCOLOR( COLDCOLOR )
+
+RETURN
+
+*--------------------
+FUNCTION c( CSTRING )
+*--------------------
+
+RETURN MAX( ( MAXCOL() / 2 ) - INT( LEN( CSTRING ) / 2 ), 0 )
+
+*--------------------------------------
+FUNCTION GetInstaledLibs( clibs, lGcc )
+*--------------------------------------
+
+   LOCAL cSuffix := IIF( lGCC, ".a", ".lib" )
+   LOCAL aReturnLibs := {}
+   LOCAL aLibs       := DIRECTORY( clibs )
+   LOCAL nPos
+   LOCAL nCount
+   LOCAL cItem
+   LOCAL aDefLib := {}
+
+
+   aadd(aDefLib,"ace32"+ cSuffix)
+   aadd(aDefLib,"hbcpage"+ cSuffix)
+   aadd(aDefLib,"hbcommon"+ cSuffix)
+   aadd(aDefLib,"hbct"+cSuffix)
+   aadd(aDefLib,"rdddbt"+ cSuffix)
+   aadd(aDefLib,"rddcdx"+ cSuffix)
+   aadd(aDefLib,"rddfpt"+ cSuffix)
+   aadd(aDefLib,"rddntx"+ cSuffix)
+   aadd(aDefLib,"hbdebug"+ cSuffix)
+   aadd(aDefLib,"gtcgi"+ cSuffix)
+   aadd(aDefLib,"gtdos"+ cSuffix)
+   aadd(aDefLib,"gtpca"+ cSuffix)
+   aadd(aDefLib,"gtsln"+ cSuffix)
+   aadd(aDefLib,"gtstd"+ cSuffix)
+   aadd(aDefLib,"gttrm"+ cSuffix)
+   aadd(aDefLib,"gtwin"+ cSuffix)
+   aadd(aDefLib,"gtwvt"+ cSuffix)
+   aadd(aDefLib,"hbodbc"+ cSuffix)
+   aadd(aDefLib,"hbpgsql"+ cSuffix)
+   aadd(aDefLib,"hblang"+ cSuffix)
+   aadd(aDefLib,"hbmisc"+ cSuffix)
+   aadd(aDefLib,"hbnf"+ cSuffix)
+   aadd(aDefLib,"hbgt"+ cSuffix)
+   aadd(aDefLib,"hbmysql"+ cSuffix)
+   aadd(aDefLib,"hbmacro"+ cSuffix)
+   aadd(aDefLib,"hbnulrdd"+ cSuffix)
+   aadd(aDefLib,"hbpp"+ cSuffix)
+   aadd(aDefLib,"hbrdd"+ cSuffix)
+   aadd(aDefLib,"rddads"+ cSuffix)
+   aadd(aDefLib,"hbrtl"+ cSuffix)
+   aadd(aDefLib,"hbclipsm"+ cSuffix)
+   aadd(aDefLib,"hbtip"+cSuffix)
+   aadd(aDefLib,"hbw32"+cSuffix)
+   aadd(aDefLib,"hbvm"+ cSuffix)
+   aadd(aDefLib,"hbziparch"+ cSuffix)
+
+
+   IF lGcc
+      AEval( aLibs, { | x, y | cItem := x[1], IIF( Left( cItem, 3 ) == "lib", aLibs[ y, 1 ] := SubStr( cItem, 4 ), ) } )
+   ENDIF
+
+   FOR nCount := 1 TO LEN( aLibs )
+
+      cItem := Lower( aLibs[ nCount, 1 ] )
+
+      nPos := AScan( aDefLib, { | a | Lower( a ) == cItem } )
+      IF nPos == 0
+         AAdd( aReturnLibs, aLibs[ nCount, 1 ] )
+      ENDIF
+
+   NEXT
+
+RETURN aReturnLibs
+
+*-----------------------------
+FUNCTION GetLibs( lGcc, cDir )
+*-----------------------------
+
+   LOCAL lLinux        := AT( "linux", LOWER( OS() ) ) > 0
+   LOCAL cEnv          := GETENV( "HB_LIB_INSTALL" )
+   LOCAL aInstaledLibs := GetInstaledLibs( IIF( ! lLinux, IIF( ! lGcc, cDir + "\*.lib", cDir + "\*.a" ),  "/usr/lib/harbour/*.a" ), lGcc )
+   LOCAL cExt := iif(lGcc,".a",".lib")
+
+                            /* 1234567890123456789 */
+   LOCAL aLibsDesc     := { { "Harbour hbmisc      lib - hbmisc" + cExt                         , "hbmisc" + cExt },;
+                            { "Harbour NanFor Lib  lib - hbnf" + cExt                           , "hbnf" + cExt },;
+                            { "Harbour GT Lib      lib - hbgt"+cExt                             , "hbgt" + cExt },;
+                            { "Harbour ZipArch     lib - hbziparch"+cExt                        , "hbziparch" + cExt + iif( lLinux, " stdc++.a z.a", " " ) },;
+                            { "Harbour ole (old)   lib - hbole"+ cExt                           , "hbole" + cExt + " ole2" + cExt },;
+                            { "Harbour MySQL       lib - hbmysql" + cExt                        , "hbmysql" + cExt },;
+                            { "Harbour PostgreSQL  lib - hbpgsql"+cExt                          , "hbpgsql" + cExt },;
+                            { "Harbour samples     lib - hbclipsm"+cExt                         , "hbclipsm" + cExt }  }
+
+
+   AEVAL( aInstaledLibs, { | x | AAdd( aLibsDesc, { padr("Harbour contrib",19)+" lib - " + padr(x,15), x } ) } )
+
+RETURN aLibsDesc
+
+*-----------------------------------------
+FUNCTION DIR_MULTI( cFileMaskList, cAttr )
+*-----------------------------------------
+
+   LOCAL aList := listasarray2( cFileMaskList, "|" )
+   AEVAL( aList, { | tmp, tmp1 | aList[ tmp1 ] := DIRECTORY( tmp, cAttr ) } )
+
+RETURN ArrayAJoin( alist )
+
+*----------------------------
+FUNCTION ArrayAJoin( aArray )
+*----------------------------
+
+   LOCAL tmp
+   LOCAL nLenArray := LEN( aArray )
+   LOCAL nLen
+   LOCAL nPos      := LEN( aArray[ 1 ] ) + 1
+
+   nLen := 0
+
+   FOR tmp := 1 TO nLenArray
+      nLen += LEN( aArray[ tmp ] )
+   NEXT
+
+   ASIZE( aArray[ 1 ], nLen )
+
+   FOR tmp := 2 TO nLenArray
+      ACOPY( aArray[ tmp ], aArray[ 1 ],,, nPos )
+      nPos += LEN( aArray[ tmp ] )
+   NEXT
+RETURN aArray[ 1 ]
+
+*-----------------------------------------
+FUNCTION ListAsArray2( cList, cDelimiter )
+*-----------------------------------------
+
+   LOCAL nPos
+   LOCAL aList  := {}              // Define an empty array
+
+   IF cDelimiter == NIL
+      cDelimiter := ","
+   ENDIF
+   //
+   DO WHILE ( nPos := AT( cDelimiter, cList ) ) != 0
+      AADD( aList, ALLTRIM( SUBSTR( cList, 1, nPos - 1 ) ) )                    // Add a new element
+      cList := SUBSTR( cList, nPos + 1 )
+
+   ENDDO
+   AADD( aList, ALLTRIM( cList ) )      // Add final element
+   //
+RETURN aList        // Return the array
+
+*--------------------
+FUNCTION CreateLink()
+*--------------------
+
+    LOCAL nHandle := FCreate("hbtemp.c")
+
+    FWrite( nHandle, '#include "hbapi.h"' + HB_OsNewLine())
+    FWrite( nHandle, "extern HB_FUNC( HB_GT_CRS );" + HB_OsNewLine())
+    FWrite( nHandle, "void hb_lnk_ForceLink_build( void )" + HB_OsNewLine())
+    FWrite( nHandle, "{" + HB_OsNewLine())
+    FWrite( nHandle, "   HB_FUNCNAME( HB_GT_CRS )();" + HB_OsNewLine())
+    FWrite( nHandle, "}" + HB_OsNewLine())
+    FClose( nHandle )
+
+
+RETURN NIL
+
+*----------------------
+STATIC FUNCTION ISWIN()
+*-----------------------
+RETURN "WINDOWS" $ Upper( OS() )
