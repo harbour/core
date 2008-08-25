@@ -3,13 +3,12 @@ rem
 rem $Id$
 rem
 
-..\..\bin\harbour /q /n /gc0 /km /i..\..\include hbmake hbmutils pickarry
+..\..\bin\harbour /w3 /q /n /km /i..\..\include hbmake hbmutils
 
 echo -O2 -I..\..\include -L..\..\lib > build.tmp
 
 echo hbmake.c     >> build.tmp
 echo hbmutils.c   >> build.tmp
-echo pickarry.c   >> build.tmp
 
 echo hbmfrdln.c   >> build.tmp
 echo hbmgauge.c   >> build.tmp
@@ -26,4 +25,4 @@ bcc32 @build.tmp
 del build.tmp
 
 del *.obj
-del hbmake.c hbmutils.c pickarry.c
+del hbmake.c hbmutils.c

@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-25 17:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * utils/hbdoc/bld_vc.bat
+   * utils/hbdoc/bld_b32.bat
+   * utils/hbmake/bld_b32.bat
+   * utils/hbmake/bld_vc.bat
+     + Harbour option: /w2
+     - Harbour option: /gc0 (now default)
+
+   * common.mak
+   * utils/hbmake/Makefile
+   * utils/hbmake/bld_b32.bat
+   * utils/hbmake/bld_vc.bat
+   * utils/hbmake/hbmake.prg
+   - utils/hbmake/pickarry.prg
+     % Eliminated all STATIC vars in pickarry.prg.
+     * pickarry.prg merged into hbmake.prg.
+
 2008-08-25 16:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * utils/hbmake/Makefile

@@ -57,6 +57,7 @@
 
 #include "hbclass.ch"
 
+#include "achoice.ch"
 #include "fileio.ch"
 #include "common.ch"
 #include "inkey.ch"
@@ -6053,7 +6054,7 @@ METHOD New() CLASS THbMake
 
 METHOD ReadMakefile(cFile) CLASS THbMake
 
-   LOCAL cBuffer     := {}
+   LOCAL cBuffer     := ""
    LOCAL cMacro      := ::cMacro
    LOCAL cDep        := "#DEPENDS"
    LOCAL cOpt        := "#OPTS"
@@ -6425,3 +6426,194 @@ METHOD FindMacro( cMacro, cRead ) CLASS THBMAKE
    ENDIF
 
    RETURN cRead
+
+*-------------------------------------------------------------------
+
+FUNCTION PICKARRY( T, L, b, r, IN_ARRAY, OUT_ARRAY, aDefault, lAllowAll, cTitle, lLib )
+
+   LOCAL cMarkChar := "*" // "û" // character showed when <F5> is pressed to select prgs/libs.
+
+   LOCAL nChoice    := 1
+   LOCAL x
+   LOCAL NEW_ARRAY  := {}
+   LOCAL NUM_ELEMS  := Len( IN_ARRAY )
+   LOCAL PAD_LEN    := ( r - 1 ) - ( L + 1 )
+   LOCAL lIsChecked := .f.
+   LOCAL aItems     := IN_ARRAY
+   LOCAL aTemp
+   LOCAL cItem
+   LOCAL cOldColor  := Setcolor()
+
+   LOCAL cOldScreen
+
+   LOCAL someitems
+   LOCAL lAdd := .F.
+
+   DEFAULT lAllowAll TO .F.
+   DEFAULT cTitle to ""
+   DEFAULT lLib to .F.
+
+   SOMEITEMS := 0
+
+   cOldScreen := SaveScreen()
+
+   Setcolor( "gr+/rb,b+/w,w+/b,w/b+,w/b,w+/b" )
+
+   @ T - 2, L - 1 CLEAR TO b + 1, r + 1
+   @ T - 2, L say cTitle
+   @ T - 1, L - 1 TO b + 1, r + 1 double
+
+   FOR x := 1 TO NUM_ELEMS
+      IN_ARRAY[ X ] := Padr( "   " + IN_ARRAY[ X ], PAD_LEN )
+      OUT_ARRAY[ X ] := " " + OUT_ARRAY[ X ]
+   NEXT
+
+   IF Len( aDefault ) > 0
+
+      FOR EACH cItem IN aDefault
+
+         if !lLib
+            x := AScan( IN_ARRAY, { | a | SubStr( a, 4, At(" ", alltrim(a) ) - 1 ) == cItem } )
+         else
+            x := AScan( IN_ARRAY, { | a | alltrim(cItem) $ a } )
+         endif
+
+         IF x != 0
+
+            IN_ARRAY[ x ]  := Stuff( IN_ARRAY[ x ], 2, 1, iif( lIsChecked, " ", cMarkChar ) )
+            OUT_ARRAY[ x ] := Stuff( OUT_ARRAY[ x ], 1, 1, iif( lIsChecked, " ", cMarkChar ) )
+            SOMEITEMS ++
+
+         ELSE
+
+            cItem := SubStr( cItem, Rat( "\", cItem ) - 1 )
+
+            if !lLib
+               x := AScan( aTemp, { | a | SubStr( a, 4, At( " ", a ) - 1 ) == cItem } )
+            else
+               x := AScan( IN_ARRAY, { | a | alltrim(cItem) $ a } )
+            endif
+
+            IF x != 0
+               IN_ARRAY[ x ] := Stuff( IN_ARRAY[ x ], 2, 1, iif( lIsChecked, " ", cMarkChar ) )
+               OUT_ARRAY[ x ] := Stuff( OUT_ARRAY[ x ], 1, 1, iif( lIsChecked, " ", cMarkChar ) )
+               SOMEITEMS ++
+            ENDIF
+
+         ENDIF
+      NEXT
+   ENDIF
+
+
+   Clear TypeAhead
+
+
+   WHILE nChoice != 0
+
+      @T,L CLEAR TO b, r
+
+      nChoice := AChoice( T, L, b, r, IN_ARRAY,, {|mode| PICKARRY_keys( mode, @someitems, @lAdd ) }, nChoice, 1 )
+
+      IF nChoice > 0
+
+         if lAllowAll
+
+            if lAdd   // only if F5 was pressed
+
+               For nChoice :=  1 to NUM_ELEMS
+
+                 lIsChecked := Substr( IN_ARRAY[ nChoice ], 2, 1 ) == cMarkChar
+
+                 IN_ARRAY[ nChoice ]  := Stuff( IN_ARRAY[ nChoice ], 2, 1, iif( lIsChecked, " ", cMarkChar ) )
+                 OUT_ARRAY[ nChoice ] := Stuff( OUT_ARRAY[ nChoice ], 1, 1, iif( lIsChecked, " ", cMarkChar ) )
+
+                 IF lIsChecked
+                    SOMEITEMS --
+                 ELSE
+                    SOMEITEMS ++
+                 ENDIF
+                 lAdd := .F.
+               Next
+
+            else
+
+              lIsChecked := Substr( IN_ARRAY[ nChoice ], 2, 1 ) == cMarkChar
+
+              IN_ARRAY[ nChoice ]  := Stuff( IN_ARRAY[ nChoice ], 2, 1, iif( lIsChecked, " ", cMarkChar ) )
+              OUT_ARRAY[ nChoice ] := Stuff( OUT_ARRAY[ nChoice ], 1, 1, iif( lIsChecked, " ", cMarkChar ) )
+
+              IF lIsChecked
+                 SOMEITEMS --
+              ELSE
+                 SOMEITEMS ++
+              ENDIF
+
+              nChoice ++
+
+            endif
+
+         else
+
+            lIsChecked := Substr( IN_ARRAY[ nChoice ], 2, 1 ) == cMarkChar
+
+            IN_ARRAY[ nChoice ]  := Stuff( IN_ARRAY[ nChoice ], 2, 1, iif( lIsChecked, " ", cMarkChar ) )
+            OUT_ARRAY[ nChoice ] := Stuff( OUT_ARRAY[ nChoice ], 1, 1, iif( lIsChecked, " ", cMarkChar ) )
+
+            IF lIsChecked
+               SOMEITEMS --
+            ELSE
+               SOMEITEMS ++
+            ENDIF
+
+         endif
+
+      ENDIF
+
+   ENDDO
+
+   FOR x := 1 TO NUM_ELEMS
+      IF Left( OUT_ARRAY[ X ], 1 ) == cMarkChar
+         AAdd( NEW_ARRAY, Substr( OUT_ARRAY[ X ], 2 ) )
+      ENDIF
+      IN_ARRAY[ X ] := Substr( IN_ARRAY[ X ], 4 )
+   NEXT
+
+   ASize( OUT_ARRAY, Len( NEW_ARRAY ) )
+   ACopy( NEW_ARRAY, OUT_ARRAY )
+
+   RestScreen(,,,,cOldScreen)
+   SetColor( coldColor )
+
+   RETURN Len( NEW_ARRAY )
+
+STATIC FUNCTION PICKARRY_Keys( MODE, someitems, lAdd )
+
+   LOCAL RETVAL := AC_CONT
+   LOCAL THEKEY := Lastkey()
+
+   IF MODE == AC_HITTOP 
+      KEYBOARD Chr( K_CTRL_PGDN )
+
+   ELSEIF MODE == AC_HITBOTTOM
+      KEYBOARD Chr( K_CTRL_PGUP )
+
+   ELSEIF MODE == AC_EXCEPT 
+
+      IF THEKEY == K_SPACE // space bar to select/unselect
+         RETVAL := AC_SELECT
+      ELSEIF THEKEY == K_F5  // (select all itens)
+         lAdd := !lAdd
+         RETVAL := AC_SELECT
+      ELSEIF THEKEY == K_ESC
+         RETVAL := AC_ABORT 
+      ELSEIF THEKEY = K_ENTER .AND. SOMEITEMS < 1
+         RETVAL := AC_ABORT 
+         KEYBOARD CHR( K_ENTER )
+      ELSEIF THEKEY = K_ENTER
+         KEYBOARD CHR( K_DOWN )
+         RETVAL := AC_ABORT
+      ENDIF
+
+   ENDIF
+
+   RETURN RETVAL

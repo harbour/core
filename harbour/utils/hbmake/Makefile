@@ -11,7 +11,6 @@ ROOT = ../../
 PRG_SOURCES=\
 	hbmake.prg \
 	hbmutils.prg \
-	pickarry.prg \
 
 C_SOURCES=\
 	hbmfrdln.c \
