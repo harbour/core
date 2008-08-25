@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-25 20:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * config/w32/mingw32.cf
+     % -mno-cygwin options removed. No longer needed. If someone 
+       wants to compile a mingw build using cygwin, this option 
+       should be explicitly specified as C_USR/L_USR and 'gcc' 
+       should be used as a compiler. But this setup is barely 
+       supported in Harbour, so don't expect it work.
+       (Rather, install MinGW)
+
 2008-08-25 20:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * utils/hbmake/hbmake.prg
      ! Harbour executable detection cleanups and fix to look 

@@ -12,7 +12,7 @@ LIB_EXT = .a
 CC = $(CCPREFIX)gcc
 CC_IN = -c
 CC_OUT = -o
-CPPFLAGS = -I. -I$(HB_INC_COMPILE) -mno-cygwin
+CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -Wall -W
 
 LD = $(CCPREFIX)gcc
@@ -120,8 +120,6 @@ $(foreach file, $(SYSLIBS), $(link_file))
 echo. ) >> __link__.tmp
 -$(LD) $(LDFLAGS) $(L_USR) $(LD_OUT)$@ __link__.tmp
 endef
-
-LDFLAGS = -mno-cygwin
 
 AR = $(CCPREFIX)ar
 ARFLAGS = $(A_USR)
