@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-25 22:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_vcce.mak
+     ! Do not explicitly #define HB_WINCE. This should be 
+       autodetected in hbsetup.h.
+
+   * include/hbsetup.h
+     % Minor cleanup.
+
 2008-08-25 22:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbsetup.h
    * source/common/hbver.c

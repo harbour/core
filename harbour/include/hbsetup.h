@@ -288,9 +288,10 @@
    #endif
 #endif
 
-#if !defined(HB_WINCE) && \
-    ( defined(_WINCE) || defined(__CEGCC__) || defined(__MINGW32CE__) )
-   #define HB_WINCE
+#ifndef HB_WINCE
+   #if defined(_WINCE) || defined(__CEGCC__) || defined(__MINGW32CE__)
+      #define HB_WINCE
+   #endif
 #endif
 
 #ifndef HB_OS_LINUX

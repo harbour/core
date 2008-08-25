@@ -135,7 +135,7 @@ CFLAGS         = -I$(INCLUDE_DIR) -I$(CFLAGS_VER) -T$(HB_BUILD_MODE) -W3 -nologo
                  -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -D"WIN32_PLATFORM_PSPC" \
                  -D"WINCE" -D"_WINCE" -D"_WINDOWS" -D"ARM" -D"_ARM_" -D"ARMV4" \
                  -D"POCKETPC2003_UI_MODEL" -D"_M_ARM" -D"UNICODE" -D"_UNICODE" \
-                 -DHB_WINCE $(C_USR) $(CFLAGS) -D_UWIN -I$(OBJ_DIR)
+                 $(C_USR) $(CFLAGS) -D_UWIN -I$(OBJ_DIR)
 #     -D"_CONSOLE"
 
 #-----------
