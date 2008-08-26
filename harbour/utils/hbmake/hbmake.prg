@@ -1637,13 +1637,13 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
    LOCAL getlist          := {}
    LOCAL cTopFile         := Space(50)
    LOCAL cAppName         := padr(s_cAppName,50)
-   LOCAL cDefaultLibs     := "hblang.lib hbvm.lib hbrtl.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbcommon.lib gtwin.lib hbcpage.lib hbpcre.lib hbhsx.lib hbsix.lib"
+   LOCAL cDefaultLibs     := "hblang.lib hbvm.lib hbrtl.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbcommon.lib gtwin.lib hbcpage.lib hbpcre.lib hbzlib.lib hbhsx.lib hbsix.lib"
    LOCAL cDefGccLibs      := "-lhbvm -lhbrtl -lhbpcre -lgtdos -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage -lm"
    LOCAL cDefGccLibsUnix  := "-lhbvm -lhbcpage -ltef -lhbrtl -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lhblang -lhbcommon -lhbnulrdd -lbmrddcdx -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbhsx -lhbusrrdd -lhbpcre -lgtsln -lshblang -lm -lrt"
    LOCAL cDefGccLibsw     := "-lhbvm -lhbrtl -lhbpcre -lgtwin -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage -lm"
    LOCAL cGccLibsOs2      := "-lhbvm -lhbrtl -lhbpcre -lgtos2 -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage -lm"
    LOCAL cDefLibGccLibs   := "-lhbvm -lhbrtl -lhbpcre -lgtcrs -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage"
-   LOCAL cDefaultLibsMt    := "lang.lib vmmt.lib rtlmt.lib rddmt.lib macromt.lib ppmt.lib dbfntxmt.lib dbfcdxmt.lib  dbffptmt.lib common.lib gtwin.lib codepage.lib hbpcre.lib hsxmt.lib hbsixmt.lib"
+   LOCAL cDefaultLibsMt    := "lang.lib vmmt.lib rtlmt.lib rddmt.lib macromt.lib ppmt.lib dbfntxmt.lib dbfcdxmt.lib  dbffptmt.lib common.lib gtwin.lib codepage.lib hbpcre.lib hbzlib.lib hsxmt.lib hbsixmt.lib"
    LOCAL cDefGccLibsUnixMt := "-lvmmt -lcodepage -ltef -lrtlmt  -lrddmt  -lrtl  -lvmmt  -lmacromt  -lpp  -llang  -lcommon  -lnulsys  -lbmdbfcdx  -ldbfntx  -ldbfcdx  -ldbffpt  -lhbsix  -lhsx  -lusrrdd -lhbpcre -lgtsln -lslang -lm -lrt"
    LOCAL cDefGccLibsMt    := "-lvmmt -lrtlmt -lhbpcre -lgtdos -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage -lm"
    LOCAL cDefGccLibsMtw    := "-lvmmt -lrtlmt -lhbpcre -lgtwin -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage -lm"
@@ -3116,7 +3116,7 @@ Endif // Create and compile
       FWrite( s_nMakeFileHandle, " " + s_cEOL )
       FWrite( s_nMakeFileHandle, "ALLOBJ = " + IIF( lC4W, "$(C4W)\initc.obj", "" ) + "$(OBJFILES)" + IIF( s_lExtended, " $(OBJCFILES)", " " ) + s_cEOL )
       FWrite( s_nMakeFileHandle, "ALLRES = $(RESDEPEN)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLLIB = $(USERLIBS) $(LIBFILES) "+IIF(s_lMT,"crtmt.lib","crt.lib") + " kernel32.lib user32.lib gdi32.lib winspool.lib comctl32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mpr.lib winmm.lib wsock32.lib" + s_cEOL )
+      FWrite( s_nMakeFileHandle, "ALLLIB = $(USERLIBS) $(LIBFILES) "+IIF(s_lMT,"crtmt.lib","crt.lib") + " kernel32.lib user32.lib gdi32.lib winspool.lib comctl32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mpr.lib winmm.lib wsock32.lib schannel.lib" + s_cEOL )
 
    ELSEIF s_lGcc
 
