@@ -251,7 +251,11 @@ static void do_atnum( int iSwitch )
 
          case DO_ATNUM_ATNUM:
             /* ATNUM */
+#if (__POCC__ >= 500) && defined(HB_OS_WIN_64)
+            hb_retnl( pc - pcString + sIgnore + 1 );
+#else
             hb_retnl( pc - ( pcString - sIgnore ) + 1 );
+#endif
             break;
       }
    }
