@@ -21,5 +21,5 @@ export CFLAGS=""
 for I in ${HB_INC_ALLEGRO}; do
     CFLAGS="${CFLAGS} -I${I}"
 done
-../../../contrib/mtpl_gcc.sh $1 $2 $3 $4 $5 $6 $7 $8 $9
+../mtpl_gcc.sh $1 $2 $3 $4 $5 $6 $7 $8 $9
 unset CFLAGS

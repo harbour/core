@@ -86,7 +86,6 @@ HB_EXTERN_BEGIN
 #define HB_GT_xvt    HB_GT_XVT
 #define HB_GT_xwc    HB_GT_XWC
 #define HB_GT_gui    HB_GT_GUI
-#define HB_GT_alleg  HB_GT_ALLEG
 
 /* These hacks are needed to force preprocessing if id/x is also a macro */
 #define _HB_GT_PREF_( id )      _HB_GT_PREF__( id )

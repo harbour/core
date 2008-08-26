@@ -51,6 +51,7 @@ case "$HB_ARCHITECTURE" in
         _HB_DIRS_ADD=;;
 esac
 
+if [ "${HB_INC_ALLEGRO}"   != "" ]; then _HB_DIRS="${_HB_DIRS} gtalleg"; fi;
 if [ "${HB_INC_APOLLO}"    != "" ]; then _HB_DIRS="${_HB_DIRS} hbapollo"; fi;
 if [ "${HB_INC_CURL}"      != "" ]; then _HB_DIRS="${_HB_DIRS} hbcurl  "; fi;
 if [ "${HB_INC_FIREBIRD}"  != "" ]; then _HB_DIRS="${_HB_DIRS} hbfbird "; fi;

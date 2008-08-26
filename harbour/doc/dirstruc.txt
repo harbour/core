@@ -58,6 +58,9 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---rdddbt      - DBFDBT RDD.
 |   |
+|   |---gtalleg         - GT subsystem based on Allegro with graphic
+|   |                     extensions.
+|   |    
 |   +---gtwvg           - GT subsystem for Win32 GUI using GDI functions.
 |   |   |
 |   |   +---tests       - Demo program and sample images.
@@ -301,9 +304,6 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |
 |   +---rtl             - Run-Time libraries functions and various General
 |   |   |                 Terminal (GT) implementation
-|   |   |
-|   |   +---gtalleg     - GT subsystem based on Allegro with graphic
-|   |   |                 extensions.
 |   |   |
 |   |   +---gtcgi       - GT subsystem aimed at cgi-bin applications.
 |   |   |

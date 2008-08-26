@@ -3,9 +3,6 @@ rem
 rem $Id$
 rem
 
-set HB_ROOT=..\..\..
-set HB_MAKEFILE=..\..\..\contrib\mtpl_b32.mak
-
 if not "%HB_INC_ALLEGRO%%HB_DIR_ALLEGRO%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
@@ -22,12 +19,12 @@ goto POST_EXIT
 
 if "%HB_INC_ALLEGRO%" == "" set HB_INC_ALLEGRO=%HB_DIR_ALLEGRO%\include
 set CFLAGS=-I"%HB_INC_ALLEGRO%"
-set _HB_DLL_NAME=alleg42
-if exist "%HB_DIR_ALLEGRO%\bin\%_HB_DLL_NAME%.dll" set _HB_DLL_DIR=%HB_DIR_ALLEGRO%\bin
+set _HB_DLL_NAME=alleg
+if exist "%HB_DIR_ALLEGRO%\lib\%_HB_DLL_NAME%.lib" set _HB_DLL_DIR=%HB_DIR_ALLEGRO%\lib
 
 rem ---------------------------------------------------------------
 
-call ..\..\..\contrib\mtpl_b32.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
+call ..\mtpl_vc.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem ---------------------------------------------------------------
 
@@ -47,20 +44,21 @@ if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD
 
-   implib -a ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll" >> %_HB_MAKELOG%
+   rem Use supplied .lib file.
+   if not exist ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib copy "%_HB_DLL_DIR%\%_HB_DLL_NAME%.lib" ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib > nul
    goto POST_EXIT
 
 :POST_CLEAN
 
-   if exist ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib del ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib > nul
-   if exist ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.exp del ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.exp > nul
+   if exist ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib del ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib > nul
+   if exist ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.exp del ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.exp > nul
    if exist %_HB_LIB_INSTALL%\%_HB_DLL_NAME%.lib       del %_HB_LIB_INSTALL%\%_HB_DLL_NAME%.lib       > nul
    goto POST_EXIT
 
 :POST_INSTALL
 
    if exist %_HB_LIB_INSTALL%\%_HB_DLL_NAME%.lib del %_HB_LIB_INSTALL%\%_HB_DLL_NAME%.lib
-   if exist ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib copy ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib %_HB_LIB_INSTALL%
+   if exist ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib copy ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib %_HB_LIB_INSTALL%
    goto POST_EXIT
 
 :POST_EXIT

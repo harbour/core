@@ -15,10 +15,6 @@ HB_GT_LIST=\
 #	gtcrs \
 #	gtsln \
 
-ifeq ($(HB_GTALLEG),yes)
-   HB_GT_LIST += gtalleg
-endif
-
 # verify if GT drivers exist
 HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
 

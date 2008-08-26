@@ -63,9 +63,6 @@ endif
 ifneq ($(findstring gtsln, $(HB_GT_LIBS)),)
 LINKLIBS += -lslang
 endif
-ifneq ($(findstring gtalleg, $(HB_GT_LIBS)),)
-LINKLIBS += `allegro-config --static`
-endif
 ifneq ($(findstring gtxwc, $(HB_GT_LIBS)),)
 LINKLIBS += -lX11
 #LINKPATHS += -L/usr/X11R6/lib64

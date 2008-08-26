@@ -8,6 +8,50 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-26 10:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   - source/rtl/gtalleg
+   + contrib/gtalleg
+   * TODO
+   * doc/dirstruc.txt
+   * include/hbgtcore.h
+   * contrib/gtalleg/Makefile
+   * contrib/gtalleg/make_b32.bat
+   * contrib/gtalleg/make_vc.bat
+   * contrib/gtalleg/make_gcc.sh
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+   * contrib/make_gcc_all.sh
+   * contrib/Makefile
+   * config/hpux/gcc.cf
+   * config/hpux/global.cf
+   * config/darwin/gcc.cf
+   * config/darwin/global.cf
+   * config/dos/global.cf
+   * config/linux/gcc.cf
+   * config/linux/global.cf
+   * config/sunos/gcc.cf
+   * config/sunos/global.cf
+   * config/bsd/gcc.cf
+   * config/bsd/global.cf
+   * config/w32/global.cf
+   * harbour-ce-spec
+   * harbour-w32-spec
+   * harbour.spec
+     * GTALLEG moved to contrib to make it possible to build 
+       using the non-GNU make system, also to align the build 
+       process with other 3rd party package dependent parts 
+       of Harbour.
+       HB_INC_ALLEGRO or HB_DIR_ALLEGRO may be used to point 
+       to Allegro package directory. This is generally necessary 
+       on non-*nix systems.
+     ; NOTE: Review and test build processes and modified files, 
+             and unmodified, but potentially related files:
+             bin/hb-func.sh
+             make_gnu.sh
+             make_rpm.sh
+             make_rpmce.sh
+             make_rpmw32.sh
+
 2008-08-26 09:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbsetup.h
      + Added small table (partly from MS KB) about _MSC_VER 

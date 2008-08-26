@@ -35,6 +35,7 @@ DIRS=\
 
 # contribs with external dependencies
 DIRS +=\
+	gtalleg \
 	hbapollo \
 	hbcurl \
 	hbfbird \
