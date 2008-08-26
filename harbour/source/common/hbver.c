@@ -341,7 +341,7 @@ HB_EXPORT BOOL hb_iswince( void )
 
 /* NOTE: The caller must free the returned buffer. [vszakats] */
 
-#define COMPILER_BUF_SIZE 79
+#define COMPILER_BUF_SIZE 80
 
 char * hb_verCompiler( void )
 {
@@ -354,7 +354,7 @@ char * hb_verCompiler( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_verCompiler()"));
 
-   pszCompiler = ( char * ) hb_xgrab( COMPILER_BUF_SIZE + 1 );
+   pszCompiler = ( char * ) hb_xgrab( COMPILER_BUF_SIZE );
    szSub[ 0 ] = '\0';
 
 #if defined(__IBMC__) || defined(__IBMCPP__)
@@ -514,28 +514,28 @@ char * hb_verCompiler( void )
    if( pszName )
    {
       if( iVerPatch != 0 )
-         snprintf( pszCompiler, 80, "%s%s %hd.%hd.%hd", pszName, szSub, iVerMajor, iVerMinor, iVerPatch );
+         snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s %hd.%hd.%hd", pszName, szSub, iVerMajor, iVerMinor, iVerPatch );
       else if( iVerMajor != 0 || iVerMinor != 0 )
-         snprintf( pszCompiler, 80, "%s%s %hd.%hd", pszName, szSub, iVerMajor, iVerMinor );
+         snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s %hd.%hd", pszName, szSub, iVerMajor, iVerMinor );
       else
-         snprintf( pszCompiler, 80, "%s%s", pszName, szSub );
+         snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s", pszName, szSub );
    }
    else
-      hb_strncpy( pszCompiler, "(unknown)", COMPILER_BUF_SIZE );
+      hb_strncpy( pszCompiler, "(unknown)", COMPILER_BUF_SIZE - 1 );
 
 #if defined(__DJGPP__)
 
    snprintf( szSub, sizeof( szSub ), " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );
-   hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE );
+   hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE - 1 );
 
 #else
 
    #if defined( HB_ARCH_16BIT )
-      hb_strncat( pszCompiler, " (16 bit)", COMPILER_BUF_SIZE );
+      hb_strncat( pszCompiler, " (16 bit)", COMPILER_BUF_SIZE - 1 );
    #elif defined( HB_ARCH_32BIT )
-      hb_strncat( pszCompiler, " (32 bit)", COMPILER_BUF_SIZE );
+      hb_strncat( pszCompiler, " (32 bit)", COMPILER_BUF_SIZE - 1 );
    #elif defined( HB_ARCH_64BIT )
-      hb_strncat( pszCompiler, " (64 bit)", COMPILER_BUF_SIZE );
+      hb_strncat( pszCompiler, " (64 bit)", COMPILER_BUF_SIZE - 1 );
    #endif
 
 #endif

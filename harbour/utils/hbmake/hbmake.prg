@@ -2409,7 +2409,7 @@ Endif // Create and compile
    ENDIF
 
 
-   // Selecting PRG files.
+   // Selecting .prg files.
 
    aInFiles := GetSourceFiles( s_lRecursive, s_lGcc, cOS )
    nLenaSrc := Len( aInFiles )
@@ -2443,11 +2443,11 @@ Endif // Create and compile
       Attention( s_aLangMessages[ 41 ], 22 )
 
       if s_nlang == 1
-         s_cAlertMsg := "Selecione os PRGs a compilar"
+         s_cAlertMsg := "Selecione os .prgs a compilar"
       elseif s_nlang == 3
-         s_cAlertMsg := "Seleccione los PRG a compilar"
+         s_cAlertMsg := "Seleccione los .prg a compilar"
       else
-         s_cAlertMsg := "Select the PRG files to compile"
+         s_cAlertMsg := "Select the .prg files to compile"
       endif
 
 
@@ -2484,11 +2484,11 @@ Endif // Create and compile
       cTopFile := ""
 
       IF s_nlang == 1 // PT
-         s_cAlertMsg := "Nenhum PRG foi selecionado."
+         s_cAlertMsg := "Nenhum .prg foi selecionado."
       ELSEIF s_nlang == 3
-         s_cAlertMsg := "Ning£m PRG foi seleccionado."
+         s_cAlertMsg := "Ning£m .prg foi seleccionado."
       ELSE
-         s_cAlertMsg := "No one PRG were selected."
+         s_cAlertMsg := "No .prg files were selected."
       ENDIF
 
       Alert( s_cAlertMsg )
@@ -2501,11 +2501,11 @@ Endif // Create and compile
      IF !lCreateAndCompile
 
       IF s_nlang == 1 // PT
-         s_cAlertMsg := "Informe o PRG principal da sua aplica‡Æo:"
+         s_cAlertMsg := "Informe o .prg principal da sua aplica‡Æo:"
       ELSEIF s_nlang == 3
-         s_cAlertMsg := "Informe o PRG principale de su aplicacion:"
+         s_cAlertMsg := "Informe o .prg principale de su aplicacion:"
       ELSE
-         s_cAlertMsg := "Inform the main PRG of your application:"
+         s_cAlertMsg := "Inform the main .prg of your application:"
       ENDIF
 
       @ 15,01 say s_cAlertMsg Get cTopFile pict "@S35" valid !empty(cTopFile)
@@ -2527,11 +2527,11 @@ Endif // Create and compile
       IF ! File( alltrim(cTopFile) )
 
          IF s_nLang == 1 // PT
-            s_cAlertMsg := "Arquivo "+alltrim(cTopFile)+" nÆo encontrado."+iif(s_lRecursive," O flag -r est  ativo. Informe o subdir tamb‚m se o PRG principal estiver dentro dele.","")
+            s_cAlertMsg := "Arquivo "+alltrim(cTopFile)+" nÆo encontrado."+iif(s_lRecursive," O flag -r est  ativo. Informe o subdir tamb‚m se o .prg principal estiver dentro dele.","")
          ELSEIF s_nLang == 3
-            s_cAlertMsg := "Fichero "+alltrim(cTopFile)+" no encontrado."+iif(s_lRecursive," Lo flag -r esta activado. Informe lo subdir tambi‚n si lo PRG principale est s dentro dele.","")
+            s_cAlertMsg := "Fichero "+alltrim(cTopFile)+" no encontrado."+iif(s_lRecursive," Lo flag -r esta activado. Informe lo subdir tambi‚n si lo .prg principale est s dentro dele.","")
          ELSE
-            s_cAlertMsg := "File "+alltrim(cTopFile)+" not found."+iif(s_lRecursive," The flag -r is active. Inform the subdir also if the main PRG is within it.","")
+            s_cAlertMsg := "File "+alltrim(cTopFile)+" not found."+iif(s_lRecursive," The flag -r is active. Inform the subdir also if the main .prg is within it.","")
          ENDIF
 
          Alert( s_cAlertMsg )
@@ -3240,11 +3240,11 @@ Endif // Create and compile
          ELSE
 
             IF s_nLang == 1
-               s_cAlertMsg := "For‡ar recompila‡Æo para todos PRGs </f> ? (S/N) "
+               s_cAlertMsg := "For‡ar recompila‡Æo para todos .prgs </f> ? (S/N) "
             ELSEIF s_nLang == 3 // Spanish
-               s_cAlertMsg := "Forzar recompilaci¢n para todos los PRGs </f> ? (S/N) "
+               s_cAlertMsg := "Forzar recompilaci¢n para todos los .prgs </f> ? (S/N) "
             ELSE // English
-               s_cAlertMsg := "Force recompiling for all PRGs </f> ? (Y/N) "
+               s_cAlertMsg := "Force recompiling for all .prgs </f> ? (Y/N) "
             ENDIF
 
             @ 21,5 SAY s_cAlertMsg;
@@ -4329,11 +4329,11 @@ FUNCTION CreateLibMakeFile( cFile )
 
 
    if s_nlang == 1
-      s_cAlertMsg := "Selecione os PRGs a compilar"
+      s_cAlertMsg := "Selecione os .prgs a compilar"
    elseif s_nlang == 3
-      s_cAlertMsg := "Seleccione los PRG a compilar"
+      s_cAlertMsg := "Seleccione los .prg a compilar"
    else
-      s_cAlertMsg := "Select the PRG files to compile"
+      s_cAlertMsg := "Select the .prg files to compile"
    endif
 
    aInFiles := GetSourceFiles( s_lRecursive, s_lGcc, cOS )
@@ -5617,7 +5617,7 @@ LOCAL aLang := Array( 67 )
       aLang[40] := "Usar libs externas"
       aLang[41] := "<Espacio>-Seleccionar <Enter>-Continuar proceso <F5> Selec/Deselec todo."
       aLang[42] := "Nivel del aviso de lo compilador /w"
-      aLang[43] := "Cuantos PRGs por linea no makefile:"
+      aLang[43] := "Cuantos .prgs por linea no makefile:"
       aLang[44] := "Usar la libreria Multi Thread"
       aLang[45] := "Nombre del ejecutable"
       aLang[46] := "Nivel de Avisos /w"
@@ -5689,7 +5689,7 @@ LOCAL aLang := Array( 67 )
       aLang[40] := "Usa Libs Externas ?"
       aLang[41] := "<Espa‡o>-Seleciona <Enter> p/ continuar processo <F5>-Sel/DeSel. tudo."
       aLang[42] := "N¡vel de aviso do compilador /w"
-      aLang[43] := "Qtd de PRGs por linha, no makefile: "
+      aLang[43] := "Qtd de .prgs por linha, no makefile: "
       aLang[44] := "Usar a biblioteca Multi Thread ?"
       aLang[45] := "Nome Execut vel:"
       aLang[46] := "N¡vel de Warnings /w"

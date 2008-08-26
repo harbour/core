@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-26 22:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/common/hbver.c
+     * hb_verCompiler() buffer size cleanup.
+
+   * source/rtl/hbinet.c
+     * Minor formatting.
+
+   * utils/hbmake/hbmake.prg
+     * PRG -> .prg on some screen messages.
+
+   * config/w32/xcc.cf
+   * config/w32/pocc.cf
+     + Added ws2_32.lib. Didn't solve the problem, but 
+       as per MS docs of some functions we use, we should 
+       use this instead of wsock2 (everywhere actually) 
+       [and ws2 instead of winsock for WinCE]. Someone pls 
+       correct me if I'm wrong, or if there is any reason 
+       we're using both and/or the older one?
+
+   * config/w32/pocc.cf
+     - Removed C switch -Zx (Enable Pelles C extensions).
+       We don't need this.
+
 2008-08-26 15:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/common/hbver.c
      + Show bitness for all (non-DJGPP) compilers.
