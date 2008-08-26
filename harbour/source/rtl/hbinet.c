@@ -81,7 +81,7 @@
    #include <string.h>
 
    #if defined( HB_OS_WIN_32 )
-      #define _WINSOCKAPI_  /* Prevents inclusion of Winsock.h in Windows.h */
+      #define _WINSOCKAPI_  /* Prevents inclusion of winsock.h in windows.h */
       #define HB_SOCKET_T SOCKET
       #include <winsock2.h>
       #include <windows.h>
@@ -339,7 +339,7 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
 
    /* TOFIX: make it MT safe */
 
-   /* let's see if name is an IP address; not necessary on linux */
+   /* let's see if name is an IP address; not necessary on Linux */
 #if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
    ULONG ulAddr;
 
