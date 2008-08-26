@@ -67,7 +67,7 @@ RT_FUNDEF( R_PASSENLC )
 
 CLIPPER HB_STOD( void )
 {
-   // The length check is a fix to avoid buggy behaviour of _retds()
+   /* The length check is a fix to avoid buggy behaviour of _retds() */
    _retds( ( ISCHAR( 1 ) && _parclen( 1 ) == 8 ) ? _parc( 1 ) : "        " );
 }
 

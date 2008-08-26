@@ -142,8 +142,8 @@ static int hb_CheckSpanMode( char * szFile )
 
    try
    {
-// s.r. to avoid GPF when ZIP file is read only !
-//      szZip.Open( szFile, CZipArchive::zipOpen, 0 );
+/* s.r. to avoid GPF when ZIP file is read only ! */
+/*      szZip.Open( szFile, CZipArchive::zipOpen, 0 ); */
         szZip.Open( szFile, hbza_pZipI.iReadOnly ? CZipArchive::zipOpenReadOnly : CZipArchive::zipOpen, 0 );
    }
    catch( CZipException &e )
@@ -637,7 +637,7 @@ int hb_DeleteSel( char *szFile, PHB_ITEM pArray, BOOL bCase )
 
          case -1:
          case -2:
-//       default:
+/*       default: */
             iReturn = false;
       }
    }
@@ -766,12 +766,12 @@ int hb_UnzipSel( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPassWord
                /* TODO:  They're both the same.... */
                if( !HB_IS_BLOCK( pProgress ) )
                {
-//                szZip.SetPassword( szPassWord );
+/*                szZip.SetPassword( szPassWord ); */
                   szZip.ExtractFile( ( WORD ) ulCount, ( LPCTSTR ) szPath, bWithPath, NULL, 65536 );
                }
                else
                {
-//                szZip.SetPassword( szPassWord );
+/*                szZip.SetPassword( szPassWord ); */
                   szZip.ExtractFile( ( WORD )ulCount, ( LPCTSTR )szPath, bWithPath, NULL, 65536 );
                }
             }
@@ -953,12 +953,12 @@ int hb_UnzipSelIndex( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPas
                /* TODO:  They're both the same.... */
                if( !HB_IS_BLOCK( pProgress ) )
                {
-//                szZip.SetPassword( szPassWord );
+/*                szZip.SetPassword( szPassWord ); */
                   szZip.ExtractFile( ( WORD )ulCount, ( LPCTSTR )szPath, bWithPath, NULL, 65536 );
                }
                else
                {
-//                szZip.SetPassword( szPassWord );
+/*                szZip.SetPassword( szPassWord ); */
                   szZip.ExtractFile( ( WORD )ulCount, ( LPCTSTR )szPath, bWithPath, NULL, 65536 );
                }
             }
@@ -997,7 +997,7 @@ BOOL hb_TransferFilesFromzip( char *szSource, char *szDest, PHB_ITEM pArray )
 
          case -1:
          case -2:
-//       default:
+/*       default: */
             bReturn = FALSE;
       }
    }
@@ -1014,7 +1014,7 @@ BOOL hb_TransferFilesFromzip( char *szSource, char *szDest, PHB_ITEM pArray )
 
          case -1:
          case -2:
-//       default:
+/*       default: */
             bReturn1 = FALSE;
       }
    }
@@ -1046,7 +1046,7 @@ int hb_UnzipAll(char *szFile,PHB_ITEM pBlock, BOOL bWithPath,char *szPassWord,ch
 {
    bool iReturn = true;
    uLong uiCount = 0;
-//   int iCause = 0;
+/* int iCause = 0; */
    int iMode;
    CZipArchive szZip;
    BOOL bChange = FALSE;
@@ -1094,7 +1094,7 @@ int hb_UnzipAll(char *szFile,PHB_ITEM pBlock, BOOL bWithPath,char *szPassWord,ch
    catch( CZipException &e )
    {
       HB_SYMBOL_UNUSED( e );
-      // iCause = e.m_iCause;
+      /* iCause = e.m_iCause; */
    }
 
    if( iReturn )
@@ -1159,13 +1159,13 @@ int hb_UnzipAll(char *szFile,PHB_ITEM pBlock, BOOL bWithPath,char *szPassWord,ch
          {
             szZip.CloseFile( NULL, true );
             HB_SYMBOL_UNUSED( e );
-            // iCause = e.m_iCause;
+            /* iCause = e.m_iCause; */
          }
 
          if( bChange )
          {
             bChange = FALSE;
-//          szPath = NULL;
+/*          szPath = NULL; */
          }
       }
    }
@@ -1323,7 +1323,7 @@ int hb_CmpTdSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
    catch( ... )
    {}
 
-   //if( ! bReturn )
+   /*if( ! bReturn )*/
    {
       if( szPassWord != NULL )
          szZip.SetPassword( szPassWord );

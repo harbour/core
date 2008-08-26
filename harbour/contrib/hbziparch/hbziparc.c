@@ -1105,7 +1105,7 @@ HB_FUNC( HB_UNZIPFILE )
       }
       else
       {
-//s.r. change "*.*" to "*" because file without extension were ignored
+         /* s.r. change "*.*" to "*" because file without extension were ignored */
          UnzipCreateArray( (char*) "*", 1 );
       }
 

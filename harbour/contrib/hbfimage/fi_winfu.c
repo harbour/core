@@ -73,12 +73,12 @@
 
 #include "FreeImage.h"
 
-// --------------------------------------------------------------------------
-// Convert from FreeImage to HBITMAP ----------------------------------------
-// --------------------------------------------------------------------------
+/* -------------------------------------------------------------------------- */
+/* Convert from FreeImage to HBITMAP ---------------------------------------- */
+/* -------------------------------------------------------------------------- */
 #if ( defined(HB_OS_WIN_32) || defined(__WIN32__) )
 
-// implementation: HBITMAP bitmap = FI_FiToBitmap( FIBITMAP *dib );
+/* implementation: HBITMAP bitmap = FI_FiToBitmap( FIBITMAP *dib ); */
 HB_FUNC( FI_FITOBITMAP )
 {
    if ( hb_pcount() == 1 &&
@@ -108,7 +108,7 @@ HB_FUNC( FI_FITOBITMAP )
    }
    else
    {
-      // Parameter error
+      /* Parameter error */
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 1,
@@ -118,13 +118,13 @@ HB_FUNC( FI_FITOBITMAP )
    }
 }
 
-// --------------------------------------------------------------------------
+/* -------------------------------------------------------------------------- */
 
-// --------------------------------------------------------------------------
-// Convert from HBITMAP to FreeImage ----------------------------------------
-// --------------------------------------------------------------------------
+/* -------------------------------------------------------------------------- */
+/* Convert from HBITMAP to FreeImage ---------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
-// implementation:  FIBITMAP *dib = FI_BitmapToFi( HBITMAP bitmap );
+/* implementation:  FIBITMAP *dib = FI_BitmapToFi( HBITMAP bitmap ); */
 HB_FUNC( FI_BITMAPTOFI )
 {
    if ( hb_pcount() == 1 &&
@@ -161,7 +161,7 @@ HB_FUNC( FI_BITMAPTOFI )
    }
    else
    {
-      // Parameter error
+      /* Parameter error */
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 1,
@@ -171,13 +171,13 @@ HB_FUNC( FI_BITMAPTOFI )
    }
 }
 
-// --------------------------------------------------------------------------
+/* -------------------------------------------------------------------------- */
 
-// --------------------------------------------------------------------------
-// Draw an image in a window Box --------------------------------------------
-// --------------------------------------------------------------------------
+/* -------------------------------------------------------------------------- */
+/* Draw an image in a window Box -------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
-// implementation: int scanlines = FI_WinDraw( FIBITMAP *dib, HDC hDC, nTop, nLeft, nBottom, nRight );
+/* implementation: int scanlines = FI_WinDraw( FIBITMAP *dib, HDC hDC, nTop, nLeft, nBottom, nRight ); */
 HB_FUNC( FI_WINDRAW )
 {
    if ( hb_pcount() == 6 &&
@@ -219,7 +219,7 @@ HB_FUNC( FI_WINDRAW )
    }
    else
    {
-      // Parameter error
+      /* Parameter error */
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
             HB_ERR_FUNCNAME, 6,
@@ -231,6 +231,6 @@ HB_FUNC( FI_WINDRAW )
    }
 }
 
-// --------------------------------------------------------------------------
+/* -------------------------------------------------------------------------- */
 
-#endif // ( defined(HB_OS_WIN_32) || defined(__WIN32__) )
+#endif /* ( defined(HB_OS_WIN_32) || defined(__WIN32__) ) */

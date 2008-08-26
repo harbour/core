@@ -105,24 +105,24 @@ int query( char *sel_str )
     if ( isc_start_transaction ( status, &trans, 1, &db, 0, NULL ) ) 
         ERREXIT(status, 1);   
               
-    // Allocate an output SQLDA. Just to check number of columns 
+    /* Allocate an output SQLDA. Just to check number of columns */
     sqlda = ( XSQLDA * ) malloc( XSQLDA_LENGTH ( 1 ) );
     sqlda->sqln = 1;
     sqlda->version = 1;
 
-    // Allocate a statement
+    /* Allocate a statement */
     if (isc_dsql_allocate_statement(status, &db, &stmt))
         ERREXIT(status, 1);
 
-    // Prepare the statement. 
+    /* Prepare the statement. */
     if (isc_dsql_prepare(status, &trans, &stmt, 0, sel_str, dialect, sqlda))
         ERREXIT(status, 1);
     
-    // Describe sql contents        
+    /* Describe sql contents */
     if (isc_dsql_describe(status, &stmt, dialect, sqlda))
         ERREXIT(status, 1);
     
-    // Relocate necessary number of columns
+    /* Relocate necessary number of columns */
     if ( sqlda->sqld > sqlda->sqln ) {
         free( sqlda );
         n = sqlda->sqld;
@@ -158,7 +158,7 @@ int query( char *sel_str )
     }
         
     if ( !sqlda->sqld ) {
-        // Execute and commit non-select querys 
+        /* Execute and commit non-select querys */
         if ( isc_dsql_execute ( status, &trans, &stmt, dialect, NULL ) ) 
             ERREXIT(status, 1);
 

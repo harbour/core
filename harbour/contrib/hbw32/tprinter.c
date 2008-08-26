@@ -94,9 +94,9 @@ BOOL hb_PrinterExists( LPSTR pPrinterName )
 
    if( !strchr( pPrinterName, HB_OS_PATH_LIST_SEP_CHR ) && !hb_isLegacyDevice( pPrinterName ) )
 
-   {                            // Don't bother with test if '\' in string
+   {                            /* Don't bother with test if '\' in string */
       if( hb_iswinnt() )
-      {                         // Use EnumPrinter() here because much faster than OpenPrinter()
+      {                         /* Use EnumPrinter() here because much faster than OpenPrinter() */
          EnumPrinters( Flags, NULL, 4, ( LPBYTE ) NULL, 0, &needed, &returned );
          if( needed > 0 )
          {
@@ -151,7 +151,7 @@ BOOL hb_GetDefaultPrinter( char * pPrinterName, LPDWORD pdwBufferSize )
 
    if( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5 ) /* Windows 2000 or later */
    {
-      typedef BOOL( WINAPI * DEFPRINTER ) ( LPSTR, LPDWORD );  // stops warnings
+      typedef BOOL( WINAPI * DEFPRINTER ) ( LPSTR, LPDWORD );  /* stops warnings */
       DEFPRINTER fnGetDefaultPrinter;
       HMODULE hWinSpool = LoadLibrary( TEXT( "winspool.drv" ) );
 
@@ -349,7 +349,7 @@ LONG hb_PrintFileRaw( UCHAR * cPrinterName, UCHAR * cFileName, UCHAR * cDocName 
                {
                   if( printBuffer[nRead - 1] == 26 )
                   {
-                     nRead--;   // Skip the EOF() character
+                     nRead--;   /* Skip the EOF() character */
                   }
                   WritePrinter( hPrinter, printBuffer, nRead, &nWritten );
                }
@@ -554,7 +554,7 @@ HB_FUNC( GETPRINTERS )
                      }
                      else
                      {
-                        // Tony (ABC)   11/1/2005        1:40PM.
+                        /* Tony (ABC)   11/1/2005        1:40PM. */
                         for( a = 0; a < returned; a++, pPrinterEnum++ )
                         {
                            if( !bLocalPrintersOnly
@@ -618,31 +618,33 @@ HB_FUNC( GETPRINTERS )
                               CloseHandle( hPrinter );
                            }
                         }
-                        // Tony (ABC)   11/1/2005        1:40PM. Old Code... Justo in case.
-//                        hb_arrayNew( SubItems, 0 );
-//                        hb_itemPutC( File, pPrinterEnum->pPrinterName );
-//                        hb_itemPutC( Port, pPrinterEnum->pPortName );
+                        /* Tony (ABC)   11/1/2005        1:40PM. Old Code... Justo in case. */
+#if 0
+                          hb_arrayNew( SubItems, 0 );
+                          hb_itemPutC( File, pPrinterEnum->pPrinterName );
+                          hb_itemPutC( Port, pPrinterEnum->pPortName );
+ 
+                          if ( pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL)
+                          {
+                             hb_itemPutC( Net,"LOCAL" );
+                          }
+                          else
+                          {
+                             if ( pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_NETWORK)
+                             {
+                                hb_itemPutC( Net,"NETWORK" );
+                             }
+                             else
+                             {
+                                hb_itemPutC( Net, "ERROR" );
+                             }
+                          }
 
-//                        if ( pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_LOCAL)
-//                        {
-//                           hb_itemPutC( Net,"LOCAL" );
-//                        }
-//                        else
-//                        {
-//                           if ( pPrinterEnum->Attributes & PRINTER_ATTRIBUTE_NETWORK)
-//                           {
-//                              hb_itemPutC( Net,"NETWORK" );
-//                           }
-//                           else
-//                           {
-//                              hb_itemPutC( Net, "ERROR" );
-//                           }
-//                        }
-
-//                        hb_arrayAddForward( SubItems , File ) ;
-//                        hb_arrayAddForward( SubItems , Port ) ;
-//                        hb_arrayAddForward( SubItems, Net ) ;
-//                        hb_arrayAddForward( ArrayPrinter , SubItems );
+                          hb_arrayAddForward( SubItems , File ) ;
+                          hb_arrayAddForward( SubItems , Port ) ;
+                          hb_arrayAddForward( SubItems, Net ) ;
+                          hb_arrayAddForward( ArrayPrinter , SubItems );
+#endif
                      }
                   }
                }

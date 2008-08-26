@@ -90,9 +90,9 @@ void nxs_crypt(
       keylen = NXS_MAX_KEYLEN;
    }
 
-   // debug
-   //memcpy( cipher, source, srclen );
-   // end debug
+#ifdef DEBUG_0
+   memcpy( cipher, source, srclen );
+#endif
 
    /* pass one: scramble the source using the key */
    nxs_scramble( source, srclen, key, keylen, cipher );
@@ -156,9 +156,6 @@ void nxs_scramble(
    /* Leave alone the last block */
    len = (srclen / keylen) * keylen;
    nxs_partial_scramble( source, cipher, scramble, len, keylen );
-
-   // last pos was not done.
-   //memcpy( cipher +len , source + len , srclen - len );
 
    keylen = srclen - len;
    nxs_make_scramble( scramble, key, keylen );
@@ -288,7 +285,7 @@ void nxs_xordecode(
    USHORT keypos = 0;
    BYTE c_bitrest, c_bitleft;
 
-   // A very short block?
+   /* A very short block? */
    if ( keylen > cipherlen - pos )
    {
       keylen = ( USHORT ) ( cipherlen - pos);
@@ -310,7 +307,7 @@ void nxs_xordecode(
       if (keypos == (USHORT) keylen )
       {
          keypos = 0;
-         // last block
+         /* last block */
          if ( keylen > cipherlen - pos )
          {
             keylen = ( USHORT ) (cipherlen - pos);

@@ -201,7 +201,7 @@ HB_FUNC( WIN32_DELETEDC )
       * phDC = NULL;
    }
 
-   hb_retni( 0 );               // Return zero as a new handle even if fails
+   hb_retni( 0 );               /* Return zero as a new handle even if fails */
 }
 
 HB_FUNC( WIN32_STARTPAGE )
@@ -263,8 +263,8 @@ HB_FUNC( WIN32_TEXTOUT )
          }
          else if( TextOut( hDC, iRow, iCol, lpData, iLen ) )
          {
-            GetTextExtentPoint32( hDC, lpData, iLen, &sSize ); // Get the length of the text in device size
-            Result = ( LONG ) sSize.cx; // return the width so we can update the current pen position (::PosY)
+            GetTextExtentPoint32( hDC, lpData, iLen, &sSize ); /* Get the length of the text in device size */
+            Result = ( LONG ) sSize.cx; /* return the width so we can update the current pen position (::PosY) */
          }
 
          HB_TCHAR_FREE( lpData );
@@ -291,12 +291,12 @@ HB_FUNC( WIN32_GETTEXTSIZE )
 
       lpData = HB_TCHAR_CONVNTO( hb_parc( 2 ), iLen );
 
-      GetTextExtentPoint32( hDC, lpData, iLen, &sSize );       // Get the length of the text in device size
+      GetTextExtentPoint32( hDC, lpData, iLen, &sSize );       /* Get the length of the text in device size */
 
       if( ISLOG( 4 ) && !hb_parl( 4 ) )
-         Result = ( LONG ) sSize.cy;    // return the height
+         Result = ( LONG ) sSize.cy;    /* return the height */
       else
-         Result = ( LONG ) sSize.cx;    // return the width
+         Result = ( LONG ) sSize.cx;    /* return the width */
 
       HB_TCHAR_FREE( lpData );
    }
@@ -364,7 +364,7 @@ HB_FUNC( WIN32_CREATEFONT )
    if( iDiv )
       iWidth = MulDiv( abs( iMul ), GetDeviceCaps( hDC, LOGPIXELSX ), abs( iDiv ) );
    else
-      iWidth = 0;               // Use the default font width
+      iWidth = 0;               /* Use the default font width */
 
    hFont = CreateFont( iHeight, iWidth, 0, 0, iWeight, dwItalic, dwUnderLine, 0,
                        dwCharSet, OUT_DEVICE_PRECIS, CLIP_DEFAULT_PRECIS, DRAFT_QUALITY,
@@ -431,7 +431,7 @@ HB_FUNC( WIN32_SETDOCUMENTPROPERTIES )
             {
                DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, DM_OUT_BUFFER );
 
-               if( ISNUM( 3 ) && hb_parnl( 3 ) )        // 22/02/2007 don't change if 0
+               if( ISNUM( 3 ) && hb_parnl( 3 ) )        /* 22/02/2007 don't change if 0 */
                   pDevMode->dmPaperSize = ( short ) hb_parnl( 3 );
 
                if( ISLOG( 4 ) )
@@ -440,13 +440,13 @@ HB_FUNC( WIN32_SETDOCUMENTPROPERTIES )
                if( ISNUM( 5 ) && hb_parnl( 5 ) > 0 )
                   pDevMode->dmCopies = ( short ) hb_parnl( 5 );
 
-               if( ISNUM( 6 ) && hb_parnl( 6 ) )        // 22/02/2007 don't change if 0
+               if( ISNUM( 6 ) && hb_parnl( 6 ) )        /* 22/02/2007 don't change if 0 */
                   pDevMode->dmDefaultSource = ( short ) hb_parnl( 6 );
 
-               if( ISNUM( 7 ) && hb_parnl( 7 ) )        // 22/02/2007 don't change if 0
+               if( ISNUM( 7 ) && hb_parnl( 7 ) )        /* 22/02/2007 don't change if 0 */
                   pDevMode->dmDuplex = ( short ) hb_parnl( 7 );
 
-               if( ISNUM( 8 ) && hb_parnl( 8 ) )        // 22/02/2007 don't change if 0
+               if( ISNUM( 8 ) && hb_parnl( 8 ) )        /* 22/02/2007 don't change if 0 */
                   pDevMode->dmPrintQuality = ( short ) hb_parnl( 8 );
 
                Result = ( ResetDC( hDC, pDevMode ) != NULL );
@@ -465,7 +465,7 @@ HB_FUNC( WIN32_SETDOCUMENTPROPERTIES )
    hb_retl( Result );
 }
 
-// Functions for Loading & Printing bitmaps
+/* Functions for Loading & Printing bitmaps */
 
 HB_FUNC( WIN32_LOADBITMAPFILE )
 {
@@ -482,14 +482,14 @@ HB_FUNC( WIN32_LOADBITMAPFILE )
    {
       dwFileSize = GetFileSize( hFile, &dwHighSize );
 
-      if( ( dwFileSize != INVALID_FILE_SIZE ) && !dwHighSize )  // Do not continue if File size error or TOO big for memory
+      if( ( dwFileSize != INVALID_FILE_SIZE ) && !dwHighSize )  /* Do not continue if File size error or TOO big for memory */
       {
          pbmfh = ( BITMAPFILEHEADER * ) hb_xgrab( dwFileSize );
 
          if( pbmfh )
          {
             bSuccess = ReadFile( hFile, pbmfh, dwFileSize, &dwBytesRead, NULL );
-            bSuccess = bSuccess && ( dwBytesRead == dwFileSize ) && ( pbmfh->bfType == *( WORD * ) "BM" );      //&& (pbmfh->bfSize == dwFileSize) ;
+            bSuccess = bSuccess && ( dwBytesRead == dwFileSize ) && ( pbmfh->bfType == *( WORD * ) "BM" );      /*&& (pbmfh->bfSize == dwFileSize) ;*/
          }
       }
 
@@ -498,7 +498,7 @@ HB_FUNC( WIN32_LOADBITMAPFILE )
 
    if( bSuccess )
    {
-      hb_retclen( ( char * ) pbmfh, dwFileSize );       // hb_retclenAdoptRaw
+      hb_retclen( ( char * ) pbmfh, dwFileSize );       /* hb_retclenAdoptRaw */
 
       if( pbmfh )
          hb_xfree( pbmfh );
@@ -524,7 +524,7 @@ HB_FUNC( WIN32_DRAWBITMAP )
    pBits = ( BYTE * ) pbmfh + pbmfh->bfOffBits;
 
    if( pbmi->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
-   {                            // Remember there are 2 types of BitMap File
+   {                            /* Remember there are 2 types of BitMap File */
       cxDib = ( ( BITMAPCOREHEADER * ) pbmi )->bcWidth;
       cyDib = ( ( BITMAPCOREHEADER * ) pbmi )->bcHeight;
    }
@@ -604,9 +604,9 @@ HB_FUNC( WIN32_SETPEN )
 
    void ** phPEN = ( void ** ) hb_gcAlloc( sizeof( HPEN * ), win32_HPEN_release );
 
-   * phPEN = ( void * ) CreatePen( hb_parni( 2 ),                // pen style
-                                   hb_parni( 3 ),                // pen width
-                                   ( COLORREF ) hb_parnl( 4 )    // pen color
+   * phPEN = ( void * ) CreatePen( hb_parni( 2 ),                /* pen style */
+                                   hb_parni( 3 ),                /* pen width */
+                                   ( COLORREF ) hb_parnl( 4 )    /* pen color */
                                  );
 
    hOldPen = ( HPEN ) SelectObject( hDC, ( HPEN ) * phPEN );

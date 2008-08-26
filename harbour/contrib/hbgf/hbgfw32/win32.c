@@ -67,7 +67,7 @@ HB_FUNC( WINREGISTERCLASS )
    LPTSTR       lpszClassName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
 
    wndclass.lpszClassName = lpszClassName;
-   wndclass.style = CS_OWNDC | CS_VREDRAW | CS_HREDRAW;   // hb_parnl( 2 );
+   wndclass.style = CS_OWNDC | CS_VREDRAW | CS_HREDRAW;   /* hb_parnl( 2 ); */
    wndclass.cbClsExtra    = hb_parnl( 3 );
    wndclass.cbWndExtra    = 0;
    wndclass.lpfnWndProc   = WndProc;
@@ -222,10 +222,10 @@ HB_FUNC( SETMENU )
 HB_FUNC( SENDMESSAGE )
 {
    hb_retnl( (LONG) SendMessage(
-                       (HWND) hb_parptr( 1 ),   // handle of destination window
-                       (UINT) hb_parni( 2 ),    // message to send
-                       (WPARAM) hb_parnl( 3 ),  // first message parameter
-                       (LPARAM) hb_parnl( 4 )   // second message parameter
+                       (HWND) hb_parptr( 1 ),   /* handle of destination window */
+                       (UINT) hb_parni( 2 ),    /* message to send */
+                       (WPARAM) hb_parnl( 3 ),  /* first message parameter */
+                       (LPARAM) hb_parnl( 4 )   /* second message parameter */
                      ) );
 }
 

@@ -239,9 +239,9 @@ HB_FUNC( WINADDMENUITEM )
 }
 
 
-// Given an id of a menuitem changes it to a MIS_SUBMENU type of menu item
-// NOTE: You have to delete and reinsert a menu item if you want to change it from
-//       a MIS_TEXT to a MIS_SUBMENU type of menuitem
+/* Given an id of a menuitem changes it to a MIS_SUBMENU type of menu item
+   NOTE: You have to delete and reinsert a menu item if you want to change it from
+         a MIS_TEXT to a MIS_SUBMENU type of menuitem */
 HB_FUNC( WINMAKESUBMENUITEM )
 {
    MENUITEM mit;
@@ -256,7 +256,7 @@ HB_FUNC( WINMAKESUBMENUITEM )
       mit.hwndSubMenu = hb_parnl(3);
       mit.afStyle |= MIS_SUBMENU;
 
-      // re-insert the menuitem
+      /* re-insert the menuitem */
       WinSendMsg((HWND) hb_parnl(1), MM_INSERTITEM, &mit, &text);
    }
    hb_retnl(0);
@@ -309,10 +309,10 @@ HB_FUNC( WINSETWIDTH )
 HB_FUNC( SENDMESSAGE )
 {
    hb_retnl( (LONG) WinSendMsg(
-                       (HWND) hb_parnl( 1 ), // handle of destination window
-                       (ULONG) hb_parnl( 2 ), // message to send
-                       (MPARAM) hb_parnl( 3 ),  // first message parameter
-                       (MPARAM) hb_parnl( 4 )   // second message parameter
+                       (HWND) hb_parnl( 1 ), /* handle of destination window */
+                       (ULONG) hb_parnl( 2 ), /* message to send */
+                       (MPARAM) hb_parnl( 3 ),  /* first message parameter */
+                       (MPARAM) hb_parnl( 4 )   /* second message parameter */
                      ) );
 }
 
@@ -401,7 +401,7 @@ HB_FUNC( WINSETLEFT )
 HB_FUNC( POSTQUITMESSAGE )
 {
    WinPostMsg((HWND) hb_parnl( 1 ), WM_QUIT, 0L, 0L);
-   //PostQuitMessage( hb_parnl( 1 ) );
+   /*PostQuitMessage( hb_parnl( 1 ) );*/
 }
 
 

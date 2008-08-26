@@ -2531,19 +2531,19 @@ HB_EXPORT HB_FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsExtOpen(%s, %s, %hu, %p, %p)", pFilename, pDefExt, uiExFlags, pPaths, pError));
 
-/*
-   #define FXO_TRUNCATE  0x0100   // Create (truncate if exists)
-   #define FXO_APPEND    0x0200   // Create (append if exists)
-   #define FXO_UNIQUE    0x0400   // Create unique file FO_EXCL ???
-   #define FXO_FORCEEXT  0x0800   // Force default extension
-   #define FXO_DEFAULTS  0x1000   // Use SET command defaults
-   #define FXO_DEVICERAW 0x2000   // Open devices in raw mode
-   // xHarbour extension
-   #define FXO_SHARELOCK 0x4000   // emulate DOS SH_DENY* mode in POSIX OS
-   #define FXO_COPYNAME  0x8000   // copy final szPath into pFilename
+#if 0
+   #define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */
+   #define FXO_APPEND    0x0200   /* Create (append if exists) */
+   #define FXO_UNIQUE    0x0400   /* Create unique file FO_EXCL ??? */
+   #define FXO_FORCEEXT  0x0800   /* Force default extension */
+   #define FXO_DEFAULTS  0x1000   /* Use SET command defaults */
+   #define FXO_DEVICERAW 0x2000   /* Open devices in raw mode */
+   /* xHarbour extension */
+   #define FXO_SHARELOCK 0x4000   /* emulate DOS SH_DENY* mode in POSIX OS */
+   #define FXO_COPYNAME  0x8000   /* copy final szPath into pFilename */
 
    hb_errGetFileName( pError );
-*/
+#endif
 
    szPath = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
 
