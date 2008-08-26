@@ -252,6 +252,8 @@ static void do_atnum( int iSwitch )
          case DO_ATNUM_ATNUM:
             /* ATNUM */
 #if (__POCC__ >= 500) && defined(HB_OS_WIN_64)
+            /* NOTE: Workaround for Pelles C 5.00.13 AMD64 mode internal error:
+                     'fatal error: Internal error: reduce_tree()' [vszakats]. */
             hb_retnl( pc - pcString + sIgnore + 1 );
 #else
             hb_retnl( pc - ( pcString - sIgnore ) + 1 );
