@@ -1506,12 +1506,19 @@ static void hb_compDeclaredInit( HB_COMP_DECL )
 
    /* ------- */
 
+   /* reset to previous state */
+   s_001.pNext = NULL;
+
+   /* ------- */
+
    /* First (bottom) Method */
    s_ERROR.pMethod     = &s_ERROR_14;
    /* Last (top) Method. */
    s_ERROR.pLastMethod = &s_ERROR_01;
    /* Next class definition pointer */
    s_ERROR.pNext = NULL;
+   /* reset to previous state */
+   s_ERROR_01.pNext = NULL;
 
    /* ------- */
 
@@ -1521,6 +1528,8 @@ static void hb_compDeclaredInit( HB_COMP_DECL )
    s_GET.pLastMethod = &s_GET_01;
    /* Next class definition pointer */
    s_GET.pNext = &s_ERROR;
+   /* reset to previous state */
+   s_GET_01.pNext = NULL;
 
    /* ------- */
 
@@ -1530,6 +1539,8 @@ static void hb_compDeclaredInit( HB_COMP_DECL )
    s_TBCOLUMN.pLastMethod = &s_TBCOLUMN_01;
    /* Next class definition pointer */
    s_TBCOLUMN.pNext = &s_GET;
+   /* reset to previous state */
+   s_TBCOLUMN_01.pNext = NULL;
 
    /* ------- */
 

@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-26 12:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbmain.c
+    ! reset class and functions static declarations to avoid GPF
+      when more then one file is compiled with -w3 switch
+      NOTE: Whole this code will have to be removed and written
+            from scratch
+
 2008-08-26 11:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/hbmain.c
     ! fixed GPF when more then one file was compiled with -w3 switch
