@@ -66,7 +66,7 @@
 
 /* Compile in Unix mode under Cygwin */
 #ifdef HB_OS_UNIX_COMPATIBLE
-   #undef HB_OS_WIN_32
+  #undef HB_OS_WIN_32
 #endif
 
 /* HB_INET_H_ */
@@ -81,7 +81,7 @@
    #include <string.h>
 
    #if defined( HB_OS_WIN_32 )
-      #define _WINSOCKAPI_  /* Prevents inclusion of winsock.h in windows.h */
+      #define _WINSOCKAPI_  /* Prevents inclusion of Winsock.h in Windows.h */
       #define HB_SOCKET_T SOCKET
       #include <winsock2.h>
       #include <windows.h>
@@ -213,6 +213,15 @@
    #define socklen_t int
 #endif
 
+#if (__POCC__ >= 500) && defined( HB_OS_WIN_64 )
+   /* TOFIX: Bad workaround for the '__WSAFDIsSet unresolved' problem 
+             in Pelles C 5.00.13 AMD64 mode, to make final executables 
+             link at all. Some hbinet.c features (or the whole module) 
+             won't properly work though. [vszakats] */
+   #undef FD_ISSET
+   #define FD_ISSET( s, f ) ( 0 )
+#endif
+
 #ifdef HB_OS_LINUX
 #include <signal.h>
 #define HB_INET_LINUX_INTERRUPT     SIGUSR1+90
@@ -330,7 +339,7 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
 
    /* TOFIX: make it MT safe */
 
-   /* let's see if name is an IP address; not necessary on Linux */
+   /* let's see if name is an IP address; not necessary on linux */
 #if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
    ULONG ulAddr;
 
