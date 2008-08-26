@@ -4530,6 +4530,12 @@ void hb_compCompileEnd( HB_COMP_DECL )
          pSym = hb_compSymbolKill( pSym );
       HB_COMP_PARAM->symbols.pFirst = NULL;
    }
+
+   /* Initialize predefined declarations, it's necessary for
+    * next file compilation (if any)
+    */
+   if( HB_COMP_PARAM->iWarnings >= 3 )
+      hb_compDeclaredInit( HB_COMP_PARAM );
 }
 
 static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
