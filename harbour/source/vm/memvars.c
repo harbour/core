@@ -1269,7 +1269,7 @@ typedef struct
    char * pszMask;
    BOOL bIncludeMask;
    BYTE * buffer;
-   FHANDLE fhnd;
+   HB_FHANDLE fhnd;
 } MEMVARSAVE_CARGO;
 
 /* saves a variable to a mem file already open */
@@ -1279,7 +1279,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
    char * pszMask    = ( ( MEMVARSAVE_CARGO * ) Cargo )->pszMask;
    BOOL bIncludeMask = ( ( MEMVARSAVE_CARGO * ) Cargo )->bIncludeMask;
    BYTE * buffer     = ( ( MEMVARSAVE_CARGO * ) Cargo )->buffer;
-   FHANDLE fhnd      = ( ( MEMVARSAVE_CARGO * ) Cargo )->fhnd;
+   HB_FHANDLE fhnd   = ( ( MEMVARSAVE_CARGO * ) Cargo )->fhnd;
 
    /* NOTE: Harbour name lengths are not limited, but the .mem file
             structure is not flexible enough to allow for it.
@@ -1375,7 +1375,7 @@ HB_FUNC( __MVSAVE )
    {
       PHB_FNAME pFileName;
       char szFileName[ _POSIX_PATH_MAX + 1 ];
-      FHANDLE fhnd;
+      HB_FHANDLE fhnd;
 
       /* Generate filename */
 
@@ -1449,7 +1449,7 @@ HB_FUNC( __MVRESTORE )
    {
       PHB_FNAME pFileName;
       char szFileName[ _POSIX_PATH_MAX + 1 ];
-      FHANDLE fhnd;
+      HB_FHANDLE fhnd;
 
       BOOL bAdditive = hb_parl( 2 );
 

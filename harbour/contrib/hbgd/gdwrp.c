@@ -236,7 +236,7 @@ static PHB_ITEM hb_gdFontItemNew( gdFontPtr font )
 
 /* ---------------------------------------------------------------------------*/
 
-static void * LoadImageFromHandle( FHANDLE fhandle, int sz )
+static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
 {
    void *iptr;
 
@@ -259,7 +259,7 @@ static void * LoadImageFromHandle( FHANDLE fhandle, int sz )
 static void * LoadImageFromFile( char *szFile, int *sz )
 {
    void *iptr;
-   FHANDLE fhandle;
+   HB_FHANDLE fhandle;
 
    if ( ( fhandle = hb_fsOpen( ( BYTE * ) szFile, FO_READ ) ) != FS_ERROR )
    {
@@ -289,7 +289,7 @@ static void * LoadImageFromFile( char *szFile, int *sz )
 
 /* ---------------------------------------------------------------------------*/
 
-static void SaveImageToHandle( FHANDLE fhandle, void *iptr, int sz )
+static void SaveImageToHandle( HB_FHANDLE fhandle, void *iptr, int sz )
 {
    if ( !(fhandle) )
    {
@@ -304,7 +304,7 @@ static void SaveImageToHandle( FHANDLE fhandle, void *iptr, int sz )
 
 static void SaveImageToFile( char *szFile, void *iptr, int sz )
 {
-   FHANDLE fhandle;
+   HB_FHANDLE fhandle;
 
    if ( ( fhandle = hb_fsCreate( ( BYTE * ) szFile, FC_NORMAL ) ) != FS_ERROR )
    {
@@ -357,7 +357,7 @@ static void GDImageCreateFrom( int nType )
       )
    {
 
-      FHANDLE fhandle;
+      HB_FHANDLE fhandle;
 
       /* Retrieve file handle */
       fhandle = ( hb_parinfo( 1 ) & HB_IT_NUMERIC ) ? hb_parnl( 1 ) : 0; /* 0 = std input */
@@ -421,7 +421,7 @@ static void GDImageSaveTo( int nType )
       char *szFile;
       int sz;
       void *iptr = NULL;
-      FHANDLE fhandle;
+      HB_FHANDLE fhandle;
       int level = 0, fg = 0;
 
       /* Retrieve image pointer */
@@ -3986,7 +3986,7 @@ HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlac
 
 static void AddImageToFile( char *szFile, void *iptr, int sz )
 {
-   FHANDLE fhandle;
+   HB_FHANDLE fhandle;
 
    if ( ( fhandle = hb_fsOpen( ( BYTE * ) szFile, FO_READWRITE ) ) != FS_ERROR )
    {
@@ -4039,7 +4039,7 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
       }
       else if ( hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) )
       {
-         FHANDLE fhandle;
+         HB_FHANDLE fhandle;
 
          /* Retrieve file handle */
          fhandle = ( hb_parinfo( 2 ) & HB_IT_NUMERIC ) ? hb_parnl( 2 ) : 1; /* 1 = std output */
@@ -4106,7 +4106,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
       }
       else if ( hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) )
       {
-         FHANDLE fhandle;
+         HB_FHANDLE fhandle;
 
          /* Retrieve file handle */
          fhandle = ( hb_parinfo( 2 ) & HB_IT_NUMERIC ) ? hb_parnl( 2 ) : 1; /* 1 = std output */
@@ -4156,7 +4156,7 @@ HB_FUNC( GDIMAGEGIFANIMEND )
       }
       else if ( hb_parinfo( 2 ) & HB_IT_NUMERIC || ISNIL( 2 ) )
       {
-         FHANDLE fhandle;
+         HB_FHANDLE fhandle;
 
          /* Retrieve file handle */
          fhandle = ( hb_parinfo( 1 ) & HB_IT_NUMERIC ) ? hb_parnl( 1 ) : 1; /* 1 = std output */

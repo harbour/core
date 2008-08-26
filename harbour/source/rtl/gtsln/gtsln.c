@@ -61,7 +61,7 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
 #define HB_GTID_PTR  (&s_GtId)
 
-static FHANDLE s_hStdIn, s_hStdOut, s_hStdErr;
+static HB_FHANDLE s_hStdIn, s_hStdOut, s_hStdErr;
 static BOOL s_fStdInTTY = FALSE, s_fStdOutTTY = FALSE, s_fStdErrTTY = FALSE;
 
 /* does terminal works in Unicode (UTF-8) mode? */
@@ -566,7 +566,7 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
 /* *********************************************************************** */
 
 /* I think this function should not be void. It should be BOOL */
-static void hb_gt_sln_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    BOOL gt_Inited = FALSE;
 

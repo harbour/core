@@ -88,7 +88,7 @@ static BOOL   s_bInit = FALSE;
 
 /* gt API functions */
 
-HB_EXPORT ERRCODE hb_gtInit( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+HB_EXPORT ERRCODE hb_gtInit( HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    PHB_GT pGT;
 
@@ -831,7 +831,7 @@ HB_EXPORT ERRCODE hb_gtOutStd( BYTE * pbyStr, ULONG ulLen )
    if( pGT )
       HB_GTSELF_OUTSTD( pGT, pbyStr, ulLen );
    else
-      hb_fsWriteLarge( ( FHANDLE ) HB_STDOUT_HANDLE, pbyStr, ulLen );
+      hb_fsWriteLarge( ( HB_FHANDLE ) HB_STDOUT_HANDLE, pbyStr, ulLen );
 
    return SUCCESS;
 }
@@ -846,7 +846,7 @@ HB_EXPORT ERRCODE hb_gtOutErr( BYTE * pbyStr, ULONG ulLen )
    if( pGT )
       HB_GTSELF_OUTERR( pGT, pbyStr, ulLen );
    else
-      hb_fsWriteLarge( ( FHANDLE ) HB_STDERR_HANDLE, pbyStr, ulLen );
+      hb_fsWriteLarge( ( HB_FHANDLE ) HB_STDERR_HANDLE, pbyStr, ulLen );
 
    return SUCCESS;
 }

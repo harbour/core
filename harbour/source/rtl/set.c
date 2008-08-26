@@ -173,7 +173,7 @@ static char * set_string( PHB_ITEM pItem, char * szOldString )
    return szString;
 }
 
-static void close_binary( FHANDLE handle )
+static void close_binary( HB_FHANDLE handle )
 {
    HB_TRACE(HB_TR_DEBUG, ("close_binary(%p)", handle));
 
@@ -185,7 +185,7 @@ static void close_binary( FHANDLE handle )
    }
 }
 
-static void close_text( FHANDLE handle )
+static void close_text( HB_FHANDLE handle )
 {
    HB_TRACE(HB_TR_DEBUG, ("close_text(%p)", handle));
 
@@ -199,9 +199,9 @@ static void close_text( FHANDLE handle )
    }
 }
 
-static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_set_enum set_specifier )
+static HB_FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_set_enum set_specifier )
 {
-   FHANDLE handle;
+   HB_FHANDLE handle;
    char path[ _POSIX_PATH_MAX + 1 ];
    BOOL bPipe = FALSE;
    HB_TRACE(HB_TR_DEBUG, ("open_handle(%s, %d, %s, %d)", file_name, (int) bAppend, def_ext, (int) set_specifier));
@@ -1449,7 +1449,7 @@ HB_EXPORT HB_PATHNAMES * hb_setGetFirstSetPath( void )
 }
 
 
-HB_EXPORT FHANDLE hb_setGetAltHan( void )
+HB_EXPORT HB_FHANDLE hb_setGetAltHan( void )
 {
    return hb_set.hb_set_althan;
 }
@@ -1459,12 +1459,12 @@ HB_EXPORT BOOL    hb_setGetCentury( void )
    return hb_set.hb_set_century;
 }
 
-HB_EXPORT FHANDLE hb_setGetExtraHan( void )
+HB_EXPORT HB_FHANDLE hb_setGetExtraHan( void )
 {
    return hb_set.hb_set_extrahan;
 }
 
-HB_EXPORT FHANDLE hb_setGetPrintHan( void )
+HB_EXPORT HB_FHANDLE hb_setGetPrintHan( void )
 {
    return hb_set.hb_set_printhan;
 }

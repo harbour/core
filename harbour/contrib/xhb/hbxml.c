@@ -1963,7 +1963,7 @@ static void mxml_output_func_to_stream( MXML_OUTPUT *out, char *s, int len )
 */
 static void mxml_output_func_to_handle( MXML_OUTPUT *out, char *s, int len )
 {
-   FHANDLE fh = out->u.hFile;
+   HB_FHANDLE fh = out->u.hFile;
    int olen;
 
    olen = hb_fsWrite( fh, (BYTE *) s, len );
@@ -1985,15 +1985,12 @@ static void mxml_output_func_to_sgs( MXML_OUTPUT *out, char *s, int len )
    MXML_STATUS stat;
 
    if ( len == 1 )
-   {
       stat = mxml_sgs_append_char( sgs, *s );
-   }
    else
-   {
       stat = mxml_sgs_append_string_len( sgs, s, len );
-   }
 
-   if ( stat != MXML_STATUS_OK ) {
+   if ( stat != MXML_STATUS_OK )
+   {
       out->status = MXML_STATUS_ERROR;
       out->error = MXML_ERROR_NOMEM;
    }
@@ -2058,7 +2055,8 @@ static MXML_STATUS mxml_refil_setup( MXML_REFIL *ref, MXML_REFIL_FUNC func,
 
    if (buf == NULL)
       ref->buflen = ref->bufsize = 0;
-   else {
+   else
+   {
       ref->buflen = buflen;
       ref->bufsize = bufsize;
    }
@@ -2084,14 +2082,17 @@ static void mxml_refil_destroy ( MXML_REFIL *ref ) {
 
 static int mxml_refil_getc( MXML_REFIL *ref )
 {
-   if ( ref->sparechar != MXML_EOF ) {
+   if ( ref->sparechar != MXML_EOF )
+   {
       int chr = ref->sparechar;
       ref->sparechar = MXML_EOF;
       return chr;
    }
 
-   if ( ref->bufpos >= ref->buflen ) {
-      if ( ref->refil_func != NULL ) {
+   if ( ref->bufpos >= ref->buflen )
+   {
+      if ( ref->refil_func != NULL )
+      {
          ref->refil_func( ref );
          if ( ref->status != MXML_STATUS_OK || ref->buflen == 0)
             return MXML_EOF;
@@ -2117,16 +2118,18 @@ void mxml_refil_ungetc( MXML_REFIL *ref, int chr )
 
 static void mxml_refill_from_handle_func( MXML_REFIL *ref )
 {
-   FHANDLE fh = (FHANDLE) ref->u.hFile;
+   HB_FHANDLE fh = ( HB_FHANDLE ) ref->u.hFile;
    int len;
 
    len = hb_fsRead( fh, (BYTE *) ref->buffer, ref->bufsize );
 
-   if ( len == -1 ) {
+   if ( len == -1 )
+   {
       ref->status = MXML_STATUS_ERROR;
       ref->error = MXML_ERROR_IO;
    }
-   else {
+   else
+   {
       ref->buflen = len;
       ref->bufpos = 0;
    }
@@ -2202,9 +2205,8 @@ static MXML_STATUS mxml_sgs_append_string_len( MXML_SGS *sgs, char *s, int slen 
          buf = (char *) MXML_REALLOCATOR( sgs->buffer, blklen );
 
          if ( buf == NULL )
-         {
             return MXML_STATUS_ERROR;
-         }
+
          sgs->allocated = blklen;
          sgs->buffer = buf;
       }
@@ -2366,14 +2368,9 @@ HB_FUNC( HBXML_NODE_TO_STRING )
    }
 
    if ( pStyle == NULL )
-   {
       iStyle = 0;
-   }
    else
-   {
       iStyle = hb_itemGetNI( pStyle );
-   }
-
 
    sgs = mxml_sgs_new();
    mxml_output_setup( &out, mxml_output_func_to_sgs , 0 );
@@ -2390,7 +2387,6 @@ HB_FUNC( HBXML_NODE_TO_STRING )
       mxml_sgs_destroy( sgs );
       hb_ret();
    }
-
 }
 
 /**
@@ -2414,18 +2410,13 @@ HB_FUNC( HBXML_NODE_WRITE )
    }
 
    if ( pStyle == NULL )
-   {
       iStyle = 0;
-   }
    else
-   {
       iStyle = hb_itemGetNI( pStyle );
-   }
 
    mxml_output_setup( &out, mxml_output_func_to_handle , 0 );
-   out.u.hFile = ( FHANDLE ) hb_itemGetNL( pHandle );
+   out.u.hFile = ( HB_FHANDLE ) hb_itemGetNL( pHandle );
 
    iRet = mxml_node_write( &out, pNode, iStyle );
    hb_retni( iRet );
-
 }

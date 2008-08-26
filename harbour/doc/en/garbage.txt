@@ -37,7 +37,7 @@
  *      Example:
  *        static HB_ITEM s_item; // this item can be released by the GC 
  *
- *        static HB_ITEM_PTR pItem; // this item will be maintained correctly
+ *        static PHB_ITEM pItem; // this item will be maintained correctly
  *        pItem = hb_itemNew( hb_param(1, IT_BLOCK) ); 
  *
  *      However, scanning of all variables can be a time consuming operation. It
@@ -215,7 +215,7 @@
  *  $ONELINER$
  *      Marks the memory to prevent deallocation by the garbage collector.
  *  $SYNTAX$
- *      void hb_gcItemRef( HB_ITEM_PTR pItem );
+ *      void hb_gcItemRef( PHB_ITEM pItem );
  *  $ARGUMENTS$
  *      <pItem>  The pointer to item structure that will be scanned. The
  *      passed item can be of any datatype although arrays, objects

@@ -307,35 +307,35 @@ typedef HSXHEADER * LPHSXHEADER;
 
 typedef struct _HSXINFO
 {
-   int      iHandle;          /* HSX handle */
-   ULONG    ulRecCount;       /* number of records */
-   USHORT   uiRecordSize;     /* record size in bytes */
-   BOOL     fIgnoreCase;      /* ignore case */
-   int      iFilterType;      /* character filter */
-   BOOL     fUseHash;         /* use Hash functions for alphas */
+   int        iHandle;          /* HSX handle */
+   ULONG      ulRecCount;       /* number of records */
+   USHORT     uiRecordSize;     /* record size in bytes */
+   BOOL       fIgnoreCase;      /* ignore case */
+   int        iFilterType;      /* character filter */
+   BOOL       fUseHash;         /* use Hash functions for alphas */
 
-   FHANDLE  hFile;            /* file handle */
-   char *   szFileName;       /* file name */
-   BOOL     fShared;          /* Shared file */
-   BOOL     fReadonly;        /* Read only file */
-   ULONG    ulBufSize;        /* size of buffer in records */
-   ULONG    ulBufRec;         /* number of record in buffer */
-   ULONG    ulFirstRec;       /* first record in the buffer */
-   BYTE *   pBuffer;          /* the buffer pointer */
-   BOOL     fChanged;         /* the buffer is changed and should be written to index file */
-   BOOL     fHdrChanged;      /* new records, header file has to be updated */
-   BOOL     fWrLocked;        /* the index is locked for writing */
+   HB_FHANDLE hFile;            /* file handle */
+   char *     szFileName;       /* file name */
+   BOOL       fShared;          /* Shared file */
+   BOOL       fReadonly;        /* Read only file */
+   ULONG      ulBufSize;        /* size of buffer in records */
+   ULONG      ulBufRec;         /* number of record in buffer */
+   ULONG      ulFirstRec;       /* first record in the buffer */
+   BYTE *     pBuffer;          /* the buffer pointer */
+   BOOL       fChanged;         /* the buffer is changed and should be written to index file */
+   BOOL       fHdrChanged;      /* new records, header file has to be updated */
+   BOOL       fWrLocked;        /* the index is locked for writing */
 
-   BYTE *   pSearchVal;       /* current search value for HS_NEXT */
-   ULONG    ulSearch;         /* the length of search value */
-   BYTE *   pSearchKey;       /* current search key val for HS_NEXT */
-   ULONG    ulCurrRec;        /* current record for HS_NEXT */
+   BYTE *     pSearchVal;       /* current search value for HS_NEXT */
+   ULONG      ulSearch;         /* the length of search value */
+   BYTE *     pSearchKey;       /* current search key val for HS_NEXT */
+   ULONG      ulCurrRec;        /* current record for HS_NEXT */
 
    /* xHarbour extension */
-   int      iArea;            /* work area number if bound with WA or 0 */
-   char *   szKeyExpr;        /* key expression when bound with WA for automatic update */
-   PHB_ITEM pKeyItem;         /* item with compiled key expression */
-   BOOL     fFlush;           /* data was written to file and not commited */
+   int        iArea;            /* work area number if bound with WA or 0 */
+   char *     szKeyExpr;        /* key expression when bound with WA for automatic update */
+   PHB_ITEM   pKeyItem;         /* item with compiled key expression */
+   BOOL       fFlush;           /* data was written to file and not commited */
 } HSXINFO;
 typedef HSXINFO * LPHSXINFO;
 
@@ -1332,7 +1332,7 @@ static int hb_hsxCreate( char * szFile, int iBufSize, int iKeySize,
    ULONG ulBufSize;
    USHORT uiRecordSize;
    LPHSXINFO pHSX;
-   FHANDLE hFile;
+   HB_FHANDLE hFile;
    int iRetVal;
 
    if ( !szFile || ! *szFile )
@@ -1417,7 +1417,7 @@ static int hb_hsxOpen( char * szFile, int iBufSize, int iMode )
 {
    char szFileName[ _POSIX_PATH_MAX + 1 ];
    BOOL fShared, fReadonly;
-   FHANDLE hFile;
+   HB_FHANDLE hFile;
    ULONG ulBufSize;
    USHORT uiFlags;
    LPHSXINFO pHSX;

@@ -91,9 +91,9 @@ static const BYTE s_szBell[] = { HB_CHAR_BEL, 0 };
 
 typedef struct _HB_GTSTD
 {
-   FHANDLE        hStdin;
-   FHANDLE        hStdout;
-   FHANDLE        hStderr;
+   HB_FHANDLE     hStdin;
+   HB_FHANDLE     hStdout;
+   HB_FHANDLE     hStderr;
    BOOL           fStdinConsole;
    BOOL           fStdoutConsole;
    BOOL           fStderrConsole;
@@ -200,7 +200,7 @@ static void hb_gt_std_newLine( PHB_GTSTD pGTSTD )
 }
 
 
-static void hb_gt_std_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_std_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    PHB_GTSTD pGTSTD;
 

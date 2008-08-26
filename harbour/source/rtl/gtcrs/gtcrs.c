@@ -2445,7 +2445,7 @@ void HB_GT_FUNC( gt_CatchSignal( int iSig ) )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_crs_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    InOutBase *ioBase;
 

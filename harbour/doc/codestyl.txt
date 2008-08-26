@@ -44,13 +44,11 @@ Code Implementation
     Use FALSE instead of 0 (in boolean context)
     Use NULL instead of 0 (in pointer context)
     Always use 'HB_' prefix for definitions of new datatypes and macros.
-    Use either 'PHB_' prefix  or '_PTR' suffix for datatypes that are 
-    pointers.
+    Use either 'PHB_' prefix for datatypes that are pointers.
     
     e.g.
     HB_ITEM
     PHB_ITEM
-    HB_ITEM_PTR 
 
 [4] When writing functions that deal with strings, be sure to remember
     that Harbour holds the length property of each string, and that it

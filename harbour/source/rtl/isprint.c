@@ -105,7 +105,7 @@ HB_EXPORT BOOL hb_printerIsReady( char * pszPrinterName )
             [vszakats] */
 
    {
-      FHANDLE fhnd;
+      HB_FHANDLE fhnd;
       
       if( pszPrinterName == NULL )
          pszPrinterName = "LPT1";

@@ -165,7 +165,7 @@ static USHORT  s_usUpdtRight;
 static CHAR_INFO * s_pCharInfoScreen = NULL;
 static ULONG   s_ulScreenBuffSize = 0;
 
-static FHANDLE s_hStdIn, s_hStdOut, s_hStdErr;
+static HB_FHANDLE s_hStdIn, s_hStdOut, s_hStdErr;
 
 static HANDLE  s_HInput  = INVALID_HANDLE_VALUE;
 static HANDLE  s_HOutput = INVALID_HANDLE_VALUE;
@@ -640,7 +640,7 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static void hb_gt_win_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr));
 

@@ -1228,7 +1228,7 @@ HB_EXPORT BOOL hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-HB_EXPORT BOOL hb_dbfLockIdxFile( FHANDLE hFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos )
+HB_EXPORT BOOL hb_dbfLockIdxFile( HB_FHANDLE hFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos )
 {
    HB_FOFFSET ulPos, ulPool, ulSize = 1;
    BOOL fRet = FALSE, fWait;
@@ -4786,7 +4786,7 @@ static ERRCODE hb_dbfGetValueFile( DBFAREAP pArea, USHORT uiIndex, BYTE * szFile
    pField = pArea->lpFields + uiIndex;
    if( pField->uiType == HB_FT_STRING )
    {
-      FHANDLE hFile;
+      HB_FHANDLE hFile;
 
       hFile = hb_fsExtOpen( szFile, NULL, FO_WRITE | FO_EXCLUSIVE |
                             FXO_DEFAULTS | FXO_SHARELOCK |
@@ -4886,7 +4886,7 @@ static ERRCODE hb_dbfPutValueFile( DBFAREAP pArea, USHORT uiIndex, BYTE * szFile
    pField = pArea->lpFields + uiIndex;
    if( pField->uiType == HB_FT_STRING )
    {
-      FHANDLE hFile;
+      HB_FHANDLE hFile;
 
       hFile = hb_fsExtOpen( szFile, NULL, FO_READ | FO_DENYNONE |
                             FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );

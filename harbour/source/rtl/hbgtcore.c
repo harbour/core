@@ -70,9 +70,9 @@
 /* these variables are used for stdout/stderr output when GT subsystem
  * is not initialized
  */
-static FHANDLE s_hStdIn  = ( FHANDLE ) 0,
-               s_hStdOut = ( FHANDLE ) 1,
-               s_hStdErr = ( FHANDLE ) 2;
+static HB_FHANDLE s_hStdIn  = ( HB_FHANDLE ) 0;
+static HB_FHANDLE s_hStdOut = ( HB_FHANDLE ) 1;
+static HB_FHANDLE s_hStdErr = ( HB_FHANDLE ) 2;
 
 /* base GT strucure */
 static PHB_GT_BASE   s_curGT = NULL;
@@ -163,7 +163,7 @@ static void hb_gt_def_Free( PHB_GT pGT )
    hb_xfree( pGT );
 }
 
-static void hb_gt_def_Init( PHB_GT pGT, FHANDLE hStdIn, FHANDLE hStdOut, FHANDLE hStdErr )
+static void hb_gt_def_Init( PHB_GT pGT, HB_FHANDLE hStdIn, HB_FHANDLE hStdOut, HB_FHANDLE hStdErr )
 {
    HB_GTSELF_NEW( pGT );
 

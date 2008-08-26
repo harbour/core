@@ -64,7 +64,7 @@ HB_FUNC( MEMOREAD )
 
    if( pFileName )
    {
-      FHANDLE fhnd = hb_fsOpen( ( BYTE * ) hb_itemGetCPtr( pFileName ), FO_READ | FO_SHARED | FO_PRIVATE );
+      HB_FHANDLE fhnd = hb_fsOpen( ( BYTE * ) hb_itemGetCPtr( pFileName ), FO_READ | FO_SHARED | FO_PRIVATE );
 
       if( fhnd != FS_ERROR )
       {
@@ -115,7 +115,7 @@ static BOOL hb_memowrit( BOOL bWriteEOF )
 
    if( pFileName && pString )
    {
-      FHANDLE fhnd = hb_fsCreate( ( BYTE * ) hb_itemGetCPtr( pFileName ), FC_NORMAL );
+      HB_FHANDLE fhnd = hb_fsCreate( ( BYTE * ) hb_itemGetCPtr( pFileName ), FC_NORMAL );
 
       if( fhnd != FS_ERROR )
       {

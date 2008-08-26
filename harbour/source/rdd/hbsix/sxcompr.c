@@ -172,31 +172,31 @@
 
 typedef struct _HB_LZSSX_COMPR
 {
-   FHANDLE  hInput;
-   BYTE *   inBuffer;
-   ULONG    inBuffSize;
-   ULONG    inBuffPos;
-   ULONG    inBuffRead;
-   BOOL     fInFree;
+   HB_FHANDLE hInput;
+   BYTE *     inBuffer;
+   ULONG      inBuffSize;
+   ULONG      inBuffPos;
+   ULONG      inBuffRead;
+   BOOL       fInFree;
 
-   FHANDLE  hOutput;
-   BYTE *   outBuffer;
-   ULONG    outBuffSize;
-   ULONG    outBuffPos;
-   BOOL     fOutFree;
+   HB_FHANDLE hOutput;
+   BYTE *     outBuffer;
+   ULONG      outBuffSize;
+   ULONG      outBuffPos;
+   BOOL       fOutFree;
 
-   ULONG    ulMaxSize;
-   ULONG    ulOutSize;
-   BOOL     fResult;
-   BOOL     fContinue;
+   ULONG      ulMaxSize;
+   ULONG      ulOutSize;
+   BOOL       fResult;
+   BOOL       fContinue;
 
-   BYTE     ring_buffer[ RBUFLENGTH + MAXLENGTH - 1 ];
+   BYTE       ring_buffer[ RBUFLENGTH + MAXLENGTH - 1 ];
 
-   SHORT    match_offset;
-   SHORT    match_length;
-   SHORT    parent[ RBUFLENGTH + 1 ];
-   SHORT    left  [ RBUFLENGTH + 1 ];
-   SHORT    right [ RBUFLENGTH + 257 ];
+   SHORT      match_offset;
+   SHORT      match_length;
+   SHORT      parent[ RBUFLENGTH + 1 ];
+   SHORT      left  [ RBUFLENGTH + 1 ];
+   SHORT      right [ RBUFLENGTH + 257 ];
 }
 HB_LZSSX_COMPR;
 typedef HB_LZSSX_COMPR * PHB_LZSSX_COMPR;
@@ -211,8 +211,8 @@ static void hb_LZSSxExit( PHB_LZSSX_COMPR pCompr )
 }
 
 static PHB_LZSSX_COMPR hb_LZSSxInit( 
-                              FHANDLE hInput, BYTE * pSrcBuf, ULONG ulSrcBuf,
-                              FHANDLE hOutput, BYTE * pDstBuf, ULONG ulDstBuf )
+                              HB_FHANDLE hInput, BYTE * pSrcBuf, ULONG ulSrcBuf,
+                              HB_FHANDLE hOutput, BYTE * pDstBuf, ULONG ulDstBuf )
 {
    PHB_LZSSX_COMPR pCompr = ( PHB_LZSSX_COMPR ) hb_xgrab( sizeof( HB_LZSSX_COMPR ) );
 
@@ -589,7 +589,7 @@ BOOL hb_LZSSxDecompressMem( BYTE * pSrcBuf, ULONG ulSrcLen,
    return fResult;
 }
 
-BOOL hb_LZSSxCompressFile( FHANDLE hInput, FHANDLE hOutput, ULONG * pulSize )
+BOOL hb_LZSSxCompressFile( HB_FHANDLE hInput, HB_FHANDLE hOutput, ULONG * pulSize )
 {
    PHB_LZSSX_COMPR pCompr;
    ULONG ulSize;
@@ -602,7 +602,7 @@ BOOL hb_LZSSxCompressFile( FHANDLE hInput, FHANDLE hOutput, ULONG * pulSize )
    return ulSize != ( ULONG ) -1;
 }
 
-BOOL hb_LZSSxDecompressFile( FHANDLE hInput, FHANDLE hOutput )
+BOOL hb_LZSSxDecompressFile( HB_FHANDLE hInput, HB_FHANDLE hOutput )
 {
    PHB_LZSSX_COMPR pCompr;
    BOOL fResult;
@@ -616,7 +616,7 @@ BOOL hb_LZSSxDecompressFile( FHANDLE hInput, FHANDLE hOutput )
 HB_FUNC( SX_FCOMPRESS )
 {
    BOOL fRet = FALSE;
-   FHANDLE hInput, hOutput;
+   HB_FHANDLE hInput, hOutput;
    char * szSource = hb_parc( 1 ), * szDestin = hb_parc( 2 );
    BYTE buf[ 4 ];
    ULONG ulSize;
@@ -653,7 +653,7 @@ HB_FUNC( SX_FCOMPRESS )
 HB_FUNC( SX_FDECOMPRESS )
 {
    BOOL fRet = FALSE;
-   FHANDLE hInput, hOutput;
+   HB_FHANDLE hInput, hOutput;
    char * szSource = hb_parc( 1 ), * szDestin = hb_parc( 2 );
 
    if( szSource && *szSource && szDestin && *szDestin )

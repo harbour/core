@@ -257,7 +257,7 @@ typedef struct _NTXINDEX
    ULONG       NextAvail;
    ULONG       TagBlock;      /* Index attr, next free page */
    struct     _NTXAREA * Owner;
-   FHANDLE     DiskFile;
+   HB_FHANDLE  DiskFile;
    BOOL        fDelete;       /* delete on close flag */
    BOOL        fReadonly;
    BOOL        fShared;
@@ -301,8 +301,8 @@ typedef NTXSWAPPAGE * LPNTXSWAPPAGE;
 
 typedef struct
 {
-   LPTAGINFO pTag;             /* current Tag */
-   FHANDLE  hTempFile;        /* handle to temporary file */
+   LPTAGINFO pTag;            /* current Tag */
+   HB_FHANDLE hTempFile;      /* handle to temporary file */
    char *   szTempFileName;   /* temporary file name */
    int      keyLen;           /* key length */
    BOOL     fUnique;          /* TRUE if index is unique */
@@ -372,9 +372,9 @@ typedef struct _NTXAREA
    *  example.
    */
 
-   FHANDLE  hDataFile;              /* Data file handle */
-   FHANDLE  hMemoFile;              /* Memo file handle */
-   FHANDLE  hMemoTmpFile;           /* Memo temporary file handle */
+   HB_FHANDLE hDataFile;            /* Data file handle */
+   HB_FHANDLE hMemoFile;            /* Memo file handle */
+   HB_FHANDLE hMemoTmpFile;         /* Memo temporary file handle */
    char *   szDataFileName;         /* Name of data file */
    char *   szMemoFileName;         /* Name of memo file */
    USHORT   uiHeaderLen;            /* Size of header */

@@ -102,7 +102,7 @@ typedef struct _DELIMAREA
    *  example.
    */
 
-   FHANDLE  hFile;                  /* Data file handle */
+   HB_FHANDLE hFile;                /* Data file handle */
    char *   szFileName;             /* Name of data file */
    char *   szEol;                  /* EOL marker */
    USHORT   uiEolLen;               /* Size of EOL marker */

@@ -60,6 +60,6 @@ extern HB_EXPORT ULONG hb_crc32( ULONG crc, const BYTE *buf, ULONG len );
 extern HB_EXPORT HB_ULONG hb_crc( HB_ULONG crc, const BYTE * buf, ULONG len, HB_ULONG poly );
 extern HB_EXPORT HB_ULONG hb_crcct( HB_ULONG crc, const BYTE * buf, ULONG len, HB_ULONG poly );
 extern HB_EXPORT void hb_md5( BYTE * ucData, ULONG ulLen, BYTE * ucDigest );
-extern HB_EXPORT void hb_md5file( FHANDLE hFile, BYTE * ucDigest );
+extern HB_EXPORT void hb_md5file( HB_FHANDLE hFile, BYTE * ucDigest );
 
 HB_EXTERN_END

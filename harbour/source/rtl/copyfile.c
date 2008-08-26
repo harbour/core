@@ -64,7 +64,7 @@
 static BOOL hb_fsCopy( char * szSource, char * szDest )
 {
    BOOL bRetVal = FALSE;
-   FHANDLE fhndSource;
+   HB_FHANDLE fhndSource;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCopy(%s, %s)", szSource, szDest));
 
@@ -78,7 +78,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
 
    if( fhndSource != FS_ERROR )
    {
-      FHANDLE fhndDest;
+      HB_FHANDLE fhndDest;
 
       while( ( fhndDest = hb_spCreate( ( BYTE * ) szDest, FC_NORMAL ) ) == FS_ERROR )
       {

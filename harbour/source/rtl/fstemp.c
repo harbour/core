@@ -110,7 +110,7 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 
 /* NOTE: The buffer must be at least _POSIX_PATH_MAX + 1 chars long */
 
-HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName )
+HB_EXPORT HB_FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName )
 {
    USHORT nAttemptLeft = 999;
 
@@ -118,7 +118,7 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
    {
       if( hb_fsTempName( pszName, pszDir, pszPrefix ) )
       {
-          FHANDLE fhnd = hb_fsCreateEx( pszName, ulAttr, FO_EXCLUSIVE | FO_EXCL );
+          HB_FHANDLE fhnd = hb_fsCreateEx( pszName, ulAttr, FO_EXCLUSIVE | FO_EXCL );
 
           /* This function may fail, if the generated filename got
              used between generation and the file creation. */
@@ -166,11 +166,11 @@ static BOOL fsGetTempDirByCase( BYTE *pszName, const char *pszTempDir )
    return fOK;
 }
 
-HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName )
+HB_EXPORT HB_FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName )
 {
    /* less attemps */
    int iAttemptLeft = 99, iLen;
-   FHANDLE fd;
+   HB_FHANDLE fd;
 
    do
    {
@@ -222,8 +222,8 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
           hb_set.HB_SET_DIRCASE != HB_SET_CASE_UPPER )
       {
          hb_strncat( ( char * ) pszName, "XXXXXX", _POSIX_PATH_MAX );
-         fd = ( FHANDLE ) mkstemp( ( char * ) pszName );
-         hb_fsSetIOError( fd != ( FHANDLE ) -1, 0 );
+         fd = ( HB_FHANDLE ) mkstemp( ( char * ) pszName );
+         hb_fsSetIOError( fd != ( HB_FHANDLE ) -1, 0 );
       }
       else
 #endif
@@ -242,7 +242,7 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
          fd = hb_fsCreateEx( pszName, ulAttr, FO_EXCLUSIVE | FO_EXCL );
       }
 
-      if( fd != ( FHANDLE ) FS_ERROR )
+      if( fd != ( HB_FHANDLE ) FS_ERROR )
          return fd;
    }
    while( --iAttemptLeft );

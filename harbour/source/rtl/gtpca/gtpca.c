@@ -94,31 +94,31 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
 #define HB_GTID_PTR  (&s_GtId)
 
-static const BYTE s_szBell[] = { HB_CHAR_BEL, 0 };
-static const int  s_AnsiColors[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
+static const BYTE   s_szBell[] = { HB_CHAR_BEL, 0 };
+static const int    s_AnsiColors[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
 
-static FHANDLE s_hFilenoStdin;
-static FHANDLE s_hFilenoStdout;
-static FHANDLE s_hFilenoStderr;
-static int     s_iRow;
-static int     s_iCol;
-static int     s_iLineBufSize = 0;
-static BYTE *  s_sLineBuf;
-static BYTE *  s_szCrLf;
-static ULONG   s_ulCrLf;
-static int     s_iCurrentSGR, s_iFgColor, s_iBgColor, s_iBold, s_iBlink, s_iAM;
-static int     s_iCursorStyle;
-static BOOL    s_bStdinConsole;
-static BOOL    s_bStdoutConsole;
-static BOOL    s_bStderrConsole;
-static BOOL    s_fDispTrans;
-static PHB_CODEPAGE  s_cdpTerm;
-static PHB_CODEPAGE  s_cdpHost;
-static BYTE    s_keyTransTbl[ 256 ];
+static HB_FHANDLE   s_hFilenoStdin;
+static HB_FHANDLE   s_hFilenoStdout;
+static HB_FHANDLE   s_hFilenoStderr;
+static int          s_iRow;
+static int          s_iCol;
+static int          s_iLineBufSize = 0;
+static BYTE *       s_sLineBuf;
+static BYTE *       s_szCrLf;
+static ULONG        s_ulCrLf;
+static int          s_iCurrentSGR, s_iFgColor, s_iBgColor, s_iBold, s_iBlink, s_iAM;
+static int          s_iCursorStyle;
+static BOOL         s_bStdinConsole;
+static BOOL         s_bStdoutConsole;
+static BOOL         s_bStderrConsole;
+static BOOL         s_fDispTrans;
+static PHB_CODEPAGE s_cdpTerm;
+static PHB_CODEPAGE s_cdpHost;
+static BYTE         s_keyTransTbl[ 256 ];
 
-static int     s_iOutBufSize = 0;
-static int     s_iOutBufIndex = 0;
-static BYTE *  s_sOutBuf;
+static int          s_iOutBufSize = 0;
+static int          s_iOutBufIndex = 0;
+static BYTE *       s_sOutBuf;
 
 #if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
 
@@ -436,7 +436,7 @@ static void hb_gt_pca_setKeyTrans( char * pSrcChars, char * pDstChars )
    }
 }
 
-static void hb_gt_pca_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    int iRows = 25, iCols = 80;
 

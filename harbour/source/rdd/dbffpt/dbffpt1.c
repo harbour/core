@@ -2403,7 +2403,7 @@ static ERRCODE hb_fptReadFlexItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * bBu
    return errCode;
 }
 
-static ERRCODE hb_fptCopyToFile( FHANDLE hSrc, FHANDLE hDst, HB_FOFFSET size )
+static ERRCODE hb_fptCopyToFile( HB_FHANDLE hSrc, HB_FHANDLE hDst, HB_FOFFSET size )
 {
    ERRCODE errCode = SUCCESS;
    if( size )
@@ -2434,7 +2434,7 @@ static ERRCODE hb_fptCopyToFile( FHANDLE hSrc, FHANDLE hDst, HB_FOFFSET size )
    return errCode;
 }
 
-static ERRCODE hb_fptReadRawBlock( FPTAREAP pArea, BYTE * bBuffer, FHANDLE hFile,
+static ERRCODE hb_fptReadRawBlock( FPTAREAP pArea, BYTE * bBuffer, HB_FHANDLE hFile,
                                    ULONG ulBlock, ULONG ulSize )
 {
    ERRCODE errCode = SUCCESS;
@@ -2459,7 +2459,7 @@ static ERRCODE hb_fptReadRawBlock( FPTAREAP pArea, BYTE * bBuffer, FHANDLE hFile
 }
 
 static ERRCODE hb_fptReadBlobBlock( FPTAREAP pArea, PHB_ITEM pItem,
-                                    FHANDLE hFile, ULONG ulBlock,
+                                    HB_FHANDLE hFile, ULONG ulBlock,
                                     USHORT uiMode )
 {
    ULONG ulSize;
@@ -2544,7 +2544,7 @@ static ERRCODE hb_fptReadSMTBlock( FPTAREAP pArea, PHB_ITEM pItem,
  * Read fpt vartype memos.
  */
 static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
-                              FHANDLE hFile, ULONG ulBlock, ULONG ulStart,
+                              HB_FHANDLE hFile, ULONG ulBlock, ULONG ulStart,
                               ULONG ulCount )
 {
    ERRCODE errCode;
@@ -2773,7 +2773,7 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
  * Write memo data.
  */
 static ERRCODE hb_fptWriteMemo( FPTAREAP pArea, ULONG ulBlock, ULONG ulSize,
-                                BYTE *bBufPtr, FHANDLE hFile,
+                                BYTE *bBufPtr, HB_FHANDLE hFile,
                                 ULONG ulType, ULONG ulLen, ULONG * ulStoredBlock )
 {
    MEMOGCTABLE fptGCtable;
@@ -3200,7 +3200,7 @@ static ERRCODE hb_fptLockForRead( FPTAREAP pArea, USHORT uiIndex, BOOL *fUnLock 
    return uiError;
 }
 
-static ERRCODE hb_fptGetVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem, FHANDLE hFile )
+static ERRCODE hb_fptGetVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem, HB_FHANDLE hFile )
 {
    LPFIELD pField;
    ERRCODE uiError;
@@ -3362,7 +3362,7 @@ static ERRCODE hb_fptGetVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
 static ERRCODE hb_fptGetVarFile( FPTAREAP pArea, ULONG ulBlock, BYTE * szFile, USHORT uiMode )
 {
    USHORT uiError;
-   FHANDLE hFile;
+   HB_FHANDLE hFile;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fptGetVarFile(%p, %lu, %s, %hu)", pArea, ulBlock, szFile, uiMode));
 
@@ -3401,7 +3401,7 @@ static ERRCODE hb_fptGetVarFile( FPTAREAP pArea, ULONG ulBlock, BYTE * szFile, U
 static ULONG hb_fptPutVarFile( FPTAREAP pArea, ULONG ulBlock, BYTE * szFile )
 {
    USHORT uiError;
-   FHANDLE hFile;
+   HB_FHANDLE hFile;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fptPutVarFile(%p, %lu, %s)", pArea, ulBlock, szFile));
 
@@ -3971,7 +3971,7 @@ static ERRCODE hb_fptGetValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile
          pArea->lpFields[ uiIndex - 1 ].uiType == HB_FT_ANY ) )
    {
       USHORT uiError;
-      FHANDLE hFile;
+      HB_FHANDLE hFile;
 
       hFile = hb_fsExtOpen( szFile, NULL, FO_WRITE | FO_EXCLUSIVE |
                             FXO_DEFAULTS | FXO_SHARELOCK |
@@ -4166,7 +4166,7 @@ static ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile
    {
       USHORT uiError;
       BOOL bDeleted;
-      FHANDLE hFile;
+      HB_FHANDLE hFile;
 
       /* update any pending relations and reread record if necessary */
       uiError = SELF_DELETED( ( AREAP ) pArea, &bDeleted );
@@ -4430,7 +4430,7 @@ static ERRCODE hb_fptDoPack( FPTAREAP pArea, USHORT uiBlockSize,
          if( pArea->hMemoTmpFile != FS_ERROR )
          {
             USHORT uiBlockSize = pArea->uiMemoBlockSize;
-            FHANDLE hFile = pArea->hMemoFile;
+            HB_FHANDLE hFile = pArea->hMemoFile;
 
             pArea->uiMemoBlockSize = pArea->uiNewBlockSize;
             pArea->hMemoFile = pArea->hMemoTmpFile;
@@ -4573,7 +4573,7 @@ static ERRCODE hb_fptPack( FPTAREAP pArea )
       if( pArea->hMemoTmpFile != FS_ERROR )
       {
          ERRCODE errCode;
-         FHANDLE hFile = pArea->hMemoFile;
+         HB_FHANDLE hFile = pArea->hMemoFile;
 
          pArea->uiNewBlockSize = pArea->uiMemoBlockSize;
 

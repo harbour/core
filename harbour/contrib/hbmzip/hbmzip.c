@@ -614,7 +614,7 @@ static ULONG hb_translateExtAttr( const char* szFileName, ULONG ulExtAttr )
 static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* szName, const char* szPassword, const char* szComment )
 {
    char          * szZipName, * pString;
-   FHANDLE       hFile;
+   HB_FHANDLE    hFile;
    ULONG         ulLen, ulExtAttr;
    zip_fileinfo  zfi;
    int           iResult;
@@ -888,7 +888,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
    char           cSep, * pString;
    unz_file_info  ufi;
    int            iResult;
-   FHANDLE        hFile;
+   HB_FHANDLE     hFile;
 
    iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szName, _POSIX_PATH_MAX, 
                                     NULL, 0, NULL, 0 );
@@ -1092,7 +1092,7 @@ static int hb_zipDeleteFile( const char* szZipFile, const char* szFileMask )
    char szTempFile[ _POSIX_PATH_MAX + 1 ];
    char szCurrFile[ _POSIX_PATH_MAX + 1 ];
    PHB_FNAME pFileName;
-   FHANDLE hFile;
+   HB_FHANDLE hFile;
    unzFile hUnzip;
    zipFile hZip;
    unz_global_info ugi;

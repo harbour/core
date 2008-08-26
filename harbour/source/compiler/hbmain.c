@@ -1025,7 +1025,7 @@ PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * szClassName, char * szClassFunc 
 
       if( pClass )
       {
-         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "Class", szClassName );
+         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "class", szClassName );
          return pClass;
       }
    }
@@ -1084,7 +1084,7 @@ PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, char * szMethodNa
 
    if( ( pMethod = hb_compMethodFind( pClass, szMethodName ) ) != NULL )
    {
-      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "Method", szMethodName );
+      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "method", szMethodName );
 
       /* Last Declaration override previous declarations */
       pMethod->cParamTypes = NULL;
@@ -1430,7 +1430,7 @@ static void hb_compDeclaredInit( HB_COMP_DECL )
 
   /*       Name     Ret  # of Prams  Param Types   Ret Class  Param Classes  Next
    ---------------  ---  ----------  --------------------  ---------  -------------  --------------- */
-   _DECL s_ERROR_01    = { "ARGS" , 'A', 0 , (BYTE*)NULL , NULL     , NULL , NULL    };
+   _DECL s_ERROR_01    = { "ARGS"         , 'A', 0 , (BYTE*)NULL , NULL     , NULL , NULL            };
    _DECL s_ERROR_02    = { "CANDEFAULT"   , 'B', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_01     };
    _DECL s_ERROR_03    = { "CANRETRY"     , 'B', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_02     };
    _DECL s_ERROR_04    = { "CANSUBSTITUTE", 'B', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_03     };
@@ -1447,29 +1447,28 @@ static void hb_compDeclaredInit( HB_COMP_DECL )
 
   /*       Name                             Ret  # of Prams  Param Types   Ret Class  Param Classes  Next
    ---------------                          ---  ----------  --------------------  ---------  -------------  --------------- */
-   _DECL s_GET_01      = { "ASSIGN"       , ' ', 0 , (BYTE*)NULL   , NULL     , NULL , NULL    };
+   _DECL s_GET_01      = { "ASSIGN"       , ' ', 0 , (BYTE*)NULL   , NULL     , NULL , NULL            };
    _DECL s_GET_02      = { "COLORDISP"    , 'S', 1 , (BYTE*)"\x9d" , &s_GET   , NULL , &s_GET_01       };
-   _DECL s_GET_03      = { "DISPLAY"      , 'S', 1 , (BYTE*)"\xa6" , &s_GET   , NULL , &s_GET_02       };
+   _DECL s_GET_03      = { "DISPLAY"      , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_02       };
    _DECL s_GET_04      = { "KILLFOCUS"    , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_03       };
-   _DECL s_GET_05      = { "PARSEPICT"    , 'C', 1 , (BYTE*)"C"    , NULL     , NULL , &s_GET_04       };
-   _DECL s_GET_06      = { "RESET"        , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_05       };
+   _DECL s_GET_06      = { "RESET"        , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_04       };
    _DECL s_GET_07      = { "SETFOCUS"     , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_06       };
    _DECL s_GET_08      = { "UNDO"         , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_07       };
-   _DECL s_GET_09      = { "UNTRANSFORM"  , 'S', 1 , (BYTE*)"\x9d" , &s_GET   , NULL , &s_GET_08       };
+   _DECL s_GET_09      = { "UNTRANSFORM"  , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_08       };
    _DECL s_GET_10      = { "UPDATEBUFFER" , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_09       };
    _DECL s_GET_11      = { "VARGET"       , ' ', 0 , (BYTE*)NULL   , NULL     , NULL , &s_GET_10       };
    _DECL s_GET_12      = { "VARPUT"       , ' ', 1 , (BYTE*)" "    , NULL     , NULL , &s_GET_11       };
 
    _DECL s_GET_13      = { "END"          , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_12       };
    _DECL s_GET_14      = { "HOME"         , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_13       };
-   _DECL s_GET_15      = { "LEFT"         , 'S', 1 , (BYTE*)"\xa6" , &s_GET   , NULL , &s_GET_14       };
-   _DECL s_GET_16      = { "RIGHT"        , 'S', 1 , (BYTE*)"\xa6" , &s_GET   , NULL , &s_GET_15       };
-   _DECL s_GET_17      = { "TODECPOS"     , 'S', 0 , (BYTE*)"L"    , &s_GET   , NULL , &s_GET_16       };
-   _DECL s_GET_18      = { "WORDLEFT"     , 'S', 1 , (BYTE*)"\xa6" , &s_GET   , NULL , &s_GET_17       };
-   _DECL s_GET_19      = { "WORDRIGHT"    , 'S', 1 , (BYTE*)"\xa6" , &s_GET   , NULL , &s_GET_18       };
+   _DECL s_GET_15      = { "LEFT"         , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_14       };
+   _DECL s_GET_16      = { "RIGHT"        , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_15       };
+   _DECL s_GET_17      = { "TODECPOS"     , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_16       };
+   _DECL s_GET_18      = { "WORDLEFT"     , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_17       };
+   _DECL s_GET_19      = { "WORDRIGHT"    , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_18       };
 
-   _DECL s_GET_20      = { "BACKSPACE"    , 'S', 1 , (BYTE*)"\xa6" , &s_GET   , NULL , &s_GET_19       };
-   _DECL s_GET_21      = { "DELETE"       , 'S', 1 , (BYTE*)"\xa6" , &s_GET   , NULL , &s_GET_20       };
+   _DECL s_GET_20      = { "BACKSPACE"    , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_19       };
+   _DECL s_GET_21      = { "DELETE"       , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_20       };
    _DECL s_GET_22      = { "DELEND"       , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_21       };
    _DECL s_GET_23      = { "DELLEFT"      , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_22       };
    _DECL s_GET_24      = { "DELRIGHT"     , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_23       };
@@ -1478,12 +1477,6 @@ static void hb_compDeclaredInit( HB_COMP_DECL )
 
    _DECL s_GET_27      = { "INSERT"       , 'S', 1 , (BYTE*)"C"    , &s_GET   , NULL , &s_GET_26       };
    _DECL s_GET_28      = { "OVERSTRIKE"   , 'S', 1 , (BYTE*)"C"    , &s_GET   , NULL , &s_GET_27       };
-
-   _DECL s_GET_29      = { "DELETEALL"    , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_28       };
-   _DECL s_GET_30      = { "ISEDITABLE"   , 'L', 1 , (BYTE*)"N"    , NULL     , NULL , &s_GET_29       };
-   _DECL s_GET_31      = { "INPUT"        , 'C', 0 , (BYTE*)"C"    , NULL     , NULL , &s_GET_30       };
-   _DECL s_GET_32      = { "PUTMASK"      , 'C', 2 , (BYTE*)"CL"   , NULL     , NULL , &s_GET_31       };
-   _DECL s_GET_33      = { "HASSCROLL"    , 'L', 0 , (BYTE*)NULL   , NULL     , NULL , &s_GET_32       };
 
   /*       Name     Ret  # of Prams  Param Types   Ret Class  Param Classes  Next
    ---------------  ---  ----------  --------------------  ---------  -------------  --------------- */
@@ -1523,7 +1516,7 @@ static void hb_compDeclaredInit( HB_COMP_DECL )
    /* ------- */
 
    /* First (bottom) Method */
-   s_GET.pMethod     = &s_GET_33; /* Change to BOTTOM Method. */
+   s_GET.pMethod     = &s_GET_28; /* Change to BOTTOM Method. */
    /* Last (top) Method. */
    s_GET.pLastMethod = &s_GET_01;
    /* Next class definition pointer */
@@ -1590,7 +1583,7 @@ PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, char * szDeclaredName )
 
    if( ( pDeclared = hb_compDeclaredFind( HB_COMP_PARAM, szDeclaredName ) ) != NULL )
    {
-      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "Function", szDeclaredName );
+      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "function", szDeclaredName );
 
       /* Last declaration will take effect. */
       pDeclared->cType = ' '; /* Not known yet */

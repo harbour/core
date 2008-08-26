@@ -500,7 +500,7 @@ static PHRB_BODY hb_hrbLoadFromFile( char* szHrb )
    char szFileName[ _POSIX_PATH_MAX + 1 ];
    PHRB_BODY pHrbBody = NULL;
    PHB_FNAME pFileName;
-   FHANDLE hFile;
+   HB_FHANDLE hFile;
 
    /* Create full filename */
 

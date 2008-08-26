@@ -593,7 +593,7 @@ static char *s_findStringMimeType( char *cData, int iLen )
 }
 
 
-static char *s_findFileMimeType( FHANDLE fileIn )
+static char *s_findFileMimeType( HB_FHANDLE fileIn )
 {
    char buf[512];
    int iLen;
@@ -619,7 +619,7 @@ HB_FUNC( TIP_FILEMIMETYPE )
    PHB_ITEM pFile = hb_param( 1, HB_IT_STRING | HB_IT_NUMERIC );
    char *ext_type = NULL;
    char *magic_type = NULL;
-   FHANDLE fileIn;
+   HB_FHANDLE fileIn;
 
 
    if ( pFile == NULL )
@@ -653,7 +653,7 @@ HB_FUNC( TIP_FILEMIMETYPE )
    }
    else
    {
-      fileIn = (FHANDLE) hb_itemGetNL( pFile );
+      fileIn = ( HB_FHANDLE ) hb_itemGetNL( pFile );
       magic_type = s_findFileMimeType( fileIn );
    }
 

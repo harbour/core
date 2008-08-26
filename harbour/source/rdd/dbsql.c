@@ -65,10 +65,10 @@
 #define HB_FILE_BUF_SIZE      0x10000
 typedef struct _HB_FILEBUF
 {
-   FHANDLE  hFile;
-   BYTE *   pBuf;
-   ULONG    ulSize;
-   ULONG    ulPos;
+   HB_FHANDLE hFile;
+   BYTE *     pBuf;
+   ULONG      ulSize;
+   ULONG      ulPos;
 } HB_FILEBUF;
 typedef HB_FILEBUF * PHB_FILEBUF;
 
@@ -117,7 +117,7 @@ static void hb_destroyFBuffer( PHB_FILEBUF pFileBuf )
    hb_xfree( pFileBuf );
 }
 
-static PHB_FILEBUF hb_createFBuffer( FHANDLE hFile, ULONG ulSize )
+static PHB_FILEBUF hb_createFBuffer( HB_FHANDLE hFile, ULONG ulSize )
 {
    PHB_FILEBUF pFileBuf = ( PHB_FILEBUF )hb_xgrab( sizeof( HB_FILEBUF ) );
 
@@ -223,7 +223,7 @@ static BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
 static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
                         PHB_ITEM pWhile, PHB_ITEM pFor,
                         char * szDelim, char * szSep, char * szEsc,
-                        char * szTable, FHANDLE hFile,
+                        char * szTable, HB_FHANDLE hFile,
                         BOOL fInsert, BOOL fRecno )
 {
    PHB_FILEBUF pFileBuf;
@@ -349,7 +349,7 @@ HB_FUNC( __DBSQL )
       char * szDelim    = hb_parcx( 14 );
       char * szEsc      = hb_parcx( 15 );
       HB_LONG llNext    = HB_LONG_MAX;
-      FHANDLE hFile;
+      HB_FHANDLE hFile;
       ERRCODE errCode;
 
       if( ! szFileName )

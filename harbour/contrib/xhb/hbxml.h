@@ -176,8 +176,8 @@ typedef struct tag_mxml_refil
    /* data available for callback functions */
    union
    {
-      FHANDLE hFile;
-      void    *vPtr;
+      HB_FHANDLE hFile;
+      void *     vPtr;
    } u;
 
 } MXML_REFIL;
@@ -199,8 +199,8 @@ typedef struct tag_mxml_output
    /* data available for callback functions */
    union
    {
-      FHANDLE hFile;
-      void    *vPtr;
+      HB_FHANDLE hFile;
+      void *     vPtr;
    } u;
 
 } MXML_OUTPUT;

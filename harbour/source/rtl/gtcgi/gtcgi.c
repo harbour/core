@@ -85,7 +85,7 @@ static HB_GT_FUNCS   SuperTable;
 
 typedef struct _HB_GTCGI
 {
-   FHANDLE        hStdout;
+   HB_FHANDLE     hStdout;
    int            iRow;
    int            iCol;
    int            iLastCol;
@@ -108,7 +108,7 @@ static void hb_gt_cgi_newLine( PHB_GTCGI pGTCGI )
    hb_gt_cgi_termOut( pGTCGI, ( BYTE * ) pGTCGI->szCrLf, pGTCGI->ulCrLf );
 }
 
-static void hb_gt_cgi_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    PHB_GTCGI pGTCGI;
 

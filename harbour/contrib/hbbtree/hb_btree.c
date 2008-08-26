@@ -303,7 +303,7 @@ typedef int ( * BTreeCmpFunc )( const char * l, const char * r, size_t n );
 struct hb_BTree
 {
   BYTE          * szFileName;
-  FHANDLE         hFile;
+  HB_FHANDLE      hFile;
   ULONG           ulRootPage;
   ULONG           ulFreePage;
   USHORT          usPageSize;

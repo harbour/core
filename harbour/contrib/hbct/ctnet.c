@@ -97,7 +97,7 @@
 
 BOOL WINAPI WNetErrorHandler( DWORD dwErrorCode, LPSTR lpszFunction )
 {
-   HB_ITEM_PTR pError;
+   PHB_ITEM pError;
 
    if( dwErrorCode != ERROR_EXTENDED_ERROR )
    {

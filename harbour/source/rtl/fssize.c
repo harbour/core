@@ -119,7 +119,7 @@ HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
    }
    else
    {
-      FHANDLE hFileHandle = hb_fsOpen( pszFileName, 0 );
+      HB_FHANDLE hFileHandle = hb_fsOpen( pszFileName, 0 );
 
       if( hFileHandle != FS_ERROR )
       {

@@ -97,9 +97,9 @@
    static const int  s_iCrLfLen = 2;
 #endif
 
-static FHANDLE s_hFilenoStdin  = ( FHANDLE ) 0;
-static FHANDLE s_hFilenoStdout = ( FHANDLE ) 1;
-static FHANDLE s_hFilenoStderr = ( FHANDLE ) 2;
+static HB_FHANDLE s_hFilenoStdin  = ( HB_FHANDLE ) 0;
+static HB_FHANDLE s_hFilenoStdout = ( HB_FHANDLE ) 1;
+static HB_FHANDLE s_hFilenoStderr = ( HB_FHANDLE ) 2;
 
 static USHORT  s_uiPRow;
 static USHORT  s_uiPCol;
@@ -133,7 +133,7 @@ void hb_conInit( void )
        */
 #ifdef HB_C52_STRICT
       else if( iStderr > 0 ) /* //STDERR:x */
-         s_hFilenoStderr = ( FHANDLE ) iStderr;
+         s_hFilenoStderr = ( HB_FHANDLE ) iStderr;
 #endif
    }
 #endif

@@ -298,53 +298,53 @@ typedef struct {
 
 typedef struct _HB_GTTRM
 {
-   PHB_GT   pGT;
+   PHB_GT     pGT;
 
-   FHANDLE  hFileno;
-   FHANDLE  hFilenoStdin;
-   FHANDLE  hFilenoStdout;
-   FHANDLE  hFilenoStderr;
-   int      iRow;
-   int      iCol;
-   int      iLineBufSize;
-   BYTE *   pLineBuf;
-   int      iCurrentSGR, iFgColor, iBgColor, iBold, iBlink, iACSC, iAM;
-   int      iAttrMask;
-   int      iCursorStyle;
+   HB_FHANDLE hFileno;
+   HB_FHANDLE hFilenoStdin;
+   HB_FHANDLE hFilenoStdout;
+   HB_FHANDLE hFilenoStderr;
+   int        iRow;
+   int        iCol;
+   int        iLineBufSize;
+   BYTE *     pLineBuf;
+   int        iCurrentSGR, iFgColor, iBgColor, iBold, iBlink, iACSC, iAM;
+   int        iAttrMask;
+   int        iCursorStyle;
 
-   BOOL     fOutTTY;
-   BOOL     fStdinTTY;
-   BOOL     fStdoutTTY;
-   BOOL     fStderrTTY;
+   BOOL       fOutTTY;
+   BOOL       fStdinTTY;
+   BOOL       fStdoutTTY;
+   BOOL       fStderrTTY;
 
-   BOOL     fPosAnswer;
+   BOOL       fPosAnswer;
 
 #ifndef HB_CDP_SUPPORT_OFF
-   PHB_CODEPAGE   cdpHost;
-   PHB_CODEPAGE   cdpOut;
-   PHB_CODEPAGE   cdpIn;
-   PHB_CODEPAGE   cdpEN;
+   PHB_CODEPAGE cdpHost;
+   PHB_CODEPAGE cdpOut;
+   PHB_CODEPAGE cdpIn;
+   PHB_CODEPAGE cdpEN;
 #endif
-   BOOL     fUTF8;
-   BYTE     keyTransTbl[ 256 ];
-   int      charmap[256];
+   BOOL       fUTF8;
+   BYTE       keyTransTbl[ 256 ];
+   int        charmap[ 256 ];
 
-   int      chrattr[256];
-   int      boxattr[256];
+   int        chrattr[ 256 ];
+   int        boxattr[ 256 ];
 
-   int      iOutBufSize;
-   int      iOutBufIndex;
-   BYTE *   pOutBuf;
+   int        iOutBufSize;
+   int        iOutBufIndex;
+   BYTE *     pOutBuf;
 
-   int      terminal_type;
-   int      terminal_ext;
+   int        terminal_type;
+   int        terminal_ext;
 
 #if defined( HB_OS_UNIX_COMPATIBLE )
    struct termios saved_TIO, curr_TIO;
-   BOOL     fRestTTY;
+   BOOL       fRestTTY;
 #endif
 
-   double   dToneSeconds;
+   double     dToneSeconds;
 
    /* input events */
    keyTab *pKeyTab;
@@ -2842,7 +2842,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    mouse_init( pTerm );
 }
 
-static void hb_gt_trm_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_trm_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    int iRows = 24, iCols = 80;
    PHB_GTTRM pTerm;

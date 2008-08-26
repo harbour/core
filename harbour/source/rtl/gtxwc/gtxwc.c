@@ -3331,7 +3331,7 @@ static void hb_gt_xwc_LateRefresh( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_xwc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    PXWND_DEF wnd;
 

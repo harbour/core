@@ -229,7 +229,7 @@ HB_FUNC( FREADSTR )
 
       if( ulToRead > 0 )
       {
-         FHANDLE fhnd = ( FHANDLE ) hb_parni( 1 );
+         HB_FHANDLE fhnd = ( HB_FHANDLE ) hb_parni( 1 );
          BYTE * buffer = ( BYTE * ) hb_xgrab( ulToRead + 1 );
          ULONG ulRead;
 

@@ -1073,7 +1073,7 @@ static void hb_cdxIndexCheckBuffers( LPCDXINDEX pIndex )
  */
 static ULONG hb_cdxIndexGetAvailPage( LPCDXINDEX pIndex, BOOL bHeader )
 {
-   FHANDLE hFile = pIndex->hFile;
+   HB_FHANDLE hFile = pIndex->hFile;
    BYTE byBuf[4];
    ULONG ulPos;
 
@@ -7735,7 +7735,7 @@ static ERRCODE hb_cdxZap ( CDXAREAP pArea )
 static ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    USHORT uiFlags;
-   FHANDLE hFile;
+   HB_FHANDLE hFile;
    char szBaseName[ CDX_MAXTAGNAMELEN + 1 ];
    char szFileName[ _POSIX_PATH_MAX + 1 ];
    LPCDXINDEX pIndex, * pIndexPtr;
@@ -8107,7 +8107,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 
    if ( !fOpenedIndex )
    {
-      FHANDLE hFile;
+      HB_FHANDLE hFile;
       BOOL bRetry, fShared = pArea->fShared && !fTemporary && !fExclusive;
 
       do

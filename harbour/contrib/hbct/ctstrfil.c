@@ -107,7 +107,7 @@ HB_FUNC( CSETSAFETY )
 static LONG ct_StrFile( BYTE * pFileName, BYTE * pcStr, ULONG ulLen, BOOL bOverwrite, LONG lOffset,
                         BOOL bTrunc )
 {
-   FHANDLE hFile;
+   HB_FHANDLE hFile;
    BOOL bOpen = FALSE;
    BOOL bFile = hb_fsFile( pFileName );
    ULONG ulWrite = 0;
@@ -160,7 +160,7 @@ HB_FUNC( FILESTR )
 {
    if( ISCHAR( 1 ) )
    {
-      FHANDLE hFile = hb_fsOpen( ( BYTE * ) hb_parc( 1 ), FO_READ );
+      HB_FHANDLE hFile = hb_fsOpen( ( BYTE * ) hb_parc( 1 ), FO_READ );
 
       if( hFile != FS_ERROR )
       {
@@ -232,7 +232,7 @@ HB_FUNC( FILESCREEN )
 {
    if( ISCHAR( 1 ) )
    {
-      FHANDLE hFile = hb_fsOpen( ( BYTE * ) hb_parc( 1 ), FO_READ );
+      HB_FHANDLE hFile = hb_fsOpen( ( BYTE * ) hb_parc( 1 ), FO_READ );
 
       if( hFile != FS_ERROR )
       {

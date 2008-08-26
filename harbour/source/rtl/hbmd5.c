@@ -86,7 +86,7 @@ C functions:
          digest   - raw (unformatted) MD5 digest buffer
                     (at least 16 bytes long)
 
-   void hb_md5file( FHANDLE hFile, BYTE * digest )
+   void hb_md5file( HB_FHANDLE hFile, BYTE * digest )
       Parameters:
          hFile    - file handle
          digest   - raw (unformatted) MD5 digest buffer
@@ -316,7 +316,7 @@ HB_EXPORT void hb_md5( BYTE * ucData, ULONG ulLen, BYTE * ucDigest )
    hb_md5val( md5.accum, ucDigest );
 }
 
-HB_EXPORT void hb_md5file( FHANDLE hFile, BYTE * ucDigest )
+HB_EXPORT void hb_md5file( HB_FHANDLE hFile, BYTE * ucDigest )
 {
    MD5_BUF md5;
    ULONG n;
@@ -393,7 +393,7 @@ HB_FUNC( HB_MD5FILE )
 
    if( pszFile )
    {
-      FHANDLE hFile = hb_fsOpen( ( BYTE * ) pszFile, FO_READ );
+      HB_FHANDLE hFile = hb_fsOpen( ( BYTE * ) pszFile, FO_READ );
 
       if( hFile != FS_ERROR )
       {

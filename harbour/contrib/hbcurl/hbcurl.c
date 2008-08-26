@@ -96,19 +96,19 @@ typedef struct _HB_CURL
    struct curl_slist *    pPREQUOTE;
    struct curl_slist *    pTELNETOPTIONS;
 
-   BYTE *  ul_name;
-   FHANDLE ul_handle;
+   BYTE *     ul_name;
+   HB_FHANDLE ul_handle;
 
-   BYTE *  dl_name;
-   FHANDLE dl_handle;
+   BYTE *     dl_name;
+   HB_FHANDLE dl_handle;
 
-   BYTE *  ul_ptr;
-   size_t  ul_len;
-   size_t  ul_pos;
+   BYTE * ul_ptr;
+   size_t ul_len;
+   size_t ul_pos;
 
-   BYTE *  dl_ptr;
-   size_t  dl_len;
-   size_t  dl_pos;
+   BYTE * dl_ptr;
+   size_t dl_len;
+   size_t dl_pos;
 
    PHB_ITEM pProgressBlock;
 
