@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-26 15:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/common/hbver.c
+     + Show bitness for all (non-DJGPP) compilers.
+     ! Fixed to show "Windows Server 2003 / XP x64" when 
+       Windows 5.2 is detected.
+
 2008-08-26 13:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/compiler/hbmain.c
      ! Text casing fixed in some warning messages.

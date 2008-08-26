@@ -241,7 +241,7 @@ char * hb_verPlatform( void )
                      pszName = "Windows";
                }
                else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion >= 2 )
-                  pszName = "Windows Server 2003";
+                  pszName = "Windows Server 2003 / XP x64";
                else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion == 1 )
                   pszName = "Windows XP";
                else if( osVer.dwMajorVersion == 5 )
@@ -528,7 +528,7 @@ char * hb_verCompiler( void )
    snprintf( szSub, sizeof( szSub ), " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );
    hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE );
 
-#elif defined(__BORLANDC__) || defined(__WATCOMC__) || defined(__GNUC__)
+#else
 
    #if defined( HB_ARCH_16BIT )
       hb_strncat( pszCompiler, " (16 bit)", COMPILER_BUF_SIZE );
