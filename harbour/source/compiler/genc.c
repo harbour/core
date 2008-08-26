@@ -384,9 +384,12 @@ static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, char * szModulname, char *
    hb_compGenCString( yyc, ( BYTE * ) szSourceFile, strlen( szSourceFile ) );
    fprintf( yyc, ", 0x%lx, 0x%04x )\n\n", 0L, HB_PCODE_VER );
 
-   fprintf( yyc, "#if defined(HB_PRAGMA_STARTUP)\n"
+   fprintf( yyc, "#if defined( HB_PRAGMA_STARTUP )\n"
                  "   #pragma startup hb_vm_SymbolInit_%s%s\n"
-                 "#elif defined(HB_MSC_STARTUP)\n"
+                 "#elif defined( HB_MSC_STARTUP )\n"
+                 "   #if defined( HB_OS_WIN_64 )\n"
+                 "      #pragma section( HB_MSC_START_SEGMENT, long, read )\n"
+                 "   #endif\n"
                  "   #pragma data_seg( HB_MSC_START_SEGMENT )\n"
                  "   static HB_$INITSYM hb_vm_auto_SymbolInit_%s%s = hb_vm_SymbolInit_%s%s;\n"
                  "   #pragma data_seg()\n"

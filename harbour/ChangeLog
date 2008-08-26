@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-27 00:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbinit.h
+   * source/rtl/gtwin/gtwin.c
+   * source/rtl/gtwvt/gtwvt.c
+   * source/compiler/genc.c
+     + Enabled init functions for MSVC 64-bit in C mode.
+     ; NOTE: You get the idea, please comment. If there is 
+             no simpler/easier/shorter way to achieve this, 
+             I'll update the rest 150 files, too.
+
 2008-08-26 22:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/gtalleg/Makefile
      * Excluded for POCC and XCC.
