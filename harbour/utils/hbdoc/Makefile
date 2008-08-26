@@ -19,12 +19,6 @@ PRG_SOURCES=\
 	genhpc.prg \
 	genasc.prg \
 	genpdf1.prg \
-	teeasc.prg \
-	html.prg \
-	ng.prg \
-	os2.prg \
-	rtf.prg \
-	troff.prg \
 	ft_funcs.prg \
 
 C_SOURCES=\

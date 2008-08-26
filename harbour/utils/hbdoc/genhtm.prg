@@ -53,10 +53,15 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-#include "hbdocdef.ch"
 #include "common.ch"
 
+#include "hbdocdef.ch"
+
+#include "hbclass.ch"
+
 #define DELIM   "$"                 // keyword delimiter
+
+#define CRLF HB_OSNewLine()
 
 //  output lines on the screen
 #define INFILELINE   10
@@ -94,13 +99,13 @@ STATIC oHtmClassContent
 STATIC cFileName := ""      // Stores filenames of files that will be created 
 STATIC cInherits := ""      // Stores the inheritance of a class (if known and present) 
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcessWww()
 *+
 *+    Called from ( hbdoc.prg    )   2 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcessWww()
 
@@ -1282,11 +1287,11 @@ RETURN cTmpString2
 * Return    cTemp  Formated String to WWW output
 */
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcWwwBuf()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcWwwBuf( cPar )
 
@@ -1295,7 +1300,7 @@ FUNCTION ProcWwwBuf( cPar )
 
 RETURN cPar
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcWwwAlso()
 *+
@@ -1303,7 +1308,7 @@ RETURN cPar
 *+                ( genhtm1.prg  )   1 - function processwww()
 *+                ( genhtm2.prg  )   1 - function processwww()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcWwwAlso( nWriteHandle, cSeeAlso )
 
@@ -1371,14 +1376,14 @@ FUNCTION ProcWwwAlso( nWriteHandle, cSeeAlso )
    ENDDO
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcStatusWww()
 *+
 *+    Called from ( genhtm.prg   )   1 - function processwww()
 *+                ( genhtm1.prg  )   1 - function processwww()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcStatusWww( nWriteHandle, cBuffer )
 
@@ -1396,13 +1401,13 @@ FUNCTION ProcStatusWww( nWriteHandle, cBuffer )
 
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FormatHtmBuff()
 *+
 *+    Called from ( genhtm.prg   )   1 - function prochtmdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FormatHtmBuff( cBuffer, cStyle )
 
@@ -1526,13 +1531,13 @@ FUNCTION FormatHtmBuff( cBuffer, cStyle )
    //   endif
 RETURN creturn
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function checkhtmcolor()
 *+
 *+    Called from ( genhtm.prg   )   1 - function prochtmdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNC checkhtmcolor( cbuffer, ncolorpos )
 
@@ -1558,7 +1563,7 @@ FUNC checkhtmcolor( cbuffer, ncolorpos )
    ENDDO
 RETURN cbuffer
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProchtmDesc()
 *+
@@ -1566,7 +1571,7 @@ RETURN cbuffer
 *+                ( genhtm1.prg  )   6 - function processwww()
 *+                ( genhtm2.prg  )   6 - function processwww()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProchtmDesc( cBuffer, oHtm, cStyle ,cFileName)
 
@@ -1764,7 +1769,7 @@ FUNCTION ProchtmDesc( cBuffer, oHtm, cStyle ,cFileName)
    ENDIF
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProchtmTable()
 *+
@@ -1772,7 +1777,7 @@ RETURN nil
 *+                ( genhtm1.prg  )   1 - function prochtmdesc()
 *+                ( genhtm2.prg  )   1 - function prochtmdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProchtmTable( cBuffer, nNum )
 
@@ -1845,7 +1850,7 @@ FUNCTION ProchtmTable( cBuffer, nNum )
 
 RETURN Nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function GenhtmTable()
 *+
@@ -1853,7 +1858,7 @@ RETURN Nil
 *+                ( genhtm1.prg  )   1 - function prochtmdesc()
 *+                ( genhtm2.prg  )   1 - function prochtmdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION GenhtmTable( oHtm )
 
@@ -1907,13 +1912,13 @@ STATIC FUNCTION ReadFromTop( nh )
    FT_FGOTOP()
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Static Function GetItem()
 *+
 *+    Called from ( genng.prg    )  20 - function processing()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 STATIC FUNCTION GetItem( cItem, nCurdoc )
 
@@ -1936,5 +1941,244 @@ RETURN lReturn
 
 #ifdef GAUGE
 function CountDocs(aCurDoc)
-return len(aCurdoc)
+   return len(aCurdoc)
 #endif
+
+
+*+--------------------------------------------------------------------
+*+
+*+    Class THTML
+*+
+*+--------------------------------------------------------------------
+*+
+CLASS THTML
+
+   DATA nHandle
+   DATA cFile
+   METHOD New( cFile ,aMetaContents)
+   METHOD WriteTitle( cTitle )
+   METHOD WritePar( cPar )
+   METHOD WriteParBold( cPar )
+   METHOD WriteLink( cLink ,cName)
+   METHOD WriteLinkTable( cLink ,cName)
+   METHOD WriteChmLink( cLink ,cName)
+   METHOD WriteText( cText )
+   METHOD WriteMetaTag(cTag,cDescription)
+   METHOD CLOSE()
+   // The Follow methods is for html source files for .chm help
+   METHOD NewChm( cFile ,aMetaContents,cFuncName)
+   METHOD ADDoBJECT(cType,cClassid)
+   METHOD ADDPARAM(cName,cValue)
+   METHOD EndOBJect()
+   METHOD NewContent(cFile)
+   METHOD ListItem()
+ENDCLASS
+
+METHOD New( cFile, aMetaContents ) CLASS THTML
+    
+   Local nCount
+   IF Self:nHandle > 0
+      FCLOSE( Self:nHandle )
+   ENDIF
+
+   IF VALTYPE( cFile ) != NIL .AND. VALTYPE( cFile ) == "C"
+      Self:cFile   := LOWER( cFile )
+      Self:nHandle := FCREATE( Self:cFile )
+   ENDIF
+   FWRITE( Self:nHandle, "<HTML>" + CRLF )
+   FWRITE( Self:nHandle, "<HEAD>" + CRLF )
+   if Valtype(aMetaContents) != NIL .and. Valtype(aMetaContents)=="A"
+      For nCount:=1 to len(aMetaContents)
+         Self:WriteMetaTag(aMetaContents[nCount,1],aMetaContents[nCount,2])
+      NEXT
+   Endif
+
+   RETURN Self
+
+METHOD WriteTitle( cTitle ) CLASS THTML
+
+   FWRITE( Self:nHandle, "<TITLE>" + CRLF + cTitle + CRLF + "</Title>" + CRLF + "</HEAD>" + CRLF  )
+   FWRITE( Self:nHandle, "<BODY>" + CRLF )
+   RETURN Self
+
+METHOD WritePar( cPar ) CLASS THTML
+
+   //   cPar:=STRTRAN(cPar,"<","&lt;")
+   //   cPar:=STRTRAN(cPar,">","&gt;")
+   FWRITE( Self:nHandle, "<dd>" + ALLTRIM( cPar ) + "</dd>" + CRLF )
+   RETURN Self
+
+METHOD WriteText( cPar ) CLASS THTML
+   FWRITE( Self:nHandle, cPar + CRLF )
+   RETURN Self
+
+METHOD WriteParBold( cPar, lEndDl, lPar ) CLASS THTML
+
+   DEFAULT lEnddl TO .T.
+   DEFAULT lPar TO .T.
+   IF lEndDl .AND. lPar
+      FWRITE( Self:nHandle, "</P></dd>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + "</b></dt><p>" + CRLF )
+   ELSEIF !lPar .AND. !lEnddl
+      FWRITE( Self:nHandle, "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + "</b></dt><p>" + CRLF )
+   ELSEIF !lPar .AND. lEnddl
+      FWRITE( Self:nHandle, "</PRE>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + "</b></dt><p>" + CRLF )
+   ELSEIF lPar .AND. !lEnddl
+      FWRITE( Self:nHandle, "</P></dd>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + "</b></dt><p>" + CRLF )
+
+   ENDIF
+   RETURN Self
+
+METHOD CLOSE() CLASS THTML
+
+   FWRITE( Self:nHandle, "</body>" + CRLF )
+   FWRITE( Self:nHandle, "</html>" + CRLF )
+   FCLOSE( Self:nHandle )
+
+   RETURN Self
+
+METHOD WriteLink( cLink, cName ) CLASS THTML
+
+   LOCAL nPos
+   LOCAL cTemp := ""
+
+   nPos := AT( "()", cLink )
+   IF nPos > 0
+      if AT(".htm",cLink)=0
+      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + ".htm"
+      else
+      cTemp := SUBSTR( cLink, 1, nPos - 1 )
+      endif
+   ELSE
+     if AT(".htm",cLink)=0
+      cTemp := ALLTRIM( cLink ) + ".htm"
+        else
+     cTemp := ALLTRIM( cLink ) 
+      endif
+   ENDIF
+   IF cName != Nil
+      cLink := cName
+   ENDIF
+   cTemp := STRTRAN( cTemp, "@...", "" )
+   cTemp := STRTRAN( cTemp, " ", "" )
+
+   FWRITE( Self:nHandle, "<LI><a href=" + LOWER( cTemp ) + ">" + cLink + "</a></LI>" + CRLF )
+
+   RETURN Self
+
+METHOD WriteLinkTable( cLink, cName,cInfo ) CLASS THTML
+
+   LOCAL nPos
+   LOCAL cTemp := ""
+
+   nPos := AT( "()", cLink )
+   IF nPos > 0
+      if AT(".htm",cLink)=0
+      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + ".htm"
+      else
+      cTemp := SUBSTR( cLink, 1, nPos - 1 )
+      endif
+   ELSE
+         if AT(".htm",cLink)=0
+      cTemp := ALLTRIM( cLink ) + ".htm"
+        else
+     cTemp := ALLTRIM( cLink ) 
+      endif
+   ENDIF
+   IF cName != Nil
+      cLink := cName
+   ENDIF
+   cTemp := STRTRAN( cTemp, " ", "" )
+   FWRITE( Self:nHandle, "<tr><td><a href=" + LOWER( cTemp ) + ">" + cLink + "</a></td><td>" +cinfo +"</td></tr>"+ CRLF )
+
+   RETURN Self
+
+METHOD WriteMetaTag(cTag,cDescription) Class THtml
+   fWrite(Self:nHandle,'<META NAME="'+cTag+'" CONTENT="'+cDescription+'">'+CRLF)
+   return Self
+
+/////////////////////Method for .chm html source files support////////////////
+METHOD NewChm( cFile, aMetaContents, cFuncName ) CLASS THTML
+    
+   Local nCount
+   IF Self:nHandle > 0
+      FCLOSE( Self:nHandle )
+   ENDIF
+
+   IF VALTYPE( cFile ) != NIL .AND. VALTYPE( cFile ) == "C"
+      Self:cFile   := LOWER( cFile )
+      Self:nHandle := FCREATE( Self:cFile )
+   ENDIF
+   FWRITE( Self:nHandle, "<HTML>" + CRLF +"<HEAD>" +CRLF)
+   if Valtype(aMetaContents) != NIL .and. Valtype(aMetaContents)=="A"
+   For nCount:=1 to len(aMetaContents)
+      Self:WriteMetaTag(aMetaContents[nCount,1],aMetaContents[nCount,2])
+   NEXT
+    Endif
+   ::WriteTitle(cFuncName)
+
+   FWRITE( Self:nHandle, '<BODY BGCOLOR="#FFFFFF" TEXT="#000000">' + CRLF )
+   ::AddObject("application/x-oleobject","clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e")
+   ::ADDPARAM("Keyword",cFuncName)
+   ::AddParam("ALink Name",cFuncName)
+   ::ENDOBJECT()
+   RETURN Self
+
+method ADDOBJECT(cType,cClassId) Class THTML
+   IF VALTYPE(cClassId)!=NIL .and. VALTYPE(cClassId)=="C"
+      FWRITE( Self:nHandle,'<Object type="'+cType+'" classid="'+cClassId+'">'+CRLF)
+   ELSE
+      FWRITE( Self:nHandle,'<Object type="'+ cType +'">'+CRLF)
+   ENDIF
+   RETURN Self
+
+METHOD  ENDOBJECT() Class THTML
+   FWRITE( Self:nHandle,"</OBJECT>"+CRLF)
+   RETURN Self
+
+METHOD ADDPARAM(cType,cValue) Class THTML
+   FWRITE( Self:nHandle,'<param name="'+cType+ '" value="'+cValue +'">'  +CRLF)
+   RETURN Self
+
+METHOD NewContent( cFile ) CLASS THTML
+    
+   IF Self:nHandle > 0
+      FCLOSE( Self:nHandle )
+   ENDIF
+
+   IF VALTYPE( cFile ) != NIL .AND. VALTYPE( cFile ) == "C"
+      Self:cFile   := LOWER( cFile )
+      Self:nHandle := FCREATE( Self:cFile )
+   ENDIF
+   FWRITE( Self:nHandle, "<HTML>" + CRLF )
+   RETURN Self
+
+METHOD ListItem() CLASS tHtml
+   FWRITE( Self:nHandle, "<LI>" )
+   RETURN SELF
+
+METHOD WriteChmLink( cLink, cName ) CLASS THTML
+
+   LOCAL nPos
+   LOCAL cTemp := ""
+
+   nPos := AT( "()", cLink )
+   IF nPos > 0
+      if AT(".htm",cLink)=0
+      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + ".htm"
+      else
+      cTemp := SUBSTR( cLink, 1, nPos - 1 )
+      endif
+   ELSE
+         if AT(".htm",cLink)=0
+      cTemp := ALLTRIM( cLink ) + ".htm"
+        else
+     cTemp := ALLTRIM( cLink ) 
+      endif
+   ENDIF
+   IF cName != Nil
+      cLink := cName
+   ENDIF
+   cTemp := STRTRAN( cTemp, "@...", "" )
+   cTemp := STRTRAN( cTemp, " ", "" )
+   FWRITE( Self:nHandle, "<a href=" + LOWER( cTemp ) + ">" + cLink + "</a><br>" + CRLF )
+   Return Self

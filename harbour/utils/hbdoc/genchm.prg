@@ -93,13 +93,13 @@ STATIC oHtmClassContent
 STATIC cFileName := ""      // Stores filenames of files that will be created
 STATIC cInherits := ""      // Stores the inheritance of a class (if known and present)
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcessWww()
 *+
 *+    Called from ( hbdoc.prg    )   2 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcessChm()
 
@@ -1287,11 +1287,11 @@ RETURN cTmpString2
 * Return    cTemp  Formated String to WWW output
 */
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcChmBuf()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcChmBuf( cPar )
 
@@ -1300,7 +1300,7 @@ FUNCTION ProcChmBuf( cPar )
 
 RETURN cPar
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcChmAlso()
 *+
@@ -1308,7 +1308,7 @@ RETURN cPar
 *+                ( genhtm1.prg  )   1 - function processChm()
 *+                ( genhtm2.prg  )   1 - function processChm()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcChmAlso( nWriteHandle, cSeeAlso )
 
@@ -1376,14 +1376,14 @@ FUNCTION ProcChmAlso( nWriteHandle, cSeeAlso )
    ENDDO
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcStatusChm()
 *+
 *+    Called from ( genhtm.prg   )   1 - function processChm()
 *+                ( genhtm1.prg  )   1 - function processChm()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcStatusChm( nWriteHandle, cBuffer )
 
@@ -1401,13 +1401,13 @@ FUNCTION ProcStatusChm( nWriteHandle, cBuffer )
 
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FormatChmBuff()
 *+
 *+    Called from ( genhtm.prg   )   1 - function prochtmdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FormatChmBuff( cBuffer, cStyle )
 
@@ -1532,13 +1532,13 @@ FUNCTION FormatChmBuff( cBuffer, cStyle )
    //   endif
 RETURN creturn
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function checkChmcolor()
 *+
 *+    Called from ( genChm.prg   )   1 - function procChmdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNC checkChmcolor( cbuffer, ncolorpos )
 
@@ -1564,7 +1564,7 @@ FUNC checkChmcolor( cbuffer, ncolorpos )
    ENDDO
 RETURN cbuffer
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcChmDesc()
 *+
@@ -1572,7 +1572,7 @@ RETURN cbuffer
 *+                ( genChm1.prg  )   6 - function processChm()
 *+                ( genChm2.prg  )   6 - function processChm()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
 
@@ -1755,7 +1755,7 @@ FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
    ENDIF
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcChmTable()
 *+
@@ -1763,7 +1763,7 @@ RETURN nil
 *+                ( genChm1.prg  )   1 - function procChmdesc()
 *+                ( genChm2.prg  )   1 - function procChmdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcChmTable( cBuffer, nNum )
 
@@ -1836,7 +1836,7 @@ FUNCTION ProcChmTable( cBuffer, nNum )
 
 RETURN Nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function GenChmTable()
 *+
@@ -1844,7 +1844,7 @@ RETURN Nil
 *+                ( genChm1.prg  )   1 - function procChmdesc()
 *+                ( genChm2.prg  )   1 - function procChmdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION GenChmTable( oChm )
 
@@ -1898,13 +1898,13 @@ STATIC FUNCTION ReadFromTop( nh )
    FT_FGOTOP()
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Static Function GetItem()
 *+
 *+    Called from ( genng.prg    )  20 - function processing()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 STATIC FUNCTION GetItem( cItem, nCurdoc )
 

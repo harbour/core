@@ -3,7 +3,7 @@ rem
 rem $Id$
 rem
 
-..\..\bin\harbour /w3 /q /n /km /i..\..\include hbdoc ft_funcs genasc genchm genhpc genhtm genng genos2 genpdf1 genrtf gentrf html ng os2 rtf teeasc troff
+..\..\bin\harbour /w3 /q /n /km /i..\..\include hbdoc ft_funcs genasc genchm genhpc genhtm genng genos2 genpdf1 genrtf gentrf
 
 echo -O2 -I..\..\include -L..\..\lib > build.tmp
 
@@ -18,12 +18,6 @@ echo genos2.c     >> build.tmp
 echo genpdf1.c    >> build.tmp
 echo genrtf.c     >> build.tmp
 echo gentrf.c     >> build.tmp
-echo html.c       >> build.tmp
-echo ng.c         >> build.tmp
-echo os2.c        >> build.tmp
-echo rtf.c        >> build.tmp
-echo teeasc.c     >> build.tmp
-echo troff.c      >> build.tmp
 
 echo hbdfrdln.c   >> build.tmp
 
@@ -38,4 +32,4 @@ bcc32 @build.tmp
 del build.tmp
 
 del *.obj
-del hbdoc.c ft_funcs.c genasc.c genchm.c genhpc.c genhtm.c genng.c genos2.c genpdf1.c genrtf.c gentrf.c html.c ng.c os2.c rtf.c teeasc.c troff.c
+del hbdoc.c ft_funcs.c genasc.c genchm.c genhpc.c genhtm.c genng.c genos2.c genpdf1.c genrtf.c gentrf.c

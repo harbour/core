@@ -113,6 +113,8 @@
 #include "inkey.ch"
 #include "hbdocdef.ch"
 
+#define DELIM   "$"                 // keyword delimiter
+
 #define CRLF HB_OSNewLine()
 
 #xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
@@ -155,11 +157,11 @@ STATIC cTitle:=""
 /*
 */
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function MAIN()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
@@ -1303,7 +1305,7 @@ RETURN NIL
 
 //  End of MAIN()
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ListAsArray2()
 *+
@@ -1312,7 +1314,7 @@ RETURN NIL
 *+                ( genos2.prg   )   1 - function procos2also()
 *+                ( gentrf.prg   )   1 - function proctroffalso()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ListAsArray2( cList, cDelimiter )
 
@@ -1331,14 +1333,14 @@ FUNCTION ListAsArray2( cList, cDelimiter )
    //
 RETURN aList        // Return the array
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function StripNgControls()
 *+
 *+    Called from ( genhpc.prg   )   3 - function processfiles()
 *+                ( gentrf.prg   )   2 - function processtroff()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION StripNgControls( cString )
 
@@ -1387,7 +1389,7 @@ FUNCTION StripNgControls( cString )
 
 RETURN cString
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function StripFiles()
 *+
@@ -1402,7 +1404,7 @@ RETURN cString
 *+                ( genrtf.prg   )   1 - function processrtf()
 *+                ( gentrf.prg   )   1 - function processtroff()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION StripFiles( cString )
 
@@ -1444,11 +1446,11 @@ RETURN cString
 
 //  End of StripFiles
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FirstNB()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FirstNB( cString )
 
@@ -1496,7 +1498,7 @@ RETURN nReturn
 *
 */
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ListAsArray()
 *+
@@ -1504,7 +1506,7 @@ RETURN nReturn
 *+                ( genng1.prg   )   1 - function procngialso()
 *+                ( hbdoc.prg    )   1 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ListAsArray( cList, cDelimiter )
 
@@ -1523,7 +1525,7 @@ FUNCTION ListAsArray( cList, cDelimiter )
    //
 RETURN aList        // Return the array
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ReadLN()
 *+
@@ -1556,7 +1558,7 @@ RETURN aList        // Return the array
 *+                ( hbdoc.prg    )   1 - function readatfile()
 *+                                   2 - function fill_link_info()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ReadLN( leof )
 
@@ -1569,13 +1571,13 @@ FUNCTION ReadLN( leof )
 RETURN cBuffer
 //  End of ReadLN
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ReadAtFile()
 *+
 *+    Called from ( hbdoc.prg    )   1 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ReadAtFile( cAtFile )
 
@@ -1627,11 +1629,11 @@ RETURN aDirList
 
 //  End of ReadAtFile
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function WRITE_ERROR()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION WRITE_ERROR( cDescrip, cBadLine, nLineCnt, nMax, cFile )
 
@@ -1672,13 +1674,13 @@ FUNCTION WRITE_ERROR( cDescrip, cBadLine, nLineCnt, nMax, cFile )
 
 RETURN NIL
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function fill_link_info()
 *+
 *+    Called from ( hbdoc.prg    )   1 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION fill_link_info( cLinkName )
 
@@ -1855,3 +1857,57 @@ for nCount:=1 to Len(aTemp)
          Endif
 next
 return nil
+
+FUNCTION TeeFiles()
+
+   LOCAL i
+   LOCAL nFiles      := LEN( aDirList )
+   LOCAL cFileName 
+   LOCAL lDoc
+   LOCAL cBuffer
+   LOCAL nReadHandle
+   LOCAL nSourceHandle
+   LOCAL nDocHandle
+   LOCAL cDoc        := DELIM + "DOC" + DELIM                  // DOC keyword
+   LOCAL cEnd        := DELIM + "END" + DELIM                  // END keyword
+
+   FOR i := 1 TO nFiles
+
+      cFileName   := aDirList[ i, F_NAME ]
+      nReadHandle := fopen( cFileName )
+      nSourceHandle := fcreate( "teesrcs\" + cFileName )
+      nDocHandle := fcreate( "teedocs\" + cFileName )
+   
+      lDoc := .F.
+   
+      DO WHILE freadline( nReadHandle, @cBuffer, 256 )
+
+         IF AT( cDoc, cBuffer ) > 0
+            lDoc    := .T.
+         ELSEIF AT( cEnd, cBuffer ) > 0
+            lDoc    := .F.
+            cBuffer += CRLF
+            FWRITE( nDocHandle, cBuffer, len( cBuffer ) )
+            freadline( nReadHandle, @cBuffer, 256 )
+            cBuffer += CRLF
+            FWRITE( nDocHandle, cBuffer, len( cBuffer ) )
+            LOOP            
+         ENDIF
+
+         cBuffer += CRLF
+
+         IF lDoc
+            FWRITE( nDocHandle, cBuffer, len( cBuffer ) )
+         ELSE
+            FWRITE( nSourceHandle, cBuffer, len( cBuffer ) )
+         ENDIF
+
+      ENDDO
+   
+      fclose( nReadHandle )
+      fclose( nSourceHandle )
+      fclose( nDocHandle )
+
+   NEXT
+
+   RETURN NIL

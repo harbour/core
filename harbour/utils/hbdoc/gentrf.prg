@@ -54,6 +54,8 @@
 #include "fileio.ch"
 #include "inkey.ch"
 
+#include "hbclass.ch"
+
 //  output lines on the screen
 
 #define INFILELINE   10
@@ -70,13 +72,13 @@ MEMVAR aDirlist
 MEMVAR aDocInfo
 STATIC aAlso
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcessTroff()
 *+
 *+    Called from ( hbdoc.prg    )   2 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcessTroff
 
@@ -503,13 +505,13 @@ FUNCTION ProcessTroff
    NEXT
 RETURN NIL
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcTroffAlso()
 *+
 *+    Called from ( gentrf.prg   )   1 - function processtroff()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcTroffAlso( cSeealso )
 
@@ -517,13 +519,13 @@ FUNCTION ProcTroffAlso( cSeealso )
    aAlso := ListAsArray2( cSeealso, "," )
 RETURN aAlso
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcStatusTroff()
 *+
 *+    Called from ( gentrf.prg   )   1 - function processtroff()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcStatusTroff( nWriteHandle, cBuffer )
 
@@ -537,3 +539,101 @@ FUNCTION ProcStatusTroff( nWriteHandle, cBuffer )
       nWriteHandle:WritePar( "   Not Started" )
    ENDIF
 RETURN nil
+
+*+--------------------------------------------------------------------
+*+
+*+    Class TTROFF
+*+
+*+--------------------------------------------------------------------
+*+
+CLASS TTROFF
+
+   DATA cFile
+   DATA nHandle
+   METHOD New( cFile )
+   METHOD WritePar( cPar )
+   METHOD WriteLink( clink )
+   METHOD CLOSE()
+   METHOD WriteParBold( cPar )
+   METHOD WriteTitle( cTitle, cTopic )
+   METHOD WriteText( cText )
+ENDCLASS
+
+METHOD NEW( cFile ) CLASS TTROFF
+
+   IF VALTYPE( cFile ) != NIL .AND. VALTYPE( cFile ) == "C"
+      Self:cFile   := LOWER( cFile )
+      Self:nHandle := FCREATE( Self:cFile )
+   ENDIF
+   RETURN Self
+
+METHOD WriteTitle( cTopic, cTitle ) CLASS TTROFF
+
+   LOCAL cWriteTitle := ".br" + CRLF + ;
+           ".ta" + CRLF + ;
+           ".in 0.08i" + CRLF + ;
+           ".ps -3" + CRLF + ;
+           ".vs -3" + CRLF + ;
+           ".sp 2" + CRLF + ;
+           "\fB" + cTitle + CRLF
+   LOCAL cWriteTopic := ".de }n" + CRLF + ;
+           ".bp" + CRLF + ;
+           ".sp .5i" + CRLF + ;
+           ".." + CRLF + ;
+           ".wh -.8i }n" + CRLF + ;
+           ".sp .5i" + CRLF + ;
+           ".po -.4i" + CRLF + ;
+           ".ll 7.5i" + CRLF + ;
+           ".ps 9" + CRLF + ;
+           ".vs 9" + CRLF + ;
+           ".in 0i" + CRLF + ;
+           ".ta 1.63265i" + CRLF + ;
+           ".sp 2" + CRLF + ;
+           ".ne 20" + CRLF + ;
+           ".ps +3" + CRLF + ;
+           ".vs +3" + CRLF + ;
+           cTopic + CRLF
+   LOCAL cTemp
+   LOCAL Npos
+   LOCAL cWriteTemp
+   nPos := AT( "()", cTopic )
+   IF nPos > 0
+      cTemp := SUBSTR( cTopic, nPos + 1 )
+   ELSE
+      cTemp := SUBSTR( cTopic, 21 )
+   ENDIF
+   cWriteTemp := cTemp + CRLF + ;
+                 ".in 0i" + CRLF + ;
+                 ".br" + CRLF + ;
+                 "\l'6.24i" + CRLF + ;
+                 ".br" + CRLF
+   FWRITE( Self:nHandle, cWriteTopic )
+   FWRITE( Self:nHandle, cWriteTitle )
+   FWRITE( Self:nHandle, cWriteTemp )
+   RETURN Self
+
+METHOD WriteText( cText ) CLASS TTROFF
+   FWRITE( Self:nHandle, cText + CRLF )
+   RETURN Self
+
+METHOD WritePar( cPar ) CLASS TTROFF
+   FWRITE( Self:nHandle, ALLTRIM( STRTRAN( cPar, ".", "\." ) ) + CRLF )
+   RETURN Self
+
+METHOD WriteParBold( cPar ) CLASS TTROFF
+
+   LOCAL cWriteBold := ".sp" + CRLF + ;
+           ".in 0.08i" + CRLF + ;
+           "\fB" + cPar + CRLF + ;
+           ".sp" + CRLF + ;
+           ".in 0.4i" + CRLF
+   FWRITE( Self:nHandle, cWriteBold )
+   RETURN Self
+
+METHOD CLOSE() CLASS TTROFF
+   FCLOSE( Self:nHandle )
+   RETURN Self
+
+METHOD WriteLink( cLink ) CLASS TTROFF
+   FWRITE( Self:nHandle, ALLTRIM( cLink ) + CRLF )
+   RETURN Self

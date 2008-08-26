@@ -52,8 +52,14 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-#include "hbdocdef.ch"
 #include "common.ch"
+
+#include "hbdocdef.ch"
+
+#include "hbclass.ch"
+
+#define CRLF HB_OSNewLine()
+#xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
 
 #define DELIM   "$"                 // keyword delimiter
 
@@ -64,8 +70,12 @@
 #define ERRORLINE    20
 #define LONGLINE     600
 #define LONGONELINE  86
+
 MEMVAR aDirList
 MEMVAR aDocinfo
+MEMVAR aWWW
+MEMVAR aResult
+
 STATIC aFiTable    := {}
 STATIC lIsTable    := .F.
 STATIC nCommentLen
@@ -75,13 +85,13 @@ STATIC nCurDoc     := 1
 
 STATIC aColorTable := { { "aqua", "\cf2 " }, { "black", "\cf1 " }, { "fuchia", "\cf3 " }, { "grey", "\cf4 " }, { "green", "\cf5 " }, { "lime", "\cf6 " }, { "maroon", "\cf7 " }, { "navy", "\cf8 " }, { "olive", "\cf9 " }, { "purple", "\cf10 " }, { "red", "\cf11 " }, { "silver", "\cf12 " }, { "teal", "\cf13 " }, { "white", "\cf14 " }, { "yellow", "\cf15 " } }
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcessRtf()
 *+
 *+    Called from ( hbdoc.prg    )   2 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcessRtf()
 
@@ -733,13 +743,13 @@ oRtf:WritePar( "" )                 //:endpar()
 
 RETURN oRtf:aIdh
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcRtfAlso()
 *+
 *+    Called from ( genrtf.prg   )   1 - function processrtf()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcRtfAlso( nWriteHandle, cSeeAlso )
 
@@ -806,13 +816,13 @@ FUNCTION ProcRtfAlso( nWriteHandle, cSeeAlso )
    ENDDO
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function procrtfstatus()
 *+
 *+    Called from ( genrtf.prg   )   1 - function processrtf()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION procrtfstatus( nWriteHandle, cBuffer )
 
@@ -827,13 +837,13 @@ FUNCTION procrtfstatus( nWriteHandle, cBuffer )
    ENDIF
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcRTFDesc()
 *+
 *+    Called from ( genrtf.prg   )   7 - function processrtf()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
 
@@ -1005,13 +1015,13 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
 
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcRtfTable()
 *+
 *+    Called from ( genrtf.prg   )   1 - function procrtfdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcRtfTable( cBuffer )
 
@@ -1045,13 +1055,13 @@ FUNCTION ProcRtfTable( cBuffer )
 
 RETURN Nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function GenRtfTable()
 *+
 *+    Called from ( genrtf.prg   )   1 - function procrtfdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION GenRtfTable( oRtf )
 
@@ -1088,13 +1098,13 @@ FUNCTION GenRtfTable( oRtf )
 
 RETURN Nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function checkrtfcolor()
 *+
 *+    Called from ( genrtf.prg   )   1 - function procrtfdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNC checkrtfcolor( cbuffer, ncolorpos )
 
@@ -1120,14 +1130,14 @@ FUNC checkrtfcolor( cbuffer, ncolorpos )
    ENDDO
 RETURN cbuffer
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function maxrtfelem()
 *+
 *+    Called from ( genos2.prg   )   1 - function genos2table()
 *+                ( genrtf.prg   )   1 - function genrtftable()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNC maxrtfelem( a )
 
@@ -1150,13 +1160,13 @@ FUNC maxrtfelem( a )
    nPos := ASCAN( a, { | x | LEN( x ) == max } )
 RETURN max
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FormatrtfBuff()
 *+
 *+    Called from ( genrtf.prg   )   1 - function procrtfdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FormatrtfBuff( cBuffer, cStyle )
 
@@ -1253,13 +1263,13 @@ FUNCTION FormatrtfBuff( cBuffer, cStyle )
 
 RETURN cReturn
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Static Function ReadFromTop()
 *+
 *+    Called from ( genrtf.prg   )   1 - function processrtf()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 STATIC FUNCTION ReadFromTop( nh )
 
@@ -1282,13 +1292,13 @@ STATIC FUNCTION ReadFromTop( nh )
    FT_FGOTOP()
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Static Function GetItem()
 *+
 *+    Called from ( genrtf.prg   )  21 - function processrtf()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 STATIC FUNCTION GetItem( cItem, nCurdoc )
 
@@ -1308,3 +1318,290 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
 
    ENDIF
 RETURN lReturn
+
+*+--------------------------------------------------------------------
+*+
+*+    Class TRTF
+*+
+*+--------------------------------------------------------------------
+*+
+CLASS TRTF
+
+   DATA cFile
+   DATA nHandle
+   DATA aIdh init {}
+   DATA lastId init 100
+   METHOD WriteHeader()
+   METHOD New( cFile )
+   METHOD WritePar( cPar, cIden )
+   METHOD WriteParFixed( cPar )
+   METHOD WriteParText( cPar, lConv )
+   METHOD WriteParNoIndent( cPar )
+   METHOD WriteParBox( cPar )
+   METHOD WriteLink( clink )
+   METHOD WriteJumpLink( clink )
+   METHOD WritekLink( aLink ,lAlink)
+   METHOD WriteJumpLink1( cLink, cName, cText )
+   METHOD CLOSE()
+   METHOD WriteParBold( cPar, lCenter )
+   METHOD WriteParBoldText( cPar, cText )
+   METHOD WriteTitle( cTitle, cTopic )
+   METHOD WriteJumpTitle( cTitle, cTopic )
+   METHOD EndPar()
+   METHOD EndPage()
+
+ENDCLASS
+
+METHOD new( cFile ) CLASS TRTF
+
+   IF VALTYPE( cFile ) != NIL .AND. VALTYPE( cFile ) == "C"
+      Self:cFile   := LOWER( cFile )
+      Self:nHandle := FCREATE( Self:cFile )
+   ENDIF
+   RETURN Self
+
+METHOD WriteHeader() CLASS TRTF
+
+   LOCAL cHeader := "{\rtf1\ansi\pard\fs20" + CRLF + ;
+           "\deff5{\fonttbl" + CRLF + ;
+           "{\f0\froman Tms Rmn;}" + CRLF + ;
+           "{\f1\fdecor Symbol;}" + CRLF + ;
+           "{\f2\fswiss Helv;}" + CRLF + ;
+           "{\f3\fmodern LinePrinter;}" + CRLF + ;
+           "{\f4\froman Terminal;}" + CRLF + ;
+           "{\f5\froman Times New Roman;}" + CRLF + ;
+           "{\f6\fswiss Arial;}" + CRLF + ;
+           "{\f7\froman CG Times (WN);}" + CRLF + ;
+           "{\f8\fmodern Courier;}" + CRLF + ;
+           "{\f9\fmodern Modern;}" + CRLF + ;
+           "{\f10\fscript Script;}" + CRLF + ;
+           "{\f11\fswiss Univers (WN);}" + CRLF + ;
+           "{\f12\fnil Wingdings;}" + CRLF + ;
+           "{\f13\fswiss MS Sans Serif;}" + CRLF + ;
+           "{\f14\fmodern\fcharset2 LotusWP Box;}" + CRLF + ;
+           "}" + CRLF
+
+   LOCAL cColortable := "{\colortbl;" + CRLF + ;
+           "\red0\green0\blue0;" + CRLF + ;
+           "\red0\green255\blue255;" + CRLF + ;
+           "\red255\green0\blue255;" + CRLF + ;
+           "\red128\green128\blue128;" + CRLF + ;
+           "\red0\green128\blue0;" + CRLF + ;
+           "\red0\green255\blue0;" + CRLF + ;
+           "\red128\green0\blue0;" + CRLF + ;
+           "\red0\green0\blue128;" + CRLF + ;
+           "\red128\green128\blue0;" + CRLF + ;
+           "\red128\green0\blue128;" + CRLF + ;
+           "\red255\green0\blue0;" + CRLF + ;
+           "\red192\green192\blue192;" + CRLF + ;
+           "\red0\green128\blue128;" + CRLF + ;
+           "\red255\green255\blue255;" + CRLF + ;
+           "\red255\green255\blue0;" + CRLF + ;
+           "}" + CRLF
+
+   FWRITE( Self:nHandle, cHeader )
+
+   FWRITE( Self:nHandle, cColorTable )
+
+   RETURN Self
+
+METHOD WritePar( cPar, cIden ) CLASS TRTF
+
+   DEFAULT ciDen TO ""
+   cPar := STRTRAN( cPar, "{", "\{" )
+   cPar := STRTRAN( cPar, "}", "\}" )
+   FWRITE( Self:nHandle, "\par" + CRLF + "\pard\cf1\f6\fs20\b0\i0" + cIden + HB_OEMTOANSI( cPar ) + CRLF )
+   RETURN Self
+
+METHOD WriteParNoIndent( cPar ) CLASS TRTF
+
+   cPar := STRTRAN( cPar, "{", "\{" )
+   cPar := STRTRAN( cPar, "}", "\}" )
+   FWRITE( Self:nHandle, "\par" + CRLF + "\pard\cf1\f6\fs20\b0\i0" + HB_OEMTOANSI( cPar ) + CRLF )
+   RETURN Self
+
+METHOD WriteParBox( cPar ) CLASS TRTF
+
+   cPar := STRTRAN( cPar, "{", "\{" )
+   cPar := STRTRAN( cPar, "}", "\}" )
+   FWRITE( Self:nHandle, "\par" + CRLF + "\pard\cf1\f4\b0\i0\fi-426\li426" + HB_OEMTOANSI( cPar ) + CRLF )
+   RETURN Self
+
+METHOD WriteParFixed( cPar ) CLASS TRTF
+
+   cPar := STRTRAN( cPar, "{", "\{" )
+   cPar := STRTRAN( cPar, "}", "\}" )
+   FWRITE( Self:nHandle, "\par" + CRLF + "\pard\cf1\f8\b0\i0\keep" + cPar + CRLF )
+   RETURN SELF
+
+METHOD WriteParText( cPar, lConv ) CLASS TRTF
+
+   DEFAULT lConv TO .T.
+   cPar := STRTRAN( cPar, "{", "\{" )
+   cPar := STRTRAN( cPar, "}", "\}" )
+   IF lConv
+      FWRITE( Self:nHandle, HB_OEMTOANSI( cPar ) )
+   ELSE
+      FWRITE( Self:nHandle, cPar )
+   ENDIF
+   RETURN Self
+
+METHOD EndPar() CLASS TRTF
+
+   FWRITE( Self:nHandle, "\par" + CRLF )
+   RETURN Self
+
+METHOD WriteParBold( cPar, lCenter ) CLASS TRTF
+
+   DEFAULT lCenter TO .F.
+   cPar := STRTRAN( cPar, "{", "\{" )
+   cPar := STRTRAN( cPar, "}", "\}" )
+   IF lCenter
+      FWRITE( Self:nHandle, "\par \pard\qc\cf1\f6\fs30\i\b\fi-426\li426 " + ALLTRIM( HB_OEMTOANSI( cPar ) ) + CRLF )
+   ELSE
+      FWRITE( Self:nHandle, "\par \pard\cf1\f6\fs30\i0\b\fi-426\li426 " + ALLTRIM( HB_OEMTOANSI( cPar ) ) + CRLF )
+   ENDIF
+   RETURN Self
+
+METHOD WriteParBoldText( cPar, cText ) CLASS TRTF
+
+   cPar  := STRTRAN( cPar, "{", "\{" )
+   cPar  := STRTRAN( cPar, "}", "\}" )
+   cText := STRTRAN( cText, "{", "\{" )
+   cText := STRTRAN( cText, "}", "\}" )
+
+   FWRITE( Self:nHandle, "\par \pard\cf1\f6\fs20\i\b       " + ALLTRIM( HB_OEMTOANSI( cPar ) ) + " \b\cf1\f6\fs20\i0\b0\li300 " + ALLTRIM( HB_OEMTOANSI( cText ) ) + CRLF )
+   RETURN Self
+
+METHOD WriteTitle( cTitle, cTopic, cOne ,cCat) CLASS TRTF
+
+   LOCAL cTemp
+   LOCAL nPos
+   LOCAL cWrite
+
+   nPos := AT( "()", cTitle )
+
+   IF nPos > 0
+      cTemp := ALLTRIM( HB_OEMTOANSI( STRTRAN( cTitle, "()", "xx" ) ) )
+   ELSE
+      cTemp := HB_OEMTOANSI( ALLTRIM( cTitle ) )
+      cTemp := STRTRAN( cTemp, "@", "x" )
+   ENDIF
+   nPos := AT( "#", cTitle )
+
+   IF nPos > 0
+      cTemp := ALLTRIM( HB_OEMTOANSI( STRTRAN( cTemp, "#", "\#" ) ) )
+   ENDIF
+   cTopic := ALLTRIM( HB_OEMTOANSI( cTopic ) )
+   cTemp := StrTran( cTemp, " ","_")
+
+   Aadd( ::aIdh, {"IDH_" + cTemp,::lastid++})
+   cWrite := CRLF + ;
+             "  {#{\footnote \pard\fs20 {" + "IDH_" + cTemp + " }}}" + CRLF + ;
+             "  {${\footnote \pard\fs20 {" + ALLTRIM( cTopic ) + " }}}" + CRLF + ;
+             "  {K{\footnote \pard\fs20 {" + UPPERLOWER(ALLTRIM( cTopic ))+";" + UPPERLOWER(ALLTRIM( cCat ))+ " }}}" + CRLF + ;
+             "  {A{\footnote{A} " + UPPERLOWER(ALLTRIM( cTopic )) +" }}" + CRLF + ;
+              CRLF
+
+
+
+   /*"{\f6" + CRLF + ;*/
+             /*" ; " + UPPERLOWER(cCat) +" , " +UPPERLOWER(ALLTRIM( strtran(cTopic,"()","" )))+ */
+   aadd(aWww,{cTopic,"IDH_"+cTemp,cCat})
+   nPos := ascan(aResult,{|a| UPPER(a) == UPPER(cCat)})
+   if nPos==0
+      aadd(aResult,cCat)
+   endif
+   FWRITE( Self:nHandle, cWrite )
+
+   FWRITE( Self:nHandle, "\pard\cf1\f6\fs30\i0\b\keepn " + ALLTRIM( HB_OEMTOANSI( cTopic ) ) + CRLF )
+   FWRITE( Self:nHandle, "\par" + CRLF + "\pard\cf1\f6\fs20\b\i0\keepn" + " " + CRLF )
+   FWRITE( Self:nHandle, "\par \pard\cf1\f6\fs30\i0\b\keepn " + ALLTRIM( HB_OEMTOANSI( cOne ) ) + CRLF )
+   RETURN Self
+
+METHOD WriteJumpTitle( cTitle, cTopic ) CLASS TRTF
+
+   LOCAL cTemp
+   LOCAL nPos
+   LOCAL cWrite
+
+   nPos := AT( "()", cTitle )
+
+   IF nPos > 0
+      cTemp := ALLTRIM( HB_OEMTOANSI( STRTRAN( cTitle, "()", "xx" ) ) )
+   ELSE
+      cTemp := HB_OEMTOANSI( ALLTRIM( cTitle ) )
+      cTemp := STRTRAN( cTemp, "@", "x" )
+   ENDIF
+
+   cTopic := ALLTRIM( HB_OEMTOANSI( cTopic ) )
+
+   cWrite :=  CRLF + ;
+             "  #{\footnote \pard\fs20 " + "IDH_" + cTemp + " }" + CRLF + ;
+             "  ${\footnote \pard\fs20 " + ALLTRIM( cTopic ) + " }" + CRLF + ;
+             CRLF
+
+   FWRITE( Self:nHandle, cWrite )
+
+   Self:WriteParBold( cTopic )
+
+   RETURN Self
+
+METHOD EndPage() CLASS TRTF
+
+   FWRITE( Self:nHandle, "\par " + CRLF + "\page" + CRLF )
+   RETURN Self
+
+METHOD CLOSE() CLASS TRTF
+
+   //   FWRITE( Self:nHandle, "\page" + CRLF )
+
+   FWRITE( Self:nHandle, "}" + CRLF )
+
+   FCLOSE( Self:nHandle )
+
+   RETURN Self
+
+METHOD WriteLink( cLink ) CLASS TRTF
+
+   FWRITE( Self:nHandle, "\par \pard\cf1\fs20       {\f6\uldb " + ALLTRIM( HB_OEMTOANSI( cLink ) ) + "}{\v\f6 " + "IDH_" + iif( AT( "()", cLink ) > 0, ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "()", "xx" ) ) ), ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "@", "x" ) ) ) ) + "}" + CRLF )
+
+   RETURN Self
+
+
+METHOD WriteJumpLink( cLink, cName, cText ) CLASS TRTF
+
+   FWRITE( Self:nHandle, "\par \pard\cf1\fs20       {\f6\uldb " + ALLTRIM( HB_OEMTOANSI( cName ) ) + "}{\v\f6 " + "IDH_" + iif( AT( "()", cLink ) > 0, ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "()", "xx" ) ) ), ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "@", "x" ) ) ) ) + "}" + cText + CRLF )
+
+   RETURN Self
+
+METHOD WriteJumpLink1( cLink, cName, cText ) CLASS TRTF
+
+   FWRITE( Self:nHandle, "\par \pard\cf1\fs20       {\f6\ul " + ALLTRIM( HB_OEMTOANSI( cName ) ) + "}{\v\f6 " + "IDH_" + iif( AT( "()", cLink ) > 0, ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "()", "xx" ) ) ), ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "@", "x" ) ) ) ) + "}" + cText + CRLF )
+
+   RETURN Self
+
+METHOD WritekLink( aLink ,lAlink) CLASS TRTF
+   Local cItem:=" "
+   Local nPos:=0
+   Local nSize:=Len(aLink)
+
+   HB_SYMBOL_UNUSED( lAlink )
+
+   if nSize >2
+      For nPos:=1 to nSize
+         if nPos==nSize
+            cItem+= UPPERLOWER(aLink[nPos])
+         else
+            cItem+= UPPERLOWER(aLink[nPos])
+            cItem+=";"
+         endif
+      next
+      cItem:=Alltrim(cItem)
+      FWRITE( Self:nHandle, "\par \pard\cf1\fs20       \{button , ALink("+UPPER(cItem) + ", 2) \}{\f6\uldb Related Topic }"+'{\v\f6 %!ALink(" '+cItem + '", 2) }'+ CRLF )
+   else
+      For nPos:=1 to nSize
+         FWRITE( Self:nHandle, "\par \pard\cf1\fs20       {\f6\uldb "+aLink[nPos] +' }{\v\f6 !KLink(" '+UPPERLOWER(aLink[nPos]) + '", 2) }'+ CRLF )
+      next
+   endif
+   RETURN Self

@@ -8,6 +8,35 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-26 09:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbsetup.h
+     + Added small table (partly from MS KB) about _MSC_VER 
+       values and MS product names, as we know them.
+
+   * common.mak
+   * utils/hbdoc/Makefile
+   * utils/hbdoc/bld_b32.bat
+   * utils/hbdoc/bld_vc.bat
+   * utils/hbdoc/hbdoc.prg
+   * utils/hbdoc/genasc.prg
+   * utils/hbdoc/genchm.prg
+   * utils/hbdoc/genhpc.prg
+   * utils/hbdoc/genhtm.prg
+   * utils/hbdoc/genng.prg
+   * utils/hbdoc/genos2.prg
+   * utils/hbdoc/genpdf1.prg
+   * utils/hbdoc/genrtf.prg
+   * utils/hbdoc/gentrf.prg
+   - utils/hbdoc/rtf.prg
+   - utils/hbdoc/os2.prg
+   - utils/hbdoc/teeasc.prg
+   - utils/hbdoc/ng.prg
+   - utils/hbdoc/html.prg
+   - utils/hbdoc/troff.prg
+     ! Removed non-ASCII drawing chars from comments.
+     % Removed STATIC var from THTML class.
+     % Merged separate support classes to their gen*.prg.
+
 2008-08-26 08:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * utils/hbmake/hbmake.prg
      ! Some liblists synced with xhb / hbmake.

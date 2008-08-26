@@ -87,13 +87,13 @@ STATIC nCurDoc := 1
 
 STATIC aColorTable := { { "aqua", "1B" }, { "black", "10" }, { "fuchia", "1D" }, { "grey", "18" }, { "green", "12" }, { "lime", "1A" }, { "maroon", "16" }, { "navy", "19" }, { "olive", "12" }, { "purple", "15" }, { "red", "1C" }, { "silver", "17" }, { "teal", "13 " }, { "white", "1F" }, { "yellow", "1E" } }
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcessiNg()
 *+
 *+    Called from ( hbdoc.prg    )   2 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcessPdf(lMemory)
 
@@ -733,7 +733,7 @@ fclose(hhh)
 
 RETURN Nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcPdfAlso()
 *+
@@ -741,7 +741,7 @@ RETURN Nil
 *+                ( genng.prg    )   1 - function processing()
 *+                ( genng1.prg   )   1 - function processing()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcPdfAlso( cSeealso )
 
@@ -749,7 +749,7 @@ FUNCTION ProcPdfAlso( cSeealso )
    aAlso := ListAsArray2( cSeealso, "," )
 
 RETURN aAlso
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcStatusPdf()
 *+
@@ -757,7 +757,7 @@ RETURN aAlso
 *+                ( genng.prg    )   1 - function processing()
 *+                ( genng1.prg   )   1 - function processing()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcStatusPdf( nWriteHandle, cBuffer )
 
@@ -777,14 +777,14 @@ FUNCTION ProcStatusPdf( nWriteHandle, cBuffer )
 
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function GenPdfTable()
 *+
 *+    Called from ( genng.prg    )   1 - function ProcPdfDesc()
 *+                ( genng1.prg   )   1 - function ProcPdfDesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 
 FUNCTION GenPdfTable( oPdf, nNumTableItems)
@@ -810,14 +810,14 @@ endif
 
 RETURN Nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcPdfTable()
 *+
 *+    Called from ( genng.prg    )   2 - function ProcPdfDesc()
 *+                ( genng1.prg   )   2 - function ProcPdfDesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 
 FUNCTION ProcPdfTable( cBuffer, nNum )
@@ -889,14 +889,14 @@ FUNCTION ProcPdfTable( cBuffer, nNum )
 
 RETURN Nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcPdfDesc()
 *+
 *+    Called from ( genng.prg    )   6 - function processing()
 *+                ( genng1.prg   )   6 - function processing()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
 
@@ -1189,7 +1189,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
    ENDIF
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function CheckPdfColor()
 *+
@@ -1198,7 +1198,7 @@ RETURN nil
 *+                ( genng.prg    )   1 - function ProcPdfDesc()
 *+                ( genng1.prg   )   1 - function ProcPdfDesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNC CheckPdfColor( cbuffer, ncolorpos )
 
@@ -1224,14 +1224,14 @@ FUNC CheckPdfColor( cbuffer, ncolorpos )
    ENDDO
 RETURN cbuffer
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function MaxElemPdf()
 *+
 *+    Called from ( genng.prg    )   5 - function GenPdfTable()
 *+                ( genng1.prg   )   4 - function GenPdfTable()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNC MaxElemPdf( a )
 
@@ -1250,7 +1250,7 @@ FUNC MaxElemPdf( a )
    nPos := ASCAN( a, { | x | LEN( x ) == max } )
 RETURN max
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FormatPdfBuff()
 *+
@@ -1259,7 +1259,7 @@ RETURN max
 *+                ( genng.prg    )   1 - function ProcPdfDesc()
 *+                ( genng1.prg   )   1 - function ProcPdfDesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FormatPdfBuff( cBuffer, cStyle, oPdf )
 
@@ -1358,13 +1358,13 @@ FUNCTION FormatPdfBuff( cBuffer, cStyle, oPdf )
    //   endif
 RETURN cReturn
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Static Function ReadFromTop()
 *+
 *+    Called from ( genng.prg    )   1 - function processing()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 STATIC FUNCTION ReadFromTop( nh )
 
@@ -1387,13 +1387,13 @@ STATIC FUNCTION ReadFromTop( nh )
    FT_FGOTOP()
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Static Function GetItem()
 *+
 *+    Called from ( genng.prg    )  20 - function processing()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 STATIC FUNCTION GetItem( cItem, nCurdoc )
 

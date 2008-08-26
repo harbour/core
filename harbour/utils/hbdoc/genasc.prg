@@ -73,13 +73,13 @@ MEMVAR LCONTINUOUS
 MEMVAR lAuthor
 STATIC NWRITEHANDLE
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ASCIIFiles()
 *+
 *+    Called from ( hbdoc.prg    )   2 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ASCIIFiles()
 

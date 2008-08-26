@@ -54,7 +54,12 @@
 #include "fileio.ch"
 #include "inkey.ch"
 #include "common.ch"
+
 #include "hbdocdef.ch"
+
+#include "hbclass.ch"
+
+#define CRLF HB_OSNewLine()
 
 #define DELIM   "$"                 // keyword delimiter
 
@@ -82,13 +87,13 @@ STATIC nCurDoc := 1
 
 STATIC aColorTable := { { "aqua", "1B" }, { "black", "10" }, { "fuchia", "1D" }, { "grey", "18" }, { "green", "12" }, { "lime", "1A" }, { "maroon", "16" }, { "navy", "19" }, { "olive", "12" }, { "purple", "15" }, { "red", "1C" }, { "silver", "17" }, { "teal", "13 " }, { "white", "1F" }, { "yellow", "1E" } }
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcessiNg()
 *+
 *+    Called from ( hbdoc.prg    )   2 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcessiNg()
 
@@ -650,7 +655,7 @@ FUNCTION ProcessiNg()
    NEXT
 RETURN Nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcNgiAlso()
 *+
@@ -658,7 +663,7 @@ RETURN Nil
 *+                ( genng.prg    )   1 - function processing()
 *+                ( genng1.prg   )   1 - function processing()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcNgiAlso( cSeealso )
 
@@ -667,13 +672,13 @@ FUNCTION ProcNgiAlso( cSeealso )
 
 RETURN aAlso
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcNgiInput()
 *+
 *+    Called from ( hbdoc.prg    )   1 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcNgiInput()
 
@@ -882,14 +887,14 @@ FUNCTION ProcNgiInput()
    FCLOSE( y )
 RETURN NIL
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function procngialso2()
 *+
 *+    Called from ( genng.prg    )   3 - function procngiinput()
 *+                ( genng1.prg   )   3 - function procngiinput()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION procngialso2( cSeealso )
 
@@ -915,7 +920,7 @@ FUNCTION procngialso2( cSeealso )
    NEXT
 RETURN aAlso
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcStatusng()
 *+
@@ -923,7 +928,7 @@ RETURN aAlso
 *+                ( genng.prg    )   1 - function processing()
 *+                ( genng1.prg   )   1 - function processing()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcStatusng( nWriteHandle, cBuffer )
 
@@ -941,14 +946,14 @@ FUNCTION ProcStatusng( nWriteHandle, cBuffer )
 
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function GenNgTable()
 *+
 *+    Called from ( genng.prg    )   1 - function procngdesc()
 *+                ( genng1.prg   )   1 - function procngdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION GenNgTable( oNgi )
 
@@ -1134,14 +1139,14 @@ FUNCTION GenNgTable( oNgi )
 
 RETURN Nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcNgTable()
 *+
 *+    Called from ( genng.prg    )   2 - function procngdesc()
 *+                ( genng1.prg   )   2 - function procngdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcNgTable( cBuffer, nNum )
 
@@ -1263,14 +1268,14 @@ FUNCTION ProcNgTable( cBuffer, nNum )
 
 RETURN Nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcNGDesc()
 *+
 *+    Called from ( genng.prg    )   6 - function processing()
 *+                ( genng1.prg   )   6 - function processing()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
 
@@ -1550,7 +1555,7 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
    //     endif
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function checkngcolor()
 *+
@@ -1559,7 +1564,7 @@ RETURN nil
 *+                ( genng.prg    )   1 - function procngdesc()
 *+                ( genng1.prg   )   1 - function procngdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION checkngcolor( cbuffer, ncolorpos )
 
@@ -1585,14 +1590,14 @@ FUNCTION checkngcolor( cbuffer, ncolorpos )
    ENDDO
 RETURN cbuffer
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function maxelem()
 *+
 *+    Called from ( genng.prg    )   5 - function genngtable()
 *+                ( genng1.prg   )   4 - function genngtable()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNC maxelem( a )
 
@@ -1611,7 +1616,7 @@ FUNC maxelem( a )
    nPos := ASCAN( a, { | x | LEN( x ) == max } )
 RETURN max
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FormatNgBuff()
 *+
@@ -1620,7 +1625,7 @@ RETURN max
 *+                ( genng.prg    )   1 - function procngdesc()
 *+                ( genng1.prg   )   1 - function procngdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FormatNgBuff( cBuffer, cStyle )
 
@@ -1716,13 +1721,13 @@ FUNCTION FormatNgBuff( cBuffer, cStyle )
    //   endif
 RETURN cReturn
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Static Function ReadFromTop()
 *+
 *+    Called from ( genng.prg    )   1 - function processing()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 STATIC FUNCTION ReadFromTop( nh )
 
@@ -1744,13 +1749,13 @@ STATIC FUNCTION ReadFromTop( nh )
    FT_FGOTOP()
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Static Function GetItem()
 *+
 *+    Called from ( genng.prg    )  20 - function processing()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 STATIC FUNCTION GetItem( cItem, nCurdoc )
 
@@ -1770,3 +1775,76 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
 
    ENDIF
 RETURN lReturn
+
+*+--------------------------------------------------------------------
+*+
+*+    Class TNortonGuide
+*+
+*+--------------------------------------------------------------------
+*+
+CLASS TNortonGuide
+
+   DATA cFile
+   DATA nHandle
+   METHOD New( cFile )
+   METHOD WriteParBox( cPar )
+   METHOD WritePar( cPar, lConv )
+   METHOD WriteLink( clink )
+   METHOD CLOSE()
+   METHOD WriteParBold( cPar )
+   METHOD WriteTitle( cTopic, cTitle )
+
+ENDCLASS
+
+METHOD new( cFile ) CLASS TNortonGuide
+
+   IF VALTYPE( cFile ) != NIL .AND. VALTYPE( cFile ) == "C"
+      Self:cFile   := LOWER( cFile )
+      Self:nHandle := FCREATE( Self:cFile )
+   ENDIF
+
+   RETURN Self
+
+METHOD WritePar( cPar, lconv ) CLASS TNortonGuide
+
+   DEFAULT lConv TO .T.
+   IF lConv
+      FWRITE( Self:nHandle, HB_OEMTOANSI( cPar ) + CRLF )
+   ELSE
+      FWRITE( Self:nHandle, cPar + CRLF )
+   ENDIF
+   RETURN Self
+
+METHOD WriteParBox( cPar ) CLASS TNortonGuide
+
+   FWRITE( Self:nHandle, cPar )
+   RETURN Self
+
+METHOD WriteParBold( cPar ) CLASS TNortonGuide
+
+   Self:WritePar( "" )
+   FWRITE( Self:nHandle, "^b" + HB_OEMTOANSI( cPar ) + "^b^" + CRLF )
+   Self:WritePar( "" )
+   RETURN Self
+
+METHOD WriteTitle( cTopic, cTitle ) CLASS TNortonGuide
+
+   cTopic := HB_OEMTOANSI( cTopic )
+
+   FWRITE( Self:nHandle, "!Short: " + cTopic + CRLF )
+
+   Self:WriteParBold( cTitle )
+
+   RETURN Self
+
+METHOD CLOSE() CLASS TNortonGuide
+
+   FCLOSE( Self:nHandle )
+
+   RETURN Self
+
+METHOD WriteLink( cLink ) CLASS TNortonGuide
+
+   FWRITE( Self:nHandle, cLink )
+
+   RETURN Self

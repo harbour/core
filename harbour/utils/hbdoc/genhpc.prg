@@ -71,13 +71,13 @@ MEMVAR aDocInfo
 MEMVAR aWww
 STATIC NWRITEHANDLE
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcessFiles()
 *+
 *+    Called from ( hbdoc.prg    )   2 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcessFiles()
 
@@ -536,13 +536,13 @@ FUNCTION ProcessFiles()
 
 RETURN NIL
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function Proccalso()
 *+
 *+    Called from ( genhpc.prg   )   1 - function processfiles()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION Proccalso( nWriteHandle, cSeeAlso )
 
@@ -610,14 +610,14 @@ FUNCTION Proccalso( nWriteHandle, cSeeAlso )
    ENDDO
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ProcStatus()
 *+
 *+    Called from ( genasc.prg   )   1 - function asciifiles()
 *+                ( genhpc.prg   )   1 - function processfiles()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ProcStatus( nWriteHandle, cBuffer )
 
@@ -632,13 +632,13 @@ FUNCTION ProcStatus( nWriteHandle, cBuffer )
    ENDIF
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function CheckTop()
 *+
 *+    Called from ( genhpc.prg   )   1 - function processfiles()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION CheckTop( cTop )
 

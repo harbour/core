@@ -1085,12 +1085,6 @@ HBDOC_EXE_OBJS = \
     $(OBJ_DIR)\genrtf$(OBJEXT)   \
     $(OBJ_DIR)\gentrf$(OBJEXT)   \
     $(OBJ_DIR)\genpdf1$(OBJEXT)  \
-    $(OBJ_DIR)\teeasc$(OBJEXT)   \
-    $(OBJ_DIR)\html$(OBJEXT)     \
-    $(OBJ_DIR)\ng$(OBJEXT)       \
-    $(OBJ_DIR)\os2$(OBJEXT)      \
-    $(OBJ_DIR)\rtf$(OBJEXT)      \
-    $(OBJ_DIR)\troff$(OBJEXT)    \
     $(OBJ_DIR)\ft_funcs$(OBJEXT) \
     $(OBJ_DIR)\hbdfrdln$(OBJEXT) \
 
