@@ -6,6 +6,9 @@ ROOT = ../../
 
 LIBNAME=gtalleg
 
+ifneq ($(HB_ARCHITECTURE),pocc)
+ifneq ($(HB_ARCHITECTURE),xcc)
+
 ifeq ($(HB_INC_ALLEGRO),)
 ifeq ($(HB_XBUILD),)
 HB_INC_ALLEGRO = /usr/include
@@ -24,6 +27,12 @@ C_SOURCES=\
 
 include $(TOP)$(ROOT)config/lib.cf
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-26 22:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/gtalleg/Makefile
+     * Excluded for POCC and XCC.
+
+   * contrib/gtalleg/ssf.h
+     ! Setting platform before include Allegro headers.
+       (I'm not sure this is necessary for all platforms, 
+       but it surely is for BCC and MinGW).
+
+   * contrib/gtwvg/gtwvg.h
+     ! __MINGW__ -> __MINGW32__. __MINGW__ is not #defined by MinGW.
+
 2008-08-26 22:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbct/atnum.c
      ! Workaround for PelleC 5.00.1 bug in AMD64 mode.

@@ -65,6 +65,18 @@
 #if defined(__BORLANDC__)
    #define ALLEGRO_NO_ASM
    #define ALLEGRO_BCC32
+#elif defined(_MSC_VER)
+   #define ALLEGRO_MSVC
+#elif defined(__MINGW32__)
+   #define ALLEGRO_MINGW32
+#elif defined(__DMC__)
+   #define ALLEGRO_DMC
+#elif defined(__DJGPP__)
+   #define ALLEGRO_DJGPP
+#elif defined(__WATCOMC__)
+   #define ALLEGRO_WATCOM
+#elif defined(HB_OS_DARWIN)
+   #define ALLEGRO_MACOSX
 #endif
 
 #include <allegro.h>
