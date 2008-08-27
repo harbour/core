@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-27 21:30 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_vcce.bat
+     ! Fixed.
+
+   * contrib/rddads/make_vc.bat
+     ! Undone previous modification. Quotes are needed to support 
+       dirs containing spaces (this is actually the case for the 
+       default install dir of ACE SDK).
+       For very old MSVC compilers not understanding quotes 
+       in -I (and possibly other) switches, pls specify the 
+       external package #include directories directly through:
+       set C_USR=-IC:\mypath\pkg\include
+       and so on. MSVC98 is a very old product and there is 
+       probably no way to make all features of our build systems 
+       100% compatible with it, but with this manual workaround, 
+       it can properly work (until a recommended VC upgrade :).
 
 2008-08-27 17:05 UTC+0100 JF Lefebvre (Mafact) (jfl at mafact dot com)
    * contrib/rddads/make_vc.bat
