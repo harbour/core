@@ -230,8 +230,8 @@
 #define HB_ISOPTSEP( c ) ( strchr( HB_OS_OPT_DELIM_LIST, ( c ) ) != NULL )
 
 /* NOTE:
-   Compiler                           _MSC_VER value
-   --------                           --------------
+   Compiler                                _MSC_VER value
+   --------                                --------------
    C Compiler version 6.0                  600
    C/C++ compiler version 7.0              700
    Visual C++, Windows, version 1.0        800
@@ -241,10 +241,10 @@
    Visual C++, 32-bit, version 4.0         1000
    Visual C++, 32-bit, version 5.0         1100
    Visual C++, 32-bit, version 6.0         1200
-   Visual Studio .NET                      1300
-   Visual Studio 2003                      1310
-   Visual Studio 2005                      1400
-   Visual Studio 2008                      1500
+   Visual Studio .NET, version 7.0         1300
+   Visual Studio .NET 2003, version 7.1    1310
+   Visual Studio 2005, version 8.0         1400
+   Visual Studio 2008, version 9.0         1500
 */
 
 /* ***********************************************************************
