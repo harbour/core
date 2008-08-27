@@ -236,7 +236,7 @@ HB_COMP_PTR hb_comp_new( void )
       pComp->fError           = FALSE;
 
       pComp->iWarnings  = 0;                    /* enable parse warnings */
-      pComp->iGenCOutput= HB_COMPGENC_VERBOSE;  /* C code generation should be verbose (use comments) or not */
+      pComp->iGenCOutput= HB_COMPGENC_COMPACT;  /* C code generation default mode */
       pComp->iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
       pComp->iLanguage  = HB_LANG_C;            /* default Harbour generated output language */
    }
