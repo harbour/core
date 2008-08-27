@@ -158,6 +158,11 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
    LOCAL cExp,cLib
    LOCAL lCreateAndCompile := .F.  // for "-c" param only.
 
+   /*  Initialize hb_FReadLine'()s array of EOLs and OS EOL
+    */
+   s_aEOL := { CHR(13) + CHR(10), CHR(10) }
+   s_cEOL := hb_OSNewLine()
+
    IF Empty( cFile )
       ShowHelp()
       Return .F.
@@ -171,11 +176,6 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
    ENDIF
 
    CLS
-
-   /*  Initialize hb_FReadLine'()s array of EOLs and OS EOL
-    */
-   s_aEOL := { CHR(13) + CHR(10), CHR(10) }
-   s_cEOL := hb_OSNewLine()
 
    FErase( s_cMakeFileName )
 
@@ -206,11 +206,11 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
 
    // What S.O. ?
    //
-   s_lOS2   := ( "OS/2" $ OS() )
-   s_lLinux := ( "LINUX" $ Upper( OS() ) )
-   s_lWin32 := ( "WINDOWS" $ Upper( OS() ) )
-   s_lUnix  := iif( ( "UNIX" $ Upper( OS() ) ) .OR. ( "HP-UX" $ Upper( OS() ) ) , .T., .F. )
-   s_lLinux := ( "LINUX" $ Upper( OS() ) )
+   s_lOS2   := "OS/2" $ Upper( OS() )
+   s_lLinux := "LINUX" $ Upper( OS() )
+   s_lWin32 := "WINDOWS" $ Upper( OS() )
+   s_lUnix  := "UNIX" $ Upper( OS() ) .OR. "HP-UX" $ Upper( OS() )
+   s_lLinux := "LINUX" $ Upper( OS() )
 
    IF PCount() == 0 .or.;
       "?" $ cMakeParams .or. ;
@@ -231,11 +231,11 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
 
    IF Empty( s_cHarbourDir )
       IF s_nlang == 1
-         s_cAlertMsg := "Hbmake necessita do harbour bin no path."
+         s_cAlertMsg := "hbmake necessita do harbour bin no path."
       ELSEIF s_nlang == 3
-         s_cAlertMsg := "Hbmake necessita de lo harbour bin en lo path."
+         s_cAlertMsg := "hbmake necessita de lo harbour bin en lo path."
       ELSE
-         s_cAlertMsg := "Hbmake needs harbour bin in the path."
+         s_cAlertMsg := "hbmake needs harbour bin in the path."
       ENDIF
       alert( s_cAlertMsg )
       RUN( "PATH" )
@@ -435,7 +435,7 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
 
    SET CURSOR ON
    setpos(9,0)
-   Outstd( s_cLinkCommands + s_cEOL )
+   OutErr( s_cLinkCommands + s_cEOL )
    SET CURSOR OFF
    hb_run( s_cLinkCommands )
 
@@ -601,7 +601,7 @@ FUNCTION ParseMakeFile( cFile )
 
                 IF  "$" $ aTemp[ 2 ]
 
-                  IF s_lGcc .AND. aTemp[ 1 ] = "CFLAG1" .OR. s_lGcc .AND. aTemp[ 1 ] = "CFLAG2"
+                  IF ( s_lGcc .AND. ( aTemp[ 1 ] == "CFLAG1" ) ) .OR. ( s_lGcc .AND. ( aTemp[ 1 ] == "CFLAG2" ) )
                       AAdd( s_aMacros, { aTemp[ 1 ], Strtran( ReplaceMacros( aTemp[ 2 ] ), "\", "/" ) } )
 
                       x++
@@ -645,7 +645,7 @@ FUNCTION ParseMakeFile( cFile )
 
                ELSE
 
-                  IF s_lGcc .AND. aTemp[ 1 ] = "CFLAG1" .OR. s_lGcc .AND. aTemp[ 1 ] = "CFLAG2"
+                  IF ( s_lGcc .AND. ( aTemp[ 1 ] == "CFLAG1" ) ) .OR. ( s_lGcc .AND. ( aTemp[ 1 ] == "CFLAG2" ) )
                      AAdd( s_aMacros, { aTemp[ 1 ], Strtran( aTemp[ 2 ], "\", "/" ) } )
 
                       x++
@@ -1237,8 +1237,8 @@ FUNCTION CompileFiles()
                   ENDIF
                   cComm := Strtran( cComm, "$**", cPrg )
                   cComm += IIF( s_lLinux ,  " > "+ (s_cLog)," >>"+ (s_cLog))
-                  Outstd( cComm )
-                  Outstd( s_cEOL )
+                  OutErr( cComm )
+                  OutErr( s_cEOL )
                   setpos(9,0)
                   hb_run( cComm )
                   cErrText := Memoread( (s_cLog) )
@@ -1314,9 +1314,9 @@ FUNCTION CompileFiles()
 
                   cComm := Strtran( cComm, "$**", s_aCFiles[ nFiles ] )
                   cComm += IIF( s_lLinux ,  " > "+ (s_cLog)," >>"+ (s_cLog))
-                  Outstd( " " )
-                  Outstd( cComm )
-                  Outstd( s_cEOL )
+                  OutErr( " " )
+                  OutErr( cComm )
+                  OutErr( s_cEOL )
                   setpos(9,0)
                   hb_run( cComm )
                   cComm := cOld
@@ -1380,7 +1380,7 @@ FUNCTION CompileFiles()
                      @4,16 SAY s_aCFiles[ nFiles ]
                      GaugeUpdate( aGauge, nFile / Len( s_aCFiles ) )   // Changed s_aPrgs to s_aCFiles, Ath 2004-06-08
                      nFile ++
-                     //Outstd( cComm )
+                     //OutErr( cComm )
                      setpos(9,0)
                      if s_lMingw
                      cComm := strtran(cComm ,"\","/")
@@ -1456,7 +1456,7 @@ FUNCTION CompileFiles()
 
                   @4,16 SAY cPrg
                   GaugeUpdate( aGauge, nFile / Len( s_aPrgs ) )
-                  // Outstd( s_cEOL )
+                  // OutErr( s_cEOL )
                   nFile ++
                   setpos(9,0)
                   hb_run( cComm )
@@ -1493,7 +1493,7 @@ FUNCTION CompileFiles()
 
             IF ! Empty( s_aResources[ nFiles ] )
                cComm := Strtran( cComm, "$<", s_aResources[ nFiles ] )
-               outstd( " " )
+               OutErr( " " )
                ? cComm
                setpos(9,0)
                hb_run( cComm )
@@ -1556,24 +1556,24 @@ RETURN NIL
 FUNCTION PrintMacros()
 *---------------------
 
-   Outstd( HbMake_Id()+ " "+HbMake_Copyright()+ s_cEOL )
-   Outstd( "" + s_cEOL )
-   Outstd( "Macros:" + s_cEOL )
-   AEval( s_aMacros, { | xItem | Outstd( "     " + xItem[ 1 ] + " = " + xItem[ 2 ] + s_cEOL ) } )
-   Outstd( "Implicit Rules:" + s_cEOL )
-   AEval( s_aCommands, { | xItem | Outstd( "     " + xItem[ 1 ] + s_cEOL + "        " + xItem[ 2 ] + s_cEOL ) } )
-   Outstd( "" + s_cEOL )
-   Outstd( "Targets:" )
-   Outstd( "    " + s_szProject + ":" + s_cEOL )
-   Outstd( "        " + "Flags :" + s_cEOL )
-   Outstd( "        " + "Dependents :" )
-   AEval( s_aCFiles, { | xItem | Outstd( xitem + " " ) } )
-   AEval( s_aObjs, { | xItem | Outstd( xitem + " " ) } )
-   Outstd( " " + s_cEOL )
-   Outstd( "        commands:" + s_aBuildOrder[ Len( s_aBuildOrder ) ] )
-   Outstd( " " + s_cEOL )
-   Outstd( " " + s_cEOL )
-   Outstd( " " + s_cEOL )
+   OutStd( HbMake_Id()+ " "+HbMake_Copyright()+ s_cEOL )
+   OutStd( "" + s_cEOL )
+   OutStd( "Macros:" + s_cEOL )
+   AEval( s_aMacros, { | xItem | OutStd( "     " + xItem[ 1 ] + " = " + xItem[ 2 ] + s_cEOL ) } )
+   OutStd( "Implicit Rules:" + s_cEOL )
+   AEval( s_aCommands, { | xItem | OutStd( "     " + xItem[ 1 ] + s_cEOL + "        " + xItem[ 2 ] + s_cEOL ) } )
+   OutStd( "" + s_cEOL )
+   OutStd( "Targets:" )
+   OutStd( "    " + s_szProject + ":" + s_cEOL )
+   OutStd( "        " + "Flags :" + s_cEOL )
+   OutStd( "        " + "Dependents :" )
+   AEval( s_aCFiles, { | xItem | OutStd( xitem + " " ) } )
+   AEval( s_aObjs, { | xItem | OutStd( xitem + " " ) } )
+   OutStd( " " + s_cEOL )
+   OutStd( "        commands:" + s_aBuildOrder[ Len( s_aBuildOrder ) ] )
+   OutStd( " " + s_cEOL )
+   OutStd( " " + s_cEOL )
+   OutStd( " " + s_cEOL )
 
 RETURN NIL
 
@@ -1643,12 +1643,12 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
    LOCAL cDefGccLibsw     := "-lhbvm -lhbrtl -lhbpcre -lgtwin -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage -lm"
    LOCAL cGccLibsOs2      := "-lhbvm -lhbrtl -lhbpcre -lgtos2 -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage -lm"
    LOCAL cDefLibGccLibs   := "-lhbvm -lhbrtl -lhbpcre -lgtcrs -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage"
-   LOCAL cDefaultLibsMt    := "lang.lib vmmt.lib rtlmt.lib rddmt.lib macromt.lib ppmt.lib dbfntxmt.lib dbfcdxmt.lib  dbffptmt.lib common.lib gtwin.lib codepage.lib hbpcre.lib hbzlib.lib hsxmt.lib hbsixmt.lib"
+   LOCAL cDefaultLibsMt   := "lang.lib vmmt.lib rtlmt.lib rddmt.lib macromt.lib ppmt.lib dbfntxmt.lib dbfcdxmt.lib  dbffptmt.lib common.lib gtwin.lib codepage.lib hbpcre.lib hbzlib.lib hsxmt.lib hbsixmt.lib"
    LOCAL cDefGccLibsUnixMt := "-lvmmt -lcodepage -ltef -lrtlmt  -lrddmt  -lrtl  -lvmmt  -lmacromt  -lpp  -llang  -lcommon  -lnulsys  -lbmdbfcdx  -ldbfntx  -ldbfcdx  -ldbffpt  -lhbsix  -lhsx  -lusrrdd -lhbpcre -lgtsln -lslang -lm -lrt"
    LOCAL cDefGccLibsMt    := "-lvmmt -lrtlmt -lhbpcre -lgtdos -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage -lm"
-   LOCAL cDefGccLibsMtw    := "-lvmmt -lrtlmt -lhbpcre -lgtwin -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage -lm"
+   LOCAL cDefGccLibsMtw   := "-lvmmt -lrtlmt -lhbpcre -lgtwin -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage -lm"
    LOCAL cGccLibsOs2Mt    := "-lvmmt -lrtlmt -lhbpcre -lgtos2 -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage -lm"
-//   LOCAL cDefLibGccLibsMt := "-lvmmt -lrtlmt -lhbpcre -lgtcrs -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage"
+// LOCAL cDefLibGccLibsMt := "-lvmmt -lrtlmt -lhbpcre -lgtcrs -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage"
    LOCAL cDefLibGccLibsMt := "-lvmmt -lrtlmt -lhbpcre -lgtsln -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage"
    LOCAL cHarbDll         := "harbour.lib"
    LOCAL cHARso           := "-lharbour -lncurses -lgpm -lslang -lpthread -lm"
@@ -1763,9 +1763,9 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
 
          FRename(cFile,cFile+".old")
 
-         IF LEN(oMake:aRes) >0
+         IF LEN(oMake:aRes) > 0
             FOR EACH cTemp IN oMake:aRes
-                cAllRes += cTemp+ " "
+                cAllRes += cTemp + " "
             NEXT
          ENDIF
 
@@ -2199,7 +2199,7 @@ While .t.
 
    READ msg at maxrow()-1,1,maxcol()-1
 
-   IF LastKey()==K_ESC
+   IF LastKey() == K_ESC
       SET CURSOR ON
       SetColor("W/N")
       CLS
@@ -2666,18 +2666,19 @@ Endif // Create and compile
       AEval( aOutc, { | xItem, x | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cext := Substr( cExt, 2 ), IIF( ! s_lGcc, s_aObjsC[ x ] := IIF( ! Empty( cObjDir ), cObjDir, "" ) + cTest + "." + Exten( cExt, 2 ), s_aObjsC[ x ] := IIF( ! Empty( cObjDir ), cObjDir, "" ) + cTest + "." + Exten( cExt, 1 ) ) } )
    ENDIF
 
-   FWrite( s_nMakeFileHandle, "RECURSE=" + IIF( s_lRecursive, " YES ", " NO " ) + s_cEOL )
-   FWrite( s_nMakeFileHandle, " " + s_cEOL )
-   FWrite( s_nMakeFileHandle, "SHELL = " + s_cEOL )
-   FWrite( s_nMakeFileHandle, "COMPRESS = " + IIF( s_lCompress, "YES", "NO" ) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "EXTERNALLIB = " + IIF( s_lExternalLib, "YES", "NO" ) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "XFWH = " + IIF( s_lxFwh, "YES", "NO" ) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "FILESTOADD = " + Str( s_nFilesToAdd, 2 ) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "WARNINGLEVEL = " + Str(s_nWarningLevel, 2) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "USERDEFINE = " + alltrim(s_cUserDefine) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "USERINCLUDE = " + alltrim(s_cUserInclude) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "USERLIBS = " + alltrim(s_cUserLibs) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "EDITOR = " + s_cEditor + s_cEOL )
+   FWrite( s_nMakeFileHandle, ;
+      "RECURSE=" + IIF( s_lRecursive, " YES ", " NO " ) + s_cEOL +;
+      s_cEOL +;
+      "SHELL = " + s_cEOL +;
+      "COMPRESS = " + IIF( s_lCompress, "YES", "NO" ) + s_cEOL +;
+      "EXTERNALLIB = " + IIF( s_lExternalLib, "YES", "NO" ) + s_cEOL +;
+      "XFWH = " + IIF( s_lxFwh, "YES", "NO" ) + s_cEOL +;
+      "FILESTOADD = " + Str( s_nFilesToAdd, 2 ) + s_cEOL +;
+      "WARNINGLEVEL = " + Str(s_nWarningLevel, 2) + s_cEOL +;
+      "USERDEFINE = " + alltrim(s_cUserDefine) + s_cEOL +;
+      "USERINCLUDE = " + alltrim(s_cUserInclude) + s_cEOL +;
+      "USERLIBS = " + alltrim(s_cUserLibs) + s_cEOL +;
+      "EDITOR = " + s_cEditor + s_cEOL )
 
    IF lFwh
       FWrite( s_nMakeFileHandle, "FWH = " + alltrim(cFwhPath) + s_cEOL )
@@ -2714,8 +2715,8 @@ Endif // Create and compile
       FWrite( s_nMakeFileHandle, "APOLLO = " + alltrim(cApolloPath) + s_cEOL )
    ENDIF
 
-   FWrite( s_nMakeFileHandle, "GUI = " + iif(lWhoo .or. lFwh .or. lC4W .or. lMinigui .or. lGtWvt .or. lHwGui .or. lXwt .or. lWhat32 .or. lxHGtk .or. lGtWvw , "YES", "NO" ) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "MT = " + IIF( s_lMt, "YES", "NO" ) + s_cEOL )
+   FWrite( s_nMakeFileHandle, "GUI = " + iif(lWhoo .or. lFwh .or. lC4W .or. lMinigui .or. lGtWvt .or. lHwGui .or. lXwt .or. lWhat32 .or. lxHGtk .or. lGtWvw , "YES", "NO" ) + s_cEOL +;
+      "MT = " + IIF( s_lMt, "YES", "NO" ) + s_cEOL )
 
    FOR x := 1 TO Len( s_aMacros )
 
@@ -2853,9 +2854,10 @@ Endif // Create and compile
    ENDIF
 
    cResName := Lower( alltrim(cResName) )
-   FWrite( s_nMakeFileHandle, "RESFILES = " + cResName + s_cEOL )
-   FWrite( s_nMakeFileHandle, "RESDEPEN = " + StrTran( cResName, ".rc", ".res" ) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "TOPMODULE = " + alltrim(cTopFile) + s_cEOL )
+   FWrite( s_nMakeFileHandle, ;
+      "RESFILES = " + cResName + s_cEOL +;
+      "RESDEPEN = " + StrTran( cResName, ".rc", ".res" ) + s_cEOL +;
+      "TOPMODULE = " + alltrim(cTopFile) + s_cEOL )
 
    IF lRddads
       cDefaultLibs     += " rddads.lib ace32.lib"
@@ -3072,72 +3074,77 @@ Endif // Create and compile
       FWrite( s_nMakeFileHandle, s_cEOL )
    endif
 
-   FWrite( s_nMakeFileHandle, "DEFFILE = " + s_cEOL )
-   FWrite( s_nMakeFileHandle, "HARBOURFLAGS = " + cHarbourFlags + s_cEOL )
-
+   FWrite( s_nMakeFileHandle, ;
+      "DEFFILE = " + s_cEOL +;
+      "HARBOURFLAGS = " + cHarbourFlags + s_cEOL )
 
    IF s_lBcc
 
-      FWrite( s_nMakeFileHandle, "CFLAG1 =  -OS $(SHELL)  $(CFLAGS) -d -c -L$(HB_DIR)\lib"+iif(lFwh,";$(FWH)\lib ","")+iif(!empty(s_cUserInclude)," -I" + alltrim( s_cUserInclude ),"") + " " +s_cEOL )
-      FWrite( s_nMakeFileHandle, "CFLAG2 =  -I$(HB_DIR)\include;$(CC_DIR)\include" + iif( s_lMt, " -DHB_THREAD_SUPPORT " , "" ) + s_cEOL )
+      FWrite( s_nMakeFileHandle, "CFLAG1 =  -OS $(SHELL)  $(CFLAGS) -d -c -L$(HB_DIR)\lib"+iif(lFwh,";$(FWH)\lib ","")+iif(!empty(s_cUserInclude)," -I" + alltrim( s_cUserInclude ),"") + " " +s_cEOL +;
+         "CFLAG2 =  -I$(HB_DIR)\include;$(CC_DIR)\include" + iif( s_lMt, " -DHB_THREAD_SUPPORT " , "" ) + s_cEOL )
 
-      FWrite( s_nMakeFileHandle, "RFLAGS = " + s_cEOL )
-/* added "-x" flag to LFLAGS statment to suppress creation of map file and speed up link. */
-      FWrite( s_nMakeFileHandle, "LFLAGS = -L$(CC_DIR)\lib\obj;$(CC_DIR)\lib;$(HB_DIR)\lib -Gn -M -m -s -Tp"+ iif(s_lasdll,"d","e") + " -x" + IIF( lFWH .or. lMiniGui .or. lWhoo .or. lHwgui .or. lGtWvt .or. lGtWvw ," -aa"," -ap") + IIF( lMinigui, " -L$(MINIGUI)\lib",IIF( lFwh, " -L$(FWH)\lib",IIF( lHwgui, " -L$(HWGUI)\lib","" ))) + s_cEOL )
-      FWrite( s_nMakeFileHandle, "IFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LINKER = ilink32" + s_cEOL )
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLOBJ = " + IIF( ( lWhoo .OR. lWhat32 .OR. lFwh .OR. lMinigui .OR. lHwgui .or. lGtWvt .or. lGtWvw .or. lXwt .or. lxHGtk ), "c0w32.obj", iif(s_lAsDll,"c0d32.obj","c0x32.obj" )) + " $(OBJFILES)" + IIF( s_lExtended, " $(OBJCFILES)", " " ) + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLRES = $(RESDEPEN)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLLIB = $(USERLIBS) $(LIBFILES) import32.lib " + IIF( s_lMt,"cw32mt.lib", "cw32.lib" )+ s_cEOL )
-      FWrite( s_nMakeFileHandle, ".autodepend" + s_cEOL )
+      /* added "-x" flag to LFLAGS statment to suppress creation of map file and speed up link. */
+      FWrite( s_nMakeFileHandle, ;
+         "RFLAGS = " + s_cEOL +;
+         "LFLAGS = -L$(CC_DIR)\lib\obj;$(CC_DIR)\lib;$(HB_DIR)\lib -Gn -M -m -s -Tp"+ iif(s_lasdll,"d","e") + " -x" + IIF( lFWH .or. lMiniGui .or. lWhoo .or. lHwgui .or. lGtWvt .or. lGtWvw ," -aa"," -ap") + IIF( lMinigui, " -L$(MINIGUI)\lib",IIF( lFwh, " -L$(FWH)\lib",IIF( lHwgui, " -L$(HWGUI)\lib","" ))) + s_cEOL +;
+         "IFLAGS = " + s_cEOL +;
+         "LINKER = ilink32" + s_cEOL +;
+         " " + s_cEOL +;
+         "ALLOBJ = " + IIF( ( lWhoo .OR. lWhat32 .OR. lFwh .OR. lMinigui .OR. lHwgui .or. lGtWvt .or. lGtWvw .or. lXwt .or. lxHGtk ), "c0w32.obj", iif(s_lAsDll,"c0d32.obj","c0x32.obj" )) + " $(OBJFILES)" + IIF( s_lExtended, " $(OBJCFILES)", " " ) + s_cEOL +;
+         "ALLRES = $(RESDEPEN)" + s_cEOL +;
+         "ALLLIB = $(USERLIBS) $(LIBFILES) import32.lib " + IIF( s_lMt,"cw32mt.lib", "cw32.lib" )+ s_cEOL +;
+         ".autodepend" + s_cEOL )
 
    ELSEIF s_lMSVcc
 
-      FWrite( s_nMakeFileHandle, "CFLAG1 =  -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(SHELL)  $(CFLAGS)" +IIF( s_lMt, " -DHB_THREAD_SUPPORT " , "" ) + s_cEOL )
-      FWrite( s_nMakeFileHandle, "CFLAG2 =  -c" +" -I" + alltrim( s_cUserInclude ) + " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "RFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LFLAGS = /LIBPATH:$(CC_DIR)\lib /LIBPATH1:$(HB_DIR)\lib /LIBPATH2:$(C4W)\lib"  +IIF(s_lMt, " /Nodefaultlib:LIBC "," /Nodefaultlib:LIBCMT " ) + s_cEOL )
-      FWrite( s_nMakeFileHandle, "IFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LINKER = link" + s_cEOL )
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLOBJ = " + IIF( lC4W, "$(C4W)\initc.obj", "" ) + "$(OBJFILES)" + IIF( s_lExtended, " $(OBJCFILES)", " " ) + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLRES = $(RESDEPEN)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLLIB = $(USERLIBS) $(LIBFILES) kernel32.lib user32.lib gdi32.lib winspool.lib comctl32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mpr.lib vfw32.lib winmm.lib " + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "CFLAG1 =  -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(SHELL)  $(CFLAGS)" +IIF( s_lMt, " -DHB_THREAD_SUPPORT " , "" ) + s_cEOL +;
+         "CFLAG2 =  -c" +" -I" + alltrim( s_cUserInclude ) + " " + s_cEOL +;
+         "RFLAGS = " + s_cEOL +;
+         "LFLAGS = /LIBPATH:$(CC_DIR)\lib /LIBPATH1:$(HB_DIR)\lib /LIBPATH2:$(C4W)\lib"  +IIF(s_lMt, " /Nodefaultlib:LIBC "," /Nodefaultlib:LIBCMT " ) + s_cEOL +;
+         "IFLAGS = " + s_cEOL +;
+         "LINKER = link" + s_cEOL +;
+         " " + s_cEOL +;
+         "ALLOBJ = " + IIF( lC4W, "$(C4W)\initc.obj", "" ) + "$(OBJFILES)" + IIF( s_lExtended, " $(OBJCFILES)", " " ) + s_cEOL +;
+         "ALLRES = $(RESDEPEN)" + s_cEOL +;
+         "ALLLIB = $(USERLIBS) $(LIBFILES) kernel32.lib user32.lib gdi32.lib winspool.lib comctl32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mpr.lib vfw32.lib winmm.lib " + s_cEOL )
 
    ELSEIF s_lPocc
 
-      FWrite( s_nMakeFileHandle, "CFLAG1 = $(SHELL)  /Ze /Go /Ot /Tx86-coff /I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)" +IIF( s_lMt, ' /D"HB_THREAD_SUPPORT" /MT' , "" ) + s_cEOL )
-      FWrite( s_nMakeFileHandle, "CFLAG2 = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "RFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LFLAGS = /LIBPATH:$(CC_DIR)\lib /LIBPATH:$(CC_DIR)\lib\win /LIBPATH:$(HB_DIR)\lib /MACHINE:IX86"+IIF(!s_lGui," /SUBSYSTEM:CONSOLE"," /SUBSYSTEM:WINDOWS") + s_cEOL )
-      FWrite( s_nMakeFileHandle, "IFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LINKER = polink" + s_cEOL )
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLOBJ = " + IIF( lC4W, "$(C4W)\initc.obj", "" ) + "$(OBJFILES)" + IIF( s_lExtended, " $(OBJCFILES)", " " ) + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLRES = $(RESDEPEN)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLLIB = $(USERLIBS) $(LIBFILES) "+IIF(s_lMT,"crtmt.lib","crt.lib") + " kernel32.lib user32.lib gdi32.lib winspool.lib comctl32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mpr.lib winmm.lib wsock32.lib schannel.lib" + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "CFLAG1 = $(SHELL)  /Ze /Go /Ot /Tx86-coff /I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)" +IIF( s_lMt, ' /D"HB_THREAD_SUPPORT" /MT' , "" ) + s_cEOL +;
+         "CFLAG2 = " + s_cEOL +;
+         "RFLAGS = " + s_cEOL +;
+         "LFLAGS = /LIBPATH:$(CC_DIR)\lib /LIBPATH:$(CC_DIR)\lib\win /LIBPATH:$(HB_DIR)\lib /MACHINE:IX86"+IIF(!s_lGui," /SUBSYSTEM:CONSOLE"," /SUBSYSTEM:WINDOWS") + s_cEOL +;
+         "IFLAGS = " + s_cEOL +;
+         "LINKER = polink" + s_cEOL +;
+         " " + s_cEOL +;
+         "ALLOBJ = " + IIF( lC4W, "$(C4W)\initc.obj", "" ) + "$(OBJFILES)" + IIF( s_lExtended, " $(OBJCFILES)", " " ) + s_cEOL +;
+         "ALLRES = $(RESDEPEN)" + s_cEOL +;
+         "ALLLIB = $(USERLIBS) $(LIBFILES) "+IIF(s_lMT,"crtmt.lib","crt.lib") + " kernel32.lib user32.lib gdi32.lib winspool.lib comctl32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mpr.lib winmm.lib wsock32.lib schannel.lib" + s_cEOL )
 
    ELSEIF s_lGcc
 
-      FWrite( s_nMakeFileHandle, "CFLAG1 = $(SHELL) " +IIF( !EMPTY(s_cUserInclude ) ," -I" + Alltrim( s_cUserInclude )  ,"") + IIF( "Unix" $ cOs , " -I/usr/include/harbour ", "" ) + IIF(  "Linux" $ cOS, "-I/usr/include/harbour", " -I$(HB_DIR)/include" ) + " -c -Wall" + IIF( s_lMt, " -DHB_THREAD_SUPPORT " , "" )  + iif(s_lmingw, " -mno-cygwin "," " )+ s_cEOL )
-      FWrite( s_nMakeFileHandle, "CFLAG2 = " + IIF(  "Linux" $ cOS, "-L$(HB_LIB_INSTALL)", " -L$(HB_DIR)/lib  -L$(CC_DIR)/lib" ) +  IIF( "Unix" $ cOs , " -L/usr/lib/harbour ", "" ) + IIF( lHwgui, " -L$(HWGUI)\lib","" ) + s_cEOL )
-      FWrite( s_nMakeFileHandle, "RFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LFLAGS = " + iif(!s_lLinux," ","-Wl,--noinhibit-exec ") + IIF(lUseXhb ,IIF(lUseharbourDll,"","-static ") + iif(lXwt .or. lhwgui ,"-gtcgi " , "-gtcrs "), "$(CFLAG2)") + iif(lXwt,"`pkg-config --libs gtk+-2.0` -lxwt -lxwt_gtk -lxwt","") + iif( lxHGtk, "`pkg-config --libs gtk+-2.0 libglade-2.0` -lxhgtk ","") + iif( lhwgui .and. !s_lMinGW, " `pkg-config --libs gtk+-2.0 libglade-2.0 libgnomeprint-2.2` -hwgui ","")  + iif(lhwgui .and. s_lMinGW," -mwindows " ,"" )+  iif(s_lLinux .and. s_lmt ," -mt "," "  ) +s_cEOL )
-      FWrite( s_nMakeFileHandle, "IFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LINKER = "+ IIF(lusexhb,"hblnk","gcc") + s_cEOL )
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLOBJ = $(OBJFILES) " + IIF( s_lExtended, " $(OBJCFILES)", " " ) + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLRES = $(RESDEPEN) " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLLIB = $(USERLIBS) $(LIBFILES) " +iif(s_lMinGW," -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lmpr -lwsock32 -lws2_32 -lmapi32","") + s_cEOL )
-      FWrite( s_nMakeFileHandle, ".autodepend" + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "CFLAG1 = $(SHELL) " +IIF( !EMPTY(s_cUserInclude ) ," -I" + Alltrim( s_cUserInclude )  ,"") + IIF( "Unix" $ cOs , " -I/usr/include/harbour ", "" ) + IIF(  "Linux" $ cOS, "-I/usr/include/harbour", " -I$(HB_DIR)/include" ) + " -c -Wall" + IIF( s_lMt, " -DHB_THREAD_SUPPORT " , "" )  + iif(s_lmingw, " -mno-cygwin "," " )+ s_cEOL +;
+         "CFLAG2 = " + IIF(  "Linux" $ cOS, "-L$(HB_LIB_INSTALL)", " -L$(HB_DIR)/lib  -L$(CC_DIR)/lib" ) +  IIF( "Unix" $ cOs , " -L/usr/lib/harbour ", "" ) + IIF( lHwgui, " -L$(HWGUI)\lib","" ) + s_cEOL +;
+         "RFLAGS = " + s_cEOL +;
+         "LFLAGS = " + iif(!s_lLinux," ","-Wl,--noinhibit-exec ") + IIF(lUseXhb ,IIF(lUseharbourDll,"","-static ") + iif(lXwt .or. lhwgui ,"-gtcgi " , "-gtcrs "), "$(CFLAG2)") + iif(lXwt,"`pkg-config --libs gtk+-2.0` -lxwt -lxwt_gtk -lxwt","") + iif( lxHGtk, "`pkg-config --libs gtk+-2.0 libglade-2.0` -lxhgtk ","") + iif( lhwgui .and. !s_lMinGW, " `pkg-config --libs gtk+-2.0 libglade-2.0 libgnomeprint-2.2` -hwgui ","")  + iif(lhwgui .and. s_lMinGW," -mwindows " ,"" )+  iif(s_lLinux .and. s_lmt ," -mt "," "  ) +s_cEOL +;
+         "IFLAGS = " + s_cEOL +;
+         "LINKER = "+ IIF(lusexhb,"hblnk","gcc") + s_cEOL +;
+         " " + s_cEOL +;
+         "ALLOBJ = $(OBJFILES) " + IIF( s_lExtended, " $(OBJCFILES)", " " ) + s_cEOL +;
+         "ALLRES = $(RESDEPEN) " + s_cEOL +;
+         "ALLLIB = $(USERLIBS) $(LIBFILES) " +iif(s_lMinGW," -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lmpr -lwsock32 -lws2_32 -lmapi32","") + s_cEOL +;
+         ".autodepend" + s_cEOL )
 
    ENDIF
 
 #IFdef HBM_USE_DEPENDS
 
-   FWrite( s_nMakeFileHandle, " " + s_cEOL )
-   FWrite( s_nMakeFileHandle, "#DEPENDS" + s_cEOL )
+   FWrite( s_nMakeFileHandle, ;
+      " " + s_cEOL +;
+      "#DEPENDS" + s_cEOL )
 
    IF lScanIncludes
       // Clipper/(x)Harbour sources: .prg
@@ -3170,30 +3177,33 @@ Endif // Create and compile
 
 #ENDIF
 
-   FWrite( s_nMakeFileHandle, " " + s_cEOL )
-   FWrite( s_nMakeFileHandle, "#COMMANDS" + s_cEOL )
+   FWrite( s_nMakeFileHandle, ;
+      " " + s_cEOL +;
+      "#COMMANDS" + s_cEOL )
 
    AEval( s_aCommands, { | xItem | FWrite( s_nMakeFileHandle, xitem[ 1 ] + s_cEOL ), FWrite( s_nMakeFileHandle, xitem[ 2 ] + s_cEOL ), FWrite( s_nMakeFileHandle, " " + s_cEOL ) } )
 
    IF s_lBcc .OR. s_lMSVcc .OR. s_lPocc
 
-      FWrite( s_nMakeFileHandle, "#BUILD" + s_cEOL )
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "$(PROJECT): $(CFILES) $(OBJFILES) $(RESDEPEN) $(DEFFILE)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(CC_DIR)\bin\$(LINKER) @&&!  " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(LFLAGS) +" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(ALLOBJ), +" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(PROJECT),, +" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(ALLLIB), +" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(DEFFILE), +" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(ALLRES) " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "!" + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "#BUILD" + s_cEOL +;
+         " " + s_cEOL +;
+         "$(PROJECT): $(CFILES) $(OBJFILES) $(RESDEPEN) $(DEFFILE)" + s_cEOL +;
+         "    $(CC_DIR)\bin\$(LINKER) @&&!  " + s_cEOL +;
+         "    $(LFLAGS) +" + s_cEOL +;
+         "    $(ALLOBJ), +" + s_cEOL +;
+         "    $(PROJECT),, +" + s_cEOL +;
+         "    $(ALLLIB), +" + s_cEOL +;
+         "    $(DEFFILE), +" + s_cEOL +;
+         "    $(ALLRES) " + s_cEOL +;
+         "!" + s_cEOL )
 
    ELSEIF s_lGcc
 
-      FWrite( s_nMakeFileHandle, "#BUILD" + s_cEOL )
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "$(PROJECT): $(CFILES) $(OBJFILES) $(RESDEPEN) $(DEFFILE)" + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "#BUILD" + s_cEOL +;
+         " " + s_cEOL +;
+         "$(PROJECT): $(CFILES) $(OBJFILES) $(RESDEPEN) $(DEFFILE)" + s_cEOL )
 
       IF "Linux" $ cOS
          FWrite( s_nMakeFileHandle, "    $(LINKER) @&&!" + s_cEOL )
@@ -3203,11 +3213,12 @@ Endif // Create and compile
          FWrite( s_nMakeFileHandle, "    $(CC_DIR)\bin\$(LINKER) @&&!" + s_cEOL )
       ENDIF
 
-      FWrite( s_nMakeFileHandle, "    $(PROJECT) " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(ALLOBJ)  " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(LFLAGS)  " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(ALLLIB)  " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "!" + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "    $(PROJECT) " + s_cEOL +;
+         "    $(ALLOBJ)  " + s_cEOL +;
+         "    $(LFLAGS)  " + s_cEOL +;
+         "    $(ALLLIB)  " + s_cEOL +;
+         "!" + s_cEOL )
 
    ENDIF
 
@@ -3304,7 +3315,7 @@ FUNCTION ScanInclude( cFile, lRecursive, cExclExtent, aFiles)
    LOCAL cQuoteA   := ""
    LOCAL cInclude  := ""
    LOCAL lPrg      := .F.
-   Local lC        := .F.
+   LOCAL lC        := .F.
    LOCAL lCh       := .F.
    LOCAL cPath     := ""
    LOCAL cFnam     := ""
@@ -3495,8 +3506,8 @@ FUNCTION CompileUpdatedFiles()
                      cComm := Strtran( cComm, "$**", s_aPrgs[ nFiles ] )
                      cComm += IIF( s_lLinux , " > "+ (s_cLog)," >>"+ (s_cLog))
 
-                     //Outstd( cComm )
-                     //Outstd( s_cEOL )
+                     //OutErr( cComm )
+                     //OutErr( s_cEOL )
                      setpos(9,0)
                      hb_run( cComm )
                      cErrText := Memoread( (s_cLog) )
@@ -3558,10 +3569,10 @@ FUNCTION CompileUpdatedFiles()
                   ENDIF
                   cComm := Strtran( cComm, "$**", aCtocompile[ nFiles ] )
                   cComm += IIF( s_lLinux ,  " > "+ (s_cLog)," >>"+ (s_cLog))
-                  Outstd( " " )
+                  OutErr( " " )
 
-                  Outstd( cComm )
-                  Outstd( s_cEOL )
+                  OutErr( cComm )
+                  OutErr( s_cEOL )
                   setpos(9,0)
                   hb_run( cComm )
                   cComm := cOld
@@ -3618,8 +3629,8 @@ FUNCTION CompileUpdatedFiles()
                      @4,16 SAY s_aCFiles[ nFiles ]
                      GaugeUpdate( aGauge, nFile / Len( s_aCFiles ) )  // changed s_aPrgs to s_aCFiles Ath 2004-06-08
                      nFile ++
-                     //Outstd( cComm )
-                     //Outstd( s_cEOL )
+                     //OutErr( cComm )
+                     //OutErr( s_cEOL )
                      setpos(9,0)
                      hb_run( cComm )
                      cErrText := Memoread( (s_cLog) )
@@ -3735,7 +3746,7 @@ FUNCTION CompileUpdatedFiles()
 
             IF ! Empty( s_aResources[ nFiles ] )
                cComm := Strtran( cComm, "$<", s_aResources[ nFiles ] )
-               outstd( " " )
+               OutErr( " " )
                setpos(9,0)
                hb_run( cComm )
             ENDIF
@@ -4513,63 +4524,67 @@ FUNCTION CreateLibMakeFile( cFile )
 
    ENDIF
 
-   FWrite( s_nMakeFileHandle, "RESFILES =" + s_cEOL )
-   FWrite( s_nMakeFileHandle, "RESDEPEN = $(RESFILES)" + s_cEOL )
-   FWrite( s_nMakeFileHandle, "DEFFILE = " + s_cEOL )
-   FWrite( s_nMakeFileHandle, "HARBOURFLAGS = " + cHarbourFlags + s_cEOL )
-   FWrite( s_nMakeFileHandle, "INSTALLLIB = " + IIF( lInstallLib, "YES","NO" ) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "USERDEFINE = " + alltrim(s_cUserDefine) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "USERINCLUDE = " + alltrim(s_cUserInclude) + s_cEOL )
-   FWrite( s_nMakeFileHandle, "EDITOR = " + s_cEditor + s_cEOL )
+   FWrite( s_nMakeFileHandle, ;
+      "RESFILES =" + s_cEOL +;
+      "RESDEPEN = $(RESFILES)" + s_cEOL +;
+      "DEFFILE = " + s_cEOL +;
+      "HARBOURFLAGS = " + cHarbourFlags + s_cEOL +;
+      "INSTALLLIB = " + IIF( lInstallLib, "YES","NO" ) + s_cEOL +;
+      "USERDEFINE = " + alltrim(s_cUserDefine) + s_cEOL +;
+      "USERINCLUDE = " + alltrim(s_cUserInclude) + s_cEOL +;
+      "EDITOR = " + s_cEditor + s_cEOL )
 
    IF s_lBcc
 
-      FWrite( s_nMakeFileHandle, "CFLAG1 =  -OS $(SHELL)  $(CFLAGS) -d -L$(HB_DIR)\lib;$(FWH)\lib -c" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "CFLAG2 =  -I$(HB_DIR)\include -I$(CC_DIR)\include -I" + Alltrim( s_cUserInclude ) + s_cEOL )
-      FWrite( s_nMakeFileHandle, "RFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LFLAGS = /P32 /0" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "IFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LINKER = tlib $(LFLAGS) $(PROJECT)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLOBJ =  $(OBJFILES) $(OBJCFILES)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLRES = $(RESDEPEN)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLLIB = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, ".autodepend" + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "CFLAG1 =  -OS $(SHELL)  $(CFLAGS) -d -L$(HB_DIR)\lib;$(FWH)\lib -c" + s_cEOL +;
+         "CFLAG2 =  -I$(HB_DIR)\include -I$(CC_DIR)\include -I" + Alltrim( s_cUserInclude ) + s_cEOL +;
+         "RFLAGS = " + s_cEOL +;
+         "LFLAGS = /P32 /0" + s_cEOL +;
+         "IFLAGS = " + s_cEOL +;
+         "LINKER = tlib $(LFLAGS) $(PROJECT)" + s_cEOL +;
+         " " + s_cEOL +;
+         "ALLOBJ =  $(OBJFILES) $(OBJCFILES)" + s_cEOL +;
+         "ALLRES = $(RESDEPEN)" + s_cEOL +;
+         "ALLLIB = " + s_cEOL +;
+         ".autodepend" + s_cEOL )
 
    ELSEIF s_lMSVcc
 
-      FWrite( s_nMakeFileHandle, "CFLAG1 =  -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(SHELL) $(CFLAGS)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "CFLAG2 =  -c -I" + Alltrim( s_cUserInclude ) + s_cEOL )
-      FWrite( s_nMakeFileHandle, "RFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "IFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LINKER = lib $(PROJECT)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLOBJ = $(OBJFILES) $(OBJCFILES) " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLRES = $(RESDEPEN)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLLIB = " + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "CFLAG1 =  -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(SHELL) $(CFLAGS)" + s_cEOL +;
+         "CFLAG2 =  -c -I" + Alltrim( s_cUserInclude ) + s_cEOL +;
+         "RFLAGS = " + s_cEOL +;
+         "LFLAGS = " + s_cEOL +;
+         "IFLAGS = " + s_cEOL +;
+         "LINKER = lib $(PROJECT)" + s_cEOL +;
+         " " + s_cEOL +;
+         "ALLOBJ = $(OBJFILES) $(OBJCFILES) " + s_cEOL +;
+         "ALLRES = $(RESDEPEN)" + s_cEOL +;
+         "ALLLIB = " + s_cEOL )
 
    ELSEIF s_lPocc
 
-      FWrite( s_nMakeFileHandle, "CFLAG1 = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "CFLAG2 = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "RFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "IFLAGS = " + s_cEOL )
-//      FWrite( s_nMakeFileHandle, "LINKER = polib $(PROJECT)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LINKER = polib " + s_cEOL )
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLOBJ = $(OBJFILES) $(OBJCFILES) " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLRES = $(RESDEPEN)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLLIB = " + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "CFLAG1 = " + s_cEOL +;
+         "CFLAG2 = " + s_cEOL +;
+         "RFLAGS = " + s_cEOL +;
+         "LFLAGS = " + s_cEOL +;
+         "IFLAGS = " + s_cEOL +;
+         "LINKER = polib " + s_cEOL +;  // was LINKER = polib $(PROJECT)
+         " " + s_cEOL +;
+         "ALLOBJ = $(OBJFILES) $(OBJCFILES) " + s_cEOL +;
+         "ALLRES = $(RESDEPEN)" + s_cEOL +;
+         "ALLLIB = " + s_cEOL )
 
    ELSEIF s_lGcc
 
-      FWrite( s_nMakeFileHandle, "CFLAG1 = " + IIF( s_lLinux , "-I/usr/include/harbour", " -I$(HB_DIR)/include " ) + " $(SHELL)  -c -Wall" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "CFLAG2 = " + IIF( s_lLinux , "-L /usr/lib/harbour", " -L $(HB_DIR)/lib" ) + s_cEOL )
-      FWrite( s_nMakeFileHandle, "RFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "LFLAGS = " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "IFLAGS = " + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "CFLAG1 = " + IIF( s_lLinux , "-I/usr/include/harbour", " -I$(HB_DIR)/include " ) + " $(SHELL)  -c -Wall" + s_cEOL +;
+         "CFLAG2 = " + IIF( s_lLinux , "-L /usr/lib/harbour", " -L $(HB_DIR)/lib" ) + s_cEOL +;
+         "RFLAGS = " + s_cEOL +;
+         "LFLAGS = " + s_cEOL +;
+         "IFLAGS = " + s_cEOL )
 
       IF "linux" $ Lower( Getenv( "HB_ARCHITECTURE" ) )  .OR. cOS == "Linux" .OR. s_lLinux
          FWrite( s_nMakeFileHandle, "LINKER = ar -M " + s_cEOL )
@@ -4577,42 +4592,47 @@ FUNCTION CreateLibMakeFile( cFile )
          FWrite( s_nMakeFileHandle, "LINKER = ar -M " + s_cEOL )
       ENDIF
 
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLOBJ = $(OBJFILES) $(OBJCFILES) " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLRES = $(RESDEPEN) " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "ALLLIB = $(LIBFILES) " + s_cEOL )
-      FWrite( s_nMakeFileHandle, ".autodepend" + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         " " + s_cEOL +;
+         "ALLOBJ = $(OBJFILES) $(OBJCFILES) " + s_cEOL +;
+         "ALLRES = $(RESDEPEN) " + s_cEOL +;
+         "ALLLIB = $(LIBFILES) " + s_cEOL +;
+         ".autodepend" + s_cEOL )
 
    ENDIF
 
-   FWrite( s_nMakeFileHandle, " " + s_cEOL )
-   FWrite( s_nMakeFileHandle, "#COMMANDS" + s_cEOL )
+   FWrite( s_nMakeFileHandle, ;
+      " " + s_cEOL +;
+      "#COMMANDS" + s_cEOL )
    AEval( s_aCommands, { | xItem | FWrite( s_nMakeFileHandle, xitem[ 1 ] + s_cEOL ), FWrite( s_nMakeFileHandle, xitem[ 2 ] + s_cEOL ), FWrite( s_nMakeFileHandle, " " + s_cEOL ) } )
 
    IF s_lBcc
 
-      FWrite( s_nMakeFileHandle, "#BUILD" + s_cEOL )
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "$(PROJECT): $(CFILES) $(OBJFILES)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(CC_DIR)\bin\$(LINKER) @&&!" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(ALLOBJ)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "!" + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "#BUILD" + s_cEOL +;
+         " " + s_cEOL +;
+         "$(PROJECT): $(CFILES) $(OBJFILES)" + s_cEOL +;
+         "    $(CC_DIR)\bin\$(LINKER) @&&!" + s_cEOL +;
+         "    $(ALLOBJ)" + s_cEOL +;
+         "!" + s_cEOL )
 
    ELSEIF s_lMSVcc .OR. s_lPocc
 
-      FWrite( s_nMakeFileHandle, "#BUILD" + s_cEOL )
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "$(PROJECT): $(CFILES) $(OBJFILES)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(CC_DIR)\bin\$(LINKER) @&&!" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(PROJECT)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(ALLOBJ)" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "!" + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "#BUILD" + s_cEOL +;
+         " " + s_cEOL +;
+         "$(PROJECT): $(CFILES) $(OBJFILES)" + s_cEOL +;
+         "    $(CC_DIR)\bin\$(LINKER) @&&!" + s_cEOL +;
+         "    $(PROJECT)" + s_cEOL +;
+         "    $(ALLOBJ)" + s_cEOL +;
+         "!" + s_cEOL )
 
    ELSEIF s_lGcc
 
-      FWrite( s_nMakeFileHandle, "#BUILD" + s_cEOL )
-      FWrite( s_nMakeFileHandle, " " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "$(PROJECT): $(CFILES) $(OBJFILES) " + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "#BUILD" + s_cEOL +;
+         " " + s_cEOL +;
+         "$(PROJECT): $(CFILES) $(OBJFILES) " + s_cEOL )
 
       IF  "linux" $ Lower( Getenv( "HB_ARCHITECTURE" ) )  .OR. cOS == "Linux"
          FWrite( s_nMakeFileHandle, "    $(LINKER) @&&!" + s_cEOL )
@@ -4620,9 +4640,10 @@ FUNCTION CreateLibMakeFile( cFile )
          FWrite( s_nMakeFileHandle, "    $(CC_DIR)\bin\$(LINKER) @&&!" + s_cEOL )
       ENDIF
 
-      FWrite( s_nMakeFileHandle, "    $(PROJECT) " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "    $(ALLOBJ)  " + s_cEOL )
-      FWrite( s_nMakeFileHandle, "!" + s_cEOL )
+      FWrite( s_nMakeFileHandle, ;
+         "    $(PROJECT) " + s_cEOL +;
+         "    $(ALLOBJ)  " + s_cEOL +;
+         "!" + s_cEOL )
 
    ENDIF
 
@@ -4773,8 +4794,8 @@ FUNCTION SetBuildLib( nFHandle )
    NEXT
 
    IF s_lGcc
-      FWrite( s_nMakeFileHandle, "SAVE" + s_cEOL )
-      FWrite( s_nMakeFileHandle, "END " + s_cEOL )
+      FWrite( s_nMakeFileHandle, "SAVE" + s_cEOL +;
+         "END " + s_cEOL )
    ENDIF
 
    FClose( s_nMakeFileHandle )
@@ -4793,13 +4814,6 @@ FUNCTION FindCfile( citem, aSrcc )
  nReturnPos := AScan( aSrcc, { | x | Lower( x[ 1 ] ) == cItem } )
 
 RETURN nReturnPos
-
-/*
-#IFNDEF __HARBOUR__
-FUNCTION s_cEOL
-   RETURN Chr( 13 ) + Chr( 10 )
-#ENDIF
-*/
 
 *----------------------------
 FUNCTION CheckIFfile( nFHandle, cFile )
@@ -4831,7 +4845,7 @@ FUNCTION Checkstdout( cText )
 *----------------------------
 
    cText := Strtran( cText, "!stdout", "" )
-   Outstd( cText )
+   OutStd( cText )
 
 RETURN NIL
 
@@ -4940,11 +4954,11 @@ LOCAL nCfg
          RETURN NIL
       endif
 
-      FWrite( nCfg, "CC=BCC32" + s_cEOL )
-//    FWrite( nCfg, "CFLAGS= -c " + ReplaceMacros( "-I$(HB_DIR)\include -OS $(CFLAGS) -d -L$(HB_DIR)\lib" ) + s_cEOL )
-      FWrite( nCfg, "CFLAGS= -c -DHB_DYNLIB " + ReplaceMacros( "-I$(HB_DIR)\include $(CFLAGS) -d -L$(HB_DIR)\lib" ) + s_cEOL )
-      FWrite( nCfg, "VERBOSE=YES" + s_cEOL )
-      FWrite( nCfg, "DELTMP=YES" + s_cEOL )
+      FWrite( nCfg, ;
+         "CC=BCC32" + s_cEOL +;
+         "CFLAGS= -c -DHB_DYNLIB " + ReplaceMacros( "-I$(HB_DIR)\include $(CFLAGS) -d -L$(HB_DIR)\lib" ) + s_cEOL +;  // Added -DHB_DYNLIB flag
+         "VERBOSE=YES" + s_cEOL +;
+         "DELTMP=YES" + s_cEOL )
       FClose( nCfg )
    ENDIF
 
@@ -4972,10 +4986,11 @@ FUNCTION BuildMscCfgFile()
          RETURN NIL
       endif
 
-      FWrite( nCfg, "CC=cl" + s_cEOL )
-      FWrite( nCfg, "CFLAGS= -c -DHB_DYNLIB" + ReplaceMacros( "-I$(HB_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)" ) + s_cEOL )
-      FWrite( nCfg, "VERBOSE=YES" + s_cEOL )
-      FWrite( nCfg, "DELTMP=YES" + s_cEOL )
+      FWrite( nCfg, ;
+         "CC=cl" + s_cEOL +;
+         "CFLAGS= -c -DHB_DYNLIB" + ReplaceMacros( "-I$(HB_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)" ) + s_cEOL +;
+         "VERBOSE=YES" + s_cEOL +;
+         "DELTMP=YES" + s_cEOL )
       FClose( nCfg )
    ENDIF
 
@@ -5004,10 +5019,11 @@ FUNCTION BuildPccCfgFile()
          RETURN NIL
       endif
 
-      FWrite( nCfg, "CC=POCC" + s_cEOL )
-      FWrite( nCfg, "CFLAGS= /Ze /Go /Ot /Tx86-coff /DHB_DYNLIB " + ReplaceMacros( "-I$(HB_DIR)\include $(C_USR) $(CFLAGS)" )  + s_cEOL )
-      FWrite( nCfg, "VERBOSE=YES" + s_cEOL )
-      FWrite( nCfg, "DELTMP=YES" + s_cEOL )
+      FWrite( nCfg, ;
+         "CC=POCC" + s_cEOL +;
+         "CFLAGS= /Ze /Go /Ot /Tx86-coff /DHB_DYNLIB " + ReplaceMacros( "-I$(HB_DIR)\include $(C_USR) $(CFLAGS)" )  + s_cEOL +;
+         "VERBOSE=YES" + s_cEOL +;
+         "DELTMP=YES" + s_cEOL )
       FClose( nCfg )
 
    ENDIF
@@ -5044,10 +5060,11 @@ FUNCTION BuildGccCfgFile()
          RETURN NIL
       endif
 
-      FWrite( nCfg, "CC=gcc" + s_cEOL )
-      FWrite( nCfg, "CFLAGS= -c -DHB_DYNLIB " + ReplaceMacros( "-I" + s_cHarbourDir + "/include $(C_USR)  -L" + s_cHarbourDir + "/lib" )  + iif(s_lmingw ," -mno-cygwin ","" )+ s_cEOL )
-      FWrite( nCfg, "VERBOSE=YES" + s_cEOL )
-      FWrite( nCfg, "DELTMP=YES" + s_cEOL )
+      FWrite( nCfg, ;
+         "CC=gcc" + s_cEOL +;
+         "CFLAGS= -c -DHB_DYNLIB " + ReplaceMacros( "-I" + s_cHarbourDir + "/include $(C_USR)  -L" + s_cHarbourDir + "/lib" )  + iif(s_lmingw ," -mno-cygwin ","" )+ s_cEOL +;
+         "VERBOSE=YES" + s_cEOL +;
+         "DELTMP=YES" + s_cEOL )
       FClose( nCfg )
    ENDIF
 
@@ -5075,10 +5092,11 @@ FUNCTION BuildGccCfgFileL()
          RETURN NIL
       endif
 
-      FWrite( nCfg, "CC=gcc" + s_cEOL )
-      FWrite( nCfg, "CFLAGS= -c -I/usr/include/harbour" + s_cEOL )
-      FWrite( nCfg, "VERBOSE=YES" + s_cEOL )
-      FWrite( nCfg, "DELTMP=YES" + s_cEOL )
+      FWrite( nCfg, ;
+         "CC=gcc" + s_cEOL +;
+         "CFLAGS= -c -I/usr/include/harbour" + s_cEOL +;
+         "VERBOSE=YES" + s_cEOL +;
+         "DELTMP=YES" + s_cEOL )
       FClose( nCfg )
    ENDIF
 
@@ -5454,15 +5472,15 @@ FUNCTION WriteMakeFileHeader()
 *-----------------------------
 /*
   TODO:
-  FWrite( s_nMakeFileHandle, "#" + s_cEOL )
-  FWrite( s_nMakeFileHandle, "# "+HbMake_Id() + s_cEOL )
-  FWrite( s_nMakeFileHandle, "# "+HbMake_copyright() + s_cEOL )
-  FWrite( s_nMakeFileHandle, "# "+Version() + s_cEOL )
-  FWrite( s_nMakeFileHandle, "# "+HB_Compiler() + s_cEOL )
-  FWrite( s_nMakeFileHandle, "# "+OS() + s_cEOL )
-  FWrite( s_nMakeFileHandle, "# Makefile created at: " + dtoc( date() ) + " - " + time() + s_cEOL )
-  FWrite( s_nMakeFileHandle, "#" + s_cEOL )
-  FWrite( s_nMakeFileHandle, s_cEOL )
+  FWrite( s_nMakeFileHandle, ;
+     "#" + s_cEOL +;
+     "# "+HbMake_Id() + s_cEOL +;
+     "# "+HbMake_copyright() + s_cEOL +;
+     "# "+Version() + s_cEOL +;
+     "# "+HB_Compiler() + s_cEOL +;
+     "# "+OS() + s_cEOL +;
+     "# Makefile created at: " + dtoc( date() ) + " - " + time() + s_cEOL +;
+     "#" + s_cEOL + s_cEOL )
 */
 
 IF s_lMSVcc
@@ -5472,19 +5490,19 @@ ELSEIF s_lPocc
 ELSEIF s_lGcc
    FWrite( s_nMakeFileHandle, "#GCC" + s_cEOL )
 ELSE
-   FWrite( s_nMakeFileHandle, "#BCC" + s_cEOL )
-   FWrite( s_nMakeFileHandle, "VERSION=BCB.01" + s_cEOL )
+   FWrite( s_nMakeFileHandle, ;
+      "#BCC" + s_cEOL + ;
+      "VERSION=BCB.01" + s_cEOL )
 ENDIF
 
 
-   FWrite( s_nMakeFileHandle, "!ifndef CC_DIR" + s_cEOL )
-   FWrite( s_nMakeFileHandle, "CC_DIR = $(MAKE_DIR)" + s_cEOL )
-   FWrite( s_nMakeFileHandle, "!endif" + s_cEOL )
-   FWrite( s_nMakeFileHandle, s_cEOL )
-   FWrite( s_nMakeFileHandle, "!ifndef HB_DIR" + s_cEOL )
-   FWrite( s_nMakeFileHandle, "HB_DIR = $(HARBOUR_DIR)" + s_cEOL )
-   FWrite( s_nMakeFileHandle, "!endif" + s_cEOL )
-   FWrite( s_nMakeFileHandle, " " + s_cEOL )
+   FWrite( s_nMakeFileHandle, ;
+      "!ifndef CC_DIR" + s_cEOL +;
+      "CC_DIR = $(MAKE_DIR)" + s_cEOL +;
+      "!endif" + s_cEOL + s_cEOL +;
+      "!ifndef HB_DIR" + s_cEOL +;
+      "HB_DIR = $(HARBOUR_DIR)" + s_cEOL +;
+      "!endif" + s_cEOL + s_cEOL )
 // FWrite( s_nMakeFileHandle, "RECURSE=" + IIF( s_lRecursive, " YES ", " NO " ) + s_cEOL )
 // FWrite( s_nMakeFileHandle, " " + s_cEOL )
 
@@ -5796,8 +5814,8 @@ RETURN NIL
 *----------------------------------
 FUNCTION OsSpec(GetList,nPos,cSpec)
 *----------------------------------
-   local oGet := GetList[nPos]
-   local oControl
+   LOCAL oGet := GetList[nPos]
+   LOCAL oControl
    oControl := oGet:Control
    IF oControl != NIL
       cSpec := oControl:GetData( oControl:Value )
@@ -5815,8 +5833,8 @@ RETURN ( ("Win32" $ cOS) .or. ("Linux" $ cOS) )
 FUNCTION SetThisLibs(aTempLibs)
 *------------------------------
 
-Local c := ""
-Local n
+LOCAL c := ""
+LOCAL n
 
 for Each n In aTempLibs
      c += "-l"
@@ -5829,7 +5847,7 @@ RETURN c
 *----------------
 FUNCTION AsDll(x)
 *----------------
-Local y := x
+LOCAL y := x
  x := !y
 RETURN .T.
 
@@ -5848,76 +5866,79 @@ FUNCTION ShowHelp()
 /*
    CLS
 
-   OutStd( s_aLangMessages[ 1 ] + s_cEOL )
-   OutStd( HbMake_Copyright()  + s_cEOL )
-   OutStd( s_cEOL )
-   OutStd( s_aLangMessages[ 2 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 3 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 4 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 5 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 6 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 7 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 8 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 1 ] + s_cEOL )
+   OutErr( HbMake_Copyright()  + s_cEOL )
+   OutErr( s_cEOL )
+   OutErr( s_aLangMessages[ 2 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 3 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 4 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 5 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 6 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 7 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 8 ] + s_cEOL )
 
    IF s_lOS2
-      OutStd( s_aLangMessages[ 9 ] + s_cEOL )
-      OutStd( s_aLangMessages[ 10 ] + s_cEOL )
-      OutStd( s_aLangMessages[ 13 ] + s_cEOL )
+      OutErr( s_aLangMessages[ 9 ] + s_cEOL )
+      OutErr( s_aLangMessages[ 10 ] + s_cEOL )
+      OutErr( s_aLangMessages[ 13 ] + s_cEOL )
 
    ELSEIF  s_lLinux
-      OutStd( s_aLangMessages[ 9 ] + s_cEOL )
-      OutStd( s_aLangMessages[ 12 ] + s_cEOL )
-      OutStd( s_aLangMessages[ 14 ] + s_cEOL )
+      OutErr( s_aLangMessages[ 9 ] + s_cEOL )
+      OutErr( s_aLangMessages[ 12 ] + s_cEOL )
+      OutErr( s_aLangMessages[ 14 ] + s_cEOL )
 
    ELSE
-      OutStd( s_aLangMessages[ 11 ] + s_cEOL )
-      OutStd( s_aLangMessages[ 12 ] + s_cEOL )
-      OutStd( s_aLangMessages[ 13 ] + s_cEOL )
+      OutErr( s_aLangMessages[ 11 ] + s_cEOL )
+      OutErr( s_aLangMessages[ 12 ] + s_cEOL )
+      OutErr( s_aLangMessages[ 13 ] + s_cEOL )
    ENDIF
 
-   OutStd( s_aLangMessages[ 15 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 62 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 63 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 16 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 17 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 18 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 19 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 20 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 21 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 22 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 23 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 15 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 62 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 63 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 16 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 17 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 18 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 19 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 20 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 21 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 22 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 23 ] + s_cEOL )
 
    setpos(maxrow()-1,0)
    WAIT
    setpos(maxrow(),0)
 
-   OutStd( s_aLangMessages[ 24 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 25 ] + s_cEOL )
-   OutStd( s_aLangMessages[ 26 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 24 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 25 ] + s_cEOL )
+   OutErr( s_aLangMessages[ 26 ] + s_cEOL )
 */
-      OutStd( HbMake_ID() + HB_OSNewLine() +;
-              HbMake_Copyright() + HB_OSNewLine() +;
-              HB_OSNewLine() +;
-              "Syntax:  hbmake <makefile> [options]" + HB_OSNewLine() +;
-              HB_OSNewLine() +;
-              "Options:  -b   Use BCC as the C compiler. This options is default under Win32" + HB_OSNewLine() +;
-              "          -g   Use GCC as the C compiler. This options is default under OS/2" + HB_OSNewLine() +;
-              "          -gl  Use GCC as the C compiler on Linux" + HB_OSNewLine() +;
-              "          -v   Use MSVC as the C compiler" + HB_OSNewLine() +;
-              "          -D   Define a macro. Multiple macros can be used in a single line" + HB_OSNewLine() +;
-              "               Ex: -DOBJ=c.obj;d.obj" + HB_OSNewLine() +;
-              "                   Multiple -D is also supported" + HB_OSNewLine() +;
-              "          -p   Print all commands and defines" + HB_OSNewLine() +;
-              "          -f   Force all files to be rebuilt" + HB_OSNewLine() +;
-              "          -e   Open the editor mode" + HB_OSNewLine() +;
-              "          -ec  create/edit and compile (only for a unique prg)" + HB_OSNewLine() +;
-              "          -ex  Open the editor mode in extended mode" + HB_OSNewLine() +;
-              "          -el  Open the editor mode for creating libraries" + HB_OSNewLine() +;
-              "          -elx Open the editor mode for creating libraries in extended mode" + HB_OSNewLine() +;
-              "          -i   Ignore errors returned by commands" + HB_OSNewLine() +;
-              "          -r   Recurse directories for source code" + HB_OSNewLine() +;
-              HB_OSNewLine() +;
-              "Note:  Linked with " + Version() + HB_OSNewLine() )
+
+   /*  Changed from OutStd to OutErr so it Help Message can't be redirected
+    */
+   OutErr( HbMake_ID() + s_cEOL + ;
+           HbMake_Copyright() + s_cEOL +;
+           s_cEOL +;
+           "Syntax:  hbmake <makefile> [options]" + s_cEOL +;
+           s_cEOL +;
+           "Options:  -b   Use BCC as the C compiler. This options is default under Win32" + s_cEOL +;
+           "          -g   Use GCC as the C compiler. This options is default under OS/2" + s_cEOL +;
+           "          -gl  Use GCC as the C compiler on Linux" + s_cEOL +;
+           "          -v   Use MSVC as the C compiler" + s_cEOL +;
+           "          -D   Define a macro. Multiple macros can be used in a single line" + s_cEOL +;
+           "               Ex: -DOBJ=c.obj;d.obj" + s_cEOL +;
+           "                   Multiple -D is also supported" + s_cEOL +;
+           "          -p   Print all commands and defines" + s_cEOL +;
+           "          -f   Force all files to be rebuilt" + s_cEOL +;
+           "          -e   Open the editor mode" + s_cEOL +;
+           "          -ec  create/edit and compile (only for a unique prg)" + s_cEOL +;
+           "          -ex  Open the editor mode in extended mode" + s_cEOL +;
+           "          -el  Open the editor mode for creating libraries" + s_cEOL +;
+           "          -elx Open the editor mode for creating libraries in extended mode" + s_cEOL +;
+           "          -i   Ignore errors returned by commands" + s_cEOL +;
+           "          -r   Recurse directories for source code" + s_cEOL +;
+           s_cEOL +;
+          "Note:  Linked with " + Version() + s_cEOL )
 
 RETURN NIL
 
@@ -5934,23 +5955,16 @@ RETURN "Copyright (c) 2000-2008, http://www.harbour-project.org/"
 *---------------------
 FUNCTION ShowCredits()
 *---------------------
-local i,aCredits := {}
 
- CLS
+   CLS
 
- aadd( aCredits,"Credits:" )
- aadd( aCredits," " )
- aadd( aCredits,"Luiz Rafael Culik <culikr@uol.com.br>" )
-
- qqout( HbMake_Id() )
- qout( HbMake_copyright() )
- qout( " ")
-
- for i := 1 to Len( aCredits )
-     qout( aCredits[i] )
- next
-
- qout(" ")
+   OUTERR( HbMake_ID() + s_cEOL +;
+           HbMake_copyright() + s_cEOL +;
+           s_cEOL +;
+           "Credits:" + s_cEOL +;
+           s_cEOL +;
+           "Luiz Rafael Culik <culikr@uol.com.br>" + s_cEOL +;
+           s_cEOL )
 
 RETURN NIL
 
@@ -5962,75 +5976,75 @@ CLASS THBMAKE
 
    EXPORTED:
 
-   DATA  aDefines       Init  {}
-   DATA  aBuildOrder    Init  {}
-   DATA  aCommands      Init  {}
-   DATA  aMacros        Init  {}
-   DATA  aPrgs          Init  {}
-   DATA  aExtLibs       Init  {}
-   DATA  aCs            Init  {}
-   DATA  aObjs          Init  {}
-   DATA  aObjsc         Init  {}
-   DATA  aRes           Init  {}
+   DATA  aDefines       INIT  {}
+   DATA  aBuildOrder    INIT  {}
+   DATA  aCommands      INIT  {}
+   DATA  aMacros        INIT  {}
+   DATA  aPrgs          INIT  {}
+   DATA  aExtLibs       INIT  {}
+   DATA  aCs            INIT  {}
+   DATA  aObjs          INIT  {}
+   DATA  aObjsc         INIT  {}
+   DATA  aRes           INIT  {}
    DATA  nLinkHandle
-   DATA  cLinkcomm      Init  ""
-   DATA  lCompress      Init .F.
-   DATA  lForce         Init .F.
-   DATA  lLinux         Init .F.
-   DATA  szProject      Init ""
-   DATA  lLibrary       Init .F.
-   DATA  lInstallLib    Init .F.
-   DATA  lIgnoreErrors  Init .F.
-   DATA  lExtended      Init .T.
-   DATA  lOs2           Init .F.
-   DATA  lRecurse       Init .F.
-   DATA  lEditMode      Init .F.
+   DATA  cLinkcomm      INIT  ""
+   DATA  lCompress      INIT .F.
+   DATA  lForce         INIT .F.
+   DATA  lLinux         INIT .F.
+   DATA  szProject      INIT ""
+   DATA  lLibrary       INIT .F.
+   DATA  lInstallLib    INIT .F.
+   DATA  lIgnoreErrors  INIT .F.
+   DATA  lExtended      INIT .T.
+   DATA  lOs2           INIT .F.
+   DATA  lRecurse       INIT .F.
+   DATA  lEditMode      INIT .F.
    DATA  aDir
-   DATA  aLangMessages  init {}
+   DATA  aLangMessages  INIT {}
    DATA  cDefLang
-   DATA  lFwh           init .F.
-   DATA  lxFwh          init .F.
-   DATA  lCw            init .F.
-   DATA  lMini          init .F.
-   DATA  lHwgui         init .F.
-   DATA  lGui           Init .F.
-   DATA  lGtwvt         init .F.
-   DATA  lGtwvw         init .F.
-   DATA  lMWvW          init .F.
-   DATA  lXWT           init .F.
-   DATA  lxHGtk         init .F.
-   DATA  lWhoo          init .F.
-   DATA  lWhat32        init .F.
-   DATA  lRddAds        init .F.
-   DATA  lMediator      init .F.
-   DATA  cMakefile      init ""
-   DATA  lExternalLib   init .F.
-   DATA  cObj           init ""
-   DATA  cUserdef       init ""
-   DATA  cUserInclude   init ""
-   DATA  cUserLib       init ""
-   DATA  lGenppo        init .F.
-   DATA  lCompMod       init .F.
-   DATA  lAutomemvar    init .F.
-   DATA  lvarismemvar   init .F.
-   DATA  ldebug         init .F.
-   DATA  lSupressline   init .F.
-   DATA  StartPath      init ""
-   DATA  cFmc           init ""
-   DATA  cMedpath       init ""
-   DATA  cAppLibName    init ""
-   DATA  cOs            init ""
-   DATA  cTopfile       init ""
-   DATA  aOut           init {}
-   DATA  cFilesToAdd    init 5
-   DATA  lMT            init .F.
-   DATA  cWarningLevel  init 0
-   DATA  cTopModule     init ""
-   DATA  cRes           init ""
-   DATA  cMacro         init ""
-   DATA  lGenCsource    init .F.      // Ath added 31-05-2006
-   DATA  cShell         init ""
-   DATA  cEditor        init ""
+   DATA  lFwh           INIT .F.
+   DATA  lxFwh          INIT .F.
+   DATA  lCw            INIT .F.
+   DATA  lMini          INIT .F.
+   DATA  lHwgui         INIT .F.
+   DATA  lGui           INIT .F.
+   DATA  lGtwvt         INIT .F.
+   DATA  lGtwvw         INIT .F.
+   DATA  lMWvW          INIT .F.
+   DATA  lXWT           INIT .F.
+   DATA  lxHGtk         INIT .F.
+   DATA  lWhoo          INIT .F.
+   DATA  lWhat32        INIT .F.
+   DATA  lRddAds        INIT .F.
+   DATA  lMediator      INIT .F.
+   DATA  cMakefile      INIT ""
+   DATA  lExternalLib   INIT .F.
+   DATA  cObj           INIT ""
+   DATA  cUserdef       INIT ""
+   DATA  cUserInclude   INIT ""
+   DATA  cUserLib       INIT ""
+   DATA  lGenppo        INIT .F.
+   DATA  lCompMod       INIT .F.
+   DATA  lAutomemvar    INIT .F.
+   DATA  lvarismemvar   INIT .F.
+   DATA  ldebug         INIT .F.
+   DATA  lSupressline   INIT .F.
+   DATA  StartPath      INIT ""
+   DATA  cFmc           INIT ""
+   DATA  cMedpath       INIT ""
+   DATA  cAppLibName    INIT ""
+   DATA  cOs            INIT ""
+   DATA  cTopfile       INIT ""
+   DATA  aOut           INIT {}
+   DATA  cFilesToAdd    INIT 5
+   DATA  lMT            INIT .F.
+   DATA  cWarningLevel  INIT 0
+   DATA  cTopModule     INIT ""
+   DATA  cRes           INIT ""
+   DATA  cMacro         INIT ""
+   DATA  lGenCsource    INIT .F.      // Ath added 31-05-2006
+   DATA  cShell         INIT ""
+   DATA  cEditor        INIT ""
 
    METHOD New()
    METHOD ReadMakefile(cFile)
@@ -6050,8 +6064,7 @@ METHOD New() CLASS THbMake
    ::cTopModule     := Space( 20 )
    ::cEditor        := ""
 
-   return self
-
+   RETURN Self
 
 METHOD ReadMakefile(cFile) CLASS THbMake
 
@@ -6071,12 +6084,12 @@ METHOD ReadMakefile(cFile) CLASS THbMake
    LOCAL cCfg        := ""
    LOCAL lCfgFound   := .F.
    LOCAL aTempCFiles := {}
-   Local nHandle
-   Local cObjitem
-   Local cRes        := ""
-   Local cItem
+   LOCAL nHandle
+   LOCAL cObjitem
+   LOCAL cRes        := ""
+   LOCAL cItem
    LOCAL lLinux      := At( "linux", Lower( Os() ) ) > 0
-   Local lExtended   := .T., szProject
+   LOCAL lExtended   := .T., szProject
    LOCAL lPrgObjRule := .F.
 
    LOCAL lEof
@@ -6378,8 +6391,10 @@ METHOD ReadMakefile(cFile) CLASS THbMake
       ENDIF
    ENDDO
 
-   qout( nhandle)
-   Fclose( nHandle )
+   QOut( nhandle )
+
+   FClose( nHandle )
+
    RETURN self
 
 METHOD ReplaceMacros( cMacros ) CLass THBMAKE
@@ -6594,13 +6609,13 @@ STATIC FUNCTION PICKARRY_Keys( MODE, someitems, lAdd )
    LOCAL RETVAL := AC_CONT
    LOCAL THEKEY := Lastkey()
 
-   IF MODE == AC_HITTOP 
+   IF MODE == AC_HITTOP
       KEYBOARD Chr( K_CTRL_PGDN )
 
    ELSEIF MODE == AC_HITBOTTOM
       KEYBOARD Chr( K_CTRL_PGUP )
 
-   ELSEIF MODE == AC_EXCEPT 
+   ELSEIF MODE == AC_EXCEPT
 
       IF THEKEY == K_SPACE // space bar to select/unselect
          RETVAL := AC_SELECT
@@ -6608,11 +6623,11 @@ STATIC FUNCTION PICKARRY_Keys( MODE, someitems, lAdd )
          lAdd := !lAdd
          RETVAL := AC_SELECT
       ELSEIF THEKEY == K_ESC
-         RETVAL := AC_ABORT 
-      ELSEIF THEKEY = K_ENTER .AND. SOMEITEMS < 1
-         RETVAL := AC_ABORT 
+         RETVAL := AC_ABORT
+      ELSEIF THEKEY == K_ENTER .AND. SOMEITEMS < 1
+         RETVAL := AC_ABORT
          KEYBOARD CHR( K_ENTER )
-      ELSEIF THEKEY = K_ENTER
+      ELSEIF THEKEY == K_ENTER
          KEYBOARD CHR( K_DOWN )
          RETVAL := AC_ABORT
       ENDIF
@@ -6731,7 +6746,8 @@ FUNCTION GetSourceFiles( lSubDir, lGcc, cOs )
       ENDIF
 
    NEXT
-RETURN aRet
+
+   RETURN aRet
 
 *-------------------------------
 FUNCTION ExtenPrg( cExt, nType )
@@ -6769,7 +6785,7 @@ FUNCTION ExtenPrg( cExt, nType )
       END
    ENDIF
 
-RETURN cTemp
+   RETURN cTemp
 
 *----------------------------------------
 STATIC FUNCTION GetDirs( cPattern, lGcc )
@@ -6784,7 +6800,7 @@ STATIC FUNCTION GetDirs( cPattern, lGcc )
           AADD( aDir, cPattern + xItem[ F_NAME ] + IIF( lLinux, "/", "\" ) ), ;
           ) } )
 
-RETURN aDir
+   RETURN aDir
 
 *-----------------------
 FUNCTION GetHarbourDir()
@@ -6837,7 +6853,7 @@ FUNCTION GetBccDir()
 
    NEXT
 
-RETURN cPath
+   RETURN cPath
 
 *-------------------
 FUNCTION GetVccDir()
@@ -6858,7 +6874,7 @@ FUNCTION GetVccDir()
 
    NEXT
 
-RETURN cPath
+   RETURN cPath
 
 *--------------------
 FUNCTION GetPoccDir()
@@ -6879,7 +6895,7 @@ FUNCTION GetPoccDir()
 
    NEXT
 
-RETURN cPath
+   RETURN cPath
 
 *----------------------------
 FUNCTION Exten( cExt, nType )
@@ -6905,7 +6921,7 @@ FUNCTION Exten( cExt, nType )
 
    ENDIF
 
-RETURN cTemp
+   RETURN cTemp
 
 *--------------------
 FUNCTION GetMakeDir()
@@ -6918,7 +6934,7 @@ FUNCTION GetMakeDir()
    cPath := LEFT( cexe, RAT( "\", cexe ) - 1 )
    cPath := LEFT( cPath, RAT( "\", cPath ) - 1 )
 
-RETURN cPath
+   RETURN cPath
 
 *----------------------------
 FUNCTION GetSourceDirMacros()
@@ -6944,7 +6960,7 @@ FUNCTION GetSourceDirMacros()
       AADD( aMacros, { "SRC" + STRZERO( nCounter, 2, 0 ), STRTRAN( aStru[ nCounter ], cDir, "" ), .f. } )
    NEXT
 
-RETURN aMacros
+   RETURN aMacros
 
 *------------------------------------
 FUNCTION HbMake_FileDate( cFileName )
@@ -6952,7 +6968,7 @@ FUNCTION HbMake_FileDate( cFileName )
 
    LOCAL aFiles := DIRECTORY( cFileName )
 
-RETURN IIF( LEN( aFiles ) == 1, aFiles[ 1, 3 ], CTOD( "" ) )
+   RETURN IIF( LEN( aFiles ) == 1, aFiles[ 1, 3 ], CTOD( "" ) )
 
 *------------------------------------
 FUNCTION HbMake_FileTime( cFileName )
@@ -6960,20 +6976,20 @@ FUNCTION HbMake_FileTime( cFileName )
 
    LOCAL aFiles := DIRECTORY( cFileName )
 
-RETURN IIF( LEN( aFiles ) == 1, aFiles[ 1, 4 ], "" )
+   RETURN IIF( LEN( aFiles ) == 1, aFiles[ 1, 4 ], "" )
 
 *------------------------------
 FUNCTION TD2JUL( CTIME, DDATE )
 *------------------------------
-RETURN DDATE - CTOD( "01/01/1900" ) + ( PRB_INT( TTOS( CTIME ) / 100000,, 5 ) )
+   RETURN DDATE - CTOD( "01/01/1900" ) + ( PRB_INT( TTOS( CTIME ) / 100000,, 5 ) )
 
 *---------------------
 STATIC FUNCTION TTOS( CTIME )
 *---------------------
 
-RETURN ( VAL( SUBSTR( CTIME, 7, 2 ) ) ) + ;
-         ( VAL( SUBSTR( CTIME, 4, 2 ) ) * 60 ) + ;
-         ( VAL( SUBSTR( CTIME, 1, 2 ) ) * 3600 )
+   RETURN ( VAL( SUBSTR( CTIME, 7, 2 ) ) ) + ;
+          ( VAL( SUBSTR( CTIME, 4, 2 ) ) * 60 ) + ;
+          ( VAL( SUBSTR( CTIME, 1, 2 ) ) * 3600 )
 
 *---------------------------------------------------
 FUNCTION PRB_INT( SOMENUMBER, length, NUM_DECIMALS )
@@ -7013,7 +7029,7 @@ FUNCTION PRB_INT( SOMENUMBER, length, NUM_DECIMALS )
       SOMESTRING := "-" + SOMESTRING
    ENDIF
 
-RETURN VAL( SOMESTRING )
+   RETURN VAL( SOMESTRING )
 
 *---------------------------
 FUNCTION Exte( cExt, nType )
@@ -7035,13 +7051,14 @@ FUNCTION Exte( cExt, nType )
 
    ENDIF
 
-RETURN cTemp
+   RETURN cTemp
 
 *-----------------------------------------------
 PROCEDURE ATTENTION( CSTRING, NLINENUM, CCOLOR )
 *-----------------------------------------------
 
    LOCAL COLDCOLOR
+   LOCAL nColPos:= MAX( INT( ( MAXCOL() - LEN( cString ) ) / 2 ), 0 )
 
    DEFAULT NLINENUM TO 24
    DEFAULT CCOLOR TO "GR+/R"
@@ -7050,19 +7067,13 @@ PROCEDURE ATTENTION( CSTRING, NLINENUM, CCOLOR )
 
    CSTRING := "  " + ALLTRIM( CSTRING ) + "  "
 
-   DEVPOS( NLINENUM, c( CSTRING ) )
+   DEVPOS( NLINENUM, nColPos )
 
    DEVOUT( CSTRING )
 
    SETCOLOR( COLDCOLOR )
 
-RETURN
-
-*--------------------
-FUNCTION c( CSTRING )
-*--------------------
-
-RETURN MAX( ( MAXCOL() / 2 ) - INT( LEN( CSTRING ) / 2 ), 0 )
+   RETURN
 
 *--------------------------------------
 FUNCTION GetInstaledLibs( clibs, lGcc )
@@ -7129,7 +7140,7 @@ FUNCTION GetInstaledLibs( clibs, lGcc )
 
    NEXT
 
-RETURN aReturnLibs
+   RETURN aReturnLibs
 
 *-----------------------------
 FUNCTION GetLibs( lGcc, cDir )
@@ -7153,7 +7164,7 @@ FUNCTION GetLibs( lGcc, cDir )
 
    AEVAL( aInstaledLibs, { | x | AAdd( aLibsDesc, { padr("Harbour contrib",19)+" lib - " + padr(x,15), x } ) } )
 
-RETURN aLibsDesc
+   RETURN aLibsDesc
 
 *-----------------------------------------
 FUNCTION DIR_MULTI( cFileMaskList, cAttr )
@@ -7162,7 +7173,7 @@ FUNCTION DIR_MULTI( cFileMaskList, cAttr )
    LOCAL aList := listasarray2( cFileMaskList, "|" )
    AEVAL( aList, { | tmp, tmp1 | aList[ tmp1 ] := DIRECTORY( tmp, cAttr ) } )
 
-RETURN ArrayAJoin( alist )
+   RETURN ArrayAJoin( alist )
 
 *----------------------------
 FUNCTION ArrayAJoin( aArray )
@@ -7185,7 +7196,8 @@ FUNCTION ArrayAJoin( aArray )
       ACOPY( aArray[ tmp ], aArray[ 1 ],,, nPos )
       nPos += LEN( aArray[ tmp ] )
    NEXT
-RETURN aArray[ 1 ]
+
+   RETURN aArray[ 1 ]
 
 *-----------------------------------------
 FUNCTION ListAsArray2( cList, cDelimiter )
@@ -7194,37 +7206,30 @@ FUNCTION ListAsArray2( cList, cDelimiter )
    LOCAL nPos
    LOCAL aList  := {}              // Define an empty array
 
-   IF cDelimiter == NIL
-      cDelimiter := ","
-   ENDIF
-   //
+   DEFAULT cDelimiter TO ","
+
    DO WHILE ( nPos := AT( cDelimiter, cList ) ) != 0
       AADD( aList, ALLTRIM( SUBSTR( cList, 1, nPos - 1 ) ) )                    // Add a new element
       cList := SUBSTR( cList, nPos + 1 )
 
    ENDDO
    AADD( aList, ALLTRIM( cList ) )      // Add final element
-   //
-RETURN aList        // Return the array
+
+   RETURN aList        // Return the array
 
 *--------------------
 FUNCTION CreateLink()
 *--------------------
 
-    LOCAL nHandle := FCreate("hbtemp.c")
+    LOCAL nHandle := FCreate( "hbtemp.c" )
 
-    FWrite( nHandle, '#include "hbapi.h"' + HB_OsNewLine())
-    FWrite( nHandle, "extern HB_FUNC( HB_GT_CRS );" + HB_OsNewLine())
-    FWrite( nHandle, "void hb_lnk_ForceLink_build( void )" + HB_OsNewLine())
-    FWrite( nHandle, "{" + HB_OsNewLine())
-    FWrite( nHandle, "   HB_FUNCNAME( HB_GT_CRS )();" + HB_OsNewLine())
-    FWrite( nHandle, "}" + HB_OsNewLine())
+    FWrite( nHandle, ;
+       '#include "hbapi.h"' + s_cEOL +;
+       "extern HB_FUNC( HB_GT_CRS );" + s_cEOL +;
+       "void hb_lnk_ForceLink_build( void )" + s_cEOL +;
+       "{" + s_cEOL +;
+       "   HB_FUNCNAME( HB_GT_CRS )();" + s_cEOL +;
+       "}" + s_cEOL )
     FClose( nHandle )
 
-
-RETURN NIL
-
-*----------------------
-STATIC FUNCTION ISWIN()
-*-----------------------
-RETURN "WINDOWS" $ Upper( OS() )
+    RETURN NIL

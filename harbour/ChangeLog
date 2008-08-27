@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-27 03:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * utils/hbmake/hbmake.prg
+     ; Applied patches made by Bill Robertson. (Thanks!)
+     % Removed Function C( STRING ) as it was only used in the function, 
+       Attention(), to center a line on the screen.
+     % Removed Static Function IsWin() since it wasn't being used.
+     ! Replace all remaining calls to hb_OSNewLine() with s_cEOL.
+     ! Changed some calls from OutStd() to OutErr() since they were 
+       essentially errors mesages.
+     % Replaced some long series of FWrite()s with a single FWrite() 
+       where convientent so I could see what was being written to 
+       the makefile easier.
+     ! Replaced some comparisons from '=' to '=='.
+
 2008-08-27 02:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/filesys.c
      ! Disabled hb_fsPOpen() body for __CYGWIN__.
