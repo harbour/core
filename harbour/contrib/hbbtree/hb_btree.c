@@ -2022,9 +2022,12 @@ HB_CALL_ON_STARTUP_BEGIN( _hb_BTree_Initialize_ )
    hb_vmAtExit( hb_BTree_Terminate, NULL );
 HB_CALL_ON_STARTUP_END( _hb_BTree_Initialize_ )
 
-#if defined(HB_PRAGMA_STARTUP)
+#if defined( HB_PRAGMA_STARTUP )
    #pragma startup _hb_BTree_Initialize_
-#elif defined(HB_MSC_STARTUP)
+#elif defined( HB_MSC_STARTUP )
+   #if defined( HB_OS_WIN_64 )
+      #pragma section( HB_MSC_START_SEGMENT, long, read )
+   #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
    static HB_$INITSYM hb_vm_auto_hb_BTree_Initialize_ = _hb_BTree_Initialize_;
    #pragma data_seg()

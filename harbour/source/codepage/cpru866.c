@@ -66,9 +66,12 @@ static HB_CODEPAGE s_codepage = { "RU866",
 
 HB_CODEPAGE_INIT( RU866 )
 
-#if defined(HB_PRAGMA_STARTUP)
+#if defined( HB_PRAGMA_STARTUP )
    #pragma startup hb_codepage_Init_RU866
-#elif defined(HB_MSC_STARTUP)
+#elif defined( HB_MSC_STARTUP )
+   #if defined( HB_OS_WIN_64 )
+      #pragma section( HB_MSC_START_SEGMENT, long, read )
+   #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
    static HB_$INITSYM hb_vm_auto_hb_codepage_Init_RU866 = hb_codepage_Init_RU866;
    #pragma data_seg()

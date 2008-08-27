@@ -92,9 +92,12 @@ static HB_CODEPAGE s_codepage = { "CSWIN",
 
 HB_CODEPAGE_INIT( CSWIN );
 
-#if defined(HB_PRAGMA_STARTUP)
+#if defined( HB_PRAGMA_STARTUP )
    #pragma startup hb_codepage_Init_CSWIN
-#elif defined(HB_MSC_STARTUP)
+#elif defined( HB_MSC_STARTUP )
+   #if defined( HB_OS_WIN_64 )
+      #pragma section( HB_MSC_START_SEGMENT, long, read )
+   #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
    static HB_$INITSYM hb_vm_auto_hb_codepage_Init_CSWIN = hb_codepage_Init_CSWIN;
    #pragma data_seg()

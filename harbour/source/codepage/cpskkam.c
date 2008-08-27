@@ -91,9 +91,12 @@ static HB_CODEPAGE s_codepage = { "SKKAM",
 
 HB_CODEPAGE_INIT( SKKAM );
 
-#if defined(HB_PRAGMA_STARTUP)
+#if defined( HB_PRAGMA_STARTUP )
    #pragma startup hb_codepage_Init_SKKAM
-#elif defined(HB_MSC_STARTUP)
+#elif defined( HB_MSC_STARTUP )
+   #if defined( HB_OS_WIN_64 )
+      #pragma section( HB_MSC_START_SEGMENT, long, read )
+   #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
    static HB_$INITSYM hb_vm_auto_hb_codepage_Init_SKKAM = hb_codepage_Init_SKKAM;
    #pragma data_seg()

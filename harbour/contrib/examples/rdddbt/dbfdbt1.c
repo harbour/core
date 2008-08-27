@@ -844,10 +844,13 @@ HB_CALL_ON_STARTUP_BEGIN( _hb_dbfdbt_rdd_init_ )
    hb_vmAtInit( hb_dbfdbtRddInit, NULL );
 HB_CALL_ON_STARTUP_END( _hb_dbfdbt_rdd_init_ )
 
-#if defined(HB_PRAGMA_STARTUP)
+#if defined( HB_PRAGMA_STARTUP )
    #pragma startup dbfdbt1__InitSymbols
    #pragma startup _hb_dbfdbt_rdd_init_
-#elif defined(HB_MSC_STARTUP)
+#elif defined( HB_MSC_STARTUP )
+   #if defined( HB_OS_WIN_64 )
+      #pragma section( HB_MSC_START_SEGMENT, long, read )
+   #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
    static HB_$INITSYM hb_vm_auto_dbfdbt1__InitSymbols = dbfdbt1__InitSymbols;
    static HB_$INITSYM hb_vm_auto_dbfdbt_rdd_init = _hb_dbfdbt_rdd_init_;
