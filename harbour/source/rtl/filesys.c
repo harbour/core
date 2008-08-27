@@ -539,7 +539,7 @@ HB_EXPORT HB_FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsPOpen(%p, %s)", pFilename, pMode));
 
-#if defined(HB_OS_UNIX_COMPATIBLE)
+#if defined(HB_OS_UNIX_COMPATIBLE) && !defined(__CYGWIN__)
    {
       HB_FHANDLE hPipeHandle[2], hNullHandle;
       pid_t pid;
