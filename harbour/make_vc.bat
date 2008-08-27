@@ -29,7 +29,7 @@ set _HB_MAKE_PROGRAM=%HB_MAKE_PROGRAM%
 if "%_HB_CC_NAME%"      == "" set _HB_CC_NAME=vc
 if "%_HB_MAKE_PROGRAM%" == "" set _HB_MAKE_PROGRAM=nmake.exe
 
-set _HB_MAKEFILE=make_%_HB_CC_NAME%.mak
+set _HB_MAKEFILE=make_vc.mak
 set HB_EXIT_LEVEL=
 
 rem ---------------------------------------------------------------

@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-28 01:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_b32.bat
+   * make_vc.bat
+     ! Made makefile name independent of the HB_CC_NAME envvar.
+       NOTE: If this poses a limitation for someone, please shout, 
+             we may add an additional variable to control/override 
+             makefile name (but it cannot directly depend on 
+             HB_CC_NAME now that make_vc.mak and make_vcce.mak 
+             got merged.)
+
 2008-08-27 21:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    + config/w32/poccce.cf
      + Added POCC GNU make file for WinCE.
