@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-27 21:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   + config/w32/poccce.cf
+     + Added POCC GNU make file for WinCE.
+       It has quite some errors yet.
+
 2008-08-27 21:30 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_vcce.bat
      ! Fixed.
