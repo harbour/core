@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-28 01:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_b32.bat
+   * make_vc.bat
+     * exit_err.bat -> hbmkpost.bat
+       Please update your environment if you used this feature.
+       INCOMPATIBLE.
+
+   * make_vcce.bat
+     ! Adjusted to latest change.
+
+   * make_gnu.bat
+     * Minor formatting.
+
 2008-08-28 01:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_b32.bat
    * make_vc.bat

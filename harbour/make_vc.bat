@@ -111,4 +111,4 @@ set _HB_CC_NAME=
 set _HB_MAKE_PROGRAM=
 set _HB_MAKEFILE=
 
-if exist exit_err.bat call exit_err.bat
+if exist hbpostmk.bat call hbpostmk.bat

@@ -122,4 +122,3 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HARBOURDIR%/include
    goto END
 
 :END
-
