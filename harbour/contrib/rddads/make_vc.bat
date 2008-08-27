@@ -18,7 +18,7 @@ goto POST_EXIT
 :DIR_OK
 
 if "%HB_INC_ADS%" == "" set HB_INC_ADS=%HB_DIR_ADS%
-set CFLAGS=-I"%HB_INC_ADS%"
+set CFLAGS=-I%HB_INC_ADS%
 set _HB_DLL_NAME=ace32
 if exist "%HB_DIR_ADS%\Redistribute\%_HB_DLL_NAME%.dll" set _HB_DLL_DIR=%HB_DIR_ADS%\Redistribute
 if exist "%HB_DIR_ADS%\%_HB_DLL_NAME%.dll"              set _HB_DLL_DIR=%HB_DIR_ADS%
