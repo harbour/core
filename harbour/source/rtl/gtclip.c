@@ -56,8 +56,12 @@
 #define HB_OS_WIN_32_USED
 #include "hbgtcore.h"
 
-#if defined(__CYGWIN__)
+#if defined( __CYGWIN__ )
    #include <wchar.h>
+#elif defined( __POCC__ ) && defined( HB_WINCE )
+   #ifndef GMEM_MOVEABLE
+      #define GMEM_MOVEABLE       0x0002
+   #endif
 #endif
 
 /* TODO: add protection for MT mode */

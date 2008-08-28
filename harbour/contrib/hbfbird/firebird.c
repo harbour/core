@@ -445,7 +445,7 @@ HB_FUNC( FBGETDATA )
    char       data[ MAX_BUFFER ];
    char       date_s[ 25 ];
 
-   struct     tm times;
+   struct tm  times;
    XSQLVAR *  var;
    XSQLDA *   sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
    ISC_STATUS status[ MAX_FIELDS ];

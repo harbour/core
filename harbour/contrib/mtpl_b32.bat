@@ -21,7 +21,7 @@ set _HB_MAKEFILE=%HB_MAKEFILE%
 
 if "%_HB_CC_NAME%"      == "" set _HB_CC_NAME=b32
 if "%_HB_MAKE_PROGRAM%" == "" set _HB_MAKE_PROGRAM=make.exe
-if "%_HB_MAKEFILE%"     == "" set _HB_MAKEFILE=..\mtpl_%_HB_CC_NAME%.mak
+if "%_HB_MAKEFILE%"     == "" set _HB_MAKEFILE=..\mtpl_b32.mak
 
 set _HB_MAKELOG=make_%_HB_CC_NAME%.log
 set HB_EXIT_LEVEL=

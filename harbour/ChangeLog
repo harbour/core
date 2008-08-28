@@ -8,6 +8,96 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-28 12:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_vc.bat
+     * Updated usage text.
+
+   * include/hbwince.h
+     ! Fix for Pelles C 5.0 in WinCE/ARM mode.
+
+   * include/hbsetup.h
+     + Detecting Pelles C 5.0 in ARM mode as HB_WINCE.
+
+   * ChangeLog
+     - Removed some advices not valid anymore from previous entry.
+
+   * contrib/mtpl_b32.bat
+   * contrib/mtpl_vc.bat
+     * Synced with /make_*.bat so that the name of the .mak 
+       file is now hard-wired instead of being HB_CC_NAME dependent.
+       This way contribs may be built for WinCE in the future 
+       (this still needs adding WinCE support to mtpl_vc.mak).
+
+   * contrib/mtpl_gcc.sh
+     + Darwin autodetection was missing.
+
+   * contrib/hbfimage/fi_winfu.c
+     ! Added CBM_INIT definition for Pellec C in WinCE mode.
+
+   * source/rtl/gtclip.c
+     + Added GMEM_MOVEABLE definiction for Pelles C in WinCE mode.
+
+   + config/w32/poccce.cf
+     + Added Pellec C WinCE make file.
+
+   + config/w32/msvcce.cf
+     + Added WinCE GNU make file for MSVC. Untested, probably not working, 
+       this is just a small step to make the GNU-make equal in feature 
+       with the non-GNU make one.
+
+   * config/w32/bcc32.cf
+     * Minor sync of C options with non-GNU make file.
+
+   * config/w32/msvc.cf
+     * Attempt to sync C options with non-GNU make file.
+
+   * contrib/hbfbird/firebird.c
+     * Minor formatting.
+
+   ; NOTE1: For better consistency I'd like to rename GNU make compiler names
+            'mingw32' to 'mingw' (they've dropped '32' long ago), and 
+            'cemgw' to 'mingwce'.
+   ; NOTE2: Pelles C WinCE build still generates following errors:
+       POLINK: error: Unresolved external symbol 'GetModuleFileNameA'.
+       POLINK: error: Unresolved external symbol 'RegOpenKeyExA'.
+       ../../math.c(605): error #3120: [asm] Symbol 'inf' is undefined.
+       contrib\gtwvg\gtwvg.h(78): fatal error #1035: Can't find include file <olectl.h>.
+       ../../ctmath2.c(324): error #3120: [asm] Symbol 'inf' is undefined.
+       ../../win32.c(70): error #2048: Undeclared identifier 'CS_OWNDC'.
+       ../../win32.c(75): error #2048: Undeclared identifier 'IDI_APPLICATION'.
+       ../../win32.c(75): error #2140: Type error in argument 2 to 'LoadIconA'; found 'int', expected 'const char *'.
+       ../../win32.c(181): error #2048: Undeclared identifier 'MFS_DISABLED'.
+       ../../win32.c(194): warning #2027: Missing prototype for 'InsertMenuItem'.
+       ../../win32.c(219): warning #2027: Missing prototype for 'SetMenu'.
+       ../../odbc.c(94): fatal error #1035: Can't find include file <sql.h>.
+       contrib\hbsqlit3\sqlite3\sqlite3.c(9936): warning #2027: Missing prototype for 'localtime'. [ ... ]
+       ../../w32_ole.c(403): error #2152: Unknown field 'pllVal' of 'union (no name)'.
+       ../../w32_ole.c(403): error #2168: Operands of = have incompatible types 'int' and 'long long int *'.
+       ../../w32_ole.c(408): error #2152: Unknown field 'llVal' of 'union (no name)'.
+       ../../w32_ole.c(786): error #2152: Unknown field 'pllVal' of 'union (no name)'.
+       ../../w32_ole.c(786): error #2144: Type error: pointer expected.
+       ../../w32_ole.c(792): error #2152: Unknown field 'llVal' of 'union (no name)'.
+       ../../hbsyslog.c(31): error #2140: Type error in argument 2 to 'RegisterEventSourceW'; found 'const char *', expected 'const wchar_t *'.
+       ../../hbsyslog.c(97): error #2140: Type error in argument 8 to 'ReportEventW'; found 'const char * *', expected 'const wchar_t * *'.
+       ../../firebird.c(448): error #2149: Undefined size for 'times' with type '(incomplete) struct tm'.
+       ../../firebird.c(479): error #2152: Unknown field 'tm_year' of '(incomplete) struct tm'.
+       ../../firebird.c(480): error #2152: Unknown field 'tm_mon' of '(incomplete) struct tm'.
+       ../../firebird.c(481): error #2152: Unknown field 'tm_mday' of '(incomplete) struct tm'.
+       ../../firebird.c(482): error #2152: Unknown field 'tm_hour' of '(incomplete) struct tm'.
+       ../../firebird.c(483): error #2152: Unknown field 'tm_min' of '(incomplete) struct tm'.
+       ../../firebird.c(484): error #2152: Unknown field 'tm_sec' of '(incomplete) struct tm'.
+       ../../firebird.c(493): error #2152: Unknown field 'tm_year' of '(incomplete) struct tm'.
+       ../../firebird.c(493): error #2152: Unknown field 'tm_mon' of '(incomplete) struct tm'.
+       ../../firebird.c(493): error #2152: Unknown field 'tm_mday' of '(incomplete) struct tm'.
+       ../../firebird.c(502): error #2152: Unknown field 'tm_hour' of '(incomplete) struct tm'.
+       ../../firebird.c(503): error #2152: Unknown field 'tm_min' of '(incomplete) struct tm'.
+       ../../firebird.c(504): error #2152: Unknown field 'tm_sec' of '(incomplete) struct tm'.
+       ../../fi_winfu.c(97): warning #2027: Missing prototype for 'CreateDIBitmap'.
+       ../../fi_winfu.c(98): error #2048: Undeclared identifier 'CBM_INIT'.
+       ../../fi_winfu.c(99): error #2168: Operands of = have incompatible types 'HBITMAP' and 'int'.
+       ../../fi_winfu.c(150): warning #2027: Missing prototype for 'GetDIBits'.
+       [ lots of them with hbmysql ]
+
 2008-08-28 01:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_b32.bat
    * make_vc.bat
@@ -44,14 +134,6 @@
      ! Undone previous modification. Quotes are needed to support 
        dirs containing spaces (this is actually the case for the 
        default install dir of ACE SDK).
-       For very old MSVC compilers not understanding quotes 
-       in -I (and possibly other) switches, pls specify the 
-       external package #include directories directly through:
-       set C_USR=-IC:\mypath\pkg\include
-       and so on. MSVC98 is a very old product and there is 
-       probably no way to make all features of our build systems 
-       100% compatible with it, but with this manual workaround, 
-       it can properly work (until a recommended VC upgrade :).
 
 2008-08-27 17:05 UTC+0100 JF Lefebvre (Mafact) (jfl at mafact dot com)
    * contrib/rddads/make_vc.bat

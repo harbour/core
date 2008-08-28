@@ -2,8 +2,7 @@
 # $Id$
 #
 
-# The Harbour Project
-# GNU MAKE file for Pelles ISO C Compiler for WinCE
+# Work in progress. Please test.
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
@@ -12,33 +11,27 @@ EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 
-CC = pocc.exe
+CC = cl.exe
 CC_IN = -c
 CC_OUT = -Fo
-CPPFLAGS = -I.
+CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+# -W4 for max warnings
+CFLAGS = -nologo -W3 -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -D"WIN32_PLATFORM_PSPC" -D"WINCE" -D"_WINCE" -D"_WINDOWS" -D"ARM" -D"_ARM_" -D"ARMV4" -D"POCKETPC2003_UI_MODEL" -D"_M_ARM" -D"UNICODE" -D"_UNICODE" -D_UWIN
 
-CPPFLAGS += -Ze -Go
-
-# optimizations
-CPPFLAGS += -Ot -Ox
-
-# For Pocket PC and ARM processors (including XScale)
-CPPFLAGS += -Tarm-coff -DSTRSAFE_NO_DEPRECATE
-
-ifneq ($(HB_INC_COMPILE),)
-CPPFLAGS += -I$(HB_INC_COMPILE)
+ifeq ($(HB_VISUALC_VER_PRE80),)
+CFLAGS += -Od -Os -Gy -GS- -EHsc- -fp:fast -Gm -Zi -GR- -FD -D_CRT_SECURE_NO_DEPRECATE
+else
+CFLAGS += -Oxsb1 -EHsc -YX -GF
 endif
 
-CFLAGS = 
-
-LD = polink.exe
-LD_OUT = -OUT:
+LD = cl.exe
+LD_OUT = -Fe
 
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
-LINKPATHS += -LIBPATH:$(LIB_DIR)
+LINKPATHS += -link -LIBPATH:$(LIB_DIR)
 else
-LINKPATHS += -LIBPATH:$(HB_LIB_COMPILE)
+LINKPATHS += -link -LIBPATH:$(HB_LIB_COMPILE)
 endif
 LINKLIBS += $(foreach lib, $(CONTRIBS), $(subst lib,,$(lib))$(LIB_EXT))
 LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
@@ -53,18 +46,10 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
 
-LDFLAGS = $(LINKPATHS) coredll.lib corelibc.lib winsock.lib ws2.lib
+LDFLAGS = $(LINKPATHS)
 
-ifeq ($(HB_GT_DEFAULT),gtgui)
-LDFLAGS += /SUBSYSTEM:WINDOWS
-else
-ifeq ($(HB_GT_LIB),gtgui)
-LDFLAGS += /SUBSYSTEM:WINDOWS
-endif
-endif
-
-AR = polib.exe
+AR = lib.exe
 ARFLAGS = $(A_USR)
-AR_RULE = $(AR) $(ARFLAGS) /out:$(LIB_DIR)/$@ $(^F)
+AR_RULE = $(AR) $(ARFLAGS) /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 include $(TOP)$(ROOT)config/rules.cf
