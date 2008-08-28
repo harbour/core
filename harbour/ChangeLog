@@ -40,7 +40,7 @@
      ! Added CBM_INIT definition for Pellec C in WinCE mode.
 
    * source/rtl/gtclip.c
-     + Added GMEM_MOVEABLE definiction for Pelles C in WinCE mode.
+     + Added GMEM_MOVEABLE definition for Pelles C in WinCE mode.
 
    + config/w32/poccce.cf
      + Added Pellec C WinCE make file.
