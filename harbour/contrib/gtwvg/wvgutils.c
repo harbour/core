@@ -89,8 +89,6 @@ BOOL WINAPI ChooseColor( LPCHOOSECOLORW );
 
 HB_EXTERN_BEGIN
 
-extern HANDLE  hb_hInstance;
-
 extern BOOL     wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );
 extern PHB_ITEM wvt_Rect2Array( RECT *rc  );
 extern BOOL     wvt_Array2Point(PHB_ITEM aPoint, POINT *pt );
@@ -102,6 +100,15 @@ extern void     wvt_Point2ArrayEx( POINT *pt  , PHB_ITEM aPoint);
 extern void     wvt_Size2ArrayEx( SIZE *siz ,PHB_ITEM aSize );
 
 HB_EXTERN_END
+
+static HANDLE wvg_hInstance( void )
+{
+   HANDLE hInstance;
+
+   hb_winmainArgGet( &hInstance, NULL, NULL );
+
+   return hInstance;
+}
 
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
@@ -993,7 +1000,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
       if ( ISNUM( 3 ) )
       {
          LPTSTR lpTemplate = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-         hDlg = CreateDialogIndirect( ( HINSTANCE     ) hb_hInstance,
+         hDlg = CreateDialogIndirect( ( HINSTANCE     ) wvg_hInstance(),
                                       ( LPDLGTEMPLATE ) lpTemplate,
                                                         hb_parl( 2 ) ? _s->hWnd : NULL,
                                       ( DLGPROC       ) hb_parnl( 3 ) );
@@ -1006,7 +1013,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
             case 0:
             {
                LPTSTR lpTemplate = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-               hDlg = CreateDialog( ( HINSTANCE ) hb_hInstance,
+               hDlg = CreateDialog( ( HINSTANCE ) wvg_hInstance(),
                                                   lpTemplate,
                                                   hb_parl( 2 ) ? _s->hWnd : NULL,
                                       ( DLGPROC ) hb_wvt_gtDlgProcMLess );
@@ -1016,7 +1023,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
 
             case 1:
             {
-               hDlg = CreateDialog( ( HINSTANCE ) hb_hInstance,
+               hDlg = CreateDialog( ( HINSTANCE ) wvg_hInstance(),
                                     MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
                                     hb_parl( 2 ) ? _s->hWnd : NULL,
                                     ( DLGPROC ) hb_wvt_gtDlgProcMLess );
@@ -1026,7 +1033,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
             case 2:
             {
                /* hb_parc( 1 ) is already unicode compliant, so no conversion */
-               hDlg = CreateDialogIndirect( ( HINSTANCE     ) hb_hInstance,
+               hDlg = CreateDialogIndirect( ( HINSTANCE     ) wvg_hInstance(),
                                             ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                             hb_parl( 2 ) ? _s->hWnd : NULL,
                                             ( DLGPROC ) hb_wvt_gtDlgProcMLess );
@@ -1133,7 +1140,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
       case 0:
       {
          LPTSTR lpTemplate = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-         iResult = DialogBoxParam( ( HINSTANCE     ) hb_hInstance,
+         iResult = DialogBoxParam( ( HINSTANCE     ) wvg_hInstance(),
                                                      lpTemplate,
                                                      hParent,
                                          ( DLGPROC ) hb_wvt_gtDlgProcModal,
@@ -1144,7 +1151,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
 
       case 1:
       {
-         iResult = DialogBoxParam( ( HINSTANCE     ) hb_hInstance,
+         iResult = DialogBoxParam( ( HINSTANCE     ) wvg_hInstance(),
                            MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
                                                      hParent,
                                          ( DLGPROC ) hb_wvt_gtDlgProcModal,
@@ -1155,7 +1162,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
       case 2:
       {
          /* hb_parc( 1 ) is already unicode compliant, so no conversion */
-         iResult = DialogBoxIndirectParam( ( HINSTANCE     ) hb_hInstance,
+         iResult = DialogBoxIndirectParam( ( HINSTANCE     ) wvg_hInstance(),
                                            ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                                              hParent,
                                                  ( DLGPROC ) hb_wvt_gtDlgProcModal,
@@ -1372,7 +1379,7 @@ HB_FUNC( WVT_DLGSETICON )
 
    if ( ISNUM( 2 ) )
    {
-      hIcon = LoadIcon( ( HINSTANCE ) hb_hInstance, MAKEINTRESOURCE( hb_parni( 2 ) ) );
+      hIcon = LoadIcon( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 2 ) ) );
    }
    else
    {
@@ -1648,7 +1655,7 @@ HB_FUNC( WIN_LOADICON )
 
    if ( ISNUM( 1 ) )
    {
-      hIcon = LoadIcon( ( HINSTANCE ) hb_hInstance, MAKEINTRESOURCE( hb_parni( 1 ) ) );
+      hIcon = LoadIcon( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
    }
    else
    {
@@ -1676,11 +1683,11 @@ HB_FUNC( WIN_LOADIMAGE )
    switch ( iSource )
    {
       case 0:
-         hImage = LoadBitmap( ( HINSTANCE ) hb_hInstance, MAKEINTRESOURCE( hb_parni( 1 ) ) );
+         hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
          break;
 
       case 1:
-         hImage = LoadBitmap( ( HINSTANCE ) hb_hInstance, lpBuffer );
+         hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), lpBuffer );
          break;
 
       case 2:
