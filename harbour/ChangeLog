@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-28 12:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbfimage/fi_winfu.c
+     ! Added CBM_INIT definition for Pellec C in WinCE mode.
+       [UNDONE. CreateDIBitmap() also doesn't exist in WinCE. ]
+
 2008-08-28 12:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_vc.bat
      * Updated usage text.
