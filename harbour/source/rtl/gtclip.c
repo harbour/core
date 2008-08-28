@@ -60,7 +60,7 @@
    #include <wchar.h>
 #elif defined( __POCC__ ) && defined( HB_WINCE )
    #ifndef GMEM_MOVEABLE
-      #define GMEM_MOVEABLE       0x0002
+      #define GMEM_MOVEABLE       2
    #endif
 #endif
 
