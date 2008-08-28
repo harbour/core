@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-28 20:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtchrmap.c
+   * source/rtl/hbgtcore.c
+   * source/vm/hvm.c
+     + Added three TOFIXes regarding namespace violations.
+       s_pszLinkedMain        -> hb_vm_pszLinkedMain
+       s_defaultGT            -> hb_gt_szNameDefault
+       s_szDefaultCharMapFile -> hb_gt_szCharMapFileDefault
+       TOFIX: These should be fixed in 1.1 (or maybe even in 
+              1.0.1 if this isn't such a big problem for 3rd 
+              parties).
+
 2008-08-28 18:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/gtwvg/wvgutils.c
      ! Fixed to use documented Harbour API hb_winmainArgGet() 

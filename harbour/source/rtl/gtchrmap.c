@@ -62,6 +62,10 @@
 #define MAX_CHAR_VAL    0xff
 #define HB_CHRMAP(a,c)  ( ( (a) << 16 ) | (c) )
 
+/* TOFIX: s_szDefaultCharMapFile is violating namespace, so it should be 
+          renamed to hb_gt_szCharMapFileDefault, or wrapped into an 
+          official API ASAP. [vszakats] */
+
 char * s_szDefaultCharMapFile = "/etc/harbour/hb-charmap.def";
 
 static void chrmap_init( int *piTransTbl )

@@ -228,7 +228,10 @@ static BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
 #  define HB_TRACE_PRG( _TRMSG_ ) if( hb_bTracePrgCalls ) HB_TRACE( HB_TR_ALWAYS, _TRMSG_ )
 #endif
 
-HB_EXPORT const char * s_pszLinkedMain = NULL; /* name of starup function set by linker */
+/* TOFIX: s_pszLinkedMain is violating namespace, so it should be 
+          renamed to hb_vm_pszLinkedMain ASAP. [vszakats] */
+
+HB_EXPORT const char * s_pszLinkedMain = NULL; /* name of startup function set by linker */
 
 /* virtual machine state */
 

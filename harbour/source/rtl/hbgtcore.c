@@ -75,7 +75,7 @@ static HB_FHANDLE s_hStdOut = ( HB_FHANDLE ) 1;
 static HB_FHANDLE s_hStdErr = ( HB_FHANDLE ) 2;
 
 /* base GT strucure */
-static PHB_GT_BASE   s_curGT = NULL;
+static PHB_GT_BASE s_curGT = NULL;
 
 PHB_GT hb_gt_Base( void )
 {
@@ -3016,6 +3016,9 @@ static HB_GT_FUNCS s_gtCoreFunc =
 /* ************************************************************************* */
 
 static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
+
+/* TOFIX: s_defaultGT is violating namespace, so it should be 
+          renamed to hb_gt_szNameDefault ASAP. [vszakats] */
 
 #if defined(HB_GT_DEFAULT)
    HB_EXPORT const char * s_defaultGT = HB_GT_DRVNAME( HB_GT_DEFAULT );
