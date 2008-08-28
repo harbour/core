@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-28 20:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_vc.bat
+   - make_vcce.bat
+     + Added some additional information how to create WinCE 
+       builds using make_vc.bat.
+     - Deleted make_vcce.bat
+
 2008-08-28 20:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtchrmap.c
    * source/rtl/hbgtcore.c

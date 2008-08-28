@@ -19,8 +19,12 @@ rem    set HB_REBUILD_PARSER=yes
 rem    set HB_MAKE_PROGRAM=
 rem    set HB_SHOW_ERRORS=
 rem    set HB_MAKE_FLAGS=
-rem    set HB_CC_NAME=vc or vcce
+rem
+rem To create a WinCE build, use the following settings:
 rem    set HB_BUILD_WINCE=yes
+rem    set HB_CC_NAME=vcce
+rem    set HB=C:\your_harbour_windows_binaries\harbour.exe
+rem    set HBPP=C:\your_harbour_windows_binaries\hbpp.exe
 rem ---------------------------------------------------------------
 
 set _HB_CC_NAME=%HB_CC_NAME%
