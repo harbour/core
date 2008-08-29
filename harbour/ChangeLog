@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-29 14:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * utils/hbmake/hbmake.prg
+     ; Applied patch created by Bill Robertson:
+     * The following functions aren't used in hbmake and were removed:
+       FindCfile(), TestforPrg(), AsDll(), ExtenPrg(), GetMakeDir()
+
 2008-08-29 11:29 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompdf.h
   * harbour/source/compiler/hbmain.c
@@ -26,7 +32,7 @@
    * bin/postinst.sh
    * source/vm/Makefile
      * Renamed 'cemgw' HB_COMPILER name to 'mingwce' 
-       for consitency.
+       for consistency.
 
 2008-08-29 10:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * ChangeLog

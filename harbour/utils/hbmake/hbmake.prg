@@ -4804,15 +4804,6 @@ FUNCTION SetBuildLib( nFHandle )
 
 RETURN NIL
 
-*---------------------------------
-FUNCTION FindCfile( citem, aSrcc )
-*---------------------------------
- LOCAL nReturnPos := 0
-
- nReturnPos := AScan( aSrcc, { | x | Lower( x[ 1 ] ) == cItem } )
-
-RETURN nReturnPos
-
 *----------------------------
 FUNCTION CheckIFfile( nFHandle, cFile )
 *----------------------------
@@ -5147,41 +5138,6 @@ FUNCTION FindHarbourCfg( cCfg )
 
 RETURN lFound
 
-*---------------------------
-FUNCTION TestforPrg( cFile )
-*---------------------------
-
-   LOCAL aFiles AS ARRAY  := {}
-   LOCAL cPath AS STRING  := ""
-   LOCAL cTest AS STRING  := ""
-   LOCAL cDrive AS STRING := ""
-   LOCAL cExt AS STRING   := ""
-   LOCAL cItem AS STRING  := ""
-   LOCAL aDir AS ARRAY
-   LOCAL nPos AS NUMERIC
-   LOCAL nFiles AS NUMERIC
-
-   hb_FNAMESPLIT( cFile, @cPath, @cTest, @cExt, @cDrive )
-
-   cExt := Substr( cExt, 2 )
-   aDir := Directory( cTest + ".*" )
-
-   FOR nPos := 1 TO 7
-      cItem := cTest + "." + Extenprg( cExt, nPos )
-      AAdd( aFiles, cItem )
-   NEXT
-
-   FOR nFiles := 1 TO Len( aFiles )
-      nPos := AScan( aDir, { | a | a[ 1 ] == aFiles[ nFiles ] } )
-
-      IF nPos > 0
-         AAdd( s_aPrgs, aFiles[ nFiles ] )
-      ENDIF
-
-   NEXT
-
-RETURN NIL
-
 *-------------------
 FUNCTION GetGccDir()
 *-------------------
@@ -5325,7 +5281,6 @@ FUNCTION ConvertParams( cFile, aFile, p1, p2, p3, p4, p5, p6 )
 
 
 RETURN cParam
-
 
 *------------------------------------
 FUNCTION ProcessParameters( cParams )
@@ -5738,7 +5693,6 @@ LOCAL aLang := Array( 67 )
 
 RETURN aLang
 
-
 *------------------------------------------
 FUNCTION GetSelFiles( aInFiles, aOutFiles )
 *------------------------------------------
@@ -5841,13 +5795,6 @@ for Each n In aTempLibs
 next
 
 RETURN c
-
-*----------------
-FUNCTION AsDll(x)
-*----------------
-LOCAL y := x
- x := !y
-RETURN .T.
 
 *--------------------
 FUNCTION Delete_ppo()
@@ -6747,44 +6694,6 @@ FUNCTION GetSourceFiles( lSubDir, lGcc, cOs )
 
    RETURN aRet
 
-*-------------------------------
-FUNCTION ExtenPrg( cExt, nType )
-*-------------------------------
-
-   LOCAL aExt   := { "C", "c" }
-   LOCAL nPos
-   LOCAL cTemp  := ""
-
-   nPos := ASCAN( aExt, { | a | a == cExt } )
-
-   IF nPos > 0
-      SWITCH nType
-      CASE 1
-         cTemp := STRTRAN( cExt, aExt[ nPos ], "prg" )
-         EXIT
-      CASE  2
-         cTemp := STRTRAN( cExt, aExt[ nPos ], "prG" )
-         EXIT
-      CASE  3
-         cTemp := STRTRAN( cExt, aExt[ nPos ], "pRg" )
-         EXIT
-      CASE  4
-         cTemp := STRTRAN( cExt, aExt[ nPos ], "Prg" )
-         EXIT
-      CASE  5
-         cTemp := STRTRAN( cExt, aExt[ nPos ], "PRg" )
-         EXIT
-      CASE  6
-         cTemp := STRTRAN( cExt, aExt[ nPos ], "PrG" )
-         EXIT
-      CASE  7
-         cTemp := STRTRAN( cExt, aExt[ nPos ], "PRG" )
-         EXIT
-      END
-   ENDIF
-
-   RETURN cTemp
-
 *----------------------------------------
 STATIC FUNCTION GetDirs( cPattern, lGcc )
 *----------------------------------------
@@ -6920,19 +6829,6 @@ FUNCTION Exten( cExt, nType )
    ENDIF
 
    RETURN cTemp
-
-*--------------------
-FUNCTION GetMakeDir()
-*--------------------
-
-   LOCAL cPath := ""
-   LOCAL cExe  := HB_ARGV( 0 )
-
-   cExe  := STRTRAN( cExe, "/", "\" )
-   cPath := LEFT( cexe, RAT( "\", cexe ) - 1 )
-   cPath := LEFT( cPath, RAT( "\", cPath ) - 1 )
-
-   RETURN cPath
 
 *----------------------------
 FUNCTION GetSourceDirMacros()
