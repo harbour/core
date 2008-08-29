@@ -67,8 +67,6 @@
 
 #xtranslate TimeToSec(<x>) => ( ( Val( Substr( <x>, 1, 2 ) ) * 3600 ) +( Val( Substr( <x>, 4, 2 ) ) * 60 ) + ( Val( Substr( <x>, 7, 2 ) ) ) )
 
-#translate DateDiff(<x>,<y>) => (<x>-<y>)
-
 #Define HBM_USE_DEPENDS    // Set this to have section #DEPENDS parsed like RMake, Ath 2004-06
                            // An extra parameter is added to FileIsNewer() to have it check the INCLUDE paths also
                            // Interactive mode asks whether sources should be scanned for dependencies (#include, set procedure to, set proc to

@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-29 10:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * ChangeLog
+     ! Minor typo.
+
+   * utils/hbmake/hbmake.prg
+     % Minor cleanup.
+
+   * source/common/hbver.c
+     * Further cleanup of constant usage.
+     + Changed Borland to CodeGear to BCC5.9 and above.
+       (borrowed from xhb / Andi Jahja)
+
+   * config/w32/gcc.cf
+   * config/w32/dm.cf
+     * contrib syslibs moved to separate lines.
+
 2008-08-28 20:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_vc.bat
    - make_vcce.bat
@@ -782,7 +798,7 @@
    * utils/hbdoc/bld_b32.bat
    * utils/hbmake/bld_b32.bat
    * utils/hbmake/bld_vc.bat
-     + Harbour option: /w2
+     + Harbour option: /w3
      - Harbour option: /gc0 (now default)
 
    * common.mak

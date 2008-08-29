@@ -55,7 +55,8 @@ ifneq ($(LNK_USR_LIB),)
 LINKLIBS += $(foreach lib, $(LNK_USR_LIB), $(lib)$(LIB_EXT))
 endif
 
-SYSLIBS = kernel32 user32 winspool gdi32 comctl32 comdlg32 ole32 oleaut32 uuid wsock32 advapi32
+SYSLIBS = kernel32 user32 gdi32 wsock32 advapi32
+SYSLIBS += winspool comctl32 comdlg32 ole32 oleaut32 uuid
 LINKLIBS += $(SYSLIBS)
 
 

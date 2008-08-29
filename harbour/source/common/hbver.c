@@ -120,7 +120,7 @@ char * hb_verPlatform( void )
       regs.h.ah = 0x30;
       HB_DOS_INT86( 0x21, &regs, &regs );
 
-      snprintf( pszPlatform, 256, "DOS %d.%02d", regs.h.al, regs.h.ah );
+      snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "DOS %d.%02d", regs.h.al, regs.h.ah );
 
       /* Host OS detection: Windows 2.x, 3.x, 95/98 */
 
@@ -184,16 +184,16 @@ char * hb_verPlatform( void )
          /* is this OS/2 2.x ? */
          if( aulQSV[ QSV_VERSION_MINOR - 1 ] < 30 )
          {
-            snprintf( pszPlatform, 256, "OS/2 %ld.%02ld",
+            snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "OS/2 %ld.%02ld",
                       aulQSV[ QSV_VERSION_MAJOR - 1 ] / 10,
                       aulQSV[ QSV_VERSION_MINOR - 1 ] );
          }
          else
-            snprintf( pszPlatform, 256, "OS/2 %2.2f",
+            snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "OS/2 %2.2f",
                       ( float ) aulQSV[ QSV_VERSION_MINOR - 1 ] / 10 );
       }
       else
-         snprintf( pszPlatform, 256, "OS/2" );
+         snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "OS/2" );
    }
 
 #elif defined(HB_OS_WIN_32)
@@ -260,7 +260,7 @@ char * hb_verPlatform( void )
                break;
          }
 
-         snprintf( pszPlatform, 256, "%s %lu.%lu.%04d",
+         snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "%s %lu.%lu.%04d",
                    pszName,
                    ( ULONG ) osVer.dwMajorVersion,
                    ( ULONG ) osVer.dwMinorVersion,
@@ -283,12 +283,12 @@ char * hb_verPlatform( void )
          }
       }
       else
-         snprintf( pszPlatform, 256, "Windows" );
+         snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows" );
    }
 
 #elif defined(__CEGCC__)
    {
-      snprintf( pszPlatform, 256, "Windows" );
+      snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows CE" );
    }
 #elif defined(HB_OS_UNIX)
 
@@ -296,7 +296,7 @@ char * hb_verPlatform( void )
       struct utsname un;
 
       uname( &un );
-      snprintf( pszPlatform, 256, "%s %s %s", un.sysname, un.release, un.machine );
+      snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "%s %s %s", un.sysname, un.release, un.machine );
    }
 
 #else
@@ -425,7 +425,11 @@ char * hb_verCompiler( void )
 
 #elif defined(__BORLANDC__)
 
-   pszName = "Borland C++";
+   #if (__BORLANDC__ >= 1424) /* Version 5.9 */
+      pszName = "CodeGear C++";
+   #else
+      pszName = "Borland C++";
+   #endif
    #if (__BORLANDC__ == 1040) /* Version 3.1 */
       iVerMajor = 3;
       iVerMinor = 1;
