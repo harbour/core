@@ -18,7 +18,7 @@ UNAMEL=`echo "$UNAME"|tr A-Z a-z`
 UNAMEU=`echo "$UNAME"|tr a-z A-Z`
 
 export HB_ARCHITECTURE=w32
-export HB_COMPILER=cemgw
+export HB_COMPILER=mingwce
 
 if [ "$OSTYPE" = "msdosdjgpp" ]; then
     HB_HOST_ARCH="dos"
@@ -40,7 +40,7 @@ if [ "$HB_HOST_ARCH" != "w32" ]; then
 fi
 
 [ -z "$HB_INSTALL_PREFIX" ] && \
-export HB_INSTALL_PREFIX="/usr/local/arm-wince-cemgw-harbour"
+export HB_INSTALL_PREFIX="/usr/local/arm-wince-mingwce-harbour"
 export CC_C_USR=""
 export C_USR="$CC_C_USR $C_USR"
 export CC_PRG_USR

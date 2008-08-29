@@ -9,7 +9,7 @@ ifeq ($(HB_ARCHITECTURE),w32)
 		C_MAIN = mainwin.c
 		DIRS = mainstd
 	else
-		ifeq ($(HB_COMPILER),cemgw)
+		ifeq ($(HB_COMPILER),mingwce)
 			C_MAIN = mainwin.c
 			DIRS = mainstd mainwin
 		else

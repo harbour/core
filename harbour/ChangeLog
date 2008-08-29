@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-29 10:40 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   + config/w32/mingwce.cf
+   - config/w32/cemgw.cf
+   * harbour-ce-spec
+   * make_xmingwce.sh
+   * bin/hb-mkslib.sh
+   * bin/hb-func.sh
+   * bin/postinst.sh
+   * source/vm/Makefile
+     * Renamed 'cemgw' HB_COMPILER name to 'mingwce' 
+       for consitency.
+
 2008-08-29 10:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * ChangeLog
      ! Minor typo.
