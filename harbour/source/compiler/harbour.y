@@ -1325,7 +1325,6 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                   HB_COMP_PARAM->pLastMethod->cType = HB_COMP_PARAM->cVarType;
                   HB_COMP_PARAM->pLastMethod->iParamCount = 1;
 
-                  /* TOFIX: these allocations causes memory leaks */
                   HB_COMP_PARAM->pLastMethod->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
                   HB_COMP_PARAM->pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
 

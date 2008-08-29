@@ -40,7 +40,6 @@
  *    hb_compMethodAdd()
  *    hb_compMethodFind()
  *    hb_compDeclaredAdd()
- *    hb_compDeclaredInit()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -74,8 +73,6 @@
 static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType );
 static int hb_compProcessRSPFile( HB_COMP_DECL, char * ); /* process response file */
 static int hb_compAutoOpen( HB_COMP_DECL, const char * szPrg, BOOL * bSkipGen, int iFileType );
-
-static void hb_compDeclaredInit( HB_COMP_DECL );
 
 
 /* ************************************************************************* */
@@ -133,10 +130,6 @@ int hb_compMain( int argc, char * argv[], BYTE ** pBufPtr, ULONG * pulSize,
 
       /* Prepare the table of identifiers */
       hb_compIdentifierOpen( HB_COMP_PARAM );
-
-      /* Load standard Declarations. */
-      if( HB_COMP_PARAM->iWarnings >= 3 )
-         hb_compDeclaredInit( HB_COMP_PARAM );
    }
 
    if( szSource )
@@ -1009,25 +1002,8 @@ PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * szClassName, char * szClassFunc 
 
    if( ( pClass = hb_compClassFind( HB_COMP_PARAM, szClassName ) ) != NULL )
    {
-      PCOMCLASS * pClassPtr = &HB_COMP_PARAM->pFirstClass;
-
-      while( *pClassPtr && *pClassPtr != HB_COMP_PARAM->pReleaseClass )
-      {
-         /* It's predefined class, allow to redefine them */
-         if( *pClassPtr == pClass )
-         {
-            *pClassPtr = pClass->pNext;
-            pClass = NULL;
-            break;
-         }
-         pClassPtr = &( *pClassPtr )->pNext;
-      }
-
-      if( pClass )
-      {
-         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "class", szClassName );
-         return pClass;
-      }
+      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "class", szClassName );
+      return pClass;
    }
 
    pClass = ( PCOMCLASS ) hb_xgrab( sizeof( COMCLASS ) );
@@ -1047,11 +1023,6 @@ PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * szClassName, char * szClassFunc 
    pDeclared = hb_compDeclaredAdd( HB_COMP_PARAM, szClassFunc ? szClassFunc : szClassName );
    pDeclared->cType = 'S';
    pDeclared->pClass = pClass;
-   
-   if( ! HB_COMP_PARAM->pReleaseClass )
-   {
-      HB_COMP_PARAM->pReleaseClass = pClass;
-   }
    
    return pClass;
 }
@@ -1087,8 +1058,12 @@ PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, char * szMethodNa
       hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "method", szMethodName );
 
       /* Last Declaration override previous declarations */
-      pMethod->cParamTypes = NULL;
       pMethod->iParamCount = 0;
+      if( pMethod->cParamTypes )
+         hb_xfree( pMethod->cParamTypes );
+      pMethod->cParamTypes = NULL;
+      if( pMethod->pParamClasses )
+         hb_xfree( pMethod->pParamClasses );
       pMethod->pParamClasses = NULL;
 
       return pMethod;
@@ -1113,446 +1088,6 @@ PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, char * szMethodNa
    HB_COMP_PARAM->pLastMethod = pMethod;
 
    return pMethod;
-}
-
-static void hb_compDeclaredInit( HB_COMP_DECL )
-{
-  #define _DECL static COMDECLARED
-
-  /*
-    \x5c -> ByRef    (+60)             '-'  -> NIL
-    \x7a -> Optional (+90)             'U'  -> Undefined
-
-    ' '  -> AnyType                    'A'  -> Array                     'B'  -> Array
-    'A'  -> Array of AnyType           'a'  -> Array of Arrays           'b'  -> Array of Blocks
-    \x7a -> Optional AnyType           \x9b -> Optional Array            \x9c -> Optional Block
-    \x94 -> Optional Array of AnyType  \xb5 -> Optional Array of Arrays  \xb6 -> Optional Array of Blocks
-
-    'C'  -> Character/String           'D'  -> Date                      'L'  -> Logical
-    'c'  -> Array of Strings           'd'  -> Array of Dates            'l'  -> Array of Logicals
-    \x9d -> Optional Character         \x9e -> Optional Date             \xa6 -> Optional Logical
-    \xb7 -> Optional Array of Strings  \xb8 -> Optional Array of Dates   \xc0 -> Optional Array of Logicals
-
-    'N'  -> Numeric                    'O'  -> Object                    'S'  -> Class
-    'n'  -> Array of Numerics          'o'  -> Array of Objects          's'  -> Array of Classes
-    \xa8 -> Optional Numeric           \xa9 -> Optional Object           \xad -> Optional Class
-    \xc2 -> Optional Array of Numerics \xc3 -> Optional Array of Objects \xc7 -> Optional Array of Classes
-   */
-
-   /* ------------------------------------------------- Standard Functions -------------------------------------------------- */
-
-   /*              Name        Ret  # of Prams  Param Types                                                   Ret Class  Param Classes  Next
-                   ----------  ---  ----------  ------------------------------                                ---------  -------------  ------ */
-   _DECL s_001 = { "AADD"            , ' ', 2 , (BYTE*)"A "                                                   , NULL     , NULL , NULL  };
-   _DECL s_002 = { "ABS"             , 'N', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_001};
-   _DECL s_003 = { "ACHOICE"         , 'N', 9 , (BYTE*)"NNNNA\x7a\x9d\xa8\xa8"                                , NULL     , NULL , &s_002};
-   _DECL s_004 = { "ACLONE"          , 'A', 1 , (BYTE*)"A"                                                    , NULL     , NULL , &s_003};
-   _DECL s_005 = { "ACOPY"           , 'A', 5 , (BYTE*)"AA\xa8\xa8\xa8"                                       , NULL     , NULL , &s_004};
-   _DECL s_006 = { "ADEL"            , 'A', 2 , (BYTE*)"AN"                                                   , NULL     , NULL , &s_005};
-   _DECL s_007 = { "ADIR"            , 'N', 6 , (BYTE*)"\x9d\x9b\x9b\x9b\x9b\x9b"                             , NULL     , NULL , &s_006};
-   _DECL s_008 = { "AEVAL"           , 'A', 4 , (BYTE*)"AB\xa8\xa8"                                           , NULL     , NULL , &s_007};
-   _DECL s_009 = { "AFIELDS"         , 'N', 4 , (BYTE*)"A\x9b\x9b\x9b"                                        , NULL     , NULL , &s_008};
-   _DECL s_010 = { "AFILL"           , 'A', 4 , (BYTE*)"A \xa8\xa8"                                           , NULL     , NULL , &s_009};
-   _DECL s_011 = { "AINS"            , 'A', 2 , (BYTE*)"AN"                                                   , NULL     , NULL , &s_010};
-   _DECL s_012 = { "ALERT"           , 'N', 4 , (BYTE*)"C\x9b\x9d\xa8"                                        , NULL     , NULL , &s_011};
-   _DECL s_013 = { "ALIAS"           , 'C', 1 , (BYTE*)"\xa8"                                                 , NULL     , NULL , &s_012};
-   _DECL s_014 = { "ALLTRIM"         , 'C', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_013};
-   _DECL s_015 = { "AMPM"            , 'C', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_014};
-   _DECL s_016 = { "ARRAY"           , 'A', 3 , (BYTE*)"N\xa8\xa8"                                            , NULL     , NULL , &s_015};
-   _DECL s_017 = { "ASC"             , 'N', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_016};
-   _DECL s_018 = { "ASCAN"           , 'N', 4 , (BYTE*)"A\xa7\xa8\xa8"                                        , NULL     , NULL , &s_017};
-   _DECL s_019 = { "ASIZE"           , 'A', 2 , (BYTE*)"AN"                                                   , NULL     , NULL , &s_018};
-   _DECL s_020 = { "ASORT"           , 'A', 4 , (BYTE*)"A\xa8\xa8\x9c"                                        , NULL     , NULL , &s_019};
-   _DECL s_021 = { "AT"              , 'N', 2 , (BYTE*)"CC"                                                   , NULL     , NULL , &s_020};
-   _DECL s_022 = { "ATAIL"           , ' ', 1 , (BYTE*)"A"                                                    , NULL     , NULL , &s_021};
-   _DECL s_023 = { "BIN2I"           , 'N', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_022};
-   _DECL s_024 = { "BIN2L"           , 'N', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_023};
-   _DECL s_025 = { "BIN2U"           , 'N', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_024};
-   _DECL s_026 = { "BIN2W"           , 'N', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_025};
-   _DECL s_027 = { "BOF"             , 'L', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_026};
-   _DECL s_028 = { "BROWSE"          , '-', 4 , (BYTE*)"\xa8\xa8\xa8\xa8"                                     , NULL     , NULL , &s_027};
-   _DECL s_029 = { "CDOW"            , 'C', 1 , (BYTE*)"D"                                                    , NULL     , NULL , &s_028};
-   _DECL s_030 = { "CHR"             , 'C', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_029};
-   _DECL s_031 = { "CMONTH"          , 'C', 1 , (BYTE*)"D"                                                    , NULL     , NULL , &s_030};
-   _DECL s_032 = { "COL"             , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_031};
-   _DECL s_033 = { "CTOD"            , 'D', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_032};
-   _DECL s_034 = { "CURDIR"          , 'C', 1 , (BYTE*)"\x9d"                                                 , NULL     , NULL , &s_033};
-   _DECL s_035 = { "DATE"            , 'D', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_034};
-   _DECL s_036 = { "DAY"             , 'N', 1 , (BYTE*)"D"                                                    , NULL     , NULL , &s_035};
-   _DECL s_037 = { "DAYS"            , 'N', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_036};
-   _DECL s_038 = { "DBAPPEND"        , '-', 1 , (BYTE*)"\xa6"                                                 , NULL     , NULL , &s_037};
-   _DECL s_039 = { "DBCLEARFILTER"   , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_038};
-   _DECL s_040 = { "DBCLEARINDEX"    , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_039};
-   _DECL s_041 = { "DBCLEARRELATION" , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_040};
-   _DECL s_042 = { "DBCLOSEALL"      , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_041};
-   _DECL s_043 = { "DBCLOSEAREA"     , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_042};
-   _DECL s_044 = { "DBCOMMIT"        , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_043};
-   _DECL s_045 = { "DBCOMMITALL"     , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_044};
-   _DECL s_046 = { "DBCREATE"        , '-', 5 , (BYTE*)"CA\x9d\xa6\x9d"                                       , NULL     , NULL , &s_045};
-   _DECL s_047 = { "DBCREATEINDEX"   , '-', 5 , (BYTE*)"C B\xa6\xa6"                                          , NULL     , NULL , &s_046};
-   _DECL s_048 = { "DBDELETE"        , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_047};
-   _DECL s_049 = { "DBEDIT"          , '-',12 , (BYTE*)"\xa8\xa8\xa8\xa8\x7a\x7a\x7a\x7a\x7a\x7a\x7a\x7a"     , NULL     , NULL , &s_048};
-   _DECL s_050 = { "DBEVAL"          , '-', 6 , (BYTE*)"B\x9c\x9cNNL"                                         , NULL     , NULL , &s_049};
-   _DECL s_051 = { "DBF"             , 'C', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_050};
-   _DECL s_052 = { "DBFILTER"        , ' ', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_051};
-   _DECL s_053 = { "DBGOBOTTOM"      , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_052};
-   _DECL s_054 = { "DBGOTO"          , '-', 1 , (BYTE*)"\x7a"                                                 , NULL     , NULL , &s_053};
-   _DECL s_055 = { "DBGOTOP"         , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_054};
-   _DECL s_056 = { "DBRECALL"        , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_055};
-   _DECL s_057 = { "DBREINDEX"       , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_056};
-   _DECL s_058 = { "DBRELATION"      , ' ', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_057};
-   _DECL s_059 = { "DBRLOCK"         , 'L', 1 , (BYTE*)"\x7a"                                                 , NULL     , NULL , &s_058};
-   _DECL s_060 = { "DBRLOCKLIST"     , 'A', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_059};
-   _DECL s_061 = { "DBRSELECT"       , 'N', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_060};
-   _DECL s_062 = { "DBRUNLOCK"       , '-', 1 , (BYTE*)"\x7a"                                                 , NULL     , NULL , &s_061};
-   _DECL s_063 = { "DBSEEK"          , 'L', 3 , (BYTE*)" \xa6\xa6"                                            , NULL     , NULL , &s_062};
-   _DECL s_064 = { "DBSELECTAREA"    , '-', 1 , (BYTE*)" "                                                    , NULL     , NULL , &s_063};
-   _DECL s_065 = { "DBSETDRIVER"     , 'C', 1 , (BYTE*)"\x9d"                                                 , NULL     , NULL , &s_064};
-   _DECL s_066 = { "DBSETFILTER"     , '-', 2 , (BYTE*)"B\x9d"                                                , NULL     , NULL , &s_065};
-   _DECL s_067 = { "DBSETINDEX"      , '-', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_066};
-   _DECL s_068 = { "DBSETORDER"      , '-', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_067};
-   _DECL s_069 = { "DBSETRELATION"   , '-', 3 , (BYTE*)" BC"                                                  , NULL     , NULL , &s_068};
-   _DECL s_070 = { "DBSKIP"          , '-', 1 , (BYTE*)"\xa8"                                                 , NULL     , NULL , &s_069};
-   _DECL s_071 = { "DBSTRUCT"        , 'A', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_070};
-   _DECL s_072 = { "DBUNLOCK"        , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_071};
-   _DECL s_073 = { "DBUNLOCKALL"     , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_072};
-   _DECL s_074 = { "DBUSEAREA"       , '-', 6 , (BYTE*)"\xa6\x9d""C\x9d\xa6\xa6"                              , NULL     , NULL , &s_073};
-   _DECL s_075 = { "DELETED"         , 'L', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_074};
-   _DECL s_076 = { "DESCEND"         , ' ', 1 , (BYTE*)" "                                                    , NULL     , NULL , &s_075};
-   _DECL s_077 = { "DEVOUT"          , '-', 2 , (BYTE*)" \x9d"                                                , NULL     , NULL , &s_076};
-   _DECL s_078 = { "DEVOUTPICT"      , '-', 3 , (BYTE*)" C\x9d"                                               , NULL     , NULL , &s_077};
-   _DECL s_079 = { "DEVPOS"          , '-', 2 , (BYTE*)"NN"                                                   , NULL     , NULL , &s_078};
-   _DECL s_080 = { "DIRECTORY"       , 'A', 3 , (BYTE*)"\x9d\x9d\xa6"                                         , NULL     , NULL , &s_079};
-   _DECL s_081 = { "DIRCHANGE"       , 'N', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_080};
-   _DECL s_082 = { "DIRREMOVE"       , 'N', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_081};
-   _DECL s_083 = { "DISKSPACE"       , 'N', 1 , (BYTE*)"\xa8"                                                 , NULL     , NULL , &s_082};
-   _DECL s_084 = { "DISPBEGIN"       , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_083};
-   _DECL s_085 = { "DISPCOUNT"       , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_084};
-   _DECL s_086 = { "DISPEND"         , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_085};
-   _DECL s_087 = { "DISPOUT"         , '-', 2 , (BYTE*)" \x9d"                                                , NULL     , NULL , &s_086};
-   _DECL s_088 = { "DOW"             , 'N', 1 , (BYTE*)"D"                                                    , NULL     , NULL , &s_087};
-   _DECL s_089 = { "DTOC"            , 'C', 1 , (BYTE*)"D"                                                    , NULL     , NULL , &s_088};
-   _DECL s_090 = { "DTOS"            , 'C', 1 , (BYTE*)"D"                                                    , NULL     , NULL , &s_089};
-   _DECL s_091 = { "ELAPTIME"        , 'C', 2 , (BYTE*)"CC"                                                   , NULL     , NULL , &s_090};
-   _DECL s_092 = { "EMPTY"           , 'L', 1 , (BYTE*)" "                                                    , NULL     , NULL , &s_091};
-   _DECL s_093 = { "EOF"             , 'L', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_092};
-   _DECL s_094 = { "ERRORNEW"        , 'S', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_093};
-   _DECL s_095 = { "EVAL"            , ' ', 3 , (BYTE*)"B\x7a\x7a"                                            , NULL     , NULL , &s_094};
-   _DECL s_096 = { "EXP"             , 'N', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_095};
-   _DECL s_097 = { "FCLOSE"          , 'L', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_096};
-   _DECL s_098 = { "FCOUNT"          , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_097};
-   _DECL s_099 = { "FCREATE"         , 'N', 2 , (BYTE*)"C\xa8"                                                , NULL     , NULL , &s_098};
-   _DECL s_100 = { "FERASE"          , 'N', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_099};
-   _DECL s_101 = { "FERROR"          , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_100};
-   _DECL s_102 = { "FIELD"           , 'C', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_101};
-   _DECL s_103 = { "FIELDBLOCK"      , 'B', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_102};
-   _DECL s_104 = { "FIELDGET"        , ' ', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_103};
-   _DECL s_105 = { "FIELDNAME"       , 'C', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_104};
-   _DECL s_106 = { "FIELDPOS"        , 'N', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_105};
-   _DECL s_107 = { "FIELDPUT"        , ' ', 2 , (BYTE*)"N "                                                   , NULL     , NULL , &s_106};
-   _DECL s_108 = { "FIELDWBLOCK"     , 'B', 2 , (BYTE*)"CN"                                                   , NULL     , NULL , &s_107};
-   _DECL s_109 = { "FILE"            , 'L', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_108};
-   _DECL s_110 = { "FLOCK"           , 'L', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_109};
-   _DECL s_111 = { "FOPEN"           , 'N', 2 , (BYTE*)"C\xa8"                                                , NULL     , NULL , &s_110};
-   _DECL s_112 = { "FOUND"           , 'L', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_111};
-   _DECL s_113 = { "FREAD"           , 'N', 3 , (BYTE*)"N\x5cN"                                               , NULL     , NULL , &s_112};
-   _DECL s_114 = { "FREADSTR"        , 'C', 2 , (BYTE*)"NN"                                                   , NULL     , NULL , &s_113};
-   _DECL s_115 = { "FRENAME"         , 'N', 2 , (BYTE*)"CC"                                                   , NULL     , NULL , &s_114};
-   _DECL s_116 = { "FSEEK"           , 'N', 3 , (BYTE*)"NN\xa8"                                               , NULL     , NULL , &s_115};
-   _DECL s_117 = { "FWRITE"          , 'N', 3 , (BYTE*)"NC\xa8"                                               , NULL     , NULL , &s_116};
-   _DECL s_118 = { "GETACTIVE"       , '-', 1 , (BYTE*)"O"                                                    , NULL     , NULL , &s_117};
-   _DECL s_119 = { "GETAPPLYKEY"     , '-', 2 , (BYTE*)"ON"                                                   , NULL     , NULL , &s_118};
-   _DECL s_120 = { "GETDOSETKEY"     , '-', 2 , (BYTE*)"BO"                                                   , NULL     , NULL , &s_119};
-   _DECL s_121 = { "GETENV"          , 'C', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_120};
-   _DECL s_122 = { "GETNEW"          , 'O', 6 , (BYTE*)"\xa8\xa8\x9c\x9d\x9d\x9d"                             , NULL     , NULL , &s_121};
-   _DECL s_123 = { "GETPREVALIDATE"  , 'L', 1 , (BYTE*)"O"                                                    , NULL     , NULL , &s_122};
-   _DECL s_124 = { "GETPOSTVALIDATE" , 'L', 1 , (BYTE*)"O"                                                    , NULL     , NULL , &s_123};
-   _DECL s_125 = { "GETREADER"       , '-', 1 , (BYTE*)"O"                                                    , NULL     , NULL , &s_124};
-   _DECL s_126 = { "HARDCR"          , 'C', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_125};
-   _DECL s_127 = { "HB_ANSITOOEM"    , 'C', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_126};
-   _DECL s_128 = { "HB_DISKSPACE"    , 'N', 2 , (BYTE*)"\x9d\xa8"                                             , NULL     , NULL , &s_127};
-   _DECL s_129 = { "HB_FEOF"         , 'L', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_128};
-   _DECL s_130 = { "HB_OEMTOANSI"    , 'C', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_129};
-   _DECL s_131 = { "HEADER"          , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_130};
-   _DECL s_132 = { "I2BIN"           , 'C', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_131};
-   _DECL s_133 = { "IF"              , ' ', 3 , (BYTE*)"L  "                                                  , NULL     , NULL , &s_132};
-   _DECL s_134 = { "INDEXEXT"        , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_133};
-   _DECL s_135 = { "INDEXKEY"        , 'C', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_134};
-   _DECL s_136 = { "INDEXORD"        , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_135};
-   _DECL s_137 = { "INKEY"           , 'N', 2 , (BYTE*)"\xa8\xa8"                                             , NULL     , NULL , &s_136};
-   _DECL s_138 = { "INT"             , 'N', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_137};
-   _DECL s_139 = { "ISAFFIRM"        , 'L', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_138};
-   _DECL s_140 = { "ISALPHA"         , 'L', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_139};
-   _DECL s_141 = { "ISDIGIT"         , 'L', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_140};
-   _DECL s_142 = { "ISDISK"          , 'L', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_141};
-   _DECL s_143 = { "ISLOWER"         , 'L', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_142};
-   _DECL s_144 = { "ISNEGATIVE"      , 'L', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_143};
-   _DECL s_145 = { "ISUPPER"         , 'L', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_144};
-   _DECL s_146 = { "L2BIN"           , 'C', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_145};
-   _DECL s_147 = { "LASTKEY"         , 'N', 1 , (BYTE*)"\xa8"                                                 , NULL     , NULL , &s_146};
-   _DECL s_148 = { "LASTREC"         , 'N', 1 , (BYTE*)" "                                                    , NULL     , NULL , &s_147};
-   _DECL s_149 = { "LEFT"            , 'C', 2 , (BYTE*)"CN"                                                   , NULL     , NULL , &s_148};
-   _DECL s_150 = { "LEN"             , 'N', 1 , (BYTE*)" "                                                    , NULL     , NULL , &s_149};
-   _DECL s_151 = { "LOG"             , 'N', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_150};
-   _DECL s_152 = { "LOWER"           , 'C', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_151};
-   _DECL s_153 = { "LTRIM"           , 'C', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_152};
-   _DECL s_154 = { "LUPDATE"         , 'D', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_153};
-   _DECL s_155 = { "MAKEDIR"         , 'N', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_154};
-   _DECL s_156 = { "MAX"             , ' ', 2 , (BYTE*)"  "                                                   , NULL     , NULL , &s_155};
-   _DECL s_157 = { "MAXCOL"          , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_156};
-   _DECL s_158 = { "MAXROW"          , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_157};
-   _DECL s_159 = { "MCOL"            , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_158};
-   _DECL s_160 = { "MEMOEDIT"        , 'C',13 , (BYTE*)"\x9d\xa8\xa8\xa8\xa8\xa6\x9d\xa8\xa8\xa8\xa8\xa8\xa8" , NULL     , NULL , &s_159};
-   _DECL s_161 = { "MEMOTRAN"        , 'C', 3 , (BYTE*)"C\x9d\x9d"                                            , NULL     , NULL , &s_160};
-   _DECL s_162 = { "MEMOLINE"        , 'C', 5 , (BYTE*)"C\xa8\xa8\xa8\xa6"                                    , NULL     , NULL , &s_161};
-   _DECL s_163 = { "MEMORY"          , 'N', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_162};
-   _DECL s_164 = { "MEMOREAD"        , 'C', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_163};
-   _DECL s_165 = { "MEMOTRAN"        , 'C', 3 , (BYTE*)"C\x9d\x9d"                                            , NULL     , NULL , &s_164};
-   _DECL s_166 = { "MEMOWRIT"        , 'L', 2 , (BYTE*)"CC"                                                   , NULL     , NULL , &s_165};
-   _DECL s_167 = { "MEMVARBLOCK"     , 'B', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_166};
-   _DECL s_168 = { "MIN"             , ' ', 2 , (BYTE*)"  "                                                   , NULL     , NULL , &s_167};
-   _DECL s_169 = { "MLCOUNT"         , 'N', 4 , (BYTE*)"C\xa8\xa8\xa6"                                        , NULL     , NULL , &s_168};
-   _DECL s_170 = { "MLCTOPOS"        , 'L', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_169};
-   _DECL s_171 = { "MLPOS"           , 'N', 5 , (BYTE*)"CNN\xa8\xa6"                                          , NULL     , NULL , &s_170};
-   _DECL s_172 = { "MOD"             , 'N', 2 , (BYTE*)"NN"                                                   , NULL     , NULL , &s_171};
-   _DECL s_173 = { "MONTH"           , 'N', 1 , (BYTE*)"D"                                                    , NULL     , NULL , &s_172};
-   _DECL s_174 = { "MPOSTOLC"        , 'L', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_173};
-   _DECL s_175 = { "MROW"            , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_174};
-   _DECL s_176 = { "NATIONMSG"       , 'C', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_175};
-   _DECL s_177 = { "NETERR"          , 'L', 1 , (BYTE*)"\xa6"                                                 , NULL     , NULL , &s_176};
-   _DECL s_178 = { "NETNAME"         , 'C', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_177};
-   _DECL s_179 = { "NEXTKEY"         , 'N', 1 , (BYTE*)"\xa8"                                                 , NULL     , NULL , &s_178};
-   _DECL s_180 = { "ORDBAGEXT"       , 'C', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_179};
-   _DECL s_181 = { "ORDBAGNAME"      , 'C', 1 , (BYTE*)" "                                                    , NULL     , NULL , &s_180};
-   _DECL s_182 = { "ORDCREATE"       , '-', 5 , (BYTE*)"C\x9d \x9c\xa6"                                       , NULL     , NULL , &s_181};
-   _DECL s_183 = { "ORDDESTROY"      , '-', 2 , (BYTE*)"C\x9d"                                                , NULL     , NULL , &s_182};
-   _DECL s_184 = { "ORDFOR"          , 'C', 2 , (BYTE*)" \x9d"                                                , NULL     , NULL , &s_183};
-   _DECL s_185 = { "ORDKEY"          , 'C', 2 , (BYTE*)" \x9d"                                                , NULL     , NULL , &s_184};
-   _DECL s_186 = { "ORDLISTADD"      , '-', 2 , (BYTE*)"C\x9d"                                                , NULL     , NULL , &s_185};
-   _DECL s_187 = { "ORDLISTCLEAR"    , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_186};
-   _DECL s_188 = { "ORDLISTREBUILD"  , '-', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_187};
-   _DECL s_189 = { "ORDNAME"         , 'C', 2 , (BYTE*)"N\x9d"                                                , NULL     , NULL , &s_188};
-   _DECL s_190 = { "ORDNUMBER"       , 'N', 2 , (BYTE*)"C\x9d"                                                , NULL     , NULL , &s_189};
-   _DECL s_191 = { "ORDSETFOCUS"     , 'C', 2 , (BYTE*)"\x7a\x9d"                                             , NULL     , NULL , &s_190};
-   _DECL s_192 = { "OS"              , 'C', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_191};
-   _DECL s_193 = { "OUTERR"          , '-', 1 , (BYTE*)"\x7a"                                                 , NULL     , NULL , &s_192};
-   _DECL s_194 = { "OUTSTD"          , '-', 1 , (BYTE*)"\x7a"                                                 , NULL     , NULL , &s_193};
-   _DECL s_195 = { "PADC"            , 'C', 3 , (BYTE*)" N\x9d"                                               , NULL     , NULL , &s_194};
-   _DECL s_196 = { "PADL"            , 'C', 3 , (BYTE*)" N\x9d"                                               , NULL     , NULL , &s_195};
-   _DECL s_197 = { "PADR"            , 'C', 3 , (BYTE*)" N\x9d"                                               , NULL     , NULL , &s_196};
-   _DECL s_198 = { "PCOL"            , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_197};
-   _DECL s_199 = { "PCOUNT"          , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_198};
-   _DECL s_200 = { "PROCFILE"        , 'C', 1 , (BYTE*)"\x7a"                                                 , NULL     , NULL , &s_199};
-   _DECL s_201 = { "PROCLINE"        , 'N', 1 , (BYTE*)"\xa8"                                                 , NULL     , NULL , &s_200};
-   _DECL s_202 = { "PROCNAME"        , 'N', 1 , (BYTE*)"\xa8"                                                 , NULL     , NULL , &s_201};
-   _DECL s_203 = { "PROW"            , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_202};
-/*
- * Both QOUT and QQOUT can take from 0 to as many parameters as you like
- * of any type, so including them in the parameter checking is of no use,
- * because the list requires an upper limit and a type declaration for all
- * of the parameters. So instead of trying to fix the unfixable, I have
- * commented them out and fixed the linkage for s_206 to point to s_203.
- * - David G. Holm <dholm@jsd-llc.com>
- *
- *   _DECL s_204 = { "QOUT"            , '-', 2 , (BYTE*)"\x7a\x7a"                                             , NULL     , NULL , &s_203};
- *   _DECL s_205 = { "QQOUT"           , '-', 2 , (BYTE*)"\x7a\x7a"                                             , NULL     , NULL , &s_204};
-*/
-   _DECL s_206 = { "RAT"             , 'N', 2 , (BYTE*)"CC"                                                   , NULL     , NULL , &s_203};
-   _DECL s_207 = { "RDDLIST"         , 'A', 1 , (BYTE*)"\xa8"                                                 , NULL     , NULL , &s_206};
-   _DECL s_208 = { "RDDNAME"         , 'C', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_207};
-   _DECL s_209 = { "RDDSETDEFAULT"   , 'C', 1 , (BYTE*)"\x9d"                                                 , NULL     , NULL , &s_208};
-   _DECL s_210 = { "READEXIT"        , 'L', 1 , (BYTE*)"\xa6"                                                 , NULL     , NULL , &s_209};
-   _DECL s_211 = { "READUPDATED"     , 'L', 1 , (BYTE*)"\xa6"                                                 , NULL     , NULL , &s_210};
-   _DECL s_212 = { "READINSERT"      , 'L', 1 , (BYTE*)"\xa6"                                                 , NULL     , NULL , &s_211};
-   _DECL s_213 = { "READKEY"         , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_212};
-   _DECL s_214 = { "READFORMAT"      , 'B', 1 , (BYTE*)"B"                                                    , NULL     , NULL , &s_213};
-   _DECL s_215 = { "READKILL"        , 'L', 1 , (BYTE*)"\xa6"                                                 , NULL     , NULL , &s_214};
-   _DECL s_216 = { "READMODAL"       , 'L', 2 , (BYTE*)"A\xa8"                                                , NULL     , NULL , &s_215};
-   _DECL s_217 = { "READUPDATED"     , 'L', 1 , (BYTE*)"\xa6"                                                 , NULL     , NULL , &s_216};
-   _DECL s_218 = { "READVAR"         , 'C', 1 , (BYTE*)"\x9d"                                                 , NULL     , NULL , &s_217};
-   _DECL s_219 = { "RECCOUNT"        , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_218};
-   _DECL s_220 = { "RECNO"           , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_219};
-   _DECL s_221 = { "RECSIZE"         , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_220};
-   _DECL s_222 = { "REPLICATE"       , 'C', 2 , (BYTE*)"CN"                                                   , NULL     , NULL , &s_221};
-   _DECL s_223 = { "RESTSCREEN"      , '-', 5 , (BYTE*)"\xa8\xa8\xa8\xa8\x9d"                                 , NULL     , NULL , &s_222};
-   _DECL s_224 = { "RIGHT"           , 'C', 2 , (BYTE*)"CN"                                                   , NULL     , NULL , &s_223};
-   _DECL s_225 = { "RLOCK"           , 'L', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_224};
-   _DECL s_226 = { "ROUND"           , 'N', 2 , (BYTE*)"NN"                                                   , NULL     , NULL , &s_225};
-   _DECL s_227 = { "ROW"             , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_226};
-   _DECL s_228 = { "RTRIM"           , 'C', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_227};
-   _DECL s_229 = { "SAVESCREEN"      , '-', 4 , (BYTE*)"\xa8\xa8\xa8\xa8"                                     , NULL     , NULL , &s_228};
-   _DECL s_230 = { "SCROLL"          , '-', 6 , (BYTE*)"\xa8\xa8\xa8\xa8\xa8\xa8"                             , NULL     , NULL , &s_229};
-   _DECL s_231 = { "SECONDS"         , 'N', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_230};
-   _DECL s_232 = { "SECS"            , 'N', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_231};
-   _DECL s_233 = { "SELECT"          , 'N', 1 , (BYTE*)"\x9d"                                                 , NULL     , NULL , &s_232};
-   _DECL s_234 = { "SET"             , ' ', 3 , (BYTE*)"N\x7a\xa6"                                            , NULL     , NULL , &s_233};
-   _DECL s_235 = { "SETCOLOR"        , 'C', 1 , (BYTE*)"\x9d"                                                 , NULL     , NULL , &s_234};
-   _DECL s_236 = { "SETCURSOR"       , 'N', 1 , (BYTE*)"\xa8"                                                 , NULL     , NULL , &s_235};
-   _DECL s_237 = { "SETKEY"          , ' ', 3 , (BYTE*)"N\x9c\x9c"                                            , NULL     , NULL , &s_236};
-   _DECL s_238 = { "SETMODE"         , 'L', 2 , (BYTE*)"NN"                                                   , NULL     , NULL , &s_237};
-   _DECL s_239 = { "SETPOS"          , '-', 2 , (BYTE*)"NN"                                                   , NULL     , NULL , &s_238};
-   _DECL s_240 = { "SETPRC"          , '-', 2 , (BYTE*)"NN"                                                   , NULL     , NULL , &s_239};
-   _DECL s_241 = { "SETTYPEAHEAD"    , '-', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_240};
-   _DECL s_242 = { "SPACE"           , 'C', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_241};
-   _DECL s_243 = { "SQRT"            , 'N', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_242};
-   _DECL s_244 = { "STR"             , 'C', 3 , (BYTE*)"N\xa8\xa8"                                            , NULL     , NULL , &s_243};
-   _DECL s_245 = { "STRTRAN"         , 'C', 5 , (BYTE*)"CC\x9d\xa8\xa8"                                       , NULL     , NULL , &s_244};
-   _DECL s_246 = { "STRZERO"         , 'C', 3 , (BYTE*)"N\xa8\xa8"                                            , NULL     , NULL , &s_245};
-   _DECL s_247 = { "STUFF"           , 'C', 4 , (BYTE*)"CNNC"                                                 , NULL     , NULL , &s_246};
-   _DECL s_248 = { "SUBSTR"          , 'C', 3 , (BYTE*)"CN\xa8"                                               , NULL     , NULL , &s_247};
-   _DECL s_249 = { "TBROWSENEW"      , 'O', 4 , (BYTE*)"NNNN"                                                 , NULL     , NULL , &s_248};
-   _DECL s_250 = { "TBROWSEDB"       , 'O', 4 , (BYTE*)"NNNN"                                                 , NULL     , NULL , &s_249};
-   _DECL s_251 = { "TBCOLUMNNEW"     , 'O', 2 , (BYTE*)"CB"                                                   , NULL     , NULL , &s_250};
-   _DECL s_252 = { "TIME"            , 'C', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_251};
-   _DECL s_253 = { "TONE"            , '-', 2 , (BYTE*)"NN"                                                   , NULL     , NULL , &s_252};
-   _DECL s_254 = { "TRANSFORM"       , 'C', 2 , (BYTE*)" C"                                                   , NULL     , NULL , &s_253};
-   _DECL s_255 = { "TRIM"            , 'C', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_254};
-   _DECL s_256 = { "TYPE"            , 'C', 1 , (BYTE*)" "                                                    , NULL     , NULL , &s_255};
-   _DECL s_257 = { "U2BIN"           , 'C', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_256};
-   _DECL s_258 = { "UPDATED"         , 'L', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_257};
-   _DECL s_259 = { "UPPER"           , 'C', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_258};
-   _DECL s_260 = { "USED"            , 'L', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_259};
-   _DECL s_261 = { "VAL"             , 'N', 1 , (BYTE*)"C"                                                    , NULL     , NULL , &s_260};
-   _DECL s_262 = { "VALTYPE"         , ' ', 1 , (BYTE*)" "                                                    , NULL     , NULL , &s_261};
-   _DECL s_263 = { "VERSION"         , 'C', 0 , (BYTE*)NULL                                                   , NULL     , NULL , &s_262};
-   _DECL s_264 = { "W2BIN"           , 'C', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_263};
-   _DECL s_265 = { "WORD"            , 'N', 1 , (BYTE*)"N"                                                    , NULL     , NULL , &s_264};
-   _DECL s_266 = { "HB_FNAMESPLIT"   , '-', 5 , (BYTE*)"C\x5c\x5c\x5c\x5c"                                    , NULL     , NULL , &s_265};
-   _DECL s_267 = { "HB_FNAMEMERGE"   , 'C', 4 , (BYTE*)"CCCC"                                                 , NULL     , NULL , &s_266};
-   /* TODO: Rest of Standard Functions. */
-
-   /* -------------------------------------------------- Standard Classes --------------------------------------------------- */
-
-   static COMCLASS s_ERROR    = { "ERROR"   , NULL, NULL, NULL };
-   static COMCLASS s_GET      = { "GET"     , NULL, NULL, NULL };
-   static COMCLASS s_TBCOLUMN = { "TBCOLUMN", NULL, NULL, NULL };
-   static COMCLASS s_TBROWSE  = { "TBROWSE" , NULL, NULL, NULL };
-
-  /*       Name     Ret  # of Prams  Param Types   Ret Class  Param Classes  Next
-   ---------------  ---  ----------  --------------------  ---------  -------------  --------------- */
-   _DECL s_ERROR_01    = { "ARGS"         , 'A', 0 , (BYTE*)NULL , NULL     , NULL , NULL            };
-   _DECL s_ERROR_02    = { "CANDEFAULT"   , 'B', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_01     };
-   _DECL s_ERROR_03    = { "CANRETRY"     , 'B', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_02     };
-   _DECL s_ERROR_04    = { "CANSUBSTITUTE", 'B', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_03     };
-   _DECL s_ERROR_05    = { "CARGO"        , ' ', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_04     };
-   _DECL s_ERROR_06    = { "DESCRIPTION"  , 'S', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_05     };
-   _DECL s_ERROR_07    = { "FILENAME"     , 'S', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_06     };
-   _DECL s_ERROR_08    = { "GENCODE"      , 'N', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_07     };
-   _DECL s_ERROR_09    = { "OPERATION"    , 'S', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_08     };
-   _DECL s_ERROR_10    = { "OSCODE"       , 'N', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_09     };
-   _DECL s_ERROR_11    = { "SEVERITY"     , 'N', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_10     };
-   _DECL s_ERROR_12    = { "SUBCODE"      , 'N', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_11     };
-   _DECL s_ERROR_13    = { "SUBSYSTEM"    , 'S', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_12     };
-   _DECL s_ERROR_14    = { "TRIES"        , 'N', 0 , (BYTE*)NULL , NULL     , NULL , &s_ERROR_13     };
-
-  /*       Name                             Ret  # of Prams  Param Types   Ret Class  Param Classes  Next
-   ---------------                          ---  ----------  --------------------  ---------  -------------  --------------- */
-   _DECL s_GET_01      = { "ASSIGN"       , ' ', 0 , (BYTE*)NULL   , NULL     , NULL , NULL            };
-   _DECL s_GET_02      = { "COLORDISP"    , 'S', 1 , (BYTE*)"\x9d" , &s_GET   , NULL , &s_GET_01       };
-   _DECL s_GET_03      = { "DISPLAY"      , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_02       };
-   _DECL s_GET_04      = { "KILLFOCUS"    , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_03       };
-   _DECL s_GET_06      = { "RESET"        , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_04       };
-   _DECL s_GET_07      = { "SETFOCUS"     , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_06       };
-   _DECL s_GET_08      = { "UNDO"         , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_07       };
-   _DECL s_GET_09      = { "UNTRANSFORM"  , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_08       };
-   _DECL s_GET_10      = { "UPDATEBUFFER" , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_09       };
-   _DECL s_GET_11      = { "VARGET"       , ' ', 0 , (BYTE*)NULL   , NULL     , NULL , &s_GET_10       };
-   _DECL s_GET_12      = { "VARPUT"       , ' ', 1 , (BYTE*)" "    , NULL     , NULL , &s_GET_11       };
-
-   _DECL s_GET_13      = { "END"          , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_12       };
-   _DECL s_GET_14      = { "HOME"         , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_13       };
-   _DECL s_GET_15      = { "LEFT"         , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_14       };
-   _DECL s_GET_16      = { "RIGHT"        , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_15       };
-   _DECL s_GET_17      = { "TODECPOS"     , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_16       };
-   _DECL s_GET_18      = { "WORDLEFT"     , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_17       };
-   _DECL s_GET_19      = { "WORDRIGHT"    , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_18       };
-
-   _DECL s_GET_20      = { "BACKSPACE"    , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_19       };
-   _DECL s_GET_21      = { "DELETE"       , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_20       };
-   _DECL s_GET_22      = { "DELEND"       , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_21       };
-   _DECL s_GET_23      = { "DELLEFT"      , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_22       };
-   _DECL s_GET_24      = { "DELRIGHT"     , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_23       };
-   _DECL s_GET_25      = { "DELWORDLEFT"  , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_24       };
-   _DECL s_GET_26      = { "DELWORDRIGHT" , 'S', 0 , (BYTE*)NULL   , &s_GET   , NULL , &s_GET_25       };
-
-   _DECL s_GET_27      = { "INSERT"       , 'S', 1 , (BYTE*)"C"    , &s_GET   , NULL , &s_GET_26       };
-   _DECL s_GET_28      = { "OVERSTRIKE"   , 'S', 1 , (BYTE*)"C"    , &s_GET   , NULL , &s_GET_27       };
-
-  /*       Name     Ret  # of Prams  Param Types   Ret Class  Param Classes  Next
-   ---------------  ---  ----------  --------------------  ---------  -------------  --------------- */
-   _DECL s_TBCOLUMN_01 = { "BLOCK"        , ' ', 0 , (BYTE*)NULL , NULL     , NULL , NULL    };
-   _DECL s_TBCOLUMN_02 = { "CARGO"        , ' ', 0 , (BYTE*)NULL , NULL     , NULL , &s_TBCOLUMN_01  };
-   _DECL s_TBCOLUMN_03 = { "COLORBLOCK"   , 'A', 0 , (BYTE*)NULL , NULL     , NULL , &s_TBCOLUMN_02  };
-   _DECL s_TBCOLUMN_04 = { "COLSEP"       , 'C', 0 , (BYTE*)NULL , NULL     , NULL , &s_TBCOLUMN_03  };
-   _DECL s_TBCOLUMN_05 = { "DEFCOLOR"     , 'A', 0 , (BYTE*)NULL , NULL     , NULL , &s_TBCOLUMN_04  };
-   _DECL s_TBCOLUMN_06 = { "FOOTING"      , 'C', 0 , (BYTE*)NULL , NULL     , NULL , &s_TBCOLUMN_05  };
-   _DECL s_TBCOLUMN_07 = { "FOOTSEP"      , 'C', 0 , (BYTE*)NULL , NULL     , NULL , &s_TBCOLUMN_06  };
-   _DECL s_TBCOLUMN_08 = { "HEADING"      , 'C', 0 , (BYTE*)NULL , NULL     , NULL , &s_TBCOLUMN_07  };
-   _DECL s_TBCOLUMN_09 = { "PICTURE"      , ' ', 0 , (BYTE*)NULL , NULL     , NULL , &s_TBCOLUMN_08  };
-   _DECL s_TBCOLUMN_10 = { "WIDTH"        , 'N', 0 , (BYTE*)NULL , NULL     , NULL , &s_TBCOLUMN_09  };
-   _DECL s_TBCOLUMN_11 = { "COLPOS"       , ' ', 0 , (BYTE*)NULL , NULL     , NULL , &s_TBCOLUMN_10  };
-   _DECL s_TBCOLUMN_12 = { "HEADSEP"      , ' ', 0 , (BYTE*)NULL , NULL     , NULL , &s_TBCOLUMN_11  };
-
-   /* TODO: Finish definition of GET, and add definitions for TBROWSE. */
-
-   #undef _DECL
-
-   /* ------- */
-
-   /* reset to previous state */
-   s_001.pNext = NULL;
-
-   /* ------- */
-
-   /* First (bottom) Method */
-   s_ERROR.pMethod     = &s_ERROR_14;
-   /* Last (top) Method. */
-   s_ERROR.pLastMethod = &s_ERROR_01;
-   /* Next class definition pointer */
-   s_ERROR.pNext = NULL;
-   /* reset to previous state */
-   s_ERROR_01.pNext = NULL;
-
-   /* ------- */
-
-   /* First (bottom) Method */
-   s_GET.pMethod     = &s_GET_28; /* Change to BOTTOM Method. */
-   /* Last (top) Method. */
-   s_GET.pLastMethod = &s_GET_01;
-   /* Next class definition pointer */
-   s_GET.pNext = &s_ERROR;
-   /* reset to previous state */
-   s_GET_01.pNext = NULL;
-
-   /* ------- */
-
-   /* First (bottom) Method */
-   s_TBCOLUMN.pMethod     = &s_TBCOLUMN_12; /* Change to BOTTOM Method. */
-   /* Last (top) Method. */
-   s_TBCOLUMN.pLastMethod = &s_TBCOLUMN_01;
-   /* Next class definition pointer */
-   s_TBCOLUMN.pNext = &s_GET;
-   /* reset to previous state */
-   s_TBCOLUMN_01.pNext = NULL;
-
-   /* ------- */
-
-   /* First (bottom) Method */
-   s_TBROWSE.pMethod     = NULL; /* Change to BOTTOM Method. */
-   /* Last (top) Method. */
-   s_TBROWSE.pLastMethod = NULL;
-   /* Next class definition pointer */
-   s_TBROWSE.pNext = &s_TBCOLUMN;
-
-   /* ------- */
-
-   HB_COMP_PARAM->pFirstDeclared   = &s_267; /* Change to BOTTOM Function. */
-   HB_COMP_PARAM->pLastDeclared    = &s_001;
-   HB_COMP_PARAM->pReleaseDeclared = NULL;
-
-   HB_COMP_PARAM->pFirstClass      = &s_TBROWSE;
-   HB_COMP_PARAM->pLastClass       = &s_ERROR;
-   HB_COMP_PARAM->pReleaseClass    = NULL;
 }
 
 /* returns a symbol pointer from the symbol table
@@ -1587,8 +1122,12 @@ PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, char * szDeclaredName )
 
       /* Last declaration will take effect. */
       pDeclared->cType = ' '; /* Not known yet */
-      pDeclared->cParamTypes = NULL;
       pDeclared->iParamCount = 0;
+      if( pDeclared->cParamTypes )
+         hb_xfree( pDeclared->cParamTypes );
+      pDeclared->cParamTypes = NULL;
+      if( pDeclared->pParamClasses )
+         hb_xfree( pDeclared->pParamClasses );
       pDeclared->pParamClasses = NULL;
 
       return pDeclared;
@@ -1603,12 +1142,12 @@ PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, char * szDeclaredName )
    pDeclared->pParamClasses = NULL;
    pDeclared->pNext = NULL;
 
-   HB_COMP_PARAM->pLastDeclared->pNext = pDeclared;
+   if( HB_COMP_PARAM->pFirstDeclared == NULL )
+      HB_COMP_PARAM->pFirstDeclared = pDeclared;
+   else
+      HB_COMP_PARAM->pLastDeclared->pNext = pDeclared;
+
    HB_COMP_PARAM->pLastDeclared = pDeclared;
-   if( ! HB_COMP_PARAM->pReleaseDeclared )
-   {
-      HB_COMP_PARAM->pReleaseDeclared = pDeclared;
-   }
 
    return pDeclared;
 }
@@ -1632,8 +1171,6 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, char * szVarName, BYTE cValueTyp
       {
          pDeclared->iParamCount++;
 
-
-         /* TOFIX: these allocations causes memory leaks */
          if( pDeclared->cParamTypes )
          {
             pDeclared->cParamTypes = ( BYTE * ) hb_xrealloc( pDeclared->cParamTypes, pDeclared->iParamCount );
@@ -1662,7 +1199,6 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, char * szVarName, BYTE cValueTyp
 
       HB_COMP_PARAM->pLastMethod->iParamCount++;
 
-      /* TOFIX: these allocations causes memory leaks */
       if( HB_COMP_PARAM->pLastMethod->cParamTypes )
       {
          HB_COMP_PARAM->pLastMethod->cParamTypes = ( BYTE * ) hb_xrealloc( HB_COMP_PARAM->pLastMethod->cParamTypes, HB_COMP_PARAM->pLastMethod->iParamCount );
@@ -4497,22 +4033,22 @@ void hb_compCompileEnd( HB_COMP_DECL )
       hb_xfree( ( void * ) pInline );
    }
 
-   while( HB_COMP_PARAM->pReleaseDeclared )
+   while( HB_COMP_PARAM->pFirstDeclared )
    {
-      PCOMDECLARED pDeclared = HB_COMP_PARAM->pReleaseDeclared;
-      HB_COMP_PARAM->pReleaseDeclared = pDeclared->pNext;
+      PCOMDECLARED pDeclared = HB_COMP_PARAM->pFirstDeclared;
+      HB_COMP_PARAM->pFirstDeclared = pDeclared->pNext;
       if( pDeclared->cParamTypes )
          hb_xfree( ( void * ) pDeclared->cParamTypes );
       if( pDeclared->pParamClasses )
          hb_xfree( ( void * ) pDeclared->pParamClasses );
       hb_xfree( ( void * ) pDeclared );
    }
-   HB_COMP_PARAM->pFirstDeclared = HB_COMP_PARAM->pLastDeclared = NULL;
+   HB_COMP_PARAM->pLastDeclared = NULL;
 
-   while( HB_COMP_PARAM->pReleaseClass )
+   while( HB_COMP_PARAM->pFirstClass )
    {
-      PCOMCLASS pClass = HB_COMP_PARAM->pReleaseClass;
-      HB_COMP_PARAM->pReleaseClass = pClass->pNext;
+      PCOMCLASS pClass = HB_COMP_PARAM->pFirstClass;
+      HB_COMP_PARAM->pFirstClass = pClass->pNext;
       while( pClass->pMethod )
       {
          PCOMDECLARED pDeclared = pClass->pMethod;
@@ -4525,7 +4061,7 @@ void hb_compCompileEnd( HB_COMP_DECL )
       }
       hb_xfree( ( void * ) pClass );
    }
-   HB_COMP_PARAM->pFirstClass = HB_COMP_PARAM->pLastClass = NULL;
+   HB_COMP_PARAM->pLastClass = NULL;
 
    if( HB_COMP_PARAM->symbols.pFirst )
    {
@@ -4534,12 +4070,6 @@ void hb_compCompileEnd( HB_COMP_DECL )
          pSym = hb_compSymbolKill( pSym );
       HB_COMP_PARAM->symbols.pFirst = NULL;
    }
-
-   /* Initialize predefined declarations, it's necessary for
-    * next file compilation (if any)
-    */
-   if( HB_COMP_PARAM->iWarnings >= 3 )
-      hb_compDeclaredInit( HB_COMP_PARAM );
 }
 
 static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )

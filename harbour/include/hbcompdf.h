@@ -617,11 +617,9 @@ typedef struct _HB_COMP
 
    PCOMDECLARED      pFirstDeclared;
    PCOMDECLARED      pLastDeclared;
-   PCOMDECLARED      pReleaseDeclared;
    PCOMDECLARED      pLastMethod;
    PCOMCLASS         pFirstClass;
    PCOMCLASS         pLastClass;
-   PCOMCLASS         pReleaseClass;
 
    PFUNCTION         pInitFunc;
    PFUNCTION         pLineFunc;

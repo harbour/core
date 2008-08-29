@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-29 11:29 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.y
+    ! removed all classes and functions static declarations
+    ! fixed cleanup code for classes and functions declarations
+
 2008-08-29 10:40 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    + config/w32/mingwce.cf
    - config/w32/cemgw.cf
