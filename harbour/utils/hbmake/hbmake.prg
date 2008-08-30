@@ -65,8 +65,6 @@
 
 #define HB_FEOF  -1        // hb_FReadLine() returns -1 on End-of-File (EOF)
 
-#xtranslate TimeToSec(<x>) => ( ( Val( Substr( <x>, 1, 2 ) ) * 3600 ) +( Val( Substr( <x>, 4, 2 ) ) * 60 ) + ( Val( Substr( <x>, 7, 2 ) ) ) )
-
 #Define HBM_USE_DEPENDS    // Set this to have section #DEPENDS parsed like RMake, Ath 2004-06
                            // An extra parameter is added to FileIsNewer() to have it check the INCLUDE paths also
                            // Interactive mode asks whether sources should be scanned for dependencies (#include, set procedure to, set proc to
@@ -7049,7 +7047,7 @@ FUNCTION GetLibs( lGcc, cDir )
    LOCAL aLibsDesc     := { { "Harbour hbmisc      lib - hbmisc" + cExt                         , "hbmisc" + cExt },;
                             { "Harbour NanFor Lib  lib - hbnf" + cExt                           , "hbnf" + cExt },;
                             { "Harbour GT Lib      lib - hbgt"+cExt                             , "hbgt" + cExt },;
-                            { "Harbour ZipArch     lib - hbziparch"+cExt                        , "hbziparch" + cExt + iif( lLinux, " stdc++.a z.a", " " ) },;
+                            { "Harbour ZipArchive  lib - hbziparch"+cExt                        , "hbziparch" + cExt + iif( lLinux, " stdc++.a z.a", " " ) },;
                             { "Harbour ole (old)   lib - hbole"+ cExt                           , "hbole" + cExt + " ole2" + cExt },;
                             { "Harbour MySQL       lib - hbmysql" + cExt                        , "hbmysql" + cExt },;
                             { "Harbour PostgreSQL  lib - hbpgsql"+cExt                          , "hbpgsql" + cExt },;

@@ -122,7 +122,7 @@ BOOL hb_spFile( BYTE * pFilename, BYTE * pRetPath )
    return bIsFile;
 }
 
-FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags )
+HB_FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags )
 {
    BYTE path[ _POSIX_PATH_MAX + 1 ];
 
@@ -134,7 +134,7 @@ FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags )
       return hb_fsOpen( pFilename, uiFlags );
 }
 
-FHANDLE hb_spCreate( BYTE * pFilename, ULONG ulAttr )
+HB_FHANDLE hb_spCreate( BYTE * pFilename, ULONG ulAttr )
 {
    BYTE path[ _POSIX_PATH_MAX + 1 ];
    PHB_FNAME pFilepath;
@@ -151,7 +151,7 @@ FHANDLE hb_spCreate( BYTE * pFilename, ULONG ulAttr )
    return hb_fsCreate( path, ulAttr );
 }
 
-FHANDLE hb_spCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFlags )
+HB_FHANDLE hb_spCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFlags )
 {
    BYTE path[ _POSIX_PATH_MAX + 1 ];
    PHB_FNAME pFilepath;

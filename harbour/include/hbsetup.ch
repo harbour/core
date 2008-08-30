@@ -79,6 +79,8 @@
  * You should modify your 3rd party code to compile without this macro ASAP.
  * NOTE: C code using legacy Clipper (.api) headers is unaffected.
  */
-#define HB_LEGACY_LEVEL     1
+#ifndef HB_LEGACY_OFF
+   #define HB_LEGACY_LEVEL     1
+#endif
 
 #endif /* HB_SETUP_CH_ */

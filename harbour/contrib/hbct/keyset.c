@@ -63,7 +63,7 @@ static void SetGet( int iFlag )
 
    gtInfo.pNewVal = gtInfo.pResult = NULL;
 
-   hb_gtInfo( GTI_KBDSHIFTS, &gtInfo );
+   hb_gtInfo( HB_GTI_KBDSHIFTS, &gtInfo );
    if( gtInfo.pResult )
    {
       iState = hb_itemGetNI( gtInfo.pResult );
@@ -75,7 +75,7 @@ static void SetGet( int iFlag )
    {
       iNewState = hb_parl( 1 ) ? ( iState | iFlag ) : ( iState & ~iFlag );
       gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal, iNewState );
-      hb_gtInfo( GTI_KBDSHIFTS, &gtInfo );
+      hb_gtInfo( HB_GTI_KBDSHIFTS, &gtInfo );
    }
 
    if( gtInfo.pNewVal )
@@ -114,7 +114,7 @@ static void SetGet( int iFlag )
 
 HB_FUNC( KSETINS )
 {
-   SetGet( GTI_KBD_INSERT );
+   SetGet( HB_GTI_KBD_INSERT );
 }
 
 
@@ -145,7 +145,7 @@ HB_FUNC( KSETINS )
 
 HB_FUNC( KSETCAPS )
 {
-   SetGet( GTI_KBD_CAPSLOCK );
+   SetGet( HB_GTI_KBD_CAPSLOCK );
 }
 
 
@@ -176,7 +176,7 @@ HB_FUNC( KSETCAPS )
 
 HB_FUNC( KSETNUM )
 {
-   SetGet( GTI_KBD_NUMLOCK );
+   SetGet( HB_GTI_KBD_NUMLOCK );
 }
 
 
@@ -207,5 +207,5 @@ HB_FUNC( KSETNUM )
 
 HB_FUNC( KSETSCROLL )
 {
-   SetGet( GTI_KBD_SCROLOCK );
+   SetGet( HB_GTI_KBD_SCROLOCK );
 }

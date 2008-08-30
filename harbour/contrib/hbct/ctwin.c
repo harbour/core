@@ -1427,11 +1427,11 @@ static BOOL hb_ctw_gt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch ( iType )
    {
-      case GTI_ISCTWIN:
+      case HB_GTI_ISCTWIN:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 
-      case GTI_NEWWIN:
+      case HB_GTI_NEWWIN:
       {
          BOOL fResult;
 
@@ -1443,7 +1443,7 @@ static BOOL hb_ctw_gt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                           s_iCurrWindow );
          return fResult;
       }
-      case GTI_GETWIN:
+      case HB_GTI_GETWIN:
       {
          BOOL fResult;
          int iWindow = s_iCurrWindow;
@@ -1454,7 +1454,7 @@ static BOOL hb_ctw_gt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 8 ), iWindow );
          return fResult;
       }
-      case GTI_SETWIN:
+      case HB_GTI_SETWIN:
       {
          BOOL fResult;
 
@@ -1492,9 +1492,9 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       {
          HB_GT_INFO gtInfo;
          gtInfo.pNewVal = gtInfo.pResult = NULL;
-         HB_GTSELF_INFO( pGT, GTI_FULLSCREEN, &gtInfo );
+         HB_GTSELF_INFO( pGT, HB_GTI_FULLSCREEN, &gtInfo );
          fScreen = gtInfo.pResult && hb_itemGetL( gtInfo.pResult );
-         HB_GTSELF_INFO( pGT, GTI_KBDSUPPORT, &gtInfo );
+         HB_GTSELF_INFO( pGT, HB_GTI_KBDSUPPORT, &gtInfo );
          if( gtInfo.pResult )
          {
             if( !hb_itemGetL( gtInfo.pResult ) )

@@ -71,7 +71,7 @@ HB_FUNC( FT_CAPLOCK )
    HB_GT_INFO gtInfo;
 
    gtInfo.pNewVal = gtInfo.pResult = NULL;
-   hb_gtInfo( GTI_KBDSHIFTS, &gtInfo );
+   hb_gtInfo( HB_GTI_KBDSHIFTS, &gtInfo );
    if( gtInfo.pResult )
    {
       iState = hb_itemGetNI( gtInfo.pResult );
@@ -81,10 +81,10 @@ HB_FUNC( FT_CAPLOCK )
 
    if( ISLOG( 1 ) )
    {
-      iNewState = hb_parl( 1 ) ? ( iState | GTI_KBD_CAPSLOCK ) :
-                                 ( iState & ~GTI_KBD_CAPSLOCK );
+      iNewState = hb_parl( 1 ) ? ( iState | HB_GTI_KBD_CAPSLOCK ) :
+                                 ( iState & ~HB_GTI_KBD_CAPSLOCK );
       gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal, iNewState );
-      hb_gtInfo( GTI_KBDSHIFTS, &gtInfo );
+      hb_gtInfo( HB_GTI_KBDSHIFTS, &gtInfo );
    }
 
    if( gtInfo.pNewVal )
@@ -92,5 +92,5 @@ HB_FUNC( FT_CAPLOCK )
    if( gtInfo.pResult )
       hb_itemRelease( gtInfo.pResult );
 
-   hb_retl( ( iState & GTI_KBD_CAPSLOCK ) != 0 );
+   hb_retl( ( iState & HB_GTI_KBD_CAPSLOCK ) != 0 );
 }

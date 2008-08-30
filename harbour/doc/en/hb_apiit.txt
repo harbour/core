@@ -24,7 +24,7 @@
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_evalLaunch( PEVALINFO pEvalInfo ) --> ( PHB_ITEM )pResult
+ *      hb_evalLaunch( PHB_EVALINFO pEvalInfo ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pEvalInfo>
  *  $RETURNS$
@@ -57,7 +57,7 @@
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem ) --> ( BOOL )bResult
+ *      hb_evalNew( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem ) --> ( BOOL ) bResult
  *  $ARGUMENTS$
  *      <pEvalInfo>
  *
@@ -92,7 +92,7 @@
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem ) --> ( BOOL )bResult
+ *      hb_evalPutParam( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem ) --> ( BOOL ) bResult
  *  $ARGUMENTS$
  *      <pEvalInfo>
  *
@@ -127,7 +127,7 @@
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_evalRelease( PEVALINFO pEvalInfo ) --> ( BOOL )bResult
+ *      hb_evalRelease( PHB_EVALINFO pEvalInfo ) --> ( BOOL ) bResult
  *  $ARGUMENTS$
  *      <pEvalInfo>
  *  $RETURNS$
@@ -380,7 +380,7 @@
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_itemFreeC( char * szText ) --> ( BOOL )bResult
+ *      hb_itemFreeC( char * szText ) --> ( BOOL ) bResult
  *  $ARGUMENTS$
  *      <szText>
  *  $RETURNS$
@@ -580,7 +580,7 @@
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_itemGetL( PHB_ITEM pItem ) --> ( BOOL )bResult
+ *      hb_itemGetL( PHB_ITEM pItem ) --> ( BOOL ) bResult
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
@@ -1536,7 +1536,7 @@
  *      C Prototype
  *
  *      #include <hbapiitm.h>
- *      hb_itemRelease( PHB_ITEM pItem ) --> ( BOOL )bResult
+ *      hb_itemRelease( PHB_ITEM pItem ) --> ( BOOL ) bResult
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$

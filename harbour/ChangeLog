@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-30 11:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbsetup.ch
+     + Added HB_LEGACY_OFF macro to turn off HB_LEGACY_LEVEL.
+
+   * utils/hbmake/hbmake.prg
+     * Two minor cleanups.
+
+   * doc/en/hb_apiit.txt
+   * source/vm/eval.c
+     * PEVALINFO -> PHB_EVALINFO
+     * EVALINFO -> HB_EVALINFO
+
+   * contrib/hbct/ctwin.c
+   * contrib/hbct/keyset.c
+   * contrib/hbct/misc3.c
+   * contrib/hbnf/numlock.c
+   * contrib/hbnf/shift.c
+   * contrib/hbnf/alt.c
+   * contrib/hbnf/ctrl.c
+   * contrib/hbnf/caplock.c
+     * GTI_* -> HB_GTI_*
+
+   * source/rtl/spfiles.c
+     * FHANDLE -> HB_FHANDLE
+
 2008-08-29 14:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * utils/hbmake/hbmake.prg
      ; Applied patch created by Bill Robertson:
@@ -462,7 +487,7 @@
    * source/compiler/hbmain.c
      ! Text casing fixed in some warning messages.
      ! Attempted to update hardcoded declarations for TGET methods.
-       Some of the were removed, for some of them the parameter list 
+       Some of them were removed, for some of them the parameter list 
        was updated to be in sync with current tget.prg.
 
    * contrib/gtalleg/gtalleg.c
@@ -1611,7 +1636,6 @@
                 - UINT64, UINT64_MAX
                 - ULONG, ULONG_MAX
                 - ULONGLONG, ULONGLONG_MAX
-                - assert()
               ; Some hacks currently used:
                 - HB_DONT_DEFINE_BASIC_TYPES
                 - HB_DONT_DEFINE_BOOL
