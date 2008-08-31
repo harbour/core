@@ -12,7 +12,7 @@
 
 //#include <shlobj.h>
 #include <windows.h>
-#include "item.api"
+#include "hbapiitm.h"
 //#include "hbapiitm.h"
 #include "hbapi.h"
 //#include "hbvm.h"
@@ -41,8 +41,8 @@ HB_FUNC( DRAWFOCUSRECT )
 {
    RECT lprc ;
 
-   if (ISARRAY(2) && Array2Rect( hb_param( 2 ,HB_IT_ARRAY ) , &lprc ) )   
-      hb_retl( DrawFocusRect( (HDC) hb_parnl( 1 ), &lprc ) ) ;   
+   if (ISARRAY(2) && Array2Rect( hb_param( 2 ,HB_IT_ARRAY ) , &lprc ) )
+      hb_retl( DrawFocusRect( (HDC) hb_parnl( 1 ), &lprc ) ) ;
    else
       hb_retl(FALSE);
 }
@@ -57,7 +57,7 @@ HB_FUNC( INTERSECTCLIPRECT )
                                 hb_parni( 2 )      ,
                                 hb_parni( 3 )      ,
                                 hb_parni( 4 )      ,
-                                hb_parni( 5 )      
+                                hb_parni( 5 )
                                 ) ) ;
 }
 
@@ -73,9 +73,9 @@ HB_FUNC( FILLRECT )
 
    if (Array2Rect( hb_param( 2 , HB_IT_ARRAY) , &rc) )
       hb_retni( FillRect(
-       (HDC) hb_parnl( 1 ),   // handle to device context 
-       &rc, // pointer to structure with rectangle  
-       (HBRUSH) hb_parnl( 3 )    // handle to brush 
+       (HDC) hb_parnl( 1 ),   // handle to device context
+       &rc, // pointer to structure with rectangle
+       (HBRUSH) hb_parnl( 3 )    // handle to brush
    ) );
 }
 */
@@ -172,7 +172,7 @@ aSrc :=  SETRECT(2 ,3,41,60)
 HB_FUNC( SETRECT )
 {
    RECT lprc    ;
- 
+
    if ( SetRect( &lprc         ,
                      hb_parni( 1 ),
                      hb_parni( 2 ),
@@ -182,8 +182,8 @@ HB_FUNC( SETRECT )
       hb_itemRelease(hb_itemReturn(Rect2Array( &lprc)));
    }
    else
-      hb_ret( ) ;      
-   
+      hb_ret( ) ;
+
 }
 
 
@@ -192,7 +192,7 @@ HB_FUNC( SETRECT )
 // WINUSERAPI BOOL WINAPI SetRectEmpty( OUT LPRECT lprc);
 
 /* Call as
-   Local aSrc 
+   Local aSrc
    aSrc :=SETRECTEMPTY(aSrc)
 */
 
@@ -225,7 +225,7 @@ HB_FUNC( COPYRECT )
    RECT   lprcDst ;
    RECT   lprcSrc ;
    if ( Array2Rect(hb_param( 1, HB_IT_ARRAY ) , &lprcSrc ))
-      { 
+      {
       if ( CopyRect( &lprcDst, &lprcSrc ) ){
           hb_itemRelease(hb_itemReturn(Rect2Array( &lprcDst)));
 
@@ -274,7 +274,7 @@ HB_FUNC( INFLATERECT )
 // WINUSERAPI BOOL WINAPI IntersectRect( OUT LPRECT lprcDst, IN CONST RECT *lprcSrc1, IN CONST RECT *lprcSrc2);
 
 /* Call as
-Local aDest  
+Local aDest
 local aSrc1 := { 1 , 5 , 4 , 6 }
 Local asrc2 := { 10 , 50 , 24 , 66 }
 aDest := INTERSECTRECT(,aSrc1,aSrc2)
@@ -465,9 +465,9 @@ HB_FUNC( PTINRECT )
    if (Array2Rect( pSrc1, &lprc) && Array2Point( pSrc2, &pt))
    {
       hb_retl( (BOOL) PtInRect( &lprc, pt ) ) ;
-   
+
    }
-   else      
+   else
       hb_retl( FALSE) ;
 
 }
@@ -484,7 +484,7 @@ HB_FUNC( EXCLUDECLIPRECT )
                               hb_parni( 2 )      ,
                               hb_parni( 3 )      ,
                               hb_parni( 4 )      ,
-                              hb_parni( 5 )      
+                              hb_parni( 5 )
                               ) ) ;
 }
 
@@ -497,7 +497,7 @@ HB_FUNC( EXCLUDECLIPRECT )
 HB_FUNC( RECTVISIBLE )
 {
    RECT rc;
- 
+
    if ( ISARRAY(2) && Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ))
       hb_retl( RectVisible( (HDC) hb_parnl( 1 ), &rc ) ) ;
    else

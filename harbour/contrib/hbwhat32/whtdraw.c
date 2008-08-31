@@ -9,7 +9,7 @@
 #define _WIN32_WINNT   0x0400
 
 #include <windows.h>
-#include "item.api"
+#include "hbapiitm.h"
 #include "hbapi.h"
 
 extern PHB_ITEM Rect2Array( RECT *rc  );
@@ -56,8 +56,8 @@ HB_FUNC( MOVETOEX )
      {
 
      aPt = Point2Array(&Point) ;
-     _itemReturn( aPt );
-     _itemRelease( aPt );
+     hb_itemReturn( aPt );
+     hb_itemRelease( aPt );
 
      }
 
@@ -78,8 +78,8 @@ HB_FUNC( GETCURRENTPOSITIONEX )
    if ( GetCurrentPositionEx( (HDC) hb_parnl( 1 ), &pt ) )
    {
        aPt = Point2Array( &pt) ;
-       _itemReturn( aPt );
-       _itemRelease( aPt );
+       hb_itemReturn( aPt );
+       hb_itemRelease( aPt );
 
    }
 }
@@ -312,13 +312,13 @@ HB_FUNC( POLYLINE )
           if ( Array2Point(aSub, &pt ))
           {
                *(Point+i) = pt ;
-               _itemRelease( aSub );
+               hb_itemRelease( aSub );
           }
           else
           {
                hb_retl(0);
                hb_xfree(Point);
-               _itemRelease( aSub );
+               hb_itemRelease( aSub );
                return ;
            }
        }
@@ -360,13 +360,13 @@ HB_FUNC( POLYLINETO )
           if ( Array2Point(aSub, &pt ))
           {
                *(Point+i) = pt ;
-               _itemRelease( aSub );
+               hb_itemRelease( aSub );
           }
           else
           {
             hb_retl(0);
             hb_xfree(Point);
-            _itemRelease( aSub );
+            hb_itemRelease( aSub );
             return ;
           }
        }
@@ -419,7 +419,7 @@ HB_FUNC( POLYPOLYLINE )
           if ( Array2Point(aSub, &pt ))
           {
                *(Point+i) = pt ;
-               _itemRelease( aSub );
+               hb_itemRelease( aSub );
 
           }
           else
@@ -427,7 +427,7 @@ HB_FUNC( POLYPOLYLINE )
             hb_retl(0);
             hb_xfree(PolyPoints);
             hb_xfree(Point);
-            _itemRelease( aSub );
+            hb_itemRelease( aSub );
             return ;
           }
        }
@@ -482,14 +482,14 @@ HB_FUNC( POLYDRAW )
                if ( Array2Point(aSub, &pt ))
                {
                     *(Point+i) = pt ;
-                    _itemRelease( aSub );
+                    hb_itemRelease( aSub );
                }
                else
                {
                   hb_retl(0);
                   hb_xfree(PolyPoints);
                   hb_xfree(Point);
-                  _itemRelease( aSub );
+                  hb_itemRelease( aSub );
                   return ;
                }
             }
@@ -539,13 +539,13 @@ HB_FUNC( POLYBEZIER )
           if ( Array2Point(aSub, &pt ))
           {
                *(Point+i) = pt ;
-              _itemRelease( aSub );
+              hb_itemRelease( aSub );
           }
           else
           {
             hb_retl(0);
             hb_xfree(Point);
-            _itemRelease( aSub );
+            hb_itemRelease( aSub );
             return ;
           }
        }
@@ -589,13 +589,13 @@ HB_FUNC( POLYBEZIERTO )
           if ( Array2Point(aSub, &pt ))
           {
                *(Point+i) = pt ;
-               _itemRelease( aSub );
+               hb_itemRelease( aSub );
           }
           else
           {
             hb_retl(0);
             hb_xfree(Point);
-            _itemRelease( aSub );
+            hb_itemRelease( aSub );
             return ;
           }
        }
@@ -737,13 +737,13 @@ HB_FUNC( POLYGON )
           if ( Array2Point(aSub, &pt ))
           {
                *(Point+i) = pt ;
-               _itemRelease( aSub );
+               hb_itemRelease( aSub );
           }
           else
           {
             hb_retl(0);
             hb_xfree(Point);
-            _itemRelease( aSub );
+            hb_itemRelease( aSub );
             return ;
           }
        }
@@ -796,14 +796,14 @@ HB_FUNC( POLYPOLYGON )
           if ( Array2Point(aSub, &pt ))
           {
                *(Point+i) = pt ;
-               _itemRelease( aSub );
+               hb_itemRelease( aSub );
           }
           else
           {
                hb_retl(0);
                hb_xfree(PolyPoints);
                hb_xfree(Point);
-               _itemRelease( aSub );
+               hb_itemRelease( aSub );
                return ;
           }
        }

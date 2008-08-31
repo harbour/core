@@ -11,7 +11,7 @@
 #include <commctrl.h>
 #include <shlobj.h>
 
-#include "item.api"
+#include "hbapiitm.h"
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbstack.h"
@@ -96,29 +96,29 @@ HB_FUNC( TABCTRL_GETITEMCOUNT )
 HB_FUNC( TABCTRL_GETITEMRECT )
 {
    RECT rc;
-   PHB_ITEM aRect = _itemArrayNew( 4 );
+   PHB_ITEM aRect = hb_itemArrayNew( 4 );
    PHB_ITEM temp;
 
    TabCtrl_GetItemRect((HWND) hb_parnl (1), hb_parni(2), &rc);
 
-   temp = _itemPutNL( NULL, rc.left );
+   temp = hb_itemPutNL( NULL, rc.left );
    hb_arraySet( aRect, 1, temp );
-   _itemRelease( temp );
+   hb_itemRelease( temp );
 
-   temp = _itemPutNL( NULL, rc.top );
+   temp = hb_itemPutNL( NULL, rc.top );
    hb_arraySet( aRect, 2, temp );
-   _itemRelease( temp );
+   hb_itemRelease( temp );
 
-   temp = _itemPutNL( NULL, rc.right );
+   temp = hb_itemPutNL( NULL, rc.right );
    hb_arraySet( aRect, 3, temp );
-   _itemRelease( temp );
+   hb_itemRelease( temp );
 
-   temp = _itemPutNL( NULL, rc.bottom );
+   temp = hb_itemPutNL( NULL, rc.bottom );
    hb_arraySet( aRect, 4, temp );
-   _itemRelease( temp );
+   hb_itemRelease( temp );
 
-   _itemReturn( aRect );
-   _itemRelease( aRect );
+   hb_itemReturn( aRect );
+   hb_itemRelease( aRect );
 }
 
 //---------------------------------------------------------------------------//
@@ -293,7 +293,7 @@ HB_FUNC( TABCTRL_GETCURFOCUS )
 
 HB_FUNC( TABCTRL_SETCURFOCUS )
 {
-  TabCtrl_SetCurFocus( (HWND) hb_parnl(1), (int) hb_parni(2) );   
+  TabCtrl_SetCurFocus( (HWND) hb_parnl(1), (int) hb_parni(2) );
   hb_ret();
 }
 

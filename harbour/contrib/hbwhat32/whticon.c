@@ -12,7 +12,7 @@
 //#include <shlobj.h>
 #include <windows.h>
 //#include <commctrl.h>
-#include "item.api"
+#include "hbapiitm.h"
 //#include "hbapiitm.h"
 #include "hbapi.h"
 //#include "hbvm.h"

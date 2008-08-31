@@ -11,7 +11,7 @@
 
 //#include <shlobj.h>
 #include <windows.h>
-#include "item.api"
+#include "hbapiitm.h"
 #include <commctrl.h>
 //#include "hbapiitm.h"
 #include "hbapi.h"
@@ -79,8 +79,8 @@ HB_FUNC( GETTOOLBARITEMRECT )
    SendMessage((HWND) hb_parnl(1), TB_GETITEMRECT, hb_parni(2), (LPARAM)&rc);
 //   MapWindowPoints((HWND) hb_parnl(1), HWND_DESKTOP, (POINT*)&rc, 2);
    aRect = Rect2Array( &rc  );
-   _itemReturn( aRect );
-   _itemRelease( aRect );
+   hb_itemReturn( aRect );
+   hb_itemRelease( aRect );
 }
 
 

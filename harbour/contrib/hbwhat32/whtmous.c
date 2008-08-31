@@ -14,7 +14,7 @@
 
 //#include <shlobj.h>
 #include <windows.h>
-#include "item.api"
+#include "hbapiitm.h"
 //#include "hbapiitm.h"
 #include "hbapi.h"
 //#include "hbvm.h"
@@ -142,8 +142,8 @@ HB_FUNC( GETCURSORPOS )
    if ( GetCursorPos( &Point ) )
    {
       gcPos = Point2Array( &Point);
-      _itemReturn( gcPos );
-      _itemRelease( gcPos );
+      hb_itemReturn( gcPos );
+      hb_itemRelease( gcPos );
    }
 
 }

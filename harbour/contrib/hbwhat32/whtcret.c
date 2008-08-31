@@ -18,7 +18,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
-#include "item.api"
+#include "hbapiitm.h"
 
 extern PHB_ITEM Rect2Array( RECT *rc  );
 extern BOOL Array2Rect(PHB_ITEM aRect, RECT *rc );
@@ -65,14 +65,14 @@ HB_FUNC( GETCARETPOS )
 {
    POINT Point ;
    PHB_ITEM aPt;
-   
-   if ( GetCaretPos( (LPPOINT) &Point ) ) 
+
+   if ( GetCaretPos( (LPPOINT) &Point ) )
    {
       aPt = Point2Array(&Point) ;
-      _itemReturn( aPt );
-      _itemRelease( aPt );
+      hb_itemReturn( aPt );
+      hb_itemRelease( aPt );
    }
-  
+
 }
 
 

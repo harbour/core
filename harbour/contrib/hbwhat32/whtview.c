@@ -9,7 +9,7 @@
 #define _WIN32_WINNT   0x0400
 
 #include <windows.h>
-#include "item.api"
+#include "hbapiitm.h"
 #include "hbapi.h"
 
 extern PHB_ITEM Rect2Array( RECT *rc  );
@@ -33,8 +33,8 @@ HB_FUNC( GETVIEWPORTEXTEX )
    if ( GetViewportExtEx( (HDC) hb_parnl( 1 ), &siz ) )
    {
        aSize = Size2Array( &siz );
-       _itemReturn( aSize );
-       _itemRelease( aSize );
+       hb_itemReturn( aSize );
+       hb_itemRelease( aSize );
    }
 
 }
@@ -54,8 +54,8 @@ HB_FUNC( GETVIEWPORTORGEX )
    if (  GetViewportOrgEx( (HDC) hb_parnl( 1 ), &pt ) )
    {
       aPoint = Point2Array( &pt );
-      _itemReturn( aPoint );
-      _itemRelease( aPoint );
+      hb_itemReturn( aPoint );
+      hb_itemRelease( aPoint );
    }
 
 }
@@ -75,8 +75,8 @@ HB_FUNC( GETWINDOWEXTEX )
    if ( GetWindowExtEx( (HDC) hb_parnl( 1 ), &siz ) )
    {
        aSize = Size2Array( &siz );
-       _itemReturn( aSize );
-       _itemRelease( aSize );
+       hb_itemReturn( aSize );
+       hb_itemRelease( aSize );
    }
 }
 
@@ -96,8 +96,8 @@ HB_FUNC( SCALEVIEWPORTEXTEX )
                                 hb_parni( 4 )    , hb_parni( 5 ), &siz  ) )
    {
        aSize = Size2Array( &siz );
-       _itemReturn( aSize );
-       _itemRelease( aSize );
+       hb_itemReturn( aSize );
+       hb_itemRelease( aSize );
 
    }
 }
@@ -117,8 +117,8 @@ HB_FUNC( SETVIEWPORTEXTEX )
    if ( SetViewportExtEx( (HDC) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ), &siz ) )
    {
        aSize = Size2Array( &siz );
-       _itemReturn( aSize );
-       _itemRelease( aSize );
+       hb_itemReturn( aSize );
+       hb_itemRelease( aSize );
 
    }
 }
@@ -138,8 +138,8 @@ HB_FUNC( SETVIEWPORTORGEX )
    if ( SetViewportOrgEx( (HDC) hb_parnl( 1 ),hb_parni( 2 ), hb_parni( 3 ), &pt ) )
    {
        aPoint = Point2Array( &pt );
-       _itemReturn( aPoint );
-       _itemRelease( aPoint );
+       hb_itemReturn( aPoint );
+       hb_itemRelease( aPoint );
 
    }
 }

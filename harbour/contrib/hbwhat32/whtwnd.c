@@ -6,7 +6,7 @@
 
 #include <windows.h>
 #include <winuser.h>
-#include "item.api"
+#include "hbapiitm.h"
 #include "hbapi.h"
 
 extern PHB_ITEM Rect2Array( RECT *rc  );
@@ -248,8 +248,8 @@ HB_FUNC( GETCLIENTRECT )
 
    aMetr = Rect2Array( &rc  );
 
-   _itemReturn( aMetr );
-   _itemRelease( aMetr );
+   hb_itemReturn( aMetr );
+   hb_itemRelease( aMetr );
 }
 
 //-----------------------------------------------------------------------------
@@ -265,8 +265,8 @@ HB_FUNC( GETWINDOWRECT )
    GetWindowRect( (HWND) hb_parnl( 1 ),   &rc );
    aMetr = Rect2Array( &rc  );
 
-   _itemReturn( aMetr );
-   _itemRelease( aMetr );
+   hb_itemReturn( aMetr );
+   hb_itemRelease( aMetr );
 }
 
 
@@ -1160,8 +1160,8 @@ HB_FUNC( SETWINDOWEXTEX )
      {
 
      pArray = Size2Array(&lpSize) ;
-     _itemReturn( pArray );
-     _itemRelease( pArray );
+     hb_itemReturn( pArray );
+     hb_itemRelease( pArray );
 
      }
 }
@@ -1187,8 +1187,8 @@ HB_FUNC( SETWINDOWORGEX )
 
    {
      pArray = Point2Array(&lpPoint) ;
-     _itemReturn( pArray );
-     _itemRelease( pArray );
+     hb_itemReturn( pArray );
+     hb_itemRelease( pArray );
    }
 }
 

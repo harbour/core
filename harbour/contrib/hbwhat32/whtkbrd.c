@@ -23,7 +23,7 @@ Modified functions:
 #include <windows.h>
 //#include <commctrl.h>
 //#include <winuser.h>
-#include "item.api"
+#include "hbapiitm.h"
 #include "hbapi.h"
 //#include "commctrl.h"
 

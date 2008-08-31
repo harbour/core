@@ -23,7 +23,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
-#include "item.api"
+#include "hbapiitm.h"
 
 extern PHB_ITEM Rect2Array( RECT *rc  );
 
@@ -97,8 +97,8 @@ HB_FUNC( STATUSBARGETRECT )
   HWND hWnd = (HWND) hb_parnl(1);
   SendMessage ( hWnd, SB_GETRECT, hb_parnl(2), (LPARAM) &rc);
   aRect = Rect2Array( &rc  );
-  _itemReturn( aRect );
-  _itemRelease( aRect );
+  hb_itemReturn( aRect );
+  hb_itemRelease( aRect );
 }
 
 
@@ -109,8 +109,8 @@ HB_FUNC( STATUSBARGETPARTS )
   HWND hWnd = (HWND) hb_parnl(1);
   SendMessage ( hWnd, SB_GETPARTS, hb_parni(2), (LPARAM) &rc);
   aParts = Rect2Array( &rc  );
-  _itemReturn( aParts );
-  _itemRelease( aParts );
+  hb_itemReturn( aParts );
+  hb_itemRelease( aParts );
 }
 
 //----------------------------------------------------------------------------//

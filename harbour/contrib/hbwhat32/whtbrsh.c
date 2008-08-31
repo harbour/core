@@ -16,7 +16,7 @@
 #define _WIN32_WINNT   0x0400
 
 #include <windows.h>
-#include "item.api"
+#include "hbapiitm.h"
 #include "hbapi.h"
 
 
@@ -144,18 +144,18 @@ HB_FUNC( GETBRUSHORGEX )
 
    if ( GetBrushOrgEx( (HDC) hb_parnl( 1 ), &Point ) )
    {
-     aPt = _itemArrayNew( 2 );
+     aPt = hb_itemArrayNew( 2 );
 
-     temp = _itemPutNL( NULL, Point.x );
+     temp = hb_itemPutNL( NULL, Point.x );
      hb_arraySet( aPt, 1, temp );
-     _itemRelease( temp );
+     hb_itemRelease( temp );
 
-     temp = _itemPutNL( NULL, Point.y );
+     temp = hb_itemPutNL( NULL, Point.y );
      hb_arraySet( aPt, 2, temp );
-     _itemRelease( temp );
+     hb_itemRelease( temp );
 
-     _itemReturn( aPt );
-     _itemRelease( aPt );
+     hb_itemReturn( aPt );
+     hb_itemRelease( aPt );
    }
 }
 
@@ -175,18 +175,18 @@ HB_FUNC( SETBRUSHORGEX )
 
    if ( SetBrushOrgEx( (HDC) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ), &Point) )
    {
-     aPt = _itemArrayNew( 2 );
+     aPt = hb_itemArrayNew( 2 );
 
-     temp = _itemPutNL( NULL, Point.x );
+     temp = hb_itemPutNL( NULL, Point.x );
      hb_arraySet( aPt, 1, temp );
-     _itemRelease( temp );
+     hb_itemRelease( temp );
 
-     temp = _itemPutNL( NULL, Point.y );
+     temp = hb_itemPutNL( NULL, Point.y );
      hb_arraySet( aPt, 2, temp );
-     _itemRelease( temp );
+     hb_itemRelease( temp );
 
-     _itemReturn( aPt );
-     _itemRelease( aPt );
+     hb_itemReturn( aPt );
+     hb_itemRelease( aPt );
 
    }
 

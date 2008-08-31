@@ -12,7 +12,7 @@
 #define _WIN32_WINNT   0x0400
 
 #include <windows.h>
-#include "item.api"
+#include "hbapiitm.h"
 #include "hbapi.h"
 extern PHB_ITEM Rect2Array( RECT *rc  );
 extern BOOL Array2Rect(PHB_ITEM aRect, RECT *rc );
@@ -165,8 +165,8 @@ HB_FUNC( GETDCORGEX )
    if ( GetDCOrgEx( (HDC) hb_parnl( 1 ), &Point ) )
    {
      aPt = Point2Array(&Point);
-     _itemReturn( aPt );
-     _itemRelease( aPt );
+     hb_itemReturn( aPt );
+     hb_itemRelease( aPt );
    }
 
 }

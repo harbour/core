@@ -8,6 +8,57 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-31 16:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * utils/hbdoc/bld_vc.bat
+   * utils/hbmake/bld_vc.bat
+     % Minor cleanup.
+
+   * contrib/hbwhat32/whticon.c
+   * contrib/hbwhat32/whtcret.c
+   * contrib/hbwhat32/whthead.c
+   * contrib/hbwhat32/whtmous.c
+   * contrib/hbwhat32/whtmeta.c
+   * contrib/hbwhat32/whtrgn.c
+   * contrib/hbwhat32/whttbar.c
+   * contrib/hbwhat32/whtrect.c
+   * contrib/hbwhat32/whtbrsh.c
+   * contrib/hbwhat32/whtgdi.c
+   * contrib/hbwhat32/whtview.c
+   * contrib/hbwhat32/whtlv.c
+   * contrib/hbwhat32/whtwnd.c
+   * contrib/hbwhat32/whtcomm.c
+   * contrib/hbwhat32/whtprn.c
+   * contrib/hbwhat32/whttab.c
+   * contrib/hbwhat32/whtfont.c
+   * contrib/hbwhat32/whtbmp.c
+   * contrib/hbwhat32/whtpen.c
+   * contrib/hbwhat32/whtkbrd.c
+   * contrib/hbwhat32/whttext.c
+   * contrib/hbwhat32/whtdc.c
+   * contrib/hbwhat32/whtdraw.c
+   * contrib/hbnf/fttext.c
+   * contrib/hbnf/peek.c
+   * contrib/hbnf/ontick.c
+   * contrib/hbnf/origin.c
+   * contrib/hbnf/mouse.c
+   * contrib/hbnf/poke.c
+     ! Fixed to use Harbour API instead of legacy Clipper API.
+
+   + contrib/hbbtree/tests/bld_b32.bat
+   + contrib/hbbtree/tests/bld_vc.bat
+   + contrib/hbbtree/tests/bld_djgp.bat
+   - contrib/hbbtree/tests/mktest.bat
+   * contrib/hbbtree/tests/ctest.c
+     + Added make files.
+     * Minor cleanups.
+     ; One of the tests fail.
+
+   * contrib/hbbtree/tbtree.prg
+     ! Fixed crash due to scope problem in class declaration.
+
+   * contrib/examples/pe/editorlo.c
+     ! #include <x> -> #include "x" for Harbour headers.
+
 2008-08-31 10:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbole/oleauto.prg
    * contrib/hbw32/w32_tole.prg

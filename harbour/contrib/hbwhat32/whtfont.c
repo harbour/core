@@ -13,7 +13,7 @@
 #define _WIN32_WINNT   0x0400
 
 #include <windows.h>
-#include "item.api"
+#include "hbapiitm.h"
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbstack.h"

@@ -1,6 +1,7 @@
 /*
  * $Id$
 */
+
 #include <stdio.h>
 #include <io.h>
 #include <fcntl.h>
@@ -15,11 +16,11 @@
 #define  mc51
 
 #ifdef mc51
-  #include <extend.api>
-  #include <fm.api>
-  #include <gt.api>
-  #include <filesys.api>
-  #include <vm.api>
+  #include "extend.api"
+  #include "fm.api"
+  #include "gt.api"
+  #include "filesys.api"
+  #include "vm.api"
 #else
   #include "rvideo.h"
   #include <dos.h>

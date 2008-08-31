@@ -10,7 +10,7 @@
 
 //#include <shlobj.h>
 #include <windows.h>
-#include "item.api"
+#include "hbapiitm.h"
 //#include "hbapiitm.h"
 #include "hbapi.h"
 //#include "hbvm.h"
@@ -297,8 +297,8 @@ HB_FUNC( GETTEXTEXTENTPOINT32 )
    if ( GetTextExtentPoint32( (HDC) hb_parnl(1), pstr, strlen( pstr ), &sz ) )
    {
       aMetr = Size2Array( &sz ) ;
-      _itemReturn( aMetr );
-      _itemRelease( aMetr );
+      hb_itemReturn( aMetr );
+      hb_itemRelease( aMetr );
    }
 
 }

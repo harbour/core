@@ -12,7 +12,7 @@
 #define _WIN32_WINNT   0x0400
 
 #include <windows.h>
-#include "item.api"
+#include "hbapiitm.h"
 #include "hbapi.h"
 
 extern PHB_ITEM Rect2Array( RECT *rc  );
@@ -81,7 +81,7 @@ HB_FUNC( CREATEPOLYGONRGN )
        iCount = (int) hb_parinfa( 1, 0 ) ;
        Point = (POINT *) hb_xgrab( iCount * sizeof (POINT) ) ;
        aParam = hb_param(1,HB_IT_ARRAY);
-       
+
        for ( i = 0 ; i<iCount ; i++ )
        {
           aSub = hb_itemArrayGet( aParam, i+1 );
@@ -134,7 +134,7 @@ HB_FUNC( CREATEPOLYPOLYGONRGN )
        iCount = hb_parinfa( 1, 0 ) ;
        Point = (POINT *) hb_xgrab( iCount * sizeof (POINT) ) ;
        aParam = hb_param(1,HB_IT_ARRAY);
-       
+
        for ( i = 0 ; i<iCount ; i++ )
        {
           aSub = hb_itemArrayGet( aParam, i+1 );
@@ -263,7 +263,7 @@ HB_FUNC( EXTSELECTCLIPRGN )
 {
    hb_retni( ExtSelectClipRgn( (HDC) hb_parnl( 1 ) ,
                                (HRGN) hb_parnl( 2 ),
-                               hb_parni( 3 )       
+                               hb_parni( 3 )
                                ) ) ;
 }
 
@@ -290,7 +290,7 @@ HB_FUNC( GETRANDOMRGN )
 {
    hb_retni( GetRandomRgn( (HDC) hb_parnl( 1 ) ,
                            (HRGN) hb_parnl( 2 ),
-                           hb_parni( 3 )       
+                           hb_parni( 3 )
                            ) ) ;
 }
 
@@ -315,7 +315,7 @@ HB_FUNC( FRAMERGN )
                       (HRGN) hb_parnl( 2 )  ,
                       (HBRUSH) hb_parnl( 3 ),
                       hb_parni( 4 )         ,
-                      hb_parni( 5 )         
+                      hb_parni( 5 )
                       ) ) ;
 }
 
@@ -343,7 +343,7 @@ HB_FUNC( VALIDATERECT )
       hb_retl( ValidateRect( (HWND) hb_parnl( 1 ), &rc ) ) ;
    else
       hb_retl( ValidateRect( (HWND) hb_parnl( 1 ), NULL) ) ;
-      
+
 }
 */
 
@@ -356,7 +356,7 @@ HB_FUNC( INVALIDATERGN )
 {
    hb_retl( InvalidateRgn( (HWND) hb_parnl( 1 ),
                            (HRGN) hb_parnl( 2 ),
-                           hb_parl( 3 )        
+                           hb_parl( 3 )
                          ) ) ;
 }
 
@@ -444,7 +444,7 @@ HB_FUNC( SETRECTRGN )
                         hb_parni( 2 )       ,
                         hb_parni( 3 )       ,
                         hb_parni( 4 )       ,
-                        hb_parni( 5 )       
+                        hb_parni( 5 )
                         ) ) ;
 }
 
@@ -457,7 +457,7 @@ HB_FUNC( GETUPDATERGN )
 {
    hb_retni( GetUpdateRgn( (HWND) hb_parnl( 1 ),
                            (HRGN) hb_parnl( 2 ),
-                           hb_parl( 3 )        
+                           hb_parl( 3 )
                          ) ) ;
 }
 
@@ -481,7 +481,7 @@ HB_FUNC( EXCLUDEUPDATERGN )
 
 
 /*
-       
+
 HB_FUNC( GETRGNBOX )
 {
    RECT *rc ;

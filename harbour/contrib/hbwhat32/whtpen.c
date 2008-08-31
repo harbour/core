@@ -12,7 +12,7 @@
 
 //#include <shlobj.h>
 #include <windows.h>
-#include "item.api"
+#include "hbapiitm.h"
 //#include "hbapiitm.h"
 #include "hbapi.h"
 //#include "hbvm.h"
@@ -24,9 +24,9 @@
 HB_FUNC( CREATEPEN )
 {
    hb_retnl( (LONG) CreatePen(
-               hb_parni( 1 ),   // pen style 
-               hb_parni( 2 ),   // pen width  
-               (COLORREF) hb_parnl( 3 ) // pen color 
+               hb_parni( 1 ),   // pen style
+               hb_parni( 2 ),   // pen width
+               (COLORREF) hb_parnl( 3 ) // pen color
              ) );
 }
 
@@ -91,7 +91,7 @@ HB_FUNC( EXTCREATEPEN )
                                   (DWORD) hb_parnl( 2 ),
                                   &LOGBRUSH            ,
                                   (DWORD) hb_parnl( 4 ),
-                                  &&dWord4             
+                                  &&dWord4
                                   ) ) ;
 }
 

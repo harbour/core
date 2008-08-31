@@ -64,9 +64,8 @@
  *  $END$
  */
 
-#include "extend.api"
-#include "item.api"
-#include "hbundoc.api"
+#include "hbapi.h"
+#include "hbapiitm.h"
 
 #include "cpmi.h"
 
@@ -84,14 +83,14 @@ void cdecl _evLow( unsigned int, void *, unsigned int );
 
 static long far Ticks = 0;
 static long far Interval = 1;
-static ITEM far codeBlock;
+static PHB_ITEM far codeBlock;
 static char inProgress = 0;
 
 static void cdecl TickTock( void )
 {
    auto unsigned int ProtMode = cpmiIsProtected();
    auto LONGPTR Timer;
-   auto EVALINFO eval;
+   auto HB_EVALINFO eval;
 
    if ( inProgress ) return;
 
@@ -112,9 +111,9 @@ static void cdecl TickTock( void )
    {
       Ticks = *Timer.Address;
 
-      _evalNew( &eval, codeBlock );
+      hb_evalNew( &eval, codeBlock );
 
-      _itemRelease( _evalLaunch( &eval ) );
+      hb_itemRelease( hb_evalLaunch( &eval ) );
    }
 
    if ( ProtMode ) cpmiFreeSelector( Timer.Pointer.Segment );
@@ -127,13 +126,13 @@ static void cdecl TickTock( void )
 
 CLIPPER FT_OnTick( void )
 {
-   if ( _itemType( codeBlock ) == BLOCK ) _itemRelease( codeBlock );
+   if ( hb_itemType( codeBlock ) == BLOCK ) hb_itemRelease( codeBlock );
 
-   codeBlock = _itemParam( 1 );
+   codeBlock = hb_itemParam( 1 );
 
-   if ( _itemType( codeBlock ) == BLOCK )
+   if ( hb_itemType( codeBlock ) == BLOCK )
    {
-      Interval = _parnl( 2 );
+      Interval = hb_parnl( 2 );
 
       _evLow( 5, TickTock, TRUE );
    }

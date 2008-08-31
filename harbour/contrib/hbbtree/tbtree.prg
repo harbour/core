@@ -41,10 +41,10 @@ CLASS TBTree STATIC
 
   HIDDEN:
     DATA nHandle  /* hb_btree handle */
-    METHOD New( cFileName, nPageSize, nKeySize, nFlags, nBuffers )
     METHOD Open( cFileName, nFlags, nBuffers )
 
   EXPORTED:
+    METHOD New( cFileName, nPageSize, nKeySize, nFlags, nBuffers )
     METHOD Close() INLINE hb_BTreeClose( ::nHandle )
     METHOD Insert( cKey, lData ) INLINE hb_BTreeInsert( ::nHandle, cKey, lData )
     METHOD Delete( cKey, lData ) INLINE hb_BTreeDelete( ::nHandle, cKey, lData )

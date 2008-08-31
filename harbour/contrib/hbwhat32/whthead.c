@@ -12,7 +12,7 @@
 #include <shlobj.h>
 #include <commctrl.h>
 
-#include "item.api"
+#include "hbapiitm.h"
 #include "hbapi.h"
 
 extern PHB_ITEM Rect2Array( RECT *rc  );
@@ -128,16 +128,16 @@ HB_FUNC( HEADER_GETORDERARRAY )
 
   if ( lRet )
   {
-      aInt  = _itemArrayNew(iCount ) ;
+      aInt  = hb_itemArrayNew(iCount ) ;
       for ( i = 0; i<iCount ; i++)
       {
-        temp = _itemPutNL( NULL, lpi[i] );
+        temp = hb_itemPutNL( NULL, lpi[i] );
         hb_arraySet( aInt, i+1, temp );
-        _itemRelease( temp );
+        hb_itemRelease( temp );
       }
 
-      _itemReturn(aInt);
-      _itemRelease(aInt);
+      hb_itemReturn(aInt);
+      hb_itemRelease(aInt);
       hb_xfree( lpi ) ;
   }
 }
@@ -195,8 +195,8 @@ HB_FUNC( HEADER_GETITEMRECT )
    if ( Header_GetItemRect((HWND) hb_parnl(1), (WPARAM) hb_parni(2), &rc ) )
    {
       aRc = Rect2Array( &rc );
-      _itemReturn( aRc );
-      _itemRelease( aRc );
+      hb_itemReturn( aRc );
+      hb_itemRelease( aRc );
 
    }
 

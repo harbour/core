@@ -62,7 +62,8 @@
  *  $END$
  */
 
-#include "extend.api"
+#include "hbapi.h"
+
 #include "cpmi.h"
 
 #define FP_SEG( fp ) ( *( ( unsigned int * ) &( fp ) + 1 ) )
@@ -75,8 +76,8 @@ HB_FUNC( FT_POKE )
 
    if ( ( PCOUNT >= 3 ) && ( ISNUM( 1 ) ) && ( ISNUM( 2 ) ) && ( ISNUM( 3 ) ) )
    {
-      FP_SEG( bytePtr ) = _parni( 1 );
-      FP_OFF( bytePtr ) = _parni( 2 );
+      FP_SEG( bytePtr ) = hb_parni( 1 );
+      FP_OFF( bytePtr ) = hb_parni( 2 );
 
       if ( ProtMode )
       {
@@ -86,14 +87,14 @@ HB_FUNC( FT_POKE )
          if ( FP_SEG( bytePtr ) == 0 ) goto Bogus;
       }
 
-      *bytePtr = ( unsigned char ) _parni( 3 );
+      *bytePtr = ( unsigned char ) hb_parni( 3 );
 
       if ( ProtMode ) hb_cpmiFreeSelector( FP_SEG( bytePtr ) );
 
-      _retl( TRUE );
+      hb_retl( TRUE );
    }
    else
-      Bogus: _retl( FALSE );
+      Bogus: hb_retl( FALSE );
 
    return;
 }
