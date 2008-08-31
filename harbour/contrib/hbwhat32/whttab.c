@@ -97,28 +97,15 @@ HB_FUNC( TABCTRL_GETITEMRECT )
 {
    RECT rc;
    PHB_ITEM aRect = hb_itemArrayNew( 4 );
-   PHB_ITEM temp;
 
    TabCtrl_GetItemRect((HWND) hb_parnl (1), hb_parni(2), &rc);
 
-   temp = hb_itemPutNL( NULL, rc.left );
-   hb_arraySet( aRect, 1, temp );
-   hb_itemRelease( temp );
+   hb_arraySetNL( aRect, 1, rc.left );
+   hb_arraySetNL( aRect, 2, rc.top );
+   hb_arraySetNL( aRect, 3, rc.right );
+   hb_arraySetNL( aRect, 4, rc.bottom );
 
-   temp = hb_itemPutNL( NULL, rc.top );
-   hb_arraySet( aRect, 2, temp );
-   hb_itemRelease( temp );
-
-   temp = hb_itemPutNL( NULL, rc.right );
-   hb_arraySet( aRect, 3, temp );
-   hb_itemRelease( temp );
-
-   temp = hb_itemPutNL( NULL, rc.bottom );
-   hb_arraySet( aRect, 4, temp );
-   hb_itemRelease( temp );
-
-   hb_itemReturn( aRect );
-   hb_itemRelease( aRect );
+   hb_itemReturnRelease( aRect );
 }
 
 //---------------------------------------------------------------------------//

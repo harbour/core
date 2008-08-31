@@ -199,16 +199,15 @@ BOOL Array2Rect(PHB_ITEM aRect, RECT *rc )
 
 // Not API - internal use
 
-PHB_ITEM Rect2Array( RECT *rc  )
+PHB_ITEM Rect2Array( RECT * rc  )
 {
-   PHB_ITEM aRect = hb_itemArrayNew(4);
-   PHB_ITEM element = hb_itemNew(NULL);
+   PHB_ITEM aRect = hb_itemArrayNew( 4 );
 
-   hb_arraySet(aRect, 1, hb_itemPutNL(element, rc->left));
-   hb_arraySet(aRect, 2, hb_itemPutNL(element, rc->top));
-   hb_arraySet(aRect, 3, hb_itemPutNL(element, rc->right));
-   hb_arraySet(aRect, 4, hb_itemPutNL(element, rc->bottom));
-   hb_itemRelease(element);
+   hb_arraySetNL( aRect, 1, rc->left );
+   hb_arraySetNL( aRect, 2, rc->top );
+   hb_arraySetNL( aRect, 3, rc->right );
+   hb_arraySetNL( aRect, 4, rc->bottom );
+
    return aRect;
 }
 
@@ -259,14 +258,13 @@ BOOL Array2Point(PHB_ITEM aPoint, POINT *pt )
 
 // Not API - internal use
 
-PHB_ITEM Point2Array( POINT *pt  )
+PHB_ITEM Point2Array( POINT * pt )
 {
-   PHB_ITEM aPoint = hb_itemArrayNew(2);
-   PHB_ITEM element = hb_itemNew(NULL);
+   PHB_ITEM aPoint = hb_itemArrayNew( 2 );
 
-   hb_arraySet(aPoint, 1, hb_itemPutNL(element, pt->x));
-   hb_arraySet(aPoint, 2, hb_itemPutNL(element, pt->y));
-   hb_itemRelease(element);
+   hb_arraySetNL( aPoint, 1, pt->x );
+   hb_arraySetNL( aPoint, 2, pt->y );
+
    return aPoint;
 }
 
@@ -274,10 +272,11 @@ PHB_ITEM Point2Array( POINT *pt  )
 
 BOOL Array2Size(PHB_ITEM aSize, SIZE *siz )
 {
-   if (HB_IS_ARRAY(aSize) && hb_arrayLen(aSize) == 2) {
+   if( HB_IS_ARRAY( aSize ) && hb_arrayLen( aSize ) == 2 )
+   {
       siz->cx = hb_arrayGetNL(aSize,1);
       siz->cy = hb_arrayGetNL(aSize,2);
-      return TRUE ;
+      return TRUE;
    }
    return FALSE;
 }
@@ -311,14 +310,13 @@ BOOL Array2Size(PHB_ITEM aSize, SIZE *siz )
 
 // Not API - internal use
 
-PHB_ITEM Size2Array( SIZE *siz  )
+PHB_ITEM Size2Array( SIZE * siz )
 {
-   PHB_ITEM aSize = hb_itemArrayNew(2);
-   PHB_ITEM element = hb_itemNew(NULL);
+   PHB_ITEM aSize = hb_itemArrayNew( 2 );
 
-   hb_arraySet(aSize, 1, hb_itemPutNL(element, siz->cx));
-   hb_arraySet(aSize, 2, hb_itemPutNL(element, siz->cy));
-   hb_itemRelease(element);
+   hb_arraySetNL( aSize, 1, siz->cx );
+   hb_arraySetNL( aSize, 2, siz->cy );
+
    return aSize;
 }
 
@@ -651,38 +649,26 @@ HB_FUNC( ATAN )
 //-----------------------------------------------------------------------------
 
 /* Extended function for Array CopyRight Luiz Rafael Culik Guimaraes Culikr@uol.com.br */
-void  Rect2ArrayEx( RECT *rc ,PHB_ITEM aRect )
+void  Rect2ArrayEx( RECT * rc, PHB_ITEM aRect )
 {
-   PHB_ITEM element = hb_itemNew(NULL);
-
-   hb_arraySet(aRect, 1, hb_itemPutNL(element, rc->left));
-   hb_arraySet(aRect, 2, hb_itemPutNL(element, rc->top));
-   hb_arraySet(aRect, 3, hb_itemPutNL(element, rc->right));
-   hb_arraySet(aRect, 4, hb_itemPutNL(element, rc->bottom));
-   hb_itemRelease(element);
+   hb_arraySetNL( aRect, 1, rc->left );
+   hb_arraySetNL( aRect, 2, rc->top );
+   hb_arraySetNL( aRect, 3, rc->right );
+   hb_arraySetNL( aRect, 4, rc->bottom );
 }
 
 //-----------------------------------------------------------------------------
 
-void Point2ArrayEx( POINT *pt  , PHB_ITEM aPoint)
+void Point2ArrayEx( POINT *pt, PHB_ITEM aPoint )
 {
-
-   PHB_ITEM element = hb_itemNew(NULL);
-
-   hb_arraySet(aPoint, 1, hb_itemPutNL(element, pt->x));
-   hb_arraySet(aPoint, 2, hb_itemPutNL(element, pt->y));
-   hb_itemRelease(element);
-
+   hb_arraySetNL( aPoint, 1, pt->x );
+   hb_arraySetNL( aPoint, 2, pt->y );
 }
 
 //-----------------------------------------------------------------------------
 
-void Size2ArrayEx( SIZE *siz ,PHB_ITEM aSize )
+void Size2ArrayEx( SIZE * siz, PHB_ITEM aSize )
 {
-   PHB_ITEM element = hb_itemNew(NULL);
-
-   hb_arraySet(aSize, 1, hb_itemPutNL(element, siz->cx));
-   hb_arraySet(aSize, 2, hb_itemPutNL(element, siz->cy));
-   hb_itemRelease(element);
-
+   hb_arraySetNL( aSize, 1, siz->cx );
+   hb_arraySetNL( aSize, 2, siz->cy );
 }

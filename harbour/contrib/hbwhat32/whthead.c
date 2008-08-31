@@ -121,7 +121,6 @@ HB_FUNC( HEADER_GETORDERARRAY )
 
   UINT iCount = Header_GetItemCount((HWND)hb_parnl(1) );
   PHB_ITEM aInt ;
-  PHB_ITEM temp ;
   INT *lpi = (INT*) hb_xgrab( iCount*sizeof(INT)) ;
   BOOL lRet = Header_GetOrderArray((HWND) hb_parnl(1), iCount, lpi )  ;
   UINT i;
@@ -130,14 +129,9 @@ HB_FUNC( HEADER_GETORDERARRAY )
   {
       aInt  = hb_itemArrayNew(iCount ) ;
       for ( i = 0; i<iCount ; i++)
-      {
-        temp = hb_itemPutNL( NULL, lpi[i] );
-        hb_arraySet( aInt, i+1, temp );
-        hb_itemRelease( temp );
-      }
+         hb_arraySetNL( aInt, i+1, lpi[i] );
 
-      hb_itemReturn(aInt);
-      hb_itemRelease(aInt);
+      hb_itemReturnRelease(aInt);
       hb_xfree( lpi ) ;
   }
 }

@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-31 16:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * hbwhat32/whtdate.c
+   * hbwhat32/whthead.c
+   * hbwhat32/whtbrsh.c
+   * hbwhat32/whtgdi.c
+   * hbwhat32/whtmisc.c
+   * hbwhat32/whttab.c
+   * hbwhat32/whtbmp.c
+   * hbwhat32/whtkbrd.c
+     % Using hb_arraySet*() instead of hb_arraySet()
+
 2008-08-31 16:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * utils/hbdoc/bld_vc.bat
    * utils/hbmake/bld_vc.bat

@@ -255,7 +255,6 @@ HB_FUNC( COPYACCELERATORTABLE )
    int iRet ;
    PHB_ITEM aParam ;
    PHB_ITEM aSub ;
-   PHB_ITEM item ;
    int i ;
 
    if ( ISARRAY(2) && ((iCount=hb_parinfa(2,0)) > 0 ) )
@@ -264,7 +263,7 @@ HB_FUNC( COPYACCELERATORTABLE )
    iRet = CopyAcceleratorTable( (HACCEL) hb_parnl( 1 ) ,
                                    (iCount==0 ? NULL : lpAccelDst ) ,
                                    iCount
-                              ) ;
+                              );
 
    if ( ( iCount > 0 ) && (iRet > 0 ) )
    {
@@ -273,21 +272,19 @@ HB_FUNC( COPYACCELERATORTABLE )
 
       aParam = hb_param( 2, HB_IT_ARRAY ) ;
       aSub = hb_itemArrayNew( 3 ) ;
-      item = hb_itemNew( NULL ) ;
       for ( i = 0 ; i < iCount ; i++ )
       {
-         hb_arraySet( aSub, 1, hb_itemPutNI( item, lpAccelDst->fVirt ) ) ;
-         hb_arraySet( aSub, 2, hb_itemPutNI( item, lpAccelDst->key   ) ) ;
-         hb_arraySet( aSub, 3, hb_itemPutNI( item, lpAccelDst->cmd   ) ) ;
-         hb_arraySet( aParam, i+1, hb_arrayClone(aSub) ) ;
+         hb_arraySetNI( aSub, 1, lpAccelDst->fVirt );
+         hb_arraySetNI( aSub, 2, lpAccelDst->key   );
+         hb_arraySetNI( aSub, 3, lpAccelDst->cmd   );
+         hb_arraySet( aParam, i + 1, hb_arrayClone( aSub ) );
       }
-      hb_itemRelease(item) ;
-      hb_itemRelease(aSub) ;
+      hb_itemRelease( aSub );
    }
 
-   if ( iCount > 0 )
+   if( iCount > 0 )
       hb_xfree( lpAccelDst );
-   hb_retni( iRet ) ;
+   hb_retni( iRet );
 }
 
 

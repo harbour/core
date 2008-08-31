@@ -138,24 +138,16 @@ HB_FUNC( FIXBRUSHORGEX )
 
 HB_FUNC( GETBRUSHORGEX )
 {
-   POINT Point ;
-   PHB_ITEM aPt;
-   PHB_ITEM temp ;
+   POINT Point;
 
-   if ( GetBrushOrgEx( (HDC) hb_parnl( 1 ), &Point ) )
+   if( GetBrushOrgEx( ( HDC ) hb_parnl( 1 ), &Point ) )
    {
-     aPt = hb_itemArrayNew( 2 );
+      PHB_ITEM aPt = hb_itemArrayNew( 2 );
 
-     temp = hb_itemPutNL( NULL, Point.x );
-     hb_arraySet( aPt, 1, temp );
-     hb_itemRelease( temp );
+      hb_arraySetNL( aPt, 1, Point.x );
+      hb_arraySetNL( aPt, 2, Point.y );
 
-     temp = hb_itemPutNL( NULL, Point.y );
-     hb_arraySet( aPt, 2, temp );
-     hb_itemRelease( temp );
-
-     hb_itemReturn( aPt );
-     hb_itemRelease( aPt );
+      hb_itemReturnRelease( aPt );
    }
 }
 
@@ -169,27 +161,17 @@ HB_FUNC( GETBRUSHORGEX )
 HB_FUNC( SETBRUSHORGEX )
 {
 
-   POINT Point ;
-   PHB_ITEM aPt;
-   PHB_ITEM temp ;
+   POINT Point;
 
-   if ( SetBrushOrgEx( (HDC) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ), &Point) )
+   if( SetBrushOrgEx( ( HDC ) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ), &Point ) )
    {
-     aPt = hb_itemArrayNew( 2 );
+      PHB_ITEM aPt = hb_itemArrayNew( 2 );
 
-     temp = hb_itemPutNL( NULL, Point.x );
-     hb_arraySet( aPt, 1, temp );
-     hb_itemRelease( temp );
+      hb_arraySetNL( aPt, 1, Point.x );
+      hb_arraySetNL( aPt, 2, Point.y );
 
-     temp = hb_itemPutNL( NULL, Point.y );
-     hb_arraySet( aPt, 2, temp );
-     hb_itemRelease( temp );
-
-     hb_itemReturn( aPt );
-     hb_itemRelease( aPt );
-
+      hb_itemReturnRelease( aPt );
    }
-
 }
 
 

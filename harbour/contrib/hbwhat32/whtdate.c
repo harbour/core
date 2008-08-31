@@ -113,97 +113,47 @@ HB_FUNC( DATETIME_GETMONTHCALFONT )
 
 HB_FUNC( DATETIME_GETRANGE )
 {
-   LPSYSTEMTIME lpSysTimeArray = (SYSTEMTIME *) hb_xgrab( 2 * sizeof(SYSTEMTIME)) ;
-   PHB_ITEM aMinMaxDate, aMinDate, aMaxDate ;
-   PHB_ITEM temp ;
-   DWORD dwRet ;
+   LPSYSTEMTIME lpSysTimeArray = (SYSTEMTIME *) hb_xgrab( 2 * sizeof(SYSTEMTIME));
+   PHB_ITEM aMinMaxDate, aMinDate, aMaxDate;
+   DWORD dwRet;
 
-   dwRet = DateTime_GetRange( (HWND) hb_parnl( 1 ), (SYSTEMTIME *)lpSysTimeArray ) ;
+   dwRet = DateTime_GetRange( (HWND) hb_parnl( 1 ), (SYSTEMTIME *)lpSysTimeArray );
 
-   if ( ISBYREF(2) )
-      hb_stornl(dwRet,2);
+   if( ISBYREF( 2 ) )
+      hb_stornl( dwRet, 2 );
 
+   aMinMaxDate = hb_itemArrayNew( 2 );
 
-   aMinMaxDate = hb_itemArrayNew( 2 ) ;
-   aMinDate    = hb_itemArrayNew( 8 ) ;
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[0].wYear );
-       hb_arraySet( aMinDate, 1, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[0].wMonth );
-       hb_arraySet( aMinDate, 2, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[0].wDayOfWeek );
-       hb_arraySet( aMinDate, 3, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[0].wDay );
-       hb_arraySet( aMinDate, 4, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[0].wHour );
-       hb_arraySet( aMinDate, 5, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[0].wMinute );
-       hb_arraySet( aMinDate, 6, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[0].wSecond );
-       hb_arraySet( aMinDate, 7, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[0].wMilliseconds );
-       hb_arraySet( aMinDate, 8, temp );
-       hb_itemRelease( temp );
+   aMinDate = hb_itemArrayNew( 8 );
+   hb_arraySetNL( aMinDate, 1, lpSysTimeArray[0].wYear );
+   hb_arraySetNL( aMinDate, 2, lpSysTimeArray[0].wMonth );
+   hb_arraySetNL( aMinDate, 3, lpSysTimeArray[0].wDayOfWeek );
+   hb_arraySetNL( aMinDate, 4, lpSysTimeArray[0].wDay );
+   hb_arraySetNL( aMinDate, 5, lpSysTimeArray[0].wHour );
+   hb_arraySetNL( aMinDate, 6, lpSysTimeArray[0].wMinute );
+   hb_arraySetNL( aMinDate, 7, lpSysTimeArray[0].wSecond );
+   hb_arraySetNL( aMinDate, 8, lpSysTimeArray[0].wMilliseconds );
 
    hb_arraySet( aMinMaxDate, 1, aMinDate );
 
 
-   aMaxDate    = hb_itemArrayNew( 8 ) ;
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[1].wYear );
-       hb_arraySet( aMaxDate, 1, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[1].wMonth );
-       hb_arraySet( aMaxDate, 2, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[1].wDayOfWeek );
-       hb_arraySet( aMaxDate, 3, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[1].wDay );
-       hb_arraySet( aMaxDate, 4, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[1].wHour );
-       hb_arraySet( aMaxDate, 5, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[1].wMinute );
-       hb_arraySet( aMaxDate, 6, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[1].wSecond );
-       hb_arraySet( aMaxDate, 7, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, lpSysTimeArray[1].wMilliseconds );
-       hb_arraySet( aMaxDate, 8, temp );
-       hb_itemRelease( temp );
+   aMaxDate = hb_itemArrayNew( 8 );
+   hb_arraySetNL( aMaxDate, 1, lpSysTimeArray[1].wYear );
+   hb_arraySetNL( aMaxDate, 2, lpSysTimeArray[1].wMonth );
+   hb_arraySetNL( aMaxDate, 3, lpSysTimeArray[1].wDayOfWeek );
+   hb_arraySetNL( aMaxDate, 4, lpSysTimeArray[1].wDay );
+   hb_arraySetNL( aMaxDate, 5, lpSysTimeArray[1].wHour );
+   hb_arraySetNL( aMaxDate, 6, lpSysTimeArray[1].wMinute );
+   hb_arraySetNL( aMaxDate, 7, lpSysTimeArray[1].wSecond );
+   hb_arraySetNL( aMaxDate, 8, lpSysTimeArray[1].wMilliseconds );
 
    hb_arraySet( aMinMaxDate, 2, aMaxDate );
 
-   hb_itemReturn( aMinMaxDate );
-   hb_itemRelease( aMinMaxDate );
+   hb_itemReturnRelease( aMinMaxDate );
    hb_itemRelease( aMinDate );
    hb_itemRelease( aMaxDate );
-   hb_xfree(lpSysTimeArray);
 
+   hb_xfree(lpSysTimeArray);
 }
 
 //-----------------------------------------------------------------------------
@@ -221,11 +171,8 @@ HB_FUNC( DATETIME_GETRANGE )
 
 HB_FUNC( DATETIME_GETSYSTEMTIME )
 {
-   SYSTEMTIME SysTime ;
-   PHB_ITEM aSysTime ;
-   PHB_ITEM temp ;
+   SYSTEMTIME SysTime;
    long nRet;
-
 
    nRet = DateTime_GetSystemtime(
                       (HWND) hb_parnl( 1 ),   // Handle to a DTP control
@@ -237,44 +184,19 @@ HB_FUNC( DATETIME_GETSYSTEMTIME )
 
    if (nRet == GDT_VALID)  // Time is valid
    {
-       aSysTime = hb_itemArrayNew( 8 ) ;
+      PHB_ITEM aSysTime = hb_itemArrayNew( 8 );
 
-       temp = hb_itemPutNL( NULL, SysTime.wYear );
-       hb_arraySet( aSysTime, 1, temp );
-       hb_itemRelease( temp );
+      hb_arraySetNL( aSysTime, 1, SysTime.wYear );
+      hb_arraySetNL( aSysTime, 2, SysTime.wMonth );
+      hb_arraySetNL( aSysTime, 3, SysTime.wDayOfWeek );
+      hb_arraySetNL( aSysTime, 4, SysTime.wDay );
+      hb_arraySetNL( aSysTime, 5, SysTime.wHour );
+      hb_arraySetNL( aSysTime, 6, SysTime.wMinute );
+      hb_arraySetNL( aSysTime, 7, SysTime.wSecond );
+      hb_arraySetNL( aSysTime, 8, SysTime.wMilliseconds );
 
-       temp = hb_itemPutNL( NULL, SysTime.wMonth );
-       hb_arraySet( aSysTime, 2, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, SysTime.wDayOfWeek );
-       hb_arraySet( aSysTime, 3, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, SysTime.wDay );
-       hb_arraySet( aSysTime, 4, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, SysTime.wHour );
-       hb_arraySet( aSysTime, 5, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, SysTime.wMinute );
-       hb_arraySet( aSysTime, 6, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, SysTime.wSecond );
-       hb_arraySet( aSysTime, 7, temp );
-       hb_itemRelease( temp );
-
-       temp = hb_itemPutNL( NULL, SysTime.wMilliseconds );
-       hb_arraySet( aSysTime, 8, temp );
-       hb_itemRelease( temp );
-
-       hb_itemReturn( aSysTime );
-       hb_itemRelease( aSysTime );
+      hb_itemReturnRelease( aSysTime );
    }
-
 }
 
 //-----------------------------------------------------------------------------

@@ -795,61 +795,24 @@ HB_FUNC( DRAGDETECT )
 HB_FUNC( GETDRAWITEMSTRUCT )
 {
 
-  DRAWITEMSTRUCT *dis =(DRAWITEMSTRUCT*) hb_parnl( 1 ) ;
+  DRAWITEMSTRUCT * dis = ( DRAWITEMSTRUCT * ) hb_parnl( 1 );
 
-  PHB_ITEM arrDis = hb_itemArrayNew(12) ;
-  PHB_ITEM temp ;
+  PHB_ITEM arrDis = hb_itemArrayNew( 12 );
 
-  temp = hb_itemPutNL( NULL, dis->CtlType );
-  hb_arraySet( arrDis, 1, temp );
-  hb_itemRelease( temp );
+  hb_arraySetNL( arrDis,  1, dis->CtlType );
+  hb_arraySetNL( arrDis,  2, dis->CtlID );
+  hb_arraySetNL( arrDis,  3, dis->itemID );
+  hb_arraySetNL( arrDis,  4, dis->itemAction );
+  hb_arraySetNL( arrDis,  5, dis->itemState );
+  hb_arraySetNL( arrDis,  6, ( LONG ) dis->hwndItem );
+  hb_arraySetNL( arrDis,  7, ( LONG ) dis->hDC );
+  hb_arraySetNL( arrDis,  8, dis->rcItem.left );
+  hb_arraySetNL( arrDis,  9, dis->rcItem.top );
+  hb_arraySetNL( arrDis, 10, dis->rcItem.right );
+  hb_arraySetNL( arrDis, 11, dis->rcItem.bottom );
+  hb_arraySetNL( arrDis, 12, dis->itemData );
 
-  temp = hb_itemPutNL( NULL, dis->CtlID );
-  hb_arraySet( arrDis, 2, temp );
-  hb_itemRelease( temp );
-
-  temp = hb_itemPutNL( NULL, dis->itemID );
-  hb_arraySet( arrDis, 3, temp );
-  hb_itemRelease( temp );
-
-  temp = hb_itemPutNL( NULL, dis->itemAction );
-  hb_arraySet( arrDis, 4, temp );
-  hb_itemRelease( temp );
-
-  temp = hb_itemPutNL( NULL, dis->itemState );
-  hb_arraySet( arrDis, 5, temp );
-  hb_itemRelease( temp );
-
-  temp = hb_itemPutNL( NULL, (LONG) dis->hwndItem );
-  hb_arraySet( arrDis, 6, temp );
-  hb_itemRelease( temp );
-
-  temp = hb_itemPutNL( NULL, (LONG) dis->hDC );
-  hb_arraySet( arrDis, 7, temp );
-  hb_itemRelease( temp );
-
-  temp = hb_itemPutNL( NULL, dis->rcItem.left );
-  hb_arraySet( arrDis, 8, temp );
-  hb_itemRelease( temp );
-
-  temp = hb_itemPutNL( NULL, dis->rcItem.top );
-  hb_arraySet( arrDis, 9, temp );
-  hb_itemRelease( temp );
-
-  temp = hb_itemPutNL( NULL, dis->rcItem.right );
-  hb_arraySet( arrDis, 10, temp );
-  hb_itemRelease( temp );
-
-  temp = hb_itemPutNL( NULL, dis->rcItem.bottom );
-  hb_arraySet( arrDis, 11, temp );
-  hb_itemRelease( temp );
-
-  temp = hb_itemPutNL( NULL, dis->itemData );
-  hb_arraySet( arrDis, 12, temp );
-  hb_itemRelease( temp );
-
-  hb_itemReturn( arrDis );
-  hb_itemRelease( arrDis );
+  hb_itemReturnRelease( arrDis );
 }
 
 
