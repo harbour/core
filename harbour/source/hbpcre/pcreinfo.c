@@ -43,7 +43,7 @@ information about a compiled pattern. However, use of this function is now
 deprecated, as it has been superseded by pcre_fullinfo(). */
 
 
-#if 1
+#if 2875
 #include "_hbconf.h"
 #endif
 
@@ -72,7 +72,7 @@ Returns:        number of capturing subpatterns
                 or negative values on error
 */
 
-PCRE_EXP_DEFN int
+PCRE_EXP_DEFN int PCRE_CALL_CONVENTION
 pcre_info(const pcre *argument_re, int *optptr, int *first_byte)
 {
 real_pcre internal_re;

@@ -42,7 +42,7 @@ POSSIBILITY OF SUCH DAMAGE.
 strings. */
 
 
-#if 1
+#if 2875
 #include "_hbconf.h"
 #endif
 
@@ -155,8 +155,7 @@ for (p = string; length-- > 0; p++)
     }
   }
 #else
-/* pacify warnings */
-(void)(string);
+(void)(string);  /* Keep picky compilers happy */
 (void)(length);
 #endif
 

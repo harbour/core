@@ -41,7 +41,7 @@ POSSIBILITY OF SUCH DAMAGE.
 /* This module contains the external function pcre_config(). */
 
 
-#if 1
+#if 2875
 #include "_hbconf.h"
 #endif
 
@@ -62,7 +62,7 @@ Arguments:
 Returns:           0 if data returned, negative on error
 */
 
-PCRE_EXP_DEFN int
+PCRE_EXP_DEFN int PCRE_CALL_CONVENTION
 pcre_config(int what, void *where)
 {
 switch (what)

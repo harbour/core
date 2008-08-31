@@ -26,8 +26,6 @@ copy config.h   ori_dst\config.h.generic
 copy pcre.h     ori_dst\pcre.h.generic         
 copy pcreinal.h ori_dst\pcre_internal.h
 copy ucp.h      ori_dst\ucp.h                  
-copy ucpinter.h ori_dst\ucpinternal.h          
-copy ucptable.h ori_dst\ucptable.h             
 copy chartabs.c ori_dst\pcre_chartables.c.dist 
 copy pcrecomp.c ori_dst\pcre_compile.c         
 copy pcreconf.c ori_dst\pcre_config.c          
@@ -44,7 +42,7 @@ copy pcrerefc.c ori_dst\pcre_refcount.c
 copy pcrestud.c ori_dst\pcre_study.c           
 copy pcretabs.c ori_dst\pcre_tables.c          
 copy pcretryf.c ori_dst\pcre_try_flipped.c     
-copy pcrefind.c ori_dst\pcre_ucp_searchfuncs.c 
+copy pcreucd.c  ori_dst\pcre_ucd.c 
 copy pcrevutf.c ori_dst\pcre_valid_utf8.c      
 copy pcrever.c  ori_dst\pcre_version.c         
 copy pcrexcls.c ori_dst\pcre_xclass.c          

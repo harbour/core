@@ -760,7 +760,6 @@ PCRE_LIB_OBJS = \
     $(OBJ_DIR)\pcreconf$(OBJEXT) \
     $(OBJ_DIR)\pcredfa$(OBJEXT)  \
     $(OBJ_DIR)\pcreexec$(OBJEXT) \
-    $(OBJ_DIR)\pcrefind$(OBJEXT) \
     $(OBJ_DIR)\pcrefinf$(OBJEXT) \
     $(OBJ_DIR)\pcreget$(OBJEXT)  \
     $(OBJ_DIR)\pcreinfo$(OBJEXT) \
@@ -771,6 +770,7 @@ PCRE_LIB_OBJS = \
     $(OBJ_DIR)\pcrestud$(OBJEXT) \
     $(OBJ_DIR)\pcretabs$(OBJEXT) \
     $(OBJ_DIR)\pcretryf$(OBJEXT) \
+    $(OBJ_DIR)\pcreucd$(OBJEXT)  \
     $(OBJ_DIR)\pcrever$(OBJEXT)  \
     $(OBJ_DIR)\pcrevutf$(OBJEXT) \
     $(OBJ_DIR)\pcrexcls$(OBJEXT) \

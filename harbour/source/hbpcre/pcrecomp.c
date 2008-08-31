@@ -42,7 +42,7 @@ POSSIBILITY OF SUCH DAMAGE.
 supporting internal functions that are not used by other modules. */
 
 
-#if 1
+#if 2875
 #include "_hbconf.h"
 #endif
 
@@ -1451,8 +1451,7 @@ for (;;)
       break;
       }
 #else
-    /* pacify warnings */
-    (void)(utf8);
+    (void)(utf8);  /* Keep compiler happy by referencing function argument */
 #endif
     }
   }
@@ -1547,8 +1546,7 @@ for (;;)
       break;
       }
 #else
-    /* pacify warnings */
-    (void)(utf8);
+    (void)(utf8);  /* Keep compiler happy by referencing function argument */
 #endif
     }
   }
@@ -2021,7 +2019,7 @@ get_othercase_range(unsigned int *cptr, unsigned int d, unsigned int *ocptr,
 unsigned int c, othercase, next;
 
 for (c = *cptr; c <= d; c++)
-  { if ((othercase = _pcre_ucp_othercase(c)) != NOTACHAR) break; }
+  { if ((othercase = UCD_OTHERCASE(c)) != c) break; }
 
 if (c > d) return FALSE;
 
@@ -2030,7 +2028,7 @@ next = othercase + 1;
 
 for (++c; c <= d; c++)
   {
-  if (_pcre_ucp_othercase(c) != next) break;
+  if (UCD_OTHERCASE(c) != next) break;
   next++;
   }
 
@@ -2141,8 +2139,7 @@ if (next >= 0) switch(op_code)
 #ifdef SUPPORT_UTF8
   if (utf8 && item > 127) { GETCHAR(item, utf8_char); }
 #else
-  /* pacify warnings */
-  (void)(utf8_char);
+  (void)(utf8_char);  /* Keep compiler happy by referencing function argument */
 #endif
   return item != next;
 
@@ -2161,7 +2158,7 @@ if (next >= 0) switch(op_code)
     unsigned int othercase;
     if (next < 128) othercase = cd->fcc[next]; else
 #ifdef SUPPORT_UCP
-    othercase = _pcre_ucp_othercase((unsigned int)next);
+    othercase = UCD_OTHERCASE((unsigned int)next);
 #else
     othercase = NOTACHAR;
 #endif
@@ -2182,7 +2179,7 @@ if (next >= 0) switch(op_code)
     unsigned int othercase;
     if (next < 128) othercase = cd->fcc[next]; else
 #ifdef SUPPORT_UCP
-    othercase = _pcre_ucp_othercase(next);
+    othercase = UCD_OTHERCASE(next);
 #else
     othercase = NOTACHAR;
 #endif
@@ -3348,7 +3345,7 @@ for (;; ptr++)
         if ((options & PCRE_CASELESS) != 0)
           {
           unsigned int othercase;
-          if ((othercase = _pcre_ucp_othercase(c)) != NOTACHAR)
+          if ((othercase = UCD_OTHERCASE(c)) != c)
             {
             *class_utf8data++ = XCL_SINGLE;
             class_utf8data += _pcre_ord2utf8(othercase, class_utf8data);
@@ -4929,10 +4926,8 @@ we set the flag only if there is a literal "\r" or "\n" in the class. */
         both phases.
 
         If we are not at the pattern start, compile code to change the ims
-        options if this setting actually changes any of them. We also pass the
-        new setting back so that it can be put at the start of any following
-        branches, and when this group ends (if we are in a group), a resetting
-        item can be compiled. */
+        options if this setting actually changes any of them, and reset the
+        greedy defaults and the case value for firstbyte and reqbyte. */
 
         if (*ptr == ')')
           {
@@ -4940,7 +4935,6 @@ we set the flag only if there is a literal "\r" or "\n" in the class. */
                (lengthptr == NULL || *lengthptr == 2 + 2*LINK_SIZE))
             {
             cd->external_options = newoptions;
-            options = newoptions;
             }
          else
             {
@@ -4949,17 +4943,17 @@ we set the flag only if there is a literal "\r" or "\n" in the class. */
               *code++ = OP_OPT;
               *code++ = newoptions & PCRE_IMS;
               }
-
-            /* Change options at this level, and pass them back for use
-            in subsequent branches. Reset the greedy defaults and the case
-            value for firstbyte and reqbyte. */
-
-            *optionsptr = options = newoptions;
             greedy_default = ((newoptions & PCRE_UNGREEDY) != 0);
             greedy_non_default = greedy_default ^ 1;
-            req_caseopt = ((options & PCRE_CASELESS) != 0)? REQ_CASELESS : 0;
+            req_caseopt = ((newoptions & PCRE_CASELESS) != 0)? REQ_CASELESS : 0;
             }
 
+          /* Change options at this level, and pass them back for use
+          in subsequent branches. When not at the start of the pattern, this
+          information is also necessary so that a resetting item can be
+          compiled at the end of a group (if we are in a group). */
+
+          *optionsptr = options = newoptions;
           previous = NULL;       /* This item can't be repeated */
           continue;              /* It is complete */
           }
@@ -5953,7 +5947,7 @@ Returns:        pointer to compiled data block, or NULL on error,
                 with errorptr and erroroffset set
 */
 
-PCRE_EXP_DEFN pcre *
+PCRE_EXP_DEFN pcre * PCRE_CALL_CONVENTION
 pcre_compile(const char *pattern, int options, const char **errorptr,
   int *erroroffset, const unsigned char *tables)
 {
@@ -5961,7 +5955,7 @@ return pcre_compile2(pattern, options, NULL, errorptr, erroroffset, tables);
 }
 
 
-PCRE_EXP_DEFN pcre *
+PCRE_EXP_DEFN pcre * PCRE_CALL_CONVENTION
 pcre_compile2(const char *pattern, int options, int *errorcodeptr,
   const char **errorptr, int *erroroffset, const unsigned char *tables)
 {

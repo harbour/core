@@ -33,8 +33,6 @@ copy ori_src\config.h.generic       config.h
 copy ori_src\pcre.h.generic         pcre.h
 copy ori_src\pcre_internal.h        pcreinal.h
 copy ori_src\ucp.h                  ucp.h
-copy ori_src\ucpinternal.h          ucpinter.h
-copy ori_src\ucptable.h             ucptable.h
 copy ori_src\pcre_chartables.c.dist chartabs.c
 copy ori_src\pcre_compile.c         pcrecomp.c
 copy ori_src\pcre_config.c          pcreconf.c
@@ -51,7 +49,7 @@ copy ori_src\pcre_refcount.c        pcrerefc.c
 copy ori_src\pcre_study.c           pcrestud.c
 copy ori_src\pcre_tables.c          pcretabs.c
 copy ori_src\pcre_try_flipped.c     pcretryf.c
-copy ori_src\pcre_ucp_searchfuncs.c pcrefind.c
+copy ori_src\pcre_ucd.c             pcreucd.c
 copy ori_src\pcre_valid_utf8.c      pcrevutf.c
 copy ori_src\pcre_version.c         pcrever.c
 copy ori_src\pcre_xclass.c          pcrexcls.c

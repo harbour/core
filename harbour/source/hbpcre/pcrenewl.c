@@ -47,7 +47,7 @@ and NLTYPE_ANY. The full list of Unicode newline characters is taken from
 http://unicode.org/unicode/reports/tr18/. */
 
 
-#if 1
+#if 2875
 #include "_hbconf.h"
 #endif
 

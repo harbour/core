@@ -45,7 +45,7 @@ compilation of dftables.c, in which case the macro DFTABLES is defined. */
 
 
 #ifndef DFTABLES
-#  if 1
+#  if 2875
 #  include "_hbconf.h"
 #  endif
 #  include "pcreinal.h"

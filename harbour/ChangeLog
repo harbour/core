@@ -8,6 +8,61 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-08-31 10:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbole/oleauto.prg
+   * contrib/hbw32/w32_tole.prg
+     * MessageBox() calls converted to Alert()s.
+       A #translate added for the to be reconverted to MessageBox(), 
+       since I'm not sure why should we use MessageBox()es here?
+       IMO it'd be better to throw RTEs, or handle these cases more 
+       "natively". Opinions?
+
+   * contrib/hbole/oleauto.prg
+     + Modified to generate RTE when the object could not 
+       be created, so that it works more like OLE in hbw32.lib, 
+       and the test doesn't crash in this case. I don't have 
+       Excel, and this is what I could fix without it.
+
+   * contrib/hbw32/w32_tole.prg
+   * contrib/hbw32/w32_ole.c
+     ! Typos, minor formatting.
+
+   * common.mak
+   * source/hbpcre/Makefile
+   * source/hbpcre/cnv_hb2o.bat
+   * source/hbpcre/cnv_o2hb.bat
+   - source/hbpcre/ucpinter.h
+   - source/hbpcre/ucptable.h
+   - source/hbpcre/pcrefind.c
+   + source/hbpcre/pcreucd.c
+   * source/hbpcre/pcrevutf.c
+   * source/hbpcre/pcre.h
+   * source/hbpcre/pcreconf.c
+   * source/hbpcre/pcreinfo.c
+   * source/hbpcre/pcremktb.c
+   * source/hbpcre/config.h
+   * source/hbpcre/pcrenewl.c
+   * source/hbpcre/pcreoutf.c
+   * source/hbpcre/chartabs.c
+   * source/hbpcre/pcrerefc.c
+   * source/hbpcre/pcreget.c
+   * source/hbpcre/pcrefinf.c
+   * source/hbpcre/pcretryf.c
+   * source/hbpcre/pcreexec.c
+   * source/hbpcre/pcreinal.h
+   * source/hbpcre/pcretabs.c
+   * source/hbpcre/pcredfa.c
+   * source/hbpcre/pcrever.c
+   * source/hbpcre/pcrecomp.c
+   * source/hbpcre/pcrexcls.c
+   * source/hbpcre/pcrestud.c
+   * source/hbpcre/ucp.h
+     + Updated to PCRE 7.8 RC1
+       (will be updated to final pretty soon)
+       This version contains the small patches we 
+       so far had locally in Harbour. Thanks to 
+       Philip Hazel for applying them.
+
 2008-08-30 11:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbsetup.ch
      + Added HB_LEGACY_OFF macro to turn off HB_LEGACY_LEVEL.

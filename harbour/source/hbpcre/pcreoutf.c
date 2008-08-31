@@ -41,7 +41,7 @@ POSSIBILITY OF SUCH DAMAGE.
 /* This file contains a private PCRE function that converts an ordinal
 character value into a UTF8 string. */
 
-#if 1
+#if 2875
 #include "_hbconf.h"
 #endif
 
@@ -78,11 +78,10 @@ for (j = i; j > 0; j--)
 *buffer = _pcre_utf8_table2[i] | cvalue;
 return i + 1;
 #else
-/* pacify warnings */
-(void)(cvalue);
-(void)(buffer);
-return 0;   /* Keep compiler happy; this function won't ever be */
-#endif      /* called when SUPPORT_UTF8 is not defined. */
+(void)(cvalue);  /* Keep compiler happy; this function won't ever be */
+(void)(buffer);  /* called when SUPPORT_UTF8 is not defined. */
+return 0;
+#endif
 }
 
 /* End of pcre_ord2utf8.c */

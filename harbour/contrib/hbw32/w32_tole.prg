@@ -63,9 +63,11 @@
 #include "hbclass.ch"
 #include "error.ch"
 
+#translate Alert( <x> ) => MessageBox( 0, <x>, "OLE Error", 0 )
+
 #ifndef __XHARBOUR__
 
-#define EG_OLEEXECPTION 1001
+#define EG_OLEEXCEPTION 1001
 
 #xcommand TRY              => BEGIN SEQUENCE WITH s_bBreak
 #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
@@ -76,7 +78,7 @@ static s_bBreak := { |oErr| break( oErr ) }
 STATIC PROCEDURE THROW( oError )
    LOCAL lError := Eval( ErrorBlock(), oError )
    IF !HB_ISLOGICAL( lError ) .OR. lError
-       __ErrInHandler()
+      __ErrInHandler()
    ENDIF
    Break( oError )
 RETURN
@@ -211,7 +213,7 @@ METHOD New( uObj, cClass ) CLASS TOleAuto
 
    LOCAL oErr
 
-   // Hack incase OLE Server already created and New() is attempted as an OLE Method.
+   // Hack in case OLE Server already created and New() is attempted as an OLE Method.
    IF ::hObj != NIL
       RETURN HB_ExecFromArray( Self, "_New", HB_aParams() )
    ENDIF
@@ -227,7 +229,7 @@ METHOD New( uObj, cClass ) CLASS TOleAuto
             oErr:CanRetry      := .F.
             oErr:CanSubstitute := .T.
             oErr:Description   := OLEExceptionDescription()
-            oErr:GenCode       := EG_OLEEXECPTION
+            oErr:GenCode       := EG_OLEEXCEPTION
             oErr:Operation     := ProcName()
             oErr:Severity      := ES_ERROR
             oErr:SubCode       := -1
@@ -241,7 +243,7 @@ METHOD New( uObj, cClass ) CLASS TOleAuto
             oErr:CanRetry      := .F.
             oErr:CanSubstitute := .T.
             oErr:Description   := Ole2TxtError()
-            oErr:GenCode       := EG_OLEEXECPTION
+            oErr:GenCode       := EG_OLEEXCEPTION
             oErr:Operation     := ProcName()
             oErr:Severity      := ES_ERROR
             oErr:SubCode       := -1
@@ -267,7 +269,7 @@ METHOD New( uObj, cClass ) CLASS TOleAuto
       oErr:CanDefault    := .F.
       oErr:CanRetry      := .F.
       oErr:CanSubstitute := .T.
-      oErr:Description   := "Invalid argument to contrustor!"
+      oErr:Description   := "Invalid argument to contructor!"
       oErr:GenCode       := 0
       oErr:Operation     := ProcName()
       oErr:Severity      := ES_ERROR
@@ -309,7 +311,7 @@ METHOD GetActiveObject( cClass ) CLASS TOleAuto
             oErr:CanRetry      := .F.
             oErr:CanSubstitute := .T.
             oErr:Description   := OLEExceptionDescription()
-            oErr:GenCode       := EG_OLEEXECPTION
+            oErr:GenCode       := EG_OLEEXCEPTION
             oErr:Operation     := ProcName()
             oErr:Severity      := ES_ERROR
             oErr:SubCode       := -1
@@ -323,7 +325,7 @@ METHOD GetActiveObject( cClass ) CLASS TOleAuto
             oErr:CanRetry      := .F.
             oErr:CanSubstitute := .T.
             oErr:Description   := Ole2TxtError()
-            oErr:GenCode       := EG_OLEEXECPTION
+            oErr:GenCode       := EG_OLEEXCEPTION
             oErr:Operation     := ProcName()
             oErr:Severity      := ES_ERROR
             oErr:SubCode       := -1
@@ -335,7 +337,7 @@ METHOD GetActiveObject( cClass ) CLASS TOleAuto
 
       ::cClassName := cClass
    ELSE
-      MessageBox( 0, "Invalid parameter type to constructor TOleAuto():GetActiveObject()!", "OLE Interface", 0 )
+      Alert( "OLE interface: Invalid parameter type to constructor TOleAuto():GetActiveObject()" )
       ::hObj := 0
    ENDIF
 

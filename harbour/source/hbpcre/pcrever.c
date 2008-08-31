@@ -42,7 +42,7 @@ POSSIBILITY OF SUCH DAMAGE.
 string that identifies the PCRE version that is in use. */
 
 
-#if 1
+#if 2875
 #include "_hbconf.h"
 #endif
 
@@ -79,7 +79,7 @@ I could find no way of detecting that a macro is defined as an empty string at
 pre-processor time. This hack uses a standard trick for avoiding calling
 the STRING macro with an empty argument when doing the test. */
 
-PCRE_EXP_DEFN const char *
+PCRE_EXP_DEFN const char * PCRE_CALL_CONVENTION
 pcre_version(void)
 {
 return (XSTRING(Z PCRE_PRERELEASE)[1] == 0)?

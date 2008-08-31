@@ -53,7 +53,11 @@
 
 #include "hbclass.ch"
 #include "common.ch"
+#include "error.ch"
 
+#translate Alert( <x> ) => MessageBox( 0, <x>, "OLE Error", 0 )
+
+#define EG_OLEEXCEPTION 1001
 
 CLASS TOleAuto
 
@@ -73,12 +77,37 @@ ENDCLASS
 
 //--------------------------------------------------------------------
 
+STATIC PROCEDURE THROW( oError )
+   LOCAL lError := Eval( ErrorBlock(), oError )
+   IF !HB_ISLOGICAL( lError ) .OR. lError
+      __ErrInHandler()
+   ENDIF
+   Break( oError )
+RETURN
+
 METHOD New( uObj ) CLASS TOleAuto
+   LOCAL oErr
 
    IF ISCHARACTER( uObj )
       ::hObj := CreateOleObject( uObj )
    ELSE
       ::hObj := uObj
+   ENDIF
+
+   IF Empty( ::hObj )
+       oErr := ErrorNew()
+       oErr:Args          := hb_AParams()
+       oErr:CanDefault    := .F.
+       oErr:CanRetry      := .F.
+       oErr:CanSubstitute := .T.
+       oErr:Description   := Ole2TxtError()
+       oErr:GenCode       := EG_OLEEXCEPTION
+       oErr:Operation     := ProcName()
+       oErr:Severity      := ES_ERROR
+       oErr:SubCode       := -1
+       oErr:SubSystem     := "TOleAuto"
+
+       RETURN Throw( oErr )
    ENDIF
 
    RETURN Self
@@ -89,8 +118,8 @@ METHOD GetActiveObject( cClass ) CLASS TOleAuto
       ::hObj := GetOleObject( cClass )
       // ::cClassName := cClass
    ELSE
-      MessageBox( 0, "Invalid parameter type to constructor TOleAuto():GetActiveObject()!", "OLE Interface", 0 )
-      ::hObj := 0
+      Alert( "OLE interface: Invalid parameter type to constructor TOleAuto():GetActiveObject()" )
+      ::hObj := NIL
    ENDIF
 
    RETURN Self
@@ -131,7 +160,7 @@ METHOD Invoke( cMethod, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) C
       OLEShowException()
       RETURN Self
    ELSEIF OleError() != 0
-      MessageBox( 0, cMethod + ":   " + Ole2TxtError(), "OLE Error", 0 )
+      Alert( "OLE error: " + cMethod + ":   " + Ole2TxtError() )
    ENDIF
 
    RETURN uObj
@@ -157,7 +186,7 @@ METHOD Set( cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) CL
    IF Ole2TxtError() == "DISP_E_EXCEPTION"
       OLEShowException()
    ELSEIF OleError() != 0
-      MessageBox( 0, cProperty + ":   " + Ole2TxtError(), "OLE Error", 0 )
+      Alert( "OLE error: " + cProperty + ":   " + Ole2TxtError() )
    ENDIF
 
    RETURN nil
@@ -192,7 +221,7 @@ METHOD Get( cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) CL
       IF OleIsObject()
          RETURN TOleAuto():New( uObj )
       ELSEIF OleError() != 0
-         MessageBox( 0, cProperty + ":   " + Ole2TxtError(), "OLE Error", 0 )
+         Alert( "OLE error: " + cProperty + ":   " + Ole2TxtError() )
       ENDIF
    ENDIF
 

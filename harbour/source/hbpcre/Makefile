@@ -11,7 +11,6 @@ C_SOURCES=\
 	pcreconf.c \
 	pcredfa.c \
 	pcreexec.c \
-	pcrefind.c \
 	pcrefinf.c \
 	pcreget.c \
 	pcreinfo.c \
@@ -22,6 +21,7 @@ C_SOURCES=\
 	pcrestud.c \
 	pcretabs.c \
 	pcretryf.c \
+	pcreucd.c \
 	pcrever.c \
 	pcrevutf.c \
 	pcrexcls.c \

@@ -121,7 +121,7 @@ static BOOL s_bInit = FALSE;
 
 /* ----------------------------------------------------------------------- */
 
-#define EG_OLEEXECPTION 1001
+#define EG_OLEEXCEPTION 1001
 #define HB_STRING_ALLOC( p, l )     hb_itemReSizeString( p, l )
 
 static void hb_itemPushForward( PHB_ITEM pItem )
@@ -1623,7 +1623,7 @@ static void OleThrowError( void )
 
    /*HB_TRACE(HB_TR_INFO, ("Desc: '%s'\n", sDescription));*/
 
-   pReturn = hb_errRT_SubstParams( hb_parcx( -1 ), EG_OLEEXECPTION, (ULONG) s_nOleError, sDescription, hb_itemGetSymbol( hb_stackBaseItem() )->szName );
+   pReturn = hb_errRT_SubstParams( hb_parcx( -1 ), EG_OLEEXCEPTION, (ULONG) s_nOleError, sDescription, hb_itemGetSymbol( hb_stackBaseItem() )->szName );
 
    if( fFree )
    {

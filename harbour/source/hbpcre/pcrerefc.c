@@ -44,7 +44,7 @@ pattern data block. This might be helpful in applications where the block is
 shared by different users. */
 
 
-#if 1
+#if 2875
 #include "_hbconf.h"
 #endif
 
@@ -68,7 +68,7 @@ Returns:        the (possibly updated) count value (a non-negative number), or
                 a negative error number
 */
 
-PCRE_EXP_DEFN int
+PCRE_EXP_DEFN int PCRE_CALL_CONVENTION
 pcre_refcount(pcre *argument_re, int adjust)
 {
 real_pcre *re = (real_pcre *)argument_re;
