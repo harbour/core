@@ -64,22 +64,17 @@
 #include "hbvm.h"
 #include "hbzlib.h"
 
-#if defined(__GNUC__) && !defined(__MINGW32__)
+#if defined(HB_OS_LINUX)
    #include <sys/types.h>
    #include <sys/stat.h>
-   #include <fcntl.h>
-   #include <errno.h>
-   #include <dirent.h>
 #endif
 #include <time.h>
 
 #ifdef HB_EXTERN_C
-#include "ZipArchive.h"
+   #include "ZipArchive.h"
 #endif
 
 HB_EXTERN_BEGIN
-
-#define hb_fsCurDirBuffEx hb_fsCurDirBuff
 
 #define filePos 1
 #define Lenght 2
@@ -102,11 +97,6 @@ typedef struct _HB_ZIP_INTERNAL
    int iReadOnly;
    PHB_ITEM pItem;
 } HB_ZIP_INTERNAL,* PHB_ZIP_INTERNAL,* HB_ZIP_INTERNAL_PTR;
-
-#ifndef LPCTSTR
-typedef const char *LPCSTR;
-typedef LPCSTR LPCTSTR;
-#endif
 
 extern PHB_ITEM hbza_ZipArray;
 extern PHB_ITEM hbza_ChangeDiskBlock;

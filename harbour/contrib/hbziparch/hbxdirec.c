@@ -53,7 +53,6 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
-#include "hbapierr.h"
 
 #include "directry.ch"
 

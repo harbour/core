@@ -715,7 +715,7 @@ int hb_UnzipSel( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPassWord
       if( pbyBuffer )
       {
          if( hb_stricmp( pbyBuffer, ".\\" ) == 0 )
-            hb_fsCurDirBuffEx( 0, (BYTE*) szPath, _POSIX_PATH_MAX + 1 );
+            hb_fsCurDirBuff( 0, (BYTE*) szPath, _POSIX_PATH_MAX + 1 );
          else
             hb_strncpy( szPath, pbyBuffer, _POSIX_PATH_MAX );
 
@@ -1102,7 +1102,7 @@ int hb_UnzipAll(char *szFile,PHB_ITEM pBlock, BOOL bWithPath,char *szPassWord,ch
       if( pbyBuffer )
       {
          if( hb_stricmp( pbyBuffer, ".\\" ) == 0 )
-            hb_fsCurDirBuffEx( 0, ( BYTE * ) szPath, _POSIX_PATH_MAX + 1 );
+            hb_fsCurDirBuff( 0, ( BYTE * ) szPath, _POSIX_PATH_MAX + 1 );
          else
             hb_strncpy( szPath, pbyBuffer, _POSIX_PATH_MAX );
 

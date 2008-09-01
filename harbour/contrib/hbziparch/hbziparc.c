@@ -52,15 +52,6 @@
 
 #include "hbziparc.h"
 
-#include "hbapifs.h"
-#include "hbapierr.h"
-#if defined(HB_OS_LINUX)
-   #include <sys/types.h>
-   #include <sys/stat.h>
-   #include <fcntl.h>
-   #include <dirent.h>
-#endif
-
 extern void hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttributes, BOOL bDirOnly, BOOL bFullPath );
 
 static PHB_ITEM s_FileToZip;
@@ -122,7 +113,6 @@ static void UnzipCreateArray( char * szSkleton, int uiOption )
    PHB_ITEM Temp;
    BOOL bOkAdd;
    int ulLen = hb_arrayLen(hbza_ZipArray);
-   char sRegEx[ _POSIX_PATH_MAX + _POSIX_PATH_MAX + 1 ];
 
    for( ul = 0; ul < ulLen; ul++ )
    {

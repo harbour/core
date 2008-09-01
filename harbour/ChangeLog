@@ -8,6 +8,47 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-01 09:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/hbziparc.h
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbzipnew.cpp
+   * contrib/hbziparch/hbxdirec.c
+     % Cleanups: Unused headers, types, one #define, 
+       one BCC582 warning, one Linux/GCC/MinGW #ifdef oddness.
+     ; NOTE: Need to test this on Linux.
+
+   * utils/hbmake/hbmake.prg
+     ; Applied cleanup and fix patch from Bill Robertson:
+     ! LIBFILES -> HBLIBS
+       EXTERNLIB -> CONTRIBLIB
+       EXTLIBFILES -> CONTRIBLIBS
+     * ALLLIB = $(USERLIBS) $(LIBFILES) ... ->
+       ALLLIB = $(USERLIBS) $(CONTRIBLIBS) $(HBLIBS) ...
+     % Removed CONTRIBLIB = YES from makefile output as it did nothing.
+     % Combined two ShowHelp() secs into one and put together 
+       with ShowCredits() at top of program.
+     % Simplied Flag checks somewhat but it's still awkward. I fixed 
+       a mingw bug where a flag was set to .t. in one place and .f. 
+       later because of inconsistent use of letters, capitals/lower, etc. 
+       Still lots of checking for lower(...), upper(...), etc. of the 
+       command-line params.
+     * Changed Help screen to reflect current program options better.
+     * Made some alert message a little clearer and minor formatting.
+     ! Initalized s_nMakeFileHandle to F_ERROR and reset it to F_ERROR 
+       whenever the file was closed. Didn't seem to be a current problem, 
+       just good practice.
+
+   * utils/hbmake/hbmake.prg
+     * Removed separate /credits switch and added content to 
+       main help screen.
+     % Removed a few CLS commands from command-line orientated 
+       places.
+     % Removed -elx and -ex from help screen (as these are the 
+       same as -el and -e). They are still accepted though.
+
+   * source/compiler/hbusage.c
+     + Added Bill Robertson to credits list.
+
 2008-08-31 16:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * hbwhat32/whtdate.c
    * hbwhat32/whthead.c

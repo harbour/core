@@ -184,6 +184,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Antonio Linares <alinares fivetechsoft.com>\n"
          "April White <awhite mail.rosecom.ca>\n"
          "Bil Simser <bsimser home.com>\n"
+         "Bill Robertson <arcadia2 sbcglobal.net>\n"
          "Brian Hays <bhays abacuslaw.com>\n"
          "Bruno Cantero <bruno issnet.net>\n"
          "Chen Kedem <niki actcom.co.il>\n"
