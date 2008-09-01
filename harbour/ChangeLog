@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-01 21:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbzipnew.cpp
+     % Cleanups, optimizations, fixes. Now it's possible to 
+       oversee what the code actually tries to do.
+     * Statics reduced to one, not changing current dir anymore.
+     ; It may happen that something is not working as it was, please test.
+       Path handling is/was very shady. Unix support is (and was) 
+       not working at places.
+     ; NOTE: 'Kiss of death' change.
+             Please be prepared that I plan to remove hbziparch 
+             from the repository sometimes this week. If you have 
+             a strong reason not to do so (or some alternative 
+             proposal), pls write to the list.
+             If someone wants to continue using it, it can be accessed 
+             from past revisions of the SVN, or the 1.0.0 binary and 
+             source releases.
+             Someone could as well upload the lastest (or latest stable) 
+             revision to our website.
+
 2008-09-01 15:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    - contrib/hbziparch/hbziparc.h
    * contrib/hbziparch/hbziparc.c
