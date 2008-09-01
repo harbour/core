@@ -371,7 +371,7 @@ int hb_CmpPkSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
 
 PHB_ITEM hb___GetFileNamesFromZip( char * szFile, BOOL iMode )
 {
-   PHB_ITEM hbza_ZipArray;
+   PHB_ITEM pZipArray;
    int iNumberOfFiles;
    ULONG ulCount;
    bool iReturn = true;
@@ -410,8 +410,8 @@ PHB_ITEM hb___GetFileNamesFromZip( char * szFile, BOOL iMode )
    {
       iNumberOfFiles = szZip.GetCount();
 
-      hbza_ZipArray = hb_itemNew( NULL );
-      hb_arrayNew( hbza_ZipArray, iNumberOfFiles );
+      pZipArray = hb_itemNew( NULL );
+      hb_arrayNew( pZipArray, iNumberOfFiles );
       time_t theTime;
       tm * SzTime;
 
@@ -514,23 +514,23 @@ PHB_ITEM hb___GetFileNamesFromZip( char * szFile, BOOL iMode )
 
             hb_arraySetCL( TempArray, HBZA_FI_TIME, szTime, 8 );
             hb_arraySetCL( TempArray, HBZA_FI_ATTR, szAttr, 5 );
-            hb_arraySetForward( hbza_ZipArray, ulCount+1, TempArray );
+            hb_arraySetForward( pZipArray, ulCount+1, TempArray );
             hb_itemRelease( TempArray );
          }
          else
          {
             CZipString szTempString = ( LPCTSTR ) fh.GetFileName();
             const char * szFileNameInZip = ( const char * ) szTempString;
-            hb_arraySetC( hbza_ZipArray, ulCount + 1, ( char * ) szFileNameInZip );
+            hb_arraySetC( pZipArray, ulCount + 1, ( char * ) szFileNameInZip );
          }
       }
    }
    else
-      hbza_ZipArray = hb_itemArrayNew( 0 );
+      pZipArray = hb_itemArrayNew( 0 );
 
    szZip.Close();
 
-   return hbza_ZipArray;
+   return pZipArray;
 }
 
 BOOL hb_IsPassWord( char *szFile )
