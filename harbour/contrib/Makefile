@@ -29,7 +29,6 @@ DIRS=\
 	xhb \
 
 #	hbsqlit2 \
-#	hbw32ddr \
 #	hbwhat32 \
 #	hbziparch \
 

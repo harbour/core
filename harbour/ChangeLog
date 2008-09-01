@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-01 21:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   - contrib/hbw32ddr
+   * contrib/Makefile
+   * contrib/make_b32_all.bat
+   * contrib/make_gcc_all.sh
+   * contrib/make_vc_all.bat
+     - Removed contrib hbw32ddr.
+       For those wanting to peek into this code, or 
+       pick up development, the exact source can be 
+       found in Harbour 1.0.0 release.
+
 2008-09-01 21:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparch/hbziparc.c
    * contrib/hbziparch/hbzipnew.cpp

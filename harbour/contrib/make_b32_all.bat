@@ -39,7 +39,7 @@ rem *******************************************************
 rem Compiling contrib dirs ...
 rem *******************************************************
 
-rem hbsqlit2 hbw32ddr hbwhat32 hbziparch
+rem hbsqlit2 hbwhat32 hbziparch
 
 set _HB_DIRS=gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
