@@ -59,8 +59,6 @@
 #include "hbvm.h"
 #include "hbzlib.h"
 
-#include "hbziparc.h"
-
 #include <time.h>
 
 #ifdef HB_EXTERN_C
@@ -119,7 +117,7 @@ class SegmActionCallback : public CZipActionCallback
 
       HB_SYMBOL_UNUSED( iProgress );
 
-      hb_vmEvalBlockV( s_pProgressInfo, 2, Disk, Total);
+      hb_vmEvalBlockV( s_pProgressInfo, 2, Disk, Total );
 
       hb_itemRelease( Disk );
       hb_itemRelease( Total );
@@ -324,7 +322,7 @@ int hb_CmpPkSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
       hb_xfree( s_pZipI.szComment );
    }
 
-   if( HB_IS_BLOCK( pProgress ) )
+   if( pProgress && HB_IS_BLOCK( pProgress ) )
    {
       s_pProgressInfo = pProgress;
       szZip.SetCallback( &spanac );
@@ -334,7 +332,7 @@ int hb_CmpPkSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
    {
       szDummy = ( char * ) hb_arrayGetCPtr( pArray, ulCount );
 
-      if( pBlock != NULL )
+      if( pBlock && HB_IS_BLOCK( pBlock ) )
       {
          PHB_ITEM FileName = hb_itemPutC( NULL, hb_arrayGetCPtr( pArray, ulCount ) ), FilePos = hb_itemPutNI( NULL, ulCount );
  
@@ -702,7 +700,7 @@ int hb_UnzipSel( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPassWord
    SegmCallback span;
    SegmActionCallback spanac;
 
-   if( HB_IS_BLOCK( pProgress ) )
+   if( pProgress && HB_IS_BLOCK( pProgress ) )
    {
       s_pProgressInfo = pProgress;
       szZip.SetCallback( &spanac );
@@ -735,9 +733,8 @@ int hb_UnzipSel( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPassWord
    if( iReturn )
    {
       if( szPassWord !=  NULL )
-      {
          szZip.SetPassword( szPassWord );
-      }
+
       if( pbyBuffer )
       {
          if( hb_stricmp( pbyBuffer, ".\\" ) == 0 )
@@ -777,7 +774,7 @@ int hb_UnzipSel( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPassWord
             szZip.SetRootPath(szPath);
             hb_xfree( pOut );
 
-            if( pBlock != NULL )
+            if( pBlock && HB_IS_BLOCK( pBlock ) )
             {
                PHB_ITEM FileName = hb_itemPutC( NULL, ( char * ) szFileNameInZip  ), Pos = hb_itemPutNI( NULL, iCause );
 
@@ -790,7 +787,7 @@ int hb_UnzipSel( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPassWord
             try
             {
                /* TODO:  They're both the same.... */
-               if( !HB_IS_BLOCK( pProgress ) )
+               if( !pProgress || !HB_IS_BLOCK( pProgress ) )
                {
 /*                szZip.SetPassword( szPassWord ); */
                   szZip.ExtractFile( ( WORD ) ulCount, ( LPCTSTR ) szPath, bWithPath, NULL, 65536 );
@@ -917,7 +914,7 @@ int hb_UnzipSelIndex( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPas
    SegmCallback span;
    SegmActionCallback spanac;
 
-   if( HB_IS_BLOCK( pProgress ) )
+   if( pProgress && HB_IS_BLOCK( pProgress ) )
    {
       s_pProgressInfo = pProgress;
       szZip.SetCallback( &spanac );
@@ -964,7 +961,7 @@ int hb_UnzipSelIndex( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPas
             szTempString = ( LPCTSTR ) fh.GetFileName();
             szFileNameInZip = ( const char * ) szTempString;
 
-            if( pBlock != NULL )
+            if( pBlock && HB_IS_BLOCK( pBlock ) )
             {
                PHB_ITEM FileName = hb_itemPutC( NULL, ( char * ) szFileNameInZip );
 
@@ -975,7 +972,7 @@ int hb_UnzipSelIndex( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPas
             try
             {
                /* TODO:  They're both the same.... */
-               if( !HB_IS_BLOCK( pProgress ) )
+               if( !pProgress || !HB_IS_BLOCK( pProgress ) )
                {
 /*                szZip.SetPassword( szPassWord ); */
                   szZip.ExtractFile( ( WORD )ulCount, ( LPCTSTR )szPath, bWithPath, NULL, 65536 );
@@ -1082,7 +1079,7 @@ int hb_UnzipAll(char *szFile,PHB_ITEM pBlock, BOOL bWithPath,char *szPassWord,ch
 
    HB_SYMBOL_UNUSED( pDiskBlock );
 
-   if( HB_IS_BLOCK( pProgress ) )
+   if( pProgress && HB_IS_BLOCK( pProgress ) )
    {
       s_pProgressInfo = pProgress;
       szZip.SetCallback( &spanac );
@@ -1155,7 +1152,7 @@ int hb_UnzipAll(char *szFile,PHB_ITEM pBlock, BOOL bWithPath,char *szPassWord,ch
          szZip.SetRootPath( szPath );
          hb_xfree( pOut );
       
-         if( pBlock != NULL )
+         if( pBlock && HB_IS_BLOCK( pBlock ) )
          {
             PHB_ITEM FileName = hb_itemPutC( NULL, ( char * ) szFileNameInZip );
             PHB_ITEM Pos = hb_itemPutNI( NULL, uiCount );
@@ -1168,7 +1165,7 @@ int hb_UnzipAll(char *szFile,PHB_ITEM pBlock, BOOL bWithPath,char *szPassWord,ch
       
          try
          {
-            if( ! HB_IS_BLOCK( pProgress ) )
+            if( !pProgress || ! HB_IS_BLOCK( pProgress ) )
             {
                szZip.SetPassword( szPassWord );
                szZip.ExtractFile( ( WORD ) uiCount, ( LPCTSTR ) szPath, bWithPath ? true : false, NULL, 65536 );
@@ -1250,7 +1247,7 @@ int hb_CompressFile( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBl
          hb_xfree( s_pZipI.szComment );
       }
 
-      if( HB_IS_BLOCK( pProgress ) )
+      if( pProgress && HB_IS_BLOCK( pProgress ) )
       {
          s_pProgressInfo = pProgress;
          szZip.SetCallback( &spanac );
@@ -1272,7 +1269,7 @@ int hb_CompressFile( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBl
          {
             if( dwSize != ( DWORD ) -1 )
             {
-               if( pBlock != NULL )
+               if( pBlock && HB_IS_BLOCK( pBlock ) )
                {
                   PHB_ITEM FileName = hb_itemPutC( NULL, hb_arrayGetCPtr( pArray, ulCount ) ), FilePos = hb_itemPutNI( NULL, ulCount );
 
@@ -1358,7 +1355,7 @@ int hb_CmpTdSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
          hb_xfree( s_pZipI.szComment );
       }
 
-      if( HB_IS_BLOCK( pProgress ) )
+      if( pProgress && HB_IS_BLOCK( pProgress ) )
       {
          s_pProgressInfo = pProgress;
          szZip.SetCallback( &spanac );
@@ -1371,7 +1368,7 @@ int hb_CmpTdSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
 
          if( dwSize != ( DWORD ) -1 )
          {
-            if( pBlock != NULL )
+            if( pBlock && HB_IS_BLOCK( pBlock ) )
             {
                PHB_ITEM FileName = hb_itemPutC( NULL, hb_arrayGetCPtr( pArray, ulCount ) ), FilePos = hb_itemPutNI( NULL, ulCount );
 
@@ -1448,7 +1445,7 @@ int hb_CompressFileStd( char *szFile, char *szFiletoCompress, int iCompLevel, PH
          hb_xfree( s_pZipI.szComment );
       }
 
-      if( HB_IS_BLOCK( pProgress ) )
+      if( pProgress && HB_IS_BLOCK( pProgress ) )
       {
          s_pProgressInfo = pProgress;
          szZip.SetCallback( &spanac );
@@ -1460,7 +1457,7 @@ int hb_CompressFileStd( char *szFile, char *szFiletoCompress, int iCompLevel, PH
 
          if( dwSize != ( DWORD ) -1 )
          {
-            if( pBlock != NULL )
+            if( pBlock && HB_IS_BLOCK( pBlock ) )
             {
                PHB_ITEM FileName = hb_itemPutC( NULL, szFiletoCompress );
 
@@ -1548,7 +1545,7 @@ int hb_CmpTdSpanStd( char *szFile, char * szFiletoCompress, int iCompLevel, PHB_
       hb_xfree( s_pZipI.szComment );
    }
 
-   if( HB_IS_BLOCK( pProgress ) )
+   if( pProgress && HB_IS_BLOCK( pProgress ) )
    {
       s_pProgressInfo = pProgress;
       szZip.SetCallback( &spanac );
@@ -1561,9 +1558,9 @@ int hb_CmpTdSpanStd( char *szFile, char * szFiletoCompress, int iCompLevel, PHB_
          if( szPassWord != NULL )
             szZip.SetPassword( szPassWord );
 
-         if( pBlock != NULL )
+         if( pBlock && HB_IS_BLOCK( pBlock ) )
          {
-            PHB_ITEM FileName =hb_itemPutC( NULL, szFiletoCompress );
+            PHB_ITEM FileName = hb_itemPutC( NULL, szFiletoCompress );
 
             hb_vmEvalBlockV( pBlock, 1, FileName );
 

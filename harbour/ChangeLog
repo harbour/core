@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-01 15:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   - contrib/hbziparch/hbziparc.h
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbzipnew.cpp
+   * contrib/hbziparch/tests/unzipa.prg
+     % Further cleanups, optimizations.
+     % Removed adding current directory to .zip filename 
+       if it didn't contain a path. If a file doesn't contain 
+       path, the OS will create it by default in the current dir.
+       If someone knows why this hack was there, please tell.
+
 2008-09-01 12:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparch/hbziparc.c
    * contrib/hbziparch/hbzipnew.cpp
