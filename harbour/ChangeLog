@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-01 12:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/hbziparc.h
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbzipnew.cpp
+     ! Fixed several potential leaks.
+     % Optimized out several unnecessary allocations.
+     % Optimized out several unnecessary string copying.
+     % Cleaned all global variables.
+     % Cleaned all static variables in C code.
+     % Using HB_ERR_FUNCNAME.
+     ! Returning empty values instead of NULL.
+     ! Fixed potential GPFs.
+     ! Using manifest constants instead of literals.
+     * Cleaned header file and constant usage.
+     * Other minor fixes and optimizations.
+     * Formatting.
+     ; The code is still a mess.
+
 2008-09-01 09:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparch/hbziparc.h
    * contrib/hbziparch/hbziparc.c

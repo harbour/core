@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for the Zlib API,
+ * Header file for the ZipArchive API
  *
  * Copyright 2000-2001 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -50,60 +50,13 @@
  *
  */
 
-
 #ifndef HB_APIZLIB_H_
 #define HB_APIZLIB_H_
 
-#define HB_OS_WIN_32_USED
-
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
-#include "hbapifs.h"
-#include "hbdate.h"
-#include "hbvm.h"
-#include "hbzlib.h"
-
-#if defined(HB_OS_LINUX)
-   #include <sys/types.h>
-   #include <sys/stat.h>
-#endif
-#include <time.h>
-
-#ifdef HB_EXTERN_C
-   #include "ZipArchive.h"
-#endif
-
 HB_EXTERN_BEGIN
 
-#define filePos 1
-#define Lenght 2
-#define Method 3
-#define Size 4
-#define Ratio 5
-#define Date 6
-#define Time 7
-#define Crc32 8
-#define Attr  9
-#define WRITEBUFFERSIZE   16384
-#define MAXFILENAME       256
+extern void         hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttributes, BOOL bDirOnly, BOOL bFullPath );
 
-typedef struct _HB_ZIP_INTERNAL
-{
-   int iWrite;
-   int iExtract;
-   int iRead;
-   char * szComment;
-   int iReadOnly;
-   PHB_ITEM pItem;
-} HB_ZIP_INTERNAL,* PHB_ZIP_INTERNAL,* HB_ZIP_INTERNAL_PTR;
-
-extern PHB_ITEM hbza_ZipArray;
-extern PHB_ITEM hbza_ChangeDiskBlock;
-extern PHB_ITEM hbza_pProgressInfo;
-extern HB_ZIP_INTERNAL hbza_pZipI;
-
-extern char *       hb___CheckFile( char * szFile);
 extern PHB_ITEM     hb___GetFileNamesFromZip(char *szFile,BOOL iMode);
 extern int          hb_CmpPkSpan(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,BOOL bPath,BOOL bDrive,PHB_ITEM pProgress);
 extern BOOL         hb_TransferFilesFromzip(char *szSource,char *szDest,PHB_ITEM pArray);
