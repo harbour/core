@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-02 10:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * utils/hbmake/hbmake.prg
+     ; Applied patch by Bill Robertson:
+     ! Fixed previously introduced (by me actually) bug. Thanks.
+     % Removed "non-extended" codepath, since it was never used.
+     ! UI elements fixed to properly accomodate to any 
+       screen dimensions.
+
+   * utils/hbmake/hbmake.prg
+     ! Fixed to not change casing of files, plus a few other minor fixes.
+     ! Made one filename comparison multiplatform by using hb_FileMatch()
+     ; Added TOFIXes where filename comparison is not multiplatform.
+     % Removed some dead or commented code.
+
 2008-09-01 21:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    - contrib/hbw32ddr
    * contrib/Makefile
