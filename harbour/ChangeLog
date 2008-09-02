@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-02 23:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbzipnew.cpp
+     * Complete cleanup/refactor/fixes.
+       (original functions and internal logic was kept, 
+       except some shady path/curdir manipulations, which 
+       were removed, along with any directory changes)
+       The code got significantly easier to oversee, so if 
+       someone wants to find out how this interface works, 
+       now the code is much easier to read. If we want to 
+       keep this in Harbour, maybe we could just swap the 
+       low-level interface to utilize hbmzip calls instead 
+       of ZipArchive ones. We would lose the segmented 
+       archive feature though, but I'm not sure how 
+       important this is these days, when there is no 
+       floppy disk anymore.
+       Code size is now 40% smaller than in 1.0.0.
+       It's still far from being perfect, but now it's at 
+       least possible to fix.
+
 2008-09-02 10:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * utils/hbmake/hbmake.prg
      ; Applied patch by Bill Robertson:
