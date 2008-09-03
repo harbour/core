@@ -503,19 +503,10 @@ BOOL hb_Unzip( char * szFile, PHB_ITEM pBlock, BOOL bWithPath, char * szPassword
 
          for( nPos = 1; nPos <= hb_arrayLen( pProcFiles ); nPos++ )
          {
-            HB_TYPE type = hb_arrayGetType( pProcFiles, nPos );
+            nZipFPos = myzip.FindFile( ( LPCTSTR ) hb_arrayGetCPtr( pProcFiles, nPos ), false );
 
-            if( type & HB_IT_NUMERIC )
-            {
-               nZipFPos = myzip.FindFile( ( LPCTSTR ) hb_arrayGetCPtr( pProcFiles, nPos ), false );
-
-               if( nZipFPos == ( ZIP_INDEX_TYPE ) -1 )
-                  nZipFPos = myzip.FindFile( ( LPCTSTR ) hb_arrayGetCPtr( pProcFiles, nPos ), true );
-            }
-            else if( type & HB_IT_STRING )
-               nZipFPos = ( ZIP_INDEX_TYPE ) hb_arrayGetNL( pProcFiles, nPos ) - 1;
-            else
-               nZipFPos = ( ZIP_INDEX_TYPE ) -1;
+            if( nZipFPos == ( ZIP_INDEX_TYPE ) -1 )
+               nZipFPos = myzip.FindFile( ( LPCTSTR ) hb_arrayGetCPtr( pProcFiles, nPos ), true );
 
             if( nZipFPos != ( ZIP_INDEX_TYPE ) -1 )
             {
