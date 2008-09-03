@@ -333,18 +333,13 @@ PHB_ITEM hb_GetFileNamesFromZip( char * szFile, BOOL bVerbose )
 
                if( iRatio < 0 )
                   iRatio = 0;
-
-               hb_arraySetNL( pTempArray, HBZA_FI_LENGTH , fh.m_uUncomprSize );
-               hb_arraySetNL( pTempArray, HBZA_FI_SIZE   , fh.m_uComprSize );
-               hb_arraySetNL( pTempArray, HBZA_FI_RATIO  , iRatio );
             }
             else
-            {
                iRatio = 0;
-               hb_arraySetNL( pTempArray, HBZA_FI_LENGTH , fh.m_uUncomprSize );
-               hb_arraySetNL( pTempArray, HBZA_FI_SIZE   , fh.m_uComprSize );
-               hb_arraySetNL( pTempArray, HBZA_FI_RATIO  , iRatio );
-            }
+
+            hb_arraySetNL( pTempArray, HBZA_FI_LENGTH , fh.m_uUncomprSize );
+            hb_arraySetNL( pTempArray, HBZA_FI_SIZE   , fh.m_uComprSize );
+            hb_arraySetNL( pTempArray, HBZA_FI_RATIO  , iRatio );
 
             {
                DWORD uAttr = fh.GetSystemAttr();

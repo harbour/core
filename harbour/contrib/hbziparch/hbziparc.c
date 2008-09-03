@@ -739,7 +739,7 @@ static void hb_procexistingzip( BOOL bUnzip )
    if( ISCHAR( 1 ) )
    {
       char * pszZipFileName = hb_FNAddZipExt( hb_parc( 1 ) );
-      PHB_ITEM pParamFiles = hb_param( 6, HB_IT_STRING | HB_IT_NUMERIC | HB_IT_ARRAY );
+      PHB_ITEM pParamFiles = hb_param( bUnzip ? 6 : 2, HB_IT_STRING | HB_IT_NUMERIC | HB_IT_ARRAY );
       PHB_ITEM pProcFiles = hb_itemArrayNew( 0 );
 
       if( pParamFiles )

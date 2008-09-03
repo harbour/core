@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-03 15:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbzipnew.cpp
+     ! Some fixes to prev.
+
 2008-09-03 12:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparch/hbziparc.c
    * contrib/hbziparch/hbzipnew.cpp
