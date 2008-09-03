@@ -8,6 +8,121 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-03 15:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/Makefile
+   * contrib/hbziparch/common.mak
+   + contrib/hbziparch/hbziparc.prg
+   - contrib/hbziparch/hbzipnew.cpp
+   + contrib/hbziparch/hbzipold.cpp
+   * contrib/hbziparch/tests/bld_b32.bat
+   * contrib/hbziparch/tests/bld_vc.bat
+   - contrib/hbziparch/Wildcard.h
+   - contrib/hbziparch/ZipString.h
+   - contrib/hbziparch/FileInfo.h
+   - contrib/hbziparch/ZipFileMapping_lnx.h
+   - contrib/hbziparch/ZipMutex_win.h
+   - contrib/hbziparch/ZipPathComponent.h
+   - contrib/hbziparch/Aes.h
+   - contrib/hbziparch/BaseLibCompressor.cpp
+   - contrib/hbziparch/zlib
+   - contrib/hbziparch/ZipCentralDir.h
+   - contrib/hbziparch/RandomPool.h
+   - contrib/hbziparch/ZipPathComponent_win.cpp
+   - contrib/hbziparch/ZipString_stl.h
+   - contrib/hbziparch/ZipPlatform_win.cpp
+   - contrib/hbziparch/std_mfc.h
+   - contrib/hbziparch/DeflateCompressor.h
+   - contrib/hbziparch/ZipCrc32Cryptograph.h
+   - contrib/hbziparch/Wildcard.cpp
+   - contrib/hbziparch/ZipString.cpp
+   - contrib/hbziparch/FileFilter.h
+   - contrib/hbziparch/ZipMutex.h
+   - contrib/hbziparch/ZipCompatibility.cpp
+   - contrib/hbziparch/ZipFileMapping_win.h
+   - contrib/hbziparch/ZipExtraData.cpp
+   - contrib/hbziparch/Sha1.h
+   - contrib/hbziparch/ZipArchive.cpp
+   - contrib/hbziparch/ZipFileHeader.h
+   - contrib/hbziparch/DirEnumerator.cpp
+   - contrib/hbziparch/DeflateCompressor.cpp
+   - contrib/hbziparch/ZipBaseException.h
+   - contrib/hbziparch/std_stl.h
+   - contrib/hbziparch/_features.h
+   - contrib/hbziparch/ZipFileMapping.h
+   - contrib/hbziparch/BaseLibCompressor.h
+   - contrib/hbziparch/FileFilter.cpp
+   - contrib/hbziparch/ZipException.h
+   - contrib/hbziparch/ZipCryptograph.h
+   - contrib/hbziparch/ZipAbstractFile.h
+   - contrib/hbziparch/ZipStorage.h
+   - contrib/hbziparch/ZipStringStoreSettings.h
+   - contrib/hbziparch/stdafx.h
+   - contrib/hbziparch/ZipCompatibility.h
+   - contrib/hbziparch/ZipExtraData.h
+   - contrib/hbziparch/ZipMemFile.h
+   - contrib/hbziparch/Hmac.cpp
+   - contrib/hbziparch/Bzip2Compressor.h
+   - contrib/hbziparch/ZipExport.h
+   - contrib/hbziparch/ZipArchive.h
+   - contrib/hbziparch/ZipExtraField.cpp
+   - contrib/hbziparch/ZipFileHeader.cpp
+   - contrib/hbziparch/ZipPlatform.h
+   - contrib/hbziparch/ZipAesCryptograph.cpp
+   - contrib/hbziparch/ZipException.cpp
+   - contrib/hbziparch/ZipCompressor.h
+   - contrib/hbziparch/ZipFile_stl.cpp
+   - contrib/hbziparch/DirEnumerator.h
+   - contrib/hbziparch/ZipCryptograph.cpp
+   - contrib/hbziparch/ZipStorage.cpp
+   - contrib/hbziparch/ZipAutoBuffer.h
+   - contrib/hbziparch/ZipCollections_mfc.h
+   - contrib/hbziparch/ZipFile_mfc.h
+   - contrib/hbziparch/resource.h
+   - contrib/hbziparch/ZipCallbackProvider.h
+   - contrib/hbziparch/ZipMemFile.cpp
+   - contrib/hbziparch/Bzip2Compressor.cpp
+   - contrib/hbziparch/ZipCollections.h
+   - contrib/hbziparch/ZipFile.h
+   - contrib/hbziparch/Aes.cpp
+   - contrib/hbziparch/ZipCentralDir.cpp
+   - contrib/hbziparch/RandomPool.cpp
+   - contrib/hbziparch/ZipMutex_lnx.h
+   - contrib/hbziparch/Hmac.h
+   - contrib/hbziparch/ZipExtraField.h
+   - contrib/hbziparch/ZipCompressor.cpp
+   - contrib/hbziparch/License.txt
+   - contrib/hbziparch/ZipCrc32Cryptograph.cpp
+   - contrib/hbziparch/ZipAesCryptograph.h
+   - contrib/hbziparch/ZipPathComponent_lnx.cpp
+   - contrib/hbziparch/ZipPlatformComm.cpp
+   - contrib/hbziparch/ZipString_mfc.h
+   - contrib/hbziparch/ZipCallback.h
+   - contrib/hbziparch/ZipAutoBuffer.cpp
+   - contrib/hbziparch/ZipFile_mfc.cpp
+   - contrib/hbziparch/ZipCollections_stl.h
+   - contrib/hbziparch/BytesWriter.h
+   - contrib/hbziparch/ZipPlatform_lnx.cpp
+   - contrib/hbziparch/_platform.h
+   - contrib/hbziparch/ZipFile_stl.h
+   - contrib/hbziparch/readme.txt
+   - contrib/hbziparch/Sha1.cpp
+     + Added .prg level implementation of old hbziparch interface.
+       It's based on Toninhos functions sent to the list, but 
+       synced with old interface and extended with new features, 
+       fixes and all the remaining interface functions, and old 
+       doc.
+       There are some non-implemented stuff, and a couple of 
+       NOTEs and TOFIXes, if someone wants, these can be addressed.
+       (some not, as hbmzip doesn't support multi-volume archives.)
+     * Library renamed from hbziparch -> hbziparc to be short 
+       filename. The dir itself will also be renamed so.
+     * Make files modified to compile on all platforms and to 
+       pull hbmzip to build tests.
+     - Removed ZipArchive sources.
+     ; Temporarily kept hbzipold.cpp to serve as reference.
+     ; TOFIX: There is a problem with the loop adding new 
+              files to the .zip.
+
 2008-09-03 15:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparch/Makefile
    * contrib/hbziparch/common.mak

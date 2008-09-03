@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * ZipArchive interface for Harbour
  *
+ * Copyright 2008 Viktor Szakats (harbour.01 syenar hu) (refactor/fix/reformat)
  * Copyright 2000-2001 Luiz Rafael Culik <culik@sl.conex.net>
  * Copyright 1999 Leslee Griffith <les.griffith@vantagesystems.ca> (hb_fsDirectory())
  * www - http://www.harbour-project.org
