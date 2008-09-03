@@ -73,7 +73,11 @@
 #include "hbstack.h"
 #include "hbapicls.h"
 
-static PHB_DYNS pHB_CSTRUCTURE = NULL, pPOINTER, pVALUE, pBUFFER, pDEVALUE;
+static PHB_DYNS s_pHB_CSTRUCTURE = NULL;
+static PHB_DYNS s_pPOINTER;
+static PHB_DYNS s_pVALUE;
+static PHB_DYNS s_pBUFFER;
+static PHB_DYNS s_pDEVALUE;
 
 HB_EXTERN_BEGIN
 HB_EXPORT char * hb_parcstruct( int iParam, ... );
@@ -85,14 +89,14 @@ HB_EXPORT char * hb_parcstruct( int iParam, ... )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_parcstruct(%d, ...)", iParam));
 
-   if( pHB_CSTRUCTURE == NULL )
+   if( s_pHB_CSTRUCTURE == NULL )
    {
-      pHB_CSTRUCTURE = hb_dynsymFind( "HB_CSTRUCTURE" );
+      s_pHB_CSTRUCTURE = hb_dynsymFind( "HB_CSTRUCTURE" );
 
-      pPOINTER       = hb_dynsymGetCase( "POINTER" );
-      pVALUE         = hb_dynsymGetCase( "VALUE" );
-      pBUFFER        = hb_dynsymGetCase( "BUFFER" );
-      pDEVALUE       = hb_dynsymGetCase( "DEVALUE" );
+      s_pPOINTER       = hb_dynsymGetCase( "POINTER" );
+      s_pVALUE         = hb_dynsymGetCase( "VALUE" );
+      s_pBUFFER        = hb_dynsymGetCase( "BUFFER" );
+      s_pDEVALUE       = hb_dynsymGetCase( "DEVALUE" );
    }
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
@@ -121,7 +125,7 @@ HB_EXPORT char * hb_parcstruct( int iParam, ... )
 
       if( strncmp( hb_objGetClsName( pItem ), "C Structure", 11 ) == 0 )
       {
-         hb_vmPushDynSym( pVALUE );
+         hb_vmPushDynSym( s_pVALUE );
          hb_vmPush( pItem );
          hb_vmSend( 0 );
 
@@ -621,7 +625,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
                case HB_IT_ARRAY:
                   if( strncmp( hb_objGetClsName( hb_param( i, HB_IT_ANY ) ), "C Structure", 11 ) == 0 )
                   {
-                     hb_vmPushDynSym( pDEVALUE );
+                     hb_vmPushDynSym( s_pDEVALUE );
                      hb_vmPush( hb_param( i, HB_IT_ANY ) );
                      hb_vmSend( 0 );
 

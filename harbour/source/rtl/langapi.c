@@ -221,11 +221,11 @@ static int hb_langFindPos( char * pszID )
 {
    int iPos;
 
-   if( pszID != NULL )
+   if( pszID )
    {
       for( iPos = 0; iPos < HB_LANG_MAX_; iPos++ )
       {
-         if( s_langList[ iPos ] != NULL && strcmp( ( char * ) s_langList[ iPos ]->pItemList[ HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ], pszID ) == 0 )
+         if( s_langList[ iPos ] && strcmp( ( char * ) s_langList[ iPos ]->pItemList[ HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ], pszID ) == 0 )
             return iPos;
       }
    }

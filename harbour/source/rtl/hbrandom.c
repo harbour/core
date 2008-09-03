@@ -54,8 +54,8 @@
 #include "hbdate.h"
 #include <stdlib.h>
 
-#ifndef HB_OS_WIN_32
-#include <float.h>
+#if !defined( HB_OS_WIN_32 )
+   #include <float.h>
 #endif
 
 /* Globally available data, no need to MT it */
@@ -139,7 +139,7 @@ double hb_random_num()
 
    d1 = ( double ) rand();
    d2 = ( double ) RAND_MAX;
-#ifdef HB_OS_WIN_32
+#if defined( HB_OS_WIN_32 )
    /* It seems that on win32 platform there some weirdness about EPSILON value so
       that a float division using an epsilon smaller than 1e-10 may be rounded.
       Must dig if it's a borland lib bug or a windows problem.

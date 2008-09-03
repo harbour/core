@@ -164,7 +164,7 @@ HB_EXPORT int matherr( struct exception *err )
    s_hb_exc.handled = 0;
 
    mathHandler = hb_mathGetHandler();
-   if( mathHandler != NULL )
+   if( mathHandler )
    {
       retval = ( *( mathHandler ) ) ( &s_hb_exc );
       err->retval = s_hb_exc.retval;
@@ -248,7 +248,7 @@ BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
 
    {
       HB_MATH_HANDLERPROC mathHandler = hb_mathGetHandler();
-      if( mathHandler != NULL )
+      if( mathHandler )
          ( *mathHandler )( phb_exc );
    }
    return TRUE;
@@ -364,7 +364,7 @@ int hb_matherr( HB_MATH_EXCEPTION * pexc )
       pMatherrResult = hb_errLaunchSubst( pError );
       hb_errRelease( pError );
 
-      if( pMatherrResult != NULL )
+      if( pMatherrResult )
       {
          if( HB_IS_NUMERIC( pMatherrResult ) )
          {
@@ -452,7 +452,7 @@ static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
 
    /* call codeblock for both case: handled and unhandled exceptions */
 
-   if( spMathErrorBlock != NULL )
+   if( spMathErrorBlock )
    {
       PHB_ITEM pArray, pRet;
       PHB_ITEM pType, pFuncname, pError, pArg1, pArg2, pRetval, pHandled;
@@ -493,7 +493,7 @@ static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
       {
          /* exception handled by codeblock ? */
          pHandled = hb_itemArrayGet( pArray, 2 );
-         if( pHandled != NULL )
+         if( pHandled )
          {
             pexc->handled = hb_itemGetL( pHandled );
             hb_itemRelease( pHandled );
@@ -504,13 +504,13 @@ static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
             /* YES ! */
             /* extract retval for math routine and matherr() */
             pRetval = hb_itemArrayGet( pArray, 1 );
-            if( pRetval != NULL )
+            if( pRetval )
             {
                pexc->retval = hb_itemGetND( pRetval );
                hb_itemGetNLen( pRetval, &pexc->retvalwidth, &pexc->retvaldec );
                hb_itemRelease( pRetval );
             }
-            if( pRet != NULL && HB_IS_NUMERIC( pRet ) )
+            if( pRet && HB_IS_NUMERIC( pRet ) )
             {
                retval = hb_itemGetNI( pRet );   /* block may also return 0 to force C math lib warnings */
                hb_itemRelease( pRet );
@@ -533,7 +533,7 @@ static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
       retval = 1;               /* default return value to suppress C math lib warnings */
    }
 
-   if( sPrevMathHandler != NULL )
+   if( sPrevMathHandler )
    {
       if( pexc->handled )
       {
@@ -575,7 +575,7 @@ HB_FUNC( HB_MATHERBLOCK )       /* ([<nNewErrorBlock>]) -> <nOldErrorBlock> */
       /* set new error block */
       PHB_ITEM pNewErrorBlock = hb_param( 1, HB_IT_BLOCK );
 
-      if( pNewErrorBlock != NULL )
+      if( pNewErrorBlock )
       {
          if( spMathErrorBlock == NULL )
          {

@@ -90,7 +90,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
       fprintf( yyc, "/*\n * %s\n", szHrb );
       fprintf( yyc, " * %s\n", szCmp );
-      fprintf( yyc, " * Generated C source from \"%s\"\n */\n", HB_COMP_PARAM->szFile );
+      fprintf( yyc, " * Generated C source from \"%s\"\n */\n\n", HB_COMP_PARAM->szFile );
 
       hb_xfree( szCmp );
       hb_xfree( szHrb );

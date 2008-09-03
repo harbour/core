@@ -686,7 +686,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          hb_strncpy( info->path, dirname, sizeof( info->path ) - 1 );
       }
 
-      if( info->dir != NULL && info->pattern[ 0 ] != '\0' )
+      if( info->dir && info->pattern[ 0 ] != '\0' )
       {
          while( ( info->entry = readdir( info->dir ) ) != NULL )
          {
@@ -831,11 +831,11 @@ HB_EXPORT BOOL hb_fsFindNext( PHB_FFIND ffind )
 
 HB_EXPORT void hb_fsFindClose( PHB_FFIND ffind )
 {
-   if( ffind != NULL )
+   if( ffind )
    {
       /* Do platform dependant cleanup */
 
-      if( ffind->info != NULL )
+      if( ffind->info )
       {
          PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
@@ -870,7 +870,7 @@ HB_EXPORT void hb_fsFindClose( PHB_FFIND ffind )
 
 #elif defined(HB_OS_UNIX)
 
-         if( info->dir != NULL )
+         if( info->dir )
          {
             closedir( info->dir );
          }

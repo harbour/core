@@ -462,7 +462,7 @@ static void hb_gt_win_xScreenUpdate( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_xScreenUpdate()"));
 
-   if( s_pCharInfoScreen != NULL )
+   if( s_pCharInfoScreen )
    {
       if( s_uiDispCount == 0 && s_usUpdtTop <= s_usUpdtBottom )
       {
@@ -587,7 +587,7 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
 
       if( s_pCharInfoScreen == NULL || ulSize != s_ulScreenBuffSize )
       {
-         if( s_pCharInfoScreen != NULL )
+         if( s_pCharInfoScreen )
             hb_xfree( s_pCharInfoScreen );
          s_ulScreenBuffSize = ulSize;
          s_pCharInfoScreen = ( CHAR_INFO * ) hb_xgrab( s_ulScreenBuffSize );
@@ -631,7 +631,7 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
       }
       HB_GTSELF_SETPOS( pGT, s_sCurRow, s_sCurCol );
    }
-   else if( s_pCharInfoScreen != NULL )
+   else if( s_pCharInfoScreen )
    {
       hb_xfree( s_pCharInfoScreen );
       s_ulScreenBuffSize = 0;
@@ -765,7 +765,7 @@ static void hb_gt_win_Exit( PHB_GT pGT )
 
    HB_GTSELF_REFRESH( pGT );
 
-   if( s_pCharInfoScreen != NULL )
+   if( s_pCharInfoScreen )
    {
       hb_xfree( s_pCharInfoScreen );
       s_pCharInfoScreen = NULL;
@@ -1364,7 +1364,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                clipKey = &extKeyTab[ extKey ];
             }
 
-            if( clipKey != NULL )
+            if( clipKey )
             {
                if( ( dwState & SHIFT_PRESSED ) && ( dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) )
                {
@@ -1719,7 +1719,7 @@ static void hb_gt_win_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
-   if( iSize > 0 && s_pCharInfoScreen != NULL &&
+   if( iSize > 0 && s_pCharInfoScreen &&
        iRow < ( int ) _GetScreenHeight() && iCol < ( int ) _GetScreenWidth() )
    {
       BYTE bColor, bAttr;

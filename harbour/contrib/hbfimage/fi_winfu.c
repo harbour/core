@@ -81,9 +81,9 @@
 /* implementation: HBITMAP bitmap = FI_FiToBitmap( FIBITMAP *dib ); */
 HB_FUNC( FI_FITOBITMAP )
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       FIBITMAP *dib;
       HBITMAP bitmap;
@@ -100,11 +100,8 @@ HB_FUNC( FI_FITOBITMAP )
       ReleaseDC( NULL, hDC );
 
       /* return value */
-      if ( bitmap != NULL )
-      {
+      if( bitmap )
          hb_retptr( bitmap );
-      }
-
    }
    else
    {
@@ -127,9 +124,9 @@ HB_FUNC( FI_FITOBITMAP )
 /* implementation:  FIBITMAP *dib = FI_BitmapToFi( HBITMAP bitmap ); */
 HB_FUNC( FI_BITMAPTOFI )
 {
-   if ( hb_pcount() == 1 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER
-      )
+   if( hb_pcount() == 1 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER
+     )
    {
       FIBITMAP *dib;
       HBITMAP bitmap;
@@ -153,11 +150,8 @@ HB_FUNC( FI_BITMAPTOFI )
       }
 
       /* return value */
-      if ( dib != NULL )
-      {
+      if( dib )
          hb_retptr( dib );
-      }
-
    }
    else
    {
@@ -180,14 +174,14 @@ HB_FUNC( FI_BITMAPTOFI )
 /* implementation: int scanlines = FI_WinDraw( FIBITMAP *dib, HDC hDC, nTop, nLeft, nBottom, nRight ); */
 HB_FUNC( FI_WINDRAW )
 {
-   if ( hb_pcount() == 6 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC
-      )
+   if( hb_pcount() == 6 &&
+       hb_parinfo( 1 ) & HB_IT_POINTER &&
+       hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+       hb_parinfo( 6 ) & HB_IT_NUMERIC
+     )
    {
       FIBITMAP *dib;
       HDC hDC;

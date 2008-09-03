@@ -62,7 +62,7 @@ STATIC s_cComment
 STATIC s_lReadOnly := .F.
 STATIC s_bProgress
 
-PROCEDURE hb_SetZipReadOnly( lReadOnly )
+PROCEDURE SetZipReadOnly( lReadOnly )
 
    DEFAULT lReadOnly TO .F.
 

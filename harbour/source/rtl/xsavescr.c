@@ -85,7 +85,7 @@ HB_FUNC( __XSAVESCREEN )
 
    hb_gtGetPos( &s_iRow, &s_iCol );
    hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &ulSize );
-   if( s_pBuffer != NULL )
+   if( s_pBuffer )
       hb_xfree( s_pBuffer );
    s_pBuffer = hb_xgrab( ulSize );
    hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), s_pBuffer );
@@ -98,7 +98,7 @@ HB_FUNC( __XSAVESCREEN )
 
 HB_FUNC( __XRESTSCREEN )
 {
-   if( s_pBuffer != NULL )
+   if( s_pBuffer )
    {
       hb_gtRest( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), s_pBuffer );
       hb_xfree( s_pBuffer );
@@ -107,4 +107,3 @@ HB_FUNC( __XRESTSCREEN )
       hb_gtSetPos( s_iRow, s_iCol );
    }
 }
-

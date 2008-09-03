@@ -161,12 +161,12 @@ static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
 {
    char * szHash;
 
-   if( hb_curl->pHash == NULL )
+   if( ! hb_curl->pHash )
       hb_curl->pHash = hb_hashTableCreate( HB_CURL_HASH_TABLE_SIZE,
                            hb_curl_HashKey, hb_curl_HashDel, hb_curl_HashCmp );
 
    szHash = ( char * ) hb_hashTableFind( hb_curl->pHash, ( void * ) szValue );
-   if( !szHash )
+   if( ! szHash )
    {
       szHash = hb_strdup( szValue );
       hb_hashTableAdd( hb_curl->pHash, ( void * ) szHash, ( void * ) szHash );

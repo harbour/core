@@ -516,10 +516,10 @@ static BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, BOOL
       s_pClr[15] = al_make_color(0xFF, 0xFF, 0xFF);  /* bright white */
 
       s_bmp = al_create_system_bitmap(AL_SCREEN_W, AL_SCREEN_H);
-      if( s_bmp == NULL )
+      if( !s_bmp )
       {
          s_bmp = al_create_bitmap(AL_SCREEN_W, AL_SCREEN_H);
-         if( s_bmp == NULL )
+         if( !s_bmp )
          {
             hb_gt_alleg_Error( "Could not allocate double buffer bitmap" );
          }

@@ -8,6 +8,32 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-03 23:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparc/hbziparc.prg
+     ! Fix to one of the rarely used function names.
+
+   * contrib/gtalleg/gtalleg.c
+   * contrib/hbw32/dllcall.c
+   * contrib/hbcurl/hbcurl.c
+   * contrib/hbfimage/fi_winfu.c
+   * contrib/hbfimage/fi_wrp.c
+   * source/vm/memvars.c
+   * source/rtl/gtwin/gtwin.c
+   * source/rtl/math.c
+   * source/rtl/gtclip.c
+   * source/rtl/fstemp.c
+   * source/rtl/is.c
+   * source/rtl/xsavescr.c
+   * source/rtl/fkmax.c
+   * source/rtl/langapi.c
+   * source/rtl/hbrandom.c
+   * source/rtl/hbinet.c
+   * source/rtl/hbffind.c
+     * Minor formatting, code style/format cleanup (!=/== NULL mostly).
+
+   * source/compiler/genc.c
+     * Minor; empty line added to .c output.
+
 2008-09-03 20:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparc/hbziparc.prg
      ! Some formatting to docs.

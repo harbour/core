@@ -146,7 +146,7 @@ BOOL hb_gt_w32_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )
       if( hglb )
       {
          LPTSTR lptstr = ( LPTSTR ) GlobalLock( hglb );
-         if( lptstr != NULL )
+         if( lptstr )
          {
             switch( uFormat )
             {

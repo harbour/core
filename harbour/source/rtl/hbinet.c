@@ -362,7 +362,7 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
       Host = gethostbyname( name );
    }
 
-   if( Host == NULL && Socket != NULL )
+   if( Host == NULL && Socket )
    {
 #if defined(HB_OS_WIN_32)
       HB_SOCKET_SET_ERROR2( Socket, WSAGetLastError() , "Generic error in gethostbyname()" );
@@ -509,7 +509,7 @@ static HB_GARBAGE_FUNC( hb_inetSocketFinalize )
       Socket->com = ( HB_SOCKET_T ) -1;
    }
 
-   if( Socket->caPeriodic != NULL )
+   if( Socket->caPeriodic )
    {
       hb_itemRelease( Socket->caPeriodic );
       Socket->caPeriodic = NULL;
@@ -714,7 +714,7 @@ HB_FUNC( HB_INETTIMEOUT )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
-   if( Socket != NULL )
+   if( Socket )
    {
       hb_retni( Socket->timeout );
       if( ISNUM( 2 ) )
@@ -934,7 +934,7 @@ static void s_inetRecvInternal( int iMode )
          iTimeElapsed += Socket->timeout;
 
          /* if we have a caPeriodic, timeLimit is our REAL timeout */
-         if( Socket->caPeriodic != NULL )
+         if( Socket->caPeriodic )
          {
             hb_execFromArray( Socket->caPeriodic );
 
@@ -1050,7 +1050,7 @@ static void s_inetRecvPattern( char *szPattern )
       {
          iTimeElapsed += Socket->timeout;
 
-         if( Socket->caPeriodic != NULL )
+         if( Socket->caPeriodic )
          {
             hb_execFromArray( Socket->caPeriodic );
             /* do we continue? */
@@ -1237,7 +1237,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
       else
       {
          iTimeElapsed += Socket->timeout;
-         if( Socket->caPeriodic != NULL )
+         if( Socket->caPeriodic )
          {
             hb_execFromArray( Socket->caPeriodic );
 
@@ -1567,14 +1567,10 @@ HB_FUNC( HB_INETSERVER )
       return;
    }
 
-   if( Socket != NULL )
-   {
+   if( Socket )
       HB_SOCKET_ZERO_ERROR( Socket );
-   }
    else
-   {
       HB_SOCKET_INIT( Socket, pSocket );
-   }
 
    /* Creates comm socket */
 #if defined(HB_OS_WIN_32)
@@ -1731,7 +1727,7 @@ HB_FUNC( HB_INETCONNECT )
       return;
    }
 
-   if( Socket != NULL )
+   if( Socket )
    {
       if( Socket->com != ( HB_SOCKET_T ) -1 )
       {
@@ -1741,15 +1737,13 @@ HB_FUNC( HB_INETCONNECT )
       HB_SOCKET_ZERO_ERROR( Socket );
    }
    else
-   {
       HB_SOCKET_INIT( Socket, pSocket );
-   }
 
    Host = hb_getHosts( szHost, Socket );
 
    /* error had been set by get hosts */
 
-   if( Host != NULL )
+   if( Host )
    {
       /* Creates comm socket */
 #if defined(HB_OS_WIN_32)
@@ -1794,7 +1788,7 @@ HB_FUNC( HB_INETCONNECTIP )
       return;
    }
 
-   if( Socket != NULL )
+   if( Socket )
    {
       if( Socket->com != ( HB_SOCKET_T ) -1 )
       {
@@ -2077,7 +2071,7 @@ HB_FUNC( HB_INETDGRAMRECV )
                (struct sockaddr *) &Socket->remote, &iDtLen );
       }
       iTimeElapsed += Socket->timeout;
-      if( Socket->caPeriodic != NULL )
+      if( Socket->caPeriodic )
       {
          hb_execFromArray( Socket->caPeriodic );
          /* do we continue? */

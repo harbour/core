@@ -63,7 +63,7 @@ HB_FUNC( ISALPHA )
 {
    char * szString = hb_parc( 1 );
 
-   if( szString != NULL )
+   if( szString )
    {
       if( isalpha( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
@@ -86,10 +86,7 @@ HB_FUNC( ISDIGIT )
 {
    char * szString = hb_parc( 1 );
 
-   if( szString != NULL )
-      hb_retl( isdigit( ( unsigned char ) * szString ) );
-   else
-      hb_retl( FALSE );
+   hb_retl( szString && isdigit( ( unsigned char ) * szString ) );
 }
 
 /* determines if first char of string is upper-case */
@@ -98,7 +95,7 @@ HB_FUNC( ISUPPER )
 {
    char * szString = hb_parc( 1 );
 
-   if( szString != NULL )
+   if( szString )
    {
       if( isupper( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
@@ -120,7 +117,7 @@ HB_FUNC( ISLOWER )
 {
    char * szString = hb_parc( 1 );
 
-   if( szString != NULL )
+   if( szString )
    {
       if( islower( ( unsigned char ) * szString ) )
          hb_retl( TRUE );

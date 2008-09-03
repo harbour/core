@@ -73,7 +73,7 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 
    char cTempDir[ _POSIX_PATH_MAX + 1 ];
 
-   if( pszDir != NULL && pszDir[ 0 ] != '\0' )
+   if( pszDir && pszDir[ 0 ] != '\0' )
    {
       hb_strncpy( ( char * ) cTempDir, ( const char * ) pszDir, sizeof( cTempDir ) - 1 );
    }
@@ -87,7 +87,7 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
    }
    cTempDir[ _POSIX_PATH_MAX ] = '\0';
 
-   fResult = GetTempFileNameA( ( LPCSTR ) cTempDir, ( ( pszPrefix == NULL ) ? ( LPCSTR ) "hb" : ( LPCSTR ) pszPrefix ), 0, ( LPSTR ) pszBuffer );
+   fResult = GetTempFileNameA( ( LPCSTR ) cTempDir, pszPrefix ? ( LPCSTR ) pszPrefix : ( LPCSTR ) "hb", 0, ( LPSTR ) pszBuffer );
 
 #else
 
@@ -124,9 +124,7 @@ HB_EXPORT HB_FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefi
              used between generation and the file creation. */
 
           if( fhnd != FS_ERROR )
-          {
              return fhnd;
-          }
       }
       else
       {
@@ -146,7 +144,7 @@ static BOOL fsGetTempDirByCase( BYTE *pszName, const char *pszTempDir )
 {
    BOOL fOK = FALSE;
 
-   if( pszTempDir != NULL && *pszTempDir != '\0' )
+   if( pszTempDir && *pszTempDir != '\0' )
    {
       hb_strncpy( ( char * ) pszName, ( char * ) pszTempDir, _POSIX_PATH_MAX );
       if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
@@ -176,7 +174,7 @@ HB_EXPORT HB_FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefi
    {
       pszName[ 0 ] = '\0';
 
-      if( pszDir != NULL && pszDir[ 0 ] != '\0' )
+      if( pszDir && pszDir[ 0 ] != '\0' )
       {
          hb_strncpy( ( char * ) pszName, ( char * ) pszDir, _POSIX_PATH_MAX );
       }
@@ -206,10 +204,8 @@ HB_EXPORT HB_FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefi
          pszName[ len + 1 ] = '\0';
       }
 
-      if( pszPrefix != NULL )
-      {
+      if( pszPrefix )
          hb_strncat( ( char * ) pszName, ( char * ) pszPrefix, _POSIX_PATH_MAX );
-      }
 
       iLen = ( int ) strlen( ( char * ) pszName );
       if( iLen > _POSIX_PATH_MAX - 6 )
