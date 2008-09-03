@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ZipArchive interface for Harbour
+ * ZipArchive interface for Harbour (C++)
  *
  * Copyright 2008 Viktor Szakats (harbour.01 syenar hu) (refactor/fix/reformat)
  * Copyright 2000-2001 Luiz Rafael Culik <culik@sl.conex.net>

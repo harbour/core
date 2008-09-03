@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-03 16:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparc/make_b32.bat
+   * contrib/hbziparc/make_vc.bat
+     % Special C flags not needed anymore.
+
+   - contrib/hbziparc/hbzipold.cpp
+   + contrib/hbziparc/hbzipcpp.old
+     * Renamed to not look like something live.
+
 2008-09-03 16:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * harbour-ce-spec
    * make_deb.sh
