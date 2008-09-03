@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-03 19:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparc/hbziparc.prg
+     ! RTE fixed when not specifying some optional params.
+     ! Fixed to parse the right array, and thus not exluding 
+       all filenames to be zipped.
+     ; Disclaimer: I'm not a user of these functions, and 
+       I've admittedly not tested them besides tests/unzipa.prg 
+       and tests/zipa.prg (which are pretty basic cases), so 
+       bumps are expected. If you find some bugs, please try 
+       to provide patches to fix them. Thanks.
+
 2008-09-03 16:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparc/make_b32.bat
    * contrib/hbziparc/make_vc.bat

@@ -760,6 +760,8 @@ FUNCTION hb_ZipFile( cFileName,;
 
    IF !Empty( hZip := hb_ZipOpen( cFileName ) )
 
+      DEFAULT acFiles TO {}
+      DEFAULT acExclude TO {}
       DEFAULT lWithPath TO .F.
       DEFAULT lWithDrive TO .F.
 
@@ -775,7 +777,7 @@ FUNCTION hb_ZipFile( cFileName,;
       /* NOTE: Try not to add the .zip file to itself. */
       hb_FNameSplit( cFileName, NIL, @cName, @cExt )
       aExclFile := { hb_FNameMerge( NIL, cName, cExt ) }
-      FOR EACH cFN IN acFiles
+      FOR EACH cFN IN acExclude
          IF "?" $ cFN .OR. "*" $ cFN
             tmp := Directory( cFN )
             FOR EACH aFile IN tmp
