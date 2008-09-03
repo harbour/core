@@ -40,11 +40,11 @@ fi
 #**************************************************************
 
 # hbsqlit2
-_HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit3 hbtpathy hbvpdf xhb"
+_HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit3 hbtpathy hbvpdf hbziparc xhb"
 
 case "$HB_ARCHITECTURE" in
    w32|cyg|os2)
-        # hbwhat32 hbziparch
+        # hbwhat32
         _HB_DIRS_ADD="gtwvg hbole hbodbc hbw32 rddado"
         ;;
    *)

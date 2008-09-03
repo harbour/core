@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-03 16:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * harbour-ce-spec
+   * make_deb.sh
+   * harbour-w32-spec
+   * harbour.spec
+   * contrib/Makefile
+   * contrib/make_b32_all.bat
+   * contrib/make_gcc_all.sh
+   * contrib/make_vc_all.bat
+   + contrib/hbziparc
+   - contrib/hbziparch
+     + hbziparc readded to default contrib list, as it 
+       creates no more harm now.
+     ; NOTE: And now that this is about ready, we might 
+             step forward to develop a .7z interface ;)
+
 2008-09-03 15:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparch/Makefile
    * contrib/hbziparch/common.mak

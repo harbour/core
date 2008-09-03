@@ -25,12 +25,12 @@ DIRS=\
 	hbtpathy \
 	hbvpdf \
 	hbw32 \
+	hbziparc \
 	rddado \
 	xhb \
 
 #	hbsqlit2 \
 #	hbwhat32 \
-#	hbziparch \
 
 # contribs with external dependencies
 DIRS +=\

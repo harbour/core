@@ -47,7 +47,7 @@ then
     export HB_WITHOUT_X11=yes
 fi
 
-export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbsqlit3 hbtip hbtpathy hbvpdf xhb"
+export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbsqlit3 hbtip hbtpathy hbvpdf hbziparc xhb"
 
 if [ ! -f "/usr/include/hpdf.h" ] && \
    [ ! -f "/usr/local/include/hpdf.h" ]
