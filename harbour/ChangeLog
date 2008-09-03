@@ -139,6 +139,8 @@
        There are some non-implemented stuff, and a couple of 
        NOTEs and TOFIXes, if someone wants, these can be addressed.
        (some not, as hbmzip doesn't support multi-volume archives.)
+     ; NOTE: This implementation is based on hbmzip.lib, so you 
+             MUST link it, to make it work. INCOMPATIBLE.
      * Library renamed from hbziparch -> hbziparc to be short 
        filename. The dir itself will also be renamed so.
        INCOMPATIBLE.
