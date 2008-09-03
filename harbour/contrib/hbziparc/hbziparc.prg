@@ -74,13 +74,13 @@ PROCEDURE hb_SetZipReadOnly( lReadOnly )
 
 /* $DOC$
  * $FUNCNAME$
- *     HB_SETZIPCOMMENT()
+ *     hb_SetZipComment()
  * $CATEGORY$
  *     Zip Functions
  * $ONELINER$
  *     Set an Zip archive Comment
  * $SYNTAX$
- *     HB_SETZIPCOMMENT( <cComment> ) --> NIL
+ *     hb_SetZipComment( <cComment> ) --> NIL
  * $ARGUMENTS$
  *     <cComment>   Comment to add to the zip archive
  * $RETURNS$
@@ -89,8 +89,8 @@ PROCEDURE hb_SetZipReadOnly( lReadOnly )
  *     This function stored an global comment to an zip archive.
  *     It should be called before any of the compression functions.
  * $EXAMPLES$
- *     HB_SETZIPCOMMENT( "This is an Test" )
- *     hb_zipfile( "test.zip", { "\windows\ios.ini", "\windows\win.ini" } )
+ *     hb_SetZipComment( "This is an Test" )
+ *     hb_ZipFile( "test.zip", { "\windows\ios.ini", "\windows\win.ini" } )
  * $STATUS$
  *     R
  * $COMPLIANCE$
@@ -98,7 +98,7 @@ PROCEDURE hb_SetZipReadOnly( lReadOnly )
  * $PLATFORMS$
  *      All
  * $FILES$
- *      Library is hbziparc.lib
+ *      Library is hbziparc
  * $END$
  */
 PROCEDURE hb_SetZipComment( cComment )
@@ -111,13 +111,13 @@ PROCEDURE hb_SetZipComment( cComment )
 
 /* $DOC$
  * $FUNCNAME$
- *     HB_GETZIPCOMMENT()
+ *     hb_GetZipComment()
  * $CATEGORY$
  *     Zip Functions
  * $ONELINER$
  *     Return the comment of an zip file
  * $SYNTAX$
- *     HB_GETZIPCOMMENT( <szFile> ) --> <szComment>
+ *     hb_GetZipComment( <szFile> ) --> <szComment>
  * $ARGUMENTS$
  *     <szFile>  File to get the comment from
  * $RETURNS$
@@ -126,7 +126,7 @@ PROCEDURE hb_SetZipComment( cComment )
  *     This function receives a valid zip file name as parameter,
  *     and returns the global comment stored within.
  * $EXAMPLES$
- *     ? "The comment in test.zip is ", HB_GETZIPCOMMENT( "test.zip" )
+ *     ? "The comment in test.zip is ", hb_GetZipComment( "test.zip" )
  * $STATUS$
  *     R
  * $COMPLIANCE$
@@ -134,7 +134,7 @@ PROCEDURE hb_SetZipComment( cComment )
  * $PLATFORMS$
  *     All
  * $FILES$
- *     Library is hbziparc.lib
+ *     Library is hbziparc
  * $END$
  */
 FUNCTION hb_GetZipComment( cFileName )
@@ -142,9 +142,11 @@ FUNCTION hb_GetZipComment( cFileName )
    LOCAL cComment
    LOCAL cExt
 
-   hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-   IF Empty( cExt )
-      cFileName += ".zip"
+   IF Set( _SET_DEFEXTENSIONS )
+      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+      IF Empty( cExt )
+         cFileName += ".zip"
+      ENDIF
    ENDIF
 
    IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
@@ -161,9 +163,11 @@ FUNCTION hb_GetFileCount( cFileName )
    LOCAL nEntries
    LOCAL cExt
 
-   hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-   IF Empty( cExt )
-      cFileName += ".zip"
+   IF Set( _SET_DEFEXTENSIONS )
+      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+      IF Empty( cExt )
+         cFileName += ".zip"
+      ENDIF
    ENDIF
 
    IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
@@ -180,9 +184,11 @@ FUNCTION hb_ZipWithPassword( cFileName )
    LOCAL hUnzip
    LOCAL cExt
 
-   hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-   IF Empty( cExt )
-      cFileName += ".zip"
+   IF Set( _SET_DEFEXTENSIONS )
+      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+      IF Empty( cExt )
+         cFileName += ".zip"
+      ENDIF
    ENDIF
 
    IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
@@ -214,9 +220,11 @@ FUNCTION hb_GetFilesInZip( cFileName, lVerbose )
 
    LOCAL aFiles := {}
 
-   hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-   IF Empty( cExt )
-      cFileName += ".zip"
+   IF Set( _SET_DEFEXTENSIONS )
+      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+      IF Empty( cExt )
+         cFileName += ".zip"
+      ENDIF
    ENDIF
 
    IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
@@ -257,13 +265,13 @@ FUNCTION hb_GetFilesInZip( cFileName, lVerbose )
 
 /* $DOC$
  * $FUNCNAME$
- *     HB_ZIPTESTPK()
+ *     hb_ZipTestPK()
  * $CATEGORY$
  *     Zip Functions
  * $ONELINER$
  *     Test pkSpanned zip files
  * $SYNTAX$
- *     HB_ZIPTESTPK( <cFile> ) --> <nReturnCode>
+ *     hb_ZipTestPK( <cFile> ) --> <nReturnCode>
  * $ARGUMENTS$
  *     <cFile>  File to be tested.
  * $RETURNS$
@@ -277,15 +285,15 @@ FUNCTION hb_GetFilesInZip( cFileName, lVerbose )
  *     <table>
  *     Error code     Meaning
  *     114            Incorrect Disk
- *     103            No Call back was set with HB_SETDISKZIP()
+ *     103            No Call back was set with hb_ZipTestPK()
  *     </table>
  *
  *     Call this function to determine if the disk inserted is the correct
  *     one before any other function.
  * $EXAMPLES$
- *     if HB_ZIPTESTPK( "A:\test22.zip" ) == 114
+ *     IF hb_ZipTestPK( "A:\test22.zip" ) == 114
  *        ? "Invalid Diskette"
- *     endif
+ *     ENDIF
  * $STATUS$
  *     R
  * $COMPLIANCE$
@@ -293,7 +301,7 @@ FUNCTION hb_GetFilesInZip( cFileName, lVerbose )
  * $PLATFORMS$
  *     All
  * $FILES$
- *     Library is hbziparc.lib
+ *     Library is hbziparc
  * $END$
  */
 FUNCTION hb_ZipTestPK( cFileName )
@@ -306,13 +314,13 @@ FUNCTION hb_ZipTestPK( cFileName )
 
 /* $DOC$
  * $FUNCNAME$
- *     HB_SETDISKZIP()
+ *     hb_SetDiskZip()
  * $CATEGORY$
  *     Zip Functions
  * $ONELINER$
  *     Set an codeblock for disk changes
  * $SYNTAX$
- *     HB_SETDISKZIP( <bBlock> ) ---> TRUE
+ *     hb_SetDiskZip( <bBlock> ) --> .T.
  * $ARGUMENTS$
  *     <bBlock> an Code block that contains an function that will be performed
  *     when the need of changing disk are need.
@@ -326,13 +334,13 @@ FUNCTION hb_ZipTestPK( cFileName )
  *     Set this function before opening archives that are in removable media.
  *     This block will be released, when the caller finish it job.
  * $EXAMPLES$
- *     HB_SETDISKZIP( {|nDisk| Alert( "Please insert disk no " + Str( nDisk, 3 ) ) } )
+ *     hb_SetDiskZip( {| nDisk | Alert( "Please insert disk no " + Str( nDisk, 3 ) ) } )
  * $COMPLIANCE$
  *     This function is a Harbour extension
  * $PLATFORMS$
  *     All
  * $FILES$
- *     Library is hbziparc.lib
+ *     Library is hbziparc
  * $END$
  */
 FUNCTION hb_SetDiskZip( bBlock )
@@ -355,13 +363,13 @@ FUNCTION TransferFromZip( cZipSrc, cZipDst, aFiles )
 
 /* $DOC$
  * $FUNCNAME$
- *     HB_SETBUFFER()
+ *     hb_SetBuffer()
  * $CATEGORY$
  *     Zip Functions
  * $ONELINER$
  *
  * $SYNTAX$
- *     HB_SETBUFFER( [<nWriteBuffer>], [<nExtractBuffer>], [<nReadBuffer>] ) --> NIL
+ *     hb_SetBuffer( [<nWriteBuffer>], [<nExtractBuffer>], [<nReadBuffer>] ) --> NIL
  * $ARGUMENTS$
  *     <nWriteBuffer>   The size of the write buffer.
  *
@@ -372,7 +380,7 @@ FUNCTION TransferFromZip( cZipSrc, cZipDst, aFiles )
  *     <NIL>            This function always returns NIL.
  * $DESCRIPTION$
  *     This function set the size of the internal buffers for write/extract/read
- *     operation
+ *     operation.
  *
  *     If the size of the buffer is smaller then the default, the function
  *     will automatically use the default values, which are 65535/16384/32768
@@ -381,7 +389,7 @@ FUNCTION TransferFromZip( cZipSrc, cZipDst, aFiles )
  *     This function be called before any of the compression/decompression
  *     functions.
  * $EXAMPLES$
- *     HB_SETBUFFER( 100000, 115214, 65242 )
+ *     hb_SetBuffer( 100000, 115214, 65242 )
  * $STATUS$
  *     R
  * $COMPLIANCE$
@@ -389,7 +397,7 @@ FUNCTION TransferFromZip( cZipSrc, cZipDst, aFiles )
  * $PLATFORMS$
  *     All
  * $FILES$
- *     Library is hbziparc.lib
+ *     Library is hbziparc
  * $END$
  */
 PROCEDURE hb_SetBuffer( nWriteBuffer, nExtractBuffer, nReadBuffer )
@@ -406,15 +414,15 @@ PROCEDURE hb_SetBuffer( nWriteBuffer, nExtractBuffer, nReadBuffer )
 /*
  * $DOC$
  * $FUNCNAME$
- *     HB_ZIPFILEBYTDSPAN()
+ *     hb_ZipFileByTDSpan()
  * $CATEGORY$
  *     Zip Functions
  * $ONELINER$
  *     Create a zip file
  * $SYNTAX$
- *     HB_ZIPFILEBYTDSPAN( <cFile> ,<cFileToCompress> | <aFiles>, <nLevel>,
+ *     hb_ZipFileByTDSpan( <cFile> ,<cFileToCompress> | <aFiles>, <nLevel>,
  *     <bBlock>, <lOverWrite>, <cPassword>, <iSize>, <lWithPath>, <lWithDrive>,
- *     <pFileProgress>) ---> lCompress
+ *     <pFileProgress>) --> lCompress
  * $ARGUMENTS$
  *     <cFile>   Name of the zip file
  *
@@ -458,7 +466,7 @@ PROCEDURE hb_SetBuffer( nWriteBuffer, nExtractBuffer, nReadBuffer )
  *     file. Default is to overwrite the file, otherwise if <lOverWrite> is
  *     false the new files are added to the <cFile>.
  *
- *     If <lWithPath> is used, it tells thats the path should also be stored '
+ *     If <lWithPath> is used, it tells thats the path should also be stored 
  *     with the file name. Default is false.
  *
  *     If <lWithDrive> is used, it tells thats the Drive and path should also
@@ -466,28 +474,28 @@ PROCEDURE hb_SetBuffer( nWriteBuffer, nExtractBuffer, nReadBuffer )
  *
  *     If <pFileProgress> is used, an Code block is evaluated, showing the total
  *     of that file has being processed.
- *     The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
+ *     The codeblock must be defined as follow {| nPos, nTotal | GaugeUpdate( aGauge1, nPos / nTotal ) }
  * $EXAMPLES$
- *     FUNCTION MAIN()
+ *     PROCEDURE Main()
  *
- *     IF HB_ZIPFILEBYTDSPAN( "test.zip", "test.prg" )
- *        qout( "File was successfully created" )
+ *     IF hb_ZipFileByTDSpan( "test.zip", "test.prg" )
+ *        QOut( "File was successfully created" )
  *     ENDIF
  *
- *     IF HB_ZIPFILEBYTDSPAN( "test1.zip", { "test.prg", "C:\windows\win.ini" } )
- *        qout( "File was successfully created" )
+ *     IF hb_ZipFileByTDSpan( "test1.zip", { "test.prg", "C:\windows\win.ini" } )
+ *        QOut( "File was successfully created" )
  *     ENDIF
  *
- *     IF HB_ZIPFILEBYTDSPAN( "test2.zip", { "test.prg", "C:\windows\win.ini" }, 9, {|nPos,cFile| qout(cFile) }, "hello",, 521421 )
- *        qout("File was successfully created" )
+ *     IF hb_ZipFileByTDSpan( "test2.zip", { "test.prg", "C:\windows\win.ini" }, 9, {| nPos, cFile | QOut( cFile ) }, "hello",, 521421 )
+ *        QOut( "File was successfully created" )
  *     ENDIF
  *
  *     aFiles := { "test.prg", "C:\windows\win.ini" }
  *     nLen   := Len( aFiles )
  *     aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "." )
  *     GaugeDisplay( aGauge )
- *     HB_ZIPFILEBYTDSPAN( "test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen) },, "hello",, 6585452 )
- *     Return NIL
+ *     hb_ZipFileByTDSpan( "test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos / nLen) },, "hello",, 6585452 )
+ *     RETURN
  * $STATUS$
  *     R
  * $COMPLIANCE$
@@ -495,7 +503,7 @@ PROCEDURE hb_SetBuffer( nWriteBuffer, nExtractBuffer, nReadBuffer )
  * $PLATFORMS$
  *     All
  * $FILES$
- *     Library is hbziparc.lib
+ *     Library is hbziparc
  * $END$
  */
 FUNCTION hb_ZipFileByTDSpan( cFileName, aFileToCompress, nLevel, bUpdate, lOverwrite, cPassword, nSpanSize, lWithPath, lWithDrive, bProgress, lFullPath, acExclude )
@@ -509,15 +517,15 @@ FUNCTION hb_ZipFileByTDSpan( cFileName, aFileToCompress, nLevel, bUpdate, lOverw
 /*
  * $DOC$
  * $FUNCNAME$
- *     HB_ZIPFILEBYPKSPAN()
+ *     hb_ZipFileByPKSpan()
  * $CATEGORY$
  *     Zip Functions
  * $ONELINER$
  *     Create a zip file on removable media
  * $SYNTAX$
- *     HB_ZIPFILEBYPKSPAN( <cFile>, <cFileToCompress> | <aFiles>, <nLevel>,
+ *     hb_ZipFileByPKSpan( <cFile>, <cFileToCompress> | <aFiles>, <nLevel>,
  *     <bBlock>, <lOverWrite>, <cPassword>, <lWithPath>, <lWithDrive>,
- *     <pFileProgress>) ---> lCompress
+ *     <pFileProgress> ) --> lCompress
  * $ARGUMENTS$
  *     <cFile>   Name of the zip file
  *
@@ -571,34 +579,34 @@ FUNCTION hb_ZipFileByTDSpan( cFileName, aFileToCompress, nLevel, bUpdate, lOverw
  *
  *     If <pFileProgress> is used, an Code block is evaluated, showing the total
  *     of that file has being processed.
- *     The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
+ *     The codeblock must be defined as follow {| nPos, nTotal | GaugeUpdate( aGauge1, nPos / nTotal ) }
  *
  *     Before calling this function, Set an Changedisk codeblock by calling
- *     the HB_SETDISKZIP().
+ *     the hb_SetDiskZip().
  * $EXAMPLES$
- *     FUNCTION MAIN()
+ *     PROCEDURE Main()
  *
- *     hb_setdiskzip( {|nDisk| Alert( "Please insert disk no " + Str( nDisk, 3 ) ) } )
+ *     hb_SetDiskZip( {| nDisk | Alert( "Please insert disk no " + Str( nDisk, 3 ) ) } )
  *
- *     IF HB_ZIPFILEBYPKSPAN( "A:\test.zip", "test.prg" )
- *        qout( "File was successfully created" )
+ *     IF hb_ZipFileByPKSpan( "A:\test.zip", "test.prg" )
+ *        QOut( "File was successfully created" )
  *     ENDIF
  *
- *     IF HB_ZIPFILEBYPKSPAN( "A:\test1.zip", { "test.prg", "C:\windows\win.ini" } )
- *        qout( "File was successfully created" )
+ *     IF hb_ZipFileByPKSpan( "A:\test1.zip", { "test.prg", "C:\windows\win.ini" } )
+ *        QOut( "File was successfully created" )
  *     ENDIF
  *
- *     IF HB_ZIPFILEBYPKSPAN( "test2.zip", { "test.prg", "C:\windows\win.ini"}, 9, {|nPos,cFile| qout(cFile) } )
- *        qout( "File was successfully created" )
+ *     IF hb_ZipFileByPKSpan( "test2.zip", { "test.prg", "C:\windows\win.ini" }, 9, {| nPos, cFile | QOut( cFile ) } )
+ *        QOut( "File was successfully created" )
  *     ENDIF
  *
  *     aFiles := { "test.prg", "C:\windows\win.ini" }
  *     nLen   := Len( aFiles )
  *     aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "." )
  *     GaugeDisplay( aGauge )
- *     HB_ZIPFILEBYPKSPAN( "F:\test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen ) },, "hello" )
- *     // assuming F:\ is a Zip Drive
- *     Return NIL
+ *     // assuming F: is a Zip Drive
+ *     hb_ZipFileByPKSpan( "F:\test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen ) },, "hello" )
+ *     RETURN
  * $STATUS$
  *     R
  * $COMPLIANCE$
@@ -606,7 +614,7 @@ FUNCTION hb_ZipFileByTDSpan( cFileName, aFileToCompress, nLevel, bUpdate, lOverw
  * $PLATFORMS$
  *     All
  * $FILES$
- *     Library is hbziparc.lib
+ *     Library is hbziparc
  * $END$
  */
 FUNCTION hb_ZipFileByPKSpan( ... )
@@ -618,15 +626,15 @@ FUNCTION hb_ZipFileByPKSpan( ... )
 /*
  * $DOC$
  * $FUNCNAME$
- *     HB_ZIPFILE()
+ *     hb_ZipFile()
  * $CATEGORY$
  *     Zip Functions
  * $ONELINER$
  *     Create a zip file
  * $SYNTAX$
- *     HB_ZIPFILE( <cFile>, <cFileToCompress> | <aFiles>, <nLevel>,
+ *     hb_ZipFile( <cFile>, <cFileToCompress> | <aFiles>, <nLevel>,
  *     <bBlock>, <lOverWrite>, <cPassword>, <lWithPath>, <lWithDrive>,
- *     <pFileProgress> ) ---> lCompress
+ *     <pFileProgress> ) --> lCompress
  * $ARGUMENTS$
  *     <cFile>   Name of the zip file to create
  *
@@ -679,29 +687,29 @@ FUNCTION hb_ZipFileByPKSpan( ... )
  *
  *     If <pFileProgress> is used, an Code block is evaluated, showing the total
  *     of that file has being processed.
- *     The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
+ *     The codeblock must be defined as follow {| nPos, nTotal | GaugeUpdate( aGauge1, nPos / nTotal ) }
  *
  * $EXAMPLES$
- *     FUNCTION MAIN()
+ *     PROCEDURE Main()
  *
- *     IF HB_ZIPFILE( "test.zip", "test.prg" )
- *        qout( "File was successfully created" )
+ *     IF hb_ZipFile( "test.zip", "test.prg" )
+ *        QOut( "File was successfully created" )
  *     ENDIF
  *
- *     IF HB_ZIPFILE( "test1.zip", { "test.prg", "C:\windows\win.ini" } )
- *        qout( "File was successfully created" )
+ *     IF hb_ZipFile( "test1.zip", { "test.prg", "C:\windows\win.ini" } )
+ *        QOut( "File was successfully created" )
  *     ENDIF
  *
- *     IF HB_ZIPFILE( "test2.zip", { "test.prg", "C:\windows\win.ini" }, 9, {|cFile,nPos,| qout(cFile) } )
- *        qout( "File was successfully created" )
+ *     IF hb_ZipFile( "test2.zip", { "test.prg", "C:\windows\win.ini" }, 9, {| cFile, nPos | QOut( cFile ) } )
+ *        QOut( "File was successfully created" )
  *     ENDIF
  *
  *     aFiles := { "test.prg", "C:\windows\win.ini" }
  *     nLen   := Len( aFiles )
  *     aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B" , "." )
  *     GaugeDisplay( aGauge )
- *     HB_ZIPFILE( "test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen ) },, "hello" )
- *     Return NIL
+ *     hb_ZipFile( "test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen ) },, "hello" )
+ *     RETURN
  * $STATUS$
  *     R
  * $COMPLIANCE$
@@ -709,7 +717,7 @@ FUNCTION hb_ZipFileByPKSpan( ... )
  * $PLATFORMS$
  *     All
  * $FILES$
- *     Library is hbziparc.lib
+ *     Library is hbziparc
  * $END$
  */
 FUNCTION hb_ZipFile( cFileName,;
@@ -749,9 +757,11 @@ FUNCTION hb_ZipFile( cFileName,;
    HB_SYMBOL_UNUSED( lFullPath )
    HB_SYMBOL_UNUSED( acExclude )
 
-   hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-   IF Empty( cExt )
-      cFileName += ".zip"
+   IF Set( _SET_DEFEXTENSIONS )
+      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+      IF Empty( cExt )
+         cFileName += ".zip"
+      ENDIF
    ENDIF
 
    IF lOverwrite .AND. hb_FileExists( cFileName )
@@ -852,14 +862,14 @@ FUNCTION hb_ZipFile( cFileName,;
 /*
  * $DOC$
  * $FUNCNAME$
- *     hb_UnzipFILE()
+ *     hb_UnzipFile()
  * $CATEGORY$
  *     Zip Functions
  * $ONELINER$
  *     Unzip a compressed file
  * $SYNTAX$
  *     hb_UnzipFILE( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>,
- *                   <cFile> | <aFile>, <pFileProgress> ) ---> lCompress
+ *                   <cFile> | <aFile>, <pFileProgress> ) --> lCompress
  * $ARGUMENTS$
  *     <cFile>   Name of the zip file to extract
  *
@@ -892,20 +902,20 @@ FUNCTION hb_ZipFile( cFileName,;
  *
  *     If <pFileProgress> is used, an Code block is evaluated, showing the total
  *     of that file has being processed.
- *     The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
+ *     The codeblock must be defined as follow {| nPos, nTotal | GaugeUpdate( aGauge1, nPos / nTotal ) }
  * $EXAMPLES$
- *     FUNCTION MAIN()
+ *     PROCEDURE Main()
  *
  *     aExtract := hb_GetFilesInZip( "test.zip" )  // extract all files in zip
- *     IF hb_UnzipFILE( "test.zip",,,, ".\", aExtract )
- *        qout("File was successfully extracted")
+ *     IF hb_UnzipFile( "test.zip",,,, ".\", aExtract )
+ *        QOut( "File was successfully extracted" )
  *     ENDIF
  *
  *     aExtract := hb_GetFilesInZip( "test2.zip" )  // extract all files in zip
- *     IF hb_UnzipFILE( "test2.zip", {|cFile| qout( cFile ) },,, ".\", aExtract )
- *        qout("File was successfully extracted")
+ *     IF hb_UnzipFile( "test2.zip", {| cFile | QOut( cFile ) },,, ".\", aExtract )
+ *        QOut( "File was successfully extracted" )
  *     ENDIF
- *     Return NIL
+ *     RETURN
  * $STATUS$
  *     R
  * $COMPLIANCE$
@@ -913,7 +923,7 @@ FUNCTION hb_ZipFile( cFileName,;
  * $PLATFORMS$
  *     All
  * $FILES$
- *     Library is hbziparc.lib
+ *     Library is hbziparc
  * $END$
  */
 FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles, bProgress )
@@ -932,9 +942,11 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
    HB_SYMBOL_UNUSED( lWithPath )
    HB_SYMBOL_UNUSED( bProgress )
 
-   hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-   IF Empty( cExt )
-      cFileName += ".zip"
+   IF Set( _SET_DEFEXTENSIONS )
+      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+      IF Empty( cExt )
+         cFileName += ".zip"
+      ENDIF
    ENDIF
 
    IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
@@ -986,13 +998,13 @@ FUNCTION hb_UnzipAllFile( ... )
 
 /* $DOC$
  * $FUNCNAME$
- *     HB_ZIPDELETEFILES()
+ *     hb_ZipDeleteFiles()
  * $CATEGORY$
  *     Zip Functions
  * $ONELINER$
  *     Delete files from an zip archive
  * $SYNTAX$
- *     HB_ZIPDELETEFILES( <cFile>, <cFiletoDelete> | <aFiles> | <nFilePos> ) --> <lDeleted>
+ *     hb_ZipDeleteFiles( <cFile>, <cFiletoDelete> | <aFiles> | <nFilePos> ) --> <lDeleted>
  * $ARGUMENTS$
  *     <cFile>  The name of the zip files from where the files will be deleted
  *
@@ -1008,7 +1020,7 @@ FUNCTION hb_UnzipAllFile( ... )
  * $DESCRIPTION$
  *     This  function removes files from an Zip archive.
  * $EXAMPLES$
- *     ? "has the file zipnew.i been deleted ", iif( HB_ZIPDELETEFILES( "\test23.zip", "zipnew.i" ), "Yes", "No" )
+ *     ? "has the file zipnew.i been deleted ", iif( hb_ZipDeleteFiles( "\test23.zip", "zipnew.i" ), "Yes", "No" )
  * $STATUS$
  *     R
  * $COMPLIANCE$
@@ -1016,7 +1028,7 @@ FUNCTION hb_UnzipAllFile( ... )
  * $PLATFORMS$
  *     All
  * $FILES$
- *     Library is hbziparc.lib
+ *     Library is hbziparc
  * $END$
  */
 
@@ -1027,9 +1039,11 @@ FUNCTION hb_ZipDeleteFiles( cFileName, acFiles )
    LOCAL cFileToProc
    LOCAL cExt
 
-   hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-   IF Empty( cExt )
-      cFileName += ".zip"
+   IF Set( _SET_DEFEXTENSIONS )
+      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+      IF Empty( cExt )
+         cFileName += ".zip"
+      ENDIF
    ENDIF
 
    IF hb_IsString( acFiles )

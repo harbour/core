@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-03 20:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparc/hbziparc.prg
+     ! Some formatting to docs.
+     + Now .zip extension will only be added if _SET_DEFEXTENSIONS 
+       is TRUE (the default).
+
 2008-09-03 19:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparc/hbziparc.prg
      ! RTE fixed when not specifying some optional params.
