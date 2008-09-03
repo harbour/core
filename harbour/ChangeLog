@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-03 15:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/Makefile
+   * contrib/hbziparch/common.mak
+   - contrib/hbziparch/hbziparc.c
+   - contrib/hbziparch/hbxdirec.c
+   * contrib/hbziparch/hbzipnew.cpp
+     * Merged Harbour C parts to .cpp file.
+     * Made full low-level interface static.
+
 2008-09-03 15:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparch/hbziparc.c
    * contrib/hbziparch/hbzipnew.cpp

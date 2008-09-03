@@ -20,8 +20,6 @@ ifeq ($(HB_WITH_ZIPARCH),yes)
 PRG_HEADERS = \
 
 C_SOURCES = \
-	hbziparc.c \
-	hbxdirec.c \
 
 CPP_SOURCES = \
 	hbzipnew.cpp \
