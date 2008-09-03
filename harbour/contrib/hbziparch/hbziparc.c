@@ -60,16 +60,13 @@ HB_EXTERN_BEGIN
 
 extern void     hb_fsDirectory( PHB_ITEM pDir, char * szSkleton, char * szAttributes, BOOL bDirOnly, BOOL bFullPath );
 
+extern char *   hb_FNAddZipExt( const char * szFile );
 extern PHB_ITEM hb_GetFileNamesFromZip( char * szFile, BOOL bVerbose );
 extern ULONG    hb_GetNumberofFilestoUnzip( char * szFile );
 extern BOOL     hb_TransferFilesFromzip( char * szSource, char * szDest, PHB_ITEM pArray );
 extern BOOL     hb_SetCallbackFunc( PHB_ITEM pFunc );
-extern BOOL     hb_CmpPkSpan( char * szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock, BOOL bOverWrite, char * szPassWord, BOOL bPath, BOOL bDrive, PHB_ITEM pProgress );
-extern BOOL     hb_CmpTdSpan( char * szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock, BOOL bOverWrite, char * szPassWord, long iSpanSize, BOOL bPath, BOOL bDrive, PHB_ITEM pProgress );
-extern BOOL     hb_CompressFile( char * szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock, BOOL bOverWrite, char * szPassWord, BOOL bPath, BOOL bDrive, PHB_ITEM pProgress );
-extern BOOL     hb_UnzipAll( char * szFile, PHB_ITEM pBlock, BOOL bWithPath, char * szPassWord, char * pbyBuffer, PHB_ITEM pDiskBlock, PHB_ITEM pProgress );
-extern BOOL     hb_UnzipSel( char * szFile, PHB_ITEM pBlock, BOOL bWithPath, char * szPassWord, const char * szPath, PHB_ITEM pArray, PHB_ITEM pProgress );
-extern BOOL     hb_UnzipSelIndex( char * szFile, PHB_ITEM pBlock, BOOL bWithPath, char * szPassWord, char * szPath, PHB_ITEM pSelArray, PHB_ITEM pProgress );
+extern BOOL     hb_CompressFile( char * szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock, BOOL bOverwrite, char * szPassword, long iSpanSize, BOOL bPath, BOOL bDrive, PHB_ITEM pProgress, BOOL bSpan );
+extern BOOL     hb_Unzip( char * szFile, PHB_ITEM pBlock, BOOL bWithPath, char * szPassword, const char * szPath, PHB_ITEM pArray, PHB_ITEM pProgress );
 extern BOOL     hb_DeleteSel( char * szFile, PHB_ITEM pArray );
 extern int      hb_CheckSpanMode( char * szFile );
 extern void     hb_SetZipBuff( int a, int b, int c );
@@ -80,22 +77,6 @@ extern void     hb_SetZipReadOnly( BOOL bRead );
 
 HB_EXTERN_END
 
-static void hb_ClearArchiveFlag( PHB_ITEM pProcFiles )
-{
-   ULONG nPos, nLen = hb_arrayLen( pProcFiles );
-
-   for( nPos = 0; nPos < nLen; nPos++ )
-   {
-      ULONG nAttr;
-
-      hb_fsGetAttr( ( BYTE * ) hb_arrayGetCPtr( pProcFiles, nPos + 1 ), &nAttr );
-      /* TOFIX: Doesn't work for some reason. 
-                May be a problem or property of hb_fsSetAttr(). */
-      nAttr &= ~HB_FA_ARCHIVE;
-      hb_fsSetAttr( ( BYTE * ) hb_arrayGetCPtr( pProcFiles, nPos + 1 ), nAttr );
-   }
-}
-
 static void UnzipCreateArray( const char * szSkleton, PHB_ITEM pProcFiles, PHB_ITEM pZipFiles )
 {
    ULONG nPos, nLen = hb_arrayLen( pZipFiles );
@@ -103,31 +84,31 @@ static void UnzipCreateArray( const char * szSkleton, PHB_ITEM pProcFiles, PHB_I
    for( nPos = 0; nPos < nLen; nPos++ )
    {
       const char * szEntry = hb_arrayGetCPtr( pZipFiles, nPos + 1 );
-      BOOL bOkAdd = TRUE;
+      BOOL bAdd = TRUE;
 
       if( szSkleton )
-         bOkAdd = hb_strMatchFile( szEntry, ( const char * ) szSkleton );
+         bAdd = hb_strMatchFile( szEntry, ( const char * ) szSkleton );
 
-      if( ! bOkAdd )
+      if( ! bAdd )
       {
          PHB_FNAME pFileName = hb_fsFNameSplit( szEntry );
 
          if( pFileName->szName )
          {
             char * pszFile = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-            pFileName->szPath = ( char * ) "";
+            pFileName->szPath = "";
             hb_fsFNameMerge( pszFile, pFileName );
-            bOkAdd = hb_strMatchFile( szSkleton, pszFile );
+            bAdd = hb_strMatchFile( szSkleton, pszFile );
             hb_xfree( pszFile );
 
-            if( ! bOkAdd )
-               bOkAdd = hb_strMatchFile( szSkleton, szEntry );
+            if( ! bAdd )
+               bAdd = hb_strMatchFile( szSkleton, szEntry );
          }
 
          hb_xfree( pFileName );
       }
 
-      if( bOkAdd )
+      if( bAdd )
       {
          PHB_ITEM pTemp = hb_itemPutC( NULL, szEntry );
          hb_arrayAddForward( pProcFiles, pTemp );
@@ -197,17 +178,17 @@ static PHB_ITEM ZipCreateExclude( PHB_ITEM pExcludeParam )
             {
                PHB_ITEM pDirFiles = hb_itemNew( NULL );
                ULONG nDirPos, nDirLen;
-      
+
                hb_fsDirectory( pDirFiles, szExclude, NULL, 0, TRUE );
                nDirLen = hb_arrayLen( pDirFiles );
-      
+
                for( nDirPos = 0; nDirPos < nDirLen; nDirPos++ )
                {
                   PHB_ITEM pTemp = hb_itemPutC( NULL, hb_arrayGetCPtr( hb_arrayGetItemPtr( pDirFiles, nDirPos + 1 ), F_NAME ) );
                   hb_arrayAddForward( pExcludeFiles, pTemp );
                   hb_itemRelease( pTemp );
                }
-      
+
                hb_itemRelease( pDirFiles );
             }
             else
@@ -223,49 +204,49 @@ static PHB_ITEM ZipCreateExclude( PHB_ITEM pExcludeParam )
    return pExcludeFiles;
 }
 
-static PHB_ITEM ZipCreateArray( PHB_ITEM pParam, BOOL bFullPath, PHB_ITEM pExcludeParam )
+static PHB_ITEM ZipCreateArray( PHB_ITEM pParamFiles, BOOL bFullPath, PHB_ITEM pExcludeParam )
 {
    PHB_ITEM pProcFiles = hb_itemArrayNew( 0 );
 
-   if( pParam )
+   if( pParamFiles )
    {
       PHB_ITEM pExcludeFiles = ZipCreateExclude( pExcludeParam );
       PHB_ITEM pParamArray;
       PHB_ITEM pDirFiles = hb_itemNew( NULL );
-     
+
       ULONG nArrayPos, nArrayLen;
 
-      if( HB_IS_STRING( pParam ) )
+      if( HB_IS_STRING( pParamFiles ) )
       {
          PHB_ITEM pTemp;
-      
+
          pParamArray = hb_itemArrayNew( 0 );
-      
-         pTemp = hb_itemPutC( NULL, hb_itemGetCPtr( pParam ) );
+
+         pTemp = hb_itemPutC( NULL, hb_itemGetCPtr( pParamFiles ) );
          hb_arrayAddForward( pParamArray, pTemp );
          hb_itemRelease( pTemp );
       }
       else
-         pParamArray = hb_arrayClone( pParam );
-      
+         pParamArray = hb_arrayClone( pParamFiles );
+
       nArrayLen = hb_arrayLen( pParamArray );
-      
+
       for( nArrayPos = 0; nArrayPos < nArrayLen; nArrayPos++ )
       {
          char * szArrEntry = hb_arrayGetCPtr( pParamArray, nArrayPos + 1 );
-      
-         if( strchr( szArrEntry, '*' ) || 
+
+         if( strchr( szArrEntry, '*' ) ||
              strchr( szArrEntry, '?' ) )
          {
             ULONG nPos, nLen;
-      
+
             hb_fsDirectory( pDirFiles, szArrEntry, NULL, 0, bFullPath );
             nLen = hb_arrayLen( pDirFiles );
-      
+
             for( nPos = 0; nPos < nLen; nPos++ )
             {
                char * pszEntry = hb_arrayGetCPtr( hb_arrayGetItemPtr( pDirFiles, nPos + 1 ), F_NAME );
-      
+
                if( ZipTestExclude( pszEntry, pExcludeFiles ) )
                {
                   PHB_ITEM pTemp = hb_itemPutC( NULL, pszEntry );
@@ -273,7 +254,7 @@ static PHB_ITEM ZipCreateArray( PHB_ITEM pParam, BOOL bFullPath, PHB_ITEM pExclu
                   hb_itemRelease( pTemp );
                }
             }
-      
+
             hb_itemClear( pDirFiles );
          }
          else
@@ -283,27 +264,13 @@ static PHB_ITEM ZipCreateArray( PHB_ITEM pParam, BOOL bFullPath, PHB_ITEM pExclu
             hb_itemRelease( pTemp );
          }
       }
-      
+
       hb_itemRelease( pParamArray );
       hb_itemRelease( pDirFiles );
       hb_itemRelease( pExcludeFiles );
    }
 
    return pProcFiles;
-}
-
-static char * hb_FNAddZipExt( const char * szFile )
-{
-   PHB_FNAME pZipFileName = hb_fsFNameSplit( szFile );
-   char * pszZipFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-
-   if( ! pZipFileName->szExtension )
-      pZipFileName->szExtension = ".zip";
-
-   hb_fsFNameMerge( pszZipFileName, pZipFileName );
-   hb_xfree( pZipFileName );
-
-   return pszZipFileName;
 }
 
 /*
@@ -411,160 +378,22 @@ HB_FUNC( HB_ZIPFILE )
    if( ISCHAR( 1 ) )
    {
       PHB_ITEM pProcFiles = ZipCreateArray( hb_param( 2, HB_IT_STRING | HB_IT_ARRAY ),
-                                            ISLOG( 11 ) ? hb_parl( 11 ) : TRUE, 
+                                            ISLOG( 11 ) ? hb_parl( 11 ) : TRUE,
                                             hb_param( 10, HB_IT_STRING | HB_IT_ARRAY ) );
 
       if( hb_arrayLen( pProcFiles ) )
       {
-         char * pszZipFileName = hb_FNAddZipExt( hb_parc( 1 ) );
-
-         bReturn = hb_CompressFile( pszZipFileName,
+         bReturn = hb_CompressFile( hb_parc( 1 ),
                                     pProcFiles,
                                     ISNUM( 3 ) ? hb_parni( 3 ) : -1,
                                     hb_param( 4, HB_IT_BLOCK ),
                                     hb_parl( 5 ),
                                     hb_parc( 6 ),
+                                    0,
                                     hb_parl( 7 ),
                                     hb_parl( 8 ),
-                                    hb_param( 9, HB_IT_BLOCK ) );
-
-         if( bReturn )
-            hb_ClearArchiveFlag( pProcFiles );
-
-         hb_xfree( pszZipFileName );
-      }
-
-      hb_itemRelease( pProcFiles );
-   }
-
-   hb_retl( bReturn );
-}
-
-/*
- * $DOC$
- * $FUNCNAME$
- *     HB_ZIPFILEBYTDSPAN()
- * $CATEGORY$
- *     Zip Functions
- * $ONELINER$
- *     Create a zip file
- * $SYNTAX$
- *     HB_ZIPFILEBYTDSPAN( <cFile> ,<cFileToCompress> | <aFiles>, <nLevel>,
- *     <bBlock>, <lOverWrite>, <cPassword>, <iSize>, <lWithPath>, <lWithDrive>,
- *     <pFileProgress>) ---> lCompress
- * $ARGUMENTS$
- *     <cFile>   Name of the zip file
- *
- *     <cFileToCompress>  Name of a file to Compress, Drive and/or path
- *     can be used
- *         _or_
- *     <aFiles>  An array containing files to compress, Drive and/or path
- *     can be used
- *
- *     <nLevel>  Compression level ranging from 0 to 9
- *
- *     <bBlock>  Code block to execute while compressing
- *
- *     <lOverWrite>  Toggle to overwrite the file if exists
- *
- *     <cPassword> Password to encrypt the files
- *
- *     <iSize> Size of the archive, in bytes. Default is 1457664 bytes
- *
- *     <lWithPath> Toggle to store the path or not
- *
- *     <lWithDrive> Toggle to store the Drive letter and path or not
- *
- *     <pFileProgress> Code block for File Progress
- * $RETURNS$
- *     <lCompress>  .T. if file was create, otherwise .F.
- * $DESCRIPTION$
- *     This function creates a zip file named <cFile>. If the extension
- *     is omitted, .zip will be assumed. If the second parameter is a
- *     character string, this file will be added to the zip file. If the
- *     second parameter is an array, all file names contained in <aFiles>
- *     will be compressed.
- *
- *     If <nLevel> is used, it determines the compression type where 0 means
- *     no compression and 9 means best compression.
- *
- *     If <bBlock> is used, every time the file is opened to compress it
- *     will evaluate bBlock. Parameters of bBlock are cFile and nPos.
- *
- *     If <lOverWrite> is used, it toggles to overwrite or not the existing
- *     file. Default is to overwrite the file, otherwise if <lOverWrite> is
- *     false the new files are added to the <cFile>.
- *
- *     If <lWithPath> is used, it tells thats the path should also be stored '
- *     with the file name. Default is false.
- *
- *     If <lWithDrive> is used, it tells thats the Drive and path should also
- *     be stored with the file name. Default is false.
- *
- *     If <pFileProgress> is used, an Code block is evaluated, showing the total
- *     of that file has being processed.
- *     The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
- * $EXAMPLES$
- *     FUNCTION MAIN()
- *
- *     IF HB_ZIPFILEBYTDSPAN( "test.zip", "test.prg" )
- *        qout( "File was successfully created" )
- *     ENDIF
- *
- *     IF HB_ZIPFILEBYTDSPAN( "test1.zip", { "test.prg", "C:\windows\win.ini" } )
- *        qout( "File was successfully created" )
- *     ENDIF
- *
- *     IF HB_ZIPFILEBYTDSPAN( "test2.zip", { "test.prg", "C:\windows\win.ini" }, 9, {|nPos,cFile| qout(cFile) }, "hello",, 521421 )
- *        qout("File was successfully created" )
- *     ENDIF
- *
- *     aFiles := { "test.prg", "C:\windows\win.ini" }
- *     nLen   := Len( aFiles )
- *     aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "." )
- *     GaugeDisplay( aGauge )
- *     HB_ZIPFILEBYTDSPAN( "test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen) },, "hello",, 6585452 )
- *     Return NIL
- * $STATUS$
- *     R
- * $COMPLIANCE$
- *     This function is a Harbour extension
- * $PLATFORMS$
- *     All
- * $FILES$
- *     Library is hbziparch.lib
- * $END$
- */
-
-HB_FUNC( HB_ZIPFILEBYTDSPAN )
-{
-   BOOL bReturn = FALSE;
-
-   if( ISCHAR( 1 ) )
-   {
-      PHB_ITEM pProcFiles = ZipCreateArray( hb_param( 2, HB_IT_STRING | HB_IT_ARRAY ),
-                                            ISLOG( 12 ) ? hb_parl( 12 ) : TRUE, 
-                                            hb_param( 11, HB_IT_STRING | HB_IT_ARRAY ) );
-
-      if( hb_arrayLen( pProcFiles ) )
-      {
-         char * pszZipFileName = hb_FNAddZipExt( hb_parc( 1 ) );
-
-         bReturn = hb_CmpTdSpan( pszZipFileName,
-                                 pProcFiles,
-                                 ISNUM( 3 ) ? hb_parni( 3 ) : -1,
-                                 hb_param( 4, HB_IT_BLOCK ),
-                                 hb_parl( 5 ),
-                                 hb_parc( 6 ),
-                                 hb_parnl( 7 ),
-                                 hb_parl( 8 ),
-                                 hb_parl( 9 ),
-                                 hb_param( 10, HB_IT_BLOCK ) );
-
-         if( bReturn )
-            hb_ClearArchiveFlag( pProcFiles );
-
-         hb_xfree( pszZipFileName );
+                                    hb_param( 9, HB_IT_BLOCK ), 
+                                    FALSE );
       }
 
       hb_itemRelease( pProcFiles );
@@ -684,27 +513,149 @@ HB_FUNC( HB_ZIPFILEBYPKSPAN )
    if( ISCHAR( 1 ) )
    {
       PHB_ITEM pProcFiles = ZipCreateArray( hb_param( 2, HB_IT_STRING | HB_IT_ARRAY ),
-                                            ISLOG( 11 ) ? hb_parl( 11 ) : TRUE, 
+                                            ISLOG( 11 ) ? hb_parl( 11 ) : TRUE,
                                             hb_param( 10, HB_IT_STRING | HB_IT_ARRAY ) );
 
       if( hb_arrayLen( pProcFiles ) )
       {
-         char * pszZipFileName = hb_FNAddZipExt( hb_parc( 1 ) );
+         bReturn = hb_CompressFile( hb_parc( 1 ),
+                                    pProcFiles,
+                                    ISNUM( 3 ) ? hb_parni( 3 ) : -1,
+                                    hb_param( 4, HB_IT_BLOCK ),
+                                    hb_parl( 5 ),
+                                    hb_parc( 6 ),
+                                    0,
+                                    hb_parl( 7 ),
+                                    hb_parl( 8 ),
+                                    hb_param( 9, HB_IT_BLOCK ),
+                                    TRUE );
+      }
 
-         bReturn = hb_CmpPkSpan( pszZipFileName,
-                                 pProcFiles,
-                                 ISNUM( 3 ) ? hb_parni( 3 ) : -1,
-                                 hb_param( 4, HB_IT_BLOCK ),
-                                 hb_parl( 5 ),
-                                 hb_parc( 6 ),
-                                 hb_parl( 7 ),
-                                 hb_parl( 8 ),
-                                 hb_param( 9, HB_IT_BLOCK ) );
+      hb_itemRelease( pProcFiles );
+   }
 
-         if( bReturn )
-            hb_ClearArchiveFlag( pProcFiles );
+   hb_retl( bReturn );
+}
 
-         hb_xfree( pszZipFileName );
+/*
+ * $DOC$
+ * $FUNCNAME$
+ *     HB_ZIPFILEBYTDSPAN()
+ * $CATEGORY$
+ *     Zip Functions
+ * $ONELINER$
+ *     Create a zip file
+ * $SYNTAX$
+ *     HB_ZIPFILEBYTDSPAN( <cFile> ,<cFileToCompress> | <aFiles>, <nLevel>,
+ *     <bBlock>, <lOverWrite>, <cPassword>, <iSize>, <lWithPath>, <lWithDrive>,
+ *     <pFileProgress>) ---> lCompress
+ * $ARGUMENTS$
+ *     <cFile>   Name of the zip file
+ *
+ *     <cFileToCompress>  Name of a file to Compress, Drive and/or path
+ *     can be used
+ *         _or_
+ *     <aFiles>  An array containing files to compress, Drive and/or path
+ *     can be used
+ *
+ *     <nLevel>  Compression level ranging from 0 to 9
+ *
+ *     <bBlock>  Code block to execute while compressing
+ *
+ *     <lOverWrite>  Toggle to overwrite the file if exists
+ *
+ *     <cPassword> Password to encrypt the files
+ *
+ *     <iSize> Size of the archive, in bytes. Default is 1457664 bytes
+ *
+ *     <lWithPath> Toggle to store the path or not
+ *
+ *     <lWithDrive> Toggle to store the Drive letter and path or not
+ *
+ *     <pFileProgress> Code block for File Progress
+ * $RETURNS$
+ *     <lCompress>  .T. if file was create, otherwise .F.
+ * $DESCRIPTION$
+ *     This function creates a zip file named <cFile>. If the extension
+ *     is omitted, .zip will be assumed. If the second parameter is a
+ *     character string, this file will be added to the zip file. If the
+ *     second parameter is an array, all file names contained in <aFiles>
+ *     will be compressed.
+ *
+ *     If <nLevel> is used, it determines the compression type where 0 means
+ *     no compression and 9 means best compression.
+ *
+ *     If <bBlock> is used, every time the file is opened to compress it
+ *     will evaluate bBlock. Parameters of bBlock are cFile and nPos.
+ *
+ *     If <lOverWrite> is used, it toggles to overwrite or not the existing
+ *     file. Default is to overwrite the file, otherwise if <lOverWrite> is
+ *     false the new files are added to the <cFile>.
+ *
+ *     If <lWithPath> is used, it tells thats the path should also be stored '
+ *     with the file name. Default is false.
+ *
+ *     If <lWithDrive> is used, it tells thats the Drive and path should also
+ *     be stored with the file name. Default is false.
+ *
+ *     If <pFileProgress> is used, an Code block is evaluated, showing the total
+ *     of that file has being processed.
+ *     The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
+ * $EXAMPLES$
+ *     FUNCTION MAIN()
+ *
+ *     IF HB_ZIPFILEBYTDSPAN( "test.zip", "test.prg" )
+ *        qout( "File was successfully created" )
+ *     ENDIF
+ *
+ *     IF HB_ZIPFILEBYTDSPAN( "test1.zip", { "test.prg", "C:\windows\win.ini" } )
+ *        qout( "File was successfully created" )
+ *     ENDIF
+ *
+ *     IF HB_ZIPFILEBYTDSPAN( "test2.zip", { "test.prg", "C:\windows\win.ini" }, 9, {|nPos,cFile| qout(cFile) }, "hello",, 521421 )
+ *        qout("File was successfully created" )
+ *     ENDIF
+ *
+ *     aFiles := { "test.prg", "C:\windows\win.ini" }
+ *     nLen   := Len( aFiles )
+ *     aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "." )
+ *     GaugeDisplay( aGauge )
+ *     HB_ZIPFILEBYTDSPAN( "test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen) },, "hello",, 6585452 )
+ *     Return NIL
+ * $STATUS$
+ *     R
+ * $COMPLIANCE$
+ *     This function is a Harbour extension
+ * $PLATFORMS$
+ *     All
+ * $FILES$
+ *     Library is hbziparch.lib
+ * $END$
+ */
+
+HB_FUNC( HB_ZIPFILEBYTDSPAN )
+{
+   BOOL bReturn = FALSE;
+
+   if( ISCHAR( 1 ) )
+   {
+      PHB_ITEM pProcFiles = ZipCreateArray( hb_param( 2, HB_IT_STRING | HB_IT_ARRAY ),
+                                            ISLOG( 12 ) ? hb_parl( 12 ) : TRUE,
+                                            hb_param( 11, HB_IT_STRING | HB_IT_ARRAY ) );
+
+      if( hb_arrayLen( pProcFiles ) )
+      {
+         bReturn = hb_CompressFile( hb_parc( 1 ),
+                                    pProcFiles,
+                                    ISNUM( 3 ) ? hb_parni( 3 ) : -1,
+                                    hb_param( 4, HB_IT_BLOCK ),
+                                    hb_parl( 5 ),
+                                    hb_parc( 6 ),
+                                    ISNUM( 7 ) ? hb_parnl( 7 ) : 1457664,
+                                    hb_parl( 8 ),
+                                    hb_parl( 9 ),
+                                    hb_param( 10, HB_IT_BLOCK ),
+                                    TRUE );
       }
 
       hb_itemRelease( pProcFiles );
@@ -788,132 +739,40 @@ HB_FUNC( HB_UNZIPFILE )
    if( ISCHAR( 1 ) )
    {
       char * pszZipFileName = hb_FNAddZipExt( hb_parc( 1 ) );
+      PHB_ITEM pParamFiles = hb_param( 6, HB_IT_STRING | HB_IT_NUMERIC | HB_IT_ARRAY );
+      PHB_ITEM pProcFiles = hb_itemArrayNew( 0 );
+      PHB_ITEM pZipFiles = hb_GetFileNamesFromZip( pszZipFileName, FALSE );
+      ULONG nZipLen = hb_arrayLen( pZipFiles );
 
-      if( hb_CheckSpanMode( pszZipFileName ) <= 0 )
+      if( pParamFiles )
       {
-         PHB_ITEM pUnzip = hb_param( 6, HB_IT_STRING | HB_IT_ARRAY );
-         PHB_ITEM pProcFiles = hb_itemArrayNew( 0 );
-         PHB_ITEM pZipFiles = hb_GetFileNamesFromZip( pszZipFileName, FALSE );
-
-         if( ! pUnzip )
-            UnzipCreateArray( "*", pProcFiles, pZipFiles );
-         else if( HB_IS_ARRAY( pUnzip ) )
+         if( HB_IS_ARRAY( pParamFiles ) )
          {
-            ULONG nPos, nLen = hb_arrayLen( pUnzip );
-        
+            ULONG nPos, nLen = hb_arrayLen( pParamFiles );
+         
             for( nPos = 0; nPos < nLen; nPos++ )
-               UnzipCreateArray( hb_arrayGetCPtr( pUnzip, nPos + 1 ), pProcFiles, pZipFiles );
+            {
+               HB_TYPE type = hb_arrayGetType( pParamFiles, nPos + 1 );
+         
+               if( type & HB_IT_NUMERIC )
+               {
+                  ULONG nZipPos = hb_arrayGetNL( pParamFiles, nPos + 1 );
+         
+                  if( nZipPos > 0 && nZipPos <= nZipLen )
+                  {
+                     PHB_ITEM pTemp = hb_itemPutNL( NULL, nZipPos );
+                     hb_arrayAddForward( pProcFiles, pTemp );
+                     hb_itemRelease( pTemp );
+                  }
+               }
+               else if( type & HB_IT_STRING )
+                  UnzipCreateArray( hb_arrayGetCPtr( pParamFiles, nPos + 1 ), pProcFiles, pZipFiles );
+            }
          }
-         else
-            UnzipCreateArray( hb_itemGetCPtr( pUnzip ), pProcFiles, pZipFiles );
-        
-         if( hb_arrayLen( pProcFiles ) )
+         else if( HB_IS_NUMERIC( pParamFiles ) )
          {
-            bReturn = hb_UnzipSel( pszZipFileName,
-                                   hb_param( 2, HB_IT_BLOCK ),
-                                   hb_parl( 3 ),
-                                   hb_parc( 4 ),
-                                   hb_parc( 5 ),
-                                   pProcFiles,
-                                   hb_param( 7, HB_IT_BLOCK ) );
-         }
-
-         hb_itemRelease( pZipFiles );
-         hb_itemRelease( pProcFiles );
-      }
-      
-      hb_xfree( pszZipFileName );
-   }
-
-   hb_retl( bReturn );
-}
-
-/*
- * $DOC$
- * $FUNCNAME$
- *     HB_UNZIPFILEINDEX()
- * $CATEGORY$
- *     Zip Functions
- * $ONELINER$
- *     Unzip a compressed file referenced by it number in the zipfile
- * $SYNTAX$
- *     HB_UNZIPFILEINDEX( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>,
- *     <nFile> | <anFiles>, <pFileProgress> ) ---> lCompress
- * $ARGUMENTS$
- *     <cFile>   Name of the zip file
- *
- *     <bBlock>  Code block to execute while compressing
- *
- *     <lWithPath> Toggle to create directory if needed
- *
- *     <cPassWord> Password to use to extract files
- *
- *     <cPath>    Path to extract the files to - mandatory.
- *
- *     <cFile> | <anFiles> A File or Array of files position to extract - mandatory
- *
- *     <pFileProgress> Code block for File Progress
- * $RETURNS$
- *     <lCompress>  .T. if all file was successfully restored, otherwise .F.
- * $DESCRIPTION$
- *     This function restores all files contained inside the <cFile>.
- *     If the extension is omitted, .zip will be assumed. If a file already
- *     exists, it will be overwritten.
- *
- *     If <bBlock> is used, every time the file is opened to compress it
- *     will evaluate bBlock. Parameters of bBlock are cFile and nPos.
- *
- *     The <cPath> is a mandatory parameter. Set to ".\" to extract to the
- *     current dir
- *
- *     If <cFile> or <anFiles> are not provided, no files will be extracted!
- *     Make sure you provide the file or files you want extracted
- *
- *     If <pFileProgress> is used, an Code block is evaluated, showing the total
- *     of that file has being processed.
- *     The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
- * $EXAMPLES$
- *     FUNCTION MAIN()
- *
- *     IF HB_UNZIPFILEINDEX( "test.zip",,,, ".\", 1 )
- *        qout( "File was successfully created" )
- *     ENDIF
- *
- *     IF HB_UNZIPFILEINDEX( "test2.zip", {|cFile| qout(cFile) },,, ".\", { 1, 2 } )
- *        qout( "File was successfully created" )
- *     ENDIF
- *
- *     Return NIL
- * $STATUS$
- *     R
- * $COMPLIANCE$
- *     This function is a Harbour extension
- * $PLATFORMS$
- *     All
- * $FILES$
- *     Library is hbziparch.lib
- * $END$
- */
-
-HB_FUNC( HB_UNZIPFILEINDEX )
-{
-   BOOL bReturn = FALSE;
-
-   if( ISCHAR( 1 ) )
-   {
-      PHB_ITEM pDelZip = hb_param( 6, HB_IT_NUMERIC | HB_IT_ARRAY );
-
-      if( pDelZip )
-      {
-         char * pszZipFileName = hb_FNAddZipExt( hb_parc( 1 ) );
-         PHB_ITEM pZipFiles = hb_GetFileNamesFromZip( pszZipFileName, FALSE );
-         ULONG nZipLen = hb_arrayLen( pZipFiles );
-         PHB_ITEM pProcFiles = hb_itemArrayNew( 0 );
-
-         if( HB_IS_NUMERIC( pDelZip ) )
-         {
-            ULONG nZipPos = hb_itemGetNL( pDelZip );
-
+            ULONG nZipPos = hb_itemGetNL( pParamFiles );
+         
             if( nZipPos > 0 && nZipPos <= nZipLen )
             {
                PHB_ITEM pTemp = hb_itemPutNL( NULL, nZipPos );
@@ -922,60 +781,36 @@ HB_FUNC( HB_UNZIPFILEINDEX )
             }
          }
          else
-         {
-            ULONG nPos, nLen = hb_arrayLen( pDelZip );
-
-            for( nPos = 0; nPos < nLen; nPos++ )
-            {
-               ULONG nZipPos = hb_arrayGetNL( pDelZip, nPos + 1 );
-
-               if( nZipPos > 0 && nZipPos <= nZipLen )
-               {
-                  PHB_ITEM pTemp = hb_itemPutNL( NULL, nZipPos );
-                  hb_arrayAddForward( pProcFiles, pTemp );
-                  hb_itemRelease( pTemp );
-               }
-            }
-         }
-
-         if( hb_arrayLen( pProcFiles ) )
-         {
-            bReturn = hb_UnzipSelIndex( pszZipFileName,
-                                        hb_param( 2, HB_IT_BLOCK ),
-                                        hb_parl( 3 ),
-                                        hb_parc( 4 ),
-                                        hb_parc( 5 ),
-                                        pProcFiles,
-                                        hb_param( 7, HB_IT_BLOCK ) );
-         }
-
-         hb_itemRelease( pProcFiles );
-         hb_itemRelease( pZipFiles );
-         hb_xfree( pszZipFileName );
+            UnzipCreateArray( hb_itemGetCPtr( pParamFiles ), pProcFiles, pZipFiles );
       }
+
+      if( ! pParamFiles || hb_arrayLen( pProcFiles ) )
+      {
+         bReturn = hb_Unzip( pszZipFileName,
+                             hb_param( 2, HB_IT_BLOCK ),
+                             hb_parl( 3 ),
+                             hb_parc( 4 ),
+                             hb_parc( 5 ),
+                             pParamFiles ? pProcFiles : NULL,
+                             hb_param( 7, HB_IT_BLOCK ) );
+      }
+
+      hb_itemRelease( pZipFiles );
+      hb_itemRelease( pProcFiles );
+      hb_xfree( pszZipFileName );
    }
 
    hb_retl( bReturn );
 }
 
+HB_FUNC( HB_UNZIPFILEINDEX )
+{
+   HB_FUNC_EXEC( HB_UNZIPFILE );
+}
+
 HB_FUNC( HB_UNZIPALLFILE )
 {
-   if( ISCHAR( 1 ) )
-   {
-      char * szZipFile = hb_FNAddZipExt( hb_parc( 1 ) );
-
-      hb_retl( hb_UnzipAll( szZipFile,
-                            hb_param( 2, HB_IT_BLOCK ),
-                            hb_parl( 3 ),
-                            hb_parc( 4 ),
-                            hb_parc( 5 ),
-                            hb_param( 6, HB_IT_BLOCK ),
-                            hb_param( 7, HB_IT_BLOCK ) ) );
-
-      hb_xfree( szZipFile );
-   }
-   else
-      hb_retl( FALSE );
+   HB_FUNC_EXEC( HB_UNZIPFILE );
 }
 
 /* $DOC$
@@ -1020,34 +855,34 @@ HB_FUNC( HB_ZIPDELETEFILES )
 
    if( ISCHAR( 1 ) )
    {
-      PHB_ITEM pDelZip = hb_param( 2, HB_IT_STRING | HB_IT_ARRAY | HB_IT_NUMERIC );
+      PHB_ITEM pParamFiles = hb_param( 2, HB_IT_STRING | HB_IT_ARRAY | HB_IT_NUMERIC );
 
-      if( pDelZip )
+      if( pParamFiles )
       {
          char * pszZipFileName = hb_FNAddZipExt( hb_parc( 1 ) );
          PHB_ITEM pZipFiles = hb_GetFileNamesFromZip( pszZipFileName, FALSE );
          ULONG nZipLen = hb_arrayLen( pZipFiles );
-         
+
          if( nZipLen )
          {
             PHB_ITEM pProcFiles = hb_itemArrayNew( 0 );
 
-            if( HB_IS_STRING( pDelZip ) )
+            if( HB_IS_STRING( pParamFiles ) )
             {
-               if( hb_itemGetCLen( pDelZip ) )
-                  UnzipCreateArray( hb_itemGetCPtr( pDelZip ), pProcFiles, pZipFiles );
+               if( hb_itemGetCLen( pParamFiles ) )
+                  UnzipCreateArray( hb_itemGetCPtr( pParamFiles ), pProcFiles, pZipFiles );
             }
-            else if( HB_IS_ARRAY( pDelZip ) )
+            else if( HB_IS_ARRAY( pParamFiles ) )
             {
-               ULONG nPos, nLen = hb_arrayLen( pDelZip );
-            
+               ULONG nPos, nLen = hb_arrayLen( pParamFiles );
+
                for( nPos = 0; nPos < nLen; nPos++ )
-                  UnzipCreateArray( hb_arrayGetCPtr( pDelZip, nPos + 1 ), pProcFiles, pZipFiles );
+                  UnzipCreateArray( hb_arrayGetCPtr( pParamFiles, nPos + 1 ), pProcFiles, pZipFiles );
             }
-            else if( HB_IS_NUMERIC( pDelZip ) )
+            else if( HB_IS_NUMERIC( pParamFiles ) )
             {
-               ULONG nZipPos = hb_itemGetNL( pDelZip );
-            
+               ULONG nZipPos = hb_itemGetNL( pParamFiles );
+
                if( nZipPos > 0 && nZipPos <= nZipLen )
                {
                   PHB_ITEM pTemp = hb_itemPutC( NULL, hb_arrayGetCPtr( pZipFiles, nZipPos ) );
@@ -1055,7 +890,7 @@ HB_FUNC( HB_ZIPDELETEFILES )
                   hb_itemRelease( pTemp );
                }
             }
-            
+
             if( hb_arrayLen( pProcFiles ) )
                bReturn = hb_DeleteSel( pszZipFileName, pProcFiles );
 

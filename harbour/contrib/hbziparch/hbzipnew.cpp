@@ -50,8 +50,6 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
@@ -74,6 +72,12 @@
 #define HBZA_FI_TIME       7
 #define HBZA_FI_CRC32      8
 #define HBZA_FI_ATTR       9
+
+#define FILE_ATTRIBUTE_READONLY             0x00000001
+#define FILE_ATTRIBUTE_HIDDEN               0x00000002
+#define FILE_ATTRIBUTE_SYSTEM               0x00000004
+#define FILE_ATTRIBUTE_DIRECTORY            0x00000010
+#define FILE_ATTRIBUTE_ARCHIVE              0x00000020
 
 typedef struct
 {
@@ -119,6 +123,20 @@ class CHBZipActionCallback : public CZipActionCallback
       return true;
    }
 };
+
+char * hb_FNAddZipExt( const char * szFile )
+{
+   PHB_FNAME pZipFileName = hb_fsFNameSplit( szFile );
+   char * pszZipFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+
+   if( ! pZipFileName->szExtension )
+      pZipFileName->szExtension = ".zip";
+
+   hb_fsFNameMerge( pszZipFileName, pZipFileName );
+   hb_xfree( pZipFileName );
+
+   return pszZipFileName;
+}
 
 int hb_CheckSpanMode( char * szFile )
 {
@@ -295,7 +313,7 @@ PHB_ITEM hb_GetFileNamesFromZip( char * szFile, BOOL bVerbose )
       for( nZipFPos = 0; nZipFPos < nZipFCount; nZipFPos++ )
       {
          CZipFileHeader fh;
-        
+
          myzip.GetFileInfo( fh, nZipFPos );
 
          if( bVerbose )
@@ -328,7 +346,6 @@ PHB_ITEM hb_GetFileNamesFromZip( char * szFile, BOOL bVerbose )
                hb_arraySetNL( pTempArray, HBZA_FI_RATIO  , iRatio );
             }
 
-            #if defined( HB_OS_WIN_32 )
             {
                DWORD uAttr = fh.GetSystemAttr();
                szAttr[ 0 ] = uAttr & FILE_ATTRIBUTE_READONLY  ? 'r' : '-';
@@ -339,12 +356,6 @@ PHB_ITEM hb_GetFileNamesFromZip( char * szFile, BOOL bVerbose )
                if( fh.m_uMethod == 0 || uAttr & FILE_ATTRIBUTE_DIRECTORY )
                   szMethod = "Stored";
             }
-            #else
-               szAttr[ 0 ] =
-               szAttr[ 1 ] =
-               szAttr[ 2 ] =
-               szAttr[ 3 ] = ' ';
-            #endif
 
             szAttr[ 4 ] = fh.IsEncrypted() ? '*' : ' ';
 
@@ -368,7 +379,7 @@ PHB_ITEM hb_GetFileNamesFromZip( char * szFile, BOOL bVerbose )
                      break;
                }
             }
-            
+
             hb_arraySetC( pTempArray, HBZA_FI_METHOD, szMethod );
 
             snprintf( szCRC, sizeof( szCRC ), "%8.8lx", ( ULONG ) fh.m_uCrc32 );
@@ -461,19 +472,17 @@ BOOL hb_DeleteSel( char * szFile, PHB_ITEM pArray )
    return bReturn;
 }
 
-BOOL hb_UnzipAll( char * szFile, PHB_ITEM pBlock, BOOL bWithPath, char * szPassword, char * pbyBuffer, PHB_ITEM pDiskBlock, PHB_ITEM pProgress )
+BOOL hb_Unzip( char * szFile, PHB_ITEM pBlock, BOOL bWithPath, char * szPassword, const char * szPath, PHB_ITEM pProcFiles, PHB_ITEM pProgress )
 {
    CZipArchive myzip;
    CHBZipSegmCallback cb_Segm;
    BOOL bReturn = hb_zipopenread( &myzip, &cb_Segm, szFile );
 
-   HB_SYMBOL_UNUSED( pDiskBlock );
-
    if( bReturn )
    {
       CHBZipActionCallback cb_Action;
       char * pszPath = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-      ZIP_INDEX_TYPE uiCount;
+      ZIP_INDEX_TYPE nZipFPos;
 
       if( szPassword )
          myzip.SetPassword( szPassword );
@@ -484,76 +493,59 @@ BOOL hb_UnzipAll( char * szFile, PHB_ITEM pBlock, BOOL bWithPath, char * szPassw
          myzip.SetCallback( &cb_Action );
       }
 
-      hb_strncpy( pszPath, pbyBuffer && strcmp( pbyBuffer, ".\\" ) ? pbyBuffer : "", _POSIX_PATH_MAX );
+      hb_strncpy( pszPath, szPath && strcmp( szPath, ".\\" ) ? szPath : "", _POSIX_PATH_MAX );
 
       myzip.SetRootPath( pszPath );
 
-      for( uiCount = 0; uiCount < myzip.GetCount(); uiCount++ )
+      if( pProcFiles )
       {
-         CZipFileHeader fh;
-         myzip.GetFileInfo( fh, uiCount );
-      
-         if( pBlock && HB_IS_BLOCK( pBlock ) )
+         ULONG nPos;
+
+         for( nPos = 1; nPos <= hb_arrayLen( pProcFiles ); nPos++ )
          {
-            PHB_ITEM pFileName = hb_itemPutC( NULL, ( char * ) ( LPCTSTR ) fh.GetFileName() );
-            PHB_ITEM pFilePos = hb_itemPutNL( NULL, ( LONG ) uiCount );
-            hb_vmEvalBlockV( pBlock, 2, pFileName, pFilePos );
-            hb_itemRelease( pFileName );
-            hb_itemRelease( pFilePos );
-         }
-      
-         try
-         {
-            myzip.SetPassword( szPassword );
-            myzip.ExtractFile( uiCount, ( LPCTSTR ) pszPath, bWithPath ? true : false, NULL, 65536 );
-         }
-         catch( ... )
-         {
-            myzip.CloseFile( NULL, true );
+            HB_TYPE type = hb_arrayGetType( pProcFiles, nPos );
+
+            if( type & HB_IT_NUMERIC )
+            {
+               nZipFPos = myzip.FindFile( ( LPCTSTR ) hb_arrayGetCPtr( pProcFiles, nPos ), false );
+
+               if( nZipFPos == ( ZIP_INDEX_TYPE ) -1 )
+                  nZipFPos = myzip.FindFile( ( LPCTSTR ) hb_arrayGetCPtr( pProcFiles, nPos ), true );
+            }
+            else if( type & HB_IT_STRING )
+               nZipFPos = ( ZIP_INDEX_TYPE ) hb_arrayGetNL( pProcFiles, nPos ) - 1;
+            else
+               nZipFPos = ( ZIP_INDEX_TYPE ) -1;
+
+            if( nZipFPos != ( ZIP_INDEX_TYPE ) -1 )
+            {
+               CZipFileHeader fh;
+               myzip.GetFileInfo( fh, nZipFPos );
+
+               if( pBlock && HB_IS_BLOCK( pBlock ) )
+               {
+                  PHB_ITEM pFileName = hb_itemPutC( NULL, ( char * ) ( LPCTSTR ) fh.GetFileName() );
+                  PHB_ITEM pFilePos = hb_itemPutNL( NULL, nPos );
+                  hb_vmEvalBlockV( pBlock, 2, pFileName, pFilePos );
+                  hb_itemRelease( pFileName );
+                  hb_itemRelease( pFilePos );
+               }
+
+               try
+               {
+                  myzip.ExtractFile( nZipFPos, ( LPCTSTR ) pszPath, bWithPath ? true : false, NULL, 65536 );
+               }
+               catch( ... )
+               {
+                  bReturn = FALSE;
+                  myzip.CloseFile( NULL, true );
+               }
+            }
          }
       }
-
-      hb_xfree( pszPath );
-
-      myzip.Close();
-   }
-
-   return bReturn;
-}
-
-BOOL hb_UnzipSel( char * szFile, PHB_ITEM pBlock, BOOL lWithPath, char * szPassword, const char * pbyBuffer, PHB_ITEM pSelArray, PHB_ITEM pProgress )
-{
-   CZipArchive myzip;
-   CHBZipSegmCallback cb_Segm;
-   BOOL bReturn = hb_zipopenread( &myzip, &cb_Segm, szFile );
-
-   if( bReturn )
-   {
-      CHBZipActionCallback cb_Action;
-      char * pszPath = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-      ULONG nPos;
-
-      if( szPassword )
-         myzip.SetPassword( szPassword );
-
-      if( pProgress && HB_IS_BLOCK( pProgress ) )
+      else
       {
-         s_hbzaSettings.pProgressBlock = pProgress;
-         myzip.SetCallback( &cb_Action );
-      }
-
-      hb_strncpy( pszPath, pbyBuffer && strcmp( pbyBuffer, ".\\" ) ? pbyBuffer : "", _POSIX_PATH_MAX );
-
-      myzip.SetRootPath( pszPath );
-
-      for( nPos = 1; nPos <= hb_arrayLen( pSelArray ); nPos++ )
-      {
-         ZIP_INDEX_TYPE nZipFPos = myzip.FindFile( ( LPCTSTR ) hb_arrayGetCPtr( pSelArray, nPos ), false );
-
-         if( nZipFPos == ( ZIP_INDEX_TYPE ) -1 )
-            nZipFPos = myzip.FindFile( ( LPCTSTR ) hb_arrayGetCPtr( pSelArray, nPos ), true );
-
-         if( nZipFPos != ( ZIP_INDEX_TYPE ) -1 )
+         for( nZipFPos = 0; nZipFPos < myzip.GetCount(); nZipFPos++ )
          {
             CZipFileHeader fh;
             myzip.GetFileInfo( fh, nZipFPos );
@@ -561,7 +553,7 @@ BOOL hb_UnzipSel( char * szFile, PHB_ITEM pBlock, BOOL lWithPath, char * szPassw
             if( pBlock && HB_IS_BLOCK( pBlock ) )
             {
                PHB_ITEM pFileName = hb_itemPutC( NULL, ( char * ) ( LPCTSTR ) fh.GetFileName() );
-               PHB_ITEM pFilePos = hb_itemPutNI( NULL, nPos );
+               PHB_ITEM pFilePos = hb_itemPutNL( NULL, ( LONG ) nZipFPos );
                hb_vmEvalBlockV( pBlock, 2, pFileName, pFilePos );
                hb_itemRelease( pFileName );
                hb_itemRelease( pFilePos );
@@ -569,7 +561,7 @@ BOOL hb_UnzipSel( char * szFile, PHB_ITEM pBlock, BOOL lWithPath, char * szPassw
 
             try
             {
-               myzip.ExtractFile( nZipFPos, ( LPCTSTR ) pszPath, lWithPath ? true : false, NULL, 65536 );
+               myzip.ExtractFile( nZipFPos, ( LPCTSTR ) pszPath, bWithPath ? true : false, NULL, 65536 );
             }
             catch( ... )
             {
@@ -580,58 +572,6 @@ BOOL hb_UnzipSel( char * szFile, PHB_ITEM pBlock, BOOL lWithPath, char * szPassw
       }
 
       hb_xfree( pszPath );
-
-      myzip.Close();
-   }
-
-   return bReturn;
-}
-
-BOOL hb_UnzipSelIndex( char * szFile, PHB_ITEM pBlock, BOOL lWithPath, char * szPassword, char * pszPath, PHB_ITEM pSelArray, PHB_ITEM pProgress )
-{
-   CZipArchive myzip;
-   CHBZipSegmCallback cb_Segm;
-   BOOL bReturn = hb_zipopenread( &myzip, &cb_Segm, szFile );
-
-   if( bReturn )
-   {
-      CHBZipActionCallback cb_Action;
-      ULONG nPos;
-
-      if( szPassword )
-         myzip.SetPassword( szPassword );
-
-      if( pProgress && HB_IS_BLOCK( pProgress ) )
-      {
-         s_hbzaSettings.pProgressBlock = pProgress;
-         myzip.SetCallback( &cb_Action );
-      }
-
-      for( nPos = 0; nPos <= hb_arrayLen( pSelArray ); nPos++ )
-      {
-         ZIP_INDEX_TYPE nZipFPos = ( ZIP_INDEX_TYPE ) hb_arrayGetNL( pSelArray, nPos ) - 1;
-
-         CZipFileHeader fh;
-
-         myzip.GetFileInfo( fh, nZipFPos );
-
-         if( pBlock && HB_IS_BLOCK( pBlock ) )
-         {
-            PHB_ITEM pFileName = hb_itemPutC( NULL, ( char * ) ( LPCTSTR ) fh.GetFileName() );
-            hb_vmEvalBlockV( pBlock, 1, pFileName );
-            hb_itemRelease( pFileName );
-         }
-
-         try
-         {
-            myzip.ExtractFile( nZipFPos, ( LPCTSTR ) pszPath, lWithPath ? true : false, NULL, 65536 );
-         }
-         catch( ... )
-         {
-            bReturn = FALSE;
-            myzip.CloseFile( NULL, true );
-         }
-      }
 
       myzip.Close();
    }
@@ -699,26 +639,25 @@ BOOL hb_TransferFilesFromzip( char * szSource, char * szDest, PHB_ITEM pArray )
    return FALSE;
 }
 
-BOOL hb_CompressFile( char * szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock, BOOL bOverWrite, char * szPassword, BOOL bPath, BOOL bDrive, PHB_ITEM pProgress )
+BOOL hb_CompressFile( char * szFile, PHB_ITEM pProcFiles, int iCompLevel, PHB_ITEM pBlock, BOOL bOverwrite, char * szPassword, long iSpanSize, BOOL bPath, BOOL bDrive, PHB_ITEM pProgress, BOOL bSpan )
 {
    CZipArchive myzip;
    BOOL bReturn = TRUE;
-   BOOL bFileExist = hb_fsFileExists( szFile );
-   char * szFileLower = hb_strdup( ( char * ) szFile );
+   char * pszZipFileName = hb_FNAddZipExt( szFile );
 
    CHBZipSegmCallback cb_Segm;
    myzip.SetSegmCallback( &cb_Segm );
 
-   #ifdef HB_OS_WIN_32
-      hb_strLower( szFileLower, strlen( szFileLower ) );
-   #endif
-
    try
    {
-      if( ( bFileExist && bOverWrite ) || !bFileExist )
-         myzip.Open( szFile, CZipArchive::zipCreate, 0 );
+      BOOL bFileExist = hb_fsFileExists( pszZipFileName );
+
+      if( ( bFileExist && bOverwrite ) || !bFileExist )
+         myzip.Open( pszZipFileName, bSpan ? CZipArchive::zipCreateSegm : CZipArchive::zipCreate, bSpan ? iSpanSize : 0 );
+      else if( ! bSpan )
+         myzip.Open( pszZipFileName, CZipArchive::zipOpen, 0 );
       else
-         myzip.Open( szFile, CZipArchive::zipOpen, 0 );
+         bReturn = FALSE;
    }
    catch( CZipException )
    {
@@ -731,6 +670,10 @@ BOOL hb_CompressFile( char * szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM p
    {
       CHBZipActionCallback cb_Action;
       ULONG nPos;
+
+      #ifndef HB_OS_UNIX_COMPATIBLE
+         hb_strLower( pszZipFileName, strlen( pszZipFileName ) );
+      #endif
 
       if( szPassword )
          myzip.SetPassword( szPassword );
@@ -747,19 +690,19 @@ BOOL hb_CompressFile( char * szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM p
          myzip.SetCallback( &cb_Action );
       }
 
-      for( nPos = 1; nPos <= hb_arrayLen( pArray ); nPos++ )
+      for( nPos = 1; nPos <= hb_arrayLen( pProcFiles ); nPos++ )
       {
-         const char * szDummy = hb_arrayGetCPtr( pArray, nPos );
-         char * szDummyLower = hb_strdup( szDummy );
+         const char * szDummy = hb_arrayGetCPtr( pProcFiles, nPos );
+         char * pszDummyLower = hb_strdup( szDummy );
 
-         #ifdef HB_OS_WIN_32
-            hb_strLower( szDummyLower, strlen( szDummyLower ) );
+         #ifndef HB_OS_UNIX_COMPATIBLE
+            hb_strLower( pszDummyLower, strlen( pszDummyLower ) );
          #endif
 
          /* Prevent adding current archive file. */
          /* TOFIX: strstr() is not suitable for portable filename comparison. */
-         if( ! strstr( szFileLower, szDummyLower ) && 
-             ! strstr( szDummyLower, szFileLower ) )
+         if( ! strstr( pszZipFileName, pszDummyLower ) &&
+             ! strstr( pszDummyLower, pszZipFileName ) )
          {
             if( hb_fsFileExists( szDummy ) )
             {
@@ -781,116 +724,15 @@ BOOL hb_CompressFile( char * szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM p
             }
          }
 
-         hb_xfree( szDummyLower );
+         hb_xfree( pszDummyLower );
       }
    }
 
-   hb_xfree( szFileLower );
+   hb_xfree( pszZipFileName );
 
    try
    {
       myzip.Close();
-   }
-   catch( CZipException )
-   {
-      bReturn = FALSE;
-   }
-   catch( ... )
-   {}
-
-   return bReturn;
-}
-
-BOOL hb_CompressFileStd( char * szFile, char * szFiletoCompress, int iCompLevel, PHB_ITEM pBlock, BOOL bOverWrite, char * szPassword, BOOL bPath, BOOL bDrive, PHB_ITEM pProgress )
-{
-   CZipArchive myzip;
-   BOOL bReturn = TRUE;
-   BOOL bFileExist = hb_fsFileExists( szFile );
-
-   CHBZipSegmCallback cb_Segm;
-   myzip.SetSegmCallback( &cb_Segm );
-
-   try
-   {
-      if( ( bFileExist && bOverWrite ) || !bFileExist )
-         myzip.Open( szFile, CZipArchive::zipCreate, 0 );
-      else
-         myzip.Open( szFile, CZipArchive::zipOpen, 0 );
-   }
-   catch( CZipException )
-   {
-      bReturn = FALSE;
-   }
-
-   if( bReturn )
-   {
-      CHBZipActionCallback cb_Action;
-
-      if( szPassword )
-         myzip.SetPassword( szPassword );
-
-      if( s_hbzaSettings.pszComment )
-      {
-         myzip.SetGlobalComment( s_hbzaSettings.pszComment );
-         hb_xfree( s_hbzaSettings.pszComment );
-      }
-
-      if( pProgress && HB_IS_BLOCK( pProgress ) )
-      {
-         s_hbzaSettings.pProgressBlock = pProgress;
-         myzip.SetCallback( &cb_Action );
-      }
-
-      try
-      {
-         if( hb_fsFileExists( szFiletoCompress ) )
-         {
-            if( pBlock && HB_IS_BLOCK( pBlock ) )
-            {
-               PHB_ITEM pFileName = hb_itemPutC( NULL, szFiletoCompress );
-               hb_vmEvalBlockV( pBlock, 1, pFileName );
-               hb_itemRelease( pFileName );
-            }
-
-            if( ! myzip.AddNewFile( szFiletoCompress, iCompLevel, ( bDrive || bPath ) ? true : false, CZipArchive::zipsmSafeSmart, 65536 ) )
-               bReturn = FALSE;
-         }
-      }
-      catch( ... )
-      {}
-   }
-
-   try
-   {
-      myzip.Close();
-   }
-   catch( CZipException )
-   {
-      bReturn = FALSE;
-   }
-   catch( ... )
-   {}
-
-   return bReturn;
-}
-
-BOOL hb_CmpPkSpan( char * szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock, BOOL bOverWrite, char * szPassword, BOOL bPath, BOOL bDrive, PHB_ITEM pProgress )
-{
-   CZipArchive myzip;
-   BOOL bReturn = TRUE;
-   BOOL bFileExist = hb_fsFileExists( szFile );
-
-   CHBZipSegmCallback cb_Segm;
-   myzip.SetSegmCallback( &cb_Segm );
-
-   bDrive = FALSE;
-
-   try
-   {
-      if( ( bFileExist && bOverWrite ) || !bFileExist )
-         myzip.Open( szFile, CZipArchive::zipCreateSegm, 0 );
-      else
-         bReturn = FALSE;
    }
    catch( CZipException )
    {
@@ -901,139 +743,19 @@ BOOL hb_CmpPkSpan( char * szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlo
 
    if( bReturn )
    {
-      CHBZipActionCallback cb_Action;
-      ULONG nPos;
+      ULONG nPos, nLen = hb_arrayLen( pProcFiles );
 
-      if( szPassword )
-         myzip.SetPassword( szPassword );
-      
-      if( s_hbzaSettings.pszComment )
+      for( nPos = 0; nPos < nLen; nPos++ )
       {
-         myzip.SetGlobalComment( s_hbzaSettings.pszComment );
-         hb_xfree( s_hbzaSettings.pszComment );
-      }
-      
-      if( pProgress && HB_IS_BLOCK( pProgress ) )
-      {
-         s_hbzaSettings.pProgressBlock = pProgress;
-         myzip.SetCallback( &cb_Action );
-      }
-      
-      for( nPos = 1; nPos <= hb_arrayLen( pArray ); nPos++ )
-      {
-         if( pBlock && HB_IS_BLOCK( pBlock ) )
-         {
-            PHB_ITEM pFileName = hb_itemPutC( NULL, hb_arrayGetCPtr( pArray, nPos ) );
-            PHB_ITEM pFilePos = hb_itemPutNI( NULL, nPos );
-            hb_vmEvalBlockV( pBlock, 2, pFileName, pFilePos );
-            hb_itemRelease( pFileName );
-            hb_itemRelease( pFilePos );
-         }
-      
-         try
-         {
-            myzip.AddNewFile( hb_arrayGetCPtr( pArray, nPos ), iCompLevel, ( bDrive || bPath ) ? true : false, CZipArchive::zipsmSafeSmart, 65536 );
-         }
-         catch( ... )
-         {}
+         ULONG nAttr;
+
+         hb_fsGetAttr( ( BYTE * ) hb_arrayGetCPtr( pProcFiles, nPos + 1 ), &nAttr );
+         /* TOFIX: Doesn't work for some reason.
+                   May be a problem or property of hb_fsSetAttr(). */
+         nAttr &= ~HB_FA_ARCHIVE;
+         hb_fsSetAttr( ( BYTE * ) hb_arrayGetCPtr( pProcFiles, nPos + 1 ), nAttr );
       }
    }
-
-   try
-   {
-      myzip.Close();
-   }
-   catch( CZipException )
-   {
-      bReturn = FALSE;
-   }
-   catch( ... )
-   {}
-
-   return bReturn;
-}
-
-BOOL hb_CmpTdSpan( char * szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock, BOOL bOverWrite, char * szPassword, long iSpanSize, BOOL bPath, BOOL bDrive, PHB_ITEM pProgress )
-{
-   CZipArchive myzip;
-   BOOL bReturn = TRUE;
-   BOOL bFileExist = hb_fsFileExists( szFile );
-
-   CHBZipSegmCallback cb_Segm;
-   myzip.SetSegmCallback( &cb_Segm );
-
-   if( iSpanSize == 0 )
-      iSpanSize = 1457664;
-
-   try
-   {
-      if( ( bFileExist && bOverWrite ) || !bFileExist )
-         myzip.Open( szFile, CZipArchive::zipCreateSegm, iSpanSize );
-      else
-         bReturn = FALSE;
-   }
-   catch( CZipException )
-   {
-      bReturn = FALSE;
-   }
-   catch( ... )
-   {}
-
-   if( bReturn )
-   {
-      CHBZipActionCallback cb_Action;
-      ULONG nPos;
-
-      if( szPassword )
-         myzip.SetPassword( szPassword );
-
-      if( s_hbzaSettings.pszComment )
-      {
-         myzip.SetGlobalComment( s_hbzaSettings.pszComment );
-         hb_xfree( s_hbzaSettings.pszComment );
-      }
-
-      if( pProgress && HB_IS_BLOCK( pProgress ) )
-      {
-         s_hbzaSettings.pProgressBlock = pProgress;
-         myzip.SetCallback( &cb_Action );
-      }
-
-      for( nPos = 1; nPos <= hb_arrayLen( pArray ); nPos++ )
-      {
-         const char * szDummy = hb_arrayGetCPtr( pArray, nPos );
-
-         if( hb_fsFileExists( szDummy ) )
-         {
-            if( pBlock && HB_IS_BLOCK( pBlock ) )
-            {
-               PHB_ITEM pFileName = hb_itemPutC( NULL, szDummy );
-               PHB_ITEM pFilePos = hb_itemPutNI( NULL, nPos );
-               hb_vmEvalBlockV( pBlock, 2, pFileName, pFilePos );
-               hb_itemRelease( pFileName );
-               hb_itemRelease( pFilePos );
-            }
-
-            try
-            {
-               myzip.AddNewFile( szDummy, iCompLevel, ( bDrive || bPath ) ? true : false, CZipArchive::zipsmSafeSmart, 65536 );
-            }
-            catch( ... )
-            {}
-         }
-      }
-   }
-
-   try
-   {
-      myzip.Close();
-   }
-   catch( CZipException )
-   {
-      bReturn = FALSE;
-   }
-   catch( ... )
-   {}
 
    return bReturn;
 }
