@@ -132,6 +132,7 @@
        (some not, as hbmzip doesn't support multi-volume archives.)
      * Library renamed from hbziparch -> hbziparc to be short 
        filename. The dir itself will also be renamed so.
+       INCOMPATIBLE.
      * Make files modified to compile on all platforms and to 
        pull hbmzip to build tests.
      - Removed ZipArchive sources.

@@ -185,13 +185,13 @@ FUNCTION hb_ZipWithPassword( cFileName )
       cFileName += ".zip"
    ENDIF
 
-   IF !Empty( hUnzip := HB_UnZipOpen( cFileName ) )
+   IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
 
       IF hb_UnzipFileFirst( hUnzip ) == 0
          hb_UnzipFileInfo( hUnzip, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, @lCrypted )
       ENDIF
 
-      hb_UnZipClose( hUnzip )
+      hb_UnzipClose( hUnzip )
    ENDIF
 
    RETURN lCrypted
@@ -219,7 +219,7 @@ FUNCTION hb_GetFilesInZip( cFileName, lVerbose )
       cFileName += ".zip"
    ENDIF
 
-   IF !Empty( hUnzip := HB_UnZipOpen( cFileName ) )
+   IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
 
       DEFAULT lVerbose TO .F.
 
@@ -250,7 +250,7 @@ FUNCTION hb_GetFilesInZip( cFileName, lVerbose )
          nErr := hb_UnzipFileNext( hUnzip )
       ENDDO
 
-      hb_UnZipClose( hUnzip )
+      hb_UnzipClose( hUnzip )
    ENDIF
 
    RETURN aFiles
@@ -850,13 +850,13 @@ FUNCTION hb_ZipFile( cFileName,;
 /*
  * $DOC$
  * $FUNCNAME$
- *     HB_UNZIPFILE()
+ *     hb_UnzipFILE()
  * $CATEGORY$
  *     Zip Functions
  * $ONELINER$
  *     Unzip a compressed file
  * $SYNTAX$
- *     HB_UNZIPFILE( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>,
+ *     hb_UnzipFILE( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>,
  *                   <cFile> | <aFile>, <pFileProgress> ) ---> lCompress
  * $ARGUMENTS$
  *     <cFile>   Name of the zip file to extract
@@ -895,12 +895,12 @@ FUNCTION hb_ZipFile( cFileName,;
  *     FUNCTION MAIN()
  *
  *     aExtract := hb_GetFilesInZip( "test.zip" )  // extract all files in zip
- *     IF HB_UNZIPFILE( "test.zip",,,, ".\", aExtract )
+ *     IF hb_UnzipFILE( "test.zip",,,, ".\", aExtract )
  *        qout("File was successfully extracted")
  *     ENDIF
  *
  *     aExtract := hb_GetFilesInZip( "test2.zip" )  // extract all files in zip
- *     IF HB_UNZIPFILE( "test2.zip", {|cFile| qout( cFile ) },,, ".\", aExtract )
+ *     IF hb_UnzipFILE( "test2.zip", {|cFile| qout( cFile ) },,, ".\", aExtract )
  *        qout("File was successfully extracted")
  *     ENDIF
  *     Return NIL
