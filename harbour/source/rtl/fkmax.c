@@ -68,7 +68,7 @@ HB_FUNC( FKLABEL )
 
    if( pPar1 )
    {
-      USHORT uiFKey = hb_itemGetNI( pPar1 );
+      USHORT uiFKey = ( USHORT ) hb_itemGetNI( pPar1 );
 
       if( uiFKey > 0 && uiFKey <= 40 )
       {

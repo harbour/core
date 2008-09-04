@@ -8,6 +8,45 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-04 09:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_vc.mak
+   * contrib/mtpl_vc.mak
+     + -w34701 VC flag added to enabled warning 4701 (uninitialized vars) on -W3 level.
+     % -FD VC flag removed. This is only needed for IDEs.
+     % -Gs VC flag moved to the common section.
+     % VC flags synced in contrib with core.
+     + TOFIX added for WinCE command line. It's full of stuff which is _probably_ not needed.
+     + NOTE added about MSDN page explaining VC switches.
+     ; NOTE: -W4 and -Wp64 are recommended for MSVC.
+     ; TOFIX: There are still a few uninit vars warnings:
+              harboury.c(7226) : warning C4701: potentially uninitialized local variable 'hb_complval' used
+              macroy.c(3095) : warning C4701: potentially uninitialized local variable 'hb_macrolval' used
+              dbffpt1.c(2671) : warning C4701: potentially uninitialized local variable 'ulType' used
+              dbffpt1.c(2614) : warning C4701: potentially uninitialized local variable 'ulSize' used
+              dbffpt1.c(3073) : warning C4701: potentially uninitialized local variable 'ulOldSize' used
+              dbffpt1.c(3083) : warning C4701: potentially uninitialized local variable 'ulBlock' used
+              dbffpt1.c(3652) : warning C4701: potentially uninitialized local variable 'pBlock' used
+
+   * source/rdd/workarea.c
+     ! Fixed DBI_POSITIONED value returned.
+
+   * include/hbsetup.h
+   * source/vm/pvalue.c
+   * source/rtl/fserror.c
+   * source/rtl/accept.c
+   * source/rtl/descend.c
+   * source/rtl/inkey.c
+   * source/rtl/dates.c
+   * source/rtl/fkmax.c
+   * source/rtl/natmsg.c
+   * source/rtl/hbinet.c
+   * source/rtl/dates.c
+     ! Fixed some MSVS2008 -W4 warnings (we use -W3 as the default).
+     ; NOTE: There is a lot more of these.
+
+   * source/rtl/dates.c
+     * Formatting.
+
 2008-09-03 23:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparc/hbziparc.prg
      ! Fix to one of the rarely used function names.

@@ -994,8 +994,8 @@ static void s_inetRecvPattern( char *szPattern )
    PHB_ITEM pMaxSize    = hb_param( 3, HB_IT_NUMERIC );
    PHB_ITEM pBufferSize = hb_param( 4, HB_IT_NUMERIC );
 
-   char cChar;
-   char *Buffer;
+   char cChar = '\0';
+   char * Buffer;
    int iAllocated, iBufferSize, iMax;
    int iLen = 0, iPatLen;
    int iPos = 0, iTimeElapsed;
@@ -1146,9 +1146,9 @@ HB_FUNC( HB_INETRECVENDBLOCK )
    PHB_ITEM pMaxSize    = hb_param( 4, HB_IT_NUMERIC );
    PHB_ITEM pBufferSize = hb_param( 5, HB_IT_NUMERIC );
 
-   char cChar;
-   char *Buffer;
-   char **Proto;
+   char cChar = '\0';
+   char * Buffer;
+   char ** Proto;
    int iAllocated, iBufferSize, iMax;
    int iLen;
    int iPos = 0;
@@ -1256,7 +1256,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
          int protos;
          bProtoFound = 0;
 
-         for( protos=0; protos < iprotos; protos++ )
+         for( protos = 0; protos < iprotos; protos++ )
          {
             if( cChar == Proto[protos][iprotosize[protos]-1] && iprotosize[protos] <= iPos )
             {

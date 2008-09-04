@@ -50,18 +50,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_dateFormat()
- *    hb_dateUnformat()
- *
- * See doc/license.txt for licensing terms.
- *
- */
-
 #include <ctype.h>
 
 #include "hbapi.h"
@@ -82,7 +70,8 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
     * Determine the maximum size of the formatted date string
     */
    size = strlen( szDateFormat );
-   if( size > 10 ) size = 10;
+   if( size > 10 )
+      size = 10;
 
    if( szDate && szFormattedDate && strlen( szDate ) == 8 ) /* A valid date is always 8 characters */
    {
@@ -102,7 +91,8 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
          while( toupper( ( UCHAR ) *szPtr ) == digit && format_count < size )
          {
             szPtr++;
-            if( format_count + digit_count < size ) digit_count++;
+            if( format_count + digit_count < size )
+               digit_count++;
          }
          switch( digit )
          {
@@ -112,14 +102,14 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
                   case 4:
                      if( ! used_d && format_count < size )
                      {
-/*                        szFormattedDate[ format_count++ ] = '0'; */
+                        /* szFormattedDate[ format_count++ ] = '0'; */
                         szFormattedDate[ format_count++ ] = szDate[ 6 ];
                         digit_count--;
                      }
                   case 3:
                      if( ! used_d && format_count < size )
                      {
-/*                        szFormattedDate[ format_count++ ] = '0'; */
+                        /* szFormattedDate[ format_count++ ] = '0'; */
                         szFormattedDate[ format_count++ ] = szDate[ 6 ];
                         digit_count--;
                      }
@@ -135,7 +125,8 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
                         szFormattedDate[ format_count++ ] = szDate[ 7 ];
                         digit_count--;
                      }
-                     while( digit_count-- > 0 && format_count < size ) szFormattedDate[ format_count++ ] = digit;
+                     while( digit_count-- > 0 && format_count < size )
+                        szFormattedDate[ format_count++ ] = digit;
                }
                used_d = TRUE;
                break;
@@ -169,7 +160,8 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
                         szFormattedDate[ format_count++ ] = szDate[ 5 ];
                         digit_count--;
                      }
-                     while( digit_count-- > 0 && format_count < size ) szFormattedDate[ format_count++ ] = digit;
+                     while( digit_count-- > 0 && format_count < size )
+                        szFormattedDate[ format_count++ ] = digit;
                }
                used_m = TRUE;
                break;
@@ -204,13 +196,15 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
                         szFormattedDate[ format_count++ ] = szDate[ 3 ];
                         digit_count--;
                      }
-                     while( digit_count-- > 0 && format_count < size ) szFormattedDate[ format_count++ ] = digit;
+                     while( digit_count-- > 0 && format_count < size )
+                        szFormattedDate[ format_count++ ] = digit;
                }
                used_y = TRUE;
                break;
 
             default:
-               while( digit_count-- > 0 && format_count < size ) szFormattedDate[ format_count++ ] = digit;
+               while( digit_count-- > 0 && format_count < size )
+                  szFormattedDate[ format_count++ ] = digit;
          }
       }
    }
@@ -261,27 +255,36 @@ HB_EXPORT long hb_dateUnformat( const char * szDate, const char * szDateFormat )
             case 'd':
                if( d_pos == 0 )
                {
-                  if( m_pos == 0 && y_pos == 0 ) d_pos = 1;
-                  else if( m_pos == 0 || y_pos == 0 ) d_pos = 2;
-                  else d_pos = 3;
+                  if( m_pos == 0 && y_pos == 0 )
+                     d_pos = 1;
+                  else if( m_pos == 0 || y_pos == 0 )
+                     d_pos = 2;
+                  else
+                     d_pos = 3;
                }
                break;
             case 'M':
             case 'm':
                if( m_pos == 0 )
                {
-                  if( d_pos == 0 && y_pos == 0 ) m_pos = 1;
-                  else if( d_pos == 0 || y_pos == 0 ) m_pos = 2;
-                  else m_pos = 3;
+                  if( d_pos == 0 && y_pos == 0 )
+                     m_pos = 1;
+                  else if( d_pos == 0 || y_pos == 0 )
+                     m_pos = 2;
+                  else
+                     m_pos = 3;
                }
                break;
             case 'Y':
             case 'y':
                if( y_pos == 0 )
                {
-                  if( m_pos == 0 && d_pos == 0 ) y_pos = 1;
-                  else if( m_pos == 0 || d_pos == 0 ) y_pos = 2;
-                  else y_pos = 3;
+                  if( m_pos == 0 && d_pos == 0 )
+                     y_pos = 1;
+                  else if( m_pos == 0 || d_pos == 0 )
+                     y_pos = 2;
+                  else
+                     y_pos = 3;
                }
          }
       }

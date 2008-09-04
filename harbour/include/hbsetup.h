@@ -302,7 +302,7 @@
 
 /* Sub-option inside HB_OS_WIN_32 */
 #ifndef HB_WINCE
-   #if defined(_WINCE) || defined(__CEGCC__) || defined(__MINGW32CE__) || (__POCC_TARGET__ == 2)
+   #if defined(_WINCE) || defined(__CEGCC__) || defined(__MINGW32CE__) || (defined(__POCC_TARGET__) && __POCC_TARGET__ == 2)
       #define HB_WINCE
    #endif
 #endif

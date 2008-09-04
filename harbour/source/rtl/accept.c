@@ -111,7 +111,7 @@ HB_FUNC( __ACCEPT )
          default:
             if( ulLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 && input <= 255 )
             {
-               szAcceptResult[ ulLen ] = input; /* Accept the input */
+               szAcceptResult[ ulLen ] = ( char ) input; /* Accept the input */
                hb_conOutAlt( &szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
                ulLen++; /* Then adjust the input count */
             }

@@ -171,7 +171,7 @@ static int hb_WinToDosError( ULONG ulError )
          break;
 
       default:
-         iResult = ( int ) ulError ;
+         iResult = ( int ) ulError;
          break;
    }
 
@@ -223,7 +223,6 @@ HB_EXPORT void  hb_fsSetError( USHORT uiError )
 /* set error code for last operation */
 HB_EXPORT void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
 {
-
    /* TODO: implement it */
    HB_SYMBOL_UNUSED( uiOperation );
 
@@ -234,8 +233,8 @@ HB_EXPORT void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
    else
    {
 #if defined(HB_WIN32_IO) || defined(HB_OS_WIN_32)
-      s_uiOsErrorLast = (USHORT) GetLastError();
-      s_uiErrorLast = hb_WinToDosError( s_uiOsErrorLast );
+      s_uiOsErrorLast = ( USHORT ) GetLastError();
+      s_uiErrorLast = ( USHORT ) hb_WinToDosError( s_uiOsErrorLast );
 #elif defined(_MSC_VER) || defined(__DMC__)
       #ifdef __XCC__
          extern unsigned long _doserrno;

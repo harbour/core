@@ -81,7 +81,7 @@ static PHB_ITEM s_inkeyBlockAfter  = NULL;
 
 HB_FUNC( INKEY )
 {
-   USHORT uiPCount = hb_pcount();
+   USHORT uiPCount = ( USHORT ) hb_pcount();
    PHB_ITEM pKey = NULL;
    int iKey;
 

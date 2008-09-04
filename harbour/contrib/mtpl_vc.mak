@@ -118,13 +118,14 @@ HB_VISUALC_VER = 80
 
 # C Compiler Flags
 !if $(HB_VISUALC_VER) >= 80
-CFLAGS_VER     = -Ot2b1 -FD -Gs -D_CRT_SECURE_NO_DEPRECATE
+CFLAGS_VER     = -Ot2b1 -EHs-c- -D_CRT_SECURE_NO_DEPRECATE
 !else
-CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX -FD -Gs
+CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX
 !endif
 #-----------
 
-CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -W3 -nologo -T$(HB_BUILD_MODE) $(C_USR) $(CFLAGS)
+CFLAGS         = -nologo -W3 -w34701 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) \
+                 $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
 
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"

@@ -141,10 +141,12 @@ HB_BUILD_MODE  = C
 !if "$(HB_BUILD_WINCE)" == "yes"
 
 !if $(HB_VISUALC_VER) >= 80
-CFLAGS_VER     = -Od -Os -Gy -GS- -EHsc- -fp:fast -Gm -Zi -GR- -FD -D_CRT_SECURE_NO_DEPRECATE
+CFLAGS_VER     = -Od -Os -Gy -GS- -EHsc- -fp:fast -Gm -Zi -GR- -D_CRT_SECURE_NO_DEPRECATE
 !else
 CFLAGS_VER     = -Oxsb1 -EHsc -YX -GF
 !endif
+
+# TOFIX: These should be cleaned from everything not absolutely necessary:
 
 CFLAGS         = -nologo -W3 -I$(INCLUDE_DIR) -I$(CFLAGS_VER) -T$(HB_BUILD_MODE) \
                  -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -D"WIN32_PLATFORM_PSPC" \
@@ -166,13 +168,15 @@ CFLAGS    = $(CFLAGS) -D "NDEBUG"
 
 !else
 
+# NOTE: See here: http://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
+
 !if $(HB_VISUALC_VER) >= 80
-CFLAGS_VER     = -Ot2b1 -EHs-c- -FD -Gs -D_CRT_SECURE_NO_DEPRECATE
+CFLAGS_VER     = -Ot2b1 -EHs-c- -D_CRT_SECURE_NO_DEPRECATE
 !else
-CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX -FD -Gs
+CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX
 !endif
 
-CFLAGS         = -nologo -W3 -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) \
+CFLAGS         = -nologo -W3 -w34701 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) \
                  $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
 
 #-----------

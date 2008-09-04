@@ -62,7 +62,7 @@ void hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen )
    else
    {
       for(; ulLen--; szStringTo++, szStringFrom++ )
-         *szStringTo = 256 - *szStringFrom;
+         *szStringTo = ( char ) ( 256 - *szStringFrom );
    }
 }
 

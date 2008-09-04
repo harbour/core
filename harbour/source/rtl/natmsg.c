@@ -86,11 +86,11 @@
 #define _LF_YN                  12      /* "Y/N" */ /* NOTE: This must be in uppercase. [vszakats] */
 #define _INVALID_EXPR           13      /* "INVALID EXPRESSION" */
 
-static char * hb_nationGetMsg( USHORT uiMsg )
+static char * hb_nationGetMsg( int iMsg )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_nationGetMsg(%hu)", uiMsg));
+   HB_TRACE(HB_TR_DEBUG, ("hb_nationGetMsg(%hu)", iMsg));
 
-   return ( uiMsg >= 1 && uiMsg <= 13 ) ? ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + uiMsg - 1 ) : ( char * ) "";
+   return ( iMsg >= 1 && iMsg <= 13 ) ? ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + iMsg - 1 ) : ( char * ) "";
 }
 
 HB_FUNC( __NATISAFFIRM )

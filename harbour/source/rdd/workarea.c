@@ -845,7 +845,8 @@ static ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             hb_itemPutL( pItem, TRUE );
          else if( SELF_RECCOUNT( pArea, &ulRecCount ) != SUCCESS )
             return FAILURE;
-         hb_itemPutL( pItem, ulRecNo != ulRecCount + 1 );
+         else
+            hb_itemPutL( pItem, ulRecNo != ulRecCount + 1 );
          break;
       }
       case DBI_RM_SUPPORTED:
