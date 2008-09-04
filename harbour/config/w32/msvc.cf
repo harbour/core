@@ -14,12 +14,12 @@ CC_IN = -c
 CC_OUT = -Fo
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 # -W4 for max warnings
-CFLAGS = -nologo -W3 -Zi
+CFLAGS = -nologo -W3 -Gs -Zi
 
 ifeq ($(HB_VISUALC_VER_PRE80),)
-CFLAGS += -Ot2b1 -EHs-c- -FD -Gs -D_CRT_SECURE_NO_DEPRECATE
+CFLAGS += -Ot2b1 -EHs-c- -D_CRT_SECURE_NO_DEPRECATE
 else
-CFLAGS += -Ogt2yb1p -GX- -G6 -YX -FD -Gs
+CFLAGS += -Ogt2yb1p -GX- -G6 -YX
 endif
 
 LD = cl.exe

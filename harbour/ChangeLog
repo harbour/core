@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-04 15:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * config/w32/msvc.cf
+   * config/w32/msvcce.cf
+     * Synced with latest non-GNU changes.
+
 2008-09-04 09:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_vc.mak
    * contrib/mtpl_vc.mak
