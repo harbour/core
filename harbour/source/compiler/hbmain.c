@@ -45,10 +45,6 @@
  *
  */
 
-/* malloc.h has been obsoleted by stdlib.h, which is included via hbcomp.h
-#include <malloc.h> 
-*/
-
 /*
  * Avoid tracing in preprocessor/compiler.
  */
@@ -60,11 +56,6 @@
 
 #include "hbcomp.h"
 #include "hbhash.h"
-
-#if defined(HB_OS_DOS) && defined(__BORLANDC__)
-   #include <limits.h>
-   extern unsigned _stklen = UINT_MAX;
-#endif
 
 #define HB_COMP_SINGLEFILE    1
 #define HB_COMP_AUTOADDFILE   2

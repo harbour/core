@@ -1369,7 +1369,8 @@ static BOOL hb_cdxIndexUnLockRead( LPCDXINDEX pIndex )
 
    hb_cdxIndexPoolFree( pIndex, CDX_PAGECACHESIZE );
 
-   if ( pIndex->pArea->fShared && pIndex->fShared )
+   if ( pIndex->pArea->fShared && pIndex->fShared &&
+        !HB_DIRTYREAD( pIndex->pArea ) )
    {
 #ifdef HB_CDX_DBGCODE
       if ( pIndex->WrLck || ! pIndex->RdLck )
