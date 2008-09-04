@@ -2090,7 +2090,7 @@ static BOOL hb_ntxIndexUnLockRead( LPNTXINDEX pIndex )
       hb_errInternal( 9106, "hb_ntxIndexUnLockRead: bad count of locks.", NULL, NULL );
 
    if( pIndex->lockRead || pIndex->lockWrite || !pIndex->fShared ||
-       HB_DIRTYREAD( pIndex->pArea ) )
+       HB_DIRTYREAD( pIndex->Owner ) )
    {
       fOK = TRUE;
    }
