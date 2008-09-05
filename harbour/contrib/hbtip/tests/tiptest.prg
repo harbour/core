@@ -13,7 +13,7 @@
 * just demostrating it is working
 *
 * With the filename, data will be stored to the file or
-* retreived from the file and sent to internet.
+* retrieved from the file and sent to internet.
 *
 * Usage of URI.
 * HTTP Protocol
@@ -43,7 +43,7 @@
 *    - without path, get the list of files (use path/ to get the list of
 *      files in a dir.
 *    - with path, get a file. If the target file (second param) starts with '+'
-*      it will be sent instead of being retreived.
+*      it will be sent instead of being retrieved.
 */
 
 #include "hbclass.ch"
@@ -124,7 +124,7 @@ PROCEDURE MAIN( cUrl, cFile )
                @7,5 SAY "First 80 characters:"
                ? Trim(SubStr( cData, 1, 80 ))
             ELSE
-               @7,5 SAY "ERROR - file can't be retreived " + oClient:lastErrorMessage()
+               @7,5 SAY "ERROR - file can't be retrieved " + oClient:lastErrorMessage()
             ENDIF
          ELSE
             IF oClient:ReadToFile( cFile )

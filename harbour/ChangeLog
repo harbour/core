@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-05 17:11 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * contrib/hbtip/test/tiptest.prg
+  * contrib/hbtip/popcln.prg
+    * fixed typos: "retreived vs retrieved"
+
 2008-09-05 16:54 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
   * contrib/hbbmcdx/bmdbfcdx.c
     ! fixed to not respect bitmap filters when structural order
