@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-05 16:54 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
+  * contrib/hbbmcdx/bmdbfcdx.c
+    ! fixed to not respect bitmap filters when structural order
+      is scanned, f.e. in OrdListAdd() with active bitmap filter.
+
+  * source/rtl/hbinet.c
+    ! fixed return value of HB_INETGETSNDBUFSIZE
+
 2008-09-05 15:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbffpt/dbffpt1.c
     ! fixed GPF introduced by today MSVC warning cleanup
