@@ -2,6 +2,208 @@
  * $Id$
  */
 
+Version 1.0.1 (2008-09-10)
+
+General
+=============================
+- Digital Marc C build fixed.
+- Debian, RPM packaging fixes.
+- Several code quality enhancements, warning fixes.
+- Doc quality fixes, formatting.
+- Fixed so that build-time PRG_USR always overrides 
+  default options in GNU-make.
+- Added openSUSE package requirements to doc/linux1st.txt.
+- Unnecessary compiler options and lib dependencies cleaned 
+  from processes.
+- Fixed Darwin (OS X) builds broken due to a change 
+  shortly before 1.0.0.
+- Non-critical filename casing related cleanups.
+- Non-ASCII chars stripped from several source files for 
+  better portability.
+- Added RDD regression test code.
+- Fixed potential buffer overruns in PP, GTCRS, GTPCA, 
+  GTSTD, hbfbird, hbwhat32.
+- Eliminated remaining non-safe string calls:
+  strncpy(), strcpy() -> hb_strncpy()
+  strncat(), strcat() -> hb_strncat()
+- Added major+minor version number to non-GNU make generated 
+  harbour.dlls. (harbour-vc.dll becomes harbour-10-vc.dll)
+- Some contrib name collisions fixed in non-GNU builds.
+- gtalleg GT moved to the contrib area to enable it for 
+  non-GNU builds and non-*nix builds in general.
+  Use HB_INC_ALLEGRO or HB_DIR_ALLEGRO (for non-GNU make only) 
+  to specify the location of the headers or the package 
+  (respectively).
+- Harbour compiler now defaults to -gc0 switch (was -gc2) to 
+  generate the smallest possible .c output by default.
+- Fixed to compile under Cygwin.
+- -mno-cygwin option removed from MinGW builds. You may 
+  need to readd this to C_USR, for very old MinGW compilers, 
+  like Cygnus MinGW32 2.95.
+- Fixed WinCE harbour.dll generation in non-GNU builds.
+- Fixed WinCE build warnings in non-GNU builds.
+- Synced build options between BCC/MSVC GNU make and 
+  non-GNU make.
+- Default HB_VISUALC_VER envvar value changed uniformly 
+  to 80 for both core and contrib and WinCE build in non-GNU make.
+  You may change you environment if you relied on the default.
+- Non-GNU MSVC WinCE builds are now integrated into mainstream 
+  non-GNU MSVC make. make_vcce.bat was removed. Please read 
+  instructions in make_vc.bat, how to initiate a WinCE build.
+- Now Harbour is able to build and run properly in MSVC C mode 
+  in AMD64 (64-bit) mode.
+- Added experimental Pelles C WinCE GNU-make file. It doesn't 
+  yet work properly.
+- Post batch file called from core non-GNU make files was 
+  renamed, please update your system if you're using them:
+  exit_err.bat -> hbmkpost.bat
+- Added experimental MSVC WinCE GNU-make file.
+- Added Darwin autodetection to non-GNU make files.
+- Changed GNU-make name of MinGW WinCE compiler (HB_COMPILER) 
+  from 'cemgw' to 'mingwce'. Please update your system, if 
+  you've been using this directly (and not via make_*ce.sh scripts).
+
+Core
+=============================
+- Added HB_LEGACY_LEVEL macro to control inclusion of 
+  certain deprecated Harbour elements. This macro is 
+  enabled by default, and will be disabled at 1.1. You 
+  can disable it now manually by #defining HB_LEGACY_LEVEL_OFF, 
+  in order to check what elements needs to be changed.
+- HB_DBG_*() internal functions moved to the internal 
+  function namespace __DBG*(). Some of these - potentially 
+  used by 3rd party packages - are still accessible under 
+  the old name, when HB_LEGACY_LEVEL is #defined.
+- Removed old __VM*() macros which were aliased to __DBG*()
+  functions.
+- Macro name change __EXPORT__ -> HB_DYNLIB
+  This shouldn't normally affect users, but if you happen 
+  to use it, please update it.
+- Some internal macro names changed as follows:
+  OS_UNIX_COMPATIBLE *                -> HB_OS_UNIX_COMPATIBLE
+  OS_DOS_COMPATIBLE                   -> !defined( HB_OS_UNIX_COMPATIBLE )
+  OS_PATH_LIST_SEPARATOR              -> HB_OS_PATH_LIST_SEP_CHR
+  OS_PATH_DELIMITER *                 -> HB_OS_PATH_DELIM_CHR
+  OS_PATH_DELIMITER_STRING            -> HB_OS_PATH_DELIM_STR
+  OS_PATH_DELIMITER_LIST              -> HB_OS_PATH_DELIM_LIST
+  OS_FILE_MASK                        -> HB_OS_ALLFILE_MASK
+  OS_DRIVE_DELIMITER                  -> HB_OS_DRIVE_DELIM_CHR
+  OS_HAS_DRIVE_LETTER                 -> HB_OS_HAS_DRIVE_LETTER
+  OS_OPT_DELIMITER_LIST               -> HB_OS_OPT_DELIM_LIST
+  OS_EOL_LEN                          -> HB_OS_EOL_LEN
+  HARBOUR_GCC_OS2                     -> HB_OS_OS2_GCC
+  HARBOUR_START_PROCEDURE             -> HB_START_PROCEDURE
+  HARBOUR_MAIN_STD                    -> HB_MAIN_STD
+  HARBOUR_MAIN_WIN                    -> HB_MAIN_WIN
+  HARBOUR_MAX_RDD_DRIVERNAME_LENGTH * -> HB_RDD_MAX_DRIVERNAME_LEN
+  HARBOUR_MAX_RDD_ALIAS_LENGTH *      -> HB_RDD_MAX_ALIAS_LEN
+  HARBOUR_MAX_RDD_AREA_NUM            -> HB_RDD_MAX_AREA_NUM
+  If you happen to use these, please update your code to use 
+  the new names. The more commonly used ones (marked with '*') 
+  are still available under the old name, covered with HB_LEGACY_LEVEL.
+- hbmake and hbdoc tools reduction in size, several 
+  fixes, better multiplaform support and lots of code cleanups, 
+  especially in hbmake (still a long way to go though).
+- Some names deprecated and replaced with new ones:
+  FHANDLE      -> HB_FHANDLE
+  EVALINFO     -> HB_EVALINFO
+  PEVALINFO    -> PHB_EVALINFO
+  EVALINFO_PTR -> marked as legacy
+  CLR_STRLEN   -> HB_CLRSTR_LEN
+  All of these are marked with HB_LEGACY_LEVEL.
+  Important to note that legacy Clipper compatible C
+  sources may continue to use Clipper compatible symbols, 
+  regardless of the HB_LEGACY_LEVEL setting. It's advised 
+  to change these to Harbour-only C sources in preparation 
+  to next Harbour major version.
+- Marked hb_fileNameConv() as HB_LEGACY_LEVEL. 3rd party 
+  and app developers should switch to hb_fsNameConv().
+- GTI_*, GFX_* macros marked HB_LEGACY_LEVEL. Pls use 
+  HB_GTI_*, HB_GFX_* versions.
+- Fixed potential buffer overrun in hb_fsTempName().
+- Debugger: Strip function name from module name used to initialize
+  global and file wide variables. It fixes presenting file wide 
+  static variables in debugger.
+- Removed hb_hInstance, hb_hPrevInstance, s_iCmdShow, s_WinMainParam 
+  old undocumented public variables. 3rd parties should use 
+  official hb_winmainArgGet() API to get these values.
+- Fixed _FIELD indirectly used as alias to generate the right RTE:
+  ? ("_FIELD")->NAME, or:
+  M->var := "_FIELD"; ? ("&var")->NAME
+- Fixed OS() to detect Vista/Windows 2008. This bug got 
+  introduced in 1.0.0rc2.
+- Fixed OS() string when run on Windows XP 64-bit Edition.
+- Changed HB_COMPILER() to always show 32/64-bit in the 
+  returned string.
+- Fixed GPFs and leaks when using -w3 switch.
+- Bad workaround added for Pelles C 5.00.1 in AMD64 to 
+  compile the Harbour 'inet' subsystem. It won't properly 
+  work, but it lets build the rest of Harbour.
+- PCRE lib upgraded to 7.8 RC1 (from 7.7)
+- Fixed dbInfo( DBI_POSITIONED ) returned value.
+- Fixed dirty index reading.
+
+Contrib
+=============================
+- hbmzip potential GPF fixed in executable type detection.
+- General code style fixes in certain contribs.
+- Harbour -km switch enabled for contribs.
+- hbmysql SQLFETCHR() function updated to allow fetching 
+  binary (BLOB) fields.
+- hbclipsm GAUGE*() function fixes.
+- gtalleg fixed to compile under several non-*nix platforms
+  (still needs more work).
+- xhb HB_ARRAYBLOCK() compatibility function added.
+- hbnf FT_GETE() function bad leak fixed on Win32 systems, 
+  and potential GPF on all systems.
+- hbwhat32 removed wintypes.ch header. Header with the same 
+  name and identical content can be found in xhb contrib.
+- hbct VOLUME() buffer overrun fixed.
+- hbole GPF fixed. This bug got introduced in 1.0.0rc2.
+- hbole, hbw32 64-bit fix for MESSAGEBOX() functions. It now 
+  allows for both pointer and numeric types to be passed as 
+  window handle.
+- hbwhat32 fixed to not define WinMain() and also not to 
+  collide with certain Harbour public symbols.
+- hbw32 unnecessary memory allocation hacks removed from 
+  OLE support.
+- Using ANSI C comments more consistently in contribs.
+- hbct / atnum.c changed to work around a compiler bug in 
+  Pelles C 5.00.1 in AMD64 mode.
+- hbole modified to generate RTE when OLE object cannot
+  be found, to be in sync with hbw32 OLE implementation.  
+- hbbtree fixed scope problem in class, causing an RTE.
+  Added build batch files for its tests.
+- Remaining code (hbwhat32, hbnf) fixed to always use 
+  Harbour C API, instead of legacy Clipper C API (*.api,
+  clipdefs.h and extend.h).
+- hbziparch heavy rework/refactor/reduce effort, what 
+  resulted in hbziparc, which implements the same old 
+  ZipArchive interface with similar functionality (except 
+  progress codeblock callbacks and .zip spanning feature), 
+  written in Harbour. If you need old Harbour ZipArchive 
+  API, please change hbziparch to hbziparc and link in 
+  hbmzip library, too. In contrary to old implementation, 
+  this new one is completely portable. This code could 
+  use some more testing, be aware.
+
+Known build issues
+=============================
+- Windows 64-bit builds may generate a large amount of type 
+  conversion warnings. This is currently normal and will be 
+  addressed in a future version.
+- Contrib hbfimage won't currently compile on Linux systems 
+  and with Open Watcom compilers. This will be addressed in 
+  a future version.
+- Contrib hbsqlit3 will not embed foreign sqlite3 library code 
+  for Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems. 
+  For these compilers you will have to supply sqlite3 library 
+  yourself. For other compilers, some warnings are expected and 
+  normal in this non-Harbour code.
+- Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions 
+  won't work.
+
+
 Version 1.0.0 (2008-08-10) tag: 1.0.0
 
 General

@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-05 04:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/whatsnew.txt
+     + Added 1.0.1 changes. Please review.
+       [1.0.1]
+
 2008-09-04 19:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbfntx/dbfntx1.c
     ! fixed typo in previous commit
