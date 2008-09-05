@@ -419,7 +419,7 @@ static void GDImageSaveTo( int nType )
    {
       gdImagePtr im;
       char *szFile;
-      int sz;
+      int sz = 0;
       void *iptr = NULL;
       HB_FHANDLE fhandle;
       int level = 0, fg = 0;
@@ -490,28 +490,28 @@ static void GDImageSaveTo( int nType )
          fg = hb_parni( 3 );
       }
 
-      switch ( nType )
+      switch( nType )
       {
-        case IMAGE_JPEG  :
-             /* Get image Ptr */
-             iptr = gdImageJpegPtr (im, &sz, level);
-             break;
-        case IMAGE_GIF   :
-             /* Get image Ptr */
-             iptr = gdImageGifPtr (im, &sz);
-             break;
-        case IMAGE_PNG   :
-             /* Get image Ptr */
-             iptr = gdImagePngPtrEx (im, &sz, level);
-             break;
-        case IMAGE_WBMP  :
-             /* Get image Ptr */
-             iptr = gdImageWBMPPtr (im, &sz, fg);
-             break;
-        case IMAGE_GD    :
-             /* Get image Ptr */
-             iptr = gdImageGdPtr (im, &sz);
-             break;
+      case IMAGE_JPEG  :
+           /* Get image Ptr */
+           iptr = gdImageJpegPtr( im, &sz, level );
+           break;
+      case IMAGE_GIF   :
+           /* Get image Ptr */
+           iptr = gdImageGifPtr( im, &sz );
+           break;
+      case IMAGE_PNG   :
+           /* Get image Ptr */
+           iptr = gdImagePngPtrEx( im, &sz, level );
+           break;
+      case IMAGE_WBMP  :
+           /* Get image Ptr */
+           iptr = gdImageWBMPPtr( im, &sz, fg );
+           break;
+      case IMAGE_GD    :
+           /* Get image Ptr */
+           iptr = gdImageGdPtr( im, &sz );
+           break;
       }
 
       /* If i get a file name */
@@ -519,7 +519,6 @@ static void GDImageSaveTo( int nType )
       {
          szFile = hb_parcx( 2 );
          SaveImageToFile( szFile, iptr, sz );
-
       }
 
       /* Write to file handle (1 = std output) */

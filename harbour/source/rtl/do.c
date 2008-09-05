@@ -65,7 +65,7 @@
 
 HB_FUNC( DO )
 {
-   USHORT uiPCount = hb_pcount();
+   USHORT uiPCount = ( USHORT ) hb_pcount();
 
    if( uiPCount > 0 )
    {

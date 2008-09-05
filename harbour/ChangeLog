@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-05 20:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/debug/dbgentry.c
+   * source/rtl/do.c
+   * source/rtl/xhelp.c
+   * contrib/xhb/freadlin.c
+   * contrib/hbw32/w32_prn.c
+   * contrib/rddads/ads1.c
+   * contrib/hbgd/gdwrp.c
+   * contrib/hbtip/encmthd.c
+   * utils/hbdoc/hbdfrdln.c
+   * utils/hbmake/hbmfrdln.c
+     ! Fixed some more MSVS 2008 -W4 warnings.
+
 2008-09-05 18:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbapollo/apollo.c
    * contrib/hbclipsm/gauge.c

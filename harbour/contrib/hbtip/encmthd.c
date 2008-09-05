@@ -59,30 +59,30 @@
 
 HB_FUNC( TIPENCODERBASE64_ENCODE )
 {
-   char *cData = hb_parc(1);
+   char *cData = hb_parc( 1 );
    char *cRet;
-   int nLen = hb_parclen(1);
+   int nLen = hb_parclen( 1 );
    int nPos = 0, nPosRet = 0;
    int nPosBlock = 0, nLineCount = 0;
    ULONG nFinalLen;
    unsigned char cElem, cElem1;
    BOOL bExcept;
 
-   if ( ! cData )
+   if( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         HB_ERR_FUNCNAME, 1, hb_paramError(1) );
+         HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
       return;
    }
 
-   if ( ! nLen )
+   if( ! nLen )
    {
       hb_retc( NULL );
       return;
    }
 
    /* read the status of bHttpExcept */
-   if ( hb_pcount() > 1 )
+   if( hb_pcount() > 1 )
    {
       /* this makes this function static!!!! */
       bExcept = hb_parl( 2 );
@@ -96,9 +96,9 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
    nFinalLen = (ULONG) ((nLen / 3 + 2) * 4);
    /* add line termination padding, CRLF each 76 output bytes */
    nFinalLen += (nFinalLen / 72 +1) * 2;
-   cRet = (char *) hb_xgrab( nFinalLen );
+   cRet = ( char * ) hb_xgrab( nFinalLen );
 
-   while ( nPos < nLen )
+   while( nPos < nLen )
    {
       cElem = (unsigned char) cData[ nPos ];
       /* NOT using trailing 0 here as some buggy 3dparty func
@@ -128,19 +128,19 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
             break;
       }
 
-      if ( cElem < 26 )
+      if( cElem < 26 )
       {
          cRet[nPosRet++] = cElem + 'A';
       }
-      else if ( cElem < 52 )
+      else if( cElem < 52 )
       {
          cRet[nPosRet++] = ( cElem - 26 ) + 'a';
       }
-      else if ( cElem < 62 )
+      else if( cElem < 62 )
       {
          cRet[nPosRet++] = ( cElem - 52 ) + '0';
       }
-      else if ( cElem == 62 )
+      else if( cElem == 62 )
       {
          cRet[nPosRet++] = '+';
       }
@@ -149,13 +149,13 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
          cRet[nPosRet++] = '/';
       }
 
-      if ( ! bExcept )
+      if( ! bExcept )
       {
          nLineCount ++ ;
          /* RFC says to add a CRLF each 76 chars, but is pretty unclear about
             the fact of this 76 chars counting CRLF or not. Common
             practice is to limit line size to 72 chars */
-         if ( nLineCount == 72 )
+         if( nLineCount == 72 )
          {
             cRet[nPosRet++] = '\r';
             cRet[nPosRet++] = '\n';
@@ -176,7 +176,7 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
 
    /* RFC is not explicit, but CRLF SHOULD be added at bottom
       during encoding phase */
-   if ( ! bExcept )
+   if( ! bExcept )
    {
       cRet[nPosRet++] = '\r';
       cRet[nPosRet++] = '\n';
@@ -188,20 +188,20 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
 
 HB_FUNC( TIPENCODERBASE64_DECODE )
 {
-   char *cData = hb_parc(1);
+   char *cData = hb_parc( 1 );
    unsigned char *cRet;
-   int nLen = hb_parclen(1);
+   int nLen = hb_parclen( 1 );
    int nPos = 0, nPosRet = 0, nPosBlock = 0;
    unsigned char cElem;
 
-   if ( ! cData )
+   if( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         HB_ERR_FUNCNAME, 1, hb_paramError(1) );
+         HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
       return;
    }
 
-   if ( ! nLen )
+   if( ! nLen )
    {
       hb_retc( NULL );
       return;
@@ -209,34 +209,34 @@ HB_FUNC( TIPENCODERBASE64_DECODE )
 
 
    /* we know exactly the renturned length. */
-   cRet = (unsigned char *) hb_xgrab( (nLen / 4 + 1) * 3 );
+   cRet = ( unsigned char * ) hb_xgrab( (nLen / 4 + 1) * 3 );
 
-   while ( nPos < nLen )
+   while( nPos < nLen )
    {
       cElem = cData[ nPos ];
 
-      if ( cElem >= 'A' && cElem <= 'Z' )
+      if( cElem >= 'A' && cElem <= 'Z' )
       {
          cElem -= 'A';
       }
-      else if ( cElem >= 'a' && cElem <= 'z' )
+      else if( cElem >= 'a' && cElem <= 'z' )
       {
          cElem = cElem - 'a' + 26;
       }
-      else if ( cElem >= '0' && cElem <= '9' )
+      else if( cElem >= '0' && cElem <= '9' )
       {
          cElem = cElem - '0' + 52;
       }
-      else if ( cElem == '+' )
+      else if( cElem == '+' )
       {
          cElem = 62;
       }
-      else if ( cElem == '/' )
+      else if( cElem == '/' )
       {
          cElem = 63;
       }
       /* end of stream? */
-      else if ( cElem == '=' )
+      else if( cElem == '=' )
       {
          break;
       }
@@ -279,43 +279,43 @@ HB_FUNC( TIPENCODERBASE64_DECODE )
 
    /* this function also adds a zero */
    /* hopefully reduce the size of cRet */
-   cRet = (unsigned char *) hb_xrealloc( cRet, nPosRet + 1 );
-   hb_retclen_buffer( (char *)cRet, nPosRet );
+   cRet = ( unsigned char * ) hb_xrealloc( cRet, nPosRet + 1 );
+   hb_retclen_buffer( ( char * ) cRet, nPosRet );
 }
 
 HB_FUNC( TIPENCODERQP_ENCODE )
 {
-   char *cData = hb_parc(1);
-   int nLen = hb_parclen(1);
+   char *cData = hb_parc( 1 );
+   int nLen = hb_parclen( 1 );
    char *cRet;
    unsigned char cElem;
    int nVal, iLineLen = 0;
    int nPosRet = 0, nPos = 0;
 
-   if ( ! cData )
+   if( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         HB_ERR_FUNCNAME, 1, hb_paramError(1) );
+         HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
       return;
    }
 
-   if ( ! nLen )
+   if( ! nLen )
    {
       hb_retc( NULL );
       return;
    }
 
    /* Preallocating maximum possible length */
-   cRet = (char *) hb_xgrab( nLen * 3 + ( nLen/72 ) *3 + 3 );
+   cRet = ( char * ) hb_xgrab( nLen * 3 + ( nLen/72 ) *3 + 3 );
    /* last +3 is trailing \r\n\0 */
-   while ( nPos < nLen )
+   while( nPos < nLen )
    {
       cElem = (unsigned char) cData[ nPos ];
 
       /* We chose not to encode spaces and tab here.
          cElem is signed and ranges from -126 to +127.
          negative values are automatically encoded */
-      if ( (cElem >=33 && cElem <= 60) || cElem >= 62 ||
+      if( (cElem >=33 && cElem <= 60) || cElem >= 62 ||
          cElem == 9 || cElem == 32 )
       {
          cRet[nPosRet++] = (char) cElem;
@@ -333,7 +333,7 @@ HB_FUNC( TIPENCODERQP_ENCODE )
 
       nPos++;
 
-      if ( iLineLen >= 72 )
+      if( iLineLen >= 72 )
       {
          cRet[nPosRet++] = '=';
          cRet[nPosRet++] = '\r';
@@ -344,7 +344,7 @@ HB_FUNC( TIPENCODERQP_ENCODE )
 
    /* Securing last line trailing space, if needed */
    cElem = (unsigned char) cRet[nPosRet - 1];
-   if ( cElem == 9 || cElem == 32 )
+   if( cElem == 9 || cElem == 32 )
    {
       cRet[nPosRet++] = '=';
       cRet[nPosRet++] = '\r';
@@ -353,26 +353,26 @@ HB_FUNC( TIPENCODERQP_ENCODE )
    /* Adding canonical new line for RFC2045 blocks */
 
    /* this function also adds a zero */
-   cRet = (char *) hb_xrealloc( cRet, nPosRet + 1 );
+   cRet = ( char * ) hb_xrealloc( cRet, nPosRet + 1 );
    hb_retclen_buffer( cRet, nPosRet );
 }
 
 HB_FUNC( TIPENCODERQP_DECODE )
 {
-   char *cData = hb_parc(1);
-   int nLen = hb_parclen(1);
+   char *cData = hb_parc( 1 );
+   int nLen = hb_parclen( 1 );
    char *cRet;
    int nPos = 0, nPosRet = 0, nVal;
    unsigned char cElem, cCipher;
 
-   if ( ! cData )
+   if( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         HB_ERR_FUNCNAME, 1, hb_paramError(1) );
+         HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
       return;
    }
 
-   if ( ! nLen )
+   if( ! nLen )
    {
       hb_retc( NULL );
       return;
@@ -380,19 +380,19 @@ HB_FUNC( TIPENCODERQP_DECODE )
 
 
    /* allocate maximum possible lenght. */
-   cRet = (char *) hb_xgrab( nLen + 1 );
+   cRet = ( char * ) hb_xgrab( nLen + 1 );
 
-   while ( nPos < nLen )
+   while( nPos < nLen )
    {
       cElem = (unsigned char) cData[ nPos ];
 
-      if ( cElem == '=' )
+      if( cElem == '=' )
       {
-         if ( nPos < nLen - 2 )
+         if( nPos < nLen - 2 )
          {
             cCipher = (unsigned char) cData[ ++nPos ];
             /* soft line break */
-            if ( cCipher == '\r' )
+            if( cCipher == '\r' )
             {
                nPos += 2;
                continue;
@@ -413,7 +413,7 @@ HB_FUNC( TIPENCODERQP_DECODE )
          /* else the encoding is malformed */
          else
          {
-            if (nPosRet > 0 )
+            if(nPosRet > 0 )
             {
                break;
             }
@@ -429,49 +429,49 @@ HB_FUNC( TIPENCODERQP_DECODE )
 
    /* this function also adds a zero */
    /* hopefully reduce the size of cRet */
-   cRet = (char *) hb_xrealloc( cRet, nPosRet + 1 );
+   cRet = ( char * ) hb_xrealloc( cRet, nPosRet + 1 );
    hb_retclen_buffer( cRet, nPosRet );
 }
 
 HB_FUNC( TIPENCODERURL_ENCODE )
 {
-   char *cData = hb_parc(1);
-   int nLen = hb_parclen(1);
-   BOOL bComplete = hb_parl(2);
+   char *cData = hb_parc( 1 );
+   int nLen = hb_parclen( 1 );
+   BOOL bComplete = hb_parl( 2 );
    char *cRet;
    int nPos = 0, nPosRet = 0, nVal;
    char cElem;
    
-   if ( hb_pcount() < 2 )
+   if( hb_pcount() < 2 )
    {
       bComplete = TRUE;
    }
 
-   if ( ! cData )
+   if( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         HB_ERR_FUNCNAME, 1, hb_paramError(1) );
+         HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
       return;
    }
 
-   if ( ! nLen )
+   if( ! nLen )
    {
       hb_retc( NULL );
       return;
    }
 
    /* Giving maximum final length possible */
-   cRet = (char *) hb_xgrab( nLen * 3 +1);
+   cRet = ( char * ) hb_xgrab( nLen * 3 + 1 );
 
-   while ( nPos < nLen )
+   while( nPos < nLen )
    {
       cElem = cData[ nPos ];
 
-      if ( cElem == ' ' )
+      if( cElem == ' ' )
       {
          cRet[ nPosRet ] = '+';
       }
-      else if (
+      else if(
          (cElem >= 'A' && cElem <= 'Z') ||
          (cElem >= 'a' && cElem <= 'z') ||
          (cElem >= '0' && cElem <= '9') ||
@@ -480,17 +480,17 @@ HB_FUNC( TIPENCODERURL_ENCODE )
       {
          cRet[ nPosRet ] = cElem;
       }
-      else if ( ! bComplete && ( cElem == ':' || cElem == '?' || cElem == '=' ) )
+      else if( ! bComplete && ( cElem == ':' || cElem == '?' || cElem == '=' ) )
       {
          cRet[ nPosRet ] = cElem;
       }
       else /* encode! */
       {
-         cRet[ nPosRet++] = '%';
-         nVal = ((unsigned char) cElem) >> 4;
-         cRet[ nPosRet++] = nVal < 10 ? '0' + nVal : 'A' + nVal - 10;
-         nVal = ((unsigned char) cElem) & 0x0f;
-         cRet[ nPosRet ] = nVal < 10 ? '0' + nVal : 'A' + nVal - 10;
+         cRet[ nPosRet++ ] = '%';
+         nVal = ( ( unsigned char ) cElem ) >> 4;
+         cRet[ nPosRet++ ] = nVal < 10 ? '0' + ( char ) nVal : 'A' + ( char ) nVal - 10;
+         nVal = ( ( unsigned char ) cElem ) & 0x0F;
+         cRet[ nPosRet ] = nVal < 10 ? '0' + ( char ) nVal : 'A' + ( char ) nVal - 10;
       }
 
       nPosRet++;
@@ -502,20 +502,20 @@ HB_FUNC( TIPENCODERURL_ENCODE )
 
 HB_FUNC( TIPENCODERURL_DECODE )
 {
-   char *cData = hb_parc(1);
-   int nLen = hb_parclen(1);
+   char *cData = hb_parc( 1 );
+   int nLen = hb_parclen( 1 );
    char *cRet;
    int nPos = 0, nPosRet = 0;
    char cElem;
 
-   if ( ! cData )
+   if( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         HB_ERR_FUNCNAME, 1, hb_paramError(1) );
+         HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
       return;
    }
 
-   if ( ! nLen )
+   if( ! nLen )
    {
       hb_retc( NULL );
       return;
@@ -523,19 +523,19 @@ HB_FUNC( TIPENCODERURL_DECODE )
 
 
    /* maximum possible lenght */
-   cRet = (char *) hb_xgrab( nLen );
+   cRet = ( char * ) hb_xgrab( nLen );
 
-   while ( nPos < nLen )
+   while( nPos < nLen )
    {
       cElem = cData[ nPos ];
 
-      if ( cElem == '+' )
+      if( cElem == '+' )
       {
          cRet[ nPosRet ] = ' ';
       }
-      else if ( cElem == '%' )
+      else if( cElem == '%' )
       {
-         if ( nPos < nLen - 2 )
+         if( nPos < nLen - 2 )
          {
             cElem = cData[ ++nPos ];
             cRet[ nPosRet ] = cElem < 'A' ? cElem - '0' : cElem - 'A' + 10;
@@ -546,7 +546,7 @@ HB_FUNC( TIPENCODERURL_DECODE )
          }
          else
          {
-            if (nPosRet > 0 )
+            if( nPosRet > 0 )
             {
                break;
             }
@@ -563,6 +563,6 @@ HB_FUNC( TIPENCODERURL_DECODE )
 
    /* this function also adds a zero */
    /* hopefully reduce the size of cRet */
-   cRet = (char *) hb_xrealloc( cRet, nPosRet + 1 );
+   cRet = ( char * ) hb_xrealloc( cRet, nPosRet + 1 );
    hb_retclen_buffer( cRet, nPosRet );
 }

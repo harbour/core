@@ -190,7 +190,7 @@ HB_FUNC( HB_FREADLINE )
       if( ISARRAY( 3 ) )
       {
          pTerm1 = hb_param( 3, HB_IT_ARRAY );
-         iTerms = ( int ) hb_arrayLen( pTerm1 );
+         iTerms = ( USHORT ) hb_arrayLen( pTerm1 );
 
          if( iTerms <= 0 )
          {

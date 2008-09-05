@@ -1038,8 +1038,8 @@ hb_dbgEvalSubstituteVar( HB_WATCHPOINT *watch, char *szWord, int nStart, int nLe
    t = (char *) ALLOC( strlen( watch->szExpr ) - nLen + 9 + 1 );
    memmove( t, watch->szExpr, nStart );
    memmove( t + nStart, "__dbg[", 6 );
-   t[ nStart + 6 ] = '0' + ( ( j + 1 ) / 10 );
-   t[ nStart + 7 ] = '0' + ( ( j + 1 ) % 10 );
+   t[ nStart + 6 ] = '0' + ( char ) ( ( j + 1 ) / 10 );
+   t[ nStart + 7 ] = '0' + ( char ) ( ( j + 1 ) % 10 );
    t[ nStart + 8 ] = ']';
    strcpy( t + nStart + 9, watch->szExpr + nStart + nLen );
    FREE( watch->szExpr );

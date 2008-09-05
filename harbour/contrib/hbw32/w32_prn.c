@@ -471,7 +471,7 @@ HB_FUNC( WIN32_LOADBITMAPFILE )
 {
    char * pstrFileName = hb_parc( 1 );
    BOOL bSuccess = FALSE;
-   DWORD dwFileSize, dwHighSize, dwBytesRead;
+   DWORD dwFileSize = 0, dwHighSize, dwBytesRead;
    HANDLE hFile;
    BITMAPFILEHEADER *pbmfh = NULL;
 

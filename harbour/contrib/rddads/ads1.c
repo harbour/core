@@ -115,13 +115,13 @@ static void adsSetListener_callback( HB_set_enum setting, HB_set_listener_enum w
             AdsSetDefault( ( UNSIGNED8 * ) hb_setGetCPtr( HB_SET_DEFAULT ) );
             break;
          case HB_SET_DELETED    :
-            AdsShowDeleted( ! hb_setGetL( HB_SET_DELETED ) );
+            AdsShowDeleted( ( UNSIGNED16 ) ! hb_setGetL( HB_SET_DELETED ) );
             break;
          case HB_SET_EPOCH      :
-            AdsSetEpoch( hb_setGetNI( HB_SET_EPOCH ) );
+            AdsSetEpoch( ( UNSIGNED16 ) hb_setGetNI( HB_SET_EPOCH ) );
             break;
          case HB_SET_EXACT      :
-            AdsSetExact( hb_setGetL( HB_SET_EXACT ) );
+            AdsSetExact( ( UNSIGNED16 ) hb_setGetL( HB_SET_EXACT ) );
             break;
          case HB_SET_PATH       :
             AdsSetSearchPath( ( UNSIGNED8 * ) hb_setGetCPtr( HB_SET_PATH ) );
@@ -154,9 +154,9 @@ static void adsSetSend( void )
 
    AdsSetDateFormat( ( UNSIGNED8 * ) hb_setGetCPtr( HB_SET_DATEFORMAT ) );
    AdsSetDefault( ( UNSIGNED8 * ) hb_setGetCPtr( HB_SET_DEFAULT ) );
-   AdsShowDeleted( ! hb_setGetL( HB_SET_DELETED ) );
-   AdsSetEpoch( hb_setGetNI( HB_SET_EPOCH ) );
-   AdsSetExact( hb_setGetL( HB_SET_EXACT ) );
+   AdsShowDeleted( ( UNSIGNED16 ) ! hb_setGetL( HB_SET_DELETED ) );
+   AdsSetEpoch( ( UNSIGNED16 ) hb_setGetNI( HB_SET_EPOCH ) );
+   AdsSetExact( ( UNSIGNED16 ) hb_setGetL( HB_SET_EXACT ) );
    AdsSetSearchPath( ( UNSIGNED8 * ) hb_setGetCPtr( HB_SET_PATH ) );
    AdsSetDecimals( ( UNSIGNED16 ) hb_setGetNI( HB_SET_DECIMALS ) );
 }
@@ -1012,7 +1012,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
    if( pArea->dbfi.itmCobExpr && !pArea->dbfi.fOptimized && !pArea->fEof )
    {
       /* Remember FOUND flag for updating after SKIPFILTER() */
-      u16Found = pArea->fFound;
+      u16Found = ( UNSIGNED16 ) pArea->fFound;
 
       if( u16Found && u16KeyLen > 0 )
       {
@@ -1079,7 +1079,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
                if( u16SavedKeyLen == 0 )
                   u16Found = FALSE;
                else
-                  u16Found = adsIndexKeyCmp( pArea->hOrdCurrent, pucSavedKey, u16SavedKeyLen );
+                  u16Found = ( UNSIGNED16 ) adsIndexKeyCmp( pArea->hOrdCurrent, pucSavedKey, u16SavedKeyLen );
             }
          }
       }
@@ -2282,7 +2282,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          {
             bTypeError = FALSE;
             *szText = hb_itemGetL( pItem ) ? 'T' : 'F';
-            ulRetVal = AdsSetLogical( pArea->hTable, ADSFIELD( uiIndex ), hb_itemGetL( pItem ) );
+            ulRetVal = AdsSetLogical( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED16 ) hb_itemGetL( pItem ) );
          }
          break;
 
@@ -2632,11 +2632,16 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    }
    *ucfieldPtr = '\0';
 
-   uRetVal = AdsCreateTable( hConnection, pCreateInfo->abName, pCreateInfo->atomAlias,
-                             pArea->iFileType, hb_ads_iCharType,
-                             hb_ads_iLockType, hb_ads_iCheckRights,
-                             hb_setGetNI( HB_SET_MBLOCKSIZE ),
-                             ucfieldDefs, &hTable );
+   uRetVal = AdsCreateTable( hConnection, 
+                             pCreateInfo->abName,
+                             pCreateInfo->atomAlias,
+                             ( UNSIGNED16 ) pArea->iFileType,
+                             ( UNSIGNED16 ) hb_ads_iCharType,
+                             ( UNSIGNED16 ) hb_ads_iLockType,
+                             ( UNSIGNED16 ) hb_ads_iCheckRights,
+                             ( UNSIGNED16 ) hb_setGetNI( HB_SET_MBLOCKSIZE ),
+                             ucfieldDefs,
+                             &hTable );
    hb_xfree( ucfieldDefs );
 
    if( uRetVal != AE_SUCCESS )
@@ -2910,7 +2915,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
          if( pArea->iFileType == ADS_CDX )
 #endif
          {
-            AdsStmtSetTableType( hStatement, pArea->iFileType );
+            AdsStmtSetTableType( hStatement, ( UNSIGNED16 ) pArea->iFileType );
          }
 
          u32RetVal = AdsExecuteSQLDirect( hStatement, ( UNSIGNED8 * ) szSQL, &hTable );
@@ -2936,9 +2941,12 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       do
       {
          u32RetVal = AdsOpenTable( hConnection,
-                        pOpenInfo->abName, pOpenInfo->atomAlias,
-                        (fDictionary ? ADS_DEFAULT : pArea->iFileType),
-                        hb_ads_iCharType, hb_ads_iLockType, hb_ads_iCheckRights,
+                        pOpenInfo->abName,
+                        pOpenInfo->atomAlias,
+                        ( fDictionary ? ADS_DEFAULT : ( UNSIGNED16 ) pArea->iFileType),
+                        ( UNSIGNED16 ) hb_ads_iCharType,
+                        ( UNSIGNED16 ) hb_ads_iLockType,
+                        ( UNSIGNED16 ) hb_ads_iCheckRights,
                         ( pOpenInfo->fShared ? ADS_SHARED : ADS_EXCLUSIVE ) |
                         ( pOpenInfo->fReadonly ? ADS_READONLY : ADS_DEFAULT ),
                         &hTable );
@@ -3307,7 +3315,7 @@ static ERRCODE adsForceRel( ADSAREAP pArea )
 
 static ERRCODE adsSetRel( ADSAREAP pArea, LPDBRELINFO  lpdbRelations )
 {
-   UNSIGNED32 ulRetVal = ~AE_SUCCESS;
+   UNSIGNED32 ulRetVal = ( UNSIGNED32 ) ~AE_SUCCESS;
    UNSIGNED8 *szExp;
    USHORT rddID;
 
@@ -4675,7 +4683,7 @@ static void adsRegisterRDD( USHORT * pusRddId )
 
    uiCount = ( USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
-   uiRddId = hb_parni( 4 );
+   uiRddId = ( USHORT ) hb_parni( 4 );
 
    if( pTable )
    {
@@ -4843,7 +4851,7 @@ HB_FUNC( ADSCUSTOMIZEAOF )
    ADSAREAP   pArea;
    ULONG      ulRecord = 0;
    UNSIGNED32 u32NumRecs = 0;
-   UNSIGNED32 u32RetVal = ~AE_SUCCESS;   /* initialize to something other than success */
+   UNSIGNED32 u32RetVal = ( UNSIGNED32 ) ~AE_SUCCESS;   /* initialize to something other than success */
    UNSIGNED16 u16Option = ADS_AOF_ADD_RECORD;
    UNSIGNED32 * pu32Records;
 
@@ -4851,7 +4859,7 @@ HB_FUNC( ADSCUSTOMIZEAOF )
    if( pArea )
    {
       if( ISNUM( 2 ) )                  /* add, delete or toggle */
-         u16Option = hb_parni( 2 );
+         u16Option = ( UNSIGNED16 ) hb_parni( 2 );
 
       if( ISNIL( 1 ) )                  /* default to current record */
       {
