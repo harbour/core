@@ -224,7 +224,7 @@ char * hb_verPlatform( void )
 
                if( osVer.dwMajorVersion == 6 )
                {
-#if !defined(HB_WINCE) && (!defined(_MSC_VER) || _MSC_VER >= 1400)
+#if !defined(HB_WINCE) && !defined(__DMC__) && (!defined(_MSC_VER) || _MSC_VER >= 1400)
                   OSVERSIONINFOEXA osVerEx;
 
                   osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );

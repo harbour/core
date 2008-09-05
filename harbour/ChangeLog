@@ -8,6 +8,37 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-05 12:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/common/hbver.c
+     ! Version detection fixed for __DMC__
+       [TOMERGE 1.0.1]
+
+   * contrib/mtpl_gcc.mak
+     % One unnecessary C -I option deleted.
+       [TOMERGE 1.0.1]
+
+   - contrib/hbsqlit2
+   + contrib/examples/hbsqlit2
+   * doc/whatsnew.txt
+     * Moved hbsqlit2 to examples.
+       [TOMERGE 1.0.1]
+
+   * contrib/examples/hbsqlit2/Makefile
+   * contrib/examples/hbsqlit2/make_b32.bat
+   * contrib/examples/hbsqlit2/make_gcc.sh
+   * contrib/examples/hbsqlit2/make_vc.bat
+   * contrib/examples/hbsqlit2/common.mak
+   * contrib/examples/hbsqlit2/tests/bld_b32.bat
+   * contrib/examples/hbsqlit2/tests/bld_vc.bat
+     * Modified make files to work from the new location.
+     * Location of sqlite2 headers can be specified by HB_INC_SQLITE2.
+     ; Notice that sqlite2 lib itself should now be build separately.
+       [TOMERGE 1.0.1]
+
+2008-09-05 11:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/common/hbver.c
+     ! Version detection fixed for __DMC__.
+
 2008-09-05 11:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/mtpl_vc.mak
      - Removed recently (and mistakenly) added unnecessary option.

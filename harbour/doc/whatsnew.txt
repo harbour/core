@@ -177,6 +177,8 @@ Contrib
 - Remaining code (hbwhat32, hbnf) fixed to always use 
   Harbour C API, instead of legacy Clipper C API (*.api,
   clipdefs.h and extend.h).
+- hbsqlit2 lib was moved to examples and sqlite2 sources 
+  removed. Please use hbsqlit3 instead.
 - hbziparch heavy rework/refactor/reduce effort, what 
   resulted in hbziparc, which implements the same old 
   ZipArchive interface with similar functionality (except 

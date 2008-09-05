@@ -126,7 +126,7 @@ ifndef GCC_NOOPTIM
 CFLAGS         := -O3 $(CFLAGS)
 endif
 
-CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
+CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)
 CLIBFLAGS      := -c $(CFLAGS) $(CLIBFLAGS)
 HARBOURFLAGS   := -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -km $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        := $(LDFLAGS)
