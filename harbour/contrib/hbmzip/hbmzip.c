@@ -949,12 +949,12 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
             FILETIME    ftutc, ft;
             SYSTEMTIME  st;
             
-            st.wSecond = ufi.tmu_date.tm_sec;
-            st.wMinute = ufi.tmu_date.tm_min;
-            st.wHour = ufi.tmu_date.tm_hour;
-            st.wDay = ufi.tmu_date.tm_mday;
-            st.wMonth = ufi.tmu_date.tm_mon + 1;
-            st.wYear = ufi.tmu_date.tm_year;
+            st.wSecond = ( WORD ) ufi.tmu_date.tm_sec;
+            st.wMinute = ( WORD ) ufi.tmu_date.tm_min;
+            st.wHour = ( WORD ) ufi.tmu_date.tm_hour;
+            st.wDay = ( WORD ) ufi.tmu_date.tm_mday;
+            st.wMonth = ( WORD ) ufi.tmu_date.tm_mon + 1;
+            st.wYear = ( WORD ) ufi.tmu_date.tm_year;
             st.wMilliseconds = 0;
 
             if( SystemTimeToFileTime( &st, &ft ) &&

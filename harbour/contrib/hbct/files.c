@@ -248,15 +248,15 @@ HB_FUNC( SETFDATI )
                GetLocalTime( &st );
             if( pDate )
             {
-               st.wYear = year;
-               st.wMonth = month;
-               st.wDay = day;
+               st.wYear = ( WORD ) year;
+               st.wMonth = ( WORD ) month;
+               st.wDay = ( WORD ) day;
             }
             if( pTime )
             {
-               st.wHour = hour;
-               st.wMinute = minute;
-               st.wSecond = second;
+               st.wHour = ( WORD ) hour;
+               st.wMinute = ( WORD ) minute;
+               st.wSecond = ( WORD ) second;
             }
             SystemTimeToFileTime( &st, &local_ft );
             LocalFileTimeToFileTime( &local_ft, &ft );

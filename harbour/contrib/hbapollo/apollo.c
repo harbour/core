@@ -110,10 +110,10 @@ HB_FUNC( SX_CREATEEXEC )
  * --------------------------------------------------*/
 HB_FUNC( SX_CREATEFIELD )
 {
-   sx_CreateField( ( PBYTE ) hb_parc( 1 ), /* Field name */
-                   ( PBYTE ) hb_parc( 2 ), /* Field type */
-                   hb_parni( 3 ),          /* Field lenght */
-                   hb_parni( 4 ) );        /* Field decimals */
+   sx_CreateField( ( PBYTE ) hb_parc( 1 ),    /* Field name */
+                   ( PBYTE ) hb_parc( 2 ),    /* Field type */
+                   ( SHORT ) hb_parni( 3 ),   /* Field lenght */
+                   ( SHORT ) hb_parni( 4 ) ); /* Field decimals */
 }
 
 
@@ -124,10 +124,10 @@ HB_FUNC( SX_CREATEFIELD )
 HB_FUNC( SX_CREATENEW )
 {
    hb_retni(
-      sx_CreateNew( ( PBYTE ) hb_parc( 1 ), /* Field name */
-                    ( PBYTE ) hb_parc( 2 ), /* Alias */
-                    hb_parni( 3 ),          /* RDE Type */
-                    hb_parni( 4 ) ) );      /* The maximum number of fields to be added to the file structure */
+      sx_CreateNew( ( PBYTE ) hb_parc( 1 ),      /* Field name */
+                    ( PBYTE ) hb_parc( 2 ),      /* Alias */
+                    ( SHORT ) hb_parni( 3 ),     /* RDE Type */
+                    ( SHORT ) hb_parni( 4 ) ) ); /* The maximum number of fields to be added to the file structure */
 }
 
 
@@ -216,7 +216,7 @@ HB_FUNC( SX_INDEXTAG )
       sx_IndexTag( ( PBYTE ) hb_parc( 1 ),    /* Field name */
                    ( PBYTE ) hb_parc( 2 ),    /* Tag name */
                    ( PBYTE ) hb_parc( 3 ),    /* Index expression as a string */
-                   hb_parni( 4 ),             /* Option (0=Standard) (1=Unique) (2=Roll-Your-Own) */
+                   ( SHORT ) hb_parni( 4 ),   /* Option (0=Standard) (1=Unique) (2=Roll-Your-Own) */
                    hb_parl( 5 ),              /* True for a descend index */
                    ( PBYTE ) hb_parc( 6) ) ); /* Condition */
 }
@@ -257,13 +257,13 @@ HB_FUNC( SX_REPLACE )
    switch( hb_parni( 2 ) )
    {
       case R_INTEGER :
-      case R_JULIAN  : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parni( 3) );  break;
-      case R_LOGICAL : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parni( 3) );  break;  /* TODO: somthing is wrong here... */
-      case R_LONG    : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parnl( 3) );  break;
+      case R_JULIAN  : sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parni( 3 ) );  break;
+      case R_LOGICAL : sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parni( 3 ) );  break;  /* TODO: somthing is wrong here... */
+      case R_LONG    : sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parnl( 3 ) );  break;
       case R_DOUBLE  :
            {
               double d = hb_parnd( 3 );
-              sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) &d );
+              sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) &d );
               break;
            }
       case R_CHAR    :
@@ -271,8 +271,8 @@ HB_FUNC( SX_REPLACE )
       case R_MEMO    :
       case R_BITMAP  :
       case R_BLOBFILE:
-      case R_BLOBPTR : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3) );  break;
-      default:         sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3) );
+      case R_BLOBPTR : sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parc( 3 ) );  break;
+      default:         sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parc( 3 ) );
    }
 }
 
@@ -313,7 +313,7 @@ HB_FUNC( SX_SELECT )
  * --------------------------------------------------*/
 HB_FUNC( SX_SETCENTURY )
 {
-   sx_SetCentury( hb_parl( 1 ) );         /* If True, the century digits will be returned.
+   sx_SetCentury( hb_parl( 1 ) ? 1 : 0 ); /* If True, the century digits will be returned.
                                            * If False, they will not. */
 }
 
@@ -324,8 +324,8 @@ HB_FUNC( SX_SETCENTURY )
  * --------------------------------------------------*/
 HB_FUNC( SX_SETDATEFORMAT )
 {
-   sx_SetDateFormat( hb_parni( 1 ) );     /* If True, the century digits will be returned.
-                                           * If False, they will not. */
+   sx_SetDateFormat( hb_parl( 1 ) ? 1 : 0 ); /* If True, the century digits will be returned.
+                                              * If False, they will not. */
 }
 
 
@@ -334,8 +334,8 @@ HB_FUNC( SX_SETDATEFORMAT )
  * --------------------------------------------------*/
 HB_FUNC( SX_SETMEMOBLOCKSIZE )
 {
-   sx_SetMemoBlockSize( hb_parni( 1 ) );  /* The new default block size.
-                                           * The size must be a value from 1 through 1024. */
+   sx_SetMemoBlockSize( ( WORD ) hb_parni( 1 ) ); /* The new default block size.
+                                                   * The size must be a value from 1 through 1024. */
 }
 
 /* -----------------20/01/2002 13:33-----------------
@@ -344,7 +344,7 @@ HB_FUNC( SX_SETMEMOBLOCKSIZE )
  * --------------------------------------------------*/
 HB_FUNC( SX_SETORDER )
 {
-   hb_retni( sx_SetOrder( hb_parni( 1 ) ) );       /* Selects an existing order as the controlling index order. */
+   hb_retni( sx_SetOrder( ( SHORT ) hb_parni( 1 ) ) ); /* Selects an existing order as the controlling index order. */
 }
 
 
@@ -353,7 +353,7 @@ HB_FUNC( SX_SETORDER )
  * --------------------------------------------------*/
 HB_FUNC( SX_SETSOFTSEEK )
 {
-   sx_SetSoftSeek( hb_parl( 1 ) );        /* True to set softseek ON */
+   sx_SetSoftSeek( hb_parl( 1 ) ? 1 : 0 ); /* True to set softseek ON */
 }
 
 
@@ -362,7 +362,7 @@ HB_FUNC( SX_SETSOFTSEEK )
  * --------------------------------------------------*/
 HB_FUNC( SX_SKIP )
 {
-   sx_Skip( hb_parni( 1 ) );              /* Number of records to skip */
+   sx_Skip( hb_parnl( 1 ) );              /* Number of records to skip */
 }
 
 
@@ -374,8 +374,8 @@ HB_FUNC( SX_SYSPROP )
 {
    int i = hb_parni( 2 );
    hb_retni(
-    sx_SysProp( hb_parni( 1 ),            /* One of the predefined constant values. See Apollo.ch */
-                ( void * ) &i ));
+    sx_SysProp( ( WORD ) hb_parni( 1 ),            /* One of the predefined constant values. See Apollo.ch */
+                ( void * ) &i ) );
 }
 /*
 HB_FUNC( SX_DISABLEAUTOOPEN )
@@ -395,8 +395,8 @@ HB_FUNC( SX_USE )
    hb_retni(
       sx_Use( ( PBYTE ) hb_parc( 1 ),      /* Filename */
               ( PBYTE ) hb_parc( 2 ),      /* Alias */
-              hb_parni( 3 ),               /* OpenMode */
-              hb_parni( 4) ));             /* RDE Type */
+              ( SHORT ) hb_parni( 3 ),     /* OpenMode */
+              ( SHORT ) hb_parni( 4 ) ) ); /* RDE Type */
 }
 
 

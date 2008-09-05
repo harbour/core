@@ -75,7 +75,7 @@ HB_FUNC( CHARPACK )
          while( n_count < n_max && in[n_in + n_count] == c )
             n_count++;
          out[n_out++] = 0;
-         out[n_out++] = n_count;
+         out[n_out++] = ( unsigned char ) n_count;
          out[n_out++] = c;
          n_in += n_count;
       }

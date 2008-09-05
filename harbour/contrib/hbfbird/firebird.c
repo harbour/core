@@ -82,12 +82,12 @@ HB_FUNC( FBCREATEDB )
       ISC_STATUS status[ 20 ];
       char create_db[ MAX_BUFFER ];
 
-      char * db_name = hb_parcx( 1 );
-      char * user    = hb_parcx( 2 );
-      char * pass    = hb_parcx( 3 );
-      int    page    = hb_parni( 4 );
-      char * charset = hb_parcx( 5 );
-      int    dialect = hb_parni( 6 );
+      char *         db_name = hb_parcx( 1 );
+      char *         user    = hb_parcx( 2 );
+      char *         pass    = hb_parcx( 3 );
+      int            page    = hb_parni( 4 );
+      char *         charset = hb_parcx( 5 );
+      unsigned short dialect = ( unsigned short ) hb_parni( 6 );
        
       snprintf( create_db, sizeof( create_db ), 
                 "CREATE DATABASE '%s' USER '%s' PASSWORD '%s' PAGE_SIZE = %i DEFAULT CHARACTER SET %s",
@@ -110,7 +110,7 @@ HB_FUNC( FBCONNECT )
    char *        user = hb_parcx( 2 );
    char *        passwd = hb_parcx( 3 );
    char          dpb[ 128 ];
-   int           i = 0;
+   short         i = 0;
    int           len;
 
    /* TOFIX: Possible buffer overflow. Use snprintf(). */
@@ -121,14 +121,14 @@ HB_FUNC( FBCONNECT )
       len = ( int ) ( sizeof( dpb ) - i - 4 );
    dpb[ i++ ] = ( char ) len;
    hb_strncpy( &( dpb[ i ] ), user, len );
-   i += len;
+   i += ( short ) len;
    dpb[ i++ ] = isc_dpb_password;
    len = strlen( passwd );
    if( len > ( int ) ( sizeof( dpb ) - i - 2 ) )
       len = ( int ) ( sizeof( dpb ) - i - 2 );
-   dpb[ i++ ] = len;
+   dpb[ i++ ] = ( char ) len;
    hb_strncpy( &( dpb[ i ] ), passwd, len );
-   i += len;
+   i += ( short ) len;
 
    if( isc_attach_database( status, 0, db_connect, &db, i, dpb ) )
       hb_retnl( isc_sqlcode( status ) );
@@ -153,7 +153,7 @@ HB_FUNC( FBERROR )
 {
    char msg[ MAX_BUFFER ];
 
-   isc_sql_interprete( hb_parni( 1 ) /* sqlcode */, 
+   isc_sql_interprete( ( short ) hb_parni( 1 ) /* sqlcode */, 
                        msg,
                        sizeof( msg ) );
 
@@ -201,7 +201,7 @@ HB_FUNC( FBEXECUTE )
    char          * exec_str = hb_parcx( 2 );
    ISC_STATUS      status[ 20 ];
    ISC_STATUS      status_rollback[ 20 ];
-   int             dialect = hb_parni( 3 );
+   unsigned short  dialect = ( unsigned short ) hb_parni( 3 );
 
    if( ISPOINTER( 4 ) )
    {
@@ -247,8 +247,7 @@ HB_FUNC( FBQUERY )
    XSQLVAR           * var;
 
    char                sel_str[ MAX_LEN ];
-   int                 dialect = ISNUM( 3 ) ? hb_parni( 3 ) : DIALECT;
-   int                 n;
+   unsigned short      dialect = ISNUM( 3 ) ? ( unsigned short ) hb_parni( 3 ) : DIALECT;
    int                 i;
    int                 dtype;
    int                 num_cols;
@@ -297,8 +296,10 @@ HB_FUNC( FBQUERY )
    /* Relocate necessary number of columns */
    if( sqlda->sqld > sqlda->sqln )
    {
-      hb_xfree( sqlda );
+      ISC_SHORT n;
+
       n = sqlda->sqld;
+      hb_xfree( sqlda );
       sqlda = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH( n ) );
       sqlda->sqln = n;
       sqlda->version = 1;
@@ -371,7 +372,7 @@ HB_FUNC( FBQUERY )
       hb_arraySetPtr( qry_handle, 3, ( void * ) trans );
 
    hb_arraySetNL( qry_handle, 4, ( long ) num_cols );
-   hb_arraySetNL( qry_handle, 5, ( long ) dialect );
+   hb_arraySetNI( qry_handle, 5, ( int ) dialect );
    hb_arraySet(   qry_handle, 6, aNew );
 
    hb_itemReturnRelease( qry_handle );
@@ -387,7 +388,7 @@ HB_FUNC( FBFETCH )
       isc_stmt_handle stmt = ( isc_stmt_handle ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
       ISC_STATUS      status[ MAX_FIELDS ];
       XSQLDA *        sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
-      int             dialect = hb_itemGetNI( hb_itemArrayGet( aParam, 5 ) );
+      unsigned short  dialect = ( unsigned short ) hb_itemGetNI( hb_itemArrayGet( aParam, 5 ) );
       long            fetch_stat;
 
       /* TOFIX */

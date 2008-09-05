@@ -145,7 +145,8 @@ Core
   work, but it lets build the rest of Harbour (like hbrun.exe).
 - PCRE lib upgraded to 7.8 RC1 (from 7.7)
 - Fixed dbInfo( DBI_POSITIONED ) returned value.
-- Fixed potential internal error in dirty index reading.
+- Fixed internal error in dirty index reading.
+- Fixed return value of HB_INETGETSNDBUFSIZE().
 
 Contrib
 =============================
@@ -193,6 +194,7 @@ Contrib
   implementation, this new one is completely portable and 
   fixes some potential leaks and GPFs. This code could use 
   some more testing, be aware.
+- hbbmcdx fixed internal error in dirty index reading.
 
 Known build issues
 =============================

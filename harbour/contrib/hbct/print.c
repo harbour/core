@@ -91,7 +91,7 @@
 
 HB_FUNC( PRINTSTAT )
 {
-   USHORT uiPort = ISNUM( 1 ) ? hb_parni( 1 ) : 1;
+   USHORT uiPort = ISNUM( 1 ) ? ( USHORT ) hb_parni( 1 ) : 1;
    int Status = 0;
 
 #if defined(HB_OS_DOS)
@@ -142,7 +142,7 @@ HB_FUNC( PRINTSTAT )
 
 HB_FUNC( PRINTREADY )
 {
-   USHORT uiPort = ISNUM( 1 ) ? hb_parni( 1 ) : 1;
+   USHORT uiPort = ISNUM( 1 ) ? ( USHORT ) hb_parni( 1 ) : 1;
    int Status = 0;
 
 #if defined(HB_OS_DOS)

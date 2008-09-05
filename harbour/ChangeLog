@@ -8,6 +8,50 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-05 18:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbapollo/apollo.c
+   * contrib/hbclipsm/gauge.c
+   * contrib/hbct/atadjust.c
+   * contrib/hbct/atnum.c
+   * contrib/hbct/atrepl.c
+   * contrib/hbct/ctstr.c
+   * contrib/hbct/ctwfunc.c
+   * contrib/hbct/dattime2.c
+   * contrib/hbct/dattime3.c
+   * contrib/hbct/files.c
+   * contrib/hbct/pack.c
+   * contrib/hbct/print.c
+   * contrib/hbct/setrc.c
+   * contrib/hbfbird/firebird.c
+   * contrib/hbhpdf/harupdf.c
+   * contrib/hbmisc/hb_f.c
+   * contrib/hbmzip/hbmzip.c
+   * contrib/hbnf/descendn.c
+   * contrib/hbnf/dispc.c
+   * contrib/hbnf/ftattr.c
+   * contrib/hbnf/ftshadow.c
+   * contrib/hbnf/fttext.c
+   * contrib/hbodbc/odbc.c
+   * contrib/hbole/ole2.c
+   * contrib/hbw32/dllcall.c
+   * contrib/hbw32/tprinter.c
+   * contrib/rddads/ads1.c
+   * contrib/xhb/cstructc.c
+   * contrib/xhb/hbxml.c
+   * contrib/xhb/xhbmsgs.c
+   * utils/hbmake/hbmgauge.c
+     ! Fixed some MSVS 2008 -W4 warnings.
+     ; There are quite some more.
+
+   * contrib/hbhpdf/harupdf.c
+     ! HPDF_ADDPAGELABEL() accepting first parameter wrongly.
+
+   * contrib/hbfbird/firebird.c
+     ! FBQUERY() potential GPF when using value from freed memory.
+
+   * doc/whatsnew.txt
+     * Updated for latest fixes.
+
 2008-09-05 17:41 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
   * contrib/hbbmcdx/bmdbfcdx.c
     ! fixed dirty index reading.

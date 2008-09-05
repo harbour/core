@@ -198,11 +198,11 @@ HB_FUNC( SQLCONNECT ) /* HB_SQLCONNECT( hDbc, cDSN, cUseName, cPassword ) --> nR
    HB_TCHAR_FREE( lpPassword );
 #else
    ret =  SQLConnect( ( HDBC ) hb_parptr( 1 ),
-                      (unsigned char*) hb_parcx( 2 ),
+                      ( unsigned char * ) hb_parcx( 2 ),
                       ( SQLSMALLINT ) hb_parclen( 2 ),
-                      (unsigned char*) hb_parcx( 3 ),
+                      ( unsigned char * ) hb_parcx( 3 ),
                       ( SQLSMALLINT ) hb_parclen( 3 ),
-                      (unsigned char*) hb_parcx( 4 ),
+                      ( unsigned char * ) hb_parcx( 4 ),
                       ( SQLSMALLINT ) hb_parclen( 4 ) );
 #endif
    hb_retni( ret );
@@ -233,7 +233,7 @@ HB_FUNC( SQLALLOCST )  /* HB_SQLALLOCSTMT( hDbc, @hStmt ) --> nRetCode */
 
 HB_FUNC( SQLFREESTM ) /* HB_SQLFREESTMT( hStmt, nType ) --> nRetCode */
 {
-   hb_retni( SQLFreeStmt( ( HSTMT ) hb_parptr( 1 ), hb_parni( 2 ) ) );
+   hb_retni( SQLFreeStmt( ( HSTMT ) hb_parptr( 1 ), ( SQLUSMALLINT ) hb_parni( 2 ) ) );
 }
 
 HB_FUNC( SQLEXECDIR )  /* HB_SQLEXECDIRECT( hStmt, cStatement ) --> nRetCode */
@@ -243,7 +243,7 @@ HB_FUNC( SQLEXECDIR )  /* HB_SQLEXECDIRECT( hStmt, cStatement ) --> nRetCode */
    hb_retni( SQLExecDirect( ( HSTMT ) hb_parptr( 1 ), lpStr, hb_parclen( 2 ) ) );
    HB_TCHAR_FREE( lpStr );
 #else
-   hb_retni( SQLExecDirect( ( HSTMT ) hb_parptr( 1 ), (unsigned char*) hb_parcx( 2 ), hb_parclen( 2 ) ) );
+   hb_retni( SQLExecDirect( ( HSTMT ) hb_parptr( 1 ), ( unsigned char * ) hb_parcx( 2 ), hb_parclen( 2 ) ) );
 #endif
 }
 
@@ -259,7 +259,7 @@ HB_FUNC( SQLGETDATA ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBuffer ) -
    WORD wType, wResult;
    int iReallocs = 0;
 
-   wType = hb_parni( 3 );
+   wType = ( WORD ) hb_parni( 3 );
    if( !wType )
       wType = ( WORD ) SQL_BINARY;
    lLen = ( SQLLEN ) hb_parnl( 4 );
@@ -273,7 +273,7 @@ HB_FUNC( SQLGETDATA ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBuffer ) -
    wResult = ! SQL_NO_DATA;
    while( wResult != SQL_NO_DATA )
    {
-      wResult = SQLGetData( ( HSTMT ) hb_parptr( 1 ), hb_parni( 2 ), wType, ( PTR ) bBuffer, lLen, &lLen );
+      wResult = SQLGetData( ( HSTMT ) hb_parptr( 1 ), ( SQLUSMALLINT ) hb_parni( 2 ), wType, ( PTR ) bBuffer, lLen, &lLen );
       if( wResult == SQL_SUCCESS && iReallocs == 0 )
       {
          hb_storclen( ( LPSTR ) bBuffer, ( ULONG ) ( lLen < 0 ? 0 : ( lLen < hb_parnl( 4 ) ? lLen : hb_parnl( 4 ) ) ), 5 );
@@ -334,11 +334,11 @@ HB_FUNC( SQLNUMRES )
 HB_FUNC( SQLDESCRIB )
 {
    SDWORD      lLen      = ( SDWORD ) hb_parnl( 4 );
-   SQLSMALLINT wBufLen   = hb_parni( 5 );
-   SQLSMALLINT wDataType = hb_parni( 6 );
+   SQLSMALLINT wBufLen   = ( SQLUSMALLINT ) hb_parni( 5 );
+   SQLSMALLINT wDataType = ( SQLUSMALLINT ) hb_parni( 6 );
    SQLULEN     wColSize  = hb_parni( 7 );
-   SQLSMALLINT wDecimals = hb_parni( 8 );
-   SQLSMALLINT wNullable = hb_parni( 9 );
+   SQLSMALLINT wDecimals = ( SQLUSMALLINT ) hb_parni( 8 );
+   SQLSMALLINT wNullable = ( SQLUSMALLINT ) hb_parni( 9 );
 #if defined( HB_OS_WIN_32 ) && defined( UNICODE )
    LPTSTR      buffer    = ( LPTSTR ) hb_xgrab( lLen * sizeof( TCHAR ) );
 #else
@@ -347,7 +347,7 @@ HB_FUNC( SQLDESCRIB )
    WORD        wResult;
 
    wResult = SQLDescribeCol( ( HSTMT ) hb_parptr( 1 ),
-                             hb_parni( 2 ),
+                             ( SQLUSMALLINT ) hb_parni( 2 ),
                              buffer,
                              ( SQLSMALLINT ) lLen,
                              &wBufLen,
@@ -384,17 +384,17 @@ HB_FUNC( SQLCOLATTRIBUTE )
 {
    SDWORD      lLen      = ( SDWORD ) hb_parnl( 5 );
    PTR         bBuffer   = hb_xgrab( lLen );
-   SQLSMALLINT wBufLen   = hb_parni( 6 );
+   SQLSMALLINT wBufLen   = ( SQLUSMALLINT ) hb_parni( 6 );
 #if defined(__DMC__)
    SQLINTEGER  wNumPtr   = hb_parni( 7 );
 #else
    SQLLEN      wNumPtr   = hb_parni( 7 );
 #endif
    WORD        wResult   = SQLColAttribute( ( HSTMT ) hb_parptr( 1 ),
-                                            hb_parni( 2 ),
-                                            hb_parni( 3 ),
-                                            (unsigned char*) bBuffer, 
-                                            hb_parni( 5 ), 
+                                            ( SQLUSMALLINT ) hb_parni( 2 ),
+                                            ( SQLUSMALLINT ) hb_parni( 3 ),
+                                            ( unsigned char * ) bBuffer, 
+                                            ( SQLUSMALLINT ) hb_parni( 5 ), 
                                             &wBufLen,
                                             &wNumPtr );
 
@@ -418,7 +418,7 @@ HB_FUNC( SQLEXTENDE )
 #else
    SQLULEN       uiRowCountPtr = hb_parni( 4 );
 #endif
-   SQLUSMALLINT  siRowStatus   = hb_parni( 5 );
+   SQLUSMALLINT  siRowStatus   = ( SQLUSMALLINT ) hb_parni( 5 );
    WORD          wResult       = SQLExtendedFetch( ( HSTMT ) hb_parptr( 1 ),
                                                    ( USHORT ) hb_parnl( 2 ),
                                                    ( USHORT ) hb_parnl( 3 ),
@@ -466,7 +466,7 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg */
       hb_storc( szStr, 4 );
       HB_TCHAR_FREE( szStr );
 #else
-      hb_storc( (char *) buffer, 4 );
+      hb_storc( ( char * ) buffer, 4 );
 #endif
    }
    hb_stornl( ( LONG ) lError, 5 );
@@ -477,7 +477,7 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg */
       hb_storc( szStr, 6 );
       HB_TCHAR_FREE( szStr );
 #else
-      hb_storc( (char *) szErrorMsg, 6 );
+      hb_storc( ( char * ) szErrorMsg, 6 );
 #endif
    }
 }
@@ -602,7 +602,7 @@ HB_FUNC( SQLPREPARE )  /* HB_SQLPREPARE( hStmt, cStatement ) --> nRetCode */
    hb_retni( SQLPrepare( ( HSTMT ) hb_parptr( 1 ), lpStr, SQL_NTS ) );
    HB_TCHAR_FREE( lpStr );
 #else
-   hb_retni( SQLPrepare( ( HSTMT ) hb_parptr( 1 ), (unsigned char*) hb_parcx( 2 ), SQL_NTS ) );
+   hb_retni( SQLPrepare( ( HSTMT ) hb_parptr( 1 ), ( unsigned char * ) hb_parcx( 2 ), SQL_NTS ) );
 #endif
 }
 
@@ -627,7 +627,7 @@ HB_FUNC( SQLEXECUTESCALAR )
       wResult = SQLExecDirect( ( HSTMT ) hStmt, lpStr, SQL_NTS );
       HB_TCHAR_FREE( lpStr );
 #else
-      wResult = SQLExecDirect( ( HSTMT ) hStmt, (unsigned char*) hb_parcx( 1 ), SQL_NTS );
+      wResult = SQLExecDirect( ( HSTMT ) hStmt, ( unsigned char * ) hb_parcx( 1 ), SQL_NTS );
 #endif
       if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO )
       {
@@ -635,7 +635,7 @@ HB_FUNC( SQLEXECUTESCALAR )
          if( wResult != SQL_NO_DATA )
          {
             wResult = SQLGetData( ( HSTMT ) hStmt, 1, SQL_C_CHAR, bBuffer, sizeof( bBuffer ), &lLen );
-            hb_storc( (char *)bBuffer, 3 );
+            hb_storc( ( char * ) bBuffer, 3 );
          }
       }
    }
@@ -649,7 +649,7 @@ HB_FUNC( SQLSTOD )
 {
    if( hb_parclen( 1 ) >= 10 )
    {
-      char *szSqlDate = hb_parc( 1 );  /* YYYY-MM-DD */
+      char * szSqlDate = hb_parc( 1 );  /* YYYY-MM-DD */
       char szHrbDate[9];               /* YYYYMMDD */
 
       szHrbDate[ 0 ] = szSqlDate[ 0 ];

@@ -114,7 +114,7 @@ static LPSTR DblToDate( double nDate, char * cDate )
 
 static LPWSTR AnsiToWide( LPCSTR cAnsi )
 {
-   unsigned short wLen;
+   unsigned int wLen;
    LPWSTR cString;
 
    wLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cAnsi, -1, 0, 0 );
@@ -126,7 +126,7 @@ static LPWSTR AnsiToWide( LPCSTR cAnsi )
 
 static LPSTR WideToAnsi( LPWSTR cWide )
 {
-   unsigned short wLen;
+   unsigned int wLen;
    LPSTR cString;
 
    wLen = WideCharToMultiByte( CP_ACP, 0, ( LPWSTR ) cWide, -1,
@@ -191,10 +191,10 @@ static void GetParams( DISPPARAMS * dParams )
             case HB_IT_LOGICAL:
 #if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
                pArgs[ n ].vt = VT_BOOL;
-               pArgs[ n ].boolVal = hb_parl( nArg );
+               pArgs[ n ].boolVal = hb_parl( nArg ) ? VARIANT_TRUE : VARIANT_FALSE;
 #else
                pArgs[ n ].n1.n2.vt   = VT_BOOL;
-               pArgs[ n ].n1.n2.n3.boolVal = hb_parl( nArg );
+               pArgs[ n ].n1.n2.n3.boolVal = hb_parl( nArg ) ? VARIANT_TRUE : VARIANT_FALSE;
 #endif
                break;
 
@@ -289,7 +289,7 @@ static void RetValue( void )
          break;
 
       case VT_BOOL:
-         hb_retl( s_RetVal.boolVal );
+         hb_retl( s_RetVal.boolVal == VARIANT_TRUE );
          break;
 
       case VT_DISPATCH:
@@ -329,7 +329,7 @@ static void RetValue( void )
          break;
 
       case VT_BOOL:
-         hb_retl( s_RetVal.n1.n2.n3.boolVal );
+         hb_retl( s_RetVal.n1.n2.n3.boolVal == VARIANT_TRUE );
          break;
 
       case VT_DISPATCH:

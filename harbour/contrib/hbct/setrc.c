@@ -57,12 +57,12 @@ HB_FUNC( SETRC )
    BOOL fRow = ISNUM( 1 ), fCol = ISNUM( 2 );
 
    if( fRow && fCol )
-      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
+      hb_gtSetPos( ( SHORT ) hb_parni( 1 ), ( SHORT ) hb_parni( 2 ) );
    else
    {
       SHORT sRow, sCol;
       hb_gtGetPos( &sRow, &sCol );
-      hb_gtSetPos( fRow ? hb_parni( 1 ) : sRow, fCol ? hb_parni( 2 ) : sCol );
+      hb_gtSetPos( fRow ? ( SHORT ) hb_parni( 1 ) : sRow, fCol ? ( SHORT ) hb_parni( 2 ) : sCol );
    }
 
    hb_retc( NULL );

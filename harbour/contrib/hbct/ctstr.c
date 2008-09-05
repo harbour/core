@@ -471,7 +471,7 @@ HB_FUNC( CSETATMUPA )
  */
 
 static int siAtLikeMode = 0;    /* TODO: make this tread safe */
-static int scAtLikeChar = '?';  /* TODO: make this tread safe */
+static char scAtLikeChar = '?';  /* TODO: make this tread safe */
 
 void ct_setatlike( int iNewMode )
 {

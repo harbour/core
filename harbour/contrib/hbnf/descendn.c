@@ -53,10 +53,10 @@ HB_FUNC( FT_DESCEND )
 #if defined(HB_OS_DOS) || defined(HB_OS_WIN_32)
    {
 
-      auto PHB_ITEM iP   = hb_itemParam( 1 );
-      auto USHORT uiType = hb_itemType( iP );
+      auto PHB_ITEM iP = hb_itemParam( 1 );
+      auto HB_TYPE uiType = hb_itemType( iP );
 
-      auto PHB_ITEM iR   = NULL;
+      auto PHB_ITEM iR = NULL;
       auto USHORT uiLen, n;
       auto char * pDescend;
    

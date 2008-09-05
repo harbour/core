@@ -3645,7 +3645,7 @@ static ERRCODE adsOrderDestroy( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
 
 static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo )
 {
-   ADSHANDLE  hIndex;
+   ADSHANDLE  hIndex  = 0;
    UNSIGNED8  aucBuffer[ MAX_STR_LEN + 1 ];
    UNSIGNED16 u16len  = MAX_STR_LEN;
    UNSIGNED16 u16     = 0;

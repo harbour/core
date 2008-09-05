@@ -57,40 +57,38 @@
 #define b_size     4096
 #define c_size     4096
 
-static long hb_hbfskip( int recs );
-
-static long last_rec[10];
-static long recno[10];
-static long offset[10];
-static int  handles[10];
-static int  area = 0;
-static char *b;
-static char *c;
-static long last_off[10];
-static long lastbyte[10];
-static int  isEof[10];
+static long       last_rec[ 10 ];
+static long       recno[ 10 ];
+static long       offset[ 10 ];
+static HB_FHANDLE handles[ 10 ];
+static int        area = 0;
+static char *     b;
+static char *     c;
+static long       last_off[ 10 ];
+static long       lastbyte[ 10 ];
+static int        isEof[ 10 ];
 
 HB_FUNC( HB_FUSE )
 {
-   PHB_ITEM arg1_it = hb_param(1,HB_IT_STRING);
-   PHB_ITEM arg2_it = hb_param(2,HB_IT_NUMERIC);
+   PHB_ITEM arg1_it = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM arg2_it = hb_param( 2, HB_IT_NUMERIC );
    int open_flags;
 
    if ( arg1_it ) {
 
      if( arg2_it )
-         open_flags = hb_parni(2);
+         open_flags = hb_parni( 2 );
      else
          open_flags = 0;
 
-      handles[area]  = hb_fsOpen( ( BYTE * ) hb_parc(1), open_flags );
+      handles[area]  = hb_fsOpen( ( BYTE * ) hb_parc( 1 ), ( SHORT ) open_flags );
       offset[area]   = 0;
       recno[area]    = 1;
-      b              = ( char * )hb_xgrab( b_size );
-      c              = ( char * )hb_xgrab( c_size );
-      lastbyte[area] = hb_fsSeek( handles[area], 0L, FS_END );
-      isEof[area] = (lastbyte[area] == 0);
-      hb_retni( handles[area] );
+      b              = ( char * ) hb_xgrab( b_size );
+      c              = ( char * ) hb_xgrab( c_size );
+      lastbyte[area] = hb_fsSeek( handles[ area ], 0L, FS_END );
+      isEof[area] = ( lastbyte[ area ] == 0 );
+      hb_retni( handles[ area ] );
    }
    else {
       hb_fsClose( handles[area] );
@@ -110,14 +108,9 @@ HB_FUNC( HB_FUSE )
 
 HB_FUNC( HB_FRECNO )
 {
-   hb_retnl( recno[area] );
+   hb_retnl( recno[ area ] );
 }
 
-
-HB_FUNC( HB_FSKIP )
-{
-   hb_hbfskip( ISNUM( 1 ) ? hb_parni(1) : 1 );
-}
 
 static long hb_hbfskip( int recs )
 {
@@ -184,6 +177,11 @@ static long hb_hbfskip( int recs )
    }
 
    return ( recno[area] );
+}
+
+HB_FUNC( HB_FSKIP )
+{
+   hb_hbfskip( ISNUM( 1 ) ? hb_parni(1) : 1 );
 }
 
 HB_FUNC( HB_FREADLN )

@@ -231,7 +231,7 @@ typedef struct DYNAPARM
       SHORT    usArg;            /* 2-byte argument */
       DWORD    dwArg;            /* 4-byte argument */
       double   dArg;             /* double argument */
-   };
+   } numargs;
    void *      pArg;             /* Pointer to argument */
 } DYNAPARM;
 
@@ -299,7 +299,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
          else
          {
             /* Arg has the real arg */
-            dwVal = *( (DWORD *)( (BYTE *) ( &( Parm[nInd].dwArg ) ) + ( nLoops * 4 ) ) );
+            dwVal = *( (DWORD *)( (BYTE *) ( &( Parm[nInd].numargs.dwArg ) ) + ( nLoops * 4 ) ) );
          }
 
          /* Do push dwVal */
@@ -502,17 +502,17 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
             case HB_IT_NIL:
                Parm[ iCnt ].nWidth = sizeof( void * );
                /* TOFIX: Store NULL pointer in pointer variable. */
-               Parm[ iCnt ].dwArg = 0;
+               Parm[ iCnt ].numargs.dwArg = 0;
                break;
 
             case HB_IT_POINTER:
                Parm[ iCnt ].nWidth = sizeof( void * );
                /* TOFIX: Store pointer in pointer variable. */
-               Parm[ iCnt ].dwArg = ( DWORD ) hb_itemGetPtr( pParam );
+               Parm[ iCnt ].numargs.dwArg = ( DWORD ) hb_itemGetPtr( pParam );
 
                if( hb_parinfo( i ) & HB_IT_BYREF )
                {
-                  Parm[ iCnt ].pArg = &( Parm[ iCnt ].dwArg );
+                  Parm[ iCnt ].pArg = &( Parm[ iCnt ].numargs.dwArg );
                   Parm[ iCnt ].dwFlags = DC_FLAG_ARGPTR;  /* use the pointer */
                }
                break;
@@ -522,23 +522,23 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
             case HB_IT_DATE:
             case HB_IT_LOGICAL:
                Parm[ iCnt ].nWidth = sizeof( DWORD );
-               Parm[ iCnt ].dwArg = ( DWORD ) hb_itemGetNL( pParam );
+               Parm[ iCnt ].numargs.dwArg = ( DWORD ) hb_itemGetNL( pParam );
 
                if( hb_parinfo( i ) & HB_IT_BYREF )
                {
-                  Parm[ iCnt ].pArg = &( Parm[ iCnt ].dwArg );
+                  Parm[ iCnt ].pArg = &( Parm[ iCnt ].numargs.dwArg );
                   Parm[ iCnt ].dwFlags = DC_FLAG_ARGPTR;  /* use the pointer */
                }
                break;
 
             case HB_IT_DOUBLE:
                Parm[ iCnt ].nWidth = sizeof( double );
-               Parm[ iCnt ].dArg = hb_itemGetND( pParam );
+               Parm[ iCnt ].numargs.dArg = hb_itemGetND( pParam );
 
                if( hb_parinfo( i ) & HB_IT_BYREF )
                {
                   Parm[ iCnt ].nWidth = sizeof( void * );
-                  Parm[ iCnt ].pArg = &( Parm[ iCnt ].dArg );
+                  Parm[ iCnt ].pArg = &( Parm[ iCnt ].numargs.dArg );
                   Parm[ iCnt ].dwFlags = DC_FLAG_ARGPTR;  /* use the pointer */
                }
 
@@ -569,7 +569,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
                if( strncmp( hb_objGetClsName( hb_param( i, HB_IT_ANY ) ), "C Structure", 11 ) == 0 )
                {
                   Parm[ iCnt ].nWidth = sizeof( void * );
-                  Parm[ iCnt ].dwArg = ( DWORD ) hb_parcstruct( i );
+                  Parm[ iCnt ].numargs.dwArg = ( DWORD ) hb_parcstruct( i );
                   break;
                }
 #endif
@@ -598,22 +598,22 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
             switch( HB_ITEM_TYPE( hb_param( i, HB_IT_ANY ) ) )
             {
                case HB_IT_NIL:
-                  hb_stornl( Parm[ iCnt ].dwArg, i );
+                  hb_stornl( Parm[ iCnt ].numargs.dwArg, i );
                   break;
 
                case HB_IT_POINTER:
-                  hb_storptr( ( void * ) Parm[ iCnt ].dwArg, i );
+                  hb_storptr( ( void * ) Parm[ iCnt ].numargs.dwArg, i );
                   break;
 
                case HB_IT_INTEGER:
                case HB_IT_LONG:
                case HB_IT_DATE:
                case HB_IT_LOGICAL:
-                  hb_stornl( Parm[ iCnt ].dwArg, i );
+                  hb_stornl( Parm[ iCnt ].numargs.dwArg, i );
                   break;
 
                case HB_IT_DOUBLE:
-                  hb_stornd( Parm[ iCnt ].dArg, i );
+                  hb_stornd( Parm[ iCnt ].numargs.dArg, i );
                   break;
 
                case HB_IT_STRING:

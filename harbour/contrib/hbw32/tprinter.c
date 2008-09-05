@@ -326,7 +326,8 @@ LONG hb_PrintFileRaw( UCHAR * cPrinterName, UCHAR * cFileName, UCHAR * cDocName 
    UCHAR printBuffer[BIG_PRINT_BUFFER];
    HANDLE hPrinter, hFile;
    DOC_INFO_1 DocInfo;
-   DWORD nRead, nWritten, Result;
+   DWORD nRead, nWritten;
+   LONG Result;
    LPTSTR lpPrinterName = HB_TCHAR_CONVTO( ( char * ) cPrinterName );
 
    if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) != 0 )
@@ -388,7 +389,7 @@ LONG hb_PrintFileRaw( UCHAR * cPrinterName, UCHAR * cFileName, UCHAR * cDocName 
 HB_FUNC( PRINTFILERAW )
 {
    UCHAR *cPrinterName, *cFileName, *cDocName;
-   DWORD Result = -1;
+   LONG Result = -1;
 
    if( ISCHAR( 1 ) && ISCHAR( 2 ) )
    {

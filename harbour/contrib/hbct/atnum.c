@@ -74,7 +74,7 @@ static void do_atnum( int iSwitch )
       int iMultiPass = ct_getatmupa();
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
-      size_t sIgnore, sMatchStrLen;
+      size_t sIgnore, sMatchStrLen = 0;
       ULONG ulCounter;
       char *pc = NULL;
 

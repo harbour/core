@@ -151,7 +151,7 @@ HB_FUNC( XHB_INDEX )
             if( HB_IS_VALID_INDEX( ulIndex, ulLen ) )
             {
                char cValue = HB_IS_STRING( pValue ) ? hb_itemGetCPtr( pValue )[0] :
-                             hb_itemGetNI( pValue );
+                             ( char ) hb_itemGetNI( pValue );
                if( ulLen == 1 )
                   hb_itemPutCL( pSelf, &cValue, 1 );
                else
@@ -221,7 +221,7 @@ HB_FUNC( XHB_PLUS )
             pValue && HB_IS_NUMERIC( pValue ) )
    {
       UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0];
-      uc += hb_itemGetNI( pValue );
+      uc += ( UCHAR ) hb_itemGetNI( pValue );
       hb_retclen( ( char * ) &uc, 1 );
    }
    else if( HB_IS_HASH( pSelf ) && HB_IS_HASH( pValue ) )
@@ -254,7 +254,7 @@ HB_FUNC( XHB_MINUS )
             pValue && HB_IS_NUMERIC( pValue ) )
    {
       UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0];
-      uc -= hb_itemGetNI( pValue );
+      uc -= ( UCHAR ) hb_itemGetNI( pValue );
       hb_retclen( ( char * ) &uc, 1 );
    }
    else if( HB_IS_HASH( pSelf ) && HB_IS_HASH( pValue ) )

@@ -173,12 +173,12 @@ End
 
 HB_FUNC( FT_SAVEATT )
 {
-   USHORT uiTop    = hb_parni( 1 ); /* Defaults to zero on bad type */
-   USHORT uiLeft   = hb_parni( 2 ); /* Defaults to zero on bad type */
+   USHORT uiTop    = ( USHORT ) hb_parni( 1 ); /* Defaults to zero on bad type */
+   USHORT uiLeft   = ( USHORT ) hb_parni( 2 ); /* Defaults to zero on bad type */
    USHORT uiMaxRow = hb_gtMaxRow();
    USHORT uiMaxCol = hb_gtMaxCol();
-   USHORT uiBottom = ISNUM( 3 ) ? hb_parni( 3 ) : uiMaxRow;
-   USHORT uiRight  = ISNUM( 4 ) ? hb_parni( 4 ) : uiMaxRow;
+   USHORT uiBottom = ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : uiMaxRow;
+   USHORT uiRight  = ISNUM( 4 ) ? ( USHORT ) hb_parni( 4 ) : uiMaxRow;
 
    ULONG  ulSize;
    char * pBuffer;
@@ -386,12 +386,12 @@ HB_FUNC( FT_RESTATT )
    ULONG ulLen = hb_parclen( 5 );
    if( ulLen )
    {
-      USHORT uiTop    = hb_parni( 1 ); /* Defaults to zero on bad type */
-      USHORT uiLeft   = hb_parni( 2 ); /* Defaults to zero on bad type */
+      USHORT uiTop    = ( USHORT ) hb_parni( 1 ); /* Defaults to zero on bad type */
+      USHORT uiLeft   = ( USHORT ) hb_parni( 2 ); /* Defaults to zero on bad type */
       USHORT uiMaxRow = hb_gtMaxRow();
       USHORT uiMaxCol = hb_gtMaxCol();
-      USHORT uiBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
-      USHORT uiRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
+      USHORT uiBottom = ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : hb_gtMaxRow();
+      USHORT uiRight  = ISNUM( 4 ) ? ( USHORT ) hb_parni( 4 ) : hb_gtMaxCol();
       char * pAttrib  = hb_parc( 5 );
 
       if( uiBottom > uiMaxRow )
