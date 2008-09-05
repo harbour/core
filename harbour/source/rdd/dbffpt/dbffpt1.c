@@ -2904,7 +2904,7 @@ static ERRCODE hb_fptWriteMemo( FPTAREAP pArea, ULONG ulBlock, ULONG ulSize,
 static ERRCODE hb_fptPutMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
                               ULONG * pulBlock )
 {
-   ULONG ulBlock = *pulBlock, ulSize, ulType, ulOldSize = 0, ulOldType, ulArrayCount = 0;
+   ULONG ulBlock = 0, ulSize, ulType, ulOldSize = 0, ulOldType = 0, ulArrayCount = 0;
    BYTE itmBuffer[FLEX_ITEM_BUFSIZE];
    BYTE  *bBufPtr = NULL, *bBufAlloc = NULL;
    ERRCODE errCode;
@@ -3062,7 +3062,7 @@ static ERRCODE hb_fptPutMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
    }
    else
    {
-      ulOldType = 0;
+      ulBlock = *pulBlock;
       errCode = SUCCESS;
    }
 
