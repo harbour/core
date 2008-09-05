@@ -475,7 +475,7 @@ HB_FUNC( ADSKEYNO )
       {
          UNSIGNED32 pulKey = 0L;
          ADSHANDLE  hIndex = 0;
-         UNSIGNED16 usFilterOption = pFilterOption ? hb_itemGetNI( pFilterOption ) : ADS_IGNOREFILTERS;
+         UNSIGNED16 usFilterOption = pFilterOption ? ( UNSIGNED16 ) hb_itemGetNI( pFilterOption ) : ADS_IGNOREFILTERS;
       
          /* get an Index Handle */
          if( pxOrder == NULL || HB_IS_NIL( pxOrder ) ) /* didn't pass it in; use current */
@@ -542,7 +542,7 @@ HB_FUNC( ADSKEYCOUNT )
       {
          UNSIGNED32 pulKey = 0L;
          ADSHANDLE  hIndex = 0;
-         UNSIGNED16 usFilterOption = pFilterOption ? hb_itemGetNI( pFilterOption ) : ADS_IGNOREFILTERS;
+         UNSIGNED16 usFilterOption = pFilterOption ? ( UNSIGNED16 ) hb_itemGetNI( pFilterOption ) : ADS_IGNOREFILTERS;
 
          /* get an Index Handle */
          if( pxOrder == NULL || HB_IS_NIL( pxOrder ) ) /* didn't pass it in; use current */
@@ -1512,7 +1512,7 @@ HB_FUNC( ADSGETHANDLETYPE )             /* DD, admin, table */
 /* nLastErr := AdsGetLastError( [ @cLastErr ] ) */
 HB_FUNC( ADSGETLASTERROR )
 {
-   UNSIGNED32 ulLastErr = ~AE_SUCCESS;
+   UNSIGNED32 ulLastErr = ( UNSIGNED32 ) ~AE_SUCCESS;
    UNSIGNED8  aucError[ ADS_MAX_ERROR_LEN + 1 ];
    UNSIGNED16 usLength = ADS_MAX_ERROR_LEN + 1;
 
@@ -1904,7 +1904,7 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
       case ADS_DD_ENCRYPT_COMMUNICATION:
 #endif
       {
-         ulBuffer = hb_itemGetL( pParam );
+         ulBuffer = ( UNSIGNED16 ) hb_itemGetL( pParam );
          ulRetVal = AdsDDSetDatabaseProperty( hConnect, 
                                               ulProperty,
                                               &ulBuffer,
@@ -1921,7 +1921,7 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
       {
          if( HB_IS_NUMERIC( pParam ) )
          {
-            ulBuffer = hb_itemGetNI( pParam );
+            ulBuffer = ( UNSIGNED16 ) hb_itemGetNI( pParam );
             ulRetVal = AdsDDSetDatabaseProperty( hConnect,
                                                  ulProperty,
                                                  &ulBuffer,
@@ -1938,7 +1938,7 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
       }
       default:
       {
-         ulRetVal = ~AE_SUCCESS;
+         ulRetVal = ( UNSIGNED32 ) ~AE_SUCCESS;
          break;
       }
    }
@@ -2177,13 +2177,13 @@ HB_FUNC( ADSCREATEFTSINDEX )
                                    ( UNSIGNED32 )  ISNUM( 4 ) ? hb_parnl( 4 ) : ADS_DEFAULT   /* ulPageSize               */ ,
                                    ( UNSIGNED32 )  ISNUM( 5 ) ? hb_parnl( 5 ) : 3             /* ulMinWordLen             */ ,
                                    ( UNSIGNED32 )  ISNUM( 6 ) ? hb_parnl( 6 ) : 30            /* ulMaxWordLen             */ ,
-                                   ( UNSIGNED16 )  ISLOG( 7 ) ? hb_parl( 7 ) : TRUE           /* usUseDefaultDelim        */ ,
+                                   ISLOG( 7 ) ? ( UNSIGNED16 ) hb_parl( 7 ) : TRUE            /* usUseDefaultDelim        */ ,
                                    ( UNSIGNED8 * ) hb_parc( 8 )                               /* pucDelimiters            */ ,
-                                   ( UNSIGNED16 )  ISLOG( 9 ) ? hb_parl( 9 ) : TRUE           /* usUseDefaultNoise        */ ,
+                                   ISLOG( 9 ) ? ( UNSIGNED16 ) hb_parl( 9 ) : TRUE            /* usUseDefaultNoise        */ ,
                                    ( UNSIGNED8 * ) hb_parc( 10 )                              /* pucNoiseWords            */ ,
-                                   ( UNSIGNED16 )  ISLOG( 11 ) ? hb_parl( 11 ) : TRUE         /* usUseDefaultDrop         */ ,
+                                   ISLOG( 11 ) ? ( UNSIGNED16 ) hb_parl( 11 ) : TRUE          /* usUseDefaultDrop         */ ,
                                    ( UNSIGNED8 * ) hb_parc( 12 )                              /* pucDropChars             */ ,
-                                   ( UNSIGNED16 )  ISLOG( 13 ) ? hb_parl( 13 ) : TRUE         /* usUseDefaultConditionals */ ,
+                                   ISLOG( 13 ) ? ( UNSIGNED16 ) hb_parl( 13 ) : TRUE          /* usUseDefaultConditionals */ ,
                                    ( UNSIGNED8 * ) hb_parc( 14 )                              /* pucConditionalChars      */ ,
                                    ( UNSIGNED8 * ) hb_parc( 15 )                              /* pucReserved1             */ ,
                                    ( UNSIGNED8 * ) hb_parc( 16 )                              /* pucReserved2             */ ,
