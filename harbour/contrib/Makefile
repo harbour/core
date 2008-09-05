@@ -29,7 +29,6 @@ DIRS=\
 	rddado \
 	xhb \
 
-#	hbsqlit2 \
 #	hbwhat32 \
 
 # contribs with external dependencies

@@ -39,7 +39,6 @@ fi
 
 #**************************************************************
 
-# hbsqlit2
 _HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit3 hbtpathy hbvpdf hbziparc xhb"
 
 case "$HB_ARCHITECTURE" in

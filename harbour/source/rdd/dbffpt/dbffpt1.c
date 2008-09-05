@@ -2548,7 +2548,7 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
                               ULONG ulCount )
 {
    ERRCODE errCode;
-   ULONG ulSize, ulType;
+   ULONG ulSize = 0, ulType = 0;
    BYTE * pBuffer, * bMemoBuf;
    FPTBLOCK fptBlock;
 
@@ -2565,7 +2565,6 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
    }
    else
    {
-      ulSize = ulType = 0;
       errCode = SUCCESS;
    }
 
@@ -2905,7 +2904,7 @@ static ERRCODE hb_fptWriteMemo( FPTAREAP pArea, ULONG ulBlock, ULONG ulSize,
 static ERRCODE hb_fptPutMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
                               ULONG * pulBlock )
 {
-   ULONG ulBlock, ulSize, ulType, ulOldSize, ulOldType, ulArrayCount = 0;
+   ULONG ulBlock = *pulBlock, ulSize, ulType, ulOldSize = 0, ulOldType, ulArrayCount = 0;
    BYTE itmBuffer[FLEX_ITEM_BUFSIZE];
    BYTE  *bBufPtr = NULL, *bBufAlloc = NULL;
    ERRCODE errCode;
@@ -3063,8 +3062,7 @@ static ERRCODE hb_fptPutMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
    }
    else
    {
-      ulBlock = *pulBlock;
-      ulOldSize = ulOldType = 0;
+      ulOldType = 0;
       errCode = SUCCESS;
    }
 
@@ -3522,7 +3520,7 @@ static ERRCODE hb_fptPutVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
       }
       else
       {
-         BYTE buffer[ 11 ], *pBlock, *pAlloc = NULL;
+         BYTE buffer[ 11 ], *pBlock = NULL, *pAlloc = NULL;
          ULONG ulOldBlock = 0, ulOldSize = 0, ulNewSize = 0;
          USHORT uiType = HB_GET_LE_UINT16( pFieldBuf + pField->uiLen - 2 );
 

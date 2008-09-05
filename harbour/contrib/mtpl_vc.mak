@@ -125,7 +125,7 @@ CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX
 #-----------
 
 CFLAGS         = -nologo -W3 -w34701 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) \
-                 $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
+                 $(C_USR) $(CFLAGS)
 
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
