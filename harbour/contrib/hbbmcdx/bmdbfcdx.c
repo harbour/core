@@ -1400,13 +1400,15 @@ static BOOL hb_cdxIndexUnLockRead( LPCDXINDEX pIndex )
  if ( bTurbo )
  {
 #ifdef HB_CDX_DBGCODE
-   if ( pIndex->pArea->fShared && pIndex->fShared )
+   if ( pIndex->pArea->fShared && pIndex->fShared &&
+        !HB_DIRTYREAD( pIndex->pArea ) )
       pIndex->RdLck = FALSE;
 #endif
  }
  else
  {
-   if ( pIndex->pArea->fShared && pIndex->fShared )
+   if ( pIndex->pArea->fShared && pIndex->fShared &&
+        !HB_DIRTYREAD( pIndex->pArea ) )
    {
 #ifdef HB_CDX_DBGCODE
       if ( pIndex->WrLck || ! pIndex->RdLck )
