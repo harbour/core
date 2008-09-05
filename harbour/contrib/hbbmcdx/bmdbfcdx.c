@@ -4040,7 +4040,8 @@ static BOOL hb_cdxPageReadPrevKey( LPCDXPAGE pPage )
             break;
       }
    }
-   while( !hb_cdxCheckRecordScope( pPage->TagParent->pIndex->pArea,
+   while( ( pPage->TagParent->OptFlags & CDX_TYPE_STRUCTURE ) == 0 &&
+          !hb_cdxCheckRecordScope( pPage->TagParent->pIndex->pArea,
                                    hb_cdxPageGetKeyRec( pPage, pPage->iCurKey ) ) );
    if( pPage->iCurKey != 0 )
       hb_cdxSetCurKey( pPage );
@@ -4083,7 +4084,8 @@ static BOOL hb_cdxPageReadNextKey( LPCDXPAGE pPage )
             break;
       }
    }
-   while( !hb_cdxCheckRecordScope( pPage->TagParent->pIndex->pArea,
+   while( ( pPage->TagParent->OptFlags & CDX_TYPE_STRUCTURE ) == 0 &&
+          !hb_cdxCheckRecordScope( pPage->TagParent->pIndex->pArea,
                                    hb_cdxPageGetKeyRec( pPage, pPage->iCurKey ) ) );
    if( pPage->iCurKey != 0 )
       hb_cdxSetCurKey( pPage );

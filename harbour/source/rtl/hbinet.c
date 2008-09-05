@@ -214,9 +214,9 @@
 #endif
 
 #if (__POCC__ >= 500) && defined( HB_OS_WIN_64 )
-   /* TOFIX: Bad workaround for the '__WSAFDIsSet unresolved' problem 
-             in Pelles C 5.00.13 AMD64 mode, to make final executables 
-             link at all. Some hbinet.c features (or the whole module) 
+   /* TOFIX: Bad workaround for the '__WSAFDIsSet unresolved' problem
+             in Pelles C 5.00.13 AMD64 mode, to make final executables
+             link at all. Some hbinet.c features (or the whole module)
              won't properly work though. [vszakats] */
    #undef FD_ISSET
    #define FD_ISSET( s, f ) ( 0 )
@@ -808,6 +808,7 @@ HB_FUNC( HB_INETGETSNDBUFSIZE )
 #else
       getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( void * ) &value, &len );
 #endif
+      hb_retni( value );
    }
 }
 
