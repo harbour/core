@@ -343,7 +343,7 @@ ULONG hb_fsAttrEncode( const char * szAttr )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrEncode(%p)", szAttr));
 
-   while( ( ch = toupper( *pos ) ) != '\0' )
+   while( ( ch = ( char ) toupper( *pos ) ) != '\0' )
    {
       switch( ch )
       {

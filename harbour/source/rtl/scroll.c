@@ -105,6 +105,6 @@ HB_FUNC( SCROLL )
                 ( USHORT ) iLeft,
                 ( USHORT ) iBottom,
                 ( USHORT ) iRight,
-                hb_parni( 5 ), /* Defaults to zero on bad type */
-                hb_parni( 6 ) ); /* Defaults to zero on bad type */
+                ( SHORT ) hb_parni( 5 ), /* Defaults to zero on bad type */
+                ( SHORT ) hb_parni( 6 ) ); /* Defaults to zero on bad type */
 }

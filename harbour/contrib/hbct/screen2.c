@@ -77,7 +77,7 @@ HB_FUNC( SAYDOWN )
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
-         BYTE bColor = hb_gtGetCurrColor();
+         BYTE bColor = ( BYTE ) hb_gtGetCurrColor();
 
          if( ulLen > ( ULONG ) ( iMaxRow - iRow + 1 ) )
             ulLen = ( ULONG ) ( iMaxRow - iRow + 1 );

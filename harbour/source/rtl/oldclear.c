@@ -58,8 +58,11 @@ HB_FUNC( __ATCLEAR )
 {
    if( hb_pcount() == 4 )
    {
-      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
-      hb_gtScroll( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), 0, 0 );
+      hb_gtSetPos( ( SHORT ) hb_parni( 1 ), ( SHORT ) hb_parni( 2 ) );
+      hb_gtScroll( ( USHORT ) hb_parni( 1 ),
+                   ( USHORT ) hb_parni( 2 ),
+                   ( USHORT ) hb_parni( 3 ),
+                   ( USHORT ) hb_parni( 4 ), 0, 0 );
    }
 }
 
@@ -70,4 +73,3 @@ HB_FUNC( __CLEAR )
 }
 
 #endif
-

@@ -74,7 +74,7 @@ HB_FUNC( SETCOLOR )
 HB_FUNC( COLORSELECT )
 {
    if( ISNUM( 1 ) )
-      hb_gtColorSelect( hb_parni( 1 ) );
+      hb_gtColorSelect( ( USHORT ) hb_parni( 1 ) );
 }
 
 HB_FUNC( SETBLINK )

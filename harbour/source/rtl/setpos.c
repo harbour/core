@@ -67,7 +67,7 @@
 HB_FUNC( SETPOS ) /* Sets the screen position */
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
+      hb_gtSetPos( ( SHORT ) hb_parni( 1 ), ( SHORT ) hb_parni( 2 ) );
 }
 
 HB_FUNC( ROW ) /* Return the current screen row position (zero origin) */
@@ -89,4 +89,3 @@ HB_FUNC( COL ) /* Return the current screen column position (zero origin) */
 
    hb_retni( iCol );
 }
-

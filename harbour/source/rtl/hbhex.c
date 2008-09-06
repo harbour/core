@@ -119,7 +119,7 @@ HB_FUNC( HB_NUMTOHEX )
    do
    {
       int iDigit = ( int ) ( ulNum & 0x0F );
-      ret[ --iLen ] = iDigit + ( iDigit < 10 ? '0' : 'A' - 10 ); 
+      ret[ --iLen ] = ( char ) ( iDigit + ( iDigit < 10 ? '0' : 'A' - 10 ) );
       ulNum >>= 4;
    }
    while( fDefaultLen ? ulNum != 0 : iLen != 0 );

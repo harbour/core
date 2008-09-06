@@ -115,17 +115,17 @@ HB_FUNC( DISKSPACE )
       typedef BOOL ( WINAPI * P_GDFSE )( LPCSTR, PULARGE_INTEGER,
                                          PULARGE_INTEGER, PULARGE_INTEGER );
       ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;
-      USHORT uiParam = hb_parni( 1 );
+      USHORT uiParam = ( USHORT ) hb_parni( 1 );
       USHORT uiDrive = uiParam == 0 ? hb_fsCurDrv() + 1 : uiParam;
       UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
 
 #if defined(HB_WINCE)
-      TCHAR lpPath[4];
+      TCHAR lpPath[ 4 ];
 
-      lpPath[0] = uiDrive + 'A' - 1;
-      lpPath[1] = ':';
-      lpPath[2] = '\\';
-      lpPath[3] = '\0';
+      lpPath[ 0 ] = ( TCHAR ) uiDrive + 'A' - 1;
+      lpPath[ 1 ] = ':';
+      lpPath[ 2 ] = '\\';
+      lpPath[ 3 ] = '\0';
 
       bError = !GetDiskFreeSpaceEx( lpPath,
                                     ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
@@ -134,14 +134,14 @@ HB_FUNC( DISKSPACE )
       if( !bError )
          dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
 #else
-      char szPath[4];
+      char szPath[ 4 ];
       P_GDFSE pGetDiskFreeSpaceEx = ( P_GDFSE )
                            GetProcAddress( GetModuleHandleA( "kernel32.dll" ),
                                            "GetDiskFreeSpaceExA" );
-      szPath[0] = uiDrive + 'A' - 1;
-      szPath[1] = ':';
-      szPath[2] = '\\';
-      szPath[3] = '\0';
+      szPath[ 0 ] = ( char ) uiDrive + 'A' - 1;
+      szPath[ 1 ] = ':';
+      szPath[ 2 ] = '\\';
+      szPath[ 3 ] = '\0';
 
       if( pGetDiskFreeSpaceEx )
       {
@@ -186,7 +186,7 @@ HB_FUNC( DISKSPACE )
    }
 #elif defined(HB_OS_UNIX)
    {
-      char *szName = hb_parc( 1 );
+      char * szName = hb_parc( 1 );
       BOOL fFree = FALSE;
 
       if( !szName )

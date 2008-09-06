@@ -1253,7 +1253,7 @@ HB_FUNC( FT_FAPPEND )
    if( !error[area] )
    {
       /* move DOS eof marker */
-      hb_fsWrite( handles[area], (void *) buff, 0 );
+      hb_fsWrite( handles[area], (BYTE *) buff, 0 );
       error[area] = hb_fsError();
    }
 

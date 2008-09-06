@@ -66,7 +66,7 @@
 
 /* Compile in Unix mode under Cygwin */
 #ifdef HB_OS_UNIX_COMPATIBLE
-  #undef HB_OS_WIN_32
+   #undef HB_OS_WIN_32
 #endif
 
 /* HB_INET_H_ */
@@ -180,11 +180,11 @@
    #include <errno.h>
 #endif
 
-#if defined( HB_OS_UNIX ) || defined( HB_OS_UNIX_COMPATIBLE ) || defined( HB_OS_BSD ) || defined(HB_OS_OS2)
+#if defined( HB_OS_UNIX ) || defined( HB_OS_UNIX_COMPATIBLE ) || defined( HB_OS_BSD ) || defined( HB_OS_OS2 )
    #include <sys/time.h>
 #endif
 
-#if defined(HB_OS_OS2)
+#if defined( HB_OS_OS2 )
    #include <sys/socket.h>
    #include <sys/select.h>
    #include <sys/ioctl.h>
@@ -213,7 +213,7 @@
    #define socklen_t int
 #endif
 
-#if (__POCC__ >= 500) && defined( HB_OS_WIN_64 )
+#if defined( __POCC__ ) && ( __POCC__ >= 500 ) && defined( HB_OS_WIN_64 )
    /* TOFIX: Bad workaround for the '__WSAFDIsSet unresolved' problem
              in Pelles C 5.00.13 AMD64 mode, to make final executables
              link at all. Some hbinet.c features (or the whole module)

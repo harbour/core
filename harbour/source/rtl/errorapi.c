@@ -758,7 +758,7 @@ USHORT hb_errGetGenCode( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetGenCode(%p)", pError));
 
-   return hb_arrayGetNI( pError, HB_TERROR_GENCODE );
+   return ( USHORT ) hb_arrayGetNI( pError, HB_TERROR_GENCODE );
 }
 
 PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
@@ -797,7 +797,7 @@ USHORT hb_errGetOsCode( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetOsCode(%p)", pError));
 
-   return hb_arrayGetNI( pError, HB_TERROR_OSCODE );
+   return ( USHORT ) hb_arrayGetNI( pError, HB_TERROR_OSCODE );
 }
 
 PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
@@ -813,7 +813,7 @@ USHORT hb_errGetSeverity( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetSeverity(%p)", pError));
 
-   return hb_arrayGetNI( pError, HB_TERROR_SEVERITY );
+   return ( USHORT ) hb_arrayGetNI( pError, HB_TERROR_SEVERITY );
 }
 
 PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
@@ -829,7 +829,7 @@ USHORT hb_errGetSubCode( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetSubCode(%p)", pError));
 
-   return hb_arrayGetNI( pError, HB_TERROR_SUBCODE );
+   return ( USHORT ) hb_arrayGetNI( pError, HB_TERROR_SUBCODE );
 }
 
 PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
@@ -861,7 +861,7 @@ USHORT hb_errGetTries( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetTries(%p)", pError));
 
-   return hb_arrayGetNI( pError, HB_TERROR_TRIES );
+   return ( USHORT ) hb_arrayGetNI( pError, HB_TERROR_TRIES );
 }
 
 PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries )
@@ -877,7 +877,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetFlags(%p)", pError));
 
-   return hb_arrayGetNI( pError, HB_TERROR_FLAGS );
+   return ( USHORT ) hb_arrayGetNI( pError, HB_TERROR_FLAGS );
 }
 
 PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )

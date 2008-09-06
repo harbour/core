@@ -84,14 +84,14 @@ rem ---------------------------------------------------------------
 
 :BUILD
 
-   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %_HB_MAKEFILE% %1 %2 %3 > make_%_HB_CC_NAME%.log
+   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -nologo -f %_HB_MAKEFILE% %1 %2 %3 > make_%_HB_CC_NAME%.log
    if errorlevel 1 set HB_EXIT_LEVEL=1
    if errorlevel 1 if not "%HB_SHOW_ERRORS%" == "no" notepad make_%_HB_CC_NAME%.log
    goto EXIT
 
 :CLEAN
 
-   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %_HB_MAKEFILE% CLEAN > make_%_HB_CC_NAME%.log
+   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -nologo -f %_HB_MAKEFILE% CLEAN > make_%_HB_CC_NAME%.log
    if errorlevel 1 set HB_EXIT_LEVEL=1
    if errorlevel 1 goto EXIT
    if exist make_%_HB_CC_NAME%.log del make_%_HB_CC_NAME%.log > nul
@@ -100,7 +100,7 @@ rem ---------------------------------------------------------------
 
 :INSTALL
 
-   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %_HB_MAKEFILE% INSTALL > nul
+   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -nologo -f %_HB_MAKEFILE% INSTALL > nul
    if errorlevel 1 set HB_EXIT_LEVEL=1
    goto EXIT
 

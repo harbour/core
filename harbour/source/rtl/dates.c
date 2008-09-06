@@ -126,7 +126,7 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
                         digit_count--;
                      }
                      while( digit_count-- > 0 && format_count < size )
-                        szFormattedDate[ format_count++ ] = digit;
+                        szFormattedDate[ format_count++ ] = ( char ) digit;
                }
                used_d = TRUE;
                break;
@@ -161,7 +161,7 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
                         digit_count--;
                      }
                      while( digit_count-- > 0 && format_count < size )
-                        szFormattedDate[ format_count++ ] = digit;
+                        szFormattedDate[ format_count++ ] = ( char ) digit;
                }
                used_m = TRUE;
                break;
@@ -197,14 +197,14 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
                         digit_count--;
                      }
                      while( digit_count-- > 0 && format_count < size )
-                        szFormattedDate[ format_count++ ] = digit;
+                        szFormattedDate[ format_count++ ] = ( char ) digit;
                }
                used_y = TRUE;
                break;
 
             default:
                while( digit_count-- > 0 && format_count < size )
-                  szFormattedDate[ format_count++ ] = digit;
+                  szFormattedDate[ format_count++ ] = ( char ) digit;
          }
       }
    }

@@ -76,5 +76,5 @@ HB_FUNC( SETCURSOR )
    hb_retni( uiCursor );
 
    if( ISNUM( 1 ) )
-      hb_gtSetCursor( hb_parni( 1 ) );
+      hb_gtSetCursor( ( USHORT ) hb_parni( 1 ) );
 }

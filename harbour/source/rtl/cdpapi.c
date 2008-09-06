@@ -334,8 +334,8 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
 
                   for( i = 0; i < 256; i++ )
                   {
-                     cdpage->s_upper[i] = toupper( ( UCHAR ) i );
-                     cdpage->s_lower[i] = tolower( ( UCHAR ) i );
+                     cdpage->s_upper[i] = ( char ) toupper( ( UCHAR ) i );
+                     cdpage->s_lower[i] = ( char ) tolower( ( UCHAR ) i );
                   }
                   if( strpbrk( cdpage->CharsUpper, "~." ) != NULL )
                   {
@@ -387,12 +387,12 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                      iumax = iu;
                      ilmax = il;
 
-                     cdpage->s_chars[iu] = i;
-                     cdpage->s_chars[il] = i + nAddLower;
+                     cdpage->s_chars[iu] = ( char ) i;
+                     cdpage->s_chars[il] = ( char ) ( i + nAddLower );
                      if( cdpage->lAccInterleave )
                      {
-                        cdpage->s_accent[iu] = ia;
-                        cdpage->s_accent[il] = ia + nAddLower;
+                        cdpage->s_accent[iu] = ( char ) ia;
+                        cdpage->s_accent[il] = ( char ) ( ia + nAddLower );
                      }
                      cdpage->s_upper[il] = *ptrUpper;
                      cdpage->s_lower[iu] = *ptrLower;
@@ -402,12 +402,12 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                      for( i = 91; i <= 96; i++ )
                      {
                         if( !cdpage->s_chars[i] )
-                           cdpage->s_chars[i] = cdpage->nChars + ( i - 90 );
+                           cdpage->s_chars[i] = ( char ) ( cdpage->nChars + ( i - 90 ) );
                      }
                      for( i = 123; i < 256; i++ )
                      {
                         if( !cdpage->s_chars[i] )
-                           cdpage->s_chars[i] = cdpage->nChars + nAddLower + ( i - 122 );
+                           cdpage->s_chars[i] = ( char ) ( cdpage->nChars + nAddLower + ( i - 122 ) );
                      }
                   }
                   /*
@@ -799,7 +799,7 @@ HB_EXPORT ULONG hb_cdpStrnToUTF8( PHB_CODEPAGE cdp, BOOL fCtrl,
       else
       {
          uniCodes = cdp->uniTable->uniCodes;
-         nChars = cdp->uniTable->nChars;
+         nChars = ( USHORT ) cdp->uniTable->nChars;
       }
    }
    else
@@ -843,7 +843,7 @@ HB_EXPORT ULONG hb_cdpStrnToU16( PHB_CODEPAGE cdp, BOOL fCtrl,
       else
       {
          uniCodes = cdp->uniTable->uniCodes;
-         nChars = cdp->uniTable->nChars;
+         nChars = ( USHORT ) cdp->uniTable->nChars;
       }
    }
    else

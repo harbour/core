@@ -296,7 +296,7 @@ static void hb_conOut( USHORT uiParam, hb_out_func_typedef * pOutFunc )
 
 HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
 {
-   USHORT uiPCount = hb_pcount();
+   USHORT uiPCount = ( USHORT ) hb_pcount();
    USHORT uiParam;
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
@@ -309,7 +309,7 @@ HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
 
 HB_FUNC( OUTERR ) /* writes a list of values to the standard error device */
 {
-   USHORT uiPCount = hb_pcount();
+   USHORT uiPCount = ( USHORT ) hb_pcount();
    USHORT uiParam;
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
@@ -322,7 +322,7 @@ HB_FUNC( OUTERR ) /* writes a list of values to the standard error device */
 
 HB_FUNC( QQOUT ) /* writes a list of values to the current device (screen or printer) and is affected by SET ALTERNATE */
 {
-   USHORT uiPCount = hb_pcount();
+   USHORT uiPCount = ( USHORT ) hb_pcount();
    USHORT uiParam;
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
@@ -342,7 +342,7 @@ HB_FUNC( QOUT )
       BYTE buf[ 80 ];
 
       s_uiPRow++;
-      s_uiPCol = hb_set.HB_SET_MARGIN;
+      s_uiPCol = ( USHORT ) hb_set.HB_SET_MARGIN;
       if( s_uiPCol )
       {
          if( s_uiPCol > sizeof( buf ) )
@@ -395,7 +395,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
        hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
       USHORT uiPRow = ( USHORT ) iRow;
-      USHORT uiPCol = ( USHORT ) iCol + hb_set.HB_SET_MARGIN;
+      USHORT uiPCol = ( USHORT ) iCol + ( USHORT ) hb_set.HB_SET_MARGIN;
 
       if( s_uiPRow != uiPRow || s_uiPCol != uiPCol )
       {

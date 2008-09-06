@@ -499,10 +499,10 @@ static void convert_open_flags( BOOL fCreate, ULONG ulAttr, USHORT uiFlags,
 }
 #endif
 
-static int convert_seek_flags( USHORT uiFlags )
+static USHORT convert_seek_flags( USHORT uiFlags )
 {
    /* by default FS_SET is set */
-   int result_flags = SEEK_SET;
+   USHORT result_flags = SEEK_SET;
 
    HB_TRACE(HB_TR_DEBUG, ("convert_seek_flags(%hu)", uiFlags));
 
@@ -1067,16 +1067,16 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
 
          if( lJulian > 0 )
          {
-            st.wYear = iYear;
-            st.wMonth = iMonth;
-            st.wDay = iDay;
+            st.wYear = ( WORD ) iYear;
+            st.wMonth = ( WORD ) iMonth;
+            st.wDay = ( WORD ) iDay;
          }
          if( lMillisec >= 0 )
          {
-            st.wHour = iHour;
-            st.wMinute = iMinute;
-            st.wSecond = iSecond;
-            st.wMilliseconds = iMSec;
+            st.wHour = ( WORD ) iHour;
+            st.wMinute = ( WORD ) iMinute;
+            st.wSecond = ( WORD ) iSecond;
+            st.wMilliseconds = ( WORD ) iMSec;
          }
          SystemTimeToFileTime( &st, &local_ft );
          LocalFileTimeToFileTime( &local_ft, &ft );
@@ -1949,7 +1949,7 @@ HB_EXPORT ULONG hb_fsSeek( HB_FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags 
       {
          ret = DosSetFilePtr( hFileHandle, lOffset, Flags, &ulPos );
          /* TODO: what we should do with this error code? Is it DOS compatible? */
-         hb_fsSetError(( USHORT ) ret );
+         hb_fsSetError( ( USHORT ) ret );
       }
       if( ret != 0 )
       {

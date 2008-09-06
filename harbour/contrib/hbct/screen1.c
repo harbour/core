@@ -102,13 +102,13 @@
 HB_FUNC( SCREENATTR )
 {
    SHORT sRow, sCol;
-   int iRow, iCol;
+   SHORT iRow, iCol;
    BYTE bColor, bAttr;
    USHORT usChar;
 
    hb_gtGetPos( &sRow, &sCol );
-   iRow = ISNUM( 1 ) ? hb_parni( 1 ) : sRow;
-   iCol = ISNUM( 2 ) ? hb_parni( 2 ) : sCol;
+   iRow = ISNUM( 1 ) ? ( SHORT ) hb_parni( 1 ) : sRow;
+   iCol = ISNUM( 2 ) ? ( SHORT ) hb_parni( 2 ) : sCol;
 
    if( hb_gtGetChar( iRow, iCol, &bColor, &bAttr, &usChar ) != SUCCESS )
       bColor = 0;
@@ -151,7 +151,7 @@ HB_FUNC( SCREENMIX )
       char * szText = hb_parc( 1 ), * szAttr;
       ULONG ulAttr = hb_parclen( 2 ), ul = 0;
       SHORT sRow, sCol;
-      int iRow, iCol, i;
+      SHORT iRow, iCol, i;
 
       if( ulAttr == 0 )
       {
@@ -162,8 +162,8 @@ HB_FUNC( SCREENMIX )
          szAttr = hb_parc( 2 );
 
       hb_gtGetPos( &sRow, &sCol );
-      iRow = ISNUM( 3 ) ? hb_parni( 3 ) : sRow;
-      iCol = ISNUM( 4 ) ? hb_parni( 4 ) : sCol;
+      iRow = ISNUM( 3 ) ? ( SHORT ) hb_parni( 3 ) : sRow;
+      iCol = ISNUM( 4 ) ? ( SHORT ) hb_parni( 4 ) : sCol;
 
       if( iRow >= 0 && iCol >= 0 &&
           iRow <= hb_gtMaxRow() && iCol <= hb_gtMaxCol() )
@@ -231,11 +231,11 @@ HB_FUNC( SAYSCREEN )
    {
       char * szText = hb_parc( 1 );
       SHORT sRow, sCol;
-      int iRow, iCol, i;
+      SHORT iRow, iCol, i;
 
       hb_gtGetPos( &sRow, &sCol );
-      iRow = ISNUM( 2 ) ? hb_parni( 2 ) : sRow;
-      iCol = ISNUM( 3 ) ? hb_parni( 3 ) : sCol;
+      iRow = ISNUM( 2 ) ? ( SHORT ) hb_parni( 2 ) : sRow;
+      iCol = ISNUM( 3 ) ? ( SHORT ) hb_parni( 3 ) : sCol;
 
       if( iRow >= 0 && iCol >= 0 &&
           iRow <= hb_gtMaxRow() && iCol <= hb_gtMaxCol() )
