@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-07 01:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/make_vc.bat
+     ! Fixed external .lib handling for MSVC.
+
+   * contrib/rddads/make_vc.bat
+     ! Fixed external .lib handling for MSVC 
+       (for older ACE versions).
+
+   * contrib/hbhpdf/make_b32.bat
+   * contrib/hbhpdf/make_vc.bat
+     + Added .lib/.dll support for libharu 2.1.0 
+       binary distribution version.
+
 2008-09-06 12:38 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/hbpcre/pcre.h
    * source/hbpcre/config.h

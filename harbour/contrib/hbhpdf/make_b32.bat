@@ -21,7 +21,10 @@ goto POST_EXIT
 if "%HB_INC_LIBHARU%" == "" set HB_INC_LIBHARU=%HB_DIR_LIBHARU%\include
 set CFLAGS=-I"%HB_INC_LIBHARU%"
 set _HB_DLL_NAME=libhpdf
-set _HB_DLL_DIR=%HB_DIR_LIBHARU%
+if exist "%HB_DIR_LIBHARU%\%_HB_DLL_NAME%.dll"         set _HB_DLL_DIR=%HB_DIR_LIBHARU%
+if exist "%HB_DIR_LIBHARU%\lib_dll\%_HB_DLL_NAME%.dll" set _HB_DLL_DIR=%HB_DIR_LIBHARU%\lib_dll
+
+if not "%HB_DIR_LIBHARU%" == "" echo Using .dll: "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll"
 
 rem ---------------------------------------------------------------
 
