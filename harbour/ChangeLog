@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-06 12:38 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/hbpcre/pcre.h
+   * source/hbpcre/config.h
+     + Upgraded PCRE lib to 7.8 release version.
+
+   * contrib/hbct/token2.c
+   * contrib/examples/pp/hbppcore.c
+     * Minor formatting.
+
 2008-09-06 11:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_vc.bat
    * contrib/mtpl_vc.bat

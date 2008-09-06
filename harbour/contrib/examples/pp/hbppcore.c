@@ -1798,7 +1798,7 @@ static int WorkPseudoF( char **ptri, char *ptro, DEFINES * stdef )
 
          ipos++;
       }
-      while( 1 );
+      while( TRUE );
    }
    else
    {
@@ -3227,7 +3227,7 @@ static BOOL CheckOptional( char *ptrmp, char *ptri, char *ptro, int *lenres, BOO
             break;
          }
       }
-      while( 1 );
+      while( TRUE );
    }
    s_Repeate = save_Repeate;
    s_numBrackets = save_numBr;
@@ -3720,7 +3720,7 @@ int hb_pp_RdStr( FILE * handl_i, char *buffer, int maxlen, BOOL lContinue, char 
       return -1;
    }
 
-   while( 1 )
+   while( TRUE )
    {
       if( *iBuffer == *lenBuffer )
       {
