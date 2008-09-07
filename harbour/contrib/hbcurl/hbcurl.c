@@ -790,6 +790,11 @@ HB_FUNC( CURL_EASY_SETOPT )
          case HB_CURLOPT_TCP_NODELAY:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_TCP_NODELAY, HB_CURL_OPT_BOOL( 3 ) );
             break;
+#if LIBCURL_VERSION_NUM > 0x071300
+         case HB_CURLOPT_ADDRESS_SCOPE:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_ADDRESS_SCOPE, hb_parnl( 3 ) );
+            break;
+#endif
 
          /* Names and passwords options (Authentication) */
 
@@ -1228,6 +1233,14 @@ HB_FUNC( CURL_EASY_SETOPT )
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_KRB4LEVEL, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
 #endif
             break;
+#if LIBCURL_VERSION_NUM > 0x071300
+         case HB_CURLOPT_CRLFILE:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_CRLFILE, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
+            break;
+         case HB_CURLOPT_ISSUERCERT:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_ISSUERCERT, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
+            break;
+#endif
 
          /* SSH options */
 
@@ -1598,6 +1611,18 @@ HB_FUNC( CURL_EASY_GETINFO )
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_FTP_ENTRY_PATH, &ret_string );
 #endif
          type = HB_CURL_INFO_TYPE_STR;
+         break;
+      case HB_CURLINFO_PRIMARY_IP:
+#if LIBCURL_VERSION_NUM >= 0x071300
+         res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_PRIMARY_IP, &ret_string );
+#endif
+         type = HB_CURL_INFO_TYPE_STR;
+         break;
+      case HB_CURLINFO_APPCONNECT_TIME:
+#if LIBCURL_VERSION_NUM >= 0x071300
+         res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_APPCONNECT_TIME, &ret_double );
+#endif
+         type = HB_CURL_INFO_TYPE_DOUBLE;
          break;
       }
 

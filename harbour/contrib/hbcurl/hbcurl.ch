@@ -52,6 +52,8 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef HBCURL_CH_
 #define HBCURL_CH_
 
@@ -219,6 +221,9 @@
 #define HB_CURLOPT_PROXY_TRANSFER_MODE        166
 #define HB_CURLOPT_SEEKFUNCTION               167
 #define HB_CURLOPT_SEEKDATA                   168
+#define HB_CURLOPT_CRLFILE                    169
+#define HB_CURLOPT_ISSUERCERT                 170
+#define HB_CURLOPT_ADDRESS_SCOPE              171
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_PROGRESSBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
@@ -359,6 +364,8 @@
 #define HB_CURLINFO_COOKIELIST                29
 #define HB_CURLINFO_LASTSOCKET                30
 #define HB_CURLINFO_FTP_ENTRY_PATH            31
+#define HB_CURLINFO_PRIMARY_IP                32
+#define HB_CURLINFO_APPCONNECT_TIME           33
 
 /* curl result codes. */
 
@@ -445,5 +452,7 @@
 #define HB_CURLE_SSH                          79 /* error from the SSH layer, somewhat generic so the error message will be of interest when this has happened */
 #define HB_CURLE_SSL_SHUTDOWN_FAILED          80 /* Failed to shut down the SSL connection */
 #define HB_CURLE_AGAIN                        81 /* socket is not ready for send/recv, wait till it's ready and try again */
+#define HB_CURLE_SSL_CRL_BADFILE              82 /* could not load CRL file, missing or wrong format (Added in 7.19.0) */
+#define HB_CURLE_SSL_ISSUER_ERROR             83 /* Issuer check failed. (Added in 7.19.0) */
 
 #endif /* HBCURL_CH_ */
