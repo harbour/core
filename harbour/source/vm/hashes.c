@@ -651,7 +651,7 @@ void hb_hashCloneBody( PHB_ITEM pHash, PHB_ITEM pDest, PHB_NESTED_CLONED pCloned
    {
       PHB_ITEM pValue = &pHash->item.asHash.value->pPairs[ ulPos ].value;
       if( HB_IS_BYREF( pValue ) )
-         hb_itemUnRef( pValue );
+         pValue = hb_itemUnRef( pValue );
       hb_itemCopy( &pDest->item.asHash.value->pPairs[ ulPos ].key,
                    &pHash->item.asHash.value->pPairs[ ulPos ].key );
       pDest->item.asHash.value->ulLen++;
