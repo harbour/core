@@ -520,7 +520,7 @@ static int hb_ctw_CreateWindow( PHB_GT pGT, int iTop, int iLeft, int iBottom, in
    if( pWnd->iShadowAttr >= 0 )
       fClear = TRUE;
    bAttr  = 0;
-   bColor = iColor ? iColor : HB_GTSELF_GETCOLOR( pGT );
+   bColor = iColor ? ( BYTE ) iColor : ( BYTE ) HB_GTSELF_GETCOLOR( pGT );
    usChar = ( USHORT ) HB_GTSELF_GETCLEARCHAR( pGT );
 
    lIndex = 0;
@@ -829,7 +829,7 @@ static int hb_ctw_AddWindowBox( PHB_GT pGT, int iWindow, BYTE * szBox, int iColo
    {
       if( iColor == 0 )
          iColor = HB_GTSELF_GETCOLOR( pGT );
-      HB_GTSELF_BOX( pGT, 0, 0, iMaxRow, iMaxCol, szBox, iColor );
+      HB_GTSELF_BOX( pGT, 0, 0, iMaxRow, iMaxCol, szBox, ( BYTE ) iColor );
       if( iWindow > 0 && iWindow <= s_iOpenWindows &&
           s_windows[ iWindow ] != NULL )
       {
@@ -1087,8 +1087,8 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, BYTE * pText, ULONG ulLength )
          if( iRow > iMaxRow )
          {
             HB_GTSELF_SCROLL( pGT, 0, 0, iMaxRow, iMaxCol,
-                              HB_GTSELF_GETCOLOR( pGT ),
-                              HB_GTSELF_GETCLEARCHAR( pGT ),
+                              ( BYTE ) HB_GTSELF_GETCOLOR( pGT ),
+                              ( BYTE ) HB_GTSELF_GETCLEARCHAR( pGT ),
                           iRow - iMaxRow, 0 );
             iRow = iMaxRow;
             iCol = 0;
@@ -1566,7 +1566,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                   ul2 = ul - ulLast;
                   if( ul2 > ulWidth )
                      ul2 = ulWidth;
-                  HB_GTSELF_PUTTEXT( pGT, i, ( ( ulWidth - ul2 + 1 ) >> 1 ) + 1, iClrNorm,
+                  HB_GTSELF_PUTTEXT( pGT, i, ( ( ulWidth - ul2 + 1 ) >> 1 ) + 1, ( BYTE ) iClrNorm,
                                      ( BYTE * ) szMessage + ulLast, ul2 );
                }
                ulLast = ul + 1;
@@ -1579,7 +1579,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             ul2 = ul - ulLast;
             if( ul2 > ulWidth )
                ul2 = ulWidth;
-            HB_GTSELF_PUTTEXT( pGT, i, ( ( ulWidth - ul2 + 1 ) >> 1 ) + 1, iClrNorm,
+            HB_GTSELF_PUTTEXT( pGT, i, ( ( ulWidth - ul2 + 1 ) >> 1 ) + 1, ( BYTE ) iClrNorm,
                                ( BYTE * ) szMessage + ulLast, ul2 );
          }
 
@@ -1592,7 +1592,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             {
                iClr = i == iPos ? iClrHigh : iClrNorm;
                ulLen = hb_arrayGetCLen( pOptions, i );
-               HB_GTSELF_PUTTEXT( pGT, iLines + 1, iMnuCol, iClr,
+               HB_GTSELF_PUTTEXT( pGT, iLines + 1, iMnuCol, ( BYTE ) iClr,
                                   ( BYTE * ) hb_arrayGetCPtr( pOptions, i ), ulLen );
                iMnuCol += ulLen + 3;
             }

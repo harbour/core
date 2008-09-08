@@ -226,7 +226,7 @@ HB_FUNC( TRANSFORM )
                      /* Upper */
                      case '!':
                      {
-                        szResult[ ulResultPos++ ] = hb_charUpper( szExp[ ulExpPos ] );
+                        szResult[ ulResultPos++ ] = ( char ) hb_charUpper( szExp[ ulExpPos ] );
                         ulExpPos++;
                         bAnyPic = TRUE;
                         break;
@@ -244,7 +244,7 @@ HB_FUNC( TRANSFORM )
                      case 'x':
                      case 'X':
                      {
-                        szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? hb_charUpper( szExp[ ulExpPos ] ) : szExp[ ulExpPos ];
+                        szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? ( char ) hb_charUpper( szExp[ ulExpPos ] ) : szExp[ ulExpPos ];
                         ulExpPos++;
                         bAnyPic = TRUE;
                         break;
@@ -337,12 +337,12 @@ HB_FUNC( TRANSFORM )
                         break;
                      }
                      default:
-                        szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? hb_charUpper( *szExp ) : *szExp;
+                        szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? ( char ) hb_charUpper( *szExp ) : *szExp;
                   }
                }
                else
                {
-                  szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? hb_charUpper( *szExp ) : *szExp;
+                  szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? ( char ) hb_charUpper( *szExp ) : *szExp;
                }
                szExp++;
             }
@@ -352,7 +352,7 @@ HB_FUNC( TRANSFORM )
          {
             while( ulExpPos++ < ulExpLen )
             {
-               szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? hb_charUpper( *szExp ) : *szExp;
+               szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? ( char ) hb_charUpper( *szExp ) : *szExp;
                szExp++;
             }
          }
