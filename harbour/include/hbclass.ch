@@ -135,7 +135,7 @@
 #endif
 
 /* Disable method decoration when Harbour compiled strict compatibility mode.
-   In strict mode, PP doesn't support identifier concatenation, which 
+   In strict mode, PP doesn't support identifier concatenation, which
    would be needed for method decoration. */
 #ifdef HB_C52_STRICT
    #ifndef HB_CLS_NO_DECORATION
@@ -408,7 +408,8 @@ DECLARE HBClass ;
    MESSAGE <MessageName> [ AS <type> ] INLINE Self:<AltMsgName> <ctor> <export> <protect> <hidde> <persistent>
 */
 
-#xcommand MESSAGE <MessageName> [ AS <type> ] TO <oObject> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] =>;
+#xcommand MESSAGE <MessageName> [ AS <type> ] TO <oObject> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
+   MESSAGE <MessageName> [ AS <type> ] INLINE Self:<oObject>:<MessageName> <export> <protect> <hidde> <persistent>
 
 #xcommand MESSAGE <MessageName> [ AS <type> ] IN <SuperClass> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
    MESSAGE <MessageName> [ AS <type> ] INLINE Self:<SuperClass>:<MessageName> <export> <protect> <hidde> <persistent>
