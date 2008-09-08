@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-08 11:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/whatsnew.txt
+   * doc/dirstruc.txt
+     * Updated.
+
+   * contrib/hbhpdf/tests/harupdf.prg
+   - contrib/hbhpdf/tests/files/maskimage.png
+   + contrib/hbhpdf/tests/files/maskimag.png
+   - contrib/hbhpdf/tests/files/32_32_2color.dat
+   - contrib/hbhpdf/tests/files/32_32_gray.dat
+   - contrib/hbhpdf/tests/files/penguinattack.ttf
+   - contrib/hbhpdf/tests/files/32_32_rgb.dat
+     * One file renamed to short name.
+     - Some unused files removed.
+
 2008-09-08 02:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/transfrm.c
    * source/rtl/set.c

@@ -213,6 +213,7 @@ Known build issues
   normal in this non-Harbour code.
 - Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions 
   won't work.
+- gtalleg contrib may not compile on all platforms/compilers.
 
 
 Version 1.0.0 (2008-08-10) tag: 1.0.0

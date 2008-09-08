@@ -60,9 +60,7 @@
 //----------------------------------------------------------------------//
 
 #include "harupdf.ch"
-#ifdef __oHARBOUR__
-#include "xhb.ch"
-#endif
+
 //----------------------------------------------------------------------//
 
 Function Main( cFileToSave )
@@ -73,10 +71,8 @@ Function Main( cFileToSave )
 
    if DesignHaruPDF( cFileToSave )
       Alert( "PDF File <"+cFileToSave+"> is Created!" )
-
    else
       Alert( "Some problems in creating the PDF!" )
-
    endif
 
    Return nil
@@ -1314,7 +1310,7 @@ Static function Page_Images( pdf )
    /* image3 is a RGB-color image. we use this image for color-mask
     * demo.
     */
-   image3 := HPDF_LoadPngImageFromFile(pdf, cImagePath+"maskimage.png")
+   image3 := HPDF_LoadPngImageFromFile(pdf, cImagePath+"maskimag.png")
 
    iw := HPDF_Image_GetWidth(image)
    ih := HPDF_Image_GetHeight(image)

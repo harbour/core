@@ -48,6 +48,10 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---guestbk     - Harbour Guests Book.
 |   |   |
+|   |   +---hbsqlit2    - Interface for SQLite 2.x library.
+|   |   |   |
+|   |   |   +---tests   - Test programs.
+|   |   |
 |   |   +---hscript     - Harbour Script.
 |   |   |
 |   |   +---misc        - A few humble demonstration.
@@ -172,10 +176,6 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
-|   +---hbsqlit2        - Interface for SQLite 2.x library.
-|   |   |
-|   |   +---tests       - Test programs.
-|   |
 |   +---hbsqlit3        - Interface for SQLite 3.x library.
 |   |   |
 |   |   +---sqlite3     - An amalgamation of SQLite core library.
@@ -207,8 +207,8 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   +---hbwhat32        - What32 is a library for ccessing all of Win32 API
 |   |                     from PRG level.
 |   |
-|   +---hbziparch       - Interface for ZipArchive general purpose compression
-|   |   |                 library to work with ZIP files.
+|   +---hbziparc        - Compatibility interface with ZipArchive general 
+|   |   |                 purpose compression library to work with ZIP files.
 |   |   |
 |   |   +---tests       - Test programs.
 |   |   |
