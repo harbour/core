@@ -59,17 +59,16 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
    pause
    echo     HB_COMPILER:
    echo       - When HB_ARCHITECTURE=dos
-   echo         - bcc16   (Borland C++ 3.x, 4.x, 5.0x, DOS 16-bit)
    echo         - djgpp   (Delorie GNU C, DOS 32-bit)
    echo         - rxs32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)
    echo         - watcom  (OpenWatcom, DOS 32-bit)
    echo       - When HB_ARCHITECTURE=w32
    echo         - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)
+   echo         - mingw32 (MinGW GNU C, Windows 32-bit)
    echo         - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)
-   echo         - mingw32 (Cygnus/MinGW GNU C, Windows 32-bit)
    echo         - rxsnt   (EMX/RSXNT/Win32 GNU C, Windows 32-bit)
    echo         - icc     (IBM Visual Age C++, Windows 32-bit)
-   echo         - msvc    (Microsoft Visual C++, Windows 32-bit)
+   echo         - msvc    (Microsoft Visual C++, Windows 32/64-bit)
    echo         - watcom  (OpenWatcom, Windows 32-bit)
    echo       - When HB_ARCHITECTURE=linux
    echo         - gcc     (GNU C, 32-bit)
@@ -79,13 +78,14 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
    echo.
    pause
    echo     HB_GT_LIB:
-   echo       - gtstd (Standard streaming) (for all architectures)
-   echo       - gtdos (DOS console)        (for dos architecture)
-   echo       - gtwin (Win32 console)      (for w32 architecture)
-   echo       - gtos2 (OS/2 console)       (for os2 architecture)
-   echo       - gtpca (PC ANSI console)    (for all architectures)
-   echo       - gtcrs (Curses console)     (for linux, w32 architectures)
-   echo       - gtsln (Slang console)      (for linux, w32 architectures)
+   echo       - gtstd (Standard streaming)  (for all architectures)
+   echo       - gtdos (DOS console)         (for dos architecture)
+   echo       - gtwin (Windows console)     (for w32 architecture)
+   echo       - gtwvt (Windows GUI console) (for w32 architecture)
+   echo       - gtos2 (OS/2 console)        (for os2 architecture)
+   echo       - gtpca (PC ANSI console)     (for all architectures)
+   echo       - gtcrs (Curses console)      (for linux, w32 architectures)
+   echo       - gtsln (Slang console)       (for linux, w32 architectures)
    goto END
 
 :NO_ARCH
@@ -110,7 +110,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
 
 :COMPILE
 
-   %HB_BIN_INSTALL%\harbour %1.prg -n -q0 -gc0 -i%HB_INC_INSTALL% %2 %3 %HARBOURFLAGS%
+   %HB_BIN_INSTALL%\harbour %1.prg -n -q0 -i%HB_INC_INSTALL% %2 %3 %HARBOURFLAGS%
 
 :A_DOS
 
@@ -119,31 +119,6 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
    if not "%HB_ARCHITECTURE%" == "dos" goto A_W32
 
    if "%HB_GT_LIB%" == "" set _HB_GT_LIB=gtdos
-
-   if not "%HB_COMPILER%" == "bcc16" goto A_DOS_BCC16_NOT
-
-      echo -O2 -d -mh %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% > build.tmp
-      echo -e%1.exe >> build.tmp
-      echo %1.c >> build.tmp
-      echo hbcpage.lib >> build.tmp
-      echo hbdebug.lib >> build.tmp
-      echo hbvm.lib >> build.tmp
-      echo hbrtl.lib >> build.tmp
-      echo %_HB_GT_LIB%.lib >> build.tmp
-      echo hblang.lib >> build.tmp
-      echo hbrdd.lib >> build.tmp
-      echo hbmacro.lib >> build.tmp
-      echo hbpp.lib >> build.tmp
-      echo rddfpt.lib >> build.tmp
-      echo rddntx.lib >> build.tmp
-      echo rddcdx.lib >> build.tmp
-      echo hbsix.lib >> build.tmp
-      echo hbcommon.lib >> build.tmp
-      bcc @build.tmp
-      del build.tmp
-      goto END
-
-:A_DOS_BCC16_NOT
 
    if not "%HB_COMPILER%" == "djgpp" goto A_DOS_DJGPP_NOT
 
@@ -217,7 +192,6 @@ if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
    if "%HB_COMPILER%" == "rsxnt"   gcc %1.c -Zwin32 %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbsix -lhbcommon -lhbpcre -lhbzlib
 
    if "%HB_COMPILER%" == "msvc"    cl -TP -W3 %CFLAGS% -I%HB_INC_INSTALL% %1.c /link /subsystem:CONSOLE /LIBPATH:%HB_LIB_INSTALL% %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib %_HB_GT_LIB%.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib winspool.lib
-   if "%HB_COMPILER%" == "msvc"    echo Ignore LNK4033 warning
 
 :C_WATCOM
 

@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-08 22:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/bld.bat
+    * Some changes to make it more up-to-date.
+
+  * utils/hbtest/hbtest.prg
+  * utils/hbtest/rt_array.prg
+    + Added comment to 'TAEVSM' test case saying this is 
+      a CA-Cl*pper bug.
+    + Added two additional tests doing resizes in ASORT() 
+      blocks. They fail very badly in Harbour. (TOFIX)
+
+  ; Made my indenting of ChangeLog entries compatible with 
+    everyone else's.
+
 2008-09-08 21:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hashes.c
     ! fixed typo in hash cloning code which caused that references

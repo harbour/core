@@ -359,7 +359,9 @@ PROCEDURE Main_ARRAY()
    TEST_LINE( AScan( saAllTypes, scStringZ  ) , 3           )
    SET EXACT OFF
 
-   TEST_LINE( TAEVSM()                        , "N10N 9N 8N 7N 6N 5N 4N 3N 2N 1         0" )
+   TEST_LINE( TAEVSM()                        , "N10N 9N 8N 7N 6N 5N 4N 3N 2N 1         0" ) /* Bug in CA-Cl*pper 5.x */
+   TEST_LINE( TASOSM1()                       , "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0NN 0NN 0         0{  }" )
+   TEST_LINE( TASOSM2()                       , "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0         0{  }" )
 
    RETURN
 
@@ -372,6 +374,24 @@ STATIC FUNCTION TAEVSM()
    AEval( aArray, {| x | cString += ValType( x ) + Str( Len( aArray ), 2 ), ASize( aArray, Len( aArray ) - 1 ) } )
 
    RETURN cString + Str( Len( aArray ) )
+
+STATIC FUNCTION TASOSM1()
+
+   LOCAL cString := ""
+   LOCAL aArray := { 1, 2, 3, 4, 5 }
+
+   ASort( aArray, NIL, NIL, {| x, y | cString += ValType( x ) + ValType( y ) + Str( Len( aArray ), 2 ), ASize( aArray, Len( aArray ) - 1 ), x > y } )
+
+   RETURN cString + Str( Len( aArray ) ) + XToStrX( aArray )
+
+STATIC FUNCTION TASOSM2()
+
+   LOCAL cString := ""
+   LOCAL aArray := { 1, 2, 3, 4, 5 }
+
+   ASort( aArray, NIL, NIL, {| x, y | cString += ValType( x ) + ValType( y ) + Str( Len( aArray ), 2 ), ASize( aArray, Len( aArray ) - 1 ) } )
+
+   RETURN cString + Str( Len( aArray ) ) + XToStrX( aArray )
 
 STATIC FUNCTION TANew( cChar, nLen )
    LOCAL aArray

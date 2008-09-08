@@ -489,6 +489,47 @@ FUNCTION XToStrE( xValue )
 
    RETURN ""
 
+FUNCTION XToStrX( xValue )
+   LOCAL cType := ValType( xValue )
+
+   LOCAL tmp
+   LOCAL cRetVal
+
+   DO CASE
+   CASE cType == "C"
+
+      xValue := StrTran( xValue, Chr(0), '"+Chr(0)+"' )
+      xValue := StrTran( xValue, Chr(9), '"+Chr(9)+"' )
+      xValue := StrTran( xValue, Chr(10), '"+Chr(10)+"' )
+      xValue := StrTran( xValue, Chr(13), '"+Chr(13)+"' )
+      xValue := StrTran( xValue, Chr(26), '"+Chr(26)+"' )
+
+      RETURN xValue
+
+   CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
+   CASE cType == "D" ; RETURN DToS( xValue )
+   CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
+   CASE cType == "O" ; RETURN xValue:className() + " Object"
+   CASE cType == "U" ; RETURN "NIL"
+   CASE cType == "B" ; RETURN '{||...} -> ' + XToStrX( Eval( xValue ) )
+   CASE cType == "A"
+
+      cRetVal := '{ '
+
+      FOR tmp := 1 TO Len( xValue )
+         cRetVal += XToStrX( xValue[ tmp ] )
+         IF tmp < Len( xValue )
+            cRetVal += ", "
+         ENDIF
+      NEXT
+   
+      RETURN cRetVal + ' }'
+
+   CASE cType == "M" ; RETURN 'M:' + xValue
+   ENDCASE
+
+   RETURN ""
+
 STATIC FUNCTION ErrorMessage( oError )
    LOCAL cMessage := ""
    LOCAL tmp
