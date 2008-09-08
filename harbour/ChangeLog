@@ -8,6 +8,39 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-08 13:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/mtpl_b32.mak
+   * contrib/mtpl_vc.mak
+   * contrib/mtpl_gcc.mak
+     * Changed the location of intermediate obj and c files from 
+       /obj/<arch>/ to local [/contrib/<contribname>/]obj/<arch>/
+       dir so that similar filenames across different contribs 
+       would never interfere with each other anymore when using 
+       non-GNU make. This was a difficult to detect problem, 
+       especially when someone is trying to use custom contribs, 
+       and even more so if these custom contribs happen to have 
+       3rd party code with non Harbour controlled filenames. This 
+       change is also an important last step to make contribs 
+       fully self-containing.
+     ; TODO: mtpl_gcc.mak support has to be finished by someone 
+             familiar with bash.
+     ; NOTE: This change shouldn't go to 1.0.1 until well tested 
+             and reviewed.
+     ; NOTE: As a consequence of the above, from now on a 
+             'make_*.bat clean' won't anymore clean the objects/.c
+             file of all contribs. If you hadn't so so far, now you'll 
+             need to explicitly call 'contrib/make_*.all.bat clean' 
+             to do that.
+
+   * contrib/mtpl_gcc.mak
+   * make_gcc.mak
+     % HB_ARCHITECTURE hack from cyg to w32 removed, 
+       as cyg is not a valid public architecture name 
+       in Harbour. cyg is used in make_gcc.sh internally, and 
+       it's automatically converted to w32 before using 
+       make_gcc.mak, so it would seem that this is solved 
+       at the right place already, and the hack is not needed.
+
 2008-09-08 11:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/whatsnew.txt
    * doc/dirstruc.txt

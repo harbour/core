@@ -78,7 +78,8 @@ HB_LIB_INSTALL = $(HB_INSTALL_PREFIX)\lib
 HB_CC_DIRNAME = $(_HB_CC_NAME)
 !endif
 
-OBJ_DIR = $(HB_ROOT)\obj\$(HB_CC_DIRNAME)\\
+OBJ_ROOT = obj
+OBJ_DIR = $(OBJ_ROOT)\$(HB_CC_DIRNAME)\\
 LIB_DIR = $(HB_ROOT)\lib\$(HB_CC_DIRNAME)\\
 BIN_DIR = $(HB_ROOT)\bin\$(HB_CC_DIRNAME)\\
 
@@ -151,14 +152,17 @@ LDFLAGS        =  $(LDFLAGS)
 #**********************************************************
 # General *.c --> *.obj COMPILE rule for STATIC Libraries
 {.}.c{$(OBJ_DIR)}$(OBJEXT)::
+    if not exist "$(OBJ_DIR)" md "$(OBJ_DIR)" > nul
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #**********************************************************
 # General *.cpp --> *.obj COMPILE rule for STATIC Libraries
 {.}.cpp{$(OBJ_DIR)}$(OBJEXT)::
+    if not exist "$(OBJ_DIR)" md "$(OBJ_DIR)" > nul
     $(CC) $(CLIBFLAGS: -TC= -TP) -Fo$(OBJ_DIR)\ $<
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for STATIC Libraries
 {.}.prg{$(OBJ_DIR)}$(OBJEXT):
+    if not exist "$(OBJ_DIR)" md "$(OBJ_DIR)" > nul
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #**********************************************************
@@ -194,6 +198,8 @@ doClean:
 <<KEEP
     @if exist _hbdeloa.bat $(DEL) _hbdeloa.bat > nul
     @if exist _hbdeloo.bat $(DEL) _hbdeloo.bat > nul
+    @if exist "$(OBJ_DIR)" rd "$(OBJ_DIR)" > nul 2> nul
+    @if exist "$(OBJ_ROOT)" rd "$(OBJ_ROOT)" > nul 2> nul
 
 !if "$(HB_INSTALL_PREFIX)" == "$(HB_ROOT)"
     @if exist $(HB_LIB_INSTALL)\$(LIBNAME)$(LIBEXT) $(DEL) $(HB_LIB_INSTALL)\$(LIBNAME)$(LIBEXT) > nul

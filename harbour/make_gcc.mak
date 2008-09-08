@@ -61,14 +61,6 @@
 
 #**********************************************************
 
-ifeq ($(HB_ARCHITECTURE),cyg)
-# Revert Cygwin architecture to w32.
-# After all it's under Windows OS.
-HB_ARCHITECTURE = w32
-endif
-
-#**********************************************************
-
 ifndef ECHO
 ECHO = echo
 endif
@@ -103,8 +95,8 @@ endif
 # *before* common.cf is included
 
 OBJEXT=.o
-EXEEXT=$(if $(findstring $(HB_ARCHITECTURE),w32 cyg dos os2),.exe)
-DLLEXT=$(if $(findstring $(HB_ARCHITECTURE),w32 cyg dos os2),.dll,.so)
+EXEEXT=$(if $(findstring $(HB_ARCHITECTURE),w32 dos os2),.exe)
+DLLEXT=$(if $(findstring $(HB_ARCHITECTURE),w32 dos os2),.dll,.so)
 LIBEXT=.a
 LIBPREF=lib
 
@@ -125,7 +117,7 @@ include common.cf
 # building CONSOLE programs. Otherwise we're building
 # GUI programs without console. Please note IT IS A
 # DIRTY HACK and any better solution is HIGHLY WELCOME
-ifneq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),)
+ifneq ($(findstring $(HB_ARCHITECTURE),w32 os2),)
 MAIN_LIB      = $(LIB_DIR)/$(LIBPREF)mainstd$(LIBEXT)
 MAIN_LIB_OBJS = $(OBJ_DIR)/mainstd$(OBJEXT)
 
@@ -158,7 +150,7 @@ endif
 
 # DLLs on Windows require IMPORT lib
 # and an additional compiler phase
-ifneq ($(findstring $(HB_ARCHITECTURE),w32 cyg),)
+ifneq ($(findstring $(HB_ARCHITECTURE),w32),)
 HB_DLL_IMPLIB := $(HARBOUR_DLL:$(DLLEXT)=$(LIBEXT))
 HB_IMPLIB_PART := -Wl,--out-implib,$(HB_DLL_IMPLIB)
 endif
@@ -194,7 +186,7 @@ CEXEFLAGSDLL   :=  $(CFLAGS) $(CEXEFLAGSDLL)
 
 # Under architectures other than "DOS based" add -fPIC
 # to gcc compiler flags for compiling shared libraries
-ifeq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),)
+ifeq ($(findstring $(HB_ARCHITECTURE),w32 os2),)
 ifeq ($(findstring -fPIC,$(CLIBFLAGSDLL)),)
 CLIBFLAGSDLL   := -fPIC $(CLIBFLAGSDLL)
 endif
@@ -317,7 +309,7 @@ $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
 $(VM_LIB)       : $(VM_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-ifneq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),)
+ifneq ($(findstring $(HB_ARCHITECTURE),w32 os2),)
 $(MAIN_LIB)     : $(MAIN_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 endif

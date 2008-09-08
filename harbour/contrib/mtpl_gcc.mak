@@ -26,14 +26,6 @@ endif
 
 #**********************************************************
 
-ifeq ($(HB_ARCHITECTURE),cyg)
-# Revert Cygwin architecture to w32.
-# After all it's under Windows OS.
-HB_ARCHITECTURE = w32
-endif
-
-#**********************************************************
-
 ifndef ECHO
 ECHO = echo
 endif
@@ -88,7 +80,8 @@ ifndef HB_CC_DIRNAME
 HB_CC_DIRNAME = $(_HB_CC_NAME)
 endif
 
-OBJ_DIR = $(HB_ROOT)/obj/$(HB_CC_DIRNAME)/
+OBJ_ROOT = obj
+OBJ_DIR = $(OBJ_ROOT)/$(HB_CC_DIRNAME)/
 LIB_DIR = $(HB_ROOT)/lib/$(HB_CC_DIRNAME)/
 BIN_DIR = $(HB_ROOT)/bin/$(HB_CC_DIRNAME)/
 
