@@ -170,22 +170,18 @@
 2008-09-05 12:32 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/whatsnew.txt
      * Reviewed, some clarifications.
-       [TOMERGE 1.0.1]
 
 2008-09-05 12:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/common/hbver.c
      ! Version detection fixed for __DMC__
-       [TOMERGE 1.0.1]
 
    * contrib/mtpl_gcc.mak
      % One unnecessary C -I option deleted.
-       [TOMERGE 1.0.1]
 
    - contrib/hbsqlit2
    + contrib/examples/hbsqlit2
    * doc/whatsnew.txt
      * Moved hbsqlit2 to examples.
-       [TOMERGE 1.0.1]
 
    * contrib/examples/hbsqlit2/Makefile
    * contrib/examples/hbsqlit2/make_b32.bat
@@ -197,7 +193,6 @@
      * Modified make files to work from the new location.
      * Location of sqlite2 headers can be specified by HB_INC_SQLITE2.
      ; Notice that sqlite2 lib itself should now be build separately.
-       [TOMERGE 1.0.1]
 
 2008-09-05 11:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/common/hbver.c
@@ -206,15 +201,12 @@
 2008-09-05 11:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/mtpl_vc.mak
      - Removed recently (and mistakenly) added unnecessary option.
-       [TOMERGE 1.0.1]
 
    * source/macro/macro.y
      - Removed old comment, other part synced with harbour.y.
-       [TOMERGE 1.0.1]
 
    * source/rdd/dbffpt/dbffpt1.c
      ! Fixed MSVC -W4 potentially unused var warnings.
-       [TOMERGE 1.0.1]
 
    * contrib/Makefile
    * contrib/make_b32_all.bat
@@ -224,7 +216,6 @@
        hbsqlit2 is broken due to foreign code problems.
        It will be converted to use separately compiled 
        sqlite2 library. Pls use hbsqlit3 as a replacement.
-       [TOMERGE 1.0.1]
 
    - contrib/hbsqlit2/vdbeaux.c
    - contrib/hbsqlit2/build.c
@@ -270,12 +261,10 @@
    - contrib/hbsqlit2/opcodes.c
    - contrib/hbsqlit2/encode.c
      - Removed foreign code.
-       [TOMERGE 1.0.1]
 
 2008-09-05 04:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/whatsnew.txt
      + Added 1.0.1 changes. Please review.
-       [TONERGE 1.0.1]
 
 2008-09-04 19:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbfntx/dbfntx1.c
