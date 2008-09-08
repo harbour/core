@@ -28,8 +28,8 @@
              and reviewed.
      ; NOTE: As a consequence of the above, from now on a 
              'make_*.bat clean' won't anymore clean the objects/.c
-             file of all contribs. If you hadn't so so far, now you'll 
-             need to explicitly call 'contrib/make_*.all.bat clean' 
+             files of all contribs. If you hadn't do so so far, now 
+             you'll need to explicitly call 'contrib/make_*.all.bat clean' 
              to do that.
 
    * contrib/mtpl_gcc.mak
