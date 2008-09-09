@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-09 11:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbct/numconv.prg
+    ! Fixed typo. Thanks to Grigory Filatov for reporting it.
+
 2008-09-09 11:32 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   + contrib/hbwhat32/hbwhat.h
   * contrib/hbwhat32/whtbmp.c

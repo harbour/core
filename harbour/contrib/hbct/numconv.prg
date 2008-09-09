@@ -173,7 +173,7 @@ LOCAL nInt
 IF nNum > 0
    
    nInt := INT( nNum / nBase)
-   RETURN Iiif(nInt==0, "", B10TOBN( nInt, @nBase )) +;
+   RETURN iif(nInt==0, "", B10TOBN( nInt, @nBase )) +;
           SUBSTR( WORLD, ( nNum % nBase ) + 1, 1 )
 
 ELSEIF nNum == 0
