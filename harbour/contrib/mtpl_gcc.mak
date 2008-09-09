@@ -80,8 +80,7 @@ ifndef HB_CC_DIRNAME
 HB_CC_DIRNAME = $(_HB_CC_NAME)
 endif
 
-OBJ_ROOT = obj
-OBJ_DIR = $(OBJ_ROOT)/$(HB_CC_DIRNAME)/
+OBJ_DIR = obj/$(HB_CC_DIRNAME)/
 LIB_DIR = $(HB_ROOT)/lib/$(HB_CC_DIRNAME)/
 BIN_DIR = $(HB_ROOT)/bin/$(HB_CC_DIRNAME)/
 

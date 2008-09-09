@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-09 11:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_gcc.mak
+  * contrib/mtpl_vc.mak
+    ! Some more fine tuning.
+
 2008-09-09 11:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/asort.c
     ! fixed GPF when user sort code block reduces the size of sorted array
