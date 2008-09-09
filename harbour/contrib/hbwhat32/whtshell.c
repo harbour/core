@@ -18,7 +18,6 @@
 #include "hbstack.h"
 #include "hbapiitm.h"
 
-
 //-----------------------------------------------------------------------------
 // SHSTDAPI_(UINT) DragQueryFileA(HDROP,UINT,LPSTR,UINT);
 
@@ -175,7 +174,7 @@ HB_FUNC( SHAPPBARMESSAGE )
 //-----------------------------------------------------------------------------
 // SHSTDAPI_(DWORD) DoEnvironmentSubstA(LPSTR szString, UINT cchString);
 
-#ifndef __WATCOMC__
+#if !defined(__WATCOMC__) && !defined(__MINGW32__)
 HB_FUNC( DOENVIRONMENTSUBST )
 {
    hb_retnl((LONG) DoEnvironmentSubst( (LPSTR) hb_parcx( 1 ) ,

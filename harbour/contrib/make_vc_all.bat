@@ -39,15 +39,13 @@ rem *******************************************************
 rem Compiling contrib dirs ...
 rem *******************************************************
 
-rem hbwhat32
-
 set _HB_DIRS=gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set _HB_DIRS=hbmsql hbmzip hbnf hbodbc hbole hbsqlit3
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set _HB_DIRS=hbtip hbtpathy hbvpdf hbw32 hbziparc
+set _HB_DIRS=hbtip hbtpathy hbvpdf hbw32 hbwhat32 hbziparc
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set _HB_DIRS=rddado xhb

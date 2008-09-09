@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-09 13:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbwhat32/whthead.c
+  * contrib/hbwhat32/whtmmcap.c
+  * contrib/hbwhat32/whtshell.c
+  * contrib/hbwhat32/whtdir.c
+    ! Fixed a few problems when compiling with MinGW.
+
+  * contrib/Makefile
+  * contrib/make_b32_all.bat
+  * contrib/make_gcc_all.sh
+  * contrib/make_vc_all.bat
+    + Readded hbwhat32 to default build lists.
+    ; This doesn't mean this lib works, but the amount of 
+      warnings are now on a manageable level on both 32 and 
+      64 bit on BCC/MSVC/MINGW, we can gradually fix the 
+      remaining ones, and maybe if we have this lib 
+      built, someone will try to use it and maybe fix it.
+      [ We may temply as well disable it again, if it turns 
+      out to be a showstopper for 1.0.1 release. ]
+    ; If there is anything against the above, I'd suggest 
+      to remove the whole contrib altogether.
+
 2008-09-09 12:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/debug/dbgentry.c
     ! Fixed recent typo. Thanks Lorenzo.

@@ -7,6 +7,7 @@
 
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
+#define _WIN32_IE      0x0500
 
 #include "hbwhat.h"
 
@@ -16,6 +17,44 @@
 
 #include "hbapiitm.h"
 #include "hbapi.h"
+
+#ifndef HDM_SETBITMAPMARGIN
+   #define HDM_SETBITMAPMARGIN          (HDM_FIRST + 20)
+#endif
+#ifndef HDM_GETBITMAPMARGIN
+   #define HDM_GETBITMAPMARGIN          (HDM_FIRST + 21)
+#endif
+#ifndef HDM_SETFILTERCHANGETIMEOUT
+   #define HDM_SETFILTERCHANGETIMEOUT   (HDM_FIRST + 22)
+#endif
+#ifndef HDM_EDITFILTER
+   #define HDM_EDITFILTER               (HDM_FIRST + 23)
+#endif
+#ifndef HDM_CLEARFILTER
+   #define HDM_CLEARFILTER              (HDM_FIRST + 24)
+#endif
+
+#ifndef Header_SetHotDivider
+   #define Header_SetHotDivider(hwnd, fPos, dw) (int)SNDMSG((hwnd), HDM_SETHOTDIVIDER, (WPARAM)(fPos), (LPARAM)(dw))
+#endif
+#ifndef Header_SetBitmapMargin
+   #define Header_SetBitmapMargin(hwnd, iWidth) (int)SNDMSG((hwnd), HDM_SETBITMAPMARGIN, (WPARAM)(iWidth), 0)
+#endif
+#ifndef Header_GetBitmapMargin
+   #define Header_GetBitmapMargin(hwnd) (int)SNDMSG((hwnd), HDM_GETBITMAPMARGIN, 0, 0)
+#endif
+#ifndef Header_SetFilterChangeTimeout
+   #define Header_SetFilterChangeTimeout(hwnd, i) (int)SNDMSG((hwnd), HDM_SETFILTERCHANGETIMEOUT, 0, (LPARAM)(i))
+#endif
+#ifndef Header_EditFilter
+   #define Header_EditFilter(hwnd, i, fDiscardChanges) (int)SNDMSG((hwnd), HDM_EDITFILTER, (WPARAM)(i), MAKELPARAM(fDiscardChanges, 0))
+#endif
+#ifndef Header_ClearFilter
+   #define Header_ClearFilter(hwnd, i)  (int)SNDMSG((hwnd), HDM_CLEARFILTER, (WPARAM)(i), 0)
+#endif
+#ifndef Header_ClearAllFilters
+   #define Header_ClearAllFilters(hwnd) (int)SNDMSG((hwnd), HDM_CLEARFILTER, (WPARAM)-1, 0)
+#endif
 
 extern PHB_ITEM Rect2Array( RECT *rc  );
 extern BOOL Array2Rect(PHB_ITEM aRect, RECT *rc );
