@@ -63,7 +63,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 
-static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock )
+static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PHB_BASEARRAY pBaseArray, ULONG ulLast )
 {
    if( pBlock )
    {
@@ -73,7 +73,9 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock )
       hb_vmPush( pItem2 );
       hb_vmSend( 2 );
 
-      if( HB_IS_LOGICAL( hb_stackReturnItem() ) )
+      if( pBaseArray->ulLen <= ulLast )
+         return FALSE;
+      else if( HB_IS_LOGICAL( hb_stackReturnItem() ) )
          return hb_itemGetL( hb_stackReturnItem() );
    }
 
@@ -119,16 +121,14 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock )
 
 /* partition array pItems[lb..ub] */
 
-static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_ITEM pBlock )
+static LONG hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, LONG lb, LONG ub, PHB_ITEM pBlock )
 {
-   LONG i, j, p;
+   LONG i, j;
 
    /* select pivot and exchange with 1st element */
-   p = lb + ( ( ub - lb ) >> 1 );
-   if( p != lb )
-   {
-      hb_itemSwap( pItems + lb, pItems + p );
-   }
+   i = lb + ( ( ub - lb ) >> 1 );
+   if( i != lb )
+      hb_itemSwap( pBaseArray->pItems + lb, pBaseArray->pItems + i );
 
    /* sort lb+1..ub based on pivot */
    i = lb + 1;
@@ -136,14 +136,14 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
 
    while( TRUE )
    {
-      while( i < j && hb_itemIsLess( pItems + i, pItems + lb, pBlock ) )
-      {
-         i++;
-      }
-
-      while( j >= i && hb_itemIsLess( pItems + lb, pItems + j, pBlock ) )
+      while( j >= i && !hb_itemIsLess( pBaseArray->pItems + j, pBaseArray->pItems + lb, pBlock, pBaseArray, j ) )
       {
          j--;
+      }
+
+      while( i < j && !hb_itemIsLess( pBaseArray->pItems + lb, pBaseArray->pItems + i, pBlock, pBaseArray, i ) )
+      {
+         i++;
       }
 
       if( i >= j )
@@ -152,38 +152,45 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
       }
 
       /* Swap the items */
-      hb_itemSwap( pItems + i, pItems + j );
+      hb_itemSwap( pBaseArray->pItems + i, pBaseArray->pItems + j );
       j--;
       i++;
    }
 
-   /* pivot belongs in pItems[j] */
-   if( j > lb )
-   {
-      hb_itemSwap( pItems + lb, pItems + j );
-   }
+   /* pivot belongs in pBaseArray->pItems[j] */
+   if( j > lb && pBaseArray->ulLen > ( ULONG ) j )
+      hb_itemSwap( pBaseArray->pItems + lb, pBaseArray->pItems + j );
 
    return j;
 }
 
-/* sort array pItems[lb..ub] */
+/* sort array pBaseArray->pItems[lb..ub] */
 
-static void hb_arraySortQuick( PHB_ITEM pItems, LONG lb, LONG ub, PHB_ITEM pBlock )
+static void hb_arraySortQuick( PHB_BASEARRAY pBaseArray, LONG lb, LONG ub, PHB_ITEM pBlock )
 {
+   LONG m;
+
    while( lb < ub )
    {
+      if( ( ULONG ) ub >= pBaseArray->ulLen )
+      {
+         ub = pBaseArray->ulLen - 1;
+         if( lb >= ub )
+            break;
+      }
+
       /* partition into two segments */
-      LONG m = hb_arraySortQuickPartition( pItems, lb, ub, pBlock );
+      m = hb_arraySortQuickPartition( pBaseArray, lb, ub, pBlock );
 
       /* sort the smallest partition to minimize stack requirements */
       if( m - lb <= ub - m )
       {
-         hb_arraySortQuick( pItems, lb, m - 1, pBlock );
+         hb_arraySortQuick( pBaseArray, lb, m - 1, pBlock );
          lb = m + 1;
       }
       else
       {
-         hb_arraySortQuick( pItems, m + 1, ub, pBlock );
+         hb_arraySortQuick( pBaseArray, m + 1, ub, pBlock );
          ub = m - 1;
       }
    }
@@ -220,7 +227,7 @@ BOOL hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM
 
          /* Optimize when only one or no element is to be sorted */
          if( ulCount > 1 )
-            hb_arraySortQuick( pBaseArray->pItems, ulStart - 1, ulEnd, pBlock );
+            hb_arraySortQuick( pBaseArray, ulStart - 1, ulEnd, pBlock );
       }
 
       return TRUE;

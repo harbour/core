@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-09 11:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/asort.c
+    ! fixed GPF when user sort code block reduces the size of sorted array
+
 2008-09-09 11:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbct/numconv.prg
     ! Fixed typo. Thanks to Grigory Filatov for reporting it.
