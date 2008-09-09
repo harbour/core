@@ -65,7 +65,7 @@ HB_FUNC( CLOSEWINDOW )
 HB_FUNC( FINDWINDOW )
 {
 
-   hb_retnl((ULONG) FindWindow( (LPCSTR) hb_parcx(1), ISCHAR(2) ? hb_parcx(2):NULL ) );
+   HB_RETWH( FindWindow( (LPCSTR) hb_parcx(1), ISCHAR(2) ? hb_parcx(2):NULL ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -165,28 +165,28 @@ HB_FUNC( MOVEWINDOW )
 
 HB_FUNC( DEFWINDOWPROC )
 {
-  hb_retnl( DefWindowProc( (HWND) HB_PARWH(1), hb_parnl(2), hb_parnl(3), hb_parnl(4)));
+  HB_RETWI( DefWindowProc( (HWND) HB_PARWH(1), hb_parnl(2), hb_parnl(3), hb_parnl(4)));
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( DEFDLGPROC )
 {
-  hb_retnl( DefDlgProc( (HWND) HB_PARWH(1), hb_parnl(2), hb_parnl(3), hb_parnl(4)));
+  HB_RETWI( DefDlgProc( (HWND) HB_PARWH(1), hb_parnl(2), hb_parnl(3), hb_parnl(4)));
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( DEFMDICHILDPROC )
 {
-  hb_retnl( DefMDIChildProc( (HWND) HB_PARWH(1), hb_parnl(2), hb_parnl(3), hb_parnl(4)));
+  HB_RETWI( DefMDIChildProc( (HWND) HB_PARWH(1), hb_parnl(2), hb_parnl(3), hb_parnl(4)));
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( DEFFRAMEPROC )
 {
-  hb_retnl( DefFrameProc( (HWND) HB_PARWH(1), (HWND) HB_PARWH(2), hb_parnl(3), hb_parnl(4), hb_parnl(5)));
+  HB_RETWI( DefFrameProc( (HWND) HB_PARWH(1), (HWND) HB_PARWH(2), hb_parnl(3), hb_parnl(4), hb_parnl(5)));
 }
 
 
@@ -194,7 +194,7 @@ HB_FUNC( DEFFRAMEPROC )
 
 HB_FUNC( CALLWINDOWPROC )
 {
-  hb_retnl( CallWindowProc( (WNDPROC) hb_parptr(1), (HWND) HB_PARWH(2), hb_parni(3), hb_parnl(4), hb_parnl(5)));
+  HB_RETWI( CallWindowProc( (WNDPROC) HB_PARWH(1), (HWND) HB_PARWH(2), hb_parni(3), hb_parnl(4), hb_parnl(5)));
 }
 
 //-----------------------------------------------------------------------------
@@ -1017,7 +1017,7 @@ HB_FUNC( SETWINDOWLONGPTR )
 {
    hb_retnl( (LONG) SetWindowLongPtr( (HWND) HB_PARWH( 1 ),
                                       hb_parni( 2 )       ,
-                                      ISPOINTER( 3 ) ? (LONG_PTR) hb_parptr( 3 ) : (LONG_PTR) hb_parnl( 3 )
+                                      (LONG_PTR) HB_PARWH( 3 )
                                     ) );
 }
 
@@ -1026,7 +1026,7 @@ HB_FUNC( SETWINDOWLONGPTR )
 #ifndef __WATCOMC__
 HB_FUNC( GETCLASSLONGPTR )
 {
-    hb_retnl((ULONG_PTR) GetClassLongPtr( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ) );
+    HB_RETWI( GetClassLongPtr( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -1034,7 +1034,7 @@ HB_FUNC( GETCLASSLONGPTR )
 
 HB_FUNC( SETCLASSLONGPTR )
 {
-   hb_retnl( (ULONG_PTR) SetClassLongPtr( (HWND) HB_PARWH( 1 ), hb_parni( 2 ), (LONG_PTR) hb_parnl(3) ) );
+   HB_RETWI( SetClassLongPtr( (HWND) HB_PARWH( 1 ), hb_parni( 2 ), (LONG_PTR) hb_parnl(3) ) );
 }
 #endif
 

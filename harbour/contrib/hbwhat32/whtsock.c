@@ -767,13 +767,14 @@ int _stdcall _WSACondFunc( LPWSABUF lpCallerId,  LPWSABUF lpCallerData, LPQOS lp
       hb_vmPushSymbol( (HB_SYMB *) dwCallbackData ); // Harbour function pointer
       hb_vmPushNil();
 
-      hb_vmPushLong( (LONG ) lpCallerId );
-      hb_vmPushLong( (LONG ) lpCallerData );
-      hb_vmPushLong( (LONG ) lpSQOS );
-      hb_vmPushLong( (LONG ) lpGQOS );
-      hb_vmPushLong( (LONG ) lpCalleeId );
-      hb_vmPushLong( (LONG ) lpCalleeData );
-      hb_vmPushLong( (LONG ) g );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) lpCallerId );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) lpCallerId );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) lpCallerData );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) lpSQOS );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) lpGQOS );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) lpCalleeId );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) lpCalleeData );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) g );
 
       hb_vmDo(7);
       res = hb_itemGetNI( (PHB_ITEM) hb_param( -1, HB_IT_ANY ) );
@@ -826,7 +827,7 @@ HB_FUNC( WSAACCEPT )
 
 HB_FUNC( WSACLOSEEVENT )
 {
-   hb_retl( ( BOOL ) WSACloseEvent( (WSAEVENT) hb_parnl( 1 ) ) );
+   hb_retl( ( BOOL ) WSACloseEvent( (WSAEVENT) HB_PARWH( 1 ) ) );
 }
 
 
@@ -889,7 +890,7 @@ HB_FUNC( WSACONNECT )
 
 HB_FUNC( WSACREATEEVENT )
 {
-   hb_retnl( ( ULONG)  WSACreateEvent( ) );
+   HB_RETWH( WSACreateEvent( ) );
 }
 
 
@@ -964,8 +965,8 @@ HB_FUNC( WSAENUMPROTOCOLS )
 
 HB_FUNC( WSAEVENTSELECT )
 {
-   hb_retni( (int ) WSAEventSelect( (SOCKET)   hb_parnl( 1 ) ,
-                                    (WSAEVENT) hb_parnl( 2 ) ,
+   hb_retni( (int ) WSAEventSelect( (SOCKET)   hb_parnl( 1 ),
+                                    (WSAEVENT) HB_PARWH( 2 ),
                                     (long)     hb_parnl( 3 )
                                    ) );
 }
@@ -1235,7 +1236,7 @@ HB_FUNC( WSARECVFROM )
 
 HB_FUNC( WSARESETEVENT )
 {
-   hb_retl( WSAResetEvent( (WSAEVENT) hb_parnl( 1 ) ) );
+   hb_retl( WSAResetEvent( (WSAEVENT) HB_PARWH( 1 ) ) );
 }
 
 
@@ -1322,7 +1323,7 @@ HB_FUNC( WSASENDTO )
 
 HB_FUNC( WSASETEVENT )
 {
-   hb_retl( WSASetEvent( (WSAEVENT) hb_parnl( 1 ) ) );
+   hb_retl( WSASetEvent( (WSAEVENT) HB_PARWH( 1 ) ) );
 }
 
 

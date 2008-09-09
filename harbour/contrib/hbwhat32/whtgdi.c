@@ -806,13 +806,13 @@ HB_FUNC( GETDRAWITEMSTRUCT )
   hb_arraySetNL( arrDis,  3, dis->itemID );
   hb_arraySetNL( arrDis,  4, dis->itemAction );
   hb_arraySetNL( arrDis,  5, dis->itemState );
-  hb_arraySetNL( arrDis,  6, ( LONG ) dis->hwndItem );
-  hb_arraySetNL( arrDis,  7, ( LONG ) dis->hDC );
+  HB_ARRAYSETWH( arrDis,  6, dis->hwndItem );
+  HB_ARRAYSETWH( arrDis,  7, dis->hDC );
   hb_arraySetNL( arrDis,  8, dis->rcItem.left );
   hb_arraySetNL( arrDis,  9, dis->rcItem.top );
   hb_arraySetNL( arrDis, 10, dis->rcItem.right );
   hb_arraySetNL( arrDis, 11, dis->rcItem.bottom );
-  hb_arraySetNL( arrDis, 12, dis->itemData );
+  hb_arraySetNInt( arrDis, 12, ( HB_PTRDIFF ) dis->itemData );
 
   hb_itemReturnRelease( arrDis );
 }

@@ -77,7 +77,7 @@ HB_FUNC( GETPROFILESTRING )
    char * lpEntry   = ISNIL( 2 ) ? NULL : hb_parcx( 2 );
    char * lpDefault = hb_parc ( 3 );
 
-   while ( TRUE )
+   for( ;; )
    {
       dwLen = GetProfileString( lpSection , lpEntry ,lpDefault , bBuffer, nSize );
       if ( ( ( ( lpSection == NULL ) || ( lpEntry == NULL ) ) && ( nSize - dwLen == 2 ) ) || ( ( lpSection && lpEntry ) && ( nSize - dwLen == 1 ) ) )
@@ -88,7 +88,6 @@ HB_FUNC( GETPROFILESTRING )
       }
       else
         break ;
-
    }
 
    if( dwLen )
@@ -111,7 +110,7 @@ HB_FUNC( GETPRIVATEPROFILESTRING )
    char * lpDefault  = hb_parcx( 3 );
    char * lpFileName = hb_parcx( 4 );
 
-   while ( TRUE )
+   for( ;; )
    {
       dwLen = GetPrivateProfileString( lpSection , lpEntry ,lpDefault , bBuffer, nSize , lpFileName);
       if ( ( ( ( lpSection == NULL ) || ( lpEntry == NULL ) ) && ( nSize - dwLen == 2 ) ) || ( ( lpSection && lpEntry ) && ( nSize - dwLen == 1 ) ) )
@@ -124,6 +123,7 @@ HB_FUNC( GETPRIVATEPROFILESTRING )
         break ;
 
    }
+
    if( dwLen )
      hb_retclen( ( char * ) bBuffer, dwLen );
    else

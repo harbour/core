@@ -31,7 +31,7 @@ HB_FUNC( TVINSERTITEM )
       is.item.iSelectedImage = hb_parnl( 4 );
    #endif
 
-   hb_retnl( SendMessage( ( HWND ) HB_PARWH( 1 ), TVM_INSERTITEM, 0,
+   HB_RETWI( SendMessage( ( HWND ) HB_PARWH( 1 ), TVM_INSERTITEM, 0,
            ( LPARAM )( LPTV_INSERTSTRUCT )( &is ) ) );
 }
 
@@ -45,7 +45,7 @@ HB_FUNC( TVDELETEITEM )
 
 HB_FUNC( TVSETIMAGELIST ) // ( hWnd, hImageList, nType )
 {
-   hb_retnl( ( LONG ) TreeView_SetImageList( ( HWND ) HB_PARWH( 1 ),
+   HB_RETWH( TreeView_SetImageList( ( HWND ) HB_PARWH( 1 ),
             ( HIMAGELIST ) HB_PARWH( 2 ), hb_parnl( 3 ) ) );
 }
 
@@ -74,7 +74,7 @@ HB_FUNC( TVGETSELTEXT ) // ( hWnd ) --> cText
 
 HB_FUNC( TVGETSELECTED ) // ( hWnd ) --> hItem
 {
-   hb_retnl( ( LONG ) TreeView_GetSelection( ( HWND ) HB_PARWH( 1 ) ) );
+   HB_RETWH( TreeView_GetSelection( ( HWND ) HB_PARWH( 1 ) ) );
 }
 
 //-------------------------------------------------------------------------//

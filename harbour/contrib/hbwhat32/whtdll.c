@@ -243,7 +243,7 @@ typedef struct DYNAPARM {
 //  #define CTYPE_STRUCTURE 1000
 #define CTYPE_STRUCTURE_PTR 10000
 
-extern RESULT DynaCall(int Flags, DWORD lpFunction,
+extern RESULT DynaCall(int Flags, LPVOID lpFunction,
                 int nArgs, DYNAPARM Parm[],
                 LPVOID pRet, int nRetSiz);
 
@@ -262,13 +262,13 @@ HB_FUNC( CALLDLL )
     double DblParms[15];
     DYNAPARM   Parm[15];
     HINSTANCE  hInst = (HINSTANCE) HB_PARWH( 1 );
-    DWORD      lpFunction = (DWORD) HB_PARWH( 2 );
+    LPVOID     lpFunction = ( LPVOID ) HB_PARWH( 2 );
     RESULT     rc;
 
     if ( hInst == NULL )
        return;
 
-    if ((LPVOID)lpFunction == NULL)
+    if ( lpFunction == NULL )
        return;
 
     if ( ISNIL(3) )
@@ -294,16 +294,16 @@ HB_FUNC( CALLDLL )
             {
             case CTYPE_CHAR_PTR          :
                 Parm[iCnt].nWidth = sizeof(  char * );
-                if ( ISNIL(i) ) Parm[iCnt].numargs.pArg = NULL;
+                if( ISNIL(i) ) Parm[iCnt].numargs.pArg = NULL;
                 else if (ISNUM(i) ) Parm[iCnt].numargs.dwArg = (DWORD) MAKEINTRESOURCE( hb_parni( i ) );
-                else Parm[iCnt].numargs.dwArg = ( DWORD ) hb_parc ( i  );
+                else Parm[iCnt].numargs.dwArg = ( DWORD ) hb_parc( i );
                 iCnt++;
                 break;
             case CTYPE_STRUCTURE_PTR     :
             case CTYPE_UNSIGNED_CHAR_PTR :
                 Parm[iCnt].nWidth = sizeof( unsigned char * );
                 if ( ISNIL(i) ) Parm[iCnt].numargs.pArg = NULL;
-                else Parm[iCnt].numargs.dwArg = ( DWORD ) hb_parc ( i  );
+                else Parm[iCnt].numargs.dwArg = ( DWORD ) hb_parc( i  );
                 iCnt++;
                 break;
             case CTYPE_BOOL              :

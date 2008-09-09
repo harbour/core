@@ -8,6 +8,103 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-09 21:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbwhat32/hbwhat.h
+  * contrib/hbwhat32/whtcall.c
+  * contrib/hbwhat32/whtclpb.c
+  * contrib/hbwhat32/whtcomm.c
+  * contrib/hbwhat32/whtdll.c
+  * contrib/hbwhat32/whtgdi.c
+  * contrib/hbwhat32/whtilst.c
+  * contrib/hbwhat32/whtinet.c
+  * contrib/hbwhat32/whtini.c
+  * contrib/hbwhat32/whtmisc.c
+  * contrib/hbwhat32/whtmmcap.c
+  * contrib/hbwhat32/whtmsg.c
+  * contrib/hbwhat32/whtsock.c
+  * contrib/hbwhat32/whtsys.c
+  * contrib/hbwhat32/whttab.c
+  * contrib/hbwhat32/whttree.c
+  * contrib/hbwhat32/whtwnd.c
+  * contrib/hbwhat32/wincorec.c
+    ! Fixed remaining 64-bit problems.
+    ! Fixed to work as before, using numbers for pointers.
+    ! Fixed bugs in these internet related functions:
+      INTERNETREADFILE(), INTERNETWRITEFILE()
+    ; NOTE: Number of warnings went down from somewhere well 
+            above a thousand to just a few ones, mostly common 
+            in other parts of Harbour. If someone could help to 
+            clear these remains, it'd be great.
+            Tested with MSVS2008 -W4 64/32-bit modes, BCC 5.8, 
+            MinGW 4.31.
+    ; NOTE: I didn't do any real-life tests. Pls do if you're 
+            interested or you're using this contrib.
+    ; NOTE: Remaining warnings:
+            - MSVS 2008 -W4 64-bit:
+              wincorec.c(689) : warning C4244: 'argument' : conversion from 'HB_PTRDIFF' to 'ULONG', possible loss of data
+              whtclpb.c(208) : warning C4244: 'argument' : conversion from 'SIZE_T' to 'ULONG', possible loss of data
+              whtdll.c(298) : warning C4311: 'type cast' : pointer truncation from 'LPSTR' to 'DWORD'
+              whtdll.c(299) : warning C4311: 'type cast' : pointer truncation from 'char *' to 'DWORD'
+              whtdll.c(306) : warning C4311: 'type cast' : pointer truncation from 'char *' to 'DWORD'
+              whtlv.c(84) : warning C4267: 'argument' : conversion from 'size_t' to 'ULONG', possible loss of data
+              whtlv.c(109) : warning C4267: 'argument' : conversion from 'size_t' to 'ULONG', possible loss of data
+              whtmem.c(243) : warning C4244: 'argument' : conversion from 'SIZE_T' to 'int', possible loss of data
+              whtmem.c(270) : warning C4244: 'argument' : conversion from 'SIZE_T' to 'int', possible loss of data
+              whtmem.c(279) : warning C4244: 'argument' : conversion from 'SIZE_T' to 'int', possible loss of data
+              whtreg.c(171) : warning C4267: 'argument' : conversion from 'size_t' to 'DWORD', possible loss of data
+              whtshell.c(34) : warning C4267: 'argument' : conversion from 'size_t' to 'ULONG', possible loss of data
+              whtsys.c(1093) : warning C4244: 'argument' : conversion from 'SIZE_T' to 'int', possible loss of data
+              whttext.c(127) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+              whttext.c(154) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+              whttext.c(190) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+              whttext.c(246) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+              whttext.c(299) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+
+            - MSVS 2008 -W4 32-bit:
+              wincorec.c(434) : warning C4152: nonstandard extension, function/data pointer conversion in expression
+              wincorec.c(438) : warning C4152: nonstandard extension, function/data pointer conversion in expression
+              wincorec.c(442) : warning C4152: nonstandard extension, function/data pointer conversion in expression
+              wincorec.c(446) : warning C4152: nonstandard extension, function/data pointer conversion in expression
+              wincorec.c(450) : warning C4152: nonstandard extension, function/data pointer conversion in expression
+              wincorec.c(454) : warning C4152: nonstandard extension, function/data pointer conversion in expression
+              wincorec.c(458) : warning C4152: nonstandard extension, function/data pointer conversion in expression
+              wincorec.c(462) : warning C4152: nonstandard extension, function/data pointer conversion in expression
+              wincorec.c(466) : warning C4152: nonstandard extension, function/data pointer conversion in expression
+              wincorec.c(470) : warning C4152: nonstandard extension, function/data pointer conversion in expression
+              wincorec.c(486) : warning C4152: nonstandard extension, function/data pointer conversion in expression
+              wincorec.c(529) : warning C4055: 'type cast' : from data pointer 'void *' to function pointer 'DLGPROC'
+              wincorec.c(543) : warning C4055: 'type cast' : from data pointer 'void *' to function pointer 'DLGPROC'
+              wincorec.c(556) : warning C4055: 'type cast' : from data pointer 'void *' to function pointer 'DLGPROC'
+              wincorec.c(569) : warning C4055: 'type cast' : from data pointer 'void *' to function pointer 'DLGPROC'
+              whtsys.c(316) : warning C4055: 'type cast' : from data pointer 'void *' to function pointer 'TIMERPROC'
+              whtwnd.c(197) : warning C4055: 'type cast' : from data pointer 'void *' to function pointer 'WNDPROC'
+
+            - MinGW 4.31 32-bit:
+              wincorec.c:94: warning: signed and unsigned type in conditional expression
+              wincorec.c:95: warning: signed and unsigned type in conditional expression
+              wincorec.c:96: warning: signed and unsigned type in conditional expression
+              wincorec.c:97: warning: signed and unsigned type in conditional expression
+              wincorec.c:119: warning: signed and unsigned type in conditional expression
+              wincorec.c:120: warning: signed and unsigned type in conditional expression
+              wincorec.c:121: warning: signed and unsigned type in conditional expression
+              wincorec.c:122: warning: signed and unsigned type in conditional expression
+              whtcdlg.c:180: warning: signed and unsigned type in conditional expression
+              whtdate.c:61: warning: passing argument 1 of 'hb_retptr' makes pointer from integer without a cast
+              whtdlg.c:169: warning: signed and unsigned type in conditional expression
+              whtmisc.c:95: warning: signed and unsigned type in conditional expression
+              whtmisc.c:349: warning: signed and unsigned type in conditional expression
+              whtseria.c:343: warning: signed and unsigned type in conditional expression
+              whtsock.c:43: warning: signed and unsigned type in conditional expression
+              whtsock.c:108: warning: signed and unsigned type in conditional expression
+              whtsock.c:124: warning: signed and unsigned type in conditional expression
+              whtsock.c:226: warning: signed and unsigned type in conditional expression
+              whtsock.c:246: warning: signed and unsigned type in conditional expression
+              whtsock.c:249: warning: signed and unsigned type in conditional expression
+              whtsock.c:318: warning: signed and unsigned type in conditional expression
+              whtsock.c:331: warning: signed and unsigned type in conditional expression
+              whtsock.c:338: warning: signed and unsigned type in conditional expression
+              whtsys.c:1091: warning: comparison between signed and unsigned
+
 2008-09-09 13:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbwhat32/whthead.c
   * contrib/hbwhat32/whtmmcap.c

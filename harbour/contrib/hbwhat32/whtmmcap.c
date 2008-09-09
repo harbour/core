@@ -629,7 +629,7 @@ HB_FUNC( CAPGETMCIDEVICENAME )
 /* To check: the return must be a LONG */
 HB_FUNC( CAPGETUSERDATA )
 {
- hb_retl( capGetUserData( (HWND) HB_PARWH(1) ) );
+   hb_retl( capGetUserData( (HWND) HB_PARWH(1) ) != 0 );
 }
 
 /* ------------------------------------------------------------------------ */

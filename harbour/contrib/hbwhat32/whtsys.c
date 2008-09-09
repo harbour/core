@@ -309,8 +309,8 @@ HB_FUNC( GETSYSTEMMETRICS )
 //
 HB_FUNC( SETTIMER )
 {
-   hb_retni( SetTimer( (HWND) HB_PARWH( 1 ),
-                       (UINT) hb_parni( 2 ),
+   HB_RETWI( SetTimer( (HWND) HB_PARWH( 1 ),
+                       ( UINT_PTR ) HB_PARWI( 2 ),
                        (UINT) hb_parni( 3 ),
                        ISNIL(4) ? NULL : (TIMERPROC) HB_PARWH(4)
                       ) );
@@ -1038,7 +1038,7 @@ DWORD GetCurrentProcess( VOID )
 */
 HB_FUNC( GETCURRENTPROCESS )
 {
-   hb_retnl( (LONG) GetCurrentProcess() );
+   hb_retptr( GetCurrentProcess() );
 }
 
 //-------------------------------------------------------------------//

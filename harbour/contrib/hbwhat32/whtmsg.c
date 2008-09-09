@@ -50,7 +50,7 @@ HB_FUNC( TRANSLATEMESSAGE )
 
 HB_FUNC( DISPATCHMESSAGE )
 {
-  hb_retnl(DispatchMessage( (MSG*) hb_parcx(1)));
+  HB_RETWI( DispatchMessage( ( MSG * ) hb_parcx( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -373,7 +373,7 @@ HB_FUNC( INSENDMESSAGEEX )
 HB_FUNC( MSGWAITFORMULTIPLEOBJECTS )
 {
    hb_retnl( (LONG) MsgWaitForMultipleObjects( (DWORD) hb_parnl( 1 ) ,
-                                               (HANDLE *) hb_parnl( 2 ),
+                                               (HANDLE *) HB_PARWI( 2 ),
                                                hb_parl( 3 ) ,
                                                (DWORD) hb_parnl( 4 ) ,
                                                (DWORD) hb_parnl( 5 )
@@ -387,7 +387,7 @@ HB_FUNC( MSGWAITFORMULTIPLEOBJECTS )
 HB_FUNC( MSGWAITFORMULTIPLEOBJECTSEX )
 {
    hb_retnl( (LONG) MsgWaitForMultipleObjectsEx( (DWORD) hb_parnl( 1 ) ,
-                                                 (HANDLE *) hb_parnl( 2 ),
+                                                 (HANDLE *) HB_PARWI( 2 ),
                                                  (DWORD) hb_parnl( 3 ) ,
                                                  (DWORD) hb_parnl( 4 ) ,
                                                  (DWORD) hb_parnl( 5 )

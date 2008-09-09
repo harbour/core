@@ -146,10 +146,10 @@ LRESULT CALLBACK __WndProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
       //hb_vmPushSymbol( pSymTest->pSymbol );
       hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
       hb_vmPushNil();
-      hb_vmPushLong( (LONG ) hWnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
-      hb_vmPushLong( (LONG ) wParam );
-      hb_vmPushLong( (LONG ) lParam );
+      hb_vmPushNumInt( ( HB_LONG ) wParam );
+      hb_vmPushNumInt( ( HB_LONG ) lParam );
       hb_vmPushLong( 1 );
       hb_vmDo( 5 );
       res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
@@ -175,10 +175,10 @@ LRESULT CALLBACK __WndProc2 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
       //hb_vmPushSymbol( pSymTest->pSymbol );
       hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
       hb_vmPushNil();
-      hb_vmPushLong( (LONG ) hWnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
-      hb_vmPushLong( (LONG ) wParam );
-      hb_vmPushLong( (LONG ) lParam );
+      hb_vmPushNumInt( ( HB_LONG ) wParam );
+      hb_vmPushNumInt( ( HB_LONG ) lParam );
       hb_vmPushLong( 2 );
       hb_vmDo( 5 );
       res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
@@ -204,10 +204,10 @@ LRESULT CALLBACK __WndProc3 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
       //hb_vmPushSymbol( pSymTest->pSymbol );
       hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
       hb_vmPushNil();
-      hb_vmPushLong( (LONG ) hWnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
-      hb_vmPushLong( (LONG ) wParam );
-      hb_vmPushLong( (LONG ) lParam );
+      hb_vmPushNumInt( ( HB_LONG ) wParam );
+      hb_vmPushNumInt( ( HB_LONG ) lParam );
       hb_vmPushLong( 3 );
       hb_vmDo( 5 );
       res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
@@ -233,10 +233,10 @@ LRESULT CALLBACK __WndProc4 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
       //hb_vmPushSymbol( pSymTest->pSymbol );
       hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
       hb_vmPushNil();
-      hb_vmPushLong( (LONG ) hWnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
-      hb_vmPushLong( (LONG ) wParam );
-      hb_vmPushLong( (LONG ) lParam );
+      hb_vmPushNumInt( ( HB_LONG ) wParam );
+      hb_vmPushNumInt( ( HB_LONG ) lParam );
       hb_vmPushLong( 4 );
       hb_vmDo( 5 );
       res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
@@ -262,10 +262,10 @@ LRESULT CALLBACK __WndProc5 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
       //hb_vmPushSymbol( pSymTest->pSymbol );
       hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
       hb_vmPushNil();
-      hb_vmPushLong( (LONG ) hWnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
-      hb_vmPushLong( (LONG ) wParam );
-      hb_vmPushLong( (LONG ) lParam );
+      hb_vmPushNumInt( ( HB_LONG ) wParam );
+      hb_vmPushNumInt( ( HB_LONG ) lParam );
       hb_vmPushLong( 5 );
       hb_vmDo( 5 );
       res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
@@ -290,10 +290,10 @@ LRESULT CALLBACK __WndProc6 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
       //hb_vmPushSymbol( pSymTest->pSymbol );
       hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
       hb_vmPushNil();
-      hb_vmPushLong( (LONG ) hWnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
-      hb_vmPushLong( (LONG ) wParam );
-      hb_vmPushLong( (LONG ) lParam );
+      hb_vmPushNumInt( ( HB_LONG ) wParam );
+      hb_vmPushNumInt( ( HB_LONG ) lParam );
       hb_vmPushLong( 6 );
       hb_vmDo( 5 );
       res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
@@ -319,10 +319,10 @@ LRESULT CALLBACK __WndProc7 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
       //hb_vmPushSymbol( pSymTest->pSymbol );
       hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
       hb_vmPushNil();
-      hb_vmPushLong( (LONG ) hWnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
-      hb_vmPushLong( (LONG ) wParam );
-      hb_vmPushLong( (LONG ) lParam );
+      hb_vmPushNumInt( ( HB_LONG ) wParam );
+      hb_vmPushNumInt( ( HB_LONG ) lParam );
       hb_vmPushLong( 7 );
       hb_vmDo( 5 );
       res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
@@ -348,10 +348,10 @@ LRESULT CALLBACK __WndProc8 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
       //hb_vmPushSymbol( pSymTest->pSymbol );
       hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
       hb_vmPushNil();
-      hb_vmPushLong( (LONG ) hWnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
-      hb_vmPushLong( (LONG ) wParam );
-      hb_vmPushLong( (LONG ) lParam );
+      hb_vmPushNumInt( ( HB_LONG ) wParam );
+      hb_vmPushNumInt( ( HB_LONG ) lParam );
       hb_vmPushLong( 8 );
       hb_vmDo( 5 );
       res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
@@ -377,10 +377,10 @@ LRESULT CALLBACK __WndProc9 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
       //hb_vmPushSymbol( pSymTest->pSymbol );
       hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
       hb_vmPushNil();
-      hb_vmPushLong( (LONG ) hWnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
-      hb_vmPushLong( (LONG ) wParam );
-      hb_vmPushLong( (LONG ) lParam );
+      hb_vmPushNumInt( ( HB_LONG ) wParam );
+      hb_vmPushNumInt( ( HB_LONG ) lParam );
       hb_vmPushLong( 9 );
       hb_vmDo( 5 );
       res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
@@ -406,10 +406,10 @@ LRESULT CALLBACK __WndProc10 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
       //hb_vmPushSymbol( pSymTest->pSymbol );
       hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
       hb_vmPushNil();
-      hb_vmPushLong( (LONG ) hWnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
-      hb_vmPushLong( (LONG ) wParam );
-      hb_vmPushLong( (LONG ) lParam );
+      hb_vmPushNumInt( ( HB_LONG ) wParam );
+      hb_vmPushNumInt( ( HB_LONG ) lParam );
       hb_vmPushLong( 10 );
       hb_vmDo( 5 );
       res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
@@ -501,10 +501,10 @@ BOOL CALLBACK __DlgProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       //hb_vmPushSymbol( pSymTest->pSymbol );
       hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
       hb_vmPushNil();
-      hb_vmPushLong( (LONG ) hWnd );
+      hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
-      hb_vmPushLong( (LONG ) wParam );
-      hb_vmPushLong( (LONG ) lParam );
+      hb_vmPushNumInt( ( HB_LONG ) wParam );
+      hb_vmPushNumInt( ( HB_LONG ) lParam );
       hb_vmDo( 4 );
       res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
 
@@ -522,10 +522,10 @@ HB_FUNC( _DIALOGBOX )
 {
 
 
-  hb_retni( DialogBox( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) )  ,
+  HB_RETWI( DialogBox( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) )  ,
                        (hb_parinfo(2)==HB_IT_STRING ? hb_parc(2) : MAKEINTRESOURCE( (WORD) hb_parni(2))) ,
                        (ISNIL(3) ?  NULL : (HWND) HB_PARWH(3) )        ,
-                       (DLGPROC) hb_parptr(4)
+                       (DLGPROC) HB_PARWH(4)
                      ));
 
 }
@@ -536,10 +536,10 @@ HB_FUNC( _DIALOGBOX )
 HB_FUNC( _DIALOGBOXINDIRECT )
 {
 
-   hb_retni( DialogBoxIndirect( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) ),
+   HB_RETWI( DialogBoxIndirect( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) ),
                                (LPDLGTEMPLATE) hb_parc(2),
                                (ISNIL(3) ?  NULL : (HWND) HB_PARWH(3) ),
-                               (DLGPROC) hb_parptr(4)
+                               (DLGPROC) HB_PARWH(4)
                              ));
 }
 
@@ -552,7 +552,7 @@ HB_FUNC( _CREATEDIALOG )
   HB_RETWH( CreateDialog( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) ),
                                   (hb_parinfo(2)==HB_IT_STRING ? hb_parc(2) : MAKEINTRESOURCE( (WORD) hb_parni(2))),
                                   (ISNIL(3) ?  NULL : (HWND) HB_PARWH(3) ),
-                                  (DLGPROC) hb_parptr(4)
+                                  (DLGPROC) HB_PARWH(4)
                                 ) );
 }
 
@@ -565,7 +565,7 @@ HB_FUNC( _CREATEDIALOGINDIRECT )
             (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) ),
             (LPDLGTEMPLATE) hb_parc(2),
             (ISNIL(3) ?  NULL : (HWND) HB_PARWH(3) ),
-            (DLGPROC) hb_parptr(4)
+            (DLGPROC) HB_PARWH(4)
           ));
 }
 
@@ -686,7 +686,7 @@ HB_FUNC( _MAKEDLGTEMPLATE )
     p = lpwAlign (p)  ;
 
 
-    hb_retclen( (LPSTR) pdlgtemplate, ( (ULONG) p - (ULONG) pdlgtemplate ) );
+    hb_retclen( (LPSTR) pdlgtemplate, ( ( HB_PTRDIFF ) p - ( HB_PTRDIFF ) pdlgtemplate ) );
 
     LocalFree (LocalHandle (pdlgtemplate) );
 }

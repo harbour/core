@@ -100,7 +100,7 @@ typedef struct DYNAPARM
 
 //------------------------------------------------------------------
 
-RESULT DynaCall(int Flags, DWORD lpFunction,
+RESULT DynaCall(int Flags, LPVOID lpFunction,
                                   int nArgs, DYNAPARM Parm[],
                                   LPVOID pRet, int nRetSiz)
 {

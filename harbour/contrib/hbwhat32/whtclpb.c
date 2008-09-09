@@ -275,10 +275,9 @@ HB_FUNC( SETCLIPBOARDDATA )
 
       case CF_BITMAP:
          if( IsClipboardFormatAvailable( CF_BITMAP ) )
-            hb_retl( ( BOOL ) SetClipboardData( CF_BITMAP,
-                                 DuplicateBitmap( ( HBITMAP ) HB_PARWH( 2 ) ) ) );
+            hb_retl( SetClipboardData( CF_BITMAP, DuplicateBitmap( ( HBITMAP ) HB_PARWH( 2 ) ) ) != NULL );
          else
-            hb_retnl( 0 );
+            hb_retl( FALSE );
          break;
 
       default:
@@ -289,11 +288,11 @@ HB_FUNC( SETCLIPBOARDDATA )
             pMem = GlobalLock( hMem );
             memcpy( pMem, hb_parcx( 2 ), dwLen );
             GlobalUnlock( hMem );
-            hb_retnl( ( ULONG ) SetClipboardData( ( UINT ) hb_parni( 1 ), hMem ) );
+            HB_RETWH( SetClipboardData( ( UINT ) hb_parni( 1 ), hMem ) );
          }
          else
          {
-            hb_retnl( 0 );
+            HB_RETWH( 0 );
          }
          break;
    }

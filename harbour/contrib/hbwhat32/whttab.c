@@ -25,7 +25,7 @@ HB_FUNC( TABCTRL_CREATE )
 {
    HWND hwnd;
    HWND hbutton;
-   LONG hFont;
+   LRESULT hFont;
    LONG style;
    style = ISNIL(6) ? 0 : (LONG) hb_parnl(6);
    hwnd = (HWND) HB_PARWH (1);
@@ -136,7 +136,7 @@ HB_FUNC( TABCTRL_GETIMAGELIST )
 HB_FUNC( TABCTRL_SETIMAGELIST )
 {
    HB_RETWH( TabCtrl_SetImageList( (HWND) HB_PARWH( 1 ),
-                    (LPARAM)(HIMAGELIST) hb_parnl( 2 ) ) );
+                    (LPARAM)(HIMAGELIST) HB_PARWH( 2 ) ) );
 }
 
 

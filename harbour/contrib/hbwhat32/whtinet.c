@@ -115,7 +115,7 @@ HB_FUNC( INTERNETOPEN )
    LPCTSTR lpszProxyBypass = ISNIL( 4 ) ? NULL : hb_parcx( 4 );
    DWORD   dwFlags         = ISNIL( 5 ) ? 0    : hb_parnl( 5 );
 
-   hb_retnl( ( ULONG ) InternetOpen( lpszAgent, dwAccessType, lpszProxyName, lpszProxyBypass, dwFlags ) );
+   HB_RETWH( InternetOpen( lpszAgent, dwAccessType, lpszProxyName, lpszProxyBypass, dwFlags ) );
 }
 
 //---------------------------------------------------------------------//
@@ -147,9 +147,9 @@ HB_FUNC( INTERNETCONNECT )
    DWORD         dwFlags        = ISNIL( 7 ) ? 0    : hb_parnl( 7 );
    DWORD_PTR     dwContext      = ISNIL( 8 ) ? 0    : hb_parnl( 8 );
 
-   hb_retnl( ( ULONG ) InternetConnect( hInternet,    lpszServerName,
-                              nServerPort, lpszUserName, lpszPassword,
-                              dwService, dwFlags,      dwContext ) );
+   HB_RETWH( InternetConnect( hInternet,    lpszServerName,
+                    nServerPort, lpszUserName, lpszPassword,
+                    dwService, dwFlags,      dwContext ) );
 }
 
 //---------------------------------------------------------------------//
@@ -197,13 +197,13 @@ HB_FUNC( INTERNETWRITEFILE )
    HINTERNET hFile                    = ( HINTERNET ) HB_PARWH( 1 );
    LPCVOID   lpBuffer                 = hb_parcx( 2 );
    DWORD     dwNumberOfBytesToWrite   = ( DWORD ) hb_parnl( 3 );
-   LPDWORD   lpdwNumberOfBytesWritten = ( LPDWORD ) 0 ;
+   DWORD     dwNumberOfBytesWritten   = ( DWORD ) 0 ;
 
    hb_retl( InternetWriteFile( hFile, lpBuffer, dwNumberOfBytesToWrite,
-                                                lpdwNumberOfBytesWritten ) );
+                                                &dwNumberOfBytesWritten ) );
 
    if ISBYREF( 4 )
-      hb_stornl( ( ULONG ) lpdwNumberOfBytesWritten, 4 );
+      hb_stornl( ( ULONG ) dwNumberOfBytesWritten, 4 );
 }
 
 //---------------------------------------------------------------------//
@@ -225,11 +225,11 @@ HB_FUNC( INTERNETREADFILE )
    HINTERNET hFile                    = ( HINTERNET ) HB_PARWH( 1 );
    LPVOID    lpBuffer                 = hb_parcx( 2 );
    DWORD     dwNumberOfBytesToRead    = ( DWORD ) hb_parnl( 3 );
-   LPDWORD   lpdwNumberOfBytesRead    = ( LPDWORD ) 0  ;
-   BOOL      bRet ;
+   DWORD     dwNumberOfBytesRead      = ( DWORD ) 0;
+   BOOL      bRet;
 
    bRet = InternetReadFile( hFile, &lpBuffer,
-                            dwNumberOfBytesToRead, lpdwNumberOfBytesRead );
+                            dwNumberOfBytesToRead, &dwNumberOfBytesRead );
 
    hb_retl( bRet );
 
@@ -237,9 +237,9 @@ HB_FUNC( INTERNETREADFILE )
    {
       if ISBYREF( 4 )
       {
-         hb_stornl( ( ULONG ) lpdwNumberOfBytesRead, 4 );
+         hb_stornl( ( ULONG ) dwNumberOfBytesRead, 4 );
       }
-      hb_storclen( ( char * ) lpBuffer, ( ULONG ) lpdwNumberOfBytesRead, 2 );
+      hb_storclen( ( char * ) lpBuffer, ( ULONG ) dwNumberOfBytesRead, 2 );
    }
 }
 
@@ -276,7 +276,7 @@ HB_FUNC( FTPCOMMAND )
    if ( bRet )
    {
       if ( ISBYREF( 6 ) )
-         hb_stornl( ( ULONG ) phFtpCommand, 6 );
+         HB_STORWH( phFtpCommand, 6 );
    }
 }
 //---------------------------------------------------------------------//
@@ -365,7 +365,7 @@ HB_FUNC( FTPFINDFIRSTFILE )
       if ( ISBYREF( 3 ) )
          hb_storclen( (char *) &FindFileData , sizeof( WIN32_FIND_DATA ), 3 );
 
-   hb_retnl( ( ULONG ) hResult );
+   HB_RETWH( hResult );
 }
 
 //---------------------------------------------------------------------//

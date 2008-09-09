@@ -25,7 +25,7 @@ HB_FUNC( IMAGELIST_CREATE )
 {
    HIMAGELIST ilist;
    ilist = ImageList_Create( hb_parni(1), hb_parni(2), hb_parnl(3), hb_parni(4), hb_parni(5));
-   hb_retnl((LONG) ilist);
+   HB_RETWH( ilist );
 }
 
 //-----------------------------------------------------------------------------

@@ -28,43 +28,43 @@
 
 HB_FUNC( STR2PTR )
 {
-   char *cStr = hb_parcx( 1 )    ;
-   hb_retnl( ( LONG_PTR ) cStr );
+   char *cStr = hb_parcx( 1 );
+   HB_RETWI( cStr );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( PEEKW )
 {
-   hb_retni( * ( LPWORD ) hb_parnint( 1 ) );
+   hb_retni( ( int ) ( * ( LPWORD ) HB_PARWI( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( PEEKL )
 {
-   hb_retnl( * (LPDWORD) hb_parnint( 1 ) );
+   hb_retnl( ( long ) ( * (LPDWORD) HB_PARWI( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( PEEKB )
 {
-   hb_retni( * ( LPBYTE ) hb_parnint( 1 ) );
+   hb_retni( ( int ) ( * ( LPBYTE ) HB_PARWI( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( POKEW )
 {
-   * ( LPWORD ) hb_parnint( 1 ) = (WORD) hb_parni( 2 );
+   * ( LPWORD ) HB_PARWI( 1 ) = (WORD) hb_parni( 2 );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( POKEL )
 {
-   * ( LPLONG ) hb_parnint( 1 ) = (DWORD) hb_parnl( 2 );
+   * ( LPLONG ) HB_PARWI( 1 ) = (DWORD) hb_parnl( 2 );
 }
 
 
@@ -72,7 +72,7 @@ HB_FUNC( POKEL )
 
 HB_FUNC( POKEB )
 {
-   * ( LPBYTE ) hb_parnint( 1 ) = ( BYTE ) hb_parni( 2 );
+   * ( LPBYTE ) HB_PARWI( 1 ) = ( BYTE ) hb_parni( 2 );
 }
 
 
@@ -82,9 +82,9 @@ HB_FUNC( POKEB )
 HB_FUNC( PEEK )
 {
  if ( hb_pcount()==2 )
-    hb_retclen( (char *) hb_parnint( 1 ), hb_parnl( 2 ) );
+    hb_retclen( (char *) HB_PARWI( 1 ), hb_parnl( 2 ) );
  else
-    hb_retc( (char *) hb_parnint( 1 ) );
+    hb_retc( (char *) HB_PARWI( 1 ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -92,10 +92,7 @@ HB_FUNC( PEEK )
 
 HB_FUNC( POKE )
 {
-   if( hb_pcount() ==3 )
-      hb_xmemcpy( (char *) hb_parnint(1), hb_parcx( 2 ), hb_parnl( 3 ) );
-   else
-      hb_xmemcpy( (char *) hb_parnint(1), hb_parcx( 2 ), hb_parclen( 2 ) );
+   hb_xmemcpy( (char *) HB_PARWI(1), hb_parcx( 2 ), hb_pcount() == 3 ? hb_parnl( 3 ) : hb_parclen( 2 ) );
 }
 
 
@@ -378,8 +375,7 @@ HB_FUNC( CHECKBIT )
 
 HB_FUNC( GETENVIRONMENTSTRINGS )
 {
-   // TOFIX
-   hb_retnl( (LONG) GetEnvironmentStrings(  ) );
+   HB_RETWI( GetEnvironmentStrings() );
 }
 
 
@@ -389,8 +385,7 @@ HB_FUNC( GETENVIRONMENTSTRINGS )
 
 HB_FUNC( FREEENVIRONMENTSTRINGS )
 {
-   // TOFIX
-   hb_retl( (LONG) FreeEnvironmentStrings( (LPTSTR) hb_parnl(1) ) );
+   hb_retl( (LONG) FreeEnvironmentStrings( (LPTSTR) HB_PARWI( 1 ) ) );
 }
 
 
@@ -457,14 +452,13 @@ HB_FUNC( WINEXEC )
 //  Helper routine.  Take an input pointer, return closest
 //  pointer that is aligned on a DWORD (4 byte) boundary.
 
-LPWORD lpwAlign ( LPWORD lpIn)
+LPWORD lpwAlign( LPWORD lpIn )
 {
-  ULONG ul;
-  ul = (ULONG) lpIn;
-  ul +=3;
-  ul >>=2;
-  ul <<=2;
-  return (LPWORD) ul;
+   HB_PTRDIFF ul = ( HB_PTRDIFF ) lpIn;
+   ul += 3;
+   ul >>=2;
+   ul <<=2;
+   return ( LPWORD ) ul;
 }
 
 //-----------------------------------------------------------------------------
@@ -516,7 +510,7 @@ HB_FUNC( CREATEMUTEX )
        sa = (SECURITY_ATTRIBUTES *) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value;
    }
 
-   hb_retnl( (ULONG) CreateMutex( ISNIL( 1 ) ? NULL : sa, hb_parnl( 2 ), hb_parcx( 3 ) ) );
+   HB_RETWH( CreateMutex( ISNIL( 1 ) ? NULL : sa, hb_parnl( 2 ), hb_parcx( 3 ) ) );
 }
 
 //----------------------------------------------------------------------------
@@ -524,7 +518,7 @@ HB_FUNC( CREATEMUTEX )
 
 HB_FUNC( OPENMUTEX )
 {
-  hb_retnl( (ULONG) OpenMutex( hb_parnl( 1 ), hb_parl( 2 ), hb_parcx( 3 ) ) );
+  HB_RETWH( OpenMutex( hb_parnl( 1 ), hb_parl( 2 ), hb_parcx( 3 ) ) );
 }
 
 //----------------------------------------------------------------------------

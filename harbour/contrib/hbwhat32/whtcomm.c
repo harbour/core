@@ -273,8 +273,8 @@ HB_FUNC( INITLISTVIEW )
 
    hbutton = CreateWindowEx(WS_EX_CLIENTEDGE,"SysListView32","",
    LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_CHILD | WS_TABSTOP | WS_VISIBLE | WS_BORDER | LVS_REPORT,
-   hb_parni(3), hb_parni(4) , hb_parni(5), hb_parni(6) ,
-   hwnd,(HMENU)hb_parni(2) , GetModuleHandle(NULL) , NULL );
+   hb_parni(3), hb_parni(4), hb_parni(5), hb_parni(6) ,
+   hwnd, ( HMENU ) HB_PARWH(2), GetModuleHandle(NULL) , NULL );
 
    SendMessage(hbutton,LVM_SETEXTENDEDLISTVIEWSTYLE, 0,LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT | LVS_EX_HEADERDRAGDROP );
 
