@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-09 12:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/debug/dbgentry.c
+    ! Fixed recent typo. Thanks Lorenzo.
+
 2008-09-09 11:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/mtpl_b32.mak
   * contrib/mtpl_gcc.mak
