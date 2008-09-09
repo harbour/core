@@ -8,9 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-09 09:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_vc.mak
+    * Minor adjustment to previous change (to not display the 
+      obj dir creation for each command.)
+
+  * contrib/hbwhat32/whtdll.c
+  * contrib/hbwhat32/wincorec.c
+  * contrib/hbwhat32/whtsock.c
+  * contrib/hbwhat32/whtcall.c
+  * contrib/hbwhat32/whtclpb.c
+  * contrib/hbwhat32/whtmapi.c
+  * contrib/hbwhat32/whtdlg.c
+  * contrib/hbwhat32/whtwnd.c
+  * contrib/hbwhat32/whtmisc.c
+  * contrib/hbwhat32/whtinet.c
+    ! Fixed MSVS 2008 -W4 warnings.
+
+  * bin/bld.bat
+    * Some further updates.
+
 2008-09-08 22:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/bld.bat
-    * Some changes to make it more up-to-date.
+    * Some changes to make it more up-to-date. 
 
   * utils/hbtest/hbtest.prg
   * utils/hbtest/rt_array.prg

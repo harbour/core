@@ -34,12 +34,12 @@ HB_FUNC( ACCEPT )
    int addrlen ;
 
    if ( ISNIL(2) )
-      hb_retnl( (LONG) accept( (SOCKET) hb_parnl(1), NULL, NULL ) ) ;
+      hb_retnl( (LONG) accept( (SOCKET) hb_parnl(1), NULL, NULL ) );
    else
    {
       addr = hb_parcx(2);
-      addrlen = ISNIL(3) ? hb_parni(3) : hb_parclen(2) ;
-      hb_retnl( (LONG) accept( (SOCKET) hb_parnl(1), ( struct sockaddr *) addr, &addrlen ) ) ;
+      addrlen = ISNIL(3) ? hb_parni(3) : hb_parclen(2);
+      hb_retnl( (LONG) accept( (SOCKET) hb_parnl(1), ( struct sockaddr *) addr, &addrlen ) );
       hb_storclen( addr, addrlen, 2 );
       hb_storni( addrlen, 3);
    }
@@ -55,7 +55,7 @@ HB_FUNC( BIND )
 {
    char *name = (char *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
 
-   hb_retni(( int ) bind( (SOCKET) hb_parnl(1), ( struct sockaddr *) name, hb_parni( 3 ) ) ) ;
+   hb_retni(( int ) bind( (SOCKET) hb_parnl(1), ( struct sockaddr *) name, hb_parni( 3 ) ) );
 }
 
 
@@ -64,7 +64,7 @@ HB_FUNC( BIND )
 
 HB_FUNC( CLOSESOCKET )
 {
-   hb_retni( closesocket( (SOCKET) hb_parnl(1) ) ) ;
+   hb_retni( closesocket( (SOCKET) hb_parnl(1) ) );
 }
 
 
@@ -77,7 +77,7 @@ HB_FUNC( CONNECT )
 {
    char *name = (char *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
 
-   hb_retni( (int ) connect((SOCKET) hb_parnl( 1 ), ( struct sockaddr *) name, hb_parni( 3 ) ) ) ;
+   hb_retni( (int ) connect((SOCKET) hb_parnl( 1 ), ( struct sockaddr *) name, hb_parni( 3 ) ) );
 }
 
 
@@ -90,7 +90,7 @@ HB_FUNC( IOCTLSOCKET )
 {
    ULONG arg = hb_parnl( 3 );
 
-   hb_retni( (int ) ioctlsocket((SOCKET) hb_parnl( 1 ), hb_parnl( 2 ), &arg ) ) ;
+   hb_retni( (int ) ioctlsocket((SOCKET) hb_parnl( 1 ), hb_parnl( 2 ), &arg ) );
    hb_stornl( arg, 3 );
 }
 
@@ -103,9 +103,9 @@ HB_FUNC( IOCTLSOCKET )
 HB_FUNC( GETPEERNAME )
 {
    char *name  = (char *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
-   int addrlen = ISNIL(3) ? hb_parni(3) : hb_parclen(2) ;
+   int addrlen = ISNIL(3) ? hb_parni(3) : hb_parclen(2);
 
-   hb_retni( (int ) getpeername((SOCKET) hb_parnl( 1 ), ( struct sockaddr *) name, &addrlen ) ) ;
+   hb_retni( (int ) getpeername((SOCKET) hb_parnl( 1 ), ( struct sockaddr *) name, &addrlen ) );
    hb_storclen( name, addrlen, 2 );
    hb_storni( addrlen, 3);
 }
@@ -119,9 +119,9 @@ HB_FUNC( GETPEERNAME )
 HB_FUNC( GETSOCKNAME )
 {
    char *name  = (char *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
-   int addrlen = ISNIL(3) ? hb_parni(3) : hb_parclen(2) ;
+   int addrlen = ISNIL(3) ? hb_parni(3) : hb_parclen(2);
 
-   hb_retni( (int ) getsockname((SOCKET) hb_parnl( 1 ), ( struct sockaddr *) name, &addrlen ) ) ;
+   hb_retni( (int ) getsockname((SOCKET) hb_parnl( 1 ), ( struct sockaddr *) name, &addrlen ) );
    hb_storclen( name, addrlen, 2 );
    hb_storni( addrlen, 3);
 }
@@ -142,7 +142,7 @@ HB_FUNC( GETSOCKOPT )
                                 hb_parni( 3 ),
                                 optval      ,
                                 &optlen
-                              ) ) ;
+                              ) );
 
    hb_storclen( optval, optlen, 4 );
    hb_storni( optlen, 5 );
@@ -154,7 +154,7 @@ HB_FUNC( GETSOCKOPT )
 
 HB_FUNC( HTONL )
 {
-   hb_retnl( (ULONG) htonl( hb_parnl( 1 ) ) ) ;
+   hb_retnl( (ULONG) htonl( hb_parnl( 1 ) ) );
 }
 
 
@@ -163,7 +163,7 @@ HB_FUNC( HTONL )
 
 HB_FUNC( HTONS )
 {
-   hb_retni( (USHORT) htons( (USHORT) hb_parni( 1 ) ) ) ;
+   hb_retni( (USHORT) htons( (USHORT) hb_parni( 1 ) ) );
 }
 
 
@@ -172,7 +172,7 @@ HB_FUNC( HTONS )
 
 HB_FUNC( INET_ADDR )
 {
-   hb_retnl( (ULONG) inet_addr( hb_parcx( 1 ) ) ) ;
+   hb_retnl( (ULONG) inet_addr( hb_parcx( 1 ) ) );
 }
 
 
@@ -183,7 +183,7 @@ HB_FUNC( INET_NTOA )
 {
    struct in_addr *in = (struct in_addr *) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value ;
 
-   hb_retc( inet_ntoa( *in ) ) ;
+   hb_retc( inet_ntoa( *in ) );
 }
 
 
@@ -192,7 +192,7 @@ HB_FUNC( INET_NTOA )
 
 HB_FUNC( LISTEN )
 {
- hb_retni( (int) listen((SOCKET) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+ hb_retni( (int) listen((SOCKET) hb_parnl( 1 ), hb_parni( 2 ) ) );
 }
 
 
@@ -201,7 +201,7 @@ HB_FUNC( LISTEN )
 
 HB_FUNC( NTOHL )
 {
-   hb_retnl( (ULONG) ntohl( hb_parnl(1 ) ) ) ;
+   hb_retnl( (ULONG) ntohl( hb_parnl(1 ) ) );
 }
 
 
@@ -210,7 +210,7 @@ HB_FUNC( NTOHL )
 
 HB_FUNC( NTOHS )
 {
-   hb_retni( ( USHORT ) ntohs( (USHORT) hb_parni(1) ) ) ;
+   hb_retni( ( USHORT ) ntohs( (USHORT) hb_parni(1) ) );
 }
 
 
@@ -222,15 +222,15 @@ HB_FUNC( NTOHS )
 HB_FUNC( RECV )
 {
    int  iBuffLen = (ISNIL(3) ? (ISNIL(2) ? 0 : hb_parclen(2) ) : hb_parni(3));
-   char   *buf  = ( char *) hb_xgrab(iBuffLen) ;
+   char   *buf  = ( char *) hb_xgrab(iBuffLen);
    int iRet;
 
-   iRet = recv((SOCKET) hb_parnl( 1 ), buf, iBuffLen, hb_parni( 4 ) ) ;
+   iRet = recv((SOCKET) hb_parnl( 1 ), buf, iBuffLen, hb_parni( 4 ) );
    if ( iRet && ISBYREF( 2 ) )
       hb_storclen( buf, iRet, 2 );
 
    hb_retni( iRet );
-   hb_xfree( buf ) ;
+   hb_xfree( buf );
 }
 
 
@@ -242,7 +242,7 @@ HB_FUNC( RECV )
 HB_FUNC( RECVFROM )
 {
    int  iBuffLen = (ISNIL(3) ? (ISNIL(2) ? 0 : hb_parclen(2) ) : hb_parni(3));
-   char *buf     = ( char *) hb_xgrab(iBuffLen) ;
+   char *buf     = ( char *) hb_xgrab(iBuffLen);
    char *from    = (ISNIL(5) ? NULL : (char *) hb_parc( 5 )); //hb_param( 5, HB_IT_STRING )->item.asString.value );
    int  iAddrLen = (ISNIL(6) ? (ISNIL(5) ? 0 : hb_parclen(5) ) : hb_parni(6));
    int  iRet;
@@ -253,7 +253,7 @@ HB_FUNC( RECVFROM )
                               hb_parni( 4 ),
                               ( struct sockaddr *)from  ,
                               &iAddrLen
-                              ) ;
+                              );
 
    if ( iRet && ISBYREF( 2 ) )
       hb_storclen( buf, iRet, 2 );
@@ -262,7 +262,7 @@ HB_FUNC( RECVFROM )
       hb_storclen(from, iAddrLen, 5 );
 
    hb_retni( iRet );
-   hb_xfree( buf ) ;
+   hb_xfree( buf );
 
 }
 
@@ -296,7 +296,7 @@ HB_FUNC( SOCKSELECT )
                             writefds     ,
                             exceptfds    ,
                             timeout
-                           ) ) ;
+                           ) );
 
     if ( ISCHAR( 2 ) && ISBYREF( 2 ) )
        hb_storclen( ( char *) readfds, sizeof(fd_set), 2 );
@@ -314,7 +314,7 @@ HB_FUNC( SOCKSELECT )
 HB_FUNC( SEND )
 {
    int  iBuffLen = (ISNIL(3) ? (ISNIL(2) ? 0 : hb_parclen(2) ) : hb_parni(3));
-   hb_retni( ( int ) send((SOCKET) hb_parnl( 1 ), hb_parcx(2), iBuffLen, hb_parni( 4 ) ) ) ;
+   hb_retni( ( int ) send((SOCKET) hb_parnl( 1 ), hb_parcx(2), iBuffLen, hb_parni( 4 ) ) );
 }
 
 
@@ -342,7 +342,7 @@ HB_FUNC( SENDTO )
                                             hb_parni( 4 ),
                                             to           ,
                                             iToLen
-                                          ) ) ;
+                                          ) );
 }
 
 
@@ -352,14 +352,14 @@ HB_FUNC( SENDTO )
 HB_FUNC( SETSOCKOPT )
 {
 //   SOCKET s       ;
-   INT    optval  = hb_parni(5) ;
+   INT    optval  = hb_parni(5);
 
    hb_retni( (int ) setsockopt( (SOCKET) hb_parnl( 1 ) ,
                                  hb_parni( 2 ),
                                  hb_parni( 3 ),
                                  (const char *) &optval      ,
                                  sizeof( optval) //hb_parni( 5 )
-                               ) ) ;
+                               ) );
 }
 
 
@@ -368,7 +368,7 @@ HB_FUNC( SETSOCKOPT )
 
 HB_FUNC( SHUTDOWN )
 {
-   hb_retni( (int ) shutdown((SOCKET) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retni( (int ) shutdown((SOCKET) hb_parnl( 1 ), hb_parni( 2 ) ) );
 }
 
 
@@ -377,7 +377,7 @@ HB_FUNC( SHUTDOWN )
 
 HB_FUNC( SOCKET )
 {
-   hb_retnl( ( ULONG ) socket( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) ) ;
+   hb_retnl( ( ULONG ) socket( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
 
@@ -390,9 +390,9 @@ HB_FUNC( GETHOSTBYADDR )
    he = gethostbyaddr( hb_parcx( 1 ) ,
                        hb_parni( 2 ),
                        hb_parni( 3 )
-                     ) ;
+                     );
 
-   hb_retclen( ( char *)he, sizeof(HOSTENT) ) ;
+   hb_retclen( ( char *)he, sizeof(HOSTENT) );
 }
 
 
@@ -403,9 +403,9 @@ HB_FUNC( GETHOSTBYNAME )
 {
    HOSTENT *he ;
 
-   he = gethostbyname( hb_parcx( 1 ) ) ;
+   he = gethostbyname( hb_parcx( 1 ) );
 
-   hb_retclen( ( char *)he, sizeof(HOSTENT) ) ;
+   hb_retclen( ( char *)he, sizeof(HOSTENT) );
 
 }
 
@@ -418,7 +418,7 @@ HB_FUNC( GETHOSTBYNAME )
 HB_FUNC( GETHOSTNAME )
 {
    char *name  = ( char*) hb_parcx( 1 )  ;
-   int iLen    =  hb_parclen( 1 ) ;
+   int iLen    =  hb_parclen( 1 );
 
    hb_retni( (int ) gethostname( name, iLen ) )  ;
    hb_storc( name, 1 );
@@ -430,7 +430,7 @@ HB_FUNC( GETHOSTNAME )
 
 HB_FUNC( GETSERVBYPORT )
 {
-   hb_retclen( ( char * ) getservbyport( hb_parni( 1 ),hb_parcx( 2 ) ), sizeof(SERVENT) ) ;
+   hb_retclen( ( char * ) getservbyport( hb_parni( 1 ),hb_parcx( 2 ) ), sizeof(SERVENT) );
 }
 
 
@@ -439,7 +439,7 @@ HB_FUNC( GETSERVBYPORT )
 
 HB_FUNC( GETSERVBYNAME )
 {
-   hb_retclen( ( char *) getservbyname( hb_parcx( 1 ), hb_parcx( 2 ) ), sizeof(SERVENT) ) ;
+   hb_retclen( ( char *) getservbyname( hb_parcx( 1 ), hb_parcx( 2 ) ), sizeof(SERVENT) );
 }
 
 
@@ -448,7 +448,7 @@ HB_FUNC( GETSERVBYNAME )
 
 HB_FUNC( GETPROTOBYNUMBER )
 {
-   hb_retclen( ( char * ) getprotobynumber( hb_parni( 1 ) ), sizeof(PROTOENT) ) ;
+   hb_retclen( ( char * ) getprotobynumber( hb_parni( 1 ) ), sizeof(PROTOENT) );
 }
 
 
@@ -457,7 +457,7 @@ HB_FUNC( GETPROTOBYNUMBER )
 
 HB_FUNC( GETPROTOBYNAME )
 {
-   hb_retclen( ( char * ) getprotobyname( hb_parcx( 1 ) ), sizeof(PROTOENT) ) ;
+   hb_retclen( ( char * ) getprotobyname( hb_parcx( 1 ) ), sizeof(PROTOENT) );
 }
 
 
@@ -468,7 +468,7 @@ HB_FUNC( WSASTARTUP )
 {
    WSADATA WSAData  ;
 
-   hb_retni( (int ) WSAStartup( hb_parni( 1 ), &WSAData ) ) ;
+   hb_retni( (int ) WSAStartup( ( WORD ) hb_parni( 1 ), &WSAData ) );
 
    if ( ISBYREF( 2 ) )
      hb_storclen( ( char * ) &WSAData, sizeof( WSADATA ), 2 );
@@ -481,7 +481,7 @@ HB_FUNC( WSASTARTUP )
 
 HB_FUNC( WSACLEANUP )
 {
-   hb_retni( (int ) WSACleanup( ) ) ;
+   hb_retni( (int ) WSACleanup( ) );
 }
 
 
@@ -490,7 +490,7 @@ HB_FUNC( WSACLEANUP )
 
 HB_FUNC( WSASETLASTERROR )
 {
-   WSASetLastError( hb_parni( 1 ) ) ;
+   WSASetLastError( hb_parni( 1 ) );
 }
 
 
@@ -499,7 +499,7 @@ HB_FUNC( WSASETLASTERROR )
 
 HB_FUNC( WSAGETLASTERROR )
 {
-   hb_retni( (int ) WSAGetLastError( ) ) ;
+   hb_retni( (int ) WSAGetLastError( ) );
 }
 
 
@@ -508,7 +508,7 @@ HB_FUNC( WSAGETLASTERROR )
 
 HB_FUNC( WSAISBLOCKING )
 {
-   hb_retl( WSAIsBlocking( ) ) ;
+   hb_retl( WSAIsBlocking( ) );
 }
 
 
@@ -517,7 +517,7 @@ HB_FUNC( WSAISBLOCKING )
 
 HB_FUNC( WSAUNHOOKBLOCKINGHOOK )
 {
-   hb_retni( (int ) WSAUnhookBlockingHook() ) ;
+   hb_retni( (int ) WSAUnhookBlockingHook() );
 }
 
 
@@ -534,7 +534,7 @@ HB_FUNC( WSASETBLOCKINGHOOK )
 
    // Your code goes here
 
-// ( FARPROC ) WSASetBlockingHook( lpBlockFunc ) ) ;
+// ( FARPROC ) WSASetBlockingHook( lpBlockFunc ) );
 }
 
 */
@@ -545,7 +545,7 @@ HB_FUNC( WSASETBLOCKINGHOOK )
 
 HB_FUNC( WSACANCELBLOCKINGCALL )
 {
-   hb_retni( (int ) WSACancelBlockingCall() ) ;
+   hb_retni( (int ) WSACancelBlockingCall() );
 }
 
 
@@ -562,7 +562,7 @@ HB_FUNC( WSACANCELBLOCKINGCALL )
 
 HB_FUNC( WSAASYNCGETSERVBYNAME )
 {
-   char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT ) ;
+   char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
 
    if( ( hRet = WSAAsyncGetServByName( (HWND)         hb_parnl( 1 ),
@@ -572,10 +572,10 @@ HB_FUNC( WSAASYNCGETSERVBYNAME )
                                      ( char *)      buf          ,
                                      ( int)         MAXGETHOSTSTRUCT ) ) != 0 )
 
-      hb_storclen( buf, sizeof(SERVENT), 5 ) ;
+      hb_storclen( buf, sizeof(SERVENT), 5 );
 
    hb_retnl( (ULONG ) hRet );
-   hb_xfree( buf ) ;
+   hb_xfree( buf );
 }
 
 
@@ -590,7 +590,7 @@ HB_FUNC( WSAASYNCGETSERVBYNAME )
 
 HB_FUNC( WSAASYNCGETSERVBYPORT )
 {
-   char * buf = (char *) hb_xgrab( MAXGETHOSTSTRUCT ) ;
+   char * buf = (char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
 
    if( ( hRet = WSAAsyncGetServByPort( (HWND) hb_parnl( 1 )        ,
@@ -600,10 +600,10 @@ HB_FUNC( WSAASYNCGETSERVBYPORT )
                                        ( char *)      buf         ,
                                        ( int)         MAXGETHOSTSTRUCT  ) ) != 0 )
 
-        hb_storclen( buf, sizeof(SERVENT), 5 ) ;
+        hb_storclen( buf, sizeof(SERVENT), 5 );
 
    hb_retnl( (ULONG ) hRet );
-   hb_xfree( buf ) ;
+   hb_xfree( buf );
 }
 
 
@@ -619,7 +619,7 @@ HB_FUNC( WSAASYNCGETSERVBYPORT )
 
 HB_FUNC( WSAASYNCGETPROTOBYNAME )
 {
-   char * buf = ( char * ) hb_xgrab( MAXGETHOSTSTRUCT ) ;
+   char * buf = ( char * ) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
 
    if( ( hRet = WSAAsyncGetProtoByName( (HWND)         hb_parnl( 1 ),
@@ -628,10 +628,10 @@ HB_FUNC( WSAASYNCGETPROTOBYNAME )
                                        ( char *)      buf          ,
                                        ( int)         MAXGETHOSTSTRUCT  ) ) != 0 )
 
-        hb_storclen( buf, sizeof(PROTOENT), 4) ;
+        hb_storclen( buf, sizeof(PROTOENT), 4);
 
    hb_retnl( (ULONG ) hRet );
-   hb_xfree( buf ) ;
+   hb_xfree( buf );
 }
 
 
@@ -647,7 +647,7 @@ HB_FUNC( WSAASYNCGETPROTOBYNAME )
 
 HB_FUNC( WSAASYNCGETPROTOBYNUMBER )
 {
-   char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT ) ;
+   char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
 
    if( ( hRet = WSAAsyncGetProtoByNumber( (HWND)         hb_parnl( 1 ),
@@ -656,10 +656,10 @@ HB_FUNC( WSAASYNCGETPROTOBYNUMBER )
                                          ( char *)      buf          ,
                                          ( int)         MAXGETHOSTSTRUCT  ) ) != 0 )
 
-        hb_storclen( buf, sizeof(PROTOENT), 4) ;
+        hb_storclen( buf, sizeof(PROTOENT), 4);
 
    hb_retnl( (ULONG ) hRet );
-   hb_xfree( buf ) ;
+   hb_xfree( buf );
 }
 
 //-----------------------------------------------------------------------------
@@ -673,7 +673,7 @@ HB_FUNC( WSAASYNCGETPROTOBYNUMBER )
 
 HB_FUNC( WSAASYNCGETHOSTBYNAME )
 {
-   char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT ) ;
+   char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
 
    if( ( hRet = WSAAsyncGetHostByName( (HWND) hb_parnl( 1 ),
@@ -682,10 +682,10 @@ HB_FUNC( WSAASYNCGETHOSTBYNAME )
                                        ( char *)      buf          ,
                                        ( int)         MAXGETHOSTSTRUCT ) ) != 0 )
 
-      hb_storclen( buf, sizeof(HOSTENT), 4) ;
+      hb_storclen( buf, sizeof(HOSTENT), 4);
 
    hb_retnl( (ULONG ) hRet );
-   hb_xfree( buf ) ;
+   hb_xfree( buf );
 }
 
 
@@ -702,7 +702,7 @@ HB_FUNC( WSAASYNCGETHOSTBYNAME )
 HB_FUNC( WSAASYNCGETHOSTBYADDR )
 {
 
-   char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT ) ;
+   char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
 
    if( ( hRet = WSAAsyncGetHostByAddr( (HWND)         hb_parnl( 1 ) ,
@@ -713,10 +713,10 @@ HB_FUNC( WSAASYNCGETHOSTBYADDR )
                                       ( char *)      buf           ,
                                       ( int)         MAXGETHOSTSTRUCT  ) ) != 0 )
 
-      hb_storclen( buf, sizeof(HOSTENT), 5) ;
+      hb_storclen( buf, sizeof(HOSTENT), 5);
 
    hb_retnl( (ULONG ) hRet );
-   hb_xfree( buf ) ;
+   hb_xfree( buf );
 
 
 }
@@ -727,7 +727,7 @@ HB_FUNC( WSAASYNCGETHOSTBYADDR )
 
 HB_FUNC( WSACANCELASYNCREQUEST )
 {
-   hb_retni( (int) WSACancelAsyncRequest( (HANDLE) hb_parnl( 1 ) ) ) ;
+   hb_retni( (int) WSACancelAsyncRequest( (HANDLE) hb_parnl( 1 ) ) );
 }
 
 
@@ -740,7 +740,7 @@ HB_FUNC( WSAASYNCSELECT )
                                     (HWND) hb_parnl( 2 )   ,
                                     (UINT) hb_parni( 3 )   ,
                                      hb_parnl( 4 )
-                                  ) ) ;
+                                  ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -773,7 +773,7 @@ int _stdcall _WSACondFunc( LPWSABUF lpCallerId,  LPWSABUF lpCallerData, LPQOS lp
       hb_vmPushLong( (LONG ) lpCalleeData );
       hb_vmPushLong( (LONG ) g );
 
-      hb_vmDo(7) ;
+      hb_vmDo(7);
       res = hb_itemGetNI( (PHB_ITEM) hb_param( -1, HB_IT_ANY ) );
 
    }
@@ -808,12 +808,12 @@ HB_FUNC( WSAACCEPT )
                      &addr                    ,
                      &addrlen                 ,
                      _WSACondFunc              ,
-                     ISNIL( 3 ) ? 0 : (DWORD_PTR) hb_parnl( 3 ) ) ;
+                     ISNIL( 3 ) ? 0 : (DWORD_PTR) hb_parnl( 3 ) );
 
    if( ( sRet != INVALID_SOCKET ) && ISBYREF( 2 ) )
-        hb_storclen( ( char * ) &addr, addrlen, 2 ) ;
+        hb_storclen( ( char * ) &addr, addrlen, 2 );
 
-    hb_retnl( ( ULONG ) sRet ) ;
+    hb_retnl( ( ULONG ) sRet );
 
 }
 
@@ -824,7 +824,7 @@ HB_FUNC( WSAACCEPT )
 
 HB_FUNC( WSACLOSEEVENT )
 {
-   hb_retl( ( BOOL ) WSACloseEvent( (WSAEVENT) hb_parnl( 1 ) ) ) ;
+   hb_retl( ( BOOL ) WSACloseEvent( (WSAEVENT) hb_parnl( 1 ) ) );
 }
 
 
@@ -866,7 +866,7 @@ HB_FUNC( WSACONNECT )
 
 
 
-   hb_retni( (int ) iRet ) ;
+   hb_retni( (int ) iRet );
 
 =======
 // hb_retni( (int ) WSAConnect( (SOCKET) hb_parnl( 1 )            ,
@@ -876,7 +876,7 @@ HB_FUNC( WSACONNECT )
                                                 lpCalleeData ,
                                                 lpSQOS       ,
                                                 lpGQOS
-                                              ) ) ;
+                                              ) );
 >>>>>>> 1.4
 }
 */
@@ -887,7 +887,7 @@ HB_FUNC( WSACONNECT )
 
 HB_FUNC( WSACREATEEVENT )
 {
-   hb_retnl( ( ULONG)  WSACreateEvent( ) ) ;
+   hb_retnl( ( ULONG)  WSACreateEvent( ) );
 }
 
 
@@ -907,7 +907,7 @@ HB_FUNC( WSADUPLICATESOCKET )
 // hb_retni( (int ) WSADuplicateSocket( (SOCKET) hb_parnl( 1 )               ,
                                                         (DWORD) hb_parnl( 2 ),
                                                         lpProtocolInfo
-                                                      ) ) ;
+                                                      ) );
 }
 
 */
@@ -929,7 +929,7 @@ HB_FUNC( WSAENUMNETWORKEVENTS )
 // hb_retni( (int ) WSAEnumNetworkEvents( (SOCKET) hb_parnl( 1 )s              ,
                                                           hEventObject   ,
                                                           lpNetworkEvents
-                                                        ) ) ;
+                                                        ) );
 }
 
 */
@@ -951,7 +951,7 @@ HB_FUNC( WSAENUMPROTOCOLS )
 // hb_retni( (int ) WSAEnumProtocols( lpiProtocols    ,
                                       lpProtocolBuffer,
                                       lpdwBufferLength
-                                     ) ) ;
+                                     ) );
 }
 
 */
@@ -965,7 +965,7 @@ HB_FUNC( WSAEVENTSELECT )
    hb_retni( (int ) WSAEventSelect( (SOCKET)   hb_parnl( 1 ) ,
                                     (WSAEVENT) hb_parnl( 2 ) ,
                                     (long)     hb_parnl( 3 )
-                                   ) ) ;
+                                   ) );
 }
 
 
@@ -988,7 +988,7 @@ HB_FUNC( WSAGETOVERLAPPEDRESULT )
                                     lpcbTransfer,
                                     hb_parl( 4 ),
                                     lpdwFlags
-                                   ) ) ;
+                                   ) );
 }
 
 */
@@ -1007,7 +1007,7 @@ HB_FUNC( WSAGETQOSBYNAME )
 
    // Your code goes here
 
-// hb_retl( WSAGetQOSByName((SOCKET) hb_parnl( 1 ), lpQOSName, lpQOS ) ) ;
+// hb_retl( WSAGetQOSByName((SOCKET) hb_parnl( 1 ), lpQOSName, lpQOS ) );
 }
 
 */
@@ -1026,7 +1026,7 @@ HB_FUNC( WSAHTONL )
 
    // Your code goes here
 
-// hb_retni( (int ) WSAHtonl((SOCKET) hb_parnl( 1 ), hostlong, &lpnetlong ) ) ;
+// hb_retni( (int ) WSAHtonl((SOCKET) hb_parnl( 1 ), hostlong, &lpnetlong ) );
 }
 
 */
@@ -1045,7 +1045,7 @@ HB_FUNC( WSAHTONS )
 
    // Your code goes here
 
-// hb_retni( (int ) WSAHtons((SOCKET) hb_parnl( 1 ), hostshort, &lpnetshort ) ) ;
+// hb_retni( (int ) WSAHtons((SOCKET) hb_parnl( 1 ), hostshort, &lpnetshort ) );
 }
 
 */
@@ -1076,7 +1076,7 @@ HB_FUNC( WSAIOCTL )
                                               lpcbBytesReturned    ,
                                               lpOverlapped         ,
                                               lpCompletionRoutine
-                                            ) ) ;
+                                            ) );
 }
 
 */
@@ -1106,7 +1106,7 @@ HB_FUNC( WSAJOINLEAF )
                                                     lpSQOS               ,
                                                     lpGQOS               ,
                                                     (DWORD) hb_parnl( 8 )
-                                                  ) ) ;
+                                                  ) );
 }
 
 */
@@ -1125,7 +1125,7 @@ HB_FUNC( WSANTOHL )
 
    // Your code goes here
 
-   hb_retni( (int ) WSANtohl((SOCKET) hb_parnl( 1 ), netlong, &lphostlong ) ) ;
+   hb_retni( (int ) WSANtohl((SOCKET) hb_parnl( 1 ), netlong, &lphostlong ) );
 }
 
 */
@@ -1144,7 +1144,7 @@ HB_FUNC( WSANTOHS )
 
    // Your code goes here
 
-   hb_retni( (int ) WSANtohs((SOCKET) hb_parnl( 1 ), netshort, &lphostshort ) ) ;
+   hb_retni( (int ) WSANtohs((SOCKET) hb_parnl( 1 ), netshort, &lphostshort ) );
 }
 
 */
@@ -1173,7 +1173,7 @@ HB_FUNC( WSARECV )
                                              lpFlags              ,
                                              lpOverlapped         ,
                                              lpCompletionRoutine
-                                           ) ) ;
+                                           ) );
 }
 
 */
@@ -1191,7 +1191,7 @@ HB_FUNC( WSARECVDISCONNECT )
 
 // hb_retni( (int ) WSARecvDisconnect( (SOCKET) hb_parnl( 1 )                  ,
                                                        lpInboundDisconnectData
-                                                     ) ) ;
+                                                     ) );
 }
 
 */
@@ -1222,7 +1222,7 @@ HB_FUNC( WSARECVFROM )
                                                  lpFromlen            ,
                                                  lpOverlapped         ,
                                                  lpCompletionRoutine
-                                               ) ) ;
+                                               ) );
 }
 
 */
@@ -1233,7 +1233,7 @@ HB_FUNC( WSARECVFROM )
 
 HB_FUNC( WSARESETEVENT )
 {
-   hb_retl( WSAResetEvent( (WSAEVENT) hb_parnl( 1 ) ) ) ;
+   hb_retl( WSAResetEvent( (WSAEVENT) hb_parnl( 1 ) ) );
 }
 
 
@@ -1258,7 +1258,7 @@ HB_FUNC( WSASEND )
                                              (DWORD) hb_parnl( 5 ),
                                              lpOverlapped         ,
                                              lpCompletionRoutine
-                                           ) ) ;
+                                           ) );
 }
 
 */
@@ -1278,7 +1278,7 @@ HB_FUNC( WSASENDDISCONNECT )
 
 // hb_retni( (int ) WSASendDisconnect( (SOCKET) hb_parnl( 1 )s                       ,
                                                        lpOutboundDisconnectData
-                                                     ) ) ;
+                                                     ) );
 }
 
 */
@@ -1309,7 +1309,7 @@ HB_FUNC( WSASENDTO )
                                                hb_parni( 7 )        ,
                                                lpOverlapped         ,
                                                lpCompletionRoutine
-                                             ) ) ;
+                                             ) );
 }
 
 */
@@ -1320,7 +1320,7 @@ HB_FUNC( WSASENDTO )
 
 HB_FUNC( WSASETEVENT )
 {
-   hb_retl( WSASetEvent( (WSAEVENT) hb_parnl( 1 ) ) ) ;
+   hb_retl( WSASetEvent( (WSAEVENT) hb_parnl( 1 ) ) );
 }
 
 
@@ -1342,7 +1342,7 @@ HB_FUNC( WSASOCKET )
                                                   lpProtocolInfo       ,
                                                   g                    ,
                                                   (DWORD) hb_parnl( 6 )
-                                                ) ) ;
+                                                ) );
 }
 
 */
@@ -1364,7 +1364,7 @@ HB_FUNC( WSAWAITFORMULTIPLEEVENTS )
                                                                 hb_parl( 3 )         ,
                                                                 (DWORD) hb_parnl( 4 ),
                                                                 hb_parl( 5 )
-                                                              ) ) ;
+                                                              ) );
 }
 
 */
@@ -1388,7 +1388,7 @@ HB_FUNC( WSAADDRESSTOSTRING )
                                                         lpProtocolInfo         ,
                                                         (LPSTR) hb_parcx( 4 )   ,
                                                         lpdwAddressStringLength
-                                                      ) ) ;
+                                                      ) );
 }
 
 */
@@ -1413,7 +1413,7 @@ HB_FUNC( WSASTRINGTOADDRESS )
                                                         lpProtocolInfo      ,
                                                         lpAddress           ,
                                                         lpAddressLength
-                                                      ) ) ;
+                                                      ) );
 }
 
 */
@@ -1435,7 +1435,7 @@ HB_FUNC( WSALOOKUPSERVICEBEGIN )
 // hb_retni( (int ) WSALookupServiceBegin( lpqsRestrictions     ,
                                                            (DWORD) hb_parnl( 2 ),
                                                            lphLookup
-                                                         ) ) ;
+                                                         ) );
 }
 
 */
@@ -1458,7 +1458,7 @@ HB_FUNC( WSALOOKUPSERVICENEXT )
                                                           (DWORD) hb_parnl( 2 ) ,
                                                           lpdwBufferLength      ,
                                                           lpqsResults
-                                                        ) ) ;
+                                                        ) );
 }
 
 */
@@ -1470,7 +1470,7 @@ HB_FUNC( WSALOOKUPSERVICENEXT )
 
 HB_FUNC( WSALOOKUPSERVICEEND )
 {
-   hb_retni( (int ) WSALookupServiceEnd( (HANDLE) hb_parnl( 1 ) ) ) ;
+   hb_retni( (int ) WSALookupServiceEnd( (HANDLE) hb_parnl( 1 ) ) );
 }
 
 
@@ -1485,7 +1485,7 @@ HB_FUNC( WSAINSTALLSERVICECLASS )
 
    // Your code goes here
 
-// hb_retni( (int ) WSAInstallServiceClass( lpServiceClassInfo ) ) ;
+// hb_retni( (int ) WSAInstallServiceClass( lpServiceClassInfo ) );
 }
 
 */
@@ -1503,7 +1503,7 @@ HB_FUNC( WSAREMOVESERVICECLASS )
 
    // Your code goes here
 
-// hb_retni( (int ) WSARemoveServiceClass( lpServiceClassId ) ) ;
+// hb_retni( (int ) WSARemoveServiceClass( lpServiceClassId ) );
 }
 
 */
@@ -1527,7 +1527,7 @@ HB_FUNC( WSAGETSERVICECLASSINFO )
                                                             lpServiceClassId  ,
                                                             lpdwBufSize       ,
                                                             lpServiceClassInfo
-                                                          ) ) ;
+                                                          ) );
 }
 
 */
@@ -1547,7 +1547,7 @@ HB_FUNC( WSAENUMNAMESPACEPROVIDERS )
 
 // hb_retni( (int ) WSAEnumNameSpaceProviders( lpdwBufferLength,
                                                                lpnspBuffer
-                                                             ) ) ;
+                                                             ) );
 }
 
 */
@@ -1568,7 +1568,7 @@ HB_FUNC( WSAGETSERVICECLASSNAMEBYCLASSID )
 // hb_retni( (int ) WSAGetServiceClassNameByClassId( lpServiceClassId    ,
                                                                      (LPSTR) hb_parcx( 2 ),
                                                                      lpdwBufferLength
-                                                                   ) ) ;
+                                                                   ) );
 }
 
 */
@@ -1589,7 +1589,7 @@ HB_FUNC( WSASETSERVICE )
 // hb_retni( (int ) WSASetService( lpqsRegInfo          ,
                                                    essoperation         ,
                                                    (DWORD) hb_parnl( 3 )
-                                                 ) ) ;
+                                                 ) );
 }
 
 */
@@ -1611,7 +1611,7 @@ HB_FUNC( WSAPROVIDERCONFIGCHANGE )
 // hb_retni( (int ) WSAProviderConfigChange( lpNotificationHandle,
                                                              lpOverlapped        ,
                                                              lpCompletionRoutine
-                                                           ) ) ;
+                                                           ) );
 }
 
 */

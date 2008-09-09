@@ -41,7 +41,7 @@
 
 HB_FUNC( LOADLIBRARY )
 {
-   hb_retnl( (LONG) LoadLibraryA( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   hb_retnl( (LONG) LoadLibraryA( (LPCSTR) hb_parcx( 1 ) ) );
 }
 */
 //-----------------------------------------------------------------------------
@@ -53,7 +53,7 @@ HB_FUNC( LOADLIBRARYEX )
    hb_retnl( (LONG) LoadLibraryExA( (LPCSTR) hb_parcx( 1 ) ,
                                     (HANDLE) hb_parnl( 2 ),
                                     (DWORD) hb_parnl( 3 )
-                                    ) ) ;
+                                    ) );
 }
 
 
@@ -63,7 +63,7 @@ HB_FUNC( LOADLIBRARYEX )
 
 HB_FUNC( FREELIBRARY )
 {
-   hb_retl( FreeLibrary( (HMODULE) hb_parnl( 1 ) ) ) ;
+   hb_retl( FreeLibrary( (HMODULE) hb_parnl( 1 ) ) );
 }
 */
 
@@ -75,7 +75,7 @@ HB_FUNC( FREELIBRARYANDEXITTHREAD )
 {
    FreeLibraryAndExitThread( (HMODULE) hb_parnl( 1 ),
                              (DWORD) hb_parnl( 2 )
-                            ) ;
+                            );
 }
 
 //-----------------------------------------------------------------------------
@@ -198,7 +198,7 @@ typedef struct DYNAPARM {
     union {                     //
         DWORD   dwArg;          // 4-byte argument
         void   *pArg;           // Pointer to argument
-    };
+    } numargs;
 } DYNAPARM;
 
 #pragma pack()
@@ -279,67 +279,67 @@ HB_FUNC( CALLDLL )
     if(iArgCnt > 0)
         iArgCnt /= 2;
 
-    //printf( "\nNo. Parameters: %i\n", iArgCnt ) ;
+    //printf( "\nNo. Parameters: %i\n", iArgCnt );
     if( iArgCnt > 0)
     {
         for( i = 6; i <= iParams; i += 2)
         {
-            //printf( "\nParameter Type: %i\n", hb_parni( i ) ) ;
-            //printf( "Parameter: %i\n", hb_parni( i + 2) ) ;
-            //printf( "Parameter: %i\n", hb_parni( i + 4) ) ;
-            //printf( "Parameter: %i\n", hb_parni( i + 6) ) ;
+            //printf( "\nParameter Type: %i\n", hb_parni( i ) );
+            //printf( "Parameter: %i\n", hb_parni( i + 2) );
+            //printf( "Parameter: %i\n", hb_parni( i + 4) );
+            //printf( "Parameter: %i\n", hb_parni( i + 6) );
             switch ( hb_parni( i-1 ) )
             {
             case CTYPE_CHAR_PTR          :
                 Parm[iCnt].nWidth = sizeof(  char * );
-                if ( ISNIL(i) ) Parm[iCnt].pArg = NULL;
-                else if (ISNUM(i) ) Parm[iCnt].dwArg = (DWORD) MAKEINTRESOURCE( hb_parni( i ) );
-                else Parm[iCnt].dwArg = ( DWORD ) hb_parc ( i  );
+                if ( ISNIL(i) ) Parm[iCnt].numargs.pArg = NULL;
+                else if (ISNUM(i) ) Parm[iCnt].numargs.dwArg = (DWORD) MAKEINTRESOURCE( hb_parni( i ) );
+                else Parm[iCnt].numargs.dwArg = ( DWORD ) hb_parc ( i  );
                 iCnt++;
                 break;
             case CTYPE_STRUCTURE_PTR     :
             case CTYPE_UNSIGNED_CHAR_PTR :
                 Parm[iCnt].nWidth = sizeof( unsigned char * );
-                if ( ISNIL(i) ) Parm[iCnt].pArg = NULL;
-                else Parm[iCnt].dwArg = ( DWORD ) hb_parc ( i  );
+                if ( ISNIL(i) ) Parm[iCnt].numargs.pArg = NULL;
+                else Parm[iCnt].numargs.dwArg = ( DWORD ) hb_parc ( i  );
                 iCnt++;
                 break;
             case CTYPE_BOOL              :
                 Parm[iCnt].nWidth = sizeof( BOOL );
-                Parm[iCnt].dwArg = ( DWORD ) hb_parl( i );
+                Parm[iCnt].numargs.dwArg = ( DWORD ) hb_parl( i );
                 iCnt++;
                 break;
             case CTYPE_CHAR              :
                 Parm[iCnt].nWidth = sizeof( char );
-                if ( ISNIL(i) ) Parm[iCnt].pArg = NULL;
-                else Parm[iCnt].dwArg = ( DWORD ) hb_parni( i );
+                if ( ISNIL(i) ) Parm[iCnt].numargs.pArg = NULL;
+                else Parm[iCnt].numargs.dwArg = ( DWORD ) hb_parni( i );
                 iCnt++;
                 break;
             case CTYPE_UNSIGNED_CHAR     :
                 Parm[iCnt].nWidth = sizeof( unsigned char );
-                if ( ISNIL(i) ) Parm[iCnt].pArg = NULL;
-                else Parm[iCnt].dwArg = ( DWORD ) hb_parni( i );
+                if ( ISNIL(i) ) Parm[iCnt].numargs.pArg = NULL;
+                else Parm[iCnt].numargs.dwArg = ( DWORD ) hb_parni( i );
                 iCnt++;
                 break;
             case CTYPE_SHORT             :
             case CTYPE_UNSIGNED_SHORT    :
                 Parm[iCnt].nWidth = sizeof( short int );
-                if ( ISNIL(i) ) Parm[iCnt].pArg = NULL;
-                else Parm[iCnt].dwArg = ( DWORD ) hb_parni( i );
+                if ( ISNIL(i) ) Parm[iCnt].numargs.pArg = NULL;
+                else Parm[iCnt].numargs.dwArg = ( DWORD ) hb_parni( i );
                 iCnt++;
                 break;
             case CTYPE_INT               :
             case CTYPE_UNSIGNED_INT      :
                 Parm[iCnt].nWidth = sizeof( unsigned int );
-                if ( ISNIL(i) ) Parm[iCnt].pArg = NULL;
-                else Parm[iCnt].dwArg = ( DWORD ) hb_parnd( i );
+                if ( ISNIL(i) ) Parm[iCnt].numargs.pArg = NULL;
+                else Parm[iCnt].numargs.dwArg = ( DWORD ) hb_parnd( i );
                 iCnt++;
                 break;
             case CTYPE_LONG              :
             case CTYPE_UNSIGNED_LONG     :
                 Parm[iCnt].nWidth = sizeof( unsigned long int );
-                if ( ISNIL(i) ) Parm[iCnt].dwArg = 0;
-                else Parm[iCnt].dwArg = ( DWORD ) hb_parnd( i );
+                if ( ISNIL(i) ) Parm[iCnt].numargs.dwArg = 0;
+                else Parm[iCnt].numargs.dwArg = ( DWORD ) hb_parnd( i );
                 iCnt++;
                 break;
             case CTYPE_LONG_PTR          :
@@ -350,38 +350,38 @@ HB_FUNC( CALLDLL )
             case CTYPE_SHORT_PTR         :
             case CTYPE_UNSIGNED_SHORT_PTR:
                 Parm[iCnt].nWidth = sizeof( unsigned long int * );
-                if ( ISNIL(i) ) Parm[iCnt].pArg = NULL;
-                else Parm[iCnt].dwArg   = ( DWORD ) hb_parnl( i );
+                if ( ISNIL(i) ) Parm[iCnt].numargs.pArg = NULL;
+                else Parm[iCnt].numargs.dwArg   = ( DWORD ) hb_parnl( i );
                 iCnt++;
                 break;
             case CTYPE_FLOAT_PTR         :
                 Parm[iCnt].nWidth = sizeof( float * );
-                Parm[iCnt].dwArg   = ( DWORD ) hb_parnl( i );
+                Parm[iCnt].numargs.dwArg   = ( DWORD ) hb_parnl( i );
                 iCnt++;
                 break;
             case CTYPE_DOUBLE_PTR        :
                 Parm[iCnt].nWidth = sizeof( double * );
-                Parm[iCnt].dwArg   = ( DWORD ) hb_parnl( i );
+                Parm[iCnt].numargs.dwArg   = ( DWORD ) hb_parnl( i );
                 iCnt++;
                 break;
             case CTYPE_FLOAT             :
                 Parm[iCnt].nWidth = sizeof( float );
                 DblParms[iCnt] = ( double ) hb_parnd( i );
-                Parm[iCnt].pArg   = &DblParms[iCnt];
+                Parm[iCnt].numargs.pArg   = &DblParms[iCnt];
                 Flags |= DC_RETVAL_MATH4;
                 iCnt++;
                 break;
             case CTYPE_DOUBLE            :
                 Parm[iCnt].nWidth = sizeof( double );
                 DblParms[iCnt] = ( double ) hb_parnd( i );
-                Parm[iCnt].pArg   = &DblParms[iCnt];
+                Parm[iCnt].numargs.pArg   = &DblParms[iCnt];
                 Parm[iCnt].dwFlags = DC_FLAG_ARGPTR;  // use the pointer
                 Flags |= DC_RETVAL_MATH8;
                 iCnt++;
                 break;
             default:
                 MessageBox( GetActiveWindow(), "UNKNOWN Parameter Type!", "CallDll Parameter Error!", MB_OK | MB_ICONERROR );
-                printf( "Bad Parameter: %i\n", hb_parni( i-1 ) ) ;
+                printf( "Bad Parameter: %i\n", hb_parni( i-1 ) );
                 return;
             }
         }

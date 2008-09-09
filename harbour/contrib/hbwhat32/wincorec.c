@@ -25,18 +25,18 @@
 #include "hbstack.h"
 #include "hbapiitm.h"
 
-LRESULT CALLBACK __WndProc   (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) ;
-LRESULT CALLBACK __WndProc2  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) ;
-LRESULT CALLBACK __WndProc3  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) ;
-LRESULT CALLBACK __WndProc4  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) ;
-LRESULT CALLBACK __WndProc5  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) ;
-LRESULT CALLBACK __WndProc6  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) ;
-LRESULT CALLBACK __WndProc7  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) ;
-LRESULT CALLBACK __WndProc8  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) ;
-LRESULT CALLBACK __WndProc9  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) ;
-LRESULT CALLBACK __WndProc10 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) ;
+LRESULT CALLBACK __WndProc   (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK __WndProc2  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK __WndProc3  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK __WndProc4  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK __WndProc5  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK __WndProc6  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK __WndProc7  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK __WndProc8  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK __WndProc9  (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK __WndProc10 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-BOOL CALLBACK __DlgProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) ;
+BOOL CALLBACK __DlgProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 int nCopyAnsiToWideChar (LPWORD lpWCStr, LPSTR lpAnsiIn);
 LPWORD lpwAlign ( LPWORD lpIn);
@@ -55,14 +55,14 @@ HB_FUNC( _REGISTERCLASS )
    /*
    wndclass.style         = (ISNIL(1) ? (CS_HREDRAW | CS_VREDRAW | CS_OWNDC | CS_DBLCLKS)  : hb_parni(1) );
    wndclass.lpfnWndProc   = __WndProc ;
-   wndclass.cbClsExtra    = ( ISNIL(2)  ? 0 : hb_parni(2)) ;
-   wndclass.cbWndExtra    = ( ISNIL(3)  ? 0 : hb_parni(3)) ;
-   wndclass.hInstance     = ( ISNIL(4)  ? GetModuleHandle(NULL) : (HANDLE) hb_parnl(4) ) ;
-   wndclass.hIcon         = ( ISNIL(5)  ? LoadIcon(GetModuleHandle(NULL),"") : (HICON) hb_parnl(5) ) ;
-   wndclass.hCursor       = ( ISNIL(6)  ? LoadCursor (NULL, IDC_ARROW) : (HCURSOR) hb_parnl(6) ) ;
-   wndclass.hbrBackground = ( ISNIL(7)  ? (INT) COLOR_WINDOW  + 1 :  (HBRUSH) hb_parnl(7) ) ;
-   wndclass.lpszMenuName  = (LPCSTR) ( !ISNIL(8) ? hb_parc(8) : NULL ) ;
-   wndclass.lpszClassName = (LPCSTR) hb_parc(9) ;
+   wndclass.cbClsExtra    = ( ISNIL(2)  ? 0 : hb_parni(2));
+   wndclass.cbWndExtra    = ( ISNIL(3)  ? 0 : hb_parni(3));
+   wndclass.hInstance     = ( ISNIL(4)  ? GetModuleHandle(NULL) : (HANDLE) hb_parnl(4) );
+   wndclass.hIcon         = ( ISNIL(5)  ? LoadIcon(GetModuleHandle(NULL),"") : (HICON) hb_parnl(5) );
+   wndclass.hCursor       = ( ISNIL(6)  ? LoadCursor (NULL, IDC_ARROW) : (HCURSOR) hb_parnl(6) );
+   wndclass.hbrBackground = ( ISNIL(7)  ? (INT) COLOR_WINDOW  + 1 :  (HBRUSH) hb_parnl(7) );
+   wndclass.lpszMenuName  = (LPCSTR) ( !ISNIL(8) ? hb_parc(8) : NULL );
+   wndclass.lpszClassName = (LPCSTR) hb_parc(9);
    */
 
    hb_retl( RegisterClass (wndclass));
@@ -73,9 +73,9 @@ HB_FUNC( _REGISTERCLASS )
 
 HB_FUNC( _UNREGISTERCLASS )
 {
-   HANDLE hInst = ( ISNIL(2) ? GetModuleHandle(NULL) : (HANDLE) hb_parnl(2) ) ;
+   HANDLE hInst = ( ISNIL(2) ? GetModuleHandle(NULL) : (HANDLE) hb_parnl(2) );
 
-   hb_retl( UnregisterClass( hb_parc(1), (HINSTANCE) hInst ) ) ;
+   hb_retl( UnregisterClass( hb_parc(1), (HINSTANCE) hInst ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -85,7 +85,7 @@ HB_FUNC( _UNREGISTERCLASS )
 
 HB_FUNC( _CREATEWINDOWEX )
 {
-   DWORD  dwExStyle  = (ISNIL(1)  ? 0 : hb_parnl(1)) ;
+   DWORD  dwExStyle  = (ISNIL(1)  ? 0 : hb_parnl(1));
    LPCSTR cClass     = (LPCSTR) hb_parc(2);
    LPCSTR cTitle     = (LPCSTR) hb_parc(3);
    DWORD  nStyle     = (ISNIL(4)  ? 0 : (DWORD) hb_parnd(4) );
@@ -93,7 +93,7 @@ HB_FUNC( _CREATEWINDOWEX )
    int    y          = (ISNIL(6)  ? CW_USEDEFAULT : hb_parni(6));
    int    nWidth     = (ISNIL(7)  ? CW_USEDEFAULT : hb_parni(7));
    int    nHeight    = (ISNIL(8)  ? CW_USEDEFAULT : hb_parni(8));
-   HWND   hWndParent = (ISNIL(9)  ? (HWND) NULL : (HWND) hb_parnl(9)) ;
+   HWND   hWndParent = (ISNIL(9)  ? (HWND) NULL : (HWND) hb_parnl(9));
    HMENU  hMenu      = (ISNIL(10) ? (HMENU) NULL : (HMENU) hb_parni(10));
    HANDLE hInstance  = (ISNIL(11) ? GetModuleHandle( NULL ) : (HANDLE) hb_parnl(11));
    LPVOID lParam     = (ISNIL(12) ? NULL : (LPVOID) hb_parnl(12));
@@ -118,13 +118,13 @@ HB_FUNC( _CREATEMDIWINDOW )
    int    y          = (ISNIL(5)  ? CW_USEDEFAULT : hb_parni(5));
    int    nWidth     = (ISNIL(6)  ? CW_USEDEFAULT : hb_parni(6));
    int    nHeight    = (ISNIL(7)  ? CW_USEDEFAULT : hb_parni(7));
-   HWND   hWndParent = (ISNIL(8)  ? (HWND) NULL : (HWND) hb_parnl(8)) ;
+   HWND   hWndParent = (ISNIL(8)  ? (HWND) NULL : (HWND) hb_parnl(8));
    HANDLE hInstance  = (ISNIL(9)  ? GetModuleHandle( NULL ) : (HANDLE) hb_parnl(9));
    LPARAM lParam     = (ISNIL(10) ? 0 : (LPARAM) hb_parnl(10));
 
    HWND hWnd = CreateMDIWindow( cClass, cTitle,nStyle,
                                 x, y, nWidth, nHeight,
-                                hWndParent, (HINSTANCE) hInstance, lParam ) ;
+                                hWndParent, (HINSTANCE) hInstance, lParam );
    hb_retnl( (LONG) hWnd );
 }
 
@@ -429,47 +429,47 @@ HB_FUNC( GETWNDPROC )
   switch ( hb_parni(1) )
   {
     case 10:
-      hb_retptr( __WndProc10 ) ;
+      hb_retptr( __WndProc10 );
       return ;
 
     case 9:
-      hb_retptr( __WndProc9 ) ;
+      hb_retptr( __WndProc9 );
       return ;
 
     case 8:
-      hb_retptr( __WndProc8 ) ;
+      hb_retptr( __WndProc8 );
       return ;
 
     case 7:
-      hb_retptr( __WndProc7 ) ;
+      hb_retptr( __WndProc7 );
       return ;
 
     case 6:
-      hb_retptr( __WndProc6 ) ;
+      hb_retptr( __WndProc6 );
       return ;
 
     case 5:
-      hb_retptr( __WndProc5 ) ;
+      hb_retptr( __WndProc5 );
       return ;
 
     case 4:
-      hb_retptr( __WndProc4 ) ;
+      hb_retptr( __WndProc4 );
       return ;
 
     case 3:
-      hb_retptr( __WndProc3 ) ;
+      hb_retptr( __WndProc3 );
       return ;
 
     case 2:
-      hb_retptr( __WndProc2 ) ;
+      hb_retptr( __WndProc2 );
       return ;
 
     case 1:
-      hb_retptr( __WndProc ) ;
+      hb_retptr( __WndProc );
       return ;
 
     default:
-      hb_retptr( NULL ) ;
+      hb_retptr( NULL );
       return ;
 
   }
@@ -481,7 +481,7 @@ HB_FUNC( GETWNDPROC )
 
 HB_FUNC( _GETDLGPROC )
 {
-    hb_retptr( __DlgProc ) ;
+    hb_retptr( __DlgProc );
 }
 
 //-----------------------------------------------------------------------------
@@ -534,9 +534,9 @@ HB_FUNC( _DIALOGBOX )
 HB_FUNC( _DIALOGBOXINDIRECT )
 {
 
-   hb_retni( DialogBoxIndirect( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) )   ,
-                               (LPDLGTEMPLATE) hb_parc(2)  ,
-                               (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) )        ,
+   hb_retni( DialogBoxIndirect( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) ),
+                               (LPDLGTEMPLATE) hb_parc(2),
+                               (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) ),
                                (DLGPROC) hb_parptr(4)
                              ));
 }
@@ -547,9 +547,9 @@ HB_FUNC( _DIALOGBOXINDIRECT )
 HB_FUNC( _CREATEDIALOG )
 {
 
-  hb_retnl( (ULONG) CreateDialog( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) )  ,
-                                  (hb_parinfo(2)==HB_IT_STRING ? hb_parc(2) : MAKEINTRESOURCE( (WORD) hb_parni(2))) ,
-                                  (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) )        ,
+  hb_retnl( (ULONG) CreateDialog( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) ),
+                                  (hb_parinfo(2)==HB_IT_STRING ? hb_parc(2) : MAKEINTRESOURCE( (WORD) hb_parni(2))),
+                                  (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) ),
                                   (DLGPROC) hb_parptr(4)
                                 ) );
 }
@@ -561,9 +561,9 @@ HB_FUNC( _CREATEDIALOGINDIRECT )
 {
   hb_retnl(
    (ULONG) CreateDialogIndirect(
-            (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) )   ,
-            (LPDLGTEMPLATE) hb_parc(2) ,
-            (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) )        ,
+            (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) ),
+            (LPDLGTEMPLATE) hb_parc(2),
+            (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) ),
             (DLGPROC) hb_parptr(4)
           ));
 }
@@ -576,10 +576,10 @@ HB_FUNC( _CREATEDIALOGINDIRECT )
 HB_FUNC( _MAKEDLGTEMPLATE )
 
 {
-   WORD *p, *pdlgtemplate ;
-   WORD  nItems = hb_parni( 1, 4 ) ;
-   int   i, nchar ;
-   DWORD lStyle ;
+   WORD *p, *pdlgtemplate;
+   WORD  nItems = ( WORD ) hb_parni( 1, 4 );
+   int   i, nchar;
+   DWORD lStyle;
 
    // Parameters: 12 arrays
    // 1 for DLG template
@@ -589,31 +589,31 @@ HB_FUNC( _MAKEDLGTEMPLATE )
 
    //---------------
 
-    lStyle = hb_parnl(1,3) ;
+    lStyle = hb_parnl(1,3);
 
     // start to fill in the dlgtemplate information.  addressing by WORDs
 
     *p++ = 1                   ; // version
     *p++ = 0xFFFF                   ; // signature
-    *p++ = LOWORD ( hb_parnl(1,1) ) ; // Help Id
-    *p++ = HIWORD ( hb_parnl(1,1) ) ;
+    *p++ = LOWORD ( hb_parnl(1,1) ); // Help Id
+    *p++ = HIWORD ( hb_parnl(1,1) );
 
-    *p++ = LOWORD ( hb_parnl(1,2) ) ; // ext. style
-    *p++ = HIWORD ( hb_parnl(1,2) ) ;
+    *p++ = LOWORD ( hb_parnl(1,2) ); // ext. style
+    *p++ = HIWORD ( hb_parnl(1,2) );
 
-    *p++ = LOWORD (lStyle)          ;
-    *p++ = HIWORD (lStyle)          ;
+    *p++ = LOWORD (lStyle);
+    *p++ = HIWORD (lStyle);
 
-    *p++ = (WORD)   nItems        ;  // NumberOfItems
-    *p++ = (short)  hb_parni(1,5) ;  // x
-    *p++ = (short)  hb_parni(1,6) ;  // y
-    *p++ = (short)  hb_parni(1,7) ;  // cx
-    *p++ = (short)  hb_parni(1,8) ;  // cy
-    *p++ = (short)  0             ;  // Menu (ignored for now.)
-    *p++ = (short)  0x00          ;  // Class also ignored
+    *p++ = (WORD)   nItems;  // NumberOfItems
+    *p++ = (short)  hb_parni(1,5);  // x
+    *p++ = (short)  hb_parni(1,6);  // y
+    *p++ = (short)  hb_parni(1,7);  // cx
+    *p++ = (short)  hb_parni(1,8);  // cy
+    *p++ = (short)  0;  // Menu (ignored for now.)
+    *p++ = (short)  0x00;  // Class also ignored
 
     if ( hb_parinfa(1,11) == HB_IT_STRING ) {
-        nchar = nCopyAnsiToWideChar( p, TEXT( hb_parc(1,11) ) ) ;
+        nchar = nCopyAnsiToWideChar( p, TEXT( hb_parc(1,11) ) );
         p += nchar   ;
       }
     else
@@ -622,11 +622,11 @@ HB_FUNC( _MAKEDLGTEMPLATE )
     // add in the wPointSize and szFontName here iff the DS_SETFONT bit on
 
     if ( (lStyle & DS_SETFONT ) ) {
-      *p++ = (short) hb_parni(1,12) ;
-      *p++ = (short) hb_parni(1,13) ;
-      *p++ = (short) hb_parni(1,14) ;
+      *p++ = (short) hb_parni(1,12);
+      *p++ = (short) hb_parni(1,13);
+      *p++ = (short) hb_parni(1,14);
 
-      nchar = nCopyAnsiToWideChar( p, TEXT( hb_parc(1,15) ) ) ;
+      nchar = nCopyAnsiToWideChar( p, TEXT( hb_parc(1,15) ) );
       p += nchar ;
 
     } ;
@@ -637,44 +637,44 @@ HB_FUNC( _MAKEDLGTEMPLATE )
    for ( i = 1 ; i <= nItems ; i++ ) {
 
       // make sure each item starts on a DWORD boundary
-      p = lpwAlign (p) ;
+      p = lpwAlign (p);
 
 
-      *p++ = LOWORD ( hb_parnl(2,i) ) ;    // help id
-      *p++ = HIWORD ( hb_parnl(2,i) ) ;
+      *p++ = LOWORD ( hb_parnl(2,i) );    // help id
+      *p++ = HIWORD ( hb_parnl(2,i) );
 
-      *p++ = LOWORD ( hb_parnl(3,i) ) ; // ext. style
-      *p++ = HIWORD ( hb_parnl(3,i) ) ;
+      *p++ = LOWORD ( hb_parnl(3,i) ); // ext. style
+      *p++ = HIWORD ( hb_parnl(3,i) );
 
-      *p++ = LOWORD ( hb_parnl(4,i) ) ; // style
-      *p++ = HIWORD ( hb_parnl(4,i) ) ;
+      *p++ = LOWORD ( hb_parnl(4,i) ); // style
+      *p++ = HIWORD ( hb_parnl(4,i) );
 
-      *p++ = (short)  hb_parni(5,i)   ;  // x
-      *p++ = (short)  hb_parni(6,i)   ;  // y
-      *p++ = (short)  hb_parni(7,i)   ;  // cx
-      *p++ = (short)  hb_parni(8,i)   ;  // cy
+      *p++ = (short)  hb_parni(5,i);  // x
+      *p++ = (short)  hb_parni(6,i);  // y
+      *p++ = (short)  hb_parni(7,i);  // cx
+      *p++ = (short)  hb_parni(8,i);  // cy
 
-      *p++ = LOWORD ( hb_parnl(9,i) ) ;  // id
-      *p++ = HIWORD ( hb_parnl(9,i) ) ;  // id   // 0;
+      *p++ = LOWORD ( hb_parnl(9,i) );  // id
+      *p++ = HIWORD ( hb_parnl(9,i) );  // id   // 0;
 
       if ( hb_parinfa(10,i) == HB_IT_STRING ) {
-          nchar = nCopyAnsiToWideChar(p, TEXT ( hb_parc(10,i)) ) ; // class
+          nchar = nCopyAnsiToWideChar(p, TEXT ( hb_parc(10,i)) ); // class
           p += nchar ;
          }
       else
          {
          *p++ = 0xFFFF ;
-         *p++ = (WORD) hb_parni(10,i) ;
+         *p++ = (WORD) hb_parni(10,i);
          }
 
       if ( hb_parinfa(11,i) == HB_IT_STRING ) {
-         nchar = nCopyAnsiToWideChar(p, (LPSTR) hb_parc(11,i) ) ;  // text
+         nchar = nCopyAnsiToWideChar(p, (LPSTR) hb_parc(11,i) );  // text
          p += nchar ;
          }
       else
          {
          *p++ = 0xFFFF ;
-         *p++ = (WORD) hb_parni(11,i) ;
+         *p++ = (WORD) hb_parni(11,i);
          }
 
 
@@ -685,8 +685,8 @@ HB_FUNC( _MAKEDLGTEMPLATE )
     p = lpwAlign (p)  ;
 
 
-    hb_retclen( (LPSTR) pdlgtemplate, ( (ULONG) p - (ULONG) pdlgtemplate ) ) ;
+    hb_retclen( (LPSTR) pdlgtemplate, ( (ULONG) p - (ULONG) pdlgtemplate ) );
 
-    LocalFree (LocalHandle (pdlgtemplate) ) ;
+    LocalFree (LocalHandle (pdlgtemplate) );
 
 }

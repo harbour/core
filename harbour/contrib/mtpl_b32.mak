@@ -161,17 +161,17 @@ $(OBJ_DIR);\
 #**********************************************************
 # General *.c --> *.obj COMPILE rule for STATIC Libraries
 {$(ALL_LIB_SRC_DIRS)}.c{$(OBJ_DIR)}$(OBJEXT):
-    if not exist "$(OBJ_DIR)" md "$(OBJ_DIR)" > nul
+    @if not exist "$(OBJ_DIR)" md "$(OBJ_DIR)" > nul
     $(CC) $(CLIBFLAGS) -o$@ $<
 #**********************************************************
 # General *.cpp --> *.obj COMPILE rule for STATIC Libraries
 {$(ALL_LIB_SRC_DIRS)}.cpp{$(OBJ_DIR)}$(OBJEXT):
-    if not exist "$(OBJ_DIR)" md "$(OBJ_DIR)" > nul
+    @if not exist "$(OBJ_DIR)" md "$(OBJ_DIR)" > nul
     $(CC) $(CLIBFLAGS: -P= ) -P -o$@ $<
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for STATIC Libraries
 {$(ALL_LIB_SRC_DIRS)}.prg{$(OBJ_DIR)}$(OBJEXT):
-    if not exist "$(OBJ_DIR)" md "$(OBJ_DIR)" > nul
+    @if not exist "$(OBJ_DIR)" md "$(OBJ_DIR)" > nul
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
     $(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)\$&.c
 #**********************************************************

@@ -32,7 +32,7 @@
 
 HB_FUNC( ENDDIALOG )
 {
-  EndDialog( (HWND) hb_parnl(1) , hb_parni(2) ) ;
+  EndDialog( (HWND) hb_parnl(1) , hb_parni(2) );
 }
 
 //-----------------------------------------------------------------------------
@@ -56,7 +56,7 @@ HB_FUNC( GETNEXTDLGGROUPITEM )
    hb_retnl( (LONG) GetNextDlgGroupItem( (HWND) hb_parnl( 1 ),
                                          (HWND) hb_parnl( 2 ),
                                          hb_parl( 3 )
-                                       ) ) ;
+                                       ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ HB_FUNC( GETNEXTDLGTABITEM )
    hb_retnl( (LONG) GetNextDlgTabItem( (HWND) hb_parnl( 1 ),
                                        (HWND) hb_parnl( 2 ),
                                        hb_parl( 3 )
-                                     ) ) ;
+                                     ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ HB_FUNC( GETNEXTDLGTABITEM )
 
 HB_FUNC( GETDLGCTRLID )
 {
-   hb_retni( GetDlgCtrlID( (HWND) hb_parnl( 1 ) ) ) ;
+   hb_retni( GetDlgCtrlID( (HWND) hb_parnl( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -86,7 +86,7 @@ HB_FUNC( GETDLGCTRLID )
 
 HB_FUNC( GETDIALOGBASEUNITS )
 {
-   hb_retnl( (LONG) GetDialogBaseUnits(  ) ) ;
+   hb_retnl( (LONG) GetDialogBaseUnits(  ) );
 }
 
 
@@ -100,7 +100,7 @@ HB_FUNC( SETDLGITEMINT )
                            hb_parni( 2 )       ,
                            (UINT) hb_parni( 3 ),
                            hb_parl( 4 )
-                         ) ) ;
+                         ) );
 }
 
 
@@ -142,13 +142,13 @@ HB_FUNC( GETDLGITEMTEXT )  // GETDLGITMTEXT
 
 HB_FUNC( GETLBITEMTEXT )  // GETDLGITMTEXT
 {
-   USHORT iLen = ISNIL(3) ? 255 : hb_parni( 3 );
-   char *cText = (char*) hb_xgrab( iLen+1 );
+   USHORT iLen = ISNIL(3) ? 255 : ( USHORT ) hb_parni( 3 );
+   char * cText = ( char * ) hb_xgrab( iLen + 1 );
 
    SendMessage(
                   (HWND) hb_parnl( 1 ),    // handle of dialog box
-                  LB_GETTEXT ,
-                  (WPARAM) hb_parni( 2 ) , // item number
+                  LB_GETTEXT,
+                  (WPARAM) hb_parni( 2 ), // item number
                   (LPARAM) (LPCSTR) cText           // address of buffer for text
               );
 
@@ -176,7 +176,7 @@ HB_FUNC( CHECKRADIOBUTTON )
                               hb_parni( 2 ),         // identifier of first radio button in group
                               hb_parni( 3 ),         // identifier of last radio button in group
                               hb_parni( 4 )          // identifier of radio button to select
-                             ) ) ;
+                             ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -186,7 +186,7 @@ HB_FUNC( ISDLGBUTTONCHECKED )
   hb_retni( IsDlgButtonChecked(
                                (HWND) hb_parnl( 1 ),       // handle of dialog box
                                hb_parni( 2 )               // button identifier
-                               ) ) ;
+                               ) );
 
 
 }
@@ -207,9 +207,9 @@ HB_FUNC( DLGDIRLIST )
                          hb_parni( 3 )       ,
                          hb_parni( 4 )       ,
                          (UINT) hb_parni( 5 )
-                       ) ) ;
+                       ) );
 
-   hb_storc(cText,2) ;
+   hb_storc(cText,2);
    hb_xfree(cText);
 
 }
@@ -222,17 +222,17 @@ HB_FUNC( DLGDIRLIST )
 HB_FUNC( DLGDIRSELECTEX )
 {
 
-   USHORT iLen = ISNIL(3) ? MAX_PATH : hb_parni( 3 );
+   USHORT iLen = ISNIL(3) ? MAX_PATH : ( USHORT ) hb_parni( 3 );
    char *cText = (char*) hb_xgrab( iLen+1 );
 
    hb_retl( DlgDirSelectEx( (HWND) hb_parnl( 1 ),
                             (LPSTR) cText       ,
                             iLen                ,
                             hb_parni( 4 )
-                          ) ) ;
+                          ) );
 
-   hb_storc(cText, 2 ) ;
-   hb_xfree(cText) ;
+   hb_storc(cText, 2 );
+   hb_xfree(cText);
 }
 
 //-----------------------------------------------------------------------------
@@ -242,16 +242,16 @@ HB_FUNC( DLGDIRSELECTEX )
 HB_FUNC( DLGDIRLISTCOMBOBOX )
 {
    char *cText = (char*) hb_xgrab( MAX_PATH+1 );
-   //cText = hb_parcx(2) ;
+   //cText = hb_parcx(2);
 
    hb_retni( DlgDirListComboBox( (HWND) hb_parnl( 1 ),
                                  (LPSTR) cText       ,
                                  hb_parni( 3 )       ,
                                  hb_parni( 4 )       ,
                                  (UINT) hb_parni( 5 )
-                               ) ) ;
-   hb_storc(cText, 2 ) ;
-   hb_xfree(cText) ;
+                               ) );
+   hb_storc(cText, 2 );
+   hb_xfree(cText);
 
 }
 
@@ -262,17 +262,17 @@ HB_FUNC( DLGDIRLISTCOMBOBOX )
 HB_FUNC( DLGDIRSELECTCOMBOBOXEX )
 {
 
-   USHORT iLen = ISNIL(3) ? MAX_PATH : hb_parni( 3 );
+   USHORT iLen = ISNIL(3) ? MAX_PATH : ( USHORT ) hb_parni( 3 );
    char *cText = (char*) hb_xgrab( iLen+1 );
 
    hb_retl( DlgDirSelectComboBoxEx( (HWND) hb_parnl( 1 ),
                                     (LPSTR) cText       ,
                                     iLen                ,
                                     hb_parni( 4 )
-                                  ) ) ;
+                                  ) );
 
-   hb_storc(cText, 2 ) ;
-   hb_xfree(cText) ;
+   hb_storc(cText, 2 );
+   hb_xfree(cText);
 
 }
 
@@ -291,17 +291,17 @@ HB_FUNC( MAPDIALOGRECT )
    PHB_ITEM pArray;
    if (ISARRAY(2) )
       {
-      pArray=hb_param( 2, HB_IT_ARRAY ) ;
+      pArray=hb_param( 2, HB_IT_ARRAY );
       lpRect.left   = hb_arrayGetNL( pArray , 1 );
       lpRect.top    = hb_arrayGetNL( pArray , 2 );
       lpRect.right  = hb_arrayGetNL( pArray , 3 );
       lpRect.bottom = hb_arrayGetNL( pArray , 4 );
 
-      hb_retl( MapDialogRect( (HWND) hb_parnl( 1 ), &lpRect ) ) ;
-      hb_stornl( lpRect.left   , 2 , 1 ) ;
-      hb_stornl( lpRect.top    , 2 , 2 ) ;
-      hb_stornl( lpRect.right  , 2 , 3 ) ;
-      hb_stornl( lpRect.bottom , 2 , 4 ) ;
+      hb_retl( MapDialogRect( (HWND) hb_parnl( 1 ), &lpRect ) );
+      hb_stornl( lpRect.left   , 2 , 1 );
+      hb_stornl( lpRect.top    , 2 , 2 );
+      hb_stornl( lpRect.right  , 2 , 3 );
+      hb_stornl( lpRect.bottom , 2 , 4 );
    }
    else
       hb_retl(FALSE);
@@ -320,7 +320,7 @@ HB_FUNC( GETCOMBOBOXINFO )
 {
    PCOMBOBOXINFO pcbi      ;
 
-   hb_retl( GetComboBoxInfo( (HWND) hb_parnl( 1 ), pcbi ) ) ;
+   hb_retl( GetComboBoxInfo( (HWND) hb_parnl( 1 ), pcbi ) );
 }
 
 */
@@ -341,7 +341,7 @@ HB_FUNC( GETALTTABINFO )
                            pati                ,
                            (LPSTR) hb_parcx( 4 ),
                            (UINT) hb_parni( 5 )
-                         ) ) ;
+                         ) );
 }
 
 */
@@ -352,7 +352,7 @@ HB_FUNC( GETALTTABINFO )
 /*
 HB_FUNC( GETLISTBOXINFO )
 {
-   hb_retnl( (LONG) GetListBoxInfo( (HWND) hb_parnl( 1 ) ) ) ;
+   hb_retnl( (LONG) GetListBoxInfo( (HWND) hb_parnl( 1 ) ) );
 }
 */
 
@@ -365,9 +365,9 @@ HWND  hWnd     = (HWND) hb_parnl( 1 );
 if( h ){
     typedef DWORD (WINAPI *xdwGetListBoxInfo)( HWND hWnd );
     xdwGetListBoxInfo pfnGLI = (xdwGetListBoxInfo)
-    GetProcAddress( h, "GetListBoxInfo") ;
+    GetProcAddress( h, "GetListBoxInfo");
     if( pfnGLI ){
-        dwGLIRet = (DWORD) pfnGLI( hWnd ) ;
+        dwGLIRet = (DWORD) pfnGLI( hWnd );
     }
     FreeLibrary( h );
 }

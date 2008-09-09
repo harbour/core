@@ -27,7 +27,7 @@
 HB_FUNC( STR2PTR )
 {
    char *cStr = hb_parcx( 1 )    ;
-   hb_retnl( ( LONG_PTR ) cStr ) ;
+   hb_retnl( ( LONG_PTR ) cStr );
 }
 
 //-----------------------------------------------------------------------------
@@ -41,7 +41,7 @@ HB_FUNC( PEEKW )
 
 HB_FUNC( PEEKL )
 {
-   hb_retnl( * (LPDWORD) hb_parnl( 1 ) ) ;
+   hb_retnl( * (LPDWORD) hb_parnl( 1 ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -55,14 +55,14 @@ HB_FUNC( PEEKB )
 
 HB_FUNC( POKEW )
 {
-   * ( LPWORD ) hb_parnl( 1 ) = (WORD) hb_parni( 2 ) ;
+   * ( LPWORD ) hb_parnl( 1 ) = (WORD) hb_parni( 2 );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( POKEL )
 {
-   * ( LPLONG ) hb_parnl( 1 ) = (DWORD) hb_parnl( 2 ) ;
+   * ( LPLONG ) hb_parnl( 1 ) = (DWORD) hb_parnl( 2 );
 }
 
 
@@ -70,7 +70,7 @@ HB_FUNC( POKEL )
 
 HB_FUNC( POKEB )
 {
-   * ( LPBYTE ) hb_parnl( 1 ) = hb_parni( 2 ) ;
+   * ( LPBYTE ) hb_parnl( 1 ) = ( BYTE ) hb_parni( 2 );
 }
 
 
@@ -119,7 +119,7 @@ HB_FUNC( F2BIN )
 
    *( ( float *) ( Buffer ) ) = (float) hb_parnd( 1 );
 
-   hb_retclen( ( char *)Buffer,sizeof(float) ) ;
+   hb_retclen( ( char *)Buffer,sizeof(float) );
    hb_xfree(Buffer);
 
 }
@@ -327,7 +327,7 @@ PHB_ITEM Size2Array( SIZE * siz )
 
 HB_FUNC( MAKEINRESOURCE )
 {
-  hb_retc( MAKEINTRESOURCE( (WORD) hb_parni( 1 ) ) ) ;
+  hb_retc( MAKEINTRESOURCE( (WORD) hb_parni( 1 ) ) );
 }
 
 
@@ -335,19 +335,19 @@ HB_FUNC( MAKEINRESOURCE )
 
 HB_FUNC( MESSAGEBOX )
 {
- // LPCSTR lpCaption =  hb_parcx(3) ;
+ // LPCSTR lpCaption =  hb_parcx(3);
 
   hb_retnl( MessageBox( ISNIL(1) ? NULL : (HWND) hb_parnl(1) ,
                         (LPCSTR) hb_parcx(2),
                         ISNIL(3) ? NULL : (LPCSTR) hb_parcx(3) ,
-                        ISNIL(4) ? 0 : (UINT) hb_parnl(4) ) ) ;
+                        ISNIL(4) ? 0 : (UINT) hb_parnl(4) ) );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( MESSAGEBEEP )
 {
-  hb_retl( MessageBeep( ISNIL(1) ?  (0xFFFFFFFF) : hb_parnl(1) ) ) ;
+  hb_retl( MessageBeep( ISNIL(1) ?  (0xFFFFFFFF) : hb_parnl(1) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -376,7 +376,7 @@ HB_FUNC( CHECKBIT )
 
 HB_FUNC( GETENVIRONMENTSTRINGS )
 {
-   hb_retnl( (LONG) GetEnvironmentStrings(  ) ) ;
+   hb_retnl( (LONG) GetEnvironmentStrings(  ) );
 }
 
 
@@ -386,7 +386,7 @@ HB_FUNC( GETENVIRONMENTSTRINGS )
 
 HB_FUNC( FREEENVIRONMENTSTRINGS )
 {
-   hb_retl( (LONG) FreeEnvironmentStrings( (LPTSTR) hb_parnl(1) ) ) ;
+   hb_retl( (LONG) FreeEnvironmentStrings( (LPTSTR) hb_parnl(1) ) );
 }
 
 
@@ -396,7 +396,7 @@ HB_FUNC( FREEENVIRONMENTSTRINGS )
 
 HB_FUNC( SLEEP )
 {
-   Sleep( (DWORD) hb_parnl( 1 ) ) ;
+   Sleep( (DWORD) hb_parnl( 1 ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -405,7 +405,7 @@ HB_FUNC( SLEEP )
 
 HB_FUNC( SETHANDLECOUNT )
 {
-   hb_retni( SetHandleCount( (UINT) hb_parni( 1 ) ) ) ;
+   hb_retni( SetHandleCount( (UINT) hb_parni( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -421,7 +421,7 @@ HB_FUNC( GETENVIRONMENTVARIABLE )
    dwRet = GetEnvironmentVariableA( (LPCSTR) hb_parcx( 1 ),
                                     (LPSTR) cText ,
                                     (DWORD) dwLen
-                                  ) ;
+                                  );
    hb_retclen( cText, dwRet );
    hb_xfree( cText );
 
@@ -435,7 +435,7 @@ HB_FUNC( SETENVIRONMENTVARIABLE )
 {
    hb_retl( SetEnvironmentVariableA( (LPCSTR) hb_parcx( 1 ),
                                      (LPCSTR) hb_parcx( 2 )
-                                     ) ) ;
+                                     ) );
 }
 
 
@@ -445,7 +445,7 @@ HB_FUNC( SETENVIRONMENTVARIABLE )
 
 HB_FUNC( WINEXEC )
 {
-   hb_retni( WinExec( (LPCSTR) hb_parcx( 1 ), (UINT) hb_parni( 2 ) ) ) ;
+   hb_retni( WinExec( (LPCSTR) hb_parcx( 1 ), (UINT) hb_parni( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -543,7 +543,7 @@ HB_FUNC( REGISTERHOTKEY )
                             hb_parni( 2 )       ,
                             (UINT) hb_parni( 3 ),
                             (UINT) hb_parni( 4 )
-                          ) ) ;
+                          ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -552,7 +552,7 @@ HB_FUNC( REGISTERHOTKEY )
 
 HB_FUNC( UNREGISTERHOTKEY )
 {
-   hb_retl( UnregisterHotKey( (HWND) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retl( UnregisterHotKey( (HWND) hb_parnl( 1 ), hb_parni( 2 ) ) );
 }
 
 
@@ -572,7 +572,7 @@ HB_FUNC( GETCLASSINFO )
                       (LPCSTR) hb_parcx( 2 ), &WndClass ) )
 
 
-     hb_retclen( (char*) &WndClass, sizeof(WNDCLASS) ) ;
+     hb_retclen( (char*) &WndClass, sizeof(WNDCLASS) );
 
    // the line below GPFs !
    // hb_itemPutCRaw( hb_param( -1, HB_IT_ANY ), (char *) &WndClass, sizeof( WNDCLASS ) );
@@ -596,7 +596,7 @@ HB_FUNC( GETCLASSINFOEX )
    if ( GetClassInfoEx( ISNIL(1) ? NULL : (HINSTANCE) hb_parnl( 1 ),
                             (LPCSTR) hb_parcx( 2 ), &WndClassEx ) )
 
-      hb_retclen( (char*) &WndClassEx, sizeof(WNDCLASSEX) ) ;
+      hb_retclen( (char*) &WndClassEx, sizeof(WNDCLASSEX) );
       //hb_itemPutCRaw( hb_param( -1, HB_IT_ANY ), (char *) &WndClassEx, sizeof( WNDCLASSEX ) );
 
 }

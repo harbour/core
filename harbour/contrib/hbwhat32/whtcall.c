@@ -90,7 +90,7 @@ typedef struct DYNAPARM
    {
       DWORD   dwArg;           // 4-byte argument
       void   *pArg;            // Pointer to argument
-   };
+   } numargs;
 } DYNAPARM;
 
 #pragma pack()
@@ -128,7 +128,7 @@ RESULT DynaCall(int Flags, DWORD lpFunction,
       nInd  = (nArgs - 1) - i;
       // Start at the back of the arg ptr, aligned on a DWORD
       nSize = (Parm[nInd].nWidth + 3) / 4 * 4;
-      pArg  = (BYTE *)Parm[nInd].pArg + nSize - 4;
+      pArg  = (BYTE *)Parm[nInd].numargs.pArg + nSize - 4;
       dwStSize += (DWORD)nSize; // Count no of bytes on stack
       while (nSize > 0)
       {
@@ -142,7 +142,7 @@ RESULT DynaCall(int Flags, DWORD lpFunction,
          else
          {
             // Arg has the real arg
-            dwVal = Parm[nInd].dwArg;
+            dwVal = Parm[nInd].numargs.dwArg;
          }
          // Do push dwVal
          pStack--;           // ESP = ESP - 4
