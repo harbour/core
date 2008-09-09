@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <shlobj.h>
 //#include <commctrl.h>
@@ -14,7 +16,7 @@ HB_FUNC( TVINSERTITEM )
 {
    TV_INSERTSTRUCT is;
 
-   is.hParent      = ( HTREEITEM ) hb_parnl( 3 );
+   is.hParent      = ( HTREEITEM ) HB_PARWH( 3 );
    is.hInsertAfter = TVI_LAST;
 
    #if (_WIN32_IE >= 0x0400) && !defined(_MSC_VER)
@@ -29,29 +31,29 @@ HB_FUNC( TVINSERTITEM )
       is.item.iSelectedImage = hb_parnl( 4 );
    #endif
 
-   hb_retnl( SendMessage( ( HWND ) hb_parnl( 1 ), TVM_INSERTITEM, 0,
+   hb_retnl( SendMessage( ( HWND ) HB_PARWH( 1 ), TVM_INSERTITEM, 0,
            ( LPARAM )( LPTV_INSERTSTRUCT )( &is ) ) );
 }
 
 //-------------------------------------------------------------------------//
 HB_FUNC( TVDELETEITEM )
 {
-   TreeView_DeleteItem( (HWND) hb_parnl( 1 ), ( HTREEITEM ) hb_parnl( 2 ) );
+   TreeView_DeleteItem( (HWND) HB_PARWH( 1 ), ( HTREEITEM ) HB_PARWH( 2 ) );
 }
 
 //-------------------------------------------------------------------------//
 
 HB_FUNC( TVSETIMAGELIST ) // ( hWnd, hImageList, nType )
 {
-   hb_retnl( ( LONG ) TreeView_SetImageList( ( HWND ) hb_parnl( 1 ),
-            ( HIMAGELIST ) hb_parnl( 2 ), hb_parnl( 3 ) ) );
+   hb_retnl( ( LONG ) TreeView_SetImageList( ( HWND ) HB_PARWH( 1 ),
+            ( HIMAGELIST ) HB_PARWH( 2 ), hb_parnl( 3 ) ) );
 }
 
 //-------------------------------------------------------------------------//
 
 HB_FUNC( TVGETSELTEXT ) // ( hWnd ) --> cText
 {
-   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   HWND hWnd = ( HWND ) HB_PARWH( 1 );
    HTREEITEM hItem = TreeView_GetSelection( hWnd );
    TV_ITEM tvi;
    BYTE buffer[ 100 ];
@@ -72,7 +74,7 @@ HB_FUNC( TVGETSELTEXT ) // ( hWnd ) --> cText
 
 HB_FUNC( TVGETSELECTED ) // ( hWnd ) --> hItem
 {
-   hb_retnl( ( LONG ) TreeView_GetSelection( ( HWND ) hb_parnl( 1 ) ) );
+   hb_retnl( ( LONG ) TreeView_GetSelection( ( HWND ) HB_PARWH( 1 ) ) );
 }
 
 //-------------------------------------------------------------------------//

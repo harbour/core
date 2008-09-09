@@ -16,6 +16,8 @@
 
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <shlobj.h>
 //#include <commctrl.h>
@@ -57,10 +59,10 @@ HB_FUNC( _REGISTERCLASS )
    wndclass.lpfnWndProc   = __WndProc ;
    wndclass.cbClsExtra    = ( ISNIL(2)  ? 0 : hb_parni(2));
    wndclass.cbWndExtra    = ( ISNIL(3)  ? 0 : hb_parni(3));
-   wndclass.hInstance     = ( ISNIL(4)  ? GetModuleHandle(NULL) : (HANDLE) hb_parnl(4) );
-   wndclass.hIcon         = ( ISNIL(5)  ? LoadIcon(GetModuleHandle(NULL),"") : (HICON) hb_parnl(5) );
-   wndclass.hCursor       = ( ISNIL(6)  ? LoadCursor (NULL, IDC_ARROW) : (HCURSOR) hb_parnl(6) );
-   wndclass.hbrBackground = ( ISNIL(7)  ? (INT) COLOR_WINDOW  + 1 :  (HBRUSH) hb_parnl(7) );
+   wndclass.hInstance     = ( ISNIL(4)  ? GetModuleHandle(NULL) : (HANDLE) HB_PARWH(4) );
+   wndclass.hIcon         = ( ISNIL(5)  ? LoadIcon(GetModuleHandle(NULL),"") : (HICON) HB_PARWH(5) );
+   wndclass.hCursor       = ( ISNIL(6)  ? LoadCursor (NULL, IDC_ARROW) : (HCURSOR) HB_PARWH(6) );
+   wndclass.hbrBackground = ( ISNIL(7)  ? (INT) COLOR_WINDOW  + 1 :  (HBRUSH) HB_PARWH(7) );
    wndclass.lpszMenuName  = (LPCSTR) ( !ISNIL(8) ? hb_parc(8) : NULL );
    wndclass.lpszClassName = (LPCSTR) hb_parc(9);
    */
@@ -73,7 +75,7 @@ HB_FUNC( _REGISTERCLASS )
 
 HB_FUNC( _UNREGISTERCLASS )
 {
-   HANDLE hInst = ( ISNIL(2) ? GetModuleHandle(NULL) : (HANDLE) hb_parnl(2) );
+   HANDLE hInst = ( ISNIL(2) ? GetModuleHandle(NULL) : (HANDLE) HB_PARWH(2) );
 
    hb_retl( UnregisterClass( hb_parc(1), (HINSTANCE) hInst ) );
 }
@@ -93,16 +95,16 @@ HB_FUNC( _CREATEWINDOWEX )
    int    y          = (ISNIL(6)  ? CW_USEDEFAULT : hb_parni(6));
    int    nWidth     = (ISNIL(7)  ? CW_USEDEFAULT : hb_parni(7));
    int    nHeight    = (ISNIL(8)  ? CW_USEDEFAULT : hb_parni(8));
-   HWND   hWndParent = (ISNIL(9)  ? (HWND) NULL : (HWND) hb_parnl(9));
-   HMENU  hMenu      = (ISNIL(10) ? (HMENU) NULL : (HMENU) hb_parni(10));
-   HANDLE hInstance  = (ISNIL(11) ? GetModuleHandle( NULL ) : (HANDLE) hb_parnl(11));
-   LPVOID lParam     = (ISNIL(12) ? NULL : (LPVOID) hb_parnl(12));
+   HWND   hWndParent = (ISNIL(9)  ? (HWND) NULL : (HWND) HB_PARWH(9));
+   HMENU  hMenu      = (ISNIL(10) ? (HMENU) NULL : (HMENU) HB_PARWH(10));
+   HANDLE hInstance  = (ISNIL(11) ? GetModuleHandle( NULL ) : (HANDLE) HB_PARWH(11));
+   LPVOID lParam     = (ISNIL(12) ? NULL : (LPVOID) HB_PARWH(12));
 
    HWND hWnd = CreateWindowEx( dwExStyle, cClass, cTitle,
                                nStyle, x, y, nWidth, nHeight,
                                hWndParent, hMenu, (HINSTANCE) hInstance, lParam )  ;
 
-   hb_retnl( (LONG) hWnd );
+   HB_RETWH( hWnd );
 }
 
 //-----------------------------------------------------------------------------
@@ -118,14 +120,14 @@ HB_FUNC( _CREATEMDIWINDOW )
    int    y          = (ISNIL(5)  ? CW_USEDEFAULT : hb_parni(5));
    int    nWidth     = (ISNIL(6)  ? CW_USEDEFAULT : hb_parni(6));
    int    nHeight    = (ISNIL(7)  ? CW_USEDEFAULT : hb_parni(7));
-   HWND   hWndParent = (ISNIL(8)  ? (HWND) NULL : (HWND) hb_parnl(8));
-   HANDLE hInstance  = (ISNIL(9)  ? GetModuleHandle( NULL ) : (HANDLE) hb_parnl(9));
+   HWND   hWndParent = (ISNIL(8)  ? (HWND) NULL : (HWND) HB_PARWH(8));
+   HANDLE hInstance  = (ISNIL(9)  ? GetModuleHandle( NULL ) : (HANDLE) HB_PARWH(9));
    LPARAM lParam     = (ISNIL(10) ? 0 : (LPARAM) hb_parnl(10));
 
    HWND hWnd = CreateMDIWindow( cClass, cTitle,nStyle,
                                 x, y, nWidth, nHeight,
                                 hWndParent, (HINSTANCE) hInstance, lParam );
-   hb_retnl( (LONG) hWnd );
+   HB_RETWH( hWnd );
 }
 
 
@@ -520,9 +522,9 @@ HB_FUNC( _DIALOGBOX )
 {
 
 
-  hb_retni( DialogBox( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) )  ,
+  hb_retni( DialogBox( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) )  ,
                        (hb_parinfo(2)==HB_IT_STRING ? hb_parc(2) : MAKEINTRESOURCE( (WORD) hb_parni(2))) ,
-                       (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) )        ,
+                       (ISNIL(3) ?  NULL : (HWND) HB_PARWH(3) )        ,
                        (DLGPROC) hb_parptr(4)
                      ));
 
@@ -534,9 +536,9 @@ HB_FUNC( _DIALOGBOX )
 HB_FUNC( _DIALOGBOXINDIRECT )
 {
 
-   hb_retni( DialogBoxIndirect( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) ),
+   hb_retni( DialogBoxIndirect( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) ),
                                (LPDLGTEMPLATE) hb_parc(2),
-                               (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) ),
+                               (ISNIL(3) ?  NULL : (HWND) HB_PARWH(3) ),
                                (DLGPROC) hb_parptr(4)
                              ));
 }
@@ -547,9 +549,9 @@ HB_FUNC( _DIALOGBOXINDIRECT )
 HB_FUNC( _CREATEDIALOG )
 {
 
-  hb_retnl( (ULONG) CreateDialog( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) ),
+  HB_RETWH( CreateDialog( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) ),
                                   (hb_parinfo(2)==HB_IT_STRING ? hb_parc(2) : MAKEINTRESOURCE( (WORD) hb_parni(2))),
-                                  (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) ),
+                                  (ISNIL(3) ?  NULL : (HWND) HB_PARWH(3) ),
                                   (DLGPROC) hb_parptr(4)
                                 ) );
 }
@@ -559,11 +561,10 @@ HB_FUNC( _CREATEDIALOG )
 
 HB_FUNC( _CREATEDIALOGINDIRECT )
 {
-  hb_retnl(
-   (ULONG) CreateDialogIndirect(
-            (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) ),
+  HB_RETWH( CreateDialogIndirect(
+            (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) ),
             (LPDLGTEMPLATE) hb_parc(2),
-            (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) ),
+            (ISNIL(3) ?  NULL : (HWND) HB_PARWH(3) ),
             (DLGPROC) hb_parptr(4)
           ));
 }
@@ -688,5 +689,4 @@ HB_FUNC( _MAKEDLGTEMPLATE )
     hb_retclen( (LPSTR) pdlgtemplate, ( (ULONG) p - (ULONG) pdlgtemplate ) );
 
     LocalFree (LocalHandle (pdlgtemplate) );
-
 }

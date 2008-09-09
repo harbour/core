@@ -11,6 +11,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include "hbapiitm.h"
 #include "hbapi.h"
@@ -26,11 +28,11 @@ extern BOOL Array2Point(PHB_ITEM aPoint, POINT *pt );
 
 HB_FUNC( CREATEELLIPTICRGN )
 {
-   hb_retnl( (LONG) CreateEllipticRgn( hb_parni( 1 ),
+   HB_RETWH( CreateEllipticRgn( hb_parni( 1 ),
                                        hb_parni( 2 ),
                                        hb_parni( 3 ),
                                        hb_parni( 4 )
-                                       ) ) ;
+                                       ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -44,9 +46,9 @@ HB_FUNC( CREATEELLIPTICRGNINDIRECT )
    RECT rc;
 
    if (ISARRAY( 1 ) && Array2Rect( hb_param( 1, HB_IT_ARRAY ), &rc ) )
-      hb_retnl( (LONG) CreateEllipticRgnIndirect( &rc ) ) ;
+      HB_RETWH( CreateEllipticRgnIndirect( &rc ) );
    else
-      hb_retnl( 0 ) ;
+      hb_retnl( 0 );
 }
 
 //-----------------------------------------------------------------------------
@@ -55,10 +57,10 @@ HB_FUNC( CREATEELLIPTICRGNINDIRECT )
 
 HB_FUNC( FILLRGN )
 {
-   hb_retl( FillRgn( (HDC) hb_parnl( 1 )   ,
-                     (HRGN) hb_parnl( 2 )  ,
-                     (HBRUSH) hb_parnl( 3 )
-                     ) ) ;
+   hb_retl( FillRgn( (HDC) HB_PARWH( 1 )   ,
+                     (HRGN) HB_PARWH( 2 )  ,
+                     (HBRUSH) HB_PARWH( 3 )
+                     ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -78,8 +80,8 @@ HB_FUNC( CREATEPOLYGONRGN )
 
    if (ISARRAY( 1 ) )
    {
-       iCount = (int) hb_parinfa( 1, 0 ) ;
-       Point = (POINT *) hb_xgrab( iCount * sizeof (POINT) ) ;
+       iCount = (int) hb_parinfa( 1, 0 );
+       Point = (POINT *) hb_xgrab( iCount * sizeof (POINT) );
        aParam = hb_param(1,HB_IT_ARRAY);
 
        for ( i = 0 ; i<iCount ; i++ )
@@ -95,7 +97,7 @@ HB_FUNC( CREATEPOLYGONRGN )
           }
        }
 
-       hb_retnl( (LONG) CreatePolygonRgn( Point, iCount, hb_parni( 2 ) ) ) ;
+       HB_RETWH( CreatePolygonRgn( Point, iCount, hb_parni( 2 ) ) );
        hb_xfree(Point);
 
    }
@@ -123,16 +125,16 @@ HB_FUNC( CREATEPOLYPOLYGONRGN )
 
    if (ISARRAY( 1 ) && ISARRAY( 2 ) )
    {
-       iPolyCount = hb_parinfa(2,0) ;
-       PolyPoints = ( INT *) hb_xgrab( iPolyCount * sizeof( INT ) ) ;
+       iPolyCount = hb_parinfa(2,0);
+       PolyPoints = ( INT *) hb_xgrab( iPolyCount * sizeof( INT ) );
 
        for ( i=0 ; i < iPolyCount ; i++ )
        {
-          *(PolyPoints+i) = hb_parni( 2,i+1) ;
+          *(PolyPoints+i) = hb_parni( 2,i+1);
        }
 
-       iCount = hb_parinfa( 1, 0 ) ;
-       Point = (POINT *) hb_xgrab( iCount * sizeof (POINT) ) ;
+       iCount = hb_parinfa( 1, 0 );
+       Point = (POINT *) hb_xgrab( iCount * sizeof (POINT) );
        aParam = hb_param(1,HB_IT_ARRAY);
 
        for ( i = 0 ; i<iCount ; i++ )
@@ -149,7 +151,7 @@ HB_FUNC( CREATEPOLYPOLYGONRGN )
           }
        }
 
-       hb_retnl( (LONG) CreatePolyPolygonRgn( Point, PolyPoints, iPolyCount, hb_parni( 3 ) ) ) ;
+       HB_RETWH( CreatePolyPolygonRgn( Point, PolyPoints, iPolyCount, hb_parni( 3 ) ) );
        hb_xfree(PolyPoints);
        hb_xfree(Point);
 
@@ -169,11 +171,11 @@ HB_FUNC( CREATEPOLYPOLYGONRGN )
 
 HB_FUNC( CREATERECTRGN )
 {
-   hb_retnl( (LONG) CreateRectRgn( hb_parni( 1 ),
+   HB_RETWH( CreateRectRgn( hb_parni( 1 ),
                                    hb_parni( 2 ),
                                    hb_parni( 3 ),
                                    hb_parni( 4 )
-                                   ) ) ;
+                                   ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -188,9 +190,9 @@ HB_FUNC( CREATERECTRGNINDIRECT )
    RECT rc;
 
    if (ISARRAY( 1 ) && Array2Rect( hb_param( 1, HB_IT_ARRAY ), &rc ) )
-      hb_retnl( (LONG) CreateRectRgnIndirect( &rc ) ) ;
+      HB_RETWH( CreateRectRgnIndirect( &rc ) );
    else
-      hb_retnl( 0 ) ;
+      hb_retnl( 0 );
 }
 
 
@@ -201,13 +203,13 @@ HB_FUNC( CREATERECTRGNINDIRECT )
 
 HB_FUNC( CREATEROUNDRECTRGN )
 {
-   hb_retnl( (LONG) CreateRoundRectRgn( hb_parni( 1 ),
+   HB_RETWH( CreateRoundRectRgn( hb_parni( 1 ),
                                         hb_parni( 2 ),
                                         hb_parni( 3 ),
                                         hb_parni( 4 ),
                                         hb_parni( 5 ),
                                         hb_parni( 6 )
-                                        ) ) ;
+                                        ) );
 }
 
 
@@ -220,8 +222,8 @@ HB_FUNC( CREATEROUNDRECTRGN )
 
 HB_FUNC( COMBINERGN )
 {
-    hb_retni( CombineRgn( (HRGN) hb_parnl(1), (HRGN) hb_parnl(2),
-                          (HRGN) hb_parnl(3), hb_parni(4) ) ) ;
+    hb_retni( CombineRgn( (HRGN) HB_PARWH(1), (HRGN) HB_PARWH(2),
+                          (HRGN) HB_PARWH(3), hb_parni(4) ) );
 
 }
 
@@ -236,20 +238,20 @@ HB_FUNC( COMBINERGN )
 HB_FUNC( GETREGIONDATA )
 {
    RGNDATA *RgnData ;
-   DWORD nBytes = GetRegionData( (HRGN) hb_parnl( 1 ) , 0, NULL ) ;
+   DWORD nBytes = GetRegionData( (HRGN) HB_PARWH( 1 ) , 0, NULL );
    DWORD nRet ;
 
    if ( nBytes )
    {
-     RgnData = (RGNDATA *) hb_xgrab( nBytes ) ;
-     nRet = GetRegionData( (HRGN) hb_parnl( 1 ) ,
+     RgnData = (RGNDATA *) hb_xgrab( nBytes );
+     nRet = GetRegionData( (HRGN) HB_PARWH( 1 ) ,
                              nBytes             ,
                              RgnData
-                         ) ;
+                         );
      if ( nRet == 1 )
-         hb_retclen( ( char *) RgnData,nBytes ) ;
+         hb_retclen( ( char *) RgnData,nBytes );
 
-     hb_xfree( RgnData) ;
+     hb_xfree( RgnData);
    }
 
 }
@@ -261,10 +263,10 @@ HB_FUNC( GETREGIONDATA )
 
 HB_FUNC( EXTSELECTCLIPRGN )
 {
-   hb_retni( ExtSelectClipRgn( (HDC) hb_parnl( 1 ) ,
-                               (HRGN) hb_parnl( 2 ),
+   hb_retni( ExtSelectClipRgn( (HDC) HB_PARWH( 1 ) ,
+                               (HRGN) HB_PARWH( 2 ),
                                hb_parni( 3 )
-                               ) ) ;
+                               ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -278,7 +280,7 @@ HB_FUNC( RECTINREGION )
     RECT rc;
 
    if (ISARRAY( 2 ) && Array2Rect( hb_param( 2, HB_IT_ARRAY ), &rc ) )
-      hb_retl( RectInRegion( (HRGN) hb_parnl( 1 ), &rc ) ) ;
+      hb_retl( RectInRegion( (HRGN) HB_PARWH( 1 ), &rc ) );
 }
 
 
@@ -288,10 +290,10 @@ HB_FUNC( RECTINREGION )
 
 HB_FUNC( GETRANDOMRGN )
 {
-   hb_retni( GetRandomRgn( (HDC) hb_parnl( 1 ) ,
-                           (HRGN) hb_parnl( 2 ),
+   hb_retni( GetRandomRgn( (HDC) HB_PARWH( 1 ) ,
+                           (HRGN) HB_PARWH( 2 ),
                            hb_parni( 3 )
-                           ) ) ;
+                           ) );
 }
 
 
@@ -301,7 +303,7 @@ HB_FUNC( GETRANDOMRGN )
 
 HB_FUNC( GETCLIPRGN )
 {
-   hb_retni( GetClipRgn( (HDC) hb_parnl( 1 ), (HRGN) hb_parnl( 2 ) ) ) ;
+   hb_retni( GetClipRgn( (HDC) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
 
 
@@ -311,12 +313,12 @@ HB_FUNC( GETCLIPRGN )
 
 HB_FUNC( FRAMERGN )
 {
-   hb_retl( FrameRgn( (HDC) hb_parnl( 1 )   ,
-                      (HRGN) hb_parnl( 2 )  ,
-                      (HBRUSH) hb_parnl( 3 ),
+   hb_retl( FrameRgn( (HDC) HB_PARWH( 1 )   ,
+                      (HRGN) HB_PARWH( 2 )  ,
+                      (HBRUSH) HB_PARWH( 3 ),
                       hb_parni( 4 )         ,
                       hb_parni( 5 )
-                      ) ) ;
+                      ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -325,7 +327,7 @@ HB_FUNC( FRAMERGN )
 
 HB_FUNC( EQUALRGN )
 {
-   hb_retl( EqualRgn( (HRGN) hb_parnl( 1 ), (HRGN) hb_parnl( 2 ) ) ) ;
+   hb_retl( EqualRgn( (HRGN) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
 
 /*
@@ -340,9 +342,9 @@ HB_FUNC( VALIDATERECT )
    RECT rc ;
 
    if (ISARRAY( 2 ) && Array2Rect( hb_param( 2, HB_IT_ARRAY ), &rc ) )
-      hb_retl( ValidateRect( (HWND) hb_parnl( 1 ), &rc ) ) ;
+      hb_retl( ValidateRect( (HWND) HB_PARWH( 1 ), &rc ) );
    else
-      hb_retl( ValidateRect( (HWND) hb_parnl( 1 ), NULL) ) ;
+      hb_retl( ValidateRect( (HWND) HB_PARWH( 1 ), NULL) );
 
 }
 */
@@ -354,10 +356,10 @@ HB_FUNC( VALIDATERECT )
 
 HB_FUNC( INVALIDATERGN )
 {
-   hb_retl( InvalidateRgn( (HWND) hb_parnl( 1 ),
-                           (HRGN) hb_parnl( 2 ),
+   hb_retl( InvalidateRgn( (HWND) HB_PARWH( 1 ),
+                           (HRGN) HB_PARWH( 2 ),
                            hb_parl( 3 )
-                         ) ) ;
+                         ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -366,7 +368,7 @@ HB_FUNC( INVALIDATERGN )
 
 HB_FUNC( VALIDATERGN )
 {
-   hb_retl( ValidateRgn( (HWND) hb_parnl( 1 ), (HRGN) hb_parnl( 2 ) ) ) ;
+   hb_retl( ValidateRgn( (HWND) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -375,7 +377,7 @@ HB_FUNC( VALIDATERGN )
 
 HB_FUNC( INVERTRGN )
 {
-   hb_retl( InvertRgn( (HDC) hb_parnl( 1 ), (HRGN) hb_parnl( 2 ) ) ) ;
+   hb_retl( InvertRgn( (HDC) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -384,7 +386,7 @@ HB_FUNC( INVERTRGN )
 
 HB_FUNC( OFFSETCLIPRGN )
 {
-   hb_retni( OffsetClipRgn( (HDC) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) ) ;
+   hb_retni( OffsetClipRgn( (HDC) HB_PARWH( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -393,7 +395,7 @@ HB_FUNC( OFFSETCLIPRGN )
 
 HB_FUNC( OFFSETRGN )
 {
-   hb_retni( OffsetRgn( (HRGN) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) ) ;
+   hb_retni( OffsetRgn( (HRGN) HB_PARWH( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -402,7 +404,7 @@ HB_FUNC( OFFSETRGN )
 
 HB_FUNC( PAINTRGN )
 {
-   hb_retl( PaintRgn( (HDC) hb_parnl( 1 ), (HRGN) hb_parnl( 2 ) ) ) ;
+   hb_retl( PaintRgn( (HDC) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -411,7 +413,7 @@ HB_FUNC( PAINTRGN )
 
 HB_FUNC( PATHTOREGION )
 {
-   hb_retnl( (LONG) PathToRegion( (HDC) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( PathToRegion( (HDC) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -420,7 +422,7 @@ HB_FUNC( PATHTOREGION )
 
 HB_FUNC( PTINREGION )
 {
-   hb_retl( PtInRegion( (HRGN) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) ) ;
+   hb_retl( PtInRegion( (HRGN) HB_PARWH( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
 
@@ -431,7 +433,7 @@ HB_FUNC( PTINREGION )
 
 HB_FUNC( SELECTCLIPRGN )
 {
-   hb_retni( SelectClipRgn( (HDC) hb_parnl( 1 ), (HRGN) hb_parnl( 2 ) ) ) ;
+   hb_retni( SelectClipRgn( (HDC) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -440,12 +442,12 @@ HB_FUNC( SELECTCLIPRGN )
 
 HB_FUNC( SETRECTRGN )
 {
-   hb_retl( SetRectRgn( (HRGN) hb_parnl( 1 ),
+   hb_retl( SetRectRgn( (HRGN) HB_PARWH( 1 ),
                         hb_parni( 2 )       ,
                         hb_parni( 3 )       ,
                         hb_parni( 4 )       ,
                         hb_parni( 5 )
-                        ) ) ;
+                        ) );
 }
 
 
@@ -455,10 +457,10 @@ HB_FUNC( SETRECTRGN )
 
 HB_FUNC( GETUPDATERGN )
 {
-   hb_retni( GetUpdateRgn( (HWND) hb_parnl( 1 ),
-                           (HRGN) hb_parnl( 2 ),
+   hb_retni( GetUpdateRgn( (HWND) HB_PARWH( 1 ),
+                           (HRGN) HB_PARWH( 2 ),
                            hb_parl( 3 )
-                         ) ) ;
+                         ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -467,7 +469,7 @@ HB_FUNC( GETUPDATERGN )
 
 HB_FUNC( EXCLUDEUPDATERGN )
 {
-   hb_retni( ExcludeUpdateRgn( (HDC) hb_parnl( 1 ), (HWND) hb_parnl( 2 ) ) ) ;
+   hb_retni( ExcludeUpdateRgn( (HDC) HB_PARWH( 1 ), (HWND) HB_PARWH( 2 ) ) );
 }
 
 
@@ -487,7 +489,7 @@ HB_FUNC( GETRGNBOX )
    RECT *rc ;
 
 
-   hb_retni( GetRgnBox( (HRGN) hb_parnl( 1 ), lpRect ) ) ;
+   hb_retni( GetRgnBox( (HRGN) HB_PARWH( 1 ), lpRect ) );
 
 }
 
@@ -506,11 +508,7 @@ HB_FUNC( EXTCREATEREGION )
 
    // Your code goes here
 
-   hb_retnl( (LONG) ExtCreateRegion( &XFORM, (DWORD) hb_parnl( 2 ), &&RGNDATA ) ) ;
+   HB_RETWH( ExtCreateRegion( &XFORM, (DWORD) hb_parnl( 2 ), &&RGNDATA ) );
 }
 
 */
-
-
-
-

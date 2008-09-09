@@ -10,6 +10,8 @@
 #define _WIN32_WINNT   0x0400
 #define _WIN32_IE      0x0500
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <commctrl.h>
 #include "hbapi.h"
@@ -31,9 +33,9 @@ HB_FUNC( IMAGELIST_CREATE )
 
 HB_FUNC( IMAGELIST_REPLACEICON )
 {
-   hb_retni( ImageList_ReplaceIcon( (HIMAGELIST) hb_parnl(1),
+   hb_retni( ImageList_ReplaceIcon( (HIMAGELIST) HB_PARWH(1),
                           (int) hb_parni(2)                 ,
-                          (HICON) hb_parnl(3) ) )           ;
+                          (HICON) HB_PARWH(3) ) )           ;
 }
 
 //-----------------------------------------------------------------------------
@@ -41,7 +43,7 @@ HB_FUNC( IMAGELIST_REPLACEICON )
 
 HB_FUNC( IMAGELIST_ADDICON )
 {
-   hb_retni( ImageList_AddIcon( (HIMAGELIST) hb_parnl(1), (HICON) hb_parnl(2) ) );
+   hb_retni( ImageList_AddIcon( (HIMAGELIST) HB_PARWH(1), (HICON) HB_PARWH(2) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -49,7 +51,7 @@ HB_FUNC( IMAGELIST_ADDICON )
 
 HB_FUNC( IMAGELIST_DESTROY )
 {
-   hb_retl( ImageList_Destroy( (HIMAGELIST) hb_parnl(1) ) );
+   hb_retl( ImageList_Destroy( (HIMAGELIST) HB_PARWH(1) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -58,7 +60,7 @@ HB_FUNC( IMAGELIST_DESTROY )
 HB_FUNC( IMAGELIST_GETIMAGECOUNT )
 {
 
-   hb_retni( ImageList_GetImageCount((HIMAGELIST) hb_parnl(1) ) );
+   hb_retni( ImageList_GetImageCount((HIMAGELIST) HB_PARWH(1) ) );
 
 }
 
@@ -67,7 +69,7 @@ HB_FUNC( IMAGELIST_GETIMAGECOUNT )
 
 HB_FUNC( IMAGELIST_SETIMAGECOUNT )
 {
-   hb_retl(  ImageList_SetImageCount((HIMAGELIST) hb_parnl( 1 ),
+   hb_retl(  ImageList_SetImageCount((HIMAGELIST) HB_PARWH( 1 ),
                                      (UINT) hb_parni( 2 ) ) )  ;
 }
 
@@ -76,9 +78,9 @@ HB_FUNC( IMAGELIST_SETIMAGECOUNT )
 
 HB_FUNC( IMAGELIST_ADD )
 {
-   hb_retni( ImageList_Add((HIMAGELIST) hb_parnl( 1 ),
-                           (HBITMAP) hb_parnl( 2 )   ,
-                           (HBITMAP) hb_parnl( 3 ))) ;
+   hb_retni( ImageList_Add((HIMAGELIST) HB_PARWH( 1 ),
+                           (HBITMAP) HB_PARWH( 2 )   ,
+                           (HBITMAP) HB_PARWH( 3 )));
 }
 
 //-----------------------------------------------------------------------------
@@ -86,7 +88,7 @@ HB_FUNC( IMAGELIST_ADD )
 
 HB_FUNC( IMAGELIST_SETBKCOLOR )
 {
-   hb_retnl( (LONG) ImageList_SetBkColor((HIMAGELIST) hb_parnl( 1 ),
+   hb_retnl( (LONG) ImageList_SetBkColor((HIMAGELIST) HB_PARWH( 1 ),
                                          (COLORREF) hb_parnl( 2 )));
 }
 
@@ -95,7 +97,7 @@ HB_FUNC( IMAGELIST_SETBKCOLOR )
 
 HB_FUNC( IMAGELIST_GETBKCOLOR )
 {
-   hb_retnl( (LONG) ImageList_GetBkColor((HIMAGELIST) hb_parnl( 1 )));
+   hb_retnl( (LONG) ImageList_GetBkColor((HIMAGELIST) HB_PARWH( 1 )));
 }
 
 //-----------------------------------------------------------------------------
@@ -103,7 +105,7 @@ HB_FUNC( IMAGELIST_GETBKCOLOR )
 
 HB_FUNC( IMAGELIST_SETOVERLAYIMAGE )
 {
-   hb_retl(  ImageList_SetOverlayImage((HIMAGELIST) hb_parnl( 1 ) ,
+   hb_retl(  ImageList_SetOverlayImage((HIMAGELIST) HB_PARWH( 1 ) ,
                                         hb_parni(2), hb_parni(3)));
 }
 
@@ -113,8 +115,8 @@ HB_FUNC( IMAGELIST_SETOVERLAYIMAGE )
 
 HB_FUNC( IMAGELIST_DRAW )
 {
-   hb_retl( ImageList_Draw((HIMAGELIST) hb_parnl( 1 ), hb_parni(2)    ,
-                           (HDC) hb_parnl(3), hb_parni(4), hb_parni(5),
+   hb_retl( ImageList_Draw((HIMAGELIST) HB_PARWH( 1 ), hb_parni(2)    ,
+                           (HDC) HB_PARWH(3), hb_parni(4), hb_parni(5),
                            (UINT) hb_parni(6)))                       ;
 
 }
@@ -124,10 +126,10 @@ HB_FUNC( IMAGELIST_DRAW )
 
 HB_FUNC( IMAGELIST_REPLACE )
 {
-   hb_retl(  ImageList_Replace((HIMAGELIST) hb_parnl( 1 ),
+   hb_retl(  ImageList_Replace((HIMAGELIST) HB_PARWH( 1 ),
                                 hb_parni( 2 )            ,
-                                (HBITMAP) hb_parnl(3)    ,
-                                (HBITMAP) hb_parnl(4)))  ;
+                                (HBITMAP) HB_PARWH(3)    ,
+                                (HBITMAP) HB_PARWH(4)))  ;
 }
 
 //-----------------------------------------------------------------------------
@@ -135,8 +137,8 @@ HB_FUNC( IMAGELIST_REPLACE )
 
 HB_FUNC( IMAGELIST_ADDMASKED )
 {
-   hb_retni( ImageList_AddMasked((HIMAGELIST) hb_parnl( 1 ) ,
-                                  (HBITMAP) hb_parnl( 2 )   ,
+   hb_retni( ImageList_AddMasked((HIMAGELIST) HB_PARWH( 1 ) ,
+                                  (HBITMAP) HB_PARWH( 2 )   ,
                                   (COLORREF) hb_parnl( 3 )));
 
 }
@@ -147,10 +149,10 @@ HB_FUNC( IMAGELIST_ADDMASKED )
 
 HB_FUNC( IMAGELIST_DRAWEX )
 {
-   hb_retl(  ImageList_DrawEx((HIMAGELIST) hb_parnl( 1 ), hb_parni( 2 )     ,
-                              (HDC) hb_parnl( 3 ), hb_parni(4), hb_parni(5) ,
+   hb_retl(  ImageList_DrawEx((HIMAGELIST) HB_PARWH( 1 ), hb_parni( 2 )     ,
+                              (HDC) HB_PARWH( 3 ), hb_parni(4), hb_parni(5) ,
                               hb_parni(6), hb_parni(7),(COLORREF)hb_parnl(8),
-                              (COLORREF) hb_parnl(9), (UINT) hb_parni(10))) ;
+                              (COLORREF) hb_parnl(9), (UINT) hb_parni(10)));
 }
 
 //-----------------------------------------------------------------------------
@@ -170,7 +172,7 @@ HB_FUNC( IMAGELIST_DRAWINDIRECT )
 
 HB_FUNC( IMAGELIST_REMOVE )
 {
-   hb_retl( ImageList_Remove((HIMAGELIST) hb_parnl( 1 ), hb_parni( 2 )));
+   hb_retl( ImageList_Remove((HIMAGELIST) HB_PARWH( 1 ), hb_parni( 2 )));
 }
 
 //-----------------------------------------------------------------------------
@@ -178,7 +180,7 @@ HB_FUNC( IMAGELIST_REMOVE )
 
 HB_FUNC( IMAGELIST_GETICON )
 {
-   hb_retnl( (LONG) ImageList_GetIcon((HIMAGELIST) hb_parnl( 1 ),
+   HB_RETWH( ImageList_GetIcon((HIMAGELIST) HB_PARWH( 1 ),
                                        hb_parni( 2 )            ,
                                        (UINT) hb_parni(3)))     ;
 }
@@ -189,7 +191,7 @@ HB_FUNC( IMAGELIST_GETICON )
 
 HB_FUNC( IMAGELIST_LOADIMAGE )
 {
-   hb_retnl( (LONG) ImageList_LoadImageA( (HINSTANCE) hb_parnl(1),
+   HB_RETWH( ImageList_LoadImageA( (HINSTANCE) HB_PARWH(1),
                                           ISCHAR(2)?(LPCSTR) hb_parcx(2) : MAKEINTRESOURCE(hb_parni(2))   ,
                                            hb_parni(3)           ,
                                            hb_parni(4)           ,
@@ -203,9 +205,9 @@ HB_FUNC( IMAGELIST_LOADIMAGE )
 
 HB_FUNC( IMAGELIST_COPY  )
 {
-   hb_retl( ImageList_Copy((HIMAGELIST) hb_parnl( 1 ),
+   hb_retl( ImageList_Copy((HIMAGELIST) HB_PARWH( 1 ),
                            hb_parni( 2 )             ,
-                           (HIMAGELIST) hb_parnl( 3 ),
+                           (HIMAGELIST) HB_PARWH( 3 ),
                            hb_parni( 4 )             ,
                            (UINT) hb_parni(5)))      ;
 }
@@ -215,7 +217,7 @@ HB_FUNC( IMAGELIST_COPY  )
 
 HB_FUNC( IMAGELIST_BEGINDRAG )
 {
-   hb_retl( ImageList_BeginDrag((HIMAGELIST) hb_parnl( 1 ),
+   hb_retl( ImageList_BeginDrag((HIMAGELIST) HB_PARWH( 1 ),
                                  hb_parni( 2 )            ,
                                  hb_parni( 3 )            ,
                                  hb_parni( 4 )))          ;
@@ -231,7 +233,7 @@ WINCOMMCTRLAPI void WINAPI ImageList_EndDrag(void);
 
 HB_FUNC( IMAGELIST_ENDDRAG )
 {
-   ImageList_EndDrag() ;
+   ImageList_EndDrag();
 }
 
 //-----------------------------------------------------------------------------
@@ -239,7 +241,7 @@ HB_FUNC( IMAGELIST_ENDDRAG )
 
 HB_FUNC( IMAGELIST_DRAGENTER  )
 {
-   hb_retl( ImageList_DragEnter( (HWND) hb_parnl(1), hb_parni(2), hb_parni(3)));
+   hb_retl( ImageList_DragEnter( (HWND) HB_PARWH(1), hb_parni(2), hb_parni(3)));
 }
 
 //-----------------------------------------------------------------------------
@@ -247,7 +249,7 @@ HB_FUNC( IMAGELIST_DRAGENTER  )
 
 HB_FUNC( IMAGELIST_DRAGLEAVE )
 {
-   hb_retl( ImageList_DragLeave( (HWND) hb_parnl(1)));
+   hb_retl( ImageList_DragLeave( (HWND) HB_PARWH(1)));
 }
 
 //-----------------------------------------------------------------------------
@@ -264,7 +266,7 @@ HB_FUNC( IMAGELIST_MOVE )
 
 HB_FUNC( IMAGELIST_SETDRAGCURSORIMAGE  )
 {
-   hb_retl( ImageList_SetDragCursorImage((HIMAGELIST) hb_parnl( 1 ),
+   hb_retl( ImageList_SetDragCursorImage((HIMAGELIST) HB_PARWH( 1 ),
                                          hb_parni( 2 )             ,
                                          hb_parni( 3 )             ,
                                          hb_parni( 4 )))           ;
@@ -291,7 +293,7 @@ HB_FUNC( IMAGELIST_GETDRAGIMAGE )
 
    if ( Array2Point(aPt1,&pt) )
        if( Array2Point(aPt2,&ptHotspot) )
-           hb_retnl( (LONG) ImageList_GetDragImage( &pt, &ptHotspot));
+           HB_RETWH( ImageList_GetDragImage( &pt, &ptHotspot));
 }
 
 
@@ -303,7 +305,7 @@ HB_FUNC( IMAGELIST_GETICONSIZE )
    int cx ;
    int cy ;
 
-   if ( ImageList_GetIconSize((HIMAGELIST) hb_parnl( 1 ), &cx, &cy) )
+   if ( ImageList_GetIconSize((HIMAGELIST) HB_PARWH( 1 ), &cx, &cy) )
    {
       hb_storni( cx, 2 );
       hb_storni( cy, 3 );
@@ -318,7 +320,7 @@ HB_FUNC( IMAGELIST_GETICONSIZE )
 
 HB_FUNC( IMAGELIST_SETICONSIZE )
 {
-   hb_retl(  ImageList_SetIconSize((HIMAGELIST) hb_parnl( 1 )      ,
+   hb_retl(  ImageList_SetIconSize((HIMAGELIST) HB_PARWH( 1 )      ,
                                    hb_parni( 2 ), hb_parni( 3 ) ) );
 
 }
@@ -332,7 +334,7 @@ HB_FUNC( IMAGELIST_GETIMAGEINFO )
 {
    IMAGEINFO ii ;
 
-   if (  ImageList_GetImageInfo((HIMAGELIST) hb_parnl( 1 ), hb_parni( 2 ), &ii ) )
+   if (  ImageList_GetImageInfo((HIMAGELIST) HB_PARWH( 1 ), hb_parni( 2 ), &ii ) )
       hb_retclen( (char*) &ii, sizeof(IMAGEINFO));
 
 }
@@ -343,9 +345,9 @@ HB_FUNC( IMAGELIST_GETIMAGEINFO )
 
 HB_FUNC( IMAGELIST_MERGE )
 {
-   hb_retnl( (LONG) ImageList_Merge((HIMAGELIST) hb_parnl( 1 ),
+   HB_RETWH( ImageList_Merge((HIMAGELIST) HB_PARWH( 1 ),
                                     hb_parni( 2 )             ,
-                                    (HIMAGELIST) hb_parnl( 3 ),
+                                    (HIMAGELIST) HB_PARWH( 3 ),
                                     hb_parni( 4 )             ,
                                     hb_parni( 5 )             ,
                                     hb_parni( 6 )))           ;
@@ -357,5 +359,5 @@ HB_FUNC( IMAGELIST_MERGE )
 
 HB_FUNC( IMAGELIST_DUPLICATE )
 {
-   hb_retnl( (LONG) ImageList_Duplicate((HIMAGELIST) hb_parnl( 1 )));
+   HB_RETWH( ImageList_Duplicate((HIMAGELIST) HB_PARWH( 1 )));
 }

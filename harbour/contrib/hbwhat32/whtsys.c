@@ -35,6 +35,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 //-------------------------------------------------------------------//
 
 #include <shlobj.h>
@@ -58,14 +60,14 @@ BOOL PASCAL enable_privilege( LPCTSTR privilege_name );
 //
 HB_FUNC( GETFREESPACE )
 {
-   hb_retnl( (LONG) GetFreeSpace( (UINT) hb_parni( 1 ) ) ) ;
+   hb_retnl( (LONG) GetFreeSpace( (UINT) hb_parni( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( OUTPUTDEBUGSTRING )
 {
-   OutputDebugString( (LPCSTR) hb_parcx( 1 ) ) ;
+   OutputDebugString( (LPCSTR) hb_parcx( 1 ) );
 }
 
 //-------------------------------------------------------------------//
@@ -81,7 +83,7 @@ HB_FUNC( GETTIMEZONEINFORMATION )
 {
  TIME_ZONE_INFORMATION tzi;
 
- hb_retnl( GetTimeZoneInformation( &tzi ) ) ;
+ hb_retnl( GetTimeZoneInformation( &tzi ) );
 
  if ( ISBYREF(1) )
     hb_storclen( (char*) &tzi, sizeof(tzi), 1);
@@ -97,7 +99,7 @@ HB_FUNC( SETTIMEZONEINFORMATION )
 {
  TIME_ZONE_INFORMATION *tzi = ( TIME_ZONE_INFORMATION *) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value ;
 
- hb_retl( SetTimeZoneInformation( tzi ) ) ;
+ hb_retl( SetTimeZoneInformation( tzi ) );
 
 }
 
@@ -107,7 +109,7 @@ HB_FUNC( SETTIMEZONEINFORMATION )
 /*
 HB_FUNC( ISDEBUGGERPRESENT )
 {
-   hb_retl( IsDebuggerPresent() ) ;
+   hb_retl( IsDebuggerPresent() );
 }
 */
 //-------------------------------------------------------------------//
@@ -116,7 +118,7 @@ HB_FUNC( ISDEBUGGERPRESENT )
 //
 HB_FUNC( DEBUGBREAK )
 {
-   DebugBreak(  ) ;
+   DebugBreak(  );
 }
 
 //-------------------------------------------------------------------//
@@ -127,7 +129,7 @@ HB_FUNC( DEBUGBREAK )
 /*
 HB_FUNC( ENCRYPTFILE )
 {
-   hb_retl( EncryptFileA( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   hb_retl( EncryptFileA( (LPCSTR) hb_parcx( 1 ) ) );
 }
 */
 
@@ -139,7 +141,7 @@ HB_FUNC( ENCRYPTFILE )
 /*
 HB_FUNC( DECRYPTFILE )
 {
-   hb_retl( DecryptFileA( (LPCSTR) hb_parcx( 1 ), 0 ) ) ; //(DWORD) hb_parnl( 2 ) ) ) ;
+   hb_retl( DecryptFileA( (LPCSTR) hb_parcx( 1 ), 0 ) ); //(DWORD) hb_parnl( 2 ) ) );
 }
 */
 
@@ -155,7 +157,7 @@ HB_FUNC( FILEENCRYPTIONSTATUSA )
 
    // Your code goes here
 
-   hb_retl( FileEncryptionStatusA( (LPCSTR) hb_parcx( 1 ), lpStatus ) ) ;
+   hb_retl( FileEncryptionStatusA( (LPCSTR) hb_parcx( 1 ), lpStatus ) );
 }
 */
 //-------------------------------------------------------------------//
@@ -164,7 +166,7 @@ HB_FUNC( FILEENCRYPTIONSTATUSA )
 //
 HB_FUNC( ISPROCESSORFEATUREPRESENT )
 {
-   hb_retl( IsProcessorFeaturePresent( (DWORD) hb_parnl( 1 ) ) ) ;
+   hb_retl( IsProcessorFeaturePresent( (DWORD) hb_parnl( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -173,7 +175,7 @@ HB_FUNC( ISPROCESSORFEATUREPRESENT )
 
 HB_FUNC( MULDIV )
 {
-   hb_retni( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) ) ;
+   hb_retni( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -218,7 +220,7 @@ HB_FUNC( SYSTEMPARAMETERSINFO )
 //
 HB_FUNC( FREERESOURCE )
 {
-   hb_retl( FreeResource( (HGLOBAL) hb_parnl( 6 )) ) ;
+   hb_retl( FreeResource( (HGLOBAL) HB_PARWH( 6 )) );
 }
 
 //-------------------------------------------------------------------//
@@ -227,7 +229,7 @@ HB_FUNC( FREERESOURCE )
 //
 HB_FUNC( SETDEBUGERRORLEVEL )
 {
-   SetDebugErrorLevel( (DWORD) hb_parnl( 1 ) ) ;
+   SetDebugErrorLevel( (DWORD) hb_parnl( 1 ) );
 }
 
 //-------------------------------------------------------------------//
@@ -236,7 +238,7 @@ HB_FUNC( SETDEBUGERRORLEVEL )
 //
 HB_FUNC( SETLASTERROREX )
 {
-   SetLastErrorEx( (DWORD) hb_parnl( 1 ), (DWORD) hb_parnl( 2 ) ) ;
+   SetLastErrorEx( (DWORD) hb_parnl( 1 ), (DWORD) hb_parnl( 2 ) );
 }
 
 //-------------------------------------------------------------------//
@@ -246,7 +248,7 @@ HANDLE GetStdHandle(DWORD nStdHandle )  // input, output, or error device
 
 HB_FUNC( GETSTDHANDLE )
 {
-   hb_retnl( (LONG) GetStdHandle( (DWORD) hb_parnl(1) ) ) ;
+   HB_RETWH( GetStdHandle( (DWORD) hb_parnl(1) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -259,7 +261,7 @@ BOOL SetStdHandle(
 
 HB_FUNC( SETSTDHANDLE )
 {
-   hb_retl( SetStdHandle( (DWORD) hb_parnl(1), (HANDLE) hb_parnl(2) ) ) ;
+   hb_retl( SetStdHandle( (DWORD) hb_parnl(1), (HANDLE) HB_PARWH(2) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -269,7 +271,7 @@ BOOL SetConsoleTitle(LPCSTR szTitle )
 
 HB_FUNC( SETCONSOLETITLE )
 {
-   hb_retnl( ( LONG ) SetConsoleTitle( ( LPCSTR ) hb_parcx( 1 ) ) ) ;
+   hb_retnl( ( LONG ) SetConsoleTitle( ( LPCSTR ) hb_parcx( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -288,7 +290,7 @@ HB_FUNC( GETCONSOLEWINDOW )
 
    GetConsoleTitle( realtitle,MAX_PATH );
    SetConsoleTitle( "Finding Handle" );
-   hb_retnl( ( LONG ) FindWindow( NULL,"Finding Handle" ) );
+   HB_RETWH( FindWindow( NULL,"Finding Handle" ) );
    SetConsoleTitle( realtitle );
 }
 
@@ -298,7 +300,7 @@ HB_FUNC( GETCONSOLEWINDOW )
 //
 HB_FUNC( GETSYSTEMMETRICS )
 {
-   hb_retni( GetSystemMetrics( hb_parni( 1 ) ) ) ;
+   hb_retni( GetSystemMetrics( hb_parni( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -307,11 +309,11 @@ HB_FUNC( GETSYSTEMMETRICS )
 //
 HB_FUNC( SETTIMER )
 {
-   hb_retni( SetTimer( (HWND) hb_parnl( 1 ),
+   hb_retni( SetTimer( (HWND) HB_PARWH( 1 ),
                        (UINT) hb_parni( 2 ),
                        (UINT) hb_parni( 3 ),
-                       ISNIL(4) ? NULL : (TIMERPROC) hb_parnl(4)
-                      ) ) ;
+                       ISNIL(4) ? NULL : (TIMERPROC) HB_PARWH(4)
+                      ) );
 }
 
 //-------------------------------------------------------------------//
@@ -320,14 +322,14 @@ HB_FUNC( SETTIMER )
 //
 HB_FUNC( KILLTIMER )
 {
-   hb_retl( KillTimer( (HWND) hb_parnl( 1 ), (UINT) hb_parni(2) ) ) ;
+   hb_retl( KillTimer( (HWND) HB_PARWH( 1 ), (UINT) hb_parni(2) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( GETSYSCOLOR )
 {
-  hb_retnl( GetSysColor( hb_parni(1) ) ) ;
+  hb_retnl( GetSysColor( hb_parni(1) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -336,7 +338,7 @@ HB_FUNC( GETSYSCOLOR )
 //
 HB_FUNC( EXITWINDOWSEX )
 {
-   hb_retl( ExitWindowsEx( (UINT) hb_parni( 1 ), (DWORD) hb_parnl( 2 ) ) ) ;
+   hb_retl( ExitWindowsEx( (UINT) hb_parni( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -345,7 +347,7 @@ HB_FUNC( EXITWINDOWSEX )
 //
 HB_FUNC( GETSYSCOLORBRUSH )
 {
-   hb_retnl( (LONG) GetSysColorBrush( hb_parni( 1 ) ) ) ;
+   HB_RETWH( GetSysColorBrush( hb_parni( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -358,35 +360,35 @@ HB_FUNC( SETSYSCOLORS )
 
    // Your code goes here
 
-   hb_retl( SetSysColors( hb_parni( 1 ), hb_parni( 2 ), &lpaRgbValues ) ) ;
+   hb_retl( SetSysColors( hb_parni( 1 ), hb_parni( 2 ), &lpaRgbValues ) );
 }
 */
 //-------------------------------------------------------------------//
 
 HB_FUNC( AND )
 {
-  hb_retnl( hb_parnl(1) & hb_parnl(2) ) ;
+  hb_retnl( hb_parnl(1) & hb_parnl(2) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( OR )
 {
-  hb_retnl( hb_parnl(1) | hb_parnl(2) ) ;
+  hb_retnl( hb_parnl(1) | hb_parnl(2) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( NOT )
 {
-   hb_retnl( ~( hb_parnl(1) ) ) ;
+   hb_retnl( ~( hb_parnl(1) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( _GETINSTANCE )
 {
-   hb_retnl( (LONG) GetModuleHandle( NULL ) );
+   HB_RETWH( GetModuleHandle( NULL ) );
 }
 
 //-------------------------------------------------------------------//
@@ -407,14 +409,14 @@ HB_FUNC( HIWORD )
 
 HB_FUNC( MAKELONG )
 {
-   hb_retnl( (LONG) (((WORD) (hb_parni(1))) | (((DWORD) ((WORD) (hb_parni(2)))) << 16)) ) ;
+   hb_retnl( (LONG) (((WORD) (hb_parni(1))) | (((DWORD) ((WORD) (hb_parni(2)))) << 16)) );
 }
 
 //-------------------------------------------------------------------//
 /*
 HB_FUNC( GETLASTERROR )
 {
-  hb_retnl( ( LONG ) GetLastError() ) ;
+  hb_retnl( ( LONG ) GetLastError() );
 }
 */
 //-------------------------------------------------------------------//
@@ -442,7 +444,7 @@ HB_FUNC( FORMATMESSAGE)
 /*
 HB_FUNC( SETLASTERROR )
 {
-   SetLastError( (DWORD) hb_parnl( 1 ) ) ;
+   SetLastError( (DWORD) hb_parnl( 1 ) );
 }
 */
 //-------------------------------------------------------------------//
@@ -451,7 +453,7 @@ HB_FUNC( SETLASTERROR )
 //
 HB_FUNC( SETERRORMODE )
 {
-   hb_retni( SetErrorMode( (UINT) hb_parni( 1 ) ) ) ;
+   hb_retni( SetErrorMode( (UINT) hb_parni( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -496,7 +498,7 @@ HB_FUNCNAME( CHARTOOEM )();
 
 HB_FUNC( GETVERSION )
 {
-   hb_retnl( (LONG) GetVersion(  ) ) ;
+   hb_retnl( (LONG) GetVersion(  ) );
 }
 
 //-------------------------------------------------------------------//
@@ -505,10 +507,10 @@ HB_FUNC( GETVERSION )
 //
 HB_FUNC( FINDRESOURCE )
 {
-   hb_retnl( (LONG) FindResourceA( (HMODULE) hb_parnl( 1 ),
+   HB_RETWH( FindResourceA( (HMODULE) HB_PARWH( 1 ),
                                    (LPCSTR) hb_parcx( 2 )  ,
                                    (LPCSTR) hb_parcx( 3 )
-                                  ) ) ;
+                                  ) );
 }
 
 //-------------------------------------------------------------------//
@@ -517,11 +519,11 @@ HB_FUNC( FINDRESOURCE )
 //
 HB_FUNC( FINDRESOURCEEX )
 {
-   hb_retnl( (LONG) FindResourceExA( (HMODULE) hb_parnl( 1 ),
+   HB_RETWH( FindResourceExA( (HMODULE) HB_PARWH( 1 ),
                                      (LPCSTR) hb_parcx( 2 )  ,
                                      (LPCSTR) hb_parcx( 3 )  ,
                                      (WORD) hb_parni( 4 )
-                                     ) ) ;
+                                     ) );
 }
 
 //-------------------------------------------------------------------//
@@ -530,9 +532,9 @@ HB_FUNC( FINDRESOURCEEX )
 //
 HB_FUNC( LOADRESOURCE )
 {
-   hb_retnl( (LONG) LoadResource( (HMODULE) hb_parnl( 1 ),
-                                  (HRSRC) hb_parnl( 2 )
-                                 ) ) ;
+   HB_RETWH( LoadResource( (HMODULE) HB_PARWH( 1 ),
+                                  (HRSRC) HB_PARWH( 2 )
+                                 ) );
 }
 
 //-------------------------------------------------------------------//
@@ -550,10 +552,10 @@ HB_FUNC( LOADSTRING )
    ULONG iLen = ISNIL(3) ? MAX_PATH : (ULONG) hb_parclen( 3 );
    LPTSTR cText = (char*) hb_xgrab( iLen+1 );
 
-   iLen = LoadString( ( ISNIL(1) ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) ),
+   iLen = LoadString( ( ISNIL(1) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH(1) ),
                       (UINT) hb_parni(2) ,
                       (LPTSTR) cText ,
-                      iLen ) ;
+                      iLen );
 
    hb_retclen( cText, iLen );
    hb_xfree( cText );
@@ -565,9 +567,9 @@ HB_FUNC( LOADSTRING )
 //
 HB_FUNC( SIZEOFRESOURCE )
 {
-   hb_retnl( (LONG) SizeofResource( (HMODULE) hb_parnl( 1 ),
-                                    (HRSRC) hb_parnl( 2 )
-                                    ) ) ;
+   hb_retnl( (LONG) SizeofResource( (HMODULE) HB_PARWH( 1 ),
+                                    (HRSRC) HB_PARWH( 2 )
+                                    ) );
 }
 
 //-------------------------------------------------------------------//
@@ -576,7 +578,7 @@ HB_FUNC( SIZEOFRESOURCE )
 //
 HB_FUNC( LOCKRESOURCE )
 {
-   hb_retnl( (LONG) LockResource( (HGLOBAL) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( LockResource( (HGLOBAL) HB_PARWH( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -589,7 +591,7 @@ HB_FUNC( LOADMODULE )
 
    // Your code goes here
 
-   hb_retnl( (LONG) LoadModule( (LPCSTR) hb_parcx( 1 ), lpParameterBlock ) ) ;
+   hb_retnl( (LONG) LoadModule( (LPCSTR) hb_parcx( 1 ), lpParameterBlock ) );
 }
 */
 
@@ -599,7 +601,7 @@ HB_FUNC( LOADMODULE )
 //
 HB_FUNC( TONE )
 {
-   hb_retl( Beep( (DWORD) hb_parnl( 1 ), (DWORD) hb_parnl( 2 ) ) ) ;
+   hb_retl( Beep( (DWORD) hb_parnl( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -609,10 +611,10 @@ HB_FUNC( TONE )
 HB_FUNC( GETMODULEFILENAME )
 {
    char szBuffer[ MAX_PATH + 1 ] = {0} ;
-   GetModuleFileNameA( ISNIL(1) ? GetModuleHandle(NULL) : (HMODULE) hb_parnl( 1 ),
+   GetModuleFileNameA( ISNIL(1) ? GetModuleHandle(NULL) : (HMODULE) HB_PARWH( 1 ),
                        szBuffer  ,
                        MAX_PATH
-                     ) ;
+                     );
    hb_retc(szBuffer);
 }
 
@@ -622,7 +624,7 @@ HB_FUNC( GETMODULEFILENAME )
 //
 HB_FUNC( GETMODULEHANDLE )
 {
-   hb_retnl( (LONG) GetModuleHandleA( (ISNIL(1) ? NULL : (LPCSTR) hb_parcx( 1 ) ) ) ) ;
+   HB_RETWH( GetModuleHandleA( (ISNIL(1) ? NULL : (LPCSTR) hb_parcx( 1 ) ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -644,7 +646,7 @@ HB_FUNC( GETSYSTEMTIME )
 
    // Your code goes here
 
-   GetSystemTime( lpSystemTime ) ;
+   GetSystemTime( lpSystemTime );
 }
 */
 //-------------------------------------------------------------------//
@@ -658,7 +660,7 @@ HB_FUNC( SETSYSTEMTIME )
 
    // Your code goes here
 
-   hb_retl( SetSystemTime( &lpSystemTime ) ) ;
+   hb_retl( SetSystemTime( &lpSystemTime ) );
 }
 */
 //-------------------------------------------------------------------//
@@ -671,7 +673,7 @@ HB_FUNC( GETLOCALTIME )
 
    // Your code goes here
 
-   GetLocalTime( lpSystemTime ) ;
+   GetLocalTime( lpSystemTime );
 }
 */
 //-------------------------------------------------------------------//
@@ -684,7 +686,7 @@ HB_FUNC( SETLOCALTIME )
 
    // Your code goes here
 
-   hb_retl( SetLocalTime( &lpSystemTime ) ) ;
+   hb_retl( SetLocalTime( &lpSystemTime ) );
 }
 */
 //-------------------------------------------------------------------//
@@ -697,7 +699,7 @@ HB_FUNC( GETSYSTEMINFO )
 
    // Your code goes here
 
-   GetSystemInfo( lpSystemInfo ) ;
+   GetSystemInfo( lpSystemInfo );
 }
 */
 //-------------------------------------------------------------------//
@@ -706,7 +708,7 @@ HB_FUNC( GETSYSTEMINFO )
 //
 HB_FUNC( GETTICKCOUNT )
 {
-   hb_retnl( (LONG) GetTickCount(  ) ) ;
+   hb_retnl( (LONG) GetTickCount(  ) );
 }
 
 //-------------------------------------------------------------------//
@@ -717,7 +719,7 @@ HB_FUNC( GETLOGICALDRIVESTRINGS )
 {
    hb_retnl( (LONG) GetLogicalDriveStrings( (DWORD) hb_parnl( 1 ),
                                              (LPSTR) hb_parcx( 2 )
-                                             ) ) ;
+                                             ) );
 }
 
 //-------------------------------------------------------------------//
@@ -730,10 +732,10 @@ HB_FUNC( GETCOMPUTERNAME )
    char cText[MAX_COMPUTERNAME_LENGTH+1]  ;
    DWORD nSize = MAX_COMPUTERNAME_LENGTH+1;
 
-   hb_retl( GetComputerNameA( (LPSTR) &cText, &nSize ) ) ;
+   hb_retl( GetComputerNameA( (LPSTR) &cText, &nSize ) );
 
-   hb_storc( cText, 1 ) ;
-   hb_stornl( nSize, 2 ) ;
+   hb_storc( cText, 1 );
+   hb_stornl( nSize, 2 );
 }
 
 //-------------------------------------------------------------------//
@@ -742,7 +744,7 @@ HB_FUNC( GETCOMPUTERNAME )
 //
 HB_FUNC( SETCOMPUTERNAME )
 {
-   hb_retl( SetComputerNameA( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   hb_retl( SetComputerNameA( (LPCSTR) hb_parcx( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -756,7 +758,7 @@ HB_FUNC( GETCOMPUTERNAMEEX )
 
    // Your code goes here
 
-   hb_retl( GetComputerNameExA( NameType, (LPSTR) hb_parcx( 2 ), nSize ) ) ;
+   hb_retl( GetComputerNameExA( NameType, (LPSTR) hb_parcx( 2 ), nSize ) );
 }
 */
 //-------------------------------------------------------------------//
@@ -769,7 +771,7 @@ HB_FUNC( SETCOMPUTERNAMEEX )
 
    // Your code goes here
 
-   hb_retl( SetComputerNameExA( NameType, (LPCSTR) hb_parcx( 2 ) ) ) ;
+   hb_retl( SetComputerNameExA( NameType, (LPCSTR) hb_parcx( 2 ) ) );
 }
 */
 //-------------------------------------------------------------------//
@@ -781,9 +783,9 @@ HB_FUNC( GETUSERNAME )
    DWORD nSize    ;
    char *szUser = hb_parcx( 1 );
 
-   hb_retl( GetUserNameA( szUser, &nSize ) ) ;
-   hb_storc( szUser , 1 ) ;
-   hb_stornl( ( LONG ) nSize , 2 ) ;
+   hb_retl( GetUserNameA( szUser, &nSize ) );
+   hb_storc( szUser , 1 );
+   hb_stornl( ( LONG ) nSize , 2 );
 }
 
 //-------------------------------------------------------------------//
@@ -815,7 +817,7 @@ HB_FUNC( VERIFYVERSIONINFO )
    hb_retl( VerifyVersionInfoA( lpVersionInformation     ,
                                 (DWORD) hb_parnl( 2 )    ,
                                 (DWORDLONG) hb_parnl( 3 )
-                                ) ) ;
+                                ) );
 }
 */
 //-------------------------------------------------------------------//
@@ -828,7 +830,7 @@ HB_FUNC( VERIFYVERSIONINFO )
 //
 HB_FUNC( ARRANGEICONICWINDOWS )
 {
-   hb_retni( ArrangeIconicWindows( (HWND) hb_parnl( 1 ) ) ) ;
+   hb_retni( ArrangeIconicWindows( (HWND) HB_PARWH( 1 ) ) );
 }
 
 
@@ -844,12 +846,12 @@ HB_FUNC( TILEWINDOWS )
 
    // Your code goes here
 
-   hb_retni( TileWindows( (HWND) hb_parnl( 1 ),
+   hb_retni( TileWindows( (HWND) HB_PARWH( 1 ),
                           (UINT) hb_parni( 2 ),
                           &lpRect             ,
                           (UINT) hb_parni( 4 ),
-                          (HWND) hb_parnl( 5 )
-                        ) ) ;
+                          (HWND) HB_PARWH( 5 )
+                        ) );
 }
 */
 //-------------------------------------------------------------------//
@@ -865,12 +867,12 @@ HB_FUNC( CASCADEWINDOWS )
 
    // Your code goes here
 
-   hb_retni( CascadeWindows( (HWND) hb_parnl( 1 ),
+   hb_retni( CascadeWindows( (HWND) HB_PARWH( 1 ),
                              (UINT) hb_parni( 2 ),
                              &lpRect             ,
                              (UINT) hb_parni( 4 ),
-                             (HWND) hb_parnl( 5 )
-                           ) ) ;
+                             (HWND) HB_PARWH( 5 )
+                           ) );
 }
 */
 //-------------------------------------------------------------------//
@@ -881,11 +883,11 @@ HB_FUNC( CASCADEWINDOWS )
 //
 HB_FUNC( WINHELP )
 {
-      hb_retl( WinHelp( (HWND) hb_parnl( 1 ) ,
+      hb_retl( WinHelp( (HWND) HB_PARWH( 1 ) ,
                      (LPCSTR) hb_parcx( 2 ),
                      (UINT) hb_parni( 3 ) ,
                      (ULONG) hb_parnl( 4 )
-                   ) ) ;
+                   ) );
 }
 
 //-------------------------------------------------------------------//
@@ -906,12 +908,12 @@ HB_FUNC( WINHELP )
 HB_FUNC( HTMLHELP )
 {
 
- hb_retnl( (LONG) HtmlHelp( (HWND)   hb_parnl( 1 )  ,
+ HB_RETWH( HtmlHelp( (HWND)   HB_PARWH( 1 )  ,
                             (LPCSTR) hb_parcx( 2 ) ,
                             (UINT)   ISNIL(3) ? HH_DISPLAY_TOPIC : hb_parni( 3 )  ,
                             (DWORD)  ISNIL(4) ? NULL : hb_parnl( 4 )
                           )
-         ) ;
+         );
 }
 */
 //-------------------------------------------------------------------//
@@ -936,13 +938,13 @@ HB_FUNC( CREATEFILE )
    if( ISCHAR( 4 ) )
       sa = ( SECURITY_ATTRIBUTES *) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING )->item.asString.value ;
 
-   hb_retnl( (LONG) CreateFile( (LPCTSTR) hb_parcx(1),
+   HB_RETWH( CreateFile( (LPCTSTR) hb_parcx(1),
                                 (DWORD)   hb_parnl(2),
                                 (DWORD)   hb_parnl(3),
                                 ISCHAR( 4 ) ? (SECURITY_ATTRIBUTES *) sa : NULL ,
                                 (DWORD) hb_parnl(5),
                                 (DWORD) hb_parnl(6),
-                                ISNIL( 7 ) ? NULL : (HANDLE) hb_parnl(7) ) ) ;
+                                ISNIL( 7 ) ? NULL : (HANDLE) HB_PARWH(7) ) );
 
 }
 
@@ -954,7 +956,7 @@ BOOL CloseHandle(
 */
 HB_FUNC( CLOSEHANDLE )
 {
-  hb_retl( CloseHandle( (HANDLE) hb_parnl(1) ) );
+  hb_retl( CloseHandle( (HANDLE) HB_PARWH(1) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -969,7 +971,7 @@ HB_FUNC( CLOSEHANDLE )
 */
 HB_FUNC( READFILE )
 {
-   char * Buffer = ( char * ) hb_xgrab( hb_parnl( 3 ) ) ;
+   char * Buffer = ( char * ) hb_xgrab( hb_parnl( 3 ) );
    DWORD nRead   = 0      ;
    BOOL  bRet             ;
    OVERLAPPED *Overlapped = NULL;
@@ -978,19 +980,19 @@ HB_FUNC( READFILE )
       Overlapped = ( OVERLAPPED *) hb_parc( 5 ); //hb_param( 5, HB_IT_STRING )->item.asString.value ;
 
 
-   bRet = ReadFile( (HANDLE) hb_parnl( 1 ) ,
+   bRet = ReadFile( (HANDLE) HB_PARWH( 1 ) ,
                     Buffer                 ,
                     (DWORD)  hb_parnl( 3 ) ,
                     &nRead        ,
-                    ISCHAR( 5 ) ? Overlapped : NULL ) ;
+                    ISCHAR( 5 ) ? Overlapped : NULL );
 
    if ( bRet )
    {
-      hb_storclen( ( char * ) Buffer, nRead, 2 ) ;
+      hb_storclen( ( char * ) Buffer, nRead, 2 );
    }
 
-   hb_stornl( nRead, 4 ) ;
-   hb_retl( bRet ) ;
+   hb_stornl( nRead, 4 );
+   hb_retl( bRet );
 }
 
 //-------------------------------------------------------------------//
@@ -1012,13 +1014,13 @@ HB_FUNC( WRITEFILE )
    if( ISCHAR( 4 ))
      Overlapped = ( OVERLAPPED *) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING )->item.asString.value ;
 
-   hb_retl ( WriteFile( (HANDLE)  hb_parnl( 1 )   ,
+   hb_retl ( WriteFile( (HANDLE)  HB_PARWH( 1 )   ,
                      hb_parcx( 2 )       ,
                      hb_parclen( 2 )    ,
                      &nWritten          ,
-                     ISCHAR( 4 ) ? Overlapped : NULL ) ) ;
+                     ISCHAR( 4 ) ? Overlapped : NULL ) );
 
-   hb_stornl( nWritten, 3 ) ;
+   hb_stornl( nWritten, 3 );
 }
 
 //-------------------------------------------------------------------//
@@ -1059,7 +1061,7 @@ HB_FUNC( GETPROCESSWORKINGSETSIZE )
    PSIZE_T MinimumWorkingSetSize = NULL;
    PSIZE_T MaximumWorkingSetSize = NULL;
 
-   hb_retl(GetProcessWorkingSetSize(ISNIL(1) ? GetCurrentProcess() : (HANDLE) hb_parnl( 1 ),
+   hb_retl(GetProcessWorkingSetSize(ISNIL(1) ? GetCurrentProcess() : (HANDLE) HB_PARWH( 1 ),
                             MinimumWorkingSetSize, MaximumWorkingSetSize ));
 
    hb_stornl( MinimumWorkingSetSize ? ( long ) *MinimumWorkingSetSize : 0, 2 );
@@ -1075,7 +1077,7 @@ NOTE: This function is not supported and returns .F. under Windows 9x
 */
 HB_FUNC( SETPROCESSWORKINGSETSIZE )
 {
-   hb_retl(SetProcessWorkingSetSize(ISNIL(1) ? GetCurrentProcess() : (HANDLE) hb_parnl( 1 ),
+   hb_retl(SetProcessWorkingSetSize(ISNIL(1) ? GetCurrentProcess() : (HANDLE) HB_PARWH( 1 ),
                    hb_parnl( 2 ), hb_parnl( 3 ) ));
 }
 
@@ -1088,7 +1090,7 @@ HB_FUNC( VIRTUALQUERY )
 {
    if( hb_parni(1) >= sizeof(MEMORY_BASIC_INFORMATION) )
    {
-      hb_retl(VirtualQuery((void *) hb_parnl(1), (struct _MEMORY_BASIC_INFORMATION *) hb_parnl(2), sizeof(MEMORY_BASIC_INFORMATION)));
+      hb_retl(VirtualQuery((void *) HB_PARWH(1), (struct _MEMORY_BASIC_INFORMATION *) HB_PARWH(2), sizeof(MEMORY_BASIC_INFORMATION)));
    }
    else
    {
@@ -1104,7 +1106,7 @@ BOOL VirtualLock(LPVOID lpAddress, SIZE_T dwSize );
 */
 HB_FUNC( VIRTUALLOCK )
 {
-   hb_retl( VirtualLock( ( void * ) hb_parnl( 1 ), hb_parni( 2 ) ) );
+   hb_retl( VirtualLock( ( void * ) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1134,16 +1136,16 @@ HB_FUNC( FILETIMETOSYSTEMTIME )
 
    if ( FileTimeToSystemTime( FileTime, &SystemTime ) )
    {
-      hb_retl( TRUE ) ;
+      hb_retl( TRUE );
 
       if ( ISBYREF( 2 ) )
       {
-         hb_storclen( ( char * ) &SystemTime , sizeof( SYSTEMTIME ), 2 ) ;
+         hb_storclen( ( char * ) &SystemTime , sizeof( SYSTEMTIME ), 2 );
       }
    }
    else
    {
-      hb_retl( FALSE ) ;
+      hb_retl( FALSE );
    }
 }
 
@@ -1151,7 +1153,5 @@ HB_FUNC( FILETIMETOSYSTEMTIME )
 // BOOL SetConsoleOutputCP(  UINT wCodePageID )  // code page to set;
 HB_FUNC( SETCONSOLEOUTPUTCP )
 {
-   hb_retl( SetConsoleOutputCP( (UINT) hb_parnl( 1 ) ) ) ;
+   hb_retl( SetConsoleOutputCP( (UINT) hb_parnl( 1 ) ) );
 }
-
-

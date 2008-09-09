@@ -20,6 +20,8 @@
 #define _WIN32_WINNT   0x0400
 #define _WIN32_IE      0x0500
 
+#include "hbwhat.h"
+
 #ifndef __MINGW32__
 #ifndef __WATCOMC__
 
@@ -50,7 +52,7 @@
 //
 HB_FUNC( INTERNETDIAL )
 {
-   HWND    hWnd   = ISNIL( 1 ) ? 0    : ( HWND ) hb_parnl( 1 );
+   HWND    hWnd   = ISNIL( 1 ) ? 0    : ( HWND ) HB_PARWH( 1 );
    LPTSTR  lpszId = ISNIL( 2 ) ? NULL : hb_parcx( 2 );
    DWORD   nFlags = INTERNET_AUTODIAL_FORCE_ONLINE ;
    DWORD   nRet   = 0;
@@ -136,7 +138,7 @@ HB_FUNC( INTERNETOPEN )
 //
 HB_FUNC( INTERNETCONNECT )
 {
-   HINTERNET     hInternet      = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET     hInternet      = ( HINTERNET ) HB_PARWH( 1 );
    LPCTSTR       lpszServerName = hb_parcx( 2 );
    INTERNET_PORT nServerPort    = ISNIL( 3 ) ? INTERNET_DEFAULT_HTTP_PORT : ( INTERNET_PORT ) hb_parni( 3 );
    LPCTSTR       lpszUserName   = ISNIL( 4 ) ? NULL : hb_parcx( 4 );
@@ -167,7 +169,7 @@ HB_FUNC( INTERNETCONNECT )
 //
 HB_FUNC( FTPOPENFILE )
 {
-   HINTERNET hFtp         = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hFtp         = ( HINTERNET ) HB_PARWH( 1 );
    LPCTSTR   lpszFileName = hb_parcx( 2 );
    DWORD     dwAccess     = ISNIL( 3 ) ? GENERIC_READ : hb_parni( 3  );
    DWORD     dwFlags      = ISNIL( 4 ) ? FTP_TRANSFER_TYPE_BINARY : hb_parni( 4 );
@@ -192,7 +194,7 @@ HB_FUNC( FTPOPENFILE )
 //
 HB_FUNC( INTERNETWRITEFILE )
 {
-   HINTERNET hFile                    = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hFile                    = ( HINTERNET ) HB_PARWH( 1 );
    LPCVOID   lpBuffer                 = hb_parcx( 2 );
    DWORD     dwNumberOfBytesToWrite   = ( DWORD ) hb_parnl( 3 );
    LPDWORD   lpdwNumberOfBytesWritten = ( LPDWORD ) 0 ;
@@ -220,7 +222,7 @@ HB_FUNC( INTERNETWRITEFILE )
 //
 HB_FUNC( INTERNETREADFILE )
 {
-   HINTERNET hFile                    = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hFile                    = ( HINTERNET ) HB_PARWH( 1 );
    LPVOID    lpBuffer                 = hb_parcx( 2 );
    DWORD     dwNumberOfBytesToRead    = ( DWORD ) hb_parnl( 3 );
    LPDWORD   lpdwNumberOfBytesRead    = ( LPDWORD ) 0  ;
@@ -257,7 +259,7 @@ HB_FUNC( INTERNETREADFILE )
 //
 HB_FUNC( FTPCOMMAND )
 {
-   HINTERNET hInternet       = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hInternet       = ( HINTERNET ) HB_PARWH( 1 );
    BOOL      fExpectResponse = ISNIL( 2 ) ? 0 : hb_parl( 2 );
    DWORD     dwFlags         = ISNIL( 3 ) ? FTP_TRANSFER_TYPE_BINARY : hb_parnl( 3 );
    LPCTSTR   lpszCommand     = hb_parcx( 4 );
@@ -349,7 +351,7 @@ HB_FUNC( FTPCOMMAND )
 //
 HB_FUNC( FTPFINDFIRSTFILE )
 {
-   HINTERNET hInternet              = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hInternet              = ( HINTERNET ) HB_PARWH( 1 );
    LPCTSTR   lpszSearchFile         = ISNIL( 2 ) ? TEXT ("*.*") : hb_parcx( 2 );
    WIN32_FIND_DATA FindFileData ;
    DWORD     dwFlags                = ISNIL( 4 ) ? INTERNET_FLAG_NEED_FILE : hb_parnl( 4 );
@@ -376,7 +378,7 @@ HB_FUNC( FTPFINDFIRSTFILE )
 //
 HB_FUNC( INTERNETFINDNEXTFILE )
 {
-   HINTERNET       hFind       = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET       hFind       = ( HINTERNET ) HB_PARWH( 1 );
    WIN32_FIND_DATA FindFileData ;
 
    if ( InternetFindNextFile( hFind, &FindFileData ) )
@@ -408,7 +410,7 @@ HB_FUNC( INTERNETFINDNEXTFILE )
 //
 HB_FUNC( FTPGETFILE )
 {
-   HINTERNET hInternet            = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hInternet            = ( HINTERNET ) HB_PARWH( 1 );
    LPCTSTR   lpszRemoteFile       = hb_parcx( 2 );
    LPCTSTR   lpszLocalFile        = hb_parcx( 3 );
    BOOL      fFailIfExist         = ISNIL( 4 ) ? FALSE : hb_parl( 4 );
@@ -438,7 +440,7 @@ HB_FUNC( FTPGETFILE )
 //
 HB_FUNC( FTPPUTFILE )
 {
-   HINTERNET hInternet            = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hInternet            = ( HINTERNET ) HB_PARWH( 1 );
    LPCTSTR   lpszLocalFile        = hb_parcx( 2 );
    LPCTSTR   lpszRemoteFile       = hb_parcx( 3 );
    DWORD     dwFlags              = ISNIL( 4 ) ? FTP_TRANSFER_TYPE_BINARY | INTERNET_FLAG_RELOAD : hb_parnl( 4 );
@@ -461,7 +463,7 @@ HB_FUNC( FTPPUTFILE )
 //
 HB_FUNC( FTPCREATEDIRECTORY )
 {
-   HINTERNET hInternet     = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hInternet     = ( HINTERNET ) HB_PARWH( 1 );
    LPCTSTR   lpszDirectory = hb_parcx( 2 );
 
    hb_retl( FtpCreateDirectoryA( hInternet, lpszDirectory ) );
@@ -482,7 +484,7 @@ HB_FUNC( FTPCREATEDIRECTORY )
 //
 HB_FUNC( FTPREMOVEDIRECTORY )
 {
-   HINTERNET hInternet     = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hInternet     = ( HINTERNET ) HB_PARWH( 1 );
    LPCTSTR   lpszDirectory = hb_parcx( 2 );
 
    hb_retl( FtpRemoveDirectoryA( hInternet, lpszDirectory ) );
@@ -503,7 +505,7 @@ HB_FUNC( FTPREMOVEDIRECTORY )
 //
 HB_FUNC( FTPDELETEFILE )
 {
-   HINTERNET hInternet    = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hInternet    = ( HINTERNET ) HB_PARWH( 1 );
    LPCTSTR   lpszFileName = hb_parcx( 2 );
 
    hb_retl( FtpDeleteFile( hInternet, lpszFileName ) );
@@ -525,7 +527,7 @@ HB_FUNC( FTPDELETEFILE )
 //
 HB_FUNC( FTPRENAMEFILE )
 {
-   HINTERNET hInternet    = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hInternet    = ( HINTERNET ) HB_PARWH( 1 );
    LPCTSTR   lpszExisting = hb_parcx( 2 );
    LPCTSTR   lpszNew      = hb_parcx( 3 );
 
@@ -548,7 +550,7 @@ HB_FUNC( FTPRENAMEFILE )
 //
 HB_FUNC( FTPGETCURRENTDIRECTORY )
 {
-   HINTERNET hInternet           = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hInternet           = ( HINTERNET ) HB_PARWH( 1 );
    LPTSTR   lpszCurrentDirectory = ( LPTSTR ) hb_xgrab( MAX_PATH );
    DWORD    dwCurrentDirectory   = MAX_PATH;
    BOOL     bRet;
@@ -579,7 +581,7 @@ HB_FUNC( FTPGETCURRENTDIRECTORY )
 //
 HB_FUNC( FTPSETCURRENTDIRECTORY )
 {
-   HINTERNET hInternet     = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hInternet     = ( HINTERNET ) HB_PARWH( 1 );
    LPTSTR    lpszDirectory = hb_parcx( 2 );
 
    hb_retl( FtpSetCurrentDirectoryA( hInternet, lpszDirectory ) );
@@ -598,7 +600,7 @@ HB_FUNC( FTPSETCURRENTDIRECTORY )
 //
 HB_FUNC( INTERNETCLOSEHANDLE )
 {
-   HINTERNET hInternet = ( HINTERNET ) hb_parnl( 1 );
+   HINTERNET hInternet = ( HINTERNET ) HB_PARWH( 1 );
 
    hb_retl( InternetCloseHandle( hInternet ) );
 }

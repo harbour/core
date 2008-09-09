@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <mapi.h>
 #include "hbapi.h"

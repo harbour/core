@@ -10,6 +10,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <shlobj.h>
 //#include <commctrl.h>
@@ -45,7 +47,7 @@ HB_FUNC( SETCARETBLINKTIME )
 HB_FUNC( GETCARETX )
 {
    POINT ptPoint ;
-   GetCaretPos( (LPPOINT) &ptPoint ) ;
+   GetCaretPos( (LPPOINT) &ptPoint );
    hb_retnl( ptPoint.x );
 }
 
@@ -54,7 +56,7 @@ HB_FUNC( GETCARETX )
 HB_FUNC( GETCARETY )
 {
    POINT ptPoint ;
-   GetCaretPos( (LPPOINT) &ptPoint ) ;
+   GetCaretPos( (LPPOINT) &ptPoint );
    hb_retnl( ptPoint.y );
 }
 
@@ -68,7 +70,7 @@ HB_FUNC( GETCARETPOS )
 
    if ( GetCaretPos( (LPPOINT) &Point ) )
    {
-      aPt = Point2Array(&Point) ;
+      aPt = Point2Array(&Point);
       hb_itemReturn( aPt );
       hb_itemRelease( aPt );
    }
@@ -88,7 +90,7 @@ HB_FUNC( SETCARETPOS )
 
 HB_FUNC( SHOWCARET )
 {
-   hb_retl( ShowCaret( (HWND) hb_parnl(1) ) ) ;
+   hb_retl( ShowCaret( (HWND) HB_PARWH(1) ) );
 }
 
 
@@ -96,31 +98,24 @@ HB_FUNC( SHOWCARET )
 
 HB_FUNC( HIDECARET )
 {
-   hb_retl( HideCaret( (HWND) hb_parnl(1) ) );
+   hb_retl( HideCaret( (HWND) HB_PARWH(1) ) );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( CREATECARET )
 {
-   hb_retl( CreateCaret( (HWND) hb_parnl(1)  ,
-                         (HBITMAP) hb_parnl(2),
+   hb_retl( CreateCaret( (HWND) HB_PARWH(1)  ,
+                         (HBITMAP) HB_PARWH(2),
                          (int) hb_parni(3) ,
-                         (int) hb_parni(4) ) ) ;
+                         (int) hb_parni(4) ) );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( DESTROYCARET )
 {
-  hb_retl( DestroyCaret() ) ;
+  hb_retl( DestroyCaret() );
 }
 
-
-
 //-----------------------------------------------------------------------------
-
-
-
-
-

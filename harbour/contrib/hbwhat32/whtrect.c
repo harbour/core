@@ -10,6 +10,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 //#include <shlobj.h>
 #include <windows.h>
 #include "hbapiitm.h"
@@ -42,7 +44,7 @@ HB_FUNC( DRAWFOCUSRECT )
    RECT lprc ;
 
    if (ISARRAY(2) && Array2Rect( hb_param( 2 ,HB_IT_ARRAY ) , &lprc ) )
-      hb_retl( DrawFocusRect( (HDC) hb_parnl( 1 ), &lprc ) ) ;
+      hb_retl( DrawFocusRect( (HDC) HB_PARWH( 1 ), &lprc ) );
    else
       hb_retl(FALSE);
 }
@@ -53,12 +55,12 @@ HB_FUNC( DRAWFOCUSRECT )
 
 HB_FUNC( INTERSECTCLIPRECT )
 {
-   hb_retni( IntersectClipRect( (HDC) hb_parnl( 1 ),
+   hb_retni( IntersectClipRect( (HDC) HB_PARWH( 1 ),
                                 hb_parni( 2 )      ,
                                 hb_parni( 3 )      ,
                                 hb_parni( 4 )      ,
                                 hb_parni( 5 )
-                                ) ) ;
+                                ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -73,9 +75,9 @@ HB_FUNC( FILLRECT )
 
    if (Array2Rect( hb_param( 2 , HB_IT_ARRAY) , &rc) )
       hb_retni( FillRect(
-       (HDC) hb_parnl( 1 ),   // handle to device context
+       (HDC) HB_PARWH( 1 ),   // handle to device context
        &rc, // pointer to structure with rectangle
-       (HBRUSH) hb_parnl( 3 )    // handle to brush
+       (HBRUSH) HB_PARWH( 3 )    // handle to brush
    ) );
 }
 */
@@ -100,7 +102,7 @@ HB_FUNC( FILLRECT )
    PHB_ITEM pSrc1;
 
     if (Array2Rect( hb_param( 2 , HB_IT_ARRAY) , &rc) )
-      hb_retni( FillRect( (HDC) hb_parnl( 1 ), &lprc, (HBRUSH) hb_parnl( 3 ) ) ) ;
+      hb_retni( FillRect( (HDC) HB_PARWH( 1 ), &lprc, (HBRUSH) HB_PARWH( 3 ) ) );
    }
    else
     hb_retni(0);
@@ -127,7 +129,7 @@ HB_FUNC( FRAMERECT )
    PHB_ITEM pSrc1;
 
  if (Array2Rect( hb_param( 2 , HB_IT_ARRAY) , &lprc) )
-      hb_retni( FrameRect( (HDC) hb_parnl( 1 ), &lprc, (HBRUSH) hb_parnl( 3 ) ) ) ;
+      hb_retni( FrameRect( (HDC) HB_PARWH( 1 ), &lprc, (HBRUSH) HB_PARWH( 3 ) ) );
    }
    else
       hb_retni( 0 );
@@ -152,7 +154,7 @@ HB_FUNC( INVERTRECT )
    PHB_ITEM pSrc1;
 
  if (Array2Rect( hb_param( 2 , HB_IT_ARRAY) , &lprc) )
-    hb_retl( InvertRect( (HDC) hb_parnl( 1 ), &lprc ) ) ;
+    hb_retl( InvertRect( (HDC) HB_PARWH( 1 ), &lprc ) );
    }
    else
       hb_retl(FALSE);
@@ -182,7 +184,7 @@ HB_FUNC( SETRECT )
       hb_itemRelease(hb_itemReturn(Rect2Array( &lprc)));
    }
    else
-      hb_ret( ) ;
+      hb_ret( );
 
 }
 
@@ -258,7 +260,7 @@ HB_FUNC( INFLATERECT )
       if ( InflateRect( &lprc, hb_parni( 2 ), hb_parni( 3 ) ) )
 {
          Rect2ArrayEx( &lprc,pArray );
-         hb_retl( TRUE ) ;
+         hb_retl( TRUE );
       }
       else
          hb_retl(FALSE);
@@ -413,7 +415,7 @@ HB_FUNC( ISRECTEMPTY )
 
    if (ISARRAY(1) && Array2Rect( pSrc1, &lprc))
    {
-      hb_retl( IsRectEmpty( &lprc ) ) ;
+      hb_retl( IsRectEmpty( &lprc ) );
    }
    else
       hb_retl(FALSE);
@@ -438,7 +440,7 @@ HB_FUNC( EQUALRECT )
 
    if (Array2Rect( pSrc1, &lprc1) && Array2Rect( pSrc2, &lprc2))
    {
-      hb_retl( EqualRect( &lprc1, &lprc2 ) ) ;
+      hb_retl( EqualRect( &lprc1, &lprc2 ) );
    }
    else
       hb_retl(FALSE);
@@ -464,11 +466,11 @@ HB_FUNC( PTINRECT )
 
    if (Array2Rect( pSrc1, &lprc) && Array2Point( pSrc2, &pt))
    {
-      hb_retl( (BOOL) PtInRect( &lprc, pt ) ) ;
+      hb_retl( (BOOL) PtInRect( &lprc, pt ) );
 
    }
    else
-      hb_retl( FALSE) ;
+      hb_retl( FALSE);
 
 }
 
@@ -480,12 +482,12 @@ HB_FUNC( PTINRECT )
 
 HB_FUNC( EXCLUDECLIPRECT )
 {
-   hb_retni( ExcludeClipRect( (HDC) hb_parnl( 1 ),
+   hb_retni( ExcludeClipRect( (HDC) HB_PARWH( 1 ),
                               hb_parni( 2 )      ,
                               hb_parni( 3 )      ,
                               hb_parni( 4 )      ,
                               hb_parni( 5 )
-                              ) ) ;
+                              ) );
 }
 
 
@@ -499,7 +501,7 @@ HB_FUNC( RECTVISIBLE )
    RECT rc;
 
    if ( ISARRAY(2) && Array2Rect( hb_param(2,HB_IT_ARRAY), &rc ))
-      hb_retl( RectVisible( (HDC) hb_parnl( 1 ), &rc ) ) ;
+      hb_retl( RectVisible( (HDC) HB_PARWH( 1 ), &rc ) );
    else
       hb_retl(0);
 
@@ -515,7 +517,7 @@ HB_FUNC( GETBOUNDSRECT )
 {
    RECT rc ;
 
-   hb_retni( GetBoundsRect( (HDC) hb_parnl( 1 ), lpRect, (UINT) hb_parni( 3 ) ) ) ;
+   hb_retni( GetBoundsRect( (HDC) HB_PARWH( 1 ), lpRect, (UINT) hb_parni( 3 ) ) );
 }
 
 */
@@ -530,9 +532,7 @@ HB_FUNC( VALIDATERECT )
    RECT rc ;
 
    if (ISARRAY( 2 ) && Array2Rect( hb_param( 2, HB_IT_ARRAY ), &rc ) )
-      hb_retl( ValidateRect( (HWND) hb_parnl( 1 ), &rc) ) ;
+      hb_retl( ValidateRect( (HWND) HB_PARWH( 1 ), &rc) );
    else
-      hb_retl(ValidateRect( (HWND) hb_parnl( 1 ),NULL));
+      hb_retl(ValidateRect( (HWND) HB_PARWH( 1 ),NULL));
 }
-
-

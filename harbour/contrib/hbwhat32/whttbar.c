@@ -9,6 +9,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 //#include <shlobj.h>
 #include <windows.h>
 #include "hbapiitm.h"
@@ -37,7 +39,7 @@ HB_FUNC( CREATEMAPPEDBITMAP )
 {
    COLORMAP *cm = (COLORMAP *) hb_parc( 4 ); //hb_param(4, HB_IT_STRING)->item.asString.value;
 
-   hb_retnl( (LONG) CreateMappedBitmap( (HINSTANCE) hb_parnl(1),
+   HB_RETWH( CreateMappedBitmap( (HINSTANCE) HB_PARWH(1),
                                        (int) hb_parni(2),
                                        (UINT) hb_parni(3),
                                        ISNIL(4) ? NULL : (COLORMAP *) cm ,
@@ -52,11 +54,11 @@ HB_FUNC( CREATEMAPPEDBITMAP )
 HB_FUNC( CREATETOOLBAREX )
 {
 
-   hb_retnl( (LONG) CreateToolbarEx( (HWND) hb_parnl(1),    // parent
+   HB_RETWH( CreateToolbarEx( (HWND) HB_PARWH(1),    // parent
                                      (DWORD)hb_parnl(2),      // style
                                      (UINT) hb_parni(3),      // id,
                                      (int) hb_parni(4),       // number of btn images in bmp
-                                     ISNIL(5) ? NULL : (HINSTANCE) hb_parnl(5), // hInst of bmp
+                                     ISNIL(5) ? NULL : (HINSTANCE) HB_PARWH(5), // hInst of bmp
                                      (UINT) hb_parnl(6),      // resource id, or hBmp handle
                                      (LPCTBBUTTON) hb_parcx(7),// array of button structures
                                      (int) hb_parni(8),         // number of buttons to add
@@ -76,8 +78,8 @@ HB_FUNC( GETTOOLBARITEMRECT )
 {
    RECT    rc = {0,0,0,0};
    PHB_ITEM aRect ;
-   SendMessage((HWND) hb_parnl(1), TB_GETITEMRECT, hb_parni(2), (LPARAM)&rc);
-//   MapWindowPoints((HWND) hb_parnl(1), HWND_DESKTOP, (POINT*)&rc, 2);
+   SendMessage((HWND) HB_PARWH(1), TB_GETITEMRECT, hb_parni(2), (LPARAM)&rc);
+//   MapWindowPoints((HWND) HB_PARWH(1), HWND_DESKTOP, (POINT*)&rc, 2);
    aRect = Rect2Array( &rc  );
    hb_itemReturn( aRect );
    hb_itemRelease( aRect );
@@ -85,6 +87,3 @@ HB_FUNC( GETTOOLBARITEMRECT )
 
 
 //-----------------------------------------------------------------------------
-
-
-

@@ -9,6 +9,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <shlobj.h>
 //#include <commctrl.h>
@@ -40,7 +42,7 @@ extern BOOL Array2Point(PHB_ITEM aPoint, POINT *pt );
 
 HB_FUNC( CREATEMETAFILE )
 {
-   hb_retnl( (LONG) CreateMetaFile( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   HB_RETWH( CreateMetaFile( (LPCSTR) hb_parcx( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -49,9 +51,9 @@ HB_FUNC( CREATEMETAFILE )
 
 HB_FUNC( COPYMETAFILE )
 {
-   hb_retnl( (LONG) CopyMetaFile( (HMETAFILE) hb_parnl( 1 ),
+   HB_RETWH( CopyMetaFile( (HMETAFILE) HB_PARWH( 1 ),
                                    (LPCSTR) hb_parcx( 2 )
-                                   ) ) ;
+                                   ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -60,7 +62,7 @@ HB_FUNC( COPYMETAFILE )
 
 HB_FUNC( CLOSEMETAFILE )
 {
-   hb_retnl( (LONG) CloseMetaFile( (HDC) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( CloseMetaFile( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -70,7 +72,7 @@ HB_FUNC( CLOSEMETAFILE )
 
 HB_FUNC( DELETEMETAFILE )
 {
-   hb_retl( DeleteMetaFile( (HMETAFILE) hb_parnl( 1 ) ) ) ;
+   hb_retl( DeleteMetaFile( (HMETAFILE) HB_PARWH( 1 ) ) );
 }
 
 
@@ -80,7 +82,7 @@ HB_FUNC( DELETEMETAFILE )
 
 HB_FUNC( GETMETAFILE )
 {
-   hb_retnl( (LONG) GetMetaFile( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   HB_RETWH( GetMetaFile( (LPCSTR) hb_parcx( 1 ) ) );
 }
 
 
@@ -94,7 +96,7 @@ HB_FUNC( GETMETAFILE )
 
 HB_FUNC( PLAYMETAFILE )
 {
-   hb_retl( PlayMetaFile( (HDC) hb_parnl( 1 ), (HMETAFILE) hb_parnl( 2 ) ) ) ;
+   hb_retl( PlayMetaFile( (HDC) HB_PARWH( 1 ), (HMETAFILE) HB_PARWH( 2 ) ) );
 }
 
 
@@ -109,10 +111,10 @@ HB_FUNC( GETMETAFILEBITSEX )
 
    // Your code goes here
 
-   hb_retni( GetMetaFileBitsEx( (HMETAFILE) hb_parnl( 1 ),
+   hb_retni( GetMetaFileBitsEx( (HMETAFILE) HB_PARWH( 1 ),
                                 (UINT) hb_parni( 2 )     ,
                                 lpVoid
-                                ) ) ;
+                                ) );
 }
 
 */
@@ -131,11 +133,11 @@ HB_FUNC( ENUMMETAFILE )
 
    // Your code goes here
 
-   hb_retl( EnumMetaFile( (HDC) hb_parnl( 1 )      ,
-                          (HMETAFILE) hb_parnl( 2 ),
+   hb_retl( EnumMetaFile( (HDC) HB_PARWH( 1 )      ,
+                          (HMETAFILE) HB_PARWH( 2 ),
                           mfEnumProc               ,
                           lParam
-                          ) ) ;
+                          ) );
 }
 
 */
@@ -151,7 +153,7 @@ HB_FUNC( SETMETAFILEBITSEX )
 
    // Your code goes here
 
-   hb_retnl( (LONG) SetMetaFileBitsEx( (UINT) hb_parni( 1 ), &BYTE ) ) ;
+   HB_RETWH( SetMetaFileBitsEx( (UINT) hb_parni( 1 ), &BYTE ) );
 }
 
 */
@@ -172,11 +174,11 @@ HB_FUNC( CREATEENHMETAFILE )
    RECT rc ;
 
    if ( ISARRAY(3) && Array2Rect( hb_param(3,HB_IT_ARRAY), &rc ))
-      hb_retnl( (LONG) CreateEnhMetaFile( (HDC) hb_parnl( 1 )  ,
+      HB_RETWH( CreateEnhMetaFile( (HDC) HB_PARWH( 1 )  ,
                                            (LPCSTR) hb_parcx( 2 ),
                                            &rc                  ,
                                            ISNIL(4) ? NULL : (LPCSTR) hb_parcx( 4 )
-                                        ) ) ;
+                                        ) );
 
 
 }
@@ -187,7 +189,7 @@ HB_FUNC( CREATEENHMETAFILE )
 
 HB_FUNC( GETENHMETAFILE )
 {
-   hb_retnl( (LONG) GetEnhMetaFile( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   HB_RETWH( GetEnhMetaFile( (LPCSTR) hb_parcx( 1 ) ) );
 }
 
 
@@ -196,7 +198,7 @@ HB_FUNC( GETENHMETAFILE )
 
 HB_FUNC( GETMETARGN )
 {
-   hb_retni( GetMetaRgn( (HDC) hb_parnl( 1 ), (HRGN) hb_parnl( 2 ) ) ) ;
+   hb_retni( GetMetaRgn( (HDC) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
 
 
@@ -206,7 +208,7 @@ HB_FUNC( GETMETARGN )
 
 HB_FUNC( SETMETARGN )
 {
-   hb_retni( SetMetaRgn( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retni( SetMetaRgn( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -214,7 +216,7 @@ HB_FUNC( SETMETARGN )
 
 HB_FUNC( CLOSEENHMETAFILE )
 {
-   hb_retnl( (LONG) CloseEnhMetaFile( (HDC) hb_parnl(1) ) );
+   HB_RETWH( CloseEnhMetaFile( (HDC) HB_PARWH(1) ) );
 }
 
 
@@ -225,7 +227,7 @@ HB_FUNC( CLOSEENHMETAFILE )
 
 HB_FUNC( DELETEENHMETAFILE )
 {
-   hb_retl( DeleteEnhMetaFile( (HENHMETAFILE) hb_parnl( 1 ) ) ) ;
+   hb_retl( DeleteEnhMetaFile( (HENHMETAFILE) HB_PARWH( 1 ) ) );
 }
 
 
@@ -238,10 +240,10 @@ HB_FUNC( PLAYENHMETAFILE )
    RECT  rc ;
 
    if ( ISARRAY(3) && Array2Rect( hb_param(3,HB_IT_ARRAY), &rc ))
-      hb_retl( PlayEnhMetaFile( (HDC) hb_parnl( 1 )         ,
-                                (HENHMETAFILE) hb_parnl( 2 ),
+      hb_retl( PlayEnhMetaFile( (HDC) HB_PARWH( 1 )         ,
+                                (HENHMETAFILE) HB_PARWH( 2 ),
                                 &rc
-                             ) ) ;
+                             ) );
 }
 
 
@@ -251,9 +253,9 @@ HB_FUNC( PLAYENHMETAFILE )
 
 HB_FUNC( COPYENHMETAFILEA )
 {
-   hb_retnl( (LONG) CopyEnhMetaFileA( (HENHMETAFILE) hb_parnl( 1 ),
+   HB_RETWH( CopyEnhMetaFileA( (HENHMETAFILE) HB_PARWH( 1 ),
                                       (LPCSTR) hb_parcx( 2 )
-                                      ) ) ;
+                                      ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -269,17 +271,17 @@ HB_FUNC( GETWINMETAFILEBITS )
 
    UINT nBytes ;
 
-   nBytes = GetWinMetaFileBits( (HENHMETAFILE) hb_parnl( 1 ),
-                                 0 , NULL, hb_parni( 2 ), (HDC) hb_parnl( 3 ) ) ;
+   nBytes = GetWinMetaFileBits( (HENHMETAFILE) HB_PARWH( 1 ),
+                                 0 , NULL, hb_parni( 2 ), (HDC) HB_PARWH( 3 ) );
 
    if ( nBytes )
    {
-       Buffer = (BYTE *) hb_xgrab( nBytes) ;
+       Buffer = (BYTE *) hb_xgrab( nBytes);
 
-       if ( GetWinMetaFileBits( (HENHMETAFILE) hb_parnl( 1 ) ,
+       if ( GetWinMetaFileBits( (HENHMETAFILE) HB_PARWH( 1 ) ,
                                  nBytes  , Buffer            ,
                                  hb_parni( 2 )               ,
-                                 (HDC) hb_parnl( 3 )
+                                 (HDC) HB_PARWH( 3 )
                                  ) )
            hb_retclen( ( char *)Buffer, nBytes );
 
@@ -301,11 +303,11 @@ HB_FUNC( PLAYENHMETAFILERECORD )
 
    // Your code goes here
 
-   hb_retl( PlayEnhMetaFileRecord( (HDC) hb_parnl( 1 ) ,
+   hb_retl( PlayEnhMetaFileRecord( (HDC) HB_PARWH( 1 ) ,
                                    lpHandleTable       ,
                                    &emfr               ,
                                    (UINT) hb_parni( 4 )
-                                   ) ) ;
+                                   ) );
 }
 
 */
@@ -316,10 +318,10 @@ HB_FUNC( PLAYENHMETAFILERECORD )
 
 HB_FUNC( GETENHMETAFILEDESCRIPTION )
 {
-   hb_retni( GetEnhMetaFileDescription( (HENHMETAFILE) hb_parnl( 1 ),
+   hb_retni( GetEnhMetaFileDescription( (HENHMETAFILE) HB_PARWH( 1 ),
                                          (UINT) hb_parni( 2 )        ,
                                          (LPSTR) hb_parcx( 3 )
-                                         ) ) ;
+                                         ) );
 }
 
 
@@ -335,11 +337,11 @@ HB_FUNC( PLAYMETAFILERECORD )
 
    // Your code goes here
 
-   hb_retl( PlayMetaFileRecord( (HDC) hb_parnl( 1 ) ,
+   hb_retl( PlayMetaFileRecord( (HDC) HB_PARWH( 1 ) ,
                                 lpHandleTable       ,
                                 lpMetaRecord        ,
                                 (UINT) hb_parni( 4 )
-                                ) ) ;
+                                ) );
 }
 
 */
@@ -355,7 +357,7 @@ HB_FUNC( SETENHMETAFILEBITS )
 
    // Your code goes here
 
-   hb_retnl( (LONG) SetEnhMetaFileBits( (UINT) hb_parni( 1 ), &BYTE ) ) ;
+   HB_RETWH( SetEnhMetaFileBits( (UINT) hb_parni( 1 ), &BYTE ) );
 }
 
 */
@@ -373,11 +375,11 @@ HB_FUNC( SETWINMETAFILEBITS )
 
    // Your code goes here
 
-   hb_retnl( (LONG) SetWinMetaFileBits( (UINT) hb_parni( 1 ),
+   HB_RETWH( SetWinMetaFileBits( (UINT) hb_parni( 1 ),
                                         &BYTE               ,
-                                        (HDC) hb_parnl( 3 ) ,
+                                        (HDC) HB_PARWH( 3 ) ,
                                         &&METAFILEPICT
-                                        ) ) ;
+                                        ) );
 }
 
 */
@@ -397,12 +399,12 @@ HB_FUNC( ENUMENHMETAFILE )
 
    if ( ISARRAY(5) && Array2Rect( hb_param(5,HB_IT_ARRAY), &rc ))
 
-   hb_retl( EnumEnhMetaFile( (HDC) hb_parnl( 1 )         ,
-                             (HENHMETAFILE) hb_parnl( 2 ),
+   hb_retl( EnumEnhMetaFile( (HDC) HB_PARWH( 1 )         ,
+                             (HENHMETAFILE) HB_PARWH( 2 ),
                              enhmfEnumProc               ,
                              lpVoid                      ,
                              &rc
-                             ) ) ;
+                             ) );
 }
 
 */
@@ -424,10 +426,10 @@ HB_FUNC( GETENHMETAFILEBITS )
 
    // Your code goes here
 
-   hb_retni( GetEnhMetaFileBits( (HENHMETAFILE) hb_parnl( 1 ),
+   hb_retni( GetEnhMetaFileBits( (HENHMETAFILE) HB_PARWH( 1 ),
                                  (UINT) hb_parni( 2 )        ,
                                  lpByte
-                                 ) ) ;
+                                 ) );
 }
 
 */
@@ -444,10 +446,10 @@ HB_FUNC( GETENHMETAFILEHEADER )
 
    // Your code goes here
 
-   hb_retni( GetEnhMetaFileHeader( (HENHMETAFILE) hb_parnl( 1 ),
+   hb_retni( GetEnhMetaFileHeader( (HENHMETAFILE) HB_PARWH( 1 ),
                                    (UINT) hb_parni( 2 )        ,
                                    lPenhMetaHeader
-                                   ) ) ;
+                                   ) );
 }
 
 */
@@ -463,10 +465,10 @@ HB_FUNC( GETENHMETAFILEPALETTEENTRIES )
 
    // Your code goes here
 
-   hb_retni( GetEnhMetaFilePaletteEntries( (HENHMETAFILE) hb_parnl( 1 ),
+   hb_retni( GetEnhMetaFilePaletteEntries( (HENHMETAFILE) HB_PARWH( 1 ),
                                            (UINT) hb_parni( 2 )        ,
                                            lpPaletteEntry
-                                           ) ) ;
+                                           ) );
 }
 
 */
@@ -482,11 +484,10 @@ HB_FUNC( GETENHMETAFILEPIXELFORMAT )
 
    // Your code goes here
 
-   hb_retni( GetEnhMetaFilePixelFormat( (HENHMETAFILE) hb_parnl( 1 ),
+   hb_retni( GetEnhMetaFilePixelFormat( (HENHMETAFILE) HB_PARWH( 1 ),
                                         (UINT) hb_parni( 2 )        ,
                                         &PixelFormatdescriptor
-                                        ) ) ;
+                                        ) );
 }
 
 */
-

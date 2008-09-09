@@ -7,6 +7,8 @@
 
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <shlobj.h>
 //#include <commctrl.h>
@@ -22,7 +24,7 @@
 
 HB_FUNC( GLOBALALLOC )
 {
-   hb_retnl( (LONG) GlobalAlloc( (UINT) hb_parni( 1 ),(SIZE_T) hb_parnl(2) ) ) ;
+   HB_RETWH( GlobalAlloc( (UINT) hb_parni( 1 ),(SIZE_T) hb_parnl(2) ) );
 }
 
 
@@ -32,10 +34,10 @@ HB_FUNC( GLOBALALLOC )
 HB_FUNC( GLOBALREALLOC )
 {
 
-   hb_retnl( (LONG) GlobalReAlloc( (HGLOBAL) hb_parnl( 1 ),
+   HB_RETWH( GlobalReAlloc( (HGLOBAL) HB_PARWH( 1 ),
                                    (SIZE_T) hb_parnl( 2 )   ,
                                    (UINT) hb_parni( 3 )
-                                   ) ) ;
+                                   ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -43,7 +45,7 @@ HB_FUNC( GLOBALREALLOC )
 
 HB_FUNC( GLOBALSIZE )
 {
-   hb_retnl( (LONG) GlobalSize( (HGLOBAL) hb_parnl( 1 ) ) ) ;
+   hb_retnl( (LONG) GlobalSize( (HGLOBAL) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -51,7 +53,7 @@ HB_FUNC( GLOBALSIZE )
 
 HB_FUNC( GLOBALFLAGS )
 {
-   hb_retni( (UINT) GlobalFlags( (HGLOBAL) hb_parnl( 1 ) ) ) ;
+   hb_retni( (UINT) GlobalFlags( (HGLOBAL) HB_PARWH( 1 ) ) );
 }
 
 
@@ -60,7 +62,7 @@ HB_FUNC( GLOBALFLAGS )
 
 HB_FUNC( GLOBALLOCK )
 {
-   hb_retnl( (LONG) GlobalLock( (HGLOBAL) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( GlobalLock( (HGLOBAL) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -68,7 +70,7 @@ HB_FUNC( GLOBALLOCK )
 
 HB_FUNC( GLOBALHANDLE )
 {
-   hb_retnl( (LONG) GlobalHandle( (LPCVOID) hb_parnl(1) ) ) ;
+   HB_RETWH( GlobalHandle( (LPCVOID) HB_PARWH(1) ) );
 }
 
 
@@ -78,7 +80,7 @@ HB_FUNC( GLOBALHANDLE )
 
 HB_FUNC( GLOBALUNLOCK )
 {
-   hb_retl( GlobalUnlock( (HGLOBAL) hb_parnl( 1 ) ) ) ;
+   hb_retl( GlobalUnlock( (HGLOBAL) HB_PARWH( 1 ) ) );
 }
 
 
@@ -88,7 +90,7 @@ HB_FUNC( GLOBALUNLOCK )
 
 HB_FUNC( GLOBALFREE )
 {
-   hb_retnl( (LONG) GlobalFree( (HGLOBAL) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( GlobalFree( (HGLOBAL) HB_PARWH( 1 ) ) );
 }
 
 
@@ -99,7 +101,7 @@ HB_FUNC( GLOBALFREE )
 
 HB_FUNC( GLOBALCOMPACT )
 {
-// (SIZE_T) GlobalCompact( (DWORD) hb_parnl( 1 ) ) ) ;
+// (SIZE_T) GlobalCompact( (DWORD) hb_parnl( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -109,7 +111,7 @@ HB_FUNC( GLOBALCOMPACT )
 
 HB_FUNC( GLOBALFIX )
 {
-   GlobalFix( (HGLOBAL) hb_parnl( 1 ) ) ;
+   GlobalFix( (HGLOBAL) HB_PARWH( 1 ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -119,7 +121,7 @@ HB_FUNC( GLOBALFIX )
 
 HB_FUNC( GLOBALUNFIX )
 {
-   GlobalUnfix( (HGLOBAL) hb_parnl( 1 ) ) ;
+   GlobalUnfix( (HGLOBAL) HB_PARWH( 1 ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -129,7 +131,7 @@ HB_FUNC( GLOBALUNFIX )
 
 HB_FUNC( GLOBALWIRE )
 {
-   hb_retnl( (LONG) GlobalWire( (HGLOBAL) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( GlobalWire( (HGLOBAL) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -139,7 +141,7 @@ HB_FUNC( GLOBALWIRE )
 
 HB_FUNC( GLOBALUNWIRE )
 {
-   hb_retl( GlobalUnWire( (HGLOBAL) hb_parnl( 1 ) ) ) ;
+   hb_retl( GlobalUnWire( (HGLOBAL) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -157,7 +159,7 @@ HB_FUNC( GLOBALMEMORYSTATUS )
 
    // Your code goes here
 
-   GlobalMemoryStatus( lpBuffer ) ;
+   GlobalMemoryStatus( lpBuffer );
 }
 
    Last change:  WN   29 May 2002   11:26 pm
@@ -177,7 +179,7 @@ HB_FUNC( GLOBALMEMORYSTATUSEX )
 
    // Your code goes here
 
-   hb_retl( GlobalMemoryStatusEx( lpBuffer ) ) ;
+   hb_retl( GlobalMemoryStatusEx( lpBuffer ) );
 }
 
 */
@@ -187,7 +189,7 @@ HB_FUNC( GLOBALMEMORYSTATUSEX )
 
 HB_FUNC( LOCALALLOC )
 {
-   hb_retnl( (LONG) LocalAlloc( (UINT) hb_parni( 1 ), (SIZE_T) hb_parni( 2 ) ) ) ;
+   HB_RETWH( LocalAlloc( (UINT) hb_parni( 1 ), (SIZE_T) hb_parni( 2 ) ) );
 }
 
 
@@ -197,10 +199,10 @@ HB_FUNC( LOCALALLOC )
 HB_FUNC( LOCALREALLOC )
 {
 
-   hb_retnl( (LONG) LocalReAlloc( (HLOCAL) hb_parnl( 1 ),
+   HB_RETWH( LocalReAlloc( (HLOCAL) HB_PARWH( 1 ),
                                   (SIZE_T) hb_parni( 2 )         ,
                                   (UINT) hb_parni( 3 )  
-                                  ) ) ;
+                                  ) );
 }
 
 
@@ -210,7 +212,7 @@ HB_FUNC( LOCALREALLOC )
 
 HB_FUNC( LOCALLOCK )
 {
-   hb_retnl( (LONG) LocalLock( (HLOCAL) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( LocalLock( (HLOCAL) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -219,7 +221,7 @@ HB_FUNC( LOCALLOCK )
 
 HB_FUNC( LOCALHANDLE )
 {
-   hb_retnl( (LONG) LocalHandle( (LPCVOID) hb_parnl(1) ) ) ;
+   HB_RETWH( LocalHandle( (LPCVOID) HB_PARWH(1) ) );
 }
 
 
@@ -229,7 +231,7 @@ HB_FUNC( LOCALHANDLE )
 
 HB_FUNC( LOCALUNLOCK )
 {
-   hb_retl( LocalUnlock( (HLOCAL) hb_parnl( 1 ) ) ) ;
+   hb_retl( LocalUnlock( (HLOCAL) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -238,7 +240,7 @@ HB_FUNC( LOCALUNLOCK )
 
 HB_FUNC( LOCALSIZE )
 {
-   hb_retni( LocalSize( (HLOCAL) hb_parnl( 1 ) ) ) ;
+   hb_retni( LocalSize( (HLOCAL) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -247,7 +249,7 @@ HB_FUNC( LOCALSIZE )
 
 HB_FUNC( LOCALFLAGS )
 {
-   hb_retni( LocalFlags( (HLOCAL) hb_parnl( 1 ) ) ) ;
+   hb_retni( LocalFlags( (HLOCAL) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -256,7 +258,7 @@ HB_FUNC( LOCALFLAGS )
 
 HB_FUNC( LOCALFREE )
 {
-   hb_retnl( (LONG) LocalFree( (HLOCAL) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( LocalFree( (HLOCAL) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -265,7 +267,7 @@ HB_FUNC( LOCALFREE )
 
 HB_FUNC( LOCALSHRINK )
 {
-   hb_retni( LocalShrink( (HLOCAL) hb_parnl( 1 ), (UINT) hb_parni( 2 ) ) ) ;
+   hb_retni( LocalShrink( (HLOCAL) HB_PARWH( 1 ), (UINT) hb_parni( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -274,8 +276,5 @@ HB_FUNC( LOCALSHRINK )
 
 HB_FUNC( LOCALCOMPACT )
 {
-   hb_retni( LocalCompact( (UINT) hb_parni( 1 ) ) ) ;
+   hb_retni( LocalCompact( (UINT) hb_parni( 1 ) ) );
 }
-
-
-

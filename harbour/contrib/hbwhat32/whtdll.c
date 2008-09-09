@@ -8,6 +8,8 @@
 
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 
 #include <windows.h>
 #include <shlobj.h>
@@ -41,7 +43,7 @@
 
 HB_FUNC( LOADLIBRARY )
 {
-   hb_retnl( (LONG) LoadLibraryA( (LPCSTR) hb_parcx( 1 ) ) );
+   HB_RETWH( LoadLibraryA( (LPCSTR) hb_parcx( 1 ) ) );
 }
 */
 //-----------------------------------------------------------------------------
@@ -50,8 +52,8 @@ HB_FUNC( LOADLIBRARY )
 
 HB_FUNC( LOADLIBRARYEX )
 {
-   hb_retnl( (LONG) LoadLibraryExA( (LPCSTR) hb_parcx( 1 ) ,
-                                    (HANDLE) hb_parnl( 2 ),
+   HB_RETWH( LoadLibraryExA( (LPCSTR) hb_parcx( 1 ) ,
+                                    (HANDLE) HB_PARWH( 2 ),
                                     (DWORD) hb_parnl( 3 )
                                     ) );
 }
@@ -63,7 +65,7 @@ HB_FUNC( LOADLIBRARYEX )
 
 HB_FUNC( FREELIBRARY )
 {
-   hb_retl( FreeLibrary( (HMODULE) hb_parnl( 1 ) ) );
+   hb_retl( FreeLibrary( (HMODULE) HB_PARWH( 1 ) ) );
 }
 */
 
@@ -73,7 +75,7 @@ HB_FUNC( FREELIBRARY )
 
 HB_FUNC( FREELIBRARYANDEXITTHREAD )
 {
-   FreeLibraryAndExitThread( (HMODULE) hb_parnl( 1 ),
+   FreeLibraryAndExitThread( (HMODULE) HB_PARWH( 1 ),
                              (DWORD) hb_parnl( 2 )
                             );
 }
@@ -86,7 +88,7 @@ HB_FUNC( GETPROCADDRESS )
   ULONG dwProcAddr;
   char  cFuncName[ MAX_PATH + 1 ];
 
-    if ((dwProcAddr = (ULONG) GetProcAddress( (HMODULE) hb_parnl(1),
+    if ((dwProcAddr = (ULONG) GetProcAddress( (HMODULE) HB_PARWH(1),
                                               ISCHAR( 2 ) ? (LPCSTR) hb_parcx(2) :
                                               (LPCSTR) MAKELONG((WORD) hb_parni(2), 0) ) ) == 0 )
     {
@@ -95,7 +97,7 @@ HB_FUNC( GETPROCADDRESS )
           // try forced ANSI flavour ?
           hb_strncpy( cFuncName, hb_parcx( 2 ), sizeof( cFuncName ) - 2 );
           hb_strncat( cFuncName, "A", sizeof( cFuncName ) - 1 );
-          dwProcAddr = (ULONG) GetProcAddress((HMODULE) hb_parnl(1), cFuncName);
+          dwProcAddr = (ULONG) GetProcAddress((HMODULE) HB_PARWH(1), cFuncName);
        }
     }
 
@@ -259,8 +261,8 @@ HB_FUNC( CALLDLL )
     int Flags;
     double DblParms[15];
     DYNAPARM   Parm[15];
-    HINSTANCE  hInst = (HINSTANCE) hb_parnl( 1 );
-    DWORD      lpFunction = (DWORD) hb_parnl( 2 );
+    HINSTANCE  hInst = (HINSTANCE) HB_PARWH( 1 );
+    DWORD      lpFunction = (DWORD) HB_PARWH( 2 );
     RESULT     rc;
 
     if ( hInst == NULL )
@@ -437,6 +439,3 @@ HB_FUNC( CALLDLL )
             break;
     }
 }
-
-
-

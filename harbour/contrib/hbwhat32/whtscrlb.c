@@ -6,6 +6,9 @@
 // Scrollbar API functions
 
 #define _WIN32_WINNT   0x0400
+
+#include "hbwhat.h"
+
 #include <windows.h>
 
 #include "hbapi.h"
@@ -17,11 +20,11 @@
 
 HB_FUNC( SETSCROLLPOS )
 {
-   hb_retni( SetScrollPos( (HWND) hb_parnl( 1 ),
+   hb_retni( SetScrollPos( (HWND) HB_PARWH( 1 ),
                            hb_parni( 2 )       ,
                            hb_parni( 3 )       ,
                            hb_parl( 4 )
-                         ) ) ;
+                         ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -30,7 +33,7 @@ HB_FUNC( SETSCROLLPOS )
 
 HB_FUNC( GETSCROLLPOS )
 {
-   hb_retni( GetScrollPos( (HWND) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retni( GetScrollPos( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -39,12 +42,12 @@ HB_FUNC( GETSCROLLPOS )
 
 HB_FUNC( SETSCROLLRANGE )
 {
-   hb_retl( SetScrollRange( (HWND) hb_parnl( 1 ),
+   hb_retl( SetScrollRange( (HWND) HB_PARWH( 1 ),
                             hb_parni( 2 )       ,
                             hb_parni( 3 )       ,
                             hb_parni( 4 )       ,
                             hb_parl( 5 )
-                          ) ) ;
+                          ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -59,19 +62,19 @@ HB_FUNC( GETSCROLLRANGE )
    LPINT lpMinPos = 0 ;
    LPINT lpMaxPos = 0 ;
 
-   if ( GetScrollRange( (HWND) hb_parnl( 1 ), hb_parni( 2 ), lpMinPos, lpMaxPos ) )
+   if ( GetScrollRange( (HWND) HB_PARWH( 1 ), hb_parni( 2 ), lpMinPos, lpMaxPos ) )
    {
       if ( ISBYREF(3) && ISBYREF(4) )
       {
-         hb_storni(3,*lpMinPos) ;
-         hb_storni(4,*lpMaxPos) ;
-         hb_retl(1) ;
+         hb_storni(3,*lpMinPos);
+         hb_storni(4,*lpMaxPos);
+         hb_retl(1);
       }
       else
         hb_retl(0);
    }
    else
-     hb_retl(0) ;
+     hb_retl(0);
 
 }
 
@@ -82,7 +85,7 @@ HB_FUNC( GETSCROLLRANGE )
 
 HB_FUNC( SHOWSCROLLBAR )
 {
-   hb_retl( ShowScrollBar( (HWND) hb_parnl( 1 ), hb_parni( 2 ), hb_parl( 3 ) ) ) ;
+   hb_retl( ShowScrollBar( (HWND) HB_PARWH( 1 ), hb_parni( 2 ), hb_parl( 3 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -91,10 +94,10 @@ HB_FUNC( SHOWSCROLLBAR )
 
 HB_FUNC( ENABLESCROLLBAR )
 {
-   hb_retl( EnableScrollBar( (HWND) hb_parnl( 1 ),
+   hb_retl( EnableScrollBar( (HWND) HB_PARWH( 1 ),
                              (UINT) hb_parni( 2 ),
                              (UINT) hb_parni( 3 )
-                           ) ) ;
+                           ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -108,11 +111,11 @@ HB_FUNC( SETSCROLLINFO )
 {
    SCROLLINFO * scrollInfo =  (SCROLLINFO * ) hb_parc( 3 ); //hb_param( 3, HB_IT_STRING )->item.asString.value;
 
-   hb_retni( SetScrollInfo( (HWND) hb_parnl( 1 ),
+   hb_retni( SetScrollInfo( (HWND) HB_PARWH( 1 ),
                             hb_parni( 2 )       ,
                             scrollInfo          ,
                             hb_parl( 4 )
-                          ) ) ;
+                          ) );
 }
 
 
@@ -125,10 +128,10 @@ HB_FUNC( SETSCROLLINFO )
 HB_FUNC( GETSCROLLINFO )
 {
    SCROLLINFO si ;
-   si.cbSize = sizeof(SCROLLINFO) ;
+   si.cbSize = sizeof(SCROLLINFO);
    si.fMask  = SIF_ALL ;
 
-   if ( GetScrollInfo( (HWND) hb_parnl( 1 ), hb_parni( 2 ), &si ) )
+   if ( GetScrollInfo( (HWND) HB_PARWH( 1 ), hb_parni( 2 ), &si ) )
       hb_retclen( (char *) &si, sizeof( SCROLLINFO ) );
 
       // problem
@@ -149,7 +152,7 @@ HB_FUNC( GETSCROLLBARINFO )
 {
    SCROLLBARINFO sbi     ;
 
-   if ( GetScrollBarInfo( (HWND) hb_parnl( 1 ), hb_parnl( 2 ), &sbi ) )
+   if ( GetScrollBarInfo( (HWND) HB_PARWH( 1 ), hb_parnl( 2 ), &sbi ) )
        hb_retclen( (char *) &sbi, sizeof( SCROLLBARINFO ) );
 
      // problem

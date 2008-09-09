@@ -7,6 +7,8 @@
 
 #ifndef __WATCOMC__
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <commctrl.h>
 #include <shlobj.h>
@@ -26,11 +28,11 @@ HB_FUNC( TABCTRL_CREATE )
    LONG hFont;
    LONG style;
    style = ISNIL(6) ? 0 : (LONG) hb_parnl(6);
-   hwnd = (HWND) hb_parnl (1);
+   hwnd = (HWND) HB_PARWH (1);
    hFont = SendMessage( hwnd, WM_GETFONT, 0, 0);
-   hbutton = CreateWindowEx(0, WC_TABCONTROL, NULL , style, hb_parni(2), hb_parni(3) , hb_parni(4), hb_parni(5) , hwnd,NULL, GetModuleHandle(NULL) , NULL ) ;
-   SendMessage(hbutton,(UINT)WM_SETFONT, (WPARAM) hFont, 1 ) ;
-   hb_retnl ( (LONG) hbutton );
+   hbutton = CreateWindowEx(0, WC_TABCONTROL, NULL , style, hb_parni(2), hb_parni(3) , hb_parni(4), hb_parni(5) , hwnd,NULL, GetModuleHandle(NULL) , NULL );
+   SendMessage(hbutton,(UINT)WM_SETFONT, (WPARAM) hFont, 1 );
+   HB_RETWH( hbutton );
 }
 
 //---------------------------------------------------------------------------//
@@ -39,14 +41,14 @@ HB_FUNC( TABCTRL_CREATE )
 
 HB_FUNC( TABCTRL_ADDITEM )
 {
-   int iCount = TabCtrl_GetItemCount( (HWND) hb_parnl(1) );
+   int iCount = TabCtrl_GetItemCount( (HWND) HB_PARWH(1) );
    TC_ITEM item;
 
    item.mask = TCIF_TEXT | TCIF_IMAGE;
    item.iImage = ISNIL(3) ? -1 : (LONG) hb_parnl(3);
    item.pszText = (LPSTR) hb_parcx(2);
 
-   hb_retni( TabCtrl_InsertItem( (HWND) hb_parnl(1), iCount, &item) );
+   hb_retni( TabCtrl_InsertItem( (HWND) HB_PARWH(1), iCount, &item) );
 }
 
 //---------------------------------------------------------------------------//
@@ -57,21 +59,21 @@ HB_FUNC( TABCTRL_INSERTITEM )
    item.mask = TCIF_TEXT | TCIF_IMAGE;
    item.iImage = ISNIL(4) ? -1 : (LONG) hb_parnl(4);
    item.pszText = (LPSTR) hb_parcx(2);
-   hb_retni( TabCtrl_InsertItem( (HWND) hb_parnl(1), (INT) hb_parni(3), &item) );
+   hb_retni( TabCtrl_InsertItem( (HWND) HB_PARWH(1), (INT) hb_parni(3), &item) );
 }
 
 //---------------------------------------------------------------------------//
 
 HB_FUNC( TABCTRL_SETCURSEL )
 {
-   hb_retni( TabCtrl_SetCurSel( (HWND) hb_parnl(1) , hb_parni (2) ) );
+   hb_retni( TabCtrl_SetCurSel( (HWND) HB_PARWH(1) , hb_parni (2) ) );
 }
 
 //---------------------------------------------------------------------------//
 
 HB_FUNC( TABCTRL_GETCURSEL )
 {
-   hb_retni ( TabCtrl_GetCurSel( (HWND) hb_parnl (1) ) ) ;
+   hb_retni ( TabCtrl_GetCurSel( (HWND) HB_PARWH (1) ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -79,7 +81,7 @@ HB_FUNC( TABCTRL_GETCURSEL )
 HB_FUNC( TABCTRL_GETITEM )
 {
    TC_ITEM item;
-   hb_retl(TabCtrl_GetItem( (HWND) hb_parnl (1), (int) hb_parni(2) , &item ) );
+   hb_retl(TabCtrl_GetItem( (HWND) HB_PARWH (1), (int) hb_parni(2) , &item ) );
 
    // assign  item to param 3
 }
@@ -88,7 +90,7 @@ HB_FUNC( TABCTRL_GETITEM )
 
 HB_FUNC( TABCTRL_GETITEMCOUNT )
 {
-   hb_retni( TabCtrl_GetItemCount( (HWND) hb_parnl(1) ) ) ;
+   hb_retni( TabCtrl_GetItemCount( (HWND) HB_PARWH(1) ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -98,7 +100,7 @@ HB_FUNC( TABCTRL_GETITEMRECT )
    RECT rc;
    PHB_ITEM aRect = hb_itemArrayNew( 4 );
 
-   TabCtrl_GetItemRect((HWND) hb_parnl (1), hb_parni(2), &rc);
+   TabCtrl_GetItemRect((HWND) HB_PARWH (1), hb_parni(2), &rc);
 
    hb_arraySetNL( aRect, 1, rc.left );
    hb_arraySetNL( aRect, 2, rc.top );
@@ -112,7 +114,7 @@ HB_FUNC( TABCTRL_GETITEMRECT )
 
 HB_FUNC( TABCTRL_GETROWCOUNT )
 {
-   hb_retni( TabCtrl_GetRowCount( (HWND) hb_parnl(1) ) ) ;
+   hb_retni( TabCtrl_GetRowCount( (HWND) HB_PARWH(1) ) );
 }
 
 
@@ -123,7 +125,7 @@ HB_FUNC( TABCTRL_GETROWCOUNT )
 
 HB_FUNC( TABCTRL_GETIMAGELIST )
 {
-   hb_retnl( (LONG) TabCtrl_GetImageList( (HWND) hb_parnl(1) ) ) ;
+   HB_RETWH( TabCtrl_GetImageList( (HWND) HB_PARWH(1) ) );
 }
 
 
@@ -133,8 +135,8 @@ HB_FUNC( TABCTRL_GETIMAGELIST )
 
 HB_FUNC( TABCTRL_SETIMAGELIST )
 {
-   hb_retnl( (LONG) TabCtrl_SetImageList( (HWND) hb_parnl( 1 ),
-                    (LPARAM)(HIMAGELIST) hb_parnl( 2 ) ) ) ;
+   HB_RETWH( TabCtrl_SetImageList( (HWND) HB_PARWH( 1 ),
+                    (LPARAM)(HIMAGELIST) hb_parnl( 2 ) ) );
 }
 
 
@@ -148,7 +150,7 @@ HB_FUNC( TABCTRL_SETITEM )
    item.mask = TCIF_TEXT | TCIF_IMAGE;
    item.iImage = -1;
    item.pszText = (LPSTR) hb_parcx( 3 );
-   hb_retl( TabCtrl_SetItem( (HWND) hb_parnl( 1 ), hb_parni( 2 ), &item) ) ;
+   hb_retl( TabCtrl_SetItem( (HWND) HB_PARWH( 1 ), hb_parni( 2 ), &item) );
 }
 
 //---------------------------------------------------------------------------//
@@ -157,7 +159,7 @@ HB_FUNC( TABCTRL_SETITEM )
 
 HB_FUNC( TABCTRL_DELETEALLITEMS )
 {
-   hb_retl(TabCtrl_DeleteAllItems((HWND) hb_parnl(1)));
+   hb_retl(TabCtrl_DeleteAllItems((HWND) HB_PARWH(1)));
 }
 
 //---------------------------------------------------------------------------//
@@ -166,7 +168,7 @@ HB_FUNC( TABCTRL_DELETEALLITEMS )
 
 HB_FUNC( TABCTRL_DELETEITEM )
 {
-   hb_retl(TabCtrl_DeleteItem((HWND) hb_parnl(1), (WPARAM) hb_parni(2)));
+   hb_retl(TabCtrl_DeleteItem((HWND) HB_PARWH(1), (WPARAM) hb_parni(2)));
 }
 
 //---------------------------------------------------------------------------//
@@ -179,7 +181,7 @@ HB_FUNC( TABCTRL_HITTEST )
 {
    TCHITTESTINFO tcht ;
 
-   hb_parni( TabCtrl_HitTest( (HWND) hb_parnl(1), &tcht ) ) ;
+   hb_parni( TabCtrl_HitTest( (HWND) HB_PARWH(1), &tcht ) );
 
    // assign to structure in param 2
 
@@ -192,7 +194,7 @@ HB_FUNC( TABCTRL_HITTEST )
 
 HB_FUNC( TABCTRL_SETITEMEXTRA )
 {
-   hb_retl( TabCtrl_SetItemExtra( (HWND) hb_parnl(1), (int) hb_parni(2) ) ) ;
+   hb_retl( TabCtrl_SetItemExtra( (HWND) HB_PARWH(1), (int) hb_parni(2) ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -210,12 +212,12 @@ HB_FUNC( TABCTRL_ADJUSTRECT )
      rc.right  = hb_parnl(3,3);
      rc.bottom = hb_parnl(3,4);
 
-     TabCtrl_AdjustRect( (HWND) hb_parnl(1), (BOOL) hb_parl(2), &rc );
+     TabCtrl_AdjustRect( (HWND) HB_PARWH(1), (BOOL) hb_parl(2), &rc );
 
-     hb_stornl( rc.left  , 3 ,1 ) ;
-     hb_stornl( rc.top   , 3, 2 ) ;
-     hb_stornl( rc.right , 3 ,3 ) ;
-     hb_stornl( rc.bottom, 3, 4 ) ;
+     hb_stornl( rc.left  , 3 ,1 );
+     hb_stornl( rc.top   , 3, 2 );
+     hb_stornl( rc.right , 3 ,3 );
+     hb_stornl( rc.bottom, 3, 4 );
   }
 
 }
@@ -226,7 +228,7 @@ HB_FUNC( TABCTRL_ADJUSTRECT )
 
 HB_FUNC( TABCTRL_SETITEMSIZE )
 {
-   hb_retnl( TabCtrl_SetItemSize( (HWND) hb_parnl(1), (int) hb_parni(2), (int) hb_parni(3) ) );
+   hb_retnl( TabCtrl_SetItemSize( (HWND) HB_PARWH(1), (int) hb_parni(2), (int) hb_parni(3) ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -235,7 +237,7 @@ HB_FUNC( TABCTRL_SETITEMSIZE )
 
 HB_FUNC( TABCTRL_REMOVEIMAGE )
 {
-  TabCtrl_RemoveImage( (HWND) hb_parnl(1), (int) hb_parni(2) ) ;
+  TabCtrl_RemoveImage( (HWND) HB_PARWH(1), (int) hb_parni(2) );
 }
 
 //---------------------------------------------------------------------------//
@@ -244,7 +246,7 @@ HB_FUNC( TABCTRL_REMOVEIMAGE )
 
 HB_FUNC( TABCTRL_SETPADDING )
 {
-   TabCtrl_SetPadding( (HWND) hb_parnl(1), (int) hb_parni(2), (int) hb_parni(3) ) ;
+   TabCtrl_SetPadding( (HWND) HB_PARWH(1), (int) hb_parni(2), (int) hb_parni(3) );
 }
 
 //---------------------------------------------------------------------------//
@@ -253,7 +255,7 @@ HB_FUNC( TABCTRL_SETPADDING )
 
 HB_FUNC( TABCTRL_GETTOOLTIPS )
 {
-   hb_retnl( (LONG) TabCtrl_GetToolTips( (HWND) hb_parnl( 1 ) ) );
+   HB_RETWH( TabCtrl_GetToolTips( (HWND) HB_PARWH( 1 ) ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -262,7 +264,7 @@ HB_FUNC( TABCTRL_GETTOOLTIPS )
 
 HB_FUNC( TABCTRL_SETTOOLTIPS )
 {
-   TabCtrl_SetToolTips( (HWND) hb_parnl(1), (HWND) hb_parnl(2) ) ;
+   TabCtrl_SetToolTips( (HWND) HB_PARWH(1), (HWND) HB_PARWH(2) );
 }
 
 //---------------------------------------------------------------------------//
@@ -271,7 +273,7 @@ HB_FUNC( TABCTRL_SETTOOLTIPS )
 
 HB_FUNC( TABCTRL_GETCURFOCUS )
 {
-   hb_retni( TabCtrl_GetCurFocus( (HWND) hb_parnl(1) ) );
+   hb_retni( TabCtrl_GetCurFocus( (HWND) HB_PARWH(1) ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -280,7 +282,7 @@ HB_FUNC( TABCTRL_GETCURFOCUS )
 
 HB_FUNC( TABCTRL_SETCURFOCUS )
 {
-  TabCtrl_SetCurFocus( (HWND) hb_parnl(1), (int) hb_parni(2) );
+  TabCtrl_SetCurFocus( (HWND) HB_PARWH(1), (int) hb_parni(2) );
   hb_ret();
 }
 
@@ -290,7 +292,7 @@ HB_FUNC( TABCTRL_SETCURFOCUS )
 
 HB_FUNC( TABCTRL_SETMINTABWIDTH )
 {
-   hb_retni( TabCtrl_SetMinTabWidth( (HWND) hb_parnl(1), (int) hb_parni(2) ) );
+   hb_retni( TabCtrl_SetMinTabWidth( (HWND) HB_PARWH(1), (int) hb_parni(2) ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -299,7 +301,7 @@ HB_FUNC( TABCTRL_SETMINTABWIDTH )
 
 HB_FUNC( TABCTRL_DESELECTALL )
 {
-   TabCtrl_DeselectAll( (HWND) hb_parnl(1), (UINT) hb_parni( 2 ) ) ;
+   TabCtrl_DeselectAll( (HWND) HB_PARWH(1), (UINT) hb_parni( 2 ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -308,7 +310,7 @@ HB_FUNC( TABCTRL_DESELECTALL )
 
 HB_FUNC( TABCTRL_HIGHLIGHTITEM )
 {
-   hb_retl( TabCtrl_HighlightItem( (HWND) hb_parnl(1), (int) hb_parni(2), (WORD) hb_parni(3) ) );
+   hb_retl( TabCtrl_HighlightItem( (HWND) HB_PARWH(1), (int) hb_parni(2), (WORD) hb_parni(3) ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -317,7 +319,7 @@ HB_FUNC( TABCTRL_HIGHLIGHTITEM )
 
 HB_FUNC( TABCTRL_SETEXTENDEDSTYLE )
 {
-   hb_retnl( TabCtrl_SetExtendedStyle( (HWND) hb_parnl(1), (DWORD) hb_parnl(2) ) ) ;
+   hb_retnl( TabCtrl_SetExtendedStyle( (HWND) HB_PARWH(1), (DWORD) hb_parnl(2) ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -326,7 +328,7 @@ HB_FUNC( TABCTRL_SETEXTENDEDSTYLE )
 
 HB_FUNC( TABCTRL_GETEXTENDEDSTYLE )
 {
-   hb_retnl( TabCtrl_GetExtendedStyle( (HWND) hb_parnl(1) ) ) ;
+   hb_retnl( TabCtrl_GetExtendedStyle( (HWND) HB_PARWH(1) ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -335,7 +337,7 @@ HB_FUNC( TABCTRL_GETEXTENDEDSTYLE )
 
 HB_FUNC( TABCTRL_SETUNICODEFORMAT )
 {
-   hb_retl( TabCtrl_SetUnicodeFormat( (HWND) hb_parnl(1), hb_parl(2) ) );
+   hb_retl( TabCtrl_SetUnicodeFormat( (HWND) HB_PARWH(1), hb_parl(2) ) );
 }
 
 //---------------------------------------------------------------------------//
@@ -344,7 +346,7 @@ HB_FUNC( TABCTRL_SETUNICODEFORMAT )
 
 HB_FUNC( TABCTRL_GETUNICODEFORMAT )
 {
-   hb_retl( TabCtrl_GetUnicodeFormat( (HWND) hb_parnl(1) ) ) ;
+   hb_retl( TabCtrl_GetUnicodeFormat( (HWND) HB_PARWH(1) ) );
 }
 
 //---------------------------------------------------------------------------//

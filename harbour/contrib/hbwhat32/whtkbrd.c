@@ -20,6 +20,8 @@ Modified functions:
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 //#include <commctrl.h>
 //#include <winuser.h>
@@ -33,7 +35,7 @@ Modified functions:
 
 HB_FUNC( OEMKEYSCAN )
 {
-   hb_retnl( OemKeyScan( (WORD) hb_parni(1) ) ) ;
+   hb_retnl( OemKeyScan( (WORD) hb_parni(1) ) );
 }
 
 
@@ -45,7 +47,7 @@ HB_FUNC( VKKEYSCAN )
    char *Buffer ;
    Buffer =hb_parcx( 1 );
 
-   hb_retni( VkKeyScan( *Buffer ) ) ;
+   hb_retni( VkKeyScan( *Buffer ) );
 }
 
 
@@ -55,9 +57,9 @@ HB_FUNC( VKKEYSCAN )
 HB_FUNC( VKKEYSCANEX )
 {
    char *Buffer ;
-   Buffer = hb_parcx( 1 ) ;
+   Buffer = hb_parcx( 1 );
 
-   hb_retni( VkKeyScanEx( *Buffer, (HKL) hb_parnl( 2 ) ) ) ;
+   hb_retni( VkKeyScanEx( *Buffer, (HKL) HB_PARWH( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -66,7 +68,7 @@ HB_FUNC( VKKEYSCANEX )
 
 HB_FUNC( GETKBCODEPAGE )
 {
-   hb_retni( GetKBCodePage(  ) ) ;
+   hb_retni( GetKBCodePage(  ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -75,7 +77,7 @@ HB_FUNC( GETKBCODEPAGE )
 
 HB_FUNC( GETKEYSTATE )
 {
-   hb_retni( GetKeyState( hb_parni( 1 ) ) ) ;
+   hb_retni( GetKeyState( hb_parni( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -84,7 +86,7 @@ HB_FUNC( GETKEYSTATE )
 
 HB_FUNC( GETASYNCKEYSTATE )
 {
-  hb_retni( GetAsyncKeyState( hb_parni( 1 ) ) ) ;
+  hb_retni( GetAsyncKeyState( hb_parni( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -98,7 +100,7 @@ HB_FUNC( GETKEYBOARDSTATE )
    BYTE lpKeyState[256] ;
 
    if ( GetKeyboardState( lpKeyState ))
-     hb_retclen( ( char *) lpKeyState, 256 ) ;
+     hb_retclen( ( char *) lpKeyState, 256 );
 }
 
 
@@ -111,7 +113,7 @@ HB_FUNC( GETKEYBOARDSTATE )
 
 HB_FUNC( SETKEYBOARDSTATE )
 {
-   hb_retl( SetKeyboardState( (LPBYTE) hb_parcx(1) ) ) ;
+   hb_retl( SetKeyboardState( (LPBYTE) hb_parcx(1) ) );
 }
 
 
@@ -125,9 +127,9 @@ HB_FUNC( GETKEYNAMETEXT )
 {
 
    char cText[MAX_PATH] ;
-   int iRet = GetKeyNameText( hb_parnl( 1 ), cText, MAX_PATH ) ;
+   int iRet = GetKeyNameText( hb_parnl( 1 ), cText, MAX_PATH );
    if ( iRet )
-     hb_retclen( cText, iRet ) ;
+     hb_retclen( cText, iRet );
 
 }
 
@@ -138,7 +140,7 @@ HB_FUNC( GETKEYNAMETEXT )
 
 HB_FUNC( GETKEYBOARDTYPE )
 {
-   hb_retni( GetKeyboardType( hb_parni( 1 ) ) ) ;
+   hb_retni( GetKeyboardType( hb_parni( 1 ) ) );
 }
 
 
@@ -148,7 +150,7 @@ HB_FUNC( GETKEYBOARDTYPE )
 
 HB_FUNC( MAPVIRTUALKEY )
 {
-   hb_retni( MapVirtualKey( (UINT) hb_parni( 1 ), (UINT) hb_parni( 2 ) ) ) ;
+   hb_retni( MapVirtualKey( (UINT) hb_parni( 1 ), (UINT) hb_parni( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -159,8 +161,8 @@ HB_FUNC( MAPVIRTUALKEYEX )
 {
    hb_retni( MapVirtualKeyEx( (UINT) hb_parni( 1 ),
                               (UINT) hb_parni( 2 ),
-                              (HKL) hb_parnl( 3 )
-                            ) ) ;
+                              (HKL) HB_PARWH( 3 )
+                            ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -168,7 +170,7 @@ HB_FUNC( MAPVIRTUALKEYEX )
 
 HB_FUNC( GETINPUTSTATE )
 {
-   hb_retl( GetInputState(  ) ) ;
+   hb_retl( GetInputState(  ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -177,7 +179,7 @@ HB_FUNC( GETINPUTSTATE )
 
 HB_FUNC( GETQUEUESTATUS )
 {
-   hb_retnl( (LONG) GetQueueStatus( (UINT) hb_parni( 1 ) ) ) ;
+   hb_retnl( (LONG) GetQueueStatus( (UINT) hb_parni( 1 ) ) );
 }
 
 
@@ -187,9 +189,9 @@ HB_FUNC( GETQUEUESTATUS )
 
 HB_FUNC( LOADACCELERATORS )
 {
-   hb_retnl( (LONG) LoadAccelerators( (HINSTANCE) hb_parnl( 1 ),
+   HB_RETWH( LoadAccelerators( (HINSTANCE) HB_PARWH( 1 ),
                                       (LPCSTR) hb_parcx( 2 )
-                                    ) ) ;
+                                    ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -214,17 +216,17 @@ HB_FUNC( CREATEACCELERATORTABLE )
    if ( hb_parinfo( 1 ) == HB_IT_ARRAY  )
    {
        iCount = hb_parinfa( 1, 0 );
-       aAccel = (ACCEL *) hb_xgrab( iCount*sizeof(ACCEL) ) ;
-       aParam = hb_param( 1, HB_IT_ARRAY ) ;
+       aAccel = (ACCEL *) hb_xgrab( iCount*sizeof(ACCEL) );
+       aParam = hb_param( 1, HB_IT_ARRAY );
        for ( i= 0 ; i<iCount ; i++ )
           {
-             aSub = hb_itemArrayGet( aParam, i+1 ) ;
-             aAccel[i].fVirt = (BYTE) hb_arrayGetNI(aSub,1) ;
-             aAccel[i].key   = (WORD) hb_arrayGetNI(aSub,2) ;
-             aAccel[i].cmd   = (WORD) hb_arrayGetNI(aSub,3) ;
+             aSub = hb_itemArrayGet( aParam, i+1 );
+             aAccel[i].fVirt = (BYTE) hb_arrayGetNI(aSub,1);
+             aAccel[i].key   = (WORD) hb_arrayGetNI(aSub,2);
+             aAccel[i].cmd   = (WORD) hb_arrayGetNI(aSub,3);
           }
-      hb_retnl( (LONG) CreateAcceleratorTable( aAccel, iCount ) ) ;
-      hb_xfree(aAccel) ;
+      HB_RETWH( CreateAcceleratorTable( aAccel, iCount ) );
+      hb_xfree(aAccel);
    }
    else
       hb_retnl(0);
@@ -236,7 +238,7 @@ HB_FUNC( CREATEACCELERATORTABLE )
 
 HB_FUNC( DESTROYACCELERATORTABLE )
 {
-   hb_retl( DestroyAcceleratorTable( (HACCEL) hb_parnl( 1 ) ) ) ;
+   hb_retl( DestroyAcceleratorTable( (HACCEL) HB_PARWH( 1 ) ) );
 }
 
 
@@ -258,9 +260,9 @@ HB_FUNC( COPYACCELERATORTABLE )
    int i ;
 
    if ( ISARRAY(2) && ((iCount=hb_parinfa(2,0)) > 0 ) )
-      lpAccelDst = (LPACCEL) hb_xgrab( iCount * sizeof(ACCEL) ) ;
+      lpAccelDst = (LPACCEL) hb_xgrab( iCount * sizeof(ACCEL) );
 
-   iRet = CopyAcceleratorTable( (HACCEL) hb_parnl( 1 ) ,
+   iRet = CopyAcceleratorTable( (HACCEL) HB_PARWH( 1 ) ,
                                    (iCount==0 ? NULL : lpAccelDst ) ,
                                    iCount
                               );
@@ -270,8 +272,8 @@ HB_FUNC( COPYACCELERATORTABLE )
       // read accelerator table elements into a subarrays
       // and store them into the original array elements
 
-      aParam = hb_param( 2, HB_IT_ARRAY ) ;
-      aSub = hb_itemArrayNew( 3 ) ;
+      aParam = hb_param( 2, HB_IT_ARRAY );
+      aSub = hb_itemArrayNew( 3 );
       for ( i = 0 ; i < iCount ; i++ )
       {
          hb_arraySetNI( aSub, 1, lpAccelDst->fVirt );
@@ -295,10 +297,10 @@ HB_FUNC( COPYACCELERATORTABLE )
 HB_FUNC( TRANSLATEACCELERATOR )
 {
    LPMSG  lpMsg = ( MSG * ) hb_parc( 3 ); //hb_param(3, HB_IT_STRING)->item.asString.value;
-   hb_retni( TranslateAccelerator( (HWND) hb_parnl( 1 )  ,
-                                   (HACCEL) hb_parnl( 2 ),
+   hb_retni( TranslateAccelerator( (HWND) HB_PARWH( 1 )  ,
+                                   (HACCEL) HB_PARWH( 2 ),
                                    lpMsg
-                                 ) ) ;
+                                 ) );
 }
 
 /*
@@ -328,12 +330,12 @@ HB_FUNC( CALLNEXTHOOKEX )
 
 HB_FUNC( SETWINDOWSHOOKEX )
 {
-    SetWindowsHookEx( (int) hb_parni(1), (HOOKPROC) hb_parnl(2), (HINSTANCE) hb_parnl(3), (DWORD) hb_parnl(4) );
+    SetWindowsHookEx( (int) hb_parni(1), (HOOKPROC) HB_PARWH(2), (HINSTANCE) HB_PARWH(3), (DWORD) hb_parnl(4) );
 }
 
 HB_FUNC( MAKEPROCINSTANCE )
 {
-   hb_retc( (FARPROC) MakeProcInstance( (FARPROC) hb_parcx(1), (HINSTANCE) hb_parnl(2) ) );
+   hb_retc( (FARPROC) MakeProcInstance( (FARPROC) hb_parcx(1), (HINSTANCE) HB_PARWH(2) ) );
 }
 
 
@@ -343,7 +345,7 @@ HB_FUNC( MAKEPROCINSTANCE )
 
 HB_FUNC( UNHOOKWINDOWSHOOKEX )
 {
-    UnhookWindowsHookEx( (HHOOK) hb_parni(1) );
+    UnhookWindowsHookEx( (HHOOK) HB_PARWH(1) );
 }
 
 

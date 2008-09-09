@@ -4,6 +4,8 @@
 
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <shlobj.h>
 //#include <commctrl.h>
@@ -18,33 +20,33 @@
 
 HB_FUNC( LISTVIEW_DELETEALLITEMS )
 {
-   ListView_DeleteAllItems( (HWND) hb_parnl(1) );
+   ListView_DeleteAllItems( (HWND) HB_PARWH(1) );
 }
 
 HB_FUNC( LISTVIEW_DELETECOLUMN )
 {
-   ListView_DeleteColumn( (HWND) hb_parnl(1), (INT) hb_parni(2) );
+   ListView_DeleteColumn( (HWND) HB_PARWH(1), (INT) hb_parni(2) );
 }
 
 HB_FUNC( LISTVIEW_ENSUREVISIBLE )
 {
-   hb_retl(ListView_EnsureVisible( (HWND) hb_parnl(1), hb_parni(2), hb_parl(3) ));
+   hb_retl(ListView_EnsureVisible( (HWND) HB_PARWH(1), hb_parni(2), hb_parl(3) ));
 }
 
 HB_FUNC( LISTVIEW_INSERTCOLUMN )
 {
    LV_COLUMN *lvColumn = ( LV_COLUMN *) hb_parc( 3 ); //hb_param( 3, HB_IT_STRING )->item.asString.value ;
-   ListView_InsertColumn( (HWND)hb_parnl(1), hb_parni(2), lvColumn );
+   ListView_InsertColumn( (HWND)HB_PARWH(1), hb_parni(2), lvColumn );
 }
 
 HB_FUNC( LISTVIEW_SETITEMCOUNT )
 {
-   ListView_SetItemCount( (HWND) hb_parnl(1), hb_parnl(2) );
+   ListView_SetItemCount( (HWND) HB_PARWH(1), hb_parnl(2) );
 }
 
 HB_FUNC( LISTVIEW_GETNEXTITEM )
 {
-   hb_retnl(ListView_GetNextItem( (HWND) hb_parnl(1), hb_parni(2), hb_parnl(3) ));
+   hb_retni( ListView_GetNextItem( (HWND) HB_PARWH(1), hb_parni(2), hb_parnl(3) ));
 }
 
 HB_FUNC( LISTVIEWNOTIFY )
@@ -70,8 +72,8 @@ HB_FUNC( LISTVIEWNOTIFY )
                pSymTest = hb_dynsymFind( "_WINLVGETDBINFO" );
             if ( pSymTest )
                {
-               pArray = hb_param( 3, HB_IT_ARRAY ) ;
-               DArray = hb_param( 4, HB_IT_ARRAY ) ;
+               pArray = hb_param( 3, HB_IT_ARRAY );
+               DArray = hb_param( 4, HB_IT_ARRAY );
                cAlias = hb_parcx(5);
                hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) ); //pSymTest->pSymbol );
                hb_vmPushNil();
@@ -95,8 +97,8 @@ HB_FUNC( LISTVIEWNOTIFY )
                pSymTest = hb_dynsymFind( "_WINLVGETDBINFO" );
             if ( pSymTest )
                {
-               pArray = hb_param( 3, HB_IT_ARRAY ) ;
-               DArray = hb_param( 4, HB_IT_ARRAY ) ;
+               pArray = hb_param( 3, HB_IT_ARRAY );
+               DArray = hb_param( 4, HB_IT_ARRAY );
                cAlias = hb_parcx(5);
                hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) ); //pSymTest->pSymbol );
                hb_vmPushNil();

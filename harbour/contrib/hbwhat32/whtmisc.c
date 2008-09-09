@@ -11,6 +11,8 @@
 
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <shlobj.h>
 //#include <commctrl.h>
@@ -34,35 +36,35 @@ HB_FUNC( STR2PTR )
 
 HB_FUNC( PEEKW )
 {
-   hb_retni( * ( LPWORD ) hb_parnl( 1 ) );
+   hb_retni( * ( LPWORD ) hb_parnint( 1 ) );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( PEEKL )
 {
-   hb_retnl( * (LPDWORD) hb_parnl( 1 ) );
+   hb_retnl( * (LPDWORD) hb_parnint( 1 ) );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( PEEKB )
 {
-   hb_retni( * ( LPBYTE ) hb_parnl( 1 ) );
+   hb_retni( * ( LPBYTE ) hb_parnint( 1 ) );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( POKEW )
 {
-   * ( LPWORD ) hb_parnl( 1 ) = (WORD) hb_parni( 2 );
+   * ( LPWORD ) hb_parnint( 1 ) = (WORD) hb_parni( 2 );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( POKEL )
 {
-   * ( LPLONG ) hb_parnl( 1 ) = (DWORD) hb_parnl( 2 );
+   * ( LPLONG ) hb_parnint( 1 ) = (DWORD) hb_parnl( 2 );
 }
 
 
@@ -70,7 +72,7 @@ HB_FUNC( POKEL )
 
 HB_FUNC( POKEB )
 {
-   * ( LPBYTE ) hb_parnl( 1 ) = ( BYTE ) hb_parni( 2 );
+   * ( LPBYTE ) hb_parnint( 1 ) = ( BYTE ) hb_parni( 2 );
 }
 
 
@@ -80,9 +82,9 @@ HB_FUNC( POKEB )
 HB_FUNC( PEEK )
 {
  if ( hb_pcount()==2 )
-    hb_retclen( (char *) hb_parnl( 1 ), hb_parnl( 2 ) );
+    hb_retclen( (char *) hb_parnint( 1 ), hb_parnl( 2 ) );
  else
-    hb_retc( (char *) hb_parnl( 1 ) );
+    hb_retc( (char *) hb_parnint( 1 ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -91,9 +93,9 @@ HB_FUNC( PEEK )
 HB_FUNC( POKE )
 {
    if( hb_pcount() ==3 )
-      hb_xmemcpy( (char *) hb_parnl(1), hb_parcx( 2 ), hb_parnl( 3 ) );
+      hb_xmemcpy( (char *) hb_parnint(1), hb_parcx( 2 ), hb_parnl( 3 ) );
    else
-      hb_xmemcpy( (char *) hb_parnl(1), hb_parcx( 2 ), hb_parclen( 2 ) );
+      hb_xmemcpy( (char *) hb_parnint(1), hb_parcx( 2 ), hb_parclen( 2 ) );
 }
 
 
@@ -337,7 +339,7 @@ HB_FUNC( MESSAGEBOX )
 {
  // LPCSTR lpCaption =  hb_parcx(3);
 
-  hb_retnl( MessageBox( ISNIL(1) ? NULL : (HWND) hb_parnl(1) ,
+  hb_retnl( MessageBox( ISNIL(1) ? NULL : (HWND) HB_PARWH(1) ,
                         (LPCSTR) hb_parcx(2),
                         ISNIL(3) ? NULL : (LPCSTR) hb_parcx(3) ,
                         ISNIL(4) ? 0 : (UINT) hb_parnl(4) ) );
@@ -376,6 +378,7 @@ HB_FUNC( CHECKBIT )
 
 HB_FUNC( GETENVIRONMENTSTRINGS )
 {
+   // TOFIX
    hb_retnl( (LONG) GetEnvironmentStrings(  ) );
 }
 
@@ -386,6 +389,7 @@ HB_FUNC( GETENVIRONMENTSTRINGS )
 
 HB_FUNC( FREEENVIRONMENTSTRINGS )
 {
+   // TOFIX
    hb_retl( (LONG) FreeEnvironmentStrings( (LPTSTR) hb_parnl(1) ) );
 }
 
@@ -528,7 +532,7 @@ HB_FUNC( OPENMUTEX )
 
 HB_FUNC( RELEASEMUTEX )
 {
-  hb_retl( ReleaseMutex( (HANDLE) hb_parnl( 1 ) ) );
+  hb_retl( ReleaseMutex( (HANDLE) HB_PARWH( 1 ) ) );
 }
 
 
@@ -539,7 +543,7 @@ HB_FUNC( RELEASEMUTEX )
 
 HB_FUNC( REGISTERHOTKEY )
 {
-   hb_retl( RegisterHotKey( (HWND) hb_parnl( 1 ),
+   hb_retl( RegisterHotKey( (HWND) HB_PARWH( 1 ),
                             hb_parni( 2 )       ,
                             (UINT) hb_parni( 3 ),
                             (UINT) hb_parni( 4 )
@@ -552,7 +556,7 @@ HB_FUNC( REGISTERHOTKEY )
 
 HB_FUNC( UNREGISTERHOTKEY )
 {
-   hb_retl( UnregisterHotKey( (HWND) hb_parnl( 1 ), hb_parni( 2 ) ) );
+   hb_retl( UnregisterHotKey( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
 
 
@@ -568,7 +572,7 @@ HB_FUNC( GETCLASSINFO )
 {
    WNDCLASS WndClass  ;
 
-   if ( GetClassInfo( ISNIL(1) ? NULL : (HINSTANCE) hb_parnl( 1 ),
+   if ( GetClassInfo( ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH( 1 ),
                       (LPCSTR) hb_parcx( 2 ), &WndClass ) )
 
 
@@ -593,7 +597,7 @@ HB_FUNC( GETCLASSINFOEX )
 {
    WNDCLASSEX WndClassEx ;
 
-   if ( GetClassInfoEx( ISNIL(1) ? NULL : (HINSTANCE) hb_parnl( 1 ),
+   if ( GetClassInfoEx( ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH( 1 ),
                             (LPCSTR) hb_parcx( 2 ), &WndClassEx ) )
 
       hb_retclen( (char*) &WndClassEx, sizeof(WNDCLASSEX) );

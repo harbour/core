@@ -52,6 +52,8 @@
 
 #define HB_OS_WIN_32_USED
 
+#include "hbwhat.h"
+
 #include "hbapi.h"
 
 #if defined(HB_OS_WIN_32)
@@ -63,7 +65,7 @@ HB_FUNC( HINSTANCE )
 
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
-   hb_retnl( ( LONG ) hInstance );
+   HB_RETWH( hInstance );
 }
 
 HB_FUNC( HPREVINSTANCE )
@@ -72,7 +74,7 @@ HB_FUNC( HPREVINSTANCE )
 
    hb_winmainArgGet( NULL, &hPrevInstance, NULL );
 
-   hb_retnl( ( LONG ) hPrevInstance );
+   HB_RETWH( hPrevInstance );
 }
 
 HB_FUNC( NCMDSHOW )

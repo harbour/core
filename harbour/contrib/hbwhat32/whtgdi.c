@@ -18,6 +18,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 //#include <shlobj.h>
 #include <windows.h>
 #include "hbapiitm.h"
@@ -57,7 +59,7 @@ HB_FUNC( GETGVALUE )
 }
 
 //-----------------------------------------------------------------------------
-// BYTE GetBValue( WORD rgb ) ;
+// BYTE GetBValue( WORD rgb );
 
 HB_FUNC( GETBVALUE )
 {
@@ -79,7 +81,7 @@ HB_FUNC( GETRVALUE )
 HB_FUNC( SETTEXTCOLOR )
 {
 
-  hb_retnl( (ULONG) SetTextColor( (HDC) hb_parnl( 1 ), (COLORREF) hb_parnl(2) ) ) ;
+  hb_retnl( (ULONG) SetTextColor( (HDC) HB_PARWH( 1 ), (COLORREF) hb_parnl(2) ) );
 
 }
 
@@ -90,7 +92,7 @@ HB_FUNC( SETTEXTCOLOR )
 
 HB_FUNC( GETTEXTCOLOR )
 {
-   hb_retnl((ULONG) GetTextColor( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retnl((ULONG) GetTextColor( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -101,7 +103,7 @@ HB_FUNC( GETTEXTCOLOR )
 
 HB_FUNC( GETBKCOLOR )
 {
-   hb_retnl( (ULONG) GetBkColor( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retnl( (ULONG) GetBkColor( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -112,7 +114,7 @@ HB_FUNC( GETBKCOLOR )
 HB_FUNC( SETBKCOLOR )
 {
 
-   hb_retnl( (ULONG) SetBkColor( (HDC) hb_parnl( 1 ), (COLORREF) hb_parnl(2) ) ) ;
+   hb_retnl( (ULONG) SetBkColor( (HDC) HB_PARWH( 1 ), (COLORREF) hb_parnl(2) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -121,7 +123,7 @@ HB_FUNC( SETBKCOLOR )
 
 HB_FUNC( UPDATECOLORS )
 {
-   hb_retl( UpdateColors( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retl( UpdateColors( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -137,7 +139,7 @@ HB_FUNC( UPDATECOLORS )
 
 HB_FUNC( GETSTOCKOBJECT )
 {
-   hb_retnl( (LONG) GetStockObject( hb_parni( 1 ) ) ) ;
+   HB_RETWH( GetStockObject( hb_parni( 1 ) ) );
 }
 
 
@@ -148,7 +150,7 @@ HB_FUNC( GETSTOCKOBJECT )
 
 HB_FUNC( SELECTOBJECT )
 {
-   hb_retnl( (LONG) SelectObject( (HDC) hb_parnl( 1 ), (HGDIOBJ) hb_parnl( 2 ) ) ) ;
+   HB_RETWH( SelectObject( (HDC) HB_PARWH( 1 ), (HGDIOBJ) HB_PARWH( 2 ) ) );
 }
 
 
@@ -159,7 +161,7 @@ HB_FUNC( SELECTOBJECT )
 
 HB_FUNC( DELETEOBJECT )
 {
-   hb_retl( DeleteObject( (HGDIOBJ) hb_parnl( 1 ) ) ) ;
+   hb_retl( DeleteObject( (HGDIOBJ) HB_PARWH( 1 ) ) );
 }
 
 
@@ -169,7 +171,7 @@ HB_FUNC( DELETEOBJECT )
 
 HB_FUNC( UNREALIZEOBJECT )
 {
-   hb_retl( UnrealizeObject( (HGDIOBJ) hb_parnl( 1 ) ) ) ;
+   hb_retl( UnrealizeObject( (HGDIOBJ) HB_PARWH( 1 ) ) );
 }
 
 
@@ -181,7 +183,7 @@ HB_FUNC( UNREALIZEOBJECT )
 
 HB_FUNC( GETOBJECTTYPE )
 {
-   hb_retnl( (LONG) GetObjectType( (HGDIOBJ) hb_parnl( 1 ) ) ) ;
+   hb_retnl( ( long ) GetObjectType( (HGDIOBJ) HB_PARWH( 1 ) ) );
 }
 
 
@@ -192,7 +194,7 @@ HB_FUNC( GETOBJECTTYPE )
 
 HB_FUNC( GETCURRENTOBJECT )
 {
-   hb_retnl( (LONG) GetCurrentObject( (HDC) hb_parnl( 1 ), (UINT) hb_parni( 2 ) ) ) ;
+   HB_RETWH( GetCurrentObject( (HDC) HB_PARWH( 1 ), (UINT) hb_parni( 2 ) ) );
 }
 
 
@@ -205,12 +207,12 @@ HB_FUNC( GETCURRENTOBJECT )
 HB_FUNC( GETOBJECT )
 {
 
-   int nBytes = GetObject( (HGDIOBJ) hb_parnl( 1 ), 0, NULL );
-   LPVOID  lpObj = (VOID *) hb_xgrab(nBytes) ;
+   int nBytes = GetObject( (HGDIOBJ) HB_PARWH( 1 ), 0, NULL );
+   LPVOID  lpObj = (VOID *) hb_xgrab(nBytes);
 
-   nBytes = GetObject( (HGDIOBJ) hb_parnl( 1 ), nBytes, lpObj )  ;
+   nBytes = GetObject( (HGDIOBJ) HB_PARWH( 1 ), nBytes, lpObj )  ;
 
-   hb_retclen( (char *) lpObj,nBytes) ;
+   hb_retclen( (char *) lpObj,nBytes);
    hb_xfree(lpObj);
 
 }
@@ -228,11 +230,11 @@ HB_FUNC( ENUMOBJECTS )
 
    // Your code goes here
 
-   hb_retni( EnumObjects( (HDC) hb_parnl( 1 ),
+   hb_retni( EnumObjects( (HDC) HB_PARWH( 1 ),
                           hb_parni( 2 )      ,
                           gObjEnumProc       ,
                           lpVoid
-                          ) ) ;
+                          ) );
 }
 
 */
@@ -247,7 +249,7 @@ HB_FUNC( ENUMOBJECTS )
 
 HB_FUNC( GETMAPMODE )
 {
-   hb_retni( GetMapMode( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retni( GetMapMode( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -258,7 +260,7 @@ HB_FUNC( GETMAPMODE )
 
 HB_FUNC( SETMAPMODE )
 {
-   hb_retni( SetMapMode( (HDC) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retni( SetMapMode( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -267,7 +269,7 @@ HB_FUNC( SETMAPMODE )
 
 HB_FUNC( SETMAPPERFLAGS )
 {
-   hb_retnl( (LONG) SetMapperFlags( (HDC) hb_parnl( 1 ), (DWORD) hb_parnl( 2 ) ) ) ;
+   hb_retnl( (LONG) SetMapperFlags( (HDC) HB_PARWH( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
 
 
@@ -286,7 +288,7 @@ HB_FUNC( SETMAPPERFLAGS )
 HB_FUNC( BEGINPAINT )
 {
    PAINTSTRUCT pps ;
-   hb_retnl( (LONG) BeginPaint( (HWND) hb_parnl( 1 ), &pps ) ) ;
+   HB_RETWH( BeginPaint( (HWND) HB_PARWH( 1 ), &pps ) );
    hb_storclen( (char *) &pps, sizeof(PAINTSTRUCT), 2 );
 }
 
@@ -298,7 +300,7 @@ HB_FUNC( BEGINPAINT )
 
 HB_FUNC( ENDPAINT )
 {
-   hb_retl( EndPaint( (HWND) hb_parnl( 1 ), (PAINTSTRUCT*) hb_parcx( 2 ) ) );
+   hb_retl( EndPaint( (HWND) HB_PARWH( 1 ), (PAINTSTRUCT*) hb_parcx( 2 ) ) );
 }
 
 
@@ -308,7 +310,7 @@ HB_FUNC( ENDPAINT )
 
 HB_FUNC( GETGRAPHICSMODE )
 {
-   hb_retni( GetGraphicsMode( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retni( GetGraphicsMode( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -320,7 +322,7 @@ HB_FUNC( GETGRAPHICSMODE )
 HB_FUNC( GDICOMMENT )
 {
 
-   hb_retl( GdiComment( (HDC) hb_parnl( 1 ), (UINT) hb_parni( 2 ), ( const BYTE * ) hb_parcx( 3 ) ) ) ;
+   hb_retl( GdiComment( (HDC) HB_PARWH( 1 ), (UINT) hb_parni( 2 ), ( const BYTE * ) hb_parcx( 3 ) ) );
 
 }
 
@@ -332,7 +334,7 @@ HB_FUNC( GDICOMMENT )
 
 HB_FUNC( GDISETBATCHLIMIT )
 {
-   hb_retnl( (LONG) GdiSetBatchLimit( (DWORD) hb_parnl( 1 ) ) ) ;
+   hb_retnl( (LONG) GdiSetBatchLimit( (DWORD) hb_parnl( 1 ) ) );
 }
 
 
@@ -349,7 +351,7 @@ HB_FUNC( GDISETBATCHLIMIT )
 
 HB_FUNC( SELECTCLIPPATH )
 {
-   hb_retl( SelectClipPath( (HDC) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retl( SelectClipPath( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
 
 
@@ -362,7 +364,7 @@ HB_FUNC( SELECTCLIPPATH )
 
 HB_FUNC( WIDENPATH )
 {
-   hb_retl( WidenPath( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retl( WidenPath( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -373,7 +375,7 @@ HB_FUNC( WIDENPATH )
 
 HB_FUNC( STROKEANDFILLPATH )
 {
-   hb_retl( StrokeAndFillPath( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retl( StrokeAndFillPath( (HDC) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -382,7 +384,7 @@ HB_FUNC( STROKEANDFILLPATH )
 
 HB_FUNC( STROKEPATH )
 {
-   hb_retl( StrokePath( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retl( StrokePath( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -393,7 +395,7 @@ HB_FUNC( STROKEPATH )
 
 HB_FUNC( ENDPATH )
 {
-   hb_retl( EndPath( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retl( EndPath( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -404,7 +406,7 @@ HB_FUNC( ENDPATH )
 
 HB_FUNC( ABORTPATH )
 {
-   hb_retl( AbortPath( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retl( AbortPath( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -421,7 +423,7 @@ HB_FUNC( GETPATH )
 
    // Your code goes here
 
-   hb_retni( GetPath( (HDC) hb_parnl( 1 ), lpPoInt, lpByte, hb_parni( 4 ) ) ) ;
+   hb_retni( GetPath( (HDC) HB_PARWH( 1 ), lpPoInt, lpByte, hb_parni( 4 ) ) );
 }
 
 */
@@ -447,8 +449,8 @@ HB_FUNC( LPTODP )
 
    if (ISARRAY( 2 ) )
    {
-       iCount = hb_parinfa( 2, 0 ) ;
-       Point = ( POINT *) hb_xgrab( iCount * sizeof (POINT) ) ;
+       iCount = hb_parinfa( 2, 0 );
+       Point = ( POINT *) hb_xgrab( iCount * sizeof (POINT) );
        aParam = hb_param(2,HB_IT_ARRAY);
 
        for ( i = 0 ; i<iCount ; i++ )
@@ -463,13 +465,13 @@ HB_FUNC( LPTODP )
           }
        }
 
-       if ( LPtoDP( (HDC) hb_parnl( 1 ), Point, iCount ) )
+       if ( LPtoDP( (HDC) HB_PARWH( 1 ), Point, iCount ) )
        {
          for ( i = 0 ; i < iCount ; i++ )
          {
             aSub = Point2Array(Point+i);
-            //hb_arraySet( aParam, i+1, hb_arrayClone(aSub, NULL ) ) ;
-            hb_arraySet( aParam, i+1, hb_arrayClone(aSub) ) ;
+            //hb_arraySet( aParam, i+1, hb_arrayClone(aSub, NULL ) );
+            hb_arraySet( aParam, i+1, hb_arrayClone(aSub) );
             hb_itemRelease(aSub);
          }
          hb_retl(1);
@@ -477,11 +479,11 @@ HB_FUNC( LPTODP )
        else
          hb_retl(0);
 
-       hb_xfree(Point) ;
+       hb_xfree(Point);
 
    }
    else
-     hb_retl(0) ;
+     hb_retl(0);
 
 }
 
@@ -505,8 +507,8 @@ HB_FUNC( DPTOLP )
 
    if (ISARRAY( 2 ) )
    {
-       iCount = hb_parinfa( 2, 0 ) ;
-       Point = ( POINT * ) hb_xgrab( iCount * sizeof (POINT) ) ;
+       iCount = hb_parinfa( 2, 0 );
+       Point = ( POINT * ) hb_xgrab( iCount * sizeof (POINT) );
        aParam = hb_param(2,HB_IT_ARRAY);
 
        for ( i = 0 ; i<iCount ; i++ )
@@ -521,12 +523,12 @@ HB_FUNC( DPTOLP )
           }
        }
 
-       if ( DPtoLP( (HDC) hb_parnl( 1 ), Point, iCount ) )
+       if ( DPtoLP( (HDC) HB_PARWH( 1 ), Point, iCount ) )
        {
          for ( i = 0 ; i < iCount ; i++ )
          {
             aSub = Point2Array(Point+i);
-            hb_arraySet( aParam, i+1, hb_arrayClone(aSub) ) ;
+            hb_arraySet( aParam, i+1, hb_arrayClone(aSub) );
             hb_itemRelease(aSub);
          }
          hb_retl(1);
@@ -534,11 +536,11 @@ HB_FUNC( DPTOLP )
        else
          hb_retl(0);
 
-       hb_xfree(Point) ;
+       hb_xfree(Point);
 
    }
    else
-     hb_retl(0) ;
+     hb_retl(0);
 
 }
 
@@ -549,7 +551,7 @@ HB_FUNC( DPTOLP )
 
 HB_FUNC( GETDEVICECAPS )
 {
-   hb_retni( GetDeviceCaps( (HDC) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retni( GetDeviceCaps( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -559,7 +561,7 @@ HB_FUNC( GETDEVICECAPS )
 
 HB_FUNC( PAINTDESKTOP )
 {
-   hb_retl( PaintDesktop( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retl( PaintDesktop( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -573,9 +575,9 @@ HB_FUNC( PAINTDESKTOP )
 
 HB_FUNC( GETGUIRESOURCES )
 {
-   hb_retnl( (LONG) GetGuiResources( (HANDLE) hb_parnl( 1 ),
+   hb_retnl( (LONG) GetGuiResources( (HANDLE) HB_PARWH( 1 ),
                                      (DWORD) hb_parnl( 2 )
-                                   ) ) ;
+                                   ) );
 }
 
 #endif
@@ -586,7 +588,7 @@ HB_FUNC( GETGUIRESOURCES )
 
 HB_FUNC( PTVISIBLE )
 {
-   hb_retl( PtVisible( (HDC) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) ) ;
+   hb_retl( PtVisible( (HDC) HB_PARWH( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
 
@@ -596,7 +598,7 @@ HB_FUNC( PTVISIBLE )
 
 HB_FUNC( SETGRAPHICSMODE )
 {
-   hb_retni( SetGraphicsMode( (HDC) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retni( SetGraphicsMode( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
 
 
@@ -606,7 +608,7 @@ HB_FUNC( SETGRAPHICSMODE )
 /*
 HB_FUNC( SETLAYOUT )
 {
-   hb_retnl( (LONG) SetLayout( (HDC) hb_parnl( 1 ), (DWORD) hb_parnl( 2 ) ) ) ;
+   hb_retnl( (LONG) SetLayout( (HDC) HB_PARWH( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
 */
 
@@ -616,7 +618,7 @@ HB_FUNC( SETLAYOUT )
 
 HB_FUNC( SWAPBUFFERS )
 {
-   hb_retl( SwapBuffers( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retl( SwapBuffers( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -631,9 +633,9 @@ HB_FUNC( GETCLIPBOX )
    RECT Rect ;
    PHB_ITEM aRect ;
 
-   hb_retni( GetClipBox( (HDC) hb_parnl( 1 ), &Rect ) ) ;
+   hb_retni( GetClipBox( (HDC) HB_PARWH( 1 ), &Rect ) );
 
-      aRect = Rect2Array( &Rect ) ;
+      aRect = Rect2Array( &Rect );
       hb_itemReturn( aRect );
       hb_itemRelease( aRect );
 
@@ -652,7 +654,7 @@ HB_FUNC( GETMITERLIMIT )
 
    // Your code goes here
 
-   hb_retl( GetMiterLimit( (HDC) hb_parnl( 1 ), pFloat ) ) ;
+   hb_retl( GetMiterLimit( (HDC) HB_PARWH( 1 ), pFloat ) );
 }
 
 */
@@ -667,7 +669,7 @@ HB_FUNC( GETRASTERIZERCAPS )
    LPRASTERIZER_STATUS lprs = (LPRASTERIZER_STATUS) hb_parc(1); //hb_param( 1,HB_IT_STRING )->item.asString.value;
 
    if( GetRasterizerCaps( lprs, (UINT) hb_parni( 2 ) ) )
-       hb_retclen( (char*) lprs, sizeof(RASTERIZER_STATUS) ) ;
+       hb_retclen( (char*) lprs, sizeof(RASTERIZER_STATUS) );
    //hb_itemPutCRaw( hb_param( -1, HB_IT_ANY ), (char *) lprs, sizeof(RASTERIZER_STATUS ) );
 
 }
@@ -686,7 +688,7 @@ HB_FUNC( GETASPECTRATIOFILTEREX )
    PHB_ITEM pArray=hb_param(2,HB_IT_ARRAY);
    // Your code goes here
 
-   if( GetAspectRatioFilterEx( (HDC) hb_parnl( 1 ), &lpSize ) )
+   if( GetAspectRatioFilterEx( (HDC) HB_PARWH( 1 ), &lpSize ) )
       {
       Size2ArrayEx(&lpSize,pArray);
       hb_retl(TRUE);
@@ -717,7 +719,7 @@ HB_FUNC( DEVICECAPABILITIESA )
                                   Word                 ,
                                   (LPSTR) hb_parcx( 4 ) ,
                                   &DEVMODEA
-                                  ) ) ;
+                                  ) );
 }
 
 */
@@ -734,9 +736,9 @@ HB_FUNC( GETUPDATERECT )
    RECT Rect ;
    PHB_ITEM aRect ;
 
-   if ( GetUpdateRect( (HWND) hb_parnl( 1 ), &Rect, hb_parl( 2 ) ) )
+   if ( GetUpdateRect( (HWND) HB_PARWH( 1 ), &Rect, hb_parl( 2 ) ) )
    {
-      aRect = Rect2Array( &Rect ) ;
+      aRect = Rect2Array( &Rect );
       hb_itemReturn( aRect );
       hb_itemRelease( aRect );
    }
@@ -755,12 +757,12 @@ HB_FUNC( DRAGOBJECT )
 
    // Your code goes here
 
-   hb_retnl( (LONG) DragObject( (HWND) hb_parnl( 1 )   ,
-                                (HWND) hb_parnl( 2 )   ,
+   hb_retnl( (LONG) DragObject( (HWND) HB_PARWH( 1 )   ,
+                                (HWND) HB_PARWH( 2 )   ,
                                 (UINT) hb_parni( 3 )   ,
                                 uLong_ptr              ,
-                                (HCURSOR) hb_parnl( 5 )
-                              ) ) ;
+                                (HCURSOR) HB_PARWH( 5 )
+                              ) );
 }
 
 */
@@ -780,9 +782,9 @@ HB_FUNC( DRAGDETECT )
    PHB_ITEM pArray;
    if (ISARRAY(2))
    {
-      pArray = hb_param(2, HB_IT_ARRAY) ;
+      pArray = hb_param(2, HB_IT_ARRAY);
       Array2Point(pArray,&PoInt);
-      hb_retl( DragDetect( (HWND) hb_parnl( 1 ), PoInt ) ) ;
+      hb_retl( DragDetect( (HWND) HB_PARWH( 1 ), PoInt ) );
    }
    else
       hb_retl(FALSE);
@@ -795,7 +797,7 @@ HB_FUNC( DRAGDETECT )
 HB_FUNC( GETDRAWITEMSTRUCT )
 {
 
-  DRAWITEMSTRUCT * dis = ( DRAWITEMSTRUCT * ) hb_parnl( 1 );
+  DRAWITEMSTRUCT * dis = ( DRAWITEMSTRUCT * ) HB_PARWH( 1 );
 
   PHB_ITEM arrDis = hb_itemArrayNew( 12 );
 
@@ -829,7 +831,7 @@ HB_FUNC( DRAWFRAMECONTROL )
    // Your code goes here
    if (Array2Rect(pArray,&lpRect))
    {
-      if( DrawFrameControl( (HDC) hb_parnl( 1 ) ,
+      if( DrawFrameControl( (HDC) HB_PARWH( 1 ) ,
                               &lpRect              ,
                               (UINT) hb_parni( 3 ),
                               (UINT) hb_parni( 4 )
@@ -861,7 +863,7 @@ HB_FUNC( DRAWANIMATEDRECTS )
    // Your code goes here
    if ( Array2Rect(hb_param(3,HB_IT_ARRAY),&lprcFrom ) && Array2Rect(hb_param(4,HB_IT_ARRAY) ,&lprcFrom ))
    {
-      if(DrawAnimatedRects( (HWND) hb_parnl( 1 ),
+      if(DrawAnimatedRects( (HWND) HB_PARWH( 1 ),
                                hb_parni( 2 )       ,
                                &lprcFrom           ,
                                &lprcTo
@@ -889,7 +891,7 @@ HB_FUNC( GETWINDOWORGEX )
    PHB_ITEM pArray=hb_param(2,HB_IT_ARRAY);
 
 
-   if( GetWindowOrgEx( (HDC) hb_parnl( 1 ), &lpPoInt ) )
+   if( GetWindowOrgEx( (HDC) HB_PARWH( 1 ), &lpPoInt ) )
       {
          Point2ArrayEx(&lpPoInt,pArray);
          hb_retl(TRUE);
@@ -911,7 +913,7 @@ HB_FUNC( GETWORLDTRANSFORM )
 
    // Your code goes here
 
-   hb_retl( GetWorldTransform( (HDC) hb_parnl( 1 ), lpxForm ) ) ;
+   hb_retl( GetWorldTransform( (HDC) HB_PARWH( 1 ), lpxForm ) );
 }
 
 */
@@ -928,10 +930,10 @@ HB_FUNC( MODIFYWORLDTRANSFORM )
 
    // Your code goes here
 
-   hb_retl( ModifyWorldTransform( (HDC) hb_parnl( 1 )  ,
+   hb_retl( ModifyWorldTransform( (HDC) HB_PARWH( 1 )  ,
                                   &XFORM               ,
                                   (DWORD) hb_parnl( 3 )
-                                  ) ) ;
+                                  ) );
 }
 
 */
@@ -947,11 +949,11 @@ HB_FUNC( OFFSETVIEWPORTORGEX )
 
    // Your code goes here
 
-   hb_retl( OffsetViewportOrgEx( (HDC) hb_parnl( 1 ),
+   hb_retl( OffsetViewportOrgEx( (HDC) HB_PARWH( 1 ),
                                  hb_parni( 2 )      ,
                                  hb_parni( 3 )      ,
                                  lpPoInt
-                                 ) ) ;
+                                 ) );
 }
 
 */
@@ -967,11 +969,11 @@ HB_FUNC( OFFSETWINDOWORGEX )
 
    // Your code goes here
 
-   hb_retl( OffsetWindowOrgEx( (HDC) hb_parnl( 1 ),
+   hb_retl( OffsetWindowOrgEx( (HDC) HB_PARWH( 1 ),
                                hb_parni( 2 )      ,
                                hb_parni( 3 )      ,
                                lpPoInt
-                               ) ) ;
+                               ) );
 }
 
 */
@@ -987,7 +989,7 @@ HB_FUNC( SCALEWINDOWEXTEX )
    PHB_ITEM pArray=hb_param(6,HB_IT_ARRAY);
 
 
-   if( ScaleWindowExtEx( (HDC) hb_parnl( 1 ),
+   if( ScaleWindowExtEx( (HDC) HB_PARWH( 1 ),
                               hb_parni( 2 )      ,
                               hb_parni( 3 )      ,
                               hb_parni( 4 )      ,
@@ -1015,7 +1017,7 @@ HB_FUNC( SETBOUNDSRECT )
 
    // Your code goes here
 
-   hb_retni( SetBoundsRect( (HDC) hb_parnl( 1 ), &RECT, (UINT) hb_parni( 3 ) ) ) ;
+   hb_retni( SetBoundsRect( (HDC) HB_PARWH( 1 ), &RECT, (UINT) hb_parni( 3 ) ) );
 }
 
 */
@@ -1033,7 +1035,7 @@ HB_FUNC( SETWORLDTRANSFORM )
 
    // Your code goes here
 
-   hb_retl( SetWorldTransform( (HDC) hb_parnl( 1 ), &XFORM ) ) ;
+   hb_retl( SetWorldTransform( (HDC) HB_PARWH( 1 ), &XFORM ) );
 }
 
 */
@@ -1049,14 +1051,7 @@ HB_FUNC( SETMITERLIMIT )
 
    // Your code goes here
 
-   hb_retl( SetMiterLimit( (HDC) hb_parnl( 1 ), (FLOAT) hb_parnd( 2 ), pFloat ) ) ;
+   hb_retl( SetMiterLimit( (HDC) HB_PARWH( 1 ), (FLOAT) hb_parnd( 2 ), pFloat ) );
 }
 
 */
-
-
-
-
-
-
-

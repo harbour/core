@@ -11,6 +11,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include "hbapiitm.h"
 #include "hbapi.h"
@@ -29,7 +31,7 @@ extern void Size2ArrayEx( SIZE *siz  ,  PHB_ITEM aSize);
 
 HB_FUNC( GETDC )
 {
-   hb_retnl( (ULONG) GetDC( (HWND) hb_parnl(1) ) ) ;
+   HB_RETWH( GetDC( (HWND) HB_PARWH(1) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -38,7 +40,7 @@ HB_FUNC( GETDC )
 
 HB_FUNC( RESTOREDC )
 {
-   hb_retl( RestoreDC( (HDC) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retl( RestoreDC( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -47,7 +49,7 @@ HB_FUNC( RESTOREDC )
 
 HB_FUNC( SAVEDC )
 {
-   hb_retni( SaveDC( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retni( SaveDC( (HDC) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -55,17 +57,17 @@ HB_FUNC( SAVEDC )
 
 HB_FUNC( GETDCEX )
 {
-   hb_retnl( (LONG) GetDCEx( (HWND) hb_parnl( 1 ) ,
-                             (HRGN) hb_parnl( 2 ) ,
+   HB_RETWH( GetDCEx( (HWND) HB_PARWH( 1 ) ,
+                             (HRGN) HB_PARWH( 2 ) ,
                              (DWORD) hb_parnl( 3 )
-                           ) ) ;
+                           ) );
 }
 
 //-----------------------------------------------------------------------------
 
 HB_FUNC( RELEASEDC )
 {
-   hb_retni( ReleaseDC( (HWND) hb_parnl(1), (HDC) hb_parnl(2) ) ) ;
+   hb_retni( ReleaseDC( (HWND) HB_PARWH(1), (HDC) HB_PARWH(2) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -73,7 +75,7 @@ HB_FUNC( RELEASEDC )
 
 HB_FUNC( DELETEDC )
 {
-   hb_retl( DeleteDC( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retl( DeleteDC( (HDC) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -81,7 +83,7 @@ HB_FUNC( DELETEDC )
 
 HB_FUNC( CANCELDC )
 {
-   hb_retl( CancelDC( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retl( CancelDC( (HDC) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -89,7 +91,7 @@ HB_FUNC( CANCELDC )
 
 HB_FUNC( CREATECOMPATIBLEDC )
 {
-   hb_retnl( (LONG) CreateCompatibleDC( (HDC) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( CreateCompatibleDC( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -97,7 +99,7 @@ HB_FUNC( CREATECOMPATIBLEDC )
 
 HB_FUNC( WINDOWFROMDC )
 {
-   hb_retnl( (LONG) WindowFromDC( (HDC) hb_parnl( 1 ) ) );
+   HB_RETWH( WindowFromDC( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -107,7 +109,7 @@ HB_FUNC( WINDOWFROMDC )
 
 HB_FUNC( GETWINDOWDC )
 {
-   hb_retnl( (LONG) GetWindowDC( (HWND) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( GetWindowDC( (HWND) HB_PARWH( 1 ) ) );
 }
 
 
@@ -123,12 +125,12 @@ HB_FUNC( CREATEDC )
    if ( ! ISNIL( 4 ) )
         lpInitData = (DEVMODE *) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING)->item.asString.value ;
 
-   hb_retnl( (ULONG) CreateDC((LPCTSTR) hb_parcx( 1 )  ,       // pointer to string specifying driver name
+   HB_RETWH( CreateDC((LPCTSTR) hb_parcx( 1 )  ,       // pointer to string specifying driver name
                               (LPCTSTR) hb_parcx( 2 )  ,       // pointer to string specifying device name
                               NULL                    ,       // do not use; set to NULL
                               ISNIL( 4 ) ? NULL : lpInitData // pointer to optional printer data
                              )
-           ) ;
+           );
 }
 
 
@@ -144,8 +146,8 @@ HB_FUNC( RESETDC )
    if ( ! ISNIL( 2 ) )
         lpInitData = (DEVMODE *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING)->item.asString.value ;
 
-   hb_retnl( (LONG) ResetDCA( (HDC) hb_parnl( 1 ),
-                               ISNIL( 2 )? NULL : lpInitData ) ) ;
+   HB_RETWH( ResetDCA( (HDC) HB_PARWH( 1 ),
+                               ISNIL( 2 )? NULL : lpInitData ) );
 
 }
 
@@ -162,7 +164,7 @@ HB_FUNC( GETDCORGEX )
    POINT Point ;
    PHB_ITEM aPt;
 
-   if ( GetDCOrgEx( (HDC) hb_parnl( 1 ), &Point ) )
+   if ( GetDCOrgEx( (HDC) HB_PARWH( 1 ), &Point ) )
    {
      aPt = Point2Array(&Point);
      hb_itemReturn( aPt );
@@ -192,12 +194,12 @@ HB_FUNC( SCROLLDC )
 
    if( Array2Rect(hb_param( 4, HB_IT_ARRAY ) , &lprcScroll )  && Array2Rect(hb_param( 5, HB_IT_ARRAY ) , &lprcClip ) )
    {
-      if( ScrollDC( (HDC) hb_parnl( 1 ) ,
+      if( ScrollDC( (HDC) HB_PARWH( 1 ) ,
                       hb_parni( 2 )       ,
                       hb_parni( 3 )       ,
                       &lprcScroll         ,
                       &lprcClip           ,
-                      (HRGN) hb_parnl( 6 ),
+                      (HRGN) HB_PARWH( 6 ),
                       &lprcUpdate
                     ) )
         {
@@ -210,11 +212,3 @@ HB_FUNC( SCROLLDC )
    else
       hb_retl(FALSE);
 }
-
-
-
-
-
-
-
-

@@ -56,6 +56,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 //#include <shlobj.h>
 #include <windows.h>
 //#include <commctrl.h>
@@ -69,10 +71,10 @@
 HB_FUNC( GETPROFILESTRING )
 {
    DWORD nSize = 1024 ;
-   LPTSTR bBuffer = (LPTSTR) hb_xgrab( nSize ) ;
+   LPTSTR bBuffer = (LPTSTR) hb_xgrab( nSize );
    DWORD dwLen ;
-   char * lpSection = ISNIL( 1 ) ? NULL : hb_parcx( 1 ) ;
-   char * lpEntry   = ISNIL( 2 ) ? NULL : hb_parcx( 2 ) ;
+   char * lpSection = ISNIL( 1 ) ? NULL : hb_parcx( 1 );
+   char * lpEntry   = ISNIL( 2 ) ? NULL : hb_parcx( 2 );
    char * lpDefault = hb_parc ( 3 );
 
    while ( TRUE )
@@ -80,9 +82,9 @@ HB_FUNC( GETPROFILESTRING )
       dwLen = GetProfileString( lpSection , lpEntry ,lpDefault , bBuffer, nSize );
       if ( ( ( ( lpSection == NULL ) || ( lpEntry == NULL ) ) && ( nSize - dwLen == 2 ) ) || ( ( lpSection && lpEntry ) && ( nSize - dwLen == 1 ) ) )
       {
-        hb_xfree( bBuffer ) ;
+        hb_xfree( bBuffer );
         nSize *= 2 ;
-        bBuffer = (LPTSTR) hb_xgrab( nSize ) ;
+        bBuffer = (LPTSTR) hb_xgrab( nSize );
       }
       else
         break ;
@@ -94,7 +96,7 @@ HB_FUNC( GETPROFILESTRING )
    else
       hb_retc( lpDefault );
 
-   hb_xfree( bBuffer ) ;
+   hb_xfree( bBuffer );
 
 }
 
@@ -102,21 +104,21 @@ HB_FUNC( GETPROFILESTRING )
 HB_FUNC( GETPRIVATEPROFILESTRING )
 {
    DWORD nSize = 1024 ;
-   LPTSTR bBuffer = (LPTSTR) hb_xgrab( nSize ) ;
+   LPTSTR bBuffer = (LPTSTR) hb_xgrab( nSize );
    DWORD dwLen ;
    char * lpSection  = ISNIL( 1 ) ? NULL : hb_parcx( 1 );
-   char * lpEntry    = ISNIL( 2 ) ? NULL : hb_parcx( 2 ) ;
+   char * lpEntry    = ISNIL( 2 ) ? NULL : hb_parcx( 2 );
    char * lpDefault  = hb_parcx( 3 );
    char * lpFileName = hb_parcx( 4 );
 
    while ( TRUE )
    {
-      dwLen = GetPrivateProfileString( lpSection , lpEntry ,lpDefault , bBuffer, nSize , lpFileName) ;
+      dwLen = GetPrivateProfileString( lpSection , lpEntry ,lpDefault , bBuffer, nSize , lpFileName);
       if ( ( ( ( lpSection == NULL ) || ( lpEntry == NULL ) ) && ( nSize - dwLen == 2 ) ) || ( ( lpSection && lpEntry ) && ( nSize - dwLen == 1 ) ) )
       {
-        hb_xfree( bBuffer ) ;
+        hb_xfree( bBuffer );
         nSize *= 2 ;
-        bBuffer = (LPTSTR) hb_xgrab( nSize ) ;
+        bBuffer = (LPTSTR) hb_xgrab( nSize );
       }
       else
         break ;
@@ -127,7 +129,7 @@ HB_FUNC( GETPRIVATEPROFILESTRING )
    else
       hb_retc( lpDefault );
 
-   hb_xfree( bBuffer ) ;
+   hb_xfree( bBuffer );
 
 }
 
@@ -139,7 +141,7 @@ HB_FUNC( WRITEPROFILESTRING )
    char * lpData = ISCHAR(3) ? hb_parcx( 3 ) : NULL ;
 
    if ( WriteProfileString( lpSection , lpEntry , lpData) )
-      hb_retl( TRUE ) ;
+      hb_retl( TRUE );
    else
       hb_retl(FALSE);
 }
@@ -153,7 +155,7 @@ HB_FUNC( WRITEPRIVATEPROFILESTRING )
    char * lpFileName= hb_parcx( 4 );
 
    if ( WritePrivateProfileString( lpSection , lpEntry , lpData , lpFileName ) )
-      hb_retl( TRUE ) ;
+      hb_retl( TRUE );
    else
       hb_retl(FALSE);
 }
@@ -169,7 +171,7 @@ HB_FUNC( GETPRIVATEPROFILEINT )
                                     (LPCSTR) hb_parcx( 2 ),
                                     hb_parni( 3 )        ,
                                     (LPCSTR) hb_parcx( 4 )
-                                    ) ) ;
+                                    ) );
 }
 
 
@@ -182,7 +184,7 @@ HB_FUNC( GETPROFILEINT )
    hb_retni( GetProfileIntA( (LPCSTR) hb_parcx( 1 ),
                              (LPCSTR) hb_parcx( 2 ),
                              hb_parni( 3 )
-                             ) ) ;
+                             ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -194,7 +196,7 @@ HB_FUNC( GETPROFILESECTION )
    hb_retnl( (LONG) GetProfileSectionA( (LPCSTR) hb_parcx( 1 ),
                                         (LPSTR) hb_parcx( 2 ) ,
                                         (DWORD) hb_parnl( 3 )
-                                        ) ) ;
+                                        ) );
 }
 */
 
@@ -204,7 +206,7 @@ HB_FUNC( GETPROFILESECTION )
 
 HB_FUNC( WRITEPROFILESECTION )
 {
-   hb_retl( WriteProfileSectionA( (LPCSTR) hb_parcx( 1 ), (LPCSTR) hb_parcx( 2 ) ) ) ;
+   hb_retl( WriteProfileSectionA( (LPCSTR) hb_parcx( 1 ), (LPCSTR) hb_parcx( 2 ) ) );
 }
 
 /*
@@ -218,7 +220,7 @@ HB_FUNC( GETPRIVATEPROFILESECTION )
                                                (LPSTR) hb_parcx( 2 ) ,
                                                (DWORD) hb_parnl( 3 ),
                                                (LPCSTR) hb_parcx( 4 )
-                                               ) ) ;
+                                               ) );
 }
 
 */
@@ -231,7 +233,7 @@ HB_FUNC( WRITEPRIVATEPROFILESECTION )
    hb_retl( WritePrivateProfileSectionA( (LPCSTR) hb_parcx( 1 ),
                                          (LPCSTR) hb_parcx( 2 ),
                                          (LPCSTR) hb_parcx( 3 )
-                                         ) ) ;
+                                         ) );
 }
 
 /*
@@ -244,7 +246,7 @@ HB_FUNC( GETPRIVATEPROFILESECTIONNAMES )
    hb_retnl( (LONG) GetPrivateProfileSectionNames( (LPSTR) hb_parcx( 1 ) ,
                                                     (DWORD) hb_parnl( 2 ),
                                                     (LPCSTR) hb_parcx( 3 )
-                                                    ) ) ;
+                                                    ) );
 }
 */
 //-----------------------------------------------------------------------------
@@ -263,7 +265,7 @@ HB_FUNC( GETPRIVATEPROFILESTRUCT )
                                       lpStruct             ,
                                       (UINT) hb_parni( 4 ) ,
                                       (LPCSTR) hb_parcx( 5 )
-                                      ) ) ;
+                                      ) );
 }
 
 */
@@ -284,12 +286,7 @@ HB_FUNC( WRITEPRIVATEPROFILESTRUCT )
                                         lpStruct             ,
                                         (UINT) hb_parni( 4 ) ,
                                         (LPCSTR) hb_parcx( 5 )
-                                        ) ) ;
+                                        ) );
 }
 
 */
-
-
-
-
-

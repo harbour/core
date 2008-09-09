@@ -7,6 +7,8 @@
 
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <shlobj.h>
 //#include <commctrl.h>
@@ -33,18 +35,18 @@ HB_FUNC( DRAGQUERYFILE )
     cFile = (char*) hb_xgrab( strlen( hb_parcx(3) ) + 1 );
 
 
-  iRet = DragQueryFile( (HDROP) hb_parnl( 1 ),
+  iRet = DragQueryFile( (HDROP) HB_PARWH( 1 ),
                         (UINT) hb_parni( 2 ) ,
                         hb_parni(4) > 0 ? cFile : NULL ,
                         (UINT) hb_parni( 4 )
-                      ) ;
+                      );
 
    if (hb_parni( 4 ) > 0)
    {
-      hb_storclen( cFile, iRet, 3 ) ;
+      hb_storclen( cFile, iRet, 3 );
       hb_xfree( cFile );
    }
-   hb_retni( iRet ) ;
+   hb_retni( iRet );
  }
 
 
@@ -56,12 +58,12 @@ HB_FUNC( DRAGQUERYPOINT )
 {
    POINT lpPoInt ;
    BOOL lRet ;
-   lRet = DragQueryPoint( (HDROP) hb_parnl( 1 ),(LPPOINT) &lpPoInt )  ;
+   lRet = DragQueryPoint( (HDROP) HB_PARWH( 1 ),(LPPOINT) &lpPoInt )  ;
    if (ISBYREF( 2 ) ){
       hb_stornl(2,lpPoInt.x,1);
       hb_stornl(2,lpPoInt.y,2);
    }
-   hb_retl( lRet ) ;
+   hb_retl( lRet );
 
 }
 
@@ -72,7 +74,7 @@ HB_FUNC( DRAGQUERYPOINT )
 
 HB_FUNC( DRAGFINISH )
 {
-   DragFinish( (HDROP) hb_parnl( 1 ) ) ;
+   DragFinish( (HDROP) HB_PARWH( 1 ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -81,7 +83,7 @@ HB_FUNC( DRAGFINISH )
 
 HB_FUNC( DRAGACCEPTFILES )
 {
-   DragAcceptFiles( (HWND) hb_parnl( 1 ), hb_parl( 2 ) ) ;
+   DragAcceptFiles( (HWND) HB_PARWH( 1 ), hb_parl( 2 ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -90,13 +92,13 @@ HB_FUNC( DRAGACCEPTFILES )
 
 HB_FUNC( SHELLEXECUTE )
 {
-   hb_retnl( (LONG) ShellExecute( (HWND) hb_parnl( 1 )     ,
+   HB_RETWH( ShellExecute( (HWND) HB_PARWH( 1 )     ,
                                   (LPCSTR) hb_parcx( 2 )    ,
                                   (LPCSTR) hb_parcx( 3 )    ,
                                   ISNIL(4) ? NULL : (LPCSTR) hb_parcx( 4 )    ,
                                   (LPCSTR) hb_parcx( 5 )    ,
                                    hb_parni( 6 )
-                                 ) ) ;
+                                 ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -112,12 +114,12 @@ HB_FUNC( FINDEXECUTABLE )
    hInst = FindExecutable( (LPCSTR) hb_parcx( 1 )    ,
                            (LPCSTR) hb_parcx( 2 )    ,
                            (LPSTR)  cBuffer
-                         ) ;
+                         );
 
-   hb_retnl( (LONG) hInst) ;
+   HB_RETWH( hInst);
 
-   if ( (LONG) hInst > 32 )
-      hb_storc( cBuffer, 3 ) ;
+   if( ( HB_PTRDIFF ) hInst > 32 )
+      hb_storc( cBuffer, 3 );
 }
 
 
@@ -136,7 +138,7 @@ HB_FUNC( COMMANDLINETOARGVW )
 // () CommandLineToArgvW( (LPWSTR) hb_parcx( 1 ) ,
                           (LPCWSTR) hb_parcx( 2 ),
                           &Intpnumargs
-                        ) ) ;
+                        ) );
 }
 
 */
@@ -146,10 +148,10 @@ HB_FUNC( COMMANDLINETOARGVW )
 
 HB_FUNC( SHELLABOUT )
 {
-   hb_retni( ShellAbout( (HWND) hb_parnl(1),
+   hb_retni( ShellAbout( (HWND) HB_PARWH(1),
                          (LPCSTR) hb_parcx(2),
                          (LPCSTR) hb_parcx(3),
-                         (ISNIL(4) ? NULL : (HICON) hb_parnl(4) )
+                         (ISNIL(4) ? NULL : (HICON) HB_PARWH(4) )
                        ) );
 }
 
@@ -165,7 +167,7 @@ HB_FUNC( SHAPPBARMESSAGE )
 
    // Your code goes here
 
-// () SHAppBarMessage( (DWORD) hb_parnl( 1 ), pData ) ) ;
+// () SHAppBarMessage( (DWORD) hb_parnl( 1 ), pData ) );
 }
 
 */
@@ -178,7 +180,7 @@ HB_FUNC( DOENVIRONMENTSUBST )
 {
    hb_retnl((LONG) DoEnvironmentSubst( (LPSTR) hb_parcx( 1 ) ,
                                        (UINT) hb_parni( 2 )
-                                     ) ) ;
+                                     ) );
 }
 #endif
 //-----------------------------------------------------------------------------
@@ -196,7 +198,7 @@ HB_FUNC( EXTRACTICONEX )
                             &iLarge              ,
                             &iSmall              ,
                             nIcons               ,
-                           ) ) ;
+                           ) );
 
 
        // unfinished
@@ -211,7 +213,7 @@ HB_FUNC( EXTRACTICONEX )
 HB_FUNC( SHFILEOPERATION )
 {
    SHFILEOPSTRUCT *sfo = (SHFILEOPSTRUCT *) hb_parc( 1 ); //hb_param(1, HB_IT_STRING)->item.asString.value;
-   hb_retni( SHFileOperation( sfo ) ) ;
+   hb_retni( SHFileOperation( sfo ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -219,7 +221,7 @@ HB_FUNC( SHFILEOPERATION )
 
 HB_FUNC( SHFREENAMEMAPPINGS )
 {
-   SHFreeNameMappings( (HANDLE) hb_parnl( 1 ) ) ;
+   SHFreeNameMappings( (HANDLE) HB_PARWH( 1 ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -230,7 +232,7 @@ HB_FUNC( SHFREENAMEMAPPINGS )
 HB_FUNC( SHELLEXECUTEEX )
 {
    SHELLEXECUTEINFO *ExecInfo = (SHELLEXECUTEINFO *) hb_parc( 1 ); //hb_param(1, HB_IT_STRING)->item.asString.value;
-   hb_retl( ShellExecuteEx( ExecInfo ) ) ;
+   hb_retl( ShellExecuteEx( ExecInfo ) );
 }
 
 
@@ -245,11 +247,11 @@ HB_FUNC( SHELLEXECUTEEX )
 
 HB_FUNC( WINEXECERROR )
 {
-   WinExecError( (HWND) hb_parnl( 1 ) ,
+   WinExecError( (HWND) HB_PARWH( 1 ) ,
                  hb_parni( 2 )        ,
                  (LPCSTR) hb_parcx( 3 ),
                  (LPCSTR) hb_parcx( 4 )
-                  ) ;
+                  );
 }
 
 */
@@ -264,7 +266,7 @@ HB_FUNC( SHCREATEPROCESSASUSERW )
 
    // Your code goes here
 
-   hb_retl( SHCreateProcessAsUserW( pscpi ) ) ;
+   hb_retl( SHCreateProcessAsUserW( pscpi ) );
 }
 
 */
@@ -282,7 +284,7 @@ HB_FUNC( SHQUERYRECYCLEBIN )
 
    // Your code goes here
 
-// (SHSTDAPI) SHQueryRecycleBin( (LPCSTR) hb_parcx( 1 ), pSHQueryRBInfo ) ) ;
+// (SHSTDAPI) SHQueryRecycleBin( (LPCSTR) hb_parcx( 1 ), pSHQueryRBInfo ) );
 }
 
 */
@@ -297,10 +299,10 @@ HB_FUNC( SHQUERYRECYCLEBIN )
 
 HB_FUNC( SHEMPTYRECYCLEBIN )
 {
-   hb_retnl(  SHEmptyRecycleBin( (HWND) hb_parnl( 1 ) ,
+   hb_retnl(  SHEmptyRecycleBin( (HWND) HB_PARWH( 1 ) ,
                                  (LPCSTR) hb_parcx( 2 ),
                                  (DWORD) hb_parnl( 3 )
-                                ) ) ;
+                                ) );
 }
 
 #endif
@@ -313,7 +315,7 @@ HB_FUNC( SHEMPTYRECYCLEBIN )
 HB_FUNC( SHELL_NOTIFYICON )
 {
    NOTIFYICONDATA * Data =  (NOTIFYICONDATA * ) hb_parc( 2 ); //hb_param(2, HB_IT_STRING)->item.asString.value;
-   hb_retl( Shell_NotifyIcon( (DWORD) hb_parnl( 1 ), Data ) ) ;
+   hb_retl( Shell_NotifyIcon( (DWORD) hb_parnl( 1 ), Data ) );
 }
 
 
@@ -334,7 +336,7 @@ HB_FUNC( SHGETFILEINFO )
                             &psfi                    ,
                             (UINT) hb_parni( 4 )     ,
                             (UINT) hb_parni( 5 )
-                          ) ) ;
+                          ) );
 }
 
 */
@@ -356,7 +358,7 @@ HB_FUNC( SHGETDISKFREESPACEEX )
                             &pulFreeBytesAvailableToCaller,
                             &pulTotalNumberOfBytes        ,
                             &pulTotalNumberOfFreeBytes
-                          ) ) ;
+                          ) );
 }
 
 */
@@ -372,7 +374,7 @@ HB_FUNC( SHGETNEWLINKINFO )
                              (LPSTR) hb_parcx( 3 ) ,
                              hb_parl( 4 )         ,
                              (UINT) hb_parni( 5 )
-                           ) ) ;
+                           ) );
 }
 
 */
@@ -384,12 +386,12 @@ HB_FUNC( SHGETNEWLINKINFO )
 
 HB_FUNC( SHINVOKEPRINTERCOMMAND )
 {
-   hb_retl( SHInvokePrinterCommand( (HWND) hb_parnl( 1 ) ,
+   hb_retl( SHInvokePrinterCommand( (HWND) HB_PARWH( 1 ) ,
                                     (UINT) hb_parni( 2 ) ,
                                     (LPCSTR) hb_parcx( 3 ),
                                     (LPCSTR) hb_parcx( 4 ),
                                      hb_parl( 5 )
-                                   ) ) ;
+                                   ) );
 }
 
 #endif
@@ -402,7 +404,7 @@ HB_FUNC( SHINVOKEPRINTERCOMMAND )
 /*
 HB_FUNC( SHLOADNONLOADEDICONOVERLAYIDENTIFIERS )
 {
-// (SHSTDAPI) SHLoadNonloadedIconOverlayIdentifiers(  ) ) ;
+// (SHSTDAPI) SHLoadNonloadedIconOverlayIdentifiers(  ) );
 }
 */
 

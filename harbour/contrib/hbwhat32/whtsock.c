@@ -12,6 +12,8 @@
 
 #define _WINSOCKAPI_  // Prevents inclusion of Winsock.h in Windows.h
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <shlobj.h>
 //#include <commctrl.h>
@@ -565,7 +567,7 @@ HB_FUNC( WSAASYNCGETSERVBYNAME )
    char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
 
-   if( ( hRet = WSAAsyncGetServByName( (HWND)         hb_parnl( 1 ),
+   if( ( hRet = WSAAsyncGetServByName( (HWND)         HB_PARWH( 1 ),
                                      (unsigned int) hb_parni( 2 ),
                                      ( char *)      hb_parcx( 3 ) ,
                                      ISNIL( 4 ) ? NULL : ( char *) hb_parcx( 4 ) ,
@@ -574,7 +576,7 @@ HB_FUNC( WSAASYNCGETSERVBYNAME )
 
       hb_storclen( buf, sizeof(SERVENT), 5 );
 
-   hb_retnl( (ULONG ) hRet );
+   HB_RETWH( hRet );
    hb_xfree( buf );
 }
 
@@ -593,7 +595,7 @@ HB_FUNC( WSAASYNCGETSERVBYPORT )
    char * buf = (char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
 
-   if( ( hRet = WSAAsyncGetServByPort( (HWND) hb_parnl( 1 )        ,
+   if( ( hRet = WSAAsyncGetServByPort( (HWND) HB_PARWH( 1 )        ,
                                       (unsigned int) hb_parni( 2 ),
                                        hb_parni( 3 )              ,
                                        ISNIL( 4 ) ? NULL : ( char *) hb_parcx( 4 ) ,
@@ -602,7 +604,7 @@ HB_FUNC( WSAASYNCGETSERVBYPORT )
 
         hb_storclen( buf, sizeof(SERVENT), 5 );
 
-   hb_retnl( (ULONG ) hRet );
+   HB_RETWH( hRet );
    hb_xfree( buf );
 }
 
@@ -622,7 +624,7 @@ HB_FUNC( WSAASYNCGETPROTOBYNAME )
    char * buf = ( char * ) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
 
-   if( ( hRet = WSAAsyncGetProtoByName( (HWND)         hb_parnl( 1 ),
+   if( ( hRet = WSAAsyncGetProtoByName( (HWND)         HB_PARWH( 1 ),
                                        (unsigned int) hb_parni( 2 ),
                                        ( char *)      hb_parcx( 3 ) ,
                                        ( char *)      buf          ,
@@ -630,7 +632,7 @@ HB_FUNC( WSAASYNCGETPROTOBYNAME )
 
         hb_storclen( buf, sizeof(PROTOENT), 4);
 
-   hb_retnl( (ULONG ) hRet );
+   HB_RETWH( hRet );
    hb_xfree( buf );
 }
 
@@ -650,7 +652,7 @@ HB_FUNC( WSAASYNCGETPROTOBYNUMBER )
    char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
 
-   if( ( hRet = WSAAsyncGetProtoByNumber( (HWND)         hb_parnl( 1 ),
+   if( ( hRet = WSAAsyncGetProtoByNumber( (HWND)         HB_PARWH( 1 ),
                                          (unsigned int) hb_parni( 2 ),
                                          (int)          hb_parni( 3 ),
                                          ( char *)      buf          ,
@@ -658,7 +660,7 @@ HB_FUNC( WSAASYNCGETPROTOBYNUMBER )
 
         hb_storclen( buf, sizeof(PROTOENT), 4);
 
-   hb_retnl( (ULONG ) hRet );
+   HB_RETWH( hRet );
    hb_xfree( buf );
 }
 
@@ -676,7 +678,7 @@ HB_FUNC( WSAASYNCGETHOSTBYNAME )
    char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
 
-   if( ( hRet = WSAAsyncGetHostByName( (HWND) hb_parnl( 1 ),
+   if( ( hRet = WSAAsyncGetHostByName( (HWND) HB_PARWH( 1 ),
                                        (unsigned int) hb_parni( 2 ),
                                        ( char *)      hb_parcx( 3 ) ,
                                        ( char *)      buf          ,
@@ -684,7 +686,7 @@ HB_FUNC( WSAASYNCGETHOSTBYNAME )
 
       hb_storclen( buf, sizeof(HOSTENT), 4);
 
-   hb_retnl( (ULONG ) hRet );
+   HB_RETWH( hRet );
    hb_xfree( buf );
 }
 
@@ -705,7 +707,7 @@ HB_FUNC( WSAASYNCGETHOSTBYADDR )
    char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
 
-   if( ( hRet = WSAAsyncGetHostByAddr( (HWND)         hb_parnl( 1 ) ,
+   if( ( hRet = WSAAsyncGetHostByAddr( (HWND)         HB_PARWH( 1 ) ,
                                       (unsigned int) hb_parni( 2 ) ,
                                       ( char *)      hb_parcx( 3 )  ,
                                       ( int )        hb_parclen( 3),
@@ -715,7 +717,7 @@ HB_FUNC( WSAASYNCGETHOSTBYADDR )
 
       hb_storclen( buf, sizeof(HOSTENT), 5);
 
-   hb_retnl( (ULONG ) hRet );
+   HB_RETWH( hRet );
    hb_xfree( buf );
 
 
@@ -727,7 +729,7 @@ HB_FUNC( WSAASYNCGETHOSTBYADDR )
 
 HB_FUNC( WSACANCELASYNCREQUEST )
 {
-   hb_retni( (int) WSACancelAsyncRequest( (HANDLE) hb_parnl( 1 ) ) );
+   hb_retni( (int) WSACancelAsyncRequest( (HANDLE) HB_PARWH( 1 ) ) );
 }
 
 
@@ -737,7 +739,7 @@ HB_FUNC( WSACANCELASYNCREQUEST )
 HB_FUNC( WSAASYNCSELECT )
 {
    hb_retni( (int ) WSAAsyncSelect( (SOCKET) hb_parnl( 1 ) ,
-                                    (HWND) hb_parnl( 2 )   ,
+                                    (HWND) HB_PARWH( 2 )   ,
                                     (UINT) hb_parni( 3 )   ,
                                      hb_parnl( 4 )
                                   ) );
@@ -1454,7 +1456,7 @@ HB_FUNC( WSALOOKUPSERVICENEXT )
 
    // Your code goes here
 
-// hb_retni( (int ) WSALookupServiceNext( (HANDLE) hb_parnl( 1 ),
+// hb_retni( (int ) WSALookupServiceNext( (HANDLE) HB_PARWH( 1 ),
                                                           (DWORD) hb_parnl( 2 ) ,
                                                           lpdwBufferLength      ,
                                                           lpqsResults
@@ -1470,7 +1472,7 @@ HB_FUNC( WSALOOKUPSERVICENEXT )
 
 HB_FUNC( WSALOOKUPSERVICEEND )
 {
-   hb_retni( (int ) WSALookupServiceEnd( (HANDLE) hb_parnl( 1 ) ) );
+   hb_retni( (int ) WSALookupServiceEnd( (HANDLE) HB_PARWH( 1 ) ) );
 }
 
 
@@ -1615,7 +1617,6 @@ HB_FUNC( WSAPROVIDERCONFIGCHANGE )
 }
 
 */
-
 
 //-----------------------------------------------------------------------------
 // End.

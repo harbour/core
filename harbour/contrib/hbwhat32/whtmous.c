@@ -12,6 +12,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 //#include <shlobj.h>
 #include <windows.h>
 #include "hbapiitm.h"
@@ -36,7 +38,7 @@ extern void Size2ArrayEx( SIZE *siz  ,  PHB_ITEM aSize);
 
 HB_FUNC( LOADCURSOR )
 {
-   hb_retnl( (LONG) LoadCursor( ISNIL(1) ? NULL : (HINSTANCE) hb_parnl(1) ,
+   HB_RETWH( LoadCursor( ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH(1) ,
                     hb_parinfo(2)== HB_IT_STRING ? hb_parcx(2): MAKEINTRESOURCE( hb_parnl( 2 ) ) ) );
 }
 
@@ -46,7 +48,7 @@ HB_FUNC( LOADCURSOR )
 
 HB_FUNC( GETCAPTURE )
 {
-   hb_retnl( (LONG) GetCapture(  ) ) ;
+   HB_RETWH( GetCapture(  ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -55,7 +57,7 @@ HB_FUNC( GETCAPTURE )
 
 HB_FUNC( SETCAPTURE )
 {
-   hb_retnl( (LONG) SetCapture( (HWND) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( SetCapture( (HWND) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -64,7 +66,7 @@ HB_FUNC( SETCAPTURE )
 
 HB_FUNC( RELEASECAPTURE )
 {
-   hb_retl( ReleaseCapture(  ) ) ;
+   hb_retl( ReleaseCapture(  ) );
 }
 
 
@@ -74,7 +76,7 @@ HB_FUNC( RELEASECAPTURE )
 
 HB_FUNC( GETDOUBLECLICKTIME )
 {
-   hb_retni( GetDoubleClickTime(  ) ) ;
+   hb_retni( GetDoubleClickTime(  ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -83,7 +85,7 @@ HB_FUNC( GETDOUBLECLICKTIME )
 
 HB_FUNC( SETDOUBLECLICKTIME )
 {
-   hb_retl( SetDoubleClickTime( (UINT) hb_parni( 1 ) ) ) ;
+   hb_retl( SetDoubleClickTime( (UINT) hb_parni( 1 ) ) );
 }
 
 
@@ -93,7 +95,7 @@ HB_FUNC( SETDOUBLECLICKTIME )
 
 HB_FUNC( SHOWCURSOR )
 {
-   hb_retni( ShowCursor( hb_parl( 1 ) ) ) ;
+   hb_retni( ShowCursor( hb_parl( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -102,7 +104,7 @@ HB_FUNC( SHOWCURSOR )
 
 HB_FUNC( SETCURSORPOS )
 {
-   hb_retl( SetCursorPos( hb_parni( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retl( SetCursorPos( hb_parni( 1 ), hb_parni( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -116,7 +118,7 @@ HB_FUNC( SETCURSORPOS )
 
 HB_FUNC( WINSETCURSOR )
 {
-   hb_retnl( (LONG) SetCursor( (HCURSOR) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( SetCursor( (HCURSOR) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -183,7 +185,7 @@ HB_FUNC( GETCLIPCURSOR )
 
 HB_FUNC( GETCURSOR )
 {
-   hb_retnl( (LONG) GetCursor(  ) ) ;
+   HB_RETWH( GetCursor(  ) );
 }
 
 
@@ -193,7 +195,7 @@ HB_FUNC( GETCURSOR )
 
 HB_FUNC( SWAPMOUSEBUTTON )
 {
-   hb_retl( SwapMouseButton( hb_parl( 1 ) ) ) ;
+   hb_retl( SwapMouseButton( hb_parl( 1 ) ) );
 }
 
 
@@ -203,7 +205,7 @@ HB_FUNC( SWAPMOUSEBUTTON )
 
 HB_FUNC( LOADCURSORFROMFILE )
 {
-   hb_retnl( (LONG) LoadCursorFromFile( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   HB_RETWH( LoadCursorFromFile( (LPCSTR) hb_parcx( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -212,14 +214,14 @@ HB_FUNC( LOADCURSORFROMFILE )
 
 HB_FUNC( CREATECURSOR )
 {
-   hb_retnl( (LONG) CreateCursor( (HINSTANCE) hb_parnl( 1 ),
+   HB_RETWH( CreateCursor( (HINSTANCE) HB_PARWH( 1 ),
                                   hb_parni( 2 )            ,
                                   hb_parni( 3 )            ,
                                   hb_parni( 4 )            ,
                                   hb_parni( 5 )            ,
                                   hb_parcx( 6 )             ,
                                   hb_parcx( 7 )
-                                 ) ) ;
+                                 ) );
 }
 
 
@@ -229,7 +231,7 @@ HB_FUNC( CREATECURSOR )
 
 HB_FUNC( DESTROYCURSOR )
 {
-   hb_retl( DestroyCursor( (HCURSOR) hb_parnl( 1 ) ) ) ;
+   hb_retl( DestroyCursor( (HCURSOR) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -238,7 +240,7 @@ HB_FUNC( DESTROYCURSOR )
 
 HB_FUNC( COPYCURSOR )
 {
-   hb_retnl( (LONG) CopyCursor( (HCURSOR) hb_parnl( 1 ) ) ) ;
+   HB_RETWH( CopyCursor( (HCURSOR) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -247,7 +249,7 @@ HB_FUNC( COPYCURSOR )
 
 HB_FUNC( SETSYSTEMCURSOR )
 {
-   hb_retl( SetSystemCursor( (HCURSOR) hb_parnl( 1 ), (DWORD) hb_parnl( 2 ) ) ) ;
+   hb_retl( SetSystemCursor( (HCURSOR) HB_PARWH( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
 
 
@@ -260,9 +262,8 @@ HB_FUNC( GETCURSORINFO )
 
    if ( GetCursorInfo( &pci ) )
 
-      hb_retclen( (char *) &pci, sizeof( CURSORINFO ) ) ;
+      hb_retclen( (char *) &pci, sizeof( CURSORINFO ) );
 
 }
-
 
 #endif

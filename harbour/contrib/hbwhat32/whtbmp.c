@@ -19,7 +19,10 @@ Modified and non-API functions:
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
+
 #include "hbapiitm.h"
 #include "hbapi.h"
 
@@ -38,8 +41,8 @@ extern void Size2ArrayEx( SIZE *siz  ,  PHB_ITEM aSize);
 
 HB_FUNC( LOADBITMAP )
 {
-   hb_retnl( (LONG) LoadBitmap(
-             ISNIL(1) ? GetModuleHandle( NULL ): (HINSTANCE) hb_parnl(1) ,
+   HB_RETWH( LoadBitmap(
+             ISNIL(1) ? GetModuleHandle( NULL ): (HINSTANCE) HB_PARWH(1) ,
              hb_parinfo(2)==HB_IT_STRING ?
                        (LPCTSTR) hb_parcx( 2 ) :
                        MAKEINTRESOURCE( (WORD) hb_parni(2)) ) );
@@ -51,10 +54,10 @@ HB_FUNC( LOADBITMAP )
 
 HB_FUNC( DRAWBITMAP )
 {
-   HDC hDC = (HDC) hb_parnl( 1 );
+   HDC hDC = (HDC) HB_PARWH( 1 );
    HDC hDCmem = CreateCompatibleDC( hDC );
    DWORD dwraster = (ISNIL(3))? SRCCOPY : hb_parnl(3);
-   HBITMAP hBitmap = (HBITMAP) hb_parnl( 2 );
+   HBITMAP hBitmap = (HBITMAP) HB_PARWH( 2 );
    BITMAP  bitmap;
    int nWidthDest = ( hb_pcount() >=5 && !ISNIL(6) )? hb_parni(6):0;
    int nHeightDest = ( hb_pcount()>=6 && !ISNIL(7) )? hb_parni(7):0;
@@ -78,7 +81,7 @@ HB_FUNC( GETBITMAPSIZE )
 {
    PHB_ITEM aArray = hb_itemArrayNew( 2 );
    BITMAP bm;
-   HBITMAP hBmp = ( HBITMAP ) hb_parnl( 1 );
+   HBITMAP hBmp = ( HBITMAP ) HB_PARWH( 1 );
 
    GetObject( hBmp, sizeof( bm ), &bm );
 
@@ -98,7 +101,7 @@ HB_FUNC( GETBITMAPDIMENSIONEX )
 {
    SIZE Size;
 
-   if( GetBitmapDimensionEx( ( HBITMAP ) hb_parnl( 1 ), &Size ) )
+   if( GetBitmapDimensionEx( ( HBITMAP ) HB_PARWH( 1 ), &Size ) )
       hb_itemReturnRelease( Size2Array( &Size ) );
 }
 
@@ -114,7 +117,7 @@ HB_FUNC( SETBITMAPDIMENSIONEX )
 {
    SIZE Size;
 
-   if ( SetBitmapDimensionEx( (HBITMAP) hb_parnl( 1 ),
+   if ( SetBitmapDimensionEx( (HBITMAP) HB_PARWH( 1 ),
                                   hb_parni( 2 )          ,
                                   hb_parni( 3 )          ,
                                   &Size
@@ -137,7 +140,7 @@ HB_FUNC( SETBITMAPDIMENSIONEX )
 
 HB_FUNC( SETSTRETCHBLTMODE )
 {
-   hb_retni( SetStretchBltMode( (HDC) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retni( SetStretchBltMode( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -146,18 +149,18 @@ HB_FUNC( SETSTRETCHBLTMODE )
 
 HB_FUNC( STRETCHBLT )
 {
-   hb_retl( StretchBlt( (HDC) hb_parnl( 1 )   ,
+   hb_retl( StretchBlt( (HDC) HB_PARWH( 1 )   ,
                         hb_parni( 2 )         ,
                         hb_parni( 3 )         ,
                         hb_parni( 4 )         ,
                         hb_parni( 5 )         ,
-                        (HDC) hb_parnl( 6 )   ,
+                        (HDC) HB_PARWH( 6 )   ,
                         hb_parni( 7 )         ,
                         hb_parni( 8 )         ,
                         hb_parni( 9 )         ,
                         hb_parni( 10 )        ,
                         (DWORD) hb_parnl( 11 )
-                        ) ) ;
+                        ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -167,12 +170,12 @@ HB_FUNC( STRETCHBLT )
 
 HB_FUNC( CREATEBITMAP )
 {
-   hb_retnl( (LONG) CreateBitmap( hb_parni( 1 )       ,
-                                  hb_parni( 2 )       ,
-                                  (UINT) hb_parni( 3 ),
-                                  (UINT) hb_parni( 4 ),
-                                  hb_parcx(5)
-                                  ) ) ;
+   HB_RETWH( CreateBitmap( hb_parni( 1 )       ,
+                           hb_parni( 2 )       ,
+                           (UINT) hb_parni( 3 ),
+                           (UINT) hb_parni( 4 ),
+                           hb_parcx(5)
+                           ) );
 }
 
 
@@ -186,7 +189,7 @@ HB_FUNC( CREATEBITMAPINDIRECT )
 {
    CONST BITMAP *bmp = (BITMAP * ) hb_parc( 1 );//hb_param( 1,HB_IT_STRING )->item.asString.value;
 
-   hb_retnl( (LONG) CreateBitmapIndirect( bmp ) ) ;
+   HB_RETWH( CreateBitmapIndirect( bmp ) );
 }
 
 
@@ -196,10 +199,10 @@ HB_FUNC( CREATEBITMAPINDIRECT )
 
 HB_FUNC( CREATECOMPATIBLEBITMAP )
 {
-   hb_retnl( (LONG) CreateCompatibleBitmap( (HDC) hb_parnl( 1 ),
+   HB_RETWH( CreateCompatibleBitmap( (HDC) HB_PARWH( 1 ),
                                             hb_parni( 2 )      ,
                                             hb_parni( 3 )
-                                            ) ) ;
+                                            ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -212,13 +215,13 @@ HB_FUNC( CREATEDIBITMAP )
    BITMAPINFOHEADER *bmih = (BITMAPINFOHEADER *) hb_parc( 2 );//hb_param( 2, HB_IT_STRING )->item.asString.value ;
    BITMAPINFO *bmi  = (BITMAPINFO *) hb_parc( 5 );//hb_param( 5, HB_IT_STRING)->item.asString.value ;
 
-   hb_retnl( (LONG) CreateDIBitmap( (HDC) hb_parnl( 1 )  ,
+   HB_RETWH( CreateDIBitmap( (HDC) HB_PARWH( 1 )  ,
                                     bmih                ,
                                     (DWORD) hb_parnl( 3 ),
                                     (VOID *) hb_parcx( 3 ),
                                     bmi                 ,
                                     (UINT) hb_parni( 6 )
-                                    ) ) ;
+                                    ) );
 }
 
 
@@ -233,15 +236,15 @@ HB_FUNC( CREATEDIBSECTION )
    BITMAPINFO *bmi  = (BITMAPINFO *) hb_parc( 2 );//hb_param( 2, HB_IT_STRING)->item.asString.value ;
    VOID **ppBits = (VOID **) 0;
 
-   hb_retnl( (LONG) CreateDIBSection( (HDC) hb_parnl( 1 )   ,
+   HB_RETWH( CreateDIBSection( (HDC) HB_PARWH( 1 )   ,
                                       bmi                  ,
                                       (UINT) hb_parni( 3 )  ,
                                       ppBits                ,
-                                      (HANDLE) hb_parnl( 5 ),
+                                      (HANDLE) HB_PARWH( 5 ),
                                       (DWORD) hb_parnl( 6 )
-                                      ) ) ;
+                                      ) );
 
-   hb_stornl((LONG) *ppBits, 4) ;
+   HB_STORWH( *ppBits, 4);
 }
 
 
@@ -251,10 +254,10 @@ HB_FUNC( CREATEDIBSECTION )
 
 HB_FUNC( CREATEDISCARDABLEBITMAP )
 {
-   hb_retnl( (LONG) CreateDiscardableBitmap( (HDC) hb_parnl( 1 ),
+   HB_RETWH( CreateDiscardableBitmap( (HDC) HB_PARWH( 1 ),
                                              hb_parni( 2 )      ,
                                              hb_parni( 3 )
-                                             ) ) ;
+                                             ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -263,19 +266,19 @@ HB_FUNC( CREATEDISCARDABLEBITMAP )
 
 HB_FUNC( MASKBLT )
 {
-   hb_retl( MaskBlt( (HDC) hb_parnl( 1 )    ,
+   hb_retl( MaskBlt( (HDC) HB_PARWH( 1 )    ,
                      hb_parni( 2 )          ,
                      hb_parni( 3 )          ,
                      hb_parni( 4 )          ,
                      hb_parni( 5 )          ,
-                     (HDC) hb_parnl( 6 )    ,
+                     (HDC) HB_PARWH( 6 )    ,
                      hb_parni( 7 )          ,
                      hb_parni( 8 )          ,
-                     (HBITMAP) hb_parnl( 9 ),
+                     (HBITMAP) HB_PARWH( 9 ),
                      hb_parni( 10 )         ,
                      hb_parni( 11 )         ,
                      (DWORD) hb_parnl( 12 )
-                     ) ) ;
+                     ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -284,16 +287,16 @@ HB_FUNC( MASKBLT )
 
 HB_FUNC( BITBLT )
 {
-   hb_retl( BitBlt( (HDC) hb_parnl( 1 )  ,
+   hb_retl( BitBlt( (HDC) HB_PARWH( 1 )  ,
                     hb_parni( 2 )        ,
                     hb_parni( 3 )        ,
                     hb_parni( 4 )        ,
                     hb_parni( 5 )        ,
-                    (HDC) hb_parnl( 6 )  ,
+                    (HDC) HB_PARWH( 6 )  ,
                     hb_parni( 7 )        ,
                     hb_parni( 8 )        ,
                     (DWORD) hb_parnl( 9 )
-                    ) ) ;
+                    ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -302,13 +305,13 @@ HB_FUNC( BITBLT )
 
 HB_FUNC( PATBLT )
 {
-   hb_retl( PatBlt( (HDC) hb_parnl( 1 )  ,
+   hb_retl( PatBlt( (HDC) HB_PARWH( 1 )  ,
                     hb_parni( 2 )        ,
                     hb_parni( 3 )        ,
                     hb_parni( 4 )        ,
                     hb_parni( 5 )        ,
                     (DWORD) hb_parnl( 6 )
-                    ) ) ;
+                    ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -317,7 +320,7 @@ HB_FUNC( PATBLT )
 
 HB_FUNC( SETROP2 )
 {
-   hb_retni( SetROP2( (HDC) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retni( SetROP2( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -328,11 +331,10 @@ HB_FUNC( SETROP2 )
 
 HB_FUNC( SETBITMAPBITS )
 {
-
-   hb_retnl( (LONG) SetBitmapBits( (HBITMAP) hb_parnl( 1 ),
+   hb_retnl( SetBitmapBits( (HBITMAP) HB_PARWH( 1 ),
                                    (DWORD) hb_parclen( 2 )  ,
                                    (VOID *) hb_parcx( 2 )
-                                   ) ) ;
+                                   ) );
 }
 
 
@@ -348,14 +350,14 @@ HB_FUNC( SETDIBITS )
 
    // Your code goes here
 
-   hb_retni( SetDIBits( (HDC) hb_parnl( 1 )    ,
-                        (HBITMAP) hb_parnl( 2 ),
+   hb_retni( SetDIBits( (HDC) HB_PARWH( 1 )    ,
+                        (HBITMAP) HB_PARWH( 2 ),
                         (UINT) hb_parni( 3 )   ,
                         (UINT) hb_parni( 4 )   ,
                         (VOID *) hb_parcx(5)    ,
                         bmi                    ,
                         (UINT) hb_parni( 7 )
-                        ) ) ;
+                        ) );
 }
 
 
@@ -365,7 +367,7 @@ HB_FUNC( SETDIBITS )
 
 HB_FUNC( GETROP2 )
 {
-   hb_retni( GetROP2( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retni( GetROP2( (HDC) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -374,7 +376,7 @@ HB_FUNC( GETROP2 )
 
 HB_FUNC( GETSTRETCHBLTMODE )
 {
-   hb_retni( GetStretchBltMode( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retni( GetStretchBltMode( (HDC) HB_PARWH( 1 ) ) );
 }
 
 
@@ -388,7 +390,7 @@ HB_FUNC( SETDIBITSTODEVICE )
 
    BITMAPINFO *bmi  = (BITMAPINFO *) hb_parc( 11 );//hb_param( 11, HB_IT_STRING)->item.asString.value ;
 
-   hb_retni( SetDIBitsToDevice( (HDC) hb_parnl( 1 )  ,
+   hb_retni( SetDIBitsToDevice( (HDC) HB_PARWH( 1 )  ,
                                 hb_parni( 2 )        ,
                                 hb_parni( 3 )        ,
                                 (DWORD) hb_parnl( 4 ),
@@ -400,7 +402,7 @@ HB_FUNC( SETDIBITSTODEVICE )
                                 (VOID *) hb_parcx(10) ,
                                 bmi                  ,
                                 (UINT) hb_parni( 12 )
-                                ) ) ;
+                                ) );
 }
 
 
@@ -414,7 +416,7 @@ HB_FUNC( STRETCHDIBITS )
 
    BITMAPINFO *bmi  = (BITMAPINFO *) hb_parc( 11 );//hb_param( 11, HB_IT_STRING)->item.asString.value ;
 
-   hb_retni( StretchDIBits( (HDC) hb_parnl( 1 )   ,
+   hb_retni( StretchDIBits( (HDC) HB_PARWH( 1 )   ,
                             hb_parni( 2 )         ,
                             hb_parni( 3 )         ,
                             hb_parni( 4 )         ,
@@ -427,7 +429,7 @@ HB_FUNC( STRETCHDIBITS )
                             bmi                   ,
                             (UINT) hb_parni( 12 ) ,
                             (DWORD) hb_parnl( 13 )
-                            ) ) ;
+                            ) );
 }
 
 
@@ -449,41 +451,41 @@ void Pic(HDC hDC, int x , int y , int dx , int dy , HBITMAP hBmp , COLORREF rgbT
      HBRUSH   hOld ;
 
 
-     hDCMem       = CreateCompatibleDC(hDC) ;
-     hDCMem2      = CreateCompatibleDC(hDC) ;
-     hbmTransMask = CreateBitmap(dx,dy,1,1,NULL) ;
+     hDCMem       = CreateCompatibleDC(hDC);
+     hDCMem2      = CreateCompatibleDC(hDC);
+     hbmTransMask = CreateBitmap(dx,dy,1,1,NULL);
 
 
-     SetBkColor(hDC, RGB(255,255,255)) ; //White)
-     SetTextColor(hDC, RGB(0,0,0)) ;     //Black)
+     SetBkColor(hDC, RGB(255,255,255)); //White)
+     SetTextColor(hDC, RGB(0,0,0));     //Black)
 
      hbmDefault=(HBITMAP)SelectObject(hDCMem, hBmp);
      SelectObject(hDCMem2, hbmTransMask)   ;
 
     // build mask based on transparent color.
 
-     SetBkColor(hDCMem, rgbTransparent) ;
-     BitBlt(hDCMem2, 0, 0, dx, dy, hDCMem, 0, 0, SRCCOPY) ;
+     SetBkColor(hDCMem, rgbTransparent);
+     BitBlt(hDCMem2, 0, 0, dx, dy, hDCMem, 0, 0, SRCCOPY);
 
     if( disabled)
       {
         hBr=CreateSolidBrush(GetSysColor(COLOR_BTNHIGHLIGHT));
         hOld=(HBRUSH)SelectObject(hDC,hBr)  ;
-        BitBlt(hDC, x+1, y+1, dx-2, dy-2, hDCMem2, 0, 0, 12060490) ;
-        SelectObject(hDC,hOld) ;
+        BitBlt(hDC, x+1, y+1, dx-2, dy-2, hDCMem2, 0, 0, 12060490);
+        SelectObject(hDC,hOld);
         DeleteObject(hBr)      ;
 
-        hBr=CreateSolidBrush(GetSysColor(COLOR_BTNSHADOW)) ;
-        hOld=(HBRUSH)SelectObject(hDC,hBr) ;
-        BitBlt(hDC, x, y, dx-2, dy-2, hDCMem2, 0, 0, 12060490) ;
-        SelectObject(hDC,hOld) ;
-        DeleteObject(hBr) ;
+        hBr=CreateSolidBrush(GetSysColor(COLOR_BTNSHADOW));
+        hOld=(HBRUSH)SelectObject(hDC,hBr);
+        BitBlt(hDC, x, y, dx-2, dy-2, hDCMem2, 0, 0, 12060490);
+        SelectObject(hDC,hOld);
+        DeleteObject(hBr);
       }
     else
       {
-        BitBlt(hDC, x, y, dx, dy, hDCMem, 0, 0, SRCINVERT) ;
+        BitBlt(hDC, x, y, dx, dy, hDCMem, 0, 0, SRCINVERT);
         BitBlt(hDC, x, y, dx, dy, hDCMem2, 0, 0, SRCAND)   ;
-        BitBlt(hDC, x, y, dx, dy, hDCMem, 0, 0, SRCINVERT) ;
+        BitBlt(hDC, x, y, dx, dy, hDCMem, 0, 0, SRCINVERT);
       }
 
 
@@ -491,8 +493,8 @@ void Pic(HDC hDC, int x , int y , int dx , int dy , HBITMAP hBmp , COLORREF rgbT
     SelectObject(hDCMem2, hbmDefault);
     DeleteObject(hbmTransMask);
 
-    DeleteDC(hDCMem) ;
-    DeleteDC(hDCMem2) ;
+    DeleteDC(hDCMem);
+    DeleteDC(hDCMem2);
 
     return ;
 
@@ -507,12 +509,12 @@ DrawGlyph(HDC hDC, int x , int y , int dx , int dy , HBITMAP hBmp , COLORREF rgb
 
 HB_FUNC( DRAWGLYPH )
    {
-    Pic(    (HDC) hb_parni(1),
+    Pic(    (HDC) HB_PARWH(1),
                   hb_parni(2),
                   hb_parni(3),
                   hb_parni(4),
                   hb_parni(5),
-        (HBITMAP) hb_parni(6),
+        (HBITMAP) HB_PARWH(6),
        (COLORREF) hb_parnl(7),
                   hb_parl(8));
     return;
@@ -536,8 +538,8 @@ HB_FUNC( DRAWSTATE )
 
    // Your code goes here
 
-   hb_retl( DrawState( (HDC) hb_parnl( 1 )   ,
-                       (HBRUSH) hb_parnl( 2 ),
+   hb_retl( DrawState( (HDC) HB_PARWH( 1 )   ,
+                       (HBRUSH) HB_PARWH( 2 ),
                        drawstateProc         ,
                        (LPARAM) hb_parnl( 4 ),
                        (WPARAM) hb_parnl( 5 ),
@@ -546,7 +548,7 @@ HB_FUNC( DRAWSTATE )
                        hb_parni( 8 )         ,
                        hb_parni( 9 )         ,
                        (UINT) hb_parni( 10 )
-                     ) ) ;
+                     ) );
 }
 
 */
@@ -564,10 +566,10 @@ HB_FUNC( GETBITMAPBITS )
 
    // Your code goes here
 
-   hb_retnl( (LONG) GetBitmapBits( (HBITMAP) hb_parnl( 1 ),
+   HB_RETWH( GetBitmapBits( (HBITMAP) HB_PARWH( 1 ),
                                    hb_parnl( 2 )          ,
                                    lpVoid
-                                   ) ) ;
+                                   ) );
 }
 
 */
@@ -585,16 +587,16 @@ HB_FUNC( GETDIBITS )
    VOID *lpvBits ;
    BITMAPINFO *bmi  = (BITMAPINFO *) hb_param( 6, HB_IT_STRING)->item.asString.value ;
 
-   hb_retni( GetDIBits( (HDC) hb_parnl( 1 )       ,
-                        (HBITMAP) hb_parnl( 2 )   ,
+   hb_retni( GetDIBits( (HDC) HB_PARWH( 1 )       ,
+                        (HBITMAP) HB_PARWH( 2 )   ,
                         (UINT) hb_parni( 3 )      ,
                         (UINT) hb_parni( 4 )      ,
                         ISNIL(5) ? NULL : lpvBits ,
                         bmi                       ,
                         (UINT) hb_parni( 7 )
-                        ) ) ;
+                        ) );
 
-  hb_storc( lpvBits, 5) ;
+  hb_storc( lpvBits, 5);
 }
 */
 
@@ -610,12 +612,12 @@ HB_FUNC( GETGLYPHINDICESA )
 
    // Your code goes here
 
-   hb_retnl( (LONG) GetGlyphIndicesA( (HDC) hb_parnl( 1 )  ,
+   HB_RETWH( GetGlyphIndicesA( (HDC) HB_PARWH( 1 )  ,
                                       (LPCSTR) hb_parcx( 2 ),
                                       hb_parni( 3 )        ,
                                       lpWord               ,
                                       (DWORD) hb_parnl( 5 )
-                                      ) ) ;
+                                      ) );
 }
 
 */
@@ -633,14 +635,14 @@ HB_FUNC( GETGLYPHOUTLINEA )
 
    // Your code goes here
 
-   hb_retnl( (LONG) GetGlyphOutlineA( (HDC) hb_parnl( 1 )  ,
+   HB_RETWH( GetGlyphOutlineA( (HDC) HB_PARWH( 1 )  ,
                                       (UINT) hb_parni( 2 ) ,
                                       (UINT) hb_parni( 3 ) ,
                                       lpglyphMetrics       ,
                                       (DWORD) hb_parnl( 5 ),
                                       lpVoid               ,
                                       &MAT2
-                                      ) ) ;
+                                      ) );
 }
 
 */
@@ -655,18 +657,18 @@ HB_FUNC( ALPHABLEND )
 {
    BLENDFUNCTION *bf = (BLENDFUNCTION *) hb_param( 11, HB_IT_STRING)->item.asString.value ;
 
-   hb_retl( AlphaBlend( (HDC) hb_parnl( 1 ),
+   hb_retl( AlphaBlend( (HDC) HB_PARWH( 1 ),
                         hb_parni( 2 )      ,
                         hb_parni( 3 )      ,
                         hb_parni( 4 )      ,
                         hb_parni( 5 )      ,
-                        (HDC) hb_parnl( 6 ),
+                        (HDC) HB_PARWH( 6 ),
                         hb_parni( 7 )      ,
                         hb_parni( 8 )      ,
                         hb_parni( 9 )      ,
                         hb_parni( 10 )     ,
                         *bf
-                        ) ) ;
+                        ) );
 }
 */
 
@@ -681,17 +683,17 @@ HB_FUNC( PLGBLT )
 
    // Your code goes here
 
-   hb_retl( PlgBlt( (HDC) hb_parnl( 1 )    ,
+   hb_retl( PlgBlt( (HDC) HB_PARWH( 1 )    ,
                     &POINT                 ,
-                    (HDC) hb_parnl( 3 )    ,
+                    (HDC) HB_PARWH( 3 )    ,
                     hb_parni( 4 )          ,
                     hb_parni( 5 )          ,
                     hb_parni( 6 )          ,
                     hb_parni( 7 )          ,
-                    (HBITMAP) hb_parnl( 8 ),
+                    (HBITMAP) HB_PARWH( 8 ),
                     hb_parni( 9 )          ,
                     hb_parni( 10 )
-                    ) ) ;
+                    ) );
 }
 
 */
@@ -708,11 +710,11 @@ HB_FUNC( SETDIBCOLORTABLE )
 
    // Your code goes here
 
-   hb_retni( SetDIBColorTable( (HDC) hb_parnl( 1 ) ,
+   hb_retni( SetDIBColorTable( (HDC) HB_PARWH( 1 ) ,
                                (UINT) hb_parni( 2 ),
                                (UINT) hb_parni( 3 ),
                                &RGBQUAD
-                               ) ) ;
+                               ) );
 }
 
 */
@@ -726,19 +728,18 @@ HB_FUNC( SETDIBCOLORTABLE )
 /*
 HB_FUNC( TRANSPARENTBLT )
 {
-   hb_retl( TransparentBlt( (HDC) hb_parnl( 1 )  ,
+   hb_retl( TransparentBlt( (HDC) HB_PARWH( 1 )  ,
                             hb_parni( 2 )        ,
                             hb_parni( 3 )        ,
                             hb_parni( 4 )        ,
                             hb_parni( 5 )        ,
-                            (HDC) hb_parnl( 6 )  ,
+                            (HDC) HB_PARWH( 6 )  ,
                             hb_parni( 7 )        ,
                             hb_parni( 8 )        ,
                             hb_parni( 9 )        ,
                             hb_parni( 10 )       ,
                             (UINT) hb_parni( 11 )
-                            ) ) ;
+                            ) );
 }
 
 */
-

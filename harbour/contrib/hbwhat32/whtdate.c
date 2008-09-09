@@ -9,6 +9,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <shlobj.h>
 //#include <commctrl.h>
@@ -28,7 +30,7 @@
 HB_FUNC( DATETIME_CREATE )
 {
 
-   hb_retnl( (LONG) CreateWindowEx( ISNIL( 1 ) ? 0 : hb_parnl( 1 ) ,
+   HB_RETWH( CreateWindowEx( ISNIL( 1 ) ? 0 : hb_parnl( 1 ) ,
                                     "SysDateTimePick32"   ,   // CLASSNAME
                                     0                     ,   // Window Name   // ????????
                                     (DWORD) hb_parnl( 2 ) ,   // nStyle
@@ -36,10 +38,10 @@ HB_FUNC( DATETIME_CREATE )
                                     hb_parni( 4 )         ,   // y
                                     hb_parni( 5 )         ,   // nWidth
                                     hb_parni( 6 )         ,   // nHeight
-                                    (HWND) hb_parnl( 7 )  ,   // hParent
-                                    (HMENU) hb_parni( 8 ) ,   // hMenu
+                                    (HWND) HB_PARWH( 7 )  ,   // hParent
+                                    (HMENU) HB_PARWH( 8 ) ,   // hMenu
                                     GetModuleHandle(NULL) ,   // hInstance
-                                    ISNIL( 9 ) ? NULL : (void *) hb_parnl( 9 ) ) ) ;   // lpParam
+                                    ISNIL( 9 ) ? NULL : (void *) HB_PARWH( 9 ) ) );   // lpParam
 }
 
 //-----------------------------------------------------------------------------
@@ -56,8 +58,8 @@ HB_FUNC( DATETIME_CREATE )
 HB_FUNC( DATETIME_GETMONTHCAL )
 {
 
-   hb_retnl( (LONG) DateTime_GetMonthCal(
-                                            (HWND) hb_parnl( 1 )  // Handle to a DTP control
+   HB_RETWH( DateTime_GetMonthCal(
+                                            (HWND) HB_PARWH( 1 )  // Handle to a DTP control
                                           ) );
 }
 
@@ -74,8 +76,8 @@ HB_FUNC( DATETIME_GETMONTHCAL )
 HB_FUNC( DATETIME_GETMONTHCALCOLOR )
 {
 
-   hb_retnl( (LONG) DateTime_GetMonthCalColor(
-                                            (HWND) hb_parnl( 1 ),  // Handle to a DTP control
+   hb_retnl( ( long ) DateTime_GetMonthCalColor(
+                                            (HWND) HB_PARWH( 1 ),  // Handle to a DTP control
                                                    hb_parni( 2 )   // Value of type int specifying which month calendar color to retrieve.
 
                                              ) );
@@ -93,9 +95,9 @@ HB_FUNC( DATETIME_GETMONTHCALCOLOR )
 
 HB_FUNC( DATETIME_GETMONTHCALFONT )
 {
-
-   hb_retnl( (LONG) DateTime_GetMonthCalFont(
-                                            (HWND) hb_parnl( 1 )   // Handle to a DTP control
+   // QUESTION: Doc seems to say this returns a HFONT, but it's not on 64-bit.
+   hb_retnl( ( long ) DateTime_GetMonthCalFont(
+                                            (HWND) HB_PARWH( 1 )   // Handle to a DTP control
                                              ) );
 }
 
@@ -117,7 +119,7 @@ HB_FUNC( DATETIME_GETRANGE )
    PHB_ITEM aMinMaxDate, aMinDate, aMaxDate;
    DWORD dwRet;
 
-   dwRet = DateTime_GetRange( (HWND) hb_parnl( 1 ), (SYSTEMTIME *)lpSysTimeArray );
+   dwRet = DateTime_GetRange( (HWND) HB_PARWH( 1 ), (SYSTEMTIME *)lpSysTimeArray );
 
    if( ISBYREF( 2 ) )
       hb_stornl( dwRet, 2 );
@@ -175,7 +177,7 @@ HB_FUNC( DATETIME_GETSYSTEMTIME )
    long nRet;
 
    nRet = DateTime_GetSystemtime(
-                      (HWND) hb_parnl( 1 ),   // Handle to a DTP control
+                      (HWND) HB_PARWH( 1 ),   // Handle to a DTP control
                       &SysTime              // Pointer to a SYSTEMTIME structure. If DTM_GETSYSTEMTIME returns
                                               // GDT_VALID, this structure will contain the system time.
                                               // Otherwise, it will not contain valid information.
@@ -215,7 +217,7 @@ HB_FUNC( DATETIME_GETSYSTEMTIME )
 HB_FUNC( DATETIME_SETFORMAT )
 {
    hb_retl( DateTime_SetFormat(
-                      (HWND) hb_parnl( 1 ),   // Handle to a DTP control
+                      (HWND) HB_PARWH( 1 ),   // Handle to a DTP control
                    (LPCTSTR) hb_parcx( 2 )     // Pointer to a zero-terminated format string that defines
                                               // the desired display. Setting this parameter to NULL will
                                               // reset the control to the default format string for the current style.
@@ -237,8 +239,8 @@ HB_FUNC( DATETIME_SETFORMAT )
 
 HB_FUNC( DATETIME_SETMONTHCALCOLOR )
 {
-   hb_retnl( (LONG) DateTime_SetMonthCalColor(
-                      (HWND) hb_parnl( 1 ),   // Handle to a DTP control
+   hb_retnl( ( long ) DateTime_SetMonthCalColor(
+                      (HWND) HB_PARWH( 1 ),   // Handle to a DTP control
                              hb_parni( 2 ),   // Value of type int specifying which month calendar color to set.
                   (COLORREF) hb_parnl( 3 )    // COLORREF value that represents the color that will be set for the specified area of the month calendar.
                                     )  );
@@ -260,8 +262,8 @@ HB_FUNC( DATETIME_SETMONTHCALFONT )
 {
 
    DateTime_SetMonthCalFont(
-                      (HWND) hb_parnl( 1 ),   // Handle to a DTP control
-                     (HFONT) hb_parnl( 2 ),   // Handle to the font that will be set.
+                      (HWND) HB_PARWH( 1 ),   // Handle to a DTP control
+                     (HFONT) HB_PARWH( 2 ),   // Handle to the font that will be set.
                       (BOOL) hb_parl( 3 )     // Specifies whether the control should be redrawn
                                               // immediately upon setting the font. Setting this
                                               // parameter to TRUE causes the control to redraw itself.
@@ -289,14 +291,14 @@ HB_FUNC( DATETIME_SETSYSTEMTIME )
 
    if ( ISARRAY( 3 ) ) // array
    {
-      SysTime.wYear         = (WORD)  hb_parnl( 3, 1 );
-      SysTime.wMonth        = (WORD)  hb_parnl( 3, 2 );
-      SysTime.wDayOfWeek    = (WORD)  hb_parnl( 3, 3 );
-      SysTime.wDay          = (WORD)  hb_parnl( 3, 4 );
-      SysTime.wHour         = (WORD)  hb_parnl( 3, 5 );
-      SysTime.wMinute       = (WORD)  hb_parnl( 3, 6 );
-      SysTime.wSecond       = (WORD)  hb_parnl( 3, 7 );
-      SysTime.wMilliseconds = (WORD)  hb_parnl( 3, 8 );
+      SysTime.wYear         = (WORD)  hb_parni( 3, 1 );
+      SysTime.wMonth        = (WORD)  hb_parni( 3, 2 );
+      SysTime.wDayOfWeek    = (WORD)  hb_parni( 3, 3 );
+      SysTime.wDay          = (WORD)  hb_parni( 3, 4 );
+      SysTime.wHour         = (WORD)  hb_parni( 3, 5 );
+      SysTime.wMinute       = (WORD)  hb_parni( 3, 6 );
+      SysTime.wSecond       = (WORD)  hb_parni( 3, 7 );
+      SysTime.wMilliseconds = (WORD)  hb_parni( 3, 8 );
       lpSysTime = &SysTime;
    }
    else
@@ -313,9 +315,8 @@ HB_FUNC( DATETIME_SETSYSTEMTIME )
    }
 
    hb_retl( DateTime_SetSystemtime(
-                      (HWND) hb_parnl( 1 ) ,   // Handle to a DTP control
+                      (HWND) HB_PARWH( 1 ) ,   // Handle to a DTP control
                       (DWORD) hb_parnl( 2 ),   // Value that specifies the action that should be performed.
                       lpSysTime                // Pointer to SYSTEMTIME structures
                                ) );
 }
-

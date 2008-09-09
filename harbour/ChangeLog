@@ -8,6 +8,65 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-09 11:32 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  + contrib/hbwhat32/hbwhat.h
+  * contrib/hbwhat32/whtbmp.c
+  * contrib/hbwhat32/whtbrsh.c
+  * contrib/hbwhat32/whtcall.c
+  * contrib/hbwhat32/whtcdlg.c
+  * contrib/hbwhat32/whtclpb.c
+  * contrib/hbwhat32/whtcomm.c
+  * contrib/hbwhat32/whtcret.c
+  * contrib/hbwhat32/whtdate.c
+  * contrib/hbwhat32/whtdc.c
+  * contrib/hbwhat32/whtdir.c
+  * contrib/hbwhat32/whtdlg.c
+  * contrib/hbwhat32/whtdll.c
+  * contrib/hbwhat32/whtdraw.c
+  * contrib/hbwhat32/whtfont.c
+  * contrib/hbwhat32/whtgdi.c
+  * contrib/hbwhat32/whthead.c
+  * contrib/hbwhat32/whticon.c
+  * contrib/hbwhat32/whtilst.c
+  * contrib/hbwhat32/whtinet.c
+  * contrib/hbwhat32/whtini.c
+  * contrib/hbwhat32/whtkbrd.c
+  * contrib/hbwhat32/whtlv.c
+  * contrib/hbwhat32/whtmain.c
+  * contrib/hbwhat32/whtmapi.c
+  * contrib/hbwhat32/whtmem.c
+  * contrib/hbwhat32/whtmenu.c
+  * contrib/hbwhat32/whtmeta.c
+  * contrib/hbwhat32/whtmisc.c
+  * contrib/hbwhat32/whtmmcap.c
+  * contrib/hbwhat32/whtmous.c
+  * contrib/hbwhat32/whtmsg.c
+  * contrib/hbwhat32/whtpen.c
+  * contrib/hbwhat32/whtprn.c
+  * contrib/hbwhat32/whtrect.c
+  * contrib/hbwhat32/whtreg.c
+  * contrib/hbwhat32/whtrgn.c
+  * contrib/hbwhat32/whtscrlb.c
+  * contrib/hbwhat32/whtseria.c
+  * contrib/hbwhat32/whtshell.c
+  * contrib/hbwhat32/whtsock.c
+  * contrib/hbwhat32/whtsys.c
+  * contrib/hbwhat32/whttab.c
+  * contrib/hbwhat32/whttbar.c
+  * contrib/hbwhat32/whttext.c
+  * contrib/hbwhat32/whttree.c
+  * contrib/hbwhat32/whtview.c
+  * contrib/hbwhat32/whtwnd.c
+  * contrib/hbwhat32/wincorec.c
+    ! Changed pointer related hb_ret, hb_par and hb_stor calls 
+      to ptr versions. This might create incompatibilities and 
+      since there is no test package for this lib, it's difficult 
+      to test if it works. I relied on MSVC warnings.
+    ; There are still some calls to change. One other problem is 
+      there is no public equivalent of hb_vmPushLong() for pointers, 
+      so these VM specific parts should be changed to use some more 
+      official Harbour APIs.
+
 2008-09-09 09:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/mtpl_b32.mak
   * contrib/mtpl_vc.mak

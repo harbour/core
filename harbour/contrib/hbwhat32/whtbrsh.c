@@ -15,7 +15,10 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
+
 #include "hbapiitm.h"
 #include "hbapi.h"
 
@@ -24,7 +27,7 @@
 
 HB_FUNC( CREATESOLIDBRUSH )
 {
-   hb_retnl( (LONG) CreateSolidBrush( (COLORREF) hb_parnl( 1 ) ) ) ;    // brush color
+   HB_RETWH( CreateSolidBrush( (COLORREF) hb_parnl( 1 ) ) );    // brush color
 }
 
 
@@ -32,7 +35,7 @@ HB_FUNC( CREATESOLIDBRUSH )
 
 HB_FUNC( CREATEPATTERNBRUSH )
 {
-   hb_retnl( (LONG) CreatePatternBrush((HBITMAP) hb_parnl( 1 ) ) ) ;    // bitmap handle
+   HB_RETWH( CreatePatternBrush((HBITMAP) HB_PARWH( 1 ) ) );    // bitmap handle
 }
 
 //-----------------------------------------------------------------------------
@@ -41,9 +44,9 @@ HB_FUNC( CREATEPATTERNBRUSH )
 
 HB_FUNC( CREATEDIBPATTERNBRUSH )
 {
-   hb_retnl( (LONG) CreateDIBPatternBrush( (HGLOBAL) hb_parnl( 1 ),
+   HB_RETWH( CreateDIBPatternBrush( (HGLOBAL) HB_PARWH( 1 ),
                                            (UINT) hb_parni( 2 )
-                                           ) ) ;
+                                           ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -55,11 +58,11 @@ HB_FUNC( CREATEDIBPATTERNBRUSH )
 
 HB_FUNC( CREATEBRUSHINDIRECT )
 {
-   //PHB_ITEM br = hb_param( 1,HB_IT_STRING ) ;
+   //PHB_ITEM br = hb_param( 1,HB_IT_STRING );
    //LOGBRUSH *lb = (LOGBRUSH * ) br->item.asString.value;
-   LOGBRUSH *lb = (LOGBRUSH * ) hb_parnl( 1 );
+   LOGBRUSH *lb = (LOGBRUSH * ) HB_PARWH( 1 );
 
-   hb_retnl( (LONG) CreateBrushIndirect( lb ) ) ;
+   HB_RETWH( CreateBrushIndirect( lb ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -69,7 +72,7 @@ HB_FUNC( CREATEBRUSHINDIRECT )
 HB_FUNC( CREATEHATCHBRUSH )
 {
 
-   hb_retnl( (LONG) CreateHatchBrush( hb_parni( 1 ), (COLORREF) hb_parnl(2) ) ) ;
+   HB_RETWH( CreateHatchBrush( hb_parni( 1 ), (COLORREF) hb_parnl(2) ) );
 }
 
 
@@ -83,7 +86,7 @@ HB_FUNC( CREATEHATCHBRUSH )
 
 HB_FUNC( GETDCBRUSHCOLOR )
 {
-   hb_retnl( (ULONG) GetDCBrushColor( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retnl( (ULONG) GetDCBrushColor( (HDC) HB_PARWH( 1 ) ) );
 }
 
 */
@@ -98,7 +101,7 @@ HB_FUNC( GETDCBRUSHCOLOR )
 HB_FUNC( SETDCBRUSHCOLOR )
 {
 
-   hb_retnl( (ULONG) SetDCBrushColor( (HDC) hb_parnl( 1 ), (COLORREF) hb_parnl( 2 ) ) ) ;
+   hb_retnl( (ULONG) SetDCBrushColor( (HDC) HB_PARWH( 1 ), (COLORREF) hb_parnl( 2 ) ) );
 }
 */
 //-----------------------------------------------------------------------------
@@ -111,7 +114,7 @@ HB_FUNC( CREATEDIBPATTERNBRUSHPT )
 {
    BITMAPINFO *bmi = (BITMAPINFO *) hb_parc( 1 );//hb_param( 1,HB_IT_STRING )->item.asString.value;
 
-   hb_retnl( (LONG) CreateDIBPatternBrushPt( bmi, (UINT) hb_parni( 2 ) ) ) ;
+   HB_RETWH( CreateDIBPatternBrushPt( bmi, (UINT) hb_parni( 2 ) ) );
 }
 
 
@@ -124,11 +127,11 @@ HB_FUNC( FIXBRUSHORGEX )
 {
    POINT *Point = (POINT *) hb_parc( 4 );//hb_param( 4,HB_IT_STRING )->item.asString.value;
 
-   hb_retl( FixBrushOrgEx( (HDC) hb_parnl( 1 ),
+   hb_retl( FixBrushOrgEx( (HDC) HB_PARWH( 1 ),
                            hb_parni( 2 )      ,
                            hb_parni( 3 )      ,
                            Point
-                           ) ) ;
+                           ) );
 }
 
 
@@ -140,7 +143,7 @@ HB_FUNC( GETBRUSHORGEX )
 {
    POINT Point;
 
-   if( GetBrushOrgEx( ( HDC ) hb_parnl( 1 ), &Point ) )
+   if( GetBrushOrgEx( ( HDC ) HB_PARWH( 1 ), &Point ) )
    {
       PHB_ITEM aPt = hb_itemArrayNew( 2 );
 
@@ -163,7 +166,7 @@ HB_FUNC( SETBRUSHORGEX )
 
    POINT Point;
 
-   if( SetBrushOrgEx( ( HDC ) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ), &Point ) )
+   if( SetBrushOrgEx( ( HDC ) HB_PARWH( 1 ), hb_parni( 2 ), hb_parni( 3 ), &Point ) )
    {
       PHB_ITEM aPt = hb_itemArrayNew( 2 );
 
@@ -173,6 +176,3 @@ HB_FUNC( SETBRUSHORGEX )
       hb_itemReturnRelease( aPt );
    }
 }
-
-
-

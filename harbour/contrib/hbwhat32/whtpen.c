@@ -10,6 +10,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 //#include <shlobj.h>
 #include <windows.h>
 #include "hbapiitm.h"
@@ -23,7 +25,7 @@
 
 HB_FUNC( CREATEPEN )
 {
-   hb_retnl( (LONG) CreatePen(
+   HB_RETWH( CreatePen(
                hb_parni( 1 ),   // pen style
                hb_parni( 2 ),   // pen width
                (COLORREF) hb_parnl( 3 ) // pen color
@@ -41,7 +43,7 @@ HB_FUNC( CREATEPENINDIRECT )
 
    // Your code goes here
 
-   hb_retnl( (LONG) CreatePenIndirect( &LOGPEN ) ) ;
+   HB_RETWH( CreatePenIndirect( &LOGPEN ) );
 }
 
 */
@@ -55,7 +57,7 @@ HB_FUNC( CREATEPENINDIRECT )
 
 HB_FUNC( GETDCPENCOLOR )
 {
-   hb_retnl( (ULONG) GetDCPenColor( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retnl( (ULONG) GetDCPenColor( (HDC) HB_PARWH( 1 ) ) );
 }
 
 */
@@ -70,7 +72,7 @@ HB_FUNC( GETDCPENCOLOR )
 HB_FUNC( SETDCPENCOLOR )
 {
 
-   hb_retnl( (ULONG) SetDCPenColor( (HDC) hb_parnl( 1 ), (COLORREF) hb_parnl( 2 ) ) ) ;
+   hb_retnl( (ULONG) SetDCPenColor( (HDC) HB_PARWH( 1 ), (COLORREF) hb_parnl( 2 ) ) );
 }
 
 */
@@ -87,43 +89,12 @@ HB_FUNC( EXTCREATEPEN )
 
    // Your code goes here
 
-   hb_retnl( (LONG) ExtCreatePen( (DWORD) hb_parnl( 1 ),
+   HB_RETWH( ExtCreatePen( (DWORD) hb_parnl( 1 ),
                                   (DWORD) hb_parnl( 2 ),
                                   &LOGBRUSH            ,
                                   (DWORD) hb_parnl( 4 ),
                                   &&dWord4
-                                  ) ) ;
+                                  ) );
 }
 
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

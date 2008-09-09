@@ -12,6 +12,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include "hbapiitm.h"
 #include "hbapi.h"
@@ -37,7 +39,7 @@ HB_FUNC( CREATEFONT )
 
    if ( ISARRAY(1))
    {
-      hb_retnl( (LONG) CreateFont( hb_parni( 1, 1 )         ,  // nHeight
+      HB_RETWH( CreateFont( hb_parni( 1, 1 )         ,  // nHeight
                                     hb_parni( 1, 2 )         ,  // nWidth
                                     hb_parni( 1, 3 )         ,  // nEscapement
                                     hb_parni( 1, 4 )         ,  // nOrientation
@@ -51,12 +53,12 @@ HB_FUNC( CREATEFONT )
                                     (DWORD) hb_parnl( 1, 12 ),  // fdwQuality
                                     (DWORD) hb_parnl( 1, 13 ),  // fdwPitchAndFamily
                                     (LPCSTR) hb_parcx( 1, 14 )   // lpszFace
-                                   ) ) ;
+                                   ) );
 
    }
    else
    {
-      hb_retnl( (LONG) CreateFont( ISNIL(1) ? 0 : hb_parni( 1 )         ,  // nHeight
+      HB_RETWH( CreateFont( ISNIL(1) ? 0 : hb_parni( 1 )         ,  // nHeight
                                     ISNIL(2) ? 0 : hb_parni( 2 )         ,  // nWidth
                                     ISNIL(3) ? 0 : hb_parni( 3 )         ,  // nEscapement
                                     ISNIL(4) ? 0 : hb_parni( 4 )         ,  // nOrientation
@@ -70,7 +72,7 @@ HB_FUNC( CREATEFONT )
                                     (DWORD) hb_parnl( 12 ),  // fdwQuality
                                     (DWORD) hb_parnl( 13 ),  // fdwPitchAndFamily
                                     (LPCSTR) hb_parcx( 14 )   // lpszFace
-                                   ) ) ;
+                                   ) );
 
    }
 
@@ -81,7 +83,7 @@ HB_FUNC( CREATEFONT )
 
 HB_FUNC( ADDFONTRESOURCE )
 {
-   hb_retni( AddFontResource( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   hb_retni( AddFontResource( (LPCSTR) hb_parcx( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -91,7 +93,7 @@ HB_FUNC( CREATEFONTINDIRECT )
 {
    LOGFONT *lf = (LOGFONT * ) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value;
 
-   hb_retnl( (LONG) CreateFontIndirect( lf ) ) ;
+   HB_RETWH( CreateFontIndirect( lf ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -107,7 +109,7 @@ HB_FUNC( CREATEFONTINDIRECTEX )
 
    // Your code goes here
 
-   hb_retnl( (LONG) CreateFontIndirectEx( &ENUMLOGFONTEXDVA ) ) ;
+   HB_RETWH( CreateFontIndirectEx( &ENUMLOGFONTEXDVA ) );
 }
 
 */
@@ -122,7 +124,7 @@ HB_FUNC( CREATESCALABLEFONTRESOURCE )
                                          (LPCSTR) hb_parcx( 2 ),
                                          (LPCSTR) hb_parcx( 3 ),
                                          (LPCSTR) hb_parcx( 4 )
-                                         ) ) ;
+                                         ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -138,14 +140,14 @@ HB_FUNC( ENUMFONTFAMILIES )
 
    if ( ISBLOCK( 3 ) )
    {
-     lParam = (LPARAM) (PHB_ITEM ) hb_param( 3, HB_IT_BLOCK ) ;
+     lParam = (LPARAM) (PHB_ITEM ) hb_param( 3, HB_IT_BLOCK );
 
 
-     hb_retni( EnumFontFamilies( (HDC) hb_parnl( 1 )  ,
+     hb_retni( EnumFontFamilies( (HDC) HB_PARWH( 1 )  ,
                                 (LPCSTR) hb_parcx( 2 ),
                                 (FONTENUMPROC) GenericCallblockProc  ,
                                 lParam
-                                ) ) ;
+                                ) );
    }
    else
      OutputDebugString("EnumFontFamilies(): No codeblock");
@@ -168,16 +170,16 @@ HB_FUNC( ENUMFONTFAMILIESEX )
 
    if ( ISBLOCK( 3 ) )
    {
-     lParam = (LPARAM) (PHB_ITEM ) hb_param( 3, HB_IT_BLOCK ) ;
+     lParam = (LPARAM) (PHB_ITEM ) hb_param( 3, HB_IT_BLOCK );
 
 
 
-   hb_retni( EnumFontFamiliesEx( (HDC) hb_parnl( 1 )  ,
+   hb_retni( EnumFontFamiliesEx( (HDC) HB_PARWH( 1 )  ,
                                   LogFont            ,
                                   (FONTENUMPROC) GenericCallblockProc  ,
                                   lParam               ,
                                   0
-                                  ) ) ;
+                                  ) );
 
   }
    else
@@ -201,13 +203,13 @@ HB_FUNC( ENUMFONTS )
 
    if ( ISBLOCK( 3 ) )
    {
-     lParam = (LPARAM) (PHB_ITEM ) hb_param( 3, HB_IT_BLOCK ) ;
+     lParam = (LPARAM) (PHB_ITEM ) hb_param( 3, HB_IT_BLOCK );
 
-     hb_retni( EnumFonts( (HDC) hb_parnl( 1 )  ,
+     hb_retni( EnumFonts( (HDC) HB_PARWH( 1 )  ,
                          (LPCSTR) hb_parcx( 2 ),
                          (FONTENUMPROC) GenericCallblockProc  ,
                          lParam
-                         ) ) ;
+                         ) );
    }
    else
      OutputDebugString("EnumFonts(): No codeblock");
@@ -301,19 +303,19 @@ HB_FUNC( GETFONTDATA )
    if ( ! ISNIL( 5 ) && ( hb_parnl( 5 ) > 0 ) )
       cBuffer = (char *) hb_xgrab( hb_parnl(5));
 
-   dwRet = GetFontData( (HDC) hb_parnl( 1 )  ,
+   dwRet = GetFontData( (HDC) HB_PARWH( 1 )  ,
                                  (DWORD) hb_parnl( 2 ),
                                  (DWORD) hb_parnl( 3 ),
                                  ( ISNIL( 5 ) || ( hb_parnl( 5 ) <= 0 ) ) ? NULL :cBuffer  ,
                                  (DWORD) ISNIL( 5 ) ? 0 : hb_parnl( 5 )
-                      ) ;
+                      );
 
-   hb_retnl( (LONG) dwRet ) ;
+   hb_retnl( (LONG) dwRet );
 
    if ( ! ISNIL( 5 ) && ( hb_parnl( 5 ) > 0 ) )
    {
-      hb_storclen(cBuffer, dwRet, 4 ) ;
-      hb_xfree( cBuffer ) ;
+      hb_storclen(cBuffer, dwRet, 4 );
+      hb_xfree( cBuffer );
    }
 
 }
@@ -325,7 +327,7 @@ HB_FUNC( GETFONTDATA )
 
 HB_FUNC( GETFONTLANGUAGEINFO )
 {
-   hb_retnl( (LONG) GetFontLanguageInfo( (HDC) hb_parnl( 1 ) ) ) ;
+   hb_retnl( (LONG) GetFontLanguageInfo( (HDC) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -341,7 +343,7 @@ HB_FUNC( GETFONTUNICODERANGES )
 
    // Your code goes here
 
-   hb_retnl( (LONG) GetFontUnicodeRanges( (HDC) hb_parnl( 1 ), lpglyphSet ) ) ;
+   hb_retnl( (LONG) GetFontUnicodeRanges( (HDC) HB_PARWH( 1 ), lpglyphSet ) );
 }
 
 */
@@ -365,7 +367,7 @@ HB_FUNC( ADDFONTMEMRESOURCEEX )
                                           (DWORD) hb_parnl( 2 ),
                                           pVoid2               ,
                                           (DWORD) hb_parnl( 4 )
-                                          ) ) ;
+                                          ) );
 }
 
 */
@@ -386,7 +388,7 @@ HB_FUNC( ADDFONTRESOURCEEXA )
    hb_retni( AddFontResourceExA( (LPCSTR) hb_parcx( 1 ),
                                  (DWORD) hb_parnl( 2 ),
                                  pVoid
-                                 ) ) ;
+                                 ) );
 }
 
 */
@@ -399,7 +401,7 @@ HB_FUNC( ADDFONTRESOURCEEXA )
 /*
 HB_FUNC( REMOVEFONTMEMRESOURCEEX )
 {
-   hb_retl( RemoveFontMemResourceExA( (HANDLE) hb_parnl( 1 ) ) ) ;
+   hb_retl( RemoveFontMemResourceExA( (HANDLE) HB_PARWH( 1 ) ) );
 }
 
 */
@@ -410,7 +412,7 @@ HB_FUNC( REMOVEFONTMEMRESOURCEEX )
 
 HB_FUNC( REMOVEFONTRESOURCE )
 {
-   hb_retl( RemoveFontResource( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   hb_retl( RemoveFontResource( (LPCSTR) hb_parcx( 1 ) ) );
 }
 
 
@@ -431,8 +433,7 @@ HB_FUNC( REMOVEFONTRESOURCEEXA )
    hb_retl( RemoveFontResourceExA( (LPCSTR) hb_parcx( 1 ),
                                    (DWORD) hb_parnl( 2 ),
                                    pVoid
-                                   ) ) ;
+                                   ) );
 }
 
 */
-

@@ -9,6 +9,8 @@
 
 #define _WIN32_WINNT   0x0400
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include <shlobj.h>
 //#include <commdlg.h>
@@ -33,7 +35,7 @@
 
 HB_FUNC( COMMDLGEXTENDEDERROR )
 {
-  hb_retnl( CommDlgExtendedError() ) ;
+  hb_retnl( CommDlgExtendedError() );
 }
 
 //---------------------------------------------------------------------
@@ -48,7 +50,7 @@ HB_FUNC( CHOOSEFONT )
   cf->lStructSize = sizeof(CHOOSEFONT);
 
   if (ChooseFont( cf ) )
-      hb_retclen( (char *) cf, sizeof( CHOOSEFONT )) ;
+      hb_retclen( (char *) cf, sizeof( CHOOSEFONT ));
 }
 
 //----------------------------------------------------------------------------
@@ -61,19 +63,19 @@ HB_FUNC( _FINDTEXT )
 
    fr.lStructSize = sizeof( fr );
 
-   fr.hwndOwner        = (HWND) hb_parnl( 1 ) ;
-   fr.hInstance        = (HINSTANCE) hb_parnl( 2 ) ;
-   fr.Flags            = (DWORD)  hb_parnl( 3 ) ;
-   fr.lpstrFindWhat    = (LPTSTR) hb_parcx( 4 ) ;
+   fr.hwndOwner        = (HWND) HB_PARWH( 1 );
+   fr.hInstance        = (HINSTANCE) HB_PARWH( 2 );
+   fr.Flags            = (DWORD)  hb_parnl( 3 );
+   fr.lpstrFindWhat    = (LPTSTR) hb_parcx( 4 );
    fr.lpstrReplaceWith = NULL ;
-   fr.wFindWhatLen     = (WORD) hb_parclen(4) ;
+   fr.wFindWhatLen     = (WORD) hb_parclen(4);
    fr.wReplaceWithLen  = 0 ;
    fr.lCustData        = 0 ;
 //   fr.lpfnHook         = ISNIL(5) ? NULL : __DlgProc ;
    fr.lpTemplateName   = NULL ;
 
 
-   hb_retnl( (LONG) FindText( &fr ) ) ;
+   HB_RETWH( FindText( &fr ) );
 }
 
 //----------------------------------------------------------------------------
@@ -86,18 +88,18 @@ HB_FUNC( _REPLACETEXT )
 
    fr.lStructSize = sizeof( fr );
 
-   fr.hwndOwner        = (HWND) hb_parnl( 1 ) ;
-   fr.hInstance        = (HINSTANCE) hb_parnl( 2 ) ;
-   fr.Flags            = (DWORD)  hb_parnl( 3 ) ;
+   fr.hwndOwner        = (HWND) HB_PARWH( 1 );
+   fr.hInstance        = (HINSTANCE) HB_PARWH( 2 );
+   fr.Flags            = (DWORD)  hb_parnl( 3 );
    fr.lpstrFindWhat    = (LPTSTR) hb_parcx( 4 )  ;
    fr.lpstrReplaceWith = (LPTSTR) hb_parcx( 5 )  ;
-   fr.wFindWhatLen     = (WORD) hb_parclen( 4 ) ;
-   fr.wReplaceWithLen  = (WORD) hb_parclen( 5 ) ;
+   fr.wFindWhatLen     = (WORD) hb_parclen( 4 );
+   fr.wReplaceWithLen  = (WORD) hb_parclen( 5 );
    fr.lCustData        = 0 ;
 //   fr.lpfnHook         = ISNIL(5) ? NULL : __DlgProc ;
    fr.lpTemplateName   = NULL ;
 
-   hb_retnl( (LONG) FindText( &fr ) ) ;
+   HB_RETWH( FindText( &fr ) );
 }
 
 
@@ -175,14 +177,14 @@ HB_FUNC( CHOOSECOLOR )
    int i ;
 
    for( i = 0 ; i <16 ; i++ )
-     crCustClr[i] = (ISARRAY(3) ? hb_parnl(3,i+1) : RGB(0,0,0)) ;
-                                    // GetSysColor(COLOR_BTNFACE)) ;
+     crCustClr[i] = (ISARRAY(3) ? hb_parnl(3,i+1) : RGB(0,0,0));
+                                    // GetSysColor(COLOR_BTNFACE));
 
-   cc.lStructSize    = sizeof( CHOOSECOLOR ) ;
-   cc.hwndOwner      = ISNIL(1) ? GetActiveWindow():(HWND) hb_parnl(1) ;
-   cc.rgbResult      = (COLORREF)ISNIL(2) ?  0 : hb_parnl(2) ;
+   cc.lStructSize    = sizeof( CHOOSECOLOR );
+   cc.hwndOwner      = ISNIL(1) ? GetActiveWindow():(HWND) HB_PARWH(1);
+   cc.rgbResult      = (COLORREF)ISNIL(2) ?  0 : hb_parnl(2);
    cc.lpCustColors   = crCustClr ;
-   cc.Flags          = (WORD) (ISNIL(4) ? CC_ANYCOLOR | CC_FULLOPEN | CC_RGBINIT : hb_parnl(4) ) ;
+   cc.Flags          = (WORD) (ISNIL(4) ? CC_ANYCOLOR | CC_FULLOPEN | CC_RGBINIT : hb_parnl(4) );
    if ( ChooseColorA( &cc ) )
    {
       hb_retnl( cc.rgbResult );
@@ -204,7 +206,7 @@ HB_FUNC( _GETOPENFILENAME )
    ZeroMemory( &ofn, sizeof(ofn) );
    ofn.hInstance       = GetModuleHandle(NULL)  ;
    ofn.lStructSize     = sizeof(ofn);
-   ofn.hwndOwner       = (ISNIL  (1) ? GetActiveWindow() : (HWND) hb_parnl(1));
+   ofn.hwndOwner       = (ISNIL  (1) ? GetActiveWindow() : (HWND) HB_PARWH(1));
    ofn.lpstrTitle      = hb_parc (3);
    ofn.lpstrFilter     = hb_parc (4);
    ofn.Flags           = (ISNIL  (5) ? OFN_EXPLORER : hb_parnl(5) );
@@ -217,7 +219,7 @@ HB_FUNC( _GETOPENFILENAME )
    if( GetOpenFileName( &ofn ) )
    {
       hb_stornl( ofn.nFilterIndex, 8 );
-      hb_storclen( szFileName, hb_parcsiz(2), 2 ) ;
+      hb_storclen( szFileName, hb_parcsiz(2), 2 );
       hb_xfree( szFileName );
       hb_retc( ( char * ) ofn.lpstrFile );
    }
@@ -241,7 +243,7 @@ HB_FUNC( _GETSAVEFILENAME )
     ZeroMemory( &ofn, sizeof( ofn ) );
     ofn.hInstance       = GetModuleHandle(NULL);
     ofn.lStructSize     = sizeof(ofn);
-    ofn.hwndOwner       = ISNIL   (1)  ? GetActiveWindow() : (HWND) hb_parnl(1);
+    ofn.hwndOwner       = ISNIL   (1)  ? GetActiveWindow() : (HWND) HB_PARWH(1);
     ofn.lpstrTitle      = hb_parc (3);
     ofn.lpstrFilter     = hb_parc (4);
     ofn.Flags           = (ISNIL  (5) ? OFN_FILEMUSTEXIST|OFN_EXPLORER : hb_parnl(4) ); 
@@ -268,12 +270,12 @@ HB_FUNC( _GETSAVEFILENAME )
 
 HB_FUNC( SHBROWSEFORFOLDER )
 {
-   HWND hwnd = ISNIL   (1)  ? GetActiveWindow() : (HWND) hb_parnl(1);
+   HWND hwnd = ISNIL   (1)  ? GetActiveWindow() : (HWND) HB_PARWH(1);
    BROWSEINFO BrowseInfo;
    char *lpBuffer = (char*) hb_xgrab( MAX_PATH + 1 );
    LPITEMIDLIST pidlBrowse;
 
-   SHGetSpecialFolderLocation(hwnd, ISNIL(4) ? CSIDL_DRIVES : hb_parni(4), &pidlBrowse) ;
+   SHGetSpecialFolderLocation(hwnd, ISNIL(4) ? CSIDL_DRIVES : hb_parni(4), &pidlBrowse);
    BrowseInfo.hwndOwner = hwnd;
    BrowseInfo.pidlRoot = pidlBrowse;
    BrowseInfo.pszDisplayName = lpBuffer;
@@ -296,4 +298,3 @@ HB_FUNC( SHBROWSEFORFOLDER )
 
    hb_xfree( lpBuffer);
 }
-

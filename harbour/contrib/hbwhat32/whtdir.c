@@ -10,6 +10,8 @@
 #define HB_OS_WIN_32_USED
 //#define _WIN32_WINNT   0x0500
 
+#include "hbwhat.h"
+
 #include <windows.h>
 #include "hbapi.h"
 
@@ -19,7 +21,7 @@
 
 HB_FUNC( GETLOGICALDRIVES )
 {
-   hb_retnl( (LONG) GetLogicalDrives(  ) ) ;
+   hb_retnl( (LONG) GetLogicalDrives(  ) );
 }
 
 
@@ -29,7 +31,7 @@ HB_FUNC( GETLOGICALDRIVES )
 
 HB_FUNC( GETDRIVETYPE )
 {
-   hb_retni( GetDriveType( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   hb_retni( GetDriveType( (LPCSTR) hb_parcx( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -80,7 +82,7 @@ HB_FUNC( GETTEMPFILENAME )
                             (LPCSTR) hb_parcx( 2 ),
                             (UINT) ( ISNIL(3) ? 0 : hb_parni( 3 ) ) ,
                             (LPSTR) cPath
-                           ) ;
+                           );
    hb_retc( cPath);
 }
 
@@ -106,7 +108,7 @@ HB_FUNC( GETSYSTEMWINDOWSDIRECTORY )
 {
    char cPath[ MAX_PATH +1 ] = {0};
 
-   GetSystemWindowsDirectory( (LPSTR) cPath, MAX_PATH ) ;
+   GetSystemWindowsDirectory( (LPSTR) cPath, MAX_PATH );
 
    hb_retc( cPath );
 }
@@ -120,7 +122,7 @@ HB_FUNC( GETSYSTEMWINDOWSDIRECTORY )
 HB_FUNC( SETCURRENTDIRECTORY )
 {
 
-   hb_retl( SetCurrentDirectory( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   hb_retl( SetCurrentDirectory( (LPCSTR) hb_parcx( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -130,7 +132,7 @@ HB_FUNC( SETCURRENTDIRECTORY )
 HB_FUNC( GETCURRENTDIRECTORY )
 {
    char cPath[ MAX_PATH + 1 ] = {0};
-   GetCurrentDirectory( MAX_PATH , (LPSTR) cPath ) ;
+   GetCurrentDirectory( MAX_PATH , (LPSTR) cPath );
    hb_retc( cPath );
 }
 
@@ -140,7 +142,7 @@ HB_FUNC( GETCURRENTDIRECTORY )
 
 HB_FUNC( SETFILEATTRIBUTES )
 {
-   hb_retl( SetFileAttributes( (LPCSTR) hb_parcx( 1 ), (DWORD) hb_parnl( 2 ) ) ) ;
+   hb_retl( SetFileAttributes( (LPCSTR) hb_parcx( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -149,7 +151,7 @@ HB_FUNC( SETFILEATTRIBUTES )
 
 HB_FUNC( GETFILEATTRIBUTES )
 {
-   hb_retnl( (LONG) GetFileAttributes( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   hb_retnl( (LONG) GetFileAttributes( (LPCSTR) hb_parcx( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -158,7 +160,7 @@ HB_FUNC( GETFILEATTRIBUTES )
 
 HB_FUNC( DELETEFILE )
 {
-   hb_retl( DeleteFile( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   hb_retl( DeleteFile( (LPCSTR) hb_parcx( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -167,7 +169,7 @@ HB_FUNC( DELETEFILE )
 
 HB_FUNC( SETVOLUMELABEL )
 {
-   hb_retl( SetVolumeLabel( (LPCSTR) hb_parcx( 1 ), (LPCSTR) hb_parcx( 2 ) ) ) ;
+   hb_retl( SetVolumeLabel( (LPCSTR) hb_parcx( 1 ), (LPCSTR) hb_parcx( 2 ) ) );
 }
 
 
@@ -182,7 +184,7 @@ HB_FUNC( CREATEDIRECTORY )
    if (ISCHAR(2))
        sa = (SECURITY_ATTRIBUTES *) hb_parc( 2 ); //hb_param(2, HB_IT_STRING)->item.asString.value;
 
-   hb_retl( CreateDirectoryA( (LPCSTR) hb_parcx( 1 ), sa ) ) ;
+   hb_retl( CreateDirectoryA( (LPCSTR) hb_parcx( 1 ), sa ) );
 }
 
 
@@ -200,7 +202,7 @@ HB_FUNC( CREATEDIRECTORYEX )
    hb_retl( CreateDirectoryExA( (LPCSTR) hb_parcx( 1 ),
                                 (LPCSTR) hb_parcx( 2 ),
                                 lpSecurityAttributes
-                                ) ) ;
+                                ) );
 }
 
 */
@@ -211,7 +213,7 @@ HB_FUNC( CREATEDIRECTORYEX )
 
 HB_FUNC( REMOVEDIRECTORY )
 {
-   hb_retl( RemoveDirectory( (LPCSTR) hb_parcx( 1 ) ) ) ;
+   hb_retl( RemoveDirectory( (LPCSTR) hb_parcx( 1 ) ) );
 }
 
 
@@ -235,9 +237,9 @@ HB_FUNC( GETFULLPATHNAME )
                             (LPSTR) buffer ,
                             &szBuffRet
                           )  ;
-  hb_retnl( dwReq ) ;
-  hb_storc( szBuffRet , 4 ) ;
-  hb_storc( buffer ,3 ) ;
+  hb_retnl( dwReq );
+  hb_storc( szBuffRet , 4 );
+  hb_storc( buffer ,3 );
 }
 
 
@@ -294,7 +296,7 @@ HB_FUNC( GETLONGPATHNAME )
    hb_retnl( (LONG) GetLongPathName( (LPCSTR) hb_parcx( 1 ),
                                       (LPSTR) hb_parcx( 2 ) ,
                                       (DWORD) hb_parnl( 3 )
-                                      ) ) ;
+                                      ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -320,7 +322,7 @@ BOOL GetVolumeInformation(
 
 HB_FUNC( GETVOLUMEINFORMATION )
 {
-  char *VolumeNameBuffer     = (char *) hb_xgrab( MAX_PATH ) ;
+  char *VolumeNameBuffer     = (char *) hb_xgrab( MAX_PATH );
   DWORD VolumeSerialNumber                              ;
   DWORD MaximumComponentLength                          ;
   DWORD FileSystemFlags                                 ;
@@ -334,12 +336,12 @@ HB_FUNC( GETVOLUMEINFORMATION )
                                   &MaximumComponentLength                ,
                                   &FileSystemFlags                       ,
                                   (LPTSTR)FileSystemNameBuffer           ,
-                                  MAX_PATH ) ;
+                                  MAX_PATH );
   if ( bRet  )
   {
-     if ( ISBYREF( 2 ) )  hb_storc ((char *) VolumeNameBuffer, 2 ) ;
-     if ( ISBYREF( 3 ) )  hb_stornl( (LONG)  VolumeSerialNumber, 3 ) ;
-     if ( ISBYREF( 4 ) )  hb_stornl( (LONG)  MaximumComponentLength, 4 ) ;
+     if ( ISBYREF( 2 ) )  hb_storc ((char *) VolumeNameBuffer, 2 );
+     if ( ISBYREF( 3 ) )  hb_stornl( (LONG)  VolumeSerialNumber, 3 );
+     if ( ISBYREF( 4 ) )  hb_stornl( (LONG)  MaximumComponentLength, 4 );
      if ( ISBYREF( 5 ) )  hb_stornl( (LONG)  FileSystemFlags, 5 );
      if ( ISBYREF( 6 ) )  hb_storc ((char *) FileSystemNameBuffer, 6 );
   }
@@ -348,5 +350,3 @@ HB_FUNC( GETVOLUMEINFORMATION )
   hb_xfree( VolumeNameBuffer );
   hb_xfree( FileSystemNameBuffer );
 }
-
-
