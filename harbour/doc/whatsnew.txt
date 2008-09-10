@@ -208,6 +208,7 @@ Contrib
   and fixed to support Win64 platform. INTERNETREADFILE(), 
   INTERNETWRITEFILE() functions were fixed. what32.ch renamed 
   to hbwhat.ch.
+- hbhpdf fixed HPDF_ADDPAGELABEL().
 
 Known build issues
 =============================

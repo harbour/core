@@ -8,6 +8,49 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-10 13:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * doc/whatsnew.txt
+    + Updated.
+
+  * contrib/hbw32/Makefile
+  * contrib/hbw32/common.mak
+  - contrib/hbw32/w32_prn.c
+  + contrib/hbw32/win_prn1.c
+  - contrib/hbw32/tprinter.c
+  + contrib/hbw32/win_prn2.c
+  - contrib/hbw32/dllcall.c
+  + contrib/hbw32/win_dll.c
+  - contrib/hbw32/w32_osc.c
+  + contrib/hbw32/win_osc.c
+  - contrib/hbw32/w32_ole.c
+  + contrib/hbw32/win_ole.c
+  - contrib/hbw32/w32_regc.c
+  + contrib/hbw32/win_regc.c
+  - contrib/hbw32/w32_os.prg
+  + contrib/hbw32/win_os.prg
+  - contrib/hbw32/w32_tole.prg
+  + contrib/hbw32/win_tole.prg
+  - contrib/hbw32/w32_reg.prg
+  + contrib/hbw32/win_reg.prg
+  - contrib/hbw32/w32_tprn.prg
+  + contrib/hbw32/win_tprn.prg
+    * Cleaned some 'w32'.
+
+  * contrib/hbwhat/hbwhat.h
+    ! Hack to disable UNICODE if enabled.
+      hbwhat cannot currently be compiled in UNICODE mode.
+
+  * contrib/hbwhat/wincorec.c
+  * contrib/hbwhat/whtmisc.c
+    % Made some internal functions static by moving them around.
+    ! Removed TEXT( <function_call> ) type of syntax.
+
+  * contrib/hbodbc/odbc.c
+    ! MSVC warning fixed in the UNICODE path.
+
+  * contrib/hbnf/getenvrn.c
+    ! Fixed to compile in Windows/UNICODE mode.
+
 2008-09-10 09:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * doc/whatsnew.txt
     + Updated.

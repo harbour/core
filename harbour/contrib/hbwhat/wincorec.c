@@ -40,8 +40,54 @@ LRESULT CALLBACK __WndProc10 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 
 BOOL CALLBACK __DlgProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-int nCopyAnsiToWideChar (LPWORD lpWCStr, LPSTR lpAnsiIn);
-LPWORD lpwAlign ( LPWORD lpIn);
+
+//-----------------------------------------------------------------------------
+
+//  Helper routine.  Take an input pointer, return closest
+//  pointer that is aligned on a DWORD (4 byte) boundary.
+
+static LPWORD lpwAlign( LPWORD lpIn )
+{
+   HB_PTRDIFF ul = ( HB_PTRDIFF ) lpIn;
+   ul += 3;
+   ul >>=2;
+   ul <<=2;
+   return ( LPWORD ) ul;
+}
+
+//-----------------------------------------------------------------------------
+
+
+static int nCopyAnsiToWideChar (LPWORD lpWCStr, LPSTR lpAnsiIn)
+{
+  int nChar = 0;
+
+  do {
+      *lpWCStr++ = (WORD) *lpAnsiIn;
+      nChar++;
+     } while (*lpAnsiIn++);
+
+  return nChar;
+}
+
+/*
+
+alternative to the above function:
+
+//----------------------------------------------------------------------------
+
+// Helper routine.  Takes second parameter as Ansi string, copies
+// it to first parameter as wide character (16-bits / char) string,
+// and returns integer number of wide characters (words) in string
+// (including the trailing wide char NULL).
+
+static int nCopyAnsiToWideChar (LPWORD lpWCStr, LPSTR lpAnsiIn)
+{
+  int cchAnsi = lstrlen( lpAnsiIn );
+  return MultiByteToWideChar(GetACP(), MB_PRECOMPOSED, lpAnsiIn, cchAnsi, lpWCStr, cchAnsi) +1;
+}
+
+*/
 
 //-----------------------------------------------------------------------------
 
@@ -613,10 +659,11 @@ HB_FUNC( _MAKEDLGTEMPLATE )
     *p++ = (short)  0;  // Menu (ignored for now.)
     *p++ = (short)  0x00;  // Class also ignored
 
-    if ( hb_parinfa(1,11) == HB_IT_STRING ) {
-        nchar = nCopyAnsiToWideChar( p, TEXT( hb_parc(1,11) ) );
-        p += nchar   ;
-      }
+    if ( hb_parinfa(1,11) == HB_IT_STRING )
+    {
+        nchar = nCopyAnsiToWideChar( p, ( LPSTR ) hb_parc(1,11) );
+        p += nchar;
+    }
     else
       *p++ =0 ;
 
@@ -627,7 +674,7 @@ HB_FUNC( _MAKEDLGTEMPLATE )
       *p++ = (short) hb_parni(1,13);
       *p++ = (short) hb_parni(1,14);
 
-      nchar = nCopyAnsiToWideChar( p, TEXT( hb_parc(1,15) ) );
+      nchar = nCopyAnsiToWideChar( p, ( LPSTR ) hb_parc(1,15) );
       p += nchar ;
 
     } ;
@@ -658,25 +705,27 @@ HB_FUNC( _MAKEDLGTEMPLATE )
       *p++ = LOWORD ( hb_parnl(9,i) );  // id
       *p++ = HIWORD ( hb_parnl(9,i) );  // id   // 0;
 
-      if ( hb_parinfa(10,i) == HB_IT_STRING ) {
-          nchar = nCopyAnsiToWideChar(p, TEXT ( hb_parc(10,i)) ); // class
-          p += nchar ;
-         }
+      if( hb_parinfa(10,i) == HB_IT_STRING )
+      {
+          nchar = nCopyAnsiToWideChar(p, ( LPSTR ) hb_parc(10,i) ); // class
+          p += nchar;
+      }
       else
-         {
-         *p++ = 0xFFFF ;
+      {
+         *p++ = 0xFFFF;
          *p++ = (WORD) hb_parni(10,i);
-         }
+      }
 
-      if ( hb_parinfa(11,i) == HB_IT_STRING ) {
-         nchar = nCopyAnsiToWideChar(p, (LPSTR) hb_parc(11,i) );  // text
-         p += nchar ;
-         }
+      if ( hb_parinfa(11,i) == HB_IT_STRING )
+      {
+         nchar = nCopyAnsiToWideChar(p, ( LPSTR ) hb_parc(11,i) );  // text
+         p += nchar;
+      }
       else
-         {
+      {
          *p++ = 0xFFFF ;
          *p++ = (WORD) hb_parni(11,i);
-         }
+      }
 
 
       *p++ = 0x00 ;  // extras ( in array 12 )

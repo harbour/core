@@ -9,18 +9,18 @@ LIBNAME=hbw32
 ifeq ($(HB_ARCHITECTURE),w32)
 
 C_SOURCES=\
-	dllcall.c \
-	tprinter.c \
-	w32_ole.c \
-	w32_osc.c \
-	w32_prn.c \
-	w32_regc.c \
+	win_dll.c \
+	win_ole.c \
+	win_osc.c \
+	win_prn1.c \
+	win_prn2.c \
+	win_regc.c \
 
 PRG_SOURCES=\
-	w32_os.prg \
-	w32_reg.prg \
-	w32_tole.prg \
-	w32_tprn.prg \
+	win_os.prg \
+	win_reg.prg \
+	win_tole.prg \
+	win_tprn.prg \
 
 PRG_HEADERS = \
 	hbw32.ch \

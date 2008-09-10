@@ -185,14 +185,14 @@ HB_FUNC( FT_GETE )
    }
 #elif defined(HB_OS_WIN_32)
    {
-
-
       char *buffer = NULL;
-      LPVOID lpEnviron = GetEnvironmentStringsA();
+      LPVOID lpEnviron = GetEnvironmentStrings();
       char *sCurEnv;
       int x;
       int buffsize = 0;
       int rettype = NORETURN;
+
+      char * szEnviron = HB_TCHAR_CONVFROM( lpEnviron );
 
       if( ISCHAR( 1 ) )
          rettype = CHARTYPE;
@@ -202,7 +202,7 @@ HB_FUNC( FT_GETE )
       if( rettype == CHARTYPE )
          /* scan strings first and add up total size */
       {
-         for( sCurEnv = ( LPSTR ) lpEnviron; *sCurEnv; sCurEnv++ )
+         for( sCurEnv = szEnviron; *sCurEnv; sCurEnv++ )
          {
             if( !*sCurEnv )
                /* null string, we're done */
@@ -222,7 +222,7 @@ HB_FUNC( FT_GETE )
          buffer[0] = '\0';
       }
       x = 0;
-      for( sCurEnv = ( LPSTR ) lpEnviron; *sCurEnv; sCurEnv++ )
+      for( sCurEnv = szEnviron; *sCurEnv; sCurEnv++ )
       {
          if( !*sCurEnv )
             /* null string, we're done */
@@ -254,6 +254,7 @@ HB_FUNC( FT_GETE )
       /* return number of strings found */
       hb_retni( x );
 
+      HB_TCHAR_FREE( szEnviron );
       FreeEnvironmentStrings( ( LPTSTR ) lpEnviron );
    }
 

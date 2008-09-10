@@ -2,6 +2,13 @@
  * $Id$
  */
 
+/* TOFIX: Hack to make it compile when UNICODE is set.
+          This library doesn't support UNICODE yet (?), so we 
+          disable it to avoid build problems. [vszakats] */
+#ifdef UNICODE
+   #undef UNICODE
+#endif
+
 //#define HB_PARWH( x )            hb_parnl( x )
 //#define HB_RETWH( x )            hb_retnl( ( LONG ) x )
 //#define HB_STORWH( x, y )        hb_stornl( ( LONG ) x, y )

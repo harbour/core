@@ -187,11 +187,11 @@ HB_FUNC( SQLCONNECT ) /* HB_SQLCONNECT( hDbc, cDSN, cUseName, cPassword ) --> nR
 
    ret =  SQLConnect( ( HDBC ) hb_parptr( 1 ),
                       lpDSN,
-                      hb_parclen( 2 ),
+                      ( SQLSMALLINT ) hb_parclen( 2 ),
                       lpUseName,
-                      hb_parclen( 3 ),
+                      ( SQLSMALLINT ) hb_parclen( 3 ),
                       lpPassword,
-                      hb_parclen( 4 ) );
+                      ( SQLSMALLINT ) hb_parclen( 4 ) );
 
    HB_TCHAR_FREE( lpDSN );
    HB_TCHAR_FREE( lpUseName );

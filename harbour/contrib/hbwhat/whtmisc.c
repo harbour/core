@@ -447,54 +447,6 @@ HB_FUNC( WINEXEC )
    hb_retni( WinExec( (LPCSTR) hb_parcx( 1 ), (UINT) hb_parni( 2 ) ) );
 }
 
-//-----------------------------------------------------------------------------
-
-//  Helper routine.  Take an input pointer, return closest
-//  pointer that is aligned on a DWORD (4 byte) boundary.
-
-LPWORD lpwAlign( LPWORD lpIn )
-{
-   HB_PTRDIFF ul = ( HB_PTRDIFF ) lpIn;
-   ul += 3;
-   ul >>=2;
-   ul <<=2;
-   return ( LPWORD ) ul;
-}
-
-//-----------------------------------------------------------------------------
-
-
-int nCopyAnsiToWideChar (LPWORD lpWCStr, LPSTR lpAnsiIn)
-{
-  int nChar = 0;
-
-  do {
-      *lpWCStr++ = (WORD) *lpAnsiIn;
-      nChar++;
-     } while (*lpAnsiIn++);
-
-  return nChar;
-}
-
-/*
-
-alternative to the above function:
-
-//----------------------------------------------------------------------------
-
-// Helper routine.  Takes second parameter as Ansi string, copies
-// it to first parameter as wide character (16-bits / char) string,
-// and returns integer number of wide characters (words) in string
-// (including the trailing wide char NULL).
-
-int nCopyAnsiToWideChar (LPWORD lpWCStr, LPSTR lpAnsiIn)
-{
-  int cchAnsi = lstrlen( lpAnsiIn );
-  return MultiByteToWideChar(GetACP(), MB_PRECOMPOSED, lpAnsiIn, cchAnsi, lpWCStr, cchAnsi) +1;
-}
-
-*/
-
 
 // Mutex functions
 
