@@ -62,6 +62,7 @@
   - contrib/hbwhat32
   + contrib/hbwhat
     * Renamed to not contain '32'.
+      INCOMPATIBLE.
     ; NOTE: I plan to do this with a couple of other 
             names too in the future.
 
@@ -71,6 +72,7 @@
   + contrib/hbwhat/hbwhat.ch
     * Renamed what32.ch to not contain '32' (and added 
       hb for consistency if it got renamed anyway).
+      INCOMPATIBLE.
 
   * utils/hbmake/hbmake.prg
     * Updated by Bill Robertson to fix too many things to 
