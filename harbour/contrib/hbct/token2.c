@@ -420,7 +420,7 @@ HB_FUNC( TOKENINIT )
       /* scan start condition */
       pc = pcSubStr - 1;
 
-      while( TRUE )
+      for( ;; )
       {
          size_t sMatchedPos = sSeparatorStrLen;
 
@@ -462,7 +462,7 @@ HB_FUNC( TOKENINIT )
 
          if( pc == NULL )
             break;
-      }  /* while( TRUE ); */
+      }  /* for( ;; ) */
 
       /* save token environment to 4th parameter OR to the static */
       if( ISBYREF( 4 ) )

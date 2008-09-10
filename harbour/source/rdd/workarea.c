@@ -1032,7 +1032,7 @@ static ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 
    if( !pEvalInfo->dbsci.lNext || lNext > 0 )
    {
-      while( TRUE )
+      for( ;; )
       {
          if( SELF_EOF( pArea, &fEof ) != SUCCESS )
             return FAILURE;
@@ -1114,7 +1114,7 @@ static ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
 
    if( !pArea->dbsi.lNext || lNext > 0 )
    {
-      while( TRUE )
+      for( ;; )
       {
          if( SELF_EOF( pArea, &fEof ) != SUCCESS )
             return FAILURE;
@@ -1189,7 +1189,7 @@ static ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
 
    if( !pTransInfo->dbsci.lNext || lNext > 0 )
    {
-      while( TRUE )
+      for( ;; )
       {
          if( SELF_EOF( pArea, &fEof ) != SUCCESS )
             return FAILURE;

@@ -656,7 +656,7 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
 {
    int ch, iLine = 0;
 
-   while( TRUE )
+   for( ;; )
    {
       if( pState->pFile->pLineBuf )
       {
@@ -2548,7 +2548,7 @@ static void hb_pp_defineNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken, BOOL fDir
           pLast->spaces == 0 )
       {
          USHORT type = HB_PP_TOKEN_KEYWORD;
-         while( TRUE )
+         for( ;; )
          {
             pLast = pLast->pNext;
             if( pLast && ( usPCount == 0 || type == HB_PP_TOKEN_COMMA ) &&
@@ -3363,7 +3363,7 @@ static BOOL hb_pp_tokenSkipExp( PHB_PP_TOKEN * pTokenPtr, PHB_PP_TOKEN pStop,
    if( pfStop )
       * pfStop = FALSE;
 
-   while( TRUE )
+   for( ;; )
    {
       pPrev = pToken;
       if( hb_pp_tokenStartExtBlock( &pToken ) )
@@ -3771,7 +3771,7 @@ static PHB_PP_TOKEN * hb_pp_matchResultLstAdd( PHB_PP_STATE pState,
    PHB_PP_TOKEN pNext;
    BOOL fFirst = TRUE, fStop = FALSE;
 
-   while( TRUE )
+   for( ;; )
    {
       pNext = pToken;
       if( hb_pp_tokenSkipExp( &pNext, pStop, HB_PP_CMP_ADDR, &fStop ) &&

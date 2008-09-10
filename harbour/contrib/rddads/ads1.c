@@ -3942,7 +3942,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
                   */
                   SELF_RECNO( ( AREAP ) pArea, &ulRecNo );
                   AdsGotoTop( hIndex );
-                  do
+                  for( ;; )
                   {
                      AdsAtEOF( pArea->hTable, &u16 );
                      if( u16 )
@@ -3951,7 +3951,6 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
                      if( AdsSkip( hIndex, 1 ) == AE_NO_CURRENT_RECORD )
                         break;
                   }
-                  while( TRUE );
                   SELF_GOTO( ( AREAP ) pArea, ulRecNo );
                }
                else  /* no scope set */

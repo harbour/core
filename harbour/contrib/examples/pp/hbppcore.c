@@ -1753,7 +1753,8 @@ static int WorkPseudoF( char **ptri, char *ptro, DEFINES * stdef )
    {
       ipos = 0;
       ibeg = 0;
-      do                        /* Parsing through parameters */
+
+      for( ;; )                 /* Parsing through parameters */
       {                         /* in macro definition        */
          if( *( stdef->pars + ipos ) == ',' || *( stdef->pars + ipos ) == '\0' )
          {
@@ -1798,7 +1799,6 @@ static int WorkPseudoF( char **ptri, char *ptro, DEFINES * stdef )
 
          ipos++;
       }
-      while( TRUE );
    }
    else
    {
@@ -3211,7 +3211,7 @@ static BOOL CheckOptional( char *ptrmp, char *ptri, char *ptro, int *lenres, BOO
 
    if( *ptri == '\0' )
    {
-      do
+      for( ;; )
       {
          HB_SKIPTABSPACES( ptrmp );
          if( *ptrmp == HB_PP_OPT_START )
@@ -3227,7 +3227,6 @@ static BOOL CheckOptional( char *ptrmp, char *ptri, char *ptro, int *lenres, BOO
             break;
          }
       }
-      while( TRUE );
    }
    s_Repeate = save_Repeate;
    s_numBrackets = save_numBr;
@@ -3720,7 +3719,7 @@ int hb_pp_RdStr( FILE * handl_i, char *buffer, int maxlen, BOOL lContinue, char 
       return -1;
    }
 
-   while( TRUE )
+   for( ;; )
    {
       if( *iBuffer == *lenBuffer )
       {

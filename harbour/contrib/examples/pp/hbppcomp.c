@@ -138,7 +138,7 @@ int hb_pp_Internal_( FILE * handl_o, char * sOut )
 
   hb_pp_NestedLiteralString = FALSE;
   hb_pp_LiteralEscSeq = FALSE;
-  while( TRUE )
+  for( ;; )
   {
     pFile = hb_comp_files.pLast;
     lens = 0;
@@ -568,7 +568,7 @@ int hb_pp_ReadRules( void )
    if( ! s_szOutLine )
       s_szOutLine = (char *) hb_xgrab( HB_PP_STR_SIZE );
 #endif
-  while( TRUE )
+  for( ;; )
   {
      pFile = hb_comp_files.pLast;
      lens = lContinue = 0;

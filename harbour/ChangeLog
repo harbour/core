@@ -8,6 +8,49 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-10 09:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * doc/whatsnew.txt
+    + Updated.
+
+  * contrib/Makefile
+  * contrib/make_b32_all.bat
+  * contrib/make_gcc_all.sh
+  * contrib/make_vc_all.bat
+  - contrib/hbwhat32
+  + contrib/hbwhat
+    * Renamed to not contain '32'.
+    ; NOTE: I plan to do this with a couple of other 
+            names too in the future.
+
+  * contrib/hbwhat/Makefile
+  * contrib/hbwhat/common.mak
+  - contrib/hbwhat/what32.ch
+  + contrib/hbwhat/hbwhat.ch
+    * Renamed what32.ch to not contain '32' (and added 
+      hb for consistency if it got renamed anyway).
+
+  * utils/hbmake/hbmake.prg
+    * Updated by Bill Robertson to fix too many things to 
+      mention here. (cleaned up lots of stuff, using hb_run()s 
+      return values, cleaned to not call main() function 
+      recursively (!), display output cleanups, etcetc)
+    * hbwhat32, hbziparch lib name changes.
+
+  * contrib/examples/pp/hbppcore.c
+  * contrib/examples/pp/hbppcomp.c
+  * contrib/rddads/ads1.c
+  * source/pp/ppcore.c
+  * source/vm/asort.c
+  * source/vm/hvm.c
+  * source/rtl/disksphb.c
+  * source/rdd/dbfntx/dbfntx1.c
+  * source/rdd/workarea.c
+  * contrib/hbct/screen2.c
+  * contrib/hbct/token2.c
+    * while( TRUE ) -> for( ;; )
+    * do {} while( TRUE ) -> for( ;; ) {}
+    ; To avoid warnings about conditions being constant.
+
 2008-09-09 21:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbwhat32/hbwhat.h
   * contrib/hbwhat32/whtcall.c

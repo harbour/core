@@ -147,6 +147,10 @@ Core
 - Fixed dbInfo( DBI_POSITIONED ) returned value.
 - Fixed internal error in dirty index reading.
 - Fixed return value of HB_INETGETSNDBUFSIZE().
+- Fixed GPF when user sort code block reduces the size of sorted array.
+- Fixed typo in hash cloning code which caused that references
+  was copied to cloned array. Thanks to Mindaugas for example.
+- Added missing MESSAGE <MessageName> TO <oObject> to hbclass.ch.
 
 Contrib
 =============================
@@ -197,6 +201,13 @@ Contrib
 - hbbmcdx fixed internal error in dirty index reading.
 - hbcurl added support for libcurl 7.19.0 features.
 - hbhpdf added support for libharu 2.1.0.
+- Fixed so that contrib source files cannot collide with each 
+  other when building them using the non-GNU make system.
+- Former hbwhat32 lib added to the default contrib list 
+  under the name of hbwhat, compilation was fully cleaned 
+  and fixed to support Win64 platform. INTERNETREADFILE(), 
+  INTERNETWRITEFILE() functions were fixed. what32.ch renamed 
+  to hbwhat.ch.
 
 Known build issues
 =============================

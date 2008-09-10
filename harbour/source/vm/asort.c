@@ -134,7 +134,7 @@ static LONG hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, LONG lb, LONG 
    i = lb + 1;
    j = ub;
 
-   while( TRUE )
+   for( ;; )
    {
       while( j >= i && !hb_itemIsLess( pBaseArray->pItems + j, pBaseArray->pItems + lb, pBlock, pBaseArray, j ) )
       {

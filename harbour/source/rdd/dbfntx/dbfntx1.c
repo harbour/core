@@ -1120,7 +1120,7 @@ static LPPAGEINFO hb_ntxPageGetBuffer( LPTAGINFO pTag, ULONG ulPage )
    else
    {
       ULONG ul = pIndex->ulPageLast;
-      do
+      for( ;; )
       {
          if( ++ul >= pIndex->ulPagesDepth )
             ul = 0;
@@ -1144,7 +1144,6 @@ static LPPAGEINFO hb_ntxPageGetBuffer( LPTAGINFO pTag, ULONG ulPage )
             break;
          }
       }
-      while( TRUE );
    }
 
    if( !*pPagePtr )
@@ -4716,7 +4715,7 @@ static void hb_ntxSortAddNodeKey( LPNTXSORTINFO pSort, BYTE *pKeyVal, ULONG ulRe
    ULONG ulPage = 0;
    int iLevel = 0;
 
-   do
+   for( ;; )
    {
       pPage = pSort->NodeList[ iLevel ];
       if( pPage == NULL )
@@ -4735,7 +4734,6 @@ static void hb_ntxSortAddNodeKey( LPNTXSORTINFO pSort, BYTE *pKeyVal, ULONG ulRe
       else
          break;
    }
-   while( TRUE );
 
    memcpy( hb_ntxGetKeyVal( pPage, pPage->uiKeys ), pKeyVal, pSort->pTag->KeyLength );
    hb_ntxSetKeyRec( pPage, pPage->uiKeys, ulRec );

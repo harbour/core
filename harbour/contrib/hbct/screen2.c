@@ -270,7 +270,7 @@ HB_FUNC( CLEARSLOW )
       dXX = dYY = 0;
 
       hb_gtBeginWrite();
-      while( TRUE )
+      for( ;; )
       {
          hb_gtBoxEx( iTop, iLeft, iBottom, iRight, pbFrame, bColor );
          if( lDelay )

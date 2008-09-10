@@ -102,7 +102,7 @@ HB_FUNC( HB_DISKSPACE )
                          szPath[ 0 ] - 'A' + 1 :
                        ( szPath[ 0 ] >= 'a' && szPath[ 0 ] <= 'z' ?
                          szPath[ 0 ] - 'a' + 1 : 0 ) );
-      while( TRUE )
+      for( ;; )
       {
          union REGS regs;
 
@@ -168,7 +168,7 @@ HB_FUNC( HB_DISKSPACE )
       typedef BOOL ( WINAPI * P_GDFSE )( LPCSTR, PULARGE_INTEGER,
                                          PULARGE_INTEGER, PULARGE_INTEGER );
 
-      while( TRUE )
+      for( ;; )
       {
          ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;
          UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );

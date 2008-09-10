@@ -25,7 +25,7 @@ DIRS=\
 	hbtpathy \
 	hbvpdf \
 	hbw32 \
-	hbwhat32 \
+	hbwhat \
 	hbziparc \
 	rddado \
 	xhb \

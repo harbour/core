@@ -584,7 +584,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
       ulPastClock = ( ULONG ) clock();
 #endif
 
-   while( TRUE )
+   for( ;; )
    {
 #ifndef HB_NO_PROFILER
       if( hb_bProfiler )
