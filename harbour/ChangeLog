@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-11 18:00 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * contrib/gtwvg/wvgutils.c
+    ! HB_FUNC( WVT__MAKEDLGTEMPLATE )
+         hb_retclen( ( LPSTR ) pdlgtemplate, ( ULONG ) ( p - pdlgtemplate ) );    =>         
+         hb_retclen( ( LPSTR ) pdlgtemplate, ( ( ULONG ) p - ( ULONG ) pdlgtemplate ) ) ;
+      Fix to open modeless/modal dialogs.
+      ; NOTE: Need to be fixed in v1.0.0 also.
+
 2008-09-10 13:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * doc/whatsnew.txt
     + Updated.

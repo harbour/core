@@ -1288,7 +1288,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
     p = lpwAlign( p );
 
-    hb_retclen( ( LPSTR ) pdlgtemplate, ( ULONG ) ( p - pdlgtemplate ) );
+    hb_retclen( ( LPSTR ) pdlgtemplate, ( ( ULONG ) p - ( ULONG ) pdlgtemplate ) ) ;
 
     LocalFree( LocalHandle( pdlgtemplate ) );
 }
@@ -1301,6 +1301,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 HB_EXPORT LPWORD lpwAlign( LPWORD lpIn )
 {
    HB_PTRDIFF ul = ( HB_PTRDIFF ) lpIn;
+
    ul += 3;
    ul >>=2;
    ul <<=2;
