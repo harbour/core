@@ -61,6 +61,21 @@
 
 #if !defined( HB_GC_PTR )
 
+#if defined( HB_MT_VM )
+
+#  include "hbthread.h"
+
+   static HB_CRITICAL_NEW( s_gcMtx );
+#  define HB_GC_LOCK          hb_threadEnterCriticalSection( &s_gcMtx );
+#  define HB_GC_UNLOCK        hb_threadLeaveCriticalSection( &s_gcMtx );
+
+#else
+
+#  define HB_GC_LOCK
+#  define HB_GC_UNLOCK
+
+#endif /* HB_MT_VM */
+
 /* holder of memory block information */
 /* NOTE: USHORT is used intentionally to fill up the structure to
  * full 16 bytes (on 16/32 bit environment)
@@ -72,7 +87,7 @@ typedef struct HB_GARBAGE_
    HB_GARBAGE_FUNC_PTR pFunc;  /* cleanup function called before memory releasing */
    USHORT locked;              /* locking counter */
    BYTE used;                  /* used/unused block */
-   BYTE flags;
+   BYTE flags;                 /* HB_GC_USERSWEEP */
 } HB_GARBAGE, *HB_GARBAGE_PTR;
 
 #ifdef HB_ALLOC_ALIGNMENT
@@ -93,15 +108,12 @@ typedef struct HB_GARBAGE_
 #define HB_GARBAGE_FREE( pAlloc )   hb_xfree( ( void * ) ( pAlloc ) )
 
 /* status of memory block */
-/* flags stored in 'locked' slot */
-#define HB_GC_UNLOCKED     0
-#define HB_GC_LOCKED       1  /* do not collect a memory block */
 /* flags stored in 'used' slot */
-#define HB_GC_USED_FLAG    2  /* the bit for used/unused flag */
-#define HB_GC_DELETE       4  /* item marked to delete */
-#define HB_GC_DELETELST    8  /* item will be deleted during finalization */
+#define HB_GC_USED_FLAG    1  /* the bit for used/unused flag */
+#define HB_GC_DELETE       2  /* item marked to delete */
+#define HB_GC_DELETELST    4  /* item will be deleted during finalization */
 /* flags stored in 'flags' slot */
-#define HB_GC_USERSWEEP   16  /* memory block with user defined sweep function */
+#define HB_GC_USERSWEEP    8  /* memory block with user defined sweep function */
 
 /* pointer to memory block that will be checked in next step */
 static HB_GARBAGE_PTR s_pCurrBlock = NULL;
@@ -109,15 +121,6 @@ static HB_GARBAGE_PTR s_pCurrBlock = NULL;
 
 /* pointer to locked memory blocks */
 static HB_GARBAGE_PTR s_pLockedBlock = NULL;
-
-/* list of functions that sweeps external memory blocks */
-typedef struct _HB_GARBAGE_EXTERN {
-   HB_GARBAGE_SWEEPER_PTR pFunc;
-   void * pBlock;
-   struct _HB_GARBAGE_EXTERN *pNext;
-} HB_GARBAGE_EXTERN, *HB_GARBAGE_EXTERN_PTR;
-
-static HB_GARBAGE_EXTERN_PTR s_pSweepExtern = NULL;
 
 /* pointer to memory blocks that will be deleted */
 static HB_GARBAGE_PTR s_pDeletedBlock = NULL;
@@ -130,7 +133,18 @@ static BOOL s_bCollecting = FALSE;
  */
 static BYTE s_uUsedFlag = HB_GC_USED_FLAG;
 
+
+/* list of functions that sweeps external memory blocks */
+typedef struct _HB_GARBAGE_EXTERN {
+   HB_GARBAGE_SWEEPER_PTR pFunc;
+   void * pBlock;
+   struct _HB_GARBAGE_EXTERN *pNext;
+} HB_GARBAGE_EXTERN, *HB_GARBAGE_EXTERN_PTR;
+
+static HB_GARBAGE_EXTERN_PTR s_pSweepExtern = NULL;
+
 static void  hb_gcUnregisterSweep( void * Cargo );
+
 
 static void hb_gcLink( HB_GARBAGE_PTR *pList, HB_GARBAGE_PTR pAlloc )
 {
@@ -168,11 +182,15 @@ void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
    pAlloc = HB_GARBAGE_NEW( ulSize );
    if( pAlloc )
    {
-      hb_gcLink( &s_pCurrBlock, pAlloc );
       pAlloc->pFunc  = pCleanupFunc;
       pAlloc->locked = 0;
       pAlloc->used   = s_uUsedFlag;
       pAlloc->flags  = 0;
+
+      HB_GC_LOCK
+      hb_gcLink( &s_pCurrBlock, pAlloc );
+      HB_GC_UNLOCK
+
       return HB_MEM_PTR( pAlloc );        /* hide the internal data */
    }
    else
@@ -186,13 +204,15 @@ void hb_gcFree( void *pBlock )
    {
       HB_GARBAGE_PTR pAlloc = HB_GC_PTR( pBlock );
 
+      /* Don't release the block that will be deleted during finalization */
       if( !( pAlloc->used & HB_GC_DELETE ) )
       {
-         /* Don't release the block that will be deleted during finalization */
+         HB_GC_LOCK
          if( pAlloc->locked )
             hb_gcUnlink( &s_pLockedBlock, pAlloc );
          else
             hb_gcUnlink( &s_pCurrBlock, pAlloc );
+         HB_GC_UNLOCK
 
          if( pAlloc->flags & HB_GC_USERSWEEP )
             hb_gcUnregisterSweep( pBlock );
@@ -242,10 +262,12 @@ void hb_gcRefFree( void * pBlock )
             /* unlink the block first to avoid possible problems
              * if cleanup function activate GC
              */
+            HB_GC_LOCK
             if( pAlloc->locked )
                hb_gcUnlink( &s_pLockedBlock, pAlloc );
             else
                hb_gcUnlink( &s_pCurrBlock, pAlloc );
+            HB_GC_UNLOCK
 
             pAlloc->used |= HB_GC_DELETE;
 
@@ -274,7 +296,7 @@ HB_COUNTER hb_gcRefCount( void * pBlock )
 
 
 /*
- * Check if block still cannot be access after destructor execution
+ * Check if block still cannot be accessed after destructor execution
  */
 void hb_gcRefCheck( void * pBlock )
 {
@@ -284,11 +306,15 @@ void hb_gcRefCheck( void * pBlock )
    {
       if( hb_xRefCount( pAlloc ) != 0 )
       {
+         pAlloc->used = s_uUsedFlag;
+         pAlloc->locked = 0;
+
+         HB_GC_LOCK
+         hb_gcLink( &s_pCurrBlock, pAlloc );
+         HB_GC_UNLOCK
+
          if( hb_vmRequestQuery() == 0 )
             hb_errRT_BASE( EG_DESTRUCTOR, 1301, NULL, "Reference to freed block", 0 );
-
-         hb_gcLink( &s_pCurrBlock, pAlloc );
-         pAlloc->used = s_uUsedFlag;
       }
    }
 }
@@ -311,13 +337,17 @@ HB_ITEM_PTR hb_gcGripGet( HB_ITEM_PTR pOrigin )
    {
       HB_ITEM_PTR pItem = ( HB_ITEM_PTR ) HB_MEM_PTR( pAlloc );
 
-      hb_gcLink( &s_pLockedBlock, pAlloc );
       pAlloc->pFunc  = hb_gcGripRelease;
       pAlloc->locked = 1;
       pAlloc->used   = s_uUsedFlag;
       pAlloc->flags  = 0;
 
       pItem->type = HB_IT_NIL;
+
+      HB_GC_LOCK
+      hb_gcLink( &s_pLockedBlock, pAlloc );
+      HB_GC_UNLOCK
+
       if( pOrigin )
          hb_itemCopy( pItem, pOrigin );
 
@@ -336,7 +366,10 @@ void hb_gcGripDrop( HB_ITEM_PTR pItem )
       if( HB_IS_COMPLEX( pItem ) )
          hb_itemClear( pItem );    /* clear value stored in this item */
 
+      HB_GC_LOCK
       hb_gcUnlink( &s_pLockedBlock, pAlloc );
+      HB_GC_UNLOCK
+
       HB_GARBAGE_FREE( pAlloc );
    }
 }
@@ -350,12 +383,14 @@ void * hb_gcLock( void * pBlock )
    {
       HB_GARBAGE_PTR pAlloc = HB_GC_PTR( pBlock );
 
+      HB_GC_LOCK
       if( ! pAlloc->locked )
       {
          hb_gcUnlink( &s_pCurrBlock, pAlloc );
          hb_gcLink( &s_pLockedBlock, pAlloc );
       }
       ++pAlloc->locked;
+      HB_GC_UNLOCK
    }
 
    return pBlock;
@@ -370,15 +405,18 @@ void * hb_gcUnlock( void * pBlock )
    {
       HB_GARBAGE_PTR pAlloc = HB_GC_PTR( pBlock );
 
+      HB_GC_LOCK
       if( pAlloc->locked )
       {
          if( --pAlloc->locked == 0 )
          {
+            pAlloc->used = s_uUsedFlag;
+
             hb_gcUnlink( &s_pLockedBlock, pAlloc );
             hb_gcLink( &s_pCurrBlock, pAlloc );
-            pAlloc->used = s_uUsedFlag;
          }
       }
+      HB_GC_UNLOCK
    }
    return pBlock;
 }
@@ -510,8 +548,11 @@ void hb_gcRegisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo )
    pExt = ( HB_GARBAGE_EXTERN_PTR ) hb_xgrab( sizeof( HB_GARBAGE_EXTERN ) );
    pExt->pFunc = pSweep;
    pExt->pBlock = Cargo;
+
+   HB_GC_LOCK
    pExt->pNext = s_pSweepExtern;
    s_pSweepExtern = pExt;
+   HB_GC_UNLOCK
 
    /* set user sweep flag */
    HB_GC_PTR( Cargo )->flags ^= HB_GC_USERSWEEP;
@@ -521,6 +562,8 @@ static void hb_gcUnregisterSweep( void * Cargo )
 {
    HB_GARBAGE_EXTERN_PTR pExt;
    HB_GARBAGE_EXTERN_PTR pPrev;
+
+   HB_GC_LOCK
 
    pPrev = pExt = s_pSweepExtern;
    while( pExt )
@@ -550,21 +593,34 @@ static void hb_gcUnregisterSweep( void * Cargo )
          pExt = pExt->pNext;
       }
    }
+
+   HB_GC_UNLOCK
 }
 
 void hb_gcCollect( void )
 {
    /* TODO: decrease the amount of time spend collecting */
-   hb_gcCollectAll();
+   hb_gcCollectAll( FALSE );
 }
 
 /* Check all memory block if they can be released
 */
-void hb_gcCollectAll( void )
+void hb_gcCollectAll( BOOL fForce )
 {
-   if( s_pCurrBlock && !s_bCollecting )
+   /* MTNOTE: it's not necessary to protect s_bCollecting with mutex
+    *         because it can be changed at RT only inside this procedure
+    *         when all other threads are stoped by hb_vmSuspendThreads(),
+    *         [druzus]
+    */
+   if( !s_bCollecting && hb_vmSuspendThreads( fForce ) )
    {
       HB_GARBAGE_PTR pAlloc, pDelete;
+
+      if( !s_pCurrBlock )
+      {
+         hb_vmResumeThreads();
+         return;
+      }
 
       s_bCollecting = TRUE;
 
@@ -575,10 +631,8 @@ void hb_gcCollectAll( void )
 
       /* Step 2 - sweep */
       /* check all known places for blocks they are referring */
-      hb_vmIsLocalRef();
+      hb_vmIsStackRef();
       hb_vmIsStaticRef();
-      hb_memvarsIsMemvarRef();
-      hb_gcItemRef( hb_stackReturnItem() );
       hb_clsIsClassRef();
 
       if( s_pSweepExtern )
@@ -679,11 +733,12 @@ void hb_gcCollectAll( void )
             hb_gcUnlink( &s_pDeletedBlock, s_pDeletedBlock );
             if( hb_xRefCount( pDelete ) != 0 )
             {
-               if( hb_vmRequestQuery() == 0 )
-                  hb_errRT_BASE( EG_DESTRUCTOR, 1301, NULL, "Reference to freed block", 0 );
-
                hb_gcLink( &s_pCurrBlock, pAlloc );
                pAlloc->used = s_uUsedFlag;
+               pAlloc->locked = 0;
+
+               if( hb_vmRequestQuery() == 0 )
+                  hb_errRT_BASE( EG_DESTRUCTOR, 1301, NULL, "Reference to freed block", 0 );
             }
             else
                HB_GARBAGE_FREE( pDelete );
@@ -698,9 +753,14 @@ void hb_gcCollectAll( void )
       s_uUsedFlag ^= HB_GC_USED_FLAG;
 
       s_bCollecting = FALSE;
+      hb_vmResumeThreads();
    }
 }
 
+/* MTNOTE: It's executed at the end of HVM cleanup code just before
+ *         application exit when other threads are destroyed, so it
+ *         does not need additional protection code for MT mode, [druzus]
+ */
 void hb_gcReleaseAll( void )
 {
    if( s_pCurrBlock )
@@ -760,5 +820,5 @@ HB_FUNC( HB_GCALL )
     */
    hb_ret();
 
-   hb_gcCollectAll();
+   hb_gcCollectAll( hb_pcount() < 1 || hb_parl( 1 ) );
 }

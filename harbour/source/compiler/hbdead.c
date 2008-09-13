@@ -358,7 +358,7 @@ static HB_CODETRACE_FUNC( hb_p_endproc )
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
-static const PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
+static const PHB_CODETRACE_FUNC s_codeTraceFuncTable[] =
 {
    hb_p_default,               /* HB_P_AND,                  */
    hb_p_default,               /* HB_P_ARRAYPUSH,            */
@@ -541,7 +541,8 @@ static const PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
    hb_p_default,               /* HB_P_LOCALINCPUSH          */
    hb_p_default,               /* HB_P_PUSHFUNCSYM           */
    hb_p_default,               /* HB_P_HASHGEN               */
-   hb_p_default                /* HB_P_SEQBLOCK              */
+   hb_p_default,               /* HB_P_SEQBLOCK              */
+   hb_p_default                /* HB_P_THREADSTATICS         */
 };
 
 void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )

@@ -303,7 +303,7 @@ HB_EXPORT PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
 
    if( szText == NULL )
    {
-      pItem->item.asString.value  = "";
+      pItem->item.asString.value  = ( char * ) "";
       pItem->item.asString.length = 0;
    }
    else
@@ -329,7 +329,7 @@ HB_EXPORT PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, ULONG
 
    if( szText == NULL )
    {
-      pItem->item.asString.value  = "";
+      pItem->item.asString.value  = ( char * ) "";
       pItem->item.asString.length = 0;
    }
    else
@@ -368,7 +368,7 @@ HB_EXPORT PHB_ITEM hb_itemPutCPtr2( PHB_ITEM pItem, char * szText )
    if( ulLen == 0 )
    {
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = "";
+      pItem->item.asString.value     = ( char * ) "";
       hb_xfree( szText );
    }
    else if( ulLen == 1 )
@@ -409,7 +409,7 @@ HB_EXPORT PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
    if( ulLen == 0 )
    {
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = "";
+      pItem->item.asString.value     = ( char * ) "";
       hb_xfree( szText );
    }
    else if( ulLen == 1 )
@@ -462,7 +462,7 @@ HB_EXPORT char * hb_itemGetCPtr( PHB_ITEM pItem )
    if( pItem && HB_IS_STRING( pItem ) )
       return pItem->item.asString.value;
    else
-      return "";
+      return ( char * ) "";
 }
 
 HB_EXPORT ULONG hb_itemGetCLen( PHB_ITEM pItem )
@@ -822,7 +822,7 @@ HB_EXPORT PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
 
    pItem->type = HB_IT_DOUBLE;
    pItem->item.asDouble.length = HB_DBL_LENGTH( dNumber );
-   pItem->item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
+   pItem->item.asDouble.decimal = hb_stackSetStruct()->HB_SET_DECIMALS;
    pItem->item.asDouble.value = dNumber;
 
    return pItem;
@@ -954,7 +954,7 @@ HB_EXPORT PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, i
       iWidth = HB_DBL_LENGTH( dNumber );
 
    if( iDec < 0 )
-      iDec = hb_set.HB_SET_DECIMALS;
+      iDec = hb_stackSetStruct()->HB_SET_DECIMALS;
 
    if( iDec > 0 )
       return hb_itemPutNDLen( pItem, dNumber, iWidth, iDec );
@@ -996,7 +996,7 @@ HB_EXPORT PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, 
    }
 
    if( iDec < 0 )
-      iDec = hb_set.HB_SET_DECIMALS;
+      iDec = hb_stackSetStruct()->HB_SET_DECIMALS;
 
    pItem->type = HB_IT_DOUBLE;
    pItem->item.asDouble.length = iWidth;
@@ -1023,7 +1023,7 @@ HB_EXPORT PHB_ITEM hb_itemPutNDDec( PHB_ITEM pItem, double dNumber, int iDec )
 
    if( iDec == HB_DEFAULT_DECIMALS )
    {
-      pItem->item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
+      pItem->item.asDouble.decimal = hb_stackSetStruct()->HB_SET_DECIMALS;
    }
    else
    {
@@ -1299,36 +1299,36 @@ HB_EXPORT char * hb_itemTypeStr( PHB_ITEM pItem )
          return ( char * ) ( hb_arrayIsObject( pItem ) ? "O" : "A" );
 
       case HB_IT_BLOCK:
-         return "B";
+         return ( char * ) "B";
 
       case HB_IT_DATE:
-         return "D";
+         return ( char * ) "D";
 
       case HB_IT_LOGICAL:
-         return "L";
+         return ( char * ) "L";
 
       case HB_IT_INTEGER:
       case HB_IT_LONG:
       case HB_IT_DOUBLE:
-         return "N";
+         return ( char * ) "N";
 
       case HB_IT_STRING:
-         return "C";
+         return ( char * ) "C";
 
       case HB_IT_MEMO:
-         return "M";
+         return ( char * ) "M";
 
       case HB_IT_HASH:
-         return "H";
+         return ( char * ) "H";
 
       case HB_IT_POINTER:
-         return "P";
+         return ( char * ) "P";
 
       case HB_IT_SYMBOL:
-         return "S";
+         return ( char * ) "S";
    }
 
-   return "U";
+   return ( char * ) "U";
 }
 
 /* Internal API, not standard Clipper */
@@ -1350,6 +1350,7 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
    type = HB_ITEM_TYPERAW( pItem );
    pItem->type = HB_IT_NIL;
 
+   /* GCLOCK enter */
    if( type & HB_IT_STRING )
    {
       if( pItem->item.asString.allocated )
@@ -1384,6 +1385,7 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
       if( pItem->item.asPointer.collect )
          hb_gcRefFree( pItem->item.asPointer.value );
    }
+   /* GCLOCK leave */
 }
 
 /* Internal API, not standard Clipper */
@@ -1403,6 +1405,7 @@ HB_EXPORT void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
    if( HB_IS_COMPLEX( pSource ) )
    {
+      /* GCLOCK enter */
       if( HB_IS_STRING( pSource ) )
       {
          if( pSource->item.asString.allocated )
@@ -1441,6 +1444,7 @@ HB_EXPORT void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
                hb_gcRefInc( pSource->item.asPointer.value );
          }
       }
+      /* GCLOCK leave */
    }
 }
 
@@ -1508,9 +1512,11 @@ HB_EXPORT void hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
    if( HB_IS_COMPLEX( pDest ) )
       hb_itemClear( pDest );
 
+   /* GCLOCK enter */
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
    pDest->type &= ~HB_IT_DEFAULT;
    pSource->type = HB_IT_NIL;
+   /* GCLOCK leave */
 }
 
 /* Internal API, not standard Clipper */
@@ -1537,9 +1543,11 @@ void hb_itemMoveRef( PHB_ITEM pDest, PHB_ITEM pSource )
    if( HB_IS_COMPLEX( pDest ) )
       hb_itemClear( pDest );
 
+   /* GCLOCK enter */
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
    pDest->type &= ~HB_IT_DEFAULT;
    pSource->type = HB_IT_NIL;
+   /* GCLOCK leave */
 }
 
 /* Internal API, not standard Clipper */
@@ -1584,9 +1592,11 @@ void hb_itemMoveToRef( PHB_ITEM pDest, PHB_ITEM pSource )
    if( HB_IS_COMPLEX( pDest ) )
       hb_itemClear( pDest );
 
+   /* GCLOCK enter */
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
    pDest->type &= ~HB_IT_DEFAULT;
    pSource->type = HB_IT_NIL;
+   /* GCLOCK leave */
 }
 
 void hb_itemMoveFromRef( PHB_ITEM pDest, PHB_ITEM pSource )
@@ -1617,11 +1627,13 @@ HB_EXPORT void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
     * It's safe to use this version because our GC cannot be
     * activated inside memcpy()
     */
+   /* GCLOCK enter */
    memcpy( &temp, pItem2, sizeof( HB_ITEM ) );
    memcpy( pItem2, pItem1, sizeof( HB_ITEM ) );
    memcpy( pItem1, &temp, sizeof( HB_ITEM ) );
    pItem1->type &= ~HB_IT_DEFAULT;
    pItem2->type &= ~HB_IT_DEFAULT;
+   /* GCLOCK leave */
 }
 
 /* Internal API, not standard Clipper */
@@ -1635,11 +1647,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
    {
       if( HB_IS_MEMVAR( pItem ) )
       {
-         HB_VALUE_PTR pValue;
-
-         pValue = *( pItem->item.asMemvar.itemsbase ) + 
-                     pItem->item.asMemvar.value;
-         pItem = pValue->pVarItem;
+         pItem = pItem->item.asMemvar.value;
       }
       else if( HB_IS_ENUM( pItem ) ) /* FOR EACH control variable */
       {
@@ -1870,11 +1878,14 @@ PHB_ITEM hb_itemUnShareString( PHB_ITEM pItem )
        hb_xRefCount( pItem->item.asString.value ) > 1 )
    {
       ULONG ulLen = pItem->item.asString.length + 1;
-      char *szText = ( char* ) hb_xgrab( ulLen );
-
-      hb_xmemcpy( szText, pItem->item.asString.value, ulLen );
+      char *szText = ( char* ) hb_xmemcpy( hb_xgrab( ulLen ),
+                                           pItem->item.asString.value, ulLen );
       if( pItem->item.asString.allocated )
-         hb_xRefDec( pItem->item.asString.value );
+      {
+         /* GCLOCK enter */
+         hb_xRefFree( pItem->item.asString.value );
+         /* GCLOCK leave */
+      }
       pItem->item.asString.value = szText;
       pItem->item.asString.allocated = ulLen;
    }
@@ -1936,7 +1947,7 @@ HB_EXPORT int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact
    ulLenFirst = pFirst->item.asString.length;
    ulLenSecond = pSecond->item.asString.length;
 
-   if( hb_set.HB_SET_EXACT && !bForceExact )
+   if( hb_stackSetStruct()->HB_SET_EXACT && !bForceExact )
    {
       /* SET EXACT ON and not using == */
       /* Don't include trailing spaces */
@@ -1952,9 +1963,10 @@ HB_EXPORT int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact
    if( ulMinLen )
    {
 #ifndef HB_CDP_SUPPORT_OFF
-      if( hb_cdp_page->lSort )
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp && cdp->lSort )
          iRet = hb_cdpcmp( szFirst, ulLenFirst, szSecond, ulLenSecond,
-                           hb_cdp_page, hb_set.HB_SET_EXACT || bForceExact );
+                           cdp, bForceExact || hb_stackSetStruct()->HB_SET_EXACT );
       else
 #endif
       {
@@ -1974,7 +1986,8 @@ HB_EXPORT int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact
          if( !iRet && ulLenFirst != ulLenSecond )
          {
             /* Force an exact comparison? */
-            if( hb_set.HB_SET_EXACT || bForceExact || ulLenSecond > ulLenFirst )
+            if( bForceExact || ulLenSecond > ulLenFirst ||
+                hb_stackSetStruct()->HB_SET_EXACT )
                iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
          }
       }
@@ -1984,7 +1997,7 @@ HB_EXPORT int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact
       /* Both empty ? */
       if( ulLenFirst != ulLenSecond )
       {
-         if( hb_set.HB_SET_EXACT || bForceExact )
+         if( bForceExact || hb_stackSetStruct()->HB_SET_EXACT )
             iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
          else
             iRet = ( ulLenSecond == 0 ) ? 0 : -1;
@@ -2014,7 +2027,7 @@ HB_EXPORT int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExac
    ulLenFirst = pFirst->item.asString.length;
    ulLenSecond = pSecond->item.asString.length;
 
-   if( hb_set.HB_SET_EXACT && !bForceExact )
+   if( !bForceExact || hb_stackSetStruct()->HB_SET_EXACT )
    {
       /* SET EXACT ON and not using == */
       /* Don't include trailing spaces */
@@ -2030,9 +2043,10 @@ HB_EXPORT int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExac
    if( ulMinLen )
    {
 #ifndef HB_CDP_SUPPORT_OFF
-      if( hb_cdp_page->lSort )
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp && cdp->lSort )
          iRet = hb_cdpicmp( szFirst, ulLenFirst, szSecond, ulLenSecond,
-                            hb_cdp_page, hb_set.HB_SET_EXACT || bForceExact );
+                            cdp, bForceExact || hb_stackSetStruct()->HB_SET_EXACT );
       else
 #endif
       {
@@ -2054,7 +2068,8 @@ HB_EXPORT int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExac
          if( !iRet && ulLenFirst != ulLenSecond )
          {
             /* Force an exact comparison? */
-            if( hb_set.HB_SET_EXACT || bForceExact || ulLenSecond > ulLenFirst )
+            if( bForceExact || ulLenSecond > ulLenFirst ||
+                hb_stackSetStruct()->HB_SET_EXACT )
                iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
          }
       }
@@ -2064,7 +2079,7 @@ HB_EXPORT int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExac
       /* Both empty ? */
       if( ulLenFirst != ulLenSecond )
       {
-         if( hb_set.HB_SET_EXACT || bForceExact )
+         if( bForceExact || hb_stackSetStruct()->HB_SET_EXACT )
             iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
          else
             iRet = ( ulLenSecond == 0 ) ? 0 : -1;
@@ -2428,7 +2443,7 @@ HB_EXPORT char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
             hb_dateDecStr( szDate, pItem->item.asDate.value );
 
             buffer = ( char * ) hb_xgrab( 11 );
-            hb_dateFormat( szDate, buffer, hb_set.HB_SET_DATEFORMAT );
+            hb_dateFormat( szDate, buffer, hb_stackSetStruct()->HB_SET_DATEFORMAT );
             * ulLen = strlen( buffer );
             * bFreeReq = TRUE;
          }
@@ -2437,10 +2452,10 @@ HB_EXPORT char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
       case HB_IT_DOUBLE:
       case HB_IT_INTEGER:
       case HB_IT_LONG:
-         if( hb_set.HB_SET_FIXED )
+         if( hb_stackSetStruct()->HB_SET_FIXED )
          {
             /* If fixed mode is enabled, use the default number of decimal places. */
-            hb_itemPutNI( hb_stackAllocItem(), hb_set.HB_SET_DECIMALS );
+            hb_itemPutNI( hb_stackAllocItem(), hb_stackSetStruct()->HB_SET_DECIMALS );
             buffer = hb_itemStr( pItem, NULL, hb_stackItemFromTop( -1 ) );
             hb_stackPop();
          }
@@ -2453,14 +2468,14 @@ HB_EXPORT char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
          }
          else
          {
-            buffer = "";
+            buffer = ( char * ) "";
             * ulLen = 0;
             * bFreeReq = FALSE;
          }
          break;
 
       case HB_IT_NIL:
-         buffer = "NIL";
+         buffer = ( char * ) "NIL";
          * ulLen = 3;
          * bFreeReq = FALSE;
          break;
@@ -2500,7 +2515,7 @@ HB_EXPORT char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
          break;
       }
       default:
-         buffer = "";
+         buffer = ( char * ) "";
          * ulLen = 0;
          * bFreeReq = FALSE;
    }

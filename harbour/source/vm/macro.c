@@ -60,10 +60,39 @@
 #include "hbstack.h"
 
 /* various flags for macro compiler */
-#ifdef HB_C52_STRICT
-static ULONG s_macroFlags = HB_SM_SHORTCUTS;
+#ifndef HB_SM_DEFAULT
+#  ifdef HB_C52_STRICT
+#     define HB_SM_DEFAULT    ( HB_SM_SHORTCUTS );
+#  else
+#     define HB_SM_DEFAULT    ( HB_SM_SHORTCUTS | HB_SM_HARBOUR );
+#  endif
+#endif
+
+#if defined( HB_MT_VM )
+
+static void hb_macroFlagsInit( void * pFlags )
+{
+   * ( ( ULONG * ) pFlags ) = HB_SM_DEFAULT;
+}
+
+static HB_TSD_NEW( s_macroFlags, sizeof( ULONG ), hb_macroFlagsInit, NULL );
+
+static ULONG hb_macroFlags( void )
+{
+   return * ( ( ULONG * ) hb_stackGetTSD( &s_macroFlags ) );
+}
+
+static void hb_macroFlagsSet( ULONG flag )
+{
+   * ( ( ULONG * ) hb_stackGetTSD( &s_macroFlags ) ) = flag;
+}
+
 #else
-static ULONG s_macroFlags = HB_SM_SHORTCUTS | HB_SM_HARBOUR;
+
+   static ULONG s_macroFlags = HB_SM_DEFAULT;
+#  define hb_macroFlags()     s_macroFlags
+#  define hb_macroFlagsSet(f) do { s_macroFlags = (f); } while(0)
+
 #endif
 
 /* ************************************************************************* */
@@ -390,7 +419,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
       BOOL fFree;
 
       struMacro.mode       = HB_MODE_MACRO;
-      struMacro.supported  = (flags & HB_SM_RT_MACRO) ? s_macroFlags : flags;
+      struMacro.supported  = (flags & HB_SM_RT_MACRO) ? hb_macroFlags() : flags;
       struMacro.Flags      = HB_MACRO_GEN_PUSH;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
@@ -471,7 +500,7 @@ void hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags )
       int iStatus;
 
       struMacro.mode       = HB_MODE_MACRO;
-      struMacro.supported  = (flags & HB_SM_RT_MACRO) ? s_macroFlags : flags;
+      struMacro.supported  = (flags & HB_SM_RT_MACRO) ? hb_macroFlags() : flags;
       struMacro.Flags      = HB_MACRO_GEN_POP;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
@@ -529,7 +558,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       szString[ ulLen ] = '\0';
 
       struMacro.mode       = HB_MODE_MACRO;
-      struMacro.supported  = (bSupported & HB_SM_RT_MACRO) ? s_macroFlags : bSupported;
+      struMacro.supported  = (bSupported & HB_SM_RT_MACRO) ? hb_macroFlags() : bSupported;
       struMacro.Flags      = iFlag;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
@@ -563,7 +592,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       int iStatus;
 
       struMacro.mode       = HB_MODE_MACRO;
-      struMacro.supported  = (bSupported & HB_SM_RT_MACRO) ? s_macroFlags : bSupported;
+      struMacro.supported  = (bSupported & HB_SM_RT_MACRO) ? hb_macroFlags() : bSupported;
       struMacro.Flags      = iFlag | HB_MACRO_GEN_ALIASED;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
@@ -711,7 +740,7 @@ HB_MACRO_PTR hb_macroCompile( char * szString )
 
    pMacro = ( HB_MACRO_PTR ) hb_xgrab( sizeof( HB_MACRO ) );
    pMacro->mode      = HB_MODE_MACRO;
-   pMacro->supported = s_macroFlags;
+   pMacro->supported = hb_macroFlags();
    pMacro->Flags     = HB_MACRO_DEALLOCATE | HB_MACRO_GEN_PUSH |
                        HB_MACRO_GEN_LIST | HB_MACRO_GEN_PARE;
    pMacro->uiNameLen = HB_SYMBOL_NAME_LEN;
@@ -815,7 +844,7 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
       int iStatus;
 
       struMacro.mode       = HB_MODE_MACRO;
-      struMacro.supported  = s_macroFlags;
+      struMacro.supported  = hb_macroFlags();
       struMacro.Flags      = HB_MACRO_GEN_PUSH | HB_MACRO_GEN_TYPE;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
@@ -914,14 +943,14 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
  */
 ULONG hb_macroSetMacro( BOOL bSet, ULONG flag )
 {
-   ULONG ulCurrentFlags = s_macroFlags;
+   ULONG ulCurrentFlags = hb_macroFlags();
 
    if( flag > 0 )
    {
       if( bSet )
-         s_macroFlags |= flag;
+         hb_macroFlagsSet( ulCurrentFlags | flag );
       else
-         s_macroFlags &= ~flag;
+         hb_macroFlagsSet( ulCurrentFlags & ~flag );
    }
 
    return ulCurrentFlags;
@@ -940,31 +969,13 @@ HB_FUNC( HB_SETMACRO )
        {
           case HB_SM_HARBOUR:
              /* enable/disable extended Harbour compatibility */
-             hb_retl( s_macroFlags & ulFlags );
-             pValue = hb_param( 2, HB_IT_LOGICAL );
-             if( pValue )
-                hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );
-             break;
-
           case HB_SM_XBASE:
              /* enable/disable extended xbase compatibility */
-             hb_retl( s_macroFlags & ulFlags );
-             pValue = hb_param( 2, HB_IT_LOGICAL );
-             if( pValue )
-                hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );
-             break;
-
-          case HB_SM_ARRSTR :
+          case HB_SM_ARRSTR:
              /* enable/disable processing of strings as an array of bytes */
-             hb_retl( s_macroFlags & ulFlags );
-             pValue = hb_param( 2, HB_IT_LOGICAL );
-             if( pValue )
-                hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );
-             break;
-
           case HB_SM_SHORTCUTS:
              /* enable/disable support for shortcut logical operators */
-             hb_retl( s_macroFlags & ulFlags );
+             hb_retl( hb_macroFlags() & ulFlags );
              pValue = hb_param( 2, HB_IT_LOGICAL );
              if( pValue )
                 hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );

@@ -918,7 +918,7 @@ static void hb_dbfGetLockArray( DBFAREAP pArea, PHB_ITEM pItem )
    hb_arrayNew( pItem, pArea->ulNumLocksPos );
    for( ulCount = 0; ulCount < pArea->ulNumLocksPos; ulCount++ )
    {
-      hb_itemPutNL( hb_arrayGetItemPtr( pItem, ulCount + 1 ), pArea->pLocksPos[ ulCount ] );
+      hb_arraySetNL( pItem, ulCount + 1, pArea->pLocksPos[ ulCount ] );
    }
 }
 
@@ -1528,8 +1528,8 @@ static ERRCODE hb_dbfSkip( DBFAREAP pArea, LONG lToSkip )
 
    pArea->fTop = pArea->fBottom = FALSE;
 
-   if( lToSkip == 0 || hb_set.HB_SET_DELETED ||
-       pArea->dbfi.itmCobExpr || pArea->dbfi.fFilter )
+   if( lToSkip == 0 || pArea->dbfi.itmCobExpr || pArea->dbfi.fFilter ||
+       hb_setGetDeleted() )
       return SUPER_SKIP( ( AREAP ) pArea, lToSkip );
 
    uiError = SELF_SKIPRAW( ( AREAP ) pArea, lToSkip );
@@ -1781,7 +1781,7 @@ static ERRCODE hb_dbfFlush( DBFAREAP pArea )
          uiError = SELF_WRITEDBHEADER( ( AREAP ) pArea );
    }
 
-   if( hb_set.HB_SET_HARDCOMMIT && uiError == SUCCESS )
+   if( hb_setGetHardCommit() && uiError == SUCCESS )
    {
       if( pArea->fDataFlush )
       {
@@ -1862,12 +1862,12 @@ static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    {
       case HB_FT_STRING:
 #ifndef HB_CDP_SUPPORT_OFF
-         if( pArea->cdPage != hb_cdp_page )
+         if( pArea->cdPage != hb_vmCDP() )
          {
             char * pVal = ( char * ) hb_xgrab( pField->uiLen + 1 );
             memcpy( pVal, pArea->pRecord + pArea->pFieldOffset[ uiIndex ], pField->uiLen );
             pVal[ pField->uiLen ] = '\0';
-            hb_cdpnTranslate( pVal, pArea->cdPage, hb_cdp_page, pField->uiLen );
+            hb_cdpnTranslate( pVal, pArea->cdPage, hb_vmCDP(), pField->uiLen );
             hb_itemPutCLPtr( pItem, pVal, pField->uiLen );
          }
          else
@@ -2304,7 +2304,7 @@ static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                     hb_itemGetCPtr( pItem ), uiSize );
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_cdp_page, pArea->cdPage, uiSize );
+            hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_vmCDP(), pArea->cdPage, uiSize );
 #endif
             memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + uiSize,
                     ' ', pField->uiLen - uiSize );
@@ -2653,7 +2653,7 @@ static ERRCODE hb_dbfClose( DBFAREAP pArea )
 
       /* It's not Clipper compatible but it reduces the problem with
          byggy Windows network setting */
-      if( hb_set.HB_SET_HARDCOMMIT )
+      if( hb_setGetHardCommit() )
          SELF_FLUSH( ( AREAP ) pArea );
    }
 
@@ -2734,7 +2734,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
 
-   if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
+   if( ! pFileName->szExtension && hb_setGetDefExtension() )
    {
       pItem = hb_itemPutC( pItem, NULL );
       if( SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem ) != SUCCESS )
@@ -3095,10 +3095,10 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    {
       pArea->cdPage = hb_cdpFind( (char *) pCreateInfo->cdpId );
       if( !pArea->cdPage )
-         pArea->cdPage = hb_cdp_page;
+         pArea->cdPage = hb_vmCDP();
    }
    else
-      pArea->cdPage = hb_cdp_page;
+      pArea->cdPage = hb_vmCDP();
 #endif
 
    pItem = hb_itemNew( NULL );
@@ -3632,10 +3632,10 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    {
       pArea->cdPage = hb_cdpFind( (char *) pOpenInfo->cdpId );
       if( !pArea->cdPage )
-         pArea->cdPage = hb_cdp_page;
+         pArea->cdPage = hb_vmCDP();
    }
    else
-      pArea->cdPage = hb_cdp_page;
+      pArea->cdPage = hb_vmCDP();
 #endif
    pArea->fShared = pOpenInfo->fShared;
    pArea->fReadonly = pOpenInfo->fReadonly;
@@ -3644,7 +3644,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
     *   1: AUTOSHARE enabled.
     *   2: force exclusive mode.
     * */
-   if( hb_set.HB_SET_AUTOSHARE == 2 )
+   if( hb_setGetAutoShare() == 2 )
       pArea->fShared = FALSE;
    uiFlags = (pArea->fReadonly ? FO_READ : FO_READWRITE) |
              (pArea->fShared ? FO_DENYNONE : FO_EXCLUSIVE);
@@ -3652,7 +3652,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pFileName = hb_fsFNameSplit( ( char * ) szFileName );
    /* Add default file name extension if necessary */
-   if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
+   if( ! pFileName->szExtension && hb_setGetDefExtension() )
    {
       hb_itemClear( pItem );
       if( SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem ) != SUCCESS )
@@ -4343,9 +4343,9 @@ static ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo )
          /* Copy data */
          memcpy( pBuffer, pArea->pRecord, pArea->uiRecordLen );
 #ifndef HB_CDP_SUPPORT_OFF
-         if( pArea->cdPage != hb_cdp_page )
+         if( pArea->cdPage != hb_vmCDP() )
          {
-            hb_dbfTranslateRec( pArea, pBuffer, pArea->cdPage, hb_cdp_page );
+            hb_dbfTranslateRec( pArea, pBuffer, pArea->cdPage, hb_vmCDP() );
          }
 #endif
          pBuffer += pArea->uiRecordLen;
@@ -5184,7 +5184,7 @@ static ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIn
 
    pFileName = hb_fsFNameSplit( szFile );
 
-   if( hb_set.HB_SET_DEFEXTENSIONS && !pFileName->szExtension )
+   if( ! pFileName->szExtension && hb_setGetDefExtension() )
    {
       /* Add default extension if missing */
       pFileExt = hb_itemPutC( NULL, NULL );
@@ -5265,7 +5265,7 @@ static ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItem
 
    pFileName = hb_fsFNameSplit( szFile );
 
-   if( hb_set.HB_SET_DEFEXTENSIONS && !pFileName->szExtension )
+   if( ! pFileName->szExtension && hb_setGetDefExtension() )
    {
       pFileExt = hb_itemPutC( NULL, NULL );
       if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, ulConnect, pFileExt ) == SUCCESS )
@@ -5370,7 +5370,7 @@ static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
          int iScheme = hb_itemGetNI( pItem );
 
          hb_itemPutNI( pItem, pData->bLockType ? pData->bLockType :
-                              hb_set.HB_SET_DBFLOCKSCHEME );
+                              hb_setGetDBFLockScheme() );
          switch( iScheme )
          {
             case DB_DBFLOCK_CLIP:

@@ -74,31 +74,48 @@
 #include "hbapigt.h"
 #include "hbapiitm.h"
 #include "hbset.h"
+#include "hbstack.h"
 #include "hbvm.h"
 
-static PHB_ITEM s_inkeyBlockBefore = NULL;
-static PHB_ITEM s_inkeyBlockAfter  = NULL;
+typedef struct
+{
+   PHB_ITEM before;
+   PHB_ITEM after;
+} HB_INKEYBLOCK, * PHB_INKEYBLOCK;
+
+static void hb_inkeyBlockRelease( void * cargo )
+{
+   PHB_INKEYBLOCK pInkeyBlock = ( PHB_INKEYBLOCK ) cargo;
+
+   if( pInkeyBlock->before )
+      hb_itemRelease( pInkeyBlock->before );
+   if( pInkeyBlock->after )
+      hb_itemRelease( pInkeyBlock->after );
+}
+
+static HB_TSD_NEW( s_inkeyBlock, sizeof( HB_INKEYBLOCK ), NULL, hb_inkeyBlockRelease );
 
 HB_FUNC( INKEY )
 {
+   PHB_INKEYBLOCK pInkeyBlock = ( PHB_INKEYBLOCK ) hb_stackTestTSD( &s_inkeyBlock );
    USHORT uiPCount = ( USHORT ) hb_pcount();
    PHB_ITEM pKey = NULL;
    int iKey;
 
-   if( s_inkeyBlockBefore )
-      hb_vmEvalBlock( s_inkeyBlockBefore );
+   if( pInkeyBlock && pInkeyBlock->before )
+      hb_vmEvalBlock( pInkeyBlock->before );
 
    do
    {
       iKey = hb_inkey( uiPCount == 1 || ( uiPCount > 1 && ISNUM( 1 ) ),
                        hb_parnd( 1 ),
-                       ISNUM( 2 ) ? hb_parni( 2 ) : hb_set.HB_SET_EVENTMASK );
+                       ISNUM( 2 ) ? hb_parni( 2 ) : hb_setGetEventMask() );
 
-      if( iKey == 0 || !s_inkeyBlockAfter )
+      if( iKey == 0 || !pInkeyBlock || !pInkeyBlock->after )
          break;
 
       pKey = hb_itemPutNI( pKey, iKey );
-      iKey = hb_itemGetNI( hb_vmEvalBlockV( s_inkeyBlockAfter, 1, pKey ) );
+      iKey = hb_itemGetNI( hb_vmEvalBlockV( pInkeyBlock->after, 1, pKey ) );
       hb_inkeySetLast( iKey );
    }
    while( iKey == 0 );
@@ -111,73 +128,37 @@ HB_FUNC( INKEY )
 
 /* temporary disabled */
 #if 0
-
-static BOOL s_fInit = FALSE;
-
-static void hb_inkeyBlockFree( void * cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-
-   if( s_inkeyBlockBefore )
-   {
-      hb_itemRelease( s_inkeyBlockBefore );
-      s_inkeyBlockBefore = NULL;
-   }
-   if( s_inkeyBlockAfter )
-   {
-      hb_itemRelease( s_inkeyBlockAfter );
-      s_inkeyBlockAfter = NULL;
-   }
-}
-
-static void hb_inkeySetDestructor( void )
-{
-   if( !s_fInit )
-   {
-      s_fInit = TRUE;
-      hb_vmAtExit( hb_inkeyBlockFree, NULL );
-   }
-}
-
 HB_FUNC( HB_SETINKEYBEFOREBLOCK )
 {
-   if( s_inkeyBlockBefore )
-      hb_itemReturn( s_inkeyBlockBefore );
+   PHB_INKEYBLOCK pInkeyBlock = ( PHB_INKEYBLOCK ) hb_stackGetTSD( &s_inkeyBlock );
+
+   if( pInkeyBlock->before )
+      hb_itemReturn( pInkeyBlock->before );
 
    if( hb_pcount() > 0 )
    {
       PHB_ITEM pBlock = hb_param( 1, HB_IT_BLOCK );
 
-      if( pBlock )
-      {
-         hb_inkeySetDestructor();
-         pBlock = hb_itemNew( pBlock );
-      }
-
-      if( s_inkeyBlockBefore )
-         hb_itemRelease( s_inkeyBlockBefore );
-      s_inkeyBlockBefore = pBlock;
+      if( pInkeyBlock->before )
+         hb_itemRelease( pInkeyBlock->before );
+      pInkeyBlock->before = pBlock ? hb_itemNew( pBlock ) : pBlock;
    }
 }
 
 HB_FUNC( HB_SETINKEYAFTERBLOCK )
 {
-   if( s_inkeyBlockAfter )
-      hb_itemReturn( s_inkeyBlockAfter );
+   PHB_INKEYBLOCK pInkeyBlock = ( PHB_INKEYBLOCK ) hb_stackGetTSD( &s_inkeyBlock );
+
+   if( pInkeyBlock->after )
+      hb_itemReturn( pInkeyBlock->after );
 
    if( hb_pcount() > 0 )
    {
       PHB_ITEM pBlock = hb_param( 1, HB_IT_BLOCK );
 
-      if( pBlock )
-      {
-         hb_inkeySetDestructor();
-         pBlock = hb_itemNew( pBlock );
-      }
-
-      if( s_inkeyBlockAfter )
-         hb_itemRelease( s_inkeyBlockAfter );
-      s_inkeyBlockAfter = pBlock;
+      if( pInkeyBlock->after )
+         hb_itemRelease( pInkeyBlock->after );
+      pInkeyBlock->after = pBlock ? hb_itemNew( pBlock ) : pBlock;
    }
 }
 
@@ -258,7 +239,7 @@ HB_FUNC( HB_KEYINS )
 
 HB_FUNC( NEXTKEY )
 {
-   hb_retni( hb_inkeyNext( ISNUM( 1 ) ? hb_parni( 1 ) : hb_set.HB_SET_EVENTMASK ) );
+   hb_retni( hb_inkeyNext( ISNUM( 1 ) ? hb_parni( 1 ) : hb_setGetEventMask() ) );
 }
 
 HB_FUNC( LASTKEY )

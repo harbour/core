@@ -417,6 +417,8 @@ VM_COMMON_LIB_OBJS = \
     $(OBJ_DIR)\proc$(OBJEXT)     \
     $(OBJ_DIR)\pvalue$(OBJEXT)   \
     $(OBJ_DIR)\runner$(OBJEXT)   \
+    $(OBJ_DIR)\set$(OBJEXT)      \
+    $(OBJ_DIR)\thread$(OBJEXT)   \
     $(OBJ_DIR)\vm$(OBJEXT)       \
     $(OBJ_DIR)\harbinit$(OBJEXT) \
 
@@ -552,7 +554,6 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\scrrow$(OBJEXT)   \
     $(OBJ_DIR)\secondfs$(OBJEXT) \
     $(OBJ_DIR)\seconds$(OBJEXT)  \
-    $(OBJ_DIR)\set$(OBJEXT)      \
     $(OBJ_DIR)\setcolor$(OBJEXT) \
     $(OBJ_DIR)\setcurs$(OBJEXT)  \
     $(OBJ_DIR)\setkey$(OBJEXT)   \

@@ -66,6 +66,7 @@ _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbvm.h"
+#include "hbstack.h"
 #include "hbmath.h"
 
 #if defined(HB_MATH_ERRNO)
@@ -75,16 +76,57 @@ _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
 #   include <ieeefp.h>
 #endif
 
+typedef struct
+{
+   int                  mode;
+   PHB_ITEM             block;
+   HB_MATH_HANDLERPROC  handler;
+   HB_MATH_HANDLERPROC  prevHandler;
+#if defined(HB_MATH_HANDLER)
+   HB_MATH_EXCEPTION    exception;
+#endif
+} HB_MATHERRDATA, * PHB_MATHERRDATA;
+
+static void hb_mathErrDataInit( void * Cargo )
+{
+   PHB_MATHERRDATA pMathErr = ( PHB_MATHERRDATA ) Cargo;
+
+   pMathErr->mode = HB_MATH_ERRMODE_DEFAULT;
+
+   pMathErr->handler = hb_matherr;
+
+#if defined(HB_MATH_HANDLER)
+   pMathErr->exception.type = HB_MATH_ERR_NONE;
+   pMathErr->exception.funcname = "";
+   pMathErr->exception.error = "";
+   pMathErr->exception.arg1 = 0.0;
+   pMathErr->exception.arg2 = 0.0;
+   pMathErr->exception.retval = 0.0;
+   pMathErr->exception.retvalwidth = -1;   /* we don't know */
+   pMathErr->exception.retvaldec = -1;     /* use standard SET DECIMALS */
+   pMathErr->exception.handled = 1;
+#endif
+}
+
+static void hb_mathErrDataRelease( void * Cargo )
+{
+   PHB_MATHERRDATA pMathErr = ( PHB_MATHERRDATA ) Cargo;
+
+   hb_itemRelease( pMathErr->block );
+}
+
+static HB_TSD_NEW( s_mathErrData, sizeof( HB_MATHERRDATA ),
+                   hb_mathErrDataInit, hb_mathErrDataRelease );
+
+#define hb_mathErrData()      ( ( PHB_MATHERRDATA ) hb_stackGetTSD( &s_mathErrData ) )
+
+
 /*
  * ************************************************************
  * Harbour Math functions Part I:
  * handling math errors, C math lib redirection
  * ************************************************************
  */
-
-#if defined(HB_MATH_HANDLER)
-static HB_MATH_EXCEPTION s_hb_exc = { HB_MATH_ERR_NONE, "", "", 0.0, 0.0, 0.0, -1, -1, 0 };
-#endif
 
 /* reset math error information */
 void hb_mathResetError( HB_MATH_EXCEPTION * phb_exc )
@@ -94,15 +136,18 @@ void hb_mathResetError( HB_MATH_EXCEPTION * phb_exc )
    HB_SYMBOL_UNUSED( phb_exc );
 
 #if defined(HB_MATH_HANDLER)
-   s_hb_exc.type = HB_MATH_ERR_NONE;
-   s_hb_exc.funcname = "";
-   s_hb_exc.error = "";
-   s_hb_exc.arg1 = 0.0;
-   s_hb_exc.arg2 = 0.0;
-   s_hb_exc.retval = 0.0;
-   s_hb_exc.retvalwidth = -1;   /* we don't know */
-   s_hb_exc.retvaldec = -1;     /* use standard SET DECIMALS */
-   s_hb_exc.handled = 1;
+   {
+      PHB_MATHERRDATA pMathErr = hb_mathErrData();
+      pMathErr->exception.type = HB_MATH_ERR_NONE;
+      pMathErr->exception.funcname = "";
+      pMathErr->exception.error = "";
+      pMathErr->exception.arg1 = 0.0;
+      pMathErr->exception.arg2 = 0.0;
+      pMathErr->exception.retval = 0.0;
+      pMathErr->exception.retvalwidth = -1;   /* we don't know */
+      pMathErr->exception.retvaldec = -1;     /* use standard SET DECIMALS */
+      pMathErr->exception.handled = 1;
+   }
 #elif defined(HB_MATH_ERRNO)
    errno = 0;
 #endif
@@ -115,59 +160,62 @@ HB_EXPORT int matherr( struct exception *err )
 {
    int retval;
    HB_MATH_HANDLERPROC mathHandler;
+   HB_MATH_EXCEPTION * pExc;
 
    HB_TRACE( HB_TR_DEBUG, ( "matherr(%p)", err ) );
+
+   pExc = &hb_mathErrData()->exception;
 
    /* map math error types */
    switch( err->type )
    {
       case DOMAIN:
-         s_hb_exc.type = HB_MATH_ERR_DOMAIN;
-         s_hb_exc.error = "Argument not in domain of function";
+         pExc->type = HB_MATH_ERR_DOMAIN;
+         pExc->error = "Argument not in domain of function";
          break;
 
       case SING:
-         s_hb_exc.type = HB_MATH_ERR_SING;
-         s_hb_exc.error = "Calculation results in singularity";
+         pExc->type = HB_MATH_ERR_SING;
+         pExc->error = "Calculation results in singularity";
          break;
 
       case OVERFLOW:
-         s_hb_exc.type = HB_MATH_ERR_OVERFLOW;
-         s_hb_exc.error = "Calculation result too large to represent";
+         pExc->type = HB_MATH_ERR_OVERFLOW;
+         pExc->error = "Calculation result too large to represent";
          break;
 
       case UNDERFLOW:
-         s_hb_exc.type = HB_MATH_ERR_UNDERFLOW;
-         s_hb_exc.error = "Calculation result too small to represent";
+         pExc->type = HB_MATH_ERR_UNDERFLOW;
+         pExc->error = "Calculation result too small to represent";
          break;
 
       case TLOSS:
-         s_hb_exc.type = HB_MATH_ERR_TLOSS;
-         s_hb_exc.error = "Total loss of significant digits";
+         pExc->type = HB_MATH_ERR_TLOSS;
+         pExc->error = "Total loss of significant digits";
          break;
 
       case PLOSS:
-         s_hb_exc.type = HB_MATH_ERR_PLOSS;
-         s_hb_exc.error = "Partial loss of significant digits";
+         pExc->type = HB_MATH_ERR_PLOSS;
+         pExc->error = "Partial loss of significant digits";
          break;
 
       default:
-         s_hb_exc.type = HB_MATH_ERR_UNKNOWN;
-         s_hb_exc.error = "Unknown math error";
+         pExc->type = HB_MATH_ERR_UNKNOWN;
+         pExc->error = "Unknown math error";
          break;
    }
 
-   s_hb_exc.funcname = ( char * ) err->name;    /* (char *) Avoid warning in DJGPP */
-   s_hb_exc.arg1 = err->arg1;
-   s_hb_exc.arg2 = err->arg2;
-   s_hb_exc.retval = err->retval;
-   s_hb_exc.handled = 0;
+   pExc->funcname = ( char * ) err->name;    /* (char *) Avoid warning in DJGPP */
+   pExc->arg1 = err->arg1;
+   pExc->arg2 = err->arg2;
+   pExc->retval = err->retval;
+   pExc->handled = 0;
 
    mathHandler = hb_mathGetHandler();
    if( mathHandler )
    {
-      retval = ( *( mathHandler ) ) ( &s_hb_exc );
-      err->retval = s_hb_exc.retval;
+      retval = ( *( mathHandler ) ) ( pExc );
+      err->retval = pExc->retval;
    }
    else
    {
@@ -262,7 +310,7 @@ BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
 
 #  if defined(HB_MATH_HANDLER)
 
-   memcpy( phb_exc, &s_hb_exc, sizeof( HB_MATH_EXCEPTION ) );
+   memcpy( phb_exc, &hb_mathErrData()->exception, sizeof( HB_MATH_EXCEPTION ) );
    return phb_exc->type != HB_MATH_ERR_NONE;
 
 #  else
@@ -283,23 +331,24 @@ BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
  * ************************************************************
  */
 
-static int s_hb_matherr_mode = HB_MATH_ERRMODE_DEFAULT; /* TODO: make this thread safe */
-
 /* set error handling mode of hb_matherr() */
 int hb_mathSetErrMode( int imode )
 {
+   PHB_MATHERRDATA pMathErr;
    int oldmode;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_mathSetErrMode (%i)", imode ) );
 
-   oldmode = s_hb_matherr_mode;
+   pMathErr = hb_mathErrData();
+   oldmode = pMathErr->mode;
 
-   if( ( imode == HB_MATH_ERRMODE_DEFAULT ) ||
-       ( imode == HB_MATH_ERRMODE_CDEFAULT ) ||
-       ( imode == HB_MATH_ERRMODE_USER ) ||
-       ( imode == HB_MATH_ERRMODE_USERDEFAULT ) || ( imode == HB_MATH_ERRMODE_USERCDEFAULT ) )
+   if( imode == HB_MATH_ERRMODE_DEFAULT ||
+       imode == HB_MATH_ERRMODE_CDEFAULT ||
+       imode == HB_MATH_ERRMODE_USER ||
+       imode == HB_MATH_ERRMODE_USERDEFAULT ||
+       imode == HB_MATH_ERRMODE_USERCDEFAULT )
    {
-      s_hb_matherr_mode = imode;
+      pMathErr->mode = imode;
    }
 
    return oldmode;
@@ -309,7 +358,7 @@ int hb_mathSetErrMode( int imode )
 int hb_mathGetErrMode( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_mathGetErrMode()" ) );
-   return s_hb_matherr_mode;
+   return hb_mathErrData()->mode;
 }
 
 /* Harbour equivalent to mathSet/GetErrMode */
@@ -411,18 +460,17 @@ int hb_matherr( HB_MATH_EXCEPTION * pexc )
  * ************************************************************
  */
 
-/* static slot for current math error handler, this is hb_matherr by default */
-static HB_MATH_HANDLERPROC s_mathHandlerProc = hb_matherr;      /* TODO: make this thread safe */
-
 /* install a harbour-like math error handler (that will be called by the matherr() function), return old handler */
 HB_MATH_HANDLERPROC hb_mathSetHandler( HB_MATH_HANDLERPROC handlerproc )
 {
    HB_MATH_HANDLERPROC oldHandlerProc;
+   PHB_MATHERRDATA pMathErr;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_mathSetHandler (%p)", handlerproc ) );
 
-   oldHandlerProc = s_mathHandlerProc;
-   s_mathHandlerProc = handlerproc;
+   pMathErr = hb_mathErrData();
+   oldHandlerProc = pMathErr->handler;
+   pMathErr->handler = handlerproc;
 
    return oldHandlerProc;
 }
@@ -432,7 +480,7 @@ HB_MATH_HANDLERPROC hb_mathGetHandler( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_mathGetHandler ()" ) );
 
-   return s_mathHandlerProc;
+   return hb_mathErrData()->handler;
 }
 
 /*
@@ -443,16 +491,14 @@ HB_MATH_HANDLERPROC hb_mathGetHandler( void )
  * ************************************************************
  */
 
-static PHB_ITEM spMathErrorBlock = NULL;
-static HB_MATH_HANDLERPROC sPrevMathHandler = NULL;
-
 static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
 {
+   PHB_MATHERRDATA pMathErr = hb_mathErrData();
    int retval;
 
    /* call codeblock for both case: handled and unhandled exceptions */
 
-   if( spMathErrorBlock )
+   if( pMathErr->block )
    {
       PHB_ITEM pArray, pRet;
       PHB_ITEM pType, pFuncname, pError, pArg1, pArg2, pRetval, pHandled;
@@ -474,7 +520,7 @@ static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
          the <exception handled flag> and it
          b) can return an integer value to set the return value of matherr().
          NOTE that these values are only used if lHandled was .F. and is set to .T. within the codeblock */
-      pRet = hb_itemDo( spMathErrorBlock, 6, pType, pFuncname, pError, pArg1, pArg2, pArray );
+      pRet = hb_itemDo( pMathErr->block, 6, pType, pFuncname, pError, pArg1, pArg2, pArray );
 
       hb_itemRelease( pType );
       hb_itemRelease( pFuncname );
@@ -533,17 +579,17 @@ static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
       retval = 1;               /* default return value to suppress C math lib warnings */
    }
 
-   if( sPrevMathHandler )
+   if( pMathErr->prevHandler )
    {
       if( pexc->handled )
       {
          /* the error is handled, so simply inform the previous handler */
-         ( *sPrevMathHandler ) ( pexc );
+         ( *pMathErr->prevHandler ) ( pexc );
       }
       else
       {
          /* else go on error handling within previous handler */
-         retval = ( *sPrevMathHandler ) ( pexc );
+         retval = ( *pMathErr->prevHandler ) ( pexc );
       }
    }
    return retval;
@@ -552,22 +598,23 @@ static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
 /* set/get math error block */
 HB_FUNC( HB_MATHERBLOCK )       /* ([<nNewErrorBlock>]) -> <nOldErrorBlock> */
 {
+   PHB_MATHERRDATA pMathErr = hb_mathErrData();
 
    /* immediately install hb_matherrblock and keep it permanently installed !
       This is not dangerous because hb_matherrorblock will always call the previous error handler */
-   if( sPrevMathHandler == NULL )
+   if( pMathErr->prevHandler == NULL )
    {
-      sPrevMathHandler = hb_mathSetHandler( hb_matherrblock );
+      pMathErr->prevHandler = hb_mathSetHandler( hb_matherrblock );
    }
 
    /* return old math handler */
-   if( spMathErrorBlock == NULL )
+   if( pMathErr->block == NULL )
    {
       hb_ret();
    }
    else
    {
-      hb_itemReturn( spMathErrorBlock );
+      hb_itemReturn( pMathErr->block );
    }
 
    if( hb_pcount() > 0 )
@@ -577,19 +624,19 @@ HB_FUNC( HB_MATHERBLOCK )       /* ([<nNewErrorBlock>]) -> <nOldErrorBlock> */
 
       if( pNewErrorBlock )
       {
-         if( spMathErrorBlock == NULL )
+         if( pMathErr->block == NULL )
          {
-            spMathErrorBlock = hb_itemNew( NULL );
+            pMathErr->block = hb_itemNew( NULL );
          }
-         hb_itemCopy( spMathErrorBlock, pNewErrorBlock );
+         hb_itemCopy( pMathErr->block, pNewErrorBlock );
       }
       else
       {
          /* a parameter other than a block has been passed -> delete error handler ! */
-         if( spMathErrorBlock )
+         if( pMathErr->block )
          {
-            hb_itemRelease( spMathErrorBlock );
-            spMathErrorBlock = NULL;
+            hb_itemRelease( pMathErr->block );
+            pMathErr->block = NULL;
          }
       }
    }

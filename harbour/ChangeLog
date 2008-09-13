@@ -8,6 +8,613 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-13 18:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbpp.h
+  * harbour/include/hbvm.h
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbtrace.h
+  * harbour/include/hbapilng.h
+  * harbour/include/hbinit.h
+  * harbour/source/rtl/langapi.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/hbpp.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/common/hbver.c
+  * harbour/source/common/hbtrace.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/hbident.c
+  * harbour/source/compiler/hbfunchk.c
+    * changed some declarations from 'char *' to 'const char *' and
+      fixed casting for some more pedantic compilers
+
+  * harbour/source/pp/ppcore.c
+    ! fixed one typo which could cause memory leak and even GPF
+
+  * harbour/common.mak
+  * harbour/source/vm/Makefile
+  * harbour/source/rtl/Makefile
+  - harbour/source/rtl/set.c
+  + harbour/source/vm/set.c
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+    * moved from RTL to HVM
+    * eliminated hb_set global structure
+    * moved set structure to HVM stack
+    + added internal function hb_setClone() which is used to create
+      copy of SET structure for child threads
+    * hidden HB_SET_STRUCT declaration - 3-rd part code must not access it
+      directly. Dedicated hb_set*() functions should be used instead.
+    + added new function:
+         BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
+      which allow to change some set by 3-rd party code.
+      TODO: not all SETs can be changed yet - if someone have a while
+            then please add code for missing ones.
+
+  * harbour/include/set.ch
+  * harbour/include/hbset.h
+    + added _SET_CODEPAGE which works like _SET_LANGUAGE giving common
+      interface
+
+  * harbour/include/hbsetup.h
+    + added HB_CODEPAGE_DEFAULT which works like HB_LANG_DEFAULT
+
+  * harbour/source/vm/hvm.c
+    ! fixed builds which uses non EN lang or code page modules
+      by forcing linking the chosen ones
+
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+  * harbour/include/hbapicdp.h
+  * harbour/source/rtl/cdpapi.c
+    - removed global code page variable: hb_cdp_page and moved
+      code page settings to HVM stack
+    + added new function hb_cdpID() which returns current code page
+      character ID
+    + added new functions hb_vmCDP() and hb_vmSetCDP() to get/set
+      active for given thread code page structure
+
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+  * harbour/include/hbapilng.h
+  * harbour/source/rtl/langapi.c
+    + moved lang setting to HVM stack
+    + added new functions hb_vmLang() and hb_vmSetLang() to get/set
+      active for given thread language module
+
+  * harbour/include/hbvmpub.h
+  * harbour/include/hbstack.h
+  * harbour/include/hbapi.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/dynsym.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/memvars.c
+    * changed memvar handles for HB_HANDLE to void * which is directly
+      casted to PHB_ITEM - new memvar references
+    * changed HB_DYNS declarations for MT mode. In MT mode HB_DYNS does
+      not contain area and memvar handles which are moved to thread
+      local HVM stack
+    + added array for thread local memvar and area handles to HVM stack
+    % eliminated global continues array with all memvars and detached locals
+    % changed HB_IT_MEMVAR to use pointers to HB_ITEM directly - it resolve
+      synchronization problems in MT mode and should also improve the speed
+      and reduce memory usage. It should be well visible in applications which
+      uses lot of detached locals.
+    - removed hb_memvarsInit() and hb_memvarsFree() - they are not necessary
+      now because we do not longer use array with all allocated memvars
+      and detached local and private stack initialization is made
+      automatically
+    + added internal functions hb_dynsymGetMemvar()/hb_dynsymSetMemvar()
+    + added hb_memvarGetValueBySym() for debugger
+    * moved PRIVATE variable stack to HVM stack
+    * eliminated all static variables in memvars module
+
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+  * harbour/source/rtl/fserror.c
+    * moved IO errors to HVM stack
+    + added special IO error handling which works without HVM stack
+      It allows to use hb_fs*() functions without allocated stack
+      by 3-rd party threads.
+
+  * harbour/source/rtl/filesys.c
+    * moved hb_fsCurDir() to HVM stack with special handling to work
+      with HVM stack like IO errors
+
+  * harbour/source/rdd/workarea.c
+    * allocated RDD node array in bigger peaces to reduce later RT
+      reallocations in MT mode. If user want to add dynamically more
+      then 64 RDDs then it should synchronize this operation himself.
+
+  * harbour/source/rdd/wacore.c
+    * moved WA list, current WA, default RDD and neteer() flag to HVM stack
+
+  * harbour/include/hbdefs.h
+    - removed HB_HANDLE declaration
+
+  * harbour/include/hbapi.h
+    - removed HB_VALUE structure - it's not longer used due to different
+      memvar handling
+    * updated hb_struMemvar to new memvar handling
+    * replaced hb_vmIsLocalRef() and hb_memvarsIsMemvarRef() with
+      hb_vmIsStackRef() which respect multiple stack and new memvar
+      and static structures and location in GC mark pass.
+
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+    + added support for thread specific data located on HVM stack
+      Now it's possible to allocate static variables which are
+      local to thread. Such variables are allocated on HVM stack
+      and automatically destroyed. To declare new TSD variable use:
+         HB_TSD_NEW( <name>, <size>, <init>, <destruct> )
+      <name> - name of variable which holds TSD handler
+      <size> - size of TSD are which has to be allocated
+      <init> - init function, executed when new TSD is allocated by thread
+               (thread access given TSD 1-st time). This function receives
+               void * pointer to allocated area.
+      <destruct> - destructor function executed when HVM stack is destroyed
+      f.e.:
+         static HB_TSD_NEW( s_scrData, sizeof( HB_SCRDATA ),
+                            NULL, hb_xSaveRestRelease );
+      To initialize dynamically allocated TSD variable use:
+         HB_TSD_INIT( <name>, <size>, <init>, <destruct> )
+      Pointer to TSD can be accessed using hb_stackGetTSD( &<name> )
+      where <name> is name of variable which holds TSD handler, f.e.:
+         PHB_SCRDATA pScrData = ( PHB_SCRDATA ) hb_stackGetTSD( &s_scrData );
+      See source/rtl/xsavescr.c as an example
+      It's also possible to test if data has been already allocated for
+      current thread by:
+         hb_stackTestTSD( &<name> ) => pData
+      it works like hb_stackGetTSD() but return NULL if current thread data
+      has not been allocated yet.
+
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+    * changed hb_stack location to thread local storage in MT mode
+    + added functions and macros to access/assign new HVM stack members
+    + changed garbage collection mark functions to work with multiple
+      stacks, thread local static and memvar variables
+
+  * harbour/source/rtl/xsavescr.c
+    * use TSD data for screen buffer to make __XSAVESCREEN()/__XRESTSCREEN()
+      thread independent
+
+  * harbour/source/rtl/idle.c
+    * use TSD data for idle task settings and codeblocks
+    - removed hb_idleShutDown() - it's not longer necessary
+
+  * harbour/source/rtl/setkey.c
+    * use TSD data for allocated keys to make SETKEY() thread independent
+
+  * harbour/source/rtl/math.c
+    * moved math error handler, math error block, math error mode and
+      math error structure to TSD
+
+  * harbour/source/rtl/errorapi.c
+    * moved error handler, error block, error launch counter and DOS error
+      value to TSD
+
+  * harbour/source/rtl/inkey.c
+    * moved inkey "before" and "after" blocks to TSD
+
+  * harbour/source/rdd/hsx/hsx.c
+    * moved HSX handles array to TSD
+
+  * harbour/include/hbapigt.h
+  * harbour/source/rtl/console.c
+    - removed hb_setkeyInit() and hb_setkeyExit() - they are not longer
+      necessary, allocated resources will be freed by TSD destructor
+      function
+
+  * harbour/include/hbapi.h
+  * harbour/source/rtl/console.c
+    * removed hb_conXSaveRestRelease() - it's not longer necessary,
+      allocated resources will be freed by TSD destructor function
+
+  * harbour/source/vm/macro.c
+    * moved s_macroFlags to TSD
+
+  * harbour/source/rtl/accept.c
+    * moved accept buffer to TSD
+
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/hbopt.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/vm/hvm.c
+    + added new PCODE HB_P_THREADSTATICS
+    + added support for static variables which are local to thread:
+         THREAD STATIC <varname [:= <exp>], ...>
+      They work like normal static variables but each thread operates
+      on its own copy.
+    * added protection against possible double call to hb_xfree()
+      It can happen due to wrong marking expressions as used by bison
+      and executing destructors after our free code when syntax error
+      appear.
+
+  * harbour/source/rtl/perfuncs.prg
+  * harbour/source/rtl/menuto.prg
+  * harbour/source/rtl/getlist.prg
+  * harbour/source/rtl/readvar.prg
+  * harbour/source/rtl/text.prg
+    * use THREAD STATIC variables to make above code MT safe
+
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+    + added hb_gt_BaseFree() which will release current GT pointer
+      locked by hb_gt_Base() function. This function will be used
+      to optional automatic GT access synchronization when threads
+      share the same GT.
+
+  * harbour/source/rtl/gtapi.c
+  * harbour/source/rtl/inkeyapi.c
+  * harbour/source/rtl/mouseapi.c
+  * harbour/contrib/hbct/ctwin.c
+    * free GT pointer by hb_gt_BaseFree()
+      TODO: CTWIN is not MT safe yet - it will be updated together
+            with core GT when we add multi window interface for
+            thread with own console window.
+
+  * harbour/bin/hb-func.sh
+  * harbour/config/linux/gcc.cf
+    + added rt lib to Linux builds
+
+  * harbour/bin/postinst.sh
+    * create MT safe version of FM stat library: fmmt
+
+  * harbour/bin/pack_src.sh
+    + added support for ZIP packing
+
+  * harbour/include/hbapi.h
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+    + added hb_vmThreadInit()/hb_vmThreadQuit() functions - they initialize
+      HVM for calling thread so it can execute .prg code and call HVM
+      functions. They can be used by 3-rd party code threads.
+    + added hb_vmUnlock()/hb_vmLock() functions which informs that
+      thread will not operate on HVM structures for some time allowing
+      to execute single thread only processes like GC.
+    + added hb_vmThreadQuitRequest() which sends stop request to given
+       thread
+    + added hb_vmWaitForThreads() which stops main thread execution waiting
+      for other threads
+    + added hb_vmSuspendThreads() and hb_vmResumeThreads() used be GC
+      to stop all HVM threads before mark/swap scan
+    + added linked list of HVM stacks
+    + added hb_vmTerminateThreads() used by main HVM thread in QUIT state
+    * moved EXIT procedures execution from QUIT request to HVM QUIT state
+      in MT mode. It may effects some non structural code which tries to
+      access private variables in EXIT functions but it's much cleaner
+      and understandable for user. Please remember that we guaranties
+      that ALWAYS code in BEGIN SEQUENCE is _always_ executed even after
+      HVM QUIT request just like destructs. Personally I think that we
+      should move EXIT procedures execution also in ST mode.
+    * changed startup and cleanup code for new internal structures
+    * changes startup and cleanup code for MT mode
+    % removed some redundant HB_ITEM type settings
+    ! eliminated non MT safe code which was using reference counters
+      without protection
+
+  * harbour/common.mak
+  * harbour/source/vm/Makefile
+  + harbour/include/hbthread.h
+  + harbour/source/vm/thread.c
+    + added C level functions to manage threads and synchronization objects
+      See hbthread.h for detail description. They are based on PTHREAD API
+      and PTHREAD documentation can be used as reference. I intentionally
+      keep this list small for easier multiplatform porting.
+      Now they have been implemented for PTHREADS (POSIX threads supported by
+      many different OSes), MS-Win32/64 and OS2. The OS2 version is not tested
+      at all. I do not even know if it can be compiled so please make tests.
+      I used Internet resources and some part of xHarbour code as documentation
+      for OS2 MT API. It should be quite easy to add other platforms if necessary.
+      Harbour core code needs non recursive mutexes, conditional variables and
+      TLS for one pointer. If platforms does not support conditional variables
+      (f.e. MS-Win or OS2) then they can be emulated using multistate semaphores.
+    + added .prg functions to manage threads and synchronization objects:
+         hb_threadStart( <@sStart()> | <bStart> [, <params,...> ] ) -> <pThID>
+         hb_threadJoin( <pThID> [, @<xRetCode> ] ) -> <lOK>
+         hb_threadDetach( <pThID> ) -> <lOK>
+         hb_threadQuitRequest( <pThID> ) -> <lOK>
+         hb_threadWaitForAll() -> NIL
+         hb_mutexCreate() -> <pMtx>
+         hb_mutexLock( <pMtx> [, <nTimeOut> ] ) -> <lLocked>
+         hb_mutexUnlock( <pMtx> ) -> <lOK>
+         hb_mutexNotify( <pMtx> [, <xVal>] ) -> NIL
+         hb_mutexNotifyAll( <pMtx> [, <xVal>] ) -> NIL
+         hb_mutexSubscribe( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
+         hb_mutexSubscribeNow( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
+      The function list should give similar to xHarbour API but they are not exactly
+      the same and except of hb_mutex*() functions which should replicate xHarbour behavior.
+
+  + harbour/source/vm/vmmt
+  + harbour/source/vm/vmmt/Makefile
+    + added hbvmmt library to GNU make builds.
+      Non GNU make builds should be updated.
+
+  * harbour/contrib/hbct/pos1.c
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/rddads/ads1.c
+  * harbour/contrib/hbmisc/spd.c
+  * harbour/contrib/hbbmcdx/bmdbfcdx.c
+  * harbour/contrib/examples/rdddbt/dbfdbt1.c
+  * harbour/source/vm/runner.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/strcase.c
+  * harbour/source/rtl/spfiles.c
+  * harbour/source/rtl/defpath.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/dateshb.c
+  * harbour/source/rtl/mlcfunc.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/is.c
+  * harbour/source/rtl/setcolor.c
+  * harbour/source/rtl/errorint.c
+  * harbour/source/rtl/transfrm.c
+  * harbour/source/rtl/dates.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtsln/gtsln.h
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/sdf1.c
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/hbdbsort.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/hsx/hsx.c
+  * harbour/source/rdd/hbsix/sxfname.c
+    * use API functions instead of direct accessing to hb_cdp_page or hb_set
+
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/fssize.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/filesys.c
+    * encapsulate potentially slow IO operation inside
+      hb_vmUnlock()/hb_vmLock() calls to allow other thread GC
+      activation
+
+  * harbour/contrib/hbnf/fttext.c
+    ! fixed casting
+
+  * harbour/contrib/gtwvg/gtwvg.h
+    - removed #include <comctl32.h> - my MinGW and MinGW/CE instalations do
+      not have them. If it exists in some newer ones then it has to be
+      covered by #if version checking.
+
+  * harbour/source/vm/dynsym.c
+    - removed hb_dynsymLog() and hb_dynsymMemvarHandle()
+    * modified code to be MT safe and improved speed of some operations
+    * added MUEXT protection for global dynamic table access
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/garbage.c
+    * changed to work with MT HVM
+    * changed to work with new memvar structures and thread local static and
+      memvar variables
+    * added MUEXT protection for linked block lists
+    + added parameter to hb_gcCollectAll() which will force GC activation
+      in MT mode by temporary suspending all executed threads.
+    + added logical parameter to HB_GCALL() functions which is passed to
+      hb_gcCollectAll()
+
+  * harbour/source/vm/fm.c
+    * added MUEXT protection for FM statistic module
+    * added MT protection for reference counters. For platforms
+      which supports atomic incrmenetation/decrementation (f.e.
+      Interlocked*() functions in MS-Win) such operations are
+      used. For other it's MUTEX protection. It gives MT safe
+      readonly access for HVM complex variables without user
+      synchronization. The MUTEX protection can cause some speed
+      overhead so it's good to define MT safe version of
+      HB_ATOM_INC()/HB_ATOM_DEC() in hbthread.h if given platform
+      has them. Now they are defined only for Windows. For other
+      platforms We can define can define them in assembler for some
+      most popular CPUs in the future.
+
+  * harbour/source/vm/classes.c
+    * changed class definition array. Now it keeps pointers to class
+      structures.
+    * In MT mode allocated at HVM startup big enough array for class
+      definitions to avoid later RT reallocations. It effectively eliminates
+      MUTEX synchronization for class structure access.
+    * protect by MUTEX code for new class creation
+
+  * harbour/source/debug/dbgentry.c
+    * eliminated hbvmopt.h and direct accessing to HVM structures
+
+  * harbour/source/rtl/gtclip.c
+    * protect with MUTEX access to internal clipboard data
+
+  * harbour/source/rdd/nulsys/nulsys.c
+    + added hb_rddCloseAll()
+
+  + harbour/tests/mt
+  + harbour/tests/mt/mttest01.prg
+  + harbour/tests/mt/mttest02.prg
+  + harbour/tests/mt/mttest03.prg
+  + harbour/tests/mt/mttest04.prg
+  + harbour/tests/mt/mttest05.prg
+  + harbour/tests/mt/mttest06.prg
+  + harbour/tests/mt/mttest07.prg
+    + added some demonstration/test small MT programs written
+      using Harbour language. Some of them can be also compiled
+      by xHarbour but xHarbour does not pass any of my tests in
+      real multi-CPU machine so do not expect they will work
+      correctly.
+
+   Harbour threads needs OS threads support. Each Harbour thread is directly
+   mapped to OS thread. It's not very efficient on some older system where
+   cost of thread creation and/or task switching is very expensive but it
+   should not be bigger problem for modern OS-es which can support threads
+   in practice nearly in user space only.
+   I haven't touched Harbour function calling convention which comes from
+   Clipper. It means that we do not pass pointer to VM to each functions
+   like CLIP or xBase++. To resolve the problem I have to use thread local
+   storage (TLS) where such pointer is kept. If platform does not support
+   TLS then it can be emulated by us. Anyhow the speed of accessing TLS
+   data and extracting HB_STACK poitner is critical for performance.
+   Some compilers depending on used hardware and OS give native support
+   for TLS (f.e. __thread keyword in GCC/BCC or __declspec( thread ) in MSVC).
+   This should give optimal performance. On other Harbour uses TLS functions
+   like TlsGetValue() (MS-WIN) or pthread_getspecific() (PTHREAD) are used.
+   OS2 gives quite interesting TLS functionality which seems to be quite fast
+   though it will be interesting to know how it is iplemented internally for
+   real multi CPU machines (if it depends on CPU exception then the
+   performance will be bad). We need TLS only for one pointer to HB_STACK
+   structure.
+   I haven't added any tricks like HB_THREAD_STUB in xHarbour to reduce
+   the cost of TLS access. If it will be necessary for some platform the we
+   can add it.
+   Except TLS Harbour threads needs OS support for non recursive mutexes or
+   critical sections and conditional variables. If platforms does not support
+   conditional variables (f.e. MS-Win or OS2) then they can be emulated using
+   multistate semaphores. I intentionally didn't create code which may need
+   recursive mutexes. The non recursive ones are often faster and some
+   platforms may not support recursive mutexes so they will have to be
+   emulated by us.
+   Harbour uses reference counters for complex variables. It means that even
+   readonly access to complex item causes internal write operations necessary
+   to increment/decrement its reference counter. To make such readonly access
+   MT safe we have to make incrementation and decrementation with result
+   checking atomic. By default it's done by mutex inside vm/fm.c but some
+   platforms have native support for atomic inc/dec operations, f.e. 
+   Interlocked*() functions in MS-Win. If they are available then such
+   functions should be used to not reduce the performance by mutex call
+   very often used functions. For many CPUs it should be quite easy to
+   implement such atomic inc/dec functionality in assembler. F.e. for
+   GCC and x86@32 it may looks like:
+
+      static __inline__ void hb_atomic_inc32( volatile int * p )
+      {
+         __asm__ __volatile__(
+            "lock incl %0"
+            :"=m" (*p) :"m" (*p)
+         );
+      }
+
+      static __inline__ int hb_atomic_dec32( volatile int * p )
+      {
+         unsigned char c;
+         __asm__ __volatile__(
+            "lock decl %0"
+            "sete %1"
+            :"=m" (*p), "=qm" (c) :"m" (*p) : "memory"
+         );
+         return c == 0;
+      }
+
+   and then it's enough to define in hbthreads.h:
+      #define HB_ATOM_INC( p )    hb_atomic_inc32( ( volatile int * ) p )
+      #define HB_ATOM_DEC( p )    hb_atomic_dec32( ( volatile int * ) p )
+
+   Probably I'll make it for some most popular CPUs in the future.
+   In Harbour each thread which wants to call HVM functions have to allocate
+   it's own HVM stack. It's done hb_vmThreadInit(). The HVM stack is freed
+   by calling hb_vmThreadQuit(). This functions can be called also by 3-rd
+   party threads if they want to call HVM functions or execute .prg code.
+   Calling HVM functions without allocated stack will cause GPF.
+   I moved most of static variables to HVM stack to make them thread
+   local. But some of them like FS errors have their own alternative
+   copy which is used when thread does not allocate HVM stack. It allows
+   to use hb_fs*() functions without HVM stack but programmer have to
+   know that error codes return by hb_fs*Error() functions can be
+   overwritten by other threads which also didn't allocated HVM stack.
+   To execute garbage collector scan and mark pass it's necessary to
+   stop other HVM threads. Otherwise the scan may give false results.
+   It's also possible to not stop threads but protect with mutex all
+   operations on GC items but it will probably cause performance reduction
+   and will force some other modifications. Maybe I'll implement it
+   in the future.
+   I didn't use any OS level thread KILL or CANCEL calls. All HVM threads
+   have to be cleanly removed without any resource leaks.
+   QUIT command terminate only calling thread. If main (startup) HVM
+   thread call QUIT then it sends QUIT request to all existing threads.
+   In QUIT state ALWAYS statements and destructors are executed.
+   New thread is created by:
+      hb_threadStart( <@sStart()> | <bStart> [, <params,...> ] ) -> <pThID>
+   The returned value is a pointer to internal thread structure which
+   can be used in JOIN or DETACH operations. Each thread should be Joined
+   or DETACHED to avoid resource leaks. If programmer does not store
+   <pThID> or all instances of <pThID> are destroyed then thread is
+   automatically detached. I do not know clear method of thread detaching
+   in OS2. If some OS2 users knows it then plase update vm/hbthread.c.
+   When thread terminates then all locked by this thread mutexes are
+   released.
+   Each thread uses its own memvars (PRIVATEs and PUBLICs) and work areas.
+   When new thread is created then it inherits from parent thread:
+      - code page
+      - language
+      - SETs
+      - default RDD
+   error block is initialized to default value by calling ERRORSYS()
+   and PUBLIC variable GetList := {} is created.
+   The following objects are initialized to default value:
+         - error block
+         - math error handler and math error block
+         - macro compiler features setting (hb_setMacro())
+           or move them to SETs.
+   We can think about inheriting them. It's also possible to add
+   inheriting of all visible memvars but I do not know it's good
+   idea.
+
+   Compilation and linking:
+   For MT mode HVM library should be compiled with HB_MT_VM macro.
+   GNU make automatically creates hbvmmt library which should be
+   linked with Harbour MT programs instead of hbvm.
+   Non GNU make files should be updated.
+   If given compiler support TLS then you can try to set HB_USE_TLS
+   to force using native compiler TLS support. Now it's enabled by
+   default only for BCC. For Linux and GCC builds it may depend also
+   on used GLIBC version. In older system there is no TLS support
+   at all or TLS works only for shared binaries so I haven't enabled
+   it. If you will test some other compiler then please add default
+   native TLS support for them in hbthread.h
+   Users using hb* scripts can simply use -mt switch when they want
+   to create MT program, f.e.:
+      hbmk -n -w3 -es2 -mt mttest01.prg
+
+   There are still some minor things which should be done but I'll
+   do them later. Current state seems to be fully functional.
+   The most important and still missing is our own file lock server
+   for RDD synchronization in POSIX systems. Kernel internally
+   recognize POSIX locks by PID and file i-node - not PID and file
+   handle. It means that the same file open more then once by one
+   process shares locks. Because POSIX locks can be overwritten
+   then we do not have any synchronization between aliased workareas
+   or threads using the same table in *nixes. We have to make
+   synchronization ourselves. I'll create such lock server ASAP.
+
+   Please test and enjoy using Harbour threads.
+
 2008-09-12 16:05 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * contrib/gtwvg/wvgutils.c
     ! HB_FUNC( WVT__MAKEDLGTEMPLATE )

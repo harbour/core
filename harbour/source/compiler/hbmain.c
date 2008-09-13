@@ -416,6 +416,7 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
             szVarScope = "LOCAL";
             break;
          case VS_STATIC:
+         case VS_TH_STATIC:
             szVarScope = "STATIC";
             break;
          case VS_FIELD:
@@ -469,6 +470,7 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
    pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
    pVar->szName = szVarName;
    pVar->szAlias = NULL;
+   pVar->uiFlags = 0;
    pVar->cType = cValueType;
    pVar->iUsed = VU_NOT_USED;
    pVar->pNext = NULL;
@@ -594,6 +596,8 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
             }
             break;
          }
+         case VS_TH_STATIC:
+            pVar->uiFlags = VS_THREAD;
          case VS_STATIC:
             hb_compVarListAdd( &pFunc->pStatics, pVar );
             break;
@@ -3325,6 +3329,68 @@ void hb_compStaticDefEnd( HB_COMP_DECL, char * szVarName )
 }
 
 /*
+ * Mark thread static variables
+ */
+static void hb_compStaticDefThreadSet( HB_COMP_DECL )
+{
+   if( HB_COMP_PARAM->pInitFunc )
+   {
+      USHORT uiCount = 0, uiVar = 0;
+      PFUNCTION pFunc;
+      PVAR pVar;
+
+      pFunc = HB_COMP_PARAM->functions.pFirst;
+      while( pFunc )
+      {
+         pVar = pFunc->pStatics;
+         while( pVar )
+         {
+            if( pVar->uiFlags & VS_THREAD )
+               ++uiCount;
+            pVar = pVar->pNext;
+         }
+         pFunc = pFunc->pNext;
+      }
+      if( uiCount )
+      {
+         ULONG ulSize = ( ( ULONG ) uiCount << 1 ) + 3;
+         BYTE * pBuffer = ( BYTE * ) hb_xgrab( ulSize ), *ptr;
+         pBuffer[ 0 ] = HB_P_THREADSTATICS;
+         pBuffer[ 1 ] = HB_LOBYTE( uiCount );
+         pBuffer[ 2 ] = HB_HIBYTE( uiCount );
+         ptr = pBuffer + 3;
+         pFunc = HB_COMP_PARAM->functions.pFirst;
+         while( pFunc && uiCount )
+         {
+            pVar = pFunc->pStatics;
+            while( pVar && uiCount )
+            {
+               ++uiVar;
+               if( pVar->uiFlags & VS_THREAD )
+               {
+                  HB_PUT_LE_UINT16( ptr, uiVar );
+                  ptr += 2;
+                  --uiCount;
+               }
+               pVar = pVar->pNext;
+            }
+            pFunc = pFunc->pNext;
+         }
+
+         HB_COMP_PARAM->pInitFunc->pOwner = HB_COMP_PARAM->functions.pLast;
+         HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc;
+
+         hb_compGenPCodeN( pBuffer, ulSize, HB_COMP_PARAM );
+
+         HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc->pOwner;
+         HB_COMP_PARAM->pInitFunc->pOwner = NULL;
+
+         hb_xfree( pBuffer );
+      }
+   }
+}
+
+/*
  * Start of stop line number info generation
  */
 static void hb_compLineNumberDefStart( HB_COMP_DECL )
@@ -4211,6 +4277,8 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
          {
             char szNewName[ 25 ];
 
+            /* Mark thread static variables */
+            hb_compStaticDefThreadSet( HB_COMP_PARAM );
             /* Fix the number of static variables */
             HB_COMP_PARAM->pInitFunc->pCode[ 3 ] = HB_LOBYTE( HB_COMP_PARAM->iStaticCnt );
             HB_COMP_PARAM->pInitFunc->pCode[ 4 ] = HB_HIBYTE( HB_COMP_PARAM->iStaticCnt );

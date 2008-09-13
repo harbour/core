@@ -244,7 +244,7 @@ HB_EXPORT long hb_dateUnformat( const char * szDate, const char * szDateFormat )
       int count, digit, non_digit, size;
 
       if( ! szDateFormat )
-         szDateFormat = hb_set.HB_SET_DATEFORMAT;
+         szDateFormat = hb_setGetDateFormat();
       size = strlen( szDateFormat );
 
       for( count = 0; count < size; count++ )
@@ -324,8 +324,9 @@ HB_EXPORT long hb_dateUnformat( const char * szDate, const char * szDateFormat )
 
       if( y_value >= 0 && y_value < 100 )
       {
-         count = hb_set.HB_SET_EPOCH % 100;
-         digit = hb_set.HB_SET_EPOCH / 100;
+         count = hb_setGetEpoch();
+         digit = count / 100;
+         count %= 100;
 
          if( y_value >= count )
             y_value += ( digit * 100 );

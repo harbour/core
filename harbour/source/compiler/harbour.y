@@ -175,6 +175,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %token NUM_DATE
 %token EPSILON
 %token HASHOP
+%token THREAD
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -552,6 +553,7 @@ IdentName  : IDENTIFIER
            | PARAMETERS       { $$ = $<string>1; }
            | PROCREQ          { $$ = $<string>1; }
            | DESCEND          { $$ = $<string>1; }
+           | THREAD           { $$ = $<string>1; }
            ;
 
 /* Numeric values
@@ -1104,6 +1106,8 @@ VarDefs  : LOCAL { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_COMP
            VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
          | STATIC { HB_COMP_PARAM->iVarScope = VS_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
            VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
+         | THREAD STATIC { HB_COMP_PARAM->iVarScope = VS_TH_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
+           VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
          | PARAMETERS { if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
                         else
@@ -1143,7 +1147,7 @@ ExtVarDef  : VarDef
 
 VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
                {
-                  if( HB_COMP_PARAM->iVarScope == VS_STATIC )
+                  if( HB_COMP_PARAM->iVarScope & VS_STATIC )
                   {
                      hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
                      hb_compStaticDefEnd( HB_COMP_PARAM, $1 );
@@ -1166,7 +1170,7 @@ VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_P
                   HB_COMP_PARAM->cVarType = ' ';
 
                   HB_COMP_PARAM->iVarScope = $<iNumber>3;
-                  if( HB_COMP_PARAM->iVarScope == VS_STATIC )
+                  if( HB_COMP_PARAM->iVarScope & VS_STATIC )
                   {
                      hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
                      HB_COMP_EXPR_DELETE( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( $1, HB_COMP_PARAM ), $6, HB_COMP_PARAM ), HB_COMP_PARAM ) );
@@ -2396,13 +2400,14 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_D
       HB_COMP_EXPR_DELETE( hb_compArrayDimPush( pInitValue, HB_COMP_PARAM ) );
       hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( szName, NULL, HB_COMP_PARAM ), TRUE );
    }
-   else if( HB_COMP_PARAM->iVarScope == VS_STATIC )
+   else if( HB_COMP_PARAM->iVarScope & VS_STATIC )
    {
       HB_EXPR_PTR pVar = hb_compExprNewVar( szName, HB_COMP_PARAM );
       HB_EXPR_PTR pAssign;
 
       /* create a static variable */
       hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
+
       hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
       /* create an array */
       pInitValue = hb_compArrayDimPush( pInitValue, HB_COMP_PARAM );

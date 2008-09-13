@@ -108,18 +108,32 @@
 #define HB_TERROR_IVARCOUNT         12
 
 
+HB_FUNC_EXTERN( ERRORNEW );
+
 /* pseudo function name in operation description
    (deprecated, kept for compatibility, use HB_ERR_FUNCNAME instead) */
 const char hb_errFuncName = 1;
 
-static HB_ERROR_INFO_PTR s_errorHandler = NULL;
-static PHB_ITEM s_errorBlock = NULL;
 static PHB_ITEM s_pError = NULL;
-static int     s_iLaunchCount = 0;
-static USHORT  s_uiErrorDOS = 0; /* The value of DOSERROR() */
 
-HB_FUNC_EXTERN( ERRORNEW );
 static HB_SYMB  s_symErrorNew = { "ERRORNEW", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ERRORNEW )}, NULL };
+
+typedef struct
+{
+   HB_ERROR_INFO_PTR errorHandler;
+   PHB_ITEM          errorBlock;
+   int               iLaunchCount;
+   SHORT             uiErrorDOS;    /* The value of DOSERROR() */
+} HB_ERRDATA, * PHB_ERRDATA;
+
+static void hb_errorDataRelease( void * Cargo )
+{
+   PHB_ERRDATA pErrData = ( PHB_ERRDATA ) Cargo;
+
+   hb_itemRelease( pErrData->errorBlock );
+}
+
+static HB_TSD_NEW( s_errData, sizeof( HB_ERRDATA ), NULL, hb_errorDataRelease );
 
 
 static BOOL hb_errGetNumCode( int * piValue, const char * szOperation )
@@ -447,17 +461,23 @@ HB_FUNC( __ERRINHANDLER )
 HB_FUNC( ERRORBLOCK )
 {
    PHB_ITEM pNewErrorBlock = hb_param( 1, HB_IT_BLOCK );
+   PHB_ITEM pErrorBlock = hb_errorBlock();
 
-   hb_itemReturn( s_errorBlock );
+   hb_itemReturn( pErrorBlock );
    if( pNewErrorBlock )
    {
-      hb_itemCopy( s_errorBlock, pNewErrorBlock );
+      hb_itemCopy( pErrorBlock, pNewErrorBlock );
    }
 }
 
 PHB_ITEM hb_errorBlock( void )
 {
-   return s_errorBlock;
+   PHB_ERRDATA pErrData = ( PHB_ERRDATA ) hb_stackGetTSD( &s_errData );
+
+   if( !pErrData->errorBlock )
+      pErrData->errorBlock = hb_itemNew( NULL );
+
+   return pErrData->errorBlock;
 }
 
 /* set new low-level error launcher (C function) and return
@@ -465,11 +485,12 @@ PHB_ITEM hb_errorBlock( void )
  */
 HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler )
 {
-   HB_ERROR_INFO_PTR pOld = s_errorHandler;
+   PHB_ERRDATA pErrData = ( PHB_ERRDATA ) hb_stackGetTSD( &s_errData );
+   HB_ERROR_INFO_PTR pOld = pErrData->errorHandler;
 
    if( pNewHandler )
-      pNewHandler->Previous = s_errorHandler;
-   s_errorHandler = pNewHandler;
+      pNewHandler->Previous = pErrData->errorHandler;
+   pErrData->errorHandler = pNewHandler;
 
    return pOld;
 }
@@ -478,10 +499,12 @@ HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler )
 
 HB_FUNC( DOSERROR )
 {
-   hb_retni( s_uiErrorDOS );
+   PHB_ERRDATA pErrData = ( PHB_ERRDATA ) hb_stackGetTSD( &s_errData );
+
+   hb_retni( pErrData->uiErrorDOS );
 
    if( ISNUM( 1 ) )
-      s_uiErrorDOS = ( USHORT ) hb_parni( 1 );
+      pErrData->uiErrorDOS = ( USHORT ) hb_parni( 1 );
 }
 
 void hb_errInit( void )
@@ -490,9 +513,6 @@ void hb_errInit( void )
 
    /* error function */
    hb_dynsymNew( &s_symErrorNew );
-
-   /* initialize an item for error block */
-   s_errorBlock = hb_itemNew( NULL );
 
    /* Create error class and base object */
    s_pError = hb_itemNew( NULL );
@@ -504,8 +524,6 @@ void hb_errExit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errExit()"));
 
-   hb_itemRelease( s_errorBlock );
-   s_errorBlock = NULL;
    hb_itemRelease( s_pError );
    s_pError = NULL;
 }
@@ -528,42 +546,39 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 
    if( pError )
    {
+      PHB_ERRDATA pErrData = ( PHB_ERRDATA ) hb_stackGetTSD( &s_errData );
       PHB_ITEM pResult;
 
       /* Check if we have a valid error handler */
-
-      if( hb_itemType( s_errorBlock ) != HB_IT_BLOCK )
+      if( !pErrData->errorBlock || hb_itemType( pErrData->errorBlock ) != HB_IT_BLOCK )
          hb_errInternal( HB_EI_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
-
-      if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
+      if( pErrData->iLaunchCount == HB_ERROR_LAUNCH_MAX )
          hb_errInternal( HB_EI_ERRTOOMANY, NULL, NULL, NULL );
 
       /* Launch the error handler: "lResult := EVAL( ErrorBlock(), oError )" */
-
-      s_iLaunchCount++;
+      pErrData->iLaunchCount++;
 
       /* set DOSERROR() to last OS error code */
-      s_uiErrorDOS = hb_errGetOsCode( pError );
+      pErrData->uiErrorDOS = hb_errGetOsCode( pError );
 
-      if( s_errorHandler )
+      if( pErrData->errorHandler )
       {
          /* there is a low-level error handler defined - use it instead
           * of normal Harbour-level one
           */
-         s_errorHandler->Error = pError;
-         s_errorHandler->ErrorBlock = s_errorBlock;
-         pResult = ( s_errorHandler->Func )( s_errorHandler );
-         s_errorHandler->Error = NULL;
+         pErrData->errorHandler->Error = pError;
+         pErrData->errorHandler->ErrorBlock = pErrData->errorBlock;
+         pResult = ( pErrData->errorHandler->Func )( pErrData->errorHandler );
+         pErrData->errorHandler->Error = NULL;
       }
       else
-         pResult = hb_itemDo( s_errorBlock, 1, pError );
+         pResult = hb_itemDo( pErrData->errorBlock, 1, pError );
 
-      s_iLaunchCount--;
+      pErrData->iLaunchCount--;
 
       /* Check results */
-
       if( hb_vmRequestQuery() != 0 )
       {
          if( pResult )
@@ -577,7 +592,6 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 
          /* If the error block didn't return a logical value, */
          /* or the canSubstitute flag has been set, consider it as a failure */
-
          if( hb_itemType( pResult ) != HB_IT_LOGICAL || ( uiFlags & EF_CANSUBSTITUTE ) )
             bFailure = TRUE;
          else
@@ -595,7 +609,6 @@ USHORT hb_errLaunch( PHB_ITEM pError )
             hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
 
          /* Add one try to the counter. */
-
          if( uiAction == E_RETRY )
             hb_errPutTries( pError, ( USHORT ) ( hb_errGetTries( pError ) + 1 ) );
       }
@@ -627,40 +640,38 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 
    if( pError )
    {
-      /* Check if we have a valid error handler */
+      PHB_ERRDATA pErrData = ( PHB_ERRDATA ) hb_stackGetTSD( &s_errData );
 
-      if( hb_itemType( s_errorBlock ) != HB_IT_BLOCK )
+      /* Check if we have a valid error handler */
+      if( !pErrData->errorBlock || hb_itemType( pErrData->errorBlock ) != HB_IT_BLOCK )
          hb_errInternal( HB_EI_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
-
-      if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
+      if( pErrData->iLaunchCount == HB_ERROR_LAUNCH_MAX )
          hb_errInternal( HB_EI_ERRTOOMANY, NULL, NULL, NULL );
 
       /* Launch the error handler: "xResult := EVAL( ErrorBlock(), oError )" */
-
-      s_iLaunchCount++;
+      pErrData->iLaunchCount++;
 
       /* set DOSERROR() to last OS error code */
-      s_uiErrorDOS = hb_errGetOsCode( pError );
+      pErrData->uiErrorDOS = hb_errGetOsCode( pError );
 
-      if( s_errorHandler )
+      if( pErrData->errorHandler )
       {
          /* there is a low-level error handler defined - use it instead
           * of normal Harbour-level one
           */
-         s_errorHandler->Error = pError;
-         s_errorHandler->ErrorBlock = s_errorBlock;
-         pResult = ( s_errorHandler->Func )( s_errorHandler );
-         s_errorHandler->Error = NULL;
+         pErrData->errorHandler->Error = pError;
+         pErrData->errorHandler->ErrorBlock = pErrData->errorBlock;
+         pResult = ( pErrData->errorHandler->Func )( pErrData->errorHandler );
+         pErrData->errorHandler->Error = NULL;
       }
       else
-         pResult = hb_itemDo( s_errorBlock, 1, pError );
+         pResult = hb_itemDo( pErrData->errorBlock, 1, pError );
 
-      s_iLaunchCount--;
+      pErrData->iLaunchCount--;
 
       /* Check results */
-
       if( hb_vmRequestQuery() != 0 )
       {
          if( pResult )
@@ -671,7 +682,6 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       {
          /* If the canSubstitute flag has not been set,
             consider it as a failure. */
-
          if( ! ( hb_errGetFlags( pError ) & EF_CANSUBSTITUTE ) )
             hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
       }

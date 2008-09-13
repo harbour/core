@@ -225,6 +225,7 @@
 #include "hbapirdd.h"
 #include "hbapierr.h"
 #include "hbvm.h"
+#include "hbstack.h"
 #include "hbset.h"
 #ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"
@@ -340,12 +341,34 @@ typedef struct _HSXINFO
 typedef HSXINFO * LPHSXINFO;
 
 
-/* number of active HSX indexes */
-static int s_iHandleCount = 0;
-/* size of handle array */
-static int s_iHandleSize = 0;
-/* array indexed by handle number with HSXINFO pointers */
-static LPHSXINFO * s_handleArray = NULL;
+typedef struct
+{
+   int         iHandleCount;  /* number of active HSX indexes */
+   int         iHandleSize;   /* size of handle array */
+   LPHSXINFO * handleArray;   /* array indexed by handle number with HSXINFO pointers */
+}
+HSXTABLE, * LPHSXTABLE;
+
+static int hb_hsxDestroy( int iHandle );
+
+static void hb_hsxTableRelease( void * Cargo )
+{
+   LPHSXTABLE pTable = ( LPHSXTABLE ) Cargo;
+   int iHandle;
+
+   for( iHandle = 0; iHandle < pTable->iHandleSize; ++iHandle )
+   {
+      if( pTable->handleArray[ iHandle ] )
+         hb_hsxDestroy( iHandle );
+   }
+}
+
+static HB_TSD_NEW( s_hsxTable, sizeof( HSXTABLE ), NULL, hb_hsxTableRelease );
+
+static LPHSXTABLE hb_hsxTable( void )
+{
+   return ( LPHSXTABLE ) hb_stackGetTSD( &s_hsxTable );
+}
 
 /* the conversion table for ASCII alpha pairs */
 static const BYTE hb_hsxHashArray[] = {
@@ -385,10 +408,11 @@ static int hb_hsxHashVal( int c1, int c2, int iKeyBits,
    if ( fNoCase )
    {
 #ifndef HB_CDP_SUPPORT_OFF
-      if ( iFilter == 3 && hb_cdp_page->nChars )
+      PHB_CODEPAGE cdp;
+      if ( iFilter == 3 && ( cdp = hb_vmCDP() )->nChars )
       {
-         c1 = ( BYTE ) hb_cdp_page->s_upper[ c1 ];
-         c2 = ( BYTE ) hb_cdp_page->s_upper[ c2 ];
+         c1 = ( BYTE ) cdp->s_upper[ c1 ];
+         c2 = ( BYTE ) cdp->s_upper[ c2 ];
       }
       else
 #endif
@@ -474,10 +498,11 @@ static int hb_hsxStrCmp( BYTE * pSub, ULONG ulSub, BYTE * pStr, ULONG ulLen,
          if ( fNoCase )
          {
 #ifndef HB_CDP_SUPPORT_OFF
-            if ( iFilter == 3 && hb_cdp_page->nChars )
+            PHB_CODEPAGE cdp;
+            if ( iFilter == 3 && ( cdp = hb_vmCDP() )->nChars )
             {
-               c1 = ( BYTE ) hb_cdp_page->s_upper[ c1 ];
-               c2 = ( BYTE ) hb_cdp_page->s_upper[ c2 ];
+               c1 = ( BYTE ) cdp->s_upper[ c1 ];
+               c2 = ( BYTE ) cdp->s_upper[ c2 ];
             }
             else
 #endif
@@ -512,8 +537,10 @@ static int hb_hsxStrCmp( BYTE * pSub, ULONG ulSub, BYTE * pStr, ULONG ulLen,
 
 static LPHSXINFO hb_hsxGetPointer( int iHandle )
 {
-   return ( iHandle >=0 && iHandle < s_iHandleSize ) ?
-          s_handleArray[ iHandle ] : NULL;
+   LPHSXTABLE pTable = hb_hsxTable();
+
+   return ( iHandle >=0 && iHandle < pTable->iHandleSize ) ?
+          pTable->handleArray[ iHandle ] : NULL;
 }
 
 static int hb_hsxCompile( char * szExpr, PHB_ITEM * pExpr )
@@ -1149,7 +1176,7 @@ static int hb_hsxNext( int iHandle, ULONG * pulRecNo )
          iRetVal = hb_hsxRead( iHandle, ++pHSX->ulCurrRec, &pRecPtr );
          if ( iRetVal != HSX_SUCCESS )
             break;
-         if ( ! hb_set.HB_SET_DELETED || ( *pRecPtr & 0x80 ) == 0 ) /* Not deleted */
+         if ( ! hb_setGetDeleted() || ( *pRecPtr & 0x80 ) == 0 ) /* Not deleted */
          {
             for ( i = 0; i < pHSX->uiRecordSize; i++ )
             {
@@ -1175,31 +1202,32 @@ static LPHSXINFO hb_hsxNew( void )
 {
    LPHSXINFO pHSX;
    int iHandle = 0;
+   LPHSXTABLE pTable = hb_hsxTable();
 
-   if ( s_iHandleSize == 0 )
+   if ( pTable->iHandleSize == 0 )
    {
-      s_iHandleSize = HSX_HALLOC;
-      s_handleArray = ( LPHSXINFO * ) hb_xgrab( sizeof( LPHSXINFO ) * HSX_HALLOC );
-      memset( s_handleArray, 0, sizeof( LPHSXINFO ) * s_iHandleSize );
+      pTable->iHandleSize = HSX_HALLOC;
+      pTable->handleArray = ( LPHSXINFO * ) hb_xgrab( sizeof( LPHSXINFO ) * HSX_HALLOC );
+      memset( pTable->handleArray, 0, sizeof( LPHSXINFO ) * pTable->iHandleSize );
    }
    else
    {
-      while ( iHandle < s_iHandleSize )
+      while ( iHandle < pTable->iHandleSize )
       {
-         if ( s_handleArray[ iHandle ] == NULL )
+         if ( pTable->handleArray[ iHandle ] == NULL )
             break;
          iHandle++;
       }
-      if ( iHandle == s_iHandleSize )
+      if ( iHandle == pTable->iHandleSize )
       {
-         s_iHandleSize += HSX_HALLOC;
-         s_handleArray = ( LPHSXINFO * ) hb_xrealloc( s_handleArray, 
-                                          sizeof( LPHSXINFO ) * s_iHandleSize );
-         memset( &s_handleArray[ iHandle ], 0, sizeof( LPHSXINFO ) * HSX_HALLOC );
+         pTable->iHandleSize += HSX_HALLOC;
+         pTable->handleArray = ( LPHSXINFO * ) hb_xrealloc( pTable->handleArray, 
+                                          sizeof( LPHSXINFO ) * pTable->iHandleSize );
+         memset( &pTable->handleArray[ iHandle ], 0, sizeof( LPHSXINFO ) * HSX_HALLOC );
       }
    }
-   s_handleArray[ iHandle ] = pHSX = ( LPHSXINFO ) hb_xgrab( sizeof( HSXINFO ) );
-   s_iHandleCount++;
+   pTable->handleArray[ iHandle ] = pHSX = ( LPHSXINFO ) hb_xgrab( sizeof( HSXINFO ) );
+   pTable->iHandleCount++;
    memset( pHSX, 0, sizeof( HSXINFO ) );
    pHSX->iHandle = iHandle;
    pHSX->hFile = FS_ERROR;
@@ -1287,9 +1315,11 @@ static int hb_hsxVerify( int iHandle, BYTE * szText, ULONG ulLen,
 
 static int hb_hsxDestroy( int iHandle )
 {
-   if ( iHandle >=0 && iHandle < s_iHandleSize && s_handleArray[ iHandle ] != NULL )
+   LPHSXTABLE pTable = hb_hsxTable();
+
+   if ( iHandle >=0 && iHandle < pTable->iHandleSize && pTable->handleArray[ iHandle ] != NULL )
    {
-      LPHSXINFO pHSX = s_handleArray[ iHandle ];
+      LPHSXINFO pHSX = pTable->handleArray[ iHandle ];
       int iRetVal = HSX_SUCCESS;
 
       if ( pHSX->hFile != FS_ERROR )
@@ -1312,12 +1342,12 @@ static int hb_hsxDestroy( int iHandle )
          hb_hsxExpDestroy( pHSX->pKeyItem );
       hb_xfree( pHSX );
 
-      s_handleArray[ iHandle ] = NULL;
-      if ( --s_iHandleCount == 0 )
+      pTable->handleArray[ iHandle ] = NULL;
+      if ( --pTable->iHandleCount == 0 )
       {
-         hb_xfree( s_handleArray );
-         s_iHandleSize = 0;
-         s_handleArray = NULL;
+         hb_xfree( pTable->handleArray );
+         pTable->iHandleSize = 0;
+         pTable->handleArray = NULL;
       }
       return iRetVal;
    }
@@ -1441,7 +1471,7 @@ static int hb_hsxOpen( char * szFile, int iBufSize, int iMode )
 
    fReadonly = ( iMode & 0x02 ) != 0;
    fShared = ( iMode & 0x01 ) == 0;
-   if( hb_set.HB_SET_AUTOSHARE == 2 )
+   if( hb_setGetAutoShare() == 2 )
       fShared = FALSE;
    uiFlags = ( fReadonly ? FO_READ : FO_READWRITE ) |
              ( fShared ? FO_DENYNONE : FO_EXCLUSIVE );

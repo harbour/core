@@ -50,10 +50,10 @@
  *
  */
 
-STATIC s_cFile
-STATIC s_lOldPrinter
-STATIC s_lOldExtra
-STATIC s_cOldExtraFile
+THREAD STATIC s_cFile
+THREAD STATIC s_lOldPrinter
+THREAD STATIC s_lOldExtra
+THREAD STATIC s_cOldExtraFile
 
 PROCEDURE __TextSave( cFile )
 

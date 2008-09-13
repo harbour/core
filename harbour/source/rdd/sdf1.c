@@ -69,14 +69,16 @@ static const USHORT s_uiNumLength[ 9 ] = { 0, 4, 6, 8, 11, 13, 16, 18, 20 };
 
 static void hb_sdfInitArea( SDFAREAP pArea, char * szFileName )
 {
+   char * szEol;
+
    /* Allocate only after succesfully open file */
    pArea->szFileName = hb_strdup( szFileName );
 
    /* set line separator: EOL */
-   if( hb_set.HB_SET_EOL && hb_set.HB_SET_EOL[ 0 ] )
-      pArea->szEol = hb_strdup( hb_set.HB_SET_EOL );
-   else
-      pArea->szEol = hb_strdup( hb_conNewLine() );
+   szEol = hb_setGetEOL();
+   if( !szEol || !szEol[ 0 ] )
+      szEol = hb_conNewLine();
+   pArea->szEol = hb_strdup( szEol );
    pArea->uiEolLen = strlen( pArea->szEol );
 
    /* Alloc buffer */
@@ -379,12 +381,12 @@ static ERRCODE hb_sdfGetValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    {
       case HB_FT_STRING:
 #ifndef HB_CDP_SUPPORT_OFF
-         if( pArea->cdPage != hb_cdp_page )
+         if( pArea->cdPage != hb_vmCDP() )
          {
             char * pVal = ( char * ) hb_xgrab( pField->uiLen + 1 );
             memcpy( pVal, pArea->pRecord + pArea->pFieldOffset[ uiIndex ], pField->uiLen );
             pVal[ pField->uiLen ] = '\0';
-            hb_cdpnTranslate( pVal, pArea->cdPage, hb_cdp_page, pField->uiLen );
+            hb_cdpnTranslate( pVal, pArea->cdPage, hb_vmCDP(), pField->uiLen );
             hb_itemPutCLPtr( pItem, pVal, pField->uiLen );
          }
          else
@@ -498,7 +500,7 @@ static ERRCODE hb_sdfPutValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                     hb_itemGetCPtr( pItem ), uiSize );
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_cdp_page, pArea->cdPage, uiSize );
+            hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_vmCDP(), pArea->cdPage, uiSize );
 #endif
             memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + uiSize,
                     ' ', pField->uiLen - uiSize );
@@ -697,7 +699,7 @@ static ERRCODE hb_sdfFlush( SDFAREAP pArea )
    {
       hb_fsSeekLarge( pArea->hFile, pArea->ulFileSize, FS_SET );
       hb_fsWrite( pArea->hFile, ( BYTE * ) "\032", 1 );
-      if( hb_set.HB_SET_HARDCOMMIT )
+      if( hb_setGetHardCommit() )
       {
          hb_fsCommit( pArea->hFile );
          pArea->fFlush = FALSE;
@@ -982,14 +984,14 @@ static ERRCODE hb_sdfCreate( SDFAREAP pArea, LPDBOPENINFO pCreateInfo )
    {
       pArea->cdPage = hb_cdpFind( (char *) pCreateInfo->cdpId );
       if( !pArea->cdPage )
-         pArea->cdPage = hb_cdp_page;
+         pArea->cdPage = hb_vmCDP();
    }
    else
-      pArea->cdPage = hb_cdp_page;
+      pArea->cdPage = hb_vmCDP();
 #endif
 
    pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
-   if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
+   if( hb_setGetDefExtension() && ! pFileName->szExtension )
    {
       PHB_ITEM pItem = hb_itemPutC( NULL, NULL );
       SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem );
@@ -1070,10 +1072,10 @@ static ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
    {
       pArea->cdPage = hb_cdpFind( (char *) pOpenInfo->cdpId );
       if( !pArea->cdPage )
-         pArea->cdPage = hb_cdp_page;
+         pArea->cdPage = hb_vmCDP();
    }
    else
-      pArea->cdPage = hb_cdp_page;
+      pArea->cdPage = hb_vmCDP();
 #endif
 
    uiFlags = ( pArea->fReadonly ? FO_READ : FO_READWRITE ) |
@@ -1081,7 +1083,7 @@ static ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pFileName = hb_fsFNameSplit( ( char * ) pOpenInfo->abName );
    /* Add default file name extension if necessary */
-   if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
+   if( hb_setGetDefExtension() && ! pFileName->szExtension )
    {
       PHB_ITEM pFileExt = hb_itemPutC( NULL, NULL );
       SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pFileExt );

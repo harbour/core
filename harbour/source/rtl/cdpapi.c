@@ -109,11 +109,11 @@ HB_UNITABLE hb_uniTbl_437 = { HB_CPID_437, NUMBER_OF_CHARS, FALSE, s_uniCodes };
 static HB_CODEPAGE s_en_codepage =
    { "EN", HB_CPID_437, HB_UNITB_437, 0, NULL, NULL, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
+HB_CODEPAGE_ANNOUNCE( EN )
+
+
 #   define HB_CDP_MAX_ 64
-
 static PHB_CODEPAGE s_cdpList[HB_CDP_MAX_] = { &s_en_codepage };
-PHB_CODEPAGE hb_cdp_page = &s_en_codepage;
-
 
 static int utf8Size( USHORT uc )
 {
@@ -457,24 +457,35 @@ HB_EXPORT PHB_CODEPAGE hb_cdpFind( const char *pszID )
 
 HB_EXPORT PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdpage )
 {
-   PHB_CODEPAGE cdpOld = hb_cdp_page;
+   PHB_CODEPAGE cdpOld;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_cdpSelect(%p)", cdpage ) );
 
+   cdpOld = hb_vmCDP();
    if( cdpage )
-   {
-      hb_cdp_page = cdpage;
-   }
+      hb_vmSetCDP( cdpage );
 
    return cdpOld;
 }
 
-HB_EXPORT char *hb_cdpSelectID( const char *pszID )
+HB_EXPORT char * hb_cdpID( void )
 {
-   char *pszIDOld = hb_cdp_page->id;
+   PHB_CODEPAGE cdp;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cdpID()" ) );
+
+   cdp = hb_vmCDP();
+
+   return cdp ? cdp->id : NULL;
+}
+
+HB_EXPORT char * hb_cdpSelectID( const char *pszID )
+{
+   char *pszIDOld;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_cdpSelectID(%s)", pszID ) );
 
+   pszIDOld = hb_cdpID();
    hb_cdpSelect( hb_cdpFind( pszID ) );
 
    return pszIDOld;
@@ -1172,7 +1183,7 @@ HB_EXPORT void hb_cdpReleaseAll( void )
 
 HB_FUNC( HB_SETCODEPAGE )
 {
-   hb_retc( hb_cdp_page->id );
+   hb_retc( hb_cdpID() );
 
    if( ISCHAR( 1 ) )
       hb_cdpSelectID( hb_parc( 1 ) );
@@ -1181,13 +1192,13 @@ HB_FUNC( HB_SETCODEPAGE )
 HB_FUNC( HB_TRANSLATE )
 {
    ULONG ulLen = hb_parclen( 1 );
+   char *szIdIn = hb_parc( 2 );
+   char *szIdOut = hb_parc( 3 );
 
-   if( ulLen )
+   if( ulLen && ( szIdIn || szIdOut ) )
    {
-      char *szIdIn = hb_parc( 2 );
-      char *szIdOut = hb_parc( 3 );
-      PHB_CODEPAGE cdpIn = szIdIn ? hb_cdpFind( szIdIn ) : hb_cdp_page;
-      PHB_CODEPAGE cdpOut = szIdOut ? hb_cdpFind( szIdOut ) : hb_cdp_page;
+      PHB_CODEPAGE cdpIn = szIdIn ? hb_cdpFind( szIdIn ) : hb_vmCDP();
+      PHB_CODEPAGE cdpOut = szIdOut ? hb_cdpFind( szIdOut ) : hb_vmCDP();
 
       if( cdpIn && cdpOut && cdpIn != cdpOut )
       {
@@ -1228,7 +1239,7 @@ HB_FUNC( HB_STRTOUTF8 )
 
    if( ulLen )
    {
-      PHB_CODEPAGE cdp = ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_cdp_page;
+      PHB_CODEPAGE cdp = ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_vmCDP();
 
       if( cdp )
       {
@@ -1271,7 +1282,7 @@ HB_FUNC( HB_UTF8TOSTR )
 
       if( ulLen )
       {
-         PHB_CODEPAGE cdp = ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_cdp_page;
+         PHB_CODEPAGE cdp = ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_vmCDP();
 
          if( cdp )
          {

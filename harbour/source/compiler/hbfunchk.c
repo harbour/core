@@ -34,9 +34,9 @@
 
 typedef struct
 {
-   char * cFuncName;                /* function name              */
-   int    iMinParam;                /* min no of parms it needs   */
-   int    iMaxParam;                /* max no of parms need       */
+   const char * cFuncName;                /* function name              */
+   int          iMinParam;                /* min no of parms it needs   */
+   int          iMaxParam;                /* max no of parms need       */
 } HB_FUNCINFO, * PHB_FUNCINFO;
 
 
@@ -127,7 +127,7 @@ static HB_FUNCINFO hb_StdFunc[] =
 
 #define HB_STD_FUNCOUNT    ( sizeof( hb_StdFunc ) / sizeof( HB_FUNCINFO ) )
 
-BOOL hb_compFunCallCheck( HB_COMP_DECL, char * szFuncCall, int iArgs )
+BOOL hb_compFunCallCheck( HB_COMP_DECL, const char * szFuncCall, int iArgs )
 {
    unsigned int uiFirst = 0, uiLast = HB_STD_FUNCOUNT - 1, uiMiddle;
    int iLen = ( int ) strlen( szFuncCall ), iCmp;

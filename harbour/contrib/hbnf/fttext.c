@@ -1253,7 +1253,7 @@ HB_FUNC( FT_FAPPEND )
    if( !error[area] )
    {
       /* move DOS eof marker */
-      hb_fsWrite( handles[area], (BYTE *) buff, 0 );
+      hb_fsWrite( handles[area], buff, 0 );
       error[area] = hb_fsError();
    }
 
@@ -1960,7 +1960,7 @@ static int _writeLine( BYTE * theData, int iDataLen )
 {
    int   err   = 0;
 
-   if( !( hb_fsWriteLarge( handles[area], theData, iDataLen ) == iDataLen ) )
+   if( !( hb_fsWriteLarge( handles[area], theData, iDataLen ) == ( ULONG ) iDataLen ) )
    {
       err = 1;
       error[area] = hb_fsError();
@@ -1979,7 +1979,7 @@ static BOOL _writeeol( HB_FHANDLE fhnd )
    char * crlf = hb_conNewLine();
    int    len = strlen( crlf );
 
-   return hb_fsWriteLarge( fhnd, ( BYTE * ) crlf, len ) == len;
+   return hb_fsWriteLarge( fhnd, ( BYTE * ) crlf, len ) == ( ULONG ) len;
 }
 
 /*  fttext.c  eof */

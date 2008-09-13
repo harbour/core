@@ -287,12 +287,6 @@ extern HB_EXPORT void    hb_inkeySetText( const char * szText, ULONG ulLen ); /*
 extern HB_EXPORT int     hb_inkeySetLast( int iKey );    /* Set new LASTKEY() value, return previous one */
 extern HB_EXPORT void    hb_inkeyExit( void );           /* reset inkey pool to default state and free any allocated resources */
 
-/* SetKey related declarations */
-
-extern HB_EXPORT void    hb_setkeyInit( void );
-extern HB_EXPORT void    hb_setkeyExit( void );
-
-
 HB_EXTERN_END
 
 #endif /* HB_APIGT_H_ */

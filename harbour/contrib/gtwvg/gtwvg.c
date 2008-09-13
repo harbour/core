@@ -1658,7 +1658,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_CLOSE:  /* Clicked 'X' on system menu */
          if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE ) == 0 )
          {
-            if( hb_set.HB_SET_CANCEL )
+            if( hb_setGetCancel() )
                hb_vmRequestCancel();
          }
          return 0;
@@ -1913,8 +1913,8 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    }
 
 #ifndef HB_CDP_SUPPORT_OFF
-   pWVT->hostCDP    = hb_cdp_page;
-   pWVT->inCDP      = hb_cdp_page;
+   pWVT->hostCDP    = hb_vmCDP();
+   pWVT->inCDP      = hb_vmCDP();
 #endif
 
    /* Set default window title */
@@ -3073,8 +3073,8 @@ static int hb_gt_wvt_wnd_Create( PHB_GT pGT, int iTop, int iLeft, int iBottom, i
    }
 
 #ifndef HB_CDP_SUPPORT_OFF
-   pWVT->hostCDP    = hb_cdp_page;
-   pWVT->inCDP      = hb_cdp_page;
+   pWVT->hostCDP    = hb_vmCDP();
+   pWVT->inCDP      = hb_vmCDP();
 #endif
 
    hb_gt_wvt_SetMode( pGT, pWVT->ROWS, pWVT->COLS );
@@ -3142,12 +3142,8 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCD
     * to make proper translation
     */
    if( !pszHostCDP || !*pszHostCDP )
-   {
-      if( hb_cdp_page )
-         pszHostCDP = hb_cdp_page->id;
-      else if( pszTermCDP && *pszTermCDP )
-         pszHostCDP = pszTermCDP;
-   }
+      pszHostCDP = hb_cdpID();
+
    if( pszHostCDP && *pszHostCDP )
    {
       PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
@@ -3174,12 +3170,8 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP
     * to make proper translation
     */
    if( !pszHostCDP || !*pszHostCDP )
-   {
-      if( hb_cdp_page )
-         pszHostCDP = hb_cdp_page->id;
-      else if( pszTermCDP && *pszTermCDP )
-         pszHostCDP = pszTermCDP;
-   }
+      pszHostCDP = hb_cdpID();
+
    if( pszHostCDP && *pszHostCDP )
    {
       PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
@@ -3554,7 +3546,15 @@ static void hb_wvt_gtCreateToolTipWindow( PHB_GTWVT pWVT )
 
 PHB_GTWVT hb_wvt_gtGetWVT( void )
 {
-   return( HB_GTWVT_GET( hb_gt_Base() ) );
+   PHB_GTWVT pWVT = NULL;
+   PHB_GT pGT = hb_gt_Base();
+
+   if( pGT )
+   {
+      pWVT = HB_GTWVT_GET( pGT );
+      hb_gt_BaseFree( pGT );
+   }
+   return pWVT;
 }
 
 //-------------------------------------------------------------------//

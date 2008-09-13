@@ -62,12 +62,12 @@
 HB_EXTERN_BEGIN
 
 /* This hack is needed to force preprocessing if id is also a macro */
-#define HB_LANG_REQUEST( id )           HB_LANG_REQUEST_( id )
-#define HB_LANG_REQUEST_( id )          extern HB_FUNC( HB_LANG_##id ); \
-                                        void hb_lang_ForceLink( void ) \
-                                        { \
-                                           HB_FUNC_EXEC( HB_LANG_##id ); \
-                                        }
+#define HB_LANG_REQUEST( id )          HB_LANG_REQUEST_( id )
+#define HB_LANG_REQUEST_( id )         HB_FUNC_EXTERN( HB_LANG_##id ); \
+                                       void hb_lang_ForceLink_##id( void ) \
+                                       { \
+                                          HB_FUNC_EXEC( HB_LANG_##id ); \
+                                       }
 
 /* Macro to publish a specific language module, for both C and Harbour level */
 #define HB_LANG_ANNOUNCE( id )          HB_FUNC( HB_LANG_##id ) {}
@@ -77,16 +77,19 @@ typedef struct _HB_LANG
    const void * pItemList[ HB_LANG_ITEM_MAX_ ];
 } HB_LANG, * PHB_LANG, * HB_LANG_PTR;
 
+extern HB_EXPORT PHB_LANG  hb_vmLang( void );
+extern HB_EXPORT void      hb_vmSetLang( PHB_LANG pLang );
+
 /* Supported language list management */
 
 extern HB_EXPORT BOOL      hb_langRegister         ( PHB_LANG lang );
-extern HB_EXPORT BOOL      hb_langDeRegister       ( char * pszID );
-extern HB_EXPORT PHB_LANG  hb_langFind             ( char * pszID );
+extern HB_EXPORT BOOL      hb_langDeRegister       ( const char * pszID );
+extern HB_EXPORT PHB_LANG  hb_langFind             ( const char * pszID );
 
 /* Default language selection and data query */
 
 extern HB_EXPORT PHB_LANG  hb_langSelect           ( PHB_LANG lang );
-extern HB_EXPORT char *    hb_langSelectID         ( char * pszID );
+extern HB_EXPORT char *    hb_langSelectID         ( const char * pszID );
 extern HB_EXPORT char *    hb_langDGetItem         ( int iIndex );
 extern HB_EXPORT char *    hb_langID               ( void );
 extern HB_EXPORT char *    hb_langName             ( void );

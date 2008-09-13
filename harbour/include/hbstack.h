@@ -62,7 +62,94 @@
 
 HB_EXTERN_BEGIN
 
+#if defined( HB_MT_VM )
+#  if defined( HB_USE_TLS )
+#     include "hbthread.h"
+#  endif
+#  if !defined( HB_USE_TLS )
+#     undef HB_STACK_MACROS
+#  endif
+#endif
+
+/* thread specific data */
+typedef void (*PHB_TSD_FUNC)(void *);
+typedef struct
+{
+   int      iHandle;
+   int      iSize;
+   PHB_TSD_FUNC pInitFunc;
+   PHB_TSD_FUNC pCleanFunc;
+}
+HB_TSD, * PHB_TSD;
+#define HB_TSD_NEW(name,size,init,clean)  \
+        HB_TSD name = { 0, size, init, clean }
+#define HB_TSD_INIT(name,size,init,clean) do { \
+            (name)->iHandle = 0; \
+            (name)->iSize = (size); \
+            (name)->pInitFunc = (init); \
+            (name)->pCleanFunc = (clean); \
+         } while( 0 )
+
+typedef struct
+{
+   USHORT   uiFError;
+   USHORT   uiErrorLast;
+   USHORT   uiOsErrorLast;
+}
+HB_IOERRORS, * PHB_IOERRORS;
+
+typedef struct
+{
+   const char *   szDefaultRDD;     /* default RDD */
+   BOOL           fNetError;        /* current NETERR() flag */
+
+   void **        waList;           /* Allocated WorkAreas */
+   USHORT         uiWaMax;          /* Number of allocated WA */
+   USHORT         uiWaSpace;        /* Number of allocated WA */
+
+   USHORT *       waNums;           /* Allocated WorkAreas */
+   USHORT         uiWaNumMax;       /* Number of allocated WA */
+
+   USHORT         uiCurrArea;       /* Current WokrArea number */
+   void *         pCurrArea;        /* Current WorkArea pointer */
+}
+HB_STACKRDD, * PHB_STACKRDD;
+
 #ifdef _HB_API_INTERNAL_
+
+#include "hbset.h"
+
+typedef struct
+{
+   PHB_TSD  pTSD;
+   void *   value;
+}
+HB_TSD_HOLDER, * PHB_TSD_HOLDER;
+
+typedef struct
+{
+   PHB_DYNS    pDynSym;
+   PHB_ITEM    pPrevMemvar;
+}
+HB_PRIVATE_ITEM, * PHB_PRIVATE_ITEM;
+
+typedef struct
+{
+   PHB_PRIVATE_ITEM stack;
+   ULONG       size;
+   ULONG       count;
+   ULONG       base;
+}
+HB_PRIVATE_STACK, * PHB_PRIVATE_STACK;
+
+#if defined( HB_MT_VM )
+typedef struct
+{
+   void *   pMemvar;       /* memvar pointer ( publics & privates ) */
+   USHORT   uiArea;        /* Workarea number */
+}
+HB_DYN_HANDLES, * PHB_DYN_HANDLES;
+#endif
 
 /* stack managed by the virtual machine */
 typedef struct
@@ -73,20 +160,48 @@ typedef struct
    LONG       wItems;         /* total items that may be holded on the stack */
    HB_ITEM    Return;         /* latest returned value */
    PHB_ITEM * pBase;          /* stack frame position for the current function call */
-   PHB_ITEM * pEvalBase;      /* stack frame position for the evaluated codeblock */
    LONG       lStatics;       /* statics base for the current function call */
    LONG       lWithObject;    /* stack offset to base current WITH OBJECT item */
    LONG       lRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */
    USHORT     uiActionRequest;/* Request for some action - stop processing of opcodes */
+   USHORT     uiQuitState;    /* HVM is quiting */
    HB_STACK_STATE state;      /* first (default) stack state frame */
+   HB_STACKRDD rdd;           /* RDD related data */
    char       szDate[ 9 ];    /* last returned date from _pards() yyyymmdd format */
-} HB_STACK;
+   void *     pCDP;           /* current codepage module */
+   void *     pLang;          /* current language module */
+   const char * szDefaultRDD; /* default RDD */
+   int        iArea;          /* current workarea number */
+   int        iAreaCount;     /* number of allocated workareas number */
+   void **    pWorkAreas;     /* workareas pool */
+   BOOL       fNetErr;        /* current NETERR() flag */
+   int        iTSD;           /* number of allocated TSD holders */
+   PHB_TSD_HOLDER pTSD;       /* thread specific data holder */
+   HB_PRIVATE_STACK privates; /* private variables stack */
+   HB_SET_STRUCT set;
+#if defined( HB_MT_VM )
+   PHB_DYN_HANDLES pDynH;     /* Dynamic symbol handles */
+   int        iDynH;          /* number of dynamic symbol handles */
+   void *     pStackLst;      /* this stack entry in stack linked list */
+   HB_IOERRORS IOErrors;      /* MT safe buffer for IO errors */
+   BYTE *     byDirBuffer;    /* MT safe buffer for hb_fsCurDir() results */
+#endif
+} HB_STACK, * PHB_STACK;
 
-#if defined(HB_STACK_MACROS)
-extern HB_STACK hb_stack;
+#if defined( HB_STACK_MACROS )
+#  if defined( HB_MT_VM )
+#     if defined( __BORLANDC__ )
+         extern PHB_STACK HB_TLS_ATTR hb_stack_ptr;
+#     else
+         extern HB_TLS_ATTR PHB_STACK hb_stack_ptr;
+#     endif
+#     define hb_stack  ( * hb_stack_ptr )
+#  else
+      extern HB_STACK hb_stack;
+#  endif
 #endif
 
-#endif
+#endif /* _HB_API_INTERNAL_ */
 
 extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
 extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
@@ -101,7 +216,7 @@ extern char *      hb_stackDateBuffer( void );
 extern void *      hb_stackId( void );
 
 extern void        hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
-extern HB_EXPORT void hb_stackPop( void );        /* pops an item from the stack */
+extern void        hb_stackPop( void );        /* pops an item from the stack */
 extern void        hb_stackPush( void );       /* pushes an item on to the stack */
 extern HB_ITEM_PTR hb_stackAllocItem( void );  /* allocates new item on the top of stack, returns pointer to it */
 extern void        hb_stackPushReturn( void );
@@ -118,10 +233,18 @@ extern void       hb_stackFree( void );       /* releases all memory used by the
 extern void       hb_stackInit( void );       /* initializes the stack */
 extern void       hb_stackIncrease( void );   /* increase the stack size */
 
+/* thread specific data */
+extern void *     hb_stackGetTSD( PHB_TSD pTSD );
+extern void *     hb_stackTestTSD( PHB_TSD pTSD );
+
+extern BYTE *     hb_stackDirBuffer( void );
+extern PHB_IOERRORS hb_stackIOErrors( void );
+extern PHB_STACKRDD hb_stackRDD( void );
+
 #ifdef _HB_API_INTERNAL_
 extern void        hb_stackDecrease( ULONG ulItems );
-extern HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pStack, USHORT uiParams );
-extern void        hb_stackOldFrame( PHB_STACK_STATE pStack );
+extern HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, USHORT uiParams );
+extern void        hb_stackOldFrame( PHB_STACK_STATE pFrame );
 extern void        hb_stackClearMevarsBase( void );
 
 extern HB_ITEM_PTR hb_stackLocalVariable( int *piFromBase );
@@ -138,9 +261,34 @@ extern LONG        hb_stackGetStaticsBase( void );
 extern PHB_ITEM    hb_stackWithObjectItem( void );
 extern LONG        hb_stackWithObjectOffset( void );
 extern void        hb_stackWithObjectSetOffset( LONG );
+
+extern void        hb_stackDestroyTSD( void );
+
+extern PHB_PRIVATE_STACK hb_stackGetPrivateStack( void );
+extern void *      hb_stackGetCDP( void );
+extern void        hb_stackSetCDP( void * );
+extern void *      hb_stackGetLang( void );
+extern void        hb_stackSetLang( void * );
+
+extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
+
+#if defined( HB_MT_VM )
+   extern void *           hb_stackList( void );
+   extern void             hb_stackListSet( void * pStackLst );
+   extern void             hb_stackIdSetActionRequest( void * pStackID, USHORT uiAction );
+   extern PHB_DYN_HANDLES  hb_stackGetDynHandle( PHB_DYNS pDynSym );
+   extern BOOL             hb_stackQuitState( void );
+   extern void             hb_stackSetQuitState( USHORT uiState );
 #endif
 
-#if defined(HB_STACK_MACROS)
+#endif /* _HB_API_INTERNAL_ */
+
+#if defined( _HB_API_INTERNAL_ ) || defined( _HB_SET_INTERNAL_ )
+   extern PHB_SET_STRUCT hb_stackSetStruct( void );
+#endif
+
+
+#if defined( HB_STACK_MACROS )
 
 #define hb_stackItemFromTop( n )    ( * ( hb_stack.pPos + ( int ) (n) ) )
 #define hb_stackItemFromBase( n )   ( * ( hb_stack.pBase + ( int ) (n) + 1 ) )
@@ -162,8 +310,18 @@ extern void        hb_stackWithObjectSetOffset( LONG );
 #define hb_stackWithObjectItem( )   ( hb_stack.lWithObject ? * ( hb_stack.pItems + hb_stack.lWithObject ) : NULL )
 #define hb_stackWithObjectOffset( ) ( hb_stack.lWithObject )
 #define hb_stackWithObjectSetOffset( n )  do { hb_stack.lWithObject = ( n ); } while( 0 )
+#define hb_stackGetCDP( )           ( hb_stack.pCDP )
+#define hb_stackSetCDP( p )         do { hb_stack.pCDP = ( p ); } while ( 0 )
+#define hb_stackGetLang( )          ( hb_stack.pLang )
+#define hb_stackSetLang( p )        do { hb_stack.pLang = ( p ); } while ( 0 )
 
 #define hb_stackId( )               ( ( void * ) &hb_stack )
+#if defined( HB_MT_VM )
+#  define hb_stackList( )           ( hb_stack.pStackLst )
+#  define hb_stackListSet( p )      do { hb_stack.pStackLst = ( p ); } while ( 0 )
+#  define hb_stackQuitState( )      ( hb_stack.uiQuitState != 0 )
+#  define hb_stackSetQuitState( n ) do { hb_stack.uiQuitState = ( n ); } while( 0 )
+#endif
 
 #define hb_stackAllocItem( )        ( ( ++hb_stack.pPos == hb_stack.pEnd ? \
                                         hb_stackIncrease() : (void) 0 ), \
@@ -231,6 +389,9 @@ extern void        hb_stackWithObjectSetOffset( LONG );
                                           ( * hb_stack.pBase )->item.asSymbol.paramcnt - \
                                           ( * hb_stack.pBase )->item.asSymbol.paramdeclcnt ) + 1 ) ) : \
                                       ( * ( hb_stack.pBase + ( int ) ( * (p) ) + 1 ) ) )
+
+#define hb_stackGetPrivateStack( )  ( &hb_stack.privates )
+#define hb_stackSetStruct( )        ( &hb_stack.set )
 
 #endif
 

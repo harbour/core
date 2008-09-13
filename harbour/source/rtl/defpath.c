@@ -56,12 +56,14 @@
 HB_FUNC( __DEFPATH )
 {
    char buffer[ _POSIX_PATH_MAX + 2 ];
+   char * szDefault;
    int size = 0;
 
-   if( hb_set.HB_SET_DEFAULT )
+   szDefault = hb_setGetDefault();
+   if( szDefault )
    {
       /* Leave enough space to append a path delimiter */
-      hb_strncpy( buffer, hb_set.HB_SET_DEFAULT, sizeof( buffer ) - 1 );
+      hb_strncpy( buffer, szDefault, sizeof( buffer ) - 1 );
       size = strlen( buffer );
    }
 

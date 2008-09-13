@@ -154,7 +154,7 @@ static ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waSkipFilter(%p, %ld)", pArea, lUpDown));
 
-   if( !hb_set.HB_SET_DELETED && pArea->dbfi.itmCobExpr == NULL )
+   if( pArea->dbfi.itmCobExpr == NULL && !hb_setGetDeleted() )
       return SUCCESS;
 
    /* Since lToSkip is passed to SkipRaw, it should never request more than
@@ -170,7 +170,7 @@ static ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
    while( !pArea->fBof && !pArea->fEof )
    {
       /* SET DELETED */
-      if( hb_set.HB_SET_DELETED )
+      if( hb_setGetDeleted() )
       {
          if( SELF_DELETED( pArea, &fDeleted ) != SUCCESS )
             return FAILURE;
@@ -842,7 +842,7 @@ static ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( SELF_RECNO( pArea, &ulRecNo ) != SUCCESS )
             return FAILURE;
          if( ulRecNo == 0 )
-            hb_itemPutL( pItem, TRUE );
+            hb_itemPutL( pItem, FALSE );
          else if( SELF_RECCOUNT( pArea, &ulRecCount ) != SUCCESS )
             return FAILURE;
          else
@@ -1796,74 +1796,74 @@ static ERRCODE hb_waRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnection,
          break;
 
       case RDDI_STRICTREAD:
-         fResult = hb_set.HB_SET_STRICTREAD;
+         fResult = hb_setGetStrictRead();
          if( hb_itemType( pItem ) == HB_IT_LOGICAL )
-            hb_set.HB_SET_STRICTREAD = hb_itemGetL( pItem );
+            hb_setSetItem( HB_SET_STRICTREAD, pItem );
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_OPTIMIZE:
-         fResult = hb_set.HB_SET_OPTIMIZE;
+         fResult = hb_setGetOptimize();
          if( hb_itemType( pItem ) == HB_IT_LOGICAL )
-            hb_set.HB_SET_OPTIMIZE = hb_itemGetL( pItem );
+            hb_setSetItem( HB_SET_OPTIMIZE, pItem );
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_FORCEOPT:
-         fResult = hb_set.HB_SET_FORCEOPT;
+         fResult = hb_setGetForceOpt();
          if( hb_itemType( pItem ) == HB_IT_LOGICAL )
-            hb_set.HB_SET_FORCEOPT = hb_itemGetL( pItem );
+            hb_setSetItem( HB_SET_FORCEOPT, pItem );
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_AUTOOPEN:
-         fResult = hb_set.HB_SET_AUTOPEN;
+         fResult = hb_setGetAutOpen();
          if( hb_itemType( pItem ) == HB_IT_LOGICAL )
-            hb_set.HB_SET_AUTOPEN = hb_itemGetL( pItem );
+            hb_setSetItem( HB_SET_AUTOPEN, pItem );
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_AUTOORDER:
-         fResult = hb_set.HB_SET_AUTORDER;
+         fResult = hb_setGetAutOrder();
          if( hb_itemType( pItem ) == HB_IT_LOGICAL )
-            hb_set.HB_SET_AUTORDER = hb_itemGetL( pItem );
+            hb_setSetItem( HB_SET_AUTORDER, pItem );
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_AUTOSHARE:
-         fResult = hb_set.HB_SET_AUTOSHARE;
+         fResult = hb_setGetAutoShare();
          if( hb_itemType( pItem ) == HB_IT_LOGICAL )
-            hb_set.HB_SET_AUTOSHARE = hb_itemGetL( pItem );
+            hb_setSetItem( HB_SET_AUTOSHARE, pItem );
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_LOCKSCHEME:
-         iResult = hb_set.HB_SET_DBFLOCKSCHEME;
+         iResult = hb_setGetDBFLockScheme();
          if( hb_itemType( pItem ) & HB_IT_NUMERIC )
-            hb_set.HB_SET_DBFLOCKSCHEME = hb_itemGetNI( pItem );
+            hb_setSetItem( HB_SET_DBFLOCKSCHEME, pItem );
          hb_itemPutNI( pItem, iResult );
          break;
       case RDDI_MEMOBLOCKSIZE:
-         iResult = hb_set.HB_SET_MBLOCKSIZE;
+         iResult = hb_setGetMBlockSize();
          if( hb_itemType( pItem ) & HB_IT_NUMERIC )
-            hb_set.HB_SET_MBLOCKSIZE = hb_itemGetNI( pItem );
+            hb_setSetItem( HB_SET_MBLOCKSIZE, pItem );
          hb_itemPutNI( pItem, iResult );
          break;
       case RDDI_MEMOEXT:
+      {
+         char * szResult = hb_setGetMFileExt();
+         if( szResult )
+            szResult = hb_strdup( szResult );
          if( hb_itemType( pItem ) & HB_IT_STRING )
          {
-            if( hb_set.HB_SET_MFILEEXT )
-            {
-               hb_itemPutC( pItem, hb_set.HB_SET_MFILEEXT );
-               hb_xfree( hb_set.HB_SET_MFILEEXT );
-            }
+            hb_setSetItem( HB_SET_MFILEEXT, pItem );
+            if( szResult )
+               hb_itemPutCLPtr( pItem, szResult, strlen( szResult ) );
             else
-            {
                hb_itemPutC( pItem, NULL );
-            }
-            hb_set.HB_SET_MFILEEXT = hb_strdup( hb_itemGetCPtr( pItem ) );
             break;
          }
-         else if( hb_set.HB_SET_MFILEEXT )
+         else if( szResult )
          {
-            hb_itemPutC( pItem, hb_set.HB_SET_MFILEEXT );
+            hb_itemPutCLPtr( pItem, szResult, strlen( szResult ) );
             break;
          }
          /* no break - return FAILURE */
+      }
       case RDDI_TABLEEXT:
       case RDDI_ORDBAGEXT:
       case RDDI_ORDEREXT:
@@ -2064,9 +2064,11 @@ static const RDDFUNCS waTable =
    ( DBENTRYP_SVP )   hb_waUnsupported          /* WhoCares */
 };
 
+#define HB_RDD_POOL_ALLOCSIZE       64
 /* common for all threads list of registered RDDs */
-static LPRDDNODE * s_RddList = NULL;   /* Registered RDDs */
-static USHORT s_uiRddMax = 0;          /* Number of registered RDD */
+static LPRDDNODE * s_RddList    = NULL;   /* Registered RDDs pool */
+static USHORT      s_uiRddMax   = 0;      /* Size of RDD pool */
+static USHORT      s_uiRddCount = 0;      /* Number of registered RDD */
 
 /*
  * Get RDD node poionter
@@ -2075,7 +2077,7 @@ HB_EXPORT LPRDDNODE hb_rddGetNode( USHORT uiNode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddGetNode(%hu)", uiNode));
 
-   return uiNode < s_uiRddMax ? s_RddList[ uiNode ] : NULL;
+   return uiNode < s_uiRddCount ? s_RddList[ uiNode ] : NULL;
 }
 
 HB_EXPORT PHB_ITEM hb_rddList( USHORT uiType )
@@ -2086,17 +2088,17 @@ HB_EXPORT PHB_ITEM hb_rddList( USHORT uiType )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddList(%hu)", uiType));
 
-   for( uiCount = uiRdds = 0; uiCount < s_uiRddMax; ++uiCount )
+   for( uiCount = uiRdds = 0; uiCount < s_uiRddCount; ++uiCount )
    {
       if( uiType == 0 || s_RddList[ uiCount ]->uiType == uiType )
          ++uiRdds;
    }
    pRddArray = hb_itemArrayNew( uiRdds );
-   for( uiCount = uiIndex = 0; uiCount < s_uiRddMax && uiIndex < uiRdds; ++uiCount )
+   for( uiCount = uiIndex = 0; uiCount < s_uiRddCount && uiIndex < uiRdds; ++uiCount )
    {
       pNode = s_RddList[ uiCount ];
       if( uiType == 0 || pNode->uiType == uiType )
-         hb_itemPutC( hb_arrayGetItemPtr( pRddArray, ++uiIndex ), pNode->szName );
+         hb_arraySetC( pRddArray, ++uiIndex, pNode->szName );
    }
    return pRddArray;
 }
@@ -2110,7 +2112,7 @@ HB_EXPORT LPRDDNODE hb_rddFindNode( const char * szDriver, USHORT * uiIndex )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddFindNode(%s, %p)", szDriver, uiIndex));
 
-   for( uiCount = 0; uiCount < s_uiRddMax; uiCount++ )
+   for( uiCount = 0; uiCount < s_uiRddCount; uiCount++ )
    {
       LPRDDNODE pNode = s_RddList[ uiCount ];
       if( strcmp( pNode->szName, szDriver ) == 0 ) /* Matched RDD */
@@ -2134,10 +2136,9 @@ HB_EXPORT void hb_rddShutDown( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddShutDown()"));
 
-   if( s_uiRddMax > 0 )
+   if( s_uiRddCount > 0 )
    {
-      hb_rddCloseAll();
-      for( uiCount = 0; uiCount < s_uiRddMax; uiCount++ )
+      for( uiCount = 0; uiCount < s_uiRddCount; uiCount++ )
       {
          if( s_RddList[ uiCount ]->pTable.exit != NULL )
          {
@@ -2147,7 +2148,7 @@ HB_EXPORT void hb_rddShutDown( void )
       }
       hb_xfree( s_RddList );
       s_RddList = NULL;
-      s_uiRddMax = 0;
+      s_uiRddMax = s_uiRddCount = 0;
    }
 }
 
@@ -2183,7 +2184,7 @@ HB_EXPORT int hb_rddRegister( const char * szDriver, USHORT uiType )
    /* Fill the new RDD node */
    hb_strncpy( pRddNewNode->szName, szDriver, sizeof( pRddNewNode->szName ) - 1 );
    pRddNewNode->uiType = uiType;
-   pRddNewNode->rddID = s_uiRddMax;
+   pRddNewNode->rddID = s_uiRddCount;
 
    /* Call <szDriver>_GETFUNCTABLE() */
    hb_vmPushSymbol( hb_dynsymSymbol( pGetFuncTable ) );
@@ -2191,7 +2192,7 @@ HB_EXPORT int hb_rddRegister( const char * szDriver, USHORT uiType )
    hb_vmPushPointer( ( void * ) &uiFunctions );
    hb_vmPushPointer( ( void * ) &pRddNewNode->pTable );
    hb_vmPushPointer( ( void * ) &pRddNewNode->pSuperTable );
-   hb_vmPushInteger( s_uiRddMax );
+   hb_vmPushInteger( s_uiRddCount );
    hb_vmDo( 4 );
    if( hb_parni( -1 ) != SUCCESS )
    {
@@ -2199,12 +2200,13 @@ HB_EXPORT int hb_rddRegister( const char * szDriver, USHORT uiType )
       return 3;                        /* Invalid FUNCTABLE */
    }
 
-   if( s_uiRddMax == 0 )                /* First RDD node */
-      s_RddList = (LPRDDNODE *) hb_xgrab( sizeof(LPRDDNODE) );
-   else
-      s_RddList = (LPRDDNODE *) hb_xrealloc( s_RddList, sizeof(LPRDDNODE) * ( s_uiRddMax + 1 ) );
-
-   s_RddList[ s_uiRddMax++ ] = pRddNewNode;   /* Add the new RDD node */
+   if( s_uiRddCount == s_uiRddMax )
+   {
+      s_uiRddMax += HB_RDD_POOL_ALLOCSIZE;
+      s_RddList = ( LPRDDNODE * ) hb_xrealloc( s_RddList,
+                                          sizeof( LPRDDNODE ) * s_uiRddMax );
+   }
+   s_RddList[ s_uiRddCount++ ] = pRddNewNode;   /* Add the new RDD node */
 
    if( pRddNewNode->pTable.init != NULL )
    {

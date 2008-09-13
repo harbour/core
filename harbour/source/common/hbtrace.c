@@ -60,15 +60,16 @@
 #include "hb_io.h"
 #include "hbtrace.h"
 
-char * hb_tr_file_ = "";
-int    hb_tr_line_ = 0;
-int    hb_tr_level_ = 0;
+const char * hb_tr_file_ = "";
+int          hb_tr_line_ = 0;
+int          hb_tr_level_ = 0;
 
 static int s_enabled = 1;
 static int s_flush   = 0;
 
 static FILE * s_fp = NULL;
-static char * s_slevel[ HB_TR_LAST ] =
+
+static const char * s_slevel[ HB_TR_LAST ] =
 {
    "HB_TR_ALWAYS",
    "HB_TR_FATAL",
@@ -77,7 +78,6 @@ static char * s_slevel[ HB_TR_LAST ] =
    "HB_TR_INFO",
    "HB_TR_DEBUG"
 };
-
 
 int hb_tracestate( int new_state )
 {
@@ -164,7 +164,7 @@ int hb_tr_level( void )
    return s_level;
 }
 
-void hb_tr_trace( char * fmt, ... )
+void hb_tr_trace( const char * fmt, ... )
 {
    /*
     * If tracing is disabled, do nothing.

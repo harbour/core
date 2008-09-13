@@ -161,7 +161,7 @@ mk_hbtools()
     else
         HB_CRS_LIB=""
         if [ "${HB_ARCHITECTURE}" = "linux" ]; then
-            HB_SYS_LIBS="${HB_SYS_LIBS} -ldl"
+            HB_SYS_LIBS="${HB_SYS_LIBS} -ldl -lrt"
         elif [ "${HB_ARCHITECTURE}" = "sunos" ]; then
             HB_SYS_LIBS="${HB_SYS_LIBS} -lrt"
             HB_SYS_LIBS="${HB_SYS_LIBS} -lsocket -lnsl -lresolv"

@@ -216,7 +216,7 @@ extern unsigned char hb_sln_inputTab[ 256 ];
 #ifndef HB_CDP_SUPPORT_OFF
 extern PHB_CODEPAGE hb_sln_cdpIN;
 #else
-#  define hb_cdp_page NULL
+#  define hb_vmCDP()    NULL
 #endif
 
 /* delay for waiting on characters after ESC key */

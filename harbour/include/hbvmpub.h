@@ -96,13 +96,15 @@ struct _HB_SYMB;
    typedef struct _HB_DYNS
    {
       struct _HB_SYMB * pSymbol; /* pointer to its relative local symbol */
-      HB_HANDLE hMemvar;         /* Index number into memvars ( publics & privates ) array */
-      USHORT    uiArea;          /* Workarea number */
-      USHORT    uiSymNum;        /* dynamic symbol number */
+#if !defined( HB_MT_VM )
+      void *   pMemvar;          /* memvar pointer ( publics & privates ) */
+      USHORT   uiArea;           /* Workarea number */
+#endif
+      USHORT   uiSymNum;         /* dynamic symbol number */
 #ifndef HB_NO_PROFILER
-      ULONG     ulCalls;         /* profiler support */
-      ULONG     ulTime;          /* profiler support */
-      ULONG     ulRecurse;       /* profiler support */
+      ULONG    ulCalls;          /* profiler support */
+      ULONG    ulTime;           /* profiler support */
+      ULONG    ulRecurse;        /* profiler support */
 #endif
    } HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
 

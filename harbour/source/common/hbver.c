@@ -346,7 +346,7 @@ HB_EXPORT BOOL hb_iswince( void )
 char * hb_verCompiler( void )
 {
    char * pszCompiler;
-   char * pszName;
+   const char * pszName;
    char szSub[ 32 ];
    int iVerMajor;
    int iVerMinor;

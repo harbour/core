@@ -82,7 +82,7 @@
 HB_FUNC( CTOD )
 {
    if( ISCHAR( 1 ) )
-      hb_retdl( hb_dateUnformat( hb_parc( 1 ), hb_set.HB_SET_DATEFORMAT ) );
+      hb_retdl( hb_dateUnformat( hb_parc( 1 ), hb_setGetDateFormat() ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1119, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -94,7 +94,7 @@ HB_FUNC( DTOC )
       char szDate[ 9 ];
       char szFormatted[ 11 ];
 
-      hb_retc( hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, hb_set.HB_SET_DATEFORMAT ) );
+      hb_retc( hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, hb_setGetDateFormat() ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1118, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

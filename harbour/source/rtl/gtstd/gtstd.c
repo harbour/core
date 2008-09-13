@@ -513,7 +513,7 @@ static BOOL hb_gt_std_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP,
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
-      pszHostCDP = hb_cdp_page->id;
+      pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 
@@ -539,7 +539,7 @@ static BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
-      pszHostCDP = hb_cdp_page->id;
+      pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 

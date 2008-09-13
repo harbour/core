@@ -120,6 +120,8 @@ HB_EXPORT ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
    return FAILURE;
 }
 
+HB_EXPORT void hb_rddCloseAll( void ) {}
+
 HB_EXPORT void hb_rddShutDown( void ) {}
 
 

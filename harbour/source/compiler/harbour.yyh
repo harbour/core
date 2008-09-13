@@ -143,9 +143,10 @@
      NUM_DATE = 359,
      EPSILON = 360,
      HASHOP = 361,
-     POST = 362,
-     UNARY = 363,
-     PRE = 364
+     THREAD = 362,
+     POST = 363,
+     UNARY = 364,
+     PRE = 365
    };
 #endif
 /* Tokens.  */
@@ -253,9 +254,10 @@
 #define NUM_DATE 359
 #define EPSILON 360
 #define HASHOP 361
-#define POST 362
-#define UNARY 363
-#define PRE 364
+#define THREAD 362
+#define POST 363
+#define UNARY 364
+#define PRE 365
 
 
 
@@ -304,8 +306,8 @@ typedef union YYSTYPE
       } value;
    } asMessage;
 }
-/* Line 1535 of yacc.c.  */
-#line 309 "harboury.h"
+/* Line 1495 of yacc.c.  */
+#line 311 "harboury.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

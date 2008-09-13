@@ -318,7 +318,7 @@ static void hb_dbtGetMemo( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       hb_fsSeekLarge( pArea->hMemoFile, ( HB_FOFFSET ) ulBlock * DBT_BLOCKSIZE, FS_SET );
       hb_fsReadLarge( pArea->hMemoFile, pBuffer, ulSize );
 #ifndef HB_CDP_SUPPORT_OFF
-      hb_cdpnTranslate( ( char * ) pBuffer, pArea->cdPage, hb_cdp_page, ulSize );
+      hb_cdpnTranslate( ( char * ) pBuffer, pArea->cdPage, hb_vmCDP(), ulSize );
 #endif
    }
    else
@@ -352,7 +352,7 @@ static void hb_dbtWriteMemo( DBTAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULON
 
    hb_fsSeekLarge( pArea->hMemoFile, ( HB_FOFFSET ) ulBlock * DBT_BLOCKSIZE, FS_SET );
 #ifndef HB_CDP_SUPPORT_OFF
-   if( hb_cdp_page != pArea->cdPage )
+   if( hb_vmCDP() != pArea->cdPage )
    {
       BYTE * pBuff = ( BYTE * ) hb_xalloc( ulLen + 1 );
 
@@ -360,7 +360,7 @@ static void hb_dbtWriteMemo( DBTAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULON
       {
          memcpy( pBuff, hb_itemGetCPtr( pItem ), ulLen );
          pBuff[ ulLen ] = 0x1A;
-         hb_cdpnTranslate( ( char * ) pBuff, hb_cdp_page, pArea->cdPage, ulLen );
+         hb_cdpnTranslate( ( char * ) pBuff, hb_vmCDP(), pArea->cdPage, ulLen );
          hb_fsWriteLarge( pArea->hMemoFile, pBuff, ulLen + 1 );
          hb_xfree( pBuff );
       }
@@ -374,7 +374,7 @@ static void hb_dbtWriteMemo( DBTAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULON
             ulRest = HB_MIN( ulLen - ulWritten, DBT_BLOCKSIZE );
             memcpy( pBlock, pSrc + ulWritten, ulRest );
             memset( pBlock + ulRest, 0x1A, DBT_BLOCKSIZE - ulRest );
-            hb_cdpnTranslate( ( char * ) pBlock, hb_cdp_page, pArea->cdPage, ulRest );
+            hb_cdpnTranslate( ( char * ) pBlock, hb_vmCDP(), pArea->cdPage, ulRest );
             hb_fsWrite( pArea->hMemoFile, pBlock, DBT_BLOCKSIZE );
             ulWritten += DBT_BLOCKSIZE;
          }

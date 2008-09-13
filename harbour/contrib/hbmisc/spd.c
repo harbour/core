@@ -377,7 +377,7 @@ HB_FUNC( SQL_SPRINTF )
 #           ifdef __XHARBOUR__
                if( HB_IS_DATETIME( pItmPar ) ){
                   hb_datetimeFormat( hb_itemGetDTS( pItmPar, cDTBuf ), cDTFrm,
-                                       (s ? cIntMod : (IsType ? "YYYY-MM-DD" : hb_set.HB_SET_DATEFORMAT)),
+                                       (s ? cIntMod : (IsType ? "YYYY-MM-DD" : hb_setGetDateFormat())),
                                        (s ? cIntMod + f : "HH:MM:SS") );
                   if( s ){
                      if( !cIntMod[0] ){
@@ -389,7 +389,7 @@ HB_FUNC( SQL_SPRINTF )
                }else
 #           endif
                   hb_dateFormat( hb_itemGetDS( pItmPar, cDTBuf ), cDTFrm,
-                                    (s ? cIntMod : (IsType ? "YYYY-MM-DD" : hb_set.HB_SET_DATEFORMAT)) );
+                                    (s ? cIntMod : (IsType ? "YYYY-MM-DD" : hb_setGetDateFormat())) );
 
                if( (f = i + HB_MAX(ulWidth, 28)) > ulMaxBuf ){
                   ulMaxBuf += f + DK_INCBUF;

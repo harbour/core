@@ -63,6 +63,7 @@ void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, 
 {
    char buffer[ 1024 ];
    char file[ _POSIX_PATH_MAX + 1 ];
+   const char * szFile;
    USHORT uiLine;
    int iLevel;
    FILE * hLog;
@@ -79,16 +80,19 @@ void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, 
 
    fLang = ( hb_langID() != NULL );
 
-   hLog = hb_fopen( hb_setGetCPtr( HB_SET_HBOUTLOG ) ? hb_setGetCPtr( HB_SET_HBOUTLOG ) : "hb_out.log", "a+" );
+   szFile = hb_setGetCPtr( HB_SET_HBOUTLOG );
+   if( !szFile )
+      szFile = "hb_out.log";
 
+   hLog = hb_fopen( szFile, "a+" );
    if( hLog )
    {
       char szTime[ 9 ];
       int iYear, iMonth, iDay;
-      
+
       hb_dateToday( &iYear, &iMonth, &iDay );
       hb_dateTimeStr( szTime );
-         
+
       fprintf( hLog, HB_I_("Application Internal Error - %s\n"), hb_cmdargARGV()[0] );
       fprintf( hLog, HB_I_("Terminated at: %04d.%02d.%02d %s\n"), iYear, iMonth, iDay, szTime );
       if( *hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) )

@@ -90,7 +90,8 @@ then
     [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libhbfm.a
     rm -f fm.o
     if [ "${HB_MT}" = "MT" ]; then
-        ${MAKE} -r fm.o 'HB_LIBCOMP_MT=YES'
+        cd vmmt
+        ${MAKE} -r fm.o
         ${AR} ${AR_OPT} ${HB_LIB_INSTALL}/libhbfmmt.a fm.o
         [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libhbfmmt.a
         rm -f fm.o

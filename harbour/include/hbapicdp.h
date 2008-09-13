@@ -179,8 +179,12 @@ extern HB_UNITABLE hb_uniTbl_kamenicky;
 extern HB_UNITABLE hb_uniTbl_mazovia;
 extern HB_UNITABLE hb_uniTbl_MIK;
 
+extern HB_EXPORT PHB_CODEPAGE  hb_vmCDP( void );
+extern HB_EXPORT void          hb_vmSetCDP( PHB_CODEPAGE pCDP );
+
 extern HB_EXPORT BOOL          hb_cdpRegister( PHB_CODEPAGE );
 extern HB_EXPORT char *        hb_cdpSelectID( const char * );
+extern HB_EXPORT char *        hb_cdpID( void );
 extern HB_EXPORT PHB_CODEPAGE  hb_cdpSelect( PHB_CODEPAGE );
 extern HB_EXPORT PHB_CODEPAGE  hb_cdpFind( const char * );
 extern HB_EXPORT void          hb_cdpTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE );
@@ -200,8 +204,6 @@ extern HB_EXPORT ULONG         hb_cdpUTF8ToStrn( PHB_CODEPAGE, BOOL, const BYTE 
 extern HB_EXPORT ULONG         hb_cdpUTF8StringLength( const BYTE *, ULONG );
 extern HB_EXPORT BYTE *        hb_cdpUTF8StringSubstr( const BYTE *, ULONG, ULONG, ULONG, ULONG * );
 extern HB_EXPORT ULONG         hb_cdpUTF8StringPeek( const BYTE *, ULONG, ULONG );
-
-extern PHB_CODEPAGE hb_cdp_page;
 
 HB_EXTERN_END
 

@@ -21,8 +21,8 @@
 
 #xtranslate COLORARRAY( <x> ) => &( '{"' + StrTran( <x>, ',', '","' ) + '"}' )
 
-STATIC s_aLevel   := {}
-STATIC s_nPointer := 1
+THREAD STATIC s_aLevel   := {}
+THREAD STATIC s_nPointer := 1
 
 FUNCTION __AtPrompt( nRow, nCol, cPrompt, cMsg, cColor )
 

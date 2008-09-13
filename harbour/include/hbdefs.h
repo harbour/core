@@ -1228,7 +1228,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
 #elif defined( ASANLM ) || defined( ASANT )
    #define HB_IMPORT
 
-#elif defined( WIN32 )
+#elif defined( HB_OS_WIN_32 )
    #define HB_IMPORT _declspec( dllimport )
 
 #else
@@ -1266,7 +1266,6 @@ typedef PHB_FUNC HB_FUNC_PTR;
 #define HB_FUNC_INITSTATICS( )     static HARBOUR hb_INITSTATICS( void )
 #define HB_FUNC_INITLINES( )       static HARBOUR hb_INITLINES( void )
 
-typedef ULONG HB_HANDLE;        /* handle to memvar value */
 typedef SHORT HB_SYMBOLSCOPE;   /* stores symbol's scope */
 
 typedef BYTE HB_CHAR;

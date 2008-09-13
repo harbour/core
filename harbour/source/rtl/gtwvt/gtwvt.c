@@ -1428,7 +1428,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_CLOSE:  /* Clicked 'X' on system menu */
          if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE ) == 0 )
          {
-            hb_set.HB_SET_CANCEL = TRUE;
+            PHB_ITEM pItem = hb_itemPutL( NULL, TRUE );
+            hb_setSetItem( HB_SET_CANCEL, pItem );
+            hb_itemRelease( pItem );
             hb_vmRequestCancel();
          }
          return 0;
@@ -1640,9 +1642,9 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    hb_gt_wvt_InitWindow( pWVT, WVT_DEFAULT_ROWS, WVT_DEFAULT_COLS );
 
 #ifndef HB_CDP_SUPPORT_OFF
-   pWVT->hostCDP    = hb_cdp_page;
+   pWVT->hostCDP    = hb_vmCDP();
 #if defined(UNICODE)
-   pWVT->inCDP      = hb_cdp_page;
+   pWVT->inCDP      = hb_vmCDP();
 #else
    {
       int i;
@@ -2546,12 +2548,8 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCD
     * to make proper translation
     */
    if( !pszHostCDP || !*pszHostCDP )
-   {
-      if( hb_cdp_page )
-         pszHostCDP = hb_cdp_page->id;
-      else if( pszTermCDP && *pszTermCDP )
-         pszHostCDP = pszTermCDP;
-   }
+      pszHostCDP = hb_cdpID();
+
    if( pszHostCDP && *pszHostCDP )
    {
       PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
@@ -2562,7 +2560,7 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCD
 #else
 
    if( !pszHostCDP )
-      pszHostCDP = hb_cdp_page->id;
+      pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 
@@ -2609,12 +2607,8 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP
     * to make proper translation
     */
    if( !pszHostCDP || !*pszHostCDP )
-   {
-      if( hb_cdp_page )
-         pszHostCDP = hb_cdp_page->id;
-      else if( pszTermCDP && *pszTermCDP )
-         pszHostCDP = pszTermCDP;
-   }
+      pszHostCDP = hb_cdpID();
+
    if( pszHostCDP && *pszHostCDP )
    {
       PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
@@ -2625,7 +2619,7 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP
 #else
 
    if( !pszHostCDP )
-      pszHostCDP = hb_cdp_page->id;
+      pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 

@@ -1946,6 +1946,32 @@ static HB_GENC_FUNC( hb_p_staticname )
    return ( lPCodePos - ulStart + 1 );
 }
 
+static HB_GENC_FUNC( hb_p_threadstatics )
+{
+   USHORT w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), u;
+
+   fprintf( cargo->yyc, "\tHB_P_THREADSTATICS, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ] );
+   if( cargo->bVerbose )
+      fprintf( cargo->yyc, "\t/* number of thread static variables: %i */", w );
+   fprintf( cargo->yyc, "\n" );
+
+   lPCodePos += 3;
+   for( u = 0; u < w; ++u )
+   {
+      fprintf( cargo->yyc, "\t%i, %i,",
+               pFunc->pCode[ lPCodePos ],
+               pFunc->pCode[ lPCodePos + 1 ] );
+      if( cargo->bVerbose )
+         hb_compGenCStaticName( HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos ] ), cargo );
+      fprintf( cargo->yyc, "\n" );
+      lPCodePos +=2;
+   }
+
+   return ( ( ULONG ) w << 1 ) + 3;
+}
+
 static HB_GENC_FUNC( hb_p_swapalias )
 {
    HB_SYMBOL_UNUSED( pFunc );
@@ -2552,7 +2578,8 @@ static const HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_localincpush,
    hb_p_pushfuncsym,
    hb_p_hashgen,
-   hb_p_seqblock
+   hb_p_seqblock,
+   hb_p_threadstatics
 };
 
 static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )

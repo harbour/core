@@ -64,26 +64,36 @@
    #endif
 #endif
 
-/* TODO: add protection for MT mode */
+#include "hbthread.h"
+
+static HB_CRITICAL_NEW( s_clipMtx );
+
 static char *     s_szClipboardData;
 static ULONG      s_ulClipboardLen;
 
 BOOL hb_gt_setClipboard( char * szClipData, ULONG ulLen )
 {
+   hb_threadEnterCriticalSection( &s_clipMtx );
+
    if( s_ulClipboardLen )
       hb_xfree( s_szClipboardData );
    s_ulClipboardLen = ulLen;
-   if( s_ulClipboardLen )
+   if( ulLen )
    {
       s_szClipboardData = ( char * ) hb_xgrab( s_ulClipboardLen + 1 );
       memcpy( s_szClipboardData, szClipData, s_ulClipboardLen );
       s_szClipboardData[ s_ulClipboardLen ] = '\0';
    }
+
+   hb_threadLeaveCriticalSection( &s_clipMtx );
+
    return TRUE;
 }
 
 BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen )
 {
+   hb_threadEnterCriticalSection( &s_clipMtx );
+
    *pszClipData = NULL;
    *pulLen = s_ulClipboardLen;
    if( s_ulClipboardLen )
@@ -92,6 +102,9 @@ BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen )
       memcpy( *pszClipData, s_szClipboardData, s_ulClipboardLen );
       ( *pszClipData )[ s_ulClipboardLen ] = '\0';
    }
+
+   hb_threadLeaveCriticalSection( &s_clipMtx );
+
    return s_ulClipboardLen != 0;
 }
 

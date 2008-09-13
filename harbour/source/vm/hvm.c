@@ -87,7 +87,9 @@
 #include "hbinkey.ch"
 #include "inkey.ch"
 #include "hbdebug.ch"
-
+#if defined( HB_MT_VM )
+#  include "hbthread.h"
+#endif
 #include "hbmemory.ch"
 
 
@@ -161,6 +163,7 @@ static void    hb_vmFrame( USHORT usLocals, BYTE bParams ); /* increases the sta
 static void    hb_vmVFrame( USHORT usLocals, BYTE bParams ); /* increases the stack pointer for the amount of locals and variable number of params suplied */
 static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
 static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the global statics array to hold a PRG statics */
+static void    hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode ); /* mark thread static variables */
 static void    hb_vmEndBlock( void );            /* copies the last codeblock pushed value into the return value */
 static void    hb_vmRetValue( void );            /* pops the latest stack value into stack.Return */
 #ifndef HB_NO_DEBUG
@@ -215,6 +218,11 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
 
 static void    hb_vmMsgIndexReference( PHB_ITEM pRefer, PHB_ITEM pObject, PHB_ITEM pIndex ); /* create object index reference */
 
+#if defined( HB_MT_VM )
+static int volatile hb_vmThreadRequest = 0;
+static void    hb_vmRequestTest( void );
+#endif
+
 #ifndef HB_NO_PROFILER
 static ULONG hb_ulOpcodesCalls[ HB_P_LAST_PCODE ];/* array to profile opcodes calls */
 static ULONG hb_ulOpcodesTime[ HB_P_LAST_PCODE ]; /* array to profile opcodes consumed time */
@@ -253,6 +261,9 @@ static BOOL     s_bDebugging;
 static BOOL     s_bDebugRequest;          /* debugger invoked via the VM */
 static PHB_DYNS s_pDynsDbgEntry = NULL;   /* Cached __DBGENTRY symbol */
 static HB_DBGENTRY_FUNC s_pFunDbgEntry;   /* C level debugger entry */
+
+/* main VM thread stack ID */
+static void * s_main_thread = NULL;
 
 /* Various compatibility flags
 */
@@ -350,6 +361,378 @@ static void hb_vmDoInitClip( void )
    }
 }
 
+#if !defined( HB_MT_VM )
+
+void hb_vmLock( void ) {}
+void hb_vmUnlock( void ) {}
+BOOL hb_vmSuspendThreads( BOOL fWait ) { HB_SYMBOL_UNUSED( fWait ); return TRUE; }
+void hb_vmResumeThreads( void ) {}
+
+#else
+
+typedef struct _HB_VM_STACKLST
+{
+   void *                     pStackId;
+   PHB_THREADSTATE            pState;
+   struct _HB_VM_STACKLST *   pNext;
+   struct _HB_VM_STACKLST *   pPrev;
+} HB_VM_STACKLST, * PHB_VM_STACKLST;
+
+static HB_CRITICAL_NEW( s_vmMtx );
+static HB_COND_NEW( s_vmCond );
+
+/* number of allocated HVM stacks */
+static int volatile s_iStackCount = 0;
+/* number of running HVM threads */
+static int volatile s_iRunningCount = 0;
+/* active HVM stacks list */
+static PHB_VM_STACKLST s_vmStackLst = NULL;
+
+#  define HB_THREQUEST_STOP   1
+#  define HB_THREQUEST_QUIT   2
+
+#  define HB_VM_LOCK      hb_threadEnterCriticalSection( &s_vmMtx );
+#  define HB_VM_UNLOCK    hb_threadLeaveCriticalSection( &s_vmMtx );
+
+static void hb_vmRequestTest( void )
+{
+   HB_VM_LOCK
+
+   s_iRunningCount--;
+   while( TRUE )
+   {
+      if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+      {
+         if( !hb_stackQuitState() )
+         {
+            hb_stackSetQuitState( TRUE );
+            hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+         }
+      }
+      if( hb_vmThreadRequest & HB_THREQUEST_STOP )
+      {
+         hb_threadCondBroadcast( &s_vmCond );
+         hb_threadCondWait( &s_vmCond, &s_vmMtx );
+      }
+      else
+         break;
+   }
+   s_iRunningCount++;
+
+   HB_VM_UNLOCK
+}
+
+/* lock VM blocking GC execution by other threads */
+void hb_vmLock( void )
+{
+   if( hb_stackId() )   /* check if thread has associated HVM stack */
+   {
+      HB_VM_LOCK
+      while( TRUE )
+      {
+         if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+         {
+            if( !hb_stackQuitState() )
+            {
+               hb_stackSetQuitState( TRUE );
+               hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+            }
+         }
+         if( hb_vmThreadRequest & HB_THREQUEST_STOP )
+            hb_threadCondWait( &s_vmCond, &s_vmMtx );
+         else
+            break;
+      }
+      s_iRunningCount++;
+      HB_VM_UNLOCK
+   }
+}
+
+/* unlock VM, allow GC execution */
+void hb_vmUnlock( void )
+{
+   if( hb_stackId() )   /* check if thread has associated HVM stack */
+   {
+      HB_VM_LOCK
+      s_iRunningCount--;
+      if( hb_vmThreadRequest )
+      {
+         if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+         {
+            if( !hb_stackQuitState() )
+            {
+               hb_stackSetQuitState( TRUE );
+               hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+            }
+         }
+         hb_threadCondBroadcast( &s_vmCond );
+      }
+      HB_VM_UNLOCK
+   }
+}
+
+/* (try to) stop all threads except current one */
+BOOL hb_vmSuspendThreads( BOOL fWait )
+{
+   HB_VM_LOCK
+
+   if( ( hb_vmThreadRequest & ( HB_THREQUEST_STOP | HB_THREQUEST_QUIT ) ) == 0 )
+   {
+      hb_vmThreadRequest |= HB_THREQUEST_STOP;
+      --s_iRunningCount;
+      while( TRUE )
+      {
+         if( s_iRunningCount <= 0 )
+         {
+            hb_vmThreadRequest &= ~HB_THREQUEST_STOP;
+            ++s_iRunningCount;
+            return TRUE;
+         }
+         if( !fWait )
+            break;
+         hb_threadCondWait( &s_vmCond, &s_vmMtx );
+         if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+            break;
+      }
+      hb_vmThreadRequest &= ~HB_THREQUEST_STOP;
+      ++s_iRunningCount;
+      hb_threadCondBroadcast( &s_vmCond );
+   }
+
+   HB_VM_UNLOCK
+
+   return FALSE;
+}
+
+/* unblock execution of threads stopped by hb_vmSuspendThreads() */
+void hb_vmResumeThreads( void )
+{
+   hb_vmThreadRequest &= ~HB_THREQUEST_STOP;
+   hb_threadCondBroadcast( &s_vmCond );
+   HB_VM_UNLOCK
+}
+
+/* wait for all threads to terminate
+ * should be called only by main HVM thread
+ */
+void hb_vmWaitForThreads( void )
+{
+   if( s_main_thread == hb_stackId() )
+   {
+      HB_VM_LOCK
+
+      --s_iRunningCount;
+      if( hb_vmThreadRequest )
+         hb_threadCondBroadcast( &s_vmCond );
+
+      while( s_iStackCount > 1 )
+         hb_threadCondWait( &s_vmCond, &s_vmMtx );
+
+      ++s_iRunningCount;
+
+      HB_VM_UNLOCK
+   }
+}
+
+/* terminate all threads except current one,
+ * should be called only by main HVM thread
+ */
+static void hb_vmTerminateThreads( void )
+{
+   HB_VM_LOCK
+
+   hb_vmThreadRequest |= HB_THREQUEST_QUIT;
+   --s_iRunningCount;
+
+   hb_threadCondBroadcast( &s_vmCond );
+
+   while( s_iStackCount > 1 )
+      hb_threadCondWait( &s_vmCond, &s_vmMtx );
+
+   ++s_iRunningCount;
+   /* hb_vmThreadRequest &= ~HB_THREQUEST_QUIT; */
+   hb_vmThreadRequest = 0;
+
+   HB_VM_UNLOCK
+}
+
+static void hb_vmStackAdd( PHB_THREADSTATE pState )
+{
+   PHB_VM_STACKLST pStack;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmStackAdd(%p)", pState));
+
+   pStack = ( PHB_VM_STACKLST ) hb_xgrab( sizeof( HB_VM_STACKLST ) );
+   pStack->pStackId = hb_stackId();
+   pStack->pState = pState;
+
+   HB_VM_LOCK
+
+   if( s_vmStackLst )
+   {
+      pStack->pNext = s_vmStackLst;
+      pStack->pPrev = s_vmStackLst->pPrev;
+      pStack->pPrev->pNext = pStack;
+      s_vmStackLst->pPrev = pStack;
+   }
+   else
+   {
+      s_vmStackLst = pStack->pNext = pStack->pPrev = pStack;
+   }
+   hb_stackListSet( ( void * ) ( pStack ) );
+   s_iStackCount++;
+   if( pState )
+   {
+      pState->pStackId = pStack->pStackId;
+      pState->fActive = TRUE;
+   }
+
+   HB_VM_UNLOCK
+
+   hb_vmLock();
+}
+
+static void hb_vmStackDel( void )
+{
+   PHB_VM_STACKLST pStack;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmStackDel()"));
+
+   hb_vmUnlock();
+
+   HB_VM_LOCK
+
+   pStack = ( PHB_VM_STACKLST ) hb_stackList();
+   if( pStack->pState )
+   {
+      pStack->pState->fActive = FALSE;
+      pStack->pState->pStackId = NULL;
+      if( pStack->pState->pThItm )
+      {
+         PHB_ITEM pThItm = pStack->pState->pThItm;
+         pStack->pState->pThItm = NULL;
+         /* NOTE: releasing pThItm may force pState freeing if parent
+          *       thread does not keep thread pointer item. So it's
+          *       important to not access it later. [druzus]
+          *        
+          */
+         hb_itemRelease( pThItm );
+      }
+      pStack->pState = NULL;
+   }
+
+   hb_setRelease( hb_stackSetStruct() );
+   hb_stackFree();
+
+   pStack->pPrev->pNext = pStack->pNext;
+   pStack->pNext->pPrev = pStack->pPrev;
+   if( s_vmStackLst == pStack )
+   {
+      s_vmStackLst = pStack->pNext;
+      if( s_vmStackLst == pStack )
+         s_vmStackLst = NULL;
+   }
+   hb_xfree( pStack );
+
+   hb_threadMutexUnlockAll();
+
+   s_iStackCount--;
+   hb_threadCondBroadcast( &s_vmCond );
+
+   HB_VM_UNLOCK
+}
+
+/* thread entry point */
+HB_EXPORT void hb_vmThreadInit( void * Cargo )
+{
+   PHB_THREADSTATE pState;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadInit(%p)", Cargo));
+   
+   hb_stackInit();      /* initialize HVM thread stack */
+
+   pState = ( PHB_THREADSTATE ) Cargo;
+
+   if( pState && pState->pszCDP )
+      hb_cdpSelectID( pState->pszCDP );
+   else
+      hb_cdpSelectID( HB_MACRO2STRING( HB_CODEPAGE_DEFAULT ) );
+
+   if( pState && pState->pszLang )
+      hb_cdpSelectID( pState->pszLang );
+   else
+      hb_langSelectID( HB_MACRO2STRING( HB_LANG_DEFAULT ) );
+
+   if( pState && pState->pSet )
+   {
+      /* TODO: add set sharing */
+      memcpy( hb_stackSetStruct(), pState->pSet, sizeof( HB_SET_STRUCT ) );
+      hb_xfree( pState->pSet );
+      pState->pSet = NULL;
+   }
+   else
+      hb_setInitialize( hb_stackSetStruct() );
+
+   if( pState && pState->pszDefRDD )
+      hb_stackRDD()->szDefaultRDD = pState->pszDefRDD;
+
+   hb_vmStackAdd( pState );
+
+   /* call CLIPINIT function to initialize GetList PUBLIC variables
+    * ErrorBlock() and __SetHelpK()
+    */
+   hb_vmDoInitClip();
+}
+
+/* thread leave point */
+HB_EXPORT void hb_vmThreadQuit( void )
+{
+   PHB_THREADSTATE pState;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadQuit()"));
+
+   hb_stackSetActionRequest( 0 );
+
+   pState = ( ( PHB_VM_STACKLST ) hb_stackList() )->pState;
+   if( pState )
+   {
+      PHB_ITEM pReturn = hb_stackReturnItem();
+
+      if( HB_IS_BYREF( pReturn ) )
+         pReturn = hb_itemUnRef( pReturn );
+      if( !pState->pResult )
+         pState->pResult = hb_itemNew( NULL );
+
+      hb_itemMove( pState->pResult, pReturn );
+   }
+   else
+      hb_itemClear( hb_stackReturnItem() );
+
+   hb_rddCloseAll();             /* close all workareas */
+   hb_stackRemove( 1 );          /* clear stack items, leave only initial symbol item */
+   hb_memvarsClear();            /* clear all PUBLIC (and PRIVATE if any) variables */
+   hb_vmStackDel();              /* remove stack from linked HVM stacks list */
+}
+
+/* send stop request to given thread */
+HB_EXPORT void hb_vmThreadQuitRequest( void * Cargo )
+{
+   PHB_THREADSTATE pState;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadQuitRequest(%p)", Cargo));
+
+   pState = ( PHB_THREADSTATE ) Cargo;
+
+   HB_VM_LOCK
+
+   if( pState->pStackId && pState->fActive )
+      hb_stackIdSetActionRequest( pState->pStackId, HB_QUIT_REQUESTED );
+
+   HB_VM_UNLOCK
+}
+
+#endif
+
 /* application entry point */
 
 HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
@@ -366,20 +749,24 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    s_pDynsDbgEntry = hb_dynsymFind( "__DBGENTRY" );
 
    hb_xinit();
-   hb_stackInit();
+   hb_stackInit();            /* initialize HVM stack */
+   s_main_thread = hb_stackId();
+#if defined( HB_MT_VM )
+   hb_vmStackAdd( NULL );
+#endif
+   hb_clsInit();              /* initialize Classy/OO system */
    hb_errInit();
 
    /* initialize dynamic symbol for evaluating codeblocks */
    hb_symEval.pDynSym = hb_dynsymGetCase( hb_symEval.szName );
 
-   hb_setInitialize();        /* initialize Sets */
-   hb_conInit();              /* initialize Console */
-   hb_memvarsInit();
-   hb_clsInit();              /* initialize Classy/OO system */
-
-   /* Set the language to the default */
+   /* Set the language and codepage to the default */
    /* This trick is needed to stringify the macro value */
    hb_langSelectID( HB_MACRO2STRING( HB_LANG_DEFAULT ) );
+   hb_cdpSelectID( HB_MACRO2STRING( HB_CODEPAGE_DEFAULT ) );
+
+   hb_setInitialize( hb_stackSetStruct() );
+   hb_conInit();
 
    /* Check for some internal switches */
    s_VMFlags = hb_cmdargProcessVM( &s_VMCancelKey, &s_VMCancelKeyEx );
@@ -407,7 +794,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
          s_pFunDbgEntry = hb_vmDebugEntry;
    }
 
-   /* emable executing PCODE (HVM reenter request) */
+   /* enable executing PCODE (HVM reenter request) */
    s_fHVMActive = TRUE;
 
    /* Call functions that initializes static variables
@@ -415,7 +802,8 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
     * because INIT function can use static variables
     */
    hb_vmDoInitStatics();
-   /* call CLIPINIT function to initialize ErrorBlock() and __SetHelpK()
+   /* call CLIPINIT function to initialize GetList PUBLIC variables
+    * ErrorBlock() and __SetHelpK()
     * Because on some platform the execution order of init functions
     * is out of Harbour control then this function has to be called
     * explicitly in VM initialization process before hb_vmDoInitFunctions()
@@ -504,9 +892,11 @@ HB_EXPORT int hb_vmQuit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmQuit()"));
 
-   hb_vmDoExitFunctions(); /* process defined EXIT functions */
+#if defined( HB_MT_VM )
+   hb_vmTerminateThreads();
+#endif
 
-   hb_idleShutDown();
+   hb_vmDoExitFunctions(); /* process defined EXIT functions */
 
    /* process AtExit registered functions */
    hb_vmDoModuleExitFunctions();
@@ -524,41 +914,48 @@ HB_EXPORT int hb_vmQuit( void )
    /* intentionally here to allow executing object destructors for all
     * cross referenced items before we release classy subsystem
     */
-   hb_gcCollectAll();
+   hb_gcCollectAll( TRUE );
 
    /* Clear any pending actions so RDD shutdown process
     * can be cleanly executed
     */
    hb_stackSetActionRequest( 0 );
-   hb_rddShutDown();
+   hb_rddCloseAll();             /* close all workareas */
+   hb_rddShutDown();             /* remove all registered RDD drivers */
+
+   /* release thread specific data */
+   hb_stackDestroyTSD();
 
    /* stop executing PCODE (HVM reenter request) */
    s_fHVMActive = FALSE;
 
    hb_errExit();
    hb_clsReleaseAll();
+
    hb_itemClear( &s_aStatics );
 
    /* release all remaining items */
 
-   hb_conRelease();             /* releases Console */
-   hb_setRelease();             /* releases Sets */
-   hb_vmReleaseLocalSymbols();  /* releases the local modules linked list */
-   hb_dynsymRelease();          /* releases the dynamic symbol table */
+   hb_conRelease();                       /* releases Console */
+   hb_vmReleaseLocalSymbols();            /* releases the local modules linked list */
+   hb_dynsymRelease();                    /* releases the dynamic symbol table */
 #ifndef HB_CDP_SUPPORT_OFF
-   hb_cdpReleaseAll();          /* releases codepages */
+   hb_cdpReleaseAll();                    /* releases codepages */
 #endif
    hb_itemClear( hb_stackReturnItem() );
 
    /* release all known garbage */
    if( hb_xquery( HB_MEM_USEDMAX ) ) /* check if fmstat is ON */
-      hb_gcCollectAll();
+      hb_gcCollectAll( TRUE );
    else
       hb_gcReleaseAll();
 
-   hb_memvarsFree();    /* free memory allocated for memvars table */
+#if defined( HB_MT_VM )
+   hb_vmStackDel();              /* remove stack from linked HVM stacks list */
+#else
+   hb_setRelease( hb_stackSetStruct() );  /* releases Sets */
    hb_stackFree();
-/* hb_dynsymLog(); */
+#endif
    hb_xexit();
 
    return s_nErrorLevel;
@@ -607,10 +1004,10 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* IMHO we should have a _SET_ controlled by user
           * sth like:
 
-         if( hb_set.HB_SET_KEYPOLL )
+         if( hb_stackSetStruct()->HB_SET_KEYPOLL )
          {
             hb_inkeyPoll();
-            uiPolls = hb_set.HB_SET_KEYPOLL;
+            uiPolls = hb_stackSetStruct()->HB_SET_KEYPOLL;
          }
 
          for some GTs which can work in assynchrous mode user may
@@ -619,9 +1016,14 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          key combination) they should set proper flags in
          ActionRequest so we can serve it in main VM loop without
          performance decrease or ignore depending on
-         hb_set.HB_SET_CANCEL, hb_set.HB_SET_DEBUG flags
+         hb_stackSetStruct()->HB_SET_CANCEL,
+         hb_stackSetStruct()->HB_SET_DEBUG flags
          */
       }
+#endif
+#if defined( HB_MT_VM )
+      if( hb_vmThreadRequest )
+         hb_vmRequestTest();
 #endif
 
       switch( pCode[ w ] )
@@ -1005,7 +1407,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Execution */
 
          case HB_P_DO:
-            hb_vmDo( HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmDo( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1016,7 +1418,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_FUNCTION:
             hb_itemSetNil( hb_stackReturnItem() );
-            hb_vmDo( HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmDo( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             hb_stackPushReturn();
             w += 3;
             break;
@@ -1030,7 +1432,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_SEND:
             hb_itemSetNil( hb_stackReturnItem() );
-            hb_vmSend( HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmSend( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
 
             /* Is This OK??? */
@@ -1070,7 +1472,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PARAMETER:
-            hb_memvarNewParameter( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ), hb_stackItemFromBase( pCode[ w + 3 ] ) );
+            hb_memvarNewParameter( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ), hb_stackItemFromBase( pCode[ w + 3 ] ) );
             HB_TRACE(HB_TR_INFO, ("(hb_vmPopParameter)"));
             w += 4;
             break;
@@ -1101,9 +1503,17 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_STATICS:
-            hb_vmStatics( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ), HB_PCODE_MKUSHORT( &( pCode[ w + 3 ] ) ) );
+            hb_vmStatics( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ), HB_PCODE_MKUSHORT( &pCode[ w + 3 ] ) );
             w += 5;
             break;
+
+         case HB_P_THREADSTATICS:
+         {
+            USHORT uiCount = HB_PCODE_MKUSHORT( &pCode[ w + 1 ] );
+            hb_vmInitThreadStatics( uiCount, &pCode[ w + 3 ] );
+            w += 3 + ( ( ULONG ) uiCount << 1 );
+            break;
+         }
 
          case HB_P_RETVALUE:
             hb_vmRetValue();
@@ -1111,14 +1521,14 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_LOCALNAME:
-            hb_vmLocalName( HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ),
+            hb_vmLocalName( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ),
                             ( char * ) pCode + w + 3 );
             w += 3;
             while( pCode[ w++ ] ) {};
             break;
 
          case HB_P_STATICNAME:
-            hb_vmStaticName( pCode[ w + 1 ], HB_PCODE_MKUSHORT( &( pCode[ w + 2 ] ) ),
+            hb_vmStaticName( pCode[ w + 1 ], HB_PCODE_MKUSHORT( &pCode[ w + 2 ] ),
                              ( char * ) pCode + w + 4 );
             w += 4;
             while( pCode[ w++ ] ) {};
@@ -1337,7 +1747,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_JUMP:
-            w += HB_PCODE_MKSHORT( &( pCode[ w + 1 ] ) );
+            w += HB_PCODE_MKSHORT( &pCode[ w + 1 ] );
             break;
 
          case HB_P_JUMPFAR:
@@ -1583,7 +1993,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHFUNCSYM:
-            hb_vmPushSymbol( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPushSymbol( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             hb_stackAllocItem()->type = HB_IT_NIL;
             w += 3;
             break;
@@ -1594,7 +2004,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHALIASEDFIELD:
-            hb_vmPushAliasedField( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPushAliasedField( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1604,7 +2014,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHALIASEDVAR:
-            hb_vmPushAliasedVar( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPushAliasedVar( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1772,7 +2182,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              */
             PHB_SYMB pSymbol = pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] );
 
-            if( pSymbol->pDynSym && pSymbol->pDynSym->hMemvar )
+            if( pSymbol->pDynSym && hb_dynsymGetMemvar( pSymbol->pDynSym ) )
                /* If exist a memory symbol with this name use it */
                hb_memvarSetValue( pSymbol, hb_stackItemFromTop(-1) );
             else if( hb_rddFieldPut( hb_stackItemFromTop(-1), pSymbol ) == FAILURE )
@@ -2115,7 +2525,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_WITHOBJECTMESSAGE:
          {
-            USHORT wSymPos = HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) );
+            USHORT wSymPos = HB_PCODE_MKUSHORT( &pCode[ w + 1 ] );
             if( wSymPos != 0xFFFF )
             {
                /* NOTE: 0xFFFF is passed when ':&varmacro' syntax is used.
@@ -2683,7 +3093,7 @@ static void hb_vmModulus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR p
       {
          /* NOTE: Clipper always returns the result of modulus
                   with the SET number of decimal places. */
-         if( hb_set.HB_SET_DECIMALS == 0 )
+         if( hb_stackSetStruct()->HB_SET_DECIMALS == 0 )
          {
             lDivisor = HB_ITEM_GET_NUMINTRAW( pItem1 ) % lDivisor;
             HB_ITEM_PUT_NUMINTRAW( pResult, lDivisor );
@@ -2757,7 +3167,6 @@ static void hb_vmInc( PHB_ITEM pItem )
       {
          if( pItem->item.asInteger.value < HB_INT_MAX )
          {
-            pItem->type = HB_IT_INTEGER;
             pItem->item.asInteger.value++;
             pItem->item.asInteger.length = HB_INT_EXPLENGTH( pItem->item.asInteger.value );
          }
@@ -2777,7 +3186,6 @@ static void hb_vmInc( PHB_ITEM pItem )
       }
       else if( pItem->item.asLong.value < HB_LONG_MAX )
       {
-         pItem->type = HB_IT_LONG;
          pItem->item.asLong.value++;
          pItem->item.asLong.length = HB_LONG_EXPLENGTH( pItem->item.asLong.value );
       }
@@ -2791,13 +3199,11 @@ static void hb_vmInc( PHB_ITEM pItem )
    }
    else if( HB_IS_DOUBLE( pItem ) )
    {
-      pItem->type = HB_IT_DOUBLE;
       pItem->item.asDouble.value++;
       pItem->item.asDouble.length = HB_DBL_LENGTH( pItem->item.asDouble.value );
    }
    else if( HB_IS_DATE( pItem ) )
    {
-      pItem->type = HB_IT_DATE;
       pItem->item.asDate.value++;
    }
    else if( ! hb_objOperatorCall( HB_OO_OP_INC, pItem, pItem, NULL, NULL ) )
@@ -2822,7 +3228,6 @@ static void hb_vmDec( PHB_ITEM pItem )
       {
          if( pItem->item.asInteger.value > HB_INT_MIN )
          {
-            pItem->type = HB_IT_INTEGER;
             pItem->item.asInteger.value--;
             pItem->item.asInteger.length = HB_INT_EXPLENGTH( pItem->item.asInteger.value );
          }
@@ -2842,7 +3247,6 @@ static void hb_vmDec( PHB_ITEM pItem )
       }
       else if( pItem->item.asLong.value > HB_LONG_MIN )
       {
-         pItem->type = HB_IT_LONG;
          pItem->item.asLong.value--;
          pItem->item.asLong.length = HB_LONG_EXPLENGTH( pItem->item.asLong.value );
       }
@@ -2856,13 +3260,11 @@ static void hb_vmDec( PHB_ITEM pItem )
    }
    else if( HB_IS_DOUBLE( pItem ) )
    {
-      pItem->type = HB_IT_DOUBLE;
       pItem->item.asDouble.value--;
       pItem->item.asDouble.length = HB_DBL_LENGTH( pItem->item.asDouble.value );
    }
    else if( HB_IS_DATE( pItem ) )
    {
-      pItem->type = HB_IT_DATE;
       pItem->item.asDate.value--;
    }
    else if( ! hb_objOperatorCall( HB_OO_OP_DEC, pItem, pItem, NULL, NULL ) )
@@ -4027,7 +4429,6 @@ static void hb_vmAnd( void )
    {
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = pItem1->item.asLogical.value && pItem2->item.asLogical.value;
-      pItem2->type = HB_IT_NIL;
       hb_stackDec();
    }
    else if( hb_objOperatorCall( HB_OO_OP_AND, pItem1, pItem1, pItem2, NULL ) )
@@ -4060,7 +4461,6 @@ static void hb_vmOr( void )
    {
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = pItem1->item.asLogical.value || pItem2->item.asLogical.value;
-      pItem2->type = HB_IT_NIL;
       hb_stackDec();
    }
    else if( hb_objOperatorCall( HB_OO_OP_OR, pItem1, pItem1, pItem2, NULL ) )
@@ -4143,23 +4543,9 @@ static void hb_vmArrayPush( void )
 
       if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
       {
-         if( hb_gcRefCount( pArray->item.asArray.value ) > 1 )
-         {
-            /* this is a temporary copy of an array - we can overwrite
-             * it with no problem
-             */
-            hb_itemCopy( pArray, pArray->item.asArray.value->pItems + ulIndex - 1 );
-            hb_stackPop();
-         }
-         else
-         {
-            /* this is a constant array { 1, 2, 3 } - we cannot use
-             * the optimization here
-             */
-            hb_itemMove( pIndex, pArray->item.asArray.value->pItems + ulIndex - 1 );
-            hb_itemMove( pArray, pIndex );
-            hb_stackDec();
-         }
+         hb_itemCopy( pIndex, pArray->item.asArray.value->pItems + ulIndex - 1 );
+         hb_itemMove( pArray, pIndex );
+         hb_stackDec();
       }
       else if( !HB_IS_OBJECT( pArray ) &&
                hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray, pIndex, NULL ) )
@@ -5335,6 +5721,135 @@ static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the g
    }
 }
 
+#if defined( HB_MT_VM )
+/*
+ * extended thread static variable reference structure
+ */
+typedef struct
+{
+   HB_ITEM  source;
+   HB_TSD   threadData;
+} HB_TSVREF, * PHB_TSVREF;
+
+/*
+ * extended thread static variable reference functions
+ */
+static PHB_ITEM hb_vmTSVRefRead( PHB_ITEM pRefer )
+{
+   PHB_TSVREF pTSVRef = ( PHB_TSVREF ) pRefer->item.asExtRef.value;
+   PHB_ITEM pItem = ( PHB_ITEM ) hb_stackTestTSD( &pTSVRef->threadData );
+   if( !pItem )
+   {
+      pItem = ( PHB_ITEM ) hb_stackGetTSD( &pTSVRef->threadData );
+      hb_itemCopy( pItem, &pTSVRef->source );
+   }
+   return pItem;
+}
+
+static PHB_ITEM hb_vmTSVRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
+{
+   PHB_TSVREF pTSVRef = ( PHB_TSVREF ) pRefer->item.asExtRef.value;
+   HB_SYMBOL_UNUSED( pSource );
+   return ( PHB_ITEM ) hb_stackGetTSD( &pTSVRef->threadData );
+}
+
+static void hb_vmTSVRefCopy( PHB_ITEM pDest )
+{
+   hb_xRefInc( pDest->item.asExtRef.value );
+}
+
+static void hb_vmTSVRefClear( void * value )
+{
+   if( hb_xRefDec( value ) )
+   {
+      PHB_ITEM pItem;
+
+      if( HB_IS_COMPLEX( &( ( PHB_TSVREF ) value )->source ) )
+         hb_itemClear( &( ( PHB_TSVREF ) value )->source );
+
+      pItem = ( PHB_ITEM ) hb_stackTestTSD( &( ( PHB_TSVREF ) value )->threadData );
+      if( pItem && HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+
+      hb_xfree( value );
+   }
+}
+
+static void hb_vmTSVRefMark( void * value )
+{
+   PHB_ITEM pItem;
+
+   if( HB_IS_GCITEM( &( ( PHB_TSVREF ) value )->source ) )
+      hb_gcItemRef( &( ( PHB_TSVREF ) value )->source );
+
+   pItem = ( PHB_ITEM ) hb_stackTestTSD( &( ( PHB_TSVREF ) value )->threadData );
+   if( pItem && HB_IS_GCITEM( pItem ) )
+      hb_gcItemRef( pItem );
+}
+
+/* destructor for terminated threads */
+void hb_vmTSVarClean( void * pThreadItem )
+{
+   if( HB_IS_COMPLEX( ( PHB_ITEM ) pThreadItem ) )
+      hb_itemClear( ( PHB_ITEM ) pThreadItem );
+}
+
+/*
+ * create extended thread static variable reference
+ */
+static void hb_vmTSVReference( PHB_ITEM pStatic )
+{
+   static const HB_EXTREF s_TSVExtRef = {
+             hb_vmTSVRefRead,
+             hb_vmTSVRefWrite,
+             hb_vmTSVRefCopy,
+             hb_vmTSVRefClear,
+             hb_vmTSVRefMark };
+
+   PHB_TSVREF pTSVRef;
+   PHB_ITEM pRefer;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmTSVReference(%p)", pStatic));
+
+   pTSVRef = ( PHB_TSVREF ) hb_xgrab( sizeof( HB_TSVREF ) );
+
+   pTSVRef->source.type = HB_IT_NIL;
+   HB_TSD_INIT( &pTSVRef->threadData, sizeof( HB_ITEM ), NULL, hb_vmTSVarClean );
+
+   /* Use hb_stackReturnItem() as temporary item holder */
+   pRefer = hb_stackReturnItem();
+   pRefer->type = HB_IT_BYREF | HB_IT_EXTREF;
+   pRefer->item.asExtRef.value = ( void * ) pTSVRef;
+   pRefer->item.asExtRef.func = &s_TSVExtRef;
+
+   hb_itemMove( &pTSVRef->source, pStatic );
+   hb_itemMove( pStatic, pRefer );
+}
+
+static void hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmInitThreadStatics(%p,%hu,%p)", uiCount, pCode));
+
+   while( uiCount-- )
+   {
+      USHORT uiStatic = HB_PCODE_MKUSHORT( pCode );
+      PHB_ITEM pStatic = s_aStatics.item.asArray.value->pItems + hb_stackGetStaticsBase() + uiStatic - 1;
+      hb_vmTSVReference( pStatic );
+      pCode += 2;
+   }
+}
+#else
+static void hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmInitThreadStatics(%p,%hu,%p)", uiCount, pCode));
+
+   /* single thread VM - do nothing, use normal static variables */
+
+   HB_SYMBOL_UNUSED( uiCount );
+   HB_SYMBOL_UNUSED( pCode );
+}
+#endif
+
 static void hb_vmEndBlock( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmEndBlock()"));
@@ -5400,7 +5915,7 @@ HB_EXPORT void hb_vmPushNumber( double dNumber, int iDec )
       hb_vmPushHBLong( ( HB_LONG ) dNumber );
 
    else
-      hb_vmPushDouble( dNumber, hb_set.HB_SET_DECIMALS );
+      hb_vmPushDouble( dNumber, hb_stackSetStruct()->HB_SET_DECIMALS );
 }
 
 static int hb_vmCalcIntWidth( HB_LONG lNumber )
@@ -5518,7 +6033,7 @@ HB_EXPORT void hb_vmPushDouble( double dNumber, int iDec )
    pItem->item.asDouble.value = dNumber;
    pItem->item.asDouble.length = HB_DBL_LENGTH( dNumber );
    if( iDec == HB_DEFAULT_DECIMALS )
-      pItem->item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
+      pItem->item.asDouble.decimal = hb_stackSetStruct()->HB_SET_DECIMALS;
    else
       pItem->item.asDouble.decimal = iDec;
 }
@@ -5533,7 +6048,7 @@ static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
    pItem->item.asDouble.value = dNumber;
 
    if( iDec == HB_DEFAULT_DECIMALS )
-      pItem->item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
+      pItem->item.asDouble.decimal = hb_stackSetStruct()->HB_SET_DECIMALS;
    else
       pItem->item.asDouble.decimal = iDec;
 
@@ -5561,7 +6076,8 @@ HB_EXPORT void hb_vmPushPointer( void * pPointer )
 
    pItem->type = HB_IT_POINTER;
    pItem->item.asPointer.value = pPointer;
-   pItem->item.asPointer.collect = FALSE;
+   pItem->item.asPointer.collect =
+   pItem->item.asPointer.single = FALSE;
 }
 
 HB_EXPORT void hb_vmPushString( const char * szText, ULONG length )
@@ -6137,7 +6653,6 @@ static void hb_vmPopStatic( USHORT uiStatic )
    hb_stackDec();
 }
 
-
 /* ----------------------------------------------- */
 /*
  * Functions to mange module symbols
@@ -6207,7 +6722,7 @@ BOOL hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols,
 }
 
 static PHB_SYMBOLS hb_vmFindFreeModule( PHB_SYMB pSymbols, USHORT uiSymbols,
-                                        char * szModuleName, ULONG ulID )
+                                        const char * szModuleName, ULONG ulID )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmFindFreeModule(%p,%hu,%s,%lu)", pSymbols, uiSymbols, szModuleName, ulID));
 
@@ -6409,7 +6924,7 @@ void hb_vmExitSymbolGroup( void * hDynLib )
 }
 
 PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols,
-                                  char * szModuleName, ULONG ulID,
+                                  const char * szModuleName, ULONG ulID,
                                   BOOL fDynLib, BOOL fClone )
 {
    PHB_SYMBOLS pNewSymbols;
@@ -6559,7 +7074,7 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols,
  * module symbols initialization with extended information
  */
 HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiModuleSymbols,
-                                          char * szModuleName, ULONG ulID,
+                                          const char * szModuleName, ULONG ulID,
                                           USHORT uiPCodeVer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbolsEx(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPCodeVer));
@@ -7067,7 +7582,12 @@ void hb_vmRequestQuit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestQuit()"));
 
+   /* In MT mode EXIT functions are executed only from hb_vmQuit()
+    * when all other threads have terminated
+    */
+#if !defined( HB_MT_VM )
    hb_vmDoExitFunctions(); /* process defined EXIT functions */
+#endif
    hb_stackSetActionRequest( HB_QUIT_REQUESTED );
 }
 
@@ -7130,7 +7650,7 @@ void hb_vmRequestCancel( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestCancel()"));
 
-   if( hb_set.HB_SET_CANCEL )
+   if( hb_stackSetStruct()->HB_SET_CANCEL )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
       char file[ _POSIX_PATH_MAX + 1 ];
@@ -7198,11 +7718,37 @@ void hb_vmRequestRestore( void )
    hb_stackPopReturn();
 }
 
+PHB_CODEPAGE hb_vmCDP( void )
+{
+   return ( PHB_CODEPAGE ) hb_stackGetCDP();
+}
 
+void hb_vmSetCDP( PHB_CODEPAGE pCDP )
+{
+   hb_stackSetCDP( ( void * ) pCDP );
+}
 
+PHB_LANG hb_vmLang( void )
+{
+   return ( PHB_LANG ) hb_stackGetLang();
+}
 
-#define HB_XVM_RETURN   return ( hb_stackGetActionRequest() & \
-      ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0;
+void hb_vmSetLang( PHB_LANG pLang )
+{
+   hb_stackSetLang( ( void * ) pLang );
+}
+
+#if defined( HB_MT_VM )
+#  define HB_XVM_RETURN \
+      if( hb_vmThreadRequest ) \
+         hb_vmRequestTest(); \
+      return ( hb_stackGetActionRequest() & \
+               ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0;
+#else
+#  define HB_XVM_RETURN \
+      return ( hb_stackGetActionRequest() & \
+               ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0;
+#endif
 
 HB_EXPORT void hb_xvmExitProc( void )
 {
@@ -7268,6 +7814,10 @@ HB_EXPORT BOOL hb_xvmSeqEnd( void )
    /* 1) Discard the value returned by BREAK statement */
    hb_stackPop();
 
+#if defined( HB_MT_VM )
+   if( hb_vmThreadRequest )
+      hb_vmRequestTest();
+#endif
    if( hb_stackGetActionRequest() & ( HB_ENDPROC_REQUESTED | HB_QUIT_REQUESTED ) )
       return TRUE;
    else if( hb_stackGetActionRequest() & HB_BREAK_REQUESTED )
@@ -7277,6 +7827,10 @@ HB_EXPORT BOOL hb_xvmSeqEnd( void )
 
 HB_EXPORT BOOL hb_xvmSeqEndTest( void )
 {
+#if defined( HB_MT_VM )
+   if( hb_vmThreadRequest )
+      hb_vmRequestTest();
+#endif
    if( ( hb_stackGetActionRequest() &
        ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0 )
       return TRUE;
@@ -7316,6 +7870,10 @@ HB_EXPORT BOOL hb_xvmSeqRecover( void )
    hb_stackDec();
    /* 1) Leave the value returned from BREAK */
 
+#if defined( HB_MT_VM )
+   if( hb_vmThreadRequest )
+      hb_vmRequestTest();
+#endif
    if( hb_stackGetActionRequest() & ( HB_ENDPROC_REQUESTED | HB_QUIT_REQUESTED ) )
       return TRUE;
    else if( hb_stackGetActionRequest() & HB_BREAK_REQUESTED )
@@ -7529,6 +8087,13 @@ HB_EXPORT void hb_xvmStatics( PHB_SYMB pSymbol, USHORT uiStatics )
    hb_vmStatics( pSymbol, uiStatics );
 }
 
+HB_EXPORT void hb_xvmThreadStatics( USHORT uiStatics, const BYTE * statics )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmThreadStatics(%hu,%p)", uiStatics, statics));
+
+   hb_vmInitThreadStatics( uiStatics, statics );
+}
+
 HB_EXPORT void hb_xvmParameter( PHB_SYMB pSymbol, int iParams )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmParameter(%p,%d)", pSymbol, iParams));
@@ -7629,7 +8194,7 @@ HB_EXPORT BOOL hb_xvmPopVariable( PHB_SYMB pSymbol )
 
    /* See the note above in HB_P_POPVARIABLE */
 #if 0
-   if( pSymbol->pDynSym && pSymbol->pDynSym->hMemvar )
+   if( pSymbol->pDynSym && hb_dynsymGetMemvar( pSymbol->pDynSym ) )
       hb_memvarSetValue( pSymbol, hb_stackItemFromTop(-1) );
    else if( hb_rddFieldPut( hb_stackItemFromTop(-1), pSymbol ) == FAILURE )
 #endif
@@ -9079,24 +9644,11 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
 
       if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
       {
-         if( hb_gcRefCount( pArray->item.asArray.value ) > 1 )
-         {
-            /* this is a temporary copy of an array - we can overwrite
-             * it with no problem
-            */
-            hb_itemCopy( pArray, pArray->item.asArray.value->pItems + ulIndex - 1 );
-         }
-         else
-         {
-            /* this is a constant array { 1, 2, 3 } - we cannot use
-             * the optimization here
-            */
-            PHB_ITEM pItem = hb_stackAllocItem();
+         PHB_ITEM pItem = hb_stackAllocItem();
 
-            hb_itemMove( pItem, pArray->item.asArray.value->pItems + ulIndex - 1 );
-            hb_itemMove( pArray, pItem );
-            hb_stackDec();
-         }
+         hb_itemCopy( pItem, pArray->item.asArray.value->pItems + ulIndex - 1 );
+         hb_itemMove( pArray, pItem );
+         hb_stackDec();
       }
       else
       {
@@ -9674,6 +10226,29 @@ void hb_vmIsStaticRef( void )
    hb_gcItemRef( &s_aStatics );
 }
 
+void hb_vmIsStackRef( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmIsStackRef()"));
+
+#if defined( HB_MT_VM )
+   if( s_vmStackLst )
+   {
+      PHB_VM_STACKLST pStack = s_vmStackLst;
+      do
+      {
+         if( pStack->pStackId )
+            hb_stackIsStackRef( pStack->pStackId, hb_vmTSVarClean );
+         pStack = pStack->pNext;
+      }
+      while( pStack != s_vmStackLst );
+   }
+#else
+   hb_stackIsStackRef( hb_stackId(), NULL );
+#endif
+}
+
+/* ------------------------------------------------------------------------ */
+
 /* $Doc$
  * $FuncName$     __SETPROFILER( <lOnOff> ) --> <lOldValue>
  * $Description$  Turns on | off the profiler activity
@@ -9756,6 +10331,9 @@ void hb_vmForceLink( void )
    HB_FUNC_EXEC( SYSINIT );
 }
 
+/* Force linking default language and codepage modules */
+HB_CODEPAGE_REQUEST( HB_CODEPAGE_DEFAULT )
+HB_LANG_REQUEST( HB_LANG_DEFAULT )
 
 #undef HB_FORCE_LINK_MAIN
 

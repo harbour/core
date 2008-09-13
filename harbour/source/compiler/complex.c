@@ -99,10 +99,10 @@
 
 typedef struct
 {
-   char *   value;      /* keyword name */
-   int      minlen;     /* minimal length */
-   int      maxlen;     /* maximal length */
-   int      type;       /* terminal symbol code */
+   const char *   value;      /* keyword name */
+   int            minlen;     /* minimal length */
+   int            maxlen;     /* maximal length */
+   int            type;       /* terminal symbol code */
 }
 HB_LEX_KEY, * PHB_LEX_KEY;
 
@@ -153,6 +153,7 @@ static const HB_LEX_KEY s_keytable[] =
    { "STATIC",      4,  6, STATIC         },
    { "STEP",        4,  4, STEP           },
    { "SWITCH",      4,  6, DOSWITCH       },
+   { "THREAD",      4,  6, THREAD         },
    { "TO",          2,  2, TO             },
    { "WHILE",       4,  5, WHILE          },
    { "WITH",        4,  4, WITH           },
@@ -247,7 +248,7 @@ static int hb_comp_keywordType( PHB_PP_TOKEN pToken )
       {
          if( HB_PP_TOKEN_ALLOC( pToken->type ) && pToken->len == pKey->maxlen )
          {
-            hb_xfree( pToken->value );
+            hb_xfree( ( void * ) pToken->value );
             pToken->value = pKey->value;
             pToken->type |= HB_PP_TOKEN_STATIC;
          }
@@ -267,13 +268,13 @@ static char * hb_comp_tokenIdentifer( HB_COMP_DECL, PHB_PP_TOKEN pToken )
       pToken->type |= HB_PP_TOKEN_STATIC;
    }
 
-   return pToken->value;
+   return ( char * ) pToken->value;
 }
 
-static char * hb_comp_tokenString( YYSTYPE *yylval_ptr, HB_COMP_DECL, PHB_PP_TOKEN pToken )
+static const char * hb_comp_tokenString( YYSTYPE *yylval_ptr, HB_COMP_DECL, PHB_PP_TOKEN pToken )
 {
    yylval_ptr->valChar.length = pToken->len;
-   yylval_ptr->valChar.string = pToken->value;
+   yylval_ptr->valChar.string = ( char * ) pToken->value;
    yylval_ptr->valChar.dealloc = FALSE;
    if( HB_PP_TOKEN_ALLOC( pToken->type ) )
    {
@@ -281,7 +282,7 @@ static char * hb_comp_tokenString( YYSTYPE *yylval_ptr, HB_COMP_DECL, PHB_PP_TOK
       pToken->value = hb_compIdentifierNew( HB_COMP_PARAM, pToken->value,
                yylval_ptr->valChar.dealloc ? HB_IDENT_COPY : HB_IDENT_FREE );
       if( !yylval_ptr->valChar.dealloc )
-         yylval_ptr->valChar.string = pToken->value;
+         yylval_ptr->valChar.string = ( char * ) pToken->value;
       pToken->type |= HB_PP_TOKEN_STATIC;
    }
    return pToken->value;
@@ -679,7 +680,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
       case HB_PP_TOKEN_SEND:
          if( HB_PP_LEX_SELF( pToken ) )
          {
-            pLex->lasttok = yylval_ptr->string = "SELF";
+            pLex->lasttok = yylval_ptr->string = ( char * ) "SELF";
             pLex->iState = IDENTIFIER;
             return IDENTIFIER;
          }
@@ -1275,6 +1276,19 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                {
                   pLex->iState = OPERATOR;
                   return DECLARE_MEMBER;
+               }
+               iType = IDENTIFIER;
+               break;
+
+            case THREAD:
+               if( pLex->iState == LOOKUP && !HB_PP_TOKEN_ISEOC( pToken->pNext ) &&
+                   HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
+                   pToken->pNext->len >= 4 &&
+                   hb_strnicmp( "STATIC", pToken->pNext->value,
+                                pToken->pNext->len ) == 0 )
+               {
+                  pLex->iState = LOOKUP;
+                  return iType;
                }
                iType = IDENTIFIER;
                break;

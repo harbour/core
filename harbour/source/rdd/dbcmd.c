@@ -682,7 +682,7 @@ HB_FUNC( DBSEEK )
       if( !ISNIL( 1 ) )
       {
          PHB_ITEM pKey = hb_param( 1, HB_IT_ANY );
-         BOOL bSoftSeek = ISLOG( 2 ) ? ( BOOL ) hb_parl( 2 ) : hb_set.HB_SET_SOFTSEEK;
+         BOOL bSoftSeek = ISLOG( 2 ) ? ( BOOL ) hb_parl( 2 ) : hb_setGetSoftSeek();
          BOOL bFindLast = ISLOG( 3 ) ? hb_parl( 3 ) : FALSE, fFound = FALSE;
          if( SELF_SEEK( pArea, bSoftSeek, pKey, bFindLast ) == SUCCESS )
          {
@@ -837,7 +837,7 @@ HB_FUNC( DBUSEAREA )
 {
    hb_retl( hb_rddOpenTable( hb_parc( 3 ), hb_parc( 2 ),
          hb_parl( 1 ) ? 0 : hb_rddGetCurrentWorkAreaNumber(),
-         hb_parc( 4 ), ISLOG( 5 ) ? hb_parl( 5 ) : !hb_set.HB_SET_EXCLUSIVE,
+         hb_parc( 4 ), ISLOG( 5 ) ? hb_parl( 5 ) : !hb_setGetExclusive(),
          hb_parl( 6 ), hb_parc( 7 ), hb_parnl( 8 ), NULL, NULL ) == SUCCESS );
 }
 
@@ -1211,7 +1211,7 @@ HB_FUNC( ORDCREATE )
       dbOrderInfo.abBagName = ( BYTE * ) hb_parcx( 1 );
       dbOrderInfo.atomBagName = ( BYTE * ) hb_parcx( 2 );
       dbOrderInfo.itmOrder = NULL;
-      dbOrderInfo.fUnique = ISLOG( 5 ) ? ( BOOL ) hb_parl( 5 ) : hb_set.HB_SET_UNIQUE;
+      dbOrderInfo.fUnique = ISLOG( 5 ) ? ( BOOL ) hb_parl( 5 ) : hb_setGetUnique();
       dbOrderInfo.abExpr = hb_param( 3, HB_IT_STRING );
       if( ( ( dbOrderInfo.abBagName == NULL || strlen( ( char * ) dbOrderInfo.abBagName ) == 0 ) &&
             ( dbOrderInfo.atomBagName == NULL || strlen( ( char * ) dbOrderInfo.atomBagName ) == 0 ) ) ||

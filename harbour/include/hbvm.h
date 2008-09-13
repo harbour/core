@@ -70,7 +70,7 @@ extern HB_EXPORT void     hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo );
 /* Harbour virtual machine functions */
 extern HB_EXPORT void     hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* old module symbols initialization */
-extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, USHORT uiPcodeVer ); /* module symbols initialization with extended information */
+extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, USHORT uiPcodeVer ); /* module symbols initialization with extended information */
 
 #ifdef _HB_API_INTERNAL_
    typedef struct _HB_SYMBOLS
@@ -87,7 +87,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
       ULONG    ulID;                /* module unique identifier */
    } HB_SYMBOLS, * PHB_SYMBOLS;     /* structure to keep track of all modules symbol tables */
 
-   extern PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, BOOL fDynLib, BOOL fClone );
+   extern PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, BOOL fDynLib, BOOL fClone );
    extern void        hb_vmFreeSymbols( PHB_SYMBOLS pSymbols );
    extern void        hb_vmBeginSymbolGroup( void * hDynLib, BOOL fClone );
    extern void        hb_vmInitSymbolGroup( void * hNewDynLib, int argc, char * argv[] );
@@ -97,6 +97,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
    extern PHB_SYMB    hb_vmGetRealFuncSym( PHB_SYMB pSym );
 
    extern void        hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue );
+   extern BOOL        hb_vmMsgReference( PHB_ITEM pObject, PHB_DYNS pMessage, PHB_DYNS pAccMsg ); /* create extended message reference */
 #endif
 
 extern void hb_vmSetExceptionHandler( void );
@@ -151,7 +152,16 @@ extern HB_EXPORT void     hb_vmPushState( void ); /* push current VM state on st
 extern HB_EXPORT void     hb_vmPopState( void ); /* pop current VM state from stack */
 extern HB_EXPORT void     hb_vmPushItemRef( PHB_ITEM pItem ); /* push item reference */
 
-extern BOOL hb_vmMsgReference( PHB_ITEM pObject, PHB_DYNS pMessage, PHB_DYNS pAccMsg ); /* create extended message reference */
+extern HB_EXPORT void     hb_vmLock( void ); /* lock VM blocking GC execution by other threads */
+extern HB_EXPORT void     hb_vmUnlock( void ); /* unlock VM, allow GC execution */
+#ifdef _HB_API_INTERNAL_
+extern HB_EXPORT BOOL     hb_vmSuspendThreads( BOOL fWait ); /* (try to) stop all threads except current one */
+extern HB_EXPORT void     hb_vmResumeThreads( void ); /* unblock execution of threads stopped by hb_vmSuspendThreads() */
+#endif
+extern HB_EXPORT void     hb_vmThreadInit( void * ); /* allocate local thread HVM stack */
+extern HB_EXPORT void     hb_vmThreadQuit( void ); /* destroy local thread HVM stack */
+extern HB_EXPORT void     hb_vmThreadQuitRequest( void * ); /* send stop request to given thread */
+extern HB_EXPORT void     hb_vmWaitForThreads( void ); /* wait for all threads to terminate can be called only by main HVM thread */
 
 /* various flags for supported features */
 #define  HB_VMFLAG_HARBOUR    1     /* enable Harbour extension */

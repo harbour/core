@@ -120,6 +120,12 @@ static HB_PSIZE_FUNC( hb_p_staticname )
    return ( lPCodePos - ulStart );
 }
 
+static HB_PSIZE_FUNC( hb_p_threadstatics )
+{
+   HB_SYMBOL_UNUSED( cargo );
+   return 3 + ( ( ULONG ) HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) << 1 );
+}
+
 const BYTE hb_comp_pcode_len[] = {
    1,        /* HB_P_AND,                  */
    1,        /* HB_P_ARRAYPUSH,            */
@@ -302,7 +308,8 @@ const BYTE hb_comp_pcode_len[] = {
    3,        /* HB_P_LOCALINCPUSH          */
    3,        /* HB_P_PUSHFUNCSYM           */
    3,        /* HB_P_HASHGEN               */
-   1         /* HB_P_SEQBLOCK              */
+   1,        /* HB_P_SEQBLOCK              */
+   0         /* HB_P_THREADSTATICS         */
 };
 
 /*
@@ -492,7 +499,8 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
    NULL,                       /* HB_P_LOCALINCPUSH          */
    NULL,                       /* HB_P_PUSHFUNCSYM           */
    NULL,                       /* HB_P_HASHGEN               */
-   NULL                        /* HB_P_SEQBLOCK              */
+   NULL,                       /* HB_P_SEQBLOCK              */
+   hb_p_threadstatics          /* HB_P_THREADSTATICS         */
 };
 
 LONG hb_compPCodeSize( PFUNCTION pFunc, ULONG ulOffset )

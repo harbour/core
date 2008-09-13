@@ -1533,6 +1533,32 @@ static HB_GENC_FUNC( hb_p_staticname )
    return usLen + 5;
 }
 
+static HB_GENC_FUNC( hb_p_threadstatics )
+{
+   USHORT w;
+   ULONG ulSize, ul;
+
+   HB_GENC_LABEL();
+
+   w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+   ulSize = ( ULONG ) w << 1;
+
+   fprintf( cargo->yyc, "\t{\n\t\tstatic const BYTE statics[ %lu ] = {", ulSize );
+
+   for( ul = 0; ul < ulSize; ++ul )
+   {
+      if( ( ul & 0x0f ) == 0 )
+         fprintf( cargo->yyc, "\n\t\t\t" );
+      if( ul == ulSize - 1 )
+         fprintf( cargo->yyc, "%d", pFunc->pCode[ lPCodePos + ul ] );
+      else
+         fprintf( cargo->yyc, "%d, ", pFunc->pCode[ lPCodePos + ul ] );
+   }
+   fprintf( cargo->yyc, " };\n\t\thb_xvmThreadStatics( %hu, statics );\n\t}\n", w );
+
+   return 3 + ulSize;
+}
+
 static HB_GENC_FUNC( hb_p_swapalias )
 {
    HB_GENC_LABEL();
@@ -2176,7 +2202,8 @@ static const HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_localincpush,
    hb_p_pushfuncsym,
    hb_p_hashgen,
-   hb_p_seqblock
+   hb_p_seqblock,
+   hb_p_threadstatics
 };
 
 void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )

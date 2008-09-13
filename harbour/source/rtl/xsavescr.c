@@ -62,33 +62,39 @@
  */
 
 #include "hbapigt.h"
+#include "hbstack.h"
 
 /* NOTE: In original CA-Cl*pper 5.x these functions are written in Clipper
          [vszakats] */
 
-static SHORT s_iRow;
-static SHORT s_iCol;
-static void * s_pBuffer = NULL;
-
-void hb_conXSaveRestRelease( void )
+typedef struct
 {
-   if( s_pBuffer )
-   {
-      hb_xfree( s_pBuffer );
-      s_pBuffer = NULL;
-   }
+   SHORT    row;
+   SHORT    col;
+   void *   buffer;
+} HB_SCRDATA, * PHB_SCRDATA;
+
+static void hb_xSaveRestRelease( void * cargo )
+{
+   PHB_SCRDATA pScrData = ( PHB_SCRDATA ) cargo;
+
+   if( pScrData->buffer )
+      hb_xfree( pScrData->buffer );
 }
+
+static HB_TSD_NEW( s_scrData, sizeof( HB_SCRDATA ), NULL, hb_xSaveRestRelease );
 
 HB_FUNC( __XSAVESCREEN )
 {
+   PHB_SCRDATA pScrData = ( PHB_SCRDATA ) hb_stackGetTSD( &s_scrData );
    ULONG ulSize;
 
-   hb_gtGetPos( &s_iRow, &s_iCol );
+   hb_gtGetPos( &pScrData->row, &pScrData->col );
    hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &ulSize );
-   if( s_pBuffer )
-      hb_xfree( s_pBuffer );
-   s_pBuffer = hb_xgrab( ulSize );
-   hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), s_pBuffer );
+   if( pScrData->buffer )
+      hb_xfree( pScrData->buffer );
+   pScrData->buffer = hb_xgrab( ulSize );
+   hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pScrData->buffer );
 }
 
 /* NOTE: There's no check about the screen size on restore, so this will
@@ -98,12 +104,14 @@ HB_FUNC( __XSAVESCREEN )
 
 HB_FUNC( __XRESTSCREEN )
 {
-   if( s_pBuffer )
-   {
-      hb_gtRest( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), s_pBuffer );
-      hb_xfree( s_pBuffer );
-      s_pBuffer = NULL;
+   PHB_SCRDATA pScrData = ( PHB_SCRDATA ) hb_stackGetTSD( &s_scrData );
 
-      hb_gtSetPos( s_iRow, s_iCol );
+   if( pScrData->buffer )
+   {
+      hb_gtRest( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pScrData->buffer );
+      hb_xfree( pScrData->buffer );
+      pScrData->buffer = NULL;
+
+      hb_gtSetPos( pScrData->row, pScrData->col );
    }
 }

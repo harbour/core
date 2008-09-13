@@ -381,7 +381,7 @@ typedef struct _HB_PP_TOKEN
    struct _HB_PP_TOKEN * pNext;     /* next token pointer */
    struct _HB_PP_TOKEN * pMTokens;  /* restrict or optional marker token(s) */
 
-   char * value;                    /* token value */
+   const char * value;              /* token value */
    USHORT len;                      /* token value length */
    USHORT spaces;                   /* leading spaces for stringify */
    USHORT type;                     /* token type, see HB_PP_TOKEN_* */
@@ -515,10 +515,10 @@ HB_PP_DEFRULE, * PHB_PP_DEFRULE;
 
 typedef struct
 {
-   char *   name;       /* input name */
-   ULONG    len;        /* input name length */
-   char *   value;      /* output name */
-   USHORT   type;       /* HB_PP_TOKEN_* */
+   const char *   name;       /* input name */
+   ULONG          len;        /* input name length */
+   const char *   value;      /* output name */
+   USHORT         type;       /* HB_PP_TOKEN_* */
 }
 HB_PP_OPERATOR, * PHB_PP_OPERATOR;
 

@@ -57,6 +57,7 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbvm.h"
 
 #if !defined(HB_WINCE)
 #  include <sys/types.h>
@@ -99,7 +100,9 @@ HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
       BOOL fResult, fFree;
       struct stat64 statbuf;
       pszFileName = hb_fsNameConv( pszFileName, &fFree );
+      hb_vmUnlock();
       fResult = stat64( ( char * ) pszFileName, &statbuf ) == 0;
+      hb_vmLock();
       if( fFree )
          hb_xfree( pszFileName );
       hb_fsSetIOError( fResult, 0 );
@@ -109,7 +112,9 @@ HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
       BOOL fResult, fFree;
       struct stat statbuf;
       pszFileName = hb_fsNameConv( pszFileName, &fFree );
+      hb_vmUnlock();
       fResult = stat( ( char * ) pszFileName, &statbuf ) == 0;
+      hb_vmLock();
       if( fFree )
          hb_xfree( pszFileName );
       hb_fsSetIOError( fResult, 0 );

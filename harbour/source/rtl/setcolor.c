@@ -56,14 +56,17 @@
 
 char * hb_conSetColor( const char * szColor )
 {
+   char * szOldColor;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_conSetColor(%s)", szColor));
 
-   hb_gtGetColorStr( hb_set.HB_SET_COLOR );
+   szOldColor = hb_setGetColor();
+   hb_gtGetColorStr( szOldColor );
 
    if( szColor != ( char * ) NULL )
       hb_gtSetColorStr( szColor );
 
-   return hb_set.HB_SET_COLOR;
+   return szOldColor;
 }
 
 HB_FUNC( SETCOLOR )

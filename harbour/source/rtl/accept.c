@@ -64,6 +64,7 @@
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbapigt.h"
+#include "hbstack.h"
 #include "inkey.ch"
 
 HB_FUNC_EXTERN( QOUT );
@@ -72,11 +73,16 @@ HB_FUNC_EXTERN( QOUT );
 
 #ifdef HB_C52_UNDOC
 
-static char s_szAcceptResult[ ACCEPT_BUFFER_LEN ] = { '\0' };
+static HB_TSD_NEW( s_szAcceptResult, ACCEPT_BUFFER_LEN, NULL, NULL );
+
+static char * hb_acceptBuffer( void )
+{
+   return ( char * ) hb_stackGetTSD( &s_szAcceptResult );
+}
 
 HB_FUNC( __ACCEPTSTR )
 {
-   hb_retc( s_szAcceptResult );
+   hb_retc( hb_acceptBuffer() );
 }
 
 #endif
@@ -121,7 +127,7 @@ HB_FUNC( __ACCEPT )
    szAcceptResult[ ulLen ] = '\0';
 
 #ifdef HB_C52_UNDOC
-   hb_strncpy( s_szAcceptResult, szAcceptResult, sizeof( s_szAcceptResult ) - 1 );
+   hb_strncpy( hb_acceptBuffer(), szAcceptResult, ACCEPT_BUFFER_LEN - 1 );
 #endif
 
    hb_retc( szAcceptResult );

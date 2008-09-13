@@ -99,6 +99,7 @@ extern HB_EXPORT void   hb_xvmFrame( int iLocals, int iParams );  /* increases t
 extern HB_EXPORT void   hb_xvmVFrame( int iLocals, int iParams ); /* increases the stack pointer for the amount of locals and variable params */
 extern HB_EXPORT void   hb_xvmSFrame( PHB_SYMB pSymbol );
 extern HB_EXPORT void   hb_xvmStatics( PHB_SYMB pSymbol, USHORT uiStatics );
+extern HB_EXPORT void   hb_xvmThreadStatics( USHORT uiStatics, const BYTE * statics );
 extern HB_EXPORT void   hb_xvmParameter( PHB_SYMB pSymbol, int iParams );
 extern HB_EXPORT void   hb_xvmRetValue( void );                   /* pops the latest stack value into stack.Return */
 extern HB_EXPORT BOOL   hb_xvmDo( USHORT uiParams );

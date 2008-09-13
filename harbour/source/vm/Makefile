@@ -57,12 +57,26 @@ C_SOURCES=\
 	proc.c       \
 	pvalue.c     \
 	runner.c     \
+	set.c        \
+	thread.c     \
 	vm.c         \
 
 PRG_SOURCES=\
 	harbinit.prg \
 
 LIBNAME=hbvm
+
+ifeq ($(HB_MT),)
+ifneq ($(C_USR),$(subst -DHB_MT_VM,,$(C_USR)))
+   C_USR:=$(subst -DHB_MT_VM,,$(C_USR))
+   HB_MT=MT
+endif
+endif
+ifeq ($(HB_MT),MT)
+ifneq ($(HB_ARCHITECTURE),dos)
+   DIRS+= vmmt
+endif
+endif
 
 include $(TOP)$(ROOT)config/lib.cf
 ifneq ($(DIRS),)

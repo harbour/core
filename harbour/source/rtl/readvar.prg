@@ -53,7 +53,7 @@
 #include "common.ch"
 
 FUNCTION ReadVar( cVarName )
-   STATIC s_cVarName := ""
+   THREAD STATIC s_cVarName := ""
 
    LOCAL cOldVarName
    LOCAL oGetList

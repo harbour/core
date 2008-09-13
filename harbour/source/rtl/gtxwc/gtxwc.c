@@ -2988,7 +2988,7 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    hb_gt_xwc_SetScrBuff( wnd, XWC_DEFAULT_COLS, XWC_DEFAULT_ROWS );
    wnd->fWinResize = FALSE;
 #ifndef HB_CDP_SUPPORT_OFF
-   wnd->hostCDP = hb_cdp_page;
+   wnd->hostCDP = hb_vmCDP();
 #endif
    wnd->cursorType = SC_NORMAL;
    
@@ -3567,12 +3567,8 @@ static BOOL hb_gt_xwc_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCD
     * to make proper translation
     */
    if( !pszHostCDP || !*pszHostCDP )
-   {
-      if( hb_cdp_page )
-         pszHostCDP = hb_cdp_page->id;
-      else if( pszTermCDP && *pszTermCDP )
-         pszHostCDP = pszTermCDP;
-   }
+      pszHostCDP = hb_cdpID();
+
    if( pszHostCDP && *pszHostCDP )
    {
       PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
@@ -3607,12 +3603,8 @@ static BOOL hb_gt_xwc_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP
     * probably some others
     */
    if( !pszTermCDP || !*pszTermCDP )
-   {
-      if( hb_cdp_page )
-         pszTermCDP = hb_cdp_page->id;
-      else if( pszHostCDP && *pszHostCDP )
-         pszTermCDP = pszHostCDP;
-   }
+      pszTermCDP = hb_cdpID();
+
    if( pszTermCDP && *pszTermCDP )
    {
       PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP );

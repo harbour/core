@@ -85,7 +85,7 @@ static int hb_pp_writeTokenCount( PHB_PP_TOKEN pToken )
 }
 
 static void hb_pp_writeToken( FILE * fout, PHB_PP_TOKEN pToken,
-                              char * szName, int iToken, BOOL fLast )
+                              const char * szName, int iToken, BOOL fLast )
 {
    while( pToken )
    {
@@ -119,7 +119,7 @@ static void hb_pp_writeToken( FILE * fout, PHB_PP_TOKEN pToken,
    }
 }
 
-static void hb_pp_writeTokenList( FILE * fout, PHB_PP_TOKEN pTokenLst, char * szName )
+static void hb_pp_writeTokenList( FILE * fout, PHB_PP_TOKEN pTokenLst, const char * szName )
 {
    int iTokens;
 
@@ -133,7 +133,7 @@ static void hb_pp_writeTokenList( FILE * fout, PHB_PP_TOKEN pTokenLst, char * sz
    }
 }
 
-static int hb_pp_writeRules( FILE * fout, PHB_PP_RULE pFirst, char * szName )
+static int hb_pp_writeRules( FILE * fout, PHB_PP_RULE pFirst, const char * szName )
 {
    char szMatch[ 16 ], szResult[ 16 ];
    ULONG ulRepeatBits, ulBit;
@@ -193,7 +193,7 @@ static int hb_pp_writeRules( FILE * fout, PHB_PP_RULE pFirst, char * szName )
 }
 
 static void hb_pp_generateInitFunc( FILE * fout, int iRules,
-                                    char * szVar, char * szRule )
+                                    const char * szVar, const char * szRule )
 {
    fprintf( fout, "   hb_pp_initRules( &pState->p%s, &pState->i%s, ",
             szVar, szVar );
@@ -236,17 +236,17 @@ static void hb_pp_undefCompilerRules( PHB_PP_STATE pState )
 {
    int i;
    PHB_PP_RULE * pRulePtr, pRule;
-   char * szRules[] = { "__HARBOUR__",
-                        "__DATE__",
-                        "__TIME__",
-                        "__HB_MAIN__",
-                        "__ARCH16BIT__",
-                        "__ARCH32BIT__",
-                        "__ARCH64BIT__",
-                        "__LITTLE_ENDIAN__",
-                        "__BIG_ENDIAN__",
-                        "__PDP_ENDIAN__",
-                        NULL };
+   const char * szRules[] = { "__HARBOUR__",
+                              "__DATE__",
+                              "__TIME__",
+                              "__HB_MAIN__",
+                              "__ARCH16BIT__",
+                              "__ARCH32BIT__",
+                              "__ARCH64BIT__",
+                              "__LITTLE_ENDIAN__",
+                              "__BIG_ENDIAN__",
+                              "__PDP_ENDIAN__",
+                              NULL };
 
    for( i = 0; szRules[ i ]; ++i )
       hb_pp_delDefine( pState, szRules[ i ] );
@@ -267,7 +267,7 @@ static void hb_pp_undefCompilerRules( PHB_PP_STATE pState )
    }
 }
 
-static int hb_pp_preprocesfile( PHB_PP_STATE pState, char * szRuleFile )
+static int hb_pp_preprocesfile( PHB_PP_STATE pState, const char * szRuleFile )
 {
    int iResult = 0;
    ULONG ulLen;
@@ -691,7 +691,7 @@ int main( int argc, char * argv[] )
             PHB_FNAME pFileName;
 
             pFileName = hb_fsFNameSplit( szFile );
-            pFileName->szExtension = ".ppo";
+            pFileName->szExtension = ( char * ) ".ppo";
             hb_fsFNameMerge( szFileName, pFileName );
             hb_xfree( pFileName );
 

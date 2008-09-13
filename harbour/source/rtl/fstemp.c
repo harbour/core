@@ -55,6 +55,7 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbvm.h"
 #include "hbmath.h"
 
 #if defined( HB_OS_UNIX )
@@ -69,26 +70,26 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 {
    BOOL fResult;
 
+   hb_vmUnlock();
+
 #if defined(HB_WIN32_IO)
-
-   char cTempDir[ _POSIX_PATH_MAX + 1 ];
-
-   if( pszDir && pszDir[ 0 ] != '\0' )
    {
-      hb_strncpy( ( char * ) cTempDir, ( const char * ) pszDir, sizeof( cTempDir ) - 1 );
-   }
-   else
-   {
-      if( ! GetTempPathA( ( DWORD ) _POSIX_PATH_MAX + 1, cTempDir ) )
+      char cTempDir[ _POSIX_PATH_MAX + 1 ];
+
+      if( pszDir && pszDir[ 0 ] != '\0' )
+         hb_strncpy( ( char * ) cTempDir, ( const char * ) pszDir, sizeof( cTempDir ) - 1 );
+      else
       {
-         hb_fsSetIOError( FALSE, 0 );
-         return FALSE;
+         if( ! GetTempPathA( ( DWORD ) _POSIX_PATH_MAX + 1, cTempDir ) )
+         {
+            hb_fsSetIOError( FALSE, 0 );
+            return FALSE;
+         }
       }
+      cTempDir[ _POSIX_PATH_MAX ] = '\0';
+
+      fResult = GetTempFileNameA( ( LPCSTR ) cTempDir, pszPrefix ? ( LPCSTR ) pszPrefix : ( LPCSTR ) "hb", 0, ( LPSTR ) pszBuffer );
    }
-   cTempDir[ _POSIX_PATH_MAX ] = '\0';
-
-   fResult = GetTempFileNameA( ( LPCSTR ) cTempDir, pszPrefix ? ( LPCSTR ) pszPrefix : ( LPCSTR ) "hb", 0, ( LPSTR ) pszBuffer );
-
 #else
 
    /* TODO: Implement these: */
@@ -103,6 +104,8 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
    fResult = ( tmpnam( ( char * ) pszBuffer ) != NULL );
 
 #endif
+
+   hb_vmLock();
 
    hb_fsSetIOError( fResult, 0 );
    return fResult;
@@ -147,18 +150,20 @@ static BOOL fsGetTempDirByCase( BYTE *pszName, const char *pszTempDir )
    if( pszTempDir && *pszTempDir != '\0' )
    {
       hb_strncpy( ( char * ) pszName, ( char * ) pszTempDir, _POSIX_PATH_MAX );
-      if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
+      switch( hb_setGetDirCase() )
       {
-         hb_strLower( ( char * ) pszName, strlen( ( char * ) pszName ) );
-         fOK = strcmp( ( char * ) pszName, pszTempDir ) == 0;
+         case HB_SET_CASE_LOWER:
+            hb_strLower( ( char * ) pszName, strlen( ( char * ) pszName ) );
+            fOK = strcmp( ( char * ) pszName, pszTempDir ) == 0;
+            break;
+         case HB_SET_CASE_UPPER:
+            hb_strUpper( ( char * ) pszName, strlen( ( char * ) pszName ) );
+            fOK = strcmp( ( char * ) pszName, pszTempDir ) == 0;
+            break;
+         default:
+            fOK = TRUE;
+            break;
       }
-      else if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER )
-      {
-         hb_strUpper( ( char * ) pszName, strlen( ( char * ) pszName ) );
-         fOK = strcmp( ( char * ) pszName, pszTempDir ) == 0;
-      }
-      else
-         fOK = TRUE;
    }
 
    return fOK;
@@ -212,13 +217,15 @@ HB_EXPORT HB_FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefi
          return FS_ERROR;
 
 #if !defined(__WATCOMC__) && ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) )
-      if( hb_set.HB_SET_FILECASE != HB_SET_CASE_LOWER &&
-          hb_set.HB_SET_FILECASE != HB_SET_CASE_UPPER &&
-          hb_set.HB_SET_DIRCASE != HB_SET_CASE_LOWER &&
-          hb_set.HB_SET_DIRCASE != HB_SET_CASE_UPPER )
+      if( hb_setGetFileCase() != HB_SET_CASE_LOWER &&
+          hb_setGetFileCase() != HB_SET_CASE_UPPER &&
+          hb_setGetDirCase() != HB_SET_CASE_LOWER &&
+          hb_setGetDirCase() != HB_SET_CASE_UPPER )
       {
          hb_strncat( ( char * ) pszName, "XXXXXX", _POSIX_PATH_MAX );
+         hb_vmUnlock();
          fd = ( HB_FHANDLE ) mkstemp( ( char * ) pszName );
+         hb_vmLock();
          hb_fsSetIOError( fd != ( HB_FHANDLE ) -1, 0 );
       }
       else

@@ -74,6 +74,7 @@
 #include "hbapiitm.h"
 #include "hbapifs.h"
 #include "hbapigt.h"
+#include "hbstack.h"
 #include "hbset.h"
 #include "hb_io.h"
 
@@ -101,8 +102,18 @@ static HB_FHANDLE s_hFilenoStdin  = ( HB_FHANDLE ) 0;
 static HB_FHANDLE s_hFilenoStdout = ( HB_FHANDLE ) 1;
 static HB_FHANDLE s_hFilenoStderr = ( HB_FHANDLE ) 2;
 
-static USHORT  s_uiPRow;
-static USHORT  s_uiPCol;
+typedef struct
+{
+   USHORT   row;
+   USHORT   col;
+} HB_PRNPOS, * PHB_PRNPOS;
+
+static HB_TSD_NEW( s_prnPos, sizeof( HB_PRNPOS ), NULL, NULL );
+
+static PHB_PRNPOS hb_prnPos( void )
+{
+   return ( PHB_PRNPOS ) hb_stackGetTSD( &s_prnPos );
+}
 
 void hb_conInit( void )
 {
@@ -145,10 +156,7 @@ void hb_conInit( void )
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
    hb_fsSetDevMode( s_hFilenoStderr, FD_BINARY );
 
-   s_uiPRow = s_uiPCol = 0;
-
    hb_gtInit( s_hFilenoStdin, s_hFilenoStdout, s_hFilenoStderr );
-   hb_setkeyInit();  /* April White, May 6, 2000 */
 }
 
 void hb_conRelease( void )
@@ -164,9 +172,6 @@ void hb_conRelease( void )
     * results in some GTs, f.e. when the screen size is controlled by remote
     * user and not Harbour application (some terminal modes), [Druzus]
     */
-
-   hb_setkeyExit();  /* April White, May 6, 2000 */
-   hb_conXSaveRestRelease();
 
    hb_gtExit();
 
@@ -215,26 +220,26 @@ void hb_conOutAlt( const char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutAlt(%s, %lu)", pStr, ulLen));
 
-   if( hb_set.HB_SET_CONSOLE )
+   if( hb_setGetConsole() )
       hb_gtWriteCon( ( BYTE * ) pStr, ulLen );
 
-   if( hb_set.HB_SET_ALTERNATE && hb_set.hb_set_althan != FS_ERROR )
+   if( hb_setGetAlternate() && hb_setGetAltHan() != FS_ERROR )
    {
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
-      hb_fsWriteLarge( hb_set.hb_set_althan, ( BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hb_setGetAltHan(), ( BYTE * ) pStr, ulLen );
    }
 
-   if( hb_set.hb_set_extrahan != FS_ERROR )
+   if( hb_setGetExtraHan() != FS_ERROR )
    {
       /* Print to extra file if valid alternate file */
-      hb_fsWriteLarge( hb_set.hb_set_extrahan, ( BYTE * ) pStr, ulLen );
+      hb_fsWriteLarge( hb_setGetExtraHan(), ( BYTE * ) pStr, ulLen );
    }
 
-   if( hb_set.HB_SET_PRINTER && hb_set.hb_set_printhan != FS_ERROR )
+   if( hb_setGetPrinter() && hb_setGetPrintHan() != FS_ERROR )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
-      hb_fsWriteLarge( hb_set.hb_set_printhan, ( BYTE * ) pStr, ulLen );
-      s_uiPCol += ( USHORT ) ulLen;
+      hb_fsWriteLarge( hb_setGetPrintHan(), ( BYTE * ) pStr, ulLen );
+      hb_prnPos()->col += ( USHORT ) ulLen;
    }
 }
 
@@ -243,12 +248,12 @@ static void hb_conOutDev( const char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutDev(%s, %lu)", pStr, ulLen));
 
-   if( hb_set.hb_set_printhan != FS_ERROR &&
-       hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
+   if( hb_setGetPrintHan() != FS_ERROR &&
+       hb_stricmp( hb_setGetDevice(), "PRINTER" ) == 0 )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
-      hb_fsWriteLarge( hb_set.hb_set_printhan, ( BYTE * ) pStr, ulLen );
-      s_uiPCol += ( USHORT ) ulLen;
+      hb_fsWriteLarge( hb_setGetPrintHan(), ( BYTE * ) pStr, ulLen );
+      hb_prnPos()->col += ( USHORT ) ulLen;
    }
    else
       /* Otherwise, display to console */
@@ -337,25 +342,27 @@ HB_FUNC( QOUT )
 {
    hb_conOutAlt( s_szCrLf, s_iCrLfLen );
 
-   if( hb_set.HB_SET_PRINTER && hb_set.hb_set_printhan != FS_ERROR )
+   if( hb_setGetPrinter() && hb_setGetPrintHan() != FS_ERROR )
    {
-      BYTE buf[ 80 ];
+      BYTE buf[ 256 ];
+      PHB_PRNPOS pPrnPos = hb_prnPos();
 
-      s_uiPRow++;
-      s_uiPCol = ( USHORT ) hb_set.HB_SET_MARGIN;
-      if( s_uiPCol )
+      pPrnPos->row++;
+      pPrnPos->col = ( USHORT ) hb_setGetMargin();
+
+      if( pPrnPos->col )
       {
-         if( s_uiPCol > sizeof( buf ) )
+         if( pPrnPos->col > sizeof( buf ) )
          {
-            BYTE * pBuf = ( BYTE * ) hb_xgrab( s_uiPCol );
-            memset( pBuf, ' ', s_uiPCol );
-            hb_fsWrite( hb_set.hb_set_printhan, pBuf, s_uiPCol );
+            BYTE * pBuf = ( BYTE * ) hb_xgrab( pPrnPos->col );
+            memset( pBuf, ' ', pPrnPos->col );
+            hb_fsWrite( hb_setGetPrintHan(), pBuf, pPrnPos->col );
             hb_xfree( pBuf );
          }
          else
          {
-            memset( buf, ' ', s_uiPCol );
-            hb_fsWrite( hb_set.hb_set_printhan, buf, s_uiPCol );
+            memset( buf, ' ', pPrnPos->col );
+            hb_fsWrite( hb_setGetPrintHan(), buf, pPrnPos->col );
          }
       }
    }
@@ -365,23 +372,26 @@ HB_FUNC( QOUT )
 
 HB_FUNC( __EJECT ) /* Ejects the current page from the printer */
 {
-   if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
+   PHB_PRNPOS pPrnPos;
+
+   if( hb_setGetPrintHan() != FS_ERROR && hb_stricmp( hb_setGetDevice(), "PRINTER" ) == 0 )
    {
       static const BYTE byEop[ 4 ] = { 0x0C, 0x0D, 0x00, 0x00 }; /* Buffer is 4 bytes to make CodeGuard happy */
-      hb_fsWrite( hb_set.hb_set_printhan, byEop, 2 );
+      hb_fsWrite( hb_setGetPrintHan(), byEop, 2 );
    }
 
-   s_uiPRow = s_uiPCol = 0;
+   pPrnPos = hb_prnPos();
+   pPrnPos->row = pPrnPos->col = 0;
 }
 
 HB_FUNC( PROW ) /* Returns the current printer row position */
 {
-   hb_retni( ( int ) s_uiPRow );
+   hb_retni( ( int ) hb_prnPos()->row );
 }
 
 HB_FUNC( PCOL ) /* Returns the current printer row position */
 {
-   hb_retni( ( int ) s_uiPCol );
+   hb_retni( ( int ) hb_prnPos()->col );
 }
 
 static void hb_conDevPos( SHORT iRow, SHORT iCol )
@@ -391,24 +401,25 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
 
-   if( hb_set.hb_set_printhan != FS_ERROR &&
-       hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
+   if( hb_setGetPrintHan() != FS_ERROR &&
+       hb_stricmp( hb_setGetDevice(), "PRINTER" ) == 0 )
    {
       USHORT uiPRow = ( USHORT ) iRow;
-      USHORT uiPCol = ( USHORT ) iCol + ( USHORT ) hb_set.HB_SET_MARGIN;
+      USHORT uiPCol = ( USHORT ) iCol + ( USHORT ) hb_setGetMargin();
+      PHB_PRNPOS pPrnPos = hb_prnPos();
 
-      if( s_uiPRow != uiPRow || s_uiPCol != uiPCol )
+      if( pPrnPos->row != uiPRow || pPrnPos->col != uiPCol )
       {
          BYTE buf[ 256 ];
          int iPtr = 0;
 
-         if( s_uiPRow != uiPRow )
+         if( pPrnPos->row != uiPRow )
          {
-            if( ++s_uiPRow > uiPRow )
+            if( ++pPrnPos->row > uiPRow )
             {
                memcpy( &buf[ iPtr ], "\x0C\x0D\x00\x00", 2 );  /* Source buffer is 4 bytes to make CodeGuard happy */
                iPtr += 2;
-               s_uiPRow = 0;
+               pPrnPos->row = 0;
             }
             else
             {
@@ -416,38 +427,38 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
                iPtr += s_iCrLfLen;
             }
 
-            while( s_uiPRow < uiPRow )
+            while( pPrnPos->row < uiPRow )
             {
                if( iPtr + s_iCrLfLen > ( int ) sizeof( buf ) )
                {
-                  hb_fsWrite( hb_set.hb_set_printhan, buf, ( USHORT ) iPtr );
+                  hb_fsWrite( hb_setGetPrintHan(), buf, ( USHORT ) iPtr );
                   iPtr = 0;
                }
                memcpy( &buf[ iPtr ], s_szCrLf, s_iCrLfLen );
                iPtr += s_iCrLfLen;
-               ++s_uiPRow;
+               ++pPrnPos->row;
             }
-            s_uiPCol = 0;
+            pPrnPos->col = 0;
          }
-         else if( s_uiPCol > uiPCol )
+         else if( pPrnPos->col > uiPCol )
          {
             buf[ iPtr++ ] = '\x0D';
-            s_uiPCol = 0;
+            pPrnPos->col = 0;
          }
 
-         while( s_uiPCol < uiPCol )
+         while( pPrnPos->col < uiPCol )
          {
             if( iPtr == ( int ) sizeof( buf ) )
             {
-               hb_fsWrite( hb_set.hb_set_printhan, buf, ( USHORT ) iPtr );
+               hb_fsWrite( hb_setGetPrintHan(), buf, ( USHORT ) iPtr );
                iPtr = 0;
             }
             buf[ iPtr++ ] = ' ';
-            ++s_uiPCol;
+            ++pPrnPos->col;
          }
 
          if( iPtr )
-            hb_fsWrite( hb_set.hb_set_printhan, buf, ( SHORT ) iPtr );
+            hb_fsWrite( hb_setGetPrintHan(), buf, ( SHORT ) iPtr );
       }
    }
    else
@@ -466,8 +477,9 @@ HB_FUNC( SETPRC ) /* Sets the current printer row and column positions */
 {
    if( hb_pcount() == 2 && ISNUM( 1 ) && ISNUM( 2 ) )
    {
-      s_uiPRow = ( USHORT ) hb_parni( 1 );
-      s_uiPCol = ( USHORT ) hb_parni( 2 );
+      PHB_PRNPOS pPrnPos = hb_prnPos();
+      pPrnPos->row = ( USHORT ) hb_parni( 1 );
+      pPrnPos->col = ( USHORT ) hb_parni( 2 );
    }
 }
 

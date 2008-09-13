@@ -206,7 +206,7 @@ HB_FUNC( TRANSFORM )
          /* Support date function for strings */
          if( uiPicFlags & ( PF_DATE | PF_BRITISH ) )
          {
-            hb_dateFormat( "XXXXXXXX", szPicDate, hb_set.HB_SET_DATEFORMAT );
+            hb_dateFormat( "XXXXXXXX", szPicDate, hb_setGetDateFormat() );
             szPic = szPicDate;
             ulPicLen = strlen( szPicDate );
          }
@@ -412,7 +412,7 @@ HB_FUNC( TRANSFORM )
          /* Support date function for numbers */
          if( uiPicFlags & PF_DATE )
          {
-            hb_dateFormat( "99999999", szPicDate, hb_set.HB_SET_DATEFORMAT );
+            hb_dateFormat( "99999999", szPicDate, hb_setGetDateFormat() );
             szPic = szPicDate;
             ulPicLen = strlen( szPicDate );
          }
@@ -443,12 +443,12 @@ HB_FUNC( TRANSFORM )
          if( iWidth == 0 )                             /* Width calculated ??      */
          {
             hb_itemGetNLen( pValue, &iWidth, &iDec );
-            if( hb_set.HB_SET_FIXED )
+            if( hb_setGetFixed() )
             {
                if( HB_IS_NUMINT( pValue ) )
-                  iWidth += 2 + ( hb_set.HB_SET_DECIMALS << 1 );
+                  iWidth += 2 + ( hb_setGetDecimals() << 1 );
                else
-                  iDec = hb_set.HB_SET_DECIMALS;
+                  iDec = hb_setGetDecimals();
             }
             if( iDec )
                iWidth += iDec + 1;
@@ -658,7 +658,7 @@ HB_FUNC( TRANSFORM )
          UINT nFor;
 
          szResult = ( char * ) hb_xgrab( 13 );
-         szDateFormat = hb_set.HB_SET_DATEFORMAT;
+         szDateFormat = hb_setGetDateFormat();
 
 #ifndef HB_C52_STRICT
          if( uiPicFlags & PF_BRITISH )
@@ -671,7 +671,7 @@ HB_FUNC( TRANSFORM )
              * compatible but it tries to respect user date format
              * [druzus]
              */
-            const char * szBritish = hb_set.hb_set_century ?
+            const char * szBritish = hb_setGetCentury() ?
                                      "DDMMYYYY" : "DDMMYY";
             char cLast = 'x';
 
@@ -758,7 +758,7 @@ HB_FUNC( TRANSFORM )
 
          if( uiPicFlags & ( PF_DATE | PF_BRITISH ) )
          {
-            hb_dateFormat( "99999999", szPicDate, hb_set.HB_SET_DATEFORMAT );
+            hb_dateFormat( "99999999", szPicDate, hb_setGetDateFormat() );
             szPic = szPicDate;
             ulPicLen = strlen( szPicDate );
          }
@@ -857,11 +857,11 @@ HB_FUNC( TRANSFORM )
       {
          char * szStr;
 
-         if( HB_IS_NUMINT( pValue ) && hb_set.HB_SET_FIXED )
+         if( HB_IS_NUMINT( pValue ) && hb_setGetFixed() )
          {
             int iWidth, iDec;
             hb_itemGetNLen( pValue, &iWidth, &iDec );
-            iWidth += 2 + ( hb_set.HB_SET_DECIMALS << 1 );
+            iWidth += 2 + ( hb_setGetDecimals() << 1 );
             szStr = ( char * ) hb_xgrab( iWidth + 1 );
             hb_itemStrBuf( szStr, pValue, iWidth, iDec );
             hb_retclen_buffer( szStr, iWidth );
@@ -883,7 +883,7 @@ HB_FUNC( TRANSFORM )
          char szDate[ 9 ];
          char szResult[ 11 ];
 
-         hb_retc( hb_dateFormat( hb_itemGetDS( pValue, szDate ), szResult, hb_set.HB_SET_DATEFORMAT ) );
+         hb_retc( hb_dateFormat( hb_itemGetDS( pValue, szDate ), szResult, hb_setGetDateFormat() ) );
       }
       else if( HB_IS_LOGICAL( pValue ) )
       {

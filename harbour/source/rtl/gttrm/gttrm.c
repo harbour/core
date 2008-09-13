@@ -727,7 +727,7 @@ static void hb_gt_trm_termOutTrans( PHB_GTTRM pTerm, BYTE * pStr, int iLen, int 
          else if( pTerm->cdpHost )
             cdp = pTerm->cdpHost;
          else
-            cdp = hb_cdp_page;
+            cdp = hb_vmCDP();
       }
 
       if( cdp )
@@ -3243,7 +3243,7 @@ static BOOL hb_gt_trm_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP,
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
-      pszHostCDP = hb_cdp_page->id;
+      pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 
@@ -3287,7 +3287,7 @@ static BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
-      pszHostCDP = hb_cdp_page->id;
+      pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 

@@ -50,7 +50,7 @@
  *
  */
 
-static s_aObjects
+thread static s_aObjects
 
 function HB_SetObject( oSelf, bConstructor )
 

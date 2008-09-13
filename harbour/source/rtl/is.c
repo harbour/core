@@ -55,8 +55,6 @@
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-extern PHB_CODEPAGE hb_cdp_page;
-
 /* determines if first char of string is letter */
 
 HB_FUNC( ISALPHA )
@@ -67,14 +65,18 @@ HB_FUNC( ISALPHA )
    {
       if( isalpha( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
-#ifndef HB_CDP_SUPPORT_OFF
-      else if( hb_cdp_page->nChars && szString[0] &&
-               ( strchr( hb_cdp_page->CharsUpper,* szString ) ||
-                 strchr( hb_cdp_page->CharsLower,* szString ) ) )
-         hb_retl( TRUE );
-#endif
       else
-         hb_retl( FALSE );
+      {
+#ifndef HB_CDP_SUPPORT_OFF
+         PHB_CODEPAGE cdp = hb_vmCDP();
+         if( cdp && cdp->nChars && szString[0] &&
+             ( strchr( cdp->CharsUpper,* szString ) ||
+               strchr( cdp->CharsLower,* szString ) ) )
+            hb_retl( TRUE );
+         else
+#endif
+            hb_retl( FALSE );
+      }
    }
    else
       hb_retl( FALSE );
@@ -99,13 +101,17 @@ HB_FUNC( ISUPPER )
    {
       if( isupper( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
-#ifndef HB_CDP_SUPPORT_OFF
-      else if( hb_cdp_page->nChars && szString[0] &&
-               strchr( hb_cdp_page->CharsUpper, * szString ) )
-         hb_retl( TRUE );
-#endif
       else
-         hb_retl( FALSE );
+      {
+#ifndef HB_CDP_SUPPORT_OFF
+         PHB_CODEPAGE cdp = hb_vmCDP();
+         if( cdp && cdp->nChars && szString[0] &&
+             strchr( cdp->CharsUpper, * szString ) )
+            hb_retl( TRUE );
+         else
+#endif
+            hb_retl( FALSE );
+      }
    }
    else
       hb_retl( FALSE );
@@ -121,13 +127,17 @@ HB_FUNC( ISLOWER )
    {
       if( islower( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
-#ifndef HB_CDP_SUPPORT_OFF
-      else if( hb_cdp_page->nChars && szString[0] &&
-               strchr( hb_cdp_page->CharsLower,* szString ) )
-         hb_retl( TRUE );
-#endif
       else
-         hb_retl( FALSE );
+      {
+#ifndef HB_CDP_SUPPORT_OFF
+         PHB_CODEPAGE cdp = hb_vmCDP();
+         if( cdp && cdp->nChars && szString[0] &&
+             strchr( cdp->CharsLower,* szString ) )
+            hb_retl( TRUE );
+#endif
+         else
+            hb_retl( FALSE );
+      }
    }
    else
       hb_retl( FALSE );

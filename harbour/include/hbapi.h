@@ -237,7 +237,6 @@ struct _HB_CODEBLOCK;
 struct _HB_BASEARRAY;
 struct _HB_BASEHASH;
 struct _HB_ITEM;
-struct _HB_VALUE;
 struct _HB_EXTREF;
 
 typedef struct _HB_STACK_STATE
@@ -309,8 +308,7 @@ struct hb_struPointer
 
 struct hb_struMemvar
 {
-   struct _HB_VALUE ** itemsbase;
-   LONG value;
+   struct _HB_ITEM * value;
 };
 
 struct hb_struRefer
@@ -414,13 +412,6 @@ typedef struct _HB_CODEBLOCK
    USHORT      uiLocals;     /* number of referenced local variables */
    SHORT       dynBuffer;    /* is pcode buffer allocated dynamically, SHORT used instead of BOOL intentionally to force optimal alignment */
 } HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;
-
-typedef struct _HB_VALUE
-{
-   HB_ITEM_PTR pVarItem;
-   HB_COUNTER  counter;
-   HB_HANDLE   hPrevMemvar;
-} HB_VALUE, * PHB_VALUE, * HB_VALUE_PTR;
 
 typedef void     ( * HB_EXTREF_FUNC0 )( void * );
 typedef PHB_ITEM ( * HB_EXTREF_FUNC1 )( PHB_ITEM );
@@ -554,9 +545,8 @@ extern void *     hb_gcUnlock( void *pAlloc ); /* passed block is allowed to be 
 #ifdef _HB_API_INTERNAL_
 HB_GARBAGE_FUNC_PTR hb_gcFunc( void *pBlock );  /* return cleanup function pointer */
 extern void       hb_gcItemRef( HB_ITEM_PTR pItem ); /* checks if passed item refers passed memory block pointer */
-extern void       hb_vmIsLocalRef( void ); /* hvm.c - mark all local variables as used */
+extern void       hb_vmIsStackRef( void ); /* hvm.c - mark all local variables as used */
 extern void       hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables as used */
-extern void       hb_memvarsIsMemvarRef( void ); /* memvars.c - mark all memvar variables as used */
 extern void       hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
 
 extern void       hb_gcRefCheck( void * pBlock ); /* Check if block still cannot be access after destructor execution */
@@ -574,7 +564,7 @@ extern HB_COUNTER hb_gcRefCount( void * pAlloc );  /* return number of reference
 
 #endif /* _HB_API_INTERNAL_ */
 extern void       hb_gcCollect( void ); /* checks if a single memory block can be released */
-extern void       hb_gcCollectAll( void ); /* checks if all memory blocks can be released */
+extern void       hb_gcCollectAll( BOOL fForce ); /* checks if all memory blocks can be released */
 
 /* Extend API */
 extern HB_EXPORT char *     hb_parc( int iParam, ... );  /* retrieve a string parameter */
@@ -883,7 +873,6 @@ extern HB_EXPORT PHB_DYNS  hb_dynsymGetCase( const char * szName );    /* finds 
 extern HB_EXPORT PHB_DYNS  hb_dynsymNew( PHB_SYMB pSymbol ); /* creates a new dynamic symbol based on a local one */
 extern HB_EXPORT PHB_DYNS  hb_dynsymFind( const char * szName );   /* finds a dynamic symbol */
 extern HB_EXPORT PHB_DYNS  hb_dynsymFindName( const char * szName ); /* converts to uppercase and finds a dynamic symbol */
-extern HB_EXPORT void      hb_dynsymLog( void );             /* displays all dynamic symbols */
 extern HB_EXPORT void      hb_dynsymRelease( void );         /* releases the memory of the dynamic symbol table */
 extern HB_EXPORT void      hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo ); /* enumerates all dynamic symbols */
 extern HB_EXPORT PHB_SYMB  hb_dynsymGetSymbol( const char * szName ); /* finds and creates a dynamic symbol if not found and return pointer to its HB_SYMB structure */
@@ -891,9 +880,12 @@ extern HB_EXPORT PHB_SYMB  hb_dynsymFindSymbol( const char * szName ); /* finds 
 extern HB_EXPORT PHB_SYMB  hb_dynsymSymbol( PHB_DYNS pDynSym );
 extern HB_EXPORT const char * hb_dynsymName( PHB_DYNS pDynSym ); /* return dynamic symbol name */
 extern HB_EXPORT BOOL      hb_dynsymIsFunction( PHB_DYNS pDynSym );
-extern HB_EXPORT HB_HANDLE hb_dynsymMemvarHandle( PHB_DYNS pDynSym ); /* return memvar handle number bound with given dynamic symbol */
 extern HB_EXPORT int       hb_dynsymAreaHandle( PHB_DYNS pDynSym ); /* return work area number bound with given dynamic symbol */
 extern HB_EXPORT void      hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea ); /* set work area number for a given dynamic symbol */
+#ifdef _HB_API_INTERNAL_
+extern           PHB_ITEM  hb_dynsymGetMemvar( PHB_DYNS pDynSym ); /* return memvar handle number bound with given dynamic symbol */
+extern           void      hb_dynsymSetMemvar( PHB_DYNS pDynSym, PHB_ITEM pMemvar ); /* set memvar handle for a given dynamic symbol */
+#endif
 
 /* Symbol management */
 extern HB_EXPORT PHB_SYMB  hb_symbolNew( const char * szName ); /* create a new symbol */
@@ -921,9 +913,7 @@ extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, LONG iItem
 extern void             hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */
 
 /* memvars subsystem */
-extern void       hb_memvarsInit( void ); /* initialize the memvar API system */
 extern void       hb_memvarsClear( void ); /* clear all PUBLIC and PRIVATE variables */
-extern void       hb_memvarsFree( void ); /* release the memvar API system */
 extern void       hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); /* copy an item into a symbol */
 extern ERRCODE    hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
 extern void       hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
@@ -936,13 +926,15 @@ extern char *     hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
 extern void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );
 extern int        hb_memvarScope( char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
 extern PHB_ITEM   hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
+extern PHB_ITEM   hb_memvarGetValueBySym( PHB_DYNS pDynSym );
 #ifdef _HB_API_INTERNAL_
-extern void       hb_memvarValueIncRef( HB_HANDLE hValue ); /* increase the reference count of a global value */
-extern void       hb_memvarValueDecRef( HB_HANDLE hValue ); /* decrease the reference count of a global value */
+extern void       hb_memvarValueIncRef( PHB_ITEM pValue ); /* increase the reference count of a global value */
+extern void       hb_memvarValueDecRef( PHB_ITEM pValue ); /* decrease the reference count of a global value */
 extern PHB_ITEM   hb_memvarGetItem( PHB_SYMB pMemvarSymb );
-#endif
-extern HB_HANDLE  hb_memvarGetVarHandle( char *szName );
-extern PHB_ITEM   hb_memvarGetValueByHandle( HB_HANDLE hMemvar );
+#if defined( HB_API_MACROS )
+#  define hb_memvarValueIncRef( p )       hb_xRefInc( p )
+#endif /* HB_API_MACROS */
+#endif /* _HB_API_INTERNAL_ */
 
 /* console I/O subsystem */
 extern void     hb_conInit( void ); /* initialize the console API system */
@@ -953,7 +945,6 @@ extern void     hb_conOutErr( const char * pStr, ULONG ulLen ); /* output an str
 extern void     hb_conOutAlt( const char * pStr, ULONG ulLen ); /* output an string to the screen and/or printer and/or alternate */
 extern USHORT   hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor ); /* retrieve and optionally set cursor shape */
 extern char *   hb_conSetColor( const char * szColor ); /* retrieve and optionally set console color */
-extern void     hb_conXSaveRestRelease( void ); /* release the save/restore API */
 
 /* compiler and macro compiler */
 extern char *   hb_compReservedName( char * szName ); /* determines if a string contains a reserve word */
@@ -989,7 +980,6 @@ extern void   hb_releaseCPU( void );
 extern void   hb_idleState( void ); /* services a single idle state */
 extern void   hb_idleReset( void ); /* services a single idle state */
 extern void   hb_idleSleep( double dSeconds ); /* sleep for a given time serving idle task */
-extern void   hb_idleShutDown( void ); /* closes all background tasks */
 
 /* misc */
 extern char * hb_verPlatform( void );  /* retrieves a newly allocated buffer containing platform version */

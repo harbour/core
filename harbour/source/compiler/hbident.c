@@ -35,9 +35,9 @@
 
 /* create a new identifier or return the existing one 
 */
-char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, int iType )
+char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType )
 {
-   char * szIdent;
+   const char * szIdent;
 
    szIdent = ( char * ) hb_hashTableFind( HB_COMP_PARAM->pIdentifiers,
                                           ( void * ) szName );
@@ -56,16 +56,16 @@ char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, int iType )
                        ( void * ) szIdent, ( void * ) szIdent );
    }
    else if( iType == HB_IDENT_FREE )
-      hb_xfree( szName );
+      hb_xfree( ( void * ) szName );
 
-   return szIdent;
+   return ( char * )  szIdent;
 }
 
 /* returns a hash key */
 static HB_HASH_FUNC( hb_comp_IdentKey )    /* ULONG func (void *Value, void *Cargo) */
 {
    ULONG ulSum = 0;
-   char *szName = ( char * )Value;
+   const char *szName = ( char * )Value;
    
    while( *szName )
      ulSum += *szName++;

@@ -663,8 +663,8 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
             /* initialize conversion tables */
             hb_sln_colorTrans();
-            hb_sln_setCharTrans( hb_cdp_page, NULL, TRUE );
-            hb_sln_setKeyTrans( hb_cdp_page, NULL );
+            hb_sln_setCharTrans( hb_vmCDP(), NULL, TRUE );
+            hb_sln_setKeyTrans( hb_vmCDP(), NULL );
 
             /* ensure we are in a normal chars set */
             SLtt_set_alt_char_set( 0 );
@@ -935,7 +935,7 @@ static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCD
    if ( pszHostCDP && *pszHostCDP )
       cdpHost = hb_cdpFind( pszHostCDP );
    if ( ! cdpHost )
-      cdpHost = hb_cdp_page;
+      cdpHost = hb_vmCDP();
 
    if ( pszTermCDP && *pszTermCDP )
       cdpTerm = hb_cdpFind( pszTermCDP );
@@ -959,7 +959,7 @@ static BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP
    if ( pszHostCDP && *pszHostCDP )
       cdpHost = hb_cdpFind( pszHostCDP );
    if ( ! cdpHost )
-      cdpHost = hb_cdp_page;
+      cdpHost = hb_vmCDP();
 
    if ( pszTermCDP && *pszTermCDP )
       cdpTerm = hb_cdpFind( pszTermCDP );

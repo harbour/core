@@ -77,9 +77,11 @@
 #include <oleauto.h>
 #include <olectl.h>
 #include <commdlg.h>
+/*
 #if defined(__MINGW32__)
 #   include <comctl32.h>
 #endif
+*/
 #include <shlobj.h>
 
 #include <time.h>

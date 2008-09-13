@@ -60,18 +60,20 @@
 /* converts szText to lower case. Does not create a new string! */
 char * hb_strLower( char * szText, ULONG ulLen )
 {
-   ULONG i;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_strLower(%s, %lu)", szText, ulLen));
 
+   {
+      ULONG i;
 #ifndef HB_CDP_SUPPORT_OFF
-   if( hb_cdp_page->nChars )
-      for( i = 0; i < ulLen; i++ )
-         szText[ i ] = ( char ) hb_cdp_page->s_lower[ ( UCHAR ) szText[ i ] ];
-   else
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp && cdp->nChars )
+         for( i = 0; i < ulLen; i++ )
+            szText[ i ] = ( char ) cdp->s_lower[ ( UCHAR ) szText[ i ] ];
+      else
 #endif
-      for( i = 0; i < ulLen; i++ )
-         szText[ i ] = ( char ) tolower( ( UCHAR ) szText[ i ] );
+         for( i = 0; i < ulLen; i++ )
+            szText[ i ] = ( char ) tolower( ( UCHAR ) szText[ i ] );
+   }
 
    return szText;
 }
@@ -79,18 +81,21 @@ char * hb_strLower( char * szText, ULONG ulLen )
 /* converts szText to upper case. Does not create a new string! */
 char * hb_strUpper( char * szText, ULONG ulLen )
 {
-   ULONG i;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strUpper(%s, %lu)", szText, ulLen));
 
+   {
+      ULONG i;
 #ifndef HB_CDP_SUPPORT_OFF
-   if( hb_cdp_page->nChars )
-      for( i = 0; i < ulLen; i++ )
-         szText[ i ] = ( char ) hb_cdp_page->s_upper[ ( UCHAR ) szText[ i ] ];
-   else
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp && cdp->nChars )
+         for( i = 0; i < ulLen; i++ )
+            szText[ i ] = ( char ) cdp->s_upper[ ( UCHAR ) szText[ i ] ];
+      else
 #endif
-      for( i = 0; i < ulLen; i++ )
-         szText[ i ] = ( char ) toupper( ( UCHAR ) szText[ i ] );
+         for( i = 0; i < ulLen; i++ )
+            szText[ i ] = ( char ) toupper( ( UCHAR ) szText[ i ] );
+   }
 
    return szText;
 }
@@ -99,8 +104,9 @@ char * hb_strUpper( char * szText, ULONG ulLen )
 int hb_charUpper( int iChar )
 {
 #ifndef HB_CDP_SUPPORT_OFF
-   if( hb_cdp_page->nChars )
-      return (unsigned char) hb_cdp_page->s_upper[ (unsigned char) iChar ];
+   PHB_CODEPAGE cdp = hb_vmCDP();
+   if( cdp && cdp->nChars )
+      return (unsigned char) cdp->s_upper[ (unsigned char) iChar ];
    else
 #endif
       return toupper( (unsigned char) iChar );
@@ -110,8 +116,9 @@ int hb_charUpper( int iChar )
 int hb_charLower( int iChar )
 {
 #ifndef HB_CDP_SUPPORT_OFF
-   if( hb_cdp_page->nChars )
-      return (unsigned char) hb_cdp_page->s_lower[ (unsigned char) iChar ];
+   PHB_CODEPAGE cdp = hb_vmCDP();
+   if( cdp && cdp->nChars )
+      return (unsigned char) cdp->s_lower[ (unsigned char) iChar ];
    else
 #endif
       return tolower( (unsigned char) iChar );

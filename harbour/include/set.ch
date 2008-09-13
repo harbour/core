@@ -128,6 +128,7 @@
 #define _SET_TRIMFILENAME     111 /* Harbour extension */
 #define _SET_HBOUTLOG         112 /* Harbour extension */
 #define _SET_HBOUTLOGINFO     113 /* Harbour extension */
+#define _SET_CODEPAGE         114 /* Harbour extension */
 
 #define HB_SET_BASE           100
 #define HB_SET_COUNT          14

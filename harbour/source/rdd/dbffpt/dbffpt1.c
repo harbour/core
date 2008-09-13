@@ -1367,7 +1367,7 @@ static ULONG hb_fptStoreSMTItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
          {
             memcpy( *bBufPtr, hb_itemGetCPtr( pItem ), ulLen );
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( ( char *) *bBufPtr, hb_cdp_page, pArea->cdPage, ulLen );
+            hb_cdpnTranslate( ( char *) *bBufPtr, hb_vmCDP(), pArea->cdPage, ulLen );
 #endif
             *bBufPtr += ulLen;
          }
@@ -1454,7 +1454,7 @@ static ERRCODE hb_fptReadRawSMTItem( FPTAREAP pArea, PHB_ITEM pItem )
             return EDBF_READ;
          }
 #ifndef HB_CDP_SUPPORT_OFF
-         hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_cdp_page, ulLen );
+         hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_vmCDP(), ulLen );
 #endif
          hb_itemPutCLPtr( pItem, ( char *) pBuffer, ulLen );
          break;
@@ -1550,7 +1550,7 @@ static ERRCODE hb_fptReadSMTItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * bBuf
             else
             {
 #ifndef HB_CDP_SUPPORT_OFF
-               hb_cdpnTranslate( ( char *) (*pbMemoBuf), pArea->cdPage, hb_cdp_page, ulLen );
+               hb_cdpnTranslate( ( char *) (*pbMemoBuf), pArea->cdPage, hb_vmCDP(), ulLen );
 #endif
                hb_itemPutCL( pItem, ( char *) (*pbMemoBuf), ulLen );
                *pbMemoBuf += ulLen;
@@ -1674,7 +1674,6 @@ static ULONG hb_fptStoreSixItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
    LONG lVal;
    double dVal;
    int iWidth, iDec;
-   PHB_ITEM pTmpItem;
 
    memset( *bBufPtr, '\0', SIX_ITEM_BUFSIZE );
    ulSize = SIX_ITEM_BUFSIZE;
@@ -1692,8 +1691,7 @@ static ULONG hb_fptStoreSixItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
          *bBufPtr += SIX_ITEM_BUFSIZE;
          for( i = 1; i <= ulLen; i++ )
          {
-            pTmpItem = hb_arrayGetItemPtr( pItem, i );
-            ulSize += hb_fptStoreSixItem( pArea, pTmpItem, bBufPtr );
+            ulSize += hb_fptStoreSixItem( pArea, hb_arrayGetItemPtr( pItem, i ), bBufPtr );
          }
          break;
 
@@ -1757,7 +1755,7 @@ static ULONG hb_fptStoreSixItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
          {
             memcpy( *bBufPtr, hb_itemGetCPtr( pItem ), ulLen );
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( ( char *) *bBufPtr, hb_cdp_page, pArea->cdPage, ulLen );
+            hb_cdpnTranslate( ( char *) *bBufPtr, hb_vmCDP(), pArea->cdPage, ulLen );
 #endif
             *bBufPtr += ulLen;
          }
@@ -1813,7 +1811,7 @@ static ERRCODE hb_fptReadSixItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * bBuf
             if( bBufEnd - (*pbMemoBuf) >= ( LONG ) ulLen )
             {
 #ifndef HB_CDP_SUPPORT_OFF
-               hb_cdpnTranslate( ( char *) (*pbMemoBuf), pArea->cdPage, hb_cdp_page, ulLen );
+               hb_cdpnTranslate( ( char *) (*pbMemoBuf), pArea->cdPage, hb_vmCDP(), ulLen );
 #endif
                hb_itemPutCL( pItem, ( char *) (*pbMemoBuf), ulLen );
             }
@@ -1950,7 +1948,7 @@ static void hb_fptStoreFlexItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
             *bBufPtr += 2;
             memcpy( *bBufPtr, hb_itemGetCPtr( pItem ), ulLen );
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( ( char *) *bBufPtr, hb_cdp_page, pArea->cdPage, ulLen );
+            hb_cdpnTranslate( ( char *) *bBufPtr, hb_vmCDP(), pArea->cdPage, ulLen );
 #endif
             *bBufPtr += ulLen;
          }
@@ -2350,7 +2348,7 @@ static ERRCODE hb_fptReadFlexItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * bBu
             if( bBufEnd - (*pbMemoBuf) >= ( LONG ) ulLen )
             {
 #ifndef HB_CDP_SUPPORT_OFF
-               hb_cdpnTranslate( ( char *) *pbMemoBuf, pArea->cdPage, hb_cdp_page, ulLen );
+               hb_cdpnTranslate( ( char *) *pbMemoBuf, pArea->cdPage, hb_vmCDP(), ulLen );
 #endif
                hb_itemPutCL( pItem, ( char *) *pbMemoBuf, ulLen );
                *pbMemoBuf += ulLen;
@@ -2648,7 +2646,7 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
       else if( pArea->bMemoType == DB_MEMO_DBT )
       {
 #ifndef HB_CDP_SUPPORT_OFF
-         hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_cdp_page, ulSize );
+         hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_vmCDP(), ulSize );
 #endif
          pBuffer[ ulSize ] = '\0';
          hb_itemPutCLPtr( pItem, ( char * ) pBuffer, ulSize );
@@ -2660,7 +2658,7 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
          if( ulType == SMT_IT_CHAR )
          {
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_cdp_page, ulSize );
+            hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_vmCDP(), ulSize );
 #endif
             pBuffer[ ulSize ] = '\0';
             hb_itemPutCLPtr( pItem, ( char * ) pBuffer, ulSize );
@@ -2740,7 +2738,7 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
                break;
             case FPTIT_TEXT:
 #ifndef HB_CDP_SUPPORT_OFF
-               hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_cdp_page, ulSize );
+               hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_vmCDP(), ulSize );
 #endif
                pBuffer[ ulSize ] = '\0';
                hb_itemPutCLPtr( pItem, ( char * ) pBuffer, ulSize );
@@ -2919,11 +2917,11 @@ static ERRCODE hb_fptPutMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
       ulSize = hb_itemGetCLen( pItem );
       bBufPtr = ( BYTE *) hb_itemGetCPtr( pItem );
 #ifndef HB_CDP_SUPPORT_OFF
-      if( ulSize > 0 && pArea->cdPage != hb_cdp_page )
+      if( ulSize > 0 && pArea->cdPage != hb_vmCDP() )
       {
          bBufAlloc = ( BYTE * ) hb_xgrab( ulSize );
          memcpy( bBufAlloc, bBufPtr, ulSize );
-         hb_cdpnTranslate( ( char *) bBufAlloc, hb_cdp_page, pArea->cdPage, ulSize );
+         hb_cdpnTranslate( ( char *) bBufAlloc, hb_vmCDP(), pArea->cdPage, ulSize );
          bBufPtr = bBufAlloc;
       }
       if( pArea->bMemoType == DB_MEMO_SMT )
@@ -3259,7 +3257,7 @@ static ERRCODE hb_fptGetVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             {
                pString[ uiType ] = '\0';
 #ifndef HB_CDP_SUPPORT_OFF
-               hb_cdpnTranslate( pString, pArea->cdPage, hb_cdp_page, uiType );
+               hb_cdpnTranslate( pString, pArea->cdPage, hb_vmCDP(), uiType );
 #endif
                if( hFile != FS_ERROR )
                {
@@ -3602,7 +3600,7 @@ static ERRCODE hb_fptPutVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             pAlloc = ( BYTE * ) hb_xgrab( uiType + 1 );
             memcpy( pAlloc, hb_itemGetCPtr( pItem ), uiType );
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( ( char * ) pAlloc, hb_cdp_page, pArea->cdPage, uiType );
+            hb_cdpnTranslate( ( char * ) pAlloc, hb_vmCDP(), pArea->cdPage, uiType );
 #endif
             if( uiType <= pField->uiLen - 2 )
             {
@@ -4647,11 +4645,13 @@ static ERRCODE hb_fptInfo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          else
          {
             LPDBFDATA pData = ( LPDBFDATA ) SELF_RDDNODE( pArea )->lpvCargo;
+            char * szMFileExt;
             if( pData->szMemoExt[ 0 ] )
                hb_itemPutC( pItem, pData->szMemoExt );
             else if( pArea->bMemoType == DB_MEMO_FPT &&
-                     hb_set.HB_SET_MFILEEXT && hb_set.HB_SET_MFILEEXT[ 0 ] )
-               hb_itemPutC( pItem, hb_set.HB_SET_MFILEEXT );
+                     ( szMFileExt = hb_setGetMFileExt() ) != NULL &&
+                     *szMFileExt )
+               hb_itemPutC( pItem, szMFileExt );
             else
             {
                char * szExt = hb_memoDefaultFileExt( pArea->bMemoType, pArea->rddID );
@@ -4952,7 +4952,7 @@ static ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
    {
       case RDDI_MEMOEXT:
       {
-         char * szNew = hb_itemGetCPtr( pItem );
+         char * szNew = hb_itemGetCPtr( pItem ), *szMFileExt;
 
          if( szNew && szNew[0] == '.' && szNew[1] )
             szNew = hb_strdup( szNew );
@@ -4962,8 +4962,9 @@ static ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
          if( pData->szMemoExt[ 0 ] )
             hb_itemPutC( pItem, pData->szMemoExt );
          else if( pData->bMemoType == DB_MEMO_FPT && pRDD->rddID != s_uiRddIdBLOB &&
-                  hb_set.HB_SET_MFILEEXT && hb_set.HB_SET_MFILEEXT[ 0 ] )
-            hb_itemPutC( pItem, hb_set.HB_SET_MFILEEXT );
+                  ( szMFileExt = hb_setGetMFileExt() ) != NULL &&
+                  *szMFileExt )
+            hb_itemPutC( pItem, szMFileExt );
          else
             hb_itemPutC( pItem, hb_memoDefaultFileExt( pData->bMemoType, pRDD->rddID ) );
 
@@ -4976,12 +4977,12 @@ static ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
       }
       case RDDI_MEMOBLOCKSIZE:
       {
-         int iSize = hb_itemGetNI( pItem );
+         int iSize = hb_itemGetNI( pItem ), iOldSize;
 
          if( pData->uiMemoBlockSize )
             hb_itemPutNI( pItem, pData->uiMemoBlockSize );
-         else if( hb_set.HB_SET_MBLOCKSIZE > 0 && hb_set.HB_SET_MBLOCKSIZE <= 0xFFFF )
-            hb_itemPutNI( pItem, hb_set.HB_SET_MBLOCKSIZE );
+         else if( ( iOldSize = hb_setGetMBlockSize() ) > 0 && iOldSize <= 0xFFFF )
+            hb_itemPutNI( pItem, iOldSize );
          else if( pData->bMemoType == DB_MEMO_DBT )
             hb_itemPutNI( pItem, DBT_DEFBLOCKSIZE );
          else if( pData->bMemoType == DB_MEMO_SMT )

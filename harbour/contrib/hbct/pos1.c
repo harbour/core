@@ -61,13 +61,15 @@
 
 #ifndef HB_CDP_SUPPORT_OFF
 #   include "hbapicdp.h"
-#   define ISUPPER(c)    ( isupper( ( UCHAR ) c ) || ( hb_cdp_page->nChars && strchr( hb_cdp_page->CharsUpper, ( UCHAR ) c ) != NULL ) )
-#   define ISLOWER(c)    ( islower( ( UCHAR ) c ) || ( hb_cdp_page->nChars && strchr( hb_cdp_page->CharsLower, ( UCHAR ) c ) != NULL ) )
-#   define ISALPHA(c)    ( isalpha( ( UCHAR ) c ) || ( hb_cdp_page->nChars && ( strchr( hb_cdp_page->CharsUpper, ( UCHAR ) c ) != NULL || strchr( hb_cdp_page->CharsLower, c ) != NULL ) ) )
+#   define ISUPPER(c)    ( isupper( ( UCHAR ) c ) || ( cdp->nChars && strchr( cdp->CharsUpper, ( UCHAR ) c ) != NULL ) )
+#   define ISLOWER(c)    ( islower( ( UCHAR ) c ) || ( cdp->nChars && strchr( cdp->CharsLower, ( UCHAR ) c ) != NULL ) )
+#   define ISALPHA(c)    ( isalpha( ( UCHAR ) c ) || ( cdp->nChars && ( strchr( cdp->CharsUpper, ( UCHAR ) c ) != NULL || strchr( cdp->CharsLower, c ) != NULL ) ) )
+#   define HB_CDP_STUB   PHB_CODEPAGE cdp = hb_vmCDP();
 #else
 #   define ISUPPER(c)    isupper( ( UCHAR ) c )
 #   define ISLOWER(c)    islower( ( UCHAR ) c )
 #   define ISALPHA(c)    isalpha( ( UCHAR ) c )
+#   define HB_CDP_STUB
 #endif
 
 /* defines */
@@ -85,6 +87,7 @@ static void do_pos1( int iSwitch )
            ISCHAR( 2 ) &&                 /* .. string as 2nd .. */
            ISCHAR( 3 ) ) ) )              /* .. and 3rd param */
    {
+      HB_CDP_STUB
       unsigned char *pcString;
       size_t sStrLen;
       unsigned char *puc, ucChar1 = ' ', ucChar2 = ' ';

@@ -2805,7 +2805,7 @@ static BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP,
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP || !*pszHostCDP )
    {
-      pszHostCDP = hb_cdp_page->id;
+      pszHostCDP = hb_cdpID();
       if ( !pszHostCDP )
          pszHostCDP = pszTermCDP;
    }
@@ -2854,7 +2854,7 @@ static BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP || !*pszHostCDP )
    {
-      pszHostCDP = hb_cdp_page->id;
+      pszHostCDP = hb_cdpID();
    }
 
    if( pszTermCDP && pszHostCDP && *pszTermCDP && *pszHostCDP )

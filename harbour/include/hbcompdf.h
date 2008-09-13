@@ -102,6 +102,7 @@ typedef struct _VAR
    char *    szAlias;              /* variable alias namespace */
    int       iUsed;                /* number of times used */
    int       iDeclLine;            /* declaration line number */
+   USHORT    uiFlags;              /* optional falgs, f.e. THREAD STATIC */
    BYTE      cType;                /* optional strong typing */
    PCOMCLASS pClass;
    struct _VAR * pNext;            /* pointer to next defined variable */
@@ -584,7 +585,7 @@ typedef struct _HB_COMP_LEX
    PHB_PP_STATE   pPP;
    int            iState;
    BOOL           fEol;
-   char *         lasttok;
+   const char *   lasttok;
 }
 HB_COMP_LEX, * PHB_COMP_LEX;
 

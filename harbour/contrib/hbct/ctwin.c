@@ -1691,7 +1691,10 @@ BOOL hb_ctwInit( void )
    PHB_GT pGT = hb_gt_Base();
    BOOL fResult = FALSE;
    if( pGT )
+   {
       fResult = hb_ctw_Init( pGT );
+      hb_gt_BaseFree( pGT );
+   }
    return fResult;
 }
 
@@ -1700,7 +1703,10 @@ int  hb_ctwSetShadowAttr( int iAttr )
    PHB_GT pGT = hb_gt_Base();
    int iResult = -1;
    if( pGT )
+   {
       iResult = hb_ctw_SetShadowAttr( pGT, iAttr );
+      hb_gt_BaseFree( pGT );
+   }
    return iResult;
 }
 
@@ -1709,7 +1715,10 @@ int  hb_ctwSetMoveMode( int iMode )
    PHB_GT pGT = hb_gt_Base();
    int iResult = -1;
    if( pGT )
+   {
       iResult = hb_ctw_SetMoveMode( pGT, iMode );
+      hb_gt_BaseFree( pGT );
+   }
    return iResult;
 }
 
@@ -1718,7 +1727,10 @@ int  hb_ctwSetMoveStep( int iVertical, int iHorizontal )
    PHB_GT pGT = hb_gt_Base();
    int iResult = -1;
    if( pGT )
+   {
       iResult = hb_ctw_SetMoveStep( pGT, iVertical, iHorizontal );
+      hb_gt_BaseFree( pGT );
+   }
    return iResult;
 }
 
@@ -1730,6 +1742,7 @@ int  hb_ctwSetWindowBoard( int iTop, int iLeft, int iBottom, int iRight )
    {
       iResult = hb_ctw_SetWindowBoard( pGT, iTop, iLeft, iBottom, iRight );
       HB_GTSELF_FLUSH( pGT );
+      hb_gt_BaseFree( pGT );
    }
    return iResult;
 }
@@ -1739,7 +1752,10 @@ int  hb_ctwSetBorderMode( int iTop, int iLeft, int iBottom, int iRight )
    PHB_GT pGT = hb_gt_Base();
    int iResult = -1;
    if( pGT )
+   {
       iResult = hb_ctw_SetBorderMode( pGT, iTop, iLeft, iBottom, iRight );
+      hb_gt_BaseFree( pGT );
+   }
    return iResult;
 }
 
@@ -1751,6 +1767,7 @@ int  hb_ctwCreateWindow( int iTop, int iLeft, int iBottom, int iRight, BOOL fCle
    {
       iResult = hb_ctw_CreateWindow( pGT, iTop, iLeft, iBottom, iRight, fClear, iColor );
       HB_GTSELF_FLUSH( pGT );
+      hb_gt_BaseFree( pGT );
    }
    return iResult;
 }
@@ -1763,6 +1780,7 @@ int  hb_ctwCloseAllWindows( void )
    {
       iResult = hb_ctw_CloseAllWindows( pGT );
       HB_GTSELF_FLUSH( pGT );
+      hb_gt_BaseFree( pGT );
    }
    return iResult;
 }
@@ -1775,6 +1793,7 @@ int  hb_ctwCloseWindow( int iWindow )
    {
       iResult = hb_ctw_CloseWindow( pGT, iWindow );
       HB_GTSELF_FLUSH( pGT );
+      hb_gt_BaseFree( pGT );
    }
    return iResult;
 }
@@ -1784,7 +1803,10 @@ int  hb_ctwCurrentWindow( void )
    PHB_GT pGT = hb_gt_Base();
    int iResult = 0;
    if( pGT )
+   {
       iResult = hb_ctw_CurrentWindow( pGT );
+      hb_gt_BaseFree( pGT );
+   }
    return iResult;
 }
 
@@ -1796,6 +1818,7 @@ int  hb_ctwSelectWindow( int iWindow )
    {
       iResult = hb_ctw_SelectWindow( pGT, iWindow );
       HB_GTSELF_FLUSH( pGT );
+      hb_gt_BaseFree( pGT );
    }
    return iResult;
 }
@@ -1805,7 +1828,10 @@ int  hb_ctwMaxWindow( void )
    PHB_GT pGT = hb_gt_Base();
    int iResult = 0;
    if( pGT )
+   {
       iResult = hb_ctw_MaxWindow( pGT );
+      hb_gt_BaseFree( pGT );
+   }
    return iResult;
 }
 
@@ -1814,7 +1840,10 @@ int  hb_ctwChangeMargins( int iWindow, int iTop, int iLeft, int iBottom, int iRi
    PHB_GT pGT = hb_gt_Base();
    int iResult = -1;
    if( pGT )
+   {
       iResult = hb_ctw_ChangeMargins( pGT, iWindow, iTop, iLeft, iBottom, iRight );
+      hb_gt_BaseFree( pGT );
+   }
    return iResult;
 }
 
@@ -1823,7 +1852,10 @@ int  hb_ctwGetWindowCords( int iWindow, BOOL fCenter, int * piTop, int * piLeft,
    PHB_GT pGT = hb_gt_Base();
    int iResult = -1;
    if( pGT )
+   {
       iResult = hb_ctw_GetWindowCords( pGT, iWindow, fCenter, piTop, piLeft, piBottom, piRight );
+      hb_gt_BaseFree( pGT );
+   }
    return iResult;
 }
 
@@ -1832,7 +1864,10 @@ int  hb_ctwGetFormatCords( int iWindow, BOOL fRelative, int * piTop, int * piLef
    PHB_GT pGT = hb_gt_Base();
    int iResult = -1;
    if( pGT )
+   {
       iResult = hb_ctw_GetFormatCords( pGT, iWindow, fRelative, piTop, piLeft, piBottom, piRight );
+      hb_gt_BaseFree( pGT );
+   }
    return iResult;
 }
 
@@ -1841,7 +1876,10 @@ int  hb_ctwMoveWindow( int iWindow, int iRow, int iCol )
    PHB_GT pGT = hb_gt_Base();
    int iResult = -1;
    if( pGT )
+   {
       iResult = hb_ctw_MoveWindow( pGT, iWindow, iRow, iCol );
+      hb_gt_BaseFree( pGT );
+   }
    return iResult;
 }
 
@@ -1850,7 +1888,10 @@ int  hb_ctwCenterWindow( int iWindow, BOOL fCenter )
    PHB_GT pGT = hb_gt_Base();
    int iResult = -1;
    if( pGT )
+   {
       iResult = hb_ctw_CenterWindow( pGT, iWindow, fCenter );
+      hb_gt_BaseFree( pGT );
+   }
    return iResult;
 }
 
@@ -1862,6 +1903,7 @@ int  hb_ctwAddWindowBox( int iWindow, BYTE * szBox, int iColor )
    {
       iResult = hb_ctw_AddWindowBox( pGT, iWindow, szBox, iColor );
       HB_GTSELF_FLUSH( pGT );
+      hb_gt_BaseFree( pGT );
    }
    return iResult;
 }
@@ -1877,7 +1919,10 @@ int  hb_ctwLastKey( void )
    {
       PHB_GT pGT = hb_gt_Base();
       if( pGT )
+      {
          hb_ctw_Init( pGT );
+         hb_gt_BaseFree( pGT );
+      }
    }
    return s_iLastKey;
 }

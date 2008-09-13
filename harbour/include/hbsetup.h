@@ -74,7 +74,16 @@
  */
 
 #ifndef HB_LANG_DEFAULT
-   #define HB_LANG_DEFAULT      EN
+   #define HB_LANG_DEFAULT       EN
+#endif
+
+/* ***********************************************************************
+ * NOTE: You can select the default codepage used by Harbour, by
+ *       defining this to a valid codepage modul identifier.
+ */
+
+#ifndef HB_CODEPAGE_DEFAULT
+   #define HB_CODEPAGE_DEFAULT   EN
 #endif
 
 /* ***********************************************************************

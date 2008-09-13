@@ -62,6 +62,7 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbvm.h"
 #include "hbdate.h"
 #include "hb_io.h"
 
@@ -433,6 +434,8 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
    /* Do platform dependant first/next search */
 
+   hb_vmUnlock();
+
 #if defined(HB_OS_DOS)
 
    {
@@ -440,13 +443,13 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       /* Handling HB_FA_LABEL doesn't need any special tricks 
          under the DOS platform. */
-         
+
       if( ffind->bFirst )
       {
          ffind->bFirst = FALSE;
-         
+
          tzset();
-         
+
 #if defined(__WATCOMC__)
          bFound = ( _dos_findfirst( ffind->pszFileMask, ( USHORT ) hb_fsAttrToRaw( ffind->attrmask ), &info->entry ) == 0 );
 #else
@@ -499,16 +502,16 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
       /* TODO: HB_FA_LABEL handling */
-         
+
       if( ffind->bFirst )
       {
          ffind->bFirst = FALSE;
-         
+
          tzset();
-         
+
          info->hFindFile = HDIR_CREATE;
          info->findCount = 1;
-         
+
          bFound = DosFindFirst( ffind->pszFileMask,
                                 &info->hFindFile,
                                 ( LONG ) hb_fsAttrToRaw( ffind->attrmask ),
@@ -528,25 +531,25 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       if( bFound )
       {
          struct stat sStat;
-      
+
          stat( info->entry.achName, &sStat );
-      
+
          hb_strncpy( ffind->szName, info->entry.achName, sizeof( ffind->szName ) - 1 );
          ffind->size = sStat.st_size;
-      
+
          raw_attr = info->entry.attrFile;
-      
+
          {
             time_t ftime;
             struct tm * ft;
-      
+
             ftime = sStat.st_mtime;
             ft = localtime( &ftime );
-      
+
             nYear  = ft->tm_year + 1900;
             nMonth = ft->tm_mon + 1;
             nDay   = ft->tm_mday;
-      
+
             nHour  = ft->tm_hour;
             nMin   = ft->tm_min;
             nSec   = ft->tm_sec;
@@ -561,7 +564,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
       bFound = FALSE;
-         
+
       if( ffind->attrmask & HB_FA_LABEL )
       {
          if( ffind->bFirst )
@@ -606,6 +609,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             if( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
                ffind->size = 0;
             else
+            {
 #if defined(__XCC__) || __POCC__ >= 500
                /* NOTE: PellesC 5.00.1 will go into an infinite loop if we don't 
                         split this into two operations. [vszakats] */
@@ -615,6 +619,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                ffind->size = ( HB_FOFFSET ) info->pFindFileData.nFileSizeLow +
                      ( ( HB_FOFFSET ) info->pFindFileData.nFileSizeHigh << 32 );
 #endif
+            }
 
             raw_attr = ( ULONG ) info->pFindFileData.dwFileAttributes;
 
@@ -624,7 +629,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             {
                FILETIME ft;
                SYSTEMTIME time;
-         
+
                if( FileTimeToLocalFileTime( &info->pFindFileData.ftLastWriteTime, &ft ) &&
                    FileTimeToSystemTime( &ft, &time ) )
                {
@@ -659,10 +664,10 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          char * pos;
 
          ffind->bFirst = FALSE;
-         
+
          dirname[ 0 ] = '\0';
          info->pattern[ 0 ] = '\0';
-         
+
          /* hb_strncpy( string, pszFileName, sizeof( string ) - 1 ); */
          hb_strncpy( string, ffind->pszFileMask, sizeof( string ) - 1 ); 
          pos = strrchr( string, HB_OS_PATH_DELIM_CHR );
@@ -765,7 +770,6 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    if( bFound )
    {
       /* Do the conversions common for all platforms */
-      
       ffind->szName[ _POSIX_PATH_MAX ] = '\0';
 
       ffind->attr = hb_fsAttrFromRaw( raw_attr );
@@ -776,6 +780,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       snprintf( ffind->szTime, sizeof( ffind->szTime ), "%02d:%02d:%02d", nHour, nMin, nSec );
    }
+   hb_vmLock();
 
    return bFound;
 }
@@ -833,6 +838,8 @@ HB_EXPORT void hb_fsFindClose( PHB_FFIND ffind )
 {
    if( ffind )
    {
+      hb_vmUnlock();
+
       /* Do platform dependant cleanup */
 
       if( ffind->info )
@@ -890,5 +897,7 @@ HB_EXPORT void hb_fsFindClose( PHB_FFIND ffind )
       }
 
       hb_xfree( ( void * ) ffind );
+
+      hb_vmLock();
    }
 }

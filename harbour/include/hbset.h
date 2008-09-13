@@ -134,17 +134,21 @@ typedef enum
    HB_SET_EOL           = 110,
    HB_SET_TRIMFILENAME  = 111,
    HB_SET_HBOUTLOG      = 112,
-   HB_SET_HBOUTLOGINFO  = 113
+   HB_SET_HBOUTLOGINFO  = 113,
+   HB_SET_CODEPAGE      = 114
 
 } HB_set_enum;
 
+#if defined( _HB_SET_INTERNAL_ ) || defined( _HB_API_INTERNAL_ )
 typedef struct
 {
    /* Lower case members are indirectly related to a SET */
-   HB_FHANDLE hb_set_althan;
-   BOOL       hb_set_century;
-   HB_FHANDLE hb_set_extrahan;
-   HB_FHANDLE hb_set_printhan;
+   HB_FHANDLE     hb_set_althan;
+   BOOL           hb_set_century;
+   HB_FHANDLE     hb_set_extrahan;
+   HB_FHANDLE     hb_set_printhan;
+   HB_PATHNAMES * hb_set_path;
+   void *         hb_set_listener;
 
    /* Upper case members are directly related to a SET */
    BOOL       HB_SET_ALTERNATE;
@@ -207,7 +211,17 @@ typedef struct
    char *     HB_SET_HBOUTLOG;
    char *     HB_SET_HBOUTLOGINFO;
 
-} HB_SET_STRUCT;
+} HB_SET_STRUCT, * PHB_SET_STRUCT;
+
+extern void hb_setInitialize( PHB_SET_STRUCT pSet );
+extern void hb_setRelease( PHB_SET_STRUCT pSet );
+extern PHB_SET_STRUCT hb_setClone( PHB_SET_STRUCT pSet );
+
+#else
+
+typedef void * PHB_SET_STRUCT;
+
+#endif /* _HB_SET_INTERNAL_ || _HB_API_INTERNAL_ */
 
 #define HB_SET_CASE_MIXED  0
 #define HB_SET_CASE_LOWER  1
@@ -217,9 +231,6 @@ typedef struct
 #define HB_SET_DBFLOCK_CLIP       1
 #define HB_SET_DBFLOCK_CL53       2
 #define HB_SET_DBFLOCK_VFP        3
-
-extern void hb_setInitialize( void );
-extern void hb_setRelease( void );
 
 typedef enum
 {
@@ -232,16 +243,12 @@ extern int hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * );
 extern void hb_setListenerNotify( HB_set_enum, HB_set_listener_enum );
 extern int hb_setListenerRemove( int );
 
-#if defined( HB_SET_IMPORT )
-   extern HB_IMPORT HB_SET_STRUCT hb_set;
-#else
-   extern HB_EXPORT HB_SET_STRUCT hb_set;
-#endif
-
 extern HB_EXPORT BOOL       hb_setGetL( HB_set_enum set_specifier );
 extern HB_EXPORT char *     hb_setGetCPtr( HB_set_enum set_specifier );
 extern HB_EXPORT int        hb_setGetNI( HB_set_enum set_specifier );
 extern HB_EXPORT long       hb_setGetNL( HB_set_enum set_specifier );
+
+extern HB_EXPORT BOOL       hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem );
 
 extern HB_EXPORT HB_PATHNAMES * hb_setGetFirstSetPath( void );
 

@@ -71,6 +71,7 @@
 #include "hbapiitm.h"
 #include "hbset.h"
 #include "hbvm.h"
+#include "hbstack.h"
 #include "hbdate.h"
 #include "error.ch"
 #if defined( HB_OS_UNIX )
@@ -83,22 +84,31 @@
 #endif
 #include <time.h>
 
-/* list of background tasks 
- * A pointer into an array of pointers to items with a codeblock
-*/
-static HB_ITEM_PTR * s_pIdleTasks = NULL;
+typedef struct
+{
+   BOOL           fCollectGarbage;  /* flag to force GC activation in idle state */
+   BOOL           fIamIdle;         /* flag to prevent recursive calls of hb_idleState() */
+   int            iIdleTask;        /* current task to be executed */
+   int            iIdleMaxTask;     /* number of tasks in the list */
+   PHB_ITEM *     pIdleTasks;       /* list of background tasks */
+} HB_IDLEDATA, * PHB_IDLEDATA;
 
-/* flag to prevent recursive calls of hb_idleState() */
-static BOOL s_bIamIdle = FALSE;
+static void hb_idleDataRelease( void * Cargo )
+{
+   PHB_IDLEDATA pIdleData = ( PHB_IDLEDATA ) Cargo;
 
-/* current task to be executed */
-static USHORT s_uiIdleTask = 0;
+   if( pIdleData->pIdleTasks )
+   {
+      do
+      {
+         hb_itemRelease( pIdleData->pIdleTasks[ --pIdleData->iIdleMaxTask ] );
+      }
+      while( pIdleData->iIdleMaxTask );
+      hb_xfree( pIdleData->pIdleTasks );
+   }
+}
 
-/* number of tasks in the list */
-static USHORT s_uiIdleMaxTask = 0;
-
-/* flag to indicate GarbageCollection should be done in idle state. */
-static BOOL hb_vm_bCollectGarbage = TRUE;
+static HB_TSD_NEW( s_idleData, sizeof( HB_IDLEDATA ), NULL, hb_idleDataRelease );
 
 void hb_releaseCPU( void )
 {
@@ -169,55 +179,46 @@ void hb_releaseCPU( void )
 /* performs all tasks defined for idle state */
 void hb_idleState( void )
 {
-   if( ! s_bIamIdle )
+   PHB_IDLEDATA pIdleData = ( PHB_IDLEDATA ) hb_stackGetTSD( &s_idleData );
+
+   if( ! pIdleData->fIamIdle )
    {
-      s_bIamIdle = TRUE;
+      pIdleData->fIamIdle = TRUE;
 
+      hb_vmUnlock();
       hb_releaseCPU();
+      hb_vmLock();
 
-      if( hb_vm_bCollectGarbage )
+      if( pIdleData->fCollectGarbage )
       {
-         hb_gcCollectAll();
-         hb_vm_bCollectGarbage = FALSE;
+         hb_gcCollectAll( FALSE );
+         pIdleData->fCollectGarbage = FALSE;
       }
 
-      if( s_pIdleTasks && s_uiIdleTask < s_uiIdleMaxTask )
+      if( pIdleData->pIdleTasks && pIdleData->iIdleTask < pIdleData->iIdleMaxTask )
       {
-         hb_itemRelease( hb_itemDo( s_pIdleTasks[ s_uiIdleTask ], 0 ) );
-         ++s_uiIdleTask;
-         if( hb_set.HB_SET_IDLEREPEAT && s_uiIdleTask == s_uiIdleMaxTask )
+         hb_itemRelease( hb_itemDo( pIdleData->pIdleTasks[ pIdleData->iIdleTask ], 0 ) );
+         ++pIdleData->iIdleTask;
+         if( pIdleData->iIdleTask == pIdleData->iIdleMaxTask && hb_setGetIdleRepeat() )
          {
-            s_uiIdleTask = 0;    /* restart processing of idle tasks */
-            hb_vm_bCollectGarbage = TRUE;
+            pIdleData->iIdleTask = 0;    /* restart processing of idle tasks */
+            pIdleData->fCollectGarbage = TRUE;
          }
       }
-      s_bIamIdle = FALSE;
+      pIdleData->fIamIdle = FALSE;
    }
 }
 
 void hb_idleReset( void )
 {
-   if( ( ! hb_set.HB_SET_IDLEREPEAT ) && s_uiIdleTask == s_uiIdleMaxTask )
-   {
-      s_uiIdleTask = 0;
-   }
-   hb_vm_bCollectGarbage = TRUE;
-}
+   PHB_IDLEDATA pIdleData = ( PHB_IDLEDATA ) hb_stackGetTSD( &s_idleData );
 
-/* close all active background task on program exit */
-void hb_idleShutDown( void )
-{
-   if( s_pIdleTasks )
+   if( pIdleData->iIdleTask == pIdleData->iIdleMaxTask && !hb_setGetIdleRepeat() )
    {
-      do
-      {
-         hb_itemRelease( s_pIdleTasks[ --s_uiIdleMaxTask ] );
-      }
-      while( s_uiIdleMaxTask );
-      hb_xfree( s_pIdleTasks );
-      s_uiIdleTask = 0;
-      s_pIdleTasks = NULL;
+      pIdleData->iIdleTask = 0;
    }
+
+   pIdleData->fCollectGarbage = TRUE;
 }
 
 void hb_idleSleep( double dSeconds )
@@ -236,7 +237,8 @@ void hb_idleSleep( double dSeconds )
 /* signal that the user code is in idle state */
 HB_FUNC( HB_IDLESTATE )
 {
-   hb_vm_bCollectGarbage = TRUE;
+   PHB_IDLEDATA pIdleData = ( PHB_IDLEDATA ) hb_stackGetTSD( &s_idleData );
+   pIdleData->fCollectGarbage = TRUE;
    hb_idleState();
 }
 
@@ -259,66 +261,66 @@ HB_FUNC( HB_IDLEADD )
 
    if( pBlock )
    {
-      ++s_uiIdleMaxTask;
-      if( !s_pIdleTasks )
+      PHB_IDLEDATA pIdleData = ( PHB_IDLEDATA ) hb_stackGetTSD( &s_idleData );
+
+      ++pIdleData->iIdleMaxTask;
+      if( !pIdleData->pIdleTasks )
       {
-         s_pIdleTasks = ( HB_ITEM_PTR * ) hb_xgrab( sizeof( HB_ITEM_PTR ) );
+         pIdleData->pIdleTasks = ( HB_ITEM_PTR * ) hb_xgrab( sizeof( HB_ITEM_PTR ) );
       }
       else
       {
-         s_pIdleTasks = ( HB_ITEM_PTR * ) hb_xrealloc( s_pIdleTasks, sizeof( HB_ITEM_PTR ) * s_uiIdleMaxTask );
+         pIdleData->pIdleTasks = ( HB_ITEM_PTR * ) hb_xrealloc( pIdleData->pIdleTasks, sizeof( HB_ITEM_PTR ) * pIdleData->iIdleMaxTask );
       }
       /* store a copy of passed codeblock
       */
-      s_pIdleTasks[ s_uiIdleMaxTask - 1 ] = hb_itemNew( pBlock );
+      pIdleData->pIdleTasks[ pIdleData->iIdleMaxTask - 1 ] = hb_itemNew( pBlock );
 
       /* return a pointer as a handle to this idle task
       */
       hb_retptr( ( void * ) hb_codeblockId( pBlock ) );    /* TODO: access to pointers from harbour code */
    }
-   else
-      hb_retptr( NULL );    /* error - a codeblock is required */
 }
 
 /* Delete a task with given handle and return a codeblock with this task */
 HB_FUNC( HB_IDLEDEL )
 {
-   BOOL bFound = FALSE;
+   PHB_IDLEDATA pIdleData = ( PHB_IDLEDATA ) hb_stackTestTSD( &s_idleData );
+   void * pID = hb_parptr( 1 );
 
-   if( s_pIdleTasks && ( hb_parinfo( 1 ) & HB_IT_POINTER ) )
+   if( pID && pIdleData && pIdleData->pIdleTasks )
    {
       SHORT iTask;
-      void * pID = hb_parptr( 1 );
       HB_ITEM_PTR pItem;
 
       iTask = 0;
-      while( iTask < s_uiIdleMaxTask && !bFound )
+      while( iTask < pIdleData->iIdleMaxTask )
       {
-         pItem = s_pIdleTasks[ iTask ];
+         pItem = pIdleData->pIdleTasks[ iTask ];
          if( pID == hb_codeblockId( pItem ) )
          {
              hb_itemClear( hb_itemReturn( pItem ) ); /* return a codeblock */
              hb_itemRelease( pItem );
 
-             --s_uiIdleMaxTask;
-             if( s_uiIdleMaxTask )
+             --pIdleData->iIdleMaxTask;
+             if( pIdleData->iIdleMaxTask )
              {
-                if( iTask != s_uiIdleMaxTask )
+                if( iTask != pIdleData->iIdleMaxTask )
                 {
-                   memcpy( &s_pIdleTasks[ iTask ], &s_pIdleTasks[ iTask + 1 ],
-                           sizeof( HB_ITEM_PTR ) * ( s_uiIdleMaxTask - iTask ) );
+                   memmove( &pIdleData->pIdleTasks[ iTask ], &pIdleData->pIdleTasks[ iTask + 1 ],
+                            sizeof( HB_ITEM_PTR ) * ( pIdleData->iIdleMaxTask - iTask ) );
                 }
-                s_pIdleTasks = ( HB_ITEM_PTR * ) hb_xrealloc( s_pIdleTasks, sizeof( HB_ITEM_PTR ) * s_uiIdleMaxTask );
-                if( s_uiIdleTask >= s_uiIdleMaxTask )
-                   s_uiIdleTask = 0;
+                pIdleData->pIdleTasks = ( HB_ITEM_PTR * ) hb_xrealloc( pIdleData->pIdleTasks, sizeof( HB_ITEM_PTR ) * pIdleData->iIdleMaxTask );
+                if( pIdleData->iIdleTask >= pIdleData->iIdleMaxTask )
+                   pIdleData->iIdleTask = 0;
              }
              else
              {
-                hb_xfree( s_pIdleTasks );
-                s_uiIdleTask = 0;
-                s_pIdleTasks = NULL;
+                hb_xfree( pIdleData->pIdleTasks );
+                pIdleData->pIdleTasks = NULL;
+                pIdleData->iIdleTask = 0;
              }
-             bFound = TRUE;
+             break;
          }
          ++iTask;
       }

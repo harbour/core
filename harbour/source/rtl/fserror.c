@@ -54,14 +54,11 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbstack.h"
 #include "hb_io.h"
 #if !(defined(HB_WIN32_IO) || defined(HB_OS_WIN_32))
 #  include <errno.h>
 #endif
-
-static USHORT s_uiFError = 0;
-static USHORT s_uiErrorLast = 0;
-static USHORT s_uiOsErrorLast = 0;
 
 
 /* Try to translate C errno into DOS error code */
@@ -184,7 +181,7 @@ HB_EXPORT USHORT hb_fsGetFError( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsGetFError()"));
 
-   return s_uiFError;
+   return hb_stackIOErrors()->uiFError;
 }
 
 /* return DOS error code of last operation */
@@ -192,7 +189,7 @@ HB_EXPORT USHORT hb_fsError( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsError()"));
 
-   return s_uiErrorLast;
+   return hb_stackIOErrors()->uiErrorLast;
 }
 
 /* return real error code of last operation */
@@ -200,7 +197,7 @@ HB_EXPORT USHORT hb_fsOsError( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsOsError()"));
 
-   return s_uiOsErrorLast;
+   return hb_stackIOErrors()->uiOsErrorLast;
 }
 
 /* set FERROR() code */
@@ -208,33 +205,38 @@ HB_EXPORT void hb_fsSetFError( USHORT uiError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetFError(%hu)", uiError));
 
-   s_uiFError = uiError;
+   hb_stackIOErrors()->uiFError = uiError;
 }
 
 /* set DOS error code for last operation */
 HB_EXPORT void  hb_fsSetError( USHORT uiError )
 {
+   PHB_IOERRORS pIOErrors;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetError(%hu)", uiError));
 
+   pIOErrors = hb_stackIOErrors();
    /* TODO: untranslate uiError into errno */
-   s_uiOsErrorLast = s_uiErrorLast = uiError;
+   pIOErrors->uiOsErrorLast = pIOErrors->uiErrorLast = uiError;
 }
 
 /* set error code for last operation */
 HB_EXPORT void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
 {
+   PHB_IOERRORS pIOErrors = hb_stackIOErrors();
+
    /* TODO: implement it */
    HB_SYMBOL_UNUSED( uiOperation );
 
    if( fResult )
    {
-      s_uiOsErrorLast = s_uiErrorLast = 0;
+      pIOErrors->uiOsErrorLast = pIOErrors->uiErrorLast = 0;
    }
    else
    {
 #if defined(HB_WIN32_IO) || defined(HB_OS_WIN_32)
-      s_uiOsErrorLast = ( USHORT ) GetLastError();
-      s_uiErrorLast = ( USHORT ) hb_WinToDosError( s_uiOsErrorLast );
+      pIOErrors->uiOsErrorLast = ( USHORT ) GetLastError();
+      pIOErrors->uiErrorLast = ( USHORT ) hb_WinToDosError( pIOErrors->uiOsErrorLast );
 #elif defined(_MSC_VER) || defined(__DMC__)
       #ifdef __XCC__
          extern unsigned long _doserrno;
@@ -243,16 +245,16 @@ HB_EXPORT void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
       #endif
       if( _doserrno != 0 )
       {
-         s_uiOsErrorLast = s_uiErrorLast = _doserrno;
+         pIOErrors->uiOsErrorLast = pIOErrors->uiErrorLast = _doserrno;
       }
       else
       {
-         s_uiOsErrorLast = errno;
-         s_uiErrorLast = hb_errnoToDosError( errno );
+         pIOErrors->uiOsErrorLast = errno;
+         pIOErrors->uiErrorLast = hb_errnoToDosError( errno );
       }
 #else
-      s_uiOsErrorLast = errno;
-      s_uiErrorLast = hb_errnoToDosError( s_uiOsErrorLast );
+      pIOErrors->uiOsErrorLast = errno;
+      pIOErrors->uiErrorLast = hb_errnoToDosError( pIOErrors->uiOsErrorLast );
 #endif
    }
 }

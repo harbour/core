@@ -1592,7 +1592,7 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
              ( pArg->value.asNum.val.l & 0xff ) == 0 &&
                pArg->value.asNum.val.l != 0 )
          {
-            pExpr->value.asString.string = "";
+            pExpr->value.asString.string = ( char * ) "";
             pExpr->value.asString.dealloc = FALSE;
             pExpr->ulLength = 0;
          }

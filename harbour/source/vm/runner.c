@@ -505,7 +505,7 @@ static PHRB_BODY hb_hrbLoadFromFile( char* szHrb )
    /* Create full filename */
 
    pFileName = hb_fsFNameSplit( szHrb );
-   if( hb_set.HB_SET_DEFEXTENSIONS && pFileName->szExtension == NULL )
+   if( pFileName->szExtension == NULL && hb_stackSetStruct()->HB_SET_DEFEXTENSIONS )
    {
       pFileName->szExtension = ".hrb";
    }

@@ -84,7 +84,7 @@ ifneq ($(findstring -DHB_EXT_ZLIB, $(C_USR)),)
 LINKLIBS += -lz
 endif
 
-LINKLIBS += -lm -ldl -Wl,--end-group
+LINKLIBS += -lm -lrt -ldl -Wl,--end-group
 
 LDFLAGS = $(LINKPATHS)
 

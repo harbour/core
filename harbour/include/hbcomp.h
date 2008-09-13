@@ -97,9 +97,11 @@ extern void hb_compParserStop( HB_COMP_DECL );
 #define VS_STATIC     2
 #define VS_FIELD      4
 #define VS_PARAMETER  8
+#define VS_THREAD     16
 #define VS_PRIVATE    64
 #define VS_PUBLIC     128
 #define VS_MEMVAR     ( VS_PUBLIC | VS_PRIVATE )
+#define VS_TH_STATIC  ( VS_STATIC | VS_THREAD )
 
 /* return detailed information about a class of variable  */
 extern int hb_compVariableScope( HB_COMP_DECL, char * );
@@ -143,7 +145,7 @@ extern PINLINE   hb_compInlineAdd( HB_COMP_DECL, char * szFunName, int iLine );
 extern PINLINE   hb_compInlineFind( HB_COMP_DECL, char * szFunName );
 
 extern PFUNCALL  hb_compFunCallFind( HB_COMP_DECL, char * szFunName ); /* locates a previously defined called function */
-extern BOOL      hb_compFunCallCheck( HB_COMP_DECL, char *, int );
+extern BOOL      hb_compFunCallCheck( HB_COMP_DECL, const char *, int );
 
 extern void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cType ); /* add a new param, local, static variable to a function definition or a public or private */
 extern PVAR hb_compVariableFind( HB_COMP_DECL, char * szVarName, int * piPos, int * piScope );
@@ -339,7 +341,7 @@ extern void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
 extern void hb_compGenCString( FILE * yyc, BYTE * pText, ULONG ulLen );
 
 /* hbident.c   */
-extern char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, int iType ); /* create the reusable identifier */
+extern char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType ); /* create the reusable identifier */
 extern void hb_compIdentifierOpen( HB_COMP_DECL ); /* prepare the table of identifiers */
 extern void hb_compIdentifierClose( HB_COMP_DECL ); /* release the table of identifiers */
 

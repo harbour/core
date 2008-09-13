@@ -70,14 +70,16 @@ static const USHORT s_uiNumLength[ 9 ] = { 0, 4, 6, 8, 11, 13, 16, 18, 20 };
 
 static void hb_delimInitArea( DELIMAREAP pArea, char * szFileName )
 {
+   char * szEol;
+
    /* Allocate only after succesfully open file */
    pArea->szFileName = hb_strdup( szFileName );
 
    /* set line separator: EOL */
-   if( hb_set.HB_SET_EOL && hb_set.HB_SET_EOL[ 0 ] )
-      pArea->szEol = hb_strdup( hb_set.HB_SET_EOL );
-   else
-      pArea->szEol = hb_strdup( hb_conNewLine() );
+   szEol = hb_setGetEOL();
+   if( !szEol || !szEol[ 0 ] )
+      szEol = hb_conNewLine();
+   pArea->szEol = hb_strdup( szEol );
    pArea->uiEolLen = strlen( pArea->szEol );
 
    /* allocate record buffer, one additional byte is for deleted flag */
@@ -553,12 +555,12 @@ static ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
    {
       case HB_FT_STRING:
 #ifndef HB_CDP_SUPPORT_OFF
-         if( pArea->cdPage != hb_cdp_page )
+         if( pArea->cdPage != hb_vmCDP() )
          {
             char * pVal = ( char * ) hb_xgrab( pField->uiLen + 1 );
             memcpy( pVal, pArea->pRecord + pArea->pFieldOffset[ uiIndex ], pField->uiLen );
             pVal[ pField->uiLen ] = '\0';
-            hb_cdpnTranslate( pVal, pArea->cdPage, hb_cdp_page, pField->uiLen );
+            hb_cdpnTranslate( pVal, pArea->cdPage, hb_vmCDP(), pField->uiLen );
             hb_itemPutCLPtr( pItem, pVal, pField->uiLen );
          }
          else
@@ -673,7 +675,7 @@ static ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                     hb_itemGetCPtr( pItem ), uiSize );
 #ifndef HB_CDP_SUPPORT_OFF
-            hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_cdp_page, pArea->cdPage, uiSize );
+            hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_vmCDP(), pArea->cdPage, uiSize );
 #endif
             memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + uiSize,
                     ' ', pField->uiLen - uiSize );
@@ -872,7 +874,7 @@ static ERRCODE hb_delimFlush( DELIMAREAP pArea )
    {
       hb_fsSeekLarge( pArea->hFile, pArea->ulFileSize, FS_SET );
       hb_fsWrite( pArea->hFile, ( BYTE * ) "\032", 1 );
-      if( hb_set.HB_SET_HARDCOMMIT )
+      if( hb_setGetHardCommit() )
       {
          hb_fsCommit( pArea->hFile );
          pArea->fFlush = FALSE;
@@ -945,18 +947,14 @@ static ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 #ifndef HB_C52_STRICT
          else if( hb_itemType( pItem ) & HB_IT_ARRAY )
          {
-            PHB_ITEM pDelim, pSeparator;
+            char cSeparator;
 
-            pDelim = hb_arrayGetItemPtr( pItem, 1 );
-            pSeparator = hb_arrayGetItemPtr( pItem, 2 );
-            if( hb_itemType( pDelim ) & HB_IT_STRING )
-               pArea->cDelim = *hb_itemGetCPtr( pDelim );
-            if( hb_itemType( pSeparator ) & HB_IT_STRING )
-            {
-               char * szSeparator = hb_itemGetCPtr( pSeparator );
-               if( *szSeparator )
-                  pArea->cSeparator = *szSeparator;
-            }
+            if( hb_arrayGetType( pItem, 1 ) & HB_IT_STRING )
+               pArea->cDelim = *hb_arrayGetCPtr( pItem, 1 );
+
+            cSeparator = *hb_arrayGetCPtr( pItem, 2 );
+            if( cSeparator )
+               pArea->cSeparator = cSeparator;
          }
 #endif
          break;
@@ -1249,14 +1247,14 @@ static ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
    {
       pArea->cdPage = hb_cdpFind( (char *) pCreateInfo->cdpId );
       if( !pArea->cdPage )
-         pArea->cdPage = hb_cdp_page;
+         pArea->cdPage = hb_vmCDP();
    }
    else
-      pArea->cdPage = hb_cdp_page;
+      pArea->cdPage = hb_vmCDP();
 #endif
 
    pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
-   if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
+   if( hb_setGetDefExtension() && ! pFileName->szExtension )
    {
       PHB_ITEM pItem = hb_itemPutC( NULL, NULL );
       SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem );
@@ -1337,10 +1335,10 @@ static ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
    {
       pArea->cdPage = hb_cdpFind( (char *) pOpenInfo->cdpId );
       if( !pArea->cdPage )
-         pArea->cdPage = hb_cdp_page;
+         pArea->cdPage = hb_vmCDP();
    }
    else
-      pArea->cdPage = hb_cdp_page;
+      pArea->cdPage = hb_vmCDP();
 #endif
 
    uiFlags = ( pArea->fReadonly ? FO_READ : FO_READWRITE ) |
@@ -1348,7 +1346,7 @@ static ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pFileName = hb_fsFNameSplit( ( char * ) pOpenInfo->abName );
    /* Add default file name extension if necessary */
-   if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
+   if( hb_setGetDefExtension() && ! pFileName->szExtension )
    {
       PHB_ITEM pFileExt = hb_itemPutC( NULL, NULL );
       SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pFileExt );

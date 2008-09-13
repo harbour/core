@@ -88,12 +88,32 @@
 #include "hbmemory.ch"
 #include "hbdate.h"
 #include "hbset.h"
+#if defined( HB_MT_VM )
+#  include "hbthread.h"
+#endif
 
 /* #define HB_FM_WIN32_ALLOC */
 /* #define HB_PARANOID_MEM_CHECK */
 
 #ifndef HB_OS_WIN_32
 #  undef HB_FM_WIN32_ALLOC
+#endif
+
+#undef HB_ATOM_INC
+#undef HB_ATOM_DEC
+
+#if defined( HB_MT_VM ) && ( defined( HB_FM_STATISTICS ) || \
+    !defined( HB_ATOM_INC ) || !defined( HB_ATOM_DEC ) )
+
+   static HB_CRITICAL_NEW( s_fmMtx );
+#  define HB_FM_LOCK          hb_threadEnterCriticalSection( &s_fmMtx );
+#  define HB_FM_UNLOCK        hb_threadLeaveCriticalSection( &s_fmMtx );
+
+#else
+
+#  define HB_FM_LOCK
+#  define HB_FM_UNLOCK
+
 #endif
 
 #ifdef HB_FM_WIN32_ALLOC
@@ -172,6 +192,48 @@ typedef void * PHB_MEMINFO;
 #define HB_MEM_PTR( p )       ( ( void * ) ( ( BYTE * ) ( p ) + HB_MEMINFO_SIZE ) )
 
 
+#if !defined( HB_MT_VM )
+
+#  undef HB_ATOM_DEC
+#  undef HB_ATOM_INC
+#  undef HB_ATOM_GET
+#  undef HB_ATOM_SET
+#  define HB_ATOM_INC( p )    ( ++(*(p)) )
+#  define HB_ATOM_DEC( p )    ( --(*(p)) )
+
+#elif !defined( HB_ATOM_INC ) || !defined( HB_ATOM_DEC )
+
+   /* HB_ATOM_INC and HB_ATOM_DEC have to be synced together */
+#  undef HB_ATOM_DEC
+#  undef HB_ATOM_INC
+#  undef HB_ATOM_GET
+#  undef HB_ATOM_SET
+   static __inline void hb_counterIncrement( volatile HB_COUNTER * p )
+   {
+      HB_FM_LOCK
+      ++(*p);
+      HB_FM_UNLOCK
+   }
+#  define HB_ATOM_INC( p )    hb_counterIncrement( p )
+   static __inline int hb_counterDecrement( volatile HB_COUNTER * p )
+   {
+      int iResult;
+      HB_FM_LOCK
+      iResult = --(*p) != 0;
+      HB_FM_UNLOCK
+      return iResult;
+   }
+#  define HB_ATOM_DEC( p )    hb_counterDecrement( p )
+#endif
+
+#ifndef HB_ATOM_GET
+#  define HB_ATOM_GET( p )    (*(p))
+#endif
+#ifndef HB_ATOM_SET
+#  define HB_ATOM_SET( p, n ) ( (*(p)) = (n) )
+#endif
+
+
 HB_EXPORT void hb_xsetfilename( char * szValue )
 {
 #ifdef HB_FM_STATISTICS
@@ -206,6 +268,9 @@ HB_EXPORT void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
       return pMem;
 
 #ifdef HB_FM_STATISTICS
+
+   HB_FM_LOCK
+
    if( ! s_pFirstBlock )
    {
       pMem->pPrevBlock = NULL;
@@ -245,13 +310,15 @@ HB_EXPORT void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
    if( s_lMemoryMaxBlocks < s_lMemoryBlocks )
       s_lMemoryMaxBlocks = s_lMemoryBlocks;
 
+   HB_FM_UNLOCK
+
 #ifdef HB_PARANOID_MEM_CHECK
    memset( HB_MEM_PTR( pMem ), HB_MEMFILER, ulSize );
 #endif
 
 #endif
 
-   * HB_COUNTER_PTR( HB_MEM_PTR( pMem ) ) = 1;
+   HB_ATOM_SET( HB_COUNTER_PTR( HB_MEM_PTR( pMem ) ), 1 );
 
    return HB_MEM_PTR( pMem );
 }
@@ -271,6 +338,9 @@ HB_EXPORT void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
       hb_errInternal( HB_EI_XGRABALLOC, NULL, NULL, NULL );
 
 #ifdef HB_FM_STATISTICS
+
+   HB_FM_LOCK
+
    if( ! s_pFirstBlock )
    {
       pMem->pPrevBlock = NULL;
@@ -310,13 +380,15 @@ HB_EXPORT void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
    if( s_lMemoryMaxBlocks < s_lMemoryBlocks )
       s_lMemoryMaxBlocks = s_lMemoryBlocks;
 
+   HB_FM_UNLOCK
+
 #ifdef HB_PARANOID_MEM_CHECK
    memset( HB_MEM_PTR( pMem ), HB_MEMFILER, ulSize );
 #endif
 
 #endif
 
-   * HB_COUNTER_PTR( HB_MEM_PTR( pMem ) ) = 1;
+   HB_ATOM_SET( HB_COUNTER_PTR( HB_MEM_PTR( pMem ) ), 1 );
 
    return HB_MEM_PTR( pMem );
 }
@@ -381,6 +453,8 @@ HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
       pMem = realloc( pMemBlock, HB_ALLOC_SIZE( ulSize ) );
 #endif
 
+      HB_FM_LOCK
+
       s_lMemoryConsumed += ( ulSize - ulMemSize );
       if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
          s_lMemoryMaxConsumed = s_lMemoryConsumed;
@@ -399,6 +473,8 @@ HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
          s_pFirstBlock = ( PHB_MEMINFO ) pMem;
       if( s_pLastBlock == pMemBlock )
          s_pLastBlock = ( PHB_MEMINFO ) pMem;
+
+      HB_FM_UNLOCK
    }
 #else
 
@@ -442,6 +518,8 @@ HB_EXPORT void hb_xfree( void * pMem )            /* frees fixed memory */
       if( HB_FM_GETSIG( pMem, pMemBlock->ulSize ) != HB_MEMINFO_SIGNATURE )
          hb_errInternal( HB_EI_XMEMOVERFLOW, NULL, NULL, NULL );
 
+      HB_FM_LOCK
+
       s_lMemoryConsumed -= pMemBlock->ulSize + sizeof( HB_COUNTER );
       s_lMemoryBlocks--;
 
@@ -454,6 +532,8 @@ HB_EXPORT void hb_xfree( void * pMem )            /* frees fixed memory */
          pMemBlock->pNextBlock->pPrevBlock = pMemBlock->pPrevBlock;
       else
          s_pLastBlock = pMemBlock->pPrevBlock;
+
+      HB_FM_UNLOCK
 
       pMemBlock->u32Signature = 0;
       HB_FM_CLRSIG( pMem, pMemBlock->ulSize );
@@ -478,14 +558,14 @@ HB_EXPORT void hb_xfree( void * pMem )            /* frees fixed memory */
 #undef hb_xRefInc
 void hb_xRefInc( void * pMem )
 {
-   ++( * HB_COUNTER_PTR( pMem ) );
+   HB_ATOM_INC( HB_COUNTER_PTR( pMem ) );
 }
 
 /* decrement reference counter, return TRUE when 0 reached */
 #undef hb_xRefDec
 BOOL hb_xRefDec( void * pMem )
 {
-   return --( * HB_COUNTER_PTR( pMem ) ) == 0;
+   return HB_ATOM_DEC( HB_COUNTER_PTR( pMem ) ) == 0;
 }
 
 /* decrement reference counter and free the block when 0 reached */
@@ -497,12 +577,12 @@ void hb_xRefFree( void * pMem )
    if( HB_FM_PTR( pMem )->u32Signature != HB_MEMINFO_SIGNATURE )
       hb_errInternal( HB_EI_XFREEINV, NULL, NULL, NULL );
 
-   if( --( * HB_COUNTER_PTR( pMem ) ) == 0 )
+   if( HB_ATOM_DEC( HB_COUNTER_PTR( pMem ) ) == 0 )
       hb_xfree( pMem );
 
 #else
 
-   if( --( * HB_COUNTER_PTR( pMem ) ) == 0 )
+   if( HB_ATOM_DEC( HB_COUNTER_PTR( pMem ) ) == 0 )
       free( HB_FM_PTR( pMem ) );
 
 #endif
@@ -512,7 +592,7 @@ void hb_xRefFree( void * pMem )
 #undef hb_xRefCount
 HB_COUNTER hb_xRefCount( void * pMem )
 {
-   return * HB_COUNTER_PTR( pMem );
+   return HB_ATOM_GET( HB_COUNTER_PTR( pMem ) );
 }
 
 /* reallocates memory, create copy if reference counter greater then 1 */
@@ -521,12 +601,13 @@ void * hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize )
 {
 
 #ifdef HB_FM_STATISTICS
-   if( * HB_COUNTER_PTR( pMem ) > 1 )
+   if( HB_ATOM_GET( HB_COUNTER_PTR( pMem ) ) > 1 )
    {
-      void * pMemNew = hb_xgrab( ulSize );
+      void * pMemNew = memcpy( hb_xgrab( ulSize ), pMem, HB_MIN( ulSave, ulSize ) );
 
-      --( * HB_COUNTER_PTR( pMem ) );
-      memcpy( pMemNew, pMem, HB_MIN( ulSave, ulSize ) );
+      if( HB_ATOM_DEC( HB_COUNTER_PTR( pMem ) ) == 0 )
+         hb_xfree( pMem );
+
       return pMemNew;
    }
 
@@ -534,15 +615,16 @@ void * hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize )
 
 #else
 
-   if( * HB_COUNTER_PTR( pMem ) > 1 )
+   if( HB_ATOM_GET( HB_COUNTER_PTR( pMem ) ) > 1 )
    {
       void * pMemNew = malloc( HB_ALLOC_SIZE( ulSize ) );
 
       if( pMemNew )
       {
-         --( * HB_COUNTER_PTR( pMem ) );
-         * HB_COUNTER_PTR( HB_MEM_PTR( pMemNew ) ) = 1;
+         HB_ATOM_SET( HB_COUNTER_PTR( HB_MEM_PTR( pMemNew ) ), 1 );
          memcpy( HB_MEM_PTR( pMemNew ), pMem, HB_MIN( ulSave, ulSize ) );
+         if( HB_ATOM_DEC( HB_COUNTER_PTR( pMem ) ) == 0 )
+            free( HB_FM_PTR( pMem ) );
          return HB_MEM_PTR( pMemNew );
       }
    }

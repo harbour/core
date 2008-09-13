@@ -241,9 +241,9 @@ void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort )
          pQuickSort->pSwapBufferA[ 0 ] = ' ';
 
 #ifndef HB_CDP_SUPPORT_OFF
-         if( pArea->cdPage != hb_cdp_page )
+         if( pArea->cdPage != hb_vmCDP() )
          {
-            hb_dbfTranslateRec( (DBFAREAP) pArea, (BYTE *) pQuickSort->pSwapBufferA, hb_cdp_page, pArea->cdPage );
+            hb_dbfTranslateRec( (DBFAREAP) pArea, (BYTE *) pQuickSort->pSwapBufferA, hb_vmCDP(), pArea->cdPage );
          }
 #endif
 

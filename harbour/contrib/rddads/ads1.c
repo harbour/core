@@ -52,7 +52,6 @@
 
 #define HB_OS_WIN_32_USED
 
-#define HB_SET_IMPORT
 #define SUPERTABLE ( &adsSuper )
 #define MAX_STR_LEN 255
 
@@ -70,18 +69,6 @@
 #include "rddads.h"
 
 #include <ctype.h>
-
-/*
- * This code is a workaround for not working HB_IMPORT attribute
- * it should not be necessary
- */
-#ifndef HB_SET_IMPORT
-   static HB_SET_STRUCT * s_hb_set_ptr = NULL;
-#  define hb_set              ( * s_hb_set_ptr )
-#  define HB_ADS_SET_INIT()   do { s_hb_set_ptr = hb_GetSetStructPtr(); } while(0)
-#else
-#  define HB_ADS_SET_INIT()   do { } while(0)
-#endif
 
 static int s_iSetListenerHandle = 0;
 
@@ -4762,8 +4749,6 @@ HB_FUNC( ADS ) { ; }
 static void hb_adsRddInit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
-
-   HB_ADS_SET_INIT();
 
    if( hb_rddRegister( "ADS", RDT_FULL ) > 1 ||
        hb_rddRegister( "ADT", RDT_FULL ) > 1 ||

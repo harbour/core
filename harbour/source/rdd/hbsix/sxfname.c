@@ -75,7 +75,7 @@ HB_FUNC( SX_FNAMEPARSER )
       if( !ISLOG( 3 ) || !hb_parl( 3 ) )
          pFileName->szExtension = NULL;
 
-      if( !hb_set.HB_SET_TRIMFILENAME )
+      if( !hb_setGetTrimFileName() )
       {
          if( pFileName->szName )
          {

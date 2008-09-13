@@ -114,7 +114,6 @@ C_SOURCES=\
 	scrrow.c     \
 	secondfs.c   \
 	seconds.c    \
-	set.c        \
 	setcolor.c   \
 	setcurs.c    \
 	setkey.c     \

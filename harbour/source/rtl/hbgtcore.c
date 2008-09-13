@@ -82,6 +82,11 @@ PHB_GT hb_gt_Base( void )
    return s_curGT;
 }
 
+void hb_gt_BaseFree( PHB_GT pGT )
+{
+   HB_SYMBOL_UNUSED( pGT );
+}
+
 /* helper internal function */
 static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
 {
@@ -1397,7 +1402,7 @@ static BOOL hb_gt_def_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCD
 {
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
-      pszHostCDP = hb_cdp_page->id;
+      pszHostCDP = hb_cdpID();
    if( !pszTermCDP )
       pszTermCDP = pszHostCDP;
 
@@ -2305,14 +2310,14 @@ static void hb_gt_def_InkeyPollDo( PHB_GT pGT )
       {
          case HB_BREAK_FLAG:           /* Check for Ctrl+Break */
          case K_ALT_C:                 /* Check for normal Alt+C */
-            if( hb_set.HB_SET_CANCEL )
+            if( hb_setGetCancel() )
             {
                hb_vmRequestCancel();   /* Request cancellation */
                return;
             }
             break;
          case K_ALT_D:                 /* Check for Alt+D */
-            if( hb_set.HB_SET_DEBUG )
+            if( hb_setGetDebug() )
             {
                hb_vmRequestDebug();    /* Request the debugger */
                return;
@@ -2329,12 +2334,12 @@ static void hb_gt_def_InkeyPoll( PHB_GT pGT )
 
    /*
     * Clipper 5.3 always poll events without respecting
-    * hb_set.HB_SET_TYPEAHEAD when CL5.2 only when it's non zero.
+    * _SET_TYPEAHEAD when CL5.2 only when it's non zero.
     * IMHO keeping CL5.2 behavior will be more accurate for xharbour
     * because it allow to control it by user what some times could be
     * necessary due to different low level GT behavior on some platforms
     */
-   if( hb_set.HB_SET_TYPEAHEAD )
+   if( hb_setGetTypeAhead() )
    {
       hb_gt_def_InkeyPollDo( pGT );
    }
@@ -2440,6 +2445,8 @@ static void hb_gt_def_InkeySetText( PHB_GT pGT, const char * szText, ULONG ulLen
 /* Reset the keyboard buffer */
 static void hb_gt_def_InkeyReset( PHB_GT pGT )
 {
+   int iTypeAhead;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeyReset(%p)", pGT));
 
    if( pGT->StrBuffer )
@@ -2451,14 +2458,16 @@ static void hb_gt_def_InkeyReset( PHB_GT pGT )
    pGT->inkeyHead = 0;
    pGT->inkeyTail = 0;
 
-   if( hb_set.HB_SET_TYPEAHEAD != pGT->inkeyBufferSize )
+   iTypeAhead = hb_setGetTypeAhead();
+
+   if( iTypeAhead != pGT->inkeyBufferSize )
    {
       if( pGT->inkeyBufferSize > HB_DEFAULT_INKEY_BUFSIZE )
          hb_xfree( pGT->inkeyBuffer );
 
-      if( hb_set.HB_SET_TYPEAHEAD > HB_DEFAULT_INKEY_BUFSIZE )
+      if( iTypeAhead > HB_DEFAULT_INKEY_BUFSIZE )
       {
-         pGT->inkeyBufferSize = hb_set.HB_SET_TYPEAHEAD;
+         pGT->inkeyBufferSize = iTypeAhead;
          pGT->inkeyBuffer = ( int * ) hb_xgrab( pGT->inkeyBufferSize * sizeof( int ) );
       }
       else
