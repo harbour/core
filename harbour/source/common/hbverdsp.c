@@ -144,9 +144,6 @@ void hb_verBuildInfo( void )
    }
 
    hb_conOutErr( "Other build settings: ", 0 );
-#if defined( HB_MT_VM )
-   hb_conOutErr( "(MT) ", 0 );
-#endif
 #if defined(__cplusplus)
    hb_conOutErr( "(C++ mode) ", 0 );
 #else
