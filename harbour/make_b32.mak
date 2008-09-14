@@ -120,7 +120,7 @@ CFLAGS = -I$(INCLUDE_DIR) -I$(OBJ_DIR) $(C_USR)
 !endif
 #-----------
 !if "$(HB_BUILD_ST)" != "yes"
-    CFLAGS = -tWM $(CFLAGS)
+    CFLAGS = -tWM $(CFLAGS) -DHB_MT_VM
 !endif
 #-----------
 !if "$(HB_GT_DEFAULT)" != ""
@@ -157,6 +157,10 @@ LDFLAGSDLL     = -Gn -C -aa -Tpd -Gi -L$(LIB_DIR) $(LDFLAGSDLL)
 !endif
 
 #**********************************************************
+
+!if "$(HB_BUILD_ST)" != "yes"
+    STANDARD_STATIC_CLIBS = cw32mt$(RTLIBSUFFIX).lib
+!endif
 
 # This is needed, otherwise the libs may overflow
 # when debug info is requested with -v -y
@@ -481,6 +485,7 @@ $(CFLAGS)
 -e$(HBRUN_EXE)
 $(**: = ^
 )
+$(STANDARD_STATIC_CLIBS)
 $(STANDARD_STATIC_HBLIBS)
 !
 #**********************************************************
@@ -494,6 +499,7 @@ $(CFLAGS)
 -e$(HBTEST_EXE)
 $(**: = ^
 )
+$(STANDARD_STATIC_CLIBS)
 $(STANDARD_STATIC_HBLIBS)
 !
 #**********************************************************
@@ -507,6 +513,7 @@ $(CFLAGS)
 -e$(HBDOC_EXE)
 $(**: = ^
 )
+$(STANDARD_STATIC_CLIBS)
 $(MINIMAL_STATIC_HBLIBS) $(HBDOC_LIBS)
 !
 #**********************************************************
@@ -520,6 +527,7 @@ $(CFLAGS)
 -e$(HBMAKE_EXE)
 $(**: = ^
 )
+$(STANDARD_STATIC_CLIBS)
 $(MINIMAL_STATIC_HBLIBS)
 !
 #**********************************************************

@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 19:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+    + Now setting 'HB_BUILD_ST = no' will generate an MT build.
+      TODO: Change the default to 'yes' should be the way to go 
+            IMO.
+
+  * bin/bld.bat
+    + Added cw32mt.lib for BCC32 to make it work for MT Harbour.
+    ; I hope this won't break ST Harbour builds, a quick tests 
+      proved not.
+
 2008-09-14 19:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak
@@ -37,7 +48,6 @@
 
   * contrib/hbnf/common.mak
     ! File list synced with the GNU-make one.
-      [TOMERGE 1.0]
 
   * source/common/hbver.c
     * "Intl." removed from the version number. Besides mimicing 
