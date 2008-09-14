@@ -74,8 +74,6 @@
 #define PGM_ERR  -1        // Return value for an abnormal exit
 #define PGM_OK    0        // Return value for a normal exit
 #define PGM_QUIT  1        // Quit before making file but without error
-#define PGM_BAK   2        // ?
-#define PGM_BAD   3        // ?
 
 #Define HBM_USE_DEPENDS    // Set this to have section #DEPENDS parsed like RMake, Ath 2004-06
                            // An extra parameter is added to FileIsNewer() to have it check the INCLUDE paths also
@@ -1308,7 +1306,7 @@ FUNCTION CompileFiles()
 
    NEXT
 
-RETURN IIF ( lErrs, PGM_BAK, PGM_OK )
+RETURN IIF ( lErrs, PGM_ERR, PGM_OK )
 
 *-------------------------------
 FUNCTION GetParaDefines( cTemp )
@@ -3308,7 +3306,7 @@ FUNCTION CompileUpdatedFiles()
 
                      s_lErrors := IIF( hb_run( s_cEditor + " " + s_cLogFile ) != 0, .T., .F. )
                      IF s_lErrors
-                        RETURN PGM_BAD
+                        RETURN PGM_ERR
                      ENDIF
                   ENDIF
 

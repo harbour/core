@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 22:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmake/hbmake.prg
+    ! Fixed two typos in last commit. Thanks to Bill Robertson.
+
 2008-09-14 22:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbverdsp.c
     + Showing MT status on //BUILD screen.
