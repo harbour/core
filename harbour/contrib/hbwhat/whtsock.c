@@ -14,16 +14,22 @@
 
 #include "hbwhat.h"
 
+#if !(defined(__POCC__) && __POCC__ < 500)
+   #include <winsock2.h>
+#endif
 #include <windows.h>
 #include <shlobj.h>
 //#include <commctrl.h>
+#include <time.h>
+
+#if defined(__POCC__) && __POCC__ < 500
+   #include <winsock2.h>
+#endif
 
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
-#include <time.h>
-#include <winsock2.h>
 
 //-----------------------------------------------------------------------------
 //  SOCKET  accept( IN SOCKET s, OUT struct sockaddr * addr, IN OUT int * addrlen );
@@ -40,7 +46,7 @@ HB_FUNC( ACCEPT )
    else
    {
       addr = hb_parcx(2);
-      addrlen = ISNIL(3) ? hb_parni(3) : hb_parclen(2);
+      addrlen = ISNIL(3) ? hb_parni(3) : ( int ) hb_parclen(2);
       hb_retnl( (LONG) accept( (SOCKET) hb_parnl(1), ( struct sockaddr *) addr, &addrlen ) );
       hb_storclen( addr, addrlen, 2 );
       hb_storni( addrlen, 3);
@@ -105,7 +111,7 @@ HB_FUNC( IOCTLSOCKET )
 HB_FUNC( GETPEERNAME )
 {
    char *name  = (char *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
-   int addrlen = ISNIL(3) ? hb_parni(3) : hb_parclen(2);
+   int addrlen = ISNIL(3) ? hb_parni(3) : ( int ) hb_parclen(2);
 
    hb_retni( (int ) getpeername((SOCKET) hb_parnl( 1 ), ( struct sockaddr *) name, &addrlen ) );
    hb_storclen( name, addrlen, 2 );
@@ -121,7 +127,7 @@ HB_FUNC( GETPEERNAME )
 HB_FUNC( GETSOCKNAME )
 {
    char *name  = (char *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
-   int addrlen = ISNIL(3) ? hb_parni(3) : hb_parclen(2);
+   int addrlen = ISNIL(3) ? hb_parni(3) : ( int ) hb_parclen(2);
 
    hb_retni( (int ) getsockname((SOCKET) hb_parnl( 1 ), ( struct sockaddr *) name, &addrlen ) );
    hb_storclen( name, addrlen, 2 );
@@ -223,7 +229,7 @@ HB_FUNC( NTOHS )
 
 HB_FUNC( RECV )
 {
-   int  iBuffLen = (ISNIL(3) ? (ISNIL(2) ? 0 : hb_parclen(2) ) : hb_parni(3));
+   int  iBuffLen = (ISNIL(3) ? (ISNIL(2) ? 0 : ( int ) hb_parclen(2) ) : hb_parni(3));
    char   *buf  = ( char *) hb_xgrab(iBuffLen);
    int iRet;
 
@@ -243,10 +249,10 @@ HB_FUNC( RECV )
 
 HB_FUNC( RECVFROM )
 {
-   int  iBuffLen = (ISNIL(3) ? (ISNIL(2) ? 0 : hb_parclen(2) ) : hb_parni(3));
+   int  iBuffLen = (ISNIL(3) ? (ISNIL(2) ? 0 : ( int ) hb_parclen(2) ) : hb_parni(3));
    char *buf     = ( char *) hb_xgrab(iBuffLen);
    char *from    = (ISNIL(5) ? NULL : (char *) hb_parc( 5 )); //hb_param( 5, HB_IT_STRING )->item.asString.value );
-   int  iAddrLen = (ISNIL(6) ? (ISNIL(5) ? 0 : hb_parclen(5) ) : hb_parni(6));
+   int  iAddrLen = (ISNIL(6) ? (ISNIL(5) ? 0 : ( int ) hb_parclen(5) ) : hb_parni(6));
    int  iRet;
 
    iRet = ( int ) recvfrom( (SOCKET) hb_parnl( 1 )  ,
@@ -315,7 +321,7 @@ HB_FUNC( SOCKSELECT )
 
 HB_FUNC( SEND )
 {
-   int  iBuffLen = (ISNIL(3) ? (ISNIL(2) ? 0 : hb_parclen(2) ) : hb_parni(3));
+   int  iBuffLen = (ISNIL(3) ? (ISNIL(2) ? 0 : ( int ) hb_parclen(2) ) : hb_parni(3));
    hb_retni( ( int ) send((SOCKET) hb_parnl( 1 ), hb_parcx(2), iBuffLen, hb_parni( 4 ) ) );
 }
 
@@ -328,14 +334,14 @@ HB_FUNC( SEND )
 HB_FUNC( SENDTO )
 {
 
-   int  iBuffLen = (ISNIL(3) ? ( ISNIL(2) ? 0 : hb_parclen(2) ) : hb_parni(3));
+   int  iBuffLen = (ISNIL(3) ? ( ISNIL(2) ? 0 : ( int ) hb_parclen(2) ) : hb_parni(3));
    struct sockaddr *to = NULL;
    int iToLen = 0 ;
 
    if ( ISCHAR( 5 ) )
    {
      to = (struct sockaddr *) hb_parc( 5 ); //hb_param( 5, HB_IT_STRING )->item.asString.value ;
-     iToLen = (ISNIL(6) ? (ISNIL(5) ? 0 : hb_parclen(5) ) : hb_parni(6));
+     iToLen = (ISNIL(6) ? (ISNIL(5) ? 0 : ( int ) hb_parclen(5) ) : hb_parni(6));
    }
 
    hb_retni( (int ) sendto( (SOCKET) hb_parnl( 1 )       ,

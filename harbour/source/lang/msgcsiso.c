@@ -68,7 +68,7 @@ static HB_LANG s_lang =
       "Èesky",                     /* Name (in native language) */
       "CS",                        /* RFC ID */
       "ISO-8859-2",                /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

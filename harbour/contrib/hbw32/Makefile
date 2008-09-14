@@ -14,6 +14,7 @@ C_SOURCES=\
 	win_osc.c \
 	win_prn1.c \
 	win_prn2.c \
+	win_prt.c \
 	win_regc.c \
 
 PRG_SOURCES=\
@@ -21,6 +22,10 @@ PRG_SOURCES=\
 	win_reg.prg \
 	win_tole.prg \
 	win_tprn.prg \
+	win_tprt.prg \
+
+C_HEADERS = \
+	hbwin.h \
 
 PRG_HEADERS = \
 	hbw32.ch \

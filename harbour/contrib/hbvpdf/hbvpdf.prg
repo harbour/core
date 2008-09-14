@@ -2547,7 +2547,7 @@ local nLength := len( cStr )
    ENDIF
 return nil
 
-FUNCTION FilePos( nHandle )
+STATIC FUNCTION FilePos( nHandle )
 RETURN ( FSEEK( nHandle, 0, FS_RELATIVE ) )
 
 FUNCTION pdfFilePrint( cFile )
@@ -2600,19 +2600,19 @@ function pdfUnderLine( cString )
 function TimeAsAMPM( cTime )
 */
 
-FUNCTION Chr_RGB( cChar )
+STATIC FUNCTION Chr_RGB( cChar )
 RETURN str(asc( cChar ) / 255, 4, 2)
 
-FUNCTION NumToken( cString, cDelimiter )
+STATIC FUNCTION NumToken( cString, cDelimiter )
 RETURN AllToken( cString, cDelimiter )
 
-FUNCTION Token( cString, cDelimiter, nPointer )
+STATIC FUNCTION Token( cString, cDelimiter, nPointer )
 RETURN AllToken( cString, cDelimiter, nPointer, 1 )
 
-FUNCTION AtToken( cString, cDelimiter, nPointer )
+STATIC FUNCTION AtToken( cString, cDelimiter, nPointer )
 RETURN AllToken( cString, cDelimiter, nPointer, 2 )
 
-FUNCTION AllToken( cString, cDelimiter, nPointer, nAction )
+STATIC FUNCTION AllToken( cString, cDelimiter, nPointer, nAction )
 LOCAL nTokens := 0, nPos := 1, nLen := len( cString ), nStart := 0, cToken := "", cRet
 DEFAULT cDelimiter to chr(0)+chr(9)+chr(10)+chr(13)+chr(26)+chr(32)+chr(138)+chr(141)
 DEFAULT nAction to 0
@@ -2648,7 +2648,7 @@ DEFAULT nAction to 0
       ENDDO
 RETURN cRet
 
-FUNCTION NumAt( cSearch, cString )
+STATIC FUNCTION NumAt( cSearch, cString )
    LOCAL n := 0, nAt := 0, nPos := 0
    WHILE ( nAt := at( cSearch, substr( cString, nPos + 1 ) )) > 0
            nPos += nAt
@@ -2656,7 +2656,7 @@ FUNCTION NumAt( cSearch, cString )
    ENDDO
 RETURN n
 
-FUNCTION FileSize( nHandle )
+STATIC FUNCTION FileSize( nHandle )
 
    LOCAL nCurrent
    LOCAL nLength
@@ -2675,7 +2675,7 @@ RETURN ( nLength )
 // next 3 function written by Peter Kulek
 //modified for compatibility with common.ch by V.K.
 //modified DATE processing by V.K.
-function Array2File(cFile,aRay,nDepth,hFile)
+STATIC function Array2File(cFile,aRay,nDepth,hFile)
 local nBytes := 0
 local i
 nDepth := iif(ISNUMBER(nDepth),nDepth,0)
@@ -2697,7 +2697,7 @@ if nDepth == 0
 endif
 return(nBytes)
 
-static function WriteData(hFile,xData)
+STATIC function WriteData(hFile,xData)
 local cData  := valtype(xData)
    if ISCHARACTER(xData)
        cData += i2bin(len(xData))+xData
@@ -2714,7 +2714,7 @@ local cData  := valtype(xData)
    endif
 return( fWrite(hFile,cData,len(cData)) )
 
-function File2Array(cFile,nLen,hFile)
+STATIC function File2Array(cFile,nLen,hFile)
 LOCAL cData,cType,nDataLen,nBytes
 local nDepth := 0
 local aRay   := {}
@@ -2767,13 +2767,13 @@ return(aRay)
 // 0.05
 #ifdef __HARBOUR__
 
-Function SWPRUNCMD( cCommand, x1, x2, x3 )
+STATIC Function SWPRUNCMD( cCommand, x1, x2, x3 )
 
    HB_SYMBOL_UNUSED( x1 )
    HB_SYMBOL_UNUSED( x2 )
    HB_SYMBOL_UNUSED( x3 )
 
-   RUN (cCommand)
+   hb_run( cCommand )
 
 Return .T.
 

@@ -10,6 +10,28 @@
  * Antonio Linares <alinares@fivetechsoft.com>
  * www - http://www.harbour-project.org
  *
+ * Copyright 2007-2008 Miguel Angel Marchuet <miguelangel@marchuet.net>
+ *  ADO_GOTOID( nWA, nRecord )
+ *  ADO_GOTO( nWA, nRecord )
+ *  ADO_OPEN( nWA, aOpenInfo ) some modifications
+ *     Open: Excel files
+ *           Paradox files
+ *           Access with password
+ *           FireBird
+ *  ADO_CLOSE( nWA )
+ *  ADO_ZAP( nWA )
+ *  ADO_ORDINFO( nWA, nIndex, aOrderInfo ) some modifications
+ *  ADO_RECINFO( nWA, nRecord, nInfoType, uInfo )
+ *  ADO_FIELDINFO( nWA, nField, nInfoType, uInfo )
+ *  ADO_FIELDNAME( nWA, nField )
+ *  ADO_FORCEREL( nWA )
+ *  ADO_RELEVAL( nWA, aRelInfo )
+ *  ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
+ *  ADO_DROP(  nRdd, cTable, cIndex, ulConnect )
+ *  ADO_LOCATE( nWA, lContinue )
+ *
+ * www - http://www.xharbour.org
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -21,7 +43,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  if not, write to
+ * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
  *
@@ -38,16 +60,16 @@
  * the executable file might be covered by the GNU General Public License.
  *
  * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  if you copy code from other
+ * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
- * if you write modifications of your own for Harbour, it is your choice
+ * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
- * if you do not wish that, delete this exception notice.
+ * If you do not wish that, delete this exception notice.
  *
  */
 
@@ -57,6 +79,7 @@
 #include "adordd.ch"
 #include "common.ch"
 #include "dbstruct.ch"
+#include "dbinfo.ch"
 
 #ifndef __XHARBOUR__
    #include "hbusrrdd.ch"
@@ -65,28 +88,35 @@
    #xcommand CATCH [<!oErr!>] => errorBlock( bError ) ;;
                                  RECOVER [USING <oErr>] <-oErr-> ;;
                                  errorBlock( bError )
+   #command FINALLY           => ALWAYS
 #else
    #include "usrrdd.ch"
 #endif
 
-#define WA_RECORDSET  1
-#define WA_BOF        2
-#define WA_EOF        3
-#define WA_CONNECTION 4
-#define WA_CATALOG    5
-#define WA_TABLENAME  6
-#define WA_ENGINE     7
-#define WA_SERVER     8
-#define WA_USERNAME   9
-#define WA_PASSWORD  10
-#define WA_QUERY     11
-#define WA_LOCATEFOR 12
-#define WA_SCOPEINFO 13
-#define WA_SQLSTRUCT 14
+#define WA_RECORDSET   1
+#define WA_BOF         2
+#define WA_EOF         3
+#define WA_CONNECTION  4
+#define WA_CATALOG     5
+#define WA_TABLENAME   6
+#define WA_ENGINE      7
+#define WA_SERVER      8
+#define WA_USERNAME    9
+#define WA_PASSWORD   10
+#define WA_QUERY      11
+#define WA_LOCATEFOR  12
+#define WA_SCOPEINFO  13
+#define WA_SQLSTRUCT  14
+#define WA_CONNOPEN   15
+#define WA_PENDINGREL 16
+#define WA_FOUND      17
 
+#define WA_SIZE       17
 
-#define WA_SIZE      14
+#define RDD_CONNECTION 1
+#define RDD_CATALOG    2
 
+#define RDD_SIZE       2
 
 ANNOUNCE ADORDD
 
@@ -102,61 +132,95 @@ return iif( nPos <= Len( aTokens ), aTokens[ nPos ], "" )
 
 #endif
 
-static function ADO_INIT( nRDD )
+STATIC FUNCTION ADO_INIT( nRDD )
 
-   local aRData
+   LOCAL aRData := Array( RDD_SIZE )
 
    USRRDD_RDDDATA( nRDD, aRData )
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_NEW( nWA )
+STATIC FUNCTION ADO_NEW( nWA )
 
-   local aWAData := Array( WA_SIZE )
+   LOCAL aWAData := Array( WA_SIZE )
 
    aWAData[ WA_BOF ] := .F.
    aWAData[ WA_EOF ] := .F.
 
    USRRDD_AREADATA( nWA, aWAData )
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_CREATE( nWA, aOpenInfo )
+STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
 
-   local cDataBase   := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 1, ";" )
-   local cTableName  := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 2, ";" )
-   local cDbEngine   := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 3, ";" )
-   local cServer     := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 4, ";" )
-   local cUserName   := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 5, ";" )
-   local cPassword   := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 6, ";" )
-   local oConnection := TOleAuto():New( "ADODB.Connection" )
-   local oCatalog    := TOleAuto():New( "ADOX.Catalog" )
-   local aWAData     := USRRDD_AREADATA( nWA )
-   local oError
+   LOCAL cDataBase   := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 1, ";" )
+   LOCAL cTableName  := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 2, ";" )
+   LOCAL cDbEngine   := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 3, ";" )
+   LOCAL cServer     := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 4, ";" )
+   LOCAL cUserName   := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 5, ";" )
+   LOCAL cPassword   := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 6, ";" )
+   LOCAL oConnection := TOleAuto():New( "ADODB.Connection" )
+   LOCAL oCatalog    := TOleAuto():New( "ADOX.Catalog" )
+   LOCAL aWAData     := USRRDD_AREADATA( nWA )
+   LOCAL oError, n
 
-   do case
-      case Lower( Right( cDataBase, 4 ) ) == ".mdb"
-           if ! File( cDataBase )
+   DO CASE
+      CASE Lower( Right( cDataBase, 4 ) ) == ".mdb"
+           IF ! File( cDataBase )
               oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase )
-           endif
+           ENDIF
            oConnection:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase )
 
-      case Upper( cDbEngine ) == "MYSQL"
+      CASE Lower( Right( cDataBase, 4 ) ) == ".xls"
+           IF ! File( cDataBase )
+              oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False" )
+           ENDIF
+           oConnection:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False")
+
+      CASE Lower( Right( cDataBase, 3 ) ) == ".db"
+           IF ! File( cDataBase )
+              oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Paradox 3.x';" )
+           ENDIF
+           oConnection:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Paradox 3.x';" )
+
+      CASE Lower( Right( cDataBase, 4 ) ) == ".fdb"
+           IF ! File( cDataBase )
+              oCatalog:Create( "Driver=Firebird/InterBase(r) driver;Uid=" + cUserName + ";Pwd=" + cPassword + ";DbName=" + cDataBase + ";" )
+           ENDIF
+#ifdef __XHARBOUR__
+           __OutDebug( "Driver=Firebird/InterBase(r) driver;Uid=" + cUserName + ";Pwd=" + cPassword + ";DbName=" + cDataBase + ";" )
+#endif
+           oConnection:Open( "Driver=Firebird/InterBase(r) driver;Uid=" + cUserName + ";Pwd=" + cPassword + ";DbName=" + cDataBase + ";" )
+           oConnection:CursorLocation := adUseClient
+
+#ifdef __XHARBOUR__
+           __OutDebug( oConnection:State != adStateClosed,;
+                       oConnection:State != adStateOpen )
+#endif
+
+      CASE Upper( cDbEngine ) == "MYSQL"
            oConnection:Open( "DRIVER={MySQL ODBC 3.51 Driver};" + ;
                              "server=" + cServer + ;
                              ";database=" + cDataBase + ;
                              ";uid=" + cUserName + ;
                              ";pwd=" + cPassword )
 
-   endcase
+   ENDCASE
 
    TRY
       oConnection:Execute( "DROP TABLE " + cTableName )
    CATCH
-   END
+   END TRY
 
    TRY
-      oConnection:Execute( "CREATE TABLE [" + cTableName + "] (" + aWAData[ WA_SQLSTRUCT ] + ")" )
+      IF Lower( Right( cDataBase, 4 ) ) == ".fdb"
+#ifdef __XHARBOUR__
+         __OutDebug( "CREATE TABLE " + cTableName + " (" + StrTran( StrTran( aWAData[ WA_SQLSTRUCT ], "[", '"' ), "]", '"' ) + ")" )
+#endif
+         oConnection:Execute( "CREATE TABLE " + cTableName + " (" + StrTran( StrTran( aWAData[ WA_SQLSTRUCT ], "[", '"' ), "]", '"' ) + ")" )
+      ELSE
+         oConnection:Execute( "CREATE TABLE [" + cTableName + "] (" + aWAData[ WA_SQLSTRUCT ] + ")" )
+      ENDIF
    CATCH
       oError := ErrorNew()
       oError:GenCode     := EG_CREATE
@@ -165,77 +229,111 @@ static function ADO_CREATE( nWA, aOpenInfo )
                             HB_LANGERRMSG( EG_UNSUPPORTED ) + ")"
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       oError:CanDefault  := .T.
+
+      FOR n := 0 To oConnection:Errors:Count - 1
+          oError:Description += oConnection:Errors(n):Description
+#ifdef __XHARBOUR__
+          __OutDebug( oConnection:Errors(n):Description )
+#endif
+      NEXT
+
       UR_SUPER_ERROR( nWA, oError )
    END
 
    oConnection:Close()
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_CREATEFIELDS( nWA, aStruct )
+STATIC FUNCTION ADO_CREATEFIELDS( nWA, aStruct )
 
-   local aWAData := USRRDD_AREADATA( nWA )
-   local n
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
+   LOCAL n
 
    aWAData[ WA_SQLSTRUCT ] := ""
 
-   for n := 1 to Len( aStruct )
-      if n > 1
-         aWAData[ WA_SQLSTRUCT ] += ", "
-      endif
-      aWAData[ WA_SQLSTRUCT ] += "[" + aStruct[ n ][ DBS_NAME ] + "]"
-      do case
-         case aStruct[ n ][ DBS_TYPE ] $ "C,Character"
-              aWAData[ WA_SQLSTRUCT ] += " CHAR(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ") NULL"
-   
-         case aStruct[ n ][ DBS_TYPE ] == "N"
-              aWAData[ WA_SQLSTRUCT ] += " NUMERIC(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ")"
-   
-         case aStruct[ n ][ DBS_TYPE ] == "L"
-              aWAData[ WA_SQLSTRUCT ] += " LOGICAL"
-      endcase
-   next
+   FOR n := 1 to Len( aStruct )
+     IF n > 1
+        aWAData[ WA_SQLSTRUCT ] += ", "
+     ENDIF
+     aWAData[ WA_SQLSTRUCT ] += "[" + aStruct[ n ][ DBS_NAME ] + "]"
+     DO CASE
+        CASE aStruct[ n ][ DBS_TYPE ] $ "C,Character"
+             aWAData[ WA_SQLSTRUCT ] += " CHAR(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ") NULL"
 
-return SUCCESS
+        CASE aStruct[ n ][ DBS_TYPE ] == "V"
+             aWAData[ WA_SQLSTRUCT ] += " VARCHAR(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ") NULL"
 
-static function ADO_OPEN( nWA, aOpenInfo )
+        CASE aStruct[ n ][ DBS_TYPE ] == "B"
+             aWAData[ WA_SQLSTRUCT ] += " DOUBLE NULL"
 
-   local aWAData := USRRDD_AREADATA( nWA )
-   local cName, aField, oError, nResult
-   local oRecordSet, nTotalFields, n
+        CASE aStruct[ n ][ DBS_TYPE ] == "Y"
+             aWAData[ WA_SQLSTRUCT ] += " SMALLINT NULL"
+
+        CASE aStruct[ n ][ DBS_TYPE ] == "I"
+             aWAData[ WA_SQLSTRUCT ] += " MEDIUMINT NULL"
+
+        CASE aStruct[ n ][ DBS_TYPE ] == "D"
+             aWAData[ WA_SQLSTRUCT ] += " DATE NULL"
+
+        CASE aStruct[ n ][ DBS_TYPE ] == "T"
+             aWAData[ WA_SQLSTRUCT ] += " DATETIME NULL"
+
+        CASE aStruct[ n ][ DBS_TYPE ] == "@"
+             aWAData[ WA_SQLSTRUCT ] += " TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP"
+
+        CASE aStruct[ n ][ DBS_TYPE ] == "M"
+             aWAData[ WA_SQLSTRUCT ] += " TEXT NULL"
+
+        CASE aStruct[ n ][ DBS_TYPE ] == "N"
+             aWAData[ WA_SQLSTRUCT ] += " NUMERIC(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ")"
+
+        CASE aStruct[ n ][ DBS_TYPE ] == "L"
+             aWAData[ WA_SQLSTRUCT ] += " LOGICAL"
+     ENDCASE
+  NEXT
+
+RETURN SUCCESS
+
+STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
+
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
+   LOCAL cName, aField, oError, nResult
+   LOCAL oRecordSet, nTotalFields, n
 
    // When there is no ALIAS we will create new one using file name
-   if aOpenInfo[ UR_OI_ALIAS ] == nil
+   IF Empty( aOpenInfo[ UR_OI_ALIAS ] )
       HB_FNAMESPLIT( aOpenInfo[ UR_OI_NAME ], , @cName )
       aOpenInfo[ UR_OI_ALIAS ] := cName
-   endif
+   ENDIF
 
-   aWAData[ WA_CONNECTION ] := TOleAuto():New( "ADODB.Connection" )
-   aWAData[ WA_TABLENAME ] := s_cTableName
-   aWAData[ WA_QUERY ]    := s_cQuery
-   aWAData[ WA_USERNAME ] := s_cUserName
-   aWAData[ WA_PASSWORD ] := s_cPassword
-   aWAData[ WA_SERVER ] := s_cServer
-   aWAData[ WA_ENGINE ] := s_cEngine
+   IF Empty( aOpenInfo[ UR_OI_CONNECT ] )
+      aWAData[ WA_CONNECTION ] := TOleAuto():New( "ADODB.Connection" )
+      aWAData[ WA_TABLENAME ] := s_cTableName
+      aWAData[ WA_QUERY ]    := s_cQuery
+      aWAData[ WA_USERNAME ] := s_cUserName
+      aWAData[ WA_PASSWORD ] := s_cPassword
+      aWAData[ WA_SERVER ] := s_cServer
+      aWAData[ WA_ENGINE ] := s_cEngine
+      aWAData[ WA_CONNOPEN ] := .T.
 
-   do case
-      case Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".mdb"
-           if Empty( aWAData[ WA_PASSWORD ] )
+      DO CASE
+      CASE Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".mdb"
+           IF Empty( aWAData[ WA_PASSWORD ] )
               aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] )
-           else
+           ELSE
               aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Jet OLEDB:Database Password=" + AllTrim( aWAData[ WA_PASSWORD ] ) )
-           endif
+           ENDIF
 
-      case Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".xls"
+      CASE Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".xls"
            aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False" )
 
-      case Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".dbf"
+      CASE Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".dbf"
            aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties=dBASE IV;User ID=Admin;Password=;" )
 
-      case Lower( Right( aOpenInfo[ UR_OI_NAME ], 3 ) ) == ".db"
+      CASE Lower( Right( aOpenInfo[ UR_OI_NAME ], 3 ) ) == ".db"
            aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties='Paradox 3.x';" )
 
-      case aWAData[ WA_ENGINE ] == "MYSQL"
+      CASE aWAData[ WA_ENGINE ] == "MYSQL"
            aWAData[ WA_CONNECTION ]:Open( "DRIVER={MySQL ODBC 3.51 Driver};" + ;
                                           "server=" + aWAData[ WA_SERVER ] + ;
                                           ";database=" + aOpenInfo[ UR_OI_NAME ] + ;
@@ -249,37 +347,73 @@ static function ADO_OPEN( nWA, aOpenInfo )
                                           ";uid=" + aWAData[ WA_USERNAME ] + ;
                                           ";pwd=" + aWAData[ WA_PASSWORD ] )
 
-      case aWAData[ WA_ENGINE ] == "ORACLE"
+      CASE aWAData[ WA_ENGINE ] == "ORACLE"
            aWAData[ WA_CONNECTION ]:Open( "Provider=MSDAORA.1;" + ;
                                           "Persist Security Info=False" + ;
                                           iif( Empty( aWAData[ WA_SERVER ] ),;
                                           "", ";Data source=" + aWAData[ WA_SERVER ] ) + ;
                                           ";User ID=" + aWAData[ WA_USERNAME ] + ;
                                           ";Password=" + aWAData[ WA_PASSWORD ] )
+      CASE aWAData[ WA_ENGINE ] == "FIREBIRD"
+           aWAData[ WA_CONNECTION ]:Open( "Driver=Firebird/InterBase(r) driver;" + ;
+                                          "Persist Security Info=False" +;
+                                          ";Uid=" + aWAData[ WA_USERNAME ] +;
+                                          ";Pwd=" + aWAData[ WA_PASSWORD ] +;
+                                          ";DbName=" + aOpenInfo[ UR_OI_NAME ] )
+      ENDCASE
+   ELSE
+      aWAData[ WA_CONNECTION ] := TOleAuto():New( aOpenInfo[ UR_OI_CONNECT ], "ADODB.Connection" )
+      aWAData[ WA_TABLENAME ] := s_cTableName
+      aWAData[ WA_QUERY ]    := s_cQuery
+      aWAData[ WA_USERNAME ] := s_cUserName
+      aWAData[ WA_PASSWORD ] := s_cPassword
+      aWAData[ WA_SERVER ] := s_cServer
+      aWAData[ WA_ENGINE ] := s_cEngine
+      aWAData[ WA_CONNOPEN ] := .F.
+   ENDIF
 
-   endcase
+   // will be initilized
+   s_cQuery := ""
+
+   IF Empty( aWAData[ WA_QUERY ] )
+      aWAData[ WA_QUERY ] := "SELECT * FROM "
+   ENDIF
 
    oRecordSet := TOleAuto():New( "ADODB.Recordset" )
-   oRecordSet:CursorType     := adOpenDynamic
-   oRecordSet:CursorLocation := adUseClient
-   oRecordSet:LockType       := adLockPessimistic
-   oRecordSet:Open( aWAData[ WA_QUERY ] + aWAData[ WA_TABLENAME ], aWAData[ WA_CONNECTION ] )
 
-   aWAData[ WA_CATALOG ] := TOleAuto():New( "ADOX.Catalog" )
-   aWAData[ WA_CATALOG ]:ActiveConnection := aWAData[ WA_CONNECTION ]
-
-   if oRecordSet == NIL
+   IF oRecordSet == NIL
       oError := ErrorNew()
       oError:GenCode     := EG_OPEN
       oError:SubCode     := 1001
       oError:Description := HB_LANGERRMSG( EG_OPEN )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
-      oError:OsCode      := 0 // To be implemented
+      oError:OsCode      := 0 // TODO
       oError:CanDefault  := .T.
 
       UR_SUPER_ERROR( nWA, oError )
-      return FAILURE
-   endif
+      RETURN FAILURE
+   ENDIF
+   oRecordSet:CursorType     := adOpenDynamic
+   oRecordSet:CursorLocation := adUseClient
+   oRecordSet:LockType       := adLockPessimistic
+   IF aWAData[ WA_QUERY ] == "SELECT * FROM "
+      oRecordSet:Open( aWAData[ WA_QUERY ] + aWAData[ WA_TABLENAME ], aWAData[ WA_CONNECTION ] )
+   ELSE
+      oRecordSet:Open( aWAData[ WA_QUERY ], aWAData[ WA_CONNECTION ] )
+   ENDIF
+
+   TRY
+      aWAData[ WA_CATALOG ] := TOleAuto():New( "ADOX.Catalog" )
+      aWAData[ WA_CATALOG ]:ActiveConnection := aWAData[ WA_CONNECTION ]
+   CATCH
+   END TRY
+
+   IF Empty( aWAData[ WA_CATALOG ] )
+      TRY
+         aWAData[ WA_CATALOG ] := aWAData[ WA_CONNECTION ]:OpenSchema( adSchemaIndexes )
+      CATCH
+      END TRY
+   ENDIF
 
    aWAData[ WA_RECORDSET ] := oRecordSet
    aWAData[ WA_BOF ] := aWAData[ WA_EOF ] := .F.
@@ -293,291 +427,600 @@ static function ADO_OPEN( nWA, aOpenInfo )
       aField[ UR_FI_TYPEEXT ] := 0
       aField[ UR_FI_LEN ]     := ADO_GETFIELDSIZE( aField[ UR_FI_TYPE ], oRecordSet:Fields( n - 1 ):DefinedSize )
       aField[ UR_FI_DEC ]     := 0
+#ifdef UR_FI_FLAGS
+      aField[ UR_FI_FLAGS ]   := 0
+#endif
+#ifdef UR_FI_STEP
+      aField[ UR_FI_STEP ]    := 0
+#endif
       UR_SUPER_ADDFIELD( nWA, aField )
-    NEXT
+   NEXT
 
    nResult := UR_SUPER_OPEN( nWA, aOpenInfo )
 
-   if nResult == SUCCESS
+   IF nResult == SUCCESS
       ADO_GOTOP( nWA )
-   endif
+   ENDIF
 
-return nResult
+RETURN nResult
 
-static function ADO_CLOSE( nWA )
+STATIC FUNCTION ADO_CLOSE( nWA )
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    TRY
-      // oRecordSet:Close()
+      oRecordSet:Close()
+      IF ! Empty( aWAData[ WA_CONNOPEN ] )
+        IF aWAData[ WA_CONNECTION ]:State != adStateClosed
+           IF aWAData[ WA_CONNECTION ]:State != adStateOpen
+              aWAData[ WA_CONNECTION ]:Cancel()
+           ELSE
+              aWAData[ WA_CONNECTION ]:Close()
+           ENDIF
+        ENDIF
+      ENDIF
    CATCH
    END
 
-return UR_SUPER_CLOSE( nWA )
+RETURN UR_SUPER_CLOSE( nWA )
 
-static function ADO_GETVALUE( nWA, nField, xValue )
+STATIC FUNCTION ADO_GETVALUE( nWA, nField, xValue )
 
-   local aWAData := USRRDD_AREADATA( nWA )
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
-   if aWAData[ WA_EOF ] .or. oRecordSet:RecordCount() == 0
-      xValue := nil
-   else
-      xValue := oRecordSet:Fields( nField - 1 ):Value
-   endif
+   WITH OBJECT USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+      IF aWAData[ WA_EOF ] .OR. :EOF .OR. :BOF
+         xValue := nil
+         IF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_STRING
+            xValue := Space( :Fields( nField - 1 ):DefinedSize )
+         ENDIF
+      ELSE
+         xValue := :Fields( nField - 1 ):Value
 
-return SUCCESS
+         IF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_STRING
+            IF ValType( xValue ) == "U"
+                xValue := Space( :Fields( nField - 1 ):DefinedSize )
+            ELSE
+                xValue := PadR( xValue, :Fields( nField - 1 ):DefinedSize )
+            ENDIF
+         ELSEIF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_DATE
+            // Null values
+            IF ValType( xValue ) == "U"
+                xValue := cToD( "" )
+            ENDIF
+#ifdef HB_FT_DATETIME
+         ELSEIF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_DATETIME
+            // Null values
+            IF ValType( xValue ) == "U"
+                xValue := cToD( "" )
+            ENDIF
+#endif
+#ifdef HB_FT_TIMESTAMP
+         ELSEIF ADO_GETFIELDTYPE( :Fields( nField - 1 ):Type ) == HB_FT_TIMESTAMP
+            // Null values
+            IF ValType( xValue ) == "U"
+                xValue := cToD( "" )
+            ENDIF
+#endif
+         ENDIF
+      ENDIF
+   END WITH
 
-static function ADO_GOTOID( nWA, nRecord )
+RETURN SUCCESS
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ], nRecNo
+STATIC FUNCTION ADO_GOTO( nWA, nRecord )
 
-   if oRecordSet:RecordCount() > 0
-      oRecordSet:MoveFirst()
-      oRecordSet:Move( nRecord - 1, 0 )
-    endif
-    ADO_RECID( nWA, @nRecNo )
+   LOCAL nRecNo
+
+   WITH OBJECT USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+      IF :RecordCount > 0
+         :MoveFirst()
+         :Move( nRecord - 1, 0 )
+      ENDIF
+      ADO_RECID( nWA, @nRecNo )
+   END WITH
 
 RETURN iif( nRecord == nRecNo, SUCCESS, FAILURE )
 
-static function ADO_GOTOP( nWA )
+STATIC FUNCTION ADO_GOTOID( nWA, nRecord )
+   LOCAL nRecNo
 
-   local aWAData    := USRRDD_AREADATA( nWA )
-   local oRecordSet := aWAData[ WA_RECORDSET ]
+   WITH OBJECT USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+      IF :RecordCount > 0
+         :MoveFirst()
+         :Move( nRecord - 1, 0 )
+      ENDIF
+      ADO_RECID( nWA, @nRecNo )
+   END WITH
 
-   if oRecordSet:RecordCount() != 0
+RETURN iif( nRecord == nRecNo, SUCCESS, FAILURE )
+
+STATIC FUNCTION ADO_GOTOP( nWA )
+
+   LOCAL aWAData    := USRRDD_AREADATA( nWA )
+   LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
+
+   IF oRecordSet:RecordCount() != 0
       oRecordSet:MoveFirst()
-   endif
+   ENDIF
 
    aWAData[ WA_BOF ] := .F.
    aWAData[ WA_EOF ] := .F.
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_GOBOTTOM( nWA )
+STATIC FUNCTION ADO_GOBOTTOM( nWA )
 
-   local aWAData    := USRRDD_AREADATA( nWA )
-   local oRecordSet := aWAData[ WA_RECORDSET ]
+   LOCAL aWAData    := USRRDD_AREADATA( nWA )
+   LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
 
    oRecordSet:MoveLast()
 
    aWAData[ WA_BOF ] := .F.
    aWAData[ WA_EOF ] := .F.
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_SKIPRAW( nWA, nRecords )
+STATIC FUNCTION ADO_SKIPRAW( nWA, nToSkip )
 
-   local aWAData    := USRRDD_AREADATA( nWA )
-   local oRecordSet := aWAData[ WA_RECORDSET ]
+   LOCAL aWAData    := USRRDD_AREADATA( nWA )
+   LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
+   LOCAL nResult    := SUCCESS
 
-   if nRecords != 0
-      if aWAData[ WA_EOF ]
-         if nRecords > 0
-            return SUCCESS
-         endif
+   IF ! Empty( aWAData[ WA_PENDINGREL ] )
+      IF ADO_FORCEREL( nWA ) != SUCCESS
+         RETURN FAILURE
+      ENDIF
+   ENDIF
+
+   IF nToSkip != 0
+      IF aWAData[ WA_EOF ]
+         IF nToSkip > 0
+            RETURN SUCCESS
+         ENDIF
          ADO_GOBOTTOM( nWA )
-         ++nRecords
-       endif
-       if nRecords < 0 .AND. oRecordSet:AbsolutePosition <= -nRecords
-          oRecordSet:MoveFirst()
-          aWAData[ WA_BOF ] := .T.
-          aWAData[ WA_EOF ] := oRecordSet:EOF
-       elseif nRecords != 0
-          oRecordSet:Move( nRecords )
-          aWAData[ WA_BOF ] := .F.
-          aWAData[ WA_EOF ] := oRecordSet:EOF
-       endif
-   endif
+         ++nToSkip
+      ENDIF
+      TRY
+         IF aWAData[WA_CONNECTION]:State != adStateClosed
+            IF nToSkip < 0 .AND. oRecordSet:AbsolutePosition <= -nToSkip
+               oRecordSet:MoveFirst()
+               aWAData[ WA_BOF ] := .T.
+               aWAData[ WA_EOF ] := oRecordSet:EOF
+            ELSEIF nToSkip != 0
+               oRecordSet:Move( nToSkip )
+               aWAData[ WA_BOF ] := .F.
+               aWAData[ WA_EOF ] := oRecordSet:EOF
+            ENDIF
+         ELSE
+            nResult := FAILURE
+         ENDIF
+      CATCH
+         nResult := FAILURE
+      END
+   ENDIF
 
-return SUCCESS
 
-static function ADO_BOF( nWA, lBof )
+RETURN nResult
 
-   local aWAData := USRRDD_AREADATA( nWA )
+STATIC FUNCTION ADO_BOF( nWA, lBof )
+
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
    lBof := aWAData[ WA_BOF ]
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_EOF( nWA, lEof )
+STATIC FUNCTION ADO_EOF( nWA, lEof )
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL nResult    := SUCCESS
 
-   lEof := ( oRecordSet:AbsolutePosition == -3 )
+   TRY
+      IF USRRDD_AREADATA( nWA )[WA_CONNECTION]:State != adStateClosed
+         lEof := ( oRecordSet:AbsolutePosition == -3 )
+      ENDIF
+   CATCH
+      nResult := FAILURE
+   END
 
-return SUCCESS
+RETURN nResult
 
-static function ADO_DELETED( nWA, lDeleted )
+STATIC FUNCTION ADO_DELETED( nWA, lDeleted )
 
-  local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-  TRY
-     if oRecordSet:Status == adRecDeleted
-        lDeleted := .T.
-     else
-        lDeleted := .F.
-     endif
-  CATCH
-     lDeleted := .f.
-  END
+   TRY
+      IF oRecordSet:Status == adRecDeleted
+              lDeleted := .T.
+           ELSE
+              lDeleted := .F.
+           ENDIF
+   CATCH
+      lDeleted := .F.
+   END TRY
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_DELETE( nWA )
+STATIC FUNCTION ADO_DELETE( nWA )
 
-  local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    oRecordSet:Delete()
 
    ADO_SKIPRAW( nWA, 1 )
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_RECID( nWA, nRecNo )
+STATIC FUNCTION ADO_RECNO( nWA, nRecNo )
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL nResult    := SUCCESS
 
-   nRecno := iif( oRecordSet:AbsolutePosition == -3, oRecordSet:RecordCount() + 1, oRecordSet:AbsolutePosition )
+   TRY
+      IF USRRDD_AREADATA( nWA )[WA_CONNECTION]:State != adStateClosed
+         nRecno := iif( oRecordSet:AbsolutePosition == -3, oRecordSet:RecordCount() + 1, oRecordSet:AbsolutePosition )
 
-return SUCCESS
+      ELSE
+         nRecno  := 0
+         nResult := FAILURE
+      ENDIF
+   CATCH
+      nRecNo  := 0
+      nResult := FAILURE
+   END
 
-static function ADO_RECCOUNT( nWA, nRecords )
+RETURN nResult
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+STATIC FUNCTION ADO_RECID( nWA, nRecNo )
+RETURN ADO_RECNO( nWA, @nRecNo )
+
+STATIC FUNCTION ADO_RECCOUNT( nWA, nRecords )
+
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    nRecords := oRecordSet:RecordCount()
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_PUTVALUE( nWA, nField, xValue )
+STATIC FUNCTION ADO_PUTVALUE( nWA, nField, xValue )
 
-   local aWAData := USRRDD_AREADATA( nWA )
-   local oRecordSet := aWAData[ WA_RECORDSET ]
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
+   LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
 
-   if ! aWAData[ WA_EOF ] .and. !( oRecordSet:Fields( nField - 1 ):Value == xValue )
+   IF ! aWAData[ WA_EOF ] .AND. !( oRecordSet:Fields( nField - 1 ):Value == xValue )
       oRecordSet:Fields( nField - 1 ):Value := xValue
       TRY
          oRecordSet:Update()
       CATCH
       END
-   endif
+   ENDIF
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_APPEND( nWA, lUnLockAll )
+STATIC FUNCTION ADO_APPEND( nWA, lUnLockAll )
 
-  local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-  HB_SYMBOL_UNUSED( lUnLockAll )
+   HB_SYMBOL_UNUSED( lUnLockAll )
 
-  oRecordSet:AddNew()
+   oRecordSet:AddNew()
 
-  TRY
-     oRecordSet:Update()
-  CATCH
-  END
+        TRY
+      oRecordSet:Update()
+        CATCH
+   END
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_FLUSH( nWA )
+STATIC FUNCTION ADO_FLUSH( nWA )
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    TRY
       oRecordSet:Update()
    CATCH
    END
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_ORDINFO( nWA, nIndex, aOrderInfo )
+STATIC FUNCTION ADO_ORDINFO( nWA, nIndex, aOrderInfo )
 
-   local aWAData    := USRRDD_AREADATA( nWA )
-   local oRecordSet := aWAData[ WA_RECORDSET ]
+   LOCAL aWAData    := USRRDD_AREADATA( nWA )
+   LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
+   LOCAL nResult := SUCCESS
 
-   do case
-      case nIndex == UR_ORI_TAG
-           if aOrderInfo[ UR_ORI_TAG ] < aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
-              aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( aOrderInfo[ UR_ORI_TAG ] ):Name
-           else
-              aOrderInfo[ UR_ORI_RESULT ] := ""
-           endif
-   endcase
+        DO CASE
+   CASE nIndex == DBOI_EXPRESSION
+      IF ! Empty( aWAData[ WA_CATALOG ] ) .AND. !Empty( aOrderInfo[ UR_ORI_TAG ] ) .AND.;
+            aOrderInfo[ UR_ORI_TAG ] < aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
+         aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( aOrderInfo[ UR_ORI_TAG ] ):Name
+      ELSE
+         aOrderInfo[ UR_ORI_RESULT ] := ""
+      ENDIF
+   CASE nIndex == DBOI_NAME
+      IF ! Empty( aWAData[ WA_CATALOG ] ) .AND. !Empty( aOrderInfo[ UR_ORI_TAG ] ) .AND.;
+            aOrderInfo[ UR_ORI_TAG ] < aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
+         aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( aOrderInfo[ UR_ORI_TAG ] ):Name
+      ELSE
+         aOrderInfo[ UR_ORI_RESULT ] := ""
+      ENDIF
+   CASE nIndex == DBOI_NUMBER
+      aOrderInfo[ UR_ORI_RESULT ] := aOrderInfo[ UR_ORI_TAG ]
+   CASE nIndex == DBOI_BAGNAME
+      aOrderInfo[ UR_ORI_RESULT ] := ""
+   CASE nIndex == DBOI_BAGEXT
+      aOrderInfo[ UR_ORI_RESULT ] := ""
+   CASE nIndex == DBOI_ORDERCOUNT
+      IF ! Empty( aWAData[ WA_CATALOG ] )
+         aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
+      ELSE
+         aOrderInfo[ UR_ORI_RESULT ] := 0
+      ENDIF
+   CASE nIndex == DBOI_FILEHANDLE
+      aOrderInfo[ UR_ORI_RESULT ] := 0
+   CASE nIndex == DBOI_ISCOND
+      aOrderInfo[ UR_ORI_RESULT ] := .F.
+   CASE nIndex == DBOI_ISDESC
+      aOrderInfo[ UR_ORI_RESULT ] := .F.
+   CASE nIndex == DBOI_UNIQUE
+      aOrderInfo[ UR_ORI_RESULT ] := .F.
+   CASE nIndex == DBOI_POSITION
+      IF aWAData[ WA_CONNECTION ]:State != adStateClosed
+         ADO_RECID( nWA, @aOrderInfo[ UR_ORI_RESULT ] )
+      ELSE
+         aOrderInfo[ UR_ORI_RESULT ] := 0
+         nResult := FAILURE
+      ENDIF
+   CASE nIndex == DBOI_RECNO
+      IF aWAData[ WA_CONNECTION ]:State != adStateClosed
+         ADO_RECID( nWA, @aOrderInfo[ UR_ORI_RESULT ] )
+      ELSE
+         aOrderInfo[ UR_ORI_RESULT ] := 0
+         nResult := FAILURE
+      ENDIF
+   CASE nIndex == DBOI_KEYCOUNT
+      IF aWAData[ WA_CONNECTION ]:State != adStateClosed
+         aOrderInfo[ UR_ORI_RESULT ] := oRecordSet:RecordCount
+      ELSE
+         aOrderInfo[ UR_ORI_RESULT ] := 0
+         nResult := FAILURE
+      ENDIF
+        ENDCASE
 
-return SUCCESS
+RETURN nResult
 
-static function ADO_PACK( nWA )
+STATIC FUNCTION ADO_RECINFO( nWA, nRecord, nInfoType, uInfo )
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL nResult := SUCCESS
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-return SUCCESS
+#ifdef UR_DBRI_DELETED
+   DO CASE
+   CASE nInfoType == UR_DBRI_DELETED
+      uInfo := .F.
+   CASE nInfoType == UR_DBRI_LOCKED
+      uInfo := .T.
+   CASE nInfoType == UR_DBRI_RECSIZE
+   CASE nInfoType == UR_DBRI_RECNO
+      nResult := ADO_RECID( nWA, @nRecord )
+   CASE nInfoType == UR_DBRI_UPDATED
+      uInfo := .F.
+   CASE nInfoType == UR_DBRI_ENCRYPTED
+      uInfo := .F.
+   CASE nInfoType == UR_DBRI_RAWRECORD
+      uInfo := ""
+   CASE nInfoType == UR_DBRI_RAWMEMOS
+      uInfo := ""
+   CASE nInfoType == UR_DBRI_RAWDATA
+      nResult := ADO_GOTO( nWA, nRecord )
+      uInfo := ""
+   ENDCASE
+#else
+   HB_SYMBOL_UNUSED( nRecord )
+   HB_SYMBOL_UNUSED( nInfoType )
+   HB_SYMBOL_UNUSED( uInfo )
+#endif
 
-static function ADO_RAWLOCK( nWA, nAction, nRecNo )
+RETURN nResult
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+STATIC FUNCTION ADO_FIELDNAME( nWA, nField, cFieldName )
+   LOCAL nResult := SUCCESS
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-  HB_SYMBOL_UNUSED( nAction )
-  HB_SYMBOL_UNUSED( nRecNo )
+   TRY
+      cFieldName := oRecordSet:Fields( nField - 1 ):Name
+   CATCH
+      cFieldName := ''
+      nResult    := FAILURE
+   END TRY
 
-return SUCCESS
+RETURN nResult
 
-static function ADO_LOCK( nWA, aLockInfo  )
+STATIC FUNCTION ADO_FIELDINFO( nWA, nField, nInfoType, uInfo )
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL nType, nLen
+   LOCAL nResult := SUCCESS
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+
+   DO CASE
+   CASE nInfoType == DBS_NAME
+       uInfo := oRecordSet:Fields( nField - 1 ):Name
+
+   CASE nInfoType == DBS_TYPE
+       nType := ADO_GETFIELDTYPE( oRecordSet:Fields( nField - 1 ):Type )
+       DO CASE
+       CASE nType == HB_FT_STRING
+           uInfo := "C"
+       CASE nType == HB_FT_LOGICAL
+           uInfo := "L"
+       CASE nType == HB_FT_MEMO
+           uInfo := "M"
+       CASE nType == HB_FT_OLE
+           uInfo := "G"
+#ifdef HB_FT_PICTURE
+       CASE nType == HB_FT_PICTURE
+           uInfo := "P"
+#endif
+       CASE nType == HB_FT_ANY
+           uInfo := "V"
+       CASE nType == HB_FT_DATE
+           uInfo := "D"
+#ifdef HB_FT_DATETIME
+       CASE nType == HB_FT_DATETIME
+           uInfo := "T"
+#endif
+#ifdef HB_FT_TIMESTAMP
+       CASE nType == HB_FT_TIMESTAMP
+           uInfo := "@"
+#endif
+       CASE nType == HB_FT_LONG
+           uInfo := "N"
+       CASE nType == HB_FT_INTEGER
+           uInfo := "I"
+       CASE nType == HB_FT_DOUBLE
+           uInfo := "B"
+       OTHERWISE
+           uInfo := "U"
+       ENDCASE
+
+   CASE nInfoType == DBS_LEN
+        ADO_FIELDINFO( nWA, nField, DBS_TYPE, @nType )
+        IF nType == 'N'
+            nLen := oRecordSet:Fields( nField - 1 ):Precision
+        ELSE
+            nLen := oRecordSet:Fields( nField - 1 ):DefinedSize
+        ENDIF
+        // Un campo mayor de 1024 lo consideramos un campo memo
+        uInfo := iif( nLen > 1024, 10, nLen )
+
+   CASE nInfoType == DBS_DEC
+        ADO_FIELDINFO( nWA, nField, DBS_LEN, @nLen )
+        ADO_FIELDINFO( nWA, nField, DBS_TYPE, @nType )
+        IF oRecordSet:Fields( nField - 1 ):Type == adInteger
+            uInfo := 0
+        ELSEIF nType == 'N'
+            uInfo := Min( Max( 0, nLen - 1 - oRecordSet:Fields( nField - 1 ):DefinedSize ), 15 )
+        ELSE
+            uInfo := 0
+        ENDIF
+#ifdef DBS_FLAG
+   CASE nInfoType == DBS_FLAG
+        uInfo := 0
+#endif
+#ifdef DBS_STEP
+   CASE nInfoType == DBS_STEP
+        uInfo := 0
+#endif
+   OTHERWISE
+       RETURN FAILURE
+   ENDCASE
+
+RETURN SUCCESS
+
+STATIC FUNCTION ADO_ORDLSTFOCUS( nWA, aOrderInfo )
+
+   HB_SYMBOL_UNUSED( nWA )
+   HB_SYMBOL_UNUSED( aOrderInfo )
+/* TODO
+   LOCAL nRecNo
+   LOCAL aWAData    := USRRDD_AREADATA( nWA )
+   LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
+
+   WITH OBJECT oRecordSet
+      ADO_RECID( nWA, @nRecNo )
+
+      :Close()
+      IF aOrderInfo[ UR_ORI_TAG ] == 0
+          :Open( "SELECT * FROM " + s_aTableNames[ nWA ] , HB_QWith(), adOpenDynamic, adLockPessimistic )
+      ELSE
+          //:Open( "SELECT * FROM " + ::oTabla:cTabla + ' ORDER BY ' + ::OrdKey( uTag ) , QWith(), adOpenDynamic, adLockPessimistic, adCmdUnspecified )
+          :Open( "SELECT * FROM " + s_aTableNames[ nWA ], HB_QWith(), adOpenDynamic, adLockPessimistic )
+      ENDIF
+      aOrderInfo[ UR_ORI_RESULT ] := aOrderInfo[ UR_ORI_TAG ]
+
+      ADO_GOTOP( nWA )
+      ADO_GOTO( nWA, nRecNo )
+   END WITH
+*/
+RETURN SUCCESS
+
+STATIC FUNCTION ADO_PACK( nWA )
+
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+
+RETURN SUCCESS
+
+STATIC FUNCTION ADO_RAWLOCK( nWA, nAction, nRecNo )
+
+/* TODO
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+*/
+   HB_SYMBOL_UNUSED( nRecNo )
+   HB_SYMBOL_UNUSED( nWA )
+   HB_SYMBOL_UNUSED( nAction )
+
+RETURN SUCCESS
+
+STATIC FUNCTION ADO_LOCK( nWA, aLockInfo  )
+
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    aLockInfo[ UR_LI_METHOD ] := DBLM_MULTIPLE
    aLockInfo[ UR_LI_RECORD ] := RECNO()
    aLockInfo[ UR_LI_RESULT ] := .T.
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_UNLOCK( nWA, xRecID )
+STATIC FUNCTION ADO_UNLOCK( nWA, xRecID )
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+/* TODO
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+*/
+   HB_SYMBOL_UNUSED( xRecId )
+   HB_SYMBOL_UNUSED( nWA )
 
-  HB_SYMBOL_UNUSED( xRecID )
+RETURN SUCCESS
 
-return SUCCESS
+STATIC FUNCTION ADO_SETFILTER( nWA, aFilterInfo )
 
-static function ADO_SETFILTER( nWA, aFilterInfo )
-
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    oRecordSet:Filter := SQLTranslate( aFilterInfo[ UR_FRI_CEXPR ] )
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_CLEARFILTER( nWA )
+STATIC FUNCTION ADO_CLEARFILTER( nWA )
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    TRY
       oRecordSet:Filter := ""
    CATCH
    END
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_ZAP( nWA )
+STATIC FUNCTION ADO_ZAP( nWA )
 
-   local aWAData    := USRRDD_AREADATA( nWA )
-   local oRecordSet := aWAData[ WA_RECORDSET ]
+   LOCAL aWAData    := USRRDD_AREADATA( nWA )
+   LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
 
-   if aWAData[ WA_CONNECTION ] != nil .and. aWAData[ WA_TABLENAME ] != nil
+   IF aWAData[ WA_CONNECTION ] != NIL .and. aWAData[ WA_TABLENAME ] != nil
       TRY
          aWAData[ WA_CONNECTION ]:Execute( "TRUNCATE TABLE " + aWAData[ WA_TABLENAME ] )
       CATCH
          aWAData[ WA_CONNECTION ]:Execute( "DELETE * FROM " + aWAData[ WA_TABLENAME ] )
       END
       oRecordSet:Requery()
-   endif
+   ENDIF
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_SETLOCATE( nWA, aScopeInfo )
+STATIC FUNCTION ADO_SETLOCATE( nWA, aScopeInfo )
 
-   local aWAData := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
    aScopeInfo[ UR_SI_CFOR ] := SQLTranslate( aWAData[ WA_LOCATEFOR ] )
 
@@ -585,66 +1028,69 @@ static function ADO_SETLOCATE( nWA, aScopeInfo )
 
 return SUCCESS
 
-static function ADO_LOCATE( nWA, lContinue )
+STATIC FUNCTION ADO_LOCATE( nWA, lContinue )
 
-   local aWAData    := USRRDD_AREADATA( nWA )
-   local oRecordSet := aWAData[ WA_RECORDSET ]
+   LOCAL aWAData    := USRRDD_AREADATA( nWA )
+   LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
 
    oRecordSet:Find( aWAData[ WA_SCOPEINFO ][ UR_SI_CFOR ], iif( lContinue, 1, 0 ) )
-   USRRDD_SETFOUND( nWA, ! oRecordSet:EOF )
+   aWAData[ WA_FOUND ] := ! oRecordSet:EOF
    aWAData[ WA_EOF ] := oRecordSet:EOF
 
-return SUCCESS
+RETURN SUCCESS
 
+STATIC FUNCTION ADO_CLEARREL( nWA )
 
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
+   LOCAL nKeys := 0, cKeyName
 
-static function ADO_CLEARREL( nWA )
+   TRY
+      nKeys := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count
+   CATCH
+   END
 
-   local aWAData := USRRDD_AREADATA( nWA )
-   local nKeys := 0, cKeyName
-
-   if aWAData[ WA_CATALOG ] != nil .and. aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys != nil
-      TRY
-         nKeys := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count
-      CATCH
-      END
-   endif
-
-   if nKeys > 0
+   IF nKeys > 0
       cKeyName := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nKeys - 1 ):Name
-      if !( Upper( cKeyName ) == "PRIMARYKEY" )
+      IF !( Upper( cKeyName ) == "PRIMARYKEY" )
          aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Delete( cKeyName )
-      endif
-   endif
+      ENDIF
+   ENDIF
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_RELAREA( nWA, nRelNo, nRelArea )
+STATIC FUNCTION ADO_RELAREA( nWA, nRelNo, nRelArea )
 
-   local aWAData := USRRDD_AREADATA( nWA )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
+   TRY
+      IF nRelNo <= aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count()
+         nRelArea := Select( aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):RelatedTable )
+      ENDIF
+   CATCH
+      nRelArea := 0
+   END TRY
 
-   if nRelNo <= aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count()
-      nRelArea := Select( aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):RelatedTable )
-   endif
+RETURN SUCCESS
 
-return SUCCESS
+STATIC FUNCTION ADO_RELTEXT( nWA, nRelNo, cExpr )
 
-static function ADO_RELTEXT( nWA, nRelNo, cExpr )
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
 
-   local aWAData := USRRDD_AREADATA( nWA )
+   TRY
+      IF nRelNo <= aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count()
+         cExpr := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):Columns( 0 ):RelatedColumn
+      ENDIF
+   CATCH
+      cExpr := ''
+   END TRY
 
-   if nRelNo <= aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count()
-      cExpr := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):Columns( 0 ):RelatedColumn
-   endif
+RETURN SUCCESS
 
-return SUCCESS
+STATIC FUNCTION ADO_SETREL( nWA, aRelInfo )
 
-static function ADO_SETREL( nWA, aRelInfo )
-
-   local aWAData := USRRDD_AREADATA( nWA )
-   local cParent := Alias( aRelInfo[ UR_RI_PARENT ] )
-   local cChild  := Alias( aRelInfo[ UR_RI_CHILD ] )
-   local cKeyName := cParent + "_" + cChild
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
+   LOCAL cParent := Alias( aRelInfo[ UR_RI_PARENT ] )
+   LOCAL cChild  := Alias( aRelInfo[ UR_RI_CHILD ] )
+   LOCAL cKeyName := cParent + "_" + cChild
 
    TRY
       aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Append( cKeyName, adKeyForeign,;
@@ -653,34 +1099,83 @@ static function ADO_SETREL( nWA, aRelInfo )
       // raise error for can't create relation
    END
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_ORDLSTADD( nWA, aOrderInfo )
+STATIC FUNCTION ADO_FORCEREL( nWA )
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL aPendingRel
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
+
+   IF ! Empty( aWAData[ WA_PENDINGREL ] )
+
+      aPendingRel := aWAData[ WA_PENDINGREL ]
+      aWAData[ WA_PENDINGREL ] := Nil
+
+      RETURN ADO_RELEVAL( nWA, aPendingRel )
+   ENDIF
+
+RETURN SUCCESS
+
+STATIC FUNCTION ADO_RELEVAL( nWA, aRelInfo )
+   LOCAL aInfo, nReturn, nOrder, uResult
+
+   nReturn := ADO_EVALBLOCK( aRelInfo[UR_RI_PARENT], aRelInfo[UR_RI_BEXPR], @uResult )
+
+   IF  nReturn == SUCCESS
+      /*
+       *  Check the current order
+       */
+      aInfo := Array( UR_ORI_SIZE )
+      nReturn := ADO_ORDINFO( nWA, DBOI_NUMBER, @aInfo )
+
+      IF nReturn == SUCCESS
+         nOrder := aInfo[UR_ORI_RESULT]
+         IF nOrder != 0
+            IF aRelInfo[UR_RI_SCOPED]
+               aInfo[UR_ORI_NEWVAL] := uResult
+               nReturn := ADO_ORDINFO( nWA, DBOI_SCOPETOP, @aInfo )
+               IF nReturn == SUCCESS
+                  nReturn := ADO_ORDINFO( nWA, DBOI_SCOPEBOTTOM, @aInfo )
+               ENDIF
+            ENDIF
+            IF nReturn == SUCCESS
+               nReturn := ADO_SEEK( nWA, .F., uResult, .F. )
+            ENDIF
+         ELSE
+            nReturn := ADO_GOTO( nWA, uResult )
+         ENDIF
+      ENDIF
+   ENDIF
+
+RETURN nReturn
+
+
+STATIC FUNCTION ADO_ORDLSTADD( nWA, aOrderInfo )
+
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    TRY
       oRecordSet:Index := aOrderInfo[ UR_ORI_BAG ]
    CATCH
    END
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_ORDLSTCLEAR( nWA )
+STATIC FUNCTION ADO_ORDLSTCLEAR( nWA )
 
-   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    TRY
       oRecordSet:Index := ""
    CATCH
    END
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_ORDCREATE( nWA, aOrderCreateInfo )
+STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
 
-   local aWAData := USRRDD_AREADATA( nWA )
-   local oIndex, oError, n, lFound := .f.
+   LOCAL aWAData := USRRDD_AREADATA( nWA )
+   LOCAL oIndex, oError, n, lFound := .F.
 
    if aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != nil
       for n := 1 to aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
@@ -693,14 +1188,14 @@ static function ADO_ORDCREATE( nWA, aOrderCreateInfo )
    endif
 
    TRY
-      if aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes == nil .or. ! lFound
+      IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes == nil .OR. ! lFound
          oIndex := TOleAuto():New( "ADOX.Index" )
          oIndex:Name := iif( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
          oIndex:PrimaryKey := .F.
          oIndex:Unique := aOrderCreateInfo[ UR_ORCR_UNIQUE ]
          oIndex:Columns:Append( aOrderCreateInfo[ UR_ORCR_CKEY ] )
          aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Append( oIndex )
-      endif
+      ENDIF
    CATCH
       oError := ErrorNew()
       oError:GenCode     := EG_CREATE
@@ -712,27 +1207,182 @@ static function ADO_ORDCREATE( nWA, aOrderCreateInfo )
       UR_SUPER_ERROR( nWA, oError )
    END
 
-return SUCCESS
+RETURN SUCCESS
 
-static function ADO_ORDDESTROY( nWA, aOrderInfo )
+STATIC FUNCTION ADO_ORDDESTROY( nWA, aOrderInfo )
 
-   local aWAData := USRRDD_AREADATA( nWA ), n, oIndex
+   LOCAL aWAData := USRRDD_AREADATA( nWA ), n, oIndex
 
-   if aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != nil
-      for n := 1 to aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
+   IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != nil
+      FOR n := 1 to aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
           oIndex := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( n - 1 )
-          if oIndex:Name == aOrderInfo[ UR_ORI_TAG ]
+          IF oIndex:Name == aOrderInfo[ UR_ORI_TAG ]
              aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Delete( oIndex:Name )
-          endif
-      next
-   endif
+          ENDIF
+      NEXT
+   ENDIF
+
+RETURN SUCCESS
+
+STATIC FUNCTION ADO_EVALBLOCK( nArea, bBlock, uResult )
+
+   LOCAL nCurrArea
+
+   nCurrArea := Select()
+   IF nCurrArea != nArea
+      DbSelectArea( nArea )
+   ELSE
+      nCurrArea := 0
+   ENDIF
+
+   uResult := Eval( bBlock )
+
+   IF nCurrArea > 0
+      DbSelectArea( nCurrArea )
+   ENDIF
+
+RETURN SUCCESS
+
+STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
+   LOCAL n
+   LOCAL lRet := FAILURE
+   LOCAL aRData := USRRDD_RDDDATA( nRDD )
+
+   HB_SYMBOL_UNUSED( ulConnect )
+
+   IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
+      TRY
+         n := aRData[ WA_CATALOG ]:Tables( cTable )
+         lRet := SUCCESS
+      CATCH
+      END TRY
+      IF ! Empty( cIndex )
+         TRY
+            n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes( cIndex )
+            lRet := SUCCESS
+         CATCH
+         END TRY
+      ENDIF
+   ENDIF
+
+RETURN lRet
+
+STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
+   LOCAL n
+   LOCAL lRet := FAILURE
+   LOCAL aRData := USRRDD_RDDDATA( nRDD )
+
+   HB_SYMBOL_UNUSED( ulConnect )
+
+   IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
+      TRY
+         n := aRData[ WA_CATALOG ]:Tables:Delete( cTable )
+         lRet := SUCCESS
+      CATCH
+      END TRY
+      IF ! Empty( cIndex )
+         TRY
+            n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes:Delete( cIndex )
+            lRet := SUCCESS
+         CATCH
+         END TRY
+      ENDIF
+   ENDIF
+
+RETURN lRet
+
+STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
+
+   HB_SYMBOL_UNUSED( nWA )
+   HB_SYMBOL_UNUSED( lSoftSeek )
+   HB_SYMBOL_UNUSED( cKey )
+   HB_SYMBOL_UNUSED( lFindLast )
+/* TODO
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+
+   LPCDXTAG pTag;
+
+   if ( FAST_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
+
+//oRecordSet:Find( aWAData[ WA_SCOPEINFO ][ UR_SI_CFOR ], iif( lContinue, 1, 0 ) )
+   LPCDXKEY pKey;
+   ERRCODE retval = SUCCESS;
+   BOOL  fEOF = FALSE, fLast;
+   ULONG ulRec;
+
+   IF ! Empty( aWAData[ WA_PENDINGREL ] )
+      ADO_FORCEREL( nWA )
+   ENDIF
+
+   pArea->fTop = pArea->fBottom = FALSE;
+   pArea->fEof = FALSE;
+
+   if ( pTag->UsrUnique )
+      fLast = !pTag->UsrAscend;
+   else
+      fLast = pTag->UsrAscend ? fFindLast : !fFindLast;
+
+   // TODO: runtime error if valtype(pKeyItm) != pTag->Type
+   pKey = hb_cdxKeyPutItem( NULL, pKeyItm, fLast ? CDX_MAX_REC_NUM : CDX_IGNORE_REC_NUM, pTag, TRUE, FALSE );
+
+   hb_cdxIndexLockRead( pTag->pIndex );
+   hb_cdxTagRefreshScope( pTag );
+   ulRec = hb_cdxTagKeyFind( pTag, pKey );
+   if ( ( ulRec == 0 && ! fSoftSeek ) || pTag->TagEOF )
+      fEOF = TRUE;
+   else // if ( fSoftSeek )
+   {
+      if ( ! hb_cdxBottomScope( pTag ) )
+         fEOF = TRUE;
+      else if ( ! hb_cdxTopScope( pTag ) )
+      {
+         hb_cdxTagGoTop( pTag );
+         if ( pTag->CurKey->rec == 0 )
+            fEOF = TRUE;
+      }
+   }
+   hb_cdxIndexUnLockRead( pTag->pIndex );
+   if ( !fEOF )
+   {
+      retval = SELF_GOTO( ( AREAP ) pArea, pTag->CurKey->rec );
+      if ( retval != FAILURE && pArea->fPositioned )
+      {
+         retval = SELF_SKIPFILTER( ( AREAP ) pArea, fFindLast ? -1 : 1 );
+         if ( retval != FAILURE && ulRec && pArea->fPositioned )
+         {
+            pArea->fFound = ( ulRec == pArea->ulRecNo ||
+                     hb_cdxValCompare( pTag, pKey->val, pKey->len,
+                        pTag->CurKey->val, pTag->CurKey->len, FALSE ) == 0 );
+            if ( ! pArea->fFound && ! fSoftSeek )
+               fEOF = TRUE;
+         }
+      }
+   }
+   if ( retval != FAILURE &&
+        ( fEOF || ! hb_cdxTopScope( pTag ) ||
+                  ! hb_cdxBottomScope( pTag ) ) )
+   {
+      retval = SELF_GOTO( ( AREAP ) pArea, 0 );
+   }
+   pArea->fBof = FALSE;
+   hb_cdxKeyFree( pKey );
+   return retval;
+*/
+RETURN FAILURE
+
+static function ADO_FOUND( nWA, lFound )
+
+   local aWAData := USRRDD_AREADATA( nWA )
+
+   lFound := aWAData[ WA_FOUND ]
 
 return SUCCESS
 
-function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
+FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 
-   local cSuperRDD   /* NO SUPER RDD */
-   local aADOFunc[ UR_METHODCOUNT ]
+   LOCAL cSuperRDD   /* NO SUPER RDD */
+   LOCAL aADOFunc[ UR_METHODCOUNT ]
 
    aADOFunc[ UR_INIT ]         := ( @ADO_INIT() )
    aADOFunc[ UR_NEW ]          := ( @ADO_NEW() )
@@ -744,10 +1394,11 @@ function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aADOFunc[ UR_EOF  ]         := ( @ADO_EOF() )
    aADOFunc[ UR_DELETED ]      := ( @ADO_DELETED() )
    aADOFunc[ UR_SKIPRAW ]      := ( @ADO_SKIPRAW() )
-   aADOFunc[ UR_GOTO ]         := ( @ADO_GOTOID() )
+   aADOFunc[ UR_GOTO ]         := ( @ADO_GOTO() )
    aADOFunc[ UR_GOTOID ]       := ( @ADO_GOTOID() )
    aADOFunc[ UR_GOTOP ]        := ( @ADO_GOTOP() )
    aADOFunc[ UR_GOBOTTOM ]     := ( @ADO_GOBOTTOM() )
+   aADOFunc[ UR_RECNO ]        := ( @ADO_RECNO() )
    aADOFunc[ UR_RECID ]        := ( @ADO_RECID() )
    aADOFunc[ UR_RECCOUNT ]     := ( @ADO_RECCOUNT() )
    aADOFunc[ UR_GETVALUE ]     := ( @ADO_GETVALUE() )
@@ -756,6 +1407,10 @@ function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aADOFunc[ UR_APPEND ]       := ( @ADO_APPEND() )
    aADOFunc[ UR_FLUSH ]        := ( @ADO_FLUSH() )
    aADOFunc[ UR_ORDINFO ]      := ( @ADO_ORDINFO() )
+   aADOFunc[ UR_RECINFO ]      := ( @ADO_RECINFO() )
+   aADOFunc[ UR_FIELDINFO ]    := ( @ADO_FIELDINFO() )
+   aADOFunc[ UR_FIELDNAME ]    := ( @ADO_FIELDNAME() )
+   aADOFunc[ UR_ORDLSTFOCUS ]  := ( @ADO_ORDLSTFOCUS() )
    aADOFunc[ UR_PACK ]         := ( @ADO_PACK() )
    aADOFunc[ UR_RAWLOCK ]      := ( @ADO_RAWLOCK() )
    aADOFunc[ UR_LOCK ]         := ( @ADO_LOCK() )
@@ -765,6 +1420,9 @@ function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aADOFunc[ UR_ZAP ]          := ( @ADO_ZAP() )
    aADOFunc[ UR_SETLOCATE ]    := ( @ADO_SETLOCATE() )
    aADOFunc[ UR_LOCATE ]       := ( @ADO_LOCATE() )
+   aAdoFunc[ UR_FOUND ]        := ( @ADO_FOUND() )
+   aADOFunc[ UR_FORCEREL ]     := ( @ADO_FORCEREL() )
+   aADOFunc[ UR_RELEVAL ]      := ( @ADO_RELEVAL() )
    aADOFunc[ UR_CLEARREL ]     := ( @ADO_CLEARREL() )
    aADOFunc[ UR_RELAREA ]      := ( @ADO_RELAREA() )
    aADOFunc[ UR_RELTEXT ]      := ( @ADO_RELTEXT() )
@@ -773,146 +1431,188 @@ function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aADOFunc[ UR_ORDDESTROY ]   := ( @ADO_ORDDESTROY() )
    aADOFunc[ UR_ORDLSTADD ]    := ( @ADO_ORDLSTADD() )
    aADOFunc[ UR_ORDLSTCLEAR ]  := ( @ADO_ORDLSTCLEAR() )
+   aADOFunc[ UR_EVALBLOCK ]    := ( @ADO_EVALBLOCK() )
+   aADOFunc[ UR_SEEK ]         := ( @ADO_SEEK() )
+   aADOFunc[ UR_EXISTS ]       := ( @ADO_EXISTS() )
+   aADOFunc[ UR_DROP ]         := ( @ADO_DROP() )
 
-
-return USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, cSuperRDD,;
+RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, cSuperRDD,;
                             aADOFunc )
 
-init procedure ADORDD_INIT()
+INIT PROCEDURE ADORDD_INIT()
    rddRegister( "ADORDD", RDT_FULL )
-return
+RETURN
 
-static function ADO_GETFIELDSIZE( nDBFFieldType, nADOFieldSize )
+STATIC FUNCTION ADO_GETFIELDSIZE( nDBFFieldType, nADOFieldSize )
 
-   local nDBFFieldSize := 0
+   LOCAL nDBFFieldSize := 0
 
-   do case
+   DO CASE
 
-      case nDBFFieldType == HB_FT_STRING
+      CASE nDBFFieldType == HB_FT_STRING
            nDBFFieldSize := nADOFieldSize
 
-      case nDBFFieldType == HB_FT_INTEGER
+      CASE nDBFFieldType == HB_FT_INTEGER
            nDBFFieldSize := nADOFieldSize
 
-      case nDBFFieldType == HB_FT_DOUBLE
-           nDBFFieldSize := nADOFieldSize
-
-      case nDBFFieldType == HB_FT_DATE
+      CASE nDBFFieldType == HB_FT_DATE
            nDBFFieldSize := 8
 
-      case nDBFFieldType == HB_FT_LOGICAL
-           nDBFFieldSize := 1
+      CASE nDBFFieldType == HB_FT_DOUBLE
+           nDBFFieldSize := nADOFieldSize
 
-      case nDBFFieldType == HB_FT_MEMO
+#ifdef HB_FT_DATETIME
+      CASE nDBFFieldType == HB_FT_DATETIME
+           nDBFFieldSize := 8
+#endif
+
+#ifdef HB_FT_TIMESTAMP
+      CASE nDBFFieldType == HB_FT_TIMESTAMP
+           nDBFFieldSize := 8
+#endif
+
+      CASE nDBFFieldType == HB_FT_OLE
            nDBFFieldSize := 10
 
-   endcase
+#ifdef HB_FT_PICTURE
+      CASE nDBFFieldType == HB_FT_PICTURE
+           nDBFFieldSize := 10
+#endif
 
-return nDBFFieldSize
+      CASE nDBFFieldType == HB_FT_LOGICAL
+           nDBFFieldSize := 1
 
-static function ADO_GETFIELDTYPE( nADOFieldType )
+      CASE nDBFFieldType == HB_FT_MEMO
+           nDBFFieldSize := 10
 
-   local nDBFFieldType := 0
+   ENDCASE
 
-   do case
+RETURN nDBFFieldSize
 
-      case nADOFieldType == adEmpty
-      case nADOFieldType == adTinyInt
-           nDBFFieldType := HB_FT_INTEGER
+STATIC FUNCTION ADO_GETFIELDTYPE( nADOFieldType )
 
-      case nADOFieldType == adSmallInt
-           nDBFFieldType := HB_FT_INTEGER
+   LOCAL nDBFFieldType := 0
 
-      case nADOFieldType == adInteger
-           nDBFFieldType := HB_FT_INTEGER
+   DO CASE
 
-      case nADOFieldType == adBigInt
-           nDBFFieldType := HB_FT_INTEGER
+      CASE nADOFieldType == adEmpty
+      CASE nADOFieldType == adTinyInt
+         nDBFFieldType := HB_FT_INTEGER
 
-      case nADOFieldType == adUnsignedTinyInt
-      case nADOFieldType == adUnsignedSmallInt
-      case nADOFieldType == adUnsignedInt
-      case nADOFieldType == adUnsignedBigInt
-      case nADOFieldType == adSingle
+      CASE nADOFieldType == adSmallInt
+         nDBFFieldType := HB_FT_INTEGER
 
-      case nADOFieldType == adDouble
-           nDBFFieldType := HB_FT_DOUBLE
+      CASE nADOFieldType == adInteger
+         nDBFFieldType := HB_FT_INTEGER
 
-      case nADOFieldType == adCurrency
-           nDBFFieldType := HB_FT_INTEGER
+      CASE nADOFieldType == adBigInt
+         nDBFFieldType := HB_FT_INTEGER
 
-      case nADOFieldType == adDecimal
-           nDBFFieldType := HB_FT_LONG
+      CASE nADOFieldType == adUnsignedTinyInt
+      CASE nADOFieldType == adUnsignedSmallInt
+      CASE nADOFieldType == adUnsignedInt
+      CASE nADOFieldType == adUnsignedBigInt
+      CASE nADOFieldType == adSingle
 
-      case nADOFieldType == adNumeric
-           nDBFFieldType := HB_FT_LONG
+      CASE nADOFieldType == adDouble
+                   nDBFFieldType := HB_FT_DOUBLE
+
+      CASE nADOFieldType == adCurrency
+         nDBFFieldType := HB_FT_INTEGER
+
+      CASE nADOFieldType == adDecimal
+         nDBFFieldType := HB_FT_LONG
+
+      CASE nADOFieldType == adNumeric
+         nDBFFieldType := HB_FT_LONG
 
 
-      case nADOFieldType == adError
-      case nADOFieldType == adUserDefined
-      case nADOFieldType == adVariant
-           nDBFFieldType := HB_FT_ANY
+      CASE nADOFieldType == adError
+      CASE nADOFieldType == adUserDefined
+      CASE nADOFieldType == adVariant
+                   nDBFFieldType := HB_FT_ANY
 
-      case nADOFieldType == adIDispatch
+      CASE nADOFieldType == adIDispatch
 
-      case nADOFieldType == adIUnknown
+      CASE nADOFieldType == adIUnknown
 
-      case nADOFieldType == adGUID
-           nDBFFieldType := HB_FT_STRING
+      CASE nADOFieldType == adGUID
+                   nDBFFieldType := HB_FT_STRING
 
-      case nADOFieldType == adDate
-           nDBFFieldType := HB_FT_DATE
+      CASE nADOFieldType == adDate
+#ifdef HB_FT_DATETIME
+         nDBFFieldType := HB_FT_DATETIME
+#else
+         nDBFFieldType := HB_FT_DATE
+#endif
 
-      case nADOFieldType == adDBDate
-          nDBFFieldType := HB_FT_DATE
+      CASE nADOFieldType == adDBDate
+#ifdef HB_FT_DATETIME
+         nDBFFieldType := HB_FT_DATETIME
+#else
+         nDBFFieldType := HB_FT_DATE
+#endif
 
-      case nADOFieldType == adDBTime
-          //nDBFFieldType := HB_FT_DATE
+      CASE nADOFieldType == adDBTime
 
-      case nADOFieldType == adDBTimeStamp
-          //nDBFFieldType := HB_FT_DATE
+      CASE nADOFieldType == adDBTimeStamp
+#ifdef HB_FT_TIMESTAMP
+         nDBFFieldType := HB_FT_TIMESTAMP
+#else
+         //nDBFFieldType := HB_FT_DATE
+#endif
 
-      case nADOFieldType == adFileTime
-          //nDBFFieldType := HB_FT_DATE
+      CASE nADOFieldType == adFileTime
+#ifdef HB_FT_DATETIME
+         nDBFFieldType := HB_FT_DATETIME
+#else
+         //nDBFFieldType := HB_FT_DATE
+#endif
 
-      case nADOFieldType == adBSTR
-           nDBFFieldType := HB_FT_STRING
+      CASE nADOFieldType == adBSTR
+         nDBFFieldType := HB_FT_STRING
 
-      case nADOFieldType == adChar
-           nDBFFieldType := HB_FT_STRING
+      CASE nADOFieldType == adChar
+         nDBFFieldType := HB_FT_STRING
 
-      case nADOFieldType == adVarChar
-           nDBFFieldType := HB_FT_STRING
+      CASE nADOFieldType == adVarChar
+         nDBFFieldType := HB_FT_STRING
 
-      case nADOFieldType == adLongVarChar
-           nDBFFieldType := HB_FT_STRING
+      CASE nADOFieldType == adLongVarChar
+         nDBFFieldType := HB_FT_STRING
 
-      case nADOFieldType == adWChar
-           nDBFFieldType := HB_FT_STRING
+      CASE nADOFieldType == adWChar
+         nDBFFieldType := HB_FT_STRING
 
-      case nADOFieldType == adVarWChar
-           nDBFFieldType := HB_FT_STRING
+      CASE nADOFieldType == adVarWChar
+         nDBFFieldType := HB_FT_STRING
 
-      case nADOFieldType == adBinary
-      case nADOFieldType == adVarBinary
-      case nADOFieldType == adLongVarBinary
-      case nADOFieldType == adChapter
+      CASE nADOFieldType == adBinary
+         nDBFFieldType := HB_FT_OLE
 
-      case nADOFieldType == adVarNumeric
+      CASE nADOFieldType == adVarBinary
+         nDBFFieldType := HB_FT_OLE
+
+      CASE nADOFieldType == adLongVarBinary
+         nDBFFieldType := HB_FT_OLE
+
+      CASE nADOFieldType == adChapter
+
+      CASE nADOFieldType == adVarNumeric
       // case nADOFieldType == adArray
 
-      case nADOFieldType == adBoolean
-           nDBFFieldType := HB_FT_LOGICAL
+      CASE nADOFieldType == adBoolean
+         nDBFFieldType := HB_FT_LOGICAL
 
-      case nADOFieldType == adLongVarWChar
-           nDBFFieldType := HB_FT_MEMO
+      CASE nADOFieldType == adLongVarWChar
+         nDBFFieldType := HB_FT_MEMO
 
-      case nADOFieldType == adPropVariant
-           nDBFFieldType := HB_FT_MEMO
+      CASE nADOFieldType == adPropVariant
+         nDBFFieldType := HB_FT_MEMO
 
-   endcase
+   ENDCASE
 
-return nDBFFieldType
+RETURN nDBFFieldType
 
 function HB_AdoSetTable( cTableName )
 
@@ -936,58 +1636,58 @@ function HB_AdoSetUser( cUser )
 
    s_cUserName := cUser
 
-return nil
+RETURN NIL
 
 function HB_AdoSetPassword( cPassword )
 
    s_cPassword := cPassword
 
-return nil
+RETURN NIL
 
-function HB_AdoSetQuery( cQuery )
+FUNCTION HB_AdoSetQuery( cQuery )
 
    DEFAULT cQuery TO "SELECT * FROM "
 
    s_cQuery := cQuery
 
-return nil
+RETURN NIL
 
-function HB_AdoSetLocateFor( cLocateFor )
+FUNCTION HB_AdoSetLocateFor( cLocateFor )
 
    USRRDD_AREADATA( Select() )[ WA_LOCATEFOR ] := cLocateFor
 
-return nil
+RETURN NIL
 
-static function SQLTranslate( cExpr )
+STATIC FUNCTION SQLTranslate( cExpr )
 
-   if Left( cExpr, 1 ) == '"' .and. Right( cExpr, 1 ) == '"'
-      cExpr := SubStr( cExpr, 2, Len( cExpr ) - 2 )
-   endif
-  
-   cExpr := StrTran( cExpr, '""', "" )
-   cExpr := StrTran( cExpr, '"', "'" )
-   cExpr := StrTran( cExpr, "''", "'" )
-   cExpr := StrTran( cExpr, "==", "=" )
-   cExpr := StrTran( cExpr, ".and.", "AND" )
-   cExpr := StrTran( cExpr, ".or.", "OR" )
-   cExpr := StrTran( cExpr, ".AND.", "AND" )
-   cExpr := StrTran( cExpr, ".OR.", "OR" )
+  if Left( cExpr, 1 ) == '"' .and. Right( cExpr, 1 ) == '"'
+     cExpr := SubStr( cExpr, 2, Len( cExpr ) - 2 )
+  endif
 
-return cExpr
+  cExpr := StrTran( cExpr, '""', "" )
+  cExpr := StrTran( cExpr, '"', "'" )
+  cExpr := StrTran( cExpr, "''", "'" )
+  cExpr := StrTran( cExpr, "==", "=" )
+  cExpr := StrTran( cExpr, ".and.", "AND" )
+  cExpr := StrTran( cExpr, ".or.", "OR" )
+  cExpr := StrTran( cExpr, ".AND.", "AND" )
+  cExpr := StrTran( cExpr, ".OR.", "OR" )
 
-function HB_AdoRddGetConnection( nWA )
+RETURN cExpr
 
-   DEFAULT nWA TO Select()
-
-return USRRDD_AREADATA( nWA )[ WA_CONNECTION ]
-
-function HB_AdoRddGetCatalog( nWA )
+FUNCTION HB_AdoRddGetConnection( nWA )
 
    DEFAULT nWA TO Select()
 
-return USRRDD_AREADATA( nWA )[ WA_CATALOG ]
+RETURN USRRDD_AREADATA( nWA )[ WA_CONNECTION ]
 
-function HB_AdoRddGetRecordSet( nWA )
+FUNCTION HB_AdoRddGetCatalog( nWA )
+
+   DEFAULT nWA TO Select()
+
+RETURN USRRDD_AREADATA( nWA )[ WA_CATALOG ]
+
+FUNCTION HB_AdoRddGetRecordSet( nWA )
 
    local aWAData
 
@@ -995,4 +1695,4 @@ function HB_AdoRddGetRecordSet( nWA )
 
    aWAData := USRRDD_AREADATA( nWA )
 
-return iif( aWAData != nil, aWAData[ WA_RECORDSET ], nil )
+RETURN iif( aWAData != nil, aWAData[ WA_RECORDSET ], nil )

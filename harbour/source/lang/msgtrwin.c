@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Türkçe",                    /* Name (in native language) */
       "TR",                        /* RFC ID */
       "1254",                      /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

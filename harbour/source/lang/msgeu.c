@@ -49,7 +49,7 @@ static HB_LANG s_lang =
       "English",                   /* Name (in native language) */
       "EU",                        /* RFC ID */
       "850",                       /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

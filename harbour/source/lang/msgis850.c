@@ -67,7 +67,7 @@ static HB_LANG s_lang =
       "Öslenska",                  /* Name (in native language) */
       "IS",                        /* RFC ID */
       "850",                       /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

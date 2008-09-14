@@ -101,11 +101,11 @@ static int hb_Inp9x( USHORT usPort )
 
    #elif defined( __WATCOMC__ )
 
-      usVal = inp( usPort );
+      usVal = ( USHORT ) inp( usPort );
 
    #else
 
-      usVal = _inp( usPort );
+      usVal = ( USHORT ) _inp( usPort );
 
    #endif
 
@@ -184,15 +184,15 @@ static void hb_gt_w9xTone( double dFreq, double dDurat )
 
       /* set the frequency (LSB,MSB) */
 
-      hb_Outp9x(66, uLSB);
-      hb_Outp9x(66, uMSB);
+      hb_Outp9x(66, ( USHORT ) uLSB);
+      hb_Outp9x(66, ( USHORT ) uMSB);
 
       /* Get current Port setting */
       /* enable Speaker Data & Timer gate bits */
       /* (00000011B is bitmask to enable sound) */
       /* Turn on Speaker - sound Tone for duration.. */
 
-      hb_Outp9x(97, hb_Inp9x( 97 ) | 3);
+      hb_Outp9x(97, ( USHORT ) hb_Inp9x( 97 ) | 3);
 
       hb_idleSleep( dDurat );
 

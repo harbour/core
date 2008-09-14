@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Harbour GUI framework for Win32
+ * Harbour GUI framework for Windows
  *
  * Copyright 2001 Alexander S.Kresin <alex@belacy.belgorod.su>
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>

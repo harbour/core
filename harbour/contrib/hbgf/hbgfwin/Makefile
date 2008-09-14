@@ -4,12 +4,12 @@
 
 ROOT = ../../../
 
-LIBNAME=hbgfw32
+LIBNAME=hbgfwin
 
 ifeq ($(HB_ARCHITECTURE),w32)
 
 C_SOURCES=\
-	win32.c \
+	winapi.c \
 
 PRG_SOURCES=\
 	button.prg \

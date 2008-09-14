@@ -356,10 +356,10 @@ static HFONT hb_gt_wvt_GetFont( char * pszFace, int iHeight, int iWidth, int iWe
       logfont.lfItalic         = 0;
       logfont.lfUnderline      = 0;
       logfont.lfStrikeOut      = 0;
-      logfont.lfCharSet        = iCodePage;             /* OEM_CHARSET; */
+      logfont.lfCharSet        = ( BYTE ) iCodePage;    /* OEM_CHARSET; */
       logfont.lfOutPrecision   = 0;
       logfont.lfClipPrecision  = 0;
-      logfont.lfQuality        = iQuality;              /* DEFAULT_QUALITY, DRAFT_QUALITY or PROOF_QUALITY */
+      logfont.lfQuality        = ( BYTE ) iQuality;     /* DEFAULT_QUALITY, DRAFT_QUALITY or PROOF_QUALITY */
       logfont.lfPitchAndFamily = FIXED_PITCH+FF_MODERN; /* all mapping depends on fixed width fonts! */
       logfont.lfHeight         = iHeight;
       logfont.lfWidth          = iWidth < 0 ? -iWidth : iWidth;
@@ -1008,7 +1008,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          }
          else
          {
-            keyState = wParam;
+            keyState = ( SHORT ) wParam;
             switch( keyState )
             {
                case MK_LBUTTON:
@@ -1448,10 +1448,10 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          }
          else if( bColor != bOldColor )
          {
-            hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, bOldColor, text, len );
+            hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
             if( pWVT->bGui )
             {
-               hb_gt_wvt_TextOut( pWVT, pWVT->hGuiDC, startCol, iRow, bOldColor, text, len );
+               hb_gt_wvt_TextOut( pWVT, pWVT->hGuiDC, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
             }
             bOldColor = bColor;
             startCol = iCol;
@@ -1462,10 +1462,10 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
       }
       if( len > 0 )
       {
-         hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, bOldColor, text, len );
+         hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
          if( pWVT->bGui )
          {
-            hb_gt_wvt_TextOut( pWVT, pWVT->hGuiDC, startCol, iRow, bOldColor, text, len );
+            hb_gt_wvt_TextOut( pWVT, pWVT->hGuiDC, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
          }
       }
    }

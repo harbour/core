@@ -20,12 +20,12 @@
 
 HB_FUNC( LISTVIEW_DELETEALLITEMS )
 {
-   ListView_DeleteAllItems( (HWND) HB_PARWH(1) );
+   ( void ) ListView_DeleteAllItems( (HWND) HB_PARWH(1) );
 }
 
 HB_FUNC( LISTVIEW_DELETECOLUMN )
 {
-   ListView_DeleteColumn( (HWND) HB_PARWH(1), (INT) hb_parni(2) );
+   ( void ) ListView_DeleteColumn( (HWND) HB_PARWH(1), (INT) hb_parni(2) );
 }
 
 HB_FUNC( LISTVIEW_ENSUREVISIBLE )
@@ -36,7 +36,7 @@ HB_FUNC( LISTVIEW_ENSUREVISIBLE )
 HB_FUNC( LISTVIEW_INSERTCOLUMN )
 {
    LV_COLUMN *lvColumn = ( LV_COLUMN *) hb_parc( 3 ); //hb_param( 3, HB_IT_STRING )->item.asString.value ;
-   ListView_InsertColumn( (HWND)HB_PARWH(1), hb_parni(2), lvColumn );
+   ( void ) ListView_InsertColumn( (HWND)HB_PARWH(1), hb_parni(2), lvColumn );
 }
 
 HB_FUNC( LISTVIEW_SETITEMCOUNT )

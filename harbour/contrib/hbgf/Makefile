@@ -5,7 +5,7 @@
 ROOT = ../../
 
 ifeq ($(HB_ARCHITECTURE),w32)
-DIRS = hbgfw32
+DIRS = hbgfwin
 endif
 
 ifeq ($(HB_ARCHITECTURE),linux)

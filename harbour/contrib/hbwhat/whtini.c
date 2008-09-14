@@ -58,13 +58,8 @@
 
 #include "hbwhat.h"
 
-//#include <shlobj.h>
 #include <windows.h>
-//#include <commctrl.h>
 #include "hbapi.h"
-#include "tchar.h"
-//#include "hbstack.h"
-//#include "hbapiitm.h"
 
 
 //-----------------------------------------------------------------------------

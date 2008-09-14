@@ -186,7 +186,7 @@ HB_FUNC( FT_GETE )
 #elif defined(HB_OS_WIN_32)
    {
       char *buffer = NULL;
-      LPVOID lpEnviron = GetEnvironmentStrings();
+      LPTCH lpEnviron = GetEnvironmentStrings();
       char *sCurEnv;
       int x;
       int buffsize = 0;

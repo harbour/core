@@ -146,11 +146,11 @@ HB_FUNC( WVT_CHOOSEFONT )
    lf.lfHeight         = PointSize;
    lf.lfWidth          = ISNIL( 3 ) ? 0 : hb_parni( 3 );
    lf.lfWeight         = ISNIL( 4 ) ? 0 : hb_parni( 4 );
-   lf.lfItalic         = ISNIL( 6 ) ? 0 : hb_parl( 6 );
-   lf.lfUnderline      = ISNIL( 7 ) ? 0 : hb_parl( 7 );
-   lf.lfStrikeOut      = ISNIL( 8 ) ? 0 : hb_parl( 8 );
+   lf.lfItalic         = ISNIL( 6 ) ? 0 : ( BYTE ) hb_parl( 6 );
+   lf.lfUnderline      = ISNIL( 7 ) ? 0 : ( BYTE ) hb_parl( 7 );
+   lf.lfStrikeOut      = ISNIL( 8 ) ? 0 : ( BYTE ) hb_parl( 8 );
    lf.lfCharSet        = DEFAULT_CHARSET;
-   lf.lfQuality        = ISNIL( 5 ) ? DEFAULT_QUALITY : hb_parni( 5 );
+   lf.lfQuality        = ISNIL( 5 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 5 );
    lf.lfPitchAndFamily = FF_DONTCARE;
    if ( ISCHAR( 1 ) )
    {
@@ -304,11 +304,11 @@ HB_FUNC( WVT_SETTOOLTIP )
    {
       LPTSTR text = HB_TCHAR_CONVTO( hb_parcx( 5 ) );
 
-      xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+      xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
       iTop    = xy.y;
       iLeft   = xy.x;
 
-      xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 )+1, hb_parni( 3 )+1 );
+      xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 )+1, ( USHORT ) hb_parni( 3 )+1 );
       iBottom = xy.y - 1;
       iRight  = xy.x - 1;
 
@@ -375,7 +375,7 @@ HB_FUNC( WVT_SETTOOLTIPWIDTH )
 
    if ( ISNUM( 1 ) )
    {
-      SendMessage( _s->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) ( int ) hb_parni( 1 ) );
+      SendMessage( _s->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
    }
 
    hb_retni( iTipWidth );
@@ -499,7 +499,7 @@ HB_FUNC( WVT_SETMOUSEPOS )
 
    POINT xy = { 0,0 };
 
-   xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   xy = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
 
    if ( ClientToScreen( _s->hWnd, &xy ) )
    {
@@ -636,7 +636,7 @@ HB_FUNC( WVT_GETXYFROMROWCOL )
    PHB_ITEM info = hb_itemArrayNew( 2 );
    POINT    xy = { 0,0 };
 
-   xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   xy = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
 
    hb_arraySetNL( info, 1, xy.x );
    hb_arraySetNL( info, 2, xy.y );
@@ -682,7 +682,7 @@ HB_FUNC( WVT_SETMENU )
    RECT rc = { 0, 0, 0, 0 };
    USHORT height, width;
 
-   SetMenu( _s->hWnd, ( HMENU ) hb_parni( 1 ) ) ;
+   SetMenu( _s->hWnd, ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) ;
 
    GetWindowRect( _s->hWnd, &wi );
    GetClientRect( _s->hWnd, &ci );
@@ -709,7 +709,7 @@ HB_FUNC( WVT_SETPOPUPMENU )
 
    HMENU hPopup = _s->hPopup ;
 
-   _s->hPopup = ( HMENU ) hb_parnl( 1 );
+   _s->hPopup = ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 );
    if ( hPopup )
    {
       hb_retnint( ( HB_PTRDIFF ) hPopup );
@@ -747,7 +747,7 @@ HB_FUNC( WVT_APPENDMENU )
       lpszCaption = HB_TCHAR_CONVTO( hb_parc( 4 ) );
       for ( i = 0; i < iLen; i++ )
       {
-        ucBuf[ i ] = ( *lpszCaption == '~' ) ? '&' : *lpszCaption ;
+        ucBuf[ i ] = ( *lpszCaption == '~' ) ? '&' : ( char ) *lpszCaption;
         lpszCaption++;
       }
       ucBuf[ iLen ]= '\0';
@@ -762,31 +762,31 @@ HB_FUNC( WVT_APPENDMENU )
   }
   else
   {
-    lpszCaption = ( LPCTSTR ) hb_parni( 4 ) ; // It is a SEPARATOR or Submenu
+    lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 ) ; // It is a SEPARATOR or Submenu
   }
 
-  hb_retl( AppendMenu( ( HMENU ) hb_parnl( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parni( 3 ), ( LPCTSTR ) lpszCaption ) ) ;
+  hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), ( LPCTSTR ) lpszCaption ) ) ;
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_DELETEMENU )
 {
-  hb_retl( DeleteMenu( ( HMENU ) hb_parnl( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+  hb_retl( DeleteMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_DESTROYMENU )
 {
-  hb_retl( DestroyMenu( ( HMENU ) hb_parnl( 1 ) ) );
+  hb_retl( DestroyMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_ENABLEMENUITEM )
 {
-   hb_retni( EnableMenuItem( ( HMENU ) hb_parnl( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retni( EnableMenuItem( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -857,10 +857,10 @@ HB_FUNC( WVT_INVALIDATERECT )
    RECT  rc = { 0,0,0,0 };
    POINT xy = { 0,0 };
 
-   xy           = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   xy           = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
    rc.top       = xy.y;
    rc.left      = xy.x;
-   xy           = hb_wvt_gtGetXYFromColRow( hb_parni( 4 )+1, hb_parni( 3 )+1 );
+   xy           = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 )+1, ( USHORT ) hb_parni( 3 )+1 );
    rc.bottom    = xy.y - 1;
    rc.right     = xy.x - 1;
 
@@ -883,7 +883,7 @@ HB_FUNC( WVT_CLIENTTOSCREEN )
    PHB_ITEM info = hb_itemArrayNew( 2 );
    POINT    xy = { 0,0 };
 
-   xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   xy = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
 
    ClientToScreen( _s->hWnd, &xy );
 
@@ -918,7 +918,7 @@ HB_FUNC( WVT_TRACKPOPUPMENU )
 
    GetCursorPos( &xy );
 
-   hb_retnl( TrackPopupMenu( ( HMENU ) hb_parnl( 1 ) ,
+   hb_retnl( TrackPopupMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ) ,
                      TPM_CENTERALIGN | TPM_RETURNCMD ,
                                                 xy.x ,
                                                 xy.y ,
@@ -1003,7 +1003,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
          hDlg = CreateDialogIndirect( ( HINSTANCE     ) wvg_hInstance(),
                                       ( LPDLGTEMPLATE ) lpTemplate,
                                                         hb_parl( 2 ) ? _s->hWnd : NULL,
-                                      ( DLGPROC       ) hb_parnl( 3 ) );
+                                      ( DLGPROC       ) ( HB_PTRDIFF ) hb_parnint( 3 ) );
          HB_TCHAR_FREE( lpTemplate );
       }
       else
@@ -1089,8 +1089,8 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
    PHB_DYNS pExecSym;
    int      iIndex;
    int      iResource = hb_parni( 4 );
-   int      iResult   = 0;
-   HWND     hParent   = ISNIL( 5 ) ? _s->hWnd : ( HWND ) hb_parnl( 5 );
+   HB_PTRDIFF iResult = 0;
+   HWND     hParent   = ISNIL( 5 ) ? _s->hWnd : ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 );
 
    /* check if we still have room for a new dialog */
    for ( iIndex = 0; iIndex < WVT_DLGMD_MAX; iIndex++ )
@@ -1171,7 +1171,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
       break;
    }
 
-   hb_retni( iResult );
+   hb_retnint( iResult );
 }
 
 //-------------------------------------------------------------------//
@@ -1179,7 +1179,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
 HB_FUNC( WVT__MAKEDLGTEMPLATE )
 {
    WORD  *p, *pdlgtemplate ;
-   WORD  nItems = hb_parni( 1, 4 ) ;
+   WORD  nItems = ( WORD ) hb_parni( 1, 4 ) ;
    int   i, nchar ;
    DWORD lStyle ;
 
@@ -1329,7 +1329,7 @@ HB_EXPORT int nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn )
 HB_FUNC( WVT_LBADDSTRING )
 {
    LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
-   SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM )( LPSTR ) text );
+   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM )( LPSTR ) text );
    HB_TCHAR_FREE( text );
 }
 
@@ -1337,21 +1337,21 @@ HB_FUNC( WVT_LBADDSTRING )
 
 HB_FUNC( WVT_LBGETCOUNT )
 {
-   hb_retnl( ( long ) SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), LB_GETCOUNT, 0, 0 ) );
+   hb_retnl( ( long ) SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_GETCOUNT, 0, 0 ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_LBDELETESTRING )
 {
-   SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), LB_DELETESTRING, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_DELETESTRING, hb_parni( 3 ), 0 );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_LBSETCURSEL )
 {
-   SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), LB_SETCURSEL, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
 //-------------------------------------------------------------------//
@@ -1359,7 +1359,7 @@ HB_FUNC( WVT_LBSETCURSEL )
 HB_FUNC( WVT_CBADDSTRING )
 {
    LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
-   SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM )( LPSTR ) text );
+   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM )( LPSTR ) text );
    HB_TCHAR_FREE( text );
 }
 
@@ -1367,7 +1367,7 @@ HB_FUNC( WVT_CBADDSTRING )
 
 HB_FUNC( WVT_CBSETCURSEL )
 {
-   SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
 //-------------------------------------------------------------------//
@@ -1391,8 +1391,8 @@ HB_FUNC( WVT_DLGSETICON )
 
    if ( hIcon )
    {
-      SendMessage( ( HWND ) hb_parnl( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); // Set Title Bar ICON
-      SendMessage( ( HWND ) hb_parnl( 1 ), WM_SETICON, ICON_BIG,   ( LPARAM ) hIcon ); // Set Task List Icon
+      SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); // Set Title Bar ICON
+      SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), WM_SETICON, ICON_BIG,   ( LPARAM ) hIcon ); // Set Task List Icon
    }
 
    if ( hIcon )
@@ -1420,12 +1420,12 @@ HB_FUNC( WIN_SENDMESSAGE )
       cText = HB_TCHAR_CONVTO( hb_parc( 4 ) );
    }
 
-   hb_retnl( ( ULONG ) SendMessage( ( HWND ) hb_parnl( 1 ),
+   hb_retnl( ( ULONG ) SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
                                     ( UINT ) hb_parni( 2 ),
-                                    ( ISNIL( 3 ) ? 0 : ( WPARAM ) hb_parnl( 3 ) ),
+                                    ( ISNIL( 3 ) ? 0 : ( WPARAM ) hb_parnint( 3 ) ),
                                     ( ISNIL( 4 ) ? 0 : ( cText ? ( LPARAM ) ( LPSTR ) cText :
                                        ( ISCHAR( 4 ) ? ( LPARAM )( LPSTR ) hb_parc( 4 ) :
-                                           ( LPARAM ) hb_parnl( 4 ) ) ) ) )
+                                           ( LPARAM ) hb_parnint( 4 ) ) ) ) )
            );
 
    if( cText )
@@ -1452,11 +1452,11 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
       hb_xmemcpy( cText, hb_itemGetCPtr( pText ), iLen+1 );
    }
 
-   hb_retnl( (LONG) SendDlgItemMessage( (HWND) hb_parnl( 1 ) ,
+   hb_retnl( (LONG) SendDlgItemMessage( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ) ,
                                         (int)  hb_parni( 2 ) ,
                                         (UINT) hb_parni( 3 ) ,
-                                        (ISNIL(4) ? 0 : (WPARAM) hb_parnl( 4 ))   ,
-                                        (cText ? (LPARAM) cText : (LPARAM) hb_parnl( 5 ))
+                                        (ISNIL(4) ? 0 : (WPARAM) hb_parnint( 4 ))   ,
+                                        (cText ? (LPARAM) cText : (LPARAM) hb_parnint( 5 ))
                                       ) );
 
    if( cText )
@@ -1475,56 +1475,56 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 //
 HB_FUNC( WIN_SETTIMER )
 {
-   hb_retl( SetTimer( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ), NULL ) );
+   hb_retl( SetTimer( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parni( 3 ), NULL ) != 0 );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_SETFOCUS )
 {
-   SetFocus( ( HWND ) hb_parnl( 1 ) );
+   SetFocus( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_SETTEXTCOLOR )
 {
-   hb_retnl( ( ULONG ) SetTextColor( ( HDC ) hb_parnl( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
+   hb_retnl( ( ULONG ) SetTextColor( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_SETBKCOLOR )
 {
-   hb_retnl( ( ULONG ) SetBkColor( ( HDC ) hb_parnl( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
+   hb_retnl( ( ULONG ) SetBkColor( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_SETBKMODE )
 {
-   hb_retni( ( int ) SetBkMode( ( HDC ) hb_parnl( 1 ), hb_parni( 2 ) ) );
+   hb_retni( ( int ) SetBkMode( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_GETSTOCKOBJECT )
 {
-   hb_retnint( ( HB_PTRDIFF ) GetStockObject( hb_parnl( 1 ) ) );
+   hb_retnint( ( HB_PTRDIFF ) GetStockObject( hb_parni( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_DELETEOBJECT )
 {
-   hb_retl( DeleteObject( ( HGDIOBJ ) hb_parnl( 1 ) ) );
+   hb_retl( DeleteObject( ( HGDIOBJ ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_SELECTOBJECT )
 {
-   hb_retnint( ( HB_PTRDIFF ) SelectObject( ( HDC ) hb_parnl( 1 ), ( HGDIOBJ ) hb_parnl( 2 ) ) );
+   hb_retnint( ( HB_PTRDIFF ) SelectObject( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( HGDIOBJ ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1559,7 +1559,7 @@ HB_FUNC( WIN_GETDIALOGBASEUNITS )
 
 HB_FUNC( WIN_SETMENU )
 {
-   SetMenu( ( HWND ) hb_parnl( 1 ), ( HMENU ) hb_parni( 2 ) ) ;
+   SetMenu( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) ;
 }
 
 //-------------------------------------------------------------------//
@@ -1567,7 +1567,7 @@ HB_FUNC( WIN_SETMENU )
 HB_FUNC( WIN_SETDLGITEMTEXT )
 {
    LPTSTR lpBuffer = HB_TCHAR_CONVTO( hb_parc( 3 ) );
-   SetDlgItemText( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ), lpBuffer );
+   SetDlgItemText( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), lpBuffer );
    HB_TCHAR_FREE( lpBuffer );
 }
 
@@ -1575,12 +1575,12 @@ HB_FUNC( WIN_SETDLGITEMTEXT )
 
 HB_FUNC( WIN_GETDLGITEMTEXT )
 {
-   USHORT iLen = ( USHORT ) SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1 ;
+   USHORT iLen = ( USHORT ) SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1 ;
    LPTSTR cText = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
    char * szText;
-   USHORT iResult;
+   UINT iResult;
 
-   iResult = GetDlgItemText( ( HWND ) hb_parnl( 1 ),   // handle of dialog box
+   iResult = GetDlgItemText( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), // handle of dialog box
                              hb_parni( 2 ),            // identifier of control
                              cText,                    // address of buffer for text
                              iLen                      // maximum size of string
@@ -1597,7 +1597,7 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
 
 HB_FUNC( WIN_CHECKDLGBUTTON )
 {
-   hb_retl( CheckDlgButton( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ),
+   hb_retl( CheckDlgButton( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ),
                             ( UINT )( ISNUM( 3 ) ? hb_parni( 3 ) : hb_parl( 3 ) ) ) );
 }
 
@@ -1605,14 +1605,14 @@ HB_FUNC( WIN_CHECKDLGBUTTON )
 
 HB_FUNC( WIN_ISDLGBUTTONCHECKED )
 {
-   hb_retni( IsDlgButtonChecked( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retni( IsDlgButtonChecked( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ) ) ;
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_CHECKRADIOBUTTON )
 {
-    hb_retl( CheckRadioButton( ( HWND ) hb_parnl( 1 ),   // handle of dialog box
+    hb_retl( CheckRadioButton( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), // handle of dialog box
                                         hb_parni( 2 ),   // identifier of first radio button in group
                                         hb_parni( 3 ),   // identifier of last radio button in group
                                         hb_parni( 4 )    // identifier of radio button to select
@@ -1623,7 +1623,7 @@ HB_FUNC( WIN_CHECKRADIOBUTTON )
 
 HB_FUNC( WIN_GETDLGITEM )
 {
-   hb_retnint( ( HB_PTRDIFF ) GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ) );
+   hb_retnint( ( HB_PTRDIFF ) GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1633,7 +1633,7 @@ HB_FUNC( WIN_MESSAGEBOX )
    LPTSTR lpBuffer = HB_TCHAR_CONVTO( hb_parc( 2 ) );
    LPTSTR lpBuffer2 = HB_TCHAR_CONVTO( hb_parc( 3 ) );
 
-   hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), lpBuffer, lpBuffer2, ISNIL( 4 ) ? MB_OK : hb_parni( 4 ) ) ) ;
+   hb_retni( MessageBox( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), lpBuffer, lpBuffer2, ISNIL( 4 ) ? MB_OK : hb_parni( 4 ) ) ) ;
 
    HB_TCHAR_FREE( lpBuffer );
    HB_TCHAR_FREE( lpBuffer2 );
@@ -1643,7 +1643,7 @@ HB_FUNC( WIN_MESSAGEBOX )
 
 HB_FUNC( WIN_INVALIDATERECT )
 {
-   InvalidateRect( ( HWND ) hb_parnl( 1 ), NULL, TRUE );
+   InvalidateRect( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), NULL, TRUE );
 }
 
 //-------------------------------------------------------------------//
@@ -1707,7 +1707,7 @@ HB_FUNC( WIN_GETCLIENTRECT )
    RECT     rc = { 0,0,0,0 };
    PHB_ITEM info = hb_itemArrayNew( 4 );
 
-   GetClientRect( ( HWND ) hb_parnl( 1 ), &rc );
+   GetClientRect( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), &rc );
 
    hb_arraySetNI( info, 1, rc.left   );
    hb_arraySetNI( info, 2, rc.top    );
@@ -1723,7 +1723,7 @@ HB_FUNC( WIN_GETCLIENTRECT )
 //
 HB_FUNC( WIN_DRAWIMAGE )
 {
-   hb_retl( hb_wvt_DrawImage( ( HDC ) hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ),
+   hb_retl( hb_wvt_DrawImage( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parni( 3 ),
                                    hb_parni( 4 ), hb_parni( 5 ), hb_parc( 6 ) ) );
 }
 
@@ -1731,21 +1731,21 @@ HB_FUNC( WIN_DRAWIMAGE )
 
 HB_FUNC( WIN_GETDC )
 {
-   hb_retnint( ( HB_PTRDIFF ) GetDC( ( HWND ) hb_parnl( 1 ) ) );
+   hb_retnint( ( HB_PTRDIFF ) GetDC( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_RELEASEDC )
 {
-   hb_retl( ReleaseDC( ( HWND ) hb_parnl( 1 ), ( HDC ) hb_parnl( 2 ) ) );
+   hb_retl( ReleaseDC( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( HDC ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_RECTANGLE )
 {
-   Rectangle( ( HDC ) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+   Rectangle( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1775,7 +1775,7 @@ HB_FUNC( WIN_DRAWTEXT )
    rc.right  = hb_parni( 3,3 );
    rc.bottom = hb_parni( 3,4 );
 
-   hb_retl( DrawText( ( HDC ) hb_parnl( 1 ), lpBuffer, lstrlen( lpBuffer ), &rc, hb_parni( 4 ) ) );
+   hb_retl( DrawText( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), lpBuffer, lstrlen( lpBuffer ), &rc, hb_parni( 4 ) ) );
    HB_TCHAR_FREE( lpBuffer );
 }
 
@@ -1786,7 +1786,7 @@ HB_FUNC( WIN_GETWINDOWRECT )
    RECT rc;
    PHB_ITEM info = hb_itemArrayNew( 4 );
 
-   GetWindowRect( ( HWND ) hb_parnl( 1 ), &rc );
+   GetWindowRect( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), &rc );
 
    hb_arraySetNI( info, 1, rc.left   );
    hb_arraySetNI( info, 2, rc.top    );
@@ -1800,28 +1800,28 @@ HB_FUNC( WIN_GETWINDOWRECT )
 
 HB_FUNC( WIN_MOVEWINDOW )
 {
-   MoveWindow( (HWND) hb_parnl( 1 ), hb_parnl( 2 ), hb_parnl( 3 ), hb_parnl( 4 ), hb_parnl( 5 ), hb_parl( 6 ) );
+   MoveWindow( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parnl( 2 ), hb_parnl( 3 ), hb_parnl( 4 ), hb_parnl( 5 ), hb_parl( 6 ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_SETPARENT )
 {
-   hb_retnint( ( HB_PTRDIFF ) SetParent( (HWND) hb_parnl( 1 ), (HWND) hb_parnl( 2 ) ) );
+   hb_retnint( ( HB_PTRDIFF ) SetParent( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ), (HWND) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_SETWINDOWLONG )
 {
-   hb_retnl( SetWindowLong( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ), hb_parnl( 3 ) ) );
+   hb_retnl( SetWindowLong( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parnl( 3 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_ISWINDOW )
 {
-   hb_retl( IsWindow( (HWND) hb_parnl( 1 ) ) );
+   hb_retl( IsWindow( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1848,7 +1848,7 @@ HB_FUNC( WIN_CLIENTTOSCREEN )
 
    if ( wvt_Array2Point( pArray ,&Point ) )
    {
-      if ( ClientToScreen( (HWND) hb_parnl( 1 ), &Point ) )
+      if ( ClientToScreen( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ), &Point ) )
       {
           wvt_Point2ArrayEx( &Point, pArray );
           hb_retl( TRUE ) ;
@@ -1873,7 +1873,7 @@ HB_FUNC( WIN_SCREENTOCLIENT )
 
    if ( wvt_Array2Point( pArray, &Point ) )
    {
-      if( ScreenToClient( (HWND) hb_parnl( 1 ), &Point ) > 0 )
+      if( ScreenToClient( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ), &Point ) > 0 )
       {
           wvt_Point2ArrayEx( &Point, pArray );
           hb_retl( TRUE ) ;
@@ -2022,7 +2022,7 @@ HB_FUNC( WVT__GETOPENFILENAME )
 
    ofn.hInstance        = GetModuleHandle( NULL )  ;
    ofn.lStructSize      = sizeof( ofn );
-   ofn.hwndOwner        = ISNIL(1) ? GetActiveWindow() : (HWND) hb_parnl( 1 ) ;
+   ofn.hwndOwner        = ISNIL(1) ? GetActiveWindow() : (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ) ;
    ofn.lpstrTitle       = lpstrTitle;
    ofn.lpstrFilter      = lpstrFilter;
    ofn.Flags            = ISNIL(5) ? OFN_SHOWHELP|OFN_NOCHANGEDIR : hb_parnl( 5 ) ;
@@ -2069,7 +2069,7 @@ HB_FUNC( WVT__GETSAVEFILENAME )
 
    ofn.hInstance       = GetModuleHandle( NULL );
    ofn.lStructSize     = sizeof( ofn );
-   ofn.hwndOwner       = ISNIL   (1) ? GetActiveWindow() : (HWND) hb_parnl( 1 );
+   ofn.hwndOwner       = ISNIL   (1) ? GetActiveWindow() : (HWND) ( HB_PTRDIFF ) hb_parnint( 1 );
    ofn.lpstrTitle      = lpstrTitle;
    ofn.lpstrFilter     = lpstrFilter;
    ofn.Flags           = (ISNIL  (5) ? OFN_FILEMUSTEXIST|OFN_EXPLORER|OFN_NOCHANGEDIR : hb_parnl( 5 ) );
@@ -2121,9 +2121,9 @@ HB_FUNC( WIN_NOT )
 
 HB_FUNC( WIN_TRACKPOPUPMENU )
 {
-   HMENU hMenu  = ( HMENU ) hb_parnl( 1 );
+   HMENU hMenu  = ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 );
    UINT  uFlags = ISNIL( 2 ) ? TPM_CENTERALIGN | TPM_RETURNCMD : hb_parnl( 2 );
-   HWND  hWnd   = ISNIL( 3 ) ? GetActiveWindow() : ( HWND ) hb_parnl( 3 );
+   HWND  hWnd   = ISNIL( 3 ) ? GetActiveWindow() : ( HWND ) ( HB_PTRDIFF ) hb_parnint( 3 );
 
    POINT xy = { 0,0 };
 
@@ -2146,7 +2146,7 @@ HB_FUNC( WIN_CHOOSECOLOR )
    }
 
    cc.lStructSize   = sizeof( CHOOSECOLOR ) ;
-   cc.hwndOwner     = ISNIL( 4 ) ? NULL : (HWND) hb_parnl( 4 );
+   cc.hwndOwner     = ISNIL( 4 ) ? NULL : (HWND) ( HB_PTRDIFF ) hb_parnint( 4 );
    cc.rgbResult     = ISNIL( 1 ) ?  0 : ( COLORREF ) hb_parnl( 1 ) ;
    cc.lpCustColors  = crCustClr ;
    cc.Flags         = ( WORD ) ( ISNIL( 3 ) ? CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN : hb_parnl( 3 ) );

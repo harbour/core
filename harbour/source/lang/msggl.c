@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Galego",                    /* Name (in native language) */
       "GL",                        /* RFC ID */
       "850",                       /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

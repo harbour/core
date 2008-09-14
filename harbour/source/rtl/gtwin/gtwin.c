@@ -807,12 +807,12 @@ static BOOL hb_gt_win_SetMode( PHB_GT pGT, int iRows, int iCols )
       if( iRows > coBuf.Y )
          iRows = coBuf.Y;
       else
-         coBuf.Y = iRows;
+         coBuf.Y = ( SHORT ) iRows;
 
       if( iCols > coBuf.X )
          iCols = coBuf.X;
       else
-         coBuf.X = iCols;
+         coBuf.X = ( SHORT ) iCols;
 
       /* new console window size and scroll position */
       srWin.Top    = srWin.Left = 0;
@@ -1068,11 +1068,11 @@ static int SpecialHandling( WORD * wChar, unsigned short wKey, int ch, BOOL lRev
          case 8:
          case 9:
          case 10:
-            *wChar = ch = wKey + 47;
+            ch = *wChar = wKey + 47;
             break;
 
          case 11:          /* 0 */
-            *wChar = ch = 48;
+            ch = *wChar = 48;
             break;
 
          case 12:          /* - */
@@ -1080,19 +1080,19 @@ static int SpecialHandling( WORD * wChar, unsigned short wKey, int ch, BOOL lRev
             break;
 
          case 13:          /* = */
-            *wChar = ch = 61;
+            ch = *wChar = 61;
             break;
 
          case 26:          /* [ */
-            *wChar = ch = 91;
+            ch = *wChar = 91;
             break;
 
          case 27:          /* ] */
-            *wChar = ch = 93;
+            ch = *wChar = 93;
             break;
 
          case 39:          /* ; */
-            *wChar = ch = 59;
+            ch = *wChar = 59;
             break;
 
          case 40:          /* ' */
@@ -1100,19 +1100,19 @@ static int SpecialHandling( WORD * wChar, unsigned short wKey, int ch, BOOL lRev
             break;
 
          case 41:          /* ` */
-            *wChar = ch = 96;
+            ch = *wChar = 96;
             break;
 
          case 43:          /* \ */
-            *wChar = ch = 92;
+            ch = *wChar = 92;
             break;
 
          case 51:          /* , */
-            *wChar = ch = 44;
+            ch = *wChar = 44;
             break;
 
          case 52:          /* . */
-            *wChar = ch = 46;
+            ch = *wChar = 46;
             break;
 
          case 53:          /* / */
@@ -1736,7 +1736,7 @@ static void hb_gt_win_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          ++i;
       }
 
-      hb_gt_win_xUpdtSet( iRow, iFirst, iRow, iCol - 1 );
+      hb_gt_win_xUpdtSet( ( USHORT ) iRow, ( USHORT ) iFirst, ( USHORT ) iRow, ( USHORT ) iCol - 1 );
    }
 }
 
@@ -1754,8 +1754,8 @@ static void hb_gt_win_Refresh( PHB_GT pGT )
 
       HB_GTSELF_GETSCRCURSOR( pGT, &iRow, &iCol, &iStyle );
 
-      s_sCurRow = iRow;
-      s_sCurCol = iCol;
+      s_sCurRow = ( SHORT ) iRow;
+      s_sCurCol = ( SHORT ) iCol;
 
       if( iRow < 0 || iCol < 0 ||
           iRow >= ( int ) _GetScreenHeight() ||
@@ -1765,7 +1765,7 @@ static void hb_gt_win_Refresh( PHB_GT pGT )
       }
       else
       {
-         s_usCursorStyle = iStyle;
+         s_usCursorStyle = ( USHORT ) iStyle;
       }
 
       hb_gt_win_xScreenUpdate();

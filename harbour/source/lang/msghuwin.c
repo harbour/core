@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Magyar",                    /* Name (in native language) */
       "HU",                        /* RFC ID */
       "Windows-1250",              /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

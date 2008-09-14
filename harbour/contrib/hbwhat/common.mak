@@ -22,7 +22,6 @@ LIB_OBJS = \
     $(OBJ_DIR)wincorec$(OBJEXT) \
     $(OBJ_DIR)whtbmp$(OBJEXT) \
     $(OBJ_DIR)whtbrsh$(OBJEXT) \
-    $(OBJ_DIR)whtcall$(OBJEXT) \
     $(OBJ_DIR)whtcdlg$(OBJEXT) \
     $(OBJ_DIR)whtclpb$(OBJEXT) \
     $(OBJ_DIR)whtcomm$(OBJEXT) \
@@ -31,7 +30,6 @@ LIB_OBJS = \
     $(OBJ_DIR)whtdc$(OBJEXT) \
     $(OBJ_DIR)whtdir$(OBJEXT) \
     $(OBJ_DIR)whtdlg$(OBJEXT) \
-    $(OBJ_DIR)whtdll$(OBJEXT) \
     $(OBJ_DIR)whtdraw$(OBJEXT) \
     $(OBJ_DIR)whtfont$(OBJEXT) \
     $(OBJ_DIR)whtgdi$(OBJEXT) \

@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Български",                 /* Name (in native language) */
       "BG",                        /* RFC ID */
       "ISO-8859-5",                /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

@@ -4,11 +4,10 @@
 
 /*
  * Harbour Project source code:
- * Harbour GUI framework for Win32
- * Class HBMenu
+ * Harbour GUI framework for Windows
+ * Class HGFMenuItem
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
- * Copyright 2001 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,30 +51,44 @@
  *
  */
 
+#include "common.ch"
 #include "hbclass.ch"
 
-CLASS HBMenu FROM HBPersistent
+CLASS HGFMenuItem FROM HBPersistent
 
-   DATA   nHandle
-   DATA   Items    PROPERTY
+   DATA   Caption  PROPERTY // Specifies the text of the menu item
+   DATA   Name     PROPERTY // The name of this component
+   DATA   OnClick  PROPERTY // A character description of the method to invoke
+   DATA   Enabled  PROPERTY // Specifies whether the menu item is enabled
+   DATA   Items    PROPERTY // Contains the menu items in the submenu of the menu item
 
-   METHOD New( oForm )      // Creates a new menu
-   METHOD Add( oMenuItem )  // Adds a menuitem
-   METHOD FindItem( nId )   // Searches for a sub menuitem given its id
+   DATA   nId               // Command value to send to the container form
+   DATA   oParent           // Identifies the parent menu item of this menu item
+   DATA   nHandle           // The handle of the submenu of this menu item
+
+   CLASSDATA nIdStart   // start value for commands value to assign to menu items
+
+   METHOD New( oOwner ) // Creates a new menu item
+   METHOD Add( oMenuItem ) // Adds a new drop down menu item
+   METHOD FindItem( nId ) // Searches for a sub menuitem given its id
 
 ENDCLASS
 
-METHOD New( oForm ) CLASS HBMenu
+METHOD New( oOwner ) CLASS HGFMenuItem
 
-   ::Items   := {}
+   DEFAULT ::nIdStart TO 110
 
-   if oForm != nil
-      ::nHandle := WinCreateMenu( oForm:hWnd )
-   endif
+   ::Caption  := ""
+   ::Enabled  := .t.
+   ::nId      := ::nIdStart++
+   ::oParent  := oOwner
 
 return Self
 
-METHOD Add( oMenuItem ) CLASS HBMenu
+METHOD Add( oMenuItem ) CLASS HGFMenuItem
+
+   DEFAULT ::Items  TO {}
+   DEFAULT ::nHandle TO WinCreateSubMenu( ::oParent:nHandle, ::nId )
 
    WinAddMenuItem( ::nHandle, oMenuItem:Caption, Len( ::Items ),;
                    nil, oMenuItem:nId, oMenuItem:Enabled )
@@ -85,7 +98,7 @@ METHOD Add( oMenuItem ) CLASS HBMenu
 
 return nil
 
-METHOD FindItem( nId ) CLASS HBMenu
+METHOD FindItem( nId ) CLASS HGFMenuItem
 
    local oMenuItem, n
 

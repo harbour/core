@@ -1036,8 +1036,8 @@ HB_FUNC( WVT_DRAWBOXGET )
    POINT xy = { 0,0 };
    POINT yz = { 0,0 };
 
-   xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
-   yz = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ) + hb_parni( 3 ), hb_parni( 1 ) + 1 );
+   xy = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
+   yz = hb_wvt_gtGetXYFromColRow( ( USHORT ) ( hb_parni( 2 ) + hb_parni( 3 ) ), ( USHORT ) hb_parni( 1 ) + 1 );
 
    hb_wvt_DrawBoxGet( _s->hdc, xy.y, xy.x, yz.y, yz.x );
    if ( _s->bGui )
@@ -1137,11 +1137,11 @@ HB_FUNC( WVT_DRAWIMAGE )
    POINT xy = { 0,0 };
    int   iLeft, iTop, iRight, iBottom;
 
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
    iTop    = xy.y + hb_parni( 6,1 );
    iLeft   = xy.x + hb_parni( 6,2 ) ;
 
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
+   xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 ) + 1, ( USHORT ) hb_parni( 3 ) + 1 );
    iBottom = xy.y - 1 + hb_parni( 6,3 );
    iRight  = xy.x - 1 + hb_parni( 6,4 );
 
@@ -1178,13 +1178,13 @@ HB_FUNC( WVT_DRAWLABEL )
    logfont.lfEscapement     = ( ISNIL(  5 ) ? 0 : ( hb_parni( 5 ) * 10 ) );
    logfont.lfOrientation    = 0;
    logfont.lfWeight         = ( ISNIL( 11 ) ? 0 : hb_parni( 11 ) );
-   logfont.lfItalic         = ( ISNIL( 14 ) ? 0 : hb_parl( 14 ) );
-   logfont.lfUnderline      = ( ISNIL( 15 ) ? 0 : hb_parl( 15 ) );
-   logfont.lfStrikeOut      = ( ISNIL( 16 ) ? 0 : hb_parl( 16 ) );
-   logfont.lfCharSet        = ( ISNIL( 13 ) ? _s->CodePage : hb_parni( 13 ) );
+   logfont.lfItalic         = ( ISNIL( 14 ) ? 0 : ( BYTE ) hb_parl( 14 ) );
+   logfont.lfUnderline      = ( ISNIL( 15 ) ? 0 : ( BYTE ) hb_parl( 15 ) );
+   logfont.lfStrikeOut      = ( ISNIL( 16 ) ? 0 : ( BYTE ) hb_parl( 16 ) );
+   logfont.lfCharSet        = ( ISNIL( 13 ) ? ( BYTE ) _s->CodePage : ( BYTE ) hb_parni( 13 ) );
    logfont.lfOutPrecision   = 0;
    logfont.lfClipPrecision  = 0;
-   logfont.lfQuality        = ( ISNIL( 12 ) ? DEFAULT_QUALITY : hb_parni( 12 ) );
+   logfont.lfQuality        = ( ISNIL( 12 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 12 ) );
    logfont.lfPitchAndFamily = FF_DONTCARE;
    logfont.lfHeight         = ( ISNIL(  9 ) ? _s->fontHeight : hb_parni(  9 ) );
    logfont.lfWidth          = ( ISNIL( 10 ) ? (_s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 10 ) );
@@ -1199,7 +1199,7 @@ HB_FUNC( WVT_DRAWLABEL )
       COLORREF fgClr = hb_wvt_FgColorParam( 6 ),
                bgClr = hb_wvt_BgColorParam( 7 );
 
-      xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+      xy = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );
       xy.x += hb_parni( 17,2 );
       xy.y += hb_parni( 17,1 );
 
@@ -1244,10 +1244,10 @@ HB_FUNC( WVT_DRAWOUTLINE )
    POINT xy = { 0,0 };
    int   iTop, iLeft, iBottom, iRight;
 
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );;
    iTop    = xy.y - 1 + hb_parni( 8,1 );
    iLeft   = xy.x - 1 + hb_parni( 8,2 );
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 )+1, hb_parni( 3 )+1 );
+   xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 ) + 1, ( USHORT ) hb_parni( 3 ) + 1 );
    iBottom = xy.y + hb_parni( 8,3 );
    iRight  = xy.x + hb_parni( 8,4 );
 
@@ -1754,10 +1754,10 @@ HB_FUNC( WVT_DRAWBUTTON )
    COLORREF bkColor   = ISNIL(  9 ) ? _s->COLORS[ 7 ] : ( COLORREF ) hb_parnl( 9 ) ;
    // int      iImageAt  = ISNIL( 10 ) ? 0 : hb_parni( 10 );
 
-   xy         = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   xy         = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );;
    iTop       = xy.y + hb_parni( 11,1 );
    iLeft      = xy.x + hb_parni( 11,2 );
-   xy         = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
+   xy         = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 ) + 1, ( USHORT ) hb_parni( 3 ) + 1 );
    iBottom    = xy.y-1 + hb_parni( 11,3 );
    iRight     = xy.x-1 + hb_parni( 11,4 );
 
@@ -1902,11 +1902,11 @@ HB_FUNC( WVT_DRAWSTATUSBAR )
 
    for ( i = 0; i < iPanels; i++ )
    {
-      xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2, iNext+2 ), hb_parni( 2, iNext+1 ) );
+      xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2, iNext+2 ), ( USHORT ) hb_parni( 2, iNext+1 ) );
       iTop    = xy.y;
       iLeft   = xy.x + 1;
 
-      xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2, iNext+4 ), hb_parni( 2, iNext+3 )+1 );
+      xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2, iNext+4 ), ( USHORT ) hb_parni( 2, iNext+3 )+1 );
       iBottom = xy.y - 1;
       iRight  = xy.x - 2;
 
@@ -1929,7 +1929,7 @@ HB_FUNC( WVT_DRAWSTATUSBAR )
       iNext = iNext + 4;
    }
 
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2, 4 * iPanels ), hb_parni( 2, ( 4 * iPanels ) - 1 )+1 );
+   xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2, 4 * iPanels ), ( USHORT ) hb_parni( 2, ( 4 * iPanels ) - 1 )+1 );
    iTop    = xy.y - 2;
    iLeft   = xy.x - 2;
    iBottom = iTop;
@@ -1971,11 +1971,11 @@ HB_FUNC( WVT_DRAWPICTURE )
    {
       if ( _s->iPicture[ iSlot ] )
       {
-         xy       = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+         xy       = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );;
          iTop     = xy.y + hb_parni( 6,1 );
          iLeft    = xy.x + hb_parni( 6,2 );
 
-         xy       = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
+         xy       = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 ) + 1, ( USHORT ) hb_parni( 3 ) + 1 );
          iBottom  = xy.y-1 + hb_parni( 6,3 );
          iRight   = xy.x-1 + hb_parni( 6,4 );
 
@@ -2001,7 +2001,7 @@ HB_FUNC( WVT_DRAWLABELEX )
       COLORREF fgClr = hb_wvt_FgColorParam( 5 ),
                bgClr = hb_wvt_BgColorParam( 6 );
 
-      xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+      xy = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );;
       xy.x += hb_parni( 8,2 );
       xy.y += hb_parni( 8,1 );
 
@@ -2044,11 +2044,11 @@ HB_FUNC( WVT_DRAWLINEEX )
    HPEN     hPen;
    int      iSlot = hb_parni( 8 ) - 1;
 
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );;
    iTop    = xy.y + hb_parni( 9,1 );
    iLeft   = xy.x + hb_parni( 9,2 );
 
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
+   xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 ) + 1, ( USHORT ) hb_parni( 3 ) + 1 );
    iBottom = xy.y-1 + hb_parni( 9,4 );
    iRight  = xy.x-1 + hb_parni( 9,4 );
 
@@ -2241,10 +2241,10 @@ HB_FUNC( WVT_DRAWOUTLINEEX )
    int   iTop, iLeft, iBottom, iRight;
    int   iSlot = hb_parni( 5 ) - 1;
 
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );;
    iTop    = xy.y - 1 + hb_parni( 6,1 );
    iLeft   = xy.x - 1 + hb_parni( 6,2 );
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 )+1, hb_parni( 3 )+1 );
+   xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 ) + 1, ( USHORT ) hb_parni( 3 ) + 1 );
    iBottom = xy.y + hb_parni( 6,3 );
    iRight  = xy.x + hb_parni( 6,4 );
 
@@ -2282,10 +2282,10 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    COLORREF fgClr = hb_wvt_FgColorParam( 8 ),
             bgClr = hb_wvt_BgColorParam( 9 );
 
-   xy           = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   xy           = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );;
    iTop         = xy.y + hb_parni( 11,1 );
    iLeft        = xy.x + hb_parni( 11,2 );
-   xy           = hb_wvt_gtGetXYFromColRow( hb_parni( 4 )+1, hb_parni( 3 )+1 );
+   xy           = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 ) + 1, ( USHORT ) hb_parni( 3 ) + 1 );
    iBottom      = xy.y - 1 + hb_parni( 11,3 );
    iRight       = xy.x - 1 + hb_parni( 11,4 );
 
@@ -2294,7 +2294,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
 
    SetTextColor( _s->hdc, fgClr );
    SetBkColor( _s->hdc, bgClr );
-   SelectObject( _s->hdc, ( HFONT ) hb_parnl( 10 ) );
+   SelectObject( _s->hdc, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 10 ) );
 
    //GetTextExtentPoint32( _s->hdc, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), &sz );
    GetTextExtentPoint32( _s->hdc, text, lstrlen( text ), &sz );
@@ -2352,7 +2352,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    {
       SetTextColor( _s->hGuiDC, fgClr );
       SetBkColor( _s->hGuiDC, bgClr );
-      SelectObject( _s->hGuiDC, ( HFONT ) hb_parnl( 10 ) );
+      SelectObject( _s->hGuiDC, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 10 ) );
       SetTextAlign( _s->hGuiDC, iAlignH | iAlignV );
 
       //ExtTextOut( _s->hGuiDC, x, y, uiOptions, &rect, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
@@ -2647,17 +2647,17 @@ HB_FUNC( WVT_DRAWSHADEDRECT )
 
       vert[ 0 ].x     = iLeft;
       vert[ 0 ].y     = iTop;
-      vert[ 0 ].Red   = hb_parni( 7,1 );
-      vert[ 0 ].Green = hb_parni( 7,2 );
-      vert[ 0 ].Blue  = hb_parni( 7,3 );
-      vert[ 0 ].Alpha = hb_parni( 7,4 );
+      vert[ 0 ].Red   = ( COLOR16 ) hb_parni( 7,1 );
+      vert[ 0 ].Green = ( COLOR16 ) hb_parni( 7,2 );
+      vert[ 0 ].Blue  = ( COLOR16 ) hb_parni( 7,3 );
+      vert[ 0 ].Alpha = ( COLOR16 ) hb_parni( 7,4 );
 
       vert[ 1 ].x     = iRight;
       vert[ 1 ].y     = iBottom;
-      vert[ 1 ].Red   = hb_parni( 8,1 );
-      vert[ 1 ].Green = hb_parni( 8,2 );
-      vert[ 1 ].Blue  = hb_parni( 8,3 );
-      vert[ 1 ].Alpha = hb_parni( 8,4 );
+      vert[ 1 ].Red   = ( COLOR16 ) hb_parni( 8,1 );
+      vert[ 1 ].Green = ( COLOR16 ) hb_parni( 8,2 );
+      vert[ 1 ].Blue  = ( COLOR16 ) hb_parni( 8,3 );
+      vert[ 1 ].Alpha = ( COLOR16 ) hb_parni( 8,4 );
 
       gRect.UpperLeft = 0;
       gRect.LowerRight= 1;
@@ -2719,7 +2719,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
    SetTextColor( _s->hdc, fgClr );
    SetBkColor( _s->hdc, bgClr );
    SetBkMode( _s->hdc, ISNIL( 11 ) ? OPAQUE : hb_parni( 11 ) );
-   SelectObject( _s->hdc, ( HFONT ) hb_parnl( 12 ) );
+   SelectObject( _s->hdc, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 12 ) );
 
    //DrawText( _s->hdc, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
    DrawText( _s->hdc, text, lstrlen( text ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
@@ -2729,7 +2729,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
       SetTextColor( _s->hGuiDC, fgClr );
       SetBkColor( _s->hGuiDC, bgClr );
       SetBkMode( _s->hGuiDC, ISNIL( 11 ) ? OPAQUE : hb_parni( 11 ) );
-      SelectObject( _s->hGuiDC, ( HFONT ) hb_parnl( 12 ) );
+      SelectObject( _s->hGuiDC, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 12 ) );
 
       //DrawText( _s->hGuiDC, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
       DrawText( _s->hGuiDC, text, lstrlen( text ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
@@ -2845,13 +2845,13 @@ HB_FUNC( WVT_CREATEFONT )
    logfont.lfEscapement     = ( ISNIL( 10 ) ? 0 : ( hb_parni( 10 ) * 10 ) );
    logfont.lfOrientation    = 0;
    logfont.lfWeight         = ( ISNIL(  4 ) ? 0 : hb_parni( 4 ) );
-   logfont.lfItalic         = ( ISNIL(  5 ) ? 0 : hb_parl(  5 ) );
-   logfont.lfUnderline      = ( ISNIL(  6 ) ? 0 : hb_parl(  6 ) );
-   logfont.lfStrikeOut      = ( ISNIL(  7 ) ? 0 : hb_parl(  7 ) );
-   logfont.lfCharSet        = ( ISNIL(  8 ) ? _s->CodePage : hb_parni( 8 ) );
+   logfont.lfItalic         = ( ISNIL(  5 ) ? 0 : ( BYTE ) hb_parl(  5 ) );
+   logfont.lfUnderline      = ( ISNIL(  6 ) ? 0 : ( BYTE ) hb_parl(  6 ) );
+   logfont.lfStrikeOut      = ( ISNIL(  7 ) ? 0 : ( BYTE ) hb_parl(  7 ) );
+   logfont.lfCharSet        = ( ISNIL(  8 ) ? ( BYTE ) _s->CodePage : ( BYTE ) hb_parni( 8 ) );
    logfont.lfOutPrecision   = 0;
    logfont.lfClipPrecision  = 0;
-   logfont.lfQuality        = ( ISNIL( 9 ) ? DEFAULT_QUALITY : hb_parni( 9 ) );
+   logfont.lfQuality        = ( ISNIL( 9 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 9 ) );
    logfont.lfPitchAndFamily = FF_DONTCARE;
    logfont.lfHeight         = ( ISNIL(  2 ) ? _s->fontHeight : hb_parni( 2 ) );
    logfont.lfWidth          = ( ISNIL(  3 ) ? ( _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 3 ) );
@@ -2926,13 +2926,13 @@ HB_FUNC( WVT_LOADFONT )
    logfont.lfEscapement     = ( ISNIL( 11 ) ? 0 : ( hb_parni( 11 ) * 10 ) );
    logfont.lfOrientation    = 0;
    logfont.lfWeight         = ( ISNIL(  5 ) ? 0 : hb_parni( 5 ) );
-   logfont.lfItalic         = ( ISNIL(  6 ) ? 0 : hb_parl(  6 ) );
-   logfont.lfUnderline      = ( ISNIL(  7 ) ? 0 : hb_parl(  7 ) );
-   logfont.lfStrikeOut      = ( ISNIL(  8 ) ? 0 : hb_parl(  8 ) );
-   logfont.lfCharSet        = ( ISNIL(  9 ) ? _s->CodePage : hb_parni( 9 ) );
+   logfont.lfItalic         = ( ISNIL(  6 ) ? 0 : ( BYTE ) hb_parl(  6 ) );
+   logfont.lfUnderline      = ( ISNIL(  7 ) ? 0 : ( BYTE ) hb_parl(  7 ) );
+   logfont.lfStrikeOut      = ( ISNIL(  8 ) ? 0 : ( BYTE ) hb_parl(  8 ) );
+   logfont.lfCharSet        = ( ISNIL(  9 ) ? ( BYTE ) _s->CodePage : ( BYTE ) hb_parni( 9 ) );
    logfont.lfOutPrecision   = 0;
    logfont.lfClipPrecision  = 0;
-   logfont.lfQuality        = ( ISNIL( 10 ) ? DEFAULT_QUALITY : hb_parni( 10 ) );
+   logfont.lfQuality        = ( ISNIL( 10 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 10 ) );
    logfont.lfPitchAndFamily = FF_DONTCARE;
    logfont.lfHeight         = ( ISNIL(  3 ) ? _s->fontHeight : hb_parni( 3 ) );
    logfont.lfWidth          = ( ISNIL(  4 ) ? ( _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 4 ) );
@@ -2999,11 +2999,11 @@ HB_FUNC( WVT_SAVESCREEN )
    int      iTop, iLeft, iBottom, iRight, iWidth, iHeight;
    PHB_ITEM info = hb_itemArrayNew( 3 );
 
-   xy        = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   xy        = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );;
    iTop      = xy.y;
    iLeft     = xy.x;
 
-   xy        = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
+   xy        = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 ) + 1, ( USHORT ) hb_parni( 3 ) + 1 );
    iBottom   = xy.y-1;
    iRight    = xy.x-1;
 
@@ -3037,18 +3037,18 @@ HB_FUNC( WVT_RESTSCREEN )
    BOOL    bResult = FALSE;
    BOOL    bDoNotDestroyBMP = ISNIL( 6 ) ? FALSE : hb_parl( 6 );
 
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 1 ) );;
    iTop    = xy.y;
    iLeft   = xy.x;
 
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
+   xy      = hb_wvt_gtGetXYFromColRow( ( USHORT ) hb_parni( 4 ) + 1, ( USHORT ) hb_parni( 3 ) + 1 );
    iBottom = xy.y-1;
    iRight  = xy.x-1;
 
    iWidth  = iRight - iLeft + 1 ;
    iHeight = iBottom - iTop + 1 ;
 
-   hBmp    = (HBITMAP) SelectObject( _s->hCompDC, ( HBITMAP ) hb_parnl( 5,3 ) );
+   hBmp    = (HBITMAP) SelectObject( _s->hCompDC, ( HBITMAP ) ( HB_PTRDIFF ) hb_parnint( 5,3 ) );
    if ( hBmp )
    {
       if ( ( iWidth == hb_parni( 5,1 ) )  && ( iHeight == hb_parni( 5,2 ) ) )
@@ -3089,7 +3089,7 @@ HB_FUNC( WVT_RESTSCREEN )
 
    if ( ! bDoNotDestroyBMP )
    {
-      DeleteObject( ( HBITMAP ) hb_parnl( 5,3 ) );
+      DeleteObject( ( HBITMAP ) ( HB_PTRDIFF ) hb_parnint( 5,3 ) );
    }
 
    hb_retl( bResult );

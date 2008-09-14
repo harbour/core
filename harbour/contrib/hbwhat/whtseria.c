@@ -24,7 +24,6 @@
 #include "hbvm.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
-#include "tchar.h"
 
 //-------------------------------------------------------------------//
 /*
@@ -340,7 +339,7 @@ SetCommConfig( hFile, CommConfig:Value, nSize )
 HB_FUNC( SETCOMMCONFIG )
 {
    LPCOMMCONFIG lpCC = ( LPCOMMCONFIG ) hb_parcx( 2 );
-   DWORD        size = ISNIL( 3 ) ? sizeof( COMMCONFIG ) : hb_parnl( 3 );
+   DWORD        size = ISNIL( 3 ) ? ( DWORD ) sizeof( COMMCONFIG ) : ( DWORD ) hb_parnl( 3 );
 
    hb_retl( SetCommConfig( ( HANDLE ) HB_PARWH( 1 ), lpCC, size ) );
 }

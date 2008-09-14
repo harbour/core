@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Polski",                    /* Name (in native language) */
       "PL",                        /* RFC ID */
       "ISO-8859-2",                /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

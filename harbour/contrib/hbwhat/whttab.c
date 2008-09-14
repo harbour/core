@@ -100,7 +100,7 @@ HB_FUNC( TABCTRL_GETITEMRECT )
    RECT rc;
    PHB_ITEM aRect = hb_itemArrayNew( 4 );
 
-   TabCtrl_GetItemRect((HWND) HB_PARWH (1), hb_parni(2), &rc);
+   ( void ) TabCtrl_GetItemRect((HWND) HB_PARWH (1), hb_parni(2), &rc);
 
    hb_arraySetNL( aRect, 1, rc.left );
    hb_arraySetNL( aRect, 2, rc.top );
@@ -212,7 +212,7 @@ HB_FUNC( TABCTRL_ADJUSTRECT )
      rc.right  = hb_parnl(3,3);
      rc.bottom = hb_parnl(3,4);
 
-     TabCtrl_AdjustRect( (HWND) HB_PARWH(1), (BOOL) hb_parl(2), &rc );
+     ( void ) TabCtrl_AdjustRect( (HWND) HB_PARWH(1), (BOOL) hb_parl(2), &rc );
 
      hb_stornl( rc.left  , 3 ,1 );
      hb_stornl( rc.top   , 3, 2 );

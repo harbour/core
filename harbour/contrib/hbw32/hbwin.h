@@ -3,12 +3,11 @@
  */
 
 /*
- * Harbour Project source code:
- * Harbour GUI framework for Win32
- * Class HBEdit
+ * xHarbour Project source code:
+ * Windows communications library
  *
- * Copyright 2001 Antonio Linares <alinares@fivetech.com>
- * www - http://www.harbour-project.org
+ * Copyright 2005 Alex Strickland <sscc@mweb.co.za>
+ * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,21 +50,26 @@
  *
  */
 
-#include "common.ch"
-#include "hbclass.ch"
-#include "hbgfw32.ch"
+#define FCNCREATEFILE				1
+#define FCNGETCOMMSTATE				2
+#define FCNSETCOMMSTATE				3
+#define FCNSETUPCOMM				4
+#define FCNGETCOMMTIMEOUTS  		5
+#define FCNSETCOMMTIMEOUTS  		6
+#define FCNCLOSEHANDLE      		7
+#define FCNWRITEFILE				8
+#define FCNREADFILE					9
+#define FCNGETCOMMMODEMSTATUS		10      /* WinPort:Status() */
+#define FCNPURGECOMM				11
+#define FCNCLEARCOMMERROR			12		/* WinPort:QueueStatus() */
+#define ESCAPECOMMFUNCTION          13
+#define FCNGETCOMMPROPERTIES        14
+#define FCNMAX              		14
 
-CLASS HBEdit FROM HBWinControl
-
-   METHOD    New( oContainer )
-
-ENDCLASS
-
-METHOD New( oContainer ) CLASS HBEdit
-
-   ::hWnd  := WinCreateStdWindow( , nOr( WS_BORDER, WS_CHILD, WS_TABSTOP ),,;
-                                 "EDIT", "",, oContainer:hWnd, ::GetNewId() )
-   ::Width  := 121
-   ::Height := 21
-
-return Self
+#define	WPDBGBASIC					0x01
+#define WPDBGFLOW					0x02
+#define WPDBGXTRAFLOW				0x04
+#define WPDBGOTHER					0x08
+#define WPDBGTIMEOUTS 				0x10
+#define WPDBGQUEUE    				0x20
+#define WPDBGALL      				0x3F

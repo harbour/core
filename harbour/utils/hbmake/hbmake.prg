@@ -64,12 +64,18 @@
 #include "inkey.ch"
 
 #define HB_FEOF  -1        // hb_FReadLine() returns -1 on End-of-File (EOF)
-#define LANG_PT   1        /* portuguese brazilian */
-#define LANG_EN   2        /* english              */
-#define LANG_ES   3        /* spanish              */
+
+#define BLD_ALL   2        /* Rebuild All -F        */
+#define BLD_SOME  1        /* rebuild changed files */
+#define BLD_NONE  0        /* don't build           */
+#define LANG_PT   1        /* portuguese brazilian  */
+#define LANG_EN   2        /* english               */
+#define LANG_ES   3        /* spanish               */
+#define PGM_ERR  -1        // Return value for an abnormal exit
 #define PGM_OK    0        // Return value for a normal exit
 #define PGM_QUIT  1        // Quit before making file but without error
-#define PGM_ERR   2        // Return value for an abnormal exit
+#define PGM_BAK   2        // ?
+#define PGM_BAD   3        // ?
 
 #Define HBM_USE_DEPENDS    // Set this to have section #DEPENDS parsed like RMake, Ath 2004-06
                            // An extra parameter is added to FileIsNewer() to have it check the INCLUDE paths also
@@ -100,7 +106,7 @@ STATIC s_aSrcPaths       := {}
 STATIC s_lEof            := .F.
 STATIC s_aResources      := {}
 STATIC s_nMakeFileHandle := F_ERROR       // File starts closed
-STATIC s_cLinkFileName   := "hblink.lnk"
+STATIC s_cLinkFile       := ""            // Will be set to [s_cAppName].lnk
 STATIC s_cLinkCommands   := ""
 STATIC s_lLinux          := .F.
 STATIC s_lUnix           := .F.
@@ -124,7 +130,7 @@ STATIC s_aDir
 STATIC s_aLangMessages   := {}
 STATIC s_cAppName        := ""
 STATIC s_cDefLang
-STATIC s_cLog            := ""            // log file name.
+STATIC s_cLogFile        := ""            // log file name.
 STATIC s_cMap            := ""            // map file name. For borland c
 STATIC s_cTds            := ""            // state file name. For borland c
 STATIC s_lGenPpo         := .F.
@@ -163,6 +169,7 @@ FUNCTION MAIN()
    LOCAL cExt := ""
    LOCAL cExp,cLib
    LOCAL lCreateAndCompile := .F.  // not used but must be set to .f. for now
+   LOCAL i, n, nRow
 
    IF ( PCount() == 0 ) .or. ( CmdLineParam( @cFile, @cMakeParams ) == PGM_ERR )
       ShowHelp()
@@ -180,7 +187,6 @@ FUNCTION MAIN()
       Return PGM_ERR
    ENDIF
 
-   FERASE( s_cLinkFileName )
    s_cHarbourDir := GetHarbourDir()
 
    IF Empty( s_cHarbourDir )
@@ -192,8 +198,28 @@ FUNCTION MAIN()
          s_cAlertMsg := "hbmake needs harbour bin in the path."
       ENDIF
 
-      showhelp( s_cAlertMsg )
-      s_lErrors := IIF( hb_run( "PATH" ) != 0, .T., .F. )
+      @ ROW() + 1, 0 say s_cAlertMsg
+
+      aFile := ListAsArray2( GETENV( "PATH" ), ";" )
+      n := 0                           /* Show Path params     */
+      nRow:= ROW() +1
+      @ nRow, 2 say "Current Path: "
+      FOR i:= 1 TO LEN( aFile ) - 1
+
+         @ nRow, COL() + 2 say aFile[i]
+         IF COL() + LEN( aFile[ i+1 ] ) + 2 > MAXCOL()
+            SETPOS( ++nRow, 0 )
+         ENDIF
+
+      NEXT i
+
+      IF COL() + 2 + LEN( aFile[ i ] ) > MAXCOL()
+          SETPOS( ++nRow, 0 )
+      ENDIF
+
+      @ nRow, COL() + 2 say aFile[i]
+      @ nRow+1, 0 say ""
+
       RETURN PGM_ERR
    ENDIF
 
@@ -217,14 +243,21 @@ FUNCTION MAIN()
    ENDIF
 
    s_aLangMessages := BuildLangArray()
-   s_cAppName := Substr( cFile,1 , AT(".",cFile) -1)
-   s_cLog    := s_cAppName + ".log"
+   s_cAppName      := Substr( cFile,1 , AT(".",cFile) -1)
+   s_cLinkFile     := s_cAppName + ".lnk"
+   s_cLogFile      := s_cAppName + ".log"
 
-   cExp := s_cAppName + ".exp"
-   cLib := s_cAppName + ".lib"
+   cExp            := s_cAppName + ".exp"
+   cLib            := s_cAppName + ".lib"
 
-   FErase( (s_cAppName+".out") ) // erase old *.out log filename
-   FErase( s_cLog )
+   FERASE( s_cLinkFile )
+   FErase( s_cAppName + ".out" )
+   FErase( s_cLogFile )
+
+   IF ! s_lGenppo
+      FERASE( s_cAppName + ".ppo" )
+   ENDIF
+
 
    if s_lBcc
       /* if you need of these files, comment the lines below. */
@@ -234,43 +267,51 @@ FUNCTION MAIN()
       FErase( s_cTds )
    endif
 
-   // Edit/Create MakeFile...
+   /* Edit / Create MakeFile */
 
-   if s_lEdit .or. ! s_lForce
+   IF s_lEdit .or. ! s_lForce
 
-      if ! File( cFile )
+      IF ! File( cFile )
          lCreateAndCompile := ( "-C" $ cMakeParams  )
-      else
+      ELSE
          lCreateAndCompile := .f.
          cMakeParams := StrTran( cMakeParams, "-C","" )
-      endif
-
-      if Hb_IsNil(s_lGenppo) .OR. s_lGenppo == .F.
-         Delete_ppo()
-      endif
+      ENDIF
 
       nBuildType := IIF( s_lLibrary, CreateLibMakeFile( cFile ), ;
                          /* Else */  CreateMakeFile( cFile, lCreateAndCompile  ) )
-      IF nBuildType < 0
+
+      DO CASE
+      CASE nBuildType == PGM_ERR
          SET CURSOR on
          SETCOLOR( cOldColor )
-         showhelp( "Error createing link file." )
+         @ ROW() +1, 0 say "Error createing link file: " + s_cLinkFile
          RETURN PGM_ERR
-      ENDIF
 
-      s_lForce   := IIF( nBuildType > 0, .T., .F. )
+      CASE nBuildType == BLD_NONE
+         SET CURSOR on
+         SETCOLOR( cOldColor )
+         RETURN PGM_OK
+
+      CASE nBuildType == BLD_SOME
+         s_lForce := .F.
+
+      CASE nBuildType == BLD_ALL
+          s_lForce := .T.
+
+      ENDCASE
 
    ENDIF
 
    // Compile MakeFile...
 
    // Make file is parsed here
-
+   CLEAR SCREEN
    qqout( hbMakeID() )
    qout( hbMakeCopyright() )
 
    IF s_lBcc .OR. s_lPocc .OR. s_lMSVcc
-      qout( version() + " / "+HB_Compiler() )
+      qout( version() + " / " + HB_Compiler() )
    ENDIF
 
 
@@ -301,14 +342,14 @@ FUNCTION MAIN()
 #endif
    ENDIF
 
-   if Hb_IsNil(s_lGenppo) .OR. s_lGenppo == .F.
-      Delete_ppo()
-   endif
-
    IF s_lForce
-      CompileFiles()
+      IF CompileFiles() == PGM_ERR
+         RETURN PGM_ERR
+      ENDIF
    ELSE
-      CompileUpdatedFiles()
+      IF CompileUpdatedFiles() == PGM_ERR
+         RETURN PGM_ERR
+      ENDIF
    ENDIF
 
    /* clean up screen */
@@ -687,9 +728,13 @@ FUNCTION ParseMakeFile( cFile )
          s_aBuildOrder := ListAsArray2( cTemp, ":" )
 
          IF !s_lLibrary
-            SetBuild( nFHandle )
+            IF SetBuild( nFHandle ) == PGM_ERR
+               RETURN PGM_ERR
+            ENDIF
          ELSE
-            SetBuildLib( nFHandle )
+            IF SetBuildLib( nFHandle ) == PGM_ERR
+               RETURN PGM_ERR
+            ENDIF
          ENDIF
 
       ENDIF
@@ -795,7 +840,7 @@ FUNCTION Setcommands( nFHandle, cTemp )
    LOCAL aTempMacros  := {}
    LOCAL aLocalMacros := {}
 
-   s_lEof      := (hb_FReadLine( nFHandle, @cRead, s_aEOL ) == HB_FEOF)
+   s_lEof      := ( hb_FReadLine( nFHandle, @cRead, s_aEOL ) == HB_FEOF )
    cRead       := ALLTRIM( cRead )
    aTempMacros := ListAsArray2( cRead, " " )
 
@@ -946,19 +991,19 @@ FUNCTION SetBuild( nFHandle )
 
    IF ! s_lLinux .AND. !s_lMinGW
 
-      s_cLinkCommands   := cRead + "  @" + s_cLinkFileName
-      s_nMakeFileHandle := FCreate( s_cLinkFileName )
+      s_cLinkCommands   := cRead + "  @" + s_cLinkFile
+      s_nMakeFileHandle := FCreate( s_cLinkFile )
 
       IF s_nMakeFileHandle == F_ERROR
          IF s_nLang     == LANG_PT     /* portuguese brazilian */
-            s_cAlertMsg := "<"+s_cLinkFileName + "> n∆o pode ser criado."
+            s_cAlertMsg := "<" + s_cLinkFile + "> n∆o pode ser criado."
          ELSEIF s_nLang == LANG_ES     /* spanish              */
-            s_cAlertMsg := "<"+s_cLinkFileName + "> no pode ser criado."
+            s_cAlertMsg := "<" + s_cLinkFile + "> no pode ser criado."
          ELSE                          /* english             */
-            s_cAlertMsg := "<"+s_cLinkFileName + "> cannot be created."
+            s_cAlertMsg := "<" + s_cLinkFile + "> cannot be created."
          ENDIF
-         Alert( s_cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
-         RETURN NIL
+         Alert( s_cAlertMsg + " FERROR (" + Ltrim( Str( FError() ) ) + ")" )
+         RETURN PGM_ERR
       ENDIF
 
    ELSE
@@ -1047,7 +1092,7 @@ FUNCTION SetBuild( nFHandle )
       s_cLinkCommands +=" /nologo " + IIF( s_lGui, "/SUBSYSTEM:WINDOWS"," /SUBSYSTEM:CONSOLE") + " /force:multiple "
    ENDIF
 
-RETURN NIL
+RETURN PGM_OK
 
 *----------------------
 FUNCTION CompileFiles()
@@ -1067,161 +1112,83 @@ FUNCTION CompileFiles()
    LOCAL cOrder   := ""
    LOCAL nFile    := 1
    LOCAL aGauge   := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "≤" )
+   LOCAL lErrs    := .F.
 
    FOR EACH cOrder IN aOrder
 
-         IF cOrder == "$(CFILES)"
+      IF cOrder == "$(CFILES)"
 
-            IF s_lGcc
-               nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".c.o:" .OR. x[ 1 ] == ".cpp.o:" } )
-            ELSE
-               nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".c.obj:" .OR. x[ 1 ] == ".cpp.obj:" } )
-            ENDIF
+         IF s_lGcc
+            nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".c.o:" .OR. x[ 1 ] == ".cpp.o:" } )
+         ELSE
+            nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".c.obj:" .OR. x[ 1 ] == ".cpp.obj:" } )
+         ENDIF
+
+         IF nPos > 0
+               cComm := s_aCommands[ nPos, 2 ]
+            cOld  := cComm
+         ELSE
+            nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".C.OBJ:" } )
 
             IF nPos > 0
                cComm := s_aCommands[ nPos, 2 ]
                cOld  := cComm
-            ELSE
-               nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".C.OBJ:" } )
-
-               IF nPos > 0
-                  cComm := s_aCommands[ nPos, 2 ]
-                  cOld  := cComm
-               ENDIF
-
-            ENDIF
-
-            IF Len( s_aCFiles ) > 0
-
-               GaugeDisplay( aGauge )
-               nFile := 1
-
-               FOR nFiles := 1 TO Len( s_aCFiles )
-                  xItem := Substr( s_aCFiles[ nFiles ], Rat( IIF( s_lGcc, "/", "\" ), ;
-                                   s_aCFiles[ nFiles ] ) + 1 )
-                  nPos := AScan( s_aObjsC, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), ;
-                          Left( x, At( ".", x ) ) == Left( xitem, At( ".", xitem ) ) } )
-
-                  IF nPos > 0
-
-                     IF llinux
-                        cComm := Strtran( cComm, "o$*", "o" + s_aObjsC[ nPos ] )
-                     ELSE
-                        IF s_lMSVcc //.OR. s_lPocc
-                           cComm := Strtran( cComm, "-Fo$*", "-Fo" + Strtran( s_aObjsC[ nPos ], "/", "\" ) )
-                        ELSE
-                           cComm := Strtran( cComm, "o$*", "o" + Strtran( s_aObjsC[ nPos ], "/", "\" ) )
-                        ENDIF
-                     ENDIF
-
-                     cComm := Strtran( cComm, "$**", s_aCFiles[ nFiles ] )
-
-                     cComm += IIF( s_lLinux ,  " "," >>"+ (s_cLog))
-
-                     @ 4, 5 SAY "Compiling: " + PADR( s_aCFiles[ nFiles ], 50 )
-                     GaugeUpdate( aGauge, nFile / Len( s_aCFiles ) )   // Changed s_aPrgs to s_aCFiles, Ath 2004-06-08
-
-                     nFile ++
-                     OUTERR( cComm + s_cEOL )
-                     setpos(9,0)
-                     if s_lMingw
-                     cComm := strtran(cComm ,"\","/")
-                     endif
-
-                     cScreen := SAVESCREEN()
-                     s_lErrors := IIF( hb_run( cComm ) != 0, .T., .F. )
-                     RESTSCREEN( ,,,, cScreen )
-                     cErrText := Memoread( s_cLog )
-                     lEnd     := "Error E" $   cErrText
-                     IF ! s_lIgnoreErrors .AND. lEnd
-
-                        cScreen := SAVESCREEN()
-                        s_lErrors := IIF( hb_run( s_cEditor + " "+ s_cLog ), .T., .F. )
-                        RESTSCREEN( ,,,, cScreen )
-                        SET CURSOR ON
-                        QUIT
-                     ELSE
-                        // FErase( s_cLog )
-                     ENDIF
-                     lEnd := "Error F" $   cErrText
-
-                     cComm := cOld
-
-                  ENDIF
-
-               NEXT
-
             ENDIF
 
          ENDIF
 
-         IF cOrder == "$(OBJFILES)"
-
-            IF s_lGcc
-               nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".prg.o:" } )
-            ELSE
-               nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".prg.obj:" } )
-            ENDIF
-
-            IF nPos > 0
-               cComm := s_aCommands[ nPos, 2 ]
-               cOld  := cComm
-            ELSE
-
-               IF s_lGcc
-                  nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".PRG.O:" } )
-               ELSE
-                  nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".PRG.OBJ:" } )
-               ENDIF
-
-            ENDIF
+         IF Len( s_aCFiles ) > 0
 
             GaugeDisplay( aGauge )
             nFile := 1
 
-            FOR EACH cPrg IN s_aPrgs
-
-               xItem := Substr( cPrg, Rat( IIF( s_lGcc, "/", "\" ), ;
-                                cPrg ) + 1 )
-               nPos := AScan( s_aObjs, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), ;
-                       Left( x, At( ".", x ) ) == Left( xItem, At( ".", xitem ) ) } )
+            FOR nFiles := 1 TO Len( s_aCFiles )
+               xItem := Substr( s_aCFiles[ nFiles ], Rat( IIF( s_lGcc, "/", "\" ), ;
+                                s_aCFiles[ nFiles ] ) + 1 )
+               nPos  := AScan( s_aObjsC, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), ;
+                        Left( x, At( ".", x ) ) == Left( xitem, At( ".", xitem ) ) } )
 
                IF nPos > 0
 
                   IF llinux
-                     cComm := Strtran( cComm, "o$*", "o" + s_aObjs[ nPos ] )
+                     cComm := Strtran( cComm, "o$*", "o" + s_aObjsC[ nPos ] )
                   ELSE
                      IF s_lMSVcc //.OR. s_lPocc
-                        cComm := Strtran( cComm, "-Fo$*", "-Fo" + Strtran( s_aObjs[ nPos ], "/", "\" ) )
+                        cComm := Strtran( cComm, "-Fo$*", "-Fo" + Strtran( s_aObjsC[ nPos ], "/", "\" ) )
                      ELSE
-                        cComm := Strtran( cComm, "o$*", "o" + Strtran( s_aObjs[ nPos ], "/", "\" ) )
+                        cComm := Strtran( cComm, "o$*", "o" + Strtran( s_aObjsC[ nPos ], "/", "\" ) )
                      ENDIF
                   ENDIF
 
-                  cComm := Strtran( cComm, "$**", cPrg )
-                  cComm += IIF( s_lLinux ,  " > "+ (s_cLog)," >>"+ (s_cLog))
+                  cComm := Strtran( cComm, "$**", s_aCFiles[ nFiles ] )
 
-                  @ 4,5 SAY "Compiling: " + PADR( cPrg, 50 )
-                  GaugeUpdate( aGauge, nFile / Len( s_aPrgs ) )
-                  OUTERR( s_cEOL )
+                  cComm += IIF( s_lLinux ,  " "," >>" + ( s_cLogFile ) )
+
+                  @ 4, 5 SAY "Compiling: " + PADR( s_aCFiles[ nFiles ], 50 )
+                  GaugeUpdate( aGauge, nFile / Len( s_aCFiles ) )   // Changed s_aPrgs to s_aCFiles, Ath 2004-06-08
+
                   nFile ++
+                  OUTERR( cComm + s_cEOL )
                   setpos(9,0)
+                  if s_lMingw
+                     cComm := strtran(cComm ,"\","/")
+                  endif
 
                   cScreen := SAVESCREEN()
                   s_lErrors := IIF( hb_run( cComm ) != 0, .T., .F. )
                   RESTSCREEN( ,,,, cScreen )
-                  cErrText := Memoread( (s_cLog) )
-                  lEnd     := "C2006" $ cErrText .OR. "No code generated" $ cErrText .or. "Error E" $ cErrText .or. "Error F" $ cErrText
+                  cErrText := Memoread( s_cLogFile )
+                  lEnd     := "Error E" $   cErrText
 
                   IF ! s_lIgnoreErrors .AND. lEnd
 
-
-                     s_lErrors := IIF( hb_run( s_cEditor + " " + s_cLog ), .T., .F. )
+                     cScreen := SAVESCREEN()
+                     s_lErrors := IIF( hb_run( s_cEditor + " " + s_cLogFile ), .T., .F. )
+                     RESTSCREEN( ,,,, cScreen )
                      SET CURSOR ON
-                     QUIT
-                  ELSE
-                     //FErase( s_cLog )
+                     lErrs := .T.
                   ENDIF
+                  lEnd := "Error F" $   cErrText
 
                   cComm := cOld
 
@@ -1230,6 +1197,86 @@ FUNCTION CompileFiles()
             NEXT
 
          ENDIF
+
+      ENDIF
+
+      IF cOrder == "$(OBJFILES)"
+
+         IF s_lGcc
+         nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".prg.o:" } )
+         ELSE
+            nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".prg.obj:" } )
+         ENDIF
+
+         IF nPos > 0
+            cComm := s_aCommands[ nPos, 2 ]
+            cOld  := cComm
+         ELSE
+
+            IF s_lGcc
+               nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".PRG.O:" } )
+            ELSE
+               nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".PRG.OBJ:" } )
+            ENDIF
+
+         ENDIF
+
+         GaugeDisplay( aGauge )
+         nFile := 1
+
+         FOR EACH cPrg IN s_aPrgs
+
+            xItem := Substr( cPrg, Rat( IIF( s_lGcc, "/", "\" ), ;
+                          cPrg ) + 1 )
+            nPos := AScan( s_aObjs, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), ;
+                    Left( x, At( ".", x ) ) == Left( xItem, At( ".", xitem ) ) } )
+
+            IF nPos > 0
+
+               IF llinux
+                  cComm := Strtran( cComm, "o$*", "o" + s_aObjs[ nPos ] )
+               ELSE
+                  IF s_lMSVcc //.OR. s_lPocc
+                     cComm := Strtran( cComm, "-Fo$*", "-Fo" + Strtran( s_aObjs[ nPos ], "/", "\" ) )
+                  ELSE
+                     cComm := Strtran( cComm, "o$*", "o" + Strtran( s_aObjs[ nPos ], "/", "\" ) )
+                  ENDIF
+               ENDIF
+
+               cComm := Strtran( cComm, "$**", cPrg )
+               cComm += IIF( s_lLinux,  " > " + s_cLogFile, " >>" + s_cLogFile )
+
+               @ 4,5 SAY "Compiling: " + PADR( cPrg, 50 )
+               GaugeUpdate( aGauge, nFile / Len( s_aPrgs ) )
+               OUTERR( s_cEOL )
+               nFile ++
+               setpos(9,0)
+
+               cScreen := SAVESCREEN()
+               s_lErrors := IIF( hb_run( cComm ) != 0, .T., .F. )
+               RESTSCREEN( ,,,, cScreen )
+               cErrText := Memoread( s_cLogFile )
+               lEnd     :=   "C2006" $ cErrText .OR. "No code generated" $ cErrText .or. ;
+                           "Error E" $ cErrText .OR. "Error F"           $ cErrText
+
+               lErrs    := IIF( lEnd, .T., lErrs )
+
+               IF ! s_lIgnoreErrors .AND. lEnd
+
+                  s_lErrors := IIF( hb_run( s_cEditor + " " + s_cLogFile ), .T., .F. )
+               ENDIF
+
+               cComm := cOld
+
+            ENDIF
+
+         NEXT
+
+         IF lErrs
+            RETURN PGM_ERR
+         ENDIF
+
+      ENDIF
 
       IF cOrder == "$(RESDEPEN)"
          nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".rc.res:" } )
@@ -1249,6 +1296,7 @@ FUNCTION CompileFiles()
 
                cScreen := SAVESCREEN()
                s_lErrors := IIF( hb_run( cComm ) != 0, .T., .F. )
+               lErrs     := IF( s_lErrors, .T., lErrs )
                RESTSCREEN( ,,,, cScreen )
             ENDIF
 
@@ -1260,7 +1308,7 @@ FUNCTION CompileFiles()
 
    NEXT
 
-RETURN NIL
+RETURN IIF ( lErrs, PGM_BAK, PGM_OK )
 
 *-------------------------------
 FUNCTION GetParaDefines( cTemp )
@@ -1430,10 +1478,6 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
 
    LOCAL cBuild       := " "
    LOCAL cBuildForced := " "
-   LOCAL nReturnParam := -1            /* -1 = Cancel  Make
-                                           0 = Compile Necessary
-                                           1 = Compile All
-                                       */
    LOCAL aUserDefs
    LOCAL cCurrentDef  := ""
    LOCAL cRdd         := "None"
@@ -1452,6 +1496,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
 
    LOCAL cHarbourLibDir := s_cHarbourDir + iif(s_lLinux,"/lib","\lib")
    LOCAL lCancelMake := .F.
+   LOCAL cScreen     := SAVESCREEN()
 
    #IFdef HBM_USE_DEPENDS
       LOCAL cIncl              := ""
@@ -1502,6 +1547,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
 
             Alert( s_cAlertMsg+" FERROR ("+LTrim(Str(FError()))+")" )
 
+            RESTSCREEN( ,,,, cScreen )
             RETURN PGM_ERR
          ELSE
             FClose( s_nMakeFileHandle )
@@ -1590,6 +1636,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
             ENDIF
 
             Alert( s_cAlertMsg )
+            RESTSCREEN( ,,,, cScreen )
             RETURN PGM_ERR
          ENDIF
 
@@ -1614,6 +1661,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
 
             Alert( s_cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
 
+            RESTSCREEN( ,,,, cScreen )
             RETURN PGM_ERR
 
          endif
@@ -1637,6 +1685,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
             ENDIF
 
             Alert( s_cAlertMsg )
+            RESTSCREEN( cScreen )
             RETURN PGM_ERR
          ENDIF
 
@@ -1657,7 +1706,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
             ENDIF
 
             Alert( s_cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
-
+            RESTSCREEN( ,,,, cScreen )
             RETURN PGM_ERR
 
          endif
@@ -1666,10 +1715,8 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
          lNew := .T.
 
       ELSE
-         SetColor("W/N,N/W")
-         CLS
-         set cursor on
-         QUIT
+         RESTSCREEN( ,,,, cScreen )
+         RETURN PGM_ERR
       ENDIF
 
    ELSE
@@ -1689,7 +1736,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
          ENDIF
 
          Alert( s_cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
-
+         RESTSCREEN( ,,,, cScreen )
          RETURN PGM_ERR
 
       ENDIF
@@ -1708,7 +1755,7 @@ While .t.
    Setcolor( "w/b+,b+/w,w+/b,w/b+,w/b,w+/b" )
    @  0,  0, Maxrow(), Maxcol() BOX( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) + Space( 1 ) )
 
-   Attention( hbMakeID() + space(10)+s_aLangMessages[ 27 ], 0 )
+   Attention( hbMakeID() + space(10) + s_aLangMessages[ 27 ], 0 )
 
    Attention( s_aLangMessages[ 47 ], maxrow() )
 
@@ -1939,9 +1986,7 @@ While .t.
    READ msg at maxrow()-1,1,maxcol()-1
 
    IF LastKey() == K_ESC
-      SET CURSOR ON
-      SetColor("W/N")
-      CLS
+      RESTSCREEN( ,,,, cScreen )
       RETURN PGM_ERR
    ENDIF
 
@@ -2233,6 +2278,7 @@ Endif // Create and compile
             FClose( s_nMakeFileHandle )
             s_nMakeFileHandle:= F_ERROR  // Invalid handle now file is closed
             FErase( cFile )
+            RESTSCREEN( ,,,, cScreen )
             RETURN PGM_ERR
          ENDIF
 
@@ -2800,7 +2846,7 @@ Endif // Create and compile
    IF lScanIncludes
       // Clipper/(x)Harbour sources: .prg
       IF Len( s_aPrgs ) == Len( s_aObjs )
-         Attention("Scanning .prg sources...",19)
+         Attention( "Scanning .prg sources...", 19 )
          FOR nPos := 1 to Len(s_aPrgs)
             cIncl := ScanInclude( ReplaceMacros( s_aPrgs[ nPos ] ), lScanIncRecursive, cExcludeExts )
             // Only add in list if dependencies exist
@@ -2812,7 +2858,7 @@ Endif // Create and compile
 
       // C-sources: .c
       IF Len( s_aCFiles ) == Len( s_aObjsC )
-         Attention("Scanning .c sources...",19)
+         Attention( "Scanning .c sources...", 19 )
          FOR nPos := 1 to Len(s_aCFiles)
             cIncl := ScanInclude( s_aCFiles[ nPos ], lScanIncRecursive, cExcludeExts )
             // Only add in list if dependencies exist
@@ -2926,24 +2972,25 @@ Endif // Create and compile
    ENDIF
 
    /*  Set Parameter for how to continue
-    *  Cancel Make     : -1
+    *  Cancell Make    : -1
     *  Compile Updated :  0
     *  Compile All     :  1
     */
 
-    DO CASE
-    CASE cBuildForced $ "SY"
-       nBuildReturn :=  1
+   DO CASE
+   CASE cBuildForced $ "SY"
+      nBuildReturn :=  BLD_ALL
 
-    CASE cBuild       $ "SY"
-       nBuildReturn :=  0
+   CASE cBuild       $ "SY"
+      nBuildReturn :=  BLD_SOME
 
-    OTHERWISE
-       nBuildReturn := PGM_ERR
+   OTHERWISE
+      nBuildReturn := BLD_NONE
 
-    END CASE
+   END CASE
 
-RETURN nBuildReturn
+   RESTSCREEN( ,,,, cScreen )
+   RETURN nBuildReturn
 
 #IfDef HBM_USE_DEPENDS
 
@@ -3159,7 +3206,7 @@ FUNCTION CompileUpdatedFiles()
                      cComm := Strtran( cComm, "o$*", "o" + s_aObjsC[ nPos ] )
                   ENDIF
                   cComm := Strtran( cComm, "$**", s_aCFiles[ nFiles ] )
-                  cComm += IIF( s_lLinux ,  " > "+ (s_cLog)," >>"+ (s_cLog))
+                  cComm += IIF( s_lLinux ,  " > " + s_cLogFile, " >>" + s_cLogFile )
 
                   @4,16 SAY s_aCFiles[ nFiles ]
                   GaugeUpdate( aGauge, nFile / Len( s_aCFiles ) )  // changed s_aPrgs to s_aCFiles Ath 2004-06-08
@@ -3170,20 +3217,20 @@ FUNCTION CompileUpdatedFiles()
                   cScreen := SAVESCREEN()
                   s_lErrors := IIF( hb_run( cComm ) != 0, .T., .F. )
                   RESTSCREEN( ,,,, cScreen )
-                  cErrText := Memoread( (s_cLog) )
+                  cErrText := Memoread( s_cLogFile )
                   lEnd     := "Error E" $ cErrText
 
                   IF ! s_lIgnoreErrors .AND. lEnd
 
-                     s_lErrors := IIF( hb_run( s_cEditor + " " + s_cLog ), .T., .F. )
-                     set cursor on
-                     QUIT
-                  ELSE
-                     // FErase( s_cLog )
+                     s_lErrors := IIF( hb_run( s_cEditor + " " + s_cLogFile ), .T., .F. )
+
+                     IF s_lErrors
+                        RETURN PGM_ERR
+                     ENDIF
+
+                     cComm := cOld
+
                   ENDIF
-
-                  cComm := cOld
-
                ENDIF
 
             ENDIF
@@ -3192,7 +3239,7 @@ FUNCTION CompileUpdatedFiles()
          //nFile++
       ENDIF
 
-//      GaugeDisplay( aGauge )
+      GaugeDisplay( aGauge )
 
       IF cOrder == "$(OBJFILES)"
 
@@ -3201,6 +3248,7 @@ FUNCTION CompileUpdatedFiles()
          ELSE
             nPos := AScan( s_aCommands, { | x | x[ 1 ] == ".prg.obj:" } )
          ENDIF
+
          IF nPos > 0
             cComm := s_aCommands[ nPos, 2 ]
             cOld  := cComm
@@ -3242,7 +3290,7 @@ FUNCTION CompileUpdatedFiles()
                      cComm := Strtran( cComm, "o$*", "o" + s_aObjs[ nPos ] )
                   ENDIF
                   cComm := Strtran( cComm, "$**", cPrg )
-                  cComm += IIF( s_lLinux ,  " > "+ (s_cLog)," >>"+ (s_cLog))
+                  cComm += IIF( s_lLinux ,  " > " + s_cLogFile, " >>" + s_cLogFile )
 
                   @4,16 SAY cPrg
                   GaugeUpdate( aGauge, nFile / Len( s_aPrgs ) )
@@ -3253,16 +3301,15 @@ FUNCTION CompileUpdatedFiles()
                   cScreen := SAVESCREEN()
                   s_lErrors := IIF( hb_run( cComm ) != 0, .T., .F. )
                   RESTSCREEN( ,,,, cScreen )
-                  cErrText := Memoread( s_cLog )
+                  cErrText := Memoread( s_cLogFile )
                   lEnd     := "C2006" $ cErrText .OR. "No code generated" $ cErrText .or. "Error E" $ cErrText .or. "Error F" $ cErrText
 
                   IF ! s_lIgnoreErrors .AND. lEnd
 
-                     s_lErrors := IIF( hb_run( s_cEditor + " " + s_cLog ) != 0, .T., .F. )
-                     set cursor on
-                     QUIT
-                  ELSE
-                     // FErase( s_cLog )
+                     s_lErrors := IIF( hb_run( s_cEditor + " " + s_cLogFile ) != 0, .T., .F. )
+                     IF s_lErrors
+                        RETURN PGM_BAD
+                     ENDIF
                   ENDIF
 
                   cComm := cOld
@@ -3510,11 +3557,7 @@ FUNCTION CreateLibMakeFile( cFile )
 
             Alert( s_cAlertMsg )
 
-            SetColor("W/N,N/W")
-            CLS
-            set cursor on
-            QUIT
-
+            RETURN PGM_ERR
          ENDIF
 
          if s_lCancelRecursive
@@ -3561,10 +3604,7 @@ FUNCTION CreateLibMakeFile( cFile )
             ENDIF
 
             Alert( s_cAlertMsg )
-            SetColor("W/N,N/W")
-            CLS
-            set cursor on
-            QUIT
+            RETURN PGM_ERR
 
          ENDIF
 
@@ -3594,10 +3634,7 @@ FUNCTION CreateLibMakeFile( cFile )
          lNew := .T.
 
       ELSE
-         SetColor("W/N,N/W")
-         CLS
-         set cursor on
-         QUIT
+         RETURN PGM_ERR
       ENDIF
 
    ELSE
@@ -3632,7 +3669,7 @@ FUNCTION CreateLibMakeFile( cFile )
    Setcolor( "w/b+,b+/w,w+/b,w/b+,w/b,w+/b" )
    @  0,  0, Maxrow(), Maxcol() BOX( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) + Space( 1 ) )
 
-   Attention( hbMakeID() + space(10)+s_aLangMessages[ 27 ], 0 )
+   Attention( hbMakeID() + space(10) + s_aLangMessages[ 27 ], 0 )
 
    SET CURSOR OFF
 
@@ -4129,16 +4166,16 @@ FUNCTION SetBuildLib( nFHandle )
 
    s_lEof:= (hb_FReadLine( nFHandle, @cRead, s_aEOL ) == HB_FEOF)
    cRead := Alltrim( cRead )
-   s_nMakeFileHandle := FCreate( s_cLinkFileName )
+   s_nMakeFileHandle := FCreate( s_cLinkFile )
 
    IF s_nMakeFileHandle == F_ERROR
 
       IF s_nLang     == LANG_PT        /* portuguese brazilian */
-         s_cAlertMsg := "<"+s_cLinkFileName + "> n∆o pode ser criado."
+         s_cAlertMsg := "<"+s_cLinkFile + "> n∆o pode ser criado."
       ELSEIF s_nLang == LANG_ES        /* spanish              */
-         s_cAlertMsg := "<"+s_cLinkFileName + "> no pode ser criado."
+         s_cAlertMsg := "<"+s_cLinkFile + "> no pode ser criado."
       ELSE                             /* english             */
-         s_cAlertMsg := "<"+s_cLinkFileName + "> cannot be created."
+         s_cAlertMsg := "<"+s_cLinkFile + "> cannot be created."
       ENDIF
 
       Alert( s_cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
@@ -4160,9 +4197,9 @@ FUNCTION SetBuildLib( nFHandle )
    AEval( aMacro, { | xMacro | Findmacro( xMacro, @cRead ) } )
 
    IF s_lBcc .OR. s_lMSVcc .OR. s_lPocc
-      s_cLinkCommands := cRead + " @" + s_cLinkFileName
+      s_cLinkCommands := cRead + " @" + s_cLinkFile
    ELSE
-      s_cLinkCommands := cRead + " < " + s_cLinkFileName
+      s_cLinkCommands := cRead + " < " + s_cLinkFile
    ENDIF
 
    FOR nPos := 1 TO 7
@@ -5020,7 +5057,7 @@ FUNCTION ResetInternalVars()
    s_aObjsC        := {}
    s_lEof          := .F.
    s_aResources    := {}
-// s_cLinkFileName := "hblink.lnk"
+// s_cLinkFile := "linkfile.lnk"
    s_cLinkCommands := ""
 
 if s_lBcc
@@ -5085,15 +5122,6 @@ next
 
 RETURN c
 
-*--------------------
-FUNCTION Delete_ppo()
-*--------------------
-LOCAL cFile := alltrim(s_cAppName)+".ppo"
-
-  FErase( cFile )
-
-RETURN NIL
-
 *------------------
 FUNCTION ShowHelp( cMsg )
 *------------------
@@ -5142,17 +5170,17 @@ FUNCTION ShowHelp( cMsg )
       OutErr( "Message:  " + cMsg + s_cEOL )
    ENDIF
 
-RETURN NIL
+   RETURN PGM_ERR
 
 *-------------------
 FUNCTION hbMakeID()
 *-------------------
-RETURN "Harbour Make"
+   RETURN "Harbour Make"
 
 *--------------------------
 FUNCTION hbMakeCopyright()
 *--------------------------
-RETURN "Copyright (c) 2000-2008, http://www.harbour-project.org/"
+   RETURN "Copyright (c) 2000-2008, http://www.harbour-project.org/"
 
 *-------------------------------------------------------------------
 * Former tmake.prg
@@ -5784,7 +5812,7 @@ FUNCTION PickArray( T, L, B, R, InArray, OutArray, aDefault, lAllowAll, cTitle, 
    ACopy( aNewArray, OutArray )
 
    RestScreen(,,,,cOldScreen)
-   SetColor( coldColor )
+   SetColor( cOldColor )
 
    RETURN Len( aNewArray )
 
@@ -5792,8 +5820,8 @@ FUNCTION PickArray( T, L, B, R, InArray, OutArray, aDefault, lAllowAll, cTitle, 
 STATIC FUNCTION PickArray_Keys( MODE, nOnItem, lAdd )
 *-------------------------------------------------------------------
 
-   LOCAL RETVAL := AC_CONT
-   LOCAL THEKEY := Lastkey()
+   LOCAL RetVal := AC_CONT
+   LOCAL TheKey := Lastkey()
 
    IF MODE == AC_HITTOP
       KEYBOARD Chr( K_CTRL_PGDN )
@@ -5803,24 +5831,24 @@ STATIC FUNCTION PickArray_Keys( MODE, nOnItem, lAdd )
 
    ELSEIF MODE == AC_EXCEPT
 
-      IF THEKEY == K_SPACE // space bar to select/unselect
-         RETVAL := AC_SELECT
-      ELSEIF THEKEY == K_F5  // (select all itens)
+      IF TheKey == K_SPACE // space bar to select/unselect
+         RetVal := AC_SELECT
+      ELSEIF TheKey == K_F5  // (select all itens)
          lAdd := !lAdd
-         RETVAL := AC_SELECT
-      ELSEIF THEKEY == K_ESC
-         RETVAL := AC_ABORT
-      ELSEIF THEKEY == K_ENTER .AND. nOnItem < 1
-         RETVAL := AC_ABORT
+         RetVal := AC_SELECT
+      ELSEIF TheKey == K_ESC
+         RetVal := AC_ABORT
+      ELSEIF TheKey == K_ENTER .AND. nOnItem < 1
+         RetVal := AC_ABORT
          KEYBOARD CHR( K_ENTER )
-      ELSEIF THEKEY == K_ENTER
+      ELSEIF TheKey == K_ENTER
          KEYBOARD CHR( K_DOWN )
-         RETVAL := AC_ABORT
+         RetVal := AC_ABORT
       ENDIF
 
    ENDIF
 
-   RETURN RETVAL
+   RETURN RetVal
 
 *-------------------------------------------------------------------
 * Former hbmutils.prg
@@ -5874,9 +5902,9 @@ FUNCTION GetSourceFiles( lSubDir, lGcc, cOs )
          nPadr := 12 // maximum Clipper/DOS source file name length with extension.
          // if this lenght is greater than 12, then reset nPadr.
          FOR y := 1 TO nDataLen
-             nPadr := Max( AT(".prg", Lower( aData[ y, 1 ] ) )+3 , nPadr )
-             nPadr := Max( AT(".c",   Lower( aData[ y, 1 ] ) )+1 , nPadr )
-             nPadr := Max( AT(".cpp", Lower( aData[ y, 1 ] ) )+3 , nPadr )
+             nPadr := Max( AT(".prg", LOWER( aData[ y, 1 ] ) )+3 , nPadr )
+             nPadr := Max( AT(".c",   LOWER( aData[ y, 1 ] ) )+1 , nPadr )
+             nPadr := Max( AT(".cpp", LOWER( aData[ y, 1 ] ) )+3 , nPadr )
          NEXT
 
          FOR y := 1 TO nDataLen
@@ -6187,16 +6215,16 @@ FUNCTION Exte( cExt, nType )
    RETURN cTemp
 
 *-----------------------------------------------
-PROCEDURE ATTENTION( CSTRING, NLINENUM, CCOLOR )
+PROCEDURE Attention( cString, nLineNum, cColor )
 *-----------------------------------------------
 
-   LOCAL COLDCOLOR
+   LOCAL cOldColor
    LOCAL nColPos
 
    DEFAULT NLINENUM TO 24
-   DEFAULT CCOLOR TO "GR+/R"
+   DEFAULT cColor TO "GR+/R"
 
-   COLDCOLOR := SETCOLOR( CCOLOR )
+   cOldColor := SETCOLOR( cColor )
 
    CSTRING := "  " + ALLTRIM( CSTRING ) + "  "
 
@@ -6205,7 +6233,7 @@ PROCEDURE ATTENTION( CSTRING, NLINENUM, CCOLOR )
 
    DEVOUT( CSTRING )
 
-   SETCOLOR( COLDCOLOR )
+   SETCOLOR( cOldColor )
 
    RETURN
 
@@ -6283,7 +6311,7 @@ FUNCTION GetLibs( lGcc, cDir )
    LOCAL aLibsDesc     := { { "Harbour hbmisc      lib - hbmisc" + cExt  , "hbmisc" + cExt },;
                             { "Harbour NanFor Lib  lib - hbnf" + cExt    , "hbnf" + cExt },;
                             { "Harbour GT Lib      lib - hbgt"+cExt      , "hbgt" + cExt },;
-                            { "Harbour ZipArchive  lib - hbziparc"+cExt  , "hbziparc" + cExt + iif( lLinux, " stdc++.a z.a", " " ) },;
+                            { "Harbour ZipArchive  lib - hbziparc"+cExt  , "hbziparc" + cExt },;
                             { "Harbour ole (old)   lib - hbole"+ cExt    , "hbole" + cExt + " ole2" + cExt },;
                             { "Harbour MySQL       lib - hbmysql" + cExt , "hbmysql" + cExt },;
                             { "Harbour PostgreSQL  lib - hbpgsql"+cExt   , "hbpgsql" + cExt },;

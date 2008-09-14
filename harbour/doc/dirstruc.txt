@@ -37,7 +37,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |
 |   +---sunos           - Configutation files specific to SunOS.
 |   |
-|   +---w32             - Configutation files specific to MS-Win32.
+|   +---w32             - Configutation files specific to MS Windows.
 |
 +---contrib             - Miscellaneous contribution files. Those are not
 |   |                     part of the official Harbour project.
@@ -65,7 +65,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |---gtalleg         - GT subsystem based on Allegro with graphic
 |   |                     extensions.
 |   |    
-|   +---gtwvg           - GT subsystem for Win32 GUI using GDI functions.
+|   +---gtwvg           - GT subsystem for Windows GUI using GDI functions.
 |   |   |
 |   |   +---tests       - Demo program and sample images.
 |   |
@@ -128,7 +128,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   +---hbgfos2     - Implementation for OS/2 Presentation Manager
 |   |   |                 environment.
 |   |   |
-|   |   +---hbgfw32     - Implementation for Win32 environment.
+|   |   +---hbgfwin     - Implementation for Windowns environment.
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
@@ -168,7 +168,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
-|   +---hbole           - Win32 OLE Automation library.
+|   +---hbole           - Windows OLE Automation library.
 |   |   |
 |   |   +---tests       - Demonstration program.
 |   |
@@ -196,15 +196,11 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |       |
 |   |       +---files   - Sample files for testing.
 |   |
-|   +---hbw32           - Collection of Win32 specific utility functions.
+|   +---hbw32           - Collection of Windows specific utility functions.
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
-|   +---hbw32ddr        - DirectDraw implementation for Windows.
-|   |   |
-|   |   +---tests       - A BreakOut like sample game.
-|   |
-|   +---hbwhat32        - What32 is a library for ccessing all of Win32 API
+|   +---hbwhat          - What is a library for ccessing all of Windows API
 |   |                     from PRG level.
 |   |
 |   +---hbziparc        - Compatibility interface with ZipArchive general 
@@ -311,7 +307,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---gtdos       - GT subsystem for DOS compilers.
 |   |   |
-|   |   +---gtgui       - Minimal GT for W32 GUI programs.
+|   |   +---gtgui       - Minimal GT for Windows GUI programs.
 |   |   |
 |   |   +---gtos2       - GT subsystem for OS/2 compilers.
 |   |   |
@@ -325,9 +321,9 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |                 termcap/terminfo for terminal escape sequences,
 |   |   |                 but rather hard coded ones for basic capabilities.
 |   |   |
-|   |   +---gtwin       - GT subsystem for Win32 compilers (Console).
+|   |   +---gtwin       - GT subsystem for Windows compilers (Console).
 |   |   |
-|   |   +---gtwvt       - GT subsystem for Win32 using GUI windows instead of
+|   |   +---gtwvt       - GT subsystem for Windows using GUI windows instead of
 |   |   |                 Console.
 |   |   |
 |   |   +---gtxwc       - GT subsystem for XWindow Console.
@@ -337,9 +333,9 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   +---vm              - Harbour Virtual Machine and internal Run-Time
 |       |                 library functions.
 |       |
-|       +---mainstd     - mainstd library for MinGW32 build.
+|       +---mainstd     - mainstd library for MinGW build.
 |       |
-|       +---mainwin     - mainwin library for MinGW32 build.
+|       +---mainwin     - mainwin library for MinGW build.
 |
 |
 +---tests               - Test programs.

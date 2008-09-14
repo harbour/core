@@ -166,7 +166,7 @@ HB_FUNC( CHECKDLGBUTTON )
     hb_retl( CheckDlgButton(
                              (HWND) HB_PARWH( 1 ), // handle of dialog box
                              hb_parni( 2 ),          // identifier of control
-                             ISNUM(3) ? hb_parni(3) : (UINT) hb_parl(3) ) );
+                             ISNUM(3) ? ( UINT ) hb_parni(3) : (UINT) hb_parl(3) ) );
 }
 
 //-----------------------------------------------------------------------------

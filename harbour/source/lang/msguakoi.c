@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Укра╓нський",               /* Name (in native language) */
       "UA",                        /* RFC ID */
       "KOI8U",                     /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

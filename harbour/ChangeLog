@@ -8,6 +8,363 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 11:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtalleg/ssf.h
+    ! Fixed to compile with Cygwin.
+
+  * contrib/hbwhat/whtsock.c
+    ! Fixed for PellesC 4.5 where the inclusion order of 
+      Windows headers needs to be the opposite of what 5.0 needs.
+
+  * contrib/hbwhat/whtilst.c
+    ! Fixed to compile with Cygwin.
+
+  * contrib/hbwhat/whtinet.c
+    ! Added missing Windows macro for Cygwin.
+    ! Fixed three warnings with Cygwin.
+
+  * contrib/hbwhat/whtseria.c
+  * contrib/hbwhat/whtreg.c
+  * contrib/hbwhat/whtini.c
+    ! Removed #include "tchar.h", because it's unnecessary, 
+      and breaks Cygwin.
+
+  * contrib/hbwhat/whtsys.c
+    ! Removed #include "htmlhelp.h", because it's unnecessary, 
+      and breaks Cygwin.
+
+2008-09-13 19:30 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtalleg/ssf.h
+    ! Turned off ASM for MSVC AMD64 mode.
+
+  * contrib/gtalleg/Makefile
+    ! Disabled for OpenWatcom. (maybe compilation could be 
+      fixed somehow, if someone is interested pls look into it.)
+
+  * doc/whatsnew.txt
+  * contrib/hbfimage/fi_winfu.c
+  * contrib/hbfimage/fi_wrp.c
+    ! Fixed for OpenWatcom.
+
+  * contrib/gtwvg/wvgutils.c
+  * contrib/gtwvg/wvgcore.c
+    ! Silenced some MinGW/PelleC cast warnings.
+
+  * contrib/hbw32/win_prt.c
+    ! Fixed GCC (MinGW/Cygwin) warnings. The solution I choose is 
+      pretty ugly, if someone knows the right one, please help.
+      Warning was:
+      ../../win_prt.c:70: warning: missing initializer
+      ../../win_prt.c:70: warning: (near initialization for `s_PortData[0].OldDCB')
+    ! Fixed few remaining warnings / minor bugs.
+
+  * contrib/hbwhat/whtlv.c
+  * contrib/hbwhat/whtcomm.c
+  * contrib/hbwhat/whttab.c
+  * contrib/hbwhat/whttree.c
+    ! Silenced MinGW 4.12 warnings.
+
+  * contrib/hbwhat/whtdate.c
+    ! Removed #include "tchar.h", which seems unnecessary and 
+      fixed Cygwin compilation.
+
+  * contrib/hbwhat/whtsock.c
+    ! Changed #include order of Windows headers to satisfy PellesC 5.
+
+  ; TOFIX1: hbct / SETFDATI() has a possible bug here (shown in PelleC 64 bit):
+    ../../files.c(264): warning #2006: [ISO] Conversion from 'void *' to 'int' is compiler dependent.
+    ../../files.c(264): warning #2052: Conversion from 'void *' to 'int' is undefined.
+    Problem is with HFILE / HANDLE conversion.
+
+  ; TOFIX2: Here are some remaining 64-bit problems:
+    ../../hb_btree.c(643): warning #2006: [ISO] Conversion from 'void *' to 'unsigned long int' is compiler dependent.
+    ../../hb_btree.c(643): warning #2052: Conversion from 'void *' to 'unsigned long int' is undefined.
+    ../../hb_btree.c(739): warning #2006: [ISO] Conversion from 'ioBuffer_T *' to 'unsigned long int' is compiler dependent.
+    ../../hb_btree.c(739): warning #2052: Conversion from 'ioBuffer_T *' to 'unsigned long int' is undefined.
+    ../../win_dll.c(511): warning #2006: [ISO] Conversion from 'void *' to 'unsigned long int' is compiler dependent.
+    ../../win_dll.c(511): warning #2052: Conversion from 'void *' to 'unsigned long int' is undefined.
+    ../../win_ole.c(761): warning #2006: [ISO] Conversion from 'LPDISPATCH' to 'long int' is compiler dependent.
+    ../../win_ole.c(761): warning #2052: Conversion from 'LPDISPATCH' to 'long int' is undefined.
+    ../../win_ole.c(1091): warning #2006: [ISO] Conversion from 'LPDISPATCH' to 'long int' is compiler dependent.
+    ../../win_ole.c(1091): warning #2052: Conversion from 'LPDISPATCH' to 'long int' is undefined.
+    ../../win_ole.c(1425): warning #2006: [ISO] Conversion from 'void *' to 'long int' is compiler dependent.
+    ../../win_ole.c(1425): warning #2052: Conversion from 'void *' to 'long int' is undefined.
+    ../../win_ole.c(1478): warning #2006: [ISO] Conversion from 'void *' to 'long int' is compiler dependent.
+    ../../win_ole.c(1478): warning #2052: Conversion from 'void *' to 'long int' is undefined.
+    ../../win_regc.c(94): warning #2006: [ISO] Conversion from 'HKEY' to 'unsigned long int' is compiler dependent.
+    ../../win_regc.c(94): warning #2052: Conversion from 'HKEY' to 'unsigned long int' is undefined.
+    ../../win_regc.c(116): warning #2006: [ISO] Conversion from 'HKEY' to 'unsigned long int' is compiler dependent.
+    ../../win_regc.c(116): warning #2052: Conversion from 'HKEY' to 'unsigned long int' is undefined.
+
+2008-09-13 13:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * doc/dirstruc.txt
+    * Updated.
+
+  - contrib/hbgf/hbgfw32
+  + contrib/hbgf/hbgfwin
+  * contrib/hbgf/tests/bld_b32.bat
+  * contrib/hbgf/tests/bld_vc.bat
+  * contrib/hbgf/Makefile
+  * contrib/hbgf/hbgfwin/common.mak
+  * contrib/hbgf/hbgfwin/button.prg
+  * contrib/hbgf/hbgfwin/winctrl.prg
+  * contrib/hbgf/hbgfwin/form.prg
+  * contrib/hbgf/hbgfwin/menuitem.prg
+  * contrib/hbgf/hbgfwin/menu.prg
+  * contrib/hbgf/hbgfwin/edit.prg
+  * contrib/hbgf/hbgfwin/Makefile
+  - contrib/hbgf/hbgfwin/win32.c
+  + contrib/hbgf/hbgfwin/winapi.c
+  - contrib/hbgf/hbgfwin/hbgfw32.ch
+  + contrib/hbgf/hbgfwin/hbgfwin.ch
+    * Removed some '32's.
+
+2008-09-13 12:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * doc/whatsnew.txt
+    * Updated.
+
+2008-09-13 12:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbw32/Makefile
+  * contrib/hbw32/common.mak
+  * contrib/hbw32/hbw32.ch
+  + contrib/hbw32/hbwin.h
+  + contrib/hbw32/win_prt.c
+  + contrib/hbw32/win_tprt.prg
+  + contrib/hbw32/tests/testprt1.prg
+  + contrib/hbw32/tests/testprt2.prg
+    + Added Windows COM port handling functions.
+      Contributed by Alex Strickland.
+    ; I did some changes to clean warnings, few 64-bit issues, 
+      changed to use safe string functions, integrated 
+      the header into hbw32.ch, added a new general C level 
+      header, split BEGINDUMP into separate .c function, 
+      changed to ANSI C comments, marked statics with s_, 
+      fixed a few trashed string buffers and leaks in some 
+      error cases. Separated tests into distinct .prgs.
+      Fixed for UNICODE mode. Minor optimizations, formatting.
+    ; TODO: Test WinCE build.
+    ; Please test, I don't have any COM ports on my system.
+
+2008-09-13 10:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtwvg/wvgcore.c
+  * contrib/gtwvg/wvgutils.c
+    ! Fixed 64-bit problems.
+    ; Pritpal, could you please review and test these changes?
+
+2008-09-13 09:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbvpdf/hbvpdf.prg
+    ! Generic support functions made STATIC to avoid collision 
+      with similarly named functions in other libs (like hbct).
+
+  * contrib/hbvpdf/hbvpdf.prg
+  * contrib/hbvpdf/hbvpdft.prg
+    * Using hb_run() instead of RUN and __run().
+
+2008-09-12 19:30 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtalleg/Makefile
+    * Excluded Cygwin.
+
+  * contrib/hbwhat/Makefile
+  * contrib/hbwhat/common.mak
+  - contrib/hbwhat/whtdll.c
+  - contrib/hbwhat/whtcall.c
+    - Removed DLL related stuff from hbwhat, since we're 
+      maintaining (a better working) one already in hbw32, 
+      and hbwhat by itself doesn't seem to need this 
+      functionality internally. Users should migrate to 
+      the hbw32 functions, which work mostly similarly.
+
+2008-09-12 19:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * doc/whatsnew.txt
+    * Added some build notes.
+
+  * contrib/gtalleg/Makefile
+    ! Fixed POCC, XCC compiler exlusions.
+    * Excluded DMC compiler.
+
+  * contrib/hbwhat/Makefile
+    * Excluded DMC compiler.
+
+  * contrib/hbwhat/wincorec.c
+    ! Workaround for a wrong Windows API declaration in 
+      __DMC__ headers.
+
+2008-09-12 11:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbole/tests/bld_vc.bat
+  * contrib/hbw32/tests/bld_vc.bat
+    ! Added missing system libs.
+
+2008-09-12 04:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtwvg/wvgutils.c
+    ! Fix to previous fix, so it works again in 64-bit builds.
+         hb_retclen( ( LPSTR ) pdlgtemplate, ( ( ULONG ) p - ( ULONG ) pdlgtemplate ) ) ; =>
+         hb_retclen( ( LPSTR ) pdlgtemplate, ( ( HB_PTRDIFF ) p - ( HB_PTRDIFF ) pdlgtemplate ) ) ;
+    ; This way it's now in sync with similar function in hbwhat.
+
+2008-09-12 01:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rdd/usrrdd/rdds/Makefile
+  + source/rdd/usrrdd/rdds/arrayrdd.prg
+  + source/rdd/usrrdd/rdds/vfpcdx.prg
+    + Added two usrrdd based RDDs. Borrowed from xhb.
+      Works of: Francesco Saverio Giudice and 
+                Miguel Angel Marchuet Frutos
+    ; These were adapted to compile and link in Harbour, but 
+      I did no tests, so some more - hopefully minor - changes 
+      may happen to be needed.
+
+2008-09-12 00:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/rddado/adordd.prg
+  * contrib/rddado/adordd.ch
+    * Merged changes from xhb.
+      Some hbusrrdd.ch values seem to be missing from Harbour, 
+      related features will be automatically enabled if we 
+      implement them in our usrrdd.
+      Please test.
+
+2008-09-11 22:55 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * doc/whatsnew.txt
+  * source/vm/cmdarg.c
+    * Legacy undocumented symbols hb_hInstance and 
+      hb_hPrevInstance reenabled for 1.0.1, when HB_LEGACY_LEVEL 
+      is #defined. This is the default in 1.0.x. It will be 
+      turned off in 1.1.0.
+      I did this to not break binary compatibility of 1.0.1 
+      with 1.0.0 for those apps that rely on these symbols
+      (like gtwvg).
+
+2008-09-11 21:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtwvg/tests/bld_vc.bat
+    ! Added required list of system libs.
+
+2008-09-11 14:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/gtpca/gtpca.c
+  * source/rtl/gtwin/gtwin.c
+  * source/rtl/gtwvt/gtwvt.c
+  * source/rtl/gttone.c
+    ! Fixed some core MSVC -W4 warnings.
+
+  * contrib/hbnf/getenvrn.c
+    ! Fixed compile problem in MSVC C++ mode surfaced after 
+      recent UNICODE fix.
+
+2008-09-11 13:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtwvg/wvgutils.c
+    ! Fixed last MSVC -W4 warnings.
+    ; NOTE: Only these contribs have remaining -W4 warnings:
+            hbbmcdx, hbbtree, hbct (in screen*.c).
+            Plus core.
+
+2008-09-11 12:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbnf/fttext.c
+  * contrib/hbwhat/whtdate.c
+  * contrib/hbwhat/wincorec.c
+  * contrib/hbwhat/whtsock.c
+  * contrib/hbwhat/whtseria.c
+  * contrib/hbwhat/whtdlg.c
+  * contrib/hbwhat/whtsys.c
+  * contrib/hbwhat/whtmisc.c
+  * contrib/hbwhat/whtcdlg.c
+    ! Fixed all MinGW 4.3x warnings.
+    ! Added workaround for slightly wrong MinGW definition for 
+      Windows DateTime_GetMonthCal() macro.
+
+  * contrib/gtwvg/gtwvg.c
+  * contrib/gtwvg/wvgutils.c
+  * contrib/gtwvg/wvgcore.c
+    ! Fixed all MSVC -W4 warnings.
+
+  * contrib/gtwvg/gtwvg.h
+    ! Fixed old bug, which surfaced after recently 
+      fixing __MINGW__ to __MINGW32__.
+      Apparently, comctl32.h is never needed here.
+
+  * config/rules.cf
+  * contrib/hbbtree/tests/bld_djgp.bat
+    % Removed -gc0. Now default.
+
+  * contrib/make_b32_all.bat
+  * contrib/make_vc_all.bat
+    * Minor formatting.
+
+  * contrib/hbgt/asciisgt.c
+  * utils/hbdoc/hbdoc.prg
+    - Removed unnecessary version strings. This was good 
+      in CVS times, but for SVN there is not much point.
+
+  * utils/hbmake/hbmake.prg
+    + Another patch session from Bill Robertson.
+      Besides some further cleanups, this should fix 
+      some problems with the previous version.
+
+  * source/lang/msghuiso.c
+  * source/lang/msgskiso.c
+  * source/lang/msgrukoi.c
+  * source/lang/msghuwin.c
+  * source/lang/msgzhgb.c
+  * source/lang/msgskwin.c
+  * source/lang/msg_tpl.c
+  * source/lang/msgruwin.c
+  * source/lang/msgelwin.c
+  * source/lang/msgro.c
+  * source/lang/msgpt.c
+  * source/lang/msghriso.c
+  * source/lang/msghrwin.c
+  * source/lang/msgsliso.c
+  * source/lang/msgbe866.c
+  * source/lang/msgslwin.c
+  * source/lang/msghe862.c
+  * source/lang/msgcskam.c
+  * source/lang/msggl.c
+  * source/lang/msgtrwin.c
+  * source/lang/msgeo.c
+  * source/lang/msgbgiso.c
+  * source/lang/msgbgwin.c
+  * source/lang/msgskkam.c
+  * source/lang/msges.c
+  * source/lang/msguakoi.c
+  * source/lang/msgzhb5.c
+  * source/lang/msgeu.c
+  * source/lang/msgpl852.c
+  * source/lang/msgsr852.c
+  * source/lang/msguawin.c
+  * source/lang/msgde.c
+  * source/lang/msgtr857.c
+  * source/lang/msgru866.c
+  * source/lang/msgcs852.c
+  * source/lang/msgfr.c
+  * source/lang/msgis850.c
+  * source/lang/msgnl.c
+  * source/lang/msghu852.c
+  * source/lang/msgsk852.c
+  * source/lang/msgca.c
+  * source/lang/msgplmaz.c
+  * source/lang/msgpliso.c
+  * source/lang/msgplwin.c
+  * source/lang/msgbgmik.c
+  * source/lang/msgid.c
+  * source/lang/msgbg866.c
+  * source/lang/msgltwin.c
+  * source/lang/msgsriso.c
+  * source/lang/msgel.c
+  * source/lang/msgsrwin.c
+  * source/lang/msgbewin.c
+  * source/lang/msgdewin.c
+  * source/lang/msghr437.c
+  * source/lang/msghr852.c
+  * source/lang/msgko.c
+  * source/lang/msgua866.c
+  * source/lang/msghewin.c
+  * source/lang/msgit.c
+  * source/lang/msgsl437.c
+  * source/lang/msgsl852.c
+  * source/lang/msghucwi.c
+  * source/lang/msgcsiso.c
+  * source/lang/msgcswin.c
+  * source/lang/msgeswin.c
+  * source/rtl/langapi.c
+    - Cleared unnecessary version strings. This was good 
+      in CVS times, but for SVN there is not much point.
+
 2008-09-14 03:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-ce-spec
   * harbour/harbour-w32-spec

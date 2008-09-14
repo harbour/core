@@ -174,7 +174,7 @@ HB_FUNC( SHAPPBARMESSAGE )
 //-----------------------------------------------------------------------------
 // SHSTDAPI_(DWORD) DoEnvironmentSubstA(LPSTR szString, UINT cchString);
 
-#if !defined(__WATCOMC__) && !defined(__MINGW32__)
+#if !defined(__WATCOMC__) && !defined(__MINGW32__) && !defined(__CYGWIN__)
 HB_FUNC( DOENVIRONMENTSUBST )
 {
    hb_retnl((LONG) DoEnvironmentSubst( (LPSTR) hb_parcx( 1 ) ,

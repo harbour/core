@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Ελληνικά ANSI",                      /* Name (in native language) */
       "EL",                                 /* RFC ID */
       "ANSI-1253",                          /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

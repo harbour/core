@@ -2634,7 +2634,7 @@ local lRet := .t.
 //      ShellExecute( GetDeskTopWindow(), cVerb, cFile, , , 1 )
         HB_SYMBOL_UNUSED( cFile )
     else
-      __Run( cCmd )
+      hb_run( cCmd )
     endif
 #endif
 

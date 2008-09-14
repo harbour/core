@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Catal n",                   /* Name (in native language) */
       "CA",                        /* RFC ID */
       "850",                       /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

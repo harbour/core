@@ -137,10 +137,10 @@ HB_FUNC( _CREATEWINDOWEX )
    LPCSTR cClass     = (LPCSTR) hb_parc(2);
    LPCSTR cTitle     = (LPCSTR) hb_parc(3);
    DWORD  nStyle     = (ISNIL(4)  ? 0 : (DWORD) hb_parnd(4) );
-   int    x          = (ISNIL(5)  ? CW_USEDEFAULT : hb_parni(5));
-   int    y          = (ISNIL(6)  ? CW_USEDEFAULT : hb_parni(6));
-   int    nWidth     = (ISNIL(7)  ? CW_USEDEFAULT : hb_parni(7));
-   int    nHeight    = (ISNIL(8)  ? CW_USEDEFAULT : hb_parni(8));
+   int    x          = (ISNIL(5)  ? ( int ) CW_USEDEFAULT : hb_parni(5));
+   int    y          = (ISNIL(6)  ? ( int ) CW_USEDEFAULT : hb_parni(6));
+   int    nWidth     = (ISNIL(7)  ? ( int ) CW_USEDEFAULT : hb_parni(7));
+   int    nHeight    = (ISNIL(8)  ? ( int ) CW_USEDEFAULT : hb_parni(8));
    HWND   hWndParent = (ISNIL(9)  ? (HWND) NULL : (HWND) HB_PARWH(9));
    HMENU  hMenu      = (ISNIL(10) ? (HMENU) NULL : (HMENU) HB_PARWH(10));
    HANDLE hInstance  = (ISNIL(11) ? GetModuleHandle( NULL ) : (HANDLE) HB_PARWH(11));
@@ -162,17 +162,24 @@ HB_FUNC( _CREATEMDIWINDOW )
    LPCSTR cClass     = (LPCSTR) hb_parc(1);
    LPCSTR cTitle     = (LPCSTR) hb_parc(2);
    DWORD  nStyle     = (ISNIL(3)  ? WS_MAXIMIZE : (DWORD) hb_parnd(3) );
-   int    x          = (ISNIL(4)  ? CW_USEDEFAULT : hb_parni(4));
-   int    y          = (ISNIL(5)  ? CW_USEDEFAULT : hb_parni(5));
-   int    nWidth     = (ISNIL(6)  ? CW_USEDEFAULT : hb_parni(6));
-   int    nHeight    = (ISNIL(7)  ? CW_USEDEFAULT : hb_parni(7));
+   int    x          = (ISNIL(4)  ? ( int ) CW_USEDEFAULT : hb_parni(4));
+   int    y          = (ISNIL(5)  ? ( int ) CW_USEDEFAULT : hb_parni(5));
+   int    nWidth     = (ISNIL(6)  ? ( int ) CW_USEDEFAULT : hb_parni(6));
+   int    nHeight    = (ISNIL(7)  ? ( int ) CW_USEDEFAULT : hb_parni(7));
    HWND   hWndParent = (ISNIL(8)  ? (HWND) NULL : (HWND) HB_PARWH(8));
    HANDLE hInstance  = (ISNIL(9)  ? GetModuleHandle( NULL ) : (HANDLE) HB_PARWH(9));
    LPARAM lParam     = (ISNIL(10) ? 0 : (LPARAM) hb_parnl(10));
 
+#if defined(__DMC__)
+   HWND hWnd = CreateMDIWindow( ( LPSTR ) cClass, ( LPSTR ) cTitle, nStyle,
+                                x, y, nWidth, nHeight,
+                                hWndParent, (HINSTANCE) hInstance, lParam );
+#else
    HWND hWnd = CreateMDIWindow( cClass, cTitle,nStyle,
                                 x, y, nWidth, nHeight,
                                 hWndParent, (HINSTANCE) hInstance, lParam );
+#endif
+
    HB_RETWH( hWnd );
 }
 
@@ -739,3 +746,4 @@ HB_FUNC( _MAKEDLGTEMPLATE )
 
     LocalFree (LocalHandle (pdlgtemplate) );
 }
+

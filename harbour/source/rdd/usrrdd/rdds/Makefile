@@ -5,12 +5,14 @@
 ROOT = ../../../../
 
 PRG_SOURCES=\
+	arrayrdd.prg \
 	fcomma.prg \
 	hscdx.prg \
 	rlcdx.prg \
 	dbtcdx.prg \
 	fptcdx.prg \
 	smtcdx.prg \
+	vpfcdx.prg \
 
 
 LIBNAME=usrrdds

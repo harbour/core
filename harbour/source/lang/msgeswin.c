@@ -67,7 +67,7 @@ static HB_LANG s_lang =
       "Español ANSI",              /* Name (in native language) */
       "ESWIN",                     /* RFC ID */
       "ANSI",                      /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

@@ -7,12 +7,12 @@ ROOT = ../../
 LIBNAME=hbwhat
 
 ifeq ($(HB_ARCHITECTURE),w32)
+ifneq ($(HB_COMPILER),dm)
 
 C_SOURCES = \
 	wincorec.c \
 	whtbmp.c \
 	whtbrsh.c \
-	whtcall.c \
 	whtcdlg.c \
 	whtclpb.c \
 	whtcomm.c \
@@ -21,7 +21,6 @@ C_SOURCES = \
 	whtdc.c \
 	whtdir.c \
 	whtdlg.c \
-	whtdll.c \
 	whtdraw.c \
 	whtfont.c \
 	whtgdi.c \
@@ -93,6 +92,9 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

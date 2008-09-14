@@ -31,6 +31,11 @@
 #include   <shellapi.h>
 #include   <wininet.h>
 
+/* Needed for Cygwin */
+#ifndef INTERNET_FLAG_NEED_FILE
+#define INTERNET_FLAG_NEED_FILE 0x00000010
+#endif
+
 #include   "hbapi.h"
 #include   "hbvm.h"
 #include   "hbstack.h"
@@ -171,7 +176,7 @@ HB_FUNC( FTPOPENFILE )
 {
    HINTERNET hFtp         = ( HINTERNET ) HB_PARWH( 1 );
    LPCTSTR   lpszFileName = hb_parcx( 2 );
-   DWORD     dwAccess     = ISNIL( 3 ) ? GENERIC_READ : hb_parni( 3  );
+   DWORD     dwAccess     = ISNIL( 3 ) ? GENERIC_READ : ( DWORD ) hb_parni( 3  );
    DWORD     dwFlags      = ISNIL( 4 ) ? FTP_TRANSFER_TYPE_BINARY : hb_parni( 4 );
    DWORD_PTR dwContext    = ISNIL( 5 ) ? 0            : hb_parnl( 5 );
 
@@ -415,7 +420,7 @@ HB_FUNC( FTPGETFILE )
    LPCTSTR   lpszLocalFile        = hb_parcx( 3 );
    BOOL      fFailIfExist         = ISNIL( 4 ) ? FALSE : hb_parl( 4 );
    DWORD     dwFlagsAndAttributes = ISNIL( 5 ) ? FILE_ATTRIBUTE_NORMAL : hb_parnl( 5 );
-   DWORD     dwFlags              = ISNIL( 6 ) ? FTP_TRANSFER_TYPE_BINARY | INTERNET_FLAG_RELOAD : hb_parnl( 6 );
+   DWORD     dwFlags              = ISNIL( 6 ) ? FTP_TRANSFER_TYPE_BINARY | INTERNET_FLAG_RELOAD : ( DWORD ) hb_parnl( 6 );
    DWORD_PTR dwContext            = ISNIL( 7 ) ? 0 : hb_parnl( 7 );
 
    hb_retl( FtpGetFile( hInternet, lpszRemoteFile, lpszLocalFile,
@@ -443,7 +448,7 @@ HB_FUNC( FTPPUTFILE )
    HINTERNET hInternet            = ( HINTERNET ) HB_PARWH( 1 );
    LPCTSTR   lpszLocalFile        = hb_parcx( 2 );
    LPCTSTR   lpszRemoteFile       = hb_parcx( 3 );
-   DWORD     dwFlags              = ISNIL( 4 ) ? FTP_TRANSFER_TYPE_BINARY | INTERNET_FLAG_RELOAD : hb_parnl( 4 );
+   DWORD     dwFlags              = ISNIL( 4 ) ? FTP_TRANSFER_TYPE_BINARY | INTERNET_FLAG_RELOAD : ( DWORD ) hb_parnl( 4 );
    DWORD_PTR dwContext            = ISNIL( 5 ) ? 0 : hb_parnl( 5 );
 
    hb_retl( FtpPutFile( hInternet, lpszLocalFile, lpszRemoteFile, dwFlags, dwContext ) );

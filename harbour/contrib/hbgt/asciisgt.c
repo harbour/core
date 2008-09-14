@@ -10,8 +10,6 @@
  * BBS.......: The Dark Knight Returns
  * Net/Node..: 050/069
  * User Name.: Andy Leighton
- * Date......: $Date$
- * Revision..: $Revision$
  *
  * This is an original work by Andy Leighton and is placed in the
  * public domain.

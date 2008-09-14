@@ -92,7 +92,7 @@ HB_FUNC( PEEK )
 
 HB_FUNC( POKE )
 {
-   hb_xmemcpy( (char *) HB_PARWI(1), hb_parcx( 2 ), hb_pcount() == 3 ? hb_parnl( 3 ) : hb_parclen( 2 ) );
+   hb_xmemcpy( (char *) HB_PARWI(1), hb_parcx( 2 ), hb_pcount() == 3 ? ( ULONG ) hb_parnl( 3 ) : ( ULONG ) hb_parclen( 2 ) );
 }
 
 
@@ -346,7 +346,7 @@ HB_FUNC( MESSAGEBOX )
 
 HB_FUNC( MESSAGEBEEP )
 {
-  hb_retl( MessageBeep( ISNIL(1) ?  (0xFFFFFFFF) : hb_parnl(1) ) );
+  hb_retl( MessageBeep( ISNIL(1) ? ( UINT ) 0xFFFFFFFF : ( UINT ) hb_parnl(1) ) );
 }
 
 //-----------------------------------------------------------------------------

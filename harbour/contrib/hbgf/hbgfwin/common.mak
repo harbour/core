@@ -2,15 +2,15 @@
 # $Id$
 #
 
-LIBNAME = hbgfw32
+LIBNAME = hbgfwin
 
 LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 
 PRG_HEADERS = \
-    hbgfw32.ch \
+    hbgfwin.ch \
 
 LIB_OBJS = \
-    $(OBJ_DIR)win32$(OBJEXT) \
+    $(OBJ_DIR)winapi$(OBJEXT) \
     \
     $(OBJ_DIR)button$(OBJEXT) \
     $(OBJ_DIR)edit$(OBJEXT) \

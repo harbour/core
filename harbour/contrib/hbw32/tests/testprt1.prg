@@ -3,12 +3,11 @@
  */
 
 /*
- * Harbour Project source code:
- * Harbour GUI framework for Win32
- * Class HBButton
+ * xHarbour Project source code:
+ * Windows communications library
  *
- * Copyright 2001 Antonio Linares <alinares@fivetech.com>
- * www - http://www.harbour-project.org
+ * Copyright 2005 Alex Strickland <sscc@mweb.co.za>
+ * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +41,7 @@
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
  * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
+ * anyone as to the status o such modified files, you must delete
  * this exception notice from them.
  *
  * If you write modifications of your own for Harbour, it is your choice
@@ -51,23 +50,34 @@
  *
  */
 
-#include "common.ch"
-#include "hbclass.ch"
-#include "hbgfw32.ch"
+#include "hbw32.ch"
 
-CLASS HBButton FROM HBWinControl
+procedure main(cPortName)
 
-   DATA      OnClick   PROPERTY
+    local oWinPort := WinPort():Init(cPortName, CBR_9600, NOPARITY, 8, ONESTOPBIT)
+    local cString := "ATE0" + chr(13) + "ATI3" + chr(13)
+    local nResult
 
-   METHOD    New( oContainer )
+    if !oWinPort:Open
+        ? "Open() failed :", oWinPort:Error()
+    else
+        ? "Open() succeeded"
+        ?
+        if oWinPort:SetDTR(.t.)
+            ? "SetDTR(.t.) succeeded"
+        else
+            ? "SetDTR(.t.) failed :", oWinPort:Error()
+        endif
+        if (nResult := oWinPort:Write(cString)) == len(cString)
+            ? "Write() succeeded"
+        else
+            ? "Write() failed, returned ", nResult, " expected ", len(cString)
+        endif
+        ? "Scan something... we'll not read it but purge it, press enter"
+        inkey(0)
+        ? "Read() ", oWinPort:Read(@cString, 32), len(cString), cString
+        ? oWinPort:Error()
+        ? "Close", oWinPort:Close()
+    endif
 
-ENDCLASS
-
-METHOD New( oContainer ) CLASS HBButton
-
-   ::hWnd  := WinCreateStdWindow( , nOr( WS_CHILD, WS_TABSTOP ),, "BUTTON", "",,;
-                                 oContainer:hWnd, ::GetNewId() )
-   ::Width  := 80
-   ::Height := 25
-
-return Self
+return

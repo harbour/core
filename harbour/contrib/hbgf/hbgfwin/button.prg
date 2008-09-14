@@ -4,8 +4,8 @@
 
 /*
  * Harbour Project source code:
- * Harbour GUI framework for Win32
- * Win32.ch constants definitions header file
+ * Harbour GUI framework for Windows
+ * Class HBButton
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -51,30 +51,23 @@
  *
  */
 
-#ifndef HB_GFW32_CH_
-#define HB_GFW32_CH_
+#include "common.ch"
+#include "hbclass.ch"
+#include "hbgfwin.ch"
 
-#define WM_CLOSE        0x0010
-#define WM_COMMAND      0x0111
-#define WM_DESTROY      0x0002
-#define WM_LBUTTONDOWN  0x0201
+CLASS HBButton FROM HBWinControl
 
-#define WS_VISIBLE      0x10000000
-#define WS_OVERLAPPED   0x00000000
-#define WS_MINIMIZE     0x20000000
-#define WS_MAXIMIZE     0x01000000
-#define WS_CAPTION      0x00C00000
-#define WS_BORDER       0x00800000
-#define WS_SYSMENU      0x00080000
-#define WS_THICKFRAME   0x00040000
-#define WS_MINIMIZEBOX  0x00020000
-#define WS_MAXIMIZEBOX  0x00010000
+   DATA      OnClick   PROPERTY
 
-#define WS_OVERLAPPEDWINDOW ( WS_OVERLAPPED + WS_CAPTION + ;
-                              WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX + ;
-                              WS_MAXIMIZEBOX)
+   METHOD    New( oContainer )
 
-#define WS_CHILD     0x40000000
-#define WS_TABSTOP   0x00010000
+ENDCLASS
 
-#endif
+METHOD New( oContainer ) CLASS HBButton
+
+   ::hWnd  := WinCreateStdWindow( , nOr( WS_CHILD, WS_TABSTOP ),, "BUTTON", "",,;
+                                 oContainer:hWnd, ::GetNewId() )
+   ::Width  := 80
+   ::Height := 25
+
+return Self

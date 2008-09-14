@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Lietuviø",                  /* Name (in native language) */
       "LT",                        /* RFC ID */
       "Windows-1257",              /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

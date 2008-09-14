@@ -67,7 +67,7 @@ static HB_LANG s_lang =
       "Deutsch ANSI",                   /* Name (in native language) */
       "DEWIN",                        /* RFC ID */
       "ANSI",                       /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

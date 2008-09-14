@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Nederlands",     /* Name (in native language) */
       "NL",             /* RFC ID */
       "437",            /* Codepage */
-      "$Revision$Date: 2007-12-05 19:52:13 +0100 (Sze, 05 dec. 2007) $", /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

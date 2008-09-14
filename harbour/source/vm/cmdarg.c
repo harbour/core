@@ -68,10 +68,21 @@ static char ** s_argv = NULL;
 
 HB_EXTERN_BEGIN
 
-static HANDLE s_hInstance     = 0;
-static HANDLE s_hPrevInstance = 0;
-static int    s_iCmdShow      = 0;
-static BOOL   s_WinMainParam  = FALSE;
+#ifdef HB_LEGACY_LEVEL
+   /* NOTE: 1.0 compatibility stuff. Will be removed in 1.1 [vszakats]. */
+   #define s_hInstance     hb_hInstance
+   #define s_hPrevInstance hb_hPrevInstance
+
+   HANDLE s_hInstance     = 0;
+   HANDLE s_hPrevInstance = 0;
+   int    s_iCmdShow      = 0;
+   BOOL   s_WinMainParam  = FALSE;
+#else
+   static HANDLE s_hInstance     = 0;
+   static HANDLE s_hPrevInstance = 0;
+   static int    s_iCmdShow      = 0;
+   static BOOL   s_WinMainParam  = FALSE;
+#endif
 
 HB_EXTERN_END
 

@@ -26,9 +26,6 @@ General
 - Eliminated remaining non-safe string manipulation calls:
   strncpy(), strcpy() -> hb_strncpy()
   strncat(), strcat() -> hb_strncat()
-- Added major+minor version number to non-GNU make generated 
-  harbour.dlls. (harbour-*.dll becomes harbour-10-*.dll)
-  Please adjust your system.
 - Some contrib name collisions fixed in non-GNU builds.
 - gtalleg GT moved to the contrib area to enable it for 
   non-GNU builds and non-*nix builds in general.
@@ -131,6 +128,8 @@ Core
 - Removed hb_hInstance, hb_hPrevInstance, s_iCmdShow, s_WinMainParam 
   old undocumented public variables. 3rd parties should use 
   official hb_winmainArgGet() API to get these values.
+  This feature is also HB_LEGACY_LEVEL dependent, therefore it will 
+  be finalized in 1.1, until then, old symbols will still work.
 - Fixed _FIELD indirectly used as alias to generate the right RTE:
   ? ("_FIELD")->NAME, or:
   M->var := "_FIELD"; ? ("&var")->NAME
@@ -209,15 +208,19 @@ Contrib
   INTERNETWRITEFILE() functions were fixed. what32.ch renamed 
   to hbwhat.ch.
 - hbhpdf fixed HPDF_ADDPAGELABEL().
+- hbw32 got a new COM port handling class and API.
+- gtwvg got some enhancements and 64-bit compatibility fixes.
+  A critical 1.0.0 bug was also fixed, which could cause 
+  dialogs to not appear.
+- hbfimage fixed to compile with Watcom compilers.
 
 Known build issues
 =============================
 - Windows 64-bit builds may generate a large amount of type 
   conversion warnings. This is currently normal and will be 
   addressed in a future version.
-- Contrib hbfimage won't currently compile on Linux systems 
-  and with Open Watcom compilers. This will be addressed in 
-  a future version.
+- Contrib hbfimage won't currently compile on Linux systems.
+  This will be addressed in a future version.
 - Contrib hbsqlit3 will not embed foreign sqlite3 library code 
   for Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems. 
   For these compilers you will have to supply sqlite3 library 
@@ -225,7 +228,9 @@ Known build issues
   normal in this non-Harbour code.
 - Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions 
   won't work.
-- gtalleg contrib may not compile on all platforms/compilers.
+- gtalleg, hbwhat contrib may not compile on all platforms/compilers.
+- hbcurl won't build when using DMC and libcurl 7.19.0.
+  Earlier versions build okay.
 
 
 Version 1.0.0 (2008-08-10) tag: 1.0.0

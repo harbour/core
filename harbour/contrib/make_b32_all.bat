@@ -26,14 +26,14 @@ rem *******************************************************
 
 set _HB_BATWORKER=_hbwrk_.bat
 
-echo @echo off                                          >%_HB_BATWORKER%
-echo if %%1x == x goto EXIT                            >>%_HB_BATWORKER%
-echo if not exist %%1\make_b32.bat goto EXIT           >>%_HB_BATWORKER%
-echo echo Entering: %%1                                >>%_HB_BATWORKER%
-echo cd %%1                                            >>%_HB_BATWORKER%
-echo call make_b32.bat %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9 >>%_HB_BATWORKER%
-echo cd ..                                             >>%_HB_BATWORKER%
-echo :EXIT                                             >>%_HB_BATWORKER%
+echo @echo off                                          > %_HB_BATWORKER%
+echo if %%1x == x goto EXIT                            >> %_HB_BATWORKER%
+echo if not exist %%1\make_b32.bat goto EXIT           >> %_HB_BATWORKER%
+echo echo Entering: %%1                                >> %_HB_BATWORKER%
+echo cd %%1                                            >> %_HB_BATWORKER%
+echo call make_b32.bat %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9 >> %_HB_BATWORKER%
+echo cd ..                                             >> %_HB_BATWORKER%
+echo :EXIT                                             >> %_HB_BATWORKER%
 
 rem *******************************************************
 rem Compiling contrib dirs ...

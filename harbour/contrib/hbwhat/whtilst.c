@@ -225,7 +225,7 @@ HB_FUNC( IMAGELIST_BEGINDRAG )
 }
 
 //-----------------------------------------------------------------------------
-#if defined(__MINGW32__) || defined(__WATCOMC__)
+#if defined(__MINGW32__) || defined(__CYGWIN__) || defined(__WATCOMC__)
 void WINAPI ImageList_EndDrag(void);
 #else
 WINCOMMCTRLAPI void WINAPI ImageList_EndDrag(void);

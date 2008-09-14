@@ -4,11 +4,10 @@
 
 /*
  * Harbour Project source code:
- * Harbour GUI framework for Win32
- * Class HBWinControl
+ *    VFPCDX
  *
- * Copyright 2001 Antonio Linares <alinares@fivetech.com>
- * www - http://www.harbour-project.org
+ * Copyright 2007 Miguel Angel Marchuet Frutos <miguelangel /at/ marchuet.net>
+ * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,38 +50,27 @@
  *
  */
 
-#include "common.ch"
-#include "hbclass.ch"
+#include "rddsys.ch"
+#include "dbinfo.ch"
+#include "hbusrrdd.ch"
 
-#define SW_SHOWNA      8
+/* Force linking DBFCDX from which our RDD inherits */
+REQUEST DBFCDX
+REQUEST DBFFPT
 
+ANNOUNCE VFPCDX
 
-CLASS HBWinControl FROM HBPersistent
+FUNCTION VFPCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
+   /* We are inheriting from DBFCDX */
+   RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, "DBFCDX", {} )
 
-   DATA      hWnd
-   DATA      nId
+INIT PROCEDURE VFPCDX_INIT()
 
-   CLASSDATA nInitId
+   rddRegister( "VFPCDX", RDT_FULL )
 
-   ACCESS    Caption() INLINE WinGetText( ::hWnd ) PROPERTY
-   ASSIGN    Caption( cNewCaption ) INLINE ;
-                WinSetWindowText( ::hWnd, cNewCaption )
+   rddInfo( RDDI_TABLETYPE, DB_DBF_VFP, "VFPCDX" )
+   rddInfo( RDDI_MEMOTYPE, DB_MEMO_FPT, "VFPCDX" )
+   rddInfo( RDDI_MEMOVERSION, DB_MEMOVER_STD, "VFPCDX" )
+   rddInfo( RDDI_LOCKSCHEME, DB_DBFLOCK_VFP, "VFPCDX" )
 
-   ACCESS    Top()    INLINE WinGetTop( ::hWnd )    PROPERTY
-   ASSIGN    Top( nNewTop ) INLINE WinSetTop( ::hWnd, nNewTop )
-
-   ACCESS    Left()   INLINE WinGetLeft( ::hWnd )   PROPERTY
-   ASSIGN    Left( nNewLeft ) INLINE WinSetLeft( ::hWnd, nNewLeft )
-
-   ACCESS    Height() INLINE WinGetHeight( ::hWnd ) PROPERTY
-   ASSIGN    Height( nNewHeight ) INLINE WinSetHeight( ::hWnd, nNewHeight )
-
-   ACCESS    Width()  INLINE WinGetWidth( ::hWnd )  PROPERTY
-   ASSIGN    Width( nNewWidth ) INLINE WinSetWidth( ::hWnd, nNewWidth )
-
-   METHOD    GetNewId() INLINE ::nId := iif( ::nInitId == nil, ::nInitId := 1,;
-                                             ++::nInitId )
-
-   METHOD    Show() INLINE ShowWindow( ::hWnd, SW_SHOWNA )
-
-ENDCLASS
+   RETURN

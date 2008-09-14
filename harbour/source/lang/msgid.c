@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Bahasa Indonesia",          /* Name (in native language) */
       "ID",                        /* RFC ID */
       "437",                       /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

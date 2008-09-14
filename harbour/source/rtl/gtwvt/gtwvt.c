@@ -934,7 +934,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          }
          else
          {
-            keyState = wParam;
+            keyState = ( SHORT ) wParam;
 
             switch( keyState )
             {
@@ -1354,7 +1354,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          }
          else if( bColor != bOldColor )
          {
-            hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, bOldColor, text, len );
+            hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
             bOldColor = bColor;
             startCol = iCol;
             len = 0;
@@ -1363,7 +1363,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          iCol++;
       }
       if( len > 0 )
-         hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, bOldColor, text, len );
+         hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
    }
 
    EndPaint( pWVT->hWnd, &ps );

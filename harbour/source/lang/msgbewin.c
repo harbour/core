@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Беларуская ",               /* Name (in native language) */
       "BY",                        /* RFC ID */
       "1251",                      /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

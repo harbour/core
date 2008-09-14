@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Hrvatski",                  /* Name (in native language) */
       "HR",                        /* RFC ID */
       "437",                       /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

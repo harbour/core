@@ -275,7 +275,7 @@ static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
          USHORT ch, value = 0, index = 0;
          do
          {
-            ch = getc( stdin );
+            ch = ( USHORT ) getc( stdin );
             if( isdigit( ch ) )
             {
                value = ( value * 10 ) + ( ch - '0' );
@@ -353,10 +353,10 @@ static void hb_gt_pca_AnsiSetAttributes( int iAttr )
             buff[ i++ ] = ';';
          }
          buff[ i++ ] = '3';
-         buff[ i++ ] = '0' + fg;
+         buff[ i++ ] = '0' + ( BYTE ) fg;
          buff[ i++ ] = ';';
          buff[ i++ ] = '4';
-         buff[ i++ ] = '0' + bg;
+         buff[ i++ ] = '0' + ( BYTE ) bg;
          buff[ i++ ] = 'm';
          s_iBold    = bold;
          s_iBlink   = blink;
@@ -384,14 +384,14 @@ static void hb_gt_pca_AnsiSetAttributes( int iAttr )
          if( s_iFgColor != fg )
          {
             buff[ i++ ] = '3';
-            buff[ i++ ] = '0' + fg;
+            buff[ i++ ] = '0' + ( BYTE ) fg;
             buff[ i++ ] = ';';
             s_iFgColor = fg;
          }
          if( s_iBgColor != bg )
          {
             buff[ i++ ] = '4';
-            buff[ i++ ] = '0' + bg;
+            buff[ i++ ] = '0' + ( BYTE ) bg;
             buff[ i++ ] = ';';
             s_iBgColor = bg;
          }
@@ -801,7 +801,7 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          if( s_fDispTrans )
             hb_cdpnTranslate( ( char * ) s_sLineBuf, s_cdpHost, s_cdpTerm, iLen );
 #endif
-         hb_gt_pca_AnsiPutStr( iRow, iCol, iColor, s_sLineBuf, iLen );
+         hb_gt_pca_AnsiPutStr( iRow, iCol, ( BYTE ) iColor, s_sLineBuf, iLen );
          iCol += iLen;
          iLen = 0;
          iColor = bColor;
@@ -816,7 +816,7 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       if( s_fDispTrans )
          hb_cdpnTranslate( ( char * ) s_sLineBuf, s_cdpHost, s_cdpTerm, iLen );
 #endif
-      hb_gt_pca_AnsiPutStr( iRow, iCol, iColor, s_sLineBuf, iLen );
+      hb_gt_pca_AnsiPutStr( iRow, iCol, ( BYTE ) iColor, s_sLineBuf, iLen );
    }
 }
 

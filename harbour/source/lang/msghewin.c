@@ -67,7 +67,7 @@ static HB_LANG s_lang =
       "עברית",                     /* Name (in native language) */
       "HE",                        /* RFC ID */
       "1255",                      /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

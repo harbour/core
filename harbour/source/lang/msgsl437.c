@@ -45,12 +45,12 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "SL437",                    /* ID */
-      "Slovenian",                /* Name (in English) */
-      "Sloven{~ina",              /* Name (in native language) */
-      "SL",                       /* RFC ID */
-      "437",                      /* Codepage */
-      "$Revision$ $Date$",     /* Version */
+      "SL437",                     /* ID */
+      "Slovenian",                 /* Name (in English) */
+      "Sloven{~ina",               /* Name (in native language) */
+      "SL",                        /* RFC ID */
+      "437",                       /* Codepage */
+      "",                          /* Version */
 
       /* Month names */
 

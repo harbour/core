@@ -67,7 +67,7 @@ static HB_LANG s_lang =
       "§§§Â¡c≈ÈBIG5",              /* Name (in native language) */
       "ZH",                        /* RFC ID */
       "950",                       /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "",                          /* Version */
 
       /* Month names */
 

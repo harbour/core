@@ -59,7 +59,7 @@
 #include "hbapifs.h"
 #include "hbvm.h"
 
-#if defined(HB_OS_WIN_32) && !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) )
+#if defined(HB_OS_WIN_32) && !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) ) || defined(__WATCOMC__)
    #define _WINDOWS_
 #endif
 

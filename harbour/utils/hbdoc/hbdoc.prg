@@ -51,13 +51,6 @@
  */
 
 /*
- * File......: hbdoc.prg
- * Author....: Luiz Rafael Culik
- * Date......: $Date$
- * Revision..: $Revision$
- * Log file..: $Logfile:     $
- *
- *
  * Modification history:
  * ---------------------
  *

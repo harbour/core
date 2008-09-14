@@ -160,7 +160,7 @@ METHOD Invoke( cMethod, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) C
       OLEShowException()
       RETURN Self
    ELSEIF OleError() != 0
-      Alert( "OLE error: " + cMethod + ":   " + Ole2TxtError() )
+      Alert( "OLE error1: " + cMethod + ":   " + Ole2TxtError() )
    ENDIF
 
    RETURN uObj
@@ -186,7 +186,7 @@ METHOD Set( cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) CL
    IF Ole2TxtError() == "DISP_E_EXCEPTION"
       OLEShowException()
    ELSEIF OleError() != 0
-      Alert( "OLE error: " + cProperty + ":   " + Ole2TxtError() )
+      Alert( "OLE error2: " + cProperty + ":   " + Ole2TxtError() )
    ENDIF
 
    RETURN nil
@@ -221,7 +221,7 @@ METHOD Get( cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) CL
       IF OleIsObject()
          RETURN TOleAuto():New( uObj )
       ELSEIF OleError() != 0
-         Alert( "OLE error: " + cProperty + ":   " + Ole2TxtError() )
+         Alert( "OLE error3: " + cProperty + ":   " + Ole2TxtError() )
       ENDIF
    ENDIF
 

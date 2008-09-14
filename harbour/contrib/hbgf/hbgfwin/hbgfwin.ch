@@ -4,9 +4,10 @@
 
 /*
  * Harbour Project source code:
- * hbw32 header
+ * Harbour GUI framework for Windows
+ * Constants definitions header file
  *
- * Copyright 2008 Viktor Szakats <harbour.01 syenar.hu>
+ * Copyright 2001 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,58 +51,30 @@
  *
  */
 
-#ifndef HBW32_CH_
-#define HBW32_CH_
+#ifndef HB_GFWIN_CH_
+#define HB_GFWIN_CH_
 
-#define HKEY_CLASSES_ROOT                  0x80000000
-#define HKEY_CURRENT_USER                  0x80000001
-#define HKEY_LOCAL_MACHINE                 0x80000002
-#define HKEY_USERS                         0x80000003
-#define HKEY_PERFORMANCE_DATA              0x80000004
-#define HKEY_CURRENT_CONFIG                0x80000005
-#define HKEY_DYN_DATA                      0x80000006
+#define WM_CLOSE        0x0010
+#define WM_COMMAND      0x0111
+#define WM_DESTROY      0x0002
+#define WM_LBUTTONDOWN  0x0201
 
-/* The following are from winbase.h */
+#define WS_VISIBLE      0x10000000
+#define WS_OVERLAPPED   0x00000000
+#define WS_MINIMIZE     0x20000000
+#define WS_MAXIMIZE     0x01000000
+#define WS_CAPTION      0x00C00000
+#define WS_BORDER       0x00800000
+#define WS_SYSMENU      0x00080000
+#define WS_THICKFRAME   0x00040000
+#define WS_MINIMIZEBOX  0x00020000
+#define WS_MAXIMIZEBOX  0x00010000
 
-#define CBR_110                110
-#define CBR_300                300
-#define CBR_600                600
-#define CBR_1200               1200
-#define CBR_2400               2400
-#define CBR_4800               4800
-#define CBR_9600               9600
-#define CBR_14400              14400
-#define CBR_19200              19200
-#define CBR_38400              38400
-#define CBR_56000              56000
-#define CBR_57600              57600
-#define CBR_115200             115200
-#define CBR_128000             128000
-#define CBR_256000             256000
+#define WS_OVERLAPPEDWINDOW ( WS_OVERLAPPED + WS_CAPTION + ;
+                              WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX + ;
+                              WS_MAXIMIZEBOX)
 
-#define NOPARITY               0
-#define ODDPARITY              1
-#define EVENPARITY             2
-#define MARKPARITY             3
-#define SPACEPARITY            4
+#define WS_CHILD     0x40000000
+#define WS_TABSTOP   0x00010000
 
-#define ONESTOPBIT             0
-#define ONE5STOPBITS           1
-#define TWOSTOPBITS            2
-
-/* DTR Control Flow Values. */
-#define DTR_CONTROL_DISABLE    0x00
-#define DTR_CONTROL_ENABLE     0x01
-#define DTR_CONTROL_HANDSHAKE  0x02
-
-/* RTS Control Flow Values */
-#define RTS_CONTROL_DISABLE    0x00
-#define RTS_CONTROL_ENABLE     0x01
-#define RTS_CONTROL_HANDSHAKE  0x02
-#define RTS_CONTROL_TOGGLE     0x03
-
-#ifndef INVALID_HANDLE_VALUE
-#define INVALID_HANDLE_VALUE    -1
 #endif
-
-#endif /* HBW32_CH_ */

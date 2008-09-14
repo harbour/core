@@ -38,7 +38,7 @@ HB_FUNC( TVINSERTITEM )
 //-------------------------------------------------------------------------//
 HB_FUNC( TVDELETEITEM )
 {
-   TreeView_DeleteItem( (HWND) HB_PARWH( 1 ), ( HTREEITEM ) HB_PARWH( 2 ) );
+   ( void ) TreeView_DeleteItem( (HWND) HB_PARWH( 1 ), ( HTREEITEM ) HB_PARWH( 2 ) );
 }
 
 //-------------------------------------------------------------------------//
@@ -63,7 +63,7 @@ HB_FUNC( TVGETSELTEXT ) // ( hWnd ) --> cText
       tvi.hItem      = hItem;
       tvi.pszText    = ( char *)buffer;
       tvi.cchTextMax = 100;
-      TreeView_GetItem( hWnd, &tvi );
+      ( void ) TreeView_GetItem( hWnd, &tvi );
       hb_retc( tvi.pszText );
    }
    else

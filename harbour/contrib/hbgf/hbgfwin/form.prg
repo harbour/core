@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Harbour GUI framework for Win32
+ * Harbour GUI framework for Windows
  * Class HBForm
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
@@ -54,7 +54,7 @@
 
 #include "common.ch"
 #include "hbclass.ch"
-#include "hbgfw32.ch"
+#include "hbgfwin.ch"
 
 static aForms := {}
 

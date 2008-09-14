@@ -318,7 +318,7 @@ vi = hb_itemGetNI   ( hb_arrayGetItemPtr(wArray, s ));
       COL.cx=vi;
       COL.pszText=caption;
       COL.iSubItem=s;
-      ListView_InsertColumn(hc,s,&COL);
+      ( void ) ListView_InsertColumn(hc,s,&COL);
 
       }
 
@@ -347,7 +347,7 @@ HB_FUNC( ADDLISTVIEWITEMS )
         LI.iSubItem=0;
    LI.iItem=c;
    LI.pszText=caption;
-   ListView_InsertItem(h,&LI);
+   ( void ) ListView_InsertItem(h,&LI);
 
    for (s = 1 ; s<=l ; s=s+1 )
    {
