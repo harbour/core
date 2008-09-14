@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 12:38 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  - config/w32/bcc32.cf
+  + config/w32/bcc.cf
+  - config/w32/mingw32.cf
+  + config/w32/mingw.cf
+    * Cleaning some '32's from HB_COMPILER names.
+      BCC and MinGW 64-bit is coming.
+    ; Please update your build files. INCOMPATIBLE.
+
 2008-09-14 12:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * harbour-ce-spec
   * harbour-w32-spec
