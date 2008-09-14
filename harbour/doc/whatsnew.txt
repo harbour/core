@@ -60,6 +60,9 @@ General
 - Changed GNU-make name of MinGW WinCE compiler (HB_COMPILER) 
   from 'cemgw' to 'mingwce'. Please update your system, if 
   you've been using this directly (and not via make_*ce.sh scripts).
+- Memory statistics module now turned off by default for optimal 
+  performance. It can be turned on by setting HB_FM_STATISTICS 
+  macro.
 
 Core
 =============================

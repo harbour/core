@@ -80,7 +80,7 @@
  * NOTE: C code using legacy Clipper (.api) headers is unaffected.
  */
 #ifndef HB_LEGACY_OFF
-   #define HB_LEGACY_LEVEL     1
+/* #define HB_LEGACY_LEVEL     1 */
 #endif
 
 #endif /* HB_SETUP_CH_ */

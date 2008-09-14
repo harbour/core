@@ -124,7 +124,7 @@ CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX
 !endif
 #-----------
 
-CFLAGS         = -nologo -W3 -w34701 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) \
+CFLAGS         = -nologo -W4 -wd4127 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) \
                  $(C_USR) $(CFLAGS)
 
 #-----------
