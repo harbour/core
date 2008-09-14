@@ -26,6 +26,8 @@
 #       CLIBFLAGS         - Extra C compiler options for the static libraries
 #       CLIBFLAGSDLL      - Extra C compiler options for the shared libraries
 #
+#       L_USR             - Extra linker options for the static libraries
+#                           (GNU make compatible envvar)
 #       LDFLAGS           - Extra linker options for the static libraries
 #       LDFLAGSDLL        - Extra linker options for the shared libraries
 #
@@ -152,7 +154,7 @@ HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 #**********************************************************
 
 # Linker Flags
-LDFLAGS        = -ap -Tpe -Gn -C -L$(LIB_DIR) -L$(BIN_DIR) $(LDFLAGS)
+LDFLAGS        = -ap -Tpe -Gn -C -L$(LIB_DIR) -L$(BIN_DIR) $(LDFLAGS) $(L_USR)
 LDFLAGSDLL     = -aa -Gn -C -Tpd -Gi -L$(LIB_DIR) $(LDFLAGSDLL)
 !if "$(HB_BUILD_DEBUG)" == "yes"
     LDFLAGS = -v $(LDFLAGS)
@@ -163,7 +165,7 @@ LDFLAGSDLL     = -aa -Gn -C -Tpd -Gi -L$(LIB_DIR) $(LDFLAGSDLL)
 
 # This is needed, otherwise the libs may overflow
 # when debug info is requested with -v -y
-ARFLAGS = /P32
+ARFLAGS = /P32 $(A_USR)
 
 #**********************************************************
 #**********************************************************

@@ -26,6 +26,8 @@
 #       CLIBFLAGS         - Extra C compiler options for the static libraries
 #       CLIBFLAGSDLL      - Extra C compiler options for the shared libraries
 #
+#       L_USR             - Extra linker options for the static libraries
+#                           (GNU make compatible envvar)
 #       LDFLAGS           - Extra linker options for the static libraries
 #       LDFLAGSDLL        - Extra linker options for the shared libraries
 #
@@ -231,7 +233,7 @@ HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 LDFLAGS        = /NOLOGO /SUBSYSTEM:WINDOWSCE,4.20 /MACHINE:ARM /ARMPADCODE \
                  /STACK:65536,4096 /NODEFAULTLIB:"oldnames.lib" \
                  /NODEFAULTLIB:"kernel32.lib" /ALIGN:4096 /OPT:REF /OPT:ICF \
-                 /LIBPATH:$(LIB_DIR) $(LDFLAGS)
+                 /LIBPATH:$(LIB_DIR) $(LDFLAGS) $(L_USR)
 #                /ERRORREPORT:PROMPT /ENTRY:"mainWCRTStartup"
 !if $(HB_VISUALC_VER) >= 80
 LDFLAGS        = $(LDFLAGS) /MANIFEST:NO
@@ -241,7 +243,7 @@ LDFLAGSDLL     = /DLL \
                  /STACK:65536,4096 /NODEFAULTLIB:"oldnames.lib" \
                  /LIBPATH:$(LIB_DIR) $(LDFLAGSDLL)
 !else
-LDFLAGS        = /NOLOGO /SUBSYSTEM:console /LIBPATH:$(LIB_DIR) $(LDFLAGS)
+LDFLAGS        = /NOLOGO /SUBSYSTEM:console /LIBPATH:$(LIB_DIR) $(LDFLAGS) $(L_USR)
 LDFLAGSDLL     = /DLL \
                  /NOLOGO /LIBPATH:$(LIB_DIR) $(LDFLAGSDLL)
 !endif

@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 13:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_vc.mak
+    + Attempt to add support for L_USR and A_USR 
+      in non-GNU make. A_USR is probably wrong, L_USR 
+      might also be. Please test.
+
 2008-09-14 12:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * harbour-ce-spec
   * make_xmingwce.sh

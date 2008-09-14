@@ -141,13 +141,13 @@ CFLAGS = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) $(HB_BUILD_MODE)
 
 CLIBFLAGS      = -c -q -d -w -w-sig- $(CFLAGS) $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -km $(PRG_USR) $(HARBOURFLAGS)
-LDFLAGS        =  $(LDFLAGS)
+LDFLAGS        =  $(LDFLAGS) $(L_USR)
 
 #**********************************************************
 
 # This is needed, otherwise the libs may overflow when
 # debug info is requested with -v -y
-ARFLAGS = /P32
+ARFLAGS = /P32 $(A_USR)
 
 #**********************************************************
 # COMPILE Rules
