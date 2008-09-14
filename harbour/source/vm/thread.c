@@ -607,6 +607,13 @@ HB_FUNC( HB_THREADWAITFORALL )
 #endif
 }
 
+HB_FUNC( HB_THREADTERMINATEALL )
+{
+#if defined( HB_MT_VM )
+   hb_vmTerminateThreads();
+#endif
+}
+
 /* II. MUTEXES */
 
 typedef struct _HB_MUTEX

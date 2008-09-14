@@ -98,7 +98,9 @@
  *
  * By default this is turned on. Define HB_FM_STATISTICS_OFF to turn it off.
  */
-#ifndef HB_FM_STATISTICS_OFF
+#if defined( HB_FM_STATISTICS_OFF )
+   #undef HB_FM_STATISTICS
+#elif !defined( HB_FM_STATISTICS )
    #define HB_FM_STATISTICS
 #endif
 

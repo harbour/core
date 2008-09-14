@@ -152,6 +152,7 @@ extern HB_EXPORT void     hb_vmPushState( void ); /* push current VM state on st
 extern HB_EXPORT void     hb_vmPopState( void ); /* pop current VM state from stack */
 extern HB_EXPORT void     hb_vmPushItemRef( PHB_ITEM pItem ); /* push item reference */
 
+extern HB_EXPORT BOOL     hb_vmIsMt( void ); /* return TRUE if HVM is compiled with thread support */
 extern HB_EXPORT void     hb_vmLock( void ); /* lock VM blocking GC execution by other threads */
 extern HB_EXPORT void     hb_vmUnlock( void ); /* unlock VM, allow GC execution */
 #ifdef _HB_API_INTERNAL_
@@ -160,8 +161,9 @@ extern HB_EXPORT void     hb_vmResumeThreads( void ); /* unblock execution of th
 #endif
 extern HB_EXPORT void     hb_vmThreadInit( void * ); /* allocate local thread HVM stack */
 extern HB_EXPORT void     hb_vmThreadQuit( void ); /* destroy local thread HVM stack */
-extern HB_EXPORT void     hb_vmThreadQuitRequest( void * ); /* send stop request to given thread */
+extern HB_EXPORT void     hb_vmThreadQuitRequest( void * ); /* send QUIT request to given thread */
 extern HB_EXPORT void     hb_vmWaitForThreads( void ); /* wait for all threads to terminate can be called only by main HVM thread */
+extern HB_EXPORT void     hb_vmTerminateThreads( void ); /* send QUIT request to all threads except current one and wait for their termination, should be called only by main HVM thread */
 
 /* various flags for supported features */
 #define  HB_VMFLAG_HARBOUR    1     /* enable Harbour extension */

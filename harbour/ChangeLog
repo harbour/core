@@ -8,6 +8,35 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 22:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbsetup.h
+    * accept both settings: HB_FM_STATISTICS and HB_FM_STATISTICS_OFF
+      without errors
+
+  * harbour/bin/postinst.sh
+    * added small trick to make HBFM lib compilation not  dependent on
+      default HB_FM_STATISTIC settings
+
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+    + added C function hb_vmIsMt()
+
+  * harbour/source/vm/cmdarg.c
+    * report MT HVM status when program is executed with //INFO
+      parameter
+
+  * harbour/source/vm/fm.c
+    ! fixed memory statistic MT protection in hb_xrealloc() operation
+
+  * harbour/config/w32/owatcom.cf
+    * use echo instead of echo. for non empty output.
+
+  * harbour/include/hbextern.ch
+  * harbour/source/vm/thread.c
+    + added .prg function hb_threadTerminateAll() - it sends QUIT request
+      to each HVM thread and waits for their termination. Can be executed
+      only by main HVM thread.
+
 2008-09-14 16:30 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * contrib/hbvpdf/hbvpdf.prg
   * contrib/hbvpdf/hbvpdf.ch

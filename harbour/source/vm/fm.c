@@ -435,6 +435,8 @@ HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
 
       HB_FM_CLRSIG( pMem, ulMemSize );
 
+      HB_FM_LOCK
+
 #ifdef HB_PARANOID_MEM_CHECK
       pMem = malloc( HB_ALLOC_SIZE( ulSize ) );
       if( pMem )
@@ -452,8 +454,6 @@ HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
 #else
       pMem = realloc( pMemBlock, HB_ALLOC_SIZE( ulSize ) );
 #endif
-
-      HB_FM_LOCK
 
       s_lMemoryConsumed += ( ulSize - ulMemSize );
       if( s_lMemoryMaxConsumed < s_lMemoryConsumed )

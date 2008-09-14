@@ -360,6 +360,7 @@ static void hb_vmDoInitClip( void )
 
 #if !defined( HB_MT_VM )
 
+BOOL hb_vmIsMt( void ) { return FALSE; }
 void hb_vmLock( void ) {}
 void hb_vmUnlock( void ) {}
 BOOL hb_vmSuspendThreads( BOOL fWait ) { HB_SYMBOL_UNUSED( fWait ); return TRUE; }
@@ -390,6 +391,8 @@ static PHB_VM_STACKLST s_vmStackLst = NULL;
 
 #  define HB_VM_LOCK      hb_threadEnterCriticalSection( &s_vmMtx );
 #  define HB_VM_UNLOCK    hb_threadLeaveCriticalSection( &s_vmMtx );
+
+BOOL hb_vmIsMt( void ) { return TRUE; }
 
 static void hb_vmRequestTest( void )
 {
@@ -509,6 +512,32 @@ void hb_vmResumeThreads( void )
    HB_VM_UNLOCK
 }
 
+/* send QUIT request to all threads except current one
+ * and wait for their termination,
+ * should be called only by main HVM thread
+ */
+void hb_vmTerminateThreads( void )
+{
+   HB_VM_LOCK
+
+   if( s_main_thread == hb_stackId() )
+   {
+      hb_vmThreadRequest |= HB_THREQUEST_QUIT;
+      --s_iRunningCount;
+
+      hb_threadCondBroadcast( &s_vmCond );
+
+      while( s_iStackCount > 1 )
+         hb_threadCondWait( &s_vmCond, &s_vmMtx );
+
+      ++s_iRunningCount;
+      /* hb_vmThreadRequest &= ~HB_THREQUEST_QUIT; */
+      hb_vmThreadRequest = 0;
+
+      HB_VM_UNLOCK
+   }
+}
+
 /* wait for all threads to terminate
  * should be called only by main HVM thread
  */
@@ -529,28 +558,6 @@ void hb_vmWaitForThreads( void )
 
       HB_VM_UNLOCK
    }
-}
-
-/* terminate all threads except current one,
- * should be called only by main HVM thread
- */
-static void hb_vmTerminateThreads( void )
-{
-   HB_VM_LOCK
-
-   hb_vmThreadRequest |= HB_THREQUEST_QUIT;
-   --s_iRunningCount;
-
-   hb_threadCondBroadcast( &s_vmCond );
-
-   while( s_iStackCount > 1 )
-      hb_threadCondWait( &s_vmCond, &s_vmMtx );
-
-   ++s_iRunningCount;
-   /* hb_vmThreadRequest &= ~HB_THREQUEST_QUIT; */
-   hb_vmThreadRequest = 0;
-
-   HB_VM_UNLOCK
 }
 
 static void hb_vmStackAdd( PHB_THREADSTATE pState )
@@ -711,7 +718,7 @@ HB_EXPORT void hb_vmThreadQuit( void )
    hb_vmStackDel();              /* remove stack from linked HVM stacks list */
 }
 
-/* send stop request to given thread */
+/* send QUIT request to given thread */
 HB_EXPORT void hb_vmThreadQuitRequest( void * Cargo )
 {
    PHB_THREADSTATE pState;
