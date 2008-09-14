@@ -14,7 +14,7 @@
   - config/w32/mingw32.cf
   + config/w32/mingw.cf
     * Cleaning some '32's from HB_COMPILER names.
-      BCC and MinGW 64-bit is coming.
+      BCC and MinGW 64-bit are coming.
     ; Please update your build files. INCOMPATIBLE.
 
 2008-09-14 12:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
