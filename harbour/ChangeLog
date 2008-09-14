@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 17:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  + contrib/hbnf/tests/nftest.prg
+    + Adapted hbnf test program from xhb.
+
+  * contrib/hbnf/common.mak
+    ! File list synced with the GNU-make one.
+      [TOMERGE 1.0]
+
+  * source/common/hbver.c
+    * "Intl." removed from the version number. Besides mimicing 
+      CA-Cl*pper there is not point in including this, since 
+      all Harbour compilers are by default international version.
+
 2008-09-14 16:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-func.sh
   * source/vm/hvm.c

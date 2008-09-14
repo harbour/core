@@ -10,36 +10,36 @@ PRG_HEADERS = \
     ftmenuto.ch \
 
 LIB_OBJS = \
-    $(OBJ_DIR)caplock$(OBJEXT) \
-    $(OBJ_DIR)color2n$(OBJEXT) \
-    $(OBJ_DIR)descendn$(OBJEXT) \
-    $(OBJ_DIR)numlock$(OBJEXT) \
-    $(OBJ_DIR)proper$(OBJEXT) \
-    $(OBJ_DIR)shift$(OBJEXT) \
-    $(OBJ_DIR)mouse$(OBJEXT) \
-    $(OBJ_DIR)getvid$(OBJEXT) \
-    $(OBJ_DIR)setkeys$(OBJEXT) \
-    $(OBJ_DIR)setlastk$(OBJEXT) \
-    $(OBJ_DIR)ftisprn$(OBJEXT) \
-    $(OBJ_DIR)ftidle$(OBJEXT) \
-    $(OBJ_DIR)iamidle$(OBJEXT) \
-    $(OBJ_DIR)chdir$(OBJEXT) \
-    $(OBJ_DIR)rmdir$(OBJEXT) \
     $(OBJ_DIR)alt$(OBJEXT) \
+    $(OBJ_DIR)caplock$(OBJEXT) \
+    $(OBJ_DIR)chdir$(OBJEXT) \
+    $(OBJ_DIR)color2n$(OBJEXT) \
     $(OBJ_DIR)ctrl$(OBJEXT) \
+    $(OBJ_DIR)descendn$(OBJEXT) \
+    $(OBJ_DIR)dispc$(OBJEXT) \
+    $(OBJ_DIR)ftattr$(OBJEXT) \
+    $(OBJ_DIR)ftidle$(OBJEXT) \
+    $(OBJ_DIR)ftisprn$(OBJEXT) \
+    $(OBJ_DIR)ftshadow$(OBJEXT) \
+    $(OBJ_DIR)fttext$(OBJEXT) \
     $(OBJ_DIR)getenvrn$(OBJEXT) \
-    $(OBJ_DIR)n2color$(OBJEXT) \
-    $(OBJ_DIR)origin$(OBJEXT) \
-    $(OBJ_DIR)prtscr$(OBJEXT) \
-    $(OBJ_DIR)stod$(OBJEXT) \
+    $(OBJ_DIR)getver$(OBJEXT) \
+    $(OBJ_DIR)getvid$(OBJEXT) \
+    $(OBJ_DIR)iamidle$(OBJEXT) \
     $(OBJ_DIR)kspeed$(OBJEXT) \
     $(OBJ_DIR)mkdir$(OBJEXT) \
-    $(OBJ_DIR)getver$(OBJEXT) \
-    $(OBJ_DIR)ftattr$(OBJEXT) \
-    $(OBJ_DIR)dispc$(OBJEXT) \
-    $(OBJ_DIR)fttext$(OBJEXT) \
-    $(OBJ_DIR)ftshadow$(OBJEXT) \
+    $(OBJ_DIR)mouse$(OBJEXT) \
+    $(OBJ_DIR)n2color$(OBJEXT) \
+    $(OBJ_DIR)numlock$(OBJEXT) \
+    $(OBJ_DIR)origin$(OBJEXT) \
+    $(OBJ_DIR)proper$(OBJEXT) \
+    $(OBJ_DIR)prtscr$(OBJEXT) \
     $(OBJ_DIR)putkey$(OBJEXT) \
+    $(OBJ_DIR)rmdir$(OBJEXT) \
+    $(OBJ_DIR)setkeys$(OBJEXT) \
+    $(OBJ_DIR)setlastk$(OBJEXT) \
+    $(OBJ_DIR)shift$(OBJEXT) \
+    $(OBJ_DIR)stod$(OBJEXT) \
     \
     $(OBJ_DIR)aading$(OBJEXT) \
     $(OBJ_DIR)aavg$(OBJEXT) \
@@ -75,6 +75,7 @@ LIB_OBJS = \
     $(OBJ_DIR)dayofyr$(OBJEXT) \
     $(OBJ_DIR)daytobow$(OBJEXT) \
     $(OBJ_DIR)dectobin$(OBJEXT) \
+    $(OBJ_DIR)dfile$(OBJEXT) \
     $(OBJ_DIR)diskfunc$(OBJEXT) \
     $(OBJ_DIR)dispmsg$(OBJEXT) \
     $(OBJ_DIR)dosver$(OBJEXT) \
@@ -85,6 +86,8 @@ LIB_OBJS = \
     $(OBJ_DIR)eltime$(OBJEXT) \
     $(OBJ_DIR)findith$(OBJEXT) \
     $(OBJ_DIR)firstday$(OBJEXT) \
+    $(OBJ_DIR)floptst$(OBJEXT) \
+    $(OBJ_DIR)ftround$(OBJEXT) \
     $(OBJ_DIR)gcd$(OBJEXT) \
     $(OBJ_DIR)hex2dec$(OBJEXT) \
     $(OBJ_DIR)invclr$(OBJEXT) \
@@ -105,6 +108,8 @@ LIB_OBJS = \
     $(OBJ_DIR)nooccur$(OBJEXT) \
     $(OBJ_DIR)ntow$(OBJEXT) \
     $(OBJ_DIR)nwlstat$(OBJEXT) \
+    $(OBJ_DIR)nwsem$(OBJEXT) \
+    $(OBJ_DIR)nwuid$(OBJEXT) \
     $(OBJ_DIR)page$(OBJEXT) \
     $(OBJ_DIR)pchr$(OBJEXT) \
     $(OBJ_DIR)pegs$(OBJEXT) \
@@ -116,16 +121,20 @@ LIB_OBJS = \
     $(OBJ_DIR)qtr$(OBJEXT) \
     $(OBJ_DIR)rand1$(OBJEXT) \
     $(OBJ_DIR)restsets$(OBJEXT) \
-    $(OBJ_DIR)ftround$(OBJEXT) \
     $(OBJ_DIR)savearr$(OBJEXT) \
     $(OBJ_DIR)savesets$(OBJEXT) \
+    $(OBJ_DIR)scancode$(OBJEXT) \
     $(OBJ_DIR)scregion$(OBJEXT) \
+    $(OBJ_DIR)setdate$(OBJEXT) \
+    $(OBJ_DIR)settime$(OBJEXT) \
     $(OBJ_DIR)sinkey$(OBJEXT) \
     $(OBJ_DIR)sleep$(OBJEXT) \
     $(OBJ_DIR)sqzn$(OBJEXT) \
+    $(OBJ_DIR)sysmem$(OBJEXT) \
     $(OBJ_DIR)tbwhile$(OBJEXT) \
     $(OBJ_DIR)tempfile$(OBJEXT) \
     $(OBJ_DIR)vertmenu$(OBJEXT) \
+    $(OBJ_DIR)vidcur$(OBJEXT) \
     $(OBJ_DIR)vidmode$(OBJEXT) \
     $(OBJ_DIR)wda$(OBJEXT) \
     $(OBJ_DIR)week$(OBJEXT) \
@@ -133,17 +142,6 @@ LIB_OBJS = \
     $(OBJ_DIR)woy$(OBJEXT) \
     $(OBJ_DIR)xbox$(OBJEXT) \
     $(OBJ_DIR)year$(OBJEXT)
-
-#   $(OBJ_DIR)sysmem$(OBJEXT) \
-#   $(OBJ_DIR)dfile$(OBJEXT) \
-#   $(OBJ_DIR)vidcur$(OBJEXT) \
-#   $(OBJ_DIR)scancode$(OBJEXT) \
-#   $(OBJ_DIR)setdate$(OBJEXT) \
-#   $(OBJ_DIR)settime$(OBJEXT) \
-#   $(OBJ_DIR)nwsem$(OBJEXT) \
-#   $(OBJ_DIR)nwuid$(OBJEXT) \
-
-#   $(OBJ_DIR)floptst$(OBJEXT) \
 
 all: \
     $(LIB_PATH) \
