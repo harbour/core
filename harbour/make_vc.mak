@@ -21,20 +21,15 @@
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
 #
-#       C_USR             - Extra C compiler options for libraries and for
-#                           executables (GNU make compatible envvar)
-#       CLIBFLAGS         - Extra C compiler options for the static libraries
+#       C_USR             - Extra C compiler options for libraries and for executables
 #       CLIBFLAGSDLL      - Extra C compiler options for the shared libraries
 #
 #       L_USR             - Extra linker options for the static libraries
-#                           (GNU make compatible envvar)
-#       LDFLAGS           - Extra linker options for the static libraries
 #       LDFLAGSDLL        - Extra linker options for the shared libraries
 #
-#       HARBOURFLAGS      - Extra Harbour compiler options for static libs/exes
-#       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #       PRG_USR           - Extra Harbour compiler options
-#                           (GNU make compatible envvar)
+#       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
+#
 #       HB_GT_DEFAULT     - The default GT driver, Choose between:
 #                           gtstd (default), gtcgi, gtwin, gtwvt
 #       HB_GT_LIB         - To override the default GT driver
@@ -48,12 +43,12 @@
 #       HB_BUILD_VERBOSE  - enables echoing commands being executed
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
 #                           bison (you must use bison 2.3 or later)
-#       HB_INSTALL_PREFIX - Path to instalation directory into which
+#       HB_INSTALL_PREFIX - Path to installation directory into which
 #                           Harbour will be installed when the command
 #                           "make_vc.bat install" is lauched. Defaults
 #                           to current directory
 #       HB_VISUALC_VER    - Version of Visual C++ compiler.
-#                           Possible values are : 60, 70, 71, 80 (default), 90
+#                           Possible values are: 60, 70, 71, 80 (default), 90
 
 #**********************************************************
 
@@ -154,7 +149,7 @@ CFLAGS         = -nologo -W3 -I$(INCLUDE_DIR) -I$(CFLAGS_VER) -T$(HB_BUILD_MODE)
                  -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -D"WIN32_PLATFORM_PSPC" \
                  -D"WINCE" -D"_WINCE" -D"_WINDOWS" -D"ARM" -D"_ARM_" -D"ARMV4" \
                  -D"POCKETPC2003_UI_MODEL" -D"_M_ARM" -D"UNICODE" -D"_UNICODE" \
-                 $(C_USR) $(CFLAGS) -D_UWIN -I$(OBJ_DIR)
+                 $(C_USR) -D_UWIN -I$(OBJ_DIR)
 
 #-----------
 !ifndef HB_WINCE_COMPILE_WITH_GTWIN
@@ -179,7 +174,7 @@ CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX
 !endif
 
 CFLAGS         = -nologo -W4 -wd4127 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) \
-                 $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
+                 $(C_USR) -I$(OBJ_DIR)
 
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
@@ -205,14 +200,14 @@ CFLAGS         = -D"HB_GT_LIB=$(HB_GT_LIB:gt=)" $(CFLAGS)
 
 #**********************************************************
 
-CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
+CLIBFLAGS      = -c $(CFLAGS)
 CLIBFLAGSxxx   =  $(CLIBFLAGS: -MT= )
 CLIBFLAGSxxx   =  $(CLIBFLAGSxxx: -MTd= )
 !if "$(HB_BUILD_WINCE)" == "yes"
-CLIBFLAGSDLL   = -DHB_DYNLIB $(CLIBFLAGS) $(CLIBFLAGSDLL)
+CLIBFLAGSDLL   =  $(CLIBFLAGS) $(CLIBFLAGSDLL) -DHB_DYNLIB
 CEXEFLAGSDLL   =  $(CLIBFLAGS) $(CEXEFLAGSDLL)
 !else
-CLIBFLAGSDLL   = -DHB_DYNLIB -MT$(DBGMARKER) $(CLIBFLAGS) $(CLIBFLAGSDLL)
+CLIBFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS) $(CLIBFLAGSDLL) -DHB_DYNLIB
 CEXEFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS) $(CEXEFLAGSDLL)
 !endif
 
@@ -223,7 +218,7 @@ HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -km $(PRG_USR)
 !if "$(HB_BUILD_WINCE)" == "yes"
 HBFLAGSCMN     = $(HBFLAGSCMN) -D__PLATFORM__WINCE
 !endif
-HARBOURFLAGS   = -n $(HBFLAGSCMN) $(HARBOURFLAGS)
+HARBOURFLAGS   = -n $(HBFLAGSCMN)
 HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 
 #**********************************************************
@@ -233,7 +228,7 @@ HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 LDFLAGS        = /NOLOGO /SUBSYSTEM:WINDOWSCE,4.20 /MACHINE:ARM /ARMPADCODE \
                  /STACK:65536,4096 /NODEFAULTLIB:"oldnames.lib" \
                  /NODEFAULTLIB:"kernel32.lib" /ALIGN:4096 /OPT:REF /OPT:ICF \
-                 /LIBPATH:$(LIB_DIR) $(LDFLAGS) $(L_USR)
+                 /LIBPATH:$(LIB_DIR) $(L_USR)
 #                /ERRORREPORT:PROMPT /ENTRY:"mainWCRTStartup"
 !if $(HB_VISUALC_VER) >= 80
 LDFLAGS        = $(LDFLAGS) /MANIFEST:NO
@@ -243,7 +238,7 @@ LDFLAGSDLL     = /DLL \
                  /STACK:65536,4096 /NODEFAULTLIB:"oldnames.lib" \
                  /LIBPATH:$(LIB_DIR) $(LDFLAGSDLL)
 !else
-LDFLAGS        = /NOLOGO /SUBSYSTEM:console /LIBPATH:$(LIB_DIR) $(LDFLAGS) $(L_USR)
+LDFLAGS        = /NOLOGO /SUBSYSTEM:console /LIBPATH:$(LIB_DIR) $(L_USR)
 LDFLAGSDLL     = /DLL \
                  /NOLOGO /LIBPATH:$(LIB_DIR) $(LDFLAGSDLL)
 !endif

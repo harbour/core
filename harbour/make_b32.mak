@@ -21,20 +21,15 @@
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
 #
-#       C_USR             - Extra C compiler options for libraries and for
-#                           executables (GNU make compatible envvar)
-#       CLIBFLAGS         - Extra C compiler options for the static libraries
+#       C_USR             - Extra C compiler options for libraries and for executables
 #       CLIBFLAGSDLL      - Extra C compiler options for the shared libraries
 #
 #       L_USR             - Extra linker options for the static libraries
-#                           (GNU make compatible envvar)
-#       LDFLAGS           - Extra linker options for the static libraries
 #       LDFLAGSDLL        - Extra linker options for the shared libraries
 #
-#       HARBOURFLAGS      - Extra Harbour compiler options for static libs/exes
-#       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #       PRG_USR           - Extra Harbour compiler options
-#                           (GNU make compatible envvar)
+#       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
+#
 #       HB_GT_DEFAULT     - The default GT driver, Choose between:
 #                           gtstd (default),gtcgi,gtwin,gtwvt
 #       HB_GT_LIB         - To override the default GT driver
@@ -46,11 +41,11 @@
 #       HB_BUILD_VERBOSE  - enables echoing commands being executed
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
 #                           bison (you must use bison 2.3 or later)
-#       HB_INSTALL_PREFIX - Path to instalation directory into which
+#       HB_INSTALL_PREFIX - Path to installation directory into which
 #                           Harbour will be installed when the command
 #                           "make_bc.bat install" is lauched. Defaults
 #                           to current directory
-#       BCCDLL_WITH_DYNRT - If set to -tWR causes that harbour-bc.dll
+#       HB_BCCDLL_DYNRT   - If set to -tWR causes that harbour-bc.dll
 #                           will use dynamic runtime library (recommended)
 
 #**********************************************************
@@ -103,59 +98,59 @@ DLL_OBJS = $(TMP_DLL_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
 #**********************************************************
 
 # Main "Include" directory
-INCLUDE_DIR    = include
+INCLUDE_DIR = include
 
 #**********************************************************
 
 # C Compiler Flags
-CFLAGS      = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
+CFLAGS = -I$(INCLUDE_DIR) -I$(OBJ_DIR) $(C_USR)
 
 #-----------
 !ifndef BCC_NOOPTIM
-    CFLAGS  = -O2 $(CFLAGS)
+    CFLAGS = -O2 $(CFLAGS)
 !endif
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
-    CFLAGS  = -y -v $(CFLAGS)
+    CFLAGS = -y -v $(CFLAGS)
 !endif
 #-----------
-!if "$(BCCDLL_WITH_DYNRT)" == "-tWR"
-    BCCDLL_WITH_DYNRT=$(BCCDLL_WITH_DYNRT)
+!if "$(HB_BCCDLL_DYNRT)" == "-tWR"
+    HB_BCCDLL_DYNRT=$(HB_BCCDLL_DYNRT)
     RTLIBSUFFIX = i
 !endif
 #-----------
 !if "$(HB_BUILD_ST)" != "yes"
-    CFLAGS  = -tWM $(CFLAGS)
+    CFLAGS = -tWM $(CFLAGS)
 !endif
 #-----------
 !if "$(HB_GT_DEFAULT)" != ""
-    CFLAGS  = -DHB_GT_DEFAULT=$(HB_GT_DEFAULT:gt=) $(CFLAGS)
+    CFLAGS = -DHB_GT_DEFAULT=$(HB_GT_DEFAULT:gt=) $(CFLAGS)
 !endif
 #-----------
 !if "$(HB_GT_LIB)" != ""
-    CFLAGS  = -DHB_GT_LIB=$(HB_GT_LIB:gt=) $(CFLAGS)
+    CFLAGS = -DHB_GT_LIB=$(HB_GT_LIB:gt=) $(CFLAGS)
 !endif
 #-----------
 
 #**********************************************************
 
-CLIBFLAGS      = -c -q -d -w -w-sig- $(CFLAGS) $(CLIBFLAGS)
-CLIBFLAGSxxx   =  $(BCCDLL_WITH_DYNRT) $(CLIBFLAGS: -tWM= )
-CLIBFLAGSDLL   = -DHB_DYNLIB -tWM $(CLIBFLAGSxxx) $(CLIBFLAGSDLL)
+CLIBFLAGS      = -c -q -d -w -w-sig- $(CFLAGS)
+CLIBFLAGSxxx   = $(HB_BCCDLL_DYNRT) $(CLIBFLAGS: -tWM= )
+CLIBFLAGSDLL   = -tWM $(CLIBFLAGSxxx) $(CLIBFLAGSDLL) -DHB_DYNLIB
 CEXEFLAGSDLL   = -tWM $(CLIBFLAGSxxx) $(CEXEFLAGSDLL)
 
 #**********************************************************
 
 # Harbour Compiler Flags
 HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -km $(PRG_USR)
-HARBOURFLAGS   = -n $(HBFLAGSCMN) $(HARBOURFLAGS)
+HARBOURFLAGS   = -n $(HBFLAGSCMN)
 HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 
 #**********************************************************
 
 # Linker Flags
-LDFLAGS        = -ap -Tpe -Gn -C -L$(LIB_DIR) -L$(BIN_DIR) $(LDFLAGS) $(L_USR)
-LDFLAGSDLL     = -aa -Gn -C -Tpd -Gi -L$(LIB_DIR) $(LDFLAGSDLL)
+LDFLAGS        = -Gn -C -ap -Tpe -L$(LIB_DIR) -L$(BIN_DIR) $(L_USR)
+LDFLAGSDLL     = -Gn -C -aa -Tpd -Gi -L$(LIB_DIR) $(LDFLAGSDLL)
 !if "$(HB_BUILD_DEBUG)" == "yes"
     LDFLAGS = -v $(LDFLAGS)
     LDFLAGSDLL = -v $(LDFLAGSDLL)

@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 19:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+    * A change with the goal to further clean duplicate build 
+      controlling options and make the configuration of GNU 
+      and non-GNU build systems closer. INCOMPATIBLE.
+      Builders should make the following changes in their 
+      configurations and build scripts:
+      - CFLAGS -> C_USR
+      - CLIBFLAGS -> C_USR
+      - LDFLAGS -> L_USR
+      - HARBOURFLAGS -> PRG_USR
+    * BCCDLL_WITH_DYNRT -> HB_BCCDLL_DYNRT
+      Shouldn't this be the default, if it's marked as 'recommended'?
+    ; Basic rules for builders is now pretty simple:
+      C_USR for .c options, L_USR for link options, 
+      PRG_USR for .prg options.
+    ; L_USR doesn't work the same way as in GNU-make, yet.
+    ; Also expect, that in the future - even before 1.1 release - 
+      these switches might be also standardized to be 
+      HB_USR_C, HB_USR_PRG, HB_USR_L, HB_USR_A.
+
 2008-09-14 17:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   + contrib/hbnf/tests/nftest.prg
     + Adapted hbnf test program from xhb.

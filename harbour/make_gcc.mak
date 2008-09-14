@@ -21,18 +21,15 @@
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
 #
-#       C_USR             - Extra C compiler options for libraries and for
-#                           executables (GNU make compatible envvar)
-#       CLIBFLAGS         - Extra C compiler options for the static libraries
+#       C_USR             - Extra C compiler options for libraries and for executables
 #       CLIBFLAGSDLL      - Extra C compiler options for the shared libraries
 #
-#       LDFLAGS           - Extra linker options for the static libraries
+#       L_USR             - Extra linker options for the static libraries
 #       LDFLAGSDLL        - Extra linker options for the shared libraries
 #
-#       HARBOURFLAGS      - Extra Harbour compiler options for static libs/exes
-#       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #       PRG_USR           - Extra Harbour compiler options
-#                           (GNU make compatible envvar)
+#       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
+#
 #       HB_GT_DEFAULT     - The default GT driver, Choose between :
 #                           gtstd (default),gtcgi,gtpca,gttrm,gtcrs,gtsln,gtxwc
 #       HB_GT_LIB         - Set if you want to override the default GT driver
@@ -50,7 +47,7 @@
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
 #                           bison (you must use bison 2.3 or later)
 #
-#       HB_INSTALL_PREFIX - Path to instalation directory into which
+#       HB_INSTALL_PREFIX - Path to installation directory into which
 #                           Harbour will be installed when the command
 #                           "make_gcc.bat install" is lauched. Defaults
 #                           to current directory
@@ -142,7 +139,7 @@ VPATH := $(ALL_SRC_DIRS) $(LIB_DIR) $(BIN_DIR) $(OBJ_DIR) $(DLL_OBJ_DIR)
 
 # Do not perform an extra compilation phase for shared libraries
 # if gcc -fPIC compilation flag is already passed to a makefile
-ifeq ($(findstring -fPIC,$(C_USR) $(CFLAGS) $(CLIBFLAGS)),-fPIC)
+ifeq ($(findstring -fPIC,$(C_USR) $(CFLAGS)),-fPIC)
 DLL_OBJS := $(TMP_DLL_OBJS)
 else
 DLL_OBJS := $(patsubst $(OBJ_DIR)%,$(DLL_OBJ_DIR)%,$(TMP_DLL_OBJS))
@@ -180,7 +177,7 @@ ifneq ($(HB_GT_LIB),)
 CFLAGS         += -DHB_GT_LIB=$(HB_GT_LIB:gt%=%)
 endif
 #-----------
-CLIBFLAGS      := -c $(CFLAGS) $(CLIBFLAGS)
+CLIBFLAGS      := -c $(CFLAGS)
 CLIBFLAGSDLL   := -DHB_DYNLIB $(CLIBFLAGS) $(CLIBFLAGSDLL)
 CEXEFLAGSDLL   :=  $(CFLAGS) $(CEXEFLAGSDLL)
 
@@ -197,7 +194,7 @@ endif
 #**********************************************************
 
 HBFLAGSCMN     := -i$(INCLUDE_DIR) -q0 -w3 -es2 -km $(PRG_USR)
-HARBOURFLAGS   := -n $(HBFLAGSCMN) $(HARBOURFLAGS)
+HARBOURFLAGS   := -n $(HBFLAGSCMN)
 HARBOURFLAGSDLL:= -n1 -l $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 
 #**********************************************************
