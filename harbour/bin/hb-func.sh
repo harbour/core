@@ -596,15 +596,15 @@ hb_lnk_request()
     if [ -n "\$gt" ] || [ -n "\${HB_MAIN_FUNC}" ]; then
         echo "#include \\"hbinit.h\\""
         echo "HB_EXTERN_BEGIN"
-        echo "extern \${HB_LNK_ATTR} const char * s_defaultGT;"
-        echo "extern \${HB_LNK_ATTR} const char * s_pszLinkedMain;"
+        echo "extern \${HB_LNK_ATTR} const char * hb_gt_szNameDefault;"
+        echo "extern \${HB_LNK_ATTR} const char * hb_vm_pszLinkedMain;"
         echo "HB_EXTERN_END"
         echo "HB_CALL_ON_STARTUP_BEGIN( hb_lnk_SetDefault_build )"
         if [ -n "\$gt" ]; then
-            echo "   s_defaultGT = \\"\$gt\\";"
+            echo "   hb_gt_szNameDefault = \\"\$gt\\";"
         fi
         if [ -n "\${HB_MAIN_FUNC}" ]; then
-            echo "   s_pszLinkedMain = \\"\${HB_MAIN_FUNC}\\";"
+            echo "   hb_vm_pszLinkedMain = \\"\${HB_MAIN_FUNC}\\";"
         fi
         echo "HB_CALL_ON_STARTUP_END( hb_lnk_SetDefault_build )"
     fi

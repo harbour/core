@@ -3026,23 +3026,20 @@ static HB_GT_FUNCS s_gtCoreFunc =
 
 static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
 
-/* TOFIX: s_defaultGT is violating namespace, so it should be 
-          renamed to hb_gt_szNameDefault ASAP. [vszakats] */
-
 #if defined(HB_GT_DEFAULT)
-   HB_EXPORT const char * s_defaultGT = HB_GT_DRVNAME( HB_GT_DEFAULT );
+   HB_EXPORT const char * hb_gt_szNameDefault = HB_GT_DRVNAME( HB_GT_DEFAULT );
 #elif defined(HB_GT_LIB)
-   HB_EXPORT const char * s_defaultGT = HB_GT_DRVNAME( HB_GT_LIB );
+   HB_EXPORT const char * hb_gt_szNameDefault = HB_GT_DRVNAME( HB_GT_LIB );
 #elif defined(HB_OS_LINUX)
-   HB_EXPORT const char * s_defaultGT = "crs";
+   HB_EXPORT const char * hb_gt_szNameDefault = "crs";
 #elif defined(HB_OS_WIN_32)
-   HB_EXPORT const char * s_defaultGT = "win";
+   HB_EXPORT const char * hb_gt_szNameDefault = "win";
 #elif defined(HB_OS_DOS)
-   HB_EXPORT const char * s_defaultGT = "dos";
+   HB_EXPORT const char * hb_gt_szNameDefault = "dos";
 #elif defined(HB_OS_OS2)
-   HB_EXPORT const char * s_defaultGT = "os2";
+   HB_EXPORT const char * hb_gt_szNameDefault = "os2";
 #else
-   HB_EXPORT const char * s_defaultGT = "std";
+   HB_EXPORT const char * hb_gt_szNameDefault = "std";
 #endif
 
 static const HB_GT_INIT * s_gtInit[ HB_GT_MAX_ ];
@@ -3089,7 +3086,7 @@ static int hb_gt_FindEntry( const char * pszID )
 HB_EXPORT void hb_gtSetDefault( const char * szGtName )
 {
    hb_strncpy( s_gtNameBuf, szGtName, sizeof( s_gtNameBuf ) - 1 );
-   s_defaultGT = s_gtNameBuf;
+   hb_gt_szNameDefault = s_gtNameBuf;
 }
 
 HB_EXPORT BOOL hb_gtRegister( const HB_GT_INIT * gtInit )
@@ -3185,7 +3182,7 @@ HB_EXPORT void hb_gtStartupInit( void )
    }
    if( hb_gtLoad( hb_gt_FindDefault(), &s_gtCoreFunc ) )
       return;
-   if( hb_gtLoad( s_defaultGT, &s_gtCoreFunc ) )
+   if( hb_gtLoad( hb_gt_szNameDefault, &s_gtCoreFunc ) )
       return;
 
    if( hb_dynsymFind( "HB_GT_NUL" ) ) /* GTNUL was explicitly requsted */

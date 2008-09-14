@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 16:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-func.sh
+  * source/vm/hvm.c
+  * source/rtl/hbgtcore.c
+  * source/rtl/gtchrmap.c
+    ! Global vars given std names:
+      s_pszLinkedMain        -> hb_vm_pszLinkedMain
+      s_defaultGT            -> hb_gt_szNameDefault
+      s_szDefaultCharMapFile -> hb_gt_szCharMapFileDefault
+
 2008-09-14 15:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbsetup.ch
     * Turned off HB_LEGACY_LEVEL by default.

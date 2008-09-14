@@ -236,10 +236,7 @@ static BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
 #  define HB_TRACE_PRG( _TRMSG_ ) if( hb_bTracePrgCalls ) HB_TRACE( HB_TR_ALWAYS, _TRMSG_ )
 #endif
 
-/* TOFIX: s_pszLinkedMain is violating namespace, so it should be 
-          renamed to hb_vm_pszLinkedMain ASAP. [vszakats] */
-
-HB_EXPORT const char * s_pszLinkedMain = NULL; /* name of startup function set by linker */
+HB_EXPORT const char * hb_vm_pszLinkedMain = NULL; /* name of startup function set by linker */
 
 /* virtual machine state */
 
@@ -830,14 +827,14 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
             in other case it's the name of first public function in
             first linked moudule which is used if there is no
             HB_START_PROCEDURE in code */
-         if( s_pszLinkedMain && *s_pszLinkedMain == '@' )
-            pDynSym = hb_dynsymFind( s_pszLinkedMain + 1 );
+         if( hb_vm_pszLinkedMain && *hb_vm_pszLinkedMain == '@' )
+            pDynSym = hb_dynsymFind( hb_vm_pszLinkedMain + 1 );
          else
          {
             pDynSym = hb_dynsymFind( HB_START_PROCEDURE );
 
-            if( ! ( pDynSym && pDynSym->pSymbol->value.pFunPtr ) && s_pszLinkedMain )
-               pDynSym = hb_dynsymFind( s_pszLinkedMain );
+            if( ! ( pDynSym && pDynSym->pSymbol->value.pFunPtr ) && hb_vm_pszLinkedMain )
+               pDynSym = hb_dynsymFind( hb_vm_pszLinkedMain );
          }
 
          if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
@@ -846,9 +843,9 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
             hb_errInternal( HB_EI_VMBADSTARTUP, NULL, HB_START_PROCEDURE, NULL );
       }
 #else
-      else if( s_pszLinkedMain )
+      else if( hb_vm_pszLinkedMain )
       {
-         pDynSym = hb_dynsymFind( s_pszLinkedMain + ( *s_pszLinkedMain == '@' ? 1 : 0 ) );
+         pDynSym = hb_dynsymFind( hb_vm_pszLinkedMain + ( *hb_vm_pszLinkedMain == '@' ? 1 : 0 ) );
          if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
             s_pSymStart = pDynSym->pSymbol;
       }
