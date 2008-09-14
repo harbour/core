@@ -67,10 +67,8 @@ PRG_SOURCES=\
 LIBNAME=hbvm
 
 ifeq ($(HB_MT),)
-ifneq ($(C_USR),$(subst -DHB_MT_VM,,$(C_USR)))
-   C_USR:=$(subst -DHB_MT_VM,,$(C_USR))
    HB_MT=MT
-endif
+   C_USR:=$(subst -DHB_MT_VM,,$(C_USR))
 endif
 ifeq ($(HB_MT),MT)
 ifneq ($(HB_ARCHITECTURE),dos)

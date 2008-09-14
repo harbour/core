@@ -719,7 +719,7 @@ mk_hblibso()
     fi
     echo "Making ${full_lib_name}..."
     ${hb_mkslib} ${full_lib_name} $LIBS ${linker_options}
-    if [ "$HB_MT" = "MT" ]; then
+    if [ "${HB_ARCHITECTURE}" != "dos" ]; then
         echo "Making ${full_lib_name_mt}..."
         ${hb_mkslib} ${full_lib_name_mt} $LIBSMT ${linker_options}
     fi

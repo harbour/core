@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 03:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+  * harbour/harbour.spec
+    + added harbour MT libraries: libfmmt and libhbvmmt
+
+  * harbour/include/hbstack.h
+    ! respect HB_USE_TLS defined in hbthread.h
+
+  * harbour/bin/hb-func.sh
+    * always create harbourmt shared library in non DOS builds
+
+  * harbour/bin/postinst.sh
+    * always create libfmmt in non DOS builds
+
+  * harbour/source/vm/Makefile
+    * always create libhbvmmt in non DOS builds
+
 2008-09-13 18:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbpp.h
   * harbour/include/hbvm.h

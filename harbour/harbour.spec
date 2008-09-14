@@ -69,7 +69,6 @@
 %define hb_cc    export HB_COMPILER=gcc
 %define hb_cflag export C_USR="-O3 -DHB_FM_STATISTICS_OFF"
 %define hb_lflag export L_USR="${CC_L_USR} %{?_with_static:-static}"
-%define hb_mt    export HB_MT=no
 %define hb_gt    export HB_GT_LIB=gttrm
 %define hb_defgt export HB_GT_DEFAULT="${HB_GT_DEFAULT}"
 %define hb_gpm   export HB_GPM_MOUSE=%{!?_without_gpm:yes}
@@ -81,7 +80,7 @@
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
 %define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbsqlit3 hbtip hbtpathy hbvpdf hbziparc xhb %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_hbhpdf:hbhpdf} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_allegro:gtalleg}"
-%define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_mt} ; %{hb_gt} ; %{hb_defgt} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ctrb} ; %{hb_cmrc}
+%define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gt} ; %{hb_defgt} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host  www.harbour-project.org
 %define readme   README.RPM
 ######################################################################
@@ -611,6 +610,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbcplr.a
 %{_libdir}/%{name}/libhbdebug.a
 %{_libdir}/%{name}/libhbfm.a
+%{_libdir}/%{name}/libhbfmmt.a
 %{_libdir}/%{name}/librddfpt.a
 %{_libdir}/%{name}/librddcdx.a
 %{_libdir}/%{name}/librddntx.a
@@ -627,6 +627,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbsix.a
 %{_libdir}/%{name}/libhbrtl.a
 %{_libdir}/%{name}/libhbvm.a
+%{_libdir}/%{name}/libhbvmmt.a
 %{_libdir}/%{name}/libhbusrrdd.a
 
 %files contrib

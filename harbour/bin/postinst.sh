@@ -89,7 +89,7 @@ then
     ${AR} ${AR_OPT} ${HB_LIB_INSTALL}/libhbfm.a fm.o
     [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libhbfm.a
     rm -f fm.o
-    if [ "${HB_MT}" = "MT" ]; then
+    if [ "${HB_ARCHITECTURE}" != "dos" ]; then
         cd vmmt
         ${MAKE} -r fm.o
         ${AR} ${AR_OPT} ${HB_LIB_INSTALL}/libhbfmmt.a fm.o

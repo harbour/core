@@ -111,7 +111,6 @@ export CCPATH="%{hb_ccpath}:"
 export CCPREFIX="%{hb_ccpref}"
 export PATH="$CCPATH$PATH"
 
-export HB_MT=no
 export HB_XBUILD=w32
 export HB_GT_LIB=gtwin
 export HB_BIN_INSTALL=%{_bindir}
@@ -142,7 +141,6 @@ export PATH="$CCPATH$PATH"
 export HB_HOST_BUILD=lib
 export HB_ARCHITECTURE=w32
 export HB_COMPILER=mingw32
-export HB_MT=no
 export HB_XBUILD=w32
 export HB_GT_LIB=gtwin
 export HB_BIN_INSTALL=%{_bindir}
@@ -309,6 +307,7 @@ rm -fR $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbcplr.a
 %{_libdir}/%{name}/libhbdebug.a
 %{_libdir}/%{name}/libhbfm.a
+%{_libdir}/%{name}/libhbfmmt.a
 %{_libdir}/%{name}/librddfpt.a
 %{_libdir}/%{name}/librddcdx.a
 %{_libdir}/%{name}/librddntx.a
@@ -325,6 +324,7 @@ rm -fR $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbsix.a
 %{_libdir}/%{name}/libhbrtl.a
 %{_libdir}/%{name}/libhbvm.a
+%{_libdir}/%{name}/libhbvmmt.a
 %{_libdir}/%{name}/libhbmainstd.a
 %{_libdir}/%{name}/libhbusrrdd.a
 
