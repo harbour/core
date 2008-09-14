@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 12:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * harbour-ce-spec
+  * make_xmingwce.sh
+  * harbour-w32-spec
+  * bin/bld.bat
+  * make_xmingw.sh
+  * make_gnu.bat
+  * make_gnu.sh
+  * make_tgz.sh
+    * mingw32 -> mingw changes.
+    ! hbw32 -> hbwin fixes.
+
+  + config/w32/bcc32.cf
+  - config/w32/bcc.cf
+    * Renamed back, because it's difficult to know in advance 
+      how they will solve this, and there would be too many places 
+      to update.
+
 2008-09-14 12:38 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   - config/w32/bcc32.cf
   + config/w32/bcc.cf

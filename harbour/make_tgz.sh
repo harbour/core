@@ -54,7 +54,7 @@ fi
 
 if [ -z "$HB_COMPILER" ]; then
     case "$HB_ARCHITECTURE" in
-        w32) HB_COMPILER="mingw32" ;;
+        w32) HB_COMPILER="mingw" ;;
         dos) HB_COMPILER="djgpp" ;;
         *)   HB_COMPILER="gcc" ;;
     esac

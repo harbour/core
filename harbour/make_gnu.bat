@@ -23,7 +23,7 @@ rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 
 if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=w32
-if "%HB_COMPILER%" == "" set HB_COMPILER=mingw32
+if "%HB_COMPILER%" == "" set HB_COMPILER=mingw
 if "%HB_GT_LIB%" == "" set HB_GT_LIB=
 
 rem set PRG_USR= 
@@ -74,7 +74,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HARBOURDIR%/include
    echo       - When HB_ARCHITECTURE=w32
    echo         - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)
    echo         - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)
-   echo         - mingw32 (Cygnus/MinGW GNU C, Windows 32-bit)
+   echo         - mingw   (MinGW GNU C, Windows 32-bit)
    echo         - rxsnt   (EMX/RSXNT/Win32 GNU C, Windows 32-bit)
    echo         - icc     (IBM Visual Age C++, Windows 32-bit)
    echo         - msvc    (Microsoft Visual C++, Windows 32-bit)

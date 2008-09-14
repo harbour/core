@@ -33,7 +33,7 @@ fi
 
 if [ -z "$HB_COMPILER" ]; then
     case "$HB_ARCHITECTURE" in
-        w32) HB_COMPILER="mingw32" ;;
+        w32) HB_COMPILER="mingw" ;;
         dos) HB_COMPILER="djgpp" ;;
         *)   HB_COMPILER="gcc" ;;
     esac
@@ -165,7 +165,7 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
    echo "      - When HB_ARCHITECTURE=w32"
    echo "        - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)"
    echo "        - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)"
-   echo "        - mingw32 (MinGW32 GNU C, Windows 32-bit)"
+   echo "        - mingw   (MinGW GNU C, Windows 32-bit)"
    echo "        - rsxnt   (EMX/RSXNT/Win32 GNU C, Windows 32-bit)"
    echo "        - icc     (IBM Visual Age C++, Windows 32-bit)"
    echo "        - msvc    (Microsoft Visual C++, Windows 32-bit)"
