@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 16:30 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * contrib/hbvpdf/hbvpdf.prg
+  * contrib/hbvpdf/hbvpdf.ch
+  * contrib/hbvpdf/test/pdf_demo.prg
+    ! Mostly a cleanup of the code, added some functions to avoid the use  
+      of publics vars. 
+
 2008-09-14 20:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/common.ch
     % IS*() macros now using hb_Is*() functions instead of 

@@ -4,12 +4,11 @@
 
 #include "hbvpdf.ch"
 
-memvar aReport
-
 procedure main()
 
+   local aReport
    local cRun, nWidth, nTab, nI, nJ, nK, nCol, nRow, aStyle, aFonts
-   local nTop, nLeft, nBottom, nRight
+   local nTop, nLeft, nBottom, nRight, cTestFile
    local aColor := { ;
    "FF0000", "8B0000", "800000", "FF4500", "D2691E", "B8860B", "FF8C00", "FFA500", "DAA520", "808000", "FFD700", "FFFF00", "ADFF2F", "9ACD32", "7FFF00", "7CFC00", "00FF00", "32CD32", "008000", "006400",;
    "66CDAA", "7FFFD4", "87CEFA", "87CEEB", "F0F8FF", "E0FFFF", "B0C4DE", "B0E0E6", "AFEEEE", "ADD8E6", "8FBC8F", "90EE90", "98FB98", "00FA9A", "00FF7F", "3CB371", "2E8B57", "228B22", "556B2F", "6B8E23",;
@@ -19,7 +18,7 @@ procedure main()
    "FDF5E6", "FFF8DC", "FAF0E6", "FAFAD2", "FFFACD", "FFEBCD", "FFFFE0", "FAEBD7", "FFF5EE", "FFF0F5", "D8BFD8", "FFC0CB", "FFB6C1", "BC8F8F", "F08080", "FF7F50", "FF6347", "8B4513", "A0522D", "CD853F",;
    "FFFAFA", "FFFFF0", "E6E6FA", "FFFAF0", "F8F8FF", "F0FFF0", "F5F5DC", "F0FFFF", "F5FFFA", "708090", "778899", "F5F5F5", "DCDCDC", "D3D3D3", "C0C0C0", "A9A9A9", "808080", "696969", "000000", "FFFFFF"}
 
-   PUBLIC aReport := array( PARAMLEN )
+   aReport := PdfInit()
 
    set date format "YYYY/MM/DD" // important for save/load array function!!!
 
@@ -32,23 +31,12 @@ procedure main()
    pdfOpen('test.pdf', 200, .t.)
 
    pdfEditOnHeader()
-   pdfImage( 'files\color.tif', 0, 0, "M" ) // file, row, col, units, height, width
+   pdfImage( 'files' + HB_OSPATHSEPARATOR() + 'color.tif', 0, 0, "M" ) // file, row, col, units, height, width
    pdfEditOffHeader()
    pdfSaveHeader('test.hea')
    pdfCloseHeader()
 
    pdfBookOpen()
-
-   /*
-   pdfCreateHeader( "letter_portrait_6.hea",  "LETTER", "P", 6 )
-   pdfCreateHeader( "letter_portrait_8.hea",  "LETTER", "P", 8 )
-   pdfCreateHeader( "letter_landscape_6.hea", "LETTER", "L", 6 )
-   pdfCreateHeader( "letter_landscape_8.hea", "LETTER", "L", 8 )
-   pdfCreateHeader( "legal_portrait_6.hea",   "LEGAL",  "P", 6 )
-   pdfCreateHeader( "legal_portrait_8.hea",   "LEGAL",  "P", 8 )
-   pdfCreateHeader( "legal_landscape_6.hea",  "LEGAL",  "L", 6 )
-   pdfCreateHeader( "legal_landscape_8.hea",  "LEGAL",  "L", 8 )
-   */
 
    pdfNewPage( "LETTER", "P", 6 )
 
@@ -83,26 +71,6 @@ procedure main()
    pdfBox( nRow + 80, ( nCol * 2 ) + 80, ( nRow * 3 ) + 80, ( nCol * 4 ) + 80, 0.01,  95, "D" )
    pdfBox( nRow + 90, ( nCol * 2 ) + 90, ( nRow * 3 ) + 90, ( nCol * 4 ) + 90, 0.01, 100, "D" )
 
-   /*
-   nRow := 12
-   nCol := 120
-   for nI := 1 to 6
-      nRow += 10
-      nCol += 10
-      pdfBox( nCol, nRow, nCol + 10, nRow + 10, 0.5, nI, "M" )
-   next
-   for nI := 0 to 20 step 10
-      nRow += 10
-      nCol += 10
-      pdfBox( nCol, nRow, nCol + 10, nRow + 10, 0.5, nI,"M" )
-   next
-   for nI := 30 to 100 step 10
-      nRow += 10
-      nCol -= 10
-      pdfBox( nCol, nRow, nCol + 10, nRow + 10, 0.5, nI,"M" )
-   next
-   */
-
    for nI := 1 to 7
        nRow := 150 + nI * 10
       for nJ := 1 to 20
@@ -128,15 +96,17 @@ procedure main()
    nWidth := 90
    nTab := 0
 
-   pdfText( memoread('files\test.txt'),  28, 107.95, nWidth, nTab, 3, 'M', chr(253) + chr(0) + chr(0) + chr(255) )//,              pdfTextCount( memoread('test.txt'),  28, 107.95, nWidth, nTab, 3, 'M' )
-   pdfText( memoread('files\test.txt'),  58, 107.95, nWidth, nTab, 2, 'M', chr(253) + chr(0) + chr(255) + chr(0) )//,              pdfTextCount( memoread('test.txt'),  58, 107.95, nWidth, nTab, 2, 'M' )
-   pdfText( memoread('files\test.txt'),  88, 107.95, nWidth, nTab, 1, 'M', chr(253) + chr(255) + chr(0) + chr(0) )//,              pdfTextCount( memoread('test.txt'),  88, 107.95, nWidth, nTab, 1, 'M' )
-   pdfText( memoread('files\test.txt'), 118, 107.95 - nWidth / 2, nWidth, nTab, 4, 'M', chr(253) + chr(255) + chr(255) + chr(0) )//, pdfTextCount( memoread('test.txt'), 118, 107.95 - nWidth / 2, nWidth, nTab, 4, 'M' )
+   cTestFile := memoread('files' + HB_OSPATHSEPARATOR() + 'test.txt')
 
-   pdfText( memoread('files\test.txt'),  34, 100,    nWidth, nTab, 3, 'R', chr(253) + chr(0) + chr(128) + chr(128) )//, pdfTextCount( memoread('test.txt'),  33, 100,    nWidth, nTab, 3, 'R' )
-   pdfText( memoread('files\test.txt'),  41, 100,    nWidth, nTab, 2, 'R', chr(253) + chr(0) + chr(191) + chr(255) )//, pdfTextCount( memoread('test.txt'),  40, 100,    nWidth, nTab, 2, 'R' )
-   pdfText( memoread('files\test.txt'),  48, 100,    nWidth, nTab, 1, 'R', chr(253) + chr(244) + chr(164) + chr(96) )//, pdfTextCount( memoread('test.txt'),  47, 100,    nWidth, nTab, 1, 'R' )
-   pdfText( memoread('files\test.txt'),  55,  35,    nWidth, nTab, 4, 'R', chr(253) + chr(0) + chr(0) + chr(0) )//, pdfTextCount( memoread('test.txt'),  54,  35,    nWidth, nTab, 4, 'R' )
+   pdfText( cTestFile,  28, 107.95, nWidth, nTab, 3, 'M', chr(253) + chr(0) + chr(0) + chr(255) )//,              pdfTextCount( memoread('test.txt'),  28, 107.95, nWidth, nTab, 3, 'M' )
+   pdfText( cTestFile,  58, 107.95, nWidth, nTab, 2, 'M', chr(253) + chr(0) + chr(255) + chr(0) )//,              pdfTextCount( memoread('test.txt'),  58, 107.95, nWidth, nTab, 2, 'M' )
+   pdfText( cTestFile,  88, 107.95, nWidth, nTab, 1, 'M', chr(253) + chr(255) + chr(0) + chr(0) )//,              pdfTextCount( memoread('test.txt'),  88, 107.95, nWidth, nTab, 1, 'M' )
+   pdfText( cTestFile, 118, 107.95 - nWidth / 2, nWidth, nTab, 4, 'M', chr(253) + chr(255) + chr(255) + chr(0) )//, pdfTextCount( memoread('test.txt'), 118, 107.95 - nWidth / 2, nWidth, nTab, 4, 'M' )
+
+   pdfText( cTestFile,  34, 100,    nWidth, nTab, 3, 'R', chr(253) + chr(0) + chr(128) + chr(128) )//, pdfTextCount( memoread('test.txt'),  33, 100,    nWidth, nTab, 3, 'R' )
+   pdfText( cTestFile,  41, 100,    nWidth, nTab, 2, 'R', chr(253) + chr(0) + chr(191) + chr(255) )//, pdfTextCount( memoread('test.txt'),  40, 100,    nWidth, nTab, 2, 'R' )
+   pdfText( cTestFile,  48, 100,    nWidth, nTab, 1, 'R', chr(253) + chr(244) + chr(164) + chr(96) )//, pdfTextCount( memoread('test.txt'),  47, 100,    nWidth, nTab, 1, 'R' )
+   pdfText( cTestFile,  55,  35,    nWidth, nTab, 4, 'R', chr(253) + chr(0) + chr(0) + chr(0) )//, pdfTextCount( memoread('test.txt'),  54,  35,    nWidth, nTab, 4, 'R' )
 
    pdfNewPage( "LETTER", "P", 6 )
    pdfBookAdd( "Fonts", 1, aReport[ REPORTPAGE ], 0 )
@@ -155,16 +125,15 @@ procedure main()
       pdfRJust(pdfReverse("Test"), nK, aReport[ REPORTWIDTH ], "R")
    next
 
-
    pdfNewPage( "LETTER", "P", 6 )
    pdfBookAdd( "Pictures", 1, aReport[ REPORTPAGE ], 0 )
    pdfBookAdd( "TIFF", 2, aReport[ REPORTPAGE ], 0 )
-   pdfImage( 'files\color.tif', 0, 0, "M" ) // file, row, col, units, height, width
+   pdfImage( 'files' + HB_OSPATHSEPARATOR() + 'color.tif', 0, 0, "M" ) // file, row, col, units, height, width
    pdfRJust(pdfUnderline("TIFF"), nK++, aReport[ REPORTWIDTH ], "R")
 
    pdfNewPage( "LETTER", "P", 6 )
    pdfBookAdd( "JPEG", 2, aReport[ REPORTPAGE ], 0 )
-   pdfImage( 'files\color.jpg', 0, 0, "M" ) // file, row, col, units, height, width
+   pdfImage( 'files' + HB_OSPATHSEPARATOR() + 'color.jpg', 0, 0, "M" ) // file, row, col, units, height, width
    pdfRJust(pdfUnderline("JPEG"), nK++, aReport[ REPORTWIDTH ], "R")
 
    pdfOpenHeader('test.hea')
@@ -189,17 +158,6 @@ procedure main()
    pdfAtSay( chr(253) + chr(0) + chr(0) + chr(255) + 'Blue Sample of header repeating on pages  8-10', 1, 20, "R" )
 
    pdfClose()
-
-//   pdfFilePrint( "test.pdf" ) // print .pdf file WITHOUT opening acrobat
-
-/*
-   cRun := "D:\progra~2\Adobe\Acroba~2.0\Reader\AcroRd32.exe " + "test.pdf"
-
-   IF (!SWPRUNCMD( cRun, 0, "", ""))
-      alert(" Error running Acrobat Reader.")
-      break
-   ENDIF
-*/
 
 static function cton( cString, nBase ) // this function called only used in pdf_demo.prg
 local cTemp, nI, cChar := "", n := 0, nLen

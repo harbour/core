@@ -4,7 +4,29 @@
 
 #include "hbvpdf.ch"
 
-memvar aReport
+static aReport
+                                                                              /*
+===========================================================                 */
+function pdfInit()                                                            /*
+=============================================================                 */
+
+aReport := array( PARAMLEN )
+
+return aReport
+                                                                              /*              
+=============================================================                 */
+function pdfWidth( _nWidth )                                                  /*
+=============================================================                 */
+
+aReport[ REPORTWIDTH ] := _nWidth
+
+return nil
+                                                                              /*
+=============================================================                 */
+function pdfTextWidth( cStr )                                                 /*
+=============================================================                 */
+
+return pdfLen( cStr ) / 25.4
                                                                               /*
 =============================================================                 */
 function pdfAtSay( cString, nRow, nCol, cUnits, lExact, cId )                 /*
@@ -29,7 +51,7 @@ DEFAULT cId to ""
       nRow := pdfM2Y( nRow )
       nCol := pdfM2X( nCol )
    ELSEIF cUnits == "R"
-      IF .not. lExact
+      IF !lExact
          pdfCheckLine( nRow )
          nRow := nRow + aReport[ PDFTOP ]
       ENDIF
@@ -42,29 +64,20 @@ DEFAULT cId to ""
       cString := pdfStringB( cString )
       IF right( cString, 1 ) == chr(255) //reverse
          cString := left( cString, len( cString ) - 1 )
-         //pdfBox( nCol, nRow + aReport[ FONTSIZE ] - 2.0,  nCol + pdfM2X( pdfLen( cString )) + 1, nRow + 2 * aReport[ FONTSIZE ] - 1.5,,100, "D")
          pdfBox( aReport[ PAGEY ] - nRow - aReport[ FONTSIZE ] + 2.0 , nCol, aReport[ PAGEY ] - nRow + 2.0, nCol + pdfM2X( pdfLen( cString )) + 1,,100, "D")
-         //aReport[ PAGEBUFFER ] += " 1 g "
-         pdfAddBuffer( " 1 g " )
+         aReport[ PAGEBUFFER ] += " 1 g "
          lReverse := .t.
       ELSEIF right( cString, 1 ) == chr(254) //underline
          cString := left( cString, len( cString ) - 1 )
-         //pdfBox( nCol, nRow - 1.5,  nCol + pdfM2X( pdfLen( cString )) + 1, nRow - 1,,100, "D")
          pdfBox( aReport[ PAGEY ] - nRow + 0.5,  nCol, aReport[ PAGEY ] - nRow + 1, nCol + pdfM2X( pdfLen( cString )) + 1,,100, "D")
       ENDIF
 
       // version 0.01
       IF ( nAt := at( chr(253), cString )) > 0 // some color text inside
-         /*
          aReport[ PAGEBUFFER ] += CRLF + ;
          Chr_RGB( substr( cString, nAt + 1, 1 )) + " " + ;
          Chr_RGB( substr( cString, nAt + 2, 1 )) + " " + ;
          Chr_RGB( substr( cString, nAt + 3, 1 )) + " rg "
-         */
-         pdfAddBuffer( CRLF + ;
-         Chr_RGB( substr( cString, nAt + 1, 1 )) + " " + ;
-         Chr_RGB( substr( cString, nAt + 2, 1 )) + " " + ;
-         Chr_RGB( substr( cString, nAt + 3, 1 )) + " rg " )
          cString := stuff( cString, nAt, 4, "")
       ENDIF
       // version 0.01
@@ -72,19 +85,15 @@ DEFAULT cId to ""
       _nFont := ascan( aReport[ FONTS ], {|arr| arr[1] == aReport[ FONTNAME ]} )
       IF !( aReport[ FONTNAME ] == aReport[ FONTNAMEPREV ] )
          aReport[ FONTNAMEPREV ] := aReport[ FONTNAME ]
-         //aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
-         pdfAddBuffer( CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET" )
+         aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
       ELSEIF aReport[ FONTSIZE ] != aReport[ FONTSIZEPREV ]
          aReport[ FONTSIZEPREV ] := aReport[ FONTSIZE ]
-         //aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
-         pdfAddBuffer( CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET" )
+         aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
       ELSE
-         //aReport[ PAGEBUFFER ] += CRLF + "BT " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
-         pdfAddBuffer( CRLF + "BT " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET" )
+         aReport[ PAGEBUFFER ] += CRLF + "BT " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
       ENDIF
       IF lReverse
-         //aReport[ PAGEBUFFER ] += " 0 g "
-         pdfAddBuffer( " 0 g " )
+         aReport[ PAGEBUFFER ] += " 0 g "
       ENDIF
    ENDIF
 return nil
@@ -272,28 +281,20 @@ DEFAULT cColor to ""
 
       IF nShade > 0
          // version 0.02
-         //aReport[ PAGEBUFFER ] += CRLF + transform( 1.00 - nShade / 100.00, "9.99") + " g " + cBoxColor + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( y2 - y1 ))) + " -" + ltrim(str(pdfM2X( x2 - x1 ))) + " re f 0 g"
-         pdfAddBuffer( CRLF + transform( 1.00 - nShade / 100.00, "9.99") + " g " + cBoxColor + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( y2 - y1 ))) + " -" + ltrim(str(pdfM2X( x2 - x1 ))) + " re f 0 g" )
+         aReport[ PAGEBUFFER ] += CRLF + transform( 1.00 - nShade / 100.00, "9.99") + " g " + cBoxColor + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( y2 - y1 ))) + " -" + ltrim(str(pdfM2X( x2 - x1 ))) + " re f 0 g"
       ENDIF
 
       IF nBorder > 0
-         /*
          aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( y2 - y1 ))) + " -" + ltrim(str(pdfM2X( nBorder ))) + " re f"
          aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str(pdfM2X( y2 - nBorder ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( nBorder ))) + " -" + ltrim(str(pdfM2X( x2 - x1 ))) + " re f"
          aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x2 - nBorder ))) + " " + ltrim(str(pdfM2X( y2 - y1 ))) + " -" + ltrim(str(pdfM2X( nBorder ))) + " re f"
          aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( nBorder ))) + " -" + ltrim(str(pdfM2X( x2 - x1 ))) + " re f"
-         */
-         pdfAddBuffer( CRLF + "0 g " + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( y2 - y1 ))) + " -" + ltrim(str(pdfM2X( nBorder ))) + " re f" )
-         pdfAddBuffer( CRLF + "0 g " + ltrim(str(pdfM2X( y2 - nBorder ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( nBorder ))) + " -" + ltrim(str(pdfM2X( x2 - x1 ))) + " re f" )
-         pdfAddBuffer( CRLF + "0 g " + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x2 - nBorder ))) + " " + ltrim(str(pdfM2X( y2 - y1 ))) + " -" + ltrim(str(pdfM2X( nBorder ))) + " re f" )
-         pdfAddBuffer( CRLF + "0 g " + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( nBorder ))) + " -" + ltrim(str(pdfM2X( x2 - x1 ))) + " re f" )
       ENDIF
    ELSEIF cUnits == "D"// "Dots"
       //x1, y1, x2, y2 - nTop, nLeft, nBottom, nRight
       IF nShade > 0
          // version 0.02
-         //aReport[ PAGEBUFFER ] += CRLF + transform( 1.00 - nShade / 100.00, "9.99") + " g " + cBoxColor + ltrim(str( y1 )) + " " + ltrim(str( aReport[ PAGEY ] - x1 )) + " " + ltrim(str( y2 - y1 )) + " -" + ltrim(str( x2 - x1 )) + " re f 0 g"
-         pdfAddBuffer( CRLF + transform( 1.00 - nShade / 100.00, "9.99") + " g " + cBoxColor + ltrim(str( y1 )) + " " + ltrim(str( aReport[ PAGEY ] - x1 )) + " " + ltrim(str( y2 - y1 )) + " -" + ltrim(str( x2 - x1 )) + " re f 0 g" )
+         aReport[ PAGEBUFFER ] += CRLF + transform( 1.00 - nShade / 100.00, "9.99") + " g " + cBoxColor + ltrim(str( y1 )) + " " + ltrim(str( aReport[ PAGEY ] - x1 )) + " " + ltrim(str( y2 - y1 )) + " -" + ltrim(str( x2 - x1 )) + " re f 0 g"
       ENDIF
 
       IF nBorder > 0
@@ -304,29 +305,23 @@ DEFAULT cColor to ""
          ÀÄÄÄÄÄÙ
             3
 */
-         /*
          aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str( y1 )) + " " + ltrim(str( aReport[ PAGEY ] - x1 )) + " " + ltrim(str( y2 - y1 )) + " -" + ltrim(str( nBorder )) + " re f"
          aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str( y2 - nBorder )) + " " + ltrim(str( aReport[ PAGEY ] - x1 )) + " " + ltrim(str( nBorder )) + " -" + ltrim(str( x2 - x1 )) + " re f"
          aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str( y1 )) + " " + ltrim(str( aReport[ PAGEY ] - x2 + nBorder )) + " " + ltrim(str( y2 - y1 )) + " -" + ltrim(str( nBorder )) + " re f"
          aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str( y1 )) + " " + ltrim(str( aReport[ PAGEY ] - x1 )) + " " + ltrim(str( nBorder )) + " -" + ltrim(str( x2 - x1 )) + " re f"
-         */
-         pdfAddBuffer( CRLF + "0 g " + ltrim(str( y1 )) + " " + ltrim(str( aReport[ PAGEY ] - x1 )) + " " + ltrim(str( y2 - y1 )) + " -" + ltrim(str( nBorder )) + " re f" )
-         pdfAddBuffer( CRLF + "0 g " + ltrim(str( y2 - nBorder )) + " " + ltrim(str( aReport[ PAGEY ] - x1 )) + " " + ltrim(str( nBorder )) + " -" + ltrim(str( x2 - x1 )) + " re f" )
-         pdfAddBuffer( CRLF + "0 g " + ltrim(str( y1 )) + " " + ltrim(str( aReport[ PAGEY ] - x2 + nBorder )) + " " + ltrim(str( y2 - y1 )) + " -" + ltrim(str( nBorder )) + " re f" )
-         pdfAddBuffer( CRLF + "0 g " + ltrim(str( y1 )) + " " + ltrim(str( aReport[ PAGEY ] - x1 )) + " " + ltrim(str( nBorder )) + " -" + ltrim(str( x2 - x1 )) + " re f" )
       ENDIF
    ENDIF
 
 return nil
-                                                                              /*
-===============================================================               */
+
+                                                                                              /*
+===============================================================                               */
 function pdfBox1( nTop, nLeft, nBottom, nRight, nBorderWidth, cBorderColor, cBoxColor )       /*
-===============================================================               */
+===============================================================                               */
 DEFAULT nBorderWidth to 0.5
 DEFAULT cBorderColor to chr(0) + chr(0) + chr(0)
 DEFAULT cBoxColor to chr(255) + chr(255) + chr(255)
 
-   /*
    aReport[ PAGEBUFFER ] +=  CRLF + ;
                          Chr_RGB( substr( cBorderColor, 1, 1 )) + " " + ;
                          Chr_RGB( substr( cBorderColor, 2, 1 )) + " " + ;
@@ -344,24 +339,6 @@ DEFAULT cBoxColor to chr(255) + chr(255) + chr(255)
                          CRLF + ltrim( str ( nBottom - nTop - nBorderWidth )) + " " + ;
                          " re" + ;
                          CRLF + "B"
-   */
-   pdfAddBuffer( CRLF + ;
-                         Chr_RGB( substr( cBorderColor, 1, 1 )) + " " + ;
-                         Chr_RGB( substr( cBorderColor, 2, 1 )) + " " + ;
-                         Chr_RGB( substr( cBorderColor, 3, 1 )) + ;
-                         " RG" + ;
-                         CRLF + ;
-                         Chr_RGB( substr( cBoxColor, 1, 1 )) + " " + ;
-                         Chr_RGB( substr( cBoxColor, 2, 1 )) + " " + ;
-                         Chr_RGB( substr( cBoxColor, 3, 1 )) + ;
-                         " rg" + ;
-                         CRLF + ltrim(str( nBorderWidth )) + " w" + ;
-                         CRLF + ltrim( str ( nLeft + nBorderWidth / 2 )) + " " + ;
-                         CRLF + ltrim( str ( aReport[ PAGEY ] - nBottom + nBorderWidth / 2)) + " " + ;
-                         CRLF + ltrim( str ( nRight - nLeft -  nBorderWidth )) + ;
-                         CRLF + ltrim( str ( nBottom - nTop - nBorderWidth )) + " " + ;
-                         " re" + ;
-                         CRLF + "B" )
 return nil
                                                                               /*
 ==============================================================                */
@@ -383,7 +360,7 @@ DEFAULT nCol to IIF( cUnits == "R", aReport[ REPORTWIDTH ] / 2, aReport[ PAGEX ]
 
    nLen := pdfLen( cString ) / 2
    IF cUnits == "R"
-      IF .not. lExact
+      IF !lExact
          pdfCheckLine( nRow )
          nRow := nRow + aReport[ PDFTOP ]
       ENDIF
@@ -418,7 +395,7 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
    "/Type /Pages /Count " + ltrim(str(aReport[ REPORTPAGE ])) + CRLF +;
    "/Kids ["
 
-   for nI := 1 to aReport[ REPORTPAGE ]
+   for nI := 1 to aReport[ REPORTPAGE ] 
       cTemp += " " + ltrim(str( aReport[ PAGES ][ nI ] )) + " 0 R"
    next
 
@@ -488,8 +465,7 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
       ++aReport[ REPORTOBJ ]
       nRecno := 1
       FOR nI := 1 to nBookLen
-         //cTemp := IIF ( nI > 1, CRLF, "") + ltrim(str( aReport[ REPORTOBJ ] + nI - 1)) + " 0 obj" + CRLF + ;
-         cTemp := CRLF + ltrim(str( aReport[ REPORTOBJ ] + nI - 1)) + " 0 obj" + CRLF + ;
+         cTemp := CRLF + ltrim(str( aReport[ REPORTOBJ ] + nI )) + " 0 obj" + CRLF + ;
                  "<<" + CRLF + ;
                  "/Parent " + ltrim(str( aReport[ BOOKMARK ][ nRecno ][ BOOKPARENT ])) + " 0 R" + CRLF + ;
                  "/Dest [" + ltrim(str( aReport[ PAGES ][ aReport[ BOOKMARK ][ nRecno ][ BOOKPAGE ] ] )) + " 0 R /XYZ 0 " + ltrim( str( aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
@@ -500,8 +476,6 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
                  IIF( aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ] > 0, "/Last " + ltrim(str( aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ])) + " 0 R" + CRLF, "") + ;
                  IIF( aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ] != 0, "/Count " + ltrim(str( aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ])) + CRLF, "") + ;
                  ">>" + CRLF + "endobj" + CRLF
-//                 "/Dest [" + ltrim(str( aReport[ BOOKMARK ][ nRecno ][ BOOKPAGE ] * 3 )) + " 0 R /XYZ 0 " + ltrim( str( aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
-//                 "/Dest [" + ltrim(str( aReport[ PAGES ][ nRecno ] )) + " 0 R /XYZ 0 " + ltrim( str( aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
 
          aadd( aReport[ REFS ], aReport[ DOCLEN ] + 2 )
          aReport[ DOCLEN ] += len( cTemp )
@@ -522,6 +496,7 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
    aReport[ DOCLEN ] += len( cTemp )
 
    ++aReport[ REPORTOBJ ]
+
    cTemp += "xref" + CRLF + ;
    "0 " + ltrim(str( aReport[ REPORTOBJ ] )) + CRLF +;
    padl( aReport[ REFS ][ 1 ], 10, "0") + " 65535 f" + CRLF
@@ -550,7 +525,6 @@ return nil
 static function pdfClosePage()                                                /*
 ==============================                                                */
 local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
-local cImage, nTemp1, nLength
 
    aadd( aReport[ REFS ], aReport[ DOCLEN ] )
 
@@ -566,7 +540,6 @@ local cImage, nTemp1, nLength
    "/Contents " + ltrim(str( ++aReport[ REPORTOBJ ] )) + " 0 R" + CRLF + ;
    ">>" + CRLF + ;
    "endobj" + CRLF
-//   "/Contents [ " + ltrim(str( ++aReport[ REPORTOBJ ] )) + " 0 R ]" + CRLF + ;
 
    aReport[ DOCLEN ] += len( cTemp )
    fwrite( aReport[ HANDLE ], cTemp )
@@ -585,9 +558,6 @@ local cImage, nTemp1, nLength
 
       for nI := 1 to len( aReport[ PAGEFONTS ] )
          nFont := ascan( aReport[ FONTS ], { |arr| arr[1] == aReport[ PAGEFONTS ][ nI ] } )
-         //IF nFont == 0
-         //   alert("New font after!!!")
-         //ENDIF
          cTemp += CRLF + "/Fo" + ltrim(str( nFont )) + " " + ltrim(str( aReport[ FONTS ][ nFont ][ 2 ])) + " 0 R"
       next
 
@@ -619,7 +589,7 @@ local cImage, nTemp1, nLength
 
    aReport[ DOCLEN ] += len( cTemp )
    fwrite( aReport[ HANDLE ], cTemp )
-   /*
+
    IF len( aReport[ PAGEIMAGES ] ) > 0
       cTemp := ""
       for nI := 1 to len( aReport[ PAGEIMAGES ] )
@@ -649,76 +619,6 @@ local cImage, nTemp1, nLength
 
    cTemp := ltrim(str( ++aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + ;
    ltrim(str(len( aReport[ PAGEBUFFER ] ))) + CRLF + ;
-   "endobj" + CRLF
-
-   aReport[ DOCLEN ] += len( cTemp )
-   fwrite( aReport[ HANDLE ], cTemp )
-
-   */
-   cImage := ""
-   IF len( aReport[ PAGEIMAGES ] ) > 0
-      for nI := 1 to len( aReport[ PAGEIMAGES ] )
-         cTemp := ""
-         cTemp += CRLF + "q"
-         nImage := ascan( aReport[ IMAGES ], { |arr| arr[1] == aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
-         cTemp += CRLF + ltrim(str( IIF( aReport[ PAGEIMAGES ][ nI ][ 5 ] == 0, pdfM2X( aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_WIDTH ] / aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_XRES ] * 25.4 ), aReport[ PAGEIMAGES ][ nI ][ 5 ]))) + ;
-         " 0 0 " + ;
-         ltrim(str( IIF( aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, pdfM2X( aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + ;
-         " " + ltrim(str( aReport[ PAGEIMAGES ][ nI ][ 3 ] )) + ;
-         " " + ltrim(str( aReport[ PAGEY ] - aReport[ PAGEIMAGES ][ nI ][ 2 ] - ;
-         IIF( aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, pdfM2X( aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + " cm"
-         cTemp += CRLF + "/Image" + ltrim(str( nImage )) + " Do"
-         cTemp += CRLF + "Q"
-         cImage += cTemp
-      next
-      //aReport[ PAGEBUFFER ] := cTemp + aReport[ PAGEBUFFER ]
-   ENDIF
-
-   //cTemp := aReport[ PAGEBUFFER ]
-
-   //cTemp += CRLF + "endstream" + CRLF + ;
-   //"endobj" + CRLF
-   nTemp1 := len( cImage ) + IIF( aReport[ BUFFERHANDLE ] > 0, FileSize( aReport[ BUFFERHANDLE ] ), len( aReport[ PAGEBUFFER ] ))
-
-   pdfAddBuffer( CRLF + "endstream" + CRLF + "endobj" + CRLF )
-
-   aReport[ DOCLEN ] += len( cImage ) + IIF( aReport[ BUFFERHANDLE ] > 0, FileSize( aReport[ BUFFERHANDLE ] ), len( aReport[ PAGEBUFFER ] ))
-
-   fwrite( aReport[ HANDLE ], cImage )
-
-   IF aReport[ BUFFERHANDLE ] > 0
-      nLength := FILESIZE( aReport[ BUFFERHANDLE ] )
-      FSEEK( aReport[ BUFFERHANDLE ], 0 )
-
-      nBuffer := 8192
-      cBuffer := space( nBuffer )
-      k := 0
-      while k < nLength
-         IF k + nBuffer <= nLength
-            nRead := nBuffer
-         ELSE
-            nRead := nLength - k
-         ENDIF
-         fread( aReport[ BUFFERHANDLE ], @cBuffer, nRead )
-
-         fwrite( aReport[ HANDLE ], cBuffer, nRead )
-         k += nRead
-      enddo
-
-      fclose( aReport[ BUFFERHANDLE ] )
-      aReport[ BUFFERHANDLE ] := 0
-   ELSE
-      fwrite( aReport[ HANDLE ], aReport[ PAGEBUFFER ] )
-   ENDIF
-
-   aadd( aReport[ REFS ], aReport[ DOCLEN ] )
-/*
-   cTemp := ltrim(str( ++aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + ;
-   ltrim(str(len( aReport[ PAGEBUFFER ] ))) + CRLF + ;
-   "endobj" + CRLF
-*/
-   cTemp := ltrim(str( ++aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + ;
-   ltrim(str( nTemp1 )) + CRLF + ;
    "endobj" + CRLF
 
    aReport[ DOCLEN ] += len( cTemp )
@@ -766,7 +666,6 @@ local cImage, nTemp1, nLength
          "/Length " + ltrim(str( aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_LENGTH ])) + CRLF + ;
          ">>" + CRLF + ;
          "stream" + CRLF
-//         "/ColorSpace /" + IIF( aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] == 1, "DeviceGray", "DeviceRGB") + CRLF + ;
 
          aReport[ DOCLEN ] += len( cTemp )
          fwrite( aReport[ HANDLE ], cTemp )
@@ -847,10 +746,6 @@ DEFAULT cId to ""
       nHeight := aReport[ PAGEY ] - pdfM2Y( nHeight )
       nWidth := pdfM2X( nWidth )
    ELSEIF cUnits == "R"
-      //IF .not. lExact
-      //   pdfCheckLine( nRow )
-      //   nRow := nRow + aReportStyle[ PDFTOP ]
-      //ENDIF
       nRow := aReport[ PAGEY ] - pdfR2D( nRow )
       nCol := pdfM2X( aReport[ PDFLEFT ] ) + ;
               nCol * 100.00 / aReport[ REPORTWIDTH ] * ;
@@ -898,9 +793,13 @@ local nWidth := 0.00, nI, nLen, nArr, nAdd := ( aReport[ FONTNAME ] - 1 ) % 4
    ELSE
       nArr := 3 // 0.04
    ENDIF
-   For nI:= 1 To nLen
-      nWidth += aReport[ FONTWIDTH ][ nArr ][ ( asc( substr( cString, nI, 1 )) - 32 ) * 4 + 1 + nAdd ] * 25.4 * aReport[ FONTSIZE ] / 720.00 / 100.00
-   Next
+  
+   if !empty( aReport[ FONTWIDTH ] )
+      For nI:= 1 To nLen
+         nWidth += aReport[ FONTWIDTH ][ nArr ][ ( asc( substr( cString, nI, 1 )) - 32 ) * 4 + 1 + nAdd ] * 25.4 * aReport[ FONTSIZE ] / 720.00 / 100.00
+      Next
+   endif
+
 return nWidth
                                                                               /*
 ============================                                                  */
@@ -941,7 +840,7 @@ DEFAULT _cFontName to pdfGetFontInfo("NAME")
 DEFAULT _nFontType to pdfGetFontInfo("TYPE")
 DEFAULT _nFontSize to aReport[ FONTSIZE ]
 
-   IF !empty(aReport[ PAGEBUFFER ])
+   IF !empty(aReport[ PAGEBUFFER ]) 
       pdfClosePage()
    ENDIF
 
@@ -961,9 +860,6 @@ DEFAULT _nFontSize to aReport[ FONTSIZE ]
    aReport[ REPORTLINE ] := 0//5
    aReport[ FONTNAMEPREV ] := 0
    aReport[ FONTSIZEPREV ] := 0
-
-   // version 0.07
-   aReport[ PDFBOTTOM    ] := aReport[ PAGEY ] / 72 * aReport[ LPI ] - 1 // bottom, default "LETTER", "P", 6
 return nil
                                                                               /*
 ====================                                                          */
@@ -998,18 +894,18 @@ DEFAULT lOptimize to .f.
    aReport[ PAGEY        ] := 11.0 * 72
    aReport[ REPORTWIDTH  ] := nLen // 200 // should be as parameter
    aReport[ REPORTPAGE   ] := 0
-   aReport[ REPORTLINE   ] := 0    //5
+   aReport[ REPORTLINE   ] := 0//5
    aReport[ FONTNAMEPREV ] := 0
    aReport[ FONTSIZEPREV ] := 0
    aReport[ PAGEBUFFER   ] := ""
-   aReport[ REPORTOBJ    ] := 1    //2
+   aReport[ REPORTOBJ    ] := 1//2
    aReport[ DOCLEN       ] := 0
    aReport[ TYPE1        ] := { "Times-Roman", "Times-Bold", "Times-Italic", "Times-BoldItalic", "Helvetica", "Helvetica-Bold", "Helvetica-Oblique", "Helvetica-BoldOblique", "Courier", "Courier-Bold", "Courier-Oblique", "Courier-BoldOblique"  } // 0.04
    aReport[ MARGINS      ] := .t.
    aReport[ HEADEREDIT   ] := .f.
    aReport[ NEXTOBJ      ] := 0
-   aReport[ PDFTOP       ] := 1   // top
-   aReport[ PDFLEFT      ] := 10  // left & right
+   aReport[ PDFTOP       ] := 1 // top
+   aReport[ PDFLEFT      ] := 10 // left & right
    aReport[ PDFBOTTOM    ] := aReport[ PAGEY ] / 72 * aReport[ LPI ] - 1 // bottom, default "LETTER", "P", 6
    aReport[ HANDLE       ] := fcreate( cFile )
    aReport[ PAGES        ] := {}
@@ -1025,11 +921,9 @@ DEFAULT lOptimize to .f.
 
    cTemp := vpdf_FontsDat() // times, times-bold, times-italic, times-bolditalic, helvetica..., courier... // 0.04
    n1 := len( cTemp ) / ( 2 * n2 )
-   aReport[ FONTWIDTH ]    := array( n1, n2 )
+   aReport[ FONTWIDTH ] := array( n1, n2 )
 
    aReport[ OPTIMIZE     ] := lOptimize
-
-   aReport[ BUFFERHANDLE ] := 0
 
    aReport[ NEXTOBJ ] := aReport[ REPORTOBJ ] + 4
 
@@ -1040,66 +934,81 @@ DEFAULT lOptimize to .f.
       next
    next
 
-/*
-   aReportStyle := {                                                  ;
-                     { 2.475, 4.0, 4.9, 6.4,  7.5, 3  ,  64.0 , "P6",  60, 10 }, ;
-                     { 3.3  , 5.4, 6.5, 8.6, 10.0, 6  ,  85.35, "P8",  78, 10 }, ;
-                     { 2.475, 4.0, 4.9, 6.4,  7.5, 2.9,  48.9 , "L6",  45, 10 }, ;
-                     { 3.3  , 5.4, 6.5, 8.6, 10.0, 5.85, 65.2 , "L8",  58, 10 }, ;
-                     { 2.475, 4.0, 4.9, 6.4,  7.5, 2.9,  82.0 , "P6",  78, 10 }, ;
-                     { 3.3  , 5.4, 6.5, 8.6, 10.0, 6  , 109.35 , "P8", 102, 10 }  ;
-                   }
-*/
-
    aReport[ DOCLEN ] := 0
    cTemp := "%PDF-1.3" + CRLF
    aReport[ DOCLEN ] += len( cTemp )
    fwrite( aReport[ HANDLE ], cTemp )
 
-   //pdfNewPage( "LETTER", "P", 6 )
-
 return nil
                                                                               /*
 ==================================                                            */
-function pdfPageSize( _cPageSize )                                            /*
+function pdfPageSize( _cPageSize, _nWidth, _nHeight )                         /*
 ==================================                                            */
-local nSize, aSize := { { "LETTER",    8.50, 11.00 }, ;
-                        { "LEGAL" ,    8.50, 14.00 }, ;
-                        { "LEDGER",   11.00, 17.00 }, ;
-                        { "EXECUTIVE", 7.25, 10.50 }, ;
-                        { "A4",        8.27, 11.69 }, ;
-                        { "A3",       11.69, 16.54 }, ;
-                        { "JIS B4",   10.12, 14.33 }, ;
-                        { "JIS B5",    7.16, 10.12 }, ;
-                        { "JPOST",     3.94,  5.83 }, ;
-                        { "JPOSTD",    5.83,  7.87 }, ;
-                        { "COM10",     4.12,  9.50 }, ;
-                        { "MONARCH",   3.87,  7.50 }, ;
-                        { "C5",        6.38,  9.01 }, ;
-                        { "DL",        4.33,  8.66 }, ;
-                        { "B5",        6.93,  9.84 } }
+local nSize, aSize, nWidth, nHeight 
 
-DEFAULT _cPageSize to "LETTER"
+   aSize := { { "LETTER",    8.50, 11.00 }, ;
+              { "LEGAL" ,    8.50, 14.00 }, ;
+              { "LEDGER",   11.00, 17.00 }, ;
+              { "EXECUTIVE", 7.25, 10.50 }, ;
+              { "A4",        8.27, 11.69 }, ;
+              { "A3",       11.69, 16.54 }, ;
+              { "JIS B4",   10.12, 14.33 }, ;
+              { "JIS B5",    7.16, 10.12 }, ;
+              { "JPOST",     3.94,  5.83 }, ;
+              { "JPOSTD",    5.83,  7.87 }, ;
+              { "COM10",     4.12,  9.50 }, ;
+              { "MONARCH",   3.87,  7.50 }, ;
+              { "C5",        6.38,  9.01 }, ;
+              { "DL",        4.33,  8.66 }, ;
+              { "B5",        6.93,  9.84 }, ;
+              { "USSTDFOLD", 14.87, 11.00 } }
+             
+   DEFAULT _cPageSize to "LETTER"
 
-   nSize := ascan( aSize, { |arr| arr[ 1 ] = _cPageSize } )
+   if empty( _nWidth ) .or. empty( _nHeight )
 
-   IF nSize == 0 //.or. nSize > 2 //0.05
-      nSize := 1
-   ENDIF
+      nSize := ascan( aSize, { |arr| arr[ 1 ] == _cPageSize } )
 
-   aReport[ PAGESIZE ] := aSize[ nSize ][ 1 ]
+      IF nSize = 0
+         nSize := 1
+      ENDIF
+
+      aReport[ PAGESIZE ] := aSize[ nSize ][ 1 ]
+
+      nWidth := aSize[ nSize ][ 2 ] 
+      nHeight := aSize[ nSize ][ 3 ]
+
+   else
+
+      _nWidth := val( str( _nWidth ) )
+      _nHeight := val( str( _nHeight ) )
+
+      nSize := ascan( aSize, { |arr| ( arr[ 2 ] == _nWidth  ) .and. ( arr[ 3 ] == _nHeight ) } )
+
+      if nSize == 0
+         nSize := ascan( aSize, { |arr| ( arr[ 3 ] == _nWidth ) .and. ( arr[ 2 ] == _nHeight ) } )
+      endif   
+
+      IF nSize = 0
+         nSize := 1
+      ENDIF
+
+      aReport[ PAGESIZE ] := aSize[ nSize ][ 1 ]
+
+      nWidth = _nWidth
+      nHeight = _nHeight
+   
+   endif   
 
    IF aReport[ PAGEORIENT ] = "P"
-      aReport[ PAGEX ] := aSize[ nSize ][ 2 ] * 72
-      aReport[ PAGEY ] := aSize[ nSize ][ 3 ] * 72
+      aReport[ PAGEX ] := nWidth * 72
+      aReport[ PAGEY ] := nHeight * 72
    ELSE
-      aReport[ PAGEX ] := aSize[ nSize ][ 3 ] * 72
-      aReport[ PAGEY ] := aSize[ nSize ][ 2 ] * 72
+      aReport[ PAGEX ] := nHeight * 72
+      aReport[ PAGEY ] := nWidth * 72
    ENDIF
-
-   // version 0.07
-   aReport[ PDFBOTTOM    ] := aReport[ PAGEY ] / 72 * aReport[ LPI ] - 1 // bottom, default "LETTER", "P", 6
-return nil
+   
+   return nil
                                                                               /*
 ======================================                                        */
 function pdfPageOrient( _cPageOrient )                                        /*
@@ -1114,6 +1023,7 @@ return nil
 static function pdfR2D( nRow )                                                /*
 ==============================                                                */
 return aReport[ PAGEY ] - nRow * 72 / aReport[ LPI ]
+
                                                                               /*
 ==============================                                                */
 static function pdfR2M( nRow )                                                /*
@@ -1153,7 +1063,7 @@ DEFAULT lExact to .f.
    nLen := pdfLen( cString )
 
    IF cUnits == "R"
-      IF .not. lExact
+      IF !lExact
          pdfCheckLine( nRow )
          nRow := nRow + aReport[ PDFTOP ]
       ENDIF
@@ -1308,88 +1218,11 @@ DEFAULT cColor to ""
          ELSE
             pdfTextPrint( nI - 1, nLeft, @lParagraph, nJustify, nSpace, nNew, nLength, @nLineLen, @nLines, @nStart, cString, cDelim, cColor, lPrint )
          ENDIF
-/*
-            nFinish := nI - 1
-
-            nL := nLeft
-            IF lParagraph
-               IF nJustify != 2
-                  nL += nSpace * nNew
-               ENDIF
-            ENDIF
-
-            IF nJustify == 3 // right
-               nL += nLength - nLineLen
-            ELSEIF nJustify == 2 // center
-               nL += ( nLength - nLineLen ) / 2
-            ENDIF
-
-            ++nLines
-            IF lPrint
-               nRow := pdfNewLine( 1 )
-            ENDIF
-            nB := nSpace
-            IF nJustify == 4
-               nB := ( nLength - nLineLen + ( nFinish - nStart ) * nSpace ) / ( nFinish - nStart )
-            ENDIF
-            for nJ := nStart to nFinish
-                cToken := token( cString, cDelim, nJ )
-                IF lPrint
-                   pdfAtSay( cToken, pdfR2M( nRow + aReportStyle[ aReport[ REPORTSTYLE ] ][ 6 ] ), nL, "M" )
-                ENDIF
-               nL += pdfLen ( cToken ) + nB
-            next
-            nStart := nFinish + 1
-         ENDIF
-
-         lParagraph := .f.
-
-         nLineLen := 0.00
-         nLineLen += nSpace * nNew
-*/
       ELSEIF ( nI == nTokens ) .or. ( nI < nTokens .and. ( nCRLF := pdfTextNextPara( cString, cDelim, nI ) ) > 0 )
          IF nI == nTokens
             nLineLen += nSpace + nTokenLen
          ENDIF
          pdfTextPrint( nI, nLeft, @lParagraph, nJustify, nSpace, nNew, nLength, @nLineLen, @nLines, @nStart, cString, cDelim, cColor, lPrint )
-            /*
-            nFinish := nI
-
-            nL := nLeft
-            IF lParagraph
-               IF nJustify != 2
-                  nL += nSpace * nNew
-               ENDIF
-            ENDIF
-
-            IF nJustify == 3 // right
-               nL += nLength - nLineLen
-            ELSEIF nJustify == 2 // center
-               nL += ( nLength - nLineLen ) / 2
-            ENDIF
-
-            ++nLines
-            IF lPrint
-               nRow := pdfNewLine( 1 )
-            ENDIF
-            nB := nSpace
-            IF nJustify == 4
-               nB := ( nLength - nLineLen + ( nFinish - nStart ) * nSpace ) / ( nFinish - 1 - nStart )
-            ENDIF
-            for nJ := nStart to nFinish
-                cToken := token( cString, cDelim, nJ )
-                IF lPrint
-                   pdfAtSay( cToken, pdfR2M( nRow + aReportStyle[ aReport[ REPORTSTYLE ] ][ 6 ] ), nL, "M" )
-                ENDIF
-               nL += pdfLen ( cToken ) + nB
-            next
-            nStart := nFinish + 1
-
-         lParagraph := .f.
-
-         nLineLen := 0.00
-         nLineLen += nSpace * nNew
-         */
          ++nI
 
          IF nCRLF > 1
@@ -1500,7 +1333,7 @@ DEFAULT cFile to ""
          at( ' ', cFile ) > 0 .or. ;
          ( at( ' ', cFile ) == 0 .and. len( cFile ) > 8 ) .or. ;
          ( ( nAt := at( '.', cFile )) > 0 .and. len( substr( cFile, nAt + 1 )) > 3 )
-         SWPRUNCMD( "copy " + cFile + " temp.tmp > nul", 0, "", "")
+         copy file (cFile) to temp.tmp
          cFile := "temp.tmp"
       ENDIF
       //aReport[ HEADER ] := FT_RestArr( cFile, @nErrorCode )
@@ -1560,9 +1393,8 @@ return nil
 
 function pdfSaveHeader( cFile )
 local nErrorCode := 0
-   //FT_SaveArr( aReport[ HEADER ], 'temp.tmp', @nErrorCode )
    Array2File( 'temp.tmp', aReport[ HEADER ] )
-   SWPRUNCMD( "copy temp.tmp " + cFile + " > nul", 0, "", "")
+   copy file temp.tmp to (cFile)
 return nil
 
 function pdfHeader( cFunction, cId, arr )
@@ -1655,9 +1487,10 @@ function pdfMargins( nTop, nLeft, nBottom )
 local nI, nLen := len( aReport[ HEADER ] ), nTemp, aTemp, nHeight
 
 // version 0.07 begin
-DEFAULT nTop to 1 // top
-DEFAULT nLeft to 10 // left & right
-DEFAULT nBottom to aReport[ PAGEY ] / 72 * aReport[ LPI ] - 1 // bottom, default "LETTER", "P", 6
+
+   DEFAULT nTop to 1 // top
+   DEFAULT nLeft to 10 // left & right
+   DEFAULT nBottom to aReport[ PAGEY ] / 72 * aReport[ LPI ] - 1 // bottom, default "LETTER", "P", 6
 
    aReport[ PDFTOP ] := nTop
    aReport[ PDFLEFT ] := nLeft
@@ -1823,16 +1656,6 @@ DEFAULT nBottom to aReport[ PAGEY ] / 72 * aReport[ LPI ] - 1 // bottom, default
 
 return nil
 
-/*
-   aReportStyle := {                                                  ;
-                     { 2.475, 4.0, 4.9, 6.4,  7.5, 3  ,  64.0 , "P6",  60, 10 }, ;
-                     { 3.3  , 5.4, 6.5, 8.6, 10.0, 6  ,  85.35, "P8",  78, 10 }, ;
-                     { 2.475, 4.0, 4.9, 6.4,  7.5, 2.9,  48.9 , "L6",  45, 10 }, ;
-                     { 3.3  , 5.4, 6.5, 8.6, 10.0, 5.85, 65.2 , "L8",  58, 10 }, ;
-                     { 2.475, 4.0, 4.9, 6.4,  7.5, 2.9,  82.0 , "P6",  78, 10 }, ;
-                     { 3.3  , 5.4, 6.5, 8.6, 10.0, 6  , 109.35 , "P8", 102, 10 }  ;
-                   }
-*/
 function pdfCreateHeader( _file, _size, _orient, _lpi, _width )
 local ;
    aReportStyle := {                                                  ;
@@ -1950,18 +1773,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
 
    c2 := '  '
    fread( nHandle, @c2, 2 )
-/*
-if c2 == 'II' .or. c2 == 'MM'
-else
-   alert("Not II or MM")
-endif
-*/
    fread( nHandle, @c2, 2 )
-/*
-if !( c2 == '*' ) + chr(0)
-   alert("Not *")
-endif
-*/
    cIFDNext := '    '
    fread( nHandle, @cIFDNext, 4 )
 
@@ -2510,7 +2322,6 @@ local nSpace := 3 // 3 - RGB, 1 - GREY, 4 - CMYK
    xRes := asc(substr( c255, 15, 1 )) * 256 + asc(substr( c255, 16, 1 ))
    yRes := asc( substr( c255, 17, 1 )) * 256 + asc(substr( c255, 18, 1 ))
 
-   //nAt := at( chr(255) + chr(192), c255 ) + 5
    nAt := rat( chr(255) + chr(192), c255 ) + 5
    nHeight := asc(substr( c255, nAt, 1 )) * 256 + asc(substr( c255, nAt + 1, 1 ))
    nWidth := asc( substr( c255, nAt + 2, 1 )) * 256 + asc(substr( c255, nAt + 3, 1 ))
@@ -2532,73 +2343,8 @@ local nSpace := 3 // 3 - RGB, 1 - GREY, 4 - CMYK
 
 return aTemp
 
-function pdfAddBuffer( cStr )
-local nLength := len( cStr )
-   IF aReport[ BUFFERHANDLE ] > 0 //already file buffer open
-      fwrite( aReport[ BUFFERHANDLE ], cStr )
-   ELSE
-      IF len( aReport[ PAGEBUFFER ] ) + nLength > MAXBUFLEN //then open file buffer
-         aReport[ BUFFERHANDLE ] := FCREATE("temp.buf")
-         fwrite( aReport[ BUFFERHANDLE ], aReport[ PAGEBUFFER ] )
-         fwrite( aReport[ BUFFERHANDLE ], cStr )
-      ELSE
-         aReport[ PAGEBUFFER ] += cStr
-      ENDIF
-   ENDIF
-return nil
-
 STATIC FUNCTION FilePos( nHandle )
 RETURN ( FSEEK( nHandle, 0, FS_RELATIVE ) )
-
-FUNCTION pdfFilePrint( cFile )
-LOCAL cRun := "D:\progra~2\Adobe\Acroba~2.0\Reader\AcroRd32.exe /t " + cFile + " " + chr(34) + "HP LaserJet 5/5M PostScript" + chr(34) + " " + chr(34) + "LPT1" + chr(34)
-
-IF (!SWPRUNCMD( cRun, 0, "", ""))
-   alert("Error printing to PDF reader.")
-   break
-ENDIF
-//"C:\Program Files\Adobe\Acrobat 4.0\Reader\acrord32.exe" /t "%1"
-//"HP LJ4 Legal" "HP Laserjet 4 Plus" "LPT3"
-RETURN nil
-
-/*
-function pdfAtSay( cString, nRow, nCol, cUnits, lExact )
-function pdfBold()
-function pdfBoldItalic()
-function pdfBookAdd( cTitle, nLevel, nPage, nLine )
-function pdfBookClose( )
-function pdfBookCount( nRecno, nCurLevel )
-function pdfBookFirst( nRecno, nCurLevel, nObj )
-function pdfBookLast( nRecno, nCurLevel, nObj )
-function pdfBookNext( nRecno, nCurLevel, nObj )
-function pdfBookOpen( )
-function pdfBookParent( nRecno, nCurLevel, nObj )
-function pdfBookPrev( nRecno, nCurLevel, nObj )
-function pdfBox( x1, y1, x2, y2, nBorder, nShade, cUnits )
-function pdfCenter( cString, nRow, nCol, cUnits, lExact )
-function pdfCheckLine( nRow )
-function pdfClose()
-function pdfClosePage()
-function pdfGetFontInfo( cParam )
-function pdfItalic()
-function pdfLen( cString )
-function pdfM2X( n )
-function pdfM2Y( n )
-function pdfNewPage( _cPageSize, _cPageOrient, _nLpi, _cFontName, _nFontType, _nFontSize )
-function pdfNormal()
-function pdfOpen()
-function pdfPageSize( _cPageSize )
-function pdfPageOrient( _cPageOrient )
-function pdfR2D( nRow )
-function pdfR2M( nRow )
-function pdfReverse( cString )
-function pdfRJust( cString, nRow, nCol, cUnits, lExact )
-function pdfSetFont( _cFont, _nType, _nSize )
-function pdfSetLPI(_nLpi)
-function pdfStringB( cString )
-function pdfUnderLine( cString )
-function TimeAsAMPM( cTime )
-*/
 
 STATIC FUNCTION Chr_RGB( cChar )
 RETURN str(asc( cChar ) / 255, 4, 2)
@@ -2622,9 +2368,9 @@ DEFAULT nAction to 0
 // nAction == 2 - attoken
 
       while nPos <= nLen
-            if .not. substr( cString, nPos, 1 ) $ cDelimiter
+            if !substr( cString, nPos, 1 ) $ cDelimiter
                nStart := nPos
-               while nPos <= nLen .and. .not. substr( cString, nPos, 1 ) $ cDelimiter
+               while nPos <= nLen .and. !substr( cString, nPos, 1 ) $ cDelimiter
                      ++nPos
                enddo
                ++nTokens
@@ -2667,6 +2413,8 @@ STATIC FUNCTION FileSize( nHandle )
    // Get file length
    nLength := FSEEK( nHandle, 0, FS_END )
 
+   // nLength := FilePos( nHandle )
+
    // Reset file position
    FSEEK( nHandle, nCurrent )
 
@@ -2675,7 +2423,7 @@ RETURN ( nLength )
 // next 3 function written by Peter Kulek
 //modified for compatibility with common.ch by V.K.
 //modified DATE processing by V.K.
-STATIC function Array2File(cFile,aRay,nDepth,hFile)
+static function Array2File(cFile,aRay,nDepth,hFile)
 local nBytes := 0
 local i
 nDepth := iif(ISNUMBER(nDepth),nDepth,0)
@@ -2697,7 +2445,7 @@ if nDepth == 0
 endif
 return(nBytes)
 
-STATIC function WriteData(hFile,xData)
+static function WriteData(hFile,xData)
 local cData  := valtype(xData)
    if ISCHARACTER(xData)
        cData += i2bin(len(xData))+xData
@@ -2714,7 +2462,7 @@ local cData  := valtype(xData)
    endif
 return( fWrite(hFile,cData,len(cData)) )
 
-STATIC function File2Array(cFile,nLen,hFile)
+static function File2Array(cFile,nLen,hFile)
 LOCAL cData,cType,nDataLen,nBytes
 local nDepth := 0
 local aRay   := {}
@@ -2763,18 +2511,3 @@ if cFile!=NIL
 endif
 return(aRay)
 // end of 3rd function written by Peter Kulek
-
-// 0.05
-#ifdef __HARBOUR__
-
-STATIC Function SWPRUNCMD( cCommand, x1, x2, x3 )
-
-   HB_SYMBOL_UNUSED( x1 )
-   HB_SYMBOL_UNUSED( x2 )
-   HB_SYMBOL_UNUSED( x3 )
-
-   hb_run( cCommand )
-
-Return .T.
-
-#endif
