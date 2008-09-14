@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 22:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/common/hbverdsp.c
+    + Showing MT status on //BUILD screen.
+
+  * contrib/hbvpdf/hbvpdf.prg
+    ! Fix to previous modification (fixing bookmarks).
+
 2008-09-14 22:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbsetup.h
     * accept both settings: HB_FM_STATISTICS and HB_FM_STATISTICS_OFF

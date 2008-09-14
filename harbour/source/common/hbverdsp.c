@@ -144,13 +144,16 @@ void hb_verBuildInfo( void )
    }
 
    hb_conOutErr( "Other build settings: ", 0 );
+#if defined( HB_MT_VM )
+   hb_conOutErr( "(MT) ", 0 );
+#endif
 #if defined(__cplusplus)
-   hb_conOutErr( "(C++ mode)", 0 );
+   hb_conOutErr( "(C++ mode) ", 0 );
 #else
-   hb_conOutErr( "(C mode)", 0 );
+   hb_conOutErr( "(C mode) ", 0 );
 #endif
 #if defined( HB_STRICT_ANSI_C )
-   hb_conOutErr( "(ANSI C symbol initialization)", 0 );
+   hb_conOutErr( "(ANSI C symbol initialization) ", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 

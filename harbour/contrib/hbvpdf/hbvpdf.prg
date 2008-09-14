@@ -465,7 +465,7 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
       ++aReport[ REPORTOBJ ]
       nRecno := 1
       FOR nI := 1 to nBookLen
-         cTemp := CRLF + ltrim(str( aReport[ REPORTOBJ ] + nI )) + " 0 obj" + CRLF + ;
+         cTemp := CRLF + ltrim(str( aReport[ REPORTOBJ ] + nI - 1 )) + " 0 obj" + CRLF + ;
                  "<<" + CRLF + ;
                  "/Parent " + ltrim(str( aReport[ BOOKMARK ][ nRecno ][ BOOKPARENT ])) + " 0 R" + CRLF + ;
                  "/Dest [" + ltrim(str( aReport[ PAGES ][ aReport[ BOOKMARK ][ nRecno ][ BOOKPAGE ] ] )) + " 0 R /XYZ 0 " + ltrim( str( aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
