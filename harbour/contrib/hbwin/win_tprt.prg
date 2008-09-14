@@ -53,7 +53,7 @@
 #include "hbclass.ch"
 #include "common.ch"
 
-#include "hbw32.ch"
+#include "hbwin.ch"
 
 #define MAXSERIAL                   16
 

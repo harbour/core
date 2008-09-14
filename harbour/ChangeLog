@@ -8,6 +8,43 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 12:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * harbour-ce-spec
+  * harbour-w32-spec
+  * harbour.spec
+  * common.mak
+  * include/hbver.h
+    * Changed version number to 1.1.0
+
+  * include/hbextern.ch
+    + Added new thread functions.
+
+  * harbour-ce-spec
+  * harbour-w32-spec
+  * contrib/Makefile
+  * contrib/make_b32_all.bat
+  * contrib/make_gcc_all.sh
+  * contrib/make_vc_all.bat
+  - contrib/hbw32
+  + contrib/hbwin
+  * contrib/hbwin/win_reg.prg
+  * contrib/hbwin/win_os.prg
+  * contrib/hbwin/win_tprt.prg
+  * contrib/hbwin/common.mak
+  - contrib/hbwin/hbw32.ch
+  + contrib/hbwin/hbwin.ch
+  - contrib/hbwin/tests/testw32p.prg
+  + contrib/hbwin/tests/testprn.prg
+  * contrib/hbwin/tests/testreg.prg
+  * contrib/hbwin/tests/bld_b32.bat
+  * contrib/hbwin/tests/testprt1.prg
+  * contrib/hbwin/tests/bld_vc.bat
+  * contrib/hbwin/tests/testprt2.prg
+  * contrib/hbwin/Makefile
+    * Renamed hbw32 to hbwin.
+    * Renamed hbw32.ch to hbwin.ch.
+    ; INCOMPATIBLE.
+
 2008-09-14 11:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/gtalleg/ssf.h
     ! Fixed to compile with Cygwin.

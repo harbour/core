@@ -43,7 +43,7 @@ _HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbs
 
 case "$HB_ARCHITECTURE" in
    w32|cyg|os2)
-        _HB_DIRS_ADD="gtwvg hbole hbodbc hbw32 hbwhat rddado"
+        _HB_DIRS_ADD="gtwvg hbole hbodbc hbwin hbwhat rddado"
         ;;
    *)
         _HB_DIRS_ADD=;;

@@ -50,7 +50,7 @@
  *
  */
 
-#include "hbw32.ch"
+#include "hbwin.ch"
 
 procedure main(cPortName)
 

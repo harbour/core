@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * hbw32 header
+ * hbwin header
  *
  * Copyright 2008 Viktor Szakats <harbour.01 syenar.hu>
  * www - http://www.harbour-project.org
@@ -50,8 +50,8 @@
  *
  */
 
-#ifndef HBW32_CH_
-#define HBW32_CH_
+#ifndef HBWIN_CH_
+#define HBWIN_CH_
 
 #define HKEY_CLASSES_ROOT                  0x80000000
 #define HKEY_CURRENT_USER                  0x80000001
@@ -104,4 +104,4 @@
 #define INVALID_HANDLE_VALUE    -1
 #endif
 
-#endif /* HBW32_CH_ */
+#endif /* HBWIN_CH_ */

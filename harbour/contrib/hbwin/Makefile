@@ -4,7 +4,7 @@
 
 ROOT = ../../
 
-LIBNAME=hbw32
+LIBNAME=hbwin
 
 ifeq ($(HB_ARCHITECTURE),w32)
 
@@ -28,7 +28,7 @@ C_HEADERS = \
 	hbwin.h \
 
 PRG_HEADERS = \
-	hbw32.ch \
+	hbwin.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

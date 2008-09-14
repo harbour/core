@@ -63,7 +63,7 @@
 
 #include "common.ch"
 #include "directry.ch"
-#include "hbw32.ch"
+#include "hbwin.ch"
 
 /* NOTE: To change any of these registry settings 
          Administrator rights are required by default in Windows. [vszakats] */

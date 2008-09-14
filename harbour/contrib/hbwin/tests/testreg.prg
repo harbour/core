@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#include "hbw32.ch"
+#include "hbwin.ch"
 
 PROCEDURE Main()
 

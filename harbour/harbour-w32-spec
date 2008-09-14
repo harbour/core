@@ -25,7 +25,7 @@
 ######################################################################
 
 %define name      harbour-w32
-%define version   1.0.1
+%define version   1.1.0
 %define releasen  dev
 %define hb_pref   hbw
 %define hb_ccpath /opt/xmingw/bin
@@ -116,7 +116,7 @@ export HB_GT_LIB=gtwin
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}
-export HB_CONTRIBLIBS="gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbtip hbvpdf hbw32 hbziparc rddado xhb %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_allegro:gtalleg}"
+export HB_CONTRIBLIBS="gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbtip hbvpdf hbwin hbziparc rddado xhb %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_allegro:gtalleg}"
 
 make -r
 

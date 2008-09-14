@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = $(LIBPREF)hbw32
+LIBNAME = $(LIBPREF)hbwin
 
 LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 
@@ -10,7 +10,7 @@ C_HEADERS = \
     hbwin.h \
 
 PRG_HEADERS = \
-    hbw32.ch \
+    hbwin.ch \
 
 LIB_OBJS = \
     $(OBJ_DIR)win_dll$(OBJEXT) \
