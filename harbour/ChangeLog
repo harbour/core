@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-14 20:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/common.ch
+    % IS*() macros now using hb_Is*() functions instead of 
+      ValType() calls.
+
 2008-09-14 19:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
     + Now setting 'HB_BUILD_ST = no' will generate an MT build.
