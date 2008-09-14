@@ -17,10 +17,12 @@
       s_pszLinkedMain        -> hb_vm_pszLinkedMain
       s_defaultGT            -> hb_gt_szNameDefault
       s_szDefaultCharMapFile -> hb_gt_szCharMapFileDefault
+    ; INCOMPATIBLE.
 
 2008-09-14 15:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbsetup.ch
     * Turned off HB_LEGACY_LEVEL by default.
+    ; INCOMPATIBLE.
 
   * doc/whatsnew.txt
     * Synced with 1.0.1.
