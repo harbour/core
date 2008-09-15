@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-15 21:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * contrib/mtpl_b32.mak
+    + Added -vG -Od to debug flags (CodeGuard and no optimization 
+      if HB_BUILD_DEBUG is 'yes').
+    ; I couldn't test it, because I'm getting a fatal error 
+      when trying with my BCC build file.
+      Fatal: Unable to open file '.OBJ'
+
 2008-09-15 20:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * tests/multifnc/Makefile
   * doc/gmake.txt

@@ -125,7 +125,7 @@ CFLAGS = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) $(HB_BUILD_MODE)
 
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
-    CFLAGS  = -y -v $(CFLAGS)
+    CFLAGS  = -y -v -vG -Od $(CFLAGS)
 !endif
 #-----------
 !if !$d(BCC_NOOPTIM)
