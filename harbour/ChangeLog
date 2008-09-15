@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-15 13:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/speedtst.prg
+    * small update in speedtst.prg. It should be enough to make test and
+      compare MT and ST mode speed.
+      Please make test with different C compiler and send results to
+      devel list.
+
 2008-09-15 11:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * tests/bld_b32.bat
   * tests/bld_vc.bat

@@ -28,11 +28,8 @@
     #undef REAL_TIME
     #xtranslate seconds() => fs_seconds()
 #endif
-#ifdef __XHARBOUR__
-    #define ASSOC_ARRAY Hash()
-    #undef REAL_TIME
-#endif
 #ifdef __HARBOUR__
+    #define ASSOC_ARRAY { => }
     #undef REAL_TIME
 #endif
 
@@ -65,7 +62,7 @@ private M_C := dtos(date()),;
         M_D := date()
 
 #ifndef __CLIP__
-//#ifdef __XHARBOUR__
+//#ifdef __HARBOUR__
 //  setcancel(.f.)
 //  altd(0)
 //#endif
@@ -75,10 +72,10 @@ private M_C := dtos(date()),;
   //CLEAR SCREEN
 #endif
 #ifdef FlagShip
-  FS_SET( "zerobyte", .t. )
-  FS_SET( "devel", .f. )
-//  FS_SET( "break", 0 )
-//  FS_SET( "debug", 0 )
+    FS_SET( "zerobyte", .t. )
+    FS_SET( "devel", .f. )
+//    FS_SET( "break", 0 )
+//    FS_SET( "debug", 0 )
 #endif
 
 for i:=1 to len(a)
@@ -87,8 +84,8 @@ for i:=1 to len(a)
     a3[i]:=stuff(dtos(date()),7,0,".")
 next
 
-? ""
-? VERSION()+", "+OS()
+?
+? date(), time(), VERSION()+mt_mode()+", "+OS()
 ? "ARR_LEN =", ARR_LEN
 ? "N_LOOPS =", N_LOOPS
 
@@ -228,6 +225,14 @@ for i:=1 to N_LOOPS
 next
 dsp_time( "n:=o:GenCode -> ", t, tn)
 
+#ifdef __HARBOUR__
+t:=secondscpu()
+for i:=1 to N_LOOPS
+    n:=o[8]
+next
+dsp_time( "n:=o[8] -> ", t, tn)
+#endif
+
 #ifdef ASSOC_ARRAY
 t:=secondscpu()
 for i:=1 to N_LOOPS
@@ -293,14 +298,14 @@ t:=secondscpu()
 for i:=1 to N_LOOPS
     eval(bc,i)
 next
-dsp_time( "eval({|x|x%ARR_LEN}) -> ", t, tn)
+dsp_time( "eval({|x|x%ARR_LEN},i) -> ", t, tn)
 
 bc:={|x|f1(x)}
 t:=secondscpu()
 for i:=1 to N_LOOPS
     eval(bc,i)
 next
-dsp_time( "eval({|x|f1(x)}) -> ", t, tn)
+dsp_time( "eval({|x|f1(x)},i) -> ", t, tn)
 
 t:=secondscpu()
 for i:=1 to N_LOOPS
@@ -365,7 +370,7 @@ aa:={}
 t:=secondscpu()
 for i:=1 to N_LOOPS
     if i%1000 == 0
-   aa:={}
+        aa:={}
     endif
     aadd(aa,{i,j,c,a,a2,t,bc})
 next
@@ -438,6 +443,12 @@ dsp_time( "s:=f4() -> ", t, tn)
 
 t:=secondscpu()
 for i:=1 to N_LOOPS
+    c:=f5()
+next
+dsp_time( "s:=f5() -> ", t, tn)
+
+t:=secondscpu()
+for i:=1 to N_LOOPS
     ascan(a,i%ARR_LEN)
 next
 dsp_time( "ascan(a,i%ARR_LEN) -> ", t, tn)
@@ -478,7 +489,28 @@ function f3(a,b,c,d,e,f,g,h,i)
 return nil
 
 function f4()
-return space(50000)
+return space(40000)
+
+function f5()
+return space(5)
+
+function mt_mode()
+#ifdef __CLIP__
+    return " (MT)"
+#else
+    #ifdef __XHARBOUR__
+        return iif( HB_MULTITHREAD(), " (MT)", "" )
+    #else
+        #ifdef __HARBOUR__
+            return iif( HB_MTVM(), " (MT)", "" )
+        #else
+            #ifdef __XPP__
+                return " (MT)"
+            #endif
+        #endif
+    #endif
+#endif
+return ""
 
 #ifdef FlagShip
     function fs_seconds()
