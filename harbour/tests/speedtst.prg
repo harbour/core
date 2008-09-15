@@ -29,6 +29,7 @@
     #xtranslate seconds() => fs_seconds()
 #endif
 #ifdef __HARBOUR__
+    #include "hbmemory.ch"
     #define ASSOC_ARRAY { => }
     #undef REAL_TIME
 #endif
@@ -84,8 +85,18 @@ for i:=1 to len(a)
     a3[i]:=stuff(dtos(date()),7,0,".")
 next
 
+#ifdef __HARBOUR__
+if MEMORY( HB_MEM_USEDMAX ) != 0
+   ?
+   ? "Warning !!! Memory statistic enabled."
+endif
+#endif
 ?
-? date(), time(), VERSION()+mt_mode()+", "+OS()
+? "Startup loop to increase CPU clock..."
+t:=seconds()+5; while t > seconds(); enddo
+
+?
+? date(), time(), VERSION()+build_mode()+", "+OS()
 ? "ARR_LEN =", ARR_LEN
 ? "N_LOOPS =", N_LOOPS
 
@@ -489,20 +500,22 @@ function f3(a,b,c,d,e,f,g,h,i)
 return nil
 
 function f4()
-return space(40000)
+return space(4000)
 
 function f5()
 return space(5)
 
-function mt_mode()
+function build_mode()
 #ifdef __CLIP__
     return " (MT)"
 #else
     #ifdef __XHARBOUR__
-        return iif( HB_MULTITHREAD(), " (MT)", "" )
+        return iif( HB_MULTITHREAD(), " (MT)", "" ) + ;
+               iif( MEMORY( HB_MEM_USEDMAX ) != 0, " (FMSTAT)", "" )
     #else
         #ifdef __HARBOUR__
-            return iif( HB_MTVM(), " (MT)", "" )
+            return iif( HB_MTVM(), " (MT)", "" ) + ;
+                   iif( MEMORY( HB_MEM_USEDMAX ) != 0, " (FMSTAT)", "" )
         #else
             #ifdef __XPP__
                 return " (MT)"

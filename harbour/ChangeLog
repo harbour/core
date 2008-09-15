@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-15 23:08 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/tests/memtst.prg
+    + added some simple tests for memory manager
+
+  * harbour/tests/speedtst.prg
+    * reduced the size of allocated block size to not test C-RTL
+      memory manager but HVM speed
+
+  * harbour/include/hbthread.h
+    * added for x86@32 PTHREADS builds HB_ATOM_GET() and HB_ATOM_SET()
+      so they can be used together with HB_ATOM_INC()/HB_ATOM_DEC()
+      also for x86@64 but with reduced to 32bit reference counter.
+
 2008-09-15 21:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * contrib/mtpl_b32.mak

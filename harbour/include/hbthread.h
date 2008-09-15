@@ -128,6 +128,8 @@ HB_EXTERN_BEGIN
 
 #     define HB_ATOM_INC( p )    ( hb_atomic_inc32( ( volatile int * ) (p) ) )
 #     define HB_ATOM_DEC( p )    ( hb_atomic_dec32( ( volatile int * ) (p) ) )
+#     define HB_ATOM_GET( p )    (*(int volatile *)(p))
+#     define HB_ATOM_SET( p, n ) do { (*(int volatile *)(p)) = (n); } while(0)
 
 #  endif
 
