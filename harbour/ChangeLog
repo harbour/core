@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-15 11:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * tests/bld_b32.bat
+  * tests/bld_vc.bat
+    + Added bld files for tests.
+
+  * tests/bld_b32_dll.bat
+    ! .dll name updated.
+
 2008-09-15 04:33 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/pack_src.sh
     * added file list to archive so it's possible to recreate it later without SVN data

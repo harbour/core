@@ -13,14 +13,14 @@ rem ---------------------------------------------------------------
 
 bcc32 -c -O2 -d -I..\include %1.c ..\source\vm\mainwin.c
 
-@echo c0w32.obj +              >  _bld_b32_dll.tmp
-@echo %1.obj +                 >> _bld_b32_dll.tmp
-@echo mainwin.obj, +           >> _bld_b32_dll.tmp
-@echo %1.exe, +                >> _bld_b32_dll.tmp
-@echo , +                      >> _bld_b32_dll.tmp
-@echo ..\lib\harbour-b32.lib + >> _bld_b32_dll.tmp
-@echo cw32.lib +               >> _bld_b32_dll.tmp
-@echo import32.lib,            >> _bld_b32_dll.tmp
+@echo c0w32.obj +                 >  _bld_b32_dll.tmp
+@echo %1.obj +                    >> _bld_b32_dll.tmp
+@echo mainwin.obj, +              >> _bld_b32_dll.tmp
+@echo %1.exe, +                   >> _bld_b32_dll.tmp
+@echo , +                         >> _bld_b32_dll.tmp
+@echo ..\lib\harbour-11-b32.lib + >> _bld_b32_dll.tmp
+@echo cw32.lib +                  >> _bld_b32_dll.tmp
+@echo import32.lib,               >> _bld_b32_dll.tmp
 
 ilink32 -Tpe -Gn @_bld_b32_dll.tmp
 
