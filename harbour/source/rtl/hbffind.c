@@ -838,13 +838,13 @@ HB_EXPORT void hb_fsFindClose( PHB_FFIND ffind )
 {
    if( ffind )
    {
-      hb_vmUnlock();
-
       /* Do platform dependant cleanup */
 
       if( ffind->info )
       {
          PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
+
+         hb_vmUnlock();
 
 #if defined(HB_OS_DOS)
 
@@ -893,11 +893,11 @@ HB_EXPORT void hb_fsFindClose( PHB_FFIND ffind )
 
 #endif
 
+         hb_vmLock();
+
          hb_xfree( ( void * ) ffind->info );
       }
 
       hb_xfree( ( void * ) ffind );
-
-      hb_vmLock();
    }
 }

@@ -93,6 +93,8 @@ MKLIB  = tlib.exe
 
 DLL_OBJS = $(TMP_DLL_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
 
+VMMT_LIB_OBJS = $(VM_LIB_OBJS:$(OBJ_DIR)=$(MT_OBJ_DIR))
+
 #**********************************************************
 # C compiler, Harbour compiler and Linker flags.
 #**********************************************************
@@ -104,6 +106,7 @@ INCLUDE_DIR = include
 
 # C Compiler Flags
 CFLAGS = -I$(INCLUDE_DIR) -I$(OBJ_DIR) $(C_USR)
+CFLAGSMT = -tWM -DHB_MT_VM $(CFLAGSMT)
 
 #-----------
 !ifndef BCC_NOOPTIM
@@ -120,7 +123,9 @@ CFLAGS = -I$(INCLUDE_DIR) -I$(OBJ_DIR) $(C_USR)
 !endif
 #-----------
 !if "$(HB_BUILD_ST)" != "yes"
-    CFLAGS = -tWM $(CFLAGS) -DHB_MT_VM
+    CFLAGS = $(CFLAGS) $(CFLAGSMT)
+!else
+    HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(VMMT_LIB)
 !endif
 #-----------
 !if "$(HB_GT_DEFAULT)" != ""
@@ -183,6 +188,17 @@ ARFLAGS = /P32 $(A_USR)
 {$(ALL_SRC_DIRS)}.prg{$(OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\  $**
     $(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)\$&.c
+#**********************************************************
+
+#**********************************************************
+# General *.c --> *.obj COMPILE rule for STATIC MT Libraries
+{$(ALL_SRC_DIRS)}.c{$(MT_OBJ_DIR)}$(OBJEXT):
+    $(CC) $(CLIBFLAGS) $(CFLAGSMT) -o$@ $<
+#**********************************************************
+# General *.prg --> *.obj COMPILE rule for STATIC MT Libraries
+{$(ALL_SRC_DIRS)}.prg{$(MT_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(MT_OBJ_DIR)\  $**
+    $(CC) $(CLIBFLAGS) $(CFLAGSMT) -o$@ $(MT_OBJ_DIR)\$&.c
 #**********************************************************
 
 #**********************************************************
@@ -272,6 +288,14 @@ $(VM_LIB)       :: BasicExes
 $(VM_LIB)       :: $(VM_LIB_OBJS)
     IF EXIST "$(VM_LIB)" $(DEL) "$(VM_LIB)" > NUL
     $(MKLIB) "$(VM_LIB)" $(ARFLAGS) @&&!
++$(**: = &^
++)
+!
+#**********************************************************
+$(VMMT_LIB)     :: BasicExes
+$(VMMT_LIB)     :: $(VMMT_LIB_OBJS)
+    IF EXIST "$(VMMT_LIB)" $(DEL) "$(VMMT_LIB)" > NUL
+    $(MKLIB) "$(VMMT_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
@@ -638,6 +662,9 @@ doClean:
     -if exist $(OBJ_DIR)\*.obj          $(DEL) $(OBJ_DIR)\*.obj          > nul
     -if exist $(OBJ_DIR)\*.c            $(DEL) $(OBJ_DIR)\*.c            > nul
     -if exist $(OBJ_DIR)\*.h            $(DEL) $(OBJ_DIR)\*.h            > nul
+    -if exist $(MT_OBJ_DIR)\*.obj       $(DEL) $(MT_OBJ_DIR)\*.obj       > nul
+    -if exist $(MT_OBJ_DIR)\*.c         $(DEL) $(MT_OBJ_DIR)\*.c         > nul
+    -if exist $(MT_OBJ_DIR)\*.h         $(DEL) $(MT_OBJ_DIR)\*.h         > nul
     -if exist $(INCLUDE_DIR)\hbverbld.h $(DEL) $(INCLUDE_DIR)\hbverbld.h > nul
     -if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
     -if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul

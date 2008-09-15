@@ -105,9 +105,9 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 
 #endif
 
+   hb_fsSetIOError( fResult, 0 );
    hb_vmLock();
 
-   hb_fsSetIOError( fResult, 0 );
    return fResult;
 }
 
@@ -225,8 +225,8 @@ HB_EXPORT HB_FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefi
          hb_strncat( ( char * ) pszName, "XXXXXX", _POSIX_PATH_MAX );
          hb_vmUnlock();
          fd = ( HB_FHANDLE ) mkstemp( ( char * ) pszName );
-         hb_vmLock();
          hb_fsSetIOError( fd != ( HB_FHANDLE ) -1, 0 );
+         hb_vmLock();
       }
       else
 #endif

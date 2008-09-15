@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-15 04:33 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/pack_src.sh
+    * added file list to archive so it's possible to recreate it later without SVN data
+
+  * harbour/common.mak
+  * harbour/make_b32.mak
+  * harbour/make_gcc.mak
+    + added HBVMMT library for default builds
+      BCC version not tested - please test.
+
+  * harbour/source/vm/hvm.c
+    * moved language and code page setting before class and error initialization
+
+  * harbour/source/rtl/fserror.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/fssize.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/filesys.c
+    ! fixed overloading FS error codes by other operations, f.e. accessing
+      TLS data by OS API function call
+
 2008-09-15 01:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbverdsp.c
     * Undone prev change.

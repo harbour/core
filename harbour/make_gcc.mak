@@ -40,6 +40,7 @@
 #                           (if you don't have slang installed)
 #
 #       HB_COMMERCE       - If set to yes disables pure GNU modules (slang,GPM,...)
+#       HB_BUILD_ST       - If set to yes builds harbour in SingleThread mode
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build (currently not working)
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
@@ -55,6 +56,12 @@
 # ---------------------------------------------------------------
 
 .SUFFIXES:
+
+# GCC has ST mode as default
+ifeq ($(HB_BUILD_ST),)
+    HB_BUILD_ST=yes
+endif
+
 
 #**********************************************************
 
@@ -130,12 +137,14 @@ endif
 #**********************************************************
 
 # Default sources directory search paths
-VPATH := $(ALL_SRC_DIRS) $(LIB_DIR) $(BIN_DIR) $(OBJ_DIR) $(DLL_OBJ_DIR)
+VPATH := $(ALL_SRC_DIRS) $(LIB_DIR) $(BIN_DIR) $(OBJ_DIR) $(MT_OBJ_DIR) $(DLL_OBJ_DIR)
 
 #**********************************************************
 
 # Some definitions cannot be kept in common.mak
 # due to serious limitations of Microsoft Nmake
+
+VMMT_LIB_OBJS = $(subst $(OBJ_DIR),$(MT_OBJ_DIR),$(VM_LIB_OBJS))
 
 # Do not perform an extra compilation phase for shared libraries
 # if gcc -fPIC compilation flag is already passed to a makefile
@@ -160,6 +169,7 @@ endif
 INCLUDE_DIR    := include
 
 CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
+CFLAGSMT       := -DHB_MT_VM $(CFLAGSMT)
 #-----------
 ifndef GCC_NOOPTIM
 CFLAGS         := -O3 $(CFLAGS)
@@ -180,6 +190,15 @@ endif
 CLIBFLAGS      := -c $(CFLAGS)
 CLIBFLAGSDLL   := -DHB_DYNLIB $(CLIBFLAGS) $(CLIBFLAGSDLL)
 CEXEFLAGSDLL   :=  $(CFLAGS) $(CEXEFLAGSDLL)
+
+ifeq ($(findstring $(HB_ARCHITECTURE),dos),)
+ifneq ($(HB_BUILD_ST),yes)
+    CLIBFLAGS += $(CFLAGSMT)
+    CLIBFLAGSDLL += $(CFLAGSMT)
+else
+    HB_BUILD_TARGETS += $(VMMT_LIB)
+endif
+endif
 
 # Under architectures other than "DOS based" add -fPIC
 # to gcc compiler flags for compiling shared libraries
@@ -248,9 +267,18 @@ $(OBJ_DIR)/%$(OBJEXT) : %.prg
 	$(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)/ $<
 	$(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)/$(<F:.prg=.c)
 #----------------------------------------------------------
+# General *.prg --> *.o COMPILE rule for STATIC MT Libraries
+$(MT_OBJ_DIR)/%$(OBJEXT) : %.prg
+	$(HB) $(HARBOURFLAGS) -o$(MT_OBJ_DIR)/ $<
+	$(CC) $(CLIBFLAGS) $(CFLAGSMT) -o$@ $(MT_OBJ_DIR)/$(<F:.prg=.c)
+#----------------------------------------------------------
 # General *.c --> *.o COMPILE rule for STATIC Libraries
 $(OBJ_DIR)/%$(OBJEXT) : %.c
 	$(CC) $(CLIBFLAGS) -o$@ $<
+#----------------------------------------------------------
+# General *.c --> *.o COMPILE rule for STATIC MT Libraries
+$(MT_OBJ_DIR)/%$(OBJEXT) : %.c
+	$(CC) $(CLIBFLAGS) $(CFLAGSMT) -o$@ $<
 #*******************************************************
 # General *.prg --> *.o COMPILE rule for SHARED Libraries
 $(DLL_OBJ_DIR)/%$(OBJEXT) : %.prg
@@ -304,6 +332,9 @@ $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(VM_LIB)       : $(VM_LIB_OBJS)
+	$(MKLIB) $(ARFLAGS) $@ $^
+#**********************************************************
+$(VMMT_LIB)     : $(VMMT_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 ifneq ($(findstring $(HB_ARCHITECTURE),w32 os2),)
@@ -546,6 +577,9 @@ doClean:
 	-$(DEL) $(OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(OBJ_DIR)/*.c
 	-$(DEL) $(OBJ_DIR)/*.h
+	-$(DEL) $(MT_OBJ_DIR)/*$(OBJEXT)
+	-$(DEL) $(MT_OBJ_DIR)/*.c
+	-$(DEL) $(MT_OBJ_DIR)/*.h
 	-$(DEL) $(INCLUDE_DIR)/hbverbld.h
 	-$(DEL) $(DLL_OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(DLL_OBJ_DIR)/*.c

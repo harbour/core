@@ -622,9 +622,8 @@ HB_EXPORT HB_FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
             close( hPipeHandle[1] );
          }
       }
-      hb_vmLock();
-
       hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
+      hb_vmLock();
 
       if( pbyTmp )
          hb_xfree( pbyTmp );
@@ -660,8 +659,8 @@ HB_EXPORT HB_FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
       hb_vmUnlock();
       hFile = ( HANDLE ) CreateFileA( ( char * ) pFilename, dwMode, dwShare,
                                       NULL, dwCreat, dwAttr, NULL );
-      hb_vmLock();
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
+      hb_vmLock();
 
       hFileHandle = ( HB_FHANDLE ) hFile;
    }
@@ -685,8 +684,8 @@ HB_EXPORT HB_FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 #else
       hFileHandle = open( ( char * ) pFilename, flags | share, mode );
 #endif
-      hb_vmLock();
       hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
+      hb_vmLock();
    }
 #else
 
@@ -720,9 +719,8 @@ HB_EXPORT HB_FHANDLE hb_fsCreate( BYTE * pFilename, ULONG ulAttr )
       hb_vmUnlock();
       hFile = ( HANDLE ) CreateFileA( ( char * ) pFilename, dwMode, dwShare,
                                       NULL, dwCreat, dwAttr, NULL );
-      hb_vmLock();
-
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
+      hb_vmLock();
 
       hFileHandle = ( HB_FHANDLE ) hFile;
    }
@@ -740,8 +738,8 @@ HB_EXPORT HB_FHANDLE hb_fsCreate( BYTE * pFilename, ULONG ulAttr )
 #else
       hFileHandle = open( ( char * ) pFilename, flags | share, mode );
 #endif
-      hb_vmLock();
       hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
+      hb_vmLock();
    }
 #else
 
@@ -781,9 +779,8 @@ HB_EXPORT HB_FHANDLE hb_fsCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFla
       hb_vmUnlock();
       hFile = ( HANDLE ) CreateFileA( ( char * ) pFilename, dwMode, dwShare,
                                       NULL, dwCreat, dwAttr, NULL );
-      hb_vmLock();
-
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
+      hb_vmLock();
 
       hFileHandle = ( HB_FHANDLE ) hFile;
    }
@@ -799,8 +796,8 @@ HB_EXPORT HB_FHANDLE hb_fsCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFla
 #else
       hFileHandle = open( ( char * ) pFilename, flags | share, mode );
 #endif
-      hb_vmLock();
       hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
+      hb_vmLock();
    }
 #else
 
@@ -940,8 +937,8 @@ HB_EXPORT BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plM
 
             fResult = TRUE;
          }
-         hb_vmLock();
          hb_fsSetIOError( fResult, 0 );
+         hb_vmLock();
          hb_fsClose( hFile );
       }
    }
@@ -966,9 +963,8 @@ HB_EXPORT BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plM
 
          fResult = TRUE;
       }
-      hb_vmLock();
-
       hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
 
       if( fFree )
          hb_xfree( pszFileName );
@@ -1008,28 +1004,26 @@ HB_EXPORT BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
          *pulAttr = hb_fsAttrFromRaw( dwAttr );
          fResult = TRUE;
       }
-      hb_vmLock();
       hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
    }
 #elif defined( HB_OS_DOS )
+   hb_vmUnlock();
    {
 #if defined( __DJGPP__ ) || defined(__BORLANDC__)
-      int attr;
-      hb_vmUnlock();
-      attr = _chmod( ( char * ) pszFileName, 0, 0 );
-      hb_vmLock();
+      int attr = _chmod( ( char * ) pszFileName, 0, 0 );
       if( attr != -1 )
 #else
       unsigned int attr = 0;
-      hb_vmUnlock();
       if( _dos_getfileattr( ( char * ) pszFileName, &attr ) == 0 )
 #endif
       {
          *pulAttr = hb_fsAttrFromRaw( attr );
          fResult = TRUE;
       }
-      hb_vmLock();
+      hb_fsSetIOError( fResult, 0 );
    }
+   hb_vmLock();
 #elif defined( HB_OS_OS2 )
    {
       FILESTATUS3 fs3;
@@ -1037,13 +1031,13 @@ HB_EXPORT BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
 
       hb_vmUnlock();
       ulrc = DosQueryPathInfo( ( PSZ ) pszFileName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
-      hb_vmLock();
       if( ulrc == NO_ERROR )
       {
          *pulAttr = hb_fsAttrFromRaw( fs3.attrFile );
          fResult = TRUE;
       }
       hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
    }
 #elif defined( HB_OS_UNIX )
    {
@@ -1055,8 +1049,8 @@ HB_EXPORT BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
          *pulAttr = hb_fsAttrFromRaw( sStat.st_mode );
          fResult = TRUE;
       }
-      hb_vmLock();
       hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
    }
 #else
    {
@@ -1116,8 +1110,8 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
          SystemTimeToFileTime( &st, &local_ft );
          LocalFileTimeToFileTime( &local_ft, &ft );
          fResult = SetFileTime( DosToWinHandle( hFile ), NULL, &ft, &ft ) != 0;
-         hb_vmLock();
          hb_fsSetIOError( fResult, 0 );
+         hb_vmLock();
          hb_fsClose( hFile );
       }
    }
@@ -1167,9 +1161,9 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
          ulrc = DosSetPathInfo( ( PSZ ) pszFileName, FIL_STANDARD,
                                 &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
       }
-      hb_vmLock();
       fResult = ulrc == NO_ERROR;
       hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
       if( fFree )
          hb_xfree( pszFileName );
    }
@@ -1179,11 +1173,10 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
 
       pszFileName = hb_fsNameConv( pszFileName, &fFree );
 
+      hb_vmUnlock();
       if( lJulian <= 0 && lMillisec )
       {
-         hb_vmUnlock();
          fResult = utime( ( char * ) pszFileName, NULL ) == 0;
-         hb_vmLock();
       }
       else
       {
@@ -1191,7 +1184,6 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
          struct tm new_value;
          time_t tim;
 
-         hb_vmUnlock();
          if( lJulian <= 0 || lMillisec < 0 )
          {
             time_t current_time;
@@ -1226,9 +1218,9 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
 #   endif
          buf.actime = buf.modtime = mktime( &new_value );
          fResult = utime( ( char * ) pszFileName, &buf ) == 0;
-         hb_vmLock();
       }
       hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
       if( fFree )
          hb_xfree( pszFileName );
    }
@@ -1267,8 +1259,8 @@ HB_EXPORT BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
          dwFlags |= FILE_ATTRIBUTE_NORMAL;
       hb_vmUnlock();
       fResult = SetFileAttributesA( ( char * ) pszFileName, dwFlags );
-      hb_vmLock();
       hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
    }
 #elif defined( HB_OS_OS2 )
    {
@@ -1293,9 +1285,9 @@ HB_EXPORT BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
          ulrc = DosSetPathInfo( ( PSZ ) pszFileName, FIL_STANDARD,
                                 &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
       }
-      hb_vmLock();
       fResult = ulrc == NO_ERROR;
       hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
    }
 #elif defined( HB_OS_DOS )
 
@@ -1306,8 +1298,8 @@ HB_EXPORT BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
 #  else
    fResult = _dos_setfileattr( ( char * ) pszFileName, ulAttr ) != -1;
 #  endif
-   hb_vmLock();
    hb_fsSetIOError( fResult, 0 );
+   hb_vmLock();
 
 #elif defined( HB_OS_UNIX_COMPATIBLE )
    {
@@ -1330,8 +1322,8 @@ HB_EXPORT BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
       }
       hb_vmUnlock();
       fResult = chmod( ( char * ) pszFileName, iAttr ) != -1;
-      hb_vmLock();
       hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
    }
 #else
    {
@@ -1363,16 +1355,16 @@ HB_EXPORT USHORT hb_fsRead( HB_FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount
 
          hb_vmUnlock();
          fResult = ReadFile( DosToWinHandle( hFileHandle ), pBuff, ( DWORD ) uiCount, &dwRead, NULL );
-         hb_vmLock();
          hb_fsSetIOError( fResult, 0 );
+         hb_vmLock();
 
          uiRead = fResult ? ( USHORT ) dwRead : 0;
       }
    #else
       hb_vmUnlock();
       uiRead = read( hFileHandle, pBuff, uiCount );
-      hb_vmLock();
       hb_fsSetIOError( uiRead != ( USHORT ) -1, 0 );
+      hb_vmLock();
    #endif
 
    if( uiRead == ( USHORT ) -1 )
@@ -1411,8 +1403,8 @@ HB_EXPORT USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const BYTE * pBuff, USHORT 
              dwWritten = 0;
              fResult = SetEndOfFile( DosToWinHandle( hFileHandle ) );
          }
-         hb_vmLock();
          hb_fsSetIOError( fResult, 0 );
+         hb_vmLock();
 
          uiWritten = fResult ? ( USHORT ) dwWritten : 0;
       }
@@ -1421,8 +1413,8 @@ HB_EXPORT USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const BYTE * pBuff, USHORT 
       {
          hb_vmUnlock();
          uiWritten = write( hFileHandle, pBuff, uiCount );
-         hb_vmLock();
          hb_fsSetIOError( uiWritten != ( USHORT ) -1, 0 );
+         hb_vmLock();
          if( uiWritten == ( USHORT ) -1 )
             uiWritten = 0;
       }
@@ -1467,8 +1459,8 @@ HB_EXPORT ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCo
    {
       hb_vmUnlock();
       ulRead = read( hFileHandle, pBuff, ulCount );
-      hb_vmLock();
       hb_fsSetIOError( ulRead != (ULONG) -1, 0 );
+      hb_vmLock();
    }
    #else
    {
@@ -1511,8 +1503,8 @@ HB_EXPORT ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCo
          ulRead += ( ULONG ) uiRead;
          pPtr += uiRead;
       }
-      hb_vmLock();
       hb_fsSetIOError( ulLeftToRead == 0, 0 );
+      hb_vmLock();
    }
    #endif
 
@@ -1554,8 +1546,8 @@ HB_EXPORT ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULO
          {
             hb_vmUnlock();
             ulWritten = write( hFileHandle, pBuff, ulCount );
-            hb_vmLock();
             hb_fsSetIOError( ulWritten != ( ULONG ) -1, 0 );
+            hb_vmLock();
             if( ulWritten == ( ULONG ) -1 )
                ulWritten = 0;
          }
@@ -1601,8 +1593,8 @@ HB_EXPORT ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULO
                ulWritten += ( ULONG ) uiWritten;
                pPtr += uiWritten;
             }
-            hb_vmLock();
             hb_fsSetIOError( ulLeftToWrite == 0, 0 );
+            hb_vmLock();
          }
       #endif
       else
@@ -1698,8 +1690,8 @@ HB_EXPORT void hb_fsCommit( HB_FHANDLE hFileHandle )
          close( dup_handle );
          fResult = TRUE;
       }
-      hb_vmLock();
       hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
    }
 
 #else
@@ -1760,8 +1752,8 @@ HB_EXPORT BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
       default:
          bResult = FALSE;
    }
-   hb_vmLock();
    hb_fsSetIOError( bResult, 0 );
+   hb_vmLock();
 #elif defined(HB_OS_OS2)
    {
       struct _FILELOCK fl, ful;
@@ -1794,8 +1786,8 @@ HB_EXPORT BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
          default:
             bResult = FALSE;
       }
-      hb_vmLock();
       hb_fsSetIOError( bResult, 0 );
+      hb_vmLock();
    }
 #elif defined(_MSC_VER) || defined(__DMC__)
    {
@@ -1817,8 +1809,8 @@ HB_EXPORT BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
          default:
             bResult = FALSE;
       }
-      hb_vmLock();
       hb_fsSetIOError( bResult, 0 );
+      hb_vmLock();
       lseek( hFileHandle, ulOldPos, SEEK_SET );
    }
 #elif defined(__MINGW32__)
@@ -1841,8 +1833,8 @@ HB_EXPORT BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
          default:
             bResult = FALSE;
       }
-      hb_vmLock();
       hb_fsSetIOError( bResult, 0 );
+      hb_vmLock();
       lseek( hFileHandle, ulOldPos, SEEK_SET );
    }
 #elif defined(HB_OS_UNIX)
@@ -1881,8 +1873,8 @@ HB_EXPORT BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
          default:
             bResult = FALSE;
       }
-      hb_vmLock();
       hb_fsSetIOError( bResult, 0 );
+      hb_vmLock();
    }
 #elif defined(HAVE_POSIX_IO) && !defined(__IBMCPP__) && ( !defined(__GNUC__) || defined(__DJGPP__) )
 
@@ -1900,8 +1892,8 @@ HB_EXPORT BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
       default:
          bResult = FALSE;
    }
-   hb_vmLock();
    hb_fsSetIOError( bResult, 0 );
+   hb_vmLock();
 
 #else
 
@@ -1980,8 +1972,8 @@ HB_EXPORT BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
          default:
             bResult = FALSE;
       }
-      hb_vmLock();
       hb_fsSetIOError( bResult, 0 );
+      hb_vmLock();
    }
 #elif defined(HB_USE_LARGEFILE64)
    {
@@ -2017,8 +2009,8 @@ HB_EXPORT BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
          default:
             bResult = FALSE;
       }
-      hb_vmLock();
       hb_fsSetIOError( bResult, 0 );
+      hb_vmLock();
    }
 #else
    bResult = hb_fsLock( hFileHandle, (ULONG) ulStart, (ULONG) ulLength, uiMode );
@@ -2199,15 +2191,15 @@ HB_EXPORT BOOL hb_fsDelete( BYTE * pFilename )
 
    hb_vmUnlock();
    bResult = DeleteFileA( ( char * ) pFilename );
-   hb_vmLock();
    hb_fsSetIOError( bResult, 0 );
+   hb_vmLock();
 
 #elif defined(HB_FS_FILE_IO)
 
    hb_vmUnlock();
    bResult = ( remove( ( char * ) pFilename ) == 0 );
-   hb_vmLock();
    hb_fsSetIOError( bResult, 0 );
+   hb_vmLock();
 
 #else
 
@@ -2276,8 +2268,8 @@ HB_EXPORT BOOL hb_fsMkDir( BYTE * pDirname )
 
    hb_vmUnlock();
    bResult = CreateDirectoryA( ( char * ) pDirname, NULL );
-   hb_vmLock();
    hb_fsSetIOError( bResult, 0 );
+   hb_vmLock();
 
 #elif defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
@@ -2289,8 +2281,8 @@ HB_EXPORT BOOL hb_fsMkDir( BYTE * pDirname )
 #  else
       bResult = ( mkdir( ( char * ) pDirname, S_IRWXU | S_IRWXG | S_IRWXO ) == 0 );
 #  endif
-   hb_vmLock();
    hb_fsSetIOError( bResult, 0 );
+   hb_vmLock();
 
 #else
 
@@ -2318,15 +2310,15 @@ HB_EXPORT BOOL hb_fsChDir( BYTE * pDirname )
 
    hb_vmUnlock();
    bResult = SetCurrentDirectoryA( ( char * ) pDirname );
-   hb_vmLock();
    hb_fsSetIOError( bResult, 0 );
+   hb_vmLock();
 
 #elif defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
    hb_vmUnlock();
    bResult = ( chdir( ( char * ) pDirname ) == 0 );
-   hb_vmLock();
    hb_fsSetIOError( bResult, 0 );
+   hb_vmLock();
 
 #else
 
@@ -2354,15 +2346,15 @@ HB_EXPORT BOOL hb_fsRmDir( BYTE * pDirname )
 
    hb_vmUnlock();
    bResult = RemoveDirectoryA( ( char * ) pDirname );
-   hb_vmLock();
    hb_fsSetIOError( bResult, 0 );
+   hb_vmLock();
 
 #elif defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
    hb_vmUnlock();
    bResult = ( rmdir( ( char * ) pDirname ) == 0 );
-   hb_vmLock();
    hb_fsSetIOError( bResult, 0 );
+   hb_vmLock();
 
 #else
 
@@ -2422,29 +2414,29 @@ HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen 
 
    hb_vmUnlock();
    fResult = GetCurrentDirectoryA( ulLen, ( char * ) pbyBuffer );
-   hb_vmLock();
    hb_fsSetIOError( fResult, 0 );
+   hb_vmLock();
 
 #elif defined(HB_OS_OS2)
 
    hb_vmUnlock();
    fResult = ( _getcwd1( (char *) pbyBuffer, uiDrive + 'A' - 1 ) == 0 );
-   hb_vmLock();
    hb_fsSetIOError( fResult, 0 );
+   hb_vmLock();
 
 #elif defined(HAVE_POSIX_IO)
 
    hb_vmUnlock();
    fResult = ( getcwd( ( char * ) pbyBuffer, ulLen ) != NULL );
-   hb_vmLock();
    hb_fsSetIOError( fResult, 0 );
+   hb_vmLock();
 
 #elif defined(__MINGW32__)
 
    hb_vmUnlock();
    fResult = ( _getdcwd( uiDrive, pbyBuffer, ulLen ) != NULL );
-   hb_vmLock();
    hb_fsSetIOError( fResult, 0 );
+   hb_vmLock();
 
 #else
 
@@ -2617,8 +2609,8 @@ HB_EXPORT BOOL hb_fsIsDevice( HB_FHANDLE hFileHandle )
 
    hb_vmUnlock();
    bResult = GetFileType( DosToWinHandle( hFileHandle ) ) == FILE_TYPE_CHAR;
-   hb_vmLock();
    hb_fsSetIOError( bResult, 0 );
+   hb_vmLock();
 
 #elif defined(HB_FS_FILE_IO)
 
@@ -2628,8 +2620,8 @@ HB_EXPORT BOOL hb_fsIsDevice( HB_FHANDLE hFileHandle )
 #else
    bResult = isatty( hFileHandle ) != 0;
 #endif
-   hb_vmLock();
    hb_fsSetIOError( bResult, 0 );
+   hb_vmLock();
 
 #else
 
@@ -2877,6 +2869,7 @@ HB_EXPORT BOOL hb_fsEof( HB_FHANDLE hFileHandle )
 }
 #else
    fResult = eof( hFileHandle ) != 0;
+   hb_fsSetIOError( fResult, 0 );
 #endif
 
    hb_vmLock();

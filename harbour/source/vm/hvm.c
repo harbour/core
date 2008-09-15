@@ -758,16 +758,17 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 #if defined( HB_MT_VM )
    hb_vmStackAdd( NULL );
 #endif
-   hb_clsInit();              /* initialize Classy/OO system */
-   hb_errInit();
-
-   /* initialize dynamic symbol for evaluating codeblocks */
-   hb_symEval.pDynSym = hb_dynsymGetCase( hb_symEval.szName );
 
    /* Set the language and codepage to the default */
    /* This trick is needed to stringify the macro value */
    hb_langSelectID( HB_MACRO2STRING( HB_LANG_DEFAULT ) );
    hb_cdpSelectID( HB_MACRO2STRING( HB_CODEPAGE_DEFAULT ) );
+
+   hb_clsInit();              /* initialize Classy/OO system */
+   hb_errInit();
+
+   /* initialize dynamic symbol for evaluating codeblocks */
+   hb_symEval.pDynSym = hb_dynsymGetCase( hb_symEval.szName );
 
    hb_setInitialize( hb_stackSetStruct() );
    hb_conInit();

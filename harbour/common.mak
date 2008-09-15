@@ -94,6 +94,8 @@ BIN_DIR = bin\$(HB_CC_NAME)
 OBJ_DIR = obj\$(HB_CC_NAME)
 LIB_DIR = lib\$(HB_CC_NAME)
 
+MT_OBJ_DIR = obj\$(HB_CC_NAME)_mt
+
 DLL_ROOTDIR = obj\dll
 DLL_OBJ_DIR = $(DLL_ROOTDIR)\$(HB_CC_NAME)
 
@@ -102,6 +104,8 @@ HB_DEST_DIRS = \
     $(BIN_DIR)      \
     $(OBJ_DIR)      \
     $(LIB_DIR)      \
+    \
+    $(MT_OBJ_DIR)   \
     \
     $(DLL_ROOTDIR)  \
     $(DLL_OBJ_DIR)
@@ -211,6 +215,7 @@ COMMON_LIB   = $(LIB_DIR)\$(LIBPREF)hbcommon$(LIBEXT)
 COMPILER_LIB = $(LIB_DIR)\$(LIBPREF)hbcplr$(LIBEXT)
 PP_LIB       = $(LIB_DIR)\$(LIBPREF)hbpp$(LIBEXT)
 VM_LIB       = $(LIB_DIR)\$(LIBPREF)hbvm$(LIBEXT)
+VMMT_LIB     = $(LIB_DIR)\$(LIBPREF)hbvmmt$(LIBEXT)
 RTL_LIB      = $(LIB_DIR)\$(LIBPREF)hbrtl$(LIBEXT)
 MACRO_LIB    = $(LIB_DIR)\$(LIBPREF)hbmacro$(LIBEXT)
 DEBUG_LIB    = $(LIB_DIR)\$(LIBPREF)hbdebug$(LIBEXT)
