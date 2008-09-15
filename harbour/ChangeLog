@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-15 14:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/bld.bat
+  * bin/bld_os2.cmd
+  * contrib/gtwvg/tests/bld_b32.bat
+  * contrib/hbgd/tests/bld_b32.bat
+    ! Changed CFLAGS to C_USR.
+
 2008-09-15 13:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/tests/speedtst.prg
     * small update in speedtst.prg. It should be enough to make test and
