@@ -1292,4 +1292,10 @@ typedef BYTE HB_ATTR;
 #define HB_CHAR_SOFT1           ( ( char ) 141 )
 #define HB_CHAR_SOFT2           ( ( char ) HB_CHAR_LF )
 
+#if defined(_MSC_VER) || defined(__BORLANDC__) || defined(__POCC__) || defined(__XCC__) || defined(__DMC__)
+   #pragma comment( lib, "" )
+#endif
+
+
+
 #endif /* HB_DEFS_H_ */

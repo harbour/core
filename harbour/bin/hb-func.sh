@@ -152,7 +152,7 @@ mk_hbtools()
         HB_SYS_LIBS="-lz ${HB_SYS_LIBS}"
         hb_libs="${hb_libs//hbzlib/}"
     fi
-    if [ "${HB_COMPILER}" = "mingw32" ]; then
+    if [ "${HB_COMPILER}" = "mingw" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lwsock32 -lws2_32"
     elif [ "${HB_COMPILER}" = "mingwce" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32"
@@ -493,7 +493,7 @@ else
 fi
 
 l=""
-if [ "\${HB_COMPILER}" = "mingw32" ]; then
+if [ "\${HB_COMPILER}" = "mingw" ]; then
     if [ -z "\${HB_MODE}" ]; then
         LN_OPT="\${LN_OPT} -mwindows"
         l="hbmainwin"

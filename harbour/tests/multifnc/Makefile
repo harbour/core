@@ -11,7 +11,7 @@ else
 ifeq ($(HB_COMPILER),djgpp)
 L_USR += -Wl,--allow-multiple-definition
 else
-ifeq ($(HB_COMPILER),mingw32)
+ifeq ($(HB_COMPILER),mingw)
 L_USR += -Wl,--allow-multiple-definition
 else
 ifeq ($(HB_COMPILER),xcc)

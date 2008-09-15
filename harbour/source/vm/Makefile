@@ -5,7 +5,7 @@
 ROOT = ../../
 
 ifeq ($(HB_ARCHITECTURE),w32)
-	ifeq ($(HB_COMPILER),mingw32)
+	ifeq ($(HB_COMPILER),mingw)
 		C_MAIN = mainwin.c
 		DIRS = mainstd
 	else

@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-15 20:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * tests/multifnc/Makefile
+  * doc/gmake.txt
+  * bin/hb-func.sh
+  * bin/postinst.sh
+  * include/hbdefs.h
+  * source/vm/Makefile
+  * source/vm/vmmt/Makefile
+    ! Changed mingw32 to mingw in remaining places.
+
 2008-09-15 17:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbthread.h
     + added assembler MT version of HB_ATOM_INC/HB_ATOM_DEC operation

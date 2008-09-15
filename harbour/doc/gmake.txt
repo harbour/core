@@ -146,9 +146,9 @@ For gcc on Win95/WinNT with the Cygwin library:
   C_USR             -mwin32
   L_USR             -mwin32
 
-For gcc on Win95/WinNT with the Mingw32 library:
+For gcc on Win95/WinNT with the MinGW library:
   HB_ARCHITECTURE   w32
-  HB_COMPILER       mingw32
+  HB_COMPILER       mingw
   HB_GT_LIB         gtwin
 
 For MSVC on Win95/WinNT:
