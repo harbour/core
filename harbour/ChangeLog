@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-15 17:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbthread.h
+    + added assembler MT version of HB_ATOM_INC/HB_ATOM_DEC operation
+      for x86@32
+
+  * harbour/source/vm/fm.c
+    ! removed #undef HB_ATOM_INC/HB_ATOM_DEC I left by mistake
+
 2008-09-15 14:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/bld.bat
   * bin/bld_os2.cmd

@@ -99,9 +99,6 @@
 #  undef HB_FM_WIN32_ALLOC
 #endif
 
-#undef HB_ATOM_INC
-#undef HB_ATOM_DEC
-
 #if defined( HB_MT_VM ) && ( defined( HB_FM_STATISTICS ) || \
     !defined( HB_ATOM_INC ) || !defined( HB_ATOM_DEC ) )
 

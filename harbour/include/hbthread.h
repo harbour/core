@@ -104,6 +104,33 @@ HB_EXTERN_BEGIN
 #     define HB_COND_GET(v)            ( &( (v)->cond ) )
 #  endif
 
+#  if HB_COUNTER_SIZE == 4 && defined( __GNUC__ ) && \
+      ( defined( __i386__ ) || defined( __x86_64__ ) )
+
+      static __inline__ void hb_atomic_inc32( volatile int * p )
+      {
+         __asm__ __volatile__(
+            "lock; incl %0\n"
+            :"=m" (*p) :"m" (*p)
+         );
+      }
+
+      static __inline__ int hb_atomic_dec32( volatile int * p )
+      {
+         unsigned char c;
+         __asm__ __volatile__(
+            "lock; decl %0\n"
+            "sete %1\n"
+            :"=m" (*p), "=qm" (c) :"m" (*p) : "memory"
+         );
+         return c == 0;
+      }
+
+#     define HB_ATOM_INC( p )    ( hb_atomic_inc32( ( volatile int * ) (p) ) )
+#     define HB_ATOM_DEC( p )    ( hb_atomic_dec32( ( volatile int * ) (p) ) )
+
+#  endif
+
 #elif defined( HB_OS_WIN_32 )
 
 # define HB_MAX_THREAD  32768
