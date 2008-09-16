@@ -186,7 +186,7 @@ DBGMARKER      =  d
 
 #-----------
 !if "$(HB_BUILD_ST)" != "yes"
-CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
+CFLAGS         = -MT$(DBGMARKER) -DHB_MT_VM $(CFLAGS)
 !endif
 #-----------
 !if "$(HB_GT_DEFAULT)" != ""

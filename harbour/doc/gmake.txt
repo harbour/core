@@ -110,12 +110,12 @@ Now. let's take a look at the rules themselves. They all live in the
 config/ directory, with the following structure:
 
   config/: The generic configuration files.
-  config/w32: Configuration files for win32 platforms.
+  config/w32: Configuration files for Windows platforms.
 
 
 Finally, you will notice one thing: the build system compiles
-everything into a subdirectory (for example, w32/gcc for WIN32 files
-compiled with gcc). This has two advantages:
+everything into a subdirectory (for example, w32/gcc for Windows 
+files compiled with gcc). This has two advantages:
 
 1. It allows you to compile for multiple platforms/compilers at the
    same time.

@@ -145,7 +145,7 @@ Exactly the same I've done in GT subsystem. HB_GTSYS() makes exactly
 the same job as RDDSYS() but for GT. This symbol is requested by core
 code and in the module where it is defined it request default build GT
 driver or if it's not set then default GT driver for given platform.
-For Win32 it looks like:
+For Windows it looks like:
 
     ANNOUNCE HB_GTSYS
     REQUEST HB_GT_WIN

@@ -10,7 +10,7 @@ the creation of the make file.
 
 Hbmake support the follow Switchs
 
--b Use BCC as the C compiler. This options is default under Win32
+-b Use BCC as the C compiler. This options is default under Windows
 -g Use GCC as the C compiler. This options is default under OS/2
 -gl Use GCC as the C compiler on Linux
 -v Use MSVC as the C compiler

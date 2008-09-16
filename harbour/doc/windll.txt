@@ -8,17 +8,17 @@ Windows 32-bit DLLs with Harbour code
 Programs created with Clipper or Harbour are traditionally a
 monolithic EXE containing all executable code.  This includes
 the Virtual Machine (VM) and the RunTime Library (RTL) as well as
-your own code.  Running under Windows (Win32) with Harbour, you
+your own code.  Running under Windows with Harbour, you
 can now also create and use Windows DLLs that contain PRG code.
 
-Harbour supports Win32 DLLs in 3 ways.
+Harbour supports Windows DLLs in 3 ways.
 
   1) Self-contained DLLs containing functions from any platform.
-     (These are not what we call a "Harbour.dll", although they may
+     (These are not what we call a "harbour.dll", although they may
      be named that. The DLL entry points are different.)
      These have the VM/RTL inside them and can be used by any other
      Windows program. You can create a .lib for static linking,
-     or use GetProcAddress as in any standard Win32 DLL.
+     or use GetProcAddress as in any standard Windows DLL.
      Calling Harbour/Prg functions directly is limited to
      those that take no parameters unless you include C functions
      in the DLL that take parameters and then call the PRG-level
