@@ -193,13 +193,11 @@ RETURN
 
 STATIC PROCEDURE HB_DotUsage()
 
-   OutStd( 'Harbour "DOt Prompt" Console / runner' + HB_OSNewLine() +;
+   OutStd( 'Harbour "DOt Prompt" Console / runner ' + HBRawVersion() + HB_OSNewLine() +;
            'Copyright (c) 1999-2008, Przemyslaw Czerpak' + HB_OSNewLine() + ;
            'http://www.harbour-project.org/' + HB_OSNewLine() +;
            HB_OSNewLine() +;
-           'Syntax:  hbrun [<hrbfile[.prg|.hrb]> [<parameters,...>]]' + HB_OSNewLine() + ;
-           HB_OSNewLine() +;
-           "Note:  Linked with " + Version() + HB_OSNewLine() )
+           'Syntax:  hbrun [<hrbfile[.prg|.hrb]> [<parameters,...>]]' + HB_OSNewLine() )
 
 RETURN
 
@@ -294,6 +292,9 @@ STATIC PROCEDURE HB_DotExec( cCommand )
    __MVSETBASE()
 
 RETURN
+
+FUNCTION HBRawVersion()
+   RETURN StrTran( Version(), "Harbour ", "" )
 
 /* ********************************************************************** */
 

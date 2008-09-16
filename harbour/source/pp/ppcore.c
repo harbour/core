@@ -111,8 +111,8 @@ static const char * hb_pp_szWarnings[] =
 /* error messages */
 static const char * hb_pp_szErrors[] =
 {
-   "Illegal character: '\\x%s'",                                        /* C2004 */
-   "Unterminated string: '%s'",                                         /* C2007 */
+   "Illegal character '\\x%s'",                                         /* C2004 */
+   "Unterminated string '%s'",                                          /* C2007 */
    "Missing ENDTEXT",                                                   /* C2033 */
    "Syntax error in #define",                                           /* C2055 */
    "Label missing in #define",                                          /* C2057 */
@@ -129,25 +129,25 @@ static const char * hb_pp_szErrors[] =
    "Error in #undef",                                                   /* C2071 */
    "Ambiguous match pattern in #translate/#command",                    /* C2072 */
    "Result pattern contains nested clauses in #translate/#command",     /* C2073 */
-   "#error: '%s'",                                                      /* C2074 */
-   "Circularity detected in #define: '%s'",                             /* C2078 */
-   "Circularity detected in #translate: '%s'",                          /* C2079 */
-   "Circularity detected in #command: '%s'",                            /* C2080 */
+   "#error '%s'",                                                       /* C2074 */
+   "Circularity detected in #define '%s'",                              /* C2078 */
+   "Circularity detected in #translate '%s'",                           /* C2079 */
+   "Circularity detected in #command '%s'",                             /* C2080 */
    "Unterminated /* */ comment",                                        /* C2083 */
 
    "Error in #pragma",                                                  /* C20?? */
    "Error in #if expression",                                           /* C20?? */
 
-   "Cannot open input file: %s'",                                       /* C30?? */
+   "Cannot open input file '%s'",                                       /* C30?? */
 
    "File %s is too long",                                               /* C30?? */
 
    "Can't create preprocessed output file",                             /* C3006 */
-   "Can't open #include file: '%s'",                                    /* C3007 */
+   "Can't open #include file '%s'",                                     /* C3007 */
    "Bad filename in #include",                                          /* C3008 */
    "Too many nested #includes",                                         /* C3009 */
    "Invalid name follows #",                                            /* C3010 */
-   "Can't open standard rule file: '%s'"                                /* C3011 */
+   "Can't open standard rule file '%s'"                                 /* C3011 */
 };
 
 

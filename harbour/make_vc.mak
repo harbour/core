@@ -116,6 +116,8 @@ MKLIB  = lib.exe
 
 DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
 
+VMMT_LIB_OBJS = $(VM_LIB_OBJS:obj\vc=obj\vc_mt)
+
 #**********************************************************
 # C compiler, Harbour compiler and Linker flags.
 #**********************************************************
@@ -136,6 +138,8 @@ HB_BUILD_MODE  = C
 
 # C Compiler Flags
 !if "$(HB_BUILD_WINCE)" == "yes"
+
+HB_BUILD_ST = yes
 
 !if $(HB_VISUALC_VER) >= 80
 CFLAGS_VER     = -Od -Os -Gy -GS- -EHsc- -fp:fast -Gm -Zi -GR- -D_CRT_SECURE_NO_DEPRECATE
@@ -182,19 +186,23 @@ CFLAGS         = -Zi $(CFLAGS)
 DBGMARKER      =  d
 !endif
 
+CFLAGSMT = -MT$(DBGMARKER) -DHB_MT_VM $(CFLAGSMT)
+
 !endif
 
 #-----------
 !if "$(HB_BUILD_ST)" != "yes"
-CFLAGS         = -MT$(DBGMARKER) -DHB_MT_VM $(CFLAGS)
+CFLAGS = $(CFLAGS) $(CFLAGSMT)
+!else
+HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(VMMT_LIB)
 !endif
 #-----------
 !if "$(HB_GT_DEFAULT)" != ""
-CFLAGS         = -D"HB_GT_DEFAULT=$(HB_GT_DEFAULT:gt=)" $(CFLAGS)
+CFLAGS = -D"HB_GT_DEFAULT=$(HB_GT_DEFAULT:gt=)" $(CFLAGS)
 !endif
 #-----------
 !if "$(HB_GT_LIB)" != ""
-CFLAGS         = -D"HB_GT_LIB=$(HB_GT_LIB:gt=)" $(CFLAGS)
+CFLAGS = -D"HB_GT_LIB=$(HB_GT_LIB:gt=)" $(CFLAGS)
 !endif
 #-----------
 
@@ -494,6 +502,21 @@ STANDARD_SYSLIBS = user32.lib wsock32.lib advapi32.lib gdi32.lib
 #*******************************************************
 
 #*******************************************************
+# General *.c --> *.obj COMPILE rules for STATIC MT Libraries
+#*******************************************************
+{$(VM_DIR)}.c{$(MT_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) $(CFLAGSMT) -Fo$(MT_OBJ_DIR)\ $<
+#*******************************************************
+
+#*******************************************************
+# General *.prg --> *.obj COMPILE rules for STATIC MT Libraries
+#*******************************************************
+{$(VM_DIR)}.prg{$(MT_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(MT_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) $(CFLAGSMT) -Fo$(MT_OBJ_DIR)\ $(MT_OBJ_DIR)\$(*B).c
+#*******************************************************
+
+#*******************************************************
 # General *.c --> *.obj COMPILE rules for SHARED Libraries
 #*******************************************************
 {$(DLL_OBJ_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
@@ -768,6 +791,9 @@ $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
 $(VM_LIB)       : $(VM_LIB_OBJS)
     $(MKLIB) /out:$@ $**
 #**********************************************************
+$(VMMT_LIB)     : $(VMMT_LIB_OBJS)
+    $(MKLIB) /out:$@ $**
+#**********************************************************
 $(RTL_LIB)      : $(RTL_LIB_OBJS)
     $(MKLIB) /out:$@ $**
 #**********************************************************
@@ -1027,11 +1053,6 @@ doClean:
     -if exist *.idb                     $(DEL) *.idb                     > nul
     -if exist *.pch                     $(DEL) *.pch                     > nul
     -if exist *.pdb                     $(DEL) *.pdb                     > nul
-    -if exist $(OBJ_DIR)\*.obj          $(DEL) $(OBJ_DIR)\*.obj          > nul
-    -if exist $(OBJ_DIR)\*.c            $(DEL) $(OBJ_DIR)\*.c            > nul
-    -if exist $(OBJ_DIR)\*.h            $(DEL) $(OBJ_DIR)\*.h            > nul
-    -if exist $(OBJ_DIR)\*.pch          $(DEL) $(OBJ_DIR)\*.pch          > nul
-    -if exist $(LIB_DIR)\*.lib          $(DEL) $(LIB_DIR)\*.lib          > nul
     -if exist $(BIN_DIR)\*.exe          $(DEL) $(BIN_DIR)\*.exe          > nul
     -if exist $(BIN_DIR)\*.pdb          $(DEL) $(BIN_DIR)\*.pdb          > nul
     -if exist $(BIN_DIR)\*.ilk          $(DEL) $(BIN_DIR)\*.ilk          > nul
@@ -1039,10 +1060,18 @@ doClean:
     -if exist $(BIN_DIR)\*.dll          $(DEL) $(BIN_DIR)\*.dll          > nul
     -if exist $(BIN_DIR)\*.lib          $(DEL) $(BIN_DIR)\*.lib          > nul
     -if exist $(BIN_DIR)\*.exp          $(DEL) $(BIN_DIR)\*.exp          > nul
-    -if exist $(INCLUDE_DIR)\hbverbld.h $(DEL) $(INCLUDE_DIR)\hbverbld.h > nul
+    -if exist $(LIB_DIR)\*.lib          $(DEL) $(LIB_DIR)\*.lib          > nul
+    -if exist $(OBJ_DIR)\*.obj          $(DEL) $(OBJ_DIR)\*.obj          > nul
+    -if exist $(OBJ_DIR)\*.c            $(DEL) $(OBJ_DIR)\*.c            > nul
+    -if exist $(OBJ_DIR)\*.h            $(DEL) $(OBJ_DIR)\*.h            > nul
+    -if exist $(OBJ_DIR)\*.pch          $(DEL) $(OBJ_DIR)\*.pch          > nul
+    -if exist $(MT_OBJ_DIR)\*.obj       $(DEL) $(MT_OBJ_DIR)\*.obj       > nul
+    -if exist $(MT_OBJ_DIR)\*.c         $(DEL) $(MT_OBJ_DIR)\*.c         > nul
+    -if exist $(MT_OBJ_DIR)\*.h         $(DEL) $(MT_OBJ_DIR)\*.h         > nul
     -if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
     -if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
     -if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul
+    -if exist $(INCLUDE_DIR)\hbverbld.h $(DEL) $(INCLUDE_DIR)\hbverbld.h > nul
     -if exist inst_$(HB_CC_NAME).log    $(DEL) inst_$(HB_CC_NAME).log    > nul
     -if exist bin\*.exe                 $(DEL) bin\*.exe                 > nul
     -if exist bin\*.dll                 $(DEL) bin\*.dll                 > nul

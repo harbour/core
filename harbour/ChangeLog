@@ -8,6 +8,47 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-17 01:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * debian/changelog
+    * Synced with 1.0.1.
+
+  * source/pp/ppcore.c
+    ! Minor typo in one PP error message. (sync 1.0.1)
+    * Cleaned ":" from all PP error/warning messages to be 
+      friendly with Eclipse.
+
+  * source/compiler/hbgenerr.c
+    * Cleaned some more ":" chars from compiler error/warning 
+      messages to be friendly with Eclipse.
+    ; NOTE: Few more still remain. If you have an idea how to rephrase these, pls tell:
+            "Bound error: '%s'"
+            "Syntax error: '%s'"
+            "Syntax error: \"%s at '%s'\""
+            "Invalid lvalue: '%s'"
+            "Invalid use of '@' (pass by reference): '%s'"
+            "3Incompatible type in assignment to declared array element expected: '%s'"
+            "4Suspicious type in assignment to declared array element expected: '%s'"
+
+  * utils/hbmake/hbmake.prg
+    * Updated by large patch from Bill Robertson.
+      Adds several enhancements, fixes and optimizations 
+      to the previous version.
+
+  * utils/hbdoc/hbdoc.prg
+  * utils/hbmake/hbmake.prg
+  * utils/hbrun/hbrun.prg
+    * Changed the way version number is shown.
+
+  * utils/hbmake/hbmake.prg
+    * Updated MT lib lists. (untested)
+
+  * make_b32.mak
+    * Minor sync with make_vc.mak.
+
+  * make_vc.mak
+    * Attempt to implement hbvmmt.lib just like in 
+      make_b32.mak to make them synced.
+
 2008-09-16 19:11 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/utils/hbtest/rt_class.prg
     ! fixed description message

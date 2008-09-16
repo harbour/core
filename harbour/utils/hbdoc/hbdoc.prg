@@ -270,7 +270,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    //  Get the linkfile name and get the info in it
 
    IF cLinkName == NIL
-      outstd( "Harbour Doc Extractor"+ hb_osnewline() )
+      outstd( "Harbour Doc Extractor " + HBRawVersion() + hb_osnewline() )
       outstd( "Copyright (c) 1999-2008, http://www.harbour-project.org/"+ hb_osnewline() )
       outstd( ""+ hb_osnewline() )
       outstd( "Syntax:  hbdoc [options] <linkname> [<ifile>]"+ hb_osnewline() )
@@ -1904,3 +1904,6 @@ FUNCTION TeeFiles()
    NEXT
 
    RETURN NIL
+
+FUNCTION HBRawVersion()
+   RETURN StrTran( Version(), "Harbour ", "" )
