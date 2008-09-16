@@ -188,7 +188,7 @@ HB_EXTERN_BEGIN
 
 #  define HB_CRITICAL_INITVAL ( ( HMTX ) 0 )
 #  define HB_COND_INITVAL     ( ( HEV ) 0 )
-#  define HB_THREAD_SELF()    _gettid()
+#  define HB_THREAD_SELF()    ( ( TID ) _gettid() )
 
 #  define HB_CRITICAL_INIT(v)       DosCreateMutexSem( NULL, &(v), 0L, FALSE )
 #  define HB_CRITICAL_DESTROY(v)    DosCloseMutexSem( v )
@@ -303,13 +303,19 @@ extern void hb_threadMutexUnlockAll( void );
     */
 #  if defined( __BORLANDC__ )
 #     define HB_USE_TLS
+#  elif defined( __GNUC__ ) && __GNUC__ >= 3 && \
+        defined( __GLIBC__ ) && defined( __GLIBC_MINOR__ ) && \
+        ( __GLIBC__ > 2 || ( __GLIBC__ == 2 && __GLIBC_MINOR__ >= 6 ) ) && \
+        defined( HB_OS_LINUX ) && \
+        ( defined( __i386__ ) || defined( __x86_64__ ) )
+#     define HB_USE_TLS
 #  endif
 #endif
 
 #ifdef HB_USE_TLS
 #  if ( defined( __GNUC__ ) && __GNUC__ >= 3 ) || defined( __BORLANDC__ )
 #     define HB_TLS_ATTR      __thread
-#  elif defined( _MSC_VER ) || defined( __WATCOMC__ )
+#  elif defined( _MSC_VER ) || defined( __WATCOMC__ ) || defined( __DMC__ )
 #     define HB_TLS_ATTR      __declspec( thread )
 #  else
 #     undef HB_USE_TLS
@@ -331,7 +337,7 @@ extern void hb_threadMutexUnlockAll( void );
 #  elif defined( HB_OS_OS2 )
 #     define HB_TLS_KEY       PULONG
 #     define hb_tls_init(k)   DosAllocThreadLocalMemory( 1, &k )
-#     define hb_tls_set(k,v)  do { *k = ( ULONG ) (v) } while( 0 )
+#     define hb_tls_set(k,v)  do { *k = ( ULONG ) (v); } while( 0 )
 #     define hb_tls_get(k)    ( *k )
 #  endif
 #endif

@@ -53,6 +53,7 @@
 #define HB_OS_WIN_32_USED
 
 #define INCL_DOSSEMAPHORES
+#define INCL_DOSPROCESS
 
 #define _HB_THREAD_INTERNAL_
 

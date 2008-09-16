@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-16 14:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbthread.h
+    + added DMC to list of compilers which can use __declspec( thread )
+    + automatically use TLS for Linux and GLIBC >= 2.6 on x86* machines
+
+  * harbour/include/hbthread.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/thread.c
+    ! clean up typos in OS2 builds
+
 2008-09-16 13:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/compiler/hbgenerr.c
     * Most ':' chars removed from Harbour compiler error messages.
