@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-17 01:29 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_xmingwce.sh
+  * harbour/make_xmingw.sh
+    + added an option to build utility binaries in cross builds
+
+  * harbour/source/vm/thread.c
+    ! fixes in OS2 builds MT builds
+
 2008-09-17 01:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * debian/changelog
     * Synced with 1.0.1.

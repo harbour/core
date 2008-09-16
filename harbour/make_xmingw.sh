@@ -110,7 +110,7 @@ export PATH CCPATH CCPREFIX
 
 export HB_TOOLS_PREF="hbw"
 export HB_XBUILD="w32"
-export HB_HOST_BUILD="lib"
+[ "${HB_HOST_BUILD}" = "all" ] || export HB_HOST_BUILD="lib"
 
 export HB_BIN_COMPILE="/tmp/hb-xmingw-$$"
 rm -fR "${HB_BIN_COMPILE}"

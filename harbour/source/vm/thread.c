@@ -347,11 +347,9 @@ HB_THREAD_T hb_threadCreate( PHB_THREAD_STARTFUNC start_func, void * Cargo )
    if( pthread_create( &th_id, NULL, start_func, Cargo ) != 0 )
       th_id = 0;
 #elif defined( HB_OS_WIN_32 )
-   if( ( th_id = ( HANDLE ) _beginthreadex( NULL, 0, start_func, Cargo, 0, NULL ) ) == 0 )
-      th_id = 0;
+   th_id = ( HANDLE ) _beginthreadex( NULL, 0, start_func, Cargo, 0, NULL );
 #elif defined( HB_OS_OS2 )
-   if( ( th_id = _beginthread( ( void * ) start_func, NULL, 128 * 1024, Cargo ) ) < 0 )
-      th_id = 0;
+   th_id = _beginthread( ( void * ) start_func, NULL, 128 * 1024, Cargo );
 #else
    { int TODO_MT; }
    th_id = 0;
@@ -375,7 +373,7 @@ BOOL hb_threadJoin( HB_THREAD_T th_id )
    }
    return FALSE;
 #elif defined( HB_OS_OS2 )
-   return DosWaitThread( th_id, DCWW_WAIT ) == NO_ERROR;
+   return DosWaitThread( &th_id, DCWW_WAIT ) == NO_ERROR;
 #else
    { int TODO_MT; }
    return FALSE;
@@ -399,7 +397,7 @@ BOOL hb_threadDetach( HB_THREAD_T th_id )
     *       does not keep thread pointer item alive and the cleanup code
     *       will be executed by THIS thread.
     */
-   return DosWaitThread( th_id, DCWW_NOWAIT ) == NO_ERROR;
+   return DosWaitThread( &th_id, DCWW_NOWAIT ) == NO_ERROR;
 #else
    { int TODO_MT; }
    return FALSE;
