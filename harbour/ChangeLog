@@ -8,21 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-16 12:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * contrib/mtpl_b32.mak
+    ! Removed CG switches.
+
 2008-09-16 05:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
-   * doc/gmake.txt
-   * doc/gtapi.txt
-   * doc/hbmake.txt
-   * doc/windll.txt
-     * Useless changes.
+  * doc/gmake.txt
+  * doc/gtapi.txt
+  * doc/hbmake.txt
+  * doc/windll.txt
+    * Useless changes.
 
-   * make_vc.mak
-     * Some untested MT support for MSVC.
+  * make_vc.mak
+    * Some untested MT support for MSVC.
 
-   * include/hbdefs.h
-     ! Removed mistakenly committed experiment to pull in 
-       MT related libs. This caused the strange build problem due 
-       to empty lib name passed to #pragma. This could work 
-       in case someone wanted to deal with it in the future.
+  * include/hbdefs.h
+    ! Removed mistakenly committed experiment to pull in 
+      MT related libs. This caused the strange build problem due 
+      to empty lib name passed to #pragma. This could work 
+      in case someone wanted to deal with it in the future.
 
 2008-09-15 23:08 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/tests/memtst.prg

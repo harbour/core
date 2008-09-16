@@ -114,7 +114,7 @@ CFLAGSMT = -tWM -DHB_MT_VM $(CFLAGSMT)
 !endif
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
-    CFLAGS = -y -v -vG -Od $(CFLAGS)
+    CFLAGS = -y -v $(CFLAGS)
 !endif
 #-----------
 !if "$(HB_BCCDLL_DYNRT)" == "-tWR"
