@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-16 15:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbthread.h
+    * do not use native TLS support in BCC builds when CodeGuard
+      is enabled
+
 2008-09-16 14:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbthread.h
     + added DMC to list of compilers which can use __declspec( thread )
