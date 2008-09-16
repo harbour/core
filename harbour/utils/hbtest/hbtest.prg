@@ -152,6 +152,7 @@ PROCEDURE Main( cPar1, cPar2 )
 #ifdef __HARBOUR__
    Main_OPOVERL()
    Main_CLASS()
+   Main_MT()
 #endif
    Main_LAST()
 

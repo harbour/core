@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-16 19:11 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/utils/hbtest/rt_class.prg
+    ! fixed description message
+
+  * harbour/common.mak
+  * harbour/utils/hbtest/Makefile
+  * harbour/utils/hbtest/hbtest.prg
+  + harbour/utils/hbtest/rt_mt.prg
+    + added simple MT test for fast checking MT builds
+      NOTE: DMC builds crashes with and without direct TLS access
+            If possible it has to be fixed. Now MT mode is not supported
+            for this compiler.
+
 2008-09-16 15:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbthread.h
     * do not use native TLS support in BCC builds when CodeGuard

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Regression tests for the runtime library (strings)
+ * Harbour class/OOP test
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
