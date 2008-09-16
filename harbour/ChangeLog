@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-16 13:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/compiler/hbgenerr.c
+    * Most ':' chars removed from Harbour compiler error messages.
+      Few still remain, where I wasn't sure of the exact meaning 
+      or final layout of the texts.
+      Warnings are also a TODO yet.
+      Please review.
+
 2008-09-16 12:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * contrib/mtpl_b32.mak
