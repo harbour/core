@@ -25,11 +25,12 @@ fi
 linker_options=""
 
 case "$hb_arch" in
-    *windows*|*mingw32*|msys*)  hb_arch="w32" ;;
-    *os/2*)                     hb_arch="os2" ;;
-    *dos)    hb_arch="dos" ;;
-    *bsd)    hb_arch="bsd" ;;
-    *darwin) hb_arch="darwin" ;;
+    *windows*|*mingw32*|msys*) hb_arch="w32" ;;
+    *os/2*)                    hb_arch="os2" ;;
+    *dos)                      hb_arch="dos" ;;
+    *bsd)                      hb_arch="bsd" ;;
+    *darwin)                   hb_arch="darwin" ;;
+    *SunOS)                    hb_arch="sunos" ;;
 esac
 
 case "$hb_arch" in

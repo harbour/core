@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-17 14:04 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkslib.sh
+  * make_xmingwce.sh
+  * make_gcc.sh
+  * make_xmingw.sh
+  * make_gnu.sh
+  * make_tgz.sh
+    + Added SunOS platform detection as an attempt to make 
+      make_tgz.sh work on OpenSolaris.
+    ; NOFIX: Still, when trying to use make_tgz.sh in OpenSolaris, 
+             I'm getting these errors:
+             ---
+             ld: fatal: library -lharbour: not found
+             ld: fatal: library -lncurses: not found
+             ---
+             gtar: wheel: %s: Invalid group
+
 2008-09-17 13:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * tests/memtst.prg
   * tests/speedtst.prg

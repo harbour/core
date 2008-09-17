@@ -20,6 +20,7 @@ if [ -z "$HB_ARCHITECTURE" ]; then
          *dos)                        hb_arch="dos" ;;
          *bsd)                        hb_arch="bsd" ;;
          *darwin)                     hb_arch="darwin" ;;
+         *SunOS)                      hb_arch="sunos" ;;
       esac
    fi
    export HB_ARCHITECTURE="$hb_arch"
