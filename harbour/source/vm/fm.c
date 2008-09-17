@@ -66,13 +66,22 @@
  *
  */
 
+/* NOTE: This definitions must be ahead of any and all #include statements */
+
+/* For MS-Win builds */
 #define HB_OS_WIN_32_USED
+
+/* For Linux and mremap() function */
+#ifndef _GNU_SOURCE
+#  define _GNU_SOURCE
+#endif
 
 /* NOTE: For OS/2. Must be ahead of any and all #include statements */
 #define INCL_BASE
 #define INCL_DOSMISC
 #define INCL_DOSERRORS
 #define INCL_DOSPROCESS
+
 
 /* malloc.h has been obsoleted by stdlib.h, which is included via
    hbvmpub.h, which is include via hbapi.h
@@ -92,11 +101,29 @@
 #  include "hbthread.h"
 #endif
 
+/* #define HB_FM_DL_ALLOC */
 /* #define HB_FM_WIN32_ALLOC */
+/* #define HB_FM_STATISTICS */
 /* #define HB_PARANOID_MEM_CHECK */
 
-#ifndef HB_OS_WIN_32
-#  undef HB_FM_WIN32_ALLOC
+#if defined( HB_FM_DL_ALLOC )
+/* #  define NO_MALLINFO 1 */
+/* #  define INSECURE */
+/* #  define USE_DL_PREFIX */
+#  define REALLOC_ZERO_BYTES_FREES
+#  if defined( HB_MT_VM )
+#     define USE_LOCKS  1
+#  endif
+#  include "dlmalloc.c"
+#  if defined( USE_DL_PREFIX )
+#     define malloc( n )         dlmalloc( (n) )
+#     define realloc( p, n )     dlrealloc( (p), (n) )
+#     define free( p )           dlfree( (p) )
+#  endif
+#elif defined( HB_FM_WIN32_ALLOC ) && defined( HB_OS_WIN_32 )
+#  define malloc( n )         (void *) LocalAlloc( LMEM_FIXED, ( n ) )
+#  define realloc( p, n )     (void *) LocalReAlloc( (HLOCAL) ( p ), ( n ), LMEM_MOVEABLE )
+#  define free( p )           LocalFree( (HLOCAL) ( p ) )
 #endif
 
 #if defined( HB_MT_VM ) && ( defined( HB_FM_STATISTICS ) || \
@@ -113,17 +140,11 @@
 
 #endif
 
-#ifdef HB_FM_WIN32_ALLOC
-#  define malloc( n )         (void *) LocalAlloc( LMEM_FIXED, ( n ) )
-#  define realloc( p, n )     (void *) LocalReAlloc( (HLOCAL) ( p ), ( n ), LMEM_MOVEABLE )
-#  define free( p )           LocalFree( (HLOCAL) ( p ) )
-#endif
-
 #ifndef HB_FM_STATISTICS
 #  undef HB_PARANOID_MEM_CHECK
 #endif
 
-#if defined(HB_FM_STATISTICS) && !defined(HB_TR_LEVEL)
+#if defined( HB_FM_STATISTICS ) && !defined( HB_TR_LEVEL )
 #  define HB_TR_LEVEL HB_TR_ERROR
 #endif
 

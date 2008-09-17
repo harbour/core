@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-18 01:17 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/fm.c
+  + harbour/source/vm/dlmalloc.c
+    + added alternative memory manager written by Doug Lea
+      It can be activated by recompiling Harbour with HB_FM_DL_ALLOC macro.
+      Please make test on different platforms with different C compilers.
+      Linux users will not benefit from it because the default GLIBC MM
+      is derived from a version of code.
+      NOTE: the results may strongly depend on total memory allocation
+      and will be different then in simple memory tests.
+
 2008-09-17 22:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/rddado/adordd.prg
     ! Marking one STATIC var as thread STATIC.
