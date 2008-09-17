@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-17 17:32 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkslib.sh
+  * make_gcc.sh
+  * make_gnu.sh
+  * make_tgz.sh
+  * make_xmingw.sh
+  * make_xmingwce.sh
+  * contrib/make_gcc_all.sh
+  * contrib/mtpl_gcc.sh
+    - Removed unnecessary explicit SunOS detection.
+    - Removed unnecessary explicit Darwin detection (to be tested).
+
+  * contrib/make_gcc_all.sh
+    ! Fixed 'cyg' platform in contrib make files.
+
+  * make_tgz.sh
+    ! Fixed .tgz generation for SunOS. Thanks Przemek.
+      I simply copied the Linux method here, I'm not sure 64-bit 
+      code would apply here, too.
+    ! Fix for SunOS to link against curses instead of ncurses lib.
+      Someone pls verify me.
+    ; TOFIX: make_tgz.sh in OpenSolaris still has these errors:
+             ld: fatal: relocations remain against allocatable but non-writable sections.
+             ld: fatal: library -lharbour: not found
+
 2008-09-17 14:04 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkslib.sh
   * make_xmingwce.sh
@@ -17,7 +42,7 @@
   * make_tgz.sh
     + Added SunOS platform detection as an attempt to make 
       make_tgz.sh work on OpenSolaris.
-    ; NOFIX: Still, when trying to use make_tgz.sh in OpenSolaris, 
+    ; TOFIX: Still, when trying to use make_tgz.sh in OpenSolaris, 
              I'm getting these errors:
              ---
              ld: fatal: library -lharbour: not found

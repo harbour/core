@@ -29,8 +29,6 @@ case "$hb_arch" in
     *os/2*)                    hb_arch="os2" ;;
     *dos)                      hb_arch="dos" ;;
     *bsd)                      hb_arch="bsd" ;;
-    *darwin)                   hb_arch="darwin" ;;
-    *SunOS)                    hb_arch="sunos" ;;
 esac
 
 case "$hb_arch" in

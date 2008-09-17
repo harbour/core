@@ -30,8 +30,6 @@ else
         *windows*|*mingw32*|msys*)  HB_HOST_ARCH="w32"; HB_HOST_CC="mingw" ;;
         *dos)    HB_HOST_ARCH="dos" ;;
         *bsd)    HB_HOST_ARCH="bsd" ;;
-        *darwin) HB_HOST_ARCH="darwin" ;;
-        *SunOS)  HB_HOST_ARCH="sunos" ;;
     esac
 fi
 

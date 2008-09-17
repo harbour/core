@@ -46,8 +46,6 @@ if [ -z "$HB_ARCHITECTURE" ]; then
             *os/2*)                    hb_arch="os2" ;;
             *dos)                      hb_arch="dos" ;;
             *bsd)                      hb_arch="bsd" ;;
-            *darwin)                   hb_arch="darwin" ;;
-            *SunOS)                    hb_arch="sunos" ;;
         esac
     fi
     export HB_ARCHITECTURE="$hb_arch"
@@ -105,6 +103,11 @@ case "$HB_ARCHITECTURE" in
         ETC="/private/etc"
         ;;
     linux)
+        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr"
+        [ -d "$HB_INSTALL_PREFIX/lib64" ] && [ "${HB_ARCH64}" = yes ] && HB_LIBDIRNAME="lib64"
+        HB_INSTALL_GROUP=root
+        ;;
+    sunos)
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr"
         [ -d "$HB_INSTALL_PREFIX/lib64" ] && [ "${HB_ARCH64}" = yes ] && HB_LIBDIRNAME="lib64"
         HB_INSTALL_GROUP=root
@@ -270,6 +273,7 @@ then
     case $HB_ARCHITECTURE in
         darwin)     ADD_LIBS="$ADD_LIBS -lncurses -L/opt/local/lib -L/sw/lib" ;;
         dos|w32)    ADD_LIBS="" ;;
+        sunos)      ADD_LIBS="$ADD_LIBS -lcurses" ;;
         *)          ADD_LIBS="$ADD_LIBS -lncurses" ;;
     esac 
     [ "${HB_GPM_MOUSE}" = yes ] && ADD_LIBS="$ADD_LIBS -lgpm"
