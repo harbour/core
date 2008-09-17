@@ -98,3 +98,8 @@ function build_mode()
       #endif
    #endif
 #endif
+
+#if __HARBOUR__ < 0x010100
+FUNCTION HB_MTVM()
+   RETURN .F.
+#endif
