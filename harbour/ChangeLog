@@ -20,6 +20,10 @@
     - Removed unnecessary explicit SunOS detection.
     - Removed unnecessary explicit Darwin detection (to be tested).
 
+  * contrib/mtpl_gcc.sh
+    - Detecting 'cyg' platform looks unnecessary here and may 
+      only create problems, so it got removed.
+
   * contrib/make_gcc_all.sh
     ! Fixed 'cyg' platform in contrib make files.
 
