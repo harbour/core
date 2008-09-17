@@ -1104,7 +1104,8 @@ void hb_setRelease( PHB_SET_STRUCT pSet )
    /* Free all set listeners */
    if( pSet->hb_set_listener )
    {
-      PHB_SET_LISTENER pListener = ( PHB_SET_LISTENER ) pSet->hb_set_listener;
+      PHB_SET_LISTENER pListener = ( ( PHB_SET_LISTENER_LST )
+                                     pSet->hb_set_listener )->first;
       while( pListener )
       {
          PHB_SET_LISTENER pNext = pListener->next;

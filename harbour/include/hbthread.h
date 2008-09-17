@@ -297,7 +297,9 @@ extern PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, 
 
 extern void hb_threadMutexUnlockAll( void );
 
-#if !defined( HB_USE_TLS )
+#if defined( HB_NO_TLS )
+#  undef HB_USE_TLS
+#elif !defined( HB_USE_TLS )
    /* enable native compiler TLS support be default for this compilers
     * which are known that it will work correctly
     */
