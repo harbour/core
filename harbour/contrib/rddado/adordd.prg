@@ -83,11 +83,11 @@
 
 #ifndef __XHARBOUR__
    #include "hbusrrdd.ch"
-   #xcommand TRY              => bError := errorBlock( {|oErr| break( oErr ) } ) ;;
+   #xcommand TRY              => s_bError := errorBlock( {|oErr| break( oErr ) } ) ;;
                                  BEGIN SEQUENCE
-   #xcommand CATCH [<!oErr!>] => errorBlock( bError ) ;;
+   #xcommand CATCH [<!oErr!>] => errorBlock( s_bError ) ;;
                                  RECOVER [USING <oErr>] <-oErr-> ;;
-                                 errorBlock( bError )
+                                 errorBlock( s_bError )
    #command FINALLY           => ALWAYS
 #else
    #include "usrrdd.ch"
@@ -120,7 +120,11 @@
 
 ANNOUNCE ADORDD
 
-static bError, s_cTableName, s_cEngine, s_cServer, s_cUserName, s_cPassword, s_cQuery := ""
+static s_cTableName, s_cEngine, s_cServer, s_cUserName, s_cPassword, s_cQuery := ""
+
+#ifndef __XHARBOUR__
+THREAD STATIC s_bError
+#endif
 
 #ifdef __XHARBOUR__
 
