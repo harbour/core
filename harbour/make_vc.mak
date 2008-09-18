@@ -74,6 +74,11 @@ HB_GT_DEFAULT = wvt
 !endif
 !endif
 
+# MSVC has ST mode as default
+!if "$(HB_BUILD_ST)" == ""
+HB_BUILD_ST = yes
+!endif
+
 #**********************************************************
 
 # Visual C++ version
@@ -138,8 +143,6 @@ HB_BUILD_MODE  = C
 
 # C Compiler Flags
 !if "$(HB_BUILD_WINCE)" == "yes"
-
-HB_BUILD_ST = yes
 
 !if $(HB_VISUALC_VER) >= 80
 CFLAGS_VER     = -Od -Os -Gy -GS- -EHsc- -fp:fast -Gm -Zi -GR- -D_CRT_SECURE_NO_DEPRECATE
