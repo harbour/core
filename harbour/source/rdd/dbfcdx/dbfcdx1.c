@@ -7383,14 +7383,14 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    if( pArea->lpdbPendingRel )
       SELF_FORCEREL( ( AREAP ) pArea );
 
-   if( SELF_COMPILE( (AREAP) pArea, ( BYTE * ) hb_itemGetCPtr( pOrderInfo->abExpr ) ) == FAILURE )
-      return FAILURE;
-
    if( hb_strlentrim( hb_itemGetCPtr( pOrderInfo->abExpr ) ) +
        ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->abFor ?
          hb_strlentrim( ( const char * ) pArea->lpdbOrdCondInfo->abFor ) : 0 ) >
        CDX_HEADEREXPLEN - 2 )
       return hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_KEYLENGTH, NULL, 0, 0 );
+
+   if( SELF_COMPILE( (AREAP) pArea, ( BYTE * ) hb_itemGetCPtr( pOrderInfo->abExpr ) ) == FAILURE )
+      return FAILURE;
 
    pKeyExp = pArea->valResult;
    pArea->valResult = NULL;
