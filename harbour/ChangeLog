@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-18 11:02 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
+  * contrib/hbbmcdx/bmdbfcdx.c
+  * source/rdd/dbfcdx/dbfcdx1.c
+    ! fixed generation error when length of key is greater than 256 as Clipper.
+      instead of wait for internal error.
+    * Used defined errors instead of hardcoded numbers.
+
 2008-09-18 07:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/cdpapi.c
     * explicit casting to char * in 1-st strchr() parameter as workaround

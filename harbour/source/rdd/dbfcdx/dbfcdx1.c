@@ -6503,7 +6503,7 @@ static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pKeyItm, BOO
 
    if ( ! pTag )
    {
-      hb_cdxErrorRT( pArea, EG_NOORDER, 1201, NULL, 0, EF_CANDEFAULT );
+      hb_cdxErrorRT( pArea, EG_NOORDER, EDBF_NOTINDEXED, NULL, 0, EF_CANDEFAULT );
       return FAILURE;
    }
    else
@@ -7369,6 +7369,9 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    if( pArea->lpdbPendingRel )
       SELF_FORCEREL( ( AREAP ) pArea );
 
+   if( hb_itemGetCLen( pOrderInfo->abExpr ) > CDX_MAXKEY )
+      return hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_KEYLENGTH, NULL, 0, 0 );
+
    /* If we have a codeblock for the expression, use it */
    if ( pOrderInfo->itmCobExpr )
       pKeyExp = hb_itemNew( pOrderInfo->itmCobExpr );
@@ -7419,7 +7422,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       hb_vmDestroyBlockOrMacro( pKeyExp );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       hb_cdxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH,
-                     1026, NULL, 0, 0 );
+                     EDBF_INVALIDKEY, NULL, 0, 0 );
       return FAILURE;
    }
    if ( pArea->lpdbOrdCondInfo )
@@ -8329,7 +8332,7 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
             }
             else
             {
-               hb_cdxErrorRT( pArea, 0, 1052, NULL, 0, 0 );
+               hb_cdxErrorRT( pArea, 0, EDBF_NOTCUSTOM, NULL, 0, 0 );
             }
          }
          break;
@@ -8377,7 +8380,7 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
             }
             else
             {
-               hb_cdxErrorRT( pArea, 0, 1052, NULL, 0, 0 );
+               hb_cdxErrorRT( pArea, 0, EDBF_NOTCUSTOM, NULL, 0, 0 );
             }
          }
          break;
