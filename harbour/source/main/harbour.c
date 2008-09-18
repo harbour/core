@@ -351,7 +351,7 @@ void hb_conOutErr( const char * pStr, ULONG ulLen )
 
 char * hb_conNewLine( void )
 {
-   return "\n";
+   return ( char * ) "\n";
 }
 
 static int  s_iFileCase = HB_SET_CASE_MIXED;
@@ -401,7 +401,7 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
                ++pFileName->szName;
                --ulLen;
             }
-            pFileName->szName[ulLen] = '\0';
+            ( ( char * ) pFileName->szName )[ulLen] = '\0';
          }
          if( pFileName->szExtension )
          {
@@ -413,7 +413,7 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
                ++pFileName->szExtension;
                --ulLen;
             }
-            pFileName->szExtension[ulLen] = '\0';
+            ( ( char * ) pFileName->szExtension )[ulLen] = '\0';
          }
       }
 
@@ -421,25 +421,25 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
       if( s_iFileCase == HB_SET_CASE_LOWER )
       {
          if( pFileName->szName )
-            hb_strlow( pFileName->szName );
+            hb_strlow( ( char * ) pFileName->szName );
          if( pFileName->szExtension )
-            hb_strlow( pFileName->szExtension );
+            hb_strlow( ( char * ) pFileName->szExtension );
       }
       else if( s_iFileCase == HB_SET_CASE_UPPER )
       {
          if( pFileName->szName )
-            hb_strupr( pFileName->szName );
+            hb_strupr( ( char * ) pFileName->szName );
          if( pFileName->szExtension )
-            hb_strupr( pFileName->szExtension );
+            hb_strupr( ( char * ) pFileName->szExtension );
       }
 
       /* DIRCASE */
       if( pFileName->szPath )
       {
          if( s_iDirCase == HB_SET_CASE_LOWER )
-            hb_strlow( pFileName->szPath );
+            hb_strlow( ( char * ) pFileName->szPath );
          else if( s_iDirCase == HB_SET_CASE_UPPER )
-            hb_strupr( pFileName->szPath );
+            hb_strupr( ( char * ) pFileName->szPath );
       }
 
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );
@@ -556,7 +556,7 @@ static void hb_compChkFileSwitches( int argc, char * argv[] )
             if( argv[i][0] )
                --i;
             else
-               argv[i] = "-";
+               argv[i] = ( char * ) "-";
          }
       }
    }

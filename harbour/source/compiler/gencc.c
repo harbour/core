@@ -80,7 +80,7 @@ static void hb_gencc_copyLocals( FILE * yyc, int iLocal1, int iLocal2 )
 }
 
 static int hb_gencc_checkJumpCondAhead( LONG lValue, PFUNCTION pFunc, ULONG lPCodePos, PHB_LABEL_INFO cargo,
-                                        char * szFunc )
+                                        const char * szFunc )
 {
    if( HB_GENC_GETLABEL( lPCodePos + 1 ) == 0 )
    {

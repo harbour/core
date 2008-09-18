@@ -340,7 +340,7 @@ static SHORT cdxTmpStackSize = 0;
 /*
  * generate internal error
  */
-static void hb_cdxErrInternal( char * szMsg )
+static void hb_cdxErrInternal( const char * szMsg )
 {
    hb_errInternal( 9201, szMsg ? szMsg : "hb_cdxErrInternal: data integrity error.", NULL, NULL );
 }

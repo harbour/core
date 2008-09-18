@@ -3564,14 +3564,14 @@ static LPNTXINDEX hb_ntxFindBag( NTXAREAP pArea, char * szBagName )
 
    pSeek = hb_fsFNameSplit( szBagName );
    if( ! pSeek->szName )
-      pSeek->szName = "";
+      pSeek->szName = ( char * ) "";
 
    pIndex = pArea->lpIndexes;
    while( pIndex )
    {
       pName = hb_fsFNameSplit( pIndex->IndexName );
       if( ! pName->szName )
-         pName->szName = "";
+         pName->szName = ( char * ) "";
       fFound = !hb_stricmp( pName->szName, pSeek->szName ) &&
                ( !pSeek->szPath || ( pName->szPath &&
                   !hb_stricmp( pName->szPath, pSeek->szPath ) ) ) &&

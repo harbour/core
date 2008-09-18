@@ -2947,9 +2947,11 @@ static BOOL hb_gt_xwc_Resize( PXWND_DEF wnd, USHORT cols, USHORT rows )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_xwc_SetFont( PXWND_DEF wnd, char *fontFace, char *weight, int size,  char *encoding )
+static BOOL hb_gt_xwc_SetFont( PXWND_DEF wnd, const char *fontFace,
+                               const char *weight, int size,
+                               const char *encoding )
 {
-   char fontString[150];
+   char fontString[250];
    XFontStruct *xfs;
 
 /*
@@ -3237,7 +3239,7 @@ static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, char *szData, ULONG ulSize )
       }
       else
       {
-         char * cMsg = "Cannot set primary selection\r\n";
+         const char * cMsg = "Cannot set primary selection\r\n";
          HB_GTSELF_OUTERR( wnd->pGT, ( BYTE * ) cMsg, strlen( cMsg ) );
       }
    }
@@ -3427,7 +3429,7 @@ static BOOL hb_gt_xwc_GetBlink( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static char * hb_gt_xwc_Version( PHB_GT pGT, int iType )
+static const char * hb_gt_xwc_Version( PHB_GT pGT, int iType )
 {
    HB_SYMBOL_UNUSED( pGT );
 

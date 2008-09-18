@@ -799,7 +799,7 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
          }
          else if( pExp->ExprType == HB_ET_ALIASVAR )
          {
-            char *szAlias = pExp->value.asAlias.pAlias->value.asSymbol;
+            const char *szAlias = pExp->value.asAlias.pAlias->value.asSymbol;
             int iLen = strlen( szAlias );
             if( ( iLen == 1 || ( iLen >= 4 && iLen <= 6 ) ) &&
                 memcmp( szAlias, "MEMVAR", iLen ) == 0 &&

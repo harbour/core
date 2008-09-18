@@ -365,7 +365,7 @@ static SHORT cdxTmpStackSize = 0;
 /*
  * generate internal error
  */
-static void hb_cdxErrInternal( char * szMsg )
+static void hb_cdxErrInternal( const char * szMsg )
 {
    hb_errInternal( 9201, szMsg ? szMsg : "hb_cdxErrInternal: data integrity error.", NULL, NULL );
 }
@@ -373,7 +373,7 @@ static void hb_cdxErrInternal( char * szMsg )
 /*
  * generate Run-Time error
  */
-static ERRCODE hb_cdxErrorRT( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char * filename, USHORT uiOsCode, USHORT uiFlags )
+static ERRCODE hb_cdxErrorRT( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, const char * filename, USHORT uiOsCode, USHORT uiFlags )
 {
    PHB_ITEM pError;
    ERRCODE iRet = FAILURE;

@@ -186,7 +186,7 @@ extern HB_EXPORT ERRCODE hb_gtTone( double dFrequency, double dDuration );
 extern HB_EXPORT ERRCODE hb_gtWrite( BYTE * pbyStr, ULONG ulLen );
 extern HB_EXPORT ERRCODE hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pbyStr, ULONG ulLen );
 extern HB_EXPORT ERRCODE hb_gtWriteCon( BYTE * pbyStr, ULONG ulLen );
-extern HB_EXPORT char *  hb_gtVersion( int iType );
+extern HB_EXPORT const char * hb_gtVersion( int iType );
 extern HB_EXPORT ERRCODE hb_gtOutStd( BYTE * pbyStr, ULONG ulLen );
 extern HB_EXPORT ERRCODE hb_gtOutErr( BYTE * pbyStr, ULONG ulLen );
 extern HB_EXPORT ERRCODE hb_gtSetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox );

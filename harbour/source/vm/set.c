@@ -174,7 +174,7 @@ static void close_text( PHB_SET_STRUCT pSet, HB_FHANDLE handle )
    }
 }
 
-static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, char * file_name, BOOL bAppend, char * def_ext, HB_set_enum set_specifier )
+static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL bAppend, const char * def_ext, HB_set_enum set_specifier )
 {
    HB_FHANDLE handle;
    char path[ _POSIX_PATH_MAX + 1 ];

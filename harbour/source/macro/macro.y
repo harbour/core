@@ -128,14 +128,14 @@
 
 %union                  /* special structure used by lex and yacc to share info */
 {
-   char *   string;     /* to hold a string returned by lex */
+   const char * string; /* to hold a string returned by lex */
    int      iNumber;    /* to hold a temporary integer number */
    HB_LONG  lNumber;    /* to hold a temporary long number */
    void *   pVoid;      /* to hold any memory structure we may need */
    HB_EXPR_PTR asExpr;
    struct
    {
-      char *   string;
+      const char * string;
       int      length;
    } valChar;
    struct
@@ -161,7 +161,7 @@
  */
 extern int  yylex( YYSTYPE *, HB_MACRO_PTR );   /* main lex token function, called by yyparse() */
 extern int  yyparse( HB_MACRO_PTR );            /* main yacc parsing function */
-extern void yyerror( HB_MACRO_PTR, char * );    /* parsing error management function */
+extern void yyerror( HB_MACRO_PTR, const char * );    /* parsing error management function */
 
 static void hb_macroIdentNew( HB_COMP_DECL, char * );
 
@@ -730,7 +730,7 @@ IfInline    : IIF '(' Expression ',' Argument ',' Argument ')'
  ** ------------------------------------------------------------------------ **
  */
 
-void yyerror( HB_MACRO_PTR pMacro, char * s )
+void yyerror( HB_MACRO_PTR pMacro, const char * s )
 {
    HB_SYMBOL_UNUSED( pMacro );
    HB_SYMBOL_UNUSED( s );

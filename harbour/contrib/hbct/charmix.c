@@ -113,7 +113,8 @@ HB_FUNC( CHARMIX )
    if( ISCHAR( 1 ) )
    {
       char *pcString1 = hb_parc( 1 );
-      char *pcString2, *pcResult;
+      const char *pcString2;
+      char *pcResult;
       size_t sLen1 = hb_parclen( 1 );
       size_t sLen2, sPos1, sPos2, sResultPos;
 

@@ -62,7 +62,7 @@
 #define MAX_CHAR_VAL    0xff
 #define HB_CHRMAP(a,c)  ( ( (a) << 16 ) | (c) )
 
-char * hb_gt_szCharMapFileDefault = "/etc/harbour/hb-charmap.def";
+const char * hb_gt_szCharMapFileDefault = "/etc/harbour/hb-charmap.def";
 
 static void chrmap_init( int *piTransTbl )
 {

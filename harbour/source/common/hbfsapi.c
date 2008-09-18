@@ -232,7 +232,8 @@ HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 /* This function joins path, name and extension into a string with a filename */
 HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 {
-   char * pszName, cDirSep;
+   const char * pszName;
+   char cDirSep;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameMerge(%p, %p)", pszFileName, pFileName));
 

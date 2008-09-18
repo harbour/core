@@ -125,33 +125,33 @@ static void mxml_refill_from_handle_func( MXML_REFIL *ref );
 /* Currently not used
 static MXML_OUTPUT *mxml_output_new( MXML_OUTPUT_FUNC func, int node_count);
 static void mxml_output_destroy( MXML_OUTPUT *out );
-static MXML_STATUS mxml_output_string( MXML_OUTPUT *out, char *s );
+static MXML_STATUS mxml_output_string( MXML_OUTPUT *out, const char *s );
 */
 
 static MXML_STATUS mxml_output_setup( MXML_OUTPUT *out, MXML_OUTPUT_FUNC func, int node_count);
 static MXML_STATUS mxml_output_char( MXML_OUTPUT *out, int c );
-static MXML_STATUS mxml_output_string_len( MXML_OUTPUT *out, char *s, int len );
-static MXML_STATUS mxml_output_string_escape( MXML_OUTPUT *out, char *s );
-static MXML_STATUS mxml_output_string( MXML_OUTPUT *out, char *s );
+static MXML_STATUS mxml_output_string_len( MXML_OUTPUT *out, const char *s, int len );
+static MXML_STATUS mxml_output_string_escape( MXML_OUTPUT *out, const char *s );
+static MXML_STATUS mxml_output_string( MXML_OUTPUT *out, const char *s );
 
 /* Currently not used
 static void mxml_output_func_to_stream( MXML_OUTPUT *out, char *s, int len );
 */
-static void mxml_output_func_to_handle( MXML_OUTPUT *out, char *s, int len );
-static void mxml_output_func_to_sgs( MXML_OUTPUT *out, char *s, int len );
+static void mxml_output_func_to_handle( MXML_OUTPUT *out, const char *s, int len );
+static void mxml_output_func_to_sgs( MXML_OUTPUT *out, const char *s, int len );
 
 /* Self growing string routines */
 static MXML_SGS *mxml_sgs_new( void );
 static void mxml_sgs_destroy( MXML_SGS *sgs );
 static char *mxml_sgs_extract( MXML_SGS *sgs );
 static MXML_STATUS mxml_sgs_append_char( MXML_SGS *sgs, char c );
-static MXML_STATUS mxml_sgs_append_string_len( MXML_SGS *sgs, char *s, int slen );
+static MXML_STATUS mxml_sgs_append_string_len( MXML_SGS *sgs, const char *s, int slen );
 /* Currently not used
 static MXML_STATUS mxml_sgs_append_string( MXML_SGS *sgs, char *s );
 */
 
 /* Error description */
-static char *mxml_error_desc( MXML_ERROR_CODE code );
+static const char *mxml_error_desc( MXML_ERROR_CODE code );
 
 
 
@@ -1898,27 +1898,27 @@ static MXML_STATUS mxml_output_char( MXML_OUTPUT *out, int c )
    return out->status;
 }
 
-static MXML_STATUS mxml_output_string_len( MXML_OUTPUT *out, char *s, int len )
+static MXML_STATUS mxml_output_string_len( MXML_OUTPUT *out, const char *s, int len )
 {
    out->output_func( out, s, len );
    return out->status;
 }
 
 /* Currently not used
-static MXML_STATUS mxml_output_string( MXML_OUTPUT *out, char *s )
+static MXML_STATUS mxml_output_string( MXML_OUTPUT *out, const char *s )
 {
    return mxml_output_string_len( out, s, strlen( s ) );
 }
 */
 
-static MXML_STATUS mxml_output_string( MXML_OUTPUT *out, char *s)
+static MXML_STATUS mxml_output_string( MXML_OUTPUT *out, const char *s)
 {
    out->output_func( out, s, strlen(s) );
    return out->status;
 }
 
 
-static MXML_STATUS mxml_output_string_escape( MXML_OUTPUT *out, char *s )
+static MXML_STATUS mxml_output_string_escape( MXML_OUTPUT *out, const char *s )
 {
 
    while ( *s ) {
@@ -1942,7 +1942,7 @@ static MXML_STATUS mxml_output_string_escape( MXML_OUTPUT *out, char *s )
 * Useful function to output to streams
 */
 /* Currently not used
-static void mxml_output_func_to_stream( MXML_OUTPUT *out, char *s, int len )
+static void mxml_output_func_to_stream( MXML_OUTPUT *out, const char *s, int len )
 {
    FILE *fp = (FILE *) out->data;
 
@@ -1961,7 +1961,7 @@ static void mxml_output_func_to_stream( MXML_OUTPUT *out, char *s, int len )
 /**
 * Useful function to output to file handles
 */
-static void mxml_output_func_to_handle( MXML_OUTPUT *out, char *s, int len )
+static void mxml_output_func_to_handle( MXML_OUTPUT *out, const char *s, int len )
 {
    HB_FHANDLE fh = out->u.hFile;
    int olen;
@@ -1978,7 +1978,7 @@ static void mxml_output_func_to_handle( MXML_OUTPUT *out, char *s, int len )
 /**
 * Useful function to output to self growing strings
 */
-static void mxml_output_func_to_sgs( MXML_OUTPUT *out, char *s, int len )
+static void mxml_output_func_to_sgs( MXML_OUTPUT *out, const char *s, int len )
 {
    MXML_SGS *sgs = (MXML_SGS *) out->u.vPtr;
 
@@ -2193,7 +2193,7 @@ static MXML_STATUS mxml_sgs_append_char( MXML_SGS *sgs, char c )
    return MXML_STATUS_OK;
 }
 
-static MXML_STATUS mxml_sgs_append_string_len( MXML_SGS *sgs, char *s, int slen )
+static MXML_STATUS mxml_sgs_append_string_len( MXML_SGS *sgs, const char *s, int slen )
 {
    char *buf;
 
@@ -2250,7 +2250,7 @@ static char * mxml_sgs_extract( MXML_SGS *sgs )
    Error code routines
 ***********************************************************/
 
-static char *edesc[] =
+static const char *edesc[] =
 {
    "Input/output error",
    "Not enough memory",
@@ -2267,7 +2267,7 @@ static char *edesc[] =
    "Escape/entity '&;' found"
 };
 
-static char *mxml_error_desc( MXML_ERROR_CODE code )
+static const char *mxml_error_desc( MXML_ERROR_CODE code )
 {
    int iCode = ((int)code) - 1;
    if ( iCode < 0 || iCode > (signed) (sizeof( edesc ) / sizeof( char * ) ) )

@@ -835,9 +835,9 @@ HB_EXPORT ERRCODE hb_gtTone( double dFrequency, double dDuration )
    return FAILURE;
 }
 
-HB_EXPORT char * hb_gtVersion( int iType )
+HB_EXPORT const char * hb_gtVersion( int iType )
 {
-   char * szVersion = ( char * ) "";
+   const char * szVersion = "";
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtVersion(%d)",iType));

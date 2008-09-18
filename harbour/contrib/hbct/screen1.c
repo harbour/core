@@ -148,7 +148,8 @@ HB_FUNC( SCREENMIX )
 
    if( ulLen )
    {
-      char * szText = hb_parc( 1 ), * szAttr;
+      char * szText = hb_parc( 1 );
+      const char * szAttr;
       ULONG ulAttr = hb_parclen( 2 ), ul = 0;
       SHORT sRow, sCol;
       SHORT iRow, iCol, i;

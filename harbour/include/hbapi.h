@@ -663,10 +663,10 @@ extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns
 #endif /* HB_API_MACROS */
 
 
-extern HB_EXPORT int    hb_storc( char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
-extern HB_EXPORT int    hb_storclen( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
+extern HB_EXPORT int    hb_storc( const char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
+extern HB_EXPORT int    hb_storclen( const char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
 extern HB_EXPORT int    hb_storclen_buffer( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string buffer on a variable by reference */
-extern HB_EXPORT int    hb_stords( char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
+extern HB_EXPORT int    hb_stords( const char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
 extern HB_EXPORT int    hb_storl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
 extern HB_EXPORT int    hb_storni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
 extern HB_EXPORT int    hb_stornl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
@@ -708,7 +708,7 @@ extern HB_EXPORT long      hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex ); /* r
 extern HB_EXPORT HB_TYPE   hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the type of an array item */
 extern HB_EXPORT BOOL      hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
 extern HB_EXPORT BOOL      hb_arraySetForward( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element by forwarding it's value */
-extern HB_EXPORT BOOL      hb_arraySetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate );
+extern HB_EXPORT BOOL      hb_arraySetDS( PHB_ITEM pArray, ULONG ulIndex, const char * szDate );
 extern HB_EXPORT BOOL      hb_arraySetDL( PHB_ITEM pArray, ULONG ulIndex, LONG lDate );
 extern HB_EXPORT BOOL      hb_arraySetL( PHB_ITEM pArray, ULONG ulIndex, BOOL fValue );
 extern HB_EXPORT BOOL      hb_arraySetNI( PHB_ITEM pArray, ULONG ulIndex, int iNumber );
@@ -821,7 +821,7 @@ extern HB_EXPORT BOOL      hb_compStrToNum( const char* szNum, ULONG ulLen, HB_L
 extern HB_EXPORT BOOL      hb_valStrnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns TRUE if results is double, used by VAL() */
 extern HB_EXPORT BOOL      hb_strToNum( const char* szNum, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
 extern HB_EXPORT BOOL      hb_strnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
-                          
+
 extern HB_EXPORT BOOL      hb_strMatchFile( const char * pszString, const char * szPattern ); /* compare two strings using platform dependent rules for file matching */
 extern HB_EXPORT BOOL      hb_strMatchRegExp( const char * szString, const char * szPattern ); /* compare two strings using a regular expression pattern */
 extern HB_EXPORT BOOL      hb_strMatchWild(const char *szString, const char *szPattern ); /* compare two strings using pattern with wildcard (?*) - patern have to be prefix of given string */
@@ -947,7 +947,7 @@ extern USHORT   hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor ); /* retri
 extern char *   hb_conSetColor( const char * szColor ); /* retrieve and optionally set console color */
 
 /* compiler and macro compiler */
-extern char *   hb_compReservedName( char * szName ); /* determines if a string contains a reserve word */
+extern const char * hb_compReservedName( const char * szName ); /* determines if a string contains a reserve word */
 extern char *   hb_compEncodeString( int iMethod, const char * szText, ULONG * pulLen );
 extern char *   hb_compDecodeString( int iMethod, const char * szText, ULONG * pulLen );
 
@@ -969,8 +969,8 @@ extern void   hb_macroPushSymbol( HB_ITEM_PTR pItem ); /* handle a macro functio
 extern void   hb_macroRun( HB_MACRO_PTR pMacro ); /* executes pcode compiled by macro compiler */
 extern HB_MACRO_PTR hb_macroCompile( char * szString ); /* compile a string and return a pcode buffer */
 extern void   hb_macroDelete( HB_MACRO_PTR pMacro ); /* release all memory allocated for macro evaluation */
-extern char * hb_macroTextSymbol( char *szString, ULONG ulLength, BOOL *pfNewString ); /* substitute macro variables occurences within a given string and check if result is a valid function or variable name */
-extern char * hb_macroExpandString( char *szString, ULONG ulLength, BOOL *pfNewString ); /* expands valid '&' operator */
+extern char * hb_macroTextSymbol( const char *szString, ULONG ulLength, BOOL *pfNewString ); /* substitute macro variables occurences within a given string and check if result is a valid function or variable name */
+extern char * hb_macroExpandString( const char *szString, ULONG ulLength, BOOL *pfNewString ); /* expands valid '&' operator */
 extern void   hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags ); /* compiles and evaluates an aliased macro expression */
 extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags ); /* compiles and evaluates an aliased macro expression */
 extern char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an expression */

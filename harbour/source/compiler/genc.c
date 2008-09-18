@@ -32,8 +32,8 @@
 
 static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
-static void hb_compGenCFunc( FILE *yyc, char *cDecor, char *szName, int iStrip );
-static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, char * szModulname, char * szSourceFile );
+static void hb_compGenCFunc( FILE *yyc, const char *cDecor, const char *szName, int iStrip );
+static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, const char * szModulname, const char * szSourceFile );
 
 /* helper structure to pass information */
 typedef struct HB_stru_genc_info
@@ -372,7 +372,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       hb_compOutStd( HB_COMP_PARAM, "Done.\n" );
 }
 
-static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, char * szModulname, char * szSourceFile )
+static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, const char * szModulname, const char * szSourceFile )
 {
 /*
    HB_SYMBOL_UNUSED( szSourceFile );
@@ -400,7 +400,7 @@ static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, char * szModulname, char *
 }
 
 
-static void hb_compGenCFunc( FILE * yyc, char *cDecor, char *szName, int iStrip )
+static void hb_compGenCFunc( FILE * yyc, const char *cDecor, const char *szName, int iStrip )
 {
    int i=0;
 
@@ -462,7 +462,7 @@ static void hb_compGenCLocalName( PFUNCTION pFunc, int iLocal, ULONG lPCodePos, 
    }
    else
    {
-      char *szName = hb_compLocalVariableName( pFunc, ( USHORT ) iLocal );
+      const char *szName = hb_compLocalVariableName( pFunc, ( USHORT ) iLocal );
 
       if( szName )
          fprintf( cargo->yyc, "\t/* %s */", szName );
@@ -473,7 +473,7 @@ static void hb_compGenCLocalName( PFUNCTION pFunc, int iLocal, ULONG lPCodePos, 
 
 static void hb_compGenCStaticName( USHORT uiStatic, HB_GENC_INFO_PTR cargo )
 {
-   char *szName = hb_compStaticVariableName( cargo->HB_COMP_PARAM, uiStatic );
+   const char *szName = hb_compStaticVariableName( cargo->HB_COMP_PARAM, uiStatic );
    if( szName )
       fprintf( cargo->yyc, "\t/* %s */", szName );
    else

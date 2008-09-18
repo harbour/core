@@ -250,7 +250,7 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
  *    PRIVATE &a&b   //this will cause syntax error '&'
  *
  */
-static char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
+static char * hb_macroTextSubst( const char * szString, ULONG *pulStringLen )
 {
    char * szResult;
    ULONG ulResStrLen;
@@ -263,7 +263,7 @@ static char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
 
    pHead = (char *) memchr( (void *) szString, '&', *pulStringLen );
    if( pHead == NULL )
-      return szString;  /* no more processing is required */
+      return ( char * ) szString;  /* no more processing is required */
 
    /* initial length of the string and the result buffer (it can contain null bytes) */
    ulResBufLen = ulResStrLen = *pulStringLen;
@@ -642,7 +642,7 @@ void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags 
  * new string if a valid macro text substitution was found (and sets
  * pbNewString to TRUE)
 */
-char * hb_macroExpandString( char *szString, ULONG ulLength, BOOL *pfNewString )
+char * hb_macroExpandString( const char *szString, ULONG ulLength, BOOL *pfNewString )
 {
    char *szResultString;
 
@@ -651,12 +651,12 @@ char * hb_macroExpandString( char *szString, ULONG ulLength, BOOL *pfNewString )
    if( szString )
       szResultString = hb_macroTextSubst( szString, &ulLength );
    else
-      szResultString = szString;
+      szResultString = ( char * ) szString;
    *pfNewString = ( szString != szResultString );
    return szResultString;
 }
 
-char * hb_macroTextSymbol( char *szString, ULONG ulLength, BOOL *pfNewString )
+char * hb_macroTextSymbol( const char *szString, ULONG ulLength, BOOL *pfNewString )
 {
    char *szResult = NULL;
 
@@ -834,7 +834,7 @@ void hb_macroTextValue( HB_ITEM_PTR pItem )
 
 char * hb_macroGetType( HB_ITEM_PTR pItem )
 {
-   char * szType;
+   const char * szType;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGetType(%p)", pItem));
 
@@ -861,7 +861,7 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
             /* Clipper ignores any undeclared symbols or UDFs if the
              * compiled expression is a valid codeblock
             */
-            szType ="B";
+            szType = "B";
          }
          else if( struMacro.status & HB_MACRO_UNKN_SYM )
          {
@@ -934,7 +934,7 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
    else
       szType = "U";
 
-   return szType;
+   return ( char * ) szType;
 }
 
 /*
@@ -992,7 +992,7 @@ HB_FUNC( HB_SETMACRO )
 /* ************************************************************************* */
 
 /* returns the order + 1 of a variable if defined or zero */
-static int hb_macroLocalVarGetPos( char * szVarName, HB_COMP_DECL )
+static int hb_macroLocalVarGetPos( const char * szVarName, HB_COMP_DECL )
 {
    int iVar = 1;
    HB_CBVAR_PTR pVars = HB_PCODE_DATA->pLocals;
@@ -1015,7 +1015,7 @@ static int hb_macroLocalVarGetPos( char * szVarName, HB_COMP_DECL )
    return 0;
 }
 
-BOOL hb_macroIsValidMacroText( char * szText, ULONG ulLen )
+BOOL hb_macroIsValidMacroText( const char * szText, ULONG ulLen )
 {
    if( ulLen )
    {
@@ -1101,7 +1101,7 @@ void hb_macroGenJumpHere( ULONG ulOffset, HB_COMP_DECL )
 /*
  * Function generates pcode for passed memvar name
  */
-static void hb_macroMemvarGenPCode( BYTE bPCode, char * szVarName, HB_COMP_DECL )
+static void hb_macroMemvarGenPCode( BYTE bPCode, const char * szVarName, HB_COMP_DECL )
 {
    BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
    HB_DYNS_PTR pSym;
@@ -1129,7 +1129,7 @@ static void hb_macroMemvarGenPCode( BYTE bPCode, char * szVarName, HB_COMP_DECL 
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */
-void hb_macroGenPushSymbol( char * szSymbolName, BOOL bFunction, HB_COMP_DECL )
+void hb_macroGenPushSymbol( const char * szSymbolName, BOOL bFunction, HB_COMP_DECL )
 {
    BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
    HB_DYNS_PTR pSym;
@@ -1212,7 +1212,7 @@ void hb_macroGenPushDate( HB_LONG lNumber, HB_COMP_DECL )
 }
 
 /* sends a message to an object */
-void hb_macroGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL )
+void hb_macroGenMessage( const char * szMsgName, BOOL bIsObject, HB_COMP_DECL )
 {
    BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
 
@@ -1228,7 +1228,7 @@ void hb_macroGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL )
 }
 
 /* generates an underscore-symbol name for a data assignment */
-void hb_macroGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL )
+void hb_macroGenMessageData( const char * szMsg, BOOL bIsObject, HB_COMP_DECL )
 {
    char * szResult;
    int iLen;
@@ -1247,7 +1247,7 @@ void hb_macroGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL )
 }
 
 /* generates the pcode to pop a value from the virtual machine stack onto a variable */
-void hb_macroGenPopVar( char * szVarName, HB_COMP_DECL )
+void hb_macroGenPopVar( const char * szVarName, HB_COMP_DECL )
 {
    int iVar;
 
@@ -1265,7 +1265,7 @@ void hb_macroGenPopVar( char * szVarName, HB_COMP_DECL )
 }
 
 /* generates the pcode to pop a value from the virtual machine stack onto a variable */
-void hb_macroGenPopMemvar( char * szVarName, HB_COMP_DECL )
+void hb_macroGenPopMemvar( const char * szVarName, HB_COMP_DECL )
 {
    hb_macroMemvarGenPCode( HB_P_MPOPMEMVAR, szVarName, HB_COMP_PARAM );
 }
@@ -1273,9 +1273,9 @@ void hb_macroGenPopMemvar( char * szVarName, HB_COMP_DECL )
 /* generates the pcode to pop a value from the virtual machine stack onto
  * an aliased variable
  */
-void hb_macroGenPopAliasedVar( char * szVarName,
+void hb_macroGenPopAliasedVar( const char * szVarName,
                                BOOL bPushAliasValue,
-                               char * szAlias,
+                               const char * szAlias,
                                HB_LONG lWorkarea, HB_COMP_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGenPopAliasedVar(%s->%s)",szAlias,szVarName));
@@ -1324,7 +1324,7 @@ void hb_macroGenPopAliasedVar( char * szVarName,
 /* generates the pcode to push a nonaliased variable value to the virtual
  * machine stack
  */
-void hb_macroGenPushVar( char * szVarName, BOOL bMacroVar, HB_COMP_DECL )
+void hb_macroGenPushVar( const char * szVarName, BOOL bMacroVar, HB_COMP_DECL )
 {
    int iVar;
 
@@ -1343,7 +1343,7 @@ void hb_macroGenPushVar( char * szVarName, BOOL bMacroVar, HB_COMP_DECL )
 }
 
 /* generates the pcode to push a variable by reference to the virtual machine stack */
-void hb_macroGenPushVarRef( char * szVarName, HB_COMP_DECL )
+void hb_macroGenPushVarRef( const char * szVarName, HB_COMP_DECL )
 {
    USHORT iVar;
 
@@ -1357,7 +1357,7 @@ void hb_macroGenPushVarRef( char * szVarName, HB_COMP_DECL )
 }
 
 /* generates the pcode to push a variable by reference to the virtual machine stack */
-void hb_macroGenPushMemvarRef( char * szVarName, HB_COMP_DECL )
+void hb_macroGenPushMemvarRef( const char * szVarName, HB_COMP_DECL )
 {
    hb_macroMemvarGenPCode( HB_P_MPUSHMEMVARREF, szVarName, HB_COMP_PARAM );
 }
@@ -1365,9 +1365,9 @@ void hb_macroGenPushMemvarRef( char * szVarName, HB_COMP_DECL )
 /* generates the pcode to push an aliased variable value to the virtual
  * machine stack
  */
-void hb_macroGenPushAliasedVar( char * szVarName,
+void hb_macroGenPushAliasedVar( const char * szVarName,
                                 BOOL bPushAliasValue,
-                                char * szAlias,
+                                const char * szAlias,
                                 HB_LONG lWorkarea, HB_COMP_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGenPushAliasedVar(%s->%s)",szAlias,szVarName));
@@ -1437,9 +1437,9 @@ void hb_macroGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_COMP_DECL
    hb_macroGenPCodeN( pBuffer, 1 + sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ), HB_COMP_PARAM );
 }
 
-void hb_macroGenPushFunSym( char * szFunName, HB_COMP_DECL )
+void hb_macroGenPushFunSym( const char * szFunName, HB_COMP_DECL )
 {
-   char * szFunction;
+   const char * szFunction;
 
    szFunction = hb_compReservedName( szFunName );
    if( szFunction )
@@ -1455,15 +1455,15 @@ void hb_macroGenPushFunSym( char * szFunName, HB_COMP_DECL )
    }
 }
 
-void hb_macroGenPushFunCall( char * szFunName, HB_COMP_DECL )
+void hb_macroGenPushFunCall( const char * szFunName, HB_COMP_DECL )
 {
    hb_macroGenPushFunSym( szFunName, HB_COMP_PARAM );
    hb_macroGenPCode1( HB_P_PUSHNIL, HB_COMP_PARAM );
 }
 
-void hb_macroGenPushFunRef( char * szFunName, HB_COMP_DECL )
+void hb_macroGenPushFunRef( const char * szFunName, HB_COMP_DECL )
 {
-   char * szFunction;
+   const char * szFunction;
 
    /* if abbreviated function name was used - change it for whole name */
    szFunction = hb_compReservedName( szFunName );
@@ -1471,7 +1471,7 @@ void hb_macroGenPushFunRef( char * szFunName, HB_COMP_DECL )
 }
 
 /* generates the pcode to push a string on the virtual machine stack */
-void hb_macroGenPushString( char * szText, ULONG ulStrLen, HB_COMP_DECL )
+void hb_macroGenPushString( const char * szText, ULONG ulStrLen, HB_COMP_DECL )
 {
    if( ulStrLen <= UINT24_MAX )
    {

@@ -60,7 +60,7 @@
 
 /* ********************************************************************* */
 
-gchar *MultiLineDelimiters = "\n\r";
+const gchar * MultiLineDelimiters = "\n\r";
 
 static void GtkMsgInfoCallback( GtkWidget *Widget, gpointer Data )
 {

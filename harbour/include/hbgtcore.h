@@ -179,7 +179,7 @@ typedef struct
    BOOL     (* GetBlink) ( HB_GT_PTR );
    void     (* SetBlink) ( HB_GT_PTR, BOOL );
    void     (* SetSnowFlag) ( HB_GT_PTR, BOOL );
-   char *   (* Version) ( HB_GT_PTR, int );
+   const char * (* Version) ( HB_GT_PTR, int );
    BOOL     (* Suspend) ( HB_GT_PTR );
    BOOL     (* Resume) ( HB_GT_PTR );
    BOOL     (* PreExt) ( HB_GT_PTR );
@@ -269,7 +269,7 @@ typedef int ( * GTENTRYP_V )( void );
 
 typedef struct _HB_GT_INIT
 {
-   char           * id;
+   const char     * id;
    BOOL           (* init) ( PHB_GT_FUNCS );
    PHB_GT_FUNCS   pSuperTable;
    int *          pGtId;

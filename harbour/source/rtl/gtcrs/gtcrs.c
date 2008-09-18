@@ -881,7 +881,7 @@ static int wait_key( InOutBase * ioBase, int milisec )
    return nKey;
 }
 
-static void write_ttyseq( InOutBase * ioBase, char *seq )
+static void write_ttyseq( InOutBase * ioBase, const char *seq )
 {
    if ( ioBase->baseout != NULL )
    {
@@ -1408,7 +1408,7 @@ static void gt_outerr( InOutBase * ioBase, const char *str, int len )
    gt_outstr( ioBase, ioBase->stderrfd, ( unsigned char * ) str, len );
 }
 
-static char *tiGetS( char *capname )
+static char *tiGetS( const char *capname )
 {
    char *ptr;
 
@@ -1834,7 +1834,7 @@ static void setKeyTrans( InOutBase * ioBase, unsigned char *ksrc, unsigned char 
    }
 }
 
-static void setDispTrans( InOutBase * ioBase, char *src, char *dst, int box )
+static void setDispTrans( InOutBase * ioBase, const char *src, const char *dst, int box )
 {
    unsigned char c, d;
    int i, aSet = 0;
@@ -2549,7 +2549,7 @@ static void hb_gt_crs_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 /* *********************************************************************** */
 
-static char * hb_gt_crs_Version( PHB_GT pGT, int iType )
+static const char * hb_gt_crs_Version( PHB_GT pGT, int iType )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Version(%p,%d)", pGT, iType ) );
 

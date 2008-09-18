@@ -76,7 +76,7 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
    SHORT iCols;
    SHORT iMax;
    char szOldColor[ HB_CLRSTR_LEN ];
-   char * szStr = "        ";
+   const char * szStr = "        ";
    char szPct[ 5 ];
 
    hb_gtGetColorStr( szOldColor );
@@ -152,7 +152,7 @@ HB_FUNC( GAUGEDISPLAY )
    {
       SHORT iCenter = ( SHORT ) ( ( ( hb_arrayGetNI( pArray, B_RIGHT ) - hb_arrayGetNI( pArray, B_LEFT ) ) / 2 ) + 1 );
       char szOldColor[ HB_CLRSTR_LEN ];
-      char * szStr = "        ";
+      const char * szStr = "        ";
 
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_arrayGetCPtr( pArray, B_BACKCOLOR ) );

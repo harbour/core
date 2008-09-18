@@ -23,7 +23,7 @@ HB_FUNC( GT_STREXPAND )
 {
   char *in, *out;
   int  nIns = 1;
-  char *insert = " ";
+  const char *insert = " ";
   int  len;
   int  i, j, p;
 

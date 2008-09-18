@@ -5273,7 +5273,7 @@ void hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile )
 
    pFileName = hb_fsFNameSplit( szRulesFile );
    if( !pFileName->szExtension )
-       pFileName->szExtension = ( char * ) ".ch";
+       pFileName->szExtension = ".ch";
    hb_fsFNameMerge( szFileName, pFileName );
    hb_xfree( pFileName );
 

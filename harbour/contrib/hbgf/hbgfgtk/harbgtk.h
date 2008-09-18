@@ -67,7 +67,7 @@
 /* default MultiLine delimiters - they allow to divide  */
 /* single string into MultiLine string by putting these */
 /* delimiters into it */
-extern gchar *MultiLineDelimiters;
+extern const gchar *MultiLineDelimiters;
 
 /* ************************************************************************* */
 

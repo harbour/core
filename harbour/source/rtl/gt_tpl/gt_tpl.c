@@ -93,7 +93,7 @@ static int hb_gt_tpl_ReadKey( PHB_GT pGT, int iEventMask )
    return 0;
 }
 
-static char * hb_gt_tpl_Version( PHB_GT pGT, int iType )
+static const char * hb_gt_tpl_Version( PHB_GT pGT, int iType )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Version(%p,%d)", pGT, iType ) );
 

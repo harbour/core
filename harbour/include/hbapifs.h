@@ -231,10 +231,10 @@ extern HB_EXPORT BOOL       hb_fsDirExists  ( const char * pszDirName ); /* chec
 /* Filename support */
 typedef struct
 {
-   char * szPath;
-   char * szName;
-   char * szExtension;
-   char * szDrive;
+   const char * szPath;
+   const char * szName;
+   const char * szExtension;
+   const char * szDrive;
    char   szBuffer[ _POSIX_PATH_MAX + HB_MAX_DRIVE_LENGTH + 4 ];
 } HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
 

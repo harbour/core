@@ -962,7 +962,7 @@ static void hb_gt_dos_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 #endif
 }
 
-static char * hb_gt_dos_Version( PHB_GT pGT, int iType )
+static const char * hb_gt_dos_Version( PHB_GT pGT, int iType )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Version(%p,%d)", pGT, iType ) );
 

@@ -55,7 +55,7 @@
 /*
  * Prints available options
  */
-void hb_compPrintUsage( HB_COMP_DECL, char * szSelf )
+void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
 {
    static const char * szOptions [] =
    {

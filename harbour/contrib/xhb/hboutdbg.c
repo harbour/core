@@ -106,7 +106,7 @@ static void debugInit( void )
    {
       if ( strlen( pFileName->szName ) > 20 )
       {
-         pFileName->szName[20] = 0;
+         ( ( char * ) pFileName->szName )[20] = 0;
       }
       snprintf( szDebugTitle, sizeof( szDebugTitle ), "%s - Debug", pFileName->szName );
 

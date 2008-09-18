@@ -77,7 +77,7 @@ struct _COMCLASS;    /* forward declaration */
 /* Declared Function/Method support structure */
 typedef struct _COMDECLARED
 {
-   char                * szName;              /* the name of the symbol */
+   const char          * szName;              /* the name of the symbol */
    BYTE                  cType;
    USHORT                iParamCount;
    BYTE                * cParamTypes;
@@ -89,7 +89,7 @@ typedef struct _COMDECLARED
 /* Declared Class support structure */
 typedef struct _COMCLASS
 {
-   char             * szName;
+   const char       * szName;
    PCOMDECLARED       pMethod;
    PCOMDECLARED       pLastMethod;
    struct _COMCLASS * pNext;
@@ -98,20 +98,20 @@ typedef struct _COMCLASS
 /* locals, static, public variables support */
 typedef struct _VAR
 {
-   char *    szName;               /* variable name */
-   char *    szAlias;              /* variable alias namespace */
-   int       iUsed;                /* number of times used */
-   int       iDeclLine;            /* declaration line number */
-   USHORT    uiFlags;              /* optional falgs, f.e. THREAD STATIC */
-   BYTE      cType;                /* optional strong typing */
-   PCOMCLASS pClass;
+   const char *   szName;           /* variable name */
+   const char *   szAlias;          /* variable alias namespace */
+   int            iUsed;            /* number of times used */
+   int            iDeclLine;        /* declaration line number */
+   USHORT         uiFlags;          /* optional falgs, f.e. THREAD STATIC */
+   BYTE           cType;            /* optional strong typing */
+   PCOMCLASS      pClass;
    struct _VAR * pNext;            /* pointer to next defined variable */
 } VAR, * PVAR;
 
 /* local variables declared in a codeblock */
 typedef struct HB_CBVAR_
 {
-   char * szName;
+   const char * szName;
    BYTE bType;
    BOOL bUsed;
    struct HB_CBVAR_ * pNext;
@@ -238,7 +238,7 @@ typedef struct HB_EXPR_
 {
    union
    {
-      char *asSymbol;      /* variable name */
+      const char *asSymbol;/* variable name */
       BOOL asLogical;      /* logical value */
       struct
       {
@@ -248,7 +248,7 @@ typedef struct HB_EXPR_
       struct
       {
          struct HB_EXPR_ *pMacro;   /* macro variable */
-         char *szName;              /* variable name  */
+         const char *szName;        /* variable name  */
       } asRTVar;                 /* PUBLIC or PRIVATE variable declaration */
       struct
       {
@@ -262,7 +262,7 @@ typedef struct HB_EXPR_
       } asNum;
       struct
       {
-         char * szMacro;               /* identifier after the macro operator */
+         const char * szMacro;         /* identifier after the macro operator */
          struct HB_EXPR_ *pExprList;   /* list elements if &(...) was used */
          USHORT SubType;               /* context in which macro is used */
          unsigned char cMacroOp;       /* macro operator */
@@ -295,7 +295,7 @@ typedef struct HB_EXPR_
       {
          struct HB_EXPR_ *pObject;     /* object */
          struct HB_EXPR_ *pParms;      /* method parameters */
-         char * szMessage;             /* message as string */
+         const char * szMessage;       /* message as string */
          struct HB_EXPR_ *pMessage;    /* message as macro */
       } asMessage;
       struct
@@ -314,7 +314,7 @@ typedef struct HB_EXPR_
 
 typedef struct HB_ENUMERATOR_
 {
-   char *szName;
+   const char *szName;
    BOOL bForEach;
    struct HB_ENUMERATOR_ *pNext;
 } HB_ENUMERATOR, *HB_ENUMERATOR_PTR; /* support structure for FOR EACH statements */
@@ -370,7 +370,7 @@ typedef struct HB_RTVAR_
 /* structure to hold a Clipper defined function */
 typedef struct __FUNC
 {
-   char *       szName;                   /* name of a defined Clipper function */
+   const char * szName;                   /* name of a defined Clipper function */
    HB_SYMBOLSCOPE cScope;                 /* scope of a defined Clipper function */
    BYTE         bFlags;                   /* some flags we may need */
    USHORT       wParamCount;              /* number of declared parameters */
@@ -412,10 +412,10 @@ typedef struct __FUNC
 /* structure to hold an INLINE block of source */
 typedef struct __INLINE
 {
-   char *       szName;                   /* name of a inline function */
+   const char * szName;                   /* name of a inline function */
    BYTE *       pCode;                    /* pointer to a memory block where pcode is stored */
    ULONG        lPCodeSize;               /* total memory size for pcode */
-   char *       szFileName;               /* Source file name */
+   const char * szFileName;               /* Source file name */
    int          iLine;                    /* Source line number */
    struct __INLINE * pNext;               /* pointer to the next defined inline */
 } _INLINE, * PINLINE;
@@ -423,7 +423,7 @@ typedef struct __INLINE
 /* structure to hold a called functions */
 typedef struct __FUNCALL
 {
-   char *       szName;                   /* name of a called function */
+   const char * szName;                   /* name of a called function */
    struct __FUNCALL * pNext;              /* pointer to the next called function */
 } _FUNCALL, * PFUNCALL;
 
@@ -454,7 +454,7 @@ typedef struct
 /* compiler symbol support structure */
 typedef struct _COMSYMBOL
 {
-   char *         szName;               /* the name of the symbol */
+   const char *   szName;               /* the name of the symbol */
    HB_SYMBOLSCOPE cScope;               /* the scope of the symbol */
    BOOL           bFunc;      /* is it a function name (TRUE) or memvar (FALSE) */
    PCOMCLASS      pClass;
@@ -471,7 +471,7 @@ typedef struct
 
 typedef struct __EXTERN
 {
-   char * szName;               /* name of the extern function */
+   const char * szName;         /* name of the extern function */
    HB_SYMBOLSCOPE cScope;       /* the scope of the function */
    struct __EXTERN * pNext;
 } _EXTERN, * PEXTERN;      /* support structure for extern symbols */
@@ -479,7 +479,7 @@ typedef struct __EXTERN
 
 typedef struct _AUTOOPEN
 {
-   char * szName;
+   const char * szName;
    struct _AUTOOPEN * pNext;
 } AUTOOPEN, * PAUTOOPEN;      /* support structure for extern symbols */
 
@@ -642,14 +642,14 @@ typedef struct _HB_COMP
    ULONG             lastLinePos;         /* position of last opcode with line number */
    int               lastLine;            /* last generated in PCODE line number */
    int               currLine;            /* currently compiled line number */
-   char *            lastModule;          /* last generated in PCODE module name */
-   char *            currModule;          /* currently compiled module name */
+   const char *      lastModule;          /* last generated in PCODE module name */
+   const char *      currModule;          /* currently compiled module name */
 
-   char *            szAnnounce;
+   const char *      szAnnounce;
    char *            szStdCh;             /* standard definitions file name (-u) */
-   char *            szFromClass;
-   char *            szDeclaredFun;
-   char *            szFile;              /* Source file name of compiled module */
+   const char *      szFromClass;
+   const char *      szDeclaredFun;
+   const char *      szFile;              /* Source file name of compiled module */
    char              szPrefix[ 20 ];      /* holds the prefix added to the generated symbol init function name (in C output currently) */
 
    char              cVarType;            /* current declared variable type */

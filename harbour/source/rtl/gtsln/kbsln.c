@@ -109,7 +109,7 @@ static int s_hb_sln_Abort_key = 28;
 
 /* DeadKey definition's ENVVAR name. This EnvVar contains */
 /* an ASCII value of a key, which serves as a DeadKey */
-static char *hb_DeadKeyEnvName = "HRBNATIONDEADKEY";
+static const char *hb_DeadKeyEnvName = "HRBNATIONDEADKEY";
 
 /* a table for Keys work with a Dead key. The first
    element contains a number of defined keys */
@@ -174,7 +174,7 @@ static void hb_sln_Init_KeyTranslations()
  
    /* on Unix systems ESC is a special key so let
       assume ESC is a doble pressed ESC key    */
-   SLkp_define_keysym( "^[^[", SL_KEY_ESC );
+   SLkp_define_keysym( ( char * ) "^[^[", SL_KEY_ESC );
  
    /* try to define Shft-Fn and Ctrl-Fn keys.
       Because we assume terminal has only 10 Fkeys
@@ -224,7 +224,7 @@ static void hb_sln_Init_KeyTranslations()
    /* mouse events under xterm */
    if( hb_sln_UnderXterm )
    {
-      keyseq = SLtt_tgetstr( "Km" );
+      keyseq = SLtt_tgetstr( ( char * ) "Km" );
       if( ( keyseq != NULL ) && ( keyseq[ 0 ] != 0 ) )
       {
          /* fprintf( stderr, "%s\r\n", keyseq ); */

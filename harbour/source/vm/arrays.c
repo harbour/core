@@ -575,7 +575,7 @@ char * hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex )
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetCPtr( pArray->item.asArray.value->pItems + ulIndex - 1 );
    else
-      return "";
+      return ( char * ) "";
 }
 
 ULONG hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex )
@@ -609,7 +609,7 @@ HB_TYPE hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
       return 0;
 }
 
-HB_EXPORT BOOL hb_arraySetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
+HB_EXPORT BOOL hb_arraySetDS( PHB_ITEM pArray, ULONG ulIndex, const char * szDate )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySetDS(%p, %lu, %s)", pArray, ulIndex, szDate));
 

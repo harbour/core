@@ -213,7 +213,7 @@ HB_EXPORT char * hb_parcx( int iParam, ... )
       }
    }
 
-   return "";
+   return ( char * ) "";
 }
 
 HB_EXPORT ULONG  hb_parclen( int iParam, ... )
@@ -917,7 +917,7 @@ HB_EXPORT void hb_retptrGC( void * pointer )
 }
 
 
-HB_EXPORT int hb_storc( char * szText, int iParam, ... )
+HB_EXPORT int hb_storc( const char * szText, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storc(%s, %d, ...)", szText, iParam));
 
@@ -948,7 +948,7 @@ HB_EXPORT int hb_storc( char * szText, int iParam, ... )
    return 0;
 }
 
-HB_EXPORT int hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
+HB_EXPORT int hb_storclen( const char * szText, ULONG ulLen, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storclen(%s, %lu, %d, ...)", szText, ulLen, iParam));
 
@@ -1012,7 +1012,7 @@ HB_EXPORT int hb_storclen_buffer( char * szText, ULONG ulLen, int iParam, ... )
 
 /* szDate must have YYYYMMDD format */
 
-HB_EXPORT int hb_stords( char * szDate, int iParam, ... )
+HB_EXPORT int hb_stords( const char * szDate, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stords(%s, %d, ...)", szDate, iParam));
 

@@ -705,14 +705,14 @@ static void hb_gt_def_Bell( PHB_GT pGT )
    HB_GTSELF_TONE( pGT, 700.0, 3.0 );
 }
 
-static char * hb_gt_def_Version( PHB_GT pGT, int iType )
+static const char * hb_gt_def_Version( PHB_GT pGT, int iType )
 {
    HB_SYMBOL_UNUSED( pGT );
 
    if( iType == 0 )
-      return "NUL";
+      return ( char * ) "NUL";
 
-   return "Harbour Terminal: NULL";
+   return ( char * ) "Harbour Terminal: NULL";
 }
 
 static BOOL hb_gt_def_GetChar( PHB_GT pGT, int iRow, int iCol,
@@ -3049,7 +3049,7 @@ static int s_iGtCount = 0;
 
 HB_FUNC_EXTERN( HB_GTSYS );
 
-static char * hb_gt_FindDefault( void )
+static const char * hb_gt_FindDefault( void )
 {
    char szFuncName[ 15 + HB_GT_NAME_MAX_ ];
    int iPos;

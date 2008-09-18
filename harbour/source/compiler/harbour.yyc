@@ -372,13 +372,13 @@ static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirstElseIf, ULONG ulOffse
 static void hb_compElseIfFix( HB_COMP_DECL, void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 
 static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR, BOOL );
-static void hb_compRTVariableGen( HB_COMP_DECL, char * );
+static void hb_compRTVariableGen( HB_COMP_DECL, const char * );
 
 static HB_EXPR_PTR hb_compArrayDimPush( HB_EXPR_PTR pInitValue, HB_COMP_DECL );
-static void hb_compVariableDim( char *, HB_EXPR_PTR, HB_COMP_DECL );
+static void hb_compVariableDim( const char *, HB_EXPR_PTR, HB_COMP_DECL );
 
-static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach );
-static void hb_compForEnd( HB_COMP_DECL, char *szVarName );
+static void hb_compForStart( HB_COMP_DECL, const char *szVarName, BOOL bForEach );
+static void hb_compForEnd( HB_COMP_DECL, const char *szVarName );
 static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend );
 static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend );
 static void hb_compEnumEnd( HB_COMP_DECL, HB_EXPR_PTR pExpr );
@@ -481,7 +481,7 @@ typedef union YYSTYPE
  * typedef-ined to YYSTYPE
  */
 extern int  yylex( YYSTYPE *, HB_COMP_DECL );    /* main lex token function, called by yyparse() */
-extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management function */
+extern void yyerror( HB_COMP_DECL, const char * );     /* parsing error management function */
 
 
 /* Line 216 of yacc.c.  */
@@ -4693,7 +4693,7 @@ yyreduce:
                      /* check for reserved name
                      * NOTE: Clipper doesn't check for it
                      */
-                     char * szFunction = hb_compReservedName( (yyvsp[(2) - (2)].string) );
+                     const char * szFunction = hb_compReservedName( (yyvsp[(2) - (2)].string) );
                      if( szFunction )
                         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, (yyvsp[(2) - (2)].string) );
                      HB_COMP_PARAM->szAnnounce = (yyvsp[(2) - (2)].string);
@@ -4713,7 +4713,7 @@ yyreduce:
     {
                if( (yyvsp[(1) - (1)].valChar).dealloc )
                {
-                  (yyvsp[(1) - (1)].valChar).string = hb_compIdentifierNew( HB_COMP_PARAM, (yyvsp[(1) - (1)].valChar).string, HB_IDENT_FREE );
+                  (yyvsp[(1) - (1)].valChar).string = ( char * ) hb_compIdentifierNew( HB_COMP_PARAM, (yyvsp[(1) - (1)].valChar).string, HB_IDENT_FREE );
                   (yyvsp[(1) - (1)].valChar).dealloc = FALSE;
                }
                hb_compAutoOpenAdd( HB_COMP_PARAM, (yyvsp[(1) - (1)].valChar).string );
@@ -4818,27 +4818,27 @@ yyreduce:
 
   case 121:
 #line 539 "harbour.y"
-    { (yyval.string) = "STEP"; ;}
+    { (yyval.string) = ( char * ) "STEP"; ;}
     break;
 
   case 122:
 #line 540 "harbour.y"
-    { (yyval.string) = "TO"; ;}
+    { (yyval.string) = ( char * ) "TO"; ;}
     break;
 
   case 123:
 #line 541 "harbour.y"
-    { (yyval.string) = "LOOP"; ;}
+    { (yyval.string) = ( char * ) "LOOP"; ;}
     break;
 
   case 124:
 #line 542 "harbour.y"
-    { (yyval.string) = "EXIT"; ;}
+    { (yyval.string) = ( char * ) "EXIT"; ;}
     break;
 
   case 125:
 #line 543 "harbour.y"
-    { (yyval.string) = "IN"; ;}
+    { (yyval.string) = ( char * ) "IN"; ;}
     break;
 
   case 126:
@@ -7672,7 +7672,7 @@ static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR pVar, BOOL bPopInitV
       pFunc->rtvars = pRTvar;
 }
 
-static void hb_compRTVariableGen( HB_COMP_DECL, char * szCreateFun )
+static void hb_compRTVariableGen( HB_COMP_DECL, const char * szCreateFun )
 {
    USHORT usCount = 0;
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
@@ -7744,7 +7744,7 @@ static HB_EXPR_PTR hb_compArrayDimPush( HB_EXPR_PTR pInitValue, HB_COMP_DECL )
    return pInitValue;
 }
 
-static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_DECL )
+static void hb_compVariableDim( const char * szName, HB_EXPR_PTR pInitValue, HB_COMP_DECL )
 {
    if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
    {
@@ -7783,7 +7783,7 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_D
    }
 }
 
-static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach )
+static void hb_compForStart( HB_COMP_DECL, const char *szVarName, BOOL bForEach )
 {
    HB_ENUMERATOR_PTR pEnumVar;
    
@@ -7820,7 +7820,7 @@ static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach )
    pEnumVar->pNext    = NULL;
 }
 
-BOOL hb_compForEachVarError( HB_COMP_DECL, char *szVarName )
+BOOL hb_compForEachVarError( HB_COMP_DECL, const char *szVarName )
 {
    HB_ENUMERATOR_PTR pEnumVar;
    
@@ -7847,7 +7847,7 @@ BOOL hb_compForEachVarError( HB_COMP_DECL, char *szVarName )
    return TRUE;            
 }
 
-static void hb_compForEnd( HB_COMP_DECL, char *szVar )
+static void hb_compForEnd( HB_COMP_DECL, const char *szVar )
 {
    HB_ENUMERATOR_PTR * pEnumVar;
    
@@ -7866,7 +7866,7 @@ static void hb_compForEnd( HB_COMP_DECL, char *szVar )
 
 static HB_CARGO2_FUNC( hb_compEnumEvalStart )
 {
-   char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
+   const char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
    if( szName )
       hb_compForStart( HB_COMP_PARAM, szName, TRUE );
 
@@ -7910,8 +7910,7 @@ static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend )
 
 static HB_CARGO_FUNC( hb_compEnumEvalEnd )
 {
-   char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
-
+   const char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
    if( szName )
       hb_compForEnd( HB_COMP_PARAM, szName );
 }
@@ -8173,7 +8172,7 @@ BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PFUNCTION pFunc )
    return fUnclosed;
 }
 
-void yyerror( HB_COMP_DECL, char * s )
+void yyerror( HB_COMP_DECL, const char * s )
 {
    if( !HB_COMP_PARAM->pLex->lasttok || HB_COMP_PARAM->pLex->lasttok[ 0 ] == '\n' )
    {

@@ -88,7 +88,7 @@ static void hb_addToFBuffer( PHB_FILEBUF pFileBuf, char ch )
    pFileBuf->pBuf[ pFileBuf->ulPos++ ] = ( BYTE ) ch;
 }
 
-static void hb_addStrnToFBuffer( PHB_FILEBUF pFileBuf, char * str, ULONG ulSize )
+static void hb_addStrnToFBuffer( PHB_FILEBUF pFileBuf, const char * str, ULONG ulSize )
 {
    ULONG ulPos = 0;
    while( ulPos < ulSize )
@@ -99,7 +99,7 @@ static void hb_addStrnToFBuffer( PHB_FILEBUF pFileBuf, char * str, ULONG ulSize 
    }
 }
 
-static void hb_addStrToFBuffer( PHB_FILEBUF pFileBuf, char * szStr )
+static void hb_addStrToFBuffer( PHB_FILEBUF pFileBuf, const char * szStr )
 {
    while( *szStr )
    {
@@ -131,14 +131,14 @@ static PHB_FILEBUF hb_createFBuffer( HB_FHANDLE hFile, ULONG ulSize )
 
 /* Export field value into the buffer in SQL format */
 static BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
-                                char * szDelim, char * szEsc )
+                                const char * szDelim, const char * szEsc )
 {
    switch( hb_itemType( pValue ) )
    {
       case HB_IT_STRING:
       {
          ULONG ulLen = hb_itemGetCLen( pValue ), ulCnt = 0;
-         char *szVal = hb_itemGetCPtr( pValue );
+         const char *szVal = hb_itemGetCPtr( pValue );
 
          hb_addStrToFBuffer( pFileBuf, szDelim );
          while( ulLen && HB_ISSPACE( szVal[ ulLen - 1 ] ) )
@@ -222,8 +222,8 @@ static BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
 /* Export DBF content to a SQL script file */
 static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
                         PHB_ITEM pWhile, PHB_ITEM pFor,
-                        char * szDelim, char * szSep, char * szEsc,
-                        char * szTable, HB_FHANDLE hFile,
+                        const char * szDelim, char * szSep, const char * szEsc,
+                        const char * szTable, HB_FHANDLE hFile,
                         BOOL fInsert, BOOL fRecno )
 {
    PHB_FILEBUF pFileBuf;
@@ -231,7 +231,7 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
    USHORT uiFields = 0, ui;
    PHB_ITEM pTmp;
    BOOL fWriteSep = FALSE;
-   char * szNewLine = hb_conNewLine();
+   const char * szNewLine = hb_conNewLine();
    char * szInsert = NULL;
    BOOL fEof = TRUE;
    BOOL fNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );

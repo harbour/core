@@ -56,7 +56,7 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
 {
    PHB_DEBUGINFO pLineInfo = NULL, pInfo = NULL;
    ULONG ulPos, ulSkip, ulLine, ulOffset;
-   char * pszModuleName = "", * ptr;
+   const char * pszModuleName = "", * ptr;
    PFUNCTION pFunc;
 
    pFunc = HB_COMP_PARAM->functions.pFirst;
@@ -76,7 +76,7 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
                break;
 
             case HB_P_MODULENAME:
-               pszModuleName = ( char * ) &pFunc->pCode[ ulPos + 1 ];
+               pszModuleName = ( const char * ) &pFunc->pCode[ ulPos + 1 ];
                pInfo = NULL;
                break;
 

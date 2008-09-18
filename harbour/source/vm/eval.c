@@ -270,7 +270,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
          being called, you must use '(PHB_ITEM *) 0' as the third parameter.
 */
 
-PHB_ITEM hb_itemDoC( char * szFunc, ULONG ulPCount, ... )
+PHB_ITEM hb_itemDoC( const char * szFunc, ULONG ulPCount, ... )
 {
    PHB_ITEM pResult = NULL;
 

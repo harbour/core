@@ -75,13 +75,13 @@ static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirstElseIf, ULONG ulOffse
 static void hb_compElseIfFix( HB_COMP_DECL, void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 
 static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR, BOOL );
-static void hb_compRTVariableGen( HB_COMP_DECL, char * );
+static void hb_compRTVariableGen( HB_COMP_DECL, const char * );
 
 static HB_EXPR_PTR hb_compArrayDimPush( HB_EXPR_PTR pInitValue, HB_COMP_DECL );
-static void hb_compVariableDim( char *, HB_EXPR_PTR, HB_COMP_DECL );
+static void hb_compVariableDim( const char *, HB_EXPR_PTR, HB_COMP_DECL );
 
-static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach );
-static void hb_compForEnd( HB_COMP_DECL, char *szVarName );
+static void hb_compForStart( HB_COMP_DECL, const char *szVarName, BOOL bForEach );
+static void hb_compForEnd( HB_COMP_DECL, const char *szVarName );
 static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend );
 static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend );
 static void hb_compEnumEnd( HB_COMP_DECL, HB_EXPR_PTR pExpr );
@@ -153,7 +153,7 @@ static void hb_compDebugStart( void ) { };
  * typedef-ined to YYSTYPE
  */
 extern int  yylex( YYSTYPE *, HB_COMP_DECL );    /* main lex token function, called by yyparse() */
-extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management function */
+extern void yyerror( HB_COMP_DECL, const char * );     /* parsing error management function */
 %}
 
 
@@ -448,7 +448,7 @@ Statement  : ExecFlow CrlfStmnt
                      /* check for reserved name
                      * NOTE: Clipper doesn't check for it
                      */
-                     char * szFunction = hb_compReservedName( $2 );
+                     const char * szFunction = hb_compReservedName( $2 );
                      if( szFunction )
                         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, $2 );
                      HB_COMP_PARAM->szAnnounce = $2;
@@ -462,7 +462,7 @@ Statement  : ExecFlow CrlfStmnt
 CompTimeStr : LITERAL {
                if( $1.dealloc )
                {
-                  $1.string = hb_compIdentifierNew( HB_COMP_PARAM, $1.string, HB_IDENT_FREE );
+                  $1.string = ( char * ) hb_compIdentifierNew( HB_COMP_PARAM, $1.string, HB_IDENT_FREE );
                   $1.dealloc = FALSE;
                }
                hb_compAutoOpenAdd( HB_COMP_PARAM, $1.string );
@@ -536,11 +536,11 @@ DynList    : IdentName                 { hb_compExternAdd( HB_COMP_PARAM, $1, HB
            ;
 
 IdentName  : IDENTIFIER
-           | STEP             { $$ = "STEP"; }
-           | TO               { $$ = "TO"; }
-           | LOOP             { $$ = "LOOP"; }
-           | EXIT             { $$ = "EXIT"; }
-           | IN               { $$ = "IN"; }
+           | STEP             { $$ = ( char * ) "STEP"; }
+           | TO               { $$ = ( char * ) "TO"; }
+           | LOOP             { $$ = ( char * ) "LOOP"; }
+           | EXIT             { $$ = ( char * ) "EXIT"; }
+           | IN               { $$ = ( char * ) "IN"; }
            | OPTIONAL         { $$ = $<string>1; }
            | EXTERN           { $$ = $<string>1; }
            | DYNAMIC          { $$ = $<string>1; }
@@ -2320,7 +2320,7 @@ static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR pVar, BOOL bPopInitV
       pFunc->rtvars = pRTvar;
 }
 
-static void hb_compRTVariableGen( HB_COMP_DECL, char * szCreateFun )
+static void hb_compRTVariableGen( HB_COMP_DECL, const char * szCreateFun )
 {
    USHORT usCount = 0;
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
@@ -2392,7 +2392,7 @@ static HB_EXPR_PTR hb_compArrayDimPush( HB_EXPR_PTR pInitValue, HB_COMP_DECL )
    return pInitValue;
 }
 
-static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_DECL )
+static void hb_compVariableDim( const char * szName, HB_EXPR_PTR pInitValue, HB_COMP_DECL )
 {
    if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
    {
@@ -2431,7 +2431,7 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_D
    }
 }
 
-static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach )
+static void hb_compForStart( HB_COMP_DECL, const char *szVarName, BOOL bForEach )
 {
    HB_ENUMERATOR_PTR pEnumVar;
    
@@ -2468,7 +2468,7 @@ static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach )
    pEnumVar->pNext    = NULL;
 }
 
-BOOL hb_compForEachVarError( HB_COMP_DECL, char *szVarName )
+BOOL hb_compForEachVarError( HB_COMP_DECL, const char *szVarName )
 {
    HB_ENUMERATOR_PTR pEnumVar;
    
@@ -2495,7 +2495,7 @@ BOOL hb_compForEachVarError( HB_COMP_DECL, char *szVarName )
    return TRUE;            
 }
 
-static void hb_compForEnd( HB_COMP_DECL, char *szVar )
+static void hb_compForEnd( HB_COMP_DECL, const char *szVar )
 {
    HB_ENUMERATOR_PTR * pEnumVar;
    
@@ -2514,7 +2514,7 @@ static void hb_compForEnd( HB_COMP_DECL, char *szVar )
 
 static HB_CARGO2_FUNC( hb_compEnumEvalStart )
 {
-   char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
+   const char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
    if( szName )
       hb_compForStart( HB_COMP_PARAM, szName, TRUE );
 
@@ -2558,8 +2558,7 @@ static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend )
 
 static HB_CARGO_FUNC( hb_compEnumEvalEnd )
 {
-   char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
-
+   const char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
    if( szName )
       hb_compForEnd( HB_COMP_PARAM, szName );
 }
@@ -2821,7 +2820,7 @@ BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PFUNCTION pFunc )
    return fUnclosed;
 }
 
-void yyerror( HB_COMP_DECL, char * s )
+void yyerror( HB_COMP_DECL, const char * s )
 {
    if( !HB_COMP_PARAM->pLex->lasttok || HB_COMP_PARAM->pLex->lasttok[ 0 ] == '\n' )
    {

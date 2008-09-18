@@ -113,7 +113,7 @@
    typedef struct _HB_SOCKET_STRUCT
    {
        HB_SOCKET_T com;
-       char *errorDesc;
+       const char *errorDesc;
        int errorCode;
        struct sockaddr_in remote;
        LONG count;
@@ -988,7 +988,7 @@ HB_FUNC( HB_INETRECVALL )
 }
 
 
-static void s_inetRecvPattern( char *szPattern )
+static void s_inetRecvPattern( const char *szPattern )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
    PHB_ITEM pResult     = hb_param( 2, HB_IT_BYREF );

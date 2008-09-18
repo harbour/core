@@ -129,7 +129,7 @@ HB_FUNC( HB_NUMTOHEX )
 
 HB_FUNC( HB_STRTOHEX )
 {
-   char * szStr = hb_parc( 1 ), * szSep = "";
+   const char * szStr = hb_parc( 1 ), * szSep = "";
    ULONG ulStr, ulSep = 0;
 
    if( hb_pcount() > 1 )

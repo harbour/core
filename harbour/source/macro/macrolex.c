@@ -178,7 +178,7 @@ static int hb_lexStringExtCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
       {
          ulLen = pLex->pDst - yylval_ptr->valChar.string;
          *pLex->pDst++ = '\0';
-         hb_strRemEscSeq( yylval_ptr->valChar.string, &ulLen );
+         hb_strRemEscSeq( ( char * ) yylval_ptr->valChar.string, &ulLen );
          yylval_ptr->valChar.length = ( int ) ulLen;
          return LITERAL;
       }
@@ -186,7 +186,7 @@ static int hb_lexStringExtCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
    }
    ulLen = pLex->pDst - yylval_ptr->valChar.string;
    *pLex->pDst++ = '\0';
-   hb_strRemEscSeq( yylval_ptr->valChar.string, &ulLen );
+   hb_strRemEscSeq( ( char * ) yylval_ptr->valChar.string, &ulLen );
    yylval_ptr->valChar.length = ( int ) ulLen;
    hb_macroError( EG_SYNTAX, pMacro );
    return LITERAL;
@@ -504,7 +504,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                   {
                      yylval_ptr->string++;
                      if( pLex->pDst - yylval_ptr->string > HB_SYMBOL_NAME_LEN + 1 )
-                        yylval_ptr->string[ HB_SYMBOL_NAME_LEN ] = '\0';
+                        ( ( char * ) yylval_ptr->string )[ HB_SYMBOL_NAME_LEN ] = '\0';
                      return MACROVAR;
                   }
                   return MACROTEXT;
@@ -697,7 +697,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                         break;
                   }
                   if( pLex->pDst - yylval_ptr->string > HB_SYMBOL_NAME_LEN + 1 )
-                     yylval_ptr->string[ HB_SYMBOL_NAME_LEN ] = '\0';
+                     ( ( char * ) yylval_ptr->string )[ HB_SYMBOL_NAME_LEN ] = '\0';
                }
                return IDENTIFIER;
             }

@@ -6,11 +6,11 @@
 
 /* TODO: search this file for TODO and find 'em! */
 
-char *hb_strtoken(char *szText,
-                  long lText,
-                  long lIndex,
-                  char cDelimiter,
-                  long *lLen)
+static const char *hb_strtoken(char *szText,
+                               long lText,
+                               long lIndex,
+                               char cDelimiter,
+                               long *lLen)
 {
   long wStart;
   long wEnd = 0;
@@ -59,7 +59,7 @@ char *hb_strtoken(char *szText,
 /* returns the nth occurence of a substring within a token-delimited string */
 HB_FUNC( STRTOKEN )
 {
-  char *szText;
+  const char *szText;
   long lIndex = hb_parnl(2);
   char cDelimiter = *hb_parc(3);
   long lLen;

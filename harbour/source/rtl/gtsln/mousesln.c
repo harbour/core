@@ -329,18 +329,18 @@ void hb_gt_sln_mouse_Init( void )
 {
    if( hb_sln_UnderXterm )
    {
-      char * SaveHilit = "\033[?1001s"; /* save old hilit tracking */
-      char * EnabTrack = "\033[?1000h"; /* enable mouse tracking */
+      const char * SaveHilit = "\033[?1001s"; /* save old hilit tracking */
+      const char * EnabTrack = "\033[?1000h"; /* enable mouse tracking */
 
       /* force mouse usage under xterm */
       (void)SLtt_set_mouse_mode( 1, 1 );
 
       /* initial xterm settings */
-      SLtt_write_string( SaveHilit );
-      SLtt_write_string( EnabTrack );
+      SLtt_write_string( ( char * ) SaveHilit );
+      SLtt_write_string( ( char * ) EnabTrack );
       SLtt_flush_output();
 
-      s_iMouseButtons = SLtt_tgetnum( "BT" );
+      s_iMouseButtons = SLtt_tgetnum( ( char * ) "BT" );
 
       /* force two buttons mouse under xterm */
       if( s_iMouseButtons < 1 )
@@ -405,12 +405,12 @@ void hb_gt_sln_mouse_Exit( void )
    {
       if( hb_sln_UnderXterm )
       {
-         char * DisabTrack = "\033[?1000l"; /* disable mouse tracking */
-         char * RestoHilit = "\033[?1001r"; /* restore old hilittracking */
+         const char * DisabTrack = "\033[?1000l"; /* disable mouse tracking */
+         const char * RestoHilit = "\033[?1001r"; /* restore old hilittracking */
 
          /* restore xterm settings */
-         SLtt_write_string( DisabTrack );
-         SLtt_write_string( RestoHilit );
+         SLtt_write_string( ( char * ) DisabTrack );
+         SLtt_write_string( ( char * ) RestoHilit );
          SLtt_flush_output();
 
          /* force mouse usage under xterm */

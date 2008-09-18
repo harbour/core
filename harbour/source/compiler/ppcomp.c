@@ -59,7 +59,7 @@ static void hb_pp_ErrorGen( void * cargo,
 {
    HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
    int iCurrLine = HB_COMP_PARAM->currLine;
-   char * currModule = HB_COMP_PARAM->currModule;
+   const char * currModule = HB_COMP_PARAM->currModule;
 
    HB_COMP_PARAM->currLine = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
    HB_COMP_PARAM->currModule = hb_pp_fileName( HB_COMP_PARAM->pLex->pPP );
@@ -253,7 +253,7 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
 }
 
 
-void hb_compInitPP( HB_COMP_DECL, int argc, char * argv[] )
+void hb_compInitPP( HB_COMP_DECL, int argc, char * const argv[] )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_compInitPP()" ) );
 

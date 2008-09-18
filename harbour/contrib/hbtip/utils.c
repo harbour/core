@@ -84,8 +84,8 @@ HB_FUNC( TIP_TIMESTAMP )
    TIME_ZONE_INFORMATION tzInfo;
    LONG lDate;
    int iYear, iMonth, iDay;
-   char *days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-   char *months[] = {
+   const char *days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+   const char *months[] = {
          "Jan", "Feb", "Mar",
          "Apr", "May", "Jun",
          "Jul", "Aug", "Sep",
@@ -211,9 +211,9 @@ typedef struct tag_mime
    /* Position in stream from which the match begins */
    int pos;
    /* String to match */
-   char *pattern;
+   const char *pattern;
    /* Mimetype if complete */
-   char *mime_type;
+   const char *mime_type;
    /* following entry to determine a mimetype, relative to current position (or 0) */
    int next;
    /* alternative entry to determine a mimetype, relative to current position (or 0) */
@@ -345,9 +345,9 @@ static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 typedef struct tag_mime_ext
 {
    /* Extension to match */
-   char *pattern;
+   const char *pattern;
    /* Mimetype if complete */
-   char *mime_type;
+   const char *mime_type;
    /* flags for confrontation */
    short unsigned int flags;
 } EXT_MIME_ENTRY;
@@ -390,7 +390,7 @@ static EXT_MIME_ENTRY s_extMimeTable[EXT_MIME_TABLE_SIZE] =
 };
 
 
-static char *s_findExtMimeType( char *cExt)
+static const char *s_findExtMimeType( const char *cExt )
 {
    int iCount;
 
@@ -417,7 +417,7 @@ static char *s_findExtMimeType( char *cExt)
 
 
 
-static char *s_findMimeStringInTree( char *cData, int iLen, int iElem )
+static const char *s_findMimeStringInTree( const char *cData, int iLen, int iElem )
 {
    MIME_ENTRY *elem = s_mimeTable + iElem;
    int iPos = elem->pos;
@@ -482,7 +482,7 @@ static char *s_findMimeStringInTree( char *cData, int iLen, int iElem )
 }
 
 
-static char *s_findStringMimeType( char *cData, int iLen )
+static const char *s_findStringMimeType( const char *cData, int iLen )
 {
    int iCount;
    BOOL bFormFeed;
@@ -593,7 +593,7 @@ static char *s_findStringMimeType( char *cData, int iLen )
 }
 
 
-static char *s_findFileMimeType( HB_FHANDLE fileIn )
+static const char *s_findFileMimeType( HB_FHANDLE fileIn )
 {
    char buf[512];
    int iLen;
@@ -617,8 +617,8 @@ static char *s_findFileMimeType( HB_FHANDLE fileIn )
 HB_FUNC( TIP_FILEMIMETYPE )
 {
    PHB_ITEM pFile = hb_param( 1, HB_IT_STRING | HB_IT_NUMERIC );
-   char *ext_type = NULL;
-   char *magic_type = NULL;
+   const char *ext_type = NULL;
+   const char *magic_type = NULL;
    HB_FHANDLE fileIn;
 
 
@@ -678,8 +678,8 @@ HB_FUNC( TIP_FILEMIMETYPE )
 HB_FUNC( TIP_MIMETYPE )
 {
    PHB_ITEM pData = hb_param( 1, HB_IT_STRING );
-   char *magic_type;
-   char *cData;
+   const char *magic_type;
+   const char *cData;
    ULONG ulLen;
 
    if ( pData == NULL )
@@ -833,7 +833,7 @@ HB_FUNC( HB_EXEC )
 
 HB_FUNC( TIP_HTMLSPECIALCHARS )
 {
-   char *cData = hb_parc(1);
+   const char *cData = hb_parc(1);
    int nLen = hb_parclen(1);
    char *cRet;
    int nPos = 0, nPosRet = 0;
@@ -927,5 +927,3 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
 
    hb_retclen_buffer( cRet, nPosRet );
 }
-
-

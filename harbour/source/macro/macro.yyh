@@ -124,14 +124,14 @@
 typedef union YYSTYPE
 #line 130 "macro.y"
 {
-   char *   string;     /* to hold a string returned by lex */
+   const char * string; /* to hold a string returned by lex */
    int      iNumber;    /* to hold a temporary integer number */
    HB_LONG  lNumber;    /* to hold a temporary long number */
    void *   pVoid;      /* to hold any memory structure we may need */
    HB_EXPR_PTR asExpr;
    struct
    {
-      char *   string;
+      const char * string;
       int      length;
    } valChar;
    struct
@@ -150,7 +150,7 @@ typedef union YYSTYPE
       UCHAR    bDec;    /* to hold the number of decimal points in the value */
    } valDouble;
 }
-/* Line 1535 of yacc.c.  */
+/* Line 1495 of yacc.c.  */
 #line 155 "macroy.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -180,7 +180,7 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
             return hb_strdup( pszPos );
          }
          else
-            return "";
+            return ( char * ) "";
       }
    }
 
@@ -240,7 +240,7 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
                hb_strncpy( pszRetVal, pszNext, ulLen );
             }
             else
-               pszRetVal = "";
+               pszRetVal = ( char * ) "";
             break;
          }
 
@@ -368,7 +368,7 @@ ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
 
    if( hb_cmdargCheck( "BUILD" ) )
       hb_verBuildInfo();
-      
+
    if( ( cFlags = hb_cmdargString( "FLAGS" ) ) != NULL ) 
    {
       int i = 0;

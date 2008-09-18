@@ -136,7 +136,7 @@ HB_FUNC( ATREPL )
       ULONG ulCounter;
       char *pc;
 
-      char *pcReplacement;
+      const char *pcReplacement;
       size_t sReplaceLen;
       int iReplaceMode;
       char *pcRetStr;

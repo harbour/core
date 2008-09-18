@@ -35,7 +35,7 @@
 
 /* create a new identifier or return the existing one 
 */
-char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType )
+const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType )
 {
    const char * szIdent;
 
@@ -58,7 +58,7 @@ char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType )
    else if( iType == HB_IDENT_FREE )
       hb_xfree( ( void * ) szName );
 
-   return ( char * )  szIdent;
+   return szIdent;
 }
 
 /* returns a hash key */

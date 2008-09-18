@@ -261,7 +261,7 @@ static ERRCODE hb_memoErrorRT( FPTAREAP pArea, USHORT uiGenCode, USHORT uiSubCod
 }
 
 
-static char * hb_memoDefaultFileExt( int iType, USHORT uiRdd )
+static const char * hb_memoDefaultFileExt( int iType, USHORT uiRdd )
 {
    if( uiRdd == s_uiRddIdBLOB )
       return DBV_MEMOEXT;
@@ -1110,7 +1110,7 @@ static ULONG hb_fptGetMemoLen( FPTAREAP pArea, USHORT uiIndex )
 /*
  * Return the type of memo.
  */
-static char * hb_fptGetMemoType( FPTAREAP pArea, USHORT uiIndex )
+static const char * hb_fptGetMemoType( FPTAREAP pArea, USHORT uiIndex )
 {
    ULONG ulBlock, ulSize, ulType;
    FPTBLOCK fptBlock;
@@ -4654,7 +4654,7 @@ static ERRCODE hb_fptInfo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                hb_itemPutC( pItem, szMFileExt );
             else
             {
-               char * szExt = hb_memoDefaultFileExt( pArea->bMemoType, pArea->rddID );
+               const char * szExt = hb_memoDefaultFileExt( pArea->bMemoType, pArea->rddID );
                if( !szExt )
                   szExt = hb_memoDefaultFileExt( pData->bMemoType, pArea->rddID );
                hb_itemPutC( pItem, szExt );

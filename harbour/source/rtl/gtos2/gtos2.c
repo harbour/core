@@ -694,7 +694,7 @@ static void hb_gt_os2_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    }
 }
 
-static char * hb_gt_os2_Version( PHB_GT pGT, int iType )
+static const char * hb_gt_os2_Version( PHB_GT pGT, int iType )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Version(%p,%d)", pGT, iType ) );
 

@@ -268,8 +268,8 @@ ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
 static void hb_signalExceptionHandler( int sig, siginfo_t * si, void * ucp )
 {
    char buffer[ 32 ];
-   char *signame;
-   char *sigaddr;
+   const char *signame;
+   const char *sigaddr;
 
    HB_SYMBOL_UNUSED( ucp );
 

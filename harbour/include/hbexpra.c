@@ -358,7 +358,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                   /* simple &variable - replace the second argument with
                    * a variable name
                    */
-                  char *szName = pFirst->value.asMacro.szMacro;
+                  const char *szName = pFirst->value.asMacro.szMacro;
                   if( pFirst->pNext )
                      HB_COMP_EXPR_DELETE( pFirst->pNext );  /* delete a second argument */
                   pArg->pNext = hb_compExprNewVar( szName, HB_COMP_PARAM );
@@ -373,7 +373,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                   if( pArg->pNext == NULL )
                   {
                       /* no second argument */
-                     char *szText = pFirst->value.asMacro.szMacro;
+                     const char *szText = pFirst->value.asMacro.szMacro;
                      pArg->pNext = hb_compExprNewString( szText, strlen( szText ), FALSE, HB_COMP_PARAM );
                      pArg->pNext->pNext = pNext;
                   }
@@ -454,10 +454,10 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
  *    pObject : szMessage
  */
 #ifdef HB_MACRO_SUPPORT
-HB_EXPR_PTR hb_macroExprNewSend( HB_EXPR_PTR pObject, char * szMessage,
+HB_EXPR_PTR hb_macroExprNewSend( HB_EXPR_PTR pObject, const char * szMessage,
                                  HB_EXPR_PTR pMessage, HB_COMP_DECL )
 #else
-HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, char * szMessage,
+HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, const char * szMessage,
                                 HB_EXPR_PTR pMessage, HB_COMP_DECL )
 #endif
 {

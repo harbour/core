@@ -67,7 +67,7 @@
 /* helper function for the list function */
 static void do_list( int iSwitch )
 {
-   char *pcString;
+   const char *pcString;
    size_t sStrLen;
 
    size_t asCharCnt[256];

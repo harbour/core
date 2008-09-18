@@ -79,10 +79,10 @@ HB_EXTERN_BEGIN
 
 typedef struct _HB_UNITABLE
 {
-   char *   uniID;
-   int      nChars;
-   BOOL     lMulti;
-   USHORT * uniCodes;
+   const char *   uniID;
+   int            nChars;
+   BOOL           lMulti;
+   USHORT *       uniCodes;
 } HB_UNITABLE, * PHB_UNITABLE;
 
 typedef struct _HB_MULTICHAR
@@ -94,12 +94,12 @@ typedef struct _HB_MULTICHAR
 
 typedef struct _HB_CODEPAGE
 {
-   char *         id;
-   char *         uniID;
+   const char *   id;
+   const char *   uniID;
    PHB_UNITABLE   uniTable;
    int            nChars;
-   char *         CharsUpper;
-   char *         CharsLower;
+   const char *   CharsUpper;
+   const char *   CharsLower;
    BOOL           lLatin;
    BOOL           lAccEqual;
    BOOL           lAccInterleave;

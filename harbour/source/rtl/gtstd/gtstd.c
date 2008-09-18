@@ -437,7 +437,7 @@ static void hb_gt_std_Bell( PHB_GT pGT )
    hb_gt_std_termOut( HB_GTSTD_GET( pGT ), s_szBell, 1 );
 }
 
-static char * hb_gt_std_Version( PHB_GT pGT, int iType )
+static const char * hb_gt_std_Version( PHB_GT pGT, int iType )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Version(%p,%d)", pGT, iType ) );
 

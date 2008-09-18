@@ -588,12 +588,12 @@ HB_EXPORT HB_FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
                   hFileHandle = hPipeHandle[ 1 ];
                }
             } else {
-               char *argv[4];
-               argv[0] = "sh";
-               argv[1] = "-c";
+               char * argv[4];
+               argv[0] = ( char * ) "sh";
+               argv[1] = ( char * ) "-c";
                argv[2] = ( char * ) pFilename;
                argv[3] = ( char * ) 0;
-               hNullHandle = open("/dev/null", O_RDWR);
+               hNullHandle = open( "/dev/null", O_RDWR );
                if( bRead ) {
                   close( hPipeHandle[ 0 ] );
                   dup2( hPipeHandle[ 1 ], 1 );
@@ -609,10 +609,10 @@ HB_EXPORT HB_FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
                if( iMaxFD < 3 )
                   iMaxFD = 1024;
                for( hNullHandle = 3; hNullHandle < iMaxFD; ++hNullHandle )
-                  close(hNullHandle);
-               setuid(getuid());
-               setgid(getgid());
-               execve("/bin/sh", argv, environ);
+                  close( hNullHandle );
+               setuid( getuid() );
+               setgid( getgid() );
+               execve( "/bin/sh", argv, environ );
                exit(1);
             }
          }
@@ -2935,14 +2935,14 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
             ulLen = strlen( pFileName->szName );
             ulLen = hb_strRTrimLen( pFileName->szName, ulLen, FALSE );
             pFileName->szName = hb_strLTrim( pFileName->szName, &ulLen );
-            pFileName->szName[ulLen] = '\0';
+            ( ( char * ) pFileName->szName )[ulLen] = '\0';
          }
          if( pFileName->szExtension )
          {
             ulLen = strlen( pFileName->szExtension );
             ulLen = hb_strRTrimLen( pFileName->szExtension, ulLen, FALSE );
             pFileName->szExtension = hb_strLTrim( pFileName->szExtension, &ulLen );
-            pFileName->szExtension[ulLen] = '\0';
+            ( ( char * ) pFileName->szExtension )[ulLen] = '\0';
          }
       }
 
@@ -2950,25 +2950,25 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
       if( iFileCase == HB_SET_CASE_LOWER )
       {
          if( pFileName->szName )
-            hb_strLower( pFileName->szName, strlen( pFileName->szName ) );
+            hb_strLower( ( char * ) pFileName->szName, strlen( pFileName->szName ) );
          if( pFileName->szExtension )
-            hb_strLower( pFileName->szExtension, strlen( pFileName->szExtension ) );
+            hb_strLower( ( char * ) pFileName->szExtension, strlen( pFileName->szExtension ) );
       }
       else if( iFileCase == HB_SET_CASE_UPPER )
       {
          if( pFileName->szName )
-            hb_strUpper( pFileName->szName, strlen( pFileName->szName ) );
+            hb_strUpper( ( char * ) pFileName->szName, strlen( pFileName->szName ) );
          if( pFileName->szExtension )
-            hb_strUpper( pFileName->szExtension, strlen( pFileName->szExtension ) );
+            hb_strUpper( ( char * ) pFileName->szExtension, strlen( pFileName->szExtension ) );
       }
 
       /* DIRCASE */
       if( pFileName->szPath )
       {
          if( iDirCase == HB_SET_CASE_LOWER )
-            hb_strLower( pFileName->szPath, strlen( pFileName->szPath ) );
+            hb_strLower( ( char * ) pFileName->szPath, strlen( pFileName->szPath ) );
          else if( iDirCase == HB_SET_CASE_UPPER )
-            hb_strUpper( pFileName->szPath, strlen( pFileName->szPath ) );
+            hb_strUpper( ( char * ) pFileName->szPath, strlen( pFileName->szPath ) );
       }
 
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );

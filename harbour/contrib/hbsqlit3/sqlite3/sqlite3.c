@@ -21235,7 +21235,7 @@ static int openDirectory(const char *zFilename, int *pFd){
   char zDirname[MAX_PATHNAME+1];
 
   sqlite3_snprintf(MAX_PATHNAME, zDirname, "%s", zFilename);
-  for(ii=strlen(zDirname); ii>=0 && zDirname[ii]!='/'; ii--);
+  for(ii=strlen(zDirname); ii>=0 && zDirname[ii]!='/'; ii--) {};
   if( ii>0 ){
     zDirname[ii] = '\0';
     fd = open(zDirname, O_RDONLY|O_BINARY, 0);

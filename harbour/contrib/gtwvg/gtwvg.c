@@ -659,7 +659,7 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    }
 }
 
-static void hb_gt_wvt_SetWindowTitle( HWND hWnd, char * title )
+static void hb_gt_wvt_SetWindowTitle( HWND hWnd, const char * title )
 {
    LPTSTR text = HB_TCHAR_CONVTO( title );
    SetWindowText( hWnd, text );
@@ -2028,7 +2028,7 @@ static BOOL hb_gt_wvt_PutChar( PHB_GT pGT, int iRow, int iCol,
 
 /* ********************************************************************** */
 
-static char * hb_gt_wvt_Version( PHB_GT pGT, int iType )
+static const char * hb_gt_wvt_Version( PHB_GT pGT, int iType )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Version(%p,%d)", pGT, iType ) );
 

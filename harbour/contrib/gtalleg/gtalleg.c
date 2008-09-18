@@ -209,7 +209,7 @@ static const gtAllegKey s_CtrlTable[GT_CTRL_TABLE_SIZE] = {
 #define MK_GT8BCOLOR(n)          ((n & 0xFF) / 16 | (n & 0xFF00) / 256)
 
 
-static void hb_gt_alleg_Error( char * szMsg )
+static void hb_gt_alleg_Error( const char * szMsg )
 {
    s_fGtError = TRUE;
    hb_errInternal( 9997, "%s: %s", szMsg, allegro_error );
@@ -583,7 +583,7 @@ static void hb_gt_alleg_Exit( PHB_GT pGT )
    }
 }
 
-static char * hb_gt_alleg_Version( PHB_GT pGT, int iType )
+static const char * hb_gt_alleg_Version( PHB_GT pGT, int iType )
 {
    HB_SYMBOL_UNUSED( pGT );
 

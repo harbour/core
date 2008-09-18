@@ -127,7 +127,7 @@ static const char * s_szReservedFun[] = {
 #define RESERVED_FUNCTIONS    ( sizeof( s_szReservedFun ) / sizeof( char * ) )
 #endif
 
-char * hb_compReservedName( char * szName )
+const char * hb_compReservedName( const char * szName )
 {
 #if !defined( HB_RESERVED_OFF )
    unsigned int uiFirst = 0, uiLast = RESERVED_FUNCTIONS - 1, uiMiddle;
@@ -161,4 +161,3 @@ char * hb_compReservedName( char * szName )
 
    return NULL;
 }
-

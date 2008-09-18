@@ -54,8 +54,8 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-static ULONG hb_tokenCount( char * szLine, ULONG ulLen,
-                            char * szDelim, ULONG ulDelim,
+static ULONG hb_tokenCount( const char * szLine, ULONG ulLen,
+                            const char * szDelim, ULONG ulDelim,
                             BOOL fSkipStrings, BOOL fDoubleQuoteOnly )
 {
    ULONG ul = 0, ulTokens = 1;
@@ -88,10 +88,10 @@ static ULONG hb_tokenCount( char * szLine, ULONG ulLen,
    return ulTokens;
 }
 
-static char * hb_tokenGet( char * szLine, ULONG ulLen,
-                           char * szDelim, ULONG ulDelim,
-                           BOOL fSkipStrings, BOOL fDoubleQuoteOnly,
-                           ULONG ulToken, ULONG * pulLen )
+static const char * hb_tokenGet( const char * szLine, ULONG ulLen,
+                                 const char * szDelim, ULONG ulDelim,
+                                 BOOL fSkipStrings, BOOL fDoubleQuoteOnly,
+                                 ULONG ulToken, ULONG * pulLen )
 {
    ULONG ul, ulStart;
    char cQuote = 0;
@@ -131,8 +131,8 @@ static char * hb_tokenGet( char * szLine, ULONG ulLen,
    return NULL;
 }
 
-static PHB_ITEM hb_tokenArray( char * szLine, ULONG ulLen,
-                               char * szDelim, ULONG ulDelim,
+static PHB_ITEM hb_tokenArray( const char * szLine, ULONG ulLen,
+                               const char * szDelim, ULONG ulDelim,
                                BOOL fSkipStrings, BOOL fDoubleQuoteOnly )
 {
    ULONG ulTokens = hb_tokenCount( szLine, ulLen, szDelim, ulDelim,
@@ -173,10 +173,10 @@ static PHB_ITEM hb_tokenArray( char * szLine, ULONG ulLen,
 }
 
 static void hb_tokenParam( int iDelim, ULONG ulSkip,
-                           char ** pszLine, ULONG * pulLen,
-                           char ** pszDelim, ULONG * pulDelim )
+                           const char ** pszLine, ULONG * pulLen,
+                           const char ** pszDelim, ULONG * pulDelim )
 {
-   char * szLine = hb_parc( 1 ), * szDelim = NULL;
+   const char * szLine = hb_parc( 1 ), * szDelim = NULL;
    ULONG ulLen = hb_parclen( 1 ), ulDelim = 0;
 
    if( ulLen )
@@ -219,7 +219,7 @@ static void hb_tokenParam( int iDelim, ULONG ulSkip,
 
 HB_FUNC( HB_TOKENCOUNT )
 {
-   char * szLine, * szDelim;
+   const char * szLine, * szDelim;
    ULONG ulLen, ulDelim;
 
    hb_tokenParam( 2, 0, &szLine, &ulLen, &szDelim, &ulDelim );
@@ -233,7 +233,7 @@ HB_FUNC( HB_TOKENCOUNT )
 
 HB_FUNC( HB_TOKENGET )
 {
-   char * szLine, * szDelim;
+   const char * szLine, * szDelim;
    ULONG ulLen, ulDelim;
 
    hb_tokenParam( 3, 0, &szLine, &ulLen, &szDelim, &ulDelim );
@@ -255,7 +255,7 @@ HB_FUNC( HB_TOKENGET )
  */
 HB_FUNC( HB_TOKENPTR )
 {
-   char * szLine, * szDelim, * szToken;
+   const char * szLine, * szDelim, * szToken;
    ULONG ulLen, ulDelim, ulSkip, ulToken;
 
    hb_tokenParam( 3, hb_parnl( 2 ), &szLine, &ulLen, &szDelim, &ulDelim );
@@ -281,7 +281,7 @@ HB_FUNC( HB_TOKENPTR )
 
 HB_FUNC( HB_ATOKENS )
 {
-   char * szLine, * szDelim;
+   const char * szLine, * szDelim;
    ULONG ulLen, ulDelim;
 
    hb_tokenParam( 2, 0, &szLine, &ulLen, &szDelim, &ulDelim );

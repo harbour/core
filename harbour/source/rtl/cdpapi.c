@@ -306,8 +306,8 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
             if( !s_cdpList[iPos] )
             {
                int i, ia, iu, il, iumax = 0, ilmax = 0;
-               char *ptrUpper = cdpage->CharsUpper;
-               char *ptrLower = cdpage->CharsLower;
+               char *ptrUpper = ( char * ) cdpage->CharsUpper;
+               char *ptrLower = ( char * ) cdpage->CharsLower;
                char *ptr;
                HB_MULTICHAR multi[12];
                int nMulti = 0;
@@ -339,8 +339,8 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                   }
                   if( strpbrk( cdpage->CharsUpper, "~." ) != NULL )
                   {
-                     ptrUpper = cdpage->CharsUpper = hb_strdup( cdpage->CharsUpper );
-                     ptrLower = cdpage->CharsLower = hb_strdup( cdpage->CharsLower );
+                     cdpage->CharsUpper = ptrUpper = hb_strdup( cdpage->CharsUpper );
+                     cdpage->CharsLower = ptrLower = hb_strdup( cdpage->CharsLower );
                      cdpage->lChClone = TRUE;
                   }
                   for( i = ia = 1; *ptrUpper; i++, ia++, ptrUpper++, ptrLower++ )
@@ -476,7 +476,7 @@ HB_EXPORT char * hb_cdpID( void )
 
    cdp = hb_vmCDP();
 
-   return cdp ? cdp->id : NULL;
+   return cdp ? ( char * ) cdp->id : NULL;
 }
 
 HB_EXPORT char * hb_cdpSelectID( const char *pszID )
@@ -1174,8 +1174,8 @@ HB_EXPORT void hb_cdpReleaseAll( void )
          hb_xfree( s_cdpList[iPos]->multi );
       if( s_cdpList[iPos]->lChClone )
       {
-         hb_xfree( s_cdpList[iPos]->CharsUpper );
-         hb_xfree( s_cdpList[iPos]->CharsLower );
+         hb_xfree( ( void * ) s_cdpList[iPos]->CharsUpper );
+         hb_xfree( ( void * ) s_cdpList[iPos]->CharsLower );
       }
       iPos++;
    }

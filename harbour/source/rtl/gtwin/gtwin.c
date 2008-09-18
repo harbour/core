@@ -847,7 +847,7 @@ static BOOL hb_gt_win_SetMode( PHB_GT pGT, int iRows, int iCols )
 
 /* *********************************************************************** */
 
-static char * hb_gt_win_Version( PHB_GT pGT, int iType )
+static const char * hb_gt_win_Version( PHB_GT pGT, int iType )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Version(%p,%d)", pGT, iType ) );
 

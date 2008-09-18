@@ -70,7 +70,7 @@ static HB_GT_FUNCS   SuperTable;
 
 /* *********************************************************************** */
 
-static char * hb_gt_gui_Version( PHB_GT pGT, int iType )
+static const char * hb_gt_gui_Version( PHB_GT pGT, int iType )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Version(%p,%d)", pGT, iType ) );
 

@@ -66,6 +66,37 @@
 
 HB_EXTERN_BEGIN
 
+/* Inline assembler version of atomic operations on memory reference counters */
+#if HB_COUNTER_SIZE == 4 && defined( __GNUC__ ) && \
+    ( defined( i386 ) || defined( __i386__ ) || defined( __x86_64__ ) )
+
+   static __inline__ void hb_atomic_inc32( volatile int * p )
+   {
+      __asm__ __volatile__(
+         "lock; incl %0\n"
+         :"=m" (*p) :"m" (*p)
+      );
+   }
+
+   static __inline__ int hb_atomic_dec32( volatile int * p )
+   {
+      unsigned char c;
+      __asm__ __volatile__(
+         "lock; decl %0\n"
+         "sete %1\n"
+         :"=m" (*p), "=qm" (c) :"m" (*p) : "memory"
+      );
+      return c == 0;
+   }
+
+#  define HB_ATOM_INC( p )    ( hb_atomic_inc32( ( volatile int * ) (p) ) )
+#  define HB_ATOM_DEC( p )    ( hb_atomic_dec32( ( volatile int * ) (p) ) )
+#  define HB_ATOM_GET( p )    (*(int volatile *)(p))
+#  define HB_ATOM_SET( p, n ) do { (*(int volatile *)(p)) = (n); } while(0)
+
+#endif
+
+
 #if defined( HB_PTHREAD_API )
 
    typedef pthread_t       HB_THREAD_ID;
@@ -104,35 +135,6 @@ HB_EXTERN_BEGIN
 #     define HB_COND_GET(v)            ( &( (v)->cond ) )
 #  endif
 
-#  if HB_COUNTER_SIZE == 4 && defined( __GNUC__ ) && \
-      ( defined( __i386__ ) || defined( __x86_64__ ) )
-
-      static __inline__ void hb_atomic_inc32( volatile int * p )
-      {
-         __asm__ __volatile__(
-            "lock; incl %0\n"
-            :"=m" (*p) :"m" (*p)
-         );
-      }
-
-      static __inline__ int hb_atomic_dec32( volatile int * p )
-      {
-         unsigned char c;
-         __asm__ __volatile__(
-            "lock; decl %0\n"
-            "sete %1\n"
-            :"=m" (*p), "=qm" (c) :"m" (*p) : "memory"
-         );
-         return c == 0;
-      }
-
-#     define HB_ATOM_INC( p )    ( hb_atomic_inc32( ( volatile int * ) (p) ) )
-#     define HB_ATOM_DEC( p )    ( hb_atomic_dec32( ( volatile int * ) (p) ) )
-#     define HB_ATOM_GET( p )    (*(int volatile *)(p))
-#     define HB_ATOM_SET( p, n ) do { (*(int volatile *)(p)) = (n); } while(0)
-
-#  endif
-
 #elif defined( HB_OS_WIN_32 )
 
 # define HB_MAX_THREAD  32768
@@ -162,16 +164,22 @@ HB_EXTERN_BEGIN
 #  define HB_COND_TIMEDWAIT(v,n)    ( WaitForSingleObject( (v), (n) ) != WAIT_FAILED )
 
    /* Atomic operations on memory reference counters */
-#  if HB_COUNTER_SIZE == 8
-#     define HB_ATOM_INC( p )    (InterlockedIncrement64((LONGLONG *)(p)))
-#     define HB_ATOM_DEC( p )    (InterlockedDecrement64((LONGLONG *)(p)))
-#     define HB_ATOM_GET( p )    (*(LONGLONG volatile *)(p))
-#     define HB_ATOM_SET( p, n ) do { (*(LONGLONG volatile *)(p)) = (n); } while(0)
-#  else
-#     define HB_ATOM_INC( p )    (InterlockedIncrement((LONG *)(p)))
-#     define HB_ATOM_DEC( p )    (InterlockedDecrement((LONG *)(p)))
-#     define HB_ATOM_GET( p )    (*(LONG volatile *)(p))
-#     define HB_ATOM_SET( p, n ) do { (*(LONG volatile *)(p)) = (n); } while(0)
+#  if !defined( HB_ATOM_INC ) || !defined( HB_ATOM_DEC )
+#     undef HB_ATOM_DEC
+#     undef HB_ATOM_INC
+#     undef HB_ATOM_GET
+#     undef HB_ATOM_SET
+#     if HB_COUNTER_SIZE == 8
+#        define HB_ATOM_INC( p )    (InterlockedIncrement64((LONGLONG *)(p)))
+#        define HB_ATOM_DEC( p )    (InterlockedDecrement64((LONGLONG *)(p)))
+#        define HB_ATOM_GET( p )    (*(LONGLONG volatile *)(p))
+#        define HB_ATOM_SET( p, n ) do { (*(LONGLONG volatile *)(p)) = (n); } while(0)
+#     else
+#        define HB_ATOM_INC( p )    (InterlockedIncrement((LONG *)(p)))
+#        define HB_ATOM_DEC( p )    (InterlockedDecrement((LONG *)(p)))
+#        define HB_ATOM_GET( p )    (*(LONG volatile *)(p))
+#        define HB_ATOM_SET( p, n ) do { (*(LONG volatile *)(p)) = (n); } while(0)
+#     endif
 #  endif
 
 

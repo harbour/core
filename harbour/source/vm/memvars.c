@@ -693,7 +693,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
  * procedure only.
  * The scope of released variables are specified using passed name's mask
  */
-static void hb_memvarReleaseWithMask( char *szMask, BOOL bInclude )
+static void hb_memvarReleaseWithMask( const char *szMask, BOOL bInclude )
 {
    ULONG ulBase = hb_stackGetPrivateStack()->count;
    PHB_DYNS pDynVar;
@@ -880,9 +880,9 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, const char ** p
 
 /* ************************************************************************** */
 
-static char * hb_memvarGetMask( int iParam )
+static const char * hb_memvarGetMask( int iParam )
 {
-   char * pszMask = hb_parc( iParam );
+   const char * pszMask = hb_parc( iParam );
    if( !pszMask || pszMask[ 0 ] == '*' )
       pszMask = "*";
    return pszMask;
@@ -992,7 +992,7 @@ HB_FUNC( __MVRELEASE )
    if( iCount && ISCHAR( 1 ) )
    {
       BOOL bIncludeVar;
-      char * pszMask;
+      const char * pszMask;
 
       pszMask = hb_memvarGetMask( 1 );
       bIncludeVar = ( pszMask[ 0 ] == '*' && !pszMask[ 1 ] ) ||
@@ -1178,7 +1178,7 @@ HB_FUNC( __MVPUT )
 
 typedef struct
 {
-   char * pszMask;
+   const char * pszMask;
    BOOL bIncludeMask;
    BYTE * buffer;
    HB_FHANDLE fhnd;
@@ -1188,7 +1188,7 @@ typedef struct
 
 static HB_DYNS_FUNC( hb_memvarSave )
 {
-   char * pszMask    = ( ( MEMVARSAVE_CARGO * ) Cargo )->pszMask;
+   const char * pszMask    = ( ( MEMVARSAVE_CARGO * ) Cargo )->pszMask;
    BOOL bIncludeMask = ( ( MEMVARSAVE_CARGO * ) Cargo )->bIncludeMask;
    BYTE * buffer     = ( ( MEMVARSAVE_CARGO * ) Cargo )->buffer;
    HB_FHANDLE fhnd   = ( ( MEMVARSAVE_CARGO * ) Cargo )->fhnd;
@@ -1405,7 +1405,7 @@ HB_FUNC( __MVRESTORE )
       {
          BOOL bIncludeMask;
          BYTE buffer[ HB_MEM_REC_LEN ];
-         char * pszMask;
+         const char * pszMask;
 
 #ifdef HB_C52_STRICT
          pszMask = "*";

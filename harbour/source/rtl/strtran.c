@@ -67,14 +67,14 @@ HB_FUNC( STRTRAN )
 
    if( pText && pSeek )
    {
-      char * szText = hb_itemGetCPtr( pText );
+      const char * szText = hb_itemGetCPtr( pText );
       ULONG ulText = hb_itemGetCLen( pText );
       ULONG ulSeek = hb_itemGetCLen( pSeek );
 
       if( ulSeek && ulSeek <= ulText )
       {
-         char * szSeek = hb_itemGetCPtr( pSeek );
-         char * szReplace;
+         const char * szSeek = hb_itemGetCPtr( pSeek );
+         const char * szReplace;
          ULONG ulStart;
 
          ulStart = ( ISNUM( 4 ) ? hb_parnl( 4 ) : 1 );

@@ -222,7 +222,7 @@ int hb_compExprIsString( HB_EXPR_PTR pExpr )
    return ( pExpr->ExprType == HB_ET_STRING );
 }
 
-char * hb_compExprAsString( HB_EXPR_PTR pExpr )
+const char * hb_compExprAsString( HB_EXPR_PTR pExpr )
 {
    if( pExpr->ExprType == HB_ET_STRING )
       return pExpr->value.asString.string;
@@ -279,7 +279,7 @@ HB_LONG hb_compExprAsLongNum( HB_EXPR_PTR pExpr )
       return 0;
 }
 
-char *hb_compExprAsSymbol( HB_EXPR_PTR pExpr )
+const char *hb_compExprAsSymbol( HB_EXPR_PTR pExpr )
 {
    switch( pExpr->ExprType )
    {
@@ -349,7 +349,7 @@ HB_EXPR_PTR hb_compExprNewDate( HB_LONG lValue, HB_COMP_DECL )
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewString( char *szValue, ULONG ulLen, BOOL fDealloc, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewString( const char *szValue, ULONG ulLen, BOOL fDealloc, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -357,7 +357,7 @@ HB_EXPR_PTR hb_compExprNewString( char *szValue, ULONG ulLen, BOOL fDealloc, HB_
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_STRING );
 
-   pExpr->value.asString.string = szValue;
+   pExpr->value.asString.string = ( char * ) szValue;
    pExpr->value.asString.dealloc = fDealloc;
    pExpr->ulLength = ulLen;
    pExpr->ValType = HB_EV_STRING;
@@ -518,7 +518,7 @@ HB_EXPR_PTR hb_compExprNewSelf( HB_COMP_DECL )
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewVarRef( char * szVarName, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewVarRef( const char * szVarName, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -531,7 +531,7 @@ HB_EXPR_PTR hb_compExprNewVarRef( char * szVarName, HB_COMP_DECL )
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewFunRef( char * szFunName, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewFunRef( const char * szFunName, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -560,7 +560,7 @@ HB_EXPR_PTR hb_compExprNewRef( HB_EXPR_PTR pRefer, HB_COMP_DECL )
 /* Creates new macro expression
  */
 HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr,
-                                 unsigned char cMacroOp, char * szName,
+                                 unsigned char cMacroOp, const char * szName,
                                  HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
@@ -756,7 +756,7 @@ HB_EXPR_PTR hb_compExprAddListExpr( HB_EXPR_PTR pList, HB_EXPR_PTR pNewItem )
    return pList;
 }
 
-HB_EXPR_PTR hb_compExprNewVar( char * szName, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewVar( const char * szName, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -772,7 +772,7 @@ HB_EXPR_PTR hb_compExprNewVar( char * szName, HB_COMP_DECL )
  * szName is a string with variable name if 'PUBLIC varname' context
  * pMacroVar is a macro expression if 'PUBLIC &varname' context
  */
-HB_EXPR_PTR hb_compExprNewRTVar( char * szName, HB_EXPR_PTR pMacroVar,
+HB_EXPR_PTR hb_compExprNewRTVar( const char * szName, HB_EXPR_PTR pMacroVar,
                                  HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
@@ -789,7 +789,7 @@ HB_EXPR_PTR hb_compExprNewRTVar( char * szName, HB_EXPR_PTR pMacroVar,
 
 /* Create a new symbol used in function calls
  */
-HB_EXPR_PTR hb_compExprNewFunName( char * szName, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewFunName( const char * szName, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -802,7 +802,7 @@ HB_EXPR_PTR hb_compExprNewFunName( char * szName, HB_COMP_DECL )
 
 /* Create a new symbol used in an alias expressions
  */
-HB_EXPR_PTR hb_compExprNewAlias( char * szName, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewAlias( const char * szName, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -1326,7 +1326,7 @@ ULONG hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 
 /* Create a new declaration for codeblock local variable
  */
-static HB_CBVAR_PTR hb_compExprCBVarNew( char * szVarName, BYTE bType )
+static HB_CBVAR_PTR hb_compExprCBVarNew( const char * szVarName, BYTE bType )
 {
    HB_CBVAR_PTR pVar;
 
@@ -1344,7 +1344,7 @@ static HB_CBVAR_PTR hb_compExprCBVarNew( char * szVarName, BYTE bType )
 
 /* Add a new local variable declaration
  */
-HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR pCB, char * szVarName, BYTE bType,
+HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR pCB, const char * szVarName, BYTE bType,
                                  HB_COMP_DECL )
 {
    HB_CBVAR_PTR pVar;

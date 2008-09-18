@@ -142,7 +142,7 @@ struct tag_mxml_refil;
 struct tag_mxml_output;
 
 typedef void (*MXML_REFIL_FUNC)( struct tag_mxml_refil *ref );
-typedef void (*MXML_OUTPUT_FUNC)( struct tag_mxml_output *out, char *data, int len );
+typedef void (*MXML_OUTPUT_FUNC)( struct tag_mxml_output *out, const char *data, int len );
 
 /*************************************************
    Structures holding the XML data

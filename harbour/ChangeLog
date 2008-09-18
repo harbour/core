@@ -8,6 +8,104 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-18 07:21 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbthread.h
+    * use assembler version of atomic inc/dec operation in all x86 based
+      GCC builds - it should noticeable improve OS2 MT build speed,
+      please test.
+
+  * harbour/include/hbcomp.h
+  * harbour/include/hbapicdp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbgtcore.h
+  * harbour/include/hbapifs.h
+  * harbour/include/hbwince.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprop.h
+  * harbour/include/hbmacro.h
+  * harbour/include/hbapigt.h
+  * harbour/include/hbapi.h
+  * harbour/include/hbapiitm.h
+  * harbour/include/hbexprb.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/hbpp.c
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/cmdarg.c
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/extrap.c
+  * harbour/source/vm/memvars.c
+  * harbour/source/vm/eval.c
+  * harbour/source/vm/extend.c
+  * harbour/source/vm/set.c
+  * harbour/source/main/harbour.c
+  * harbour/source/common/hbfsapi.c
+  * harbour/source/common/reserved.c
+  * harbour/source/common/expropt1.c
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyh
+  * harbour/source/macro/macrolex.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/gtos2/gtos2.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/cdpapi.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/hbtoken.c
+  * harbour/source/rtl/gtchrmap.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtsln/mousesln.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtsln/kbsln.c
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/hbhex.c
+  * harbour/source/rtl/gtgui/gtgui.c
+  * harbour/source/rtl/gt_tpl/gt_tpl.c
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/strtran.c
+  * harbour/source/rtl/hbinet.c
+  * harbour/source/rtl/gtapi.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbsql.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/hbsix/sxfname.c
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/hbdbginf.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/hbident.c
+  * harbour/source/compiler/hbusage.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.y
+  * harbour/contrib/gtalleg/gtalleg.c
+  * harbour/contrib/hbct/charlist.c
+  * harbour/contrib/hbct/charmix.c
+  * harbour/contrib/hbct/screen1.c
+  * harbour/contrib/hbct/atrepl.c
+  * harbour/contrib/xhb/hboutdbg.c
+  * harbour/contrib/xhb/hbxml.c
+  * harbour/contrib/xhb/hbxml.h
+  * harbour/contrib/hbgt/strexpan.c
+  * harbour/contrib/hbsqlit3/sqlite3/sqlite3.c
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/hbclipsm/status.c
+  * harbour/contrib/hbclipsm/gauge.c
+  * harbour/contrib/hbmisc/stringsx.c
+  * harbour/contrib/hbtip/utils.c
+  * harbour/contrib/hbgf/hbgfgtk/msginfo.c
+  * harbour/contrib/hbgf/hbgfgtk/harbgtk.h
+  * harbour/contrib/hbbmcdx/bmdbfcdx.c
+  * harbour/utils/hbmake/hbmgauge.c
+    * use const char * instead of char * in places which should be marked
+      as const
+
 2008-09-18 01:17 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/fm.c
   + harbour/source/vm/dlmalloc.c

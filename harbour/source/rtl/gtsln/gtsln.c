@@ -68,7 +68,7 @@ static BOOL s_fStdInTTY = FALSE, s_fStdOutTTY = FALSE, s_fStdErrTTY = FALSE;
 BOOL hb_sln_Is_Unicode = FALSE;
 
 /* Slang color names */
-static char * s_colorNames[] =
+static const char * s_colorNames[] =
 {
     "black"         ,
     "blue"          ,
@@ -118,7 +118,7 @@ static BOOL s_bSuspended = FALSE;
 /* A definition is a list of pairs of chars. The first char in each pair is  */
 /* an ASCII key, which should be pressed *after* a "DeadKey" was pressed to  */
 /* get the nation char, a second in that pair is a corresponding nation char */
-static char * hb_NationCharsEnvName = "HRBNATIONCHARS";
+static const char * hb_NationCharsEnvName = "HRBNATIONCHARS";
 
 /* *********************************************************************** */
 
@@ -162,7 +162,8 @@ static void hb_sln_colorTrans( void )
        * the same.
        */
       clr = ( bg << 4 ) | ( fg ^ 0x07 );
-      SLtt_set_color( clr, ( char * ) NULL, s_colorNames[ fg ], s_colorNames[ bg ] );
+      SLtt_set_color( clr, ( char * ) NULL, ( char * ) s_colorNames[ fg ],
+                                            ( char * ) s_colorNames[ bg ] );
 #ifdef HB_SLN_UTF8
       s_colorTab[ i ] = clr;
 #else
@@ -536,7 +537,7 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
 {
    if( isatty( iStdOut ) && isatty( iStdIn ) )
    {
-      char * szBuf = "\r\303\255\033[6n";
+      const char * szBuf = "\r\303\255\033[6n";
       struct timeval tv;
       fd_set rdfds;
 
@@ -713,8 +714,8 @@ static void hb_gt_sln_Exit( PHB_GT pGT )
    /* restore a standard bell frequency and duration */
    if( hb_sln_UnderLinuxConsole )
    {
-      SLtt_write_string( "\033[10]" );
-      SLtt_write_string( "\033[11]" );
+      SLtt_write_string( ( char * ) "\033[10]" );
+      SLtt_write_string( ( char * ) "\033[11]" );
       SLtt_flush_output();
    }
 
@@ -817,7 +818,7 @@ static void hb_gt_sln_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 /* *********************************************************************** */
 
-static char * hb_gt_sln_Version( PHB_GT pGT, int iType )
+static const char * hb_gt_sln_Version( PHB_GT pGT, int iType )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Version(%p)", pGT ) );
 

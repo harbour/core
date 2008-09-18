@@ -691,7 +691,7 @@ int main( int argc, char * argv[] )
             PHB_FNAME pFileName;
 
             pFileName = hb_fsFNameSplit( szFile );
-            pFileName->szExtension = ( char * ) ".ppo";
+            pFileName->szExtension = ".ppo";
             hb_fsFNameMerge( szFileName, pFileName );
             hb_xfree( pFileName );
 
