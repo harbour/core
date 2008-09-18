@@ -938,24 +938,30 @@ HB_FUNC( CURL_EASY_SETOPT )
          case HB_CURLOPT_COOKIESESSION:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_COOKIESESSION, HB_CURL_OPT_BOOL( 3 ) );
             break;
+#if LIBCURL_VERSION_NUM >= 0x070E01
          case HB_CURLOPT_COOKIELIST:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_COOKIELIST, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
             break;
          case HB_CURLOPT_HTTPGET:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPGET, HB_CURL_OPT_BOOL( 3 ) );
             break;
+#endif
          case HB_CURLOPT_HTTP_VERSION:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP_VERSION, hb_parnl( 3 ) );
             break;
+#if LIBCURL_VERSION_NUM >= 0x070E01
          case HB_CURLOPT_IGNORE_CONTENT_LENGTH:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_IGNORE_CONTENT_LENGTH, HB_CURL_OPT_BOOL( 3 ) );
             break;
+#endif
+#if LIBCURL_VERSION_NUM >= 0x071002
          case HB_CURLOPT_HTTP_CONTENT_DECODING:
-            res = curl_easy_setopt( hb_curl->curl, CURLOPT_IGNORE_CONTENT_LENGTH, HB_CURL_OPT_BOOL( 3 ) );
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP_CONTENT_DECODING, HB_CURL_OPT_BOOL( 3 ) );
             break;
          case HB_CURLOPT_HTTP_TRANSFER_DECODING:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP_TRANSFER_DECODING, HB_CURL_OPT_BOOL( 3 ) );
             break;
+#endif
 
          /* FTP options */
 
@@ -1051,8 +1057,12 @@ HB_FUNC( CURL_EASY_SETOPT )
          case HB_CURLOPT_FTP_SKIP_PASV_IP:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_FTP_SKIP_PASV_IP, HB_CURL_OPT_BOOL( 3 ) );
             break;
-         case HB_CURLOPT_USE_SSL: /* HB_CURLOPT_FTP_SSL */
+         case HB_CURLOPT_USE_SSL:
+#if LIBCURL_VERSION_NUM > 0x071004
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_USE_SSL, hb_parnl( 3 ) );
+#else
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_FTP_SSL, hb_parnl( 3 ) );
+#endif
             break;
          case HB_CURLOPT_FTPSSLAUTH:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_FTPSSLAUTH, hb_parnl( 3 ) );
@@ -1130,9 +1140,11 @@ HB_FUNC( CURL_EASY_SETOPT )
          case HB_CURLOPT_TIMEOUT:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_TIMEOUT, hb_parnl( 3 ) );
             break;
+#if LIBCURL_VERSION_NUM >= 0x071002
          case HB_CURLOPT_TIMEOUT_MS:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_TIMEOUT_MS, hb_parnl( 3 ) );
             break;
+#endif
          case HB_CURLOPT_LOW_SPEED_LIMIT:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_LOW_SPEED_LIMIT, hb_parnl( 3 ) );
             break;
@@ -1160,9 +1172,11 @@ HB_FUNC( CURL_EASY_SETOPT )
          case HB_CURLOPT_CONNECTTIMEOUT:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_CONNECTTIMEOUT, hb_parnl( 3 ) );
             break;
+#if LIBCURL_VERSION_NUM >= 0x071002
          case HB_CURLOPT_CONNECTTIMEOUT_MS:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_CONNECTTIMEOUT_MS, hb_parnl( 3 ) );
             break;
+#endif
          case HB_CURLOPT_IPRESOLVE:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_IPRESOLVE, hb_parnl( 3 ) );
             break;
@@ -1244,20 +1258,24 @@ HB_FUNC( CURL_EASY_SETOPT )
 
          /* SSH options */
 
+#if LIBCURL_VERSION_NUM >= 0x071001
          case HB_CURLOPT_SSH_AUTH_TYPES:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_AUTH_TYPES, hb_parnl( 3 ) );
             break;
+#endif
 #if LIBCURL_VERSION_NUM >= 0x071101
          case HB_CURLOPT_SSH_HOST_PUBLIC_KEY_MD5:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_HOST_PUBLIC_KEY_MD5, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
             break;
 #endif
+#if LIBCURL_VERSION_NUM >= 0x071001
          case HB_CURLOPT_SSH_PUBLIC_KEYFILE:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_PUBLIC_KEYFILE, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
             break;
          case HB_CURLOPT_SSH_PRIVATE_KEYFILE:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_PRIVATE_KEYFILE, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
             break;
+#endif
 
          /* Other options */
 
@@ -1771,11 +1789,15 @@ HB_FUNC( CURL_VERSION_INFO )
       hb_arraySetC(  pArray,  5, data->ssl_version );                 /* human readable string */
       hb_arraySetNI( pArray,  6, data->ssl_version_num );             /* not used anymore, always 0 */
       hb_arraySetC(  pArray,  7, data->libz_version );                /* human readable string */
-      hb_arraySetC(  pArray,  9, data->age >= CURLVERSION_SECOND ? data->ares : NULL );
-      hb_arraySetNI( pArray, 10, data->age >= CURLVERSION_SECOND ? data->ares_num : 0 );
-      hb_arraySetC(  pArray, 11, data->age >= CURLVERSION_THIRD  ? data->libidn : NULL );
-      hb_arraySetNI( pArray, 12, data->age >= CURLVERSION_FOURTH ? data->iconv_ver_num : 0 ); /* Same as '_libiconv_version' if built with HAVE_ICONV */
-      hb_arraySetC(  pArray, 13, data->age >= CURLVERSION_FOURTH ? data->libssh_version : NULL ); /* human readable string */
+      hb_arraySetC(  pArray,  9, data->age >= 1 ? data->ares : NULL );
+      hb_arraySetNI( pArray, 10, data->age >= 1 ? data->ares_num : 0 );
+      hb_arraySetC(  pArray, 11, data->age >= 2 ? data->libidn : NULL );
+      hb_arraySetNI( pArray, 12, data->age >= 3 ? data->iconv_ver_num : 0 ); /* Same as '_libiconv_version' if built with HAVE_ICONV */
+#if LIBCURL_VERSION_NUM >= 0x071001 /* Just a guess. It's not documented in which libcurl version this member got added. */
+      hb_arraySetC(  pArray, 13, data->age >= 3 ? data->libssh_version : NULL ); /* human readable string */
+#else
+      hb_arraySetC(  pArray, 13, NULL ); /* human readable string */
+#endif
 
       {
          PHB_ITEM pProtocols;
