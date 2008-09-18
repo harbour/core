@@ -17,15 +17,15 @@
 # --with mysql       - build hbmysql lib
 # --with pgsql       - build hbpgsql lib
 # --with gd          - build hbgd lib
-# --with odbc        - build hbodbc lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build rddads RDD
+# --with odbc        - build hbodbc lib
 # --without gpllib   - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build hbnf lib (nanforum lib)
 # --without x11      - do not build GTXWC
-# --without gpm      - build GTSLN and GTCRS without GPM support
-# --without gtsln    - do not build GTSLN
+# --without gpm      - build GTTRM, GTSLN and GTCRS without GPM support
 # --without gtcrs    - do not build GTCRS
+# --without gtsln    - do not build GTSLN
 ######################################################################
 
 test_reqrpm()
@@ -108,6 +108,10 @@ fi
 if test_reqrpm "allegro-devel"
 then
     INST_PARAM="${INST_PARAM} --with allegro"
+fi
+if [ -f /usr/include/curl/curl.h ] ]
+then
+    INST_PARAM="${INST_PARAM} --with curl"
 fi
 if [ -f /usr/local/ads/acesdk/ace.h ] || [ -f ${HOME}/ads/acesdk/ace.h ]
 then

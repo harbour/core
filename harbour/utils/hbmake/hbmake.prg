@@ -123,7 +123,6 @@ STATIC s_szProject       := ""
 STATIC s_lLibrary        := .F.
 STATIC s_lIgnoreErrors   := .F.
 STATIC s_lRecursive      := .F.
-STATIC s_lCancelRecursive:= .F.
 STATIC s_lEditMake       := .F.
 STATIC s_lCompress       := .F.
 STATIC s_lContribLib     := .F.
@@ -144,7 +143,6 @@ STATIC s_lxFwh           := .F.
 STATIC s_nFilesToAdd     := 5
 STATIC s_nWarningLevel   := 0
 STATIC s_lAsDll          := .F.
-STATIC s_cHarbourCfg     := "harbour.cfg" // don't change this file name.
 STATIC s_cObjDir         := "obj"
 STATIC s_lGui            := .F.
 STATIC s_cEditor         := ""
@@ -173,8 +171,8 @@ FUNCTION MAIN()
 
    DEFAULT s_cEOL TO hb_OsNewLine()
 
-   /* NOTE: Please don't modify the formatting or layout. We have a common 
-            header/help layout for all Harbour command-line tools, and 
+   /* NOTE: Please don't modify the formatting or layout. We have a common
+            header/help layout for all Harbour command-line tools, and
             - in case an update - they need to be modified together. Thank you.
             [vszakats] */
    OutErr( HBMAKEID + " " + HBRawVersion() + s_cEOL )
@@ -296,6 +294,19 @@ FUNCTION MAIN()
 
       ENDCASE
 
+      /* Restore the statics necessary to read again in ParseMakeFile */
+      s_aCFiles         := {}
+      s_aCommands       := {}
+      s_aContribLibs    := {}
+      s_aDefines        := {}
+#IfDef HBM_USE_DEPENDS
+      s_aDepends        := {}
+#Endif
+      s_aMacros         := {}
+      s_aObjs           := {}
+      s_aObjsc          := {}
+      s_aPrgs           := {}
+
    ENDIF
 
    /*  Compile MakeFile...
@@ -399,7 +410,6 @@ FUNCTION ParseMakeFile( cFile )
 #ENDIF
    LOCAL aTemp1      := {}
    LOCAL cCfg        := ""
-   LOCAL lCfgFound   := .F.
    LOCAL aTempCFiles := {}
    LOCAL lLinux      :=  s_lLinux
    LOCAL lUnix       :=  s_lUnix
@@ -418,12 +428,15 @@ FUNCTION ParseMakeFile( cFile )
    ENDIF
 
    #IFndef __PLATFORM__WINDOWS
-      IF !FILE("hbtemp.c")
+      IF !FILE( "hbtemp.c" )
          CreateLink()
       ENDIF
    #ENDIF
 
-   s_lEof  := ( hb_FReadLine( nFHandle, @cBuffer, s_aEOL ) == HB_FEOF )
+   IF hb_FReadLine( nFHandle, @cBuffer, s_aEOL ) == HB_FEOF
+      RETURN RET_ERR
+   ENDIF
+
    cBuffer := Trim( cBuffer )
 
    AAdd( s_aDefines, { "HARBOUR_DIR", s_cHarbourDir } )
@@ -645,7 +658,6 @@ FUNCTION ParseMakeFile( cFile )
 
             IF aTemp[ 1 ] == "PRGFILES"
                s_aPrgs     := ListAsArray2( ReplaceMacros( aTemp[ 2 ] ), " " )
-               lCfgFound := FindHarbourCfg( @cCfg )
             ENDIF
 
             IF aTemp[ 1 ] == "PRGFILE"
@@ -748,22 +760,6 @@ FUNCTION ParseMakeFile( cFile )
    ENDDO
 
    FCLOSE( nFHandle )  // Close the opened file & release memory
-
-   IF (!lCfgFound .or. s_lForce)
-
-      IF s_lBcc
-         RETURN  BuildBccCfgFile()
-      ELSEIF s_lMSVcc
-         RETURN  BuildMscCfgFile()
-      ELSEIF s_lPocc
-         RETURN  BuildPccCfgFile()
-      ELSEIF s_lGcc .AND. !lLinux
-         RETURN  BuildGccCfgFile()
-      ELSEIF s_lGcc .AND. lLinux
-         RETURN  BuildGccCfgFileL()
-      ENDIF
-
-   ENDIF
 
 RETURN RET_OK
 
@@ -1033,7 +1029,6 @@ FUNCTION SetBuild( nFHandle )
 
                      cRead := STRTRAN(cRead,",","")
                      cRead := STRTRAN(cRead,"+","")
-//                   cRead := STRTRAN(cRead," ", '"' +s_cEOL+'"')
                      aTemp := ListAsArray2( cRead, " " )
                      cRead :=""
                      FOR EACH xItem IN aTemp
@@ -1145,14 +1140,6 @@ FUNCTION CompileFiles()
                      cComm := STRTRAN(cComm ,"\","/")
                      endif
 
-                     /*  TOFIX: cComm still has macros in it at this point
-                         as well as a \\ in the obj files area. May have // for
-                         linux, OSX, havent' checked.
-                      */
-
-                     cComm := replacemacros( cComm )
-                     cComm := STRTRAN( cComm, "\\", "\" )
-
                      lErrors   := IIF( hb_run( cComm ) != 0, .T., .F. )
                      s_lErrors := IIF( lErrors, .T., s_lErrors )
                      IF ! s_lIgnoreErrors .AND. lErrors
@@ -1202,8 +1189,8 @@ FUNCTION CompileFiles()
                   LOOP
                ENDIF
 
-               xItem := SUBSTR( cPrg, Rat( IIF( s_lGcc, "/", "\" ), ;
-                                cPrg ) + 1 )
+               xItem := SUBSTR( cPrg, Rat( IIF( s_lGcc, "/", "\" ), cPrg ) + 1 )
+
                nPos := AScan( s_aObjs, { | x | x := SUBSTR( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), ;
                        Left( x, At( ".", x ) ) == Left( xItem, At( ".", xitem ) ) } )
 
@@ -1224,13 +1211,6 @@ FUNCTION CompileFiles()
 
                   nFile ++
 
-                  /*  TOFIX: cComm still has macros in it at this point
-                      as well as a \\ in the -oobj files area. May have // for
-                      linux, OSX, havent' checked.
-                   */
-
-                  cComm := replacemacros( cComm )
-                  cComm := STRTRAN( cComm, "\\", "\" )
                   lErrors   := IIF( hb_run( cComm ) != 0, .T., .F. )
                   s_lErrors := IIF( lErrors, .T., s_lErrors )
                   IF ! s_lIgnoreErrors .AND. lErrors
@@ -1357,7 +1337,6 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
    LOCAL nLenaSrc     := Len( aSrc )
 
    LOCAL lFwh         := .F.
-// LOCAL lxFwh        := .F.
    LOCAL lC4W         := .F.
    LOCAL lMiniGui     := .F.
    LOCAL lHwGui       := .F.
@@ -1373,7 +1352,6 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
    LOCAL lMediator    := .F.
    LOCAL lApollo      := .F.
 
-// LOCAL lMt          := .F.
    LOCAL cOS          := IIF( s_lUnix, "Unix", IIF( s_lLinux, "Linux", iif(s_lOS2,"OS/2","Win32") ) )
    LOCAL cCompiler    := IIF( s_lLinux .OR. s_lGcc, "GCC",iif(s_lPocc,"POCC",iif(s_lMSVcc,"MSVC","BCC")))
 
@@ -1386,22 +1364,15 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
 
    LOCAL cMedPath     := Space( 200 )
    LOCAL cApolloPath  := Space( 200 )
-
-   LOCAL cObjDir      := s_cObjDir + space( 20 )
-   LOCAL lAutoMemvar  := .F.
-   LOCAL lVarIsMemvar := .F.
-   LOCAL lDebug       := .F.
-   LOCAL lSupressLine := .F.
+   LOCAL cObjDir        := s_cObjDir + space( 20 )
+   LOCAL lAutoMemvar    := .F.
+   LOCAL lVarIsMemvar   := .F.
+   LOCAL lDebug         := .F.
+   LOCAL lSupressLine   := .F.
    LOCAL nPos
    LOCAL cHarbourFlags  := ""
-
-// LOCAL nWarningLevel :=0
-
    LOCAL lUseharbourDll := .F.
-
-   LOCAL lCompMod         := .F.
-
-//   LOCAL lGenppo          := .F.
+   LOCAL lCompMod       := .F.
    LOCAL x
    LOCAL getlist           := {}
    LOCAL cTopFile          := Space(50)
@@ -1433,7 +1404,6 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
    LOCAL aLibsIn      := {}
    LOCAL aLibsOut     := {}
    LOCAL cGt          := ""
-
    LOCAL cOldLib      := ""
    LOCAL cHtmlLib     := ""
    LOCAL lLinux       := s_lLinux
@@ -1441,13 +1411,8 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
    LOCAL nWriteFiles  := 0
    LOCAL cResName     := space(200)
    LOCAL aSelFiles
-
    LOCAL cBuild       := " "
    LOCAL cBuildForced := " "
-   LOCAL nReturnParam := -1            /* -1 = Cancel  Make
-                                           0 = Compile Necessary
-                                           1 = Compile All
-                                       */
    LOCAL aUserDefs
    LOCAL cCurrentDef  := ""
    LOCAL cRdd         := "None"
@@ -1460,10 +1425,8 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
    LOCAL cExtraLibs   := ""
    LOCAL cTempLibs    := ""
    LOCAL aTempLibs
-
    LOCAL aUserLibs
    LOCAL cUserLib
-
    LOCAL cHarbourLibDir := s_cHarbourDir + iif(s_lLinux,"/lib","\lib")
    LOCAL lCancelMake := .F.
 
@@ -1603,10 +1566,6 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
             ALERT( cAlertMsg )
             RESTSCREEN( ,,,, cOldScreen )
             RETURN RET_ERR
-         ENDIF
-
-         IF s_lCancelRecursive
-            s_lRecursive := .F.
          ENDIF
 
          // after oMake read, recreate other clean makefile to edit.
@@ -3463,10 +3422,6 @@ FUNCTION CreateLibMakeFile( cFile )
 
          ENDIF
 
-         if s_lCancelRecursive
-            s_lRecursive := .F.
-         endif
-
          // after oMake read, recreate other clean makefile to edit.
          s_nMakeFileHandle := FCreate(cFile)
 
@@ -4115,7 +4070,6 @@ FUNCTION SetBuildLib( nFHandle )
                IF s_lGcc
                   FWrite( s_nMakeFileHandle, "CREATE  lib" + cRead + s_cEOL )
                   cLib := "lib" + cRead
-//                  FWrite( s_nMakeFileHandle, cRead + s_cEOL )
                ELSE
                   cRead := STRTRAN(cRead,",","")
                   cRead := STRTRAN(cRead,"+","")
@@ -4288,227 +4242,6 @@ FUNCTION CheckIFdef( nFHandle, cTemp )
    ENDDO
 
 RETURN NIL
-
-*-------------------------
-FUNCTION BuildBccCfgFile()
-*-------------------------
-LOCAL cAlertMsg
-LOCAL cCfg := s_cHarbourDir + "\bin\" + s_cHarbourCFG
-LOCAL nCfg
-
-   IF ! FILE( cCfg ) .or. s_lForce
-
-      nCfg := FCREATE( cCfg )
-
-      IF nCfg == F_ERROR
-         IF s_nLang     == LANG_PT     /* portuguese brazilian */
-            cAlertMsg := cCfg + " n∆o pode ser criado."
-         ELSEIF s_nLang == LANG_ES     /* spanish              */
-            cAlertMsg := cCfg + " no pode ser criado."
-         ELSE                          /* english             */
-            cAlertMsg := cCfg + " cannot be created."
-         ENDIF
-
-         ALERT( cAlertMsg + " FERROR (" + LTRIM( STR( FError() ) ) + ")" )
-         RETURN RET_ERR
-
-      ENDIF
-
-      FWrite( nCfg, ;
-         "CC=BCC32" + s_cEOL +;
-         "CFLAGS= -c -DHB_DYNLIB " +  ( "-I$(HB_DIR)\include $(CFLAGS) -d -L$(HB_DIR)\lib" ) + s_cEOL +;  // Added -DHB_DYNLIB flag
-         "VERBOSE=YES" + s_cEOL +;
-         "DELTMP=YES" + s_cEOL )
-      FClose( nCfg )
-   ENDIF
-
-RETURN RET_OK
-
-*-------------------------
-FUNCTION BuildMscCfgFile()
-*-------------------------
-   LOCAL cAlertMsg
-   LOCAL cCfg := s_cHarbourDir + "\bin\" + s_cHarbourCFG
-   LOCAL nCfg
-
-   IF !File( cCfg )  .or. s_lForce
-
-      nCfg := FCreate( cCfg )
-
-      if nCfg == F_ERROR
-         IF s_nLang     == LANG_PT     /* portuguese brazilian */
-            cAlertMsg := cCfg + " n∆o pode ser criado."
-         ELSEIF s_nLang == LANG_ES     /* spanish              */
-            cAlertMsg := cCfg + " no pode ser criado."
-         ELSE                          /* english             */
-            cAlertMsg := cCfg + " cannot be created."
-         ENDIF
-         ALERT( cAlertMsg + " FERROR (" + LTRIM( STR( FERROR() ) ) + ")" )
-         RETURN RET_ERR
-      endif
-
-      FWrite( nCfg, ;
-         "CC=cl" + s_cEOL +;
-         "CFLAGS= -c -DHB_DYNLIB" + ReplaceMacros( "-I$(HB_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)" ) + s_cEOL +;
-         "VERBOSE=YES" + s_cEOL +;
-         "DELTMP=YES" + s_cEOL )
-      FClose( nCfg )
-   ENDIF
-
-RETURN RET_OK
-
-*-------------------------
-FUNCTION BuildPccCfgFile()
-*-------------------------
-   LOCAL cAlertMsg
-   LOCAL cCfg := s_cHarbourDir + "\bin\" + s_cHarbourCFG
-   LOCAL nCfg
-
-   IF !FILE( cCfg )  .or. s_lForce
-
-      nCfg := FCREATE( cCfg )
-
-      IF nCfg == F_ERROR
-         IF s_nLang     == LANG_PT     /* portuguese brazilian */
-            cAlertMsg := cCfg + " n∆o pode ser criado."
-         ELSEIF s_nLang == LANG_ES     /* spanish              */
-            cAlertMsg := cCfg + " no pode ser criado."
-         ELSE                          /* english             */
-            cAlertMsg := cCfg + " cannot be created."
-         ENDIF
-         ALERT( cAlertMsg + " FERROR (" + LTRIM( STR( FERROR() ) ) + ")" )
-         RETURN RET_ERR
-      ENDIF
-
-      FWRITE( nCfg, ;
-         "CC=POCC" + s_cEOL +;
-         "CFLAGS= /Ze /Go /Ot /Tx86-coff /DHB_DYNLIB " + ReplaceMacros( "-I$(HB_DIR)\include $(C_USR) $(CFLAGS)" )  + s_cEOL +;
-         "VERBOSE=YES" + s_cEOL +;
-         "DELTMP=YES" + s_cEOL )
-      FCLOSE( nCfg )
-
-   ENDIF
-
-RETURN RET_OK
-
-*-------------------------
-FUNCTION BuildGccCfgFile()
-*-------------------------
-   LOCAL cAlertMsg
-   LOCAL cCfg
-   LOCAL nCfg
-   LOCAL cDir := s_cHarbourDir
-//   LOCAL cBhc := ALLTRIM( STRTRAN( ReplaceMacros( "$(HB_DIR)" ), "\", "/" ) )
-
-//  cDir := STRTRAN( cDir, "/", "\" )
-
-   cCfg := s_cHarbourDir + "\bin\" + s_cHarbourCFG
-
-   IF !FILE( cCfg ) .or. s_lForce
-
-      nCfg := FCREATE( cCfg )
-
-      IF nCfg == F_ERROR
-         IF s_nLang     == LANG_PT     /* portuguese brazilian */
-            cAlertMsg := cCfg + " n∆o pode ser criado."
-         ELSEIF s_nLang == LANG_ES     /* spanish              */
-            cAlertMsg := cCfg + " no pode ser criado."
-         ELSE                          /* english             */
-            cAlertMsg := cCfg + " cannot be created."
-         ENDIF
-         ALERT( cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
-         RETURN RET_ERR
-      ENDIF
-
-      FWRITE( nCfg, ;
-         "CC=gcc" + s_cEOL +;
-         "CFLAGS= -c -DHB_DYNLIB " + ReplaceMacros( "-I" + s_cHarbourDir + "/include $(C_USR)  -L" + s_cHarbourDir + "/lib" )  + iif(s_lmingw ," -mno-cygwin ","" )+ s_cEOL +;
-         "VERBOSE=YES" + s_cEOL +;
-         "DELTMP=YES" + s_cEOL )
-      FCLOSE( nCfg )
-   ENDIF
-
-RETURN RET_OK
-
-*--------------------------
-FUNCTION BuildGccCfgFileL()
-*--------------------------
-   LOCAL cAlertMsg
-   LOCAL cCfg := "/etc/"+s_cHarbourCFG
-   LOCAL nCfg
-
-   IF !File( cCfg )  .or. s_lForce
-
-      nCfg := FCreate( cCfg )
-
-      if nCfg == F_ERROR
-         IF s_nLang     == LANG_PT     /* portuguese brazilian */
-            cAlertMsg := cCfg + " n∆o pode ser criado."
-         ELSEIF s_nLang == LANG_ES     /* spanish              */
-            cAlertMsg := cCfg + " no pode ser criado."
-         ELSE                          /* english             */
-            cAlertMsg := cCfg + " cannot be created."
-         ENDIF
-         ALERT( cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
-         RETURN RET_ERR
-      endif
-
-      FWrite( nCfg, ;
-         "CC=gcc" + s_cEOL +;
-         "CFLAGS= -c -I/usr/include/harbour" + s_cEOL +;
-         "VERBOSE=YES" + s_cEOL +;
-         "DELTMP=YES" + s_cEOL )
-      FClose( nCfg )
-   ENDIF
-
-RETURN RET_OK
-
-*------------------------------
-FUNCTION FindHarbourCfg( cCfg )
-*------------------------------
-
-   LOCAL cPath AS STRING := ""
-   LOCAL lFound AS LOGICAL := .F.
-   LOCAL cEnv AS STRING
-   LOCAL aEnv as Array of String
-   LOCAL lLinux :=  s_lLinux
-   LOCAL nPos
-
-   IF ! lLinux .OR. s_lOs2
-      cEnv := Gete( "PATH" ) + ";" + Curdir()
-      aEnv := ListAsArray2( cEnv, ";" )
-
-      FOR nPos := 1 TO Len( aEnv )
-
-         IF File( aEnv[ nPos ] + "\"+s_cHarbourCFG )
-            cPath  := aEnv[ nPos ]
-            lFound := .T.
-            EXIT
-         ENDIF
-
-      NEXT
-
-   ELSE
-
-      IF File( "/etc/"+s_cHarbourCFG )
-         lFound := .T.
-         cPath  := "/etc/"+s_cHarbourCFG
-      ENDIF
-
-      IF !lFound
-
-         IF File( "/usr/local/etc/"+s_cHarbourCFG )
-            lFound := .T.
-            cPath  := "/usr/local/etc/"+s_cHarbourCFG
-         ENDIF
-
-      ENDIF
-
-   ENDIF
-
-   cCfg := cPath
-
-RETURN lFound
 
 *-------------------
 FUNCTION GetGccDir()
@@ -4875,8 +4608,8 @@ FUNCTION ShowHelp( cMsg )
 
    /* Changed from OutStd to OutErr so the Help Message can't be redirected */
 
-   /* NOTE: Please don't modify the formatting or layout. We have a common 
-            header/help layout for all Harbour command-line tools, and 
+   /* NOTE: Please don't modify the formatting or layout. We have a common
+            header/help layout for all Harbour command-line tools, and
             - in case an update - they need to be modified together. Thank you.
             [vszakats] */
    OutErr( ;
@@ -5033,7 +4766,6 @@ METHOD ReadMakefile(cFile) CLASS THbMake
    LOCAL lComSec     := .F.
    LOCAL aTemp1      := {}
    LOCAL cCfg        := ""
-   LOCAL lCfgFound   := .F.
    LOCAL aTempCFiles := {}
    LOCAL nHandle
    LOCAL cObjitem
@@ -5991,41 +5723,41 @@ FUNCTION GetInstaledLibs( clibs, lGcc )
    LOCAL nCount
    LOCAL aDefLib := {}
 
-   aadd(aDefLib,"ace32"+ cSuffix)
-   aadd(aDefLib,"hbcpage"+ cSuffix)
-   aadd(aDefLib,"hbcommon"+ cSuffix)
-   aadd(aDefLib,"hbct"+cSuffix)
-   aadd(aDefLib,"rdddbt"+ cSuffix)
-   aadd(aDefLib,"rddcdx"+ cSuffix)
-   aadd(aDefLib,"rddfpt"+ cSuffix)
-   aadd(aDefLib,"rddntx"+ cSuffix)
-   aadd(aDefLib,"hbdebug"+ cSuffix)
-   aadd(aDefLib,"gtcgi"+ cSuffix)
-   aadd(aDefLib,"gtdos"+ cSuffix)
-   aadd(aDefLib,"gtpca"+ cSuffix)
-   aadd(aDefLib,"gtsln"+ cSuffix)
-   aadd(aDefLib,"gtstd"+ cSuffix)
-   aadd(aDefLib,"gttrm"+ cSuffix)
-   aadd(aDefLib,"gtwin"+ cSuffix)
-   aadd(aDefLib,"gtwvt"+ cSuffix)
-   aadd(aDefLib,"hbodbc"+ cSuffix)
-   aadd(aDefLib,"hbpgsql"+ cSuffix)
-   aadd(aDefLib,"hblang"+ cSuffix)
-   aadd(aDefLib,"hbmisc"+ cSuffix)
-   aadd(aDefLib,"hbnf"+ cSuffix)
-   aadd(aDefLib,"hbgt"+ cSuffix)
-   aadd(aDefLib,"hbmysql"+ cSuffix)
-   aadd(aDefLib,"hbmacro"+ cSuffix)
-   aadd(aDefLib,"hbnulrdd"+ cSuffix)
-   aadd(aDefLib,"hbpp"+ cSuffix)
-   aadd(aDefLib,"hbrdd"+ cSuffix)
-   aadd(aDefLib,"rddads"+ cSuffix)
-   aadd(aDefLib,"hbrtl"+ cSuffix)
-   aadd(aDefLib,"hbclipsm"+ cSuffix)
-   aadd(aDefLib,"hbtip"+cSuffix)
-   aadd(aDefLib,"hbw32"+cSuffix)
-   aadd(aDefLib,"hbvm"+ cSuffix)
-   aadd(aDefLib,"hbziparc"+ cSuffix)
+   aadd( aDefLib, "ace32"    + cSuffix )
+   aadd( aDefLib, "hbcpage"  + cSuffix )
+   aadd( aDefLib, "hbcommon" + cSuffix )
+   aadd( aDefLib, "hbct"     + cSuffix )
+   aadd( aDefLib, "rdddbt"   + cSuffix )
+   aadd( aDefLib, "rddcdx"   + cSuffix )
+   aadd( aDefLib, "rddfpt"   + cSuffix )
+   aadd( aDefLib, "rddntx"   + cSuffix )
+   aadd( aDefLib, "hbdebug"  + cSuffix )
+   aadd( aDefLib, "gtcgi"    + cSuffix )
+   aadd( aDefLib, "gtdos"    + cSuffix )
+   aadd( aDefLib, "gtpca"    + cSuffix )
+   aadd( aDefLib, "gtsln"    + cSuffix )
+   aadd( aDefLib, "gtstd"    + cSuffix )
+   aadd( aDefLib, "gttrm"    + cSuffix )
+   aadd( aDefLib, "gtwin"    + cSuffix )
+   aadd( aDefLib, "gtwvt"    + cSuffix )
+   aadd( aDefLib, "hbodbc"   + cSuffix )
+   aadd( aDefLib, "hbpgsql"  + cSuffix )
+   aadd( aDefLib, "hblang"   + cSuffix )
+   aadd( aDefLib, "hbmisc"   + cSuffix )
+   aadd( aDefLib, "hbnf"     + cSuffix )
+   aadd( aDefLib, "hbgt"     + cSuffix )
+   aadd( aDefLib, "hbmysql"  + cSuffix )
+   aadd( aDefLib, "hbmacro"  + cSuffix )
+   aadd( aDefLib, "hbnulrdd" + cSuffix )
+   aadd( aDefLib, "hbpp"     + cSuffix )
+   aadd( aDefLib, "hbrdd"    + cSuffix )
+   aadd( aDefLib, "rddads"   + cSuffix )
+   aadd( aDefLib, "hbrtl"    + cSuffix )
+   aadd( aDefLib, "hbclipsm" + cSuffix )
+   aadd( aDefLib, "hbtip"    + cSuffix )
+   aadd( aDefLib, "hbw32"    + cSuffix )
+   aadd( aDefLib, "hbvm"     + cSuffix )
+   aadd( aDefLib, "hbziparc" + cSuffix )
 
    IF lGcc
       AEval( aLibs, { | x, y | cItem := x[1], IIF( Left( cItem, 3 ) == "lib", aLibs[ y, 1 ] := SUBSTR( cItem, 4 ), ) } )

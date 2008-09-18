@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-18 11:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_rpm.sh
+    ! Attempt to detect libcurl.
+      [TOMERGE 1.0]
+
+  * contrib/hbziparc/hbziparc.prg
+  * contrib/hbwin/win_tole.prg
+  * contrib/hbvpdf/hbvpdf.prg
+    * Some STATIC vars converted to THREAD STATIC.
+    * aReport renamed to s_aReport.
+      (is it a good idea to name 'ts_name' THREAD STATIC 
+      vars?)
+
+  * utils/hbmake/hbmake.prg
+    ! Patch by Bill Robertson applied.
+      This should eliminate any messing with harbour.cfg.
+
 2008-09-18 11:02 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
   * contrib/hbbmcdx/bmdbfcdx.c
   * source/rdd/dbfcdx/dbfcdx1.c

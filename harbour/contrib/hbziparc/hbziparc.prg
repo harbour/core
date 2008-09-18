@@ -57,10 +57,10 @@
 #include "directry.ch"
 #include "fileio.ch"
 
-STATIC s_nReadBuffer := 32768
-STATIC s_cComment
-STATIC s_lReadOnly := .F.
-STATIC s_bProgress
+THREAD STATIC s_nReadBuffer := 32768
+THREAD STATIC s_cComment
+THREAD STATIC s_lReadOnly := .F.
+THREAD STATIC s_bProgress
 
 PROCEDURE SetZipReadOnly( lReadOnly )
 

@@ -73,7 +73,7 @@
 #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
 #xcommand FINALLY          => ALWAYS
 
-static s_bBreak := { |oErr| break( oErr ) }
+THREAD STATIC s_bBreak := { |oErr| break( oErr ) }
 
 STATIC PROCEDURE THROW( oError )
    LOCAL lError := Eval( ErrorBlock(), oError )
