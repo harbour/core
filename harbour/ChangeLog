@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-18 22:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/fm.c
+    ! Suppressing warnings for foreign dmalloc.c code for BCC.
+
 2008-09-18 21:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/xhb/Makefile
   * contrib/xhb/common.mak

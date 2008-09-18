@@ -114,7 +114,23 @@
 #  if defined( HB_MT_VM )
 #     define USE_LOCKS  1
 #  endif
+#  if defined( __BORLANDC__ )
+#     pragma warn -aus
+#     pragma warn -ccc
+#     pragma warn -eff
+#     pragma warn -ngu
+#     pragma warn -prc
+#     pragma warn -rch
+#  endif
 #  include "dlmalloc.c"
+#  if defined( __BORLANDC__ )
+#     pragma warn +aus
+#     pragma warn +ccc
+#     pragma warn +eff
+#     pragma warn +ngu
+#     pragma warn +prc
+#     pragma warn +rch
+#  endif
 #  if defined( USE_DL_PREFIX )
 #     define malloc( n )         dlmalloc( (n) )
 #     define realloc( p, n )     dlrealloc( (p), (n) )
