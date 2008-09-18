@@ -20,6 +20,7 @@ LIB_OBJS = \
     $(OBJ_DIR)hbsyslog$(OBJEXT) \
     $(OBJ_DIR)hboutdbg$(OBJEXT) \
     $(OBJ_DIR)cstructc$(OBJEXT) \
+    $(OBJ_DIR)xhbcopyf$(OBJEXT) \
     $(OBJ_DIR)xhbenum$(OBJEXT) \
     $(OBJ_DIR)xhbfunc$(OBJEXT) \
     $(OBJ_DIR)xhbmsgs$(OBJEXT) \
