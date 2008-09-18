@@ -501,12 +501,12 @@ HB_EXPORT void hb_cdpTranslate( char *psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpO
          {
             char * ptr;
 
-            ptr = strchr( cdpIn->CharsUpper, *psz );
+            ptr = strchr( ( char * ) cdpIn->CharsUpper, *psz );
             if( ptr )
                *psz = cdpOut->CharsUpper[ ptr - cdpIn->CharsUpper ];
             else
             {
-               ptr = strchr( cdpIn->CharsLower, *psz );
+               ptr = strchr( ( char * ) cdpIn->CharsLower, *psz );
                if( ptr )
                   *psz = cdpOut->CharsLower[ ptr - cdpIn->CharsLower ];
             }
@@ -543,12 +543,12 @@ HB_EXPORT void hb_cdpnTranslate( char *psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdp
          {
             char * ptr;
 
-            ptr = strchr( cdpIn->CharsUpper, *psz );
+            ptr = strchr( ( char * ) cdpIn->CharsUpper, *psz );
             if( ptr )
                *psz = cdpOut->CharsUpper[ ptr - cdpIn->CharsUpper ];
             else
             {
-               ptr = strchr( cdpIn->CharsLower, *psz );
+               ptr = strchr( ( char * ) cdpIn->CharsLower, *psz );
                if( ptr )
                   *psz = cdpOut->CharsLower[ ptr - cdpIn->CharsLower ];
             }

@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-18 07:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/cdpapi.c
+    * explicit casting to char * in 1-st strchr() parameter as workaround
+      for wrong function prototype in DMC header files
+
 2008-09-18 07:21 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbthread.h
     * use assembler version of atomic inc/dec operation in all x86 based
