@@ -109,7 +109,7 @@ if test_reqrpm "allegro-devel"
 then
     INST_PARAM="${INST_PARAM} --with allegro"
 fi
-if [ -f /usr/include/curl/curl.h ] ]
+if test_reqrpm "curl-devel"
 then
     INST_PARAM="${INST_PARAM} --with curl"
 fi

@@ -814,6 +814,8 @@ extern HB_EXPORT char *    hb_strupr( char * pszText ); /* convert a string in-p
 extern HB_EXPORT char *    hb_strlow( char * pszText ); /* convert a string in-place to lower-case */
 extern HB_EXPORT char *    hb_strdup( const char * pszText ); /* returns a pointer to a newly allocated copy of the source string */
 extern HB_EXPORT char *    hb_strndup( const char * pszText, ULONG ulLen ); /* returns a pointer to a newly allocated copy of the source string not longer then ulLen */
+extern HB_EXPORT char *    hb_strduptrim( const char * pszText ); /* returns a pointer to a newly allocated copy of the trimmed source string */
+extern HB_EXPORT ULONG     hb_strlentrim( const char * pszText ); /* like strlen() but result is the length of trimmed text */
 extern HB_EXPORT ULONG     hb_strnlen( const char * pszText, ULONG ulLen ); /* like strlen() but result is limited to ulLen */
 extern HB_EXPORT char *    hb_xstrcat( char *dest, const char *src, ... ); /* Concatenates multiple strings into a single result */
 extern HB_EXPORT char *    hb_xstrcpy( char *szDest, const char *szSrc, ...); /* Concatenates multiple strings into a single result */

@@ -203,6 +203,51 @@ HB_EXPORT ULONG hb_strnlen( const char * pszText, ULONG ulLen )
    return ul;
 }
 
+HB_EXPORT char * hb_strduptrim( const char * pszText )
+{
+   char * pszDup;
+   ULONG ulLen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strduptrim(%s)", pszText));
+
+   while( pszText[ 0 ] == ' ' )
+   {
+      ++pszText;
+   }
+   ulLen = strlen( pszText );
+   while( ulLen && pszText[ ulLen - 1 ] == ' ' )
+   {
+      --ulLen;
+   }
+
+   pszDup = ( char * ) hb_xgrab( ulLen + 1 );
+   memcpy( pszDup, pszText, ulLen );
+   pszDup[ ulLen ] = '\0';
+
+   return pszDup;
+}
+
+HB_EXPORT ULONG hb_strlentrim( const char * pszText )
+{
+   ULONG ul = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strlentrim(%s)", pszText));
+
+   while( pszText[ 0 ] == ' ' )
+   {
+      ++pszText;
+   }
+   while( pszText[ ul] )
+   {
+      ++ul;
+   }
+   while( ul && pszText[ ul - 1 ] == ' ' )
+   {
+      --ul;
+   }
+   return ul;
+}
+
 HB_EXPORT int hb_stricmp( const char * s1, const char * s2 )
 {
    int rc = 0, c1, c2;
