@@ -513,6 +513,7 @@ HB_FUNC( HB_THREADSTART )
    {
       PHB_ITEM pReturn;
       PHB_THREADSTATE pThread;
+      ULONG ulPCount, ulParam;
 
       pReturn = hb_itemNew( NULL );
       pThread = ( PHB_THREADSTATE )
@@ -525,6 +526,15 @@ HB_FUNC( HB_THREADSTART )
       pThread->pszDefRDD = hb_stackRDD()->szDefaultRDD;
       pThread->pSet      = hb_setClone( hb_stackSetStruct() );
       pThread->pParams   = hb_arrayBaseParams();
+
+      /* detach LOCAL variables passed by reference */
+      ulPCount = hb_arrayLen( pThread->pParams );
+      for( ulParam = 2; ulParam <= ulPCount; ++ulParam )
+      {
+         PHB_ITEM pParam = hb_arrayGetItemPtr( pThread->pParams, ulParam );
+         if( HB_IS_BYREF( pParam ) )
+            hb_memvarDetachLocal( pParam );
+      }
 
       /* make copy of thread pointer item before we pass it to new thread
        * to avoid race condition

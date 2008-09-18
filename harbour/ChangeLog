@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-18 20:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/thread.c
+    * detach local parameters passed by reference to hb_threadStart()
+      to avoid possible calling thread HVM stack corruption
+
 2008-09-18 19:28 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbfcdx/dbfcdx1.c
     ! fixed memory leak - Many thanks to Miguel for report
