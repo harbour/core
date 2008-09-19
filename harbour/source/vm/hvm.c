@@ -704,13 +704,13 @@ HB_EXPORT void hb_vmThreadQuit( void )
 
       if( HB_IS_BYREF( pReturn ) )
          pReturn = hb_itemUnRef( pReturn );
-      if( !pState->pResult )
-         pState->pResult = hb_itemNew( NULL );
 
-      hb_itemMove( pState->pResult, pReturn );
+      if( !pState->pResult )
+         pState->pResult = hb_itemNew( pReturn );
+      else
+         hb_itemCopy( pState->pResult, pReturn );
    }
-   else
-      hb_itemClear( hb_stackReturnItem() );
+   hb_itemClear( hb_stackReturnItem() );
 
    hb_rddCloseAll();             /* close all workareas */
    hb_stackRemove( 1 );          /* clear stack items, leave only initial symbol item */

@@ -1149,8 +1149,12 @@ typedef RDDNODE * LPRDDNODE;
  *  PROTOTYPES
  *  ----------
  */
-/* RDD virtual machine integration functions */
+ 
 
+/* internal RDD functions */
+extern void hb_rddCloseDetachedAreas( void );
+
+/* RDD virtual machine integration functions */
 extern HB_EXPORT void    hb_rddShutDown( void );
 extern HB_EXPORT ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
 extern HB_EXPORT ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
@@ -1214,6 +1218,11 @@ extern HB_EXPORT ERRCODE   hb_rddTransRecords(
                               const char *szCpId,
                               PHB_ITEM pDelim );
 extern HB_EXPORT void      hb_tblStructure( AREAP pArea, PHB_ITEM pStruct, USHORT uiSize );
+extern HB_EXPORT ERRCODE   hb_rddCloseAllParentRelations( AREAP pArea );
+
+extern HB_EXPORT ERRCODE   hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo );
+extern HB_EXPORT AREAP     hb_rddRequestArea( char * szAlias, PHB_ITEM pCargo,
+                                              BOOL fNewArea, BOOL fWait );
 
 #if 0
 extern HB_EXPORT ERRCODE   hb_rddDisinherit( const char * drvName );

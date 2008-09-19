@@ -373,7 +373,12 @@ BOOL hb_threadJoin( HB_THREAD_T th_id )
    }
    return FALSE;
 #elif defined( HB_OS_OS2 )
-   return DosWaitThread( &th_id, DCWW_WAIT ) == NO_ERROR;
+   APIRET rc = DosWaitThread( &th_id, DCWW_WAIT );
+   /* TOFIX: ERROR_INVALID_THREADID is a hack for failing DosWaitThread()
+    *        when thread terminates before DosWaitThread() call.
+    *        OS2 users please check and fix this code if possible.
+    */
+   return rc == NO_ERROR || rc == ERROR_INVALID_THREADID;
 #else
    { int TODO_MT; }
    return FALSE;
@@ -390,14 +395,8 @@ BOOL hb_threadDetach( HB_THREAD_T th_id )
 #elif defined( HB_OS_WIN_32 )
    return CloseHandle( th_id ) != 0;
 #elif defined( HB_OS_OS2 )
-   /* TODO: I do not know clean method of running thread detaching
-    *       In OS/2.
-    *       After termination the HVM threads are detached automatically
-    *       by GC but it may not clean allocated OS resources if caller
-    *       does not keep thread pointer item alive and the cleanup code
-    *       will be executed by THIS thread.
-    */
-   return DosWaitThread( &th_id, DCWW_NOWAIT ) == NO_ERROR;
+   APIRET rc = DosWaitThread( &th_id, DCWW_NOWAIT );
+   return rc == NO_ERROR || rc == ERROR_INVALID_THREADID;
 #else
    { int TODO_MT; }
    return FALSE;
@@ -505,7 +504,6 @@ static PHB_THREADSTATE hb_thParam( int iParam )
    return NULL;
 }
 
-
 HB_FUNC( HB_THREADSTART )
 {
    PHB_ITEM pStart = hb_param( 1, HB_IT_ANY );
@@ -562,10 +560,16 @@ HB_FUNC( HB_THREADJOIN )
    {
       BOOL fResult = FALSE;
 
-      if( pThread->th_id && hb_threadJoin( pThread->th_id ) )
+      if( pThread->th_id )
       {
-         pThread->th_id = 0;
-         fResult = TRUE;
+         hb_vmUnlock();
+         fResult = hb_threadJoin( pThread->th_id );
+         if( fResult )
+            pThread->th_id = 0;
+         hb_vmLock();
+      }
+      if( fResult )
+      {
          if( pThread->pResult )
             hb_itemParamStore( 2, pThread->pResult );
       }

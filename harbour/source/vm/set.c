@@ -209,7 +209,7 @@ static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL
                     ( hb_strnicmp( pFilename->szName, "COM", 3 ) == 0 &&
                       pFilename->szName[3] >= '1' && pFilename->szName[3] <= '9' ) ) ) )
             {
-               hb_strupr( pFilename->szName );
+               hb_strupr( ( char * ) pFilename->szName );
                def_ext = NULL;
             }
          }

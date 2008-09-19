@@ -656,52 +656,6 @@ static ERRCODE hb_waAlias( AREAP pArea, BYTE * szAlias )
 }
 
 /*
- * Close the table in the WorkArea - helper function
- */
-static ERRCODE hb_waCloseAux( AREAP pArea, void * pChildArea )
-{
-   USHORT uiPrevArea, uiArea;
-   LPDBRELINFO lpdbRelation, lpdbRelPrev, lpdbRelTmp;
-
-   uiArea = ( ( AREAP ) pChildArea )->uiArea;
-   if( pArea->lpdbRelations )
-   {
-      uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
-      lpdbRelation = pArea->lpdbRelations;
-      lpdbRelPrev = NULL;
-      while( lpdbRelation )
-      {
-         if( lpdbRelation->lpaChild->uiArea == uiArea )
-         {
-            /* Clear this relation */
-            hb_rddSelectWorkAreaNumber( lpdbRelation->lpaChild->uiArea );
-            SELF_CHILDEND( lpdbRelation->lpaChild, lpdbRelation );
-            hb_rddSelectWorkAreaNumber( uiPrevArea );
-            if( lpdbRelation->itmCobExpr )
-            {
-               hb_itemRelease( lpdbRelation->itmCobExpr );
-            }
-            if( lpdbRelation->abKey )
-               hb_itemRelease( lpdbRelation->abKey );
-            lpdbRelTmp = lpdbRelation;
-            if( lpdbRelPrev )
-               lpdbRelPrev->lpdbriNext = lpdbRelation->lpdbriNext;
-            else
-               pArea->lpdbRelations = lpdbRelation->lpdbriNext;
-            lpdbRelation = lpdbRelation->lpdbriNext;
-            hb_xfree( lpdbRelTmp );
-         }
-         else
-         {
-            lpdbRelPrev  = lpdbRelation;
-            lpdbRelation = lpdbRelation->lpdbriNext;
-         }
-      }
-   }
-   return SUCCESS;
-}
-
-/*
  * Close the table in the WorkArea.
  */
 static ERRCODE hb_waClose( AREAP pArea )
@@ -713,11 +667,8 @@ static ERRCODE hb_waClose( AREAP pArea )
    SELF_CLEARREL( pArea );
    SELF_CLEARLOCATE( pArea );
 
-   if( pArea->uiParents > 0 )
-   {
-      /* Clear relations that has this area as a child */
-      hb_rddIterateWorkAreas( hb_waCloseAux, pArea );
-   }
+   /* Clear relations that has this area as a child */
+   hb_rddCloseAllParentRelations( pArea );
 
    if( pArea->atomAlias )
       hb_dynsymSetAreaHandle( ( PHB_DYNS ) pArea->atomAlias, 0 );
@@ -2135,6 +2086,8 @@ HB_EXPORT void hb_rddShutDown( void )
    USHORT uiCount;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddShutDown()"));
+
+   hb_rddCloseDetachedAreas();
 
    if( s_uiRddCount > 0 )
    {

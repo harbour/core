@@ -102,7 +102,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest, PHB_ITEM pBlock )
          bRetVal = TRUE;
 
          if( hb_itemType( pBlock ) != HB_IT_BLOCK )
-			pBlock = NULL;
+            pBlock = NULL;
 
          while( ( usRead = hb_fsRead( fhndSource, buffer, BUFFER_SIZE ) ) != 0 )
          {

@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-19 22:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/set.c
+    ! fixed casting
+
+  * harbour/contrib/xhb/xhbcopyf.c
+    * replaced TABs with SPACEs
+
+  * harbour/include/hbapirdd.h
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/wacore.c
+  * harbour/source/rdd/wafunc.c
+    + added support for detaching and attaching workareas
+
+  * harbour/source/vm/hvm.c
+    % minor cleanup in thread return code
+
+  * harbour/include/hbthread.h
+  * harbour/source/vm/thread.c
+    * unlock HVM stack during thread join operation
+    * added workaround for DosWaitThread() which seems to fail if thread
+      terminated before
+    ; added TOFIX note for OS2 and join code
+
 2008-09-19 12:21 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
   * contrib/hbbmcdx/bmdbfcdx.c
   * source/rdd/dbfcdx/dbfcdx1.c

@@ -301,7 +301,7 @@ extern void     hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, BOOL f
 extern PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, BOOL fClear );
 extern PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, BOOL fClear );
 
-#if defined( HB_MT_VM ) && defined( _HB_API_INTERNAL_ ) /* && defined( HB_STACK_MACROS ) */
+#if defined( HB_MT_VM ) && defined( _HB_API_INTERNAL_ )
 
 extern void hb_threadMutexUnlockAll( void );
 

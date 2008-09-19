@@ -1133,3 +1133,48 @@ ERRCODE hb_rddTransRecords( AREAP pArea,
 
    return errCode;
 }
+
+static ERRCODE hb_rddCloseParentRel( AREAP pArea, void * pChildArea )
+{
+   if( pArea->lpdbRelations )
+   {
+      LPDBRELINFO * lpdbRelationPtr = &pArea->lpdbRelations;
+      USHORT uiArea = ( ( AREAP ) pChildArea )->uiArea;
+
+      do
+      {
+         LPDBRELINFO lpdbRelation = *lpdbRelationPtr;
+
+         if( lpdbRelation->lpaChild->uiArea == uiArea )
+         {
+            /* Clear this relation */
+            hb_rddSelectWorkAreaNumber( lpdbRelation->lpaChild->uiArea );
+            SELF_CHILDEND( lpdbRelation->lpaChild, lpdbRelation );
+            if( lpdbRelation->itmCobExpr )
+               hb_itemRelease( lpdbRelation->itmCobExpr );
+            if( lpdbRelation->abKey )
+               hb_itemRelease( lpdbRelation->abKey );
+
+            *lpdbRelationPtr = lpdbRelation->lpdbriNext;
+            hb_xfree( lpdbRelation );
+         }
+         else
+            lpdbRelationPtr = &lpdbRelation->lpdbriNext;
+      }
+      while ( *lpdbRelationPtr );
+   }
+   return SUCCESS;
+}
+
+/* close all parent relations */
+ERRCODE hb_rddCloseAllParentRelations( AREAP pArea )
+{
+   ERRCODE errCode = SUCCESS;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddCloseAllParentRelations(%p)", pArea));
+
+   if( pArea->uiParents > 0 )
+      errCode = hb_rddIterateWorkAreas( hb_rddCloseParentRel, pArea );
+
+   return errCode;
+}
