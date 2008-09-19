@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-20 00:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/source/rdd/wadetach.c
+    + added .prg functions:
+         hb_waDetach( [<nWorkArea>|<cAlias>], [<xCargo>] ) -> <lSuccess>
+         hb_waRequest( [<cAlias>], [<lFreeArea>], [<@xCargo>], [<lWait>] )
+            -> <lSuccess>
+      The first one detach workarea from current thread and move it
+      to special hidden holder. Before detaching all relations (parent
+      and child) to detached workarea are cleared.
+      The second one restores area from the holder and attach it
+      to calling thread.
+    + added xBase++ compatible functions DbRelease() / DbRequest()
+      xBase++ users please test. If possible please also check what xBase++
+      does with relations and active RLOCKs/FLOCK on released WA.
+
 2008-09-19 22:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/set.c
     ! fixed casting
@@ -37,40 +52,40 @@
     ! fixed return value after rt error.
     * Added rt error as in clipper when OrdkeyVal is greater than 240, with default
       capabilities as in clipper.
-    code to test it:
-	FUNCTION MAIN()
+      code to test it:
+      FUNCTION MAIN()
 
-	    LOCAL i
-	    LOCAL nSec := SECONDS()
+         LOCAL i
+         LOCAL nSec := SECONDS()
 
-	    REQUEST DBFCDX
-	    RddSetDefault( "DBFCDX" )
+         REQUEST DBFCDX
+         RddSetDefault( "DBFCDX" )
 
-	    DBCREATE( "__MYTEST", { { "test", "C", 241, 0 } } )
+         DBCREATE( "__MYTEST", { { "test", "C", 241, 0 } } )
 
-	    USE __MYTEST
-	    INDEX ON FIELD->Test TO __MYTEST
+         USE __MYTEST
+         INDEX ON FIELD->Test TO __MYTEST
 
-	    FOR i := 1 TO 10
-	        APPEND BLANK
-        	FIELD->test := Replicate( "1", 240 ) + Str( 10 - i, 1 )
-	    NEXT
+         FOR i := 1 TO 10
+            APPEND BLANK
+            FIELD->test := Replicate( "1", 240 ) + Str( 10 - i, 1 )
+         NEXT
 
-	    DbGoTop()
-	    ? &(OrdKey())
-	    ? "Length of &(OrdKey()) :" + Str( Len( &(OrdKey()) ) )
-	    ? OrdKeyVal()
-	    ? "Length of OrdKeyVal() :" + Str( Len(OrdKeyVal()) )
-	    WHILE ! EOF()
-	      ? Right( FIELD->Test, 1 )
-	      DbSkip()
-	    ENDDO
+         DbGoTop()
+         ? &(OrdKey())
+         ? "Length of &(OrdKey()) :" + Str( Len( &(OrdKey()) ) )
+         ? OrdKeyVal()
+         ? "Length of OrdKeyVal() :" + Str( Len(OrdKeyVal()) )
+         WHILE ! EOF()
+            ? Right( FIELD->Test, 1 )
+            DbSkip()
+         ENDDO
 
-	    USE
-	    FERASE( "__MYTEST.DBF" )
-	    FERASE( "__MYTEST.CDX" )
+         USE
+         FERASE( "__MYTEST.DBF" )
+         FERASE( "__MYTEST.CDX" )
 
-	RETURN NIL
+      RETURN NIL
 
 2008-09-19 11:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbct/fcopy.prg
