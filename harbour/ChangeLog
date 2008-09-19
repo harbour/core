@@ -8,6 +8,47 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-19 12:21 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
+  * contrib/hbbmcdx/bmdbfcdx.c
+  * source/rdd/dbfcdx/dbfcdx1.c
+    ! fixed return value after rt error.
+    * Added rt error as in clipper when OrdkeyVal is greater than 240, with default
+      capabilities as in clipper.
+    code to test it:
+	FUNCTION MAIN()
+
+	    LOCAL i
+	    LOCAL nSec := SECONDS()
+
+	    REQUEST DBFCDX
+	    RddSetDefault( "DBFCDX" )
+
+	    DBCREATE( "__MYTEST", { { "test", "C", 241, 0 } } )
+
+	    USE __MYTEST
+	    INDEX ON FIELD->Test TO __MYTEST
+
+	    FOR i := 1 TO 10
+	        APPEND BLANK
+        	FIELD->test := Replicate( "1", 240 ) + Str( 10 - i, 1 )
+	    NEXT
+
+	    DbGoTop()
+	    ? &(OrdKey())
+	    ? "Length of &(OrdKey()) :" + Str( Len( &(OrdKey()) ) )
+	    ? OrdKeyVal()
+	    ? "Length of OrdKeyVal() :" + Str( Len(OrdKeyVal()) )
+	    WHILE ! EOF()
+	      ? Right( FIELD->Test, 1 )
+	      DbSkip()
+	    ENDDO
+
+	    USE
+	    FERASE( "__MYTEST.DBF" )
+	    FERASE( "__MYTEST.CDX" )
+
+	RETURN NIL
+
 2008-09-19 11:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbct/fcopy.prg
   * contrib/hbnf/dfile.prg

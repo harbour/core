@@ -3490,17 +3490,24 @@ static void hb_cdxTagHeaderStore( LPCDXTAG pTag )
    uiKeyLen = pTag->KeyExpr == NULL ? 0 : strlen( pTag->KeyExpr );
    uiForLen = pTag->ForExpr == NULL ? 0 : strlen( pTag->ForExpr );
 
-   HB_PUT_LE_UINT16( tagHeader.keyExpPos, 0 );
-   HB_PUT_LE_UINT16( tagHeader.keyExpLen, uiKeyLen + 1 );
-   HB_PUT_LE_UINT16( tagHeader.forExpPos, uiKeyLen + 1 );
-   HB_PUT_LE_UINT16( tagHeader.forExpLen, uiForLen + 1 );
-   if ( uiKeyLen > 0 )
+   if( uiKeyLen + uiForLen > CDX_HEADEREXPLEN - 2 )
    {
-      memcpy( tagHeader.keyExpPool, pTag->KeyExpr, uiKeyLen + 1 );
+      hb_cdxErrorRT( pTag->pIndex->pArea, EG_DATAWIDTH, EDBF_KEYLENGTH, NULL, 0, 0 );
    }
-   if ( uiForLen > 0 )
+   else
    {
-      memcpy( tagHeader.keyExpPool + uiKeyLen + 1, pTag->ForExpr, uiForLen + 1 );
+      HB_PUT_LE_UINT16( tagHeader.keyExpPos, 0 );
+      HB_PUT_LE_UINT16( tagHeader.keyExpLen, uiKeyLen + 1 );
+      HB_PUT_LE_UINT16( tagHeader.forExpPos, uiKeyLen + 1 );
+      HB_PUT_LE_UINT16( tagHeader.forExpLen, uiForLen + 1 );
+      if( uiKeyLen > 0 )
+      {
+         memcpy( tagHeader.keyExpPool, pTag->KeyExpr, uiKeyLen );
+      }
+      if( uiForLen > 0 )
+      {
+         memcpy( tagHeader.keyExpPool + uiKeyLen + 1, pTag->ForExpr, uiForLen );
+      }
    }
    hb_cdxIndexPageWrite( pTag->pIndex, pTag->TagBlock, (BYTE *) &tagHeader, sizeof( CDXTAGHEADER ) );
 }
@@ -3529,17 +3536,26 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
     * invalid root page offset (position inside an index file)
     * invalid key value length
     */
-   if ( pTag->RootBlock == 0 || pTag->RootBlock % CDX_PAGELEN != 0 ||
-        ( HB_FOFFSET ) pTag->RootBlock >= hb_fsSeekLarge( pTag->pIndex->hFile, 0, FS_END ) ||
-        HB_GET_LE_UINT16( tagHeader.keySize ) > CDX_MAXKEY ||
-        uiForPos + uiForLen > CDX_HEADEREXPLEN ||
-        uiKeyPos + uiKeyLen > CDX_HEADEREXPLEN )
+   if( pTag->RootBlock == 0 || pTag->RootBlock % CDX_PAGELEN != 0 ||
+       ( HB_FOFFSET ) pTag->RootBlock >= hb_fsSeekLarge( pTag->pIndex->hFile, 0, FS_END ) ||
+       HB_GET_LE_UINT16( tagHeader.keySize ) > CDX_MAXKEY ||
+       uiForPos + uiForLen > CDX_HEADEREXPLEN ||
+       uiKeyPos + uiKeyLen > CDX_HEADEREXPLEN ||
+       ( uiKeyPos < uiForPos ? ( uiKeyPos + uiKeyLen > uiForPos ) :
+                               ( uiForPos + uiForLen > uiKeyPos ) ) )
    {
       pTag->RootBlock = 0; /* To force RT error - index corrupted */
       return;
    }
-   pTag->KeyExpr   = ( char * ) hb_xgrab( CDX_MAXEXP + 1 );
-   hb_strncpyTrim( pTag->KeyExpr, ( const char * ) tagHeader.keyExpPool, CDX_MAXEXP );
+
+   /* some wrong RDDs do not set expression length this is workaround for them */
+   if( !uiKeyLen )
+      uiKeyLen = ( uiForPos >= uiKeyPos ? uiForPos : CDX_HEADEREXPLEN ) - uiKeyPos;
+   if( !uiForLen )
+      uiForLen = ( uiForPos <= uiKeyPos ? uiKeyPos : CDX_HEADEREXPLEN ) - uiForPos;
+
+   pTag->KeyExpr   = ( char * ) hb_xgrab( uiKeyLen + 1 );
+   hb_strncpyTrim( pTag->KeyExpr, ( const char * ) tagHeader.keyExpPool, uiKeyLen );
 
    pTag->uiLen     = HB_GET_LE_UINT16( tagHeader.keySize );
    pTag->MaxKeys   = CDX_INT_FREESPACE / ( pTag->uiLen + 8 );
@@ -3600,9 +3616,9 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
    /* Check if there is a FOR expression: pTag->OptFlags & CDX_TYPE_FORFILTER */
    if ( tagHeader.keyExpPool[ uiForPos ] != 0 )
    {
-      pTag->ForExpr = ( char * ) hb_xgrab( CDX_MAXEXP + 1 );
+      pTag->ForExpr = ( char * ) hb_xgrab( uiForLen + 1 );
       hb_strncpyTrim( pTag->ForExpr, ( const char * ) tagHeader.keyExpPool +
-                      uiForPos, CDX_MAXEXP );
+                      uiForPos, uiForLen );
       if ( SELF_COMPILE( ( AREAP ) pTag->pIndex->pArea, ( BYTE * ) pTag->ForExpr ) == FAILURE )
          pTag->RootBlock = 0; /* To force RT error - index corrupted */
       else
@@ -4564,19 +4580,17 @@ static LPCDXTAG hb_cdxIndexCreateTag( BOOL fStruct, LPCDXINDEX pIndex,
 
    if ( bType == 'C' )
       hb_cdxMakeSortTab( pTag->pIndex->pArea );
+
    if ( KeyExp != NULL )
    {
-      pTag->KeyExpr = ( char * ) hb_xgrab( CDX_MAXEXP + 1 );
-      hb_strncpyTrim( pTag->KeyExpr, KeyExp, CDX_MAXEXP );
+      pTag->KeyExpr = hb_strduptrim( KeyExp );
       pTag->nField = hb_rddFieldExpIndex( ( AREAP ) pTag->pIndex->pArea,
                                           pTag->KeyExpr );
    }
    pTag->pKeyItem = pKeyItem;
    if ( ForExp != NULL )
-   {
-      pTag->ForExpr = ( char * ) hb_xgrab( CDX_MAXEXP + 1 );
-      hb_strncpyTrim( pTag->ForExpr, ForExp, CDX_MAXEXP );
-   }
+      pTag->ForExpr = hb_strduptrim( ForExp );
+
    pTag->pForItem = pForItem;
    pTag->AscendKey = pTag->UsrAscend = fAscnd;
    pTag->UniqueKey = fUniq;
@@ -7948,30 +7962,37 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderCreate(%p, %p)", pArea, pOrderInfo));
 
-   if ( FAST_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
    if( pArea->lpdbPendingRel )
       SELF_FORCEREL( ( AREAP ) pArea );
 
-   if( hb_itemGetCLen( pOrderInfo->abExpr ) > CDX_MAXKEY )
-      return hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_KEYLENGTH, NULL, 0, 0 );
-
-   /* If we have a codeblock for the expression, use it */
-   if ( pOrderInfo->itmCobExpr )
-      pKeyExp = hb_itemNew( pOrderInfo->itmCobExpr );
-   else /* Otherwise, try compiling the key expression string */
+   if( hb_strlentrim( hb_itemGetCPtr( pOrderInfo->abExpr ) ) +
+       ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->abFor ?
+         hb_strlentrim( ( const char * ) pArea->lpdbOrdCondInfo->abFor ) : 0 ) >
+       CDX_HEADEREXPLEN - 2 )
    {
-      if( SELF_COMPILE( (AREAP) pArea, ( BYTE * ) hb_itemGetCPtr( pOrderInfo->abExpr ) ) == FAILURE )
-         return FAILURE;
-      pKeyExp = pArea->valResult;
-      pArea->valResult = NULL;
+      hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_KEYLENGTH, NULL, 0, 0 );
+      return FAILURE;
+   }
+
+   if( SELF_COMPILE( (AREAP) pArea, ( BYTE * ) hb_itemGetCPtr( pOrderInfo->abExpr ) ) == FAILURE )
+      return FAILURE;
+
+   pKeyExp = pArea->valResult;
+   pArea->valResult = NULL;
+   /* If we have a codeblock for the expression, use it */
+   if( pOrderInfo->itmCobExpr )
+   {
+      hb_vmDestroyBlockOrMacro( pKeyExp );
+      pKeyExp = hb_itemNew( pOrderInfo->itmCobExpr );
    }
 
    /* Get a blank record before testing expression */
    ulRecNo = pArea->ulRecNo;
    SELF_GOTO( ( AREAP ) pArea, 0 );
-   if ( SELF_EVALBLOCK( ( AREAP ) pArea, pKeyExp ) == FAILURE )
+   if( SELF_EVALBLOCK( ( AREAP ) pArea, pKeyExp ) == FAILURE )
    {
       hb_vmDestroyBlockOrMacro( pKeyExp );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
@@ -7992,8 +8013,6 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          break;
       case 'C':
          uiLen = ( USHORT ) hb_itemGetCLen( pResult );
-         if( uiLen > CDX_MAXKEY )
-            uiLen = CDX_MAXKEY;
          break;
       default:
          bType = 'U';
@@ -8001,16 +8020,27 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    }
    hb_itemRelease( pResult );
 
+   /* Make sure KEY has proper type and iLen lower than 240 */
+   if ( bType == 'C' && uiLen > CDX_MAXKEY )
+   {
+      if( hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, EF_CANDEFAULT ) == E_DEFAULT )
+        uiLen = CDX_MAXKEY;
+      else
+      {
+        hb_vmDestroyBlockOrMacro( pKeyExp );
+        SELF_GOTO( ( AREAP ) pArea, ulRecNo );
+        return FAILURE;
+      }
+   }
    /* Make sure KEY has proper type and iLen is not 0 */
-   if ( bType == 'U' || uiLen == 0 )
+   else if ( bType == 'U' || uiLen == 0 )
    {
       hb_vmDestroyBlockOrMacro( pKeyExp );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
-      hb_cdxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH,
-                     EDBF_INVALIDKEY, NULL, 0, 0 );
+      hb_cdxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, 0 );
       return FAILURE;
    }
-   if ( pArea->lpdbOrdCondInfo )
+   if( pArea->lpdbOrdCondInfo )
    {
       fAscend = !pArea->lpdbOrdCondInfo->fDescending;
       fCustom = pArea->lpdbOrdCondInfo->fCustom;
@@ -8019,13 +8049,9 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 
       /* Check conditional expression */
       szFor = ( char * ) pArea->lpdbOrdCondInfo->abFor;
-      if ( pArea->lpdbOrdCondInfo->itmCobFor )
-         /* If we have a codeblock for the conditional expression, use it */
-         pForExp = hb_itemNew( pArea->lpdbOrdCondInfo->itmCobFor );
-      else if ( szFor )
+      if( szFor )
       {
-         /* Otherwise, try compiling the conditional expression string */
-         if ( SELF_COMPILE( (AREAP) pArea, ( BYTE * ) szFor ) == FAILURE )
+         if( SELF_COMPILE( (AREAP) pArea, ( BYTE * ) szFor ) == FAILURE )
          {
             hb_vmDestroyBlockOrMacro( pKeyExp );
             SELF_GOTO( ( AREAP ) pArea, ulRecNo );
@@ -8033,6 +8059,13 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          }
          pForExp = pArea->valResult;
          pArea->valResult = NULL;
+      }
+      /* If we have a codeblock for the conditional expression, use it */
+      if( pArea->lpdbOrdCondInfo->itmCobFor )
+      {
+         if( pForExp )
+            hb_vmDestroyBlockOrMacro( pForExp );
+         pForExp = hb_itemNew( pArea->lpdbOrdCondInfo->itmCobFor );
       }
    }
    /* Test conditional expression */
@@ -8200,8 +8233,8 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    }
 
    pTag = hb_cdxIndexAddTag( pIndex, szTagName, hb_itemGetCPtr( pOrderInfo->abExpr ),
-                      pKeyExp, bType, uiLen, szFor, pForExp,
-                      fAscend , pOrderInfo->fUnique, fCustom, FALSE );
+                             pKeyExp, bType, uiLen, szFor, pForExp,
+                             fAscend , pOrderInfo->fUnique, fCustom, FALSE );
 
    if ( pArea->lpdbOrdCondInfo && ( !pArea->lpdbOrdCondInfo->fAll &&
                                     !pArea->lpdbOrdCondInfo->fAdditive ) )
