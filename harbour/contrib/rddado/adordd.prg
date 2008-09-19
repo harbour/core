@@ -120,7 +120,12 @@
 
 ANNOUNCE ADORDD
 
-static s_cTableName, s_cEngine, s_cServer, s_cUserName, s_cPassword, s_cQuery := ""
+THREAD STATIC s_cTableName
+THREAD STATIC s_cEngine
+THREAD STATIC s_cServer
+THREAD STATIC s_cUserName
+THREAD STATIC s_cPassword
+THREAD STATIC s_cQuery := ""
 
 #ifndef __XHARBOUR__
 THREAD STATIC s_bError

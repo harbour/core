@@ -69,11 +69,13 @@
 
 #include "fileio.ch"
 #include "common.ch"
+
 #define  F_BLOCK   512
 
-STATIC s_hSrcFile := -1
-STATIC s_lSetDaTi := .T.
-STATIC s_fileDate, s_fileTime
+THREAD STATIC s_hSrcFile := -1
+THREAD STATIC s_lSetDaTi := .T.
+THREAD STATIC s_fileDate
+THREAD STATIC s_fileTime
 
 /*
  * FileCopy()

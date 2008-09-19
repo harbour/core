@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-19 11:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbct/fcopy.prg
+  * contrib/hbnf/dfile.prg
+  * contrib/hbpgsql/pgrdd.prg
+  * contrib/hbtpathy/telepath.prg
+  * contrib/rddado/adordd.prg
+    + Some STATICs converted to THREAD STATIC.
+
+  * contrib/hbtip/ftpcln.prg
+    * STATIC var renamed.
+
 2008-09-18 22:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/fm.c
     ! Suppressing warnings for foreign dlalloc.c code for BCC.

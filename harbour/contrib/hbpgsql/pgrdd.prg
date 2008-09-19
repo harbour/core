@@ -72,7 +72,7 @@
 
 ANNOUNCE PGRDD
 
-STATIC s_aConnections := {}
+THREAD STATIC s_aConnections := {}
 
 FUNCTION DBPGCONNECTION( cConnString )
 

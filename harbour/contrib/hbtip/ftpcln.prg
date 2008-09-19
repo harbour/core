@@ -100,7 +100,7 @@
 #include "tip.ch"
 #include "common.ch"
 
-STATIC nPort := 16000
+STATIC s_nPort := 16000
 
 /**
 * Inet service manager: ftp
@@ -500,13 +500,13 @@ RETURN ::TransferStart()
 METHOD Port() CLASS tIPClientFTP
 
    ::SocketPortServer := HB_InetCreate( ::nConnTimeout )
-   nPort ++
-   DO WHILE nPort < 24000
-      HB_InetServer( nPort, ::SocketPortServer )
+   s_nPort ++
+   DO WHILE s_nPort < 24000
+      HB_InetServer( s_nPort, ::SocketPortServer )
       IF ::InetErrorCode( ::SocketPortServer ) == 0
          RETURN ::SendPort()
       ENDIF
-      nPort ++
+      s_nPort ++
    ENDDO
 
 RETURN .F.

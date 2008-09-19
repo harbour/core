@@ -29,7 +29,7 @@
 
 
 
-static nHandle := 0
+THREAD static nHandle := 0
 
 #ifdef FT_TEST
 

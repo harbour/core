@@ -64,8 +64,8 @@
 
 
 
-STATIC   s_aPorts               // Array with port info
-STATIC   s_nErrorCode := 0      // Error code from last operation, 0 if no error
+THREAD STATIC s_aPorts               // Array with port info
+THREAD STATIC s_nErrorCode := 0      // Error code from last operation, 0 if no error
 
 
 
