@@ -9,6 +9,7 @@ C_SOURCES=\
 	dbcmd53.c \
 	dbcmdhb.c \
 	dbcmdx.c \
+	dbdetach.c \
 	dbdrop.c \
 	dbexists.c \
 	fieldhb.c \

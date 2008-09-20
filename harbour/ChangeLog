@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-20 05:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/rdd/Makefile
+    ! restored dbdetach.* in makefiles
+
+  + harbour/source/rdd/dbdetach.c
+    + added file I forgot to add in previous commit
+
+  * harbour/source/vm/thread.c
+    + added support for using function name as string in HB_THREADSTART()
+    + added support for thread attributes. They will be used in the future.
+
 2008-09-19 21:28 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * common.mak
   * source/rdd/Makefile

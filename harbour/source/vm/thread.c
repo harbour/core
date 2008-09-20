@@ -458,6 +458,11 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
          hb_vmPushSymbol( hb_itemGetSymbol( pStart ) );
          hb_vmPushNil();
       }
+      else if( HB_IS_STRING( pStart ) )
+      {
+         hb_vmPushDynSym( hb_dynsymGet( hb_itemGetCPtr( pStart ) ) );
+         hb_vmPushNil();
+      }
       else
          ulPCount = 0;
    }
@@ -506,8 +511,44 @@ static PHB_THREADSTATE hb_thParam( int iParam )
 
 HB_FUNC( HB_THREADSTART )
 {
-   PHB_ITEM pStart = hb_param( 1, HB_IT_ANY );
-   if( pStart && ( HB_IS_BLOCK( pStart ) || HB_IS_SYMBOL( pStart ) ) )
+   ULONG ulAttr = 0, ulStart = 1;
+   const char * szFuncName = NULL;
+   PHB_SYMB pSymbol = NULL;
+   PHB_ITEM pStart;
+
+   pStart = hb_param( ulStart, HB_IT_ANY );
+   while( pStart && HB_IS_NUMERIC( pStart ) )
+   {
+      ulAttr |= ( ULONG ) hb_itemGetNL( pStart );
+      pStart = hb_param( ++ulStart, HB_IT_ANY );
+   }
+
+   if( pStart )
+   {
+      if( HB_IS_STRING( pStart ) )
+      {
+         PHB_DYNS pDynSym;
+         szFuncName = hb_itemGetCPtr( pStart );
+         pDynSym = hb_dynsymFindName( szFuncName );
+         if( pDynSym )
+            pSymbol = pDynSym->pSymbol;
+         if( !pSymbol || !pSymbol->value.pFunPtr )
+            pStart = NULL;
+      }
+      else if( HB_IS_SYMBOL( pStart ) )
+      {
+         pSymbol = hb_itemGetSymbol( pStart );
+         if( !pSymbol->value.pFunPtr )
+         {
+            szFuncName = pSymbol->szName;
+            pStart = NULL;
+         }
+      }
+      else if( !HB_IS_BLOCK( pStart ) )
+         pStart = NULL;
+   }
+
+   if( pStart )
    {
       PHB_ITEM pReturn;
       PHB_THREADSTATE pThread;
@@ -525,14 +566,32 @@ HB_FUNC( HB_THREADSTART )
       pThread->pSet      = hb_setClone( hb_stackSetStruct() );
       pThread->pParams   = hb_arrayBaseParams();
 
-      /* detach LOCAL variables passed by reference */
       ulPCount = hb_arrayLen( pThread->pParams );
-      for( ulParam = 2; ulParam <= ulPCount; ++ulParam )
+      /* remove thread attributes */
+      if( ulStart > 1 )
+      {
+         for( ulParam = 1; ulParam < ulStart; ++ulParam )
+            hb_arrayDel( pThread->pParams, 1 );
+         ulPCount -= ulStart - 1;
+         hb_arraySize( pThread->pParams, ulPCount );
+      }
+      if( HB_IS_STRING( pStart ) && pSymbol )
+         hb_itemPutSymbol( hb_arrayGetItemPtr( pThread->pParams, 1 ), pSymbol );
+      /* detach LOCAL variables passed by reference */
+      for( ulParam = 1; ulParam <= ulPCount; ++ulParam )
       {
          PHB_ITEM pParam = hb_arrayGetItemPtr( pThread->pParams, ulParam );
          if( HB_IS_BYREF( pParam ) )
-            hb_memvarDetachLocal( pParam );
+         {
+            if( ulParam == 1 )
+               hb_itemCopy( pParam, hb_itemUnRef( pParam ) );
+            else
+               hb_memvarDetachLocal( pParam );
+         }
       }
+      /* TODO: use thread attributes in thread initialization,
+       *       f.e. to copy visible memvars if user request about it.
+       */
 
       /* make copy of thread pointer item before we pass it to new thread
        * to avoid race condition
@@ -549,7 +608,12 @@ HB_FUNC( HB_THREADSTART )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   {
+      if( szFuncName )
+         hb_errRT_BASE_SubstR( EG_NOFUNC, 1001, NULL, szFuncName, 0 );
+      else
+         hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
 }
 
 HB_FUNC( HB_THREADJOIN )

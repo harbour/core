@@ -890,6 +890,7 @@ RDD_LIB_OBJS = \
     $(OBJ_DIR)\dbcmd53$(OBJEXT)  \
     $(OBJ_DIR)\dbcmdhb$(OBJEXT)  \
     $(OBJ_DIR)\dbcmdx$(OBJEXT)   \
+    $(OBJ_DIR)\dbdetach$(OBJEXT) \
     $(OBJ_DIR)\dbdrop$(OBJEXT)   \
     $(OBJ_DIR)\dbexists$(OBJEXT) \
     $(OBJ_DIR)\fieldhb$(OBJEXT)  \
