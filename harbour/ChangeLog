@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-19 21:28 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * common.mak
+  * source/rdd/Makefile
+    * removed dbdetach.* from make constructors
+
 2008-09-20 03:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     * minor modification: #ifdef ... => #if defined( ... )
