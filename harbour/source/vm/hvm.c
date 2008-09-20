@@ -975,7 +975,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
    ULONG ulLastOpcode = 0; /* opcodes profiler support */
    ULONG ulPastClock = 0;  /* opcodes profiler support */
 #endif
-#ifndef HB_GUI
+#if !defined( HB_GUI )
    static unsigned short uiPolls = 1;
 #endif
 
@@ -1000,7 +1000,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
       }
 #endif
 
-#ifndef HB_GUI
+#if !defined( HB_GUI )
       if( ! --uiPolls )
       {
          hb_inkeyPoll();
@@ -5179,7 +5179,7 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 #endif
 
    /* Poll the console keyboard
-   #ifndef HB_GUI
+   #if !defined( HB_GUI )
       hb_inkeyPoll();
    #endif
    */
@@ -5281,7 +5281,7 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 #endif
 
    /* Poll the console keyboard
-   #ifndef HB_GUI
+   #if !defined( HB_GUI )
       hb_inkeyPoll();
    #endif
    */

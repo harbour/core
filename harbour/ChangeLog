@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-20 03:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    * minor modification: #ifdef ... => #if defined( ... )
+
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gttrm/gttrm.c
+    ! fixed reentrance counter resetting
+
 2008-09-20 00:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/source/rdd/wadetach.c
     + added .prg functions:

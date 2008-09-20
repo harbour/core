@@ -1332,8 +1332,8 @@ static int wait_key( PHB_GTTRM pTerm, int milisec )
    }
 #endif
 
-   counter = ++( pTerm->key_counter );
 restart:
+   counter = ++( pTerm->key_counter );
    nKey = esc = n = i = 0;
 again:
    if( ( nKey = getMouseKey( &pTerm->mLastEvt ) ) != 0 )

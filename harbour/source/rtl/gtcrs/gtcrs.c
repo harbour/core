@@ -758,8 +758,8 @@ static int wait_key( InOutBase * ioBase, int milisec )
       return K_RESIZE;
    }
 
-   counter = ++( ioBase->key_counter );
  restart:
+   counter = ++( ioBase->key_counter );
    nKey = esc = n = i = 0;
  again:
    if ( ( nKey = getMouseKey( &ioBase->mLastEvt ) ) != 0 )
