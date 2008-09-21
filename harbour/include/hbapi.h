@@ -698,6 +698,8 @@ extern HB_EXPORT char *    hb_arrayGetC( PHB_ITEM pArray, ULONG ulIndex ); /* re
 extern HB_EXPORT char *    hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string pointer on an array element */
 extern HB_EXPORT ULONG     hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
 extern HB_EXPORT void *    hb_arrayGetPtr( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the pointer contained on an array element */
+extern HB_EXPORT void *    hb_arrayGetPtrGC( PHB_ITEM pArray, ULONG ulIndex, HB_GARBAGE_FUNC_PTR pFunc ); /* retrieves the GC pointer contained on an array element */
+extern HB_EXPORT PHB_SYMB  hb_arrayGetSymbol( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves symbol contained on an array element */
 extern HB_EXPORT BOOL      hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the logical value contained on an array element */
 extern HB_EXPORT int       hb_arrayGetNI( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the int value contained on an array element */
 extern HB_EXPORT long      hb_arrayGetNL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the long numeric value contained on an array element */
@@ -723,6 +725,7 @@ extern HB_EXPORT BOOL      hb_arraySetCL( PHB_ITEM pArray, ULONG ulIndex, const 
 extern HB_EXPORT BOOL      hb_arraySetCPtr( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen );
 extern HB_EXPORT BOOL      hb_arraySetPtr( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
 extern HB_EXPORT BOOL      hb_arraySetPtrGC( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
+extern HB_EXPORT BOOL      hb_arraySetSymbol( PHB_ITEM pArray, ULONG ulIndex, PHB_SYMB pSymbol );
 extern HB_EXPORT BOOL      hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* fill an array with a given item */
 extern HB_EXPORT ULONG     hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE */
 extern HB_EXPORT ULONG     hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE in reverted order */
@@ -877,6 +880,7 @@ extern HB_EXPORT PHB_DYNS  hb_dynsymFind( const char * szName );   /* finds a dy
 extern HB_EXPORT PHB_DYNS  hb_dynsymFindName( const char * szName ); /* converts to uppercase and finds a dynamic symbol */
 extern HB_EXPORT void      hb_dynsymRelease( void );         /* releases the memory of the dynamic symbol table */
 extern HB_EXPORT void      hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo ); /* enumerates all dynamic symbols */
+extern HB_EXPORT void      hb_dynsymProtectEval( PHB_DYNS_FUNC pFunction, void * Cargo ); /* enumerates all dynamic symbols with global symbol table locked - can be used ONLY when user function does not try to access dynamic symbol table */
 extern HB_EXPORT PHB_SYMB  hb_dynsymGetSymbol( const char * szName ); /* finds and creates a dynamic symbol if not found and return pointer to its HB_SYMB structure */
 extern HB_EXPORT PHB_SYMB  hb_dynsymFindSymbol( const char * szName ); /* finds a dynamic symbol and return pointer to its HB_SYMB structure */
 extern HB_EXPORT PHB_SYMB  hb_dynsymSymbol( PHB_DYNS pDynSym );
@@ -929,6 +933,9 @@ extern void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_IT
 extern int        hb_memvarScope( char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
 extern PHB_ITEM   hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
 extern PHB_ITEM   hb_memvarGetValueBySym( PHB_DYNS pDynSym );
+extern PHB_ITEM   hb_memvarSaveInArray( int iScope, BOOL fCopy ); /* create array with visible memvar references or copies respecting given memvars scope */
+extern void       hb_memvarRestoreFromArray( PHB_ITEM pArray );
+
 #ifdef _HB_API_INTERNAL_
 extern void       hb_memvarValueIncRef( PHB_ITEM pValue ); /* increase the reference count of a global value */
 extern void       hb_memvarValueDecRef( PHB_ITEM pValue ); /* decrease the reference count of a global value */

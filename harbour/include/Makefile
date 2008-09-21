@@ -92,6 +92,7 @@ PRG_HEADERS=\
 	hbsetup.ch   \
 	hbsix.ch     \
 	hbstdgen.ch  \
+	hbthread.ch  \
 	hbusrrdd.ch  \
 	hbzlib.ch    \
 	inkey.ch     \

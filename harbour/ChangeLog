@@ -8,6 +8,56 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-21 23:03 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/arrays.c
+    + added hb_arrayGetPtrGC(), hb_arrayGetSymbol(), hb_arraySetSymbol()
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/dynsym.c
+    + added hb_dynsymProtectEval(). Works like hb_dynsymEval() but
+      keeps dynamic symbol table locked during whole execution.
+      It's faster then hb_dynsymEval() but user function may not
+      access dynamic symbol tbale to not cause recursive locks
+    + added protection against possible dynamic symbol table resizing
+      during hb_dynsymEval() by other threads.
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/memvars.c
+    + added hb_memvarSaveInArray( int iScope, BOOL fCopy ) and
+      hb_memvarRestoreFromArray( PHB_ITEM pArray )
+    % use hb_dynsymProtectEval() in places where it's safe
+
+  * harbour/include/Makefile
+  + harbour/include/hbthread.ch
+    + added header file with thread constant definitions:
+         HB_THREAD_INHERIT_PUBLIC
+         HB_THREAD_INHERIT_PRIVATE
+         HB_THREAD_INHERIT_MEMVARS
+         HB_THREAD_MEMVARS_COPY
+
+  * harbour/include/hbthread.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/thread.c
+    + added support for inheriting visible memvars from current
+      thread when new thread is created. Memvars in child thread
+      can be shared with parrent or they can be copied. See HB_THREAD_*
+      attributes defined in hbthread.ch, f.e.:
+         hb_threadStart( HB_THREAD_INHERIT_PUBLIC, @thFunc() )
+      or:
+         hb_threadStart( HB_BITOR( HB_THREAD_INHERIT_MEMVARS + ;
+                                   HB_THREAD_MEMVARS_COPY ), ;
+                          @thFunc() )
+      Please note that when child thread creates new PUBLIC variable
+      which didn't existed when thread was started then it's visible
+      only for this thread and optionally for its child threads but
+      not for parent thread.
+      Please also remember that write access to shared memvars have
+      to be protected by users.
+
+  + harbour/tests/mt/mttest08.prg
+    + added test code for thread memvars inheritance
+
 2008-09-20 05:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/rdd/Makefile

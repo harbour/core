@@ -598,6 +598,26 @@ void * hb_arrayGetPtr( PHB_ITEM pArray, ULONG ulIndex )
       return NULL;
 }
 
+void * hb_arrayGetPtrGC( PHB_ITEM pArray, ULONG ulIndex, HB_GARBAGE_FUNC_PTR pFunc )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetPtrGC(%p, %lu, %p)", pArray, ulIndex, pFunc));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetPtrGC( pArray->item.asArray.value->pItems + ulIndex - 1, pFunc );
+   else
+      return NULL;
+}
+
+PHB_SYMB hb_arrayGetSymbol( PHB_ITEM pArray, ULONG ulIndex )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetSymbol(%p, %lu)", pArray, ulIndex));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetSymbol( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return NULL;
+}
+
 
 HB_TYPE hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
 {
@@ -774,6 +794,19 @@ HB_EXPORT BOOL hb_arraySetPtrGC( PHB_ITEM pArray, ULONG ulIndex, void * pValue )
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
       hb_itemPutPtrGC( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+HB_EXPORT BOOL hb_arraySetSymbol( PHB_ITEM pArray, ULONG ulIndex, PHB_SYMB pSymbol )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetSymbol(%p, %lu, %p)", pArray, ulIndex, pValue));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutSymbol( pArray->item.asArray.value->pItems + ulIndex - 1, pSymbol );
       return TRUE;
    }
    else

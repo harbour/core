@@ -65,6 +65,9 @@
 #include "hbapilng.h"
 #include "hbvm.h"
 #include "hbstack.h"
+#include "hbmemvar.ch"
+#include "hbthread.ch"
+
 #if defined( HB_PTHREAD_API )
 #  include <time.h>
 #  include <sys/time.h>
@@ -418,6 +421,11 @@ static HB_GARBAGE_FUNC( hb_threadDestructor )
       hb_itemRelease( pThread->pParams );
       pThread->pParams = NULL;
    }
+   if( pThread->pMemvars )
+   {
+      hb_itemRelease( pThread->pMemvars );
+      pThread->pMemvars = NULL;
+   }
    if( pThread->pResult )
    {
       hb_itemRelease( pThread->pResult );
@@ -481,6 +489,11 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
    {
       hb_itemRelease( pThread->pParams );
       pThread->pParams = NULL;
+      if( pThread->pMemvars )
+      {
+         hb_itemRelease( pThread->pMemvars );
+         pThread->pMemvars = NULL;
+      }
 
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 0 );
    }
@@ -589,9 +602,17 @@ HB_FUNC( HB_THREADSTART )
                hb_memvarDetachLocal( pParam );
          }
       }
-      /* TODO: use thread attributes in thread initialization,
-       *       f.e. to copy visible memvars if user request about it.
-       */
+
+      if( ( ulAttr & HB_THREAD_INHERIT_MEMVARS ) != 0 )
+      {
+         int iScope = 0;
+         if( ( ulAttr & HB_THREAD_INHERIT_PUBLIC ) != 0 )
+            iScope |= HB_MV_PUBLIC;
+         if( ( ulAttr & HB_THREAD_INHERIT_PRIVATE ) != 0 )
+            iScope |= HB_MV_PRIVATE;
+         pThread->pMemvars = hb_memvarSaveInArray( iScope,
+                                    ( ulAttr & HB_THREAD_MEMVARS_COPY ) != 0 );
+      }
 
       /* make copy of thread pointer item before we pass it to new thread
        * to avoid race condition
@@ -601,6 +622,8 @@ HB_FUNC( HB_THREADSTART )
       pThread->th_id = hb_threadCreate( hb_threadStartVM, ( void * ) pReturn );
       if( pThread->th_id == 0 )
       {
+         if( pThread->pMemvars )
+            hb_itemRelease( pThread->pMemvars );
          hb_setRelease( pThread->pSet );
          hb_xfree( pThread->pSet );
          hb_itemRelease( pReturn );

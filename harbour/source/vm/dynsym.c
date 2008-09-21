@@ -516,16 +516,54 @@ static PHB_DYNS hb_dynsymGetByIndex( long lIndex )
 
 void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
 {
+   PHB_DYNS pDynSym = NULL;
    USHORT uiPos = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymEval(%p, %p)", pFunction, Cargo));
 
    while( TRUE )
    {
-      PHB_DYNS pDynSym = hb_dynsymGetByIndex( ++uiPos );
+
+      HB_DYNSYM_LOCK
+
+      if( pDynSym )
+      {
+         /* protection against resizing dynamic symbol by
+          * user function or other thread in MT mode
+          */
+         while( s_pDynItems[ uiPos ].pDynSym != pDynSym )
+         {
+            if( ++uiPos >= s_uiDynSymbols )
+               break;
+         }
+      }
+      if( ++uiPos < s_uiDynSymbols )
+         pDynSym = s_pDynItems[ uiPos ].pDynSym;
+      else
+         pDynSym = NULL;
+
+      HB_DYNSYM_UNLOCK
+
       if( !pDynSym || !( pFunction )( pDynSym, Cargo ) )
          break;
    }
+}
+
+void hb_dynsymProtectEval( PHB_DYNS_FUNC pFunction, void * Cargo )
+{
+   USHORT uiPos = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymProtectEval(%p, %p)", pFunction, Cargo));
+
+   HB_DYNSYM_LOCK
+
+   while( uiPos < s_uiDynSymbols )
+   {
+      if( !( pFunction )( s_pDynItems[ uiPos++ ].pDynSym, Cargo ) )
+         break;
+   }
+
+   HB_DYNSYM_UNLOCK
 }
 
 void hb_dynsymRelease( void )

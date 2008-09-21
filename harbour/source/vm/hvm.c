@@ -686,6 +686,13 @@ HB_EXPORT void hb_vmThreadInit( void * Cargo )
     * ErrorBlock() and __SetHelpK()
     */
    hb_vmDoInitClip();
+
+   if( pState && pState->pMemvars )
+   {
+      hb_memvarRestoreFromArray( pState->pMemvars );
+      hb_itemRelease( pState->pMemvars );
+      pState->pMemvars = NULL;
+   }
 }
 
 /* thread leave point */

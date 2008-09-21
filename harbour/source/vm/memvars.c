@@ -94,6 +94,15 @@ struct mv_PUBLIC_var_info
    HB_DYNS_PTR pDynSym;
 };
 
+struct mv_memvarArray_info
+{
+   PHB_ITEM pArray;
+   ULONG ulPos;
+   ULONG ulCount;
+   int iScope;
+   BOOL fCopy;
+};
+
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
 
 static PHB_ITEM hb_memvarValueNew( void )
@@ -804,7 +813,7 @@ static int hb_memvarCount( int iScope )
    {
       int iPublicCnt = 0;
 
-      hb_dynsymEval( hb_memvarCountPublics, ( void * ) &iPublicCnt );
+      hb_dynsymProtectEval( hb_memvarCountPublics, ( void * ) &iPublicCnt );
       return iPublicCnt;
    }
    else
@@ -856,7 +865,7 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, const char ** p
          /* enumerate existing dynamic symbols and fill this structure
           * with info for requested PUBLIC variable
           */
-         hb_dynsymEval( hb_memvarFindPublicByPos, ( void * ) &struPub );
+         hb_dynsymProtectEval( hb_memvarFindPublicByPos, ( void * ) &struPub );
          if( struPub.bFound )
          {
             pValue = hb_dynsymGetMemvar( struPub.pDynSym );
@@ -876,6 +885,95 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, const char ** p
    }
 
    return pValue;
+}
+
+static HB_DYNS_FUNC( hb_memvarCountVisible )
+{
+   PHB_ITEM pMemvar = hb_dynsymGetMemvar( pDynSymbol );
+
+   if( pMemvar )
+   {
+      struct mv_memvarArray_info *pMVInfo = ( struct mv_memvarArray_info * ) Cargo;
+      if( !pMVInfo->iScope ||
+          ( hb_memvarScopeGet( pDynSymbol ) & pMVInfo->iScope ) != 0 )
+      {
+         ++pMVInfo->ulCount;
+      }
+   }
+   return TRUE;
+}
+
+static HB_DYNS_FUNC( hb_memvarStoreInArray )
+{
+   PHB_ITEM pMemvar = hb_dynsymGetMemvar( pDynSymbol );
+
+   if( pMemvar )
+   {
+      struct mv_memvarArray_info *pMVInfo = ( struct mv_memvarArray_info * ) Cargo;
+      if( !pMVInfo->iScope ||
+          ( hb_memvarScopeGet( pDynSymbol ) & pMVInfo->iScope ) != 0 )
+      {
+         PHB_ITEM pItem = hb_arrayGetItemPtr( pMVInfo->pArray, ++pMVInfo->ulPos );
+         hb_arrayNew( pItem, 2 );
+         hb_arraySetSymbol( pItem, 1, pDynSymbol->pSymbol );
+         pItem = hb_arrayGetItemPtr( pItem, 2 );
+         if( pMVInfo->fCopy )
+         {
+            hb_itemCopy( pItem, pMemvar );
+            hb_memvarDetachLocal( pItem );
+         }
+         else
+         {
+            pItem->type = HB_IT_BYREF | HB_IT_MEMVAR;
+            pItem->item.asMemvar.value = pMemvar;
+            hb_xRefInc( pMemvar );
+         }
+         /* stop execution if all symbols are saved */
+         if( pMVInfo->ulPos >= pMVInfo->ulCount )
+            return FALSE;
+      }
+   }
+   return TRUE;
+}
+
+PHB_ITEM hb_memvarSaveInArray( int iScope, BOOL fCopy )
+{
+   struct mv_memvarArray_info MVInfo;
+
+   iScope &= HB_MV_PUBLIC | HB_MV_PRIVATE;
+   if( iScope == ( HB_MV_PUBLIC | HB_MV_PRIVATE ) )
+      iScope = 0;
+
+   MVInfo.pArray = NULL;
+   MVInfo.ulPos = MVInfo.ulCount = 0;
+   MVInfo.iScope = iScope;
+   MVInfo.fCopy = fCopy;
+
+   hb_dynsymProtectEval( hb_memvarCountVisible, ( void * ) &MVInfo );
+   if( MVInfo.ulCount > 0 )
+   {
+      MVInfo.pArray = hb_itemArrayNew( MVInfo.ulCount );
+      hb_dynsymEval( hb_memvarStoreInArray, ( void * ) &MVInfo );
+   }
+   return MVInfo.pArray;
+}
+
+void hb_memvarRestoreFromArray( PHB_ITEM pArray )
+{
+   ULONG ulCount, ulPos;
+
+   ulCount = hb_arrayLen( pArray );
+   for( ulPos = 1; ulPos <= ulCount; ++ulPos )
+   {
+      PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulPos );
+      PHB_DYNS pDynSym = hb_arrayGetSymbol( pItem, 1 )->pDynSym;
+      PHB_ITEM pMemvar = hb_arrayGetItemPtr( pItem, 2 )->item.asMemvar.value;
+      hb_memvarValueIncRef( pMemvar );
+      if( hb_dynsymGetMemvar( pDynSym ) )
+         hb_memvarDetachDynSym( pDynSym, pMemvar );
+      else
+         hb_dynsymSetMemvar( pDynSym, pMemvar );
+   }
 }
 
 /* ************************************************************************** */

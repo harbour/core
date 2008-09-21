@@ -271,6 +271,7 @@ typedef struct _HB_THREADSTATE
    void *         pStackId;
    BOOL           fActive;
    PHB_ITEM       pParams;
+   PHB_ITEM       pMemvars;
    PHB_ITEM       pResult;
    PHB_ITEM       pThItm;
    HB_THREAD_T    th_id;
