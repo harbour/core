@@ -7428,6 +7428,10 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          break;
       case 'C':
          uiLen = ( USHORT ) hb_itemGetCLen( pResult );
+#if !(defined(HB_COMPAT_C53) && defined(HB_C52_STRICT))
+         if( uiLen > CDX_MAXKEY )
+            uiLen = CDX_MAXKEY;
+#endif
          break;
       default:
          bType = 'U';
@@ -7435,8 +7439,16 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    }
    hb_itemRelease( pResult );
 
-   /* Make sure KEY has proper type and iLen lower than 240 */
-   if ( bType == 'C' && uiLen > CDX_MAXKEY )
+   /* Make sure KEY has proper type and length */
+   if ( bType == 'U' || uiLen == 0 )
+   {
+      hb_vmDestroyBlockOrMacro( pKeyExp );
+      SELF_GOTO( ( AREAP ) pArea, ulRecNo );
+      hb_cdxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, 0 );
+      return FAILURE;
+   }
+#if defined(HB_COMPAT_C53) && defined(HB_C52_STRICT)
+   else if ( bType == 'C' && uiLen > CDX_MAXKEY )
    {
       if( hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, EF_CANDEFAULT ) == E_DEFAULT )
         uiLen = CDX_MAXKEY;
@@ -7447,14 +7459,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
         return FAILURE;
       }
    }
-   /* Make sure KEY has proper type and iLen is not 0 */
-   else if ( bType == 'U' || uiLen == 0 )
-   {
-      hb_vmDestroyBlockOrMacro( pKeyExp );
-      SELF_GOTO( ( AREAP ) pArea, ulRecNo );
-      hb_cdxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, 0 );
-      return FAILURE;
-   }
+#endif
    if( pArea->lpdbOrdCondInfo )
    {
       fAscend = !pArea->lpdbOrdCondInfo->fDescending;

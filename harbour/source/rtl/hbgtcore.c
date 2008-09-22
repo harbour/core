@@ -3032,6 +3032,8 @@ static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
    HB_EXPORT const char * hb_gt_szNameDefault = HB_GT_DRVNAME( HB_GT_LIB );
 #elif defined(HB_OS_LINUX)
    HB_EXPORT const char * hb_gt_szNameDefault = "crs";
+#elif defined(HB_WINCE)
+   HB_EXPORT const char * hb_gt_szNameDefault = "wvt";
 #elif defined(HB_OS_WIN_32)
    HB_EXPORT const char * hb_gt_szNameDefault = "win";
 #elif defined(HB_OS_DOS)

@@ -31,7 +31,7 @@
 #       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #
 #       HB_GT_DEFAULT     - The default GT driver, Choose between:
-#                           gtstd (default),gtcgi,gtwin,gtwvt
+#                           gtwin (default),gtcgi,gtwvt,gtstd
 #       HB_GT_LIB         - To override the default GT driver
 #                           (search for HB_GT_LIBS for a list of values)
 #       HB_BUILD_ST       - If set to yes builds harbour in SingleThread mode
@@ -59,10 +59,6 @@
 HB_ARCHITECTURE = w32
 
 #**********************************************************
-
-!if "$(HB_GT_LIB)" == ""
-HB_GT_LIB = gtwin
-!endif
 
 # BORLAND has ST mode as default
 !if "$(HB_BUILD_ST)" == ""

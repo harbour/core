@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 19:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * common.mak
+  * source/rtl/hbgtcore.c
+    ! Any messing with HB_GT_LIB and HB_GT_DEFAULT was removed 
+      from non-GNU make files, to leave these things to the 
+      source code itself (just like in GNU-make).
+    + Added automatic selection of GTWVT from source code, 
+      so that it also works in GNU-make.
+
+  * source/rdd/dbfcdx/dbfcdx1.c
+    ! Restored RTE behaviour when key length is zero.
+    ! Recently added C53 compatible but C52 incompatible 
+      RTE enabled only if HB_COMPAT_C53 and HB_C52_STRICT 
+      are both #defined to not make valid C52 apps crash.
+    ; Someone pls review me.
+
 2008-09-22 16:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbregex.c
    * added hack to force linking newer PCRE versions not the one included
