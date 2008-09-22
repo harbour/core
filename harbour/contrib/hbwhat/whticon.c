@@ -27,7 +27,7 @@
 
 // WINUSERAPI HICON WINAPI LoadIconA( IN HINSTANCE hInstance, IN LPCSTR lpIconName);
 
-HB_FUNC( LOADICON )
+HB_FUNC( VWN_LOADICON )
 {
    HB_RETWH( LoadIcon(  ( ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH( 1 ) ) ,
              (hb_parinfo(2)==HB_IT_STRING ? hb_parcx(2) : MAKEINTRESOURCE( (WORD) hb_parni(2))) ) );
@@ -39,7 +39,7 @@ HB_FUNC( LOADICON )
 // WINUSERAPI HICON WINAPI CreateIcon( IN HINSTANCE hInstance, IN int nWidth, IN int nHeight, IN BYTE cPlanes, IN BYTE cBitsPixel, IN CONST BYTE *lpbANDbits, IN CONST BYTE *lpbXORbits);
 
 
-HB_FUNC( CREATEICON )
+HB_FUNC( VWN_CREATEICON )
 {
 
    HB_RETWH( CreateIcon(  ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ),
@@ -57,7 +57,7 @@ HB_FUNC( CREATEICON )
 
 // WINUSERAPI BOOL WINAPI DestroyIcon( IN HICON hIcon);
 
-HB_FUNC( DESTROYICON )
+HB_FUNC( VWN_DESTROYICON )
 {
    hb_retl( DestroyIcon( (HICON) HB_PARWH( 1 ) ) );
 }
@@ -66,7 +66,7 @@ HB_FUNC( DESTROYICON )
 
 // WINUSERAPI int WINAPI LookupIconIdFromDirectory( IN PBYTE presbits, IN BOOL fIcon);
 
-HB_FUNC( LOOKUPICONIDFROMDIRECTORY )
+HB_FUNC( VWN_LOOKUPICONIDFROMDIRECTORY )
 {
 
    hb_retni( LookupIconIdFromDirectory( (PBYTE) hb_parcx( 1 ), hb_parl( 2 ) ) );
@@ -77,7 +77,7 @@ HB_FUNC( LOOKUPICONIDFROMDIRECTORY )
 // WINUSERAPI int WINAPI LookupIconIdFromDirectoryEx( IN PBYTE presbits, IN BOOL fIcon, IN int cxDesired, IN int cyDesired, IN UINT Flags);
 
 
-HB_FUNC( LOOKUPICONIDFROMDIRECTORYEX )
+HB_FUNC( VWN_LOOKUPICONIDFROMDIRECTORYEX )
 {
 
    hb_retni( LookupIconIdFromDirectoryEx( (PBYTE) hb_parcx( 1 ) ,
@@ -92,7 +92,7 @@ HB_FUNC( LOOKUPICONIDFROMDIRECTORYEX )
 //-----------------------------------------------------------------------------
 // WINUSERAPI HICON WINAPI CreateIconFromResource( IN PBYTE presbits, IN DWORD dwResSize, IN BOOL fIcon, IN DWORD dwVer);
 
-HB_FUNC( CREATEICONFROMRESOURCE )
+HB_FUNC( VWN_CREATEICONFROMRESOURCE )
 {
 
    HB_RETWH( CreateIconFromResource( (PBYTE) hb_parcx( 1 ) ,
@@ -106,7 +106,7 @@ HB_FUNC( CREATEICONFROMRESOURCE )
 //-----------------------------------------------------------------------------
 // WINUSERAPI HICON WINAPI CreateIconFromResourceEx( IN PBYTE presbits, IN DWORD dwResSize, IN BOOL fIcon, IN DWORD dwVer, IN int cxDesired, IN int cyDesired, IN UINT Flags);
 
-HB_FUNC( CREATEICONFROMRESOURCEEX )
+HB_FUNC( VWN_CREATEICONFROMRESOURCEEX )
 {
 
    HB_RETWH( CreateIconFromResourceEx( (PBYTE) hb_parcx( 1 )  ,
@@ -124,7 +124,7 @@ HB_FUNC( CREATEICONFROMRESOURCEEX )
 // WINUSERAPI HANDLE WINAPI LoadImageA( IN HINSTANCE, IN LPCSTR, IN UINT, IN int, IN int, IN UINT);
 
 
-HB_FUNC( LOADIMAGE )
+HB_FUNC( VWN_LOADIMAGE )
 {
    HB_RETWH( LoadImage( ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ),
                                (LPCSTR) hb_parcx( 2 )    ,
@@ -139,7 +139,7 @@ HB_FUNC( LOADIMAGE )
 // WINUSERAPI HANDLE WINAPI CopyImage( IN HANDLE, IN UINT, IN int, IN int, IN UINT);
 
 
-HB_FUNC( COPYIMAGE )
+HB_FUNC( VWN_COPYIMAGE )
 {
    HB_RETWH( CopyImage( (HANDLE) HB_PARWH( 1 ),
                                (UINT) hb_parni( 2 )  ,
@@ -153,7 +153,7 @@ HB_FUNC( COPYIMAGE )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI DrawIcon( IN HDC hDC, IN int X, IN int Y, IN HICON hIcon);
 
-HB_FUNC( DRAWICON )
+HB_FUNC( VWN_DRAWICON )
 {
    hb_retl( DrawIcon( (HDC) HB_PARWH( 1 )  ,
                       hb_parni( 2 )        ,
@@ -167,7 +167,7 @@ HB_FUNC( DRAWICON )
 // WINUSERAPI BOOL WINAPI DrawIconEx( IN HDC hdc, IN int xLeft, IN int yTop, IN HICON hIcon, IN int cxWidth, IN int cyWidth, IN UINT istepIfAniCur, IN HBRUSH hbrFlickerFreeDraw, IN UINT diFlags);
 
 
-HB_FUNC( DRAWICONEX )
+HB_FUNC( VWN_DRAWICONEX )
 {
    hb_retl( DrawIconEx( (HDC) HB_PARWH( 1 )   ,
                         hb_parni( 2 )         ,
@@ -185,7 +185,7 @@ HB_FUNC( DRAWICONEX )
 
 // WINUSERAPI HICON WINAPI CreateIconIndirect( IN PICONINFO piconinfo);
 
-HB_FUNC( CREATEICONINDIRECT )
+HB_FUNC( VWN_CREATEICONINDIRECT )
 {
    ICONINFO *ii =  (ICONINFO * ) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value;
 
@@ -198,7 +198,7 @@ HB_FUNC( CREATEICONINDIRECT )
 // WINUSERAPI HICON WINAPI CopyIcon( IN HICON hIcon);
 
 
-HB_FUNC( COPYICON )
+HB_FUNC( VWN_COPYICON )
 {
    HB_RETWH( CopyIcon( (HICON) HB_PARWH( 1 ) ) );
 }
@@ -206,7 +206,7 @@ HB_FUNC( COPYICON )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI GetIconInfo( IN HICON hIcon, OUT PICONINFO piconinfo);
 
-HB_FUNC( GETICONINFO )
+HB_FUNC( VWN_GETICONINFO )
 {
    ICONINFO ii;
 
@@ -224,7 +224,7 @@ HB_FUNC( GETICONINFO )
 // SHSTDAPI_(HICON) DuplicateIcon(HINSTANCE hInst, HICON hIcon);
 
 #ifndef __WATCOMC__
-HB_FUNC( DUPLICATEICON )
+HB_FUNC( VWN_DUPLICATEICON )
 {
    HB_RETWH( DuplicateIcon(  ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ),
                                    (HICON) HB_PARWH( 2 )
@@ -234,7 +234,7 @@ HB_FUNC( DUPLICATEICON )
 //-----------------------------------------------------------------------------
 // SHSTDAPI_(HICON) ExtractAssociatedIconA(HINSTANCE hInst, LPSTR lpIconPath, LPWORD lpiIcon);
 
-HB_FUNC( EXTRACTASSOCIATEDICON )
+HB_FUNC( VWN_EXTRACTASSOCIATEDICON )
 {
    WORD lpiIcon  ;
    HICON  hiRet ;
@@ -258,7 +258,7 @@ HB_FUNC( EXTRACTASSOCIATEDICON )
 // SHSTDAPI_(HICON) ExtractIconA(HINSTANCE hInst, LPCSTR lpszExeFileName, UINT nIconIndex);
 
 
-HB_FUNC( EXTRACTICON )
+HB_FUNC( VWN_EXTRACTICON )
 {
    HB_RETWH( ExtractIcon( ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) HB_PARWH( 1 ),
                                  (LPCSTR) hb_parcx( 2 )    ,

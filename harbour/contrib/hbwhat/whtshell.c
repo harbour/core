@@ -22,7 +22,7 @@
 // SHSTDAPI_(UINT) DragQueryFileA(HDROP,UINT,LPSTR,UINT);
 
 
-HB_FUNC( DRAGQUERYFILE )
+HB_FUNC( VWN_DRAGQUERYFILE )
 {
 
   char *cFile ;
@@ -53,7 +53,7 @@ HB_FUNC( DRAGQUERYFILE )
 // SHSTDAPI_(BOOL) DragQueryPoint(HDROP,LPPOINT);
 
 
-HB_FUNC( DRAGQUERYPOINT )
+HB_FUNC( VWN_DRAGQUERYPOINT )
 {
    POINT lpPoInt ;
    BOOL lRet ;
@@ -71,7 +71,7 @@ HB_FUNC( DRAGQUERYPOINT )
 // SHSTDAPI_(void) DragFinish(HDROP);
 
 
-HB_FUNC( DRAGFINISH )
+HB_FUNC( VWN_DRAGFINISH )
 {
    DragFinish( (HDROP) HB_PARWH( 1 ) );
 }
@@ -80,7 +80,7 @@ HB_FUNC( DRAGFINISH )
 // SHSTDAPI_(void) DragAcceptFiles(HWND,BOOL);
 
 
-HB_FUNC( DRAGACCEPTFILES )
+HB_FUNC( VWN_DRAGACCEPTFILES )
 {
    DragAcceptFiles( (HWND) HB_PARWH( 1 ), hb_parl( 2 ) );
 }
@@ -89,7 +89,7 @@ HB_FUNC( DRAGACCEPTFILES )
 // SHSTDAPI_(HINSTANCE) ShellExecuteA(HWND hwnd, LPCSTR lpOperation, LPCSTR lpFile, LPCSTR lpParameters, LPCSTR lpDirectory, INT nShowCmd);
 
 
-HB_FUNC( SHELLEXECUTE )
+HB_FUNC( VWN_SHELLEXECUTE )
 {
    HB_RETWH( ShellExecute( (HWND) HB_PARWH( 1 )     ,
                                   (LPCSTR) hb_parcx( 2 )    ,
@@ -103,7 +103,7 @@ HB_FUNC( SHELLEXECUTE )
 //-----------------------------------------------------------------------------
 // SHSTDAPI_(HINSTANCE) FindExecutableA(LPCSTR lpFile, LPCSTR lpDirectory, LPSTR lpResult);
 
-HB_FUNC( FINDEXECUTABLE )
+HB_FUNC( VWN_FINDEXECUTABLE )
 {
 
   char cBuffer[MAX_PATH];
@@ -128,7 +128,7 @@ HB_FUNC( FINDEXECUTABLE )
 // no info
 
 /*
-HB_FUNC( COMMANDLINETOARGVW )
+HB_FUNC( VWN_COMMANDLINETOARGVW )
 {
    intpNumArgs Intpnumargs ;
 
@@ -145,7 +145,7 @@ HB_FUNC( COMMANDLINETOARGVW )
 //-----------------------------------------------------------------------------
 // SHSTDAPI_(INT) ShellAboutA(HWND hWnd, LPCSTR szApp, LPCSTR szOtherStuff, HICON hIcon);
 
-HB_FUNC( SHELLABOUT )
+HB_FUNC( VWN_SHELLABOUT )
 {
    hb_retni( ShellAbout( (HWND) HB_PARWH(1),
                          (LPCSTR) hb_parcx(2),
@@ -160,7 +160,7 @@ HB_FUNC( SHELLABOUT )
 
 /*
 
-HB_FUNC( SHAPPBARMESSAGE )
+HB_FUNC( VWN_SHAPPBARMESSAGE )
 {
    PAPPBARDATA pData     ;
 
@@ -175,7 +175,7 @@ HB_FUNC( SHAPPBARMESSAGE )
 // SHSTDAPI_(DWORD) DoEnvironmentSubstA(LPSTR szString, UINT cchString);
 
 #if !defined(__WATCOMC__) && !defined(__MINGW32__) && !defined(__CYGWIN__)
-HB_FUNC( DOENVIRONMENTSUBST )
+HB_FUNC( VWN_DOENVIRONMENTSUBST )
 {
    hb_retnl((LONG) DoEnvironmentSubst( (LPSTR) hb_parcx( 1 ) ,
                                        (UINT) hb_parni( 2 )
@@ -186,7 +186,7 @@ HB_FUNC( DOENVIRONMENTSUBST )
 // SHSTDAPI_(UINT) ExtractIconExA(LPCSTR lpszFile, int nIconIndex, HICON *phiconLarge, HICON *phiconSmall, UINT nIcons);
 
 /*
-HB_FUNC( EXTRACTICONEX )
+HB_FUNC( VWN_EXTRACTICONEX )
 {
    HICON iLarge;
    HICON iSmall;
@@ -209,7 +209,7 @@ HB_FUNC( EXTRACTICONEX )
 //-----------------------------------------------------------------------------
 // SHSTDAPI_(int) SHFileOperationA(LPSHFILEOPSTRUCTA lpFileOp);
 
-HB_FUNC( SHFILEOPERATION )
+HB_FUNC( VWN_SHFILEOPERATION )
 {
    SHFILEOPSTRUCT *sfo = (SHFILEOPSTRUCT *) hb_parc( 1 ); //hb_param(1, HB_IT_STRING)->item.asString.value;
    hb_retni( SHFileOperation( sfo ) );
@@ -218,7 +218,7 @@ HB_FUNC( SHFILEOPERATION )
 //-----------------------------------------------------------------------------
 // SHSTDAPI_(void) SHFreeNameMappings(HANDLE hNameMappings);
 
-HB_FUNC( SHFREENAMEMAPPINGS )
+HB_FUNC( VWN_SHFREENAMEMAPPINGS )
 {
    SHFreeNameMappings( (HANDLE) HB_PARWH( 1 ) );
 }
@@ -228,7 +228,7 @@ HB_FUNC( SHFREENAMEMAPPINGS )
 
 // uses structure
 
-HB_FUNC( SHELLEXECUTEEX )
+HB_FUNC( VWN_SHELLEXECUTEEX )
 {
    SHELLEXECUTEINFO *ExecInfo = (SHELLEXECUTEINFO *) hb_parc( 1 ); //hb_param(1, HB_IT_STRING)->item.asString.value;
    hb_retl( ShellExecuteEx( ExecInfo ) );
@@ -244,7 +244,7 @@ HB_FUNC( SHELLEXECUTEEX )
 // NT only ?
 // ????
 
-HB_FUNC( WINEXECERROR )
+HB_FUNC( VWN_WINEXECERROR )
 {
    WinExecError( (HWND) HB_PARWH( 1 ) ,
                  hb_parni( 2 )        ,
@@ -259,7 +259,7 @@ HB_FUNC( WINEXECERROR )
 // SHSTDAPI_(BOOL) SHCreateProcessAsUserW(PSHCREATEPROCESSINFOW pscpi);
 
 /*
-HB_FUNC( SHCREATEPROCESSASUSERW )
+HB_FUNC( VWN_SHCREATEPROCESSASUSERW )
 {
    PSHCREATEPROCESSINFOW pscpi ;
 
@@ -277,7 +277,7 @@ HB_FUNC( SHCREATEPROCESSASUSERW )
 
 // check the prototype !!!
 
-HB_FUNC( SHQUERYRECYCLEBIN )
+HB_FUNC( VWN_SHQUERYRECYCLEBIN )
 {
    LPSHQUERYRBINFO pSHQueryRBInfo ;
 
@@ -296,7 +296,7 @@ HB_FUNC( SHQUERYRECYCLEBIN )
 
 #if(WINVER >= 0x0500)
 
-HB_FUNC( SHEMPTYRECYCLEBIN )
+HB_FUNC( VWN_SHEMPTYRECYCLEBIN )
 {
    hb_retnl(  SHEmptyRecycleBin( (HWND) HB_PARWH( 1 ) ,
                                  (LPCSTR) hb_parcx( 2 ),
@@ -311,7 +311,7 @@ HB_FUNC( SHEMPTYRECYCLEBIN )
 
 //uses structure
 
-HB_FUNC( SHELL_NOTIFYICON )
+HB_FUNC( VWN_SHELL_NOTIFYICON )
 {
    NOTIFYICONDATA * Data =  (NOTIFYICONDATA * ) hb_parc( 2 ); //hb_param(2, HB_IT_STRING)->item.asString.value;
    hb_retl( Shell_NotifyIcon( (DWORD) hb_parnl( 1 ), Data ) );
@@ -324,7 +324,7 @@ HB_FUNC( SHELL_NOTIFYICON )
 
 /*
 
-HB_FUNC( SHGETFILEINFO )
+HB_FUNC( VWN_SHGETFILEINFO )
 {
    SHFILEINFOA psfi             ;
 
@@ -345,7 +345,7 @@ HB_FUNC( SHGETFILEINFO )
 
 /*
 
-HB_FUNC( SHGETDISKFREESPACEEX )
+HB_FUNC( VWN_SHGETDISKFREESPACEEX )
 {
    ULARGE_INTEGER pulFreeBytesAvailableToCaller ;
    ULARGE_INTEGER pulTotalNumberOfBytes         ;
@@ -366,7 +366,7 @@ HB_FUNC( SHGETDISKFREESPACEEX )
 // SHSTDAPI_(BOOL) SHGetNewLinkInfoA(LPCSTR pszLinkTo, LPCSTR pszDir, LPSTR pszName, BOOL *pfMustCopy, UINT uFlags);
 
 /*
-HB_FUNC( SHGETNEWLINKINFO )
+HB_FUNC( VWN_SHGETNEWLINKINFO )
 {
    hb_retl( SHGetNewLinkInfo( (LPCSTR) hb_parcx( 1 ),
                              (LPCSTR) hb_parcx( 2 ),
@@ -383,7 +383,7 @@ HB_FUNC( SHGETNEWLINKINFO )
 
 #if(WINVER >= 0x0500)
 
-HB_FUNC( SHINVOKEPRINTERCOMMAND )
+HB_FUNC( VWN_SHINVOKEPRINTERCOMMAND )
 {
    hb_retl( SHInvokePrinterCommand( (HWND) HB_PARWH( 1 ) ,
                                     (UINT) hb_parni( 2 ) ,
@@ -401,7 +401,7 @@ HB_FUNC( SHINVOKEPRINTERCOMMAND )
 // verify the prototype
 
 /*
-HB_FUNC( SHLOADNONLOADEDICONOVERLAYIDENTIFIERS )
+HB_FUNC( VWN_SHLOADNONLOADEDICONOVERLAYIDENTIFIERS )
 {
 // (SHSTDAPI) SHLoadNonloadedIconOverlayIdentifiers(  ) );
 }

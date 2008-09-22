@@ -2,17 +2,19 @@
  * $Id$
  */
 
+//----------------------------------------------------------------------//
+
 #define WIN_WANT_VER4
 #define WIN_WANT_ALL
+
 #include "winuser.ch"
 #include "hbclass.ch"
-//#include "debug.ch"
 #include "commctrl.ch"
 #include "wintypes.ch"
 #include "cstruct.ch"
 #include "wingdi.ch"
 
-
+//----------------------------------------------------------------------//
 // move that structure to WinStruc.ch
 
 typedef struct {;
@@ -21,15 +23,15 @@ typedef struct {;
     UINT code;
 } NMHDR
 
-*-----------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 
-CLASS TabControl
+CLASS WHT_TabControl
 
    DATA hParent
-   DATA hTab AS  NUMERIC
-   DATA Tabs AS  ARRAY HIDDEN
-   DATA Dlgs AS  ARRAY HIDDEN
-   DATA Procs AS ARRAY HIDDEN
+   DATA hTab   AS  NUMERIC
+   DATA Tabs   AS  ARRAY HIDDEN
+   DATA Dlgs   AS  ARRAY HIDDEN
+   DATA Procs  AS  ARRAY HIDDEN
    DATA nCurSel
    DATA nProc
    DATA nId
@@ -69,54 +71,49 @@ CLASS TabControl
    METHOD SetToolTips()
    METHOD SetUnicodeFormat()
 
-ENDCLASS
+   ENDCLASS
 
-*-----------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 METHOD New( hDlg, nL, nT, nW, nH, nStyle, nSel,nId )
    ::hParent:=hDlg
    ::Tabs:={}
    ::Dlgs:={}
    ::Procs:={}
-   ::nId:=nId
-   ::nCurSel:=iif(nSel==NIL,1,nSel)
-   ::hTab:=TabCtrl_Create( hDlg, nL, nT, nW, nH, nStyle,nId)
-   ::nProc:=SetProcedure( hDlg, {|hDlg,nMsg,nwParam,nlParam|;
-            ::TabProc(hDlg,nMsg,nwParam,nlParam)} , {WM_NOTIFY} )
-RETURN Self
+   ::nId := nId
+   ::nCurSel := iif(nSel==NIL,1,nSel)
+   ::hTab := VWN_TabCtrl_Create( hDlg, nL, nT, nW, nH, nStyle,nId )
+   ::nProc := WHT_SetProcedure( hDlg, {|hDlg,nMsg,nwParam,nlParam|;
+                   ::TabProc( hDlg,nMsg,nwParam,nlParam )} , { WM_NOTIFY } )
 
-*-----------------------------------------------------------------------------*
+   RETURN Self
+//----------------------------------------------------------------------//
+STATIC FUNCTION _TempPageProc( nMsg )
 
-static FUNCTION _TempPageProc(nMsg)
    IF nMsg==WM_CTLCOLORDLG
-      return(GetStockObject(NULL_BRUSH))
+      return( VWN_GetStockObject( NULL_BRUSH ) )
    END
 
    RETURN(0)
-
-*-----------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 #undef TCN_SELCHANGE
 #define TCN_SELCHANGE 0
 
-METHOD TabProc(hDlg, nMsg, nwParam, nlParam)
-
+METHOD TabProc( hDlg, nMsg, nwParam, nlParam )
    LOCAL tnhdr
-
    LOCAL nSel
 
-   IF nMsg==WM_NOTIFY
+   IF nMsg == WM_NOTIFY
 
       tnhdr IS NMHDR
-      tnhdr:Buffer( peek(nlParam,tnhdr:sizeof() ) )
+      tnhdr:Buffer( WHT_Peek( nlParam,tnhdr:sizeof() ) )
 
-      IF tnhdr:code==0//TCN_SELCHANGE
+      IF tnhdr:code == 0//TCN_SELCHANGE
 
-        nSel:=TabCtrl_GetCurSel( ::hTab )+1
+        nSel := VWN_TabCtrl_GetCurSel( ::hTab )+1
         IF ::nCursel != nSel
-           ShowWindow(::Tabs[::nCurSel], SW_HIDE)
+           VWN_ShowWindow(::Tabs[::nCurSel], SW_HIDE)
            ::nCurSel:=nSel
-           ShowWindow(::Tabs[::nCurSel], SW_SHOW)
+           VWN_ShowWindow(::Tabs[::nCurSel], SW_SHOW)
            /*
            IF ::nCurSel > 0
 
@@ -144,31 +141,25 @@ METHOD TabProc(hDlg, nMsg, nwParam, nlParam)
            */
 
         ENDIF
-
       ENDIF
-
    ENDIF
 
-   Return( CallWindowProc(::nProc, hDlg, nMsg, nwParam, nlParam) )
-
-*-----------------------------------------------------------------------------*
-
+   Return( VWN_CallWindowProc( ::nProc, hDlg, nMsg, nwParam, nlParam ) )
+//----------------------------------------------------------------------//
 METHOD Add(cText,cRes,bProc,nImgPos)
-LOCAL hTab
+   LOCAL hTab
 
-   IF (hTab:=TabCtrl_AddItem(::hTab,cText,nImgPos)) > -1
+   IF (hTab:=VWN_TabCtrl_AddItem(::hTab,cText,nImgPos)) > -1
       AADD(::Dlgs,cRes)
       AADD(::Tabs,NIL )
       AADD(::Procs,bProc)
    ENDIF
 
    RETURN(hTab)
-
-*-----------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 METHOD Insert(nPos,cText,cRes,bProc,nImgPos)
 
-   if TabCtrl_InsertItem(::hTab,cText,nPos,nImgpos) > -1
+   if VWN_TabCtrl_InsertItem(::hTab,cText,nPos,nImgpos) > -1
       AINS(::Dlgs,nPos,cRes,.T.)
       aIns(::Tabs,nPos,NIL,.T.)
       AINS(::Procs,nPos,bProc,.T.)
@@ -176,20 +167,18 @@ METHOD Insert(nPos,cText,cRes,bProc,nImgPos)
    ENDIF
 
    return(.F.)
-
-*-----------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 METHOD Delete(nPos)
-
    Local nCount:=LEN(::Tabs)
+
    if nPos > 0 .and. nPos <= nCount
       IF nPos <= ::nCurSel     // verify !!!!!
         ::nCurSel--
       ENDIF
-      TabCtrl_DeleteItem(nPos-1)
+      VWN_TabCtrl_DeleteItem(nPos-1)
       ADel(::Dlgs,nPos,.t.)
-      if isWindow(::Tabs[nPos])
-         DestroyWindow(::Tabs[nPos])
+      if VWN_IsWindow(::Tabs[nPos])
+         VWN_DestroyWindow(::Tabs[nPos])
       endif
       ADel(::Tabs,nPos,.t.)
       ADEL(::Procs,nPos,.T.)
@@ -197,12 +186,9 @@ METHOD Delete(nPos)
    Endif
 
    RETURN(.F.)
-
-*-----------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 METHOD Configure()
-
-   LOCAL aTab :=GetClientRect(::hTab)
+   LOCAL aTab :=VWN_GetClientRect(::hTab)
    local acRect:={0,0,0,0}
    LOCAL aTemp
    LOCAL aWnd:={}
@@ -211,22 +197,22 @@ METHOD Configure()
    LOCAL aPt
 
    aPt:={aTab[1],aTab[2]}
-   ClientToScreen(::hTab   ,aPt)
-   ScreenToClient(::hParent,aPt)
+   VWN_ClientToScreen(::hTab   ,aPt)
+   VWN_ScreenToClient(::hParent,aPt)
    aTab[1]:=aPt[1]
    aTab[2]:=aPt[2]
 
    aPt:={aTab[3],aTab[4]}
-   ClientToScreen(::hTab   ,aPt)
-   ScreenToClient(::hParent,aPt)
+   VWN_ClientToScreen(::hTab   ,aPt)
+   VWN_ScreenToClient(::hParent,aPt)
    aTab[3]:=aPt[1]
    aTab[4]:=aPt[2]
 
 
    IF LEN(::Tabs) > 0
-      acRect:=TabCtrl_GetItemRect(::hTab,0)
+      acRect:=VWN_TabCtrl_GetItemRect(::hTab,0)
       FOR i:=1 TO LEN(::Tabs)-1
-         aTemp:=TabCtrl_GetItemRect(::hTab,i)
+         aTemp:=VWN_TabCtrl_GetItemRect(::hTab,i)
          acRect[1]:=MIN(acRect[1],aTemp[1])
          acRect[2]:=MIN(acRect[2],aTemp[2])
          acRect[3]:=MAX(acRect[3],aTemp[3])
@@ -235,8 +221,8 @@ METHOD Configure()
    ENDIF
 
    aPt:={acRect[1],acRect[2]}
-   ClientToScreen(::hTab   ,aPt)
-   ScreenToClient(::hParent,aPt)
+   VWN_ClientToScreen(::hTab   ,aPt)
+   VWN_ScreenToClient(::hParent,aPt)
    acRect[1]:=aPt[1]
    acRect[2]:=aPt[2]
    /*
@@ -247,188 +233,152 @@ METHOD Configure()
    acRect[4]:=aPt[2]
    */
    FOR i:=1 TO LEN(::Dlgs)
-      IF ::Dlgs[i] != NIL .AND. EMPTY(::Tabs[i])
+      IF ::Dlgs[i] != NIL .AND. EMPTY( ::Tabs[ i ] )
 
-         hCtrl:=CreatePage(::Dlgs[i],::hParent,::Procs, i )
+         hCtrl := CreatePage( ::Dlgs[i],::hParent,::Procs, i )
          ::Tabs[i]:=hCtrl
-         MoveWindow( hCtrl, acRect[1]+4, acRect[2]+acRect[4]+4, aTab[3]-aTab[1]-8, aTab[4]-(acRect[4]+acRect[2])- 8, .F. )
+         VWN_MoveWindow( hCtrl, acRect[1]+4, acRect[2]+acRect[4]+4, aTab[3]-aTab[1]-8, aTab[4]-(acRect[4]+acRect[2])- 8, .F. )
          IF i != ::nCurSel
-            ShowWindow(hCtrl,SW_HIDE)
+            VWN_ShowWindow(hCtrl,SW_HIDE)
          ENDIF
       ENDIF
    NEXT
 
    RETURN(self)
-
-*-----------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 Static Function CreatePage(acRes,hParent,aProcs, i)
-   Local bBlock:=iif(valtype( aProcs[i])== "B", aProcs[i], {|nMsg| _TempPageProc(nMsg)} )
-   RETURN CreateDialog( , acRes, hParent, bBlock )
+   Local bBlock := iif(valtype( aProcs[i])== "B", aProcs[i], {|nMsg| _TempPageProc(nMsg)} )
 
-*-----------------------------------------------------------------------------*
+   RETURN WHT_CreateDialog( , acRes, hParent, bBlock )
+//----------------------------------------------------------------------//
 METHOD AdjustRect(lDisplay,aRect)
 
-   TabCtrl_AdjustRect(::hTab,lDisplay,@aRect)
+   VWN_TabCtrl_AdjustRect(::hTab,lDisplay,@aRect)
 
    RETURN(aRect)
-
-*-----------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 METHOD DeleteAll()
+  Local lRet:=VWN_TabCtrl_DeleteAllItems(::hTab)
 
-  Local lRet:=TabCtrl_DeleteAllItems(::hTab)
-
-  AEVAL(::Tabs,{|hWnd| iif(isWindow(hWnd),DestroyWindow(hWnd),)})
+  AEVAL(::Tabs,{|hWnd| iif(VWN_IsWindow(hWnd),VWN_DestroyWindow(hWnd),)})
   ::Tabs:={}
   ::aDlg:={}
   ::Procs:={}
   ::nCurSel:=0
 
   RETURN(lRet)
-
-*-----------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 METHOD DeselectAll(lExcludeFocus)
 
-   TabCtrl_DeselectAll(::hTab,lExcludeFocus)
+   VWN_TabCtrl_DeselectAll(::hTab,lExcludeFocus)
 
    RETURN(NIL)
-
-*-----------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 METHOD GetCurFocus()
 
-  RETURN TabCtrl_GetCurFocus(::hTab )+1
-
-*-----------------------------------------------------------------------------*
+  RETURN VWN_TabCtrl_GetCurFocus(::hTab )+1
+//----------------------------------------------------------------------//
 METHOD GetCurSel()
 
-   RETURN TabCtrl_GetCurSel(::hTab)+1
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_GetCurSel(::hTab)+1
+//----------------------------------------------------------------------//
 METHOD GetExtendedStyle()
 
-   RETURN TabCtrl_GetExtendedStyle(::hTab)
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_GetExtendedStyle(::hTab)
+//----------------------------------------------------------------------//
 METHOD GetImageList()
 
    RETURN NIL //TabCtrl_GetImageList(::hTab)
-
-*-----------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 METHOD GetItem(nItem,ptrItem)
 
-   RETURN TabCtrl_GetItem(::hTab,nItem-1,@ptrItem)
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_GetItem(::hTab,nItem-1,@ptrItem)
+//----------------------------------------------------------------------//
 METHOD GetItemCount()
 
-   RETURN TabCtrl_GetItemCount(::hTab)
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_GetItemCount(::hTab)
+//----------------------------------------------------------------------//
 METHOD GetItemRect(nItem)
 
-   RETURN TabCtrl_GetItemRect(::hTab,nItem-1)
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_GetItemRect(::hTab,nItem-1)
+//----------------------------------------------------------------------//
 METHOD GetRowCount()
 
-   RETURN TabCtrl_GetRowCount(::hTab)
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_GetRowCount(::hTab)
+//----------------------------------------------------------------------//
 METHOD GetToolTips()
 
-   RETURN TabCtrl_GetToolTips(::hTab)
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_GetToolTips(::hTab)
+//----------------------------------------------------------------------//
 METHOD GetUnicodeFormat()
 
-   RETURN TabCtrl_GetUnicodeFormat(::hTab)
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_GetUnicodeFormat(::hTab)
+//----------------------------------------------------------------------//
 METHOD HighlightItem(nItem,nHighlight)
 
-   RETURN TabCtrl_HighlightItem(::hTab,nItem-1,nHighlight)
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_HighlightItem(::hTab,nItem-1,nHighlight)
+//----------------------------------------------------------------------//
 METHOD HitTest(nPtrHitTestInfo)
 
-   RETURN TabCtrl_HitTest(::hTab,nPtrHitTestInfo) + 1
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_HitTest(::hTab,nPtrHitTestInfo) + 1
+//----------------------------------------------------------------------//
 METHOD RemoveImage(nImageIndex)
 
-   RETURN TabCtrl_RemoveImage(::hTab, nImageIndex-1)
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_RemoveImage(::hTab, nImageIndex-1)
+//----------------------------------------------------------------------//
 METHOD SetCurFocus(nItem)
 
-   TabCtrl_SetCurFocus(::hTab, nItem-1)
+   VWN_TabCtrl_SetCurFocus( ::hTab, nItem-1 )
 
    RETURN(NIL)
-
-*-----------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 METHOD SetCurSel(nItem)
 
-   RETURN TabCtrl_SetCurSel(::hTab, nItem-1) + 1
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_SetCurSel(::hTab, nItem-1) + 1
+//----------------------------------------------------------------------//
 METHOD SetExtendedStyle(nExStyle)
 
-   RETURN TabCtrl_SetExtendedStyle(::hTab,nExStyle)
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_SetExtendedStyle(::hTab,nExStyle)
+//----------------------------------------------------------------------//
 METHOD SetImageList(hImageList)
 
-   RETURN TabCtrl_SetImageList(::hTab, hImageList)
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_SetImageList(::hTab, hImageList)
+//----------------------------------------------------------------------//
 METHOD SetItem(nItem, cText)
 
-   RETURN TabCtrl_SetItem(::hTab, nItem-1, cText )
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_SetItem(::hTab, nItem-1, cText )
+//----------------------------------------------------------------------//
 METHOD SetItemExtra(nBytes)
 
-   RETURN TabCtrl_SetItemExtra(::hTab, nBytes)
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_SetItemExtra(::hTab, nBytes)
+//----------------------------------------------------------------------//
 METHOD SetItemSize(x,y)
 
-   RETURN TabCtrl_SetItemSize(::hTab, x, y )
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_SetItemSize(::hTab, x, y )
+//----------------------------------------------------------------------//
 METHOD SetMinTabWidth(dx)
 
-   RETURN TabCtrl_SetMinTabWidth( ::hTab, dx )
-
-*-----------------------------------------------------------------------------*
+   RETURN VWN_TabCtrl_SetMinTabWidth( ::hTab, dx )
+//----------------------------------------------------------------------//
 METHOD SetPadding( cx, cy )
 
-   TabCtrl_SetPadding( ::hTab, cx, cy )
+   VWN_TabCtrl_SetPadding( ::hTab, cx, cy )
 
    RETURN(NIL)
-
-*-----------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 METHOD SetToolTips( hToolTips )
 
-   TabCtrl_SetToolTips( ::hTab, hToolTips )
+   VWN_TabCtrl_SetToolTips( ::hTab, hToolTips )
 
    RETURN(NIL)
-
-*-----------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 METHOD SetUnicodeFormat( lUnicode )
 
-   RETURN TabCtrl_SetUnicodeFormat( ::hTab, lUnicode )
-
-*-----------------------------------------------------------------------------*
-
-
-
-
+   RETURN VWN_TabCtrl_SetUnicodeFormat( ::hTab, lUnicode )
+//----------------------------------------------------------------------//
 /*
-*-----------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 METHOD Configure()
-
-
    LOCAL aTab :=GetClientRect(::hTab)
    local acRect:={0,0,0,0}
    LOCAL aTemp
@@ -507,5 +457,4 @@ Function TransferChildren(hDlg,hPage,lShow)
    RETURN(aChildren)
 
 *-----------------------------------------------------------------------------*
-
 */

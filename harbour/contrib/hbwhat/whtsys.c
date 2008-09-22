@@ -55,14 +55,14 @@ BOOL PASCAL enable_privilege( LPCTSTR privilege_name );
 //
 // WINBASEAPI DWORD WINAPI GetFreeSpace(UINT);
 //
-HB_FUNC( GETFREESPACE )
+HB_FUNC( VWN_GETFREESPACE )
 {
    hb_retnl( (LONG) GetFreeSpace( (UINT) hb_parni( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( OUTPUTDEBUGSTRING )
+HB_FUNC( VWN_OUTPUTDEBUGSTRING )
 {
    OutputDebugString( (LPCSTR) hb_parcx( 1 ) );
 }
@@ -76,7 +76,7 @@ HB_FUNC( OUTPUTDEBUGSTRING )
 // GetTimeZoneInformation(@cTZI)
 // tzi:Buffer(cTZI)
 //
-HB_FUNC( GETTIMEZONEINFORMATION )
+HB_FUNC( VWN_GETTIMEZONEINFORMATION )
 {
  TIME_ZONE_INFORMATION tzi;
 
@@ -92,7 +92,7 @@ HB_FUNC( GETTIMEZONEINFORMATION )
 //
 // SYNTAX: SetTimeZoneInformation(tzi:value)
 //
-HB_FUNC( SETTIMEZONEINFORMATION )
+HB_FUNC( VWN_SETTIMEZONEINFORMATION )
 {
  TIME_ZONE_INFORMATION *tzi = ( TIME_ZONE_INFORMATION *) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value ;
 
@@ -104,7 +104,7 @@ HB_FUNC( SETTIMEZONEINFORMATION )
 //
 // Win98 ++
 /*
-HB_FUNC( ISDEBUGGERPRESENT )
+HB_FUNC( VWN_ISDEBUGGERPRESENT )
 {
    hb_retl( IsDebuggerPresent() );
 }
@@ -113,7 +113,7 @@ HB_FUNC( ISDEBUGGERPRESENT )
 //
 // WINBASEAPI VOID WINAPI DebugBreak( VOID );
 //
-HB_FUNC( DEBUGBREAK )
+HB_FUNC( VWN_DEBUGBREAK )
 {
    DebugBreak(  );
 }
@@ -124,7 +124,7 @@ HB_FUNC( DEBUGBREAK )
 //
 // NT ?
 /*
-HB_FUNC( ENCRYPTFILE )
+HB_FUNC( VWN_ENCRYPTFILE )
 {
    hb_retl( EncryptFileA( (LPCSTR) hb_parcx( 1 ) ) );
 }
@@ -136,7 +136,7 @@ HB_FUNC( ENCRYPTFILE )
 //
 // NT ?
 /*
-HB_FUNC( DECRYPTFILE )
+HB_FUNC( VWN_DECRYPTFILE )
 {
    hb_retl( DecryptFileA( (LPCSTR) hb_parcx( 1 ), 0 ) ); //(DWORD) hb_parnl( 2 ) ) );
 }
@@ -148,7 +148,7 @@ HB_FUNC( DECRYPTFILE )
 /*
 // need function info !
 
-HB_FUNC( FILEENCRYPTIONSTATUSA )
+HB_FUNC( VWN_FILEENCRYPTIONSTATUSA )
 {
    LPDWORD lpStatus   ;
 
@@ -161,7 +161,7 @@ HB_FUNC( FILEENCRYPTIONSTATUSA )
 //
 // WINBASEAPI BOOL WINAPI IsProcessorFeaturePresent( IN DWORD ProcessorFeature );
 //
-HB_FUNC( ISPROCESSORFEATUREPRESENT )
+HB_FUNC( VWN_ISPROCESSORFEATUREPRESENT )
 {
    hb_retl( IsProcessorFeaturePresent( (DWORD) hb_parnl( 1 ) ) );
 }
@@ -170,7 +170,7 @@ HB_FUNC( ISPROCESSORFEATUREPRESENT )
 //
 // WINBASEAPI int WINAPI MulDiv( IN int nNumber, IN int nNumerator, IN int nDenominator );
 
-HB_FUNC( MULDIV )
+HB_FUNC( VWN_MULDIV )
 {
    hb_retni( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
@@ -181,7 +181,7 @@ HB_FUNC( MULDIV )
 //
 // note: correct parameters must be passed, as per API requirements
 //
-HB_FUNC( SYSTEMPARAMETERSINFO )
+HB_FUNC( VWN_SYSTEMPARAMETERSINFO )
 {
    PHB_ITEM pBuffer = hb_param( 3, HB_IT_STRING );
 
@@ -215,7 +215,7 @@ HB_FUNC( SYSTEMPARAMETERSINFO )
 //
 // WINBASEAPI BOOL WINAPI FreeResource( IN HGLOBAL hResData );
 //
-HB_FUNC( FREERESOURCE )
+HB_FUNC( VWN_FREERESOURCE )
 {
    hb_retl( FreeResource( (HGLOBAL) HB_PARWH( 6 )) );
 }
@@ -224,7 +224,7 @@ HB_FUNC( FREERESOURCE )
 //
 // WINUSERAPI VOID WINAPI SetDebugErrorLevel( IN DWORD dwLevel );
 //
-HB_FUNC( SETDEBUGERRORLEVEL )
+HB_FUNC( VWN_SETDEBUGERRORLEVEL )
 {
    SetDebugErrorLevel( (DWORD) hb_parnl( 1 ) );
 }
@@ -233,7 +233,7 @@ HB_FUNC( SETDEBUGERRORLEVEL )
 //
 // WINUSERAPI VOID WINAPI SetLastErrorEx( IN DWORD dwErrCode, IN DWORD dwType );
 //
-HB_FUNC( SETLASTERROREX )
+HB_FUNC( VWN_SETLASTERROREX )
 {
    SetLastErrorEx( (DWORD) hb_parnl( 1 ), (DWORD) hb_parnl( 2 ) );
 }
@@ -243,7 +243,7 @@ HB_FUNC( SETLASTERROREX )
 HANDLE GetStdHandle(DWORD nStdHandle )  // input, output, or error device
 */
 
-HB_FUNC( GETSTDHANDLE )
+HB_FUNC( VWN_GETSTDHANDLE )
 {
    HB_RETWH( GetStdHandle( (DWORD) hb_parnl(1) ) );
 }
@@ -256,7 +256,7 @@ BOOL SetStdHandle(
 );
 */
 
-HB_FUNC( SETSTDHANDLE )
+HB_FUNC( VWN_SETSTDHANDLE )
 {
    hb_retl( SetStdHandle( (DWORD) hb_parnl(1), (HANDLE) HB_PARWH(2) ) );
 }
@@ -266,7 +266,7 @@ HB_FUNC( SETSTDHANDLE )
 BOOL SetConsoleTitle(LPCSTR szTitle )
 */
 
-HB_FUNC( SETCONSOLETITLE )
+HB_FUNC( VWN_SETCONSOLETITLE )
 {
    hb_retnl( ( LONG ) SetConsoleTitle( ( LPCSTR ) hb_parcx( 1 ) ) );
 }
@@ -281,7 +281,7 @@ Note: The real API is only supported on Windows 2000 and above, so we do a nasty
       3) use FindWindow to find the window handle of the window with our text
       4) restore the original text
 */
-HB_FUNC( GETCONSOLEWINDOW )
+HB_FUNC( VWN_GETCONSOLEWINDOW )
 {
    char realtitle[ MAX_PATH ];
 
@@ -295,7 +295,7 @@ HB_FUNC( GETCONSOLEWINDOW )
 //
 // WINUSERAPI int WINAPI GetSystemMetrics( IN int nIndex);
 //
-HB_FUNC( GETSYSTEMMETRICS )
+HB_FUNC( VWN_GETSYSTEMMETRICS )
 {
    hb_retni( GetSystemMetrics( hb_parni( 1 ) ) );
 }
@@ -304,7 +304,7 @@ HB_FUNC( GETSYSTEMMETRICS )
 //
 // WINUSERAPI UINT_PTR WINAPI SetTimer( IN HWND hWnd, IN UINT_PTR nIDEvent, IN UINT uElapse, IN TIMERPROC lpTimerFunc);
 //
-HB_FUNC( SETTIMER )
+HB_FUNC( VWN_SETTIMER )
 {
    HB_RETWI( SetTimer( (HWND) HB_PARWH( 1 ),
                        ( UINT_PTR ) HB_PARWI( 2 ),
@@ -317,14 +317,14 @@ HB_FUNC( SETTIMER )
 //
 // WINUSERAPI BOOL WINAPI KillTimer( IN HWND hWnd, IN UINT_PTR uIDEvent);
 //
-HB_FUNC( KILLTIMER )
+HB_FUNC( VWN_KILLTIMER )
 {
    hb_retl( KillTimer( (HWND) HB_PARWH( 1 ), (UINT) hb_parni(2) ) );
 }
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( GETSYSCOLOR )
+HB_FUNC( VWN_GETSYSCOLOR )
 {
   hb_retnl( GetSysColor( hb_parni(1) ) );
 }
@@ -333,7 +333,7 @@ HB_FUNC( GETSYSCOLOR )
 //
 // WINUSERAPI BOOL WINAPI ExitWindowsEx( IN UINT uFlags, IN DWORD dwReserved);
 //
-HB_FUNC( EXITWINDOWSEX )
+HB_FUNC( VWN_EXITWINDOWSEX )
 {
    hb_retl( ExitWindowsEx( (UINT) hb_parni( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
@@ -342,7 +342,7 @@ HB_FUNC( EXITWINDOWSEX )
 //
 // WINUSERAPI HBRUSH WINAPI GetSysColorBrush( IN int nIndex);
 //
-HB_FUNC( GETSYSCOLORBRUSH )
+HB_FUNC( VWN_GETSYSCOLORBRUSH )
 {
    HB_RETWH( GetSysColorBrush( hb_parni( 1 ) ) );
 }
@@ -351,7 +351,7 @@ HB_FUNC( GETSYSCOLORBRUSH )
 //
 // WINUSERAPI BOOL WINAPI SetSysColors( IN int cElements, IN CONST INT * lpaElements, IN CONST COLORREF * lpaRgbValues);
 /*
-HB_FUNC( SETSYSCOLORS )
+HB_FUNC( VWN_SETSYSCOLORS )
 {
    COLORREF lpaRgbValues ;
 
@@ -362,56 +362,56 @@ HB_FUNC( SETSYSCOLORS )
 */
 //-------------------------------------------------------------------//
 
-HB_FUNC( AND )
+HB_FUNC( VWN_AND )
 {
   hb_retnl( hb_parnl(1) & hb_parnl(2) );
 }
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( OR )
+HB_FUNC( VWN_OR )
 {
   hb_retnl( hb_parnl(1) | hb_parnl(2) );
 }
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( NOT )
+HB_FUNC( VWN_NOT )
 {
    hb_retnl( ~( hb_parnl(1) ) );
 }
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( _GETINSTANCE )
+HB_FUNC( VWN__GETINSTANCE )
 {
    HB_RETWH( GetModuleHandle( NULL ) );
 }
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( LOWORD )
+HB_FUNC( VWN_LOWORD )
 {
    hb_retni( (int) ( hb_parnl( 1 ) & 0xFFFF ) );
 }
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( HIWORD )
+HB_FUNC( VWN_HIWORD )
 {
    hb_retni( (int) ( ( hb_parnl( 1 ) >> 16 ) & 0xFFFF ) );
 }
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( MAKELONG )
+HB_FUNC( VWN_MAKELONG )
 {
    hb_retnl( (LONG) (((WORD) (hb_parni(1))) | (((DWORD) ((WORD) (hb_parni(2)))) << 16)) );
 }
 
 //-------------------------------------------------------------------//
 /*
-HB_FUNC( GETLASTERROR )
+HB_FUNC( VWN_GETLASTERROR )
 {
   hb_retnl( ( LONG ) GetLastError() );
 }
@@ -421,7 +421,7 @@ HB_FUNC( GETLASTERROR )
 // T.B.D.
 // returns error message text
 /*
-HB_FUNC( FORMATMESSAGE)
+HB_FUNC( VWN_FORMATMESSAGE)
 {
    hb_retnl( FormatMessage( (DWORD) hb_parnl( 1 )            ,  // source and processing options
                             ISNIL( 2) ? NULL : hb_parcx( 2 ) ,  // pointer to  message source
@@ -439,7 +439,7 @@ HB_FUNC( FORMATMESSAGE)
 // WINBASEAPI VOID WINAPI SetLastError( IN DWORD dwErrCode );
 //
 /*
-HB_FUNC( SETLASTERROR )
+HB_FUNC( VWN_SETLASTERROR )
 {
    SetLastError( (DWORD) hb_parnl( 1 ) );
 }
@@ -448,14 +448,14 @@ HB_FUNC( SETLASTERROR )
 //
 // WINBASEAPI UINT WINAPI SetErrorMode( IN UINT uMode );
 //
-HB_FUNC( SETERRORMODE )
+HB_FUNC( VWN_SETERRORMODE )
 {
    hb_retni( SetErrorMode( (UINT) hb_parni( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( OEMTOCHAR )
+HB_FUNC( VWN_OEMTOCHAR )
 {
    int iLen = hb_parclen( 1 );
    char * buffer = ( char* ) hb_xgrab( iLen + 1 );
@@ -466,7 +466,7 @@ HB_FUNC( OEMTOCHAR )
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( CHARTOOEM )
+HB_FUNC( VWN_CHARTOOEM )
 {
    int iLen = hb_parclen( 1 );
    char * buffer = ( char* ) hb_xgrab( iLen + 1 );
@@ -477,23 +477,23 @@ HB_FUNC( CHARTOOEM )
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( OEMTOANSI )
+HB_FUNC( VWN_OEMTOANSI )
 {
-HB_FUNCNAME( OEMTOCHAR )();
+HB_FUNCNAME( VWN_OEMTOCHAR )();
 }
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( ANSITOOEM )
+HB_FUNC( VWN_ANSITOOEM )
 {
-HB_FUNCNAME( CHARTOOEM )();
+HB_FUNCNAME( VWN_CHARTOOEM )();
 }
 
 //-------------------------------------------------------------------//
 //
 // WINBASEAPI DWORD WINAPI GetVersion( VOID );
 
-HB_FUNC( GETVERSION )
+HB_FUNC( VWN_GETVERSION )
 {
    hb_retnl( (LONG) GetVersion(  ) );
 }
@@ -502,7 +502,7 @@ HB_FUNC( GETVERSION )
 //
 // WINBASEAPI HRSRC WINAPI FindResourceA( IN HMODULE hModule, IN LPCSTR lpName, IN LPCSTR lpType );
 //
-HB_FUNC( FINDRESOURCE )
+HB_FUNC( VWN_FINDRESOURCE )
 {
    HB_RETWH( FindResourceA( (HMODULE) HB_PARWH( 1 ),
                                    (LPCSTR) hb_parcx( 2 )  ,
@@ -514,7 +514,7 @@ HB_FUNC( FINDRESOURCE )
 //
 // WINBASEAPI HRSRC WINAPI FindResourceExA( IN HMODULE hModule, IN LPCSTR lpType, IN LPCSTR lpName, IN WORD wLanguage );
 //
-HB_FUNC( FINDRESOURCEEX )
+HB_FUNC( VWN_FINDRESOURCEEX )
 {
    HB_RETWH( FindResourceExA( (HMODULE) HB_PARWH( 1 ),
                                      (LPCSTR) hb_parcx( 2 )  ,
@@ -527,7 +527,7 @@ HB_FUNC( FINDRESOURCEEX )
 //
 // WINBASEAPI HGLOBAL WINAPI LoadResource( IN HMODULE hModule, IN HRSRC hResInfo );
 //
-HB_FUNC( LOADRESOURCE )
+HB_FUNC( VWN_LOADRESOURCE )
 {
    HB_RETWH( LoadResource( (HMODULE) HB_PARWH( 1 ),
                                   (HRSRC) HB_PARWH( 2 )
@@ -544,7 +544,7 @@ HB_FUNC( LOADRESOURCE )
 //
 // modified
 //
-HB_FUNC( LOADSTRING )
+HB_FUNC( VWN_LOADSTRING )
 {
    ULONG iLen = ISNIL(3) ? MAX_PATH : (ULONG) hb_parclen( 3 );
    LPTSTR cText = (char*) hb_xgrab( iLen+1 );
@@ -562,7 +562,7 @@ HB_FUNC( LOADSTRING )
 //
 // WINBASEAPI DWORD WINAPI SizeofResource( IN HMODULE hModule, IN HRSRC hResInfo );
 //
-HB_FUNC( SIZEOFRESOURCE )
+HB_FUNC( VWN_SIZEOFRESOURCE )
 {
    hb_retnl( (LONG) SizeofResource( (HMODULE) HB_PARWH( 1 ),
                                     (HRSRC) HB_PARWH( 2 )
@@ -573,7 +573,7 @@ HB_FUNC( SIZEOFRESOURCE )
 //
 // WINBASEAPI LPVOID WINAPI LockResource( IN HGLOBAL hResData );
 //
-HB_FUNC( LOCKRESOURCE )
+HB_FUNC( VWN_LOCKRESOURCE )
 {
    HB_RETWH( LockResource( (HGLOBAL) HB_PARWH( 1 ) ) );
 }
@@ -582,7 +582,7 @@ HB_FUNC( LOCKRESOURCE )
 //
 // WINBASEAPI DWORD WINAPI LoadModule( IN LPCSTR lpModuleName, IN LPVOID lpParameterBlock );
 /*
-HB_FUNC( LOADMODULE )
+HB_FUNC( VWN_LOADMODULE )
 {
    LPVOID lpParameterBlock ;
 
@@ -596,7 +596,7 @@ HB_FUNC( LOADMODULE )
 //
 // WINBASEAPI BOOL WINAPI Beep( IN DWORD dwFreq, IN DWORD dwDuration );
 //
-HB_FUNC( TONE )
+HB_FUNC( VWN_TONE )
 {
    hb_retl( Beep( (DWORD) hb_parnl( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
@@ -605,7 +605,7 @@ HB_FUNC( TONE )
 //
 // WINBASEAPI DWORD WINAPI GetModuleFileNameA( IN HMODULE hModule, OUT LPSTR lpFilename, IN DWORD nSize );
 
-HB_FUNC( GETMODULEFILENAME )
+HB_FUNC( VWN_GETMODULEFILENAME )
 {
    char szBuffer[ MAX_PATH + 1 ] = {0} ;
    GetModuleFileNameA( ISNIL(1) ? GetModuleHandle(NULL) : (HMODULE) HB_PARWH( 1 ),
@@ -619,7 +619,7 @@ HB_FUNC( GETMODULEFILENAME )
 //
 // WINBASEAPI HMODULE WINAPI GetModuleHandleA( IN LPCSTR lpModuleName );
 //
-HB_FUNC( GETMODULEHANDLE )
+HB_FUNC( VWN_GETMODULEHANDLE )
 {
    HB_RETWH( GetModuleHandleA( (ISNIL(1) ? NULL : (LPCSTR) hb_parcx( 1 ) ) ) );
 }
@@ -628,7 +628,7 @@ HB_FUNC( GETMODULEHANDLE )
 //
 // WINBASEAPI LPSTR WINAPI GetCommandLineA( VOID );
 //
-HB_FUNC( GETCOMMANDLINE )
+HB_FUNC( VWN_GETCOMMANDLINE )
 {
    hb_retc( (LPSTR) GetCommandLine() );
 }
@@ -637,7 +637,7 @@ HB_FUNC( GETCOMMANDLINE )
 //
 // WINBASEAPI VOID WINAPI GetSystemTime( OUT LPSYSTEMTIME lpSystemTime );
 /*
-HB_FUNC( GETSYSTEMTIME )
+HB_FUNC( VWN_GETSYSTEMTIME )
 {
    LPSYSTEMTIME lpSystemTime ;
 
@@ -651,7 +651,7 @@ HB_FUNC( GETSYSTEMTIME )
 // WINBASEAPI BOOL WINAPI SetSystemTime( IN CONST SYSTEMTIME *lpSystemTime );
 //
 /*
-HB_FUNC( SETSYSTEMTIME )
+HB_FUNC( VWN_SETSYSTEMTIME )
 {
    SYSTEMTIME CONST lpSystemTime ;
 
@@ -664,7 +664,7 @@ HB_FUNC( SETSYSTEMTIME )
 //
 // WINBASEAPI VOID WINAPI GetLocalTime( OUT LPSYSTEMTIME lpSystemTime );
 /*
-HB_FUNC( GETLOCALTIME )
+HB_FUNC( VWN_GETLOCALTIME )
 {
    LPSYSTEMTIME lpSystemTime ;
 
@@ -677,7 +677,7 @@ HB_FUNC( GETLOCALTIME )
 //
 // WINBASEAPI BOOL WINAPI SetLocalTime( IN CONST SYSTEMTIME *lpSystemTime );
 /*
-HB_FUNC( SETLOCALTIME )
+HB_FUNC( VWN_SETLOCALTIME )
 {
    SYSTEMTIME CONST lpSystemTime ;
 
@@ -690,7 +690,7 @@ HB_FUNC( SETLOCALTIME )
 //
 // WINBASEAPI VOID WINAPI GetSystemInfo( OUT LPSYSTEM_INFO lpSystemInfo );
 /*
-HB_FUNC( GETSYSTEMINFO )
+HB_FUNC( VWN_GETSYSTEMINFO )
 {
    LPSYSTEM_INFO lpSystemInfo ;
 
@@ -703,7 +703,7 @@ HB_FUNC( GETSYSTEMINFO )
 //
 // WINBASEAPI DWORD WINAPI GetTickCount( VOID );
 //
-HB_FUNC( GETTICKCOUNT )
+HB_FUNC( VWN_GETTICKCOUNT )
 {
    hb_retnl( (LONG) GetTickCount(  ) );
 }
@@ -712,7 +712,7 @@ HB_FUNC( GETTICKCOUNT )
 //
 // WINBASEAPI DWORD WINAPI GetLogicalDriveStringsA( IN DWORD nBufferLength, OUT LPSTR lpBuffer );
 
-HB_FUNC( GETLOGICALDRIVESTRINGS )
+HB_FUNC( VWN_GETLOGICALDRIVESTRINGS )
 {
    hb_retnl( (LONG) GetLogicalDriveStrings( (DWORD) hb_parnl( 1 ),
                                              (LPSTR) hb_parcx( 2 )
@@ -724,7 +724,7 @@ HB_FUNC( GETLOGICALDRIVESTRINGS )
 // WINBASEAPI BOOL WINAPI GetComputerNameA ( OUT LPSTR lpBuffer, IN OUT LPDWORD nSize );
 //
 //
-HB_FUNC( GETCOMPUTERNAME )
+HB_FUNC( VWN_GETCOMPUTERNAME )
 {
    char cText[MAX_COMPUTERNAME_LENGTH+1]  ;
    DWORD nSize = MAX_COMPUTERNAME_LENGTH+1;
@@ -739,7 +739,7 @@ HB_FUNC( GETCOMPUTERNAME )
 //
 // WINBASEAPI BOOL WINAPI SetComputerNameA ( IN LPCSTR lpComputerName );
 //
-HB_FUNC( SETCOMPUTERNAME )
+HB_FUNC( VWN_SETCOMPUTERNAME )
 {
    hb_retl( SetComputerNameA( (LPCSTR) hb_parcx( 1 ) ) );
 }
@@ -748,7 +748,7 @@ HB_FUNC( SETCOMPUTERNAME )
 //
 // WINBASEAPI BOOL WINAPI GetComputerNameExA ( IN COMPUTER_NAME_FORMAT NameType, OUT LPSTR lpBuffer, IN OUT LPDWORD nSize );
 /*
-HB_FUNC( GETCOMPUTERNAMEEX )
+HB_FUNC( VWN_GETCOMPUTERNAMEEX )
 {
    COMPUTER_NAME_FORMAT NameType ;
    LPDWORD              nSize    ;
@@ -762,7 +762,7 @@ HB_FUNC( GETCOMPUTERNAMEEX )
 //
 // WINBASEAPI BOOL WINAPI SetComputerNameExA ( IN COMPUTER_NAME_FORMAT NameType, IN LPCSTR lpBuffer );
 /*
-HB_FUNC( SETCOMPUTERNAMEEX )
+HB_FUNC( VWN_SETCOMPUTERNAMEEX )
 {
    COMPUTER_NAME_FORMAT NameType ;
 
@@ -775,7 +775,7 @@ HB_FUNC( SETCOMPUTERNAMEEX )
 //
 // WINADVAPI BOOL WINAPI GetUserNameA ( OUT LPSTR lpBuffer, IN OUT LPDWORD nSize );
 //
-HB_FUNC( GETUSERNAME )
+HB_FUNC( VWN_GETUSERNAME )
 {
    DWORD nSize    ;
    char *szUser = hb_parcx( 1 );
@@ -789,7 +789,7 @@ HB_FUNC( GETUSERNAME )
 //
 // WINBASEAPI BOOL WINAPI GetVersionExA( IN OUT LPOSVERSIONINFOA lpVersionInformation );
 //
-HB_FUNC( GETVERSIONEX )
+HB_FUNC( VWN_GETVERSIONEX )
 {
    BOOL bGetVer;
    OSVERSIONINFOEX osvi;
@@ -805,7 +805,7 @@ HB_FUNC( GETVERSIONEX )
 //
 // WINBASEAPI BOOL WINAPI VerifyVersionInfoA( IN LPOSVERSIONINFOEXA lpVersionInformation, IN DWORD dwTypeMask, IN DWORDLONG dwlConditionMask );
 /*
-HB_FUNC( VERIFYVERSIONINFO )
+HB_FUNC( VWN_VERIFYVERSIONINFO )
 {
    LPOSVERSIONINFOEXA lpVersionInformation ;
 
@@ -825,7 +825,7 @@ HB_FUNC( VERIFYVERSIONINFO )
 //
 // WINUSERAPI UINT WINAPI ArrangeIconicWindows( IN HWND hWnd);
 //
-HB_FUNC( ARRANGEICONICWINDOWS )
+HB_FUNC( VWN_ARRANGEICONICWINDOWS )
 {
    hb_retni( ArrangeIconicWindows( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -837,7 +837,7 @@ HB_FUNC( ARRANGEICONICWINDOWS )
 //
 // move to MDI
 /*
-HB_FUNC( TILEWINDOWS )
+HB_FUNC( VWN_TILEWINDOWS )
 {
    RECT lpRect     ;
 
@@ -858,7 +858,7 @@ HB_FUNC( TILEWINDOWS )
 // move to MDI
 //
 /*
-HB_FUNC( CASCADEWINDOWS )
+HB_FUNC( VWN_CASCADEWINDOWS )
 {
    RECT lpRect     ;
 
@@ -878,7 +878,7 @@ HB_FUNC( CASCADEWINDOWS )
 //
 // need to verify 4th parameter !
 //
-HB_FUNC( WINHELP )
+HB_FUNC( VWN_WINHELP )
 {
       hb_retl( WinHelp( (HWND) HB_PARWH( 1 ) ,
                      (LPCSTR) hb_parcx( 2 ),
@@ -902,7 +902,7 @@ HB_FUNC( WINHELP )
 //  free HtmlHelp Workshop doanloadable from MSDN
 //
 /*
-HB_FUNC( HTMLHELP )
+HB_FUNC( VWN_HTMLHELP )
 {
 
  HB_RETWH( HtmlHelp( (HWND)   HB_PARWH( 1 )  ,
@@ -927,7 +927,7 @@ HB_FUNC( HTMLHELP )
                                // copy
 );
 */
-HB_FUNC( CREATEFILE )
+HB_FUNC( VWN_CREATEFILE )
 {
 
    SECURITY_ATTRIBUTES *sa = NULL;
@@ -951,7 +951,7 @@ BOOL CloseHandle(
   HANDLE hObject   // handle to object to close
 );
 */
-HB_FUNC( CLOSEHANDLE )
+HB_FUNC( VWN_CLOSEHANDLE )
 {
   hb_retl( CloseHandle( (HANDLE) HB_PARWH(1) ) );
 }
@@ -966,7 +966,7 @@ HB_FUNC( CLOSEHANDLE )
   LPOVERLAPPED lpOverlapped           // pointer to structure for data
 );
 */
-HB_FUNC( READFILE )
+HB_FUNC( VWN_READFILE )
 {
    char * Buffer = ( char * ) hb_xgrab( hb_parnl( 3 ) );
    DWORD nRead   = 0      ;
@@ -1002,7 +1002,7 @@ BOOL WriteFile(
   LPOVERLAPPED lpOverlapped        // pointer to structure for overlapped I/O
 );
 */
-HB_FUNC( WRITEFILE )
+HB_FUNC( VWN_WRITEFILE )
 {
 
    DWORD nWritten = 0;
@@ -1024,7 +1024,7 @@ HB_FUNC( WRITEFILE )
 /*
 DWORD GetCurrentProcessId( VOID )
 */
-HB_FUNC( GETCURRENTPROCESSID )
+HB_FUNC( VWN_GETCURRENTPROCESSID )
 {
    hb_retnl( (ULONG) GetCurrentProcessId() );
 }
@@ -1033,7 +1033,7 @@ HB_FUNC( GETCURRENTPROCESSID )
 /*
 DWORD GetCurrentProcess( VOID )
 */
-HB_FUNC( GETCURRENTPROCESS )
+HB_FUNC( VWN_GETCURRENTPROCESS )
 {
    hb_retptr( GetCurrentProcess() );
 }
@@ -1042,7 +1042,7 @@ HB_FUNC( GETCURRENTPROCESS )
 /*
 DWORD GetCurrentThreadId( VOID )
 */
-HB_FUNC( GETCURRENTTHREADID )
+HB_FUNC( VWN_GETCURRENTTHREADID )
 {
    hb_retnl( (DWORD) GetCurrentThreadId() );
 }
@@ -1053,7 +1053,7 @@ BOOL GetProcessWorkingSetSize( HANDLE hProcess, PSIZE_T lpMinimumWorkingSetSize,
                                PSIZE_T lpMaximumWorkingSetSize );
 NOTE: This function is not supported and returns .F. under Windows 9x
 */
-HB_FUNC( GETPROCESSWORKINGSETSIZE )
+HB_FUNC( VWN_GETPROCESSWORKINGSETSIZE )
 {
    PSIZE_T MinimumWorkingSetSize = NULL;
    PSIZE_T MaximumWorkingSetSize = NULL;
@@ -1072,7 +1072,7 @@ BOOL SetProcessWorkingSetSize( HANDLE hProcess, PSIZE_T lpMinimumWorkingSetSize,
 NOTE: This function is not supported and returns .F. under Windows 9x
       It may also fail if the process does not have right SE_INC_BASE_PRIORITY_NAME on NT/2000
 */
-HB_FUNC( SETPROCESSWORKINGSETSIZE )
+HB_FUNC( VWN_SETPROCESSWORKINGSETSIZE )
 {
    hb_retl(SetProcessWorkingSetSize(ISNIL(1) ? GetCurrentProcess() : (HANDLE) HB_PARWH( 1 ),
                    hb_parnl( 2 ), hb_parnl( 3 ) ));
@@ -1083,7 +1083,7 @@ HB_FUNC( SETPROCESSWORKINGSETSIZE )
 DWORD VirtualQuery( LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer,  SIZE_T dwLength);
 - may not be functional, always seems to return error
 */
-HB_FUNC( VIRTUALQUERY )
+HB_FUNC( VWN_VIRTUALQUERY )
 {
 // if( hb_parni(1) >= sizeof(MEMORY_BASIC_INFORMATION) )
 // {
@@ -1101,7 +1101,7 @@ HB_FUNC( VIRTUALQUERY )
 BOOL VirtualLock(LPVOID lpAddress, SIZE_T dwSize );
 - may not be functional, always seems to return error
 */
-HB_FUNC( VIRTUALLOCK )
+HB_FUNC( VWN_VIRTUALLOCK )
 {
    hb_retl( VirtualLock( ( void * ) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -1126,7 +1126,7 @@ HB_FUNC( VIRTUALLOCK )
 //   } SYSTEMTIME
 //
 //
-HB_FUNC( FILETIMETOSYSTEMTIME )
+HB_FUNC( VWN_FILETIMETOSYSTEMTIME )
 {
    FILETIME   *FileTime  = ( FILETIME *) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value ;
    SYSTEMTIME SystemTime ;
@@ -1148,7 +1148,7 @@ HB_FUNC( FILETIMETOSYSTEMTIME )
 
 //---------------------------------------------------------------------//
 // BOOL SetConsoleOutputCP(  UINT wCodePageID )  // code page to set;
-HB_FUNC( SETCONSOLEOUTPUTCP )
+HB_FUNC( VWN_SETCONSOLEOUTPUTCP )
 {
    hb_retl( SetConsoleOutputCP( (UINT) hb_parnl( 1 ) ) );
 }

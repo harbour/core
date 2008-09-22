@@ -34,7 +34,7 @@ int CALLBACK GenericCallblockProc( LONG param1, LONG param2, int wParam, LPARAM 
 
 // provide default 0 to first 5 parameters
 
-HB_FUNC( CREATEFONT )
+HB_FUNC( VWN_CREATEFONT )
 {
 
    if ( ISARRAY(1))
@@ -81,7 +81,7 @@ HB_FUNC( CREATEFONT )
 //-----------------------------------------------------------------------------
 // WINGDIAPI int WINAPI AddFontResourceA(IN LPCSTR);
 
-HB_FUNC( ADDFONTRESOURCE )
+HB_FUNC( VWN_ADDFONTRESOURCE )
 {
    hb_retni( AddFontResource( (LPCSTR) hb_parcx( 1 ) ) );
 }
@@ -89,7 +89,7 @@ HB_FUNC( ADDFONTRESOURCE )
 //-----------------------------------------------------------------------------
 // WINGDIAPI HFONT WINAPI CreateFontIndirectA( IN CONST LOGFONTA *);
 
-HB_FUNC( CREATEFONTINDIRECT )
+HB_FUNC( VWN_CREATEFONTINDIRECT )
 {
    LOGFONT *lf = (LOGFONT * ) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value;
 
@@ -103,7 +103,7 @@ HB_FUNC( CREATEFONTINDIRECT )
 
 /*
 
-HB_FUNC( CREATEFONTINDIRECTEX )
+HB_FUNC( VWN_CREATEFONTINDIRECTEX )
 {
    ENUMLOGFONTEXDVA
 
@@ -118,7 +118,7 @@ HB_FUNC( CREATEFONTINDIRECTEX )
 // WINGDIAPI BOOL WINAPI CreateScalableFontResourceA( IN DWORD, IN LPCSTR, IN LPCSTR, IN LPCSTR);
 
 
-HB_FUNC( CREATESCALABLEFONTRESOURCE )
+HB_FUNC( VWN_CREATESCALABLEFONTRESOURCE )
 {
    hb_retl( CreateScalableFontResource( (DWORD) hb_parnl( 1 ),
                                          (LPCSTR) hb_parcx( 2 ),
@@ -134,7 +134,7 @@ HB_FUNC( CREATESCALABLEFONTRESOURCE )
 // EnumFontFamilies(hDC,cTypeFace,codeBlock) -> HBFuncLastReturnValue or NIL if problem
 
 
-HB_FUNC( ENUMFONTFAMILIES )
+HB_FUNC( VWN_ENUMFONTFAMILIES )
 {
    LPARAM        lParam        ;
 
@@ -163,7 +163,7 @@ HB_FUNC( ENUMFONTFAMILIES )
 // syntax
 // EnumFontFamiliesEx(hDC,LogFontStruct,codeBlock) -> HBFuncLastReturnValue or NIL if problem
 
-HB_FUNC( ENUMFONTFAMILIESEX )
+HB_FUNC( VWN_ENUMFONTFAMILIESEX )
 {
    LOGFONT *LogFont = (LOGFONT * ) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
    LPARAM  lParam  ;
@@ -197,7 +197,7 @@ HB_FUNC( ENUMFONTFAMILIESEX )
 // syntax
 // EnumFonts(hDC,cTypeFace,codeBlock) -> HBFuncLastReturnValue or NIL if problem
 
-HB_FUNC( ENUMFONTS )
+HB_FUNC( VWN_ENUMFONTS )
 {
    LPARAM lParam ;
 
@@ -296,7 +296,7 @@ int CALLBACK GenericCallblockProc( LONG param1, LONG param2, int wParam, LPARAM 
 // GetFontData(hDC, nTable, dwOffset,[@cBuffer]
 
 
-HB_FUNC( GETFONTDATA )
+HB_FUNC( VWN_GETFONTDATA )
 {
    char * cBuffer = NULL;
    DWORD dwRet ;
@@ -325,7 +325,7 @@ HB_FUNC( GETFONTDATA )
 // WINGDIAPI DWORD WINAPI GetFontLanguageInfo( IN HDC );
 
 
-HB_FUNC( GETFONTLANGUAGEINFO )
+HB_FUNC( VWN_GETFONTLANGUAGEINFO )
 {
    hb_retnl( (LONG) GetFontLanguageInfo( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -337,7 +337,7 @@ HB_FUNC( GETFONTLANGUAGEINFO )
 
 /*
 
-HB_FUNC( GETFONTUNICODERANGES )
+HB_FUNC( VWN_GETFONTUNICODERANGES )
 {
    LPGLYPHSET lpglyphSet ;
 
@@ -356,7 +356,7 @@ HB_FUNC( GETFONTUNICODERANGES )
 
 /*
 
-HB_FUNC( ADDFONTMEMRESOURCEEX )
+HB_FUNC( VWN_ADDFONTMEMRESOURCEEX )
 {
    PVOID pVoid1 ;
    PVOID pVoid2 ;
@@ -379,7 +379,7 @@ HB_FUNC( ADDFONTMEMRESOURCEEX )
 
 /*
 
-HB_FUNC( ADDFONTRESOURCEEXA )
+HB_FUNC( VWN_ADDFONTRESOURCEEXA )
 {
    PVOID  pVoid  ;
 
@@ -399,7 +399,7 @@ HB_FUNC( ADDFONTRESOURCEEXA )
 // no prototype ?
 
 /*
-HB_FUNC( REMOVEFONTMEMRESOURCEEX )
+HB_FUNC( VWN_REMOVEFONTMEMRESOURCEEX )
 {
    hb_retl( RemoveFontMemResourceExA( (HANDLE) HB_PARWH( 1 ) ) );
 }
@@ -410,7 +410,7 @@ HB_FUNC( REMOVEFONTMEMRESOURCEEX )
 // WINGDIAPI BOOL WINAPI RemoveFontResourceA(IN LPCSTR);
 
 
-HB_FUNC( REMOVEFONTRESOURCE )
+HB_FUNC( VWN_REMOVEFONTRESOURCE )
 {
    hb_retl( RemoveFontResource( (LPCSTR) hb_parcx( 1 ) ) );
 }
@@ -424,7 +424,7 @@ HB_FUNC( REMOVEFONTRESOURCE )
 
 /*
 
-HB_FUNC( REMOVEFONTRESOURCEEXA )
+HB_FUNC( VWN_REMOVEFONTRESOURCEEXA )
 {
    PVOID  pVoid  ;
 

@@ -2,22 +2,21 @@
  * $Id$
  */
 
+//----------------------------------------------------------------------//
+
 #include "set.ch"
 
 #define CRLF chr(13)+chr(10)
 
-
-*-----------------------------------------------------------------------------*
-function _trace(c)
-
+//----------------------------------------------------------------------//
+function WHT__trace(c)
    local cn
 
    if valtype(c)=='C'
      cn:=c //:classname()
    endif
 
-
-   OutputDebugString(iif(empty(cn),'',cn+':')+procname(1)+'('+alltrim(str(procline(1)))+')'+;
+   VWN_OutputDebugString(iif(empty(cn),'',cn+':')+procname(1)+'('+alltrim(str(procline(1)))+')'+;
    ' <- '+procname(2)+'('+alltrim(str(procline(2)))+')'+;
    ' <- '+procname(3)+'('+alltrim(str(procline(3)))+')'+;
    ' <- '+procname(4)+'('+alltrim(str(procline(4)))+')'+;
@@ -25,14 +24,11 @@ function _trace(c)
    CRLF)
 
    return(NIL)
-
-
-
-*------------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 * PARAM is used here on purpose to allow for macro expansion of the
 * parameters which are passed here as private !!!!!!!!!
-*------------------------------------------------------------------------------*
-FUNCTION _DVIEW
+//----------------------------------------------------------------------//
+FUNCTION WHT__DVIEW()
    PARAM p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18
 
    LOCAL no_of_param, x, dbg_array, description, half
@@ -40,7 +36,7 @@ FUNCTION _DVIEW
    no_of_param := PCOUNT( )
    half := no_of_param / 2
 
-   OutputDebugString( '------------------------------' +CRLF)
+   VWN_OutputDebugString( '------------------------------' +CRLF)
    BEGIN SEQUENCE
       FOR x := 1 TO half
          dbg_array := "p" + lTrim( STR( x, 2, 0 ) )
@@ -50,10 +46,8 @@ FUNCTION _DVIEW
    END
 
    RETURN NIL
-
-*------------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 STATIC FUNCTION DLIST( dbg_array, description )
-*------------------------------------------------------------------------------*
    LOCAL heading, x, a_len, data_type, value
 
    IF ValType( dbg_array ) $ 'AOS'
@@ -72,10 +66,9 @@ STATIC FUNCTION DLIST( dbg_array, description )
       DSINGLE_VIEW( heading, data_type, value )
    ENDIF
    RETURN NIL
-
-*------------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 STATIC FUNCTION DSINGLE_VIEW( heading, data_type, value )
-*------------------------------------------------------------------------------*
+
    DO CASE
    CASE data_type == "A"
       DLIST( value, heading )
@@ -92,21 +85,19 @@ STATIC FUNCTION DSINGLE_VIEW( heading, data_type, value )
    CASE data_type == "N"
       DQOUT( "   Numeric:", heading, " => ", value )
    CASE data_type == "O"
-      OutputDebugString( "  Object vv" +CRLF) // arrows don't show in Windows
+      VWN_OutputDebugString( "  Object vv" +CRLF) // arrows don't show in Windows
       DLIST( value, heading )
-      OutputDebugString( "  Object ^^" +CRLF) // arrows don't show in windows
+      VWN_OutputDebugString( "  Object ^^" +CRLF) // arrows don't show in windows
    CASE data_type == "N"
       DQOUT( "   Numeric:", heading, " => ", value )
    CASE data_type == "U"
       DQOUT( "Undefinded:", heading, " => ", value )
    OTHERWISE
-      OutputDebugString( "Unknown data type returned by VALTYPE()" +CRLF)
+      VWN_OutputDebugString( "Unknown data type returned by VALTYPE()" +CRLF)
    ENDCASE
    RETURN NIL
-
-*------------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 STATIC FUNCTION DQOUT( a, b, c, d, show_len )
-*------------------------------------------------------------------------------*
    LOCAL e := ''
 
    IF ValType( show_len ) == 'L' .AND. show_len
@@ -120,10 +111,9 @@ STATIC FUNCTION DQOUT( a, b, c, d, show_len )
 
    e:=""
 
-   OutputDebugString( b + e + c + asstring( d ) +CRLF)
+   VWN_OutputDebugString( b + e + c + asstring( d ) +CRLF)
    RETURN NIL
-
-*-----------------------------------------------------------------------------*
+//----------------------------------------------------------------------//
 STATIC FUNCTION asString( x )
    local v := ValType( x )
 
@@ -153,3 +143,4 @@ STATIC FUNCTION asString( x )
    END CASE
 
    RETURN( x )
+//----------------------------------------------------------------------//

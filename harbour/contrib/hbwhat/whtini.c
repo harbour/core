@@ -63,7 +63,7 @@
 
 
 //-----------------------------------------------------------------------------
-HB_FUNC( GETPROFILESTRING )
+HB_FUNC( VWN_GETPROFILESTRING )
 {
    DWORD nSize = 1024 ;
    LPTSTR bBuffer = (LPTSTR) hb_xgrab( nSize );
@@ -95,7 +95,7 @@ HB_FUNC( GETPROFILESTRING )
 }
 
 //-----------------------------------------------------------------------------
-HB_FUNC( GETPRIVATEPROFILESTRING )
+HB_FUNC( VWN_GETPRIVATEPROFILESTRING )
 {
    DWORD nSize = 1024 ;
    LPTSTR bBuffer = (LPTSTR) hb_xgrab( nSize );
@@ -129,7 +129,7 @@ HB_FUNC( GETPRIVATEPROFILESTRING )
 }
 
 //-----------------------------------------------------------------------------
-HB_FUNC( WRITEPROFILESTRING )
+HB_FUNC( VWN_WRITEPROFILESTRING )
 {
    char * lpSection = hb_parcx( 1 );
    char * lpEntry = ISCHAR(2) ? hb_parcx( 2 ) : NULL ;
@@ -142,7 +142,7 @@ HB_FUNC( WRITEPROFILESTRING )
 }
 
 //-----------------------------------------------------------------------------
-HB_FUNC( WRITEPRIVATEPROFILESTRING )
+HB_FUNC( VWN_WRITEPRIVATEPROFILESTRING )
 {
    char * lpSection = hb_parcx( 1 );
    char * lpEntry = ISCHAR(2) ? hb_parcx( 2 ) : NULL ;
@@ -160,7 +160,7 @@ HB_FUNC( WRITEPRIVATEPROFILESTRING )
 // WINBASEAPI UINT WINAPI GetPrivateProfileInt( IN LPCSTR lpAppName, IN LPCSTR lpKeyName, IN INT nDefault, IN LPCSTR lpFileName );
 
 
-HB_FUNC( GETPRIVATEPROFILEINT )
+HB_FUNC( VWN_GETPRIVATEPROFILEINT )
 {
    hb_retni( GetPrivateProfileIntA( (LPCSTR) hb_parcx( 1 ),
                                     (LPCSTR) hb_parcx( 2 ),
@@ -174,7 +174,7 @@ HB_FUNC( GETPRIVATEPROFILEINT )
 // WINBASEAPI UINT WINAPI GetProfileInt( IN LPCSTR lpAppName, IN LPCSTR lpKeyName, IN INT nDefault );
 
 
-HB_FUNC( GETPROFILEINT )
+HB_FUNC( VWN_GETPROFILEINT )
 {
    hb_retni( GetProfileIntA( (LPCSTR) hb_parcx( 1 ),
                              (LPCSTR) hb_parcx( 2 ),
@@ -186,7 +186,7 @@ HB_FUNC( GETPROFILEINT )
 // WINBASEAPI DWORD WINAPI GetProfileSection( IN LPCSTR lpAppName, OUT LPSTR lpReturnedString, IN DWORD nSize );
 
 /*
-HB_FUNC( GETPROFILESECTION )
+HB_FUNC( VWN_GETPROFILESECTION )
 {
    hb_retnl( (LONG) GetProfileSectionA( (LPCSTR) hb_parcx( 1 ),
                                         (LPSTR) hb_parcx( 2 ) ,
@@ -199,7 +199,7 @@ HB_FUNC( GETPROFILESECTION )
 // WINBASEAPI BOOL WINAPI WriteProfileSection( IN LPCSTR lpAppName, IN LPCSTR lpString );
 
 
-HB_FUNC( WRITEPROFILESECTION )
+HB_FUNC( VWN_WRITEPROFILESECTION )
 {
    hb_retl( WriteProfileSectionA( (LPCSTR) hb_parcx( 1 ), (LPCSTR) hb_parcx( 2 ) ) );
 }
@@ -209,7 +209,7 @@ HB_FUNC( WRITEPROFILESECTION )
 // WINBASEAPI DWORD WINAPI GetPrivateProfileSection( IN LPCSTR lpAppName, OUT LPSTR lpReturnedString, IN DWORD nSize, IN LPCSTR lpFileName );
 
 
-HB_FUNC( GETPRIVATEPROFILESECTION )
+HB_FUNC( VWN_GETPRIVATEPROFILESECTION )
 {
    hb_retnl( (LONG) GetPrivateProfileSectionA( (LPCSTR) hb_parcx( 1 ),
                                                (LPSTR) hb_parcx( 2 ) ,
@@ -223,7 +223,7 @@ HB_FUNC( GETPRIVATEPROFILESECTION )
 // WINBASEAPI BOOL WINAPI WritePrivateProfileSectionA( IN LPCSTR lpAppName, IN LPCSTR lpString, IN LPCSTR lpFileName );
 
 
-HB_FUNC( WRITEPRIVATEPROFILESECTION )
+HB_FUNC( VWN_WRITEPRIVATEPROFILESECTION )
 {
    hb_retl( WritePrivateProfileSectionA( (LPCSTR) hb_parcx( 1 ),
                                          (LPCSTR) hb_parcx( 2 ),
@@ -236,7 +236,7 @@ HB_FUNC( WRITEPRIVATEPROFILESECTION )
 // WINBASEAPI DWORD WINAPI GetPrivateProfileSectionNamesA( OUT LPSTR lpszReturnBuffer, IN DWORD nSize, IN LPCSTR lpFileName );
 
 
-HB_FUNC( GETPRIVATEPROFILESECTIONNAMES )
+HB_FUNC( VWN_GETPRIVATEPROFILESECTIONNAMES )
 {
    hb_retnl( (LONG) GetPrivateProfileSectionNames( (LPSTR) hb_parcx( 1 ) ,
                                                     (DWORD) hb_parnl( 2 ),
@@ -249,7 +249,7 @@ HB_FUNC( GETPRIVATEPROFILESECTIONNAMES )
 
 /*
 
-HB_FUNC( GETPRIVATEPROFILESTRUCT )
+HB_FUNC( VWN_GETPRIVATEPROFILESTRUCT )
 {
    LPVOID lpStruct    ;
 
@@ -270,7 +270,7 @@ HB_FUNC( GETPRIVATEPROFILESTRUCT )
 
 /*
 
-HB_FUNC( WRITEPRIVATEPROFILESTRUCT )
+HB_FUNC( VWN_WRITEPRIVATEPROFILESTRUCT )
 {
    LPVOID lpStruct    ;
 

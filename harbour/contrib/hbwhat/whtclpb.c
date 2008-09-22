@@ -34,35 +34,35 @@ HBITMAP DuplicateBitmap( HBITMAP hbmpSrc );
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( CLOSECLIPBOARD )
+HB_FUNC( VWN_CLOSECLIPBOARD )
 {
    hb_retl( CloseClipboard() );
 }
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( COUNTCLIPBOARDFORMATS )
+HB_FUNC( VWN_COUNTCLIPBOARDFORMATS )
 {
    hb_retni( CountClipboardFormats() );
 }
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( EMPTYCLIPBOARD )
+HB_FUNC( VWN_EMPTYCLIPBOARD )
 {
    hb_retl( EmptyClipboard() );
 }
 
 //-------------------------------------------------------------------------------
 
-HB_FUNC( ENUMCLIPBOARDFORMATS )
+HB_FUNC( VWN_ENUMCLIPBOARDFORMATS )
 {
    hb_retni( EnumClipboardFormats( (UINT) hb_parni(1) ) );
 }
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( SETCLIPBOARDVIEWER )
+HB_FUNC( VWN_SETCLIPBOARDVIEWER )
 {
    HB_RETWH( SetClipboardViewer( (HWND) HB_PARWH(1) ) );
 }
@@ -71,7 +71,7 @@ HB_FUNC( SETCLIPBOARDVIEWER )
 //
 // WINUSERAPI BOOL WINAPI ChangeClipboardChain( IN HWND hWndRemove, IN HWND hWndNewNext);
 //
-HB_FUNC( CHANGECLIPBOARDCHAIN )
+HB_FUNC( VWN_CHANGECLIPBOARDCHAIN )
 {
    hb_retl( ChangeClipboardChain( (HWND) HB_PARWH( 1 ), (HWND) HB_PARWH( 2 ) ) );
 }
@@ -81,7 +81,7 @@ HB_FUNC( CHANGECLIPBOARDCHAIN )
 //
 // WINUSERAPI HWND WINAPI GetOpenClipboardWindow( VOID);
 //
-HB_FUNC( GETOPENCLIPBOARDWINDOW )
+HB_FUNC( VWN_GETOPENCLIPBOARDWINDOW )
 {
    HB_RETWH( GetOpenClipboardWindow(  ) );
 }
@@ -91,7 +91,7 @@ HB_FUNC( GETOPENCLIPBOARDWINDOW )
 //
 // WINUSERAPI int WINAPI GetPriorityClipboardFormat( OUT UINT *paFormatPriorityList, IN int cFormats);
 //
-HB_FUNC( GETPRIORITYCLIPBOARDFORMAT )
+HB_FUNC( VWN_GETPRIORITYCLIPBOARDFORMAT )
 {
    UINT *p, *paFP ;
    UINT i;
@@ -111,7 +111,7 @@ HB_FUNC( GETPRIORITYCLIPBOARDFORMAT )
 //
 #if(WINVER >= 0x0500)
 
-HB_FUNC( GETCLIPBOARDSEQUENCENUMBER )
+HB_FUNC( VWN_GETCLIPBOARDSEQUENCENUMBER )
 {
    hb_retnl( (LONG) GetClipboardSequenceNumber(  ) );
 }
@@ -120,42 +120,42 @@ HB_FUNC( GETCLIPBOARDSEQUENCENUMBER )
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( GETCLIPBOARDOWNER )
+HB_FUNC( VWN_GETCLIPBOARDOWNER )
 {
    HB_RETWH( GetClipboardOwner() );
 }
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( GETCLIPBOARDVIEWER )
+HB_FUNC( VWN_GETCLIPBOARDVIEWER )
 {
    HB_RETWH( GetClipboardViewer() );
 }
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( ISCLIPBOARDFORMATAVAILABLE )
+HB_FUNC( VWN_ISCLIPBOARDFORMATAVAILABLE )
 {
    hb_retl( IsClipboardFormatAvailable( hb_parni(1) ) );
 }
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( OPENCLIPBOARD )
+HB_FUNC( VWN_OPENCLIPBOARD )
 {
    hb_retl( OpenClipboard( (HWND) HB_PARWH(1) ) );
 }
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( REGISTERCLIPBOARDFORMAT )
+HB_FUNC( VWN_REGISTERCLIPBOARDFORMAT )
 {
    hb_retni( RegisterClipboardFormat( (LPCSTR) hb_parcx(1) ) );
 }
 
 //----------------------------------------------------------------------------//
 /*
-HB_FUNC( GETCLIPBOARDDATA )
+HB_FUNC( VWN_GETCLIPBOARDDATA )
 {
    HANDLE hClipMem ;
    LPSTR  lpClip ;
@@ -172,7 +172,7 @@ HB_FUNC( GETCLIPBOARDDATA )
 */
 //----------------------------------------------------------------------------//
 
-HB_FUNC( GETCLIPBOARDDATA )
+HB_FUNC( VWN_GETCLIPBOARDDATA )
 {
    WORD    wType = ( ISNIL( 1 ) ? CF_TEXT : ( WORD ) hb_parni( 1 ) );
    HGLOBAL hMem ;
@@ -214,7 +214,7 @@ HB_FUNC( GETCLIPBOARDDATA )
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( GETCLIPBOARDFORMATNAME )
+HB_FUNC( VWN_GETCLIPBOARDFORMATNAME )
 {
    int nRet ;
    char cName[128] ;
@@ -229,7 +229,7 @@ HB_FUNC( GETCLIPBOARDFORMATNAME )
 
 //----------------------------------------------------------------------------//
 /*
-HB_FUNC( SETCLIPBOARDDATA )
+HB_FUNC( VWN_SETCLIPBOARDDATA )
 {
    HANDLE hMem ;
    void *pMem ;
@@ -253,7 +253,7 @@ HB_FUNC( SETCLIPBOARDDATA )
 */
 //----------------------------------------------------------------------------//
 
-HB_FUNC( SETCLIPBOARDDATA )
+HB_FUNC( VWN_SETCLIPBOARDDATA )
 {
    WORD    wType = ( WORD ) hb_parni( 1 );
    HGLOBAL hMem ;

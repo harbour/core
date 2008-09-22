@@ -29,7 +29,7 @@ extern void Size2ArrayEx( SIZE *siz  ,  PHB_ITEM aSize);
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETDC )
+HB_FUNC( VWN_GETDC )
 {
    HB_RETWH( GetDC( (HWND) HB_PARWH(1) ) );
 }
@@ -38,7 +38,7 @@ HB_FUNC( GETDC )
 
 // WINGDIAPI BOOL WINAPI RestoreDC(IN HDC, IN int);
 
-HB_FUNC( RESTOREDC )
+HB_FUNC( VWN_RESTOREDC )
 {
    hb_retl( RestoreDC( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -47,7 +47,7 @@ HB_FUNC( RESTOREDC )
 
 // WINGDIAPI int WINAPI SaveDC(IN HDC);
 
-HB_FUNC( SAVEDC )
+HB_FUNC( VWN_SAVEDC )
 {
    hb_retni( SaveDC( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -55,7 +55,7 @@ HB_FUNC( SAVEDC )
 //-----------------------------------------------------------------------------
 // WINUSERAPI HDC WINAPI GetDCEx( IN HWND hWnd, IN HRGN hrgnClip, IN DWORD flags);
 
-HB_FUNC( GETDCEX )
+HB_FUNC( VWN_GETDCEX )
 {
    HB_RETWH( GetDCEx( (HWND) HB_PARWH( 1 ) ,
                              (HRGN) HB_PARWH( 2 ) ,
@@ -65,7 +65,7 @@ HB_FUNC( GETDCEX )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( RELEASEDC )
+HB_FUNC( VWN_RELEASEDC )
 {
    hb_retni( ReleaseDC( (HWND) HB_PARWH(1), (HDC) HB_PARWH(2) ) );
 }
@@ -73,7 +73,7 @@ HB_FUNC( RELEASEDC )
 //-----------------------------------------------------------------------------
 // WINGDIAPI BOOL WINAPI DeleteDC( IN HDC);
 
-HB_FUNC( DELETEDC )
+HB_FUNC( VWN_DELETEDC )
 {
    hb_retl( DeleteDC( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -81,7 +81,7 @@ HB_FUNC( DELETEDC )
 //-----------------------------------------------------------------------------
 // WINGDIAPI BOOL WINAPI CancelDC( IN HDC);
 
-HB_FUNC( CANCELDC )
+HB_FUNC( VWN_CANCELDC )
 {
    hb_retl( CancelDC( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -89,7 +89,7 @@ HB_FUNC( CANCELDC )
 //-----------------------------------------------------------------------------
 // WINGDIAPI HDC WINAPI CreateCompatibleDC( IN HDC);
 
-HB_FUNC( CREATECOMPATIBLEDC )
+HB_FUNC( VWN_CREATECOMPATIBLEDC )
 {
    HB_RETWH( CreateCompatibleDC( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -97,7 +97,7 @@ HB_FUNC( CREATECOMPATIBLEDC )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( WINDOWFROMDC )
+HB_FUNC( VWN_WINDOWFROMDC )
 {
    HB_RETWH( WindowFromDC( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -107,7 +107,7 @@ HB_FUNC( WINDOWFROMDC )
 
 // WINUSERAPI HDC WINAPI GetWindowDC( IN HWND hWnd);
 
-HB_FUNC( GETWINDOWDC )
+HB_FUNC( VWN_GETWINDOWDC )
 {
    HB_RETWH( GetWindowDC( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -118,7 +118,7 @@ HB_FUNC( GETWINDOWDC )
 
 // HDC CreateDC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, PCTSTR lpszOutput, CONST DEVMODE *lpInitData )
 
-HB_FUNC( CREATEDC )
+HB_FUNC( VWN_CREATEDC )
 {
    DEVMODE *lpInitData = NULL;
 
@@ -138,7 +138,7 @@ HB_FUNC( CREATEDC )
 //-----------------------------------------------------------------------------
 // WINGDIAPI HDC WINAPI ResetDCA(IN HDC, IN CONST DEVMODEA *);
 
-HB_FUNC( RESETDC )
+HB_FUNC( VWN_RESETDC )
 {
 
    DEVMODE *lpInitData = NULL;
@@ -159,7 +159,7 @@ HB_FUNC( RESETDC )
 // GetDCOrgEx(hDC) -> aPt
 
 
-HB_FUNC( GETDCORGEX )
+HB_FUNC( VWN_GETDCORGEX )
 {
    POINT Point ;
    PHB_ITEM aPt;
@@ -185,7 +185,7 @@ Local aDest := array( 4 )
 SCROLLDC(nHdc,ndx,ndy,aSrc,aSrc2,hrgnUpdate,@aDest)
 */
 
-HB_FUNC( SCROLLDC )
+HB_FUNC( VWN_SCROLLDC )
 {
    RECT   lprcScroll ;
    RECT   lprcClip   ;

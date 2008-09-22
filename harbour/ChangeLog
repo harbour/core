@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-21 20:29 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbwhat/*.c;*.prg
+    ! Prefixed every WHAT specific functions with "WHT_" and 
+      Windows specific functions with "VWN_"
+
+    ; NOTE: Now onwards HBWhat.lib use proprietory namespace and 
+      can be used alongwith any other WINAPI library. In the next 
+      few days I will upload a working demo taking care of all
+      the components together.
+  
+    ; TOFIX: HBWhat.lib is not usable as is still.
+      Viktor, please examine these two functions in wincorec.c
+         HB_FUNC( WHT__GETDLGPROC )
+         BOOL CALLBACK __DlgProc( H... )
+      where I have changed the casts to original code. Only then
+      I could get it worked. It is only for WHT_DialogBox() and 
+      I am sure until we fix it no other component will work.
+      It should be easy, IMO, just I do not know the whole story.
+      Probably the above change will not let HbWhat to be compliled
+      by other compilers or they will produce warnings.
+
 2008-09-22 04:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbinet.c
     ! fixed typo in previous commit which broke MS-Win builds

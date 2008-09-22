@@ -39,7 +39,7 @@ extern void Size2ArrayEx( SIZE *siz  ,  PHB_ITEM aSize);
 //-----------------------------------------------------------------------------
 // to be tested
 
-HB_FUNC( LOADBITMAP )
+HB_FUNC( VWN_LOADBITMAP )
 {
    HB_RETWH( LoadBitmap(
              ISNIL(1) ? GetModuleHandle( NULL ): (HINSTANCE) HB_PARWH(1) ,
@@ -52,7 +52,7 @@ HB_FUNC( LOADBITMAP )
 // Alex Kresin
 // DrawBitmap( hDC, hBitmap, nROP, x, y, nWidth, hHeight )
 
-HB_FUNC( DRAWBITMAP )
+HB_FUNC( VWN_DRAWBITMAP )
 {
    HDC hDC = (HDC) HB_PARWH( 1 );
    HDC hDCmem = CreateCompatibleDC( hDC );
@@ -77,7 +77,7 @@ HB_FUNC( DRAWBITMAP )
    DeleteDC( hDCmem );
 }
 
-HB_FUNC( GETBITMAPSIZE )
+HB_FUNC( VWN_GETBITMAPSIZE )
 {
    PHB_ITEM aArray = hb_itemArrayNew( 2 );
    BITMAP bm;
@@ -97,7 +97,7 @@ HB_FUNC( GETBITMAPSIZE )
 // Syntax
 // GetBitmapDimensionEx(hBmp) -> aSize or NIL
 
-HB_FUNC( GETBITMAPDIMENSIONEX )
+HB_FUNC( VWN_GETBITMAPDIMENSIONEX )
 {
    SIZE Size;
 
@@ -113,7 +113,7 @@ HB_FUNC( GETBITMAPDIMENSIONEX )
 // SetBitmapDimensionsEx(hBmp,x,y)-> aOriginalDimesions
 
 
-HB_FUNC( SETBITMAPDIMENSIONEX )
+HB_FUNC( VWN_SETBITMAPDIMENSIONEX )
 {
    SIZE Size;
 
@@ -138,7 +138,7 @@ HB_FUNC( SETBITMAPDIMENSIONEX )
 // WINGDIAPI int WINAPI SetStretchBltMode(IN HDC, IN int);
 
 
-HB_FUNC( SETSTRETCHBLTMODE )
+HB_FUNC( VWN_SETSTRETCHBLTMODE )
 {
    hb_retni( SetStretchBltMode( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -147,7 +147,7 @@ HB_FUNC( SETSTRETCHBLTMODE )
 // WINGDIAPI BOOL WINAPI StretchBlt(IN HDC, IN int, IN int, IN int, IN int, IN HDC, IN int, IN int, IN int, IN int, IN DWORD);
 
 
-HB_FUNC( STRETCHBLT )
+HB_FUNC( VWN_STRETCHBLT )
 {
    hb_retl( StretchBlt( (HDC) HB_PARWH( 1 )   ,
                         hb_parni( 2 )         ,
@@ -168,7 +168,7 @@ HB_FUNC( STRETCHBLT )
 
 
 
-HB_FUNC( CREATEBITMAP )
+HB_FUNC( VWN_CREATEBITMAP )
 {
    HB_RETWH( CreateBitmap( hb_parni( 1 )       ,
                            hb_parni( 2 )       ,
@@ -185,7 +185,7 @@ HB_FUNC( CREATEBITMAP )
 
 // uses BITMAP structure
 
-HB_FUNC( CREATEBITMAPINDIRECT )
+HB_FUNC( VWN_CREATEBITMAPINDIRECT )
 {
    CONST BITMAP *bmp = (BITMAP * ) hb_parc( 1 );//hb_param( 1,HB_IT_STRING )->item.asString.value;
 
@@ -197,7 +197,7 @@ HB_FUNC( CREATEBITMAPINDIRECT )
 //-----------------------------------------------------------------------------
 // WINGDIAPI HBITMAP WINAPI CreateCompatibleBitmap( IN HDC, IN int, IN int);
 
-HB_FUNC( CREATECOMPATIBLEBITMAP )
+HB_FUNC( VWN_CREATECOMPATIBLEBITMAP )
 {
    HB_RETWH( CreateCompatibleBitmap( (HDC) HB_PARWH( 1 ),
                                             hb_parni( 2 )      ,
@@ -210,7 +210,7 @@ HB_FUNC( CREATECOMPATIBLEBITMAP )
 
 // uses structures
 
-HB_FUNC( CREATEDIBITMAP )
+HB_FUNC( VWN_CREATEDIBITMAP )
 {
    BITMAPINFOHEADER *bmih = (BITMAPINFOHEADER *) hb_parc( 2 );//hb_param( 2, HB_IT_STRING )->item.asString.value ;
    BITMAPINFO *bmi  = (BITMAPINFO *) hb_parc( 5 );//hb_param( 5, HB_IT_STRING)->item.asString.value ;
@@ -231,7 +231,7 @@ HB_FUNC( CREATEDIBITMAP )
 /// ????????
 /// ????????
 
-HB_FUNC( CREATEDIBSECTION )
+HB_FUNC( VWN_CREATEDIBSECTION )
 {
    BITMAPINFO *bmi  = (BITMAPINFO *) hb_parc( 2 );//hb_param( 2, HB_IT_STRING)->item.asString.value ;
    VOID **ppBits = (VOID **) 0;
@@ -252,7 +252,7 @@ HB_FUNC( CREATEDIBSECTION )
 // WINGDIAPI HBITMAP WINAPI CreateDiscardableBitmap( IN HDC, IN int, IN int);
 
 
-HB_FUNC( CREATEDISCARDABLEBITMAP )
+HB_FUNC( VWN_CREATEDISCARDABLEBITMAP )
 {
    HB_RETWH( CreateDiscardableBitmap( (HDC) HB_PARWH( 1 ),
                                              hb_parni( 2 )      ,
@@ -264,7 +264,7 @@ HB_FUNC( CREATEDISCARDABLEBITMAP )
 // WINGDIAPI BOOL WINAPI MaskBlt( IN HDC, IN int, IN int, IN int, IN int, IN HDC, IN int, IN int, IN HBITMAP, IN int, IN int, IN DWORD);
 
 
-HB_FUNC( MASKBLT )
+HB_FUNC( VWN_MASKBLT )
 {
    hb_retl( MaskBlt( (HDC) HB_PARWH( 1 )    ,
                      hb_parni( 2 )          ,
@@ -285,7 +285,7 @@ HB_FUNC( MASKBLT )
 // WINGDIAPI BOOL WINAPI BitBlt( IN HDC, IN int, IN int, IN int, IN int, IN HDC, IN int, IN int, IN DWORD);
 
 
-HB_FUNC( BITBLT )
+HB_FUNC( VWN_BITBLT )
 {
    hb_retl( BitBlt( (HDC) HB_PARWH( 1 )  ,
                     hb_parni( 2 )        ,
@@ -303,7 +303,7 @@ HB_FUNC( BITBLT )
 // WINGDIAPI BOOL WINAPI PatBlt(IN HDC, IN int, IN int, IN int, IN int, IN DWORD);
 
 
-HB_FUNC( PATBLT )
+HB_FUNC( VWN_PATBLT )
 {
    hb_retl( PatBlt( (HDC) HB_PARWH( 1 )  ,
                     hb_parni( 2 )        ,
@@ -318,7 +318,7 @@ HB_FUNC( PATBLT )
 // WINGDIAPI int WINAPI SetROP2(IN HDC, IN int);
 
 
-HB_FUNC( SETROP2 )
+HB_FUNC( VWN_SETROP2 )
 {
    hb_retni( SetROP2( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -329,7 +329,7 @@ HB_FUNC( SETROP2 )
 // Syntax:
 // SetBitmapBits(hBmp,cBits)
 
-HB_FUNC( SETBITMAPBITS )
+HB_FUNC( VWN_SETBITMAPBITS )
 {
    hb_retnl( SetBitmapBits( (HBITMAP) HB_PARWH( 1 ),
                                    (DWORD) hb_parclen( 2 )  ,
@@ -341,7 +341,7 @@ HB_FUNC( SETBITMAPBITS )
 //-----------------------------------------------------------------------------
 // WINGDIAPI int WINAPI SetDIBits(IN HDC, IN HBITMAP, IN UINT, IN UINT, IN CONST VOID *, IN CONST BITMAPINFO *, IN UINT);
 
-HB_FUNC( SETDIBITS )
+HB_FUNC( VWN_SETDIBITS )
 {
 
    BITMAPINFO *bmi  = (BITMAPINFO *) hb_parc( 6 );//hb_param( 6, HB_IT_STRING)->item.asString.value ;
@@ -365,7 +365,7 @@ HB_FUNC( SETDIBITS )
 // WINGDIAPI int WINAPI GetROP2( IN HDC);
 
 
-HB_FUNC( GETROP2 )
+HB_FUNC( VWN_GETROP2 )
 {
    hb_retni( GetROP2( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -374,7 +374,7 @@ HB_FUNC( GETROP2 )
 // WINGDIAPI int WINAPI GetStretchBltMode( IN HDC);
 
 
-HB_FUNC( GETSTRETCHBLTMODE )
+HB_FUNC( VWN_GETSTRETCHBLTMODE )
 {
    hb_retni( GetStretchBltMode( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -385,7 +385,7 @@ HB_FUNC( GETSTRETCHBLTMODE )
 
 // uses bitmapinfo structure
 
-HB_FUNC( SETDIBITSTODEVICE )
+HB_FUNC( VWN_SETDIBITSTODEVICE )
 {
 
    BITMAPINFO *bmi  = (BITMAPINFO *) hb_parc( 11 );//hb_param( 11, HB_IT_STRING)->item.asString.value ;
@@ -411,7 +411,7 @@ HB_FUNC( SETDIBITSTODEVICE )
 
 // uses bitmap info structure
 
-HB_FUNC( STRETCHDIBITS )
+HB_FUNC( VWN_STRETCHDIBITS )
 {
 
    BITMAPINFO *bmi  = (BITMAPINFO *) hb_parc( 11 );//hb_param( 11, HB_IT_STRING)->item.asString.value ;
@@ -437,7 +437,7 @@ HB_FUNC( STRETCHDIBITS )
 
 void Pic(HDC hDC, int x , int y , int dx , int dy , HBITMAP hBmp , COLORREF rgbTransparent , BOOL disabled)
 
-//HB_FUNC( DRAWGLYPH )
+//HB_FUNC( VWN_DRAWGLYPH )
 
 {
 
@@ -507,7 +507,7 @@ void Pic(HDC hDC, int x , int y , int dx , int dy , HBITMAP hBmp , COLORREF rgbT
 DrawGlyph(HDC hDC, int x , int y , int dx , int dy , HBITMAP hBmp , COLORREF rgbTransparent , BOOL disabled)
 */
 
-HB_FUNC( DRAWGLYPH )
+HB_FUNC( VWN_DRAWGLYPH )
    {
     Pic(    (HDC) HB_PARWH(1),
                   hb_parni(2),
@@ -532,7 +532,7 @@ HB_FUNC( DRAWGLYPH )
 
 /*
 
-HB_FUNC( DRAWSTATE )
+HB_FUNC( VWN_DRAWSTATE )
 {
    DRAWSTATEPROC drawstateProc ;
 
@@ -560,7 +560,7 @@ HB_FUNC( DRAWSTATE )
 
 /*
 
-HB_FUNC( GETBITMAPBITS )
+HB_FUNC( VWN_GETBITMAPBITS )
 {
    LPVOID  lpVoid  ;
 
@@ -582,7 +582,7 @@ HB_FUNC( GETBITMAPBITS )
 // NOT FINISHED
 
 /*
-HB_FUNC( GETDIBITS )
+HB_FUNC( VWN_GETDIBITS )
 {
    VOID *lpvBits ;
    BITMAPINFO *bmi  = (BITMAPINFO *) hb_param( 6, HB_IT_STRING)->item.asString.value ;
@@ -606,7 +606,7 @@ HB_FUNC( GETDIBITS )
 
 /*
 
-HB_FUNC( GETGLYPHINDICESA )
+HB_FUNC( VWN_GETGLYPHINDICESA )
 {
    LPWORD lpWord ;
 
@@ -627,7 +627,7 @@ HB_FUNC( GETGLYPHINDICESA )
 
 /*
 
-HB_FUNC( GETGLYPHOUTLINEA )
+HB_FUNC( VWN_GETGLYPHOUTLINEA )
 {
    LPGLYPHMETRICS lpglyphMetrics ;
    LPVOID         lpVoid         ;
@@ -653,7 +653,7 @@ HB_FUNC( GETGLYPHOUTLINEA )
 // NT only ?
 
 /*
-HB_FUNC( ALPHABLEND )
+HB_FUNC( VWN_ALPHABLEND )
 {
    BLENDFUNCTION *bf = (BLENDFUNCTION *) hb_param( 11, HB_IT_STRING)->item.asString.value ;
 
@@ -677,7 +677,7 @@ HB_FUNC( ALPHABLEND )
 
 /*
 
-HB_FUNC( PLGBLT )
+HB_FUNC( VWN_PLGBLT )
 {
    CONST   POINT   ;
 
@@ -704,7 +704,7 @@ HB_FUNC( PLGBLT )
 
 /*
 
-HB_FUNC( SETDIBCOLORTABLE )
+HB_FUNC( VWN_SETDIBCOLORTABLE )
 {
    CONST RGBQUAD ;
 
@@ -726,7 +726,7 @@ HB_FUNC( SETDIBCOLORTABLE )
 // NT only ?
 
 /*
-HB_FUNC( TRANSPARENTBLT )
+HB_FUNC( VWN_TRANSPARENTBLT )
 {
    hb_retl( TransparentBlt( (HDC) HB_PARWH( 1 )  ,
                             hb_parni( 2 )        ,

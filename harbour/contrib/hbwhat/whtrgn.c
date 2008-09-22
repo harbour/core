@@ -26,7 +26,7 @@ extern BOOL Array2Point(PHB_ITEM aPoint, POINT *pt );
 // WINGDIAPI HRGN WINAPI CreateEllipticRgn( IN int, IN int, IN int, IN int);
 
 
-HB_FUNC( CREATEELLIPTICRGN )
+HB_FUNC( VWN_CREATEELLIPTICRGN )
 {
    HB_RETWH( CreateEllipticRgn( hb_parni( 1 ),
                                        hb_parni( 2 ),
@@ -41,7 +41,7 @@ HB_FUNC( CREATEELLIPTICRGN )
 // Syntax
 // CreateEllipticRgnIndirect( aRect ) -> hRgn, or 0
 
-HB_FUNC( CREATEELLIPTICRGNINDIRECT )
+HB_FUNC( VWN_CREATEELLIPTICRGNINDIRECT )
 {
    RECT rc;
 
@@ -55,7 +55,7 @@ HB_FUNC( CREATEELLIPTICRGNINDIRECT )
 // WINGDIAPI BOOL WINAPI FillRgn( IN HDC, IN HRGN, IN HBRUSH);
 
 
-HB_FUNC( FILLRGN )
+HB_FUNC( VWN_FILLRGN )
 {
    hb_retl( FillRgn( (HDC) HB_PARWH( 1 )   ,
                      (HRGN) HB_PARWH( 2 )  ,
@@ -69,7 +69,7 @@ HB_FUNC( FILLRGN )
 // Syntax
 // CreatePolygonRgn( aPoints, nPolyFillMode ) -> hRgn , or 0
 
-HB_FUNC( CREATEPOLYGONRGN )
+HB_FUNC( VWN_CREATEPOLYGONRGN )
 {
    POINT * Point ;
    POINT pt ;
@@ -112,7 +112,7 @@ HB_FUNC( CREATEPOLYGONRGN )
 // Syntax
 // CreatePolyPolygonRgn( aPoints, aQtyPoints, nFillMode ) -> hRgn, or 0
 
-HB_FUNC( CREATEPOLYPOLYGONRGN )
+HB_FUNC( VWN_CREATEPOLYPOLYGONRGN )
 {
    POINT * Point ;
    INT * PolyPoints ;
@@ -169,7 +169,7 @@ HB_FUNC( CREATEPOLYPOLYGONRGN )
 // CreateRectRgn(x1,y1,x2,y2) ->hRgn
 
 
-HB_FUNC( CREATERECTRGN )
+HB_FUNC( VWN_CREATERECTRGN )
 {
    HB_RETWH( CreateRectRgn( hb_parni( 1 ),
                                    hb_parni( 2 ),
@@ -184,7 +184,7 @@ HB_FUNC( CREATERECTRGN )
 // Syntax
 // CreateRectRgnIndirect( aRect) ->hRgn, or 0
 
-HB_FUNC( CREATERECTRGNINDIRECT )
+HB_FUNC( VWN_CREATERECTRGNINDIRECT )
 {
 
    RECT rc;
@@ -201,7 +201,7 @@ HB_FUNC( CREATERECTRGNINDIRECT )
 // WINGDIAPI HRGN WINAPI CreateRoundRectRgn( IN int, IN int, IN int, IN int, IN int, IN int);
 
 
-HB_FUNC( CREATEROUNDRECTRGN )
+HB_FUNC( VWN_CREATEROUNDRECTRGN )
 {
    HB_RETWH( CreateRoundRectRgn( hb_parni( 1 ),
                                         hb_parni( 2 ),
@@ -220,7 +220,7 @@ HB_FUNC( CREATEROUNDRECTRGN )
 // Syntax:
 // CombineRgn(hrgnDest,hrgnSrc1, hrgnSrc2, fnCombineMode ) -> nRgnType
 
-HB_FUNC( COMBINERGN )
+HB_FUNC( VWN_COMBINERGN )
 {
     hb_retni( CombineRgn( (HRGN) HB_PARWH(1), (HRGN) HB_PARWH(2),
                           (HRGN) HB_PARWH(3), hb_parni(4) ) );
@@ -235,7 +235,7 @@ HB_FUNC( COMBINERGN )
 // Syntax
 // GetRegionData(hRgn) -> cData, or NIL
 
-HB_FUNC( GETREGIONDATA )
+HB_FUNC( VWN_GETREGIONDATA )
 {
    RGNDATA *RgnData ;
    DWORD nBytes = GetRegionData( (HRGN) HB_PARWH( 1 ) , 0, NULL );
@@ -261,7 +261,7 @@ HB_FUNC( GETREGIONDATA )
 // WINGDIAPI int WINAPI ExtSelectClipRgn(IN HDC, IN HRGN, IN int);
 
 
-HB_FUNC( EXTSELECTCLIPRGN )
+HB_FUNC( VWN_EXTSELECTCLIPRGN )
 {
    hb_retni( ExtSelectClipRgn( (HDC) HB_PARWH( 1 ) ,
                                (HRGN) HB_PARWH( 2 ),
@@ -275,7 +275,7 @@ HB_FUNC( EXTSELECTCLIPRGN )
 // Syntax
 // RectInRegion( hRgn, aRect ) -> lInRgn , or NIL on failure
 
-HB_FUNC( RECTINREGION )
+HB_FUNC( VWN_RECTINREGION )
 {
     RECT rc;
 
@@ -288,7 +288,7 @@ HB_FUNC( RECTINREGION )
 // WINGDIAPI int WINAPI GetRandomRgn (IN HDC, IN HRGN, IN INT);
 
 
-HB_FUNC( GETRANDOMRGN )
+HB_FUNC( VWN_GETRANDOMRGN )
 {
    hb_retni( GetRandomRgn( (HDC) HB_PARWH( 1 ) ,
                            (HRGN) HB_PARWH( 2 ),
@@ -301,7 +301,7 @@ HB_FUNC( GETRANDOMRGN )
 // WINGDIAPI int WINAPI GetClipRgn( IN HDC, IN HRGN);
 
 
-HB_FUNC( GETCLIPRGN )
+HB_FUNC( VWN_GETCLIPRGN )
 {
    hb_retni( GetClipRgn( (HDC) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
@@ -311,7 +311,7 @@ HB_FUNC( GETCLIPRGN )
 //-----------------------------------------------------------------------------
 // WINGDIAPI BOOL WINAPI FrameRgn( IN HDC, IN HRGN, IN HBRUSH, IN int, IN int);
 
-HB_FUNC( FRAMERGN )
+HB_FUNC( VWN_FRAMERGN )
 {
    hb_retl( FrameRgn( (HDC) HB_PARWH( 1 )   ,
                       (HRGN) HB_PARWH( 2 )  ,
@@ -325,7 +325,7 @@ HB_FUNC( FRAMERGN )
 // WINGDIAPI BOOL WINAPI EqualRgn( IN HRGN, IN HRGN);
 
 
-HB_FUNC( EQUALRGN )
+HB_FUNC( VWN_EQUALRGN )
 {
    hb_retl( EqualRgn( (HRGN) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
@@ -337,7 +337,7 @@ HB_FUNC( EQUALRGN )
 // Syntax
 // ValidateRect( hWnd, aRect ) -> lSuccess
 
-HB_FUNC( VALIDATERECT )
+HB_FUNC( VWN_VALIDATERECT )
 {
    RECT rc ;
 
@@ -354,7 +354,7 @@ HB_FUNC( VALIDATERECT )
 // WINUSERAPI BOOL WINAPI InvalidateRgn( IN HWND hWnd, IN HRGN hRgn, IN BOOL bErase);
 
 
-HB_FUNC( INVALIDATERGN )
+HB_FUNC( VWN_INVALIDATERGN )
 {
    hb_retl( InvalidateRgn( (HWND) HB_PARWH( 1 ),
                            (HRGN) HB_PARWH( 2 ),
@@ -366,7 +366,7 @@ HB_FUNC( INVALIDATERGN )
 // WINUSERAPI BOOL WINAPI ValidateRgn( IN HWND hWnd, IN HRGN hRgn);
 
 
-HB_FUNC( VALIDATERGN )
+HB_FUNC( VWN_VALIDATERGN )
 {
    hb_retl( ValidateRgn( (HWND) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
@@ -375,7 +375,7 @@ HB_FUNC( VALIDATERGN )
 // WINGDIAPI BOOL WINAPI InvertRgn( IN HDC, IN HRGN);
 
 
-HB_FUNC( INVERTRGN )
+HB_FUNC( VWN_INVERTRGN )
 {
    hb_retl( InvertRgn( (HDC) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
@@ -384,7 +384,7 @@ HB_FUNC( INVERTRGN )
 // WINGDIAPI int WINAPI OffsetClipRgn(IN HDC, IN int, IN int);
 
 
-HB_FUNC( OFFSETCLIPRGN )
+HB_FUNC( VWN_OFFSETCLIPRGN )
 {
    hb_retni( OffsetClipRgn( (HDC) HB_PARWH( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
@@ -393,7 +393,7 @@ HB_FUNC( OFFSETCLIPRGN )
 // WINGDIAPI int WINAPI OffsetRgn(IN HRGN, IN int, IN int);
 
 
-HB_FUNC( OFFSETRGN )
+HB_FUNC( VWN_OFFSETRGN )
 {
    hb_retni( OffsetRgn( (HRGN) HB_PARWH( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
@@ -402,7 +402,7 @@ HB_FUNC( OFFSETRGN )
 // WINGDIAPI BOOL WINAPI PaintRgn(IN HDC, IN HRGN);
 
 
-HB_FUNC( PAINTRGN )
+HB_FUNC( VWN_PAINTRGN )
 {
    hb_retl( PaintRgn( (HDC) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
@@ -411,7 +411,7 @@ HB_FUNC( PAINTRGN )
 // WINGDIAPI HRGN WINAPI PathToRegion(IN HDC);
 
 
-HB_FUNC( PATHTOREGION )
+HB_FUNC( VWN_PATHTOREGION )
 {
    HB_RETWH( PathToRegion( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -420,7 +420,7 @@ HB_FUNC( PATHTOREGION )
 // WINGDIAPI BOOL WINAPI PtInRegion(IN HRGN, IN int, IN int);
 
 
-HB_FUNC( PTINREGION )
+HB_FUNC( VWN_PTINREGION )
 {
    hb_retl( PtInRegion( (HRGN) HB_PARWH( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
@@ -431,7 +431,7 @@ HB_FUNC( PTINREGION )
 // WINGDIAPI int WINAPI SelectClipRgn(IN HDC, IN HRGN);
 
 
-HB_FUNC( SELECTCLIPRGN )
+HB_FUNC( VWN_SELECTCLIPRGN )
 {
    hb_retni( SelectClipRgn( (HDC) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
@@ -440,7 +440,7 @@ HB_FUNC( SELECTCLIPRGN )
 // WINGDIAPI BOOL WINAPI SetRectRgn(IN HRGN, IN int, IN int, IN int, IN int);
 
 
-HB_FUNC( SETRECTRGN )
+HB_FUNC( VWN_SETRECTRGN )
 {
    hb_retl( SetRectRgn( (HRGN) HB_PARWH( 1 ),
                         hb_parni( 2 )       ,
@@ -455,7 +455,7 @@ HB_FUNC( SETRECTRGN )
 // WINUSERAPI int WINAPI GetUpdateRgn( IN HWND hWnd, IN HRGN hRgn, IN BOOL bErase);
 
 
-HB_FUNC( GETUPDATERGN )
+HB_FUNC( VWN_GETUPDATERGN )
 {
    hb_retni( GetUpdateRgn( (HWND) HB_PARWH( 1 ),
                            (HRGN) HB_PARWH( 2 ),
@@ -467,7 +467,7 @@ HB_FUNC( GETUPDATERGN )
 // WINUSERAPI int WINAPI ExcludeUpdateRgn( IN HDC hDC, IN HWND hWnd);
 
 
-HB_FUNC( EXCLUDEUPDATERGN )
+HB_FUNC( VWN_EXCLUDEUPDATERGN )
 {
    hb_retni( ExcludeUpdateRgn( (HDC) HB_PARWH( 1 ), (HWND) HB_PARWH( 2 ) ) );
 }
@@ -484,7 +484,7 @@ HB_FUNC( EXCLUDEUPDATERGN )
 
 /*
 
-HB_FUNC( GETRGNBOX )
+HB_FUNC( VWN_GETRGNBOX )
 {
    RECT *rc ;
 
@@ -501,7 +501,7 @@ HB_FUNC( GETRGNBOX )
 
 /*
 
-HB_FUNC( EXTCREATEREGION )
+HB_FUNC( VWN_EXTCREATEREGION )
 {
    CONST XFORM   ;
    CONST RGNDATA ;

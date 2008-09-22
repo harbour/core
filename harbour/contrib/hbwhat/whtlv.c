@@ -18,38 +18,38 @@
 #include "hbapiitm.h"
 
 
-HB_FUNC( LISTVIEW_DELETEALLITEMS )
+HB_FUNC( VWN_LISTVIEW_DELETEALLITEMS )
 {
    ( void ) ListView_DeleteAllItems( (HWND) HB_PARWH(1) );
 }
 
-HB_FUNC( LISTVIEW_DELETECOLUMN )
+HB_FUNC( VWN_LISTVIEW_DELETECOLUMN )
 {
    ( void ) ListView_DeleteColumn( (HWND) HB_PARWH(1), (INT) hb_parni(2) );
 }
 
-HB_FUNC( LISTVIEW_ENSUREVISIBLE )
+HB_FUNC( VWN_LISTVIEW_ENSUREVISIBLE )
 {
    hb_retl(ListView_EnsureVisible( (HWND) HB_PARWH(1), hb_parni(2), hb_parl(3) ));
 }
 
-HB_FUNC( LISTVIEW_INSERTCOLUMN )
+HB_FUNC( VWN_LISTVIEW_INSERTCOLUMN )
 {
    LV_COLUMN *lvColumn = ( LV_COLUMN *) hb_parc( 3 ); //hb_param( 3, HB_IT_STRING )->item.asString.value ;
    ( void ) ListView_InsertColumn( (HWND)HB_PARWH(1), hb_parni(2), lvColumn );
 }
 
-HB_FUNC( LISTVIEW_SETITEMCOUNT )
+HB_FUNC( VWN_LISTVIEW_SETITEMCOUNT )
 {
    ListView_SetItemCount( (HWND) HB_PARWH(1), hb_parnl(2) );
 }
 
-HB_FUNC( LISTVIEW_GETNEXTITEM )
+HB_FUNC( VWN_LISTVIEW_GETNEXTITEM )
 {
    hb_retni( ListView_GetNextItem( (HWND) HB_PARWH(1), hb_parni(2), hb_parnl(3) ));
 }
 
-HB_FUNC( LISTVIEWNOTIFY )
+HB_FUNC( VWN_LISTVIEWNOTIFY )
 {
    LPARAM lParam = (LPARAM) hb_parnl(2);
    LPNMHDR lpnmh = (LPNMHDR) lParam;

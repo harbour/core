@@ -26,7 +26,7 @@
 // SYNTAX:
 // DatePicker_Create( nExStyle, nStyle, x, y, nWidth, nHeight, hWndParent, nId ) --> hDTP
 
-HB_FUNC( DATETIME_CREATE )
+HB_FUNC( VWN_DATETIME_CREATE )
 {
 
    HB_RETWH( CreateWindowEx( ISNIL( 1 ) ? 0 : hb_parnl( 1 ) ,
@@ -54,9 +54,9 @@ HB_FUNC( DATETIME_CREATE )
 //
 // #define DateTime_GetMonthCal(hdp) (HWND)SNDMSG(hdp, DTM_GETMONTHCAL, 0, 0)
 
-HB_FUNC( DATETIME_GETMONTHCAL )
+HB_FUNC( VWN_DATETIME_GETMONTHCAL )
 {
-   /* NOTE: '(HWND)' is needed as a workaround for MinGW (4.32), 
+   /* NOTE: '(HWND)' is needed as a workaround for MinGW (4.32),
             where this is missing from the supplied headers. */
    HB_RETWH( (HWND) DateTime_GetMonthCal(
                                             (HWND) HB_PARWH( 1 )  // Handle to a DTP control
@@ -73,7 +73,7 @@ HB_FUNC( DATETIME_GETMONTHCAL )
 //
 // #define DateTime_GetMonthCalColor(hdp, iColor) SNDMSG(hdp, DTM_GETMCCOLOR, iColor, 0)
 
-HB_FUNC( DATETIME_GETMONTHCALCOLOR )
+HB_FUNC( VWN_DATETIME_GETMONTHCALCOLOR )
 {
 
    hb_retnl( ( long ) DateTime_GetMonthCalColor(
@@ -93,7 +93,7 @@ HB_FUNC( DATETIME_GETMONTHCALCOLOR )
 //
 // #define DateTime_GetMonthCalFont(hdp) SNDMSG(hdp, DTM_GETMCFONT, 0, 0)
 
-HB_FUNC( DATETIME_GETMONTHCALFONT )
+HB_FUNC( VWN_DATETIME_GETMONTHCALFONT )
 {
    // QUESTION: Doc seems to say this returns a HFONT, but it's not on 64-bit.
    hb_retnl( ( long ) DateTime_GetMonthCalFont(
@@ -113,7 +113,7 @@ HB_FUNC( DATETIME_GETMONTHCALFONT )
 //
 //
 
-HB_FUNC( DATETIME_GETRANGE )
+HB_FUNC( VWN_DATETIME_GETRANGE )
 {
    LPSYSTEMTIME lpSysTimeArray = (SYSTEMTIME *) hb_xgrab( 2 * sizeof(SYSTEMTIME));
    PHB_ITEM aMinMaxDate, aMinDate, aMaxDate;
@@ -171,7 +171,7 @@ HB_FUNC( DATETIME_GETRANGE )
 //
 //
 
-HB_FUNC( DATETIME_GETSYSTEMTIME )
+HB_FUNC( VWN_DATETIME_GETSYSTEMTIME )
 {
    SYSTEMTIME SysTime;
    long nRet;
@@ -214,7 +214,7 @@ HB_FUNC( DATETIME_GETSYSTEMTIME )
 //
 //
 
-HB_FUNC( DATETIME_SETFORMAT )
+HB_FUNC( VWN_DATETIME_SETFORMAT )
 {
    hb_retl( DateTime_SetFormat(
                       (HWND) HB_PARWH( 1 ),   // Handle to a DTP control
@@ -237,7 +237,7 @@ HB_FUNC( DATETIME_SETFORMAT )
 //
 //
 
-HB_FUNC( DATETIME_SETMONTHCALCOLOR )
+HB_FUNC( VWN_DATETIME_SETMONTHCALCOLOR )
 {
    hb_retnl( ( long ) DateTime_SetMonthCalColor(
                       (HWND) HB_PARWH( 1 ),   // Handle to a DTP control
@@ -258,7 +258,7 @@ HB_FUNC( DATETIME_SETMONTHCALCOLOR )
 //
 //
 
-HB_FUNC( DATETIME_SETMONTHCALFONT )
+HB_FUNC( VWN_DATETIME_SETMONTHCALFONT )
 {
 
    DateTime_SetMonthCalFont(
@@ -285,7 +285,7 @@ HB_FUNC( DATETIME_SETMONTHCALFONT )
 //
 //
 
-HB_FUNC( DATETIME_SETSYSTEMTIME )
+HB_FUNC( VWN_DATETIME_SETSYSTEMTIME )
 {
    SYSTEMTIME SysTime, *lpSysTime ;
 

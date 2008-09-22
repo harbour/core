@@ -21,7 +21,7 @@ extern BOOL Array2Point(PHB_ITEM aPoint, POINT *pt );
 //-----------------------------------------------------------------------------
 //WINCOMMCTRLAPI HIMAGELIST  WINAPI ImageList_Create(int cx, int cy, UINT flags, int cInitial, int cGrow);
 
-HB_FUNC( IMAGELIST_CREATE )
+HB_FUNC( VWN_IMAGELIST_CREATE )
 {
    HIMAGELIST ilist;
    ilist = ImageList_Create( hb_parni(1), hb_parni(2), hb_parnl(3), hb_parni(4), hb_parni(5));
@@ -31,7 +31,7 @@ HB_FUNC( IMAGELIST_CREATE )
 //-----------------------------------------------------------------------------
 // WINCOMMCTRLAPI int         WINAPI ImageList_ReplaceIcon(HIMAGELIST himl, int i, HICON hicon);
 
-HB_FUNC( IMAGELIST_REPLACEICON )
+HB_FUNC( VWN_IMAGELIST_REPLACEICON )
 {
    hb_retni( ImageList_ReplaceIcon( (HIMAGELIST) HB_PARWH(1),
                           (int) hb_parni(2)                 ,
@@ -41,7 +41,7 @@ HB_FUNC( IMAGELIST_REPLACEICON )
 //-----------------------------------------------------------------------------
 //#define     ImageList_AddIcon(himl, hicon) ImageList_ReplaceIcon(himl, -1, hicon)
 
-HB_FUNC( IMAGELIST_ADDICON )
+HB_FUNC( VWN_IMAGELIST_ADDICON )
 {
    hb_retni( ImageList_AddIcon( (HIMAGELIST) HB_PARWH(1), (HICON) HB_PARWH(2) ) );
 }
@@ -49,7 +49,7 @@ HB_FUNC( IMAGELIST_ADDICON )
 //-----------------------------------------------------------------------------
 //  ImageList_Destroy(HIMAGELIST himl);
 
-HB_FUNC( IMAGELIST_DESTROY )
+HB_FUNC( VWN_IMAGELIST_DESTROY )
 {
    hb_retl( ImageList_Destroy( (HIMAGELIST) HB_PARWH(1) ) );
 }
@@ -57,7 +57,7 @@ HB_FUNC( IMAGELIST_DESTROY )
 //-----------------------------------------------------------------------------
 // WINCOMMCTRLAPI int         WINAPI ImageList_GetImageCount(HIMAGELIST himl);
 
-HB_FUNC( IMAGELIST_GETIMAGECOUNT )
+HB_FUNC( VWN_IMAGELIST_GETIMAGECOUNT )
 {
 
    hb_retni( ImageList_GetImageCount((HIMAGELIST) HB_PARWH(1) ) );
@@ -67,7 +67,7 @@ HB_FUNC( IMAGELIST_GETIMAGECOUNT )
 //-----------------------------------------------------------------------------
 //  ImageList_SetImageCount(HIMAGELIST himl, UINT uNewCount);
 
-HB_FUNC( IMAGELIST_SETIMAGECOUNT )
+HB_FUNC( VWN_IMAGELIST_SETIMAGECOUNT )
 {
    hb_retl(  ImageList_SetImageCount((HIMAGELIST) HB_PARWH( 1 ),
                                      (UINT) hb_parni( 2 ) ) )  ;
@@ -76,7 +76,7 @@ HB_FUNC( IMAGELIST_SETIMAGECOUNT )
 //-----------------------------------------------------------------------------
 // WINCOMMCTRLAPI int         WINAPI ImageList_Add(HIMAGELIST himl, HBITMAP hbmImage, HBITMAP hbmMask);
 
-HB_FUNC( IMAGELIST_ADD )
+HB_FUNC( VWN_IMAGELIST_ADD )
 {
    hb_retni( ImageList_Add((HIMAGELIST) HB_PARWH( 1 ),
                            (HBITMAP) HB_PARWH( 2 )   ,
@@ -86,7 +86,7 @@ HB_FUNC( IMAGELIST_ADD )
 //-----------------------------------------------------------------------------
 //WINCOMMCTRLAPI COLORREF    WINAPI ImageList_SetBkColor(HIMAGELIST himl, COLORREF clrBk);
 
-HB_FUNC( IMAGELIST_SETBKCOLOR )
+HB_FUNC( VWN_IMAGELIST_SETBKCOLOR )
 {
    hb_retnl( (LONG) ImageList_SetBkColor((HIMAGELIST) HB_PARWH( 1 ),
                                          (COLORREF) hb_parnl( 2 )));
@@ -95,7 +95,7 @@ HB_FUNC( IMAGELIST_SETBKCOLOR )
 //-----------------------------------------------------------------------------
 // WINCOMMCTRLAPI COLORREF    WINAPI ImageList_GetBkColor(HIMAGELIST himl);
 
-HB_FUNC( IMAGELIST_GETBKCOLOR )
+HB_FUNC( VWN_IMAGELIST_GETBKCOLOR )
 {
    hb_retnl( (LONG) ImageList_GetBkColor((HIMAGELIST) HB_PARWH( 1 )));
 }
@@ -103,7 +103,7 @@ HB_FUNC( IMAGELIST_GETBKCOLOR )
 //-----------------------------------------------------------------------------
 // ImageList_SetOverlayImage(HIMAGELIST himl, int iImage, int iOverlay);
 
-HB_FUNC( IMAGELIST_SETOVERLAYIMAGE )
+HB_FUNC( VWN_IMAGELIST_SETOVERLAYIMAGE )
 {
    hb_retl(  ImageList_SetOverlayImage((HIMAGELIST) HB_PARWH( 1 ) ,
                                         hb_parni(2), hb_parni(3)));
@@ -113,7 +113,7 @@ HB_FUNC( IMAGELIST_SETOVERLAYIMAGE )
 // WINCOMMCTRLAPI BOOL WINAPI ImageList_Draw(HIMAGELIST himl, int i, HDC hdcDst,;
 //                                           int x, int y, UINT fStyle);
 
-HB_FUNC( IMAGELIST_DRAW )
+HB_FUNC( VWN_IMAGELIST_DRAW )
 {
    hb_retl( ImageList_Draw((HIMAGELIST) HB_PARWH( 1 ), hb_parni(2)    ,
                            (HDC) HB_PARWH(3), hb_parni(4), hb_parni(5),
@@ -124,7 +124,7 @@ HB_FUNC( IMAGELIST_DRAW )
 //-----------------------------------------------------------------------------
 //  ImageList_Replace(HIMAGELIST himl, int i, HBITMAP hbmImage, HBITMAP hbmMask);
 
-HB_FUNC( IMAGELIST_REPLACE )
+HB_FUNC( VWN_IMAGELIST_REPLACE )
 {
    hb_retl(  ImageList_Replace((HIMAGELIST) HB_PARWH( 1 ),
                                 hb_parni( 2 )            ,
@@ -135,7 +135,7 @@ HB_FUNC( IMAGELIST_REPLACE )
 //-----------------------------------------------------------------------------
 // WINCOMMCTRLAPI int         WINAPI ImageList_AddMasked(HIMAGELIST himl, HBITMAP hbmImage, COLORREF crMask);
 
-HB_FUNC( IMAGELIST_ADDMASKED )
+HB_FUNC( VWN_IMAGELIST_ADDMASKED )
 {
    hb_retni( ImageList_AddMasked((HIMAGELIST) HB_PARWH( 1 ) ,
                                   (HBITMAP) HB_PARWH( 2 )   ,
@@ -147,7 +147,7 @@ HB_FUNC( IMAGELIST_ADDMASKED )
 //  ImageList_DrawEx(HIMAGELIST himl, int i, HDC hdcDst, int x, int y, int dx, ;
 // int dy, COLORREF rgbBk, COLORREF rgbFg, UINT fStyle);
 
-HB_FUNC( IMAGELIST_DRAWEX )
+HB_FUNC( VWN_IMAGELIST_DRAWEX )
 {
    hb_retl(  ImageList_DrawEx((HIMAGELIST) HB_PARWH( 1 ), hb_parni( 2 )     ,
                               (HDC) HB_PARWH( 3 ), hb_parni(4), hb_parni(5) ,
@@ -160,7 +160,7 @@ HB_FUNC( IMAGELIST_DRAWEX )
 
 // uses structure
 
-HB_FUNC( IMAGELIST_DRAWINDIRECT )
+HB_FUNC( VWN_IMAGELIST_DRAWINDIRECT )
 {
   IMAGELISTDRAWPARAMS *pimldp  = ( IMAGELISTDRAWPARAMS *) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value ;
 
@@ -170,7 +170,7 @@ HB_FUNC( IMAGELIST_DRAWINDIRECT )
 //-----------------------------------------------------------------------------
 //  ImageList_Remove(HIMAGELIST himl, int i);
 
-HB_FUNC( IMAGELIST_REMOVE )
+HB_FUNC( VWN_IMAGELIST_REMOVE )
 {
    hb_retl( ImageList_Remove((HIMAGELIST) HB_PARWH( 1 ), hb_parni( 2 )));
 }
@@ -178,7 +178,7 @@ HB_FUNC( IMAGELIST_REMOVE )
 //-----------------------------------------------------------------------------
 // WINCOMMCTRLAPI HICON       WINAPI ImageList_GetIcon(HIMAGELIST himl, int i, UINT flags);
 
-HB_FUNC( IMAGELIST_GETICON )
+HB_FUNC( VWN_IMAGELIST_GETICON )
 {
    HB_RETWH( ImageList_GetIcon((HIMAGELIST) HB_PARWH( 1 ),
                                        hb_parni( 2 )            ,
@@ -189,7 +189,7 @@ HB_FUNC( IMAGELIST_GETICON )
 // WINCOMMCTRLAPI HIMAGELIST  WINAPI ImageList_LoadImageA(HINSTANCE hi, LPCSTR lpbmp,;
 //                 int cx, int cGrow,(COLORREF)crMask, UINT uType, UINT uFlags);
 
-HB_FUNC( IMAGELIST_LOADIMAGE )
+HB_FUNC( VWN_IMAGELIST_LOADIMAGE )
 {
    HB_RETWH( ImageList_LoadImageA( (HINSTANCE) HB_PARWH(1),
                                           ISCHAR(2)?(LPCSTR) hb_parcx(2) : MAKEINTRESOURCE(hb_parni(2))   ,
@@ -203,7 +203,7 @@ HB_FUNC( IMAGELIST_LOADIMAGE )
 //-----------------------------------------------------------------------------
 //  ImageList_Copy(HIMAGELIST himlDst, int iDst, HIMAGELIST himlSrc, int iSrc, UINT uFlags);
 
-HB_FUNC( IMAGELIST_COPY  )
+HB_FUNC( VWN_IMAGELIST_COPY  )
 {
    hb_retl( ImageList_Copy((HIMAGELIST) HB_PARWH( 1 ),
                            hb_parni( 2 )             ,
@@ -215,7 +215,7 @@ HB_FUNC( IMAGELIST_COPY  )
 //-----------------------------------------------------------------------------
 //  ImageList_BeginDrag(HIMAGELIST himlTrack, int iTrack, int dxHotspot, int dyHotspot);
 
-HB_FUNC( IMAGELIST_BEGINDRAG )
+HB_FUNC( VWN_IMAGELIST_BEGINDRAG )
 {
    hb_retl( ImageList_BeginDrag((HIMAGELIST) HB_PARWH( 1 ),
                                  hb_parni( 2 )            ,
@@ -231,7 +231,7 @@ void WINAPI ImageList_EndDrag(void);
 WINCOMMCTRLAPI void WINAPI ImageList_EndDrag(void);
 #endif
 
-HB_FUNC( IMAGELIST_ENDDRAG )
+HB_FUNC( VWN_IMAGELIST_ENDDRAG )
 {
    ImageList_EndDrag();
 }
@@ -239,7 +239,7 @@ HB_FUNC( IMAGELIST_ENDDRAG )
 //-----------------------------------------------------------------------------
 //  ImageList_DragEnter(HWND hwndLock, int x, int y);
 
-HB_FUNC( IMAGELIST_DRAGENTER  )
+HB_FUNC( VWN_IMAGELIST_DRAGENTER  )
 {
    hb_retl( ImageList_DragEnter( (HWND) HB_PARWH(1), hb_parni(2), hb_parni(3)));
 }
@@ -247,7 +247,7 @@ HB_FUNC( IMAGELIST_DRAGENTER  )
 //-----------------------------------------------------------------------------
 //  ImageList_DragLeave(HWND hwndLock);
 
-HB_FUNC( IMAGELIST_DRAGLEAVE )
+HB_FUNC( VWN_IMAGELIST_DRAGLEAVE )
 {
    hb_retl( ImageList_DragLeave( (HWND) HB_PARWH(1)));
 }
@@ -255,7 +255,7 @@ HB_FUNC( IMAGELIST_DRAGLEAVE )
 //-----------------------------------------------------------------------------
 //  ImageList_DragMove(int x, int y);
 
-HB_FUNC( IMAGELIST_MOVE )
+HB_FUNC( VWN_IMAGELIST_MOVE )
 {
    hb_retl( ImageList_DragMove( hb_parni(1), hb_parni(2)));
 
@@ -264,7 +264,7 @@ HB_FUNC( IMAGELIST_MOVE )
 //-----------------------------------------------------------------------------
 //  ImageList_SetDragCursorImage(HIMAGELIST himlDrag, int iDrag, int dxHotspot, int dyHotspot);
 
-HB_FUNC( IMAGELIST_SETDRAGCURSORIMAGE  )
+HB_FUNC( VWN_IMAGELIST_SETDRAGCURSORIMAGE  )
 {
    hb_retl( ImageList_SetDragCursorImage((HIMAGELIST) HB_PARWH( 1 ),
                                          hb_parni( 2 )             ,
@@ -275,7 +275,7 @@ HB_FUNC( IMAGELIST_SETDRAGCURSORIMAGE  )
 //-----------------------------------------------------------------------------
 //  ImageList_DragShowNolock(BOOL fShow);
 
-HB_FUNC( IMAGELIST_DRAGSHOWNOLOCK )
+HB_FUNC( VWN_IMAGELIST_DRAGSHOWNOLOCK )
 {
    hb_retl( ImageList_DragShowNolock( hb_parl( 1 )));
 }
@@ -284,7 +284,7 @@ HB_FUNC( IMAGELIST_DRAGSHOWNOLOCK )
 // WINCOMMCTRLAPI HIMAGELIST  WINAPI ImageList_GetDragImage(POINT FAR* ppt,POINT FAR* pptHotspot);
 
 
-HB_FUNC( IMAGELIST_GETDRAGIMAGE )
+HB_FUNC( VWN_IMAGELIST_GETDRAGIMAGE )
 {
    POINT pt        ;
    POINT ptHotspot ;
@@ -300,7 +300,7 @@ HB_FUNC( IMAGELIST_GETDRAGIMAGE )
 //-----------------------------------------------------------------------------
 //  ImageList_GetIconSize(HIMAGELIST himl, int FAR *cx, int FAR *cy);
 
-HB_FUNC( IMAGELIST_GETICONSIZE )
+HB_FUNC( VWN_IMAGELIST_GETICONSIZE )
 {
    int cx ;
    int cy ;
@@ -318,7 +318,7 @@ HB_FUNC( IMAGELIST_GETICONSIZE )
 //-----------------------------------------------------------------------------
 //  ImageList_SetIconSize(HIMAGELIST himl, int cx, int cy);
 
-HB_FUNC( IMAGELIST_SETICONSIZE )
+HB_FUNC( VWN_IMAGELIST_SETICONSIZE )
 {
    hb_retl(  ImageList_SetIconSize((HIMAGELIST) HB_PARWH( 1 )      ,
                                    hb_parni( 2 ), hb_parni( 3 ) ) );
@@ -330,7 +330,7 @@ HB_FUNC( IMAGELIST_SETICONSIZE )
 
 // returns structure buffer
 
-HB_FUNC( IMAGELIST_GETIMAGEINFO )
+HB_FUNC( VWN_IMAGELIST_GETIMAGEINFO )
 {
    IMAGEINFO ii ;
 
@@ -343,7 +343,7 @@ HB_FUNC( IMAGELIST_GETIMAGEINFO )
 //-----------------------------------------------------------------------------
 // WINCOMMCTRLAPI HIMAGELIST  WINAPI ImageList_Merge(HIMAGELIST himl1, int i1, HIMAGELIST himl2, int i2, int dx, int dy);
 
-HB_FUNC( IMAGELIST_MERGE )
+HB_FUNC( VWN_IMAGELIST_MERGE )
 {
    HB_RETWH( ImageList_Merge((HIMAGELIST) HB_PARWH( 1 ),
                                     hb_parni( 2 )             ,
@@ -357,7 +357,7 @@ HB_FUNC( IMAGELIST_MERGE )
 //-----------------------------------------------------------------------------
 // WINCOMMCTRLAPI HIMAGELIST  WINAPI ImageList_Duplicate(HIMAGELIST himl);
 
-HB_FUNC( IMAGELIST_DUPLICATE )
+HB_FUNC( VWN_IMAGELIST_DUPLICATE )
 {
    HB_RETWH( ImageList_Duplicate((HIMAGELIST) HB_PARWH( 1 )));
 }

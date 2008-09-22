@@ -31,7 +31,7 @@ extern PHB_ITEM Rect2Array( RECT *rc  );
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( INITCOMMONCONTROLS )
+HB_FUNC( VWN_INITCOMMONCONTROLS )
 {
   InitCommonControls();
 }
@@ -42,7 +42,7 @@ HB_FUNC( INITCOMMONCONTROLS )
 // SYNTAX
 // InitCommnonControlsEx(nFlags)
 
-HB_FUNC( INITCOMMONCONTROLSEX )
+HB_FUNC( VWN_INITCOMMONCONTROLSEX )
 {
   INITCOMMONCONTROLSEX icc ;
   icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
@@ -52,7 +52,7 @@ HB_FUNC( INITCOMMONCONTROLSEX )
 }
 
 //----------------------------------------------------------------------------//
-HB_FUNC( CREATESTATUSWINDOW )
+HB_FUNC( VWN_CREATESTATUSWINDOW )
 {
   HB_RETWH( CreateStatusWindow (
                                          hb_parnl(1),
@@ -66,7 +66,7 @@ HB_FUNC( CREATESTATUSWINDOW )
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( DRAWSTATUSTEXT )
+HB_FUNC( VWN_DRAWSTATUSTEXT )
 {
     RECT rc ;
 
@@ -86,13 +86,13 @@ HB_FUNC( DRAWSTATUSTEXT )
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( WRITESTATUSWINDOW )
+HB_FUNC( VWN_WRITESTATUSWINDOW )
 {
    SendMessage( (HWND) HB_PARWH( 1 ), SB_SETTEXT, hb_parni( 2 ), (LPARAM) hb_parcx( 3 ) );
 }
 
 
-HB_FUNC( STATUSBARGETRECT )
+HB_FUNC( VWN_STATUSBARGETRECT )
 {
   RECT rc;
   PHB_ITEM aRect ;
@@ -104,7 +104,7 @@ HB_FUNC( STATUSBARGETRECT )
 }
 
 
-HB_FUNC( STATUSBARGETPARTS )
+HB_FUNC( VWN_STATUSBARGETPARTS )
 {
   RECT rc;
   PHB_ITEM aParts;
@@ -120,7 +120,7 @@ HB_FUNC( STATUSBARGETPARTS )
 // T.B.D.
 
 /*
-HB_FUNC( MENUHELP )
+HB_FUNC( VWN_MENUHELP )
 {
 
      LPINPUT lpwIDs
@@ -151,7 +151,7 @@ to load the appropriate Help string.
 /*
    CreateProgressBar( hParentWindow, nRange, x ,y, nWidth,nHeight,bBorder )
 */
-HB_FUNC( CREATEPROGRESSBAR )
+HB_FUNC( VWN_CREATEPROGRESSBAR )
 {
    HWND hPBar, hParentWindow = (HWND) HB_PARWH(1);
    RECT rcClient;
@@ -206,14 +206,14 @@ HB_FUNC( CREATEPROGRESSBAR )
 /*
    UpdateProgressBar( hPBar )
 */
-HB_FUNC( UPDATEPROGRESSBAR )
+HB_FUNC( VWN_UPDATEPROGRESSBAR )
 {
    SendMessage( (HWND) HB_PARWH(1), PBM_STEPIT, 0, 0 );
 }
 
 //----------------------------------------------------------------------------//
 
-HB_FUNC( SETPROGRESSBAR )
+HB_FUNC( VWN_SETPROGRESSBAR )
 {
    SendMessage( (HWND) HB_PARWH(1), PBM_SETPOS, (WPARAM) hb_parni(2), 0 );
 }
@@ -258,7 +258,7 @@ HB_FUNC( SETPROGRESSBAR )
 //----------------------------------------------------------------------------
 
 
-HB_FUNC( INITLISTVIEW )
+HB_FUNC( VWN_INITLISTVIEW )
 {
    HWND hwnd;
    HWND hbutton;
@@ -286,7 +286,7 @@ HB_FUNC( INITLISTVIEW )
    HB_RETWH( hbutton );
 }
 //------------------------------------------------------------------------------------------
-HB_FUNC( INITLISTVIEWCOLUMNS )
+HB_FUNC( VWN_INITLISTVIEWCOLUMNS )
 {
    PHB_ITEM wArray;
    PHB_ITEM hArray;
@@ -324,7 +324,7 @@ vi = hb_itemGetNI   ( hb_arrayGetItemPtr(wArray, s ));
 
 }
 //------------------------------------------------------------------------------------------
-HB_FUNC( ADDLISTVIEWITEMS )
+HB_FUNC( VWN_ADDLISTVIEWITEMS )
 {
 // PHB_ITEM hArray;
    char *caption = NULL;
@@ -356,27 +356,27 @@ HB_FUNC( ADDLISTVIEWITEMS )
    }
 }
 //------------------------------------------------------------------------------------------
-HB_FUNC( LISTVIEW_SETCURSEL )
+HB_FUNC( VWN_LISTVIEW_SETCURSEL )
 {
    ListView_SetItemState((HWND) HB_PARWH (1), (WPARAM) hb_parni(2)-1 ,LVIS_FOCUSED | LVIS_SELECTED , LVIS_FOCUSED | LVIS_SELECTED );
 }
 //------------------------------------------------------------------------------------------
-HB_FUNC( C_SETFOCUS )
+HB_FUNC( VWN_C_SETFOCUS )
 {
    HB_RETWH( SetFocus( (HWND) HB_PARWH( 1 ) ) );
 }
 //------------------------------------------------------------------------------------------
-HB_FUNC( LISTVIEWDELETESTRING )
+HB_FUNC( VWN_LISTVIEWDELETESTRING )
 {
    SendMessage( (HWND) HB_PARWH( 1 ),LVM_DELETEITEM , (WPARAM) hb_parni(2)-1, 0);
 }
 //------------------------------------------------------------------------------------------
-HB_FUNC( LISTVIEWRESET )
+HB_FUNC( VWN_LISTVIEWRESET )
 {
    SendMessage( (HWND) HB_PARWH( 1 ), LVM_DELETEALLITEMS , 0, 0 );
 }
 //------------------------------------------------------------------------------------------
-HB_FUNC( LISTVIEW_GETFIRSTITEM )
+HB_FUNC( VWN_LISTVIEW_GETFIRSTITEM )
 {
    hb_retni( ListView_GetNextItem( (HWND) HB_PARWH( 1 ), -1, LVNI_ALL | LVNI_SELECTED ) + 1 );
 }

@@ -59,7 +59,7 @@
 #if defined(HB_OS_WIN_32)
 
 // don't not use GETINSTANCE(), because it is an API, which means something else
-HB_FUNC( HINSTANCE )
+HB_FUNC( VWN_HINSTANCE )
 {
    HANDLE hInstance;
 
@@ -68,7 +68,7 @@ HB_FUNC( HINSTANCE )
    HB_RETWH( hInstance );
 }
 
-HB_FUNC( HPREVINSTANCE )
+HB_FUNC( VWN_HPREVINSTANCE )
 {
    HANDLE hPrevInstance;
 
@@ -77,7 +77,7 @@ HB_FUNC( HPREVINSTANCE )
    HB_RETWH( hPrevInstance );
 }
 
-HB_FUNC( NCMDSHOW )
+HB_FUNC( VWN_NCMDSHOW )
 {
    int iCmdShow;
 

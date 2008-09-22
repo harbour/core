@@ -19,7 +19,7 @@
 // WINBASEAPI DWORD WINAPI GetLogicalDrives( VOID );
 
 
-HB_FUNC( GETLOGICALDRIVES )
+HB_FUNC( VWN_GETLOGICALDRIVES )
 {
    hb_retnl( (LONG) GetLogicalDrives(  ) );
 }
@@ -29,7 +29,7 @@ HB_FUNC( GETLOGICALDRIVES )
 // WINBASEAPI UINT WINAPI GetDriveTypeA( IN LPCSTR lpRootPathName );
 
 
-HB_FUNC( GETDRIVETYPE )
+HB_FUNC( VWN_GETDRIVETYPE )
 {
    hb_retni( GetDriveType( (LPCSTR) hb_parcx( 1 ) ) );
 }
@@ -41,7 +41,7 @@ HB_FUNC( GETDRIVETYPE )
 // modified
 // GetSystemDirectory() -> cDir
 
-HB_FUNC( GETSYSTEMDIRECTORY )
+HB_FUNC( VWN_GETSYSTEMDIRECTORY )
 {
 
    char szBuffer[ MAX_PATH + 1 ] = {0} ;
@@ -57,7 +57,7 @@ HB_FUNC( GETSYSTEMDIRECTORY )
 // GetTempPath() -> cPath
 
 
-HB_FUNC( GETTEMPPATH )
+HB_FUNC( VWN_GETTEMPPATH )
 {
    char szBuffer[ MAX_PATH + 1 ] = {0} ;
    GetTempPath(MAX_PATH, szBuffer);
@@ -74,7 +74,7 @@ HB_FUNC( GETTEMPPATH )
 // modified
 // GetTempFileName(cPath,cPrefix,nUnique) -> cFileName
 
-HB_FUNC( GETTEMPFILENAME )
+HB_FUNC( VWN_GETTEMPFILENAME )
 {
    char cPath[ MAX_PATH ] = {0};
 
@@ -90,7 +90,7 @@ HB_FUNC( GETTEMPFILENAME )
 // WINBASEAPI UINT WINAPI GetWindowsDirectoryA( OUT LPSTR lpBuffer, IN UINT uSize );
 
 
-HB_FUNC( GETWINDOWSDIRECTORY )
+HB_FUNC( VWN_GETWINDOWSDIRECTORY )
 {
    char szBuffer[ MAX_PATH + 1 ] = {0} ;
    GetWindowsDirectory( szBuffer,MAX_PATH);
@@ -104,7 +104,7 @@ HB_FUNC( GETWINDOWSDIRECTORY )
 // NT only
 #if (_WIN32_WINNT >= 0x0500)
 
-HB_FUNC( GETSYSTEMWINDOWSDIRECTORY )
+HB_FUNC( VWN_GETSYSTEMWINDOWSDIRECTORY )
 {
    char cPath[ MAX_PATH +1 ] = {0};
 
@@ -119,7 +119,7 @@ HB_FUNC( GETSYSTEMWINDOWSDIRECTORY )
 // WINBASEAPI BOOL WINAPI SetCurrentDirectoryA( IN LPCSTR lpPathName );
 
 
-HB_FUNC( SETCURRENTDIRECTORY )
+HB_FUNC( VWN_SETCURRENTDIRECTORY )
 {
 
    hb_retl( SetCurrentDirectory( (LPCSTR) hb_parcx( 1 ) ) );
@@ -129,7 +129,7 @@ HB_FUNC( SETCURRENTDIRECTORY )
 // WINBASEAPI DWORD WINAPI GetCurrentDirectoryA( IN DWORD nBufferLength, OUT LPSTR lpBuffer );
 
 
-HB_FUNC( GETCURRENTDIRECTORY )
+HB_FUNC( VWN_GETCURRENTDIRECTORY )
 {
    char cPath[ MAX_PATH + 1 ] = {0};
    GetCurrentDirectory( MAX_PATH , (LPSTR) cPath );
@@ -140,7 +140,7 @@ HB_FUNC( GETCURRENTDIRECTORY )
 // WINBASEAPI BOOL WINAPI SetFileAttributesA( IN LPCSTR lpFileName, IN DWORD dwFileAttributes );
 
 
-HB_FUNC( SETFILEATTRIBUTES )
+HB_FUNC( VWN_SETFILEATTRIBUTES )
 {
    hb_retl( SetFileAttributes( (LPCSTR) hb_parcx( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
@@ -149,7 +149,7 @@ HB_FUNC( SETFILEATTRIBUTES )
 // WINBASEAPI DWORD WINAPI GetFileAttributesA( IN LPCSTR lpFileName );
 
 
-HB_FUNC( GETFILEATTRIBUTES )
+HB_FUNC( VWN_GETFILEATTRIBUTES )
 {
    hb_retnl( (LONG) GetFileAttributes( (LPCSTR) hb_parcx( 1 ) ) );
 }
@@ -158,7 +158,7 @@ HB_FUNC( GETFILEATTRIBUTES )
 // WINBASEAPI BOOL WINAPI DeleteFileA( IN LPCSTR lpFileName );
 
 
-HB_FUNC( DELETEFILE )
+HB_FUNC( VWN_DELETEFILE )
 {
    hb_retl( DeleteFile( (LPCSTR) hb_parcx( 1 ) ) );
 }
@@ -167,7 +167,7 @@ HB_FUNC( DELETEFILE )
 // WINBASEAPI BOOL WINAPI SetVolumeLabelA( IN LPCSTR lpRootPathName, IN LPCSTR lpVolumeName );
 
 
-HB_FUNC( SETVOLUMELABEL )
+HB_FUNC( VWN_SETVOLUMELABEL )
 {
    hb_retl( SetVolumeLabel( (LPCSTR) hb_parcx( 1 ), (LPCSTR) hb_parcx( 2 ) ) );
 }
@@ -177,7 +177,7 @@ HB_FUNC( SETVOLUMELABEL )
 //-----------------------------------------------------------------------------
 // WINBASEAPI BOOL WINAPI CreateDirectoryA( IN LPCSTR lpPathName, IN LPSECURITY_ATTRIBUTES lpSecurityAttributes );
 
-HB_FUNC( CREATEDIRECTORY )
+HB_FUNC( VWN_CREATEDIRECTORY )
 {
    SECURITY_ATTRIBUTES *sa = NULL;
 
@@ -193,7 +193,7 @@ HB_FUNC( CREATEDIRECTORY )
 
 /*
 
-HB_FUNC( CREATEDIRECTORYEX )
+HB_FUNC( VWN_CREATEDIRECTORYEX )
 {
    LPSECURITY_ATTRIBUTES lpSecurityAttributes ;
 
@@ -211,7 +211,7 @@ HB_FUNC( CREATEDIRECTORYEX )
 // WINBASEAPI BOOL WINAPI RemoveDirectoryA( IN LPCSTR lpPathName );
 
 
-HB_FUNC( REMOVEDIRECTORY )
+HB_FUNC( VWN_REMOVEDIRECTORY )
 {
    hb_retl( RemoveDirectory( (LPCSTR) hb_parcx( 1 ) ) );
 }
@@ -225,7 +225,7 @@ HB_FUNC( REMOVEDIRECTORY )
 //See MSDN first
 
 
-HB_FUNC( GETFULLPATHNAME )
+HB_FUNC( VWN_GETFULLPATHNAME )
 {
    char *szBuffRet = NULL ;
    char buffer[ MAX_PATH + 1 ] = {0};
@@ -253,7 +253,7 @@ HB_FUNC( GETFULLPATHNAME )
 // WINBASEAPI BOOL WINAPI GetVolumePathNameA( LPCSTR lpszFileName, LPSTR lpszVolumePathName, DWORD cchBufferLength );
 //#if (_WIN32_WINNT >= 0x0500)
 
-HB_FUNC( GETVOLUMEPATHNAME )
+HB_FUNC( VWN_GETVOLUMEPATHNAME )
 {
    typedef BOOL ( WINAPI * P_GVPN )( LPCTSTR, LPTSTR, DWORD );
    BOOL bResult = FALSE;
@@ -277,7 +277,7 @@ HB_FUNC( GETVOLUMEPATHNAME )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETSHORTPATHNAME )
+HB_FUNC( VWN_GETSHORTPATHNAME )
 {
    char buffer[ MAX_PATH + 1 ] = {0};
    int iRet;
@@ -291,7 +291,7 @@ HB_FUNC( GETSHORTPATHNAME )
 //-----------------------------------------------------------------------------
 // WINBASEAPI DWORD WINAPI GetLongPathNameA( IN LPCSTR lpszShortPath, OUT LPSTR lpszLongPath, IN DWORD cchBuffer );
 
-HB_FUNC( GETLONGPATHNAME )
+HB_FUNC( VWN_GETLONGPATHNAME )
 {
    hb_retnl( (LONG) GetLongPathName( (LPCSTR) hb_parcx( 1 ),
                                       (LPSTR) hb_parcx( 2 ) ,
@@ -320,7 +320,7 @@ BOOL GetVolumeInformation(
 // Syntax:
 // GetVolumeInformation([cPath],[@cVolName],[@nSerNum],[@nMaxName],[@nFlags],[@cFATName] )
 
-HB_FUNC( GETVOLUMEINFORMATION )
+HB_FUNC( VWN_GETVOLUMEINFORMATION )
 {
   char *VolumeNameBuffer     = (char *) hb_xgrab( MAX_PATH );
   DWORD VolumeSerialNumber                              ;

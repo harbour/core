@@ -2,11 +2,13 @@
  * $Id$
  */
 
-// hbwhat
-// Common Dialog interface
+//----------------------------------------------------------------------//
+
 #define WT_DIALOG     0      // used internally (user custom dialog class - advanced option)
+
 #include "commdlg.ch"
 #include "winuser.ch"
+
 /*
 pragma(4)
 #include "ctruct.ch"
@@ -15,15 +17,14 @@ pragma(4)
 
 // Under development !!!
 
-*-----------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
+//
 // FindText()
 // don't forget to call RegisterWindowMessage(FINDMESSAGESTRING) before calling
 // SYNTAX: FinText(<hWnd>,[<hInst>],<nFlags>,<cFindWhat>,[<bAction>]) -> hDlg
 // isDialogMessage() will detect this dialog automatically, if called in auto mode
-
-Function FindText( hWnd, hInst, nFlags, cFindWhat, bAction)
-
+//
+Function WHT_FindText( hWnd, hInst, nFlags, cFindWhat, bAction)
    LOCAL nIndex
    LOCAL n
    LOCAL aDialog := _Get_aDialog()
@@ -61,15 +62,13 @@ Function FindText( hWnd, hInst, nFlags, cFindWhat, bAction)
 
    Return( hDlg )
 
-*-----------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 // FindText()
 // don't forget to call RegisterWindowMessage(FINDMESSAGESTRING) before calling
 // SYNTAX: ReplaceText(<hWnd>,[<hInst>],<nFlags>,<cFindWhat>,<cReplaceWith>,[<bAction>]) -> hDlg
 // isDialogMessage() will detect this dialog automatically, if called in auto mode
-
-Function ReplaceText( hWnd, hInst, nFlags, cFindWhat, cReplaceWith, bAction)
-
+//
+Function WHT_ReplaceText( hWnd, hInst, nFlags, cFindWhat, cReplaceWith, bAction)
    LOCAL n
    LOCAL nIndex
    LOCAL aDialog := _Get_aDialog()
@@ -106,12 +105,8 @@ Function ReplaceText( hWnd, hInst, nFlags, cFindWhat, cReplaceWith, bAction)
    EndIf
 
    Return( hDlg )
-
-
-*-----------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 /*
-
 GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex)
 
 hWnd:     Handle to parent window
@@ -128,11 +123,8 @@ Returns:  If OFN_ALLOWMULTISELECT
           else
               FileName.
           endif
-
-
 */
-
-FUNCTION GetOpenFileName( hWnd, cPath, cTitle, aaFilters, nFlags, cIniDir, cDefExt, nIndex )
+FUNCTION WHT_GetOpenFileName( hWnd, cPath, cTitle, aaFilters, nFlags, cIniDir, cDefExt, nIndex )
 
    LOCAL aFiles, cRet, cFile, x, aFilter, cFilter := "", cItem, nAt, cChar
 
@@ -195,12 +187,8 @@ FUNCTION GetOpenFileName( hWnd, cPath, cTitle, aaFilters, nFlags, cIniDir, cDefE
      //cRet := Left( cRet, At( chr(0), cRet ) -1 )
    ENDIF
 
-RETURN cRet
-
-
-
-*-----------------------------------------------------------------------------*
-
+   RETURN cRet
+//----------------------------------------------------------------------//
 /*
 GetSaveFileName( hWnd, cFile, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex)
 
@@ -215,24 +203,16 @@ nIndex:   Index position of types
 
 Returns:  FileName.
 */
+FUNCTION WHT_GetSaveFileName(hWnd, cFile, cTitle, aFilter, nFlags, cIniDir, cDefExt, nIndex )
+   local n,c:=''
 
+   IF aFilter==nil
+      aFilter:={}
+   END
+   FOR n:=1 TO LEN(aFilter)
+       c+=aFilter[n][1]+chr(0)+aFilter[n][2]+chr(0)
+   NEXT
+   cFile:=_GetSaveFileName(hWnd, cFile, cTitle, c, nFlags, cIniDir, cDefExt, @nIndex )
 
-FUNCTION GetSaveFileName(hWnd, cFile, cTitle, aFilter, nFlags, cIniDir, cDefExt, nIndex )
-local n,c:=''
-IF aFilter==nil
-   aFilter:={}
-END
-FOR n:=1 TO LEN(aFilter)
-    c+=aFilter[n][1]+chr(0)+aFilter[n][2]+chr(0)
-NEXT
-cFile:=_GetSaveFileName(hWnd, cFile, cTitle, c, nFlags, cIniDir, cDefExt, @nIndex )
-Return(cFile)
-
-
-
-
-
-
-
-
-
+   Return(cFile)
+//----------------------------------------------------------------------//

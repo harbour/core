@@ -39,7 +39,7 @@ local dcbInfo   := dcb:value
 BuildComm( cComParam, @dcbInfo )
 dcb:buffer( dcbInfo )
 */
-HB_FUNC( BUILDCOMMDCB )
+HB_FUNC( VWN_BUILDCOMMDCB )
 {
    DCB dcb ;
 
@@ -64,7 +64,7 @@ BuildComDCBAndTimeouts( cCommParam, @dcbInfo, CommTimeOuts:value )
 dcb:buffer( dcbInfo )
 */
 //
-HB_FUNC( BUILDCOMMDCBANDTIMEOUTS )
+HB_FUNC( VWN_BUILDCOMMDCBANDTIMEOUTS )
 {
    DCB dcb ;
    LPCOMMTIMEOUTS lptimeouts = ( LPCOMMTIMEOUTS ) hb_parcx( 3 );
@@ -84,7 +84,7 @@ if ClearCommBreak( hFile )
    // Your code goes here
 endif
 */
-HB_FUNC( CLEARCOMMBREAK )
+HB_FUNC( VWN_CLEARCOMMBREAK )
 {
    hb_retl( ClearCommBreak( ( HANDLE ) HB_PARWH( 1 ) ) );
 }
@@ -100,7 +100,7 @@ if ClearCommError( hFile, @nError, @cComStat )
    // Proceed with fresh i/o
 endif
 */
-HB_FUNC( CLEARCOMMERROR )
+HB_FUNC( VWN_CLEARCOMMERROR )
 {
    DWORD   err = 0 ;
    COMSTAT Stat ;
@@ -128,7 +128,7 @@ if CommConfigDialog( cDeviceName, hWnd, @cCommConfig )
    CommConfig:buffer( cCommConfig )
 endif
 */
-HB_FUNC( COMMCONFIGDIALOG )
+HB_FUNC( VWN_COMMCONFIGDIALOG )
 {
    LPCTSTR      lpszName = ( LPCTSTR ) hb_parcx( 1 );
    HWND         hwnd     = ISNIL( 2 ) ? NULL : ( HWND ) HB_PARWH( 2 );
@@ -151,7 +151,7 @@ if EscapeCommFunction( hFile, nFunc )
    // ok
 endif
 */
-HB_FUNC( ESCAPECOMMFUNCTION )
+HB_FUNC( VWN_ESCAPECOMMFUNCTION )
 {
    hb_retl( EscapeCommFunction( ( HANDLE ) HB_PARWH( 1 ), hb_parnl( 2 ) ) );
 }
@@ -167,7 +167,7 @@ if GetCommConfig( hFile, @cCommConfig )
    CommConfig:buffer( cCommConfig )
 endif
 */
-HB_FUNC( GETCOMMCONFIG )
+HB_FUNC( VWN_GETCOMMCONFIG )
 {
    COMMCONFIG lpCC ; // = ( LPCOMMCONFIG ) hb_parcx( 2 );
    DWORD        size = sizeof( COMMCONFIG );
@@ -188,7 +188,7 @@ if GetCommMask( hFile, @nMask )
    endif
 endif
 */
-HB_FUNC( GETCOMMMASK )
+HB_FUNC( VWN_GETCOMMMASK )
 {
    DWORD mask;
    hb_retl( GetCommMask( ( HANDLE ) HB_PARWH( 1 ), &mask ) );
@@ -206,7 +206,7 @@ if GetCommModemStatus( hFile, @nStat )
    endif
 endif
 */
-HB_FUNC( GETCOMMMODEMSTATUS )
+HB_FUNC( VWN_GETCOMMMODEMSTATUS )
 {
    DWORD modemStat ;
    hb_retl( GetCommModemStatus( ( HANDLE ) HB_PARWH( 1 ), &modemStat ) );
@@ -224,7 +224,7 @@ local cCommProp := CommProp:value
 GetCommProperties( hFile, @cCommProp )
 CommProp:buffer( cCommProp )
 */
-HB_FUNC( GETCOMMPROPERTIES )
+HB_FUNC( VWN_GETCOMMPROPERTIES )
 {
    COMMPROP CommProp ;
    CommProp.wPacketLength = sizeof( COMMPROP );
@@ -243,7 +243,7 @@ BOOL GetCommState(
 GetCommState( hFile, @cDcb )
 dcb:buffer( cDcb )
 */
-HB_FUNC( GETCOMMSTATE )
+HB_FUNC( VWN_GETCOMMSTATE )
 {
    DCB dcb ;
    dcb.DCBlength = sizeof( DCB );
@@ -262,7 +262,7 @@ BOOL GetCommTimeouts(
 GetCommTimeouts( cFile, @cCommTimeouts )
 CommTimeouts:buffer( cCommTimeouts )
 */
-HB_FUNC( GETCOMMTIMEOUTS )
+HB_FUNC( VWN_GETCOMMTIMEOUTS )
 {
    COMMTIMEOUTS Timeouts ;
 
@@ -281,7 +281,7 @@ BOOL GetDefaultCommConfig(
 GetDefaultCommConfig( 'Standard Modem over IR link #4', @cCommConfig )
 CommConfig:buffer( cCommConfig )
 */
-HB_FUNC( GETDEFAULTCOMMCONFIG )
+HB_FUNC( VWN_GETDEFAULTCOMMCONFIG )
 {
    char * Buffer = (char *) hb_xgrab( sizeof( COMMCONFIG ) );
    DWORD size = sizeof( COMMCONFIG );
@@ -311,7 +311,7 @@ local nActions := PURGE_TXABORT + PURGE_RXABORT // + ... ANY COMBINATION
 if PurgeComm( hFile, nActions )
 endif
 */
-HB_FUNC( PURGECOMM )
+HB_FUNC( VWN_PURGECOMM )
 {
    hb_retl( PurgeComm( ( HANDLE ) HB_PARWH( 1 ), hb_parnl( 2 ) ) );
 }
@@ -322,7 +322,7 @@ BOOL SetCommBreak(
   HANDLE hFile   // handle to communications device                  IN
 );
 */
-HB_FUNC( SETCOMMBREAK )
+HB_FUNC( VWN_SETCOMMBREAK )
 {
    hb_retl( SetCommBreak( ( HANDLE ) HB_PARWH( 1 ) ) );
 }
@@ -336,7 +336,7 @@ BOOL SetCommConfig(
 );
 SetCommConfig( hFile, CommConfig:Value, nSize )
 */
-HB_FUNC( SETCOMMCONFIG )
+HB_FUNC( VWN_SETCOMMCONFIG )
 {
    LPCOMMCONFIG lpCC = ( LPCOMMCONFIG ) hb_parcx( 2 );
    DWORD        size = ISNIL( 3 ) ? ( DWORD ) sizeof( COMMCONFIG ) : ( DWORD ) hb_parnl( 3 );
@@ -353,7 +353,7 @@ BOOL SetCommMask(
 if SetCommMask( hFile, nEvtMask )
 endif
 */
-HB_FUNC( SETCOMMMASK )
+HB_FUNC( VWN_SETCOMMMASK )
 {
    hb_retl( SetCommMask( ( HANDLE ) HB_PARWH( 1 ), hb_parnl( 2 ) ) );
 }
@@ -365,7 +365,7 @@ BOOL SetCommState(
   LPDCB lpDCB    // device-control block                             IN
 );
 */
-HB_FUNC( SETCOMMSTATE )
+HB_FUNC( VWN_SETCOMMSTATE )
 {
    LPDCB lpDCB = ( LPDCB ) hb_parcx( 2 );
 
@@ -379,7 +379,7 @@ BOOL SetCommTimeouts(
   LPCOMMTIMEOUTS lpCommTimeouts  // time-out values                  IN
 );
 */
-HB_FUNC( SETCOMMTIMEOUTS )
+HB_FUNC( VWN_SETCOMMTIMEOUTS )
 {
    LPCOMMTIMEOUTS lptimeouts = ( LPCOMMTIMEOUTS ) hb_parcx( 2 );
 
@@ -394,7 +394,7 @@ BOOL SetDefaultCommConfig(
   DWORD        dwSize    // size of structure                        IN
 );
 */
-HB_FUNC( SETDEFAULTCOMMCONFIG )
+HB_FUNC( VWN_SETDEFAULTCOMMCONFIG )
 {
    LPCOMMCONFIG lpCC = ( LPCOMMCONFIG ) hb_parcx( 2 );
    DWORD        size = sizeof( COMMCONFIG );
@@ -410,7 +410,7 @@ BOOL SetupComm(
   DWORD  dwOutQueue  // size of output buffer                        IN
 );
 */
-HB_FUNC( SETUPCOMM )
+HB_FUNC( VWN_SETUPCOMM )
 {
    hb_retl( SetupComm( ( HANDLE ) HB_PARWH( 1 ), hb_parnl( 2 ), hb_parnl( 3 ) ) );
 }
@@ -422,7 +422,7 @@ BOOL TransmitCommChar(
   char   cChar   // character to transmit                            IN
 );
 */
-HB_FUNC( TRANSMITCOMMCHAR )
+HB_FUNC( VWN_TRANSMITCOMMCHAR )
 {
    hb_retl( TransmitCommChar( ( HANDLE ) HB_PARWH( 1 ), ( char ) hb_parni( 2 ) ) );
 }
@@ -440,7 +440,7 @@ if WaitCommEvent( hFile, @nEvent )
    endif
 endif
 */
-HB_FUNC( WAITCOMMEVENT )
+HB_FUNC( VWN_WAITCOMMEVENT )
 {
    DWORD evMask ;
 
@@ -448,6 +448,4 @@ HB_FUNC( WAITCOMMEVENT )
    hb_stornl( ( ULONG ) evMask, 2 );
 }
 
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
 //-------------------------------------------------------------------//

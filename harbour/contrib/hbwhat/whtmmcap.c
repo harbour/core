@@ -260,7 +260,7 @@
                                        int nWidth, int nHeight,
                                        HWND hWnd,
                                        int nID ); */
-HB_FUNC( CAPCREATECAPTUREWINDOW )
+HB_FUNC( VWN_CAPCREATECAPTUREWINDOW )
 {
    HB_RETWH( capCreateCaptureWindow( (LPCSTR) hb_parc(1),
                                           (DWORD) hb_parnl(2),
@@ -279,7 +279,7 @@ HB_FUNC( CAPCREATECAPTUREWINDOW )
 
 /* BOOL VFWAPI capGetDriverDescription( WORD wDriverIndex, LPSTR lpszName, INT cbName, LPSTR lpszVer, INT cbVer ); */
 /*
-HB_FUNC( CAPGETDRIVERDESCRIPTION )
+HB_FUNC( VWN_CAPGETDRIVERDESCRIPTION )
 {
  TCHAR lpszName[255];
  int cbName = 255;
@@ -322,7 +322,7 @@ HB_FUNC( CAPGETDRIVERDESCRIPTION )
 /* BOOL capCaptureAbort( hwnd ); */
 /* WM_CAP_ABORT */
 /* SendMessage( hwnd, WM_CAP_ABORT, 0, 0 ) */
-HB_FUNC( CAPCAPTUREABORT )
+HB_FUNC( VWN_CAPCAPTUREABORT )
 {
  hb_retl( capCaptureAbort( (HWND) HB_PARWH(1) ) );
 }
@@ -339,7 +339,7 @@ HB_FUNC( CAPCAPTUREABORT )
 /* BOOL capCaptureSequence( hwnd ); */
 /* WM_CAP_SEQUENCE */
 /* SendMessage( hwnd, WM_CAP_SEQUENCE, 0, 0 ) */
-HB_FUNC( CAPCAPTURESEQUENCE )
+HB_FUNC( VWN_CAPCAPTURESEQUENCE )
 {
  hb_retl( capCaptureSequence( (HWND) HB_PARWH(1) ) );
 }
@@ -349,7 +349,7 @@ HB_FUNC( CAPCAPTURESEQUENCE )
 /* BOOL capCaptureSequenceNoFile( hwnd ); */
 /* WM_CAP_SEQUENCE_NOFILE */
 /* SendMessage( hwnd, WM_CAP_SEQUENCE_NOFILE, 0, 0 ) */
-HB_FUNC( CAPCAPTURESEQUENCENOFILE )
+HB_FUNC( VWN_CAPCAPTURESEQUENCENOFILE )
 {
  hb_retl( capCaptureSequenceNoFile( (HWND) HB_PARWH(1) ) );
 }
@@ -366,7 +366,7 @@ HB_FUNC( CAPCAPTURESEQUENCENOFILE )
 /* BOOL capCaptureSingleFrame( hwnd ); */
 /* WM_CAP_SINGLE_FRAME */
 /* SendMessage( hwnd, WM_CAP_SINGLE_FRAME, 0, 0 ) */
-HB_FUNC( CAPCAPTURESINGLEFRAME )
+HB_FUNC( VWN_CAPCAPTURESINGLEFRAME )
 {
  hb_retl( capCaptureSingleFrame( (HWND) HB_PARWH(1) ) );
 }
@@ -376,7 +376,7 @@ HB_FUNC( CAPCAPTURESINGLEFRAME )
 /* BOOL capCaptureSingleFrameClose( hwnd ); */
 /* WM_CAP_SINGLE_FRAME_CLOSE */
 /* SendMessage( hwnd, WM_CAP_SINGLE_FRAME_CLOSE, 0, 0 ) */
-HB_FUNC( CAPCAPTURESINGLEFRAMECLOSE )
+HB_FUNC( VWN_CAPCAPTURESINGLEFRAMECLOSE )
 {
  hb_retl( capCaptureSingleFrameClose( (HWND) HB_PARWH(1) ) );
 }
@@ -386,7 +386,7 @@ HB_FUNC( CAPCAPTURESINGLEFRAMECLOSE )
 /* BOOL capCaptureSingleFrameOpen( hwnd ); */
 /* WM_CAP_SINGLE_FRAME_OPEN */
 /* SendMessage( hwnd, WM_CAP_SINGLE_FRAME_OPEN, 0, 0 ) */
-HB_FUNC( CAPCAPTURESINGLEFRAMEOPEN )
+HB_FUNC( VWN_CAPCAPTURESINGLEFRAMEOPEN )
 {
  hb_retl( capCaptureSingleFrameOpen( (HWND) HB_PARWH(1) ) );
 }
@@ -396,7 +396,7 @@ HB_FUNC( CAPCAPTURESINGLEFRAMEOPEN )
 /* BOOL capCaptureStop( hwnd ); */
 /* WM_CAP_STOP */
 /* SendMessage( hwnd, WM_CAP_STOP, 0, 0 ) */
-HB_FUNC( CAPCAPTURESTOP )
+HB_FUNC( VWN_CAPCAPTURESTOP )
 {
  hb_retl( capCaptureStop( (HWND) HB_PARWH(1) ) );
 }
@@ -406,7 +406,7 @@ HB_FUNC( CAPCAPTURESTOP )
 /* BOOL capDlgVideoCompression( hwnd ); */
 /* WM_CAP_DLG_VIDEOCOMPRESSION */
 /* SendMessage( hwnd, WM_CAP_DLG_VIDEOCOMPRESSION, 0, 0 ) */
-HB_FUNC( CAPDLGVIDEOCOMPRESSION )
+HB_FUNC( VWN_CAPDLGVIDEOCOMPRESSION )
 {
  hb_retl( capDlgVideoCompression( (HWND) HB_PARWH(1) ) );
 }
@@ -416,7 +416,7 @@ HB_FUNC( CAPDLGVIDEOCOMPRESSION )
 /* BOOL capDlgVideoDisplay( hwnd ); */
 /* WM_CAP_DLG_VIDEODISPLAY */
 /* SendMessage( hwnd, WM_CAP_DLG_VIDEODISPLAY, 0, 0 ) */
-HB_FUNC( CAPDLGVIDEODISPLAY )
+HB_FUNC( VWN_CAPDLGVIDEODISPLAY )
 {
  hb_retl( capDlgVideoDisplay( (HWND) HB_PARWH(1) ) );
 }
@@ -426,7 +426,7 @@ HB_FUNC( CAPDLGVIDEODISPLAY )
 /* BOOL capDlgVideoFormat( hwnd ); */
 /* WM_CAP_DLG_VIDEOFORMAT */
 /* SendMessage( hwnd, WM_CAP_DLG_VIDEOFORMAT, 0, 0 ) */
-HB_FUNC( CAPDLGVIDEOFORMAT )
+HB_FUNC( VWN_CAPDLGVIDEOFORMAT )
 {
  hb_retl( capDlgVideoFormat( (HWND) HB_PARWH(1) ) );
 }
@@ -436,7 +436,7 @@ HB_FUNC( CAPDLGVIDEOFORMAT )
 /* BOOL capDlgVideoSource( hwnd ); */
 /* WM_CAP_DLG_VIDEOSOURCE */
 /* SendMessage( hwnd, WM_CAP_DLG_VIDEOSOURCE, 0, 0 ) */
-HB_FUNC( CAPDLGVIDEOSOURCE )
+HB_FUNC( VWN_CAPDLGVIDEOSOURCE )
 {
  hb_retl( capDlgVideoSource( (HWND) HB_PARWH(1) ) );
 }
@@ -446,7 +446,7 @@ HB_FUNC( CAPDLGVIDEOSOURCE )
 /* BOOL capDriverConnect( hwnd, iIndex ); */
 /* WM_CAP_DRIVER_CONNECT */
 /* SendMessage( hwnd, WM_CAP_DRIVER_CONNECT, 0, 0 ) */
-HB_FUNC( CAPDRIVERCONNECT )
+HB_FUNC( VWN_CAPDRIVERCONNECT )
 {
  hb_retl( capDriverConnect( (HWND) HB_PARWH(1), hb_parni(2) ) );
 }
@@ -456,7 +456,7 @@ HB_FUNC( CAPDRIVERCONNECT )
 /* BOOL capDriverDisconnect( hwnd ); */
 /* WM_CAP_DRIVER_DISCONNECT */
 /* SendMessage( hwnd, WM_CAP_DRIVER_DISCONNECT, 0, 0 ) */
-HB_FUNC( CAPDRIVERDISCONNECT )
+HB_FUNC( VWN_CAPDRIVERDISCONNECT )
 {
  hb_retl( capDriverDisconnect( (HWND) HB_PARWH(1) ) );
 }
@@ -474,7 +474,7 @@ HB_FUNC( CAPDRIVERDISCONNECT )
 /* WM_CAP_DRIVER_GET_NAME */
 /* SendMessage( hwnd, WM_CAP_DRIVER_GET_NAME, 0, 0 ) */
 /*
-HB_FUNC( CAPDRIVERGETNAME )
+HB_FUNC( VWN_CAPDRIVERGETNAME )
 {
  TCHAR szName[255];
  WORD wSize = 255;
@@ -492,7 +492,7 @@ HB_FUNC( CAPDRIVERGETNAME )
 /* WM_CAP_DRIVER_GET_VERSION */
 /* SendMessage( hwnd, WM_CAP_DRIVER_GET_VERSION, 0, 0 ) */
 /*
-HB_FUNC( CAPDRIVERGETVERSION )
+HB_FUNC( VWN_CAPDRIVERGETVERSION )
 {
  TCHAR szVer[40];
  WORD wSize = 40;
@@ -509,7 +509,7 @@ HB_FUNC( CAPDRIVERGETVERSION )
 /* BOOL capEditCopy( hwnd ); */
 /* WM_CAP_EDIT_COPY */
 /* SendMessage( hwnd, WM_CAP_EDIT_COPY, 0, 0 ) */
-HB_FUNC( CAPEDITCOPY )
+HB_FUNC( VWN_CAPEDITCOPY )
 {
  hb_retl( capEditCopy( (HWND) HB_PARWH(1) ) );
 }
@@ -519,7 +519,7 @@ HB_FUNC( CAPEDITCOPY )
 /* BOOL capFileAlloc( hwnd, dwSize ); */
 /* WM_CAP_FILE_ALLOCATE */
 /* SendMessage( hwnd, WM_CAP_FILE_ALLOCATE, 0, 0 ) */
-HB_FUNC( CAPFILEALLOC )
+HB_FUNC( VWN_CAPFILEALLOC )
 {
  hb_retl( capFileAlloc( (HWND) HB_PARWH(1), (DWORD) hb_parnl(2) ) );
 }
@@ -530,7 +530,7 @@ HB_FUNC( CAPFILEALLOC )
 /* WM_CAP_FILE_GET_CAPTURE_FILE */
 /* SendMessage( hwnd, WM_CAP_FILE_GET_CAPTURE_FILE, 0, 0 ) */
 /*
-HB_FUNC( CAPFILEGETCAPTUREFILE )
+HB_FUNC( VWN_CAPFILEGETCAPTUREFILE )
 {
  TCHAR szName[255];
  WORD wSize = 255;
@@ -547,7 +547,7 @@ HB_FUNC( CAPFILEGETCAPTUREFILE )
 /* BOOL capFileSaveAs( hwnd, szName ); */
 /* WM_CAP_FILE_SAVEAS */
 /* SendMessage( hwnd, WM_CAP_FILE_SAVEAS, 0, 0 ) */
-HB_FUNC( CAPFILESAVEAS )
+HB_FUNC( VWN_CAPFILESAVEAS )
 {
  hb_retl( capFileSaveAs( (HWND) HB_PARWH(1), hb_parc(2) ) );
 }
@@ -557,7 +557,7 @@ HB_FUNC( CAPFILESAVEAS )
 /* BOOL capFileSaveDIB( hwnd, szName ); */
 /* WM_CAP_FILE_SAVEDIB */
 /* SendMessage( hwnd, WM_CAP_FILE_SAVEDIB, 0, 0 ) */
-HB_FUNC( CAPFILESAVEDIB )
+HB_FUNC( VWN_CAPFILESAVEDIB )
 {
  hb_retl( capFileSaveDIB( (HWND) HB_PARWH(1), hb_parc(2) ) );
 }
@@ -567,7 +567,7 @@ HB_FUNC( CAPFILESAVEDIB )
 /* BOOL capFileSetCaptureFile( hwnd, szName ); */
 /* WM_CAP_FILE_SET_CAPTURE_FILE */
 /* SendMessage( hwnd, WM_CAP_FILE_SET_CAPTURE_FILE, 0, 0 ) */
-HB_FUNC( CAPFILESETCAPTUREFILE )
+HB_FUNC( VWN_CAPFILESETCAPTUREFILE )
 {
  hb_retl( capFileSetCaptureFile( (HWND) HB_PARWH(1), hb_parc(2) ) );
 }
@@ -591,7 +591,7 @@ HB_FUNC( CAPFILESETCAPTUREFILE )
 /* DWORD capGetAudioFormatSize( hwnd ); */
 /* WM_CAP_GET_AUDIOFORMAT */
 /* SendMessage( hwnd, WM_CAP_GET_AUDIOFORMAT, 0, 0 ) */
-HB_FUNC( CAPGETAUDIOFORMATSIZE )
+HB_FUNC( VWN_CAPGETAUDIOFORMATSIZE )
 {
  hb_retnl( capGetAudioFormatSize( (HWND) HB_PARWH(1) ) );
 }
@@ -602,7 +602,7 @@ HB_FUNC( CAPGETAUDIOFORMATSIZE )
 /* WM_CAP_GET_MCI_DEVICE */
 /* SendMessage( hwnd, WM_CAP_GET_MCI_DEVICE, 0, 0 ) */
 /*
-HB_FUNC( CAPGETMCIDEVICENAME )
+HB_FUNC( VWN_CAPGETMCIDEVICENAME )
 {
  TCHAR szName[255];
  WORD wSize = 255;
@@ -627,7 +627,7 @@ HB_FUNC( CAPGETMCIDEVICENAME )
 /* WM_CAP_GET_USER_DATA */
 /* SendMessage( hwnd, WM_CAP_GET_USER_DATA, 0, 0 ) */
 /* To check: the return must be a LONG */
-HB_FUNC( CAPGETUSERDATA )
+HB_FUNC( VWN_CAPGETUSERDATA )
 {
    hb_retl( capGetUserData( (HWND) HB_PARWH(1) ) != 0 );
 }
@@ -644,7 +644,7 @@ HB_FUNC( CAPGETUSERDATA )
 /* DWORD capGetVideoFormatSize( hwnd ); */
 /* WM_CAP_GET_VIDEOFORMAT */
 /* SendMessage( hwnd, WM_CAP_GET_VIDEOFORMAT, 0, 0 ) */
-HB_FUNC( CAPGETVIDEOFORMATSIZE )
+HB_FUNC( VWN_CAPGETVIDEOFORMATSIZE )
 {
  hb_retnl( capGetVideoFormatSize( (HWND) HB_PARWH(1) ) );
 }
@@ -654,7 +654,7 @@ HB_FUNC( CAPGETVIDEOFORMATSIZE )
 /* BOOL capGrabFrame( hwnd ); */
 /* WM_CAP_GRAB_FRAME */
 /* SendMessage( hwnd, WM_CAP_GRAB_FRAME, 0, 0 ) */
-HB_FUNC( CAPGRABFRAME )
+HB_FUNC( VWN_CAPGRABFRAME )
 {
  hb_retl( capGrabFrame( (HWND) HB_PARWH(1) ) );
 }
@@ -664,7 +664,7 @@ HB_FUNC( CAPGRABFRAME )
 /* BOOL capGrabFrameNoStop( hwnd ); */
 /* WM_CAP_GRAB_FRAME_NOSTOP */
 /* SendMessage( hwnd, WM_CAP_GRAB_FRAME_NOSTOP, 0, 0 ) */
-HB_FUNC( CAPGRABFRAMENOSTOP )
+HB_FUNC( VWN_CAPGRABFRAMENOSTOP )
 {
  hb_retl( capGrabFrameNoStop( (HWND) HB_PARWH(1) ) );
 }
@@ -674,7 +674,7 @@ HB_FUNC( CAPGRABFRAMENOSTOP )
 /* BOOL capOverlay( hwnd, f ); */
 /* WM_CAP_SET_OVERLAY */
 /* SendMessage( hwnd, WM_CAP_SET_OVERLAY, 0, 0 ) */
-HB_FUNC( CAPOVERLAY )
+HB_FUNC( VWN_CAPOVERLAY )
 {
  hb_retl( capOverlay( (HWND) HB_PARWH(1), hb_parl(2) ) );
 }
@@ -684,7 +684,7 @@ HB_FUNC( CAPOVERLAY )
 /* BOOL capPaletteAuto( hwnd, iFrames, iColors ); */
 /* WM_CAP_PAL_AUTOCREATE */
 /* SendMessage( hwnd, WM_CAP_PAL_AUTOCREATE, 0, 0 ) */
-HB_FUNC( CAPPALETTEAUTO )
+HB_FUNC( VWN_CAPPALETTEAUTO )
 {
  hb_retl( capPaletteAuto( (HWND) HB_PARWH(1), hb_parni(2), hb_parni(3) ) );
 }
@@ -694,7 +694,7 @@ HB_FUNC( CAPPALETTEAUTO )
 /* BOOL capPaletteManual( hwnd, fGrab, iColors ); */
 /* WM_CAP_PAL_MANUALCREATE */
 /* SendMessage( hwnd, WM_CAP_PAL_MANUALCREATE, 0, 0 ) */
-HB_FUNC( CAPPALETTEMANUAL )
+HB_FUNC( VWN_CAPPALETTEMANUAL )
 {
  hb_retl( capPaletteManual( (HWND) HB_PARWH(1), hb_parl(2), hb_parni(3) ) );
 }
@@ -704,7 +704,7 @@ HB_FUNC( CAPPALETTEMANUAL )
 /* BOOL capPaletteOpen( hwnd, szName ); */
 /* WM_CAP_PAL_OPEN */
 /* SendMessage( hwnd, WM_CAP_PAL_OPEN, 0, 0 ) */
-HB_FUNC( CAPPALETTEOPEN )
+HB_FUNC( VWN_CAPPALETTEOPEN )
 {
  hb_retl( capPaletteOpen( (HWND) HB_PARWH(1), hb_parc(2) ) );
 }
@@ -714,7 +714,7 @@ HB_FUNC( CAPPALETTEOPEN )
 /* BOOL capPalettePaste( hwnd ); */
 /* WM_CAP_PAL_PASTE */
 /* SendMessage( hwnd, WM_CAP_PAL_PASTE, 0, 0 ) */
-HB_FUNC( CAPPALETTEPASTE )
+HB_FUNC( VWN_CAPPALETTEPASTE )
 {
  hb_retl( capPalettePaste( (HWND) HB_PARWH(1) ) );
 }
@@ -724,7 +724,7 @@ HB_FUNC( CAPPALETTEPASTE )
 /* BOOL capPaletteSave( hwnd, szName ); */
 /* WM_CAP_PAL_SAVE */
 /* SendMessage( hwnd, WM_CAP_PAL_SAVE, 0, 0 ) */
-HB_FUNC( CAPPALETTESAVE )
+HB_FUNC( VWN_CAPPALETTESAVE )
 {
  hb_retl( capPaletteSave( (HWND) HB_PARWH(1), hb_parc(2) ) );
 }
@@ -734,7 +734,7 @@ HB_FUNC( CAPPALETTESAVE )
 /* BOOL capPreview( hwnd, f ); */
 /* WM_CAP_SET_PREVIEW */
 /* SendMessage( hwnd, WM_CAP_SET_PREVIEW, 0, 0 ) */
-HB_FUNC( CAPPREVIEW )
+HB_FUNC( VWN_CAPPREVIEW )
 {
  hb_retl( capPreview( (HWND) HB_PARWH(1), hb_parl(2) ) );
 }
@@ -744,7 +744,7 @@ HB_FUNC( CAPPREVIEW )
 /* BOOL capPreviewRate( hwnd, wMS ); */
 /* WM_CAP_SET_PREVIEWRATE */
 /* SendMessage( hwnd, WM_CAP_SET_PREVIEWRATE, 0, 0 ) */
-HB_FUNC( CAPPREVIEWRATE )
+HB_FUNC( VWN_CAPPREVIEWRATE )
 {
  hb_retl( capPreviewRate( (HWND) HB_PARWH(1), (WORD) hb_parnl(2) ) );
 }
@@ -754,7 +754,7 @@ HB_FUNC( CAPPREVIEWRATE )
 /* BOOL capPreviewScale( hwnd, f ); */
 /* WM_CAP_SET_SCALE */
 /* SendMessage( hwnd, WM_CAP_SET_SCALE, 0, 0 ) */
-HB_FUNC( CAPPREVIEWSCALE )
+HB_FUNC( VWN_CAPPREVIEWSCALE )
 {
  hb_retl( capPreviewScale( (HWND) HB_PARWH(1), hb_parl(2) ) );
 }
@@ -820,7 +820,7 @@ HB_FUNC( CAPPREVIEWSCALE )
 /* BOOL capSetMCIDeviceName( hwnd, szName ); */
 /* WM_CAP_SET_MCI_DEVICE */
 /* SendMessage( hwnd, WM_CAP_SET_MCI_DEVICE, 0, 0 ) */
-HB_FUNC( CAPSETMCIDEVICENAME )
+HB_FUNC( VWN_CAPSETMCIDEVICENAME )
 {
  hb_retl( capSetMCIDeviceName( (HWND) HB_PARWH(1), hb_parc(2) ) );
 }
@@ -837,7 +837,7 @@ HB_FUNC( CAPSETMCIDEVICENAME )
 /* BOOL capSetUserData( hwnd, lUser ); */
 /* WM_CAP_SET_USER_DATA */
 /* SendMessage( hwnd, WM_CAP_SET_USER_DATA, 0, 0 ) */
-HB_FUNC( CAPSETUSERDATA )
+HB_FUNC( VWN_CAPSETUSERDATA )
 {
  hb_retl( capSetUserData( (HWND) HB_PARWH(1), hb_parnl(2) ) );
 }

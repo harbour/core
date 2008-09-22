@@ -25,7 +25,7 @@
 // HDC StartDoc( hDC, cDocName, [ cFilename ], [ cDataType ], [DI_Flag] )
 
 
-HB_FUNC( STARTDOC )
+HB_FUNC( VWN_STARTDOC )
 {
    DOCINFO di;
    di.cbSize       = sizeof(DOCINFO);
@@ -39,7 +39,7 @@ HB_FUNC( STARTDOC )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ENDDOC )
+HB_FUNC( VWN_ENDDOC )
 {
    hb_retni(EndDoc( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -49,7 +49,7 @@ HB_FUNC( ENDDOC )
 // WINGDIAPI int WINAPI AbortDoc(IN HDC);
 
 
-HB_FUNC( ABORTDOC )
+HB_FUNC( VWN_ABORTDOC )
 {
    hb_retni( AbortDoc( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -57,14 +57,14 @@ HB_FUNC( ABORTDOC )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( STARTPAGE )
+HB_FUNC( VWN_STARTPAGE )
 {
    hb_retni( StartPage( (HDC) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ENDPAGE )
+HB_FUNC( VWN_ENDPAGE )
 {
    hb_retni( EndPage( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -75,7 +75,7 @@ HB_FUNC( ENDPAGE )
 
 /*
 
-HB_FUNC( ESCAPE )
+HB_FUNC( VWN_ESCAPE )
 {
    LPVOID lpVoid ;
 
@@ -94,7 +94,7 @@ HB_FUNC( ESCAPE )
 // WINGDIAPI int WINAPI ExtEscape( IN HDC, IN int, IN int, IN LPCSTR, IN int, OUT LPSTR);
 
 /*
-HB_FUNC( EXTESCAPE )
+HB_FUNC( VWN_EXTESCAPE )
 {
    hb_retni( ExtEscape( (HDC) HB_PARWH( 1 )  ,
                         hb_parni( 2 )        ,

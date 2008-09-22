@@ -39,7 +39,7 @@ Local aSrc := { 1 , 11 , 55 , 62 }
 DRAWFOCUSRECT(hDc,aSrc)
 */
 
-HB_FUNC( DRAWFOCUSRECT )
+HB_FUNC( VWN_DRAWFOCUSRECT )
 {
    RECT lprc ;
 
@@ -53,7 +53,7 @@ HB_FUNC( DRAWFOCUSRECT )
 // WINGDIAPI int WINAPI IntersectClipRect( IN HDC, IN int, IN int, IN int, IN int);
 
 
-HB_FUNC( INTERSECTCLIPRECT )
+HB_FUNC( VWN_INTERSECTCLIPRECT )
 {
    hb_retni( IntersectClipRect( (HDC) HB_PARWH( 1 ),
                                 hb_parni( 2 )      ,
@@ -69,7 +69,7 @@ HB_FUNC( INTERSECTCLIPRECT )
 
 // ok
 /*
-HB_FUNC( FILLRECT )
+HB_FUNC( VWN_FILLRECT )
 {
    RECT rc;
 
@@ -96,7 +96,7 @@ HB_FUNC( FILLRECT )
 
 /*
 
-HB_FUNC( FILLRECT )
+HB_FUNC( VWN_FILLRECT )
 {
    RECT   lprc ;
    PHB_ITEM pSrc1;
@@ -122,7 +122,7 @@ HB_FUNC( FILLRECT )
 // re written in _WinDraw.c
 
 /*
-HB_FUNC( FRAMERECT )
+HB_FUNC( VWN_FRAMERECT )
 {
    RECT   lprc ;
 
@@ -148,7 +148,7 @@ HB_FUNC( FRAMERECT )
 // rewritten in _WinDraw.c
 
 /*
-HB_FUNC( INVERTRECT )
+HB_FUNC( VWN_INVERTRECT )
 {
    RECT lprc ;
    PHB_ITEM pSrc1;
@@ -171,7 +171,7 @@ aSrc :=  SETRECT(2 ,3,41,60)
 */
 
 
-HB_FUNC( SETRECT )
+HB_FUNC( VWN_SETRECT )
 {
    RECT lprc    ;
 
@@ -199,7 +199,7 @@ HB_FUNC( SETRECT )
 */
 
 
-HB_FUNC( SETRECTEMPTY )
+HB_FUNC( VWN_SETRECTEMPTY )
 {
    RECT lprc ;
    if( SetRectEmpty( &lprc ) ) {
@@ -222,7 +222,7 @@ aret:= COPYRECT(aSrc)
 */
 
 
-HB_FUNC( COPYRECT )
+HB_FUNC( VWN_COPYRECT )
 {
    RECT   lprcDst ;
    RECT   lprcSrc ;
@@ -250,7 +250,7 @@ Local aSrc:={1,2,3,4}
 INFLATERECT(@aSrc,12,23)
 */
 
-HB_FUNC( INFLATERECT )
+HB_FUNC( VWN_INFLATERECT )
 {
    RECT lprc ;
    PHB_ITEM pArray=hb_param( 1, HB_IT_ARRAY );
@@ -282,7 +282,7 @@ Local asrc2 := { 10 , 50 , 24 , 66 }
 aDest := INTERSECTRECT(,aSrc1,aSrc2)
 */
 
-HB_FUNC( INTERSECTRECT )
+HB_FUNC( VWN_INTERSECTRECT )
 {
    RECT   lprcDst  ;
    RECT   lprcSrc1 ;
@@ -314,7 +314,7 @@ aDest:=UnionRect(aSrc1,aSrc2)
 */
 
 
-HB_FUNC( UNIONRECT )
+HB_FUNC( VWN_UNIONRECT )
 {
    RECT lprcDst  ;
    RECT   lprcSrc1 ;
@@ -347,7 +347,7 @@ aDest := SUBTRACTRECT(aSrc1,aSrc2)
 */
 
 
-HB_FUNC( SUBTRACTRECT )
+HB_FUNC( VWN_SUBTRACTRECT )
 {
    RECT lprcDst  ;
    RECT   lprcSrc1 ;
@@ -378,7 +378,7 @@ OFFSETRECT(@aSrc1,20,30)
 */
 
 
-HB_FUNC( OFFSETRECT )
+HB_FUNC( VWN_OFFSETRECT )
 {
    RECT lprc ;
    PHB_ITEM pSrc1=hb_param( 1, HB_IT_ARRAY );
@@ -408,7 +408,7 @@ local aSrc1 := { 1 , 5 , 4 , 6 }
 ? OFFSETRECT(aSrc1)
 */
 
-HB_FUNC( ISRECTEMPTY )
+HB_FUNC( VWN_ISRECTEMPTY )
 {
    RECT lprc ;
    PHB_ITEM pSrc1=hb_param( 1, HB_IT_ARRAY );
@@ -432,7 +432,7 @@ local aSrc1 := { 1 , 5 , 4 , 6 }
 Local asrc2 := { 10 , 50 , 24 , 66 }
 EQUALRECT(aSrc1,aSrc2)
 */
-HB_FUNC( EQUALRECT )
+HB_FUNC( VWN_EQUALRECT )
 {
    RECT lprc1 ;
    RECT lprc2 ;
@@ -458,7 +458,7 @@ PTINRECT(aSrc1,aSrc2)
 */
 
 
-HB_FUNC( PTINRECT )
+HB_FUNC( VWN_PTINRECT )
 {
    RECT  lprc ;
    POINT pt   ;
@@ -480,7 +480,7 @@ HB_FUNC( PTINRECT )
 // WINGDIAPI int WINAPI ExcludeClipRect( IN HDC, IN int, IN int, IN int, IN int);
 
 
-HB_FUNC( EXCLUDECLIPRECT )
+HB_FUNC( VWN_EXCLUDECLIPRECT )
 {
    hb_retni( ExcludeClipRect( (HDC) HB_PARWH( 1 ),
                               hb_parni( 2 )      ,
@@ -496,7 +496,7 @@ HB_FUNC( EXCLUDECLIPRECT )
 // WINGDIAPI BOOL WINAPI RectVisible(IN HDC, IN CONST RECT *);
 
 
-HB_FUNC( RECTVISIBLE )
+HB_FUNC( VWN_RECTVISIBLE )
 {
    RECT rc;
 
@@ -513,7 +513,7 @@ HB_FUNC( RECTVISIBLE )
 
 /*
 
-HB_FUNC( GETBOUNDSRECT )
+HB_FUNC( VWN_GETBOUNDSRECT )
 {
    RECT rc ;
 
@@ -527,7 +527,7 @@ HB_FUNC( GETBOUNDSRECT )
 // Syntax
 // ValidateRect( hWnd,[aRect]) -> lSuccess
 
-HB_FUNC( VALIDATERECT )
+HB_FUNC( VWN_VALIDATERECT )
 {
    RECT rc ;
 

@@ -35,7 +35,7 @@ extern void Size2ArrayEx( SIZE *siz  ,  PHB_ITEM aSize);
 // HBITMAP CreateMappedBitmap(HINSTANCE hInstance, int idBitmap, UINT wFlags,
 //                            LPCOLORMAP lpColorMap, int iNumMaps )
 
-HB_FUNC( CREATEMAPPEDBITMAP )
+HB_FUNC( VWN_CREATEMAPPEDBITMAP )
 {
    COLORMAP *cm = (COLORMAP *) hb_parc( 4 ); //hb_param(4, HB_IT_STRING)->item.asString.value;
 
@@ -51,7 +51,7 @@ HB_FUNC( CREATEMAPPEDBITMAP )
 //                        UINT wBMID,LPCTBBUTTON lpButtons,int iNumButtons,int dxButton,
 //                        int dyButton, int dxBitmap, int dyBitmap,UINT uStructSize );
 
-HB_FUNC( CREATETOOLBAREX )
+HB_FUNC( VWN_CREATETOOLBAREX )
 {
 
    HB_RETWH( CreateToolbarEx( (HWND) HB_PARWH(1),    // parent
@@ -74,7 +74,7 @@ HB_FUNC( CREATETOOLBAREX )
 //-----------------------------------------------------------------------------
 
 
-HB_FUNC( GETTOOLBARITEMRECT )
+HB_FUNC( VWN_GETTOOLBARITEMRECT )
 {
    RECT    rc = {0,0,0,0};
    PHB_ITEM aRect ;

@@ -27,7 +27,7 @@ extern BOOL Array2Size(PHB_ITEM aSize, SIZE *siz );
 // Syntax
 // GetViewPortExtEx(hDC)->aSize, or NIL
 
-HB_FUNC( GETVIEWPORTEXTEX )
+HB_FUNC( VWN_GETVIEWPORTEXTEX )
 {
    SIZE siz ;
    PHB_ITEM aSize ;
@@ -48,7 +48,7 @@ HB_FUNC( GETVIEWPORTEXTEX )
 // Syntax
 // GetViewportOrgEx(hDC) -> aOrigin, or NIL
 
-HB_FUNC( GETVIEWPORTORGEX )
+HB_FUNC( VWN_GETVIEWPORTORGEX )
 {
    POINT pt ;
    PHB_ITEM aPoint;
@@ -69,7 +69,7 @@ HB_FUNC( GETVIEWPORTORGEX )
 // Syntax
 // GetWindowExEx(hDC) -> aSize, or NIL
 
-HB_FUNC( GETWINDOWEXTEX )
+HB_FUNC( VWN_GETWINDOWEXTEX )
 {
    SIZE siz ;
    PHB_ITEM aSize ;
@@ -89,7 +89,7 @@ HB_FUNC( GETWINDOWEXTEX )
 // Syntax
 // ScaleViewport(hDC, xNum, xDeNum, yNum, yDeNum ) -> aOldSize, or NIL on failure
 
-HB_FUNC( SCALEVIEWPORTEXTEX )
+HB_FUNC( VWN_SCALEVIEWPORTEXTEX )
 {
    SIZE siz ;
    PHB_ITEM aSize ;
@@ -111,7 +111,7 @@ HB_FUNC( SCALEVIEWPORTEXTEX )
 // Syntax
 // SetViewportExtEx( hDC, nXExt, nYExt ) -> aOldSize, or NIL
 
-HB_FUNC( SETVIEWPORTEXTEX )
+HB_FUNC( VWN_SETVIEWPORTEXTEX )
 {
    SIZE siz ;
    PHB_ITEM aSize ;
@@ -132,7 +132,7 @@ HB_FUNC( SETVIEWPORTEXTEX )
 // Syntax
 // SetViewportOrgEx( hDC, X, Y) -> aOldOrg, or NIL on failure
 
-HB_FUNC( SETVIEWPORTORGEX )
+HB_FUNC( VWN_SETVIEWPORTORGEX )
 {
    POINT pt ;
    PHB_ITEM aPoint ;

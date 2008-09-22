@@ -33,7 +33,7 @@
 //----------------------------------------------------------------------------
 // DWORD CommDlgExtendedError(VOID)
 
-HB_FUNC( COMMDLGEXTENDEDERROR )
+HB_FUNC( VWN_COMMDLGEXTENDEDERROR )
 {
   hb_retnl( CommDlgExtendedError() );
 }
@@ -42,7 +42,7 @@ HB_FUNC( COMMDLGEXTENDEDERROR )
 
 //Syntax: ChooseFont( cf:value) -> structure buffer, or NIL
 
-HB_FUNC( CHOOSEFONT )
+HB_FUNC( VWN_CHOOSEFONT )
 {
   CHOOSEFONT *cf =  (CHOOSEFONT * ) hb_parc( 1 );
                        //hb_param( 1, HB_IT_STRING )->item.asString.value;
@@ -57,7 +57,7 @@ HB_FUNC( CHOOSEFONT )
 
 // to be called called via FindText (in wincdlg.prg)
 
-HB_FUNC( _FINDTEXT )
+HB_FUNC( VWN__FINDTEXT )
 {
    FINDREPLACE fr ;
 
@@ -82,7 +82,7 @@ HB_FUNC( _FINDTEXT )
 
 // to be called called via FindText (in wincdlg.prg)
 
-HB_FUNC( _REPLACETEXT )
+HB_FUNC( VWN__REPLACETEXT )
 {
    FINDREPLACE fr ;
 
@@ -105,7 +105,7 @@ HB_FUNC( _REPLACETEXT )
 
 //----------------------------------------------------------------------------
 
-HB_FUNC( PRINTDLG )
+HB_FUNC( VWN_PRINTDLG )
 {
 
    PRINTDLG *pd  = ( PRINTDLG * ) hb_parc( 1 );
@@ -127,7 +127,7 @@ HB_FUNC( PRINTDLG )
 //NT
 
 /*
-HB_FUNC( PRINTDLGEX )
+HB_FUNC( VWN_PRINTDLGEX )
 {
 
    PRINTDLGEX *pd  = ( PRINTDLGEX * ) hb_param( 1, HB_IT_STRING )->item.asString.value;
@@ -146,7 +146,7 @@ HB_FUNC( PRINTDLGEX )
 
 //----------------------------------------------------------------------------
 
-HB_FUNC( PAGESETUPDLG )
+HB_FUNC( VWN_PAGESETUPDLG )
 {
 
    PAGESETUPDLG *psd = (PAGESETUPDLG * ) hb_parc( 1 );
@@ -170,7 +170,7 @@ HB_FUNC( PAGESETUPDLG )
 
 // nColor := ChooseColor( [hParentWnd],[nInitColor],[aCustColors[16]],[nFlags])
 
-HB_FUNC( CHOOSECOLOR )
+HB_FUNC( VWN_CHOOSECOLOR )
 {
    CHOOSECOLOR cc ;
    COLORREF crCustClr[16] ;
@@ -196,7 +196,7 @@ HB_FUNC( CHOOSECOLOR )
 
 // to be called via GetOpenFileName in wincdlg.prg
 
-HB_FUNC( _GETOPENFILENAME )
+HB_FUNC( VWN__GETOPENFILENAME )
 {
    OPENFILENAME ofn;
    char *szFileName = ( char * ) hb_xgrab( hb_parclen( 2 ) + 1 );
@@ -235,7 +235,7 @@ HB_FUNC( _GETOPENFILENAME )
 
 // to be called via GetSaveFileName in wincdlg.prg
 
-HB_FUNC( _GETSAVEFILENAME )
+HB_FUNC( VWN__GETSAVEFILENAME )
 {
     OPENFILENAME ofn;
     char szFileName[ MAX_PATH + 1 ];
@@ -263,12 +263,11 @@ HB_FUNC( _GETSAVEFILENAME )
    }
 }
 
-
 //----------------------------------------------------------------------------
 
 //SYNTAX: SHBrowseForFolder([<hWnd>],[<cTitle>],<nFlags>,[<nFolderType>])
 
-HB_FUNC( SHBROWSEFORFOLDER )
+HB_FUNC( VWN_SHBROWSEFORFOLDER )
 {
    HWND hwnd = ISNIL   (1)  ? GetActiveWindow() : (HWND) HB_PARWH(1);
    BROWSEINFO BrowseInfo;

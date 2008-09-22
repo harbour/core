@@ -30,21 +30,21 @@ extern BOOL Array2Point(PHB_ITEM aPoint, POINT *pt );
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETCARETBLINKTIME )
+HB_FUNC( VWN_GETCARETBLINKTIME )
 {
    hb_retni( GetCaretBlinkTime() );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( SETCARETBLINKTIME )
+HB_FUNC( VWN_SETCARETBLINKTIME )
 {
    hb_retl( SetCaretBlinkTime( (UINT) hb_parni(1) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETCARETX )
+HB_FUNC( VWN_GETCARETX )
 {
    POINT ptPoint ;
    GetCaretPos( (LPPOINT) &ptPoint );
@@ -53,7 +53,7 @@ HB_FUNC( GETCARETX )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETCARETY )
+HB_FUNC( VWN_GETCARETY )
 {
    POINT ptPoint ;
    GetCaretPos( (LPPOINT) &ptPoint );
@@ -63,7 +63,7 @@ HB_FUNC( GETCARETY )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETCARETPOS )
+HB_FUNC( VWN_GETCARETPOS )
 {
    POINT Point ;
    PHB_ITEM aPt;
@@ -80,7 +80,7 @@ HB_FUNC( GETCARETPOS )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( SETCARETPOS )
+HB_FUNC( VWN_SETCARETPOS )
 {
 
    hb_retl( SetCaretPos( hb_parni(1), hb_parni(2) ) );
@@ -88,7 +88,7 @@ HB_FUNC( SETCARETPOS )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( SHOWCARET )
+HB_FUNC( VWN_SHOWCARET )
 {
    hb_retl( ShowCaret( (HWND) HB_PARWH(1) ) );
 }
@@ -96,14 +96,14 @@ HB_FUNC( SHOWCARET )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( HIDECARET )
+HB_FUNC( VWN_HIDECARET )
 {
    hb_retl( HideCaret( (HWND) HB_PARWH(1) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( CREATECARET )
+HB_FUNC( VWN_CREATECARET )
 {
    hb_retl( CreateCaret( (HWND) HB_PARWH(1)  ,
                          (HBITMAP) HB_PARWH(2),
@@ -113,7 +113,7 @@ HB_FUNC( CREATECARET )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( DESTROYCARET )
+HB_FUNC( VWN_DESTROYCARET )
 {
   hb_retl( DestroyCaret() );
 }

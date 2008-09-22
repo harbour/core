@@ -25,7 +25,7 @@
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( CREATESOLIDBRUSH )
+HB_FUNC( VWN_CREATESOLIDBRUSH )
 {
    HB_RETWH( CreateSolidBrush( (COLORREF) hb_parnl( 1 ) ) );    // brush color
 }
@@ -33,7 +33,7 @@ HB_FUNC( CREATESOLIDBRUSH )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( CREATEPATTERNBRUSH )
+HB_FUNC( VWN_CREATEPATTERNBRUSH )
 {
    HB_RETWH( CreatePatternBrush((HBITMAP) HB_PARWH( 1 ) ) );    // bitmap handle
 }
@@ -42,7 +42,7 @@ HB_FUNC( CREATEPATTERNBRUSH )
 
 // WINGDIAPI HBRUSH WINAPI CreateDIBPatternBrush( IN HGLOBAL, IN UINT);
 
-HB_FUNC( CREATEDIBPATTERNBRUSH )
+HB_FUNC( VWN_CREATEDIBPATTERNBRUSH )
 {
    HB_RETWH( CreateDIBPatternBrush( (HGLOBAL) HB_PARWH( 1 ),
                                            (UINT) hb_parni( 2 )
@@ -56,7 +56,7 @@ HB_FUNC( CREATEDIBPATTERNBRUSH )
 // uses structure
 
 
-HB_FUNC( CREATEBRUSHINDIRECT )
+HB_FUNC( VWN_CREATEBRUSHINDIRECT )
 {
    //PHB_ITEM br = hb_param( 1,HB_IT_STRING );
    //LOGBRUSH *lb = (LOGBRUSH * ) br->item.asString.value;
@@ -69,7 +69,7 @@ HB_FUNC( CREATEBRUSHINDIRECT )
 
 // WINGDIAPI HBRUSH WINAPI CreateHatchBrush( IN int, IN COLORREF);
 
-HB_FUNC( CREATEHATCHBRUSH )
+HB_FUNC( VWN_CREATEHATCHBRUSH )
 {
 
    HB_RETWH( CreateHatchBrush( hb_parni( 1 ), (COLORREF) hb_parnl(2) ) );
@@ -84,7 +84,7 @@ HB_FUNC( CREATEHATCHBRUSH )
 
 // WINGDIAPI COLORREF WINAPI GetDCBrushColor( IN HDC);
 
-HB_FUNC( GETDCBRUSHCOLOR )
+HB_FUNC( VWN_GETDCBRUSHCOLOR )
 {
    hb_retnl( (ULONG) GetDCBrushColor( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -98,7 +98,7 @@ HB_FUNC( GETDCBRUSHCOLOR )
 /*
 // WINGDIAPI COLORREF WINAPI SetDCBrushColor(IN HDC, IN COLORREF);
 
-HB_FUNC( SETDCBRUSHCOLOR )
+HB_FUNC( VWN_SETDCBRUSHCOLOR )
 {
 
    hb_retnl( (ULONG) SetDCBrushColor( (HDC) HB_PARWH( 1 ), (COLORREF) hb_parnl( 2 ) ) );
@@ -110,7 +110,7 @@ HB_FUNC( SETDCBRUSHCOLOR )
 
 // uses structure
 
-HB_FUNC( CREATEDIBPATTERNBRUSHPT )
+HB_FUNC( VWN_CREATEDIBPATTERNBRUSHPT )
 {
    BITMAPINFO *bmi = (BITMAPINFO *) hb_parc( 1 );//hb_param( 1,HB_IT_STRING )->item.asString.value;
 
@@ -123,7 +123,7 @@ HB_FUNC( CREATEDIBPATTERNBRUSHPT )
 
 // obsolete - not implemented
 
-HB_FUNC( FIXBRUSHORGEX )
+HB_FUNC( VWN_FIXBRUSHORGEX )
 {
    POINT *Point = (POINT *) hb_parc( 4 );//hb_param( 4,HB_IT_STRING )->item.asString.value;
 
@@ -139,7 +139,7 @@ HB_FUNC( FIXBRUSHORGEX )
 
 // WINGDIAPI BOOL WINAPI GetBrushOrgEx( IN HDC, OUT LPPOINT);
 
-HB_FUNC( GETBRUSHORGEX )
+HB_FUNC( VWN_GETBRUSHORGEX )
 {
    POINT Point;
 
@@ -161,7 +161,7 @@ HB_FUNC( GETBRUSHORGEX )
 
 // WINGDIAPI BOOL WINAPI SetBrushOrgEx( IN HDC, IN int, IN int, OUT LPPOINT);
 
-HB_FUNC( SETBRUSHORGEX )
+HB_FUNC( VWN_SETBRUSHORGEX )
 {
 
    POINT Point;

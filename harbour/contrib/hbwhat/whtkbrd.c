@@ -33,7 +33,7 @@ Modified functions:
 //-----------------------------------------------------------------------------
 // WINUSERAPI DWORD WINAPI OemKeyScan( IN WORD wOemChar);
 
-HB_FUNC( OEMKEYSCAN )
+HB_FUNC( VWN_OEMKEYSCAN )
 {
    hb_retnl( OemKeyScan( (WORD) hb_parni(1) ) );
 }
@@ -42,7 +42,7 @@ HB_FUNC( OEMKEYSCAN )
 //-----------------------------------------------------------------------------
 // WINUSERAPI SHORT WINAPI VkKeyScanA( IN CHAR ch);
 
-HB_FUNC( VKKEYSCAN )
+HB_FUNC( VWN_VKKEYSCAN )
 {
    char *Buffer ;
    Buffer =hb_parcx( 1 );
@@ -54,7 +54,7 @@ HB_FUNC( VKKEYSCAN )
 //-----------------------------------------------------------------------------
 // WINUSERAPI SHORT WINAPI VkKeyScanExA( IN CHAR ch, IN HKL dwhkl);
 
-HB_FUNC( VKKEYSCANEX )
+HB_FUNC( VWN_VKKEYSCANEX )
 {
    char *Buffer ;
    Buffer = hb_parcx( 1 );
@@ -66,7 +66,7 @@ HB_FUNC( VKKEYSCANEX )
 // WINUSERAPI UINT WINAPI GetKBCodePage( VOID);
 
 
-HB_FUNC( GETKBCODEPAGE )
+HB_FUNC( VWN_GETKBCODEPAGE )
 {
    hb_retni( GetKBCodePage(  ) );
 }
@@ -75,7 +75,7 @@ HB_FUNC( GETKBCODEPAGE )
 // WINUSERAPI SHORT WINAPI GetKeyState( IN int nVirtKey);
 
 
-HB_FUNC( GETKEYSTATE )
+HB_FUNC( VWN_GETKEYSTATE )
 {
    hb_retni( GetKeyState( hb_parni( 1 ) ) );
 }
@@ -84,7 +84,7 @@ HB_FUNC( GETKEYSTATE )
 // WINUSERAPI SHORT WINAPI GetAsyncKeyState( IN int vKey);
 
 
-HB_FUNC( GETASYNCKEYSTATE )
+HB_FUNC( VWN_GETASYNCKEYSTATE )
 {
   hb_retni( GetAsyncKeyState( hb_parni( 1 ) ) );
 }
@@ -95,7 +95,7 @@ HB_FUNC( GETASYNCKEYSTATE )
 // Syntax:
 // GetKeyboardState() -> cKeyboardState
 
-HB_FUNC( GETKEYBOARDSTATE )
+HB_FUNC( VWN_GETKEYBOARDSTATE )
 {
    BYTE lpKeyState[256] ;
 
@@ -111,7 +111,7 @@ HB_FUNC( GETKEYBOARDSTATE )
 // SetKeyboardState(cKeyboardState) -> lSuccess
 // cKeyboardState must be 256 char long
 
-HB_FUNC( SETKEYBOARDSTATE )
+HB_FUNC( VWN_SETKEYBOARDSTATE )
 {
    hb_retl( SetKeyboardState( (LPBYTE) hb_parcx(1) ) );
 }
@@ -123,7 +123,7 @@ HB_FUNC( SETKEYBOARDSTATE )
 // syntax:
 // GetKeyNameText( nKey) -> cText
 
-HB_FUNC( GETKEYNAMETEXT )
+HB_FUNC( VWN_GETKEYNAMETEXT )
 {
 
    char cText[MAX_PATH] ;
@@ -138,7 +138,7 @@ HB_FUNC( GETKEYNAMETEXT )
 // WINUSERAPI int WINAPI GetKeyboardType( IN int nTypeFlag);
 
 
-HB_FUNC( GETKEYBOARDTYPE )
+HB_FUNC( VWN_GETKEYBOARDTYPE )
 {
    hb_retni( GetKeyboardType( hb_parni( 1 ) ) );
 }
@@ -148,7 +148,7 @@ HB_FUNC( GETKEYBOARDTYPE )
 // WINUSERAPI UINT WINAPI MapVirtualKeyA( IN UINT uCode, IN UINT uMapType);
 
 
-HB_FUNC( MAPVIRTUALKEY )
+HB_FUNC( VWN_MAPVIRTUALKEY )
 {
    hb_retni( MapVirtualKey( (UINT) hb_parni( 1 ), (UINT) hb_parni( 2 ) ) );
 }
@@ -157,7 +157,7 @@ HB_FUNC( MAPVIRTUALKEY )
 // WINUSERAPI UINT WINAPI MapVirtualKeyExA( IN UINT uCode, IN UINT uMapType, IN HKL dwhkl);
 
 
-HB_FUNC( MAPVIRTUALKEYEX )
+HB_FUNC( VWN_MAPVIRTUALKEYEX )
 {
    hb_retni( MapVirtualKeyEx( (UINT) hb_parni( 1 ),
                               (UINT) hb_parni( 2 ),
@@ -168,7 +168,7 @@ HB_FUNC( MAPVIRTUALKEYEX )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI GetInputState( VOID);
 
-HB_FUNC( GETINPUTSTATE )
+HB_FUNC( VWN_GETINPUTSTATE )
 {
    hb_retl( GetInputState(  ) );
 }
@@ -177,7 +177,7 @@ HB_FUNC( GETINPUTSTATE )
 // WINUSERAPI DWORD WINAPI GetQueueStatus( IN UINT flags);
 
 
-HB_FUNC( GETQUEUESTATUS )
+HB_FUNC( VWN_GETQUEUESTATUS )
 {
    hb_retnl( (LONG) GetQueueStatus( (UINT) hb_parni( 1 ) ) );
 }
@@ -187,7 +187,7 @@ HB_FUNC( GETQUEUESTATUS )
 // WINUSERAPI HACCEL WINAPI LoadAcceleratorsA( IN HINSTANCE hInstance, IN LPCSTR lpTableName);
 
 
-HB_FUNC( LOADACCELERATORS )
+HB_FUNC( VWN_LOADACCELERATORS )
 {
    HB_RETWH( LoadAccelerators( (HINSTANCE) HB_PARWH( 1 ),
                                       (LPCSTR) hb_parcx( 2 )
@@ -204,7 +204,7 @@ HB_FUNC( LOADACCELERATORS )
 
 // to be tested
 
-HB_FUNC( CREATEACCELERATORTABLE )
+HB_FUNC( VWN_CREATEACCELERATORTABLE )
 {
 
    ACCEL * aAccel ;
@@ -236,7 +236,7 @@ HB_FUNC( CREATEACCELERATORTABLE )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI DestroyAcceleratorTable( IN HACCEL hAccel);
 
-HB_FUNC( DESTROYACCELERATORTABLE )
+HB_FUNC( VWN_DESTROYACCELERATORTABLE )
 {
    hb_retl( DestroyAcceleratorTable( (HACCEL) HB_PARWH( 1 ) ) );
 }
@@ -250,7 +250,7 @@ HB_FUNC( DESTROYACCELERATORTABLE )
 
 // to be tested
 
-HB_FUNC( COPYACCELERATORTABLE )
+HB_FUNC( VWN_COPYACCELERATORTABLE )
 {
    LPACCEL lpAccelDst = NULL;
    int iCount = 0;
@@ -294,7 +294,7 @@ HB_FUNC( COPYACCELERATORTABLE )
 // WINUSERAPI int WINAPI TranslateAcceleratorA( IN HWND hWnd, IN HACCEL hAccTable, IN LPMSG lpMsg);
 
 
-HB_FUNC( TRANSLATEACCELERATOR )
+HB_FUNC( VWN_TRANSLATEACCELERATOR )
 {
    LPMSG  lpMsg = ( MSG * ) hb_parc( 3 ); //hb_param(3, HB_IT_STRING)->item.asString.value;
    hb_retni( TranslateAccelerator( (HWND) HB_PARWH( 1 )  ,
@@ -313,7 +313,7 @@ HB_FUNC( TRANSLATEACCELERATOR )
 //  LPARAM lParam   // value passed to hook procedure
 //);
 
-HB_FUNC( CALLNEXTHOOKEX )
+HB_FUNC( VWN_CALLNEXTHOOKEX )
 {
     CallNextHookEx( (HHOOK) hb_parni(1), (int) hb_parni(2), (WPARAM) hb_parnl(3), (LPARAM) hb_parnl(4) );
 }
@@ -328,12 +328,12 @@ HB_FUNC( CALLNEXTHOOKEX )
 //  DWORD dwThreadId   // identity of thread to install hook for
 //);
 
-HB_FUNC( SETWINDOWSHOOKEX )
+HB_FUNC( VWN_SETWINDOWSHOOKEX )
 {
     SetWindowsHookEx( (int) hb_parni(1), (HOOKPROC) HB_PARWH(2), (HINSTANCE) HB_PARWH(3), (DWORD) hb_parnl(4) );
 }
 
-HB_FUNC( MAKEPROCINSTANCE )
+HB_FUNC( VWN_MAKEPROCINSTANCE )
 {
    hb_retc( (FARPROC) MakeProcInstance( (FARPROC) hb_parcx(1), (HINSTANCE) HB_PARWH(2) ) );
 }
@@ -343,13 +343,13 @@ HB_FUNC( MAKEPROCINSTANCE )
 //  HHOOK hhk   // handle to hook procedure to remove
 //);
 
-HB_FUNC( UNHOOKWINDOWSHOOKEX )
+HB_FUNC( VWN_UNHOOKWINDOWSHOOKEX )
 {
     UnhookWindowsHookEx( (HHOOK) HB_PARWH(1) );
 }
 
 
-HB_FUNC( GETCURRENTPROCESS )
+HB_FUNC( VWN_GETCURRENTPROCESS )
 {
    GetCurrentProcess();
 }

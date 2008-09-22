@@ -18,7 +18,7 @@
 // WINUSERAPI int WINAPI SetScrollPos( IN HWND hWnd, IN int nBar, IN int nPos, IN BOOL bRedraw);
 
 
-HB_FUNC( SETSCROLLPOS )
+HB_FUNC( VWN_SETSCROLLPOS )
 {
    hb_retni( SetScrollPos( (HWND) HB_PARWH( 1 ),
                            hb_parni( 2 )       ,
@@ -31,7 +31,7 @@ HB_FUNC( SETSCROLLPOS )
 // WINUSERAPI int WINAPI GetScrollPos( IN HWND hWnd, IN int nBar);
 
 
-HB_FUNC( GETSCROLLPOS )
+HB_FUNC( VWN_GETSCROLLPOS )
 {
    hb_retni( GetScrollPos( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -40,7 +40,7 @@ HB_FUNC( GETSCROLLPOS )
 // WINUSERAPI BOOL WINAPI SetScrollRange( IN HWND hWnd, IN int nBar, IN int nMinPos, IN int nMaxPos, IN BOOL bRedraw);
 
 
-HB_FUNC( SETSCROLLRANGE )
+HB_FUNC( VWN_SETSCROLLRANGE )
 {
    hb_retl( SetScrollRange( (HWND) HB_PARWH( 1 ),
                             hb_parni( 2 )       ,
@@ -57,7 +57,7 @@ HB_FUNC( SETSCROLLRANGE )
 // GetScrollRange(hWnd,nSbar,@nMin,@nMax) -> lSuccess
 
 
-HB_FUNC( GETSCROLLRANGE )
+HB_FUNC( VWN_GETSCROLLRANGE )
 {
    LPINT lpMinPos = 0 ;
    LPINT lpMaxPos = 0 ;
@@ -83,7 +83,7 @@ HB_FUNC( GETSCROLLRANGE )
 // WINUSERAPI BOOL WINAPI ShowScrollBar( IN HWND hWnd, IN int wBar, IN BOOL bShow);
 
 
-HB_FUNC( SHOWSCROLLBAR )
+HB_FUNC( VWN_SHOWSCROLLBAR )
 {
    hb_retl( ShowScrollBar( (HWND) HB_PARWH( 1 ), hb_parni( 2 ), hb_parl( 3 ) ) );
 }
@@ -92,7 +92,7 @@ HB_FUNC( SHOWSCROLLBAR )
 // WINUSERAPI BOOL WINAPI EnableScrollBar( IN HWND hWnd, IN UINT wSBflags, IN UINT wArrows);
 
 
-HB_FUNC( ENABLESCROLLBAR )
+HB_FUNC( VWN_ENABLESCROLLBAR )
 {
    hb_retl( EnableScrollBar( (HWND) HB_PARWH( 1 ),
                              (UINT) hb_parni( 2 ),
@@ -107,7 +107,7 @@ HB_FUNC( ENABLESCROLLBAR )
 // SetScrollInfo(hWnd,nSBarFlag,scrollinfo.value)-> lSuccess
 
 
-HB_FUNC( SETSCROLLINFO )
+HB_FUNC( VWN_SETSCROLLINFO )
 {
    SCROLLINFO * scrollInfo =  (SCROLLINFO * ) hb_parc( 3 ); //hb_param( 3, HB_IT_STRING )->item.asString.value;
 
@@ -125,7 +125,7 @@ HB_FUNC( SETSCROLLINFO )
 // syntax
 // GetScrollInfo(hWnd,nSBarFlag) -> SCROLLINFO structure or NIL
 
-HB_FUNC( GETSCROLLINFO )
+HB_FUNC( VWN_GETSCROLLINFO )
 {
    SCROLLINFO si ;
    si.cbSize = sizeof(SCROLLINFO);
@@ -148,7 +148,7 @@ HB_FUNC( GETSCROLLINFO )
 
 // to be tested
 #if (WINVER >= 0x0500)
-HB_FUNC( GETSCROLLBARINFO )
+HB_FUNC( VWN_GETSCROLLBARINFO )
 {
    SCROLLBARINFO sbi     ;
 

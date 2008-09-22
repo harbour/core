@@ -2,9 +2,10 @@
  * $Id$
  */
 
+//----------------------------------------------------------------------//
 // hbwhat
 // Rebar class
-
+//----------------------------------------------------------------------//
 #include "common.ch"
 
 #include "winuser.ch"
@@ -13,14 +14,14 @@
 #include "wintypes.ch"
 #include "cstruct.ch"
 
-pragma pack(4)
-
 #include "winstruc.ch"
 
 #include 'hbwhat.ch'
 #include "commctrl.ch"
 
 #include 'debug.ch'
+//----------------------------------------------------------------------//
+pragma pack(4)
 
 typedef struct tagREBARINFO;
 {;
@@ -96,97 +97,82 @@ typedef struct _RB_HITTESTINFO;
     UINT flags;
     int iBand;
 } RBHITTESTINFO, FAR *LPRBHITTESTINFO
+//----------------------------------------------------------------------//
+CLASS WHT_REBAR
 
+   DATA hWnd
+   DATA hParent
+   DATA nStyle
+   DATA nProc
 
-*-----------------------------------------------------------------------------*
+   METHOD Init() Constructor
+   METHOD Create()
+   METHOD AddBand()
+   METHOD rbProc()
+   METHOD GetHeight()
+   ACCESS height INLINE ::GetHeight()
 
-CLASS REBAR
-
-  DATA hWnd
-  DATA hParent
-  DATA nStyle
-  DATA nProc
-
-
-  METHOD INIT() Constructor
-  METHOD Create()
-  METHOD AddBand()
-  METHOD rbProc()
-  METHOD GetHeight()
-  ACCESS height INLINE ::GetHeight()
-ENDCLASS
-
+   ENDCLASS
+//----------------------------------------------------------------------//
 METHOD GetHeight()
-LOCAL aRect:=GetWindowRect(::hWnd)
-return aRect[4]-aRect[2]
+   LOCAL aRect := VWN_GetWindowRect( ::hWnd )
 
-*-----------------------------------------------------------------------------*
+   return aRect[4]-aRect[2]
+//----------------------------------------------------------------------//
+METHOD Init()
 
-METHOD INIT()
-   InitCommonControlsEx(ICC_COOL_CLASSES)
+   VWN_InitCommonControlsEx( ICC_COOL_CLASSES )
 
+   RETURN SELF
+//----------------------------------------------------------------------//
+METHOD Create( hParent,nStyle )
 
-RETURN SELF
+   ::hParent := hParent
+   ::nStyle := IFNIL( nStyle,WS_VISIBLE+WS_BORDER+WS_CHILD+WS_CLIPCHILDREN+;
+                             WS_CLIPSIBLINGS+RBS_VARHEIGHT+RBS_BANDBORDERS+;
+                             CCS_NODIVIDER+CCS_NOPARENTALIGN+CCS_TOP,nStyle )
 
-
-*-----------------------------------------------------------------------------*
-
-METHOD create(hParent,nStyle)
-
-//   LOCAL rbi IS REBARINFO
-
-   ::hParent:=hParent
-   ::nStyle :=IFNIL(nStyle,WS_VISIBLE+WS_BORDER+WS_CHILD+WS_CLIPCHILDREN+;
-                           WS_CLIPSIBLINGS+RBS_VARHEIGHT+RBS_BANDBORDERS+;
-                           CCS_NODIVIDER+CCS_NOPARENTALIGN+CCS_TOP,nStyle)
-
-   ::hWnd := CreateWindowEx(WS_EX_TOOLWINDOW,;
-                           REBARCLASSNAME,;
-                           "",;
-                           ::nStyle,;
-                           0,0,200,100,;
-                           hParent,;
-                           1,;
-                           hInstance(),;
-                           0)
+   ::hWnd := WHT_CreateWindowEx( WS_EX_TOOLWINDOW,;
+                                 REBARCLASSNAME,;
+                                 "",;
+                                 ::nStyle,;
+                                 0,0,200,100,;
+                                 hParent,;
+                                 1,;
+                                 VWN_hInstance(),;
+                                 0 )
 
 
-  ::nProc:=SetProcedure(::hParent,{|hWnd, nMsg,nwParam,nlParam| HB_SYMBOL_UNUSED( hWnd ), ::rbProc(nMsg,nwParam,nlParam)},{WM_SIZE})
+   ::nProc := WHT_SetProcedure( ::hParent,{|hWnd, nMsg,nwParam,nlParam| ;
+                HB_SYMBOL_UNUSED( hWnd ), ::rbProc( nMsg,nwParam,nlParam )}, { WM_SIZE } )
 
+   // rbi:cbSize := rbi:sizeof()  // Required when using this struct.
+   // rbi:fMask  := 0
+   // rbi:himl   := 0
 
-
-
-  // rbi:cbSize := rbi:sizeof()  // Required when using this struct.
-  // rbi:fMask  := 0
-  // rbi:himl   := 0
-
-   SendMessage(::hWnd, RB_SETBKCOLOR, 0, GetSysColor(COLOR_BTNFACE))
-  // view SendMessage(::hWnd, RB_SETBARINFO, 0, rbi:value)
+   VWN_SendMessage( ::hWnd, RB_SETBKCOLOR, 0, VWN_GetSysColor( COLOR_BTNFACE ) )
+   // view SendMessage(::hWnd, RB_SETBARINFO, 0, rbi:value)
 
    return self
-
-
-*-----------------------------------------------------------------------------*
-
-METHOD rbProc(nMsg,nwParam,nlParam)
+//----------------------------------------------------------------------//
+METHOD rbProc( nMsg,nwParam,nlParam )
    LOCAL acRect
    LOCAL aRect
+
    DO CASE
-   CASE nMsg==WM_SIZE
-     acRect:=GetClientRect(::hParent)
-     aRect:=GetWindowRect(::hWnd)
-     MoveWindow(::hWnd,0,0,acRect[3],aRect[4]-aRect[2],.t.)
+   CASE nMsg == WM_SIZE
+      acRect := VWN_GetClientRect( ::hParent )
+      aRect := VWN_GetWindowRect( ::hWnd )
+      VWN_MoveWindow( ::hWnd, 0, 0, acRect[ 3 ], aRect[ 4 ]-aRect[ 2 ], .t. )
+
    ENDCASE
-RETURN CallWindowProc(::nProc,::hParent,nMsg,nwParam,nlParam)
 
+   RETURN VWN_CallWindowProc( ::nProc,::hParent,nMsg,nwParam,nlParam )
+//----------------------------------------------------------------------//
 
-
-
-*-----------------------------------------------------------------------------*
-METHOD addband(nMask,nStyle,hChild,cxMin,cyMin,cx,cText,hBmp,nPos)
-
+METHOD AddBand( nMask,nStyle,hChild,cxMin,cyMin,cx,cText,hBmp,nPos )
    LOCAL rbBand IS REBARBANDINFO
-   LOCAL aRect:=GetWindowRect(hChild)
+   LOCAL aRect := VWN_GetWindowRect( hChild )
 
    HB_SYMBOL_UNUSED( nPos )
 
@@ -203,12 +189,13 @@ METHOD addband(nMask,nStyle,hChild,cxMin,cyMin,cx,cText,hBmp,nPos)
    rbBand:hwndChild  := IFNIL(hChild,0,hChild)
    rbBand:cxMinChild := IFNIL(cxMin,aRect[3]-aRect[1],cxMin)
    rbBand:cyMinChild := IFNIL(cyMin,aRect[4]-aRect[2],cyMin)
-   rbBand:cx         := IFNIL(cx,GetClientRect(::hParent)[3],cx)
+   rbBand:cx         := IFNIL(cx,VWN_GetClientRect(::hParent)[3],cx)
    rbBand:lpText     := IFNIL(cText,"Test",cText)
-   rbBand:hbmBack    := IFNIL(hBmp,0,hBmp) //LoadBitmap(hInstance(), "IDB_BACKGRND"),hBmp)
+   rbBand:hbmBack    := IFNIL(hBmp,0,hBmp) //VWN_LoadBitmap(hInstance(), "IDB_BACKGRND"),hBmp)
 
-
-  // view rbBand,aRect,LoadBitmap(hInstance(), "IDB_BACKGRND"), rbBand:value
+   // view rbBand,aRect,LoadBitmap(hInstance(), "IDB_BACKGRND"), rbBand:value
 
    // Add the band
-   RETURN SendMessage(::hWnd, RB_INSERTBAND, -1, rbBand:value ) != 0
+   RETURN VWN_SendMessage(::hWnd, RB_INSERTBAND, -1, rbBand:value ) != 0
+//----------------------------------------------------------------------//
+

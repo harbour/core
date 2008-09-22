@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 // WINGDIAPI HPEN WINAPI CreatePen( IN int, IN int, IN COLORREF);
 
-HB_FUNC( CREATEPEN )
+HB_FUNC( VWN_CREATEPEN )
 {
    HB_RETWH( CreatePen(
                hb_parni( 1 ),   // pen style
@@ -37,7 +37,7 @@ HB_FUNC( CREATEPEN )
 
 /*
 
-HB_FUNC( CREATEPENINDIRECT )
+HB_FUNC( VWN_CREATEPENINDIRECT )
 {
    CONST LOGPEN ;
 
@@ -55,7 +55,7 @@ HB_FUNC( CREATEPENINDIRECT )
 
 /*
 
-HB_FUNC( GETDCPENCOLOR )
+HB_FUNC( VWN_GETDCPENCOLOR )
 {
    hb_retnl( (ULONG) GetDCPenColor( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -69,7 +69,7 @@ HB_FUNC( GETDCPENCOLOR )
 
 /*
 
-HB_FUNC( SETDCPENCOLOR )
+HB_FUNC( VWN_SETDCPENCOLOR )
 {
 
    hb_retnl( (ULONG) SetDCPenColor( (HDC) HB_PARWH( 1 ), (COLORREF) hb_parnl( 2 ) ) );
@@ -82,7 +82,7 @@ HB_FUNC( SETDCPENCOLOR )
 
 /*
 
-HB_FUNC( EXTCREATEPEN )
+HB_FUNC( VWN_EXTCREATEPEN )
 {
    CONST LOGBRUSH ;
    CONST dWord4   ;

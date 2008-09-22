@@ -12,7 +12,7 @@
 
 //-------------------------------------------------------------------------//
 
-HB_FUNC( TVINSERTITEM )
+HB_FUNC( VWN_TVINSERTITEM )
 {
    TV_INSERTSTRUCT is;
 
@@ -36,14 +36,14 @@ HB_FUNC( TVINSERTITEM )
 }
 
 //-------------------------------------------------------------------------//
-HB_FUNC( TVDELETEITEM )
+HB_FUNC( VWN_TVDELETEITEM )
 {
    ( void ) TreeView_DeleteItem( (HWND) HB_PARWH( 1 ), ( HTREEITEM ) HB_PARWH( 2 ) );
 }
 
 //-------------------------------------------------------------------------//
 
-HB_FUNC( TVSETIMAGELIST ) // ( hWnd, hImageList, nType )
+HB_FUNC( VWN_TVSETIMAGELIST ) // ( hWnd, hImageList, nType )
 {
    HB_RETWH( TreeView_SetImageList( ( HWND ) HB_PARWH( 1 ),
             ( HIMAGELIST ) HB_PARWH( 2 ), hb_parnl( 3 ) ) );
@@ -51,7 +51,7 @@ HB_FUNC( TVSETIMAGELIST ) // ( hWnd, hImageList, nType )
 
 //-------------------------------------------------------------------------//
 
-HB_FUNC( TVGETSELTEXT ) // ( hWnd ) --> cText
+HB_FUNC( VWN_TVGETSELTEXT ) // ( hWnd ) --> cText
 {
    HWND hWnd = ( HWND ) HB_PARWH( 1 );
    HTREEITEM hItem = TreeView_GetSelection( hWnd );
@@ -72,7 +72,7 @@ HB_FUNC( TVGETSELTEXT ) // ( hWnd ) --> cText
 
 //-------------------------------------------------------------------------//
 
-HB_FUNC( TVGETSELECTED ) // ( hWnd ) --> hItem
+HB_FUNC( VWN_TVGETSELECTED ) // ( hWnd ) --> hItem
 {
    HB_RETWH( TreeView_GetSelection( ( HWND ) HB_PARWH( 1 ) ) );
 }

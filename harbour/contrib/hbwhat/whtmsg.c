@@ -24,16 +24,16 @@
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( _ISDIALOGMESSAGE )
+HB_FUNC( VWN_ISDIALOGMESSAGE )
 {
-  hb_retl(IsDialogMessage( (HWND) HB_PARWH(1), (MSG*) hb_parcx(2) ));
+  hb_retl( IsDialogMessage( (HWND) HB_PARWH(1), (MSG*) hb_parcx(2) ));
 }
 
 
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI TranslateMDISysAccel( IN HWND hWndClient, IN LPMSG lpMsg);
 
-HB_FUNC( TRANSLATEMDISYSACCEL )
+HB_FUNC( VWN_TRANSLATEMDISYSACCEL )
 {
    hb_retl( TranslateMDISysAccel( (HWND) HB_PARWH( 1 ), (MSG*) hb_parcx( 2 ) ) );
 }
@@ -41,21 +41,21 @@ HB_FUNC( TRANSLATEMDISYSACCEL )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( TRANSLATEMESSAGE )
+HB_FUNC( VWN_TRANSLATEMESSAGE )
 {
   hb_retl(TranslateMessage( (MSG*) hb_parcx(1)));
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( DISPATCHMESSAGE )
+HB_FUNC( VWN_DISPATCHMESSAGE )
 {
   HB_RETWI( DispatchMessage( ( MSG * ) hb_parcx( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( POSTQUITMESSAGE )
+HB_FUNC( VWN_POSTQUITMESSAGE )
 {
   PostQuitMessage(hb_parni(1));
 }
@@ -63,7 +63,7 @@ HB_FUNC( POSTQUITMESSAGE )
 //-----------------------------------------------------------------------------
 
 
-HB_FUNC( POSTMESSAGE )
+HB_FUNC( VWN_POSTMESSAGE )
 {
 
    char *cText = NULL;
@@ -91,7 +91,7 @@ HB_FUNC( POSTMESSAGE )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( SENDMESSAGE )
+HB_FUNC( VWN_SENDMESSAGE )
 {
 
    char *cText = NULL;
@@ -120,7 +120,7 @@ HB_FUNC( SENDMESSAGE )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( SENDDLGITEMMESSAGE )
+HB_FUNC( VWN_SENDDLGITEMMESSAGE )
 {
    char *cText;
    PHB_ITEM pText = hb_param( 5, HB_IT_STRING );
@@ -174,7 +174,7 @@ HB_FUNC( SENDDLGITEMMESSAGE )
 
 // add error handling and recovery
 
-HB_FUNC( GETMESSAGE )
+HB_FUNC( VWN_GETMESSAGE )
 {
   MSG Msg ;
 
@@ -192,7 +192,7 @@ HB_FUNC( GETMESSAGE )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( PEEKMESSAGE )
+HB_FUNC( VWN_PEEKMESSAGE )
 {
   MSG Msg ;
 
@@ -215,7 +215,7 @@ HB_FUNC( PEEKMESSAGE )
 // WINUSERAPI UINT WINAPI RegisterWindowMessage( IN LPCWSTR lpString);
 
 
-HB_FUNC( REGISTERWINDOWMESSAGE )
+HB_FUNC( VWN_REGISTERWINDOWMESSAGE )
 {
    hb_retni( RegisterWindowMessageA( (LPCSTR) hb_parcx( 1 ) ) );
 }
@@ -225,7 +225,7 @@ HB_FUNC( REGISTERWINDOWMESSAGE )
 // WINUSERAPI BOOL WINAPI SetMessageQueue( IN int cMessagesMax);
 
 
-HB_FUNC( SETMESSAGEQUEUE )
+HB_FUNC( VWN_SETMESSAGEQUEUE )
 {
    hb_retl( SetMessageQueue( hb_parni( 1 ) ) );
 }
@@ -234,7 +234,7 @@ HB_FUNC( SETMESSAGEQUEUE )
 // WINUSERAPI DWORD WINAPI GetMessagePos( VOID);
 
 
-HB_FUNC( GETMESSAGEPOS )
+HB_FUNC( VWN_GETMESSAGEPOS )
 {
    hb_retnl( (LONG) GetMessagePos(  ) );
 }
@@ -243,7 +243,7 @@ HB_FUNC( GETMESSAGEPOS )
 // WINUSERAPI LONG WINAPI GetMessageTime( VOID);
 
 
-HB_FUNC( GETMESSAGETIME )
+HB_FUNC( VWN_GETMESSAGETIME )
 {
    hb_retnl( (LONG) GetMessageTime(  ) );
 }
@@ -252,7 +252,7 @@ HB_FUNC( GETMESSAGETIME )
 // WINUSERAPI LPARAM WINAPI GetMessageExtraInfo( VOID);
 
 
-HB_FUNC( GETMESSAGEEXTRAINFO )
+HB_FUNC( VWN_GETMESSAGEEXTRAINFO )
 {
    hb_retnl( (LONG) GetMessageExtraInfo(  ) );
 }
@@ -261,7 +261,7 @@ HB_FUNC( GETMESSAGEEXTRAINFO )
 // WINUSERAPI LPARAM WINAPI SetMessageExtraInfo( IN LPARAM lParam);
 
 
-HB_FUNC( SETMESSAGEEXTRAINFO )
+HB_FUNC( VWN_SETMESSAGEEXTRAINFO )
 {
    hb_retnl( (LONG) SetMessageExtraInfo( (LPARAM) hb_parnl( 1 ) ) );
 }
@@ -272,7 +272,7 @@ HB_FUNC( SETMESSAGEEXTRAINFO )
 
 /*
 
-HB_FUNC( SENDMESSAGETIMEOUT )
+HB_FUNC( VWN_SENDMESSAGETIMEOUT )
 {
    PDWORD_PTR lpdwResult ;
 
@@ -294,7 +294,7 @@ HB_FUNC( SENDMESSAGETIMEOUT )
 // WINUSERAPI BOOL WINAPI SendNotifyMessageA( IN HWND hWnd, IN UINT Msg, IN WPARAM wParam, IN LPARAM lParam);
 
 
-HB_FUNC( SENDNOTIFYMESSAGE )
+HB_FUNC( VWN_SENDNOTIFYMESSAGE )
 {
    hb_retl( SendNotifyMessage( (HWND) HB_PARWH( 1 )  ,
                                (UINT) hb_parni( 2 )  ,
@@ -307,7 +307,7 @@ HB_FUNC( SENDNOTIFYMESSAGE )
 // WINUSERAPI BOOL WINAPI PostThreadMessageA( IN DWORD idThread, IN UINT Msg, IN WPARAM wParam, IN LPARAM lParam);
 
 
-HB_FUNC( POSTTHREADMESSAGE )
+HB_FUNC( VWN_POSTTHREADMESSAGE )
 {
    hb_retl( PostThreadMessage( (DWORD) hb_parnl( 1 ) ,
                                (UINT) hb_parni( 2 )  ,
@@ -319,7 +319,7 @@ HB_FUNC( POSTTHREADMESSAGE )
 //----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI ReplyMessage( IN LRESULT lResult);
 
-HB_FUNC( REPLYMESSAGE )
+HB_FUNC( VWN_REPLYMESSAGE )
 {
    hb_retl( ReplyMessage( (LRESULT) hb_parnl( 1 ) ) );
 }
@@ -328,7 +328,7 @@ HB_FUNC( REPLYMESSAGE )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI WaitMessage( VOID);
 
-HB_FUNC( WAITMESSAGE )
+HB_FUNC( VWN_WAITMESSAGE )
 {
    hb_retl( WaitMessage(  ) );
 }
@@ -336,7 +336,7 @@ HB_FUNC( WAITMESSAGE )
 //-----------------------------------------------------------------------------
 // WINUSERAPI DWORD WINAPI WaitForInputIdle( IN HANDLE hProcess, IN DWORD dwMilliseconds);
 
-HB_FUNC( WAITFORINPUTIDLE )
+HB_FUNC( VWN_WAITFORINPUTIDLE )
 {
    hb_retnl( (LONG) WaitForInputIdle( (HANDLE) HB_PARWH( 1 ),
                                       (DWORD) hb_parnl( 2 )
@@ -346,7 +346,7 @@ HB_FUNC( WAITFORINPUTIDLE )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI InSendMessage( VOID);
 
-HB_FUNC( INSENDMESSAGE )
+HB_FUNC( VWN_INSENDMESSAGE )
 {
    hb_retl( InSendMessage(  ) );
 }
@@ -357,7 +357,7 @@ HB_FUNC( INSENDMESSAGE )
 
 #if(WINVER >= 0x0500)
 
-HB_FUNC( INSENDMESSAGEEX )
+HB_FUNC( VWN_INSENDMESSAGEEX )
 {
 
    hb_retnl( (LONG) InSendMessageEx( NULL ) ); // param reserved must be NULL
@@ -370,7 +370,7 @@ HB_FUNC( INSENDMESSAGEEX )
 // WINUSERAPI DWORD WINAPI MsgWaitForMultipleObjects( IN DWORD nCount, IN CONST HANDLE *pHandles, IN BOOL fWaitAll, IN DWORD dwMilliseconds, IN DWORD dwWakeMask);
 
 
-HB_FUNC( MSGWAITFORMULTIPLEOBJECTS )
+HB_FUNC( VWN_MSGWAITFORMULTIPLEOBJECTS )
 {
    hb_retnl( (LONG) MsgWaitForMultipleObjects( (DWORD) hb_parnl( 1 ) ,
                                                (HANDLE *) HB_PARWI( 2 ),
@@ -384,7 +384,7 @@ HB_FUNC( MSGWAITFORMULTIPLEOBJECTS )
 // WINUSERAPI DWORD WINAPI MsgWaitForMultipleObjectsEx( IN DWORD nCount, IN CONST HANDLE *pHandles, IN DWORD dwMilliseconds, IN DWORD dwWakeMask, IN DWORD dwFlags);
 
 
-HB_FUNC( MSGWAITFORMULTIPLEOBJECTSEX )
+HB_FUNC( VWN_MSGWAITFORMULTIPLEOBJECTSEX )
 {
    hb_retnl( (LONG) MsgWaitForMultipleObjectsEx( (DWORD) hb_parnl( 1 ) ,
                                                  (HANDLE *) HB_PARWI( 2 ),
@@ -400,7 +400,7 @@ HB_FUNC( MSGWAITFORMULTIPLEOBJECTSEX )
 
 /*
 
-HB_FUNC( SENDMESSAGECALLBACK )
+HB_FUNC( VWN_SENDMESSAGECALLBACK )
 {
    SENDASYNCPROC lpResultCallBack ;
    ULONG_PTR     dwData           ;
@@ -423,7 +423,7 @@ HB_FUNC( SENDMESSAGECALLBACK )
 
 /*
 
-HB_FUNC( BROADCASTSYSTEMMESSAGE )
+HB_FUNC( VWN_BROADCASTSYSTEMMESSAGE )
 {
    LPDWORD lpdWord ;
 
@@ -444,7 +444,7 @@ HB_FUNC( BROADCASTSYSTEMMESSAGE )
 
 /*
 
-HB_FUNC( BROADCASTSYSTEMMESSAGE )
+HB_FUNC( VWN_BROADCASTSYSTEMMESSAGE )
 {
    LPDWORD lpdWord ;
 
@@ -465,7 +465,7 @@ HB_FUNC( BROADCASTSYSTEMMESSAGE )
 
 /*
 
-HB_FUNC( REGISTERDEVICENOTIFICATION )
+HB_FUNC( VWN_REGISTERDEVICENOTIFICATION )
 {
    LPVOID NotificationFilter ;
 
@@ -484,7 +484,7 @@ HB_FUNC( REGISTERDEVICENOTIFICATION )
 
 #if(WINVER >= 0x0500)
 
-HB_FUNC( UNREGISTERDEVICENOTIFICATION )
+HB_FUNC( VWN_UNREGISTERDEVICENOTIFICATION )
 {
    hb_retl( UnregisterDeviceNotification( (HDEVNOTIFY) HB_PARWH( 1 ) ) );
 }
@@ -495,7 +495,7 @@ HB_FUNC( UNREGISTERDEVICENOTIFICATION )
 // WINUSERAPI BOOL WINAPI AttachThreadInput( IN DWORD idAttach, IN DWORD idAttachTo, IN BOOL fAttach);
 
 
-HB_FUNC( ATTACHTHREADINPUT )
+HB_FUNC( VWN_ATTACHTHREADINPUT )
 {
 
    hb_retl( AttachThreadInput( (DWORD) hb_parnl( 1 ) ,
@@ -508,7 +508,7 @@ HB_FUNC( ATTACHTHREADINPUT )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI CallMsgFilterA( IN LPMSG lpMsg, IN int nCode);
 
-HB_FUNC( CALLMSGFILTER )
+HB_FUNC( VWN_CALLMSGFILTER )
 {
    MSG *Msg = (MSG * ) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value;
 

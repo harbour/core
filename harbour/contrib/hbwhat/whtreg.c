@@ -66,7 +66,7 @@
  *
  */
 
-HB_FUNC( REGCLOSEKEY )
+HB_FUNC( VWN_REGCLOSEKEY )
 {
 
    HKEY hwHandle = ( HKEY ) HB_PARWH( 1 );
@@ -83,7 +83,7 @@ HB_FUNC( REGCLOSEKEY )
 
 }
 
-HB_FUNC( REGOPENKEYEX )
+HB_FUNC( VWN_REGOPENKEYEX )
 {
 
    HKEY hwKey = ( ( HKEY ) HB_PARWH( 1 ) );
@@ -105,7 +105,7 @@ HB_FUNC( REGOPENKEYEX )
       }
 }
 
-HB_FUNC( REGQUERYVALUEEX )
+HB_FUNC( VWN_REGQUERYVALUEEX )
 {
    LONG lError;
    DWORD lpType=hb_parnl( 4 );
@@ -135,7 +135,7 @@ HB_FUNC( REGQUERYVALUEEX )
 }
 
 
-HB_FUNC( REGENUMKEYEX )
+HB_FUNC( VWN_REGENUMKEYEX )
 {
 
    FILETIME ft;
@@ -163,14 +163,14 @@ HB_FUNC( REGENUMKEYEX )
 }
 
 
-HB_FUNC( REGSETVALUEEX )
+HB_FUNC( VWN_REGSETVALUEEX )
 {
 
    hb_retnl( RegSetValueExA( ( HKEY ) HB_PARWH( 1 ), hb_parcx( 2 ), 0, hb_parnl( 4 ), ( BYTE * const ) hb_parcx( 5 ), ( strlen( hb_parcx( 5 ) ) + 1 ) ) );
 
 }
 
-HB_FUNC( REGCREATEKEY )
+HB_FUNC( VWN_REGCREATEKEY )
 {
    HKEY hKey;
    LONG nErr;
@@ -201,7 +201,7 @@ LONG RegCreateKeyEx(
 
 */
 
-HB_FUNC( REGCREATEKEYEX )
+HB_FUNC( VWN_REGCREATEKEYEX )
 {
 
   HKEY hkResult ;
@@ -232,7 +232,7 @@ HB_FUNC( REGCREATEKEYEX )
 }
 
 
-HB_FUNC( REGDELETEKEY )
+HB_FUNC( VWN_REGDELETEKEY )
 {
    if ( RegDeleteKeyA( ( HKEY ) HB_PARWH( 1 ), ( LPCTSTR ) hb_parcx( 2 ) ) == ERROR_SUCCESS )
       hb_retnl( 0 );
@@ -243,7 +243,7 @@ HB_FUNC( REGDELETEKEY )
 //  For strange reasons this function is not working properly
 //  May be I am missing something. Pritpal Bedi.
 
-HB_FUNC( REGDELETEVALUE )
+HB_FUNC( VWN_REGDELETEVALUE )
 {
    if ( RegDeleteValue( ( HKEY ) HB_PARWH( 1 ), hb_parcx( 2 ) ) == ERROR_SUCCESS )
       hb_retnl( 0 );

@@ -36,7 +36,7 @@ extern void Size2ArrayEx( SIZE *siz  ,  PHB_ITEM aSize);
 //-----------------------------------------------------------------------------
 // WINUSERAPI HCURSOR WINAPI LoadCursorA( IN HINSTANCE hInstance, IN LPCSTR lpCursorName);
 
-HB_FUNC( LOADCURSOR )
+HB_FUNC( VWN_LOADCURSOR )
 {
    HB_RETWH( LoadCursor( ISNIL(1) ? NULL : (HINSTANCE) HB_PARWH(1) ,
                     hb_parinfo(2)== HB_IT_STRING ? hb_parcx(2): MAKEINTRESOURCE( hb_parnl( 2 ) ) ) );
@@ -46,7 +46,7 @@ HB_FUNC( LOADCURSOR )
 // WINUSERAPI HWND WINAPI GetCapture( VOID);
 
 
-HB_FUNC( GETCAPTURE )
+HB_FUNC( VWN_GETCAPTURE )
 {
    HB_RETWH( GetCapture(  ) );
 }
@@ -55,7 +55,7 @@ HB_FUNC( GETCAPTURE )
 // WINUSERAPI HWND WINAPI SetCapture( IN HWND hWnd);
 
 
-HB_FUNC( SETCAPTURE )
+HB_FUNC( VWN_SETCAPTURE )
 {
    HB_RETWH( SetCapture( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -64,7 +64,7 @@ HB_FUNC( SETCAPTURE )
 // WINUSERAPI BOOL WINAPI ReleaseCapture( VOID);
 
 
-HB_FUNC( RELEASECAPTURE )
+HB_FUNC( VWN_RELEASECAPTURE )
 {
    hb_retl( ReleaseCapture(  ) );
 }
@@ -74,7 +74,7 @@ HB_FUNC( RELEASECAPTURE )
 // WINUSERAPI UINT WINAPI GetDoubleClickTime( VOID);
 
 
-HB_FUNC( GETDOUBLECLICKTIME )
+HB_FUNC( VWN_GETDOUBLECLICKTIME )
 {
    hb_retni( GetDoubleClickTime(  ) );
 }
@@ -83,7 +83,7 @@ HB_FUNC( GETDOUBLECLICKTIME )
 // WINUSERAPI BOOL WINAPI SetDoubleClickTime( IN UINT);
 
 
-HB_FUNC( SETDOUBLECLICKTIME )
+HB_FUNC( VWN_SETDOUBLECLICKTIME )
 {
    hb_retl( SetDoubleClickTime( (UINT) hb_parni( 1 ) ) );
 }
@@ -93,7 +93,7 @@ HB_FUNC( SETDOUBLECLICKTIME )
 // WINUSERAPI int WINAPI ShowCursor( IN BOOL bShow);
 
 
-HB_FUNC( SHOWCURSOR )
+HB_FUNC( VWN_SHOWCURSOR )
 {
    hb_retni( ShowCursor( hb_parl( 1 ) ) );
 }
@@ -102,7 +102,7 @@ HB_FUNC( SHOWCURSOR )
 // WINUSERAPI BOOL WINAPI SetCursorPos( IN int X, IN int Y);
 
 
-HB_FUNC( SETCURSORPOS )
+HB_FUNC( VWN_SETCURSORPOS )
 {
    hb_retl( SetCursorPos( hb_parni( 1 ), hb_parni( 2 ) ) );
 }
@@ -116,14 +116,14 @@ HB_FUNC( SETCURSORPOS )
 // Function renamed !!!
 
 
-HB_FUNC( WINSETCURSOR )
+HB_FUNC( VWN_WINSETCURSOR )
 {
    HB_RETWH( SetCursor( (HCURSOR) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( TRACKMOUSEEVENT )
+HB_FUNC( VWN_TRACKMOUSEEVENT )
 {
 
  TRACKMOUSEEVENT *tme =  (TRACKMOUSEEVENT * ) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value;
@@ -136,7 +136,7 @@ HB_FUNC( TRACKMOUSEEVENT )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI GetCursorPos( OUT LPPOINT lpPoint);
 
-HB_FUNC( GETCURSORPOS )
+HB_FUNC( VWN_GETCURSORPOS )
 {
    POINT Point ;
    PHB_ITEM gcPos ;
@@ -154,7 +154,7 @@ HB_FUNC( GETCURSORPOS )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI ClipCursor( IN CONST RECT *lpRect);
 
-HB_FUNC( CLIPCURSOR )
+HB_FUNC( VWN_CLIPCURSOR )
 {
    RECT rc ;
    BOOL bRectOk ;
@@ -169,7 +169,7 @@ HB_FUNC( CLIPCURSOR )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI GetClipCursor( OUT LPRECT lpRect);
 
-HB_FUNC( GETCLIPCURSOR )
+HB_FUNC( VWN_GETCLIPCURSOR )
 {
    RECT rc;
 
@@ -183,7 +183,7 @@ HB_FUNC( GETCLIPCURSOR )
 // WINUSERAPI HCURSOR WINAPI GetCursor( VOID);
 
 
-HB_FUNC( GETCURSOR )
+HB_FUNC( VWN_GETCURSOR )
 {
    HB_RETWH( GetCursor(  ) );
 }
@@ -193,7 +193,7 @@ HB_FUNC( GETCURSOR )
 // WINUSERAPI BOOL WINAPI SwapMouseButton( IN BOOL fSwap);
 
 
-HB_FUNC( SWAPMOUSEBUTTON )
+HB_FUNC( VWN_SWAPMOUSEBUTTON )
 {
    hb_retl( SwapMouseButton( hb_parl( 1 ) ) );
 }
@@ -203,7 +203,7 @@ HB_FUNC( SWAPMOUSEBUTTON )
 // WINUSERAPI HCURSOR WINAPI LoadCursorFromFileA( IN LPCSTR lpFileName);
 
 
-HB_FUNC( LOADCURSORFROMFILE )
+HB_FUNC( VWN_LOADCURSORFROMFILE )
 {
    HB_RETWH( LoadCursorFromFile( (LPCSTR) hb_parcx( 1 ) ) );
 }
@@ -212,7 +212,7 @@ HB_FUNC( LOADCURSORFROMFILE )
 // WINUSERAPI HCURSOR WINAPI CreateCursor( IN HINSTANCE hInst, IN int xHotSpot, IN int yHotSpot, IN int nWidth, IN int nHeight, IN CONST VOID *pvANDPlane, IN CONST VOID *pvXORPlane);
 
 
-HB_FUNC( CREATECURSOR )
+HB_FUNC( VWN_CREATECURSOR )
 {
    HB_RETWH( CreateCursor( (HINSTANCE) HB_PARWH( 1 ),
                                   hb_parni( 2 )            ,
@@ -229,7 +229,7 @@ HB_FUNC( CREATECURSOR )
 // WINUSERAPI BOOL WINAPI DestroyCursor( IN HCURSOR hCursor);
 
 
-HB_FUNC( DESTROYCURSOR )
+HB_FUNC( VWN_DESTROYCURSOR )
 {
    hb_retl( DestroyCursor( (HCURSOR) HB_PARWH( 1 ) ) );
 }
@@ -238,7 +238,7 @@ HB_FUNC( DESTROYCURSOR )
 // WINUSERAPI HCURSOR WINAPI CopyCursor( IN HCURSOR hCursor);
 
 
-HB_FUNC( COPYCURSOR )
+HB_FUNC( VWN_COPYCURSOR )
 {
    HB_RETWH( CopyCursor( (HCURSOR) HB_PARWH( 1 ) ) );
 }
@@ -247,7 +247,7 @@ HB_FUNC( COPYCURSOR )
 // WINUSERAPI BOOL WINAPI SetSystemCursor( IN HCURSOR hcur, IN DWORD id);
 
 
-HB_FUNC( SETSYSTEMCURSOR )
+HB_FUNC( VWN_SETSYSTEMCURSOR )
 {
    hb_retl( SetSystemCursor( (HCURSOR) HB_PARWH( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
@@ -256,7 +256,7 @@ HB_FUNC( SETSYSTEMCURSOR )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI GetCursorInfo( OUT PCURSORINFO pci );
 #if (WINVER >= 0x0500)
-HB_FUNC( GETCURSORINFO )
+HB_FUNC( VWN_GETCURSORINFO )
 {
    CURSORINFO pci ;
 

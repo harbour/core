@@ -36,7 +36,7 @@
 
 // syntax: accept(s [,@cAddr][,@nAddrLen]) -> s
 
-HB_FUNC( ACCEPT )
+HB_FUNC( VWN_ACCEPT )
 {
    char *addr  ;
    int addrlen ;
@@ -59,7 +59,7 @@ HB_FUNC( ACCEPT )
 
 // syntax: bind(s, sa:value, sa:sizeof ) -> nInt
 
-HB_FUNC( BIND )
+HB_FUNC( VWN_BIND )
 {
    char *name = (char *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
 
@@ -70,7 +70,7 @@ HB_FUNC( BIND )
 //-----------------------------------------------------------------------------
 //  int  closesocket( IN SOCKET s );
 
-HB_FUNC( CLOSESOCKET )
+HB_FUNC( VWN_CLOSESOCKET )
 {
    hb_retni( closesocket( (SOCKET) hb_parnl(1) ) );
 }
@@ -81,7 +81,7 @@ HB_FUNC( CLOSESOCKET )
 
 // syntax connect( s, san:value, san:sizeof ) -> nInt
 
-HB_FUNC( CONNECT )
+HB_FUNC( VWN_CONNECT )
 {
    char *name = (char *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
 
@@ -94,7 +94,7 @@ HB_FUNC( CONNECT )
 
 //syntax: ioctlsocket( s, nCmd, @nArg) -> nErr
 
-HB_FUNC( IOCTLSOCKET )
+HB_FUNC( VWN_IOCTLSOCKET )
 {
    ULONG arg = hb_parnl( 3 );
 
@@ -108,7 +108,7 @@ HB_FUNC( IOCTLSOCKET )
 
 // syntax: getpeername( s, @san, @nLen ) -> int
 
-HB_FUNC( GETPEERNAME )
+HB_FUNC( VWN_GETPEERNAME )
 {
    char *name  = (char *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
    int addrlen = ISNIL(3) ? hb_parni(3) : ( int ) hb_parclen(2);
@@ -124,7 +124,7 @@ HB_FUNC( GETPEERNAME )
 
 // syntax: getstockname( s, @san, @nLen )
 
-HB_FUNC( GETSOCKNAME )
+HB_FUNC( VWN_GETSOCKNAME )
 {
    char *name  = (char *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
    int addrlen = ISNIL(3) ? hb_parni(3) : ( int ) hb_parclen(2);
@@ -140,7 +140,7 @@ HB_FUNC( GETSOCKNAME )
 
 // syntax: getsockopt( s, nLevel, nOptName, @cOptVal, @nOptName) -> nErr
 
-HB_FUNC( GETSOCKOPT )
+HB_FUNC( VWN_GETSOCKOPT )
 {
    char *optval = (char *) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING )->item.asString.value ;
    int  optlen  = hb_parni( 5 );
@@ -160,7 +160,7 @@ HB_FUNC( GETSOCKOPT )
 //-----------------------------------------------------------------------------
 //  u_long  htonl( IN u_long hostlong );
 
-HB_FUNC( HTONL )
+HB_FUNC( VWN_HTONL )
 {
    hb_retnl( (ULONG) htonl( hb_parnl( 1 ) ) );
 }
@@ -169,7 +169,7 @@ HB_FUNC( HTONL )
 //-----------------------------------------------------------------------------
 //  u_short  htons( IN u_short hostshort );
 
-HB_FUNC( HTONS )
+HB_FUNC( VWN_HTONS )
 {
    hb_retni( (USHORT) htons( (USHORT) hb_parni( 1 ) ) );
 }
@@ -178,7 +178,7 @@ HB_FUNC( HTONS )
 //-----------------------------------------------------------------------------
 //  unsigned long  inet_addr( IN const char * cp );
 
-HB_FUNC( INET_ADDR )
+HB_FUNC( VWN_INET_ADDR )
 {
    hb_retnl( (ULONG) inet_addr( hb_parcx( 1 ) ) );
 }
@@ -187,7 +187,7 @@ HB_FUNC( INET_ADDR )
 //-----------------------------------------------------------------------------
 //  char *  inet_ntoa( IN struct in_addr in );
 
-HB_FUNC( INET_NTOA )
+HB_FUNC( VWN_INET_NTOA )
 {
    struct in_addr *in = (struct in_addr *) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value ;
 
@@ -198,7 +198,7 @@ HB_FUNC( INET_NTOA )
 //-----------------------------------------------------------------------------
 //  int  listen( IN SOCKET s, IN int backlog );
 
-HB_FUNC( LISTEN )
+HB_FUNC( VWN_LISTEN )
 {
  hb_retni( (int) listen((SOCKET) hb_parnl( 1 ), hb_parni( 2 ) ) );
 }
@@ -207,7 +207,7 @@ HB_FUNC( LISTEN )
 //-----------------------------------------------------------------------------
 //  u_long  ntohl( IN u_long netlong );
 
-HB_FUNC( NTOHL )
+HB_FUNC( VWN_NTOHL )
 {
    hb_retnl( (ULONG) ntohl( hb_parnl(1 ) ) );
 }
@@ -216,7 +216,7 @@ HB_FUNC( NTOHL )
 //-----------------------------------------------------------------------------
 //  u_short  ntohs( IN u_short netshort );
 
-HB_FUNC( NTOHS )
+HB_FUNC( VWN_NTOHS )
 {
    hb_retni( ( USHORT ) ntohs( (USHORT) hb_parni(1) ) );
 }
@@ -227,7 +227,7 @@ HB_FUNC( NTOHS )
 
 // syntax: recv( s, @cBuff, [nLen] , nFlags)-> nRecv or nErr
 
-HB_FUNC( RECV )
+HB_FUNC( VWN_RECV )
 {
    int  iBuffLen = (ISNIL(3) ? (ISNIL(2) ? 0 : ( int ) hb_parclen(2) ) : hb_parni(3));
    char   *buf  = ( char *) hb_xgrab(iBuffLen);
@@ -247,7 +247,7 @@ HB_FUNC( RECV )
 
 // syntax: recvfrom( s, @cBuff, nLen, nFlags [, @cSockAddr] [, @nSockAddrLen] )-> nRecv or nErr
 
-HB_FUNC( RECVFROM )
+HB_FUNC( VWN_RECVFROM )
 {
    int  iBuffLen = (ISNIL(3) ? (ISNIL(2) ? 0 : ( int ) hb_parclen(2) ) : hb_parni(3));
    char *buf     = ( char *) hb_xgrab(iBuffLen);
@@ -280,7 +280,7 @@ HB_FUNC( RECVFROM )
 
 // syntax: select
 
-HB_FUNC( SOCKSELECT )
+HB_FUNC( VWN_SOCKSELECT )
 {
    fd_set   *readfds   = NULL;
    fd_set   *writefds  = NULL;
@@ -319,7 +319,7 @@ HB_FUNC( SOCKSELECT )
 //-----------------------------------------------------------------------------
 //  int  send( IN SOCKET s, IN const char * buf, IN int len, IN int flags );
 
-HB_FUNC( SEND )
+HB_FUNC( VWN_SEND )
 {
    int  iBuffLen = (ISNIL(3) ? (ISNIL(2) ? 0 : ( int ) hb_parclen(2) ) : hb_parni(3));
    hb_retni( ( int ) send((SOCKET) hb_parnl( 1 ), hb_parcx(2), iBuffLen, hb_parni( 4 ) ) );
@@ -331,7 +331,7 @@ HB_FUNC( SEND )
 
 // syntax: sendto( s, cBuff, [nBuffLen], nFlags, [sockaddr:value], [sockaddr:sizeof])-> nSent or nErr
 
-HB_FUNC( SENDTO )
+HB_FUNC( VWN_SENDTO )
 {
 
    int  iBuffLen = (ISNIL(3) ? ( ISNIL(2) ? 0 : ( int ) hb_parclen(2) ) : hb_parni(3));
@@ -357,7 +357,7 @@ HB_FUNC( SENDTO )
 //-----------------------------------------------------------------------------
 //  int  setsockopt( IN SOCKET s, IN int level, IN int optname, IN const char * optval, IN int optlen );
 
-HB_FUNC( SETSOCKOPT )
+HB_FUNC( VWN_SETSOCKOPT )
 {
 //   SOCKET s       ;
    INT    optval  = hb_parni(5);
@@ -374,7 +374,7 @@ HB_FUNC( SETSOCKOPT )
 //-----------------------------------------------------------------------------
 //  int  shutdown( IN SOCKET s, IN int how );
 
-HB_FUNC( SHUTDOWN )
+HB_FUNC( VWN_SHUTDOWN )
 {
    hb_retni( (int ) shutdown((SOCKET) hb_parnl( 1 ), hb_parni( 2 ) ) );
 }
@@ -383,7 +383,7 @@ HB_FUNC( SHUTDOWN )
 //-----------------------------------------------------------------------------
 //  SOCKET  socket( IN int af, IN int type, IN int protocol );
 
-HB_FUNC( SOCKET )
+HB_FUNC( VWN_SOCKET )
 {
    hb_retnl( ( ULONG ) socket( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
@@ -392,7 +392,7 @@ HB_FUNC( SOCKET )
 //-----------------------------------------------------------------------------
 //  struct hostent *  gethostbyaddr( IN const char * addr, IN int len, IN int type );
 
-HB_FUNC( GETHOSTBYADDR )
+HB_FUNC( VWN_GETHOSTBYADDR )
 {
    HOSTENT *he ;
    he = gethostbyaddr( hb_parcx( 1 ) ,
@@ -407,7 +407,7 @@ HB_FUNC( GETHOSTBYADDR )
 //-----------------------------------------------------------------------------
 //  struct hostent *  gethostbyname( IN const char * name );
 
-HB_FUNC( GETHOSTBYNAME )
+HB_FUNC( VWN_GETHOSTBYNAME )
 {
    HOSTENT *he ;
 
@@ -423,7 +423,7 @@ HB_FUNC( GETHOSTBYNAME )
 
 // syntax: gethostbyname( @cBuff ) -> nErr
 
-HB_FUNC( GETHOSTNAME )
+HB_FUNC( VWN_GETHOSTNAME )
 {
    char *name  = ( char*) hb_parcx( 1 )  ;
    int iLen    =  hb_parclen( 1 );
@@ -436,7 +436,7 @@ HB_FUNC( GETHOSTNAME )
 //-----------------------------------------------------------------------------
 //  struct servent *  getservbyport( IN int port, IN const char * proto );
 
-HB_FUNC( GETSERVBYPORT )
+HB_FUNC( VWN_GETSERVBYPORT )
 {
    hb_retclen( ( char * ) getservbyport( hb_parni( 1 ),hb_parcx( 2 ) ), sizeof(SERVENT) );
 }
@@ -445,7 +445,7 @@ HB_FUNC( GETSERVBYPORT )
 //-----------------------------------------------------------------------------
 //  struct servent *  getservbyname( IN const char * name, IN const char * proto );
 
-HB_FUNC( GETSERVBYNAME )
+HB_FUNC( VWN_GETSERVBYNAME )
 {
    hb_retclen( ( char *) getservbyname( hb_parcx( 1 ), hb_parcx( 2 ) ), sizeof(SERVENT) );
 }
@@ -454,7 +454,7 @@ HB_FUNC( GETSERVBYNAME )
 //-----------------------------------------------------------------------------
 //  struct protoent *  getprotobynumber( IN int number );
 
-HB_FUNC( GETPROTOBYNUMBER )
+HB_FUNC( VWN_GETPROTOBYNUMBER )
 {
    hb_retclen( ( char * ) getprotobynumber( hb_parni( 1 ) ), sizeof(PROTOENT) );
 }
@@ -463,7 +463,7 @@ HB_FUNC( GETPROTOBYNUMBER )
 //-----------------------------------------------------------------------------
 //  struct protoent *  getprotobyname( IN const char * name );
 
-HB_FUNC( GETPROTOBYNAME )
+HB_FUNC( VWN_GETPROTOBYNAME )
 {
    hb_retclen( ( char * ) getprotobyname( hb_parcx( 1 ) ), sizeof(PROTOENT) );
 }
@@ -472,7 +472,7 @@ HB_FUNC( GETPROTOBYNAME )
 //-----------------------------------------------------------------------------
 //  int  WSAStartup( IN WORD wVersionRequested, OUT LPWSADATA lpWSAData );
 
-HB_FUNC( WSASTARTUP )
+HB_FUNC( VWN_WSASTARTUP )
 {
    WSADATA WSAData  ;
 
@@ -487,7 +487,7 @@ HB_FUNC( WSASTARTUP )
 //  int  WSACleanup( void );
 
 
-HB_FUNC( WSACLEANUP )
+HB_FUNC( VWN_WSACLEANUP )
 {
    hb_retni( (int ) WSACleanup( ) );
 }
@@ -496,7 +496,7 @@ HB_FUNC( WSACLEANUP )
 //-----------------------------------------------------------------------------
 //  void  WSASetLastError( IN int iError );
 
-HB_FUNC( WSASETLASTERROR )
+HB_FUNC( VWN_WSASETLASTERROR )
 {
    WSASetLastError( hb_parni( 1 ) );
 }
@@ -505,7 +505,7 @@ HB_FUNC( WSASETLASTERROR )
 //-----------------------------------------------------------------------------
 //  int  WSAGetLastError( void );
 
-HB_FUNC( WSAGETLASTERROR )
+HB_FUNC( VWN_WSAGETLASTERROR )
 {
    hb_retni( (int ) WSAGetLastError( ) );
 }
@@ -514,7 +514,7 @@ HB_FUNC( WSAGETLASTERROR )
 //-----------------------------------------------------------------------------
 //  BOOL  WSAIsBlocking( void );
 
-HB_FUNC( WSAISBLOCKING )
+HB_FUNC( VWN_WSAISBLOCKING )
 {
    hb_retl( WSAIsBlocking( ) );
 }
@@ -523,7 +523,7 @@ HB_FUNC( WSAISBLOCKING )
 //-----------------------------------------------------------------------------
 //  int  WSAUnhookBlockingHook( void );
 
-HB_FUNC( WSAUNHOOKBLOCKINGHOOK )
+HB_FUNC( VWN_WSAUNHOOKBLOCKINGHOOK )
 {
    hb_retni( (int ) WSAUnhookBlockingHook() );
 }
@@ -536,7 +536,7 @@ HB_FUNC( WSAUNHOOKBLOCKINGHOOK )
 
 /*
 
-HB_FUNC( WSASETBLOCKINGHOOK )
+HB_FUNC( VWN_WSASETBLOCKINGHOOK )
 {
    FARPROC lpBlockFunc ;
 
@@ -551,7 +551,7 @@ HB_FUNC( WSASETBLOCKINGHOOK )
 //-----------------------------------------------------------------------------
 //  int  WSACancelBlockingCall( void );
 
-HB_FUNC( WSACANCELBLOCKINGCALL )
+HB_FUNC( VWN_WSACANCELBLOCKINGCALL )
 {
    hb_retni( (int ) WSACancelBlockingCall() );
 }
@@ -568,7 +568,7 @@ HB_FUNC( WSACANCELBLOCKINGCALL )
 //             se:Buffer(c)
 //          endif
 
-HB_FUNC( WSAASYNCGETSERVBYNAME )
+HB_FUNC( VWN_WSAASYNCGETSERVBYNAME )
 {
    char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
@@ -596,7 +596,7 @@ HB_FUNC( WSAASYNCGETSERVBYNAME )
 //             se:Buffer(c)
 //          endif
 
-HB_FUNC( WSAASYNCGETSERVBYPORT )
+HB_FUNC( VWN_WSAASYNCGETSERVBYPORT )
 {
    char * buf = (char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
@@ -625,7 +625,7 @@ HB_FUNC( WSAASYNCGETSERVBYPORT )
 //          endif
 
 
-HB_FUNC( WSAASYNCGETPROTOBYNAME )
+HB_FUNC( VWN_WSAASYNCGETPROTOBYNAME )
 {
    char * buf = ( char * ) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
@@ -653,7 +653,7 @@ HB_FUNC( WSAASYNCGETPROTOBYNAME )
 //          endif
 
 
-HB_FUNC( WSAASYNCGETPROTOBYNUMBER )
+HB_FUNC( VWN_WSAASYNCGETPROTOBYNUMBER )
 {
    char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
@@ -679,7 +679,7 @@ HB_FUNC( WSAASYNCGETPROTOBYNUMBER )
 //             se:Buffer(c)
 //          endif
 
-HB_FUNC( WSAASYNCGETHOSTBYNAME )
+HB_FUNC( VWN_WSAASYNCGETHOSTBYNAME )
 {
    char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT );
    HANDLE hRet ;
@@ -707,7 +707,7 @@ HB_FUNC( WSAASYNCGETHOSTBYNAME )
 //          endif
 
 
-HB_FUNC( WSAASYNCGETHOSTBYADDR )
+HB_FUNC( VWN_WSAASYNCGETHOSTBYADDR )
 {
 
    char * buf = ( char *) hb_xgrab( MAXGETHOSTSTRUCT );
@@ -733,7 +733,7 @@ HB_FUNC( WSAASYNCGETHOSTBYADDR )
 //-----------------------------------------------------------------------------
 //  int  WSACancelAsyncRequest( IN HANDLE hAsyncTaskHandle );
 
-HB_FUNC( WSACANCELASYNCREQUEST )
+HB_FUNC( VWN_WSACANCELASYNCREQUEST )
 {
    hb_retni( (int) WSACancelAsyncRequest( (HANDLE) HB_PARWH( 1 ) ) );
 }
@@ -742,7 +742,7 @@ HB_FUNC( WSACANCELASYNCREQUEST )
 //-----------------------------------------------------------------------------
 //  int  WSAAsyncSelect( IN SOCKET s, IN HWND hWnd, IN u_int wMsg, IN long lEvent );
 
-HB_FUNC( WSAASYNCSELECT )
+HB_FUNC( VWN_WSAASYNCSELECT )
 {
    hb_retni( (int ) WSAAsyncSelect( (SOCKET) hb_parnl( 1 ) ,
                                     (HWND) HB_PARWH( 2 )   ,
@@ -806,7 +806,7 @@ int _stdcall _WSACondFunc( LPWSABUF lpCallerId,  LPWSABUF lpCallerData, LPQOS lp
 // function pointer using HB_FuncPtr or HB_ObjMsgPtr.
 
 
-HB_FUNC( WSAACCEPT )
+HB_FUNC( VWN_WSAACCEPT )
 {
 //   SOCKET          s              ;
    struct sockaddr addr           ;
@@ -831,7 +831,7 @@ HB_FUNC( WSAACCEPT )
 //-----------------------------------------------------------------------------
 //  BOOL  WSACloseEvent( IN WSAEVENT hEvent );
 
-HB_FUNC( WSACLOSEEVENT )
+HB_FUNC( VWN_WSACLOSEEVENT )
 {
    hb_retl( ( BOOL ) WSACloseEvent( (WSAEVENT) HB_PARWH( 1 ) ) );
 }
@@ -844,7 +844,7 @@ HB_FUNC( WSACLOSEEVENT )
 // syntax: WSAConnect( s, cSockAddr, [cCallerData], [@cCalleeData]
 
 /*
-HB_FUNC( WSACONNECT )
+HB_FUNC( VWN_WSACONNECT )
 {
    sockaddr struct *name  ( sockaddr struct *) hb_param( 2, HB_IT_STRING )->item.asString.value ;
    WSABUF          *CallerData ;
@@ -894,7 +894,7 @@ HB_FUNC( WSACONNECT )
 //-----------------------------------------------------------------------------
 //  WSAEVENT  WSACreateEvent( void );
 
-HB_FUNC( WSACREATEEVENT )
+HB_FUNC( VWN_WSACREATEEVENT )
 {
    HB_RETWH( WSACreateEvent( ) );
 }
@@ -906,7 +906,7 @@ HB_FUNC( WSACREATEEVENT )
 
 /*
 
-HB_FUNC( WSADUPLICATESOCKET )
+HB_FUNC( VWN_WSADUPLICATESOCKET )
 {
    SOCKET              s              ;
    LPWSAPROTOCOL_INFOA lpProtocolInfo ;
@@ -927,7 +927,7 @@ HB_FUNC( WSADUPLICATESOCKET )
 
 /*
 
-HB_FUNC( WSAENUMNETWORKEVENTS )
+HB_FUNC( VWN_WSAENUMNETWORKEVENTS )
 {
    SOCKET             s               ;
    WSAEVENT           hEventObject    ;
@@ -949,7 +949,7 @@ HB_FUNC( WSAENUMNETWORKEVENTS )
 
 /*
 
-HB_FUNC( WSAENUMPROTOCOLS )
+HB_FUNC( VWN_WSAENUMPROTOCOLS )
 {
    LPINT               lpiProtocols     ;
    LPWSAPROTOCOL_INFOA lpProtocolBuffer ;
@@ -969,7 +969,7 @@ HB_FUNC( WSAENUMPROTOCOLS )
 //-----------------------------------------------------------------------------
 //  int  WSAEventSelect( IN SOCKET s, IN WSAEVENT hEventObject, IN long lNetworkEvents );
 
-HB_FUNC( WSAEVENTSELECT )
+HB_FUNC( VWN_WSAEVENTSELECT )
 {
    hb_retni( (int ) WSAEventSelect( (SOCKET)   hb_parnl( 1 ),
                                     (WSAEVENT) HB_PARWH( 2 ),
@@ -983,7 +983,7 @@ HB_FUNC( WSAEVENTSELECT )
 
 /*
 
-HB_FUNC( WSAGETOVERLAPPEDRESULT )
+HB_FUNC( VWN_WSAGETOVERLAPPEDRESULT )
 {
    SOCKET          s            ;
    LPWSAOVERLAPPED lpOverlapped ;
@@ -1008,7 +1008,7 @@ HB_FUNC( WSAGETOVERLAPPEDRESULT )
 
 /*
 
-HB_FUNC( WSAGETQOSBYNAME )
+HB_FUNC( VWN_WSAGETQOSBYNAME )
 {
    SOCKET   s         ;
    LPWSABUF lpQOSName ;
@@ -1027,7 +1027,7 @@ HB_FUNC( WSAGETQOSBYNAME )
 
 /*
 
-HB_FUNC( WSAHTONL )
+HB_FUNC( VWN_WSAHTONL )
 {
    SOCKET s         ;
    u_long hostlong  ;
@@ -1046,7 +1046,7 @@ HB_FUNC( WSAHTONL )
 
 /*
 
-HB_FUNC( WSAHTONS )
+HB_FUNC( VWN_WSAHTONS )
 {
    SOCKET  s          ;
    u_short hostshort  ;
@@ -1065,7 +1065,7 @@ HB_FUNC( WSAHTONS )
 
 /*
 
-HB_FUNC( WSAIOCTL )
+HB_FUNC( VWN_WSAIOCTL )
 {
    SOCKET                             s                   ;
    LPVOID                             lpvInBuffer         ;
@@ -1096,7 +1096,7 @@ HB_FUNC( WSAIOCTL )
 
 /*
 
-HB_FUNC( WSAJOINLEAF )
+HB_FUNC( VWN_WSAJOINLEAF )
 {
    SOCKET          s            ;
    sockaddr struct name         ;
@@ -1126,7 +1126,7 @@ HB_FUNC( WSAJOINLEAF )
 
 /*
 
-HB_FUNC( WSANTOHL )
+HB_FUNC( VWN_WSANTOHL )
 {
    SOCKET s          ;
    u_long netlong    ;
@@ -1145,7 +1145,7 @@ HB_FUNC( WSANTOHL )
 
 /*
 
-HB_FUNC( WSANTOHS )
+HB_FUNC( VWN_WSANTOHS )
 {
    SOCKET  s           ;
    u_short netshort    ;
@@ -1164,7 +1164,7 @@ HB_FUNC( WSANTOHS )
 
 /*
 
-HB_FUNC( WSARECV )
+HB_FUNC( VWN_WSARECV )
 {
    SOCKET                             s                    ;
    LPWSABUF                           lpBuffers            ;
@@ -1193,7 +1193,7 @@ HB_FUNC( WSARECV )
 
 /*
 
-HB_FUNC( WSARECVDISCONNECT )
+HB_FUNC( VWN_WSARECVDISCONNECT )
 {
     LPWSABUF lpInboundDisconnectData ;
 
@@ -1211,7 +1211,7 @@ HB_FUNC( WSARECVDISCONNECT )
 
 /*
 
-HB_FUNC( WSARECVFROM )
+HB_FUNC( VWN_WSARECVFROM )
 {
    LPWSABUF                           lpBuffers            ;
    LPDWORD                            lpNumberOfBytesRecvd ;
@@ -1240,7 +1240,7 @@ HB_FUNC( WSARECVFROM )
 //-----------------------------------------------------------------------------
 //  BOOL  WSAResetEvent( IN WSAEVENT hEvent );
 
-HB_FUNC( WSARESETEVENT )
+HB_FUNC( VWN_WSARESETEVENT )
 {
    hb_retl( WSAResetEvent( (WSAEVENT) HB_PARWH( 1 ) ) );
 }
@@ -1251,7 +1251,7 @@ HB_FUNC( WSARESETEVENT )
 
 /*
 
-HB_FUNC( WSASEND )
+HB_FUNC( VWN_WSASEND )
 {
    SOCKET                             s                   ;
    LPWSABUF                           lpBuffers           ;
@@ -1278,7 +1278,7 @@ HB_FUNC( WSASEND )
 
 /*
 
-HB_FUNC( WSASENDDISCONNECT )
+HB_FUNC( VWN_WSASENDDISCONNECT )
 {
    SOCKET   s                        ;
    LPWSABUF lpOutboundDisconnectData ;
@@ -1298,7 +1298,7 @@ HB_FUNC( WSASENDDISCONNECT )
 
 /*
 
-HB_FUNC( WSASENDTO )
+HB_FUNC( VWN_WSASENDTO )
 {
    SOCKET                             s                   ;
    LPWSABUF                           lpBuffers           ;
@@ -1327,7 +1327,7 @@ HB_FUNC( WSASENDTO )
 //-----------------------------------------------------------------------------
 //  BOOL  WSASetEvent( IN WSAEVENT hEvent );
 
-HB_FUNC( WSASETEVENT )
+HB_FUNC( VWN_WSASETEVENT )
 {
    hb_retl( WSASetEvent( (WSAEVENT) HB_PARWH( 1 ) ) );
 }
@@ -1338,7 +1338,7 @@ HB_FUNC( WSASETEVENT )
 
 /*
 
-HB_FUNC( WSASOCKET )
+HB_FUNC( VWN_WSASOCKET )
 {
    LPWSAPROTOCOL_INFOA lpProtocolInfo ;
    GROUP               g              ;
@@ -1362,7 +1362,7 @@ HB_FUNC( WSASOCKET )
 
 /*
 
-HB_FUNC( WSAWAITFORMULTIPLEEVENTS )
+HB_FUNC( VWN_WSAWAITFORMULTIPLEEVENTS )
 {
    WSAEVENT lphEvents  ;
 
@@ -1384,7 +1384,7 @@ HB_FUNC( WSAWAITFORMULTIPLEEVENTS )
 
 /*
 
-HB_FUNC( WSAADDRESSTOSTRING )
+HB_FUNC( VWN_WSAADDRESSTOSTRING )
 {
    LPSOCKADDR          lpsaAddress             ;
    LPWSAPROTOCOL_INFOA lpProtocolInfo          ;
@@ -1409,7 +1409,7 @@ HB_FUNC( WSAADDRESSTOSTRING )
 
 /*
 
-HB_FUNC( WSASTRINGTOADDRESS )
+HB_FUNC( VWN_WSASTRINGTOADDRESS )
 {
    LPWSAPROTOCOL_INFOA lpProtocolInfo  ;
    LPSOCKADDR          lpAddress       ;
@@ -1434,7 +1434,7 @@ HB_FUNC( WSASTRINGTOADDRESS )
 
 /*
 
-HB_FUNC( WSALOOKUPSERVICEBEGIN )
+HB_FUNC( VWN_WSALOOKUPSERVICEBEGIN )
 {
    LPWSAQUERYSETA lpqsRestrictions ;
    LPHANDLE       lphLookup        ;
@@ -1456,7 +1456,7 @@ HB_FUNC( WSALOOKUPSERVICEBEGIN )
 
 /*
 
-HB_FUNC( WSALOOKUPSERVICENEXT )
+HB_FUNC( VWN_WSALOOKUPSERVICENEXT )
 {
    LPDWORD        lpdwBufferLength ;
    LPWSAQUERYSETA lpqsResults      ;
@@ -1477,7 +1477,7 @@ HB_FUNC( WSALOOKUPSERVICENEXT )
 //-----------------------------------------------------------------------------
 //  INT  WSALookupServiceEnd( IN HANDLE hLookup );
 
-HB_FUNC( WSALOOKUPSERVICEEND )
+HB_FUNC( VWN_WSALOOKUPSERVICEEND )
 {
    hb_retni( (int ) WSALookupServiceEnd( (HANDLE) HB_PARWH( 1 ) ) );
 }
@@ -1488,7 +1488,7 @@ HB_FUNC( WSALOOKUPSERVICEEND )
 
 /*
 
-HB_FUNC( WSAINSTALLSERVICECLASS )
+HB_FUNC( VWN_WSAINSTALLSERVICECLASS )
 {
    LPWSASERVICECLASSINFOA lpServiceClassInfo ;
 
@@ -1506,7 +1506,7 @@ HB_FUNC( WSAINSTALLSERVICECLASS )
 
 /*
 
-HB_FUNC( WSAREMOVESERVICECLASS )
+HB_FUNC( VWN_WSAREMOVESERVICECLASS )
 {
    LPGUID lpServiceClassId ;
 
@@ -1523,7 +1523,7 @@ HB_FUNC( WSAREMOVESERVICECLASS )
 
 /*
 
-HB_FUNC( WSAGETSERVICECLASSINFO )
+HB_FUNC( VWN_WSAGETSERVICECLASSINFO )
 {
    LPGUID                 lpProviderId       ;
    LPGUID                 lpServiceClassId   ;
@@ -1547,7 +1547,7 @@ HB_FUNC( WSAGETSERVICECLASSINFO )
 
 /*
 
-HB_FUNC( WSAENUMNAMESPACEPROVIDERS )
+HB_FUNC( VWN_WSAENUMNAMESPACEPROVIDERS )
 {
    LPDWORD              lpdwBufferLength ;
    LPWSANAMESPACE_INFOA lpnspBuffer      ;
@@ -1567,7 +1567,7 @@ HB_FUNC( WSAENUMNAMESPACEPROVIDERS )
 
 /*
 
-HB_FUNC( WSAGETSERVICECLASSNAMEBYCLASSID )
+HB_FUNC( VWN_WSAGETSERVICECLASSNAMEBYCLASSID )
 {
    LPGUID  lpServiceClassId     ;
    LPDWORD lpdwBufferLength     ;
@@ -1588,7 +1588,7 @@ HB_FUNC( WSAGETSERVICECLASSNAMEBYCLASSID )
 
 /*
 
-HB_FUNC( WSASETSERVICE )
+HB_FUNC( VWN_WSASETSERVICE )
 {
    LPWSAQUERYSETA   lpqsRegInfo    ;
    WSAESETSERVICEOP essoperation   ;
@@ -1609,7 +1609,7 @@ HB_FUNC( WSASETSERVICE )
 
 /*
 
-HB_FUNC( WSAPROVIDERCONFIGCHANGE )
+HB_FUNC( VWN_WSAPROVIDERCONFIGCHANGE )
 {
    LPHANDLE                           lpNotificationHandle ;
    LPWSAOVERLAPPED                    lpOverlapped         ;

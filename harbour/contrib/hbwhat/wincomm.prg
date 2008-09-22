@@ -2,72 +2,64 @@
  * $Id$
  */
 
-// hbwhat
+//----------------------------------------------------------------------//
 
+// hbwhat
 // common controls and common dialogs
 
 #include "winuser.ch"
 #include "commctrl.ch"
 #include "hbwhat.ch"
 
+//----------------------------------------------------------------------//
+FUNCTION WHT_CreateStatusBar( nStyle, cText, hParent, nId  )
+   LOCAL hSBWnd
+   LOCAL nProc
 
-*------------------------------------------------------------------------------
-
-FUNCTION CreateStatusBar(nStyle, cText, hParent, nId  )
-LOCAL hSBWnd
-LOCAL nProc
-   IF ( hSBWnd := CreateStatusWindow(nStyle, cText,hParent, nId )) != 0
-      nProc:=SetProcedure(hParent, {|hWnd, nMsg, nwParam, nlParam| ;
+   IF ( hSBWnd := VWN_CreateStatusWindow( nStyle, cText,hParent, nId )) != 0
+      nProc := VWN_SetProcedure( hParent, {|hWnd, nMsg, nwParam, nlParam| ;
              _SBMove( nProc, hWnd, nMsg, nwParam, nlParam, hSBWnd ) }, WM_SIZE )
    ENDIF
-RETURN(hSBWnd)
 
-*------------------------------------------------------------------------------
-
+   RETURN(hSBWnd)
+//----------------------------------------------------------------------//
 // internal use
-
-Static FUNCTION  _SBMove(  nProc, hWnd, nMsg, nwParam, nlParam, hSBWnd )
+STATIC FUNCTION  _SBMove( nProc, hWnd, nMsg, nwParam, nlParam, hSBWnd )
    LOCAL aRect
+
    IF nMsg == WM_SIZE
-      If IsWindow( hSBWnd )
-         aRect := GetWindowRect( hSBWnd )
-         MoveWindow( hSBWnd, 0, HiWord( nlParam ) - ( aRect[ 4 ] - aRect[ 2 ] ) , ;
-                     LoWord( nlParam ) , aRect[ 4 ] - aRect[ 2 ] , .T. )
+      If VWN_IsWindow( hSBWnd )
+         aRect := VWN_GetWindowRect( hSBWnd )
+         VWN_MoveWindow( hSBWnd, 0, VWN_HiWord( nlParam ) - ( aRect[ 4 ] - aRect[ 2 ] ) , ;
+                         VWN_LoWord( nlParam ) , aRect[ 4 ] - aRect[ 2 ] , .T. )
 
       Endif
    EndIf
-   Return CallWindowProc( nProc, hWnd, nMsg, nwParam, nlParam )
 
-
-*------------------------------------------------------------------------------
-
-FUNCTION SetStatusBarParts( hSBWnd, aParts )
+   RETURN VWN_CallWindowProc( nProc, hWnd, nMsg, nwParam, nlParam )
+//----------------------------------------------------------------------//
+FUNCTION WHT_SetStatusBarParts( hSBWnd, aParts )
    LOCAL bSizes := ""
+
    AEVAL(aParts,{|x| bSizes+=L2BIN(x)})
-   return SendMessage( hSBWnd, SB_SETPARTS, LEN( aParts ), bSizes )
 
+   RETURN VWN_SendMessage( hSBWnd, SB_SETPARTS, LEN( aParts ), bSizes )
+//----------------------------------------------------------------------//
+FUNCTION WHT_SetStatusBarText( hSBWnd, nPart, cText, nBorder )
 
-*------------------------------------------------------------------------------
+   nBorder := IFNIL( nBorder,0,nBorder )
 
-FUNCTION SetStatusBarText( hSBWnd, nPart, cText, nBorder )
-   nBorder:=IFNIL(nBorder,0,nBorder)
-   return SendMessage( hSBWnd, SB_SETTEXT + nBorder, nPart, cText )
+   RETURN VWN_SendMessage( hSBWnd, SB_SETTEXT + nBorder, nPart, cText )
+//----------------------------------------------------------------------//
+FUNCTION WHT_SetStatusBkColor( hSBWnd, nPart, nColor )
 
+   RETURN VWN_SendMessage( hSBWnd, SB_SETBKCOLOR, nPart, nColor )
+//----------------------------------------------------------------------//
+FUNCTION WHT_SetStatusIcon( hSBWnd, nPart, hIcon )
 
-*------------------------------------------------------------------------------
+   RETURN VWN_SendMessage( hSBWnd, SB_SETICON, nPart, hIcon )
+//----------------------------------------------------------------------//
+FUNCTION WHT_SetStatusToolTip( hSBWnd, nPart, cTTip )
 
-FUNCTION SetStatusBkColor( hSBWnd, nPart, nColor )
-   return SendMessage( hSBWnd, SB_SETBKCOLOR, nPart, nColor )
-
-
-*------------------------------------------------------------------------------
-
-FUNCTION SetStatusIcon( hSBWnd, nPart, hIcon )
-   return SendMessage( hSBWnd, SB_SETICON, nPart, hIcon )
-
-*------------------------------------------------------------------------------
-
-FUNCTION SetStatusToolTip( hSBWnd, nPart, cTTip )
-   return SendMessage( hSBWnd, SB_SETTIPTEXT, nPart, cTTip )
-
-
+   RETURN VWN_SendMessage( hSBWnd, SB_SETTIPTEXT, nPart, cTTip )
+//----------------------------------------------------------------------//

@@ -21,7 +21,7 @@
 
 //---------------------------------------------------------------------------//
 
-HB_FUNC( TABCTRL_CREATE )
+HB_FUNC( VWN_TABCTRL_CREATE )
 {
    HWND hwnd;
    HWND hbutton;
@@ -39,7 +39,7 @@ HB_FUNC( TABCTRL_CREATE )
 
 // not an API
 
-HB_FUNC( TABCTRL_ADDITEM )
+HB_FUNC( VWN_TABCTRL_ADDITEM )
 {
    int iCount = TabCtrl_GetItemCount( (HWND) HB_PARWH(1) );
    TC_ITEM item;
@@ -53,7 +53,7 @@ HB_FUNC( TABCTRL_ADDITEM )
 
 //---------------------------------------------------------------------------//
 
-HB_FUNC( TABCTRL_INSERTITEM )
+HB_FUNC( VWN_TABCTRL_INSERTITEM )
 {
    TC_ITEM item;
    item.mask = TCIF_TEXT | TCIF_IMAGE;
@@ -64,21 +64,21 @@ HB_FUNC( TABCTRL_INSERTITEM )
 
 //---------------------------------------------------------------------------//
 
-HB_FUNC( TABCTRL_SETCURSEL )
+HB_FUNC( VWN_TABCTRL_SETCURSEL )
 {
    hb_retni( TabCtrl_SetCurSel( (HWND) HB_PARWH(1) , hb_parni (2) ) );
 }
 
 //---------------------------------------------------------------------------//
 
-HB_FUNC( TABCTRL_GETCURSEL )
+HB_FUNC( VWN_TABCTRL_GETCURSEL )
 {
    hb_retni ( TabCtrl_GetCurSel( (HWND) HB_PARWH (1) ) );
 }
 
 //---------------------------------------------------------------------------//
 
-HB_FUNC( TABCTRL_GETITEM )
+HB_FUNC( VWN_TABCTRL_GETITEM )
 {
    TC_ITEM item;
    hb_retl(TabCtrl_GetItem( (HWND) HB_PARWH (1), (int) hb_parni(2) , &item ) );
@@ -88,14 +88,14 @@ HB_FUNC( TABCTRL_GETITEM )
 
 //---------------------------------------------------------------------------//
 
-HB_FUNC( TABCTRL_GETITEMCOUNT )
+HB_FUNC( VWN_TABCTRL_GETITEMCOUNT )
 {
    hb_retni( TabCtrl_GetItemCount( (HWND) HB_PARWH(1) ) );
 }
 
 //---------------------------------------------------------------------------//
 
-HB_FUNC( TABCTRL_GETITEMRECT )
+HB_FUNC( VWN_TABCTRL_GETITEMRECT )
 {
    RECT rc;
    PHB_ITEM aRect = hb_itemArrayNew( 4 );
@@ -112,7 +112,7 @@ HB_FUNC( TABCTRL_GETITEMRECT )
 
 //---------------------------------------------------------------------------//
 
-HB_FUNC( TABCTRL_GETROWCOUNT )
+HB_FUNC( VWN_TABCTRL_GETROWCOUNT )
 {
    hb_retni( TabCtrl_GetRowCount( (HWND) HB_PARWH(1) ) );
 }
@@ -123,7 +123,7 @@ HB_FUNC( TABCTRL_GETROWCOUNT )
 // TabCtrl_GetImageList(hwnd)
 // (HIMAGELIST)SNDMSG((hwnd), TCM_GETIMAGELIST, 0, 0L)
 
-HB_FUNC( TABCTRL_GETIMAGELIST )
+HB_FUNC( VWN_TABCTRL_GETIMAGELIST )
 {
    HB_RETWH( TabCtrl_GetImageList( (HWND) HB_PARWH(1) ) );
 }
@@ -133,7 +133,7 @@ HB_FUNC( TABCTRL_GETIMAGELIST )
 // #define TabCtrl_SetImageList(hwnd, himl)
 // (HIMAGELIST)SNDMSG((hwnd), TCM_SETIMAGELIST, 0, (LPARAM)(HIMAGELIST)(himl))
 
-HB_FUNC( TABCTRL_SETIMAGELIST )
+HB_FUNC( VWN_TABCTRL_SETIMAGELIST )
 {
    HB_RETWH( TabCtrl_SetImageList( (HWND) HB_PARWH( 1 ),
                     (LPARAM)(HIMAGELIST) HB_PARWH( 2 ) ) );
@@ -144,7 +144,7 @@ HB_FUNC( TABCTRL_SETIMAGELIST )
 // TabCtrl_SetItem(hwnd, iItem, pitem)
 // (BOOL)SNDMSG((hwnd), TCM_SETITEM, (WPARAM)(int)(iItem), (LPARAM)(TC_ITEM FAR*)(pitem))
 
-HB_FUNC( TABCTRL_SETITEM )
+HB_FUNC( VWN_TABCTRL_SETITEM )
 {
    TC_ITEM item;
    item.mask = TCIF_TEXT | TCIF_IMAGE;
@@ -157,7 +157,7 @@ HB_FUNC( TABCTRL_SETITEM )
 // TabCtrl_DeleteAllItems(hwnd)
 // (BOOL)SNDMSG((hwnd), TCM_DELETEALLITEMS, 0, 0L)
 
-HB_FUNC( TABCTRL_DELETEALLITEMS )
+HB_FUNC( VWN_TABCTRL_DELETEALLITEMS )
 {
    hb_retl(TabCtrl_DeleteAllItems((HWND) HB_PARWH(1)));
 }
@@ -166,7 +166,7 @@ HB_FUNC( TABCTRL_DELETEALLITEMS )
 // TabCtrl_DeleteItem(hwnd, i)
 // (BOOL)SNDMSG((hwnd), TCM_DELETEITEM, (WPARAM)(int)(i), 0L)
 
-HB_FUNC( TABCTRL_DELETEITEM )
+HB_FUNC( VWN_TABCTRL_DELETEITEM )
 {
    hb_retl(TabCtrl_DeleteItem((HWND) HB_PARWH(1), (WPARAM) hb_parni(2)));
 }
@@ -177,7 +177,7 @@ HB_FUNC( TABCTRL_DELETEITEM )
 
 // waiting for structures
 
-HB_FUNC( TABCTRL_HITTEST )
+HB_FUNC( VWN_TABCTRL_HITTEST )
 {
    TCHITTESTINFO tcht ;
 
@@ -192,7 +192,7 @@ HB_FUNC( TABCTRL_HITTEST )
 // TabCtrl_SetItemExtra(hwndTC, cb)
 // (BOOL)SNDMSG((hwndTC), TCM_SETITEMEXTRA, (WPARAM)(cb), 0L)
 
-HB_FUNC( TABCTRL_SETITEMEXTRA )
+HB_FUNC( VWN_TABCTRL_SETITEMEXTRA )
 {
    hb_retl( TabCtrl_SetItemExtra( (HWND) HB_PARWH(1), (int) hb_parni(2) ) );
 }
@@ -201,7 +201,7 @@ HB_FUNC( TABCTRL_SETITEMEXTRA )
 // TabCtrl_AdjustRect(hwnd, bLarger, prc)
 // (int)SNDMSG(hwnd, TCM_ADJUSTRECT, (WPARAM)(BOOL)(bLarger), (LPARAM)(RECT FAR *)prc)
 
-HB_FUNC( TABCTRL_ADJUSTRECT )
+HB_FUNC( VWN_TABCTRL_ADJUSTRECT )
 {
   RECT rc;
 
@@ -226,7 +226,7 @@ HB_FUNC( TABCTRL_ADJUSTRECT )
 // TabCtrl_SetItemSize(hwnd, x, y)
 // (DWORD)SNDMSG((hwnd), TCM_SETITEMSIZE, 0, MAKELPARAM(x,y))
 
-HB_FUNC( TABCTRL_SETITEMSIZE )
+HB_FUNC( VWN_TABCTRL_SETITEMSIZE )
 {
    hb_retnl( TabCtrl_SetItemSize( (HWND) HB_PARWH(1), (int) hb_parni(2), (int) hb_parni(3) ) );
 }
@@ -235,7 +235,7 @@ HB_FUNC( TABCTRL_SETITEMSIZE )
 // TabCtrl_RemoveImage(hwnd, i)
 // (void)SNDMSG((hwnd), TCM_REMOVEIMAGE, i, 0L)
 
-HB_FUNC( TABCTRL_REMOVEIMAGE )
+HB_FUNC( VWN_TABCTRL_REMOVEIMAGE )
 {
   TabCtrl_RemoveImage( (HWND) HB_PARWH(1), (int) hb_parni(2) );
 }
@@ -244,7 +244,7 @@ HB_FUNC( TABCTRL_REMOVEIMAGE )
 // TabCtrl_SetPadding(hwnd,  cx, cy)
 // (void)SNDMSG((hwnd), TCM_SETPADDING, 0, MAKELPARAM(cx, cy))
 
-HB_FUNC( TABCTRL_SETPADDING )
+HB_FUNC( VWN_TABCTRL_SETPADDING )
 {
    TabCtrl_SetPadding( (HWND) HB_PARWH(1), (int) hb_parni(2), (int) hb_parni(3) );
 }
@@ -253,7 +253,7 @@ HB_FUNC( TABCTRL_SETPADDING )
 // TabCtrl_GetToolTips(hwnd)
 // (HWND)SNDMSG((hwnd), TCM_GETTOOLTIPS, 0, 0L)
 
-HB_FUNC( TABCTRL_GETTOOLTIPS )
+HB_FUNC( VWN_TABCTRL_GETTOOLTIPS )
 {
    HB_RETWH( TabCtrl_GetToolTips( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -262,7 +262,7 @@ HB_FUNC( TABCTRL_GETTOOLTIPS )
 // TabCtrl_SetToolTips(hwnd, hwndTT)
 // (void)SNDMSG((hwnd), TCM_SETTOOLTIPS, (WPARAM)(hwndTT), 0L)
 
-HB_FUNC( TABCTRL_SETTOOLTIPS )
+HB_FUNC( VWN_TABCTRL_SETTOOLTIPS )
 {
    TabCtrl_SetToolTips( (HWND) HB_PARWH(1), (HWND) HB_PARWH(2) );
 }
@@ -271,7 +271,7 @@ HB_FUNC( TABCTRL_SETTOOLTIPS )
 // TabCtrl_GetCurFocus(hwnd)
 // (int)SNDMSG((hwnd), TCM_GETCURFOCUS, 0, 0)
 
-HB_FUNC( TABCTRL_GETCURFOCUS )
+HB_FUNC( VWN_TABCTRL_GETCURFOCUS )
 {
    hb_retni( TabCtrl_GetCurFocus( (HWND) HB_PARWH(1) ) );
 }
@@ -280,7 +280,7 @@ HB_FUNC( TABCTRL_GETCURFOCUS )
 // TabCtrl_SetCurFocus(hwnd, i)
 // SNDMSG((hwnd),TCM_SETCURFOCUS, i, 0)
 
-HB_FUNC( TABCTRL_SETCURFOCUS )
+HB_FUNC( VWN_TABCTRL_SETCURFOCUS )
 {
   TabCtrl_SetCurFocus( (HWND) HB_PARWH(1), (int) hb_parni(2) );
   hb_ret();
@@ -290,7 +290,7 @@ HB_FUNC( TABCTRL_SETCURFOCUS )
 // TabCtrl_SetMinTabWidth(hwnd, x)
 // (int)SNDMSG((hwnd), TCM_SETMINTABWIDTH, 0, x)
 
-HB_FUNC( TABCTRL_SETMINTABWIDTH )
+HB_FUNC( VWN_TABCTRL_SETMINTABWIDTH )
 {
    hb_retni( TabCtrl_SetMinTabWidth( (HWND) HB_PARWH(1), (int) hb_parni(2) ) );
 }
@@ -299,7 +299,7 @@ HB_FUNC( TABCTRL_SETMINTABWIDTH )
 // TabCtrl_DeselectAll(hwnd, fExcludeFocus)
 // (void)SNDMSG((hwnd), TCM_DESELECTALL, fExcludeFocus, 0)
 
-HB_FUNC( TABCTRL_DESELECTALL )
+HB_FUNC( VWN_TABCTRL_DESELECTALL )
 {
    TabCtrl_DeselectAll( (HWND) HB_PARWH(1), (UINT) hb_parni( 2 ) );
 }
@@ -308,7 +308,7 @@ HB_FUNC( TABCTRL_DESELECTALL )
 // TabCtrl_HighlightItem(hwnd, i, fHighlight)
 // (BOOL)SNDMSG((hwnd), TCM_HIGHLIGHTITEM, (WPARAM)(i), (LPARAM)MAKELONG (fHighlight, 0))
 
-HB_FUNC( TABCTRL_HIGHLIGHTITEM )
+HB_FUNC( VWN_TABCTRL_HIGHLIGHTITEM )
 {
    hb_retl( TabCtrl_HighlightItem( (HWND) HB_PARWH(1), (int) hb_parni(2), (WORD) hb_parni(3) ) );
 }
@@ -317,7 +317,7 @@ HB_FUNC( TABCTRL_HIGHLIGHTITEM )
 // TabCtrl_SetExtendedStyle(hwnd, dw)
 // (DWORD)SNDMSG((hwnd), TCM_SETEXTENDEDSTYLE, 0, dw)
 
-HB_FUNC( TABCTRL_SETEXTENDEDSTYLE )
+HB_FUNC( VWN_TABCTRL_SETEXTENDEDSTYLE )
 {
    hb_retnl( TabCtrl_SetExtendedStyle( (HWND) HB_PARWH(1), (DWORD) hb_parnl(2) ) );
 }
@@ -326,7 +326,7 @@ HB_FUNC( TABCTRL_SETEXTENDEDSTYLE )
 // TabCtrl_GetExtendedStyle(hwnd)
 // (DWORD)SNDMSG((hwnd), TCM_GETEXTENDEDSTYLE, 0, 0)
 
-HB_FUNC( TABCTRL_GETEXTENDEDSTYLE )
+HB_FUNC( VWN_TABCTRL_GETEXTENDEDSTYLE )
 {
    hb_retnl( TabCtrl_GetExtendedStyle( (HWND) HB_PARWH(1) ) );
 }
@@ -335,7 +335,7 @@ HB_FUNC( TABCTRL_GETEXTENDEDSTYLE )
 // TabCtrl_SetUnicodeFormat(hwnd, fUnicode)
 // (BOOL)SNDMSG((hwnd), TCM_SETUNICODEFORMAT, (WPARAM)(fUnicode), 0)
 
-HB_FUNC( TABCTRL_SETUNICODEFORMAT )
+HB_FUNC( VWN_TABCTRL_SETUNICODEFORMAT )
 {
    hb_retl( TabCtrl_SetUnicodeFormat( (HWND) HB_PARWH(1), hb_parl(2) ) );
 }
@@ -344,7 +344,7 @@ HB_FUNC( TABCTRL_SETUNICODEFORMAT )
 // TabCtrl_GetUnicodeFormat(hwnd)
 // (BOOL)SNDMSG((hwnd), TCM_GETUNICODEFORMAT, 0, 0)
 
-HB_FUNC( TABCTRL_GETUNICODEFORMAT )
+HB_FUNC( VWN_TABCTRL_GETUNICODEFORMAT )
 {
    hb_retl( TabCtrl_GetUnicodeFormat( (HWND) HB_PARWH(1) ) );
 }

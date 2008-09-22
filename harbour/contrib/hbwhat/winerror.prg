@@ -2,11 +2,13 @@
  * $Id$
  */
 
-
+//----------------------------------------------------------------------//
+//
 //  hbwhat ErrorSys
 //  A.J. Wos 08/06/2002
 //  Scaled down and adapted for Harbour + hbwhat
-
+//
+//----------------------------------------------------------------------//
 #include "common.ch"
 
 #include "hbwhat.ch"
@@ -16,17 +18,13 @@
 
 #xtranslate NTRIM( <n> ) => lTrim( Str( <n> ) )
 //#define LOGFILE  error.log // don't use quotes
-
-*------------------------------------------------------------------------------*
-
-PROCEDURE ErrorSys( )
+//----------------------------------------------------------------------//
+PROCEDURE WHT_ErrorSys( )
 
    ErrorBlock( { | e | DefError( e ) } )
 
    RETURN
-
-*------------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 STATIC FUNCTION DefError( e )
 
    LOCAL cMessage, aOptions, nChoice
@@ -53,13 +51,13 @@ STATIC FUNCTION DefError( e )
    DO WHILE ( ! Empty( ProcName( i ) ) )
       cProcStack += ( CRLF + ProcFile( i ) + "->" + ProcName( i ) + "(" + NTRIM( ProcLine( i ++ ) ) + ")" )
       IF ProcName( i ) == 'DEFERROR' // Oops, recursive arror, cannot continue !
-         OutputDebugString( "" )
-         OutputDebugString( "===============" + CRLF )
-         OutputDebugString( "RECURSIVE ERROR" + CRLF )
-         OutputDebugString( "===============" + CRLF )
-         OutputDebugString( e:description + CHR( 13 ) + "Procedure Stack Depth:" + ntrim( getprocstack( ) ) + CRLF )
-         OutputDebugString( cProcStack + CRLF )
-         PostQuitMessage( 0 )
+         VWN_OutputDebugString( "" )
+         VWN_OutputDebugString( "===============" + CRLF )
+         VWN_OutputDebugString( "RECURSIVE ERROR" + CRLF )
+         VWN_OutputDebugString( "===============" + CRLF )
+         VWN_OutputDebugString( e:description + CHR( 13 ) + "Procedure Stack Depth:" + ntrim( getprocstack( ) ) + CRLF )
+         VWN_OutputDebugString( cProcStack + CRLF )
+         VWN_PostQuitMessage( 0 )
          Errorlevel( 1 )
          // quit
          RETURN( .F. )
@@ -69,7 +67,7 @@ STATIC FUNCTION DefError( e )
    //OutputDebugString( cProcStack + CRLF )
 
    cErr := LogError( e, cProcStack )
-   OutputDebugString( cErr )
+   VWN_OutputDebugString( cErr )
    cMessage := ErrorMessage( e )
 
    aOptions := { "Quit" }
@@ -106,19 +104,15 @@ STATIC FUNCTION DefError( e )
 
    END
 
-   PostQuitMessage( 0 )
+   VWN_PostQuitMessage( 0 )
    ErrorLevel( 1 )
    Quit
    //CLOSE ALL
    //PGMEXIT()
 
    RETURN ( .F. )
-
-
-*------------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 STATIC FUNCTION ErrorMessage( e )
-
    LOCAL cMessage
 
    // start error message
@@ -149,16 +143,12 @@ STATIC FUNCTION ErrorMessage( e )
    END
    cMessage += ';Called from ' + ProcFile(3) + "->" + procname( 3 ) + ' (' + AllTrim( Str( procline( 3 ) ) ) + '),  ' + ;
                + ProcFile(4) + "->" + procname( 4 ) + ' (' + AllTrim( Str( procline( 4 ) ) ) + ')'
-   cMessage += ';Error logged in file '+GetModuleFileName()+'\error.log'
+   cMessage += ';Error logged in file '+ VWN_GetModuleFileName()+'\error.log'
 
    RETURN ( cMessage )
-
-
-*------------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 STATIC FUNCTION LogError( e, cProcStack )
-
-   LOCAL Args := convertargs( e:args )
+   LOCAL Args := ConvertArgs( e:args )
    LOCAL i    := 3
    LOCAL cErr := ''
    LOCAL dVer
@@ -166,7 +156,7 @@ STATIC FUNCTION LogError( e, cProcStack )
    cErr += 'SYSTEM'
    cErr += ( CRLF + '------' )
    cErr += ( CRLF + 'Error date:' + dtoc( date( ) ) + ' time:' + time( ) )
-   cErr += ( CRLF + 'Application: ' + GetModuleFileName( ) )
+   cErr += ( CRLF + 'Application: ' + VWN_GetModuleFileName( ) )
    cErr += ( CRLF + 'hbwhat library ver.' + WhatVersion( @dVer ) + ", " + DTOC( dVer ) )
 
    // T.B.D.:
@@ -219,12 +209,8 @@ STATIC FUNCTION LogError( e, cProcStack )
    SET CONSOLE ON
 
    RETURN cErr
-
-
-*------------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 STATIC FUNCTION IfEmpty( Msg )
-
    LOCAL Ret_Val := "<none>"
 
    IF ! Empty( msg )
@@ -232,21 +218,14 @@ STATIC FUNCTION IfEmpty( Msg )
    ENDIF
 
    RETURN Ret_Val
-
-
-*------------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 STATIC PROCEDURE PrintError
 
    BREAK
 
-// RETURN
-
-
-*------------------------------------------------------------------------------*
-
+   //RETURN
+//----------------------------------------------------------------------//
 STATIC FUNCTION ConvertArgs( a )
-
    LOCAL Ret_Val
    LOCAL x, cType
    LOCAL NumArgs := iif( ValType( a ) == "A", Len( a ) , iif( ValType( a ) == "C", ( a := { a } , 1 ) , 0 ) )
@@ -278,41 +257,29 @@ STATIC FUNCTION ConvertArgs( a )
    ENDIF
 
    RETURN ifempty( Ret_Val )
-
-
-*------------------------------------------------------------------------------*
-
-STATIC FUNCTION GetAliasCount( )
-
+//----------------------------------------------------------------------//
+STATIC FUNCTION GetAliasCount()
    LOCAL Counter  := 0
    LOCAL nCounter := 0
 
    FOR Counter := 1 TO 255
-      IF ! Empty( alias( Counter ) )
-         nCounter ++
+      IF !Empty( alias( Counter ) )
+         nCounter++
       ENDIF
    NEXT
 
    RETURN( nCounter )
-
-
-*------------------------------------------------------------------------------*
-
-STATIC FUNCTION getprocstack( )
-
+//----------------------------------------------------------------------//
+STATIC FUNCTION GetProcStack( )
    LOCAL i := 2
 
-   DO WHILE ! Empty( procname( i ) )
+   DO WHILE ! Empty( ProcName( i ) )
       i ++
    ENDDO
 
    RETURN( i - 3 )
-
-
-*------------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 STATIC FUNCTION DosErrCode( e )
-
    LOCAL Msg
 
    IF e:osCode > 0
@@ -322,10 +289,7 @@ STATIC FUNCTION DosErrCode( e )
    ENDIF
 
    RETURN Msg
-
-
-*------------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 /*
  Function: DosErrText( )
  Author: Craig Yellick
@@ -333,7 +297,6 @@ STATIC FUNCTION DosErrCode( e )
  in the Clipper 5.0 "Programming & Utilities Guide" )
  Returns: character string
 */
-
 STATIC FUNCTION DosErrText( n )
 
    LOCAL desc_ := { "Invalid function number"                 , ; // 1
@@ -424,10 +387,7 @@ STATIC FUNCTION DosErrText( n )
    ENDIF
 
    RETURN desc_[ n ]
-
-
-*------------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 STATIC FUNCTION GenCodeText( n )
 
    LOCAL desc_ := { "EG_ARG", ; // 1
@@ -483,12 +443,8 @@ STATIC FUNCTION GenCodeText( n )
       n := Len( desc_ )
    ENDIF
 
-
    RETURN NTRIM( n ) + ": " + desc_[ n ]
-
-
-*------------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 STATIC FUNCTION eAlert( cMsg, aChoices, cDetail )
 
    LOCAL aDlg, i, n, aChoose, aMsg
@@ -498,7 +454,7 @@ STATIC FUNCTION eAlert( cMsg, aChoices, cDetail )
    LOCAL isDetail := .F.
 
    IF !ISCHARACTER( cMsg )
-      cMsg := asString( cMsg )
+      cMsg := WHT_asString( cMsg )
    ENDIF
    cTitle := 'Alert'
 
@@ -515,14 +471,14 @@ STATIC FUNCTION eAlert( cMsg, aChoices, cDetail )
       cMsg := SubStr( cMsg, crPos + 1 )
    ENDIF
 
-   hWnd := GetDesktopWindow( ) // default parent
-   hDC  := GetDC( hWnd )
+   hWnd := VWN_GetDesktopWindow( ) // default parent
+   hDC  := VWN_GetDC( hWnd )
 
    //------------- total width without buttons
 
-   w := GetTextExtentPoint32( hDC, AllTrim( cTitle ) ) [ 1 ]
-   aMsg := str2a( cMsg, CR )
-   AEVAL( aMsg, { | x | w := Max( w, GetTextExtentPoint32( hDC, AllTrim( x ) ) [ 1 ] ) } )
+   w := VWN_GetTextExtentPoint32( hDC, AllTrim( cTitle ) ) [ 1 ]
+   aMsg := WHT_str2a( cMsg, CR )
+   AEVAL( aMsg, { | x | w := Max( w, VWN_GetTextExtentPoint32( hDC, AllTrim( x ) ) [ 1 ] ) } )
    w += 20
 
    //--------- total width of choices, also add "&" to the choices (if needed)
@@ -533,12 +489,12 @@ STATIC FUNCTION eAlert( cMsg, aChoices, cDetail )
    txth := 8 //ATM[TM_Height]
    Msgh := Len( aMsg ) * txth
    FOR i := 1 TO n
-      ButWidth := Max( 20, GetTextExtentpoint32( hDC, aChoices[ i ] ) [ 1 ] + 6 )
+      ButWidth := Max( 20, VWN_GetTextExtentpoint32( hDC, aChoices[ i ] ) [ 1 ] + 6 )
       t := Max( t, ButWidth )
       aChoose[ i ] := iif( at( "&", aChoices[ i ] ) == 0, "&" + aChoices[ i ] , aChoices[ i ] )
    NEXT i
 
-   ReleaseDC( , hDC )
+   VWN_ReleaseDC( , hDC )
 
    ButWidth := t / 2
    t *= ( n + 1 )
@@ -548,72 +504,69 @@ STATIC FUNCTION eAlert( cMsg, aChoices, cDetail )
 
    //----------- create dialog
 
-   aDlg := MakeDlgTemplate( cTitle, ;
+   aDlg := WHT_MakeDlgTemplate( cTitle, ;
                            WS_CAPTION + DS_MODALFRAME + WS_VISIBLE + 4 + WS_POPUP + DS_SETFONT , ;
                            0, 0, w, h, 8, 'MS Sans Serif' )
 
    FOR i := 1 TO n
-      aDlg := AddDlgItem( aDlg, i, "BUTTON", ;
+      aDlg := WHT_AddDlgItem( aDlg, i, "BUTTON", ;
                          BS_PUSHBUTTON + WS_TABSTOP + WS_CHILD + WS_VISIBLE, ;
                          w - ( n - i ) * ( ButWidth + 5 ) - ButWidth - 5, h - 18, ButWidth, 14, ;
                          aChoose[ i ] )
    NEXT i
 
-   aDlg := AddDlgItem( aDlg, - 1, "STATIC", ;
+   aDlg := WHT_AddDlgItem( aDlg, - 1, "STATIC", ;
                       SS_CENTER + WS_CHILD + WS_VISIBLE, ;
                       10, 8, w - 20, Msgh, ;
                       cMsg )
 
-   aDlg := AddDlgItem( aDlg, - 1, "BUTTON", ;
+   aDlg := WHT_AddDlgItem( aDlg, - 1, "BUTTON", ;
                       BS_GROUPBOX + WS_CHILD + WS_VISIBLE, ;
                       5, 1, w - 10, Msgh + 10, ;
                       "" )
 
-   aDlg := AddDlgItem( aDlg, 101, "EDIT", ;
+   aDlg := WHT_AddDlgItem( aDlg, 101, "EDIT", ;
                       WS_CHILD + WS_VISIBLE + WS_BORDER + ES_MULTILINE + ES_READONLY + WS_VSCROLL + WS_TABSTOP, ;
                       5, h + 1, w - 10, 115, ;
                       cDetail )
 
-   MessageBeep( MB_ICONHAND )
-   i := DialogBox( , aDlg, hWnd, { | hDlg, nMsg, nwParam, nlParam | ;
+   VWN_MessageBeep( MB_ICONHAND )
+   i := WHT_DialogBox( , aDlg, hWnd, { | hDlg, nMsg, nwParam, nlParam | ;
                                   eAlertProc( hDlg, nMsg, nwParam, nlParam, @isDetail, hWnd, n ) } )
-   SetFocus( hWnd )
+   VWN_SetFocus( hWnd )
 
    RETURN i
-
-
-*------------------------------------------------------------------------------*
-
+//----------------------------------------------------------------------//
 STATIC FUNCTION eAlertProc( hDlg, nMsg, nwParam, nlParam, isDetail, hWnd, n )
-
    LOCAL aRect
 
    HB_SYMBOL_UNUSED( nlParam )
 
    DO CASE
    CASE nMsg == WM_INITDIALOG
-      CenterWindow( hDlg, , , hWnd )
-      SetOnTop( hDlg, HWND_TOPMOST )
+      WHT_CenterWindow( hDlg, , , hWnd )
+      WHT_SetOnTop( hDlg, HWND_TOPMOST )
       RETURN( 1 )
 
    CASE nMsg == WM_COMMAND
-      IF 'Detail' $ GetDlgItemText( hDlg, nwParam )
-         aRect := getwindowrect( hDlg )
+      IF 'Detail' $ VWN_GetDlgItemText( hDlg, nwParam )
+         aRect := VWN_GetWindowRect( hDlg )
          IF isDetail
-            SetDlgItemText( hDlg, nwParam, '&Detail >>' )
-            MoveWindow( hDlg, aRect[ 1 ] , aRect[ 2 ] , aRect[ 3 ] - aRect[ 1 ] , aRect[ 4 ] - aRect[ 2 ] - 200, .T. )
+            VWN_SetDlgItemText( hDlg, nwParam, '&Detail >>' )
+            VWN_MoveWindow( hDlg, aRect[ 1 ] , aRect[ 2 ] , aRect[ 3 ] - aRect[ 1 ] , aRect[ 4 ] - aRect[ 2 ] - 200, .T. )
             isDetail := .F.
          ELSE
-            SetDlgItemText( hDlg, nwParam, '<< &Detail' )
-            MoveWindow( hDlg, aRect[ 1 ] , aRect[ 2 ] , aRect[ 3 ] - aRect[ 1 ] , aRect[ 4 ] - aRect[ 2 ] + 200, .T. )
+            VWN_SetDlgItemText( hDlg, nwParam, '<< &Detail' )
+            VWN_MoveWindow( hDlg, aRect[ 1 ] , aRect[ 2 ] , aRect[ 3 ] - aRect[ 1 ] , aRect[ 4 ] - aRect[ 2 ] + 200, .T. )
             isDetail := .T.
          ENDIF
       ELSE
          IF nwParam > 0 .AND. nwParam < n
-            EndDialog( hDlg, nwParam )
+            VWN_EndDialog( hDlg, nwParam )
          ENDIF
       ENDIF
 
    ENDCASE
 
    RETURN 0
+//----------------------------------------------------------------------//

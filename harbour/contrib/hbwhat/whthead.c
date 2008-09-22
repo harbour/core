@@ -68,7 +68,7 @@ extern BOOL Array2Point(PHB_ITEM aPoint, POINT *pt );
 // SYNTAX:
 // Header_Create( nStyle, x, y, nWidth, nHeight, hWndParent, nId )
 
-HB_FUNC( HEADER_CREATE )
+HB_FUNC( VWN_HEADER_CREATE )
 {
 
    HB_RETWH( CreateWindow(  "SysHeader32"         ,
@@ -88,7 +88,7 @@ HB_FUNC( HEADER_CREATE )
 //-----------------------------------------------------------------------------
 // Header_GetItemCount(hwndHD) (int)SNDMSG((hwndHD), HDM_GETITEMCOUNT, 0, 0L)
 
-HB_FUNC( HEADER_GETITEMCOUNT )
+HB_FUNC( VWN_HEADER_GETITEMCOUNT )
 {
    hb_retni( Header_GetItemCount( (HWND) HB_PARWH(1) ) );
 }
@@ -97,7 +97,7 @@ HB_FUNC( HEADER_GETITEMCOUNT )
 //-----------------------------------------------------------------------------
 // Header_InsertItem(hwndHD, i, phdi) (int)SNDMSG((hwndHD), HDM_INSERTITEM, (WPARAM)(int)(i), (LPARAM)(const HD_ITEM FAR*)(phdi))
 
-HB_FUNC( HEADER_INSERTITEM )
+HB_FUNC( VWN_HEADER_INSERTITEM )
 {
    HDITEM *hdi = ( HDITEM *) hb_parc( 3 ); //hb_param( 3, HB_IT_STRING )->item.asString.value ;
    hb_retni( Header_InsertItem( (HWND) HB_PARWH(1), hb_parni(2), hdi ) );
@@ -107,7 +107,7 @@ HB_FUNC( HEADER_INSERTITEM )
 //-----------------------------------------------------------------------------
 // Header_DeleteItem(hwndHD, i) (BOOL)SNDMSG((hwndHD), HDM_DELETEITEM, (WPARAM)(int)(i), 0L)
 
-HB_FUNC( HEADER_DELETEITEM  )
+HB_FUNC( VWN_HEADER_DELETEITEM  )
 {
    hb_retl( Header_DeleteItem( (HWND) HB_PARWH(1), hb_parni(2) ) );
 }
@@ -119,7 +119,7 @@ HB_FUNC( HEADER_DELETEITEM  )
 // SYNTAX
 // structbuffer := Header_GetItem(hWnd,i) -> cBuff or NIL
 
-HB_FUNC( HEADER_GETITEM )
+HB_FUNC( VWN_HEADER_GETITEM )
 {
    HDITEM hdi ;
    BOOL lRet = Header_GetItem( (HWND) HB_PARWH(1), hb_parni(2), &hdi );
@@ -133,7 +133,7 @@ HB_FUNC( HEADER_GETITEM )
 //-----------------------------------------------------------------------------
 // Header_SetItem(hwndHD, i, phdi) (BOOL)SNDMSG((hwndHD), HDM_SETITEM, (WPARAM)(int)(i), (LPARAM)(const HD_ITEM FAR*)(phdi))
 
-HB_FUNC( HEADER_SETITEM )
+HB_FUNC( VWN_HEADER_SETITEM )
 {
    HDITEM *hdi = ( HDITEM * ) hb_parc( 3 ); //hb_param( 3, HB_IT_STRING )->item.asString.value ;
    hb_retl( Header_SetItem( (HWND) HB_PARWH(1), hb_parni(2), hdi ) );
@@ -143,7 +143,7 @@ HB_FUNC( HEADER_SETITEM )
 //-----------------------------------------------------------------------------
 // Header_CreateDragImage(hwnd, i) (HIMAGELIST)SNDMSG((hwnd), HDM_CREATEDRAGIMAGE, (WPARAM)(i), 0)
 
-HB_FUNC( HEADER_CREATEDRAGIMAGE )
+HB_FUNC( VWN_HEADER_CREATEDRAGIMAGE )
 {
 
    HB_RETWH( Header_CreateDragImage( (HWND) HB_PARWH(1), hb_parni(2) ) );
@@ -157,7 +157,7 @@ HB_FUNC( HEADER_CREATEDRAGIMAGE )
 // SYNTAX:
 // aOrder := Header_GetOrderArray( hWnd )
 
-HB_FUNC( HEADER_GETORDERARRAY )
+HB_FUNC( VWN_HEADER_GETORDERARRAY )
 {
 
   UINT iCount = Header_GetItemCount((HWND)HB_PARWH(1) );
@@ -191,7 +191,7 @@ HB_FUNC( HEADER_GETORDERARRAY )
 // Header_SetOrderArray(hWnd,aOrder)
 
 
-HB_FUNC(  HEADER_SETORDERARRAY )
+HB_FUNC( VWN_HEADER_SETORDERARRAY )
 {
    UINT iCount ;
    INT *lpi    ;
@@ -222,7 +222,7 @@ HB_FUNC(  HEADER_SETORDERARRAY )
 // SYNTAX:
 // aRect:=Header_GetItemRect(hWnd,i)
 
-HB_FUNC( HEADER_GETITEMRECT )
+HB_FUNC( VWN_HEADER_GETITEMRECT )
 {
    RECT rc ;
    PHB_ITEM aRc ;
@@ -242,7 +242,7 @@ HB_FUNC( HEADER_GETITEMRECT )
 // Header_GetImageList(hwnd) (HIMAGELIST)SNDMSG((hwnd), HDM_GETIMAGELIST, 0, 0)
 
 
-HB_FUNC( HEADER_GETIMAGELIST )
+HB_FUNC( VWN_HEADER_GETIMAGELIST )
 {
 
     HB_RETWH(Header_GetImageList((HWND) HB_PARWH(1) ) );
@@ -253,7 +253,7 @@ HB_FUNC( HEADER_GETIMAGELIST )
 //-----------------------------------------------------------------------------
 // Header_SetImageList(hwnd, himl) (HIMAGELIST)SNDMSG((hwnd), HDM_SETIMAGELIST, 0, (LPARAM)(himl))
 
-HB_FUNC( HEADER_SETIMAGELIST )
+HB_FUNC( VWN_HEADER_SETIMAGELIST )
 {
 
    HB_RETWH( Header_SetImageList((HWND) HB_PARWH(1), (LPARAM) hb_parnl(2) ) );
@@ -264,7 +264,7 @@ HB_FUNC( HEADER_SETIMAGELIST )
 //-----------------------------------------------------------------------------
 // Header_OrderToIndex(hwnd, i) (int)SNDMSG((hwnd), HDM_ORDERTOINDEX, (WPARAM)(i), 0)
 
-HB_FUNC( HEADER_ORDERTOINDEX )
+HB_FUNC( VWN_HEADER_ORDERTOINDEX )
 {
 
    hb_retni( Header_OrderToIndex((HWND) HB_PARWH(1), hb_parni(2) ) );
@@ -279,7 +279,7 @@ HB_FUNC( HEADER_ORDERTOINDEX )
 //              position or the index of which divider to hotlight
 // lParam = depends on wParam  (-1 and wParm = FALSE turns off hotlight)
 
-HB_FUNC( HEADER_SETHOTDIVIDER )
+HB_FUNC( VWN_HEADER_SETHOTDIVIDER )
 {
 
    hb_retni( Header_SetHotDivider((HWND) HB_PARWH(1), hb_parl(2), (LPARAM) hb_parnl(3)));
@@ -290,7 +290,7 @@ HB_FUNC( HEADER_SETHOTDIVIDER )
 //-----------------------------------------------------------------------------
 // Header_SetBitmapMargin(hwnd, iWidth) (int)SNDMSG((hwnd), HDM_SETBITMAPMARGIN, (WPARAM)(iWidth), 0)
 
-HB_FUNC( HEADER_SETBITMAPMARGIN )
+HB_FUNC( VWN_HEADER_SETBITMAPMARGIN )
 {
 
    hb_retni( Header_SetBitmapMargin( (HWND) HB_PARWH(1), hb_parni(2) ) );
@@ -301,7 +301,7 @@ HB_FUNC( HEADER_SETBITMAPMARGIN )
 //-----------------------------------------------------------------------------
 // Header_GetBitmapMargin(hwnd) (int)SNDMSG((hwnd), HDM_GETBITMAPMARGIN, 0, 0)
 
-HB_FUNC( HEADER_GETBITMAPMARGIN )
+HB_FUNC( VWN_HEADER_GETBITMAPMARGIN )
 {
 
    hb_retni( Header_GetBitmapMargin( (HWND) HB_PARWH(1) ) );
@@ -312,7 +312,7 @@ HB_FUNC( HEADER_GETBITMAPMARGIN )
 //-----------------------------------------------------------------------------
 // Header_SetUnicodeFormat(hwnd, fUnicode) (BOOL)SNDMSG((hwnd), HDM_SETUNICODEFORMAT, (WPARAM)(fUnicode), 0)
 
-HB_FUNC( HEADER_SETUNICODEFORMAT )
+HB_FUNC( VWN_HEADER_SETUNICODEFORMAT )
 {
 
    hb_retl( Header_SetUnicodeFormat( (HWND) HB_PARWH(1), hb_parl( 2 ) ) );
@@ -323,7 +323,7 @@ HB_FUNC( HEADER_SETUNICODEFORMAT )
 //-----------------------------------------------------------------------------
 // Header_GetUnicodeFormat(hwnd) (BOOL)SNDMSG((hwnd), HDM_GETUNICODEFORMAT, 0, 0)
 
-HB_FUNC( HEADER_GETUNICODEFORMAT )
+HB_FUNC( VWN_HEADER_GETUNICODEFORMAT )
 {
 
    hb_retl( Header_GetUnicodeFormat((HWND) HB_PARWH(1) ) );
@@ -334,7 +334,7 @@ HB_FUNC( HEADER_GETUNICODEFORMAT )
 //-----------------------------------------------------------------------------
 // Header_SetFilterChangeTimeout(hwnd, i) (int)SNDMSG((hwnd), HDM_SETFILTERCHANGETIMEOUT, 0, (LPARAM)(i))
 
-HB_FUNC( HEADER_SETFILTERCHANGETIMEOUT )
+HB_FUNC( VWN_HEADER_SETFILTERCHANGETIMEOUT )
 {
 
    hb_retni( Header_SetFilterChangeTimeout((HWND) HB_PARWH(1), hb_parni( 2 ) ) );
@@ -345,7 +345,7 @@ HB_FUNC( HEADER_SETFILTERCHANGETIMEOUT )
 //-----------------------------------------------------------------------------
 // Header_EditFilter(hwnd, i, fDiscardChanges) (int)SNDMSG((hwnd), HDM_EDITFILTER, (WPARAM)(i), MAKELPARAM(fDiscardChanges, 0))
 
-HB_FUNC( HEADER_EDITFILTER )
+HB_FUNC( VWN_HEADER_EDITFILTER )
 {
 
    hb_retni( Header_EditFilter( (HWND) HB_PARWH(1), hb_parni( 2 ), hb_parl( 3 ) ) );
@@ -356,7 +356,7 @@ HB_FUNC( HEADER_EDITFILTER )
 //-----------------------------------------------------------------------------
 // Header_ClearAllFilters(hwnd) (int)SNDMSG((hwnd), HDM_CLEARFILTER, (WPARAM)-1, 0)
 
-HB_FUNC( HEADER_CLEARALLFILTERS )
+HB_FUNC( VWN_HEADER_CLEARALLFILTERS )
 {
 
    hb_retni( Header_ClearAllFilters( (HWND) HB_PARWH(1) ) );
@@ -370,7 +370,7 @@ HB_FUNC( HEADER_CLEARALLFILTERS )
 // the filter should be cleared.  When this happens you will
 // only receive a single filter changed notification.
 
-HB_FUNC( HEADER_CLEARFILTER )
+HB_FUNC( VWN_HEADER_CLEARFILTER )
 {
 
    hb_retni( Header_ClearFilter( (HWND) HB_PARWH(1), hb_parni( 2 ) ) );
@@ -381,7 +381,7 @@ HB_FUNC( HEADER_CLEARFILTER )
 //-----------------------------------------------------------------------------
 // Header_Layout(hwndHD, playout) (BOOL)SNDMSG((hwndHD), HDM_LAYOUT, 0, (LPARAM)(HD_LAYOUT FAR*)(playout))
 
-HB_FUNC( HEADER_LAYOUT )
+HB_FUNC( VWN_HEADER_LAYOUT )
 {
    HD_LAYOUT *hdLayout = ( HD_LAYOUT *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
    hb_retl( Header_Layout( (HWND) HB_PARWH(1), hdLayout ) );

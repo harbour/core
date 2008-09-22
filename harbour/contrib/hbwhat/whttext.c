@@ -36,7 +36,7 @@ extern void Size2ArrayEx( SIZE *siz  ,  PHB_ITEM aSize);
 // syntax
 // TextOut(hDC, x, y, cStr) -> lSuccess
 
-HB_FUNC( TEXTOUT )
+HB_FUNC( VWN_TEXTOUT )
 {
 
    hb_retl( TextOut((HDC) HB_PARWH( 1 )   ,   // handle of device context
@@ -52,7 +52,7 @@ HB_FUNC( TEXTOUT )
 
 /*
 
-HB_FUNC( POLYTEXTOUTA )
+HB_FUNC( VWN_POLYTEXTOUTA )
 {
    CONST POLYTEXTA ;
 
@@ -71,7 +71,7 @@ HB_FUNC( POLYTEXTOUTA )
 // note: make sure that the aDx is of correct length , if passed
 
 
-HB_FUNC( EXTTEXTOUT )
+HB_FUNC( VWN_EXTTEXTOUT )
 {
    RECT  rc    ;
    INT * lpDx = NULL;
@@ -113,7 +113,7 @@ HB_FUNC( EXTTEXTOUT )
 // syntax
 // DrawText( hDC, cStr, aRect, [uFormat]) -> nTextHeight, or 0
 
-HB_FUNC( DRAWTEXT )
+HB_FUNC( VWN_DRAWTEXT )
 {
    char *cText = hb_parcx( 2 );
    RECT rc;
@@ -135,7 +135,7 @@ HB_FUNC( DRAWTEXT )
 // syntax
 // DrawText( hDC, cStr, aRect, [uFormat],[DTParams]) -> nTextHeight, or 0
 
-HB_FUNC( DRAWTEXTEX )
+HB_FUNC( VWN_DRAWTEXTEX )
 {
    char *cText = (char *) hb_parcx( 2 );
    RECT rc;
@@ -163,7 +163,7 @@ HB_FUNC( DRAWTEXTEX )
 // Syntax
 // TabbedTextOut( hDC, x, y, cStr, aTabs, nOrigin )-> DWORD of width and height, or 0
 
-HB_FUNC( TABBEDTEXTOUT )
+HB_FUNC( VWN_TABBEDTEXTOUT )
 {
    char *cText = hb_parcx( 4 );
    int iCount  ;
@@ -201,7 +201,7 @@ HB_FUNC( TABBEDTEXTOUT )
 // Syntax
 // GetTextFace(hDC) -> cTextFace , or NIL
 
-HB_FUNC( GETTEXTFACE )
+HB_FUNC( VWN_GETTEXTFACE )
 {
   char *cText = (char*) hb_xgrab(MAX_PATH);
   int iRet ;
@@ -222,7 +222,7 @@ HB_FUNC( GETTEXTFACE )
 // Syntax
 // GetTabbedTextExtent( hDC,cStr, aTabs )-> DWORD of width and height, or 0
 
-HB_FUNC( GETTABBEDTEXTEXTENT )
+HB_FUNC( VWN_GETTABBEDTEXTEXTENT )
 {
    char *cText ;
    int iCount  ;
@@ -259,7 +259,7 @@ HB_FUNC( GETTABBEDTEXTEXTENT )
 // Syntax
 // GetTextMetrics(hDC) -> TEXTMETRIC_Structure_Buffer, or NIL
 
-HB_FUNC( GETTEXTMETRICS )
+HB_FUNC( VWN_GETTEXTMETRICS )
 {
    TEXTMETRIC tm ;
 
@@ -272,7 +272,7 @@ HB_FUNC( GETTEXTMETRICS )
 
 /*
 
-HB_FUNC( GETOUTLINETEXTMETRICSA )
+HB_FUNC( VWN_GETOUTLINETEXTMETRICSA )
 {
    LPOUTLINETEXTMETRICA lpoutLinetExtMetrica ;
 
@@ -290,7 +290,7 @@ HB_FUNC( GETOUTLINETEXTMETRICSA )
 // Syntax
 // GetTextExtentPoint32( hDC, cStr ) -> aSize, or NIL
 
-HB_FUNC( GETTEXTEXTENTPOINT32 )
+HB_FUNC( VWN_GETTEXTEXTENTPOINT32 )
 {
    char * pstr = hb_parcx(2);
    SIZE sz;
@@ -310,7 +310,7 @@ HB_FUNC( GETTEXTEXTENTPOINT32 )
 // WINGDIAPI int WINAPI GetBkMode( IN HDC);
 
 
-HB_FUNC( GETBKMODE )
+HB_FUNC( VWN_GETBKMODE )
 {
    hb_retni( GetBkMode( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -319,7 +319,7 @@ HB_FUNC( GETBKMODE )
 // WINGDIAPI int WINAPI SetBkMode(IN HDC, IN int);
 
 
-HB_FUNC( SETBKMODE )
+HB_FUNC( VWN_SETBKMODE )
 {
    hb_retni( SetBkMode( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -328,7 +328,7 @@ HB_FUNC( SETBKMODE )
 // WINGDIAPI UINT WINAPI GetTextAlign( IN HDC);
 
 
-HB_FUNC( GETTEXTALIGN )
+HB_FUNC( VWN_GETTEXTALIGN )
 {
    hb_retni( GetTextAlign( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -337,7 +337,7 @@ HB_FUNC( GETTEXTALIGN )
 // WINGDIAPI UINT WINAPI SetTextAlign(IN HDC, IN UINT);
 
 
-HB_FUNC( SETTEXTALIGN )
+HB_FUNC( VWN_SETTEXTALIGN )
 {
    hb_retni( SetTextAlign( (HDC) HB_PARWH( 1 ), (UINT) hb_parni( 2 ) ) );
 }
@@ -346,7 +346,7 @@ HB_FUNC( SETTEXTALIGN )
 // WINGDIAPI BOOL WINAPI SetTextJustification(IN HDC, IN int, IN int);
 
 
-HB_FUNC( SETTEXTJUSTIFICATION )
+HB_FUNC( VWN_SETTEXTJUSTIFICATION )
 {
    hb_retl( SetTextJustification( (HDC) HB_PARWH( 1 ),
                                   hb_parni( 2 )      ,
@@ -359,7 +359,7 @@ HB_FUNC( SETTEXTJUSTIFICATION )
 // WINGDIAPI int WINAPI GetTextCharacterExtra( IN HDC);
 
 
-HB_FUNC( GETTEXTCHARACTEREXTRA )
+HB_FUNC( VWN_GETTEXTCHARACTEREXTRA )
 {
    hb_retni( GetTextCharacterExtra( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -368,7 +368,7 @@ HB_FUNC( GETTEXTCHARACTEREXTRA )
 // WINGDIAPI int WINAPI SetTextCharacterExtra(IN HDC, IN int);
 
 
-HB_FUNC( SETTEXTCHARACTEREXTRA )
+HB_FUNC( VWN_SETTEXTCHARACTEREXTRA )
 {
    hb_retni( SetTextCharacterExtra( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -379,7 +379,7 @@ HB_FUNC( SETTEXTCHARACTEREXTRA )
 // WINGDIAPI int WINAPI GetTextCharset( IN HDC hdc);
 
 
-HB_FUNC( GETTEXTCHARSET )
+HB_FUNC( VWN_GETTEXTCHARSET )
 {
    hb_retni( GetTextCharset( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -392,7 +392,7 @@ HB_FUNC( GETTEXTCHARSET )
 
 /*
 
-HB_FUNC( GRAYSTRING )
+HB_FUNC( VWN_GRAYSTRING )
 {
    GRAYSTRINGPROC lpOutputFunc ;
 
@@ -418,7 +418,7 @@ HB_FUNC( GRAYSTRING )
 
 /*
 
-HB_FUNC( GETCHARABCWIDTHSA )
+HB_FUNC( VWN_GETCHARABCWIDTHSA )
 {
    LPABC lpabc ;
 
@@ -438,7 +438,7 @@ HB_FUNC( GETCHARABCWIDTHSA )
 
 /*
 
-HB_FUNC( GETCHARABCWIDTHSFLOATA )
+HB_FUNC( VWN_GETCHARABCWIDTHSFLOATA )
 {
    LPABCFLOAT lpabcFloat ;
 
@@ -458,7 +458,7 @@ HB_FUNC( GETCHARABCWIDTHSFLOATA )
 
 /*
 
-HB_FUNC( GETCHARABCWIDTHSI )
+HB_FUNC( VWN_GETCHARABCWIDTHSI )
 {
    LPWORD lpWord ;
    LPABC  lpabc  ;
@@ -480,7 +480,7 @@ HB_FUNC( GETCHARABCWIDTHSI )
 
 /*
 
-HB_FUNC( GETCHARACTERPLACEMENTA )
+HB_FUNC( VWN_GETCHARACTERPLACEMENTA )
 {
    LPGCP_RESULTSA lpgcp_resultsa ;
 
@@ -502,7 +502,7 @@ HB_FUNC( GETCHARACTERPLACEMENTA )
 
 /*
 
-HB_FUNC( GETCHARWIDTH32A )
+HB_FUNC( VWN_GETCHARWIDTH32A )
 {
    LPINT lpInt ;
 
@@ -522,7 +522,7 @@ HB_FUNC( GETCHARWIDTH32A )
 
 /*
 
-HB_FUNC( GETCHARWIDTHA )
+HB_FUNC( VWN_GETCHARWIDTHA )
 {
    LPINT lpInt ;
 
@@ -542,7 +542,7 @@ HB_FUNC( GETCHARWIDTHA )
 
 /*
 
-HB_FUNC( GETCHARWIDTHFLOATA )
+HB_FUNC( VWN_GETCHARWIDTHFLOATA )
 {
    PFLOAT pFloat ;
 
@@ -562,7 +562,7 @@ HB_FUNC( GETCHARWIDTHFLOATA )
 
 /*
 
-HB_FUNC( GETCHARWIDTHI )
+HB_FUNC( VWN_GETCHARWIDTHI )
 {
    LPWORD lpWord ;
    LPINT  lpInt  ;
@@ -584,7 +584,7 @@ HB_FUNC( GETCHARWIDTHI )
 
 /*
 
-HB_FUNC( GETKERNINGPAIRSA )
+HB_FUNC( VWN_GETKERNINGPAIRSA )
 {
    LPKERNINGPAIR lpkerningpair ;
 
@@ -603,7 +603,7 @@ HB_FUNC( GETKERNINGPAIRSA )
 
 /*
 
-HB_FUNC( GETTEXTCHARSETINFO )
+HB_FUNC( VWN_GETTEXTCHARSETINFO )
 {
    LPFONTSIGNATURE lpSig   ;
 
@@ -622,7 +622,7 @@ HB_FUNC( GETTEXTCHARSETINFO )
 
 /*
 
-HB_FUNC( GETTEXTEXTENTEXPOINTA )
+HB_FUNC( VWN_GETTEXTEXTENTEXPOINTA )
 {
    LPINT  lpInt1 ;
    LPINT  lpInt2 ;
@@ -647,7 +647,7 @@ HB_FUNC( GETTEXTEXTENTEXPOINTA )
 
 /*
 
-HB_FUNC( GETTEXTEXTENTEXPOINTI )
+HB_FUNC( VWN_GETTEXTEXTENTEXPOINTI )
 {
    LPWORD lpWord ;
    LPINT  lpInt1 ;
@@ -674,7 +674,7 @@ HB_FUNC( GETTEXTEXTENTEXPOINTI )
 
 /*
 
-HB_FUNC( GETTEXTEXTENTPOINTA )
+HB_FUNC( VWN_GETTEXTEXTENTPOINTA )
 {
    LPSIZE lpSize ;
 
@@ -694,7 +694,7 @@ HB_FUNC( GETTEXTEXTENTPOINTA )
 
 /*
 
-HB_FUNC( GETTEXTEXTENTPOINTI )
+HB_FUNC( VWN_GETTEXTEXTENTPOINTI )
 {
    LPWORD lpWord ;
    LPSIZE lpSize ;
@@ -717,7 +717,7 @@ HB_FUNC( GETTEXTEXTENTPOINTI )
 
 /*
 
-HB_FUNC( TRANSLATECHARSETINFO )
+HB_FUNC( VWN_TRANSLATECHARSETINFO )
 {
    LPCHARSETINFO lpCs    ;
 

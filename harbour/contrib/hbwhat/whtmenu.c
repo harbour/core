@@ -22,7 +22,7 @@
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( APPENDMENU )
+HB_FUNC( VWN_APPENDMENU )
 {
   hb_retl( AppendMenu( (HMENU) HB_PARWH(1), hb_parni(2), hb_parni(3), hb_parcx(4)) );
 }
@@ -30,35 +30,35 @@ HB_FUNC( APPENDMENU )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( CHECKMENUITEM )
+HB_FUNC( VWN_CHECKMENUITEM )
 {
   hb_retnl( CheckMenuItem((HMENU) HB_PARWH(1), hb_parni(2), hb_parni(3)) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( CREATEMENU )
+HB_FUNC( VWN_CREATEMENU )
 {
   HB_RETWH( CreateMenu() );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( CREATEPOPUPMENU )
+HB_FUNC( VWN_CREATEPOPUPMENU )
 {
   HB_RETWH( CreatePopupMenu() );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( DELETEMENU )
+HB_FUNC( VWN_DELETEMENU )
 {
   hb_retl( DeleteMenu( (HMENU) HB_PARWH(1), hb_parni(2), hb_parni(3) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( DESTROYMENU )
+HB_FUNC( VWN_DESTROYMENU )
 
 {
   hb_retl( DestroyMenu( (HMENU) HB_PARWH(1) ) );
@@ -66,7 +66,7 @@ HB_FUNC( DESTROYMENU )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETMENU )
+HB_FUNC( VWN_GETMENU )
 
 {
   HB_RETWH( GetMenu( (HWND) HB_PARWH(1) ) );
@@ -74,7 +74,7 @@ HB_FUNC( GETMENU )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETMENUITEMID )
+HB_FUNC( VWN_GETMENUITEMID )
 {
    hb_retni( GetMenuItemID(
                             (HMENU) HB_PARWH( 1 ),  // handle to menu
@@ -84,28 +84,28 @@ HB_FUNC( GETMENUITEMID )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( DRAWMENUBAR )
+HB_FUNC( VWN_DRAWMENUBAR )
 {
   hb_retl( DrawMenuBar( (HWND) HB_PARWH(1)));
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ENABLEMENUITEM )
+HB_FUNC( VWN_ENABLEMENUITEM )
 {
   hb_retl( EnableMenuItem( (HMENU) HB_PARWH(1), hb_parni(2), hb_parni(3) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETMENUSTATE )
+HB_FUNC( VWN_GETMENUSTATE )
 {
   hb_retni( GetMenuState( (HMENU) HB_PARWH(1), hb_parni(2), hb_parni(3)) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETMENUSTRING )
+HB_FUNC( VWN_GETMENUSTRING )
 {
    char cText[MAX_PATH+1] ={0};
 
@@ -117,49 +117,49 @@ HB_FUNC( GETMENUSTRING )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( HILITEMENUITEM )
+HB_FUNC( VWN_HILITEMENUITEM )
 {
   hb_retl( HiliteMenuItem( (HWND) HB_PARWH(1), (HMENU) HB_PARWH(2), hb_parni(3), hb_parni(4)) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( INSERTMENU )
+HB_FUNC( VWN_INSERTMENU )
 {
   hb_retl( InsertMenu( (HMENU) HB_PARWH(1), hb_parni(2), hb_parni(3), hb_parni(4), hb_parcx(5)) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( SETMENUITEMBITMAPS )
+HB_FUNC( VWN_SETMENUITEMBITMAPS )
 {
   hb_retl( SetMenuItemBitmaps( (HMENU) HB_PARWH(1), hb_parni(2), hb_parni(3), (HBITMAP) HB_PARWH(4), (HBITMAP)  HB_PARWH(5)) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETMENUITEMCOUNT )
+HB_FUNC( VWN_GETMENUITEMCOUNT )
 {
   hb_retni( GetMenuItemCount( (HMENU) HB_PARWH(1) ));
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( SETMENU )
+HB_FUNC( VWN_SETMENU )
 {
   hb_retl( SetMenu ((HWND) HB_PARWH(1), (HMENU) HB_PARWH(2) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETSUBMENU )
+HB_FUNC( VWN_GETSUBMENU )
 {
   HB_RETWH( GetSubMenu( (HMENU) HB_PARWH(1), hb_parni(2)) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( TRACKPOPUPMENU )
+HB_FUNC( VWN_TRACKPOPUPMENU )
 {
  RECT rc ;
 
@@ -175,7 +175,7 @@ HB_FUNC( TRACKPOPUPMENU )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETSYSTEMMENU )
+HB_FUNC( VWN_GETSYSTEMMENU )
 {
   HB_RETWH( GetSystemMenu( (HWND) HB_PARWH(1), hb_parl(2) ) );
 }
@@ -185,7 +185,7 @@ HB_FUNC( GETSYSTEMMENU )
 // WINUSERAPI HMENU WINAPI LoadMenuA( IN HINSTANCE hInstance, IN LPCSTR lpMenuName);
 
 
-HB_FUNC( LOADMENU )
+HB_FUNC( VWN_LOADMENU )
 {
    HB_RETWH( LoadMenu( (HINSTANCE) HB_PARWH( 1 ), (LPCSTR) hb_parcx( 2 ) ) );
 }
@@ -195,7 +195,7 @@ HB_FUNC( LOADMENU )
 
 // WINUSERAPI HMENU WINAPI LoadMenuIndirectA( IN CONST MENUTEMPLATEA *lpMenuTemplate);
 
-HB_FUNC( LOADMENUINDIRECT )
+HB_FUNC( VWN_LOADMENUINDIRECT )
 {
    MENUTEMPLATE *mt =(MENUTEMPLATE * ) hb_parc( 1 ); //hb_param( 1, HB_IT_STRING )->item.asString.value;
 
@@ -206,7 +206,7 @@ HB_FUNC( LOADMENUINDIRECT )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI ChangeMenuA( IN HMENU hMenu, IN UINT cmd, IN LPCSTR lpszNewItem, IN UINT cmdInsert, IN UINT flags);
 
-HB_FUNC( CHANGEMENU )
+HB_FUNC( VWN_CHANGEMENU )
 {
    hb_retl( ChangeMenu( (HMENU) HB_PARWH( 1 ),
                         (UINT) hb_parni( 2 ) ,
@@ -220,7 +220,7 @@ HB_FUNC( CHANGEMENU )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI RemoveMenu( IN HMENU hMenu, IN UINT uPosition, IN UINT uFlags);
 
-HB_FUNC( REMOVEMENU )
+HB_FUNC( VWN_REMOVEMENU )
 {
    hb_retl( RemoveMenu( (HMENU) HB_PARWH( 1 ),
                         (UINT) hb_parni( 2 ) ,
@@ -233,7 +233,7 @@ HB_FUNC( REMOVEMENU )
 // WINUSERAPI LONG WINAPI GetMenuCheckMarkDimensions( VOID);
 
 
-HB_FUNC( GETMENUCHECKMARKDIMENSIONS )
+HB_FUNC( VWN_GETMENUCHECKMARKDIMENSIONS )
 {
    hb_retnl( (LONG) GetMenuCheckMarkDimensions(  ) );
 }
@@ -245,7 +245,7 @@ HB_FUNC( GETMENUCHECKMARKDIMENSIONS )
 
 /*
 
-HB_FUNC( MODIFYMENU )
+HB_FUNC( VWN_MODIFYMENU )
 {
    UINT_PTR uIDNewItem ;
 
@@ -269,7 +269,7 @@ HB_FUNC( MODIFYMENU )
 
 /*
 
-HB_FUNC( GETMENUINFO )
+HB_FUNC( VWN_GETMENUINFO )
 {
    LPMENUINFO lpmenuInfo ;
 
@@ -285,7 +285,7 @@ HB_FUNC( GETMENUINFO )
 
 
 /*
-HB_FUNC( SETMENUINFO )
+HB_FUNC( VWN_SETMENUINFO )
 {
    LPCMENUINFO lpcmenuInfo =(LPCMENUINFO) hb_param( 2, HB_IT_STRING )->item.asString.value;
    hb_retl( SetMenuInfo( (HMENU) HB_PARWH( 1 ), lpcmenuInfo ) );
@@ -297,7 +297,7 @@ HB_FUNC( SETMENUINFO )
 // WINUSERAPI BOOL WINAPI EndMenu( VOID);
 
 #if (WINVER >=0x0500)
-HB_FUNC( ENDMENU )
+HB_FUNC( VWN_ENDMENU )
 {
    hb_retl( EndMenu() );
 }
@@ -307,7 +307,7 @@ HB_FUNC( ENDMENU )
 
 
 
-HB_FUNC( INSERTMENUITEM )
+HB_FUNC( VWN_INSERTMENUITEM )
 {
    LPCMENUITEMINFOA lpcmenuitemInfoa =(LPCMENUITEMINFOA) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING )->item.asString.value;
 
@@ -325,7 +325,7 @@ HB_FUNC( INSERTMENUITEM )
 
 
 
-HB_FUNC( GETMENUITEMINFO )
+HB_FUNC( VWN_GETMENUITEMINFO )
 {
    LPCMENUITEMINFOA lpcmenuitemInfoa =(LPCMENUITEMINFOA) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING )->item.asString.value;
    hb_retl( GetMenuItemInfo( (HMENU) HB_PARWH( 1 ),
@@ -342,7 +342,7 @@ HB_FUNC( GETMENUITEMINFO )
 
 
 
-HB_FUNC( SETMENUITEMINFO )
+HB_FUNC( VWN_SETMENUITEMINFO )
 {
    LPCMENUITEMINFOA lpcmenuitemInfoa =(LPCMENUITEMINFOA) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING )->item.asString.value;
    hb_retl( SetMenuItemInfo( (HMENU) HB_PARWH( 1 ),
@@ -360,7 +360,7 @@ HB_FUNC( SETMENUITEMINFO )
 
 /*
 
-HB_FUNC( GETMENUBARINFO )
+HB_FUNC( VWN_GETMENUBARINFO )
 {
    PMENUBARINFO pmbi     ;
 
@@ -383,13 +383,13 @@ HB_FUNC( GETMENUBARINFO )
 
 //BOOL CheckMenuRadioItem( HMENU hmenu, UINT idFirst, UINT idLast, UINT idCheck, UINT uFlags );
 
-HB_FUNC( CHECKMENURADIOITEM )
+HB_FUNC( VWN_CHECKMENURADIOITEM )
 {
   hb_retl( CheckMenuRadioItem( (HMENU) HB_PARWH( 1 ), (UINT) hb_parni(2),
                                (UINT) hb_parni(3), (UINT) hb_parni(4), (UINT) hb_parni(5) ) );
 }
 
-HB_FUNC( ISMENU )
+HB_FUNC( VWN_ISMENU )
 {
    hb_retl( IsMenu((HMENU) HB_PARWH(1) ) );
 }

@@ -20,7 +20,7 @@
 
 */
 
-HB_FUNC( MAPISENDMAIL )
+HB_FUNC( VWN_MAPISENDMAIL )
 {
    MapiRecipDesc orig;
    MapiRecipDesc rcpt;

@@ -23,21 +23,21 @@ extern void Size2ArrayEx( SIZE *siz  ,  PHB_ITEM aSize);
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ISICONIC )
+HB_FUNC( VWN_ISICONIC )
 {
    hb_retl( IsIconic( (HWND) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ISWINDOWVISIBLE )
+HB_FUNC( VWN_ISWINDOWVISIBLE )
 {
    hb_retl( IsWindowVisible( (HWND) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ISZOOMED )
+HB_FUNC( VWN_ISZOOMED )
 {
    hb_retl( IsZoomed( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -46,7 +46,7 @@ HB_FUNC( ISZOOMED )
 // WINUSERAPI BOOL WINAPI IsWindowUnicode( IN HWND hWnd);
 
 
-HB_FUNC( ISWINDOWUNICODE )
+HB_FUNC( VWN_ISWINDOWUNICODE )
 {
    hb_retl( IsWindowUnicode( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -55,14 +55,14 @@ HB_FUNC( ISWINDOWUNICODE )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( CLOSEWINDOW )
+HB_FUNC( VWN_CLOSEWINDOW )
 {
    hb_retl( CloseWindow( (HWND) HB_PARWH(1) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( FINDWINDOW )
+HB_FUNC( VWN_FINDWINDOW )
 {
 
    HB_RETWH( FindWindow( (LPCSTR) hb_parcx(1), ISCHAR(2) ? hb_parcx(2):NULL ) );
@@ -72,7 +72,7 @@ HB_FUNC( FINDWINDOW )
 // WINUSERAPI HWND WINAPI FindWindowExA( IN HWND, IN HWND, IN LPCSTR, IN LPCSTR);
 
 
-HB_FUNC( FINDWINDOWEX )
+HB_FUNC( VWN_FINDWINDOWEX )
 {
    HB_RETWH( FindWindowEx( (HWND) HB_PARWH( 1 ) ,
                                   (HWND) HB_PARWH( 2 ) ,
@@ -84,28 +84,28 @@ HB_FUNC( FINDWINDOWEX )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ISCHILD )
+HB_FUNC( VWN_ISCHILD )
 {
    hb_retl( ( BOOL ) IsChild( (HWND) HB_PARWH(1), (HWND) HB_PARWH(2) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( UPDATEWINDOW )
+HB_FUNC( VWN_UPDATEWINDOW )
 {
   hb_retl( UpdateWindow( (HWND) HB_PARWH(1)) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETWINDOWLONG )
+HB_FUNC( VWN_GETWINDOWLONG )
 {
    hb_retnl( GetWindowLong( (HWND) HB_PARWH(1), hb_parni(2) ));
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( SETWINDOWLONG )
+HB_FUNC( VWN_SETWINDOWLONG )
 {
    hb_retnl( SetWindowLong( (HWND) HB_PARWH(1), hb_parni(2), hb_parnl(3) ));
 }
@@ -113,7 +113,7 @@ HB_FUNC( SETWINDOWLONG )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ENABLEWINDOW )
+HB_FUNC( VWN_ENABLEWINDOW )
 {
    EnableWindow( (HWND) HB_PARWH(1), hb_parl(2) );
 }
@@ -122,34 +122,34 @@ HB_FUNC( ENABLEWINDOW )
 // WINUSERAPI BOOL WINAPI IsWindowEnabled( IN HWND hWnd);
 
 
-HB_FUNC( ISWINDOWENABLED )
+HB_FUNC( VWN_ISWINDOWENABLED )
 {
    hb_retl( IsWindowEnabled( (HWND) HB_PARWH( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( DESTROYWINDOW )
+HB_FUNC( VWN_DESTROYWINDOW )
 {
    hb_retl( DestroyWindow( (HWND) HB_PARWH( 1 )) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ISWINDOW )
+HB_FUNC( VWN_ISWINDOW )
 {
     hb_retl( IsWindow( (HWND) HB_PARWH( 1 )) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( SHOWWINDOW )
+HB_FUNC( VWN_SHOWWINDOW )
 {
    hb_retl( ShowWindow( (HWND) HB_PARWH( 1 ), hb_parni(2) ));
 }
 
 //-----------------------------------------------------------------------------
-HB_FUNC( MOVEWINDOW )
+HB_FUNC( VWN_MOVEWINDOW )
 {
   hb_retl( MoveWindow(
                        (HWND) HB_PARWH(1),
@@ -163,28 +163,28 @@ HB_FUNC( MOVEWINDOW )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( DEFWINDOWPROC )
+HB_FUNC( VWN_DEFWINDOWPROC )
 {
   HB_RETWI( DefWindowProc( (HWND) HB_PARWH(1), hb_parnl(2), hb_parnl(3), hb_parnl(4)));
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( DEFDLGPROC )
+HB_FUNC( VWN_DEFDLGPROC )
 {
   HB_RETWI( DefDlgProc( (HWND) HB_PARWH(1), hb_parnl(2), hb_parnl(3), hb_parnl(4)));
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( DEFMDICHILDPROC )
+HB_FUNC( VWN_DEFMDICHILDPROC )
 {
   HB_RETWI( DefMDIChildProc( (HWND) HB_PARWH(1), hb_parnl(2), hb_parnl(3), hb_parnl(4)));
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( DEFFRAMEPROC )
+HB_FUNC( VWN_DEFFRAMEPROC )
 {
   HB_RETWI( DefFrameProc( (HWND) HB_PARWH(1), (HWND) HB_PARWH(2), hb_parnl(3), hb_parnl(4), hb_parnl(5)));
 }
@@ -192,7 +192,7 @@ HB_FUNC( DEFFRAMEPROC )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( CALLWINDOWPROC )
+HB_FUNC( VWN_CALLWINDOWPROC )
 {
   HB_RETWI( CallWindowProc( (WNDPROC) HB_PARWH(1), (HWND) HB_PARWH(2), hb_parni(3), hb_parnl(4), hb_parnl(5)));
 }
@@ -202,7 +202,7 @@ HB_FUNC( CALLWINDOWPROC )
 //WINUSERAPI BOOL WINAPI InvalidateRect(    IN HWND hWnd,    IN CONST RECT *lpRect,    IN BOOL bErase);
 //SYNTAX INVALIDATERECT ( hWnd,aArray ) -> lSuccess
 
-HB_FUNC( INVALIDATERECT )
+HB_FUNC( VWN_INVALIDATERECT )
 {
    RECT rc;
    BOOL bRectOk ;
@@ -220,7 +220,7 @@ HB_FUNC( INVALIDATERECT )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI RedrawWindow( IN HWND hWnd, IN CONST RECT *lprcUpdate, IN HRGN hrgnUpdate, IN UINT flags);
 
-HB_FUNC( REDRAWWINDOW )
+HB_FUNC( VWN_REDRAWWINDOW )
 {
    RECT rc ;
    BOOL bRectOk ;
@@ -241,7 +241,7 @@ HB_FUNC( REDRAWWINDOW )
 //WINUSERAPI BOOL WINAPI GetClientRect(    IN HWND hWnd,    OUT LPRECT lpRect);
 //Syntax GETCLIENTRECT( hWnd ) -> aRect
 
-HB_FUNC( GETCLIENTRECT )
+HB_FUNC( VWN_GETCLIENTRECT )
 {
    RECT rc;
 
@@ -259,7 +259,7 @@ HB_FUNC( GETCLIENTRECT )
 //WINUSERAPI BOOL WINAPI GetWindowRect(    IN HWND hWnd,    OUT LPRECT lpRect);
 //Syntax GETWINDOWRECT( hWnd ) -> aRect
 
-HB_FUNC( GETWINDOWRECT )
+HB_FUNC( VWN_GETWINDOWRECT )
 {
    RECT rc;
    PHB_ITEM aMetr ;
@@ -276,7 +276,7 @@ HB_FUNC( GETWINDOWRECT )
 // WINUSERAPI BOOL WINAPI ShowOwnedPopups( IN HWND hWnd, IN BOOL fShow);
 
 
-HB_FUNC( SHOWOWNEDPOPUPS )
+HB_FUNC( VWN_SHOWOWNEDPOPUPS )
 {
    hb_retl( ShowOwnedPopups( (HWND) HB_PARWH( 1 ), hb_parl( 2 ) ) );
 }
@@ -285,7 +285,7 @@ HB_FUNC( SHOWOWNEDPOPUPS )
 // WINUSERAPI BOOL WINAPI OpenIcon( IN HWND hWnd);
 
 
-HB_FUNC( OPENICON )
+HB_FUNC( VWN_OPENICON )
 {
    hb_retl( OpenIcon( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -295,7 +295,7 @@ HB_FUNC( OPENICON )
 // WINUSERAPI HDWP WINAPI BeginDeferWindowPos( IN int nNumWindows);
 
 
-HB_FUNC( BEGINDEFERWINDOWPOS )
+HB_FUNC( VWN_BEGINDEFERWINDOWPOS )
 {
    HB_RETWH( BeginDeferWindowPos( hb_parni( 1 ) ) );
 }
@@ -304,7 +304,7 @@ HB_FUNC( BEGINDEFERWINDOWPOS )
 // WINUSERAPI HDWP WINAPI DeferWindowPos( IN HDWP hWinPosInfo, IN HWND hWnd, IN HWND hWndInsertAfter, IN int x, IN int y, IN int cx, IN int cy, IN UINT uFlags);
 
 
-HB_FUNC( DEFERWINDOWPOS )
+HB_FUNC( VWN_DEFERWINDOWPOS )
 {
    HB_RETWH( DeferWindowPos( (HDWP) HB_PARWH( 1 ),
                                     (HWND) HB_PARWH( 2 ),
@@ -321,7 +321,7 @@ HB_FUNC( DEFERWINDOWPOS )
 // WINUSERAPI BOOL WINAPI EndDeferWindowPos( IN HDWP hWinPosInfo);
 
 
-HB_FUNC( ENDDEFERWINDOWPOS )
+HB_FUNC( VWN_ENDDEFERWINDOWPOS )
 {
    hb_retl( EndDeferWindowPos( (HDWP) HB_PARWH( 1 ) ) );
 }
@@ -331,7 +331,7 @@ HB_FUNC( ENDDEFERWINDOWPOS )
 // WINUSERAPI BOOL WINAPI SetWindowPos( IN HWND hWnd, IN HWND hWndInsertAfter, IN int X, IN int Y, IN int cx, IN int cy, IN UINT uFlags);
 
 
-HB_FUNC( SETWINDOWPOS )
+HB_FUNC( VWN_SETWINDOWPOS )
 {
    hb_retl( SetWindowPos( (HWND) HB_PARWH( 1 ),
                           (HWND) HB_PARWH( 2 ),
@@ -348,7 +348,7 @@ HB_FUNC( SETWINDOWPOS )
 // WINUSERAPI HWND WINAPI SetFocus( IN HWND hWnd);
 
 
-HB_FUNC( SETFOCUS )
+HB_FUNC( VWN_SETFOCUS )
 {
    HB_RETWH( SetFocus( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -357,7 +357,7 @@ HB_FUNC( SETFOCUS )
 // WINUSERAPI HWND WINAPI GetActiveWindow( VOID);
 
 
-HB_FUNC( GETACTIVEWINDOW )
+HB_FUNC( VWN_GETACTIVEWINDOW )
 {
    HB_RETWH( GetActiveWindow(  ) );
 }
@@ -367,7 +367,7 @@ HB_FUNC( GETACTIVEWINDOW )
 // WINUSERAPI HWND WINAPI SetActiveWindow( IN HWND hWnd);
 
 
-HB_FUNC( SETACTIVEWINDOW )
+HB_FUNC( VWN_SETACTIVEWINDOW )
 {
    HB_RETWH( SetActiveWindow( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -377,7 +377,7 @@ HB_FUNC( SETACTIVEWINDOW )
 // WINUSERAPI HWND WINAPI GetForegroundWindow( VOID);
 
 
-HB_FUNC( GETFOREGROUNDWINDOW )
+HB_FUNC( VWN_GETFOREGROUNDWINDOW )
 {
    HB_RETWH( GetForegroundWindow(  ) );
 }
@@ -387,7 +387,7 @@ HB_FUNC( GETFOREGROUNDWINDOW )
 // WINUSERAPI HWND WINAPI GetFocus( VOID);
 
 
-HB_FUNC( GETFOCUS )
+HB_FUNC( VWN_GETFOCUS )
 {
    HB_RETWH( GetFocus(  ) );
 }
@@ -397,7 +397,7 @@ HB_FUNC( GETFOCUS )
 // ok
 // WINUSERAPI BOOL WINAPI SetForegroundWindow( IN HWND hWnd);
 
-HB_FUNC( SETFOREGROUNDWINDOW )
+HB_FUNC( VWN_SETFOREGROUNDWINDOW )
 {
    hb_retl( SetForegroundWindow( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -407,7 +407,7 @@ HB_FUNC( SETFOREGROUNDWINDOW )
 // WINUSERAPI BOOL WINAPI AnyPopup( VOID);
 
 
-HB_FUNC( ANYPOPUP )
+HB_FUNC( VWN_ANYPOPUP )
 {
    hb_retl( AnyPopup(  ) );
 }
@@ -416,7 +416,7 @@ HB_FUNC( ANYPOPUP )
 // WINUSERAPI BOOL WINAPI BringWindowToTop( IN HWND hWnd);
 
 
-HB_FUNC( BRINGWINDOWTOTOP )
+HB_FUNC( VWN_BRINGWINDOWTOTOP )
 {
    hb_retl( BringWindowToTop( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -426,7 +426,7 @@ HB_FUNC( BRINGWINDOWTOTOP )
 // WINUSERAPI int WINAPI GetClassNameA( IN HWND hWnd, OUT LPSTR lpClassName, IN int nMaxCount);
 
 
-HB_FUNC( GETCLASSNAME )
+HB_FUNC( VWN_GETCLASSNAME )
 {
    char *cText= (char*) hb_xgrab( MAX_PATH+1 );
 
@@ -445,7 +445,7 @@ HB_FUNC( GETCLASSNAME )
 // WINUSERAPI HWND WINAPI GetTopWindow( IN HWND hWnd);
 
 
-HB_FUNC( GETTOPWINDOW )
+HB_FUNC( VWN_GETTOPWINDOW )
 {
    HB_RETWH( GetTopWindow( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -455,7 +455,7 @@ HB_FUNC( GETTOPWINDOW )
 // WINUSERAPI BOOL WINAPI ScrollWindow( IN HWND hWnd, IN int XAmount, IN int YAmount, IN CONST RECT *lpRect, IN CONST RECT *lpClipRect);
 //SYNTAX SCROLLWINDOW(hWnd,nXAmount,nYAmount,aRect1,aRect2) -> lSuccess
 
-HB_FUNC( SCROLLWINDOW )
+HB_FUNC( VWN_SCROLLWINDOW )
 {
    RECT lpRect     ;
    RECT lpClipRect ;
@@ -475,7 +475,7 @@ HB_FUNC( SCROLLWINDOW )
 // WINUSERAPI BOOL WINAPI SetWindowTextA( IN HWND hWnd, IN LPCSTR lpString);
 
 
-HB_FUNC( SETWINDOWTEXT )
+HB_FUNC( VWN_SETWINDOWTEXT )
 {
    hb_retl( SetWindowText( (HWND) HB_PARWH( 1 ), (LPSTR) hb_parcx( 2 ) ) );
 }
@@ -485,7 +485,7 @@ HB_FUNC( SETWINDOWTEXT )
 
 // modified API - returns the string !
 
-HB_FUNC( GETWINDOWTEXT )
+HB_FUNC( VWN_GETWINDOWTEXT )
 {
    int iLen = GetWindowTextLength( (HWND) HB_PARWH( 1 ) )  ;
    char *cText = (char*) hb_xgrab( iLen+1 );
@@ -502,7 +502,7 @@ HB_FUNC( GETWINDOWTEXT )
 // WINUSERAPI int WINAPI GetWindowTextLengthA( IN HWND hWnd);
 
 
-HB_FUNC( GETWINDOWTEXTLENGTH )
+HB_FUNC( VWN_GETWINDOWTEXTLENGTH )
 {
    hb_retni( GetWindowTextLength( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -512,7 +512,7 @@ HB_FUNC( GETWINDOWTEXTLENGTH )
 // WINUSERAPI BOOL WINAPI SetWindowContextHelpId( IN HWND, IN DWORD);
 
 
-HB_FUNC( SETWINDOWCONTEXTHELPID )
+HB_FUNC( VWN_SETWINDOWCONTEXTHELPID )
 {
    hb_retl( SetWindowContextHelpId( (HWND) HB_PARWH( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
@@ -521,7 +521,7 @@ HB_FUNC( SETWINDOWCONTEXTHELPID )
 // WINUSERAPI DWORD WINAPI GetWindowContextHelpId( IN HWND);
 
 
-HB_FUNC( GETWINDOWCONTEXTHELPID )
+HB_FUNC( VWN_GETWINDOWCONTEXTHELPID )
 {
    hb_retnl( (LONG) GetWindowContextHelpId( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -530,7 +530,7 @@ HB_FUNC( GETWINDOWCONTEXTHELPID )
 // WINUSERAPI BOOL WINAPI SetMenuContextHelpId( IN HMENU, IN DWORD);
 
 
-HB_FUNC( SETMENUCONTEXTHELPID )
+HB_FUNC( VWN_SETMENUCONTEXTHELPID )
 {
    hb_retl( SetMenuContextHelpId( (HMENU) HB_PARWH( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
@@ -539,7 +539,7 @@ HB_FUNC( SETMENUCONTEXTHELPID )
 // WINUSERAPI DWORD WINAPI GetMenuContextHelpId( IN HMENU);
 
 
-HB_FUNC( GETMENUCONTEXTHELPID )
+HB_FUNC( VWN_GETMENUCONTEXTHELPID )
 {
    hb_retnl( (LONG) GetMenuContextHelpId( (HMENU) HB_PARWH( 1 ) ) );
 }
@@ -548,7 +548,7 @@ HB_FUNC( GETMENUCONTEXTHELPID )
 // WINUSERAPI HWND WINAPI GetWindow( IN HWND, IN UINT );
 
 
-HB_FUNC( GETWINDOW )
+HB_FUNC( VWN_GETWINDOW )
 {
    HB_RETWH( GetWindow( (HWND)HB_PARWH(1), (UINT) hb_parni( 2 ) ) );
 }
@@ -563,7 +563,7 @@ if CLIENTTOSCREEN(nWnd , @aArray)
 endif
 */
 
-HB_FUNC( CLIENTTOSCREEN )
+HB_FUNC( VWN_CLIENTTOSCREEN )
 {
    POINT Point ;
    PHB_ITEM pArray;
@@ -593,7 +593,7 @@ if SCREENTOCLIENT(nWnd , @aArray)
 endif
 */
 
-HB_FUNC( SCREENTOCLIENT )
+HB_FUNC( VWN_SCREENTOCLIENT )
 {
    POINT Point ;
    PHB_ITEM pArray = hb_param( 2 , HB_IT_ARRAY );
@@ -620,7 +620,7 @@ HB_FUNC( SCREENTOCLIENT )
 //SYNTAX MAPWINDOWPOINTS(nWndSource,nWndDest,@aPoint,nPoint) -> nP
 
 
-HB_FUNC( MAPWINDOWPOINTS )
+HB_FUNC( VWN_MAPWINDOWPOINTS )
 {
    POINT lpPoints ;
    PHB_ITEM pArray =hb_param( 3 , HB_IT_ARRAY );
@@ -642,7 +642,7 @@ HB_FUNC( MAPWINDOWPOINTS )
 //SYNTAX WINDOWFROMPOINT(aPoint) -> nPoint
 
 
-HB_FUNC( WINDOWFROMPOINT )
+HB_FUNC( VWN_WINDOWFROMPOINT )
 {
    POINT Point ;
    Array2Point( hb_param( 1 , HB_IT_ARRAY ), &Point );
@@ -657,7 +657,7 @@ HB_FUNC( WINDOWFROMPOINT )
 //SYNTAX CHILDWINDOWFROMPOINT(nWnd,aPoint) -> nPoint
 
 
-HB_FUNC( CHILDWINDOWFROMPOINT )
+HB_FUNC( VWN_CHILDWINDOWFROMPOINT )
 {
    POINT Point      ;
 
@@ -672,7 +672,7 @@ HB_FUNC( CHILDWINDOWFROMPOINT )
 // WINUSERAPI HWND WINAPI ChildWindowFromPointEx( IN HWND, IN POINT, IN UINT);
 //SYNTAX CHILDWINDOWFROMPOINTEX(nWnd,aPoint,nStyle) -> nPoint
 
-HB_FUNC( CHILDWINDOWFROMPOINTEX )
+HB_FUNC( VWN_CHILDWINDOWFROMPOINTEX )
 {
    POINT PoInt ;
 
@@ -689,7 +689,7 @@ HB_FUNC( CHILDWINDOWFROMPOINTEX )
 // WINUSERAPI WORD WINAPI GetWindowWord( IN HWND hWnd, IN int nIndex);
 
 
-HB_FUNC( GETWINDOWWORD )
+HB_FUNC( VWN_GETWINDOWWORD )
 {
    hb_retni( GetWindowWord( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -697,7 +697,7 @@ HB_FUNC( GETWINDOWWORD )
 //-----------------------------------------------------------------------------
 // WINUSERAPI WORD WINAPI SetWindowWord( IN HWND hWnd, IN int nIndex, IN WORD wNewWord);
 
-HB_FUNC( SETWINDOWWORD )
+HB_FUNC( VWN_SETWINDOWWORD )
 {
 
    hb_retni( SetWindowWord( (HWND) HB_PARWH( 1 ), hb_parni( 2 ), (WORD) hb_parni(3) ) );
@@ -707,7 +707,7 @@ HB_FUNC( SETWINDOWWORD )
 //-----------------------------------------------------------------------------
 // WINUSERAPI HWND WINAPI GetDesktopWindow( VOID);
 
-HB_FUNC( GETDESKTOPWINDOW )
+HB_FUNC( VWN_GETDESKTOPWINDOW )
 {
    HB_RETWH( GetDesktopWindow(  ) );
 }
@@ -715,7 +715,7 @@ HB_FUNC( GETDESKTOPWINDOW )
 //-----------------------------------------------------------------------------
 // WINUSERAPI HWND WINAPI GetParent( IN HWND hWnd);
 
-HB_FUNC( GETPARENT )
+HB_FUNC( VWN_GETPARENT )
 {
    HB_RETWH( GetParent( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -723,7 +723,7 @@ HB_FUNC( GETPARENT )
 //-----------------------------------------------------------------------------
 // WINUSERAPI HWND WINAPI SetParent( IN HWND hWndChild, IN HWND hWndNewParent);
 
-HB_FUNC( SETPARENT )
+HB_FUNC( VWN_SETPARENT )
 {
    HB_RETWH( SetParent( (HWND) HB_PARWH( 1 ), (HWND) HB_PARWH( 2 ) ) );
 }
@@ -733,7 +733,7 @@ HB_FUNC( SETPARENT )
 // WINUSERAPI WORD WINAPI GetClassWord( IN HWND hWnd, IN int nIndex);
 
 
-HB_FUNC( GETCLASSWORD )
+HB_FUNC( VWN_GETCLASSWORD )
 {
    hb_retni( GetClassWord( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -741,7 +741,7 @@ HB_FUNC( GETCLASSWORD )
 //-----------------------------------------------------------------------------
 // WINUSERAPI WORD WINAPI SetClassWord( IN HWND hWnd, IN int nIndex, IN WORD wNewWord);
 
-HB_FUNC( SETCLASSWORD )
+HB_FUNC( VWN_SETCLASSWORD )
 {
 
    hb_retni( SetClassWord( (HWND) HB_PARWH( 1 ), hb_parni( 2 ), (WORD) hb_parni( 3 ) ) );
@@ -751,7 +751,7 @@ HB_FUNC( SETCLASSWORD )
 //-----------------------------------------------------------------------------
 // WINUSERAPI DWORD WINAPI GetClassLongA( IN HWND hWnd, IN int nIndex);
 
-HB_FUNC( GETCLASSLONG )
+HB_FUNC( VWN_GETCLASSLONG )
 {
    hb_retnl( (LONG) GetClassLong( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -759,7 +759,7 @@ HB_FUNC( GETCLASSLONG )
 //-----------------------------------------------------------------------------
 // WINUSERAPI DWORD WINAPI SetClassLongA( IN HWND hWnd, IN int nIndex, IN LONG dwNewLong);
 
-HB_FUNC( SETCLASSLONG )
+HB_FUNC( VWN_SETCLASSLONG )
 {
    hb_retnl( (LONG) SetClassLong( (HWND) HB_PARWH( 1 ),
                                   hb_parni( 2 )       ,
@@ -771,7 +771,7 @@ HB_FUNC( SETCLASSLONG )
 // WINUSERAPI HWND WINAPI GetAncestor( IN HWND hwnd, IN UINT gaFlags );
 #if(WINVER >= 0x0500)
 
-HB_FUNC( GETANCESTOR )
+HB_FUNC( VWN_GETANCESTOR )
 {
    HB_RETWH( GetAncestor( (HWND) HB_PARWH( 1 ), (UINT) hb_parni( 2 ) ) );
 }
@@ -782,7 +782,7 @@ HB_FUNC( GETANCESTOR )
 // WINUSERAPI BOOL WINAPI ShowWindowAsync( IN HWND hWnd, IN int nCmdShow);
 
 
-HB_FUNC( SHOWWINDOWASYNC )
+HB_FUNC( VWN_SHOWWINDOWASYNC )
 {
    hb_retl( ShowWindowAsync( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -805,7 +805,7 @@ RETURN(nil)
 */
 
 
-HB_FUNC( FLASHWINDOW )
+HB_FUNC( VWN_FLASHWINDOW )
 {
    hb_retl( FlashWindow( (HWND) HB_PARWH( 1 ), hb_parl( 2 ) ) );
 }
@@ -814,7 +814,7 @@ HB_FUNC( FLASHWINDOW )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI AnimateWindow( IN HWND hWnd, IN DWORD dwTime, IN DWORD dwFlags);
 #if(WINVER >= 0x0500)
-HB_FUNC( ANIMATEWINDOW )
+HB_FUNC( VWN_ANIMATEWINDOW )
 {
    hb_retl( AnimateWindow( (HWND) HB_PARWH( 1 ) ,
                            (DWORD) hb_parnl( 2 ),
@@ -825,7 +825,7 @@ HB_FUNC( ANIMATEWINDOW )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI GetWindowPlacement( IN HWND hWnd, OUT WINDOWPLACEMENT *lpwndpl);
 #if(WINVER >= 0x0500)
-HB_FUNC( GETWINDOWPLACEMENT )
+HB_FUNC( VWN_GETWINDOWPLACEMENT )
 {
    WINDOWPLACEMENT wndpl ;
    wndpl.length=sizeof(WINDOWPLACEMENT);
@@ -839,7 +839,7 @@ HB_FUNC( GETWINDOWPLACEMENT )
 // WINUSERAPI BOOL WINAPI SetWindowPlacement( IN HWND hWnd, IN CONST WINDOWPLACEMENT *lpwndpl);
 #if(WINVER >= 0x0500)
 
-HB_FUNC( SETWINDOWPLACEMENT )
+HB_FUNC( VWN_SETWINDOWPLACEMENT )
 {
    WINDOWPLACEMENT * lpwndpl = (WINDOWPLACEMENT *) hb_parc( 2 ); //hb_param( 2,HB_IT_STRING )->item.asString.value;
 
@@ -851,7 +851,7 @@ HB_FUNC( SETWINDOWPLACEMENT )
 //-----------------------------------------------------------------------------
 // WINUSERAPI int WINAPI SetWindowRgn( IN HWND hWnd, IN HRGN hRgn, IN BOOL bRedraw);
 
-HB_FUNC( SETWINDOWRGN )
+HB_FUNC( VWN_SETWINDOWRGN )
 {
    hb_retni( SetWindowRgn( (HWND) HB_PARWH( 1 ),
                            (HRGN) HB_PARWH( 2 ),
@@ -862,7 +862,7 @@ HB_FUNC( SETWINDOWRGN )
 //-----------------------------------------------------------------------------
 // WINUSERAPI int WINAPI GetWindowRgn( IN HWND hWnd, IN HRGN hRgn);
 
-HB_FUNC( GETWINDOWRGN )
+HB_FUNC( VWN_GETWINDOWRGN )
 {
    hb_retni( GetWindowRgn( (HWND) HB_PARWH( 1 ), (HRGN) HB_PARWH( 2 ) ) );
 }
@@ -872,7 +872,7 @@ HB_FUNC( GETWINDOWRGN )
 //-----------------------------------------------------------------------------
 // WINUSERAPI BOOL WINAPI SetPropA( IN HWND hWnd, IN LPCSTR lpString, IN HANDLE hData);
 
-HB_FUNC( SETPROP )
+HB_FUNC( VWN_SETPROP )
 {
    hb_retl( SetProp( (HWND) HB_PARWH( 1 )  ,
                      (LPCSTR) hb_parcx( 2 ) ,
@@ -883,7 +883,7 @@ HB_FUNC( SETPROP )
 //-----------------------------------------------------------------------------
 // WINUSERAPI HANDLE WINAPI GetPropA( IN HWND hWnd, IN LPCSTR lpString);
 
-HB_FUNC( GETPROP )
+HB_FUNC( VWN_GETPROP )
 {
    HB_RETWH( GetProp( (HWND) HB_PARWH( 1 ), (LPCSTR) hb_parcx( 2 ) ) );
 }
@@ -891,7 +891,7 @@ HB_FUNC( GETPROP )
 //-----------------------------------------------------------------------------
 // WINUSERAPI HANDLE WINAPI RemovePropA( IN HWND hWnd, IN LPCSTR lpString);
 
-HB_FUNC( REMOVEPROP )
+HB_FUNC( VWN_REMOVEPROP )
 {
    HB_RETWH( RemoveProp( (HWND) HB_PARWH( 1 ), (LPCSTR) hb_parcx( 2 ) ) );
 }
@@ -904,7 +904,7 @@ HB_FUNC( REMOVEPROP )
 
 /*
 
-HB_FUNC( ENUMPROPSEX )
+HB_FUNC( VWN_ENUMPROPSEX )
 {
    PROPENUMPROCEXA lpEnumFunc ;
 
@@ -924,7 +924,7 @@ HB_FUNC( ENUMPROPSEX )
 
 /*
 
-HB_FUNC( ENUMPROPS )
+HB_FUNC( VWN_ENUMPROPS )
 {
    PROPENUMPROCA lpEnumFunc ;
 
@@ -946,7 +946,7 @@ if ADJUSTWINDOWRECT(@arect,2,.f.)
 endif
 */
 
-HB_FUNC( ADJUSTWINDOWRECT )
+HB_FUNC( VWN_ADJUSTWINDOWRECT )
 {
    RECT lpRect  ;
 
@@ -979,7 +979,7 @@ endif
 
 
 
-HB_FUNC( ADJUSTWINDOWRECTEX )
+HB_FUNC( VWN_ADJUSTWINDOWRECTEX )
 {
    RECT lpRect    ;
    BOOL bAjust;
@@ -1005,7 +1005,7 @@ HB_FUNC( ADJUSTWINDOWRECTEX )
 // WINUSERAPI LONG_PTR WINAPI GetWindowLongPtrA( HWND hWnd, int nIndex);
 
 
-HB_FUNC( GETWINDOWLONGPTR )
+HB_FUNC( VWN_GETWINDOWLONGPTR )
 {
    hb_retptr( ( void * ) GetWindowLongPtr( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -1013,7 +1013,7 @@ HB_FUNC( GETWINDOWLONGPTR )
 //-----------------------------------------------------------------------------
 // WINUSERAPI LONG_PTR WINAPI SetWindowLongPtrA( HWND hWnd, int nIndex, LONG_PTR dwNewLong);
 
-HB_FUNC( SETWINDOWLONGPTR )
+HB_FUNC( VWN_SETWINDOWLONGPTR )
 {
    hb_retnl( (LONG) SetWindowLongPtr( (HWND) HB_PARWH( 1 ),
                                       hb_parni( 2 )       ,
@@ -1024,7 +1024,7 @@ HB_FUNC( SETWINDOWLONGPTR )
 //-----------------------------------------------------------------------------
 // WINUSERAPI ULONG_PTR WINAPI GetClassLongPtrA( IN HWND hWnd, IN int nIndex);
 #ifndef __WATCOMC__
-HB_FUNC( GETCLASSLONGPTR )
+HB_FUNC( VWN_GETCLASSLONGPTR )
 {
     HB_RETWI( GetClassLongPtr( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -1032,7 +1032,7 @@ HB_FUNC( GETCLASSLONGPTR )
 //-----------------------------------------------------------------------------
 // WINUSERAPI ULONG_PTR WINAPI SetClassLongPtrA( IN HWND hWnd, IN int nIndex, IN LONG_PTR dwNewLong);
 
-HB_FUNC( SETCLASSLONGPTR )
+HB_FUNC( VWN_SETCLASSLONGPTR )
 {
    HB_RETWI( SetClassLongPtr( (HWND) HB_PARWH( 1 ), hb_parni( 2 ), (LONG_PTR) hb_parnl(3) ) );
 }
@@ -1043,7 +1043,7 @@ HB_FUNC( SETCLASSLONGPTR )
 
 #if (WINVER >= 0X0500)
 
-HB_FUNC( GETWINDOWINFO )
+HB_FUNC( VWN_GETWINDOWINFO )
 {
    WINDOWINFO pwi ;
 
@@ -1060,7 +1060,7 @@ HB_FUNC( GETWINDOWINFO )
 
 #if (WINVER >= 0X0500)
 
-HB_FUNC( GETTITLEBARINFO )
+HB_FUNC( VWN_GETTITLEBARINFO )
 {
    TITLEBARINFO pti  ;
 
@@ -1078,7 +1078,7 @@ HB_FUNC( GETTITLEBARINFO )
 
 /*
 
-HB_FUNC( ENUMCHILDWINDOWS )
+HB_FUNC( VWN_ENUMCHILDWINDOWS )
 {
    WNDENUMPROC lpEnumFunc ;
 
@@ -1097,7 +1097,7 @@ HB_FUNC( ENUMCHILDWINDOWS )
 
 /*
 
-HB_FUNC( ENUMWINDOWS )
+HB_FUNC( VWN_ENUMWINDOWS )
 {
    WNDENUMPROC lpEnumFunc ;
 
@@ -1113,7 +1113,7 @@ HB_FUNC( ENUMWINDOWS )
 // WINUSERAPI UINT WINAPI RealGetWindowClassA( IN HWND hwnd, OUT LPSTR pszType, IN UINT cchType );
 
 /*
-HB_FUNC( REALGETWINDOWCLASS )
+HB_FUNC( VWN_REALGETWINDOWCLASS )
 {
    hb_retni( RealGetWindowClass( (HWND) HB_PARWH( 1 ),
                                  (LPSTR) hb_parcx( 2 ),
@@ -1129,7 +1129,7 @@ HB_FUNC( REALGETWINDOWCLASS )
 
 #if (WINVER >= 0X0500)
 
-HB_FUNC( REALCHILDWINDOWFROMPOINT )
+HB_FUNC( VWN_REALCHILDWINDOWFROMPOINT )
 {
    POINT ptParentClientCoords ;
    Array2Point( hb_param( 2 , HB_IT_ARRAY) , &ptParentClientCoords );
@@ -1149,7 +1149,7 @@ HB_FUNC( REALCHILDWINDOWFROMPOINT )
 // SetWindowExtEx(nHdc,nX,nY) -> aOldSize, or NIL
 
 
-HB_FUNC( SETWINDOWEXTEX )
+HB_FUNC( VWN_SETWINDOWEXTEX )
 {
    SIZE lpSize ;
    PHB_ITEM pArray;
@@ -1176,7 +1176,7 @@ HB_FUNC( SETWINDOWEXTEX )
 // SYNTAX:
 // SetWindowOrgEx(nHdc,nX,nY) -> aOldOrg, or NIL
 
-HB_FUNC( SETWINDOWORGEX )
+HB_FUNC( VWN_SETWINDOWORGEX )
 {
    POINT lpPoint ;
    PHB_ITEM pArray;
@@ -1208,7 +1208,7 @@ HB_FUNC( SETWINDOWORGEX )
                                200)  // height
 */
 
-HB_FUNC( CREATEMDICLIENT )
+HB_FUNC( VWN_CREATEMDICLIENT )
 {
   HWND hwndClient;
   HWND hFrame = (HWND) HB_PARWH(1);
@@ -1223,7 +1223,7 @@ HB_FUNC( CREATEMDICLIENT )
 
 // sets a member of the MINMAXINFO  structure
 
-HB_FUNC( SETMINMAXINFO )
+HB_FUNC( VWN_SETMINMAXINFO )
 {
   MINMAXINFO *mmi = (MINMAXINFO *) HB_PARWH(1);
   POINT pt  ;
@@ -1269,7 +1269,7 @@ AllowSetForegroundWindow( ASFW_ANY or GetCurrentProcessId() )
 #if(WINVER >= 0x0500)
 
 
-HB_FUNC( ALLOWSETFOREGROUNDWINDOW )
+HB_FUNC( VWN_ALLOWSETFOREGROUNDWINDOW )
 {
    hb_retl( AllowSetForegroundWindow ( (DWORD) hb_parnl( 1 ) ) );
 }
@@ -1282,7 +1282,7 @@ HB_FUNC( ALLOWSETFOREGROUNDWINDOW )
   #define ASFW_ANY    ((DWORD)-1)
 #endif
 
-HB_FUNC( ALLOWSETFOREGROUNDWINDOW )
+HB_FUNC( VWN_ALLOWSETFOREGROUNDWINDOW )
 {
 
    HINSTANCE h = LoadLibraryEx( "user32.dll", NULL, 0 );
@@ -1314,14 +1314,14 @@ BOOL LockSetForegroundWindow( UINT uLockCode
 /*
 #if (WINVER >= 0X0500)
 
-HB_FUNC( LOCKSETFOREGROUNDWINDOW )
+HB_FUNC( VWN_LOCKSETFOREGROUNDWINDOW )
 {
    hb_retl( LockSetForegroundWindow( (UINT) hb_parnl( 1 ) ) );
 }
 
 #endif
 */
-HB_FUNC( LOCKWINDOWUPDATE )
+HB_FUNC( VWN_LOCKWINDOWUPDATE )
 {
    hb_retl( LockWindowUpdate( (HWND) HB_PARWH( 1 ) ) );
 }

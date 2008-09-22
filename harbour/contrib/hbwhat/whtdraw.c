@@ -24,7 +24,7 @@ extern BOOL Array2Point(PHB_ITEM aPoint, POINT *pt );
 // Syntax:
 // MoveTo( x, y ) -> lSuccess
 
-HB_FUNC( MOVETO )
+HB_FUNC( VWN_MOVETO )
 {
 
    hb_retl( MoveToEx(
@@ -41,7 +41,7 @@ HB_FUNC( MOVETO )
 // MoveTo(hDC, x, y) -> aOldPoint or NIL
 
 
-HB_FUNC( MOVETOEX )
+HB_FUNC( VWN_MOVETOEX )
 {
 
    POINT Point ;
@@ -72,7 +72,7 @@ HB_FUNC( MOVETOEX )
 // SYNTAX:
 // GetCurrentPositionEx(hDC) -> aPoint or NIL
 
-HB_FUNC( GETCURRENTPOSITIONEX )
+HB_FUNC( VWN_GETCURRENTPOSITIONEX )
 {
    POINT pt ;
    PHB_ITEM aPt;
@@ -90,7 +90,7 @@ HB_FUNC( GETCURRENTPOSITIONEX )
 //-----------------------------------------------------------------------------
 // WINGDIAPI int WINAPI GetPixelFormat( IN HDC);
 
-HB_FUNC( GETPIXELFORMAT )
+HB_FUNC( VWN_GETPIXELFORMAT )
 {
    hb_retni( GetPixelFormat( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -101,7 +101,7 @@ HB_FUNC( GETPIXELFORMAT )
 
 // uses structure
 
-HB_FUNC( SETPIXELFORMAT )
+HB_FUNC( VWN_SETPIXELFORMAT )
 {
    PIXELFORMATDESCRIPTOR *pfd = (PIXELFORMATDESCRIPTOR * ) hb_parc( 3 ); //hb_param( 3, HB_IT_STRING )->item.asString.value;
 
@@ -120,7 +120,7 @@ HB_FUNC( SETPIXELFORMAT )
 // syntax:
 // DescribePixelFormat(hDC,nPixelFormat,@cDesc) -> nMaxPixFormat //PIXELFORMATDESCRIPTOR structure
 
-HB_FUNC( DESCRIBEPIXELFORMAT )
+HB_FUNC( VWN_DESCRIBEPIXELFORMAT )
 {
    PIXELFORMATDESCRIPTOR pfd ;
    UINT nBytes = sizeof(pfd);
@@ -141,7 +141,7 @@ HB_FUNC( DESCRIBEPIXELFORMAT )
 //-----------------------------------------------------------------------------
 // WINGDIAPI COLORREF WINAPI SetPixel(IN HDC, IN int, IN int, IN COLORREF);
 
-HB_FUNC( SETPIXEL )
+HB_FUNC( VWN_SETPIXEL )
 {
 
    hb_retnl( (ULONG) SetPixel( (HDC) HB_PARWH( 1 ),
@@ -156,7 +156,7 @@ HB_FUNC( SETPIXEL )
 // WINGDIAPI COLORREF WINAPI GetPixel( IN HDC, IN int, IN int);
 
 
-HB_FUNC( GETPIXEL )
+HB_FUNC( VWN_GETPIXEL )
 {
    hb_retnl( (ULONG) GetPixel( (HDC) HB_PARWH( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
@@ -165,7 +165,7 @@ HB_FUNC( GETPIXEL )
 //-----------------------------------------------------------------------------
 // WINGDIAPI BOOL WINAPI SetPixelV(IN HDC, IN int, IN int, IN COLORREF);
 
-HB_FUNC( SETPIXELV )
+HB_FUNC( VWN_SETPIXELV )
 {
 
    hb_retl( SetPixelV( (HDC) HB_PARWH( 1 ),
@@ -186,7 +186,7 @@ HB_FUNC( SETPIXELV )
 // WINGDIAPI BOOL WINAPI LineTo( IN HDC, IN int, IN int);
 
 
-HB_FUNC( LINETO )
+HB_FUNC( VWN_LINETO )
 {
    hb_retl( LineTo( (HDC) HB_PARWH( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
@@ -199,7 +199,7 @@ HB_FUNC( LINETO )
 
    TBD : Do callback functions first
 
-HB_FUNC( LINEDDA )
+HB_FUNC( VWN_LINEDDA )
 {
    LINEDDAPROC LineddaProc ;
    LPARAM      lParam      ;
@@ -223,7 +223,7 @@ HB_FUNC( LINEDDA )
 // WINGDIAPI int WINAPI GetArcDirection(IN HDC);
 
 
-HB_FUNC( GETARCDIRECTION )
+HB_FUNC( VWN_GETARCDIRECTION )
 {
    hb_retni( GetArcDirection( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -235,7 +235,7 @@ HB_FUNC( GETARCDIRECTION )
 // WINGDIAPI int WINAPI SetArcDirection(IN HDC, IN int);
 
 
-HB_FUNC( SETARCDIRECTION )
+HB_FUNC( VWN_SETARCDIRECTION )
 {
    hb_retni( SetArcDirection( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -246,7 +246,7 @@ HB_FUNC( SETARCDIRECTION )
 // WINGDIAPI BOOL WINAPI Arc( IN HDC, IN int, IN int, IN int, IN int, IN int, IN int, IN int, IN int);
 
 
-HB_FUNC( ARC )
+HB_FUNC( VWN_ARC )
 {
    hb_retl( Arc( (HDC) HB_PARWH( 1 ),
                  hb_parni( 2 )      ,
@@ -269,7 +269,7 @@ HB_FUNC( ARC )
 
 /*
 
-HB_FUNC( ARCTO )
+HB_FUNC( VWN_ARCTO )
 {
    hb_retl( ArcTo( (HDC) HB_PARWH( 1 ),
                  hb_parni( 2 )      ,
@@ -291,7 +291,7 @@ HB_FUNC( ARCTO )
 // Syntax:
 // PolyLine(hDC,aPoints) -> lSuccess
 
-HB_FUNC( POLYLINE )
+HB_FUNC( VWN_POLYLINE )
 {
 
    POINT * Point ;
@@ -340,7 +340,7 @@ HB_FUNC( POLYLINE )
 // SYNTAX:
 // PolyLineTo(hDC,aPoints)->lSuccess
 
-HB_FUNC( POLYLINETO )
+HB_FUNC( VWN_POLYLINETO )
 {
    POINT * Point ;
    POINT pt ;
@@ -389,7 +389,7 @@ HB_FUNC( POLYLINETO )
 // SYNTAX:
 // PolyPolyLine(hDC,aPoints,aQtyPoints)->lSuccess
 
-HB_FUNC( POLYPOLYLINE )
+HB_FUNC( VWN_POLYPOLYLINE )
 {
    POINT * Point ;
    DWORD * PolyPoints ;
@@ -455,7 +455,7 @@ HB_FUNC( POLYPOLYLINE )
 
 /*
 
-HB_FUNC( POLYDRAW )
+HB_FUNC( VWN_POLYDRAW )
 {
    CONST POINT ;
    CONST BYTE  ;
@@ -518,7 +518,7 @@ HB_FUNC( POLYDRAW )
 // Syntax
 // PolyBezier(hDC,aPoints) -> lSuccess
 
-HB_FUNC( POLYBEZIER )
+HB_FUNC( VWN_POLYBEZIER )
 {
 
    POINT * Point ;
@@ -568,7 +568,7 @@ HB_FUNC( POLYBEZIER )
 // PolyBezierTo(hDC,aPoints) -> lSuccess
 
 
-HB_FUNC( POLYBEZIERTO )
+HB_FUNC( VWN_POLYBEZIERTO )
 {
 
    POINT * Point ;
@@ -625,7 +625,7 @@ HB_FUNC( POLYBEZIERTO )
 // WINGDIAPI BOOL WINAPI Rectangle(IN HDC, IN int, IN int, IN int, IN int);
 
 
-HB_FUNC( RECTANGLE )
+HB_FUNC( VWN_RECTANGLE )
 {
    hb_retl( Rectangle( (HDC) HB_PARWH( 1 ),
                        hb_parni( 2 )      ,
@@ -640,7 +640,7 @@ HB_FUNC( RECTANGLE )
 // WINGDIAPI BOOL WINAPI RoundRect(IN HDC, IN int, IN int, IN int, IN int, IN int, IN int);
 
 
-HB_FUNC( ROUNDRECT )
+HB_FUNC( VWN_ROUNDRECT )
 {
    hb_retl( RoundRect( (HDC) HB_PARWH( 1 ),
                        hb_parni( 2 )      ,
@@ -659,7 +659,7 @@ HB_FUNC( ROUNDRECT )
 // WINGDIAPI BOOL WINAPI Chord( IN HDC, IN int, IN int, IN int, IN int, IN int, IN int, IN int, IN int);
 
 
-HB_FUNC( CHORD )
+HB_FUNC( VWN_CHORD )
 {
    hb_retl( Chord( (HDC) HB_PARWH( 1 ),
                    hb_parni( 2 )      ,
@@ -678,7 +678,7 @@ HB_FUNC( CHORD )
 // WINGDIAPI BOOL WINAPI Pie(IN HDC, IN int, IN int, IN int, IN int, IN int, IN int, IN int, IN int);
 
 
-HB_FUNC( PIE )
+HB_FUNC( VWN_PIE )
 {
    hb_retl( Pie( (HDC) HB_PARWH( 1 ),
                  hb_parni( 2 )      ,
@@ -697,7 +697,7 @@ HB_FUNC( PIE )
 // WINGDIAPI BOOL WINAPI Ellipse( IN HDC, IN int, IN int, IN int, IN int);
 
 
-HB_FUNC( ELLIPSE )
+HB_FUNC( VWN_ELLIPSE )
 {
    hb_retl( Ellipse( (HDC) HB_PARWH( 1 ),
                      hb_parni( 2 )      ,
@@ -717,7 +717,7 @@ HB_FUNC( ELLIPSE )
 // SYNTAX:
 // Polygon(hDC,aPoints) -> lSuccess
 
-HB_FUNC( POLYGON )
+HB_FUNC( VWN_POLYGON )
 {
    POINT * Point ;
    POINT pt ;
@@ -766,7 +766,7 @@ HB_FUNC( POLYGON )
 // SYNTAX
 // PolyPolygon(hDC,aPoints,aQtyPoints) -> lSuccess
 
-HB_FUNC( POLYPOLYGON )
+HB_FUNC( VWN_POLYPOLYGON )
 {
    POINT * Point ;
    INT * PolyPoints ;
@@ -828,7 +828,7 @@ HB_FUNC( POLYPOLYGON )
 // FillRect( hDC, aRect,hBrush ) -> nRet
 
 
-HB_FUNC( FILLRECT )
+HB_FUNC( VWN_FILLRECT )
 {
   RECT rc ;
 
@@ -848,7 +848,7 @@ HB_FUNC( FILLRECT )
 // FrameRect( hDC, aRect,hBrush ) -> nRet
 
 
-HB_FUNC( FRAMERECT )
+HB_FUNC( VWN_FRAMERECT )
 {
    RECT rc ;
 
@@ -865,7 +865,7 @@ HB_FUNC( FRAMERECT )
 // InvertRect( hDC, aRect ) -> lSuccess
 
 
-HB_FUNC( INVERTRECT )
+HB_FUNC( VWN_INVERTRECT )
 {
    RECT rc ;
 
@@ -885,7 +885,7 @@ HB_FUNC( INVERTRECT )
 // WINGDIAPI int WINAPI SetPolyFillMode(IN HDC, IN int);
 
 
-HB_FUNC( SETPOLYFILLMODE )
+HB_FUNC( VWN_SETPOLYFILLMODE )
 {
    hb_retni( SetPolyFillMode( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -895,7 +895,7 @@ HB_FUNC( SETPOLYFILLMODE )
 // WINGDIAPI BOOL WINAPI ExtFloodFill( IN HDC, IN int, IN int, IN COLORREF, IN UINT);
 
 
-HB_FUNC( EXTFLOODFILL )
+HB_FUNC( VWN_EXTFLOODFILL )
 {
 
    hb_retl( ExtFloodFill( (HDC) HB_PARWH( 1 ) ,
@@ -911,7 +911,7 @@ HB_FUNC( EXTFLOODFILL )
 // WINGDIAPI BOOL WINAPI FillPath(IN HDC);
 
 
-HB_FUNC( FILLPATH )
+HB_FUNC( VWN_FILLPATH )
 {
    hb_retl( FillPath( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -920,7 +920,7 @@ HB_FUNC( FILLPATH )
 // WINGDIAPI BOOL WINAPI FlattenPath(IN HDC);
 
 
-HB_FUNC( FLATTENPATH )
+HB_FUNC( VWN_FLATTENPATH )
 {
    hb_retl( FlattenPath( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -928,7 +928,7 @@ HB_FUNC( FLATTENPATH )
 //-----------------------------------------------------------------------------
 // WINGDIAPI BOOL WINAPI FloodFill( IN HDC, IN int, IN int, IN COLORREF);
 
-HB_FUNC( FLOODFILL )
+HB_FUNC( VWN_FLOODFILL )
 {
 
    hb_retl( FloodFill( (HDC) HB_PARWH( 1 ),
@@ -943,7 +943,7 @@ HB_FUNC( FLOODFILL )
 // WINGDIAPI int WINAPI GetPolyFillMode( IN HDC);
 
 
-HB_FUNC( GETPOLYFILLMODE )
+HB_FUNC( VWN_GETPOLYFILLMODE )
 {
    hb_retni( GetPolyFillMode( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -957,9 +957,9 @@ HB_FUNC( GETPOLYFILLMODE )
 
  // use arrays !
 
-HB_FUNC( GRADIENTFILL )
+HB_FUNC( VWN_GRADIENTFILL )
 {
-   TRIVERTEX * tve = (TRIVERTEX *) hb_param( 2 , HB_IT_STRING)->item.asString.value ;
+   TRIVERTEX * tve = (TRIVERTEX *) hb_parc( 2 );
    PVOID      pVoid      ;
 
    // Your code goes here

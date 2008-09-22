@@ -43,7 +43,7 @@ extern void Size2ArrayEx( SIZE *siz  ,  PHB_ITEM aSize);
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( RGB )
+HB_FUNC( VWN_RGB )
 {
    hb_retnl((ULONG)(COLORREF)(((BYTE)(hb_parni(1))|
                               ((WORD)((BYTE)(hb_parni(2)))<<8))|
@@ -53,7 +53,7 @@ HB_FUNC( RGB )
 //-----------------------------------------------------------------------------
 // BYTE GetGValue( DWORD rgb );
 
-HB_FUNC( GETGVALUE )
+HB_FUNC( VWN_GETGVALUE )
 {
   hb_retni( (INT) GetGValue( (DWORD) hb_parnl( 1 ) ) );
 }
@@ -61,7 +61,7 @@ HB_FUNC( GETGVALUE )
 //-----------------------------------------------------------------------------
 // BYTE GetBValue( WORD rgb );
 
-HB_FUNC( GETBVALUE )
+HB_FUNC( VWN_GETBVALUE )
 {
   hb_retni( (INT) GetBValue( (DWORD) hb_parnl( 1 ) ) );
 }
@@ -69,7 +69,7 @@ HB_FUNC( GETBVALUE )
 //-----------------------------------------------------------------------------
 // BYTE GetRValue( DWORD rgb );
 
-HB_FUNC( GETRVALUE )
+HB_FUNC( VWN_GETRVALUE )
 {
   hb_retni( (INT) GetRValue( (DWORD) hb_parnl( 1 ) ) );
 }
@@ -78,7 +78,7 @@ HB_FUNC( GETRVALUE )
 
 // WINGDIAPI COLORREF WINAPI SetTextColor(IN HDC, IN COLORREF);
 
-HB_FUNC( SETTEXTCOLOR )
+HB_FUNC( VWN_SETTEXTCOLOR )
 {
 
   hb_retnl( (ULONG) SetTextColor( (HDC) HB_PARWH( 1 ), (COLORREF) hb_parnl(2) ) );
@@ -90,7 +90,7 @@ HB_FUNC( SETTEXTCOLOR )
 // WINGDIAPI COLORREF WINAPI GetTextColor( IN HDC);
 
 
-HB_FUNC( GETTEXTCOLOR )
+HB_FUNC( VWN_GETTEXTCOLOR )
 {
    hb_retnl((ULONG) GetTextColor( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -101,7 +101,7 @@ HB_FUNC( GETTEXTCOLOR )
 // WINGDIAPI COLORREF WINAPI GetBkColor( IN HDC);
 
 
-HB_FUNC( GETBKCOLOR )
+HB_FUNC( VWN_GETBKCOLOR )
 {
    hb_retnl( (ULONG) GetBkColor( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -111,7 +111,7 @@ HB_FUNC( GETBKCOLOR )
 
 // WINGDIAPI COLORREF WINAPI SetBkColor(IN HDC, IN COLORREF);
 
-HB_FUNC( SETBKCOLOR )
+HB_FUNC( VWN_SETBKCOLOR )
 {
 
    hb_retnl( (ULONG) SetBkColor( (HDC) HB_PARWH( 1 ), (COLORREF) hb_parnl(2) ) );
@@ -121,7 +121,7 @@ HB_FUNC( SETBKCOLOR )
 // WINGDIAPI BOOL WINAPI UpdateColors(IN HDC);
 
 
-HB_FUNC( UPDATECOLORS )
+HB_FUNC( VWN_UPDATECOLORS )
 {
    hb_retl( UpdateColors( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -137,7 +137,7 @@ HB_FUNC( UPDATECOLORS )
 // WINGDIAPI HGDIOBJ WINAPI GetStockObject( IN int);
 
 
-HB_FUNC( GETSTOCKOBJECT )
+HB_FUNC( VWN_GETSTOCKOBJECT )
 {
    HB_RETWH( GetStockObject( hb_parni( 1 ) ) );
 }
@@ -148,7 +148,7 @@ HB_FUNC( GETSTOCKOBJECT )
 // WINGDIAPI HGDIOBJ WINAPI SelectObject(IN HDC, IN HGDIOBJ);
 
 
-HB_FUNC( SELECTOBJECT )
+HB_FUNC( VWN_SELECTOBJECT )
 {
    HB_RETWH( SelectObject( (HDC) HB_PARWH( 1 ), (HGDIOBJ) HB_PARWH( 2 ) ) );
 }
@@ -159,7 +159,7 @@ HB_FUNC( SELECTOBJECT )
 // WINGDIAPI BOOL WINAPI DeleteObject( IN HGDIOBJ);
 
 
-HB_FUNC( DELETEOBJECT )
+HB_FUNC( VWN_DELETEOBJECT )
 {
    hb_retl( DeleteObject( (HGDIOBJ) HB_PARWH( 1 ) ) );
 }
@@ -169,7 +169,7 @@ HB_FUNC( DELETEOBJECT )
 // WINGDIAPI BOOL WINAPI UnrealizeObject( IN HGDIOBJ);
 
 
-HB_FUNC( UNREALIZEOBJECT )
+HB_FUNC( VWN_UNREALIZEOBJECT )
 {
    hb_retl( UnrealizeObject( (HGDIOBJ) HB_PARWH( 1 ) ) );
 }
@@ -181,7 +181,7 @@ HB_FUNC( UNREALIZEOBJECT )
 // WINGDIAPI DWORD WINAPI GetObjectType( IN HGDIOBJ h);
 
 
-HB_FUNC( GETOBJECTTYPE )
+HB_FUNC( VWN_GETOBJECTTYPE )
 {
    hb_retnl( ( long ) GetObjectType( (HGDIOBJ) HB_PARWH( 1 ) ) );
 }
@@ -192,7 +192,7 @@ HB_FUNC( GETOBJECTTYPE )
 // WINGDIAPI HGDIOBJ WINAPI GetCurrentObject( IN HDC, IN UINT);
 
 
-HB_FUNC( GETCURRENTOBJECT )
+HB_FUNC( VWN_GETCURRENTOBJECT )
 {
    HB_RETWH( GetCurrentObject( (HDC) HB_PARWH( 1 ), (UINT) hb_parni( 2 ) ) );
 }
@@ -204,7 +204,7 @@ HB_FUNC( GETCURRENTOBJECT )
 //Syntax:
 //cBytes:=GetObject(hGDIObj)
 
-HB_FUNC( GETOBJECT )
+HB_FUNC( VWN_GETOBJECT )
 {
 
    int nBytes = GetObject( (HGDIOBJ) HB_PARWH( 1 ), 0, NULL );
@@ -223,7 +223,7 @@ HB_FUNC( GETOBJECT )
 
 /*
 
-HB_FUNC( ENUMOBJECTS )
+HB_FUNC( VWN_ENUMOBJECTS )
 {
    GOBJENUMPROC gObjEnumProc ;
    LPVOID       lpVoid       ;
@@ -247,7 +247,7 @@ HB_FUNC( ENUMOBJECTS )
 // WINGDIAPI int WINAPI GetMapMode( IN HDC);
 
 
-HB_FUNC( GETMAPMODE )
+HB_FUNC( VWN_GETMAPMODE )
 {
    hb_retni( GetMapMode( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -258,7 +258,7 @@ HB_FUNC( GETMAPMODE )
 // WINGDIAPI int WINAPI SetMapMode(IN HDC, IN int);
 
 
-HB_FUNC( SETMAPMODE )
+HB_FUNC( VWN_SETMAPMODE )
 {
    hb_retni( SetMapMode( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -267,7 +267,7 @@ HB_FUNC( SETMAPMODE )
 // WINGDIAPI DWORD WINAPI SetMapperFlags(IN HDC, IN DWORD);
 
 
-HB_FUNC( SETMAPPERFLAGS )
+HB_FUNC( VWN_SETMAPPERFLAGS )
 {
    hb_retnl( (LONG) SetMapperFlags( (HDC) HB_PARWH( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
@@ -285,7 +285,7 @@ HB_FUNC( SETMAPPERFLAGS )
 // Local cPS
 // BeginPaint( hWnd, @cPS) -> hDC
 
-HB_FUNC( BEGINPAINT )
+HB_FUNC( VWN_BEGINPAINT )
 {
    PAINTSTRUCT pps ;
    HB_RETWH( BeginPaint( (HWND) HB_PARWH( 1 ), &pps ) );
@@ -298,7 +298,7 @@ HB_FUNC( BEGINPAINT )
 // SYNTAX
 // EndPaint(hWnd,cPS)->lSuccess
 
-HB_FUNC( ENDPAINT )
+HB_FUNC( VWN_ENDPAINT )
 {
    hb_retl( EndPaint( (HWND) HB_PARWH( 1 ), (PAINTSTRUCT*) hb_parcx( 2 ) ) );
 }
@@ -308,7 +308,7 @@ HB_FUNC( ENDPAINT )
 
 // WINGDIAPI int WINAPI GetGraphicsMode( IN HDC);
 
-HB_FUNC( GETGRAPHICSMODE )
+HB_FUNC( VWN_GETGRAPHICSMODE )
 {
    hb_retni( GetGraphicsMode( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -319,7 +319,7 @@ HB_FUNC( GETGRAPHICSMODE )
 
 // WINGDIAPI BOOL WINAPI GdiComment( IN HDC, IN UINT, IN CONST BYTE *);
 
-HB_FUNC( GDICOMMENT )
+HB_FUNC( VWN_GDICOMMENT )
 {
 
    hb_retl( GdiComment( (HDC) HB_PARWH( 1 ), (UINT) hb_parni( 2 ), ( const BYTE * ) hb_parcx( 3 ) ) );
@@ -332,7 +332,7 @@ HB_FUNC( GDICOMMENT )
 // WINGDIAPI DWORD WINAPI GdiSetBatchLimit( IN DWORD);
 
 
-HB_FUNC( GDISETBATCHLIMIT )
+HB_FUNC( VWN_GDISETBATCHLIMIT )
 {
    hb_retnl( (LONG) GdiSetBatchLimit( (DWORD) hb_parnl( 1 ) ) );
 }
@@ -349,7 +349,7 @@ HB_FUNC( GDISETBATCHLIMIT )
 // WINGDIAPI BOOL WINAPI SelectClipPath(IN HDC, IN int);
 
 
-HB_FUNC( SELECTCLIPPATH )
+HB_FUNC( VWN_SELECTCLIPPATH )
 {
    hb_retl( SelectClipPath( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -362,7 +362,7 @@ HB_FUNC( SELECTCLIPPATH )
 // WINGDIAPI BOOL WINAPI WidenPath(IN HDC);
 
 
-HB_FUNC( WIDENPATH )
+HB_FUNC( VWN_WIDENPATH )
 {
    hb_retl( WidenPath( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -373,7 +373,7 @@ HB_FUNC( WIDENPATH )
 // WINGDIAPI BOOL WINAPI StrokeAndFillPath(IN HDC);
 
 
-HB_FUNC( STROKEANDFILLPATH )
+HB_FUNC( VWN_STROKEANDFILLPATH )
 {
    hb_retl( StrokeAndFillPath( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -382,7 +382,7 @@ HB_FUNC( STROKEANDFILLPATH )
 // WINGDIAPI BOOL WINAPI StrokePath(IN HDC);
 
 
-HB_FUNC( STROKEPATH )
+HB_FUNC( VWN_STROKEPATH )
 {
    hb_retl( StrokePath( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -393,7 +393,7 @@ HB_FUNC( STROKEPATH )
 // WINGDIAPI BOOL WINAPI EndPath(IN HDC);
 
 
-HB_FUNC( ENDPATH )
+HB_FUNC( VWN_ENDPATH )
 {
    hb_retl( EndPath( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -404,7 +404,7 @@ HB_FUNC( ENDPATH )
 // WINGDIAPI BOOL WINAPI AbortPath(IN HDC);
 
 
-HB_FUNC( ABORTPATH )
+HB_FUNC( VWN_ABORTPATH )
 {
    hb_retl( AbortPath( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -416,7 +416,7 @@ HB_FUNC( ABORTPATH )
 
 /*
 
-HB_FUNC( GETPATH )
+HB_FUNC( VWN_GETPATH )
 {
    LPPOINT lpPoInt ;
    LPBYTE  lpByte  ;
@@ -437,7 +437,7 @@ HB_FUNC( GETPATH )
 // LPToDP(hDC,aPoints)->lSuccess
 // where aPoints = array of point arrays
 
-HB_FUNC( LPTODP )
+HB_FUNC( VWN_LPTODP )
 {
    POINT * Point ;
    POINT pt;
@@ -495,7 +495,7 @@ HB_FUNC( LPTODP )
 // DPtoLP(hDC,aPoints)->lSuccess
 // where aPoints = array of point arrays
 
-HB_FUNC( DPTOLP )
+HB_FUNC( VWN_DPTOLP )
 {
    POINT * Point ;
    POINT pt;
@@ -549,7 +549,7 @@ HB_FUNC( DPTOLP )
 // WINGDIAPI int WINAPI GetDeviceCaps( IN HDC, IN int);
 
 
-HB_FUNC( GETDEVICECAPS )
+HB_FUNC( VWN_GETDEVICECAPS )
 {
    hb_retni( GetDeviceCaps( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -559,7 +559,7 @@ HB_FUNC( GETDEVICECAPS )
 // WINUSERAPI BOOL WINAPI PaintDesktop( IN HDC hdc);
 
 
-HB_FUNC( PAINTDESKTOP )
+HB_FUNC( VWN_PAINTDESKTOP )
 {
    hb_retl( PaintDesktop( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -573,7 +573,7 @@ HB_FUNC( PAINTDESKTOP )
 
 #if(WINVER >= 0x0500)
 
-HB_FUNC( GETGUIRESOURCES )
+HB_FUNC( VWN_GETGUIRESOURCES )
 {
    hb_retnl( (LONG) GetGuiResources( (HANDLE) HB_PARWH( 1 ),
                                      (DWORD) hb_parnl( 2 )
@@ -586,7 +586,7 @@ HB_FUNC( GETGUIRESOURCES )
 // WINGDIAPI BOOL WINAPI PtVisible(IN HDC, IN int, IN int);
 
 
-HB_FUNC( PTVISIBLE )
+HB_FUNC( VWN_PTVISIBLE )
 {
    hb_retl( PtVisible( (HDC) HB_PARWH( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
@@ -596,7 +596,7 @@ HB_FUNC( PTVISIBLE )
 // WINGDIAPI int WINAPI SetGraphicsMode(IN HDC hdc, IN int iMode);
 
 
-HB_FUNC( SETGRAPHICSMODE )
+HB_FUNC( VWN_SETGRAPHICSMODE )
 {
    hb_retni( SetGraphicsMode( (HDC) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -606,7 +606,7 @@ HB_FUNC( SETGRAPHICSMODE )
 // WINGDIAPI DWORD WINAPI SetLayout(IN HDC, IN DWORD);
 
 /*
-HB_FUNC( SETLAYOUT )
+HB_FUNC( VWN_SETLAYOUT )
 {
    hb_retnl( (LONG) SetLayout( (HDC) HB_PARWH( 1 ), (DWORD) hb_parnl( 2 ) ) );
 }
@@ -616,7 +616,7 @@ HB_FUNC( SETLAYOUT )
 // WINGDIAPI BOOL WINAPI SwapBuffers(HDC);
 
 
-HB_FUNC( SWAPBUFFERS )
+HB_FUNC( VWN_SWAPBUFFERS )
 {
    hb_retl( SwapBuffers( (HDC) HB_PARWH( 1 ) ) );
 }
@@ -628,7 +628,7 @@ HB_FUNC( SWAPBUFFERS )
 // this is not right, the return value is important !
 
 
-HB_FUNC( GETCLIPBOX )
+HB_FUNC( VWN_GETCLIPBOX )
 {
    RECT Rect ;
    PHB_ITEM aRect ;
@@ -648,7 +648,7 @@ HB_FUNC( GETCLIPBOX )
 
 /*
 
-HB_FUNC( GETMITERLIMIT )
+HB_FUNC( VWN_GETMITERLIMIT )
 {
    PFLOAT pFloat ;
 
@@ -664,7 +664,7 @@ HB_FUNC( GETMITERLIMIT )
 // WINGDIAPI BOOL WINAPI GetRasterizerCaps( OUT LPRASTERIZER_STATUS, IN UINT);
 
 
-HB_FUNC( GETRASTERIZERCAPS )
+HB_FUNC( VWN_GETRASTERIZERCAPS )
 {
    LPRASTERIZER_STATUS lprs = (LPRASTERIZER_STATUS) hb_parc(1); //hb_param( 1,HB_IT_STRING )->item.asString.value;
 
@@ -682,7 +682,7 @@ HB_FUNC( GETRASTERIZERCAPS )
 
 
 
-HB_FUNC( GETASPECTRATIOFILTEREX )
+HB_FUNC( VWN_GETASPECTRATIOFILTEREX )
 {
    SIZE lpSize ;
    PHB_ITEM pArray=hb_param(2,HB_IT_ARRAY);
@@ -707,7 +707,7 @@ HB_FUNC( GETASPECTRATIOFILTEREX )
 
 /*
 
-HB_FUNC( DEVICECAPABILITIESA )
+HB_FUNC( VWN_DEVICECAPABILITIESA )
 {
    WORD   Word     ;
    CONST  DEVMODEA ;
@@ -731,7 +731,7 @@ HB_FUNC( DEVICECAPABILITIESA )
 // SYNTAX
 // GetUpdateRect(hWnd,lErase) -> aRect or NIL
 
-HB_FUNC( GETUPDATERECT )
+HB_FUNC( VWN_GETUPDATERECT )
 {
    RECT Rect ;
    PHB_ITEM aRect ;
@@ -751,7 +751,7 @@ HB_FUNC( GETUPDATERECT )
 
 /*
 
-HB_FUNC( DRAGOBJECT )
+HB_FUNC( VWN_DRAGOBJECT )
 {
    ULONG_PTR uLong_ptr ;
 
@@ -776,7 +776,7 @@ DRAGDETECT(nHandle,aSrc)
 */
 
 
-HB_FUNC( DRAGDETECT )
+HB_FUNC( VWN_DRAGDETECT )
 {
    POINT PoInt ;
    PHB_ITEM pArray;
@@ -794,7 +794,7 @@ HB_FUNC( DRAGDETECT )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETDRAWITEMSTRUCT )
+HB_FUNC( VWN_GETDRAWITEMSTRUCT )
 {
 
   DRAWITEMSTRUCT * dis = ( DRAWITEMSTRUCT * ) HB_PARWH( 1 );
@@ -823,7 +823,7 @@ HB_FUNC( GETDRAWITEMSTRUCT )
 
 
 
-HB_FUNC( DRAWFRAMECONTROL )
+HB_FUNC( VWN_DRAWFRAMECONTROL )
 {
    RECT lpRect ;
    PHB_ITEM pArray=hb_param(2,HB_IT_ARRAY);
@@ -855,7 +855,7 @@ else
 
 
 
-HB_FUNC( DRAWANIMATEDRECTS )
+HB_FUNC( VWN_DRAWANIMATEDRECTS )
 {
    RECT lprcFrom ;
    RECT lprcTo   ;
@@ -885,7 +885,7 @@ HB_FUNC( DRAWANIMATEDRECTS )
 
 
 
-HB_FUNC( GETWINDOWORGEX )
+HB_FUNC( VWN_GETWINDOWORGEX )
 {
    POINT lpPoInt ;
    PHB_ITEM pArray=hb_param(2,HB_IT_ARRAY);
@@ -907,7 +907,7 @@ HB_FUNC( GETWINDOWORGEX )
 
 /*
 
-HB_FUNC( GETWORLDTRANSFORM )
+HB_FUNC( VWN_GETWORLDTRANSFORM )
 {
    LPXFORM lpxForm ;
 
@@ -924,7 +924,7 @@ HB_FUNC( GETWORLDTRANSFORM )
 
 /*
 
-HB_FUNC( MODIFYWORLDTRANSFORM )
+HB_FUNC( VWN_MODIFYWORLDTRANSFORM )
 {
    CONST XFORM ;
 
@@ -943,7 +943,7 @@ HB_FUNC( MODIFYWORLDTRANSFORM )
 
 /*
 
-HB_FUNC( OFFSETVIEWPORTORGEX )
+HB_FUNC( VWN_OFFSETVIEWPORTORGEX )
 {
    LPPOINT lpPoInt ;
 
@@ -963,7 +963,7 @@ HB_FUNC( OFFSETVIEWPORTORGEX )
 
 /*
 
-HB_FUNC( OFFSETWINDOWORGEX )
+HB_FUNC( VWN_OFFSETWINDOWORGEX )
 {
    LPPOINT lpPoInt ;
 
@@ -983,7 +983,7 @@ HB_FUNC( OFFSETWINDOWORGEX )
 
 
 
-HB_FUNC( SCALEWINDOWEXTEX )
+HB_FUNC( VWN_SCALEWINDOWEXTEX )
 {
    SIZE lpSize ;
    PHB_ITEM pArray=hb_param(6,HB_IT_ARRAY);
@@ -1011,7 +1011,7 @@ HB_FUNC( SCALEWINDOWEXTEX )
 
 /*
 
-HB_FUNC( SETBOUNDSRECT )
+HB_FUNC( VWN_SETBOUNDSRECT )
 {
    CONST RECT ;
 
@@ -1029,7 +1029,7 @@ HB_FUNC( SETBOUNDSRECT )
 
 /*
 
-HB_FUNC( SETWORLDTRANSFORM )
+HB_FUNC( VWN_SETWORLDTRANSFORM )
 {
    CONST XFORM ;
 
@@ -1045,7 +1045,7 @@ HB_FUNC( SETWORLDTRANSFORM )
 
 /*
 
-HB_FUNC( SETMITERLIMIT )
+HB_FUNC( VWN_SETMITERLIMIT )
 {
    PFLOAT pFloat ;
 

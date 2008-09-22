@@ -32,14 +32,14 @@
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ENDDIALOG )
+HB_FUNC( VWN_ENDDIALOG )
 {
   EndDialog( (HWND) HB_PARWH(1) , hb_parni(2) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( GETDLGITEM )
+HB_FUNC( VWN_GETDLGITEM )
 {
    HWND hWnd = GetDlgItem(
                  (HWND) HB_PARWH( 1 ), // handle of dialog box
@@ -53,7 +53,7 @@ HB_FUNC( GETDLGITEM )
 // WINUSERAPI HWND WINAPI GetNextDlgGroupItem( IN HWND hDlg, IN HWND hCtl, IN BOOL bPrevious);
 
 
-HB_FUNC( GETNEXTDLGGROUPITEM )
+HB_FUNC( VWN_GETNEXTDLGGROUPITEM )
 {
    HB_RETWH( GetNextDlgGroupItem( (HWND) HB_PARWH( 1 ),
                                          (HWND) HB_PARWH( 2 ),
@@ -65,7 +65,7 @@ HB_FUNC( GETNEXTDLGGROUPITEM )
 // WINUSERAPI HWND WINAPI GetNextDlgTabItem( IN HWND hDlg, IN HWND hCtl, IN BOOL bPrevious);
 
 
-HB_FUNC( GETNEXTDLGTABITEM )
+HB_FUNC( VWN_GETNEXTDLGTABITEM )
 {
    HB_RETWH( GetNextDlgTabItem( (HWND) HB_PARWH( 1 ),
                                        (HWND) HB_PARWH( 2 ),
@@ -77,7 +77,7 @@ HB_FUNC( GETNEXTDLGTABITEM )
 // WINUSERAPI int WINAPI GetDlgCtrlID( IN HWND hWnd);
 
 
-HB_FUNC( GETDLGCTRLID )
+HB_FUNC( VWN_GETDLGCTRLID )
 {
    hb_retni( GetDlgCtrlID( (HWND) HB_PARWH( 1 ) ) );
 }
@@ -86,7 +86,7 @@ HB_FUNC( GETDLGCTRLID )
 // WINUSERAPI long WINAPI GetDialogBaseUnits(VOID);
 
 
-HB_FUNC( GETDIALOGBASEUNITS )
+HB_FUNC( VWN_GETDIALOGBASEUNITS )
 {
    hb_retnl( (LONG) GetDialogBaseUnits(  ) );
 }
@@ -96,7 +96,7 @@ HB_FUNC( GETDIALOGBASEUNITS )
 // WINUSERAPI BOOL WINAPI SetDlgItemInt( IN HWND hDlg, IN int nIDDlgItem, IN UINT uValue, IN BOOL bSigned);
 
 
-HB_FUNC( SETDLGITEMINT )
+HB_FUNC( VWN_SETDLGITEMINT )
 {
    hb_retl( SetDlgItemInt( (HWND) HB_PARWH( 1 ),
                            hb_parni( 2 )       ,
@@ -108,7 +108,7 @@ HB_FUNC( SETDLGITEMINT )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( SETDLGITEMTEXT )
+HB_FUNC( VWN_SETDLGITEMTEXT )
 {
     SetDlgItemText(
        (HWND) HB_PARWH( 1 ),  // handle of dialog box
@@ -121,7 +121,7 @@ HB_FUNC( SETDLGITEMTEXT )
 
 // modified API
 
-HB_FUNC( GETDLGITEMTEXT )  // GETDLGITMTEXT
+HB_FUNC( VWN_GETDLGITEMTEXT )  // GETDLGITMTEXT
 {
    USHORT iLen = ( USHORT ) SendMessage( GetDlgItem( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 )+1 ;
    char *cText = (char*) hb_xgrab( iLen );
@@ -142,7 +142,7 @@ HB_FUNC( GETDLGITEMTEXT )  // GETDLGITMTEXT
 
 // NOT WIN API !!!
 
-HB_FUNC( GETLBITEMTEXT )  // GETDLGITMTEXT
+HB_FUNC( VWN_GETLBITEMTEXT )  // GETDLGITMTEXT
 {
    USHORT iLen = ISNIL(3) ? 255 : ( USHORT ) hb_parni( 3 );
    char * cText = ( char * ) hb_xgrab( iLen + 1 );
@@ -161,7 +161,7 @@ HB_FUNC( GETLBITEMTEXT )  // GETDLGITMTEXT
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( CHECKDLGBUTTON )
+HB_FUNC( VWN_CHECKDLGBUTTON )
 {
     hb_retl( CheckDlgButton(
                              (HWND) HB_PARWH( 1 ), // handle of dialog box
@@ -171,7 +171,7 @@ HB_FUNC( CHECKDLGBUTTON )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( CHECKRADIOBUTTON )
+HB_FUNC( VWN_CHECKRADIOBUTTON )
 {
     hb_retl( CheckRadioButton(
                               (HWND) HB_PARWH( 1 ),   // handle of dialog box
@@ -183,7 +183,7 @@ HB_FUNC( CHECKRADIOBUTTON )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ISDLGBUTTONCHECKED )
+HB_FUNC( VWN_ISDLGBUTTONCHECKED )
 {
   hb_retni( IsDlgButtonChecked(
                                (HWND) HB_PARWH( 1 ),       // handle of dialog box
@@ -198,7 +198,7 @@ HB_FUNC( ISDLGBUTTONCHECKED )
 // WINUSERAPI int WINAPI DlgDirListA( IN HWND hDlg, IN OUT LPSTR lpPathSpec, IN int nIDListBox, IN int nIDStaticPath, IN UINT uFileType);
 
 
-HB_FUNC( DLGDIRLIST )
+HB_FUNC( VWN_DLGDIRLIST )
 {
 
    char *cText = (char*) hb_xgrab( MAX_PATH+1 );
@@ -221,7 +221,7 @@ HB_FUNC( DLGDIRLIST )
 // WINUSERAPI BOOL WINAPI DlgDirSelectExA( IN HWND hDlg, OUT LPSTR lpString, IN int nCount, IN int nIDListBox);
 
 
-HB_FUNC( DLGDIRSELECTEX )
+HB_FUNC( VWN_DLGDIRSELECTEX )
 {
 
    USHORT iLen = ISNIL(3) ? MAX_PATH : ( USHORT ) hb_parni( 3 );
@@ -241,7 +241,7 @@ HB_FUNC( DLGDIRSELECTEX )
 // WINUSERAPI int WINAPI DlgDirListComboBoxA( IN HWND hDlg, IN OUT LPSTR lpPathSpec, IN int nIDComboBox, IN int nIDStaticPath, IN UINT uFiletype);
 
 
-HB_FUNC( DLGDIRLISTCOMBOBOX )
+HB_FUNC( VWN_DLGDIRLISTCOMBOBOX )
 {
    char *cText = (char*) hb_xgrab( MAX_PATH+1 );
    //cText = hb_parcx(2);
@@ -261,7 +261,7 @@ HB_FUNC( DLGDIRLISTCOMBOBOX )
 // WINUSERAPI BOOL WINAPI DlgDirSelectComboBoxExA( IN HWND hDlg, OUT LPSTR lpString, IN int nCount, IN int nIDComboBox);
 
 
-HB_FUNC( DLGDIRSELECTCOMBOBOXEX )
+HB_FUNC( VWN_DLGDIRSELECTCOMBOBOXEX )
 {
 
    USHORT iLen = ISNIL(3) ? MAX_PATH : ( USHORT ) hb_parni( 3 );
@@ -287,7 +287,7 @@ Local aSrc := { 11 , 22 , 15 , 63 )
 MAPDIALOGRECT(nDlg,@aSrc)
 */
 
-HB_FUNC( MAPDIALOGRECT )
+HB_FUNC( VWN_MAPDIALOGRECT )
 {
    RECT lpRect ;
    PHB_ITEM pArray;
@@ -318,7 +318,7 @@ HB_FUNC( MAPDIALOGRECT )
 
 /*
 
-HB_FUNC( GETCOMBOBOXINFO )
+HB_FUNC( VWN_GETCOMBOBOXINFO )
 {
    PCOMBOBOXINFO pcbi      ;
 
@@ -332,7 +332,7 @@ HB_FUNC( GETCOMBOBOXINFO )
 
 /*
 
-HB_FUNC( GETALTTABINFO )
+HB_FUNC( VWN_GETALTTABINFO )
 {
    PALTTABINFO pati        ;
 
@@ -352,13 +352,13 @@ HB_FUNC( GETALTTABINFO )
 // WINUSERAPI DWORD WINAPI GetListBoxInfo( IN HWND hwnd );
 
 /*
-HB_FUNC( GETLISTBOXINFO )
+HB_FUNC( VWN_GETLISTBOXINFO )
 {
    hb_retnl( (LONG) GetListBoxInfo( (HWND) HB_PARWH( 1 ) ) );
 }
 */
 
-HB_FUNC( GETLISTBOXINFO )
+HB_FUNC( VWN_GETLISTBOXINFO )
 {
 HINSTANCE h    = LoadLibraryEx( "user32.dll", NULL, 0);
 DWORD dwGLIRet = 0 ;

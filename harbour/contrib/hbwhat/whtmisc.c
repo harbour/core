@@ -26,7 +26,7 @@
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( STR2PTR )
+HB_FUNC( WHT_STR2PTR )
 {
    char *cStr = hb_parcx( 1 );
    HB_RETWI( cStr );
@@ -34,35 +34,35 @@ HB_FUNC( STR2PTR )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( PEEKW )
+HB_FUNC( WHT_PEEKW )
 {
    hb_retni( ( int ) ( * ( LPWORD ) HB_PARWI( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( PEEKL )
+HB_FUNC( WHT_PEEKL )
 {
    hb_retnl( ( long ) ( * (LPDWORD) HB_PARWI( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( PEEKB )
+HB_FUNC( WHT_PEEKB )
 {
    hb_retni( ( int ) ( * ( LPBYTE ) HB_PARWI( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( POKEW )
+HB_FUNC( WHT_POKEW )
 {
    * ( LPWORD ) HB_PARWI( 1 ) = (WORD) hb_parni( 2 );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( POKEL )
+HB_FUNC( WHT_POKEL )
 {
    * ( LPLONG ) HB_PARWI( 1 ) = (DWORD) hb_parnl( 2 );
 }
@@ -70,7 +70,7 @@ HB_FUNC( POKEL )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( POKEB )
+HB_FUNC( WHT_POKEB )
 {
    * ( LPBYTE ) HB_PARWI( 1 ) = ( BYTE ) hb_parni( 2 );
 }
@@ -79,7 +79,7 @@ HB_FUNC( POKEB )
 //-----------------------------------------------------------------------------
 //peek(nPtr,[nLen])->cBuffer
 
-HB_FUNC( PEEK )
+HB_FUNC( WHT_PEEK )
 {
  if ( hb_pcount()==2 )
     hb_retclen( (char *) HB_PARWI( 1 ), hb_parnl( 2 ) );
@@ -90,16 +90,14 @@ HB_FUNC( PEEK )
 //-----------------------------------------------------------------------------
 // poke(nPtr,[nLen])->NIL
 
-HB_FUNC( POKE )
+HB_FUNC( WHT_POKE )
 {
    hb_xmemcpy( (char *) HB_PARWI(1), hb_parcx( 2 ), hb_pcount() == 3 ? ( ULONG ) hb_parnl( 3 ) : ( ULONG ) hb_parclen( 2 ) );
 }
 
-
-
 //-----------------------------------------------------------------------------
 
-HB_FUNC( D2BIN )
+HB_FUNC( WHT_D2BIN )
 {
    BYTE  *Buffer;
    Buffer = (BYTE *) hb_xgrab( sizeof(double) );
@@ -111,7 +109,7 @@ HB_FUNC( D2BIN )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( F2BIN )
+HB_FUNC( WHT_F2BIN )
 {
    BYTE  *Buffer;
    Buffer = (BYTE *) hb_xgrab( sizeof(float) );
@@ -125,14 +123,14 @@ HB_FUNC( F2BIN )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( BIN2D )
+HB_FUNC( WHT_BIN2D )
 {
   hb_retnd( *( (double *) hb_parcx( 1 ) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( BIN2F )
+HB_FUNC( WHT_BIN2F )
 {
    hb_retnd( (double) *( (float *) hb_parcx( 1 ) ) );
 }
@@ -324,7 +322,7 @@ PHB_ITEM Size2Array( SIZE * siz )
 // LPTSTR MAKEINTRESOURCE( WORD wInteger )  // integer to convert
 // #define MAKEINTRESOURCE( i )  (LPTSTR) ((DWORD) ((WORD) (i)))
 
-HB_FUNC( MAKEINRESOURCE )
+HB_FUNC( VWN_MAKEINRESOURCE )
 {
   hb_retc( MAKEINTRESOURCE( (WORD) hb_parni( 1 ) ) );
 }
@@ -332,7 +330,7 @@ HB_FUNC( MAKEINRESOURCE )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( MESSAGEBOX )
+HB_FUNC( VWN_MESSAGEBOX )
 {
  // LPCSTR lpCaption =  hb_parcx(3);
 
@@ -344,14 +342,14 @@ HB_FUNC( MESSAGEBOX )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( MESSAGEBEEP )
+HB_FUNC( VWN_MESSAGEBEEP )
 {
   hb_retl( MessageBeep( ISNIL(1) ? ( UINT ) 0xFFFFFFFF : ( UINT ) hb_parnl(1) ) );
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( SETBIT )
+HB_FUNC( VWN_SETBIT )
 {
    if( hb_pcount() < 3 || hb_parni( 3 ) )
       hb_retnl( hb_parnl(1) | ( 1 << (hb_parni(2)-1) ) );
@@ -362,7 +360,7 @@ HB_FUNC( SETBIT )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( CHECKBIT )
+HB_FUNC( VWN_CHECKBIT )
 {
    hb_retl( hb_parnl(1) & ( 1 << (hb_parni(2)-1) ) );
 }
@@ -373,7 +371,7 @@ HB_FUNC( CHECKBIT )
 
 // note: returns the actual pointer
 
-HB_FUNC( GETENVIRONMENTSTRINGS )
+HB_FUNC( VWN_GETENVIRONMENTSTRINGS )
 {
    HB_RETWI( GetEnvironmentStrings() );
 }
@@ -383,7 +381,7 @@ HB_FUNC( GETENVIRONMENTSTRINGS )
 //-----------------------------------------------------------------------------
 // WINBASEAPI LPSTR WINAPI GetEnvironmentStrings( VOID );
 
-HB_FUNC( FREEENVIRONMENTSTRINGS )
+HB_FUNC( VWN_FREEENVIRONMENTSTRINGS )
 {
    hb_retl( (LONG) FreeEnvironmentStrings( (LPTSTR) HB_PARWI( 1 ) ) );
 }
@@ -393,7 +391,7 @@ HB_FUNC( FREEENVIRONMENTSTRINGS )
 // WINBASEAPI VOID WINAPI Sleep( IN DWORD dwMilliseconds );
 
 
-HB_FUNC( SLEEP )
+HB_FUNC( VWN_SLEEP )
 {
    Sleep( (DWORD) hb_parnl( 1 ) );
 }
@@ -402,7 +400,7 @@ HB_FUNC( SLEEP )
 // WINBASEAPI UINT WINAPI SetHandleCount( IN UINT uNumber );
 
 
-HB_FUNC( SETHANDLECOUNT )
+HB_FUNC( VWN_SETHANDLECOUNT )
 {
    hb_retni( SetHandleCount( (UINT) hb_parni( 1 ) ) );
 }
@@ -411,7 +409,7 @@ HB_FUNC( SETHANDLECOUNT )
 // WINBASEAPI DWORD WINAPI GetEnvironmentVariableA( IN LPCSTR lpName, OUT LPSTR lpBuffer, IN DWORD nSize );
 
 
-HB_FUNC( GETENVIRONMENTVARIABLE )
+HB_FUNC( VWN_GETENVIRONMENTVARIABLE )
 {
    UINT dwLen = MAX_PATH ;
    char *cText = (char*) hb_xgrab( MAX_PATH+1 );
@@ -430,7 +428,7 @@ HB_FUNC( GETENVIRONMENTVARIABLE )
 // WINBASEAPI BOOL WINAPI SetEnvironmentVariableA( IN LPCSTR lpName, IN LPCSTR lpValue );
 
 
-HB_FUNC( SETENVIRONMENTVARIABLE )
+HB_FUNC( VWN_SETENVIRONMENTVARIABLE )
 {
    hb_retl( SetEnvironmentVariableA( (LPCSTR) hb_parcx( 1 ),
                                      (LPCSTR) hb_parcx( 2 )
@@ -442,7 +440,7 @@ HB_FUNC( SETENVIRONMENTVARIABLE )
 // WINBASEAPI UINT WINAPI WinExec( IN LPCSTR lpCmdLine, IN UINT uCmdShow );
 
 
-HB_FUNC( WINEXEC )
+HB_FUNC( VWN_WINEXEC )
 {
    hb_retni( WinExec( (LPCSTR) hb_parcx( 1 ), (UINT) hb_parni( 2 ) ) );
 }
@@ -453,7 +451,7 @@ HB_FUNC( WINEXEC )
 //----------------------------------------------------------------------------
 // HANDLE CreateMutex(LPSECURITY_ATTRIBUTES lpMutexAttributes, BOOL bInitialOwner, LPCTSTR lpName )
 
-HB_FUNC( CREATEMUTEX )
+HB_FUNC( VWN_CREATEMUTEX )
 {
    SECURITY_ATTRIBUTES *sa = NULL;
 
@@ -468,7 +466,7 @@ HB_FUNC( CREATEMUTEX )
 //----------------------------------------------------------------------------
 // HANDLE OpenMutex(DWORD dwDesiredAccess, BOOL bInheritHandle, LPCTSTR lpName )
 
-HB_FUNC( OPENMUTEX )
+HB_FUNC( VWN_OPENMUTEX )
 {
   HB_RETWH( OpenMutex( hb_parnl( 1 ), hb_parl( 2 ), hb_parcx( 3 ) ) );
 }
@@ -476,7 +474,7 @@ HB_FUNC( OPENMUTEX )
 //----------------------------------------------------------------------------
 // BOOL ReleaseMutex( HANDLE hMutex )
 
-HB_FUNC( RELEASEMUTEX )
+HB_FUNC( VWN_RELEASEMUTEX )
 {
   hb_retl( ReleaseMutex( (HANDLE) HB_PARWH( 1 ) ) );
 }
@@ -487,7 +485,7 @@ HB_FUNC( RELEASEMUTEX )
 // WINUSERAPI BOOL WINAPI RegisterHotKey( IN HWND hWnd, IN int id, IN UINT fsModifiers, IN UINT vk);
 
 
-HB_FUNC( REGISTERHOTKEY )
+HB_FUNC( VWN_REGISTERHOTKEY )
 {
    hb_retl( RegisterHotKey( (HWND) HB_PARWH( 1 ),
                             hb_parni( 2 )       ,
@@ -500,7 +498,7 @@ HB_FUNC( REGISTERHOTKEY )
 // WINUSERAPI BOOL WINAPI UnregisterHotKey( IN HWND hWnd, IN int id);
 
 
-HB_FUNC( UNREGISTERHOTKEY )
+HB_FUNC( VWN_UNREGISTERHOTKEY )
 {
    hb_retl( UnregisterHotKey( (HWND) HB_PARWH( 1 ), hb_parni( 2 ) ) );
 }
@@ -514,7 +512,7 @@ HB_FUNC( UNREGISTERHOTKEY )
 // GetClasInfo(hInst,cClass) -> WNDCLASS struct or NIL
 
 
-HB_FUNC( GETCLASSINFO )
+HB_FUNC( VWN_GETCLASSINFO )
 {
    WNDCLASS WndClass  ;
 
@@ -539,7 +537,7 @@ HB_FUNC( GETCLASSINFO )
 // GetClasInfoEx(hInst,cClass) -> WNDCLASS struct or NIL
 
 
-HB_FUNC( GETCLASSINFOEX )
+HB_FUNC( VWN_GETCLASSINFOEX )
 {
    WNDCLASSEX WndClassEx ;
 
@@ -556,42 +554,42 @@ HB_FUNC( GETCLASSINFOEX )
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( SIN )
+HB_FUNC( VWN_SIN )
 {
    hb_retnd(sin(hb_parnd(1)));
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( COS )
+HB_FUNC( VWN_COS )
 {
    hb_retnd(cos(hb_parnd(1)));
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( TAN )
+HB_FUNC( VWN_TAN )
 {
    hb_retnd(tan(hb_parnd(1)));
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ASIN )
+HB_FUNC( VWN_ASIN )
 {
    hb_retnd(asin(hb_parnd(1)));
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ACOS )
+HB_FUNC( VWN_ACOS )
 {
    hb_retnd(acos(hb_parnd(1)));
 }
 
 //-----------------------------------------------------------------------------
 
-HB_FUNC( ATAN )
+HB_FUNC( VWN_ATAN )
 {
    hb_retnd(atan(hb_parnd(1)));
 }
