@@ -175,8 +175,7 @@ STATIC PROCEDURE ProcessKey( nKey, oDlg, oBrw, aTopics )
 
 STATIC PROCEDURE ShowTopic( oDlg, aTopics, nTopic, nPageOp )
 
-   STATIC s_nPage
-
+   local oDebug := __Dbg()
    LOCAL nRows  := oDlg:nBottom - oDlg:nTop - 1
    LOCAL nPages := Len( aTopics[ nTopic ][ 2 ] ) / nRows
    LOCAL nRowsToPaint
@@ -190,25 +189,25 @@ STATIC PROCEDURE ShowTopic( oDlg, aTopics, nTopic, nPageOp )
       IF nPageOp == -1 .OR. nPageOp == 1
          RETURN
       ENDIF
-      s_nPage := 1
+      oDebug:nHelpPage := 1
    ELSE
       DO CASE
       CASE nPageOp == 0 // Show first page
 
-         s_nPage := 1
+         oDebug:nHelpPage := 1
 
       CASE nPageOp == 1 // Show next page
 
-         IF s_nPage < nPages
-            s_nPage++
+         IF oDebug:nHelpPage < nPages
+            oDebug:nHelpPage++
          ELSE
             RETURN
          ENDIF
 
       CASE nPageOp == -1 // Show prev page
 
-         IF s_nPage > 1
-            s_nPage--
+         IF oDebug:nHelpPage > 1
+            oDebug:nHelpPage--
          ELSE
             RETURN
          ENDIF
@@ -218,16 +217,16 @@ STATIC PROCEDURE ShowTopic( oDlg, aTopics, nTopic, nPageOp )
 
    Scroll( oDlg:nTop + 1, oDlg:nLeft + 14, oDlg:nBottom - 1, oDlg:nRight - 1 )
 
-   nRowsToPaint := Min( nRows, Len( aTopics[ nTopic ][ 2 ] ) - ( ( s_nPage - 1 ) * nRows ) )
+   nRowsToPaint := Min( nRows, Len( aTopics[ nTopic ][ 2 ] ) - ( ( oDebug:nHelpPage - 1 ) * nRows ) )
 
    FOR n := 1 TO nRowsToPaint
-      DispOutAt( 2 + n, 16, aTopics[ nTopic ][ 2 ][ ( ( s_nPage - 1 ) * nRows ) + n ] )
+      DispOutAt( 2 + n, 16, aTopics[ nTopic ][ 2 ][ ( ( oDebug:nHelpPage - 1 ) * nRows ) + n ] )
    NEXT
 
    IF Len( aTopics[ nTopic ][ 2 ] ) <= nRows
       DispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page 1 of 1 " )
    ELSE
-      DispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page " + Str( s_nPage, 1 ) + " of " + Str( nPages, 1 ) + " " )
+      DispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page " + Str( oDebug:nHelpPage, 1 ) + " of " + Str( nPages, 1 ) + " " )
    ENDIF
 
    RETURN

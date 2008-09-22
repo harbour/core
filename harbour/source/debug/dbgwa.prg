@@ -215,25 +215,24 @@ return
 
 static procedure DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
 
-   static s_nFocus := 1
-
+   local oDebug := __Dbg()
    local nAlias
 
    if nKey == K_TAB .or. nKey == K_SH_TAB
-      aBrw[ s_nFocus ]:Dehilite()
-      s_nFocus := s_nFocus + iif( nKey == K_TAB, 1, -1 )
-      if s_nFocus < 1
-         s_nFocus := 3
+      aBrw[ oDebug:nWaFocus ]:Dehilite()
+      oDebug:nWaFocus += iif( nKey == K_TAB, 1, -1 )
+      if oDebug:nWaFocus < 1
+         oDebug:nWaFocus := 3
       endif
-      if s_nFocus > 3
-         s_nFocus := 1
+      if oDebug:nWaFocus > 3
+         oDebug:nWaFocus := 1
       endif
-      aBrw[ s_nFocus ]:Hilite()
+      aBrw[ oDebug:nWaFocus ]:Hilite()
       return
    endif
 
    do case
-   case s_nFocus == 1
+   case oDebug:nWaFocus == 1
       nAlias := aBrw[ 1 ]:Cargo
       WorkAreasKeyPressed( nKey, aBrw[ 1 ], Len( aAlias ) )
       if nAlias != aBrw[ 1 ]:Cargo
@@ -257,9 +256,9 @@ static procedure DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
          aBrw[ 3 ]:Dehilite()
          UpdateInfo( oDlg, aAlias[ aBrw[ 1 ]:Cargo ][ 2 ] )
       endif
-   case s_nFocus == 2
+   case oDebug:nWaFocus == 2
       WorkAreasKeyPressed( nKey, aBrw[ 2 ], Len( aInfo ) )
-   case s_nFocus == 3
+   case oDebug:nWaFocus == 3
       WorkAreasKeyPressed( nKey, aBrw[ 3 ], Len( aStruc ) )
    endcase
 

@@ -230,6 +230,8 @@ CREATE CLASS HBDebugger
    VAR lPPO              INIT .F.
    VAR lRunAtStartup     INIT .T.   // Clipper compatible
    VAR lLineNumbers      INIT .T.
+   VAR nHelpPage         INIT 1
+   VAR nWaFocus          INIT 1
 
    METHOD New()
    METHOD Activate()

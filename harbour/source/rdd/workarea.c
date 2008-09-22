@@ -2232,7 +2232,7 @@ HB_FUNC( __RDDPREALLOCATE )
 {
    LONG lNewSize = hb_parnl( 1 );
 
-   if( lNewSize > USHRT_MAX )
+   if( lNewSize > ( LONG ) USHRT_MAX )
       lNewSize = USHRT_MAX;
    if( lNewSize > ( LONG ) s_uiRddMax )
    {
@@ -2240,6 +2240,8 @@ HB_FUNC( __RDDPREALLOCATE )
       s_RddList = ( LPRDDNODE * )
                   hb_xrealloc( s_RddList, sizeof( LPRDDNODE ) * s_uiRddMax );
    }
+
+   hb_retnl( s_uiRddMax );
 }
 
 HB_FUNC_EXTERN( RDDSYS );

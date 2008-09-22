@@ -4523,14 +4523,21 @@ HB_FUNC( __CLSPREALLOCATE )
 {
    LONG lNewSize = hb_parnl( 1 );
 
-   if( lNewSize > USHRT_MAX )
+   if( lNewSize > ( LONG ) USHRT_MAX )
       lNewSize = USHRT_MAX;
+
+   HB_CLASS_LOCK
+
    if( lNewSize > ( LONG ) s_uiClsSize )
    {
       s_uiClsSize = ( USHORT ) lNewSize;
       s_pClasses = ( PCLASS * ) hb_xrealloc( s_pClasses, sizeof( PCLASS ) *
                                              ( ( ULONG ) s_uiClsSize + 1 ) );
    }
+
+   HB_CLASS_UNLOCK
+
+   hb_retnl( s_uiClsSize );
 }
 
 /* Real dirty function, though very usefull under certain circunstances:
