@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 15:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbinet.c
+    ! fixed W32 compilation
+
 2008-09-21 20:29 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbwhat/*.c;*.prg
     ! Prefixed every WHAT specific functions with "WHT_" and 

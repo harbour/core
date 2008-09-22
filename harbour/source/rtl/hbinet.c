@@ -345,25 +345,27 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
 {
    struct hostent *Host = NULL;
 
-   /* TOFIX: make it MT safe */
-
    hb_vmUnlock();
+
+   /* TOFIX: make it MT safe */
 
    /* let's see if name is an IP address; not necessary on Linux */
 #if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
-   ULONG ulAddr;
+   {
+      ULONG ulAddr;
 
-   ulAddr = inet_addr( name );
-   if( ulAddr == INADDR_NONE )
-   {
-      if( strcmp( "255.255.255.255", name ) == 0 )
+      ulAddr = inet_addr( name );
+      if( ulAddr == INADDR_NONE )
       {
-         Host = gethostbyaddr( (const char*) &ulAddr, sizeof( ulAddr ), AF_INET );
+         if( strcmp( "255.255.255.255", name ) == 0 )
+         {
+            Host = gethostbyaddr( (const char*) &ulAddr, sizeof( ulAddr ), AF_INET );
+         }
       }
-   }
-   else
-   {
-      Host = gethostbyaddr( (const char*)  &ulAddr, sizeof( ulAddr ), AF_INET );
+      else
+      {
+         Host = gethostbyaddr( (const char*)  &ulAddr, sizeof( ulAddr ), AF_INET );
+      }
    }
 #endif
 
