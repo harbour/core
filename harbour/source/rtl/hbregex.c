@@ -543,6 +543,13 @@ static void * hb_pcre_grab( size_t size )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_regex_init_ )
 #if defined( HB_PCRE_REGEX )
+   /* Hack to force linking newer PCRE versions not the one included in BCC RTL */
+#  if defined( __BORLANDC__ )
+   {
+      int iUTF8Enabled;
+      pcre_config( PCRE_CONFIG_UTF8, &iUTF8Enabled );
+   }
+#  endif
    pcre_malloc = hb_pcre_grab;
    pcre_free = hb_xfree;
    pcre_stack_malloc = hb_pcre_grab;

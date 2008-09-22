@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 16:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbregex.c
+   * added hack to force linking newer PCRE versions not the one included
+     in BCC RTL when Harbour is compiled without HB_PCRE_REGEX_BCC.
+     If user application will uses regex expressions (directly or indirectly
+     by some RTL functions) then lining it without HBPCE should give link
+     time error that pcre_config() function is missing.
+
 2008-09-22 16:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbstack.h
   * harbour/source/vm/estack.c
