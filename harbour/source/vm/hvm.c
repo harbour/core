@@ -433,52 +433,58 @@ static void hb_vmRequestTest( void )
    HB_VM_UNLOCK
 }
 
-/* lock VM blocking GC execution by other threads */
-void hb_vmLock( void )
-{
-   if( hb_stackId() )   /* check if thread has associated HVM stack */
-   {
-      HB_VM_LOCK
-      while( TRUE )
-      {
-         if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
-         {
-            if( !hb_stackQuitState() )
-            {
-               hb_stackSetQuitState( TRUE );
-               hb_stackSetActionRequest( HB_QUIT_REQUESTED );
-            }
-         }
-         if( hb_vmThreadRequest & HB_THREQUEST_STOP )
-            hb_threadCondWait( &s_vmCond, &s_vmMtx );
-         else
-            break;
-      }
-      s_iRunningCount++;
-      HB_VM_UNLOCK
-   }
-}
-
-/* unlock VM, allow GC execution */
+/* unlock VM, allow GC and other exclusive single task code execution */
 void hb_vmUnlock( void )
 {
    if( hb_stackId() )   /* check if thread has associated HVM stack */
    {
-      HB_VM_LOCK
-      s_iRunningCount--;
-      if( hb_vmThreadRequest )
+      if( hb_stackUnlock() == 1 )
       {
-         if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+         HB_VM_LOCK
+         s_iRunningCount--;
+         if( hb_vmThreadRequest )
          {
-            if( !hb_stackQuitState() )
+            if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
             {
-               hb_stackSetQuitState( TRUE );
-               hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+               if( !hb_stackQuitState() )
+               {
+                  hb_stackSetQuitState( TRUE );
+                  hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+               }
             }
+            hb_threadCondBroadcast( &s_vmCond );
          }
-         hb_threadCondBroadcast( &s_vmCond );
+         HB_VM_UNLOCK
       }
-      HB_VM_UNLOCK
+   }
+}
+
+/* lock VM blocking GC and other exclusive single task code execution */
+void hb_vmLock( void )
+{
+   if( hb_stackId() )   /* check if thread has associated HVM stack */
+   {
+      if( hb_stackLock() == 0 )
+      {
+         HB_VM_LOCK
+         while( TRUE )
+         {
+            if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+            {
+               if( !hb_stackQuitState() )
+               {
+                  hb_stackSetQuitState( TRUE );
+                  hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+               }
+            }
+            if( hb_vmThreadRequest & HB_THREQUEST_STOP )
+               hb_threadCondWait( &s_vmCond, &s_vmMtx );
+            else
+               break;
+         }
+         s_iRunningCount++;
+         HB_VM_UNLOCK
+      }
    }
 }
 

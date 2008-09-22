@@ -161,7 +161,7 @@ typedef struct
    LONG       lStatics;       /* statics base for the current function call */
    LONG       lWithObject;    /* stack offset to base current WITH OBJECT item */
    LONG       lRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */
-   USHORT     uiActionRequest;/* Request for some action - stop processing of opcodes */
+   USHORT     uiActionRequest;/* request for some action - stop processing of opcodes */
    USHORT     uiQuitState;    /* HVM is quiting */
    HB_STACK_STATE state;      /* first (default) stack state frame */
    HB_STACKRDD rdd;           /* RDD related data */
@@ -178,7 +178,8 @@ typedef struct
    HB_PRIVATE_STACK privates; /* private variables stack */
    HB_SET_STRUCT set;
 #if defined( HB_MT_VM )
-   PHB_DYN_HANDLES pDynH;     /* Dynamic symbol handles */
+   int        iUnlocked;      /* counter for nested hb_vmUnlock() calls */
+   PHB_DYN_HANDLES pDynH;     /* dynamic symbol handles */
    int        iDynH;          /* number of dynamic symbol handles */
    void *     pStackLst;      /* this stack entry in stack linked list */
    HB_IOERRORS IOErrors;      /* MT safe buffer for IO errors */
@@ -277,6 +278,8 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
    extern PHB_DYN_HANDLES  hb_stackGetDynHandle( PHB_DYNS pDynSym );
    extern BOOL             hb_stackQuitState( void );
    extern void             hb_stackSetQuitState( USHORT uiState );
+   extern int              hb_stackUnlock( void );
+   extern int              hb_stackLock( void );
 #endif
 
 #endif /* _HB_API_INTERNAL_ */
@@ -319,6 +322,8 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
 #  define hb_stackListSet( p )      do { hb_stack.pStackLst = ( p ); } while ( 0 )
 #  define hb_stackQuitState( )      ( hb_stack.uiQuitState != 0 )
 #  define hb_stackSetQuitState( n ) do { hb_stack.uiQuitState = ( n ); } while( 0 )
+#  define hb_stackUnlock()          ( ++hb_stack.iUnlocked )
+#  define hb_stackLock()            ( --hb_stack.iUnlocked )
 #endif
 
 #define hb_stackAllocItem( )        ( ( ++hb_stack.pPos == hb_stack.pEnd ? \

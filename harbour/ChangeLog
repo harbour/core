@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 03:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+    + added support for nested hb_vmUnlock()/hb_vmLock() calls
+
+  * harbour/source/rtl/hbinet.c
+    * encapsulated all potentially slow inet functions inside
+      hb_vmUnlock()/hb_vmLock() calls
+
 2008-09-22 02:34 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbvm.h
   * harbour/source/vm/hvm.c

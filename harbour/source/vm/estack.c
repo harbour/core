@@ -380,6 +380,18 @@ void hb_stackSetQuitState( USHORT uiState )
 {
    hb_stack.uiQuitState = uiState;
 }
+
+#undef hb_stackUnlock
+int hb_stackUnlock( void )
+{
+   return ++hb_stack.iUnlocked;
+}
+
+#undef hb_stackLock
+int hb_stackLock( void )
+{
+   return --hb_stack.iUnlocked;
+}
 #endif
 
 #undef hb_stackGetPrivateStack

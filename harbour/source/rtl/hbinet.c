@@ -63,6 +63,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbvm.h"
 
 /* Compile in Unix mode under Cygwin */
 #ifdef HB_OS_UNIX_COMPATIBLE
@@ -224,12 +225,14 @@
 
 #ifdef HB_OS_LINUX
 #include <signal.h>
-#define HB_INET_LINUX_INTERRUPT     SIGUSR1+90
+/* #define HB_INET_LINUX_INTERRUPT     SIGUSR1+90 */
+#  ifdef HB_INET_LINUX_INTERRUPT
 static void hb_inetLinuxSigusrHandle( int sig )
 {
    /* nothing to do */
    HB_SYMBOL_UNUSED( sig );
 }
+#  endif
 #endif
 
 /* JC1: we need it volatile to be minimally thread safe. */
@@ -251,48 +254,54 @@ static int hb_selectReadSocket( HB_SOCKET_STRUCT *Socket )
 {
    fd_set set;
    struct timeval tv;
+   int iResult;
+
+   hb_vmUnlock();
 
    FD_ZERO( &set );
    FD_SET(Socket->com, &set);
 
    if( Socket->timeout == -1 )
    {
-      if( select( Socket->com + 1, &set, NULL, NULL, NULL ) < 0 )
-         return 0;
+      iResult = select( Socket->com + 1, &set, NULL, NULL, NULL );
    }
    else
    {
       tv.tv_sec = Socket->timeout/ 1000;
       tv.tv_usec = (Socket->timeout % 1000) * 1000;
-      if( select( Socket->com + 1, &set, NULL, NULL, &tv ) < 0 )
-         return 0;
+      iResult = select( Socket->com + 1, &set, NULL, NULL, &tv );
    }
 
-   return FD_ISSET( Socket->com, &set );
+   hb_vmLock();
+
+   return iResult > 0 ? FD_ISSET( Socket->com, &set ) : 0;
 }
 
 static int hb_selectWriteSocket( HB_SOCKET_STRUCT *Socket )
 {
    fd_set set;
    struct timeval tv;
+   int iResult;
+
+   hb_vmUnlock();
 
    FD_ZERO( &set );
    FD_SET(Socket->com, &set);
 
    if( Socket->timeout == -1 )
    {
-      if( select( Socket->com + 1, NULL, &set, NULL, NULL ) < 0 )
-         return 0;
+      iResult = select( Socket->com + 1, NULL, &set, NULL, NULL );
    }
    else
    {
       tv.tv_sec = Socket->timeout/ 1000;
       tv.tv_usec = (Socket->timeout % 1000) * 1000;
-      if( select( Socket->com + 1, NULL, &set, NULL, &tv ) < 0 )
-         return 0;
+      iResult = select( Socket->com + 1, NULL, &set, NULL, &tv );
    }
 
-   return FD_ISSET( Socket->com, &set );
+   hb_vmLock();
+
+   return iResult > 0 ? FD_ISSET( Socket->com, &set ) : 0;
 }
 
 #if defined(HB_OS_WIN_32)
@@ -300,6 +309,9 @@ static int hb_selectWriteExceptSocket( HB_SOCKET_STRUCT *Socket )
 {
    fd_set set, eset;
    struct timeval tv;
+   int iResult;
+
+   hb_vmUnlock();
 
    FD_ZERO( &set );
    FD_SET(Socket->com, &set);
@@ -308,27 +320,23 @@ static int hb_selectWriteExceptSocket( HB_SOCKET_STRUCT *Socket )
 
    if( Socket->timeout == -1 )
    {
-      if( select( Socket->com + 1, NULL, &set, &eset, NULL ) < 0 )
-         return 2;
+      iResult = select( Socket->com + 1, NULL, &set, &eset, NULL ) < 0 )
    }
    else
    {
       tv.tv_sec = Socket->timeout/ 1000;
       tv.tv_usec = (Socket->timeout % 1000) * 1000;
-      if( select(Socket->com + 1, NULL, &set, &eset, &tv) < 0 )
-         return 2;
+      iResult = select(Socket->com + 1, NULL, &set, &eset, &tv);
    }
 
-   if( FD_ISSET( Socket->com, &eset) )
-   {
+   hb_vmLock();
+
+   if( iResult < 0 || FD_ISSET( Socket->com, &eset) )
       return 2;
-   }
-
-   if( FD_ISSET( Socket->com, &set ) )
-   {
+   else if( FD_ISSET( Socket->com, &set ) )
       return 1;
-   }
-   return 0;
+   else
+      return 0;
 }
 #endif
 
@@ -338,6 +346,8 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
    struct hostent *Host = NULL;
 
    /* TOFIX: make it MT safe */
+
+   hb_vmUnlock();
 
    /* let's see if name is an IP address; not necessary on Linux */
 #if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
@@ -373,6 +383,9 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
       HB_SOCKET_SET_ERROR2( Socket, h_errno, (char *) hstrerror( h_errno ) );
 #endif
    }
+
+   hb_vmLock();
+
    return Host;
 }
 
@@ -423,6 +436,8 @@ static int hb_socketConnect( HB_SOCKET_STRUCT *Socket )
       socklen_t iErrvalLen;
    #endif
    int iOpt = 1;
+
+   hb_vmUnlock();
 
    setsockopt( Socket->com, SOL_SOCKET, SO_KEEPALIVE, (const char *) &iOpt , sizeof( iOpt ));
 
@@ -487,6 +502,8 @@ static int hb_socketConnect( HB_SOCKET_STRUCT *Socket )
 
    hb_socketSetBlocking( Socket );
 
+   hb_vmLock();
+
    return Socket->errorCode == 0;
 }
 
@@ -532,7 +549,7 @@ HB_FUNC( HB_INETINIT )
          #define HB_MKWORD( l, h )  ((WORD)(((BYTE)(l)) | (((WORD)((BYTE)(h))) << 8)))
          WSADATA wsadata;
          WSAStartup( HB_MKWORD(1,1), &wsadata );
-      #elif defined( HB_OS_LINUX )
+      #elif defined( HB_INET_LINUX_INTERRUPT )
          signal( HB_INET_LINUX_INTERRUPT, hb_inetLinuxSigusrHandle );
       #endif
       s_iSessions = 1;
@@ -572,6 +589,8 @@ HB_FUNC( HB_INETCLOSE )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    else if( Socket->com != ( HB_SOCKET_T ) -1 )
    {
+      hb_vmUnlock();
+
       #if defined( HB_OS_WIN_32 )
          shutdown( Socket->com, SD_BOTH );
       #elif defined(HB_OS_OS2)
@@ -583,9 +602,11 @@ HB_FUNC( HB_INETCLOSE )
       hb_retni( HB_INET_CLOSE( Socket->com ) );
       Socket->com = ( HB_SOCKET_T ) -1;
 
-      #ifdef HB_OS_LINUX
+      #ifdef HB_INET_LINUX_INTERRUPT
          kill( 0, HB_INET_LINUX_INTERRUPT );
       #endif
+
+      hb_vmLock();
    }
    else
       hb_retni( -1 );
@@ -913,6 +934,8 @@ static void s_inetRecvInternal( int iMode )
          iMaxLen = iLen;
    }
 
+   hb_vmUnlock();
+
    iReceived = 0;
    iTimeElapsed = 0;
    HB_SOCKET_ZERO_ERROR( Socket );
@@ -933,6 +956,8 @@ static void s_inetRecvInternal( int iMode )
       {
          /* timed out; let's see if we have to run a cb routine */
          iTimeElapsed += Socket->timeout;
+
+         hb_vmLock();
 
          /* if we have a caPeriodic, timeLimit is our REAL timeout */
          if( Socket->caPeriodic )
@@ -956,11 +981,15 @@ static void s_inetRecvInternal( int iMode )
             hb_retni( iReceived );
             return;
          }
+
+         hb_vmUnlock();
       }
    }
    while( iReceived < iMaxLen && iLen > 0 );
 
    Socket->count = iReceived;
+
+   hb_vmLock();
 
    if( iLen == 0 )
    {
@@ -1030,6 +1059,8 @@ static void s_inetRecvPattern( const char *szPattern )
       iMax = 0;
    }
 
+   hb_vmUnlock();
+
    HB_SOCKET_ZERO_ERROR( Socket );
 
    Buffer = (char *) hb_xgrab( iBufferSize );
@@ -1053,9 +1084,15 @@ static void s_inetRecvPattern( const char *szPattern )
 
          if( Socket->caPeriodic )
          {
+            BOOL fResult;
+
+            hb_vmLock();
             hb_execFromArray( Socket->caPeriodic );
+            fResult = hb_parl( -1 );
+            hb_vmUnlock();
+
             /* do we continue? */
-            if( hb_parl( -1 ) &&
+            if( fResult &&
                 ( Socket->timelimit == -1 || iTimeElapsed < Socket->timelimit ) )
             {
                continue;
@@ -1082,6 +1119,8 @@ static void s_inetRecvPattern( const char *szPattern )
       }
    }
    while( iMax == 0 || iPos < iMax );
+
+   hb_vmLock();
 
    if( iLen <= 0 )
    {
@@ -1216,6 +1255,8 @@ HB_FUNC( HB_INETRECVENDBLOCK )
    iBufferSize = pBufferSize ? hb_itemGetNI( pBufferSize ) : 80;
    iMax = pMaxSize ? hb_itemGetNI( pMaxSize ) : 0;
 
+   hb_vmUnlock();
+
    HB_SOCKET_ZERO_ERROR( Socket );
 
    Buffer = (char *) hb_xgrab( iBufferSize );
@@ -1240,9 +1281,14 @@ HB_FUNC( HB_INETRECVENDBLOCK )
          iTimeElapsed += Socket->timeout;
          if( Socket->caPeriodic )
          {
-            hb_execFromArray( Socket->caPeriodic );
+            BOOL fResult;
 
-            if( hb_parl( -1 ) &&
+            hb_vmLock();
+            hb_execFromArray( Socket->caPeriodic );
+            fResult = hb_parl( -1 );
+            hb_vmUnlock();
+
+            if( fResult &&
                 ( Socket->timelimit == -1 || iTimeElapsed < Socket->timelimit ) )
             {
                continue;
@@ -1259,12 +1305,12 @@ HB_FUNC( HB_INETRECVENDBLOCK )
 
          for( protos = 0; protos < iprotos; protos++ )
          {
-            if( cChar == Proto[protos][iprotosize[protos]-1] && iprotosize[protos] <= iPos )
+            if( cChar == Proto[protos][iprotosize[protos] - 1] && iprotosize[protos] <= iPos )
             {
                bProtoFound = 1;
-               for(iPosProto=0; iPosProto < (iprotosize[protos]-1); iPosProto++)
+               for( iPosProto = 0; iPosProto < ( iprotosize[protos] - 1 ); iPosProto++ )
                {
-                  if(Proto[protos][iPosProto] != Buffer[ (iPos-iprotosize[protos])+iPosProto+1 ])
+                  if( Proto[protos][iPosProto] != Buffer[ ( iPos - iprotosize[protos] ) + iPosProto + 1 ] )
                   {
                      bProtoFound = 0;
                      break;
@@ -1277,20 +1323,17 @@ HB_FUNC( HB_INETRECVENDBLOCK )
                }
             }
          }
-
-         if(bProtoFound)
-         {
+         if( bProtoFound )
             break;
-         }
 
          Buffer[ iPos++ ] = cChar;
       }
       else
-      {
          break;
-      }
    }
    while( iMax == 0 || iPos < iMax );
+
+   hb_vmLock();
 
    if( iLen <= 0 )
    {
@@ -1364,15 +1407,16 @@ HB_FUNC( HB_INETDATAREADY )
       return;
    }
 
-   HB_SOCKET_ZERO_ERROR( Socket );
-
-   /* Watch our socket. */
-   if( hb_pcount() > 1 )
+   if( ISNUM( 1 ) )
    {
       iVal = hb_parni( 2 );
       tv.tv_sec = iVal / 1000;
       tv.tv_usec = (iVal % 1000) * 1000;
    }
+
+   hb_vmUnlock();
+
+   HB_SOCKET_ZERO_ERROR( Socket );
 
    FD_ZERO(&rfds);
    FD_SET(Socket->com, &rfds);
@@ -1384,6 +1428,8 @@ HB_FUNC( HB_INETDATAREADY )
    {
       HB_SOCKET_SET_ERROR( Socket );
    }
+
+   hb_vmLock();
 
    hb_retni( iVal );
 }
@@ -1416,6 +1462,8 @@ static void s_inetSendInternal( int iMode )
          iSend = iLen;
    }
 
+   hb_vmUnlock();
+
    HB_SOCKET_ZERO_ERROR( Socket );
 
    iSent = 0;
@@ -1445,6 +1493,8 @@ static void s_inetSendInternal( int iMode )
    }
 
    Socket->count = iSent;
+
+   hb_vmLock();
 
    hb_retni( iLen > 0 ? iSent : -1 );
 }
@@ -1606,6 +1656,8 @@ HB_FUNC( HB_INETSERVER )
 
    iListen = ISNUM( 3 ) ? hb_parni( 3 ) : 10;
 
+   hb_vmUnlock();
+
    if( bind( Socket->com, (struct sockaddr *) &Socket->remote, sizeof(Socket->remote) ) )
    {
       HB_SOCKET_SET_ERROR( Socket );
@@ -1618,6 +1670,8 @@ HB_FUNC( HB_INETSERVER )
       HB_INET_CLOSE( Socket->com );
       Socket->com = ( HB_SOCKET_T ) -1;
    }
+
+   hb_vmLock();
 
    if( pSocket )
       hb_itemReturnRelease( pSocket );
@@ -1652,6 +1706,8 @@ HB_FUNC( HB_INETACCEPT )
    {
       return;
    }
+
+   hb_vmUnlock();
 
    Len = sizeof( struct sockaddr_in );
 
@@ -1688,6 +1744,8 @@ HB_FUNC( HB_INETACCEPT )
       else
          iError = -1;
    }
+
+   hb_vmLock();
 
    if( iError == -1 )
    {
@@ -1885,6 +1943,8 @@ HB_FUNC( HB_INETDGRAMBIND )
    szAddress = hb_parc( 2 );
    Socket->remote.sin_addr.s_addr = szAddress ? inet_addr( szAddress ) : INADDR_ANY;
 
+   hb_vmUnlock();
+
    if( bind( Socket->com, (struct sockaddr *) &Socket->remote, sizeof(Socket->remote) ) )
    {
       HB_SOCKET_SET_ERROR( Socket );
@@ -1924,6 +1984,8 @@ HB_FUNC( HB_INETDGRAMBIND )
          HB_SOCKET_SET_ERROR( Socket );
       }
    }
+
+   hb_vmLock();
 
    hb_itemReturnRelease( pSocket );
 }
@@ -1998,6 +2060,8 @@ HB_FUNC( HB_INETDGRAMSEND )
          iLen = iMaxLen;
    }
 
+   hb_vmUnlock();
+
    HB_SOCKET_ZERO_ERROR( Socket );
 
    Socket->count = 0;
@@ -2006,6 +2070,8 @@ HB_FUNC( HB_INETDGRAMSEND )
       Socket->count = sendto( Socket->com, szBuffer, iLen, 0,
             (const struct sockaddr *) &Socket->remote, sizeof( Socket->remote ) );
    }
+
+   hb_vmLock();
 
    hb_retni( Socket->count );
 
@@ -2060,6 +2126,8 @@ HB_FUNC( HB_INETDGRAMRECV )
       iMaxLen = ( int ) hb_itemGetCLen( pBuffer );
    }
 
+   hb_vmUnlock();
+
    HB_SOCKET_ZERO_ERROR( Socket );
 
    do
@@ -2074,10 +2142,12 @@ HB_FUNC( HB_INETDGRAMRECV )
       iTimeElapsed += Socket->timeout;
       if( Socket->caPeriodic )
       {
+         hb_vmLock();
          hb_execFromArray( Socket->caPeriodic );
          /* do we continue? */
          fRepeat = hb_parl( -1 ) &&
                    ( Socket->timelimit == -1 || iTimeElapsed < Socket->timelimit );
+         hb_vmUnlock();
       }
    }
    while( fRepeat );
@@ -2102,6 +2172,9 @@ HB_FUNC( HB_INETDGRAMRECV )
    {
       Socket->count = iLen;
    }
+
+   hb_vmLock();
+
    hb_retni( iLen );
 }
 
