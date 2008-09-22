@@ -4513,6 +4513,26 @@ HB_FUNC( __CLSGETPROPERTIES )
    hb_itemReturnRelease( pReturn );
 }
 
+/* extend the size of classes buffer to given value to avoid later
+ * RT reallocations. It may be useful in some very seldom cases
+ * for MT programs which will allocate dynamically at runtime
+ * more then 16386 classes. In practice rather impossible though
+ * who knows ;-)
+ */
+HB_FUNC( __CLSPREALLOCATE )
+{
+   LONG lNewSize = hb_parnl( 1 );
+
+   if( lNewSize > USHRT_MAX )
+      lNewSize = USHRT_MAX;
+   if( lNewSize > ( LONG ) s_uiClsSize )
+   {
+      s_uiClsSize = ( USHORT ) lNewSize;
+      s_pClasses = ( PCLASS * ) hb_xrealloc( s_pClasses, sizeof( PCLASS ) *
+                                             ( ( ULONG ) s_uiClsSize + 1 ) );
+   }
+}
+
 /* Real dirty function, though very usefull under certain circunstances:
  * It allows to change the class handle of an object into another class handle,
  * so the object behaves like a different Class of object.

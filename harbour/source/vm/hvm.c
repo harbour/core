@@ -236,11 +236,11 @@ static ULONG hb_ulOpcodesTime[ HB_P_LAST_PCODE ]; /* array to profile opcodes co
 static BOOL  hb_bProfiler = FALSE;                        /* profiler status is off */
 #endif
 
-#ifdef HB_NO_TRACE
-#  define HB_TRACE_PRG( _TRMSG_ )
-#else
+#if defined( HB_PRG_TRACE )
 static BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
 #  define HB_TRACE_PRG( _TRMSG_ ) if( hb_bTracePrgCalls ) HB_TRACE( HB_TR_ALWAYS, _TRMSG_ )
+#else
+#  define HB_TRACE_PRG( _TRMSG_ )
 #endif
 
 HB_EXPORT const char * hb_vm_pszLinkedMain = NULL; /* name of startup function set by linker */
@@ -10306,12 +10306,12 @@ HB_FUNC( __SETPROFILER )
  * $End$ */
 HB_FUNC( __TRACEPRGCALLS )
 {
-#ifdef HB_NO_TRACE
-   hb_retl( FALSE );
-#else
+#if defined( HB_PRG_TRACE )
    hb_retl( hb_bTracePrgCalls );
    if( ISLOG( 1 ) )
       hb_bTracePrgCalls = hb_parl( 1 );
+#else
+   hb_retl( FALSE );
 #endif
 }
 

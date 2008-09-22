@@ -8,6 +8,38 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 19:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+   ! corrected previous ChangeLog entry: instead of hb_waDetach()/
+     hb_waRequest() should be db_dbDetach()/hb_dbRequest()
+
+  * harbour/source/vm/hvm.c
+   * disabled PRG tracing in default builds. If someone wants to
+     use this feature then he should recompile Harbour with HB_PRG_TRACE
+     macro. In such case tracing can be enabled/disabled by __TRACEPRGCALLS()
+     function. HB_NO_TRACE macro is not longer usable - it's default in
+     current code.
+
+  * harbour/source/vm/classes.c
+    + added PRG function __clsPreallocate() which extends the size of
+      classes buffer to given value to avoid later RT reallocations.
+      It may be useful in some very seldom cases for MT programs which
+      will allocate dynamically at runtime more then 16386 classes.
+      In practice rather impossible though who knows ;-)
+
+  * harbour/source/rdd/workarea.c
+    * set default preallocation size for RDD nodes to 128
+    + added PRG function __rddPreallocate() which extends the size of
+      RDD nodes buffer to given value to avoid later RT reallocations.
+      It may be useful in some very seldom cases for MT programs which
+      will register dynamically at runtime more then 128 RDDs when other
+      threads are active and may use RDD nodes.
+
+  * harbour/include/hbrddcdx.h
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    + added ORDLSTDELETE() method.
+      Now ordbagClear() should work for DBFCDX.
+
 2008-09-22 19:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/bld.bat
     - Removed recently added cw32mt.lib.
@@ -37,11 +69,11 @@
 
 2008-09-22 16:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbregex.c
-   * added hack to force linking newer PCRE versions not the one included
-     in BCC RTL when Harbour is compiled without HB_PCRE_REGEX_BCC.
-     If user application will uses regex expressions (directly or indirectly
-     by some RTL functions) then lining it without HBPCE should give link
-     time error that pcre_config() function is missing.
+    * added hack to force linking newer PCRE versions not the one included
+      in BCC RTL when Harbour is compiled without HB_PCRE_REGEX_BCC.
+      If user application will uses regex expressions (directly or indirectly
+      by some RTL functions) then lining it without HBPCE should give link
+      time error that pcre_config() function is missing.
 
 2008-09-22 16:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbstack.h
@@ -184,10 +216,10 @@
     ! fixed reentrance counter resetting
 
 2008-09-20 00:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-  + harbour/source/rdd/wadetach.c
+  + harbour/source/rdd/dbdetach.c
     + added .prg functions:
-         hb_waDetach( [<nWorkArea>|<cAlias>], [<xCargo>] ) -> <lSuccess>
-         hb_waRequest( [<cAlias>], [<lFreeArea>], [<@xCargo>], [<lWait>] )
+         hb_dbDetach( [<nWorkArea>|<cAlias>], [<xCargo>] ) -> <lSuccess>
+         hb_dbRequest( [<cAlias>], [<lFreeArea>], [<@xCargo>], [<lWait>] )
             -> <lSuccess>
       The first one detach workarea from current thread and move it
       to special hidden holder. Before detaching all relations (parent

@@ -616,7 +616,7 @@ static ERRCODE hb_cdxZap ( CDXAREAP pArea );
 #define hb_cdxSetRel                               NULL
 static ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static ERRCODE hb_cdxOrderListClear( CDXAREAP pArea );
-#define hb_cdxOrderListDelete                      NULL
+static ERRCODE hb_cdxOrderListDelete( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static ERRCODE hb_cdxOrderListRebuild( CDXAREAP pArea );
 #define hb_cdxOrderCondition                       NULL

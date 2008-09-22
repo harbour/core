@@ -2015,7 +2015,7 @@ static const RDDFUNCS waTable =
    ( DBENTRYP_SVP )   hb_waUnsupported          /* WhoCares */
 };
 
-#define HB_RDD_POOL_ALLOCSIZE       64
+#define HB_RDD_POOL_ALLOCSIZE       128
 /* common for all threads list of registered RDDs */
 static LPRDDNODE * s_RddList    = NULL;   /* Registered RDDs pool */
 static USHORT      s_uiRddMax   = 0;      /* Size of RDD pool */
@@ -2156,8 +2156,8 @@ HB_EXPORT int hb_rddRegister( const char * szDriver, USHORT uiType )
    if( s_uiRddCount == s_uiRddMax )
    {
       s_uiRddMax += HB_RDD_POOL_ALLOCSIZE;
-      s_RddList = ( LPRDDNODE * ) hb_xrealloc( s_RddList,
-                                          sizeof( LPRDDNODE ) * s_uiRddMax );
+      s_RddList = ( LPRDDNODE * )
+                  hb_xrealloc( s_RddList, sizeof( LPRDDNODE ) * s_uiRddMax );
    }
    s_RddList[ s_uiRddCount++ ] = pRddNewNode;   /* Add the new RDD node */
 
@@ -2221,6 +2221,25 @@ HB_EXPORT ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, 
       pSubFunction ++;
    }
    return SUCCESS;
+}
+
+/* extend the size of RDD nodes buffer to given value to avoid later
+ * RT reallocations. It may be useful in some very seldom cases
+ * for MT programs which will register dynamically at runtime
+ * more then 128 RDDs.
+ */
+HB_FUNC( __RDDPREALLOCATE )
+{
+   LONG lNewSize = hb_parnl( 1 );
+
+   if( lNewSize > USHRT_MAX )
+      lNewSize = USHRT_MAX;
+   if( lNewSize > ( LONG ) s_uiRddMax )
+   {
+      s_uiRddMax += HB_RDD_POOL_ALLOCSIZE;
+      s_RddList = ( LPRDDNODE * )
+                  hb_xrealloc( s_RddList, sizeof( LPRDDNODE ) * s_uiRddMax );
+   }
 }
 
 HB_FUNC_EXTERN( RDDSYS );

@@ -7279,8 +7279,42 @@ static ERRCODE hb_cdxOrderListClear( CDXAREAP pArea )
    return SUCCESS;
 }
 
-/* TODO: in the future, now there is no API call to SELF_ORDLSTDELETE */
-/* ( DBENTRYP_OI )    hb_cdxOrderListDelete : NULL */
+/* ( DBENTRYP_OI )    hb_cdxOrderListDelete */
+static ERRCODE hb_cdxOrderListDelete( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
+{
+   char szTagName[ CDX_MAXTAGNAMELEN + 1 ];
+   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   LPCDXINDEX pIndex, * pIndexPtr;
+   BOOL fProd;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderListDelete(%p, %p)", pArea, pOrderInfo));
+
+   if( FAST_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
+
+   hb_cdxCreateFName( pArea, hb_itemGetCPtr( pOrderInfo->atomBagName ), &fProd,
+                      szFileName, szTagName );
+   pIndex = hb_cdxFindBag( pArea, szFileName );
+
+   if( pIndex )
+   {
+      LPCDXTAG pTag = hb_cdxGetActiveTag( pArea );
+      if( pTag && pTag->pIndex == pIndex )
+         pArea->uiTag = 0;
+      pIndexPtr = &pArea->lpIndexes;
+      while( *pIndexPtr )
+      {
+         if( pIndex == *pIndexPtr )
+         {
+            *pIndexPtr = pIndex->pNext;
+            hb_cdxIndexFree( pIndex );
+            break;
+         }
+         pIndexPtr = &(*pIndexPtr)->pNext;
+      }
+   }
+   return SUCCESS;
+}
 
 /* ( DBENTRYP_OI )    hb_cdxOrderListFocus */
 static ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
