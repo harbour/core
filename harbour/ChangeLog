@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 19:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/bld.bat
+    - Removed recently added cw32mt.lib.
+    ; Now, for MT builds 'set HB_USER_LIBS=cw32mt.lib' should 
+      be used. Where cw32mt.lib may also be cp32mt.lib, 
+      cp32mti.lib, cw32mti.lib depending on other factors.
+      Notice that even this would only work if Harbour was 
+      built with 'set HB_BUILD_ST=no'.
+
 2008-09-22 19:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak
