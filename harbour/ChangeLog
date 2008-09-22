@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 16:19 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  * harbour/contrib/rddads/ads1.c
+    * using AdsCreateIndex61 when ADS_LIB_VERSION >= 610. This functions use 
+      ADS_DEFAULT as index page size parameter and force Advantage to compute
+      a page size based on the key size to provide optimal balancing.
+
 2008-09-22 20:54 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbfntx/dbfntx1.c
   * harbour/source/rdd/dbfcdx/dbfcdx1.c

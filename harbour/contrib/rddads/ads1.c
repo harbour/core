@@ -3572,11 +3572,19 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    if( pOrderInfo->fUnique )
       u32Options |= ADS_UNIQUE;
 
+#if ADS_LIB_VERSION >= 610
+   u32RetVal = AdsCreateIndex61( hTableOrIndex, pOrderInfo->abBagName,
+           pOrderInfo->atomBagName, ( UNSIGNED8 * ) hb_itemGetCPtr( pExprItem ),
+           ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->abFor ) ?
+           ( UNSIGNED8 * ) pArea->lpdbOrdCondInfo->abFor : ( UNSIGNED8 * ) "",
+           pucWhile, u32Options, ADS_DEFAULT, &hIndex);
+#else
    u32RetVal = AdsCreateIndex( hTableOrIndex, pOrderInfo->abBagName,
            pOrderInfo->atomBagName, ( UNSIGNED8 * ) hb_itemGetCPtr( pExprItem ),
            ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->abFor ) ?
            ( UNSIGNED8 * ) pArea->lpdbOrdCondInfo->abFor : ( UNSIGNED8 * ) "",
            pucWhile, u32Options, &hIndex);
+#endif
 
    SELF_ORDSETCOND( ( AREAP ) pArea, NULL );
 
