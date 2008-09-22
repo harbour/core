@@ -64,7 +64,7 @@ HB_EXTERN_BEGIN
 
 #if defined( HB_MT_VM )
 #  include "hbthread.h"
-#  if !defined( HB_USE_TLS )
+#  if !defined( HB_USE_TLS ) && !defined( HB_OS_OS2 )
 #     undef HB_STACK_MACROS
 #  endif
 #endif
@@ -189,10 +189,15 @@ typedef struct
 
 #if defined( HB_STACK_MACROS )
 #  if defined( HB_MT_VM )
-#     if defined( __BORLANDC__ )
-         extern PHB_STACK HB_TLS_ATTR hb_stack_ptr;
+#     if defined( HB_USE_TLS )
+#        if defined( __BORLANDC__ )
+            extern PHB_STACK HB_TLS_ATTR hb_stack_ptr;
+#        else
+            extern HB_TLS_ATTR PHB_STACK hb_stack_ptr;
+#        endif
 #     else
-         extern HB_TLS_ATTR PHB_STACK hb_stack_ptr;
+         extern HB_TLS_KEY hb_stack_key;
+#        define hb_stack_ptr  ( ( PHB_STACK ) hb_tls_get( hb_stack_key ) )
 #     endif
 #     define hb_stack  ( * hb_stack_ptr )
 #  else

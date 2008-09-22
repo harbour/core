@@ -101,8 +101,13 @@
 
 #else
 
-      /* compiler has no TLS support, we have to implement it ourself */
-      static HB_TLS_KEY hb_stack_key;
+      /* compiler has no native TLS support, we have to implement it ourselves */
+#     if defined( HB_STACK_MACROS )
+         HB_TLS_KEY hb_stack_key;
+#     else
+         static HB_TLS_KEY hb_stack_key;
+#        define hb_stack_ptr     ( ( PHB_STACK ) hb_tls_get( hb_stack_key ) )
+#     endif
       static volatile BOOL s_fInited = FALSE;
 #     define hb_stack_alloc()    do { if( !s_fInited ) { \
                                          hb_tls_init( hb_stack_key ); \
@@ -114,7 +119,6 @@
                                       hb_tls_set( hb_stack_key, NULL ); } \
                                  while ( 0 )
 #     define hb_stack_ready()    ( s_fInited && hb_tls_get( hb_stack_key ) != NULL )
-#     define hb_stack_ptr        ( ( PHB_STACK ) hb_tls_get( hb_stack_key ) )
 
 #endif /* HB_USE_TLS */
 

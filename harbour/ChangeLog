@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 16:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+    + added support for using stack macros without native compiler TLS
+      support in MT mode.
+    * enabled stack macros by default for OS2 MT builds
+      David, if possible please try speedtst.prg with current MT HVM
+
 2008-09-22 15:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbinet.c
     ! fixed W32 compilation
