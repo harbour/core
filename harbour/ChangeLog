@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 22:08 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/thread.c
+    ! fixed GPF when hb_threadSelf() was executed from thread without
+      allocated ID object (f.e. main thread)
+
 2008-09-22 16:19 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
   * harbour/contrib/rddads/ads1.c
     * using AdsCreateIndex61 when ADS_LIB_VERSION >= 610. This functions use 

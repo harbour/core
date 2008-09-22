@@ -643,7 +643,8 @@ HB_FUNC( HB_THREADSELF )
 {
 #if defined( HB_MT_VM )
    PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) hb_vmThreadState();
-   hb_itemReturn( pThread->pThItm );
+   if( pThread )
+      hb_itemReturn( pThread->pThItm );
 #endif
 }
 
