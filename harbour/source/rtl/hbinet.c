@@ -320,7 +320,7 @@ static int hb_selectWriteExceptSocket( HB_SOCKET_STRUCT *Socket )
 
    if( Socket->timeout == -1 )
    {
-      iResult = select( Socket->com + 1, NULL, &set, &eset, NULL ) < 0 )
+      iResult = select( Socket->com + 1, NULL, &set, &eset, NULL );
    }
    else
    {
@@ -965,7 +965,8 @@ static void s_inetRecvInternal( int iMode )
             hb_execFromArray( Socket->caPeriodic );
 
             /* do we continue? */
-            if( ! hb_parl( -1 ) || ( Socket->timelimit != -1 && iTimeElapsed >= Socket->timelimit ) )
+            if( ! hb_parl( -1 ) || hb_vmRequestQuery() != 0 ||
+                ( Socket->timelimit != -1 && iTimeElapsed >= Socket->timelimit ) )
             {
                HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
                hb_retni( iReceived );
@@ -1088,7 +1089,7 @@ static void s_inetRecvPattern( const char *szPattern )
 
             hb_vmLock();
             hb_execFromArray( Socket->caPeriodic );
-            fResult = hb_parl( -1 );
+            fResult = hb_parl( -1 ) && hb_vmRequestQuery() == 0;
             hb_vmUnlock();
 
             /* do we continue? */
@@ -1285,7 +1286,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
 
             hb_vmLock();
             hb_execFromArray( Socket->caPeriodic );
-            fResult = hb_parl( -1 );
+            fResult = hb_parl( -1 ) && hb_vmRequestQuery() == 0;
             hb_vmUnlock();
 
             if( fResult &&
@@ -2145,7 +2146,7 @@ HB_FUNC( HB_INETDGRAMRECV )
          hb_vmLock();
          hb_execFromArray( Socket->caPeriodic );
          /* do we continue? */
-         fRepeat = hb_parl( -1 ) &&
+         fRepeat = hb_parl( -1 ) && hb_vmRequestQuery() == 0 &&
                    ( Socket->timelimit == -1 || iTimeElapsed < Socket->timelimit );
          hb_vmUnlock();
       }

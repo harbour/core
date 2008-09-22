@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 04:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbinet.c
+    ! fixed typo in previous commit which broke MS-Win builds
+    * check hb_vmReaquestQuery() after executing use codeblocks
+
 2008-09-22 03:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbstack.h
   * harbour/source/vm/estack.c
