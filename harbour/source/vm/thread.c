@@ -639,6 +639,14 @@ HB_FUNC( HB_THREADSTART )
    }
 }
 
+HB_FUNC( HB_THREADSELF )
+{
+#if defined( HB_MT_VM )
+   PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) hb_vmThreadState();
+   hb_itemReturn( pThread->pThItm );
+#endif
+}
+
 HB_FUNC( HB_THREADJOIN )
 {
    PHB_THREADSTATE pThread = hb_thParam( 1 );

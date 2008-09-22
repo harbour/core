@@ -221,6 +221,13 @@ static void    hb_vmMsgIndexReference( PHB_ITEM pRefer, PHB_ITEM pObject, PHB_IT
 #if defined( HB_MT_VM )
 static int volatile hb_vmThreadRequest = 0;
 static void    hb_vmRequestTest( void );
+
+static HB_CRITICAL_NEW( s_atInitMtx );
+#  define HB_ATINIT_LOCK      hb_threadEnterCriticalSection( &s_atInitMtx );
+#  define HB_ATINIT_UNLOCK    hb_threadLeaveCriticalSection( &s_atInitMtx );
+#else
+#  define HB_ATINIT_LOCK
+#  define HB_ATINIT_UNLOCK
 #endif
 
 #ifndef HB_NO_PROFILER
@@ -290,8 +297,10 @@ HB_EXPORT void hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo )
 
    pLst->pFunc = pFunc;
    pLst->cargo = cargo;
+   HB_ATINIT_LOCK
    pLst->pNext = s_InitFunctions;
    s_InitFunctions = pLst;
+   HB_ATINIT_UNLOCK
 }
 
 HB_EXPORT void hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo )
@@ -300,8 +309,10 @@ HB_EXPORT void hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo )
 
    pLst->pFunc = pFunc;
    pLst->cargo = cargo;
+   HB_ATINIT_LOCK
    pLst->pNext = s_ExitFunctions;
    s_ExitFunctions = pLst;
+   HB_ATINIT_UNLOCK
 }
 
 static void hb_vmCleanModuleFunctions( void )
@@ -558,6 +569,13 @@ void hb_vmWaitForThreads( void )
 
       HB_VM_UNLOCK
    }
+}
+
+void * hb_vmThreadState( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadState()"));
+
+   return ( void * ) ( ( PHB_VM_STACKLST ) hb_stackList() )->pState;
 }
 
 static void hb_vmStackAdd( PHB_THREADSTATE pState )

@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 02:34 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/thread.c
+    + added .prg function hb_threadSelf() -> <pThID> | NIL
+      It returns thread ID pointer variable or NIL when thread was
+      registered without it (main thread and some 3-rd party threads
+      created by C API)
+
+  * harbour/source/vm/hvm.c
+    * protect s_InitFunctions and s_ExitFunctions by mutex
+
+  * harbour/source/common/hbverdsp.c
+    * use hb_verBuildDate() instead of __DATE__ and __TIME__ in
+      hb_verBuildInfo() function to report the same time in both
+      cases.
+
 2008-09-21 23:03 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/source/vm/arrays.c

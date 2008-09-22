@@ -93,25 +93,21 @@ void hb_verBuildInfo( void )
 
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "Built on: ", 0 );
-   hb_conOutErr( __DATE__, 0 );
-   hb_conOutErr( " ", 0 );
-   hb_conOutErr( __TIME__, 0 );
+   {
+      char * pszBuildDate = hb_verBuildDate();
+      hb_conOutErr( "Built on: ", 0 );
+      hb_conOutErr( pszBuildDate, 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
+      hb_xfree( pszBuildDate );
+   }
+
+   hb_conOutErr( "Last ChangeLog entry: ", 0 );
+   hb_conOutErr( hb_verSvnLastEntry(), 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   {
-      const char * pszLastEntry = hb_verSvnLastEntry();
-      hb_conOutErr( "Last ChangeLog entry: ", 0 );
-      hb_conOutErr( pszLastEntry, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
-   }
-
-   {
-      const char * pszLogID = hb_verSvnChangeLogID();
-      hb_conOutErr( "ChangeLog SVN version: ", 0 );
-      hb_conOutErr( pszLogID, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
-   }
+   hb_conOutErr( "ChangeLog SVN version: ", 0 );
+   hb_conOutErr( hb_verSvnChangeLogID(), 0 );
+   hb_conOutErr( hb_conNewLine(), 0 );
 
    {
       const char * pszFlags = hb_verFlagsPRG();
