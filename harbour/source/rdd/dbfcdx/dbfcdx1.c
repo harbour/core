@@ -7294,7 +7294,12 @@ static ERRCODE hb_cdxOrderListDelete( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    hb_cdxCreateFName( pArea, hb_itemGetCPtr( pOrderInfo->atomBagName ), &fProd,
                       szFileName, szTagName );
-   pIndex = hb_cdxFindBag( pArea, szFileName );
+
+   if( fProd && ( CDXAREA_DATA( pArea )->fStrictStruct ?
+                  pArea->fHasTags : hb_setGetAutOpen() ) )
+      pIndex = NULL;
+   else
+      pIndex = hb_cdxFindBag( pArea, szFileName );
 
    if( pIndex )
    {

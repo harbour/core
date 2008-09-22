@@ -7381,7 +7381,9 @@ static ERRCODE ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
                       szFileName, szTagName );
    pIndex = hb_ntxFindBag( pArea, szFileName );
 
-   if( pIndex )
+   if( pIndex && !( pIndex->Production && NTXAREA_DATA( pArea )->fStruct &&
+                    ( NTXAREA_DATA( pArea )->fStrictStruct ?
+                      pArea->fHasTags : hb_setGetAutOpen() ) ) )
    {
       pIndexPtr = &pArea->lpIndexes;
       while( *pIndexPtr )

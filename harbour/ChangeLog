@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 20:54 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * do not allow to close production index by ordBagClear() when
+      strict FP compatibility is set for production index or when
+      _SET_AUTOPEN is enabled. It compatible behavior to ordListClear()
+      function
+
 2008-09-22 20:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/classes.c
   * harbour/source/rdd/workarea.c
