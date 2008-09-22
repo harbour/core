@@ -1577,10 +1577,8 @@ METHOD leftLow() CLASS Get
 
 METHOD backSpaceLow() CLASS Get
 
-   LOCAL nPos
    LOCAL nMinus
-
-   nPos := ::nPos
+   LOCAL nPos := ::nPos
 
    IF nPos > 1 .AND. nPos == ::FirstEditable() .AND. ::lMinus2
 

@@ -342,12 +342,13 @@ STATIC FUNCTION _SKIP_RESULT( xResult )
 
 
 STATIC PROCEDURE _DISP_FHSEP( nRow, nType, cColor, aColData )
-   LOCAL lFirst, lFirstVisible
    LOCAL aCol
    LOCAL cSep
-   LOCAL nLen, nWidth
+   LOCAL nLen
+   LOCAL nWidth
+   LOCAL lFirst := .T.
+   LOCAL lFirstVisible := .T.
 
-   lFirst := lFirstVisible := .T.
    FOR EACH aCol IN aColData
       IF aCol[ _TBCI_COLPOS ] != NIL
          cSep := aCol[ nType ]
@@ -409,14 +410,16 @@ STATIC PROCEDURE _DISP_FHSEP( nRow, nType, cColor, aColData )
 
 STATIC PROCEDURE _DISP_FHNAME( nRow, nHeight, nLeft, nRight, nType, nColor, aColors, aColData )
 
-   LOCAL lFirst
    LOCAL aCol
    LOCAL cName
-   LOCAL nPos, nCol, nWidth
+   LOCAL nPos
+   LOCAL nCol
+   LOCAL nWidth
+   LOCAL lFirst := .T.
 
    DispBox( nRow, nLeft, nRow + nHeight - 1, nRight, ;
             Space( 9 ), aColors[ _TBC_CLR_STANDARD ] )
-   lFirst := .T.
+
    FOR EACH aCol IN aColData
       IF aCol[ _TBCI_COLPOS ] != NIL
          cName := aCol[ nType ]
@@ -534,10 +537,8 @@ METHOD dispRow( nRow ) CLASS TBROWSE
 
 METHOD colorRect( aRect, aColors ) CLASS TBROWSE
 
-   LOCAL nRow, nCol
-
-   nRow := ::rowCount
-   nCol := ::colCount
+   LOCAL nRow := ::rowCount
+   LOCAL nCol := ::colCount
 
    /* CA-Cl*pper checks all this conditions */
    IF ISARRAY( aRect ) .AND. Len( aRect ) >= 4 .AND. ;
@@ -569,11 +570,9 @@ METHOD colorRect( aRect, aColors ) CLASS TBROWSE
 
 METHOD scrollBuffer( nRows ) CLASS TBROWSE
 
-   LOCAL nRowCount
+   LOCAL nRowCount := ::rowCount
    LOCAL aValues, aColors
    LOCAL cOldColor
-
-   nRowCount := ::rowCount
 
    /* Store last scroll value to chose refresh order. [druzus] */
    ::nLastScroll := nRows
@@ -618,11 +617,10 @@ METHOD readRecord( nRow ) CLASS TBROWSE
    LOCAL oCol
    LOCAL cValue
    LOCAL aColor
-   LOCAL nColors, nToMove, nMoved, nRowCount
-   LOCAL lRead
+   LOCAL nColors, nToMove, nMoved
+   LOCAL nRowCount := ::rowCount
+   LOCAL lRead := .F.
 
-   lRead := .F.
-   nRowCount := ::rowCount
    IF nRow >= 1 .AND. nRow <= nRowCount .AND. !::aCellStatus[ nRow ]
 
       IF nRow <= ::nLastRow
@@ -681,13 +679,11 @@ METHOD readRecord( nRow ) CLASS TBROWSE
 
 METHOD setPosition() CLASS TBROWSE
 
-   LOCAL nMoved, nNewPos, nMoveOffset, nRowCount
-   LOCAL lSetPos
-
-   nRowCount := ::rowCount
-   nMoveOffset := ::nMoveOffset + ( ::nRowPos - ::nBufferPos )
-   nNewPos := ::nBufferPos + nMoveOffset
-   lSetPos := .T.
+   LOCAL nMoved
+   LOCAL nRowCount := ::rowCount
+   LOCAL nMoveOffset := ::nMoveOffset + ( ::nRowPos - ::nBufferPos )
+   LOCAL nNewPos := ::nBufferPos + nMoveOffset
+   LOCAL lSetPos := .T.
 
    IF nNewPos < 1
       IF ::nMoveOffset < -1
@@ -924,12 +920,11 @@ METHOD cellColor( nRow, nCol ) CLASS TBROWSE
 
 
 STATIC FUNCTION _DECODECOLORS( cColorSpec )
-   LOCAL aColors
+   LOCAL aColors := {}
+   LOCAL nColors := hb_TokenCount( cColorSpec, "," )
    LOCAL cColor
-   LOCAL nColors, nPos
+   LOCAL nPos
 
-   aColors := {}
-   nColors := hb_TokenCount( cColorSpec, "," )
    FOR nPos := 1 TO nColors
       cColor := hb_tokenGet( cColorSpec, nPos, "," )
       /* For 1-st two colors CA-Cl*pper checks if given color
@@ -968,12 +963,10 @@ STATIC FUNCTION _DECODECOLORS( cColorSpec )
  * but only when browser shows head/foot separator(s). [druzus]
  */
 STATIC FUNCTION _COLDEFCOLORS( aDefColorsIdx, nMaxColorIndex )
-   LOCAL aColorsIdx
+   LOCAL aColorsIdx := { _TBC_CLR_STANDARD, _TBC_CLR_SELECTED, ;
+                         _TBC_CLR_STANDARD, _TBC_CLR_STANDARD }
    LOCAL nColorIndex
    LOCAL nPos
-
-   aColorsIdx := { _TBC_CLR_STANDARD, _TBC_CLR_SELECTED, ;
-                   _TBC_CLR_STANDARD, _TBC_CLR_STANDARD }
 
    IF ISARRAY( aDefColorsIdx )
       FOR nPos := 1 TO _TBC_CLR_MAX
@@ -998,14 +991,12 @@ STATIC FUNCTION _COLDEFCOLORS( aDefColorsIdx, nMaxColorIndex )
  * are significant. [druzus]
  */
 STATIC FUNCTION _CELLCOLORS( aCol, xValue, nMaxColorIndex )
-   LOCAL xColor
-   LOCAL aColors
+   LOCAL aColors := { aCol[ _TBCI_DEFCOLOR ][ _TBC_CLR_STANDARD ], ;
+                      aCol[ _TBCI_DEFCOLOR ][ _TBC_CLR_SELECTED ] }
+   LOCAL xColor := Eval( aCol[ _TBCI_COLOBJECT ]:colorBlock, xValue )
    LOCAL nColorIndex
    LOCAL nPos, nMax
 
-   aColors := { aCol[ _TBCI_DEFCOLOR ][ _TBC_CLR_STANDARD ], ;
-                aCol[ _TBCI_DEFCOLOR ][ _TBC_CLR_SELECTED ] }
-   xColor := Eval( aCol[ _TBCI_COLOBJECT ]:colorBlock, xValue )
    IF ISARRAY( xColor )
       nMax := Min( Len( xColor ), 2 )
       FOR nPos := 1 TO nMax
@@ -1625,9 +1616,8 @@ STATIC FUNCTION _PREVCOLUMN( aColData, nCol )
 
 STATIC FUNCTION _SETCOLUMNS( nFrom, nTo, nStep, aColData, nFirst, nWidth, lFirst )
    LOCAL aCol
-   LOCAL nCol, nLast, nColWidth
-
-   nLast := 0
+   LOCAL nCol, nColWidth
+   LOCAL nLast := 0
 
    IF nWidth > 0
       FOR nCol := nFrom TO nTo STEP nStep
@@ -1664,10 +1654,9 @@ STATIC FUNCTION _SETCOLUMNS( nFrom, nTo, nStep, aColData, nFirst, nWidth, lFirst
 
 STATIC PROCEDURE _SETVISIBLE( aColData, nWidth, nFrozen, nLeft, nRight )
 
-   LOCAL nColCount, nPos, nFirst
+   LOCAL nPos, nFirst
    LOCAL lLeft, lRight, lFirst
-
-   nColCount := Len( aColData )
+   LOCAL nColCount := Len( aColData )
 
    /* Check if frozen columns are still valid, if not reset it to 0
     * It also calculates the size left for unfrozen columns [druzus]
@@ -1733,14 +1722,16 @@ STATIC PROCEDURE _SETVISIBLE( aColData, nWidth, nFrozen, nLeft, nRight )
 METHOD setVisible() CLASS TBROWSE
 
    LOCAL aCol
-   LOCAL nColumns, nCol, nWidth, nLeft, nColPos, nFrozen, nLast
-   LOCAL lFirst, lFrames
+   LOCAL nCol
+   LOCAL nLeft
+   LOCAL nFrozen
+   LOCAL nLast
+   LOCAL nColumns := Len( ::aColData )
+   LOCAL nWidth := _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1
+   LOCAL nColPos := ::nColPos
+   LOCAL lFirst
+   LOCAL lFrames := .F.
 
-   lFrames := .F.
-   nColumns := Len( ::aColData )
-   nWidth := _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1
-
-   nColPos := ::nColPos
    IF nColPos > nColumns
       ::nColPos := nColumns
       ::nLeftVisible := nColumns
@@ -1976,9 +1967,8 @@ METHOD rowCount() CLASS TBROWSE
          [vszakats] */
 METHOD setRowPos( nRowPos ) CLASS TBROWSE
 
-   LOCAL nRowCount, nRow
-
-   nRowCount := ::rowCount    /* executes doConfigure internally */
+   LOCAL nRow
+   LOCAL nRowCount := ::rowCount    /* executes doConfigure internally */
 
    IF ISNUMBER( nRowPos )
       nRow := Int( nRowPos )

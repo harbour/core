@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-22 14:34 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  % source/rtl/dbedit.prg
+  % source/rtl/dirscan.prg
+  % source/rtl/errorsys.prg
+  % source/rtl/hbini.prg
+  % source/rtl/listbox.prg
+  % source/rtl/objfunc.prg
+  % source/rtl/tbrowse.prg
+  % source/rtl/tclass.prg
+  % source/rtl/tget.prg
+  % source/rtl/tgetlist.prg
+    % Code formating and some local decarations inlined
+
 2008-09-22 19:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
    ! corrected previous ChangeLog entry: instead of hb_waDetach()/

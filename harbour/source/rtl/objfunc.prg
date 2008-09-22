@@ -281,9 +281,8 @@ FUNCTION __objDerivedFrom( oObject, xSuper )
 
 
 FUNCTION __objGetProperties( oObject, lAllExported )
-   LOCAL msg, aMsgList
-
-   aMsgList := __clsGetProperties( oObject:classH, lAllExported )
+   LOCAL msg
+   LOCAL aMsgList := __clsGetProperties( oObject:classH, lAllExported )
 
    FOR EACH msg IN aMsgList
       msg := { msg, __objSendMsg( oObject, msg ) }

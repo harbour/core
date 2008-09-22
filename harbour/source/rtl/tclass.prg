@@ -201,15 +201,14 @@ STATIC PROCEDURE Create()
 
    LOCAL Self := QSelf()
    LOCAL n
-   LOCAL nLen
    LOCAL nLenDatas := Len( ::aDatas ) //Datas local to the class !!
+   LOCAL nLen := Len( ::asSuper )
    LOCAL nClassBegin
    LOCAL hClass
    LOCAL ahSuper := {}
 
 /* Self:Class := MetaClass */
 
-   nLen := Len( ::asSuper )
    FOR n := 1 TO nLen
       hClass := __clsInstSuper( ::asSuper[ n ] ) // Super handle available
       IF hClass != 0

@@ -116,14 +116,13 @@ FUNCTION hb_IniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
    RETURN hb_IniRdLow( hIni, cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
 
 STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
-   LOCAL aFiles
    LOCAL cFile, nLen
    LOCAL aKeyVal, hCurrentSection
    LOCAL hFile, nLineEnd
    LOCAL cData, cLine
    LOCAL reComment, reInclude, reSection, reSplitters
+   LOCAL aFiles := hb_aTokens( cFileSpec, hb_OSPathListSeparator() )
 
-   aFiles := hb_aTokens( cFileSpec, hb_OSPathListSeparator() )
    IF Empty( aFiles )
       aFiles := { cFileSpec }
    ENDIF

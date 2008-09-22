@@ -239,13 +239,11 @@ METHOD display() CLASS LISTBOX
    LOCAL cColorAny
    LOCAL nTop := ::nTop
    LOCAL nLeft := ::nLeft
-   LOCAL nSize
+   LOCAL nSize := ::nRight - nLeft + 1
    LOCAL cHotBox
    LOCAL cCaption
    LOCAL nPos
    
-   nSize := ::nRight - nLeft + 1
-
    IF ::lHasFocus
       cHotBox   := ::cHotBox
       cColor3   := hb_ColorIndex( ::cColorSpec, 2 )

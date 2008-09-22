@@ -163,10 +163,9 @@ STATIC FUNCTION DefError( oError )
    RETURN .F.
 
 STATIC FUNCTION ErrorMessage( oError )
-   LOCAL cMessage
 
    // start error message
-   cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
+   LOCAL cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
    // add subsystem name if available
    IF ISCHARACTER( oError:subsystem )

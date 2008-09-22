@@ -1471,11 +1471,10 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
 METHOD HitTest( nMRow, nMCol, aMsg ) CLASS HBGetList
 
    LOCAL nCount
-   LOCAL nTotal
+   LOCAL nTotal := Len( ::aGetList )
    LOCAL lGUI
 
    ::nNextGet := 0
-   nTotal := Len( ::aGetList )
 
    FOR nCount := 1 TO nTotal
       IF ( ::nHitCode := ::aGetList[ nCount ]:hitTest( nMRow, nMCol ) ) != HTNOWHERE

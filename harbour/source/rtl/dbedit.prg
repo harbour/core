@@ -286,12 +286,12 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
  */
 STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend )
 
-   LOCAL nMode, nPrevRecNo
+   LOCAL nPrevRecNo
 
-   nMode := IIF( nKey != 0,                  DE_EXCEPT,    ;
-            IIF( !lAppend .AND. IsDbEmpty(), DE_EMPTY,     ;
-            IIF( oBrowse:hitBottom,          DE_HITBOTTOM, ;
-            IIF( oBrowse:hitTop,             DE_HITTOP, DE_IDLE ) ) ) )
+   LOCAL nMode := IIF( nKey != 0,                  DE_EXCEPT,    ;
+                  IIF( !lAppend .AND. IsDbEmpty(), DE_EMPTY,     ;
+                  IIF( oBrowse:hitBottom,          DE_HITBOTTOM, ;
+                  IIF( oBrowse:hitTop,             DE_HITTOP, DE_IDLE ) ) ) )
 
    oBrowse:forceStable()
 
