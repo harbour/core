@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-23 11:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/fm.c
+    ! Enabled USE_DL_PREFIX for _MSC_VER compilers.
+      This may be refined, but without this setting MSVS 2008 
+      would give an error on exit and GPF.
+
 2008-09-23 11:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbthread.h
     % Enabled TLS for _MSC_VER compilers.
