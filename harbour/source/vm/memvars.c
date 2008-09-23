@@ -271,10 +271,11 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
  */
 ULONG hb_memvarGetPrivatesBase( void )
 {
-   ULONG ulBase = hb_stackGetPrivateStack()->base;
+   ULONG ulBase;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetPrivatesBase()"));
 
+   ulBase = hb_stackGetPrivateStack()->base;
    hb_stackGetPrivateStack()->base = hb_stackGetPrivateStack()->count;
    return ulBase;
 }

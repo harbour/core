@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-23 15:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/codebloc.c
+    * updated old and not longer valid comment
+
+  * harbour/source/vm/memvars.c
+    * minor code formatting
+
+  * harbour/source/common/expropt2.c
+    ! fixed bug in power math expression optimization caused
+      by two lines left in the code by mistake. Many thanks to
+      Maurilio for locating the problem.
+
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+    % added support for buffering hb_stack TLS access be preloading
+      the stack pointer into C stack function local variables.
+      Please make speed tests for MT mode with different C compilers
+      and different platforms.
+
 2008-09-23 14:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/rddads/adsmgmnt.c
     * Minor.

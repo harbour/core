@@ -163,13 +163,12 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
 
       /* Create a table that will store the values of local variables
        * accessed in a codeblock
-       * The element 0 is used as the counter of references to this table
+       * The element 0 is unused
        * NOTE: This table can be shared by codeblocks created during
        * evaluation of this codeblock
        */
       pLocals = ( PHB_ITEM ) hb_xgrab( ( uiLocals + 1 ) * sizeof( HB_ITEM ) );
-      pLocals[ 0 ].type = HB_IT_LONG;
-      pLocals[ 0 ].item.asLong.value = 1;
+      pLocals[ 0 ].type = HB_IT_NIL;
 
       do
       {

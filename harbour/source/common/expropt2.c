@@ -364,8 +364,6 @@ HB_EXPR_PTR hb_compExprReducePower( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             break;
 
          default:
-            pSelf->value.asNum.val.d = pow( pLeft->value.asNum.val.d,
-                                            pRight->value.asNum.val.d );
             if( pLeft->value.asNum.NumType == HB_ET_DOUBLE )
                pSelf->value.asNum.val.d = pow( pLeft->value.asNum.val.d,
                                                ( double ) pRight->value.asNum.val.l );
