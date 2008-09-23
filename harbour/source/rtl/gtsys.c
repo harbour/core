@@ -63,14 +63,14 @@
    HB_GT_REQUEST( HB_GT_DEFAULT )
 #elif defined(HB_GT_LIB)
    HB_GT_REQUEST( HB_GT_LIB )
-#elif defined(HB_OS_LINUX)
-   HB_GT_REQUEST( CRS )
 #elif defined(HB_OS_WIN_32)
    HB_GT_REQUEST( WIN )
 #elif defined(HB_OS_DOS)
    HB_GT_REQUEST( DOS )
 #elif defined(HB_OS_OS2)
    HB_GT_REQUEST( OS2 )
+#elif defined(HB_OS_UNIX)
+   HB_GT_REQUEST( TRM )
 #else
    HB_GT_REQUEST( STD )
 #endif
