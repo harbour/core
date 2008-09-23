@@ -95,7 +95,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
    USHORT uiLine;
    int iLevel;
 
-   FILE * hLog = hb_fopen( hb_setGetCPtr( HB_SET_HBOUTLOG ), "a+" );
+   FILE * hLog = *hb_setGetCPtr( HB_SET_HBOUTLOG ) ? hb_fopen( hb_setGetCPtr( HB_SET_HBOUTLOG ), "a+" ) : NULL;
 
    if( hLog )
    {
@@ -215,6 +215,12 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
       ptr += strlen( ptr );
    }
 
+   if( hLog )
+   {
+      fprintf( hLog, "------------------------------------------------------------------------\n");
+      fclose( hLog );
+   }
+
    /* GUI */
    {
       LPTSTR lpStr = HB_TCHAR_CONVTO( msg );
@@ -222,18 +228,12 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
       HB_TCHAR_FREE( lpStr );
    }
 
-   if( hLog )
-   {
-      fprintf( hLog, "------------------------------------------------------------------------\n");
-      fclose( hLog );
-   }
-
    return EXCEPTION_CONTINUE_SEARCH; /* EXCEPTION_EXECUTE_HANDLER; */
 }
 
 #elif defined(HB_OS_OS2)
 
-static EXCEPTIONREGISTRATIONRECORD s_regRec;    /* Exception Registration Record */
+static EXCEPTIONREGISTRATIONRECORD s_regRec; /* Exception Registration Record */
 
 ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
                                       PEXCEPTIONREGISTRATIONRECORD p2,
@@ -260,7 +260,7 @@ ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
          fprintf( stderr, HB_I_("Called from %s(%hu)%s%s\n"), buffer, uiLine, *file ? HB_I_(" in ") : "", file );
    }
 
-   return XCPT_CONTINUE_SEARCH;          /* Exception not resolved... */
+   return XCPT_CONTINUE_SEARCH; /* Exception not resolved... */
 }
 
 #elif defined( HB_SIGNAL_EXCEPTION_HANDLER )
@@ -268,38 +268,38 @@ ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
 static void hb_signalExceptionHandler( int sig, siginfo_t * si, void * ucp )
 {
    char buffer[ 32 ];
-   const char *signame;
-   const char *sigaddr;
+   const char * signame;
+   const char * sigaddr;
 
    HB_SYMBOL_UNUSED( ucp );
 
    switch( sig )
    {
-      case SIGSEGV:
-         signame = "SIGSEGV";
-         snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
-         sigaddr = buffer;
-         break;
-      case SIGILL:
-         signame = "SIGILL";
-         snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
-         sigaddr = buffer;
-         break;
-      case SIGFPE:
-         signame = "SIGFPE";
-         snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
-         sigaddr = buffer;
-         break;
-      case SIGBUS:
-         signame = "SIGBUS";
-         snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
-         sigaddr = buffer;
-         break;
-      default:
-         snprintf( buffer, sizeof( buffer ), "sig:%d", sig );
-         signame = buffer;
-         sigaddr = "UNKNOWN";
-         break;
+   case SIGSEGV:
+      signame = "SIGSEGV";
+      snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+      sigaddr = buffer;
+      break;
+   case SIGILL:
+      signame = "SIGILL";
+      snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+      sigaddr = buffer;
+      break;
+   case SIGFPE:
+      signame = "SIGFPE";
+      snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+      sigaddr = buffer;
+      break;
+   case SIGBUS:
+      signame = "SIGBUS";
+      snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+      sigaddr = buffer;
+      break;
+   default:
+      snprintf( buffer, sizeof( buffer ), "sig:%d", sig );
+      signame = buffer;
+      sigaddr = "UNKNOWN";
+      break;
    }
 
    hb_errInternal( 6005, "Exception %s at address %s", signame, sigaddr );
