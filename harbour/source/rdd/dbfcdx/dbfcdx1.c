@@ -3502,8 +3502,8 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
        HB_GET_LE_UINT16( tagHeader.keySize ) > CDX_MAXKEY ||
        uiForPos + uiForLen > CDX_HEADEREXPLEN ||
        uiKeyPos + uiKeyLen > CDX_HEADEREXPLEN ||
-       ( uiKeyPos < uiForPos ? ( uiKeyPos + uiKeyLen > uiForPos ) :
-                               ( uiForPos + uiForLen > uiKeyPos ) ) )
+       ( uiKeyPos < uiForPos ? ( uiKeyPos + uiKeyLen > uiForPos && tagHeader.keyExpPool[ uiForPos ] ) :
+                               ( uiForPos + uiForLen > uiKeyPos && tagHeader.keyExpPool[ uiForPos ] ) ) )
    {
       pTag->RootBlock = 0; /* To force RT error - index corrupted */
       return;

@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-23 21:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * use HB_IMPORT instead of hardcoded attributes in hb* scripts
+
+  * harbour/source/common/hbver.c
+    * generate different info for POCC and XCC compilers
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * reduce header validation to not report clipper indexes as corrupted
+
 2008-09-23 20:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/extrap.c
     ! Fixed to close .log file before showing MessageBox().

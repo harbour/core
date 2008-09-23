@@ -383,7 +383,7 @@ char * hb_verCompiler( void )
 
 #elif defined(__XCC__)
 
-   pszName = "Pelles ISO C Compiler";
+   pszName = "Pelles ISO C Compiler (XCC)";
    iVerMajor = __XCC__ / 100;
    iVerMinor = __XCC__ % 100;
    iVerPatch = 0;

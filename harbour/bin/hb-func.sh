@@ -428,7 +428,6 @@ for gt in \${HB_GT_REQ}; do
 done
 [ -n "\${HB_FM_REQ}" ] && HB_LNK_REQ="\${HB_LNK_REQ} HB_FM_\${HB_FM_REQ}"
 
-HB_LNK_ATTR=""
 HARBOUR_LIBS=""
 if [ "\${HB_STATIC}" = "yes" ]; then
     libs="${hb_libs} ${hb_libsc}"
@@ -441,7 +440,6 @@ else
     elif [ "\${HB_ARCHITECTURE}" = "w32" ]; then
         pref=""
         ext=".dll"
-        HB_LNK_ATTR="__attribute__ ((dllimport))"
     elif [ "\${HB_ARCHITECTURE}" = "hpux" ]; then
         pref="lib"
         ext=".sl"
@@ -596,8 +594,8 @@ hb_lnk_request()
     if [ -n "\$gt" ] || [ -n "\${HB_MAIN_FUNC}" ]; then
         echo "#include \\"hbinit.h\\""
         echo "HB_EXTERN_BEGIN"
-        echo "extern \${HB_LNK_ATTR} const char * hb_gt_szNameDefault;"
-        echo "extern \${HB_LNK_ATTR} const char * hb_vm_pszLinkedMain;"
+        echo "extern HB_IMPORT const char * hb_gt_szNameDefault;"
+        echo "extern HB_IMPORT const char * hb_vm_pszLinkedMain;"
         echo "HB_EXTERN_END"
         echo "HB_CALL_ON_STARTUP_BEGIN( hb_lnk_SetDefault_build )"
         if [ -n "\$gt" ]; then
