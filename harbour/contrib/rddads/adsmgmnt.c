@@ -82,7 +82,7 @@ HB_FUNC( ADSMGGETHANDLE )
 HB_FUNC( ADSMGSETHANDLE )
 {
    s_hMgmtHandle = hb_parnl( 1 );
-   hb_retl( 1 );
+   hb_retl( TRUE );
 }
 
 HB_FUNC( ADSMGKILLUSER )
