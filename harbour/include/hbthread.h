@@ -312,6 +312,8 @@ extern void hb_threadMutexUnlockAll( void );
    /* enable native compiler TLS support be default for this compilers
     * which are known that it will work correctly
     */
+#  if defined( _MSC_VER )
+#     define HB_USE_TLS
 #  if defined( __BORLANDC__ ) && !defined( __CODEGUARD__ )
 #     define HB_USE_TLS
 #  elif defined( __GNUC__ ) && __GNUC__ >= 3 && \
