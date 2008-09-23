@@ -51,17 +51,17 @@
     * eliminated two static variables
 
 2008-09-22 14:34 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
-  % source/rtl/dbedit.prg
-  % source/rtl/dirscan.prg
-  % source/rtl/errorsys.prg
-  % source/rtl/hbini.prg
-  % source/rtl/listbox.prg
-  % source/rtl/objfunc.prg
-  % source/rtl/tbrowse.prg
-  % source/rtl/tclass.prg
-  % source/rtl/tget.prg
-  % source/rtl/tgetlist.prg
-    % Code formating and some local decarations inlined
+  * source/rtl/dbedit.prg
+  * source/rtl/dirscan.prg
+  * source/rtl/errorsys.prg
+  * source/rtl/hbini.prg
+  * source/rtl/listbox.prg
+  * source/rtl/objfunc.prg
+  * source/rtl/tbrowse.prg
+  * source/rtl/tclass.prg
+  * source/rtl/tget.prg
+  * source/rtl/tgetlist.prg
+    * Code formating and some local decarations inlined
 
 2008-09-22 19:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
@@ -112,13 +112,14 @@
     ! Any messing with HB_GT_LIB and HB_GT_DEFAULT was removed 
       from non-GNU make files, to leave these things to the 
       source code itself (just like in GNU-make).
-    + Added automatic selection of GTWVT from source code, 
-      so that it also works in GNU-make.
+    + Added automatic selection of GTWVT from source code 
+      for WinCE, so that it also works in GNU-make.
 
   * source/rdd/dbfcdx/dbfcdx1.c
     ! Restored RTE behaviour when key length is zero.
     ! Recently added C53 compatible but C52 incompatible 
-      RTE enabled only if HB_COMPAT_C53 and HB_C52_STRICT 
+      RTE (throwing an error when index key is longer than 
+      240 chars) enabled only if HB_COMPAT_C53 and HB_C52_STRICT 
       are both #defined to not make valid C52 apps crash.
     ; Someone pls review me.
 
