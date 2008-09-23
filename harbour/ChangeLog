@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-23 18:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/rddads/adsmgmnt.c
+    ! Blind fix to ADSMGGETWORKERTHREADACTIVITY() where the 
+      first element in list wasn't returned.
+      Please test, I couldn't.
+
+  * source/vm/fm.c
+    ! Stupid typo. (I guess I'm completely confused by separated 
+      "#" and preprocessor command :/ Second typo in two lines.)
+
 2008-09-23 17:09 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/os2/gcc.cf
     * enabled -DTCPV40HDRS in default builds, can be disabled by

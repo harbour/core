@@ -122,7 +122,7 @@
 #     pragma warn -prc
 #     pragma warn -rch
 #  elif defined( _MSC_VER )
-#     defined USE_DL_PREFIX
+#     define USE_DL_PREFIX
 #  endif
 #  include "dlmalloc.c"
 #  if defined( __BORLANDC__ )
