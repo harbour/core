@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 //----------------------------------------------------------------------//
 //
 //                               WhatDemo.prg
@@ -6,18 +10,18 @@
 //
 //----------------------------------------------------------------------//
 
-#Include "inkey.ch"
-#Include "winuser.ch"
+#include "inkey.ch"
+#include "winuser.ch"
 
 //----------------------------------------------------------------------//
 
 Function Main()
    Local nKey
 
-   SetColor( 'N/W' )
+   SetColor( "N/W" )
    CLS
 
-   DispOutAt( Maxrow(),0, padc( 'F2 New Dialog    ESC Exit', maxcol()+1 ), 'W+/R' )
+   DispOutAt( Maxrow(),0, padc( "F2 New Dialog    ESC Exit", maxcol()+1 ), "W+/R" )
 
    do while .t.
       nKey := inkey()
@@ -114,4 +118,3 @@ Function MyDlgProc2( hDlg, nMsg, nwParam, nlParam )
    Return( 0 )
 
 //----------------------------------------------------------------------//
-
