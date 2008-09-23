@@ -8,7 +8,7 @@ rem Template to build a final Harbour executable, using Harbour
 rem with the C code generation feature, then calling the proper C
 rem linker/compiler.
 rem
-rem Copyright 1999-2001 Viktor Szakats (viktor.szakats@syenar.hu)
+rem Copyright 1999-2008 Viktor Szakats (viktor.szakats@syenar.hu)
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 
@@ -35,20 +35,12 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
    echo   - Don't forget to make a MAIN() function for you application.
    echo   - This batch file assumes you are in some directory off the main
    echo     harbour directory.
-   echo   - Environment variables HB_COMPILER, HB_GT_LIB should be set.
-   echo     Setting HB_GT_LIB is optional.
+   echo   - Environment variable HB_COMPILER should be set.
    echo     The following values are currently supported:
    echo.
    echo     HB_COMPILER:
    echo       - gcc     (EMX GNU C, OS/2 32-bit)
    echo       - icc     (IBM Visual Age C++ 3.0, OS/2 32-bit)
-   echo.   
-   echo     HB_GT_LIB:
-   echo       - gtstd (Standard streaming) (for all architectures)
-   echo       - gtos2 (OS/2 console)       (for os2 architecture)
-   echo       - gtpca (PC ANSI console)    (for all architectures)
-   echo       - gtcrs (Curses console)     (for linux, w32 architectures)
-   echo       - gtsln (Slang console)      (for linux, w32 architectures)
    goto END
 
 :NO_COMP
@@ -67,11 +59,8 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
 
 :A_DOS
 
-   set _HB_GT_LIB=%HB_GT_LIB%
-   if "%_HB_GT_LIB%" == "" set _HB_GT_LIB=gtos2
-
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbsix -lhbcommon -lhbpcre -lhbzlib
-   if "%HB_COMPILER%" == "icc"     icc /Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp %C_USR% -I%HB_INC_INSTALL% %1.c %HB_LIB_INSTALL%\hbcpage.lib %HB_LIB_INSTALL%\hbdebug.lib %HB_LIB_INSTALL%\hbvm.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\%_HB_GT_LIB%.lib %HB_LIB_INSTALL%\hblang.lib %HB_LIB_INSTALL%\hbrdd.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\hbvm.lib %HB_LIB_INSTALL%\hbmacro.lib %HB_LIB_INSTALL%\hbpp.lib %HB_LIB_INSTALL%\rddfpt.lib %HB_LIB_INSTALL%\rddntx.lib %HB_LIB_INSTALL%\rddcdx.lib %HB_LIB_INSTALL%\hbsix.lib %HB_LIB_INSTALL%\hbcommon.lib %HB_LIB_INSTALL%\hbpcre.lib %HB_LIB_INSTALL%\hbzlib.lib
+   if "%HB_COMPILER%" == "gcc" gcc %1.c %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -lgtcgi -lgtstd -lgtos2 -lgtpca -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+   if "%HB_COMPILER%" == "icc" icc /Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp %C_USR% -I%HB_INC_INSTALL% %1.c %HB_LIB_INSTALL%\hbcpage.lib %HB_LIB_INSTALL%\hbdebug.lib %HB_LIB_INSTALL%\hbvm.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\gtcgi.lib %HB_LIB_INSTALL%\gtstd.lib %HB_LIB_INSTALL%\gtos2.lib %HB_LIB_INSTALL%\gtpca.lib %HB_LIB_INSTALL%\hblang.lib %HB_LIB_INSTALL%\hbrdd.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\hbvm.lib %HB_LIB_INSTALL%\hbmacro.lib %HB_LIB_INSTALL%\hbpp.lib %HB_LIB_INSTALL%\rddfpt.lib %HB_LIB_INSTALL%\rddntx.lib %HB_LIB_INSTALL%\rddcdx.lib %HB_LIB_INSTALL%\hbsix.lib %HB_LIB_INSTALL%\hbcommon.lib %HB_LIB_INSTALL%\hbpcre.lib %HB_LIB_INSTALL%\hbzlib.lib
    goto END
 
 :CLEANUP

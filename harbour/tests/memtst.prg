@@ -7,6 +7,8 @@
  *    a small memory mangaer test code
  */
 
+#include "simpleio.ch"
+
 #define N_LOOPS   100000
 
 #ifdef __HARBOUR__

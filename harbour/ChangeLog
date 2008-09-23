@@ -8,6 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-24 00:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * tests/memtst.prg
+    + Added #include "simpleio.ch" to allow output redirection.
+
+  * bin/bld.bat
+  * bin/bld_os2.cmd
+    * Removed any HB_GT_LIB "selection" logic. Selection is to 
+      be done from source code, from now on all supported core GTs 
+      are included in the lib list.
+    * Few other minor cleanups.
+
+  * source/vm/cmdarg.c
+    * Commented code turned into HB_C52_STRICT branch.
+
+  * source/vm/vmmt/Makefile
+    ! Fixed cemgw -> mingwce
+
+  * config/dos/global.cf
+  * config/os2/global.cf
+  * config/w32/global.cf
+    % Removed unnecessary logic to select default GT. This is 
+      done in Harbour source code now.
+
+  ; TOFIX: After MT changes, mingw32 build gives this new error:
+           make: *** mainstd: No such file or directory.  Stop.
+           make[3]: *** [first] Error 2
+           make[2]: *** [first] Error 2
+
 2008-09-23 21:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * use HB_IMPORT instead of hardcoded attributes in hb* scripts

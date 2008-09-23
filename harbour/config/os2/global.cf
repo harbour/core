@@ -15,10 +15,6 @@ HB_GT_LIST=\
 # temporary workaround for some possible problems with some GNU make versions
 HB_GT_LIBS := $(HB_GT_LIST)
 
-ifeq ($(HB_GT_LIB),)
-	HB_GT_LIB = gtos2
-endif
-
 ifeq ($(SHLVL),) # An OS/2 command shell
 
 ARCH_DIR = $(HB_ARCH)

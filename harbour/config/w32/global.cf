@@ -18,10 +18,6 @@ HB_GT_LIST=\
 # verify if GT drivers exist
 HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
 
-ifeq ($(HB_GT_LIB),)
-   HB_GT_LIB = gtwin
-endif
-
 ifeq ($(SHLVL),) # COMMAND.COM
 
 # There is a conflict with the use of '\' and '/' characters

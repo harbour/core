@@ -4,14 +4,6 @@ rem $Id$
 rem
 
 rem ---------------------------------------------------------------
-rem This is a generic template file, if it doesn't fit your own needs
-rem please DON'T MODIFY IT.
-rem
-rem Instead, make a local copy and modify that one, or make a call to
-rem this batch file from your customized one. [vszakats]
-rem ---------------------------------------------------------------
-
-rem ---------------------------------------------------------------
 rem Template to build a final Harbour executable, using Harbour
 rem with the C code generation feature, then calling the proper C
 rem linker/compiler.
@@ -22,7 +14,6 @@ rem ---------------------------------------------------------------
 
 rem if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=w32
 rem if "%HB_COMPILER%" == "" set HB_COMPILER=mingw
-rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
 
 if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=..\bin
 if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=..\lib
@@ -42,19 +33,16 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
    echo.
    echo Notes:
    echo.
-   echo   - 'filename' is the .prg filename *without* extension.
+   echo   - 'filename' is the .prg filename _without_ extension.
    echo   - Don't forget to make a MAIN() function for you application.
    echo   - This batch file assumes you are in some directory off the main
    echo     harbour directory.
-   echo   - Environment variables HB_ARCHITECTURE, HB_COMPILER, HB_GT_LIB
-   echo     should be set. Setting HB_GT_LIB is optional.
-   echo     The following values are currently supported:
+   echo   - Environment variables HB_ARCHITECTURE, HB_COMPILER should be set.
    echo.
    echo     HB_ARCHITECTURE:
-   echo       - dos   (HB_GT_LIB=gtdos by default)
-   echo       - w32   (HB_GT_LIB=gtwin by default)
+   echo       - dos
+   echo       - w32
    echo.
-   pause
    echo     HB_COMPILER:
    echo       - When HB_ARCHITECTURE=dos
    echo         - djgpp   (Delorie GNU C, DOS 32-bit)
@@ -68,16 +56,6 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
    echo         - icc     (IBM Visual Age C++, Windows 32-bit)
    echo         - msvc    (Microsoft Visual C++, Windows 32/64-bit)
    echo         - watcom  (OpenWatcom, Windows 32-bit)
-   echo.
-   pause
-   echo     HB_GT_LIB:
-   echo       - gtstd (Standard streaming)  (for all architectures)
-   echo       - gtdos (DOS console)         (for dos architecture)
-   echo       - gtwin (Windows console)     (for w32 architecture)
-   echo       - gtwvt (Windows GUI console) (for w32 architecture)
-   echo       - gtpca (PC ANSI console)     (for all architectures)
-   echo       - gtcrs (Curses console)      (for linux, w32 architectures)
-   echo       - gtsln (Slang console)       (for linux, w32 architectures)
    goto END
 
 :NO_ARCH
@@ -106,11 +84,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
 
 :A_DOS
 
-   if not "%HB_GT_LIB%" == "" set _HB_GT_LIB=%HB_GT_LIB%
-
    if not "%HB_ARCHITECTURE%" == "dos" goto A_W32
-
-   if "%HB_GT_LIB%" == "" set _HB_GT_LIB=gtdos
 
    if not "%HB_COMPILER%" == "djgpp" goto A_DOS_DJGPP_NOT
 
@@ -120,7 +94,10 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
       echo -lhbdebug >> build.tmp
       echo -lhbvm >> build.tmp
       echo -lhbrtl >> build.tmp
-      echo -l%_HB_GT_LIB% >> build.tmp
+      echo -lgtdos >> build.tmp
+      echo -lgtcgi >> build.tmp
+      echo -lgtstd >> build.tmp
+      echo -lgtpca >> build.tmp
       echo -lhblang >> build.tmp
       echo -lhbrdd >> build.tmp
       echo -lhbrtl >> build.tmp
@@ -142,7 +119,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
 
    if not "%HB_COMPILER%" == "rsx32" GOTO A_DOS_RSX32_NOT
 
-      gcc %1.c -Zrsx32 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+      gcc %1.c -Zrsx32 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -lgtdos -lgtcgi -lgtstd -lgtpca -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
       goto END
 
 :A_DOS_RSX32_NOT
@@ -156,7 +133,10 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
       echo LIB hbdebug.lib >> build.tmp
       echo LIB hbvm.lib >> build.tmp
       echo LIB hbrtl.lib >> build.tmp
-      echo LIB %_HB_GT_LIB%.lib >> build.tmp
+      echo LIB gtdos.lib >> build.tmp
+      echo LIB gtcgi.lib >> build.tmp
+      echo LIB gtstd.lib >> build.tmp
+      echo LIB gtpca.lib >> build.tmp
       echo LIB hblang.lib >> build.tmp
       echo LIB hbrdd.lib >> build.tmp
       echo LIB hbmacro.lib >> build.tmp
@@ -177,15 +157,11 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
 
 if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
 
-   if "%HB_GT_LIB%" == "" set _HB_GT_LIB=gtwin
-
-   if "%HB_COMPILER%" == "bcc32"   bcc32 -O2 -d %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %1.c %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib %_HB_GT_LIB%.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddfpt.lib rddntx.lib rddcdx.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib
-
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c -o%1.exe %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
-   if "%HB_COMPILER%" == "mingw"   gcc %1.c -o%1.exe %C_USR% -mno-cygwin -I%HB_INC_INSTALL% %HB_INC_TEMP% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
-   if "%HB_COMPILER%" == "rsxnt"   gcc %1.c -Zwin32 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
-
-   if "%HB_COMPILER%" == "msvc"    cl -TP -W3 %C_USR% -I%HB_INC_INSTALL% %1.c /link /subsystem:CONSOLE /LIBPATH:%HB_LIB_INSTALL% %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib %_HB_GT_LIB%.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
+   if "%HB_COMPILER%" == "bcc32"   bcc32 -O2 -d %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %1.c %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddfpt.lib rddntx.lib rddcdx.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib
+   if "%HB_COMPILER%" == "msvc"    cl -TP -W3 %C_USR% -I%HB_INC_INSTALL% %1.c /link /subsystem:CONSOLE /LIBPATH:%HB_LIB_INSTALL% %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib  gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
+   if "%HB_COMPILER%" == "mingw"   gcc %1.c -o%1.exe %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+   if "%HB_COMPILER%" == "gcc"     gcc %1.c -o%1.exe %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+   if "%HB_COMPILER%" == "rsxnt"   gcc %1.c -Zwin32  %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
 
 :C_WATCOM
 
@@ -198,7 +174,12 @@ if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
    echo LIB hbdebug.lib >> build.tmp
    echo LIB hbvm.lib >> build.tmp
    echo LIB hbrtl.lib >> build.tmp
-   echo LIB %_HB_GT_LIB%.lib >> build.tmp
+   echo LIB gtcgi.lib >> build.tmp
+   echo LIB gtgui.lib >> build.tmp
+   echo LIB gtpca.lib >> build.tmp
+   echo LIB gtstd.lib >> build.tmp
+   echo LIB gtwin.lib >> build.tmp
+   echo LIB gtwvt.lib >> build.tmp
    echo LIB hblang.lib >> build.tmp
    echo LIB hbmacro.lib >> build.tmp
    echo LIB hbpp.lib >> build.tmp
