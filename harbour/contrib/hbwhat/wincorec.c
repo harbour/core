@@ -436,47 +436,47 @@ HB_FUNC( WHT_GETWNDPROC )
    switch ( hb_parni(1) )
    {
       case 10:
-        hb_retptr( __WndProc10 );
+        HB_RETWI( __WndProc10 );
         return ;
 
       case 9:
-        hb_retptr( __WndProc9 );
+        HB_RETWI( __WndProc9 );
         return ;
 
       case 8:
-        hb_retptr( __WndProc8 );
+        HB_RETWI( __WndProc8 );
         return ;
 
       case 7:
-        hb_retptr( __WndProc7 );
+        HB_RETWI( __WndProc7 );
         return ;
 
       case 6:
-        hb_retptr( __WndProc6 );
+        HB_RETWI( __WndProc6 );
         return ;
 
       case 5:
-        hb_retptr( __WndProc5 );
+        HB_RETWI( __WndProc5 );
         return ;
 
       case 4:
-        hb_retptr( __WndProc4 );
+        HB_RETWI( __WndProc4 );
         return ;
 
       case 3:
-        hb_retptr( __WndProc3 );
+        HB_RETWI( __WndProc3 );
         return ;
 
       case 2:
-        hb_retptr( __WndProc2 );
+        HB_RETWI( __WndProc2 );
         return ;
 
       case 1:
-        hb_retptr( __WndProc );
+        HB_RETWI( __WndProc );
         return ;
 
       default:
-        hb_retptr( NULL );
+        HB_RETWI( NULL );
         return ;
 
    }
@@ -497,17 +497,6 @@ BOOL CALLBACK __DlgProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 
    if ( pSymTest )
    {
-      /*
-      hb_vmPushDynSym( pSymTest );
-      hb_vmPushNil();
-      hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
-      hb_vmPushLong( (LONG ) message );
-      hb_vmPushNumInt( ( HB_LONG ) wParam );
-      hb_vmPushNumInt( ( HB_LONG ) lParam );
-      hb_vmDo( 4 );
-      res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
-      */
-
       hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushLong( (LONG ) hWnd );
