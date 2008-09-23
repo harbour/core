@@ -458,7 +458,7 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
             {
                IDispatch *pDisp;/* = NULL;*/
 
-               hb_vmPushDynDym( s_pSym_hObj );
+               hb_vmPushDynSym( s_pSym_hObj );
                hb_vmPush( pItem );
                hb_vmSend( 0 );
 

@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-23 06:51 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbwin/win_ole.c
+    % hb_vmPushDynDym() => hb_vmPushDynSym()
+
 2008-09-23 15:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/codebloc.c
     * updated old and not longer valid comment
