@@ -27,10 +27,6 @@ endif
 # verify if GT drivers exist
 HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
 
-ifeq ($(HB_GT_LIB),)
-   HB_GT_LIB = gtstd
-endif
-
 MAKE = gmake
 
 ARCH_DIR = $(HB_ARCH)

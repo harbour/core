@@ -4,6 +4,14 @@ rem $Id$
 rem
 
 rem ---------------------------------------------------------------
+rem This is a generic template file, if it doesn't fit your own needs
+rem please DON'T MODIFY IT.
+rem
+rem Instead, make a local copy and modify that one, or make a call to
+rem this batch file from your customized one. [vszakats]
+rem ---------------------------------------------------------------
+
+rem ---------------------------------------------------------------
 rem Template to build a final Harbour executable, using Harbour
 rem with the C code generation feature, then calling the proper C
 rem linker/compiler.
@@ -144,8 +152,8 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
       echo LIB rddntx.lib >> build.tmp
       echo LIB rddcdx.lib >> build.tmp
       echo LIB rddfpt.lib >> build.tmp
-      echo LIB hbhsx.lib  >> build.tmp
-      echo LIB hbsix.lib  >> build.tmp
+      echo LIB hbhsx.lib >> build.tmp
+      echo LIB hbsix.lib >> build.tmp
       echo LIB hbcommon.lib >> build.tmp
       echo LIB hbpcre.lib >> build.tmp
       echo LIB hbzlib.lib >> build.tmp

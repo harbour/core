@@ -21,7 +21,7 @@ CFLAGS = -W -Wall -O2
 # can be removed if compiled on a tcp/ip stack >= 4.1 (eComStation,
 # for example), if you do not need it please use HB_OS2_NEW_TCP=yes
 # environment variable.
-ifneq($(HB_OS2_NEW_TCP),yes)
+ifneq ($(HB_OS2_NEW_TCP),yes)
    CFLAGS += -DTCPV40HDRS
 endif
 

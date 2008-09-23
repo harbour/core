@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-24 01:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/gtsys.c
+    * Added HB_WINCE with GTWVT to the set of defaults.
+
+  * config/darwin/global.cf
+  * config/hpux/global.cf
+  * config/linux/global.cf
+  * config/sunos/global.cf
+  * config/bsd/global.cf
+    % Removed unnecessary defaulting to GTSTD.
+
+  * config/os2/gcc.cf
+    ! Fixed minor typo in line 24 / HB_OS2_NEW_TCP.
+
 2008-09-23 16:19 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbwhat
     + /tests
