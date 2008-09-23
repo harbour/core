@@ -315,7 +315,7 @@ HB_FUNC( VWN_TRANSLATEACCELERATOR )
 
 HB_FUNC( VWN_CALLNEXTHOOKEX )
 {
-    CallNextHookEx( (HHOOK) hb_parni(1), (int) hb_parni(2), (WPARAM) hb_parnl(3), (LPARAM) hb_parnl(4) );
+    CallNextHookEx( (HHOOK) hb_parni(1), (int) hb_parni(2), (WPARAM) hb_parnint(3), (LPARAM) hb_parnint(4) );
 }
 
 

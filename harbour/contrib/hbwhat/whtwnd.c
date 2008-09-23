@@ -912,7 +912,7 @@ HB_FUNC( VWN_ENUMPROPSEX )
 
    hb_retni( EnumPropsEx( (HWND) HB_PARWH( 1 )  ,
                           lpEnumFunc            ,
-                          (LPARAM) hb_parnl( 3 )
+                          (LPARAM) hb_parnint( 3 )
                         ) );
 }
 
@@ -1086,7 +1086,7 @@ HB_FUNC( VWN_ENUMCHILDWINDOWS )
 
    hb_retl( EnumChildWindows( (HWND) HB_PARWH( 1 )  ,
                               lpEnumFunc            ,
-                              (LPARAM) hb_parnl( 3 )
+                              (LPARAM) hb_parnint( 3 )
                             ) );
 }
 
@@ -1103,7 +1103,7 @@ HB_FUNC( VWN_ENUMWINDOWS )
 
    // Your code goes here
 
-   hb_retl( EnumWindows( lpEnumFunc, (LPARAM) hb_parnl( 2 ) ) );
+   hb_retl( EnumWindows( lpEnumFunc, (LPARAM) hb_parnint( 2 ) ) );
 }
 
 */

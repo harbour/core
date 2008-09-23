@@ -168,7 +168,7 @@ HB_FUNC( VWN_TABCTRL_DELETEALLITEMS )
 
 HB_FUNC( VWN_TABCTRL_DELETEITEM )
 {
-   hb_retl(TabCtrl_DeleteItem((HWND) HB_PARWH(1), (WPARAM) hb_parni(2)));
+   hb_retl(TabCtrl_DeleteItem((HWND) HB_PARWH(1), (WPARAM) hb_parnint(2)));
 }
 
 //---------------------------------------------------------------------------//

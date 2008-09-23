@@ -127,7 +127,7 @@ HB_FUNC( VWN_MENUHELP )
 
      MenuHelp(
                (UINT) hb_parni(1)  ,
-               (WPARAM) hb_parni(2),
+               (WPARAM) hb_parnint(2),
                (LPARAM)hb_parl(3)  ,
                (HMENU) HB_PARWH(4) ,
                (HINSTANCE) HB_PARWH(5),
@@ -215,7 +215,7 @@ HB_FUNC( VWN_UPDATEPROGRESSBAR )
 
 HB_FUNC( VWN_SETPROGRESSBAR )
 {
-   SendMessage( (HWND) HB_PARWH(1), PBM_SETPOS, (WPARAM) hb_parni(2), 0 );
+   SendMessage( (HWND) HB_PARWH(1), PBM_SETPOS, (WPARAM) hb_parnint(2), 0 );
 }
 
 
@@ -280,7 +280,7 @@ HB_FUNC( VWN_INITLISTVIEW )
 
    if ( hb_parni(8) != 0)
    {
-      //SendMessage(hbutton,(UINT)WM_SETFONT,(WPARAM) PrepareFont ( hb_parcx(7) , (LPARAM) hb_parni(8)) , 1 );
+      //SendMessage(hbutton,(UINT)WM_SETFONT,(WPARAM) PrepareFont ( hb_parcx(7) , (LPARAM) hb_parnint(8)) , 1 );
    }
 
    HB_RETWH( hbutton );
@@ -358,7 +358,7 @@ HB_FUNC( VWN_ADDLISTVIEWITEMS )
 //------------------------------------------------------------------------------------------
 HB_FUNC( VWN_LISTVIEW_SETCURSEL )
 {
-   ListView_SetItemState((HWND) HB_PARWH (1), (WPARAM) hb_parni(2)-1 ,LVIS_FOCUSED | LVIS_SELECTED , LVIS_FOCUSED | LVIS_SELECTED );
+   ListView_SetItemState((HWND) HB_PARWH (1), (WPARAM) hb_parnint(2)-1 ,LVIS_FOCUSED | LVIS_SELECTED , LVIS_FOCUSED | LVIS_SELECTED );
 }
 //------------------------------------------------------------------------------------------
 HB_FUNC( VWN_C_SETFOCUS )
@@ -368,7 +368,7 @@ HB_FUNC( VWN_C_SETFOCUS )
 //------------------------------------------------------------------------------------------
 HB_FUNC( VWN_LISTVIEWDELETESTRING )
 {
-   SendMessage( (HWND) HB_PARWH( 1 ),LVM_DELETEITEM , (WPARAM) hb_parni(2)-1, 0);
+   SendMessage( (HWND) HB_PARWH( 1 ),LVM_DELETEITEM , (WPARAM) hb_parnint(2)-1, 0);
 }
 //------------------------------------------------------------------------------------------
 HB_FUNC( VWN_LISTVIEWRESET )

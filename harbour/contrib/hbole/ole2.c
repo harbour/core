@@ -242,7 +242,7 @@ static void GetParams( DISPPARAMS * dParams )
                   pData = hb_dynsymFindName( "hObj" );
                   if( pData )
                   {
-                     hb_vmPushSymbol( hb_dynsymSymbol( pData ) );
+                     hb_vmPushDynSym( pData );
                      hb_vmPush( uParam );
                      hb_vmDo( 0 );
 #if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)

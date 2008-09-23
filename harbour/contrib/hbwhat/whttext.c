@@ -401,7 +401,7 @@ HB_FUNC( VWN_GRAYSTRING )
    hb_retl( GrayString( (HDC) HB_PARWH( 1 )   ,
                         (HBRUSH) HB_PARWH( 2 ),
                         lpOutputFunc          ,
-                        (LPARAM) hb_parnl( 4 ),
+                        (LPARAM) hb_parnint( 4 ),
                         hb_parni( 5 )         ,
                         hb_parni( 6 )         ,
                         hb_parni( 7 )         ,

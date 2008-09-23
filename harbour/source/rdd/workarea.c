@@ -2140,7 +2140,7 @@ HB_EXPORT int hb_rddRegister( const char * szDriver, USHORT uiType )
    pRddNewNode->rddID = s_uiRddCount;
 
    /* Call <szDriver>_GETFUNCTABLE() */
-   hb_vmPushSymbol( hb_dynsymSymbol( pGetFuncTable ) );
+   hb_vmPushDynSym( pGetFuncTable );
    hb_vmPushNil();
    hb_vmPushPointer( ( void * ) &uiFunctions );
    hb_vmPushPointer( ( void * ) &pRddNewNode->pTable );

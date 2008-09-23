@@ -76,8 +76,8 @@ HB_FUNC( VWN_POSTMESSAGE )
 
 
    hb_retnl( (LONG) PostMessage( (HWND) HB_PARWH( 1 ), (UINT) hb_parni( 2 ),
-                                (ISNIL(3) ? 0 : (WPARAM) hb_parnl( 3 ))   ,
-                                (ISNIL(4) ? 0 : ( ISBYREF(4)? (LPARAM) (LPSTR) cText : ( ISCHAR(4) ? (LPARAM)(LPSTR) hb_parcx(4) : (LPARAM) hb_parnl( 4 ))))
+                                (ISNIL(3) ? 0 : (WPARAM) hb_parnint( 3 ))   ,
+                                (ISNIL(4) ? 0 : ( ISBYREF(4)? (LPARAM) (LPSTR) cText : ( ISCHAR(4) ? (LPARAM)(LPSTR) hb_parcx(4) : (LPARAM) hb_parnint( 4 ))))
                                )
             );
 
@@ -104,8 +104,8 @@ HB_FUNC( VWN_SENDMESSAGE )
    }
 
    hb_retnl( (ULONG) SendMessage( (HWND) HB_PARWH( 1 ), (UINT) hb_parni( 2 ),
-                                  (ISNIL(3) ? 0 : (WPARAM) hb_parnl( 3 ))   ,
-                                  (ISNIL(4) ? 0 : ( ISBYREF(4)? (LPARAM) (LPSTR) cText : ( ISCHAR(4) ? (LPARAM)(LPSTR) hb_parcx(4) : (LPARAM) hb_parnl( 4 ))))
+                                  (ISNIL(3) ? 0 : (WPARAM) hb_parnint( 3 ))   ,
+                                  (ISNIL(4) ? 0 : ( ISBYREF(4)? (LPARAM) (LPSTR) cText : ( ISCHAR(4) ? (LPARAM)(LPSTR) hb_parcx(4) : (LPARAM) hb_parnint( 4 ))))
                                 )
            );
 
@@ -139,8 +139,8 @@ HB_FUNC( VWN_SENDDLGITEMMESSAGE )
    hb_retnl( (LONG) SendDlgItemMessage( (HWND) HB_PARWH( 1 ) ,
                                         (int)  hb_parni( 2 ) ,
                                         (UINT) hb_parni( 3 ) ,
-                                        (ISNIL(4) ? 0 : (WPARAM) hb_parnl( 4 ))   ,
-                                        (cText ? (LPARAM) cText : (LPARAM) hb_parnl( 5 ))
+                                        (ISNIL(4) ? 0 : (WPARAM) hb_parnint( 4 ))   ,
+                                        (cText ? (LPARAM) cText : (LPARAM) hb_parnint( 5 ))
                                       )
             );
 
@@ -160,8 +160,8 @@ HB_FUNC( VWN_SENDDLGITEMMESSAGE )
    hb_retnl( SendDlgItemMessage( (HWND) HB_PARWH(1) ,     // handle of dialog box
                                 (int)   hb_parni(2) ,     // identifier of control
                                 (UINT)  hb_parni(3) ,     // message to send
-                                (ISNIL(4) ? 0 : (WPARAM) hb_parni(4) ) ,  // first message parameter
-                                (ISNIL(5) ? 0 : (hb_parinfo(5)==HB_IT_STRING ? (LPARAM) (LPSTR) hb_parcx(5) : (LPARAM) hb_parnl( 5 )) )   // second message parameter
+                                (ISNIL(4) ? 0 : (WPARAM) hb_parnint(4) ) ,  // first message parameter
+                                (ISNIL(5) ? 0 : (hb_parinfo(5)==HB_IT_STRING ? (LPARAM) (LPSTR) hb_parcx(5) : (LPARAM) hb_parnint( 5 )) )   // second message parameter
                               ));
 
 */
@@ -263,7 +263,7 @@ HB_FUNC( VWN_GETMESSAGEEXTRAINFO )
 
 HB_FUNC( VWN_SETMESSAGEEXTRAINFO )
 {
-   hb_retnl( (LONG) SetMessageExtraInfo( (LPARAM) hb_parnl( 1 ) ) );
+   hb_retnl( (LONG) SetMessageExtraInfo( (LPARAM) hb_parnint( 1 ) ) );
 }
 
 
@@ -280,8 +280,8 @@ HB_FUNC( VWN_SENDMESSAGETIMEOUT )
 
    hb_retnl( (LONG) SendMessageTimeout( (HWND) HB_PARWH( 1 )  ,
                                         (UINT) hb_parni( 2 )  ,
-                                        (WPARAM) hb_parnl( 3 ),
-                                        (LPARAM) hb_parnl( 4 ),
+                                        (WPARAM) hb_parnint( 3 ),
+                                        (LPARAM) hb_parnint( 4 ),
                                         (UINT) hb_parni( 5 )  ,
                                         (UINT) hb_parni( 6 )  ,
                                         lpdwResult
@@ -298,8 +298,8 @@ HB_FUNC( VWN_SENDNOTIFYMESSAGE )
 {
    hb_retl( SendNotifyMessage( (HWND) HB_PARWH( 1 )  ,
                                (UINT) hb_parni( 2 )  ,
-                               (WPARAM) hb_parnl( 3 ),
-                               (LPARAM) hb_parnl( 4 )
+                               (WPARAM) hb_parnint( 3 ),
+                               (LPARAM) hb_parnint( 4 )
                              ) );
 }
 
@@ -311,8 +311,8 @@ HB_FUNC( VWN_POSTTHREADMESSAGE )
 {
    hb_retl( PostThreadMessage( (DWORD) hb_parnl( 1 ) ,
                                (UINT) hb_parni( 2 )  ,
-                               (WPARAM) hb_parnl( 3 ),
-                               (LPARAM) hb_parnl( 4 )
+                               (WPARAM) hb_parnint( 3 ),
+                               (LPARAM) hb_parnint( 4 )
                              ) );
 }
 
@@ -409,9 +409,9 @@ HB_FUNC( VWN_SENDMESSAGECALLBACK )
 
    hb_retl( SendMessageCallback( (HWND) HB_PARWH( 1 )  ,
                                  (UINT) hb_parni( 2 )  ,
-                                 (WPARAM) hb_parnl( 3 ),
-                                 (LPARAM) hb_parnl( 4 ),
-                                 lpResultCallBack      ,
+                                 (WPARAM) hb_parnint( 3 ),
+                                 (LPARAM) hb_parnint( 4 ),
+                                 lpResultCallBack ,
                                  dwData
                                ) );
 }
@@ -432,8 +432,8 @@ HB_FUNC( VWN_BROADCASTSYSTEMMESSAGE )
    hb_retnl( (LONG) BroadcastSystemMessage( (DWORD) hb_parnl( 1 ) ,
                                             lpdWord               ,
                                             (UINT) hb_parni( 3 )  ,
-                                            (WPARAM) hb_parnl( 4 ),
-                                            (LPARAM) hb_parnl( 5 )
+                                            (WPARAM) hb_parnint( 4 ),
+                                            (LPARAM) hb_parnint( 5 )
                                           ) );
 }
 
@@ -453,8 +453,8 @@ HB_FUNC( VWN_BROADCASTSYSTEMMESSAGE )
    hb_retnl( (LONG) BroadcastSystemMessage( (DWORD) hb_parnl( 1 ) ,
                                             lpdWord               ,
                                             (UINT) hb_parni( 3 )  ,
-                                            (WPARAM) hb_parnl( 4 ),
-                                            (LPARAM) hb_parnl( 5 )
+                                            (WPARAM) hb_parnint( 4 ),
+                                            (LPARAM) hb_parnint( 5 )
                                           ) );
 }
 

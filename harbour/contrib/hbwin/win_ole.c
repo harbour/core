@@ -458,7 +458,7 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
             {
                IDispatch *pDisp;/* = NULL;*/
 
-               hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
+               hb_vmPushDynDym( s_pSym_hObj );
                hb_vmPush( pItem );
                hb_vmSend( 0 );
 
@@ -484,14 +484,14 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
             else if( hb_clsIsParent( hb_objGetClass( pItem ), "VTARRAYWRAPPER" ) )
             {
                /* vt := oVTArray:vt */
-               hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_vt ) );
+               hb_vmPushDynSym( s_pSym_vt );
                hb_vmPush( pItem );
                hb_vmSend( 0 );
 
                vt = (VARTYPE) hb_parnl(-1);
 
                /* aArray := oVTArray:Value */
-               hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_Value ) );
+               hb_vmPushDynSym( s_pSym_Value );
                hb_vmPush( pItem );
                hb_vmSend( 0 );
 
@@ -538,14 +538,14 @@ ItemToVariant_StringArray:
             else if( hb_clsIsParent( hb_objGetClass( pItem ), "VTWRAPPER" ) )
             {
                /* vt := oVT:vt */
-               hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_vt ) );
+               hb_vmPushDynSym( s_pSym_vt );
                hb_vmPush( pItem );
                hb_vmSend( 0 );
 
                pVariant->n1.n2.vt = (VARTYPE) hb_parnl(-1);
 
                /* value := oVT:value */
-               hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_Value ) );
+               hb_vmPushDynSym( s_pSym_Value );
                hb_vmPush( pItem );
                hb_vmSend( 0 );
 
@@ -743,7 +743,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
 
                  if( s_pSym_TOleAuto )
                  {
-                    hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_TOleAuto ) );
+                    hb_vmPushDynSym( s_pSym_TOleAuto );
                     hb_vmPushNil();
                     hb_vmDo( 0 );
 
@@ -756,7 +756,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
                     /*pDisp->lpVtbl->AddRef( pDisp );*/
 
                     /*TOleAuto():New( nDispatch )*/
-                    hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_New ) );
+                    hb_vmPushDynSym( s_pSym_New );
                     hb_itemPushForward( s_pOleAuto );
                     hb_vmPushLong( ( LONG ) pDisp );
                     hb_vmSend( 1 );
@@ -969,7 +969,7 @@ static PHB_ITEM SafeArrayToArray( SAFEARRAY * parray, UINT iDim, long * rgIndice
    {
       PHB_ITEM pVT = hb_itemPutNL( hb_itemNew( NULL ), ( LONG ) vt );
 
-      hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_VTArrayWrapper ) );
+      hb_vmPushDynSym( s_pSym_VTArrayWrapper );
       hb_vmPushNil();
       hb_itemPushForward( pVT );
       hb_itemPushForward( pArray );
@@ -1056,7 +1056,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
                PHB_ITEM pVT = hb_itemPutNL( hb_itemNew( NULL ), ( LONG ) pVariant->n1.n2.vt );
                PHB_ITEM pUnknown = hb_itemPutPtr( hb_itemNew( NULL ), ( void * ) pUnk );
 
-               hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_VTWrapper ) );
+               hb_vmPushDynSym( s_pSym_VTWrapper );
                hb_vmPushNil();
                hb_itemPushForward( pVT );
                hb_itemPushForward( pUnknown );
@@ -1074,7 +1074,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
 
          pOleAuto = hb_itemNew( NULL );
 
-         hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_TOleAuto ) );
+         hb_vmPushDynSym( s_pSym_TOleAuto );
          hb_vmPushNil();
          hb_vmDo( 0 );
 
@@ -1086,7 +1086,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
          if( hb_itemType( pOleAuto ) )
          {
             /*TOleAuto():New( nDispatch )*/
-            hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_New ) );
+            hb_vmPushDynSym( s_pSym_New );
             hb_itemPushForward( pOleAuto );
             hb_vmPushLong( ( LONG ) pDisp );
             hb_vmSend( 1 );
@@ -1609,7 +1609,7 @@ static void OleThrowError( void )
    char *sDescription;
    BOOL fFree = FALSE;
 
-   hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_cClassName ) );
+   hb_vmPushDynSym( s_pSym_cClassName );
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
 
@@ -1641,7 +1641,7 @@ HB_FUNC( TOLEAUTO_OLEVALUE )
    {
       IDispatch *pDisp;
 
-      hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
+      hb_vmPushDynSym( s_pSym_hObj );
       hb_vmPush( hb_stackSelfItem() );
       hb_vmSend( 0 );
 
@@ -1668,7 +1668,7 @@ HB_FUNC( TOLEAUTO__OLEVALUE )
       DISPPARAMS DispParams;
       PHB_ITEM *aPrgParams;
 
-      hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
+      hb_vmPushDynSym( s_pSym_hObj );
       hb_vmPush( hb_stackSelfItem() );
       hb_vmSend( 0 );
 
@@ -1696,7 +1696,7 @@ HB_FUNC( TOLEAUTO_OLENEWENUMERATOR ) /* ( hOleObject, szMethodName, uParams... )
 {
    IDispatch *pDisp;
 
-   hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
+   hb_vmPushDynSym( s_pSym_hObj );
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
 
@@ -1779,7 +1779,7 @@ HB_FUNC( TOLEAUTO_INVOKE )
    DISPID DispID;
    DISPPARAMS DispParams;
 
-   hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
+   hb_vmPushDynSym( s_pSym_hObj );
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
 
@@ -1804,7 +1804,7 @@ HB_FUNC( TOLEAUTO_SET )
    DISPID DispID;
    DISPPARAMS DispParams;
 
-   hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
+   hb_vmPushDynSym( s_pSym_hObj );
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
    pDisp = ( IDispatch * ) hb_parnl( -1 );
@@ -1828,7 +1828,7 @@ HB_FUNC( TOLEAUTO_GET )
    DISPID DispID;
    DISPPARAMS DispParams;
 
-   hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
+   hb_vmPushDynSym( s_pSym_hObj );
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
    pDisp = ( IDispatch * ) hb_parnl( -1 );
@@ -1855,7 +1855,7 @@ HB_FUNC( TOLEAUTO_ONERROR )
 
    /*HB_TRACE(HB_TR_INFO, ("Class: '%s' Message: '%s', Params: %i Arg1: %i\n", hb_objGetClsName( hb_stackSelfItem() ), hb_itemGetSymbol( hb_stackBaseItem() )->szName, hb_pcount(), hb_parinfo(1)));*/
 
-   hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
+   hb_vmPushDynSym( s_pSym_hObj );
    hb_vmPush( hb_stackSelfItem() );
    hb_vmSend( 0 );
    pDisp = ( IDispatch * ) hb_parnl( -1 );
@@ -1913,7 +1913,7 @@ OleGetID:
 
          hb_itemForwardValue( pReturn, hb_stackReturnItem() );
 
-         hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_cClassName ) );
+         hb_vmPushDynSym( s_pSym_cClassName );
          hb_vmPush( hb_stackSelfItem() );
          hb_vmSend( 0 );
 
@@ -1930,7 +1930,7 @@ OleGetID:
 
          hb_itemPutCLPtr( pOleClassName, sOleClassName, iClassNameLen + 1 + iMsgNameLen );
 
-         hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_cClassName ) );
+         hb_vmPushDynSym( s_pSym_cClassName );
          hb_vmPush( pReturn );
          hb_itemPushForward( pOleClassName );
          hb_vmSend( 1 );

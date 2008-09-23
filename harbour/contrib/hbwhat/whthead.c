@@ -227,7 +227,7 @@ HB_FUNC( VWN_HEADER_GETITEMRECT )
    RECT rc ;
    PHB_ITEM aRc ;
 
-   if ( Header_GetItemRect((HWND) HB_PARWH(1), (WPARAM) hb_parni(2), &rc ) )
+   if ( Header_GetItemRect((HWND) HB_PARWH(1), (WPARAM) hb_parnint(2), &rc ) )
    {
       aRc = Rect2Array( &rc );
       hb_itemReturn( aRc );
@@ -256,7 +256,7 @@ HB_FUNC( VWN_HEADER_GETIMAGELIST )
 HB_FUNC( VWN_HEADER_SETIMAGELIST )
 {
 
-   HB_RETWH( Header_SetImageList((HWND) HB_PARWH(1), (LPARAM) hb_parnl(2) ) );
+   HB_RETWH( Header_SetImageList((HWND) HB_PARWH(1), (LPARAM) hb_parnint(2) ) );
 
 }
 
@@ -282,7 +282,7 @@ HB_FUNC( VWN_HEADER_ORDERTOINDEX )
 HB_FUNC( VWN_HEADER_SETHOTDIVIDER )
 {
 
-   hb_retni( Header_SetHotDivider((HWND) HB_PARWH(1), hb_parl(2), (LPARAM) hb_parnl(3)));
+   hb_retni( Header_SetHotDivider((HWND) HB_PARWH(1), hb_parl(2), (LPARAM) hb_parnint(3)));
 
 }
 

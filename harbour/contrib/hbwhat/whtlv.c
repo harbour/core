@@ -51,13 +51,14 @@ HB_FUNC( VWN_LISTVIEW_GETNEXTITEM )
 
 HB_FUNC( VWN_LISTVIEWNOTIFY )
 {
-   LPARAM lParam = (LPARAM) hb_parnl(2);
+   static PHB_DYNS pSymTest = 0 ;
+
+   LPARAM lParam = (LPARAM) hb_parnint(2);
    LPNMHDR lpnmh = (LPNMHDR) lParam;
    LPCSTR cRet;
    PHB_ITEM pArray;
    PHB_ITEM DArray;
    LPSTR cAlias;
-   static PHB_DYNS pSymTest = 0 ;
    switch(lpnmh->code)
    {
    case LVN_GETDISPINFO:
@@ -75,7 +76,7 @@ HB_FUNC( VWN_LISTVIEWNOTIFY )
                pArray = hb_param( 3, HB_IT_ARRAY );
                DArray = hb_param( 4, HB_IT_ARRAY );
                cAlias = hb_parcx(5);
-               hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) ); //pSymTest->pSymbol );
+               hb_vmPush( pSymTest ); //pSymTest->pSymbol );
                hb_vmPushNil();
                hb_vmPushLong( (LONG) lpdi->item.iItem );
                hb_vmPushLong( (LONG) lpdi->item.iSubItem );
@@ -100,7 +101,7 @@ HB_FUNC( VWN_LISTVIEWNOTIFY )
                pArray = hb_param( 3, HB_IT_ARRAY );
                DArray = hb_param( 4, HB_IT_ARRAY );
                cAlias = hb_parcx(5);
-               hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) ); //pSymTest->pSymbol );
+               hb_vmPush( pSymTest ); //pSymTest->pSymbol );
                hb_vmPushNil();
                hb_vmPushLong( (LONG) lpdi->item.iItem );
                hb_vmPushLong( (LONG) lpdi->item.iSubItem );

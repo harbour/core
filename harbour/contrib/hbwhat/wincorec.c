@@ -154,7 +154,7 @@ HB_FUNC( WHT__CREATEMDIWINDOW )
    int    nHeight    = (ISNIL(7)  ? ( int ) CW_USEDEFAULT : hb_parni(7));
    HWND   hWndParent = (ISNIL(8)  ? (HWND) NULL : (HWND) HB_PARWH(8));
    HANDLE hInstance  = (ISNIL(9)  ? GetModuleHandle( NULL ) : (HANDLE) HB_PARWH(9));
-   LPARAM lParam     = (ISNIL(10) ? 0 : (LPARAM) hb_parnl(10));
+   LPARAM lParam     = (ISNIL(10) ? 0 : (LPARAM) hb_parnint(10));
 
 #if defined(__DMC__)
    HWND hWnd = CreateMDIWindow( ( LPSTR ) cClass, ( LPSTR ) cTitle, nStyle,
@@ -179,7 +179,7 @@ LRESULT CALLBACK __WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
    if ( pSymTest )
    {
-      hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
+      hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
@@ -205,7 +205,7 @@ LRESULT CALLBACK __WndProc2( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
    if ( pSymTest )
    {
-      hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
+      hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
@@ -231,7 +231,7 @@ LRESULT CALLBACK __WndProc3( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
    if ( pSymTest )
    {
-      hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
+      hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
@@ -257,7 +257,7 @@ LRESULT CALLBACK __WndProc4( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
    if ( pSymTest )
    {
-      hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
+      hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
@@ -283,7 +283,7 @@ LRESULT CALLBACK __WndProc5( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
    if ( pSymTest )
    {
-      hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
+      hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
@@ -309,7 +309,7 @@ LRESULT CALLBACK __WndProc6( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
    if ( pSymTest )
    {
-      hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
+      hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
@@ -335,7 +335,7 @@ LRESULT CALLBACK __WndProc7( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
    if ( pSymTest )
    {
-      hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
+      hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
@@ -361,7 +361,7 @@ LRESULT CALLBACK __WndProc8( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
    if ( pSymTest )
    {
-      hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
+      hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
@@ -387,7 +387,7 @@ LRESULT CALLBACK __WndProc9( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
    if ( pSymTest )
    {
-      hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
+      hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
@@ -413,7 +413,7 @@ LRESULT CALLBACK __WndProc10( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 
    if ( pSymTest )
    {
-      hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
+      hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
@@ -484,8 +484,7 @@ HB_FUNC( WHT_GETWNDPROC )
 //----------------------------------------------------------------------//
 HB_FUNC( WHT__GETDLGPROC )
 {
-   //hb_retptr( __DlgProc );
-   hb_retnl( ( ULONG ) __DlgProc );
+   HB_RETWI( __DlgProc );
 }
 //----------------------------------------------------------------------//
 BOOL CALLBACK __DlgProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
@@ -499,7 +498,7 @@ BOOL CALLBACK __DlgProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
    if ( pSymTest )
    {
       /*
-      hb_vmPushSymbol( hb_itemGetSymbol( pSymTest ) );
+      hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
       hb_vmPushLong( (LONG ) message );
@@ -509,7 +508,7 @@ BOOL CALLBACK __DlgProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
       res = hb_itemGetNL( hb_param( -1, HB_IT_ANY ) );
       */
 
-      hb_vmPushSymbol( hb_dynsymSymbol( pSymTest ) );
+      hb_vmPushDynSym( pSymTest );
       hb_vmPushNil();
       hb_vmPushLong( (LONG ) hWnd );
       hb_vmPushLong( (LONG ) message );

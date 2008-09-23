@@ -224,8 +224,8 @@ HB_FUNC( SENDMESSAGE )
    hb_retnl( (LONG) SendMessage(
                        (HWND) hb_parptr( 1 ),   /* handle of destination window */
                        (UINT) hb_parni( 2 ),    /* message to send */
-                       (WPARAM) hb_parnl( 3 ),  /* first message parameter */
-                       (LPARAM) hb_parnl( 4 )   /* second message parameter */
+                       (WPARAM) hb_parnint( 3 ),  /* first message parameter */
+                       (LPARAM) hb_parnint( 4 )   /* second message parameter */
                      ) );
 }
 
@@ -239,12 +239,12 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
    if( pDynSym )
    {
-      hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
+      hb_vmPushDynSym( pDynSym );
       hb_vmPushNil();
       hb_vmPushPointer( hWnd );
       hb_vmPushLong( message );
-      hb_vmPushLong( wParam );
-      hb_vmPushLong( lParam );
+      hb_vmPushNumInt( ( HB_LONG ) wParam );
+      hb_vmPushNumInt( ( HB_LONG ) lParam );
       hb_vmDo( 4 );
 
       if( hb_arrayGetType( hb_stackReturnItem(), 1 ) == HB_IT_NIL )

@@ -150,7 +150,7 @@ HB_FUNC( VWN_GETLBITEMTEXT )  // GETDLGITMTEXT
    SendMessage(
                   (HWND) HB_PARWH( 1 ),    // handle of dialog box
                   LB_GETTEXT,
-                  (WPARAM) hb_parni( 2 ), // item number
+                  (WPARAM) hb_parnint( 2 ), // item number
                   (LPARAM) (LPCSTR) cText           // address of buffer for text
               );
 

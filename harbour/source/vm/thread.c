@@ -463,7 +463,7 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
       }
       else if( HB_IS_SYMBOL( pStart ) )
       {
-         hb_vmPushSymbol( hb_itemGetSymbol( pStart ) );
+         hb_vmPush( pStart );
          hb_vmPushNil();
       }
       else if( HB_IS_STRING( pStart ) )

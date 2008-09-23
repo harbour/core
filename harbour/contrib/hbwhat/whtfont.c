@@ -269,7 +269,7 @@ int CALLBACK GenericCallblockProc( LONG param1, LONG param2, int wParam, LPARAM 
 
    if ( pItem )
    {
-      hb_vmPushSymbol( hb_itemGetSymbol( s_pEval ) );//s_pEval->pSymbol );
+      hb_vmPush(s_pEval);//s_pEval->pSymbol;
       hb_vmPush(pItem);
 
       hb_vmPushLong( (LONG ) param1 );

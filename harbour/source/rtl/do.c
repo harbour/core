@@ -77,7 +77,7 @@ HB_FUNC( DO )
 
          if( pDynSym )
          {
-            hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
+            hb_vmPushDynSym( pDynSym );
             hb_vmPushNil();
          }
          else
@@ -93,7 +93,7 @@ HB_FUNC( DO )
       }
       else if( HB_IS_SYMBOL( pItem ) )
       {
-         hb_vmPushSymbol( hb_itemGetSymbol( pItem ) );
+         hb_vmPush( pItem );
          hb_vmPushNil();
       }
       else

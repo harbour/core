@@ -105,7 +105,7 @@ static BOOL hb_usrPushMethod( PHB_ITEM pMethods, USHORT uiMethod )
    {
       if( HB_IS_SYMBOL( pItem ) )
       {
-         hb_vmPushSymbol( hb_itemGetSymbol( pItem ) );
+         hb_vmPush( pItem );
          hb_vmPushNil();
          return TRUE;
       }
