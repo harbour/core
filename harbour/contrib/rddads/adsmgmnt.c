@@ -79,6 +79,12 @@ HB_FUNC( ADSMGGETHANDLE )
    hb_retnl( ( long ) s_hMgmtHandle );
 }
 
+HB_FUNC( ADSMGSETHANDLE )
+{
+   s_hMgmtHandle = hb_parnl( 1 );
+   hb_retl( 1 );
+}
+
 HB_FUNC( ADSMGKILLUSER )
 {
    hb_retnl( ( UNSIGNED16 ) AdsMgKillUser( s_hMgmtHandle,
@@ -383,22 +389,22 @@ HB_FUNC( ADSMGGETUSERNAMES )
          PHB_ITEM pArrayItm = hb_arrayGetItemPtr( pArray, ulCount );
          hb_arrayNew( pArrayItm, 6 );
 
-         hb_arraySetC(  pArrayItm, 1, ( char * ) pastUserInfo[ ulCount ].aucUserName );
-         hb_arraySetNL( pArrayItm, 2,            pastUserInfo[ ulCount ].usConnNumber );
+         hb_arraySetC(  pArrayItm, 1, ( char * ) pastUserInfo[ ulCount - 1 ].aucUserName );
+         hb_arraySetNL( pArrayItm, 2,            pastUserInfo[ ulCount - 1 ].usConnNumber );
 #if ADS_LIB_VERSION >= 600
-         hb_arraySetC(  pArrayItm, 3, ( char * ) pastUserInfo[ ulCount ].aucAddress );
+         hb_arraySetC(  pArrayItm, 3, ( char * ) pastUserInfo[ ulCount - 1 ].aucAddress );
 #else
          hb_arraySetC(  pArrayItm, 3, NULL );
 #endif
 #if ADS_LIB_VERSION >= 800
-         hb_arraySetC(  pArrayItm, 4, ( char * ) pastUserInfo[ ulCount ].aucAuthUserName );
-         hb_arraySetC(  pArrayItm, 5, ( char * ) pastUserInfo[ ulCount ].aucOSUserLoginName );
+         hb_arraySetC(  pArrayItm, 4, ( char * ) pastUserInfo[ ulCount - 1 ].aucAuthUserName );
+         hb_arraySetC(  pArrayItm, 5, ( char * ) pastUserInfo[ ulCount - 1 ].aucOSUserLoginName );
 #else
          hb_arraySetC(  pArrayItm, 4, NULL );
          hb_arraySetC(  pArrayItm, 5, NULL );
 #endif
 #if ADS_LIB_VERSION >= 810
-         hb_arraySetC(  pArrayItm, 6, ( char * ) pastUserInfo[ ulCount ].aucTSAddress );
+         hb_arraySetC(  pArrayItm, 6, ( char * ) pastUserInfo[ ulCount - 1 ].aucTSAddress );
 #else
          hb_arraySetC(  pArrayItm, 6, NULL );
 #endif
