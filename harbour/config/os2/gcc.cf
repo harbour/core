@@ -16,10 +16,14 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -W -Wall -O2
 
 # 26/03/2004 - <maurilio.longo@libero.it>
-# added -DTCPV40HDRS to compile with GCC 3.2.2 on OS/2 v4.0 with mixed 16/32 bit tcp/ip stack
-# to be removed if compiled on a tcp/ip stack >= 4.1 (eComStation, for example)
-# disabled, if you need it please use: C_USR=-DTCPV40HDRS
-# CFLAGS += -DTCPV40HDRS
+# added -DTCPV40HDRS to compile with GCC 3.2.2 on OS/2 v4.0 with mixed
+# 16/32 bit tcp/ip stack
+# can be removed if compiled on a tcp/ip stack >= 4.1 (eComStation,
+# for example), if you do not need it please use HB_OS2_NEW_TCP=yes
+# environment variable.
+ifneq($(HB_OS2_NEW_TCP),yes)
+   CFLAGS += -DTCPV40HDRS
+endif
 
 LD = gcc
 LDFLAGS =
