@@ -298,7 +298,7 @@ STATIC PROCEDURE HB_DotExec( cCommand )
 
 RETURN
 
-FUNCTION HBRawVersion()
+STATIC FUNCTION HBRawVersion()
    RETURN StrTran( Version(), "Harbour ", "" )
 
 /* ********************************************************************** */

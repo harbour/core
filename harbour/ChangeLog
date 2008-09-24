@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-24 18:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbdoc/hbdoc.prg
+  * utils/hbmake/hbmake.prg
+  * utils/hbrun/hbrun.prg
+    % One function made STATIC.
+
 2008-09-24 17:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbrun/hbrun.prg
     + Added REQUESTs for GTSTD, GTCGI, GTPCA (these GTs are 

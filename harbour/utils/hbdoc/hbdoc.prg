@@ -1905,5 +1905,5 @@ FUNCTION TeeFiles()
 
    RETURN NIL
 
-FUNCTION HBRawVersion()
+STATIC FUNCTION HBRawVersion()
    RETURN StrTran( Version(), "Harbour ", "" )

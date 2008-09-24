@@ -6021,5 +6021,5 @@ FUNCTION CmdLineParam( cFile, cCmdParams )
 
    RETURN xReturn
 
-FUNCTION HBRawVersion()
+STATIC FUNCTION HBRawVersion()
    RETURN StrTran( Version(), "Harbour ", "" )
