@@ -59,9 +59,7 @@
 
 #include "hbgtcore.h"
 
-#if defined(HB_GT_DEFAULT)
-   HB_GT_REQUEST( HB_GT_DEFAULT )
-#elif defined(HB_GT_LIB)
+#if defined(HB_GT_LIB)
    HB_GT_REQUEST( HB_GT_LIB )
 #elif defined(HB_WINCE)
    HB_GT_REQUEST( WVT )

@@ -30,11 +30,8 @@
 #       PRG_USR           - Extra Harbour compiler options
 #       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #
-#       HB_GT_DEFAULT     - The default GT driver, Choose between :
-#                           gtstd (default),gtcgi,gtpca,gttrm,gtcrs,gtsln,gtxwc
-#       HB_GT_LIB         - Set if you want to override the default GT driver
-#                           (search for HB_GT_LIBS for a list of values)
-#
+#       HB_GT_LIB         - The default GT driver, choose between:
+#                           gttrm (default), gtcgi, gtpca, gtcrs, gtsln, gtxwc
 #       HB_GPM_MOUSE      - If set to yes enables using GPM mouse driver on console
 #       HB_WITHOUT_GTSLN  - If set to yes causes to not build gtsln
 #                           (if you don't have slang installed)
@@ -177,10 +174,6 @@ endif
 #-----------
 ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS         := -g $(CFLAGS)
-endif
-#-----------
-ifneq ($(HB_GT_DEFAULT),)
-CFLAGS         += -DHB_GT_DEFAULT=$(HB_GT_DEFAULT:gt%=%)
 endif
 #-----------
 ifneq ($(HB_GT_LIB),)

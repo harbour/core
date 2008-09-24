@@ -49,12 +49,8 @@ LDFLAGS = $(LINKPATHS) kernel32.lib user32.lib gdi32.lib wsock32.lib ws2_32.lib 
 LDFLAGS += winspool.lib ole32.lib oleaut32.lib uuid.lib \
            comctl32.lib mapi32.lib mpr.lib
 
-ifeq ($(HB_GT_DEFAULT),gtgui)
-LDFLAGS += /SUBSYSTEM:WINDOWS
-else
 ifeq ($(HB_GT_LIB),gtgui)
 LDFLAGS += /SUBSYSTEM:WINDOWS
-endif
 endif
 
 AR = xlib.exe

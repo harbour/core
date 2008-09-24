@@ -30,10 +30,8 @@
 #       PRG_USR           - Extra Harbour compiler options
 #       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #
-#       HB_GT_DEFAULT     - The default GT driver, Choose between:
-#                           gtwin (default),gtcgi,gtwvt,gtstd
-#       HB_GT_LIB         - To override the default GT driver
-#                           (search for HB_GT_LIBS for a list of values)
+#       HB_GT_LIB         - The default GT driver, choose between:
+#                           gtwin (default), gtcgi, gtwvt, gtstd, gtpca
 #       HB_BUILD_ST       - If set to yes builds harbour in SingleThread mode
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build
@@ -122,10 +120,6 @@ CFLAGSMT = -tWM -DHB_MT_VM $(CFLAGSMT)
     CFLAGS = $(CFLAGS) $(CFLAGSMT)
 !else
     HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(VMMT_LIB)
-!endif
-#-----------
-!if "$(HB_GT_DEFAULT)" != ""
-    CFLAGS = -DHB_GT_DEFAULT=$(HB_GT_DEFAULT:gt=) $(CFLAGS)
 !endif
 #-----------
 !if "$(HB_GT_LIB)" != ""

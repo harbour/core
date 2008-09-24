@@ -3026,9 +3026,7 @@ static HB_GT_FUNCS s_gtCoreFunc =
 
 static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
 
-#if defined(HB_GT_DEFAULT)
-   HB_EXPORT const char * hb_gt_szNameDefault = HB_GT_DRVNAME( HB_GT_DEFAULT );
-#elif defined(HB_GT_LIB)
+#if defined(HB_GT_LIB)
    HB_EXPORT const char * hb_gt_szNameDefault = HB_GT_DRVNAME( HB_GT_LIB );
 #elif defined(HB_WINCE)
    HB_EXPORT const char * hb_gt_szNameDefault = "wvt";

@@ -54,7 +54,7 @@ field F_C, F_N, F_D
 memvar M_C, M_N, M_D
 local L_C, L_N, L_D
 local i, j, t, c, c2, n, d, o, bc, tn, total, totalr, aa,;
-      a[ARR_LEN], a2[ARR_LEN], a3[ARR_LEN], aDb, cFi
+      a[ARR_LEN], a2[ARR_LEN], a3[ARR_LEN], aDb, cFi1, cFi2
 #ifdef ASSOC_ARRAY
     local aAssoc := ASSOC_ARRAY
 #endif
@@ -112,18 +112,19 @@ tn:=secondscpu()-t
 #endif
 ? ""
 
+#ifndef NO_DBF_TEST
+
 aDb:={ {"F_C", "C", 10, 0},;
        {"F_N", "N", 10, 2},;
        {"F_D", "D",  8, 0} }
-cFi:="tst_tmp.dbf"
-if file(cFi)
-    ferase(cFi)
-endif
 
-#ifndef NO_DBF_TEST
-dbcreate(cFi, aDb)
+cFi1:="tst_tmp.dbf"
+if file(cFi1)
+    ferase(cFi1)
+endif
+dbcreate(cFi1, aDb)
 select(1)
-use &cFi shared
+use &cFi1 shared
 dbappend()
 replace F_C with dtos(date())
 replace F_N with 112345.67
@@ -131,19 +132,20 @@ replace F_D with date()
 dbcommit()
 dbunlock()
 
-cFi:="tst_tmp2.dbf"
-if file(cFi)
-    ferase(cFi)
+cFi2:="tst_tmp2.dbf"
+if file(cFi2)
+    ferase(cFi2)
 endif
-dbcreate(cFi, aDb)
+dbcreate(cFi2, aDb)
 select(2)
-use &cFi exclusive
+use &cFi2 exclusive
 dbappend()
 replace F_C with dtos(date())
 replace F_N with 112345.67
 replace F_D with date()
 dbcommit()
 dbunlock()
+
 #endif
 
 L_C := dtos(date())
@@ -481,6 +483,18 @@ dsp_time( "ascan(a,{|x|x==i%ARR_LEN}) -> ", t, tn)
 dsp_time( "total application time:", total, 0)
 ? padr( "total real time:",50)+str(seconds()-totalr,8,2)
 ?
+
+#ifndef NO_DBF_TEST
+
+if file(cFi1)
+    ferase(cFi1)
+endif
+if file(cFi2)
+    ferase(cFi2)
+endif
+
+#endif
+
 return nil
 
 function dsp_time(s,t,tn)

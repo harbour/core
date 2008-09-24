@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-25 00:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_gcc.mak
+  * make_vc.mak
+  * harbour.spec
+  * source/rtl/hbgtcore.c
+  * source/rtl/Makefile
+  * source/rtl/gtsys.c
+  * config/w32/poccce.cf
+  * config/w32/xcc.cf
+  * config/w32/pocc.cf
+    % Removed HB_GT_DEFAULT envvar, which was the exact synonym 
+      of HB_GT_LIB. Please use HB_GT_LIB instead, if you - by any 
+      chance - want to change the default GT at Harbour build-time.
+
+  * tests/speedtst.prg
+    ! Fixed to delete temp .dbf files before exiting.
+
 2008-09-24 20:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/estack.c
     ! fixed stack preloading - it should be after checking if stack

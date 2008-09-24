@@ -55,12 +55,8 @@ endif
 
 LDFLAGS = $(LINKPATHS) coredll.lib corelibc.lib winsock.lib ws2.lib
 
-ifeq ($(HB_GT_DEFAULT),gtgui)
-LDFLAGS += /SUBSYSTEM:WINDOWS
-else
 ifeq ($(HB_GT_LIB),gtgui)
 LDFLAGS += /SUBSYSTEM:WINDOWS
-endif
 endif
 
 AR = polib.exe
