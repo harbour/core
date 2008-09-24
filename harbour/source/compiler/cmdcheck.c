@@ -208,7 +208,9 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                szOption[i] = '\0';
 
                if( strcmp( szOption, "CREDITS" ) == 0 ||
-                   strcmp( szOption, "CREDIT" ) == 0 || strcmp( szOption, "CREDI" ) == 0 || strcmp( szOption, "CRED" ) == 0 )
+                   strcmp( szOption, "CREDIT" ) == 0 || 
+                   strcmp( szOption, "CREDI" ) == 0 || 
+                   strcmp( szOption, "CRED" ) == 0 )
                   HB_COMP_PARAM->fCredits = TRUE;
                else
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, szOption, NULL );

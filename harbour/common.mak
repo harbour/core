@@ -1113,7 +1113,7 @@ DLL_GT_OBJS = $(HB_GT_OBJS)
 DLL_GT_OBJS = \
     $(GTWIN_LIB_OBJS)       \
     $(GTWVT_LIB_OBJS)       \
-    $(GTGUI_DLL_OBJS)
+    $(GTGUI_LIB_OBJS)
 !endif
 
 #-------------------------
