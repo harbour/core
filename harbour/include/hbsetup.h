@@ -381,6 +381,10 @@
    #endif
 #endif
 
+#if defined(HB_WINCE) && defined(HB_MT_VM)
+   #undef HB_MT_VM
+#endif
+
 /* ***********************************************************************
  * See also the following files for task specific definitions/settings
  *

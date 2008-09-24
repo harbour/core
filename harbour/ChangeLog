@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-24 12:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * harbour-ce-spec
+  * harbour-w32-spec
+  * harbour.spec
+  * make_xmingwce.sh
+    % Some remaining explicit GT defaultings removed. Relying on 
+      RTL source code.
+
+  * include/hbsetup.h
+    ! Disabled HB_MT_VM for HB_WINCE.
+
 2008-09-24 12:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/vmmt/Makefile
     ! Possible fix for mingw build error:

@@ -70,7 +70,6 @@ export CCPATH="${CCPATH}:"
 export HB_TOOLS_PREF="hbce"
 export HB_XBUILD="wce"
 [ "${HB_HOST_BUILD}" = "all" ] || export HB_HOST_BUILD="lib"
-export HB_GT_LIB="gtwvt"
 
 export HB_BIN_COMPILE="/tmp/hb-${CCPREFIX}-$$"
 rm -fR "${HB_BIN_COMPILE}"
