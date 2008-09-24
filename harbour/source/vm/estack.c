@@ -757,10 +757,10 @@ char * hb_stackDateBuffer( void )
 
 BYTE * hb_stackDirBuffer( void )
 {
-   HB_STACK_TLS_PRELOAD
 #if defined( HB_MT_VM )
    if( hb_stack_ready() )
    {
+      HB_STACK_TLS_PRELOAD
       if( !hb_stack.byDirBuffer )
          hb_stack.byDirBuffer = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
       return hb_stack.byDirBuffer;
@@ -771,10 +771,12 @@ BYTE * hb_stackDirBuffer( void )
 
 PHB_IOERRORS hb_stackIOErrors( void )
 {
-   HB_STACK_TLS_PRELOAD
 #if defined( HB_MT_VM )
    if( hb_stack_ready() )
+   {
+      HB_STACK_TLS_PRELOAD
       return &hb_stack.IOErrors;
+   }
 #endif
    return &s_IOErrors;
 }
@@ -932,7 +934,6 @@ LONG hb_stackBaseProcOffset( int iLevel )
 
 void hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine )
 {
-   HB_STACK_TLS_PRELOAD
    /*
     * This function is called by FM module and has to be ready for execution
     * before hb_stack initialization, [druzus]
@@ -940,19 +941,26 @@ void hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine )
     */
 
 #if defined( HB_MT_VM )
-   if( hb_stack_ready() && hb_stack.pPos > hb_stack.pBase )
-#else
-   if( hb_stack.pPos > hb_stack.pBase )
-#endif
-   {
-      hb_strncpy( szProcName, ( * hb_stack.pBase )->item.asSymbol.value->szName,
-                  HB_SYMBOL_NAME_LEN );
-      * puiProcLine = ( * hb_stack.pBase )->item.asSymbol.stackstate->uiLineNo;
-   }
-   else
+   if( !hb_stack_ready() )
    {
       szProcName[ 0 ] = '\0';
       * puiProcLine = 0;
+      return;
+   }
+#endif
+   {
+      HB_STACK_TLS_PRELOAD
+      if( hb_stack.pPos > hb_stack.pBase )
+      {
+         hb_strncpy( szProcName, ( * hb_stack.pBase )->item.asSymbol.value->szName,
+                     HB_SYMBOL_NAME_LEN );
+         * puiProcLine = ( * hb_stack.pBase )->item.asSymbol.stackstate->uiLineNo;
+      }
+      else
+      {
+         szProcName[ 0 ] = '\0';
+         * puiProcLine = 0;
+      }
    }
 }
 
