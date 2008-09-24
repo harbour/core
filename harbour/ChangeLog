@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-24 16:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/fm.c
+    + Enabled dlmalloc (HB_FM_DL_ALLOC) for MSVC, BCC and MINGW builds.
+    ; It's possible to disable dlmalloc with HB_FM_STD_ALLOC 
+      for testing purposes.
+
 2008-09-24 16:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/bld.bat
   * bin/bld_os2.cmd

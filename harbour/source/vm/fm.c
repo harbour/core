@@ -101,7 +101,16 @@
 #  include "hbthread.h"
 #endif
 
-/* #define HB_FM_DL_ALLOC */
+#if defined( HB_FM_STD_ALLOC )
+   #undef HB_FM_DL_ALLOC
+#elif !defined( HB_FM_DL_ALLOC )
+   #if defined( _MSC_VER ) || defined( __BORLANDC__ ) || defined( __MINGW32__ )
+      #define HB_FM_DL_ALLOC
+   #else
+      /* #define HB_FM_DL_ALLOC */
+   #endif
+#endif
+
 /* #define HB_FM_WIN32_ALLOC */
 /* #define HB_FM_STATISTICS */
 /* #define HB_PARANOID_MEM_CHECK */
@@ -134,14 +143,14 @@
 #     pragma warn +rch
 #  endif
 #  if defined( USE_DL_PREFIX )
-#     define malloc( n )         dlmalloc( (n) )
-#     define realloc( p, n )     dlrealloc( (p), (n) )
-#     define free( p )           dlfree( (p) )
+#     define malloc( n )         dlmalloc( ( n ) )
+#     define realloc( p, n )     dlrealloc( ( p ), ( n ) )
+#     define free( p )           dlfree( ( p ) )
 #  endif
 #elif defined( HB_FM_WIN32_ALLOC ) && defined( HB_OS_WIN_32 )
-#  define malloc( n )         (void *) LocalAlloc( LMEM_FIXED, ( n ) )
-#  define realloc( p, n )     (void *) LocalReAlloc( (HLOCAL) ( p ), ( n ), LMEM_MOVEABLE )
-#  define free( p )           LocalFree( (HLOCAL) ( p ) )
+#  define malloc( n )         ( void * ) LocalAlloc( LMEM_FIXED, ( n ) )
+#  define realloc( p, n )     ( void * ) LocalReAlloc( ( HLOCAL ) ( p ), ( n ), LMEM_MOVEABLE )
+#  define free( p )           LocalFree( ( HLOCAL ) ( p ) )
 #endif
 
 #if defined( HB_MT_VM ) && ( defined( HB_FM_STATISTICS ) || \
