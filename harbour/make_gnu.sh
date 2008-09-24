@@ -39,16 +39,6 @@ if [ -z "$HB_COMPILER" ]; then
     export HB_COMPILER
 fi
 
-if [ -z "$HB_GT_LIB" ]; then
-    case "$HB_ARCHITECTURE" in
-        w32) HB_GT_LIB="gtwin" ;;
-        dos) HB_GT_LIB="gtdos" ;;
-        os2) HB_GT_LIB="gtos2" ;;
-        *)   HB_GT_LIB="gttrm" ;;
-    esac
-    export HB_GT_LIB
-fi
-
 if [ -z "$HB_GPM_MOUSE" ]; then
     if [ "$HB_ARCHITECTURE" = "linux" ] && \
        ( [ -f /usr/include/gpm.h ] || [ -f /usr/local/include/gpm.h ]); then
@@ -145,14 +135,14 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
    echo "    The following values are currently supported:"
    echo
    echo "    HB_ARCHITECTURE:"
-   echo "      - dos    (HB_GT_LIB=gtdos by default)"
-   echo "      - w32    (HB_GT_LIB=gtw32 by default)"
-   echo "      - os2    (HB_GT_LIB=gtos2 by default)"
-   echo "      - linux  (HB_GT_LIB=gttrm by default)"
-   echo "      - bsd    (HB_GT_LIB=gttrm by default)"
-   echo "      - darwin (HB_GT_LIB=gttrm by default)"
-   echo "      - sunos  (HB_GT_LIB=gttrm by default)"
-   echo "      - hpux   (HB_GT_LIB=gttrm by default)"
+   echo "      - dos"
+   echo "      - w32"
+   echo "      - os2"
+   echo "      - linux"
+   echo "      - bsd"
+   echo "      - darwin"
+   echo "      - sunos"
+   echo "      - hpux"
    echo
    read
    echo "    HB_COMPILER:"
@@ -173,21 +163,6 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
    echo "      - When HB_ARCHITECTURE=os2"
    echo "        - gcc     (EMX GNU C, OS/2 32-bit)"
    echo "        - icc     (IBM Visual Age C++ 3.0, OS/2 32-bit)"
-   echo
-   read
-   echo "    HB_GT_LIB:"
-   echo "      - gtstd (TTY streaming)      (for all architectures)"
-   echo "      - gtcgi (Standard streaming) (for all architectures)"
-   echo "      - gtpca (PC ANSI console)    (for all architectures)"
-   echo "      - gtdos (DOS console)        (for dos architecture)"
-   echo "      - gtwin (Win32 console)      (for w32 architecture)"
-   echo "      - gtwvt (Win32 win console)  (for w32 architecture)"
-   echo "      - gtos2 (OS/2 console)       (for os2 architecture)"
-   echo "      - gtcrs (Curses console)     (for *nixes, w32 architectures)"
-   echo "      - gtsln (Slang console)      (for *nixes, w32 architectures)"
-   echo "      - gttrm (Terminal console)   (for *nixes architecture)"
-   echo "      - gtxwc (XWindow console)    (for *nixes architecture)"
-   echo "      - gtalleg (Allegro console)  (for all architectures)"
    echo
    echo "  - Use these optional envvars to configure the make process"
    echo "    when using the 'all' target:"

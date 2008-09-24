@@ -60,16 +60,6 @@ if [ -z "$HB_COMPILER" ]; then
     export HB_COMPILER
 fi
 
-if [ -z "$HB_GT_LIB" ]; then
-    case "$HB_ARCHITECTURE" in
-        w32) HB_GT_LIB="gtwin" ;;
-        dos) HB_GT_LIB="gtdos" ;;
-        os2) HB_GT_LIB="gtos2" ;;
-        *)   HB_GT_LIB="gttrm" ;;
-    esac
-    export HB_GT_LIB
-fi
-
 if [ -z "$HB_COMMERCE" ]; then export HB_COMMERCE=no; fi
 
 # default lib dir name

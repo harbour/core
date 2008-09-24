@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-24 02:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_gcc.sh
+  * make_gnu_os2.cmd
+  * make_gnu.bat
+  * make_gnu.sh
+  * make_tgz.sh
+    % Some additional GT defaulting logic removed.
+
 2008-09-24 01:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbwhat/tests/whatdemo.prg
     ! SVN ID.

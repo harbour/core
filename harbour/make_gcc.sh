@@ -33,16 +33,6 @@ if [ -z "$HB_CC_NAME" ]; then
    export HB_CC_NAME
 fi
 
-if [ -z "$HB_GT_LIB" ]; then
-   case "$HB_ARCHITECTURE" in
-      w32) HB_GT_LIB="gtwin" ;;
-      dos) HB_GT_LIB="gtdos" ;;
-      os2) HB_GT_LIB="gtos2" ;;
-      *)   HB_GT_LIB="gttrm" ;;
-   esac
-   export HB_GT_LIB
-fi
-
 if [ -z "$HB_GPM_MOUSE" ]; then
    if [ "$HB_ARCHITECTURE" = "linux" ] && \
       ( [ -f /usr/include/gpm.h ] || [ -f /usr/local/include/gpm.h ]); then
