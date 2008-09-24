@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-24 12:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * common.mak
+  * source/rtl/gtgui/Makefile
+  - source/rtl/gtgui/gtdef.c
+    - Removed HB_GTGUI_HACK to masquerade GTGUI under a different 
+      name and to make Windows users happier. Instead of hacking
+      Windows users with GUI programs should simply use 
+      this in their code:
+      --
+      PROCEDURE HB_GTSYS
+         REQUEST HB_GT_GUI_DEFAULT
+         RETURN
+      --
+    ; This clears up a few exceptions, make hacks and a few possible 
+      confusions.
+
 2008-09-24 02:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_gcc.sh
   * make_gnu_os2.cmd

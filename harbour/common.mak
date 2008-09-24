@@ -1003,16 +1003,8 @@ GTWVT_LIB_OBJS = \
 
 #**********************************************************
 
-GTGUI_LIB_COMMON_OBJS = \
+GTGUI_LIB_OBJS = \
     $(OBJ_DIR)\gtgui$(OBJEXT)    \
-
-GTGUI_LIB_STATIC_OBJS = \
-    $(OBJ_DIR)\gtdef$(OBJEXT)    \
-
-GTGUI_LIB_SHARED_OBJS = \
-
-GTGUI_LIB_OBJS = $(GTGUI_LIB_COMMON_OBJS) $(GTGUI_LIB_STATIC_OBJS)
-GTGUI_DLL_OBJS = $(GTGUI_LIB_COMMON_OBJS) $(GTGUI_LIB_SHARED_OBJS)
 
 #**********************************************************
 
