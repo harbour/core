@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-24 13:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/cmdcheck.c
+    ! fixed starting index in parsed parameters. argv[0] is
+      application name with path not user parameter. Parsing
+      it was giving unpredictable results if harbour binaries
+      were located in path having option delimiters in name
+
 2008-09-24 12:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * harbour-ce-spec
   * harbour-w32-spec

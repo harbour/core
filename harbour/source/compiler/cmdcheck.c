@@ -620,7 +620,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char * const Args[] )
       /* Check all switches in command line
          They start with an OS_OPT_DELIMITER char
        */
-      for( i = 0; i < iArg && !HB_COMP_PARAM->fExit; i++ )
+      for( i = 1; i < iArg && !HB_COMP_PARAM->fExit; i++ )
       {
          const char * szSwitch = Args[i];
 
@@ -1095,7 +1095,7 @@ void hb_compChkDefines( HB_COMP_DECL, int iArg, char * const Args[] )
 
       /* Check all switches in command line They start with an OS_OPT_DELIMITER
          char */
-      for( i = 0; i < iArg; i++ )
+      for( i = 1; i < iArg; i++ )
          hb_compChkDefineSwitch( HB_COMP_PARAM, Args[i] );
    }
 }
