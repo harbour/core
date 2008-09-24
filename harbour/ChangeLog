@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-24 17:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbrun/hbrun.prg
+    + Added REQUESTs for GTSTD, GTCGI, GTPCA (these GTs are 
+      available on all platforms).
+    % Removed explicit GT defaulting logic (now identical to 
+      the one in RTL).
+
 2008-09-24 16:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/fm.c
     + Enabled dlmalloc (HB_FM_DL_ALLOC) for MSVC, BCC and MINGW builds.

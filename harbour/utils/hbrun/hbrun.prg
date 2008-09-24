@@ -61,11 +61,16 @@
 
 REQUEST __HB_EXTERN__
 
+REQUEST HB_GT_CGI
+REQUEST HB_GT_PCA
+REQUEST HB_GT_STD
+
 #define HB_HISTORY_LEN 32
 #define HB_LINE_LEN    256
 #define HB_PROMPT      "."
 
-STATIC s_nRow := 2, s_nCol := 0
+STATIC s_nRow := 2
+STATIC s_nCol := 0
 STATIC s_aIncDir := {}
 
 /* ********************************************************************** */
@@ -297,19 +302,3 @@ FUNCTION HBRawVersion()
    RETURN StrTran( Version(), "Harbour ", "" )
 
 /* ********************************************************************** */
-
-/* request for full screen GT driver */
-#if   defined( __PLATFORM__WINCE )
-REQUEST HB_GT_WVT_DEFAULT
-#elif defined( __PLATFORM__WINDOWS )
-REQUEST HB_GT_WIN_DEFAULT
-#elif defined( __PLATFORM__UNIX )
-REQUEST HB_GT_TRM_DEFAULT
-#elif defined( __PLATFORM__DOS )
-REQUEST HB_GT_DOS_DEFAULT
-#elif defined( __PLATFORM__OS2 )
-REQUEST HB_GT_OS2_DEFAULT
-#endif
-
-/* ********************************************************************** */
-
