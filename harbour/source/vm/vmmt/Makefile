@@ -10,11 +10,9 @@ ROOT = ../../../
 ifeq ($(HB_ARCHITECTURE),w32)
 	ifeq ($(HB_COMPILER),mingw)
 		C_MAIN = mainwin.c
-		DIRS = mainstd
 	else
 		ifeq ($(HB_COMPILER),mingwce)
 			C_MAIN = mainwin.c
-			DIRS = mainstd mainwin
 		else
 			C_MAIN = mainstd.c mainwin.c
 		endif
@@ -74,6 +72,3 @@ ifeq ($(C_USR),$(subst -DHB_MT_VM,,$(C_USR)))
 endif
 
 include $(TOP)$(ROOT)config/lib.cf
-ifneq ($(DIRS),)
-	include $(TOP)$(ROOT)config/dir.cf
-endif

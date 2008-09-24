@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-24 12:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/vmmt/Makefile
+    ! Possible fix for mingw build error:
+      make: *** mainstd: No such file or directory.  Stop.
+      make[3]: *** [first] Error 2
+      make[2]: *** [first] Error 2
+    ; Please review.
+
+    ; TOFIX: These DLALLOC warnings are present with MinGW 4.3.2
+             In file included from ../../fm.c:127:
+             ../../dlmalloc.c:1144: warning: ignoring #pragma warning 
+             In file included from ../../fm.c:127:
+             ../../dlmalloc.c: In function 'sys_alloc':
+             ../../dlmalloc.c:3396: warning: statement with no effect
+
 2008-09-24 12:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * common.mak
   * source/rtl/gtgui/Makefile
