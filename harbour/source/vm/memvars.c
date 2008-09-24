@@ -149,7 +149,7 @@ void hb_memvarValueDecRef( PHB_ITEM pMemvar )
  */
 static void hb_memvarDetachDynSym( PHB_DYNS pDynSym, PHB_ITEM pPrevMemvar )
 {
-   PHB_ITEM pMemvar
+   PHB_ITEM pMemvar;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarDetachDynSym(%p,%p)", pDynSym, pPrevMemvar));
 

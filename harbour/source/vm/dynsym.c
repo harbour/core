@@ -101,7 +101,7 @@ static PHB_DYNS hb_dynsymInsert( PHB_SYMB pSymbol, UINT uiPos )
 {
    PHB_DYNS pDynSym;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymInsert(%p,%u)", szName, uiPos));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymInsert(%p,%u)", pSymbol, uiPos));
 
    if( ++s_uiDynSymbols == 0 )
    {
