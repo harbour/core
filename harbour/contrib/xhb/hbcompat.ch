@@ -115,6 +115,8 @@
    #xtranslate hb_IniRead([<x,...>])       => hb_ReadIni(<x>)
    #xtranslate hb_IniWrite([<x,...>])      => hb_WriteIni(<x>)
 
+   #xtranslate xhb_CopyFile([<x,...>])     => __CopyFile(<x>)
+
    /* Some statement endings */
    #xcommand ENDSEQUENCE => END
    #xcommand ENDSWITCH => END
@@ -191,6 +193,8 @@
    #xtranslate hb_SetIniComment([<x,...>]) => hb_IniSetComment(<x>)
    #xtranslate hb_ReadIni([<x,...>])       => hb_IniRead(<x>)
    #xtranslate hb_WriteIni([<x,...>])      => hb_IniWrite(<x>)
+
+   #xtranslate __CopyFile([<x,...>])       => xhb_CopyFile(<x>)
 
    #xtranslate Str(<x>,[<y>],[<y>],<z>)=> iif(<z>, LTrim(Str(<x>)), Str(<x>))
    #xtranslate hb_CMDARGARGV([<x,...>])=> hb_ARGV(0)
