@@ -38,7 +38,7 @@
     #xtranslate secondscpu([<x>]) => seconds()
 #endif
 #ifndef EOL
-    #define EOL chr(10)
+    #define EOL hb_OSNewLine()
 #endif
 #command ? => outstd(EOL)
 #command ? <xx,...> => outstd(<xx>, EOL)
@@ -573,6 +573,17 @@ return ""
 #endif
 
 #if __HARBOUR__ < 0x010100
-FUNCTION HB_MTVM()
+STATIC FUNCTION HB_MTVM()
    RETURN .F.
+#endif
+
+#ifndef __HARBOUR__
+STATIC FUNCTION hb_OSNewLine()
+#ifdef FlagShip
+   RETURN Chr( 10 )
+#elif __CLIP__
+   RETURN Chr( 10 )
+#else
+   RETURN Chr( 13 ) + Chr( 10 )
+#endif
 #endif

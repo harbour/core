@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-25 13:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * tests/speedtst.prg
+    ! Use hb_OSNewLine() instead of hard-wired EOL.
+    + Emulate hb_OSNewLine() for non-Harbour compilers.
+
 2008-09-25 13:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbthread.h
     + Enabled HB_USE_TLS for MinGW >= 4.3.0
