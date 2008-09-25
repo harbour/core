@@ -658,7 +658,7 @@ typedef unsigned long HB_COUNTER;
 
 
 #ifndef PFLL
-#  if defined( __BORLANDC__ ) || defined( _MSC_VER )
+#  if defined( __BORLANDC__ ) || defined( _MSC_VER ) || defined( __MINGW32__ )
 #     define PFLL    "I64"
 #  else
 #     define PFLL    "ll"

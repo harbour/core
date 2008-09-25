@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-25 21:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbdefs.h
+    ! Fixed 64-bit printf() formatting strings to be compatible 
+      with MinGW. MinGW seems to follow the Microsoft way instead 
+      of being compatible with other GCC dialects.
+      This fixes some pcode/c code (-gc3) generation problems for 
+      long long literals, and hbfbird/FBGETDATA() potential problems, 
+      when MinGW 3.x/4.x compilers were used.
+      [TOMERGE 1.0]
+
+    ; TOFIX: Some sqlite3.c code may also be affected, since 
+             "%llX" and "%lld"s are hard-coded into the source.
+
 2008-09-25 13:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   - make_tgz.sh
   + mpkg_tgz.sh
