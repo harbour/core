@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-25 13:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  - make_tgz.sh
+  + mpkg_tgz.sh
+  - make_deb.sh
+  + mpkg_deb.sh
+  - make_rpm.sh
+  + mpkg_rpm.sh
+  - make_rpmwce.sh
+  + mpkg_rpm_wce.sh
+  - make_rpmwin.sh
+  + mpkg_rpm_win.sh
+  - make_xmingw.sh
+  + make_gnu_xmingw.sh
+  - make_xmingwce.sh
+  + make_gnu_xmingwce.sh
+  - make_rpm_from_svn.sh
+  + mpkg_rpm_from_svn.sh
+    * Some renamed in the hope that it will better separate 
+      the simple build scripts (make*) from package build 
+      (mpkg*) scripts.
+
 2008-09-25 13:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/xhb/hbcompat.ch
     + Added xhb_CopyFile() two-way translations.

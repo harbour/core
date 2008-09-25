@@ -34,7 +34,7 @@ then
     cd SVN
     if svn co "${SVNURL}"; then
         cd "${PROJECT}"
-        ./make_rpm.sh "$*"
+        ./mpkg_rpm.sh "$*"
     fi
 else
     echo "If you want to build Harbour compilers"
