@@ -132,7 +132,7 @@ then
             -e "s|^%define releasen .*$|%define releasen  ${hb_verstat}|g" \
             -e "s|^%define hb_ccpath .*$|%define hb_ccpath ${CCPATH}|g" \
             -e "s|^%define hb_ccpref .*$|%define hb_ccpref ${CCPREFIX}|g" \
-            harbour-w32-spec > ${RPMDIR}/SPECS/harbour-w32.spec
+            harbour-win-spec > ${RPMDIR}/SPECS/harbour-win.spec
         if which rpmbuild &>/dev/null
         then
             RPMBLD="rpmbuild"
@@ -140,7 +140,7 @@ then
             RPMBLD="rpm"
         fi
         cd ${RPMDIR}/SPECS
-        ${RPMBLD} -ba harbour-w32.spec ${INST_PARAM}
+        ${RPMBLD} -ba harbour-win.spec ${INST_PARAM}
     else
         echo "Cannot find archive file: ${hb_filename}"
         exit 1

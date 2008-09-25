@@ -162,7 +162,7 @@ endif
 # C compiler flags
 #**********************************************************
 
-# Main "Include" directory
+# Main "include" directory
 INCLUDE_DIR    := include
 
 CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -I$(OBJ_DIR)

@@ -4,7 +4,7 @@
 
 # ---------------------------------------------------------------
 # Copyright 2007 Przemyslaw Czerpak (druzus/at/priv.onet.pl),
-# Harbour-MinGW cross build RPM spec file
+# Harbour-WinCE cross build RPM spec file
 #
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
@@ -24,12 +24,12 @@
 ## Definitions.
 ######################################################################
 
-%define name      harbour-w32
+%define name      harbour-wce
 %define version   1.1.0
 %define releasen  dev
-%define hb_pref   hbw
-%define hb_ccpath /opt/xmingw/bin
-%define hb_ccpref i386-mingw-
+%define hb_pref   hbwce
+%define hb_ccpath /opt/mingw32ce/bin
+%define hb_ccpref arm-wince-mingw32ce-
 %define hb_host   www.harbour-project.org
 %define readme    README.RPM
 
@@ -53,7 +53,7 @@ URL:            http://%{hb_host}/
 Source:         harbour-%{version}.src.tar.gz
 Packager:       Przemys³aw Czerpak (druzus/at/priv.onet.pl)
 BuildPrereq:    gcc binutils bash
-Requires:       gcc binutils bash sh-utils harbour = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       gcc binutils bash sh-utils cegcc-mingw32ce harbour = %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:       %{name}
 BuildRoot:      /tmp/%{name}-%{version}-root
 
@@ -62,14 +62,14 @@ BuildRoot:      /tmp/%{name}-%{version}-root
 %description
 Harbour is a CA-Cl*pper compatible compiler for multiple platforms. This
 package includes a compiler, pre-processor, header files, virtual machine
-and libraries for creating MS-Windows application in Linux box using MinGW
+and libraries for creating WinCE application in Linux box using MinGW-CE
 GCC port.
 
 %description -l pl
 Harbour to kompatybilny z jêzykiem CA-Cl*pper kompilator rozwijany na
 wielu ró¿nych platformach. Ten pakiet zawiera kompilator, preprocesor,
 zbiory nag³ówkowe, wirtualn± maszynê oraz biblioteki pozwalaj±ce na
-tworzenie aplikacji dla MS-Windows przy u¿yciu MinGW GCC.
+tworzenie aplikacji dla WinCE-PocketPC przy u¿yciu MinGW-CE GCC.
 
 
 ######################################################################
@@ -94,7 +94,7 @@ make -r
 
 export HB_HOST_BUILD=lib
 export HB_ARCHITECTURE=w32
-export HB_COMPILER=mingw
+export HB_COMPILER=mingwce
 
 mkdir -p source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}
 ln -s ../../linux/gcc/hbpp source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}/hbpp.exe
@@ -103,7 +103,7 @@ ln -s ../../linux/gcc/harbour source/main/${HB_ARCHITECTURE}/${HB_COMPILER}/harb
 
 export CC_C_USR=""
 export C_USR="$CC_C_USR -O2 -DHB_FM_STATISTICS_OFF"
-export CC_PRG_USR="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
+export CC_PRG_USR="-D__PLATFORM__WINDOWS -D__PLATFORM__WINCE -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
 export PRG_USR="$CC_PRG_USR"
 export L_USR="${CC_L_USR}"
 
@@ -111,7 +111,7 @@ export CCPATH="%{hb_ccpath}:"
 export CCPREFIX="%{hb_ccpref}"
 export PATH="$CCPATH$PATH"
 
-export HB_XBUILD=w32
+export HB_XBUILD=wce
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}
@@ -129,7 +129,7 @@ make -r
 
 export CC_C_USR=""
 export C_USR="$CC_C_USR -O2 -DHB_FM_STATISTICS_OFF"
-export CC_PRG_USR="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
+export CC_PRG_USR="-D__PLATFORM__WINDOWS -D__PLATFORM__WINCE -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
 export PRG_USR="$CC_PRG_USR"
 export L_USR="${CC_L_USR}"
 
@@ -139,8 +139,8 @@ export PATH="$CCPATH$PATH"
 
 export HB_HOST_BUILD=lib
 export HB_ARCHITECTURE=w32
-export HB_COMPILER=mingw
-export HB_XBUILD=w32
+export HB_COMPILER=mingwce
+export HB_XBUILD=wce
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}
@@ -324,6 +324,7 @@ rm -fR $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbvm.a
 %{_libdir}/%{name}/libhbvmmt.a
 %{_libdir}/%{name}/libhbmainstd.a
+%{_libdir}/%{name}/libhbmainwin.a
 %{_libdir}/%{name}/libhbusrrdd.a
 
 %{!?_without_nf: %{_libdir}/%{name}/libhbnf.a}

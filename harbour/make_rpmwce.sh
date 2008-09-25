@@ -108,7 +108,7 @@ then
         mv ${hb_filename} ${RPMDIR}/SOURCES/
         sed -e "s/^%define version .*$/%define version   ${hb_ver}/g" \
             -e "s/^%define releasen .*$/%define releasen  ${hb_verstat}/g" \
-            harbour-ce-spec > ${RPMDIR}/SPECS/harbour-ce.spec
+            harbour-wce-spec > ${RPMDIR}/SPECS/harbour-wce.spec
         if which rpmbuild &>/dev/null
         then
             RPMBLD="rpmbuild"
@@ -116,7 +116,7 @@ then
             RPMBLD="rpm"
         fi
         cd ${RPMDIR}/SPECS
-        ${RPMBLD} -ba harbour-ce.spec ${INST_PARAM}
+        ${RPMBLD} -ba harbour-wce.spec ${INST_PARAM}
     else
         echo "Cannot find archive file: ${hb_filename}"
         exit 1

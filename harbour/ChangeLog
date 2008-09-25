@@ -8,6 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-25 11:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  - harbour-ce-spec
+  + harbour-wce-spec
+  - harbour-w32-spec
+  + harbour-win-spec
+  - make_rpmw32.sh
+  + make_rpmwin.sh
+  - make_rpmce.sh
+  + make_rpmwce.sh
+    * Some steps done to use more consistent names for Windows 
+      and Windows CE, and also to move away from '32' usage.
+    ; TODO: I'd prefer to give all .spec files the same 
+            empty extensions, could anyone help how to 
+            convert current harbour.spec to harbour-spec and 
+            not break .rpm creation? Plus it would be also 
+            good to implement automatic versioning on .rpm 
+            build just like for harbour-win/wce in make_rpmw*.sh 
+            scripts.
+
+  - hbgtmk.sh
+  + make_rpm_from_svn.sh
+    * Renamed to give a better idea about its purpose.
+    ; NOTE: make_rpm_from_svn.sh seems a bit pointless now 
+            that we have the final releases in separate SVN tags.
+
+  * make_gcc.mak
+    * Minor formatting.
+
 2008-09-25 00:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_gcc.mak
