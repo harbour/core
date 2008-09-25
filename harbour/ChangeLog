@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-25 13:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbthread.h
+    + Enabled HB_USE_TLS for MinGW >= 4.3.0
+
 2008-09-25 11:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   - harbour-ce-spec
   + harbour-wce-spec

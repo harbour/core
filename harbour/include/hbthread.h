@@ -316,6 +316,8 @@ extern void hb_threadMutexUnlockAll( void );
 #     define HB_USE_TLS
 #  elif defined( __BORLANDC__ ) && !defined( __CODEGUARD__ )
 #     define HB_USE_TLS
+#  elif defined( __MINGW32__ ) && __GNUC__ >= 4 && __GNUC_MINOR__ >= 3
+#     define HB_USE_TLS
 #  elif defined( __GNUC__ ) && __GNUC__ >= 3 && \
         defined( __GLIBC__ ) && defined( __GLIBC_MINOR__ ) && \
         ( __GLIBC__ > 2 || ( __GLIBC__ == 2 && __GLIBC_MINOR__ >= 6 ) ) && \
