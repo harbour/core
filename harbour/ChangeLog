@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-26 21:28 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/thread.c
+    * release thread return value when is retrieve
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/tthreadx.prg
+    + added xBase++ compatible signal class
+
+  * harbour/source/rdd/wacore.c
+    ! added missing alias setting after attaching work area
+
+  + harbour/tests/mt/mttest09.prg
+    + added test code for using the same work area in different threads
+
 2008-09-26 19:34 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbstack.h
   * harbour/source/vm/estack.c

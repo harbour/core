@@ -669,7 +669,11 @@ HB_FUNC( HB_THREADJOIN )
       if( fResult )
       {
          if( pThread->pResult )
-            hb_itemParamStore( 2, pThread->pResult );
+         {
+            hb_itemParamStoreForward( 2, pThread->pResult );
+            hb_itemRelease( pThread->pResult );
+            pThread->pResult = NULL;
+         }
       }
       hb_retl( fResult );
    }

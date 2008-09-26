@@ -547,7 +547,7 @@ HB_EXPORT ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
       hb_arraySet( pDetachedArea, 2, pCargo );
    pHolder = ( AREAP * ) hb_gcAlloc( sizeof( AREAP ), hb_waHolderDestructor );
    *pHolder = pArea;
-   hb_itemPutPtrGC( hb_arrayGetItemPtr( pDetachedArea, 1 ), pHolder );
+   hb_arraySetPtrGC( pDetachedArea, 1, pHolder );
    /* siagnal waiting processes that new area is available */
    hb_threadCondBroadcast( &s_waCond );
    /* leave critical section */
@@ -640,7 +640,11 @@ HB_EXPORT AREAP hb_rddRequestArea( char * szAlias, PHB_ITEM pCargo,
 
    /* atach WA and set alias */
    if( pArea )
+   {
       hb_waNodeInsert( hb_stackRDD(), pArea );
+      if( pArea->atomAlias )
+         hb_dynsymSetAreaHandle( ( PHB_DYNS ) pArea->atomAlias, pArea->uiArea );
+   }
 
    return pArea;
 }

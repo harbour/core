@@ -655,6 +655,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\treport$(OBJEXT)  \
     $(OBJ_DIR)\tscalar$(OBJEXT)  \
     $(OBJ_DIR)\ttextlin$(OBJEXT) \
+    $(OBJ_DIR)\tthreadx$(OBJEXT) \
     $(OBJ_DIR)\ttopbar$(OBJEXT)  \
     $(OBJ_DIR)\typefile$(OBJEXT) \
     $(OBJ_DIR)\typefilx$(OBJEXT) \

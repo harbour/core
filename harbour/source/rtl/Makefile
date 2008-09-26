@@ -216,6 +216,7 @@ PRG_SOURCES=\
 	treport.prg  \
 	tscalar.prg  \
 	ttextlin.prg \
+	tthreadx.prg \
 	ttopbar.prg  \
 	typefile.prg \
 	typefilx.prg \
