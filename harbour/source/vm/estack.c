@@ -76,8 +76,6 @@
 
 /* ------------------------------- */
 
-#undef HB_STACK_TLS_PRELOAD
-
 #if defined( HB_MT_VM )
 
 #  include "hbthread.h"
@@ -120,20 +118,18 @@
                                       hb_tls_set( hb_stack_key, \
                                                   hb_xgrab( sizeof( HB_STACK ) ) ); \
                                  } while ( 0 )
-#     define hb_stack_dealloc()  do { hb_xfree( hb_stack_ptr ); \
+#     define hb_stack_dealloc()  do { hb_xfree( hb_tls_get( hb_stack_key ) ); \
                                       hb_tls_set( hb_stack_key, NULL ); } \
                                  while ( 0 )
 #     define hb_stack_ready()    ( s_fInited && hb_tls_get( hb_stack_key ) != NULL )
 
 #endif /* HB_USE_TLS */
 
-#  undef hb_stack
-#  ifdef HB_STACK_PRELOAD
-#     define HB_STACK_TLS_PRELOAD   PHB_STACK _hb_stack_ptr_ = hb_stack_ptr;
-#     define hb_stack               ( * _hb_stack_ptr_ )
-#  else
+#  if !defined( HB_STACK_TLS_PRELOAD )
+#     undef hb_stack
 #     define hb_stack   ( * hb_stack_ptr )
 #  endif
+
 #else
 
    /* no MT mode */
@@ -148,10 +144,6 @@
 #  define hb_stack_ready()    (TRUE)
 
 #endif /* HB_MT_VM */
-
-#ifndef HB_STACK_TLS_PRELOAD
-#  define HB_STACK_TLS_PRELOAD
-#endif
 
 /* ------------------------------- */
 

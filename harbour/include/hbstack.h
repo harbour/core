@@ -199,9 +199,40 @@ typedef struct
          extern HB_TLS_KEY hb_stack_key;
 #        define hb_stack_ptr  ( ( PHB_STACK ) hb_tls_get( hb_stack_key ) )
 #     endif
-#     ifdef HB_STACK_PRELOAD
-#        define HB_STACK_TLS_PRELOAD   PHB_STACK _hb_stack_ptr_ = hb_stack_ptr;
-#        define hb_stack               ( * _hb_stack_ptr_ )
+#     if defined( HB_STACK_PRELOAD ) && !defined( HB_USE_TLS )
+#        if defined( __BORLANDC__ )
+            static __inline void* hb_stack_ptr_from_tls( void )
+            {
+               /* mov ecx,hb_stack_key */
+               _ECX = hb_stack_key;
+               /* mov eax,dword ptr fs:[00000018h] */
+               __emit__( 0x64, 0xA1, 0x18, 0x00, 0x00, 0x00 );
+               /* mov eax,[eax+ecx*4+00000E10h] */
+               __emit__( 0x8B, 0x84, 0x88, 0x10, 0x0E, 0x00, 0x00 );
+               /* ret (if function is not inlined) */
+               return (void*) _EAX;
+            }
+#           define HB_STACK_TLS_PRELOAD   PHB_STACK _hb_stack_ptr_ = hb_stack_ptr_from_tls();
+#        elif defined( __MINGW32__ )
+            static __inline__ void * hb_stack_ptr_from_tls( void )
+            {
+               void * p;
+               __asm__ (
+                  "movl  %%fs:(0x18), %0\n\t"
+                  "movl  0x0e10(%0,%1,4), %0\n\t"
+                  :"=a" (p)
+                  :"c" (hb_stack_key)
+               );
+               return p;
+            }
+#           define HB_STACK_TLS_PRELOAD   PHB_STACK _hb_stack_ptr_ = hb_stack_ptr_from_tls();
+#        endif
+#        if defined( HB_STACK_TLS_PRELOAD )
+#           undef hb_stack_ptr
+#        else
+#           define HB_STACK_TLS_PRELOAD   PHB_STACK _hb_stack_ptr_ = hb_stack_ptr;
+#        endif
+#        define hb_stack      ( * _hb_stack_ptr_ )
 #     else
 #        define hb_stack      ( * hb_stack_ptr )
 #     endif
