@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-26 02:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/thread.c
+    ! fixed thread cleanup code when startthread() fails, f.e.
+      OS refuse to create new thread.
+
 2008-09-25 21:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbdefs.h
     ! Fixed 64-bit printf() formatting strings to be compatible 

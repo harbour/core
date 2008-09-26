@@ -431,6 +431,12 @@ static HB_GARBAGE_FUNC( hb_threadDestructor )
       hb_itemRelease( pThread->pResult );
       pThread->pResult = NULL;
    }
+   if( pThread->pSet )
+   {
+      hb_setRelease( pThread->pSet );
+      hb_xfree( pThread->pSet );
+      pThread->pSet = NULL;
+   }
    if( pThread->th_id != 0 )
    {
       hb_threadDetach( pThread->th_id );
@@ -622,10 +628,6 @@ HB_FUNC( HB_THREADSTART )
       pThread->th_id = hb_threadCreate( hb_threadStartVM, ( void * ) pReturn );
       if( pThread->th_id == 0 )
       {
-         if( pThread->pMemvars )
-            hb_itemRelease( pThread->pMemvars );
-         hb_setRelease( pThread->pSet );
-         hb_xfree( pThread->pSet );
          hb_itemRelease( pReturn );
          hb_ret();
       }
