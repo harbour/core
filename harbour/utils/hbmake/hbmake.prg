@@ -112,7 +112,7 @@ STATIC s_cLinkCommands   := ""
 STATIC s_lLinux          := .F.
 STATIC s_lUnix           := .F.
 STATIC s_lOS2            := .F.
-STATIC s_lWin32          := .F.
+STATIC s_lWindows        := .F.
 STATIC s_lBcc            := .F.           // Borland C compiler
 STATIC s_lPocc           := .F.           // Pelles C compiler
 STATIC s_lMSVcc          := .F.           // MS-Visual C compiler
@@ -1057,7 +1057,7 @@ FUNCTION SetBuild( nFHandle )
    NEXT
 
    //IF !s_lLinux .and. s_lMinGW
-   IF s_lWin32 .OR. s_lOS2 .OR. s_lMinGW
+   IF s_lWindows .OR. s_lOS2 .OR. s_lMinGW
       FClose( s_nMakeFileHandle )
       s_nMakeFileHandle:= F_ERROR  // Invalid handle now file is closed
    ENDIF
@@ -1352,7 +1352,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
    LOCAL lMediator    := .F.
    LOCAL lApollo      := .F.
 
-   LOCAL cOS          := IIF( s_lUnix, "Unix", IIF( s_lLinux, "Linux", iif(s_lOS2,"OS/2","Win32") ) )
+   LOCAL cOS          := IIF( s_lUnix, "Unix", IIF( s_lLinux, "Linux", iif(s_lOS2,"OS/2","Windows") ) )
    LOCAL cCompiler    := IIF( s_lLinux .OR. s_lGcc, "GCC",iif(s_lPocc,"POCC",iif(s_lMSVcc,"MSVC","BCC")))
 
    // Contrib GUI Libs
@@ -1676,7 +1676,7 @@ While .t.
    @ 01,01       SAY s_aLangMessages[ 28 ]
 
    @ 01,16,06,21 GET cOS;
-                 LISTBOX { "Win32", "OS/2", "Linux","Unix" };
+                 LISTBOX { "Windows", "OS/2", "Linux","Unix" };
                  MESSAGE s_aLangMessages[ 49 ];
                  STATE OsSpec(getlist,1,@cOS);
                  DROPDOWN
@@ -1702,7 +1702,7 @@ While .t.
 
    @ 02,16,08,26 GET cRdd;
                  LISTBOX { "None","RDDADS","Mediator","Apollo"};
-                 WHEN cOS == "Win32" .or. cOS == "Linux";
+                 WHEN cOS == "Windows" .or. cOS == "Linux";
                  DROPDOWN;
                  MESSAGE s_aLangMessages[ 52 ]
 
@@ -1715,7 +1715,7 @@ While .t.
    @ 02,53       GET lUseHarbourDll;
                  CHECKBOX;
                  CAPTION "use harbour[.dll|.so]" style "[X ]";
-                 WHEN cOS == "Win32" .or. cOS == "Linux";
+                 WHEN cOS == "Windows" .or. cOS == "Linux";
                  MESSAGE s_aLangMessages[ 55 ]
 
    @ 03,01       SAY "Obj Files Dir";
@@ -2934,7 +2934,7 @@ FUNCTION ScanInclude( cFile, lRecursive, cExclExtent, aFiles)
            // Provisions for recursive scanning
            // Add current file to list, making it by default the first in the list
 
-           IF s_lWin32
+           IF s_lWindows
                IF AScan(aFiles, {| x | Lower( x ) == Lower( cFnam + cExt ) } ) == 0       // Case IN-sensitive!
                    AAdd(aFiles, cFnam + cExt )
                ENDIF
@@ -2996,7 +2996,7 @@ FUNCTION ScanInclude( cFile, lRecursive, cExclExtent, aFiles)
                   ENDIF
                   IF Len(cInclude) > 0
                       // Still Ok, add to list?
-                      IF s_lWin32
+                      IF s_lWindows
                           IF AScan(aFiles, {| x | Lower( x ) == Lower( cInclude ) } ) == 0       // Case IN-sensitive!
                               AAdd(aFiles, (cInclude) )
                               // recursive scanning
@@ -3282,7 +3282,7 @@ FUNCTION CreateLibMakeFile( cFile )
 
    LOCAL aOutC     := {}
    LOCAL aSrcC     := Directory( "*.c" )
-   LOCAL cOS       := IIF( s_lLinux, "Linux", "Win32")
+   LOCAL cOS       := IIF( s_lLinux, "Linux", "Windows")
    LOCAL cCompiler := IIF( s_lLinux, "GCC",IIF(s_lMSVcc,"MSVC",IIF(s_lPocc,"POCC","BCC")))
    LOCAL cLibName  := PADR( Left( cFile, At( ".", cFile ) - 1 ) ,40)
 
@@ -3526,7 +3526,7 @@ FUNCTION CreateLibMakeFile( cFile )
    @ 01,01 SAY s_aLangMessages[ 28 ]
 
    @ 01,17,06,24 GET cOS;
-                 LISTBOX { "Win32", "OS/2", "Linux" };
+                 LISTBOX { "Windows", "OS/2", "Linux" };
                  MESSAGE s_aLangMessages[ 49 ];
                  STATE OsSpec(getlist,1,@cOS);
                  DROPDOWN
@@ -4577,7 +4577,7 @@ RETURN .T.
 *--------------------------
 FUNCTION CheckCompiler(cOS)
 *--------------------------
-RETURN ( ("Win32" $ cOS) .or. ("Linux" $ cOS) )
+RETURN ( ("Windows" $ cOS) .or. ("Linux" $ cOS) )
 
 *------------------------------
 FUNCTION SetThisLibs(aTempLibs)
@@ -5755,7 +5755,7 @@ FUNCTION GetInstaledLibs( clibs, lGcc )
    aadd( aDefLib, "hbrtl"    + cSuffix )
    aadd( aDefLib, "hbclipsm" + cSuffix )
    aadd( aDefLib, "hbtip"    + cSuffix )
-   aadd( aDefLib, "hbw32"    + cSuffix )
+   aadd( aDefLib, "hbwin"    + cSuffix )
    aadd( aDefLib, "hbvm"     + cSuffix )
    aadd( aDefLib, "hbziparc" + cSuffix )
 
@@ -5882,12 +5882,12 @@ FUNCTION CmdLineParam( cFile, cCmdParams )
    s_cEOL  := hb_OSNewLine()
    s_nLang := GETUSERLANG()            /* In hbmlang.c         */
 
-   cTemp    := UPPER( OS() )
-   s_lOS2   := ( "OS/2"    $ cTemp )
-   s_lLinux := ( "LINUX"   $ cTemp )
-   s_lWin32 := ( "WINDOWS" $ cTemp )
-   s_lUnix  := ( "UNIX"    $ cTemp .OR. ;
-                 "HP-UX"   $ cTemp        )
+   cTemp      := UPPER( OS() )
+   s_lOS2     := ( "OS/2"    $ cTemp )
+   s_lLinux   := ( "LINUX"   $ cTemp )
+   s_lWindows := ( "WINDOWS" $ cTemp )
+   s_lUnix    := ( "UNIX"    $ cTemp .OR. ;
+                   "HP-UX"   $ cTemp        )
 
    DO CASE
    CASE s_lOS2                         /* OS/2                 */
@@ -5900,9 +5900,9 @@ FUNCTION CmdLineParam( cFile, cCmdParams )
      s_lLinux  := s_lGcc := .T.
      s_cEditor := "mcedit"
 
-   CASE s_lWin32                       /* Windows              */
+   CASE s_lWindows                     /* Windows              */
 
-     s_lWin32  := s_lBcc := .T.
+     s_lWindows  := s_lBcc := .T.
      s_cEditor := "edit"
 
    CASE s_lUnix                        /* UXIX                 */
@@ -5912,8 +5912,8 @@ FUNCTION CmdLineParam( cFile, cCmdParams )
 
    OTHERWISE /*   Unknown OS - setup for windows as default    */
 
-     s_lWin32  := s_lBcc := .T.
-     s_cEditor := "edit"
+     s_lWindows := s_lBcc := .T.
+     s_cEditor  := "edit"
 
    END CASE
 

@@ -75,7 +75,7 @@ case "$HB_ARCHITECTURE" in
          ;;
    cyg)  HB_OS="CYGWIN"
          GT_LIST="${GT_LIST} WIN WVT GUI"
-         OS_LIBS="-luser32 -lwinspool -lgdi32"
+         OS_LIBS="-luser32 -lwinspool -lwsock32 -lgdi32"
          ;;
    dos)  HB_OS="DOS"
          GT_LIST="DOS"
@@ -170,7 +170,6 @@ do
 done
 GT_LIST=$GT_TEMP
 
-export C_USR="$C_USR -DHB_OS_$HB_OS"
 export HB_OS_LIBS="$HB_OS_LIBS $OS_LIBS"
 export HB_GT_LIST="$HB_GT_LIST $GT_LIST"
 export HB_GT_OBJS="$HB_GT_OBJS $GT_OBJS"

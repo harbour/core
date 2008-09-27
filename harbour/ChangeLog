@@ -8,6 +8,32 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-27 09:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbthread.h
+    % Disabled HB_USE_TLS for __BORLAND__ and __MINGW32__ for 
+      best performance.
+
+  * contrib/hbwhat/whtmmcap.c
+    ! Fixed some warnings under certain MinGW 4.3.2 
+      installations. 
+      TODO: hbwhat users pls finish this fix.
+
+  * utils/hbmake/hbmake.prg
+    ! Fixed hbw32 to hbwin.
+    * Win32 references changed to Windows.
+
+  * make_gcc.sh
+    * Not accepting CFLAGS anymore as custom C flags envvar.
+      Pls use C_USR instead.
+
+  * make_gcc.mak
+    + Added wsock32 lib to Cygwin system liblist.
+    ! Removed setting HB_OS_* macros explicitly.
+
+  * make_b32.mak
+  * make_vc.mak
+    * Minor formatting.
+
 2008-09-26 21:28 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/thread.c
     * release thread return value when is retrieve

@@ -82,7 +82,7 @@ MKLIB  = tlib.exe
 
 #**********************************************************
 
-# Some definitions cannot be kept in Common.mak
+# Some definitions cannot be kept in common.mak
 # due to serious limitations of Microsoft Nmake
 
 DLL_OBJS = $(TMP_DLL_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))

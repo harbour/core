@@ -145,7 +145,7 @@ VMMT_LIB_OBJS = $(subst $(OBJ_DIR),$(MT_OBJ_DIR),$(VM_LIB_OBJS))
 
 # Do not perform an extra compilation phase for shared libraries
 # if gcc -fPIC compilation flag is already passed to a makefile
-ifeq ($(findstring -fPIC,$(C_USR) $(CFLAGS)),-fPIC)
+ifeq ($(findstring -fPIC,$(C_USR)),-fPIC)
 DLL_OBJS := $(TMP_DLL_OBJS)
 else
 DLL_OBJS := $(patsubst $(OBJ_DIR)%,$(DLL_OBJ_DIR)%,$(TMP_DLL_OBJS))
@@ -165,7 +165,7 @@ endif
 # Main "include" directory
 INCLUDE_DIR    := include
 
-CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
+CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) -I$(OBJ_DIR)
 CFLAGSMT       := -DHB_MT_VM $(CFLAGSMT)
 #-----------
 ifndef GCC_NOOPTIM

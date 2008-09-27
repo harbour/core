@@ -97,7 +97,7 @@ MKLIB  = lib.exe
 
 #**********************************************************
 
-# Some definitions cannot be kept in Common.mak
+# Some definitions cannot be kept in common.mak
 # due to serious limitations of Microsoft Nmake
 
 # Nmake does not support macros in string
