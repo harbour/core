@@ -69,38 +69,26 @@ OS_LIBS="-lm"
 GT_LIST="TRM"
 
 case "$HB_ARCHITECTURE" in
-   w32)  HB_OS="WIN_32"
-         GT_LIST="WIN WVT GUI"
+   w32)  GT_LIST="WIN WVT GUI"
          OS_LIBS="-luser32 -lwinspool -lwsock32 -lgdi32"
          ;;
-   cyg)  HB_OS="CYGWIN"
-         GT_LIST="${GT_LIST} WIN WVT GUI"
+   cyg)  GT_LIST="${GT_LIST} WIN WVT GUI"
          OS_LIBS="-luser32 -lwinspool -lwsock32 -lgdi32"
          ;;
-   dos)  HB_OS="DOS"
-         GT_LIST="DOS"
+   dos)  GT_LIST="DOS"
          ;;
-   os2)  HB_OS="OS2"
-         GT_LIST="${GT_LIST} OS2"
+   os2)  GT_LIST="${GT_LIST} OS2"
          ;;
-   linux) HB_OS="LINUX"
+   linux) OS_LIBS="$OS_LIBS -ldl"
          [ -d "/usr/lib/lib64" ] && [ "${HB_ARCH64}" = yes ] && HB_LIBDIRNAME="lib64"
-         OS_LIBS="$OS_LIBS -ldl"
          ;;
-   bsd)  HB_OS="BSD"
-         MAKE="gmake"
+   bsd)  MAKE="gmake"
          ;;
-   darwin) HB_OS="DARWIN"
-         ;;
-   sunos) HB_OS="SUNOS"
-         OS_LIBS="$OS_LIBS -lrt"
+   sunos) OS_LIBS="$OS_LIBS -lrt"
          CRSLIB="curses"
          ;;
-   hpux) HB_OS="HPUX"
-         MAKE="gmake"
+   hpux) MAKE="gmake"
          OS_LIBS="$OS_LIBS -lrt"
-         ;;
-   *)    HB_OS=`echo $HB_ARCHITECTURE | tr '[a-z]' '[A-Z]'`
          ;;
 esac
 
