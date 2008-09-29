@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-29 18:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/os2/gcc.cf
+  * harbour/make_gnu_os2.cmd
+    * moved -DTCPV40HDRS to make_gnu_os2.cmd and added small description
+      about this macro. By default is enabled, can be disabled by
+      setting environment variable HB_OS2_TCP32 to 'yes', f.e.
+         SET HB_OS2_TCP32=yes
+      David and Maurilio, please check me.
+
 2008-09-29 13:11 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
    * contrib/xhb/common.mak
    * contrib/xhb/makefile

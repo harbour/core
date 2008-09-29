@@ -15,19 +15,11 @@ CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -Wall -W -O3
 
-# 26/03/2004 - <maurilio.longo@libero.it>
-# added -DTCPV40HDRS to compile with GCC 3.2.2 on OS/2 v4.0 with mixed
-# 16/32 bit tcp/ip stack
-# can be removed if compiled on a tcp/ip stack >= 4.1 (eComStation,
-# for example), if you do not need it please use HB_OS2_NEW_TCP=yes
-# environment variable.
-ifneq ($(HB_OS2_NEW_TCP),yes)
-   CFLAGS += -DTCPV40HDRS
-endif
-
 LD = gcc
 LDFLAGS =
-LD_OUT = -o $(SPACE)
+# NOTE: The ending space after -o is important, please preserve it.
+#       Now solved with '$(subst x,x, )' expression.
+LD_OUT = -o$(subst x,x, )
 
 ifeq ($(C_MAIN),)
 ifeq ($(HB_GT_LIB),os2pm)
