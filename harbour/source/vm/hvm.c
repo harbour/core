@@ -3253,6 +3253,7 @@ static void hb_vmInc( PHB_ITEM pItem )
       {
          if( pItem->item.asInteger.value < HB_INT_MAX )
          {
+            pItem->type = HB_IT_INTEGER;
             pItem->item.asInteger.value++;
             pItem->item.asInteger.length = HB_INT_EXPLENGTH( pItem->item.asInteger.value );
          }
@@ -3272,6 +3273,7 @@ static void hb_vmInc( PHB_ITEM pItem )
       }
       else if( pItem->item.asLong.value < HB_LONG_MAX )
       {
+         pItem->type = HB_IT_LONG;
          pItem->item.asLong.value++;
          pItem->item.asLong.length = HB_LONG_EXPLENGTH( pItem->item.asLong.value );
       }
@@ -3285,11 +3287,13 @@ static void hb_vmInc( PHB_ITEM pItem )
    }
    else if( HB_IS_DOUBLE( pItem ) )
    {
+      pItem->type = HB_IT_DOUBLE;
       pItem->item.asDouble.value++;
       pItem->item.asDouble.length = HB_DBL_LENGTH( pItem->item.asDouble.value );
    }
    else if( HB_IS_DATE( pItem ) )
    {
+      pItem->type = HB_IT_DATE;
       pItem->item.asDate.value++;
    }
    else if( ! hb_objOperatorCall( HB_OO_OP_INC, pItem, pItem, NULL, NULL ) )
@@ -3314,6 +3318,7 @@ static void hb_vmDec( PHB_ITEM pItem )
       {
          if( pItem->item.asInteger.value > HB_INT_MIN )
          {
+            pItem->type = HB_IT_INTEGER;
             pItem->item.asInteger.value--;
             pItem->item.asInteger.length = HB_INT_EXPLENGTH( pItem->item.asInteger.value );
          }
@@ -3333,6 +3338,7 @@ static void hb_vmDec( PHB_ITEM pItem )
       }
       else if( pItem->item.asLong.value > HB_LONG_MIN )
       {
+         pItem->type = HB_IT_LONG;
          pItem->item.asLong.value--;
          pItem->item.asLong.length = HB_LONG_EXPLENGTH( pItem->item.asLong.value );
       }
@@ -3346,11 +3352,13 @@ static void hb_vmDec( PHB_ITEM pItem )
    }
    else if( HB_IS_DOUBLE( pItem ) )
    {
+      pItem->type = HB_IT_DOUBLE;
       pItem->item.asDouble.value--;
       pItem->item.asDouble.length = HB_DBL_LENGTH( pItem->item.asDouble.value );
    }
    else if( HB_IS_DATE( pItem ) )
    {
+      pItem->type = HB_IT_DATE;
       pItem->item.asDate.value--;
    }
    else if( ! hb_objOperatorCall( HB_OO_OP_DEC, pItem, pItem, NULL, NULL ) )
