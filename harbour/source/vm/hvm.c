@@ -381,14 +381,6 @@ void hb_vmResumeThreads( void ) {}
 
 #else
 
-typedef struct _HB_VM_STACKLST
-{
-   void *                     pStackId;
-   PHB_THREADSTATE            pState;
-   struct _HB_VM_STACKLST *   pNext;
-   struct _HB_VM_STACKLST *   pPrev;
-} HB_VM_STACKLST, * PHB_VM_STACKLST;
-
 static HB_CRITICAL_NEW( s_vmMtx );
 static HB_COND_NEW( s_vmCond );
 
@@ -397,7 +389,7 @@ static int volatile s_iStackCount = 0;
 /* number of running HVM threads */
 static int volatile s_iRunningCount = 0;
 /* active HVM stacks list */
-static PHB_VM_STACKLST s_vmStackLst = NULL;
+static PHB_THREADSTATE s_vmStackLst = NULL;
 
 #  define HB_THREQUEST_STOP   1
 #  define HB_THREQUEST_QUIT   2
@@ -594,93 +586,131 @@ void * hb_vmThreadState( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadState()"));
 
-   return ( void * ) ( ( PHB_VM_STACKLST ) hb_stackList() )->pState;
+   return hb_stackList();
 }
 
 static void hb_vmStackAdd( PHB_THREADSTATE pState )
 {
-   HB_STACK_TLS_PRELOAD
-   PHB_VM_STACKLST pStack;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_vmStackAdd(%p)", pState));
 
-   pStack = ( PHB_VM_STACKLST ) hb_xgrab( sizeof( HB_VM_STACKLST ) );
-   pStack->pStackId = hb_stackId();
-   pStack->pState = pState;
+   if( !pState->pPrev )
+   {
+      if( s_vmStackLst )
+      {
+         pState->pNext = s_vmStackLst;
+         pState->pPrev = s_vmStackLst->pPrev;
+         pState->pPrev->pNext = pState;
+         s_vmStackLst->pPrev = pState;
+      }
+      else
+      {
+         s_vmStackLst = pState->pNext = pState->pPrev = pState;
+      }
+      s_iStackCount++;
+   }
+}
+
+static void hb_vmStackDel( PHB_THREADSTATE pState )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmStackDel(%p)", pState));
+
+   pState->fActive = FALSE;
+   pState->pStackId = NULL;
+
+   if( pState->pPrev )
+   {
+      pState->pPrev->pNext = pState->pNext;
+      pState->pNext->pPrev = pState->pPrev;
+      if( s_vmStackLst == pState )
+      {
+         s_vmStackLst = pState->pNext;
+         if( s_vmStackLst == pState )
+            s_vmStackLst = NULL;
+      }
+      pState->pPrev = pState->pNext = NULL;
+      s_iStackCount--;
+   }
+
+   if( pState->pThItm )
+   {
+      PHB_ITEM pThItm = pState->pThItm;
+      pState->pThItm = NULL;
+      /* NOTE: releasing pThItm may force pState freeing if parent
+       *       thread does not keep thread pointer item. So it's
+       *       important to not access it later. [druzus]
+       */
+      hb_itemRelease( pThItm );
+   }
+}
+
+static void hb_vmStackInit( PHB_THREADSTATE pState )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmStackInit(%p)", pState));
 
    HB_VM_LOCK
 
-   if( s_vmStackLst )
+   hb_stackInit();      /* initialize HVM thread stack */
    {
-      pStack->pNext = s_vmStackLst;
-      pStack->pPrev = s_vmStackLst->pPrev;
-      pStack->pPrev->pNext = pStack;
-      s_vmStackLst->pPrev = pStack;
-   }
-   else
-   {
-      s_vmStackLst = pStack->pNext = pStack->pPrev = pStack;
-   }
-   hb_stackListSet( ( void * ) ( pStack ) );
-   s_iStackCount++;
-   if( pState )
-   {
-      pState->pStackId = pStack->pStackId;
-      pState->fActive = TRUE;
-   }
+      HB_STACK_TLS_PRELOAD
 
+      hb_stackUnlock();
+      pState->pStackId = hb_stackId();
+      hb_stackListSet( ( void * ) ( pState ) );
+      pState->fActive = TRUE;
+      hb_vmStackAdd( pState );
+   }
    HB_VM_UNLOCK
 
    hb_vmLock();
 }
 
-static void hb_vmStackDel( void )
+static void hb_vmStackRelease( void )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_VM_STACKLST pStack;
+   BOOL fLocked;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmStackDel()"));
-
-   hb_vmUnlock();
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmStackRelease()"));
 
    HB_VM_LOCK
 
-   pStack = ( PHB_VM_STACKLST ) hb_stackList();
-   if( pStack->pState )
-   {
-      pStack->pState->fActive = FALSE;
-      pStack->pState->pStackId = NULL;
-      if( pStack->pState->pThItm )
-      {
-         PHB_ITEM pThItm = pStack->pState->pThItm;
-         pStack->pState->pThItm = NULL;
-         /* NOTE: releasing pThItm may force pState freeing if parent
-          *       thread does not keep thread pointer item. So it's
-          *       important to not access it later. [druzus]
-          *        
-          */
-         hb_itemRelease( pThItm );
-      }
-      pStack->pState = NULL;
-   }
+   fLocked = hb_stackUnlock() == 1;
+
+   hb_vmStackDel( ( PHB_THREADSTATE ) hb_stackList() );
 
    hb_setRelease( hb_stackSetStruct() );
    hb_stackFree();
 
-   pStack->pPrev->pNext = pStack->pNext;
-   pStack->pNext->pPrev = pStack->pPrev;
-   if( s_vmStackLst == pStack )
-   {
-      s_vmStackLst = pStack->pNext;
-      if( s_vmStackLst == pStack )
-         s_vmStackLst = NULL;
-   }
-   hb_xfree( pStack );
-
    hb_threadMutexUnlockAll();
 
-   s_iStackCount--;
-   hb_threadCondBroadcast( &s_vmCond );
+   if( fLocked )
+   {
+      s_iRunningCount--;
+      hb_threadCondBroadcast( &s_vmCond );
+   }
+
+   HB_VM_UNLOCK
+}
+
+HB_EXPORT BOOL hb_vmThreadRegister( void * Cargo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadRegister(%p)", Cargo));
+
+   HB_VM_LOCK
+
+   hb_vmStackAdd( ( PHB_THREADSTATE ) Cargo );
+
+   HB_VM_UNLOCK
+
+   return TRUE;
+}
+
+HB_EXPORT void hb_vmThreadRelease( void * Cargo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadRelease(%p)", Cargo));
+
+   HB_VM_LOCK
+
+   hb_vmStackDel( ( PHB_THREADSTATE ) Cargo );
 
    HB_VM_UNLOCK
 }
@@ -692,22 +722,16 @@ HB_EXPORT void hb_vmThreadInit( void * Cargo )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadInit(%p)", Cargo));
 
-   hb_stackInit();      /* initialize HVM thread stack */
+   pState = ( PHB_THREADSTATE ) Cargo;
+   if( !pState )
+      pState = hb_threadStateNew();
 
+   hb_vmStackInit( pState );  /* initialize HVM thread stack */
    {
       HB_STACK_TLS_PRELOAD
 
-      pState = ( PHB_THREADSTATE ) Cargo;
-
-      if( pState && pState->pszCDP )
-         hb_cdpSelectID( pState->pszCDP );
-      else
-         hb_cdpSelectID( HB_MACRO2STRING( HB_CODEPAGE_DEFAULT ) );
-
-      if( pState && pState->pszLang )
-         hb_cdpSelectID( pState->pszLang );
-      else
-         hb_langSelectID( HB_MACRO2STRING( HB_LANG_DEFAULT ) );
+      hb_cdpSelectID( pState->pszCDP );
+      hb_langSelectID( pState->pszLang );
 
       if( pState && pState->pSet )
       {
@@ -719,17 +743,18 @@ HB_EXPORT void hb_vmThreadInit( void * Cargo )
       else
          hb_setInitialize( hb_stackSetStruct() );
 
-      if( pState && pState->pszDefRDD )
+      if( pState->pszDefRDD )
          hb_stackRDD()->szDefaultRDD = pState->pszDefRDD;
 
-      hb_vmStackAdd( pState );
+      if( s_fHVMActive )
+      {
+         /* call CLIPINIT function to initialize GetList PUBLIC variables
+          * ErrorBlock() and __SetHelpK()
+          */
+         hb_vmDoInitClip();
+      }
 
-      /* call CLIPINIT function to initialize GetList PUBLIC variables
-       * ErrorBlock() and __SetHelpK()
-       */
-      hb_vmDoInitClip();
-
-      if( pState && pState->pMemvars )
+      if( pState->pMemvars )
       {
          hb_memvarRestoreFromArray( pState->pMemvars );
          hb_itemRelease( pState->pMemvars );
@@ -746,10 +771,10 @@ HB_EXPORT void hb_vmThreadQuit( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadQuit()"));
 
+   hb_stackSetQuitState( TRUE );
    hb_stackSetActionRequest( 0 );
 
-   pState = ( ( PHB_VM_STACKLST ) hb_stackList() )->pState;
-   if( pState )
+   pState = ( PHB_THREADSTATE ) hb_stackList();
    {
       PHB_ITEM pReturn = hb_stackReturnItem();
 
@@ -766,7 +791,7 @@ HB_EXPORT void hb_vmThreadQuit( void )
    hb_rddCloseAll();             /* close all workareas */
    hb_stackRemove( 1 );          /* clear stack items, leave only initial symbol item */
    hb_memvarsClear();            /* clear all PUBLIC (and PRIVATE if any) variables */
-   hb_vmStackDel();              /* remove stack from linked HVM stacks list */
+   hb_vmStackRelease();          /* release HVM stack and remove it from linked HVM stacks list */
 }
 
 /* send QUIT request to given thread */
@@ -804,118 +829,120 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    s_pDynsDbgEntry = hb_dynsymFind( "__DBGENTRY" );
 
    hb_xinit();
-   hb_stackInit();            /* initialize HVM stack */
+
+#if defined( HB_MT_VM )
+   hb_vmStackInit( hb_threadStateNew() ); /* initialize HVM thread stack */
+#else
+   hb_stackInit();                        /* initialize HVM stack */
+#endif
+   /* Set the language and codepage to the default */
+   /* This trick is needed to stringify the macro value */
+   hb_langSelectID( HB_MACRO2STRING( HB_LANG_DEFAULT ) );
+   hb_cdpSelectID( HB_MACRO2STRING( HB_CODEPAGE_DEFAULT ) );
    {
       HB_STACK_TLS_PRELOAD
       s_main_thread = hb_stackId();
-#if defined( HB_MT_VM )
-      hb_vmStackAdd( NULL );
-#endif
-
-      /* Set the language and codepage to the default */
-      /* This trick is needed to stringify the macro value */
-      hb_langSelectID( HB_MACRO2STRING( HB_LANG_DEFAULT ) );
-      hb_cdpSelectID( HB_MACRO2STRING( HB_CODEPAGE_DEFAULT ) );
-
-      hb_clsInit();              /* initialize Classy/OO system */
-      hb_errInit();
-
-      /* initialize dynamic symbol for evaluating codeblocks */
-      hb_symEval.pDynSym = hb_dynsymGetCase( hb_symEval.szName );
-
+      /* _SET_* initialization */
       hb_setInitialize( hb_stackSetStruct() );
-      hb_conInit();
+   }
 
-      /* Check for some internal switches */
-      s_VMFlags = hb_cmdargProcessVM( &s_VMCancelKey, &s_VMCancelKeyEx );
-      hb_inkeySetCancelKeys( s_VMCancelKey, s_VMCancelKeyEx );
+   hb_clsInit();              /* initialize Classy/OO system */
+   hb_errInit();
+
+   /* initialize dynamic symbol for evaluating codeblocks */
+   hb_symEval.pDynSym = hb_dynsymGetCase( hb_symEval.szName );
+
+   hb_conInit();
+
+   /* Check for some internal switches */
+   s_VMFlags = hb_cmdargProcessVM( &s_VMCancelKey, &s_VMCancelKeyEx );
+   hb_inkeySetCancelKeys( s_VMCancelKey, s_VMCancelKeyEx );
 
 #ifndef HB_NO_PROFILER
-      /* Initialize opcodes profiler support arrays */
-      {
-         ULONG ul;
+   /* Initialize opcodes profiler support arrays */
+   {
+      ULONG ul;
 
-         for( ul = 0; ul < HB_P_LAST_PCODE; ul++ )
-         {
-            hb_ulOpcodesCalls[ ul ] = 0;
-            hb_ulOpcodesTime[ ul ] = 0;
-         }
+      for( ul = 0; ul < HB_P_LAST_PCODE; ul++ )
+      {
+         hb_ulOpcodesCalls[ ul ] = 0;
+         hb_ulOpcodesTime[ ul ] = 0;
       }
+   }
 #endif
 
-      if( s_pDynsDbgEntry )
+   if( s_pDynsDbgEntry )
+   {
+      /* Try to get C dbgEntry() function pointer */
+      if( !s_pFunDbgEntry )
+         hb_vmDebugEntry( HB_DBG_GETENTRY, 0, NULL, 0, 0 );
+      if( !s_pFunDbgEntry )
+         s_pFunDbgEntry = hb_vmDebugEntry;
+   }
+
+   /* enable executing PCODE (HVM reenter request) */
+   s_fHVMActive = TRUE;
+
+   /* Call functions that initializes static variables
+    * Static variables have to be initialized before any INIT functions
+    * because INIT function can use static variables
+    */
+   hb_vmDoInitStatics();
+   /* call CLIPINIT function to initialize GetList PUBLIC variables
+    * ErrorBlock() and __SetHelpK()
+    * Because on some platform the execution order of init functions
+    * is out of Harbour control then this function has to be called
+    * explicitly in VM initialization process before hb_vmDoInitFunctions()
+    * and not depends on INIT clause.
+    */
+   hb_vmDoInitClip();
+   hb_clsDoInit();                  /* initialize Classy .prg functions */
+
+   hb_vmDoModuleInitFunctions();    /* process AtInit registered functions */
+   hb_vmDoInitFunctions();          /* process defined INIT functions */
+
+   /* This is undocumented CA-Cl*pper, if there's a function called _APPMAIN
+      it will be executed first. [vszakats] */
+   {
+      PHB_DYNS pDynSym = hb_dynsymFind( "_APPMAIN" );
+
+      if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
+         s_pSymStart = pDynSym->pSymbol;
+#ifdef HB_START_PROCEDURE
+      else
       {
-         /* Try to get C dbgEntry() function pointer */
-         if( !s_pFunDbgEntry )
-            hb_vmDebugEntry( HB_DBG_GETENTRY, 0, NULL, 0, 0 );
-         if( !s_pFunDbgEntry )
-            s_pFunDbgEntry = hb_vmDebugEntry;
-      }
+         /* if first char is '@' then start procedure were set by
+            programmer explicitly and should have the highest priority
+            in other case it's the name of first public function in
+            first linked moudule which is used if there is no
+            HB_START_PROCEDURE in code */
+         if( hb_vm_pszLinkedMain && *hb_vm_pszLinkedMain == '@' )
+            pDynSym = hb_dynsymFind( hb_vm_pszLinkedMain + 1 );
+         else
+         {
+            pDynSym = hb_dynsymFind( HB_START_PROCEDURE );
 
-      /* enable executing PCODE (HVM reenter request) */
-      s_fHVMActive = TRUE;
-
-      /* Call functions that initializes static variables
-       * Static variables have to be initialized before any INIT functions
-       * because INIT function can use static variables
-       */
-      hb_vmDoInitStatics();
-      /* call CLIPINIT function to initialize GetList PUBLIC variables
-       * ErrorBlock() and __SetHelpK()
-       * Because on some platform the execution order of init functions
-       * is out of Harbour control then this function has to be called
-       * explicitly in VM initialization process before hb_vmDoInitFunctions()
-       * and not depends on INIT clause.
-       */
-      hb_vmDoInitClip();
-      hb_clsDoInit();                  /* initialize Classy .prg functions */
-
-      hb_vmDoModuleInitFunctions();    /* process AtInit registered functions */
-      hb_vmDoInitFunctions();          /* process defined INIT functions */
-
-      /* This is undocumented CA-Cl*pper, if there's a function called _APPMAIN
-         it will be executed first. [vszakats] */
-      {
-         PHB_DYNS pDynSym = hb_dynsymFind( "_APPMAIN" );
+            if( ! ( pDynSym && pDynSym->pSymbol->value.pFunPtr ) && hb_vm_pszLinkedMain )
+               pDynSym = hb_dynsymFind( hb_vm_pszLinkedMain );
+         }
 
          if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
             s_pSymStart = pDynSym->pSymbol;
-#ifdef HB_START_PROCEDURE
          else
-         {
-            /* if first char is '@' then start procedure were set by
-               programmer explicitly and should have the highest priority
-               in other case it's the name of first public function in
-               first linked moudule which is used if there is no
-               HB_START_PROCEDURE in code */
-            if( hb_vm_pszLinkedMain && *hb_vm_pszLinkedMain == '@' )
-               pDynSym = hb_dynsymFind( hb_vm_pszLinkedMain + 1 );
-            else
-            {
-               pDynSym = hb_dynsymFind( HB_START_PROCEDURE );
-
-               if( ! ( pDynSym && pDynSym->pSymbol->value.pFunPtr ) && hb_vm_pszLinkedMain )
-                  pDynSym = hb_dynsymFind( hb_vm_pszLinkedMain );
-            }
-
-            if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
-               s_pSymStart = pDynSym->pSymbol;
-            else
-               hb_errInternal( HB_EI_VMBADSTARTUP, NULL, HB_START_PROCEDURE, NULL );
-         }
-#else
-         else if( hb_vm_pszLinkedMain )
-         {
-            pDynSym = hb_dynsymFind( hb_vm_pszLinkedMain + ( *hb_vm_pszLinkedMain == '@' ? 1 : 0 ) );
-            if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
-               s_pSymStart = pDynSym->pSymbol;
-         }
-#ifndef HB_C52_STRICT
-         if( bStartMainProc && ! s_pSymStart )
-            hb_errInternal( HB_EI_VMNOSTARTUP, NULL, NULL, NULL );
-#endif
-#endif
+            hb_errInternal( HB_EI_VMBADSTARTUP, NULL, HB_START_PROCEDURE, NULL );
       }
+#else
+      else if( hb_vm_pszLinkedMain )
+      {
+         pDynSym = hb_dynsymFind( hb_vm_pszLinkedMain + ( *hb_vm_pszLinkedMain == '@' ? 1 : 0 ) );
+         if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
+            s_pSymStart = pDynSym->pSymbol;
+      }
+#ifndef HB_C52_STRICT
+      if( bStartMainProc && ! s_pSymStart )
+         hb_errInternal( HB_EI_VMNOSTARTUP, NULL, NULL, NULL );
+#endif
+#endif
    }
 
    if( bStartMainProc && s_pSymStart )
@@ -1005,18 +1032,18 @@ HB_EXPORT int hb_vmQuit( void )
 #endif
    hb_itemClear( hb_stackReturnItem() );
 
-   /* release all known garbage */
-   if( hb_xquery( HB_MEM_USEDMAX ) ) /* check if fmstat is ON */
-      hb_gcCollectAll( TRUE );
-   else
-      hb_gcReleaseAll();
+   hb_gcCollectAll( TRUE );
 
 #if defined( HB_MT_VM )
-   hb_vmStackDel();              /* remove stack from linked HVM stacks list */
+   hb_vmStackRelease();       /* release HVM stack and remove it from linked HVM stacks list */
 #else
    hb_setRelease( hb_stackSetStruct() );  /* releases Sets */
    hb_stackFree();
 #endif
+
+   /* release all known garbage */
+   if( hb_xquery( HB_MEM_USEDMAX ) == 0 ) /* check if fmstat is ON */
+      hb_gcReleaseAll();
    hb_xexit();
 
    return s_nErrorLevel;
@@ -10647,10 +10674,10 @@ void hb_vmIsStackRef( void )
 #if defined( HB_MT_VM )
    if( s_vmStackLst )
    {
-      PHB_VM_STACKLST pStack = s_vmStackLst;
+      PHB_THREADSTATE pStack = s_vmStackLst;
       do
       {
-         if( pStack->pStackId )
+         if( pStack->fActive && pStack->pStackId )
             hb_stackIsStackRef( pStack->pStackId, hb_vmTSVarClean );
          pStack = pStack->pNext;
       }

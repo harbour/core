@@ -159,6 +159,8 @@ extern HB_EXPORT void     hb_vmUnlock( void ); /* unlock VM, allow GC execution 
 extern HB_EXPORT BOOL     hb_vmSuspendThreads( BOOL fWait ); /* (try to) stop all threads except current one */
 extern HB_EXPORT void     hb_vmResumeThreads( void ); /* unblock execution of threads stopped by hb_vmSuspendThreads() */
 #endif
+extern HB_EXPORT BOOL     hb_vmThreadRegister( void * ); /* Register new thread without local thread HVM stack */
+extern HB_EXPORT void     hb_vmThreadRelease( void * ); /* Remove registered thread which does not have local thread HVM stack yet */
 extern HB_EXPORT void     hb_vmThreadInit( void * ); /* allocate local thread HVM stack */
 extern HB_EXPORT void     hb_vmThreadQuit( void ); /* destroy local thread HVM stack */
 extern HB_EXPORT void     hb_vmThreadQuitRequest( void * ); /* send QUIT request to given thread */

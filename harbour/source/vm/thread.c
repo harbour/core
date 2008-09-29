@@ -453,8 +453,6 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
 
    pThread = ( PHB_THREADSTATE ) hb_itemGetPtrGC( pThItm, hb_threadDestructor );
 
-   pThread->pThItm = pThItm;
-
    hb_vmThreadInit( ( void * ) pThread );
 
    ulPCount = hb_arrayLen( pThread->pParams );
@@ -517,6 +515,24 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
 #endif
 }
 
+PHB_THREADSTATE hb_threadStateNew( void )
+{
+   PHB_ITEM pThItm;
+   PHB_THREADSTATE pThread;
+
+   pThItm = hb_itemNew( NULL );
+   pThread = ( PHB_THREADSTATE )
+                  hb_gcAlloc( sizeof( HB_THREADSTATE ), hb_threadDestructor );
+   memset( pThread, 0, sizeof( HB_THREADSTATE ) );
+   hb_itemPutPtrGC( pThItm, pThread );
+
+   pThread->pszCDP  = HB_MACRO2STRING( HB_CODEPAGE_DEFAULT );
+   pThread->pszLang = HB_MACRO2STRING( HB_LANG_DEFAULT );
+   pThread->pThItm  = pThItm;
+
+   return pThread;
+}
+
 static PHB_THREADSTATE hb_thParam( int iParam )
 {
    PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) hb_parptrGC( hb_threadDestructor, iParam );
@@ -573,11 +589,8 @@ HB_FUNC( HB_THREADSTART )
       PHB_THREADSTATE pThread;
       ULONG ulPCount, ulParam;
 
-      pReturn = hb_itemNew( NULL );
-      pThread = ( PHB_THREADSTATE )
-                  hb_gcAlloc( sizeof( HB_THREADSTATE ), hb_threadDestructor );
-      memset( pThread, 0, sizeof( HB_THREADSTATE ) );
-      hb_itemPutPtrGC( pReturn, pThread );
+      pThread = hb_threadStateNew();
+      pReturn = pThread->pThItm;
 
       pThread->pszCDP    = hb_cdpID();
       pThread->pszLang   = hb_langID();
@@ -625,10 +638,18 @@ HB_FUNC( HB_THREADSTART )
        */
       hb_itemReturn( pReturn );
 
-      pThread->th_id = hb_threadCreate( hb_threadStartVM, ( void * ) pReturn );
+#if defined( HB_MT_VM )
+      if( hb_vmThreadRegister( ( void * ) pThread ) )
+#endif
+         pThread->th_id = hb_threadCreate( hb_threadStartVM, ( void * ) pReturn );
+
       if( pThread->th_id == 0 )
       {
+#if defined( HB_MT_VM )
+         hb_vmThreadRelease( pThread );
+#else
          hb_itemRelease( pReturn );
+#endif
          hb_ret();
       }
    }

@@ -275,10 +275,14 @@ typedef struct _HB_THREADSTATE
    PHB_ITEM       pResult;
    PHB_ITEM       pThItm;
    HB_THREAD_T    th_id;
+   struct _HB_THREADSTATE * pPrev;
+   struct _HB_THREADSTATE * pNext;
 } HB_THREADSTATE, * PHB_THREADSTATE;
 
 extern void hb_threadInit( void );
 extern void hb_threadExit( void );
+
+extern PHB_THREADSTATE hb_threadStateNew( void );
 
 /* Critical sections or fast non recursive MUTEXes */
 extern void hb_threadEnterCriticalSection( HB_CRITICAL_T * critical );

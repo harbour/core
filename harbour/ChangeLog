@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-29 11:18 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbvm.h
+  * harbour/include/hbthread.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/thread.c
+    + added hb_vmThreadRegister() funtion which allows to register new
+      thread in HVM without HVM stack allocation
+    + added hb_vmThreadRelease() which removes registered thread which
+      does not have allocated HVM stack yet
+    + added hb_threadStateNew() which returns new thread control state
+      which can be used as parameter to hb_vmThreadInit(),
+      hb_vmThreadRegister(), hb_vmThreadRelease()
+    * register thread control state also for main thread
+      Now hb_threadSelf() returns thread pointer also for main thread
+    ! fixed possible race condition in hb_threadWaitForAll() and
+      hb_threadTerminateAll() by using hb_vmThreadRegister() before
+      starting thread.
+
+  * harbour/source/rtl/idle.c
+    * interrupt hb_idleSleep() on QUIT or BREAK requests
+
+  * harbour/tests/mt/mttest09.prg
+    * small cleanup
+
 2008-09-29 10:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak

@@ -188,24 +188,26 @@ void hb_idleState( void )
       hb_vmUnlock();
       hb_releaseCPU();
       hb_vmLock();
-
-      if( pIdleData->fCollectGarbage )
+      if( hb_vmRequestQuery() == 0 )
       {
-         hb_gcCollectAll( FALSE );
-         pIdleData->fCollectGarbage = FALSE;
-      }
-
-      if( pIdleData->pIdleTasks && pIdleData->iIdleTask < pIdleData->iIdleMaxTask )
-      {
-         hb_itemRelease( hb_itemDo( pIdleData->pIdleTasks[ pIdleData->iIdleTask ], 0 ) );
-         ++pIdleData->iIdleTask;
-         if( pIdleData->iIdleTask == pIdleData->iIdleMaxTask && hb_setGetIdleRepeat() )
+         if( pIdleData->fCollectGarbage )
          {
-            pIdleData->iIdleTask = 0;    /* restart processing of idle tasks */
-            pIdleData->fCollectGarbage = TRUE;
+            hb_gcCollectAll( FALSE );
+            pIdleData->fCollectGarbage = FALSE;
          }
+
+         if( pIdleData->pIdleTasks && pIdleData->iIdleTask < pIdleData->iIdleMaxTask )
+         {
+            hb_itemRelease( hb_itemDo( pIdleData->pIdleTasks[ pIdleData->iIdleTask ], 0 ) );
+            ++pIdleData->iIdleTask;
+            if( pIdleData->iIdleTask == pIdleData->iIdleMaxTask && hb_setGetIdleRepeat() )
+            {
+               pIdleData->iIdleTask = 0;    /* restart processing of idle tasks */
+               pIdleData->fCollectGarbage = TRUE;
+            }
+         }
+         pIdleData->fIamIdle = FALSE;
       }
-      pIdleData->fIamIdle = FALSE;
    }
 }
 
@@ -227,7 +229,7 @@ void hb_idleSleep( double dSeconds )
    {
       HB_ULONG end_timer = hb_dateMilliSeconds() + ( HB_ULONG ) ( dSeconds * 1000 );
 
-      while( hb_dateMilliSeconds() < end_timer )
+      while( hb_dateMilliSeconds() < end_timer && hb_vmRequestQuery() == 0 )
          hb_idleState();
 
       hb_idleReset();

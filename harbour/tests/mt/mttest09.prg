@@ -28,9 +28,10 @@ proc main()
       F1 := chr( recno() )
    enddo
 
+   ? "main thread ID:", s_mainThreadID
    thID := hb_threadStart( @thFunc() )
-   ? "thread ID:", thID
-   ? "current work area detached, used() =>", used(), alias()
+   ? "current thread ID:", thID
+   ? "work area in use, used() =>", used(), alias()
    WAIT "Press a key to detach work area"
    hb_dbDetach( , {|| countRecords( {|| F1 == "A" } ) } )
    ? "work area detached, used() =>", used(), alias()
