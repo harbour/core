@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-29 10:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+    ! Fixed to use 'COPY /B' instead of 'COPY /A' to install 
+      headers, to avoid appending and EOL to these files.
+      They should work as is.
+
+  * make_gcc.mak
+    ! Fixed mainstd lib name.
+      [TOMERGE 1.0]
+
 2008-09-27 09:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_gcc.sh
     % Minor cleanup after prev changes.

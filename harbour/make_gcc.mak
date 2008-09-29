@@ -119,7 +119,7 @@ include common.cf
 # GUI programs without console. Please note IT IS A
 # DIRTY HACK and any better solution is HIGHLY WELCOME
 ifneq ($(findstring $(HB_ARCHITECTURE),w32 os2),)
-MAIN_LIB      = $(LIB_DIR)/$(LIBPREF)mainstd$(LIBEXT)
+MAIN_LIB      = $(LIB_DIR)/$(LIBPREF)hbmainstd$(LIBEXT)
 MAIN_LIB_OBJS = $(OBJ_DIR)/mainstd$(OBJEXT)
 
 VM_STATIC_LIB_OBJS     := $(VM_STATIC_LIB_OBJS:$(OBJ_DIR)/mainstd$(OBJEXT)=)
