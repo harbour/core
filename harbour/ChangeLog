@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-29 13:11 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+   * contrib/xhb/common.mak
+   * contrib/xhb/makefile
+   + contrib/xhb/hbstruct.ch
+   + contrib/xhb/hbstruct.prg
+     + STRUCTURE / MEMBER / ENDSTRUCTURE support
+
 2008-09-29 17:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbset.h
   * harbour/source/vm/set.c
