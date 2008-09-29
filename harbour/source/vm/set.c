@@ -95,6 +95,10 @@ static char set_char( PHB_ITEM pItem, char oldChar )
    return newChar;
 }
 
+/*
+ * Change the setting if the parameter is a logical value, or is
+ * either "ON" or "OFF" (regardless of case)
+ */
 static BOOL set_logical( PHB_ITEM pItem, BOOL bDefault )
 {
    BOOL bLogical = bDefault;
@@ -200,7 +204,7 @@ static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL
          if( pFilename->szName )
          {
             int iLen = ( int ) strlen( pFilename->szName );
-            if( ( iLen == 3 && 
+            if( ( iLen == 3 &&
                   ( hb_stricmp( pFilename->szName, "PRN" ) == 0 ||
                     hb_stricmp( pFilename->szName, "CON" ) == 0 ) ) ||
                 ( iLen == 4 &&
@@ -295,44 +299,17 @@ static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL
    return handle;
 }
 
-HB_FUNC( SETCANCEL )
-{
-   hb_retl( hb_setGetCancel() );
-   hb_setSetItem( HB_SET_CANCEL, hb_param( 1, HB_IT_LOGICAL ) );
-}
-
-HB_FUNC( __SETCENTURY )
+HB_EXPORT BOOL hb_setSetCentury( BOOL new_century_setting )
 {
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
    BOOL old_century_setting = pSet->hb_set_century;
 
+   pSet->hb_set_century = new_century_setting;
    /*
-    * Change the setting if the parameter is a logical value, or is
-    * either "ON" or "OFF" (regardless of case)
-    */
-   if( ISLOG( 1 ) )
-      pSet->hb_set_century = hb_parl( 1 );
-   else if( ISCHAR( 1 ) )
-   {
-      char * szString = hb_parc( 1 );
-      ULONG ulLen = hb_parclen( 1 );
-
-      if( ulLen >= 2
-       && toupper( ( UCHAR ) szString[ 0 ] ) == 'O'
-       && toupper( ( UCHAR ) szString[ 1 ] ) == 'N' )
-         pSet->hb_set_century = TRUE;
-      else if( ulLen >= 3
-       && toupper( ( UCHAR ) szString[ 0 ] ) == 'O'
-       && toupper( ( UCHAR ) szString[ 1 ] ) == 'F'
-       && toupper( ( UCHAR ) szString[ 2 ] ) == 'F' )
-         pSet->hb_set_century = FALSE;
-   }
-
-   /*
-    * Finally, if the setting changed, adjust the current date format to use
+    * if the setting changed, adjust the current date format to use
     * the correct number of year digits.
     */
-   if( old_century_setting != pSet->hb_set_century )
+   if( old_century_setting != new_century_setting )
    {
       int count, digit, size, y_size, y_start, y_stop;
       char * szDateFormat, * szNewFormat;
@@ -364,7 +341,7 @@ HB_FUNC( __SETCENTURY )
       y_size = y_stop - y_start;
       /* Calculate size of new format */
       size -= y_size;
-      if( pSet->hb_set_century )
+      if( new_century_setting )
          size += 4;
       else size += 2;
 
@@ -376,7 +353,7 @@ HB_FUNC( __SETCENTURY )
          if( y_start > 0 ) memcpy( szNewFormat, szDateFormat, y_start );
          szNewFormat[ y_start ] = '\0';
          hb_strncat( szNewFormat, "YY", size );
-         if( pSet->hb_set_century )
+         if( new_century_setting )
             hb_strncat( szNewFormat, "YY", size );
          format_len = strlen( szDateFormat );
          if( y_stop < format_len )
@@ -391,7 +368,25 @@ HB_FUNC( __SETCENTURY )
    }
 
    /* Return the previous setting */
+   return old_century_setting;
+}
+
+HB_FUNC( __SETCENTURY )
+{
+   BOOL old_century_setting = hb_setGetCentury();
+   PHB_ITEM pNewVal = hb_param( 1, HB_IT_ANY );
+
+   if( pNewVal )
+      hb_setSetCentury( set_logical( pNewVal, old_century_setting ) );
+
    hb_retl( old_century_setting );
+}
+
+HB_FUNC( SETCANCEL )
+{
+   hb_retl( hb_setGetCancel() );
+   /* SETCANCEL() accepts only logical parameters */
+   hb_setSetItem( HB_SET_CANCEL, hb_param( 1, HB_IT_LOGICAL ) );
 }
 
 HB_FUNC( SET )
@@ -958,7 +953,7 @@ HB_FUNC( SET )
          /* Return NIL if called with invalid SET specifier */
          break;
 
-#if 0 
+#if 0
       /*
        * intentionally removed default: clause to enable C compiler warning
        * when not all HB_SET_* cases are implemented. [druzus]
@@ -1516,7 +1511,7 @@ HB_EXPORT BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
          case HB_SET_HBOUTLOGINFO:
          case HB_SET_INVALID_:
             break;
-#if 0 
+#if 0
          /*
           * intentionally removed default: clause to enable C compiler warning
           * when not all HB_SET_* cases are implemented. [druzus]
@@ -1634,7 +1629,7 @@ HB_EXPORT BOOL    hb_setGetL( HB_set_enum set_specifier )
       case HB_SET_HBOUTLOGINFO:
       case HB_SET_INVALID_:
          break;
-#if 0 
+#if 0
       /*
        * intentionally removed default: clause to enable C compiler warning
        * when not all HB_SET_* cases are implemented. [druzus]
@@ -1733,7 +1728,7 @@ HB_EXPORT char *  hb_setGetCPtr( HB_set_enum set_specifier )
       case HB_SET_TRIMFILENAME:
       case HB_SET_INVALID_:
          break;
-#if 0 
+#if 0
       /*
        * intentionally removed default: clause to enable C compiler warning
        * when not all HB_SET_* cases are implemented. [druzus]
@@ -1832,7 +1827,7 @@ HB_EXPORT int     hb_setGetNI( HB_set_enum set_specifier )
       case HB_SET_HBOUTLOGINFO:
       case HB_SET_INVALID_:
          break;
-#if 0 
+#if 0
       /*
        * intentionally removed default: clause to enable C compiler warning
        * when not all HB_SET_* cases are implemented. [druzus]

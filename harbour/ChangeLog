@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-29 17:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbset.h
+  * harbour/source/vm/set.c
+    + divided __SETCENTURY() PRG function into two functions:
+      __SETCENTURY() and public C function hb_setSetCentury()
+      to manipulate century setting from C code.
+      Modyfication by Francesco Saverio Giudice
+
 2008-09-29 15:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
   * mpkg_tgz.sh

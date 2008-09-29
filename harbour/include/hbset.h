@@ -254,6 +254,7 @@ extern HB_EXPORT HB_PATHNAMES * hb_setGetFirstSetPath( void );
 
 extern HB_EXPORT HB_FHANDLE hb_setGetAltHan( void );
 extern HB_EXPORT BOOL       hb_setGetCentury( void );
+extern HB_EXPORT BOOL       hb_setSetCentury( BOOL );
 extern HB_EXPORT HB_FHANDLE hb_setGetExtraHan( void );
 extern HB_EXPORT HB_FHANDLE hb_setGetPrintHan( void );
 extern HB_EXPORT BOOL       hb_setGetAlternate( void );
