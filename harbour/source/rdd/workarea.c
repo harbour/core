@@ -64,6 +64,7 @@
 #include "hbapierr.h"
 #include "hbapilng.h"
 #include "hbvm.h"
+#include "hbthread.h"
 #include "hbset.h"
 
 /*
@@ -2017,6 +2018,7 @@ static const RDDFUNCS waTable =
 
 #define HB_RDD_POOL_ALLOCSIZE       128
 /* common for all threads list of registered RDDs */
+static HB_CRITICAL_NEW( s_rddMtx );
 static LPRDDNODE * s_RddList    = NULL;   /* Registered RDDs pool */
 static USHORT      s_uiRddMax   = 0;      /* Size of RDD pool */
 static USHORT      s_uiRddCount = 0;      /* Number of registered RDD */
@@ -2114,21 +2116,18 @@ HB_EXPORT int hb_rddRegister( const char * szDriver, USHORT uiType )
    PHB_DYNS pGetFuncTable;
    char szGetFuncTable[ HB_RDD_MAX_DRIVERNAME_LEN + 14 ];
    USHORT uiFunctions;
+   int iResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddRegister(%s, %hu)", szDriver, uiType));
 
    if( hb_rddFindNode( szDriver, NULL ) )    /* Duplicated RDD */
-   {
       return 1;
-   }
 
    snprintf( szGetFuncTable, sizeof( szGetFuncTable ), "%s_GETFUNCTABLE",
              szDriver );
    pGetFuncTable = hb_dynsymFindName( szGetFuncTable );
    if( !pGetFuncTable )
-   {
       return 2;              /* Not valid RDD */
-   }
 
    /* Create a new RDD node */
    pRddNewNode = ( LPRDDNODE ) hb_xgrab( sizeof( RDDNODE ) );
@@ -2148,25 +2147,36 @@ HB_EXPORT int hb_rddRegister( const char * szDriver, USHORT uiType )
    hb_vmPushInteger( s_uiRddCount );
    hb_vmDo( 4 );
    if( hb_parni( -1 ) != SUCCESS )
+      iResult = 3;                        /* Invalid FUNCTABLE */
+   else
    {
-      hb_xfree( pRddNewNode );         /* Delete de new RDD node */
-      return 3;                        /* Invalid FUNCTABLE */
-   }
-
-   if( s_uiRddCount == s_uiRddMax )
-   {
-      s_uiRddMax += HB_RDD_POOL_ALLOCSIZE;
-      s_RddList = ( LPRDDNODE * )
+      hb_threadEnterCriticalSection( &s_rddMtx );
+      /* repeat the test to protect against possible registering RDD by
+       *  <szDriver>_GETFUNCTABLE()
+       */
+      if( ! hb_rddFindNode( szDriver, NULL ) )    /* Duplicated RDD */
+      {
+         if( s_uiRddCount == s_uiRddMax )
+         {
+            s_uiRddMax += HB_RDD_POOL_ALLOCSIZE;
+            s_RddList = ( LPRDDNODE * )
                   hb_xrealloc( s_RddList, sizeof( LPRDDNODE ) * s_uiRddMax );
+         }
+         s_RddList[ s_uiRddCount ] = pRddNewNode;   /* Add the new RDD node */
+         s_uiRddCount++;
+         iResult = 0;
+      }
+      else
+         iResult = 1;
+      hb_threadLeaveCriticalSection( &s_rddMtx );
    }
-   s_RddList[ s_uiRddCount++ ] = pRddNewNode;   /* Add the new RDD node */
 
-   if( pRddNewNode->pTable.init != NULL )
-   {
+   if( iResult != 0 )
+      hb_xfree( pRddNewNode );
+   else if( pRddNewNode->pTable.init != NULL )
       SELF_INIT( pRddNewNode );
-   }
 
-   return 0;                           /* Ok */
+   return iResult;
 }
 
 /*

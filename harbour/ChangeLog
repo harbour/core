@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-29 13:59 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/workarea.c
+    * added protection against multiple registering RDD with the same
+      name by *_GETFUNCTABLE() in ST/MT mode or other thread in MT mode
+
 2008-09-29 11:18 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbvm.h
   * harbour/include/hbthread.h
