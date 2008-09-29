@@ -29,7 +29,7 @@ hb_pref="hb"
 hb_contrib=""
 hb_sysdir="yes"
 hb_exesuf=""
-export C_USR="$C_USR -DHB_FM_STATISTICS_OFF -O3"
+export C_USR="$C_USR -DHB_FM_STATISTICS_OFF"
 
 [ -z "$HB_INSTALL_PREFIX" ] && [ -n "$PREFIX" ] && export HB_INSTALL_PREFIX="$PREFIX"
 

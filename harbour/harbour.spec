@@ -67,7 +67,7 @@
 %define hb_pref  hb
 %define hb_arch  export HB_ARCHITECTURE=linux
 %define hb_cc    export HB_COMPILER=gcc
-%define hb_cflag export C_USR="-O3 -DHB_FM_STATISTICS_OFF"
+%define hb_cflag export C_USR="-DHB_FM_STATISTICS_OFF"
 %define hb_lflag export L_USR="${CC_L_USR} %{?_with_static:-static}"
 %define hb_gpm   export HB_GPM_MOUSE=%{!?_without_gpm:yes}
 %define hb_crs   export HB_WITHOUT_GTCRS=%{?_without_gtcrs:yes}

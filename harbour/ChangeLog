@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-29 15:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+  * mpkg_tgz.sh
+  * harbour.spec
+  * config/darwin/gcc.cf
+  * config/hpux/gcc.cf
+  * config/dos/rsx32.cf
+  * config/dos/djgpp.cf
+  * config/linux/gcc.cf
+  * config/os2/gcc.cf
+  * config/sunos/gcc.cf
+  * config/bsd/gcc.cf
+  * config/w32/mingwce.cf
+  * config/w32/gcc.cf
+  * config/w32/rsxnt.cf
+  * config/w32/mingw.cf
+    + -O3 GCC optimization level made the default for all GCC 
+      builds. Those who wish to use lower optimization settings, 
+      pls use C_USR=-O2 or such.
+
 2008-09-29 13:59 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/workarea.c
     * added protection against multiple registering RDD with the same

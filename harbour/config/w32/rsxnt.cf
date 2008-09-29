@@ -13,7 +13,7 @@ CC = gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE) -Zwin32
-CFLAGS = -Wall
+CFLAGS = -Wall -W -O3
 
 LD = gcc
 LDFLAGS = -Zwin32

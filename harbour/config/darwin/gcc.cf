@@ -21,7 +21,7 @@ CC_OUT = -o$(subst x,x, )
 CPPFLAGS = -no-cpp-precomp -I. -I$(HB_INC_COMPILE)
 
 # -fno-common enables building .dylib files
-CFLAGS = -fno-common -Wall -W
+CFLAGS = -fno-common -Wall -W -O3
 
 # It's to avoid warning message generated when 'long double' is used
 # remove it if you have newer compiler version
