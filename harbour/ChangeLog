@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-29 23:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * contrib/mtpl_b32.mak
+  * bin/bld.bat
+    % Added BCC optimization switches
+      (the ones used for the Harbour release versions).
+
+  * bin/bld.bat
+  * bin/bld_os2.cmd
+    + Added -O3 to GCC compilation.
+
 2008-09-29 22:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     ! restored some item type settings I wrongly removed few days ago

@@ -129,7 +129,7 @@ CFLAGS = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) $(HB_BUILD_MODE)
 !endif
 #-----------
 !if !$d(BCC_NOOPTIM)
-    CFLAGS = -O2 $(CFLAGS)
+    CFLAGS = -O2 -OS -Ov -Oi -Oc $(CFLAGS)
 !endif
 #-----------
 !if "$(HB_BUILD_ST)" != "yes"

@@ -104,7 +104,7 @@ CFLAGSMT = -tWM -DHB_MT_VM $(CFLAGSMT)
 
 #-----------
 !ifndef BCC_NOOPTIM
-    CFLAGS = -O2 $(CFLAGS)
+    CFLAGS = -O2 -OS -Ov -Oi -Oc $(CFLAGS)
 !endif
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
