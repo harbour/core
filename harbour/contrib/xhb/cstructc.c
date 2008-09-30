@@ -50,7 +50,7 @@
  *
  */
 
-#include "hbvmopt.h"
+#include "hbvmint.h" /* TOFIX: clean the code to not access any internal HVM structures */
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbstack.h"

@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-09-30 11:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/Makefile
+  + harbour/include/hbvmint.h
+    + added new header file which works like hbvmopt.h but does not enable
+      stack macros
+
+  * harbour/contrib/xhb/xhbenum.c
+  * harbour/contrib/xhb/xhbqself.c
+  * harbour/contrib/xhb/xhbwith.c
+  * harbour/contrib/xhb/cstructc.c
+  * harbour/contrib/hbwin/win_ole.c
+    ! use hbvmint.h instead of hbvmopt.h to eliminate direct bindings to
+      HVM stack structure
+
 2008-09-30 02:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.mak
   * config/w32/msvc.cf

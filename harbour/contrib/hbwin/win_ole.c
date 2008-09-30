@@ -59,7 +59,7 @@
 
 #include <string.h>
 
-#include "hbvmopt.h" /* TOFIX */
+#include "hbvmint.h" /* TOFIX: clean the code to not access any internal HVM structures */
 #include "hbapi.h"
 #include "hbstack.h"
 #include "hbapierr.h"

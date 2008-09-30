@@ -50,7 +50,7 @@
  *
  */
 
-#include "hbvmopt.h"
+#include "hbvmint.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"

@@ -52,6 +52,7 @@ C_HEADERS=\
 	hbtypes.h    \
 	hbver.h      \
 	hbvm.h       \
+	hbvmint.h    \
 	hbvmopt.h    \
 	hbvmpub.h    \
 	hbxvm.h      \

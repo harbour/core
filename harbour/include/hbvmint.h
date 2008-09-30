@@ -3,10 +3,10 @@
  */
 
 /*
- * Harbour Project source code:
- *    xHarbour compatible WITH OBJECT internal functions
+ * xHarbour Project source code:
+ * Header files to force macro inlining for HVM build
  *
- * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2008 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,62 +50,18 @@
  *
  */
 
-#include "hbvmint.h"
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
-#include "hbstack.h"
+/*
+ * This header file enable macro inlining of some functions.
+ * It should be included before any other hb*.h files.
+ * !!! Be careful - including this file cause that the final binaries
+ * can be linked only with exactly the same HVM version for which
+ * it was compiled and only if exactly the same C compiler switches
+ * which interacts with alignment are used. [druzus]
+ */
 
-static PHB_ITEM hb_vmWithObjectItem( LONG lLevel )
-{
-   LONG lOffset = hb_stackWithObjectOffset();
+#undef HB_API_MACROS
+#undef HB_STACK_MACROS
 
-   while( lOffset && lLevel > 0 )
-   {
-      LONG * plOffset = ( LONG * ) hb_itemGetPtr( hb_stackItem( lOffset + 1 ) );
-      if( !plOffset )
-         break;
-      --lLevel;
-      lOffset = *plOffset;
-   }
-
-   return ( lOffset && !lLevel ) ? hb_stackItem( lOffset ) : NULL;
-}
-
-static LONG hb_vmWithObjectCount( void )
-{
-   LONG lOffset = hb_stackWithObjectOffset(), lCount = 0;
-
-   while( lOffset )
-   {
-      LONG * plOffset = ( LONG * ) hb_itemGetPtr( hb_stackItem( lOffset + 1 ) );
-      if( !plOffset )
-         break;
-      ++lCount;
-      lOffset = *plOffset;
-   }
-
-   return lCount;
-}
-
-
-
-HB_FUNC( HB_QWITH )
-{
-   hb_itemReturn( hb_vmWithObjectItem( hb_parnl( 1 ) ) );
-}
-
-HB_FUNC( HB_WITHOBJECTCOUNTER )
-{
-   hb_retnl( hb_vmWithObjectCount() );
-}
-
-HB_FUNC( HB_RESETWITH )
-{
-   PHB_ITEM pItem = hb_vmWithObjectItem( 0 );
-
-   if( hb_pcount() >= 1 && pItem )
-      hb_itemMove( pItem, hb_stackItemFromBase( 1 ) );
-   else
-      hb_errRT_BASE( EG_ARG, 1607, NULL, HB_ERR_FUNCNAME, 0, NULL );
-}
+#if !defined( _HB_API_INTERNAL_ )
+#  define _HB_API_INTERNAL_
+#endif
