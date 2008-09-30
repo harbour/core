@@ -129,7 +129,7 @@ HB_BUILD_MODE  = C
 !if "$(HB_BUILD_WINCE)" == "yes"
 
 !if $(HB_VISUALC_VER) >= 80
-CFLAGS_VER     = -Od -Os -Gy -GS- -EHsc- -fp:fast -Gm -Zi -GR- -D_CRT_SECURE_NO_DEPRECATE
+CFLAGS_VER     = -Od -Os -Gy -GS- -EHsc- -Gm -Zi -GR- -D_CRT_SECURE_NO_DEPRECATE
 !else
 CFLAGS_VER     = -Oxsb1 -EHsc -YX -GF
 !endif
