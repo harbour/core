@@ -71,8 +71,8 @@ FUNCTION CENTER( c, n, p, lMode )
    DEFAULT c TO ""
 
    IF ISLOGICAL( p )
-      lMode := c
-      c := NIL
+      lMode := p
+      p := NIL
    ELSE
       DEFAULT lMode TO .F.
    ENDIF
