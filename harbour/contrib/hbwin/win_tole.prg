@@ -50,11 +50,11 @@
  */
 
 #ifndef __PLATFORM__WINDOWS
-  Function CreateObject()
-  Return NIL
+  FUNCTION CreateObject()
+     RETURN NIL
 
   FUNCTION GetActiveObject()
-  Return NIL
+     RETURN NIL
 #else
 
 #define HB_CLS_NOTOBJECT
@@ -87,9 +87,9 @@ RETURN
 
 //----------------------------------------------------------------------------//
 
-FUNCTION CreateObject( cString )
+FUNCTION CreateObject( cString, cLicense )
 
-RETURN TOleAuto():New( cString )
+RETURN TOleAuto():New( cString, , cLicense )
 
 //----------------------------------------------------------------------------//
 
@@ -99,7 +99,7 @@ RETURN TOleAuto():GetActiveObject( cString )
 
 //----------------------------------------------------------------------------//
 
-init PROCEDURE HB_OleInit()
+INIT PROCEDURE HB_OleInit()
 
    /* It's important to store value returned by __HB_OLE_INIT() in
     * STATIC variable. When HVM will clear STATICs on HVM exit
@@ -163,7 +163,7 @@ CLASS TOleAuto
    DATA cClassName
    DATA pOleEnumerator
 
-   METHOD New( uObj, cClass ) CONSTRUCTOR
+   METHOD New( uObj, cClass, cLicense ) CONSTRUCTOR
    METHOD GetActiveObject( cClass ) CONSTRUCTOR
 
    METHOD Invoke()
@@ -209,7 +209,7 @@ CLASS TOleAuto
 ENDCLASS
 
 //--------------------------------------------------------------------
-METHOD New( uObj, cClass ) CLASS TOleAuto
+METHOD New( uObj, cClass, cLicense ) CLASS TOleAuto
 
    LOCAL oErr
 
@@ -219,7 +219,7 @@ METHOD New( uObj, cClass ) CLASS TOleAuto
    ENDIF
    
    IF ValType( uObj ) == 'C'
-      ::hObj := CreateOleObject( uObj )
+      ::hObj := CreateOleObject( uObj, , cLicense )
 
       IF OleError() != 0
          IF Ole2TxtError() == "DISP_E_EXCEPTION"

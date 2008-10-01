@@ -1380,7 +1380,7 @@ HB_FUNC( MESSAGEBOX )
 }
 
 /* ----------------------------------------------------------------------- */
-HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
+HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID [, cIID ] [, cLicense ] ) */
 {
    BSTR bstrClassID;
    IID ClassID, iid;
@@ -1401,7 +1401,7 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 
    /*HB_TRACE(HB_TR_INFO, ("Result: %p\n", s_nOleError));*/
 
-   if( hb_pcount() == 2 )
+   if( ISCHAR( 2 ) )
    {
       if( hb_parcx( 2 )[ 0 ] == '{' )
       {
@@ -1417,9 +1417,28 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 
    if( SUCCEEDED( s_nOleError ) )
    {
-      /*HB_TRACE(HB_TR_INFO, ("Class: %i\n", ClassID));*/
-      s_nOleError = CoCreateInstance( HB_ID_REF( REFCLSID, ClassID ), NULL, CLSCTX_SERVER, (REFIID) riid, &pDisp );
-      /*HB_TRACE(HB_TR_INFO, ("Result: %p\n", s_nOleError));*/
+      if( ISCHAR( 3 ) )
+      {
+         IClassFactory2 * pCF;
+
+         s_nOleError = CoGetClassObject( HB_ID_REF( REFCLSID, ClassID ), CLSCTX_SERVER, NULL, (LPIID) &IID_IClassFactory2, (LPVOID *) &pCF );
+
+         if( SUCCEEDED( s_nOleError ) )
+         {
+            BSTR bstrLic = hb_oleAnsiToSysString( hb_parc( 3 ) );
+
+            s_nOleError = pCF->lpVtbl->CreateInstanceLic( pCF, NULL, NULL, riid, bstrLic, &pDisp );
+
+            SysFreeString( bstrLic );
+            pCF->lpVtbl->Release( pCF );
+         }
+      }
+      else
+      {
+         /*HB_TRACE(HB_TR_INFO, ("Class: %i\n", ClassID));*/
+         s_nOleError = CoCreateInstance( HB_ID_REF( REFCLSID, ClassID ), NULL, CLSCTX_SERVER, (REFIID) riid, &pDisp );
+         /*HB_TRACE(HB_TR_INFO, ("Result: %p\n", s_nOleError));*/
+      }
    }
 
    hb_retnl( ( LONG ) pDisp );
