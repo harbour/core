@@ -54,15 +54,32 @@
 #include "common.ch"
 #include "setcurs.ch"
 
+#include "hbmemory.ch"
+
 MEMVAR GetList
+
+FUNCTION AlloFree( lMode )
+
+   DEFAULT lMode TO .F.
+
+   RETURN Memory( iif( lMode, HB_MEM_CHAR, HB_MEM_BLOCK ) )
 
 FUNCTION CENTER( c, n, p, lMode )
    LOCAL cRet
-   DEFAULT n TO MaxCol() + 1 - Col()*2
+
+   DEFAULT n TO MaxCol() + 1 - Col() * 2
    DEFAULT c TO ""
-   DEFAULT lMode TO .F.
+
+   IF ISLOGICAL( p )
+      lMode := c
+      c := NIL
+   ELSE
+      DEFAULT lMode TO .F.
+   ENDIF
+
    cRet := PadC( AllTrim( c ), n, p )
-   RETURN iif(lMode, cRet, RTrim( cRet ) )
+
+   RETURN iif( lMode, cRet, RTrim( cRet ) )
 
 FUNCTION CSETCURS( l )
 
@@ -76,23 +93,19 @@ FUNCTION CSETKEY( n )
    RETURN SetKey( n )
 
 FUNCTION CSETCENT( nCentury )
-   if nCentury == NIL
-      RETURN __SETCENTURY()
-   else
-      RETURN __SETCENTURY( nCentury )
-   endif
-   RETURN NIL
+   RETURN __SETCENTURY( nCentury )
 
 FUNCTION LTOC( l )
    RETURN iif( l, "T", "F" )
 
-FUNCTION DOSPARAM
+FUNCTION DOSPARAM()
    LOCAL cRet := ""
    LOCAL nCount := HB_ARGC(), i
 
    FOR i := 1 TO nCount
-      cRet += iif(i==1, "", " ") + HB_ARGV( i )
+      cRet += iif( i == 1, "", " " ) + HB_ARGV( i )
    NEXT
+
    RETURN cRet
 
 FUNCTION EXENAME()
