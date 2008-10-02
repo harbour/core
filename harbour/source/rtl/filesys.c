@@ -272,6 +272,19 @@
    #define O_LARGEFILE  0       /* O_LARGEFILE is used for LFS in 32-bit Linux */
 #endif
 
+#if !defined( HB_OS_UNIX )
+   #if !defined( S_IREAD ) && defined( S_IRUSR )
+      #define S_IREAD   S_IRUSR
+   #endif
+   #if !defined( S_IWRITE ) && defined( S_IWUSR )
+      #define S_IWRITE  S_IWUSR
+   #endif
+   #if !defined( S_IEXEC ) && defined( S_IXUSR )
+      #define S_IEXEC   S_IXUSR
+   #endif
+#endif
+
+
 #if defined(HAVE_POSIX_IO) || defined( HB_WIN32_IO ) || defined(_MSC_VER) || defined(__MINGW32__) || defined(__LCC__) || defined(__DMC__)
 /* Only compilers with Posix or Posix-like I/O support are supported */
    #define HB_FS_FILE_IO
