@@ -70,8 +70,8 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
                  xHeadingSeparators, xColumnSeparators, ;
                  xFootingSeparators, xColumnFootings )
 
-   LOCAL nOldCUrsor, nKey, nMode, nPos, nAliasPos, nColCount
-   LOCAL lDoIdleCall, lAppend
+   LOCAL nOldCUrsor, nKey, lContinue, nPos, nAliasPos, nColCount
+   LOCAL lDoIdleCall, lAppend, lFlag
    LOCAL cHeading, cBlock
    LOCAL bBlock
    LOCAL oBrowse
@@ -101,6 +101,7 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
    oBrowse:headSep   := iif( ISCHARACTER( xHeadingSeparators ), xHeadingSeparators, Chr( 205 ) + Chr( 209 ) + Chr( 205 ) )
    oBrowse:colSep    := iif( ISCHARACTER( xColumnSeparators ), xColumnSeparators, " " + Chr( 179 ) + " " )
    oBrowse:footSep   := iif( ISCHARACTER( xFootingSeparators ), xFootingSeparators, "" )
+   oBrowse:skipBlock := {| nRecs | Skipped( nRecs, lAppend ) }
    oBrowse:autoLite  := .F. /* Set to .F. just like in CA-Cl*pper. [vszakats] */
 
    IF ISARRAY( acColumns )
@@ -193,37 +194,43 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
    /* --------------------------- */
 
    lAppend := .F.
+   lFlag := .T.
    lDoIdleCall := .T.
-   nMode := DE_CONT
+   lContinue := .T.
 
-   WHILE nMode != DE_ABORT
+   WHILE lContinue
 
-      WHILE .T.
-         nKey := InKey()
-         IF oBrowse:stabilize() .OR. ( nKey != 0 .AND. nKey != K_MOUSEMOVE )
+      WHILE ! oBrowse:stabilize()
+         nKey := Nextkey()
+#ifdef HB_COMPAT_C53
+         IF nKey != 0 .AND. nKey != K_MOUSEMOVE
+#else
+         IF nKey != 0
+#endif
             EXIT
          ENDIF
       ENDDO
 
-      IF nKey == 0
+      IF ( nKey := Inkey() ) == 0
          IF lDoIdleCall
-            nMode := CallUser( oBrowse, xUserFunc, 0, @lAppend )
+            lContinue := CallUser( oBrowse, xUserFunc, 0, @lAppend, @lFlag )
             oBrowse:forceStable()
-            IF nMode == DE_ABORT
-               EXIT
-            ENDIF
          ENDIF
-         IF nMode == DE_CONT
+         IF lContinue .AND. lFlag
             oBrowse:hiLite()
+#ifdef HB_COMPAT_C53
             WHILE ( nKey := Inkey( 0 ) ) == K_MOUSEMOVE
             ENDDO
+#else
+            nKey := Inkey( 0 )
+#endif
             oBrowse:deHilite()
             IF ( bBlock := SetKey( nKey ) ) != NIL
                Eval( bBlock, ProcName( 1 ), ProcLine( 1 ), "" )
                LOOP
             ENDIF
          ELSE
-            nMode := DE_CONT
+            lFlag := .T.
          ENDIF
       ENDIF
 
@@ -268,7 +275,7 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
             CASE K_CTRL_HOME     ; oBrowse:panHome()  ; EXIT
             CASE K_CTRL_END      ; oBrowse:panEnd()   ; EXIT
             OTHERWISE
-               nMode := CallUser( oBrowse, xUserFunc, nKey, @lAppend )
+               lContinue := CallUser( oBrowse, xUserFunc, nKey, @lAppend, @lFlag )
                lDoIdleCall := .F.
                EXIT
          ENDSWITCH
@@ -284,10 +291,11 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
  *       to execute user function. We're replicating this behavior
  *       for code which may check ProcName() results in user function
  */
-STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend )
+STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
 
    LOCAL nPrevRecNo
 
+   LOCAL nAction
    LOCAL nMode := IIF( nKey != 0,                  DE_EXCEPT,    ;
                   IIF( !lAppend .AND. IsDbEmpty(), DE_EMPTY,     ;
                   IIF( oBrowse:hitBottom,          DE_HITBOTTOM, ;
@@ -300,58 +308,58 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend )
    /* NOTE: CA-Cl*pper won't check the type of the return value here, 
             and will crash if it's a non-NIL, non-numeric type. We're 
             replicating this behavior. */
-   nMode := IIF( ISBLOCK( xUserFunc ), ;
+   nAction := IIF( ISBLOCK( xUserFunc ), ;
                                  Eval( xUserFunc, nMode, oBrowse:colPos ), ;
-            IIF( ISCHARACTER( xUserFunc ) .AND. !Empty( xUserFunc ), ;
+              IIF( ISCHARACTER( xUserFunc ) .AND. !Empty( xUserFunc ), ;
                                  &xUserFunc( nMode, oBrowse:colPos ), ;
-            IIF( nKey == K_ENTER .OR. nKey == K_ESC, DE_ABORT, DE_CONT ) ) )
+              IIF( nKey == K_ENTER .OR. nKey == K_ESC, DE_ABORT, DE_CONT ) ) )
 
    IF !lAppend .AND. EOF() .AND. !IsDbEmpty()
       dbSkip( -1 )
    ENDIF
 
 #ifdef HB_C52_UNDOC
-   IF nMode == DE_APPEND
+   IF nAction == DE_APPEND
 
       IF ( lAppend := !( lAppend .AND. EOF() ) )
          dbGoBottom()
          oBrowse:down()
       ELSE
-         oBrowse:refreshCurrent()
+         oBrowse:refreshAll():forceStable()
       ENDIF
-      RETURN DE_APPEND
+      lFlag := .F.
+      RETURN .T.
    ENDIF
 #endif
 
-   IF nMode != DE_REFRESH .AND. nPrevRecNo == RecNo()
+   IF nAction == DE_REFRESH .OR. nPrevRecNo != RecNo()
 
+      IF nAction != DE_ABORT
+
+         lAppend := .F.
+
+         IF ( Set( _SET_DELETED ) .AND. Deleted() ) .OR. ;
+            ( !Empty( dbfilter() ) .AND. !&( dbFilter() ) )
+            dbSkip()
+         ENDIF
+         IF EOF()
+            dbGoBottom()
+         ENDIF
+         
+         nPrevRecNo := RecNo()
+         oBrowse:refreshAll():forceStable()
+         WHILE nPrevRecNo != RecNo()
+            oBrowse:Up():forceStable()
+         ENDDO
+         
+         lFlag := .F.
+
+      ENDIF
+   ELSE
       oBrowse:refreshCurrent()
-      IF nMode != DE_ABORT
-         nMode := DE_CONT
-      ENDIF
-
-   ELSEIF nMode != DE_ABORT
-
-      IF ( Set( _SET_DELETED ) .AND. Deleted() ) .OR. ;
-         ( !Empty( dbfilter() ) .AND. !&( dbFilter() ) )
-         dbSkip()
-      ENDIF
-      IF EOF()
-         dbGoBottom()
-      ENDIF
-
-      nPrevRecNo := RecNo()
-      oBrowse:refreshAll():forceStable()
-      WHILE nPrevRecNo != RecNo()
-         oBrowse:Up():forceStable()
-      ENDDO
-
-      lAppend := .F.
-      nMode := DE_REFRESH
-
    ENDIF
 
-   RETURN nMode
+   RETURN nAction != DE_ABORT
 
 
 /* helper function to detect empty tables. It's not perfect but
@@ -362,8 +370,7 @@ STATIC FUNCTION IsDbEmpty()
    RETURN LastRec() == 0 .OR. ;
           ( BOF() .AND. ( EOF() .OR. RecNo() == LastRec() + 1 ) )
 
-
-/* Helpr function: TBrowse skipBlock */
+/* Helper function: TBrowse skipBlock */
 STATIC FUNCTION Skipped( nRecs, lAppend )
 
    LOCAL nSkipped := 0

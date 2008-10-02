@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-02 08:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/dbedit.prg
+    ! Fixed to use local Skipped() function.
+    ! Guarded some 5.3 features with HB_COMPAT_C53.
+    ! Fixed stepping back to real record from append position.
+      (This fixes Clipper 5.x screen trashing and 
+      '87 incompatibility.)
+    ! Minor keyboard handling fix.
+    ! Fixed behaviour in append mode.
+
 2008-10-01 23:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbfbird/firebird.c
     ! Added ugly hack to make it compile with Firebird 2.1.1 
