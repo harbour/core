@@ -110,3 +110,24 @@ FUNCTION DOSPARAM()
 
 FUNCTION EXENAME()
    RETURN HB_ARGV( 0 )
+
+/* NOTE: Dummy */
+FUNCTION getkxlat( nKeyValue )
+   RETURN nKeyValue
+
+/* NOTE: Dummy */
+FUNCTION setkxlat( nOrgKeyValue, nNewKeyValue )
+   LOCAL lAccepted := .F.
+
+   HB_SYMBOL_UNUSED( nOrgKeyValue )
+   HB_SYMBOL_UNUSED( nNewKeyValue )
+
+   RETURN lAccepted
+
+/* NOTE: Dummy */
+FUNCTION dsetkbios( lNewKeyboardMode )
+   STATIC s_lKeyboardMode := .T.
+
+   HB_SYMBOL_UNUSED( lNewKeyboardMode )
+
+   RETURN s_lKeyboardMode

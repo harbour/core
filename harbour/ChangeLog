@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-02 10:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbct/ctmisc.prg
+    + Added dummy functions:
+      GETKXLAT(), SETKXLAT(), DSETKBIOS()
+
 2008-10-02 08:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/dbedit.prg
     ! Fixed to use local Skipped() function.
