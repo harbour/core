@@ -122,7 +122,7 @@ static volatile BOOL s_fThreadInit = FALSE;
       {
          if( !s_fThreadInit )
             hb_threadInit();
-   
+
          HB_CRITICAL_LOCK( s_critical_init );
          if( !cond->fInit )
          {
@@ -668,6 +668,15 @@ HB_FUNC( HB_THREADSELF )
    PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) hb_vmThreadState();
    if( pThread )
       hb_itemReturn( pThread->pThItm );
+#endif
+}
+
+HB_FUNC( HB_THREADID )
+{
+#if defined( HB_MT_VM )
+   PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) hb_vmThreadState();
+   if( pThread )
+      hb_retnl( pThread->th_id );
 #endif
 }
 
