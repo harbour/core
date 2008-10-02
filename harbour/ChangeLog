@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-02 15:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/extrap.c
+    + Upped internal buffer to store the exception dump 
+      and stack trace.
+
 2008-10-02 14:33 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbstack.h
     % enable assembler inline function to access HVM thread stack pointer
