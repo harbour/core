@@ -373,7 +373,7 @@ typedef struct _CDXINDEX
 {
    char *      szFileName;    /* Name of index file */
    char *      szRealName;    /* Real name of index file */
-   HB_FHANDLE  hFile;         /* Index file handle */
+   PHB_FILE    pFile;         /* Index file handle */
    struct _CDXAREA  * pArea;  /* Parent WorkArea */
    struct _CDXINDEX * pNext;  /* The next index in the list */
    LPCDXTAG    pCompound;     /* Compound tag */
@@ -481,9 +481,9 @@ typedef struct _CDXAREA
    *  example.
    */
 
-   HB_FHANDLE hDataFile;            /* Data file handle */
-   HB_FHANDLE hMemoFile;            /* Memo file handle */
-   HB_FHANDLE hMemoTmpFile;         /* Memo temporary file handle */
+   PHB_FILE pDataFile;              /* Data file handle */
+   PHB_FILE pMemoFile;              /* Memo file handle */
+   PHB_FILE pMemoTmpFile;           /* Memo temporary file handle */
    char *   szDataFileName;         /* Name of data file */
    char *   szMemoFileName;         /* Name of memo file */
    USHORT   uiHeaderLen;            /* Size of header */

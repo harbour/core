@@ -474,6 +474,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\errorapu$(OBJEXT) \
     $(OBJ_DIR)\errorint$(OBJEXT) \
     $(OBJ_DIR)\file$(OBJEXT)     \
+    $(OBJ_DIR)\filebuf$(OBJEXT)  \
     $(OBJ_DIR)\filehb$(OBJEXT)   \
     $(OBJ_DIR)\filesys$(OBJEXT)  \
     $(OBJ_DIR)\fkmax$(OBJEXT)    \

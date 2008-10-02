@@ -257,7 +257,7 @@ typedef struct _NTXINDEX
    ULONG       NextAvail;
    ULONG       TagBlock;      /* Index attr, next free page */
    struct     _NTXAREA * Owner;
-   HB_FHANDLE  DiskFile;
+   PHB_FILE    DiskFile;
    BOOL        fDelete;       /* delete on close flag */
    BOOL        fReadonly;
    BOOL        fShared;
@@ -372,9 +372,9 @@ typedef struct _NTXAREA
    *  example.
    */
 
-   HB_FHANDLE hDataFile;            /* Data file handle */
-   HB_FHANDLE hMemoFile;            /* Memo file handle */
-   HB_FHANDLE hMemoTmpFile;         /* Memo temporary file handle */
+   PHB_FILE pDataFile;              /* Data file handle */
+   PHB_FILE pMemoFile;              /* Memo file handle */
+   PHB_FILE pMemoTmpFile;           /* Memo temporary file handle */
    char *   szDataFileName;         /* Name of data file */
    char *   szMemoFileName;         /* Name of memo file */
    USHORT   uiHeaderLen;            /* Size of header */

@@ -94,6 +94,9 @@
 #if !defined( _LARGEFILE64_SOURCE )
 #  define _LARGEFILE64_SOURCE
 #endif
+#if !defined( _XOPEN_SOURCE )
+#  define _XOPEN_SOURCE 500
+#endif
 
 /* OS2 */
 #define INCL_DOSFILEMGR   /* File Manager values */
@@ -1414,9 +1417,9 @@ HB_EXPORT USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const BYTE * pBuff, USHORT 
          hb_vmUnlock();
          uiWritten = write( hFileHandle, pBuff, uiCount );
          hb_fsSetIOError( uiWritten != ( USHORT ) -1, 0 );
-         hb_vmLock();
          if( uiWritten == ( USHORT ) -1 )
             uiWritten = 0;
+         hb_vmLock();
       }
       else
       {
@@ -1426,8 +1429,8 @@ HB_EXPORT USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const BYTE * pBuff, USHORT 
 #else
          hb_fsSetIOError( ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) ) != -1, 0 );
 #endif
-         hb_vmLock();
          uiWritten = 0;
+         hb_vmLock();
       }
    #endif
 #else
@@ -1460,6 +1463,8 @@ HB_EXPORT ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCo
       hb_vmUnlock();
       ulRead = read( hFileHandle, pBuff, ulCount );
       hb_fsSetIOError( ulRead != (ULONG) -1, 0 );
+      if( ulRead == ( ULONG ) -1 )
+         ulRead = 0;
       hb_vmLock();
    }
    #else
@@ -1547,9 +1552,9 @@ HB_EXPORT ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULO
             hb_vmUnlock();
             ulWritten = write( hFileHandle, pBuff, ulCount );
             hb_fsSetIOError( ulWritten != ( ULONG ) -1, 0 );
-            hb_vmLock();
             if( ulWritten == ( ULONG ) -1 )
                ulWritten = 0;
+            hb_vmLock();
          }
       #else
          {
@@ -1605,8 +1610,8 @@ HB_EXPORT ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULO
 #else
          hb_fsSetIOError( ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) ) != -1, 0 );
 #endif
-         hb_vmLock();
          ulWritten = 0;
+         hb_vmLock();
       }
 
    #endif
@@ -1618,6 +1623,163 @@ HB_EXPORT ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULO
 #endif
 
    return ulWritten;
+}
+
+HB_EXPORT ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
+{
+   ULONG ulRead;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadAt(%p, %p, %lu, " PFHL ")", hFileHandle, pBuff, ulCount, llOffset));
+
+#if defined(HB_FS_FILE_IO)
+
+   #if defined(HB_WIN32_IO)
+   {
+      OVERLAPPED Overlapped;
+      hb_vmUnlock();
+      memset( &Overlapped, 0, sizeof( Overlapped ) );
+      Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF ),
+      Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 ),
+      hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
+                                 pBuff, ulCount, &ulRead, &Overlapped ), 0 );
+      hb_vmLock();
+   }
+   #elif defined(HB_OS_UNIX)
+   {
+      hb_vmUnlock();
+      #if defined(HB_USE_LARGEFILE64)
+         ulRead = pread64( hFileHandle, pBuff, ulCount, llOffset );
+      #else
+         ulRead = pread( hFileHandle, pBuff, ulCount, llOffset );
+      #endif
+      hb_fsSetIOError( ulRead != (ULONG) -1, 0 );
+      if( ulRead == ( ULONG ) -1 )
+         ulRead = 0;
+      hb_vmLock();
+   }
+   #else
+   {
+      hb_vmUnlock();
+      /* TOFIX: this is not atom operation. It has to be fixed for RDD
+       *        file access with shared file handles in aliased work areas
+       */
+      if( hb_fsSeekLarge( hFileHandle, llOffset, FS_SET ) == llOffset )
+         ulRead = hb_fsReadLarge( hFileHandle, pBuff, ulCount );
+      else
+         ulRead = 0;
+      hb_vmLock();
+   }
+   #endif
+
+#else
+
+   ulRead = 0;
+   hb_fsSetError( ( USHORT ) FS_ERROR );
+
+#endif
+
+   return ulRead;
+}
+
+HB_EXPORT ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
+{
+   ULONG ulWritten;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsWriteAt(%p, %p, %lu, " PFHL ")", hFileHandle, pBuff, ulCount, llOffset));
+
+#if defined(HB_FS_FILE_IO)
+
+   #if defined(HB_WIN32_IO)
+   {
+      OVERLAPPED Overlapped;
+      hb_vmUnlock();
+      memset( &Overlapped, 0, sizeof( Overlapped ) );
+      Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF ),
+      Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 ),
+      hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
+                                  pBuff, ulCount, &ulWritten, &Overlapped ), 0 );
+      hb_vmLock();
+   }
+   #elif defined(HB_OS_UNIX)
+   {
+      hb_vmUnlock();
+      #if defined(HB_USE_LARGEFILE64)
+         ulWritten = pwrite64( hFileHandle, pBuff, ulCount, llOffset );
+      #else
+         ulWritten = pwrite( hFileHandle, pBuff, ulCount, llOffset );
+      #endif
+      hb_fsSetIOError( ulWritten != (ULONG) -1, 0 );
+      if( ulWritten == ( ULONG ) -1 )
+         ulWritten = 0;
+      hb_vmLock();
+   }
+   #else
+   {
+      hb_vmUnlock();
+      /* TOFIX: this is not atom operation. It has to be fixed for RDD
+       *        file access with shared file handles in aliased work areas
+       */
+      if( hb_fsSeekLarge( hFileHandle, llOffset, FS_SET ) == llOffset )
+         ulWritten = hb_fsWriteLarge( hFileHandle, pBuff, ulCount );
+      else
+         ulWritten = 0;
+      hb_vmLock();
+   }
+   #endif
+
+#else
+
+   ulWritten = 0;
+   hb_fsSetError( ( USHORT ) FS_ERROR );
+
+#endif
+
+   return ulWritten;
+}
+
+HB_EXPORT BOOL hb_fsTruncAt( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset )
+{
+   BOOL fResult;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadAt(%p," PFHL ")", hFileHandle, llOffset));
+
+#if defined(HB_FS_FILE_IO)
+
+   hb_vmUnlock();
+   #if defined(HB_WIN32_IO)
+   {
+      ULONG ulOffsetLow  = ( ULONG ) ( llOffset & ULONG_MAX ),
+            ulOffsetHigh = ( ULONG ) ( llOffset >> 32 );
+
+      /* This is not atom operation anyhow if someone want to truncate
+       * file then he has to made necessary synchronizations in upper level
+       * code. We have such situation in our RDD drivers and for us such
+       * version is enough. [druzus]
+       */
+      ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
+                                    ulOffsetLow, ( PLONG ) &ulOffsetHigh,
+                                    ( DWORD ) SEEK_SET );
+      if( ( ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow ) == llOffset )
+         fResult = SetEndOfFile( DosToWinHandle( hFileHandle ) );
+      else
+         fResult = FALSE;
+   }
+   #elif defined(HB_USE_LARGEFILE64)
+      fResult = ftruncate64( hFileHandle, llOffset ) != -1;
+   #else
+      fResult = ftruncate( hFileHandle, llOffset ) != -1;
+   #endif
+   hb_fsSetIOError( fResult, 0 );
+   hb_vmLock();
+
+#else
+
+   fResult = FALSE;
+   hb_fsSetError( ( USHORT ) FS_ERROR );
+
+#endif
+
+   return fResult;
 }
 
 HB_EXPORT void hb_fsCommit( HB_FHANDLE hFileHandle )
@@ -2658,47 +2820,18 @@ HB_EXPORT BYTE hb_fsCurDrv( void )
    return ( BYTE ) uiResult; /* Return the drive number, base 0. */
 }
 
-/* copied from xHarbour */
-HB_EXPORT HB_FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
-                                   USHORT uiExFlags, BYTE * pPaths,
-                                   PHB_ITEM pError )
+/* convert file name for hb_fsExtOpen
+ * caller must free the returned buffer
+ */
+HB_EXPORT BYTE * hb_fsExtName( BYTE * pFilename, BYTE * pDefExt,
+                               USHORT uiExFlags, BYTE * pPaths )
 {
-   HB_PATHNAMES * pSearchPath = NULL, * pNextPath;
+   HB_PATHNAMES * pNextPath;
    PHB_FNAME pFilepath;
-   HB_FHANDLE hFile;
    BOOL fIsFile = FALSE;
    BYTE * szPath;
-   USHORT uiFlags;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsExtOpen(%s, %s, %hu, %p, %p)", pFilename, pDefExt, uiExFlags, pPaths, pError));
-
-#if 0
-   #define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */
-   #define FXO_APPEND    0x0200   /* Create (append if exists) */
-   #define FXO_UNIQUE    0x0400   /* Create unique file FO_EXCL ??? */
-   #define FXO_FORCEEXT  0x0800   /* Force default extension */
-   #define FXO_DEFAULTS  0x1000   /* Use SET command defaults */
-   #define FXO_DEVICERAW 0x2000   /* Open devices in raw mode */
-   /* xHarbour extension */
-   #define FXO_SHARELOCK 0x4000   /* emulate DOS SH_DENY* mode in POSIX OS */
-   #define FXO_COPYNAME  0x8000   /* copy final szPath into pFilename */
-
-   hb_errGetFileName( pError );
-#endif
 
    szPath = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-
-   uiFlags = uiExFlags & 0xff;
-   if( uiExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) )
-   {
-      uiFlags |= FO_CREAT;
-      if( uiExFlags & FXO_UNIQUE )
-         uiFlags |= FO_EXCL;
-#if !defined( HB_USE_SHARELOCKS )
-      else if( uiExFlags & FXO_TRUNCATE )
-         uiFlags |= FO_TRUNC;
-#endif
-   }
 
    pFilepath = hb_fsFNameSplit( ( char * ) pFilename );
 
@@ -2739,6 +2872,7 @@ HB_EXPORT HB_FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
    }
    else if( pPaths && *pPaths )
    {
+      HB_PATHNAMES * pSearchPath = NULL;
       hb_fsAddSearchPath( ( char * ) pPaths, &pSearchPath );
       pNextPath = pSearchPath;
       while( !fIsFile && pNextPath )
@@ -2760,6 +2894,47 @@ HB_EXPORT HB_FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
       hb_fsFNameMerge( ( char * ) szPath, pFilepath );
    }
    hb_xfree( pFilepath );
+
+   return szPath;
+}
+
+HB_EXPORT HB_FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
+                                   USHORT uiExFlags, BYTE * pPaths,
+                                   PHB_ITEM pError )
+{
+   HB_FHANDLE hFile;
+   USHORT uiFlags;
+   BYTE * szPath;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsExtOpen(%s, %s, %hu, %p, %p)", pFilename, pDefExt, uiExFlags, pPaths, pError));
+
+#if 0
+   #define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */
+   #define FXO_APPEND    0x0200   /* Create (append if exists) */
+   #define FXO_UNIQUE    0x0400   /* Create unique file FO_EXCL ??? */
+   #define FXO_FORCEEXT  0x0800   /* Force default extension */
+   #define FXO_DEFAULTS  0x1000   /* Use SET command defaults */
+   #define FXO_DEVICERAW 0x2000   /* Open devices in raw mode */
+   /* Harbour extension */
+   #define FXO_SHARELOCK 0x4000   /* emulate DOS SH_DENY* mode in POSIX OS */
+   #define FXO_COPYNAME  0x8000   /* copy final szPath into pFilename */
+
+   hb_errGetFileName( pError );
+#endif
+
+   szPath = hb_fsExtName( pFilename, pDefExt, uiExFlags, pPaths );
+
+   uiFlags = uiExFlags & 0xff;
+   if( uiExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) )
+   {
+      uiFlags |= FO_CREAT;
+      if( uiExFlags & FXO_UNIQUE )
+         uiFlags |= FO_EXCL;
+#if !defined( HB_USE_SHARELOCKS )
+      else if( uiExFlags & FXO_TRUNCATE )
+         uiFlags |= FO_TRUNC;
+#endif
+   }
 
    hFile = hb_fsOpen( szPath, uiFlags );
 

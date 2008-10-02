@@ -38,7 +38,6 @@ C_HEADERS=\
 	hbpp.h       \
 	hbrddcdx.h   \
 	hbrdddbf.h   \
-	hbrdddbt.h   \
 	hbrddfpt.h   \
 	hbrdddel.h   \
 	hbrddntx.h   \
@@ -48,6 +47,7 @@ C_HEADERS=\
 	hbsetup.h    \
 	hbstack.h    \
 	hbsxfunc.h   \
+	hbthread.h   \
 	hbtrace.h    \
 	hbtypes.h    \
 	hbver.h      \

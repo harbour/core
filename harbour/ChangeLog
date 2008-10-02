@@ -8,6 +8,93 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-02 14:33 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+    % enable assembler inline function to access HVM thread stack pointer
+      without native compiler TLS support even if HB_STACK_PRELOAD is not
+      defined in MinGW builds. It gives some additional small speed
+      improvement in MT mode
+
+  * harbour/source/rtl/idle.c
+    * unlock HVM inside hb_releaseCPU() function
+
+  * harbour/contrib/hbwin/win_ole.c
+    ! fixed casting and C++ compilation in some compilers
+
+  * harbour/include/Makefile
+  + harbour/contrib/examples/rdddbt/hbrdddbt.h
+  - harbour/include/hbrdddbt.h
+    ! moved hbrdddbt.h to correct location
+
+  * harbour/include/Makefile
+    ! added missinf hbthread.h
+
+  * harbour/tests/rddtest/rddmktst.prg
+  * harbour/tests/rddtest/adscl52.prg
+  * harbour/tests/rddtest/adscl53.prg
+  * harbour/tests/rddtest/ntxcl52.prg
+  * harbour/tests/rddtest/ntxcl53.prg
+  * harbour/tests/rddtest/cdxcl52.prg
+  * harbour/tests/rddtest/rddtst.prg
+  * harbour/tests/rddtest/cdxcl53.prg
+    ! fixed description in header I wrongly copied without updating
+      from other files
+
+  + harbour/tests/hsxtest.prg
+    + added test code for HiPer-SEEK indexes
+
+  * harbour/source/rtl/filesys.c
+    + added new functions: hb_fsExtName(), hb_fsReadAt(), hb_fsWriteAt(),
+      hb_fsTruncAt() to use with shared file handles.
+      Please test it in other *nixes. I used pread[64]()/pwrite[64]()
+      POSIX functions but I do not know if they are available by default
+      in other supported platforms like MacOSX, BSD, HPUX, SunOS.
+      If not they I will have to implement some workaround.
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  * harbour/include/hbapifs.h
+  + harbour/source/rtl/filebuf.c
+    + added set of new file functions (hb_file*()) which are designed to
+      use with shared file handles and locks (buffers in the future):
+      hb_fileExtOpen(), hb_fileCreateTemp(), hb_fileClose(), hb_fileLock(),
+      hb_fileReadAt(), hb_fileWriteAt(), hb_fileTruncAt(), hb_fileSize(),
+      hb_fileCommit(), hb_fileHandle()
+      These functions operate on PHB_FILE structure instead of HB_FHANDLE.
+      Now in POSIX systems they share file handle between aliased or
+      simultaneously open by other thread work areas. It resolves the
+      problem with releasing all process FCNTL locks by any close()
+      operation even on duplicated or open() separately handle.
+      Now DOS deny flags emulation works in single process even if
+      BSD locks are disabled (non Linux *nixes).
+      They also keep internal file lock list what allows to synchronize
+      threads and aliases with file locks in POSIX systems. In the future
+      it will be used also for internal locking to synchronize threads
+      without OS level locks - pseudo exclusive mode in cloned WA.
+      Finally these structures will be used also for file buffers
+      which will be shared between aliased WA and threads.
+
+  * harbour/include/hbrdddbf.h
+  * harbour/include/hbrddcdx.h
+  * harbour/include/hbrddntx.h
+  * harbour/include/hbrdddel.h
+  * harbour/include/hbrddsdf.h
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/sdf1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/hsx/hsx.c
+  * harbour/contrib/hbbmcdx/bmdbfcdx.c
+  * harbour/contrib/hbbmcdx/hbbmcdx.h
+    * use PHB_FILE and hb_file*() functions instead of HB_FHANDLE (hb_fs*())
+      to access files.
+
+  + harbour/tests/aliaslck.prg
+    + added test code for file lock synchronization between aliased
+      work areas
+
 2008-10-02 11:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/extrap.c
     * Added "error" text in exception message.

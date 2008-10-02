@@ -34,6 +34,7 @@ C_SOURCES=\
 	errorapu.c   \
 	errorint.c   \
 	file.c       \
+	filebuf.c    \
 	filehb.c     \
 	filesys.c    \
 	fkmax.c      \

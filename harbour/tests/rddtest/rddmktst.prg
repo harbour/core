@@ -4,8 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    demonstration/test code for terminal character output and codepage
- *    translations
+ *    RDD tests
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org

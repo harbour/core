@@ -206,10 +206,10 @@ static int hb_delimNextChar( DELIMAREAP pArea )
                  pArea->pBuffer + pArea->ulBufferIndex, ulLeft );
       pArea->ulBufferStart += pArea->ulBufferIndex;
       pArea->ulBufferIndex = 0;
-      hb_fsSeekLarge( pArea->hFile, pArea->ulBufferStart + ulLeft, FS_SET );
-      pArea->ulBufferRead = hb_fsReadLarge( pArea->hFile,
-                                            pArea->pBuffer + ulLeft,
-                                            pArea->ulBufferSize - ulLeft );
+      pArea->ulBufferRead = hb_fileReadAt( pArea->pFile,
+                                           pArea->pBuffer + ulLeft,
+                                           pArea->ulBufferSize - ulLeft,
+                                           pArea->ulBufferStart + ulLeft );
       if( pArea->ulBufferRead > 0 &&
           pArea->pBuffer[ pArea->ulBufferRead + ulLeft - 1 ] == '\032' )
          pArea->ulBufferRead--;
@@ -814,8 +814,8 @@ static ERRCODE hb_delimGoCold( DELIMAREAP pArea )
    {
       ULONG ulSize = hb_delimEncodeBuffer( pArea );
 
-      hb_fsSeekLarge( pArea->hFile, pArea->ulRecordOffset, FS_SET );
-      if( hb_fsWriteLarge( pArea->hFile, pArea->pBuffer, ulSize ) != ulSize )
+      if( hb_fileWriteAt( pArea->pFile, pArea->pBuffer, ulSize,
+                          pArea->ulRecordOffset ) != ulSize )
       {
          PHB_ITEM pError = hb_errNew();
 
@@ -872,11 +872,10 @@ static ERRCODE hb_delimFlush( DELIMAREAP pArea )
 
    if( pArea->fFlush )
    {
-      hb_fsSeekLarge( pArea->hFile, pArea->ulFileSize, FS_SET );
-      hb_fsWrite( pArea->hFile, ( BYTE * ) "\032", 1 );
+      hb_fileWriteAt( pArea->pFile, ( BYTE * ) "\032", 1, pArea->ulFileSize );
       if( hb_setGetHardCommit() )
       {
-         hb_fsCommit( pArea->hFile );
+         hb_fileCommit( pArea->pFile );
          pArea->fFlush = FALSE;
       }
    }
@@ -975,7 +974,7 @@ static ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_FILEHANDLE:
-         hb_itemPutNInt( pItem, ( HB_NHANDLE ) pArea->hFile );
+         hb_itemPutNInt( pItem, ( HB_NHANDLE ) hb_fileHandle( pArea->pFile ) );
          break;
 
       case DBI_SHARED:
@@ -1155,7 +1154,7 @@ static ERRCODE hb_delimNewArea( DELIMAREAP pArea )
    if( SUPER_NEW( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
-   pArea->hFile = FS_ERROR;
+   pArea->pFile = NULL;
    pArea->fTransRec = TRUE;
    pArea->uiRecordLen = 0;
    pArea->ulBufferSize = 0;
@@ -1191,11 +1190,11 @@ static ERRCODE hb_delimClose( DELIMAREAP pArea )
    SUPER_CLOSE( ( AREAP ) pArea );
 
    /* Update record and unlock records */
-   if( pArea->hFile != FS_ERROR )
+   if( pArea->pFile )
    {
       SELF_FLUSH( ( AREAP ) pArea );
-      hb_fsClose( pArea->hFile );
-      pArea->hFile = FS_ERROR;
+      hb_fileClose( pArea->pFile );
+      pArea->pFile = NULL;
    }
 
    if( pArea->pFieldOffset )
@@ -1271,11 +1270,11 @@ static ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
    /* Try create */
    do
    {
-      pArea->hFile = hb_fsExtOpen( szFileName, NULL,
-                                   FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
-                                   FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                                   NULL, pError );
-      if( pArea->hFile == FS_ERROR )
+      pArea->pFile = hb_fileExtOpen( szFileName, NULL,
+                                     FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
+                                     FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                     NULL, pError );
+      if( !pArea->pFile )
       {
          if( !pError )
          {
@@ -1297,7 +1296,7 @@ static ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
    if( pError )
       hb_itemRelease( pError );
 
-   if( pArea->hFile == FS_ERROR )
+   if( !pArea->pFile )
       return FAILURE;
 
    errCode = SUPER_CREATE( ( AREAP ) pArea, pCreateInfo );
@@ -1370,10 +1369,10 @@ static ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* Try open */
    do
    {
-      pArea->hFile = hb_fsExtOpen( szFileName, NULL, uiFlags |
-                                   FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                                   NULL, pError );
-      if( pArea->hFile == FS_ERROR )
+      pArea->pFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
+                                     FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                     NULL, pError );
+      if( !pArea->pFile )
       {
          if( !pError )
          {
@@ -1395,7 +1394,7 @@ static ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
    if( pError )
       hb_itemRelease( pError );
 
-   if( pArea->hFile == FS_ERROR )
+   if( !pArea->pFile )
       return FAILURE;
 
    errCode = SUPER_OPEN( ( AREAP ) pArea, pOpenInfo );

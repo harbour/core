@@ -903,9 +903,8 @@ static BOOL hb_ntxBlockRead( LPNTXINDEX pIndex, ULONG ulBlock, BYTE *buffer, int
 #ifdef HB_NTX_DEBUG_DISP
    s_rdNO++;
 #endif
-   hb_fsSeekLarge( pIndex->DiskFile,
-                   hb_ntxFileOffset( pIndex, ulBlock ), FS_SET );
-   if( hb_fsRead( pIndex->DiskFile, buffer, iSize ) != iSize )
+   if( hb_fileReadAt( pIndex->DiskFile, buffer, iSize,
+                      hb_ntxFileOffset( pIndex, ulBlock ) ) != ( ULONG ) iSize )
    {
       hb_ntxErrorRT( pIndex->Owner, EG_READ, EDBF_READ,
                      pIndex->IndexName, hb_fsError(), 0 );
@@ -925,9 +924,8 @@ static BOOL hb_ntxBlockWrite( LPNTXINDEX pIndex, ULONG ulBlock, BYTE *buffer, in
 #ifdef HB_NTX_DEBUG_DISP
    s_wrNO++;
 #endif
-   hb_fsSeekLarge( pIndex->DiskFile,
-                   hb_ntxFileOffset( pIndex, ulBlock ), FS_SET );
-   if( hb_fsWrite( pIndex->DiskFile, buffer, iSize ) != iSize )
+   if( hb_fileWriteAt( pIndex->DiskFile, buffer, iSize,
+                       hb_ntxFileOffset( pIndex, ulBlock ) ) != ( ULONG ) iSize )
    {
       hb_ntxErrorRT( pIndex->Owner, EG_WRITE, EDBF_WRITE,
                      pIndex->IndexName, hb_fsError(), 0 );
@@ -1056,8 +1054,7 @@ static void hb_ntxIndexTrunc( LPNTXINDEX pIndex )
    pIndex->Update = pIndex->Changed = pIndex->fFlush = TRUE;
    pIndex->TagBlock = pIndex->NextAvail = 0;
    pIndex->Version = 0;
-   hb_fsSeek( pIndex->DiskFile, NTXBLOCKSIZE, FS_SET );
-   hb_fsWrite( pIndex->DiskFile, NULL, 0 );
+   hb_fileTruncAt( pIndex->DiskFile, NTXBLOCKSIZE );
 }
 
 /*
@@ -1283,7 +1280,7 @@ static ULONG hb_ntxPageAlloc( LPNTXINDEX pIndex )
    if( !pIndex->TagBlock )
    {
       HB_FOFFSET fOffset;
-      fOffset = hb_fsSeekLarge( pIndex->DiskFile, 0, FS_END );
+      fOffset = hb_fileSize( pIndex->DiskFile );
       pIndex->TagBlock = ( ULONG )
                      ( fOffset >> ( pIndex->LargeFile ? NTXBLOCKBITS : 0 ) );
    }
@@ -1750,7 +1747,7 @@ static LPNTXINDEX hb_ntxIndexNew( NTXAREAP pArea )
    pIndex = ( LPNTXINDEX ) hb_xgrab( sizeof( NTXINDEX ) );
    memset( pIndex, 0, sizeof( NTXINDEX ) );
 
-   pIndex->DiskFile = FS_ERROR;
+   pIndex->DiskFile = NULL;
    pIndex->Owner = pArea;
    return pIndex;
 }
@@ -1770,9 +1767,9 @@ static void hb_ntxIndexFree( LPNTXINDEX pIndex )
    }
    if( pIndex->HeaderBuff )
       hb_xfree( pIndex->HeaderBuff );
-   if( pIndex->DiskFile != FS_ERROR )
+   if( pIndex->DiskFile )
    {
-      hb_fsClose( pIndex->DiskFile );
+      hb_fileClose( pIndex->DiskFile );
       if( pIndex->fDelete )
       {
          hb_fsDelete( ( BYTE * ) ( pIndex->RealName ?
@@ -4665,10 +4662,9 @@ static void hb_ntxSortBufferFlush( LPNTXSORTINFO pSort )
    if( pSort->ulPagesIO )
    {
       LPNTXINDEX pIndex = pSort->pTag->Owner;
-      hb_fsSeekLarge( pIndex->DiskFile,
-                      hb_ntxFileOffset( pIndex, pSort->ulFirstIO ), FS_SET );
       ulSize = pSort->ulPagesIO * NTXBLOCKSIZE;
-      if( hb_fsWriteLarge( pIndex->DiskFile, pSort->pBuffIO, ulSize ) != ulSize )
+      if( hb_fileWriteAt( pIndex->DiskFile, pSort->pBuffIO, ulSize,
+                     hb_ntxFileOffset( pIndex, pSort->ulFirstIO ) ) != ulSize )
       {
          hb_ntxErrorRT( pIndex->Owner, EG_WRITE, EDBF_WRITE,
                         pIndex->IndexName, hb_fsError(), 0 );
@@ -5366,11 +5362,10 @@ static ERRCODE hb_ntxTagCreate( LPTAGINFO pTag, BOOL fReindex )
                   iRec = ulRecCount - ulRecNo + 1;
                if( ulNextCount > 0 && ulNextCount < ( ULONG ) iRec )
                   iRec = ( int ) ulNextCount;
-               hb_fsSeekLarge( pArea->hDataFile,
-                               ( HB_FOFFSET ) pArea->uiHeaderLen +
-                               ( HB_FOFFSET ) ( ulRecNo - 1 ) *
-                               ( HB_FOFFSET ) pArea->uiRecordLen, FS_SET );
-               hb_fsReadLarge( pArea->hDataFile, pSort->pBuffIO, pArea->uiRecordLen * iRec );
+               hb_fileReadAt( pArea->pDataFile, pSort->pBuffIO, pArea->uiRecordLen * iRec,
+                              ( HB_FOFFSET ) pArea->uiHeaderLen +
+                              ( HB_FOFFSET ) ( ulRecNo - 1 ) *
+                              ( HB_FOFFSET ) pArea->uiRecordLen );
                iRecBuff = 0;
             }
             pArea->pRecord = pSort->pBuffIO + iRecBuff * pArea->uiRecordLen;
@@ -5777,7 +5772,7 @@ static ERRCODE ntxFlush( NTXAREAP pArea )
          {
             if( pIndex->fFlush /* && !pIndex->Temporary */ )
             {
-               hb_fsCommit( pIndex->DiskFile );
+               hb_fileCommit( pIndex->DiskFile );
                pIndex->fFlush = FALSE;
             }
             pIndex = pIndex->pNext;
@@ -6290,7 +6285,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    }
    else
    {
-      HB_FHANDLE hFile;
+      PHB_FILE pFile;
       BOOL bRetry, fOld, fShared = pArea->fShared && !fTemporary && !fExclusive;
       USHORT uiFlags = FO_READWRITE | ( fShared ? FO_DENYNONE : FO_EXCLUSIVE );
 
@@ -6299,29 +6294,29 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       {
          if( fTemporary )
          {
-            hFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, ( BYTE * ) szSpFile );
+            pFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, ( BYTE * ) szSpFile );
             fOld = FALSE;
          }
          else
          {
-            hFile = hb_fsExtOpen( ( BYTE * ) szFileName, NULL, uiFlags |
-                                  ( fOld ? FXO_APPEND : FXO_TRUNCATE ) |
-                                  FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                                  NULL, NULL );
+            pFile = hb_fileExtOpen( ( BYTE * ) szFileName, NULL, uiFlags |
+                                    ( fOld ? FXO_APPEND : FXO_TRUNCATE ) |
+                                    FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                    NULL, NULL );
          }
-         if( hFile == FS_ERROR )
+         if( !pFile )
             bRetry = ( hb_ntxErrorRT( pArea, EG_CREATE, EDBF_CREATE, szFileName,
                                       hb_fsError(), EF_CANRETRY | EF_CANDEFAULT ) == E_RETRY );
          else
          {
             bRetry = FALSE;
             if( fOld )
-               fOld = ( hb_fsSeekLarge( hFile, 0, FS_END ) != 0 );
+               fOld = ( hb_fileSize( pFile ) != 0 );
          }
       }
       while( bRetry );
 
-      if( hFile == FS_ERROR )
+      if( !pFile )
       {
          hb_vmDestroyBlockOrMacro( pKeyExp );
          if( pForExp != NULL )
@@ -6334,7 +6329,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       pIndex->IndexName = hb_strdup( szFileName );
       pIndex->fReadonly = FALSE;
       pIndex->fShared = fShared;
-      pIndex->DiskFile = hFile;
+      pIndex->DiskFile = pFile;
       pIndex->fDelete = fTemporary;
       if( fTemporary )
          pIndex->RealName = hb_strdup( szSpFile );
@@ -6781,7 +6776,8 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             hb_itemPutNI( pInfo->itmResult, hb_ntxFindTagNum( pArea, pTag ) );
             break;
          case DBOI_FILEHANDLE:
-            hb_itemPutNInt( pInfo->itmResult, ( HB_NHANDLE ) pTag->Owner->DiskFile );
+            hb_itemPutNInt( pInfo->itmResult,
+                     ( HB_NHANDLE ) hb_fileHandle( pTag->Owner->DiskFile ) );
             break;
          case DBOI_FULLPATH:
             hb_itemPutC( pInfo->itmResult, pTag->Owner->IndexName );
@@ -7249,7 +7245,7 @@ static ERRCODE ntxCountScope( NTXAREAP pArea, void * pPtr, LONG * plRecNo )
 static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    USHORT uiFlags;
-   HB_FHANDLE hFile;
+   PHB_FILE pFile;
    char szFileName[ _POSIX_PATH_MAX + 1 ], szTagName[ NTX_MAX_TAGNAME + 1 ];
    LPNTXINDEX pIndex, *pIndexPtr;
    ERRCODE errCode;
@@ -7283,10 +7279,10 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
       do
       {
          fRetry = FALSE;
-         hFile = hb_fsExtOpen( ( BYTE * ) szFileName, NULL, uiFlags |
-                               FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                               NULL, NULL );
-         if( hFile == FS_ERROR )
+         pFile = hb_fileExtOpen( ( BYTE * ) szFileName, NULL, uiFlags |
+                                 FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                 NULL, NULL );
+         if( !pFile )
          {
             fRetry = ( hb_ntxErrorRT( pArea, EG_OPEN, EDBF_OPEN_INDEX, szFileName,
                      hb_fsError(), EF_CANRETRY | EF_CANDEFAULT ) == E_RETRY );
@@ -7294,14 +7290,14 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
       }
       while( fRetry );
 
-      if( hFile == FS_ERROR )
+      if( !pFile )
          return FAILURE;
 
       pIndex = hb_ntxIndexNew( pArea );
       pIndex->IndexName = hb_strdup( szFileName );
       pIndex->fReadonly = fReadonly;
       pIndex->fShared = fShared;
-      pIndex->DiskFile = hFile;
+      pIndex->DiskFile = pFile;
       pIndex->Production = fProd;
 
       pIndexPtr = &pArea->lpIndexes;

@@ -114,6 +114,8 @@ void hb_releaseCPU( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_releaseCPU()"));
 
+   hb_vmUnlock();
+
    /* TODO: Add code to release time slices on all platforms */
 
 #if defined(HB_OS_WIN_32) || defined(__CYGWIN__)
@@ -174,6 +176,8 @@ void hb_releaseCPU( void )
    /* Do nothing */
 
 #endif
+
+   hb_vmLock();
 }
 
 /* performs all tasks defined for idle state */
@@ -185,9 +189,7 @@ void hb_idleState( void )
    {
       pIdleData->fIamIdle = TRUE;
 
-      hb_vmUnlock();
       hb_releaseCPU();
-      hb_vmLock();
       if( hb_vmRequestQuery() == 0 )
       {
          if( pIdleData->fCollectGarbage )

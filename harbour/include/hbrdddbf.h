@@ -191,9 +191,9 @@ typedef struct _DBFAREA
    *  example.
    */
 
-   HB_FHANDLE hDataFile;            /* Data file handle */
-   HB_FHANDLE hMemoFile;            /* Memo file handle */
-   HB_FHANDLE hMemoTmpFile;         /* Memo temporary file handle */
+   PHB_FILE pDataFile;              /* Data file handle */
+   PHB_FILE pMemoFile;              /* Memo file handle */
+   PHB_FILE pMemoTmpFile;           /* Memo temporary file handle */
    char *   szDataFileName;         /* Name of data file */
    char *   szMemoFileName;         /* Name of memo file */
    USHORT   uiHeaderLen;            /* Size of header */
@@ -368,7 +368,7 @@ extern HB_EXPORT ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, USHORT uiIndex,
                                             ULONG ulBlock, ULONG ulSize,
                                             ULONG ulType );
 extern HB_EXPORT ERRCODE hb_dbfGetEGcode( ERRCODE errCode );
-extern HB_EXPORT BOOL    hb_dbfLockIdxFile( HB_FHANDLE hFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos );
+extern HB_EXPORT BOOL    hb_dbfLockIdxFile( PHB_FILE pFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos );
 extern HB_EXPORT BOOL    hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool );
 
 #ifndef HB_CDP_SUPPORT_OFF

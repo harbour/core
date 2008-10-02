@@ -74,6 +74,7 @@
 #include <windows.h>
 #include <ole2.h>
 #include <oleauto.h>
+#include <olectl.h>
 
 #ifndef __MINGW32__
    /* Missing in Mingw V 2. */
@@ -1419,15 +1420,16 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID [, cIID ] [, cLicense ] ) */
    {
       if( ISCHAR( 3 ) )
       {
-         IClassFactory2 * pCF;
+         LPVOID * pCFPtr = NULL;
 
-         s_nOleError = CoGetClassObject( HB_ID_REF( REFCLSID, ClassID ), CLSCTX_SERVER, NULL, (LPIID) &IID_IClassFactory2, (LPVOID *) &pCF );
+         s_nOleError = CoGetClassObject( HB_ID_REF( REFCLSID, ClassID ), CLSCTX_SERVER, NULL, HB_ID_REF( REFIID, IID_IClassFactory2 ), pCFPtr );
 
          if( SUCCEEDED( s_nOleError ) )
          {
+            IClassFactory2 * pCF = ( IClassFactory2 * ) pCFPtr;
             BSTR bstrLic = hb_oleAnsiToSysString( hb_parc( 3 ) );
 
-            s_nOleError = pCF->lpVtbl->CreateInstanceLic( pCF, NULL, NULL, riid, bstrLic, &pDisp );
+            s_nOleError = pCF->lpVtbl->CreateInstanceLic( pCF, NULL, NULL, (REFIID) riid, bstrLic, &pDisp );
 
             SysFreeString( bstrLic );
             pCF->lpVtbl->Release( pCF );
