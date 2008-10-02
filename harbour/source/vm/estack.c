@@ -125,7 +125,7 @@
 
 #endif /* HB_USE_TLS */
 
-#  if !defined( HB_STACK_TLS_PRELOAD )
+#  if !defined( HB_STACK_PRELOAD )
 #     undef hb_stack
 #     define hb_stack   ( * hb_stack_ptr )
 #  endif

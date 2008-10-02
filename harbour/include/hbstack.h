@@ -242,8 +242,9 @@ typedef struct
       extern HB_STACK hb_stack;
 #  endif
 #endif
-#ifndef HB_STACK_TLS_PRELOAD
+#if !defined( HB_STACK_TLS_PRELOAD ) && defined( HB_STACK_PRELOAD )
 #  define HB_STACK_TLS_PRELOAD
+#  undef  HB_STACK_PRELOAD
 #endif
 
 #endif /* _HB_API_INTERNAL_ */
