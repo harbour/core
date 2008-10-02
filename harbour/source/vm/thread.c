@@ -677,7 +677,9 @@ HB_FUNC( HB_THREADID )
    PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) hb_vmThreadState();
    if( pThread )
       hb_retnl( pThread->th_id );
+   else
 #endif
+      hb_retnl( 0 );
 }
 
 HB_FUNC( HB_THREADJOIN )

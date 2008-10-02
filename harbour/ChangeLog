@@ -9,6 +9,10 @@
 */
 
 
+2008-10-02 15:54 UTC+0200 Maurilio Longo (maurilio.longo@libero.it)
+  * harbour/source/vm/thread.c
+    * hb_ThreadID() returns 0 when built in ST mode.
+
 2008-10-02 15:50 UTC+0200 Maurilio Longo (maurilio.longo@libero.it)
   * harbour/source/vm/thread.c
     + added hb_ThreadID() function which returns thread ID of current thread.
