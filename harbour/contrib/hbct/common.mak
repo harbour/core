@@ -94,6 +94,7 @@ LIB_OBJS = \
     \
     $(OBJ_DIR)blank$(OBJEXT) \
     $(OBJ_DIR)ct$(OBJEXT) \
+    $(OBJ_DIR)ctdummy$(OBJEXT) \
     $(OBJ_DIR)ctmisc$(OBJEXT) \
     $(OBJ_DIR)ctrand$(OBJEXT) \
     $(OBJ_DIR)cttime$(OBJEXT) \

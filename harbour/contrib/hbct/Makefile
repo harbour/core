@@ -86,6 +86,7 @@ C_SOURCES =\
 PRG_SOURCES=\
 	blank.prg \
 	ct.prg \
+	ctdummy.prg \
 	ctmisc.prg \
 	ctrand.prg \
 	cttime.prg \

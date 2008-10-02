@@ -676,10 +676,10 @@ HB_FUNC( HB_THREADID )
 #if defined( HB_MT_VM )
    PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) hb_vmThreadState();
    if( pThread )
-      hb_retnl( pThread->th_id );
+      hb_retnint( ( HB_PTRDIFF ) pThread->th_id );
    else
 #endif
-      hb_retnl( 0 );
+      hb_retnint( 0 );
 }
 
 HB_FUNC( HB_THREADJOIN )

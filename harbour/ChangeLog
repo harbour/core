@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-02 20:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbct/Makefile
+  * contrib/hbct/common.mak
+  * contrib/hbct/ctmisc.prg
+  + contrib/hbct/ctdummy.prg
+    * Recently added dummy CT functions moved to a separate file.
+
+  * source/vm/thread.c
+    ! Fixed warning in HB_THREADID().
 
 2008-10-02 15:54 UTC+0200 Maurilio Longo (maurilio.longo@libero.it)
   * harbour/source/vm/thread.c

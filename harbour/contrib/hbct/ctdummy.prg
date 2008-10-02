@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Misc CA-Tools functions
+ * Dummy CA-Tools functions
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 2008 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,63 +50,22 @@
  *
  */
 
-#include "color.ch"
 #include "common.ch"
-#include "setcurs.ch"
 
-#include "hbmemory.ch"
+FUNCTION getkxlat( nKeyValue )
+   RETURN nKeyValue
 
-MEMVAR GetList
+FUNCTION setkxlat( nOrgKeyValue, nNewKeyValue )
+   LOCAL lAccepted := .F.
 
-FUNCTION AlloFree( lMode )
+   HB_SYMBOL_UNUSED( nOrgKeyValue )
+   HB_SYMBOL_UNUSED( nNewKeyValue )
 
-   DEFAULT lMode TO .F.
+   RETURN lAccepted
 
-   RETURN Memory( iif( lMode, HB_MEM_CHAR, HB_MEM_BLOCK ) )
+FUNCTION dsetkbios( lNewKeyboardMode )
+   STATIC s_lKeyboardMode := .T.
 
-FUNCTION CENTER( c, n, p, lMode )
-   LOCAL cRet
+   HB_SYMBOL_UNUSED( lNewKeyboardMode )
 
-   DEFAULT n TO MaxCol() + 1 - Col() * 2
-   DEFAULT c TO ""
-
-   IF ISLOGICAL( p )
-      lMode := p
-      p := NIL
-   ELSE
-      DEFAULT lMode TO .F.
-   ENDIF
-
-   cRet := PadC( AllTrim( c ), n, p )
-
-   RETURN iif( lMode, cRet, RTrim( cRet ) )
-
-FUNCTION CSETCURS( l )
-
-   IF ! ISLOGICAL( l )
-      RETURN SetCursor() != SC_NONE
-   ENDIF
-
-   RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
-
-FUNCTION CSETKEY( n )
-   RETURN SetKey( n )
-
-FUNCTION CSETCENT( nCentury )
-   RETURN __SETCENTURY( nCentury )
-
-FUNCTION LTOC( l )
-   RETURN iif( l, "T", "F" )
-
-FUNCTION DOSPARAM()
-   LOCAL cRet := ""
-   LOCAL nCount := HB_ARGC(), i
-
-   FOR i := 1 TO nCount
-      cRet += iif( i == 1, "", " " ) + HB_ARGV( i )
-   NEXT
-
-   RETURN cRet
-
-FUNCTION EXENAME()
-   RETURN HB_ARGV( 0 )
+   RETURN s_lKeyboardMode
