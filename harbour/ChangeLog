@@ -8,6 +8,43 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-02 23:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbsetup.ch
+    ! Removed some company names from comments.
+
+  * source/vm/extrap.c
+    + Added //BATCH internal switch to indicate exception handler 
+      to suppress the Windows exception dialog when an exception 
+      occurs. Useful for programs running without user interaction.
+      NOTE: This may not be the ultimate method. If we can gather 
+            more such situations where such "batch" mode might 
+            be useful, we may as well implement it as a Set().
+    - Removed Harbour specific exception MessageBox(). Besides 
+      having gotten rid of a MessageBox() call in core VM, Harbour now 
+      got back the standard Windows error handling dialog, which is 
+      more standard and easy to get by than the previous default 
+      method, where several clicks were needed to pass through 
+      the (sometimes hidden) popups. The details of all GPFs are 
+      still logged into hb_out.log.
+    + Removed size limit for the logged exception call stack.
+
+2008-10-02 23:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbsetup.ch
+    ! Removed some company names from comments.
+
+  * source/vm/extrap.c
+    + Added //BATCH internal switch to indicate exception handler 
+      to suppress the Windows exception dialog when an exception 
+      occurs. Useful for programs running without user interaction.
+    - Removed Harbour specific exception MessageBox(). Besides 
+      having gotten rid of a MessageBox() call in core VM, Harbour now 
+      got back the standard Windows error handling dialog, which is 
+      more standard and easy to get by than the previous default 
+      method, where several clicks were needed to pass through 
+      the (sometimes hidden) popups. The details of all GPFs are 
+      still logged into hb_out.log.
+    + Removed size limit for the logged exception call stack.
+
 2008-10-02 21:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/sdf1.c
     ! fixed stupid typo (missing !) in last modification which broke

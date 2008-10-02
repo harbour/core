@@ -60,11 +60,11 @@
          different Clipper implementations. */
 
 /* #define HB_EXTENSION */        /* Enable Harbour non-portable extensions */
-#define HB_C52_UNDOC              /* Enable CA-Cl*pper 5.2e/5.3x undocumented features */
-/* #define HB_C52_STRICT */       /* Enable CA-Cl*pper 5.2e/5.3x strict compatibility */
-#define HB_COMPAT_C53             /* Enable CA-Cl*pper 5.3x extensions */
-#define HB_COMPAT_XPP             /* Enable Alaska Xbase++ extensions */
-/* #define HB_COMPAT_VO */        /* Enable CA-VO extensions */
+#define HB_C52_UNDOC              /* Enable Cl*pper 5.2e/5.3x undocumented features */
+/* #define HB_C52_STRICT */       /* Enable Cl*pper 5.2e/5.3x strict compatibility */
+#define HB_COMPAT_C53             /* Enable Cl*pper 5.3x extensions */
+#define HB_COMPAT_XPP             /* Enable Xbase++ extensions */
+/* #define HB_COMPAT_VO */        /* Enable VO extensions */
 #define HB_COMPAT_FLAGSHIP        /* Enable Flagship extensions */
 /* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
 /* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */

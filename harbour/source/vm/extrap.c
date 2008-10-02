@@ -88,17 +88,15 @@
 
 LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
 {
-   char msg[ ( HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ) * 128 ];
-   char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
-   char file[ _POSIX_PATH_MAX + 1 ];
-   char * ptr;
-   USHORT uiLine;
-   int iLevel;
-
    FILE * hLog = *hb_setGetCPtr( HB_SET_HBOUTLOG ) ? hb_fopen( hb_setGetCPtr( HB_SET_HBOUTLOG ), "a+" ) : NULL;
 
    if( hLog )
    {
+      char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+      char file[ _POSIX_PATH_MAX + 1 ];
+      USHORT uiLine;
+      int iLevel;
+
       char szTime[ 9 ];
       int iYear, iMonth, iDay;
       
@@ -198,37 +196,22 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
          fwrite( errmsg, sizeof( char ), strlen( errmsg ), hLog );
       }
 #endif
-   }
 
-   msg[ 0 ] = '\0';
-   ptr = msg;
-   iLevel = 0;
+      iLevel = 0;
+      while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
+      {
+         char msg[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
 
-   while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
-   {
-      snprintf( ptr, sizeof( msg ) - ( ptr - msg ), 
-                HB_I_("Called from %s(%hu)%s%s\n"), buffer, uiLine, *file ? HB_I_(" in ") : "", file );
-
-      if( hLog )
-         fwrite( ptr, sizeof( *ptr ), strlen( ptr ), hLog );
-
-      ptr += strlen( ptr );
-   }
-
-   if( hLog )
-   {
+         snprintf( msg, sizeof( msg ), HB_I_("Called from %s(%hu)%s%s\n"), buffer, uiLine, *file ? HB_I_(" in ") : "", file );
+      
+         fwrite( msg, sizeof( *msg ), strlen( msg ), hLog );
+      }
+      
       fprintf( hLog, "------------------------------------------------------------------------\n");
       fclose( hLog );
    }
 
-   /* GUI */
-   {
-      LPTSTR lpStr = HB_TCHAR_CONVTO( msg );
-      MessageBox( NULL, lpStr, TEXT( HB_I_("Application Exception") ), MB_ICONSTOP );
-      HB_TCHAR_FREE( lpStr );
-   }
-
-   return EXCEPTION_CONTINUE_SEARCH; /* EXCEPTION_EXECUTE_HANDLER; */
+   return hb_cmdargCheck( "BATCH" ) ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH;
 }
 
 #elif defined(HB_OS_OS2)
