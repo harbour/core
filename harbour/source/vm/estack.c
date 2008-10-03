@@ -118,10 +118,10 @@
                                       hb_tls_set( hb_stack_key, \
                                                   hb_xgrab( sizeof( HB_STACK ) ) ); \
                                  } while ( 0 )
-#     define hb_stack_dealloc()  do { hb_xfree( hb_tls_get( hb_stack_key ) ); \
+#     define hb_stack_dealloc()  do { hb_xfree( ( void * ) hb_tls_get( hb_stack_key ) ); \
                                       hb_tls_set( hb_stack_key, NULL ); } \
                                  while ( 0 )
-#     define hb_stack_ready()    ( s_fInited && hb_tls_get( hb_stack_key ) != NULL )
+#     define hb_stack_ready()    ( s_fInited && hb_tls_get( hb_stack_key ) )
 
 #endif /* HB_USE_TLS */
 
