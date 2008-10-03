@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-03 21:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  - harbour/tests/speedtst.prg
+  + harbour/tests/speedold.prg
+    * renamed old speed test - I left it because some other xbase compiler
+      cannot compiple the new one due to not Clipper compatible PP
+
+  + harbour/tests/speedtst.prg
+    * added new speed test which can also measure mutlithread performance.
+      When linked with MT HVM version then it can be executed with optional
+      parameter which causes that each test loop is executed by separate
+      thread. Please make such tests on different platforms.
+
 2008-10-03 20:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/garbage.c
     * Use spinlock instead of mutex in OS2 builds - performance test.
