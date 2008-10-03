@@ -242,7 +242,7 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 !if "$(HB_BUILD_WINCE)" == "yes"
 STANDARD_SYSLIBS = coredll.lib corelibc.lib winsock.lib ws2.lib
 !else
-# user32.lib: *Clipboard*(), MessageBox(), CharToOemBuff(), OemToCharBuff(), GetKeyState(), GetKeyboardState(), SetKeyboardState()
+# user32.lib: *Clipboard*(), CharToOemBuff(), OemToCharBuff(), GetKeyState(), GetKeyboardState(), SetKeyboardState()
 # wsock32.lib: hbinet
 # advapi32.lib: GetUserName()
 # gdi32.lib: gtwvt

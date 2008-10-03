@@ -1835,9 +1835,7 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
 
    if( ! RegisterClass( &wndclass ) )
    {
-      MessageBox( NULL, TEXT( "Failed to register class." ),
-                  s_szClassName, MB_ICONERROR );
-      return 0;
+      hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
    }
 
    hWnd = CreateWindow(
@@ -1856,8 +1854,7 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
 
    if( hWnd == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed to create window." ),
-                  TEXT( "HARBOUR_WVG" ), MB_ICONERROR );
+      hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
    }
 
    /*
@@ -1898,7 +1895,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    pWVT = hb_gt_wvt_New( pGT );
    if( !pWVT )
    {
-      hb_errInternal( 10001, "Cannot allocate new window", NULL, NULL );
+      hb_errInternal( 10001, "Maximum number of WVT windows reached, cannot create another one", NULL, NULL );
    }
 
    HB_GTLOCAL( pGT ) = ( void * ) pWVT;
@@ -1907,10 +1904,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                                      ( HINSTANCE ) s_hPrevInstance,
                                      "", s_iCmdShow );
    if( !pWVT->hWnd )
-   {
-      /* hb_errRT_TERM( EG_CREATE, 10001, "WINAPI CreateWindow() failed", "hb_gt_wvt_Init()", 0, 0 ); */
-      hb_errInternal( 10001, "WINAPI CreateWindow() failed", "", "" );
-   }
+      return;
 
 #ifndef HB_CDP_SUPPORT_OFF
    pWVT->hostCDP    = hb_vmCDP();
@@ -3045,7 +3039,7 @@ static int hb_gt_wvt_wnd_Create( PHB_GT pGT, int iTop, int iLeft, int iBottom, i
    pWVT = hb_gt_wvt_New( pGT );
    if( !pWVT )
    {
-      hb_errInternal( 10001, "Cannot allocate new window", "", "" );
+      hb_errInternal( 10001, "Cannot allocate new window", NULL, NULL );
    }
 
    HB_GTLOCAL( pGT ) = ( void * ) pWVT;
@@ -3069,7 +3063,7 @@ static int hb_gt_wvt_wnd_Create( PHB_GT pGT, int iTop, int iLeft, int iBottom, i
 
    if( !pWVT->hWnd )
    {
-      hb_errInternal( 10001, "WINAPI CreateWindow() failed", "", "" );
+      hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
    }
 
 #ifndef HB_CDP_SUPPORT_OFF

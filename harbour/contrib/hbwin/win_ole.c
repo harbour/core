@@ -1286,27 +1286,6 @@ HB_FUNC( __OLEENUMSTOP )
 }
 
 /* ----------------------------------------------------------------------- */
-HB_FUNC( OLESHOWEXCEPTION )
-{
-   if( ( LONG ) s_nOleError == DISP_E_EXCEPTION )
-   {
-#if defined( UNICODE )
-      MessageBox( NULL, excep.bstrDescription, excep.bstrSource, MB_ICONHAND );
-#else
-      LPSTR source, description;
-
-      source = hb_oleWideToAnsi( excep.bstrSource );
-      description = hb_oleWideToAnsi( excep.bstrDescription );
-
-      MessageBox( NULL, description, source, MB_ICONHAND );
-
-      hb_xfree( source );
-      hb_xfree( description );
-#endif
-   }
-}
-
-/* ----------------------------------------------------------------------- */
 HB_FUNC( OLEEXCEPTIONSOURCE )
 {
    if( ( LONG ) s_nOleError == DISP_E_EXCEPTION )

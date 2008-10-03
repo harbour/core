@@ -63,8 +63,6 @@
 #include "hbclass.ch"
 #include "error.ch"
 
-#translate Alert( <x> ) => MessageBox( 0, <x>, "OLE Error", 0 )
-
 #ifndef __XHARBOUR__
 
 #define EG_OLEEXCEPTION 1001
@@ -675,5 +673,11 @@ METHOD PROCEDURE __enumStop() CLASS TOleAuto
    ::pOleEnumerator := NIL
 
 RETURN
+
+PROCEDURE OleShowException()
+
+   Alert( OleExceptionSource() + ": " + OleExceptionDescription() )
+
+   RETURN
 
 #endif

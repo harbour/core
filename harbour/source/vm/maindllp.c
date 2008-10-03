@@ -93,12 +93,7 @@ static FARPROC hb_getProcAddress( LPCSTR szProcName )
    }
 
    if( pProcAddr == NULL )
-   {
-      LPTSTR lpFuncName = HB_TCHAR_CONVTO( szProcName );
-      MessageBox( NULL, TEXT( "Cannot find function address" ),
-                  lpFuncName, MB_ICONSTOP );
-      HB_TCHAR_FREE( lpFuncName );
-   }
+      hb_errInternal( 9997, "Cannot find address for function %s", szProcName, NULL );
 
    return pProcAddr;
 }

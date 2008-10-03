@@ -1555,7 +1555,6 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
 {
    HWND     hWnd = ( HWND ) 0;
    WNDCLASS wndclass;
-   LPTSTR   szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
 
    HB_SYMBOL_UNUSED( hPrevInstance );
    HB_SYMBOL_UNUSED( szCmdLine );
@@ -1575,6 +1574,8 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
 
    if( RegisterClass( &wndclass ) )
    {
+      LPTSTR szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
+
       hWnd = CreateWindow(
          s_szClassName,                                       /* classname */
          szAppName,                                           /* window name */
@@ -1589,18 +1590,18 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
          hInstance,                                           /* instance */
          NULL );                                              /* lpParam */
 
+      HB_TCHAR_FREE( szAppName );
+
       if( hWnd )
       {
          ShowWindow( hWnd, iCmdShow );
          UpdateWindow( hWnd );
       }
       else
-         MessageBox( NULL, TEXT( "Failed to create window." ), szAppName, MB_ICONERROR );
+         hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
    }
    else
-      MessageBox( NULL, TEXT( "Failed to register class." ), szAppName, MB_ICONERROR );
-
-   HB_TCHAR_FREE( szAppName );
+      hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
 
    return hWnd;
 }
@@ -1635,9 +1636,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                                         ( HINSTANCE ) s_hPrevInstance,
                                         NULL, s_iCmdShow );
    if( !pWVT->hWnd )
-   {
-      hb_errInternal( 10001, "WVT window creation failed", NULL, NULL );
-   }
+      return;
 
    hb_gt_wvt_InitWindow( pWVT, WVT_DEFAULT_ROWS, WVT_DEFAULT_COLS );
 
@@ -1656,7 +1655,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    /* Set default window title */
    {
-      PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[0] );
+      PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
       hb_gt_wvt_SetWindowTitle( pWVT->hWnd, pFileName->szName );
       hb_xfree( pFileName );
    }

@@ -55,8 +55,6 @@
 #include "common.ch"
 #include "error.ch"
 
-#translate Alert( <x> ) => MessageBox( 0, <x>, "OLE Error", 0 )
-
 #define EG_OLEEXCEPTION 1001
 
 CLASS TOleAuto
@@ -157,7 +155,7 @@ METHOD Invoke( cMethod, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) C
    IF OleIsObject()
       RETURN TOleAuto():New( uObj )
    ELSEIF Ole2TxtError() == "DISP_E_EXCEPTION"
-      OLEShowException()
+      Alert( "OLE exception: " + OleExceptionSource() + ": " + OleExceptionDescription() )
       RETURN Self
    ELSEIF OleError() != 0
       Alert( "OLE error1: " + cMethod + ":   " + Ole2TxtError() )
@@ -250,3 +248,9 @@ FUNCTION CreateObject( cString )
 
 FUNCTION GetActiveObject( cString )
    RETURN TOleAuto():GetActiveObject( cString )
+
+PROCEDURE OleShowException()
+
+   Alert( OleExceptionSource() + ": " + OleExceptionDescription() )
+
+   RETURN

@@ -414,20 +414,16 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    hb_retptr( pDisp );
 }
 
-HB_FUNC( OLESHOWEXCEPTION )
+HB_FUNC( OLEEXCEPTIONSOURCE )
 {
    if( ( LONG ) s_nOleError == DISP_E_EXCEPTION )
-   {
-#if defined( UNICODE )
-      MessageBox( NULL, s_excep.bstrDescription, s_excep.bstrSource, MB_ICONHAND );
-#else
-      LPSTR source = WideToAnsi( ( LPWSTR ) s_excep.bstrSource );
-      LPSTR description = WideToAnsi( ( LPWSTR ) s_excep.bstrDescription );
-      MessageBox( NULL, description, source, MB_ICONHAND );
-      hb_xfree( source );
-      hb_xfree( description );
-#endif
-   }
+      hb_retc_buffer( hb_oleWideToAnsi( excep.bstrSource ) );
+}
+
+HB_FUNC( OLEEXCEPTIONDESCRIPTION )
+{
+   if( ( LONG ) s_nOleError == DISP_E_EXCEPTION )
+      hb_retc_buffer( hb_oleWideToAnsi( excep.bstrDescription ) );
 }
 
 HB_FUNC( OLEINVOKE ) /* ( hOleObject, szMethodName, uParams... ) */
