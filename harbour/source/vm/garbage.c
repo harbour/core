@@ -50,6 +50,8 @@
  *
  */
 
+#define INCL_DOSDATETIME
+
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbstack.h"
@@ -65,9 +67,73 @@
 
 #  include "hbthread.h"
 
+/* Performance test. Use spinlock instead of mutex in OS2 builds */
+
+#if defined( HB_OS_OS2 ) && \
+    defined( __GNUC__ ) && \
+    ( defined( i386 ) || defined( __i386__ ) || defined( __x86_64__ ) )
+
+#  if defined( HB_OS_UNIX )
+#     include <sched.h>
+#  endif
+
+   static __inline__ int hb_atomic_lock( volatile int * p )
+   {
+      unsigned char c;
+      __asm__ __volatile__(
+         "lock\n\t"
+         "cmpxchgl %3, %1\n\t"
+         "sete %0"
+         :"=a" (c), "+m" (*p)
+         :"a" (0), "d" (1)
+      );
+      return c;
+   }
+
+   static __inline__ void hb_atomic_unlock( volatile int * p )
+   {
+      __asm__ __volatile__(
+         "xchgl %0, %1"
+         :"+m" (*p)
+         :"a" (0), "r" (*p)
+      );
+   }
+
+   static int s_gcSpinLock = 0;
+
+   static void hb_gc_acquire_lock( void )
+   {
+      for( ;; )
+      {
+         if( hb_atomic_lock( &s_gcSpinLock ) )
+            return;
+#if defined( HB_OS_WIN_32 )
+         Sleep( 0 );
+#elif defined( HB_OS_OS2 )
+         DosSleep( 0 );
+#elif defined( HB_OS_UNIX )
+         sched_yield();
+#else
+         sleep( 0 );
+#endif
+      }
+   }
+
+   static void hb_gc_release_lock( void )
+   {
+      hb_atomic_unlock( &s_gcSpinLock );
+   }
+
+#  define HB_GC_LOCK          hb_gc_acquire_lock();
+#  define HB_GC_UNLOCK        hb_gc_release_lock();
+
+#else
+
    static HB_CRITICAL_NEW( s_gcMtx );
 #  define HB_GC_LOCK          hb_threadEnterCriticalSection( &s_gcMtx );
 #  define HB_GC_UNLOCK        hb_threadLeaveCriticalSection( &s_gcMtx );
+
+#endif
 
 #else
 
