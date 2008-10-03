@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-03 09:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/extrap.c
+    + Now using standard internal error call for Windows too.
+    + Implemented //BATCH for OS/2. (please test)
+
+  * source/rtl/errorint.c
+    * Upped internal buffer.
+
 2008-10-03 09:04 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbole/oleauto.prg
   * contrib/hbole/ole2.c

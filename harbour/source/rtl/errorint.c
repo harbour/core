@@ -61,7 +61,7 @@
 
 void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
 {
-   char buffer[ 1024 ];
+   char buffer[ 8192 ];
    char file[ _POSIX_PATH_MAX + 1 ];
    const char * szFile;
    USHORT uiLine;
