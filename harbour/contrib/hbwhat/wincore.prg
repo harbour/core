@@ -284,7 +284,7 @@ Function WHT__ProcessMsg( hWnd, nMsg, nwParam, nlParam, nIndex )
       EndIf
    Else
       If Valtype( bProc ) == "N"
-         nRet := HB_Exec( bProc, oObj, hWnd, nMsg, nwParam, nlParam, xCargo )
+         nRet := HB_ExecFromArray( bProc, { oObj, hWnd, nMsg, nwParam, nlParam, xCargo } )
       Else
          nRet := Eval( bProc, hWnd, nMsg, nwParam, nlParam )
       Endif
@@ -340,7 +340,7 @@ Function WHT__ProcessDlgMsg( hDlg, nMsg, nwParam, nlParam )
    nResult := iif( ValType(aDialog[ nIndex, 2 ]) == "B", ;
                   eval( aDialog[ nIndex, 2 ] , hDlg, nMsg, nwParam, nlParam ),;
                   iif( Valtype( aDialog[ nIndex, 2 ] ) == "N", ;
-                     HB_Exec( aDialog[ nIndex,2 ], aDialog[ nIndex, 4], hDlg, nMsg, nwParam, nlParam, aDialog[ nIndex, 5 ]  ),;
+                     HB_ExecFromArray( aDialog[ nIndex,2 ], { aDialog[ nIndex, 4], hDlg, nMsg, nwParam, nlParam, aDialog[ nIndex, 5 ] } ),;
                      0 );
                 )
 

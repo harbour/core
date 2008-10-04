@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-04 19:36 UTC+0100 Francesco Saverio Giudice (info at fsgiudice dot com)
+  * contrib/hbwhat/wincore.prg
+    * HB_Exec() changed to HB_ExecFromArray()
+      Now contrib/hbwhat/tests/whatdemo.prg can be compiled and runs
+
 2008-10-03 21:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   - harbour/tests/speedtst.prg
   + harbour/tests/speedold.prg
@@ -41,10 +46,10 @@
   * contrib/hbole/ole2.c
   * contrib/hbwin/win_tole.prg
   * contrib/hbwin/win_ole.c
-    * OLESHOWEXCEPTION() implemented on the .prg level, using 
+    * OLESHOWEXCEPTION() implemented on the .prg level, using
       Alert() rather than MessageBox().
     ! All MessageBox()es converted to Alert()s.
-    + Added OLEEXCEPTIONSOURCE(), OLEEXCEPTIONDESCRIPTION() 
+    + Added OLEEXCEPTIONSOURCE(), OLEEXCEPTIONDESCRIPTION()
       to hbole.
 
   * source/vm/maindllp.c
@@ -76,18 +81,18 @@
     ! Removed some company names from comments.
 
   * source/vm/extrap.c
-    + Added //BATCH internal switch to indicate exception handler 
-      to suppress the Windows exception dialog when an exception 
+    + Added //BATCH internal switch to indicate exception handler
+      to suppress the Windows exception dialog when an exception
       occurs. Useful for programs running without user interaction.
-      NOTE: This may not be the ultimate method. If we can gather 
-            more such situations where such "batch" mode might 
+      NOTE: This may not be the ultimate method. If we can gather
+            more such situations where such "batch" mode might
             be useful, we may as well implement it as a Set().
-    - Removed Harbour specific exception MessageBox(). Besides 
-      having gotten rid of a MessageBox() call in core VM, Harbour now 
-      got back the standard Windows error handling dialog, which is 
-      more standard and easy to get by than the previous default 
-      method, where several clicks were needed to pass through 
-      the (sometimes hidden) popups. The details of all GPFs are 
+    - Removed Harbour specific exception MessageBox(). Besides
+      having gotten rid of a MessageBox() call in core VM, Harbour now
+      got back the standard Windows error handling dialog, which is
+      more standard and easy to get by than the previous default
+      method, where several clicks were needed to pass through
+      the (sometimes hidden) popups. The details of all GPFs are
       still logged into hb_out.log.
     + Removed size limit for the logged exception call stack.
 
@@ -96,15 +101,15 @@
     ! Removed some company names from comments.
 
   * source/vm/extrap.c
-    + Added //BATCH internal switch to indicate exception handler 
-      to suppress the Windows exception dialog when an exception 
+    + Added //BATCH internal switch to indicate exception handler
+      to suppress the Windows exception dialog when an exception
       occurs. Useful for programs running without user interaction.
-    - Removed Harbour specific exception MessageBox(). Besides 
-      having gotten rid of a MessageBox() call in core VM, Harbour now 
-      got back the standard Windows error handling dialog, which is 
-      more standard and easy to get by than the previous default 
-      method, where several clicks were needed to pass through 
-      the (sometimes hidden) popups. The details of all GPFs are 
+    - Removed Harbour specific exception MessageBox(). Besides
+      having gotten rid of a MessageBox() call in core VM, Harbour now
+      got back the standard Windows error handling dialog, which is
+      more standard and easy to get by than the previous default
+      method, where several clicks were needed to pass through
+      the (sometimes hidden) popups. The details of all GPFs are
       still logged into hb_out.log.
     + Removed size limit for the logged exception call stack.
 
