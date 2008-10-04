@@ -414,16 +414,33 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    hb_retptr( pDisp );
 }
 
+static LPSTR hb_oleWideToAnsi( BSTR wString )
+{
+   int nConvertedLen = WideCharToMultiByte( CP_ACP, 0, wString, -1, NULL, 0, NULL, NULL );
+
+   if( nConvertedLen )
+   {
+      char * cString = ( char * ) hb_xgrab( nConvertedLen + 1 );
+
+      if( WideCharToMultiByte( CP_ACP, 0, wString, -1, cString, nConvertedLen + 1, NULL, NULL ) )
+         return cString;
+      else
+         hb_xfree( cString );
+   }
+
+   return NULL;
+}
+
 HB_FUNC( OLEEXCEPTIONSOURCE )
 {
    if( ( LONG ) s_nOleError == DISP_E_EXCEPTION )
-      hb_retc_buffer( hb_oleWideToAnsi( excep.bstrSource ) );
+      hb_retc_buffer( hb_oleWideToAnsi( s_excep.bstrSource ) );
 }
 
 HB_FUNC( OLEEXCEPTIONDESCRIPTION )
 {
    if( ( LONG ) s_nOleError == DISP_E_EXCEPTION )
-      hb_retc_buffer( hb_oleWideToAnsi( excep.bstrDescription ) );
+      hb_retc_buffer( hb_oleWideToAnsi( s_excep.bstrDescription ) );
 }
 
 HB_FUNC( OLEINVOKE ) /* ( hOleObject, szMethodName, uParams... ) */

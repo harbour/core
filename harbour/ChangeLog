@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-04 20:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbole/ole2.c
+    ! Fixed errors in previous commit. Thanks Toninho.
+
+  * contrib/hbwin/win_ole.c
+    ! Prefixed remaining static variables with 's_'.
+
 2008-10-04 19:36 UTC+0100 Francesco Saverio Giudice (info at fsgiudice dot com)
   * contrib/hbwhat/wincore.prg
     * HB_Exec() changed to HB_ExecFromArray()

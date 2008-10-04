@@ -136,10 +136,10 @@ static void hb_vmRequestReset( void )
 }
 
 /* ----------------------------------------------------------------------- */
-static EXCEPINFO excep;
+static EXCEPINFO s_excep;
 
-static DISPID lPropPut = DISPID_PROPERTYPUT;
-static UINT uArgErr;
+static DISPID s_lPropPut = DISPID_PROPERTYPUT;
+static UINT s_uArgErr;
 
 HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant );
 static PHB_ITEM SafeArrayToArray( SAFEARRAY * parray, UINT iDim, long * rgIndices, VARTYPE vt );
@@ -1289,14 +1289,14 @@ HB_FUNC( __OLEENUMSTOP )
 HB_FUNC( OLEEXCEPTIONSOURCE )
 {
    if( ( LONG ) s_nOleError == DISP_E_EXCEPTION )
-      hb_retc_buffer( hb_oleWideToAnsi( excep.bstrSource ) );
+      hb_retc_buffer( hb_oleWideToAnsi( s_excep.bstrSource ) );
 }
 
 /* ----------------------------------------------------------------------- */
 HB_FUNC( OLEEXCEPTIONDESCRIPTION )
 {
    if( ( LONG ) s_nOleError == DISP_E_EXCEPTION )
-      hb_retc_buffer( hb_oleWideToAnsi( excep.bstrDescription ) );
+      hb_retc_buffer( hb_oleWideToAnsi( s_excep.bstrDescription ) );
 }
 
 /* ----------------------------------------------------------------------- */
@@ -1507,13 +1507,13 @@ HB_FUNC( OLERELEASEOBJECT ) /* ( hOleObject, szMethodName, uParams... ) */
 /* ----------------------------------------------------------------------- */
 static HRESULT OleSetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDispParams )
 {
-   pDispParams->rgdispidNamedArgs = &lPropPut;
+   pDispParams->rgdispidNamedArgs = &s_lPropPut;
    pDispParams->cNamedArgs = 1;
 
    /* 1 Based!!! */
    if( ( ISBYREF( 1 ) ) || ISARRAY( 1 ) )
    {
-      memset( ( LPBYTE ) &excep, 0, sizeof( excep ) );
+      memset( ( LPBYTE ) &s_excep, 0, sizeof( s_excep ) );
 
       s_nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                            DispID,
@@ -1522,14 +1522,14 @@ static HRESULT OleSetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDis
                                            DISPATCH_PROPERTYPUTREF,
                                            pDispParams,
                                            NULL,    /* No return value */
-                                           &excep,
-                                           &uArgErr );
+                                           &s_excep,
+                                           &s_uArgErr );
 
       if( SUCCEEDED( s_nOleError ) )
          return s_nOleError;
    }
 
-   memset( ( LPBYTE ) &excep, 0, sizeof( excep ) );
+   memset( ( LPBYTE ) &s_excep, 0, sizeof( s_excep ) );
 
    s_nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                         DispID,
@@ -1538,8 +1538,8 @@ static HRESULT OleSetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDis
                                         DISPATCH_PROPERTYPUT,
                                         pDispParams,
                                         NULL,    /* No return value */
-                                        &excep,
-                                        &uArgErr );
+                                        &s_excep,
+                                        &s_uArgErr );
 
    pDispParams->rgdispidNamedArgs = NULL;
    pDispParams->cNamedArgs = 0;
@@ -1550,7 +1550,7 @@ static HRESULT OleSetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDis
 /* ----------------------------------------------------------------------- */
 static HRESULT OleInvoke( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDispParams )
 {
-   memset( ( LPBYTE ) &excep, 0, sizeof( excep ) );
+   memset( ( LPBYTE ) &s_excep, 0, sizeof( s_excep ) );
 
    s_nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                         DispID,
@@ -1559,8 +1559,8 @@ static HRESULT OleInvoke( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDispPara
                                         DISPATCH_METHOD,
                                         pDispParams,
                                         &s_RetVal,
-                                        &excep,
-                                        &uArgErr );
+                                        &s_excep,
+                                        &s_uArgErr );
 
    return s_nOleError;
 }
@@ -1568,7 +1568,7 @@ static HRESULT OleInvoke( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDispPara
 /* ----------------------------------------------------------------------- */
 static HRESULT OleGetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDispParams )
 {
-   memset( ( LPBYTE ) &excep, 0, sizeof( excep ) );
+   memset( ( LPBYTE ) &s_excep, 0, sizeof( s_excep ) );
 
    s_nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                         DispID,
@@ -1577,8 +1577,8 @@ static HRESULT OleGetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDis
                                         DISPATCH_PROPERTYGET,
                                         pDispParams,
                                         &s_RetVal,
-                                        &excep,
-                                        &uArgErr );
+                                        &s_excep,
+                                        &s_uArgErr );
 
    /*HB_TRACE(HB_TR_INFO, ("OleGetValue: %p\n", s_nOleError));*/
 
@@ -1615,7 +1615,7 @@ static void OleThrowError( void )
 
    if( s_nOleError == DISP_E_EXCEPTION )
    {
-      sDescription = hb_oleWideToAnsi( excep.bstrDescription );
+      sDescription = hb_oleWideToAnsi( s_excep.bstrDescription );
       fFree = TRUE;
    }
    else
