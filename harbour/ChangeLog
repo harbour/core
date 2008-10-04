@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-04 21:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/fm.c
+    ! do not build DL-MM when HB_FM_WIN32_ALLOC is set
+
+  * harbour/tests/speedtst.prg
+    + added support for --exclude=<tests,...> option to exclude some tests,
+      f.e.:
+         ./speetest --exclude=029.030.023.025.027.040.041.043.052.053.019.022.031.032
+      disables all tests which allocates memory. The same tests can be also
+      excluded by --exclude=mem
+
 2008-10-04 20:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbole/ole2.c
     ! Fixed errors in previous commit. Thanks Toninho.

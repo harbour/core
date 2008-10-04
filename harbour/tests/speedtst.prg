@@ -54,8 +54,8 @@
    return { iif( <.info.>, <(info)>, #<testExp> ), time }
 
 
-proc main(mt)
-   test(mt)
+proc main( par1, par2 )
+   test( par1, par2 )
 return
 
 
@@ -172,7 +172,7 @@ TEST t015 INIT _( field F_D ) INIT use_dbsh() EXIT close_db() ;
 
 TEST t016 WITH o := errorNew() CODE x := o:GenCode
 
-TEST t017 WITH o := errorNew() CODE x := 0 //o[8]
+TEST t017 WITH o := errorNew() CODE x := o[8]
 
 TEST t018 CODE round( i / 1000, 2 )
 
@@ -285,10 +285,23 @@ TEST t052 CODE x := f4()
 TEST t053 CODE x := f5()
 
 
-proc test(mt)
-local nLoopOverHead, nTimes, nSeconds, x, i, aThreads:={}
+proc test( par1, par2 )
+local nLoopOverHead, nTimes, nSeconds, cExclude, cNum, lMT, x, i, aThreads:={}
 
 create_db()
+
+lMt := .f.
+if !empty( par1 ) .and. lower( par1 ) = "--exclude="
+   cExclude := substr( par1, 11 )
+   par1 := par2
+elseif !empty( par2 ) .and. lower( par2 ) = "--exclude="
+   cExclude := substr( par2, 11 )
+else
+   cExclude := ""
+endif
+if lower( cExclude ) == "mem"
+   cExclude := "029.030.023.025.027.040.041.043.052.053.019.022.031.032"
+endif
 
 #ifdef __HARBOUR__
 #include "hbmemory.ch"
@@ -298,12 +311,14 @@ if MEMORY( HB_MEM_USEDMAX ) != 0
 endif
 #endif
 
-? "Startup loop to increase CPU clock..."
-x := seconds() + 5; while x > seconds(); enddo
+//? "Startup loop to increase CPU clock..."
+//x := seconds() + 5; while x > seconds(); enddo
 
 ? date(), time(), os()
 #ifdef __HARBOUR__
-   ? version() + iif( hb_mtvm(), " (MT)", "" ), hb_compiler()
+   lMT := !empty( par1 ) .and. hb_mtvm()
+   ? version() + iif( hb_mtvm(), " (MT)" + iif( lMT, "+", "" ), "" ), ;
+     hb_compiler()
 #else
    ? version()
 #endif
@@ -319,24 +334,33 @@ nSeconds := seconds()
 nTimes := secondsCPU()
 
 #ifdef __HARBOUR__
-   if !empty(mt) .and. hb_mtvm()
+   if lMT
       aThreads := array( N_TESTS )
       for i:=1 to N_TESTS
-         aThreads[ i ] := hb_threadStart( "t" + strzero( i, 3 ) )
+         cNum := strzero( i, 3 )
+         if !cNum $ cExclude
+            aThreads[ i ] := hb_threadStart( "t" + cNum )
+         endif
       next
       for i:=1 to N_TESTS
-         if hb_threadJoin( aThreads[ i ], @x )
+         if aThreads[ i ] != NIL .and. hb_threadJoin( aThreads[ i ], @x )
             ? dsp_result( x, nLoopOverHead )
          endif
        next
    else
       for i:=1 to N_TESTS
-         ? dsp_result( &( "t" + strzero( i, 3 ) )(), nLoopOverHead )
+         cNum := strzero( i, 3 )
+         if !cNum $ cExclude
+            ? dsp_result( &( "t" + cNum )(), nLoopOverHead )
+         endif
       next
    endif
 #else
    for i:=1 to N_TESTS
-      ? dsp_result( &( "t" + strzero( i, 3 ) )(), nLoopOverHead )
+      cNum := strzero( i, 3 )
+      if !cNum $ cExclude
+         ? dsp_result( &( "t" + cNum )(), nLoopOverHead )
+      endif
    next
 #endif
 

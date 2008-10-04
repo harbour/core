@@ -103,7 +103,8 @@
 
 #if defined( HB_FM_STD_ALLOC )
    #undef HB_FM_DL_ALLOC
-#elif !defined( HB_FM_DL_ALLOC )
+   #undef HB_FM_WIN32_ALLOC
+#elif !defined( HB_FM_DL_ALLOC ) && !defined( HB_FM_WIN32_ALLOC )
    #if defined( _MSC_VER ) || defined( __BORLANDC__ ) || defined( __MINGW32__ )
       #define HB_FM_DL_ALLOC
    #else
