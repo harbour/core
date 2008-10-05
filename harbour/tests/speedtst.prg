@@ -12,7 +12,7 @@
  */
 
 
-#define N_TESTS 53
+#define N_TESTS 54
 #define N_LOOPS 1000000
 #define ARR_LEN 16
 
@@ -51,14 +51,14 @@
       next ;                        ;
       time := secondscpu() - time ; ;
       [ <exit> ; ]                  ;
-   return { iif( <.info.>, <(info)>, #<testExp> ), time }
+   return { procname() + ": " + iif( <.info.>, <(info)>, #<testExp> ), time }
 
 
 proc main( ... )
-   local aParams, nMT, cExclude, cParam, lSyntax, i
+   local aParams, nMT, cExclude, lScale, cParam, lSyntax, i
 
    aParams := hb_aparams()
-   lSyntax := .f.
+   lSyntax := lScale := .f.
    cExclude := ""
    nMT := 0
    for each cParam in aParams
@@ -91,6 +91,8 @@ proc main( ... )
                cExclude += strzero( i, 3 ) + " "
             endif
          next
+      elseif cParam = "--scale"
+         lScale := .t.
       else
          lSyntax = .t.
       endif
@@ -101,7 +103,7 @@ proc main( ... )
          return
       endif
    next
-   test( nMT, cExclude )
+   test( nMT, cExclude, lScale )
 return
 
 
@@ -197,9 +199,13 @@ return
    return nil
    function hb_threadJoin()
    return nil
+   function hb_mutexCreate()
+   return nil
    function hb_mutexSubscribe()
    return nil
-   function hb_mutexCreate()
+   function hb_mutexLock()
+   return nil
+   function hb_mutexUnlock()
    return nil
    function notify()
    return nil
@@ -219,28 +225,43 @@ TEST t002 WITH L_N:=112345.67    CODE x := L_N
 
 TEST t003 WITH L_D:=date()       CODE x := L_D
 
-TEST t004 INIT _( static S_C ) INIT S_C:=dtos(date()) CODE x := S_C
+TEST t004 INIT _( static s_once, S_C ) ;
+          INIT iif( hb_threadOnce( @s_once ), S_C := dtos(date()), ) ;
+          CODE x := S_C
 
-TEST t005 INIT _( static S_N ) INIT S_N:=112345.67    CODE x := S_N
+TEST t005 INIT _( static s_once, S_N ) ;
+          INIT iif( hb_threadOnce( @s_once ), S_N := 112345.67, ) ;
+          CODE x := S_N
 
-TEST t006 INIT _( static S_D ) INIT S_D:=date()       CODE x := S_D
+TEST t006 INIT _( static s_once, S_D ) ;
+          INIT iif( hb_threadOnce( @s_once ), S_D := date(), ) ;
+          CODE x := S_D
 
-TEST t007 INIT _( memvar M_C ) INIT _( private M_C:=dtos(date()) ) ;
+TEST t007 INIT _( memvar M_C ) INIT _( private M_C := dtos( date() ) ) ;
           CODE x := M_C
 
-TEST t008 INIT _( memvar M_N ) INIT _( private M_N:=112345.67 ) ;
+TEST t008 INIT _( memvar M_N ) INIT _( private M_N := 112345.67 ) ;
           CODE x := M_N
 
-TEST t009 INIT _( memvar M_D ) INIT _( private M_D:=date() ) ;
+TEST t009 INIT _( memvar M_D ) INIT _( private M_D := date() ) ;
           CODE x := M_D
 
-TEST t010 INIT _( memvar P_C ) INIT _( public P_C:=dtos(date()) ) ;
+TEST t010 INIT _( memvar P_C ) ;
+          INIT _( static s_once ) ;
+          INIT _( public P_C ) ;
+          INIT iif( hb_threadOnce( @s_once ), P_C := dtos( date() ), ) ;
           CODE x := P_C
 
-TEST t011 INIT _( memvar P_N ) INIT _( public P_N:=112345.67 ) ;
+TEST t011 INIT _( memvar P_N ) ;
+          INIT _( static s_once ) ;
+          INIT _( public P_N ) ;
+          INIT iif( hb_threadOnce( @s_once ), P_N := 112345.67, ) ;
           CODE x := P_N
 
-TEST t012 INIT _( memvar P_D ) INIT _( public P_D:=date() ) ;
+TEST t012 INIT _( memvar P_D ) ;
+          INIT _( static s_once ) ;
+          INIT _( public P_D ) ;
+          INIT iif( hb_threadOnce( @s_once ), P_D := date(), ) ;
           CODE x := P_D
 
 TEST t013 INIT _( field F_C ) INIT use_dbsh() EXIT close_db() ;
@@ -366,6 +387,31 @@ TEST t052 CODE x := f4()
 
 TEST t053 CODE x := f5()
 
+TEST t054 WITH c := dtos( date() ) CODE f_prv( c )
+
+/* initialize mutex in hb_trheadDoOnce() */
+init proc once_init()
+   hb_threadOnce()
+return
+
+function hb_threadOnce( xOnceControl, bAction )
+   static s_mutex
+   local lFirstCall := .f.
+   if s_mutex == NIL
+      s_mutex := hb_mutexCreate()
+   endif
+   if xOnceControl == NIL
+      hb_mutexLock( s_mutex )
+      if xOnceControl == NIL
+         xOnceControl := .t.
+         lFirstCall := .t.
+         if bAction != NIL
+            eval( bAction )
+         endif
+      endif
+      hb_mutexUnlock( s_mutex )
+   endif
+return lFirstCall
 
 function thTest( mtxJobs, aResults )
    local xJob
@@ -378,8 +424,21 @@ function thTest( mtxJobs, aResults )
    enddo
 return nil
 
-proc test( nMT, cExclude )
-local nLoopOverHead, nTimes, nSeconds, cNum, aThreads, aResults, mtxJobs, x, i
+function thTestScale( mtxJobs, mtxResults )
+   local xJob
+   while .T.
+      hb_mutexSubscribe( mtxJobs,, @xJob )
+      if xJob == NIL
+         exit
+      endif
+      hb_mutexNotify( mtxResults, &( "t" + strzero( xJob, 3 ) )() )
+   enddo
+return nil
+
+proc test( nMT, cExclude, lScale )
+local nLoopOverHead, nTimes, nSeconds, cNum, aThreads, aResults, ;
+      mtxJobs, mtxResults, nTimeST, nTimeMT, nTimeTotST, nTimeTotMT, ;
+      cTest, x, i, j
 
 create_db()
 
@@ -394,32 +453,92 @@ endif
 //? "Startup loop to increase CPU clock..."
 //x := seconds() + 5; while x > seconds(); enddo
 
-? date(), time(), os()
 #ifdef __HARBOUR__
    if !hb_mtvm()
-      nMT := 0
+      if lScale
+         ? "scale test available only in MULTI THREAD mode"
+         ?
+         return
+      endif
+      if nMT != 0
+         ? "SINGLE THREAD mode, number of threads set to 0"
+         nMT := 0
+      endif
    endif
+   ? date(), time(), os()
    ? version() + iif( hb_mtvm(), " (MT)" + iif( nMT != 0, "+", "" ), "" ), ;
      hb_compiler()
 #else
+   ? date(), time(), os()
    ? version()
 #endif
+if lScale .and. nMT < 1
+   nMT := 1
+endif
+
 ? "THREADS:", iif( nMT < 0, "all->" + ltrim( str( N_TESTS ) ), ltrim( str( nMT ) ) )
 ? "N_LOOPS:", ltrim( str( N_LOOPS ) )
 if !empty( cExclude )
    ? "excluded tests:", cExclude
 endif
+
 x :=t000()
-? dsp_result( x, 0 )
 nLoopOverHead := x[2]
 
-? replicate("=",68)
+if lScale
+   ? space(56) + "1 th." + str(nMT,3) + " th.  factor"
+   ? replicate("=",76)
+else
+   ? dsp_result( x, 0 )
+   ? replicate("=",68)
+endif
 
 nSeconds := seconds()
 nTimes := secondsCPU()
 
 #ifdef __HARBOUR__
-   if nMT < 0
+   if lScale
+      mtxJobs := hb_mutexCreate()
+      mtxResults := hb_mutexCreate()
+      nTimeTotST := nTimeTotMT := 0
+      for i:=1 to nMT
+         hb_threadStart( "thTestScale", mtxJobs, mtxResults )
+      next
+      for i:=1 to N_TESTS
+         cTest := strzero( i, 3 )
+         if !cTest $ cExclude
+
+            /* linear execution */
+            nTimeST := seconds()
+            for j:=1 to nMT
+               hb_mutexNotify( mtxJobs, i )
+               hb_mutexSubscribe( mtxResults,, @x )
+               cTest := x[1]
+            next
+            nTimeST := seconds() - nTimeST
+            nTimeTotST += nTimeST
+
+            /* simultaneous execution */
+            nTimeMT := seconds()
+            for j:=1 to nMT
+               hb_mutexNotify( mtxJobs, i )
+            next
+            for j:=1 to nMT
+               hb_mutexSubscribe( mtxResults,, @x )
+               cTest := x[1]
+            next
+            nTimeMT := seconds() - nTimeMT
+            nTimeTotMT += nTimeMT
+
+            ? dsp_scaleResult( cTest, nTimeST, nTimeMT, nMT, nLoopOverHead )
+         endif
+
+      next
+      for i:=1 to nMT
+         hb_mutexNotify( mtxJobs, NIL )
+      next
+      hb_threadWaitForAll()
+   elseif nMT < 0
       aThreads := array( N_TESTS )
       for i:=1 to N_TESTS
          cNum := strzero( i, 3 )
@@ -433,11 +552,10 @@ nTimes := secondsCPU()
          endif
        next
    elseif nMT > 0
-      aThreads := {}
       aResults := array( N_TESTS )
       mtxJobs := hb_mutexCreate()
       for i:=1 to nMT
-         aadd( aThreads, hb_threadStart( "thTest", mtxJobs, aResults ) )
+         hb_threadStart( "thTest", mtxJobs, aResults )
       next
       for i:=1 to N_TESTS
          if !strzero( i, 3 ) $ cExclude
@@ -474,7 +592,13 @@ nTimes := secondsCPU()
 nTimes := secondsCPU() - nTimes
 nSeconds := seconds() - nSeconds
 
-? replicate("=",68)
+if lScale
+   ? replicate("=",76)
+   ? dsp_scaleResult( "  TOTAL  ", nTimeTotST, nTimeTotMT, nMT, 0 )
+   ? replicate("=",76)
+else
+   ? replicate("=",68)
+endif
 ? dsp_result( { "total application time:", nTimes }, 0)
 ? dsp_result( { "total real time:", nSeconds }, 0 )
 ?
@@ -510,10 +634,35 @@ return space(4000)
 function f5()
 return space(5)
 
+function f_prv(x)
+   memvar PRV_C
+   private PRV_C := x
+return nil
+
+/*
+function f_pub(x)
+   memvar PUB_C
+   public PUB_C := x
+return nil
+
+function f_stat(x)
+   static STAT_C
+   STAT_C := x
+return nil
+*/
 
 static func dsp_result( aResult, nLoopOverHead )
    return padr( "[ " + left( aResult[1], 56 ) + " ]", 60, "." ) + ;
           strtran( str( max( aResult[2] - nLoopOverHead, 0 ), 8, 2 ), " ", "." )
+
+static func dsp_scaleResult( cTest, nTimeST, nTimeMT, nMT, nLoopOverHead )
+   if .f.
+      nTimeST := max( 0, nTimeST - nMT * nLoopOverHead )
+      nTimeMT := max( 0, nTimeMT - nMT * nLoopOverHead )
+   endif
+   return padr( "[ " + left( cTest, 50 ) + " ]", 54, "_" ) + ;
+          str( nTimeST, 6, 2 ) + " " + str( nTimeMT, 6, 2 ) + " ->" + ;
+          str( nTimeST / nTimeMT, 6, 2 )
 
 
 #define TMP_FILE "_tst_tmp.dbf"

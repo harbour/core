@@ -69,8 +69,7 @@
 
 /* Performance test. Use spinlock instead of mutex in OS2 builds */
 
-#if defined( HB_OS_OS2 ) && \
-    defined( __GNUC__ ) && \
+#if defined( __GNUC__ ) && \
     ( defined( i386 ) || defined( __i386__ ) || defined( __x86_64__ ) )
 
 #  if defined( HB_OS_UNIX )
@@ -79,27 +78,17 @@
 
    static __inline__ int hb_atomic_lock( volatile int * p )
    {
-      unsigned char c;
+      int i = 0;
       __asm__ __volatile__(
-         "lock\n\t"
-         "cmpxchgl %3, %1\n\t"
-         "sete %0"
-         :"=a" (c), "+m" (*p)
-         :"a" (0), "d" (1)
+         "xchgl %0, %1\n\t"
+         : "=r" (i)
+         : "m" (*p), "0" (i)
+         : "memory"
       );
-      return c;
+      return i;
    }
 
-   static __inline__ void hb_atomic_unlock( volatile int * p )
-   {
-      __asm__ __volatile__(
-         "xchgl %0, %1"
-         :"+m" (*p)
-         :"a" (0), "r" (*p)
-      );
-   }
-
-   static int s_gcSpinLock = 0;
+   static volatile int s_gcSpinLock = 1;
 
    static void hb_gc_acquire_lock( void )
    {
@@ -111,6 +100,8 @@
          Sleep( 0 );
 #elif defined( HB_OS_OS2 )
          DosSleep( 0 );
+#elif defined( __SVR4 )
+         thr_yield();
 #elif defined( HB_OS_UNIX )
          sched_yield();
 #else
@@ -119,9 +110,9 @@
       }
    }
 
-   static void hb_gc_release_lock( void )
+   static __inline__ void hb_gc_release_lock( void )
    {
-      hb_atomic_unlock( &s_gcSpinLock );
+      s_gcSpinLock = 1;
    }
 
 #  define HB_GC_LOCK          hb_gc_acquire_lock();

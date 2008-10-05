@@ -8,6 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-05 17:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/speedtst.prg
+    + added support for --scale switch - it enables special mode
+      which compare scalability, f.e.:
+         ./speedtst --thread=4 --scale
+      executes each test loop 4 times by single thread then
+      by 4 simultaneous threads, counts total real times in both
+      cases and presents them with the scale factor.
+      Please note that exactly the same loop tests are executed
+      simultaneously so this test should well show all places which
+      are not well scalable.
+      This test allows me to locate yet another memory variable written by
+      each thread on each function call just like uiPolls in main HVM loop.
+      It's s_bDebugging which is not used in MT mode because we do not have
+      any MT debugger yet but is was effectively killing the scalability
+      in my hardware.
+      If possible I would like to see some Windows results from multi CPU
+      machine with --scale parameter, f.e.:
+         speedtst --thread=8 --scale > speedtst.log
+      Please make some tests.
+
+  * harbour/source/vm/hvm.c
+    % do not assign s_bDebugging in hb_vmDo()/hb_vmSend() when debugger
+      is not linked
+
+  * harbour/source/vm/garbage.c
+    % enabled spinlocks in all x86 GCC builds
+
 2008-10-05 15:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbpers.ch
   * source/rtl/perfuncs.prg

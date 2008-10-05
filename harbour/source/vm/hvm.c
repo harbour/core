@@ -5294,7 +5294,7 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
    PHB_SYMB pSym;
    PHB_ITEM pSelf;
 #ifndef HB_NO_DEBUG
-   BOOL bDebugPrevState;
+   BOOL bDebugPrevState = FALSE;
 #endif
 #ifndef HB_NO_PROFILER
    ULONG ulClock = 0;
@@ -5317,8 +5317,11 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
    pSym = hb_stackNewFrame( &sStackState, uiParams )->item.asSymbol.value;
    pSelf = hb_stackSelfItem();   /* NIL, OBJECT or BLOCK */
 #ifndef HB_NO_DEBUG
-   bDebugPrevState = s_bDebugging;
-   s_bDebugging = FALSE;
+   if( s_pFunDbgEntry )
+   {
+      bDebugPrevState = s_bDebugging;
+      s_bDebugging = FALSE;
+   }
 #endif
 
    if( ! HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
@@ -5381,9 +5384,12 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
    }
 
 #ifndef HB_NO_DEBUG
-   if( s_bDebugging )
-      hb_vmDebuggerEndProc();
-   s_bDebugging = bDebugPrevState;
+   if( s_pFunDbgEntry )
+   {
+      if( s_bDebugging )
+         hb_vmDebuggerEndProc();
+      s_bDebugging = bDebugPrevState;
+   }
 #endif
 
    hb_stackOldFrame( &sStackState );
@@ -5397,7 +5403,7 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    PHB_SYMB pExecSym;
    PHB_ITEM pSelf;
 #ifndef HB_NO_DEBUG
-   BOOL bDebugPrevState;
+   BOOL bDebugPrevState = FALSE;
 #endif
 #ifndef HB_NO_PROFILER
    ULONG ulClock = 0;
@@ -5420,8 +5426,11 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    pSym = hb_stackNewFrame( &sStackState, uiParams )->item.asSymbol.value;
    pSelf = hb_stackSelfItem();   /* NIL, OBJECT or BLOCK */
 #ifndef HB_NO_DEBUG
-   bDebugPrevState = s_bDebugging;
-   s_bDebugging = FALSE;
+   if( s_pFunDbgEntry )
+   {
+      bDebugPrevState = s_bDebugging;
+      s_bDebugging = FALSE;
+   }
 #endif
 
    pExecSym = hb_objGetMethod( pSelf, pSym, &sStackState );
@@ -5449,9 +5458,12 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
 
 #ifndef HB_NO_DEBUG
-   if( s_bDebugging )
-      hb_vmDebuggerEndProc();
-   s_bDebugging = bDebugPrevState;
+   if( s_pFunDbgEntry )
+   {
+      if( s_bDebugging )
+         hb_vmDebuggerEndProc();
+      s_bDebugging = bDebugPrevState;
+   }
 #endif
 
    hb_stackOldFrame( &sStackState );
