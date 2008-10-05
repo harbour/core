@@ -68,4 +68,4 @@ FUNCTION ReadVar( cVarName )
       s_cVarName := cVarName
    ENDIF
 
-RETURN cOldVarName
+   RETURN cOldVarName

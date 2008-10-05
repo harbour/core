@@ -65,59 +65,67 @@ ENDCLASS
 
 METHOD LoadFromText( cObjectText ) CLASS HBPersistent
 
-   local nFrom  := 1, cLine, cToken
-   local lStart := .t.
-   private oSelf
+   LOCAL nFrom := 1
+   LOCAL cLine
+   LOCAL cToken
+   LOCAL lStart := .t.
 
-   if empty( cObjectText )
-      return .F.
-   endif
+   PRIVATE oSelf
 
-   do while Empty( ExtractLine( cObjectText, @nFrom ) ) // We skip the first empty lines
-   enddo
+   IF Empty( cObjectText )
+      RETURN .F.
+   ENDIF
 
-   do while nFrom <= Len( cObjectText )
-      cLine  := ExtractLine( cObjectText, @nFrom )
+   // We skip the first empty lines
+   DO WHILE Empty( ExtractLine( cObjectText, @nFrom ) )
+   ENDDO
 
-      do case
-         case Upper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "OBJECT"
-              if lStart
-                 lStart := .f.
-              else
-              endif
+   DO WHILE nFrom <= Len( cObjectText )
+      cLine := ExtractLine( cObjectText, @nFrom )
 
-         case Upper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ARRAY"
-              cLine := SubStr( cLine, At( "::", cLine ) )
-              M->oSelf := Self
-              cLine := StrTran( cLine, "::", "oSelf:" )
-              cLine := StrTran( cLine, " LEN ", " = Array( " )
-              cLine := RTrim( StrTran( cLine, "=", ":=", , 1 ) ) + " )"
-              cLine := &( cLine )
+      DO CASE
+      CASE Upper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "OBJECT"
+           IF lStart
+              lStart := .F.
+           ENDIF
 
-         case Left( cToken := LTrim( hb_TokenGet( cLine, 1, "=" ) ), 2 ) == "::"
-              M->oSelf := Self
-              cLine := StrTran( cLine, "::", "oSelf:" )
-              cLine := StrTran( cLine, "=", ":=", , 1 )
-              cLine := &( cLine )
+      CASE Upper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ARRAY"
+           cLine := SubStr( cLine, At( "::", cLine ) )
+           M->oSelf := Self
+           cLine := StrTran( cLine, "::", "oSelf:" )
+           cLine := StrTran( cLine, " LEN ", " = Array( " )
+           cLine := RTrim( StrTran( cLine, "=", ":=", , 1 ) ) + " )"
+           cLine := &( cLine )
 
-      endcase
+      CASE Left( cToken := LTrim( hb_TokenGet( cLine, 1, "=" ) ), 2 ) == "::"
+           M->oSelf := Self
+           cLine := StrTran( cLine, "::", "oSelf:" )
+           cLine := StrTran( cLine, "=", ":=", , 1 )
+           cLine := &( cLine )
 
-   enddo
+      ENDCASE
 
-return .T.
+   ENDDO
+
+   RETURN .T.
 
 METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
 
-   local oNew := &( ::ClassName() + "()" ):CreateNew()
-   local aProperties, n, uValue, uNewValue, cObject, cType
+   LOCAL oNew := &( ::ClassName() + "()" ):CreateNew()
+   LOCAL aProperties
+   LOCAL n
+   LOCAL uValue
+   LOCAL uNewValue
+   LOCAL cObject
+   LOCAL cType
 
    DEFAULT cObjectName TO "o" + ::ClassName()
 
-   if nIndent == NIL
+   IF nIndent == NIL
       nIndent := 0
-   else
+   ELSE
       nIndent += 3
-   endif
+   ENDIF
 
    cObject := iif( nIndent > 0, hb_OSNewLine(), "" ) + Space( nIndent ) + ;
               "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
@@ -125,124 +133,126 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
 
    aProperties := __ClsGetProperties( ::ClassH )
 
-   for n := 1 to Len( aProperties )
+   FOR n := 1 TO Len( aProperties )
       uValue := __objSendMsg( Self, aProperties[ n ] )
       uNewValue := __objSendMsg( oNew, aProperties[ n ] )
       cType  := ValType( uValue )
 
-      if !( cType == ValType( uNewValue ) ) .OR. ! uValue == uNewValue
+      IF !( cType == ValType( uNewValue ) ) .OR. !( uValue == uNewValue )
 
-         do case
-            case cType == "A"
-                 nIndent += 3
-                 cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
-                 nIndent -= 3
-                 if n < Len( aProperties )
-                    cObject += hb_OSNewLine()
-                 endif
+         DO CASE
+         CASE cType == "A"
+              nIndent += 3
+              cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
+              nIndent -= 3
+              IF n < Len( aProperties )
+                 cObject += hb_OSNewLine()
+              ENDIF
 
-            case cType == "O"
-                 if __objDerivedFrom( uValue, "HBPERSISTENT" )
-                    cObject += uValue:SaveToText( aProperties[ n ], nIndent )
-                 endif
-                 if n < Len( aProperties )
-                    cObject += hb_OSNewLine()
-                 endif
+         CASE cType == "O"
+              IF __objDerivedFrom( uValue, "HBPERSISTENT" )
+                 cObject += uValue:SaveToText( aProperties[ n ], nIndent )
+              ENDIF
+              IF n < Len( aProperties )
+                 cObject += hb_OSNewLine()
+              ENDIF
 
-            otherwise
-                 if n == 1
-                    cObject += hb_OSNewLine()
-                 endif
-                 cObject += Space( nIndent ) + "   ::" + ;
-                            aProperties[ n ] + " = " + ValToText( uValue ) + ;
-                            hb_OSNewLine()
-         endcase
+         OTHERWISE
+              IF n == 1
+                 cObject += hb_OSNewLine()
+              ENDIF
+              cObject += Space( nIndent ) + "   ::" + ;
+                         aProperties[ n ] + " = " + ValToText( uValue ) + ;
+                         hb_OSNewLine()
+         ENDCASE
 
-      endif
+      ENDIF
 
-   next
+   NEXT
 
    cObject += hb_OSNewLine() + Space( nIndent ) + "ENDOBJECT" + hb_OSNewLine()
 
-return cObject
+   RETURN cObject
 
-static function ArrayToText( aArray, cName, nIndent )
+STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
 
-   local cArray := hb_OSNewLine() + Space( nIndent ) + "ARRAY ::" + cName + ;
+   LOCAL cArray := hb_OSNewLine() + Space( nIndent ) + "ARRAY ::" + cName + ;
                    " LEN " + AllTrim( Str( Len( aArray ) ) ) + hb_OSNewLine()
-   local n, uValue, cType
+   LOCAL n
+   LOCAL uValue
+   LOCAL cType
 
-   for n := 1 to Len( aArray )
+   FOR n := 1 TO Len( aArray )
       uValue := aArray[ n ]
       cType  := ValType( uValue )
 
-      do case
-         case cType == "A"
-              nIndent += 3
-              cArray += ArrayToText( uValue, cName + "[ " + ;
-                        AllTrim( Str( n ) ) + " ]", nIndent ) + hb_OSNewLine()
-              nIndent -= 3
+      DO CASE
+      CASE cType == "A"
+           nIndent += 3
+           cArray += ArrayToText( uValue, cName + "[ " + ;
+                     AllTrim( Str( n ) ) + " ]", nIndent ) + hb_OSNewLine()
+           nIndent -= 3
 
-         case cType == "O"
-              if __objDerivedFrom( uValue, "HBPERSISTENT" )
-                 cArray += uValue:SaveToText( cName + "[ " + AllTrim( Str( n ) ) + ;
-                                              " ]", nIndent )
-              endif
+      CASE cType == "O"
+           IF __objDerivedFrom( uValue, "HBPERSISTENT" )
+              cArray += uValue:SaveToText( cName + "[ " + AllTrim( Str( n ) ) + ;
+                                           " ]", nIndent )
+           ENDIF
 
-         otherwise
-              if n == 1
-                 cArray += hb_OSNewLine()
-              endif
-              cArray += Space( nIndent ) + "   ::" + cName + ;
-                        + "[ " + AllTrim( Str( n ) ) + " ]" + " = " + ;
-                        ValToText( uValue ) + hb_OSNewLine()
-      endcase
-   next
+      OTHERWISE
+           IF n == 1
+              cArray += hb_OSNewLine()
+           ENDIF
+           cArray += Space( nIndent ) + "   ::" + cName + ;
+                     + "[ " + AllTrim( Str( n ) ) + " ]" + " = " + ;
+                     ValToText( uValue ) + hb_OSNewLine()
+      ENDCASE
+   NEXT
 
    cArray += hb_OSNewLine() + Space( nIndent ) + "ENDARRAY" + hb_OSNewLine()
 
-return cArray
+   RETURN cArray
 
-static function ValToText( uValue )
+STATIC FUNCTION ValToText( uValue )
 
-   local cType := ValType( uValue )
-   local cText
+   LOCAL cType := ValType( uValue )
+   LOCAL cText
 
-   do case
-      case cType == "C"
-           cText := hb_StrToExp( uValue )
+   DO CASE
+   CASE cType == "C"
+        cText := hb_StrToExp( uValue )
 
-      case cType == "N"
-           cText := AllTrim( Str( uValue ) )
+   CASE cType == "N"
+        cText := AllTrim( Str( uValue ) )
 
-      case cType == "D"
-           cText := DToS( uValue )
-           cText := "0d" + iif( Empty( cText ), "00000000", cText )
+   CASE cType == "D"
+        cText := DToS( uValue )
+        cText := "0d" + iif( Empty( cText ), "00000000", cText )
 
-      otherwise
-           cText := hb_ValToStr( uValue )
-   endcase
+   OTHERWISE
+        cText := hb_ValToStr( uValue )
+   ENDCASE
 
-return cText
+   RETURN cText
 
 // Notice: nFrom must be supplied by reference
 
-static function ExtractLine( cText, nFrom )
+STATIC FUNCTION ExtractLine( cText, nFrom )
 
-   local nAt := hb_At( Chr( 10 ), cText, nFrom )
+   LOCAL nAt := hb_At( Chr( 10 ), cText, nFrom )
   
-   if nAt > 0
+   IF nAt > 0
       cText := SubStr( cText, nFrom, nAt - nFrom )
-      if Right( cText, 1 ) == Chr( 13 )
+      IF Right( cText, 1 ) == Chr( 13 )
          cText := hb_StrShrink( cText, 1 )
-      endif
+      ENDIF
       nFrom := nAt + 1
-   else
+   ELSE
       cText := SubStr( cText, nFrom )
-      if Right( cText, 1 ) == Chr( 13 )
+      IF Right( cText, 1 ) == Chr( 13 )
          cText := hb_StrShrink( cText, 1 )
-      endif
+      ENDIF
       nFrom += Len( cText ) + 1
-   endif
+   ENDIF
 
-return cText
+   RETURN cText

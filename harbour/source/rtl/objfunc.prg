@@ -279,7 +279,6 @@ FUNCTION __objDerivedFrom( oObject, xSuper )
 
    RETURN __clsParent( oObject:ClassH, cClassName )
 
-
 FUNCTION __objGetProperties( oObject, lAllExported )
    LOCAL msg
    LOCAL aMsgList := __clsGetProperties( oObject:classH, lAllExported )

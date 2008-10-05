@@ -4,7 +4,7 @@
 
 REQUEST RLCDX
 
-PROC MAIN()
+PROCEDURE MAIN()
 
    DBCREATE( "_tst", {{"F1","C",10,0}}, "RLCDX" )
    USE _tst VIA "RLCDX" SHARED
@@ -47,4 +47,4 @@ PROC MAIN()
 
    CLOSE
 
-RETURN
+   RETURN

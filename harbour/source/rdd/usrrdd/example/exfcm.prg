@@ -4,7 +4,7 @@
 
 REQUEST FCOMMA
 
-PROC MAIN()
+PROCEDURE MAIN()
 
    USE test.csv VIA "FCOMMA"
    ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
@@ -41,4 +41,4 @@ PROC MAIN()
    WAIT
    BROWSE()
 
-RETURN
+   RETURN

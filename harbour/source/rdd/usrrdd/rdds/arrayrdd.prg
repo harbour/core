@@ -65,7 +65,7 @@
 #include "dbstruct.ch"
 #include "common.ch"
 
-#xtranslate THROW(<oErr>) => (Eval(ErrorBlock(), <oErr>), Break(<oErr>))
+#xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
 ANNOUNCE ARRAYRDD
 
@@ -108,42 +108,42 @@ STATIC FUNCTION AR_INIT( nRDD )
    /* Init DBF Hash */
    USRRDD_RDDDATA( nRDD, hb_Hash() )
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_RDDDATAINIT()
-RETURN { ;
-         NIL     ; // RDDDATA_DATABASE
-       }
+   RETURN { ;
+            NIL     ; // RDDDATA_DATABASE
+          }
 
 STATIC FUNCTION AR_DATABASEINIT()
-RETURN  { ;
-          NIL   ,; // DATABASE_FILENAME
-          {}    ,; // DATABASE_RECORDS
-          {}    ,; // DATABASE_RECINFO
-          0     ,; // DATABASE_OPENNUMBER
-          FALSE ,; // DATABASE_LOCKED
-          NIL    ; // DATABASE_STRUCT - aStruct
-        }
+   RETURN { ;
+             NIL   ,; // DATABASE_FILENAME
+             {}    ,; // DATABASE_RECORDS
+             {}    ,; // DATABASE_RECINFO
+             0     ,; // DATABASE_OPENNUMBER
+             FALSE ,; // DATABASE_LOCKED
+             NIL    ; // DATABASE_STRUCT - aStruct
+          }
 
 STATIC FUNCTION AR_WADATAINIT()
-RETURN { ;
-         NIL    ,; // WADATA_DATABASE
-         0      ,; // WADATA_WORKAREA
-         NIL    ,; // WADATA_OPENINFO
-         0      ,; // WADATA_RECNO
-         FALSE  ,; // WADATA_BOF
-         FALSE  ,; // WADATA_FORCEBOF  // to solve an hack in dbf1.c
-         FALSE  ,; // WADATA_EOF
-         FALSE  ,; // WADATA_TOP
-         FALSE  ,; // WADATA_BOTTOM
-         FALSE  ,; // WADATA_FOUND
-         {}      ; // WADATA_LOCKS
-       }
+   RETURN { ;
+            NIL    ,; // WADATA_DATABASE
+            0      ,; // WADATA_WORKAREA
+            NIL    ,; // WADATA_OPENINFO
+            0      ,; // WADATA_RECNO
+            FALSE  ,; // WADATA_BOF
+            FALSE  ,; // WADATA_FORCEBOF  // to solve an hack in dbf1.c
+            FALSE  ,; // WADATA_EOF
+            FALSE  ,; // WADATA_TOP
+            FALSE  ,; // WADATA_BOTTOM
+            FALSE  ,; // WADATA_FOUND
+            {}      ; // WADATA_LOCKS
+          }
 
 STATIC FUNCTION AR_RECDATAINIT()
-RETURN { ;
-         FALSE   ; // RECDATA_DELETED
-       }
+   RETURN { ;
+            FALSE   ; // RECDATA_DELETED
+          }
 
 /*
  * methods: NEW and RELEASE receive pointer to work area structure
@@ -162,7 +162,7 @@ STATIC FUNCTION AR_NEW( pWA )
     */
    USRRDD_AREADATA( pWA, AR_WADATAINIT() )
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 // Creating fields for new DBF - dbCreate() in current workarea
 STATIC FUNCTION AR_CREATEFIELDS( nWA, aStruct )
@@ -194,7 +194,7 @@ STATIC FUNCTION AR_CREATEFIELDS( nWA, aStruct )
 
    NEXT
 
-RETURN nResult
+   RETURN nResult
 
 // Create database from current WA fields definition
 STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
@@ -250,7 +250,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    // increase open number
    aDBFData[ DATABASE_OPENNUMBER ]++
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
    LOCAL cFullName, cName, hRDDData, aWAData, aDBFData
@@ -351,7 +351,7 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
       AR_GOTOP( nWA )
    ENDIF
 
-RETURN nResult
+   RETURN nResult
 
 STATIC FUNCTION AR_CLOSE( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -363,7 +363,7 @@ STATIC FUNCTION AR_CLOSE( nWA )
    // unlock file
    aDBFData[ DATABASE_LOCKED     ] := FALSE  // Exclusive mode
 
-RETURN UR_SUPER_CLOSE( nWA )
+   RETURN UR_SUPER_CLOSE( nWA )
 
 STATIC FUNCTION AR_GETVALUE( nWA, nField, xValue )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -385,7 +385,7 @@ STATIC FUNCTION AR_GETVALUE( nWA, nField, xValue )
 
    ENDIF
 
-RETURN FAILURE
+   RETURN FAILURE
 
 STATIC FUNCTION AR_PUTVALUE( nWA, nField, xValue )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -410,7 +410,7 @@ STATIC FUNCTION AR_PUTVALUE( nWA, nField, xValue )
 
    ENDIF
 
-RETURN FAILURE
+   RETURN FAILURE
 
 STATIC FUNCTION AR_GOTO( nWA, nRecord )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -461,10 +461,10 @@ STATIC FUNCTION AR_GOTO( nWA, nRecord )
 
    ENDIF
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_GOTOID( nWA, nRecord )
-RETURN AR_GOTO( nWA, nRecord )
+   RETURN AR_GOTO( nWA, nRecord )
 
 STATIC FUNCTION AR_GOTOP( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -489,7 +489,7 @@ STATIC FUNCTION AR_GOTOP( nWA )
       ENDIF
    ENDIF
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_GOBOTTOM( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -514,7 +514,8 @@ STATIC FUNCTION AR_GOBOTTOM( nWA )
       ENDIF
 
    ENDIF
-RETURN SUCCESS
+
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -553,7 +554,7 @@ STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
 
    ENDIF
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_SKIPRAW( nWA, nRecords )
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
@@ -588,7 +589,7 @@ STATIC FUNCTION AR_SKIPRAW( nWA, nRecords )
 
       ENDIF
 
-RETURN nResult // SUCCESS
+   RETURN nResult // SUCCESS
 
 STATIC FUNCTION AR_BOF( nWA, lBof )
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
@@ -600,12 +601,15 @@ STATIC FUNCTION AR_BOF( nWA, lBof )
    ELSE
       lBof := aWAData[ WADATA_BOF ]
    ENDIF
-RETURN SUCCESS
+
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_EOF( nWA, lEof )
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
+
    lEof := aWAData[ WADATA_EOF ]
-RETURN SUCCESS
+
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_DELETE( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -642,7 +646,7 @@ STATIC FUNCTION AR_DELETE( nWA )
       aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ] := .T.
    ENDIF
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_DELETED( nWA, lDeleted )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -655,7 +659,8 @@ STATIC FUNCTION AR_DELETED( nWA, lDeleted )
    ELSE
       lDeleted := .F.
    ENDIF
-RETURN SUCCESS
+
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_APPEND( nWA, nRecords )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -688,7 +693,7 @@ STATIC FUNCTION AR_APPEND( nWA, nRecords )
 
    /* TODO: SHARED ACCESS */
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_RECID( nWA, nRecNo )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -701,14 +706,17 @@ STATIC FUNCTION AR_RECID( nWA, nRecNo )
    ELSE
       nRecNo := aWAData[ WADATA_RECNO ]
    ENDIF
-RETURN SUCCESS
+
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_RECCOUNT( nWA, nRecords )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
    LOCAL aDBFData  := aWAData[ WADATA_DATABASE ]
    LOCAL aRecords  := aDBFData[ DATABASE_RECORDS ]
+
    nRecords := Len( aRecords )
-RETURN SUCCESS
+
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_ZAP( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -747,7 +755,7 @@ STATIC FUNCTION AR_ZAP( nWA )
    // move to 0 recno
    AR_GOTO( nWA, 0 )
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION AR_ORDINFO( nWA, xMsg, xValue )
    /*
@@ -786,7 +794,8 @@ STATIC FUNCTION AR_ORDINFO( nWA, xMsg, xValue )
    aWAData[ ARRAY_RECINFO ] := {}
    AR_GOTO( nWA, 0 )
    */
-RETURN SUCCESS
+
+   RETURN SUCCESS
 
 /*
  * This function have to exist in all RDD and then name have to be in
@@ -820,12 +829,12 @@ FUNCTION ARRAYRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_ZAP          ] := ( @AR_ZAP()          )
    aMyFunc[ UR_ORDINFO      ] := ( @AR_ORDINFO()      )
 
-RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                            cSuperRDD, aMyFunc )
+   RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
+                               cSuperRDD, aMyFunc )
 
-INIT PROC ARRAYRDD_INIT()
+INIT PROCEDURE ARRAYRDD_INIT()
    rddRegister( "ARRAYRDD", RDT_FULL )
-RETURN
+   RETURN
 
 /* -------------------------------------------------- */
 /*           UTILITY FUNCTIONS                        */
@@ -919,7 +928,8 @@ FUNCTION EraseArrayRdd( cFullName )
       nReturn := FAILURE
 
    ENDIF
-RETURN nReturn
+
+   RETURN nReturn
 
 STATIC FUNCTION BlankRecord( aStruct )
    LOCAL nLenStruct := Len( aStruct )
@@ -929,7 +939,8 @@ STATIC FUNCTION BlankRecord( aStruct )
    FOR nField := 1 TO nLenStruct
        aRecord[ nField ] := EmptyValue( aStruct[ nField ][ DBS_TYPE ], aStruct[ nField ][ DBS_LEN ], aStruct[ nField ][ DBS_DEC ] )
    NEXT
-RETURN aRecord
+
+   RETURN aRecord
 
 STATIC FUNCTION PutValue( xValue, cType, nLen, nDec )
    LOCAL xVal
@@ -943,7 +954,7 @@ STATIC FUNCTION PutValue( xValue, cType, nLen, nDec )
         xVal := xValue
    ENDCASE
 
-RETURN xVal
+   RETURN xVal
 
 
 STATIC FUNCTION EmptyValue( cType, nLen, nDec )

@@ -50,20 +50,20 @@
  *
  */
 
-STATIC FUNCTION HB_doScan( cPath, cMask, cAttr, cPathSep )
+STATIC FUNCTION hb_doScan( cPath, cMask, cAttr, cPathSep )
 
    LOCAL aFile
    LOCAL lMatch
    LOCAL aResult := {}
 
    FOR EACH aFile IN Directory( cPath + hb_osFileMask(), cAttr + "D" )
-      lMatch = HB_FileMatch( aFile[ 1 ], cMask )
+      lMatch := hb_FileMatch( aFile[ 1 ], cMask )
       IF "D" $ aFile[ 5 ]
          IF lMatch .AND. "D" $ cAttr
             AAdd( aResult, aFile )
          ENDIF
          IF !( aFile[ 1 ] == "." .OR. aFile[ 1 ] == ".." .OR. aFile[ 1 ] == "" )
-            AEval( HB_DoScan( cPath + aFile[ 1 ] + cPathSep, cMask, cAttr, cPathSep ), ;
+            AEval( hb_DoScan( cPath + aFile[ 1 ] + cPathSep, cMask, cAttr, cPathSep ), ;
                    { |x| x[ 1 ] := aFile[ 1 ] + cPathSep + x[ 1 ], ;
                          AAdd( aResult, x ) } )
          ENDIF
@@ -74,7 +74,7 @@ STATIC FUNCTION HB_doScan( cPath, cMask, cAttr, cPathSep )
 
    RETURN aResult
 
-FUNCTION HB_DirScan( cPath, cFileMask, cAttr )
+FUNCTION hb_DirScan( cPath, cFileMask, cAttr )
 
    LOCAL cFilePath
    LOCAL cPathSep := hb_osPathSeparator()
@@ -89,6 +89,6 @@ FUNCTION HB_DirScan( cPath, cFileMask, cAttr )
    ENDIF
 
    RETURN HB_DoScan( cFilePath, ;
-                     IIF( Empty( cFileMask ), hb_osFileMask(), cFileMask ), ;
-                     IIF( ValType( cAttr ) $ "CM", cAttr, "" ), ;
+                     iif( Empty( cFileMask ), hb_osFileMask(), cFileMask ), ;
+                     iif( ValType( cAttr ) $ "CM", cAttr, "" ), ;
                      cPathSep )

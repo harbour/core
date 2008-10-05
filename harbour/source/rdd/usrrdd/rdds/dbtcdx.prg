@@ -64,16 +64,14 @@
 REQUEST DBFCDX
 REQUEST DBFFPT
 
-/* Announce our RDD for forign REQUESTs */
+/* Announce our RDD for foreign REQUESTs */
 ANNOUNCE DBTCDX
 
-PROC DBTCDX(); RETURN
-
 FUNCTION DBTCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
-RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                            "DBFCDX", {} ) /* We are inheriting from DBFCDX */
+   RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
+                               "DBFCDX", {} ) /* We are inheriting from DBFCDX */
 
-INIT PROC DBTCDX_INIT()
+INIT PROCEDURE DBTCDX_INIT()
    rddRegister( "DBTCDX", RDT_FULL )
    rddInfo( RDDI_MEMOTYPE, DB_MEMO_DBT, "DBTCDX" )
-RETURN
+   RETURN

@@ -65,17 +65,17 @@ ENDCLASS
 
 METHOD new() CLASS TSIGNAL
    ::mutex := hb_mutexCreate()
-RETURN Self
+   RETURN Self
 
 METHOD wait( nTimeOut ) CLASS TSIGNAL
-/* TOCHECK: I do not know if strict xbase++ compatibility needs
- *          hb_mutexSubscribe() or hb_mutexSubscribeNow()
- *          Please change it if necessary
- */
-RETURN hb_mutexSubscribe( ::mutex, nTimeOut )
+   /* TOCHECK: I do not know if strict xbase++ compatibility needs
+    *          hb_mutexSubscribe() or hb_mutexSubscribeNow()
+    *          Please change it if necessary
+    */
+   RETURN hb_mutexSubscribe( ::mutex, nTimeOut )
 
 METHOD signal() CLASS TSIGNAL
    hb_mutexNotify( ::mutex )
-RETURN Self
+   RETURN Self
 
 #endif

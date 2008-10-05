@@ -62,12 +62,8 @@
 REQUEST HB_PVALUE
 REQUEST PCOUNT
 
-//---------------------------------------------------------------------------//
-
 FUNCTION GetNew( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
    RETURN Get():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
-
-//---------------------------------------------------------------------------//
 
 FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
 

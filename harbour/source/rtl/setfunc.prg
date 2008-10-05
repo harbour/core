@@ -77,4 +77,4 @@ PROCEDURE __SetFunction( nFunctionKey, xKeySeq )
       SetKey( nFunctionKey, NIL )
    ENDIF
 
-RETURN
+   RETURN

@@ -71,7 +71,7 @@
  *
  */
 
-// Harbour Class HBClass to build classes
+/* Harbour Class HBClass to build classes */
 
 #include "common.ch"
 #include "hboo.ch"
@@ -144,8 +144,6 @@ FUNCTION HBClass()
 
    RETURN __clsInst( s_hClass )
 
-//----------------------------------------------------------------------------//
-
 // xSuper is used here as the new preprocessor file (hbclass.ch) send here
 // always an array (if no superclass, this will be an empty one)
 // In case of direct class creation (without the help of preprocessor) xSuper can be
@@ -194,9 +192,7 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
 
    RETURN QSelf()
 
-//----------------------------------------------------------------------------//
-
-/* STATIC PROCEDURE Create(MetaClass) */
+/* STATIC PROCEDURE Create( MetaClass ) */
 STATIC PROCEDURE Create()
 
    LOCAL Self := QSelf()
@@ -292,8 +288,6 @@ STATIC PROCEDURE Create()
 
    RETURN
 
-//----------------------------------------------------------------------------//
-
 STATIC FUNCTION Instance()
    LOCAL Self := QSelf()
    LOCAL oInstance := __clsInst( ::hClass )
@@ -301,8 +295,6 @@ STATIC FUNCTION Instance()
    /*oInstance:Class := Self:Class*/
 
    RETURN oInstance
-
-//----------------------------------------------------------------------------//
 
 STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
@@ -327,8 +319,6 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
    RETURN
 
-//----------------------------------------------------------------------------//
-
 STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
 
    LOCAL i
@@ -341,8 +331,6 @@ STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
    NEXT
 
    RETURN
-
-//----------------------------------------------------------------------------//
 
 STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
@@ -366,8 +354,6 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
    RETURN
 
-//----------------------------------------------------------------------------//
-
 STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
    LOCAL i
@@ -381,8 +367,6 @@ STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
    RETURN
 
-//----------------------------------------------------------------------------//
-
 STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
 
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
@@ -390,8 +374,6 @@ STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
    AAdd( QSelf():aInlines, { cMethod, bCode, nScope } )
 
    RETURN
-
-//----------------------------------------------------------------------------//
 
 STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
 
@@ -401,15 +383,11 @@ STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
 
    RETURN
 
-//----------------------------------------------------------------------------//
-
 STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
 
    AAdd( QSelf():aClsMethods, { cMethod, nFuncPtr, nScope } )
 
    RETURN
-
-//----------------------------------------------------------------------------//
 
 STATIC PROCEDURE AddVirtual( cMethod )
 
@@ -431,8 +409,6 @@ STATIC PROCEDURE AddDelegate( xMethod, nAccScope, nAsgScope, cType, cDelegMsg, c
 
    RETURN
 
-//----------------------------------------------------------------------------//
-
 STATIC PROCEDURE AddFriendClass( ... )
 
    LOCAL Self := QSelf()
@@ -441,8 +417,6 @@ STATIC PROCEDURE AddFriendClass( ... )
 
    RETURN
 
-//----------------------------------------------------------------------------//
-
 STATIC PROCEDURE AddFriendFunc( ... )
 
    LOCAL Self := QSelf()
@@ -450,8 +424,6 @@ STATIC PROCEDURE AddFriendFunc( ... )
    AEval( HB_AParams(), { | sFunc | AAdd( ::asFriendFunc, sFunc ) } )
 
    RETURN
-
-//----------------------------------------------------------------------------//
 
 STATIC PROCEDURE SetOnError( nFuncPtr )
 
@@ -465,10 +437,5 @@ STATIC PROCEDURE SetDestructor( nFuncPtr )
 
    RETURN
 
-//----------------------------------------------------------------------------//
-
 STATIC FUNCTION InitClass()
-
    RETURN QSelf()
-
-//----------------------------------------------------------------------------//

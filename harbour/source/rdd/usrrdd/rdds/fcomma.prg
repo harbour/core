@@ -50,8 +50,6 @@
  *
  */
 
-
-
 /*
  * A simple RDD which uses HB_F*() functions from MISC library
  * to access CSV files. It allow to open an CSV file and navigate
@@ -82,7 +80,7 @@ STATIC FUNCTION FCM_INIT( nRDD )
    AFILL( aRData, -1 )
    USRRDD_RDDDATA( nRDD, aRData )
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 /*
  * methods: NEW and RELEASE receive pointer to work area structure
@@ -102,7 +100,7 @@ STATIC FUNCTION FCM_NEW( pWA )
     */
    USRRDD_AREADATA( pWA, aWData )
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION FCM_CREATE( nWA, aOpenInfo )
    LOCAL oError := ErrorNew()
@@ -114,7 +112,7 @@ STATIC FUNCTION FCM_CREATE( nWA, aOpenInfo )
    oError:FileName    := aOpenInfo[ UR_OI_NAME ]
    oError:CanDefault  := .T.
    UR_SUPER_ERROR( nWA, oError )
-RETURN FAILURE
+   RETURN FAILURE
 
 STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
    LOCAL cName, nMode, nSlot, nHandle, aRData, aWData, aField, oError, nResult
@@ -178,7 +176,7 @@ STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
       FCM_GOTOP( nWA )
    ENDIF
 
-RETURN nResult
+   RETURN nResult
 
 STATIC FUNCTION FCM_CLOSE( nWA )
    LOCAL aRData, nSlot := USRRDD_AREADATA( nWA )[ 1 ]
@@ -189,7 +187,7 @@ STATIC FUNCTION FCM_CLOSE( nWA )
       aRData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
       aRData[ nSlot ] := -1
    ENDIF
-RETURN UR_SUPER_CLOSE( nWA )
+   RETURN UR_SUPER_CLOSE( nWA )
 
 STATIC FUNCTION FCM_GETVALUE( nWA, nField, xValue )
    LOCAL aWData := USRRDD_AREADATA( nWA )
@@ -204,7 +202,7 @@ STATIC FUNCTION FCM_GETVALUE( nWA, nField, xValue )
       ENDIF
       RETURN SUCCESS
    ENDIF
-RETURN FAILURE
+   RETURN FAILURE
 
 STATIC FUNCTION FCM_GOTO( nWA, nRecord )
    LOCAL aWData := USRRDD_AREADATA( nWA )
@@ -221,17 +219,17 @@ STATIC FUNCTION FCM_GOTO( nWA, nRecord )
       aWData[ 2 ] := HB_FRECNO() == 0
       aWData[ 3 ] := HB_FEOF()
    ENDIF
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION FCM_GOTOID( nWA, nRecord )
-RETURN FCM_GOTO( nWA, nRecord )
+   RETURN FCM_GOTO( nWA, nRecord )
 
 STATIC FUNCTION FCM_GOTOP( nWA )
    LOCAL aWData := USRRDD_AREADATA( nWA )
    HB_FSELECT( aWData[ 1 ] )
    HB_FGOTOP()
    aWData[ 2 ] := aWData[ 3 ] := HB_FEOF()
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION FCM_GOBOTTOM( nWA )
    LOCAL aWData := USRRDD_AREADATA( nWA )
@@ -244,7 +242,7 @@ STATIC FUNCTION FCM_GOBOTTOM( nWA )
       HB_FGOBOTTOM()
       aWData[ 2 ] := aWData[ 3 ] := .F.
    ENDIF
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION FCM_SKIPRAW( nWA, nRecords )
    LOCAL aWData
@@ -269,21 +267,21 @@ STATIC FUNCTION FCM_SKIPRAW( nWA, nRecords )
          aWData[ 3 ] := HB_FEOF()
       ENDIF
    ENDIF
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION FCM_BOF( nWA, lBof )
    LOCAL aWData := USRRDD_AREADATA( nWA )
    lBof := aWData[ 2 ]
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION FCM_EOF( nWA, lEof )
    LOCAL aWData := USRRDD_AREADATA( nWA )
    lEof := aWData[ 3 ]
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION FCM_DELETED( nWA, lDeleted )
    lDeleted := .F.
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION FCM_RECID( nWA, nRecNo )
    LOCAL aWData := USRRDD_AREADATA( nWA )
@@ -293,12 +291,12 @@ STATIC FUNCTION FCM_RECID( nWA, nRecNo )
    ELSE
       nRecNo := HB_FRECNO()
    ENDIF
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION FCM_RECCOUNT( nWA, nRecords )
    HB_FSELECT( USRRDD_AREADATA( nWA )[ 1 ] )
    nRecords := HB_FLASTREC()
-RETURN SUCCESS
+   RETURN SUCCESS
 
 /*
  * This function have to exist in all RDD and then name have to be in
@@ -325,9 +323,9 @@ FUNCTION FCOMMA_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_RECCOUNT ] := ( @FCM_RECCOUNT() )
    aMyFunc[ UR_GETVALUE ] := ( @FCM_GETVALUE() )
 
-RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                            cSuperRDD, aMyFunc )
+   RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
+                               cSuperRDD, aMyFunc )
 
-INIT PROC FCOMMA_INIT()
+INIT PROCEDURE FCOMMA_INIT()
    rddRegister( "FCOMMA", RDT_FULL )
-RETURN
+   RETURN

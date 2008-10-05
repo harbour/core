@@ -54,9 +54,9 @@
 #define HB_PERS_CH_
 
 #xcommand OBJECT <obj> AS <ClassName> => ;
-          Self := HB_SetObject( Self, { || <ClassName>():New() } )
+          Self := hb_SetObject( Self, { || <ClassName>():New() } )
 
-#xcommand ENDOBJECT => Self := HB_EndObject()
+#xcommand ENDOBJECT => Self := hb_EndObject()
 
 #xcommand ARRAY <obj> LEN <nLen> => <obj> := Array( <nLen> )
 

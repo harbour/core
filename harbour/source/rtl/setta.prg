@@ -56,4 +56,3 @@ FUNCTION SetTypeahead( nSize )
    RETURN Set( _SET_TYPEAHEAD, nSize )
 
 #endif
-

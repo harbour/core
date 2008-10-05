@@ -50,7 +50,6 @@
  *
  */
 
-
 /*
  * A simple RDD which adds automatically update HSX indexes to DBFCDX
  * To create new HSX index for current work area use: HSX_CREATE()
@@ -82,7 +81,7 @@ STATIC FUNCTION _HSX_NEW( pWA )
     */
    USRRDD_AREADATA( pWA, aWData )
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION _HSX_CLOSE( nWA )
    LOCAL aWData:= USRRDD_AREADATA( nWA ), nHSX
@@ -97,7 +96,7 @@ STATIC FUNCTION _HSX_CLOSE( nWA )
    ASIZE( aWData[ 3 ], 0 )
 
    /* call SUPER CLOSE method to close parent RDD */
-RETURN UR_SUPER_CLOSE( nWA )
+   RETURN UR_SUPER_CLOSE( nWA )
 
 STATIC FUNCTION _HSX_GOCOLD( nWA )
    LOCAL nResult, aWData, nHSX, nRecNo, nKeyNo
@@ -122,7 +121,8 @@ STATIC FUNCTION _HSX_GOCOLD( nWA )
          aWData[ 1 ] := .F.
       ENDIF
    ENDIF
-RETURN nResult
+
+   RETURN nResult
 
 STATIC FUNCTION _HSX_GOHOT( nWA )
    LOCAL nResult, aWData
@@ -132,7 +132,8 @@ STATIC FUNCTION _HSX_GOHOT( nWA )
       aWData:= USRRDD_AREADATA( nWA )
       aWData[ 1 ] := .T.
    ENDIF
-RETURN nResult
+
+   RETURN nResult
 
 STATIC FUNCTION _HSX_APPEND( nWA, lUnlockAll )
    LOCAL nResult, aWData
@@ -142,7 +143,8 @@ STATIC FUNCTION _HSX_APPEND( nWA, lUnlockAll )
       aWData:= USRRDD_AREADATA( nWA )
       aWData[ 1 ] := .T.
    ENDIF
-RETURN nResult
+
+   RETURN nResult
 
 /*
  * Three public functions for CREATE, OPEN and CLOSE HSX indexes bound
@@ -165,7 +167,7 @@ FUNCTION HSX_CREATE( cFile, cExpr, nKeySize, nBufSize, lCase, nFiltSet )
       ENDIF
    ENDIF
 
-RETURN nHsx
+   RETURN nHsx
 
 FUNCTION HSX_OPEN( cFile, nBufSize )
    LOCAL aWData, nHsx := -1, nOpenMode
@@ -183,7 +185,7 @@ FUNCTION HSX_OPEN( cFile, nBufSize )
       ENDIF
    ENDIF
 
-RETURN NIL
+   RETURN NIL
 
 FUNCTION HSX_CLOSE( xHSX )
    LOCAL aWData, nSlot
@@ -204,10 +206,12 @@ FUNCTION HSX_CLOSE( xHSX )
          ASIZE( aWData[ 3 ], LEN( aWData[ 3 ] ) - 1 )
       ENDIF
    ENDIF
-RETURN NIL
+
+   RETURN NIL
 
 FUNCTION HSX_HANDLE( cFile )
    LOCAL aWData, nSlot
+
    IF USED() .AND. RDDNAME() == "HSCDX"
       aWData:= USRRDD_AREADATA( SELECT() )
       nSlot := ASCAN( aWData[ 3 ], { |_1| _1 == cFile } )
@@ -215,7 +219,8 @@ FUNCTION HSX_HANDLE( cFile )
          RETURN aWData[ 2, nSlot ]
       ENDIF
    ENDIF
-RETURN -1
+
+   RETURN -1
 
 FUNCTION HSX_FILE( nHsx )
    LOCAL aWData, nSlot
@@ -226,7 +231,7 @@ FUNCTION HSX_FILE( nHsx )
          RETURN aWData[ 3, nSlot ]
       ENDIF
    ENDIF
-RETURN ""
+   RETURN ""
 
 FUNCTION HSX_GET( nSlot )
    LOCAL aWData
@@ -236,7 +241,7 @@ FUNCTION HSX_GET( nSlot )
          RETURN aWData[ 2, nSlot ]
       ENDIF
    ENDIF
-RETURN -1
+   RETURN -1
 
 /* Force linking DBFCDX from which our RDD inherits */
 REQUEST DBFCDX
@@ -255,12 +260,12 @@ FUNCTION HSCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_GOHOT  ] := ( @_HSX_GOHOT()  )
    aMyFunc[ UR_APPEND ] := ( @_HSX_APPEND() )
 
-RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                            cSuperRDD, aMyFunc )
+   RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
+                               cSuperRDD, aMyFunc )
 
 /*
  * Register our HSCDX at program startup
  */
-INIT PROC HSCDX_INIT()
+INIT PROCEDURE HSCDX_INIT()
    rddRegister( "HSCDX", RDT_FULL )
-RETURN
+   RETURN

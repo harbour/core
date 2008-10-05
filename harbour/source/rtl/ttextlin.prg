@@ -54,14 +54,14 @@
 
 CREATE CLASS HBTextLine
 
-   VAR cText       // A line of text
-   VAR lSoftCR     // true if line doesn't end with a hb_OSNewLine() char (word wrapping)
+   VAR cText       /* A line of text */
+   VAR lSoftCR     /* true if line doesn't end with a hb_OSNewLine() char (word wrapping) */
 
    METHOD New( cLine, lSoftCR )
 
 ENDCLASS
 
-// Creates a new line of text
+/* Creates a new line of text */
 METHOD New( cLine, lSoftCR ) CLASS HBTextLine
 
    ::cText := iif( Empty( cLine ), "", cLine )

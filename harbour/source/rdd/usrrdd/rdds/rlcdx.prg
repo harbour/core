@@ -80,7 +80,7 @@ STATIC FUNCTION RLCDX_NEW( pWA )
 
    USRRDD_AREADATA( pWA, aWData )
 
-RETURN SUCCESS
+   RETURN SUCCESS
 
 STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
    LOCAL aWData, nResult, xRecId, i
@@ -149,7 +149,7 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
 
    aLockInfo[ UR_LI_RESULT ] := .F.
 
-RETURN FAILURE
+   RETURN FAILURE
 
 STATIC FUNCTION RLCDX_UNLOCK( nWA, xRecID )
    LOCAL aWData := USRRDD_AREADATA( nWA ), i
@@ -173,7 +173,7 @@ STATIC FUNCTION RLCDX_UNLOCK( nWA, xRecID )
       ASIZE( aWData[ 2 ], 0 )
    ENDIF
 
-RETURN UR_SUPER_UNLOCK( nWA, xRecID )
+   RETURN UR_SUPER_UNLOCK( nWA, xRecID )
 
 STATIC FUNCTION RLCDX_APPEND( nWA, lUnlockAll )
    LOCAL aWData, nResult, xRecId, i
@@ -197,7 +197,7 @@ STATIC FUNCTION RLCDX_APPEND( nWA, lUnlockAll )
       ENDIF
    ENDIF
 
-RETURN nResult
+   RETURN nResult
 
 /* Force linking DBFCDX from which our RDD inherits */
 REQUEST DBFCDX
@@ -216,9 +216,9 @@ FUNCTION RLCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMethods[ UR_UNLOCK ] := ( @RLCDX_UNLOCK() )
    aMethods[ UR_APPEND ] := ( @RLCDX_APPEND() )
 
-RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                            cSuperRDD, aMethods )
+   RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
+                               cSuperRDD, aMethods )
 
-INIT PROC RLCDX_INIT()
+INIT PROCEDURE RLCDX_INIT()
    rddRegister( "RLCDX", RDT_FULL )
-RETURN
+   RETURN

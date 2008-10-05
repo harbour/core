@@ -60,22 +60,22 @@
 
 PROCEDURE AltD( nAction )
 
-   IF PCOUNT() == 0
+   IF PCount() == 0
 
       /* do not activate the debugger imediatelly because the module
          where ALTD() was called can have no debugger info - stop
          on first LINE with debugged info 
       */
-      __dbgINVOKEDEBUG( SET( _SET_DEBUG ) )
+      __dbgINVOKEDEBUG( Set( _SET_DEBUG ) )
 
    ELSEIF HB_ISNUMERIC( nAction )
 
       IF nAction == ALTD_DISABLE
-         SET( _SET_DEBUG, .F. )
+         Set( _SET_DEBUG, .F. )
       ELSEIF nAction == ALTD_ENABLE
-         SET( _SET_DEBUG, .T. )
+         Set( _SET_DEBUG, .T. )
       ENDIF
 
    ENDIF
 
-RETURN
+   RETURN

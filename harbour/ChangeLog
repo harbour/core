@@ -8,6 +8,40 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-05 15:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbpers.ch
+  * source/rtl/perfuncs.prg
+  * source/rtl/objfunc.prg
+  * source/rtl/tlabel.prg
+  * source/rtl/setta.prg
+  * source/rtl/dirscan.prg
+  * source/rtl/tthreadx.prg
+  * source/rtl/setfunc.prg
+  * source/rtl/readvar.prg
+  * source/rtl/tclass.prg
+  * source/rtl/ttextlin.prg
+  * source/rtl/profiler.prg
+  * source/rtl/treport.prg
+  * source/rtl/tgetint.prg
+  * source/rtl/persist.prg
+  * source/rtl/altd.prg
+  * source/rtl/devoutp.prg
+  * source/rdd/usrrdd/example/exmemo.prg
+  * source/rdd/usrrdd/example/exhsx.prg
+  * source/rdd/usrrdd/example/exfcm.prg
+  * source/rdd/usrrdd/example/exrlx.prg
+  * source/rdd/usrrdd/rdds/dbtcdx.prg
+  * source/rdd/usrrdd/rdds/fptcdx.prg
+  * source/rdd/usrrdd/rdds/arrayrdd.prg
+  * source/rdd/usrrdd/rdds/hscdx.prg
+  * source/rdd/usrrdd/rdds/rlcdx.prg
+  * source/rdd/usrrdd/rdds/fcomma.prg
+  * source/rdd/usrrdd/rdds/smtcdx.prg
+    * Formatting. Basically finished.
+
+  * include/hbextern.ch
+    ! Added two missing functions.
+
 2008-10-05 15:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/thread.c
     ! fixed hb_mutexSubscribe*() in ST mode

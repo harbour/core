@@ -56,4 +56,4 @@ PROCEDURE DevOutPict( xValue, cPicture, cColor )
       DevOut( Transform( xValue, cPicture ), cColor )
    ENDIF
 
-RETURN
+   RETURN

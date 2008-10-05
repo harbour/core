@@ -50,29 +50,29 @@
  *
  */
 
-thread static s_aObjects
+THREAD STATIC s_aObjects
 
-function HB_SetObject( oSelf, bConstructor )
+FUNCTION hb_SetObject( oSelf, bConstructor )
 
-   if s_aObjects == nil
+   IF s_aObjects == NIL
       s_aObjects := {}
       AAdd( s_aObjects, oSelf )
-   else
+   ELSE
       AAdd( s_aObjects, oSelf := Eval( bConstructor ) )
-   endif
+   ENDIF
 
-return oSelf
+   RETURN oSelf
 
-function HB_EndObject()
+FUNCTION hb_EndObject()
 
-   local oSelf
+   LOCAL oSelf
 
-   if Len( s_aObjects ) > 1
+   IF Len( s_aObjects ) > 1
       ASize( s_aObjects, Len( s_aObjects ) - 1 )
       oSelf := ATail( s_aObjects )
-   else
+   ELSE
       oSelf := s_aObjects[ 1 ]
-      s_aObjects := nil
-   endif
+      s_aObjects := NIL
+   ENDIF
 
-return oSelf
+   RETURN oSelf
