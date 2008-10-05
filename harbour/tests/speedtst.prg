@@ -54,16 +54,65 @@
    return { iif( <.info.>, <(info)>, #<testExp> ), time }
 
 
-proc main( par1, par2 )
-   test( par1, par2 )
+proc main( ... )
+   local aParams, nMT, cExclude, cParam, lSyntax, i
+
+   aParams := hb_aparams()
+   lSyntax := .f.
+   cExclude := ""
+   nMT := 0
+   for each cParam in aParams
+      cParam := lower( cParam )
+      if cParam = "--thread"
+         if substr( cParam, 9, 1 ) == "="
+            if isdigit( substr( cParam, 10, 1 ) )
+               nMT := val( substr( cParam, 10 ) )
+            elseif substr( cParam, 10 ) == "all"
+               nMT := -1
+            else
+               lSyntax = .t.
+            endif
+         elseif empty( substr( cParam, 9 ) )
+            nMT := -1
+         else
+            lSyntax = .t.
+         endif
+      elseif cParam = "--exclude="
+         if substr( cParam, 11 ) == "mem"
+            cExclude += "029 030 023 025 027 040 041 043 052 053 019 022 031 032 "
+         else
+            cExclude += strtran( strtran( strtran( substr( cParam, 11 ), ;
+                        ".", " " ), ".", " " ), "/", " " ) + " "
+         endif
+      elseif cParam = "--only="
+         cExclude := ""
+         for i := 1 to N_TESTS
+            if !strzero( i, 3 ) $ cParam
+               cExclude += strzero( i, 3 ) + " "
+            endif
+         next
+      else
+         lSyntax = .t.
+      endif
+      if lSyntax
+         ? "Unknown option:", cParam
+         ? "syntax:", hb_argv( 0 ), "[--thread[=<num>]] [--only=<test(s)>] [--exclude=<test(s)>]"
+         ?
+         return
+      endif
+   next
+   test( nMT, cExclude )
 return
 
 
 #ifdef __XHARBOUR__
 
    #xtranslate hb_mtvm()                  => hb_multiThread()
+   #xtranslate hb_threadWaitForAll()      => WaitForThreads()
+   #xtranslate hb_mutexNotify(<x,...>)    => Notify(<x>)
 
 #ifndef __ST__
+
 
    /* do not expect that this code will work with xHarbour.
     * xHarbour has many race conditions which are exploited quite fast
@@ -72,56 +121,89 @@ return
     * some type of MT test
     */
 
-   static function results( nTest, xResult )
-      static s_aResults[ N_TESTS + 1 ]
-      if xResult == NIL
-         xResult := s_aResults[ nTest ]
-      else
-         s_aResults[ nTest ] := xResult
-      endif
-   return xResult
-
-   /* I used function wrappers to simulate thread join which can
-    * return thread results
+   /* this define is only for test if emulation function works
+    * without running real test which causes that xHarbour crashes
     */
-   static function do_test( cFunc )
-      local x
-      ? "starting: " + cFunc + "()"
-      // if you set .f. then tests will be skipped but you can check
-      // if this test code is executed because it greatly reduces
-      // the race conditions inside xHarbour HVM
-      if .t.
-         x := &cFunc()
-         //dsp_result( x )
-      else
-         x := { "skipped test " + cFunc, val( substr( cFunc, 2 ) ) + 0.99 }
-      endif
-      results( val( substr( cFunc, 2 ) ), x )
-   return nil
+   //#define _DUMY_XHB_TEST_
 
-   function hb_threadStart( cFunc )
-   return StartThread( @do_test(), cFunc )
+
+   function hb_mutexSubscribe( mtx, nTimeOut, xSubscribed )
+      local lSubscribed
+      if valtype( nTimeOut ) == "N"
+         nTimeOut := round( nTimeOut * 1000, 0 )
+      endif
+      xSubscribed := Subscribe( mtx, nTimeOut, @lSubscribed )
+   return lSubscribed
+
+   /* in xHarbour there is race condition in JoinThread() which
+    * fails if thread end before we call it so we cannot use it :-(
+    * this code tries to simulate it and also add support for thread
+    * return value
+    */
+
+   function hb_threadStart( ... )
+      local thId
+      thId := StartThread( @threadFirstFunc(), hb_aParams() )
+      /* Just like in JoinThread() the same race condition exists in
+       * GetThreadId() so we will use HVM thread numbers internally
+       */
+#ifdef _DUMY_XHB_TEST_
+   return val( substr( hb_aParams()[1], 2 ) )
+#else
+   return GetThreadId( thId )
+#endif
 
    function hb_threadJoin( thId, xResult )
-      static s_n := 0
-      local lOK
-      /* in xHarbour there is race condition in JoinThread() which
-       * fails if thread end before we call it so we cannot use it :-(
-       */
-      //lOK := JoinThread( thId )
-      lOK := .t.
-      if s_n == 0
-         HB_SYMBOL_UNUSED( thId )
-         WaitForThreads()
+      xResult := results( thId )
+   return .t.
+
+   static function threadFirstFunc( aParams )
+      local xResult
+#ifdef _DUMY_XHB_TEST_
+      xResult := { "skipped test " + aParams[1], val( substr( aParams[1], 2 ) ) + 0.99 }
+      results( val( substr( aParams[1], 2 ) ), xResult )
+#else
+      xResult := hb_execFromArray( aParams )
+      results( GetThreadId(), xResult )
+#endif
+   return nil
+
+   static function results( nThread, xResult )
+      static s_aResults
+      static s_mutex
+      if s_aResults == nil
+         s_aResults := HSetAutoAdd( hash(), .t. )
+         s_mutex := hb_mutexCreate()
       endif
-      xResult := results( ++s_n )
-   return lOK
+      if pcount() < 2
+         while ! nThread $ s_aResults
+            Subscribe( s_mutex, 1000 )
+         enddo
+         xResult := s_aResults[ nThread ]
+      else
+         s_aResults[ nThread ] := xResult
+         /* We cannot use NotifyAll() here because it will create
+          * race condition. In this program only one thread join
+          * results so we can use simple Notify() as workaround
+          */
+         //NotifyAll( s_mutex )
+         Notify( s_mutex )
+      endif
+   return xResult
 
 #else
 
    function hb_threadStart()
    return nil
    function hb_threadJoin()
+   return nil
+   function hb_mutexSubscribe()
+   return nil
+   function hb_mutexCreate()
+   return nil
+   function notify()
+   return nil
+   function waitForThreads()
    return nil
 
 #endif
@@ -285,23 +367,21 @@ TEST t052 CODE x := f4()
 TEST t053 CODE x := f5()
 
 
-proc test( par1, par2 )
-local nLoopOverHead, nTimes, nSeconds, cExclude, cNum, lMT, x, i, aThreads:={}
+function thTest( mtxJobs, aResults )
+   local xJob
+   while .T.
+      hb_mutexSubscribe( mtxJobs,, @xJob )
+      if xJob == NIL
+         exit
+      endif
+      aResults[ xJob ] := &( "t" + strzero( xJob, 3 ) )()
+   enddo
+return nil
+
+proc test( nMT, cExclude )
+local nLoopOverHead, nTimes, nSeconds, cNum, aThreads, aResults, mtxJobs, x, i
 
 create_db()
-
-lMt := .f.
-if !empty( par1 ) .and. lower( par1 ) = "--exclude="
-   cExclude := substr( par1, 11 )
-   par1 := par2
-elseif !empty( par2 ) .and. lower( par2 ) = "--exclude="
-   cExclude := substr( par2, 11 )
-else
-   cExclude := ""
-endif
-if lower( cExclude ) == "mem"
-   cExclude := "029.030.023.025.027.040.041.043.052.053.019.022.031.032"
-endif
 
 #ifdef __HARBOUR__
 #include "hbmemory.ch"
@@ -316,14 +396,19 @@ endif
 
 ? date(), time(), os()
 #ifdef __HARBOUR__
-   lMT := !empty( par1 ) .and. hb_mtvm()
-   ? version() + iif( hb_mtvm(), " (MT)" + iif( lMT, "+", "" ), "" ), ;
+   if !hb_mtvm()
+      nMT := 0
+   endif
+   ? version() + iif( hb_mtvm(), " (MT)" + iif( nMT != 0, "+", "" ), "" ), ;
      hb_compiler()
 #else
    ? version()
 #endif
-? "N_LOOPS =", N_LOOPS
-
+? "THREADS:", iif( nMT < 0, "all->" + ltrim( str( N_TESTS ) ), ltrim( str( nMT ) ) )
+? "N_LOOPS:", ltrim( str( N_LOOPS ) )
+if !empty( cExclude )
+   ? "excluded tests:", cExclude
+endif
 x :=t000()
 ? dsp_result( x, 0 )
 nLoopOverHead := x[2]
@@ -334,7 +419,7 @@ nSeconds := seconds()
 nTimes := secondsCPU()
 
 #ifdef __HARBOUR__
-   if lMT
+   if nMT < 0
       aThreads := array( N_TESTS )
       for i:=1 to N_TESTS
          cNum := strzero( i, 3 )
@@ -347,6 +432,28 @@ nTimes := secondsCPU()
             ? dsp_result( x, nLoopOverHead )
          endif
        next
+   elseif nMT > 0
+      aThreads := {}
+      aResults := array( N_TESTS )
+      mtxJobs := hb_mutexCreate()
+      for i:=1 to nMT
+         aadd( aThreads, hb_threadStart( "thTest", mtxJobs, aResults ) )
+      next
+      for i:=1 to N_TESTS
+         if !strzero( i, 3 ) $ cExclude
+            hb_mutexNotify( mtxJobs, i )
+         endif
+      next
+      for i:=1 to nMT
+         hb_mutexNotify( mtxJobs, NIL )
+      next
+      hb_threadWaitForAll()
+      for i:=1 to N_TESTS
+         if aResults[ i ] != NIL
+            ? dsp_result( aResults[ i ], nLoopOverHead )
+         endif
+      next
+      mtxJobs := NIL
    else
       for i:=1 to N_TESTS
          cNum := strzero( i, 3 )
@@ -374,7 +481,6 @@ nSeconds := seconds() - nSeconds
 
 remove_db()
 return
-
 
 function f0()
 return nil

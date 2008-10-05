@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-05 03:29 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/speedtst.prg
+    + added support for multiple usage of --exclude parameter
+    + added support for --thread[=<num>] parameter which allows to set how
+      many threads will be used to execute speed test. When =<num> is not
+      given then each test loop is executed by separate thread, f.e.:
+         ./speedtst --thread=3
+      Now you can make tests looking for optimal for your system values.
+      Please only remember that the total results shown by speedtst
+      can be highly bound with the most expensive test loop which is
+      finished only on one CPU
+    + added support for --only=<testnums,...> parameter which allows to
+      chose requested tests
+    + added restricted parameter validation and syntax info
+
 2008-10-04 21:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/fm.c
     ! do not build DL-MM when HB_FM_WIN32_ALLOC is set
