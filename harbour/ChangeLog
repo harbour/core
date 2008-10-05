@@ -8,43 +8,47 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-06 00:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbthread.h
+    ! Blind fix for WinCE compilation after MT changes.
+
 2008-10-05 20:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
-   * common.mak
-   * source/rtl/Makefile
-   - source/rtl/persist.prg
-   + source/rtl/tpersist.prg
-   - source/rtl/symbol.prg
-   + source/rtl/tsymbol.prg
-   * source/rtl/achoice.prg
-   * source/rtl/browse.prg
-   * source/rtl/dbedit.prg
-   * source/rtl/dircmd.prg
-   * source/rtl/einstv52.prg
-   * source/rtl/einstvar.prg
-   * source/rtl/hbini.prg
-   * source/rtl/tbrowse.prg
-   * source/rtl/tclass.prg
-   * source/rtl/tget.prg
-   * source/rtl/tgetint.prg
-   * source/rtl/tlabel.prg
-   * source/rtl/tobject.prg
-   * source/rtl/treport.prg
-   * source/rtl/typefile.prg
-   * source/rtl/valtoexp.prg
-   * source/rdd/usrrdd/example/exhsx.prg
-   * source/rdd/usrrdd/example/exfcm.prg
-   * source/rdd/usrrdd/rdds/hscdx.prg
-     * Some formattings and cleanup.
+  * common.mak
+  * source/rtl/Makefile
+  - source/rtl/persist.prg
+  + source/rtl/tpersist.prg
+  - source/rtl/symbol.prg
+  + source/rtl/tsymbol.prg
+  * source/rtl/achoice.prg
+  * source/rtl/browse.prg
+  * source/rtl/dbedit.prg
+  * source/rtl/dircmd.prg
+  * source/rtl/einstv52.prg
+  * source/rtl/einstvar.prg
+  * source/rtl/hbini.prg
+  * source/rtl/tbrowse.prg
+  * source/rtl/tclass.prg
+  * source/rtl/tget.prg
+  * source/rtl/tgetint.prg
+  * source/rtl/tlabel.prg
+  * source/rtl/tobject.prg
+  * source/rtl/treport.prg
+  * source/rtl/typefile.prg
+  * source/rtl/valtoexp.prg
+  * source/rdd/usrrdd/example/exhsx.prg
+  * source/rdd/usrrdd/example/exfcm.prg
+  * source/rdd/usrrdd/rdds/hscdx.prg
+    * Some formattings and cleanup.
 
-   * source/rtl/tclass.prg
-     % ValType() optimizations.
+  * source/rtl/tclass.prg
+    % ValType() optimizations.
 
-   * source/rtl/tlabel.prg
-   * source/rtl/treport.prg
-     * Trim() -> RTrim()
+  * source/rtl/tlabel.prg
+  * source/rtl/treport.prg
+    * Trim() -> RTrim()
 
-   * source/rtl/treport.prg
-     ! Hard-coded Chr(13)+Chr(10) fixed in treport.prg.
+  * source/rtl/treport.prg
+    ! Hard-coded Chr(13)+Chr(10) fixed in treport.prg.
 
 2008-10-05 18:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbwin/win_ole.c

@@ -135,7 +135,7 @@ HB_EXTERN_BEGIN
 #     define HB_COND_GET(v)            ( &( (v)->cond ) )
 #  endif
 
-#elif defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_WIN_32 ) && ! defined( HB_WINCE )
 
 # define HB_MAX_THREAD  32768
 
@@ -181,7 +181,6 @@ HB_EXTERN_BEGIN
 #        define HB_ATOM_SET( p, n ) do { (*(LONG volatile *)(p)) = (n); } while(0)
 #     endif
 #  endif
-
 
 #elif defined( HB_OS_OS2 )
 
