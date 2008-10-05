@@ -60,7 +60,7 @@ FUNCTION __eInstVar52( oVar, cMethod, xValue, cType, nSubCode, xMin, xMax )
    LOCAL oError
    LOCAL lError
 
-   IF VALTYPE( xValue ) == cType
+   IF ValType( xValue ) == cType
       lError := .F.
       IF xMin != NIL
          lError := !( xValue >= xMin )
@@ -76,7 +76,7 @@ FUNCTION __eInstVar52( oVar, cMethod, xValue, cType, nSubCode, xMin, xMax )
 
    IF lError
       oError := ErrorNew()
-      oError:description := HB_LANGERRMSG( 1 )
+      oError:description := hb_langErrMsg( 1 )
       oError:gencode := 1
       oError:severity := 2
       oError:cansubstitute := .T.
@@ -88,8 +88,8 @@ FUNCTION __eInstVar52( oVar, cMethod, xValue, cType, nSubCode, xMin, xMax )
 #endif
       oError:subcode := nSubCode
       oError:args := { xValue }
-      xValue := EVAL( ERRORBLOCK(), oError )
-      IF !( VALTYPE( xValue ) == cType )
+      xValue := Eval( ErrorBlock(), oError )
+      IF !( ValType( xValue ) == cType )
          __errInHandler()
       ENDIF
    ENDIF

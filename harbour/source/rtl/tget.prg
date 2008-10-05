@@ -1195,7 +1195,7 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
          cChar := SubStr( cPicMask, nFor, 1 )
          IF cChar $ ",." .AND. SubStr( cBuffer, nFor, 1 ) $ ",." // " " TOFIX
             IF "E" $ cPicFunc
-               cChar := IIF( cChar == ",", ".", "," )
+               cChar := iif( cChar == ",", ".", "," )
             ENDIF
             cBuffer := SubStr( cBuffer, 1, nFor - 1 ) + cChar + SubStr( cBuffer, nFor + 1 )
          ENDIF

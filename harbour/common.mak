@@ -628,7 +628,6 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\menusys$(OBJEXT)  \
     $(OBJ_DIR)\objfunc$(OBJEXT)  \
     $(OBJ_DIR)\perfuncs$(OBJEXT) \
-    $(OBJ_DIR)\persist$(OBJEXT)  \
     $(OBJ_DIR)\profiler$(OBJEXT) \
     $(OBJ_DIR)\pushbtn$(OBJEXT)  \
     $(OBJ_DIR)\radiobtn$(OBJEXT) \
@@ -638,7 +637,6 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\scrollbr$(OBJEXT) \
     $(OBJ_DIR)\setfunc$(OBJEXT)  \
     $(OBJ_DIR)\setta$(OBJEXT)    \
-    $(OBJ_DIR)\symbol$(OBJEXT)   \
     $(OBJ_DIR)\tbcolumn$(OBJEXT) \
     $(OBJ_DIR)\tbrowse$(OBJEXT)  \
     $(OBJ_DIR)\tbrowsys$(OBJEXT) \
@@ -652,8 +650,10 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\tmenuitm$(OBJEXT) \
     $(OBJ_DIR)\tmenusys$(OBJEXT) \
     $(OBJ_DIR)\tobject$(OBJEXT)  \
+    $(OBJ_DIR)\tpersist$(OBJEXT) \
     $(OBJ_DIR)\tpopup$(OBJEXT)   \
     $(OBJ_DIR)\treport$(OBJEXT)  \
+    $(OBJ_DIR)\tsymbol$(OBJEXT)  \
     $(OBJ_DIR)\tscalar$(OBJEXT)  \
     $(OBJ_DIR)\ttextlin$(OBJEXT) \
     $(OBJ_DIR)\tthreadx$(OBJEXT) \

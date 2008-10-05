@@ -121,7 +121,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
                dbGoBottom()
             ELSE
                lAppend := .T.
-               SetCursor( IIF( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+               SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
             ENDIF
             oBrw:Down()
             oBrw:ForceStable()
@@ -238,7 +238,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 
          CASE K_INS
             IF lAppend
-               SetCursor( IIF( ReadInsert( ! ReadInsert() ), ;
+               SetCursor( iif( ReadInsert( ! ReadInsert() ), ;
                                SC_NORMAL, SC_INSERT ) )
             ENDIF
             EXIT
@@ -301,10 +301,10 @@ STATIC PROCEDURE StatLine( oBrw, lAppend )
       DispOutAt( nTop, nRight - 40, "         " )
       DispOutAt( nTop, nRight - 20, "                <new>" )
    ELSE
-      DispOutAt( nTop, nRight - 40, IIF( Deleted(), "<Deleted>", "         " ) )
+      DispOutAt( nTop, nRight - 40, iif( Deleted(), "<Deleted>", "         " ) )
       DispOutAt( nTop, nRight - 20, PadR( LTrim( Str( RecNo() ) ) + "/" + ;
                                           LTrim( Str( LastRec() ) ), 16 ) + ;
-                                    IIF( oBrw:HitTop(), "<bof>", "     " ) )
+                                    iif( oBrw:HitTop(), "<bof>", "     " ) )
    ENDIF
 
    RETURN
@@ -322,9 +322,9 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
 
    lScore := Set( _SET_SCOREBOARD, .F. )
    lExit := Set( _SET_EXIT, .T. )
-   bIns := SetKey( K_INS, {|| SetCursor( IIF( ReadInsert( ! ReadInsert() ), ;
+   bIns := SetKey( K_INS, {|| SetCursor( iif( ReadInsert( ! ReadInsert() ), ;
                                               SC_NORMAL, SC_INSERT ) ) } )
-   nCursor := SetCursor( IIF( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+   nCursor := SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
    IF !Empty( cIndexKey := IndexKey( 0 ) )
       xKeyValue := &cIndexKey
    ENDIF
@@ -332,7 +332,7 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
    oCol := oBrw:GetColumn( oBrw:ColPos )
    xValue := Eval( oCol:Block )
    oGet := GetNew( Row(), Col(), ;
-               { |xNewVal| IIF( PCount() == 0, xValue, xValue := xNewVal ) }, ;
+               { |xNewVal| iif( PCount() == 0, xValue, xValue := xNewVal ) }, ;
                "mGetVar", NIL, oBrw:ColorSpec )
    lSuccess := .F.
    IF ReadModal( { oGet } )
@@ -376,18 +376,18 @@ STATIC FUNCTION ExitKey( lAppend )
 
    SWITCH nKey
       CASE K_PGDN
-         nKey := IIF( lAppend, 0, K_DOWN )
+         nKey := iif( lAppend, 0, K_DOWN )
          EXIT
 
       CASE K_PGUP
-         nKey := IIF( lAppend, 0, K_UP )
+         nKey := iif( lAppend, 0, K_UP )
 
       CASE K_DOWN
       CASE K_UP
          EXIT
 
       OTHERWISE
-         nKey := IIF( nKey == 13 .OR. ;
+         nKey := iif( nKey == 13 .OR. ;
                       ( nKey >= 32 .AND. nKey <= 255 ), K_RIGHT, 0 )
          EXIT
    ENDSWITCH

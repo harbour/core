@@ -71,11 +71,11 @@ FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
 
    IF bSetGet == NIL
       IF FieldPos( cVarName ) > 0
-         bSetGet := &( "{|| IIF( PCOUNT()==0, FIELD->" + cVarName + ", FIELD->" + cVarName + " := HB_PVALUE(1) ) }" )
+         bSetGet := &( "{|| iif( PCount()==0, FIELD->" + cVarName + ", FIELD->" + cVarName + " := hb_PValue(1) ) }" )
       ELSEIF __MVEXIST( cVarName )
          bSetGet := {|_1| iif( _1 == NIL,  __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
       ELSE
-         bSetGet := &( "{|| IIF( PCOUNT()==0, " + cVarName + ", " + cVarName + " := HB_PVALUE(1) ) }" )
+         bSetGet := &( "{|| iif( PCount()==0, " + cVarName + ", " + cVarName + " := hb_PValue(1) ) }" )
       ENDIF
    ENDIF
 

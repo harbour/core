@@ -15,7 +15,7 @@ PROCEDURE MAIN()
    DBGOTOP()
    ? RECNO(), '"' + FIELD->LINE + '"'
    WAIT
-   WHILE !EOF()
+   DO WHILE !EOF()
       ? RECNO(), '"' + FIELD->LINE + '"'
       IF RECNO()==20
          INKEY(0)
@@ -29,7 +29,7 @@ PROCEDURE MAIN()
    ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
      "BOF", BOF(), "EOF", EOF(), "LASTREC", LASTREC()
    WAIT
-   WHILE !BOF()
+   DO WHILE !BOF()
       ? RECNO(), '[' + FIELD->LINE + ']'
       IF RECNO()==LASTREC()-20
          INKEY(0)

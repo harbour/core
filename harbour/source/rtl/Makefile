@@ -189,7 +189,6 @@ PRG_SOURCES=\
 	menusys.prg  \
 	objfunc.prg  \
 	perfuncs.prg \
-	persist.prg  \
 	profiler.prg \
 	pushbtn.prg  \
 	radiobtn.prg \
@@ -199,7 +198,6 @@ PRG_SOURCES=\
 	scrollbr.prg \
 	setfunc.prg  \
 	setta.prg    \
-	symbol.prg   \
 	tclass.prg   \
 	tbcolumn.prg \
 	tbrowse.prg  \
@@ -213,9 +211,11 @@ PRG_SOURCES=\
 	tmenuitm.prg \
 	tmenusys.prg \
 	tobject.prg  \
+	tpersist.prg \
 	tpopup.prg   \
 	treport.prg  \
 	tscalar.prg  \
+	tsymbol.prg  \
 	ttextlin.prg \
 	tthreadx.prg \
 	ttopbar.prg  \

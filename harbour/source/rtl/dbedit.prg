@@ -198,9 +198,9 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
    lDoIdleCall := .T.
    lContinue := .T.
 
-   WHILE lContinue
+   DO WHILE lContinue
 
-      WHILE ! oBrowse:stabilize()
+      DO WHILE ! oBrowse:stabilize()
          nKey := Nextkey()
 #ifdef HB_COMPAT_C53
          IF nKey != 0 .AND. nKey != K_MOUSEMOVE
@@ -219,7 +219,7 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
          IF lContinue .AND. lFlag
             oBrowse:hiLite()
 #ifdef HB_COMPAT_C53
-            WHILE ( nKey := Inkey( 0 ) ) == K_MOUSEMOVE
+            DO WHILE ( nKey := Inkey( 0 ) ) == K_MOUSEMOVE
             ENDDO
 #else
             nKey := Inkey( 0 )
@@ -296,10 +296,10 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
    LOCAL nPrevRecNo
 
    LOCAL nAction
-   LOCAL nMode := IIF( nKey != 0,                  DE_EXCEPT,    ;
-                  IIF( !lAppend .AND. IsDbEmpty(), DE_EMPTY,     ;
-                  IIF( oBrowse:hitBottom,          DE_HITBOTTOM, ;
-                  IIF( oBrowse:hitTop,             DE_HITTOP, DE_IDLE ) ) ) )
+   LOCAL nMode := iif( nKey != 0,                  DE_EXCEPT,    ;
+                  iif( !lAppend .AND. IsDbEmpty(), DE_EMPTY,     ;
+                  iif( oBrowse:hitBottom,          DE_HITBOTTOM, ;
+                  iif( oBrowse:hitTop,             DE_HITTOP, DE_IDLE ) ) ) )
 
    oBrowse:forceStable()
 
@@ -308,11 +308,11 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
    /* NOTE: CA-Cl*pper won't check the type of the return value here, 
             and will crash if it's a non-NIL, non-numeric type. We're 
             replicating this behavior. */
-   nAction := IIF( ISBLOCK( xUserFunc ), ;
+   nAction := iif( ISBLOCK( xUserFunc ), ;
                                  Eval( xUserFunc, nMode, oBrowse:colPos ), ;
-              IIF( ISCHARACTER( xUserFunc ) .AND. !Empty( xUserFunc ), ;
+              iif( ISCHARACTER( xUserFunc ) .AND. !Empty( xUserFunc ), ;
                                  &xUserFunc( nMode, oBrowse:colPos ), ;
-              IIF( nKey == K_ENTER .OR. nKey == K_ESC, DE_ABORT, DE_CONT ) ) )
+              iif( nKey == K_ENTER .OR. nKey == K_ESC, DE_ABORT, DE_CONT ) ) )
 
    IF !lAppend .AND. EOF() .AND. !IsDbEmpty()
       dbSkip( -1 )
@@ -348,7 +348,7 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
          
          nPrevRecNo := RecNo()
          oBrowse:refreshAll():forceStable()
-         WHILE nPrevRecNo != RecNo()
+         DO WHILE nPrevRecNo != RecNo()
             oBrowse:Up():forceStable()
          ENDDO
          

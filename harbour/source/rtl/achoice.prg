@@ -75,10 +75,10 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    nNumRows := nBottom - nTop + 1
 
 
-   IF VALTYPE( xSelect ) $ "A"
+   IF ValType( xSelect ) $ "A"
       alSelect := xSelect
    ELSE
-      alSelect := ARRAY( LEN( acItems ) )
+      alSelect := Array( Len( acItems ) )
       AFill( alSelect, xSelect )
    ENDIF
 
@@ -140,7 +140,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                nPos := BETWEEN( nFrstItem, nPos, nLastItem )
             ENDIF
 
-            nAtTop := MIN( nAtTop, nPos )
+            nAtTop := Min( nAtTop, nPos )
 
             IF nAtTop + nNumRows - 1 > nItems
                nAtTop := BETWEEN( 1, nPos - nNumRows + 1, nItems - nNumRows + 1 )
@@ -500,7 +500,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                      nPos := BETWEEN( nFrstItem, nPos, nLastItem )
                   ENDIF
             
-                  nAtTop := MIN( nAtTop, nPos )
+                  nAtTop := Min( nAtTop, nPos )
             
                   IF nAtTop + nNumRows - 1 > nItems
                      nAtTop := BETWEEN( 1, nPos - nNumRows + 1, nItems - nNumRows + 1 )

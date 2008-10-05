@@ -29,7 +29,7 @@ PROCEDURE MAIN()
    /* Look for all records which have 'SHERMAN' string inside */
    hs := HSX_HANDLE( "_tst" )
    HS_SET( hs, "SHERMAN" )
-   WHILE ( n := HS_NEXT( hs ) ) > 0
+   DO WHILE ( n := HS_NEXT( hs ) ) > 0
       DBGOTO( n )
       IF HS_VERIFY( hs ) > 0
          ? RTRIM( FIRST+LAST+STREET+CITY )

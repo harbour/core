@@ -76,7 +76,7 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
       RETURN .F.
    ENDIF
 
-   // We skip the first empty lines
+   /* We skip the first empty lines */
    DO WHILE Empty( ExtractLine( cObjectText, @nFrom ) )
    ENDDO
 
@@ -85,23 +85,23 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
 
       DO CASE
       CASE Upper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "OBJECT"
-           IF lStart
-              lStart := .F.
-           ENDIF
+         IF lStart
+            lStart := .F.
+         ENDIF
 
       CASE Upper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ARRAY"
-           cLine := SubStr( cLine, At( "::", cLine ) )
-           M->oSelf := Self
-           cLine := StrTran( cLine, "::", "oSelf:" )
-           cLine := StrTran( cLine, " LEN ", " = Array( " )
-           cLine := RTrim( StrTran( cLine, "=", ":=", , 1 ) ) + " )"
-           cLine := &( cLine )
+         cLine := SubStr( cLine, At( "::", cLine ) )
+         MEMVAR->oSelf := Self
+         cLine := StrTran( cLine, "::", "oSelf:" )
+         cLine := StrTran( cLine, " LEN ", " = Array( " )
+         cLine := RTrim( StrTran( cLine, "=", ":=", , 1 ) ) + " )"
+         cLine := &( cLine )
 
       CASE Left( cToken := LTrim( hb_TokenGet( cLine, 1, "=" ) ), 2 ) == "::"
-           M->oSelf := Self
-           cLine := StrTran( cLine, "::", "oSelf:" )
-           cLine := StrTran( cLine, "=", ":=", , 1 )
-           cLine := &( cLine )
+         MEMVAR->oSelf := Self
+         cLine := StrTran( cLine, "::", "oSelf:" )
+         cLine := StrTran( cLine, "=", ":=", , 1 )
+         cLine := &( cLine )
 
       ENDCASE
 
@@ -142,28 +142,28 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
 
          DO CASE
          CASE cType == "A"
-              nIndent += 3
-              cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
-              nIndent -= 3
-              IF n < Len( aProperties )
-                 cObject += hb_OSNewLine()
-              ENDIF
+            nIndent += 3
+            cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
+            nIndent -= 3
+            IF n < Len( aProperties )
+               cObject += hb_OSNewLine()
+            ENDIF
 
          CASE cType == "O"
-              IF __objDerivedFrom( uValue, "HBPERSISTENT" )
-                 cObject += uValue:SaveToText( aProperties[ n ], nIndent )
-              ENDIF
-              IF n < Len( aProperties )
-                 cObject += hb_OSNewLine()
-              ENDIF
+            IF __objDerivedFrom( uValue, "HBPERSISTENT" )
+               cObject += uValue:SaveToText( aProperties[ n ], nIndent )
+            ENDIF
+            IF n < Len( aProperties )
+               cObject += hb_OSNewLine()
+            ENDIF
 
          OTHERWISE
-              IF n == 1
-                 cObject += hb_OSNewLine()
-              ENDIF
-              cObject += Space( nIndent ) + "   ::" + ;
-                         aProperties[ n ] + " = " + ValToText( uValue ) + ;
-                         hb_OSNewLine()
+            IF n == 1
+               cObject += hb_OSNewLine()
+            ENDIF
+            cObject += Space( nIndent ) + "   ::" + ;
+                       aProperties[ n ] + " = " + ValToText( uValue ) + ;
+                       hb_OSNewLine()
          ENDCASE
 
       ENDIF
@@ -188,24 +188,24 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
 
       DO CASE
       CASE cType == "A"
-           nIndent += 3
-           cArray += ArrayToText( uValue, cName + "[ " + ;
-                     AllTrim( Str( n ) ) + " ]", nIndent ) + hb_OSNewLine()
-           nIndent -= 3
+         nIndent += 3
+         cArray += ArrayToText( uValue, cName + "[ " + ;
+                   AllTrim( Str( n ) ) + " ]", nIndent ) + hb_OSNewLine()
+         nIndent -= 3
 
       CASE cType == "O"
-           IF __objDerivedFrom( uValue, "HBPERSISTENT" )
-              cArray += uValue:SaveToText( cName + "[ " + AllTrim( Str( n ) ) + ;
-                                           " ]", nIndent )
-           ENDIF
+         IF __objDerivedFrom( uValue, "HBPERSISTENT" )
+            cArray += uValue:SaveToText( cName + "[ " + AllTrim( Str( n ) ) + ;
+                                         " ]", nIndent )
+         ENDIF
 
       OTHERWISE
-           IF n == 1
-              cArray += hb_OSNewLine()
-           ENDIF
-           cArray += Space( nIndent ) + "   ::" + cName + ;
-                     + "[ " + AllTrim( Str( n ) ) + " ]" + " = " + ;
-                     ValToText( uValue ) + hb_OSNewLine()
+         IF n == 1
+            cArray += hb_OSNewLine()
+         ENDIF
+         cArray += Space( nIndent ) + "   ::" + cName + ;
+                   + "[ " + AllTrim( Str( n ) ) + " ]" + " = " + ;
+                   ValToText( uValue ) + hb_OSNewLine()
       ENDCASE
    NEXT
 
@@ -220,22 +220,22 @@ STATIC FUNCTION ValToText( uValue )
 
    DO CASE
    CASE cType == "C"
-        cText := hb_StrToExp( uValue )
+      cText := hb_StrToExp( uValue )
 
    CASE cType == "N"
-        cText := AllTrim( Str( uValue ) )
+      cText := AllTrim( Str( uValue ) )
 
    CASE cType == "D"
-        cText := DToS( uValue )
-        cText := "0d" + iif( Empty( cText ), "00000000", cText )
+      cText := DToS( uValue )
+      cText := "0d" + iif( Empty( cText ), "00000000", cText )
 
    OTHERWISE
-        cText := hb_ValToStr( uValue )
+      cText := hb_ValToStr( uValue )
    ENDCASE
 
    RETURN cText
 
-// Notice: nFrom must be supplied by reference
+/* Notice: nFrom must be supplied by reference */
 
 STATIC FUNCTION ExtractLine( cText, nFrom )
 

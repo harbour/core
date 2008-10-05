@@ -110,7 +110,7 @@ STATIC FUNCTION _HSX_GOCOLD( nWA )
             /* update HSX indexes */
             FOR EACH nHSX IN aWData[ 2 ]
                nKeyNo := HS_KEYCOUNT( nHSX )
-               WHILE nKeyNo >= 0 .AND. nKeyNo < nRecNo
+               DO WHILE nKeyNo >= 0 .AND. nKeyNo < nRecNo
                   nKeyNo := HS_ADD( nHSX, "" )
                ENDDO
                IF nKeyNo >= nRecNo

@@ -299,7 +299,7 @@ FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
            
    ELSE
       /* When automain is off, just write all the toplevel variables. */
-      hb_HEval( hIni, { |cKey, xVal| IIF( ! hb_IsHash( xVal ),;
+      hb_HEval( hIni, { |cKey, xVal| iif( ! hb_IsHash( xVal ),;
                 FWrite( hFile, hb_CStr( cKey ) + " = " + ;
                                hb_CStr( xVal ) + cNewLine ), /* nothing */ ) } )
    ENDIF

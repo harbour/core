@@ -96,7 +96,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
    ENDIF
 
    nRetries := 0
-   DO WHILE ( nHandle := FOPEN( cFile, FO_READWRITE ) ) == F_ERROR
+   DO WHILE ( nHandle := FOpen( cFile, FO_READWRITE ) ) == F_ERROR
       oErr := ErrorNew()
       oErr:severity    := ES_ERROR
       oErr:genCode     := EG_OPEN
@@ -105,7 +105,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
       oErr:Description := "Open Error: " + cFile
       oErr:canDefault  := .T.
       oErr:canRetry    := .T.
-      oErr:OsCode      := FERROR()
+      oErr:OsCode      := FError()
       oErr:tries       := ++nRetries
       xRecover := Eval( ErrorBlock(), oErr )
       IF ISLOGICAL( xRecover ) .AND. !xRecover      // user select "Default"
@@ -122,22 +122,22 @@ PROCEDURE __TypeFile( cFile, lPrint )
    ENDIF
 
    nSize   := FSeek( nHandle, 0, FS_END )
-   nBuffer := MIN( nSize, BUFFER_LENGTH )
+   nBuffer := Min( nSize, BUFFER_LENGTH )
 
    FSeek( nHandle, 0 )  // go top
    // here we try to read a line at a time but I think we could just
    // display the whole buffer since it said: "without any headings or formating"
 
-   cbuffer := SPACE( nBuffer )
+   cbuffer := Space( nBuffer )
    ?                                                      // start in a new line
    DO WHILE ( nRead := fread( nHandle, @cbuffer, nBuffer ))  > 0
       nHasRead += nRead
       ?? cBuffer
-      nBuffer := MIN( nSize - nHasRead, nBuffer )
-      cbuffer := SPACE( nBuffer )
+      nBuffer := Min( nSize - nHasRead, nBuffer )
+      cbuffer := Space( nBuffer )
    ENDDO
 
-   FCLOSE( nHandle )
+   FClose( nHandle )
 
    IF lPrint
       Set( _SET_DEVICE,  aSaveSet[ 1 ] )

@@ -144,10 +144,10 @@ FUNCTION HBClass()
 
    RETURN __clsInst( s_hClass )
 
-// xSuper is used here as the new preprocessor file (hbclass.ch) send here
-// always an array (if no superclass, this will be an empty one)
-// In case of direct class creation (without the help of preprocessor) xSuper can be
-// either NIL or contain the name of the superclass.
+/* xSuper is used here as the new preprocessor file (hbclass.ch) send here
+   always an array (if no superclass, this will be an empty one)
+   In case of direct class creation (without the help of preprocessor) xSuper can be
+   either NIL or contain the name of the superclass. */
 
 STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
 
@@ -158,19 +158,19 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
 
    IF Empty( xSuper )
       ::asSuper := {}
-   ELSEIF VALTYPE( xSuper ) == "C"
+   ELSEIF ISCHARACTER( xSuper )
       ::asSuper := { __DynsN2Sym( xSuper ) }
-   ELSEIF VALTYPE( xSuper ) == "S"
+   ELSEIF hb_IsSymbol( xSuper )
       ::asSuper := { xSuper }
-   ELSEIF VALTYPE( xSuper ) == "A"
+   ELSEIF ISARRAY( xSuper )
       ::asSuper := {}
       nSuper := Len( xSuper )
       FOR i := 1 TO nSuper
          IF !Empty( xSuper[ i ] )
-            IF VALTYPE( xSuper[ i ] ) == "C"
-               AADD( ::asSuper, __DynsN2Sym( xSuper[ i ] ) )
-            ELSEIF VALTYPE( xSuper[ i ] ) == "S"
-               AADD( ::asSuper, xSuper[ i ] )
+            IF ISCHARACTER( xSuper[ i ] )
+               AAdd( ::asSuper, __DynsN2Sym( xSuper[ i ] ) )
+            ELSEIF hb_IsSymbol( xSuper[ i ] )
+               AAdd( ::asSuper, xSuper[ i ] )
             ENDIF
          ENDIF
       NEXT
@@ -197,7 +197,7 @@ STATIC PROCEDURE Create()
 
    LOCAL Self := QSelf()
    LOCAL n
-   LOCAL nLenDatas := Len( ::aDatas ) //Datas local to the class !!
+   LOCAL nLenDatas := Len( ::aDatas ) /* Datas local to the class !! */
    LOCAL nLen := Len( ::asSuper )
    LOCAL nClassBegin
    LOCAL hClass
@@ -206,7 +206,7 @@ STATIC PROCEDURE Create()
 /* Self:Class := MetaClass */
 
    FOR n := 1 TO nLen
-      hClass := __clsInstSuper( ::asSuper[ n ] ) // Super handle available
+      hClass := __clsInstSuper( ::asSuper[ n ] ) /* Super handle available */
       IF hClass != 0
          AAdd( ahSuper, hClass )
       ENDIF
@@ -231,7 +231,7 @@ STATIC PROCEDURE Create()
    //NEXT
    ////
 
-   //Local message...
+   /* Local message... */
 
    FOR n := 1 TO nLenDatas
       __clsAddMsg( hClass, ::aDatas[ n ][ HB_OO_DATA_SYMBOL ]       , n, ;
@@ -274,13 +274,13 @@ STATIC PROCEDURE Create()
       __clsAddMsg( hClass, "__Destructor", ::nDestructor, HB_OO_MSG_DESTRUCTOR )
    ENDIF
 
-   //Friend Classes
+   /* Friend Classes */
    nLen := Len( ::asFriendClass )
    FOR n := 1 TO nLen
       __clsAddFriend( ::hClass, ::asFriendClass[ n ] )
    NEXT
 
-   //Friend Functions
+   /* Friend Functions */
    nLen := Len( ::asFriendFunc )
    FOR n := 1 TO nLen
       __clsAddFriend( ::hClass, ::asFriendFunc[ n ] )
@@ -290,11 +290,8 @@ STATIC PROCEDURE Create()
 
 STATIC FUNCTION Instance()
    LOCAL Self := QSelf()
-   LOCAL oInstance := __clsInst( ::hClass )
 
-   /*oInstance:Class := Self:Class*/
-
-   RETURN oInstance
+   RETURN __clsInst( ::hClass )
 
 STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
@@ -303,7 +300,7 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
    DEFAULT lNoInit TO .F.
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
 
-   // Default Init for Logical and numeric
+   /* Default Init for Logical and numeric */
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
       c := Upper( Left( cType, 1 ) )
       IF c == "L"       /* Logical */
@@ -325,7 +322,7 @@ STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
    LOCAL nParam := Len( aData )
 
    FOR i := 1 TO nParam
-      IF VALTYPE( aData[ i ] ) == "C"
+      IF ISCHARACTER( aData[ i ] )
          QSelf():AddData( aData[ i ], xInit, cType, nScope, lNoInit )
       ENDIF
    NEXT
@@ -338,7 +335,7 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
    DEFAULT lNoInit TO .F.
 
-   // Default Init for Logical and numeric
+   /* Default Init for Logical and numeric */
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
       c := Upper( Left( cType, 1 ) )
       IF c == "L"       /* Logical */
@@ -360,7 +357,7 @@ STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
    LOCAL nParam := Len( aData )
 
    FOR i := 1 TO nParam
-      IF VALTYPE( aData[ i ] ) == "C"
+      IF ISCHARACTER( aData[ i ] )
          QSelf():AddClassData( aData[ i ], xInit, cType, nScope, lNoInit )
       ENDIF
    NEXT
@@ -399,9 +396,9 @@ STATIC PROCEDURE AddDelegate( xMethod, nAccScope, nAsgScope, cType, cDelegMsg, c
 
    LOCAL i
 
-   IF VALTYPE( xMethod ) == "C"
+   IF ISCHARACTER( xMethod )
       AAdd( QSelf():aDelegates, { xMethod, nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass } )
-   ELSEIF VALTYPE( xMethod ) == "A"
+   ELSEIF ISARRAY( xMethod )
       FOR i := 1 TO LEN( xMethod )
          AAdd( QSelf():aDelegates, { xMethod[ i ], nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass } )
       NEXT

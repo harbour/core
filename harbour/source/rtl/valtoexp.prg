@@ -52,21 +52,21 @@
 
 FUNCTION hb_VALTOEXP( xVal )
    LOCAL cVal
-   LOCAL v := VALTYPE( xVal )
+   LOCAL v := ValType( xVal )
 
    SWITCH v
       CASE "C"
       CASE "M"
-         cVal := HB_STRTOEXP( xVal )
+         cVal := hb_StrToExp( xVal )
          EXIT
       CASE "N"
-         cVal := LTRIM( STR( xVal ) )
+         cVal := LTrim( Str( xVal ) )
          EXIT
       CASE "D"
-         cVal := IIF( EMPTY( xVal ), "0d00000000", "0d" + DTOS( xVal ) )
+         cVal := iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
          EXIT
       CASE "L"
-         cVal := IIF( xVal, ".T.", ".F." )
+         cVal := iif( xVal, ".T.", ".F." )
          EXIT
       CASE "S"
          cVal := "@" + xVal:name + "()"
@@ -75,18 +75,18 @@ FUNCTION hb_VALTOEXP( xVal )
       CASE "O"
          cVal := "{"
          FOR EACH v IN xVal
-            cVal += IIF( v:__enumIndex() == 1, "", ", " ) + HB_VALTOEXP( v )
+            cVal += iif( v:__enumIndex() == 1, "", ", " ) + hb_ValToExp( v )
          NEXT
          cVal += "}"
          EXIT
       CASE "H"
-         IF EMPTY( xVal )
+         IF Empty( xVal )
             cVal := "{=>}"
          ELSE
             cVal := "{"
             FOR EACH v IN xVal
-               cVal += IIF( v:__enumIndex() == 1, "", ", " ) + ;
-                       HB_VALTOEXP( v:__enumKey() ) + "=>" + HB_VALTOEXP( v )
+               cVal += iif( v:__enumIndex() == 1, "", ", " ) + ;
+                       hb_ValToExp( v:__enumKey() ) + "=>" + hb_ValToExp( v )
             NEXT
             cVal += "}"
          ENDIF
@@ -107,19 +107,19 @@ FUNCTION hb_VALTOEXP( xVal )
 
    RETURN cVal
 
-FUNCTION hb_CSTR( xVal )
-   LOCAL v := VALTYPE( xVal )
+FUNCTION hb_CStr( xVal )
+   LOCAL v := ValType( xVal )
 
    SWITCH v
       CASE "C"
       CASE "M"
          RETURN xVal
       CASE "N"
-         RETURN STR( xVal )
+         RETURN Str( xVal )
       CASE "D"
-         RETURN IIF( EMPTY( xVal ), "0d00000000", "0d" + DTOS( xVal ) )
+         RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
       CASE "L"
-         RETURN IIF( xVal, ".T.", ".F." )
+         RETURN iif( xVal, ".T.", ".F." )
       CASE "S"
          RETURN "@" + xVal:name + "()"
       CASE "B"
@@ -127,9 +127,9 @@ FUNCTION hb_CSTR( xVal )
       CASE "O"
          RETURN "{ " + xVal:className + " Object }"
       CASE "A"
-         RETURN "{ Array of " + LTRIM( STR( LEN( xVal ) ) ) + " Items }"
+         RETURN "{ Array of " + LTrim( Str( Len( xVal ) ) ) + " Items }"
       CASE "H"
-         RETURN "{ Hash of " + LTRIM( STR( LEN( xVal ) ) ) + " Items }"
+         RETURN "{ Hash of " + LTrim( Str( Len( xVal ) ) ) + " Items }"
       CASE "P"
          RETURN "<pointer>"
       OTHERWISE
