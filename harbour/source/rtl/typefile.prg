@@ -54,19 +54,30 @@
 #include "error.ch"
 #include "fileio.ch"
 
-#define BUFFER_LENGTH 2048
+#define BUFFER_LENGTH 8192
 
 PROCEDURE __TypeFile( cFile, lPrint )
-   LOCAL nHandle, cBuffer, nRead := 0, nHasRead := 0, nSize := 0, nBuffer
-   LOCAL oErr, xRecover, nRetries
-   LOCAL aSaveSet[ 2 ]
-   LOCAL cDir, cName, cExt, cTmp, aPath, i
 
-   IF !ISLOGICAL( lPrint )
+   LOCAL nHandle
+   LOCAL cBuffer
+   LOCAL nRead
+   LOCAL nHasRead
+   LOCAL nSize
+   LOCAL nBuffer
+   LOCAL oErr
+   LOCAL xRecover
+   LOCAL nRetries
+   LOCAL aSaveSet[ 2 ]
+   LOCAL cDir, cName, cExt
+   LOCAL cTmp
+   LOCAL aPath
+   LOCAL i
+
+   IF ! ISLOGICAL( lPrint )
       lPrint := .F.
    ENDIF
 
-   IF !ISCHARACTER( cFile )
+   IF ! ISCHARACTER( cFile )
       oErr := ErrorNew()
       oErr:severity    := ES_ERROR
       oErr:genCode     := EG_OPEN
@@ -76,18 +87,18 @@ PROCEDURE __TypeFile( cFile, lPrint )
       Eval( ErrorBlock(), oErr )
    ENDIF
 
-   // If no drive/dir specified, search the SET DEFAULT and PATH directories
+   /* If no drive/dir specified, search the SET DEFAULT and PATH directories */
 
    hb_FNameSplit( cFile, @cDir, @cName, @cExt )
    IF Empty( cDir )
-      cTmp := SET( _SET_DEFAULT ) + ";" + SET( _SET_PATH )
+      cTmp := Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH )
       cTmp := StrTran( cTmp, ",", ";" )
       i := Len( cTmp )
-      DO WHILE SubStr( cTmp, i, 1 ) == ";"            // remove last ";"
-         cTmp := LEFT( cTmp, --i )
+      DO WHILE SubStr( cTmp, i, 1 ) == ";"            /* remove last ";" */
+         cTmp := Left( cTmp, --i )
       ENDDO
-      aPath := HB_ATOKENS( cTmp, ";" )
-      FOR i := 1 TO len( aPath )
+      aPath := hb_ATokens( cTmp, ";" )
+      FOR i := 1 TO Len( aPath )
          IF File( cTmp := hb_FNameMerge( aPath[ i ], cName, cExt ) )
             cFile := cTmp
             EXIT
@@ -108,13 +119,13 @@ PROCEDURE __TypeFile( cFile, lPrint )
       oErr:OsCode      := FError()
       oErr:tries       := ++nRetries
       xRecover := Eval( ErrorBlock(), oErr )
-      IF ISLOGICAL( xRecover ) .AND. !xRecover      // user select "Default"
+      IF ISLOGICAL( xRecover ) .AND. !xRecover      /* user select "Default" */
          RETURN
       ENDIF
    ENDDO
 
-   // NOTE: the NG say you should explicitly SET CONSOLE OFF if you wish to
-   //       suppress output to screen. [ckedem]
+   /* NOTE: the NG say you should explicitly SET CONSOLE OFF if you wish to
+            suppress output to screen. [ckedem] */
 
    IF lPrint
       aSaveSet[ 1 ] := Set( _SET_DEVICE, "PRINTER" )
@@ -125,16 +136,19 @@ PROCEDURE __TypeFile( cFile, lPrint )
    nBuffer := Min( nSize, BUFFER_LENGTH )
 
    FSeek( nHandle, 0 )  // go top
-   // here we try to read a line at a time but I think we could just
-   // display the whole buffer since it said: "without any headings or formating"
 
-   cbuffer := Space( nBuffer )
-   ?                                                      // start in a new line
-   DO WHILE ( nRead := fread( nHandle, @cbuffer, nBuffer ))  > 0
+   /* Here we try to read a line at a time but I think we could just
+      display the whole buffer since it said: 
+      "without any headings or formating" */
+
+   nHasRead := 0
+   cBuffer := Space( nBuffer )
+   QOut()                                                 /* starting a new line */
+   DO WHILE ( nRead := FRead( nHandle, @cBuffer, nBuffer ) ) > 0
       nHasRead += nRead
-      ?? cBuffer
+      QQOut( cBuffer )
       nBuffer := Min( nSize - nHasRead, nBuffer )
-      cbuffer := Space( nBuffer )
+      cBuffer := Space( nBuffer )
    ENDDO
 
    FClose( nHandle )

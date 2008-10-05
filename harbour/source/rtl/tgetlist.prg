@@ -508,7 +508,7 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
 
             IF oGet:typeOut
                IF Set( _SET_BELL )
-                  ?? Chr( 7 )
+                  QQOut( Chr( 7 ) )
                ENDIF
                IF ! Set( _SET_CONFIRM )
                   oGet:exitState := GE_ENTER

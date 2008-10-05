@@ -2034,17 +2034,21 @@ METHOD OSShell() CLASS HBDebugger
 
    SetColor( "W/N" )
    CLS
-   ? "Type 'exit' to RETURN to the Debugger"
+   QOut( "Type 'exit' to RETURN to the Debugger" )
    SetCursor( SC_NORMAL )
 
    BEGIN SEQUENCE WITH { | objErr | Break( objErr ) }
 
-      IF At( "WINDOWS", cOs ) != 0 .OR. At( "DOS", cOs ) != 0 .OR. At( "OS/2", cOs ) != 0
+      IF At( "WINDOWS", cOs ) != 0 .OR. ;
+         At( "DOS", cOs ) != 0 .OR. ;
+         At( "OS/2", cOs ) != 0
          cShell := GetEnv( "COMSPEC" )
-         RUN ( cShell )
-      ELSEIF At( "LINUX", cOs ) != 0 .OR. At( "BSD", cOs ) != 0 .OR. At( "DARWIN", cOs ) != 0
+         hb_Run( cShell )
+      ELSEIF At( "LINUX", cOs ) != 0 .OR. ;
+             At( "BSD", cOs ) != 0 .OR. ;
+             At( "DARWIN", cOs ) != 0
          cShell := GetEnv( "SHELL" )
-         RUN ( cShell )
+         hb_Run( cShell )
       ELSE
          Alert( "Not implemented yet!" )
       ENDIF

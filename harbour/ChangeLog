@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-06 01:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/debug/debugger.prg
+  * source/rtl/typefile.prg
+  * source/rtl/tgetlist.prg
+  * source/rtl/treport.prg
+  * source/rtl/teditor.prg
+    * Using [Q]QOut() functions instead of "[?]?" commands.
+    * Using hb_Run() function instead of RUN command.
+
+  * source/rtl/typefile.prg
+    % Upped read buffer.
+    * Formatting.
+    % Got rid of a few unnecessary initialization.
+
 2008-10-06 00:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbthread.h
     ! Blind fix for WinCE compilation after MT changes.

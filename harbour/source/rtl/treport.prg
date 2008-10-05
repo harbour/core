@@ -587,13 +587,12 @@ METHOD ExecuteReport() CLASS HBReportForm
    IF !::lFirstPass                       // Don't bother first time through
 
       // Make a pass through all the groups
-      FOR nGroup := Len(::aReportData[RPT_GROUPS]) TO 1 STEP -1
-
+      FOR nGroup := Len( ::aReportData[ RPT_GROUPS ] ) TO 1 STEP -1
 
          // make sure group has subtotals
          lAnySubTotals := .F.
-         FOR nCol := 1 TO Len(::aReportData[RPT_COLUMNS])
-            IF ::aReportData[RPT_COLUMNS,nCol,RCT_TOTAL]
+         FOR nCol := 1 TO Len( ::aReportData[ RPT_COLUMNS ] )
+            IF ::aReportData[ RPT_COLUMNS, nCol, RCT_TOTAL ]
                lAnySubTotals := .T.
                EXIT              // NOTE
             ENDIF
@@ -615,34 +614,34 @@ METHOD ExecuteReport() CLASS HBReportForm
          ENDIF
 
          //  If this (sub)group has changed since the last record
-         IF lGroupChanged .OR. MakeAStr(Eval(::aReportData[RPT_GROUPS,nGroup,RGT_EXP]),;
-             ::aReportData[RPT_GROUPS,nGroup,RGT_TYPE]) != ::aGroupTotals[nGroup]
+         IF lGroupChanged .OR. MakeAStr( Eval( ::aReportData[ RPT_GROUPS, nGroup, RGT_EXP ] ),;
+             ::aReportData[ RPT_GROUPS, nGroup, RGT_TYPE ] ) != ::aGroupTotals[ nGroup ]
 
-            AAdd( aRecordHeader, iif( nGroup == 1, __NatMsg(_RFRM_SUBTOTAL),;
-                                                   __NatMsg(_RFRM_SUBSUBTOTAL) ) )
+            AAdd( aRecordHeader, iif( nGroup == 1, __NatMsg( _RFRM_SUBTOTAL ),;
+                                                   __NatMsg( _RFRM_SUBSUBTOTAL ) ) )
             AAdd( aRecordHeader, "" )
 
 
             // Cycle through the columns, adding either the group
             // amount from ::aReportTotals or spaces wide enough for
             // the non-totaled columns
-            FOR nCol := 1 TO Len(::aReportData[RPT_COLUMNS])
-               IF ::aReportData[RPT_COLUMNS,nCol,RCT_TOTAL]
-                  aRecordHeader[ Len(aRecordHeader) ] += ;
-                     Transform(::aReportTotals[nGroup+1,nCol], ;
-                     ::aReportData[RPT_COLUMNS,nCol,RCT_PICT])
+            FOR nCol := 1 TO Len( ::aReportData[ RPT_COLUMNS ] )
+               IF ::aReportData[ RPT_COLUMNS, nCol, RCT_TOTAL ]
+                  aRecordHeader[ Len( aRecordHeader ) ] += ;
+                     Transform( ::aReportTotals[ nGroup + 1, nCol ], ;
+                     ::aReportData[ RPT_COLUMNS, nCol, RCT_PICT ] )
                   // Zero out the group totals column from aReportTotals
-                  ::aReportTotals[nGroup+1,nCol] := 0
+                  ::aReportTotals[ nGroup + 1, nCol ] := 0
                ELSE
-                  aRecordHeader[ Len(aRecordHeader) ] += ;
-                        Space(::aReportData[RPT_COLUMNS,nCol,RCT_WIDTH])
+                  aRecordHeader[ Len( aRecordHeader ) ] += ;
+                        Space( ::aReportData[ RPT_COLUMNS, nCol, RCT_WIDTH ] )
                ENDIF
-               aRecordHeader[ Len(aRecordHeader) ] += " "
+               aRecordHeader[ Len( aRecordHeader ) ] += " "
             NEXT
             // Get rid of the extra space from the last column
-            aRecordHeader[Len(aRecordHeader)] := ;
-                  LEFT( aRecordHeader[Len(aRecordHeader)], ;
-                  Len(aRecordHeader[Len(aRecordHeader)]) - 1 )
+            aRecordHeader[ Len( aRecordHeader ) ] := ;
+                  Left( aRecordHeader[ Len( aRecordHeader ) ], ;
+                  Len( aRecordHeader[ Len( aRecordHeader ) ] ) - 1 )
          ENDIF
       NEXT
 

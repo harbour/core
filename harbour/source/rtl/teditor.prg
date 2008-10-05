@@ -635,7 +635,7 @@ METHOD InsertState( lInsState ) CLASS HBEditor
 
    IF ISLOGICAL( lInsState )
       ::lInsert := lInsState
-      SET( _SET_INSERT, lInsState )
+      Set( _SET_INSERT, lInsState )
    ENDIF
 
    RETURN Self
