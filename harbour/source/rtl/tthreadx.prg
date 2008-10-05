@@ -55,12 +55,16 @@
 #ifdef HB_COMPAT_XPP
 
 CREATE CLASS TSignal FUNCTION Signal
+
    VAR cargo      AS USUAL EXPORTED
    VAR mutex      AS USUAL PROTECTED
-EXPORTED:
+
+   EXPORTED:
+
    METHOD new()
    METHOD wait( nTimeOut )
    METHOD signal()
+
 ENDCLASS
 
 METHOD new() CLASS TSIGNAL
@@ -68,7 +72,7 @@ METHOD new() CLASS TSIGNAL
    RETURN Self
 
 METHOD wait( nTimeOut ) CLASS TSIGNAL
-   /* TOCHECK: I do not know if strict xbase++ compatibility needs
+   /* TOCHECK: I do not know if strict Xbase++ compatibility needs
     *          hb_mutexSubscribe() or hb_mutexSubscribeNow()
     *          Please change it if necessary
     */

@@ -315,49 +315,49 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
       case HB_IT_STRING:
       case HB_IT_MEMO:
       {
-        ULONG ulLen = hb_itemGetCLen( pItem );
-
-        sString = hb_itemGetCPtr( pItem );
-
-        /* Check for hidden signature of SafeArrayToArray(). */
-        if( ( int ) ( pItem->item.asString.allocated - ulLen ) >= 5 && /* TOFIX */
-            sString[ ulLen ] == 0x7A && sString[ ulLen + 1 ] == 0x7B && sString[ ulLen + 2 ] == 0x7C && sString[ ulLen + 3 ] == 0x7D )
-        {
-           vt = (VARTYPE) sString[ ulLen + 4 ];
-           goto ItemToVariant_StringArray;
-        }
-
-        if( bByRef )
-        {
-           hb_itemPutCLConst( pItem, ( char * ) hb_oleAnsiToSysString( sString ), ulLen * 2 + 1 );
-
-           pVariant->n1.n2.vt   = VT_BYREF | VT_BSTR;
-           pVariant->n1.n2.n3.pbstrVal = ( BSTR * ) &( pItem->item.asString.value ); /* TOFIX */
-           /*wprintf( L"*** BYREF >%s<\n", *pVariant->n1.n2.n3.bstrVal );*/
-        }
-        else
-        {
-           pVariant->n1.n2.vt   = VT_BSTR;
-           pVariant->n1.n2.n3.bstrVal = hb_oleAnsiToSysString( sString );
-           /*wprintf( L"*** >%s<\n", pVariant->n1.n2.n3.bstrVal );*/
-        }
-        break;
+         ULONG ulLen = hb_itemGetCLen( pItem );
+        
+         sString = hb_itemGetCPtr( pItem );
+        
+         /* Check for hidden signature of SafeArrayToArray(). */
+         if( ( int ) ( pItem->item.asString.allocated - ulLen ) >= 5 && /* TOFIX */
+             sString[ ulLen ] == 0x7A && sString[ ulLen + 1 ] == 0x7B && sString[ ulLen + 2 ] == 0x7C && sString[ ulLen + 3 ] == 0x7D )
+         {
+            vt = ( VARTYPE ) sString[ ulLen + 4 ];
+            goto ItemToVariant_StringArray;
+         }
+        
+         if( bByRef )
+         {
+            hb_itemPutCLConst( pItem, ( char * ) hb_oleAnsiToSysString( sString ), ulLen * 2 + 1 );
+        
+            pVariant->n1.n2.vt   = VT_BYREF | VT_BSTR;
+            pVariant->n1.n2.n3.pbstrVal = ( BSTR * ) &( pItem->item.asString.value ); /* TOFIX */
+            /*wprintf( L"*** BYREF >%s<\n", *pVariant->n1.n2.n3.bstrVal );*/
+         }
+         else
+         {
+            pVariant->n1.n2.vt   = VT_BSTR;
+            pVariant->n1.n2.n3.bstrVal = hb_oleAnsiToSysString( sString );
+            /*wprintf( L"*** >%s<\n", pVariant->n1.n2.n3.bstrVal );*/
+         }
+         break;
       }
 
       case HB_IT_LOGICAL:
-        if( bByRef )
-        {
-           pVariant->n1.n2.vt = VT_BYREF | VT_BOOL;
-           pVariant->n1.n2.n3.pboolVal = ( short * ) &( pItem->item.asLogical.value ) ; /* TOFIX */
-           *pVariant->n1.n2.n3.pboolVal = hb_itemGetL( pItem ) ? VARIANT_TRUE : VARIANT_FALSE;
-           /*pItem->type = HB_IT_LONG;*/
-        }
-        else
-        {
-           pVariant->n1.n2.vt = VT_BOOL;
-           pVariant->n1.n2.n3.boolVal = hb_itemGetL( pItem ) ? VARIANT_TRUE : VARIANT_FALSE;
-        }
-        break;
+         if( bByRef )
+         {
+            pVariant->n1.n2.vt = VT_BYREF | VT_BOOL;
+            pVariant->n1.n2.n3.pboolVal = ( short * ) &( pItem->item.asLogical.value ) ; /* TOFIX */
+            *pVariant->n1.n2.n3.pboolVal = hb_itemGetL( pItem ) ? VARIANT_TRUE : VARIANT_FALSE;
+            /*pItem->type = HB_IT_LONG;*/
+         }
+         else
+         {
+            pVariant->n1.n2.vt = VT_BOOL;
+            pVariant->n1.n2.n3.boolVal = hb_itemGetL( pItem ) ? VARIANT_TRUE : VARIANT_FALSE;
+         }
+         break;
 
       case HB_IT_INTEGER:
 #if HB_INT_MAX == INT16_MAX
@@ -489,7 +489,7 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
                hb_vmPush( pItem );
                hb_vmSend( 0 );
 
-               vt = (VARTYPE) hb_parnl(-1);
+               vt = ( VARTYPE ) hb_parnl( -1 );
 
                /* aArray := oVTArray:Value */
                hb_vmPushDynSym( s_pSym_Value );
@@ -543,7 +543,7 @@ ItemToVariant_StringArray:
                hb_vmPush( pItem );
                hb_vmSend( 0 );
 
-               pVariant->n1.n2.vt = (VARTYPE) hb_parnl(-1);
+               pVariant->n1.n2.vt = ( VARTYPE ) hb_parnl( -1 );
 
                /* value := oVT:value */
                hb_vmPushDynSym( s_pSym_Value );
@@ -820,7 +820,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
                  break;
 
                default:
-                 if( (VARTYPE) ( pVariant->n1.n2.vt & ( VT_BYREF | VT_ARRAY ) ) == (VARTYPE) ( VT_BYREF | VT_ARRAY ) )
+                 if( ( VARTYPE ) ( pVariant->n1.n2.vt & ( VT_BYREF | VT_ARRAY ) ) == ( VARTYPE ) ( VT_BYREF | VT_ARRAY ) )
                  {
                     VARTYPE vt;
                     PHB_ITEM pArray;
