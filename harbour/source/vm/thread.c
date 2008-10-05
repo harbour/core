@@ -1346,9 +1346,14 @@ HB_FUNC( HB_MUTEXSUBSCRIBE )
       else
          pResult = hb_threadMutexSubscribe( pItem, FALSE );
 
-      hb_itemParamStoreForward( 3, pResult);
-      hb_itemRelease( pResult );
-      hb_retl( pResult != NULL );
+      if( pResult )
+      {
+         hb_itemParamStoreForward( 3, pResult );
+         hb_itemRelease( pResult );
+         hb_retl( TRUE );
+      }
+      else
+         hb_retl( FALSE );
    }
 }
 
@@ -1371,9 +1376,14 @@ HB_FUNC( HB_MUTEXSUBSCRIBENOW )
       else
          pResult = hb_threadMutexSubscribe( pItem, TRUE );
 
-      hb_itemParamStoreForward( 3, pResult);
-      hb_itemRelease( pResult );
-      hb_retl( pResult != NULL );
+      if( pResult )
+      {
+         hb_itemParamStoreForward( 3, pResult );
+         hb_itemRelease( pResult );
+         hb_retl( TRUE );
+      }
+      else
+         hb_retl( FALSE );
    }
 }
 
