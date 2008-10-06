@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-06 12:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+  * harbour/include/hboo.ch
+    + added SYNC attribute to accepted syntax in class declaration
+      it allows to compile code which uses this attribute but low
+      level implementation is not ready yet - work in progress
+
+  * harbour/source/vm/garbage.c
+    ! added #define INCL_DOSPROCESS for OS2 builds. For some reasons
+      #define INCL_DOSDATETIME I've found in DosSleep() documentation
+      is note enough
+
 2008-10-06 11:17 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/thread.c
     ! fixed typo in recent modification

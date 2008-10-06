@@ -50,7 +50,9 @@
  *
  */
 
+#define INCL_DOSPROCESS
 #define INCL_DOSDATETIME
+#define INCL_NOPMAPI
 
 #include "hbvmopt.h"
 #include "hbapi.h"

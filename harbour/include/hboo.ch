@@ -87,6 +87,7 @@
                                          by subclass(es) messages when executed
                                          from a given class message */
 #define HB_OO_CLSTP_OVERLOADED   1024 /* message overload NONVIRTUAL one */
+#define HB_OO_CLSTP_SYNC         2048 /* message synchronized by object or class mutex */
 
 /* Message types */
 #define HB_OO_MSG_METHOD        0
