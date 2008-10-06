@@ -125,10 +125,10 @@ FUNCTION HBClass()
       __clsAddMsg( s_hClass, "_aDelegates"    ,  9, HB_OO_MSG_ASSIGN )
       __clsAddMsg( s_hClass, "asSuper"        , 10, HB_OO_MSG_ACCESS )
       __clsAddMsg( s_hClass, "_asSuper"       , 10, HB_OO_MSG_ASSIGN )
-      __clsAddMsg( s_hClass, "nOnError"       , 11, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_nOnError"      , 11, HB_OO_MSG_ASSIGN )
-      __clsAddMsg( s_hClass, "nDestructor"    , 12, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_nDestructor"   , 12, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "sOnError"       , 11, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_sOnError"      , 11, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "sDestructor"    , 12, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_sDestructor"   , 12, HB_OO_MSG_ASSIGN )
       __clsAddMsg( s_hClass, "lModFriendly"   , 13, HB_OO_MSG_ACCESS )
       __clsAddMsg( s_hClass, "_lModFriendly"  , 13, HB_OO_MSG_ASSIGN )
       __clsAddMsg( s_hClass, "asFriendClass"  , 14, HB_OO_MSG_ACCESS )
@@ -231,7 +231,7 @@ STATIC PROCEDURE Create()
    //NEXT
    ////
 
-   /* Local message... */
+   /* local messages... */
 
    FOR n := 1 TO nLenDatas
       __clsAddMsg( hClass, ::aDatas[ n ][ HB_OO_DATA_SYMBOL ]       , n, ;
@@ -266,12 +266,12 @@ STATIC PROCEDURE Create()
       __clsAddMsg( hClass, ::aVirtuals[ n ], n, HB_OO_MSG_VIRTUAL )
    NEXT
 
-   IF ::nOnError != NIL
-      __clsAddMsg( hClass, "__OnError", ::nOnError, HB_OO_MSG_ONERROR )
+   IF ::sOnError != NIL
+      __clsAddMsg( hClass, "__OnError", ::sOnError, HB_OO_MSG_ONERROR )
    ENDIF
 
-   IF ::nDestructor != NIL
-      __clsAddMsg( hClass, "__Destructor", ::nDestructor, HB_OO_MSG_DESTRUCTOR )
+   IF ::sDestructor != NIL
+      __clsAddMsg( hClass, "__Destructor", ::sDestructor, HB_OO_MSG_DESTRUCTOR )
    ENDIF
 
    /* Friend Classes */
@@ -334,6 +334,8 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
    LOCAL c
 
    DEFAULT lNoInit TO .F.
+   DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
+   nScope := HB_BITOR( nScope, HB_OO_CLSTP_CLASS );
 
    /* Default Init for Logical and numeric */
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
@@ -382,6 +384,9 @@ STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
 
 STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
 
+   DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
+   nScope := HB_BITOR( nScope, HB_OO_CLSTP_CLASS );
+
    AAdd( QSelf():aClsMethods, { cMethod, nFuncPtr, nScope } )
 
    RETURN
@@ -422,15 +427,15 @@ STATIC PROCEDURE AddFriendFunc( ... )
 
    RETURN
 
-STATIC PROCEDURE SetOnError( nFuncPtr )
+STATIC PROCEDURE SetOnError( sFuncPtr )
 
-   QSelf():nOnError := nFuncPtr
+   QSelf():sOnError := sFuncPtr
 
    RETURN
 
-STATIC PROCEDURE SetDestructor( nFuncPtr )
+STATIC PROCEDURE SetDestructor( sFuncPtr )
 
-   QSelf():nDestructor := nFuncPtr
+   QSelf():sDestructor := sFuncPtr
 
    RETURN
 

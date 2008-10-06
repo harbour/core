@@ -8,6 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-06 21:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    ! fixed last commit typo in thread number allocating - all threads
+      where using 0 number
+
+  * harbour/source/vm/thread.c
+    ! fixed return value in recursive call to hb_mutexLock() - was FALSE
+    ! fixed typo in timeout parameter number
+      should be 2 instead of 1
+
+  * harbour/source/rtl/tobject.prg
+    ! fixed init() return value - it should be ignored and current
+      object should be returned
+
+  * harbour/source/rtl/tthreadx.prg
+    ! probably fixed timeout parameter use in signal:wait() method
+      I guess that like other xbase++ functions it's in 1/100th of
+      a second
+
+  * harbour/include/hboo.ch
+  * harbour/include/hbclass.ch
+  * harbour/source/vm/classes.c
+  * harbour/source/rtl/tclass.prg
+    + added support for SYNC object and CLASS messages working like
+      in xBase++. Please remember that all locked by thread SYNC messages
+      objects and classes are unblocked automatically for the time which
+      thread spends in hb_subscribe[Now]() or signal:wait()
+
 2008-10-06 21:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapifs.h
   * include/hbextern.ch

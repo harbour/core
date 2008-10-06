@@ -610,7 +610,7 @@ static void hb_vmStackAdd( PHB_THREADSTATE pState )
       }
       s_iStackCount++;
    }
-   if( pState->th_no )
+   if( pState->th_no == 0 )
       pState->th_no = ++s_threadNo;
 }
 

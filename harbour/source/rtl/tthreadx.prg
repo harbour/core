@@ -51,6 +51,7 @@
  */
 
 #include "hbclass.ch"
+#include "common.ch"
 
 #ifdef HB_COMPAT_XPP
 
@@ -76,7 +77,8 @@ METHOD wait( nTimeOut ) CLASS TSIGNAL
     *          hb_mutexSubscribe() or hb_mutexSubscribeNow()
     *          Please change it if necessary
     */
-   RETURN hb_mutexSubscribe( ::mutex, nTimeOut )
+   RETURN hb_mutexSubscribe( ::mutex, ;
+                             iif( ISNUMBER( nTimeOut ), nTimeOut / 100, ) )
 
 METHOD signal() CLASS TSIGNAL
    hb_mutexNotify( ::mutex )

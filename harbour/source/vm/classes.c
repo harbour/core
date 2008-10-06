@@ -145,6 +145,7 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
+#include "hbthread.h"
 #include "hboo.ch"
 
 #include <ctype.h>             /* For toupper() */
@@ -164,8 +165,9 @@ typedef struct
 typedef struct
 {
    PHB_DYNS pMessage;            /* Method symbolic name */
-   PHB_SYMB pFuncSym;            /* Function symbol */
    PHB_DYNS pAccMsg;             /* Corresponding access method symbolic name */
+   PHB_SYMB pFuncSym;            /* Function symbol */
+   PHB_SYMB pRealSym;            /* Real function symbol when wrapper is used */
    HB_TYPE  itemType;            /* Type of item in restricted assignment */
    USHORT   uiSprClass;          /* Originalclass'handel (super or current class'handel if not herited). */ /*Added by RAC&JF*/
    USHORT   uiScope;             /* Scoping value */
@@ -193,6 +195,7 @@ typedef struct
    PHB_ITEM pClassDatas;      /* Harbour Array for Class Datas */
    PHB_ITEM pSharedDatas;     /* Harbour Array for Class Shared Datas */
    PHB_ITEM pInlines;         /* Array for inline codeblocks */
+   PHB_ITEM pMutex;           /* Class sync method mutex */
    PHB_SYMB * pFriendSyms;    /* Friend functions' symbols */
    ULONG    ulOpFlags;        /* Flags for overloaded operators */
    USHORT   uiClass;          /* This class handle */
@@ -205,6 +208,7 @@ typedef struct
    USHORT   uiDataFirst;      /* First instance item from this class */
    USHORT   uiFriendSyms;     /* Number of friend function's symbols */
    USHORT   uiFriendModule;   /* Number of friend symbols in pFriendModule */
+   USHORT   uiMutexOffset;    /* Offset in instance area to SYNC method mutex */
    USHORT   uiHashKey;
 #ifdef HB_MSG_POOL
    USHORT * puiMsgIdx;
@@ -250,6 +254,8 @@ static HARBOUR  hb___msgSuper( void );
 static HARBOUR  hb___msgRealClass( void );
 static HARBOUR  hb___msgPerform( void );
 static HARBOUR  hb___msgDelegate( void );
+static HARBOUR  hb___msgSync( void );
+static HARBOUR  hb___msgSyncClass( void );
 static HARBOUR  hb___msgNoMethod( void );
 static HARBOUR  hb___msgScopeErr( void );
 static HARBOUR  hb___msgTypeErr( void );
@@ -317,6 +323,8 @@ static HB_SYMB s___msgSuper      = { "__msgSuper",      {HB_FS_MESSAGE}, {hb___m
 static HB_SYMB s___msgRealClass  = { "__msgRealClass",  {HB_FS_MESSAGE}, {hb___msgRealClass},  NULL };
 static HB_SYMB s___msgPerform    = { "__msgPerform",    {HB_FS_MESSAGE}, {hb___msgPerform},    NULL };
 static HB_SYMB s___msgDelegate   = { "__msgDelegate",   {HB_FS_MESSAGE}, {hb___msgDelegate},   NULL };
+static HB_SYMB s___msgSync       = { "__msgSync",       {HB_FS_MESSAGE}, {hb___msgSync},       NULL };
+static HB_SYMB s___msgSyncClass  = { "__msgSyncClass",  {HB_FS_MESSAGE}, {hb___msgSyncClass},  NULL };
 static HB_SYMB s___msgNoMethod   = { "__msgNoMethod",   {HB_FS_MESSAGE}, {hb___msgNoMethod},   NULL };
 static HB_SYMB s___msgScopeErr   = { "__msgScopeErr",   {HB_FS_MESSAGE}, {hb___msgScopeErr},   NULL };
 static HB_SYMB s___msgTypeErr    = { "__msgTypeErr",    {HB_FS_MESSAGE}, {hb___msgTypeErr},    NULL };
@@ -917,7 +925,10 @@ static void hb_clsCopyClass( PCLASS pClsDst, PCLASS pClsSrc )
    pClsDst->pSharedDatas = hb_itemArrayNew( 0 );
    pClsDst->pInlines = hb_arrayClone( pClsSrc->pInlines );
    pClsDst->uiDatas = pClsSrc->uiDatas;
+   pClsDst->uiMutexOffset = pClsSrc->uiMutexOffset;
    pClsDst->ulOpFlags = pClsSrc->ulOpFlags;
+   if( pClsSrc->pMutex )
+      pClsDst->pMutex = hb_threadMutexCreate( TRUE );
 
    if( pClsSrc->uiInitDatas )
    {
@@ -2514,20 +2525,18 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem, HB_TYPE nDefault )
  *             HB_OO_MSG_VIRTUAL    : virtual method
  *             HB_OO_MSG_DELEGATE   : delegate method
  *
- * <uiScope> * HB_OO_CLSTP_EXPORTED        1 : default for data and method
+ * <uiScope>   HB_OO_CLSTP_EXPORTED        1 : default for data and method
  *             HB_OO_CLSTP_PROTECTED       2 : method or data protected
  *             HB_OO_CLSTP_HIDDEN          4 : method or data hidden
  *           * HB_OO_CLSTP_CTOR            8 : method constructor
  *             HB_OO_CLSTP_READONLY       16 : data read only
  *             HB_OO_CLSTP_SHARED         32 : (method or) data shared
- *           * HB_OO_CLSTP_CLASS          64 : message is the name of a superclass
+ *             HB_OO_CLSTP_CLASS          64 : message is class message not object
  *           * HB_OO_CLSTP_SUPER         128 : message is herited
  *             HB_OO_CLSTP_PERSIST       256 : message is persistent (PROPERTY)
  *             HB_OO_CLSTP_NONVIRTUAL    512 : Class method constructor
  *             HB_OO_CLSTP_OVERLOADED   1024 : Class method constructor
- *
- *             HB_OO_CLSTP_CLASSCTOR    2048 : Class method constructor
- *             HB_OO_CLSTP_CLASSMETH    4096 : Class method
+ *             HB_OO_CLSTP_SYNC         2048 : message synchronized by object or class mutex
  *
  * <pFunction> HB_OO_MSG_METHOD     : \
  *             HB_OO_MSG_ONERROR    :  > Pointer to function
@@ -2884,6 +2893,23 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
       }
 
       pClass->ulOpFlags |= ulOpFlags;
+
+      if( uiScope & HB_OO_CLSTP_SYNC )
+      {
+         pNewMeth->pRealSym = pNewMeth->pFuncSym;
+         if( uiScope & HB_OO_CLSTP_CLASS )
+         {
+            if( !pClass->pMutex )
+               pClass->pMutex = hb_threadMutexCreate( TRUE );
+            pNewMeth->pFuncSym = &s___msgSyncClass;
+         }
+         else
+         {
+            if( !pClass->uiMutexOffset )
+               pClass->uiMutexOffset = pClass->uiDatas + 1;
+            pNewMeth->pFuncSym = &s___msgSync;
+         }
+      }
    }
 
    return TRUE;   
@@ -2924,20 +2950,18 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
  *             HB_OO_MSG_CLSASSIGN: :   empty character value where first letter
  *                                      is item type or item of a given value
  *
- * <uiScope> * HB_OO_CLSTP_EXPORTED        1 : default for data and method
+ * <uiScope>   HB_OO_CLSTP_EXPORTED        1 : default for data and method
  *             HB_OO_CLSTP_PROTECTED       2 : method or data protected
  *             HB_OO_CLSTP_HIDDEN          4 : method or data hidden
  *           * HB_OO_CLSTP_CTOR            8 : method constructor
  *             HB_OO_CLSTP_READONLY       16 : data read only
  *             HB_OO_CLSTP_SHARED         32 : (method or) data shared
- *           * HB_OO_CLSTP_CLASS          64 : message is the name of a superclass
+ *           * HB_OO_CLSTP_CLASS          64 : message is class message not object
  *           * HB_OO_CLSTP_SUPER         128 : message is herited
  *             HB_OO_CLSTP_PERSIST       256 : message is persistent (PROPERTY)
  *             HB_OO_CLSTP_NONVIRTUAL    512 : Class method constructor
  *             HB_OO_CLSTP_OVERLOADED   1024 : Class method constructor
- *
- *             HB_OO_CLSTP_CLASSCTOR    2048 : Class method constructor
- *             HB_OO_CLSTP_CLASSMETH    4096 : Class method
+ *             HB_OO_CLSTP_SYNC         2048 : message synchronized by object or class mutex
  */
 
 HB_FUNC( __CLSADDMSG )
@@ -3018,6 +3042,7 @@ static USHORT hb_clsNew( const char * szClassName, USHORT uiDatas,
    PMETHOD pMethod;
    USHORT ui, uiSuper, uiSuperCls;
    USHORT * puiClassData = NULL, uiClassDataSize = 0;
+   BOOL fClsMutex = FALSE;
 
    uiSuper  = ( USHORT ) ( pSuperArray ? hb_arrayLen( pSuperArray ) : 0 );
    pClassFunc = hb_vmGetRealFuncSym( pClassFunc );
@@ -3198,6 +3223,10 @@ static USHORT hb_clsNew( const char * szClassName, USHORT uiDatas,
                }
             }
             pNewCls->ulOpFlags |= pSprCls->ulOpFlags;
+            if( pSprCls->uiMutexOffset )
+               pNewCls->uiMutexOffset = 1;
+            if( pSprCls->pMutex )
+               fClsMutex = TRUE;
          }
       }
    }
@@ -3230,6 +3259,10 @@ static USHORT hb_clsNew( const char * szClassName, USHORT uiDatas,
    }
    pNewCls->uiDataFirst = pNewCls->uiDatas;
    pNewCls->uiDatas += uiDatas;
+   if( pNewCls->uiMutexOffset )
+      pNewCls->uiMutexOffset = pNewCls->uiDatas + 1;
+   if( fClsMutex && !pNewCls->pMutex )
+      pNewCls->pMutex = hb_threadMutexCreate( TRUE );
 
    return s_uiClasses;
 }
@@ -3344,11 +3377,20 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
    if( uiClass && uiClass <= s_uiClasses )
    {
       PCLASS   pClass = s_pClasses[ uiClass ];
+      USHORT   uiDatas = pClass->uiDatas;
 
+      if( pClass->uiMutexOffset )
+         ++uiDatas;
       pSelf = hb_itemNew( NULL );
-      hb_arrayNew( pSelf, pClass->uiDatas );
+      hb_arrayNew( pSelf, uiDatas );
       pSelf->item.asArray.value->uiClass = uiClass;
 
+      if( pClass->uiMutexOffset )
+      {
+         PHB_ITEM pMutex = hb_threadMutexCreate( TRUE );
+         hb_arraySet( pSelf, pClass->uiMutexOffset, pMutex );
+         hb_itemRelease( pMutex );
+      }
       /* Initialise value if initialisation was requested */
       if( pClass->uiInitDatas )
       {
@@ -4047,7 +4089,7 @@ static HARBOUR hb___msgPerform( void )
    {
       if( HB_IS_SYMBOL( pItem ) )
          pSym = pItem->item.asSymbol.value;
-      
+
       else if( HB_IS_OBJECT( pItem ) &&
                s_pClasses[ pItem->item.asArray.value->uiClass ]->pClassSym ==
                s___msgSymbol.pDynSym )
@@ -4074,10 +4116,9 @@ static HARBOUR hb___msgPerform( void )
 
 static HARBOUR hb___msgDelegate( void )
 {
-   PCLASS pClass   = s_pClasses[
-                  hb_stackBaseItem()->item.asSymbol.stackstate->uiClass ];
-   PMETHOD pMethod = pClass->pMethods +
-                  hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
+   PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
+   PCLASS pClass   = s_pClasses[ pStack->uiClass ];
+   PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
    PHB_SYMB pExecSym = pClass->pMethods[ pMethod->uiData ].pFuncSym;
 
    if( pExecSym && pExecSym->value.pFunPtr )
@@ -4085,9 +4126,71 @@ static HARBOUR hb___msgDelegate( void )
       if( pExecSym->scope.value & HB_FS_PCODEFUNC )
          /* Running pCode dynamic function from .hrb */
          hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
-                    pExecSym->value.pCodeFunc->pSymbols );
+                       pExecSym->value.pCodeFunc->pSymbols );
       else
          pExecSym->value.pFunPtr();
+   }
+   else
+   {
+      hb___msgNoMethod();
+   }
+}
+
+static HARBOUR hb___msgSync( void )
+{
+   PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
+   PCLASS pClass = s_pClasses[ pStack->uiClass ];
+   PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
+   PHB_SYMB pExecSym = pMethod->pRealSym;
+
+   if( pExecSym && pExecSym->value.pFunPtr )
+   {
+      PHB_ITEM pObject = hb_stackSelfItem();
+      USHORT uiClass = hb_objGetClass( pObject );
+      PHB_ITEM pMutex = NULL;
+
+      if( uiClass && uiClass <= s_uiClasses )
+         pMutex = hb_arrayGetItemPtr( pObject, s_pClasses[ uiClass ]->uiMutexOffset );
+
+      if( !pMutex || hb_threadMutexLock( pMutex ) )
+      {
+         if( pExecSym->scope.value & HB_FS_PCODEFUNC )
+            /* Running pCode dynamic function from .hrb */
+            hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
+                          pExecSym->value.pCodeFunc->pSymbols );
+         else
+            pExecSym->value.pFunPtr();
+
+         if( pMutex )
+            hb_threadMutexUnlock( pMutex );
+      }
+   }
+   else
+   {
+      hb___msgNoMethod();
+   }
+}
+
+static HARBOUR hb___msgSyncClass( void )
+{
+   PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
+   PCLASS pClass = s_pClasses[ pStack->uiClass ];
+   PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
+   PHB_SYMB pExecSym = pMethod->pRealSym;
+
+   if( pExecSym && pExecSym->value.pFunPtr )
+   {
+      if( hb_threadMutexLock( pClass->pMutex ) )
+      {
+         if( pExecSym->scope.value & HB_FS_PCODEFUNC )
+            /* Running pCode dynamic function from .hrb */
+            hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
+                          pExecSym->value.pCodeFunc->pSymbols );
+         else
+            pExecSym->value.pFunPtr();
+
+         hb_threadMutexUnlock( pClass->pMutex );
+      }
    }
    else
    {

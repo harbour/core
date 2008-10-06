@@ -81,8 +81,6 @@ static PHB_ITEM s_pOnceMutex = NULL;
 #else
 
 #  if defined( HB_PTHREAD_API )
-   struct timespec ts;
-
    static void hb_threadTimeInit( struct timespec * ts, ULONG ulMilliSec )
    {
 #     if _POSIX_C_SOURCE >= 199309L
@@ -1037,7 +1035,10 @@ BOOL hb_threadMutexLock( PHB_ITEM pItem )
    if( pMutex )
    {
       if( HB_THREAD_EQUAL( pMutex->owner, HB_THREAD_SELF() ) )
+      {
          pMutex->lock_count++;
+         fResult = TRUE;
+      }
       else
       {
          hb_vmUnlock();
@@ -1080,7 +1081,10 @@ BOOL hb_threadMutexTimedLock( PHB_ITEM pItem, ULONG ulMilliSec )
    if( pMutex )
    {
       if( HB_THREAD_EQUAL( pMutex->owner, HB_THREAD_SELF() ) )
+      {
          pMutex->lock_count++;
+         fResult = TRUE;
+      }
       else
       {
          hb_vmUnlock();
@@ -1235,10 +1239,14 @@ PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, BOOL fClear )
 #else
       PHB_MTXLST pSyncList = NULL;
 
-      hb_mutexUnlockList( &s_pSyncList, &pSyncList );
       hb_vmUnlock();
 
       HB_CRITICAL_LOCK( pMutex->mutex );
+
+      /* SYNC method mutexes cannot be used for subscribe so it's safe
+       * to unlock them when THIS mutex is internally locked
+       */
+      hb_mutexUnlockList( &s_pSyncList, &pSyncList );
 
       if( fClear && pMutex->events )
          hb_arraySize( pMutex->events, 0 );
@@ -1266,8 +1274,9 @@ PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, BOOL fClear )
 
       HB_CRITICAL_UNLOCK( pMutex->mutex );
 
-      hb_vmLock();
       hb_mutexLockList( pSyncList );
+
+      hb_vmLock();
 #endif
    }
    return pResult;
@@ -1298,10 +1307,15 @@ PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, BOOL fC
 #else
       PHB_MTXLST pSyncList = NULL;
 
-      hb_mutexUnlockList( &s_pSyncList, &pSyncList );
       hb_vmUnlock();
 
       HB_CRITICAL_LOCK( pMutex->mutex );
+
+      /* SYNC method mutexes cannot be used for subscribe so it's safe
+       * to unlock them when THIS mutex is internally locked
+       */
+      if( ulMilliSec )
+         hb_mutexUnlockList( &s_pSyncList, &pSyncList );
 
       if( fClear && pMutex->events )
          hb_arraySize( pMutex->events, 0 );
@@ -1338,8 +1352,9 @@ PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, BOOL fC
 
       HB_CRITICAL_UNLOCK( pMutex->mutex );
 
-      hb_vmLock();
       hb_mutexLockList( pSyncList );
+
+      hb_vmLock();
 #endif
    }
    return pResult;
@@ -1359,7 +1374,7 @@ HB_FUNC( HB_MUTEXLOCK )
       if( ISNUM( 2 ) )
       {
          ULONG ulMilliSec = 0;
-         double dTimeOut = hb_parnd( 1 );
+         double dTimeOut = hb_parnd( 2 );
          if( dTimeOut > 0 )
             ulMilliSec = ( ULONG ) ( dTimeOut * 1000 );
          hb_retl( hb_threadMutexTimedLock( pItem, ulMilliSec ) );
@@ -1404,7 +1419,7 @@ HB_FUNC( HB_MUTEXSUBSCRIBE )
       if( ISNUM( 2 ) )
       {
          ULONG ulMilliSec = 0;
-         double dTimeOut = hb_parnd( 1 );
+         double dTimeOut = hb_parnd( 2 );
          if( dTimeOut > 0 )
             ulMilliSec = ( ULONG ) ( dTimeOut * 1000 );
          pResult = hb_threadMutexTimedSubscribe( pItem, ulMilliSec, FALSE );
@@ -1434,7 +1449,7 @@ HB_FUNC( HB_MUTEXSUBSCRIBENOW )
       if( ISNUM( 2 ) )
       {
          ULONG ulMilliSec = 0;
-         double dTimeOut = hb_parnd( 1 );
+         double dTimeOut = hb_parnd( 2 );
          if( dTimeOut > 0 )
             ulMilliSec = ( ULONG ) ( dTimeOut * 1000 );
          pResult = hb_threadMutexTimedSubscribe( pItem, ulMilliSec, TRUE );

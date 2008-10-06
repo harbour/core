@@ -79,12 +79,11 @@
 #define HB_OO_CLSTP_READONLY       16 /* No comment */
 #define HB_OO_CLSTP_SHARED         32 /* Allow a classvar (or classmethod) to be shared by all the subclasses.
                                          Not the default behaviour as each subclass will have its own copy by default. */
-#define HB_OO_CLSTP_CLASS          64 /* The related message is a superobject call, uidata is the superclass handle
-                                         pInitValue contain one superclass object instance (absolutely needed for Inline msg and class data) */
+#define HB_OO_CLSTP_CLASS          64 /* message is class message not object */
 #define HB_OO_CLSTP_SUPER         128 /* The related message is inherited from a superclass */
 #define HB_OO_CLSTP_PERSIST       256 /* Message is persistent (PROPERTY) */
 #define HB_OO_CLSTP_NONVIRTUAL    512 /* Non Virtual message - should not be covered
-                                         by subclass(es) messages when executed
+                                         by subclass(es) messages with the same name when executed
                                          from a given class message */
 #define HB_OO_CLSTP_OVERLOADED   1024 /* message overload NONVIRTUAL one */
 #define HB_OO_CLSTP_SYNC         2048 /* message synchronized by object or class mutex */

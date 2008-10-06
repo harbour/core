@@ -155,7 +155,8 @@ FUNCTION HBObject()
 
 
 STATIC function HBObject_New( ... )
-   RETURN QSelf():Init( ... )
+   QSelf():Init( ... )
+   RETURN QSelf()
 
 STATIC FUNCTION HBObject_Init()
    RETURN QSelf()
