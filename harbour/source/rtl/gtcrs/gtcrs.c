@@ -1412,7 +1412,7 @@ static char *tiGetS( const char *capname )
 {
    char *ptr;
 
-   ptr = tigetstr( capname );
+   ptr = tigetstr( ( char * ) capname );
    if ( ptr )
    {
       if ( ptr == ( char * ) -1 )

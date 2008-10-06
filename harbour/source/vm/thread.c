@@ -74,6 +74,7 @@
 #endif
 
 static volatile BOOL s_fThreadInit = FALSE;
+static PHB_ITEM s_pOnceMutex = NULL;
 
 #if !defined( HB_MT_VM )
    /* nothing */
@@ -100,6 +101,8 @@ static volatile BOOL s_fThreadInit = FALSE;
 
 #  if defined( HB_CRITICAL_INIT )
    static HB_RAWCRITICAL_T s_critical_init;
+   static HB_RAWCRITICAL_T s_critical_once;
+   static HB_RAWCRITICAL_T s_critical_mtx;
    static void hb_threadCriticalInit( HB_CRITICAL_T * critical )
    {
       if( !s_fThreadInit )
@@ -114,10 +117,12 @@ static volatile BOOL s_fThreadInit = FALSE;
       HB_CRITICAL_UNLOCK( s_critical_init );
    }
 #  else
-   static HB_CRITICAL_NEW( s_critical_init );
+   static HB_CRITICAL_NEW( s_critical_once );
+   static HB_CRITICAL_NEW( s_critical_mtx );
 #  endif
 
 #  if defined( HB_COND_INIT )
+      static HB_CRITICAL_NEW( s_critical_init );
       static void hb_threadCondInit( HB_COND_T * cond )
       {
          if( !s_fThreadInit )
@@ -147,6 +152,8 @@ void hb_threadInit( void )
       /* nothing to do */
 #elif defined( HB_CRITICAL_INIT )
       HB_CRITICAL_INIT( s_critical_init );
+      HB_CRITICAL_INIT( s_critical_once );
+      HB_CRITICAL_INIT( s_critical_mtx );
 #endif
       s_fThreadInit = TRUE;
    }
@@ -157,10 +164,17 @@ void hb_threadExit( void )
    if( s_fThreadInit )
    {
       s_fThreadInit = FALSE;
+      if( s_pOnceMutex )
+      {
+         hb_itemRelease( s_pOnceMutex );
+         s_pOnceMutex = NULL;
+      }
 #if !defined( HB_MT_VM )
       /* nothing to do */
 #elif defined( HB_CRITICAL_DESTROY )
       HB_CRITICAL_DESTROY( s_critical_init );
+      HB_CRITICAL_DESTROY( s_critical_once );
+      HB_CRITICAL_DESTROY( s_critical_mtx );
 #endif
    }
 }
@@ -761,6 +775,50 @@ HB_FUNC( HB_THREADTERMINATEALL )
 #endif
 }
 
+HB_FUNC( HB_THREADONCE )
+{
+   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
+   if( pItem && ISBYREF( 1 ) )
+   {
+      BOOL fFirstCall = FALSE;
+      if( HB_IS_NIL( pItem ) )
+      {
+         PHB_ITEM pAction = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+
+#if defined( HB_MT_VM )
+         if( !s_pOnceMutex )
+         {
+            if( !s_fThreadInit )
+               hb_threadInit();
+            HB_CRITICAL_LOCK( s_critical_once );
+            if( !s_pOnceMutex )
+               s_pOnceMutex = hb_threadMutexCreate( FALSE );
+            HB_CRITICAL_UNLOCK( s_critical_once );
+         }
+         if( hb_threadMutexLock( s_pOnceMutex ) )
+         {
+            if( HB_IS_NIL( pItem ) )
+            {
+               hb_storl( TRUE, 1 );
+               fFirstCall = TRUE;
+               if( pAction )
+                  hb_vmEvalBlock( pAction );
+            }
+            hb_threadMutexUnlock( s_pOnceMutex );
+         }
+#else
+         hb_storl( TRUE, 1 );
+         fFirstCall = TRUE;
+         if( pAction )
+            hb_vmEvalBlock( pAction );
+#endif
+      }
+      hb_retl( fFirstCall );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /* II. MUTEXES */
 
 typedef struct _HB_MUTEX
@@ -819,7 +877,7 @@ static void hb_mutexUnlink( PHB_MUTEX *pList, PHB_MUTEX pItem )
 #if defined( HB_MT_VM )
 static void hb_mutexUnlockList( PHB_MUTEX * pList, PHB_MTXLST * pStore )
 {
-   HB_CRITICAL_LOCK( s_critical_init );
+   HB_CRITICAL_LOCK( s_critical_mtx );
    if( *pList )
    {
       PHB_MUTEX pMutex = *pList;
@@ -848,7 +906,7 @@ static void hb_mutexUnlockList( PHB_MUTEX * pList, PHB_MTXLST * pStore )
       }
       while( pMutex != *pList );
    }
-   HB_CRITICAL_UNLOCK( s_critical_init );
+   HB_CRITICAL_UNLOCK( s_critical_mtx );
 }
 
 static void hb_mutexLockList( PHB_MTXLST pList )
@@ -894,9 +952,9 @@ static HB_GARBAGE_FUNC( hb_mutexDestructor )
    PHB_MUTEX pMutex = ( PHB_MUTEX ) Cargo;
 
 #if defined( HB_MT_VM )
-   HB_CRITICAL_LOCK( s_critical_init );
+   HB_CRITICAL_LOCK( s_critical_mtx );
    hb_mutexUnlink( pMutex->fSync ? &s_pSyncList : &s_pMutexList, pMutex );
-   HB_CRITICAL_UNLOCK( s_critical_init );
+   HB_CRITICAL_UNLOCK( s_critical_mtx );
 #else
    hb_mutexUnlink( pMutex->fSync ? &s_pSyncList : &s_pMutexList, pMutex );
 #endif
@@ -953,9 +1011,9 @@ PHB_ITEM hb_threadMutexCreate( BOOL fSync )
 
    pMutex->fSync = fSync;
 #if defined( HB_MT_VM )
-   HB_CRITICAL_LOCK( s_critical_init );
+   HB_CRITICAL_LOCK( s_critical_mtx );
    hb_mutexLink( fSync ? &s_pSyncList : &s_pMutexList, pMutex );
-   HB_CRITICAL_UNLOCK( s_critical_init );
+   HB_CRITICAL_UNLOCK( s_critical_mtx );
 #else
    hb_mutexLink( fSync ? &s_pSyncList : &s_pMutexList, pMutex );
 #endif

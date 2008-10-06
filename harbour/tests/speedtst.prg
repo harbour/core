@@ -55,10 +55,11 @@
 
 
 proc main( ... )
-   local aParams, nMT, cExclude, lScale, cParam, lSyntax, i
+   local aParams, nMT, cExclude, lScale, cParam, cMemTests, lSyntax, i
 
    aParams := hb_aparams()
    lSyntax := lScale := .f.
+   cMemTests := "029 030 023 025 027 040 041 043 052 053 019 022 031 032 054 "
    cExclude := ""
    nMT := 0
    for each cParam in aParams
@@ -79,13 +80,16 @@ proc main( ... )
          endif
       elseif cParam = "--exclude="
          if substr( cParam, 11 ) == "mem"
-            cExclude += "029 030 023 025 027 040 041 043 052 053 019 022 031 032 "
+            cExclude += cMemTests
          else
             cExclude += strtran( strtran( strtran( substr( cParam, 11 ), ;
                         ".", " " ), ".", " " ), "/", " " ) + " "
          endif
       elseif cParam = "--only="
          cExclude := ""
+         if substr( cParam, 8 ) == "mem"
+            cParam := cMemTests
+         endif
          for i := 1 to N_TESTS
             if !strzero( i, 3 ) $ cParam
                cExclude += strzero( i, 3 ) + " "
@@ -213,6 +217,30 @@ return
    return nil
 
 #endif
+
+/* initialize mutex in hb_trheadDoOnce() */
+init proc once_init()
+   hb_threadOnce()
+return
+
+function hb_threadOnce( xOnceControl, bAction )
+   static s_mutex
+   local lFirstCall := .f.
+   if s_mutex == NIL
+      s_mutex := hb_mutexCreate()
+   endif
+   if xOnceControl == NIL
+      hb_mutexLock( s_mutex )
+      if xOnceControl == NIL
+         xOnceControl := .t.
+         lFirstCall := .t.
+         if bAction != NIL
+            eval( bAction )
+         endif
+      endif
+      hb_mutexUnlock( s_mutex )
+   endif
+return lFirstCall
 
 #endif
 
@@ -388,30 +416,6 @@ TEST t052 CODE x := f4()
 TEST t053 CODE x := f5()
 
 TEST t054 WITH c := dtos( date() ) CODE f_prv( c )
-
-/* initialize mutex in hb_trheadDoOnce() */
-init proc once_init()
-   hb_threadOnce()
-return
-
-function hb_threadOnce( xOnceControl, bAction )
-   static s_mutex
-   local lFirstCall := .f.
-   if s_mutex == NIL
-      s_mutex := hb_mutexCreate()
-   endif
-   if xOnceControl == NIL
-      hb_mutexLock( s_mutex )
-      if xOnceControl == NIL
-         xOnceControl := .t.
-         lFirstCall := .t.
-         if bAction != NIL
-            eval( bAction )
-         endif
-      endif
-      hb_mutexUnlock( s_mutex )
-   endif
-return lFirstCall
 
 function thTest( mtxJobs, aResults )
    local xJob

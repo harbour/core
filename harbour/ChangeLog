@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-06 02:18 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/speedtst.prg
+    * marked T054 as memory tests
+
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/thread.c
+    * added hb_threadOnce( @<onceControl> [, <bAction> ] ) -> <lFirstCall>
+      This function allow to execute some code only once. It's usefull in
+      MT environment for initialization.
+      <onceControl> is variable which holds the execution status and have
+      to be initialized to NIL. In most of cases it will be simple static
+      variable in user code.
+      <bAction> is optional codeblock which is executed only once (on 1-st
+      call with given <onceControl>)
+
+  * harbour/source/rtl/filesys.c
+    ! do not make any file name conversions in hb_fsNameConv() if HVM stack
+      is not allocated
+
+  * harbour/source/rtl/gtcrs/gtcrs.c
+    * casting
+
 2008-10-06 01:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/debug/debugger.prg
   * source/rtl/typefile.prg

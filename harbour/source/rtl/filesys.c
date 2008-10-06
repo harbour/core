@@ -3083,6 +3083,13 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
       TRIMFILENAME - strip trailing and leading spaces (also from extension)
 */
 
+   if( !hb_stackId() )
+   {
+      if( pfFree )
+         *pfFree = FALSE;
+      return szFileName;
+   }
+
    fTrim = hb_setGetTrimFileName();
    cDirSep = hb_setGetDirSeparator();
    iFileCase = hb_setGetFileCase();
