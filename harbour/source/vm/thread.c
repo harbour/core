@@ -354,45 +354,51 @@ BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, ULONG ulMi
 #endif
 }
 
-HB_THREAD_T hb_threadCreate( PHB_THREAD_STARTFUNC start_func, void * Cargo )
+HB_THREAD_HANDLE hb_threadCreate( HB_THREAD_ID * th_id, PHB_THREAD_STARTFUNC start_func, void * Cargo )
 {
-   HB_THREAD_T th_id;
+   HB_THREAD_HANDLE th_h;
 
 #if !defined( HB_MT_VM )
    HB_SYMBOL_UNUSED( start_func );
    HB_SYMBOL_UNUSED( Cargo );
-   th_id = 0;
+   *th_id = ( HB_THREAD_ID ) 0;
+   th_h = ( HB_THREAD_HANDLE ) 0;
 #elif defined( HB_PTHREAD_API )
-   if( pthread_create( &th_id, NULL, start_func, Cargo ) != 0 )
-      th_id = 0;
+   if( pthread_create( th_id, NULL, start_func, Cargo ) != 0 )
+      *th_id = ( HB_THREAD_ID ) 0;
+   th_h = *th_id;
 #elif defined( HB_OS_WIN_32 )
-   th_id = ( HANDLE ) _beginthreadex( NULL, 0, start_func, Cargo, 0, NULL );
+   th_h = ( HANDLE ) _beginthreadex( NULL, 0, start_func, Cargo, 0, th_id );
+   if( !th_h )
+      *th_id = ( HB_THREAD_ID ) 0;
 #elif defined( HB_OS_OS2 )
-   th_id = _beginthread( ( void * ) start_func, NULL, 128 * 1024, Cargo );
+   *th_id = _beginthread( ( void * ) start_func, NULL, 128 * 1024, Cargo );
+   th_h = *th_id;
 #else
    { int TODO_MT; }
-   th_id = 0;
+   *th_id = ( HB_THREAD_ID ) 0;
+   th_h = ( HB_THREAD_HANDLE ) 0;
 #endif
 
-   return th_id;
+   return th_h;
 }
 
-BOOL hb_threadJoin( HB_THREAD_T th_id )
+BOOL hb_threadJoin( HB_THREAD_HANDLE th_h )
 {
 #if !defined( HB_MT_VM )
-   HB_SYMBOL_UNUSED( th_id );
+   HB_SYMBOL_UNUSED( th_h );
    return FALSE;
 #elif defined( HB_PTHREAD_API )
-   return pthread_join( th_id, NULL ) == 0;
+   return pthread_join( th_h, NULL ) == 0;
 #elif defined( HB_OS_WIN_32 )
-   if( WaitForSingleObject( th_id, INFINITE ) != WAIT_FAILED )
+   if( WaitForSingleObject( th_h, INFINITE ) != WAIT_FAILED )
    {
-      CloseHandle( th_id );
+      CloseHandle( th_h );
       return TRUE;
    }
    return FALSE;
 #elif defined( HB_OS_OS2 )
-   APIRET rc = DosWaitThread( &th_id, DCWW_WAIT );
+   APIRET rc = DosWaitThread( &th_h, DCWW_WAIT );
    /* TOFIX: ERROR_INVALID_THREADID is a hack for failing DosWaitThread()
     *        when thread terminates before DosWaitThread() call.
     *        OS2 users please check and fix this code if possible.
@@ -404,17 +410,17 @@ BOOL hb_threadJoin( HB_THREAD_T th_id )
 #endif
 }
 
-BOOL hb_threadDetach( HB_THREAD_T th_id )
+BOOL hb_threadDetach( HB_THREAD_HANDLE th_h )
 {
 #if !defined( HB_MT_VM )
-   HB_SYMBOL_UNUSED( th_id );
+   HB_SYMBOL_UNUSED( th_h );
    return FALSE;
 #elif defined( HB_PTHREAD_API )
-   return pthread_detach( th_id ) == 0;
+   return pthread_detach( th_h ) == 0;
 #elif defined( HB_OS_WIN_32 )
-   return CloseHandle( th_id ) != 0;
+   return CloseHandle( th_h ) != 0;
 #elif defined( HB_OS_OS2 )
-   APIRET rc = DosWaitThread( &th_id, DCWW_NOWAIT );
+   APIRET rc = DosWaitThread( &th_h, DCWW_NOWAIT );
    return rc == NO_ERROR || rc == ERROR_INVALID_THREADID;
 #else
    { int TODO_MT; }
@@ -453,10 +459,10 @@ static HB_GARBAGE_FUNC( hb_threadDestructor )
       hb_xfree( pThread->pSet );
       pThread->pSet = NULL;
    }
-   if( pThread->th_id != 0 )
+   if( pThread->th_h != 0 )
    {
-      hb_threadDetach( pThread->th_id );
-      pThread->th_id = 0;
+      hb_threadDetach( pThread->th_h );
+      pThread->th_h = 0;
    }
 }
 
@@ -657,9 +663,9 @@ HB_FUNC( HB_THREADSTART )
 #if defined( HB_MT_VM )
       if( hb_vmThreadRegister( ( void * ) pThread ) )
 #endif
-         pThread->th_id = hb_threadCreate( hb_threadStartVM, ( void * ) pReturn );
+         pThread->th_h = hb_threadCreate( &pThread->th_id, hb_threadStartVM, ( void * ) pReturn );
 
-      if( pThread->th_id == 0 )
+      if( !pThread->th_h )
       {
 #if defined( HB_MT_VM )
          hb_vmThreadRelease( pThread );
@@ -692,7 +698,7 @@ HB_FUNC( HB_THREADID )
 #if defined( HB_MT_VM )
    PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) hb_vmThreadState();
    if( pThread )
-      hb_retnint( ( HB_PTRDIFF ) pThread->th_id );
+      hb_retnint( ( HB_PTRDIFF ) pThread->th_no );
    else
 #endif
       hb_retnint( 0 );
@@ -706,12 +712,12 @@ HB_FUNC( HB_THREADJOIN )
    {
       BOOL fResult = FALSE;
 
-      if( pThread->th_id )
+      if( pThread->th_h )
       {
          hb_vmUnlock();
-         fResult = hb_threadJoin( pThread->th_id );
+         fResult = hb_threadJoin( pThread->th_h );
          if( fResult )
-            pThread->th_id = 0;
+            pThread->th_h = 0;
          hb_vmLock();
       }
       if( fResult )
@@ -735,9 +741,9 @@ HB_FUNC( HB_THREADDETACH )
    {
       BOOL fResult = FALSE;
 
-      if( pThread->th_id && hb_threadDetach( pThread->th_id ) )
+      if( pThread->th_h && hb_threadDetach( pThread->th_h ) )
       {
-         pThread->th_id = 0;
+         pThread->th_h = 0;
          fResult = TRUE;
       }
       hb_retl( fResult );

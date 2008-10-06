@@ -99,8 +99,9 @@ HB_EXTERN_BEGIN
 
 #if defined( HB_PTHREAD_API )
 
+   typedef HB_LONG         HB_THREAD_NO;
    typedef pthread_t       HB_THREAD_ID;
-   typedef pthread_t       HB_THREAD_T;
+   typedef pthread_t       HB_THREAD_HANDLE;
    typedef pthread_mutex_t HB_RAWCRITICAL_T;
    typedef pthread_cond_t  HB_RAWCOND_T;
 
@@ -139,8 +140,9 @@ HB_EXTERN_BEGIN
 
 # define HB_MAX_THREAD  32768
 
+   typedef HB_LONG            HB_THREAD_NO;
    typedef unsigned           HB_THREAD_ID;
-   typedef HANDLE             HB_THREAD_T;
+   typedef HANDLE             HB_THREAD_HANDLE;
    typedef CRITICAL_SECTION   HB_RAWCRITICAL_T;
    typedef HANDLE             HB_RAWCOND_T;
 
@@ -184,8 +186,14 @@ HB_EXTERN_BEGIN
 
 #elif defined( HB_OS_OS2 )
 
+   /* In OS2 thread ID is continuous integer number so we can use it directly
+    * anyhow I'd prefer to not make such strict binding to OS values because
+    * it make cause troubles when code will be ported to other platforms.
+    */
+   /* typedef TID                HB_THREAD_NO; */
+   typedef HB_LONG            HB_THREAD_NO;
    typedef TID                HB_THREAD_ID;
-   typedef TID                HB_THREAD_T;
+   typedef TID                HB_THREAD_HANDLE;
    typedef HMTX               HB_RAWCRITICAL_T;
    typedef HEV                HB_RAWCOND_T;
 
@@ -210,8 +218,9 @@ HB_EXTERN_BEGIN
 
 #else
 
+   typedef int HB_THREAD_NO;
    typedef int HB_THREAD_ID;
-   typedef int HB_THREAD_T;
+   typedef int HB_THREAD_HANDLE;
    typedef int HB_CRITICAL_T;
    typedef int HB_RAWCRITICAL_T;
    typedef int HB_COND_T;
@@ -273,7 +282,9 @@ typedef struct _HB_THREADSTATE
    PHB_ITEM       pMemvars;
    PHB_ITEM       pResult;
    PHB_ITEM       pThItm;
-   HB_THREAD_T    th_id;
+   HB_THREAD_NO      th_no;
+   HB_THREAD_ID      th_id;
+   HB_THREAD_HANDLE  th_h;
    struct _HB_THREADSTATE * pPrev;
    struct _HB_THREADSTATE * pNext;
 } HB_THREADSTATE, * PHB_THREADSTATE;
@@ -292,9 +303,9 @@ extern BOOL hb_threadCondBroadcast( HB_COND_T * cond );
 extern BOOL hb_threadCondWait( HB_COND_T * cond, HB_CRITICAL_T * mutex );
 extern BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, ULONG ulMilliSec );
 
-extern HB_THREAD_T hb_threadCreate( PHB_THREAD_STARTFUNC start_func, void * Cargo );
-extern BOOL        hb_threadJoin( HB_THREAD_T th_id );
-extern BOOL        hb_threadDetach( HB_THREAD_T th_id );
+extern HB_THREAD_HANDLE hb_threadCreate( HB_THREAD_ID * th_id, PHB_THREAD_STARTFUNC start_func, void * Cargo );
+extern BOOL        hb_threadJoin( HB_THREAD_HANDLE th_h );
+extern BOOL        hb_threadDetach( HB_THREAD_HANDLE th_h );
 
 /* used by .prg code */
 extern PHB_ITEM hb_threadMutexCreate( BOOL fSync );

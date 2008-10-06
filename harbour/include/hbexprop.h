@@ -203,6 +203,8 @@ extern BOOL hb_compExprReduceSTOD( HB_EXPR_PTR, USHORT usCount, HB_COMP_DECL );
 extern BOOL hb_compExprReduceDTOS( HB_EXPR_PTR, HB_COMP_DECL );
 extern BOOL hb_compExprReduceCTOD( HB_EXPR_PTR, HB_COMP_DECL );
 extern BOOL hb_compExprReduceUPPER( HB_EXPR_PTR, HB_COMP_DECL );
+extern BOOL hb_compExprReduceMIN( HB_EXPR_PTR, HB_COMP_DECL );
+extern BOOL hb_compExprReduceMAX( HB_EXPR_PTR, HB_COMP_DECL );
 extern BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR, HB_LONG, BOOL, HB_COMP_DECL );
 
 extern void hb_compI18nAdd( HB_COMP_DECL, const char* szText, const char* szContext, UINT uiLine );

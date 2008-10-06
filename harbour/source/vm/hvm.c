@@ -390,6 +390,8 @@ static int volatile s_iStackCount = 0;
 static int volatile s_iRunningCount = 0;
 /* active HVM stacks list */
 static PHB_THREADSTATE s_vmStackLst = NULL;
+/* thread number */
+static HB_THREAD_NO s_threadNo = 0;
 
 #  define HB_THREQUEST_STOP   1
 #  define HB_THREQUEST_QUIT   2
@@ -608,6 +610,8 @@ static void hb_vmStackAdd( PHB_THREADSTATE pState )
       }
       s_iStackCount++;
    }
+   if( pState->th_no )
+      pState->th_no = ++s_threadNo;
 }
 
 static void hb_vmStackDel( PHB_THREADSTATE pState )

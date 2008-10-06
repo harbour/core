@@ -1904,6 +1904,144 @@ BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return FALSE;
 }
 
+BOOL hb_compExprReduceMIN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pFirst = pParms->value.asList.pExprList;
+   HB_EXPR_PTR pNext = pFirst->pNext;
+
+   if( pFirst->ExprType == pNext->ExprType )
+   {
+      HB_EXPR_PTR pExpr = NULL;
+
+      if( pNext->ExprType == HB_ET_NUMERIC )
+      {
+         BYTE bType = ( pFirst->value.asNum.NumType & pNext->value.asNum.NumType );
+
+         switch( bType )
+         {
+            case HB_ET_LONG:
+               pExpr = pFirst->value.asNum.val.l <= pNext->value.asNum.val.l ?
+                       pFirst : pNext;
+               break;
+
+            case HB_ET_DOUBLE:
+               pExpr = pFirst->value.asNum.val.d <= pNext->value.asNum.val.d ?
+                       pFirst : pNext;
+               break;
+
+            default:
+               if( pFirst->value.asNum.NumType == HB_ET_DOUBLE )
+                  pExpr = pFirst->value.asNum.val.d <= ( double ) pNext->value.asNum.val.l ?
+                          pFirst : pNext;
+               else
+                  pExpr = ( double ) pFirst->value.asNum.val.l <= pNext->value.asNum.val.d ?
+                          pFirst : pNext;
+         }
+      }
+      else if( pFirst->ExprType == HB_ET_DATE )
+      {
+         pExpr = pFirst->value.asNum.val.l <= pNext->value.asNum.val.l ?
+                 pFirst : pNext;
+      }
+      else if( pFirst->ExprType == HB_ET_LOGICAL )
+      {
+         pExpr = !pFirst->value.asLogical ? pFirst : pNext;
+      }
+
+      if( pExpr )
+      {
+         HB_EXPR_PTR * pExprPtr = &pParms->value.asList.pExprList;
+
+         while( *pExprPtr )
+         {
+            if( *pExprPtr == pExpr )
+            {
+               *pExprPtr = pExpr->pNext;
+               break;
+            }
+            pExprPtr = &( *pExprPtr )->pNext;
+         }
+         HB_COMP_EXPR_FREE( pParms );
+         HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
+         memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+         HB_COMP_EXPR_CLEAR( pExpr );
+         return TRUE;
+      }
+   }
+
+   return FALSE;
+}
+
+BOOL hb_compExprReduceMAX( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pFirst = pParms->value.asList.pExprList;
+   HB_EXPR_PTR pNext = pFirst->pNext;
+
+   if( pFirst->ExprType == pNext->ExprType )
+   {
+      HB_EXPR_PTR pExpr = NULL;
+
+      if( pNext->ExprType == HB_ET_NUMERIC )
+      {
+         BYTE bType = ( pFirst->value.asNum.NumType & pNext->value.asNum.NumType );
+
+         switch( bType )
+         {
+            case HB_ET_LONG:
+               pExpr = pFirst->value.asNum.val.l >= pNext->value.asNum.val.l ?
+                       pFirst : pNext;
+               break;
+
+            case HB_ET_DOUBLE:
+               pExpr = pFirst->value.asNum.val.d >= pNext->value.asNum.val.d ?
+                       pFirst : pNext;
+               break;
+
+            default:
+               if( pFirst->value.asNum.NumType == HB_ET_DOUBLE )
+                  pExpr = pFirst->value.asNum.val.d >= ( double ) pNext->value.asNum.val.l ?
+                          pFirst : pNext;
+               else
+                  pExpr = ( double ) pFirst->value.asNum.val.l >= pNext->value.asNum.val.d ?
+                          pFirst : pNext;
+         }
+      }
+      else if( pFirst->ExprType == HB_ET_DATE )
+      {
+         pExpr = pFirst->value.asNum.val.l >= pNext->value.asNum.val.l ?
+                 pFirst : pNext;
+      }
+      else if( pFirst->ExprType == HB_ET_LOGICAL )
+      {
+         pExpr = pFirst->value.asLogical ? pFirst : pNext;
+      }
+
+      if( pExpr )
+      {
+         HB_EXPR_PTR * pExprPtr = &pParms->value.asList.pExprList;
+
+         while( * pExprPtr )
+         {
+            if( * pExprPtr == pExpr )
+            {
+               * pExprPtr = pExpr->pNext;
+               break;
+            }
+            pExprPtr = &( *pExprPtr )->pNext;
+         }
+         HB_COMP_EXPR_FREE( pParms );
+         HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
+         memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+         HB_COMP_EXPR_CLEAR( pExpr );
+         return TRUE;
+      }
+   }
+
+   return FALSE;
+}
+
 BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR pSelf, HB_LONG lResult, BOOL fBool, HB_COMP_DECL )
 {
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;

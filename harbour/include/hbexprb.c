@@ -1654,6 +1654,16 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   if( usCount && HB_SUPPORT_HARBOUR )
                      hb_compExprReduceCTOD( pSelf, HB_COMP_PARAM );
                }
+               else if( strcmp( "MIN", pName->value.asSymbol ) == 0 )
+               {
+                  if( usCount == 2 && HB_SUPPORT_HARBOUR )
+                     hb_compExprReduceMIN( pSelf, HB_COMP_PARAM );
+               }
+               else if( strcmp( "MAX", pName->value.asSymbol ) == 0 )
+               {
+                  if( usCount == 2 && HB_SUPPORT_HARBOUR )
+                     hb_compExprReduceMAX( pSelf, HB_COMP_PARAM );
+               }
                else if( strcmp( "UPPER", pName->value.asSymbol ) == 0 )
                {
                   if( usCount )
@@ -1762,7 +1772,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   HB_EXPR_PTR   pArg = pParms->value.asList.pExprList;
                   char          buf[ 16 ];
                   BOOL          fStrict;
-               
+
                   /* TODO: warning message does not fit very well, because it requires
                            type of used parameter. Let's print "unknown", to avoid deeper 
                            analysis of parameter. 
@@ -1848,7 +1858,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                         snprintf( buf, sizeof( buf ), "%d", (int) usCount );
                         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_COUNT, buf, "1 or 2" );
                      }
-               
+
                      /* hb_i18n_gettext_noop() is not a real function. It is used to 
                         force writing of string to .pot file. So, we should try to 
                         replaced function call by first argument regardless fI18n flag 

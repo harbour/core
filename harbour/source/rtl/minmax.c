@@ -66,7 +66,7 @@ HB_FUNC( MAX )
       {
          HB_LONG l1 = hb_itemGetNInt( p1 );
          HB_LONG l2 = hb_itemGetNInt( p2 );
-   
+
          hb_retnint( l1 >= l2 ? l1 : l2 );
          return;
       }
@@ -74,13 +74,13 @@ HB_FUNC( MAX )
       {
          double d1 = hb_itemGetND( p1 );
          double d2 = hb_itemGetND( p2 );
-   
+
          int iDec1;
          int iDec2;
-   
+
          hb_itemGetNLen( p1, NULL, &iDec1 );
          hb_itemGetNLen( p2, NULL, &iDec2 );
-   
+
          if( d1 >= d2 )
             hb_retndlen( d1, 0, iDec1 );
          else
@@ -91,14 +91,14 @@ HB_FUNC( MAX )
       {
          BOOL b1 = hb_itemGetL( p1 );
          BOOL b2 = hb_itemGetL( p2 );
-   
+
          hb_retl( b1 >= b2 ? b1 : b2 );
          return;
       }
       else if( HB_IS_DATE( p1 ) && HB_IS_DATE( p2 ) )
       {
          char szDate[ 9 ];
-   
+
          hb_retds( hb_itemGetDL( p1 ) >= hb_itemGetDL( p2 ) ? hb_pardsbuff( szDate, 1 ) : hb_pardsbuff( szDate, 2 ) );
          return;
       }
@@ -118,7 +118,7 @@ HB_FUNC( MIN )
       {
          HB_LONG l1 = hb_itemGetNInt( p1 );
          HB_LONG l2 = hb_itemGetNInt( p2 );
-   
+
          hb_retnint( l1 <= l2 ? l1 : l2 );
          return;
       }
@@ -126,13 +126,13 @@ HB_FUNC( MIN )
       {
          double d1 = hb_itemGetND( p1 );
          double d2 = hb_itemGetND( p2 );
-   
+
          int iDec1;
          int iDec2;
-   
+
          hb_itemGetNLen( p1, NULL, &iDec1 );
          hb_itemGetNLen( p2, NULL, &iDec2 );
-   
+
          if( d1 <= d2 )
             hb_retndlen( d1, 0, iDec1 );
          else
@@ -143,14 +143,14 @@ HB_FUNC( MIN )
       {
          BOOL b1 = hb_itemGetL( p1 );
          BOOL b2 = hb_itemGetL( p2 );
-   
+
          hb_retl( b1 <= b2 ? b1 : b2 );
          return;
       }
       else if( HB_IS_DATE( p1 ) && HB_IS_DATE( p2 ) )
       {
          char szDate[ 9 ];
-   
+
          hb_retds( hb_itemGetDL( p1 ) <= hb_itemGetDL( p2 ) ? hb_pardsbuff( szDate, 1 ) : hb_pardsbuff( szDate, 2 ) );
          return;
       }

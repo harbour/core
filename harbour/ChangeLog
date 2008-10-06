@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-06 15:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbthread.h
+  * harbour/source/vm/thread.c
+  * harbour/source/vm/hvm.c
+    + add numeric HVM thread identifiers to thread structure. Now
+      HB_THREADID() returns numbers in all OSes
+
+  * harbour/include/hbexprop.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt2.c
+    + added compile time optimization for MIN() and MAX() functions
+
+  * harbour/source/rtl/minmax.c
+    * removed trailing spaces from source code
+
 2008-10-06 12:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbclass.ch
   * harbour/include/hboo.ch
