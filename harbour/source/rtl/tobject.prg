@@ -68,8 +68,8 @@
  *
  */
 
-/* WARNING: Can not use the preprocessor      */
-/* otherwise it will auto inherit from itself */
+/* WARNING: Can not use the preprocessor, otherwise 
+            it will auto inherit from itself. */
 
 #include "common.ch"
 #include "hboo.ch"
@@ -153,8 +153,7 @@ FUNCTION HBObject()
 
    RETURN s_oClass:Instance()
 
-
-STATIC function HBObject_New( ... )
+STATIC FUNCTION HBObject_New( ... )
    QSelf():Init( ... )
    RETURN QSelf()
 
@@ -162,7 +161,7 @@ STATIC FUNCTION HBObject_Init()
    RETURN QSelf()
 
 STATIC FUNCTION HBObject_Dftonerror( ... )
-   RETURN QSelf():MSGNOTFOUND( __GetMessage(), ... )
+   RETURN QSelf():MsgNotFound( __GetMessage(), ... )
 
 STATIC FUNCTION HBObject_Error( cDesc, cClass, cMsg, nCode )
 

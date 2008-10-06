@@ -8,10 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-06 22:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/tobject.prg
+    ! Formatting to some old code.
+
 2008-10-06 22:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
-   * include/hbthread.h
-     ! Committed MT fix to make it compile under Darwin.
-       Thanks Przemek.
+  * include/hbthread.h
+    ! Committed MT fix to make it compile under Darwin.
+      Thanks Przemek.
 
 2008-10-06 21:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
