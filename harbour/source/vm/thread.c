@@ -117,12 +117,14 @@ static PHB_ITEM s_pOnceMutex = NULL;
       HB_CRITICAL_UNLOCK( s_critical_init );
    }
 #  else
+#  if defined( HB_COND_INIT )
+      static HB_CRITICAL_NEW( s_critical_init );
+#  endif
    static HB_CRITICAL_NEW( s_critical_once );
    static HB_CRITICAL_NEW( s_critical_mtx );
 #  endif
 
 #  if defined( HB_COND_INIT )
-      static HB_CRITICAL_NEW( s_critical_init );
       static void hb_threadCondInit( HB_COND_T * cond )
       {
          if( !s_fThreadInit )
