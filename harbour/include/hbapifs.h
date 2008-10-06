@@ -205,6 +205,7 @@ extern HB_EXPORT HB_FHANDLE hb_fsPOpen      ( BYTE * pFilename, BYTE * pMode );
 extern HB_EXPORT HB_FHANDLE hb_fsGetOsHandle( HB_FHANDLE hFileHandle );
 extern HB_EXPORT USHORT     hb_fsGetFError  ( void ); /* get FERROR() flag */
 extern HB_EXPORT void       hb_fsSetFError  ( USHORT uiError ); /* set FERROR() flag */
+extern HB_EXPORT BOOL       hb_fsNameExists ( const char * pszFileName ); /* check if a name exists in the filesystem (wildcard chars not accepted). */
 extern HB_EXPORT BOOL       hb_fsFileExists ( const char * pszFileName ); /* check if a file exists (wildcard chars not accepted). */
 extern HB_EXPORT BOOL       hb_fsDirExists  ( const char * pszDirName ); /* check if a directory exists (wildcard chars not accepted). */
 

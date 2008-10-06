@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-06 21:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbapifs.h
+   * include/hbextern.ch
+   * source/common/hbfsapi.c
+   * source/rtl/hbfile.c
+     + Added hb_fsNameExists() C level function.
+     + Added hb_FNameExists() Harbour level function.
+     ; Both will return true if any kind of directory entry 
+       exists with the given name (IOW it doesn't matter 
+       if it's a file or directory, or else).
+
 2008-10-06 15:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbthread.h
   * harbour/source/vm/thread.c

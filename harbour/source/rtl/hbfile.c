@@ -53,6 +53,11 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
+HB_FUNC( HB_FNAMEEXISTS )
+{
+   hb_retl( hb_fsNameExists( hb_parc( 1 ) ) );
+}
+
 HB_FUNC( HB_FILEEXISTS )
 {
    hb_retl( hb_fsFileExists( hb_parc( 1 ) ) );

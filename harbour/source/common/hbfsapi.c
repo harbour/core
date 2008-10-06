@@ -291,6 +291,57 @@ HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
    return pszFileName;
 }
 
+HB_EXPORT BOOL hb_fsNameExists( const char * pszFileName )
+{
+   BOOL fExist;
+   BOOL fFree;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsNameExists(%p)", pszFileName));
+
+   if( pszFileName == NULL )
+      return FALSE;
+
+   pszFileName = ( char * ) hb_fsNameConv( ( BYTE * ) pszFileName, &fFree );
+
+#if defined( HB_OS_DOS )
+   {
+#if defined( __DJGPP__ ) || defined(__BORLANDC__)
+      fExist = _chmod( pszFileName, 0, 0 ) != -1;
+#else
+      unsigned int iAttr = 0;
+      fExist = _dos_getfileattr( pszFileName, &iAttr ) == 0;
+#endif
+   }
+#elif defined( HB_OS_WIN_32 )
+   {
+      fExist = ( GetFileAttributesA( pszFileName ) != INVALID_FILE_ATTRIBUTES );
+   }
+#elif defined( HB_OS_OS2 )
+   {
+      FILESTATUS3 fs3;
+      fExist = DosQueryPathInfo( pszFileName, FIL_STANDARD,
+                                 &fs3, sizeof( fs3 ) ) == NO_ERROR;
+   }
+#elif defined( HB_OS_UNIX )
+   {
+      struct stat statbuf;
+
+      fExist = stat( pszFileName, &statbuf ) == 0;
+   }
+#else
+   {
+      int TODO; /* To force warning */
+
+      fExist = FALSE;
+   }
+#endif
+
+   if( fFree )
+      hb_xfree( ( void * ) pszFileName );
+
+   return fExist;
+}
+
 HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
 {
    BOOL fExist;
