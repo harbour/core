@@ -52,6 +52,9 @@
 
 #define HB_OS_WIN_32_USED
 
+#define INCL_DOS
+#define INCL_DOSPROFILE
+
 #include "hbapi.h"
 #include "hbdate.h"
 
@@ -71,6 +74,9 @@
 #elif defined(_MSC_VER)
    #define timeb _timeb
    #define ftime _ftime
+#endif
+#if defined( HB_OS_OS2 )
+#define BUFSIZE   16 * 1024
 #endif
 
 HB_EXPORT void hb_dateTimeStamp( LONG * plJulian, LONG * plMilliSec )
@@ -250,6 +256,17 @@ HB_EXPORT double hb_secondsCPU( int n )
    FILETIME Create, Exit, Kernel, User;
 #endif
 
+#if defined( HB_OS_OS2 )
+   static ULONG timer_interval = 0;
+
+   APIRET rc;
+   QSGREC ** pBuf;
+   QSGREC * pGrec;
+   QSPREC * pPrec;
+   QSTREC * pTrec;
+   int i;
+#endif
+
    if( ( n < 1 || n > 3 ) && ( n < 11 || n > 13 ) )
       n = 3;
 
@@ -296,10 +313,46 @@ HB_EXPORT double hb_secondsCPU( int n )
       d /= 10000000.0;
    }
    else
+
+#elif defined( HB_OS_OS2 )
+
+   if ( timer_interval == 0 ) {
+      DosQuerySysInfo( QSV_TIMER_INTERVAL, QSV_TIMER_INTERVAL, (PVOID) &timer_interval, sizeof( ULONG ) );
+   }
+
+   pBuf = malloc( BUFSIZE );
+
+   if ( pBuf ) {
+
+      rc = DosQuerySysState( QS_PROCESS, 0L, _getpid(), 0L, pBuf, BUFSIZE );
+
+      if ( rc == NO_ERROR ) {
+
+         pGrec = * pBuf;
+         pPrec = (ULONG) pGrec + sizeof( QSGREC );
+         pTrec = pPrec->pThrdRec;
+
+         for ( i = 0; i < pPrec->cTCB; i++, pTrec++ ) {
+
+            if( n & 1 )
+               d += pTrec->usertime;
+
+            if( n & 2 )
+               d += pTrec->systime;
+         }
+
+         d = d * 10.0 / timer_interval;
+      }
+
+      free( pBuf );
+
+   } else
 #endif
    {
       /* TODO: this code is only for DOS and other platforms which cannot
                calculate process time */
+
+      printf( "non qui!\r\n");
       if( n & 1 )
          d = hb_dateSeconds(  );
    }

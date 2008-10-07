@@ -8,20 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-07 16:33 UTC+0200 Maurilio Longo (maurilio.longo@libero.it)
+   * harbour/source/rtl/seconds.c
+     + Added OS/2 section to secondsCPU(), but it does not work as expected :)
+       In particular, user and system times are kept per thread, but when a thread
+       dies the time it has spent in user and system-land gets lost, so the
+       overall running time of the program decreases. Not only, if I call
+       secondsCPU() before a thread starts and after it has ended I'll have
+       no idea of the time that was spent by that thread.
+
 2008-10-07 14:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbapierr.h
    * source/vm/extrap.c
    * source/rtl/errorint.c
-     ! Fixed recent modification on Windows platform, where 
+     ! Fixed recent modification on Windows platform, where
        GPF would generate an internal error.
        It didn't launch the OS error handler.
-     ! Fixed hb_errInternal() being marked as HB_EXPORT 
+     ! Fixed hb_errInternal() being marked as HB_EXPORT
        in the headers only.
 
 2008-10-07 09:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * source/rtl/inkey.c
-    + Added HB_KEYCLEAR() a documented function equivalent 
+    + Added HB_KEYCLEAR() a documented function equivalent
       to "CLEAR TYPEAHEAD" command, or undocumented __KEYBOARD() function.
 
   * contrib/rddads/rddads.h
@@ -40,7 +49,7 @@
   * harbour/include/hbatomic.h
     + added atomic inc/dec for GCC and x86@64 and PPC@32
     + use OSAtomic*() and OSSpin*() functions for atomic inc/dec and
-      spinlocks in Darwin builds 
+      spinlocks in Darwin builds
     + added spinlocks to MS-Win builds
 
 2008-10-06 22:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -87,8 +96,8 @@
   * source/rtl/hbfile.c
     + Added hb_fsNameExists() C level function.
     + Added hb_FNameExists() Harbour level function.
-    ; Both will return true if any kind of directory entry 
-      exists with the given name (IOW it doesn't matter 
+    ; Both will return true if any kind of directory entry
+      exists with the given name (IOW it doesn't matter
       if it's a file or directory, or else).
 
 2008-10-06 15:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
