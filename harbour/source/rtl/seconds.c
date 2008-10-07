@@ -257,14 +257,9 @@ HB_EXPORT double hb_secondsCPU( int n )
 #endif
 
 #if defined( HB_OS_OS2 )
-   static ULONG timer_interval = 0;
+   static ULONG s_timer_interval = 0;
 
-   APIRET rc;
    QSGREC ** pBuf;
-   QSGREC * pGrec;
-   QSPREC * pPrec;
-   QSTREC * pTrec;
-   int i;
 #endif
 
    if( ( n < 1 || n > 3 ) && ( n < 11 || n > 13 ) )
@@ -313,48 +308,47 @@ HB_EXPORT double hb_secondsCPU( int n )
       d /= 10000000.0;
    }
    else
-
 #elif defined( HB_OS_OS2 )
 
-   if ( timer_interval == 0 ) {
-      DosQuerySysInfo( QSV_TIMER_INTERVAL, QSV_TIMER_INTERVAL, (PVOID) &timer_interval, sizeof( ULONG ) );
-   }
+   if( s_timer_interval == 0 )
+      DosQuerySysInfo( QSV_TIMER_INTERVAL, QSV_TIMER_INTERVAL, ( PVOID ) &s_timer_interval, sizeof( ULONG ) );
 
-   pBuf = malloc( BUFSIZE );
+   QSGREC ** pBuf = hb_xalloc( BUFSIZE );
 
-   if ( pBuf ) {
+   if( pBuff )
+   {
+      APIRET rc = DosQuerySysState( QS_PROCESS, 0L, _getpid(), 0L, pBuf, BUFSIZE );
 
-      rc = DosQuerySysState( QS_PROCESS, 0L, _getpid(), 0L, pBuf, BUFSIZE );
+      if( rc == NO_ERROR )
+      {
+         QSGREC * pGrec = * pBuf;
+         QSPREC * pPrec = ( ULONG ) pGrec + sizeof( QSGREC );
+         QSTREC * pTrec = pPrec->pThrdRec;
 
-      if ( rc == NO_ERROR ) {
+         int i;
 
-         pGrec = * pBuf;
-         pPrec = (ULONG) pGrec + sizeof( QSGREC );
-         pTrec = pPrec->pThrdRec;
-
-         for ( i = 0; i < pPrec->cTCB; i++, pTrec++ ) {
-
+         for( i = 0; i < pPrec->cTCB; i++, pTrec++ )
+         {
             if( n & 1 )
                d += pTrec->usertime;
-
+      
             if( n & 2 )
                d += pTrec->systime;
          }
 
-         d = d * 10.0 / timer_interval;
+         d = d * 10.0 / s_timer_interval;
       }
 
-      free( pBuf );
-
-   } else
+      hb_xfree( pBuf );
+   }
+   else
 #endif
    {
       /* TODO: this code is only for DOS and other platforms which cannot
                calculate process time */
 
-      printf( "non qui!\r\n");
       if( n & 1 )
-         d = hb_dateSeconds(  );
+         d = hb_dateSeconds();
    }
 #endif
    return d;
