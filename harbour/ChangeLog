@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-07 09:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+  * source/rtl/inkey.c
+    + Added HB_KEYCLEAR() a documented function equivalent 
+      to "CLEAR TYPEAHEAD" command, or undocumented __KEYBOARD() function.
+
+  * contrib/rddads/rddads.h
+  * contrib/rddads/ads1.c
+    + Added support for ADS_USE_OEM_TRANSLATION for old ads versions.
+      Borrowed from xhb/Pavel Tsarenko.
+
 2008-10-07 02:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/Makefile
   + harbour/include/hbatomic.h

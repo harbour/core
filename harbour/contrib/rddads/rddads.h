@@ -216,7 +216,7 @@ typedef ADSAREA * ADSAREAP;
 
 #define HB_RDD_ADS_VERSION_STRING "ADS RDD 1.4"
 
-#if ADS_LIB_VERSION >= 600 && defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN_32 )
 #  define ADS_USE_OEM_TRANSLATION
 #else
 #  undef ADS_USE_OEM_TRANSLATION

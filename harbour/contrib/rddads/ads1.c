@@ -515,13 +515,21 @@ static ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, USHORT nScope, PHB
                if( HB_IS_STRING( pItem ) )
                {
                   /* bTypeError = FALSE; */
+                  pucScope = ( UNSIGNED8 * ) hb_itemGetCPtr( pItem );
 #ifdef ADS_USE_OEM_TRANSLATION
                   if( hb_ads_bOEM )
                   {
+#if ADS_LIB_VERSION >= 600
                      u16DataType = ADS_RAWKEY;
+#else
+                     USHORT uiLen = ( USHORT ) hb_itemGetCLen( pItem );
+                     
+                     char * pBuffer = hb_adsOemToAnsi( ( char * ) pucScope, uiLen );
+                     memcpy( ( char * ) pucScope, pBuffer, uiLen );
+                     hb_adsOemAnsiFree( pBuffer );
+#endif
                   }
 #endif
-                  pucScope = ( UNSIGNED8 * ) hb_itemGetCPtr( pItem );
                   AdsSetScope( hOrder, nScope,
                      ( UNSIGNED8 * ) pucScope,
                      ( UNSIGNED16 ) hb_itemGetCLen( pItem ), u16DataType );
@@ -901,7 +909,17 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
       pszKey = ( UNSIGNED8* ) hb_itemGetCPtr( pKey );
       u16KeyLen = ( UNSIGNED16 ) hb_itemGetCLen( pKey );
 #ifdef ADS_USE_OEM_TRANSLATION
+#if ADS_LIB_VERSION >= 600
       u16KeyType = hb_ads_bOEM ? ADS_RAWKEY : ADS_STRINGKEY;
+#else
+      u16KeyType = ADS_STRINGKEY;
+      if( hb_ads_bOEM )
+      {
+         char * pBuffer = hb_adsOemToAnsi( ( char * ) pszKey, u16KeyLen );
+         memcpy( ( char * ) pszKey, pBuffer, u16KeyLen );
+         hb_adsOemAnsiFree( pBuffer );
+      }
+#endif
 #else
       u16KeyType = ADS_STRINGKEY;
 #endif
@@ -1888,7 +1906,21 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 #ifdef ADS_USE_OEM_TRANSLATION
          else if( hb_ads_bOEM )
          {
+#if ADS_LIB_VERSION >= 600
             AdsGetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length );
+#else
+            if( AdsGetField( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length, ADS_NONE ) == AE_NO_CURRENT_RECORD )
+            {
+               memset( pBuffer, ' ', pField->uiLen );
+               hb_adsUpdateAreaFlags( pArea );
+            }
+            else
+            {
+               char * pBufOem = hb_adsAnsiToOem( ( char * ) pBuffer, pField->uiLen );
+               memcpy( pBuffer, pBufOem, pField->uiLen );
+               hb_adsOemAnsiFree( pBufOem );
+            }
+#endif
          }
 #endif
          else if( AdsGetField( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length, ADS_NONE ) == AE_NO_CURRENT_RECORD )
@@ -2224,7 +2256,13 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 #ifdef ADS_USE_OEM_TRANSLATION
             if( hb_ads_bOEM )
             {
+#if ADS_LIB_VERSION >= 600
                ulRetVal = AdsSetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ), uiCount );
+#else
+               char * pBuffer = hb_adsOemToAnsi( hb_itemGetCPtr( pItem ), uiCount );
+               ulRetVal = AdsSetString( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) pBuffer, uiCount );
+               hb_adsOemAnsiFree( pBuffer );
+#endif
             }
             else
 #endif

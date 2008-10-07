@@ -173,6 +173,11 @@ HB_FUNC( __KEYBOARD )
       hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
 }
 
+HB_FUNC( HB_KEYCLEAR )
+{
+   hb_inkeyReset();
+}
+
 HB_FUNC( HB_KEYPUT )
 {
    if( ISNUM( 1 ) )
