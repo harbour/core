@@ -168,6 +168,7 @@ extern HB_EXPORT USHORT    hb_errRT_DBCMD       ( ULONG ulGenCode, ULONG ulSubCo
 extern HB_EXPORT USHORT    hb_errRT_DBCMD_Ext   ( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation, USHORT uiFlags );
        
 extern HB_EXPORT void      hb_errInternal       ( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 );
+extern           void      hb_errInternalRaw    ( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 );
 
 /* Low-level error handling */
 struct HB_ERROR_INFO_;   /* forward declaration */

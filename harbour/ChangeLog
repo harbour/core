@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-07 14:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbapierr.h
+   * source/vm/extrap.c
+   * source/rtl/errorint.c
+     ! Fixed recent modification on Windows platform, where 
+       GPF would generate an internal error.
+       It didn't launch the OS error handler.
+     ! Fixed hb_errInternal() being marked as HB_EXPORT 
+       in the headers only.
+
 2008-10-07 09:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * source/rtl/inkey.c

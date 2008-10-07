@@ -59,7 +59,7 @@
 /* NOTE: Use as minimal calls from here, as possible.
          Don't allocate memory from this function. [vszakats] */
 
-void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
+void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
 {
    char buffer[ 8192 ];
    char file[ _POSIX_PATH_MAX + 1 ];
@@ -138,6 +138,11 @@ void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, 
       fprintf( hLog, "------------------------------------------------------------------------\n");
       fclose( hLog );
    }
+}
+
+HB_EXPORT void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
+{
+   hb_errInternalRaw( ulIntCode, szText, szPar1, szPar2 );
 
    /* release console settings */
    hb_conRelease();
