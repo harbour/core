@@ -89,7 +89,7 @@ typedef struct
    PHB_SYMBOLS    pModuleSymbols;
 } HRB_BODY, * PHRB_BODY;
 
-static const BYTE szHead[] = { 192,'H','R','B' };
+static const BYTE szHead[ 4 ] = { 192,'H','R','B' };
 
 
 #define SYM_NOLINK   0              /* symbol does not have to be linked */

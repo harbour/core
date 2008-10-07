@@ -63,7 +63,7 @@
    to freed by GC codeblock in .prg destructors and then (after
    catching RT EG_DESTRUCTOR error) try to execute them
  */
-static const BYTE s_pCode[] = { HB_P_PUSHNIL, HB_P_ENDBLOCK };
+static const BYTE s_pCode[ 2 ] = { HB_P_PUSHNIL, HB_P_ENDBLOCK };
 
 /* Release all allocated memory when called from the garbage collector
  */

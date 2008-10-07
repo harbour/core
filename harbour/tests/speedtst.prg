@@ -137,8 +137,11 @@ return
       local lSubscribed
       if valtype( nTimeOut ) == "N"
          nTimeOut := round( nTimeOut * 1000, 0 )
+         xSubscribed := Subscribe( mtx, nTimeOut, @lSubscribed )
+      else
+         xSubscribed := Subscribe( mtx )
+         lSubscribed := .t.
       endif
-      xSubscribed := Subscribe( mtx, nTimeOut, @lSubscribed )
    return lSubscribed
 
    /* in xHarbour there is race condition in JoinThread() which

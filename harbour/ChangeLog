@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-07 21:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/runner.c
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/itemapi.c
+    * minor casting modification
+
+  * harbour/tests/speedtst.prg
+    * added workaround for timeout parameter not working in xHb Subscribe()
+      when 3-rd parameter is passed
+
 2008-10-07 19:33 UTC+0200 Maurilio Longo (maurilio.longo@libero.it)
   * harbour/source/rtl/seconds.c
     ! fixed little typo after latest commit.

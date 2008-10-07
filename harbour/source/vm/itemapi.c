@@ -1933,8 +1933,8 @@ HB_EXPORT PHB_ITEM hb_itemClone( PHB_ITEM pItem )
 /* Check whether two strings are equal (0), smaller (-1), or greater (1) */
 HB_EXPORT int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
 {
-   char * szFirst;
-   char * szSecond;
+   const char * szFirst;
+   const char * szSecond;
    ULONG ulLenFirst;
    ULONG ulLenSecond;
    ULONG ulMinLen;
@@ -2013,8 +2013,8 @@ HB_EXPORT int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact
 /* Check whether two strings are equal (0), smaller (-1), or greater (1), ignore case */
 HB_EXPORT int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
 {
-   char * szFirst;
-   char * szSecond;
+   const char * szFirst;
+   const char * szSecond;
    ULONG ulLenFirst;
    ULONG ulLenSecond;
    ULONG ulMinLen;
