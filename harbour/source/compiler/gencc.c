@@ -66,7 +66,9 @@ void hb_compGenCString( FILE * yyc, BYTE * pText, ULONG ulLen )
       if( uchr == '"' || uchr == '\\' || uchr == '?' )
          fprintf( yyc, "\\%c", uchr );
       else if( uchr < ( BYTE ) ' ' || uchr >= 127 )
-         fprintf( yyc, "\\%03o", uchr );
+         fprintf( yyc, "\\%03o%s", uchr, ulPos < ulLen - 1 &&
+                  pText[ ulPos + 1 ] >= ( BYTE ) '0' &&
+                  pText[ ulPos + 1 ] <= ( BYTE ) '9' ? "\" \"" : "" );
       else
          fprintf( yyc, "%c", uchr );
    }
