@@ -181,7 +181,7 @@ static void hb_stack_init( PHB_STACK pStack )
    ( * pStack->pItems )->item.asSymbol.stackstate = &pStack->state;
 
    pStack->rdd.uiCurrArea = 1;
-   hb_stack.iKeyPoll = 1;
+   pStack->iKeyPoll = 1;
 }
 
 static void hb_stack_destroy_TSD( PHB_STACK pStack )
