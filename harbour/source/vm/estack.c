@@ -181,6 +181,7 @@ static void hb_stack_init( PHB_STACK pStack )
    ( * pStack->pItems )->item.asSymbol.stackstate = &pStack->state;
 
    pStack->rdd.uiCurrArea = 1;
+   hb_stack.iKeyPoll = 1;
 }
 
 static void hb_stack_destroy_TSD( PHB_STACK pStack )
@@ -420,6 +421,16 @@ int hb_stackLock( void )
    return --hb_stack.iUnlocked;
 }
 #endif
+
+#undef hb_stackKeyPolls
+int * hb_stackKeyPolls( void )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackKeyPolls()"));
+
+   return &hb_stack.iKeyPoll;
+}
 
 #undef hb_stackGetPrivateStack
 PHB_PRIVATE_STACK hb_stackGetPrivateStack( void )

@@ -177,6 +177,7 @@ typedef struct
    PHB_TSD_HOLDER pTSD;       /* thread specific data holder */
    HB_PRIVATE_STACK privates; /* private variables stack */
    HB_SET_STRUCT set;
+   int        iKeyPoll;       /* counter for GT/keyboard polling */
 #if defined( HB_MT_VM )
    int        iUnlocked;      /* counter for nested hb_vmUnlock() calls */
    PHB_DYN_HANDLES pDynH;     /* dynamic symbol handles */
@@ -307,6 +308,8 @@ extern LONG        hb_stackGetStaticsBase( void );
 extern PHB_ITEM    hb_stackWithObjectItem( void );
 extern LONG        hb_stackWithObjectOffset( void );
 extern void        hb_stackWithObjectSetOffset( LONG );
+
+extern int *       hb_stackKeyPolls( void );
 
 extern void        hb_stackDestroyTSD( void );
 
@@ -442,6 +445,7 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
 
 #define hb_stackGetPrivateStack( )  ( &hb_stack.privates )
 #define hb_stackSetStruct( )        ( &hb_stack.set )
+#define hb_stackKeyPolls( )         ( &hb_stack.iKeyPoll )
 
 #endif
 

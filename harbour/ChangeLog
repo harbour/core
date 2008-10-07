@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-07 18:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+    % moved static USHORT uiPolls to HVM stack to not reduce the HVM
+      performance in MT mode. In multi CPU environment if many threads
+      try to change the same memory variable in the same time the overall
+      performance is strongly reduced on most of tested hardware - probably
+      some random CPU delay used to resolve the conflict.
+
 2008-10-07 16:33 UTC+0200 Maurilio Longo (maurilio.longo@libero.it)
    * harbour/source/rtl/seconds.c
      + Added OS/2 section to secondsCPU(), but it does not work as expected :)

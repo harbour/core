@@ -1064,7 +1064,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
    ULONG ulPastClock = 0;  /* opcodes profiler support */
 #endif
 #if !defined( HB_GUI )
-   static unsigned short uiPolls = 1;
+   int * piKeyPolls = hb_stackKeyPolls();
 #endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmExecute(%p, %p)", pCode, pSymbols));
@@ -1089,10 +1089,10 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 #endif
 
 #if !defined( HB_GUI )
-      if( ! --uiPolls )
+      if( ! --( *piKeyPolls ) )
       {
          hb_inkeyPoll();
-         /* uiPolls = 255; */
+         *piKeyPolls = 65536;
 
          /* IMHO we should have a _SET_ controlled by user
           * sth like:
@@ -1100,7 +1100,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          if( hb_stackSetStruct()->HB_SET_KEYPOLL )
          {
             hb_inkeyPoll();
-            uiPolls = hb_stackSetStruct()->HB_SET_KEYPOLL;
+            *piKeyPolls = hb_stackSetStruct()->HB_SET_KEYPOLL;
          }
 
          for some GTs which can work in assynchrous mode user may
