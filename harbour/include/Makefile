@@ -18,6 +18,7 @@ C_HEADERS=\
 	hbapilng.h   \
 	hbapirdd.h   \
 	hbassert.h   \
+	hbatomic.h   \
 	hbchksum.h   \
 	hbcomp.h     \
 	hbcompdf.h   \

@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-07 02:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/Makefile
+  + harbour/include/hbatomic.h
+  * harbour/include/hbthread.h
+  * harbour/source/vm/garbage.c
+  * harbour/source/vm/fm.c
+    * moved atomic and spinlock functions into hbatomic.h
+
+  * harbour/include/hbatomic.h
+    + added atomic inc/dec for GCC and x86@64 and PPC@32
+    + use OSAtomic*() and OSSpin*() functions for atomic inc/dec and
+      spinlocks in Darwin builds 
+    + added spinlocks to MS-Win builds
+
 2008-10-06 22:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/tobject.prg
     ! Formatting to some old code.

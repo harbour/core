@@ -99,6 +99,7 @@
 #include "hbset.h"
 #if defined( HB_MT_VM )
 #  include "hbthread.h"
+#  include "hbatomic.h"
 #endif
 
 #if defined( HB_FM_STD_ALLOC )
