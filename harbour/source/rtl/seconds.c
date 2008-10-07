@@ -313,9 +313,9 @@ HB_EXPORT double hb_secondsCPU( int n )
    if( s_timer_interval == 0 )
       DosQuerySysInfo( QSV_TIMER_INTERVAL, QSV_TIMER_INTERVAL, ( PVOID ) &s_timer_interval, sizeof( ULONG ) );
 
-   QSGREC ** pBuf = hb_xalloc( BUFSIZE );
+   pBuf = hb_xalloc( BUFSIZE );
 
-   if( pBuff )
+   if( pBuf )
    {
       APIRET rc = DosQuerySysState( QS_PROCESS, 0L, _getpid(), 0L, pBuf, BUFSIZE );
 
@@ -331,7 +331,7 @@ HB_EXPORT double hb_secondsCPU( int n )
          {
             if( n & 1 )
                d += pTrec->usertime;
-      
+
             if( n & 2 )
                d += pTrec->systime;
          }
@@ -342,6 +342,7 @@ HB_EXPORT double hb_secondsCPU( int n )
       hb_xfree( pBuf );
    }
    else
+
 #endif
    {
       /* TODO: this code is only for DOS and other platforms which cannot
