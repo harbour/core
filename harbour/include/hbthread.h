@@ -82,28 +82,41 @@ HB_EXTERN_BEGIN
 #  define HB_THREAD_SELF()          pthread_self()
 #  define HB_THREAD_EQUAL( x, y )   pthread_equal( x, y )
 
+#  define HB_CRITICAL_INIT(v)       pthread_mutex_init( &(v), NULL )
+#  define HB_CRITICAL_DESTROY(v)    pthread_mutex_destroy( &(v) )
 #  define HB_CRITICAL_LOCK(v)       pthread_mutex_lock( &(v) )
 #  define HB_CRITICAL_UNLOCK(v)     pthread_mutex_unlock( &(v) )
+#  define HB_COND_INIT(v)           pthread_cond_init( &(v), NULL )
+#  define HB_COND_DESTROY(v)        pthread_cond_destroy( &(v) )
 #  define HB_COND_SIGNAL(v)         pthread_cond_signal( &(v) )
 #  define HB_COND_SIGNALN(v,n)      pthread_cond_broadcast( &(v) )
 
-#  if defined( PTHREAD_MUTEX_INITIALIZER )
+#  define HB_COND_OS_SUPPORT        /* OS support for conditional variables */
+
+#  if defined( PTHREAD_MUTEX_INITIALIZER ) && !defined( HB_CRITICAL_NEED_INIT )
       typedef pthread_mutex_t          HB_CRITICAL_T;
 #     define HB_CRITICAL_NEW( name )   HB_CRITICAL_T name = PTHREAD_MUTEX_INITIALIZER
 #     define HB_CRITICAL_GET(v)        ( v )
-#  else     /* platform does not support static mutex initialization */
-#     define HB_CRITICAL_INIT(v)       pthread_mutex_init( &(v), NULL )
-#     define HB_CRITICAL_DESTROY(v)    pthread_mutex_destroy( &(v) )
+#  else
+      /* platform does not support static mutex initialization */
+#     if !defined( HB_CRITICAL_NEED_INIT )
+#        define HB_CRITICAL_NEED_INIT
+#     endif
 #     define HB_CRITICAL_GET(v)        ( &( (v)->critical ) )
+#     define HB_CRITICAL_INITVAL       { ( HB_RAWCRITICAL_T ) 0 }
 #  endif
 
-#  if defined( PTHREAD_COND_INITIALIZER )
+#  if defined( PTHREAD_COND_INITIALIZER ) && !defined( HB_COND_NEED_INIT )
       typedef pthread_cond_t           HB_COND_T;
 #     define HB_COND_NEW( name )       HB_COND_T name = PTHREAD_COND_INITIALIZER
 #     define HB_COND_GET(v)            ( v )
-#  else     /* platform does not support static condition var initialization */
-#     define HB_COND_INIT(v)           pthread_cond_init( &(v), NULL )
+#  else
+      /* platform does not support static condition var initialization */
+#     if !defined( HB_COND_NEED_INIT )
+#        define HB_COND_NEED_INIT
+#     endif
 #     define HB_COND_GET(v)            ( &( (v)->cond ) )
+#     define HB_COND_INITVAL           ( ( HB_RAWCOND_T ) 0 )
 #  endif
 
 #elif defined( HB_OS_WIN_32 ) && ! defined( HB_WINCE )
@@ -120,9 +133,9 @@ HB_EXTERN_BEGIN
 #  define HB_THREAD_END                   _endthreadex( 0 ); return 0;
 #  define HB_THREAD_RAWEND                return 0;
 
+#  define HB_THREAD_SELF()          GetCurrentThreadId()
 #  define HB_CRITICAL_INITVAL       { 0, 0, 0, 0, 0, 0 }
 #  define HB_COND_INITVAL           ( ( HANDLE ) NULL )
-#  define HB_THREAD_SELF()          GetCurrentThreadId()
 
 #  define HB_CRITICAL_INIT(v)       InitializeCriticalSection( &(v) )
 #  define HB_CRITICAL_DESTROY(v)    DeleteCriticalSection( &(v) )
@@ -134,6 +147,12 @@ HB_EXTERN_BEGIN
 #  define HB_COND_SIGNALN(v,n)      ReleaseSemaphore( (v), (n), NULL )
 #  define HB_COND_WAIT(v)           ( WaitForSingleObject( (v), INFINITE ) != WAIT_FAILED )
 #  define HB_COND_TIMEDWAIT(v,n)    ( WaitForSingleObject( (v), (n) ) != WAIT_FAILED )
+
+#  undef  HB_COND_OS_SUPPORT
+#  define HB_CRITICAL_NEED_INIT
+#  define HB_COND_NEED_INIT
+
+#  define HB_THREAD_INFINITE_WAIT   INFINITE
 
 #elif defined( HB_OS_OS2 )
 
@@ -167,6 +186,12 @@ HB_EXTERN_BEGIN
 #  define HB_COND_WAIT(v)           ( DosWaitEventSem( (v), SEM_INDEFINITE_WAIT ) == NO_ERROR )
 #  define HB_COND_TIMEDWAIT(v,n)    ( DosWaitEventSem( (v), (n) ) == NO_ERROR )
 
+#  undef  HB_COND_OS_SUPPORT
+#  define HB_CRITICAL_NEED_INIT
+#  define HB_COND_NEED_INIT
+
+#  define HB_THREAD_INFINITE_WAIT   SEM_INDEFINITE_WAIT
+
 #else
 
    typedef int HB_THREAD_NO;
@@ -194,30 +219,43 @@ HB_EXTERN_BEGIN
 
 #endif
 
-#ifdef HB_CRITICAL_INIT
+
+#ifdef HB_CRITICAL_NEED_INIT
    typedef struct
    {
       BOOL  fInit;
       HB_RAWCRITICAL_T  critical;
    } HB_CRITICAL_T;
 #  define HB_CRITICAL_NEW( name )   HB_CRITICAL_T name = { FALSE, HB_CRITICAL_INITVAL }
-#endif /* HB_CRITICAL_INIT */
+#endif /* HB_CRITICAL_NEED_INIT */
 
-#ifdef HB_COND_INIT
-   typedef struct
-   {
-      BOOL     fInit;
-      int      waiters;
-      HB_RAWCOND_T      cond;
-      HB_RAWCRITICAL_T  critical;
-   } HB_COND_T;
-#  define HB_COND_NEW( name )       HB_COND_T name = { FALSE, 0, HB_COND_INITVAL, HB_CRITICAL_INITVAL }
-#endif /* HB_COND_INIT */
+#ifdef HB_COND_NEED_INIT
+#  if defined( HB_COND_OS_SUPPORT )
+      typedef struct
+      {
+         BOOL     fInit;
+         HB_RAWCOND_T   cond;
+      } HB_COND_T;
+#     define HB_COND_NEW( name )       HB_COND_T name = { FALSE, HB_COND_INITVAL }
+#  else
+      typedef struct
+      {
+         BOOL     fInit;
+         int      waiters;
+         HB_RAWCOND_T      cond;
+         HB_RAWCRITICAL_T  critical;
+      } HB_COND_T;
+#     define HB_COND_NEW( name )       HB_COND_T name = { FALSE, 0, HB_COND_INITVAL, HB_CRITICAL_INITVAL }
+#  endif
+#endif /* HB_COND_NEED_INIT */
 
 #ifndef HB_THREAD_EQUAL
 #  define HB_THREAD_EQUAL( x, y )   ( (x) == (y) )
 #endif
 
+#ifndef HB_THREAD_INFINITE_WAIT
+#  define HB_THREAD_INFINITE_WAIT   ( ( ULONG ) -1 )
+#endif
 
 typedef HB_THREAD_STARTFUNC( PHB_THREAD_STARTFUNC );
 
@@ -229,6 +267,7 @@ typedef struct _HB_THREADSTATE
    PHB_SET_STRUCT pSet;
    void *         pStackId;
    BOOL           fActive;
+   BOOL           fFinished;
    PHB_ITEM       pParams;
    PHB_ITEM       pMemvars;
    PHB_ITEM       pResult;

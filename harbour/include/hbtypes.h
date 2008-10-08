@@ -66,7 +66,7 @@ typedef PHB_SYMB ( * VM_PROCESS_DLL_SYMBOLS ) ( PHB_SYMB pModuleSymbols,
                                                 USHORT uiModuleSymbols );
 typedef PHB_SYMB ( * VM_PROCESS_SYMBOLS_EX )
                         ( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols,
-                          char * szModuleName, ULONG ulID, USHORT uiPcodeVer );
+                          const char * szModuleName, ULONG ulID, USHORT uiPcodeVer );
 
 typedef void ( * VM_DLL_EXECUTE ) ( const BYTE * pCode, PHB_SYMB pSymbols );
 
@@ -109,16 +109,16 @@ typedef int      ( * HB_PARL2)( int iParam, ULONG ulArrayIndex );
 typedef double   ( * HB_PARND2)( int iParam, ULONG ulArrayIndex );
 typedef int      ( * HB_PARNI2)( int iParam, ULONG ulArrayIndex );
 typedef long     ( * HB_PARNL2)( int iParam, ULONG ulArrayIndex );
-typedef int      ( * HB_STORC)( char * szText, int iParam );
-typedef int      ( * HB_STORCLEN)( char * szText, ULONG ulLength, int iParam);
-typedef int      ( * HB_STORDS)( char * szDate, int iParam) ;
+typedef int      ( * HB_STORC)( const char * szText, int iParam );
+typedef int      ( * HB_STORCLEN)( const char * szText, ULONG ulLength, int iParam);
+typedef int      ( * HB_STORDS)( const char * szDate, int iParam) ;
 typedef int      ( * HB_STORL)( int iLogical, int iParam );
 typedef int      ( * HB_STORNI)( int iValue, int iParam );
 typedef int      ( * HB_STORNL)( long lValue, int iParam );
 typedef int      ( * HB_STORND)( double dValue, int iParam );
-typedef int      ( * HB_STORC2)( char * szText, int iParam , ULONG ulArrayIndex);
-typedef int      ( * HB_STORCLEN2)( char * szText, ULONG ulLength, int iParam , ULONG ulArrayIndex);
-typedef int      ( * HB_STORDS2)( char * szDate, int iParam , ULONG ulArrayIndex) ;
+typedef int      ( * HB_STORC2)( const char * szText, int iParam , ULONG ulArrayIndex);
+typedef int      ( * HB_STORCLEN2)( const char * szText, ULONG ulLength, int iParam , ULONG ulArrayIndex);
+typedef int      ( * HB_STORDS2)( const char * szDate, int iParam , ULONG ulArrayIndex) ;
 typedef int      ( * HB_STORL2)( int iLogical, int iParam , ULONG ulArrayIndex);
 typedef int      ( * HB_STORNI2)( int iValue, int iParam , ULONG ulArrayIndex);
 typedef int      ( * HB_STORNL2)( long lValue, int iParam , ULONG ulArrayIndex);

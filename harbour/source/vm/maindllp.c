@@ -93,7 +93,9 @@ static FARPROC hb_getProcAddress( LPCSTR szProcName )
    }
 
    if( pProcAddr == NULL )
-      hb_errInternal( 9997, "Cannot find address for function %s", szProcName, NULL );
+   {
+      /* hb_errInternal( 9997, "Cannot find address for function %s", szProcName, NULL ); */
+   }
 
    return pProcAddr;
 }
@@ -140,8 +142,8 @@ PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
    return pSymbols;
 }
 
-/* module symbols initialization */
-PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, USHORT uiPcodeVer ) /* module symbols initialization with extended information */
+/* module symbols initialization with extended information */
+PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, USHORT uiPcodeVer )
 {
    static FARPROC s_pProcessSymbols = NULL;
 
@@ -546,7 +548,7 @@ long hb_parnl( int iParam, ... ) /* retrieve a numeric parameter as a long */
    return 0;
 }
 
-int hb_storc( char * szText, int iParam, ... )
+int hb_storc( const char * szText, int iParam, ... )
 {
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
    FARPROC pStorC = GetProcAddress( GetModuleHandle( NULL ), "_hb_storc" );
@@ -575,7 +577,7 @@ int hb_storc( char * szText, int iParam, ... )
    return 0;
 }
 
-int hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
+int hb_storclen( const char * szText, ULONG ulLen, int iParam, ... )
 {
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
    FARPROC pStorC = GetProcAddress( GetModuleHandle( NULL ), "_hb_storclen" );
@@ -605,7 +607,7 @@ int hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
    return 0;
 }
 
-int hb_stords( char * szDate, int iParam, ... )
+int hb_stords( const char * szDate, int iParam, ... )
 {
    FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
    FARPROC pStorDs = GetProcAddress( GetModuleHandle( NULL ), "_hb_stords" );

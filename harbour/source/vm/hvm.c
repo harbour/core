@@ -620,6 +620,7 @@ static void hb_vmStackDel( PHB_THREADSTATE pState )
 
    pState->fActive = FALSE;
    pState->pStackId = NULL;
+   pState->fFinished = TRUE;
 
    if( pState->pPrev )
    {
@@ -835,6 +836,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    hb_xinit();
 
 #if defined( HB_MT_VM )
+   hb_threadInit();
    hb_vmStackInit( hb_threadStateNew() ); /* initialize HVM thread stack */
 #else
    hb_stackInit();                        /* initialize HVM stack */

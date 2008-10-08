@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-09 00:17 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbtypes.h
+  * harbour/source/vm/maindllp.c
+    ! updated casting for current SVN code
+      [TOMERGE 1.0]
+
+  * harbour/include/hbthread.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/thread.c
+    + added .prg function
+         hb_threadWait( <pThID> | <apThID>, [ <nTimeOut> ] [, <lAll> ] )
+               => <nThInd> | <nThCount> | 0
+      This function wait for <nTimeOut> seconds (default infinite wait)
+      until one or all (controlled by <lAll> parameter) of given HVM threads
+      will have finished execution in HVM area. It does not join the threads.
+      It returns index to 1-st thread which has finished execution (default)
+      or number of threads which has finished in given time period when lAll
+      is .T.
+
 2008-10-08 20:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/hscript/hscript.prg
   * source/compiler/gencobj.c
