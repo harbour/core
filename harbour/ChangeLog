@@ -8,19 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-08 12:28 UTC+0200 Maurilio Longo (maurilio.longo@libero.it)
+  * harbour/source/rtl/seconds.c
+    ! removed a couple of warnings.
+
 2008-10-08 02:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/cmdarg.c
-    * HB_ARGV() will now return the executable name if called 
+    * HB_ARGV() will now return the executable name if called
       without a parameter.
-    ! HB_ARGSTRING() fixed to return "" in some error 
+    ! HB_ARGSTRING() fixed to return "" in some error
       cases instead of NIL.
 
 2008-10-08 01:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/compiler/gencc.c
-    * Trick to avoid MSVC -W4 warnings in -gc3 compiled C code, 
-      when compiled string literal contained certain high (> 127) 
+    * Trick to avoid MSVC -W4 warnings in -gc3 compiled C code,
+      when compiled string literal contained certain high (> 127)
       chars followed by a digit. Thanks Przemek.
-      NOTE: I've checked and hexadecimal format has even more 
+      NOTE: I've checked and hexadecimal format has even more
             such problems.
 
 2008-10-07 21:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
