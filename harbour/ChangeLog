@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-08 14:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/bld.bat
+  * bin/bld_os2.cmd
+    + Added support for HB_INSTALL_PREFIX.
+    + Added experimental support for 'set HB_MT=MT' flag, 
+      to create an MT executable.
+
+  * source/rtl/seconds.c
+    * Formatting.
+
 2008-10-08 12:28 UTC+0200 Maurilio Longo (maurilio.longo@libero.it)
   * harbour/source/rtl/seconds.c
     ! removed a couple of warnings.
@@ -644,10 +654,12 @@
   * bin/bld.bat
     % Added BCC optimization switches
       (the ones used for the Harbour release versions).
+      [TOMERGE 1.0]
 
   * bin/bld.bat
   * bin/bld_os2.cmd
     + Added -O3 to GCC compilation.
+      [TOMERGE 1.0]
 
 2008-09-29 22:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
@@ -696,6 +708,7 @@
     + -O3 GCC optimization level made the default for all GCC
       builds. Those who wish to use lower optimization settings,
       pls use C_USR=-O2 or such.
+      [TOMERGE 1.0]
 
 2008-09-29 13:59 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/workarea.c

@@ -76,8 +76,8 @@
    #define ftime _ftime
 #endif
 #if defined( HB_OS_OS2 )
-#define BUFSIZE   16 * 1024
-#include <unistd.h>
+   #define BUFSIZE   16 * 1024
+   #include <unistd.h>
 #endif
 
 HB_EXPORT void hb_dateTimeStamp( LONG * plJulian, LONG * plMilliSec )
@@ -323,7 +323,7 @@ HB_EXPORT double hb_secondsCPU( int n )
       if( rc == NO_ERROR )
       {
          QSGREC * pGrec = * pBuf;
-         QSPREC * pPrec = (QSPREC *) ((ULONG) pGrec + sizeof( QSGREC ));
+         QSPREC * pPrec = ( QSPREC * ) ( ( ULONG ) pGrec + sizeof( QSGREC ) );
          QSTREC * pTrec = pPrec->pThrdRec;
 
          int i;
