@@ -228,8 +228,9 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       }
 
       fclose( filecfg );
-
-   } else {
+   }
+   else
+   {
       snprintf( buffer, sizeof( buffer ),
                 "\nError: Can't find %s file in %s.\n"
                 "%s should be a text file that contains:\n"

@@ -6,7 +6,6 @@
  * hscript.prg
  * HarbourScript translation engine
  *
- *
  * Copyright (C) 1999  Felipe Coury <fcoury@creation.com.br>
  * www - http://www.harbour-project.org
  *
@@ -49,10 +48,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- *  1999/06/13  First implementation.
- *  1999/06/24  Enhanced tag matching routines.
- *  1999/07/26  Corrections to CGI output, QOut() -> OutStd().
- *
  */
 
 #include "hbextern.ch"
@@ -60,18 +55,18 @@
 
 #define IF_BUFFER 65535
 
-FUNCTION Main( cScript )
+PROCEDURE Main( cScript )
 
    LOCAL aHRSHandle  := {}                         // Handle for script lines
    LOCAL aResult     := {}                         // Handle for transl'd lines
    LOCAL cLocation                                 // Location of scripts
-   LOCAL cHarbourDir := GetEnv( "HARBOURDIR" )     // Harbour.exe dir with '\'
-   LOCAL cHost       := StrTran( alltrim( ;        // Random (not et al)
+   LOCAL cHarbourDir := GetEnv( "HARBOURDIR" )     // harbour executable dir with '\'
+   LOCAL cHost       := StrTran( AllTrim( ;        // Random (not et al)
       Str( Seconds() ) ), '.' )                    // file name
    LOCAL cScriptName, cFile, cLine, cTrans, c
    LOCAL hFile, i, lOpen, nLen
 
-   WHILE .T.
+   DO WHILE .T.
 
       IF Empty( GetEnv( "SERVER_NAME" ) )
          cScriptName := cScript
@@ -113,7 +108,7 @@ FUNCTION Main( cScript )
 
       lOpen := .f.
       ft_FUse( cScriptName )
-      WHILE !ft_FEof()
+      DO WHILE !ft_FEof()
 
          cLine  := AllTrim( ft_FReadLn() )
          cTrans := ""
@@ -127,7 +122,7 @@ FUNCTION Main( cScript )
 
             c := SubStr( cLine, i, 1 )
 
-            IF c == "%" .AND. substr( cLine, i + 1, 1 ) == ">"
+            IF c == "%" .AND. SubStr( cLine, i + 1, 1 ) == ">"
                IF lOpen
                   // Error - Already in htm mode
                ELSE
@@ -144,7 +139,7 @@ FUNCTION Main( cScript )
                ENDIF
                i++
 
-            ELSEIF c == "<" .AND. substr( cLine, i + 1, 1 ) == "%"
+            ELSEIF c == "<" .AND. SubStr( cLine, i + 1, 1 ) == "%"
                IF !lOpen
                   // Error - Not in htm mode
                ELSE
@@ -164,8 +159,8 @@ FUNCTION Main( cScript )
             ENDIF
          NEXT
 
-         IF lOpen .AND. !( substr( cLine, nLen - 1, 2 ) == "%>" )
-            cTrans += "' + chr(10) )"
+         IF lOpen .AND. !( SubStr( cLine, nLen - 1, 2 ) == "%>" )
+            cTrans += "' + Chr(10) )"
          ENDIF
 
          AAdd( aResult, cTrans )
@@ -182,8 +177,8 @@ FUNCTION Main( cScript )
       NEXT
       FClose( hFile )
 
-      // Creates the temporary HRB, erases the PRG
-      hb_Run( cHarbourDir + "harbour.exe " + cFile + " /q /n /gh /o" + Left( cHarbourDir, Len( cHarbourDir ) - 1 ) + iif( !Empty( Left( cHarbourDir, Len( cHarbourDir ) - 1 ) ), "\", "" ) )
+      // Creates the temporary .hrb, erases the .prg
+      hb_Run( cHarbourDir + "harbour " + cFile + " -q -n -gh -o" + Left( cHarbourDir, Len( cHarbourDir ) - 1 ) + iif( !Empty( Left( cHarbourDir, Len( cHarbourDir ) - 1 ) ), "\", "" ) )
       FErase( cFile )
 
       // Runs using Tugboat
@@ -197,28 +192,28 @@ FUNCTION Main( cScript )
 
    ENDDO
 
-   RETURN NIL
+   RETURN
 
 FUNCTION ParseString( cString, cDelim, nRet )
 
    LOCAL cBuf, aElem, nPosFim, nSize, i
 
-   nSize := len( cString ) - len( StrTran( cString, cDelim, '' ) ) + 1
-   aElem := array( nSize )
+   nSize := Len( cString ) - Len( StrTran( cString, cDelim, '' ) ) + 1
+   aElem := Array( nSize )
 
    cBuf := cString
-   i := 1
+
    FOR i := 1 TO nSize
-      nPosFim := at( cDelim, cBuf )
+      nPosFim := At( cDelim, cBuf )
 
       IF nPosFim > 0
-         aElem[i] := substr( cBuf, 1, nPosFim - 1 )
+         aElem[i] := SubStr( cBuf, 1, nPosFim - 1 )
       ELSE
          aElem[i] := cBuf
       ENDIF
 
-      cBuf := substr( cBuf, nPosFim + 1, len( cBuf ) )
+      cBuf := SubStr( cBuf, nPosFim + 1, Len( cBuf ) )
 
-   NEXT i
+   NEXT
 
-   RETURN( aElem[ nRet ] )
+   RETURN aElem[ nRet ]

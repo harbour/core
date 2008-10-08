@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-08 20:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/examples/hscript/hscript.prg
+  * source/compiler/gencobj.c
+  * source/compiler/genobj32.c
+    * Formatting, minor cleanups.
+
 2008-10-08 15:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_gnu.bat
     ! HARBOURDIR -> HB_INSTALL_PREFIX
