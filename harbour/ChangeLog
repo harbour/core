@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-08 14:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * contrib/mtpl_b32.mak
+    + Added -Q switch to BCC defaults. This will print 
+      verbose error messages.
+
 2008-10-08 14:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/bld.bat
   * bin/bld_os2.cmd

@@ -129,7 +129,7 @@ CFLAGSMT = -tWM -DHB_MT_VM $(CFLAGSMT)
 
 #**********************************************************
 
-CLIBFLAGS      = -c -q -d -w -w-sig- $(CFLAGS)
+CLIBFLAGS      = -c -q -d -Q -w -w-sig- $(CFLAGS)
 CLIBFLAGSxxx   = $(HB_BCCDLL_DYNRT) $(CLIBFLAGS: -tWM= )
 CLIBFLAGSDLL   = -tWM $(CLIBFLAGSxxx) $(CLIBFLAGSDLL) -DHB_DYNLIB
 CEXEFLAGSDLL   = -tWM $(CLIBFLAGSxxx) $(CEXEFLAGSDLL)
