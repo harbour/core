@@ -305,10 +305,11 @@ HB_FUNC( HB_ARGSTRING )
       {
          hb_retc( pszValue );
          hb_xfree( pszValue );
+         return;
       }
    }
-   else
-      hb_retc( NULL );
+
+   hb_retc( NULL );
 }
 
 /* Returns the number of command line arguments passed to the application, this
@@ -320,19 +321,14 @@ HB_FUNC( HB_ARGC )
 }
 
 /* Returns a command line argument passed to the application. Calling it with
-   the parameter zero, it will return the name of the executable, as written
-   in the command line. */
+   the parameter zero or no parameter, it will return the name of the executable, 
+   as written in the command line. */
 
 HB_FUNC( HB_ARGV )
 {
-   if( ISNUM( 1 ) )
-   {
-      int argc = hb_parni( 1 );
+   int argc = hb_parni( 1 );
 
-      hb_retc( ( argc >= 0 && argc < s_argc ) ? s_argv[ argc ] : NULL );
-   }
-   else
-      hb_retc( NULL );
+   hb_retc( ( argc >= 0 && argc < s_argc ) ? s_argv[ argc ] : NULL );
 }
 
 /* Check for command line internal arguments */
