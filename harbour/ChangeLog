@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-09 17:03 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/source/rtl/thfuncx.prg
+    * added xbase++ compatible functions:
+         ThreadID() -> <nThId>
+         ThreadWait( <aThreads>, <nTimeOut> ) -> <oThread> | <pThId> | NIL
+         ThreadWaitAll( <aThreads>, <nTimeOut> ) -> <lAllFinished>
+      In Harbour <aThreads> can be array of thread pointers or thread
+      objects. xbase++ compatible thread class I'll add later.
+
 2008-10-09 07:30 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   - bin/hb_flst.tmp
   * bin/pack_src.sh
