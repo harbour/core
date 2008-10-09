@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-09 20:51 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+    + added thfuncx.prg
+
+  * harbour/source/rtl/thfuncx.prg
+    + added ThreadObject() function
+
+  * harbour/source/rtl/tthreadx.prg
+    + added xBase++ compatible TThread class.
+      Special thanks to Pritpal Bedi for class skeleton with info about
+      xbase++.
+      Now only basic functionality is supported though it was enough to
+      compile and execute examples Pritpal sent. I'm leaving rest for
+      xBase++ users.
+      BTW The examples suggest that in xbase++ DispOutAt() does not change
+      cursor position. It's not Clipper compatible so I cannot make it
+      in Harbour though I can add new function which will work in such way.
+
 2008-10-09 10:48 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   ! harbour/bin/bld.bat
     + _C_MT= if not HB_MT==MT

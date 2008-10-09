@@ -646,6 +646,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\tget$(OBJEXT)     \
     $(OBJ_DIR)\tgetint$(OBJEXT)  \
     $(OBJ_DIR)\tgetlist$(OBJEXT) \
+    $(OBJ_DIR)\thfuncx$(OBJEXT)  \
     $(OBJ_DIR)\tlabel$(OBJEXT)   \
     $(OBJ_DIR)\tmenuitm$(OBJEXT) \
     $(OBJ_DIR)\tmenusys$(OBJEXT) \
