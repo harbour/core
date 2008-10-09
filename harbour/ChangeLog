@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-09 10:48 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  ! harbour/bin/bld.bat
+    + _C_MT= if not HB_MT==MT
+      Forgot to clear the variable if mt mode is switched.
+
 2008-10-09 10:36 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   ! harbour/bin/bld.bat
     + Added _C_MT=-tWM if HB_MT==MT

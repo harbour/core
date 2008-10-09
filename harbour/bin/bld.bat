@@ -31,6 +31,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
 if     "%HB_MT%" == "MT" set _HBVM_LIB=hbvmmt
 if     "%HB_MT%" == "MT" set _c_MT=-tWM
 if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
+if not "%HB_MT%" == "MT" set _C_MT=
 
 :START
 
