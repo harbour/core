@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-10 00:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapigt.h
+  * harbour/source/rtl/gtapi.c
+    + added hb_gtPutText() C function
+
+  * harbour/source/rtl/console.c
+    + added HB_DISPOUTAT() which works like DISPOUTAT but does not change
+      cursor position. xBase++ users can use
+         #xtranslate DispOutAt( <x,...> ) => hb_dispOutAt( <x> )
+      for xBase++ compatible code
+
 2008-10-09 20:51 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/rtl/Makefile

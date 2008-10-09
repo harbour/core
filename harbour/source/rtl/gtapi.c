@@ -714,6 +714,23 @@ HB_EXPORT ERRCODE hb_gtSetMode( USHORT uiRows, USHORT uiCols )
    return errCode;
 }
 
+HB_EXPORT ERRCODE hb_gtPutText( USHORT uiRow, USHORT uiCol, BYTE * pStr, ULONG ulLength )
+{
+   PHB_GT pGT;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutText(%hu, %hu, %p, %lu)", uiRow, uiCol, pStr, ulLength));
+
+   pGT = hb_gt_Base();
+   if( pGT )
+   {
+      HB_GTSELF_PUTTEXT( pGT, uiRow, uiCol, HB_GTSELF_GETCOLOR( pGT ), pStr, ulLength );
+      HB_GTSELF_FLUSH( pGT );
+      hb_gt_BaseFree( pGT );
+      return SUCCESS;
+   }
+   return FAILURE;
+}
+
 HB_EXPORT ERRCODE hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pStr, ULONG ulLength )
 {
    PHB_GT pGT;
