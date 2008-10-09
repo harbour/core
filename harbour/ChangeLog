@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-09 09:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+    + Added missing HB_DISABLEWAITLOCKS().
+    ; NOTE: This looks like a hack to add FLX_WAIT flag 
+            for locks app-wide, and on Windows systems only.
+            IMO we should not have such hacks in core, or if 
+            this is really important it should support all 
+            possible platforms.
+            It also has a low-level function equivalent, 
+            which is missing from hbapifs.h. There is no 
+            reference to these function in any Harbour or 
+            xhb changelogs.
+            If there are no objections, I'd like remove 
+            this functionality.
+
+  * source/rtl/hbrandom.c
+  * source/rtl/filesys.c
+    * Minor formatting.
+
 2008-10-09 03:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompdf.h
   * harbour/source/compiler/hbmain.c

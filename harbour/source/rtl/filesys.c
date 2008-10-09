@@ -317,7 +317,7 @@ static HANDLE DosToWinHandle( HB_FHANDLE fHandle )
       return GetStdHandle( STD_OUTPUT_HANDLE );
 
    else if( fHandle == ( HB_FHANDLE ) 2 )
-      return GetStdHandle( STD_ERROR_HANDLE) ;
+      return GetStdHandle( STD_ERROR_HANDLE);
 
    else
       return ( HANDLE ) fHandle;
@@ -1366,7 +1366,7 @@ HB_EXPORT USHORT hb_fsRead( HB_FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount
 
    #if defined(HB_WIN32_IO)
       {
-         DWORD dwRead ;
+         DWORD dwRead;
          BOOL fResult;
 
          hb_vmUnlock();
@@ -1891,14 +1891,14 @@ HB_EXPORT BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
       {
          if( hb_iswinnt() )
          {
-            OVERLAPPED sOlap ;
-            DWORD dwFlags ;
-            memset( &sOlap, 0, sizeof( OVERLAPPED ) ) ;
-            sOlap.Offset = ( ULONG ) ulStart ;
-            dwFlags = ( uiMode & FLX_SHARED ) ? 0 : LOCKFILE_EXCLUSIVE_LOCK ;
+            OVERLAPPED sOlap;
+            DWORD dwFlags;
+            memset( &sOlap, 0, sizeof( OVERLAPPED ) );
+            sOlap.Offset = ( ULONG ) ulStart;
+            dwFlags = ( uiMode & FLX_SHARED ) ? 0 : LOCKFILE_EXCLUSIVE_LOCK;
             if( !s_fUseWaitLocks || !( uiMode & FLX_WAIT ) )
             {
-               dwFlags |= LOCKFILE_FAIL_IMMEDIATELY ;
+               dwFlags |= LOCKFILE_FAIL_IMMEDIATELY;
             }
             bResult = LockFileEx( DosToWinHandle( hFileHandle ), dwFlags, 0, ulLength, 0, &sOlap );
          }
@@ -1912,9 +1912,9 @@ HB_EXPORT BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
       {
          if( hb_iswinnt() )
          {
-            OVERLAPPED sOlap ;
-            memset( &sOlap, 0, sizeof( OVERLAPPED ) ) ;
-            sOlap.Offset = ( ULONG ) ulStart ;
+            OVERLAPPED sOlap;
+            memset( &sOlap, 0, sizeof( OVERLAPPED ) );
+            sOlap.Offset = ( ULONG ) ulStart;
             bResult = UnlockFileEx( DosToWinHandle( hFileHandle ), 0, ulLength,0, &sOlap );
          }
          else
@@ -2100,13 +2100,13 @@ HB_EXPORT BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
          case FL_LOCK:
             if( hb_iswinnt() )
             {
-               OVERLAPPED sOlap ;
-               DWORD dwFlags ;
+               OVERLAPPED sOlap;
+               DWORD dwFlags;
 
                dwFlags = ( ( uiMode & FLX_SHARED ) ? 0 : LOCKFILE_EXCLUSIVE_LOCK );
                if( !s_fUseWaitLocks || !( uiMode & FLX_WAIT ) )
                {
-                  dwFlags |= LOCKFILE_FAIL_IMMEDIATELY ;
+                  dwFlags |= LOCKFILE_FAIL_IMMEDIATELY;
                }
 
                memset( &sOlap, 0, sizeof( OVERLAPPED ) );
@@ -2127,7 +2127,7 @@ HB_EXPORT BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
          case FL_UNLOCK:
             if( hb_iswinnt() )
             {
-               OVERLAPPED sOlap ;
+               OVERLAPPED sOlap;
 
                memset( &sOlap, 0, sizeof( OVERLAPPED ) );
                sOlap.Offset = dwOffsetLo;
