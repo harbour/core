@@ -600,9 +600,11 @@ HB_FUNC( __DBPACK )
          hb_itemRelease( pArea->valResult );
          pArea->valResult = hb_itemArrayNew( 2 );
          hb_arraySet( pArea->valResult, 1, pBlock );
-         pEvery = hb_param( 2, HB_IT_ANY );
-         if( pEvery && HB_IS_NUMERIC( pEvery ) )
+         pEvery = hb_param( 2, HB_IT_NUMERIC );
+         if( pEvery )
             hb_arraySet( pArea->valResult, 2, pEvery );
+         else
+            hb_arraySetNI( pArea->valResult, 2, 0 );
       }
       else
       {

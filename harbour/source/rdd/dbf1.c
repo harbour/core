@@ -4168,17 +4168,25 @@ static ERRCODE hb_dbfPack( DBFAREAP pArea )
    if( SELF_GOCOLD( ( AREAP ) pArea ) != SUCCESS )
       return FAILURE;
 
-   if( HB_IS_ARRAY( pArea->valResult ) && hb_arrayLen( pArea->valResult ) == 2 )
+   /* This is bad hack but looks that people begins to use it :-(
+    * so I'll add workaround to make it m ore safe
+    */
+   if( pArea->valResult && HB_IS_ARRAY( pArea->valResult ) &&
+       hb_arrayLen( pArea->valResult ) == 2 &&
+       ( hb_arrayGetType( pArea->valResult, 1 ) & HB_IT_BLOCK ) != 0 &&
+       ( hb_arrayGetType( pArea->valResult, 2 ) & HB_IT_NUMERIC ) != 0 )
    {
-      pBlock = hb_arrayGetItemPtr( pArea->valResult, 1 );
-      ulUserEvery = hb_arrayGetNL( pArea->valResult, 2 );
-      if( ulUserEvery < 1 )
+      pBlock = hb_itemNew( NULL );
+      hb_arrayGet( pArea->valResult, 1, pBlock );
+      if( hb_arrayGetND( pArea->valResult, 2 ) >= 1 )
+         ulUserEvery = hb_arrayGetNL( pArea->valResult, 2 );
+      else
          ulUserEvery = 1;
    }
    else
    {
       pBlock = NULL;
-      ulUserEvery = 1;
+      ulUserEvery = 0;
    }
 
    ulRecOut = ulEvery = 0;
@@ -4186,9 +4194,17 @@ static ERRCODE hb_dbfPack( DBFAREAP pArea )
    while( ulRecIn <= pArea->ulRecCount )
    {
       if( SELF_GOTO( ( AREAP ) pArea, ulRecIn ) != SUCCESS )
+      {
+         if( pBlock )
+            hb_itemRelease( pBlock );
          return FAILURE;
+      }
       if( !hb_dbfReadRecord( pArea ) )
+      {
+         if( pBlock )
+            hb_itemRelease( pBlock );
          return FAILURE;
+      }
 
       /* Execute the Code Block */
       if( pBlock )
@@ -4197,12 +4213,19 @@ static ERRCODE hb_dbfPack( DBFAREAP pArea )
          {
             ulEvery = 0;
             if( SELF_EVALBLOCK( ( AREAP ) pArea, pBlock ) != SUCCESS )
+            {
+               hb_itemRelease( pBlock );
                return FAILURE;
+            }
          }
       }
 
       if( SELF_PACKREC( ( AREAP ) pArea, ulRecOut + 1, &fWritten ) != SUCCESS )
+      {
+         if( pBlock )
+            hb_itemRelease( pBlock );
          return FAILURE;
+      }
 
       if( fWritten )
       {
@@ -4212,17 +4235,28 @@ static ERRCODE hb_dbfPack( DBFAREAP pArea )
             pArea->ulRecNo = ulRecOut;
             pArea->fRecordChanged = TRUE;
             if( ! hb_dbfWriteRecord( pArea ) )
+            {
+               if( pBlock )
+                  hb_itemRelease( pBlock );
                return FAILURE;
+            }
          }
       }
       ulRecIn++;
    }
 
    /* Execute the Code Block for pending record */
-   if( pBlock && ulEvery > 0 )
+   if( pBlock )
    {
-      if( SELF_EVALBLOCK( ( AREAP ) pArea, pBlock ) != SUCCESS )
-         return FAILURE;
+      if( ulEvery > 0 )
+      {
+         if( SELF_EVALBLOCK( ( AREAP ) pArea, pBlock ) != SUCCESS )
+         {
+            hb_itemRelease( pBlock );
+            return FAILURE;
+         }
+      }
+      hb_itemRelease( pBlock );
    }
 
    if( pArea->ulRecCount != ulRecOut )

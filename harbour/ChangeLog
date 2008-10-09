@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-09 14:11 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    * changed the place where exception handles are set/remove.
+      Now it's set at the beginning of hb_vmInit() and removed
+      at the end of hb_vmQuit()
+
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/dbf1.c
+    ! added workaround for problem with EVAL block used in PACK
+      command
+
+  * harbour/source/compiler/hbmain.c
+    * minor simplification
+
 2008-10-09 05:02 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * bin/hb_flst.tmp
   * bin/pack_src.sh

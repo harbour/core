@@ -835,6 +835,8 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 
    hb_xinit();
 
+   hb_vmSetExceptionHandler();
+
 #if defined( HB_MT_VM )
    hb_threadInit();
    hb_vmStackInit( hb_threadStateNew() ); /* initialize HVM thread stack */
@@ -956,8 +958,6 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
       int i;
       int iArgCount;
 
-      hb_vmSetExceptionHandler();
-
       hb_vmPushSymbol( s_pSymStart ); /* pushes first HB_FS_PUBLIC defined symbol to the stack */
       hb_vmPushNil();                 /* places NIL at self */
 
@@ -976,7 +976,6 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 
       hb_vmDo( ( USHORT ) iArgCount ); /* invoke it with number of supplied parameters */
 
-      hb_vmUnsetExceptionHandler();
    }
 }
 
@@ -1050,6 +1049,9 @@ HB_EXPORT int hb_vmQuit( void )
    /* release all known garbage */
    if( hb_xquery( HB_MEM_USEDMAX ) == 0 ) /* check if fmstat is ON */
       hb_gcReleaseAll();
+
+   hb_vmUnsetExceptionHandler();
+
    hb_xexit();
 
    return s_nErrorLevel;

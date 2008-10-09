@@ -333,16 +333,6 @@ static PCOMSYMBOL hb_compSymbolFind( HB_COMP_DECL, const char * szSymbolName, US
    return NULL;
 }
 
-/* NOTE: Name of symbols are released in hbident.c  on exit */
-static PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL pSym )
-{
-   PCOMSYMBOL pNext = pSym->pNext;
-
-   hb_xfree( ( void * ) pSym );
-
-   return pNext;
-}
-
 /* returns a symbol name based on its index on the symbol table
  * index starts from 0
  */
@@ -4133,12 +4123,11 @@ void hb_compCompileEnd( HB_COMP_DECL )
    }
    HB_COMP_PARAM->pLastClass = NULL;
 
-   if( HB_COMP_PARAM->symbols.pFirst )
+   while( HB_COMP_PARAM->symbols.pFirst )
    {
       PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
-      while( pSym )
-         pSym = hb_compSymbolKill( pSym );
-      HB_COMP_PARAM->symbols.pFirst = NULL;
+      HB_COMP_PARAM->symbols.pFirst = pSym->pNext;
+      hb_xfree( ( void * ) pSym );
    }
 }
 
