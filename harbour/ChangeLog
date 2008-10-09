@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-09 04:57 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  + bin/hb_flst.tmp
+  * bin/pack_src.sh
+    * Made available the source file list to users that don't build from a SVN tree
+
 2008-10-09 10:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/bld.bat
   * bin/bld_os2.cmd

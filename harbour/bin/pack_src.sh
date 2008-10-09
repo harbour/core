@@ -67,21 +67,22 @@ hb_collect_all_svn()
    done
 }
 
-hb_rmflst="no"
+#hb_rmflst="no"
 hb_flst="bin/hb_flst.tmp"
-if [ -d "$hb_rootdir/.svn" ] || [ ! -r "$hb_rootdir/$hb_flst" ]; then
-   hb_rmflst="yes"
+#if [ -d "$hb_rootdir/.svn" ] || [ ! -r "$hb_rootdir/$hb_flst" ]; then
+if [ -d "$hb_rootdir/.svn" ] ; then
+#   hb_rmflst="yes"
    #format=`cat $hb_rootdir/.svn/format`
    if [ "$format" = 4 ] || [ "$format" = 8 ]; then
       (cd "$hb_rootdir";hb_collect_all) > "$hb_rootdir/$hb_flst"
    else
       (cd "$hb_rootdir";hb_collect_all_svn) > "$hb_rootdir/$hb_flst"
    fi
-   echo "$hb_flst" >> "$hb_rootdir/$hb_flst"
+#   echo "$hb_flst" >> "$hb_rootdir/$hb_flst"
 fi
 if [ "$hb_archbin" = "zip" ]; then
    (cd "$hb_rootdir";$hb_archbin -r -q $hb_filename . "-i@$hb_flst")
 else
    (cd "$hb_rootdir";$hb_archbin $hb_archopt $hb_filename --files-from "$hb_flst")
 fi
-[ "$hb_rmflst" != "yes" ] || rm -fR "$hb_rootdir/$hb_flst"
+#[ "$hb_rmflst" != "yes" ] || rm -fR "$hb_rootdir/$hb_flst"
