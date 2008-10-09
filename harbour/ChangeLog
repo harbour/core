@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-09 10:36 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  ! harbour/bin/bld.bat
+    + Added _C_MT=-tWM if HB_MT==MT
+      BCC32 includes cw32mt.lib if -tWM is present as a switch.
+      Now setting HB_MT=MT will allow to compile and link a prg in MT mode.
+
 2008-10-09 17:03 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/source/rtl/thfuncx.prg
     * added xbase++ compatible functions:
