@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-09 07:30 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  - bin/hb_flst.tmp
+  * bin/pack_src.sh
+    - removed the temporary file list from SVN.
+    * Added code to retrieve the source file list when SVN info is not available
+
 2008-10-09 14:11 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     * changed the place where exception handles are set/remove.
