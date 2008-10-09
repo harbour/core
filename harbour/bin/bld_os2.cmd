@@ -78,5 +78,6 @@ if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
 :CLEANUP
 
    del %1.c
+   if exist %1.o del %1.o
 
 :END

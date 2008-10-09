@@ -214,5 +214,9 @@ if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
 :CLEANUP
 
    del %1.c
+   if exist %1.o del %1.o
+   if exist %1.obj del %1.obj
+   rem Borland stuff
+   if exist %1.tds del %1.tds
 
 :END
