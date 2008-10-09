@@ -74,9 +74,9 @@ if [ -d "$hb_rootdir/.svn" ] ; then
 #   hb_rmflst="yes"
    #format=`cat $hb_rootdir/.svn/format`
    if [ "$format" = 4 ] || [ "$format" = 8 ]; then
-      (cd "$hb_rootdir";hb_collect_all) > "$hb_rootdir/$hb_flst"
+      (cd "$hb_rootdir";hb_collect_all) | sort > "$hb_rootdir/$hb_flst"
    else
-      (cd "$hb_rootdir";hb_collect_all_svn) > "$hb_rootdir/$hb_flst"
+      (cd "$hb_rootdir";hb_collect_all_svn) | sort > "$hb_rootdir/$hb_flst"
    fi
 #   echo "$hb_flst" >> "$hb_rootdir/$hb_flst"
 fi
