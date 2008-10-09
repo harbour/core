@@ -53,8 +53,9 @@
  *
  */
 
-#include "hbclass.ch"
 #include "common.ch"
+#include "hbclass.ch"
+#include "hbthread.ch"
 
 #ifdef HB_COMPAT_XPP
 
@@ -199,7 +200,8 @@ METHOD start( xAction, ... ) CLASS TTHREAD
       RETURN .F.
    ELSEIF xAction == NIL
       ::active := .T.
-      ::pThreadID := hb_threadStart( { |...|
+      ::pThreadID := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, ;
+            { |...|
                ::startTime := Seconds()
                ThreadObject( Self )
                ::result := ::execute( ... )
@@ -207,7 +209,8 @@ METHOD start( xAction, ... ) CLASS TTHREAD
             }, ... )
    ELSEIF !Empty( xAction ) .AND. ValType( xAction ) $ "CBP"
       ::active := .T.
-      ::pThreadID := hb_threadStart( { |...|
+      ::pThreadID := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, ;
+            { |...|
                ::startTime := Seconds()
                ThreadObject( Self )
                IF ::atStart != NIL

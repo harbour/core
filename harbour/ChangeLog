@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-10 01:43 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtapi.c
+    + added new GT methods: LOCK() and UNLOCK()
+    * serialize GT access in MT mode - please remember that it's only
+      low level serialization to protect access to low GT resources.
+      It has nothing to application level screen output from different
+      threads which has to be serialized by programmer if necessary.
+
+  * harbour/source/rtl/tthreadx.prg
+    * use HB_THREAD_INHERIT_PUBLIC as thread attribute for thread
+      started by oThread:start() to emulate xbase++ PUBLIC variables
+      behavior
+
 2008-10-10 00:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapigt.h
   * harbour/source/rtl/gtapi.c

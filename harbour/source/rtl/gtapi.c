@@ -128,7 +128,7 @@ HB_EXPORT ERRCODE hb_gtExit( void )
 
       HB_GTSELF_FLUSH( pGT );
       HB_GTSELF_EXIT( pGT );
-      hb_gt_BaseFree( pGT );
+      /* hb_gt_BaseFree( pGT ); */
    }
 
    hb_gtUnLoad();

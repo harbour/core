@@ -116,6 +116,8 @@ struct _HB_GT_BASE;
 
 typedef struct
 {
+   BOOL     (* Lock) ( HB_GT_PTR );
+   void     (* Unlock) ( HB_GT_PTR );
    void     (* Init) ( HB_GT_PTR, HB_FHANDLE, HB_FHANDLE, HB_FHANDLE );
    void     (* Exit) ( HB_GT_PTR );
    void *   (* New) ( HB_GT_PTR );
@@ -240,19 +242,19 @@ typedef struct
    void     (* GfxText) ( HB_GT_PTR, int, int, char *, int, int, int );
 
 #if 0
-    /* keyboard */
-    int     (* ExtendedKeySupport) ( HB_GT_PTR );
+   /* keyboard */
+   int     (* ExtendedKeySupport) ( HB_GT_PTR );
 
-    /* GT CLIPBOARD functions */
-    void    (* GetClipboard) ( HB_GT_PTR, char *, ULONG * );
-    void    (* SetClipboard) ( HB_GT_PTR, char *, ULONG );
-    ULONG   (* GetClipboardSize) ( HB_GT_PTR );
+   /* GT CLIPBOARD functions */
+   void    (* GetClipboard) ( HB_GT_PTR, char *, ULONG * );
+   void    (* SetClipboard) ( HB_GT_PTR, char *, ULONG );
+   ULONG   (* GetClipboardSize) ( HB_GT_PTR );
 
-    void    (* ProcessMessages) ( HB_GT_PTR );
+   void    (* ProcessMessages) ( HB_GT_PTR );
 
-    /* GT to DRIVER communication functions */
-    void    (* update ) ( HB_GT_PTR, int );
-    int     (* info ) ( HB_GT_PTR, int, BOOL , int , void * );
+   /* GT to DRIVER communication functions */
+   void    (* update ) ( HB_GT_PTR, int );
+   int     (* info ) ( HB_GT_PTR, int, BOOL , int , void * );
 
 #endif
 
@@ -292,6 +294,8 @@ typedef HB_SCREENCELL * PHB_SCREENCELL;
 typedef struct _HB_GT_BASE
 {
    PHB_GT_FUNCS   pFuncTable;
+
+   PHB_ITEM       pMutex;
 
    int            iRow;             /* cursor row position */
    int            iCol;             /* cursor column position */
@@ -358,6 +362,8 @@ extern void hb_gt_BaseFree( PHB_GT pGT );
 
 #define HB_GTLOCAL(g)   (g)->pGTData[*HB_GTID_PTR]
 
+#define HB_GTSELF_LOCK(g)                       (g)->pFuncTable->Lock(g)
+#define HB_GTSELF_UNLOCK(g)                     (g)->pFuncTable->Unlock(g)
 #define HB_GTSELF_INIT(g,i,o,e)                 (g)->pFuncTable->Init(g,i,o,e)
 #define HB_GTSELF_EXIT(g)                       (g)->pFuncTable->Exit(g)
 #define HB_GTSELF_NEW(g)                        (g)->pFuncTable->New(g)
@@ -473,6 +479,8 @@ extern void hb_gt_BaseFree( PHB_GT pGT );
 #define HB_GTSELF_GFXTEXT(g,t,l,s,c,h,w)        (g)->pFuncTable->GfxText(g,t,l,s,c,h,w)
 #define HB_GTSELF_WHOCARES(g,p)                 (g)->pFuncTable->WhoCares(g,p)
 
+#define HB_GTSUPER_LOCK(g)                       (HB_GTSUPER)->Lock(g)
+#define HB_GTSUPER_UNLOCK(g)                     (HB_GTSUPER)->Unlock(g)
 #define HB_GTSUPER_INIT(g,i,o,e)                 (HB_GTSUPER)->Init(g,i,o,e)
 #define HB_GTSUPER_EXIT(g)                       (HB_GTSUPER)->Exit(g)
 #define HB_GTSUPER_NEW(g)                        (HB_GTSUPER)->New(g)

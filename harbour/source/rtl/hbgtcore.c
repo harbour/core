@@ -66,6 +66,7 @@
 #include "hbdate.h"
 #include "hbset.h"
 #include "hbvm.h"
+#include "hbthread.h"
 
 /* these variables are used for stdout/stderr output when GT subsystem
  * is not initialized
@@ -79,12 +80,16 @@ static PHB_GT_BASE s_curGT = NULL;
 
 PHB_GT hb_gt_Base( void )
 {
-   return s_curGT;
+   if( s_curGT && HB_GTSELF_LOCK( s_curGT ) )
+      return s_curGT;
+   else
+      return NULL;
 }
 
 void hb_gt_BaseFree( PHB_GT pGT )
 {
-   HB_SYMBOL_UNUSED( pGT );
+   if( pGT )
+      HB_GTSELF_UNLOCK( pGT );
 }
 
 /* helper internal function */
@@ -110,6 +115,8 @@ static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
 
    pGT->inkeyBuffer     = pGT->defaultKeyBuffer;
    pGT->inkeyBufferSize = HB_DEFAULT_INKEY_BUFSIZE;
+
+   pGT->pMutex       = hb_threadMutexCreate( TRUE );
 }
 
 static void * hb_gt_def_New( PHB_GT pGT )
@@ -150,6 +157,9 @@ static void * hb_gt_def_New( PHB_GT pGT )
 
 static void hb_gt_def_Free( PHB_GT pGT )
 {
+   if( s_curGT == pGT )
+      s_curGT = NULL;
+
    if( pGT->screenBuffer )
       hb_xfree( pGT->screenBuffer );
    if( pGT->prevBuffer )
@@ -162,10 +172,21 @@ static void hb_gt_def_Free( PHB_GT pGT )
    if( pGT->pNotifierBlock )
       hb_itemRelease( pGT->pNotifierBlock );
 
-   if( s_curGT == pGT )
-      s_curGT = NULL;
+   if( pGT->pMutex )
+      hb_itemRelease( pGT->pMutex );
 
    hb_xfree( pGT );
+}
+
+static BOOL hb_gt_def_Lock( PHB_GT pGT )
+{
+   return !pGT->pMutex || hb_threadMutexLock( pGT->pMutex );
+}
+
+static void hb_gt_def_Unlock( PHB_GT pGT )
+{
+   if( pGT->pMutex )
+      hb_threadMutexUnlock( pGT->pMutex );
 }
 
 static void hb_gt_def_Init( PHB_GT pGT, HB_FHANDLE hStdIn, HB_FHANDLE hStdOut, HB_FHANDLE hStdErr )
@@ -2384,7 +2405,9 @@ static int hb_gt_def_InkeyGet( PHB_GT pGT, BOOL fWait, double dSeconds, int iEve
       if( !fWait || hb_vmRequestQuery() != 0 )
          return 0;
 
+      HB_GTSELF_UNLOCK( pGT );
       hb_idleState();
+      HB_GTSELF_LOCK( pGT );
    }
    while( end_timer == 0 || end_timer > hb_dateMilliSeconds() );
 
@@ -2787,6 +2810,8 @@ static void hb_gt_def_WhoCares( PHB_GT pGT, void * pCargo )
 #if defined( __GNUC__ ) && 0
 static HB_GT_FUNCS s_gtCoreFunc =
 {
+   Lock                       : hb_gt_def_Lock                          ,
+   Unlock                     : hb_gt_def_Unlock                        ,
    Init                       : hb_gt_def_Init                          ,
    Exit                       : hb_gt_def_Exit                          ,
    New                        : hb_gt_def_New                           ,
@@ -2905,6 +2930,8 @@ static HB_GT_FUNCS s_gtCoreFunc =
 #else
 static HB_GT_FUNCS s_gtCoreFunc =
 {
+   hb_gt_def_Lock                         ,
+   hb_gt_def_Unlock                       ,
    hb_gt_def_Init                         ,
    hb_gt_def_Exit                         ,
    hb_gt_def_New                          ,
