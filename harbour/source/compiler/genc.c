@@ -158,7 +158,8 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       pFuncall = HB_COMP_PARAM->funcalls.pFirst;
       while( pFuncall )
       {
-         if( hb_compFunctionFind( HB_COMP_PARAM, pFuncall->szName ) == NULL &&
+         if( ( pFuncall->cScope & ( HB_FS_DEFERRED | HB_FS_LOCAL ) ) == 0 &&
+             hb_compFunctionFind( HB_COMP_PARAM, pFuncall->szName ) == NULL &&
              hb_compInlineFind( HB_COMP_PARAM, pFuncall->szName ) == NULL )
             fprintf( yyc, "HB_FUNC_EXTERN( %s );\n", pFuncall->szName );
          pFuncall = pFuncall->pNext;

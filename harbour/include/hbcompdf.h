@@ -424,6 +424,7 @@ typedef struct __INLINE
 typedef struct __FUNCALL
 {
    const char * szName;                   /* name of a called function */
+   HB_SYMBOLSCOPE cScope;                 /* the scope of the function */
    struct __FUNCALL * pNext;              /* pointer to the next called function */
 } _FUNCALL, * PFUNCALL;
 

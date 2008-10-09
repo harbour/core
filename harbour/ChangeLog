@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-09 03:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+  * harbour/source/compiler/hbmain.c
+    % do not add dummy entries to symbol table for functions declared
+      as dynamic - it allows to include hbdynamic.ch with list of all
+      supported functions by application and/or harbour.dll to any .prg
+      file which will be used to create shared library (.dll, .so, ...)
+      without any memory overhead.
+
+  * harbour/source/compiler/genc.c
+    % do not generate unnecessary HB_FUNC_EXTERN() declarations for
+      function declared as DYNAMIC
+
 2008-10-09 01:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
     + Added HB_THREADWAIT()

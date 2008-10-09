@@ -1900,11 +1900,13 @@ static PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION pFunc )
  * as they have to be placed on the symbol table later than the
  * first public symbol
  */
-static PFUNCALL hb_compFunCallAdd( HB_COMP_DECL, const char * szFunctionName )
+static PFUNCALL hb_compFunCallAdd( HB_COMP_DECL, const char * szFunctionName,
+                                   HB_SYMBOLSCOPE cScope )
 {
    PFUNCALL pFunc = ( PFUNCALL ) hb_xgrab( sizeof( _FUNCALL ) );
 
    pFunc->szName = szFunctionName;
+   pFunc->cScope = cScope;
    pFunc->pNext  = NULL;
    if( ! HB_COMP_PARAM->funcalls.iCount )
    {
@@ -1928,29 +1930,30 @@ static PFUNCALL hb_compFunCallAdd( HB_COMP_DECL, const char * szFunctionName )
  */
 void hb_compExternAdd( HB_COMP_DECL, const char * szExternName, HB_SYMBOLSCOPE cScope ) /* defines a new extern name */
 {
-   PEXTERN pExtern = ( PEXTERN ) hb_xgrab( sizeof( _EXTERN ) ), pLast;
+   PEXTERN * pExtern;
 
    if( strcmp( "_GET_", szExternName ) == 0 )
    {
       /* special function to implement @ GET statement */
       hb_compExternAdd( HB_COMP_PARAM, "__GETA", 0 );
-      pExtern->szName = "__GET";
+      szExternName = "__GET";
    }
-   else
-   {
-      pExtern->szName = szExternName;
-   }
-   pExtern->cScope = cScope;
-   pExtern->pNext  = NULL;
 
-   if( HB_COMP_PARAM->externs == NULL )
-      HB_COMP_PARAM->externs = pExtern;
+   pExtern = &HB_COMP_PARAM->externs;
+   while( *pExtern )
+   {
+      if( strcmp( ( *pExtern )->szName, szExternName ) == 0 )
+         break;
+      pExtern = &( *pExtern )->pNext;
+   }
+   if( *pExtern )
+      ( *pExtern )->cScope |= cScope;
    else
    {
-      pLast = HB_COMP_PARAM->externs;
-      while( pLast->pNext )
-         pLast = pLast->pNext;
-      pLast->pNext = pExtern;
+      *pExtern = ( PEXTERN ) hb_xgrab( sizeof( _EXTERN ) );
+      ( *pExtern )->szName = szExternName;
+      ( *pExtern )->cScope = cScope;
+      ( *pExtern )->pNext  = NULL;
    }
 }
 
@@ -2130,18 +2133,27 @@ void hb_compExternGen( HB_COMP_DECL ) /* generates the symbols for the EXTERN na
 
    while( HB_COMP_PARAM->externs )
    {
+      HB_SYMBOLSCOPE cScope = HB_COMP_PARAM->externs->cScope;
       PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName, NULL, HB_SYM_FUNCNAME );
+
       if( pSym )
       {
-         if( ! hb_compFunCallFind( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName ) )
-            hb_compFunCallAdd( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName );
+         PFUNCALL pFunc = hb_compFunCallFind( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName );
+         pSym->cScope |= cScope;
+         if( !pFunc )
+         {
+            if( ( cScope & HB_FS_DEFERRED ) == 0 )
+               hb_compFunCallAdd( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName, pSym->cScope );
+         }
+         else
+            pFunc->cScope |= pSym->cScope;
       }
-      else
+      else if( ( cScope & HB_FS_DEFERRED ) == 0 )
       {
-          pSym = hb_compSymbolAdd( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName, NULL, HB_SYM_FUNCNAME );
-          hb_compFunCallAdd( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName );
+         pSym = hb_compSymbolAdd( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName, NULL, HB_SYM_FUNCNAME );
+         pSym->cScope |= cScope;
+         hb_compFunCallAdd( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName, pSym->cScope );
       }
-      pSym->cScope |= HB_COMP_PARAM->externs->cScope;
       pDelete = HB_COMP_PARAM->externs;
       HB_COMP_PARAM->externs = HB_COMP_PARAM->externs->pNext;
       hb_xfree( ( void * ) pDelete );
@@ -2892,12 +2904,12 @@ void hb_compGenPushFunCall( const char * szFunName, HB_COMP_DECL )
    if( hb_compSymbolFind( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME ) != NULL )
    {
       if( ! hb_compFunCallFind( HB_COMP_PARAM, szFunName ) )
-         hb_compFunCallAdd( HB_COMP_PARAM, szFunName );
+         hb_compFunCallAdd( HB_COMP_PARAM, szFunName, 0 );
    }
    else
    {
       hb_compSymbolAdd( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME );
-      hb_compFunCallAdd( HB_COMP_PARAM, szFunName );
+      hb_compFunCallAdd( HB_COMP_PARAM, szFunName, 0 );
    }
    hb_compGenPCode3( HB_P_PUSHFUNCSYM, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), HB_COMP_PARAM );
 }
@@ -2930,13 +2942,13 @@ void hb_compGenPushSymbol( const char * szSymbolName, BOOL bFunction, HB_COMP_DE
    if( hb_compSymbolFind( HB_COMP_PARAM, szSymbolName, &wSym, bFunction ) != NULL )  /* the symbol was found on the symbol table */
    {
       if( bFunction && ! hb_compFunCallFind( HB_COMP_PARAM, szSymbolName ) )
-         hb_compFunCallAdd( HB_COMP_PARAM, szSymbolName );
+         hb_compFunCallAdd( HB_COMP_PARAM, szSymbolName, 0 );
    }
    else
    {
       hb_compSymbolAdd( HB_COMP_PARAM, szSymbolName, &wSym, bFunction );
       if( bFunction )
-         hb_compFunCallAdd( HB_COMP_PARAM, szSymbolName );
+         hb_compFunCallAdd( HB_COMP_PARAM, szSymbolName, 0 );
    }
 
    if( wSym > 255 )
