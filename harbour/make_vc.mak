@@ -32,7 +32,6 @@
 #
 #       HB_GT_LIB         - The default GT driver, choose between:
 #                           gtwin (default), gtcgi, gtwvt, gtstd, gtpca
-#       HB_BUILD_ST       - If set to yes builds harbour in SingleThread mode
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build
 #       HB_BUILD_MODE     - If set to cpp causes to compile in C++ mode
@@ -55,13 +54,6 @@
 #**********************************************************
 
 HB_ARCHITECTURE = w32
-
-#**********************************************************
-
-# MSVC has ST mode as default
-!if "$(HB_BUILD_ST)" == ""
-HB_BUILD_ST = yes
-!endif
 
 #**********************************************************
 
@@ -173,16 +165,10 @@ CFLAGS         = -Zi $(CFLAGS)
 DBGMARKER      =  d
 !endif
 
-CFLAGSMT = -MT$(DBGMARKER) -DHB_MT_VM $(CFLAGSMT)
+CFLAGSMT = -MT$(DBGMARKER) -DHB_MT_VM
 
 !endif
 
-#-----------
-!if "$(HB_BUILD_ST)" != "yes"
-CFLAGS = $(CFLAGS) $(CFLAGSMT)
-!else
-HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(VMMT_LIB)
-!endif
 #-----------
 !if "$(HB_GT_LIB)" != ""
 CFLAGS = -D"HB_GT_LIB=$(HB_GT_LIB:gt=)" $(CFLAGS)

@@ -32,7 +32,6 @@
 #
 #       HB_GT_LIB         - The default GT driver, choose between:
 #                           gtwin (default), gtcgi, gtwvt, gtstd, gtpca
-#       HB_BUILD_ST       - If set to yes builds harbour in SingleThread mode
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
@@ -55,13 +54,6 @@
 #**********************************************************
 
 HB_ARCHITECTURE = w32
-
-#**********************************************************
-
-# BORLAND has ST mode as default
-!if "$(HB_BUILD_ST)" == ""
-    HB_BUILD_ST = yes
-!endif
 
 #**********************************************************
 
@@ -100,7 +92,7 @@ INCLUDE_DIR = include
 
 # C Compiler Flags
 CFLAGS = -I$(INCLUDE_DIR) -I$(OBJ_DIR) $(C_USR)
-CFLAGSMT = -DHB_MT_VM $(CFLAGSMT)
+CFLAGSMT = -DHB_MT_VM
 
 #-----------
 !ifndef BCC_NOOPTIM
@@ -113,12 +105,6 @@ CFLAGSMT = -DHB_MT_VM $(CFLAGSMT)
 #-----------
 !if "$(HB_BCCDLL_DYNRT)" == "-tWR"
     RTLIBSUFFIX = i
-!endif
-#-----------
-!if "$(HB_BUILD_ST)" != "yes"
-    CFLAGS = $(CFLAGS) $(CFLAGSMT)
-!else
-    HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(VMMT_LIB)
 !endif
 #-----------
 !if "$(HB_GT_LIB)" != ""
@@ -151,9 +137,7 @@ LDFLAGSDLL     = -Gn -C -aa -Tpd -Gi -L$(LIB_DIR) $(LDFLAGSDLL)
 
 #**********************************************************
 
-!if "$(HB_BUILD_ST)" != "yes"
-    STANDARD_STATIC_CLIBS = cw32mt$(RTLIBSUFFIX).lib
-!endif
+STANDARD_STATIC_CLIBS = cw32mt$(RTLIBSUFFIX).lib
 
 # This is needed, otherwise the libs may overflow
 # when debug info is requested with -v -y

@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-10 09:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * common.mak
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+    - Removed option HB_BUILD_ST to build another version 
+      of Harbour MT build [for non-GNU builds], or forced 
+      SingleThreaded (non -tWM) Harbour builds.
+    * Modified to not allow CFLAGSMT to be tweaked from the 
+      outside [for non-GNU builds].
+
 2008-10-10 09:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * bin/bld.bat

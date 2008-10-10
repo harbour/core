@@ -1168,6 +1168,7 @@ HB_BUILD_TARGETS = \
     $(HARBOUR_EXE)          \
     \
     $(VM_LIB)               \
+    $(VMMT_LIB)             \
     $(RTL_LIB)              \
     $(MACRO_LIB)            \
     $(DEBUG_LIB)            \

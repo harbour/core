@@ -37,7 +37,6 @@
 #                           (if you don't have slang installed)
 #
 #       HB_COMMERCE       - If set to yes disables pure GNU modules (slang,GPM,...)
-#       HB_BUILD_ST       - If set to yes builds harbour in SingleThread mode
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build (currently not working)
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
@@ -53,12 +52,6 @@
 # ---------------------------------------------------------------
 
 .SUFFIXES:
-
-# GCC has ST mode as default
-ifeq ($(HB_BUILD_ST),)
-    HB_BUILD_ST=yes
-endif
-
 
 #**********************************************************
 
@@ -166,7 +159,7 @@ endif
 INCLUDE_DIR    := include
 
 CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) -I$(OBJ_DIR)
-CFLAGSMT       := -DHB_MT_VM $(CFLAGSMT)
+CFLAGSMT       := -DHB_MT_VM
 #-----------
 ifndef GCC_NOOPTIM
 CFLAGS         := -O3 $(CFLAGS)
@@ -183,15 +176,6 @@ endif
 CLIBFLAGS      := -c $(CFLAGS)
 CLIBFLAGSDLL   := -DHB_DYNLIB $(CLIBFLAGS) $(CLIBFLAGSDLL)
 CEXEFLAGSDLL   :=  $(CFLAGS) $(CEXEFLAGSDLL)
-
-ifeq ($(findstring $(HB_ARCHITECTURE),dos),)
-ifneq ($(HB_BUILD_ST),yes)
-    CLIBFLAGS += $(CFLAGSMT)
-    CLIBFLAGSDLL += $(CFLAGSMT)
-else
-    HB_BUILD_TARGETS += $(VMMT_LIB)
-endif
-endif
 
 # Under architectures other than "DOS based" add -fPIC
 # to gcc compiler flags for compiling shared libraries
