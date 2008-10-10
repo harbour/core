@@ -506,22 +506,25 @@ HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
       if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
          s_lMemoryMaxConsumed = s_lMemoryConsumed;
 
-      if( ! pMem )
-         hb_errInternal( HB_EI_XREALLOC, NULL, NULL, NULL );
+      if( pMem )
+      {
+         ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
+         HB_FM_SETSIG( HB_MEM_PTR( pMem ), ulSize );
+         if( ( ( PHB_MEMINFO ) pMem )->pPrevBlock )
+            ( ( PHB_MEMINFO ) pMem )->pPrevBlock->pNextBlock = ( PHB_MEMINFO ) pMem;
+         if( ( ( PHB_MEMINFO ) pMem )->pNextBlock )
+            ( ( PHB_MEMINFO ) pMem )->pNextBlock->pPrevBlock = ( PHB_MEMINFO ) pMem;
 
-      ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
-      HB_FM_SETSIG( HB_MEM_PTR( pMem ), ulSize );
-      if( ( ( PHB_MEMINFO ) pMem )->pPrevBlock )
-         ( ( PHB_MEMINFO ) pMem )->pPrevBlock->pNextBlock = ( PHB_MEMINFO ) pMem;
-      if( ( ( PHB_MEMINFO ) pMem )->pNextBlock )
-         ( ( PHB_MEMINFO ) pMem )->pNextBlock->pPrevBlock = ( PHB_MEMINFO ) pMem;
-
-      if( s_pFirstBlock == pMemBlock )
-         s_pFirstBlock = ( PHB_MEMINFO ) pMem;
-      if( s_pLastBlock == pMemBlock )
-         s_pLastBlock = ( PHB_MEMINFO ) pMem;
+         if( s_pFirstBlock == pMemBlock )
+            s_pFirstBlock = ( PHB_MEMINFO ) pMem;
+         if( s_pLastBlock == pMemBlock )
+            s_pLastBlock = ( PHB_MEMINFO ) pMem;
+      }
 
       HB_FM_UNLOCK
+
+      if( ! pMem )
+         hb_errInternal( HB_EI_XREALLOC, NULL, NULL, NULL );
    }
 #else
 

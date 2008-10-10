@@ -1646,18 +1646,7 @@ HB_EXPORT ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount
 
 #if defined(HB_FS_FILE_IO)
 
-   #if defined(HB_WIN32_IO)
-   {
-      OVERLAPPED Overlapped;
-      hb_vmUnlock();
-      memset( &Overlapped, 0, sizeof( Overlapped ) );
-      Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF ),
-      Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 ),
-      hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
-                                 pBuff, ulCount, &ulRead, &Overlapped ), 0 );
-      hb_vmLock();
-   }
-   #elif defined(HB_OS_UNIX)
+   #if defined(HB_OS_UNIX)
    {
       hb_vmUnlock();
       #if defined(HB_USE_LARGEFILE64)
@@ -1671,6 +1660,20 @@ HB_EXPORT ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount
       hb_vmLock();
    }
    #else
+   #if defined(HB_WIN32_IO)
+   if( hb_iswinnt() )
+   {
+      OVERLAPPED Overlapped;
+      hb_vmUnlock();
+      memset( &Overlapped, 0, sizeof( Overlapped ) );
+      Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF ),
+      Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 ),
+      hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
+                                 pBuff, ulCount, &ulRead, &Overlapped ), 0 );
+      hb_vmLock();
+   }
+   else
+   #endif
    {
       hb_vmUnlock();
       /* TOFIX: this is not atom operation. It has to be fixed for RDD
@@ -1702,18 +1705,7 @@ HB_EXPORT ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG 
 
 #if defined(HB_FS_FILE_IO)
 
-   #if defined(HB_WIN32_IO)
-   {
-      OVERLAPPED Overlapped;
-      hb_vmUnlock();
-      memset( &Overlapped, 0, sizeof( Overlapped ) );
-      Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF ),
-      Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 ),
-      hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
-                                  pBuff, ulCount, &ulWritten, &Overlapped ), 0 );
-      hb_vmLock();
-   }
-   #elif defined(HB_OS_UNIX)
+   #if defined(HB_OS_UNIX)
    {
       hb_vmUnlock();
       #if defined(HB_USE_LARGEFILE64)
@@ -1727,6 +1719,20 @@ HB_EXPORT ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG 
       hb_vmLock();
    }
    #else
+   #if defined(HB_WIN32_IO)
+   if( hb_iswinnt() )
+   {
+      OVERLAPPED Overlapped;
+      hb_vmUnlock();
+      memset( &Overlapped, 0, sizeof( Overlapped ) );
+      Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF ),
+      Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 ),
+      hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
+                                  pBuff, ulCount, &ulWritten, &Overlapped ), 0 );
+      hb_vmLock();
+   }
+   else
+   #endif
    {
       hb_vmUnlock();
       /* TOFIX: this is not atom operation. It has to be fixed for RDD

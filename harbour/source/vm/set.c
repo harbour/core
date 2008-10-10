@@ -1092,8 +1092,6 @@ void hb_setRelease( PHB_SET_STRUCT pSet )
    if( pSet->HB_SET_HBOUTLOG )      hb_xfree( pSet->HB_SET_HBOUTLOG );
    if( pSet->HB_SET_HBOUTLOGINFO )  hb_xfree( pSet->HB_SET_HBOUTLOGINFO );
 
-   pSet->HB_SET_TYPEAHEAD = 0;     hb_inkeyReset(); /* reset keyboard buffer */
-
    hb_fsFreeSearchPath( pSet->hb_set_path );
 
    /* Free all set listeners */

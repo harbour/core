@@ -8,6 +8,35 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-10 21:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/garbage.c
+    * unblock HVM before executing destructors and releasing blocks
+
+  * harbour/source/vm/fm.c
+    ! do not call internal error with active lock when FM statistic
+      is enabled
+
+  * harbour/source/vm/thread.c
+    ! stop other threads in hb_threadOnce() if the 1-st one
+      executes bAction block to be sure that it will be completed
+      before thread leave hb_threadOnce() function
+
+  * harbour/source/vm/set.c
+    ! do not call hb_inkeyReset() in set release. It's not necessary
+      and it could change keyboard buffer size for other threads using
+      the same GT driver.
+
+  * harbour/source/vm/hvm.c
+    % allocate new thread stack without lock
+
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtapi.c
+    * moved clipboard resetting from hbgtcore.c to gtapi.c
+
+  * harbour/source/rtl/filesys.c
+    ! do not use read/write operations with given file offset in Win9X
+      which seems to not support such functionality
+
 2008-10-10 20:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.bat
   * make_vc.mak

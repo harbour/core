@@ -208,9 +208,6 @@ static void hb_gt_def_Exit( PHB_GT pGT )
    HB_GTSELF_INKEYEXIT( pGT );
 
    HB_GTSELF_FREE( pGT );
-
-   /* clear internal clipboard data */
-   hb_gt_setClipboard( NULL, 0 );
 }
 
 static BOOL hb_gt_def_CheckPos( PHB_GT pGT, int iRow, int iCol, long *plIndex )

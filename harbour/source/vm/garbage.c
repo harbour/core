@@ -731,6 +731,14 @@ void hb_gcCollectAll( BOOL fForce )
 
       } while( pAlloc != s_pCurrBlock );
 
+      /* Step 4 - flip flag */
+      /* Reverse used/unused flag so we don't have to mark all blocks
+       * during next collecting
+       */
+      s_uUsedFlag ^= HB_GC_USED_FLAG;
+
+      hb_vmResumeThreads();
+
       /* do we have any deleted blocks? */
       if( s_pDeletedBlock )
       {
@@ -752,10 +760,11 @@ void hb_gcCollectAll( BOOL fForce )
             hb_gcUnlink( &s_pDeletedBlock, s_pDeletedBlock );
             if( hb_xRefCount( pDelete ) != 0 )
             {
-               hb_gcLink( &s_pCurrBlock, pAlloc );
                pAlloc->used = s_uUsedFlag;
                pAlloc->locked = 0;
-
+               HB_GC_LOCK
+               hb_gcLink( &s_pCurrBlock, pAlloc );
+               HB_GC_UNLOCK
                if( hb_vmRequestQuery() == 0 )
                   hb_errRT_BASE( EG_DESTRUCTOR, 1301, NULL, "Reference to freed block", 0 );
             }
@@ -764,15 +773,7 @@ void hb_gcCollectAll( BOOL fForce )
 
          } while( s_pDeletedBlock );
       }
-
-      /* Step 4 - flip flag */
-      /* Reverse used/unused flag so we don't have to mark all blocks
-       * during next collecting
-       */
-      s_uUsedFlag ^= HB_GC_USED_FLAG;
-
       s_bCollecting = FALSE;
-      hb_vmResumeThreads();
    }
 }
 

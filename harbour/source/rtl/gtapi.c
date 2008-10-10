@@ -131,6 +131,9 @@ HB_EXPORT ERRCODE hb_gtExit( void )
       /* hb_gt_BaseFree( pGT ); */
    }
 
+   /* clear internal clipboard data */
+   hb_gt_setClipboard( NULL, 0 );
+
    hb_gtUnLoad();
 
    return SUCCESS;

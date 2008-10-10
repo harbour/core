@@ -652,9 +652,9 @@ static void hb_vmStackInit( PHB_THREADSTATE pState )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmStackInit(%p)", pState));
 
-   HB_VM_LOCK
-
    hb_stackInit();      /* initialize HVM thread stack */
+
+   HB_VM_LOCK
    {
       HB_STACK_TLS_PRELOAD
 
