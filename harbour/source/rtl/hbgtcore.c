@@ -1571,11 +1571,21 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_NOTIFIERBLOCK:
          if( pGT->pNotifierBlock )
          {
-            hb_itemRelease( pGT->pNotifierBlock );
-            pGT->pNotifierBlock = NULL;
+            if( pInfo->pResult )
+               hb_itemCopy( pInfo->pResult, pGT->pNotifierBlock );
+            else
+               pInfo->pResult = hb_itemNew( pGT->pNotifierBlock );
          }
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_BLOCK )
-            pGT->pNotifierBlock = hb_itemNew( pInfo->pNewVal );
+         if( pInfo->pNewVal )
+         {
+            if( pGT->pNotifierBlock )
+            {
+               hb_itemRelease( pGT->pNotifierBlock );
+               pGT->pNotifierBlock = NULL;
+            }
+            if( hb_itemType( pInfo->pNewVal ) & HB_IT_BLOCK )
+               pGT->pNotifierBlock = hb_itemNew( pInfo->pNewVal );
+         }
          break;
 
       default:

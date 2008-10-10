@@ -614,8 +614,10 @@ static void hb_vmStackAdd( PHB_THREADSTATE pState )
       pState->th_no = ++s_threadNo;
 }
 
-static void hb_vmStackDel( PHB_THREADSTATE pState )
+static PHB_ITEM hb_vmStackDel( PHB_THREADSTATE pState )
 {
+   PHB_ITEM pThItm;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmStackDel(%p)", pState));
 
    pState->fActive = FALSE;
@@ -633,19 +635,16 @@ static void hb_vmStackDel( PHB_THREADSTATE pState )
             s_vmStackLst = NULL;
       }
       pState->pPrev = pState->pNext = NULL;
-      s_iStackCount--;
    }
 
-   if( pState->pThItm )
-   {
-      PHB_ITEM pThItm = pState->pThItm;
-      pState->pThItm = NULL;
-      /* NOTE: releasing pThItm may force pState freeing if parent
-       *       thread does not keep thread pointer item. So it's
-       *       important to not access it later. [druzus]
-       */
-      hb_itemRelease( pThItm );
-   }
+   /* NOTE: releasing pThItm may force pState freeing if parent
+    *       thread does not keep thread pointer item. So it's
+    *       important to not access it later. [druzus]
+    */
+   pThItm = pState->pThItm;
+   pState->pThItm = NULL;
+
+   return pThItm;
 }
 
 static void hb_vmStackInit( PHB_THREADSTATE pState )
@@ -673,25 +672,32 @@ static void hb_vmStackRelease( void )
 {
    HB_STACK_TLS_PRELOAD
    BOOL fLocked;
+   PHB_ITEM pThItm;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmStackRelease()"));
 
    HB_VM_LOCK
 
    fLocked = hb_stackUnlock() == 1;
+   pThItm = hb_vmStackDel( ( PHB_THREADSTATE ) hb_stackList() );
 
-   hb_vmStackDel( ( PHB_THREADSTATE ) hb_stackList() );
+   HB_VM_UNLOCK
+
+   if( pThItm )
+      hb_itemRelease( pThItm );
 
    hb_setRelease( hb_stackSetStruct() );
    hb_stackFree();
 
    hb_threadMutexUnlockAll();
 
+   HB_VM_LOCK
+
    if( fLocked )
-   {
       s_iRunningCount--;
-      hb_threadCondBroadcast( &s_vmCond );
-   }
+
+   s_iStackCount--;
+   hb_threadCondBroadcast( &s_vmCond );
 
    HB_VM_UNLOCK
 }
@@ -711,13 +717,20 @@ HB_EXPORT BOOL hb_vmThreadRegister( void * Cargo )
 
 HB_EXPORT void hb_vmThreadRelease( void * Cargo )
 {
+   PHB_ITEM pThItm;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadRelease(%p)", Cargo));
 
    HB_VM_LOCK
 
-   hb_vmStackDel( ( PHB_THREADSTATE ) Cargo );
+   pThItm = hb_vmStackDel( ( PHB_THREADSTATE ) Cargo );
+   s_iStackCount--;
+   hb_threadCondBroadcast( &s_vmCond );
 
    HB_VM_UNLOCK
+
+   if( pThItm )
+      hb_itemRelease( pThItm );
 }
 
 /* thread entry point */

@@ -726,6 +726,12 @@ HB_FUNC( HB_THREADSELF )
 {
 #if defined( HB_MT_VM )
    PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) hb_vmThreadState();
+   /* It's possible that pThread will be NULL and this function will
+    * return NIL. It may happen only in one case when this function is
+    * executed by one of destructors of items stored in thread pointer
+    * item (in practice it can be only thread return value) and parent
+    * thread destroyed this thread pointer item. [druzus]
+    */
    if( pThread )
       hb_itemReturn( pThread->pThItm );
 #endif

@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-10 22:46 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    * reduced the mutex lock time in thread exit state
+
+  * harbour/source/vm/thread.c
+    ; added note about possible behavior of hb_threadSelf() function
+      in one very specific situation. It's documented and expected
+      behavior
+
+  * harbour/source/rtl/hbgtcore.c
+    + added support for retrieving current HB_GTI_NOTIFIERBLOCK code block
+    + added support for removing HB_GTI_NOTIFIERBLOCK code block without
+      setting the new one
+
 2008-10-10 21:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/garbage.c
     * unblock HVM before executing destructors and releasing blocks
