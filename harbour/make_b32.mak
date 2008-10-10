@@ -100,7 +100,7 @@ INCLUDE_DIR = include
 
 # C Compiler Flags
 CFLAGS = -I$(INCLUDE_DIR) -I$(OBJ_DIR) $(C_USR)
-CFLAGSMT = -tWM -DHB_MT_VM $(CFLAGSMT)
+CFLAGSMT = -DHB_MT_VM $(CFLAGSMT)
 
 #-----------
 !ifndef BCC_NOOPTIM
@@ -112,7 +112,6 @@ CFLAGSMT = -tWM -DHB_MT_VM $(CFLAGSMT)
 !endif
 #-----------
 !if "$(HB_BCCDLL_DYNRT)" == "-tWR"
-    HB_BCCDLL_DYNRT=$(HB_BCCDLL_DYNRT)
     RTLIBSUFFIX = i
 !endif
 #-----------
@@ -129,10 +128,9 @@ CFLAGSMT = -tWM -DHB_MT_VM $(CFLAGSMT)
 
 #**********************************************************
 
-CLIBFLAGS      = -c -q -d -Q -w -w-sig- $(CFLAGS)
-CLIBFLAGSxxx   = $(HB_BCCDLL_DYNRT) $(CLIBFLAGS: -tWM= )
-CLIBFLAGSDLL   = -tWM $(CLIBFLAGSxxx) $(CLIBFLAGSDLL) -DHB_DYNLIB
-CEXEFLAGSDLL   = -tWM $(CLIBFLAGSxxx) $(CEXEFLAGSDLL)
+CLIBFLAGS      = -c -q -d -Q -w -w-sig- -tWM $(CFLAGS)
+CLIBFLAGSDLL   = $(HB_BCCDLL_DYNRT) $(CLIBFLAGSDLL) -DHB_DYNLIB
+CEXEFLAGSDLL   = $(HB_BCCDLL_DYNRT) $(CEXEFLAGSDLL)
 
 #**********************************************************
 
