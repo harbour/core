@@ -1330,6 +1330,14 @@ BOOL hb_threadMutexUnlock( PHB_ITEM pItem )
 
    if( pMutex )
    {
+#if !defined( HB_MT_VM )
+      if( HB_THREAD_EQUAL( pMutex->owner, HB_THREAD_SELF() ) )
+      {
+         if( --pMutex->lock_count == 0 )
+            pMutex->owner = ( HB_THREAD_ID ) 0;
+         fResult = TRUE;
+      }
+#else
       HB_CRITICAL_LOCK( pMutex->mutex );
       if( HB_THREAD_EQUAL( pMutex->owner, HB_THREAD_SELF() ) )
       {
@@ -1342,6 +1350,7 @@ BOOL hb_threadMutexUnlock( PHB_ITEM pItem )
          fResult = TRUE;
       }
       HB_CRITICAL_UNLOCK( pMutex->mutex );
+#endif
    }
    return fResult;
 }
@@ -1352,6 +1361,49 @@ void hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, BOOL fWaiting )
 
    if( pMutex )
    {
+#if !defined( HB_MT_VM )
+      if( !fWaiting )
+      {
+         if( !pMutex->events )
+         {
+            pMutex->events = hb_itemArrayNew( 1 );
+            if( pNotifier && !HB_IS_NIL( pNotifier ) )
+               hb_arraySet( pMutex->events, 1, pNotifier );
+         }
+         else if( pNotifier )
+            hb_arrayAdd( pMutex->events, pNotifier );
+         else
+            hb_arraySize( pMutex->events, hb_arrayLen( pMutex->events ) + 1 );
+      }
+      else if( pMutex->waiters )
+      {
+         int iCount = pMutex->waiters;
+         ULONG ulLen;
+
+         if( pMutex->events )
+         {
+            ulLen = hb_arrayLen( pMutex->events );
+            iCount -= ulLen;
+            if( iCount > 0 )
+               hb_arraySize( pMutex->events, ulLen + iCount );
+         }
+         else
+         {
+            ulLen = 0;
+            pMutex->events = hb_itemArrayNew( iCount );
+         }
+         if( iCount > 0 )
+         {
+            if( pNotifier && !HB_IS_NIL( pNotifier ) )
+            {
+               int iSet = iCount;
+               do
+                  hb_arraySet( pMutex->events, ++ulLen, pNotifier );
+               while( --iSet );
+            }
+         }
+      }
+#else
       HB_CRITICAL_LOCK( pMutex->mutex );
       if( !fWaiting )
       {
@@ -1401,6 +1453,7 @@ void hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, BOOL fWaiting )
          }
       }
       HB_CRITICAL_UNLOCK( pMutex->mutex );
+#endif
    }
 }
 

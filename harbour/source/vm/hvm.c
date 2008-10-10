@@ -7304,15 +7304,8 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols,
    return pNewSymbols;
 }
 
-/*
- * module symbols initialization with extended information
- */
-HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiModuleSymbols,
-                                          const char * szModuleName, ULONG ulID,
-                                          USHORT uiPCodeVer )
+static void hb_vmVerifyPCodeVersion( const char * szModuleName, USHORT uiPCodeVer )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbolsEx(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPCodeVer));
-
    if( uiPCodeVer != 0 )
    {
       if( uiPCodeVer > HB_PCODE_VER || /* the module is compiled with newer compiler version then HVM */
@@ -7327,8 +7320,31 @@ HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiModuleSymb
       }
    }
 
+}
+
+/*
+ * module symbols initialization with extended information
+ */
+HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiModuleSymbols,
+                                          const char * szModuleName, ULONG ulID,
+                                          USHORT uiPCodeVer )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbolsEx(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPCodeVer));
+
+   hb_vmVerifyPCodeVersion( szModuleName, uiPCodeVer );
    return hb_vmRegisterSymbols( pSymbols, uiModuleSymbols, szModuleName, ulID,
                                 s_fCloneSym, s_fCloneSym )->pModuleSymbols;
+}
+
+HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, USHORT uiModuleSymbols,
+                                              const char * szModuleName, ULONG ulID,
+                                              USHORT uiPCodeVer )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessDynLibSymbols(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPCodeVer));
+
+   hb_vmVerifyPCodeVersion( szModuleName, uiPCodeVer );
+   return hb_vmRegisterSymbols( pSymbols, uiModuleSymbols, szModuleName, ulID,
+                                TRUE, TRUE )->pModuleSymbols;
 }
 
 /*
@@ -7349,8 +7365,8 @@ HB_EXPORT PHB_SYMB hb_vmProcessDllSymbols( PHB_SYMB pSymbols, USHORT uiModuleSym
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessDllSymbols(%p,%hu)", pSymbols, uiModuleSymbols));
 
-   return hb_vmRegisterSymbols( pSymbols, uiModuleSymbols, "", 0,
-                                TRUE, s_fCloneSym )->pModuleSymbols;
+   return hb_vmRegisterSymbols( pSymbols, uiModuleSymbols, "", 0L,
+                                TRUE, TRUE )->pModuleSymbols;
 }
 
 static void hb_vmReleaseLocalSymbols( void )

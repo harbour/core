@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-10 06:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+    + added hb_vmProcessDynLibSymbols() which works like
+      hb_vmProcessSymbolsEx() but always mark registered modules as
+      dynamic
+
+  * harbour/source/vm/maindllp.c
+    * redirect hb_vmProcessSymbolsEx() to hb_vmProcessDynLibSymbols()
+
+  * harbour/source/vm/thread.c
+    * disabled some low level locking code in non MT HVM mode
+
 2008-10-10 01:43 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbgtcore.h
   * harbour/source/rtl/hbgtcore.c
