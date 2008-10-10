@@ -22,30 +22,22 @@
 #       (note that these are all optional)
 #
 #       C_USR             - Extra C compiler options for libraries and for executables
-#       CLIBFLAGSDLL      - Extra C compiler options for the shared libraries
-#
-#       L_USR             - Extra linker options for the static libraries
-#       LDFLAGSDLL        - Extra linker options for the shared libraries
-#
+#       L_USR             - Extra linker options for libraries
 #       PRG_USR           - Extra Harbour compiler options
-#       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #
-#       HB_GT_LIB         - The default GT driver, choose between:
-#                           gtwin (default), gtcgi, gtwvt, gtstd, gtpca
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build
-#       HB_BUILD_MODE     - If set to cpp causes to compile in C++ mode
-#       HB_BUILD_WINCE    - If set to yes, a WinCE build will be created.
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
 #       HB_BUILD_VERBOSE  - enables echoing commands being executed
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
 #                           bison (you must use bison 2.3 or later)
 #       HB_INSTALL_PREFIX - Path to installation directory into which
-#                           Harbour will be installed when the command
-#                           "make_vc.bat install" is lauched. Defaults
-#                           to current directory
+#                           Harbour will be installed when using 'install'
+#                           mode. Defaults to current directory
+#
 #       HB_VISUALC_VER    - Version of Visual C++ compiler.
 #                           Possible values are: 60, 70, 71, 80 (default), 90
+#       HB_BUILD_WINCE    - If set to yes, a WinCE build will be created.
 
 #**********************************************************
 
@@ -108,15 +100,6 @@ INCLUDE_DIR    = include
 
 #**********************************************************
 
-# In which mode compile Harbour C or CPP
-!if "$(HB_BUILD_MODE)" == "cpp"
-HB_BUILD_MODE  = P
-!else
-HB_BUILD_MODE  = C
-!endif
-
-#**********************************************************
-
 # C Compiler Flags
 !if "$(HB_BUILD_WINCE)" == "yes"
 
@@ -128,7 +111,7 @@ CFLAGS_VER     = -Oxsb1 -EHsc -YX -GF
 
 # TOFIX: These should be cleaned from everything not absolutely necessary:
 
-CFLAGS         = -nologo -W3 -I$(INCLUDE_DIR) -I$(CFLAGS_VER) -T$(HB_BUILD_MODE) \
+CFLAGS         = -nologo -W3 -I$(INCLUDE_DIR) -I$(CFLAGS_VER) \
                  -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -D"WIN32_PLATFORM_PSPC" \
                  -D"WINCE" -D"_WINCE" -D"_WINDOWS" -D"ARM" -D"_ARM_" -D"ARMV4" \
                  -D"POCKETPC2003_UI_MODEL" -D"_M_ARM" -D"UNICODE" -D"_UNICODE" \
@@ -156,7 +139,7 @@ CFLAGS_VER     = -Ot2b1 -EHs-c- -D_CRT_SECURE_NO_DEPRECATE
 CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX
 !endif
 
-CFLAGS         = -nologo -W4 -wd4127 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) \
+CFLAGS         = -nologo -W4 -wd4127 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) \
                  $(C_USR) -I$(OBJ_DIR)
 
 #-----------
@@ -169,23 +152,15 @@ CFLAGSMT = -MT$(DBGMARKER) -DHB_MT_VM
 
 !endif
 
-#-----------
-!if "$(HB_GT_LIB)" != ""
-CFLAGS = -D"HB_GT_LIB=$(HB_GT_LIB:gt=)" $(CFLAGS)
-!endif
-#-----------
-
 #**********************************************************
 
 CLIBFLAGS      = -c $(CFLAGS)
-CLIBFLAGSxxx   =  $(CLIBFLAGS: -MT= )
-CLIBFLAGSxxx   =  $(CLIBFLAGSxxx: -MTd= )
 !if "$(HB_BUILD_WINCE)" == "yes"
-CLIBFLAGSDLL   =  $(CLIBFLAGS) $(CLIBFLAGSDLL) -DHB_DYNLIB
-CEXEFLAGSDLL   =  $(CLIBFLAGS) $(CEXEFLAGSDLL)
+CLIBFLAGSDLL   =  $(CLIBFLAGS) -DHB_DYNLIB
+CEXEFLAGSDLL   =  $(CLIBFLAGS)
 !else
-CLIBFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS) $(CLIBFLAGSDLL) -DHB_DYNLIB
-CEXEFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS) $(CEXEFLAGSDLL)
+CLIBFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS) -DHB_DYNLIB
+CEXEFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS)
 !endif
 
 #**********************************************************
@@ -196,7 +171,7 @@ HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -km $(PRG_USR)
 HBFLAGSCMN     = $(HBFLAGSCMN) -D__PLATFORM__WINCE
 !endif
 HARBOURFLAGS   = -n $(HBFLAGSCMN)
-HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
+HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN)
 
 #**********************************************************
 
@@ -213,11 +188,11 @@ LDFLAGS        = $(LDFLAGS) /MANIFEST:NO
 LDFLAGSDLL     = /DLL \
                  /NOLOGO /SUBSYSTEM:WINDOWSCE,4.20 /MACHINE:ARM /ARMPADCODE \
                  /STACK:65536,4096 /NODEFAULTLIB:"oldnames.lib" \
-                 /LIBPATH:$(LIB_DIR) $(LDFLAGSDLL)
+                 /LIBPATH:$(LIB_DIR) $(L_USR)
 !else
 LDFLAGS        = /NOLOGO /SUBSYSTEM:console /LIBPATH:$(LIB_DIR) $(L_USR)
 LDFLAGSDLL     = /DLL \
-                 /NOLOGO /LIBPATH:$(LIB_DIR) $(LDFLAGSDLL)
+                 /NOLOGO /LIBPATH:$(LIB_DIR) $(L_USR)
 !endif
 
 !if "$(HB_BUILD_DEBUG)" == "yes"

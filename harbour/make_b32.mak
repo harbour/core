@@ -22,16 +22,9 @@
 #       (note that these are all optional)
 #
 #       C_USR             - Extra C compiler options for libraries and for executables
-#       CLIBFLAGSDLL      - Extra C compiler options for the shared libraries
-#
-#       L_USR             - Extra linker options for the static libraries
-#       LDFLAGSDLL        - Extra linker options for the shared libraries
-#
+#       L_USR             - Extra linker options for libraries
 #       PRG_USR           - Extra Harbour compiler options
-#       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #
-#       HB_GT_LIB         - The default GT driver, choose between:
-#                           gtwin (default), gtcgi, gtwvt, gtstd, gtpca
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
@@ -39,9 +32,9 @@
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
 #                           bison (you must use bison 2.3 or later)
 #       HB_INSTALL_PREFIX - Path to installation directory into which
-#                           Harbour will be installed when the command
-#                           "make_bc.bat install" is lauched. Defaults
-#                           to current directory
+#                           Harbour will be installed when using 'install'
+#                           mode. Defaults to current directory
+#
 #       HB_BCCDLL_DYNRT   - If set to -tWR causes that harbour-bc.dll
 #                           will use dynamic runtime library (recommended)
 
@@ -107,29 +100,25 @@ CFLAGSMT = -DHB_MT_VM
     RTLIBSUFFIX = i
 !endif
 #-----------
-!if "$(HB_GT_LIB)" != ""
-    CFLAGS = -DHB_GT_LIB=$(HB_GT_LIB:gt=) $(CFLAGS)
-!endif
-#-----------
 
 #**********************************************************
 
 CLIBFLAGS      = -c -q -d -Q -w -w-sig- -tWM $(CFLAGS)
-CLIBFLAGSDLL   = $(HB_BCCDLL_DYNRT) $(CLIBFLAGSDLL) -DHB_DYNLIB
-CEXEFLAGSDLL   = $(HB_BCCDLL_DYNRT) $(CEXEFLAGSDLL)
+CLIBFLAGSDLL   = $(HB_BCCDLL_DYNRT) $(CLIBFLAGS) -DHB_DYNLIB
+CEXEFLAGSDLL   = $(HB_BCCDLL_DYNRT) $(CLIBFLAGS)
 
 #**********************************************************
 
 # Harbour Compiler Flags
 HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -km $(PRG_USR)
 HARBOURFLAGS   = -n $(HBFLAGSCMN)
-HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
+HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN)
 
 #**********************************************************
 
 # Linker Flags
 LDFLAGS        = -Gn -C -ap -Tpe -L$(LIB_DIR) -L$(BIN_DIR) $(L_USR)
-LDFLAGSDLL     = -Gn -C -aa -Tpd -Gi -L$(LIB_DIR) $(LDFLAGSDLL)
+LDFLAGSDLL     = -Gn -C -aa -Tpd -Gi -L$(LIB_DIR) $(L_USR)
 !if "$(HB_BUILD_DEBUG)" == "yes"
     LDFLAGS = -v $(LDFLAGS)
     LDFLAGSDLL = -v $(LDFLAGSDLL)
@@ -193,7 +182,7 @@ ARFLAGS = /P32 $(A_USR)
 # General *.prg --> *.obj COMPILE rules for EXECUTABLES,
 # which use Harbour SHARED Library compiled as DLL
 {$(ALL_EXE_SRC_DIRS)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\  $**
+    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $**
     $(CC) $(CEXEFLAGSDLL) -o$@ $(DLL_OBJ_DIR)\$&.c
 #**********************************************************
 

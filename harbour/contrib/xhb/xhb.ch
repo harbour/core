@@ -62,6 +62,7 @@
    REQUEST XHB_LIB
 
    #xtranslate __Keyboard([<x,...>])        => xhb__Keyboard(<x>)
+   #xtranslate __CopyFile([<x,...>])        => xhb_CopyFile(<x>)
 #endif
 
 #endif /* __HARBOUR__ */

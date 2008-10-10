@@ -105,23 +105,7 @@ MKLIB  = tlib.exe
 
 #**********************************************************
 
-# BORLAND has ST mode as default
-!if "$(HB_BUILD_ST)" == ""
-    HB_BUILD_ST = yes
-!endif
-
-#**********************************************************
-
-# In which mode compile Harbour C or CPP
-!if "$(HB_BUILD_MODE)" == "cpp"
-HB_BUILD_MODE  = -P
-!else
-HB_BUILD_MODE  =
-!endif
-
-#**********************************************************
-
-CFLAGS = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) $(HB_BUILD_MODE)
+CFLAGS = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)
 
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
@@ -130,10 +114,6 @@ CFLAGS = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) $(HB_BUILD_MODE)
 #-----------
 !if !$d(BCC_NOOPTIM)
     CFLAGS = -O2 -OS -Ov -Oi -Oc $(CFLAGS)
-!endif
-#-----------
-!if "$(HB_BUILD_ST)" != "yes"
-    CFLAGS  = -tWM $(CFLAGS)
 !endif
 #-----------
 

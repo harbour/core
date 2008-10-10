@@ -8,6 +8,38 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-10 10:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+    * Removed special 'set HB_GT_LIB=gtXXX' support. For the exact 
+      same effect - in case you want to modify default GT at 
+      build time, which is not recommended -, pls use this:
+      'set C_USR=-DHB_GT_LIB=XXX' where XXX is 'wvt', 'std', etc.
+    - Removed HARBOURFLAGSDLL, LDFLAGSDLL, CFLAGSDLL as public options. 
+      It's better to keep these settings common IMO, and handle 
+      all DLL subtleties in our make files.
+    + L_USR is now respected for .dlls, too.
+    ! Fixed make_gcc.mak internal HARBOURFLAGSDLL to be in sync 
+      with the other .mak files (removed -l switch).
+    - Removed HB_BUILD_MODE for VC builds. Now C/C++ is left to 
+      the default value (which is C mode for core), and it's possible 
+      to override using:
+      'set C_USR=-TP' for C++ mode (or -TC for forced C mode).
+    % Other minor cleanups.
+
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_vc.mak
+    - Removed HB_BUILD_MODE undocumented options from contrib 
+      make files. For Borland C++ mode, use 'set C_USR=-P'.
+      For VC, see above.
+    - Removed HB_BUILD_ST undocumented option.
+    % Other minor cleanups.
+      
+  * contrib/xhb/hbcompat.ch
+  * contrib/xhb/xhb.ch
+    ! Moved __COPYFILE() translation to xhb.ch.
+
 2008-10-10 09:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * common.mak
   * make_b32.mak

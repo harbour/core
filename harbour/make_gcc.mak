@@ -22,32 +22,23 @@
 #       (note that these are all optional)
 #
 #       C_USR             - Extra C compiler options for libraries and for executables
-#       CLIBFLAGSDLL      - Extra C compiler options for the shared libraries
-#
-#       L_USR             - Extra linker options for the static libraries
-#       LDFLAGSDLL        - Extra linker options for the shared libraries
-#
+#       L_USR             - Extra linker options for libraries
 #       PRG_USR           - Extra Harbour compiler options
-#       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #
-#       HB_GT_LIB         - The default GT driver, choose between:
-#                           gttrm (default), gtcgi, gtpca, gtcrs, gtsln, gtxwc
-#       HB_GPM_MOUSE      - If set to yes enables using GPM mouse driver on console
-#       HB_WITHOUT_GTSLN  - If set to yes causes to not build gtsln
-#                           (if you don't have slang installed)
-#
-#       HB_COMMERCE       - If set to yes disables pure GNU modules (slang,GPM,...)
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build (currently not working)
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
 #       HB_BUILD_VERBOSE  - enables echoing commands being executed
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
 #                           bison (you must use bison 2.3 or later)
-#
 #       HB_INSTALL_PREFIX - Path to installation directory into which
-#                           Harbour will be installed when the command
-#                           "make_gcc.bat install" is lauched. Defaults
-#                           to current directory
+#                           Harbour will be installed when using 'install'
+#                           mode. Defaults to current directory
+#
+#       HB_GPM_MOUSE      - If set to yes enables using GPM mouse driver on console
+#       HB_WITHOUT_GTSLN  - If set to yes causes to not build gtsln
+#                           (if you don't have slang installed)
+#       HB_COMMERCE       - If set to yes disables pure GNU modules (slang,GPM,...)
 
 # ---------------------------------------------------------------
 
@@ -169,13 +160,9 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS         := -g $(CFLAGS)
 endif
 #-----------
-ifneq ($(HB_GT_LIB),)
-CFLAGS         += -DHB_GT_LIB=$(HB_GT_LIB:gt%=%)
-endif
-#-----------
 CLIBFLAGS      := -c $(CFLAGS)
-CLIBFLAGSDLL   := -DHB_DYNLIB $(CLIBFLAGS) $(CLIBFLAGSDLL)
-CEXEFLAGSDLL   :=  $(CFLAGS) $(CEXEFLAGSDLL)
+CLIBFLAGSDLL   := $(CLIBFLAGS) -DHB_DYNLIB
+CEXEFLAGSDLL   := $(CFLAGS)
 
 # Under architectures other than "DOS based" add -fPIC
 # to gcc compiler flags for compiling shared libraries
@@ -191,7 +178,7 @@ endif
 
 HBFLAGSCMN     := -i$(INCLUDE_DIR) -q0 -w3 -es2 -km $(PRG_USR)
 HARBOURFLAGS   := -n $(HBFLAGSCMN)
-HARBOURFLAGSDLL:= -n1 -l $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
+HARBOURFLAGSDLL:= -n1 $(HBFLAGSCMN)
 
 #**********************************************************
 # Linker Flags
@@ -228,7 +215,7 @@ LDFLAGS += $(STANDARD_STATIC_HBLIBS) $(HB_OS_LIBS)
 #LDFLAGS += $(RTL_LIB) $(VM_LIB)
 endif
 
-LDFLAGSDLL := -shared $(L_USR) -L$(LIB_DIR) $(LDFLAGSDLL)
+LDFLAGSDLL := -shared $(L_USR) -L$(LIB_DIR)
 
 #**********************************************************
 # Library manager Flags

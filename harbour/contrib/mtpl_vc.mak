@@ -102,15 +102,6 @@ MKLIB  = lib.exe
 
 #**********************************************************
 
-# In which mode compile Harbour C or CPP
-!if "$(HB_BUILD_MODE)" == "cpp"
-HB_BUILD_MODE  = P
-!else
-HB_BUILD_MODE  = C
-!endif
-
-#**********************************************************
-
 # Visual C++ version
 !ifndef HB_VISUALC_VER
 HB_VISUALC_VER = 80
@@ -124,17 +115,12 @@ CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX
 !endif
 #-----------
 
-CFLAGS         = -nologo -W4 -wd4127 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) \
+CFLAGS         = -nologo -W4 -wd4127 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) \
                  $(C_USR) $(CFLAGS)
 
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
 CFLAGS         = -Zi $(CFLAGS)
-DBGMARKER      =  d
-!endif
-#-----------
-!if "$(HB_BUILD_ST)" != "yes"
-CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
 !endif
 #-----------
 
