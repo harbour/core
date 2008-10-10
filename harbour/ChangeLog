@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-10 20:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_vc.bat
+  * make_vc.mak
+    * Cleanups.
+
 2008-10-10 10:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
     ! Fixed XPP class names.

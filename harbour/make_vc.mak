@@ -119,14 +119,11 @@ CFLAGS         = -nologo -W3 -I$(INCLUDE_DIR) -I$(CFLAGS_VER) \
 
 #-----------
 !ifndef HB_WINCE_COMPILE_WITH_GTWIN
-CFLAGS    = $(CFLAGS) -DHB_NO_WIN_CONSOLE
+CFLAGS         = $(CFLAGS) -DHB_NO_WIN_CONSOLE
 !endif
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
-CFLAGS    = $(CFLAGS) -D "_DEBUG" -D "DEBUG"
 DBGMARKER = d
-!else
-CFLAGS    = $(CFLAGS) -D "NDEBUG"
 !endif
 
 !else

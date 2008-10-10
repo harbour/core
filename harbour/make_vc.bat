@@ -11,7 +11,6 @@ rem Instead, make a local copy and modify that one, or make a call to
 rem this batch file from your customized one. [vszakats]
 rem
 rem Set any of the below settings to customize your build process:
-rem    set HB_BUILD_MODE=C
 rem    set HB_BUILD_DLL=yes
 rem    set HB_BUILD_DEBUG=yes
 rem    set HB_BUILD_VERBOSE=yes
