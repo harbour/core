@@ -259,6 +259,6 @@ typedef struct _ssfFont {
 extern void ssfCreateThinFont(ssfFont *sfont);
 extern void ssfSetFontSize(ssfFont *sfont, unsigned short fsize);
 extern unsigned short ssfDrawChar(AL_BITMAP *dst, ssfFont *sfont, char c, int x, int y, int color);
-extern int ssfDrawText(AL_BITMAP *dst, ssfFont *sfont, char *s, int x, int y, int color);
+extern int ssfDrawText(AL_BITMAP *dst, ssfFont *sfont, const char *s, int x, int y, int color);
 
 #endif  /* _SSF_H_ */

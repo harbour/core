@@ -1646,7 +1646,7 @@ HB_EXPORT ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount
 
 #if defined(HB_FS_FILE_IO)
 
-   #if defined(HB_OS_UNIX)
+   #if defined(HB_OS_UNIX) && !defined(__WATCOMC__)
    {
       hb_vmUnlock();
       #if defined(HB_USE_LARGEFILE64)
@@ -1705,7 +1705,7 @@ HB_EXPORT ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG 
 
 #if defined(HB_FS_FILE_IO)
 
-   #if defined(HB_OS_UNIX)
+   #if defined(HB_OS_UNIX) && !defined(__WATCOMC__)
    {
       hb_vmUnlock();
       #if defined(HB_USE_LARGEFILE64)

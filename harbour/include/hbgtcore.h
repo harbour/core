@@ -195,8 +195,8 @@ typedef struct
    int      (* SetFlag) ( HB_GT_PTR, int, int );
 
    /* internationalization */
-   BOOL     (* SetDispCP) ( HB_GT_PTR, char *, char *, BOOL );
-   BOOL     (* SetKeyCP) ( HB_GT_PTR, char *, char * );
+   BOOL     (* SetDispCP) ( HB_GT_PTR, const char *, const char *, BOOL );
+   BOOL     (* SetKeyCP) ( HB_GT_PTR, const char *, const char * );
 
    /* keyboard */
    int      (* ReadKey) ( HB_GT_PTR, int );
@@ -239,7 +239,7 @@ typedef struct
 
    /* Graphics API */
    int      (* GfxPrimitive) ( HB_GT_PTR, int, int, int, int, int, int );
-   void     (* GfxText) ( HB_GT_PTR, int, int, char *, int, int, int );
+   void     (* GfxText) ( HB_GT_PTR, int, int, const char *, int, int, int );
 
 #if 0
    /* keyboard */
@@ -605,10 +605,10 @@ extern HB_EXPORT void hb_gtStartupInit( void );
 
 /* low level GT functions common to different GTs supported by RTL */
 extern int  hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, BOOL fSetACSC );
-extern BOOL hb_gt_setClipboard( char * szClipData, ULONG ulLen );
+extern BOOL hb_gt_setClipboard( const char * szClipData, ULONG ulLen );
 extern BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen );
 #if defined( HB_OS_WIN_32 )
-extern BOOL hb_gt_w32_setClipboard( UINT uFormat, char * szClipData, ULONG ulLen );
+extern BOOL hb_gt_w32_setClipboard( UINT uFormat, const char * szClipData, ULONG ulLen );
 extern BOOL hb_gt_w32_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen );
 extern int  hb_gt_w32_getKbdState( void );
 extern void hb_gt_w32_setKbdState( int kbdShifts );

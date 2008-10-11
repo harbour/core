@@ -1489,7 +1489,7 @@ static void hb_gt_win_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_win_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP, BOOL fBox )
+static BOOL hb_gt_win_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
 {
    int i;
 
@@ -1530,7 +1530,7 @@ static BOOL hb_gt_win_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP,
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
+static BOOL hb_gt_win_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
 {
    int i;
 

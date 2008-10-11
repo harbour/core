@@ -505,7 +505,7 @@ static void hb_gt_std_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
       HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols );
 }
 
-static BOOL hb_gt_std_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP, BOOL fBox )
+static BOOL hb_gt_std_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
@@ -531,7 +531,7 @@ static BOOL hb_gt_std_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP,
    return FALSE;
 }
 
-static BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
+static BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 

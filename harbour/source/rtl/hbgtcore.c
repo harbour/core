@@ -728,9 +728,9 @@ static const char * hb_gt_def_Version( PHB_GT pGT, int iType )
    HB_SYMBOL_UNUSED( pGT );
 
    if( iType == 0 )
-      return ( char * ) "NUL";
+      return "NUL";
 
-   return ( char * ) "Harbour Terminal: NULL";
+   return "Harbour Terminal: NULL";
 }
 
 static BOOL hb_gt_def_GetChar( PHB_GT pGT, int iRow, int iCol,
@@ -1416,7 +1416,7 @@ static void hb_gt_def_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom,
    }
 }
 
-static BOOL hb_gt_def_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP, BOOL fBox )
+static BOOL hb_gt_def_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, BOOL fBox )
 {
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
@@ -1441,7 +1441,7 @@ static BOOL hb_gt_def_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCD
    return FALSE;
 }
 
-static BOOL hb_gt_def_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP )
+static BOOL hb_gt_def_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
 {
    HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( pszTermCDP );
@@ -1603,7 +1603,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 
    if( HB_IS_STRING( pMessage ) && iOptions > 0 )
    {
-      char * szMessage = hb_itemGetCPtr( pMessage );
+      const char * szMessage = hb_itemGetCPtr( pMessage );
       ULONG ulLen = hb_itemGetCLen( pMessage );
       BOOL fScreen = FALSE, fKeyBoard = FALSE;
       int iKey = 0, i, iDspCount, iStyle, iRows, iCols,
@@ -1846,7 +1846,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                int iUp = hb_charUpper( iKey );
                for( i = 1; i <= iOptions; ++i )
                {
-                  char *szValue = hb_arrayGetCPtr( pOptions, i );
+                  const char *szValue = hb_arrayGetCPtr( pOptions, i );
                   if( szValue && iUp == hb_charUpper( *szValue ) )
                   {
                      iRet = i;
@@ -1871,7 +1871,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       else
       {
          ULONG ul, ulStart = 0;
-         char *szEol = hb_conNewLine();
+         const char *szEol = hb_conNewLine();
 
          for( ul = 0; ul < ulLen; ++ul )
          {
@@ -1906,7 +1906,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                int iUp = hb_charUpper( iKey );
                for( i = 1; i <= iOptions; ++i )
                {
-                  char *szValue = hb_arrayGetCPtr( pOptions, i );
+                  const char *szValue = hb_arrayGetCPtr( pOptions, i );
                   if( szValue && iUp == hb_charUpper( *szValue ) )
                   {
                      iRet = i;
@@ -2795,7 +2795,7 @@ static int hb_gt_def_GfxPrimitive( PHB_GT pGT, int iType, int iTop, int iLeft, i
    return 0;
 }
 
-static void hb_gt_def_GfxText( PHB_GT pGT, int iTop, int iLeft, char * szText, int iColor, int iSize, int iWidth )
+static void hb_gt_def_GfxText( PHB_GT pGT, int iTop, int iLeft, const char * szText, int iColor, int iSize, int iWidth )
 {
    HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iTop );

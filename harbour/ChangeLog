@@ -8,6 +8,46 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-11 03:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapigt.h
+  * harbour/source/rtl/gtapi.c
+    + added hb_gtDrawBox() works like hb_gtBox() but does not change cursor
+      posiion and support colors
+    + added support for color parameter to hb_gtPutText()
+
+  * harbour/source/rtl/console.c
+    * use new hb_gtPutText() format in HB_DISPOUTAT()
+      Now all screen operations inside this function is one atomic
+      operation for other threads
+
+  * harbour/source/rtl/box.c
+    + added HB_DISPBOX() function - works like DISPBOX() bit does not
+      change cursor position and is atomic for other threads
+
+
+  * harbour/include/hbapigt.h
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtclip.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/contrib/gtalleg/gtalleg.c
+  * harbour/contrib/gtalleg/ssf.h
+  * harbour/contrib/gtalleg/ssf.c
+  * harbour/contrib/gtwvg/gtwvg.c
+    * cleanup char * casting
+
+  * harbour/source/rtl/filesys.c
+    ! do not use pread()/pwrite() in OpenWatcom Linux builds
+
 2008-10-10 22:46 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     * reduced the mutex lock time in thread exit state

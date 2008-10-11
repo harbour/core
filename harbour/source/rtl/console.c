@@ -574,31 +574,15 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
 
 HB_FUNC( HB_DISPOUTAT )
 {
-   char * pszString;
-   ULONG ulLen;
-   BOOL bFreeReq;
-
-   if( ISCHAR( 4 ) )
+   if( hb_pcount() >= 3 )
    {
-      char szOldColor[ HB_CLRSTR_LEN ];
-
-      hb_gtGetColorStr( szOldColor );
-      hb_gtSetColorStr( hb_parc( 4 ) );
+      char * pszString;
+      ULONG ulLen;
+      BOOL bFreeReq;
 
       pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-      hb_gtPutText( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
-
-      if( bFreeReq )
-         hb_xfree( pszString );
-
-      hb_gtSetColorStr( szOldColor );
-   }
-   else if( hb_pcount() >= 3 )
-   {
-      pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
-
-      hb_gtPutText( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
+      hb_gtPutText( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( BYTE * ) pszString, ulLen, hb_parc( 4 ) );
 
       if( bFreeReq )
          hb_xfree( pszString );

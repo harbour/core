@@ -1064,7 +1064,7 @@ static int hb_gt_alleg_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft
    return iRet;
 }
 
-static void hb_gt_alleg_gfx_Text( PHB_GT pGT, int iTop, int iLeft, char * cBuf, int iColor, int iSize, int iWidth )
+static void hb_gt_alleg_gfx_Text( PHB_GT pGT, int iTop, int iLeft, const char * cBuf, int iColor, int iSize, int iWidth )
 {
    int iBottom, iRight;
 

@@ -2796,7 +2796,7 @@ static int hb_gt_crs_ReadKey( PHB_GT pGT, int iEventMask )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP, BOOL fBox )
+static BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
@@ -2845,7 +2845,7 @@ static BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP,
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
+static BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 

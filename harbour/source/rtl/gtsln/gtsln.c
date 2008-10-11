@@ -927,7 +927,7 @@ static BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP, BOOL fBox )
+static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, BOOL fBox )
 {
 #ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
@@ -951,7 +951,7 @@ static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCD
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP )
+static BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
 {
 #ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;

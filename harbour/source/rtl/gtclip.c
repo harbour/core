@@ -71,7 +71,7 @@ static HB_CRITICAL_NEW( s_clipMtx );
 static char *     s_szClipboardData;
 static ULONG      s_ulClipboardLen;
 
-BOOL hb_gt_setClipboard( char * szClipData, ULONG ulLen )
+BOOL hb_gt_setClipboard( const char * szClipData, ULONG ulLen )
 {
    hb_threadEnterCriticalSection( &s_clipMtx );
 
@@ -110,7 +110,7 @@ BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen )
 
 #if defined( HB_OS_WIN_32 )
 
-BOOL hb_gt_w32_setClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
+BOOL hb_gt_w32_setClipboard( UINT uFormat, const char * szClipData, ULONG ulLen )
 {
    BOOL fResult = FALSE;
 

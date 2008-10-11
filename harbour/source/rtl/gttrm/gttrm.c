@@ -3109,9 +3109,9 @@ static const char * hb_gt_trm_Version( PHB_GT pGT, int iType )
    HB_SYMBOL_UNUSED( pGT );
 
    if( iType == 0 )
-      return ( char * ) HB_GT_DRVNAME( HB_GT_NAME );
+      return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return ( char * ) "Harbour terminal driver";
+   return "Harbour terminal driver";
 }
 
 static BOOL hb_gt_trm_Suspend( PHB_GT pGT )
@@ -3235,7 +3235,7 @@ static void hb_gt_trm_SetBlink( PHB_GT pGT, BOOL fBlink )
    HB_GTSUPER_SETBLINK( pGT, fBlink );
 }
 
-static BOOL hb_gt_trm_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP, BOOL fBox )
+static BOOL hb_gt_trm_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
@@ -3279,7 +3279,7 @@ static BOOL hb_gt_trm_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP,
    return FALSE;
 }
 
-static BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
+static BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
@@ -3337,6 +3337,7 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
    pTerm = HB_GTTRM_GET( pGT );
    pTerm->SetTermMode( pTerm, 0 );
+   pTerm->SetCursorStyle( pTerm, SC_NONE );
    while( iSize-- )
    {
       if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
@@ -3412,7 +3413,7 @@ static void hb_gt_trm_Refresh( PHB_GT pGT )
 static BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    PHB_GTTRM pTerm;
-   char * szVal;
+   const char * szVal;
    int iVal;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Info(%p,%d,%p)", pGT, iType, pInfo ) );

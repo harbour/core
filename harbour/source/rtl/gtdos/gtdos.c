@@ -1239,7 +1239,7 @@ static BOOL hb_gt_dos_Resume( PHB_GT pGT )
    return HB_GTSUPER_RESUME( pGT );
 }
 
-static BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP, BOOL fBox )
+static BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
 {
    int i;
 
@@ -1280,7 +1280,7 @@ static BOOL hb_gt_dos_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP,
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
+static BOOL hb_gt_dos_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
 {
    int i;
 

@@ -3212,7 +3212,7 @@ static void hb_gt_xwc_Initialize( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, char *szData, ULONG ulSize )
+static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char *szData, ULONG ulSize )
 {
    if( wnd->ClipboardOwner && ulSize == 0 )
    {
@@ -3557,7 +3557,7 @@ static int hb_gt_xwc_mouse_CountButton( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_xwc_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP, BOOL fBox )
+static BOOL hb_gt_xwc_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, BOOL fBox )
 {
 
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
@@ -3590,7 +3590,7 @@ static BOOL hb_gt_xwc_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCD
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_xwc_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP )
+static BOOL hb_gt_xwc_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
 {
 
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );

@@ -209,6 +209,32 @@ HB_EXPORT ERRCODE hb_gtBoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
    return FAILURE;
 }
 
+HB_EXPORT ERRCODE hb_gtDrawBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, const char * pszColor )
+{
+   PHB_GT pGT;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtBox(%hd, %hd, %hd, %hd, %p, %s)", Top, Left, Bottom, Right, pbyFrame, pszColor));
+
+   pGT = hb_gt_Base();
+   if( pGT )
+   {
+      char szOldColor[ HB_CLRSTR_LEN ];
+
+      if( pszColor )
+      {
+         HB_GTSELF_GETCOLORSTR( pGT, szOldColor );
+         HB_GTSELF_SETCOLORSTR( pGT, pszColor );
+      }
+      HB_GTSELF_BOX( pGT, Top, Left, Bottom, Right, pbyFrame, HB_GTSELF_GETCOLOR( pGT ) );
+      HB_GTSELF_FLUSH( pGT );
+      if( pszColor )
+         HB_GTSELF_SETCOLORSTR( pGT, szOldColor );
+      hb_gt_BaseFree( pGT );
+      return SUCCESS;
+   }
+   return FAILURE;
+}
+
 HB_EXPORT ERRCODE hb_gtColorSelect( USHORT uiColorIndex )
 {
    PHB_GT pGT;
@@ -330,7 +356,7 @@ HB_EXPORT ERRCODE hb_gtGetColorStr( char * pszColorString )
    return FAILURE;
 }
 
-HB_EXPORT int hb_gtColorToN( char * szColorString )
+HB_EXPORT int hb_gtColorToN( const char * szColorString )
 {
    int iColor = 0;
    PHB_GT pGT;
@@ -717,17 +743,29 @@ HB_EXPORT ERRCODE hb_gtSetMode( USHORT uiRows, USHORT uiCols )
    return errCode;
 }
 
-HB_EXPORT ERRCODE hb_gtPutText( USHORT uiRow, USHORT uiCol, BYTE * pStr, ULONG ulLength )
+HB_EXPORT ERRCODE hb_gtPutText( USHORT uiRow, USHORT uiCol,
+                                BYTE * pStr, ULONG ulLength,
+                                const char * pszColor )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutText(%hu, %hu, %p, %lu)", uiRow, uiCol, pStr, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutText(%hu, %hu, %p, %lu, %s)", uiRow, uiCol, pStr, ulLength, pszColor));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
+      char szOldColor[ HB_CLRSTR_LEN ];
+
+      if( pszColor )
+      {
+         HB_GTSELF_GETCOLORSTR( pGT, szOldColor );
+         HB_GTSELF_SETCOLORSTR( pGT, pszColor );
+      }
       HB_GTSELF_PUTTEXT( pGT, uiRow, uiCol, HB_GTSELF_GETCOLOR( pGT ), pStr, ulLength );
+      if( pszColor )
+         HB_GTSELF_SETCOLORSTR( pGT, szOldColor );
       HB_GTSELF_FLUSH( pGT );
+
       hb_gt_BaseFree( pGT );
       return SUCCESS;
    }
@@ -959,7 +997,7 @@ HB_EXPORT ERRCODE hb_gtOutErr( BYTE * pbyStr, ULONG ulLen )
    return SUCCESS;
 }
 
-HB_EXPORT ERRCODE hb_gtSetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
+HB_EXPORT ERRCODE hb_gtSetDispCP( const char * pszTermCDP, const char * pszHostCDP, BOOL fBox )
 {
    ERRCODE errCode = FAILURE;
    PHB_GT pGT;
@@ -976,7 +1014,7 @@ HB_EXPORT ERRCODE hb_gtSetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBo
    return errCode;
 }
 
-HB_EXPORT ERRCODE hb_gtSetKeyCP( char * pszTermCDP, char * pszHostCDP )
+HB_EXPORT ERRCODE hb_gtSetKeyCP( const char * pszTermCDP, const char * pszHostCDP )
 {
    ERRCODE errCode = FAILURE;
    PHB_GT pGT;
@@ -1245,7 +1283,7 @@ HB_EXPORT int hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, in
    return iResult;
 }
 
-HB_EXPORT ERRCODE hb_gtGfxText( int iTop, int iLeft, char * cBuf, int iColor, int iSize, int iWidth )
+HB_EXPORT ERRCODE hb_gtGfxText( int iTop, int iLeft, const char * cBuf, int iColor, int iSize, int iWidth )
 {
    PHB_GT pGT;
 

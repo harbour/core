@@ -63,9 +63,9 @@ HB_FUNC( DISPBOX )
 
    if( pTop && pLeft && pBottom && pRight )
    {
-      char * pszColor = hb_parc( 6 );
+      const char * pszBox = hb_parc( 5 );
+      const char * pszColor = hb_parc( 6 );
       char szOldColor[ HB_CLRSTR_LEN ];
-      char * pszBox = hb_parc( 5 );
 
       if( pszColor )
       {
@@ -94,5 +94,26 @@ HB_FUNC( DISPBOX )
 
       if( pszColor )
          hb_gtSetColorStr( szOldColor );
+   }
+}
+
+HB_FUNC( HB_DISPBOX )
+{
+   PHB_ITEM pTop    = hb_param( 1, HB_IT_NUMERIC );
+   PHB_ITEM pLeft   = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pBottom = hb_param( 3, HB_IT_NUMERIC );
+   PHB_ITEM pRight  = hb_param( 4, HB_IT_NUMERIC );
+
+   if( pTop && pLeft && pBottom && pRight )
+   {
+      const char * pszColor = hb_parc( 6 );
+      const char * pszBox = hb_parc( 5 );
+
+      hb_gtDrawBox( ( SHORT ) hb_itemGetNI( pTop ),
+                    ( SHORT ) hb_itemGetNI( pLeft),
+                    ( SHORT ) hb_itemGetNI( pBottom ),
+                    ( SHORT ) hb_itemGetNI( pRight ),
+                    ( BYTE * ) ( *pszBox ? pszBox : "         " ),
+                    pszColor );
    }
 }

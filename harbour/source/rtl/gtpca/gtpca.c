@@ -714,7 +714,7 @@ static BOOL hb_gt_pca_Resume( PHB_GT pGT )
    return TRUE;
 }
 
-static BOOL hb_gt_pca_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP, BOOL fBox )
+static BOOL hb_gt_pca_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, BOOL fBox )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
@@ -738,7 +738,7 @@ static BOOL hb_gt_pca_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP,
    return FALSE;
 }
 
-static BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
+static BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
