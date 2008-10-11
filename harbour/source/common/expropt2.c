@@ -1607,14 +1607,14 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          pExpr->value.asString.dealloc = FALSE;
          pExpr->ulLength = 1;
       }
-      
+
       HB_COMP_EXPR_FREE( pParms );
       HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
       memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
       HB_COMP_EXPR_CLEAR( pExpr );
       return TRUE;
    }
-   
+
    return FALSE;
 }
 
@@ -1914,7 +1914,7 @@ BOOL hb_compExprReduceMIN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    {
       HB_EXPR_PTR pExpr = NULL;
 
-      if( pNext->ExprType == HB_ET_NUMERIC )
+      if( pFirst->ExprType == HB_ET_NUMERIC )
       {
          BYTE bType = ( pFirst->value.asNum.NumType & pNext->value.asNum.NumType );
 
@@ -1932,10 +1932,10 @@ BOOL hb_compExprReduceMIN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
             default:
                if( pFirst->value.asNum.NumType == HB_ET_DOUBLE )
-                  pExpr = pFirst->value.asNum.val.d <= ( double ) pNext->value.asNum.val.l ?
+                  pExpr = ( pFirst->value.asNum.val.d <= ( double ) pNext->value.asNum.val.l ) ?
                           pFirst : pNext;
                else
-                  pExpr = ( double ) pFirst->value.asNum.val.l <= pNext->value.asNum.val.d ?
+                  pExpr = ( ( double ) pFirst->value.asNum.val.l <= pNext->value.asNum.val.d ) ?
                           pFirst : pNext;
          }
       }
@@ -1983,7 +1983,7 @@ BOOL hb_compExprReduceMAX( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    {
       HB_EXPR_PTR pExpr = NULL;
 
-      if( pNext->ExprType == HB_ET_NUMERIC )
+      if( pFirst->ExprType == HB_ET_NUMERIC )
       {
          BYTE bType = ( pFirst->value.asNum.NumType & pNext->value.asNum.NumType );
 
@@ -2001,10 +2001,10 @@ BOOL hb_compExprReduceMAX( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
             default:
                if( pFirst->value.asNum.NumType == HB_ET_DOUBLE )
-                  pExpr = pFirst->value.asNum.val.d >= ( double ) pNext->value.asNum.val.l ?
+                  pExpr = ( pFirst->value.asNum.val.d >= ( double ) pNext->value.asNum.val.l ) ?
                           pFirst : pNext;
                else
-                  pExpr = ( double ) pFirst->value.asNum.val.l >= pNext->value.asNum.val.d ?
+                  pExpr = ( ( double ) pFirst->value.asNum.val.l >= pNext->value.asNum.val.d ) ?
                           pFirst : pNext;
          }
       }

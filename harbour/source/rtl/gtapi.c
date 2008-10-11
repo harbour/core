@@ -252,17 +252,19 @@ HB_EXPORT ERRCODE hb_gtDrawBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right
    pGT = hb_gt_Base();
    if( pGT )
    {
-      char szOldColor[ HB_CLRSTR_LEN ];
+      int iColor;
 
       if( pszColor )
       {
-         HB_GTSELF_GETCOLORSTR( pGT, szOldColor );
-         HB_GTSELF_SETCOLORSTR( pGT, pszColor );
+         iColor = HB_GTSELF_COLORNUM( pGT, pszColor );
+         if( iColor == -1 )
+            iColor = HB_GTSELF_COLORNUM( pGT, "W/N" );
       }
-      HB_GTSELF_BOX( pGT, Top, Left, Bottom, Right, pbyFrame, HB_GTSELF_GETCOLOR( pGT ) );
+      else
+         iColor = HB_GTSELF_GETCOLOR( pGT );
+
+      HB_GTSELF_BOX( pGT, Top, Left, Bottom, Right, pbyFrame, iColor );
       HB_GTSELF_FLUSH( pGT );
-      if( pszColor )
-         HB_GTSELF_SETCOLORSTR( pGT, szOldColor );
       hb_gt_BaseFree( pGT );
       return SUCCESS;
    }
@@ -788,16 +790,18 @@ HB_EXPORT ERRCODE hb_gtPutText( USHORT uiRow, USHORT uiCol,
    pGT = hb_gt_Base();
    if( pGT )
    {
-      char szOldColor[ HB_CLRSTR_LEN ];
+      int iColor;
 
       if( pszColor )
       {
-         HB_GTSELF_GETCOLORSTR( pGT, szOldColor );
-         HB_GTSELF_SETCOLORSTR( pGT, pszColor );
+         iColor = HB_GTSELF_COLORNUM( pGT, pszColor );
+         if( iColor == -1 )
+            iColor = HB_GTSELF_COLORNUM( pGT, "W/N" );
       }
-      HB_GTSELF_PUTTEXT( pGT, uiRow, uiCol, HB_GTSELF_GETCOLOR( pGT ), pStr, ulLength );
-      if( pszColor )
-         HB_GTSELF_SETCOLORSTR( pGT, szOldColor );
+      else
+         iColor = HB_GTSELF_GETCOLOR( pGT );
+
+      HB_GTSELF_PUTTEXT( pGT, uiRow, uiCol, ( BYTE ) iColor, pStr, ulLength );
       HB_GTSELF_FLUSH( pGT );
 
       hb_gt_BaseFree( pGT );
