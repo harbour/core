@@ -255,6 +255,8 @@ METHOD display() CLASS Get
    LOCAL nOldCursor := SetCursor( SC_NONE )
    LOCAL cBuffer
    LOCAL nDispPos
+   LOCAL nRowPos
+   LOCAL nColPos
 
 #ifdef HB_COMPAT_C53
    LOCAL nPos
@@ -310,6 +312,16 @@ METHOD display() CLASS Get
       IF nPos > 0
          hb_dispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_ACCEL ) )
       ENDIF
+
+      /* should we set fixed cursor position here?
+       * The above code which can left cursor in the middle of shown screen
+       * suggests that we shouldn't. If necessary please fix me.
+       */
+      /*
+      nRowPos := ::nCapRow
+      nColPos := ::nCapCol + len( cCaption )
+      */
+
    ENDIF
 
 #endif
@@ -322,6 +334,9 @@ METHOD display() CLASS Get
                     iif( ::lHideInput, PadR( Replicate( SubStr( ::cStyle, 1, 1 ), Len( RTrim( cBuffer ) ) ), ::nDispLen ), SubStr( cBuffer, nDispPos, ::nDispLen ) ),;
                     hb_ColorIndex( ::cColorSpec, iif( ::hasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
 
+      nRowPos := ::nRow
+      nColPos := ::nCol + ::nDispLen
+
       IF Set( _SET_DELIMITERS ) .AND. !::hasFocus
 #ifdef HB_COMPAT_C53
          hb_dispOutAt( ::nRow, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
@@ -331,11 +346,14 @@ METHOD display() CLASS Get
          hb_dispOutAt( ::nRow, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ) )
          hb_dispOutAt( ::nRow, ::nCol + ::nDispLen, SubStr( Set( _SET_DELIMCHARS ), 2, 1 ) )
 #endif
+         ++nColPos
       ENDIF
    ENDIF
 
    IF ::nPos != 0
       SetPos( ::nRow, ::nCol + ::nPos - nDispPos )
+   ELSEIF nRowPos != NIL
+      SetPos( nRowPos, nColPos )
    ENDIF
 
    ::nOldPos := nDispPos

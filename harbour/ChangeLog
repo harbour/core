@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-11 13:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/tget.prg
+    ! fixed cursor positioning when new get item is added.
+    ; added note about possible modification - Viktor, please verify it
+
 2008-10-11 11:21 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/expropt2.c
     * formatting and minor cleanup
