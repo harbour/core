@@ -45,6 +45,7 @@
   * source/rtl/alert.prg
     % Minor optimization.
     ; NOTE: Found yet another hidden extension in Alert() code :(
+            UPDATE: It's a CT Alert() override extension.
 
   * source/rtl/radiobtn.prg
     ! Fix and optimization in recent modification.
