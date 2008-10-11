@@ -80,10 +80,10 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
    nOldCursor := SetCursor( SC_NONE )
    cOldScreen := SaveScreen( nTop, nLeft, nBottom, nRight )
 
-   DispBox( nTop, nLeft, nBottom, nRight, B_DOUBLE_SINGLE )
-   DispBox( nTop + 3, nLeft, nTop + 3, nLeft, chr( 198 ) )
-   DispBox( nTop + 3, nRight, nTop + 3, nRight, chr( 181 ) )
-   DispOutAt( nTop + 1, nLeft + 1, Space( nRight - nLeft - 1 ) )
+   hb_dispBox( nTop, nLeft, nBottom, nRight, B_DOUBLE_SINGLE )
+   hb_dispBox( nTop + 3, nLeft, nTop + 3, nLeft, chr( 198 ) )
+   hb_dispBox( nTop + 3, nRight, nTop + 3, nRight, chr( 181 ) )
+   hb_dispOutAt( nTop + 1, nLeft + 1, Space( nRight - nLeft - 1 ) )
 
    oBrw := TBrowseDB( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
    oBrw:HeadSep   := " " + Chr( 205 )
@@ -293,18 +293,18 @@ STATIC PROCEDURE StatLine( oBrw, lAppend )
    LOCAL nTop   := oBrw:nTop - 1
    LOCAL nRight := oBrw:nRight
 
-   DispOutAt( nTop, nRight - 27, "Record " )
+   hb_dispOutAt( nTop, nRight - 27, "Record " )
 
    IF LastRec() == 0 .AND. ! lAppend
-      DispOutAt( nTop, nRight - 20, "<none>               " )
+      hb_dispOutAt( nTop, nRight - 20, "<none>               " )
    ELSEIF RecNo() == LastRec() + 1
-      DispOutAt( nTop, nRight - 40, "         " )
-      DispOutAt( nTop, nRight - 20, "                <new>" )
+      hb_dispOutAt( nTop, nRight - 40, "         " )
+      hb_dispOutAt( nTop, nRight - 20, "                <new>" )
    ELSE
-      DispOutAt( nTop, nRight - 40, iif( Deleted(), "<Deleted>", "         " ) )
-      DispOutAt( nTop, nRight - 20, PadR( LTrim( Str( RecNo() ) ) + "/" + ;
-                                          LTrim( Str( LastRec() ) ), 16 ) + ;
-                                    iif( oBrw:HitTop(), "<bof>", "     " ) )
+      hb_dispOutAt( nTop, nRight - 40, iif( Deleted(), "<Deleted>", "         " ) )
+      hb_dispOutAt( nTop, nRight - 20, PadR( LTrim( Str( RecNo() ) ) + "/" + ;
+                                             LTrim( Str( LastRec() ) ), 16 ) + ;
+                                       iif( oBrw:HitTop(), "<bof>", "     " ) )
    ENDIF
 
    RETURN

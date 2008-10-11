@@ -398,8 +398,8 @@ STATIC PROCEDURE _DISP_FHSEP( nRow, nType, cColor, aColData )
          ELSEIF aCol[ _TBCI_LASTSPACE ] < 0
             cSep := Left( cSep, Len( cSep ) + aCol[ _TBCI_LASTSPACE ] )
          ENDIF
-         DispOutAt( nRow, aCol[ _TBCI_COLPOS ] - aCol[ _TBCI_FROZENSPACE ], ;
-                    cSep, cColor )
+         hb_dispOutAt( nRow, aCol[ _TBCI_COLPOS ] - aCol[ _TBCI_FROZENSPACE ], ;
+                       cSep, cColor )
       ELSEIF aCol[ _TBCI_CELLWIDTH ] > 0
          lFirst := .F.
       ENDIF
@@ -417,8 +417,8 @@ STATIC PROCEDURE _DISP_FHNAME( nRow, nHeight, nLeft, nRight, nType, nColor, aCol
    LOCAL nWidth
    LOCAL lFirst := .T.
 
-   DispBox( nRow, nLeft, nRow + nHeight - 1, nRight, ;
-            Space( 9 ), aColors[ _TBC_CLR_STANDARD ] )
+   hb_dispBox( nRow, nLeft, nRow + nHeight - 1, nRight, ;
+               Space( 9 ), aColors[ _TBC_CLR_STANDARD ] )
 
    FOR EACH aCol IN aColData
       IF aCol[ _TBCI_COLPOS ] != NIL
@@ -434,10 +434,10 @@ STATIC PROCEDURE _DISP_FHNAME( nRow, nHeight, nLeft, nRight, nType, nColor, aCol
             nWidth += aCol[ _TBCI_LASTSPACE ]
          ENDIF
          FOR nPos := 1 TO nHeight
-            DispOutAt( nRow + nPos - 1, nCol, ;
-                       PadR( hb_tokenGet( cName, nPos, _TBR_CHR_LINEDELIMITER ), nWidth ), ;
-                       iif( aCol[ _TBCI_DEFCOLOR ][ nColor ] == 0, "N/N", ;
-                            aColors[ aCol[ _TBCI_DEFCOLOR ][ nColor ] ] ) )
+            hb_dispOutAt( nRow + nPos - 1, nCol, ;
+                          PadR( hb_tokenGet( cName, nPos, _TBR_CHR_LINEDELIMITER ), nWidth ), ;
+                          iif( aCol[ _TBCI_DEFCOLOR ][ nColor ] == 0, "N/N", ;
+                               aColors[ aCol[ _TBCI_DEFCOLOR ][ nColor ] ] ) )
          NEXT
       ENDIF
    NEXT
@@ -454,7 +454,7 @@ METHOD dispFrames() CLASS TBROWSE
    DispBegin()
 
    IF ::lInvalid .AND. !Empty( ::cBorder )
-      DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cBorder, ::colorValue( _TBC_CLR_STANDARD ) )
+      hb_dispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cBorder, ::colorValue( _TBC_CLR_STANDARD ) )
    ENDIF
 
    IF ::nHeadHeight > 0
@@ -498,7 +498,7 @@ METHOD dispRow( nRow ) CLASS TBROWSE
       nRowPos := ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ) + nRow - 1
       cStdColor := ::colorValue( _TBC_CLR_STANDARD )
 
-      DispBox( nRowPos, ::n_Left, nRowPos, ::n_Right, Space( 9 ), cStdColor )
+      hb_dispBox( nRowPos, ::n_Left, nRowPos, ::n_Right, Space( 9 ), cStdColor )
 
       lFirst := .T.
       FOR EACH aCol, cValue, aColors IN ::aColData, ::aCellValues[ nRow ], ::aCellColors[ nRow ]
@@ -507,21 +507,21 @@ METHOD dispRow( nRow ) CLASS TBROWSE
             IF lFirst
                lFirst := .F.
             ELSEIF aCol[ _TBCI_SEPWIDTH ] > 0
-               DispOutAt( nRowPos, aCol[ _TBCI_COLPOS ] - aCol[ _TBCI_FROZENSPACE ], ;
-                          aCol[ _TBCI_COLSEP ], cStdColor )
+               hb_dispOutAt( nRowPos, aCol[ _TBCI_COLPOS ] - aCol[ _TBCI_FROZENSPACE ], ;
+                             aCol[ _TBCI_COLSEP ], cStdColor )
                nColPos += aCol[ _TBCI_SEPWIDTH ]
             ENDIF
             nColPos += aCol[ _TBCI_CELLPOS ]
             cColor := ::colorValue( aColors[ _TBC_CLR_STANDARD ] )
             IF aCol[ _TBCI_LASTSPACE ] < 0
-               DispOutAt( nRowPos, nColPos, ;
-                          Left( cValue, ::n_Right - nColPos + 1 ), cColor )
+               hb_dispOutAt( nRowPos, nColPos, ;
+                             Left( cValue, ::n_Right - nColPos + 1 ), cColor )
             ELSE
 #ifdef HB_C52_STRICT
-               DispOutAt( nRowPos, nColPos, ;
-                          Left( cValue, aCol[ _TBCI_COLWIDTH ] - aCol[ _TBCI_CELLPOS ] ), cColor )
+               hb_dispOutAt( nRowPos, nColPos, ;
+                             Left( cValue, aCol[ _TBCI_COLWIDTH ] - aCol[ _TBCI_CELLPOS ] ), cColor )
 #else
-               DispOutAt( nRowPos, nColPos, cValue, cColor )
+               hb_dispOutAt( nRowPos, nColPos, cValue, cColor )
 #endif
             ENDIF
          ENDIF
@@ -1839,7 +1839,7 @@ METHOD hiLite() CLASS TBROWSE
          IF ::n_Col + Len( cValue ) > _TBR_COORD( ::n_Right )
             cValue := Left( cValue, _TBR_COORD( ::n_Right ) - ::n_Col + 1 )
          ENDIF
-         DispOut( cValue, cColor )
+         hb_dispOutAt( ::n_Row, ::n_Col, cValue, cColor )
          SetPos( ::n_Row, ::n_Col )
          ::lHiLited := .T.
       ENDIF
@@ -1866,7 +1866,7 @@ METHOD deHilite() CLASS TBROWSE
          IF ::n_Col + Len( cValue ) > _TBR_COORD( ::n_Right )
             cValue := Left( cValue, _TBR_COORD( ::n_Right ) - ::n_Col + 1 )
          ENDIF
-         DispOut( cValue, cColor )
+         hb_dispOutAt( ::n_Row, ::n_Col, cValue, cColor )
          SetPos( ::n_Row, ::n_Col )
       ENDIF
    ENDIF

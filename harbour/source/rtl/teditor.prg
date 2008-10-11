@@ -405,11 +405,12 @@ METHOD display() CLASS HBEditor
    LOCAL i
    LOCAL nOCol := ::Col()
    LOCAL nORow := ::Row()
-   LOCAL nOCur := SetCursor( SC_NONE )
    LOCAL cOldColor
 
+   DispBegin()
+
    FOR i := 0 TO Min( ::nNumRows - 1, ::naTextLen - 1 )
-      DispOutAt( ::nTop + i, ::nLeft, PadR( SubStr( ::GetLine( ::nFirstRow + i ), ::nFirstCol, ::nNumCols ), ::nNumCols, " " ), ::LineColor( ::nFirstRow + i ) )
+      hb_dispOutAt( ::nTop + i, ::nLeft, PadR( SubStr( ::GetLine( ::nFirstRow + i ), ::nFirstCol, ::nNumCols ), ::nNumCols, " " ), ::LineColor( ::nFirstRow + i ) )
    NEXT
 
    // Clear rest of editor window (needed when deleting lines of text)
@@ -419,20 +420,16 @@ METHOD display() CLASS HBEditor
       SetColor( cOldColor )
    ENDIF
 
-   SetCursor( nOCur )
    ::SetPos( nORow, nOCol )
+
+   DispEnd()
 
    RETURN Self
 
 // Redraws current screen line
 METHOD RefreshLine() CLASS HBEditor
 
-   LOCAL nOCol := ::Col()
-   LOCAL nORow := ::Row()
-
-   DispOutAt( ::Row(), ::nLeft, PadR( SubStr( ::GetLine( ::nRow ), ::nFirstCol, ::nNumCols ), ::nNumCols, " " ), ::LineColor( ::nRow ) )
-
-   ::SetPos( nORow, nOCol )
+   hb_dispOutAt( ::Row(), ::nLeft, PadR( SubStr( ::GetLine( ::nRow ), ::nFirstCol, ::nNumCols ), ::nNumCols, " " ), ::LineColor( ::nRow ) )
 
    RETURN Self
 
@@ -440,16 +437,14 @@ METHOD RefreshLine() CLASS HBEditor
 METHOD RefreshColumn() CLASS HBEditor
 
    LOCAL i
-   LOCAL nOCol := ::Col()
-   LOCAL nORow := ::Row()
-   LOCAL nOCur := SetCursor( SC_NONE )
+
+   DispBegin()
 
    FOR i := 0 TO Min( ::nNumRows - 1, ::naTextLen - 1 )
-      DispOutAt( ::nTop + i, nOCol, SubStr( ::GetLine( ::nFirstRow + i ), ::nCol, 1 ), ::LineColor( ::nFirstRow + i ) )
+      hb_dispOutAt( ::nTop + i, ::Col(), SubStr( ::GetLine( ::nFirstRow + i ), ::nCol, 1 ), ::LineColor( ::nFirstRow + i ) )
    NEXT
 
-   SetCursor( nOCur )
-   ::SetPos( nORow, nOCol )
+   DispEnd()
 
    RETURN Self
 

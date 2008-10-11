@@ -792,21 +792,9 @@ METHOD GetActive( oGet ) CLASS HBGetList
 
 METHOD ShowScoreboard() CLASS HBGetList
 
-   LOCAL nRow
-   LOCAL nCol
-   LOCAL nOldCursor
-
    IF Set( _SET_SCOREBOARD )
 
-      nRow := Row()
-      nCol := Col()
-
-      nOldCursor := SetCursor( SC_NONE )
-
-      DispOutAt( SCORE_ROW, SCORE_COL, iif( Set( _SET_INSERT ), __NatMsg( _GET_INSERT_ON ), __NatMsg( _GET_INSERT_OFF ) ) )
-      SetPos( nRow, nCol )
-
-      SetCursor( nOldCursor )
+      hb_dispOutAt( SCORE_ROW, SCORE_COL, iif( Set( _SET_INSERT ), __NatMsg( _GET_INSERT_ON ), __NatMsg( _GET_INSERT_OFF ) ) )
 
    ENDIF
 
@@ -814,22 +802,14 @@ METHOD ShowScoreboard() CLASS HBGetList
 
 METHOD DateMsg() CLASS HBGetList
 
-   LOCAL nRow
-   LOCAL nCol
-
    IF Set( _SET_SCOREBOARD )
 
-      nRow := Row()
-      nCol := Col()
-
-      DispOutAt( SCORE_ROW, SCORE_COL, __NatMsg( _GET_INVD_DATE ) )
-      SetPos( nRow, nCol )
+      hb_dispOutAt( SCORE_ROW, SCORE_COL, __NatMsg( _GET_INVD_DATE ) )
 
       DO WHILE NextKey() == 0
       ENDDO
 
-      DispOutAt( SCORE_ROW, SCORE_COL, Space( Len( __NatMsg( _GET_INVD_DATE ) ) ) )
-      SetPos( nRow, nCol )
+      hb_dispOutAt( SCORE_ROW, SCORE_COL, Space( Len( __NatMsg( _GET_INVD_DATE ) ) ) )
 
    ENDIF
 
@@ -1613,7 +1593,7 @@ METHOD ShowGetMsg( oGet, aMsg ) CLASS HBGetList
 
       IF !Empty( cMsg )
          lMOldState := MSetCursor( .F. )
-         DispOutAt( aMsg[ MSGROW ], aMsg[ MSGLEFT ], PadC( cMsg, aMsg[ MSGRIGHT ] - aMsg[ MSGLEFT ] + 1 ), aMsg[ MSGCOLOR ] )
+         hb_dispOutAt( aMsg[ MSGROW ], aMsg[ MSGLEFT ], PadC( cMsg, aMsg[ MSGRIGHT ] - aMsg[ MSGLEFT ] + 1 ), aMsg[ MSGCOLOR ] )
          MSetCursor( lMOldState )
       ENDIF
    ENDIF

@@ -205,11 +205,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS PUSHBUTTON
 
 METHOD display() CLASS PUSHBUTTON
 
-   LOCAL cOldColor := SetColor()      
-   LOCAL nOldRow := Row()             
-   LOCAL nOldCol := Col()             
-   LOCAL lOldMCur := MSetCursor( .F. )
-
+   LOCAL cColor
    LOCAL cStyle := ::cStyle
    LOCAL cCaption := ::cCaption
    LOCAL nRow := ::nRow
@@ -219,11 +215,11 @@ METHOD display() CLASS PUSHBUTTON
    DispBegin()
 
    IF ::lBuffer
-      SetColor( hb_ColorIndex( ::cColorSpec, 2 ) )
+      cColor := hb_ColorIndex( ::cColorSpec, 2 )
    ELSEIF ::lHasFocus
-      SetColor( hb_ColorIndex( ::cColorSpec, 1 ) )
+      cColor := hb_ColorIndex( ::cColorSpec, 1 )
    ELSE
-      SetColor( hb_ColorIndex( ::cColorSpec, 0 ) )
+      cColor := hb_ColorIndex( ::cColorSpec, 0 )
    ENDIF
 
    IF ( nPos := At( "&", cCaption ) ) == 0
@@ -238,29 +234,25 @@ METHOD display() CLASS PUSHBUTTON
       nCol++
 
       IF Len( cStyle ) == 2
-         DispOutAt( ::nRow, ::nCol, SubStr( cStyle, 1, 1 ) )
-         DispOutAt( ::nRow, ::nCol + Len( cCaption ) + 1, SubStr( cStyle, 2, 1 ) )
+         hb_dispOutAt( ::nRow, ::nCol, SubStr( cStyle, 1, 1 ), cColor )
+         hb_dispOutAt( ::nRow, ::nCol + Len( cCaption ) + 1, SubStr( cStyle, 2, 1 ), cColor )
       ELSE
          nRow++
-         DispBox( ::nRow, ::nCol, ::nRow + 2, ::nCol + Len( cCaption ) + 1, cStyle )
+         hb_dispBox( ::nRow, ::nCol, ::nRow + 2, ::nCol + Len( cCaption ) + 1, cStyle, cColor )
       ENDIF
    ENDIF
 
    IF !Empty( cCaption )
 
-      DispOutAt( nRow, nCol, cCaption )
+      hb_dispOutAt( nRow, nCol, cCaption, cColor )
 
       IF nPos != 0
-         DispOutAt( nRow, nCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 3 ) )
+         hb_dispOutAt( nRow, nCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
 
    ENDIF
 
    DispEnd()
-
-   MSetCursor( lOldMCur )
-   SetColor( cOldColor )
-   SetPos( nOldRow, nOldCol )
 
    RETURN Self
 

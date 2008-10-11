@@ -143,10 +143,6 @@ METHOD delItem( nPos ) CLASS TOPBARMENU
 
 METHOD display() CLASS TOPBARMENU
 
-   LOCAL nOldRow := Row()
-   LOCAL nOldCol := Col()
-   LOCAL lOldMCur := MSetCursor( .F. )
-
    LOCAL nRow := ::nRow
    LOCAL nLeft := ::nLeft
    LOCAL nRight := ::nRight
@@ -165,7 +161,7 @@ METHOD display() CLASS TOPBARMENU
 
    DispBegin()
 
-   DispOutAt( nRow, nLeft, Space( nRight - nLeft + 1 ), cColor1 )
+   hb_dispOutAt( nRow, nLeft, Space( nRight - nLeft + 1 ), cColor1 )
 
    FOR nItem := 1 TO nItemCount
 
@@ -200,12 +196,12 @@ METHOD display() CLASS TOPBARMENU
          ENDIF
       ENDIF
 
-      DispOutAt( nRow, nLeft, cCaption,;
+      hb_dispOutAt( nRow, nLeft, cCaption,;
          iif( nItem == nCurrent, cColor2,;
             iif( aItems[ nItem ]:enabled, cColor1, hb_ColorIndex( ::cColorSpec, 4 ) ) ) )
 
       IF aItems[ nItem ]:enabled .AND. nPos > 0
-         DispOutAt( nRow, nLeft + nPos - 1, SubStr( cCaption, nPos, 1 ),;
+         hb_dispOutAt( nRow, nLeft + nPos - 1, SubStr( cCaption, nPos, 1 ),;
             iif( nItem == nCurrent, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 2 ) ) )
       ENDIF
 
@@ -220,9 +216,6 @@ METHOD display() CLASS TOPBARMENU
    ENDIF
 
    DispEnd()
-
-   SetPos( nOldRow, nOldCol )
-   MSetCursor( lOldMCur )
 
    RETURN Self
 

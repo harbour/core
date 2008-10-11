@@ -467,7 +467,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          nUserFunc := Do( xUserFunc, nMode, nPos, nPos - nAtTop )
 
          IF ISNUMBER( nUserFunc )
-            
+
             DO CASE
             CASE nUserFunc == AC_ABORT .OR. nMode == AC_NOITEM
                lFinished := .T.
@@ -482,12 +482,12 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                // this keystroke will be processed as a goto.
                nMode := AC_GOTO
             ENDCASE
-            
+
             IF nPos > 0 .AND. nMode != AC_GOTO
-            
+
                nRowsClr := Min( nNumRows, nItems )
                nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, bSelect, alSelect, acItems )
-            
+
                IF nMode == AC_NOITEM
                   nPos := 0
                   nAtTop := Max( 1, nPos - nNumRows + 1 )
@@ -495,23 +495,23 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                   DO WHILE nPos < nLastItem .AND. !Eval( bSelect, alSelect[ nPos ] )
                      nPos++
                   ENDDO
-            
+
                   IF nPos > nLastItem
                      nPos := BETWEEN( nFrstItem, nPos, nLastItem )
                   ENDIF
-            
+
                   nAtTop := Min( nAtTop, nPos )
-            
+
                   IF nAtTop + nNumRows - 1 > nItems
                      nAtTop := BETWEEN( 1, nPos - nNumRows + 1, nItems - nNumRows + 1 )
                   ENDIF
-            
+
                   IF nAtTop < 1
                      nAtTop := 1
                   ENDIF
-            
+
                ENDIF
-            
+
                DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect, nRowsClr )
             ENDIF
          ELSE
@@ -542,8 +542,6 @@ STATIC PROCEDURE DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPo
    LOCAL nCntr
    LOCAL nRow                              // Screen row
    LOCAL nIndex                            // Array index
-   LOCAL nSaveRow := Row()                 // Position at start of routine
-   LOCAL nSaveCol := Col()                 // Position at start of routine
 
    DEFAULT nRowsClr TO nNumRows
 
@@ -558,13 +556,11 @@ STATIC PROCEDURE DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPo
          DispLine( acItems[ nIndex ], nRow, nLeft, Eval( bSelect, alSelect[ nIndex ] ), nIndex == nPos, nRight - nLeft + 1 )
       ELSE
          ColorSelect( CLR_STANDARD )
-         DispOutAt( nRow, nLeft, Space( nRight - nLeft + 1 ) )
+         hb_dispOutAt( nRow, nLeft, Space( nRight - nLeft + 1 ) )
       ENDIF
    NEXT
 
    DispEnd()
-
-   SetPos( nSaveRow, nSaveCol )
 
    RETURN
 
@@ -573,7 +569,7 @@ STATIC PROCEDURE DispLine( cLine, nRow, nCol, lSelect, lHiLite, nNumCols )
    ColorSelect( iif( lSelect .AND. ISCHARACTER( cLine ), ;
                 iif( lHiLite, CLR_ENHANCED, CLR_STANDARD ), CLR_UNSELECTED ) )
 
-   DispOutAt( nRow, nCol, iif( ISCHARACTER( cLine ), PadR( cLine, nNumCols ), Space( nNumCols ) ) )
+   hb_dispOutAt( nRow, nCol, iif( ISCHARACTER( cLine ), PadR( cLine, nNumCols ), Space( nNumCols ) ) )
 
    ColorSelect( CLR_STANDARD )
 

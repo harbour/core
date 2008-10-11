@@ -227,10 +227,9 @@ METHOD delItem( nPos )
 
 METHOD display() CLASS LISTBOX
 
-   LOCAL cOldColor := SetColor()      
-   LOCAL nOldRow := Row()             
-   LOCAL nOldCol := Col()             
-   LOCAL lOldMCur := MSetCursor( .F. )
+   LOCAL nOldRow
+   LOCAL nOldCol
+   LOCAL cOldColor
 
    LOCAL nItem
    LOCAL nEnd
@@ -243,7 +242,7 @@ METHOD display() CLASS LISTBOX
    LOCAL cHotBox
    LOCAL cCaption
    LOCAL nPos
-   
+
    IF ::lHasFocus
       cHotBox   := ::cHotBox
       cColor3   := hb_ColorIndex( ::cColorSpec, 2 )
@@ -262,17 +261,21 @@ METHOD display() CLASS LISTBOX
 
    IF ::lDropDown
 
-      DispOutAt( nTop++, nLeft,;
+      hb_dispOutAt( nTop, nLeft,;
          iif( ::nValue == 0, Space( nSize - 1 ), PadR( ::aItems[ ::nValue ][ _ITEM_cTEXT ], nSize - 1 ) ),;
          cColorAny )
 
-      DispOut( ::cStyle, hb_ColorIndex( ::cColorSpec, 7 ) )
+      hb_dispOutAt( nTop++, nLeft + nSize - 1, ::cStyle, hb_ColorIndex( ::cColorSpec, 7 ) )
 
       nEnd--
    ENDIF
 
    IF ::lIsOpen
       IF !Empty( cHotBox )
+
+         nOldRow := Row()
+         nOldCol := Col()
+         cOldColor := SetColor()
 
          SetColor( hb_ColorIndex( ::cColorSpec, 4 ) )
          Scroll( nTop, nLeft, ::nBottom, ::nRight )
@@ -281,6 +284,9 @@ METHOD display() CLASS LISTBOX
          IF ::oVScroll != NIL
             ::oVScroll:display()
          ENDIF
+
+         SetColor( cOldColor )
+         SetPos( nOldRow, nOldCol )
 
          nTop++
          nLeft++
@@ -294,7 +300,7 @@ METHOD display() CLASS LISTBOX
       ENDIF
 
       FOR nItem := ::nTopItem TO nEnd
-         DispOutAt( nTop++, nLeft, PadR( ::aItems[ nItem ][ _ITEM_cTEXT ], nSize ), iif( nItem == ::nValue, cColor4, cColor3 ) )
+         hb_dispOutAt( nTop++, nLeft, PadR( ::aItems[ nItem ][ _ITEM_cTEXT ], nSize ), iif( nItem == ::nValue, cColor4, cColor3 ) )
       NEXT
    ENDIF
 
@@ -307,19 +313,16 @@ METHOD display() CLASS LISTBOX
          cCaption := Stuff( cCaption, nPos, 1, "" )
       ENDIF
 
-      DispOutAt( ::nCapRow, ::nCapCol - 1, cCaption, hb_ColorIndex( ::cColorSpec, 5 ) )
+      hb_dispOutAt( ::nCapRow, ::nCapCol - 1, cCaption, hb_ColorIndex( ::cColorSpec, 5 ) )
 
       IF nPos != 0
-         DispOutAt( ::nCapRow, ::nCapCol + nPos - 2, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 6 ) )
+         hb_dispOutAt( ::nCapRow, ::nCapCol + nPos - 2, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 6 ) )
       ENDIF
 
    ENDIF
 
    DispEnd()
 
-   MSetCursor( lOldMCur )
-   SetColor( cOldColor )
-   SetPos( nOldRow, nOldCol )
 
    RETURN Self
 

@@ -113,11 +113,7 @@ ENDCLASS
 
 METHOD display() CLASS SCROLLBAR
 
-   LOCAL cOldColor
-   LOCAL nOldRow
-   LOCAL nOldCol
-   LOCAL lOldMCur
-
+   LOCAL cColor
    LOCAL cStyle
    LOCAL nOffset
    LOCAL nStart
@@ -126,46 +122,37 @@ METHOD display() CLASS SCROLLBAR
 
    IF ::CalcThumbPos()
 
-      cOldColor := SetColor()      
-      nOldRow := Row()             
-      nOldCol := Col()             
-      lOldMCur := MSetCursor( .F. )
-
       cStyle    := ::cStyle
       nOffset   := ::nOffset
       nStart    := ::nStart
       nEnd      := ::nEnd - 1
-      
+
       DispBegin()
-      
-      SetColor( hb_ColorIndex( ::cColorSpec, 0 ) )
-      
+
+      cColor := hb_ColorIndex( ::cColorSpec, 0 )
+
       IF ::nOrient == SCROLL_VERTICAL
 
          FOR nPos := nStart + 1 TO nEnd
-            DispOutAt( nPos, nOffset, SubStr( cStyle, 2, 1 ) )
+            hb_dispOutAt( nPos, nOffset, SubStr( cStyle, 2, 1 ), cColor )
          NEXT
 
-         SetColor( hb_ColorIndex( ::cColorSpec, 1 ) )
-         DispOutAt( nStart, nOffset, SubStr( cStyle, 1, 1 ) )
-         DispOutAt( nStart + ::nThumbPos, nOffset, SubStr( cStyle, 3, 1 ) )
-         DispOutAt( nEnd + 1, nOffset, SubStr( cStyle, 4, 1 ) )
+         cColor := hb_ColorIndex( ::cColorSpec, 1 )
+         hb_dispOutAt( nStart, nOffset, SubStr( cStyle, 1, 1 ), cColor )
+         hb_dispOutAt( nStart + ::nThumbPos, nOffset, SubStr( cStyle, 3, 1 ), cColor )
+         hb_dispOutAt( nEnd + 1, nOffset, SubStr( cStyle, 4, 1 ), cColor )
       ELSE
 
-         DispOutAt( nOffset, nStart + 1, Replicate( SubStr( cStyle, 2, 1 ), nEnd - nStart ) )
-      
-         SetColor( hb_ColorIndex( ::cColorSpec, 1 ) )
-         DispOutAt( nOffset, nStart, SubStr( cStyle, 1, 1 ) )
-         DispOutAt( nOffset, nStart + ::nThumbPos, SubStr( cStyle, 3, 1 ) )
-         DispOutAt( nOffset, nEnd + 1, SubStr( cStyle, 4, 1 ) )
+         hb_dispOutAt( nOffset, nStart + 1, Replicate( SubStr( cStyle, 2, 1 ), nEnd - nStart ), cColor )
+
+         cColor := hb_ColorIndex( ::cColorSpec, 1 )
+         hb_dispOutAt( nOffset, nStart, SubStr( cStyle, 1, 1 ), cColor )
+         hb_dispOutAt( nOffset, nStart + ::nThumbPos, SubStr( cStyle, 3, 1 ), cColor )
+         hb_dispOutAt( nOffset, nEnd + 1, SubStr( cStyle, 4, 1 ), cColor )
 
       ENDIF
-      
+
       DispEnd()
-      
-      MSetCursor( lOldMCur )
-      SetColor( cOldColor )
-      SetPos( nOldRow, nOldCol )
 
       RETURN .T.
    ENDIF
@@ -173,10 +160,6 @@ METHOD display() CLASS SCROLLBAR
    RETURN .F.
 
 METHOD update() CLASS SCROLLBAR
-
-   LOCAL nOldRow
-   LOCAL nOldCol
-   LOCAL lOldMCur
 
    LOCAL nOldThumbPos := ::nThumbPos
 
@@ -186,24 +169,17 @@ METHOD update() CLASS SCROLLBAR
 
    IF ::CalcThumbPos() .AND. nOldThumbPos != ::nThumbPos
 
-      nOldRow := Row()
-      nOldCol := Col()
-      lOldMCur := MSetCursor( .F. )
-
       DispBegin()
 
       IF ::nOrient == SCROLL_VERTICAL
-         DispOutAt( ::nStart + nOldThumbPos, ::nOffSet, SubStr( ::cStyle, 2,  1), hb_ColorIndex( ::cColorSpec, 0 ) )
-         DispOutAt( ::nStart + ::nThumbPos, ::nOffset, SubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
+         hb_dispOutAt( ::nStart + nOldThumbPos, ::nOffSet, SubStr( ::cStyle, 2,  1), hb_ColorIndex( ::cColorSpec, 0 ) )
+         hb_dispOutAt( ::nStart + ::nThumbPos, ::nOffset, SubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
       ELSE
-         DispOutAt( ::nOffset, ::nStart + nOldThumbPos, SubStr( ::cStyle, 2, 1 ), hb_ColorIndex( ::cColorSpec, 0 ) )
-         DispOutAt( ::nOffset, ::nStart + ::nThumbPos, SubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
+         hb_dispOutAt( ::nOffset, ::nStart + nOldThumbPos, SubStr( ::cStyle, 2, 1 ), hb_ColorIndex( ::cColorSpec, 0 ) )
+         hb_dispOutAt( ::nOffset, ::nStart + ::nThumbPos, SubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
       ENDIF
 
       DispEnd()
-
-      MSetCursor( lOldMCur )
-      SetPos( nOldRow, nOldCol )
 
       RETURN .T.
    ENDIF

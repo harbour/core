@@ -8,6 +8,41 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-11 03:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/scrollbr.prg
+  * harbour/source/rtl/getsys.prg
+  * harbour/source/rtl/tpopup.prg
+  * harbour/source/rtl/tgetlist.prg
+  * harbour/source/rtl/radiogrp.prg
+  * harbour/source/rtl/listbox.prg
+  * harbour/source/rtl/checkbox.prg
+  * harbour/source/rtl/browse.prg
+  * harbour/source/rtl/tget.prg
+  * harbour/source/rtl/ttopbar.prg
+  * harbour/source/rtl/pushbtn.prg
+  * harbour/source/rtl/tmenusys.prg
+  * harbour/source/rtl/achoice.prg
+  * harbour/source/rtl/teditor.prg
+  * harbour/source/rtl/radiobtn.prg
+  * harbour/source/rtl/tbrowse.prg
+    * replaced DispOut() with hb_dispOut()
+    * replaced DispBox() with hb_dispBox()
+    % removed saving and restoring of cursor position in places where
+      it's not longer necessary due to hb_dispOut()/hb_dispBox() usage
+    % removed saving and restoring of SetColor() value in places where
+      it's not longer necessary due to hb_dispOut()/hb_dispBox() usage
+    % removed saving and restoring of MSetCursor(). If it's necessary
+      low GT driver should hide and redraw mouse cursor before and after
+      screen update. We do not have to make it manually
+
+   The above modification gives faster code and allow to access screen
+   from different threads simultaneously because functions like
+   hb_dispOut() and hb_dispBox() are stateless and atomic in screen
+   access. Not all .prg code has been updated yet. If someone is
+   familiar with this code then please help. I'll add yet HB_SCROLL()
+   function which will support additionally colors.
+   Viktor if possible please verify this modifications.
+
 2008-10-11 03:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapigt.h
   * harbour/source/rtl/gtapi.c
@@ -23,7 +58,6 @@
   * harbour/source/rtl/box.c
     + added HB_DISPBOX() function - works like DISPBOX() bit does not
       change cursor position and is atomic for other threads
-
 
   * harbour/include/hbapigt.h
   * harbour/include/hbgtcore.h
@@ -127,7 +161,7 @@
       For VC, see above.
     - Removed HB_BUILD_ST undocumented option.
     % Other minor cleanups.
-      
+
   * contrib/xhb/hbcompat.ch
   * contrib/xhb/xhb.ch
     ! Moved __COPYFILE() translation to xhb.ch.

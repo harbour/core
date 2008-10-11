@@ -161,11 +161,6 @@ METHOD delItem( nPos ) CLASS RADIOGROUP
 
 METHOD display() CLASS RADIOGROUP
 
-   LOCAL cOldColor := SetColor()      
-   LOCAL nOldRow := Row()             
-   LOCAL nOldCol := Col()             
-   LOCAL lOldMCur := MSetCursor( .F. )
-
    LOCAL cSelBox
    LOCAL cUnSelBox
    LOCAL cCaption
@@ -181,12 +176,10 @@ METHOD display() CLASS RADIOGROUP
       cUnSelBox := ::cHotBox
    ENDIF
 
-   SetColor( hb_ColorIndex( ::cColorSpec, 0 ) )
-
    IF !Empty( cSelBox )
-      DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cSelBox )
+      hb_dispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cSelBox, hb_ColorIndex( ::cColorSpec, 0 ) )
    ELSEIF !Empty( cUnSelBox )
-      DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cUnSelBox )
+      hb_dispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cUnSelBox, hb_ColorIndex( ::cColorSpec, 0 ) )
    ENDIF
 
    IF !Empty( cCaption := ::cCaption )
@@ -199,10 +192,10 @@ METHOD display() CLASS RADIOGROUP
          ENDIF
       ENDIF
 
-      DispOutAt( ::nCapRow, ::nCapCol, cCaption, hb_ColorIndex( ::cColorSpec, 1 ) )
+      hb_dispOutAt( ::nCapRow, ::nCapCol, cCaption, hb_ColorIndex( ::cColorSpec, 1 ) )
 
       IF nPos != 0
-         DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 2 ) )
+         hb_dispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 2 ) )
       ENDIF
 
    ENDIF
@@ -210,10 +203,6 @@ METHOD display() CLASS RADIOGROUP
    AEval( ::aItems, {| o | o:display() } )
 
    DispEnd()
-
-   MSetCursor( lOldMCur )
-   SetColor( cOldColor )
-   SetPos( nOldRow, nOldCol )
 
    RETURN Self
 

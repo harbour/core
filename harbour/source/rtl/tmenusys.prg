@@ -620,7 +620,6 @@ METHOD MHitTest( oNewMenu, nNewLevel, nNewItem ) CLASS HBMenuSys
 METHOD ShowMsg( lMode ) CLASS HBMenuSys
    LOCAL nCurrent
    LOCAL cMsg
-   LOCAL lMOldState := MSetCursor( .F. )
 
    IF ISLOGICAL( ::lOldMsgFlag ) .AND. ::lOldMsgFlag
       RestScreen( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight, ::cMsgSaveS )
@@ -635,15 +634,13 @@ METHOD ShowMsg( lMode ) CLASS HBMenuSys
          ( nCurrent := ::oMenu:current ) != 0 .AND. ;
          !Empty( cMsg := ::oMenu:getItem( nCurrent ):message )
 
-         DispOutAt( ::nMsgRow, ::nMsgLeft, PadC( cMsg, ::nMsgRight - ::nMsgLeft + 1 ), ::cMsgColor )
+         hb_dispOutAt( ::nMsgRow, ::nMsgLeft, PadC( cMsg, ::nMsgRight - ::nMsgLeft + 1 ), ::cMsgColor )
       ENDIF
 
       ::cOldMessage := cMsg
       ::lOldMsgFlag := ::lMsgFlag
 
    ENDIF
-
-   MSetCursor( lMOldState )
 
    RETURN .T.
 

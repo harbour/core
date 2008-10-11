@@ -154,23 +154,18 @@ METHOD killFocus() CLASS RADIOBUTTN
    RETURN Self
 
 METHOD display() CLASS RADIOBUTTN
-   
-   LOCAL cOldColor := SetColor()      
-   LOCAL nOldRow := Row()             
-   LOCAL nOldCol := Col()             
-   LOCAL lOldMCur := MSetCursor( .F. )
 
+   LOCAL cColor
    LOCAL cStyle := ::cStyle
    LOCAL nPos
    LOCAL cOldCaption
 
    DispBegin()
 
-   SetColor( iif( ::lBuffer, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 1 ) ) )
-   SetPos( ::nRow, ::nCol )
-   DispOut( Left( cStyle, 1 ) )
-   DispOut( iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ) )
-   DispOut( Right( cStyle, 1 ) )
+   cColor := iif( ::lBuffer, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 1 ) )
+   hb_dispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ), cColor )
+   hb_dispOutAt( ::nRow, ::nCol + 1, iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ), cColor )
+   hb_dispOutAt( ::nRow, ::nCol + 3, Right( cStyle, 1 ), cColor )
 
    IF !Empty( cOldCaption := ::cCaption )
 
@@ -181,18 +176,14 @@ METHOD display() CLASS RADIOBUTTN
          cOldCaption := Stuff( cOldCaption, nPos, 1, "" )
       ENDIF
 
-      DispOutAt( ::nCapRow, ::nCapCol, cOldCaption, hb_ColorIndex( ::cColorSpec, 4 ) )
+      hb_dispOutAt( ::nCapRow, ::nCapCol, cOldCaption, hb_ColorIndex( ::cColorSpec, 4 ) )
 
       IF nPos != 0
-         DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cOldCaption, nPos, 1 ), iif( ::lHasfocus, hb_ColorIndex( ::cColorSpec, 6 ), hb_ColorIndex( ::cColorSpec, 5 ) ) )
+         hb_dispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cOldCaption, nPos, 1 ), iif( ::lHasfocus, hb_ColorIndex( ::cColorSpec, 6 ), hb_ColorIndex( ::cColorSpec, 5 ) ) )
       ENDIF
    ENDIF
 
    DispEnd()
-
-   MSetCursor( lOldMCur )
-   SetColor( cOldColor )
-   SetPos( nOldRow, nOldCol )
 
    RETURN Self
 

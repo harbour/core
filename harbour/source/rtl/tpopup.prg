@@ -136,7 +136,7 @@ METHOD addItem( oItem ) CLASS POPUPMENU
 
       AAdd( ::aItems, oItem )
       ::nItemCount++
-      
+
       ::nWidth := Max( __CapMetrics( oItem ), ::nWidth )
 
    ENDIF
@@ -193,27 +193,19 @@ METHOD delItem( nPos ) CLASS POPUPMENU
 
 METHOD display() CLASS POPUPMENU
 
-   LOCAL nOldRow
-   LOCAL nOldCol
-   LOCAL lOldMCur
-
-   LOCAL nTop    
-   LOCAL nLeft   
-   LOCAL aItems  
+   LOCAL nTop
+   LOCAL nLeft
+   LOCAL aItems
    LOCAL nCurrent
-   LOCAL nLen    
+   LOCAL nLen
    LOCAL nPos
-   LOCAL nWidth  
+   LOCAL nWidth
    LOCAL oPopup
    LOCAL nHotKeyPos
    LOCAL cCaption
    LOCAL nCharPos
 
    IF ::isOpen()
-
-      nOldRow := Row()             
-      nOldCol := Col()             
-      lOldMCur := MSetCursor( .F. )
 
       ::setMetrics()
 
@@ -225,11 +217,11 @@ METHOD display() CLASS POPUPMENU
       nWidth   := ::nWidth
 
       DispBegin()
-      
-      DispBox( nTop, nLeft, ::nBottom, ::nRight, ;
-               SubStr( ::cBorder, 1, 8 ) + " ", ;
-               hb_ColorIndex( ::cColorSpec, 5 ) )
-      
+
+      hb_dispBox( nTop, nLeft, ::nBottom, ::nRight, ;
+                  SubStr( ::cBorder, 1, 8 ) + " ", ;
+                  hb_ColorIndex( ::cColorSpec, 5 ) )
+
 #ifdef HB_EXTENSION
       IF ::shadowed
          hb_Shadow( nTop + 1, nLeft + 1, ::nBottom + 1, ::nRight + 1 )
@@ -243,7 +235,7 @@ METHOD display() CLASS POPUPMENU
 
          IF aItems[ nPos ]:caption == MENU_SEPARATOR
 
-            DispOutAt( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), hb_ColorIndex( ::cColorSpec, 5 ) )
+            hb_dispOutAt( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), hb_ColorIndex( ::cColorSpec, 5 ) )
 
          ELSE
             cCaption := PadR( aItems[ nPos ]:caption, nWidth - 1 )
@@ -283,18 +275,15 @@ METHOD display() CLASS POPUPMENU
                cCaption := Stuff( cCaption, nHotKeyPos, 1, "" )
             ENDIF
 
-            DispOutAt( nTop, nLeft, cCaption, hb_ColorIndex( ::cColorSpec, iif( nPos == nCurrent, 1, iif( aItems[ nPos ]:enabled, 0, 4 ) ) ) )
+            hb_dispOutAt( nTop, nLeft, cCaption, hb_ColorIndex( ::cColorSpec, iif( nPos == nCurrent, 1, iif( aItems[ nPos ]:enabled, 0, 4 ) ) ) )
 
             IF aItems[ nPos ]:enabled .AND. nHotKeyPos != 0
-               DispOutAt( nTop, nLeft + nHotKeyPos - 1, SubStr( cCaption, nHotKeyPos, 1 ), hb_ColorIndex( ::cColorSpec, iif( nPos == nCurrent, 3, 2 ) ) )
+               hb_dispOutAt( nTop, nLeft + nHotKeyPos - 1, SubStr( cCaption, nHotKeyPos, 1 ), hb_ColorIndex( ::cColorSpec, iif( nPos == nCurrent, 3, 2 ) ) )
             ENDIF
          ENDIF
       NEXT
-      
-      DispEnd()
 
-      MSetCursor( lOldMCur )
-      SetPos( nOldRow, nOldCol )
+      DispEnd()
 
    ENDIF
 

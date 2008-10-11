@@ -284,8 +284,6 @@ PROCEDURE __SetFormat( bFormat )
 FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
    LOCAL xValue
    LOCAL cMessage
-   LOCAL nOldRow
-   LOCAL nOldCol
 
    HB_SYMBOL_UNUSED( xDummy )
 
@@ -300,21 +298,16 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
    ENDIF
 
    IF Set( _SET_SCOREBOARD )
-      
+
       cMessage := Left( __NatMsg( _GET_RANGE_FROM ) + LTrim( Transform( xLow, "" ) ) + ;
                         __NatMsg( _GET_RANGE_TO ) + LTrim( Transform( xHigh, "" ) ), MaxCol() )
 
-      nOldRow := Row()
-      nOldCol := Col()
-
-      DispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), cMessage )
-      SetPos( nOldRow, nOldCol )
+      hb_dispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), cMessage )
 
       DO WHILE NextKey() == 0
       ENDDO
 
-      DispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), Space( Len( cMessage ) ) )
-      SetPos( nOldRow, nOldCol )
+      hb_dispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), Space( Len( cMessage ) ) )
 
    ENDIF
 

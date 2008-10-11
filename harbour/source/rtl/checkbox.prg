@@ -189,23 +189,19 @@ METHOD hitTest( nMRow, nMCol ) CLASS CHECKBOX
 
 METHOD display() CLASS CHECKBOX
 
-   LOCAL cOldColor := SetColor()      
-   LOCAL nOldRow := Row()             
-   LOCAL nOldCol := Col()             
-   LOCAL lOldMCur := MSetCursor( .F. )
-
+   LOCAL cColor
    LOCAL cStyle := ::cStyle
    LOCAL cCaption
    LOCAL nPos
 
    DispBegin()
 
-   DispOutAt( ::nRow, ::nCol + 1, iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ),;
-      hb_ColorIndex( ::cColorSpec, iif( ::lHasFocus, 1, 0 ) ) )
+   hb_dispOutAt( ::nRow, ::nCol + 1, iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ),;
+                 hb_ColorIndex( ::cColorSpec, iif( ::lHasFocus, 1, 0 ) ) )
 
-   SetColor( hb_ColorIndex( ::cColorSpec, 2 ) )
-   DispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ) )
-   DispOutAt( ::nRow, ::nCol + 2, Right( cStyle, 1 ) )
+   cColor := hb_ColorIndex( ::cColorSpec, 2 )
+   hb_dispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ), cColor )
+   hb_dispOutAt( ::nRow, ::nCol + 2, Right( cStyle, 1 ), cColor )
 
    IF !Empty( cCaption := ::cCaption )
 
@@ -217,22 +213,19 @@ METHOD display() CLASS CHECKBOX
       ENDIF
 
       IF ::lHasFocus
-         SetColor( hb_ColorIndex( ::cColorSpec, 3 ) )
+         cColor := hb_ColorIndex( ::cColorSpec, 3 )
       ENDIF
 
-      DispOutAt( ::nCapRow, ::nCapCol, cCaption )
+      hb_dispOutAt( ::nCapRow, ::nCapCol, cCaption, cColor )
 
       IF !::lHasFocus .AND. nPos != 0
-         DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 3 ) )
+         hb_dispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), ;
+                       hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
 
    ENDIF
 
    DispEnd()
-
-   MSetCursor( lOldMCur )
-   SetColor( cOldColor )
-   SetPos( nOldRow, nOldCol )
 
    RETURN Self
 
