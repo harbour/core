@@ -153,16 +153,17 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
       IF nKey == K_ESC
          IF ::lDirty .AND. Set( _SET_SCOREBOARD )
             cBackScr := SaveScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight )
-            
+
             nRow := Row()
             nCol := Col()
-            @ ::nTop, ::nRight - 18 SAY "Abort Edit? (Y/N)"
-            
+            hb_dispOutAt( ::nTop, ::nRight - 18, "Abort Edit? (Y/N)" )
+            SetPos( ::nTop, ::nRight - 1 )
+
             nYesNoKey := Inkey( 0 )
-            
+
             RestScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight, cBackScr )
             SetPos( nRow, nCol )
-            
+
             IF Upper( Chr( nYesNoKey ) ) == "Y"
                ::lSaved := .F.
                ::lExitEdit := .T.
@@ -238,7 +239,7 @@ METHOD xDo( nStatus ) CLASS HBMemoEditor
    LOCAL nOldRow := ::Row()
    LOCAL nOldCol := ::Col()
    LOCAL nOldCur := SetCursor()
-   
+
    LOCAL xResult := Do( ::xUserFunction, nStatus, ::nRow, ::nCol - 1 )
 
    IF ! ISNUMBER( xResult )

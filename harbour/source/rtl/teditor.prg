@@ -405,7 +405,6 @@ METHOD display() CLASS HBEditor
    LOCAL i
    LOCAL nOCol := ::Col()
    LOCAL nORow := ::Row()
-   LOCAL cOldColor
 
    DispBegin()
 
@@ -415,9 +414,7 @@ METHOD display() CLASS HBEditor
 
    // Clear rest of editor window (needed when deleting lines of text)
    IF ::naTextLen < ::nNumRows
-      cOldColor := SetColor( ::cColorSpec )
-      Scroll( ::nTop + ::naTextLen, ::nLeft, ::nBottom, ::nRight )
-      SetColor( cOldColor )
+      hb_scroll( ::nTop + ::naTextLen, ::nLeft, ::nBottom, ::nRight,,, ::cColorSpec )
    ENDIF
 
    ::SetPos( nORow, nOCol )
@@ -470,7 +467,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       ENDIF
       IF ::Row() == ::nBottom
          IF ::nRow < ::naTextLen
-            Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, 1 )
+            hb_scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, 1 )
             ::nFirstRow++
             ::nRow++
             ::RefreshLine()
@@ -513,7 +510,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       ENDIF
       IF ::Row() == ::nTop
          IF ::nRow > 1
-            Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, -1 )
+            hb_scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, -1 )
             ::nFirstRow--
             ::nRow--
             ::RefreshLine()
@@ -548,7 +545,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
    CASE nKey == K_RIGHT
       IF ::Col() == ::nRight
          IF ::nCol <= iif( ::lWordWrap, ::nWordWrapCol, ::LineLen( ::nRow ) )
-            Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, 1 )
+            hb_scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, 1 )
             ::nFirstCol++
             ::nCol++
             ::RefreshColumn()
@@ -570,7 +567,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
    CASE nKey == K_LEFT
       IF ::Col() == ::nLeft
          IF ::nCol > 1
-            Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, -1 )
+            hb_scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, -1 )
             ::nFirstCol--
             ::nCol--
             ::RefreshColumn()
@@ -1026,14 +1023,14 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    IF ::nFirstCol >  ::LineLen( ::nRow ) + 1
       ::nFirstCol := ::LineLen( ::nRow ) + 1
    ENDIF
-   
+
    IF ( ::nFirstRow + nWndRow ) > ::naTextLen
       DO WHILE ( ::nFirstRow + ( --nWndRow ) ) > ::naTextLen
       ENDDO
    ENDIF
 
    // Empty area of screen which will hold editor window
-   Scroll( nTop, nLeft, nBottom, nRight )
+   hb_scroll( nTop, nLeft, nBottom, nRight )
 
    // Set cursor upper left corner
    //::SetPos( ::nTop, ::nLeft )

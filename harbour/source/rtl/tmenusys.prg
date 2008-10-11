@@ -126,9 +126,9 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
    LOCAL bKeyBlock
    LOCAL lSubMenu
 
-   ::nOldRow    := Row()  
-   ::nOldCol    := Col()  
-   ::nOldCursor := SetCursor( SC_NONE )  
+   ::nOldRow    := Row()
+   ::nOldCol    := Col()
+   ::nOldCursor := SetCursor( SC_NONE )
 
    ::nMsgRow    := nMsgRow
    ::nMsgLeft   := nMsgLeft
@@ -143,7 +143,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
          ::cMsgColor := GetClrPair( SetColor(), 1 )
       ENDIF
 
-      Scroll( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
+      hb_scroll( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
 
       ::cMsgSaveS := SaveScreen( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
 
@@ -327,7 +327,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             IF ::oMenu:ClassName() == "POPUPMENU"
                ::oMenu:close()
             ENDIF
-            
+
             nReturn := -1 // Bail out if at the top menu item
             EXIT
 

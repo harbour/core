@@ -332,7 +332,7 @@ METHOD SampleLabels() CLASS HBLabelForm
       nGetKey := Inkey( 0 )
       @ Row(), Col() SAY Chr( nGetKey )
       IF Row() == MaxRow()
-         Scroll( 0, 0, MaxRow(), MaxCol(), 1 )
+         hb_scroll( 0, 0, MaxRow(), MaxCol(), 1 )
          @ MaxRow(), 0 SAY ""
       ELSE
          @ Row() + 1, 0 SAY ""

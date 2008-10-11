@@ -145,3 +145,13 @@ HB_FUNC( HB_GFXTEXT )
                  hb_parni( 5 ) /* nSize  */,
                  hb_parni( 6 ) /* nWidth */ );
 }
+
+HB_FUNC( HB_GTLOCK )
+{
+   hb_retl( hb_gtLock() );
+}
+
+HB_FUNC( HB_GTUNLOCK )
+{
+   hb_gtUnlock();
+}

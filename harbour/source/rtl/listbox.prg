@@ -236,6 +236,7 @@ METHOD display() CLASS LISTBOX
    LOCAL cColor4
    LOCAL cColor3
    LOCAL cColorAny
+   LOCAL cColorScrl
    LOCAL nTop := ::nTop
    LOCAL nLeft := ::nLeft
    LOCAL nSize := ::nRight - nLeft + 1
@@ -273,20 +274,26 @@ METHOD display() CLASS LISTBOX
    IF ::lIsOpen
       IF !Empty( cHotBox )
 
-         nOldRow := Row()
-         nOldCol := Col()
-         cOldColor := SetColor()
-
-         SetColor( hb_ColorIndex( ::cColorSpec, 4 ) )
-         Scroll( nTop, nLeft, ::nBottom, ::nRight )
-         DispBox( nTop, nLeft, ::nBottom, ::nRight, cHotBox )
+         cColorScrl := hb_ColorIndex( ::cColorSpec, 4 )
+         hb_scroll( nTop, nLeft, ::nBottom, ::nRight,,, cColorScrl )
+         hb_dispBox( nTop, nLeft, ::nBottom, ::nRight, cHotBox, cColorScrl )
 
          IF ::oVScroll != NIL
-            ::oVScroll:display()
-         ENDIF
 
-         SetColor( cOldColor )
-         SetPos( nOldRow, nOldCol )
+            /* Is it necessary to save, set and restore color and cursor
+             * position for ::oVScroll:display() or we can remove it?
+             */
+            nOldRow := Row()
+            nOldCol := Col()
+            cOldColor := SetColor()
+            SetColor( cColorScrl )
+
+            ::oVScroll:display()
+
+            SetColor( cOldColor )
+            SetPos( nOldRow, nOldCol )
+
+         ENDIF
 
          nTop++
          nLeft++

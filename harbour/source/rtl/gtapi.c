@@ -139,6 +139,40 @@ HB_EXPORT ERRCODE hb_gtExit( void )
    return SUCCESS;
 }
 
+HB_EXPORT ERRCODE hb_gtLock( void )
+{
+   ERRCODE errCode = FAILURE;
+   PHB_GT pGT;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtLock()"));
+
+   pGT = hb_gt_Base();
+   if( pGT )
+   {
+      if( HB_GTSELF_LOCK( pGT ) )
+         errCode = SUCCESS;
+      hb_gt_BaseFree( pGT );
+   }
+   return errCode;
+}
+
+HB_EXPORT ERRCODE hb_gtUnlock( void )
+{
+   ERRCODE errCode = FAILURE;
+   PHB_GT pGT;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtUnlock()"));
+
+   pGT = hb_gt_Base();
+   if( pGT )
+   {
+      HB_GTSELF_UNLOCK( pGT );
+      errCode = SUCCESS;
+      hb_gt_BaseFree( pGT );
+   }
+   return errCode;
+}
+
 HB_EXPORT int hb_gtReadKey( int iEventMask )
 {
    int iKey = 0;

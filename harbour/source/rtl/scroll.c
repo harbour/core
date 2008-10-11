@@ -108,3 +108,79 @@ HB_FUNC( SCROLL )
                 ( SHORT ) hb_parni( 5 ), /* Defaults to zero on bad type */
                 ( SHORT ) hb_parni( 6 ) ); /* Defaults to zero on bad type */
 }
+
+HB_FUNC( HB_SCROLL )
+{
+   int iMaxRow = hb_gtMaxRow();
+   int iMaxCol = hb_gtMaxCol();
+
+   int iTop;
+   int iLeft;
+   int iBottom;
+   int iRight;
+   int iColor;
+   int iChar;
+
+   /* Enforce limits of (0,0) to (MAXROW(),MAXCOL()) */
+
+   iTop = hb_parni( 1 ); /* Defaults to zero on bad type */
+   if( iTop < 0 )
+      iTop = 0;
+   else if( iTop > iMaxRow )
+      iTop = iMaxRow;
+
+   iLeft = hb_parni( 2 ); /* Defaults to zero on bad type */
+   if( iLeft < 0 )
+      iLeft = 0;
+   else if( iLeft > iMaxCol )
+      iLeft = iMaxCol;
+
+   if( ISNUM( 3 ) )
+   {
+      iBottom = hb_parni( 3 );
+      if( iBottom < 0 )
+         iBottom = 0;
+      else if( iBottom > iMaxRow )
+         iBottom = iMaxRow;
+   }
+   else
+      iBottom = iMaxRow;
+
+   if( ISNUM( 4 ) )
+   {
+      iRight = hb_parni( 4 );
+      if( iRight < 0 )
+         iRight = 0;
+      else if( iRight > iMaxCol )
+         iRight = iMaxCol;
+   }
+   else
+      iRight = iMaxCol;
+
+   if( ISNUM( 7 ) )
+      iColor = hb_parni( 7 );
+   else if( ISCHAR( 7 ) )
+   {
+      iColor = hb_gtColorToN( hb_parc( 7 ) );
+      if( iColor == -1 )
+         iColor = hb_gtColorToN( "W/N" );
+   }
+   else
+      iColor = hb_gtGetClearColor();
+
+   if( ISNUM( 8 ) )
+      iChar = hb_parni( 8 );
+   else if( ISCHAR( 8 ) )
+      iChar = ( UCHAR ) hb_parc( 8 )[0];
+   else
+      iChar = hb_gtGetClearChar();
+
+   hb_gtScrollEx( iTop,
+                  iLeft,
+                  iBottom,
+                  iRight,
+                  ( BYTE ) iColor,
+                  ( BYTE ) iChar,
+                  hb_parni( 5 ), /* Defaults to zero on bad type */
+                  hb_parni( 6 ) ); /* Defaults to zero on bad type */
+}

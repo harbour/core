@@ -572,7 +572,6 @@ METHOD scrollBuffer( nRows ) CLASS TBROWSE
 
    LOCAL nRowCount := ::rowCount
    LOCAL aValues, aColors
-   LOCAL cOldColor
 
    /* Store last scroll value to chose refresh order. [druzus] */
    ::nLastScroll := nRows
@@ -580,11 +579,9 @@ METHOD scrollBuffer( nRows ) CLASS TBROWSE
    IF nRows >= nRowCount .OR. nRows <= -nRowCount
       AFill( ::aCellStatus, .F. )
    ELSE
-      cOldColor := SetColor( ::colorValue( _TBC_CLR_STANDARD ) )
-      Scroll( ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ), ::n_Left, ;
-              ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ), ::n_Right, ;
-              nRows )
-      SetColor( cOldColor )
+      hb_scroll( ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ), ::n_Left, ;
+                 ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ), ::n_Right, ;
+                 nRows,, ::colorValue( _TBC_CLR_STANDARD ) )
       IF nRows > 0
          DO WHILE --nRows >= 0
             aValues := ::aCellValues[ 1 ]

@@ -8,6 +8,39 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-11 04:56 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapigt.h
+  * harbour/source/rtl/gtapi.c
+    + added C functions hb_gtLock() and hb_gtUnlock()
+      They block current GT for other threads
+
+  * harbour/source/rtl/gtfunc.c
+    + added PRG functions hb_gtLock() and hb_gtUnlock()
+      They block current GT for other threads - be careful using them
+      and always unlock locked GT
+
+  * harbour/source/rtl/scroll.c
+    + added HB_SCROLL() function - it works like SCROLL() but supports
+      2 additional parameters: color and erase char. It's stateless and
+      atomic in GT access
+
+  * harbour/source/rtl/tbrowse.prg
+    * use HB_SCROLL() instead of SCROLL(). Now whole TBROWSE class
+      does not depend on other thread screen output and does not
+      set any GT variables except of cursor positioning to active
+      cell when it's enabled
+
+  * harbour/source/rtl/memoedit.prg
+  * harbour/source/rtl/tgetlist.prg
+  * harbour/source/rtl/tlabel.prg
+  * harbour/source/rtl/listbox.prg
+  * harbour/source/rtl/tmenusys.prg
+  * harbour/source/rtl/achoice.prg
+  * harbour/source/rtl/profiler.prg
+  * harbour/source/rtl/teditor.prg
+    * use atomic stateless functions when possible - this code should
+      be checked and updated by some who know it.
+
 2008-10-11 03:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/scrollbr.prg
   * harbour/source/rtl/getsys.prg
