@@ -163,9 +163,9 @@ METHOD display() CLASS RADIOBUTTN
    DispBegin()
 
    cColor := iif( ::lBuffer, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 1 ) )
-   hb_dispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ), cColor )
-   hb_dispOutAt( ::nRow, ::nCol + 1, iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ), cColor )
-   hb_dispOutAt( ::nRow, ::nCol + 3, Right( cStyle, 1 ), cColor )
+   hb_dispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ) +;
+                                 iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ) +;
+                                 Right( cStyle, 1 ), cColor )
 
    IF !Empty( cOldCaption := ::cCaption )
 

@@ -120,10 +120,6 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
                                       iif( At( "/", cColorNorm ) == 0, cColorNorm, Left( cColorNorm, At( "/", cColorNorm ) - 1 ) ), "+", "" ), "*", "" )
    ENDIF
 
-   IF nDelay == NIL
-      nDelay := 0
-   ENDIF
-
    aOptionsOK := {}
    FOR nEval := 1 TO Len( aOptions )
       IF ISCHARACTER( aOptions[ nEval ] ) .AND. !Empty( aOptions[ nEval ] )

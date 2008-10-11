@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-11 11:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+    + New functions added.
+
+  * source/rtl/alert.prg
+    % Minor optimization.
+    ; NOTE: Found yet another hidden extension in Alert() code :(
+
+  * source/rtl/radiobtn.prg
+    ! Fix and optimization in recent modification.
+
 2008-10-11 04:56 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapigt.h
   * harbour/source/rtl/gtapi.c
