@@ -276,7 +276,10 @@ HB_FUNC( HB_TOKENPTR )
       hb_retclen( szToken, ulToken );
    }
    else
+   {
+      hb_stornl( 0, 2 );
       hb_retc( NULL );
+   }
 }
 
 HB_FUNC( HB_ATOKENS )

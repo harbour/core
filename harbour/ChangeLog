@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-11 14:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/fnsplit.c
+  * source/rtl/hbtoken.c
+    ! HB_FNAMESPLIT(), HB_TOKENPTR() fixed to 
+      reset parameters passed by reference in 
+      error cases.
+
 2008-10-11 13:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/tget.prg
     ! fixed cursor positioning when new get item is added.
