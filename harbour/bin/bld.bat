@@ -58,16 +58,15 @@ if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
    echo     HB_COMPILER:
    echo       - When HB_ARCHITECTURE=dos
    echo         - djgpp   (Delorie GNU C, DOS 32-bit)
-   echo         - rxs32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)
    echo         - watcom  (OpenWatcom, DOS 32-bit)
+   echo         - rxs32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)
    echo       - When HB_ARCHITECTURE=w32
-   echo         - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)
+   echo         - msvc    (Microsoft Visual C++, Windows 32/64-bit)
    echo         - mingw   (MinGW GNU C, Windows 32-bit)
    echo         - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)
-   echo         - rxsnt   (EMX/RSXNT/Win32 GNU C, Windows 32-bit)
-   echo         - icc     (IBM Visual Age C++, Windows 32-bit)
-   echo         - msvc    (Microsoft Visual C++, Windows 32/64-bit)
+   echo         - bcc32   (Borland C++ 4.x, 5.x, 6.x, Windows 32-bit)
    echo         - watcom  (OpenWatcom, Windows 32-bit)
+   echo         - rxsnt   (EMX/RSXNT/Win32 GNU C, Windows 32-bit)
    goto END
 
 :NO_ARCH
@@ -92,7 +91,10 @@ if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
 
 :COMPILE
 
-   %HB_BIN_INSTALL%\harbour %1.prg -n -q0 -i%HB_INC_INSTALL% %2 %3 %PRG_USR%
+   if     "%OS%" == "Windows_NT" set _HB_PRG_NAME=%~n1
+   if not "%OS%" == "Windows_NT" set _HB_PRG_NAME=%1
+
+   %HB_BIN_INSTALL%\harbour %_HB_PRG_NAME%.prg -n -q0 -i%HB_INC_INSTALL% %2 %3 %PRG_USR%
 
 :A_DOS
 
@@ -100,123 +102,144 @@ if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
 
    if not "%HB_COMPILER%" == "djgpp" goto A_DOS_DJGPP_NOT
 
-      echo %1.c > build.tmp
-      echo -o%1.exe -O3 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% >> build.tmp
-      echo -lhbcpage >> build.tmp
-      echo -lhbdebug >> build.tmp
-      echo -lhbvm >> build.tmp
-      echo -lhbrtl >> build.tmp
-      echo -lgtdos >> build.tmp
-      echo -lgtcgi >> build.tmp
-      echo -lgtstd >> build.tmp
-      echo -lgtpca >> build.tmp
-      echo -lhblang >> build.tmp
-      echo -lhbrdd >> build.tmp
-      echo -lhbrtl >> build.tmp
-      echo -l%_HBVM_LIB% >> build.tmp
-      echo -lhbmacro >> build.tmp
-      echo -lhbpp >> build.tmp
-      echo -lrddfpt >> build.tmp
-      echo -lrddntx >> build.tmp
-      echo -lrddcdx >> build.tmp
-      echo -lhbhsx >> build.tmp
-      echo -lhbsix >> build.tmp
-      echo -lhbcommon >> build.tmp
-      echo -lm >> build.tmp
-      gcc @build.tmp
-      del build.tmp
-      goto END
+      echo %_HB_PRG_NAME%.c > _hb_bld.tmp
+      echo -o%_HB_PRG_NAME%.exe -O3 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% >> _hb_bld.tmp
+      echo -lhbcpage >> _hb_bld.tmp
+      echo -lhbdebug >> _hb_bld.tmp
+      echo -lhbvm >> _hb_bld.tmp
+      echo -lhbrtl >> _hb_bld.tmp
+      echo -lgtdos >> _hb_bld.tmp
+      echo -lgtcgi >> _hb_bld.tmp
+      echo -lgtstd >> _hb_bld.tmp
+      echo -lgtpca >> _hb_bld.tmp
+      echo -lhblang >> _hb_bld.tmp
+      echo -lhbrdd >> _hb_bld.tmp
+      echo -lhbrtl >> _hb_bld.tmp
+      echo -l%_HBVM_LIB% >> _hb_bld.tmp
+      echo -lhbmacro >> _hb_bld.tmp
+      echo -lhbpp >> _hb_bld.tmp
+      echo -lrddfpt >> _hb_bld.tmp
+      echo -lrddntx >> _hb_bld.tmp
+      echo -lrddcdx >> _hb_bld.tmp
+      echo -lhbhsx >> _hb_bld.tmp
+      echo -lhbsix >> _hb_bld.tmp
+      echo -lhbcommon >> _hb_bld.tmp
+      echo -lm >> _hb_bld.tmp
+      gcc @_hb_bld.tmp
+      del _hb_bld.tmp
+      goto CLEANUP
 
 :A_DOS_DJGPP_NOT
 
-   if not "%HB_COMPILER%" == "rsx32" GOTO A_DOS_RSX32_NOT
+   if not "%HB_COMPILER%" == "rsx32" goto A_DOS_RSX32_NOT
 
-      gcc %1.c -O3 -Zrsx32 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -lgtdos -lgtcgi -lgtstd -lgtpca -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
-      goto END
+      gcc %_HB_PRG_NAME%.c -O3 -Zrsx32 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -lgtdos -lgtcgi -lgtstd -lgtpca -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+      goto CLEANUP
 
 :A_DOS_RSX32_NOT
 
    if not "%HB_COMPILER%" == "watcom" goto END
 
-      wpp386 -j -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS %1.c -fo=%1.obj
-      echo debug all OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe NAME %1.exe > build.tmp
-      echo FILE %1.obj >> build.tmp
-      echo LIB hbcpage.lib >> build.tmp
-      echo LIB hbdebug.lib >> build.tmp
-      echo LIB hbvm.lib >> build.tmp
-      echo LIB hbrtl.lib >> build.tmp
-      echo LIB gtdos.lib >> build.tmp
-      echo LIB gtcgi.lib >> build.tmp
-      echo LIB gtstd.lib >> build.tmp
-      echo LIB gtpca.lib >> build.tmp
-      echo LIB hblang.lib >> build.tmp
-      echo LIB hbrdd.lib >> build.tmp
-      echo LIB hbmacro.lib >> build.tmp
-      echo LIB hbpp.lib >> build.tmp
-      echo LIB rddntx.lib >> build.tmp
-      echo LIB rddcdx.lib >> build.tmp
-      echo LIB rddfpt.lib >> build.tmp
-      echo LIB hbhsx.lib >> build.tmp
-      echo LIB hbsix.lib >> build.tmp
-      echo LIB hbcommon.lib >> build.tmp
-      echo LIB hbpcre.lib >> build.tmp
-      echo LIB hbzlib.lib >> build.tmp
-      wlink @build.tmp
-      del build.tmp
-      goto END
+      wpp386 -j -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS %_HB_PRG_NAME%.c -fo=%_HB_PRG_NAME%.obj
+      echo debug all OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe NAME %_HB_PRG_NAME%.exe > _hb_bld.tmp
+      echo FILE %_HB_PRG_NAME%.obj >> _hb_bld.tmp
+      echo LIB hbcpage.lib >> _hb_bld.tmp
+      echo LIB hbdebug.lib >> _hb_bld.tmp
+      echo LIB hbvm.lib >> _hb_bld.tmp
+      echo LIB hbrtl.lib >> _hb_bld.tmp
+      echo LIB gtdos.lib >> _hb_bld.tmp
+      echo LIB gtcgi.lib >> _hb_bld.tmp
+      echo LIB gtstd.lib >> _hb_bld.tmp
+      echo LIB gtpca.lib >> _hb_bld.tmp
+      echo LIB hblang.lib >> _hb_bld.tmp
+      echo LIB hbrdd.lib >> _hb_bld.tmp
+      echo LIB hbmacro.lib >> _hb_bld.tmp
+      echo LIB hbpp.lib >> _hb_bld.tmp
+      echo LIB rddntx.lib >> _hb_bld.tmp
+      echo LIB rddcdx.lib >> _hb_bld.tmp
+      echo LIB rddfpt.lib >> _hb_bld.tmp
+      echo LIB hbhsx.lib >> _hb_bld.tmp
+      echo LIB hbsix.lib >> _hb_bld.tmp
+      echo LIB hbcommon.lib >> _hb_bld.tmp
+      echo LIB hbpcre.lib >> _hb_bld.tmp
+      echo LIB hbzlib.lib >> _hb_bld.tmp
+      wlink @_hb_bld.tmp
+      del _hb_bld.tmp
+      goto CLEANUP
 
 :A_W32
 
-if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
+   if not "%HB_ARCHITECTURE%" == "w32" goto END
 
-   if "%HB_COMPILER%" == "bcc32"   bcc32 -tWM -O2 -OS -Ov -Oi -Oc -d %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %1.c  %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddfpt.lib rddntx.lib rddcdx.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib
-   if "%HB_COMPILER%" == "msvc"    cl -TP -W3 %C_USR% -I%HB_INC_INSTALL% %1.c /link /subsystem:CONSOLE /LIBPATH:%HB_LIB_INSTALL% %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib  gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
-   if "%HB_COMPILER%" == "mingw"   gcc %1.c -O3 -o%1.exe %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -l%_HBVM_LIB% -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -l%_HBVM_LIB% -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c -O3 -o%1.exe %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -l%_HBVM_LIB% -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -l%_HBVM_LIB% -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
-   if "%HB_COMPILER%" == "rsxnt"   gcc %1.c -O3 -Zwin32  %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -l%_HBVM_LIB% -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -l%_HBVM_LIB% -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+   if not "%HB_COMPILER%" == "bcc32" goto A_WIN_BCC_NOT
 
-:C_WATCOM
+      bcc32 -tWM -O2 -OS -Ov -Oi -Oc -d %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %_HB_PRG_NAME%.c %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddfpt.lib rddntx.lib rddcdx.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib
+      goto CLEANUP
 
-   if not "%HB_COMPILER%" == "watcom"  goto end
+:A_WIN_BCC_NOT
 
-   wpp386 -j -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT %1.c -fo=%1.obj
-   echo debug all OP osn=NT OP stack=65536 OP CASEEXACT NAME %1.exe > build.tmp
-   echo FILE %1.obj >> build.tmp
-   echo LIB hbcpage.lib >> build.tmp
-   echo LIB hbdebug.lib >> build.tmp
-   echo LIB %_HBVM_LIB%.lib >> build.tmp
-   echo LIB hbrtl.lib >> build.tmp
-   echo LIB gtcgi.lib >> build.tmp
-   echo LIB gtgui.lib >> build.tmp
-   echo LIB gtpca.lib >> build.tmp
-   echo LIB gtstd.lib >> build.tmp
-   echo LIB gtwin.lib >> build.tmp
-   echo LIB gtwvt.lib >> build.tmp
-   echo LIB hblang.lib >> build.tmp
-   echo LIB hbmacro.lib >> build.tmp
-   echo LIB hbpp.lib >> build.tmp
-   echo LIB rddntx.lib >> build.tmp
-   echo LIB rddcdx.lib >> build.tmp
-   echo LIB rddfpt.lib >> build.tmp
-   echo LIB hbhsx.lib >> build.tmp
-   echo LIB hbsix.lib >> build.tmp
-   echo LIB hbrdd.lib >> build.tmp
-   echo LIB hbcommon.lib >> build.tmp
-   echo LIB hbpcre.lib >> build.tmp
-   echo LIB hbzlib.lib >> build.tmp
-   echo LIB kernel32.lib >> build.tmp
-   echo LIB user32.lib >> build.tmp
-   echo LIB wsock32.lib >> build.tmp
-   wlink @build.tmp
-   del build.tmp
-   goto END
+   if not "%HB_COMPILER%" == "msvc" goto A_WIN_MSVC_NOT
+
+      cl -TP -W3 %C_USR% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /subsystem:CONSOLE /LIBPATH:%HB_LIB_INSTALL% %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
+      goto CLEANUP
+
+:A_WIN_MSVC_NOT
+
+   if "%HB_COMPILER%" == "gcc" set HB_COMPILER=mingw
+   if not "%HB_COMPILER%" == "mingw" goto A_WIN_MINGW_NOT
+
+      gcc %_HB_PRG_NAME%.c -O3 -o%_HB_PRG_NAME%.exe %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -l%_HBVM_LIB% -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -l%_HBVM_LIB% -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+      goto CLEANUP
+
+:A_WIN_MINGW_NOT
+
+   if not "%HB_COMPILER%" == "rsxnt" goto A_WIN_RSXNT_NOT
+
+      gcc %_HB_PRG_NAME%.c -O3 -Zwin32 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -l%_HBVM_LIB% -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -l%_HBVM_LIB% -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+      goto CLEANUP
+
+:A_WIN_RSXNT_NOT
+
+   if not "%HB_COMPILER%" == "watcom" goto END
+
+      wpp386 -j -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT %_HB_PRG_NAME%.c -fo=%_HB_PRG_NAME%.obj
+      echo debug all OP osn=NT OP stack=65536 OP CASEEXACT NAME %_HB_PRG_NAME%.exe > _hb_bld.tmp
+      echo FILE %_HB_PRG_NAME%.obj >> _hb_bld.tmp
+      echo LIB hbcpage.lib >> _hb_bld.tmp
+      echo LIB hbdebug.lib >> _hb_bld.tmp
+      echo LIB %_HBVM_LIB%.lib >> _hb_bld.tmp
+      echo LIB hbrtl.lib >> _hb_bld.tmp
+      echo LIB gtcgi.lib >> _hb_bld.tmp
+      echo LIB gtgui.lib >> _hb_bld.tmp
+      echo LIB gtpca.lib >> _hb_bld.tmp
+      echo LIB gtstd.lib >> _hb_bld.tmp
+      echo LIB gtwin.lib >> _hb_bld.tmp
+      echo LIB gtwvt.lib >> _hb_bld.tmp
+      echo LIB hblang.lib >> _hb_bld.tmp
+      echo LIB hbmacro.lib >> _hb_bld.tmp
+      echo LIB hbpp.lib >> _hb_bld.tmp
+      echo LIB rddntx.lib >> _hb_bld.tmp
+      echo LIB rddcdx.lib >> _hb_bld.tmp
+      echo LIB rddfpt.lib >> _hb_bld.tmp
+      echo LIB hbhsx.lib >> _hb_bld.tmp
+      echo LIB hbsix.lib >> _hb_bld.tmp
+      echo LIB hbrdd.lib >> _hb_bld.tmp
+      echo LIB hbcommon.lib >> _hb_bld.tmp
+      echo LIB hbpcre.lib >> _hb_bld.tmp
+      echo LIB hbzlib.lib >> _hb_bld.tmp
+      echo LIB kernel32.lib >> _hb_bld.tmp
+      echo LIB user32.lib >> _hb_bld.tmp
+      echo LIB wsock32.lib >> _hb_bld.tmp
+      wlink @_hb_bld.tmp
+      del _hb_bld.tmp
+      goto CLEANUP
 
 :CLEANUP
 
-   del %1.c
-   if exist %1.o del %1.o
-   if exist %1.obj del %1.obj
+   if exist %_HB_PRG_NAME%.c del %_HB_PRG_NAME%.c
+   if exist %_HB_PRG_NAME%.o del %_HB_PRG_NAME%.o
+   if exist %_HB_PRG_NAME%.obj del %_HB_PRG_NAME%.obj
    rem Borland stuff
-   if exist %1.tds del %1.tds
+   if exist %_HB_PRG_NAME%.tds del %_HB_PRG_NAME%.tds
 
 :END

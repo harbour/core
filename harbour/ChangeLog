@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-11 21:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/bld.bat
+  * bin/bld_os2.cmd
+    + Enabled cleanup of .c/object/.tds files after build.
+    + Under Windows NT OSes, it's now possible to pass full .prg 
+      name with extension.
+    ! Few minor fixes.
+    * Formatting, cleanup and help update.
+    ; Please test.
+
 2008-10-11 14:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/fnsplit.c
   * source/rtl/hbtoken.c
