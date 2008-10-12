@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-11 13:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_vc.mak
+  * contrib/mtpl_vc.mak
+    + Added /nologo to lib commands.
+
+  * source/rtl/fserror.c
+    * Minor formatting.
+
+  * ChangeLog
+    + Marked change as TOMERGE 1.0.
+
 2008-10-12 13:19 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbthread.h
     * casting cleanup
@@ -27,6 +38,7 @@
 
   * harbour/source/vm/classes.c
     ! fixed profiler usage
+      [TOMERGE 1.0]
 
 2008-10-11 21:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/bld.bat

@@ -153,8 +153,8 @@ CFLAGSMT = -MT$(DBGMARKER) -DHB_MT_VM
 
 CLIBFLAGS      = -c $(CFLAGS)
 !if "$(HB_BUILD_WINCE)" == "yes"
-CLIBFLAGSDLL   =  $(CLIBFLAGS) -DHB_DYNLIB
-CEXEFLAGSDLL   =  $(CLIBFLAGS)
+CLIBFLAGSDLL   = $(CLIBFLAGS) -DHB_DYNLIB
+CEXEFLAGSDLL   = $(CLIBFLAGS)
 !else
 CLIBFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS) -DHB_DYNLIB
 CEXEFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS)
@@ -721,88 +721,88 @@ $(HB_DEST_DIRS) $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL):
 # LIBRARY Targets BUILD rules
 #**********************************************************
 $(COMMON_LIB)   : $(COMMON_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(PP_LIB)       : $(PP_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(VM_LIB)       : $(VM_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(VMMT_LIB)     : $(VMMT_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(RTL_LIB)      : $(RTL_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(MACRO_LIB)    : $(MACRO_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(DEBUG_LIB)    : $(DEBUG_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(LANG_LIB)     : $(LANG_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(CODEPAGE_LIB) : $(CODEPAGE_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(PCRE_LIB)     : $(PCRE_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(HBZLIB_LIB)   : $(HBZLIB_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(HBEXTERN_LIB) : $(HBEXTERN_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(RDD_LIB)      : $(RDD_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(NULSYS_LIB)   : $(NULSYS_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(DBFNTX_LIB)   : $(DBFNTX_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(DBFCDX_LIB)   : $(DBFCDX_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(DBFFPT_LIB)   : $(DBFFPT_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(HBSIX_LIB)    : $(HBSIX_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(HSX_LIB)      : $(HSX_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(USRRDD_LIB)   : $(USRRDD_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(GTCGI_LIB)    : $(GTCGI_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(GTDOS_LIB)    : $(GTDOS_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(GTPCA_LIB)    : $(GTPCA_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(GTSTD_LIB)    : $(GTSTD_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(GTWIN_LIB)    : $(GTWIN_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(GTWVT_LIB)    : $(GTWVT_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(GTGUI_LIB)    : $(GTGUI_LIB_OBJS)
-    $(MKLIB) /out:$@ $**
+    $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 
 #**********************************************************
@@ -906,7 +906,7 @@ $(STANDARD_SYSLIBS)
 #**********************************************************
 # DLL EXECUTABLE Targets
 #**********************************************************
-HBTESTDLL_OBJS =  $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBTEST_EXE_OBJS:obj\vc=obj\dll\vc)
+HBTESTDLL_OBJS = $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBTEST_EXE_OBJS:obj\vc=obj\dll\vc)
 $(HBTESTDLL_EXE) : $(HARBOUR_DLL) $(HBTESTDLL_OBJS)
     $(LINKER) @<<
 $(LDFLAGS)

@@ -160,7 +160,7 @@ static int hb_WinToDosError( ULONG ulError )
       case ERROR_PATH_NOT_FOUND:
          iResult = 3;
          break;
-      case  ERROR_TOO_MANY_OPEN_FILES:
+      case ERROR_TOO_MANY_OPEN_FILES:
          iResult = 4;
          break;
       case ERROR_INVALID_HANDLE:
