@@ -175,27 +175,10 @@ void hb_threadInit( void )
 
 void hb_threadExit( void )
 {
-   if( s_fThreadInit )
+   if( s_pOnceMutex )
    {
-      s_fThreadInit = FALSE;
-      if( s_pOnceMutex )
-      {
-         hb_itemRelease( s_pOnceMutex );
-         s_pOnceMutex = NULL;
-      }
-#if !defined( HB_MT_VM )
-      /* nothing to do */
-#else
-#  if defined( HB_CRITICAL_DESTROY ) && defined( HB_CRITICAL_NEED_INIT )
-      HB_CRITICAL_DESTROY( s_init_mtx );
-      HB_CRITICAL_DESTROY( s_once_mtx );
-      HB_CRITICAL_DESTROY( s_thread_mtx );
-      HB_CRITICAL_DESTROY( s_mutexlst_mtx );
-#  endif
-#  if defined( HB_COND_DESTROY ) && defined( HB_COND_NEED_INIT )
-      HB_COND_DESTROY( s_thread_cond );
-#  endif
-#endif
+      hb_itemRelease( s_pOnceMutex );
+      s_pOnceMutex = NULL;
    }
 }
 

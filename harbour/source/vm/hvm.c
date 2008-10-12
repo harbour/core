@@ -1052,8 +1052,8 @@ HB_EXPORT int hb_vmQuit( void )
    hb_gcCollectAll( TRUE );
 
 #if defined( HB_MT_VM )
-   hb_threadExit();
    hb_vmStackRelease();       /* release HVM stack and remove it from linked HVM stacks list */
+   hb_threadExit();
 #else
    hb_setRelease( hb_stackSetStruct() );  /* releases Sets */
    hb_stackFree();

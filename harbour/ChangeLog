@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-12 20:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    ! execute hb_vmThreadQuit() after hb_vmStackRelease()
+
+  * harbour/source/vm/thread.c
+    * do not destroy critical sections on exit
+
 2008-10-11 16:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak
