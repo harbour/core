@@ -160,27 +160,23 @@ HB_FUNC( HB_SCROLL )
    if( ISNUM( 7 ) )
       iColor = hb_parni( 7 );
    else if( ISCHAR( 7 ) )
-   {
       iColor = hb_gtColorToN( hb_parc( 7 ) );
-      if( iColor == -1 )
-         iColor = hb_gtColorToN( "W/N" );
-   }
    else
-      iColor = hb_gtGetClearColor();
+      iColor = -1;
 
    if( ISNUM( 8 ) )
       iChar = hb_parni( 8 );
    else if( ISCHAR( 8 ) )
       iChar = ( UCHAR ) hb_parc( 8 )[0];
    else
-      iChar = hb_gtGetClearChar();
+      iChar = -1;
 
    hb_gtScrollEx( iTop,
                   iLeft,
                   iBottom,
                   iRight,
-                  ( BYTE ) iColor,
-                  ( BYTE ) iChar,
+                  iColor,
+                  iChar,
                   hb_parni( 5 ), /* Defaults to zero on bad type */
                   hb_parni( 6 ) ); /* Defaults to zero on bad type */
 }

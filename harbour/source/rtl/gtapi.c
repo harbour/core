@@ -243,24 +243,16 @@ HB_EXPORT ERRCODE hb_gtBoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
    return FAILURE;
 }
 
-HB_EXPORT ERRCODE hb_gtDrawBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, const char * pszColor )
+HB_EXPORT ERRCODE hb_gtDrawBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, int iColor )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtBox(%hd, %hd, %hd, %hd, %p, %s)", Top, Left, Bottom, Right, pbyFrame, pszColor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtDrawBox(%hd, %hd, %hd, %hd, %p, %d)", Top, Left, Bottom, Right, pbyFrame, iColor));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      int iColor;
-
-      if( pszColor )
-      {
-         iColor = HB_GTSELF_COLORNUM( pGT, pszColor );
-         if( iColor == -1 )
-            iColor = HB_GTSELF_COLORNUM( pGT, "W/N" );
-      }
-      else
+      if( iColor == -1 )
          iColor = HB_GTSELF_GETCOLOR( pGT );
 
       HB_GTSELF_BOX( pGT, Top, Left, Bottom, Right, pbyFrame, iColor );
@@ -781,27 +773,19 @@ HB_EXPORT ERRCODE hb_gtSetMode( USHORT uiRows, USHORT uiCols )
 
 HB_EXPORT ERRCODE hb_gtPutText( USHORT uiRow, USHORT uiCol,
                                 BYTE * pStr, ULONG ulLength,
-                                const char * pszColor )
+                                int iColor )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutText(%hu, %hu, %p, %lu, %s)", uiRow, uiCol, pStr, ulLength, pszColor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutText(%hu, %hu, %p, %lu, %d)", uiRow, uiCol, pStr, ulLength, iColor));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      int iColor;
-
-      if( pszColor )
-      {
-         iColor = HB_GTSELF_COLORNUM( pGT, pszColor );
-         if( iColor == -1 )
-            iColor = HB_GTSELF_COLORNUM( pGT, "W/N" );
-      }
-      else
+      if( iColor == -1 )
          iColor = HB_GTSELF_GETCOLOR( pGT );
 
-      HB_GTSELF_PUTTEXT( pGT, uiRow, uiCol, ( BYTE ) iColor, pStr, ulLength );
+      HB_GTSELF_PUTTEXT( pGT, uiRow, uiCol, iColor, pStr, ulLength );
       HB_GTSELF_FLUSH( pGT );
 
       hb_gt_BaseFree( pGT );
@@ -1267,17 +1251,21 @@ HB_EXPORT ERRCODE hb_gtGetPosEx( int * piRow, int * piCol )
    return FAILURE;
 }
 
-HB_EXPORT ERRCODE hb_gtScrollEx( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor, BYTE bChar, int iRows, int iCols )
+HB_EXPORT ERRCODE hb_gtScrollEx( int iTop, int iLeft, int iBottom, int iRight, int iColor, int iChar, int iRows, int iCols )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtScrollEx(%d, %d, %d, %d, %d, %hd, %d, %d)", iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtScrollEx(%d, %d, %d, %d, %d, %hd, %d, %d)", iTop, iLeft, iBottom, iRight, iColor, iChar, iRows, iCols));
 
    if( iTop <= iBottom && iLeft <= iRight )
    {
       PHB_GT pGT = hb_gt_Base();
       if( pGT )
       {
+         if( iColor == -1 )
+            iColor = HB_GTSELF_GETCOLOR( pGT );
+         if( iChar < 0 )
+            iChar = HB_GTSELF_GETCLEARCHAR( pGT );
          HB_GTSELF_SCROLL( pGT, iTop, iLeft, iBottom, iRight,
-                           bColor, bChar, iRows, iCols );
+                           iColor, iChar, iRows, iCols );
          HB_GTSELF_FLUSH( pGT );
          hb_gt_BaseFree( pGT );
          return SUCCESS;
@@ -1286,16 +1274,18 @@ HB_EXPORT ERRCODE hb_gtScrollEx( int iTop, int iLeft, int iBottom, int iRight, B
    return FAILURE;
 }
 
-HB_EXPORT ERRCODE hb_gtBoxEx( int iTop, int iLeft, int iBottom, int iRight, BYTE * pbyFrame, BYTE bColor )
+HB_EXPORT ERRCODE hb_gtBoxEx( int iTop, int iLeft, int iBottom, int iRight, BYTE * pbyFrame, int iColor )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtBoxEx(%d, %d, %d, %d, %p, %d)", iTop, iLeft, iBottom, iRight, pbyFrame, bColor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtBoxEx(%d, %d, %d, %d, %p, %d)", iTop, iLeft, iBottom, iRight, pbyFrame, iColor));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_BOX( pGT, iTop, iLeft, iBottom, iRight, pbyFrame, bColor );
+      if( iColor == -1 )
+         iColor = HB_GTSELF_GETCOLOR( pGT );
+      HB_GTSELF_BOX( pGT, iTop, iLeft, iBottom, iRight, pbyFrame, iColor );
       HB_GTSELF_SETPOS( pGT, iTop + 1, iLeft + 1 );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );

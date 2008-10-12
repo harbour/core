@@ -4505,13 +4505,31 @@ static HARBOUR hb___msgNull( void )
 #ifndef HB_NO_PROFILER
 void hb_mthAddTime( ULONG ulClockTicks )
 {
-   PMETHOD pMethod = s_pClasses[ hb_objGetClassH( hb_stackSelfItem() ) ]->
-                     pMethods;
-   if( pMethod )
+   PHB_ITEM pObject = hb_stackSelfItem();
+   PCLASS pClass = s_pClasses[ hb_objGetClassH( pObject ) ];
+
+   if( pClass )
    {
-      pMethod += hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
-      pMethod->ulCalls++;
-      pMethod->ulTime += ulClockTicks;
+      PMETHOD pMethod = pClass->pMethods;
+      if( pMethod )
+      {
+         pMethod += hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
+         pMethod->ulCalls++;
+         pMethod->ulTime += ulClockTicks;
+         return;
+      }
+   }
+
+   if( HB_IS_BLOCK( pObject ) )
+   {
+      PHB_SYMB pSym = hb_stackBaseItem()->item.asSymbol.value;
+
+      if( pSym == &hb_symEval || pSym->pDynSym == hb_symEval.pDynSym )
+      {
+         pSym->pDynSym->ulCalls++;
+         if( --pSym->pDynSym->ulRecurse == 0 )
+            pSym->pDynSym->ulTime += ulClockTicks;
+      }
    }
 }
 #endif

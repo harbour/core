@@ -103,7 +103,7 @@ HB_EXTERN_BEGIN
 #        define HB_CRITICAL_NEED_INIT
 #     endif
 #     define HB_CRITICAL_GET(v)        ( &( (v)->critical ) )
-#     define HB_CRITICAL_INITVAL       { ( HB_RAWCRITICAL_T ) 0 }
+#     define HB_CRITICAL_INITVAL       { }
 #  endif
 
 #  if defined( PTHREAD_COND_INITIALIZER ) && !defined( HB_COND_NEED_INIT )
@@ -116,7 +116,7 @@ HB_EXTERN_BEGIN
 #        define HB_COND_NEED_INIT
 #     endif
 #     define HB_COND_GET(v)            ( &( (v)->cond ) )
-#     define HB_COND_INITVAL           ( ( HB_RAWCOND_T ) 0 )
+#     define HB_COND_INITVAL           { }
 #  endif
 
 #elif defined( HB_OS_WIN_32 ) && ! defined( HB_WINCE )

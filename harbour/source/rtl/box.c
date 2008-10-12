@@ -65,35 +65,49 @@ HB_FUNC( DISPBOX )
    {
       const char * pszBox = hb_parc( 5 );
       const char * pszColor = hb_parc( 6 );
-      char szOldColor[ HB_CLRSTR_LEN ];
-
-      if( pszColor )
-      {
-         hb_gtGetColorStr( szOldColor );
-         hb_gtSetColorStr( pszColor );
-      }
 
       if( pszBox )
-         hb_gtBox( ( SHORT ) hb_itemGetNI( pTop ),
-                   ( SHORT ) hb_itemGetNI( pLeft),
-                   ( SHORT ) hb_itemGetNI( pBottom ),
-                   ( SHORT ) hb_itemGetNI( pRight ),
-                   ( BYTE * ) ( *pszBox ? pszBox : "         " ) );
+      {
+         int iColor;
 
-      else if( hb_parni( 5 ) == 2 )
-         hb_gtBoxD( ( SHORT ) hb_itemGetNI( pTop ),
-                    ( SHORT ) hb_itemGetNI( pLeft),
-                    ( SHORT ) hb_itemGetNI( pBottom ),
-                    ( SHORT ) hb_itemGetNI( pRight ) );
-
+         if( pszColor )
+            iColor = hb_gtColorToN( pszColor );
+         else if( ISNUM( 6 ) )
+            iColor = hb_parni( 6 );
+         else
+            iColor = -1;
+         hb_gtDrawBox( ( SHORT ) hb_itemGetNI( pTop ),
+                       ( SHORT ) hb_itemGetNI( pLeft),
+                       ( SHORT ) hb_itemGetNI( pBottom ),
+                       ( SHORT ) hb_itemGetNI( pRight ),
+                       ( BYTE * ) ( *pszBox ? pszBox : "         " ),
+                       iColor );
+      }
       else
-         hb_gtBoxS( ( SHORT ) hb_itemGetNI( pTop ),
-                    ( SHORT ) hb_itemGetNI( pLeft),
-                    ( SHORT ) hb_itemGetNI( pBottom ),
-                    ( SHORT ) hb_itemGetNI( pRight ) );
+      {
+         char szOldColor[ HB_CLRSTR_LEN ];
 
-      if( pszColor )
-         hb_gtSetColorStr( szOldColor );
+         if( pszColor )
+         {
+            hb_gtGetColorStr( szOldColor );
+            hb_gtSetColorStr( pszColor );
+         }
+
+         if( hb_parni( 5 ) == 2 )
+            hb_gtBoxD( ( SHORT ) hb_itemGetNI( pTop ),
+                       ( SHORT ) hb_itemGetNI( pLeft),
+                       ( SHORT ) hb_itemGetNI( pBottom ),
+                       ( SHORT ) hb_itemGetNI( pRight ) );
+
+         else
+            hb_gtBoxS( ( SHORT ) hb_itemGetNI( pTop ),
+                       ( SHORT ) hb_itemGetNI( pLeft),
+                       ( SHORT ) hb_itemGetNI( pBottom ),
+                       ( SHORT ) hb_itemGetNI( pRight ) );
+
+         if( pszColor )
+            hb_gtSetColorStr( szOldColor );
+      }
    }
 }
 
@@ -106,14 +120,23 @@ HB_FUNC( HB_DISPBOX )
 
    if( pTop && pLeft && pBottom && pRight )
    {
-      const char * pszColor = hb_parc( 6 );
       const char * pszBox = hb_parc( 5 );
+      const char * pszColor = hb_parc( 6 );
+      int iColor;
+
+
+      if( pszColor )
+         iColor = hb_gtColorToN( pszColor );
+      else if( ISNUM( 6 ) )
+         iColor = hb_parni( 6 );
+      else
+         iColor = -1;
 
       hb_gtDrawBox( ( SHORT ) hb_itemGetNI( pTop ),
                     ( SHORT ) hb_itemGetNI( pLeft),
                     ( SHORT ) hb_itemGetNI( pBottom ),
                     ( SHORT ) hb_itemGetNI( pRight ),
                     ( BYTE * ) ( *pszBox ? pszBox : "         " ),
-                    pszColor );
+                    iColor );
    }
 }

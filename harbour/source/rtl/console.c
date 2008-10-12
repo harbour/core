@@ -579,10 +579,18 @@ HB_FUNC( HB_DISPOUTAT )
       char * pszString;
       ULONG ulLen;
       BOOL bFreeReq;
+      int iColor;
 
       pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-      hb_gtPutText( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( BYTE * ) pszString, ulLen, hb_parc( 4 ) );
+      if( ISCHAR( 4 ) )
+         iColor = hb_gtColorToN( hb_parc( 4 ) );
+      else if( ISNUM( 6 ) )
+         iColor = hb_parni( 6 );
+      else
+         iColor = -1;
+
+      hb_gtPutText( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( BYTE * ) pszString, ulLen, iColor );
 
       if( bFreeReq )
          hb_xfree( pszString );
