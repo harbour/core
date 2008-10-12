@@ -28,7 +28,7 @@
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
-#       HB_BUILD_VERBOSE  - enables echoing commands being executed
+#       HB_BUILD_VERBOSE  - Enables echoing commands being executed
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
 #                           bison (you must use bison 2.3 or later)
 #       HB_INSTALL_PREFIX - Path to installation directory into which

@@ -95,11 +95,13 @@ HB_EXTERN_BEGIN
 #define HB_ERR_ARGS_BASEPARAMS          0xFFFFFFFF
 #define HB_ERR_ARGS_SELFPARAMS          0xFFFFFFFE
 
+#ifdef HB_LEGACY_LEVEL
 /* pseudo function name in operation description
    (deprecated, kept for compatibility, use HB_ERR_FUNCNAME instead) */
 extern const char hb_errFuncName;
+#endif
 
-#define HB_ERR_FUNCNAME ( ( char * ) 1 )
+#define HB_ERR_FUNCNAME                 ( ( const char * ) NULL + 1 )
 
 /* Standard API */
 
