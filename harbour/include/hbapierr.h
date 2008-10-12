@@ -101,12 +101,12 @@ HB_EXTERN_BEGIN
 extern const char hb_errFuncName;
 #endif
 
-#define HB_ERR_FUNCNAME                 ( ( const char * ) NULL + 1 )
+#define HB_ERR_FUNCNAME                 ( ( const char * ) ( HB_PTRDIFF ) 1 )
 
 /* Standard API */
 
-extern PHB_ITEM hb_errGetCargo( PHB_ITEM pError );
-extern PHB_ITEM hb_errGetArgs( PHB_ITEM pError );
+extern PHB_ITEM hb_errGetCargo          ( PHB_ITEM pError );
+extern PHB_ITEM hb_errGetArgs           ( PHB_ITEM pError );
 extern char *   hb_errGetDescription    ( PHB_ITEM pError );
 extern char *   hb_errGetFileName       ( PHB_ITEM pError );
 extern USHORT   hb_errGetFlags          ( PHB_ITEM pError );

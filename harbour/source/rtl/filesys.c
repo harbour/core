@@ -3200,14 +3200,12 @@ HB_EXPORT BYTE * hb_fileNameConv( char * szFileName )
 
 #endif
 
-HB_EXPORT BOOL hb_fsDisableWaitLocks( int iSet )
+static BOOL hb_fsDisableWaitLocks( int iSet )
 {
    BOOL fRetVal = s_fUseWaitLocks;
 
    if( iSet >= 0 )
-   {
       s_fUseWaitLocks = ( iSet == 0 );
-   }
 
    return fRetVal;
 }

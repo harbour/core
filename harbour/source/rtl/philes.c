@@ -297,32 +297,31 @@ HB_FUNC( HB_OSERROR )
 
 HB_FUNC( HB_OSPATHSEPARATOR )
 {
-   const char ret[ 2 ] = { HB_OS_PATH_DELIM_CHR, 0 };
-   hb_retc( ret );
+   hb_retc_const( HB_OS_PATH_DELIM_CHR_STRING );
 }
 
 HB_FUNC( HB_OSPATHLISTSEPARATOR )
 {
-   const char ret[ 2 ] = { HB_OS_PATH_LIST_SEP_CHR, 0 };
-   hb_retc( ret );
+   static const char s_ret[ 2 ] = { HB_OS_PATH_LIST_SEP_CHR, 0 };
+   hb_retc_const( s_ret );
 }
 
 HB_FUNC( HB_OSPATHDELIMITERS )
 {
-   hb_retc( HB_OS_PATH_DELIM_CHR_LIST );
+   hb_retc_const( HB_OS_PATH_DELIM_CHR_LIST );
 }
 
 HB_FUNC( HB_OSDRIVESEPARATOR )
 {
 #ifdef HB_OS_HAS_DRIVE_LETTER
-   const char ret[ 2 ] = { HB_OS_DRIVE_DELIM_CHR, 0 };
-   hb_retc( ret );
+   static const char s_ret[ 2 ] = { HB_OS_DRIVE_DELIM_CHR, 0 };
+   hb_retc_const( s_ret );
 #else
-   hb_retc( NULL );
+   hb_retc_null();
 #endif
 }
 
 HB_FUNC( HB_OSFILEMASK )
 {
-   hb_retc( HB_OS_ALLFILE_MASK );
+   hb_retc_const( HB_OS_ALLFILE_MASK );
 }

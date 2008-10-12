@@ -188,7 +188,7 @@ char * hb_conNewLine( void )
 
 HB_FUNC( HB_OSNEWLINE )
 {
-   hb_retc( s_szCrLf );
+   hb_retc_const( s_szCrLf );
 }
 
 /* Output an item to STDOUT */
