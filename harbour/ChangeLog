@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-11 20:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapierr.h
+    ! Fixed previous casting fix.
+
+  * source/rtl/console.c
+  * source/rtl/philes.c
+    % Optimized by using static buffers and hb_retc_const():
+      HB_OSNEWLINE()
+      HB_OSPATHSEPARATOR()
+      HB_OSPATHLISTSEPARATOR()
+      HB_OSPATHDELIMITERS()
+      HB_OSDRIVESEPARATOR()
+      HB_OSFILEMASK()
+
+  * source/rtl/filesys.c
+    ! hb_fsDisableWaitLocks() made static.
+
 2008-10-12 20:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     ! execute hb_vmThreadQuit() after hb_vmStackRelease()
