@@ -135,7 +135,7 @@ HB_FUNC( HB_ISPRINTER )
    hb_retl( hb_printerIsReady( hb_parc( 1 ) ) );
 }
 
-/* NOTE: The parameter is an XBase++ extension over CA-Cl*pper. [vszakats] */
+/* NOTE: The parameter is an Xbase++ extension over CA-Cl*pper. [vszakats] */
 
 HB_FUNC( ISPRINTER )
 {

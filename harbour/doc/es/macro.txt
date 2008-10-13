@@ -65,7 +65,7 @@
  *            operadores: ++, --, +=, -=, *=, /=, ^=
  *            objetos:    asignaciones a una variable de instancia
  *
- *      <b>HB_SM_XBASE</b> - Habilita extensiones de otros dialectos xbase:
+ *      <b>HB_SM_XBASE</b> - Habilita extensiones de otros dialectos Xbase++:
  *            Expansi¢n de listas de expresiones
  *
  *      <b>HB_SM_SHORTCUTS</b> - Habilita la evaluaci¢n optimizada de los

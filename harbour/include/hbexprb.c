@@ -1503,7 +1503,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                }
                else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_PARE )
                {
-                  /* var := (somevalue, &macro) - in xbase compatibility mode
+                  /* var := (somevalue, &macro) - in Xbase++ compatibility mode
                    * EVAL( {|| &macro} ) - in all cases
                    */
                   HB_GEN_FUNC1( PCode1, HB_P_MACROPUSHPARE );

@@ -442,7 +442,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
       if( iContext != 0 )
       {
          /*
-          * If compiled in xbase compatibility mode:
+          * If compiled in Xbase++ compatibility mode:
           * macro := "1,2"
           * funCall( &macro )  ==>  funCall( 1, 2 )
           * { &macro }  ==>  { 1, 2 }
@@ -970,7 +970,7 @@ HB_FUNC( HB_SETMACRO )
           case HB_SM_HARBOUR:
              /* enable/disable extended Harbour compatibility */
           case HB_SM_XBASE:
-             /* enable/disable extended xbase compatibility */
+             /* enable/disable extended Xbase++ compatibility */
           case HB_SM_ARRSTR:
              /* enable/disable processing of strings as an array of bytes */
           case HB_SM_SHORTCUTS:

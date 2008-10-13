@@ -9,7 +9,7 @@
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  * special thanks for Pritpal Bedi for class skeleton with info about
- * xbase++ and to other contributors which I hope will finish and fix
+ * Xbase++ and to other contributors which I hope will finish and fix
  * this code
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,7 +59,7 @@
 
 #ifdef HB_COMPAT_XPP
 
-/* I do not know xBase++ values */
+/* I do not know Xbase++ values */
 #define QUIT_NORESTART  1
 #define QUIT_RESTART    2
 

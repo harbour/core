@@ -61,7 +61,7 @@
 HB_FUNC( HB_DBDETACH )
 {
    PHB_ITEM pAlias = hb_param( 1, HB_IT_ANY );
-   PHB_ITEM pCargo = hb_param( 2, HB_IT_ANY ); /* HB_IT_BLOCK in xBase++ */
+   PHB_ITEM pCargo = hb_param( 2, HB_IT_ANY ); /* HB_IT_BLOCK in Xbase++ */
    AREAP pArea = NULL;
    int iArea;
 
@@ -127,15 +127,3 @@ HB_FUNC( HB_DBREQUEST )
    else
       hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
 }
-
-#ifdef HB_COMPAT_XPP
-HB_FUNC( DBRELEASE )
-{
-   HB_FUNC_EXEC( HB_DBDETACH );
-}
-
-HB_FUNC( DBREQUEST )
-{
-   HB_FUNC_EXEC( HB_DBREQUEST );
-}
-#endif

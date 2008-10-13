@@ -1522,7 +1522,7 @@ METHOD message( cMessage ) CLASS Get
 
 #ifdef HB_COMPAT_XPP
 
-/* NOTE: Not tested or compared to XBase++. [vszakats] */
+/* NOTE: Not tested or compared to Xbase++. [vszakats] */
 /* TOFIX: To make it work when @S was used. [vszakats] */
 
 METHOD posInBuffer( nRow, nCol ) CLASS Get

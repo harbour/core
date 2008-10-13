@@ -2389,7 +2389,7 @@ METHOD viewArea() CLASS TBROWSE
 
 
 /* NOTE: Returns the left margin relative column position of the first 
-         non-freezed column. Xbase++ compatible method. */
+         non-frozen column. Xbase++ compatible method. */
 METHOD firstScrCol() CLASS TBROWSE
 
    IF ::nConfigure != 0

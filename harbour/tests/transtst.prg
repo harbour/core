@@ -280,7 +280,7 @@ stop()
 ? transtest( 1234, "@0)",      "0000001234" )
 ? transtest( -1234, "@L(",     "(000001234)" )
 ? transtest( -1234, "@0)",     "(000001234)" )
-/* please test it with FoxPro and xbase++ to check if they give the same result */
+/* please test it with FoxPro and Xbase++ to check if they give the same result */
 ? transtest( -1234, "@L",      "-000001234" )
 ? transtest( -1234, "@0",      "-000001234" )
 #endif

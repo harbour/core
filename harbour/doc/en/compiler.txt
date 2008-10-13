@@ -84,7 +84,7 @@
  *
  *          /ks          enable support for strings as array of bytes (default)
  *
- *          /kx          other xbase dialects extensions (default)
+ *          /kx          other Xbase++ dialects extensions (default)
  *
  *          /kJ          disable optimalization of jump and noop pcodes
  *

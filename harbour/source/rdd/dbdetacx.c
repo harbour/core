@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Header file for macro related defines
+ *    .prg functions for workarea detaching
  *
- * Copyright 2001-2002 {list of individual authors and e-mail addresses}
+ * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,17 +50,22 @@
  *
  */
 
-/* NOTE: This file is also used by C code. */
+#include "hbapi.h"
 
-#ifndef HB_MACRO_CH_
-#define HB_MACRO_CH_
+#ifdef HB_COMPAT_XPP
 
-/* runtime settings for macro compiler */
-#define HB_SM_HARBOUR    1    /* extended Harbour features */
-#define HB_SM_XBASE      2    /* extended Xbase++ compatibility */
-#define HB_SM_SHORTCUTS  8    /* enable/disable sortcuts for logical operators */
-#define HB_SM_ARRSTR     16   /* enable/disable strings as array of bytes */
-#define HB_SM_RT_MACRO   64   /* disable automatic setup of macro flag */
-#define HB_SM_PARSER     128  /* address of macro parser (TODO) */
+HB_FUNC_EXTERN( HB_DBDETACH );
 
-#endif /* HB_MACRO_CH_ */
+HB_FUNC( DBRELEASE )
+{
+   HB_FUNC_EXEC( HB_DBDETACH );
+}
+
+HB_FUNC_EXTERN( HB_DBREQUEST );
+
+HB_FUNC( DBREQUEST )
+{
+   HB_FUNC_EXEC( HB_DBREQUEST );
+}
+
+#endif

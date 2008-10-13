@@ -30,7 +30,7 @@ $       Pad left with $
 *       Pad left with *
 ,       Comma   (Real pathetic. Just like Clipper)
 
-The following bugs have been fixed : (Just like xBase++ did !)
+The following bugs have been fixed : (Just like Xbase++ did !)
 @(   Does not give incorrect results when it should overflow
 @D   Ignored. So it should be !
 

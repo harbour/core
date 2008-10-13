@@ -233,7 +233,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BIN2U() is an XBase++ compatibility function and does not exist
+ *      BIN2U() is an Xbase++ compatibility function and does not exist
  *      as a standard CA-Cl*pper 5.x function.
  *      This function is only visible if source/rtl/binnum.c was compiled
  *      with the HB_COMPAT_XPP flag.
@@ -341,7 +341,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      W2BIN() is an XBase++ compatibility function and does not exist
+ *      W2BIN() is an Xbase++ compatibility function and does not exist
  *      as a standard CA-Cl*pper 5.x function.
  *      This function is only visible if source/rtl/binnum.c was compiled
  *      with the HB_COMPAT_XPP flag.
@@ -422,7 +422,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      U2BIN() is an XBase++ compatibility function and does not exist
+ *      U2BIN() is an Xbase++ compatibility function and does not exist
  *      as a standard CA-Cl*pper 5.x function.
  *      This function is only visible if source/rtl/binnum.c was compiled
  *      with the HB_COMPAT_XPP flag.

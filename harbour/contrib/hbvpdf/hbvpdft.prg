@@ -23,7 +23,7 @@
    #include      "hbclass.ch"
 #endif
 
-#ifdef __XPP__             //  xBase++
+#ifdef __XPP__             //  Xbase++
    #command CREATE CLASS <x> [ FROM <y> ]  =>  CLASS <x> [ FROM <y> ]
    #command MESSAGE <x> METHOD <y>         =>  METHOD <x> IS <y>
    #command CLASS MESSAGE <x> METHOD <y>   =>  CLASS METHOD <x> IS <y>

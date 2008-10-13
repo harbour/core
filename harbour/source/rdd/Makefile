@@ -10,6 +10,7 @@ C_SOURCES=\
 	dbcmdhb.c \
 	dbcmdx.c \
 	dbdetach.c \
+	dbdetacx.c \
 	dbdrop.c \
 	dbexists.c \
 	fieldhb.c \

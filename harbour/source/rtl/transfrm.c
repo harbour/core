@@ -498,7 +498,7 @@ HB_FUNC( TRANSFORM )
             for( i = 0; szResult[ i ] == ' '; i++ )
                szResult[ i ] = byParamL;
 
-            /* please test it with FoxPro and xbase++ to check
+            /* please test it with FoxPro and Xbase++ to check
              * if they made the same [druzus]
              */
             if( i && szResult[ i ] == '-' )

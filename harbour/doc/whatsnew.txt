@@ -733,7 +733,7 @@ The compiler
 syntax:
 -------
 - Added support for variable number of parameters functions.
-- reimplemented xbase++ multi-value macro support.
+- reimplemented Xbase++ multi-value macro support.
 - Added support for WITH OBJECT.
 - Changed HB_INLINE() syntax.
 - Added support for macro compiled messages.
@@ -1186,8 +1186,8 @@ The compiler
   and in harbour's runtime modules)
 - Added a new compiler switch -kJ to disable jump optimalization and
   NOOP pcode removal (optimalization is enabled by default).
-- When xbase mode is not used (-kc or -kch) then compiler doesn't
-  generate the pcode for these xbase extended features.
+- When Xbase++ mode is not used (-kc or -kch) then compiler doesn't
+  generate the pcode for these Xbase++ extended features.
 - Added support for DO <proc> WITH @variable
 - Fixed optimalization of literal strings that contain macro operator.
 - Enabled support for break[].

@@ -568,7 +568,7 @@ DECLARE HBClass ;
 
 #endif /* HB_CLS_VO */
 
-/* xBase++ syntax */
+/* Xbase++ syntax */
 #ifdef HB_CLS_XPP
 
    #xcommand SYNC METHOD <MethodName> [<decl,...>] => METHOD <MethodName> [<decl>] SYNC

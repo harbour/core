@@ -386,7 +386,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      dbSkipper() es una funci¢n de compatibilidad con XBase++ y no existe
+ *      dbSkipper() es una funci¢n de compatibilidad con Xbase++ y no existe
  *      como una funci¢n est ndar en CA-Cl*pper 5.x
  *      Esta funci¢n es solamente visible si el archivo:
  *       ../source/rtl/browdb.prg fue compilado con la bandera HB_COMPAT_XPP.

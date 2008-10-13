@@ -355,7 +355,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      dbSkipper() is an XBase++ compatibility function and does not exist
+ *      dbSkipper() is an Xbase++ compatibility function and does not exist
  *      as a standard CA-Cl*pper 5.x function.
 
  *      This function is only visible if source/rtl/browdb.prg was compiled

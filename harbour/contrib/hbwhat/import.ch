@@ -147,7 +147,7 @@ linking the VMGUI library code into it.
 
 //----------------------------------------------------------------------------//
 
-// xBase syntax
+// Xbase++ syntax
 // based on Vic McClung's code
 // Thank you Vic
 

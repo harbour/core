@@ -516,10 +516,10 @@ HB_EXPORT ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
    /* flush buffers */
    SELF_GOCOLD( pArea );
 
-   /* tests shows that xbase++ does not remove locks */
+   /* tests shows that Xbase++ does not remove locks */
    /* SELF_UNLOCK( pArea, NULL ); */
 
-   /* xbase++ documentation says that child area are also detached but
+   /* Xbase++ documentation says that child area are also detached but
     * but tests shows that it's not true and chilled and parent relations
     * are still active and corresponding WA are not detached together.
     * Harbour clears all child and parent relations.

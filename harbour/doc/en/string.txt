@@ -1450,7 +1450,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      The  @L function template is a FOXPRO/Xbase Extension
+ *      The  @L function template is a FoxPro/Xbase++ Extension
  *  $PLATFORMS$
  *      All
  *  $FILES$

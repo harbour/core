@@ -8,6 +8,42 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-13 22:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * tests/transtst.prg
+  * doc/en/string.txt
+  * doc/en/compiler.txt
+  * doc/en/macro.txt
+  * doc/en/browse.txt
+  * doc/en/binnum.txt
+  * doc/es/macro.txt
+  * doc/es/browse.txt
+  * doc/es/binnum.txt
+  * doc/transfrm.txt
+  * doc/whatsnew.txt
+  * include/hbclass.ch
+  * include/hbmacro.ch
+  * include/hbexprb.c
+  * ChangeLog
+  * contrib/hbvpdf/hbvpdft.prg
+  * contrib/hbwhat/import.ch
+  * source/vm/macro.c
+  * source/rtl/tobject.prg
+  * source/rtl/tthreadx.prg
+  * source/rtl/transfrm.c
+  * source/rtl/tget.prg
+  * source/rtl/isprint.c
+  * source/rtl/tbrowse.prg
+  * source/rdd/wacore.c
+  * source/rdd/dbdetach.c
+  * utils/hbtest/rt_trans.prg
+    * Xbase++ name references cleaned.
+
+  * common.mak
+  * source/rdd/Makefile
+  * source/rdd/dbdetach.c
+  + source/rdd/dbdetacx.c
+    * Moved XBase++ compatibility functions to separate file.
+
 2008-10-13 21:44 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbwin/win_tole.prg
     ! Fixed assignment to oErr:Operation from "+" to "-" in
@@ -21,7 +57,7 @@
 
 2008-10-13 20:21 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/wacore.c
-    ; updated comments about xbase++ behavior in dbRelease()
+    ; updated comments about Xbase++ behavior in dbRelease()
 
   * harbour/include/hbvm.h
   * harbour/source/vm/hvm.c
@@ -505,7 +541,7 @@
 
   * harbour/source/rtl/tthreadx.prg
     * use HB_THREAD_INHERIT_PUBLIC as thread attribute for thread
-      started by oThread:start() to emulate xbase++ PUBLIC variables
+      started by oThread:start() to emulate Xbase++ PUBLIC variables
       behavior
 
 2008-10-10 00:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -515,9 +551,9 @@
 
   * harbour/source/rtl/console.c
     + added HB_DISPOUTAT() which works like DISPOUTAT but does not change
-      cursor position. xBase++ users can use
+      cursor position. Xbase++ users can use
          #xtranslate DispOutAt( <x,...> ) => hb_dispOutAt( <x> )
-      for xBase++ compatible code
+      for Xbase++ compatible code
 
 2008-10-09 20:51 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
@@ -528,13 +564,13 @@
     + added ThreadObject() function
 
   * harbour/source/rtl/tthreadx.prg
-    + added xBase++ compatible TThread class.
+    + added Xbase++ compatible TThread class.
       Special thanks to Pritpal Bedi for class skeleton with info about
-      xbase++.
+      Xbase++.
       Now only basic functionality is supported though it was enough to
       compile and execute examples Pritpal sent. I'm leaving rest for
-      xBase++ users.
-      BTW The examples suggest that in xbase++ DispOutAt() does not change
+      Xbase++ users.
+      BTW The examples suggest that in Xbase++ DispOutAt() does not change
       cursor position. It's not Clipper compatible so I cannot make it
       in Harbour though I can add new function which will work in such way.
 
@@ -551,12 +587,12 @@
 
 2008-10-09 17:03 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/source/rtl/thfuncx.prg
-    * added xbase++ compatible functions:
+    * added Xbase++ compatible functions:
          ThreadID() -> <nThId>
          ThreadWait( <aThreads>, <nTimeOut> ) -> <oThread> | <pThId> | NIL
          ThreadWaitAll( <aThreads>, <nTimeOut> ) -> <lAllFinished>
       In Harbour <aThreads> can be array of thread pointers or thread
-      objects. xbase++ compatible thread class I'll add later.
+      objects. Xbase++ compatible thread class I'll add later.
 
 2008-10-09 07:30 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   - bin/hb_flst.tmp
@@ -796,7 +832,7 @@
 
   * harbour/source/rtl/tthreadx.prg
     ! probably fixed timeout parameter use in signal:wait() method
-      I guess that like other xbase++ functions it's in 1/100th of
+      I guess that like other Xbase++ functions it's in 1/100th of
       a second
 
   * harbour/include/hboo.ch
@@ -804,7 +840,7 @@
   * harbour/source/vm/classes.c
   * harbour/source/rtl/tclass.prg
     + added support for SYNC object and CLASS messages working like
-      in xBase++. Please remember that all locked by thread SYNC messages
+      in Xbase++. Please remember that all locked by thread SYNC messages
       objects and classes are unblocked automatically for the time which
       thread spends in hb_subscribe[Now]() or signal:wait()
 
@@ -1444,7 +1480,7 @@
   * harbour/common.mak
   * harbour/source/rtl/Makefile
   + harbour/source/rtl/tthreadx.prg
-    + added xBase++ compatible signal class
+    + added Xbase++ compatible signal class
 
   * harbour/source/rdd/wacore.c
     ! added missing alias setting after attaching work area
@@ -2113,8 +2149,8 @@
       and child) to detached workarea are cleared.
       The second one restores area from the holder and attach it
       to calling thread.
-    + added xBase++ compatible functions DbRelease() / DbRequest()
-      xBase++ users please test. If possible please also check what xBase++
+    + added Xbase++ compatible functions DbRelease() / DbRequest()
+      Xbase++ users please test. If possible please also check what Xbase++
       does with relations and active RLOCKs/FLOCK on released WA.
 
 2008-09-19 22:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -3694,7 +3730,7 @@
    in practice nearly in user space only.
    I haven't touched Harbour function calling convention which comes from
    Clipper. It means that we do not pass pointer to VM to each functions
-   like CLIP or xBase++. To resolve the problem I have to use thread local
+   like CLIP or Xbase++. To resolve the problem I have to use thread local
    storage (TLS) where such pointer is kept. If platform does not support
    TLS then it can be emulated by us. Anyhow the speed of accessing TLS
    data and extracting HB_STACK poitner is critical for performance.
@@ -9874,7 +9910,7 @@
    * contrib/hbw32/dllcall.c
      ! Using hb_parnint()/hb_retnint() instead of hb_parnl()/hb_retnl()
        to make Harbour level .dll functions compatible with Win64, and
-       at the same time stay compatible with XBase++.
+       at the same time stay compatible with Xbase++.
 
    * contrib/rddado/adordd.prg
      ! Fixed a few places where _SET_EXACT dependent string
@@ -12822,11 +12858,11 @@
        Now the DLL functions started to work.
      ! Fixed buffer corruption (by 1 byte) when strings were
        passed by reference.
-     + Added some XBase++-like support to always pass a copy
+     + Added some Xbase++-like support to always pass a copy
        of our string buffers to the called functions. This is
        safer but slower. The support is probably not complete.
        Please test.
-     + Added some XBase++ compatible #defines.
+     + Added some Xbase++ compatible #defines.
      + Added CALLDLLTYPED() function where the return value
        type can be specified. Untested work in progress,
        feel free to modify.
@@ -12929,7 +12965,7 @@
      + Added DLL interface. From xhb. Work of several authors.
      ; I've applied some modifications made by Alex Strickland.
      ; The API calls below are implemented:
-       XBase++ compatible:
+       Xbase++ compatible:
        - DLLLoad()
        - DLLUnload()
        - DLLPrepareCall()
@@ -14925,7 +14961,7 @@
      ! Fixed ::unTransform() padding with zero decimals for numerics.
        This cleared some differences in rto_get.prg.
      ! Fixed ::toDecPos() to not crash with non-numeric vars.
-     - Removed some XBase++ specific code which is not
+     - Removed some Xbase++ specific code which is not
        needed for Harbour.
      - Removed some other unnecessary code dealing with '.'/',' swapping.
      % Minor cleanups.
@@ -15238,7 +15274,7 @@
 2008-05-22 10:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbextern.ch
    * source/rdd/dbcmdx.c
-     + Added dbPack() and dbZap() XBase++
+     + Added dbPack() and dbZap() Xbase++
        compatibility functions.
 
 2008-05-22 10:10 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
@@ -16365,7 +16401,7 @@
      ! MaxRow()/MaxCol() extended parameters removed.
      + Added MaxRow(.T.)/MaxCol(.T.) conversions for
        xhb lib (hbcompat.ch) in both directions.
-     ; XBase++ doesn't have any extended parameters
+     ; Xbase++ doesn't have any extended parameters
        for Max*() function. Flagship has two of them,
        both of them doing something different. CAVO doesn't
        have these functions at all.
@@ -16832,10 +16868,10 @@
 
   * harbour/source/rtl/tbrowse.prg
     * calculate frozen area size for 5-th element of array returned
-      by xbase++ compatible method :viewArea(). Viktor please check me.
+      by Xbase++ compatible method :viewArea(). Viktor please check me.
       If you can also describe what exactly TOFIX in :firstScrCol()
       and :viewArea() means then maybe I can help - I do not have
-      xbase++ so I do not know what should be fixed.
+      Xbase++ so I do not know what should be fixed.
 
 2008-04-22 15:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/bld_os2.cmd
@@ -17017,7 +17053,7 @@
                one in intentional or unexpected differences to Clipper.
                It also does not have any extensions which existed in the
                old code. In the old code there was TODO note about some
-               xBase++ extensions - I do not have xBase++ so I cannot say
+               Xbase++ extensions - I do not have Xbase++ so I cannot say
                anything about it. If any of you things that they are
                important then I can add them if group agree but I will
                need detail description of additional methods and probably
@@ -30287,8 +30323,8 @@
      ! ::UnTransform() fixed when not in focus.
      - ::UnTransform() cBuffer incompatible parameter removed.
      ! ::Reform() probably made more compatible.
-     + ::PosInBuffer() XBase++ compatible method implemented.
-       (but not tested or compared with XBase++)
+     + ::PosInBuffer() Xbase++ compatible method implemented.
+       (but not tested or compared with Xbase++)
      ! ::Minus assignment fixed.
      ! ::Clear assignment fixed.
      ! ::Changed assignment fixed.
@@ -32848,7 +32884,7 @@
       as variables, f.e: {|a,b,...|qout(a+b,...)}
     ! fixed error in a[&s]:=100
     + added support for a[...] - now ... can be used in the same context as
-      xbase++ like multivalue macro (a[&s])
+      Xbase++ like multivalue macro (a[&s])
     * disabled ++, --, <op>= optimizations when -kc (strict Clipper
       compatibility mode) compiler switch is used
 
@@ -32869,7 +32905,7 @@
       as array element(s), f.e.: func f(...); return { "{", ..., "}" }
       If you think it will be usable then I can also add support for accessing
       array items with optional parameters, f.e.: ? a[ ... ]
-      so it can be used in the same context as xbase++ like macro lists
+      so it can be used in the same context as Xbase++ like macro lists
       but for this I will need new PCODE so I'd like to hear your opinion
       ASAP - I'm closing any extensions today.
 
@@ -35448,7 +35484,7 @@
    please also add support for:
       <oVar>:&<cMsgName>[(...)]
    For this we do not need any HVM modifications or new PCODEs.
-   We are supporting xBase++ macro list compilation in:
+   We are supporting Xbase++ macro list compilation in:
       cList:="1,2,3"
       x := aVar[ &cList ]
       aVar:={ &cList }
@@ -36410,7 +36446,7 @@
   * harbour/source/compiler/hbstripl.c
   * harbour/source/vm/hvm.c
   * harbour/source/vm/macro.c
-    * changed support for XBASE++ extended syntax in expressions like:
+    * changed support for Xbase++ extended syntax in expressions like:
          v:="1,2,3"
          x := a[ &v ]
          a := { &v }
@@ -36719,7 +36755,7 @@
      ! __dbDelim() return value.
      ! __dbSDF() return value.
      + CA-Cl*pper undocumented call added: _dtxCondSet()
-     + XBase++ compatible calls implemented:
+     + Xbase++ compatible calls implemented:
        dbJoin(), dbList(), dbSort(), dbTotal(), dbUpdate(), _dbExport()
        dbCopyStruct(), dbCopyExtStruct()
      + Added some more 10 chars call stubs:
@@ -36737,13 +36773,13 @@
    * harbour/source/rdd/dblist.prg
      - Removed compiler+RTL __dbList() hack which
        made it incompatible with CA-Cl*pper. The
-       hack targeted an XBase++ extension, but it's
+       hack targeted an Xbase++ extension, but it's
        compatible even without the hack. Tested with
-       XBase++ 1.82.294.
+       Xbase++ 1.82.294.
 
    * harbour/source/rtl/typefile.prg
      % FUNCTION -> PROCEDURE
-     + _TypeFile() XBase++ internal function added.
+     + _TypeFile() Xbase++ internal function added.
 
 2006-07-16 23:26 UTC+0200 Enrico Maria Giordano <e.m.giordano@emagsoftware.it>
   * source\common\expropt1.c
@@ -37145,7 +37181,7 @@
 
    The above modifications finish stack usage and making our HVM reentrant
    safe. There is only one thing which have to be fixed yet. It's HVM
-   support for xbase++ syntax in things like:
+   support for Xbase++ syntax in things like:
       func(&<paramList>), aVal[&<indexList>], {&<itemList>}
    To fix it we will have to change PCODE generated by compiler and
    replace some PCODEs used for current code by the new one. I will
@@ -53577,7 +53613,7 @@ e.vc
 2001-10-10 23:50 GMT+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/classes.c
        Fixed hb_clsIsParent for same class as parent ...
-       (xBase++ compatibility)
+       (Xbase++ compatibility)
 
 2001-10-10 10:07 GMT Dave Pearson <davep@davep.org>
    * source/rtl/tbrowse.prg
@@ -54153,7 +54189,7 @@ e.vc
      Improved support for PERSISTENT keyword (ACCESS and SETGET)
    * harbour\source\rtl\tobject.prg
      added two methods ...
-        (xBase++)  ISDERIVEDFROM
+        (Xbase++)  ISDERIVEDFROM
         (Class(y)) ISKINDOF
 
 2001-09-04 16:06 GMT+1 Antonio Linares <alinares@fivetech.com>
@@ -72164,7 +72200,7 @@ NOTE:
      source/rtl/Makefile
      makefile.bc
      makefile.vc
-     + XBase++ functions separated.
+     + Xbase++ functions separated.
 
    * include/hbextern.ch
    + utils/hbrun/exttools.prg
@@ -72372,7 +72408,7 @@ NOTE:
      source/rtl/Makefile
      makefile.bc
      makefile.vc
-     + Separated functions for XBase++ and CA-Cl*pper 5.3
+     + Separated functions for Xbase++ and CA-Cl*pper 5.3
 
    - source/tools/datesx.c
    * source/tools/dates2.c
@@ -78441,7 +78477,7 @@ Tue Oct 26 12:15:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 19991025-19:09 GMT+1 Viktor Szakats <info@szelvesz.hu>
    * source/rtl/filesys.c
-     + CURDRIVE() XBase++ compatible function added, between HB_COMPAT_XPP
+     + CURDRIVE() Xbase++ compatible function added, between HB_COMPAT_XPP
        guards, it also has a TODO:
      ! hb_fsCurDrv() fixed to convert the return value of the OS calls to
        the Clipper standard.
@@ -78455,15 +78491,15 @@ Tue Oct 26 12:15:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
        hb_fsIsDevice()
        All these fixed, so that now they work with WIN32/MINGW32.
    * source/rtl/mouseapi.c
-     + SETMOUSE() and NUMBUTTONS() XBase++ compatible functions added,
+     + SETMOUSE() and NUMBUTTONS() Xbase++ compatible functions added,
        between HB_COMPAT_XPP
    + source/rtl/oemansi.c
      source/rtl/Makefile
      config/w32/mingw32.cf
      + HB_ANSITOOEM() new Win32 related function added (Harbour extension)
      + HB_OEMTOANSI() new Win32 related function added (Harbour extension)
-     + CONVTOOEMCP() XBase++ compatible function added (between HB_COMPAT_XPP)
-     + CONVTOANSICP() XBase++ compatible function added (between HB_COMPAT_XPP)
+     + CONVTOOEMCP() Xbase++ compatible function added (between HB_COMPAT_XPP)
+     + CONVTOANSICP() Xbase++ compatible function added (between HB_COMPAT_XPP)
      ; IMPORTANT NOTE: This may cause problems in other platform, since USER32
        should be linked in. (WIN32/MINGW32 platform arranged)
    * source/rdd/dbf1.c
@@ -78654,12 +78690,12 @@ Mon Oct 25 13:14:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      ! hb_arrayCopy()/ACOPY() is now 100% Clipper compatible, the STRICT option
        removed, it's always strict now.
    * source/rtl/binnum.c
-     + BIN2U(), U2BIN(), W2BIN() XBase++ compatible functions added. All
+     + BIN2U(), U2BIN(), W2BIN() Xbase++ compatible functions added. All
        guarded with HB_COMPAT_XPP (defined by default) (not tested)
    * source/rtl/dates.c
      include/hbextern.ch
      source/runner/stdalone/external.prg
-     + STOD() put between HB_COMPAT_XPP guards, since it belongs to XBase++
+     + STOD() put between HB_COMPAT_XPP guards, since it belongs to Xbase++
        and is not part of base Clipper.
      + HB_STOD() Harbour extension function added, same as STOD() but with
        consistent naming.
@@ -79080,7 +79116,7 @@ Wed Oct 20 19:28:51 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
    * source/rtl/browdb.prg
      + dbSkipper() function added, it's now guarded with
        HARBOUR_COMPAT_XPP, so there is a possibility to switch to the
-       fully Clipper compliant, or the XBase++ compliant method.
+       fully Clipper compliant, or the Xbase++ compliant method.
      + NOTE added about dbSkipper.
    * source/rtl/filesys.c
    + source/rtl/binnum.c (added)
@@ -81804,7 +81840,7 @@ NOTE: You have to recompile all PRG sources!
     source/rdd/dbcmd.c
     * Changed WORD to USHORT in all Error handling stuff.
   * tests/working/rtl_test.prg
-    * Version() -> Version( 0 ) (xBase++ likes the numeric value better here,
+    * Version() -> Version( 0 ) (Xbase++ likes the numeric value better here,
       but I could not test it)
 
 19990917-03:15 GMT+1 Viktor Szakats <info@szelvesz.hu>
@@ -87353,9 +87389,9 @@ Wed Aug 04 10:12:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
       (Please update other makefiles accordingly)
   * include/box.ch
     include/box.h
-    + XBase++ compatible B_THIN, B_FAT border types added.
+    + Xbase++ compatible B_THIN, B_FAT border types added.
   * include/memoedit.ch
-    + Some XBase++ extensions added.
+    + Some Xbase++ extensions added.
 
 19990803-16:50 GMT+1 Viktor Szakats <info@szelvesz.hu>
   * config/win32/gcc.cf
@@ -90303,7 +90339,7 @@ Tue Jul 13 13:44:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     added support for ppo #line token
     Described line bug was mine. Fixed!
   + source/compiler/harbour.y
-    added support for ppo #line syntax (including XBase++ style)
+    added support for ppo #line syntax (including Xbase++ style)
 
 19990709-16:25 Eddie Runia
   * build32.bat; source/runner/runner.c; source/runner/run_exp.h;
