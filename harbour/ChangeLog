@@ -43,6 +43,7 @@
     ! Fixed :InsertState() to also modify physical cursor state.
     ! Fixed :BrowseText() to not go into an infinite loop in 
       view mode.
+      [TOMERGE 1.0]
 
   * source/rtl/memofile.c
     ! Minor formatting.
