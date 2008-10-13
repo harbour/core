@@ -110,7 +110,10 @@ CEXEFLAGSDLL   = $(HB_BCCDLL_DYNRT) $(CLIBFLAGS)
 #**********************************************************
 
 # Harbour Compiler Flags
-HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -km $(PRG_USR)
+HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -km -l $(PRG_USR)
+!if "$(HB_BUILD_DEBUG)" == "yes"
+HBFLAGSCMN     = $(HBFLAGSCMN) -b -l-
+!endif
 HARBOURFLAGS   = -n $(HBFLAGSCMN)
 HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN)
 

@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-13 13:51 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_gcc.mak
+  * make_vc.mak
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_gcc.mak
+  * contrib/mtpl_vc.mak
+    + Added -l switch to default Harbour options.
+    + Enabling Harbour debug options (-b -l-) when HB_DEBUG_BUILD=yes.
+
 2008-10-13 12:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/gencc.c
     ! fixed thread static variable offsets generated in .c code when
