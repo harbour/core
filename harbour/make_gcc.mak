@@ -30,7 +30,7 @@
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
 #       HB_BUILD_VERBOSE  - Enables echoing commands being executed
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
-#                           bison (you must use bison 2.3 or later)
+#                           Bison (you must use Bison 2.3 or later)
 #       HB_INSTALL_PREFIX - Path to installation directory into which
 #                           Harbour will be installed when using 'install'
 #                           mode. Defaults to current directory

@@ -87,7 +87,7 @@ CREATE CLASS HBEditor
    METHOD MoveCursor( nKey )                             // Move cursor inside text / window (needs a movement key)
    METHOD InsertState( lInsState )                       // Changes lInsert value and insertion / overstrike mode of editor
    METHOD Edit( nPassedKey )                             // Handles input (can receive a key in which case handles only this key and then exits)
-   METHOD ExitState()                                    // Returns ::lEditExit
+   METHOD ExitState()                                    // Returns ::lExitEdit
 
    METHOD KeyboardHook( nKey )                           // Gets called every time there is a key not handled directly by HBEditor
    METHOD IdleHook()                                     // Gets called every time there are no more keys to hanlde just before HBEditor blocks itself waiting for a char
@@ -801,7 +801,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
    RETURN Self
 
 METHOD ExitState() CLASS HBEditor
-   RETURN ::lEditExit
+   RETURN ::lExitEdit
 
 // This in an empty method which can be used by classes subclassing HBEditor to be able
 // to handle particular keys.

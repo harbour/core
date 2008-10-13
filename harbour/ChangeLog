@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-13 12:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/teditor.prg
+    ! Typo in previous modification.
+
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+    ! Minor formatting.
+
 2008-10-13 11:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/teditor.prg
     + Added :LineCount(), :ExitState() methods.
