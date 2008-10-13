@@ -67,27 +67,16 @@
 #  include <dlfcn.h>
 #endif
 
-/* This releases regex when called from the garbage collector */
 static HB_GARBAGE_FUNC( hb_libRelease )
 {
    /* do nothing */
    HB_SYMBOL_UNUSED( Cargo );
 }
 
-#if defined(HB_OS_WIN_32) || ( defined(HB_OS_LINUX) && !defined(__WATCOMC__) )
-static void * hb_parlib( int iParam )
-{
-   void ** pDynLibPtr = ( void ** ) hb_parptrGC( hb_libRelease, iParam );
-
-   return pDynLibPtr ? * pDynLibPtr : NULL;
-}
-#endif
-
 HB_FUNC( HB_LIBLOAD )
 {
    void * hDynLib = NULL;
 
-#if defined(HB_OS_WIN_32)
    if( hb_parclen( 1 ) > 0 )
    {
       int argc = hb_pcount() - 1, i;
@@ -97,47 +86,35 @@ HB_FUNC( HB_LIBLOAD )
       {
          argv = ( char** ) hb_xgrab( sizeof( char* ) * argc );
          for( i = 0; i < argc; ++i )
-         {
             argv[i] = hb_parcx( i + 2 );
-         }
       }
 
-      /* use stack address as first level marker */
-      hb_vmBeginSymbolGroup( ( void * ) hb_stackId(), TRUE );
-      hDynLib = ( void * ) LoadLibraryA( hb_parc( 1 ) );
-      /* set real marker */
-      hb_vmInitSymbolGroup( hDynLib, argc, argv );
-      if( argv )
+      if( hb_vmLockModuleSymbols() )
       {
-         hb_xfree( argv );
-      }
-   }
-#elif defined(HB_OS_LINUX) && !defined(__WATCOMC__)
-   if( hb_parclen( 1 ) > 0 )
-   {
-      int argc = hb_pcount() - 1, i;
-      char **argv = NULL;
-
-      if( argc > 0 )
-      {
-         argv = ( char** ) hb_xgrab( sizeof( char* ) * argc );
-         for( i = 0; i < argc; ++i )
+         /* use stack address as first level marker */
+         hb_vmBeginSymbolGroup( ( void * ) hb_stackId(), TRUE );
+#if defined( HB_OS_WIN_32 )
+         hDynLib = ( void * ) LoadLibraryA( hb_parc( 1 ) );
+#elif defined( HB_OS_OS2 )
          {
-            argv[i] = hb_parcx( i + 2 );
+            UCHAR LoadError[256] = "";    /* Area for load failure information */
+            HMODULE hDynModule;
+            if( DosLoadModule( LoadError, sizeof( LoadError ),
+                               hb_parc( 1 ), &hDynModule ) == NO_ERROR )
+               hDynLib = ( void * ) hDynModule;
          }
-      }
-
-      /* use stack address as first level marker */
-      hb_vmBeginSymbolGroup( ( void * ) hb_stackId(), TRUE );
-      hDynLib = ( void * ) dlopen( hb_parc( 1 ), RTLD_LAZY | RTLD_GLOBAL );
-      /* set real marker */
-      hb_vmInitSymbolGroup( hDynLib, argc, argv );
-      if( argv )
-      {
-         hb_xfree( argv );
-      }
-   }
+#elif defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
+         hDynLib = ( void * ) dlopen( hb_parc( 1 ), RTLD_LAZY | RTLD_GLOBAL );
 #endif
+         /* set real marker */
+         hb_vmInitSymbolGroup( hDynLib, argc, argv );
+
+         hb_vmUnlockModuleSymbols();
+      }
+
+      if( argv )
+         hb_xfree( argv );
+   }
 
    if( hDynLib )
    {
@@ -151,28 +128,28 @@ HB_FUNC( HB_LIBLOAD )
 
 HB_FUNC( HB_LIBFREE )
 {
-#if defined(HB_OS_WIN_32)
-   void * hDynLib = hb_parlib( 1 );
+   BOOL fResult = FALSE;
+   void ** pDynLibPtr = ( void ** ) hb_parptrGC( hb_libRelease, 1 );
 
-   if( hDynLib )
+   if( pDynLibPtr && *pDynLibPtr &&
+       hb_vmLockModuleSymbols() )
    {
-      hb_vmExitSymbolGroup( hDynLib );
-      hb_retl( FreeLibrary( ( HMODULE ) hDynLib ) );
-   }
-   else
-#elif defined(HB_OS_LINUX) && !defined(__WATCOMC__)
-   void * hDynLib = hb_parlib( 1 );
-
-   if( hDynLib )
-   {
-      hb_vmExitSymbolGroup( hDynLib );
-      hb_retl( dlclose( hDynLib ) == 0 );
-   }
-   else
+      void * hDynLib = *pDynLibPtr;
+      if( hDynLib )
+      {
+         *pDynLibPtr = NULL;
+         hb_vmExitSymbolGroup( hDynLib );
+#if defined( HB_OS_WIN_32 )
+         fResult = FreeLibrary( ( HMODULE ) hDynLib );
+#elif defined( HB_OS_OS2 )
+         fResult = DosFreeModule( ( HMODULE ) hDynLib ) == NO_ERROR;
+#elif defined( HB_OS_LINUX ) && !defined (__WATCOMC__ )
+         fResult = dlclose( hDynLib ) == 0;
 #endif
-   {
-      hb_retl( FALSE );
+      }
+      hb_vmUnlockModuleSymbols();
    }
+   hb_retl( FALSE );
 }
 
 HB_FUNC( HB_LIBERROR )

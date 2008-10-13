@@ -468,27 +468,37 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
          }
       }
 
-      pHrbBody->pModuleSymbols = hb_vmRegisterSymbols( pHrbBody->pSymRead,
-               ( USHORT ) pHrbBody->ulSymbols, "pcode.hrb", 0, TRUE, FALSE );
-
-      if( pHrbBody->pModuleSymbols->pModuleSymbols != pSymRead )
+      if( hb_vmLockModuleSymbols() )
       {
-         /*
-          * Old unused symbol table has been recycled - free the one
-          * we allocated and disactivate static initialization [druzus]
-          */
-         pHrbBody->pSymRead = pHrbBody->pModuleSymbols->pModuleSymbols;
-         hb_hrbFreeSymbols( pSymRead, pHrbBody->ulSymbols );
+         pHrbBody->pModuleSymbols = hb_vmRegisterSymbols( pHrbBody->pSymRead,
+                  ( USHORT ) pHrbBody->ulSymbols, "pcode.hrb", 0, TRUE, FALSE );
 
-         pHrbBody->fInit = TRUE;
+         if( pHrbBody->pModuleSymbols->pModuleSymbols != pSymRead )
+         {
+            /*
+             * Old unused symbol table has been recycled - free the one
+             * we allocated and disactivate static initialization [druzus]
+             */
+            pHrbBody->pSymRead = pHrbBody->pModuleSymbols->pModuleSymbols;
+            hb_hrbFreeSymbols( pSymRead, pHrbBody->ulSymbols );
+
+            pHrbBody->fInit = TRUE;
+         }
+         else
+         {
+            /* mark symbol table as dynamically allocated so HVM will free it on exit */
+            pHrbBody->pModuleSymbols->fAllocated = TRUE;
+
+            /* initialize static variables */
+            hb_hrbInitStatic( pHrbBody );
+         }
+         hb_vmUnlockModuleSymbols();
       }
       else
       {
-         /* mark symbol table as dynamically allocated so HVM will free it on exit */
-         pHrbBody->pModuleSymbols->fAllocated = TRUE;
-
-         /* initialize static variables */
-         hb_hrbInitStatic( pHrbBody );
+         hb_hrbFreeSymbols( pSymRead, pHrbBody->ulSymbols );
+         hb_hrbUnLoad( pHrbBody );
+         pHrbBody = NULL;
       }
    }
 

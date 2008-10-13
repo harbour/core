@@ -8,6 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-13 20:21 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/wacore.c
+    ; updated comments about xbase++ behavior in dbRelease()
+
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/dynlibhb.c
+  * harbour/source/vm/runner.c
+    ! added MT protection for HB_LIBLOAD()/HB_LIBFREE() and
+      HB_HRBLOAD()/HB_HRBUNLOAD(). Please remember that you should
+      not use any external LoadLibrary() functions because they are
+      not protected for clean PCODE modules loading/unloading even
+      in ST mode. Using them can cause HVM internal structure corruption.
+      If we have such functions in contrib then they should be redirected
+      to our HVM ones.
+      There is still one problem in MT mode which has to be resolved yet.
+      When dynamic library containing PCODE using static variables
+      is loaded 1-st time then it will force resizing of internal array
+      with static variables. If in exactly the same moment some other
+      thread operates on static variable then it may cause corruption.
+      To resolve this problem we will have to divide continuous memory
+      block common for all modules where we store all static variables
+      into separated blocks bound with each PCODE module (symbol table).
+
+  * harbour/source/vm/dynlibhb.c
+    + added support for DLL loading/unloading in OS2 builds.
+      Based on xHarbour code by Maurilio Longo - please test.
+
 2008-10-13 20:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbmisc/strfmt.c
     ! Fixed GPF when non-string was passed as 

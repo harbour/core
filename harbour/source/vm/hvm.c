@@ -222,7 +222,9 @@ static void    hb_vmMsgIndexReference( PHB_ITEM pRefer, PHB_ITEM pObject, PHB_IT
 
 #if defined( HB_MT_VM )
 static int volatile hb_vmThreadRequest = 0;
-static void    hb_vmRequestTest( void );
+static void hb_vmRequestTest( void );
+
+static PHB_ITEM s_pSymbolsMtx = NULL;
 
 static HB_CRITICAL_NEW( s_atInitMtx );
 #  define HB_ATINIT_LOCK      hb_threadEnterCriticalSection( &s_atInitMtx );
@@ -853,6 +855,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 #if defined( HB_MT_VM )
    hb_threadInit();
    hb_vmStackInit( hb_threadStateNew() ); /* initialize HVM thread stack */
+   s_pSymbolsMtx = hb_threadMutexCreate( FALSE );
 #else
    hb_stackInit();                        /* initialize HVM stack */
 #endif
@@ -1053,6 +1056,11 @@ HB_EXPORT int hb_vmQuit( void )
 
 #if defined( HB_MT_VM )
    hb_vmStackRelease();       /* release HVM stack and remove it from linked HVM stacks list */
+   if( s_pSymbolsMtx )
+   {
+      hb_itemRelease( s_pSymbolsMtx );
+      s_pSymbolsMtx = NULL;
+   }
    hb_threadExit();
 #else
    hb_setRelease( hb_stackSetStruct() );  /* releases Sets */
@@ -6915,6 +6923,23 @@ PHB_SYMB hb_vmGetRealFuncSym( PHB_SYMB pSym )
    return pSym;
 }
 
+BOOL hb_vmLockModuleSymbols( void )
+{
+#if defined( HB_MT_VM )
+   return !s_pSymbolsMtx || hb_threadMutexLock( s_pSymbolsMtx );
+#else
+   return TRUE;
+#endif
+}
+
+void hb_vmUnlockModuleSymbols( void )
+{
+#if defined( HB_MT_VM )
+   if( s_pSymbolsMtx )
+      hb_threadMutexUnlock( s_pSymbolsMtx );
+#endif
+}
+
 char * hb_vmFindModuleSymbolName( PHB_SYMB pSym )
 {
    if( pSym )
@@ -7012,28 +7037,32 @@ void hb_vmFreeSymbols( PHB_SYMBOLS pSymbols )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmFreeSymbols(%p)", pSymbols));
 
-   if( pSymbols->fActive )
+   if( pSymbols->fActive && hb_vmLockModuleSymbols() )
    {
-      USHORT ui;
-
-      for( ui = 0; ui < pSymbols->uiModuleSymbols; ++ui )
+      if( pSymbols->fActive )
       {
-         HB_SYMBOLSCOPE scope = pSymbols->pModuleSymbols[ ui ].scope.value & HB_FS_INITEXIT;
+         USHORT ui;
 
-         /* do not overwrite already initialized statics' frame */
-         if( scope != HB_FS_INITEXIT )
+         for( ui = 0; ui < pSymbols->uiModuleSymbols; ++ui )
          {
-            PHB_SYMB pSymbol = &pSymbols->pModuleSymbols[ ui ];
-            pSymbol->value.pFunPtr = NULL;
-            if( pSymbol->pDynSym && pSymbol->pDynSym->pSymbol != pSymbol &&
-                ( pSymbol->scope.value & HB_FS_LOCAL ) == 0 )
-               pSymbol->scope.value |= HB_FS_DEFERRED;
+            HB_SYMBOLSCOPE scope = pSymbols->pModuleSymbols[ ui ].scope.value & HB_FS_INITEXIT;
+
+            /* do not overwrite already initialized statics' frame */
+            if( scope != HB_FS_INITEXIT )
+            {
+               PHB_SYMB pSymbol = &pSymbols->pModuleSymbols[ ui ];
+               pSymbol->value.pFunPtr = NULL;
+               if( pSymbol->pDynSym && pSymbol->pDynSym->pSymbol != pSymbol &&
+                   ( pSymbol->scope.value & HB_FS_LOCAL ) == 0 )
+                  pSymbol->scope.value |= HB_FS_DEFERRED;
+            }
+            pSymbols->pModuleSymbols[ ui ].scope.value &= ~( HB_FS_PCODEFUNC | HB_FS_DYNCODE );
          }
-         pSymbols->pModuleSymbols[ ui ].scope.value &= ~( HB_FS_PCODEFUNC | HB_FS_DYNCODE );
+         pSymbols->hDynLib = NULL;
+         pSymbols->fActive = FALSE;
+         ++s_ulFreeSymbols;
       }
-      pSymbols->hDynLib = NULL;
-      pSymbols->fActive = FALSE;
-      ++s_ulFreeSymbols;
+      hb_vmUnlockModuleSymbols();
    }
 }
 

@@ -515,17 +515,24 @@ HB_EXPORT ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
    hb_rddSelectWorkAreaNumber( pArea->uiArea );
    /* flush buffers */
    SELF_GOCOLD( pArea );
-   /* remove all locks */
-   /* ??? is it xbase++ compatible? */
+
+   /* tests shows that xbase++ does not remove locks */
    /* SELF_UNLOCK( pArea, NULL ); */
-   /* Clear all child and parent relations */
+
+   /* xbase++ documentation says that child area are also detached but
+    * but tests shows that it's not true and chilled and parent relations
+    * are still active and corresponding WA are not detached together.
+    * Harbour clears all child and parent relations.
+    */
    SELF_CLEARREL( pArea );
    hb_rddCloseAllParentRelations( pArea );
+
    /* detach WA and alias */
    hb_waNodeDelete( hb_stackRDD() );
    pArea->uiArea = 0;
    if( pArea->atomAlias )
       hb_dynsymSetAreaHandle( ( PHB_DYNS ) pArea->atomAlias, 0 );
+
    /* restore previous WA number */
    hb_rddSelectWorkAreaNumber( iArea );
 

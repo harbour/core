@@ -89,6 +89,8 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, USHORT u
    } HB_SYMBOLS, * PHB_SYMBOLS;     /* structure to keep track of all modules symbol tables */
 
    extern PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, BOOL fDynLib, BOOL fClone );
+   extern BOOL        hb_vmLockModuleSymbols( void );
+   extern void        hb_vmUnlockModuleSymbols( void );
    extern void        hb_vmFreeSymbols( PHB_SYMBOLS pSymbols );
    extern void        hb_vmBeginSymbolGroup( void * hDynLib, BOOL fClone );
    extern void        hb_vmInitSymbolGroup( void * hNewDynLib, int argc, char * argv[] );
