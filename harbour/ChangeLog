@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-13 21:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbwince.h
+  * harbour/source/common/hbwince.c
+    ! fixed LastError overwriting inside WinCE wrapper functions
+
 2008-10-13 20:21 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/wacore.c
     ; updated comments about xbase++ behavior in dbRelease()

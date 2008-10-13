@@ -68,7 +68,6 @@ extern clock_t clock( void );
 #endif
 
 extern int remove( const char *filename );
-extern int access( const char *pathname, int mode );
 extern int system( const char *string );
 extern char *strerror( int errnum );
 

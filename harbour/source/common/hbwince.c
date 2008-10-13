@@ -135,21 +135,6 @@ int remove( const char *filename )
    return DeleteFileA( filename ) ? 0 : -1;
 }
 
-int access( const char *filename, int mode )
-{
-   WIN32_FIND_DATAW wdata;
-   LPWSTR wfilename;
-   HANDLE h;
-
-   HB_SYMBOL_UNUSED( mode );
-
-   wfilename = hb_mbtowc( filename );
-   h = FindFirstFileW( wfilename, &wdata );
-   hb_xfree( wfilename );
-
-   return h != INVALID_HANDLE_VALUE;
-}
-
 int system( const char *cmd )
 {
    LPWSTR wcmd;
@@ -368,74 +353,92 @@ HANDLE WINAPI CreateFileA( LPCSTR filename, DWORD access,
                     DWORD sharing, LPSECURITY_ATTRIBUTES sa,
                     DWORD creation, DWORD attributes, HANDLE tmplt )
 {
+   DWORD dwError;
    LPWSTR wfilename;
    HANDLE h;
 
    wfilename = hb_mbtowc( filename );
    h = CreateFileW( wfilename, access, sharing, sa, creation, attributes, tmplt );
+   dwError = GetLastError();
    hb_xfree( wfilename );
+   SetLastError( dwError );
 
    return h;
 }
 
 BOOL WINAPI MoveFileA( LPCSTR fn1, LPCSTR fn2 )
 {
+   DWORD dwError;
    LPWSTR wfn1, wfn2;
    BOOL b;
 
    wfn1 = hb_mbtowc( fn1 );
    wfn2 = hb_mbtowc( fn2 );
    b = MoveFileW( wfn1, wfn2 );
+   dwError = GetLastError();
    hb_xfree( wfn1 );
    hb_xfree( wfn2 );
+   SetLastError( dwError );
 
    return b;
 }
 
 BOOL WINAPI DeleteFileA( LPCSTR path )
 {
+   DWORD dwError;
    LPWSTR wpath;
    BOOL b;
 
    wpath = hb_mbtowc( path );
    b = DeleteFileW( wpath );
+   dwError = GetLastError();
    hb_xfree( wpath );
+   SetLastError( dwError );
 
    return b;
 }
 
 BOOL WINAPI RemoveDirectoryA( LPCSTR path )
 {
+   DWORD dwError;
    LPWSTR wpath;
    BOOL b;
 
    wpath = hb_mbtowc( path );
    b = RemoveDirectoryW( wpath );
+   dwError = GetLastError();
    hb_xfree( wpath );
+   SetLastError( dwError );
 
    return b;
 }
 
 BOOL WINAPI CreateDirectoryA( LPCSTR path, LPSECURITY_ATTRIBUTES attr )
 {
+   DWORD dwError;
    LPWSTR wpath;
    BOOL b;
 
    wpath = hb_mbtowc( path );
    b = CreateDirectoryW( wpath, attr );
+   dwError = GetLastError();
    hb_xfree( wpath );
+   SetLastError( dwError );
 
    return b;
 }
 
 BOOL WINAPI SetFileAttributesA( LPCSTR filename, DWORD attr )
 {
+   DWORD dwError;
    LPWSTR wfilename;
    BOOL b;
 
    wfilename = hb_mbtowc( filename );
    b = SetFileAttributesW( wfilename, attr );
+   dwError = GetLastError();
    hb_xfree( wfilename );
+   SetLastError( dwError );
 
    return b;
 }
@@ -456,6 +459,7 @@ BOOL WINAPI OemToCharBuffA( LPCSTR src, LPSTR dst, DWORD len )
 
 HANDLE WINAPI FindFirstFileA( LPCSTR path, WIN32_FIND_DATAA * data )
 {
+   DWORD dwError;
    WIN32_FIND_DATAW wdata;
    LPWSTR wpath;
    LPSTR mb;
@@ -463,8 +467,8 @@ HANDLE WINAPI FindFirstFileA( LPCSTR path, WIN32_FIND_DATAA * data )
 
    wpath = hb_mbtowc( path );
    h = FindFirstFileW( wpath, &wdata );
+   dwError = GetLastError();
    hb_xfree( wpath );
-
    mb = hb_wctomb( wdata.cFileName );
    hb_strncpy( data->cFileName, mb, sizeof( data->cFileName ) - 1 );
    hb_xfree( mb );
@@ -474,17 +478,20 @@ HANDLE WINAPI FindFirstFileA( LPCSTR path, WIN32_FIND_DATAA * data )
    data->ftLastWriteTime = wdata.ftLastWriteTime;
    data->nFileSizeHigh = wdata.nFileSizeHigh;
    data->nFileSizeLow = wdata.nFileSizeLow;
+   SetLastError( dwError );
 
    return h;
 }
 
 BOOL WINAPI FindNextFileA( HANDLE handle, WIN32_FIND_DATAA * data )
 {
+   DWORD dwError;
    WIN32_FIND_DATAW wdata;
    LPSTR mb;
    BOOL b;
 
    b = FindNextFileW( handle, &wdata );
+   dwError = GetLastError();
    mb = hb_wctomb( wdata.cFileName );
    hb_strncpy( data->cFileName, mb, sizeof( data->cFileName ) - 1 );
    hb_xfree( mb );
@@ -494,18 +501,22 @@ BOOL WINAPI FindNextFileA( HANDLE handle, WIN32_FIND_DATAA * data )
    data->ftLastWriteTime = wdata.ftLastWriteTime;
    data->nFileSizeHigh = wdata.nFileSizeHigh;
    data->nFileSizeLow = wdata.nFileSizeLow;
+   SetLastError( dwError );
 
    return b;
 }
 
 DWORD WINAPI GetFileAttributesA( LPCSTR path )
 {
+   DWORD dwError;
    LPWSTR wpath;
    DWORD dw;
 
    wpath = hb_mbtowc( path );
    dw = GetFileAttributesW( wpath );
+   dwError = GetLastError();
    hb_xfree( wpath );
+   SetLastError( dwError );
 
    return dw;
 }
@@ -514,12 +525,15 @@ UINT WINAPI GetDriveTypeA( LPCSTR path )
 {
    /* temporary disabled - not all WinCE compilers support GetDriveTypeW() */
 #if 0
+   DWORD dwError;
    LPWSTR wpath;
    UINT ui;
 
    wpath = hb_mbtowc( path );
    ui = GetDriveTypeW( wpath );
+   dwError = GetLastError();
    hb_xfree( wpath );
+   SetLastError( dwError );
 
    return ui;
 #else
@@ -531,11 +545,13 @@ UINT WINAPI GetDriveTypeA( LPCSTR path )
 
 BOOL WINAPI GetVersionExA( OSVERSIONINFOA * v )
 {
+   DWORD dwError;
    OSVERSIONINFOW wv;
    LPSTR mb;
    BOOL b;
 
    b = GetVersionExW( &wv );
+   dwError = GetLastError();
    mb = hb_wctomb( wv.szCSDVersion );
    hb_strncpy( v->szCSDVersion, mb, sizeof( v->szCSDVersion ) - 1 );
    hb_xfree( mb );
@@ -544,6 +560,7 @@ BOOL WINAPI GetVersionExA( OSVERSIONINFOA * v )
    v->dwMinorVersion = wv.dwMinorVersion;
    v->dwBuildNumber = wv.dwBuildNumber;
    v->dwPlatformId = wv.dwPlatformId;
+   SetLastError( dwError );
 
    return b;
 }
@@ -565,45 +582,55 @@ DWORD WINAPI GetFileType( HANDLE handle )
 
 HMODULE WINAPI GetModuleHandleA( LPCSTR modulename )
 {
+   DWORD dwError;
    LPWSTR wmodulename;
    HMODULE h;
 
    wmodulename = hb_mbtowc( modulename );
    h = GetModuleHandleW( wmodulename );
+   dwError = GetLastError();
    hb_xfree( wmodulename );
+   SetLastError( dwError );
 
    return h;
 }
 
 HINSTANCE WINAPI LoadLibraryA( LPCSTR libname )
 {
+   DWORD dwError;
    LPWSTR wlibname;
    HINSTANCE h;
 
    wlibname = hb_mbtowc( libname );
 
    h = LoadLibraryW( wlibname );
+   dwError = GetLastError();
    hb_xfree( wlibname );
+   SetLastError( dwError );
 
    return h;
 }
 
 DWORD WINAPI GetTempPathA( DWORD size, LPSTR buffer )
 {
+   DWORD dwError;
    WCHAR wbuffer[MAX_PATH] = { 0 };
    char *abuffer;
    DWORD dw;
 
    dw = GetTempPathW( MAX_PATH, wbuffer );
+   dwError = GetLastError();
    abuffer = hb_wctomb( wbuffer );
    hb_strncpy( buffer, abuffer, size );
    hb_xfree( abuffer );
+   SetLastError( dwError );
 
    return dw;
 }
 
 UINT WINAPI GetTempFileNameA( LPCSTR tmpdir, LPCSTR prefix, UINT unique, LPSTR filename )
 {
+   DWORD dwError;
    LPWSTR wtmpdir, wprefix;
    WCHAR wfilename[ MAX_PATH ] = { 0 };
    UINT u;
@@ -611,6 +638,7 @@ UINT WINAPI GetTempFileNameA( LPCSTR tmpdir, LPCSTR prefix, UINT unique, LPSTR f
    wtmpdir = hb_mbtowc( tmpdir );
    wprefix = hb_mbtowc( prefix );
    u = GetTempFileNameW( wtmpdir, wprefix, unique, wfilename );
+   dwError = GetLastError();
    hb_xfree( wtmpdir );
    hb_xfree( wprefix );
 
@@ -621,6 +649,7 @@ UINT WINAPI GetTempFileNameA( LPCSTR tmpdir, LPCSTR prefix, UINT unique, LPSTR f
       hb_strncpy( filename, afilename, _POSIX_PATH_MAX );
       hb_xfree( afilename );
    }
+   SetLastError( dwError );
 
    return u;
 }
@@ -737,6 +766,22 @@ BOOL WINAPI FloodFill( HDC h, int x, int y, COLORREF c )
  */
 #if 0
 #if defined(__MINGW32CE__)
+
+int access( const char *filename, int mode )
+{
+   WIN32_FIND_DATAW wdata;
+   LPWSTR wfilename;
+   HANDLE h;
+
+   HB_SYMBOL_UNUSED( mode );
+
+   wfilename = hb_mbtowc( filename );
+   h = FindFirstFileW( wfilename, &wdata );
+   hb_xfree( wfilename );
+
+   return h != INVALID_HANDLE_VALUE;
+}
+
 clock_t clock( void )
 {
    SYSTEMTIME st;
@@ -760,6 +805,7 @@ BOOL WINAPI GetDiskFreeSpaceA( LPCSTR path, PDWORD pdwSectorsPerCluster,
 
    return FALSE;
 }
+
 #endif /* 0 */
 
 #endif /* HB_WINCE */
