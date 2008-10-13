@@ -8,7 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
-2008-10-11 20:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+2008-10-13 11:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/teditor.prg
+    + Added :LineCount(), :ExitState() methods.
+    * Changed to use hb_MemoWrit() to write text content to 
+      disk, to avoid Chr(26) to be appended.
+    ! Fixed :InsertState() to also modify physical cursor state.
+    ! Fixed :BrowseText() to not go into an infinite loop in 
+      view mode.
+
+  * source/rtl/memofile.c
+    ! Minor formatting.
+
+  * ChangeLog
+    ! Fixed yesterday's entry dates.
+
+2008-10-12 20:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapierr.h
     ! Fixed previous casting fix.
 
@@ -32,7 +47,7 @@
   * harbour/source/vm/thread.c
     * do not destroy critical sections on exit
 
-2008-10-11 16:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+2008-10-12 16:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak
   * make_gcc.mak

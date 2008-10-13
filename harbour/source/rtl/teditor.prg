@@ -75,6 +75,7 @@ CREATE CLASS HBEditor
    METHOD LineLen( nRow )                                // Return text length of line n
    METHOD SplitLine( nRow )                              // If a line of text is longer than nWordWrapCol divides it into multiple lines
    METHOD GotoLine( nRow )                               // Put line nRow at cursor position
+   METHOD LineCount()                                    // Returns number of lines in text.
 
    METHOD GetText()                                      // Returns aText as a string (for MemoEdit())
 
@@ -86,6 +87,7 @@ CREATE CLASS HBEditor
    METHOD MoveCursor( nKey )                             // Move cursor inside text / window (needs a movement key)
    METHOD InsertState( lInsState )                       // Changes lInsert value and insertion / overstrike mode of editor
    METHOD Edit( nPassedKey )                             // Handles input (can receive a key in which case handles only this key and then exits)
+   METHOD ExitState()                                    // Returns ::lEditExit
 
    METHOD KeyboardHook( nKey )                           // Gets called every time there is a key not handled directly by HBEditor
    METHOD IdleHook()                                     // Gets called every time there are no more keys to hanlde just before HBEditor blocks itself waiting for a char
@@ -232,7 +234,7 @@ METHOD SaveFile() CLASS HBEditor
 
    IF !Empty( ::cFile )
 
-      ::lDirty := !MemoWrit( ::cFile, ::GetText() )
+      ::lDirty := !hb_MemoWrit( ::cFile, ::GetText() )
 
       RETURN !::lDirty
    ENDIF
@@ -324,6 +326,9 @@ METHOD GotoLine( nRow ) CLASS HBEditor
    ENDIF
 
    RETURN Self
+
+METHOD LineCount() CLASS HBEditor
+   RETURN ::naTextLen
 
 // If a line of text is longer than nWordWrapCol divides it into multiple lines,
 // Used during text editing to reflow a paragraph
@@ -628,6 +633,9 @@ METHOD InsertState( lInsState ) CLASS HBEditor
    IF ISLOGICAL( lInsState )
       ::lInsert := lInsState
       Set( _SET_INSERT, lInsState )
+      IF ::lEditAllow
+         SetCursor( iif( lInsState, SC_INSERT, SC_NORMAL ) )
+      ENDIF
    ENDIF
 
    RETURN Self
@@ -792,6 +800,9 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
 
    RETURN Self
 
+METHOD ExitState() CLASS HBEditor
+   RETURN ::lEditExit
+
 // This in an empty method which can be used by classes subclassing HBEditor to be able
 // to handle particular keys.
 METHOD KeyboardHook( nKey ) CLASS HBEditor
@@ -940,6 +951,10 @@ METHOD BrowseText( nPassedKey )
          IF !::MoveCursor( nKey )
             ::KeyboardHook( nKey )
          ENDIF
+      ENDIF
+
+      IF nPassedKey != NIL
+         EXIT
       ENDIF
 
    ENDDO
