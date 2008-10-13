@@ -149,7 +149,7 @@ HB_FUNC( HB_LIBFREE )
       }
       hb_vmUnlockModuleSymbols();
    }
-   hb_retl( FALSE );
+   hb_retl( fResult );
 }
 
 HB_FUNC( HB_LIBERROR )
