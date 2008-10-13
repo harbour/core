@@ -73,7 +73,7 @@ HB_FUNC( STRFORMAT )
 
    if( nParNum >= 1 )
    {
-      char * pszMask = hb_parc( 1 );
+      char * pszMask = hb_parcx( 1 );
       ULONG  nMaskLen = hb_parclen( 1 );
       ULONG  nMaskPos;
       ULONG  nPos;

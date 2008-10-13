@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-13 20:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbmisc/strfmt.c
+    ! Fixed GPF when non-string was passed as 
+      first parameter.
+
 2008-10-13 18:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/thread.c
     + added small description for hb_threadOnce() .prg function
