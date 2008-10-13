@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-13 16:34 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+  * harbour/source/vm/classes.c
+  * harbour/source/rtl/tobject.prg
+  * harbour/source/rtl/tclass.prg
+    ! fixed race condition when class function is called 1-st time
+      and new class is created. It was possible that more then one
+      thread execute this function simultaneously and two classes
+      identical classes but with different handles were created
+      and registered in HVM
+
+  * harbour/contrib/xhb/xhbcomp.prg
+    * updated hack with optional inheritance for new class code
+
 2008-10-13 13:51 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_gcc.mak

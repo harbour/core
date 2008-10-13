@@ -405,6 +405,8 @@ static PCLASS * s_pClasses     = NULL;
 static USHORT   s_uiClsSize    = 0;
 static USHORT   s_uiClasses    = 0;
 
+static PHB_ITEM s_pClassMtx = NULL;
+
 /* ================================================ */
 
 #if 0
@@ -1056,6 +1058,10 @@ void hb_clsInit( void )
    s_uiClasses = 0;
    s_pClasses = ( PCLASS * ) hb_xgrab( sizeof( PCLASS ) * ( ( ULONG ) s_uiClsSize + 1 ) );
    s_pClasses[ 0 ] = NULL;
+
+#if defined( HB_MT_VM )
+   s_pClassMtx = hb_threadMutexCreate( FALSE );
+#endif
 }
 
 /*
@@ -1164,6 +1170,12 @@ void hb_clsReleaseAll( void )
       hb_xfree( s_pClasses );
       s_pClasses = NULL;
       s_uiClsSize = 0;
+   }
+
+   if( s_pClassMtx )
+   {
+      hb_itemRelease( s_pClassMtx );
+      s_pClassMtx = NULL;
    }
 }
 
@@ -4659,6 +4671,47 @@ HB_FUNC( __CLSPREALLOCATE )
    HB_CLASS_UNLOCK
 
    hb_retnl( s_uiClsSize );
+}
+
+HB_FUNC( __CLSLOCKDEF )
+{
+   PHB_ITEM pClsItm = hb_param( 1, HB_IT_BYREF );
+   BOOL fLocked = FALSE;
+
+   if( pClsItm && HB_IS_NIL( pClsItm ) )
+   {
+      if( !s_pClassMtx || hb_threadMutexLock( s_pClassMtx ) )
+      {
+         if( HB_IS_NIL( pClsItm ) )
+            fLocked = TRUE;
+         else if( s_pClassMtx )
+            hb_threadMutexUnlock( s_pClassMtx );
+      }
+   }
+   hb_retl( fLocked );
+}
+
+HB_FUNC( __CLSUNLOCKDEF )
+{
+   PHB_ITEM pClsDst = hb_param( 1, HB_IT_BYREF ),
+            pClsSrc = hb_param( 2, HB_IT_ANY );
+
+   if( pClsDst && pClsSrc && HB_IS_NIL( pClsDst ) && !ISBYREF( 2 ) )
+   {
+      /* intentional low level hack to eliminate race condition in
+       * unprotected readonly access.
+       * hb_itemMove() uses memcpy() for whole HB_ITEM structure first
+       * coping 'type' and then 'item' parts of HB_ITEM so it cannot be
+       * used by us. [druzus]
+       */
+      memcpy( &pClsDst->item, &pClsSrc->item, sizeof( pClsDst->item ) );
+      /* pClsDst->item.asArray.value = pClsSrc->item.asArray.value; */
+      pClsDst->type = pClsSrc->type;
+      pClsSrc->type = HB_IT_NIL;
+   }
+
+   if( s_pClassMtx )
+      hb_threadMutexUnlock( s_pClassMtx );
 }
 
 /* Real dirty function, though very usefull under certain circunstances:

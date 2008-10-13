@@ -61,7 +61,7 @@ ANNOUNCE XHB_LIB
  */
 #xcommand OPTIONAL INHERIT <!className!> =>                 ;
             if type( <"className">+"()" ) == "UI"          ;;
-               aadd( s_oClass:asSuper, @__<className>() )  ;;
+               aadd( oClass:asSuper, @__<className>() )    ;;
             end
 
 
