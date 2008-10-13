@@ -1552,9 +1552,9 @@ static HB_GENC_FUNC( hb_p_threadstatics )
       if( ( ul & 0x0f ) == 0 )
          fprintf( cargo->yyc, "\n\t\t\t" );
       if( ul == ulSize - 1 )
-         fprintf( cargo->yyc, "%d", pFunc->pCode[ lPCodePos + ul ] );
+         fprintf( cargo->yyc, "%d", pFunc->pCode[ lPCodePos + ul + 3 ] );
       else
-         fprintf( cargo->yyc, "%d, ", pFunc->pCode[ lPCodePos + ul ] );
+         fprintf( cargo->yyc, "%d, ", pFunc->pCode[ lPCodePos + ul + 3 ] );
    }
    fprintf( cargo->yyc, " };\n\t\thb_xvmThreadStatics( %hu, statics );\n\t}\n", w );
 

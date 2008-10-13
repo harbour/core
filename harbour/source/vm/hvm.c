@@ -6030,8 +6030,6 @@ static void hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode )
 #else
 static void hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode )
 {
-   HB_STACK_TLS_PRELOAD
-
    HB_TRACE(HB_TR_DEBUG, ("hb_vmInitThreadStatics(%p,%hu,%p)", uiCount, pCode));
 
    /* single thread VM - do nothing, use normal static variables */
