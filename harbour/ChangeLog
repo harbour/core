@@ -8,6 +8,47 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-13 18:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/thread.c
+    + added small description for hb_threadOnce() .prg function
+
+  * harbour/include/hbthread.h
+    ! do not set TLS in POCC and XCC builds when _MSC_VER macro is set
+      This compilers also have this macro but dllspec( thread) does
+      not work for them (at least in version 4.50.15)
+
+  * harbour/utils/hbtest/rt_hvm.prg
+    + added few tests which exploit by DMC bug. Be careful with
+      this compiler. In some cases it gives buggy final code, f.e.
+      try this:
+
+            #include <stdio.h>
+            typedef struct
+            {
+               double         dd;
+               long long int  ll;
+            } UN;
+            const char * cmp( UN * pU )
+            {
+               return pU->dd >= pU->ll ? "OK" : "ERRROR";
+            }
+            int main( void )
+            {
+               UN u = { 10.50, 10 };
+               printf( "%s\n", cmp( &u ) );
+               return 0;
+            }
+
+      The same bug can be exploited also by final Harbour binaries
+      compiled by DMC in code like:
+
+         ? iif( 10.50 >= 10, "OK", "ERROR" )
+
+      I used DMC 8.42n. As long as such things will not be fixed by
+      DMC developers this compiler is not supported by Harbour and
+      reported problems with DMC Harbour builds will have to be
+      ignored by us.
+
 2008-10-13 16:34 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbclass.ch
   * harbour/source/vm/classes.c

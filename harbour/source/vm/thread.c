@@ -959,6 +959,20 @@ HB_FUNC( HB_THREADTERMINATEALL )
 #endif
 }
 
+/* hb_threadOnce( @<onceControl> [, <bAction> ] ) -> <lFirstCall>
+ * Execute <bAction> only once. <onceControl> is variable which holds
+ * the execution status and have to be initialized to NIL. In most of
+ * cases it will be simple staticvariable in user code.
+ * When <bAction> is executed by a thread all other threads which call
+ * hb_threadOnce() are stopped even if they use different <onceControl>.
+ * Because hb_threadOnce() uses single recursive mutex then deadlock caused
+ * by cross call to hb_threadOnce() from different threads is not possible.
+ * If thread calls hb_threadOnce() with the same <onceControl> variable
+ * recursively from <bAction> then hb_threadOnce() returns immediately
+ * returning FALSE without executing <bAction>.
+ * This function returns logical value indicating if it was 1-st call to
+ * hb_threadOnce() for given <onceControl> variable
+ */
 HB_FUNC( HB_THREADONCE )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
