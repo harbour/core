@@ -405,7 +405,7 @@ METHOD OleValueMinus( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '+'
+      oErr:Operation     := '-'
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1082
       oErr:SubSystem     := "BASE"
