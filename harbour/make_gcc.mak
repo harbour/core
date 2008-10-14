@@ -176,9 +176,9 @@ endif
 # Harbour Compiler Flags
 #**********************************************************
 
-HBFLAGSCMN     := -i$(INCLUDE_DIR) -q0 -w3 -es2 -km -l $(PRG_USR)
+HBFLAGSCMN     := -i$(INCLUDE_DIR) -q0 -w3 -es2 -km -l $(PRG_USR) -b-
 ifeq ($(HB_BUILD_DEBUG),yes)
-HBFLAGSCMN     := $(HBFLAGSCMN) -b -l-
+HBFLAGSCMN     := $(HBFLAGSCMN) -l-
 endif
 HARBOURFLAGS   := -n $(HBFLAGSCMN)
 HARBOURFLAGSDLL:= -n1 $(HBFLAGSCMN)

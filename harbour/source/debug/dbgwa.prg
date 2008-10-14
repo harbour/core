@@ -50,8 +50,6 @@
  *
  */
 
-#pragma DEBUGINFO=OFF
-
 #include "common.ch"
 #include "setcurs.ch"
 #include "inkey.ch"

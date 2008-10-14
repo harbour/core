@@ -62,8 +62,6 @@
          the debugger output may interfere with the applications output
          redirection, and is also slower. [vszakats] */
 
-#pragma DEBUGINFO=OFF
-
 #include "hbclass.ch"
 #include "hbdebug.ch"   // for "nMode" of __dbgEntry
 #include "hbgtinfo.ch"
