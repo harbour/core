@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-15 01:40 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  - lib/b32
+  - lib/vc
+  - bin/b32
+  - bin/vc
+  - obj/b32
+  - obj/vc
+    - Removed dirs from SVN. They are automatically created 
+      by the build scripts.
+
 2008-10-15 01:39 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     ! clear HVM stack return value before use in initialization code
@@ -27,9 +37,8 @@
   * source/debug/dbgtmitm.prg
     + Added '#pragma DEBUGINFO=OFF' to debugger 
       sources. Otherwise compiling full Harbour with 
-      -b was causing an infinite loop. (this is now 
-      the default when building with 
-      'HB_BUILD_DEBUG=yes'.
+      -b was causing an infinite loop in app.
+      (-b is now default when building with 'HB_BUILD_DEBUG=yes').
 
   * source/rdd/nulsys/nulsys.c
     ! Added DBSELECTAREA(), DBSTRUCT(), HEADER(), 
