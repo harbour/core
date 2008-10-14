@@ -729,13 +729,13 @@ HB_FUNC( HB_THREADID )
    {
       pThread = hb_thParam( 1, 0 );
       if( pThread )
-         hb_retnint( ( HB_PTRDIFF ) pThread->th_no );
+         hb_retnint( pThread->th_no );
    }
    else
    {
       pThread = ( PHB_THREADSTATE ) hb_vmThreadState();
       if( pThread )
-         hb_retnint( ( HB_PTRDIFF ) pThread->th_no );
+         hb_retnint( pThread->th_no );
       else
          hb_retnint( 0 );
    }

@@ -8479,7 +8479,7 @@ HB_EXPORT void hb_xvmPopLocal( SHORT iLocal )
    hb_vmPopLocal( iLocal );
 }
 
-HB_EXPORT PHB_ITEM hb_xvmLocalPtr( int iLocal )
+static PHB_ITEM hb_xvmLocalPtr( int iLocal )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -8497,15 +8497,6 @@ HB_EXPORT PHB_ITEM hb_xvmLocalPtr( int iLocal )
        */
       return hb_codeblockGetRef( hb_stackSelfItem()->item.asBlock.value, ( LONG ) iLocal );
    }
-}
-
-HB_EXPORT PHB_ITEM hb_xvmStaticPtr( int iStatic )
-{
-   HB_STACK_TLS_PRELOAD
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmStaticPtr(%d)", iStatic));
-
-   return s_aStatics.item.asArray.value->pItems + hb_stackGetStaticsBase() + iStatic - 1;
 }
 
 HB_EXPORT void hb_xvmCopyLocals( int iDest, int iSource )

@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-15 00:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbxvm.h
+  * harbour/source/vm/hvm.c
+    - removed to unused functions
+
+  * harbour/source/vm/thread.c
+    - removed unnecessary casting
+
 2008-10-14 20:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/dbedit.prg
   * source/rtl/tgetint.prg
