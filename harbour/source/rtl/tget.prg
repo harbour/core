@@ -72,7 +72,7 @@
          and there is no public class function like Get(). There is 
          in XPP though. */ 
 
-#if defined(HB_C52_STRICT) && !defined(HB_COMPAT_XPP)
+#if defined( HB_C52_STRICT ) && !defined( HB_COMPAT_XPP )
 CREATE CLASS Get STATIC
 #else
 CREATE CLASS Get

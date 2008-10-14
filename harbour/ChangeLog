@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-14 20:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/dbedit.prg
+  * source/rtl/tgetint.prg
+  * source/rtl/tlabel.prg
+  * source/rtl/treport.prg
+    * Changed '&( "{||" + c + "}" )' expressions to 
+      hb_macroBlock() calls.
+      To me these places seemed safe to change, but 
+      please verify me.
+
+  * source/rtl/alert.prg
+  * source/rtl/tbcolumn.prg
+  * source/rtl/tget.prg
+    * Minor formatting.
+
 2008-10-14 19:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
     + Added hb_macroBlock()

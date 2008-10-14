@@ -185,7 +185,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       ENDIF
 
       // Execute the actual label run based on matching records
-      DBEval( { || ::ExecuteLabel() }, bFor, bWhile, nNext, nRecord, lRest )
+      DBEval( {|| ::ExecuteLabel() }, bFor, bWhile, nNext, nRecord, lRest )
 
       // Print the last band if there is one
       IF ::lOneMoreBand
@@ -436,7 +436,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
             AAdd( aLabel[ LBL_FIELDS ], {} )
 
             // Field expression
-            AAdd( aLabel[ LBL_FIELDS, i ], &( "{ || " + cFieldText + "}" ) )
+            AAdd( aLabel[ LBL_FIELDS, i ], hb_macroBlock( cFieldText ) )
 
             // Text of field
             AAdd( aLabel[ LBL_FIELDS, i ], cFieldText )

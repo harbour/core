@@ -71,11 +71,11 @@ FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
 
    IF bSetGet == NIL
       IF FieldPos( cVarName ) > 0
-         bSetGet := &( "{|| iif( PCount()==0, FIELD->" + cVarName + ", FIELD->" + cVarName + " := hb_PValue(1) ) }" )
+         bSetGet := hb_macroBlock( "iif(PCount()==0,FIELD->" + cVarName + ",FIELD->" + cVarName + ":=hb_PValue(1))" )
       ELSEIF __MVEXIST( cVarName )
-         bSetGet := {|_1| iif( _1 == NIL,  __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
+         bSetGet := {| _1 | iif( _1 == NIL, __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
       ELSE
-         bSetGet := &( "{|| iif( PCount()==0, " + cVarName + ", " + cVarName + " := hb_PValue(1) ) }" )
+         bSetGet := hb_macroBlock( "iif(PCount()==0," + cVarName + "," + cVarName + ":=hb_PValue(1))" )
       ENDIF
    ENDIF
 
@@ -92,11 +92,11 @@ FUNCTION __GETA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
 
    IF bGetArray == NIL
       IF FieldPos( cVarName ) > 0
-         bGetArray := &( "{|| FIELD->" + cVarName + "}" )
+         bGetArray := hb_macroBlock( "FIELD->" + cVarName )
       ELSEIF __MVEXIST( cVarName )
          bGetArray := {|| __MVGET( cVarName ) }
       ELSE
-         bGetArray := &( "{|| " + cVarName + "}" )
+         bGetArray := hb_macroBlock( cVarName )
       ENDIF
    ENDIF
 

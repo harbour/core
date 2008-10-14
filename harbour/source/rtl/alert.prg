@@ -92,7 +92,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       CASE ValType( xMessage ) == "L" ; cMessage := iif( xMessage, ".T.", ".F." )
       CASE ValType( xMessage ) == "O" ; cMessage := xMessage:className + " Object"
       CASE ValType( xMessage ) == "S" ; cMessage := "@" + xMessage:Name + "()"
-      CASE ValType( xMessage ) == "B" ; cMessage := "{||...}"
+      CASE ValType( xMessage ) == "B" ; cMessage := "{|| ... }"
       OTHERWISE                       ; cMessage := "NIL"
       ENDCASE
 

@@ -300,7 +300,7 @@ METHOD New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nReco
       ::aGroupTotals := Array( Len(::aReportData[RPT_GROUPS]) )
 
       // Execute the actual report based on matching records
-      DBEval( { || ::ExecuteReport() }, bFor, bWhile, nNext, nRecord, lRest )
+      DBEval( {|| ::ExecuteReport() }, bFor, bWhile, nNext, nRecord, lRest )
 
       // Generate any totals that may have been identified
       // Make a pass through all the groups
@@ -1073,7 +1073,7 @@ METHOD LoadReportFile( cFrmFile ) CLASS HBReportForm
 
          // Group expression
          aReport[ RPT_GROUPS ][ 1 ][ RGT_TEXT ] := cGroupExp
-         aReport[ RPT_GROUPS ][ 1 ][ RGT_EXP ] := &( "{ || " + cGroupExp + "}" )
+         aReport[ RPT_GROUPS ][ 1 ][ RGT_EXP ] := hb_macroBlock( cGroupExp )
          IF Used()
             aReport[ RPT_GROUPS ][ 1 ][ RGT_TYPE ] := ;
                            ValType( Eval( aReport[ RPT_GROUPS ][ 1 ][ RGT_EXP ] ) )
@@ -1099,7 +1099,7 @@ METHOD LoadReportFile( cFrmFile ) CLASS HBReportForm
 
          // Subgroup expression
          aReport[ RPT_GROUPS ][ 2 ][ RGT_TEXT ] := cSubGroupExp
-         aReport[ RPT_GROUPS ][ 2 ][ RGT_EXP ] := &( "{ || " + cSubGroupExp + "}" )
+         aReport[ RPT_GROUPS ][ 2 ][ RGT_EXP ] := hb_macroBlock( cSubGroupExp )
          IF Used()
             aReport[ RPT_GROUPS ][ 2 ][ RGT_TYPE ] := ;
                            ValType( Eval( aReport[ RPT_GROUPS ][ 2 ][ RGT_EXP ] ) )
@@ -1296,7 +1296,7 @@ METHOD GetColumn( cFieldsBuffer, nOffset ) CLASS HBReportForm
                FIELD_CONTENT_EXPR_OFFSET, 2))
    aColumn[ RCT_TEXT ] := ::GetExpr( nPointer )
    cExpr := aColumn[ RCT_TEXT ]
-   aColumn[ RCT_EXP ] := &( "{ || " + cExpr + "}" )
+   aColumn[ RCT_EXP ] := hb_macroBlock( cExpr )
 
    // Header expression
    nPointer := BIN2W(SubStr(cFieldsBuffer, nOffset +;

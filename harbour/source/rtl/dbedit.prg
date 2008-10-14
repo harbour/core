@@ -147,7 +147,7 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
          creating codeblocks which are able to _assign_ values, as dbEdit() 
          is a read-only function. [vszakats] */
       
-      bBlock := iif( Type( cBlock ) == "M", {|| "  <Memo>  " }, &( "{||" + cBlock + "}" ) )
+      bBlock := iif( Type( cBlock ) == "M", {|| "  <Memo>  " }, hb_macroBlock( cBlock ) )
 
       /* ; */
 
