@@ -2709,7 +2709,7 @@ Endif // Create and compile
    ELSEIF s_lMSVcc
 
       FWrite( s_nMakeFileHandle, ;
-         "CFLAG1 =  -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(SHELL)  $(CFLAGS)" +IIF( s_lMt, " -DHB_THREAD_SUPPORT " , "" ) + s_cEOL +;
+         "CFLAG1 =  -I$(INCLUDE_DIR) -W3 -nologo $(C_USR) $(SHELL) $(CFLAGS)" +IIF( s_lMt, " -DHB_THREAD_SUPPORT " , "" ) + s_cEOL +;
          "CFLAG2 =  -c" +" -I" + ALLTRIM( s_cUserInclude ) + " " + s_cEOL +;
          "RFLAGS = " + s_cEOL +;
          "LFLAGS = /LIBPATH:$(CC_DIR)\lib /LIBPATH1:$(HB_DIR)\lib /LIBPATH2:$(C4W)\lib"  +IIF(s_lMt, " /Nodefaultlib:LIBC "," /Nodefaultlib:LIBCMT " ) + s_cEOL +;
@@ -3882,7 +3882,7 @@ FUNCTION CreateLibMakeFile( cFile )
    ELSEIF s_lMSVcc
 
       FWrite( s_nMakeFileHandle, ;
-         "CFLAG1 =  -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(SHELL) $(CFLAGS)" + s_cEOL +;
+         "CFLAG1 =  -I$(INCLUDE_DIR) -W3 -nologo $(C_USR) $(SHELL) $(CFLAGS)" + s_cEOL +;
          "CFLAG2 =  -c -I" + ALLTRIM( s_cUserInclude ) + s_cEOL +;
          "RFLAGS = " + s_cEOL +;
          "LFLAGS = " + s_cEOL +;

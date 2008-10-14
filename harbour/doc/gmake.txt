@@ -159,7 +159,6 @@ For MSVC on Win95/WinNT:
          not set to unix
 
          For best results, in your copy of make_gnu.bat, also set:
-  C_USR=-TP
   HB_ARCHITECTURE   w32
   HB_COMPILER       msvc
   HB_GT_LIB         gtwin

@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-14 19:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+    + Added hb_macroBlock()
+
+  * source/rtl/langapi.c
+    * One error text changed to be more precise.
+
+  * doc/gmake.txt
+  * bin/bld.bat
+  * contrib/hbbtree/tests/bld_vc.bat
+  * contrib/examples/pp/bld_vc.bat
+  * contrib/examples/guestbk/bld_vc.bat
+  * contrib/examples/pe/bld_vc.bat
+  * contrib/examples/dbu/bld_vc.bat
+  * contrib/examples/hscript/bld_vc.bat
+  * utils/hbdoc/bld_vc.bat
+  * utils/hbmake/bld_vc.bat
+  * utils/hbmake/hbmake.prg
+    - Removed MSVC -TP switches.
+
 2008-10-14 11:51 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/source/vm/macro.c

@@ -157,7 +157,7 @@ static HB_LANG s_lang_en =
       "",
       "",
       "",
-      "Object Destructor Failure",
+      "Memory object destructor failure",
       "array access",
       "array assign",
       "array dimension",
