@@ -148,6 +148,10 @@ HB_FUNC( DBUSEAREA ) {}
 
 HB_FUNC( DBCLOSEAREA ) {}
 
+HB_FUNC( DBSELECTAREA ) {}
+
+HB_FUNC( DBSTRUCT ) {}
+
 HB_FUNC( DBGOTO ) { hb_retni( 0 ); }
 
 HB_FUNC( DBGOTOP ) {}
@@ -210,8 +214,14 @@ HB_FUNC( LASTREC ) { hb_retni( 0 ); }
 
 HB_FUNC( FCOUNT ) { hb_parni( 0 ); }
 
+HB_FUNC( RECSIZE ) { hb_retni( 0 ); }
 
-HB_FUNC( INDEXORD ) { hb_parni(1); }
+HB_FUNC( HEADER ) { hb_retni( 0 ); }
+
+HB_FUNC( LUPDATE ) { hb_retds( NULL ); }
+
+
+HB_FUNC( INDEXORD ) { hb_parni( 1 ); }
 
 HB_FUNC( INDEXKEY ) { hb_retc( NULL ); }
 

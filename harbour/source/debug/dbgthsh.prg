@@ -51,6 +51,7 @@
  *
  */
 
+#pragma DEBUGINFO=OFF
 
 #include "hbclass.ch"
 

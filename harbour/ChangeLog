@@ -8,6 +8,32 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-15 01:04 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/debug/dbgtobj.prg
+  * source/debug/dbgbrwsr.prg
+  * source/debug/dbgtwin.prg
+  * source/debug/dbgmenu.prg
+  * source/debug/dbgthsh.prg
+  * source/debug/tbrwtext.prg
+  * source/debug/dbgwa.prg
+  * source/debug/debugger.prg
+  * source/debug/dbghelp.prg
+  * source/debug/dbgtarr.prg
+  * source/debug/dbgtmenu.prg
+  * source/debug/dbgtmitm.prg
+    + Added '#pragma DEBUGINFO=OFF' to debugger 
+      sources. Otherwise compiling full Harbour with 
+      -b was causing an infinite loop. (this is now 
+      the default when building with 
+      'HB_BUILD_DEBUG=yes'.
+
+  * source/rdd/nulsys/nulsys.c
+    ! Added DBSELECTAREA(), DBSTRUCT(), HEADER(), 
+      RECSIZE(), LUPDATE()
+      so that programs can be built with -b and 
+      hbnulrdd.lib. hbdebug.lib/dgbwa.prg uses 
+      symbols above.
+
 2008-10-15 00:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbxvm.h
   * harbour/source/vm/hvm.c
