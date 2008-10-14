@@ -731,7 +731,7 @@ char * hb_macroTextSymbol( const char *szString, ULONG ulLength, BOOL *pfNewStri
  * NOTE: it can be called to implement an index key evaluation
  * use hb_macroRun() to evaluate a compiled pcode
  */
-HB_MACRO_PTR hb_macroCompile( char * szString )
+HB_MACRO_PTR hb_macroCompile( const char * szString )
 {
    HB_MACRO_PTR pMacro;
    int iStatus;
@@ -745,7 +745,7 @@ HB_MACRO_PTR hb_macroCompile( char * szString )
                        HB_MACRO_GEN_LIST | HB_MACRO_GEN_PARE;
    pMacro->uiNameLen = HB_SYMBOL_NAME_LEN;
    pMacro->status    = HB_MACRO_CONT;
-   pMacro->string    = szString;
+   pMacro->string    = ( char * ) szString;
    pMacro->length    = strlen( szString );
 
    iStatus = hb_macroParse( pMacro );
@@ -756,6 +756,36 @@ HB_MACRO_PTR hb_macroCompile( char * szString )
    }
 
    return pMacro;
+}
+
+static void hb_macroBlock( const char * szString, PHB_ITEM pItem )
+{
+   HB_MACRO_PTR pMacro = hb_macroCompile( szString );
+
+   if( pMacro )
+   {
+      pMacro->pCodeInfo->pCode[ pMacro->pCodeInfo->lPCodePos - 1 ] = HB_P_ENDBLOCK;
+
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+
+      pItem->item.asBlock.value = hb_codeblockMacroNew( pMacro->pCodeInfo->pCode,
+                                                        pMacro->pCodeInfo->lPCodePos );
+      pItem->type = HB_IT_BLOCK;
+      pItem->item.asBlock.paramcnt = 0;
+      pItem->item.asBlock.lineno = 0;
+      pItem->item.asBlock.hclass = 0;
+      pItem->item.asBlock.method = 0;
+
+      hb_macroDelete( pMacro );
+   }
+}
+
+HB_FUNC( HB_MACROBLOCK )
+{
+   const char * szMacro = hb_parc( 1 );
+   if( szMacro )
+      hb_macroBlock( szMacro, hb_stackReturnItem() );
 }
 
 /* This function handles a macro function calls, e.g. var :=&macro()

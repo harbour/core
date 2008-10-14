@@ -976,7 +976,7 @@ extern void   hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags ); /* assign a val
 extern void   hb_macroTextValue( HB_ITEM_PTR pItem ); /* macro text substitution */
 extern void   hb_macroPushSymbol( HB_ITEM_PTR pItem ); /* handle a macro function calls, e.g. var := &macro() */
 extern void   hb_macroRun( HB_MACRO_PTR pMacro ); /* executes pcode compiled by macro compiler */
-extern HB_MACRO_PTR hb_macroCompile( char * szString ); /* compile a string and return a pcode buffer */
+extern HB_MACRO_PTR hb_macroCompile( const char * szString ); /* compile a string and return a pcode buffer */
 extern void   hb_macroDelete( HB_MACRO_PTR pMacro ); /* release all memory allocated for macro evaluation */
 extern char * hb_macroTextSymbol( const char *szString, ULONG ulLength, BOOL *pfNewString ); /* substitute macro variables occurences within a given string and check if result is a valid function or variable name */
 extern char * hb_macroExpandString( const char *szString, ULONG ulLength, BOOL *pfNewString ); /* expands valid '&' operator */

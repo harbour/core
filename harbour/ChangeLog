@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-14 11:51 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/macro.c
+    * added missing const attribute to hb_macroCompile() parameter
+    + added new .prg function:
+         hb_macroBlock( <cExpr> ) -> <bCode>
+      which converts macro expression to codeblock. New codeblocks
+      do not inherit hb_macroBlock() caller scope/attributes.
+
 2008-10-14 08:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/dbu/bld_vc.bat
     ! Removed -TP C option.
