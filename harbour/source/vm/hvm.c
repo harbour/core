@@ -6013,6 +6013,8 @@ static void hb_vmTSVReference( PHB_ITEM pStatic )
 
    /* Use hb_stackReturnItem() as temporary item holder */
    pRefer = hb_stackReturnItem();
+   if( HB_IS_COMPLEX( pRefer ) )
+      hb_itemClear( pRefer );
    pRefer->type = HB_IT_BYREF | HB_IT_EXTREF;
    pRefer->item.asExtRef.value = ( void * ) pTSVRef;
    pRefer->item.asExtRef.func = &s_TSVExtRef;
@@ -7739,6 +7741,8 @@ BOOL hb_vmMsgReference( PHB_ITEM pObject, PHB_DYNS pMessage, PHB_DYNS pAccMsg )
    hb_itemMove( &pMsgRef->object, pObject );
 
    pRefer = hb_stackReturnItem();
+   if( HB_IS_COMPLEX( pRefer ) )
+      hb_itemClear( pRefer );
    pRefer->type = HB_IT_BYREF | HB_IT_EXTREF;
    pRefer->item.asExtRef.value = ( void * ) pMsgRef;
    pRefer->item.asExtRef.func = &s_MsgExtRef;
@@ -7866,7 +7870,7 @@ static void hb_vmMsgIndexReference( PHB_ITEM pRefer, PHB_ITEM pObject, PHB_ITEM 
    pMsgIdxRef->object.type = HB_IT_NIL;
    pMsgIdxRef->index.type = HB_IT_NIL;
    hb_itemCopy( &pMsgIdxRef->object, HB_IS_STRING( pObject ) ? pRefer : pObject );
-   hb_itemCopy( &pMsgIdxRef->index, pIndex );
+   hb_itemMove( &pMsgIdxRef->index, pIndex );
 
    pIndex->type = HB_IT_BYREF | HB_IT_EXTREF;
    pIndex->item.asExtRef.value = ( void * ) pMsgIdxRef;
