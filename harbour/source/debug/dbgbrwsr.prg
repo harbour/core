@@ -55,6 +55,7 @@
 #pragma DEBUGINFO=OFF
 
 #include "hbclass.ch"
+#include "common.ch"
 
 /* HBDbBrowser
  *
@@ -235,33 +236,21 @@ METHOD Resize( nTop, nLeft, nBottom, nRight )
 
 CREATE CLASS HBDbColumn
 
-   VAR nWidth       PROTECTED
-   VAR bBlock       PROTECTED
-   VAR aDefColor    PROTECTED INIT { 1, 2 }
-
    EXPORTED:
 
-   METHOD block( bBlock ) SETGET                     /* Code block to retrieve data for the column */
-   METHOD defColor( aDefColor ) SETGET               /* Array of numeric indexes into the color table */
-   METHOD width( nWidth ) SETGET                     /* Column display width */
-                                                     
-   METHOD New( cHeading, bBlock )                    /* NOTE: This method is a Harbour extension [vszakats] */
+   VAR block      AS CODEBLOCK                  /* Code block to retrieve data for the column */
+   VAR colorBlock AS CODEBLOCK INIT {|| NIL }   /* column color block */
+   VAR defColor   AS ARRAY     INIT { 1, 2 }    /* Array of numeric indexes into the color table */
+   VAR width      AS USUAL                      /* Column display width */
+
+   METHOD New( cHeading, bBlock )               /* NOTE: This method is a Harbour extension [vszakats] */
 
 ENDCLASS
-
-METHOD block( bBlock ) CLASS HBDbColumn
-   RETURN iif( ISBLOCK( bBlock ), ::bBlock := bBlock, ::bBlock )
-
-METHOD defColor( aDefColor ) CLASS HBDbColumn
-   RETURN iif( ISARRAY( aDefColor ), ::aDefColor := aDefColor, ::aDefColor )
-
-METHOD width( nWidth ) CLASS HBDbColumn
-   RETURN iif( ISNUMBER( nWidth ), ::nWidth := nWidth, ::nWidth )
 
 METHOD New( cHeading, bBlock ) CLASS HBDbColumn
 
    HB_SYMBOL_UNUSED( cHeading )
-   ::bBlock := bBlock
+   ::block := bBlock
 
    RETURN Self
 
