@@ -63,6 +63,7 @@
          redirection, and is also slower. [vszakats] */
 
 #pragma DEBUGINFO=OFF
+#define HB_NO_READDBG
 
 #include "hbclass.ch"
 #include "hbdebug.ch"   // for "nMode" of __dbgEntry
@@ -360,7 +361,7 @@ CREATE CLASS HBDebugger
    METHOD VarSetValue( aVar, uValue )
 
    METHOD ResizeWindows( oWindow )
-   METHOD NotSupported() INLINE Alert( "Not implemented yet!" )
+   METHOD NotSupported() INLINE __dbgAlert( "Not implemented yet!" )
 
    METHOD OpenDebuggerWindow()
    METHOD CloseDebuggerWindow()
@@ -517,7 +518,7 @@ METHOD BuildBrowseStack() CLASS HBDebugger
 
       ::oBrwStack:Cargo := 1 // Actual highligthed row
 
-      ::oBrwStack:AddColumn( TBColumnNew( "", { || iif( Len( ::aProcStack ) > 0,;
+      ::oBrwStack:AddColumn( HBDbColumnNew( "", { || iif( Len( ::aProcStack ) > 0,;
             PadC( ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_FUNCTION ], 14 ), Space( 14 ) ) } ) )
    ENDIF
 
@@ -717,7 +718,7 @@ METHOD Colors() CLASS HBDebugger
    LOCAL oCol
 
    IF ::lMonoDisplay
-      Alert( "Monochrome display" )
+      __dbgAlert( "Monochrome display" )
       RETURN NIL
    ENDIF
 
@@ -728,10 +729,10 @@ METHOD Colors() CLASS HBDebugger
    oBrwColors:skipBlock := { | nPos | ( nPos := ArrayBrowseSkip( nPos, oBrwColors ), oBrwColors:cargo[ 1 ] := ;
    oBrwColors:cargo[ 1 ] + nPos, nPos ) }
 
-   oBrwColors:AddColumn( oCol := TBColumnNew( "", { || PadR( aColors[ oBrwColors:Cargo[ 1 ] ], 14 ) } ) )
+   oBrwColors:AddColumn( oCol := HBDbColumnNew( "", { || PadR( aColors[ oBrwColors:Cargo[ 1 ] ], 14 ) } ) )
    oCol:defColor := { 1, 2 }
    AAdd( oBrwColors:Cargo[ 2 ], aColors )
-   oBrwColors:AddColumn( oCol := TBColumnNew( "",;
+   oBrwColors:AddColumn( oCol := HBDbColumnNew( "",;
                        { || PadR( '"' + ::aColors[ oBrwColors:Cargo[ 1 ] ] + '"', nWidth - 15 ) } ) )
    AAdd( oBrwColors:Cargo[ 2 ], aColors )
    oCol:defColor := { 1, 3 }
@@ -1114,14 +1115,14 @@ METHOD EditColor( nColor, oBrwColors ) CLASS HBDebugger
 #ifndef HB_NO_READDBG
    SetCursor( SC_NORMAL )
    @ Row(), Col() + 15 GET cColor COLOR SubStr( ::ClrModal(), 5 ) ;
-      VALID iif( Type( cColor ) != "C", ( Alert( "Must be string" ), .F. ), .T. )
+      VALID iif( Type( cColor ) != "C", ( __dbgAlert( "Must be string" ), .F. ), .T. )
 
    READ
    SetCursor( SC_NONE )
 #else
    cColor := getdbginput( Row(), Col() + 15, cColor, ;
                            { | cColor | iif( Type( cColor ) != "C", ;
-                                 ( Alert( "Must be string" ), .F. ), .T. ) }, ;
+                                 ( __dbgAlert( "Must be string" ), .F. ), .T. ) }, ;
                            SubStr( ::ClrModal(), 5 ) )
 #endif
 
@@ -1151,14 +1152,14 @@ METHOD EditSet( nSet, oBrwSets ) CLASS HBDebugger
 #ifndef HB_NO_READDBG
    SetCursor( SC_NORMAL )
    @ Row(), Col() + 13 GET cSet COLOR SubStr( ::ClrModal(), 5 ) ;
-      VALID iif( Type( cSet ) != cType, ( Alert( "Must be of type '" + cType + "'" ), .F. ), .T. )
+      VALID iif( Type( cSet ) != cType, ( __dbgAlert( "Must be of type '" + cType + "'" ), .F. ), .T. )
 
    READ
    SetCursor( SC_NONE )
 #else
    cSet := getdbginput( Row(), Col() + 13, cSet, ;
                { | cSet | iif( Type( cSet ) != cType, ;
-                  ( Alert( "Must be of type '" + cType + "'" ), .F. ), .T. ) }, ;
+                  ( __dbgAlert( "Must be of type '" + cType + "'" ), .F. ), .T. ) }, ;
                SubStr( ::ClrModal(), 5 ) )
 #endif
 
@@ -1189,7 +1190,7 @@ METHOD EditVar( nVar ) CLASS HBDebugger
       ::InputBox( cVarName, uVarValue, NIL, .F. )
    ELSE
       cVarStr := ::InputBox( cVarName, __dbgValToStr( uVarValue ),;
-                { | u | iif( Type( u ) == "UE", ( Alert( "Expression error" ), .F. ), .T. ) } )
+                { | u | iif( Type( u ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
    ENDIF
 
    IF LastKey() != K_ESC
@@ -1200,7 +1201,7 @@ METHOD EditVar( nVar ) CLASS HBDebugger
          IF Len( uVarValue ) > 0
             __DbgArrays( uVarValue, cVarName )
          ELSE
-            Alert( "Array is empty" )
+            __dbgAlert( "Array is empty" )
          ENDIF
 
       CASE Upper( Left( cVarStr, 5 ) ) == "CLASS"
@@ -1210,7 +1211,7 @@ METHOD EditVar( nVar ) CLASS HBDebugger
          BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
             ::VarSetValue( ::aVars[ nVar ], &cVarStr )
          RECOVER USING oErr
-            Alert( oErr:description )
+            __dbgAlert( oErr:description )
          END SEQUENCE
       ENDCASE
    ENDIF
@@ -1602,14 +1603,14 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
          CASE LastKey() == K_ENTER
             IF cType == "A"
                IF Len( uValue ) == 0
-                  Alert( "Array is empty" )
+                  __dbgAlert( "Array is empty" )
                ELSE
                   __DbgArrays( uValue, cMsg )
                ENDIF
 
             ELSEIF cType == "H"
                IF Len( uValue ) == 0
-                  Alert( "Hash is empty" )
+                  __dbgAlert( "Hash is empty" )
                ELSE
                   __DbgHashes( uValue, cMsg )
                ENDIF
@@ -1618,11 +1619,11 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
                __DbgObject( uValue, cMsg )
 
             ELSE
-               Alert( "Value cannot be edited" )
+               __dbgAlert( "Value cannot be edited" )
             ENDIF
 
          OTHERWISE
-            Alert( "Value cannot be edited" )
+            __dbgAlert( "Value cannot be edited" )
          ENDCASE
       ENDDO
 
@@ -1965,7 +1966,7 @@ METHOD Open() CLASS HBDebugger
       IF ! File( cFileName ) .AND. ! Empty( ::cPathForFiles )
          cRealName := ::LocatePrgPath( cFileName )
          IF Empty( cRealName )
-           Alert( "File '" + cFileName + "' not found!" )
+           __dbgAlert( "File '" + cFileName + "' not found!" )
            RETURN NIL
          ENDIF
          cFileName := cRealName
@@ -2052,12 +2053,12 @@ METHOD OSShell() CLASS HBDebugger
          cShell := GetEnv( "SHELL" )
          hb_Run( cShell )
       ELSE
-         Alert( "Not implemented yet!" )
+         __dbgAlert( "Not implemented yet!" )
       ENDIF
 
    RECOVER USING oE
 
-      Alert( "Error: " + oE:description )
+      __dbgAlert( "Error: " + oE:description )
 
    END SEQUENCE
 
@@ -2702,7 +2703,7 @@ METHOD ShowVars() CLASS HBDebugger
                                ::oBrwVars:Cargo[ 1 ] - nOld }
 
       nWidth := ::oWndVars:nWidth() - 1
-      oCol := TBColumnNew( "", ;
+      oCol := HBDbColumnNew( "", ;
            { || PadR( LTrim( Str( ::oBrwVars:Cargo[ 1 ] - 1 ) ) + ") " + ;
                       ::VarGetInfo( ::aVars[ Max( ::oBrwVars:Cargo[ 1 ], 1 ) ] ), ;
                       ::oWndVars:nWidth() - 2 ) } )
@@ -2965,10 +2966,10 @@ METHOD ViewSets() CLASS HBDebugger
    oBrwSets:goBottomBlock := { || oBrwSets:cargo[ 1 ] := Len( oBrwSets:cargo[ 2 ][ 1 ] ) }
    oBrwSets:skipBlock := { | nPos | ( nPos := ArrayBrowseSkip( nPos, oBrwSets ), oBrwSets:cargo[ 1 ] := ;
    oBrwSets:cargo[ 1 ] + nPos, nPos ) }
-   oBrwSets:AddColumn( oCol := TBColumnNew( "", { || PadR( aSets[ oBrwSets:cargo[ 1 ] ], 12 ) } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", { || PadR( aSets[ oBrwSets:cargo[ 1 ] ], 12 ) } ) )
    AAdd( oBrwSets:Cargo[ 2 ], aSets )
    ocol:defcolor := { 1, 2 }
-   oBrwSets:AddColumn( oCol := TBColumnNew( "",;
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "",;
                        { || PadR( __dbgValToStr( Set( oBrwSets:cargo[ 1 ]  ) ), nWidth - 13 ) } ) )
    ocol:defcolor := { 1, 3 }
    ocol:width := 40
@@ -3165,7 +3166,7 @@ METHOD WatchpointsShow() CLASS HBDebugger
                                iif( Len(::aWatch) > 0, ::oBrwPnt:Cargo[ 1 ] - nOld, 0 ) }
 
       nWidth := ::oWndPnt:nWidth() - 1
-      oCol := TBColumnNew( "", ;
+      oCol := HBDbColumnNew( "", ;
          { || PadR( iif( Len( ::aWatch ) > 0, ;
                        LTrim( Str( ::oBrwPnt:Cargo[ 1 ] - 1 ) ) + ") " + ;
                        ::WatchGetInfo( Max( ::oBrwPnt:Cargo[ 1 ], 1 ) ), ;
@@ -3429,3 +3430,6 @@ FUNCTION __dbgValToStr( uVal )
    ENDCASE
 
    RETURN "U"
+
+FUNCTION __dbgAlert( cMessage )
+   RETURN hb_gtAlert( cMessage, { "Ok" }, "W+/R", "W+/B" )

@@ -52,6 +52,7 @@
  */
 
 #pragma DEBUGINFO=OFF
+#define HB_NO_READDBG
 
 #include "hbclass.ch"
 
@@ -116,7 +117,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
    oBrwSets:Cargo := { 1, {} } // Actual highligthed row
    AAdd( oBrwSets:Cargo[ 2 ], hHash )
 
-   oBrwSets:AddColumn( oCol := TBColumnNew( "", { || ::hashName + "[" + HashKeyString( hHash, oBrwSets:cargo[ 1 ] ) + "]" } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", { || ::hashName + "[" + HashKeyString( hHash, oBrwSets:cargo[ 1 ] ) + "]" } ) )
 
    // calculate max key length
    nKeyLen := 0
@@ -125,7 +126,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
    oCol:DefColor := { 1, 2 }
    nColWidth := oCol:Width
 
-   oBrwSets:AddColumn( oCol := TBColumnNew( "" ,{ || PadR( __dbgValToStr( hb_HValueAt( hHash, oBrwSets:cargo[ 1 ] ) ), nWidth - nColWidth - 1 ) } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "" ,{ || PadR( __dbgValToStr( hb_HValueAt( hHash, oBrwSets:cargo[ 1 ] ) ), nWidth - nColWidth - 1 ) } ) )
 
    /* 09/08/2004 - <maurilio.longo@libero.it>
                    Setting a fixed width like it is done in the next line of code wich I've
@@ -185,7 +186,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbHash
 
    // create a corresponding GET
    @ Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1 GET cValue ;
-      VALID iif( Type( cValue ) == "UE", ( Alert( "Expression error" ), .F. ), .T. )
+      VALID iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. )
 
    READ
 
@@ -193,7 +194,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbHash
       BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
          HB_HValueAt( pItem, nSet, &cValue )
       RECOVER USING oErr
-         Alert( oErr:description )
+         __dbgAlert( oErr:description )
       END SEQUENCE
    ENDIF
 
@@ -250,7 +251,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
       IF ValType( uValue ) == "H"
 
          IF Len( uValue ) == 0
-            Alert( "Hash is empty" )
+            __dbgAlert( "Hash is empty" )
          ELSE
             SetPos( ownd:nBottom, ownd:nLeft )
             ::aWindows[ ::nCurwindow ]:lFocused := .F.
@@ -268,7 +269,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
             ENDIF
          ENDIF
       ELSEIF ISBLOCK( uValue ) .OR. ValType( uValue ) == "P"
-         Alert( "Value cannot be edited" )
+         __dbgAlert( "Value cannot be edited" )
       ELSE
          IF ::lEditable
             oBrwSets:RefreshCurrent()
@@ -282,7 +283,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
             oBrwSets:RefreshCurrent()
             oBrwSets:ForceStable()
          ELSE
-            Alert( "Value cannot be edited" )
+            __dbgAlert( "Value cannot be edited" )
          ENDIF
       ENDIF
 

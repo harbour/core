@@ -136,7 +136,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 #endif
    ENDIF
 
-   RETURN hb_gtAlert( cMessage, aOptionsOK, cColorNorm, cColorHigh, nDelay );
+   RETURN hb_gtAlert( cMessage, aOptionsOK, cColorNorm, cColorHigh, nDelay )
 
 #ifdef HB_C52_UNDOC
 

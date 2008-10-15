@@ -71,6 +71,8 @@
 /* WARNING: Can not use the preprocessor, otherwise 
             it will auto inherit from itself. */
 
+#pragma DEBUGINFO=OFF
+
 #include "common.ch"
 #include "hboo.ch"
 #include "error.ch"

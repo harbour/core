@@ -51,6 +51,7 @@
  */
 
 #pragma DEBUGINFO=OFF
+#define HB_NO_READDBG
 
 #include "hbclass.ch"
 
@@ -149,13 +150,13 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
                           Max( 1, ::arrayindex + nSkip ) ), ::arrayindex - nPos }
 
    nMaxLen := ArrayMaxLen( ::AllNames )
-   oBrwSets:AddColumn( oCol := TBColumnNew( "",;
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "",;
                     { || PadR( ::ArrayReference[ ::arrayindex, 1 ], nMaxLen ) } ) )
    oCol:width := nMaxLen
    oCol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze := 1
 
-   oBrwSets:AddColumn( oCol := TBColumnNew( "", { || iif( ISCHARACTER( ::ArrayReference[ ::ArrayIndex, 2 ] ) .AND. !::ArrayReference[ ::ArrayIndex, 3 ],;
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", { || iif( ISCHARACTER( ::ArrayReference[ ::ArrayIndex, 2 ] ) .AND. !::ArrayReference[ ::ArrayIndex, 3 ],;
       ::ArrayReference[ ::ArrayIndex, 2 ],;
       PadR( __dbgValToStr( __dbgObjGetValue( ::TheObj, ::ArrayReference[ ::arrayindex, 1 ] ) ), nWidth  - 12 ) ) } ) )
 
@@ -198,7 +199,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
    // create a corresponding GET
    cValue := __dbgObjGetValue( ::TheObj, pitem[ nSet, 1 ], @lCanAcc )
    IF !lCanAcc
-      Alert( cValue )
+      __dbgAlert( cValue )
       RETURN NIL
    ENDIF
    cValue := PadR( __dbgValToStr( cValue ), column:Width )
@@ -211,7 +212,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
    SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
    @ Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1 GET cValue ;
-       VALID iif( Type( cValue ) == "UE", ( Alert( "Expression error" ), .F. ), .T. )
+       VALID iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. )
 
    READ
 
@@ -224,7 +225,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
       BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
          __dbgObjSetValue( ::TheObj, pitem[ nSet, 1 ], &cValue )
       RECOVER USING oErr
-         Alert( oErr:description )
+         __dbgAlert( oErr:description )
       END SEQUENCE
    ENDIF
 
@@ -315,7 +316,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
                   !aArray[ nSet, 3 ] ) .OR. ;
                 ISBLOCK( aArray[ nSet, 2 ] ) .OR. ;
                 ValType( aArray[ nSet, 2 ] ) == "P"
-            Alert( "Value cannot be edited" )
+            __dbgAlert( "Value cannot be edited" )
          ELSE
             IF ::lEditable
                oBrwSets:RefreshCurrent()
@@ -323,7 +324,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
                oBrwSets:RefreshCurrent()
                oBrwSets:ForceStable()
             else
-               Alert( "Value cannot be edited" )
+               __dbgAlert( "Value cannot be edited" )
             ENDIF
          ENDIF
       ENDIF
@@ -384,7 +385,7 @@ STATIC FUNCTION __dbgObjSetValue( oObject, cVar, xValue )
          /* Try to access variables using class code level */
          __dbgSENDMSG( 0, oObject, "_" + cVar, xValue )
       RECOVER USING oErr
-         Alert( oErr:description )
+         __dbgAlert( oErr:description )
       END SEQUENCE
    END SEQUENCE
 

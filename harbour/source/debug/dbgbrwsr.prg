@@ -107,7 +107,7 @@ CREATE CLASS HBDbBrowser
    METHOD PageDown()           INLINE ::MoveCursor( ::rowCount )
    METHOD PageUp()             INLINE ::MoveCursor( -::rowCount )
    METHOD RefreshAll()         INLINE AFill( ::aRowState, .F. ), Self
-   METHOD RefreshCurrent()     INLINE IIf( ::rowCount > 0, ::aRowState[ ::rowPos ] := .F., ), Self
+   METHOD RefreshCurrent()     INLINE iif( ::rowCount > 0, ::aRowState[ ::rowPos ] := .F., ), Self
    METHOD Resize( nTop, nLeft, nBottom, nRight )
    METHOD Stabilize()          INLINE ::ForceStable()
    METHOD Up()                 INLINE ::MoveCursor( -1 )
@@ -136,7 +136,7 @@ METHOD MoveCursor( nSkip )
 
    nSkipped := ::GoTo( ::rowPos + ::nFirstVisible - 1 + nSkip )
    IF !::hitBottom .OR. Abs( nSkipped ) > 0
-      IF IIf( nSkipped > 0, ::rowPos + nSkipped <= ::rowCount, ::rowPos + nSkipped >= 1 )
+      IF iif( nSkipped > 0, ::rowPos + nSkipped <= ::rowCount, ::rowPos + nSkipped >= 1 )
          ::RefreshCurrent()
          ::rowPos += nSkipped
          ::RefreshCurrent()
@@ -164,7 +164,7 @@ METHOD ForceStable()
                IF nColX <= ::nRight
                   oCol := ::aColumns[ nCol ]
                   xData := Eval( oCol:block )
-                  nClr := IIf( nRow == ::rowPos, 2, 1 )
+                  nClr := iif( nRow == ::rowPos, 2, 1 )
                   aClr := Eval( oCol:colorBlock, xData )
                   IF VALTYPE( aClr ) == "A"
                      nClr := aClr[ nClr ]
@@ -176,7 +176,7 @@ METHOD ForceStable()
                   ELSE
                      nWid := oCol:width
                   ENDIF
-                  DispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + IIf( nCol < Len( ::aColumns ), " ", "" ), ::aColorSpec[ nClr ] )
+                  DispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( nCol < Len( ::aColumns ), " ", "" ), ::aColorSpec[ nClr ] )
                   nColX += nWid + 1
                ENDIF
             NEXT
@@ -232,3 +232,38 @@ METHOD Resize( nTop, nLeft, nBottom, nRight )
    ENDIF
       
    RETURN self
+
+CREATE CLASS HBDbColumn
+
+   VAR nWidth       PROTECTED
+   VAR bBlock       PROTECTED
+   VAR aDefColor    PROTECTED INIT { 1, 2 }
+
+   EXPORTED:
+
+   METHOD block( bBlock ) SETGET                     /* Code block to retrieve data for the column */
+   METHOD defColor( aDefColor ) SETGET               /* Array of numeric indexes into the color table */
+   METHOD width( nWidth ) SETGET                     /* Column display width */
+                                                     
+   METHOD New( cHeading, bBlock )                    /* NOTE: This method is a Harbour extension [vszakats] */
+
+ENDCLASS
+
+METHOD block( bBlock ) CLASS HBDbColumn
+   RETURN iif( ISBLOCK( bBlock ), ::bBlock := bBlock, ::bBlock )
+
+METHOD defColor( aDefColor ) CLASS HBDbColumn
+   RETURN iif( ISARRAY( aDefColor ), ::aDefColor := aDefColor, ::aDefColor )
+
+METHOD width( nWidth ) CLASS HBDbColumn
+   RETURN iif( ISNUMBER( nWidth ), ::nWidth := nWidth, ::nWidth )
+
+METHOD New( cHeading, bBlock ) CLASS HBDbColumn
+
+   HB_SYMBOL_UNUSED( cHeading )
+   ::bBlock := bBlock
+
+   RETURN Self
+
+FUNCTION HBDbColumnNew( cHeading, bBlock )
+   RETURN HBDbColumn():New( cHeading, bBlock )

@@ -108,14 +108,14 @@ ENDCLASS
 
 METHOD New() CLASS HBDbMenu
 
-   local nCol := 0
+   LOCAL nCol := 0
 
-   if ::aMenus == nil
+   IF ::aMenus == NIL
       ::aMenus := {}
-      ::lPopup := .f.
-   else
-      ::lPopup := .t.
-   endif
+      ::lPopup := .F.
+   ELSE
+      ::lPopup := .T.
+   ENDIF
 
    ::nTop         := 0
    ::nLeft        := 0
@@ -127,380 +127,379 @@ METHOD New() CLASS HBDbMenu
 
    AAdd( ::aMenus, Self )
 
-return Self
+   RETURN Self
 
 METHOD AddItem( oMenuItem ) CLASS HBDbMenu
 
-   local oLastMenu := ATail( ::aMenus )
-   local oLastMenuItem
+   LOCAL oLastMenu := ATail( ::aMenus )
+   LOCAL oLastMenuItem
 
-   if oLastMenu:lPopup
+   IF oLastMenu:lPopup
       oMenuItem:nRow := Len( oLastMenu:aItems )
       oMenuItem:nCol := oLastMenu:nLeft + 1
-   else
+   ELSE
       oMenuItem:nRow := 0
-      if Len( oLastMenu:aItems ) > 0
+      IF Len( oLastMenu:aItems ) > 0
          oLastMenuItem := ATail( oLastMenu:aItems )
          oMenuItem:nCol := oLastMenuItem:nCol + ;
                           Len( StrTran( oLastMenuItem:cPrompt, "~", "" ) )
-      else
+      ELSE
          oMenuItem:nCol := 0
-      endif
-   endif
+      ENDIF
+   ENDIF
 
    AAdd( ATail( ::aMenus ):aItems, oMenuItem )
 
-return oMenuItem
+   RETURN oMenuItem
 
 METHOD Build() CLASS HBDbMenu
 
-   local n
-   local nPos := 0
-   local oMenuItem
+   LOCAL n
+   LOCAL nPos := 0
+   LOCAL oMenuItem
 
-   if Len( ::aMenus ) == 1           // pulldown menu
-      for n := 1 to Len( ::aItems )
+   IF Len( ::aMenus ) == 1           // pulldown menu
+      FOR n := 1 TO Len( ::aItems )
          ::aItems[ n ]:nRow := 0
          ::aItems[ n ]:nCol := nPos
          nPos += Len( StrTran( ::aItems[ n ]:cPrompt, "~", "" ) )
-      next
-   else
+      NEXT
+   ELSE
       oMenuItem := ATail( ::aMenus[ Len( ::aMenus ) - 1 ]:aItems )
       ::nTop    := oMenuItem:nRow + 1
       ::nLeft   := oMenuItem:nCol
       nPos := ::nLeft
-      for n := 1 to Len( ::aItems )
+      FOR n := 1 TO Len( ::aItems )
          ::aItems[ n ]:nRow := ::nTop + n
          ::aItems[ n ]:nCol := ::nLeft + 1
          nPos := Max( nPos, ::nLeft + Len( StrTran( ::aItems[ n ]:cPrompt, "~", "" ) ) + 1 )
-      next
+      NEXT
       ::nRight  := nPos + 1
       ::nBottom := ::nTop + Len( ::aItems ) + 1
-      for n := 1 to Len( ::aItems )
-         if ::aItems[ n ]:cPrompt != "-"
+      FOR n := 1 TO Len( ::aItems )
+         IF ::aItems[ n ]:cPrompt != "-"
             ::aItems[ n ]:cPrompt := " " + PadR( ::aItems[ n ]:cPrompt, ::nRight - ::nLeft - 1 )
-         endif
-      next
+         ENDIF
+      NEXT
       ATail( ::aMenus[ Len( ::aMenus ) - 1 ]:aItems ):bAction := ATail( ::aMenus )
       ::aMenus := ASize( ::aMenus, Len( ::aMenus ) - 1 )
-   endif
+   ENDIF
 
-return nil
+   RETURN NIL
 
 METHOD ClosePopup( nPopup ) CLASS HBDbMenu
 
-   local oPopup
+   LOCAL oPopup
 
-   if nPopup != 0
+   IF nPopup != 0
       oPopup := ::aItems[ nPopup ]:bAction
-      if ValType( oPopup ) == "O"
+      IF ISOBJECT( oPopup )
          RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 2,;
                      oPopup:cBackImage )
-         oPopup:cBackImage := nil
-      endif
+         oPopup:cBackImage := NIL
+      ENDIF
       ::aItems[ nPopup ]:Display( ::cClrPopup, ::cClrHotKey )
-   endif
+   ENDIF
 
-return nil
+   RETURN NIL
 
 METHOD DeHilite() CLASS HBDbMenu
 
-   local oMenuItem := ::aItems[ ::nOpenPopup ]
+   LOCAL oMenuItem := ::aItems[ ::nOpenPopup ]
 
    oMenuItem:Display( ::cClrPopup, ::cClrHotKey )
 
-return nil
+   RETURN NIL
 
 METHOD Display() CLASS HBDbMenu
 
-   local n
+   LOCAL n
 
    SetColor( ::cClrPopup )
 
-   if ! ::lPopup
+   IF ! ::lPopup
       DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
       SetPos( 0, 0 )
-   else
+   ELSE
       ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
       @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX B_SINGLE
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
-   endif
+   ENDIF
 
-   for n := 1 to Len( ::aItems )
-      if ::aItems[ n ]:cPrompt == "-"  // Separator
+   FOR n := 1 TO Len( ::aItems )
+      IF ::aItems[ n ]:cPrompt == "-"  // Separator
          DispOutAt( ::aItems[ n ]:nRow, ::nLeft,;
             Chr( 195 ) + Replicate( Chr( 196 ), ::nRight - ::nLeft - 1 ) + Chr( 180 ) )
-      else
+      ELSE
          ::aItems[ n ]:Display( ::cClrPopup, ::cClrHotKey )
-      endif
-   next
+      ENDIF
+   NEXT
 
-return nil
+   RETURN NIL
 
 METHOD EvalAction() CLASS HBDbMenu
 
-   local oPopup, oMenuItem
+   LOCAL oPopup, oMenuItem
 
    oPopup := ::aItems[ ::nOpenPopup ]:bAction
    oMenuItem := oPopup:aItems[ oPopup:nOpenPopup ]
 
-   if oMenuItem:bAction != nil
+   IF oMenuItem:bAction != NIL
       ::Close()
       Eval( oMenuItem:bAction, oMenuItem )
-   endif
+   ENDIF
 
-return nil
+   RETURN NIL
 
 METHOD GetHotKeyPos( cKey ) CLASS HBDbMenu
 
-   local n
+   LOCAL n
 
-   for n := 1 to Len( ::aItems )
-      if Upper( SubStr( ::aItems[ n ]:cPrompt,;
+   FOR n := 1 TO Len( ::aItems )
+      IF Upper( SubStr( ::aItems[ n ]:cPrompt,;
          At( "~", ::aItems[ n ]:cPrompt ) + 1, 1 ) ) == cKey
-         return n
-      endif
-   next
+         RETURN n
+      ENDIF
+   NEXT
 
-return 0
+   RETURN 0
 
 METHOD GetItemOrdByCoors( nRow, nCol ) CLASS HBDbMenu
 
-   local n
+   LOCAL n
 
-   for n := 1 to Len( ::aItems )
-      if ::aItems[ n ]:nRow == nRow .and. nCol >= ::aItems[ n ]:nCol .and. ;
+   FOR n := 1 TO Len( ::aItems )
+      IF ::aItems[ n ]:nRow == nRow .AND. nCol >= ::aItems[ n ]:nCol .AND. ;
          nCol <= ::aItems[ n ]:nCol + Len( ::aItems[ n ]:cPrompt ) - 2
-         return n
-      endif
-   next
+         RETURN n
+      ENDIF
+   NEXT
 
-return 0
+   RETURN 0
 
 METHOD GetItemByIdent( uIdent ) CLASS HBDbMenu
   
-   local n
-   local oItem
+   LOCAL n
+   LOCAL oItem
   
-   for n := 1 to Len( ::aItems )
+   FOR n := 1 TO Len( ::aItems )
       IF ISOBJECT( ::aItems[ n ]:bAction )
          oItem := ::aItems[ n ]:bAction:GetItemByIdent( uIdent )
          IF oItem != NIL
             RETURN oItem
          ENDIF
       ELSE
-         if VALTYPE( ::aItems[ n ]:Ident ) == VALTYPE( uIdent ) .AND.;
+         IF VALTYPE( ::aItems[ n ]:Ident ) == VALTYPE( uIdent ) .AND.;
             ::aItems[ n ]:Ident == uIdent
-            return ::aItems[ n ]
+            RETURN ::aItems[ n ]
          ENDIF
-      endif
-   next
+      ENDIF
+   NEXT
 
-return nil
+   RETURN NIL
 
 METHOD GoBottom() CLASS HBDbMenu
 
-   local oPopup
+   LOCAL oPopup
 
-   if ::IsOpen()
+   IF ::IsOpen()
       oPopup := ::aItems[ ::nOpenPopup ]:bAction
       oPopup:DeHilite()
       oPopup:ShowPopup( Len( oPopup:aItems ) )
-   endif
+   ENDIF
 
-return nil
+   RETURN NIL
 
 METHOD GoLeft() CLASS HBDbMenu
 
-   local oMenuItem := ::aItems[ ::nOpenPopup ]
+   LOCAL oMenuItem := ::aItems[ ::nOpenPopup ]
 
-   if ::nOpenPopup != 0
-      if ! ::lPopup
+   IF ::nOpenPopup != 0
+      IF ! ::lPopup
          ::ClosePopup( ::nOpenPopup )
-      else
+      ELSE
          oMenuItem:Display( ::cClrPopup, ::CClrHotKey )
-      endif
-      if ::nOpenPopup > 1
+      ENDIF
+      IF ::nOpenPopup > 1
          --::nOpenPopup
-         do while ::nOpenPopup > 1 .and. ;
+         DO WHILE ::nOpenPopup > 1 .AND. ;
             SubStr( ::aItems[ ::nOpenPopup ]:cPrompt, 1, 1 ) == "-"
             --::nOpenPopup
-         enddo
+         ENDDO
          ::ShowPopup( ::nOpenPopup )
-      else
+      ELSE
          ::ShowPopup( ::nOpenPopup := Len( ::aItems ) )
-      endif
-   endif
+      ENDIF
+   ENDIF
 
-return nil
+   RETURN NIL
 
 METHOD GoRight() CLASS HBDbMenu
 
-   local oMenuItem := ::aItems[ ::nOpenPopup ]
+   LOCAL oMenuItem := ::aItems[ ::nOpenPopup ]
 
-   if ::nOpenPopup != 0
-      if ! ::lPopup
+   IF ::nOpenPopup != 0
+      IF ! ::lPopup
          ::ClosePopup( ::nOpenPopup )
-      else
+      ELSE
          oMenuItem:Display( ::cClrPopup, ::cClrHotKey )
-      endif
-      if ::nOpenPopup < Len( ::aItems )
+      ENDIF
+      IF ::nOpenPopup < Len( ::aItems )
          ++::nOpenPopup
-         do while ::nOpenPopup < Len( ::aItems ) .and. ;
+         DO WHILE ::nOpenPopup < Len( ::aItems ) .AND. ;
             SubStr( ::aItems[ ::nOpenPopup ]:cPrompt, 1, 1 ) == "-"
             ++::nOpenPopup
-         enddo
+         ENDDO
          ::ShowPopup( ::nOpenPopup )
-      else
+      ELSE
          ::ShowPopup( ::nOpenPopup := 1 )
-      endif
-   endif
+      ENDIF
+   ENDIF
 
-return nil
+   RETURN NIL
 
 METHOD GoTop() CLASS HBDbMenu
 
-   local oPopup
+   LOCAL oPopup
 
-   if ::IsOpen()
+   IF ::IsOpen()
       oPopup := ::aItems[ ::nOpenPopup ]:bAction
       oPopup:DeHilite()
       oPopup:ShowPopup( 1 )
-   endif
+   ENDIF
 
-return nil
+   RETURN NIL
 
 METHOD LoadColors() CLASS HBDbMenu
 
-   local aColors := __DbgColors()
-   local n
+   LOCAL aColors := __DbgColors()
+   LOCAL n
 
    ::cClrPopup    := aColors[  8 ]
    ::cClrHotKey   := aColors[  9 ]
    ::cClrHilite   := aColors[ 10 ]
    ::cClrHotFocus := aColors[ 11 ]
 
-   for n := 1 to Len( ::aItems )
-      if ValType( ::aItems[ n ]:bAction ) == "O"
+   FOR n := 1 TO Len( ::aItems )
+      IF ISOBJECT( ::aItems[ n ]:bAction )
          ::aItems[ n ]:bAction:LoadColors()
-      endif
-   next
+      ENDIF
+   NEXT
 
-return nil
+   RETURN NIL
 
 METHOD Refresh() CLASS HBDbMenu
 
-   local n
+   LOCAL n
 
    DispBegin()
 
-   if ! ::lPopup
+   IF ! ::lPopup
       DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
       SetPos( 0, 0 )
-   endif
+   ENDIF
 
-   for n := 1 to Len( ::aItems )
+   FOR n := 1 TO Len( ::aItems )
       ::aItems[ n ]:Display( ::cClrPopup, ::cClrHotKey )
-   next
+   NEXT
 
    DispEnd()
 
-return nil
+   RETURN NIL
 
 METHOD ShowPopup( nPopup ) CLASS HBDbMenu
 
    ::aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
    ::nOpenPopup := nPopup
 
-   if ValType( ::aItems[ nPopup ]:bAction ) == "O"
+   IF ISOBJECT( ::aItems[ nPopup ]:bAction )
       ::aItems[ nPopup ]:bAction:Display()
       ::aItems[ nPopup ]:bAction:ShowPopup( 1 )
-   endif
+   ENDIF
 
-return nil
+   RETURN NIL
 
 METHOD ProcessKey( nKey ) CLASS HBDbMenu
 
-   local nPopup
-   local oPopup
+   LOCAL nPopup
+   LOCAL oPopup
 
-   do case
-      case nKey == K_LBUTTONDOWN
-           if MRow() == 0
-              if ( nPopup := ::GetItemOrdByCoors( 0, MCol() ) ) != 0
-                 if nPopup != ::nOpenPopup
-                    ::ClosePopup( ::nOpenPopup )
-                    ::ShowPopup( nPopup )
-                 endif
-              endif
-           else
-              oPopup := ::aItems[ ::nOpenPopup ]:bAction
-              if ( nPopup := oPopup:GetItemOrdByCoors( MRow(), MCol() ) ) == 0
-                 ::Close()
-              else
-                 oPopup:DeHilite()
-                 oPopup:nOpenPopup := nPopup
-                 oPopup:aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
-                 ::EvalAction()
-              endif
-           endif
+   DO CASE
+   CASE nKey == K_LBUTTONDOWN
+        IF MRow() == 0
+           IF ( nPopup := ::GetItemOrdByCoors( 0, MCol() ) ) != 0
+              IF nPopup != ::nOpenPopup
+                 ::ClosePopup( ::nOpenPopup )
+                 ::ShowPopup( nPopup )
+              ENDIF
+           ENDIF
+        ELSE
+           oPopup := ::aItems[ ::nOpenPopup ]:bAction
+           IF ( nPopup := oPopup:GetItemOrdByCoors( MRow(), MCol() ) ) == 0
+              ::Close()
+           ELSE
+              oPopup:DeHilite()
+              oPopup:nOpenPopup := nPopup
+              oPopup:aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
+              ::EvalAction()
+           ENDIF
+        ENDIF
 
-      case nKey == K_ESC
-           ::Close()
+   CASE nKey == K_ESC
+        ::Close()
 
-      case nKey == K_LEFT
-           ::GoLeft()
+   CASE nKey == K_LEFT
+        ::GoLeft()
 
-      case nKey == K_RIGHT
-           ::GoRight()
+   CASE nKey == K_RIGHT
+        ::GoRight()
 
-      case nKey == K_DOWN
-           ::GoDown()
+   CASE nKey == K_DOWN
+        ::GoDown()
 
-      case nKey == K_UP
-           ::GoUp()
+   CASE nKey == K_UP
+        ::GoUp()
 
-      case nKey == K_ENTER
-           ::EvalAction()
+   CASE nKey == K_ENTER
+        ::EvalAction()
 
-      case nKey == K_HOME
-           ::GoTop()
+   CASE nKey == K_HOME
+        ::GoTop()
 
-      case nKey == K_END
-           ::GoBottom()
+   CASE nKey == K_END
+        ::GoBottom()
 
-      otherwise
+   OTHERWISE
 
-         if ::nOpenPopup > 0
-            if IsAlpha( Chr( nKey ) )
-               oPopup := ::aItems[ ::nOpenPopup ]:bAction
-               nPopup := oPopup:GetHotKeyPos( Upper( Chr( nKey ) ) )
-               if nPopup > 0 .and. oPopup:nOpenPopup != nPopup
-                  oPopup:DeHilite()
-                  oPopup:ShowPopup( nPopup )
-                  ::EvalAction()
-               endif
-            endif
-         else
-            nPopup := ::GetHotKeyPos( __dbgAltToKey( nKey ) )
-            if nPopup != ::nOpenPopup
-               ::Close()
-               ::ShowPopup( nPopup )
-            endif
-         endif
+      IF ::nOpenPopup > 0
+         IF IsAlpha( Chr( nKey ) )
+            oPopup := ::aItems[ ::nOpenPopup ]:bAction
+            nPopup := oPopup:GetHotKeyPos( Upper( Chr( nKey ) ) )
+            IF nPopup > 0 .AND. oPopup:nOpenPopup != nPopup
+               oPopup:DeHilite()
+               oPopup:ShowPopup( nPopup )
+               ::EvalAction()
+            ENDIF
+         ENDIF
+      ELSE
+         nPopup := ::GetHotKeyPos( __dbgAltToKey( nKey ) )
+         IF nPopup != ::nOpenPopup
+            ::Close()
+            ::ShowPopup( nPopup )
+         ENDIF
+      ENDIF
 
-   endcase
+   ENDCASE
 
-return nil
+   RETURN NIL
 
+FUNCTION __dbgAltToKey( nKey )
 
-function __dbgAltToKey( nKey )
-
-   local nIndex := AScan( { K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F,;
+   LOCAL nIndex := AScan( { K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F,;
                             K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L,;
                             K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R,;
                             K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X,;
                             K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4,;
                             K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey )
 
-return iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 ), "" )
+   RETURN iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 ), "" )

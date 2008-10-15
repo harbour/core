@@ -56,39 +56,39 @@
 #include "setcurs.ch"
 #include "inkey.ch"
 
-procedure __dbgShowWorkAreas()
+PROCEDURE __dbgShowWorkAreas()
 
-   local oDlg
-   local oCol
+   LOCAL oDlg
+   LOCAL oCol
 
-   local aAlias := {}
-   local aBrw[ 3 ]
-   local aStruc
-   local aInfo
+   LOCAL aAlias := {}
+   LOCAL aBrw[ 3 ]
+   LOCAL aStruc
+   LOCAL aInfo
 
-   local cColor := iif( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N", "N/W, N/BG, R/W, R/BG" )
+   LOCAL cColor := iif( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N", "N/W, N/BG, R/W, R/BG" )
 
-   local n1
-   local n2
-   local n3 := 1
-   local cur_id := 1
+   LOCAL n1
+   LOCAL n2
+   LOCAL n3 := 1
+   LOCAL cur_id := 1
 
-   local nOldArea := Select()
+   LOCAL nOldArea := Select()
 
    /* We can't determine the last used area, so use 512 here */
-   for n1 := 1 to 512
-      if ( n1 )->( Used() )
+   FOR n1 := 1 TO 512
+      IF ( n1 )->( Used() )
          AAdd( aAlias, { n1, Alias( n1 ) } )
-         if n1 == nOldArea
+         IF n1 == nOldArea
             cur_id := Len( aAlias )
-         endif
-      endif
-   next
+         ENDIF
+      ENDIF
+   NEXT
 
-   if Len( aAlias ) == 0
-      Alert( "No workareas in use")
-      return
-   endif
+   IF Len( aAlias ) == 0
+      __dbgAlert( "No workareas in use")
+      RETURN
+   ENDIF
 
    IF !Used()
       dbSelectArea( aAlias[ 1 ][ 1 ] )
@@ -114,7 +114,7 @@ procedure __dbgShowWorkAreas()
                                           Max( 1, n1 + nSkip ) ),;
                                   n1 - nPos }
 
-   aBrw[ 1 ]:AddColumn( oCol := TBColumnNew( "", { || PadR( aAlias[ n1 ][ 2 ], 11 ) } ) )
+   aBrw[ 1 ]:AddColumn( oCol := HBDbColumnNew( "", { || PadR( aAlias[ n1 ][ 2 ], 11 ) } ) )
 
    oCol:ColorBlock := { || iif( aAlias[ n1 ][ 1 ] == Select(), { 3, 4 }, { 1, 2 } ) }
 
@@ -133,9 +133,9 @@ procedure __dbgShowWorkAreas()
                                                                          Max( 1, n2 + nSkip ) ), ;
                                 n2 - nPos }
 
-   aBrw[ 2 ]:AddColumn( oCol := TBColumnNew( "", { || PadR( aInfo[ n2 ], 38 ) } ) )
+   aBrw[ 2 ]:AddColumn( oCol := HBDbColumnNew( "", { || PadR( aInfo[ n2 ], 38 ) } ) )
 
-   oCol:ColorBlock := { || iif( aAlias[ n1 ][ 1 ] == Select() .and. n2 == 1, { 3, 4 }, { 1, 2 } ) }
+   oCol:ColorBlock := { || iif( aAlias[ n1 ][ 1 ] == Select() .AND. n2 == 1, { 3, 4 }, { 1, 2 } ) }
 
    /* Struc browse */
 
@@ -151,10 +151,10 @@ procedure __dbgShowWorkAreas()
                                   aBrw[ 3 ]:Cargo := n3 := iif( nSkip > 0, Min( Len( aStruc ), n3 + nSkip ),;
                                           Max( 1, n3 + nSkip ) ), n3 - nPos }
 
-   aBrw[ 3 ]:AddColumn( TBColumnNew( "", { || PadR( aStruc[ n3, 1 ], 11 ) + ;
-                                              aStruc[ n3, 2 ] + ;
-                                              Str( aStruc[ n3, 3 ], 4 ) + ;
-                                              Str( aStruc[ n3, 4 ], 3 ) } ) )
+   aBrw[ 3 ]:AddColumn( HBDbColumnNew( "", { || PadR( aStruc[ n3, 1 ], 11 ) + ;
+                                                aStruc[ n3, 2 ] + ;
+                                                Str( aStruc[ n3, 3 ], 4 ) + ;
+                                                Str( aStruc[ n3, 4 ], 3 ) } ) )
 
    /* Show dialog */
 
@@ -162,9 +162,9 @@ procedure __dbgShowWorkAreas()
    
    dbSelectArea( nOldArea )
 
-return
+   RETURN
 
-static procedure DlgWorkAreaPaint( oDlg, aBrw )
+STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
 
    /* Display captions */
 
@@ -213,31 +213,31 @@ static procedure DlgWorkAreaPaint( oDlg, aBrw )
 
    UpdateInfo( oDlg, Alias() )
 
-return
+   RETURN
 
-static procedure DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
+STATIC PROCEDURE DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
 
-   local oDebug := __Dbg()
-   local nAlias
+   LOCAL oDebug := __Dbg()
+   LOCAL nAlias
 
-   if nKey == K_TAB .or. nKey == K_SH_TAB
+   IF nKey == K_TAB .OR. nKey == K_SH_TAB
       aBrw[ oDebug:nWaFocus ]:Dehilite()
       oDebug:nWaFocus += iif( nKey == K_TAB, 1, -1 )
-      if oDebug:nWaFocus < 1
+      IF oDebug:nWaFocus < 1
          oDebug:nWaFocus := 3
-      endif
-      if oDebug:nWaFocus > 3
+      ENDIF
+      IF oDebug:nWaFocus > 3
          oDebug:nWaFocus := 1
-      endif
+      ENDIF
       aBrw[ oDebug:nWaFocus ]:Hilite()
-      return
-   endif
+      RETURN
+   ENDIF
 
-   do case
-   case oDebug:nWaFocus == 1
+   DO CASE
+   CASE oDebug:nWaFocus == 1
       nAlias := aBrw[ 1 ]:Cargo
       WorkAreasKeyPressed( nKey, aBrw[ 1 ], Len( aAlias ) )
-      if nAlias != aBrw[ 1 ]:Cargo
+      IF nAlias != aBrw[ 1 ]:Cargo
          aBrw[ 2 ]:GoTop()
          aBrw[ 2 ]:Invalidate()
          aBrw[ 2 ]:ForceStable()
@@ -257,62 +257,62 @@ static procedure DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
          aBrw[ 3 ]:ForceStable()
          aBrw[ 3 ]:Dehilite()
          UpdateInfo( oDlg, aAlias[ aBrw[ 1 ]:Cargo ][ 2 ] )
-      endif
-   case oDebug:nWaFocus == 2
+      ENDIF
+   CASE oDebug:nWaFocus == 2
       WorkAreasKeyPressed( nKey, aBrw[ 2 ], Len( aInfo ) )
-   case oDebug:nWaFocus == 3
+   CASE oDebug:nWaFocus == 3
       WorkAreasKeyPressed( nKey, aBrw[ 3 ], Len( aStruc ) )
-   endcase
+   ENDCASE
 
-return
+   RETURN
 
-static procedure WorkAreasKeyPressed( nKey, oBrw, nTotal )
+STATIC PROCEDURE WorkAreasKeyPressed( nKey, oBrw, nTotal )
 
-   do case
-   case nKey == K_UP
+   DO CASE
+   CASE nKey == K_UP
 
-      if oBrw:Cargo > 1
+      IF oBrw:Cargo > 1
          oBrw:Cargo--
          oBrw:RefreshCurrent()
          oBrw:Up()
          oBrw:ForceStable()
-      endif
+      ENDIF
 
-   case nKey == K_DOWN
+   CASE nKey == K_DOWN
 
-      if oBrw:Cargo < nTotal
+      IF oBrw:Cargo < nTotal
          oBrw:Cargo++
          oBrw:RefreshCurrent()
          oBrw:Down()
          oBrw:ForceStable()
-      endif
+      ENDIF
 
-   case nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
+   CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
 
-      if oBrw:Cargo > 1
+      IF oBrw:Cargo > 1
          oBrw:Cargo := 1
          oBrw:GoTop()
          oBrw:ForceStable()
-      endif
+      ENDIF
 
-   case nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
+   CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
 
-      if oBrw:Cargo < nTotal
+      IF oBrw:Cargo < nTotal
          oBrw:Cargo := nTotal
          oBrw:GoBottom()
          oBrw:ForceStable()
-      endif
+      ENDIF
 
-   endcase
+   ENDCASE
 
-return
+   RETURN
 
-static function DbfInfo( aInfo )
+STATIC FUNCTION DbfInfo( aInfo )
 
-   local nFor
-   local xType
-   local xValue
-   local cValue
+   LOCAL nFor
+   LOCAL xType
+   LOCAL xValue
+   LOCAL cValue
 
    aInfo := {}
 
@@ -328,33 +328,33 @@ static function DbfInfo( aInfo )
    AAdd( aInfo, Space( 8 ) + "Index order: " + LTrim( Str( IndexOrd() ) ) )
    AAdd( aInfo, Space( 4 ) + "Current Record" )
 
-   for nFor := 1 to FCount()
+   FOR nFor := 1 TO FCount()
 
       xValue := FieldGet( nFor )
       xType  := ValType( xValue )
 
-      do case
-      case xType $ "CM" ; cValue := xValue
-      case xType == "N" ; cValue := LTrim( Str( xValue ) )
-      case xType == "D" ; cValue := DToC( xValue )
-      case xType == "L" ; cValue := iif( xValue, ".T.", ".F." )
-      case xType == "A" ; cValue := "Array"
-      otherwise         ; cValue := "Error"
-      endcase
+      DO CASE
+      CASE xType $ "CM" ; cValue := xValue
+      CASE xType == "N" ; cValue := LTrim( Str( xValue ) )
+      CASE xType == "D" ; cValue := DToC( xValue )
+      CASE xType == "L" ; cValue := iif( xValue, ".T.", ".F." )
+      CASE xType == "A" ; cValue := "Array"
+      OTHERWISE         ; cValue := "Error"
+      ENDCASE
 
       AAdd( aInfo, Space( 8 ) + PadR( FieldName( nFor ), 10) + " = " + PadR( cValue, 17 ) )
 
-   next
+   NEXT
 
-return aInfo
+   RETURN aInfo
 
-static procedure UpdateInfo( oDlg, cAlias )
+STATIC PROCEDURE UpdateInfo( oDlg, cAlias )
 
-   local nOldArea
+   LOCAL nOldArea
 
-   if Empty( cAlias )
-      return
-   endif
+   IF Empty( cAlias )
+      RETURN
+   ENDIF
    
    nOldArea := Select()
    
@@ -374,4 +374,4 @@ static procedure UpdateInfo( oDlg, cAlias )
 
    dbSelectArea( nOldArea )
 
-return
+   RETURN

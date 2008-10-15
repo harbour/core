@@ -73,6 +73,8 @@
 
 /* Harbour Class HBClass to build classes */
 
+#pragma DEBUGINFO=OFF
+
 #include "common.ch"
 #include "hboo.ch"
 
