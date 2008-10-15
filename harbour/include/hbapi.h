@@ -247,6 +247,7 @@ typedef struct _HB_STACK_STATE
    USHORT   uiClass;          /* class when message is sent */
    USHORT   uiMethod;         /* number of class method */
    USHORT   uiLineNo;         /* current line number */
+   USHORT   fDebugging;       /* debugger active */
 } HB_STACK_STATE, * PHB_STACK_STATE; /* used to save/restore stack state in hb_vmDo)_ */
 
 

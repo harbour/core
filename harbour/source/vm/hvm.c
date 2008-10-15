@@ -156,11 +156,6 @@ static void    hb_vmSwapAlias( void );           /* swaps items on the eval stac
 
 /* Execution */
 static HARBOUR hb_vmDoBlock( void );             /* executes a codeblock */
-static void    hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame );
-static void    hb_vmDebuggerExit( void );        /* shuts down the debugger */
-static void    hb_vmLocalName( USHORT uiLocal, char * szLocalName ); /* locals and parameters index and name information for the debugger */
-static void    hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName ); /* statics vars information for the debugger */
-static void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
 static void    hb_vmFrame( USHORT usLocals, BYTE bParams ); /* increases the stack pointer for the amount of locals and params suplied */
 static void    hb_vmVFrame( USHORT usLocals, BYTE bParams ); /* increases the stack pointer for the amount of locals and variable number of params suplied */
 static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
@@ -168,11 +163,6 @@ static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the
 static void    hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode ); /* mark thread static variables */
 static void    hb_vmEndBlock( void );            /* copies the last codeblock pushed value into the return value */
 static void    hb_vmRetValue( void );            /* pops the latest stack value into stack.Return */
-#ifndef HB_NO_DEBUG
-static void    hb_vmDebuggerShowLine( USHORT uiLine ); /* makes the debugger shows a specific source code line */
-static void    hb_vmDebuggerEndProc( void );     /* notifies the debugger for an endproc */
-#endif
-
 /* Push */
 static void    hb_vmPushAlias( void );            /* pushes the current workarea number */
 static void    hb_vmPushAliasedField( PHB_SYMB ); /* pushes an aliased field on the eval stack */
@@ -220,6 +210,21 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
 
 static void    hb_vmMsgIndexReference( PHB_ITEM pRefer, PHB_ITEM pObject, PHB_ITEM pIndex ); /* create object index reference */
 
+#ifndef HB_NO_DEBUG
+static void    hb_vmLocalName( USHORT uiLocal, char * szLocalName ); /* locals and parameters index and name information for the debugger */
+static void    hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName ); /* statics vars information for the debugger */
+static void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
+
+static void    hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame );
+static void    hb_vmDebuggerExit( void );        /* shuts down the debugger */
+static void    hb_vmDebuggerShowLine( USHORT uiLine ); /* makes the debugger shows a specific source code line */
+static void    hb_vmDebuggerEndProc( void );     /* notifies the debugger for an endproc */
+
+static BOOL     s_bDebugRequest = FALSE;  /* debugger invoked via the VM */
+static PHB_DYNS s_pDynsDbgEntry = NULL;   /* Cached __DBGENTRY symbol */
+static HB_DBGENTRY_FUNC s_pFunDbgEntry;   /* C level debugger entry */
+#endif
+
 #if defined( HB_MT_VM )
 static int volatile hb_vmThreadRequest = 0;
 static void hb_vmRequestTest( void );
@@ -264,11 +269,6 @@ static PHB_SYMBOLS s_pSymbols = NULL;  /* to hold a linked list of all different
 static ULONG       s_ulFreeSymbols = 0;/* number of free module symbols */
 static void *      s_hDynLibID = NULL; /* unique identifer to mark symbol tables loaded from dynamic libraries */
 static BOOL        s_fCloneSym = FALSE;/* clone registered symbol tables */
-
-static BOOL     s_bDebugging;
-static BOOL     s_bDebugRequest;          /* debugger invoked via the VM */
-static PHB_DYNS s_pDynsDbgEntry = NULL;   /* Cached __DBGENTRY symbol */
-static HB_DBGENTRY_FUNC s_pFunDbgEntry;   /* C level debugger entry */
 
 /* main VM thread stack ID */
 static void * s_main_thread = NULL;
@@ -842,11 +842,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    /* initialize internal data structures */
    s_aStatics.type = HB_IT_NIL;
 
-   s_bDebugging = FALSE;
-
    hb_vmSymbolInit_RT();      /* initialize symbol table with runtime support functions */
-
-   s_pDynsDbgEntry = hb_dynsymFind( "__DBGENTRY" );
 
    hb_xinit();
 
@@ -895,6 +891,11 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    }
 #endif
 
+   /* enable executing PCODE (HVM reenter request) */
+   s_fHVMActive = TRUE;
+
+#ifndef HB_NO_DEBUG
+   s_pDynsDbgEntry = hb_dynsymFind( "__DBGENTRY" );
    if( s_pDynsDbgEntry )
    {
       /* Try to get C dbgEntry() function pointer */
@@ -903,9 +904,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
       if( !s_pFunDbgEntry )
          s_pFunDbgEntry = hb_vmDebugEntry;
    }
-
-   /* enable executing PCODE (HVM reenter request) */
-   s_fHVMActive = TRUE;
+#endif
 
    /* Call functions that initializes static variables
     * Static variables have to be initialized before any INIT functions
@@ -1011,8 +1010,10 @@ HB_EXPORT int hb_vmQuit( void )
    hb_vmDoModuleExitFunctions();
    hb_vmCleanModuleFunctions();
 
+#ifndef HB_NO_DEBUG
    /* deactivate debugger */
    hb_vmDebuggerExit();
+#endif
 
    /* release all known items stored in subsystems */
    hb_itemClear( hb_stackReturnItem() );
@@ -1583,7 +1584,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
             hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo = HB_PCODE_MKUSHORT( &pCode[ w + 1 ] );
 #ifndef HB_NO_DEBUG
-            if( s_bDebugging )
+            if( hb_stackBaseItem()->item.asSymbol.stackstate->fDebugging )
                hb_vmDebuggerShowLine( hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo );
 #endif
             w += 3;
@@ -1639,21 +1640,28 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_LOCALNAME:
+#ifndef HB_NO_DEBUG
             hb_vmLocalName( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ),
                             ( char * ) pCode + w + 3 );
+#endif
             w += 3;
             while( pCode[ w++ ] ) {};
             break;
 
          case HB_P_STATICNAME:
+#ifndef HB_NO_DEBUG
             hb_vmStaticName( pCode[ w + 1 ], HB_PCODE_MKUSHORT( &pCode[ w + 2 ] ),
                              ( char * ) pCode + w + 4 );
+#endif
             w += 4;
             while( pCode[ w++ ] ) {};
             break;
 
          case HB_P_MODULENAME:
+#ifndef HB_NO_DEBUG
             hb_vmModuleName( ( char * ) pCode + w + 1 );
+#endif
+            w++;
             while( pCode[ w++ ] ) {};
             break;
 
@@ -5322,9 +5330,6 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
    HB_STACK_STATE sStackState;
    PHB_SYMB pSym;
    PHB_ITEM pSelf;
-#ifndef HB_NO_DEBUG
-   BOOL bDebugPrevState = FALSE;
-#endif
 #ifndef HB_NO_PROFILER
    ULONG ulClock = 0;
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
@@ -5345,13 +5350,6 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 
    pSym = hb_stackNewFrame( &sStackState, uiParams )->item.asSymbol.value;
    pSelf = hb_stackSelfItem();   /* NIL, OBJECT or BLOCK */
-#ifndef HB_NO_DEBUG
-   if( s_pFunDbgEntry )
-   {
-      bDebugPrevState = s_bDebugging;
-      s_bDebugging = FALSE;
-   }
-#endif
 
    if( ! HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
@@ -5413,12 +5411,8 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
    }
 
 #ifndef HB_NO_DEBUG
-   if( s_pFunDbgEntry )
-   {
-      if( s_bDebugging )
-         hb_vmDebuggerEndProc();
-      s_bDebugging = bDebugPrevState;
-   }
+   if( sStackState.fDebugging )
+      hb_vmDebuggerEndProc();
 #endif
 
    hb_stackOldFrame( &sStackState );
@@ -5431,9 +5425,6 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    PHB_SYMB pSym;
    PHB_SYMB pExecSym;
    PHB_ITEM pSelf;
-#ifndef HB_NO_DEBUG
-   BOOL bDebugPrevState = FALSE;
-#endif
 #ifndef HB_NO_PROFILER
    ULONG ulClock = 0;
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
@@ -5454,13 +5445,6 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 
    pSym = hb_stackNewFrame( &sStackState, uiParams )->item.asSymbol.value;
    pSelf = hb_stackSelfItem();   /* NIL, OBJECT or BLOCK */
-#ifndef HB_NO_DEBUG
-   if( s_pFunDbgEntry )
-   {
-      bDebugPrevState = s_bDebugging;
-      s_bDebugging = FALSE;
-   }
-#endif
 
    pExecSym = hb_objGetMethod( pSelf, pSym, &sStackState );
    if( pExecSym && ( pExecSym->scope.value & HB_FS_DEFERRED ) && pExecSym->pDynSym )
@@ -5487,12 +5471,8 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
 
 #ifndef HB_NO_DEBUG
-   if( s_pFunDbgEntry )
-   {
-      if( s_bDebugging )
-         hb_vmDebuggerEndProc();
-      s_bDebugging = bDebugPrevState;
-   }
+   if( sStackState.fDebugging )
+      hb_vmDebuggerEndProc();
 #endif
 
    hb_stackOldFrame( &sStackState );
@@ -5654,6 +5634,7 @@ void hb_vmFunction( USHORT uiParams )
 }
 
 
+#ifndef HB_NO_DEBUG
 static void hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame )
 {
    HB_STACK_TLS_PRELOAD
@@ -5743,7 +5724,6 @@ static void hb_vmDebuggerExit( void )
    /* is debugger linked ? */
    if( s_pFunDbgEntry )
    {
-      s_bDebugging = FALSE;
       /* inform debugger that we are quitting now */
       s_pFunDbgEntry( HB_DBG_VMQUIT, 0, NULL, 0, 0 );
       /* set dummy debugger function to avoid debugger activation in .prg
@@ -5752,16 +5732,28 @@ static void hb_vmDebuggerExit( void )
    }
 }
 
+static void hb_vmDebuggerEndProc( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmDebuggerEndProc()"));
+
+   s_pFunDbgEntry( HB_DBG_ENDPROC, 0, NULL, 0, 0 );
+}
+
+static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a specific source code line */
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmDebuggerShowLine(%hu)", uiLine));
+
+   s_pFunDbgEntry( HB_DBG_SHOWLINE, uiLine, NULL, 0, 0 );
+}
+
 static void hb_vmLocalName( USHORT uiLocal, char * szLocalName ) /* locals and parameters index and name information for the debugger */
 {
+   HB_STACK_TLS_PRELOAD
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmLocalName(%hu, %s)", uiLocal, szLocalName));
 
-   if( s_bDebugging )
-   {
-      s_bDebugging = FALSE;
+   if( hb_stackBaseItem()->item.asSymbol.stackstate->fDebugging )
       s_pFunDbgEntry( HB_DBG_LOCALNAME, 0, szLocalName, uiLocal, 0 );
-      s_bDebugging = TRUE;
-   }
 }
 
 static void hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName ) /* statics vars information for the debugger */
@@ -5772,48 +5764,20 @@ static void hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticNam
 
    HB_SYMBOL_UNUSED( bIsGlobal );
 
-   if( s_bDebugging )
-   {
-      s_bDebugging = FALSE;
+   if( hb_stackBaseItem()->item.asSymbol.stackstate->fDebugging )
       s_pFunDbgEntry( HB_DBG_STATICNAME, 0, szStaticName, uiStatic, hb_stackGetStaticsBase() );
-      s_bDebugging = TRUE;
-   }
 }
 
 static void hb_vmModuleName( char * szModuleName ) /* PRG and function name information for the debugger */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmModuleName(%s)", szModuleName));
 
-#ifdef HB_NO_DEBUG
-   HB_SYMBOL_UNUSED( szModuleName );
-#else
    if( s_pFunDbgEntry )
    {
-      s_bDebugging = FALSE;
+      HB_STACK_TLS_PRELOAD
       s_pFunDbgEntry( HB_DBG_MODULENAME, 0, szModuleName, 0, 0 );
-      s_bDebugging = TRUE;
+      hb_stackBaseItem()->item.asSymbol.stackstate->fDebugging = TRUE;
    }
-#endif
-}
-
-#ifndef HB_NO_DEBUG
-static void hb_vmDebuggerEndProc( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmDebuggerEndProc()"));
-
-   s_bDebugging = FALSE;
-   s_pFunDbgEntry( HB_DBG_ENDPROC, 0, NULL, 0, 0 );
-}
-
-static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a specific source code line */
-{
-   BOOL bDebugging = s_bDebugging;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmDebuggerShowLine(%hu)", uiLine));
-
-   s_bDebugging = FALSE;
-   s_pFunDbgEntry( HB_DBG_SHOWLINE, uiLine, NULL, 0, 0 );
-   s_bDebugging = bDebugging;
 }
 #endif
 
@@ -8355,7 +8319,7 @@ HB_EXPORT void hb_xvmSetLine( USHORT uiLine )
 
    hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo = uiLine;
 #ifndef HB_NO_DEBUG
-   if( s_bDebugging )
+   if( hb_stackBaseItem()->item.asSymbol.stackstate->fDebugging )
       hb_vmDebuggerShowLine( uiLine );
 #endif
 }
@@ -10348,21 +10312,36 @@ HB_EXPORT void hb_xvmLocalName( USHORT uiLocal, char * szLocalName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalName(%hu, %s)", uiLocal, szLocalName));
 
+#ifndef HB_NO_DEBUG
    hb_vmLocalName( uiLocal, szLocalName );
+#else
+   HB_SYMBOL_UNUSED( uiLocal );
+   HB_SYMBOL_UNUSED( szLocalName );
+#endif
 }
 
 HB_EXPORT void hb_xvmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmStaticName(%d, %hu, %s)", (int)bIsGlobal, uiStatic, szStaticName));
 
+#ifndef HB_NO_DEBUG
    hb_vmStaticName( bIsGlobal, uiStatic, szStaticName );
+#else
+   HB_SYMBOL_UNUSED( bIsGlobal );
+   HB_SYMBOL_UNUSED( uiStatic );
+   HB_SYMBOL_UNUSED( szStaticName );
+#endif
 }
 
 HB_EXPORT void hb_xvmModuleName( char * szModuleName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmModuleName(%s)", szModuleName));
 
+#ifndef HB_NO_DEBUG
    hb_vmModuleName( szModuleName );
+#else
+   HB_SYMBOL_UNUSED( szModuleName );
+#endif
 }
 
 HB_EXPORT BOOL hb_xvmMacroArrayGen( USHORT uiArgSets )
@@ -10583,24 +10562,37 @@ HB_EXPORT void hb_vmFlagClear( ULONG flags )
 void hb_vmRequestDebug( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestDebug()"));
+#ifndef HB_NO_DEBUG
    s_bDebugRequest = TRUE;
+#endif
 }
 
 HB_EXPORT BOOL hb_dbg_InvokeDebug( BOOL bInvoke )
 {
+#ifndef HB_NO_DEBUG
    BOOL bRequest = s_bDebugRequest;
-
    s_bDebugRequest = bInvoke;
    return bRequest;
+#else
+   HB_SYMBOL_UNUSED( bInvoke );
+   return FALSE;
+#endif
 }
 
 HB_EXPORT HB_DBGENTRY_FUNC hb_dbg_SetEntry( HB_DBGENTRY_FUNC pFunDbgEntry )
 {
-   HB_DBGENTRY_FUNC pPrevFunc = s_pFunDbgEntry;
+   HB_DBGENTRY_FUNC pPrevFunc;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbg_SetEntry(%p)", pFunDbgEntry));
 
+#ifndef HB_NO_DEBUG
+   pPrevFunc = s_pFunDbgEntry;
    s_pFunDbgEntry = pFunDbgEntry;
+#else
+   HB_SYMBOL_UNUSED( pFunDbgEntry );
+   pPrevFunc = NULL;
+#endif
+
    return pPrevFunc;
 }
 
@@ -10621,12 +10613,13 @@ HB_EXPORT ULONG hb_dbg_ProcLevel( void )
 HB_FUNC( __DBGINVOKEDEBUG )
 {
    HB_STACK_TLS_PRELOAD
-   BOOL bRequest = s_bDebugRequest;
-   if( hb_pcount() > 0 )
-      s_bDebugRequest = hb_parl( 1 );
-   else
-      s_bDebugRequest = FALSE;
-   hb_retl( bRequest );
+
+#ifndef HB_NO_DEBUG
+   hb_retl( s_bDebugRequest );
+   s_bDebugRequest = hb_parl( 1 );
+#else
+   hb_retl( FALSE );
+#endif
 }
 
 /* $Doc$

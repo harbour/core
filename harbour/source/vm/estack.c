@@ -615,6 +615,7 @@ HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, USHORT uiParams )
    pFrame->lStatics = hb_stack.lStatics;
    pFrame->ulPrivateBase = hb_memvarGetPrivatesBase();
    pFrame->uiClass = pFrame->uiMethod = pFrame->uiLineNo = 0;
+   pFrame->fDebugging = FALSE;
 
    pItem->item.asSymbol.stackstate = pFrame;
    pItem->item.asSymbol.paramcnt = uiParams;

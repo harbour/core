@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-15 13:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/estack.c
+    * disabled all debugger related bindings and variables when
+      HB_NO_DEBUG macro is set
+    % moved s_fDebuging to HVM function stack frame to eliminate
+      saving/restoring this variable in each function/message call
+      Note: if you think it's good to block linking .prg code compiled
+            with -b (debugger support) with HVM compiled with HB_NO_DEBUG
+            then it's enough to disable whole hb_dbg_SetEntry() function
+            in hvm.c when HB_NO_DEBUG macro is set.
+
 2008-10-15 10:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * doc/dirstruc.txt
     * Updated.
