@@ -168,16 +168,13 @@ typedef struct
    char       szDate[ 9 ];    /* last returned date from _pards() yyyymmdd format */
    void *     pCDP;           /* current codepage module */
    void *     pLang;          /* current language module */
-   const char * szDefaultRDD; /* default RDD */
-   int        iArea;          /* current workarea number */
-   int        iAreaCount;     /* number of allocated workareas number */
-   void **    pWorkAreas;     /* workareas pool */
-   BOOL       fNetErr;        /* current NETERR() flag */
    int        iTSD;           /* number of allocated TSD holders */
    PHB_TSD_HOLDER pTSD;       /* thread specific data holder */
    HB_PRIVATE_STACK privates; /* private variables stack */
    HB_SET_STRUCT set;
    int        iKeyPoll;       /* counter for GT/keyboard polling */
+   int        fDebugRequest;  /* request debugger activation */
+   void *     pDebugInfo;     /* internal debugger structure */
 #if defined( HB_MT_VM )
    int        iUnlocked;      /* counter for nested hb_vmUnlock() calls */
    PHB_DYN_HANDLES pDynH;     /* dynamic symbol handles */
@@ -288,6 +285,8 @@ extern BYTE *     hb_stackDirBuffer( void );
 extern PHB_IOERRORS hb_stackIOErrors( void );
 extern PHB_STACKRDD hb_stackRDD( void );
 
+extern void **     hb_stackDebugInfo( void );
+
 #ifdef _HB_API_INTERNAL_
 extern void        hb_stackDecrease( ULONG ulItems );
 extern HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, USHORT uiParams );
@@ -310,6 +309,7 @@ extern LONG        hb_stackWithObjectOffset( void );
 extern void        hb_stackWithObjectSetOffset( LONG );
 
 extern int *       hb_stackKeyPolls( void );
+extern BOOL *      hb_stackDebugRequest( void );
 
 extern void        hb_stackDestroyTSD( void );
 
@@ -446,6 +446,8 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
 #define hb_stackGetPrivateStack( )  ( &hb_stack.privates )
 #define hb_stackSetStruct( )        ( &hb_stack.set )
 #define hb_stackKeyPolls( )         ( &hb_stack.iKeyPoll )
+#define hb_stackDebugRequest( )     ( &hb_stack.fDebugRequest )
+#define hb_stackDebugInfo( )        ( &hb_stack.pDebugInfo )
 
 #endif
 

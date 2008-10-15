@@ -216,11 +216,10 @@ static void    hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStatic
 static void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
 
 static void    hb_vmDebugEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame );
-static void    hb_vmDebuggerExit( void );        /* shuts down the debugger */
+static void    hb_vmDebuggerExit( BOOL fRemove );      /* shuts down the debugger */
 static void    hb_vmDebuggerShowLine( USHORT uiLine ); /* makes the debugger shows a specific source code line */
 static void    hb_vmDebuggerEndProc( void );     /* notifies the debugger for an endproc */
 
-static BOOL     s_bDebugRequest = FALSE;  /* debugger invoked via the VM */
 static PHB_DYNS s_pDynsDbgEntry = NULL;   /* Cached __DBGENTRY symbol */
 static HB_DBGENTRY_FUNC s_pFunDbgEntry;   /* C level debugger entry */
 #endif
@@ -808,9 +807,13 @@ HB_EXPORT void hb_vmThreadQuit( void )
    }
    hb_itemClear( hb_stackReturnItem() );
 
+   hb_stackSetActionRequest( 0 );
    hb_rddCloseAll();             /* close all workareas */
    hb_stackRemove( 1 );          /* clear stack items, leave only initial symbol item */
    hb_memvarsClear();            /* clear all PUBLIC (and PRIVATE if any) variables */
+#ifndef HB_NO_DEBUG
+   hb_vmDebuggerExit( FALSE );   /* deactivate debugger */
+#endif
    hb_vmStackRelease();          /* release HVM stack and remove it from linked HVM stacks list */
 }
 
@@ -1010,11 +1013,6 @@ HB_EXPORT int hb_vmQuit( void )
    hb_vmDoModuleExitFunctions();
    hb_vmCleanModuleFunctions();
 
-#ifndef HB_NO_DEBUG
-   /* deactivate debugger */
-   hb_vmDebuggerExit();
-#endif
-
    /* release all known items stored in subsystems */
    hb_itemClear( hb_stackReturnItem() );
    hb_stackRemove( 1 );          /* clear stack items, leave only initial symbol item */
@@ -1032,6 +1030,11 @@ HB_EXPORT int hb_vmQuit( void )
    hb_stackSetActionRequest( 0 );
    hb_rddCloseAll();             /* close all workareas */
    hb_rddShutDown();             /* remove all registered RDD drivers */
+
+#ifndef HB_NO_DEBUG
+   /* deactivate debugger */
+   hb_vmDebuggerExit( TRUE );
+#endif
 
    /* release thread specific data */
    hb_stackDestroyTSD();
@@ -5717,9 +5720,9 @@ static void hb_vmDummyDebugEntry( int nMode, int nLine, char *szName, int nIndex
    HB_SYMBOL_UNUSED( nFrame );
 }
 
-static void hb_vmDebuggerExit( void )
+static void hb_vmDebuggerExit( BOOL fRemove )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmDebuggerExit"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmDebuggerExit(%d)", fRemove));
 
    /* is debugger linked ? */
    if( s_pFunDbgEntry )
@@ -5728,7 +5731,8 @@ static void hb_vmDebuggerExit( void )
       s_pFunDbgEntry( HB_DBG_VMQUIT, 0, NULL, 0, 0 );
       /* set dummy debugger function to avoid debugger activation in .prg
        *       destructors if any */
-      s_pFunDbgEntry = hb_vmDummyDebugEntry;
+      if( fRemove )
+         s_pFunDbgEntry = hb_vmDummyDebugEntry;
    }
 }
 
@@ -10561,17 +10565,22 @@ HB_EXPORT void hb_vmFlagClear( ULONG flags )
 
 void hb_vmRequestDebug( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestDebug()"));
 #ifndef HB_NO_DEBUG
-   s_bDebugRequest = TRUE;
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestDebug()"));
+
+   *( hb_stackDebugRequest() ) = TRUE;
 #endif
 }
 
 HB_EXPORT BOOL hb_dbg_InvokeDebug( BOOL bInvoke )
 {
 #ifndef HB_NO_DEBUG
-   BOOL bRequest = s_bDebugRequest;
-   s_bDebugRequest = bInvoke;
+   HB_STACK_TLS_PRELOAD
+   BOOL * pfRequest = hb_stackDebugRequest();
+   BOOL bRequest = *pfRequest;
+   *pfRequest = bInvoke;
    return bRequest;
 #else
    HB_SYMBOL_UNUSED( bInvoke );
@@ -10615,8 +10624,10 @@ HB_FUNC( __DBGINVOKEDEBUG )
    HB_STACK_TLS_PRELOAD
 
 #ifndef HB_NO_DEBUG
-   hb_retl( s_bDebugRequest );
-   s_bDebugRequest = hb_parl( 1 );
+   BOOL * pfRequest = hb_stackDebugRequest();
+
+   hb_retl( *pfRequest );
+   *pfRequest = hb_parl( 1 );
 #else
    hb_retl( FALSE );
 #endif

@@ -108,7 +108,7 @@
 #define DEBUGGER_MAXROW         22
 #define DEBUGGER_MAXCOL         77
 
-STATIC s_oDebugger
+THREAD STATIC s_oDebugger
 
 PROCEDURE __dbgAltDEntry()
 

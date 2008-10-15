@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-15 17:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/debug/dbgentry.c
+  * harbour/source/debug/debugger.prg
+    * moved debugRequest flag and debugger internal structure
+      pointer to HVM stack
+    * allocate debugger internal structure dynamically in thread
+      thread local area when PCODE with debug information is executed
+    * changed STATIC s_oDebugger to THREAD STATIC
+    * send HB_DBG_VMQUIT after each thread termination when
+      debugger is activated
+      Now debugger can be used in MT programs and each thread can be
+      debugged separately (each has its own debuger). Please only
+      remember that thread sharing console window can overwrite other
+      threads debugger screen. There is also one limitation which I'll
+      try to remove later: only main thread debugger keeps information
+      about file wide STATIC names and line numbers with possible break
+      point places. This data should be shared between debuggers.
+
 2008-10-15 13:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/source/vm/hvm.c

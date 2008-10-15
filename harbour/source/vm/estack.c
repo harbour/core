@@ -432,6 +432,26 @@ int * hb_stackKeyPolls( void )
    return &hb_stack.iKeyPoll;
 }
 
+#undef hb_stackDebugRequest
+BOOL * hb_stackDebugRequest( void )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackDebugRequest()"));
+
+   return &hb_stack.fDebugRequest;
+}
+
+#undef hb_stackDebugInfo
+void ** hb_stackDebugInfo( void )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackDebugInfo()"));
+
+   return &hb_stack.pDebugInfo;
+}
+
 #undef hb_stackGetPrivateStack
 PHB_PRIVATE_STACK hb_stackGetPrivateStack( void )
 {

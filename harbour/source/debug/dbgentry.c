@@ -64,6 +64,8 @@
 /* dummy function declaration */
 static BOOL hb_clsSetScope( BOOL fScope ) { return fScope; }
 
+#define HB_DBGINFO_DISABLE    ( ( HB_DEBUGINFO * ) ( HB_PTRDIFF ) 0x01 )
+
 #if defined( HB_OS_UNIX_COMPATIBLE )
 #define FILENAME_EQUAL(s1, s2) ( !strcmp( (s1), (s2) ) )
 #else
@@ -171,10 +173,6 @@ typedef struct
    BOOL bInitLines;
    PHB_ITEM pStopLines;
 } HB_DEBUGINFO;
-
-
-static HB_DEBUGINFO s_Info = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* bCBTrace */ TRUE, 0, 0, 0, 0, 0 };
-static HB_DEBUGINFO *s_pInfo = &s_Info;
 
 
 static PHB_ITEM
@@ -364,10 +362,22 @@ hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame )
    int i;
    ULONG nProcLevel;
    char szProcName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
-   HB_DEBUGINFO *info = s_pInfo;
+   HB_DEBUGINFO ** infoPtr = ( HB_DEBUGINFO ** ) hb_stackDebugInfo();
+   HB_DEBUGINFO *info = *infoPtr;
 
-   if ( ( info->bInside || info->bQuit ) && nMode != HB_DBG_VMQUIT )
+   if( info == HB_DBGINFO_DISABLE )
       return;
+   else if ( nMode != HB_DBG_VMQUIT )
+   {
+      if( !info )
+      {
+         info = *infoPtr = ( HB_DEBUGINFO * ) ALLOC( sizeof( HB_DEBUGINFO ) );
+         memset( info, 0, sizeof( HB_DEBUGINFO ) );
+         info->bCBTrace = TRUE;
+      }
+      else if ( info->bInside || info->bQuit )
+         return;
+   }
 
    switch ( nMode )
    {
@@ -536,7 +546,12 @@ hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame )
          return;
 
       case HB_DBG_VMQUIT:
-         hb_dbgQuit( info );
+         if( info )
+         {
+            hb_dbgQuit( info );
+            FREE( info );
+            *infoPtr = HB_DBGINFO_DISABLE;
+         }
          return;
    }
 }
