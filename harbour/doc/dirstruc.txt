@@ -15,11 +15,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |                         make file and Changelog (=changes history) files.
 |
 +---bin                 - Executable and build scripts.
-|   |                     Should contain harbour.exe and other executable. (*)
-|   |
-|   +---b32             -
-|   |
-|   +---vc              -
+|                         Should contain harbour.exe and other executable. (*)
 |
 +---config              - Configuration Files (.cf) for the GNU Make system.
 |   |
@@ -240,16 +236,8 @@ track of all files (read the FAQ if you don't know what SVN is).
 +---include             - Include files for both Harbour and C.
 |
 +---lib                 - Run-Time libraries binaries for each platform. (*)
-|   |
-|   +---b32             -
-|   |
-|   +---vc              -
 |
 +---obj                 - Object files. (*)
-|   |
-|   +---b32             -
-|   |
-|   +---vc              -
 |
 +---source              - All source files reside underneath.
 |   |
