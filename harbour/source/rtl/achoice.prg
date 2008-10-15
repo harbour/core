@@ -75,7 +75,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    nNumRows := nBottom - nTop + 1
 
 
-   IF ValType( xSelect ) $ "A"
+   IF ISARRAY( xSelect )
       alSelect := xSelect
    ELSE
       alSelect := Array( Len( acItems ) )

@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-15 18:12 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/debug/tbrwtext.prg
+    * Replaced with new implementation from Lorenzo Fiorini.
+      Sent to the list on 2008.07.26.
+    ; NOTE: Some issue were reported with this, but it's again 
+            a step into the right direction, please try to update 
+            this code to better resemble to Clipper and to fix 
+            possible error. Thanks.
+    ; Remaining RTL .prg dependencies:
+      - ACHOICE() (just one call)
+
+  * source/debug/debugger.prg
+    * Using hb_MemoWrit() instead of MemoWrit()
+
+  * source/rtl/achoice.prg
+    % Minor opt.
+
 2008-10-15 17:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/debug/dbgtobj.prg
   * source/debug/dbgbrwsr.prg

@@ -2426,7 +2426,7 @@ METHOD SaveSettings() CLASS HBDebugger
          cInfo += "Window Next" + hb_OSNewLine()
       NEXT
 
-      MemoWrit( ::cSettingsFileName, cInfo )
+      hb_MemoWrit( ::cSettingsFileName, cInfo )
    ENDIF
 
    RETURN NIL
