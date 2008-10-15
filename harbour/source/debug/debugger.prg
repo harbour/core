@@ -65,7 +65,9 @@
 #pragma DEBUGINFO=OFF
 #define HB_NO_READDBG
 
+#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
 #include "hbclass.ch"
+
 #include "hbdebug.ch"   // for "nMode" of __dbgEntry
 #include "hbgtinfo.ch"
 #include "hbmemvar.ch"

@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-16 00:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/debug/dbgtobj.prg
+  * harbour/source/debug/dbgbrwsr.prg
+  * harbour/source/debug/dbgtwin.prg
+  * harbour/source/debug/dbgmenu.prg
+  * harbour/source/debug/dbgthsh.prg
+  * harbour/source/debug/tbrwtext.prg
+  * harbour/source/debug/debugger.prg
+  * harbour/source/debug/dbgtarr.prg
+  * harbour/source/debug/dbgtmenu.prg
+  * harbour/source/debug/dbgtmitm.prg
+    * use #define HB_CLS_NOTOBJECT to disable inheritance from HBObject
+      in internal debugger classes.
+      Here is complete list of other .prg functions still used by hbdebug
+      library:
+         GET, __GETLISTACTIVE, __GETLISTSETACTIVE, HBGETLIST, ACHOICE,
+         HB_CSTR, HBCLASS
+
+
 2008-10-15 21:33 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/tbrwtext.prg
     ! refresh rows after active line changing for proper color updating

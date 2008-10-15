@@ -52,8 +52,6 @@
 
 #pragma DEBUGINFO=OFF
 
-#include "hbclass.ch"
-
 #xcommand MENU [<oMenu>] => [ <oMenu> := ] HBDbMenu():New()
 #xcommand MENUITEM [ <oMenuItem> PROMPT ] <cPrompt> ;
           [ IDENT <nIdent> ] [ ACTION <uAction,...> ] ;
