@@ -160,6 +160,7 @@ METHOD GotoLine( n ) CLASS HBBrwText
 METHOD SetActiveLine( n ) CLASS HBBrwText
 
    ::nActiveLine := n
+   ::RefreshAll()
 
    RETURN Self
 

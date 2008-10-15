@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-15 21:33 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/debug/tbrwtext.prg
+    ! refresh rows after active line changing for proper color updating
+
 2008-10-15 20:03 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/tbrwtext.prg
     ! fixed vertical navigation to be compatible with old debugger
