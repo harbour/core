@@ -8,6 +8,39 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-15 10:09 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+    * Removed disabling -b for non-debug builds.
+    ; We aim to remove RTL .prg dependencies from hbdebug.lib, 
+      either by local implementation, .c rewrite, or force 
+      disabling debug mode in more core files.
+      Until this happens, one will have to be careful with 
+      using -b switch to compile Harbour. These are the core .prg 
+      modules currently used by hbdebug.lib:
+      - HBGETLIST(), GET(), __GET(), __GETLISTACTIVE(), __GETLISTSETACTIVE(), READINSERT(), READMODAL()
+      - HBCLASS()
+      - HBOBJECT()
+      - HBEDITOR()
+      - TBCOLUMNNEW()
+      - ACHOICE()
+      - ALERT()
+
+  * source/debug/dbgtobj.prg
+  * source/debug/dbgbrwsr.prg
+  * source/debug/dbgtwin.prg
+  * source/debug/dbgmenu.prg
+  * source/debug/dbgthsh.prg
+  * source/debug/tbrwtext.prg
+  * source/debug/dbgwa.prg
+  * source/debug/debugger.prg
+  * source/debug/dbghelp.prg
+  * source/debug/dbgtarr.prg
+  * source/debug/dbgtmenu.prg
+  * source/debug/dbgtmitm.prg
+    + Readded '#pragma DEBUGINFO=OFF'.
+
 2008-10-15 02:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/langapi.c
   * utils/hbtest/rt_class.prg

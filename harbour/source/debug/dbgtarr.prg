@@ -50,6 +50,8 @@
  *
  */
 
+#pragma DEBUGINFO=OFF
+
 #include "hbclass.ch"
 
 #include "common.ch"
