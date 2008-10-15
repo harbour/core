@@ -70,6 +70,7 @@ CREATE CLASS HBBrwText
 
    VAR cCurLine
    VAR nLineOffset
+   VAR nMaxLineLen
 
    VAR nTop
    VAR nLeft
@@ -81,10 +82,10 @@ CREATE CLASS HBBrwText
 
    METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColors, lLineNumbers )
 
-   METHOD RefreshAll() INLINE ::oBrw:ForceStable(), ::oBrw:RefreshAll()
-   METHOD ForceStable() INLINE ::oBrw:ForceStable()
-   METHOD RefreshCurrent() INLINE ::oBrw:RefreshCurrent()
-   METHOD GotoLine( n ) INLINE ::oBrw:GoTop(), ::oBrw:MoveCursor( n - 1 ), ::RefreshAll()
+   METHOD RefreshAll() INLINE ::oBrw:ForceStable():RefreshAll(), Self
+   METHOD ForceStable() INLINE ::oBrw:ForceStable(), Self
+   METHOD RefreshCurrent() INLINE ::oBrw:RefreshCurrent(), Self
+   METHOD GotoLine( n )
    METHOD SetActiveLine( n )
    METHOD GetLine( n )
    METHOD ToggleBreakPoint( nRow, lSet )
@@ -99,15 +100,15 @@ CREATE CLASS HBBrwText
    METHOD Resize( nTop, nLeft, nBottom, nRight )
    METHOD GetLineColor()
 
-   METHOD Up() INLINE ::oBrw:Up(), ::oBrw:ForceStable()
-   METHOD Down() INLINE ::oBrw:Down(), ::oBrw:ForceStable()
-   METHOD PageUp() INLINE ::oBrw:PageUp(), ::oBrw:ForceStable()
-   METHOD PageDown() INLINE ::oBrw:PageDown(), ::oBrw:ForceStable()
-   METHOD GoTop() INLINE ::oBrw:GoTop(), ::oBrw:ForceStable()
-   METHOD GoBottom() INLINE ::oBrw:GoBottom(), ::oBrw:ForceStable()
+   METHOD Up() INLINE ::oBrw:Up():ForceStable(), Self
+   METHOD Down() INLINE ::oBrw:Down():ForceStable(), Self
+   METHOD PageUp() INLINE ::oBrw:PageUp():ForceStable(), Self
+   METHOD PageDown() INLINE ::oBrw:PageDown():ForceStable(), Self
+   METHOD GoTop() INLINE ::oBrw:GoTop():ForceStable(), Self
+   METHOD GoBottom() INLINE ::oBrw:GoBottom():ForceStable(), Self
 
-   METHOD Right() INLINE iif( ::nLineOffset < Len( ::aRows[ ::nRow ] ), ( ::nLineOffset++, ::RefreshAll() ), NIL )
-   METHOD Left() INLINE iif( ::nLineOffset > 1, ( ::nLineOffset--, ::RefreshAll() ), NIL )
+   METHOD Right() INLINE IIF( ::nLineOffset < ::nMaxLineLen, ( ::nLineOffset++, ::RefreshAll() ), ), Self
+   METHOD Left() INLINE IIF( ::nLineOffset > 1, ( ::nLineOffset--, ::RefreshAll() ), ), Self
 
    METHOD RowPos() INLINE ::nRow
 
@@ -149,6 +150,13 @@ METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColors, lLineNumbers ) CLA
 
    RETURN Self
 
+METHOD GotoLine( n ) CLASS HBBrwText
+
+   ::oBrw:MoveCursor( n - ::nRow )
+   ::RefreshAll()
+
+   RETURN Self
+
 METHOD SetActiveLine( n ) CLASS HBBrwText
 
    ::nActiveLine := n
@@ -179,12 +187,17 @@ METHOD ToggleBreakPoint( nRow, lSet) CLASS HBBrwText
 
 METHOD LoadFile( cFileName ) CLASS HBBrwText
 
+   LOCAL nMaxLineLen := 0
+   LOCAL cLine
+
    ::cFileName := cFileName
-
    ::aRows := Text2Array( MemoRead( cFileName ) )
-
    ::nRows := Len( ::aRows )
 
+   FOR EACH cLine in ::aRows
+      nMaxLineLen := Max( nMaxLineLen, Len( cLine ) )
+   NEXT
+   ::nMaxLineLen := nMaxLineLen
    ::nLineOffset := 1
 
    RETURN NIL
@@ -253,7 +266,7 @@ METHOD Search( cString, lCaseSensitive, nMode ) CLASS HBBrwText
    ENDCASE
 
    DO WHILE Eval( bMove ) != 0
-      IF cString $ iif( lCaseSensitive, ::cCurLine, Upper( ::cCurLine ) )
+      IF cString $ IIF( lCaseSensitive, ::cCurLine, Upper( ::cCurLine ) )
          lFound := .T.
          ::RefreshAll()
          EXIT
@@ -329,27 +342,4 @@ STATIC FUNCTION WhichEOL( cString )
 
 STATIC FUNCTION Text2Array( cString )
 
-   LOCAL cLine
-
-   LOCAL nTokNum := 1
-   LOCAL aArray  := {}
-
-   LOCAL cEOL    := WhichEOL( cString )
-   LOCAL nEOLLen := Len( cEOL )
-
-   LOCAL nRetLen := 0
-   LOCAL ncSLen  := Len( cString )
-
-   LOCAL nTokPos := 0
-
-   DO WHILE nRetLen < ncSLen
-
-      cLine := hb_TokenPtr(@cString, @nTokPos, cEOL )
-
-      nRetLen += Len( cLine ) + nEOLLen
-
-      AAdd( aArray, cLine )
-
-   ENDDO
-
-   RETURN aArray
+   RETURN hb_aTokens( cString, WhichEOL( cString ) )
