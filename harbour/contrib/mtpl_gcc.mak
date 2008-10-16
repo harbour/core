@@ -122,7 +122,7 @@ CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)
 CLIBFLAGS      := -c $(CFLAGS) $(CLIBFLAGS)
 HARBOURFLAGS   := -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -km -l $(PRG_USR) $(HARBOURFLAGS)
 ifeq ($(HB_BUILD_DEBUG),yes)
-HARBOURFLAGS   := $(HARBOURFLAGS) -b -l-
+HARBOURFLAGS   := $(HARBOURFLAGS) -b
 endif
 LDFLAGS        := $(LDFLAGS)
 

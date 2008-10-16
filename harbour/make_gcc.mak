@@ -178,7 +178,7 @@ endif
 
 HBFLAGSCMN     := -i$(INCLUDE_DIR) -q0 -w3 -es2 -km -l $(PRG_USR)
 ifeq ($(HB_BUILD_DEBUG),yes)
-HBFLAGSCMN     := $(HBFLAGSCMN) -l-
+HBFLAGSCMN     := $(HBFLAGSCMN) -b
 endif
 HARBOURFLAGS   := -n $(HBFLAGSCMN)
 HARBOURFLAGSDLL:= -n1 $(HBFLAGSCMN)

@@ -1133,7 +1133,7 @@ METHOD EditColor( nColor, oBrwColors ) CLASS HBDebugger
    READ
    SetCursor( SC_NONE )
 #else
-   cColor := getdbginput( Row(), Col() + 15, cColor, ;
+   cColor := __dbgInput( Row(), Col() + 15, cColor, ;
                            { | cColor | iif( Type( cColor ) != "C", ;
                                  ( __dbgAlert( "Must be string" ), .F. ), .T. ) }, ;
                            SubStr( ::ClrModal(), 5 ) )
@@ -1170,7 +1170,7 @@ METHOD EditSet( nSet, oBrwSets ) CLASS HBDebugger
    READ
    SetCursor( SC_NONE )
 #else
-   cSet := getdbginput( Row(), Col() + 13, cSet, ;
+   cSet := __dbgInput( Row(), Col() + 13, cSet, ;
                { | cSet | iif( Type( cSet ) != cType, ;
                   ( __dbgAlert( "Must be of type '" + cType + "'" ), .F. ), .T. ) }, ;
                SubStr( ::ClrModal(), 5 ) )
@@ -1597,7 +1597,7 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
       SetKey( K_LBUTTONDOWN, bMouseSave)
       SetCursor( nOldCursor )
 #else
-      uTemp := getdbginput( nTop + 1, nLeft + 1, uTemp, bValid, __DbgColors()[ 5 ] )
+      uTemp := __dbgInput( nTop + 1, nLeft + 1, uTemp, bValid, __DbgColors()[ 5 ] )
 #endif
    ELSE
       hb_dispOutAt( nTop + 1, nLeft + 1, __dbgValToStr( uValue ), "," + __DbgColors()[ 5 ] )
@@ -3393,9 +3393,7 @@ STATIC FUNCTION strip_path( cFileName )
    RETURN cName + cExt
 
 
-#ifdef HB_NO_READDBG
-
-STATIC FUNCTION getdbginput( nTop, nLeft, uValue, bValid, cColor )
+STATIC FUNCTION __dbgInput( nTop, nLeft, uValue, bValid, cColor )
 
    LOCAL nOldCursor := SetCursor( SC_NORMAL )
    LOCAL uTemp := uValue
@@ -3420,8 +3418,6 @@ STATIC FUNCTION getdbginput( nTop, nLeft, uValue, bValid, cColor )
    SetCursor( nOldCursor )
 
    RETURN uTemp
-
-#endif
 
 
 FUNCTION __dbgAchoice( nTop, nLeft, nBottom, nRight, aItems, cColors )

@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-16 13:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+    + Readded -b when HB_BUILD_STATIC=yes.
+      Now it should work.
+
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_gcc.mak
+  * contrib/mtpl_vc.mak
+    % Deleted -l- switch when HB_BUILD_STATIC=yes.
+      Line numbers are automatically enabled when 
+      -b switch is used.
+
+  * source/debug/debugger.prg
+    * Renamed getdbginput() -> __dbgInput()
+
+  ; NOTE to TOFIX: Do we need "Mono display" these days? :)
+
 2008-10-16 13:08 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/debugger.prg
     + added __dbgAChoice() - simple AChoice() replacement which uses
