@@ -72,6 +72,7 @@ CREATE CLASS HBBrwText
    VAR cCurLine
    VAR nLineOffset
    VAR nMaxLineLen
+   VAR nTabWidth INIT 4
 
    VAR nTop
    VAR nLeft
@@ -114,6 +115,8 @@ CREATE CLASS HBBrwText
    METHOD RowPos() INLINE ::nRow
 
    METHOD LoadFile( cFileName )
+
+   VAR colorSpec IS colorSpec IN oBrw
 
 ENDCLASS
 
@@ -167,7 +170,9 @@ METHOD SetActiveLine( n ) CLASS HBBrwText
 
 METHOD GetLine() CLASS HBBrwText
 
-   RETURN PadR( AllTrim( Str( ::nRow ) ) + ": " + SubStr( ::aRows[ ::nRow ], ::nLineOffset ), ::nWidth )
+   RETURN PadR( AllTrim( Str( ::nRow ) ) + ": " + SubStr( ;
+                MemoLine( ::aRows[ ::nRow ], ::nWidth + ::nLineOffset, 1, ::nTabWidth, .f. ),;
+                ::nLineOffset ), ::nWidth )
 
 METHOD ToggleBreakPoint( nRow, lSet) CLASS HBBrwText
 
@@ -197,7 +202,9 @@ METHOD LoadFile( cFileName ) CLASS HBBrwText
    ::nRows := Len( ::aRows )
 
    FOR EACH cLine in ::aRows
-      nMaxLineLen := Max( nMaxLineLen, Len( cLine ) )
+      MemoLine( cLine, ::nWidth, 1, ::nTabWidth, .f. )
+      nMaxLineLen := Max( nMaxLineLen, ;
+         Len( RTrim( MemoLine( cLine, Len( cLine ) + 256, 1, ::nTabWidth, .f. ) ) ) )
    NEXT
    ::nMaxLineLen := nMaxLineLen
    ::nLineOffset := 1

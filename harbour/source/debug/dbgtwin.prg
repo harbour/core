@@ -173,7 +173,7 @@ METHOD SetCaption( cCaption ) CLASS HBDbWindow
 METHOD ShowCaption CLASS HBDbWindow
 
    IF ! Empty( ::cCaption )
-      DispOutAt( ::nTop, ::nLeft + ( ( ::nRight - ::nLeft ) / 2 ) - ;
+      hb_dispOutAt( ::nTop, ::nLeft + ( ( ::nRight - ::nLeft ) / 2 ) - ;
          ( ( Len( ::cCaption ) + 2 ) / 2 ),;
          " " + ::cCaption + " ", ::cColor )
    ENDIF
@@ -201,7 +201,7 @@ METHOD Refresh() CLASS HBDbWindow
    @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX iif( ::lFocused, B_DOUBLE, B_SINGLE ) ;
       COLOR ::cColor
 
-   DispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
+   hb_dispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
 
    ::ShowCaption( ::cCaption )
 
@@ -293,7 +293,7 @@ METHOD Move() Class HBDbWindow
 
    DO WHILE .T.
       RestScreen( ,,,, ::cbackimage )
-      DispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( Chr( 176 ), 8 ) + " " )
+      hb_dispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( Chr( 176 ), 8 ) + " " )
 
       nKey := Inkey( 0 )
 

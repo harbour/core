@@ -489,17 +489,17 @@ METHOD BarDisplay() CLASS HBDebugger
 
    @ ::nMaxRow, 0 CLEAR TO ::nMaxRow, ::nMaxCol
 
-   DispOutAt( ::nMaxRow,  0, "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace", cClrItem )
-   DispOutAt( ::nMaxRow,  0, "F1", cClrHotKey )
-   DispOutAt( ::nMaxRow,  8, "F2", cClrHotKey )
-   DispOutAt( ::nMaxRow, 16, "F3", cClrHotKey )
-   DispOutAt( ::nMaxRow, 26, "F4", cClrHotKey )
-   DispOutAt( ::nMaxRow, 34, "F5", cClrHotKey )
-   DispOutAt( ::nMaxRow, 40, "F6", cClrHotKey )
-   DispOutAt( ::nMaxRow, 46, "F7", cClrHotKey )
-   DispOutAt( ::nMaxRow, 54, "F8", cClrHotKey )
-   DispOutAt( ::nMaxRow, 62, "F9", cClrHotKey )
-   DispOutAt( ::nMaxRow, 70, "F10", cClrHotKey )
+   hb_dispOutAt( ::nMaxRow,  0, "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace", cClrItem )
+   hb_dispOutAt( ::nMaxRow,  0, "F1", cClrHotKey )
+   hb_dispOutAt( ::nMaxRow,  8, "F2", cClrHotKey )
+   hb_dispOutAt( ::nMaxRow, 16, "F3", cClrHotKey )
+   hb_dispOutAt( ::nMaxRow, 26, "F4", cClrHotKey )
+   hb_dispOutAt( ::nMaxRow, 34, "F5", cClrHotKey )
+   hb_dispOutAt( ::nMaxRow, 40, "F6", cClrHotKey )
+   hb_dispOutAt( ::nMaxRow, 46, "F7", cClrHotKey )
+   hb_dispOutAt( ::nMaxRow, 54, "F8", cClrHotKey )
+   hb_dispOutAt( ::nMaxRow, 62, "F9", cClrHotKey )
+   hb_dispOutAt( ::nMaxRow, 70, "F10", cClrHotKey )
 
    DispEnd()
 
@@ -538,7 +538,7 @@ METHOD BuildCommandWindow() CLASS HBDebugger
    ::oWndCommand:bGotFocus   := { || ::oGetListCommand:SetFocus(), SetCursor( SC_NORMAL ) }
    ::oWndCommand:bLostFocus  := { || SetCursor( SC_NONE ) }
    ::oWndCommand:bKeyPressed := { | nKey | ::CommandWindowProcessKey( nKey ) }
-   ::oWndCommand:bPainted    := { || DispOutAt( ::oWndCommand:nBottom - 1,;
+   ::oWndCommand:bPainted    := { || hb_dispOutAt( ::oWndCommand:nBottom - 1,;
                              ::oWndCommand:nLeft + 1, "> ", __DbgColors()[ 2 ] ),;
                              oGet:ColorDisp( Replicate( __DbgColors()[ 2 ] + ",", 5 ) ),;
                              hb_ClrArea( ::oWndCommand:nTop + 1, ::oWndCommand:nLeft + 1,;
@@ -795,7 +795,7 @@ METHOD CommandWindowProcessKey( nKey ) CLASS HBDebugger
 
       IF ! Empty( cCommand )
          IF ( n := AScan( ::aLastCommands, cCommand ) ) > 0 .AND. n < Len( ::aLastCommands )
-            ADel( ::aLastCommands, n, .T. )
+            HB_ADel( ::aLastCommands, n, .T. )
          ENDIF
          ::nCommand := Len( ::aLastCommands )
          ::aLastCommands[ ::nCommand ] := cCommand
@@ -805,7 +805,7 @@ METHOD CommandWindowProcessKey( nKey ) CLASS HBDebugger
          ::DoCommand( cCommand )
       ENDIF
 
-      DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ",;
+      hb_dispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ",;
          __DbgColors()[ 2 ] )
       cCommand := Space( nWidth )
       ::oGetListCommand:Get():VarPut( cCommand )
@@ -1071,11 +1071,11 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
    ENDCASE
 
    IF ::lActive
-      DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, ;
+      hb_dispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, ;
                  Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ), ;
                  __DbgColors()[ 2 ] )
       IF !Empty( cResult )
-         DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3, ;
+         hb_dispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3, ;
                      cResult, __DbgColors()[ 2 ] )
          ::oWndCommand:ScrollUp( 1 )
       ENDIF
@@ -1589,7 +1589,7 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
       uTemp := getdbginput( nTop + 1, nLeft + 1, uTemp, bValid, __DbgColors()[ 5 ] )
 #endif
    ELSE
-      DispOutAt( nTop + 1, nLeft + 1, __dbgValToStr( uValue ), "," + __DbgColors()[ 5 ] )
+      hb_dispOutAt( nTop + 1, nLeft + 1, __dbgValToStr( uValue ), "," + __DbgColors()[ 5 ] )
       SetPos( nTop + 1, nLeft + 1 )
       nOldCursor := SetCursor( SC_NONE )
 
@@ -1950,7 +1950,7 @@ METHOD Open() CLASS HBDebugger
 
    ASort( aFiles )
    ASize( aFiles, Len( aFiles ) + 1 )
-   AIns( aFiles, 1, "(Another file)" )
+   HB_AIns( aFiles, 1, "(Another file)" )
 
    nFileName := ::ListBox( "Please choose a source file", aFiles )
    IF nFileName == 0
@@ -2451,7 +2451,7 @@ METHOD Show() CLASS HBDebugger
    ::oPullDown:Display()
    ::oWndCode:Show( .T. )
    ::oWndCommand:Show()
-   DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, ">" )
+   hb_dispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, ">" )
 
    ::BarDisplay()
 

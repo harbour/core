@@ -220,7 +220,7 @@ METHOD Display() CLASS HBDbMenu
    SetColor( ::cClrPopup )
 
    IF ! ::lPopup
-      DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
+      hb_dispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
       SetPos( 0, 0 )
    ELSE
       ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
@@ -230,7 +230,7 @@ METHOD Display() CLASS HBDbMenu
 
    FOR n := 1 TO Len( ::aItems )
       IF ::aItems[ n ]:cPrompt == "-"  // Separator
-         DispOutAt( ::aItems[ n ]:nRow, ::nLeft,;
+         hb_dispOutAt( ::aItems[ n ]:nRow, ::nLeft,;
             Chr( 195 ) + Replicate( Chr( 196 ), ::nRight - ::nLeft - 1 ) + Chr( 180 ) )
       ELSE
          ::aItems[ n ]:Display( ::cClrPopup, ::cClrHotKey )
@@ -397,7 +397,7 @@ METHOD Refresh() CLASS HBDbMenu
    DispBegin()
 
    IF ! ::lPopup
-      DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
+      hb_dispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
       SetPos( 0, 0 )
    ENDIF
 

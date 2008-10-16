@@ -68,7 +68,7 @@ CREATE CLASS HBDbBrowser
 
    VAR Window
    VAR cargo
-   
+
    VAR nTop
    VAR nLeft
    VAR nBottom
@@ -124,7 +124,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow ) CLASS HBDbBrowser
    ::nLeft := nLeft
    ::nBottom := nBottom
    ::nRight := nRight
-   
+
    RETURN Self
 
 METHOD Configure()
@@ -160,7 +160,7 @@ METHOD ForceStable()
       IF Empty( ::aRowState[ nRow ] )
          ::GoTo( ::nFirstVisible + nRow - 1 )
          IF ::hitBottom
-            DispOutAt( ::nTop + nRow - 1, ::nLeft, Space( ::nRight - ::nLeft + 1 ), ::aColorSpec[ 1 ] )
+            hb_dispOutAt( ::nTop + nRow - 1, ::nLeft, Space( ::nRight - ::nLeft + 1 ), ::aColorSpec[ 1 ] )
          ELSE
             nColX := ::nLeft
             FOR nCol := 1 TO Len( ::aColumns )
@@ -179,7 +179,7 @@ METHOD ForceStable()
                   ELSE
                      nWid := oCol:width
                   ENDIF
-                  DispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( nCol < Len( ::aColumns ), " ", "" ), ::aColorSpec[ nClr ] )
+                  hb_dispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( nCol < Len( ::aColumns ), " ", "" ), ::aColorSpec[ nClr ] )
                   nColX += nWid + 1
                ENDIF
             NEXT

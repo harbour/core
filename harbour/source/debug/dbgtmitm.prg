@@ -94,12 +94,12 @@ METHOD Display( cClrText, cClrHotKey ) CLASS HBDbMenuItem
 
    LOCAL nAt
 
-   DispOutAt( ::nRow, ::nCol, StrTran( ::cPrompt, "~", "" ), cClrText )
+   hb_dispOutAt( ::nRow, ::nCol, StrTran( ::cPrompt, "~", "" ), cClrText )
 
-   DispOutAt( ::nRow, ::nCol + ;
+   hb_dispOutAt( ::nRow, ::nCol + ;
      ( nAt := At( "~", ::cPrompt ) ) - 1,;
      SubStr( ::cPrompt, nAt + 1, 1 ), cClrHotKey )
 
-   DispOutAt( ::nRow, ::nCol, iif( ::lChecked, Chr( 251 ), "" ), cClrText )
+   hb_dispOutAt( ::nRow, ::nCol, iif( ::lChecked, Chr( 251 ), "" ), cClrText )
 
    RETURN Self

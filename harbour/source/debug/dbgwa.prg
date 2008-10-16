@@ -168,9 +168,9 @@ STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
 
    /* Display captions */
 
-   DispOutAt( oDlg:nTop, oDlg:nLeft + 5, " Area ", oDlg:cColor )
-   DispOutAt( oDlg:nTop, oDlg:nLeft + 28, " Status ", oDlg:cColor )
-   DispOutAt( oDlg:nTop, oDlg:nLeft + 56, " Structure ", oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop, oDlg:nLeft + 5, " Area ", oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop, oDlg:nLeft + 28, " Status ", oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop, oDlg:nLeft + 56, " Structure ", oDlg:cColor )
 
    /* Display separator lines */
 
@@ -178,30 +178,30 @@ STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
      oDlg:nBottom - 1, oDlg:nLeft + 12 ;
      COLOR oDlg:cColor
 
-   DispOutAt( oDlg:nTop, oDlg:nLeft + 12, Chr( 194 ), oDlg:cColor )
-   DispOutAt( oDlg:nBottom, oDlg:nLeft + 12, Chr( 193 ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop, oDlg:nLeft + 12, Chr( 194 ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nBottom, oDlg:nLeft + 12, Chr( 193 ), oDlg:cColor )
 
    @ oDlg:nTop + 1, oDlg:nLeft + 51 TO ;
      oDlg:nBottom - 1, oDlg:nLeft + 51 ;
      COLOR oDlg:cColor
 
-   DispOutAt( oDlg:nTop, oDlg:nLeft + 51, Chr( 194 ), oDlg:cColor )
-   DispOutAt( oDlg:nBottom, oDlg:nLeft + 51, Chr( 193 ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop, oDlg:nLeft + 51, Chr( 194 ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nBottom, oDlg:nLeft + 51, Chr( 193 ), oDlg:cColor )
 
    @ oDlg:nTop + 6, oDlg:nLeft + 13 TO ;
      oDlg:nTop + 6, oDlg:nLeft + 50 ;
      COLOR oDlg:cColor
 
-   DispOutAt( oDlg:nTop + 6, oDlg:nLeft + 12, Chr( 195 ), oDlg:cColor )
-   DispOutAt( oDlg:nTop + 6, oDlg:nLeft + 51, Chr( 180 ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 6, oDlg:nLeft + 12, Chr( 195 ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 6, oDlg:nLeft + 51, Chr( 180 ), oDlg:cColor )
 
    /* Display labels */
 
-   DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 13, "Alias:                Record:         ", oDlg:cColor )
-   DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 13, "   BOF:         Deleted:              ", oDlg:cColor )
-   DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 13, "   EOF:           Found:              ", oDlg:cColor )
-   DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 13, "Filter:                               ", oDlg:cColor )
-   DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 13, "   Key:                               ", oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 1, oDlg:nLeft + 13, "Alias:                Record:         ", oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 2, oDlg:nLeft + 13, "   BOF:         Deleted:              ", oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 3, oDlg:nLeft + 13, "   EOF:           Found:              ", oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 4, oDlg:nLeft + 13, "Filter:                               ", oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 5, oDlg:nLeft + 13, "   Key:                               ", oDlg:cColor )
 
    /* Stabilize browse */
 
@@ -355,22 +355,22 @@ STATIC PROCEDURE UpdateInfo( oDlg, cAlias )
    IF Empty( cAlias )
       RETURN
    ENDIF
-   
+
    nOldArea := Select()
-   
+
    dbSelectArea( cAlias )
 
-   DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 20, PadR( cAlias, 11 ), oDlg:cColor )
-   DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 42,;
-              PadR( LTrim( Str( RecNo() ) ) + "/" + LTrim( Str( LastRec() ) ), 9 ),;
-              oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 1, oDlg:nLeft + 20, PadR( cAlias, 11 ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 1, oDlg:nLeft + 42,;
+                 PadR( LTrim( Str( RecNo() ) ) + "/" + LTrim( Str( LastRec() ) ), 9 ),;
+                 oDlg:cColor )
 
-   DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 21, iif( Bof(), "Yes", "No " ), oDlg:cColor )
-   DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 38, iif( Deleted(), "Yes", "No " ), oDlg:cColor )
-   DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 21, iif( Eof(), "Yes", "No " ), oDlg:cColor )
-   DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 38, iif( Found(), "Yes", "No " ), oDlg:cColor )
-   DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 21, PadR( dbFilter(), 29 ), oDlg:cColor )
-   DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 21, PadR( ordKey(), 29 ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 2, oDlg:nLeft + 21, iif( Bof(), "Yes", "No " ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 2, oDlg:nLeft + 38, iif( Deleted(), "Yes", "No " ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 3, oDlg:nLeft + 21, iif( Eof(), "Yes", "No " ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 3, oDlg:nLeft + 38, iif( Found(), "Yes", "No " ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 4, oDlg:nLeft + 21, PadR( dbFilter(), 29 ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop + 5, oDlg:nLeft + 21, PadR( ordKey(), 29 ), oDlg:cColor )
 
    dbSelectArea( nOldArea )
 

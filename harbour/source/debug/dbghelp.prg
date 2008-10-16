@@ -98,9 +98,9 @@ PROCEDURE __dbgHelp( nTopic )
 
 STATIC PROCEDURE PaintWindow( oDlg, oBrw, aTopics )
 
-   DispBox( oDlg:nTop + 1, oDlg:nLeft + 13, oDlg:nBottom - 1, oDlg:nLeft + 13, 1, oDlg:cColor )
-   DispOutAt( oDlg:nTop , oDlg:nLeft + 13 , Chr( 194 ), oDlg:cColor )
-   DispOutAt( oDlg:nBottom , oDlg:nLeft + 13 , Chr( 193 ), oDlg:cColor )
+   hb_dispBox( oDlg:nTop + 1, oDlg:nLeft + 13, oDlg:nBottom - 1, oDlg:nLeft + 13, 1, oDlg:cColor )
+   hb_dispOutAt( oDlg:nTop , oDlg:nLeft + 13 , Chr( 194 ), oDlg:cColor )
+   hb_dispOutAt( oDlg:nBottom , oDlg:nLeft + 13 , Chr( 193 ), oDlg:cColor )
 
    oBrw:ForceStable()
    ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 ) // Start on page 1
@@ -222,13 +222,13 @@ STATIC PROCEDURE ShowTopic( oDlg, aTopics, nTopic, nPageOp )
    nRowsToPaint := Min( nRows, Len( aTopics[ nTopic ][ 2 ] ) - ( ( oDebug:nHelpPage - 1 ) * nRows ) )
 
    FOR n := 1 TO nRowsToPaint
-      DispOutAt( 2 + n, 16, aTopics[ nTopic ][ 2 ][ ( ( oDebug:nHelpPage - 1 ) * nRows ) + n ] )
+      hb_dispOutAt( 2 + n, 16, aTopics[ nTopic ][ 2 ][ ( ( oDebug:nHelpPage - 1 ) * nRows ) + n ] )
    NEXT
 
    IF Len( aTopics[ nTopic ][ 2 ] ) <= nRows
-      DispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page 1 of 1 " )
+      hb_dispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page 1 of 1 " )
    ELSE
-      DispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page " + Str( oDebug:nHelpPage, 1 ) + " of " + Str( nPages, 1 ) + " " )
+      hb_dispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page " + Str( oDebug:nHelpPage, 1 ) + " of " + Str( nPages, 1 ) + " " )
    ENDIF
 
    RETURN

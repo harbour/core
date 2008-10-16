@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-16 04:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/debug/dbgbrwsr.prg
+  * harbour/source/debug/dbgtwin.prg
+  * harbour/source/debug/tbrwtext.prg
+  * harbour/source/debug/dbgwa.prg
+  * harbour/source/debug/debugger.prg
+  * harbour/source/debug/dbghelp.prg
+  * harbour/source/debug/dbgtmenu.prg
+  * harbour/source/debug/dbgtmitm.prg
+    * use hb_dispOutAt()/hb_dispBox() instead of DispOutAt()/DispBox()
+    ! fixed using ADel()/AIns() with xHarbour extended parameters
+    ! fixed RT debugger errors caused by missing ::nTabWidth and ::colorSpec
+      in HBBrwText class
+    ! fixed processing source code with TABs (chr(9))
+    ; TOFIX: "Mono Display" causes RT error due to missing color index
+             range checking. It also does not change all colors immediately
+    ; TOFIX: getdbginput(): writing out of window area, scrolling internal
+             buffer, cursor navigation, interrupting by ESC
+
 2008-10-16 00:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/dbgtobj.prg
   * harbour/source/debug/dbgbrwsr.prg
@@ -25,7 +44,6 @@
       library:
          GET, __GETLISTACTIVE, __GETLISTSETACTIVE, HBGETLIST, ACHOICE,
          HB_CSTR, HBCLASS
-
 
 2008-10-15 21:33 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/tbrwtext.prg
