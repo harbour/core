@@ -129,7 +129,7 @@ CFLAGS         = -Zi $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -km -l $(PRG_USR) $(HARBOURFLAGS)
 !if "$(HB_BUILD_DEBUG)" == "yes"
-HARBOURFLAGS   = $(HARBOURFLAGS) -b
+HARBOURFLAGS   = $(HARBOURFLAGS) -l-
 !endif
 LDFLAGS        =  $(LDFLAGS) $(L_USR)
 

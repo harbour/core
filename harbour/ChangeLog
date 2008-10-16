@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-16 14:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_gcc.mak
+  * contrib/mtpl_vc.mak
+    * Changed -b switch to -l-.
+      -b debug mode causes more problems than good for Harbour 
+      core/contrib.
+
 2008-10-16 13:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak
