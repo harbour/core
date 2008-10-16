@@ -59,7 +59,7 @@ CREATE CLASS HBPersistent
    METHOD LoadFromFile( cFileName ) INLINE ::LoadFromText( MemoRead( cFileName ) )
    METHOD LoadFromText( cObjectText )
    METHOD SaveToText( cObjectName, nIndent )
-   METHOD SaveToFile( cFileName ) INLINE MemoWrit( cFileName, ::SaveToText() )
+   METHOD SaveToFile( cFileName ) INLINE hb_MemoWrit( cFileName, ::SaveToText() )
 
 ENDCLASS
 

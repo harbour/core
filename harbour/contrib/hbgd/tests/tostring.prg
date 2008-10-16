@@ -38,7 +38,7 @@ PROCEDURE Main()
 
    //Tracelog( oI:ToString() )
 
-   MemoWrit( IMAGES_OUT + "teststring.jpg", oI:ToString() )
+   hb_MemoWrit( IMAGES_OUT + "teststring.jpg", oI:ToString() )
 
    oI:SaveToFile( IMAGES_OUT + "testtofile" )
 
@@ -47,4 +47,3 @@ PROCEDURE Main()
    ?
 
 RETURN
-

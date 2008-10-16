@@ -215,18 +215,20 @@ PROCEDURE gdImageToFile( oImage, cFile )
      WITH OBJECT oImage
         IF :cType != NIL
            DO CASE
-              CASE :cType == "jpeg"
-                   cString := :ToStringJpeg()
-                   cExt    := "jpg"
-              CASE :cType == "gif"
-                   cString := :ToStringGif()
-                   cExt    := "gif"
-              CASE :cType == "png"
-                   cString := :ToStringPng()
-                   cExt    := "png"
+           CASE :cType == "jpeg"
+                cString := :ToStringJpeg()
+                cExt    := ".jpg"
+           CASE :cType == "gif"
+                cString := :ToStringGif()
+                cExt    := ".gif"
+           CASE :cType == "png"
+                cString := :ToStringPng()
+                cExt    := ".png"
+           OTHERWISE
+                cExt    := ""
            ENDCASE
            IF cString != NIL
-              MemoWrit( cFile + "." + cExt, cString )
+              hb_MemoWrit( cFile + cExt, cString )
            ENDIF
         ENDIF
      END
