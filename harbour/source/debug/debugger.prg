@@ -1696,7 +1696,6 @@ METHOD ListBox( cCaption, aItems ) CLASS HBDebugger
    LOCAL nRight
    LOCAL oWndList
    LOCAL cSelected := ""
-   LOCAL cColors
    LOCAL n
 
    nItems := Len( aItems )
@@ -1713,11 +1712,10 @@ METHOD ListBox( cCaption, aItems ) CLASS HBDebugger
    oWndList:lShadow := .T.
    oWndList:Show()
 
-   cColors := SetColor( ::aColors[ 8 ] + "," + ::aColors[ 10 ] )
-   n := AChoice( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1, aItems )
-   SetColor( cColors )
-
+   n := __dbgAChoice( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1, aItems, ;
+                      ::aColors[ 8 ] + "," + ::aColors[ 10 ] )
    oWndList:Hide()
+
    RETURN n
 
 
@@ -3407,8 +3405,8 @@ STATIC FUNCTION getdbginput( nTop, nLeft, uValue, bValid, cColor )
    ENDIF
 
    DO WHILE .T.
-      @ nTop, nLeft SAY Space( Len( uTemp ) )
-      @ nTop, nLeft SAY ""
+      hb_dispOutAt( nTop, nLeft, Space( Len( uTemp ) ), cColor )
+      SetPos( nTop, nLeft )
 
       ACCEPT TO uTemp
 
@@ -3425,8 +3423,46 @@ STATIC FUNCTION getdbginput( nTop, nLeft, uValue, bValid, cColor )
 
 #endif
 
+
+FUNCTION __dbgAchoice( nTop, nLeft, nBottom, nRight, aItems, cColors )
+   LOCAL oBrw
+   LOCAL oCol
+   LOCAL nRow
+   LOCAL nKey
+   LOCAL nLen
+
+   oBrw := HBDbBrowser():New( nTop, nLeft, nBottom, nRight )
+   oBrw:colorSpec := IIF( ISCHARACTER( cColors ), cColors, SetColor() )
+   nLen := nRight - nLeft + 1
+   nRow := 1
+   oCol := HBDbColumnNew( "", {|| PadR( aItems[ nRow ], nLen ) } )
+   oBrw:AddColumn( oCol )
+   oBrw:goTopBlock := {|| nRow := 1 }
+   oBrw:goBottomBlock := {|| nRow := Len( aItems ) }
+   oBrw:skipBlock := {| n | n := IIF( n < 0, Max( n, 1 - nRow ), ;
+                                             Min( Len( aItems ) - nRow, n ) ), ;
+                            nRow += n, n }
+   WHILE .T.
+      oBrw:forceStable()
+      nKey := Inkey( 0 )
+      SWITCH nKey
+         CASE K_UP;     oBrw:up();        EXIT
+         CASE K_DOWN;   oBrw:down();      EXIT
+         CASE K_PGUP;   oBrw:pageUp();    EXIT
+         CASE K_PGDN;   oBrw:pageDown();  EXIT
+         CASE K_HOME;   oBrw:goTop();     EXIT
+         CASE K_END;    oBrw:goBottom();  EXIT
+         CASE K_ESC;    nRow := 0
+         CASE K_ENTER;  RETURN nRow
+      ENDSWITCH
+   ENDDO
+
+   RETURN 0
+
+
 FUNCTION __dbgAlert( cMessage )
    RETURN hb_gtAlert( cMessage, { "Ok" }, "W+/R", "W+/B" )
+
 
 FUNCTION __dbgValToStr( uVal )
 
@@ -3446,6 +3482,7 @@ FUNCTION __dbgValToStr( uVal )
    ENDCASE
 
    RETURN "U"
+
 
 /* NOTE: This is a copy of hb_CStr() */
 
