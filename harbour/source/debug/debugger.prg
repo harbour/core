@@ -1133,8 +1133,8 @@ METHOD EditColor( nColor, oBrwColors ) CLASS HBDebugger
    READ
    SetCursor( SC_NONE )
 #else
-   cColor := __dbgInput( Row(), Col() + 15, cColor, ;
-                           { | cColor | iif( Type( cColor ) != "C", ;
+   cColor := __dbgInput( Row(), Col() + 15,, cColor, ;
+                         { | cColor | iif( Type( cColor ) != "C", ;
                                  ( __dbgAlert( "Must be string" ), .F. ), .T. ) }, ;
                            SubStr( ::ClrModal(), 5 ) )
 #endif
@@ -1170,7 +1170,7 @@ METHOD EditSet( nSet, oBrwSets ) CLASS HBDebugger
    READ
    SetCursor( SC_NONE )
 #else
-   cSet := __dbgInput( Row(), Col() + 13, cSet, ;
+   cSet := __dbgInput( Row(), Col() + 13,, cSet, ;
                { | cSet | iif( Type( cSet ) != cType, ;
                   ( __dbgAlert( "Must be of type '" + cType + "'" ), .F. ), .T. ) }, ;
                SubStr( ::ClrModal(), 5 ) )
@@ -1555,33 +1555,40 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
    LOCAL nRight  := nLeft + 50
    LOCAL cType   := ValType( uValue )
    LOCAL nWidth  := nRight - nLeft - 1
-   LOCAL cPicture
    LOCAL uTemp
    LOCAL nOldCursor
-   LOCAL lScoreBoard := Set( _SET_SCOREBOARD, .F. )
+   LOCAL nOldRow
+   LOCAL nOldCol
    LOCAL lExit
    LOCAL oWndInput := HBDbWindow():New( nTop, nLeft, nBottom, nRight, cMsg,;
                                        ::oPullDown:cClrPopup )
 #ifndef HB_NO_READDBG
+   LOCAL lScoreBoard := Set( _SET_SCOREBOARD, .F. )
    LOCAL GetList := {}
    LOCAL bMouseSave
    LOCAL oGet
+   LOCAL cPicture
 #endif
 
    DEFAULT lEditable TO .T.
 
-   IF cType == "C" .AND. Len( uValue ) > nWidth
-      uTemp := uValue
-      cPicture := "@s" + LTrim( Str( nWidth ) )
-   ELSE
-      uTemp := PadR( uValue, nWidth )
-   ENDIF
-
    oWndInput:lShadow := .T.
    oWndInput:Show()
 
+   nOldCursor := SetCursor()
+   nOldRow := Row()
+   nOldCol := Col()
+
+   uTemp := uValue
+
    IF lEditable
+
 #ifndef HB_NO_READDBG
+      IF cType == "C" .AND. Len( uValue ) > nWidth
+         cPicture := "@s" + LTrim( Str( nWidth ) )
+      ELSE
+         uTemp := PadR( uValue, nWidth )
+      ENDIF
       IF bValid == NIL
          @ nTop + 1, nLeft + 1 GET uTemp PICTURE cPicture COLOR "," + __DbgColors()[ 5 ]
       ELSE
@@ -1589,20 +1596,32 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
            COLOR "," + __DbgColors()[ 5 ]
       ENDIF
 
-      nOldCursor := SetCursor( SC_NORMAL )
+      SetCursor( SC_NORMAL )
       oGet := ATail( GetList )
       bMouseSave := SetKey( K_LBUTTONDOWN, { || iif( MRow() == nTop .AND. MCol() == nLeft + 2,;
          ( oGet:undo(), oGet:exitState := GE_ESCAPE, .T. ), .F. ) } )
       READ
+      IF LastKey() == K_ESC
+         uTemp := uValue
+      ENDIF
       SetKey( K_LBUTTONDOWN, bMouseSave)
-      SetCursor( nOldCursor )
 #else
-      uTemp := __dbgInput( nTop + 1, nLeft + 1, uTemp, bValid, __DbgColors()[ 5 ] )
+      IF cType != "C" .OR. Len( uValue ) < nWidth
+         uTemp := PadR( uValue, nWidth )
+      ENDIF
+      uTemp := __dbgInput( nTop + 1, nLeft + 1, nWidth, uTemp, bValid, ;
+                           __DbgColors()[ 5 ], Max( Max( nWidth, Len( uTemp ) ), 256 ) )
 #endif
+      SWITCH cType
+         CASE "C" ; uTemp := AllTrim( uTemp ) ; EXIT
+         CASE "D" ; uTemp := CToD( uTemp )    ; EXIT
+         CASE "N" ; uTemp := Val( uTemp )     ; EXIT
+      ENDSWITCH
+
    ELSE
+
       hb_dispOutAt( nTop + 1, nLeft + 1, __dbgValToStr( uValue ), "," + __DbgColors()[ 5 ] )
       SetPos( nTop + 1, nLeft + 1 )
-      nOldCursor := SetCursor( SC_NONE )
 
       lExit := .F.
 
@@ -1640,25 +1659,14 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
          ENDCASE
       ENDDO
 
-      SetCursor( nOldCursor )
    ENDIF
 
-#ifndef HB_NO_READDBG
-   nOldCursor := SetCursor( SC_NORMAL )
-   READ
    SetCursor( nOldCursor )
-#endif
+   SetPos( nOldRow, nOldCol )
 
    oWndInput:Hide()
-   Set( _SET_SCOREBOARD, lScoreBoard )
 
-   DO CASE
-   CASE cType == "C" ; uTemp := AllTrim( uTemp )
-   CASE cType == "D" ; uTemp := CToD( uTemp )
-   CASE cType == "N" ; uTemp := Val( uTemp )
-   ENDCASE
-
-   RETURN iif( LastKey() != K_ESC, uTemp, uValue )
+   RETURN uTemp
 
 
 METHOD Inspect( uValue, cValueName ) CLASS HBDebugger
@@ -3393,31 +3401,36 @@ STATIC FUNCTION strip_path( cFileName )
    RETURN cName + cExt
 
 
-STATIC FUNCTION __dbgInput( nTop, nLeft, uValue, bValid, cColor )
+STATIC FUNCTION __dbgInput( nRow, nCol, nWidth, cValue, bValid, cColor, nSize )
 
    LOCAL nOldCursor := SetCursor( SC_NORMAL )
-   LOCAL uTemp := uValue
+   LOCAL cTemp := cValue
+   LOCAL nKey
+   LOCAL oGet
 
-   IF cColor != NIL
-      SetColor( cColor )
+   IF !ISNUMBER( nWidth )
+      nWidth := Len( cValue )
    ENDIF
+   oGet := HbDbInput():new( nRow, nCol, nWidth, cValue, cColor, nSize )
+   oGet:setFocus()
 
-   DO WHILE .T.
-      hb_dispOutAt( nTop, nLeft, Space( Len( uTemp ) ), cColor )
-      SetPos( nTop, nLeft )
-
-      ACCEPT TO uTemp
-
-      IF bValid != NIL .AND. !Eval( bValid, uTemp )
-         uTemp := uValue
-      ELSE
+   WHILE .T.
+      nKey := Inkey( 0 )
+      IF nKey == K_ESC
          EXIT
+      ELSEIF nKey == K_ENTER
+         IF bValid == NIL .OR. Eval( bValid, oGet:getValue() )
+            cTemp := oGet:getValue()
+            EXIT
+         ENDIF
+      ELSE
+         oGet:applyKey( nKey )
       ENDIF
    ENDDO
 
    SetCursor( nOldCursor )
 
-   RETURN uTemp
+   RETURN cTemp
 
 
 FUNCTION __dbgAchoice( nTop, nLeft, nBottom, nRight, aItems, cColors )

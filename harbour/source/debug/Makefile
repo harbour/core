@@ -10,6 +10,7 @@ C_SOURCES=\
 PRG_SOURCES=\
 	dbgmenu.prg \
 	dbghelp.prg \
+	dbgtinp.prg \
 	dbgtmenu.prg \
 	dbgtmitm.prg \
 	dbgtwin.prg \

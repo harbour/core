@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-17 00:07 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/debug/Makefile
+  + harbour/source/debug/dbgtinp.prg
+    + added HbDbInput class for simple user input (GET)
+
+  * harbour/source/debug/debugger.prg
+    ! changed __dbgInput() to use HbDbInput() class instead of ACCEPT
+      It fixes all bad visual end edit bad effects caused by ACCEPT.
+      TODO: replace all GET references in debugger code with HbDbInput class.
+
 2008-10-16 14:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * common.mak
   * make_b32.bat

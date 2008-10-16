@@ -679,6 +679,7 @@ DEBUG_LIB_OBJS = \
     $(OBJ_DIR)\dbgbrwsr$(OBJEXT) \
     $(OBJ_DIR)\dbghelp$(OBJEXT)  \
     $(OBJ_DIR)\dbgmenu$(OBJEXT)  \
+    $(OBJ_DIR)\dbgtinp$(OBJEXT)  \
     $(OBJ_DIR)\dbgtmenu$(OBJEXT) \
     $(OBJ_DIR)\dbgtmitm$(OBJEXT) \
     $(OBJ_DIR)\dbgtwin$(OBJEXT)  \
