@@ -14,7 +14,7 @@
 #
 # Macro to show/hide executed commands
 #
-!if "$(HB_BUILD_VERBOSE)" != "yes"
+!if "$(HB_BUILD_VERBOSE)" == "no"
 .SILENT:
 !endif
 
