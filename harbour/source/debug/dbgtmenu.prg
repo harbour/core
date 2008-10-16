@@ -224,7 +224,7 @@ METHOD Display() CLASS HBDbMenu
       SetPos( 0, 0 )
    ELSE
       ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
-      @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX B_SINGLE
+      hb_dispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, B_SINGLE )
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    ENDIF
 

@@ -416,7 +416,7 @@ STATIC PROCEDURE AddDelegate( xMethod, nAccScope, nAsgScope, cType, cDelegMsg, c
    IF ISCHARACTER( xMethod )
       AAdd( QSelf():aDelegates, { xMethod, nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass } )
    ELSEIF ISARRAY( xMethod )
-      FOR i := 1 TO LEN( xMethod )
+      FOR i := 1 TO Len( xMethod )
          AAdd( QSelf():aDelegates, { xMethod[ i ], nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass } )
       NEXT
    ENDIF

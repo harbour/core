@@ -28,7 +28,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    LOCAL acCopy    := {}                   // A padded copy of the items
    LOCAL alSelect                          // Select permission
    LOCAL nNewPos   := 0                    // The next item to be selected
-   LOCAL lFinished := .F.                  // Is processing finished?
+   LOCAL lFinished                         // Is processing finished?
    LOCAL nKey      := 0                    // The keystroke to be processed
    LOCAL nMode     := AC_IDLE              // The current operating mode
    LOCAL nAtTop    := 1                    // The number of the item at the top
@@ -83,31 +83,29 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    ENDIF
 
 
-   IF !lFinished
-
-      nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, bSelect, alSelect, acItems )
-      IF nMode == AC_NOITEM
-         nPos := 0
-      ENDIF
-
-      // Ensure hilighted item can be selected
-      nPos := BETWEEN( nFrstItem, nPos, nLastItem )
-
-      // Force hilighted row to be valid
-      nHiLiteRow := BETWEEN( 0, nHiLiteRow, nNumRows - 1 )
-
-      // Force the topmost item to be a valid index of the array
-      nAtTop := BETWEEN( 1, Max( 1, nPos - nHiLiteRow ), nItems )
-
-      // Ensure as much of the selection area as possible is covered
-      IF ( nAtTop + nNumRows - 1 ) > nItems
-         nAtTop := Max( 1, nItems - nNumrows + 1 )
-      ENDIF
-
-      DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect, nItems )
-
+   nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, bSelect, alSelect, acItems )
+   IF nMode == AC_NOITEM
+      nPos := 0
    ENDIF
 
+   // Ensure hilighted item can be selected
+   nPos := BETWEEN( nFrstItem, nPos, nLastItem )
+
+   // Force hilighted row to be valid
+   nHiLiteRow := BETWEEN( 0, nHiLiteRow, nNumRows - 1 )
+
+   // Force the topmost item to be a valid index of the array
+   nAtTop := BETWEEN( 1, Max( 1, nPos - nHiLiteRow ), nItems )
+
+   // Ensure as much of the selection area as possible is covered
+   IF ( nAtTop + nNumRows - 1 ) > nItems
+      nAtTop := Max( 1, nItems - nNumrows + 1 )
+   ENDIF
+
+   DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect, nItems )
+
+
+   lFinished := .F.
    DO WHILE !lFinished
 
       IF nMode != AC_GOTO .AND. nMode != AC_NOITEM
@@ -582,7 +580,7 @@ STATIC FUNCTION Ach_Limits( nFrstItem, nLastItem, nItems, bSelect, alSelect, acI
 
    nItems := 0
 
-   FOR nCntr := 1 TO LEN( acItems )
+   FOR nCntr := 1 TO Len( acItems )
       IF ISCHARACTER( acItems[ nCntr ] )
          nItems++
       ELSE

@@ -52,6 +52,7 @@
 
 #pragma DEBUGINFO=OFF
 
+#include "box.ch"
 #include "common.ch"
 #include "setcurs.ch"
 #include "inkey.ch"
@@ -174,24 +175,15 @@ STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
 
    /* Display separator lines */
 
-   @ oDlg:nTop + 1, oDlg:nLeft + 12 TO ;
-     oDlg:nBottom - 1, oDlg:nLeft + 12 ;
-     COLOR oDlg:cColor
-
+   hb_dispBox( oDlg:nTop + 1, oDlg:nLeft + 12, oDlg:nBottom - 1, oDlg:nLeft + 12, B_SINGLE, oDlg:cColor )
    hb_dispOutAt( oDlg:nTop, oDlg:nLeft + 12, Chr( 194 ), oDlg:cColor )
    hb_dispOutAt( oDlg:nBottom, oDlg:nLeft + 12, Chr( 193 ), oDlg:cColor )
 
-   @ oDlg:nTop + 1, oDlg:nLeft + 51 TO ;
-     oDlg:nBottom - 1, oDlg:nLeft + 51 ;
-     COLOR oDlg:cColor
-
+   hb_dispBox( oDlg:nTop + 1, oDlg:nLeft + 51, oDlg:nBottom - 1, oDlg:nLeft + 51, B_SINGLE, oDlg:cColor )
    hb_dispOutAt( oDlg:nTop, oDlg:nLeft + 51, Chr( 194 ), oDlg:cColor )
    hb_dispOutAt( oDlg:nBottom, oDlg:nLeft + 51, Chr( 193 ), oDlg:cColor )
 
-   @ oDlg:nTop + 6, oDlg:nLeft + 13 TO ;
-     oDlg:nTop + 6, oDlg:nLeft + 50 ;
-     COLOR oDlg:cColor
-
+   hb_dispBox( oDlg:nTop + 6, oDlg:nLeft + 13, oDlg:nTop + 6, oDlg:nLeft + 50, B_SINGLE, oDlg:cColor )
    hb_dispOutAt( oDlg:nTop + 6, oDlg:nLeft + 12, Chr( 195 ), oDlg:cColor )
    hb_dispOutAt( oDlg:nTop + 6, oDlg:nLeft + 51, Chr( 180 ), oDlg:cColor )
 

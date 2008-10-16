@@ -283,7 +283,7 @@ STATIC FUNCTION HitTest( aMenu, nMRow, nMCol )
    FOR EACH aMenuItem IN aMenu
       IF nMRow == aMenuItem[ 1 ] .AND. ;
          nMCol >= aMenuItem[ 2 ] .AND. ;
-         nMCol < aMenuItem[ 2 ] + LEN( aMenuItem[ 3 ] )
+         nMCol < aMenuItem[ 2 ] + Len( aMenuItem[ 3 ] )
 
          RETURN aMenuItem:__enumIndex()
       ENDIF

@@ -61,6 +61,7 @@
          the debugger output may interfere with the applications output
          redirection, and is also slower. [vszakats] */
 
+#include "box.ch"
 #include "common.ch"
 #include "inkey.ch"
 
@@ -98,7 +99,7 @@ PROCEDURE __dbgHelp( nTopic )
 
 STATIC PROCEDURE PaintWindow( oDlg, oBrw, aTopics )
 
-   hb_dispBox( oDlg:nTop + 1, oDlg:nLeft + 13, oDlg:nBottom - 1, oDlg:nLeft + 13, 1, oDlg:cColor )
+   hb_dispBox( oDlg:nTop + 1, oDlg:nLeft + 13, oDlg:nBottom - 1, oDlg:nLeft + 13, B_SINGLE, oDlg:cColor )
    hb_dispOutAt( oDlg:nTop , oDlg:nLeft + 13 , Chr( 194 ), oDlg:cColor )
    hb_dispOutAt( oDlg:nBottom , oDlg:nLeft + 13 , Chr( 193 ), oDlg:cColor )
 

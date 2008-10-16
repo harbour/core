@@ -1312,7 +1312,7 @@ METHOD doConfigure() CLASS TBROWSE
        */
       xValue := Eval( oCol:block )
       cType  := ValType( xValue )
-      nWidth := LEN( Transform( xValue, oCol:picture ) )
+      nWidth := Len( Transform( xValue, oCol:picture ) )
       cColSep := oCol:colSep
       IF cColSep == NIL
          cColSep := ::cColSep
@@ -1341,7 +1341,7 @@ METHOD doConfigure() CLASS TBROWSE
       aCol[ _TBCI_SEPWIDTH    ] := Len( cColSep )
       aCol[ _TBCI_HEADSEP     ] := cHeadSep
       aCol[ _TBCI_FOOTSEP     ] := cFootSep
-      aCol[ _TBCI_DEFCOLOR    ] := _COLDEFCOLORS( oCol:defColor, LEN( ::aColors ) )
+      aCol[ _TBCI_DEFCOLOR    ] := _COLDEFCOLORS( oCol:defColor, Len( ::aColors ) )
       aCol[ _TBCI_FROZENSPACE ] := 0
       aCol[ _TBCI_LASTSPACE   ] := 0
       IF Len( cHeadSep ) > 0
@@ -1586,7 +1586,7 @@ STATIC FUNCTION _MAXFREEZE( nColumns, aColData, nWidth )
 STATIC FUNCTION _NEXTCOLUMN( aColData, nCol )
    LOCAL aCol
 
-   DO WHILE nCol <= LEN( aColData )
+   DO WHILE nCol <= Len( aColData )
       aCol := aColData[ nCol ]
       IF aCol[ _TBCI_CELLWIDTH ] > 0
          RETURN nCol
@@ -1941,7 +1941,7 @@ METHOD colorSpec( cColorSpec ) CLASS TBROWSE
 
 METHOD colCount() CLASS TBROWSE
 
-   RETURN LEN( ::columns )
+   RETURN Len( ::columns )
 
 
 METHOD rowCount() CLASS TBROWSE
@@ -2154,7 +2154,7 @@ METHOD delColumn( nColumn ) CLASS TBROWSE
 #endif
       oCol := ::columns[ nColumn ]
       ADel( ::columns, nColumn )
-      ASize( ::columns, LEN( ::columns ) - 1 )
+      ASize( ::columns, Len( ::columns ) - 1 )
       ::configure( _TBR_CONF_COLUMNS )
    ENDIF
 
@@ -2720,9 +2720,9 @@ METHOD setStyle( nStyle, lNewValue ) CLASS TBROWSE
    /* NOTE: CA-Cl*pper 5.3 does no checks on the value of nStyle, so in case 
             it is zero or non-numeric, a regular RTE will happen. [vszakats] */
 
-   IF nStyle > LEN( ::styles ) .AND. ;
+   IF nStyle > Len( ::styles ) .AND. ;
       nStyle <= 4096 /* some reasonable limit for maximum number of styles */
-      ASIZE( ::styles, nStyle )
+      ASize( ::styles, nStyle )
    ENDIF
 
    IF ISLOGICAL( lNewValue )

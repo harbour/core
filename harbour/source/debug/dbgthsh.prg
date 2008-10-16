@@ -338,4 +338,4 @@ STATIC FUNCTION HashKeyString( hHash, nAt )
    CASE cType == "N" ; RETURN LTrim( Str( xVal ) )
    ENDCASE
   
-   RETURN AllTrim( HB_CStr( xVal ) )
+   RETURN AllTrim( __dbgCStr( xVal ) )

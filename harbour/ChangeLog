@@ -8,6 +8,33 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-16 07:40 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/achoice.prg
+    % Minor optimization.
+
+  * source/rtl/achoice.prg
+  * source/rtl/menuto.prg
+  * source/rtl/tbrowse.prg
+  * source/rtl/tclass.prg
+    * Minor formatting.
+
+  * source/rtl/tobject.prg
+    * Removed '#pragma DEBUGINFO=OFF' as it's no more 
+      needed.
+
+  * source/debug/dbgthsh.prg
+  * source/debug/debugger.prg
+    * Copied hb_CStr() as __dbgCStr() to debug.lib.
+    * Changed calls from hb_CStr() to __dbgCStr().
+
+  * source/debug/dbgtmenu.prg
+  * source/debug/dbgtwin.prg
+  * source/debug/dbgwa.prg
+    * Remaining BOX commands changed to hb_dispBox().
+
+  * source/debug/dbghelp.prg
+    ! Fixed one hb_dispBox() call with numeric frame parameter.
+
 2008-10-16 04:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/dbgbrwsr.prg
   * harbour/source/debug/dbgtwin.prg

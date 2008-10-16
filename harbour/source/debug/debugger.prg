@@ -58,6 +58,17 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *    __dbgCStr()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 /* NOTE: Don't use SAY/DevOut()/DevPos() for screen output, otherwise
          the debugger output may interfere with the applications output
          redirection, and is also slower. [vszakats] */
@@ -68,7 +79,7 @@
 #define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
 #include "hbclass.ch"
 
-#include "hbdebug.ch"   // for "nMode" of __dbgEntry
+#include "hbdebug.ch"   /* for "nMode" of __dbgEntry */
 #include "hbgtinfo.ch"
 #include "hbmemvar.ch"
 
@@ -1248,7 +1259,7 @@ METHOD GetExprValue( xExpr, lValid ) CLASS HBDebugger
       xResult := oErr:operation + ": " + oErr:description
       IF ISARRAY( oErr:args )
          xResult += "; arguments:"
-         AEval( oErr:args, { | x | xResult += " " + AllTrim( hb_CStr( x ) ) } )
+         AEval( oErr:args, { | x | xResult += " " + AllTrim( __dbgCStr( x ) ) } )
       ENDIF
       lValid := .F.
    END SEQUENCE
@@ -3414,6 +3425,9 @@ STATIC FUNCTION getdbginput( nTop, nLeft, uValue, bValid, cColor )
 
 #endif
 
+FUNCTION __dbgAlert( cMessage )
+   RETURN hb_gtAlert( cMessage, { "Ok" }, "W+/R", "W+/B" )
+
 FUNCTION __dbgValToStr( uVal )
 
    LOCAL cType := ValType( uVal )
@@ -3433,5 +3447,37 @@ FUNCTION __dbgValToStr( uVal )
 
    RETURN "U"
 
-FUNCTION __dbgAlert( cMessage )
-   RETURN hb_gtAlert( cMessage, { "Ok" }, "W+/R", "W+/B" )
+/* NOTE: This is a copy of hb_CStr() */
+
+FUNCTION __dbgCStr( xVal )
+   LOCAL v := ValType( xVal )
+
+   SWITCH v
+      CASE "C"
+      CASE "M"
+         RETURN xVal
+      CASE "N"
+         RETURN Str( xVal )
+      CASE "D"
+         RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
+      CASE "L"
+         RETURN iif( xVal, ".T.", ".F." )
+      CASE "S"
+         RETURN "@" + xVal:name + "()"
+      CASE "B"
+         RETURN "{|| ... }"
+      CASE "O"
+         RETURN "{ " + xVal:className + " Object }"
+      CASE "A"
+         RETURN "{ Array of " + LTrim( Str( Len( xVal ) ) ) + " Items }"
+      CASE "H"
+         RETURN "{ Hash of " + LTrim( Str( Len( xVal ) ) ) + " Items }"
+      CASE "P"
+         RETURN "<pointer>"
+      OTHERWISE
+         IF xVal == NIL
+            RETURN "NIL"
+         ENDIF
+   ENDSWITCH
+
+   RETURN "???:" + v
