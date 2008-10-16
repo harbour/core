@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-16 08:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbwhat/wincore.prg
+    ! One STATIC made THREAD STATIC.
+    ! STATIC vars renamed to s_*.
+
 2008-10-16 07:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/tpersist.prg
   * contrib/hbgd/gd.prg

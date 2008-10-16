@@ -30,12 +30,13 @@
 //PUBLIC lPrevInstance
 //PUBLIC hThisInstance
 
-Static hWndActive := 0
-Static aClass:={}  // cClass,nType,{{anWM,bAction,nProc,0}}
-Static aWindow:={} // hWnd, nType, {{anWM,bAction,nProc,nOldProc}}
-Static aDialog:={} // hDlg, {{anWM.bAction}} // maybe rather add them to aWindow as type 0 - dialog ?
-Static aProc       // array of possible windows procedures (10)
-                   // for subclassing ???
+THREAD STATIC s_hWndActive := 0
+
+STATIC s_aClass:={}  // cClass,nType,{{anWM,bAction,nProc,0}}
+STATIC s_aWindow:={} // hWnd, nType, {{anWM,bAction,nProc,nOldProc}}
+STATIC s_aDialog:={} // hDlg, {{anWM.bAction}} // maybe rather add them to s_aWindow as type 0 - dialog ?
+STATIC s_aProc       // array of possible windows procedures (10)
+                     // for subclassing ???
 
 //----------------------------------------------------------------------//
 /*
@@ -52,9 +53,9 @@ INIT PROCEDURE _CheckMultiInst
 
 FUNCTION WhatVersion(dDate)
 
- dDate := stod( "20020821" )
+ dDate := hb_stod( "20020821" )
 
- RETURN ( "0.g" )
+ RETURN "0.g"
 
 //----------------------------------------------------------------------//
 //
@@ -97,7 +98,7 @@ Function WHT_RegisterClass( wndclass, nType, bAction, anWM, oObj, xCargo )
    EndIf
 
    aAction := { anWM, bAction, WHT_GetWndProc( 1 ) , 0, oObj, xCargo }
-   aAdd( aClass, { WNDCLASS:lpszClassName, nType, aAction } )
+   aAdd( s_aClass, { WNDCLASS:lpszClassName, nType, aAction } )
 
    Return( .T. )
 
@@ -110,9 +111,9 @@ Function WHT_UnregisterClass( cClass, hInst )
       Return( .F. )
    EndIf
 
-   If ( n := aScan( aClass, { | x | x[ 1 ] == cClass } ) ) > 0
-      aDel( aClass, n )
-      aSize( aClass, Len( aClass ) - 1 )
+   If ( n := aScan( s_aClass, { | x | x[ 1 ] == cClass } ) ) > 0
+      aDel( s_aClass, n )
+      aSize( s_aClass, Len( s_aClass ) - 1 )
    EndIf
 
    Return( .T. )
@@ -136,32 +137,32 @@ Function WHT_CreateWindow( cClass, cTitle, nStyle, nX, nY, nWidth, nHeight, ;
    Local n
    Local nIndex
 
-   // prepare a slot in aWindow array
+   // prepare a slot in s_aWindow array
 
-   If ( nIndex := aScan( aWindow, { | x | x[ 1 ] == NIL } ) ) == 0  // waiting
-      aAdd( aWindow, )
-      nIndex := Len( aWindow )
+   If ( nIndex := aScan( s_aWindow, { | x | x[ 1 ] == NIL } ) ) == 0  // waiting
+      aAdd( s_aWindow, )
+      nIndex := Len( s_aWindow )
    EndIf
 
    // add default class procedure address and block
 
-   If ( n := aScan( aClass, { | x | cClass == x[ 1 ] } ) ) > 0 // own window class
-      aWindow[ nIndex ] := { 0, aClass[ n, 2 ] , {} }
-      If ! Empty( aClass[ n, 3 ] )                     // if default user codeblock exists
-         aAdd( aWindow[ nIndex, 3 ] , aClass[ n, 3 ] )
+   If ( n := aScan( s_aClass, { | x | cClass == x[ 1 ] } ) ) > 0 // own window class
+      s_aWindow[ nIndex ] := { 0, s_aClass[ n, 2 ] , {} }
+      If ! Empty( s_aClass[ n, 3 ] )                     // if default user codeblock exists
+         aAdd( s_aWindow[ nIndex, 3 ] , s_aClass[ n, 3 ] )
       EndIf
    Else
-      aWindow[ nIndex ] := { 0, WT_WINDOW, {} }         // no default codeblock
+      s_aWindow[ nIndex ] := { 0, WT_WINDOW, {} }         // no default codeblock
    EndIf
 
    // create a window
    If ( hWnd := WHT__CreateWindowEx( nExStyle, cClass, cTitle, nStyle, nX, nY, nWidth, nHeight, ;
                                        hWndParent, hMenu, hInst , cParam ) ) > 0
-      If aWindow[ nIndex, 1 ] == 0
-         aWindow[ nIndex, 1 ] := hWnd
+      If s_aWindow[ nIndex, 1 ] == 0
+         s_aWindow[ nIndex, 1 ] := hWnd
       EndIf
    Else
-      aWindow[ nIndex ] := { NIL, NIL, { } }
+      s_aWindow[ nIndex ] := { NIL, NIL, { } }
       __KillWindow( )
    EndIf
 
@@ -177,31 +178,31 @@ Function WHT_CreateMDIWindow( cClass, cTitle, nStyle, nX, nY, nWidth, nHeight, ;
    Local n
    Local nIndex
 
-   // prepare a slot in aWindow array
-   If ( nIndex := aScan( aWindow, { | x | x[ 1 ] == NIL } ) ) == 0  // waiting
-      aAdd( aWindow, )
-      nIndex := Len( aWindow )
+   // prepare a slot in s_aWindow array
+   If ( nIndex := aScan( s_aWindow, { | x | x[ 1 ] == NIL } ) ) == 0  // waiting
+      aAdd( s_aWindow, )
+      nIndex := Len( s_aWindow )
    EndIf
 
    // add default class procedure address and block
-   If ( n := aScan( aClass, { | x | cClass == x[ 1 ] } ) ) > 0 // own window class
-      aWindow[ nIndex ] := { 0, aClass[ n, 2 ] , { } }
-      If ! Empty( aClass[ n, 3 ] )                     // if default user codeblock exists
-         aAdd( aWindow[ nIndex, 3 ] , aClass[ n, 3 ] )
+   If ( n := aScan( s_aClass, { | x | cClass == x[ 1 ] } ) ) > 0 // own window class
+      s_aWindow[ nIndex ] := { 0, s_aClass[ n, 2 ] , { } }
+      If ! Empty( s_aClass[ n, 3 ] )                     // if default user codeblock exists
+         aAdd( s_aWindow[ nIndex, 3 ] , s_aClass[ n, 3 ] )
       EndIf
    Else
-      aWindow[ nIndex ] := { 0, WT_MDICHILD, { } }         // no default codeblock
+      s_aWindow[ nIndex ] := { 0, WT_MDICHILD, { } }         // no default codeblock
    EndIf
 
    // create a window
    If ( hWnd := WHT__CreateMDIWindow( cClass, cTitle, nStyle, nX, nY, nWidth, nHeight, ;
                                  hWndParent, hInst , lParam ) ) > 0
 
-      If aWindow[ nIndex, 1 ] == 0
-         aWindow[ nIndex, 1 ] := hWnd
+      If s_aWindow[ nIndex, 1 ] == 0
+         s_aWindow[ nIndex, 1 ] := hWnd
       EndIf
    Else
-      aWindow[ nIndex ] := { NIL, NIL, { } }
+      s_aWindow[ nIndex ] := { NIL, NIL, { } }
       __KillWindow( )
    EndIf
 
@@ -216,14 +217,14 @@ Function WHT__ProcessMsg( hWnd, nMsg, nwParam, nlParam, nIndex )
    Local bProc
    Local nType := WT_WINDOW
    Local nRet  := 0
-   Local nProc //:=aProc[nIndex]
+   Local nProc //:=s_aProc[nIndex]
    Local oObj
    Local xCargo
 
    // setup list of possible procedures (max 10 per window )
 
-   If aProc == NIL
-      aProc := { ;
+   If s_aProc == NIL
+      s_aProc := { ;
                  WHT_GetWndProc( 1 ) , ;
                  WHT_GetWndProc( 2 ) , ;
                  WHT_GetWndProc( 3 ) , ;
@@ -239,26 +240,26 @@ Function WHT__ProcessMsg( hWnd, nMsg, nwParam, nlParam, nIndex )
 
    // still in creation process ?
 
-   If ( n := aScan( aWindow, { | x | hWnd == x[ 1 ] } ) ) == 0 //find the window
-      If ( ( n := aScan( aWindow, { | x | 0 == x[ 1 ] .AND. WT_DIALOG != x[ 2 ] } ) ) > 0 )
-         aWindow[ n, 1 ] := hWnd
+   If ( n := aScan( s_aWindow, { | x | hWnd == x[ 1 ] } ) ) == 0 //find the window
+      If ( ( n := aScan( s_aWindow, { | x | 0 == x[ 1 ] .AND. WT_DIALOG != x[ 2 ] } ) ) > 0 )
+         s_aWindow[ n, 1 ] := hWnd
       EndIf
    EndIf
 
    // find the procedure corresponding to the subclass index
    // bypass Windows procedure chain, where applicable
 
-   nProc := aProc[ nIndex ]
+   nProc := s_aProc[ nIndex ]
    If !Empty( n )
-      nType := aWindow[ n, 2 ]
-      Do While ( i := aScan( aWindow[ n, 3 ] , { | x | nProc == x[ 3 ] } ) ) > 0 // does custom procedure exist ?
-         anWM  := aWindow[ n, 3, i, 1 ]
-         bProc := aWindow[ n, 3, i, 2 ]
-         oObj  := aWindow[ n, 3, i, 5 ]
-         xCargo:= aWindow[ n, 3, i, 6 ]
+      nType := s_aWindow[ n, 2 ]
+      Do While ( i := aScan( s_aWindow[ n, 3 ] , { | x | nProc == x[ 3 ] } ) ) > 0 // does custom procedure exist ?
+         anWM  := s_aWindow[ n, 3, i, 1 ]
+         bProc := s_aWindow[ n, 3, i, 2 ]
+         oObj  := s_aWindow[ n, 3, i, 5 ]
+         xCargo:= s_aWindow[ n, 3, i, 6 ]
          If ! ( ValType( bProc ) $ "BN" .AND.  ( nMsg >= WM_USER .OR. anWM[ 1 ] == - 1 .OR. aScan( anWM, nMsg ) > 0 ) )
-            If ( nProc := aWindow[ n, 3, i, 4 ] ) != 0 // old procedure exists
-               If aScan( aProc, nProc ) == 0  // not our procedure
+            If ( nProc := s_aWindow[ n, 3, i, 4 ] ) != 0 // old procedure exists
+               If aScan( s_aProc, nProc ) == 0  // not our procedure
                   Return VWN_CallWindowProc( nProc, hWnd, nMsg, nwParam, nlParam ) // external
                EndIf
             Else
@@ -306,11 +307,11 @@ Function WHT__ProcessMsg( hWnd, nMsg, nwParam, nlParam, nIndex )
 Function __KillWindow( hWnd )
    Local n
 
-   If hWnd != NIL .AND. ( n := aScan( aWindow, { | x | hWnd == x[ 1 ] } ) ) > 0
-      aWindow[ n ] := { NIL, NIL, { } }
+   If hWnd != NIL .AND. ( n := aScan( s_aWindow, { | x | hWnd == x[ 1 ] } ) ) > 0
+      s_aWindow[ n ] := { NIL, NIL, { } }
    EndIf
 
-   If aScan( aWindow, { | x | ! Empty( x[ 1 ] ) } ) == 0
+   If aScan( s_aWindow, { | x | ! Empty( x[ 1 ] ) } ) == 0
       VWN_PostQuitMessage( 0 )
    EndIf
 
@@ -326,27 +327,27 @@ Function WHT__ProcessDlgMsg( hDlg, nMsg, nwParam, nlParam )
    Local nResult
    Local n := 0
 
-   If ( ( nIndex := aScan( aDialog, { | x | hDlg == x[ 1 ] } ) ) == 0 )
-      If ( ( nIndex := aScan( aDialog, { | x | 0 == x[ 1 ] } ) ) == 0 )
+   If ( ( nIndex := aScan( s_aDialog, { | x | hDlg == x[ 1 ] } ) ) == 0 )
+      If ( ( nIndex := aScan( s_aDialog, { | x | 0 == x[ 1 ] } ) ) == 0 )
          Return( 0 )
       Else
-         aDialog[ nIndex, 1 ] := hDlg
-         If ( ( n := aScan( aWindow, { | x | 0 == x[ 1 ] .AND. WT_DIALOG == x[ 2 ] } ) ) > 0 )
-            aWindow[ n ] := { hDlg, WT_DIALOG, { } }
+         s_aDialog[ nIndex, 1 ] := hDlg
+         If ( ( n := aScan( s_aWindow, { | x | 0 == x[ 1 ] .AND. WT_DIALOG == x[ 2 ] } ) ) > 0 )
+            s_aWindow[ n ] := { hDlg, WT_DIALOG, { } }
          EndIf
       EndIf
    EndIf
 
-   nResult := iif( ValType(aDialog[ nIndex, 2 ]) == "B", ;
-                  eval( aDialog[ nIndex, 2 ] , hDlg, nMsg, nwParam, nlParam ),;
-                  iif( Valtype( aDialog[ nIndex, 2 ] ) == "N", ;
-                     HB_ExecFromArray( aDialog[ nIndex,2 ], { aDialog[ nIndex, 4], hDlg, nMsg, nwParam, nlParam, aDialog[ nIndex, 5 ] } ),;
+   nResult := iif( ValType(s_aDialog[ nIndex, 2 ]) == "B", ;
+                  eval( s_aDialog[ nIndex, 2 ] , hDlg, nMsg, nwParam, nlParam ),;
+                  iif( Valtype( s_aDialog[ nIndex, 2 ] ) == "N", ;
+                     HB_ExecFromArray( s_aDialog[ nIndex,2 ], { s_aDialog[ nIndex, 4], hDlg, nMsg, nwParam, nlParam, s_aDialog[ nIndex, 5 ] } ),;
                      0 );
                 )
 
    If nMsg == WM_NCDESTROY
-      aDialog[ nIndex ] := { NIL , NIL , NIL, NIL, NIL }
-      If ( n := aScan( aWindow, { | x | hDlg == x[ 1 ] .AND. WT_DIALOG == x[ 2 ] .AND. Empty( x[ 3 ] ) } ) ) > 0
+      s_aDialog[ nIndex ] := { NIL , NIL , NIL, NIL, NIL }
+      If ( n := aScan( s_aWindow, { | x | hDlg == x[ 1 ] .AND. WT_DIALOG == x[ 2 ] .AND. Empty( x[ 3 ] ) } ) ) > 0
          __KillWindow( hDlg )
       EndIf
    EndIf
@@ -366,12 +367,12 @@ Function WHT_DialogBox( hInst, acnDlg, hWnd, bAction, oObj, xCargo )
 
    // register the dialog
 
-   If  ( nIndex := aScan( aDialog, { | x | x[ 1 ] == NIL } ) ) == 0
-      aAdd( aDialog, { 0, bAction, 1, oObj, xCargo } )
-      nIndex := Len( aDialog )
+   If  ( nIndex := aScan( s_aDialog, { | x | x[ 1 ] == NIL } ) ) == 0
+      aAdd( s_aDialog, { 0, bAction, 1, oObj, xCargo } )
+      nIndex := Len( s_aDialog )
 
    Else
-      aDialog[ nIndex ] := { 0, bAction, 1, oObj, xCargo }  // 0 means waiting...
+      s_aDialog[ nIndex ] := { 0, bAction, 1, oObj, xCargo }  // 0 means waiting...
                                                             // 1 means modal
    EndIf
 
@@ -388,7 +389,7 @@ Function WHT_DialogBox( hInst, acnDlg, hWnd, bAction, oObj, xCargo )
 
    EndIf
 
-   aDialog[ nIndex ] := { NIL , NIL , NIL, NIL, NIL }    // unused
+   s_aDialog[ nIndex ] := { NIL , NIL , NIL, NIL, NIL }    // unused
 
    Return( nResult )
 
@@ -399,7 +400,7 @@ Function WHT_DialogBox( hInst, acnDlg, hWnd, bAction, oObj, xCargo )
 //
 FUNCTION _Get_aDialog()
 
-   RETURN(aDialog)
+   RETURN(s_aDialog)
 
 //----------------------------------------------------------------------//
 //
@@ -408,7 +409,7 @@ FUNCTION _Get_aDialog()
 //
 FUNCTION _Get_aWindow()
 
-   RETURN(aWindow)
+   RETURN(s_aWindow)
 
 //----------------------------------------------------------------------//
 
@@ -466,23 +467,23 @@ Function WHT_CreateDialog( hInst, acnDlg , hWnd, bAction, oObj, xCargo )
       Return( 0 )
    EndIf
 
-   // prepare aDialog entry
+   // prepare s_aDialog entry
 
-   If ( nIndex := aScan( aDialog, { | x | x[ 1 ] == NIL } ) ) == 0
-      aAdd( aDialog, { 0 , bAction, 0, oObj, xCargo } )    // must add before CreateDialog
-      nIndex := Len( aDialog )
+   If ( nIndex := aScan( s_aDialog, { | x | x[ 1 ] == NIL } ) ) == 0
+      aAdd( s_aDialog, { 0 , bAction, 0, oObj, xCargo } )    // must add before CreateDialog
+      nIndex := Len( s_aDialog )
    Else
-      aDialog[ nIndex ] := { 0, bAction, 0, oObj, xCargo }  // window 0 means waiting ...
+      s_aDialog[ nIndex ] := { 0, bAction, 0, oObj, xCargo }  // window 0 means waiting ...
    EndIf                                                    // type 0 means modeless
 
    // we need to add it here too, to QUIT on the last window !!!
    // note type 0
 
-   If ( n := aScan( aWindow, { | x | x[ 1 ] == NIL } ) ) == 0
-      aAdd( aWindow, { 0, WT_DIALOG, { } } )
-      n := Len( aWindow )
+   If ( n := aScan( s_aWindow, { | x | x[ 1 ] == NIL } ) ) == 0
+      aAdd( s_aWindow, { 0, WT_DIALOG, { } } )
+      n := Len( s_aWindow )
    Else
-      aWindow[ n ] := { 0, WT_DIALOG, { } }  // window 0 means waiting ...
+      s_aWindow[ n ] := { 0, WT_DIALOG, { } }  // window 0 means waiting ...
    EndIf
 
    // create the dialog
@@ -502,8 +503,8 @@ Function WHT_CreateDialog( hInst, acnDlg , hWnd, bAction, oObj, xCargo )
 
    // if failed to create
    If hDlg == 0
-      aDialog[ nIndex ] := { NIL , NIL, NIL, NIL, NIL }
-      aWindow[ n ] := { NIL , NIL , { } }
+      s_aDialog[ nIndex ] := { NIL , NIL, NIL, NIL, NIL }
+      s_aWindow[ n ] := { NIL , NIL , { } }
       __KillWindow( )
    EndIf
 
@@ -541,8 +542,8 @@ Function WHT_SetProcedure( hWnd, bAction, anWM, oObj, xCargo )
 
    // setup list of possible procedures (max 10 per window )
 
-   If aProc == NIL
-      aProc := { ;
+   If s_aProc == NIL
+      s_aProc := { ;
                  WHT_GetWndProc( 1 ) , ;
                  WHT_GetWndProc( 2 ) , ;
                  WHT_GetWndProc( 3 ) , ;
@@ -559,21 +560,21 @@ Function WHT_SetProcedure( hWnd, bAction, anWM, oObj, xCargo )
    // make sure the window is in the array
 
    If VWN_IsWindow( hWnd )
-      If ( n := aScan( aWindow, { | x | hWnd == x[ 1 ] } ) ) == 0
-         If ( n := aScan( aWindow, { | x | x[ 1 ] == NIL } ) ) == 0
-            aAdd( aWindow, )
-            n := Len( aWindow )
+      If ( n := aScan( s_aWindow, { | x | hWnd == x[ 1 ] } ) ) == 0
+         If ( n := aScan( s_aWindow, { | x | x[ 1 ] == NIL } ) ) == 0
+            aAdd( s_aWindow, )
+            n := Len( s_aWindow )
          EndIf
-         aWindow[ n ] := { hWnd, WT_WINDOW, { } }
+         s_aWindow[ n ] := { hWnd, WT_WINDOW, { } }
       EndIf
 
       // get a unique procedure address
 
       nOldProc := VWN_GetWindowLong( hWnd, GWL_WNDPROC )
       For i := 1 To 10
-         If aProc[ i ] != nOldProc
-            If aScan( aWindow[ n, 3 ] , { | x | x[ 3 ] == aProc[ i ] .OR. x[ 4 ] == aProc[ i ] } ) == 0
-               nProc := aProc[ i ]
+         If s_aProc[ i ] != nOldProc
+            If aScan( s_aWindow[ n, 3 ] , { | x | x[ 3 ] == s_aProc[ i ] .OR. x[ 4 ] == s_aProc[ i ] } ) == 0
+               nProc := s_aProc[ i ]
                Exit
             EndIf
          EndIf
@@ -590,7 +591,7 @@ Function WHT_SetProcedure( hWnd, bAction, anWM, oObj, xCargo )
          If !(ValType( bAction ) $ "BN")
             bAction := NIL
          EndIf
-         aAdd( aWindow[ n, 3 ] , { anWM, bAction, nProc, nOldProc, oObj, xCargo } )
+         aAdd( s_aWindow[ n, 3 ] , { anWM, bAction, nProc, nOldProc, oObj, xCargo } )
       EndIf
 
    EndIf
@@ -603,16 +604,16 @@ Function WHT_ResetProcedure( hWnd, nProc )
    Local n, i
    Local lRet := .F.
 
-   If ( n := aScan( aWindow, { | x | hWnd == x[ 1 ] } ) ) > 0 //find the window
+   If ( n := aScan( s_aWindow, { | x | hWnd == x[ 1 ] } ) ) > 0 //find the window
       If !ISNUMERIC( nProc ) .OR. nProc == 0  // unsubclass all
 
-         If Len( aWindow[ n, 3 ] ) > 0 // is subclassed
-            If aWindow[ n, 3, 1, 4 ] == 0
-               nProc := aWindow[ n, 3, 1, 3 ]
-               aSize( aWindow[ n, 3 ] , 1 ) // class procedure must stay
+         If Len( s_aWindow[ n, 3 ] ) > 0 // is subclassed
+            If s_aWindow[ n, 3, 1, 4 ] == 0
+               nProc := s_aWindow[ n, 3, 1, 3 ]
+               aSize( s_aWindow[ n, 3 ] , 1 ) // class procedure must stay
             Else
-               nProc := aWindow[ n, 3, 1, 4 ]
-               aSize( aWindow[ n, 3 ] , 0 )
+               nProc := s_aWindow[ n, 3, 1, 4 ]
+               aSize( s_aWindow[ n, 3 ] , 0 )
             EndIf
             If nProc != 0
                VWN_SetWindowLongPtr( hWnd, GWL_WNDPROC, nProc )
@@ -622,10 +623,10 @@ Function WHT_ResetProcedure( hWnd, nProc )
 
       Else
 
-         If ( i := aScan( aWindow[ n, 3 ] , { | x | x[ 4 ] == nProc } ) ) > 0
-            Do While Len( aWindow[ n, 3 ] ) >= i
-               aDel( aWindow[ n, 3 ] , i )
-               aSize( aWindow[ n, 3 ] , Len( aWindow[ n, 3 ] ) - 1 )
+         If ( i := aScan( s_aWindow[ n, 3 ] , { | x | x[ 4 ] == nProc } ) ) > 0
+            Do While Len( s_aWindow[ n, 3 ] ) >= i
+               aDel( s_aWindow[ n, 3 ] , i )
+               aSize( s_aWindow[ n, 3 ] , Len( s_aWindow[ n, 3 ] ) - 1 )
             EndDo
             VWN_SetWindowLongPtr( hWnd, GWL_WNDPROC, nProc )
             lRet := .T.
@@ -642,11 +643,11 @@ Function WHT_WinProcCount( hWnd, nProc )
    Local n, i
    Local nRet := 0
 
-   If ( n := aScan( aWindow, { | x | hWnd == x[ 1 ] } ) ) > 0 //find the window
+   If ( n := aScan( s_aWindow, { | x | hWnd == x[ 1 ] } ) ) > 0 //find the window
       If !ISNUMERIC( nProc ) .OR. nProc == 0
-         nRet := Max( 0, Len( aWindow[ n, 3 ] ) - 1 )
+         nRet := Max( 0, Len( s_aWindow[ n, 3 ] ) - 1 )
       Else
-         If ( i := aScan( aWindow[ n, 3 ] , { | x | x[ 3 ] == nProc } ) ) > 0
+         If ( i := aScan( s_aWindow[ n, 3 ] , { | x | x[ 3 ] == nProc } ) ) > 0
             nRet := Max( 0, i - 1 )
          EndIf
       EndIf
@@ -658,10 +659,10 @@ Function WHT_WinProcCount( hWnd, nProc )
 
 Function WHT_SelectWindow( hNewWnd )
 
-   Local hOldActive := hWndActive
+   Local hOldActive := s_hWndActive
 
    If hNewWnd != NIL .AND. VWN_IsWindow( hNewWnd )
-      hWndActive := hNewWnd
+      s_hWndActive := hNewWnd
    EndIf
 
    Return( hOldActive )
@@ -671,7 +672,7 @@ Function WHT_SelectWindow( hNewWnd )
 Function WHT_IsDialogMessage( hDlg, cMsg )
 
    If hDlg == NIL
-     Return ( aScan( aDialog, {|x| 0 == x[ 3 ] .AND. VWN_IsDialogMessage( x[ 1 ], cMsg ) } ) > 0 )
+     Return ( aScan( s_aDialog, {|x| 0 == x[ 3 ] .AND. VWN_IsDialogMessage( x[ 1 ], cMsg ) } ) > 0 )
    Endif
 
    Return( WHT_IsDialogMessage( hDlg, cMsg ) )
