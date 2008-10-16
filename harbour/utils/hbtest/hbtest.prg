@@ -330,11 +330,11 @@ PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
 
    s_nCount++
 
-   IF !( ValType( cBlock ) == "C" )
+   IF ValType( cBlock ) == "C"
+      lPPError := .F.
+   ELSE
       cBlock := "!! Preprocessor error !!"
       lPPError := .T.
-   ELSE
-      lPPError := .F.
    ENDIF
 
    lSkipped := AScan( s_aSkipList, s_nCount ) > 0
@@ -357,7 +357,7 @@ PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
       ErrorBlock( bOldError )
 
       IF !( ValType( xResult ) == ValType( xResultExpected ) )
-         IF ValType( xResultExpected) == "C" .AND. ValType( xResult ) $ "ABMO"
+         IF ValType( xResultExpected ) == "C" .AND. ValType( xResult ) $ "ABMO"
             lFailed := !( XToStr( xResult ) == xResultExpected )
          ELSE
             lFailed := .T.

@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include "common.ch"
+
 #xCommand ? ? < x > = > OutputDebugString( asString( < x > ) )
 #xCommand ? < x > = > OutputDebugString( asString( < x > ) + chr( 13 ) )
 
@@ -56,45 +58,36 @@ GET < Var > ;
 // Variable type identifier pseudo-functions
 ////////////////////////////////////////////
 
-#translate ISNIL( <v1> )       => ( (<v1>) == NIL )
-#translate ISARRAY( <v1> )     => ( VALTYPE( <v1> ) == "A" )
-#translate ISBLOCK( <v1> )     => ( VALTYPE( <v1> ) == "B" )
-#translate ISCHARACTER( <v1> ) => ( VALTYPE( <v1> ) == "C" )
-#translate ISCHAR( <v1> )      => ( VALTYPE( <v1> ) == "C" )
-#translate ISSTRING( <v1> )    => ( VALTYPE( <v1> ) == "C" )
-#translate ISDATE( <v1> )      => ( VALTYPE( <v1> ) == "D" )
-#translate ISLOGICAL( <v1> )   => ( VALTYPE( <v1> ) == "L" )
-#translate ISNUMBER( <v1> )    => ( VALTYPE( <v1> ) == "N" )
-#translate ISNUMERIC( <v1> )   => ( VALTYPE( <v1> ) == "N" )
-#translate ISOBJECT( <v1> )    => ( VALTYPE( <v1> ) == "O" )
+#translate ISCHAR( <v1> )      => ( hb_isString( <v1> ) )
+#translate ISSTRING( <v1> )    => ( hb_isString( <v1> ) )
+#translate ISNUMERIC( <v1> )   => ( hb_isNumeric( <v1> ) )
 
 #translate IFNIL( <v1>,<exp1>,<exp2> )       => IF( (<v1>) == NIL,<exp1>,<exp2> )
-#translate IFARRAY( <v1>,<exp1>,<exp2> )     => IF( VALTYPE( <v1> ) == "A",<exp1>,<exp2> )
-#translate IFBLOCK( <v1>,<exp1>,<exp2> )     => IF( VALTYPE( <v1> ) == "B",<exp1>,<exp2> )
-#translate IFCHARACTER( <v1>,<exp1>,<exp2> ) => IF( VALTYPE( <v1> ) == "C",<exp1>,<exp2> )
-#translate IFCHAR( <v1>,<exp1>,<exp2> )      => IF( VALTYPE( <v1> ) == "C",<exp1>,<exp2> )
-#translate IFSTRING( <v1>,<exp1>,<exp2> )    => IF( VALTYPE( <v1> ) == "C",<exp1>,<exp2> )
-#translate IFDATE( <v1>,<exp1>,<exp2> )      => IF( VALTYPE( <v1> ) == "D",<exp1>,<exp2> )
-#translate IFLOGICAL( <v1>,<exp1>,<exp2> )   => IF( VALTYPE( <v1> ) == "L",<exp1>,<exp2> )
-#translate IFNUMBER( <v1>,<exp1>,<exp2> )    => IF( VALTYPE( <v1> ) == "N",<exp1>,<exp2> )
-#translate IFNUMERIC( <v1>,<exp1>,<exp2> )   => IF( VALTYPE( <v1> ) == "N",<exp1>,<exp2> )
-#translate IFOBJECT( <v1>,<exp1>,<exp2> )    => IF( VALTYPE( <v1> ) == "O",<exp1>,<exp2> )
-#translate IFEMPTY( <v1>,<exp1>,<exp2> )     => IF( EMPTY( <v1> ),<exp1>,<exp2> )
-
+#translate IFARRAY( <v1>,<exp1>,<exp2> )     => IF( hb_isArray( <v1> ),<exp1>,<exp2> )
+#translate IFBLOCK( <v1>,<exp1>,<exp2> )     => IF( hb_isBlock( <v1> ),<exp1>,<exp2> )
+#translate IFCHARACTER( <v1>,<exp1>,<exp2> ) => IF( hb_isString( <v1> ),<exp1>,<exp2> )
+#translate IFCHAR( <v1>,<exp1>,<exp2> )      => IF( hb_isString( <v1> ),<exp1>,<exp2> )
+#translate IFSTRING( <v1>,<exp1>,<exp2> )    => IF( hb_isString( <v1> ),<exp1>,<exp2> )
+#translate IFDATE( <v1>,<exp1>,<exp2> )      => IF( hb_isDate( <v1> ),<exp1>,<exp2> )
+#translate IFLOGICAL( <v1>,<exp1>,<exp2> )   => IF( hb_isLogical( <v1> ),<exp1>,<exp2> )
+#translate IFNUMBER( <v1>,<exp1>,<exp2> )    => IF( hb_isNumeric( <v1> ),<exp1>,<exp2> )
+#translate IFNUMERIC( <v1>,<exp1>,<exp2> )   => IF( hb_isNumeric( <v1> ),<exp1>,<exp2> )
+#translate IFOBJECT( <v1>,<exp1>,<exp2> )    => IF( hb_isObject( <v1> ),<exp1>,<exp2> )
+#translate IFEMPTY( <v1>,<exp1>,<exp2> )     => IF( Empty( <v1> ),<exp1>,<exp2> )
 
 /////////////////////////////////////
 // Abbreviated flow control modifiers
 /////////////////////////////////////
 
-#xcommand BREAKIF <log>       => IF (<log>) ; BREAK ; END
-#xcommand EXITIF <log>        => IF (<log>) ; EXIT ; END
-#xcommand LOOPIF <log>        => IF (<log>) ; LOOP ; END
+#xcommand BREAKIF <log>       => IF (<log>) ; BREAK ; ENDIF
+#xcommand EXITIF <log>        => IF (<log>) ; EXIT ; ENDIF
+#xcommand LOOPIF <log>        => IF (<log>) ; LOOP ; ENDIF
 
 // Extended commands
   
 #command UPDATE <v1> IF <exp> TO <v2> ;
          =>                           ;
-         IF <exp> ; <v1> := <v2> ; END
+         IF <exp> ; <v1> := <v2> ; ENDIF
 
 #xtranslate frac(<num>) => (<num>-int(<num>))
 

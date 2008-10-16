@@ -338,7 +338,7 @@ METHOD new( nTop, nLeft, nBottom, nRight ) CLASS TBROWSE
 
 STATIC FUNCTION _SKIP_RESULT( xResult )
 
-   RETURN iif( ValType( xResult ) == "N", Int( xResult ), 0 )
+   RETURN iif( ISNUMBER( xResult ), Int( xResult ), 0 )
 
 
 STATIC PROCEDURE _DISP_FHSEP( nRow, nType, cColor, aColData )

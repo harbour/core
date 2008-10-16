@@ -87,12 +87,12 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
       DO CASE
       CASE ValType( xMessage ) $ "CM" ; cMessage := StrTran( xMessage, ";", Chr( 10 ) )
-      CASE ValType( xMessage ) == "N" ; cMessage := LTrim( Str( xMessage ) )
-      CASE ValType( xMessage ) == "D" ; cMessage := DToC( xMessage )
-      CASE ValType( xMessage ) == "L" ; cMessage := iif( xMessage, ".T.", ".F." )
-      CASE ValType( xMessage ) == "O" ; cMessage := xMessage:className + " Object"
-      CASE ValType( xMessage ) == "S" ; cMessage := "@" + xMessage:Name + "()"
-      CASE ValType( xMessage ) == "B" ; cMessage := "{|| ... }"
+      CASE hb_IsNumeric( xMessage )   ; cMessage := LTrim( Str( xMessage ) )
+      CASE hb_IsDate( xMessage )      ; cMessage := DToC( xMessage )
+      CASE hb_IsLogical( xMessage )   ; cMessage := iif( xMessage, ".T.", ".F." )
+      CASE hb_IsObject( xMessage )    ; cMessage := xMessage:className + " Object"
+      CASE hb_IsSymbol( xMessage )    ; cMessage := "@" + xMessage:Name + "()"
+      CASE hb_IsBlock( xMessage )     ; cMessage := "{|| ... }"
       OTHERWISE                       ; cMessage := "NIL"
       ENDCASE
 

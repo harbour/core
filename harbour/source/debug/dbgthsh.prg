@@ -249,7 +249,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
 
       uValue := HB_HValueAt( hHash, nSet )
 
-      IF ValType( uValue ) == "H"
+      IF hb_isHash( uValue )
 
          IF Len( uValue ) == 0
             __dbgAlert( "Hash is empty" )
@@ -269,7 +269,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
                ::nCurwindow--
             ENDIF
          ENDIF
-      ELSEIF ISBLOCK( uValue ) .OR. ValType( uValue ) == "P"
+      ELSEIF ISBLOCK( uValue ) .OR. hb_isPointer( uValue )
          __dbgAlert( "Value cannot be edited" )
       ELSE
          IF ::lEditable

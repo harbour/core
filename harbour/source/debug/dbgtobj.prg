@@ -307,7 +307,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
             IF Len( aArray[ nSet, 2 ] ) > 0
                HBDbArray():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
             ENDIF
-         ELSEIF ValType( aArray[ nSet, 2 ] ) == "H"
+         ELSEIF hb_isHash( aArray[ nSet, 2 ] )
             IF Len( aArray[ nSet, 2 ] ) > 0
                HBDbHash():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
             ENDIF
@@ -316,7 +316,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
          ELSEIF ( ISCHARACTER( aArray[ nSet, 2 ] ) .AND. ;
                   !aArray[ nSet, 3 ] ) .OR. ;
                 ISBLOCK( aArray[ nSet, 2 ] ) .OR. ;
-                ValType( aArray[ nSet, 2 ] ) == "P"
+                hb_isPointer( aArray[ nSet, 2 ] )
             __dbgAlert( "Value cannot be edited" )
          ELSE
             IF ::lEditable

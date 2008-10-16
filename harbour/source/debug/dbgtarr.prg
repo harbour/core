@@ -258,14 +258,14 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
                ::nCurWindow--
             ENDIF
          ENDIF
-      ELSEIF ISBLOCK( aArray[ nSet ] ) .OR. Valtype( aArray[ nSet ] ) == "P"
+      ELSEIF ISBLOCK( aArray[ nSet ] ) .OR. hb_isPointer( aArray[ nSet ] )
          __dbgAlert( "Value cannot be edited" )
       ELSE
          IF ::lEditable
             oBrwSets:RefreshCurrent()
             IF ISOBJECT( aArray[ nSet ] )
                __DbgObject( aArray[ nSet ], cName + "[" + LTrim( Str( nSet ) ) + "]" )
-            ELSEIF ValType( aArray[ nSet ] ) == "H"
+            ELSEIF hb_isHash( aArray[ nSet ] )
                __DbgHashes( aArray[ nSet ], cName + "[" + LTrim( Str( nSet ) ) + "]" )
             ELSE
                ::doGet( oBrwsets, aArray, nSet )

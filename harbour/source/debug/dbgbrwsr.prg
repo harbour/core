@@ -169,7 +169,7 @@ METHOD ForceStable()
                   xData := Eval( oCol:block )
                   nClr := iif( nRow == ::rowPos, 2, 1 )
                   aClr := Eval( oCol:colorBlock, xData )
-                  IF VALTYPE( aClr ) == "A"
+                  IF ISARRAY( aClr )
                      nClr := aClr[ nClr ]
                   ELSE
                      nClr := oCol:defColor[ nClr ]

@@ -8,6 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-16 08:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/common.ch
+  * contrib/hbziparc/hbziparc.prg
+  * source/rtl/tclass.prg
+  * source/rtl/hbini.prg
+    * Minor formatting. (hb_Is*() -> hb_is*())
+
+  * contrib/hbct/ctrand.prg
+  * contrib/hbct/numconv.prg
+  * contrib/hbct/cttime.prg
+  * contrib/hbct/showtime.prg
+  * contrib/hbwhat/hbwhat.ch
+  * utils/hbrun/hbrun.prg
+  * source/debug/dbgtobj.prg
+  * source/debug/dbgbrwsr.prg
+  * source/debug/dbgthsh.prg
+  * source/debug/dbgtarr.prg
+  * source/rtl/alert.prg
+  * source/rtl/tbrowse.prg
+    % ValType() -> IS*() / hb_is*()
+
+  * contrib/hbwhat/hbwhat.ch
+    % Using common.ch instead of replicating logic.
+    * Some formatting.
+
+  * utils/hbtest/hbtest.prg
+    * Minor formatting.
+
 2008-10-16 08:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbwhat/wincore.prg
     ! One STATIC made THREAD STATIC.

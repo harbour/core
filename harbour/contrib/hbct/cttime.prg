@@ -51,11 +51,13 @@
  *
  */
 
+#include "common.ch"
+
 function TIMETOSEC( cTime )
 local nSec := 0, nLen, i, aLim, aMod, nInd, n
 if cTime == NIL
    nSec := seconds()
-elseif valtype( cTime ) == "C"
+elseif ISCHARACTER( cTime )
    nLen := len( cTime )
    if ( nLen + 1 ) % 3 == 0 .and. nLen <= 11
       nInd := 1
@@ -80,8 +82,8 @@ return round( nSec, 2) /* round FL val to be sure that you can compare it */
 
 function SECTOTIME( nSec, lHundr )
 local i, h, n
-n := iif( !valtype( nSec ) == "N", seconds(), nSec )
-if valtype( lHundr ) == "L" .and. lHundr
+n := iif( !ISNUMBER( nSec ), seconds(), nSec )
+if ISLOGICAL( lHundr ) .and. lHundr
    h := ":" + strzero( ( nSec * 100 ) % 100, 2 )
 else
    h := ""

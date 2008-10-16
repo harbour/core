@@ -775,10 +775,10 @@ FUNCTION hb_ZipFile( cFileName,;
       DEFAULT lWithPath TO .F.
       DEFAULT lWithDrive TO .F.
 
-      IF hb_IsString( acFiles )
+      IF hb_isString( acFiles )
          acFiles := { acFiles }
       ENDIF
-      IF hb_IsString( acExclude )
+      IF hb_isString( acExclude )
          acExclude := { acExclude }
       ENDIF
 
@@ -823,7 +823,7 @@ FUNCTION hb_ZipFile( cFileName,;
 
          IF ( hHandle := FOpen( cFileToZip, FO_READ ) ) != F_ERROR
 
-            IF hb_IsBlock( bUpdate )
+            IF hb_isBlock( bUpdate )
                Eval( bUpdate, cFileToZip, nPos++ )
             ENDIF
 
@@ -836,7 +836,7 @@ FUNCTION hb_ZipFile( cFileName,;
 
             DO WHILE ( nLen := FRead( hHandle, @cBuffer, Len( cBuffer ) ) ) > 0
 
-               IF hb_IsBlock( bProgress )
+               IF hb_isBlock( bProgress )
                   nRead += nLen
                   Eval( bProgress, nRead, nSize )
                ENDIF
@@ -951,8 +951,8 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
 
    IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
 
-      IF hb_IsNumeric( acFiles ) .OR. ;
-         hb_IsString( acFiles )
+      IF hb_isNumeric( acFiles ) .OR. ;
+         hb_isString( acFiles )
          acFiles := { acFiles }
       ENDIF
 
@@ -972,7 +972,7 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
             IF AScan( acFiles, nPos ) > 0 .OR. ;
                AScan( acFiles, {| cMask | hb_FileMatch( cZipName, cMask ) } ) > 0
 
-               IF hb_IsBlock( bUpdate )
+               IF hb_isBlock( bUpdate )
                   Eval( bUpdate, cZipName, nPos )
                ENDIF
 
@@ -1046,7 +1046,7 @@ FUNCTION hb_ZipDeleteFiles( cFileName, acFiles )
       ENDIF
    ENDIF
 
-   IF hb_IsString( acFiles )
+   IF hb_isString( acFiles )
       acFiles := { acFiles }
    ENDIF
 

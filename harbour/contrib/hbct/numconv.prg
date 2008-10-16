@@ -88,7 +88,7 @@ LOCAL cNum
 Default cPad to " "
 Default nBase to 10
 
-IF VALTYPE( xNum ) == "C"
+IF ISCHARACTER( xNum )
    xNum := UPPER( ALLTRIM( xNum ) )
    xNum := CTON( xNum, 16 )
 ENDIF

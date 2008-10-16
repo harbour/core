@@ -50,6 +50,7 @@
  *
  */
 
+#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -192,19 +193,19 @@ PROCEDURE _APPMAIN( cFile, ... )
       ENDDO
    ENDIF
 
-RETURN
+   RETURN
 
 /* ********************************************************************** */
 
 STATIC PROCEDURE HB_DotUsage()
 
    OutStd( 'Harbour "DOt Prompt" Console / runner ' + HBRawVersion() + HB_OSNewLine() +;
-           'Copyright (c) 1999-2008, Przemyslaw Czerpak' + HB_OSNewLine() + ;
-           'http://www.harbour-project.org/' + HB_OSNewLine() +;
+           "Copyright (c) 1999-2008, Przemyslaw Czerpak" + HB_OSNewLine() + ;
+           "http://www.harbour-project.org/" + HB_OSNewLine() +;
            HB_OSNewLine() +;
-           'Syntax:  hbrun [<hrbfile[.prg|.hrb]> [<parameters,...>]]' + HB_OSNewLine() )
+           "Syntax:  hbrun [<hrbfile[.prg|.hrb]> [<parameters,...>]]" + HB_OSNewLine() )
 
-RETURN
+   RETURN
 
 /* ********************************************************************** */
 
@@ -235,7 +236,7 @@ STATIC PROCEDURE HB_DotInfo( cCommand )
    ENDIF
    SetPos( r, c )
 
-RETURN
+   RETURN
 
 /* ********************************************************************** */
 
@@ -246,16 +247,16 @@ STATIC PROCEDURE HB_DotErr( oErr, cCommand )
    cMessage := "Sorry, could not execute:;;" + cCommand + ";;"
    IF oErr:ClassName == "ERROR"
       cMessage += oErr:Description
-      IF ValType( oErr:Args ) == 'A' .AND. Len( oErr:Args ) > 0
+      IF ISARRAY( oErr:Args ) .AND. Len( oErr:Args ) > 0
          cMessage += ";Arguments:"
          FOR EACH xArg IN oErr:Args
             cMessage += ";" + HB_CStr( xArg )
          NEXT
       ENDIF
-   ELSEIF ValType( oErr ) == 'C'
+   ELSEIF ISCHARACTER( oErr )
       cMessage += oErr
    ENDIF
-   cMessage += ";;" + ProcName( 2 ) + '(' + LTrim( Str( ProcLine( 2 ) ) ) + ')'
+   cMessage += ";;" + ProcName( 2 ) + "(" + LTrim( Str( ProcLine( 2 ) ) ) + ")"
 
    Alert( cMessage )
 
@@ -296,7 +297,7 @@ STATIC PROCEDURE HB_DotExec( cCommand )
 
    __MVSETBASE()
 
-RETURN
+   RETURN
 
 STATIC FUNCTION HBRawVersion()
    RETURN StrTran( Version(), "Harbour ", "" )
