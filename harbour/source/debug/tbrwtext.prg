@@ -232,8 +232,8 @@ METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBBrwText
       lResize := .T.
    ENDIF
    IF lResize
-     ::oBrw:Resize( nTop, nLeft, nBottom, nRight )
-     ::nWidth := nRight - nLeft + 1
+      ::oBrw:Resize( nTop, nLeft, nBottom, nRight )
+      ::nWidth := nRight - nLeft + 1
    ENDIF
 
    RETURN Self
@@ -246,11 +246,11 @@ METHOD GetLineColor() CLASS HBBrwText
    lBreak := AScan( ::aBreakPoints, ::nRow ) > 0
 
    IF lBreak
-     aColor := { 3, 2 }
+      aColor := { 3, 2 }
    ELSEIF ::nRow == ::nActiveLine
-     aColor := { 4, 4 }
+      aColor := { 4, 4 }
    ELSE
-     aColor := { 1, 2 }
+      aColor := { 1, 2 }
    ENDIF
 
    RETURN aColor

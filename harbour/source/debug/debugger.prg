@@ -178,7 +178,6 @@ CREATE CLASS HBDebugger
    VAR oWndStack
    VAR oWndVars
 
-   VAR oBar
    VAR oBrwText
    VAR cPrgName
    VAR oBrwStack
@@ -261,7 +260,7 @@ CREATE CLASS HBDebugger
 
    METHOD CallStackProcessKey( nKey )
    METHOD ClrModal() INLINE iif( ::lMonoDisplay, "N/W, W+/W, W/N, W+/N",;
-                                "N/W, R/W, N/BG, R/BG" )
+                                                 "N/W, R/W, N/BG, R/BG" )
 
    METHOD CodeblockTrace()
    METHOD CodeWindowProcessKey( nKey )
@@ -520,7 +519,7 @@ METHOD BuildBrowseStack() CLASS HBDebugger
 
    IF ::oBrwStack == NIL
       ::oBrwStack := HBDbBrowser():New( 2, ::nMaxCol - 14, ::nMaxRow - 7, ::nMaxCol - 1 )
-      ::oBrwStack:ColorSpec := ::aColors[ 3 ] + "," + ::aColors[ 4 ] + "," + ::aColors[ 5 ]
+      ::oBrwStack:ColorSpec := ::aColors[ 3 ] + "," + ::aColors[ 4 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 6 ]
       ::oBrwStack:goTopBlock := { || ::oBrwStack:Cargo := 1 }
       ::oBrwStack:goBottomBlock := { || ::oBrwStack:Cargo := Len( ::aProcStack ) }
       ::oBrwStack:skipBlock := { | nSkip, nOld | nOld := ::oBrwStack:Cargo,;
@@ -2437,7 +2436,7 @@ METHOD ShowCallStack() CLASS HBDebugger
       ENDIF
 
       ::oWndStack:bPainted := { || ::oBrwStack:ColorSpec := __DbgColors()[ 2 ] + "," + ;
-                                  __DbgColors()[ 5 ] + "," + __DbgColors()[ 4 ],;
+                                  __DbgColors()[ 5 ] + "," + __DbgColors()[ 4 ] + "," + __DbgColors()[ 6 ],;
                                   ::oBrwStack:RefreshAll(), ::oBrwStack:ForceStable() }
       ::oWndStack:bGotFocus := { || SetCursor( SC_NONE ) }
 
@@ -2613,7 +2612,7 @@ METHOD ShowVars() CLASS HBDebugger
                                        ::nMaxCol - iif( ::oWndStack != NIL, ::oWndStack:nWidth(), 0 ) - 1 )
 
       ::oBrwVars:Cargo := { 1, {} } // Actual highlighted row
-      ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ]
+      ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ] + "," + ::aColors[ 6 ]
       ::oBrwVars:goTopBlock := { || ::oBrwVars:cargo[ 1 ] := Min( 1, Len( ::aVars ) ) }
       ::oBrwVars:goBottomBlock := { || ::oBrwVars:cargo[ 1 ] := Max( 1, Len( ::aVars ) ) }
       ::oBrwVars:skipBlock := { | nSkip, nOld | ;
@@ -3076,7 +3075,7 @@ METHOD WatchpointsShow() CLASS HBDebugger
       ::oWndPnt:Browser := ::oBrwPnt
 
       ::oBrwPnt:Cargo := { 1, {} } // Actual highlighted row
-      ::oBrwPnt:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ]
+      ::oBrwPnt:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ] + "," + ::aColors[ 6 ]
       ::oBrwPnt:goTopBlock := { || ::oBrwPnt:cargo[ 1 ] := Min( 1, Len(::aWatch ) ) }
       ::oBrwPnt:goBottomBlock := { || ::oBrwPnt:cargo[ 1 ] := Len( ::aWatch ) }
       ::oBrwPnt:skipBlock := { | nSkip, nOld | nOld := ::oBrwPnt:Cargo[ 1 ],;

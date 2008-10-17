@@ -290,7 +290,7 @@ METHOD Move() Class HBDbWindow
    LOCAL nKey
 
    DO WHILE .T.
-      RestScreen( ,,,, ::cbackimage )
+      RestScreen( ,,,, ::cBackImage )
       hb_dispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( Chr( 176 ), 8 ) + " " )
 
       nKey := Inkey( 0 )
@@ -298,9 +298,9 @@ METHOD Move() Class HBDbWindow
       DO CASE
       CASE nKey == K_UP
 
-         IF ::ntop != 0
-            ::ntop--
-            ::nbottom--
+         IF ::nTop != 0
+            ::nTop--
+            ::nBottom--
          ENDIF
 
       CASE nKey == K_DOWN
@@ -334,7 +334,7 @@ METHOD Move() Class HBDbWindow
       ENDCASE
 
       IF nKey == K_ESC .OR. nKey == K_ENTER
-         exit
+         EXIT
       ENDIF
    ENDDO
 
@@ -357,7 +357,7 @@ METHOD LoadColors() CLASS HBDbWindow
    ::cColor := aClr[ 1 ]
 
    IF ::Browser != NIL
-      ::Browser:ColorSpec := aClr[ 2 ] + "," + aClr[ 5 ] + "," + aClr[ 3 ]
+      ::Browser:ColorSpec := aClr[ 2 ] + "," + aClr[ 5 ] + "," + aClr[ 3 ] + "," + aClr[ 6 ]
    ENDIF
 
    RETURN NIL

@@ -154,7 +154,7 @@ METHOD ForceStable()
    LOCAL nRow, nCol, xData, oCol, nColX, nWid, aClr, nClr
 
    IF !::lConfigured
-       ::Configure()
+      ::Configure()
    ENDIF
    FOR nRow := 1 TO ::rowCount
       IF Empty( ::aRowState[ nRow ] )
