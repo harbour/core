@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-17 15:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/hbpp.c
+    * workaround for warning in some GCC versions which can lost
+      user casting during function autoinline optimization.
+
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/gtapi.c
+    * moved //INFO message from hb_gtInit() to hb_conInit()
+
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/contrib/hbct/ctwin.c
+    * minor cleanup
+
 2008-10-17 12:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/debugger.prg
     * changed __dbgInput() to return logical value and set edit value in

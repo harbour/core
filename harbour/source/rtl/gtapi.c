@@ -95,21 +95,14 @@ HB_EXPORT ERRCODE hb_gtInit( HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, 
    hb_gtStartupInit();
 
    pGT = hb_gt_Base();
-   if( pGT )
-   {
-      HB_GTSELF_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-      HB_GTSELF_SETCOLORSTR( pGT, hb_setGetColor() );
-      HB_GTSELF_SETCURSORSTYLE( pGT, SC_NORMAL );
-      HB_GTSELF_FLUSH( pGT );
-      hb_gt_BaseFree( pGT );
-   }
+   if( !pGT )
+      return FAILURE;
 
-   if( hb_cmdargCheck( "INFO" ) )
-   {
-      if( pGT )
-         hb_conOutErr( HB_GTSELF_VERSION( pGT, 1 ), 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
-   }
+   HB_GTSELF_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   HB_GTSELF_SETCOLORSTR( pGT, hb_setGetColor() );
+   HB_GTSELF_SETCURSORSTYLE( pGT, SC_NORMAL );
+   HB_GTSELF_FLUSH( pGT );
+   hb_gt_BaseFree( pGT );
 
    return SUCCESS;
 }

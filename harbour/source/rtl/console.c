@@ -156,7 +156,14 @@ void hb_conInit( void )
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
    hb_fsSetDevMode( s_hFilenoStderr, FD_BINARY );
 
-   hb_gtInit( s_hFilenoStdin, s_hFilenoStdout, s_hFilenoStderr );
+   if( hb_gtInit( s_hFilenoStdin, s_hFilenoStdout, s_hFilenoStderr ) != SUCCESS )
+      hb_errInternal( 9998, "Screen driver initialization failure", NULL, NULL );
+
+   if( hb_cmdargCheck( "INFO" ) )
+   {
+      hb_conOutErr( hb_gtVersion( 1 ), 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
+   }
 }
 
 void hb_conRelease( void )

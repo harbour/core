@@ -3219,7 +3219,7 @@ HB_EXPORT void hb_gtStartupInit( void )
    if( hb_gtLoad( hb_gt_szNameDefault, &s_gtCoreFunc ) )
       return;
 
-   if( hb_dynsymFind( "HB_GT_NUL" ) ) /* GTNUL was explicitly requsted */
+   if( hb_dynsymFind( "HB_GT_NUL" ) ) /* GTNUL was explicitly REQUESTed */
    {
       if( hb_gtLoad( "NUL", &s_gtCoreFunc ) )
          return;

@@ -52,7 +52,6 @@
  *
  */
 
-#include "ppcore.c"
 #include "hbset.h"
 
 #if defined(__MINGW32CE__) || defined(HB_WINCE)
@@ -69,6 +68,15 @@ void hb_xfree( void * pMem ) { free( pMem ); }
 BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree ) { if( pfFree ) * pfFree = FALSE; return szFileName; }
 int hb_setGetDirSeparator( void ) { return HB_OS_PATH_DELIM_CHR; }
 int hb_verSvnID( void ) { return 0; }
+
+/* workaround for warning in some GCC versions which can lost
+ * user casting during function autoinline optimization.
+ */
+#define hb_xgrab     malloc
+#define hb_xfree     free
+#define hb_xrealloc  realloc
+
+#include "ppcore.c"
 
 /*
  * functions to create .c files with rules defined in given PP context
