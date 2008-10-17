@@ -1317,7 +1317,7 @@ METHOD HandleEvent() CLASS HBDebugger
                      ::aWindows[ n ]:Show( .T. )
                   ENDIF
                   ::aWindows[ n ]:LDblClick( nMRow, nMCol )
-                  exit
+                  EXIT
                ENDIF
             NEXT
          ENDIF
@@ -1348,7 +1348,7 @@ METHOD HandleEvent() CLASS HBDebugger
                      ::aWindows[ n ]:Show( .T. )
                   ENDIF
                   ::aWindows[ n ]:LButtonDown( nMRow, nMCol )
-                  exit
+                  EXIT
                ENDIF
             NEXT
          ENDIF
