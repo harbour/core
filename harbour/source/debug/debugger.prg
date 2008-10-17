@@ -3306,7 +3306,7 @@ STATIC FUNCTION strip_path( cFileName )
    RETURN cName + cExt
 
 
-STATIC FUNCTION __dbgInput( nRow, nCol, nWidth, cValue, bValid, cColor, nSize )
+FUNCTION __dbgInput( nRow, nCol, nWidth, cValue, bValid, cColor, nSize )
 
    LOCAL nOldCursor := SetCursor( SC_NORMAL )
    LOCAL cTemp := cValue

@@ -51,7 +51,6 @@
  */
 
 #pragma DEBUGINFO=OFF
-#define HB_NO_READDBG
 
 #define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
 #include "hbclass.ch"
@@ -158,33 +157,17 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
 
 METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbArray
 
-#ifndef HB_NO_READDBG
-
    LOCAL nKey
    LOCAL oErr
-   LOCAL GetList := {}
-   LOCAL lScoreSave := Set( _SET_SCOREBOARD, .F. )
-   LOCAL lExitSave  := Set( _SET_EXIT, .T. )
-   LOCAL bInsSave   := SetKey( K_INS )
-   LOCAL cValue     := PadR( __dbgValToStr( pItem[ nSet ] ),;
-                             oBrowse:nRight - oBrowse:nLeft - oBrowse:GetColumn( 1 ):width )
+   LOCAL cValue := PadR( __dbgValToStr( pItem[ nSet ] ),;
+                         oBrowse:nRight - oBrowse:nLeft - oBrowse:GetColumn( 1 ):width )
 
    // make sure browse is stable
    oBrowse:forceStable()
    // if confirming new record, append blank
 
-   // set insert key to toggle insert mode and cursor
-   SetKey( K_INS, { || SetCursor( iif( ReadInsert( ! ReadInsert() ),;
-           SC_NORMAL, SC_INSERT ) ) } )
-
-   // initial cursor setting
-   SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
-
-   // create a corresponding GET
-   @ Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1 GET cValue ;
-      VALID iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. )
-
-   READ
+   cValue := __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, cValue, ;
+                         { iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
 
    IF LastKey() == K_ENTER
       BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
@@ -194,24 +177,11 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbArray
       END SEQUENCE
    ENDIF
 
-   SetCursor( SC_NONE )
-   Set( _SET_SCOREBOARD, lScoreSave )
-   Set( _SET_EXIT, lExitSave )
-   SetKey( K_INS, bInsSave )
-
    // check exit key from get
    nKey := LastKey()
    IF nKey == K_UP .OR. nKey == K_DOWN .OR. nKey == K_PGUP .OR. nKey == K_PGDN
       KEYBOARD Chr( nKey )
    ENDIF
-
-#else
-
-   HB_SYMBOL_UNUSED( oBrowse )
-   HB_SYMBOL_UNUSED( pItem )
-   HB_SYMBOL_UNUSED( nSet )
-
-#endif
 
    RETURN NIL
 

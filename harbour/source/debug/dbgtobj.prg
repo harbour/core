@@ -51,7 +51,6 @@
  */
 
 #pragma DEBUGINFO=OFF
-#define HB_NO_READDBG
 
 #define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
 #include "hbclass.ch"
@@ -177,14 +176,8 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
 
 METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
 
-#ifndef HB_NO_READDBG
-
    LOCAL column
    LOCAL nKey
-   LOCAL GetList := {}
-   LOCAL lScoreSave := Set( _SET_SCOREBOARD, .F. )
-   LOCAL lExitSave  := Set( _SET_EXIT, .T. )
-   LOCAL bInsSave   := SetKey( K_INS )
    LOCAL cValue
    LOCAL lCanAcc
    LOCAL oErr
@@ -192,7 +185,6 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
    // make sure browse is stable
    oBrowse:forceStable()
    // if confirming new record, append blank
-
 
    // get column object from browse
    column := oBrowse:getColumn( oBrowse:colPos )
@@ -205,22 +197,8 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
    ENDIF
    cValue := PadR( __dbgValToStr( cValue ), column:Width )
 
-   // set insert key to toggle insert mode and cursor
-   SetKey( K_INS, { || SetCursor( iif( ReadInsert( ! ReadInsert() ),;
-                                       SC_NORMAL, SC_INSERT ) ), inkey(0) } )
-
-   // initial cursor setting
-   SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
-
-   @ Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1 GET cValue ;
-       VALID iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. )
-
-   READ
-
-   SetCursor( SC_NONE )
-   Set( _SET_SCOREBOARD, lScoreSave )
-   Set( _SET_EXIT, lExitSave )
-   SetKey( K_INS, bInsSave )
+   cValue := __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, cValue, ;
+                         { iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
 
    IF LastKey() == K_ENTER
       BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
@@ -235,14 +213,6 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
    IF nKey == K_UP .OR. nKey == K_DOWN .OR. nKey == K_PGUP .OR. nKey == K_PGDN
       KEYBOARD Chr( nKey )
    ENDIF
-
-#else
-
-   HB_SYMBOL_UNUSED( oBrowse )
-   HB_SYMBOL_UNUSED( pItem )
-   HB_SYMBOL_UNUSED( nSet )
-
-#endif
 
    RETURN NIL
 

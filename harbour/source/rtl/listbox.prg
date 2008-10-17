@@ -227,10 +227,6 @@ METHOD delItem( nPos )
 
 METHOD display() CLASS LISTBOX
 
-   LOCAL nOldRow
-   LOCAL nOldCol
-   LOCAL cOldColor
-
    LOCAL nItem
    LOCAL nEnd
    LOCAL cColor4
@@ -279,20 +275,7 @@ METHOD display() CLASS LISTBOX
          hb_dispBox( nTop, nLeft, ::nBottom, ::nRight, cHotBox, cColorScrl )
 
          IF ::oVScroll != NIL
-
-            /* Is it necessary to save, set and restore color and cursor
-             * position for ::oVScroll:display() or we can remove it?
-             */
-            nOldRow := Row()
-            nOldCol := Col()
-            cOldColor := SetColor()
-            SetColor( cColorScrl )
-
             ::oVScroll:display()
-
-            SetColor( cOldColor )
-            SetPos( nOldRow, nOldCol )
-
          ENDIF
 
          nTop++

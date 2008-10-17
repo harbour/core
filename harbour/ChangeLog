@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-17 10:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/debug/dbgtobj.prg
+  * source/debug/dbgthsh.prg
+  * source/debug/debugger.prg
+  * source/debug/dbgtarr.prg
+    * Changed rest of GETs to __dbgInput()
+
+  * source/rtl/listbox.prg
+    - Removed saving cursor position and color, 
+      and changing default color.
+
+  ; NOTE: Couldn't replicate Mono display RTE.
+
 2008-10-17 03:13 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/dbgtwin.prg
     * use hb_scroll() instead of scroll()
