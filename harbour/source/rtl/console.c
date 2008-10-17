@@ -73,6 +73,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
+#include "hbapierr.h"
 #include "hbapigt.h"
 #include "hbstack.h"
 #include "hbset.h"

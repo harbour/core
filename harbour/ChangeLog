@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-17 16:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/console.c
+    ! added missing #include "hbapierr.h"
+
 2008-10-17 15:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/hbpp.c
     * workaround for warning in some GCC versions which can lost
