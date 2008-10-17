@@ -177,7 +177,6 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
 METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
 
    LOCAL column
-   LOCAL nKey
    LOCAL cValue
    LOCAL lCanAcc
    LOCAL oErr
@@ -197,21 +196,13 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
    ENDIF
    cValue := PadR( __dbgValToStr( cValue ), column:Width )
 
-   cValue := __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, cValue, ;
-                         { iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
-
-   IF LastKey() == K_ENTER
+   IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, @cValue, ;
+                  { | cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
       BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
          __dbgObjSetValue( ::TheObj, pitem[ nSet, 1 ], &cValue )
       RECOVER USING oErr
          __dbgAlert( oErr:description )
       END SEQUENCE
-   ENDIF
-
-   // check exit key from get
-   nKey := LastKey()
-   IF nKey == K_UP .OR. nKey == K_DOWN .OR. nKey == K_PGUP .OR. nKey == K_PGDN
-      KEYBOARD Chr( nKey )
    ENDIF
 
    RETURN NIL

@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-17 12:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/debug/debugger.prg
+    * changed __dbgInput() to return logical value and set edit value in
+      variable passed by reference
+
+  * harbour/source/debug/dbgtobj.prg
+  * harbour/source/debug/dbgthsh.prg
+  * harbour/source/debug/dbgtarr.prg
+    ! fixed typo in VALID block declaration - it was array by mistake
+    * removed unnecessary code related to GET behavior
+    * use new __dbgInput() format
+
 2008-10-17 10:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/debug/dbgtobj.prg
   * source/debug/dbgthsh.prg

@@ -162,7 +162,6 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
 
 METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbHash
 
-   LOCAL nKey
    LOCAL oErr
    LOCAL cValue := PadR( __dbgValToStr( HB_HValueAt( pItem, nSet ) ),;
                          oBrowse:nRight - oBrowse:nLeft - oBrowse:GetColumn( 1 ):width )
@@ -171,21 +170,13 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbHash
    oBrowse:forceStable()
    // if confirming new record, append blank
 
-   cValue := __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, cValue, ;
-                         { iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
-
-   IF LastKey() == K_ENTER
+   IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, @cValue, ;
+                  { | cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
       BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
          HB_HValueAt( pItem, nSet, &cValue )
       RECOVER USING oErr
          __dbgAlert( oErr:description )
       END SEQUENCE
-   ENDIF
-
-   // check exit key from get
-   nKey := LastKey()
-   IF nKey == K_UP .OR. nKey == K_DOWN .OR. nKey == K_PGUP .OR. nKey == K_PGDN
-      KEYBOARD Chr( nKey )
    ENDIF
 
    RETURN NIL

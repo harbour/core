@@ -1092,12 +1092,10 @@ METHOD EditColor( nColor, oBrwColors ) CLASS HBDebugger
    oBrwColors:RefreshCurrent()
    oBrwColors:ForceStable()
 
-   cColor := __dbgInput( Row(), Col() + 15,, cColor, ;
-                         { | cColor | iif( Type( cColor ) != "C", ;
-                                 ( __dbgAlert( "Must be string" ), .F. ), .T. ) }, ;
-                           SubStr( ::ClrModal(), 5 ) )
-
-   IF LastKey() != K_ESC
+   IF __dbgInput( Row(), Col() + 15,, @cColor, ;
+                  { | cColor | iif( Type( cColor ) != "C", ;
+                           ( __dbgAlert( "Must be string" ), .F. ), .T. ) }, ;
+                  SubStr( ::ClrModal(), 5 ) )
       ::aColors[ nColor ] := &cColor
    ENDIF
 
@@ -1114,12 +1112,10 @@ METHOD EditSet( nSet, oBrwSets ) CLASS HBDebugger
    oBrwSets:RefreshCurrent()
    oBrwSets:ForceStable()
 
-   cSet := __dbgInput( Row(), Col() + 13,, cSet, ;
-               { | cSet | iif( Type( cSet ) != cType, ;
-                  ( __dbgAlert( "Must be of type '" + cType + "'" ), .F. ), .T. ) }, ;
-               SubStr( ::ClrModal(), 5 ) )
-
-   IF LastKey() != K_ESC
+   IF __dbgInput( Row(), Col() + 13,, @cSet, ;
+                  { | cSet | iif( Type( cSet ) != cType, ;
+                     ( __dbgAlert( "Must be of type '" + cType + "'" ), .F. ), .T. ) }, ;
+                  SubStr( ::ClrModal(), 5 ) )
       Set( nSet, &cSet )
    ENDIF
 
@@ -1518,8 +1514,8 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
       IF cType != "C" .OR. Len( uValue ) < nWidth
          uTemp := PadR( uValue, nWidth )
       ENDIF
-      uTemp := __dbgInput( nTop + 1, nLeft + 1, nWidth, uTemp, bValid, ;
-                           __DbgColors()[ 5 ], Max( Max( nWidth, Len( uTemp ) ), 256 ) )
+      __dbgInput( nTop + 1, nLeft + 1, nWidth, @uTemp, bValid, ;
+                  __DbgColors()[ 5 ], Max( Max( nWidth, Len( uTemp ) ), 256 ) )
       SWITCH cType
          CASE "C" ; uTemp := AllTrim( uTemp ) ; EXIT
          CASE "D" ; uTemp := CToD( uTemp )    ; EXIT
@@ -3309,7 +3305,7 @@ STATIC FUNCTION strip_path( cFileName )
 FUNCTION __dbgInput( nRow, nCol, nWidth, cValue, bValid, cColor, nSize )
 
    LOCAL nOldCursor := SetCursor( SC_NORMAL )
-   LOCAL cTemp := cValue
+   LOCAL lOK := .F.
    LOCAL nKey
    LOCAL oGet
 
@@ -3325,7 +3321,8 @@ FUNCTION __dbgInput( nRow, nCol, nWidth, cValue, bValid, cColor, nSize )
          EXIT
       ELSEIF nKey == K_ENTER
          IF bValid == NIL .OR. Eval( bValid, oGet:getValue() )
-            cTemp := oGet:getValue()
+            cValue := oGet:getValue()
+            lOK := .T.
             EXIT
          ENDIF
       ELSE
@@ -3335,7 +3332,7 @@ FUNCTION __dbgInput( nRow, nCol, nWidth, cValue, bValid, cColor, nSize )
 
    SetCursor( nOldCursor )
 
-   RETURN cTemp
+   RETURN lOK
 
 
 FUNCTION __dbgAchoice( nTop, nLeft, nBottom, nRight, aItems, cColors )
