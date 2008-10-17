@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-17 03:13 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/debug/dbgtwin.prg
+    * use hb_scroll() instead of scroll()
+
+  * harbour/source/debug/tbrwtext.prg
+    ! fixed screen redrawing in horizontal movement
+
+  * harbour/source/debug/debugger.prg
+  * harbour/source/debug/dbgtinp.prg
+    ! replaced GET/GETLIST objects by HbDbInput()
+    ! fixed some interface incompatibilities with Clipper debugger
+    * removed HB_NO_READDBG and code using GET classes - HbDbInput()
+      works better and is much simpler in use.
+    % do not use __GetListActive()/__GetListSetActive() - now debugger
+      does not touch GET/GETLIST so it's not necessary to save/restore
+      GETLIST state
+      Now all references (except HBCLASS) to external .prg code in
+      debugger have been removed.
+      TODO: remove HB_NO_READDBG from other debugger files replacing
+            code inside with __dbgInput()/HbDbInput().
+            I would like to leave it for someone else and return to
+            core code modifications.
+
 2008-10-17 00:07 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/debug/Makefile

@@ -61,7 +61,7 @@ CREATE CLASS HBBrwText
    VAR aRows
    VAR nRows
    VAR nActiveLine
-   VAR aBreakPoints INIT {}
+   VAR aBreakPoints  INIT {}
    VAR lLineNumbers
    VAR nRow
    VAR nFirstCol
@@ -70,9 +70,9 @@ CREATE CLASS HBBrwText
    VAR oBrw
 
    VAR cCurLine
-   VAR nLineOffset
+   VAR nLineOffset   INIT 1
    VAR nMaxLineLen
-   VAR nTabWidth INIT 4
+   VAR nTabWidth     INIT 4
 
    VAR nTop
    VAR nLeft
@@ -109,8 +109,8 @@ CREATE CLASS HBBrwText
    METHOD GoTop() INLINE ::oBrw:GoTop():ForceStable(), Self
    METHOD GoBottom() INLINE ::oBrw:GoBottom():ForceStable(), Self
 
-   METHOD Right() INLINE IIF( ::nLineOffset < ::nMaxLineLen, ( ::nLineOffset++, ::RefreshAll() ), ), Self
-   METHOD Left() INLINE IIF( ::nLineOffset > 1, ( ::nLineOffset--, ::RefreshAll() ), ), Self
+   METHOD Right() INLINE IIF( ::nLineOffset < ::nMaxLineLen, ( ::nLineOffset++, ::oBrw:RefreshAll():ForceStable() ), ), Self
+   METHOD Left() INLINE IIF( ::nLineOffset > 1, ( ::nLineOffset--, ::oBrw:RefreshAll():ForceStable() ), ), Self
 
    METHOD RowPos() INLINE ::nRow
 

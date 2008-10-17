@@ -78,10 +78,12 @@ EXPORTED:
    METHOD new( nRow, nCol, nWidth, cValue, nSize )
    METHOD applyKey( nKey )
    METHOD getValue()
+   METHOD setValue( cValue )
    METHOD setFocus()
    METHOD killFocus()
    METHOD display()
    METHOD newPos( nRow, nCol )
+   METHOD setColor( cColor )
 
 ENDCLASS
 
@@ -94,9 +96,14 @@ METHOD new( nRow, nCol, nWidth, cValue, cColor, nSize ) CLASS HbDbInput
    ::cValue := PadR( cValue, ::nSize )
    ::nRow   := nRow
 
+   ::setColor( cColor )
+
+   RETURN Self
+
+METHOD setColor( cColor ) CLASS HbDbInput
+
    ::acColor:= { hb_ColorIndex( cColor, CLR_STANDARD ), ;
                  hb_ColorIndex( cColor, CLR_ENHANCED ) }
-
    IF hb_colorToN( ::acColor[ 2 ] ) == -1
       ::acColor[ 2 ] := IIF( hb_colorToN( ::acColor[ 1 ] ) != -1, ;
                              ::acColor[ 1 ], ;
@@ -128,6 +135,11 @@ METHOD killFocus() CLASS HbDbInput
 
 METHOD getValue() CLASS HbDbInput
    RETURN ::cValue
+
+METHOD setValue( cValue ) CLASS HbDbInput
+   ::cValue := PadR( cValue, ::nSize )
+   ::nPos := Min( ::nSize, Len( RTrim( ::cValue ) ) + 1 )
+   RETURN Self
 
 METHOD display() CLASS HbDbInput
 

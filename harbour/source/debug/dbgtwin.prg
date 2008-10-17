@@ -135,7 +135,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS HBDbWindow
    RETURN Self
 
 METHOD Clear() CLASS HBDbWindow
-  
+ 
    SetColor( ::cColor )
    Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1 )
 
@@ -169,7 +169,7 @@ METHOD SetCaption( cCaption ) CLASS HBDbWindow
    ::cCaption := cCaption
 
    RETURN NIL
-  
+
 METHOD ShowCaption CLASS HBDbWindow
 
    IF ! Empty( ::cCaption )
@@ -181,7 +181,7 @@ METHOD ShowCaption CLASS HBDbWindow
    RETURN NIL
 
 METHOD SetFocus( lOnOff ) CLASS HBDbWindow
-  
+
    IF ! lOnOff .AND. ::bLostFocus != NIL
       Eval( ::bLostFocus, Self )
    ENDIF
@@ -206,7 +206,7 @@ METHOD Refresh() CLASS HBDbWindow
    IF ::bPainted != NIL
       Eval( ::bPainted, Self )
    ENDIF
-   
+
    DispEnd()
 
    RETURN NIL
@@ -216,11 +216,11 @@ METHOD Show( lFocused ) CLASS HBDbWindow
    LOCAL nCol := Col()
 
    DEFAULT lFocused TO ::lFocused
-   
+
    ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
-                              ::nRight + iif( ::lShadow, 2, 0 ) )
+                               ::nRight + iif( ::lShadow, 2, 0 ) )
    SetColor( ::cColor )
-   Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight )
+   hb_scroll( ::nTop, ::nLeft, ::nBottom, ::nRight )
    ::SetFocus( lFocused )
 
    IF ::lShadow

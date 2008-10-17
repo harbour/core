@@ -74,7 +74,6 @@
          redirection, and is also slower. [vszakats] */
 
 #pragma DEBUGINFO=OFF
-#define HB_NO_READDBG
 
 #define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
 #include "hbclass.ch"
@@ -187,15 +186,15 @@ CREATE CLASS HBDebugger
    VAR aVars             INIT {}
 
    VAR nAppDispCount
-   VAR nAppLastKey
-   VAR bAppInkeyAfter
-   VAR bAppInkeyBefore
-   VAR bAppClassScope
 
    VAR nAppDirCase
    VAR nAppFileCase
-   VAR oAppGetList
    VAR nAppTypeAhead
+   VAR nAppLastKey
+
+   VAR bAppInkeyAfter
+   VAR bAppInkeyBefore
+   VAR bAppClassScope
 
    VAR nMaxRow
    VAR nMaxCol
@@ -214,7 +213,7 @@ CREATE CLASS HBDebugger
 
    VAR aLastCommands
    VAR nCommand
-   VAR oGetListCommand
+   VAR oGet
 
    VAR lAnimate          INIT .F.
    VAR lEnd              INIT .F.
@@ -406,10 +405,10 @@ METHOD New() CLASS HBDebugger
    ::oWndCode             := HBDbWindow():New( 1, 0, ::nMaxRow - 6, ::nMaxCol )
    ::oWndCode:Cargo       := { ::oWndCode:nTop, ::oWndCode:nLeft }
    ::oWndCode:bKeyPressed := { | nKey | ::CodeWindowProcessKey( nKey ) }
-   ::oWndCode:bGotFocus   := { || ::oGetListCommand:SetFocus(), SetCursor( SC_SPECIAL1 ), ;
-                                  SetPos( ::oWndCode:Cargo[ 1 ],::oWndCode:Cargo[ 2 ] ) }
-   ::oWndCode:bLostFocus  := { || ::oWndCode:Cargo[ 1 ] := Row(), ::oWndCode:Cargo[ 2 ] := Col(), ;
-                                  SetCursor( SC_NONE ) }
+   ::oWndCode:bGotFocus   := { || ::oGet:SetFocus() }
+   ::oWndCode:bLostFocus  := { || ::oGet:KillFocus(), SetCursor( SC_NONE ), ;
+                                  ::oWndCode:Cargo[ 1 ] := Row(), ;
+                                  ::oWndCode:Cargo[ 2 ] := Col() }
 
    AAdd( ::aWindows, ::oWndCode )
 
@@ -540,32 +539,27 @@ METHOD BuildBrowseStack() CLASS HBDebugger
 
 METHOD BuildCommandWindow() CLASS HBDebugger
 
-   LOCAL GetList := {}
-   LOCAL oGet
-   LOCAL cCommand
+   LOCAL nSize
 
    ::oWndCommand := HBDbWindow():New( ::nMaxRow - 5, 0, ::nMaxRow - 1, ::nMaxCol, "Command" )
 
-   ::oWndCommand:bGotFocus   := { || ::oGetListCommand:SetFocus(), SetCursor( SC_NORMAL ) }
-   ::oWndCommand:bLostFocus  := { || SetCursor( SC_NONE ) }
+   ::oWndCommand:bGotFocus   := { || ::oGet:SetFocus() }
+   ::oWndCommand:bLostFocus  := { || ::oGet:KillFocus(), SetCursor( SC_NONE ) }
    ::oWndCommand:bKeyPressed := { | nKey | ::CommandWindowProcessKey( nKey ) }
    ::oWndCommand:bPainted    := { || hb_dispOutAt( ::oWndCommand:nBottom - 1,;
                              ::oWndCommand:nLeft + 1, "> ", __DbgColors()[ 2 ] ),;
-                             oGet:ColorDisp( Replicate( __DbgColors()[ 2 ] + ",", 5 ) ),;
+                             ::oGet:setColor( __DbgColors()[ 2 ] ):display(),;
                              hb_ClrArea( ::oWndCommand:nTop + 1, ::oWndCommand:nLeft + 1,;
                              ::oWndCommand:nBottom - 2, ::oWndCommand:nRight - 1,;
-                             iif( ::lMonoDisplay, 15, hb_ColorToN( __DbgColors()[ 2 ] ) ) ) }
+                             IIF( ::lMonoDisplay, 15, hb_ColorToN( __DbgColors()[ 2 ] ) ) ) }
    AAdd( ::aWindows, ::oWndCommand )
 
    ::aLastCommands := { "" }
    ::nCommand := 1
 
-   cCommand := Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 3 )
-   // We don't use the GET command here to avoid the painting of the GET
-   AAdd( GetList, oGet := Get():New( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3,;
-         { | u | iif( PCount() > 0, cCommand := u, cCommand ) }, "cCommand" ) )
-   oGet:ColorSpec := Replicate( __DbgColors()[ 2 ] + ",", 5 )
-   ::oGetListCommand := HBGetList():New( GetList )
+   nSize := ::oWndCommand:nRight - ::oWndCommand:nLeft - 3
+   ::oGet := HbDbInput():new( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3,; 
+                              nSize, "", __DbgColors()[ 2 ], Max( nSize, 256 ) )
 
    RETURN NIL
 
@@ -768,65 +762,41 @@ METHOD CommandWindowProcessKey( nKey ) CLASS HBDebugger
 
    LOCAL cCommand
    LOCAL n
-   LOCAL nWidth := ::oWndCommand:nRight - ::oWndCommand:nLeft - 3
 
-   DO CASE
-   CASE nKey == K_UP .OR. nKey == K_F3
-
-      IF ::nCommand > 1
-         ::oGetListCommand:Get():Assign()
-         ::aLastCommands[ ::nCommand ] := Trim( ::oGetListCommand:Get():VarGet() )
-         ::nCommand--
-         cCommand := PadR( ::aLastCommands[ ::nCommand ], nWidth )
-         ::oGetListCommand:Get():VarPut( cCommand )
-         ::oGetListCommand:Get():Buffer := cCommand
-         ::oGetListCommand:Get():Pos := Len( ::aLastCommands[ ::nCommand ] ) + 1
-         ::oGetListCommand:Get():Display()
-      ENDIF
-
-   CASE nKey == K_DOWN
-
-      IF ::nCommand < Len( ::aLastCommands )
-         ::oGetListCommand:Get():Assign()
-         ::aLastCommands[ ::nCommand ] := Trim( ::oGetListCommand:Get():VarGet() )
-         ::nCommand++
-         cCommand := PadR( ::aLastCommands[ ::nCommand ], nWidth )
-         ::oGetListCommand:Get():VarPut( cCommand )
-         ::oGetListCommand:Get():Buffer := cCommand
-         ::oGetListCommand:Get():Pos := Len( ::aLastCommands[ ::nCommand ] ) + 1
-         ::oGetListCommand:Get():Display()
-      ENDIF
-
-   CASE nKey == K_ENTER
-
-      /* We must call :Assign() before :VarGet(), because it's no longer
-       * called on every change */
-      ::oGetListCommand:Get():Assign()
-      cCommand := Trim( ::oGetListCommand:Get():VarGet() )
-
-      IF ! Empty( cCommand )
-         IF ( n := AScan( ::aLastCommands, cCommand ) ) > 0 .AND. n < Len( ::aLastCommands )
-            HB_ADel( ::aLastCommands, n, .T. )
+   SWITCH nKey
+      CASE K_UP
+      CASE K_F3
+         IF ::nCommand > 1
+            ::aLastCommands[ ::nCommand ] := RTrim( ::oGet:getValue() )
+            ::oGet:setValue( ::aLastCommands[ --::nCommand ] ):display()
          ENDIF
-         ::nCommand := Len( ::aLastCommands )
-         ::aLastCommands[ ::nCommand ] := cCommand
-         AAdd( ::aLastCommands, "" )
-         ::nCommand := Len( ::aLastCommands )
-         ::oWndCommand:ScrollUp( 1 )
-         ::DoCommand( cCommand )
-      ENDIF
-
-      hb_dispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ",;
-         __DbgColors()[ 2 ] )
-      cCommand := Space( nWidth )
-      ::oGetListCommand:Get():VarPut( cCommand )
-      ::oGetListCommand:Get():Buffer := cCommand
-      ::oGetListCommand:Get():Pos := 1
-      ::oGetListCommand:Get():Display()
-
-   OTHERWISE
-      ::oGetListCommand:GetApplyKey( nKey )
-   ENDCASE
+         EXIT
+      CASE K_DOWN
+         IF ::nCommand < Len( ::aLastCommands )
+            ::aLastCommands[ ::nCommand ] := RTrim( ::oGet:getValue() )
+            ::oGet:setValue( ::aLastCommands[ ++::nCommand ] ):display()
+         ENDIF
+         EXIT
+      CASE K_ENTER
+         cCommand := RTrim( ::oGet:getValue() )
+         IF ! Empty( cCommand )
+            IF ( n := AScan( ::aLastCommands, cCommand ) ) > 0 .AND. n < Len( ::aLastCommands )
+               HB_ADel( ::aLastCommands, n, .T. )
+            ENDIF
+            ::nCommand := Len( ::aLastCommands )
+            ::aLastCommands[ ::nCommand ] := cCommand
+            AAdd( ::aLastCommands, "" )
+            ::nCommand := Len( ::aLastCommands )
+            ::oWndCommand:ScrollUp( 1 )
+            ::DoCommand( cCommand )
+         ENDIF
+         hb_dispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ", ;
+                       __DbgColors()[ 2 ] )
+         ::oGet:setValue( "" ):display()
+         EXIT
+      OTHERWISE
+         ::oGet:applyKey( nKey )
+   ENDSWITCH
 
    RETURN NIL
 
@@ -1116,31 +1086,16 @@ METHOD DoScript( cFileName ) CLASS HBDebugger
 
 METHOD EditColor( nColor, oBrwColors ) CLASS HBDebugger
 
-   LOCAL GetList    := {}
-   LOCAL lPrevScore := Set( _SET_SCOREBOARD, .F. )
-   LOCAL lPrevExit  := Set( _SET_EXIT, .T. )
    LOCAL cColor     := PadR( '"' + ::aColors[ nColor ] + '"',;
                              oBrwColors:getColumn( 2 ):Width )
 
    oBrwColors:RefreshCurrent()
    oBrwColors:ForceStable()
 
-#ifndef HB_NO_READDBG
-   SetCursor( SC_NORMAL )
-   @ Row(), Col() + 15 GET cColor COLOR SubStr( ::ClrModal(), 5 ) ;
-      VALID iif( Type( cColor ) != "C", ( __dbgAlert( "Must be string" ), .F. ), .T. )
-
-   READ
-   SetCursor( SC_NONE )
-#else
    cColor := __dbgInput( Row(), Col() + 15,, cColor, ;
                          { | cColor | iif( Type( cColor ) != "C", ;
                                  ( __dbgAlert( "Must be string" ), .F. ), .T. ) }, ;
                            SubStr( ::ClrModal(), 5 ) )
-#endif
-
-   Set( _SET_SCOREBOARD, lPrevScore )
-   Set( _SET_EXIT, lPrevExit )
 
    IF LastKey() != K_ESC
       ::aColors[ nColor ] := &cColor
@@ -1153,31 +1108,16 @@ METHOD EditColor( nColor, oBrwColors ) CLASS HBDebugger
 
 METHOD EditSet( nSet, oBrwSets ) CLASS HBDebugger
 
-   LOCAL GetList    := {}
-   LOCAL lPrevScore := Set( _SET_SCOREBOARD, .F. )
-   LOCAL lPrevExit  := Set( _SET_EXIT, .T. )
    LOCAL cSet       := PadR( __dbgValToStr( Set( nSet ) ), oBrwSets:getColumn( 2 ):Width )
    LOCAL cType      := ValType( Set( nSet ) )
 
    oBrwSets:RefreshCurrent()
    oBrwSets:ForceStable()
 
-#ifndef HB_NO_READDBG
-   SetCursor( SC_NORMAL )
-   @ Row(), Col() + 13 GET cSet COLOR SubStr( ::ClrModal(), 5 ) ;
-      VALID iif( Type( cSet ) != cType, ( __dbgAlert( "Must be of type '" + cType + "'" ), .F. ), .T. )
-
-   READ
-   SetCursor( SC_NONE )
-#else
    cSet := __dbgInput( Row(), Col() + 13,, cSet, ;
                { | cSet | iif( Type( cSet ) != cType, ;
                   ( __dbgAlert( "Must be of type '" + cType + "'" ), .F. ), .T. ) }, ;
                SubStr( ::ClrModal(), 5 ) )
-#endif
-
-   Set( _SET_SCOREBOARD, lPrevScore )
-   Set( _SET_EXIT, lPrevExit )
 
    IF LastKey() != K_ESC
       Set( nSet, &cSet )
@@ -1469,7 +1409,7 @@ METHOD HandleEvent() CLASS HBDebugger
       CASE nKey == K_SH_TAB
          ::PrevWindow()
 
-      CASE ::oWndCommand:lFocused .AND. nKey < 272 // Alt
+      CASE /* ::oWndCommand:lFocused .AND. */ nKey < 272 // Alt
          ::oWndCommand:KeyPressed( nKey )
 
       OTHERWISE
@@ -1562,14 +1502,6 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
    LOCAL lExit
    LOCAL oWndInput := HBDbWindow():New( nTop, nLeft, nBottom, nRight, cMsg,;
                                        ::oPullDown:cClrPopup )
-#ifndef HB_NO_READDBG
-   LOCAL lScoreBoard := Set( _SET_SCOREBOARD, .F. )
-   LOCAL GetList := {}
-   LOCAL bMouseSave
-   LOCAL oGet
-   LOCAL cPicture
-#endif
-
    DEFAULT lEditable TO .T.
 
    oWndInput:lShadow := .T.
@@ -1583,35 +1515,11 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
 
    IF lEditable
 
-#ifndef HB_NO_READDBG
-      IF cType == "C" .AND. Len( uValue ) > nWidth
-         cPicture := "@s" + LTrim( Str( nWidth ) )
-      ELSE
-         uTemp := PadR( uValue, nWidth )
-      ENDIF
-      IF bValid == NIL
-         @ nTop + 1, nLeft + 1 GET uTemp PICTURE cPicture COLOR "," + __DbgColors()[ 5 ]
-      ELSE
-         @ nTop + 1, nLeft + 1 GET uTemp PICTURE cPicture VALID Eval( bValid, uTemp ) ;
-           COLOR "," + __DbgColors()[ 5 ]
-      ENDIF
-
-      SetCursor( SC_NORMAL )
-      oGet := ATail( GetList )
-      bMouseSave := SetKey( K_LBUTTONDOWN, { || iif( MRow() == nTop .AND. MCol() == nLeft + 2,;
-         ( oGet:undo(), oGet:exitState := GE_ESCAPE, .T. ), .F. ) } )
-      READ
-      IF LastKey() == K_ESC
-         uTemp := uValue
-      ENDIF
-      SetKey( K_LBUTTONDOWN, bMouseSave)
-#else
       IF cType != "C" .OR. Len( uValue ) < nWidth
          uTemp := PadR( uValue, nWidth )
       ENDIF
       uTemp := __dbgInput( nTop + 1, nLeft + 1, nWidth, uTemp, bValid, ;
                            __DbgColors()[ 5 ], Max( Max( nWidth, Len( uTemp ) ), 256 ) )
-#endif
       SWITCH cType
          CASE "C" ; uTemp := AllTrim( uTemp ) ; EXIT
          CASE "D" ; uTemp := CToD( uTemp )    ; EXIT
@@ -2281,7 +2189,6 @@ METHOD RestoreAppState() CLASS HBDebugger
    SetInkeyBeforeBlock( ::bAppInkeyBefore )
    __SetClassScope( ::bAppClassScope )
 #endif
-   __GetListSetActive( ::oAppGetList )
    RETURN NIL
 
 
@@ -2302,14 +2209,14 @@ METHOD SaveAppScreen() CLASS HBDebugger
    LOCAL nRight
    LOCAL nTop
    LOCAL i
-  
+
    ::nAppDispCount := DispCount()
    FOR i := 1 TO ::nAppDispCount
       DispEnd()
    NEXT
-  
+
    ::OpenDebuggerWindow()
-  
+
    IF ::nMaxRow != MaxRow() .OR. ::nMaxCol != MaxCol()
       DispBegin()
       ::nMaxRow := MaxRow()
@@ -2317,8 +2224,7 @@ METHOD SaveAppScreen() CLASS HBDebugger
       nTop := 1
       nRight := ::nMaxCol
       ::oWndCommand:Resize( ::nMaxRow - 5, 0, ::nMaxRow - 1, ::nMaxCol )
-      ::oGetListCommand:Get():Row := ::oWndCommand:nBottom - 1
-      ::oGetListCommand:Get():Col := ::oWndCommand:nLeft + 3
+      ::oGet:newPos( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 )
       ::oBrwStack:nTop := 2
       ::oBrwStack:nLeft := ::nMaxCol - 14
       ::oBrwStack:nRight := ::nMaxCol - 1
@@ -2353,7 +2259,6 @@ METHOD SaveAppState() CLASS HBDebugger
    ::bAppInkeyBefore := SetInkeyBeforeBlock( NIL )
    ::bAppClassScope := __SetClassScope( .F. )
 #endif
-   ::oAppGetList := __GetListActive()
    RETURN NIL
 
 
