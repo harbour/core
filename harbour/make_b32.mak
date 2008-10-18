@@ -78,11 +78,6 @@ VMMT_LIB_OBJS = $(VM_LIB_OBJS:$(OBJ_DIR)=$(MT_OBJ_DIR))
 # C compiler, Harbour compiler and Linker flags.
 #**********************************************************
 
-# Main "Include" directory
-INCLUDE_DIR = include
-
-#**********************************************************
-
 # C Compiler Flags
 CFLAGS = -I$(INCLUDE_DIR) -I$(OBJ_DIR) $(C_USR)
 CFLAGSMT = -DHB_MT_VM
@@ -106,16 +101,6 @@ CFLAGSMT = -DHB_MT_VM
 CLIBFLAGS      = -c -q -d -Q -w -w-sig- -tWM $(CFLAGS)
 CLIBFLAGSDLL   = $(HB_BCCDLL_DYNRT) $(CLIBFLAGS) -DHB_DYNLIB
 CEXEFLAGSDLL   = $(HB_BCCDLL_DYNRT) $(CLIBFLAGS)
-
-#**********************************************************
-
-# Harbour Compiler Flags
-HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -km -l $(PRG_USR)
-!if "$(HB_BUILD_DEBUG)" == "yes"
-HBFLAGSCMN     = $(HBFLAGSCMN) -l-
-!endif
-HARBOURFLAGS   = -n $(HBFLAGSCMN)
-HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN)
 
 #**********************************************************
 
@@ -150,7 +135,7 @@ ARFLAGS = /P32 $(A_USR)
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for STATIC Libraries
 {$(ALL_SRC_DIRS)}.prg{$(OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\  $**
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
     $(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)\$&.c
 #**********************************************************
 
@@ -161,7 +146,7 @@ ARFLAGS = /P32 $(A_USR)
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for STATIC MT Libraries
 {$(ALL_SRC_DIRS)}.prg{$(MT_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(MT_OBJ_DIR)\  $**
+    $(HB) $(HARBOURFLAGS) -o$(MT_OBJ_DIR)\ $**
     $(CC) $(CLIBFLAGS) $(CFLAGSMT) -o$@ $(MT_OBJ_DIR)\$&.c
 #**********************************************************
 
@@ -172,7 +157,7 @@ ARFLAGS = /P32 $(A_USR)
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for SHARED Libraries
 {$(ALL_LIB_SRC_DIRS)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\  $**
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $**
     $(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)\$&.c
 #**********************************************************
 

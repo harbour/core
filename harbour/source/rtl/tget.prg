@@ -1667,10 +1667,10 @@ METHOD DeleteAll() CLASS Get
       CASE ::cType == "C"
          xValue := Space( ::nMaxlen )
       CASE ::cType == "N"
-         xValue   := 0
+         xValue := 0
          ::lMinus2 := .F.
       CASE ::cType == "D"
-         xValue := CToD( "" )
+         xValue := hb_SToD()
       CASE ::cType == "L"
          xValue := .F.
       ENDCASE

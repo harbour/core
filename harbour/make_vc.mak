@@ -95,11 +95,6 @@ VMMT_LIB_OBJS = $(VM_LIB_OBJS:obj\vc=obj\vc_mt)
 # C compiler, Harbour compiler and Linker flags.
 #**********************************************************
 
-# Main "Include" directory
-INCLUDE_DIR    = include
-
-#**********************************************************
-
 # C Compiler Flags
 !if "$(HB_BUILD_WINCE)" == "yes"
 
@@ -159,19 +154,6 @@ CEXEFLAGSDLL   = $(CLIBFLAGS)
 CLIBFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS) -DHB_DYNLIB
 CEXEFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS)
 !endif
-
-#**********************************************************
-
-# Harbour Compiler Flags
-HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -km -l $(PRG_USR)
-!if "$(HB_BUILD_DEBUG)" == "yes"
-HBFLAGSCMN     = $(HBFLAGSCMN) -l-
-!endif
-!if "$(HB_BUILD_WINCE)" == "yes"
-HBFLAGSCMN     = $(HBFLAGSCMN) -D__PLATFORM__WINCE
-!endif
-HARBOURFLAGS   = -n $(HBFLAGSCMN)
-HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN)
 
 #**********************************************************
 

@@ -82,6 +82,23 @@ HB_INC_INSTALL = $(HB_INSTALL_PREFIX)\include
 HB_LIB_INSTALL = $(HB_INSTALL_PREFIX)\lib
 !endif
 
+# Main "Include" directory
+INCLUDE_DIR = include
+
+#**********************************************************
+# Harbour Compiler Flags
+#**********************************************************
+
+HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -km -l $(PRG_USR)
+!if "$(HB_BUILD_DEBUG)" == "yes"
+HBFLAGSCMN     = $(HBFLAGSCMN) -l-
+!endif
+!if "$(HB_BUILD_WINCE)" == "yes"
+HBFLAGSCMN     = $(HBFLAGSCMN) -D__PLATFORM__WINCE
+!endif
+HARBOURFLAGS   = -n $(HBFLAGSCMN)
+HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN)
+
 #**********************************************************
 # Directory macros. These should never have to change.
 #**********************************************************

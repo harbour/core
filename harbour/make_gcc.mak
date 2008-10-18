@@ -146,9 +146,6 @@ endif
 # C compiler flags
 #**********************************************************
 
-# Main "include" directory
-INCLUDE_DIR    := include
-
 CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) -I$(OBJ_DIR)
 CFLAGSMT       := -DHB_MT_VM
 #-----------
@@ -171,17 +168,6 @@ ifeq ($(findstring -fPIC,$(CLIBFLAGSDLL)),)
 CLIBFLAGSDLL   := -fPIC $(CLIBFLAGSDLL)
 endif
 endif
-
-#**********************************************************
-# Harbour Compiler Flags
-#**********************************************************
-
-HBFLAGSCMN     := -i$(INCLUDE_DIR) -q0 -w3 -es2 -km -l $(PRG_USR)
-ifeq ($(HB_BUILD_DEBUG),yes)
-HBFLAGSCMN     := $(HBFLAGSCMN) -l-
-endif
-HARBOURFLAGS   := -n $(HBFLAGSCMN)
-HARBOURFLAGSDLL:= -n1 $(HBFLAGSCMN)
 
 #**********************************************************
 # Linker Flags

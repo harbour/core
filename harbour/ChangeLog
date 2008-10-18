@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-18 10:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * make_b32.mak
+   * make_vc.mak
+   * make_gcc.mak
+     % Harbour command line configuration moved to common.mak.
+
+   * source/rtl/tclass.prg
+   * source/rtl/tget.prg
+     + NOTE added to tclass.prg.
+     * Minor formatting.
+
 2008-10-18 10:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapi.h
   * source/common/hbgete.c

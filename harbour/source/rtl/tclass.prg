@@ -61,7 +61,7 @@
  *    Use of __cls_param function to allow multiple superclass declaration
  *    Suppress of SetType and SetInit not more nedded
  *    Delegation and forwarding
- *    Preparing the InitClass class method (not working !! )
+ *    Preparing the InitClass class method (not working !!)
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *    Support for inheritance
@@ -71,9 +71,12 @@
  *
  */
 
-/* Harbour Class HBClass to build classes */
-
+/* NOTE: This .prg is also used by the debugger subsystem, 
+         therefore we need this switch to avoid an infinite 
+         loop when launching it. [vszakats] */
 #pragma DEBUGINFO=OFF
+
+/* Harbour Class HBClass to build classes */
 
 #include "common.ch"
 #include "hboo.ch"
@@ -82,7 +85,8 @@ REQUEST HBObject
 
 FUNCTION HBClass()
 
-   STATIC s_hClass /* NOTE: Automatically default to NIL */
+   STATIC s_hClass /* NOTE: Automatically defaults to NIL */
+
    LOCAL hClass
 
    IF s_hClass == NIL .AND. __clsLockDef( @s_hClass )
@@ -204,8 +208,7 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
 
    RETURN QSelf()
 
-/* STATIC PROCEDURE Create( MetaClass ) */
-STATIC PROCEDURE Create()
+STATIC PROCEDURE Create( /* MetaClass */ )
 
    LOCAL Self := QSelf()
    LOCAL n
@@ -320,7 +323,7 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
       ELSEIF c $ "NI"   /* Numeric or Integer */
          xInit := 0
       ELSEIF c == "D"   /* Date */
-         xInit := Ctod("")
+         xInit := hb_SToD()
       ENDIF
    ENDIF
 
@@ -347,7 +350,8 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
    DEFAULT lNoInit TO .F.
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
-   nScope := HB_BITOR( nScope, HB_OO_CLSTP_CLASS );
+
+   nScope := hb_bitOr( nScope, HB_OO_CLSTP_CLASS )
 
    /* Default Init for Logical and numeric */
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
@@ -357,7 +361,7 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
       ELSEIF c $ "NI"   /* Numeric or Integer */
          xInit := 0
       ELSEIF c == "D"   /* Date */
-         xInit := Ctod("")
+         xInit := hb_SToD()
       ENDIF
    ENDIF
 
@@ -397,7 +401,8 @@ STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
 STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
 
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
-   nScope := HB_BITOR( nScope, HB_OO_CLSTP_CLASS );
+
+   nScope := hb_bitOr( nScope, HB_OO_CLSTP_CLASS )
 
    AAdd( QSelf():aClsMethods, { cMethod, nFuncPtr, nScope } )
 
