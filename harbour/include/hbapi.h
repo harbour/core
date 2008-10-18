@@ -1010,6 +1010,7 @@ extern HB_EXPORT BOOL   hb_iswince( void ); /* return .T. if OS is Windows CE or
 extern HB_EXPORT BOOL   hb_printerIsReady( char * pszPrinterName );
 
 /* environment variables access */
+extern BOOL   hb_getenv_buffer( const char * szName, char * szBuffer, int nSize );
 /* WARNING: This returned pointer must be freed if not NULL using hb_xfree( ( void * ) ptr ); */
 extern char * hb_getenv( const char * name );
 extern char * hb_netname( void );

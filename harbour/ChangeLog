@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-18 10:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapi.h
+  * source/common/hbgete.c
+    + Added hb_getenv_buffer(). Similar to hb_getenv() but 
+      this one needs a buffer+size to be passed, so no memory 
+      allocation is done by the function. It also return 
+      a BOOL to signal success. It doesn't signal if passed 
+      buffer was too small to store the value.
+
 2008-10-18 08:36 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/dbgtwin.prg
   * harbour/source/debug/dbgbrwsr.prg
