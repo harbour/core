@@ -302,8 +302,8 @@ STATIC PROCEDURE StatLine( oBrw, lAppend )
       hb_dispOutAt( nTop, nRight - 20, "                <new>" )
    ELSE
       hb_dispOutAt( nTop, nRight - 40, iif( Deleted(), "<Deleted>", "         " ) )
-      hb_dispOutAt( nTop, nRight - 20, PadR( LTrim( Str( RecNo() ) ) + "/" + ;
-                                             LTrim( Str( LastRec() ) ), 16 ) + ;
+      hb_dispOutAt( nTop, nRight - 20, PadR( hb_N2S( RecNo() ) + "/" + ;
+                                             hb_N2S( LastRec() ), 16 ) + ;
                                        iif( oBrw:HitTop(), "<bof>", "     " ) )
    ENDIF
 

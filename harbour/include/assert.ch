@@ -65,7 +65,7 @@
          IF !( <exp> )                                                  ;
        ;    OutStd(                                                     ;
                     hb_OSNewLine() + ProcName( 0 ) +                    ;
-                    "(" + LTrim( Str( ProcLine() ) ) + ")" +            ;
+                    "(" + hb_N2S( ProcLine() ) + ")" +                  ;
                     "  Assertion failed: " +                            ;
                     iif( <.msg.>, <msg>, <"exp"> )                      ;
                   )                                                     ;
@@ -75,4 +75,3 @@
 #endif /* NDEBUG */
 
 #endif /* HB_ASSERT_CH_ */
-

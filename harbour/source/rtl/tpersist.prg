@@ -177,7 +177,7 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
 STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
 
    LOCAL cArray := hb_OSNewLine() + Space( nIndent ) + "ARRAY ::" + cName + ;
-                   " LEN " + AllTrim( Str( Len( aArray ) ) ) + hb_OSNewLine()
+                   " LEN " + hb_N2S( Len( aArray ) ) + hb_OSNewLine()
    LOCAL n
    LOCAL uValue
    LOCAL cType
@@ -190,12 +190,12 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
       CASE cType == "A"
          nIndent += 3
          cArray += ArrayToText( uValue, cName + "[ " + ;
-                   AllTrim( Str( n ) ) + " ]", nIndent ) + hb_OSNewLine()
+                   hb_N2S( n ) + " ]", nIndent ) + hb_OSNewLine()
          nIndent -= 3
 
       CASE cType == "O"
          IF __objDerivedFrom( uValue, "HBPERSISTENT" )
-            cArray += uValue:SaveToText( cName + "[ " + AllTrim( Str( n ) ) + ;
+            cArray += uValue:SaveToText( cName + "[ " + hb_N2S( n ) + ;
                                          " ]", nIndent )
          ENDIF
 
@@ -204,7 +204,7 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
             cArray += hb_OSNewLine()
          ENDIF
          cArray += Space( nIndent ) + "   ::" + cName + ;
-                   + "[ " + AllTrim( Str( n ) ) + " ]" + " = " + ;
+                   + "[ " + hb_N2S( n ) + " ]" + " = " + ;
                    ValToText( uValue ) + hb_OSNewLine()
       ENDCASE
    NEXT
@@ -223,7 +223,7 @@ STATIC FUNCTION ValToText( uValue )
       cText := hb_StrToExp( uValue )
 
    CASE cType == "N"
-      cText := AllTrim( Str( uValue ) )
+      cText := hb_N2S( uValue )
 
    CASE cType == "D"
       cText := DToS( uValue )

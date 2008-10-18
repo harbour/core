@@ -192,7 +192,7 @@
    #xtranslate hb_ReadIni([<x,...>])       => hb_IniRead(<x>)
    #xtranslate hb_WriteIni([<x,...>])      => hb_IniWrite(<x>)
 
-   #xtranslate Str(<x>,[<y>],[<y>],<z>)=> iif(<z>, LTrim(Str(<x>)), Str(<x>))
+   #xtranslate Str(<x>,[<y>],[<y>],<z>)=> iif(<z>, hb_n2s(<x>), Str(<x>))
    #xtranslate hb_CMDARGARGV([<x,...>])=> hb_ARGV(0)
 
    /* Hash item functions */

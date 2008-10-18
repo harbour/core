@@ -98,7 +98,7 @@ STATIC FUNCTION DefError( oError )
 
    cMessage := ErrorMessage( oError )
    IF ! Empty( oError:osCode )
-      cDOSError := "(DOS Error " + LTrim( Str( oError:osCode ) ) + ")"
+      cDOSError := "(DOS Error " + hb_N2S( oError:osCode ) + ")"
    ENDIF
 
    // Build buttons
@@ -153,7 +153,7 @@ STATIC FUNCTION DefError( oError )
 
       OutErr( hb_OSNewLine() )
       OutErr( "Called from " + ProcName( n ) + ;
-               "(" + LTrim( Str( ProcLine( n ) ) ) + ")  " )
+               "(" + hb_N2S( ProcLine( n ) ) + ")  " )
 
    ENDDO
 
@@ -176,7 +176,7 @@ STATIC FUNCTION ErrorMessage( oError )
 
    // add subsystem's error code if available
    IF ISNUMBER( oError:subCode )
-      cMessage += "/" + LTrim( Str( oError:subCode ) )
+      cMessage += "/" + hb_N2S( oError:subCode )
    ELSE
       cMessage += "/???"
    ENDIF

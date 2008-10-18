@@ -253,8 +253,8 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
 
    RefreshVarsS( oBrwSets )
 
-   ::aWindows[ ::nCurwindow ]:SetCaption( cName + "[" + LTrim( Str( oBrwSets:cargo[ 1 ] ) ) + ".." + ;
-                                          LTrim( Str( Len( hHash ) ) ) + "]" )
+   ::aWindows[ ::nCurwindow ]:SetCaption( cName + "[" + hb_N2S( oBrwSets:cargo[ 1 ] ) + ".." + ;
+                                          hb_N2S( Len( hHash ) ) + "]" )
 
    RETURN self
 
@@ -296,7 +296,7 @@ STATIC FUNCTION HashKeyString( hHash, nAt )
    DO CASE
    CASE cType == "C" ; RETURN '"' + xVal + '"'
    CASE cType == "D" ; RETURN '"' + DToC( xVal ) + '"'
-   CASE cType == "N" ; RETURN LTrim( Str( xVal ) )
+   CASE cType == "N" ; RETURN hb_N2S( xVal )
    ENDCASE
   
    RETURN AllTrim( __dbgCStr( xVal ) )

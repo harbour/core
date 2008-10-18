@@ -139,7 +139,7 @@ PROCEDURE _APPMAIN( cFile, ... )
          nMaxCol := MaxCol()
          @ nMaxRow, 0 SAY HB_PROMPT
          @ nMaxRow, Col() GET cLine ;
-                          PICTURE "@KS" + LTrim( Str( nMaxCol - Col() + 1 ) )
+                          PICTURE "@KS" + hb_N2S( nMaxCol - Col() + 1 )
 
          SetCursor( IIF( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
@@ -256,7 +256,7 @@ STATIC PROCEDURE HB_DotErr( oErr, cCommand )
    ELSEIF ISCHARACTER( oErr )
       cMessage += oErr
    ENDIF
-   cMessage += ";;" + ProcName( 2 ) + "(" + LTrim( Str( ProcLine( 2 ) ) ) + ")"
+   cMessage += ";;" + ProcName( 2 ) + "(" + hb_N2S( ProcLine( 2 ) ) + ")"
 
    Alert( cMessage )
 

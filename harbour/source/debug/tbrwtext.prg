@@ -170,7 +170,7 @@ METHOD SetActiveLine( n ) CLASS HBBrwText
 
 METHOD GetLine() CLASS HBBrwText
 
-   RETURN PadR( AllTrim( Str( ::nRow ) ) + ": " + SubStr( ;
+   RETURN PadR( hb_N2S( ::nRow ) + ": " + SubStr( ;
                 MemoLine( ::aRows[ ::nRow ], ::nWidth + ::nLineOffset, 1, ::nTabWidth, .f. ),;
                 ::nLineOffset ), ::nWidth )
 

@@ -754,7 +754,7 @@ METHOD GetReadVar() CLASS HBGetList
 
    IF oGet:Subscript != NIL
       FOR n := 1 TO Len( oGet:Subscript )
-         cName += "[" + LTrim( Str( oGet:Subscript[ n ] ) ) + "]"
+         cName += "[" + hb_N2S( oGet:Subscript[ n ] ) + "]"
       NEXT
    ENDIF
 

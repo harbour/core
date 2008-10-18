@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-19 00:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/assert.ch
+  * contrib/xhb/hbcompat.ch
+  * source/debug/tbrwtext.prg
+  * source/debug/dbgthsh.prg
+  * source/debug/debugger.prg
+  * source/debug/dbgwa.prg
+  * source/debug/dbgtarr.prg
+  * source/rtl/errorsys.prg
+  * source/rtl/valtoexp.prg
+  * source/rtl/getsys.prg
+  * source/rtl/tgetlist.prg
+  * source/rtl/browse.prg
+  * source/rtl/alert.prg
+  * source/rtl/tscalar.prg
+  * source/rtl/tpersist.prg
+  * utils/hbmake/hbmake.prg
+  * utils/hbrun/hbrun.prg
+    % Using hb_N2S() instead of LTrim( Str() ) expressions.
+    ; NOTE: contribs and hbdoc not touched yet.
+
 2008-10-19 00:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * common.mak
   * include/hbextern.ch

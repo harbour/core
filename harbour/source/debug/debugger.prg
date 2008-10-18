@@ -1658,7 +1658,7 @@ METHOD LoadCallStack() CLASS HBDebugger
          // a procedure with debug info
          ::aProcStack[ i - nDebugLevel + 1 ] := ::aCallStack[ nPos ]
       ELSE
-         ::aProcStack[ i - nDebugLevel + 1 ] := { , ProcName( i ) + "(" + LTrim( Str( ProcLine( i ) ) ) + ")", , nLevel, , }
+         ::aProcStack[ i - nDebugLevel + 1 ] := { , ProcName( i ) + "(" + hb_N2S( ProcLine( i ) ) + ")", , nLevel, , }
       ENDIF
    NEXT
 
@@ -2297,11 +2297,11 @@ METHOD SaveSettings() CLASS HBDebugger
       ENDIF
 
       IF ::nSpeed != 0
-         cInfo += "Run Speed " + LTrim( Str( ::nSpeed ) ) + hb_OSNewLine()
+         cInfo += "Run Speed " + hb_N2S( ::nSpeed ) + hb_OSNewLine()
       ENDIF
 
       IF ::nTabWidth != 4
-         cInfo += "Options Tab " + LTrim( Str( ::nTabWidth ) ) + hb_OSNewLine()
+         cInfo += "Options Tab " + hb_N2S( ::nTabWidth ) + hb_OSNewLine()
       ENDIF
 
       IF ::lShowStatics
@@ -2338,7 +2338,7 @@ METHOD SaveSettings() CLASS HBDebugger
 
       IF ! Empty( ::aBreakPoints )
          FOR n := 1 TO Len( ::aBreakPoints )
-            cInfo += "BP " + LTrim( Str( ::aBreakPoints[ n ][ 1 ] ) ) + " " + ;
+            cInfo += "BP " + hb_N2S( ::aBreakPoints[ n ][ 1 ] ) + " " + ;
                      AllTrim( ::aBreakPoints[ n ][ 2 ] ) + hb_OSNewLine()
          NEXT
       ENDIF
@@ -2346,10 +2346,10 @@ METHOD SaveSettings() CLASS HBDebugger
       /* This part of the script must be executed after all windows are created */
       FOR n := 1 TO Len( ::aWindows )
          oWnd := ::aWindows[ n ]
-         cInfo += "Window Size " + LTrim( Str( oWnd:nBottom - oWnd:nTop + 1 ) ) + " "
-         cInfo += LTrim( Str( oWnd:nRight - oWnd:nLeft + 1 ) ) + hb_OSNewLine()
-         cInfo += "Window Move " + LTrim( Str( oWnd:nTop ) ) + " "
-         cInfo += LTrim( Str( oWnd:nLeft ) ) + hb_OSNewLine()
+         cInfo += "Window Size " + hb_N2S( oWnd:nBottom - oWnd:nTop + 1 ) + " "
+         cInfo += hb_N2S( oWnd:nRight - oWnd:nLeft + 1 ) + hb_OSNewLine()
+         cInfo += "Window Move " + hb_N2S( oWnd:nTop ) + " "
+         cInfo += hb_N2S( oWnd:nLeft ) + hb_OSNewLine()
          cInfo += "Window Next" + hb_OSNewLine()
       NEXT
 
@@ -2632,7 +2632,7 @@ METHOD ShowVars() CLASS HBDebugger
 
       nWidth := ::oWndVars:nWidth() - 1
       oCol := HBDbColumnNew( "", ;
-           { || PadR( LTrim( Str( ::oBrwVars:Cargo[ 1 ] - 1 ) ) + ") " + ;
+           { || PadR( hb_N2S( ::oBrwVars:Cargo[ 1 ] - 1 ) + ") " + ;
                       ::VarGetInfo( ::aVars[ Max( ::oBrwVars:Cargo[ 1 ], 1 ) ] ), ;
                       ::oWndVars:nWidth() - 2 ) } )
       ::oBrwVars:AddColumn( oCol )
@@ -3098,7 +3098,7 @@ METHOD WatchpointsShow() CLASS HBDebugger
       nWidth := ::oWndPnt:nWidth() - 1
       oCol := HBDbColumnNew( "", ;
          { || PadR( iif( Len( ::aWatch ) > 0, ;
-                       LTrim( Str( ::oBrwPnt:Cargo[ 1 ] - 1 ) ) + ") " + ;
+                       hb_N2S( ::oBrwPnt:Cargo[ 1 ] - 1 ) + ") " + ;
                        ::WatchGetInfo( Max( ::oBrwPnt:Cargo[ 1 ], 1 ) ), ;
                        " " ), ;
                    ::oWndPnt:nWidth() - 2 ) } )
@@ -3425,9 +3425,9 @@ FUNCTION __dbgCStr( xVal )
       CASE "O"
          RETURN "{ " + xVal:className + " Object }"
       CASE "A"
-         RETURN "{ Array of " + LTrim( Str( Len( xVal ) ) ) + " Items }"
+         RETURN "{ Array of " + hb_N2S( Len( xVal ) ) + " Items }"
       CASE "H"
-         RETURN "{ Hash of " + LTrim( Str( Len( xVal ) ) ) + " Items }"
+         RETURN "{ Hash of " + hb_N2S( Len( xVal ) ) + " Items }"
       CASE "P"
          RETURN "<pointer>"
       OTHERWISE
