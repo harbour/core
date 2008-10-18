@@ -154,8 +154,7 @@ void nxs_scramble(
    nxs_make_scramble( scramble, key, keylen );
 
    /* Leave alone the last block */
-   if( keylen > 0 )
-      len = (srclen / keylen) * keylen;
+   len = keylen > 0 ? (cipherlen / keylen) * keylen : 0;
    nxs_partial_scramble( source, cipher, scramble, len, keylen );
 
    keylen = srclen - len;
@@ -208,9 +207,8 @@ void nxs_unscramble(
    nxs_make_scramble( scramble, key, keylen );
 
    /* Leave alone the last block */
-   if( keylen > 0 )
-      len = (cipherlen / keylen) * keylen;
-   nxs_partial_unscramble( cipher, scramble, len , keylen );
+   len = keylen > 0 ? (cipherlen / keylen) * keylen : 0;
+   nxs_partial_unscramble( cipher, scramble, len, keylen );
 
    keylen = cipherlen - len;
    nxs_make_scramble( scramble, key, keylen );
