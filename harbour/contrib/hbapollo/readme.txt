@@ -1,6 +1,6 @@
-#
-# $Id$
-#
+/*
+ * $Id$
+ */
 
  RDD for VistaSoftware's Apollo Database Engine
  (Server and/or Local)
@@ -15,7 +15,7 @@
 
    Don't forget to include Apollo.lib and sde60.lib to your
    the make file or link script to build executables. See the
-   bld.bat in the contrib/apollo/test directory.
+   hbmk*.bat in the contrib/hbapollo/tests directory.
 
  To use a application that uses apollo.lib you need this file:
    - sde60.dll  ( The Apollo Engine )

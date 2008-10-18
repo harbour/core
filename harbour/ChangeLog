@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-18 22:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbmysql/utils/bld_b32.bat
+  * contrib/hbmysql/utils/bld_vc.bat
+    * One final missing bld.bat -> hbmk.bat changed done.
+
+  * contrib/hbapollo/readme.txt
+    * Minor update.
+
 2008-10-18 22:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/xhb/hbcrypt.c
     ! Fixed lower level crypt functions to not do 
