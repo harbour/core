@@ -26,7 +26,7 @@
     ! Fixed recent warning on Win32 platforms.
 
   * contrib/xhb/hbcrypt.c
-    * Changed to just work instead of RTE-in if any 
+    * Changed to just work instead of RTE-ing if any 
       of the params are empty on non-strings. If 
       non-string is passed, it's considered as 
       empty string.
