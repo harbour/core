@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-18 11:39 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbgete.c
+    * modified hb_getenv_buffer() to return logical value indicating
+      that environment variable exists even if no buffer is passed
+
 2008-10-18 10:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * make_b32.mak

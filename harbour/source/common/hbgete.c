@@ -117,46 +117,40 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 {
    BOOL bRetVal = FALSE;
 
-   if( szBuffer != NULL && nSize != 0 )
-   {
-      szBuffer[ 0 ] = '\0';
-
 #if defined(HB_OS_WIN_32)
 
-      {
-         bRetVal = GetEnvironmentVariableA( szName, szBuffer, nSize ) != 0;
-      }
+   bRetVal = GetEnvironmentVariableA( szName, szBuffer, nSize ) != 0;
 
 #elif defined(HB_OS_OS2)
-
-      {
+   {
       #ifdef __GNUC__
          PSZ EnvValue = "";
       #else
          PCSZ EnvValue = "";
       #endif
-      
-         if( DosScanEnv( szName, &EnvValue ) == NO_ERROR )
-         {
-            hb_strncpy( szBuffer, EnvValue, nSize - 1 );
-            bRetVal = TRUE;
-         }
-      }
 
-#else
-
+      if( DosScanEnv( szName, &EnvValue ) == NO_ERROR )
       {
-         char * pszTemp = getenv( szName );
-      
-         if( pszTemp != NULL )
-         {
-            hb_strncpy( szBuffer, pszTemp, nSize - 1 );
-            bRetVal = TRUE;
-         }
+         bRetVal = TRUE;
+         if( szBuffer != NULL && nSize != 0 )
+            hb_strncpy( szBuffer, EnvValue, nSize - 1 );
       }
-
-#endif
    }
+#else
+   {
+      char * pszTemp = getenv( szName );
+
+      if( pszTemp != NULL )
+      {
+         if( szBuffer != NULL && nSize != 0 )
+            hb_strncpy( szBuffer, pszTemp, nSize - 1 );
+         bRetVal = TRUE;
+      }
+   }
+#endif
+
+   if( !bRetVal && szBuffer != NULL && nSize != 0 )
+      szBuffer[ 0 ] = '\0';
 
    return bRetVal;
 }
