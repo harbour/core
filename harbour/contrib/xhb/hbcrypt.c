@@ -154,7 +154,7 @@ void nxs_scramble(
    nxs_make_scramble( scramble, key, keylen );
 
    /* Leave alone the last block */
-   len = keylen > 0 ? (cipherlen / keylen) * keylen : 0;
+   len = keylen > 0 ? (srclen / keylen) * keylen : 0;
    nxs_partial_scramble( source, cipher, scramble, len, keylen );
 
    keylen = srclen - len;
