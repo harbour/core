@@ -85,7 +85,7 @@ void nxs_crypt(
    BYTE *cipher )
 {
 
-   if(keylen > NXS_MAX_KEYLEN )
+   if( keylen > NXS_MAX_KEYLEN )
    {
       keylen = NXS_MAX_KEYLEN;
    }
@@ -112,7 +112,7 @@ void nxs_decrypt(
    const unsigned char *key, ULONG keylen,
    BYTE *result )
 {
-   if(keylen > NXS_MAX_KEYLEN )
+   if( keylen > NXS_MAX_KEYLEN )
    {
       keylen = NXS_MAX_KEYLEN;
    }
@@ -154,7 +154,8 @@ void nxs_scramble(
    nxs_make_scramble( scramble, key, keylen );
 
    /* Leave alone the last block */
-   len = (srclen / keylen) * keylen;
+   if( keylen > 0 )
+      len = (srclen / keylen) * keylen;
    nxs_partial_scramble( source, cipher, scramble, len, keylen );
 
    keylen = srclen - len;
@@ -207,7 +208,8 @@ void nxs_unscramble(
    nxs_make_scramble( scramble, key, keylen );
 
    /* Leave alone the last block */
-   len = (cipherlen / keylen) * keylen;
+   if( keylen > 0 )
+      len = (cipherlen / keylen) * keylen;
    nxs_partial_unscramble( cipher, scramble, len , keylen );
 
    keylen = cipherlen - len;
