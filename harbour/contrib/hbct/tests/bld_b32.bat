@@ -11,4 +11,4 @@ set HB_ARCHITECTURE=w32
 set HB_COMPILER=bcc32
 set HB_USER_LIBS=hbct.lib
 
-call %HB_BIN_INSTALL%\bld.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
+call %HB_BIN_INSTALL%\hbmk.bat %1 %2 %3 %4 %5 %6 %7 %8 %9

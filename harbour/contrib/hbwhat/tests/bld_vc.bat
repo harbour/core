@@ -11,4 +11,4 @@ set HB_ARCHITECTURE=w32
 set HB_COMPILER=msvc
 set HB_USER_LIBS=hbwhat.lib gtwvg.lib xhb.lib comdlg32.lib comctl32.lib shell32.lib ole32.lib oleaut32.lib
 
-call %HB_BIN_INSTALL%\bld.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
+call %HB_BIN_INSTALL%\hbmk.bat %1 %2 %3 %4 %5 %6 %7 %8 %9

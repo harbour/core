@@ -142,9 +142,9 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 
       if( pszTemp != NULL )
       {
+         bRetVal = TRUE;
          if( szBuffer != NULL && nSize != 0 )
             hb_strncpy( szBuffer, pszTemp, nSize - 1 );
-         bRetVal = TRUE;
       }
    }
 #endif

@@ -13,4 +13,4 @@ set HB_USER_LIBS=hbgd.lib bgd.lib hbct.lib
 rem ; uncomment if needed
 rem set C_USR=-tW
 
-call %HB_BIN_INSTALL%\bld.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
+call %HB_BIN_INSTALL%\hbmk.bat %1 %2 %3 %4 %5 %6 %7 %8 %9

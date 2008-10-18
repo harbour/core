@@ -8,22 +8,103 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-18 16:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  - bin/bld.bat
+  + bin/hbmk.bat
+  - bin/bld_os2.cmd
+  + bin/hbmk_os2.cmd
+  - bin/bld_b32.bat
+  + bin/hbmk_b32.bat
+  - bin/bld_vc.bat
+  + bin/hbmk_vc.bat
+  * tests/bld_b32.bat
+  * tests/bld_vc.bat
+  * contrib/hbmysql/tests/bld_b32.bat
+  * contrib/hbmysql/tests/bld_vc.bat
+  * contrib/hbct/tests/bld_b32.bat
+  * contrib/hbct/tests/bld_vc.bat
+  * contrib/xhb/tests/bld_b32.bat
+  * contrib/xhb/tests/bld_vc.bat
+  * contrib/hbodbc/tests/bld_b32.bat
+  * contrib/hbodbc/tests/bld_vc.bat
+  * contrib/hbtpathy/tests/bld_b32.bat
+  * contrib/hbtpathy/tests/bld_vc.bat
+  * contrib/hbmzip/tests/bld_b32.bat
+  * contrib/hbmzip/tests/bld_vc.bat
+  * contrib/hbole/tests/bld_b32.bat
+  * contrib/hbole/tests/bld_vc.bat
+  * contrib/hbsqlit3/tests/bld_b32.bat
+  * contrib/hbsqlit3/tests/bld_vc.bat
+  * contrib/hbapollo/tests/bld_b32.bat
+  * contrib/hbapollo/tests/bld_vc.bat
+  * contrib/hbfbird/tests/bld_b32.bat
+  * contrib/hbfbird/tests/bld_vc.bat
+  * contrib/hbziparc/tests/bld_b32.bat
+  * contrib/hbziparc/tests/bld_vc.bat
+  * contrib/hbnf/tests/bld_b32.bat
+  * contrib/hbnf/tests/bld_vc.bat
+  * contrib/hbcurl/tests/bld_b32.bat
+  * contrib/hbcurl/tests/bld_vc.bat
+  * contrib/hbhpdf/tests/bld_b32.bat
+  * contrib/hbhpdf/tests/bld_vc.bat
+  * contrib/rddado/tests/bld_b32.bat
+  * contrib/rddado/tests/bld_vc.bat
+  * contrib/gtwvg/tests/bld_vc.bat
+  * contrib/gtwvg/tests/bld_b32.bat
+  * contrib/hbpgsql/tests/bld_b32.bat
+  * contrib/hbpgsql/tests/bld_vc.bat
+  * contrib/hbclipsm/tests/bld_b32.bat
+  * contrib/hbclipsm/tests/bld_vc.bat
+  * contrib/rddads/tests/bld_b32.bat
+  * contrib/rddads/tests/bld_vc.bat
+  * contrib/hbfimage/tests/bld_b32.bat
+  * contrib/hbfimage/tests/bld_vc.bat
+  * contrib/hbgd/tests/bld_vc.bat
+  * contrib/hbgd/tests/bld_b32.bat
+  * contrib/hbmisc/tests/bld_b32.bat
+  * contrib/hbmisc/tests/bld_vc.bat
+  * contrib/hbgf/tests/bld_b32.bat
+  * contrib/hbgf/tests/bld_vc.bat
+  * contrib/hbtip/tests/bld_vc.bat
+  * contrib/hbtip/tests/bld_b32.bat
+  * contrib/hbwin/tests/bld_b32.bat
+  * contrib/hbwin/tests/bld_vc.bat
+  * contrib/hbvpdf/tests/bld_b32.bat
+  * contrib/hbvpdf/tests/bld_vc.bat
+  * contrib/hbwhat/tests/bld_b32.bat
+  * contrib/hbwhat/tests/bld_vc.bat
+  * contrib/examples/hbsqlit2/tests/bld_b32.bat
+  * contrib/examples/hbsqlit2/tests/bld_vc.bat
+    * Renamed bin\bld*.* files to bin\hbmk*.*. This 
+      dir may be put in the path in user environments, 
+      so it's necessary to put the name into the Harbour 
+      namespace. The new name is also the one supported 
+      on *nix/bash platforms, albeit with slightly 
+      different usage.
+      INCOMPATIBLE. Please update your environment.
+      To achieve compatbility with older Harbour versions 
+      and xhb, you can locally add a bld.bat file with 
+      the content: '@call hbmk.bat %1 %2 %3 %4 %5 %6 %7 %8 %9'
+
+  * source/common/hbgete.c
+    * Minor.
+
 2008-10-18 11:39 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbgete.c
     * modified hb_getenv_buffer() to return logical value indicating
       that environment variable exists even if no buffer is passed
 
 2008-10-18 10:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
-   * common.mak
-   * make_b32.mak
-   * make_vc.mak
-   * make_gcc.mak
-     % Harbour command line configuration moved to common.mak.
+  * common.mak
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+    % Harbour command line configuration moved to common.mak.
 
-   * source/rtl/tclass.prg
-   * source/rtl/tget.prg
-     + NOTE added to tclass.prg.
-     * Minor formatting.
+  * source/rtl/tclass.prg
+  * source/rtl/tget.prg
+    + NOTE added to tclass.prg.
+    * Minor formatting.
 
 2008-10-18 10:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapi.h
