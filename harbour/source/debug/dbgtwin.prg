@@ -353,7 +353,7 @@ METHOD KeyPressed( nKey ) CLASS HBDbWindow
 METHOD LoadColors() CLASS HBDbWindow
 
    LOCAL aClr := __DbgColors()
-  
+
    ::cColor := aClr[ 1 ]
 
    IF ::Browser != NIL
@@ -365,14 +365,14 @@ METHOD LoadColors() CLASS HBDbWindow
 METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBDbWindow
 
    LOCAL lShow
-  
+
    IF ( nTop == NIL .OR. nTop == ::nTop ) .AND. ;
       ( nLeft == NIL .OR. nLeft == ::nLeft ) .AND. ;
       ( nBottom == NIL .OR. nBottom == ::nBottom ) .AND. ;
       ( nRight == NIL .OR. nRight == ::nRight )
       RETURN Self
    ENDIF
-  
+
    IF ( lShow := ::lVisible )
       ::Hide()
    ENDIF
@@ -389,11 +389,11 @@ METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBDbWindow
    IF nRight != NIL
       ::nRight := nRight
    ENDIF
-  
+
    IF ::Browser != NIL
       ::Browser:Resize( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1 )
    ENDIF
-  
+
    IF lShow
       ::Show( ::lFocused )
    ENDIF

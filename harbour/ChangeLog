@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-18 08:36 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/debug/dbgtwin.prg
+  * harbour/source/debug/dbgbrwsr.prg
+  * harbour/source/debug/debugger.prg
+    ! fixed mono color setting
+    * minor formatting
+
 2008-10-17 18:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/debug/dbgtwin.prg
   * source/debug/dbgbrwsr.prg

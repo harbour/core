@@ -261,7 +261,10 @@ CREATE CLASS HBDebugger
    METHOD CallStackProcessKey( nKey )
    METHOD ClrModal() INLINE iif( ::lMonoDisplay, "N/W, W+/W, W/N, W+/N",;
                                                  "N/W, R/W, N/BG, R/BG" )
-
+   METHOD GetColors() INLINE iif( ! ::lMonoDisplay, ::aColors,;
+                                  { "W+/N", "W+/N", "N/W", "N/W",;
+                                    "N/W", "N/W", "W+/N", "N/W",;
+                                    "W+/W", "W/N", "W+/N" } )
    METHOD CodeblockTrace()
    METHOD CodeWindowProcessKey( nKey )
    METHOD Colors()
@@ -517,9 +520,12 @@ METHOD BarDisplay() CLASS HBDebugger
 
 METHOD BuildBrowseStack() CLASS HBDebugger
 
+   LOCAL aColors
+
    IF ::oBrwStack == NIL
+      aColors := __DbgColors()
       ::oBrwStack := HBDbBrowser():New( 2, ::nMaxCol - 14, ::nMaxRow - 7, ::nMaxCol - 1 )
-      ::oBrwStack:ColorSpec := ::aColors[ 3 ] + "," + ::aColors[ 4 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 6 ]
+      ::oBrwStack:ColorSpec := aColors[ 3 ] + "," + aColors[ 4 ] + "," + aColors[ 5 ] + "," + aColors[ 6 ]
       ::oBrwStack:goTopBlock := { || ::oBrwStack:Cargo := 1 }
       ::oBrwStack:goBottomBlock := { || ::oBrwStack:Cargo := Len( ::aProcStack ) }
       ::oBrwStack:skipBlock := { | nSkip, nOld | nOld := ::oBrwStack:Cargo,;
@@ -1607,6 +1613,7 @@ METHOD ListBox( cCaption, aItems ) CLASS HBDebugger
    LOCAL nRight
    LOCAL oWndList
    LOCAL cSelected := ""
+   LOCAL aColors
    LOCAL n
 
    nItems := Len( aItems )
@@ -1623,8 +1630,9 @@ METHOD ListBox( cCaption, aItems ) CLASS HBDebugger
    oWndList:lShadow := .T.
    oWndList:Show()
 
+   aColors := __DbgColors()
    n := __dbgAChoice( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1, aItems, ;
-                      ::aColors[ 8 ] + "," + ::aColors[ 10 ] )
+                      aColors[ 8 ] + "," + aColors[ 10 ] )
    oWndList:Hide()
 
    RETURN n
@@ -2543,6 +2551,7 @@ METHOD ShowVars() CLASS HBDebugger
    LOCAL nTop
    LOCAL nBottom
    LOCAL lWindowCreated := .F.
+   LOCAL aColors
 
    IF ::lGo
       RETURN NIL
@@ -2610,9 +2619,9 @@ METHOD ShowVars() CLASS HBDebugger
    IF Len( ::aVars ) > 0 .AND. ::oBrwVars == NIL
       ::oBrwVars := HBDbBrowser():New( nTop + 1, 1, nBottom - 1, ;
                                        ::nMaxCol - iif( ::oWndStack != NIL, ::oWndStack:nWidth(), 0 ) - 1 )
-
+      aColors := __DbgColors()
       ::oBrwVars:Cargo := { 1, {} } // Actual highlighted row
-      ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ] + "," + ::aColors[ 6 ]
+      ::oBrwVars:ColorSpec := aColors[ 2 ] + "," + aColors[ 5 ] + "," + aColors[ 3 ] + "," + aColors[ 6 ]
       ::oBrwVars:goTopBlock := { || ::oBrwVars:cargo[ 1 ] := Min( 1, Len( ::aVars ) ) }
       ::oBrwVars:goBottomBlock := { || ::oBrwVars:cargo[ 1 ] := Max( 1, Len( ::aVars ) ) }
       ::oBrwVars:skipBlock := { | nSkip, nOld | ;
@@ -3041,6 +3050,7 @@ METHOD WatchpointsShow() CLASS HBDebugger
    LOCAL oCol
    LOCAL lRepaint := .F.
    LOCAL nTop
+   LOCAL aColors
 
    IF ::lGo
       RETURN NIL
@@ -3075,7 +3085,8 @@ METHOD WatchpointsShow() CLASS HBDebugger
       ::oWndPnt:Browser := ::oBrwPnt
 
       ::oBrwPnt:Cargo := { 1, {} } // Actual highlighted row
-      ::oBrwPnt:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ] + "," + ::aColors[ 6 ]
+      aColors := __DbgColors()
+      ::oBrwPnt:ColorSpec := aColors[ 2 ] + "," + aColors[ 5 ] + "," + aColors[ 3 ] + "," + aColors[ 6 ]
       ::oBrwPnt:goTopBlock := { || ::oBrwPnt:cargo[ 1 ] := Min( 1, Len(::aWatch ) ) }
       ::oBrwPnt:goBottomBlock := { || ::oBrwPnt:cargo[ 1 ] := Len( ::aWatch ) }
       ::oBrwPnt:skipBlock := { | nSkip, nOld | nOld := ::oBrwPnt:Cargo[ 1 ],;
@@ -3228,9 +3239,7 @@ STATIC PROCEDURE StripUntil( pcLine, i, cChar )
 
 
 FUNCTION __DbgColors()
-   RETURN iif( ! s_oDebugger:lMonoDisplay,;
-             s_oDebugger:aColors,;
-             { "W+/N", "W+/N", "N/W", "N/W", "N/W", "N/W", "W+/N", "N/W", "W+/W", "W/N", "W+/N" } )
+   RETURN s_oDebugger:GetColors()
 
 
 FUNCTION __Dbg()

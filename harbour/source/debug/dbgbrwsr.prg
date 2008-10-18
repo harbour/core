@@ -73,7 +73,7 @@ CREATE CLASS HBDbBrowser
    VAR nLeft
    VAR nBottom
    VAR nRight
-   VAR colorSpec
+   VAR cColorSpec
    VAR autoLite INIT .T.
 
    VAR goTopBlock
@@ -96,24 +96,26 @@ CREATE CLASS HBDbBrowser
 
    METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow )
    METHOD AddColumn( oCol )    INLINE AAdd( ::aColumns, oCol ), ::colCount++, Self
+   METHOD Resize( nTop, nLeft, nBottom, nRight )
+   ACCESS ColorSpec            INLINE ::cColorSpec
+   ASSIGN ColorSpec( cColors ) METHOD SetColorSpec( cColors )
    METHOD Configure()
    METHOD DeHiLite()           INLINE Self
-   METHOD Down()               INLINE ::MoveCursor( 1 )
-   METHOD ForceStable()
-   METHOD GetColumn( nColumn ) INLINE ::aColumns[ nColumn ]
+   METHOD HiLite()             INLINE Self
+   METHOD MoveCursor( nSkip )
    METHOD GoTo( nRow )
    METHOD GoTop()              INLINE ::GoTo( 1 ), ::rowPos := 1, ::nFirstVisible := 1, ::RefreshAll()
    METHOD GoBottom()
-   METHOD HiLite()             INLINE Self
-   METHOD Invalidate()         INLINE ::RefreshAll()
-   METHOD MoveCursor( nSkip )
+   METHOD Down()               INLINE ::MoveCursor( 1 )
+   METHOD Up()                 INLINE ::MoveCursor( -1 )
    METHOD PageDown()           INLINE ::MoveCursor( ::rowCount )
    METHOD PageUp()             INLINE ::MoveCursor( -::rowCount )
+   METHOD GetColumn( nColumn ) INLINE ::aColumns[ nColumn ]
    METHOD RefreshAll()         INLINE AFill( ::aRowState, .F. ), Self
    METHOD RefreshCurrent()     INLINE iif( ::rowCount > 0, ::aRowState[ ::rowPos ] := .F., ), Self
-   METHOD Resize( nTop, nLeft, nBottom, nRight )
+   METHOD Invalidate()         INLINE ::RefreshAll()
    METHOD Stabilize()          INLINE ::ForceStable()
-   METHOD Up()                 INLINE ::MoveCursor( -1 )
+   METHOD ForceStable()
 
 ENDCLASS
 
@@ -130,9 +132,15 @@ METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow ) CLASS HBDbBrowser
 METHOD Configure()
    ::rowCount := ::nBottom - ::nTop + 1
    ASize( ::aRowState, ::rowCount )
-   ::aColorSpec := hb_aTokens( ::colorSpec, "," )
    ::lConfigured := .T.
    RETURN Self
+
+METHOD SetColorSpec( cColors )
+   IF ISCHARACTER( cColors )
+      ::cColorSpec := cColors
+      ::aColorSpec := hb_aTokens( ::cColorSpec, "," )
+   ENDIF
+   RETURN ::cColorSpec
 
 METHOD MoveCursor( nSkip )
    LOCAL nSkipped
