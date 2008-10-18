@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-19 00:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * common.mak
+  * include/hbextern.ch
+  * source/rtl/Makefile
+  + source/rtl/strtrim.c
+    + Added function HB_N2S( <number> ) -> <string>.
+      This is equivalent to LTrim( Str( <number> ) ), 
+      just faster.
+
+  * source/rtl/dircmd.prg
+  * source/rtl/tget.prg
+    * Minor cleanup.
+
 2008-10-18 22:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbmysql/utils/bld_b32.bat
   * contrib/hbmysql/utils/bld_vc.bat

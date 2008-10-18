@@ -130,6 +130,7 @@ C_SOURCES=\
 	strmatch.c   \
 	strpeek.c    \
 	strtran.c    \
+	strtrim.c    \
 	strzero.c    \
 	stuff.c      \
 	substr.c     \

@@ -1441,7 +1441,7 @@ METHOD badDate() CLASS Get
 
    RETURN ::hasFocus .AND. ;
       ::type == "D" .AND. ;
-      ( xValue := ::unTransform() ) == hb_SToD( "" ) .AND. ;
+      ( xValue := ::unTransform() ) == hb_SToD() .AND. ;
       !( ::cBuffer == Transform( xValue, ::cPicture ) )
 
 #ifdef HB_C52_UNDOC
