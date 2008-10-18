@@ -115,7 +115,7 @@ char * hb_getenv( const char * szName )
 
 BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 {
-   BOOL bRetVal = FALSE;
+   BOOL bRetVal;
 
 #if defined(HB_OS_WIN_32)
 
@@ -135,6 +135,8 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
          if( szBuffer != NULL && nSize != 0 )
             hb_strncpy( szBuffer, EnvValue, nSize - 1 );
       }
+      else
+         bRetVal = FALSE;
    }
 #else
    {
@@ -146,6 +148,8 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
          if( szBuffer != NULL && nSize != 0 )
             hb_strncpy( szBuffer, pszTemp, nSize - 1 );
       }
+      else
+         bRetVal = FALSE;
    }
 #endif
 

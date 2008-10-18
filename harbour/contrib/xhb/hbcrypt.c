@@ -417,26 +417,17 @@ void nxs_make_scramble( int *scramble, const unsigned char *key, ULONG keylen )
 
 HB_FUNC( HB_CRYPT )
 {
-   PHB_ITEM pSource = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM pKey = hb_param( 2, HB_IT_STRING );
-   BYTE *cRes;
+   PHB_ITEM pSource = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pKey = hb_param( 2, HB_IT_ANY );
 
-   if ( pSource == NULL || hb_itemGetCLen( pSource ) == 0 ||
-        pKey == NULL || hb_itemGetCLen( pKey ) == 0 )
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 2,
-            hb_param(1,HB_IT_ANY), hb_param(2,HB_IT_ANY) );
-      return;
-   }
-
-   cRes = (BYTE *) hb_xgrab( hb_itemGetCLen( pSource ) + 8 );
+   BYTE * cRes = ( BYTE * ) hb_xgrab( hb_itemGetCLen( pSource ) + 8 );
 
    nxs_crypt(
-      (BYTE *) hb_itemGetCPtr( pSource ), hb_itemGetCLen( pSource ),
-      (BYTE *) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
-      cRes);
+      ( BYTE * ) hb_itemGetCPtr( pSource ), hb_itemGetCLen( pSource ),
+      ( BYTE * ) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
+      cRes );
 
-   hb_retclenAdopt( (char *)cRes, hb_itemGetCLen( pSource ) );
+   hb_retclenAdopt( ( char * ) cRes, hb_itemGetCLen( pSource ) );
 }
 
 /*****
@@ -447,24 +438,15 @@ HB_FUNC( HB_CRYPT )
 
 HB_FUNC( HB_DECRYPT )
 {
-   PHB_ITEM pSource = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM pKey = hb_param( 2, HB_IT_STRING );
-   BYTE *cRes;
+   PHB_ITEM pSource = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pKey = hb_param( 2, HB_IT_ANY );
 
-   if ( pSource == NULL || hb_itemGetCLen( pSource ) == 0 ||
-        pKey == NULL || hb_itemGetCLen( pKey ) == 0 )
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 2,
-            hb_param(1,HB_IT_ANY), hb_param(2,HB_IT_ANY) );
-      return;
-   }
-
-   cRes = ( BYTE * ) hb_xgrab( hb_itemGetCLen( pSource ) + 8 );
+   BYTE * cRes = ( BYTE * ) hb_xgrab( hb_itemGetCLen( pSource ) + 8 );
 
    nxs_decrypt(
-      (BYTE *) hb_itemGetCPtr( pSource ), hb_itemGetCLen( pSource ),
-      (BYTE *) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
-      cRes);
+      ( BYTE * ) hb_itemGetCPtr( pSource ), hb_itemGetCLen( pSource ),
+      ( BYTE * ) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
+      cRes );
 
-   hb_retclenAdopt( (char *)cRes, hb_itemGetCLen( pSource ) );
+   hb_retclenAdopt( ( char * ) cRes, hb_itemGetCLen( pSource ) );
 }

@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-18 21:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/common/hbgete.c
+    ! Fixed recent warning on Win32 platforms.
+
+  * contrib/xhb/hbcrypt.c
+    * Changed to just work instead of RTE-in if any 
+      of the params are empty on non-strings. If 
+      non-string is passed, it's considered as 
+      empty string.
+
 2008-10-18 16:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   - bin/bld.bat
   + bin/hbmk.bat
