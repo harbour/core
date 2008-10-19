@@ -23,15 +23,15 @@ if exist hb_dbu.dif patch -N -i hb_dbu.dif
 
 :DIR_OK
 
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBU.PRG     /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUCOPY.PRG /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUEDIT.PRG /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUHELP.PRG /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUINDX.PRG /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUNET.PRG  /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUSTRU.PRG /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUUTIL.PRG /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUVIEW.PRG /i..\..\..\include\
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBU.PRG    
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUCOPY.PRG
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUEDIT.PRG
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUHELP.PRG
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUINDX.PRG
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUNET.PRG 
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUSTRU.PRG
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUUTIL.PRG
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUVIEW.PRG
 
 cl -D_CRT_SECURE_NO_DEPRECATE -nologo -O2 -W3 -I..\..\..\include dbu.c dbucopy.c dbuedit.c dbuhelp.c dbuindx.c dbunet.c dbustru.c dbuutil.c dbuview.c /link /subsystem:CONSOLE /LIBPATH:..\..\..\lib hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib gdi32.lib
 

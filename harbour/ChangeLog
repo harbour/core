@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-19 09:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * common.mak
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_gcc.mak
+  * contrib/mtpl_vc.mak
+    + Made -gc3 switch the default. This will result in 
+      noticeably faster .prg code execution at the cost of 
+      a slightly bigger executable. Speaking of the core, 
+      this can result at maximum 250K of extra executable 
+      size increase, if the final executable uses _all_ 
+      core .prg functions. Usually though it's much lower 
+      than that, especially for GUI programs, since the 
+      majority of core .prg code deals with CUI elements, 
+      like TBrowse(), TGet(), 5.3 compatible CUI controls, 
+      .frm and .lbl support, MemoEdit().
+
+  * contrib/examples/dbu/bld_b32.bat
+  * contrib/examples/dbu/bld_vc.bat
+  * utils/hbdoc/bld_vc.bat
+  * utils/hbdoc/bld_b32.bat
+  * utils/hbmake/bld_b32.bat
+  * utils/hbmake/bld_vc.bat
+    + Added -l Harbour switch.
+
 2008-10-19 09:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * include/assert.ch

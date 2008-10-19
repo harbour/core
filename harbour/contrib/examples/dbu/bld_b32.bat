@@ -23,15 +23,15 @@ if exist hb_dbu.dif patch -N -i hb_dbu.dif
 
 :DIR_OK
 
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBU.PRG     /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUCOPY.PRG /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUEDIT.PRG /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUHELP.PRG /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUINDX.PRG /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUNET.PRG  /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUSTRU.PRG /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUUTIL.PRG /i..\..\..\include\
-..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUVIEW.PRG /i..\..\..\include\
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBU.PRG    
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUCOPY.PRG
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUEDIT.PRG
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUHELP.PRG
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUINDX.PRG
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUNET.PRG 
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUSTRU.PRG
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUUTIL.PRG
+..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUVIEW.PRG
 
 echo -O2 -I..\..\..\include -L..\..\..\lib > build.tmp
 

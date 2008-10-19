@@ -3,7 +3,7 @@ rem
 rem $Id$
 rem
 
-..\..\bin\harbour /w3 /q /n /km /i..\..\include hbmake
+..\..\bin\harbour -w3 -q -n -km -l -i..\..\include hbmake
 
 echo -O2 -I..\..\include -L..\..\lib > build.tmp
 

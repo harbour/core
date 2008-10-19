@@ -3,7 +3,7 @@ rem
 rem $Id$
 rem
 
-..\..\bin\harbour /w3 /q /n /km /i..\..\include hbdoc ft_funcs genasc genchm genhpc genhtm genng genos2 genpdf1 genrtf gentrf
+..\..\bin\harbour -w3 -q -n -km -l -i..\..\include hbdoc ft_funcs genasc genchm genhpc genhtm genng genos2 genpdf1 genrtf gentrf
 
 echo -O2 -I..\..\include -L..\..\lib > build.tmp
 
