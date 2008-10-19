@@ -87,7 +87,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
       DO CASE
       CASE ValType( xMessage ) $ "CM" ; cMessage := StrTran( xMessage, ";", Chr( 10 ) )
-      CASE hb_isNumeric( xMessage )   ; cMessage := hb_N2S( xMessage )
+      CASE hb_isNumeric( xMessage )   ; cMessage := hb_NToS( xMessage )
       CASE hb_isDate( xMessage )      ; cMessage := DToC( xMessage )
       CASE hb_isLogical( xMessage )   ; cMessage := iif( xMessage, ".T.", ".F." )
       CASE hb_isObject( xMessage )    ; cMessage := xMessage:className + " Object"

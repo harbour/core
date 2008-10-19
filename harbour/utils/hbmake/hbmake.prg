@@ -1581,7 +1581,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
                cAlertMsg := "<"+cFile + "> cannot be openned for edition."
             ENDIF
 
-            ALERT( cAlertMsg + " FERROR (" + hb_N2S( FERROR() ) + ")" )
+            ALERT( cAlertMsg + " FERROR (" + hb_NToS( FERROR() ) + ")" )
             RESTSCREEN( ,,,, cOldScreen )
             RETURN RET_ERR
 
@@ -2321,8 +2321,8 @@ Endif // Create and compile
       "COMPRESS = " + IIF( s_lCompress, "YES", "NO" ) + s_cEOL +;
       "CONTRIBS     = " + IIF( s_lContribLib, "YES", "NO" )    + s_cEOL +;
       "XFWH         = " + IIF( s_lxFwh, "YES", "NO" ) + s_cEOL +;
-      "FILESTOADD   = " + hb_N2S( s_nFilesToAdd ) + s_cEOL +;
-      "WARNINGLEVEL = " + hb_N2S( s_nWarningLevel ) + s_cEOL +;
+      "FILESTOADD   = " + hb_NToS( s_nFilesToAdd ) + s_cEOL +;
+      "WARNINGLEVEL = " + hb_NToS( s_nWarningLevel ) + s_cEOL +;
       "USERDEFINE   = " + ALLTRIM(s_cUserDefine) + s_cEOL +;
       "USERINCLUDE  = " + ALLTRIM(s_cUserInclude) + s_cEOL +;
       "USERLIBS     = " + ALLTRIM(s_cUserLibs) + s_cEOL +;
@@ -5644,7 +5644,7 @@ FUNCTION PRB_INT( SOMENUMBER, length, NUM_DECIMALS )
 
    SOMENUMBER += .0000000000000005
 
-   SOMESTRING := hb_N2S( SOMENUMBER )
+   SOMESTRING := hb_NToS( SOMENUMBER )
 
    dotat := AT( ".", somestring )
 

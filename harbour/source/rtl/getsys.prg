@@ -319,7 +319,7 @@ FUNCTION hb_GetReadVar( oGet )
 
    IF oGet:subScript != NIL
       FOR n := 1 TO Len( oGet:subScript )
-         cName += "[" + hb_N2S( oGet:subScript[ n ] ) + "]"
+         cName += "[" + hb_NToS( oGet:subScript[ n ] ) + "]"
       NEXT
    ENDIF
 

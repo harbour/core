@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_N2S() function
+ * HB_NTOS() function
  *
  * Copyright 2008 Viktor Szakats <harbour.01 syenar.hu>
  * www - http://www.harbour-project.org
@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-HB_FUNC( HB_N2S )
+HB_FUNC( HB_NTOS )
 {
    PHB_ITEM pNumber = hb_param( 1, HB_IT_NUMERIC );
 

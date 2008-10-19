@@ -84,7 +84,7 @@ METHOD AsString() CLASS ScalarObject
    CASE "D" ; RETURN DToC( Self )
    CASE "H" ; RETURN "{ ... => ... }"
    CASE "L" ; RETURN iif( Self, ".T.", ".F." )
-   CASE "N" ; RETURN hb_N2S( Self )
+   CASE "N" ; RETURN hb_NToS( Self )
    CASE "S" ; RETURN "@" + Self:name + "()"
    CASE "P" ; RETURN "<0x...>"
    CASE "U" ; RETURN "NIL"
@@ -324,7 +324,7 @@ CREATE CLASS Numeric INHERIT HBScalar FUNCTION __HBNumeric
 ENDCLASS
 
 METHOD AsString() CLASS Numeric
-   RETURN hb_N2S( Self )
+   RETURN hb_NToS( Self )
 
 /* -------------------------------------------- */
 

@@ -59,6 +59,7 @@ C_SOURCES=\
 	hbcrc.c      \
 	hbhex.c      \
 	hbmd5.c      \
+	hbntos.c     \
 	hbffind.c    \
 	hbfile.c     \
 	hbgtcore.c   \
@@ -130,7 +131,6 @@ C_SOURCES=\
 	strmatch.c   \
 	strpeek.c    \
 	strtran.c    \
-	strtrim.c    \
 	strzero.c    \
 	stuff.c      \
 	substr.c     \

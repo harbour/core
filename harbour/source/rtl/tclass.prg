@@ -175,7 +175,7 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
    IF Empty( xSuper )
       ::asSuper := {}
    ELSEIF ISCHARACTER( xSuper )
-      ::asSuper := { __DynsN2Sym( xSuper ) }
+      ::asSuper := { __DynsNToSym( xSuper ) }
    ELSEIF hb_isSymbol( xSuper )
       ::asSuper := { xSuper }
    ELSEIF ISARRAY( xSuper )
@@ -184,7 +184,7 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
       FOR i := 1 TO nSuper
          IF !Empty( xSuper[ i ] )
             IF ISCHARACTER( xSuper[ i ] )
-               AAdd( ::asSuper, __DynsN2Sym( xSuper[ i ] ) )
+               AAdd( ::asSuper, __DynsNToSym( xSuper[ i ] ) )
             ELSEIF hb_isSymbol( xSuper[ i ] )
                AAdd( ::asSuper, xSuper[ i ] )
             ENDIF

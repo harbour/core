@@ -68,7 +68,7 @@ CREATE CLASS Symbol
 ENDCLASS
 
 METHOD New( cSymName ) CLASS Symbol
-   ::nSym := __DynSN2Sym( cSymName )
+   ::nSym := __DynSNToSym( cSymName )
    RETURN Self
 
 METHOD name() CLASS Symbol

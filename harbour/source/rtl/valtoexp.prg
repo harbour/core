@@ -60,7 +60,7 @@ FUNCTION hb_VALTOEXP( xVal )
          cVal := hb_StrToExp( xVal )
          EXIT
       CASE "N"
-         cVal := hb_N2S( xVal )
+         cVal := hb_NToS( xVal )
          EXIT
       CASE "D"
          cVal := iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
@@ -127,9 +127,9 @@ FUNCTION hb_CStr( xVal )
       CASE "O"
          RETURN "{ " + xVal:className + " Object }"
       CASE "A"
-         RETURN "{ Array of " + hb_N2S( Len( xVal ) ) + " Items }"
+         RETURN "{ Array of " + hb_NToS( Len( xVal ) ) + " Items }"
       CASE "H"
-         RETURN "{ Hash of " + hb_N2S( Len( xVal ) ) + " Items }"
+         RETURN "{ Hash of " + hb_NToS( Len( xVal ) ) + " Items }"
       CASE "P"
          RETURN "<pointer>"
       OTHERWISE

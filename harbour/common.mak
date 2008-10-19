@@ -517,6 +517,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hbcrc$(OBJEXT)    \
     $(OBJ_DIR)\hbhex$(OBJEXT)    \
     $(OBJ_DIR)\hbmd5$(OBJEXT)    \
+    $(OBJ_DIR)\hbntos$(OBJEXT)   \
     $(OBJ_DIR)\hbffind$(OBJEXT)  \
     $(OBJ_DIR)\hbfile$(OBJEXT)   \
     $(OBJ_DIR)\hbgtcore$(OBJEXT) \
@@ -588,7 +589,6 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\strcase$(OBJEXT)  \
     $(OBJ_DIR)\strmatch$(OBJEXT) \
     $(OBJ_DIR)\strtran$(OBJEXT)  \
-    $(OBJ_DIR)\strtrim$(OBJEXT)  \
     $(OBJ_DIR)\strzero$(OBJEXT)  \
     $(OBJ_DIR)\stuff$(OBJEXT)    \
     $(OBJ_DIR)\substr$(OBJEXT)   \

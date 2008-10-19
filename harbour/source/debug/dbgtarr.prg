@@ -225,9 +225,9 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
          IF ::lEditable
             oBrwSets:RefreshCurrent()
             IF ISOBJECT( aArray[ nSet ] )
-               __DbgObject( aArray[ nSet ], cName + "[" + hb_N2S( nSet ) + "]" )
+               __DbgObject( aArray[ nSet ], cName + "[" + hb_NToS( nSet ) + "]" )
             ELSEIF hb_isHash( aArray[ nSet ] )
-               __DbgHashes( aArray[ nSet ], cName + "[" + hb_N2S( nSet ) + "]" )
+               __DbgHashes( aArray[ nSet ], cName + "[" + hb_NToS( nSet ) + "]" )
             ELSE
                ::doGet( oBrwsets, aArray, nSet )
             ENDIF
@@ -242,8 +242,8 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
 
    RefreshVarsS( oBrwSets )
 
-   ::aWindows[ ::nCurWindow ]:SetCaption( cName + "[" + hb_N2S( oBrwSets:cargo[ 1 ] ) + ".." + ;
-                                          hb_N2S( Len( aArray ) ) + "]" )
+   ::aWindows[ ::nCurWindow ]:SetCaption( cName + "[" + hb_NToS( oBrwSets:cargo[ 1 ] ) + ".." + ;
+                                          hb_NToS( Len( aArray ) ) + "]" )
 
    RETURN self
 

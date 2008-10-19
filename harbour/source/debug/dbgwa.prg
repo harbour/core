@@ -308,16 +308,16 @@ STATIC FUNCTION DbfInfo( aInfo )
 
    aInfo := {}
 
-   AAdd( aInfo, "[" + hb_N2S( Select( Alias() ) ) + "] " + Alias() )
+   AAdd( aInfo, "[" + hb_NToS( Select( Alias() ) ) + "] " + Alias() )
    AAdd( aInfo, Space( 4 ) + "Current Driver" )
    AAdd( aInfo, Space( 8 ) + rddName() )
    AAdd( aInfo, Space( 4 ) + "Workarea Information" )
-   AAdd( aInfo, Space( 8 ) + "Select Area: " + hb_N2S( Select() ) )
-   AAdd( aInfo, Space( 8 ) + "Record Size: " + hb_N2S( Recsize() ) )
-   AAdd( aInfo, Space( 8 ) + "Header Size: " + hb_N2S( Header() ) )
-   AAdd( aInfo, Space( 8 ) + "Field Count: " + hb_N2S( FCount() ) )
+   AAdd( aInfo, Space( 8 ) + "Select Area: " + hb_NToS( Select() ) )
+   AAdd( aInfo, Space( 8 ) + "Record Size: " + hb_NToS( Recsize() ) )
+   AAdd( aInfo, Space( 8 ) + "Header Size: " + hb_NToS( Header() ) )
+   AAdd( aInfo, Space( 8 ) + "Field Count: " + hb_NToS( FCount() ) )
    AAdd( aInfo, Space( 8 ) + "Last Update: " + DToC( lUpdate() ) )
-   AAdd( aInfo, Space( 8 ) + "Index order: " + hb_N2S( IndexOrd() ) )
+   AAdd( aInfo, Space( 8 ) + "Index order: " + hb_NToS( IndexOrd() ) )
    AAdd( aInfo, Space( 4 ) + "Current Record" )
 
    FOR nFor := 1 TO FCount()
@@ -327,7 +327,7 @@ STATIC FUNCTION DbfInfo( aInfo )
 
       DO CASE
       CASE xType $ "CM" ; cValue := xValue
-      CASE xType == "N" ; cValue := hb_N2S( xValue )
+      CASE xType == "N" ; cValue := hb_NToS( xValue )
       CASE xType == "D" ; cValue := DToC( xValue )
       CASE xType == "L" ; cValue := iif( xValue, ".T.", ".F." )
       CASE xType == "A" ; cValue := "Array"
@@ -354,7 +354,7 @@ STATIC PROCEDURE UpdateInfo( oDlg, cAlias )
 
    hb_dispOutAt( oDlg:nTop + 1, oDlg:nLeft + 20, PadR( cAlias, 11 ), oDlg:cColor )
    hb_dispOutAt( oDlg:nTop + 1, oDlg:nLeft + 42,;
-                 PadR( hb_N2S( RecNo() ) + "/" + hb_N2S( LastRec() ), 9 ),;
+                 PadR( hb_NToS( RecNo() ) + "/" + hb_NToS( LastRec() ), 9 ),;
                  oDlg:cColor )
 
    hb_dispOutAt( oDlg:nTop + 2, oDlg:nLeft + 21, iif( Bof(), "Yes", "No " ), oDlg:cColor )
