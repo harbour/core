@@ -7,7 +7,7 @@
  * Harbour Project source code:
  * Debug Functions
  *
- * Copyright 2007 Francesco Saverio Giudice <info / at /fsgiudice.com>
+ * Copyright 2007-2008 Francesco Saverio Giudice <info / at /fsgiudice.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,10 +57,6 @@
 #include "hbvm.h"
 #include "item.api"
 
-#ifndef __XHARBOUR__
- #include "hbapicls.h"
-#endif
-
 static BOOL s_bToOutputDebug = TRUE;
 static BOOL s_bToLogFile     = TRUE;
 
@@ -75,8 +71,6 @@ HB_EXPORT BOOL hb_ToOutDebugOnOff( BOOL bOnOff )
 
 HB_EXPORT void hb_ToOutDebug( const char * sTraceMsg, ... )
 {
-   //BOOL bExec = TRUE; //FALSE;
-
    if ( s_bToOutputDebug )
    {
      char buffer[ 1024 ];

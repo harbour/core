@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-20 00:25 UTC+0200 Francesco Saverio Giudice (info fsgiudice com)
+  * contrib/hbdbgfx
+    * contrib/hbdbgfx/dbgfxc.c
+    * contrib/hbdbgfx/dbgfxc.prg
+    * contrib/hbdbgfx/hbdbgfx.h
+      * updated copyright year
+        minor corrections
+
 2008-10-20 00:15 UTC+0200 Francesco Saverio Giudice (info fsgiudice com)
   + contrib/hbdbgfx
     + contrib/hbdbgfx/dbgfxc.c

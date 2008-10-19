@@ -7,7 +7,7 @@
  * Harbour Project source code:
  * Debug Functions
  *
- * Copyright 2007 Francesco Saverio Giudice <info / at /fsgiudice.com>
+ * Copyright 2007-2008 Francesco Saverio Giudice <info / at /fsgiudice.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -68,13 +68,9 @@ FUNCTION HB_ToOutDebugOnOff( lOnOff )
 RETURN lOld
 
 PROCEDURE HB_ToOutDebug( ... )
-  //LOCAL cString
-  IF !s_lToOutDebug
-     RETURN
+  IF s_lToOutDebug
+     hb_OutDebug( hb_sprintf( ... ) )
   ENDIF
-
-  //cString := HB_ExecFromArray( "HB_SPRINTF", hb_aParams() )
-  hb_OutDebug( hb_sprintf( ... ) )
 RETURN
 
 FUNCTION HB_ToLogFileOnOff( lOnOff )
@@ -107,13 +103,11 @@ PROCEDURE HB_ToLogFile( cLogFile, ... )
      ELSE
         nHandle := FCreate( cLogFile )
         s_lEmptyLogFile := FALSE
-        // Dopo che lo creato, lo richiudo immediatamente e lo riapro in modo condiviso
-        // nel caso arrivasse una nuova scrittura
+        // After I have create it I have to close and open in shared way
         IF Ferror() == 0 .AND. nHandle > 0
            FClose( nHandle )
            nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED)
         ENDIF
-        //__OutDebug( "Create ", nHandle )
      ENDIF
 
      // Writing

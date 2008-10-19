@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Header file for Debug Functions API
  *
- * Copyright 2007 Francesco Saverio Giudice <info / at /fsgiudice.com>
+ * Copyright 2007-2008 Francesco Saverio Giudice <info / at /fsgiudice.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
