@@ -432,7 +432,7 @@ BOOL hb_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
       fResult = hb_fileUnlock( pFile, &fLockFS, ulStart, ulLen );
       hb_threadLeaveCriticalSection( &s_fileMtx );
       if( fLockFS )
-         hb_fsLockLarge( pFile->hFile, ulStart, ulLen, iType );
+         hb_fsLockLarge( pFile->hFile, ulStart, ulLen, ( USHORT ) iType );
    }
    else
    {
@@ -441,7 +441,7 @@ BOOL hb_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen,
       hb_threadLeaveCriticalSection( &s_fileMtx );
       if( fLockFS )
       {
-         fResult = hb_fsLockLarge( pFile->hFile, ulStart, ulLen, iType );
+         fResult = hb_fsLockLarge( pFile->hFile, ulStart, ulLen, ( USHORT ) iType );
          if( !fResult )
          {
             hb_threadEnterCriticalSection( &s_fileMtx );

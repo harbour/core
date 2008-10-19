@@ -3097,7 +3097,7 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
    }
 
    fTrim = hb_setGetTrimFileName();
-   cDirSep = hb_setGetDirSeparator();
+   cDirSep = ( char ) hb_setGetDirSeparator();
    iFileCase = hb_setGetFileCase();
    iDirCase = hb_setGetDirCase();
 

@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-19 09:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/filebuf.c
+  * source/rtl/filesys.c
+    ! Fixed -W4 warnings.
+
+  * source/rtl/tclass.prg
+  * source/rtl/tsymbol.prg
+    ! Fixed mistakes in recent commit.
+
 2008-10-19 09:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * common.mak
   * contrib/mtpl_b32.mak
