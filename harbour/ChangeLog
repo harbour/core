@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-19 23:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_gcc.mak
+  * contrib/mtpl_vc.mak
+    * Fine tuning latest setting changes. I've rather removed 
+      -gc3 as contrib default switch. For those contribs where 
+      speed is critical, this switch should be turned on 
+      on a per contrib basis.
+
 2008-10-19 09:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/filebuf.c
   * source/rtl/filesys.c
