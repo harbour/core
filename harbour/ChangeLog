@@ -8,13 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-20 00:15 UTC+0200 Francesco Saverio Giudice (info fsgiudice com)
+  + contrib/hbdbgfx
+    + contrib/hbdbgfx/dbgfxc.c
+    + contrib/hbdbgfx/dbgfxc.prg
+    + contrib/hbdbgfx/hbdbgfx.h
+    + contrib/hbdbgfx/sprintf.prg
+      + hbdbgfx lib add some functions usefull for debugging purpose:
+        hb_ToOutDebug( cMsg, p1, p2, ... )
+           that outputs to OutDebug from Microsoft debugview
+        HB_ToLogFile( cLogFile, cMsg, p1, p2, ... )
+           that outputs to a file
+        where cMsg is formatted like printf()
+        example:
+          hb_ToOutDebug( "fields: name = %s, address = %s", field->name, field->address )
+        and some utility functions:
+        HB_ToOutDebugOnOff( lOnOff )
+        HB_LogFileOnOff( lOnOff )
+        HB_EmptyLogFileOnOff( lOnOff )
+        Above functions are available either at prg than at C level.
+        Actually it is only for window platform.
+
 2008-10-19 23:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/mtpl_b32.mak
   * contrib/mtpl_gcc.mak
   * contrib/mtpl_vc.mak
-    * Fine tuning latest setting changes. I've rather removed 
-      -gc3 as contrib default switch. For those contribs where 
-      speed is critical, this switch should be turned on 
+    * Fine tuning latest setting changes. I've rather removed
+      -gc3 as contrib default switch. For those contribs where
+      speed is critical, this switch should be turned on
       on a per contrib basis.
 
 2008-10-19 09:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -31,15 +52,15 @@
   * contrib/mtpl_b32.mak
   * contrib/mtpl_gcc.mak
   * contrib/mtpl_vc.mak
-    + Made -gc3 switch the default. This will result in 
-      noticeably faster .prg code execution at the cost of 
-      a slightly bigger executable. Speaking of the core, 
-      this can result at maximum 250K of extra executable 
-      size increase, if the final executable uses _all_ 
-      core .prg functions. Usually though it's much lower 
-      than that, especially for GUI programs, since the 
-      majority of core .prg code deals with CUI elements, 
-      like TBrowse(), TGet(), 5.3 compatible CUI controls, 
+    + Made -gc3 switch the default. This will result in
+      noticeably faster .prg code execution at the cost of
+      a slightly bigger executable. Speaking of the core,
+      this can result at maximum 250K of extra executable
+      size increase, if the final executable uses _all_
+      core .prg functions. Usually though it's much lower
+      than that, especially for GUI programs, since the
+      majority of core .prg code deals with CUI elements,
+      like TBrowse(), TGet(), 5.3 compatible CUI controls,
       .frm and .lbl support, MemoEdit().
 
   * contrib/examples/dbu/bld_b32.bat
@@ -75,7 +96,7 @@
   * source/rtl/tpersist.prg
   * utils/hbmake/hbmake.prg
   * utils/hbrun/hbrun.prg
-    * Renamed hb_N2S() to hb_NToS() which feels more 
+    * Renamed hb_N2S() to hb_NToS() which feels more
       natural in Clipper.
 
 2008-10-19 00:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -105,7 +126,7 @@
   * source/rtl/Makefile
   + source/rtl/strtrim.c
     + Added function HB_N2S( <number> ) -> <string>.
-      This is equivalent to LTrim( Str( <number> ) ), 
+      This is equivalent to LTrim( Str( <number> ) ),
       just faster.
 
   * source/rtl/dircmd.prg
@@ -122,7 +143,7 @@
 
 2008-10-18 22:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/xhb/hbcrypt.c
-    ! Fixed lower level crypt functions to not do 
+    ! Fixed lower level crypt functions to not do
       zero division on zero length key input.
 
 2008-10-18 21:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -130,9 +151,9 @@
     ! Fixed recent warning on Win32 platforms.
 
   * contrib/xhb/hbcrypt.c
-    * Changed to just work instead of RTE-ing if any 
-      of the params are empty on non-strings. If 
-      non-string is passed, it's considered as 
+    * Changed to just work instead of RTE-ing if any
+      of the params are empty on non-strings. If
+      non-string is passed, it's considered as
       empty string.
 
 2008-10-18 16:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -202,15 +223,15 @@
   * contrib/hbwhat/tests/bld_vc.bat
   * contrib/examples/hbsqlit2/tests/bld_b32.bat
   * contrib/examples/hbsqlit2/tests/bld_vc.bat
-    * Renamed bin\bld*.* files to bin\hbmk*.*. This 
-      dir may be put in the path in user environments, 
-      so it's necessary to put the name into the Harbour 
-      namespace. The new name is also the one supported 
-      on *nix/bash platforms, albeit with slightly 
+    * Renamed bin\bld*.* files to bin\hbmk*.*. This
+      dir may be put in the path in user environments,
+      so it's necessary to put the name into the Harbour
+      namespace. The new name is also the one supported
+      on *nix/bash platforms, albeit with slightly
       different usage.
       INCOMPATIBLE. Please update your environment.
-      To achieve compatbility with older Harbour versions 
-      and xhb, you can locally add a bld.bat file with 
+      To achieve compatbility with older Harbour versions
+      and xhb, you can locally add a bld.bat file with
       the content: '@call hbmk.bat %1 %2 %3 %4 %5 %6 %7 %8 %9'
 
   * source/common/hbgete.c
@@ -236,10 +257,10 @@
 2008-10-18 10:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapi.h
   * source/common/hbgete.c
-    + Added hb_getenv_buffer(). Similar to hb_getenv() but 
-      this one needs a buffer+size to be passed, so no memory 
-      allocation is done by the function. It also return 
-      a BOOL to signal success. It doesn't signal if passed 
+    + Added hb_getenv_buffer(). Similar to hb_getenv() but
+      this one needs a buffer+size to be passed, so no memory
+      allocation is done by the function. It also return
+      a BOOL to signal success. It doesn't signal if passed
       buffer was too small to store the value.
 
 2008-10-18 08:36 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -255,12 +276,12 @@
   * source/debug/tbrwtext.prg
   * source/debug/debugger.prg
     ! Fixed to not crash after switching to mono display.
-      DISCLAIMER: This is a quick patch (but even this took 
-      hours) and it absolutely can be wrong, incomplete in 
-      any ways. I'm not using or knowing debugger code, pls 
+      DISCLAIMER: This is a quick patch (but even this took
+      hours) and it absolutely can be wrong, incomplete in
+      any ways. I'm not using or knowing debugger code, pls
       patch it further on.
-      NOTE: Color refresh after switching mono/color mode 
-            is still wrong and I've given up after trying 
+      NOTE: Color refresh after switching mono/color mode
+            is still wrong and I've given up after trying
             for a few hours.
     * Minor formatting.
 
@@ -301,7 +322,7 @@
     * Changed rest of GETs to __dbgInput()
 
   * source/rtl/listbox.prg
-    - Removed saving cursor position and color, 
+    - Removed saving cursor position and color,
       and changing default color.
 
   ; NOTE: Couldn't replicate Mono display RTE.
@@ -347,12 +368,12 @@
   * make_vc.bat
   * make_vc.mak
   * make_gcc.mak
-    * HB_BUILD_VERBOSE=yes is now the default. If someone 
-      is wanting to build Harbour from source and is bothered 
-      by the compiler command-lines being shown, these can 
+    * HB_BUILD_VERBOSE=yes is now the default. If someone
+      is wanting to build Harbour from source and is bothered
+      by the compiler command-lines being shown, these can
       be turned off with HB_BUILD_VERBOSE=no.
-      These lines are IMO very important to see, which options 
-      were exactly used when Harbour was built, I personally 
+      These lines are IMO very important to see, which options
+      were exactly used when Harbour was built, I personally
       archive these logs along with the builds.
 
 2008-10-16 14:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -363,7 +384,7 @@
   * contrib/mtpl_gcc.mak
   * contrib/mtpl_vc.mak
     * Changed -b switch to -l-.
-      -b debug mode causes more problems than good for Harbour 
+      -b debug mode causes more problems than good for Harbour
       core/contrib.
 
 2008-10-16 13:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -380,7 +401,7 @@
   * contrib/mtpl_gcc.mak
   * contrib/mtpl_vc.mak
     % Deleted -l- switch when HB_BUILD_STATIC=yes.
-      Line numbers are automatically enabled when 
+      Line numbers are automatically enabled when
       -b switch is used.
 
   * source/debug/debugger.prg
@@ -452,7 +473,7 @@
     * Minor formatting.
 
   * source/rtl/tobject.prg
-    * Removed '#pragma DEBUGINFO=OFF' as it's no more 
+    * Removed '#pragma DEBUGINFO=OFF' as it's no more
       needed.
 
   * source/debug/dbgthsh.prg
@@ -528,9 +549,9 @@
   * source/debug/tbrwtext.prg
     * Replaced with new implementation from Lorenzo Fiorini.
       Sent to the list on 2008.07.26.
-    ; NOTE: Some issue were reported with this, but it's again 
-            a step into the right direction, please try to update 
-            this code to better resemble to Clipper and to fix 
+    ; NOTE: Some issue were reported with this, but it's again
+            a step into the right direction, please try to update
+            this code to better resemble to Clipper and to fix
             possible error. Thanks.
     ; Remaining RTL .prg dependencies:
       - ACHOICE() (just one call)
@@ -555,7 +576,7 @@
     + Replaced Alert() with __dbgAlert() calls.
     + Added minimal TBColumn() implementation, named HBDbColumn().
     + Replaced TBColumnNew() with HBDbColumnNew() calls.
-    + Enabled HB_NO_READDBG for all sources. This isn't 
+    + Enabled HB_NO_READDBG for all sources. This isn't
       perfect, just a step into the right direction.
     ; Please test above modifications.
     ; Remaining RTL .prg dependencies:
@@ -570,7 +591,7 @@
   * source/rtl/tobject.prg
   * source/rtl/tclass.prg
     + Added '#pragma DEBUGINFO=OFF'.
-    ; NOTE: Maybe it'd be better to rewrite these in .c, 
+    ; NOTE: Maybe it'd be better to rewrite these in .c,
             also for speed. If possible.
 
   * source/rtl/alert.prg
@@ -619,11 +640,11 @@
   * make_vc.mak
   * make_gcc.mak
     * Removed disabling -b for non-debug builds.
-    ; We aim to remove RTL .prg dependencies from hbdebug.lib, 
-      either by local implementation, .c rewrite, or force 
+    ; We aim to remove RTL .prg dependencies from hbdebug.lib,
+      either by local implementation, .c rewrite, or force
       disabling debug mode in more core files.
-      Until this happens, one will have to be careful with 
-      using -b switch to compile Harbour. These are the core .prg 
+      Until this happens, one will have to be careful with
+      using -b switch to compile Harbour. These are the core .prg
       modules currently used by hbdebug.lib:
       - HBGETLIST(), GET(), __GET(), __GETLISTACTIVE(), __GETLISTSETACTIVE(), READINSERT(), READMODAL()
       - HBCLASS() [DONE]
@@ -670,9 +691,9 @@
   * make_b32.mak
   * make_gcc.mak
   * make_vc.mak
-    * Forcing -b- (disabling debug info) for all core 
-      .prg functions. Compiling anything in core with 
-      -b would cause infinite loops, when trying to use 
+    * Forcing -b- (disabling debug info) for all core
+      .prg functions. Compiling anything in core with
+      -b would cause infinite loops, when trying to use
       the debugger.
       QUESTION: Is HB_NO_READDBG still needed?
 
@@ -683,7 +704,7 @@
   - bin/vc
   - obj/b32
   - obj/vc
-    - Removed dirs from SVN. They are automatically created 
+    - Removed dirs from SVN. They are automatically created
       by the build scripts.
 
 2008-10-15 01:39 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -703,16 +724,16 @@
   * source/debug/dbgtarr.prg
   * source/debug/dbgtmenu.prg
   * source/debug/dbgtmitm.prg
-    + Added '#pragma DEBUGINFO=OFF' to debugger 
-      sources. Otherwise compiling full Harbour with 
+    + Added '#pragma DEBUGINFO=OFF' to debugger
+      sources. Otherwise compiling full Harbour with
       -b was causing an infinite loop in app.
       (-b is now default when building with 'HB_BUILD_DEBUG=yes').
 
   * source/rdd/nulsys/nulsys.c
-    ! Added DBSELECTAREA(), DBSTRUCT(), HEADER(), 
+    ! Added DBSELECTAREA(), DBSTRUCT(), HEADER(),
       RECSIZE(), LUPDATE()
-      so that programs can be built with -b and 
-      hbnulrdd.lib. hbdebug.lib/dgbwa.prg uses 
+      so that programs can be built with -b and
+      hbnulrdd.lib. hbdebug.lib/dgbwa.prg uses
       symbols above.
 
 2008-10-15 00:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -728,9 +749,9 @@
   * source/rtl/tgetint.prg
   * source/rtl/tlabel.prg
   * source/rtl/treport.prg
-    * Changed '&( "{||" + c + "}" )' expressions to 
+    * Changed '&( "{||" + c + "}" )' expressions to
       hb_macroBlock() calls.
-      To me these places seemed safe to change, but 
+      To me these places seemed safe to change, but
       please verify me.
 
   * source/rtl/alert.prg
@@ -852,7 +873,7 @@
 
 2008-10-13 20:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbmisc/strfmt.c
-    ! Fixed GPF when non-string was passed as 
+    ! Fixed GPF when non-string was passed as
       first parameter.
 
 2008-10-13 18:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -940,10 +961,10 @@
 2008-10-13 11:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/teditor.prg
     + Added :LineCount(), :ExitState() methods.
-    * Changed to use hb_MemoWrit() to write text content to 
+    * Changed to use hb_MemoWrit() to write text content to
       disk, to avoid Chr(26) to be appended.
     ! Fixed :InsertState() to also modify physical cursor state.
-    ! Fixed :BrowseText() to not go into an infinite loop in 
+    ! Fixed :BrowseText() to not go into an infinite loop in
       view mode.
       [TOMERGE 1.0]
 
@@ -984,15 +1005,15 @@
     ! Minor formatting.
 
   * include/hbapierr.h
-    ! Fixed casting in macro HB_ERR_FUNCNAME, as it was 
+    ! Fixed casting in macro HB_ERR_FUNCNAME, as it was
       generating a new warning with MSVC in 64-bit mode.
       '( ( char * ) 1 )' -> '( ( const char * ) NULL + 1 )'
       ('const' keyword was not enough to silence it)
 
   * include/hbapierr.h
   * source/rtl/errorapi.c
-    - Disabled (marked with HB_LEGACY_LEVEL) hb_errFuncName 
-      symbol. No longer supported, pls use HB_ERR_FUNCNAME 
+    - Disabled (marked with HB_LEGACY_LEVEL) hb_errFuncName
+      symbol. No longer supported, pls use HB_ERR_FUNCNAME
       instead.
 
 2008-10-11 13:40 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -1035,7 +1056,7 @@
   * bin/bld.bat
   * bin/bld_os2.cmd
     + Enabled cleanup of .c/object/.tds files after build.
-    + Under Windows NT OSes, it's now possible to pass full .prg 
+    + Under Windows NT OSes, it's now possible to pass full .prg
       name with extension.
     ! Few minor fixes.
     * Formatting, cleanup and help update.
@@ -1044,8 +1065,8 @@
 2008-10-11 14:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/fnsplit.c
   * source/rtl/hbtoken.c
-    ! HB_FNAMESPLIT(), HB_TOKENPTR() fixed to 
-      reset parameters passed by reference in 
+    ! HB_FNAMESPLIT(), HB_TOKENPTR() fixed to
+      reset parameters passed by reference in
       error cases.
 
 2008-10-11 13:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -1236,25 +1257,25 @@
   * make_b32.mak
   * make_vc.mak
   * make_gcc.mak
-    * Removed special 'set HB_GT_LIB=gtXXX' support. For the exact 
-      same effect - in case you want to modify default GT at 
+    * Removed special 'set HB_GT_LIB=gtXXX' support. For the exact
+      same effect - in case you want to modify default GT at
       build time, which is not recommended -, pls use this:
       'set C_USR=-DHB_GT_LIB=XXX' where XXX is 'wvt', 'std', etc.
-    - Removed HARBOURFLAGSDLL, LDFLAGSDLL, CFLAGSDLL as public options. 
-      It's better to keep these settings common IMO, and handle 
+    - Removed HARBOURFLAGSDLL, LDFLAGSDLL, CFLAGSDLL as public options.
+      It's better to keep these settings common IMO, and handle
       all DLL subtleties in our make files.
     + L_USR is now respected for .dlls, too.
-    ! Fixed make_gcc.mak internal HARBOURFLAGSDLL to be in sync 
+    ! Fixed make_gcc.mak internal HARBOURFLAGSDLL to be in sync
       with the other .mak files (removed -l switch).
-    - Removed HB_BUILD_MODE for VC builds. Now C/C++ is left to 
-      the default value (which is C mode for core), and it's possible 
+    - Removed HB_BUILD_MODE for VC builds. Now C/C++ is left to
+      the default value (which is C mode for core), and it's possible
       to override using:
       'set C_USR=-TP' for C++ mode (or -TC for forced C mode).
     % Other minor cleanups.
 
   * contrib/mtpl_b32.mak
   * contrib/mtpl_vc.mak
-    - Removed HB_BUILD_MODE undocumented options from contrib 
+    - Removed HB_BUILD_MODE undocumented options from contrib
       make files. For Borland C++ mode, use 'set C_USR=-P'.
       For VC, see above.
     - Removed HB_BUILD_ST undocumented option.
@@ -1269,10 +1290,10 @@
   * make_b32.mak
   * make_vc.mak
   * make_gcc.mak
-    - Removed option HB_BUILD_ST to build another version 
-      of Harbour MT build [for non-GNU builds], or forced 
+    - Removed option HB_BUILD_ST to build another version
+      of Harbour MT build [for non-GNU builds], or forced
       SingleThreaded (non -tWM) Harbour builds.
-    * Modified to not allow CFLAGSMT to be tweaked from the 
+    * Modified to not allow CFLAGSMT to be tweaked from the
       outside [for non-GNU builds].
 
 2008-10-10 09:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -1394,22 +1415,22 @@
 2008-10-09 10:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/bld.bat
   * bin/bld_os2.cmd
-    + CLEANUP section now tries to clean object files and 
+    + CLEANUP section now tries to clean object files and
       Borland .tds files, too.
 
 2008-10-09 09:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
     + Added missing HB_DISABLEWAITLOCKS().
-    ; NOTE: This looks like a hack to add FLX_WAIT flag 
+    ; NOTE: This looks like a hack to add FLX_WAIT flag
             for locks app-wide, and on Windows systems only.
-            IMO we should not have such hacks in core, or if 
-            this is really important it should support all 
+            IMO we should not have such hacks in core, or if
+            this is really important it should support all
             possible platforms.
-            It also has a low-level function equivalent, 
-            which is missing from hbapifs.h. There is no 
-            reference to these function in any Harbour or 
+            It also has a low-level function equivalent,
+            which is missing from hbapifs.h. There is no
+            reference to these function in any Harbour or
             xhb changelogs.
-            If there are no objections, I'd like remove 
+            If there are no objections, I'd like remove
             this functionality.
 
   * source/rtl/hbrandom.c
@@ -1465,14 +1486,14 @@
 2008-10-08 14:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * contrib/mtpl_b32.mak
-    + Added -Q switch to BCC defaults. This will print 
+    + Added -Q switch to BCC defaults. This will print
       verbose error messages.
 
 2008-10-08 14:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/bld.bat
   * bin/bld_os2.cmd
     + Added support for HB_INSTALL_PREFIX.
-    + Added experimental support for 'set HB_MT=MT' flag, 
+    + Added experimental support for 'set HB_MT=MT' flag,
       to create an MT executable.
 
   * source/rtl/seconds.c
