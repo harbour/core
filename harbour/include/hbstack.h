@@ -247,7 +247,7 @@ typedef struct
 
 #endif /* _HB_API_INTERNAL_ */
 
-extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
+HB_EXPORT extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
 extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
 extern LONG        hb_stackTopOffset( void );
 extern LONG        hb_stackBaseOffset( void );
@@ -259,8 +259,8 @@ extern HB_ITEM_PTR hb_stackReturnItem( void ); /* returns RETURN Item from stack
 extern char *      hb_stackDateBuffer( void );
 extern void *      hb_stackId( void );
 
+HB_EXPORT extern void hb_stackPop( void );     /* pops an item from the stack */
 extern void        hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
-extern void        hb_stackPop( void );        /* pops an item from the stack */
 extern void        hb_stackPush( void );       /* pushes an item on to the stack */
 extern HB_ITEM_PTR hb_stackAllocItem( void );  /* allocates new item on the top of stack, returns pointer to it */
 extern void        hb_stackPushReturn( void );
