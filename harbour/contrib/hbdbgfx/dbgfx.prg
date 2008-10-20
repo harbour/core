@@ -1,6 +1,6 @@
 
 /*
- * $Id: gd.prg 7887 2007-10-30 18:25:37Z lf_sfnet $
+ * $Id$
  */
 
 /*
@@ -54,69 +54,66 @@
 #include "common.ch"
 #include "fileio.ch"
 
-REQUEST HB_SPRINTF
-
 STATIC s_lToOutDebug   := TRUE
 STATIC s_lToLogFile    := TRUE
 STATIC s_lEmptyLogFile := TRUE
 
 FUNCTION HB_ToOutDebugOnOff( lOnOff )
-  LOCAL lOld := s_lToOutDebug
-  IF HB_ISLOGICAL( lOnOff )
-     s_lToOutDebug := lOnOff
-  ENDIF
+   LOCAL lOld := s_lToOutDebug
+   IF hb_isLogical( lOnOff )
+      s_lToOutDebug := lOnOff
+   ENDIF
 RETURN lOld
 
 PROCEDURE HB_ToOutDebug( ... )
-  IF s_lToOutDebug
-     hb_OutDebug( hb_sprintf( ... ) )
-  ENDIF
+   IF s_lToOutDebug
+      hb_OutDebug( hb_sprintf( ... ) )
+   ENDIF
 RETURN
 
 FUNCTION HB_ToLogFileOnOff( lOnOff )
-  LOCAL lOld := s_lToLogFile
-  IF HB_ISLOGICAL( lOnOff )
-     s_lToLogFile := lOnOff
-  ENDIF
+   LOCAL lOld := s_lToLogFile
+   IF hb_isLogical( lOnOff )
+      s_lToLogFile := lOnOff
+   ENDIF
 RETURN lOld
 
 FUNCTION HB_EmptyLogFileOnOff( lOnOff )
-  LOCAL lOld := s_lEmptyLogFile
-  IF HB_ISLOGICAL( lOnOff )
-     s_lEmptyLogFile := lOnOff
-  ENDIF
+   LOCAL lOld := s_lEmptyLogFile
+   IF hb_isLogical( lOnOff )
+      s_lEmptyLogFile := lOnOff
+   ENDIF
 RETURN lOld
 
 PROCEDURE HB_ToLogFile( cLogFile, ... )
-  LOCAL nHandle
+   LOCAL nHandle
 
-  IF !s_lToLogFile
-     RETURN
-  ENDIF
+   IF !s_lToLogFile
+      RETURN
+   ENDIF
 
-  DEFAULT cLogFile TO "logfile.log"
+   DEFAULT cLogFile TO "logfile.log"
 
-  IF cLogFile <> NIL
+   IF cLogFile != NIL
 
-     IF !s_lEmptyLogFile .AND. FILE( cLogFile )
-        nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED)
-     ELSE
-        nHandle := FCreate( cLogFile )
-        s_lEmptyLogFile := FALSE
-        // After I have create it I have to close and open in shared way
-        IF Ferror() == 0 .AND. nHandle > 0
-           FClose( nHandle )
-           nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED)
-        ENDIF
-     ENDIF
+      IF !s_lEmptyLogFile .AND. hb_FileExists( cLogFile )
+         nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED)
+      ELSE
+         nHandle := FCreate( cLogFile )
+         s_lEmptyLogFile := FALSE
+         // After I have create it I have to close and open in shared way
+         IF Ferror() == 0 .AND. nHandle > 0
+            FClose( nHandle )
+            nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED)
+         ENDIF
+      ENDIF
 
-     // Writing
-     IF nHandle > 0
-        FSeek( nHandle, 0, FS_END )
-        FWrite( nHandle, hb_sprintf( ... ) )
-        FWrite( nHandle, HB_OSNewLine() )
-        FClose( nHandle )
-     ENDIF
-  ENDIF
+      // Writing
+      IF nHandle > 0
+         FSeek( nHandle, 0, FS_END )
+         FWrite( nHandle, hb_sprintf( ... ) )
+         FWrite( nHandle, HB_OSNewLine() )
+         FClose( nHandle )
+      ENDIF
+   ENDIF
 RETURN
-

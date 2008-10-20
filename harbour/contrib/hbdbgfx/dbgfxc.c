@@ -1,6 +1,5 @@
-
 /*
- * $Id: gd.prg 7887 2007-10-30 18:25:37Z lf_sfnet $
+ * $Id$
  */
 
 /*
@@ -51,11 +50,11 @@
  *
  */
 
-#include <windows.h>
+#define HB_OS_WIN_32_USED
+
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbvm.h"
-#include "item.api"
+#include "hbapifs.h"
 
 static BOOL s_bToOutputDebug = TRUE;
 static BOOL s_bToLogFile     = TRUE;
@@ -66,77 +65,72 @@ HB_EXPORT BOOL hb_ToOutDebugOnOff( BOOL bOnOff )
 {
    BOOL bOld = s_bToOutputDebug;
    s_bToOutputDebug = bOnOff;
-   return ( bOld );
+   return bOld;
 }
 
 HB_EXPORT void hb_ToOutDebug( const char * sTraceMsg, ... )
 {
-   if ( s_bToOutputDebug )
+   if( s_bToOutputDebug )
    {
+#if defined( HB_OS_WIN_32 )
+     /* TOFIX: Convert to/from Unicode */
+
      char buffer[ 1024 ];
      va_list ap;
 
      va_start( ap, sTraceMsg );
-     vsprintf( buffer, sTraceMsg, ap );
+     vsnprintf( buffer, sizeof( buffer ), sTraceMsg, ap );
      va_end( ap );
 
-     OutputDebugString( buffer );
+     OutputDebugString( ( LPCWSTR ) buffer );
+#endif
    }
-
 }
 
 HB_EXPORT BOOL hb_ToLogFileOnOff( BOOL bOnOff )
 {
    BOOL bOld = s_bToLogFile;
    s_bToLogFile = bOnOff;
-   return ( bOld );
+   return bOld;
 }
 
 HB_EXPORT BOOL hb_EmptyLogFile( BOOL bOnOff )
 {
    BOOL bOld = s_bEmptyLogFile;
    s_bEmptyLogFile = bOnOff;
-   return ( bOld );
+   return bOld;
 }
 
 HB_EXPORT void hb_ToLogFile( const char * sFile, const char * sTraceMsg, ... )
 {
-   FILE *hFile;
+   FILE * hFile;
 
-   if( ! s_bToLogFile )
+   if( s_bToLogFile )
    {
-      return;
-   }
-
-   if( sFile == NULL )
-   {
-      if( s_bEmptyLogFile )
+      if( sFile == NULL )
       {
-         s_bEmptyLogFile = FALSE;
-
-         /* Empty the file if it exists. */
-         hFile = fopen( "logfile.log", "w" );
+         if( s_bEmptyLogFile )
+         {
+            s_bEmptyLogFile = FALSE;
+      
+            /* Empty the file if it exists. */
+            hFile = hb_fopen( "logfile.log", "w" );
+         }
+         else
+            hFile = hb_fopen( "logfile.log", "a" );
       }
       else
+         hFile = hb_fopen( sFile, "a" );
+      
+      if( hFile )
       {
-         hFile = fopen( "logfile.log", "a" );
+         va_list ap;
+      
+         va_start( ap, sTraceMsg );
+         vfprintf( hFile, sTraceMsg, ap );
+         va_end( ap );
+      
+         fclose( hFile );
       }
    }
-   else
-   {
-      hFile = fopen( sFile, "a" );
-   }
-
-   if( hFile )
-   {
-      va_list ap;
-
-      va_start( ap, sTraceMsg );
-      vfprintf( hFile, sTraceMsg, ap );
-      va_end( ap );
-
-      fclose( hFile );
-   }
-
 }
-

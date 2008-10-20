@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-20 08:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbdbgfx/Makefile
+  * contrib/hbdbgfx/common.mak
+  + contrib/hbdbgfx/make_gcc.sh
+  * contrib/hbdbgfx/make_b32.bat
+  * contrib/hbdbgfx/make_vc.bat
+  * contrib/hbdbgfx/hbdbgfx.h
+  * contrib/hbdbgfx/dbgfxc.c
+  * contrib/hbdbgfx/dbgfx.prg
+  * contrib/hbdbgfx/sprintf.prg
+    * Some cleanups and fixes.
+    ; TOFIX: hb_ToOutDebug() for WinCE/Unicode.
+             Maybe adding other platforms.
+
 2008-10-19 20:18 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * source/debug/dbgbrwsr.prg
     ! Fixed out of range error ( BASE/1133 ) when scrolling out the source

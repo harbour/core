@@ -7,17 +7,14 @@ ROOT = ../../
 C_SOURCES=\
 	dbgfxc.c \
 
+C_HEADERS=\
+	hbdbgfx.h \
+
 PRG_SOURCES=\
-	dbgfx.prg  \
-	sprinf.prg \
+	dbgfx.prg \
+	sprintf.prg \
 
 LIBNAME=hbdbgfx
-
-ifeq ($(HB_COMPILER),mingw32)
-   CFLAGS := $(CFLAGS) -I/usr/include
-else
-   CFLAGS := $(CFLAGS) -I/usr/include
-endif
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
@@ -25,4 +22,3 @@ include $(TOP)$(ROOT)config/lib.cf
 
 install::
 	$(INSTALL_RULE_HEADERS)
-

@@ -1,5 +1,5 @@
 #
-# $Id: common.mak 7935 2007-11-10 11:31:17Z vszakats $
+# $Id$
 #
 
 LIBNAME = hbdbgfx
