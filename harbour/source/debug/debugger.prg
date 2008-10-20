@@ -563,7 +563,7 @@ METHOD BuildCommandWindow() CLASS HBDebugger
    ::nCommand := 1
 
    nSize := ::oWndCommand:nRight - ::oWndCommand:nLeft - 3
-   ::oGet := HbDbInput():new( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3,; 
+   ::oGet := HbDbInput():new( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3,;
                               nSize, "", __DbgColors()[ 2 ], Max( nSize, 256 ) )
 
    RETURN NIL
@@ -1475,7 +1475,9 @@ METHOD HideVars() CLASS HBDebugger
       nTop := ::oWndPnt:nBottom + 1
    ENDIF
    ::oWndCode:Resize( nTop )
-   ::oBrwText:Resize( ::oWndCode:nTop + 1 )
+   IF ::oBrwText != NIL
+      ::oBrwText:Resize( ::oWndCode:nTop + 1 )
+   ENDIF
    IF ::oWndCode:lFocused
       ::oWndCode:cargo[ 1 ] := Row()
       ::oWndCode:cargo[ 2 ] := Col()

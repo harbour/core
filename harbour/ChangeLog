@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-20 12:06 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * source/debug/debugger.prg
+    ! Fixed error when selecting "Restore Settings" and the current prg source
+      is not in the "path for Files" option. (NIL ::oBrwText at line 1478 on
+      debugger.prg)
+
 2008-10-20 17:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/filebuf.c
     ! fixed bad typo in lock table resizing
