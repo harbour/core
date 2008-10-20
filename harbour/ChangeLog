@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-20 21:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbct/ctwin.c
+    * moved internal CTW data to structure allocated dynamically and
+      hold by inside current thread GT (HB_GT) to eliminate static
+      variables used by GTCTW. Now each thread can have its own
+      independent set of CTWindows if it allocated new GT.
+
+  * harbour/contrib/hbct/tests/ctwtest.prg
+    * removed two unused local variables
+
 2008-10-20 12:06 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * source/debug/debugger.prg
     ! Fixed error when selecting "Restore Settings" and the current prg source

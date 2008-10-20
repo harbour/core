@@ -14,7 +14,7 @@
 #include "inkey.ch"
 
 proc main()
-local aWin:=array(9), y, x, i, k, s, c, lFlag:=.f., lBoard:=.t.
+local aWin:=array(9), y, x, i, k, lFlag:=.f., lBoard:=.t.
 
 setblink(.f.)
 wboard(5,5,20,75)
