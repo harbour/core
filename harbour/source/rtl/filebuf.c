@@ -96,19 +96,21 @@ static HB_CRITICAL_NEW( s_fileMtx );
 
 static PHB_FILE s_openFiles = NULL;
 
+/*
 void hb_fileDsp( PHB_FILE pFile, const char * szMsg )
 {
    UINT uiPos = 0;
-   printf( "\r\n[%s][", szMsg );
+   fprintf( stderr, "\r\n[%s][", szMsg );
    while( uiPos < pFile->uiLocks )
    {
       PHB_FLOCK pLock = &pFile->pLocks[ uiPos ];
-      printf( "%lld:%lld ", pLock->start, pLock->len );
+      fprintf( stderr, "%lld:%lld ", pLock->start, pLock->len );
       ++uiPos;
    }
-   printf( "]" );
-   fflush(stdout);
+   fprintf( stderr, "]" );
+   fflush(stderr);
 }
+*/
 
 static PHB_FILE hb_fileFind( ULONG device, ULONG inode )
 {
@@ -191,11 +193,11 @@ static void hb_fileInsertLock( PHB_FILE pFile, UINT uiPos,
       memset( &pFile->pLocks[ pFile->uiLocks ], 0,
               sizeof( HB_FLOCK ) * HB_FLOCK_RESIZE );
    }
-   pFile->uiLocks++;
    memmove( &pFile->pLocks[ uiPos + 1 ], &pFile->pLocks[ uiPos ],
             ( pFile->uiLocks - uiPos ) * sizeof( HB_FLOCK ) );
    pFile->pLocks[ uiPos ].start = ulStart;
    pFile->pLocks[ uiPos ].len   = ulLen;
+   pFile->uiLocks++;
 }
 
 static void hb_fileDeleteLock( PHB_FILE pFile, UINT uiPos )

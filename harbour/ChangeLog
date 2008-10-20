@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-20 17:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/filebuf.c
+    ! fixed bad typo in lock table resizing
+
+  * harbour/source/rdd/hbsix/sxcompr.c
+    ! fixed ring buffer initialization in Sx_Compress()
+
 2008-10-20 08:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbdbgfx/Makefile
   * contrib/hbdbgfx/common.mak

@@ -246,7 +246,7 @@ static PHB_LZSSX_COMPR hb_LZSSxInit(
    /* initialize the ring buffer with spaces, because SIX uses
       dynamic ring buffer then we do not have to fill last MAXLENGTH
       characters */
-   memset( pCompr->ring_buffer, ' ', RBUFLENGTH - MAXLENGTH );
+   memset( pCompr->ring_buffer, ' ', RBUFLENGTH - 1 );
 
    return pCompr;
 }
