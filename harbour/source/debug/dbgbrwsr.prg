@@ -112,7 +112,7 @@ CREATE CLASS HBDbBrowser
    METHOD PageUp()             INLINE ::MoveCursor( -::rowCount )
    METHOD GetColumn( nColumn ) INLINE ::aColumns[ nColumn ]
    METHOD RefreshAll()         INLINE AFill( ::aRowState, .F. ), Self
-   METHOD RefreshCurrent()     INLINE iif( ::rowCount > 0, ::aRowState[ ::rowPos ] := .F., ), Self
+   METHOD RefreshCurrent()     INLINE iif( ::rowCount > 0 .AND. ::rowPos <= Len( ::aRowState ), ::aRowState[ ::rowPos ] := .F., ), Self
    METHOD Invalidate()         INLINE ::RefreshAll()
    METHOD Stabilize()          INLINE ::ForceStable()
    METHOD ForceStable()
@@ -241,7 +241,7 @@ METHOD Resize( nTop, nLeft, nBottom, nRight )
    IF lResize
       ::Configure():ForceStable()
    ENDIF
-      
+
    RETURN self
 
 CREATE CLASS HBDbColumn
