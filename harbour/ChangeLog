@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-21 17:19 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * source/debug/debugger.prg
+    ! Fixed error when moving in the call stack window to an source prg
+      not included in the path, and a ::oWndVars (Monitor of vars) is opened.
+
 2008-10-21 22:18 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapigt.h
   * harbour/source/rtl/console.c

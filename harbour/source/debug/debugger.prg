@@ -333,7 +333,7 @@ CREATE CLASS HBDebugger
    METHOD Sort() INLINE ASort( ::aVars,,, { | x, y | x[ 1 ] < y[ 1 ] } ),;
                         ::lSortVars := .T.,;
                         iif( ::oBrwVars != NIL, ::oBrwVars:RefreshAll(), NIL ),;
-                        iif( ::oWndVars != NIL .AND. ::oWndVars:lVisible, iif( !::lGo, ::oBrwVars:ForceStable(), NIL ), NIL )
+                        iif( ::oWndVars != NIL .AND. ::oWndVars:lVisible, iif( !::lGo .AND. ::oBrwVars != NIL, ::oBrwVars:ForceStable(), NIL ), NIL )
 
    METHOD Speed() INLINE ::nSpeed := ::InputBox( "Step delay (in tenths of a second)", ::nSpeed )
 
@@ -1775,7 +1775,7 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
       ::oBrwVars:GoTop()
    ENDIF
    ::aVars := aBVars
-   IF ::lSortVars
+   IF ::lSortVars .AND. !Empty( ::aVars )
       ::Sort()
    ENDIF
 
