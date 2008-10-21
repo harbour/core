@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-21 14:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/box.c
+    ! Fixed GPF in hb_dispBox() when box drawing chars 
+      were not passed.
 
 2008-10-21 13:17 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
   * contrib/xhb/hbcompat.ch

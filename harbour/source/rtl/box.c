@@ -120,7 +120,7 @@ HB_FUNC( HB_DISPBOX )
 
    if( pTop && pLeft && pBottom && pRight )
    {
-      const char * pszBox = hb_parc( 5 );
+      const char * pszBox = hb_parcx( 5 );
       const char * pszColor = hb_parc( 6 );
       int iColor;
 
