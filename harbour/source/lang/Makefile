@@ -47,6 +47,7 @@ C_SOURCES=\
 	msgplmaz.c \
 	msgplwin.c \
 	msgpt.c    \
+	msgptiso.c \
 	msgro.c    \
 	msgru866.c \
 	msgrukoi.c \

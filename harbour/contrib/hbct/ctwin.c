@@ -1492,8 +1492,7 @@ static BOOL hb_ctw_gt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          fResult = HB_GTSUPER_INFO( pGT, iType, pInfo );
 
          if( fResult && hb_arrayLen( pInfo->pResult ) >= 8 )
-            hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 8 ),
-                          HB_GTCTW_GET( pGT )->iCurrWindow );
+            hb_arraySetNI( pInfo->pResult, 8, HB_GTCTW_GET( pGT )->iCurrWindow );
          return fResult;
       }
       case HB_GTI_GETWIN:
@@ -1504,7 +1503,7 @@ static BOOL hb_ctw_gt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          hb_ctw_SelectWindow( HB_GTCTW_GET( pGT ), 0 );
          fResult = HB_GTSUPER_INFO( pGT, iType, pInfo );
          if( fResult && hb_arrayLen( pInfo->pResult ) >= 8 )
-            hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 8 ), iWindow );
+            hb_arraySetNI( pInfo->pResult, 8, iWindow );
          return fResult;
       }
       case HB_GTI_SETWIN:
@@ -1513,7 +1512,7 @@ static BOOL hb_ctw_gt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          hb_ctw_SelectWindow( HB_GTCTW_GET( pGT ), 0 );
          fResult = HB_GTSUPER_INFO( pGT, iType, pInfo );
-         if( hb_arrayLen( pInfo->pNewVal ) == 8 )
+         if( fResult && hb_arrayLen( pInfo->pNewVal ) >= 8 )
             hb_ctw_SelectWindow( HB_GTCTW_GET( pGT ),
                                  hb_arrayGetNI( pInfo->pNewVal, 8 ) );
          return fResult;
@@ -1561,7 +1560,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          PHB_GTCTW pCTW = HB_GTCTW_GET( pGT );
          ULONG ulWidth = 0, ulCurrWidth = 0, ul = 0, ul2, ulMaxWidth, ulLast;
          int iKey, iDspCount, iLines = 0, iTop, iLeft, iBottom, iRight,
-             iMnuCol, iPos, iClr, iWnd, i;
+             iMnuCol, iPos, iClr, iWnd, iPrevWnd, i;
          char * szMessage = hb_itemGetCPtr( pMessage );
          ULONG ulLen = hb_itemGetCLen( pMessage );
 
@@ -1607,6 +1606,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          if( iDspCount == 0 )
             HB_GTSELF_DISPBEGIN( pGT );
 
+         iPrevWnd = hb_ctw_CurrentWindow( pCTW );
          iWnd = hb_ctw_CreateWindow( pCTW, iTop, iLeft, iBottom, iRight, TRUE, iClrNorm );
          hb_ctw_AddWindowBox( pCTW, iWnd, ( BYTE * ) _B_SINGLE, iClrNorm );
          HB_GTSELF_SETCURSORSTYLE( pGT, SC_NONE );
@@ -1713,6 +1713,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          }
 
          hb_ctw_CloseWindow( pCTW, iWnd );
+         hb_ctw_SelectWindow( pCTW, iPrevWnd );
          HB_GTSELF_REFRESH( pGT );
 
          while( HB_GTSELF_DISPCOUNT( pGT ) < iDspCount )

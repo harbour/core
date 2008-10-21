@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-21 02:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/lang/Makefile
+  + harbour/source/lang/msgptiso.c
+    + added PTISO lang module
+
+  * harbour/source/lang/msgpt.c
+    * formatting
+
+  * harbour/contrib/hbct/ctwin.c
+    ! fixed restoring active window after executing CTWIN alert()
+      with window 0 active
+
 2008-10-20 21:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbct/ctwin.c
     * moved internal CTW data to structure allocated dynamically and

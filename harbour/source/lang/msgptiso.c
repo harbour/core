@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (PT)
+ * Language Support Module (PT ISO-8859-1)
  *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -64,7 +64,7 @@
 
 /* Language name: Portuguese */
 /* ISO language code (2 chars): PT */
-/* Codepage: 850 */
+/* Codepage: ISO-8859-1 */
 
 #include "hbapilng.h"
 
@@ -73,7 +73,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "PT",                        /* ID */
+      "PTISO",                     /* ID */
       "Portuguese",                /* Name (in English) */
       "Portugues",                 /* Name (in native language) */
       "PT",                        /* RFC ID */
@@ -84,7 +84,7 @@ static HB_LANG s_lang =
 
       "Janeiro",
       "Fevereiro",
-      "Mar‡o",
+      "Março",
       "Abril",
       "Maio",
       "Junho",
@@ -99,11 +99,11 @@ static HB_LANG s_lang =
 
       "Domingo",
       "Segunda-feira",
-      "Ter‡a-feira",
+      "Terça-feira",
       "Quarta-feira",
       "Quinta-feira",
       "Sexta-feira",
-      "S bado",
+      "Sábado",
 
       /* CA-Cl*pper compatible natmsg items */
 
@@ -115,54 +115,54 @@ static HB_LANG s_lang =
       "*** Total ***",
       "Ins",
       "   ",
-      "Data inv lida",
+      "Data inválida",
       "Faixa: ",
       " - ",
       "S/N",
-      "EXPRESSÇO INVALIDA",
+      "EXPRESSÃO INVALIDA",
 
       /* Error description names */
 
       "Erro desconhecido",
-      "Erro nos parƒmetros",
+      "Erro nos parâmetros",
       "Erro de limite",
       "Overflow de string",
-      "Overflow numérico",
-      "DivisÆo por zero",
-      "Erro num‚rico",
+      "Overflow numÚrico",
+      "Divisão por zero",
+      "Erro numérico",
       "Erro de sintaxe",
-      "Opera‡Æo muito complexa",
+      "Operação muito complexa",
       "",
       "",
-      "Mem¢ria insuficiente",
-      "Fun‡Æo indefinida",
-      "M‚todo nÆo exportado",
-      "Vari vel nÆo existe",
-      "Alias nÆo existe",
-      "Nenhuma vari vel exportada",
+      "Memória insuficiente",
+      "Função indefinida",
+      "Método não exportado",
+      "Variável não existe",
+      "Alias não existe",
+      "Nenhuma variável exportada",
       "Nome de alias incorreto",
       "Nome de alias duplicado",
       "",
-      "Erro de cria‡Æo",
+      "Erro de criação",
       "Erro de abertura",
       "Erro ao fechar",
       "Erro de leitura",
       "Erro de escrita",
-      "Erro de impressÆo",
+      "Erro de impressão",
       "",
       "",
       "",
       "",
-      "Opera‡Æo nÆo suportada",
+      "Operação não suportada",
       "Limite excedido",
-      "Detectado ¡ndice corrompido",
+      "Detectado índice corrompido",
       "Tipo incorreto de dado",
       "Tamanho do dato muito longo",
-      "Workarea nÆo est  em uso",
-      "Workarea nÆo indexada",
+      "Workarea não está em uso",
+      "Workarea não indexada",
       "Uso exclusivo requerido",
       "Travamento requerido",
-      "Escrita nÆo permitida",
+      "Escrita não permitida",
       "Falha no travamento do Append",
       "Falha no travamento",
       "",
@@ -172,33 +172,33 @@ static HB_LANG s_lang =
       "acesso de array",
       "array assign",
       ""
-      "nÆo ‚ um array",
+      "não é um array",
       "condicional",
 
       /* Internal error names */
 
-      "Erro irrecuper vel %lu: ",
-      "Erro na recupera‡ao do erro",
+      "Erro irrecuperável %lu: ",
+      "Erro na recuperaçao do erro",
       "ERRORBLOCK() para erro ausente",
       "Muitas chamadas recursivas ao manipulador de erros",
-      "Falha ao carregar ou RDD inv lido",
-      "M‚todo de %s inv lido",
-      "hb_xgrab nao pode alocar mem¢ria",
+      "Falha ao carregar ou RDD inválido",
+      "Método de %s inválido",
+      "hb_xgrab nao pode alocar memória",
       "hb_xrealloc chamado com ponteiro NULL",
-      "hb_xrealloc chamado com ponteiro inv lido",
-      "hb_xrealloc nao pode realocar mem¢ria",
-      "hb_xfree chamado com ponteiro inv lido",
+      "hb_xrealloc chamado com ponteiro inválido",
+      "hb_xrealloc nao pode realocar memória",
+      "hb_xfree chamado com ponteiro inválido",
       "hb_xfree chamado com ponteiro NULL",
-      "Impossivel localizar procedure de in¡cializa‡ao: \'%s\'",
-      "Nao ha procedure de inicializa‡ao",
+      "Impossivel localizar procedure de inícializaçao: \'%s\'",
+      "Nao ha procedure de inicializaçao",
       "VM opcode nao suportado",
-      "Item de s¡mbolo esperado de %s",
-      "Tipo de s¡mbolo inv lido para self em %s",
+      "Item de símbolo esperado de %s",
+      "Tipo de símbolo inválido para self em %s",
       "Codeblock esperado em %s",
       "Tipo incorreto de item na pilha tentando executar um pop de %s",
       "Stack underflow",
       "Um item iria ser copiado para ele mesmo em %s",
-      "Symbol item inv lido passado como memvar  %s",
+      "Symbol item inválido passado como memvar  %s",
       "Memory buffer overflow",
       "hb_xgrab requisitou para alocar zero bytes",
       "hb_xrealloc requisitou para redimensiorar para zero byte",
@@ -212,19 +212,19 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( PT );
+HB_LANG_ANNOUNCE( PTISO );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_PT )
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_PTISO )
    hb_langRegister( &s_lang );
-HB_CALL_ON_STARTUP_END( hb_lang_Init_PT )
+HB_CALL_ON_STARTUP_END( hb_lang_Init_PTISO )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_lang_Init_PT
+   #pragma startup hb_lang_Init_PTISO
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_lang_Init_PT = hb_lang_Init_PT;
+   static HB_$INITSYM hb_vm_auto_hb_lang_Init_PTISO = hb_lang_Init_PTISO;
    #pragma data_seg()
 #endif
