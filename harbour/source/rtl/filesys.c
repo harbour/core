@@ -317,7 +317,7 @@ static HANDLE DosToWinHandle( HB_FHANDLE fHandle )
       return GetStdHandle( STD_OUTPUT_HANDLE );
 
    else if( fHandle == ( HB_FHANDLE ) 2 )
-      return GetStdHandle( STD_ERROR_HANDLE);
+      return GetStdHandle( STD_ERROR_HANDLE );
 
    else
       return ( HANDLE ) fHandle;
@@ -3214,3 +3214,4 @@ HB_FUNC( HB_DISABLEWAITLOCKS )
 {
    hb_retl( hb_fsDisableWaitLocks( ISLOG( 1 ) ? ( hb_parl( 1 ) ? 1 : 0 ) : -1 ) );
 }
+

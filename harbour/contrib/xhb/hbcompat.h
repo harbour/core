@@ -70,6 +70,7 @@
 
    #define hb_retcAdopt( szText )               hb_retc_buffer( (szText) )
    #define hb_retclenAdopt( szText, ulLen )     hb_retclen_buffer( (szText), (ulLen) )
+   #define hb_retclenAdoptRaw( szText, ulLen )  hb_retclen_buffer( (szText), (ulLen) )
    #define hb_retcStatic( szText )              hb_retc_const( (szText) )
    #define hb_storclenAdopt                     hb_storclen_buffer
    #define hb_itemPutCRawStatic                 hb_itemPutCLConst
