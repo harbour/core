@@ -63,7 +63,7 @@ HB_FUNC( __XHELP )
 
    if( hb_dynsymIsFunction( s_pDynSym ) )
    {
-      /* awhite: push the existing params after the dyn symbol */
+      /* NOTE: push the existing params after the dyn symbol. [awhite] */
 
       USHORT uiPCount = ( USHORT ) hb_pcount();
       USHORT uiParam;
@@ -71,7 +71,7 @@ HB_FUNC( __XHELP )
       hb_vmPushDynSym( s_pDynSym );
       hb_vmPushNil();
       /* CA-Cl*pper respects references so hb_stackItemFromBase() is
-       * used insted of hb_param() [druzus]
+       * used instead of hb_param() [druzus]
        */
       for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
          hb_vmPush( hb_stackItemFromBase( uiParam ) );

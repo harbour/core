@@ -123,7 +123,7 @@ FUNCTION hb_CStr( xVal )
       CASE "S"
          RETURN "@" + xVal:name + "()"
       CASE "B"
-         RETURN "{|| ... }"
+         RETURN "{||...}"
       CASE "O"
          RETURN "{ " + xVal:className + " Object }"
       CASE "A"

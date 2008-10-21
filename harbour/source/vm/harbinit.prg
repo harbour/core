@@ -52,7 +52,7 @@
 
 #include "inkey.ch"
 
-ANNOUNCE SysInit
+ANNOUNCE SYSINIT
 
 /* NOTE: For complete compatibility */
 PROCEDURE CLIPPER520()
@@ -72,7 +72,7 @@ PROCEDURE CLIPPER530()
  * explicitly in VM initialization process before hb_vmDoInitFunctions()
  * and not depends on INIT clause.
  */
-PROCEDURE ClipInit
+PROCEDURE ClipInit()
 
    MEMVAR GetList
 

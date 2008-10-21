@@ -92,7 +92,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       CASE hb_isLogical( xMessage )   ; cMessage := iif( xMessage, ".T.", ".F." )
       CASE hb_isObject( xMessage )    ; cMessage := xMessage:className + " Object"
       CASE hb_isSymbol( xMessage )    ; cMessage := "@" + xMessage:Name + "()"
-      CASE hb_isBlock( xMessage )     ; cMessage := "{|| ... }"
+      CASE hb_isBlock( xMessage )     ; cMessage := "{||...}"
       OTHERWISE                       ; cMessage := "NIL"
       ENDCASE
 

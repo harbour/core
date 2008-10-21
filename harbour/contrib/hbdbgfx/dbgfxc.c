@@ -103,10 +103,10 @@ HB_EXPORT BOOL hb_EmptyLogFile( BOOL bOnOff )
 
 HB_EXPORT void hb_ToLogFile( const char * sFile, const char * sTraceMsg, ... )
 {
-   FILE * hFile;
-
    if( s_bToLogFile )
    {
+      FILE * hFile;
+
       if( sFile == NULL )
       {
          if( s_bEmptyLogFile )
