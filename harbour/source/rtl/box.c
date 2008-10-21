@@ -124,7 +124,6 @@ HB_FUNC( HB_DISPBOX )
       const char * pszColor = hb_parc( 6 );
       int iColor;
 
-
       if( pszColor )
          iColor = hb_gtColorToN( pszColor );
       else if( ISNUM( 6 ) )

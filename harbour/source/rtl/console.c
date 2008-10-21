@@ -593,8 +593,8 @@ HB_FUNC( HB_DISPOUTAT )
 
       if( ISCHAR( 4 ) )
          iColor = hb_gtColorToN( hb_parc( 4 ) );
-      else if( ISNUM( 6 ) )
-         iColor = hb_parni( 6 );
+      else if( ISNUM( 4 ) )
+         iColor = hb_parni( 4 );
       else
          iColor = -1;
 
