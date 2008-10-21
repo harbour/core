@@ -62,11 +62,11 @@
 #include "ctwin.h"
 
 static int           s_GtId;
-static HB_GT_FUNCS   SuperTable;
-#define HB_GTSUPER   (&SuperTable)
-#define HB_GTID_PTR  (&s_GtId)
+#undef  HB_GTSUPERTABLE
+#define HB_GTSUPERTABLE(g)    ( &( HB_GTCTW_GET( g )->SuperTable ) )
+#define HB_GTID_PTR           (&s_GtId)
 
-#define HB_GTCTW_GET(p) ( ( PHB_GTCTW ) HB_GTLOCAL( p ) )
+#define HB_GTCTW_GET(p)       ( ( PHB_GTCTW ) HB_GTLOCAL( p ) )
 
 #define HB_CTWIN_ALLOC        16
 #define HB_CTWIN_MINROWS      1
@@ -108,6 +108,7 @@ typedef struct
 typedef struct
 {
    PHB_GT pGT;
+   HB_GT_FUNCS SuperTable;
 
    int iShadowWidth;
    int iShadowAttr;
@@ -798,28 +799,23 @@ static int hb_ctw_AddWindowBox( PHB_GTCTW pCTW, int iWindow, BYTE * szBox, int i
 
 /* ********************************************************************** */
 
-static void hb_ctw_Init( PHB_GT pGT )
+static void hb_ctw_Init( PHB_GTCTW pCTW )
 {
-   PHB_GTCTW pCTW;
    int iRow, iCol;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_Init(%p)",pGT));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_Init(%p)",pCTW));
 
-   pCTW = ( PHB_GTCTW ) hb_xgrab( sizeof( HB_GTCTW ) );
-   memset( pCTW, 0, sizeof( HB_GTCTW ) );
-   HB_GTLOCAL( pGT ) = pCTW;
-   pCTW->pGT             = pGT;
    pCTW->iShadowWidth    = 2;
    pCTW->iShadowAttr     = -1;
    pCTW->iMoveMode       = 1;
    pCTW->iVerticalStep   = 2;
    pCTW->iHorizontalStep = 5;
 
-   HB_GTSUPER_GETSIZE( pGT, &pCTW->iMapHeight, &pCTW->iMapWidth );
+   HB_GTSUPER_GETSIZE( pCTW->pGT, &pCTW->iMapHeight, &pCTW->iMapWidth );
 
    /* update cursor position to the rules used by CTWIN */
-   HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
-   HB_GTSELF_SETPOS( pGT, iRow, iCol );
+   HB_GTSELF_GETPOS( pCTW->pGT, &iRow, &iCol );
+   HB_GTSELF_SETPOS( pCTW->pGT, iRow, iCol );
 }
 
 /* ********************************************************************** */
@@ -828,30 +824,34 @@ static PHB_GTCTW hb_ctw_base( void )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_base(%p)"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_base()"));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      if( *HB_GTID_PTR != 0 || hb_gtLoad( HB_GT_DRVNAME( HB_GT_NAME ), NULL ) )
+      if( HB_GTCTW_GET( pGT ) )
+         return HB_GTCTW_GET( pGT );
+      else
       {
-         if( ! HB_GTCTW_GET( pGT ) )
-            hb_ctw_Init( pGT );
-         if( HB_GTCTW_GET( pGT ) )
-            return HB_GTCTW_GET( pGT );
+         PHB_GTCTW pCTW = ( PHB_GTCTW ) hb_xgrab( sizeof( HB_GTCTW ) );
+
+         memset( pCTW, 0, sizeof( HB_GTCTW ) );
+         HB_GTLOCAL( pGT ) = pCTW;
+         pCTW->pGT = pGT;
+
+         if( hb_gtLoad( HB_GT_DRVNAME( HB_GT_NAME ), pGT, HB_GTSUPERTABLE( pGT ) ) )
+         {
+            hb_ctw_Init( pCTW );
+            return pCTW;
+         }
+
+         HB_GTLOCAL( pGT ) = NULL;
+         hb_xfree( pCTW );
       }
       hb_gt_BaseFree( pGT );
    }
 
    return NULL;
-}
-
-static void hb_ctw_gt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr));
-
-   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   hb_ctw_Init( pGT );
 }
 
 static void hb_ctw_gt_Exit( PHB_GT pGT )
@@ -1981,7 +1981,6 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
-   pFuncTable->Init                       = hb_ctw_gt_Init;
    pFuncTable->Exit                       = hb_ctw_gt_Exit;
    pFuncTable->MouseRow                   = hb_ctw_MouseRow;
    pFuncTable->MouseCol                   = hb_ctw_MouseCol;
@@ -2013,7 +2012,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
 static const HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
                                    hb_gt_FuncInit,
-                                   HB_GTSUPER,
+                                   NULL,
                                    HB_GTID_PTR };
 
 HB_GT_ANNOUNCE( HB_GT_NAME )

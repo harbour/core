@@ -68,13 +68,6 @@
 #include "hbvm.h"
 #include "hbthread.h"
 
-/* these variables are used for stdout/stderr output when GT subsystem
- * is not initialized
- */
-static HB_FHANDLE s_hStdIn  = ( HB_FHANDLE ) 0;
-static HB_FHANDLE s_hStdOut = ( HB_FHANDLE ) 1;
-static HB_FHANDLE s_hStdErr = ( HB_FHANDLE ) 2;
-
 /* base GT strucure */
 static PHB_GT_BASE s_curGT = NULL;
 
@@ -107,9 +100,9 @@ static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
    pGT->bClearColor  = 0x07;
    pGT->iHeight      = 24;
    pGT->iWidth       = 80;
-   pGT->hStdIn       = s_hStdIn;
-   pGT->hStdOut      = s_hStdOut;
-   pGT->hStdErr      = s_hStdErr;
+   pGT->hStdIn       = HB_STDIN_HANDLE;
+   pGT->hStdOut      = HB_STDOUT_HANDLE;
+   pGT->hStdErr      = HB_STDERR_HANDLE;
 
    pGT->iDoubleClickSpeed = 168; /* In milliseconds */
 
@@ -174,6 +167,9 @@ static void hb_gt_def_Free( PHB_GT pGT )
 
    if( pGT->pMutex )
       hb_itemRelease( pGT->pMutex );
+
+   if( pGT->pFuncTable )
+      hb_xfree( pGT->pFuncTable );
 
    hb_xfree( pGT );
 }
@@ -3077,8 +3073,6 @@ static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
 #endif
 
 static const HB_GT_INIT * s_gtInit[ HB_GT_MAX_ ];
-static int s_gtLinkOrder[ HB_GT_MAX_ ];
-static int s_iGtLinkCount = 0;
 static int s_iGtCount = 0;
 
 HB_FUNC_EXTERN( HB_GTSYS );
@@ -3125,15 +3119,17 @@ HB_EXPORT void hb_gtSetDefault( const char * szGtName )
 
 HB_EXPORT BOOL hb_gtRegister( const HB_GT_INIT * gtInit )
 {
-   if( hb_gt_FindEntry( gtInit->id ) == -1 )
+   if( s_iGtCount < HB_GT_MAX_ && hb_gt_FindEntry( gtInit->id ) == -1 )
    {
+      if( gtInit->pGtId )
+         *gtInit->pGtId = s_iGtCount;
       s_gtInit[ s_iGtCount++ ] = gtInit;
       return TRUE;
    }
    return FALSE;
 }
 
-HB_EXPORT BOOL hb_gtLoad( const char * szGtName, PHB_GT_FUNCS pFuncTable )
+HB_EXPORT PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
 {
    int iPos;
 
@@ -3141,87 +3137,142 @@ HB_EXPORT BOOL hb_gtLoad( const char * szGtName, PHB_GT_FUNCS pFuncTable )
    {
       if( hb_stricmp( szGtName, "nul" ) == 0 || hb_stricmp( szGtName, "null" ) == 0 )
       {
-         if( pFuncTable == NULL )
-            pFuncTable = &s_gtCoreFunc;
-         if( !s_curGT )
-         {
-            s_curGT = ( PHB_GT_BASE ) hb_xgrab( sizeof( HB_GT_BASE ) );
-            memset( s_curGT, 0, sizeof( HB_GT_BASE ) );
-         }
-         s_curGT->pFuncTable = pFuncTable;
-         return TRUE;
+         if( pGT || pSuperTable )
+            hb_errInternal( 9998, "Screen driver initialization failure", NULL, NULL );
+
+         pGT = ( PHB_GT_BASE ) hb_xgrab( sizeof( HB_GT_BASE ) );
+         memset( pGT, 0, sizeof( HB_GT_BASE ) );
+         pGT->pFuncTable = ( PHB_GT_FUNCS ) hb_xgrab( sizeof( HB_GT_FUNCS ) );
+         memcpy( pGT->pFuncTable, &s_gtCoreFunc, sizeof( HB_GT_FUNCS ) );
+         pGT->iUsed++;
+         return pGT;
       }
 
       iPos = hb_gt_FindEntry( szGtName );
 
       if( iPos != -1 )
       {
-         if( pFuncTable == NULL )
-            pFuncTable = &s_gtCoreFunc;
-         memcpy( s_gtInit[ iPos ]->pSuperTable, pFuncTable, sizeof( HB_GT_FUNCS ) );
-         if( !s_gtInit[ iPos ]->init( pFuncTable ) )
-         {
-            hb_errInternal( 6001, "Screen driver initialization failure", NULL, NULL );
-         }
-         if( s_gtInit[ iPos ]->pGtId )
-            *s_gtInit[ iPos ]->pGtId = s_iGtLinkCount;
-         s_gtLinkOrder[ s_iGtLinkCount++ ] = iPos;
+         BOOL fNew = pGT == NULL;
 
-         if( !s_curGT )
+         if( fNew )
          {
-            s_curGT = ( PHB_GT_BASE ) hb_xgrab( sizeof( HB_GT_BASE ) );
-            memset( s_curGT, 0, sizeof( HB_GT_BASE ) );
+            pGT = ( PHB_GT_BASE ) hb_xgrab( sizeof( HB_GT_BASE ) );
+            memset( pGT, 0, sizeof( HB_GT_BASE ) );
+            pGT->pFuncTable = ( PHB_GT_FUNCS ) hb_xgrab( sizeof( HB_GT_FUNCS ) );
+            memcpy( pGT->pFuncTable, &s_gtCoreFunc, sizeof( HB_GT_FUNCS ) );
+            pGT->iUsed++;
          }
-         s_curGT->pFuncTable = pFuncTable;
 
-         return TRUE;
+         if( pSuperTable == NULL )
+            pSuperTable = s_gtInit[ iPos ]->pSuperTable;
+         if( pSuperTable != NULL )
+            memcpy( pSuperTable, pGT->pFuncTable, sizeof( HB_GT_FUNCS ) );
+
+         if( s_gtInit[ iPos ]->init( pGT->pFuncTable ) )
+            return pGT;
+         else if( fNew )
+         {
+            hb_xfree( pGT->pFuncTable );
+            hb_xfree( pGT );
+         }
       }
    }
-   return FALSE;
+   return NULL;
 }
 
-HB_EXPORT BOOL hb_gtUnLoad( void )
+HB_EXPORT void * hb_gtAlloc( void )
 {
-   while( s_iGtLinkCount > 0 )
+   PHB_GT pGT = hb_gt_Base();
+
+   if( pGT )
    {
-      if( --s_iGtLinkCount == 0 )
-         memcpy( &s_gtCoreFunc,
-                 s_gtInit[ s_gtLinkOrder[ s_iGtLinkCount ] ]->pSuperTable,
-                 sizeof( HB_GT_FUNCS ) );
+      pGT->iUsed++;
+      hb_gt_BaseFree( pGT );
    }
 
-   return TRUE;
+   return ( void * ) pGT;
+}
+
+HB_EXPORT void hb_gtRelease( void * hGT )
+{
+   PHB_GT pGT;
+
+   if( hGT )
+   {
+      pGT = ( PHB_GT ) hGT;
+      if( !HB_GTSELF_LOCK( pGT ) )
+         pGT = NULL;
+   }
+   else
+      pGT = hb_gt_Base();
+
+   if( pGT )
+   {
+      if( --pGT->iUsed == 0 )
+      {
+         while( HB_GTSELF_DISPCOUNT( pGT ) )
+            HB_GTSELF_DISPEND( pGT );
+         HB_GTSELF_FLUSH( pGT );
+         HB_GTSELF_EXIT( pGT );
+      }
+      else
+         hb_gt_BaseFree( pGT );
+   }
+}
+
+HB_EXPORT void hb_gtAttach( void * hGT )
+{
+   if( s_curGT != hGT )
+   {
+      hb_gtRelease( NULL );
+      s_curGT = ( PHB_GT ) hGT;
+   }
+}
+
+HB_EXPORT BOOL hb_gtReload( const char * szGtName,
+                            HB_FHANDLE hFilenoStdin,
+                            HB_FHANDLE hFilenoStdout,
+                            HB_FHANDLE hFilenoStderr )
+{
+   BOOL fResult = FALSE;
+   if( szGtName && hb_gt_FindEntry( szGtName ) != -1 )
+   {
+      hb_gtRelease( NULL );
+      s_curGT = hb_gtLoad( szGtName, NULL, NULL );
+      fResult = s_curGT != NULL;
+      hb_gtInit( hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   }
+   return fResult;
+}
+
+static BOOL hb_gtTryInit( const char * szGtName, BOOL fFree )
+{
+   if( szGtName )
+   {
+      if( s_curGT == NULL )
+         s_curGT = hb_gtLoad( szGtName, NULL, NULL );
+
+      if( fFree )
+         hb_xfree( ( void * ) szGtName );
+   }
+
+   return s_curGT != NULL;
 }
 
 HB_EXPORT void hb_gtStartupInit( void )
 {
-   char * szGtName;
-   BOOL fInit;
-
-   szGtName = hb_cmdargString( "GT" );
-   if( szGtName )
-   {
-      fInit = hb_gtLoad( szGtName, &s_gtCoreFunc );
-      hb_xfree( szGtName );
-      if( fInit )
-         return;
-   }
-   szGtName = hb_getenv( "HB_GT" );
-   if( szGtName )
-   {
-      fInit = hb_gtLoad( szGtName, &s_gtCoreFunc );
-      hb_xfree( szGtName );
-      if( fInit )
-         return;
-   }
-   if( hb_gtLoad( hb_gt_FindDefault(), &s_gtCoreFunc ) )
+   if( hb_gtTryInit( hb_cmdargString( "GT" ), TRUE ) )
       return;
-   if( hb_gtLoad( hb_gt_szNameDefault, &s_gtCoreFunc ) )
+   if( hb_gtTryInit( hb_getenv( "HB_GT" ), TRUE ) )
+      return;
+   if( hb_gtTryInit( hb_gt_FindDefault(), FALSE ) )
+      return;
+   if( hb_gtTryInit( hb_gt_szNameDefault, FALSE ) )
       return;
 
    if( hb_dynsymFind( "HB_GT_NUL" ) ) /* GTNUL was explicitly REQUESTed */
    {
-      if( hb_gtLoad( "NUL", &s_gtCoreFunc ) )
+      if( hb_gtTryInit( "NUL", FALSE ) )
          return;
    }
 
@@ -3232,3 +3283,11 @@ HB_EXPORT void hb_gtStartupInit( void )
 }
 
 HB_GT_ANNOUNCE( HB_GT_NAME )
+
+HB_FUNC( HB_GTRELOAD )
+{
+   hb_retl( hb_gtReload( hb_parc( 1 ), 
+            ISNUM( 2 ) ? hb_numToHandle( hb_parnint( 1 ) ) : HB_STDIN_HANDLE,
+            ISNUM( 3 ) ? hb_numToHandle( hb_parnint( 2 ) ) : HB_STDOUT_HANDLE,
+            ISNUM( 4 ) ? hb_numToHandle( hb_parnint( 3 ) ) : HB_STDERR_HANDLE ) );
+}

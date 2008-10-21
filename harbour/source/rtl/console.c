@@ -99,9 +99,9 @@
    static const int  s_iCrLfLen = 2;
 #endif
 
-static HB_FHANDLE s_hFilenoStdin  = ( HB_FHANDLE ) 0;
-static HB_FHANDLE s_hFilenoStdout = ( HB_FHANDLE ) 1;
-static HB_FHANDLE s_hFilenoStderr = ( HB_FHANDLE ) 2;
+static HB_FHANDLE s_hFilenoStdin  = ( HB_FHANDLE ) HB_STDIN_HANDLE;
+static HB_FHANDLE s_hFilenoStdout = ( HB_FHANDLE ) HB_STDOUT_HANDLE;
+static HB_FHANDLE s_hFilenoStderr = ( HB_FHANDLE ) HB_STDERR_HANDLE;
 
 typedef struct
 {

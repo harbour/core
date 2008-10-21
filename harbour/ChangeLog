@@ -8,6 +8,47 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-21 22:18 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapigt.h
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/filesys.c
+    * use HB_STD{IN,OUT,ERR}_HANDLE macros instead of hard coded values
+
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtapi.c
+    + added optional support for dynamic supertables
+    + added reference counter to HB_GT_BASE structure
+    - removed hb_gtUnLoad() function
+    + added hb_gtAlloc(), hb_gtRelease(), hb_gtAttach()
+    + added hb_gtRealod() function which unloads current GT driver
+      and loads given new one
+    + added .prg function HB_GTRELOAD( <cGtName> ) -> <lSuccess>
+      This function allow to switch active GT driver at run time.
+      It can be also used to simulate removed HB_NOSTARTUPWINDOW()
+      functionality. F.e.:
+
+         REQUEST HB_GT_WVT
+         REQUEST HB_GT_NUL_DEFAULT
+         proc main()
+            // do some initializations...
+            hb_gtReload( "WVT" )
+            // rest of code...
+         return
+
+      Please remember that some GTs may refuse initialization due to
+      missing required resources and instead of return FALSE they can
+      interrupt program with internal error, just like at application
+      startup so it's not guarantied that this function always returns.
+
+  * harbour/contrib/hbct/ctwin.c
+    * updated for new GT API
+    + added support for dynamic supertable to allow using CTWIN in the
+      same time with different GTs.
+
+  * harbour/contrib/xhb/hbcompat.h
+    - removed hb_retclenAdoptRaw translation
+
 2008-10-21 14:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/box.c
     ! Fixed GPF in hb_dispBox() when box drawing chars 

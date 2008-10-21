@@ -81,9 +81,6 @@
 #include "hbgtcore.h"
 #include "hbset.h"
 
-#define HB_STDOUT_HANDLE   1
-#define HB_STDERR_HANDLE   2
-
 /* gt API functions */
 
 HB_EXPORT ERRCODE hb_gtInit( HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
@@ -109,25 +106,12 @@ HB_EXPORT ERRCODE hb_gtInit( HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, 
 
 HB_EXPORT ERRCODE hb_gtExit( void )
 {
-   PHB_GT pGT;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gtExit()"));
 
-   pGT = hb_gt_Base();
-   if( pGT )
-   {
-      while( HB_GTSELF_DISPCOUNT( pGT ) )
-         HB_GTSELF_DISPEND( pGT );
-
-      HB_GTSELF_FLUSH( pGT );
-      HB_GTSELF_EXIT( pGT );
-      /* hb_gt_BaseFree( pGT ); */
-   }
+   hb_gtRelease( NULL );
 
    /* clear internal clipboard data */
    hb_gt_setClipboard( NULL, 0 );
-
-   hb_gtUnLoad();
 
    return SUCCESS;
 }

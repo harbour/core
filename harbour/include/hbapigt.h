@@ -129,6 +129,18 @@ HB_EXTERN_BEGIN
 #endif
 
 
+/* standard input/output handles
+ * when HB_WIN32_IO is set file handles with numbers 0, 1, 2 are
+ * transalted inside filesys to
+ *    GetStdHandle( STD_INPUT_HANDLE )
+ *    GetStdHandle( STD_OUTPUT_HANDLE )
+ *    GetStdHandle( STD_ERROR_HANDLE )
+ */
+#define HB_STDIN_HANDLE    0
+#define HB_STDOUT_HANDLE   1
+#define HB_STDERR_HANDLE   2
+
+
 /* structure used to pass/receive parameters in hb_gtInfo() */
 
 typedef struct

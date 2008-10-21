@@ -310,13 +310,13 @@ static BOOL s_fUseWaitLocks = TRUE;
 
 static HANDLE DosToWinHandle( HB_FHANDLE fHandle )
 {
-   if( fHandle == ( HB_FHANDLE ) 0 )
+   if( fHandle == ( HB_FHANDLE ) HB_STDIN_HANDLE )
       return GetStdHandle( STD_INPUT_HANDLE );
 
-   else if( fHandle == ( HB_FHANDLE ) 1 )
+   else if( fHandle == ( HB_FHANDLE ) HB_STDOUT_HANDLE )
       return GetStdHandle( STD_OUTPUT_HANDLE );
 
-   else if( fHandle == ( HB_FHANDLE ) 2 )
+   else if( fHandle == ( HB_FHANDLE ) HB_STDERR_HANDLE )
       return GetStdHandle( STD_ERROR_HANDLE );
 
    else
@@ -861,18 +861,20 @@ HB_EXPORT BOOL hb_fsSetDevMode( HB_FHANDLE hFileHandle, USHORT uiDevMode )
    int iRet = 0;
 
 #if defined(HB_WIN32_IO)
-   if( hFileHandle > 2 )
+   if( hFileHandle != ( HB_FHANDLE ) 0 &&
+       hFileHandle != ( HB_FHANDLE ) 1 &&
+       hFileHandle != ( HB_FHANDLE ) 2 )
       iRet = -1;
    else
 #endif
    switch( uiDevMode )
    {
       case FD_BINARY:
-         iRet = setmode( hFileHandle, O_BINARY );
+         iRet = setmode( ( HB_NHANDLE ) hFileHandle, O_BINARY );
          break;
 
       case FD_TEXT:
-         iRet = setmode( hFileHandle, O_TEXT );
+         iRet = setmode( ( HB_NHANDLE ) hFileHandle, O_TEXT );
          break;
    }
 
@@ -886,7 +888,9 @@ HB_EXPORT BOOL hb_fsSetDevMode( HB_FHANDLE hFileHandle, USHORT uiDevMode )
    int iRet = 0;
 
 #if defined(HB_WIN32_IO)
-   if( ( HB_NHANDLE ) hFileHandle > 2 )
+   if( hFileHandle != ( HB_FHANDLE ) 0 &&
+       hFileHandle != ( HB_FHANDLE ) 1 &&
+       hFileHandle != ( HB_FHANDLE ) 2 )
       iRet = -1;
    else
 #endif
