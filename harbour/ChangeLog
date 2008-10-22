@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-22 14:51 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hbmk.bat
+    + Added support for 'set HB_GUI=yes'
+      Currently implemented for BCC32 and MSVC.
+    + Added support for 'set HB_MT=yes' (instead of 'MT')
+      for consistency. MT seems to be an xhb heritage and 
+      it may be removed in the future.
+    + Added support for optional -mt switch as an equivalent 
+      to 'set HB_MT=yes'
+    + Added support for optional -gui switch as an equivalent 
+      to 'set HB_GUI=yes'
+    ; NOTE: Ordering (first -mt, then -gui) and casing (everything 
+            is lowercase) of the above options are significant.
+
+  * bin/hbmk.bat
+  * bin/hbmk_os2.cmd
+    * Help screen cleanup.
+
+  * contrib/gtwvg/tests/bld_vc.bat
+  * contrib/gtwvg/tests/bld_b32.bat
+    * Changed to use HB_GUI=yes instead of C_USR/L_USR.
+
 2008-10-22 14:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * tests/rto_get.prg
     + Added tests for assigments as function calls (o:col( 10 ) 

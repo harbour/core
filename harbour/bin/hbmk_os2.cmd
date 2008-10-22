@@ -39,15 +39,13 @@ if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
 :HELP
 
    echo.
-   echo Usage: bld filename
+   echo Usage: hbmk_os2 filename
    echo.
    echo Notes:
    echo.
    echo   - 'filename' is the .prg filename _without_ extension.
    echo   - Don't forget to make a MAIN() function for you application.
-   echo   - This batch file assumes you are in some directory off the main
-   echo     harbour directory.
-   echo   - Environment variable HB_COMPILER should be set.
+   echo   - Environment variable HB_COMPILER myst be set.
    echo     The following values are currently supported:
    echo.
    echo     HB_COMPILER:

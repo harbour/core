@@ -28,8 +28,24 @@ if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
 if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
 if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
 
-if     "%HB_MT%" == "MT" set _HBVM_LIB=hbvmmt
-if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
+set _HB_USR_C=
+set _HB_USR_L=
+
+set _HB_MT=%HB_MT%
+if not "%1" == "-mt" goto NO_MT
+   set _HB_MT=yes
+   shift
+:NO_MT
+
+set _HB_GUI=%HB_GUI%
+if not "%1" == "-gui" goto NO_GUI
+   set _HB_GUI=yes
+   shift
+:NO_GUI
+
+set _HBVM_LIB=hbvm
+if "%_HB_MT%" == "yes" set _HBVM_LIB=hbvmmt
+if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
 
 :START
 
@@ -41,15 +57,15 @@ if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
 :HELP
 
    echo.
-   echo Usage: bld filename
+   echo Usage: hbmk [-mt] [-gui] filename
    echo.
    echo Notes:
    echo.
-   echo   - 'filename' is the .prg filename _without_ extension.
-   echo   - Don't forget to make a MAIN() function for you application.
-   echo   - This batch file assumes you are in some directory off the main
-   echo     harbour directory.
-   echo   - Environment variables HB_ARCHITECTURE, HB_COMPILER should be set.
+   echo   - 'filename' is the .prg filename (without extension in pre-NT systems).
+   echo   - Don't forget to create a MAIN() function for you application.
+   echo   - If both -mt and -gui is used, -mt should always be the first.
+   echo   - Environment variables HB_ARCHITECTURE, HB_COMPILER must be set.
+   echo     The following values are currently supported:
    echo.
    echo     HB_ARCHITECTURE:
    echo       - dos
@@ -173,14 +189,18 @@ if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
 
    if not "%HB_COMPILER%" == "bcc32" goto A_WIN_BCC_NOT
 
-      bcc32 -q -tWM -O2 -OS -Ov -Oi -Oc -d %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %_HB_PRG_NAME%.c %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddfpt.lib rddntx.lib rddcdx.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib
+      if "%_HB_GUI%" == "yes" set _HB_USR_C=-tW
+
+      bcc32 -q -tWM -O2 -OS -Ov -Oi -Oc -d %C_USR% %_HB_USR_C% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %_HB_PRG_NAME%.c %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddfpt.lib rddntx.lib rddcdx.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib
       goto CLEANUP
 
 :A_WIN_BCC_NOT
 
    if not "%HB_COMPILER%" == "msvc" goto A_WIN_MSVC_NOT
 
-      cl -nologo -W3 %C_USR% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /LIBPATH:%HB_LIB_INSTALL% %L_USR% %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
+      if "%_HB_GUI%" == "yes" set _HB_USR_L=/subsystem:windows
+
+      cl -nologo -W3 %C_USR% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /LIBPATH:%HB_LIB_INSTALL% %L_USR% %_HB_USR_L% %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
       goto CLEANUP
 
 :A_WIN_MSVC_NOT
@@ -243,3 +263,9 @@ if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
    if exist %_HB_PRG_NAME%.tds del %_HB_PRG_NAME%.tds
 
 :END
+
+set _HB_MT=
+set _HB_GUI=
+set _HBVM_LIB=
+set _HB_USR_C=
+set _HB_USR_L=
