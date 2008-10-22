@@ -67,14 +67,14 @@
 #include "hbset.h"
 #include "hbvm.h"
 #include "hbthread.h"
-
-/* base GT strucure */
-static PHB_GT_BASE s_curGT = NULL;
+#include "hbstack.h"
 
 PHB_GT hb_gt_Base( void )
 {
-   if( s_curGT && HB_GTSELF_LOCK( s_curGT ) )
-      return s_curGT;
+   PHB_GT pGT = ( PHB_GT ) hb_stackGetGT();
+
+   if( pGT && HB_GTSELF_LOCK( pGT ) )
+      return pGT;
    else
       return NULL;
 }
@@ -150,8 +150,8 @@ static void * hb_gt_def_New( PHB_GT pGT )
 
 static void hb_gt_def_Free( PHB_GT pGT )
 {
-   if( s_curGT == pGT )
-      s_curGT = NULL;
+   if( pGT == ( PHB_GT ) hb_stackGetGT() )
+      hb_stackSetGT( NULL );
 
    if( pGT->screenBuffer )
       hb_xfree( pGT->screenBuffer );
@@ -3222,10 +3222,10 @@ HB_EXPORT void hb_gtRelease( void * hGT )
 
 HB_EXPORT void hb_gtAttach( void * hGT )
 {
-   if( s_curGT != hGT )
+   if( hGT && hGT != hb_stackGetGT() )
    {
       hb_gtRelease( NULL );
-      s_curGT = ( PHB_GT ) hGT;
+      hb_stackSetGT( hGT );
    }
 }
 
@@ -3238,8 +3238,8 @@ HB_EXPORT BOOL hb_gtReload( const char * szGtName,
    if( szGtName && hb_gt_FindEntry( szGtName ) != -1 )
    {
       hb_gtRelease( NULL );
-      s_curGT = hb_gtLoad( szGtName, NULL, NULL );
-      fResult = s_curGT != NULL;
+      hb_stackSetGT( hb_gtLoad( szGtName, NULL, NULL ) );
+      fResult = hb_stackGetGT() != NULL;
       hb_gtInit( hFilenoStdin, hFilenoStdout, hFilenoStderr );
    }
    return fResult;
@@ -3249,14 +3249,14 @@ static BOOL hb_gtTryInit( const char * szGtName, BOOL fFree )
 {
    if( szGtName )
    {
-      if( s_curGT == NULL )
-         s_curGT = hb_gtLoad( szGtName, NULL, NULL );
+      if( hb_stackGetGT() == NULL )
+         hb_stackSetGT( hb_gtLoad( szGtName, NULL, NULL ) );
 
       if( fFree )
          hb_xfree( ( void * ) szGtName );
    }
 
-   return s_curGT != NULL;
+   return hb_stackGetGT() != NULL;
 }
 
 HB_EXPORT void hb_gtStartupInit( void )

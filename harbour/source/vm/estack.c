@@ -805,6 +805,29 @@ PHB_IOERRORS hb_stackIOErrors( void )
    return &s_IOErrors;
 }
 
+void * hb_stackGetGT( void )
+{
+#if defined( HB_MT_VM )
+   if( hb_stack_ready() )
+   {
+      HB_STACK_TLS_PRELOAD
+      return hb_stack.hGT;
+   }
+   else
+      return NULL;
+#else
+   HB_STACK_TLS_PRELOAD
+   return hb_stack.hGT;
+#endif
+}
+
+void hb_stackSetGT( void * hGT )
+{
+   HB_STACK_TLS_PRELOAD
+   hb_stack.hGT = hGT;
+}
+
+
 PHB_STACKRDD hb_stackRDD( void )
 {
    HB_STACK_TLS_PRELOAD

@@ -752,7 +752,7 @@ HB_EXPORT void hb_vmThreadInit( void * Cargo )
       hb_cdpSelectID( pState->pszCDP );
       hb_langSelectID( pState->pszLang );
 
-      if( pState && pState->pSet )
+      if( pState->pSet )
       {
          /* TODO: add set sharing */
          memcpy( hb_stackSetStruct(), pState->pSet, sizeof( HB_SET_STRUCT ) );
@@ -761,6 +761,9 @@ HB_EXPORT void hb_vmThreadInit( void * Cargo )
       }
       else
          hb_setInitialize( hb_stackSetStruct() );
+
+      hb_gtAttach( pState->hGT );
+      pState->hGT = NULL;
 
       if( pState->pszDefRDD )
          hb_stackRDD()->szDefaultRDD = pState->pszDefRDD;
@@ -814,6 +817,7 @@ HB_EXPORT void hb_vmThreadQuit( void )
 #ifndef HB_NO_DEBUG
    hb_vmDebuggerExit( FALSE );   /* deactivate debugger */
 #endif
+   hb_gtRelease( NULL );
    hb_vmStackRelease();          /* release HVM stack and remove it from linked HVM stacks list */
 }
 

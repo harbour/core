@@ -152,6 +152,15 @@ typedef struct
 
 /* Public interface. These should never change, only be added to. */
 
+extern HB_EXPORT void   hb_gtStartupInit( void );
+extern HB_EXPORT void * hb_gtAlloc( void );
+extern HB_EXPORT void   hb_gtRelease( void * hGT );
+extern HB_EXPORT void   hb_gtAttach( void * hGT );
+extern HB_EXPORT BOOL   hb_gtReload( const char * szGtName,
+                                     HB_FHANDLE hFilenoStdin,
+                                     HB_FHANDLE hFilenoStdout,
+                                     HB_FHANDLE hFilenoStderr );
+
 extern HB_EXPORT ERRCODE hb_gtInit( HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr );
 extern HB_EXPORT ERRCODE hb_gtExit( void );
 extern HB_EXPORT ERRCODE hb_gtLock( void );

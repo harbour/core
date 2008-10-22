@@ -168,6 +168,7 @@ typedef struct
    char       szDate[ 9 ];    /* last returned date from _pards() yyyymmdd format */
    void *     pCDP;           /* current codepage module */
    void *     pLang;          /* current language module */
+   void *     hGT;            /* current GT module */
    int        iTSD;           /* number of allocated TSD holders */
    PHB_TSD_HOLDER pTSD;       /* thread specific data holder */
    HB_PRIVATE_STACK privates; /* private variables stack */
@@ -283,6 +284,8 @@ extern void *     hb_stackTestTSD( PHB_TSD pTSD );
 
 extern BYTE *     hb_stackDirBuffer( void );
 extern PHB_IOERRORS hb_stackIOErrors( void );
+extern void *     hb_stackGetGT( void );
+extern void       hb_stackSetGT( void * );
 extern PHB_STACKRDD hb_stackRDD( void );
 
 extern void **     hb_stackDebugInfo( void );

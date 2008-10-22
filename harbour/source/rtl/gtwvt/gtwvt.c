@@ -101,6 +101,7 @@ static HANDLE  s_hPrevInstance;
 static int     s_iCmdShow;
 
 static const TCHAR s_szClassName[] = TEXT( "Harbour_WVT_Class" );
+static int     s_iClassUsers = 0;
 
 static const int K_Ctrl[] =
 {
@@ -1554,54 +1555,58 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
 static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow )
 {
    HWND     hWnd = ( HWND ) 0;
-   WNDCLASS wndclass;
+   LPTSTR   szAppName;
 
    HB_SYMBOL_UNUSED( hPrevInstance );
    HB_SYMBOL_UNUSED( szCmdLine );
 
    /* InitCommonControls(); */
 
-   wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-   wndclass.lpfnWndProc   = hb_gt_wvt_WndProc;
-   wndclass.cbClsExtra    = 0;
-   wndclass.cbWndExtra    = 0;
-   wndclass.hInstance     = hInstance;
-   wndclass.hIcon         = NULL;
-   wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
-   wndclass.hbrBackground = NULL;
-   wndclass.lpszMenuName  = NULL;
-   wndclass.lpszClassName = s_szClassName;
-
-   if( RegisterClass( &wndclass ) )
+   if( ++s_iClassUsers == 1 )
    {
-      LPTSTR szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
+      WNDCLASS wndclass;
 
-      hWnd = CreateWindow(
-         s_szClassName,                                       /* classname */
-         szAppName,                                           /* window name */
-         WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|
-            WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX,         /* style */
-         0,                                                   /* x */
-         0,                                                   /* y */
-         CW_USEDEFAULT,                                       /* width */
-         CW_USEDEFAULT,                                       /* height */
-         NULL,                                                /* window parent */
-         NULL,                                                /* menu */
-         hInstance,                                           /* instance */
-         NULL );                                              /* lpParam */
+      memset( &wndclass, 0, sizeof( WNDCLASS ) );
+      wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+      wndclass.lpfnWndProc   = hb_gt_wvt_WndProc;
+      /* wndclass.cbClsExtra    = 0; */
+      /* wndclass.cbWndExtra    = 0; */
+      wndclass.hInstance     = hInstance;
+      /* wndclass.hIcon         = NULL; */
+      wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
+      /* wndclass.hbrBackground = NULL; */
+      /* wndclass.lpszMenuName  = NULL; */
+      wndclass.lpszClassName = s_szClassName;
 
-      HB_TCHAR_FREE( szAppName );
+      if( ! RegisterClass( &wndclass ) )
+         hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
+   }
 
-      if( hWnd )
-      {
-         ShowWindow( hWnd, iCmdShow );
-         UpdateWindow( hWnd );
-      }
-      else
-         hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
+   szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
+
+   hWnd = CreateWindow(
+               s_szClassName,                               /* classname */
+               szAppName,                                   /* window name */
+               WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|
+                  WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX, /* style */
+               0,                                           /* x */
+               0,                                           /* y */
+               CW_USEDEFAULT,                               /* width */
+               CW_USEDEFAULT,                               /* height */
+               NULL,                                        /* window parent */
+               NULL,                                        /* menu */
+               hInstance,                                   /* instance */
+               NULL );                                      /* lpParam */
+
+   HB_TCHAR_FREE( szAppName );
+
+   if( hWnd )
+   {
+      ShowWindow( hWnd, iCmdShow );
+      UpdateWindow( hWnd );
    }
    else
-      hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
+      hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 
    return hWnd;
 }
@@ -1690,7 +1695,8 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
 
    if( pWVT )
    {
-      UnregisterClass( s_szClassName, ( HINSTANCE ) s_hInstance );
+      if( --s_iClassUsers == 0 )
+         UnregisterClass( s_szClassName, ( HINSTANCE ) s_hInstance );
       hb_gt_wvt_Free( pWVT );
    }
 }
@@ -2079,8 +2085,8 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             HB_TCHAR_FREE( lpImage );
             if( hIcon )
             {
-               SendMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); /* Set Title Bar Icon */
-               SendMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) hIcon ); /* Set Task List Icon */
+               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); /* Set Title Bar Icon */
+               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) hIcon ); /* Set Task List Icon */
             }
          }
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) hIcon );
@@ -2104,8 +2110,8 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          if( hIcon )
          {
-            SendMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); /* Set Title Bar Icon */
-            SendMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) hIcon ); /* Set Task List Icon */
+            SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); /* Set Title Bar Icon */
+            SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) hIcon ); /* Set Task List Icon */
          }
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) hIcon );
          break;
@@ -2527,7 +2533,7 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
    pWVT = HB_GTWVT_GET( pGT );
    if( pWVT && pWVT->hWnd )
    {
-      SendMessage( pWVT->hWnd, WM_MY_UPDATE_CARET, 0, 0 );
+      SendNotifyMessage( pWVT->hWnd, WM_MY_UPDATE_CARET, 0, 0 );
       hb_gt_wvt_ProcessMessages();
    }
 }

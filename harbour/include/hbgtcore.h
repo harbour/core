@@ -604,14 +604,6 @@ extern void hb_gt_BaseFree( PHB_GT pGT );
 extern HB_EXPORT void   hb_gtSetDefault( const char * szGtName );
 extern HB_EXPORT BOOL   hb_gtRegister( const HB_GT_INIT * gtInit );
 extern HB_EXPORT PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable );
-extern HB_EXPORT void * hb_gtAlloc( void );
-extern HB_EXPORT void   hb_gtRelease( void * hGT );
-extern HB_EXPORT void   hb_gtAttach( void * hGT );
-extern HB_EXPORT void   hb_gtStartupInit( void );
-extern HB_EXPORT BOOL   hb_gtReload( const char * szGtName,
-                                     HB_FHANDLE hFilenoStdin,
-                                     HB_FHANDLE hFilenoStdout,
-                                     HB_FHANDLE hFilenoStderr );
 
 /* low level GT functions common to different GTs supported by RTL */
 extern int  hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, BOOL fSetACSC );

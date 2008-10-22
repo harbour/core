@@ -8,6 +8,41 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-22 05:03 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+  * harbour/include/hbgtcore.h
+  * harbour/include/hbthread.h
+  * harbour/include/hbapigt.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/thread.c
+  * harbour/source/rtl/hbgtcore.c
+    + added support for optional allocating independent console window by
+      each thread. By default new thread inherits console Window from
+      parent thread. But each thread can allocate its own console window
+      by calling hb_gtReload( <cGtName> ) function, f.e. by:
+         hb_gtReload( hb_gtVersion() )
+      If GT driver supports such functionality then new it will allocate
+      new console windows.
+      Each console window has reference counter which is increased when
+      new thread starts and decreased when hb_gtReload() is executed or
+      thread terminates. When counter reach zero give console window is
+      destroyed.
+
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    ! use SendNotifyMessage() instead of SendMessage() to not block
+      threads which inherited GT from parent thread. Why non of MS-Win
+      users reported this problem?
+    + added reference counter to window class for multi GT support
+
+  + harbour/tests/mt/mttest10.prg
+    + added demonstration/test code for using independent console window
+      in different threads. It needs GT driver which supports such
+      functionality, f.e GTXWC in *nixes or GTWVT in MS-Windows
+
+  * harbour/tests/mt/mttest09.prg
+    ! fixed typo in comment
+
 2008-10-21 17:19 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * source/debug/debugger.prg
     ! Fixed error when moving in the call stack window to an source prg

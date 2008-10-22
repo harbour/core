@@ -477,6 +477,11 @@ static HB_GARBAGE_FUNC( hb_threadDestructor )
       hb_threadDetach( pThread->th_h );
       pThread->th_h = 0;
    }
+   if( pThread->hGT )
+   {
+      hb_gtRelease( pThread->hGT );
+      pThread->hGT = NULL;
+   }
 }
 
 static HB_THREAD_STARTFUNC( hb_threadStartVM )
@@ -572,6 +577,7 @@ PHB_THREADSTATE hb_threadStateNew( void )
    pThread->pszCDP  = HB_MACRO2STRING( HB_CODEPAGE_DEFAULT );
    pThread->pszLang = HB_MACRO2STRING( HB_LANG_DEFAULT );
    pThread->pThItm  = pThItm;
+   pThread->hGT     = hb_gtAlloc();
 
    return pThread;
 }

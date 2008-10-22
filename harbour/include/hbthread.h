@@ -265,6 +265,7 @@ typedef struct _HB_THREADSTATE
    const char *   pszLang;
    const char *   pszDefRDD;
    PHB_SET_STRUCT pSet;
+   void *         hGT;
    void *         pStackId;
    BOOL           fActive;
    BOOL           fFinished;

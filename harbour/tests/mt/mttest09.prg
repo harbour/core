@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- *    demonstration/test code for using common for using the same
- *    work area in different threads. Please note that this program
- *    also works when compiled without thread support.
+ *    demonstration/test code for using the same work area in different
+ *    threads. Please note that this program also works when compiled
+ *    without thread support.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
