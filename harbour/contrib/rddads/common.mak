@@ -13,6 +13,7 @@ LIB_OBJS = \
     $(OBJ_DIR)ads1$(OBJEXT) \
     $(OBJ_DIR)adsfunc$(OBJEXT) \
     $(OBJ_DIR)adsmgmnt$(OBJEXT) \
+    $(OBJ_DIR)adsx$(OBJEXT) \
 
 all: \
     $(LIB_PATH) \

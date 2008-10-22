@@ -22,6 +22,7 @@ C_SOURCES=\
 	ads1.c \
 	adsfunc.c \
 	adsmgmnt.c \
+	adsx.c \
 
 PRG_HEADERS=\
 	ads.ch \

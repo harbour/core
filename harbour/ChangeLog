@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-22 17:17 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  + contrib/rddads/adsx.c
+    + added implementation of local indexing support for ADS driver.
+      Local indexing is used in case server can not do index 
+      creation, for example: index key depends on relation child area
+      fields, index key uses user defined functions, index is created
+      using codeblock, but not expression, etc.
+    ; This code implements no update index! Partial index update could 
+      also be implemented, but I didn't have a need for this. Besides 
+      that partial index implementation will be a little more 
+      complicated than in other RDD. Database update operations are 
+      not done in a single goCold() method. So, index update should 
+      be called, from many methods: append(), putValue(), delete(), 
+      recall(), etc., or ADS RDD structure should be changed to 
+      support real goCold(). For implementation of partial index, 
+      I'd suggest to use tree index (instead of a simple sorted array 
+      and binary search). B-tree code could be found in 
+      contrib/rddsql/sqlmix.c.
+    ; Please check makefiles, and other compilers, platforms.
+
 2008-10-22 14:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hbmk_os2.cmd
     + Added support for HB_MT=yes.
