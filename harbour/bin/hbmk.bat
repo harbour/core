@@ -31,16 +31,20 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
 set _HB_USR_C=
 set _HB_USR_L=
 
+:REPEAT
+
 set _HB_MT=%HB_MT%
 if not "%1" == "-mt" goto NO_MT
    set _HB_MT=yes
    shift
+   goto REPEAT
 :NO_MT
 
 set _HB_GUI=%HB_GUI%
 if not "%1" == "-gui" goto NO_GUI
    set _HB_GUI=yes
    shift
+   goto REPEAT
 :NO_GUI
 
 set _HBVM_LIB=hbvm

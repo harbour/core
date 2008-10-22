@@ -973,13 +973,17 @@ HB_EXPORT BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plM
       if( stat( ( char * ) pszFileName, &sStat ) == 0 )
       {
          time_t ftime;
-         struct tm * ft;
+         struct tm ft;
 
          ftime = sStat.st_mtime;
-         ft = localtime( &ftime );
+#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
+         ft = *localtime( &ftime );
+#   else
+         localtime_r( &ftime, &ft );
+#   endif
 
-         *plJulian = hb_dateEncode( ft->tm_year + 1900, ft->tm_mon + 1, ft->tm_mday );
-         *plMillisec = hb_timeStampEncode( ft->tm_hour, ft->tm_min, ft->tm_sec, 0 );
+         *plJulian = hb_dateEncode( ft.tm_year + 1900, ft.tm_mon + 1, ft.tm_mday );
+         *plMillisec = hb_timeStampEncode( ft.tm_hour, ft.tm_min, ft.tm_sec, 0 );
 
          fResult = TRUE;
       }

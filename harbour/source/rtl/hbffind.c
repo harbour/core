@@ -448,7 +448,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       {
          ffind->bFirst = FALSE;
 
-         tzset();
+         /* tzset(); */
 
 #if defined(__WATCOMC__)
          bFound = ( _dos_findfirst( ffind->pszFileMask, ( USHORT ) hb_fsAttrToRaw( ffind->attrmask ), &info->entry ) == 0 );
@@ -507,7 +507,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       {
          ffind->bFirst = FALSE;
 
-         tzset();
+         /* tzset(); */
 
          info->hFindFile = HDIR_CREATE;
          info->findCount = 1;
@@ -685,7 +685,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             dirname[ 2 ] = '\0';
          }
 
-         tzset();
+         /* tzset(); */
 
          info->dir = opendir( dirname );
          hb_strncpy( info->path, dirname, sizeof( info->path ) - 1 );
@@ -711,7 +711,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          hb_strncat( dirname, info->entry->d_name, sizeof( dirname ) - 1 );
          {
             time_t ftime;
-            struct tm * ft;
+            struct tm lt;
 #if defined( HB_USE_LARGEFILE64 )
             struct stat64 sStat;
             if( stat64( dirname, &sStat ) == 0 )
@@ -726,15 +726,19 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                raw_attr = sStat.st_mode;
 
                ftime = sStat.st_mtime;
-               ft = localtime( &ftime );
+#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
+               lt = *localtime( &ftime );
+#   else
+               localtime_r( &ftime, &lt );
+#   endif
 
-               nYear  = ft->tm_year + 1900;
-               nMonth = ft->tm_mon + 1;
-               nDay   = ft->tm_mday;
+               nYear  = lt.tm_year + 1900;
+               nMonth = lt.tm_mon + 1;
+               nDay   = lt.tm_mday;
 
-               nHour  = ft->tm_hour;
-               nMin   = ft->tm_min;
-               nSec   = ft->tm_sec;
+               nHour  = lt.tm_hour;
+               nMin   = lt.tm_min;
+               nSec   = lt.tm_sec;
             }
             else
                bFound = FALSE;

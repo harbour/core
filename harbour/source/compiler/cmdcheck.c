@@ -105,14 +105,14 @@ static ULONG PackDateTime( void )
    time_t t;
    struct tm *oTime;
 
-#if defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
+#if !defined( HB_OS_UNIX ) || _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
+   time( &t );
+   oTime = localtime( &t );
+#else
    struct tm tm;
    time( &t );
    oTime = &tm;
    localtime_r( &t, oTime );
-#else
-   time( &t );
-   oTime = localtime( &t );
 #endif
 
    nValue = ( BYTE ) ( ( ( oTime->tm_year + 1900 ) - 1980 ) & ( 2 ^ 6 ) );      /* 6 bits */
