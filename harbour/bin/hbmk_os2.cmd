@@ -27,8 +27,15 @@ if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
 if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
 if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
 
-if     "%HB_MT%" == "MT" set _HBVM_LIB=hbvmmt
-if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
+set _HB_MT=%HB_MT%
+if not "%1" == "-mt" goto NO_MT
+   set _HB_MT=yes
+   shift
+:NO_MT
+
+set _HBVM_LIB=hbvm
+if "%_HB_MT%" == "yes" set _HBVM_LIB=hbvmmt
+if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
 
 :START
 
@@ -39,7 +46,7 @@ if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
 :HELP
 
    echo.
-   echo Usage: hbmk_os2 filename
+   echo Usage: hbmk_os2 [-mt] filename
    echo.
    echo Notes:
    echo.
@@ -87,3 +94,6 @@ if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
    if exist %1.o del %1.o
 
 :END
+
+set _HB_MT=
+set _HBVM_LIB=

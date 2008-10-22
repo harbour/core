@@ -63,7 +63,7 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
    echo.
    echo   - 'filename' is the .prg filename (without extension in pre-NT systems).
    echo   - Don't forget to create a MAIN() function for you application.
-   echo   - If both -mt and -gui is used, -mt should always be the first.
+   echo   - If both -mt and -gui are used, -mt should always be the first.
    echo   - Environment variables HB_ARCHITECTURE, HB_COMPILER must be set.
    echo     The following values are currently supported:
    echo.
