@@ -115,6 +115,7 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTTRM_ATTR_PROT    0x0100
 #define HB_GTTRM_ATTR_ACSC    0x0100
 #endif
+#define HB_GTTRM_ATTR_BOX     0x0800
 
 #define TERM_ANSI       1
 #define TERM_LINUX      2
@@ -722,7 +723,8 @@ static void hb_gt_trm_termOutTrans( PHB_GTTRM pTerm, BYTE * pStr, int iLen, int 
 
       if( pTerm->fUTF8 )
       {
-         if( ( iAttr & HB_GTTRM_ATTR_ACSC ) && pTerm->cdpEN )
+         if( ( iAttr & ( HB_GTTRM_ATTR_ACSC | HB_GTTRM_ATTR_BOX ) ) &&
+             pTerm->cdpEN )
             cdp = pTerm->cdpEN;
          else if( pTerm->cdpHost )
             cdp = pTerm->cdpHost;
@@ -2751,7 +2753,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    }
    pTerm->mouse_type = MOUSE_NONE;
    pTerm->esc_delay  = ESC_DELAY;
-   pTerm->iAttrMask  = ~0;
+   pTerm->iAttrMask  = ~HB_GTTRM_ATTR_BOX;
 
    szTerm = getenv("HB_TERM");
    if( szTerm == NULL || *szTerm == '\0' )
@@ -3349,6 +3351,8 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          iColor = bColor | ( pTerm->boxattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
          if( !pTerm->fUTF8 )
             usChar = pTerm->boxattr[ usChar ] & HB_GTTRM_ATTR_CHAR;
+         else
+            iColor |= HB_GTTRM_ATTR_BOX;
       }
       else
       {
