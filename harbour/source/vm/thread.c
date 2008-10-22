@@ -917,8 +917,11 @@ HB_FUNC( HB_THREADWAIT )
             break;
          }
          if( pThreads == pAlloc && iThreads >= HB_THREAD_WAIT_ALLOC )
+         {
             pThreads = ( PHB_THREADSTATE * )
-                       hb_xgrab( sizeof( PHB_THREADSTATE ) * iThreads );
+                       hb_xgrab( sizeof( PHB_THREADSTATE ) * iLen );
+            memcpy( pThreads, pAlloc, sizeof( pAlloc ) );
+         }
          pThreads[ iThreads++ ] = pThread;
       }
    }
