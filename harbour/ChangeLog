@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-22 14:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * tests/rto_get.prg
+    + Added tests for assigments as function calls (o:col( 10 ) 
+      and some for assigments as _function calls (o:_col( 10 )).
+
+  * bin/hbmk.bat
+  * make_vc.mak
+    - Removed /subsystem:console from LDFLAGS. This seems to 
+      be the default so it's not necessary.
+
+  * bin/hbmk.bat
+    + Added L_USR support for MSVC. Now it's possible to 
+      build GUI (and GTWVT) programs using 
+      'set L_USR=/subsystem:WINDOWS' switch.
+
+  * contrib/gtwvg/tests/bld_vc.bat
+    ! Using above method to make it work with MSVC.
+
 2008-10-22 12:09 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * tests/wvtext.prg
     ! Fixed GT selection code.

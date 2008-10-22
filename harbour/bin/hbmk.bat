@@ -180,7 +180,7 @@ if not "%HB_MT%" == "MT" set _HBVM_LIB=hbvm
 
    if not "%HB_COMPILER%" == "msvc" goto A_WIN_MSVC_NOT
 
-      cl -nologo -W3 %C_USR% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /subsystem:CONSOLE /LIBPATH:%HB_LIB_INSTALL% %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
+      cl -nologo -W3 %C_USR% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /LIBPATH:%HB_LIB_INSTALL% %L_USR% %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
       goto CLEANUP
 
 :A_WIN_MSVC_NOT

@@ -172,7 +172,7 @@ LDFLAGSDLL     = /DLL \
                  /STACK:65536,4096 /NODEFAULTLIB:"oldnames.lib" \
                  /LIBPATH:$(LIB_DIR) $(L_USR)
 !else
-LDFLAGS        = /NOLOGO /SUBSYSTEM:console /LIBPATH:$(LIB_DIR) $(L_USR)
+LDFLAGS        = /NOLOGO /LIBPATH:$(LIB_DIR) $(L_USR)
 LDFLAGSDLL     = /DLL \
                  /NOLOGO /LIBPATH:$(LIB_DIR) $(L_USR)
 !endif
