@@ -1,5 +1,5 @@
 /*
- * $Id:$
+ * $Id$
  */
 
 /*
@@ -343,7 +343,7 @@ static BYTE* mixBuildSortTable( PHB_CODEPAGE pCodepage )
       {
          for( j = 0; j < 256; j++ )
          {
-            if( pChars[ j ] == (BYTE) i )
+            if( pChars[ j ] == ( BYTE ) i )
             {
                pSortTable[ j ] = c;
                c++;
@@ -354,7 +354,7 @@ static BYTE* mixBuildSortTable( PHB_CODEPAGE pCodepage )
    else
    {
       for( i = 0; i < 256; i++ ) 
-         pSortTable[ i ] = i;
+         pSortTable[ i ] = ( BYTE ) i;
    }
    return pSortTable;
 }
@@ -898,10 +898,10 @@ static ERRCODE adsxCreate( ADSXAREAP pArea, LPDBOPENINFO pCreateInfo )
       {
          pArea->cdPage = hb_cdpFind( (char*) pCreateInfo->cdpId );
          if( !pArea->cdPage )
-            pArea->cdPage = hb_cdp_page;
+            pArea->cdPage = hb_vmCDP();
       }
       else
-         pArea->cdPage = hb_cdp_page;
+         pArea->cdPage = hb_vmCDP();
 
       pArea->pSortTable = mixBuildSortTable( pArea->cdPage );
       return SUCCESS;
@@ -918,10 +918,10 @@ static ERRCODE adsxOpen( ADSXAREAP pArea, LPDBOPENINFO pOpenInfo )
       {
          pArea->cdPage = hb_cdpFind( (char*) pOpenInfo->cdpId );
          if( !pArea->cdPage )
-            pArea->cdPage = hb_cdp_page;
+            pArea->cdPage = hb_vmCDP();
       }
       else
-         pArea->cdPage = hb_cdp_page;
+         pArea->cdPage = hb_vmCDP();
 
       pArea->pSortTable = mixBuildSortTable( pArea->cdPage );
       return SUCCESS;
@@ -1150,7 +1150,7 @@ static ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo 
 
    SELF_GOTO( (AREAP) pArea, ulRecNo );
 
-   pTagNew = mixTagCreate( pOrderInfo->atomBagName, pOrderInfo->abExpr, pKeyItem, 
+   pTagNew = mixTagCreate( ( char * ) pOrderInfo->atomBagName, pOrderInfo->abExpr, pKeyItem, 
                            pForItem, pWhileItem, bType, uiLen, pArea );
 
    if( pWhileItem )
@@ -1513,7 +1513,7 @@ static void adsxRegisterRDD( USHORT * pusRddId )
    uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
    * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
-   uiRddId = hb_parni( 4 );
+   uiRddId = ( USHORT ) hb_parni( 4 );
 
    if( pTable )
    {
@@ -1580,4 +1580,3 @@ HB_CALL_ON_STARTUP_END( _hb_adsx_rdd_init_ )
    static HB_$INITSYM hb_vm_auto_adsx_rdd_init = _hb_adsx_rdd_init_;
    #pragma data_seg()
 #endif
-

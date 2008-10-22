@@ -118,31 +118,31 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
 
    if not "%HB_COMPILER%" == "djgpp" goto A_DOS_DJGPP_NOT
 
-      echo %_HB_PRG_NAME%.c > _hb_bld.tmp
-      echo -o%_HB_PRG_NAME%.exe -O3 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% >> _hb_bld.tmp
-      echo -lhbcpage >> _hb_bld.tmp
-      echo -lhbdebug >> _hb_bld.tmp
-      echo -lhbvm >> _hb_bld.tmp
-      echo -lhbrtl >> _hb_bld.tmp
-      echo -lgtdos >> _hb_bld.tmp
-      echo -lgtcgi >> _hb_bld.tmp
-      echo -lgtstd >> _hb_bld.tmp
-      echo -lgtpca >> _hb_bld.tmp
-      echo -lhblang >> _hb_bld.tmp
-      echo -lhbrdd >> _hb_bld.tmp
-      echo -lhbrtl >> _hb_bld.tmp
-      echo -l%_HBVM_LIB% >> _hb_bld.tmp
-      echo -lhbmacro >> _hb_bld.tmp
-      echo -lhbpp >> _hb_bld.tmp
-      echo -lrddfpt >> _hb_bld.tmp
-      echo -lrddntx >> _hb_bld.tmp
-      echo -lrddcdx >> _hb_bld.tmp
-      echo -lhbhsx >> _hb_bld.tmp
-      echo -lhbsix >> _hb_bld.tmp
-      echo -lhbcommon >> _hb_bld.tmp
-      echo -lm >> _hb_bld.tmp
-      gcc @_hb_bld.tmp
-      del _hb_bld.tmp
+      echo %_HB_PRG_NAME%.c > _hb_mk.tmp
+      echo -o%_HB_PRG_NAME%.exe -O3 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% >> _hb_mk.tmp
+      echo -lhbcpage >> _hb_mk.tmp
+      echo -lhbdebug >> _hb_mk.tmp
+      echo -lhbvm >> _hb_mk.tmp
+      echo -lhbrtl >> _hb_mk.tmp
+      echo -lgtdos >> _hb_mk.tmp
+      echo -lgtcgi >> _hb_mk.tmp
+      echo -lgtstd >> _hb_mk.tmp
+      echo -lgtpca >> _hb_mk.tmp
+      echo -lhblang >> _hb_mk.tmp
+      echo -lhbrdd >> _hb_mk.tmp
+      echo -lhbrtl >> _hb_mk.tmp
+      echo -l%_HBVM_LIB% >> _hb_mk.tmp
+      echo -lhbmacro >> _hb_mk.tmp
+      echo -lhbpp >> _hb_mk.tmp
+      echo -lrddfpt >> _hb_mk.tmp
+      echo -lrddntx >> _hb_mk.tmp
+      echo -lrddcdx >> _hb_mk.tmp
+      echo -lhbhsx >> _hb_mk.tmp
+      echo -lhbsix >> _hb_mk.tmp
+      echo -lhbcommon >> _hb_mk.tmp
+      echo -lm >> _hb_mk.tmp
+      gcc @_hb_mk.tmp
+      del _hb_mk.tmp
       goto CLEANUP
 
 :A_DOS_DJGPP_NOT
@@ -157,30 +157,30 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
    if not "%HB_COMPILER%" == "watcom" goto END
 
       wpp386 -j -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS %_HB_PRG_NAME%.c -fo=%_HB_PRG_NAME%.obj
-      echo debug all OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe NAME %_HB_PRG_NAME%.exe > _hb_bld.tmp
-      echo FILE %_HB_PRG_NAME%.obj >> _hb_bld.tmp
-      echo LIB hbcpage.lib >> _hb_bld.tmp
-      echo LIB hbdebug.lib >> _hb_bld.tmp
-      echo LIB hbvm.lib >> _hb_bld.tmp
-      echo LIB hbrtl.lib >> _hb_bld.tmp
-      echo LIB gtdos.lib >> _hb_bld.tmp
-      echo LIB gtcgi.lib >> _hb_bld.tmp
-      echo LIB gtstd.lib >> _hb_bld.tmp
-      echo LIB gtpca.lib >> _hb_bld.tmp
-      echo LIB hblang.lib >> _hb_bld.tmp
-      echo LIB hbrdd.lib >> _hb_bld.tmp
-      echo LIB hbmacro.lib >> _hb_bld.tmp
-      echo LIB hbpp.lib >> _hb_bld.tmp
-      echo LIB rddntx.lib >> _hb_bld.tmp
-      echo LIB rddcdx.lib >> _hb_bld.tmp
-      echo LIB rddfpt.lib >> _hb_bld.tmp
-      echo LIB hbhsx.lib >> _hb_bld.tmp
-      echo LIB hbsix.lib >> _hb_bld.tmp
-      echo LIB hbcommon.lib >> _hb_bld.tmp
-      echo LIB hbpcre.lib >> _hb_bld.tmp
-      echo LIB hbzlib.lib >> _hb_bld.tmp
-      wlink @_hb_bld.tmp
-      del _hb_bld.tmp
+      echo debug all OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe NAME %_HB_PRG_NAME%.exe > _hb_mk.tmp
+      echo FILE %_HB_PRG_NAME%.obj >> _hb_mk.tmp
+      echo LIB hbcpage.lib >> _hb_mk.tmp
+      echo LIB hbdebug.lib >> _hb_mk.tmp
+      echo LIB hbvm.lib >> _hb_mk.tmp
+      echo LIB hbrtl.lib >> _hb_mk.tmp
+      echo LIB gtdos.lib >> _hb_mk.tmp
+      echo LIB gtcgi.lib >> _hb_mk.tmp
+      echo LIB gtstd.lib >> _hb_mk.tmp
+      echo LIB gtpca.lib >> _hb_mk.tmp
+      echo LIB hblang.lib >> _hb_mk.tmp
+      echo LIB hbrdd.lib >> _hb_mk.tmp
+      echo LIB hbmacro.lib >> _hb_mk.tmp
+      echo LIB hbpp.lib >> _hb_mk.tmp
+      echo LIB rddntx.lib >> _hb_mk.tmp
+      echo LIB rddcdx.lib >> _hb_mk.tmp
+      echo LIB rddfpt.lib >> _hb_mk.tmp
+      echo LIB hbhsx.lib >> _hb_mk.tmp
+      echo LIB hbsix.lib >> _hb_mk.tmp
+      echo LIB hbcommon.lib >> _hb_mk.tmp
+      echo LIB hbpcre.lib >> _hb_mk.tmp
+      echo LIB hbzlib.lib >> _hb_mk.tmp
+      wlink @_hb_mk.tmp
+      del _hb_mk.tmp
       goto CLEANUP
 
 :A_W32
@@ -223,35 +223,35 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
    if not "%HB_COMPILER%" == "watcom" goto END
 
       wpp386 -j -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT %_HB_PRG_NAME%.c -fo=%_HB_PRG_NAME%.obj
-      echo debug all OP osn=NT OP stack=65536 OP CASEEXACT NAME %_HB_PRG_NAME%.exe > _hb_bld.tmp
-      echo FILE %_HB_PRG_NAME%.obj >> _hb_bld.tmp
-      echo LIB hbcpage.lib >> _hb_bld.tmp
-      echo LIB hbdebug.lib >> _hb_bld.tmp
-      echo LIB %_HBVM_LIB%.lib >> _hb_bld.tmp
-      echo LIB hbrtl.lib >> _hb_bld.tmp
-      echo LIB gtcgi.lib >> _hb_bld.tmp
-      echo LIB gtgui.lib >> _hb_bld.tmp
-      echo LIB gtpca.lib >> _hb_bld.tmp
-      echo LIB gtstd.lib >> _hb_bld.tmp
-      echo LIB gtwin.lib >> _hb_bld.tmp
-      echo LIB gtwvt.lib >> _hb_bld.tmp
-      echo LIB hblang.lib >> _hb_bld.tmp
-      echo LIB hbmacro.lib >> _hb_bld.tmp
-      echo LIB hbpp.lib >> _hb_bld.tmp
-      echo LIB rddntx.lib >> _hb_bld.tmp
-      echo LIB rddcdx.lib >> _hb_bld.tmp
-      echo LIB rddfpt.lib >> _hb_bld.tmp
-      echo LIB hbhsx.lib >> _hb_bld.tmp
-      echo LIB hbsix.lib >> _hb_bld.tmp
-      echo LIB hbrdd.lib >> _hb_bld.tmp
-      echo LIB hbcommon.lib >> _hb_bld.tmp
-      echo LIB hbpcre.lib >> _hb_bld.tmp
-      echo LIB hbzlib.lib >> _hb_bld.tmp
-      echo LIB kernel32.lib >> _hb_bld.tmp
-      echo LIB user32.lib >> _hb_bld.tmp
-      echo LIB wsock32.lib >> _hb_bld.tmp
-      wlink @_hb_bld.tmp
-      del _hb_bld.tmp
+      echo debug all OP osn=NT OP stack=65536 OP CASEEXACT NAME %_HB_PRG_NAME%.exe > _hb_mk.tmp
+      echo FILE %_HB_PRG_NAME%.obj >> _hb_mk.tmp
+      echo LIB hbcpage.lib >> _hb_mk.tmp
+      echo LIB hbdebug.lib >> _hb_mk.tmp
+      echo LIB %_HBVM_LIB%.lib >> _hb_mk.tmp
+      echo LIB hbrtl.lib >> _hb_mk.tmp
+      echo LIB gtcgi.lib >> _hb_mk.tmp
+      echo LIB gtgui.lib >> _hb_mk.tmp
+      echo LIB gtpca.lib >> _hb_mk.tmp
+      echo LIB gtstd.lib >> _hb_mk.tmp
+      echo LIB gtwin.lib >> _hb_mk.tmp
+      echo LIB gtwvt.lib >> _hb_mk.tmp
+      echo LIB hblang.lib >> _hb_mk.tmp
+      echo LIB hbmacro.lib >> _hb_mk.tmp
+      echo LIB hbpp.lib >> _hb_mk.tmp
+      echo LIB rddntx.lib >> _hb_mk.tmp
+      echo LIB rddcdx.lib >> _hb_mk.tmp
+      echo LIB rddfpt.lib >> _hb_mk.tmp
+      echo LIB hbhsx.lib >> _hb_mk.tmp
+      echo LIB hbsix.lib >> _hb_mk.tmp
+      echo LIB hbrdd.lib >> _hb_mk.tmp
+      echo LIB hbcommon.lib >> _hb_mk.tmp
+      echo LIB hbpcre.lib >> _hb_mk.tmp
+      echo LIB hbzlib.lib >> _hb_mk.tmp
+      echo LIB kernel32.lib >> _hb_mk.tmp
+      echo LIB user32.lib >> _hb_mk.tmp
+      echo LIB wsock32.lib >> _hb_mk.tmp
+      wlink @_hb_mk.tmp
+      del _hb_mk.tmp
       goto CLEANUP
 
 :CLEANUP

@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-22 17:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hbmk.bat
+    * Minor.
+
+  * contrib/rddsql/mysqldd.c
+    ! Fixed one warning.
+
+  * contrib/rddads/adsx.c
+    ! Fixed codepage/MT related compile error.
+    ! Some warnings.
+    ! svn:keywords, svn:eol-style
+
 2008-10-22 17:17 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   + contrib/rddads/adsx.c
     + added implementation of local indexing support for ADS driver.
@@ -33,7 +45,7 @@
     + Added support for HB_MT=yes.
     + Added support for -mt switch.
 
-  * bin/hbmk.cmd
+  * bin/hbmk.bat
     ! Typo in help screen.
 
 2008-10-22 16:00 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)

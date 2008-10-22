@@ -345,6 +345,7 @@ static ERRCODE mysqlOpen( SQLBASEAREAP pArea )
             default:
               bError = TRUE;
               uiError = (USHORT) pMyField->type;
+              pFieldInfo.uiType = 0;
               break;
          }
         
