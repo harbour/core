@@ -158,21 +158,13 @@ STATIC FUNCTION DispScreen()
 
 PROCEDURE HB_GTSYS()
 #ifdef __GTWVG__
-   REQUEST HB_GT_WVG
+   REQUEST HB_GT_WVG_DEFAULT
 #else
-   REQUEST HB_GT_WVT
+   REQUEST HB_GT_WVT_DEFAULT
    REQUEST HB_GT_WIN
 #endif
    RETURN
 
-//----------------------------------------------------------------------//
-#ifdef __GTWVG__
-PROCEDURE HB_GT_WVG_DEFAULT()
-   RETURN
-#else
-PROCEDURE HB_GT_WVT_DEFAULT()
-   RETURN
-#endif
 //----------------------------------------------------------------------//
 
 FUNCTION SetPalette( nMode )

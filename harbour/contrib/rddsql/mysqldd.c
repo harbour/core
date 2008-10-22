@@ -62,12 +62,17 @@ typedef int my_socket;
 
 #include "mysql.h"
 
+/* TOFIX: HACK to make it compile under MSVC to avoid 'invalid integer constant expression' errors. */
+#if !defined( _MSC_VER )
+
 #if sizeof( MYSQL_ROW_OFFSET ) != sizeof( void* )
-  #error "MySQLDD error: sizeof( MYSQL_ROW_OFFSET ) != sizeof( void* )"
+   #error "MySQLDD error: sizeof( MYSQL_ROW_OFFSET ) != sizeof( void* )"
 #endif
 
 #if sizeof( MYSQL_ROW ) != sizeof( void* )
-  #error "MySQLDD error: sizeof( MYSQL_ROW ) != sizeof( void* )"
+   #error "MySQLDD error: sizeof( MYSQL_ROW ) != sizeof( void* )"
+#endif
+
 #endif
 
 #ifndef MYSQL_TYPE_NEWDECIMAL
@@ -85,7 +90,8 @@ static ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
 static ERRCODE mysqlGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
 
 
-static SDDNODE mysqldd = {
+static SDDNODE mysqldd =
+{
    NULL,
    "MYSQL",
    (SDDFUNC_CONNECT)    mysqlConnect,
@@ -283,7 +289,7 @@ static ERRCODE mysqlOpen( SQLBASEAREAP pArea )
       {
          pMyField = mysql_fetch_field_direct( (MYSQL_RES*) pArea->pResult, uiCount );
         
-         hb_strncpy( pBuffer, pMyField->name, 256 - 1 );
+         hb_strncpy( ( char * ) pBuffer, pMyField->name, 256 - 1 );
          pFieldInfo.atomName = pBuffer;
          pFieldInfo.atomName[ MAX_FIELD_NAME ] = '\0';
          hb_strUpper( (char *) pFieldInfo.atomName, MAX_FIELD_NAME + 1 );

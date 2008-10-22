@@ -357,7 +357,7 @@ HB_EXPORT ERRCODE hb_gtGetColorStr( char * pszColorString )
       hb_gt_BaseFree( pGT );
       return SUCCESS;
    }
-   pszColorString[0] = '\0';
+   pszColorString[ 0 ] = '\0';
    return FAILURE;
 }
 
@@ -390,7 +390,7 @@ HB_EXPORT ERRCODE hb_gtColorsToString( int * pColors, int iColorCount, char * ps
       hb_gt_BaseFree( pGT );
       return SUCCESS;
    }
-   pszColorString[0] = '\0';
+   pszColorString[ 0 ] = '\0';
    return FAILURE;
 }
 
