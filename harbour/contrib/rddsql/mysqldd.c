@@ -115,7 +115,7 @@ static void hb_mysqldd_init( void * cargo )
    if ( ! hb_sddRegister( & mysqldd ) )
    {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-      HB_FUNC_EXEC( SQLBASE );   // force SQLBASE linking
+      HB_FUNC_EXEC( SQLBASE );   /* force SQLBASE linking */
    }
 }
 
@@ -135,29 +135,25 @@ HB_INIT_SYMBOLS_BEGIN( mysqldd__InitSymbols )
 { "MYSQLDD", HB_FS_PUBLIC, HB_FUNCNAME( MYSQLDD ), NULL },
 HB_INIT_SYMBOLS_END( mysqldd__InitSymbols )
 
-
 HB_CALL_ON_STARTUP_BEGIN( _hb_mysqldd_init_ )
    hb_vmAtInit( hb_mysqldd_init, NULL );
 HB_CALL_ON_STARTUP_END( _hb_mysqldd_init_ )
 
-
-#if defined(HB_PRAGMA_STARTUP)
+#if defined( HB_PRAGMA_STARTUP )
    #pragma startup mysqldd__InitSymbols
    #pragma startup _hb_mysqldd_init_
-#elif defined(_MSC_VER)
-   #if _MSC_VER >= 1010
-      #pragma data_seg( ".CRT$XIY" )
-      #pragma comment( linker, "/Merge:.CRT=.data" )
-   #else
-      #pragma data_seg( "XIY" )
+#elif defined( HB_MSC_STARTUP )
+   #if defined( HB_OS_WIN_64 )
+      #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
+   #pragma data_seg( HB_MSC_START_SEGMENT )
    static HB_$INITSYM hb_vm_auto_mysqldd__InitSymbols = mysqldd__InitSymbols;
    static HB_$INITSYM hb_vm_auto_mysqldd_init = _hb_mysqldd_init_;
    #pragma data_seg()
 #endif
 
 
-//=====================================================================================
+/*=====================================================================================*/
 static USHORT hb_errRT_MySQLDD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode )
 {
    USHORT uiAction;
@@ -172,13 +168,13 @@ static USHORT hb_errRT_MySQLDD( ULONG ulGenCode, ULONG ulSubCode, char * szDescr
    return uiAction;
 }
 
-//============= SDD METHODS =============================================================
+/*============= SDD METHODS =============================================================*/
 
 static ERRCODE mysqlConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 {
    MYSQL*   pMySql;
 
-//   TraceLog( NULL, "mysqlConnect type:%04X s2:%s s3:%s s4:%s s5:%s\n", pItem->type, hb_arrayGetCPtr( pItem, 2 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ), hb_arrayGetCPtr( pItem, 5 ) );
+/*   TraceLog( NULL, "mysqlConnect type:%04X s2:%s s3:%s s4:%s s5:%s\n", pItem->type, hb_arrayGetCPtr( pItem, 2 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ), hb_arrayGetCPtr( pItem, 5 ) ); */
    
    pMySql = mysql_init( NULL );
    if ( ! mysql_real_connect( pMySql, hb_arrayGetCPtr( pItem, 2 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ), 
@@ -231,7 +227,7 @@ static ERRCODE mysqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
          if ( mysql_insert_id( (MYSQL*) pConnection->hConnection ) != 0 )
             hb_itemPutNInt( pConnection->pNewID, mysql_insert_id( (MYSQL*) pConnection->hConnection ) ); 
       }
-      else // error
+      else /* error */
       {
          const char*    szError;
      
@@ -274,7 +270,7 @@ static ERRCODE mysqlOpen( SQLBASEAREAP pArea )
       return FAILURE;
    }
 
-   // TODO: o kokiu atveju jau gali buti laukai? kaip tada su pItemEof priskyrimu?
+   /* TODO: In what cases pArea->uiFieldCount can be equal to zero? Do we need to assign pItemEof in that case? */
    if ( ! pArea->uiFieldCount ) 
    { 
       uiFields = mysql_num_fields( (MYSQL_RES*) pArea->pResult );
@@ -336,13 +332,15 @@ static ERRCODE mysqlOpen( SQLBASEAREAP pArea )
               pFieldInfo.uiType = HB_FT_MEMO;
               break;
           
-//            case MYSQL_TYPE_TIMESTAMP:
-//            case MYSQL_TYPE_TIME:
-//            case MYSQL_TYPE_DATETIME:
-//            case MYSQL_TYPE_YEAR:
-//            case MYSQL_TYPE_NEWDATE:
-//            case MYSQL_TYPE_ENUM:
-//            case MYSQL_TYPE_SET:
+/*
+            case MYSQL_TYPE_TIMESTAMP:
+            case MYSQL_TYPE_TIME:
+            case MYSQL_TYPE_DATETIME:
+            case MYSQL_TYPE_YEAR:
+            case MYSQL_TYPE_NEWDATE:
+            case MYSQL_TYPE_ENUM:
+            case MYSQL_TYPE_SET:
+*/
 
             default:
               bError = TRUE;
@@ -494,7 +492,7 @@ static ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
    pValue = ( (MYSQL_ROW) ( pArea->pNatRecord ) ) [ uiIndex ];
    ulLen = ( (unsigned long*) ( pArea->pNatLength ) ) [ uiIndex ];
    
-   // NULL => NIL (?)
+   /* NULL => NIL (?) */
    if ( ! pValue )
    {
       hb_itemClear( pItem );
@@ -508,7 +506,7 @@ static ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
 #if 0        
          char*  pStr;
 
-         // Do NOT trim strings
+         /* Do NOT trim strings */
          pStr = (char*) hb_xgrab( pField->uiLen + 1 );
          if ( pValue )  
             memcpy( pStr, pValue, ulLen );
@@ -519,7 +517,7 @@ static ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
          pStr[ pField->uiLen ] = '\0';
          hb_itemPutCRaw( pItem, pStr, pField->uiLen );
 #else
-         // Trim strings
+         /* Trim strings */
          if ( pValue )  
             hb_itemPutCL( pItem, pValue, ulLen );
          else

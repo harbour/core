@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-22 16:00 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * contrib/rddsql/hbsqldd.h
+  * contrib/rddsql/sqlbase.c
+  * contrib/rddsql/sqlmix.c
+  * contrib/rddsql/mysqldd.c
+    * Finished implementation of national sorting support
+    * converted // comments to /* */
+    * translated lithuanian comments to english
+    * updated startup code
+    * fixed BYTE * val -> BYTE val[1]
+
 2008-10-22 14:51 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hbmk.bat
     + Added support for 'set HB_GUI=yes'

@@ -62,7 +62,7 @@
 #define CONNECTION_LIST_EXPAND    4
 
 
-//==================== SDD registration =====================================
+/*==================== SDD registration =====================================*/
 
 static PSDDNODE s_pSdd = NULL;
 
@@ -84,7 +84,7 @@ int hb_sddRegister( PSDDNODE pSdd )
 
 
 
-//==================== SQLBASE code ===========================================
+/*==================== SQLBASE code ===========================================*/
 
 static USHORT             s_rddidSQLBASE = 0;
 static SQLDDCONNECTION*   s_pConnection = NULL;
@@ -109,7 +109,7 @@ static ERRCODE hb_errRT_SQLBASE( ULONG ulGenCode, ULONG ulSubCode, char * szDesc
 }
 
 
-//============= RDD METHODS =============================================================
+/*============= RDD METHODS =============================================================*/
 
 static ERRCODE sqlbaseGoBottom( SQLBASEAREAP pArea )
 {
@@ -231,7 +231,7 @@ static ERRCODE sqlbaseSkipRaw( SQLBASEAREAP pArea, LONG lToSkip )
 
    if ( lToSkip == 0 )
    {
-      // TODO: maybe gocold is enough here!
+      /* TODO: maybe gocold is enough here?! */
       BOOL bBof, bEof;
 
       /* Save flags */
@@ -268,7 +268,7 @@ static ERRCODE sqlbaseAppend( SQLBASEAREAP pArea, BOOL bUnLockAll )
 
    HB_SYMBOL_UNUSED( bUnLockAll );
 
-   // This GOTO is GOCOLD + GOEOF
+   /* This GOTO is GOCOLD + GOEOF */
    if ( SELF_GOTO( ( AREAP ) pArea, 0 ) == FAILURE )
       return FAILURE;
 
@@ -337,7 +337,7 @@ static ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pIt
 
 static ERRCODE sqlbaseGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength )
 {
-  /*  gal turi priklaustyi nuo Native...
+  /*  TODO: should we use this code?
   if ( pArea->lpFields[ uiIndex ].uiType == HB_IT_MEMO ) 
   {
      return pArea->pSDD->GetVarLen( pArea, uiIndex, pLength );
@@ -466,7 +466,6 @@ static ERRCODE sqlbaseRecId( SQLBASEAREAP pArea, PHB_ITEM pRecNo )
 }
 
 
-// TODO: pSortTable
 static ERRCODE sqlbaseClose( SQLBASEAREAP pArea )
 {
    if ( SELF_GOCOLD( (AREAP) pArea ) == FAILURE )
@@ -494,7 +493,7 @@ static ERRCODE sqlbaseClose( SQLBASEAREAP pArea )
 
    if ( pArea->szQuery )
      hb_xfree( pArea->szQuery );
- 
+
    return SUCCESS;
 }
 
@@ -646,7 +645,7 @@ static ERRCODE sqlbaseOpen( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
    pArea->pConnection = & s_pConnection[ pArea->ulConnection - 1 ];
    pArea->pSDD = pArea->pConnection->pSDD;
  
-   // filename is a query
+   /* filename is a query */
    pArea->szQuery = (char*) hb_strdup( (char*) pOpenInfo->abName );
 
    errCode = pArea->pSDD->Open( pArea );
@@ -744,7 +743,7 @@ static ERRCODE sqlbaseExit( LPRDDNODE pRDD )
 
    if ( s_pConnection )
    {
-      // Disconnect all connections
+      /* Disconnect all connections */
       for ( ul = 0; ul < s_ulConnectionCount; ul++ )
       {
          if ( s_pConnection[ ul ].hConnection ) 
@@ -773,7 +772,7 @@ static ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, 
    SQLDDCONNECTION*   pConn;
 
    HB_SYMBOL_UNUSED( pRDD );
-   // TraceLog( NULL, "RDDINFO index: %d type:%04X\n", (int)uiIndex, pItem->type );
+   /* TraceLog( NULL, "RDDINFO index: %d type:%04X\n", (int) uiIndex, pItem->type ); */
 
    ulConn = ulConnect ? ulConnect : s_ulConnectionCurrent;
    if ( ulConn > 0 && ulConn < s_ulConnectionCount && s_pConnection[ --ulConn ].hConnection )
@@ -819,7 +818,7 @@ static ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, 
          ULONG      ul;
          char*      pStr;
 
-         // Find free connection handle
+         /* Find free connection handle */
          for ( ul = 0; ul < s_ulConnectionCount; ul++ )
          {
             if ( ! s_pConnection[ ul ].hConnection )  
@@ -828,7 +827,7 @@ static ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, 
 
          if ( ul >= s_ulConnectionCount )
          {
-            // Realloc connection table
+            /* Realloc connection table */
             if ( s_pConnection ) 
                s_pConnection = (SQLDDCONNECTION*) hb_xrealloc( s_pConnection, sizeof( SQLDDCONNECTION ) * ( s_ulConnectionCount + CONNECTION_LIST_EXPAND ) );
             else
@@ -965,8 +964,10 @@ static ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, 
          return SUCCESS;   
       }
 
-//      default:
-//         return SUPER_RDDINFO( pRDD, uiIndex, ulConnect, pItem );  
+/*
+      default:
+         return SUPER_RDDINFO( pRDD, uiIndex, ulConnect, pItem );  
+*/
 
    }
 
@@ -974,109 +975,109 @@ static ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, 
 }
 
 
-//=====================================================================================
+/*====================================================================================*/
       
 static RDDFUNCS sqlbaseTable =
 {
-   ( DBENTRYP_BP )    NULL,                       // sqlbaseBof
-   ( DBENTRYP_BP )    NULL,                       // sqlbaseEof
-   ( DBENTRYP_BP )    NULL,                       // sqlbaseFound
+   ( DBENTRYP_BP )    NULL,                       /* sqlbaseBof */
+   ( DBENTRYP_BP )    NULL,                       /* sqlbaseEof */
+   ( DBENTRYP_BP )    NULL,                       /* sqlbaseFound */
    ( DBENTRYP_V )     sqlbaseGoBottom,
    ( DBENTRYP_UL )    sqlbaseGoTo,
    ( DBENTRYP_I )     sqlbaseGoToId,
    ( DBENTRYP_V )     sqlbaseGoTop,
-   ( DBENTRYP_BIB )   NULL,                       // sqlbaseSeek
+   ( DBENTRYP_BIB )   NULL,                       /* sqlbaseSeek */
    ( DBENTRYP_L )     sqlbaseSkip,
-   ( DBENTRYP_L )     NULL,                       // sqlbaseSkipFilter
+   ( DBENTRYP_L )     NULL,                       /* sqlbaseSkipFilter */
    ( DBENTRYP_L )     sqlbaseSkipRaw,
-   ( DBENTRYP_VF )    NULL,                       // sqlbaseAddField
+   ( DBENTRYP_VF )    NULL,                       /* sqlbaseAddField */
    ( DBENTRYP_B )     sqlbaseAppend,
-   ( DBENTRYP_I )     NULL,                       // sqlbaseCreateFields
+   ( DBENTRYP_I )     NULL,                       /* sqlbaseCreateFields */
    ( DBENTRYP_V )     sqlbaseDeleteRec,
    ( DBENTRYP_BP )    sqlbaseDeleted,
-   ( DBENTRYP_SP )    NULL,                       // sqlbaseFieldCount
-   ( DBENTRYP_VF )    NULL,                       // sqlbaseFieldDisplay
-   ( DBENTRYP_SSI )   NULL,                       // sqlbaseFieldInfo
-   ( DBENTRYP_SVP )   NULL,                       // sqlbaseFieldName
-   ( DBENTRYP_V )     NULL,                       // sqlbaseFlush
-   ( DBENTRYP_PP )    NULL,                       // sqlbaseGetRec
+   ( DBENTRYP_SP )    NULL,                       /* sqlbaseFieldCount */
+   ( DBENTRYP_VF )    NULL,                       /* sqlbaseFieldDisplay */
+   ( DBENTRYP_SSI )   NULL,                       /* sqlbaseFieldInfo */
+   ( DBENTRYP_SVP )   NULL,                       /* sqlbaseFieldName */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseFlush */
+   ( DBENTRYP_PP )    NULL,                       /* sqlbaseGetRec */
    ( DBENTRYP_SI )    sqlbaseGetValue,
    ( DBENTRYP_SVL )   sqlbaseGetVarLen,
    ( DBENTRYP_V )     sqlbaseGoCold,
    ( DBENTRYP_V )     sqlbaseGoHot,
-   ( DBENTRYP_P )     NULL,                       // sqlbasePutRec
+   ( DBENTRYP_P )     NULL,                       /* sqlbasePutRec */
    ( DBENTRYP_SI )    sqlbasePutValue,
    ( DBENTRYP_V )     sqlbaseRecall,
    ( DBENTRYP_ULP )   sqlbaseRecCount,
-   ( DBENTRYP_ISI )   NULL,                       // sqlbaseRecInfo
+   ( DBENTRYP_ISI )   NULL,                       /* sqlbaseRecInfo */
    ( DBENTRYP_ULP )   sqlbaseRecNo,
    ( DBENTRYP_I )     sqlbaseRecId,
-   ( DBENTRYP_S )     NULL,                       // sqlbaseSetFieldExtent
-   ( DBENTRYP_P )     NULL,                       // sqlbaseAlias
+   ( DBENTRYP_S )     NULL,                       /* sqlbaseSetFieldExtent */
+   ( DBENTRYP_P )     NULL,                       /* sqlbaseAlias */
    ( DBENTRYP_V )     sqlbaseClose,
    ( DBENTRYP_VP )    sqlbaseCreate,
    ( DBENTRYP_SI )    sqlbaseInfo,
-   ( DBENTRYP_V )     NULL,                       // sqlbaseNewArea
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseNewArea */
    ( DBENTRYP_VP )    sqlbaseOpen,
-   ( DBENTRYP_V )     NULL,                       // sqlbaseRelease
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseRelease */
    ( DBENTRYP_SP )    sqlbaseStructSize,
-   ( DBENTRYP_P )     NULL,                       // sqlbaseSysName
-   ( DBENTRYP_VEI )   NULL,                       // sqlbaseEval
-   ( DBENTRYP_V )     NULL,                       // sqlbasePack
-   ( DBENTRYP_LSP )   NULL,                       // sqlbasePackRec
-   ( DBENTRYP_VS )    NULL,                       // sqlbaseSort
-   ( DBENTRYP_VT )    NULL,                       // sqlbaseTrans
-   ( DBENTRYP_VT )    NULL,                       // sqlbaseTransRec
-   ( DBENTRYP_V )     NULL,                       // sqlbaseZap
-   ( DBENTRYP_VR )    NULL,                       // sqlbaseChildEnd
-   ( DBENTRYP_VR )    NULL,                       // sqlbaseChildStart
-   ( DBENTRYP_VR )    NULL,                       // sqlbaseChildSync
-   ( DBENTRYP_V )     NULL,                       // sqlbaseSyncChildren
-   ( DBENTRYP_V )     NULL,                       // sqlbaseClearRel
-   ( DBENTRYP_V )     NULL,                       // sqlbaseForceRel
-   ( DBENTRYP_SVP )   NULL,                       // sqlbaseRelArea
-   ( DBENTRYP_VR )    NULL,                       // sqlbaseRelEval
-   ( DBENTRYP_SVP )   NULL,                       // sqlbaseRelText
-   ( DBENTRYP_VR )    NULL,                       // sqlbaseSetRel
-   ( DBENTRYP_OI )    NULL,                       // sqlbaseOrderListAdd
-   ( DBENTRYP_V )     NULL,                       // sqlbaseOrderListClear
-   ( DBENTRYP_OI )    NULL,                       // sqlbaseOrderListDelete
-   ( DBENTRYP_OI )    NULL,                       // sqlbaseOrderListFocus
-   ( DBENTRYP_V )     NULL,                       // sqlbaseOrderListRebuild
-   ( DBENTRYP_VOI )   NULL,                       // sqlbaseOrderCondition
-   ( DBENTRYP_VOC )   NULL,                       // sqlbaseOrderCreate
-   ( DBENTRYP_OI )    NULL,                       // sqlbaseOrderDestroy
-   ( DBENTRYP_OII )   NULL,                       // sqlbaseOrderInfo
-   ( DBENTRYP_V )     NULL,                       // sqlbaseClearFilter
-   ( DBENTRYP_V )     NULL,                       // sqlbaseClearLocate
-   ( DBENTRYP_V )     NULL,                       // sqlbaseClearScope
-   ( DBENTRYP_VPLP )  NULL,                       // sqlbaseCountScope
-   ( DBENTRYP_I )     NULL,                       // sqlbaseFilterText
-   ( DBENTRYP_SI )    NULL,                       // sqlbaseScopeInfo
-   ( DBENTRYP_VFI )   NULL,                       // sqlbaseSetFilter
-   ( DBENTRYP_VLO )   NULL,                       // sqlbaseSetLocate
-   ( DBENTRYP_VOS )   NULL,                       // sqlbaseSetScope
-   ( DBENTRYP_VPL )   NULL,                       // sqlbaseSkipScope
-   ( DBENTRYP_B )     NULL,                       // sqlbaseLocate
-   ( DBENTRYP_P )     NULL,                       // sqlbaseCompile
-   ( DBENTRYP_I )     NULL,                       // sqlbaseError
-   ( DBENTRYP_I )     NULL,                       // sqlbaseEvalBlock
-   ( DBENTRYP_VSP )   NULL,                       // sqlbaseRawLock
-   ( DBENTRYP_VL )    NULL,                       // sqlbaseLock
-   ( DBENTRYP_I )     NULL,                       // sqlbaseUnLock
-   ( DBENTRYP_V )     NULL,                       // sqlbaseCloseMemFile
-   ( DBENTRYP_VP )    NULL,                       // sqlbaseCreateMemFile
-   ( DBENTRYP_SVPB )  NULL,                       // sqlbaseGetValueFile
-   ( DBENTRYP_VP )    NULL,                       // sqlbaseOpenMemFile
-   ( DBENTRYP_SVPB )  NULL,                       // sqlbasePutValueFile
-   ( DBENTRYP_V )     NULL,                       // sqlbaseReadDBHeader
-   ( DBENTRYP_V )     NULL,                       // sqlbaseWriteDBHeader
-   ( DBENTRYP_R )     NULL,                       // sqlbaseInit
+   ( DBENTRYP_P )     NULL,                       /* sqlbaseSysName */
+   ( DBENTRYP_VEI )   NULL,                       /* sqlbaseEval */
+   ( DBENTRYP_V )     NULL,                       /* sqlbasePack */
+   ( DBENTRYP_LSP )   NULL,                       /* sqlbasePackRec */
+   ( DBENTRYP_VS )    NULL,                       /* sqlbaseSort */
+   ( DBENTRYP_VT )    NULL,                       /* sqlbaseTrans */
+   ( DBENTRYP_VT )    NULL,                       /* sqlbaseTransRec */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseZap */
+   ( DBENTRYP_VR )    NULL,                       /* sqlbaseChildEnd */
+   ( DBENTRYP_VR )    NULL,                       /* sqlbaseChildStart */
+   ( DBENTRYP_VR )    NULL,                       /* sqlbaseChildSync */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseSyncChildren */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseClearRel */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseForceRel */
+   ( DBENTRYP_SVP )   NULL,                       /* sqlbaseRelArea */
+   ( DBENTRYP_VR )    NULL,                       /* sqlbaseRelEval */
+   ( DBENTRYP_SVP )   NULL,                       /* sqlbaseRelText */
+   ( DBENTRYP_VR )    NULL,                       /* sqlbaseSetRel */
+   ( DBENTRYP_OI )    NULL,                       /* sqlbaseOrderListAdd */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseOrderListClear */
+   ( DBENTRYP_OI )    NULL,                       /* sqlbaseOrderListDelete */
+   ( DBENTRYP_OI )    NULL,                       /* sqlbaseOrderListFocus */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseOrderListRebuild */
+   ( DBENTRYP_VOI )   NULL,                       /* sqlbaseOrderCondition */
+   ( DBENTRYP_VOC )   NULL,                       /* sqlbaseOrderCreate */
+   ( DBENTRYP_OI )    NULL,                       /* sqlbaseOrderDestroy */
+   ( DBENTRYP_OII )   NULL,                       /* sqlbaseOrderInfo */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseClearFilter */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseClearLocate */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseClearScope */
+   ( DBENTRYP_VPLP )  NULL,                       /* sqlbaseCountScope */
+   ( DBENTRYP_I )     NULL,                       /* sqlbaseFilterText */
+   ( DBENTRYP_SI )    NULL,                       /* sqlbaseScopeInfo */
+   ( DBENTRYP_VFI )   NULL,                       /* sqlbaseSetFilter */
+   ( DBENTRYP_VLO )   NULL,                       /* sqlbaseSetLocate */
+   ( DBENTRYP_VOS )   NULL,                       /* sqlbaseSetScope */
+   ( DBENTRYP_VPL )   NULL,                       /* sqlbaseSkipScope */
+   ( DBENTRYP_B )     NULL,                       /* sqlbaseLocate */
+   ( DBENTRYP_P )     NULL,                       /* sqlbaseCompile */
+   ( DBENTRYP_I )     NULL,                       /* sqlbaseError */
+   ( DBENTRYP_I )     NULL,                       /* sqlbaseEvalBlock */
+   ( DBENTRYP_VSP )   NULL,                       /* sqlbaseRawLock */
+   ( DBENTRYP_VL )    NULL,                       /* sqlbaseLock */
+   ( DBENTRYP_I )     NULL,                       /* sqlbaseUnLock */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseCloseMemFile */
+   ( DBENTRYP_VP )    NULL,                       /* sqlbaseCreateMemFile */
+   ( DBENTRYP_SVPB )  NULL,                       /* sqlbaseGetValueFile */
+   ( DBENTRYP_VP )    NULL,                       /* sqlbaseOpenMemFile */
+   ( DBENTRYP_SVPB )  NULL,                       /* sqlbasePutValueFile */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseReadDBHeader */
+   ( DBENTRYP_V )     NULL,                       /* sqlbaseWriteDBHeader */
+   ( DBENTRYP_R )     NULL,                       /* sqlbaseInit */
    ( DBENTRYP_R )     sqlbaseExit,
-   ( DBENTRYP_RVVL )  NULL,                       // sqlbaseDrop
-   ( DBENTRYP_RVVL )  NULL,                       // sqlbaseExists
+   ( DBENTRYP_RVVL )  NULL,                       /* sqlbaseDrop */
+   ( DBENTRYP_RVVL )  NULL,                       /* sqlbaseExists */
    ( DBENTRYP_RSLV )  sqlbaseRddInfo,
-   ( DBENTRYP_SVP )   NULL                        // sqlbaseWhoCares
+   ( DBENTRYP_SVP )   NULL                        /* sqlbaseWhoCares */
 };
 
 
@@ -1138,7 +1139,6 @@ HB_INIT_SYMBOLS_END( sqlbase1__InitSymbols )
 HB_CALL_ON_STARTUP_BEGIN( _hb_sqlbase_init_ )
    hb_vmAtInit( hb_sqlbaseInit, NULL );
 HB_CALL_ON_STARTUP_END( _hb_sqlbase_init_ )
-
 
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup sqlbase1__InitSymbols

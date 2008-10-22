@@ -60,7 +60,7 @@
 #include "hbapi.h"
 
 
-// New ...INFO_ constants
+/* New ...INFO_ constants */
 #define DBI_QUERY             1001
 
 #define RDDI_CONNECT          1001
@@ -73,9 +73,11 @@
 #define RDDI_QUERY            1008
 
 
-//====================================================================
-//  SQLBASE
-//====================================================================
+/*
+====================================================================
+  SQLBASE
+====================================================================
+*/
 
 #define MAX_FIELD_NAME          64
 
@@ -160,22 +162,24 @@ typedef struct _SQLDDCONNECTION
 } SQLDDCONNECTION;
 
 
-//====================================================================
-//  SQLMIX
-//====================================================================
+/*
+====================================================================
+  SQLMIX
+====================================================================
+*/
 
 #define MIX_MAXKEYLEN        1024
 #define MIX_MAXTAGNAMELEN      16
 
 
-#define MIX_NODE_ORDER         2    // >=2
+#define MIX_NODE_ORDER         2    /* >=2 */
 
 
 typedef struct _MIXKEY
 {
    ULONG     rec;
    BYTE      notnul;
-   BYTE *    val;
+   BYTE      val[ 1 ];
 } MIXKEY, *PMIXKEY;
 
 
@@ -207,8 +211,8 @@ typedef struct _MIXTAG
    PHB_ITEM             pForItem;
                        
    BYTE                 bType;
-   UINT                 uiKeyLen;            // Length of key
-   UINT                 uiTotalLen;          // Total length of key structure
+   UINT                 uiKeyLen;            /* Length of key */
+   UINT                 uiTotalLen;          /* Total length of key structure */
                        
    BOOL                 fEof;
    BOOL                 fBof;
@@ -223,7 +227,7 @@ typedef struct _MIXTAG
    PMIXKEY              HotKey;
    BOOL                 HotFor;
                        
-   BYTE*                pSortTable;  // National sorttable for character key tags, NULL otherwise
+   BYTE*                pSortTable;  /* National sorttable for character key tags, NULL otherwise */
 } MIXTAG, *PMIXTAG;
 
 
@@ -299,9 +303,11 @@ typedef struct _SQLMIXAREA
 
 
 
-//====================================================================
-//  SQLDD
-//====================================================================
+/*
+====================================================================
+  SQLDD
+====================================================================
+*/
 
 typedef   ERRCODE   (* SDDFUNC_CONNECT    )( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
 typedef   ERRCODE   (* SDDFUNC_DISCONNECT )( SQLDDCONNECTION* pConnection );
@@ -333,11 +339,13 @@ int hb_sddRegister( PSDDNODE pSdd );
 
 
 
-//====================================================================
-//  Misc
-//====================================================================
+/*
+====================================================================
+  Misc
+====================================================================
+*/
 
-// Error subcodes
+/* Error subcodes */
 #define ESQLDD_NOTCONNECTED        1901
 #define ESQLDD_INVALIDFIELD        1902
 #define ESQLDD_INVALIDQUERY        1903
