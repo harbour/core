@@ -24,6 +24,10 @@
 
 //----------------------------------------------------------------------//
 
+STATIC nRows := 20, nCols := 60, nColorIndex := 1
+
+//----------------------------------------------------------------------//
+
 FUNCTION Main()
    Local nKey, lMark, lResize, lClose
    Local nHeight := 20
@@ -80,6 +84,9 @@ FUNCTION Main()
       CASE nKey == K_F9
          RunInSysTray()
 
+      CASE nKey == K_F10
+         hb_threadStart( @thFunc() )
+
       ENDCASE
    ENDDO
 
@@ -135,6 +142,7 @@ STATIC FUNCTION DispScreen()
 #ifdef __GTWVG__
    DispOutAt( ++nRow, nCol, "< F9 Run in SysTray     >", cColor )
 #endif
+   DispOutAt( ++nRow, nCol, "< F10 Open New Window   >", cColor )
 
    DispOutAt( maxrow(), 0, Space( maxcol()+1 ), "N/G*" )
 
@@ -214,3 +222,32 @@ FUNCTION RunInSysTray()
 
 //----------------------------------------------------------------------//
 
+PROCEDURE thFunc()
+   Local cTitle
+   Local aColor := { 'W+/N', 'W+/B', 'W+/G', 'W+/BG', 'W+/N*', 'W+/RB', 'N/W*', 'N/GR*' }
+
+   /* allocate own GT driver */
+   hb_gtReload( 'WVT' )
+   Hb_GtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
+
+   nColorIndex++
+   if nColorIndex > len( aColor )
+      nColorIndex := 1
+   endif
+
+   nRows++
+   nCols += 2
+   cTitle := 'New Window with '+ltrim( str( nRows ) )+;
+                                        ' Rows and '+ltrim( str( nCols ) )+' Columns'
+
+   SetMode( nRows,nCols )
+   SetColor( aColor[ nColorIndex ] )
+   Hb_GtInfo( HB_GTI_WINTITLE, cTitle )
+   DispOutAt( 0, 0, padc( cTitle, maxcol()+1 ), 'N/GR*' )
+
+   use test shared
+   browse()
+
+   return
+
+//----------------------------------------------------------------------//
