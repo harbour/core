@@ -131,7 +131,7 @@ HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -km -l $(PRG_USR) $(HARBOURFLA
 !if "$(HB_BUILD_DEBUG)" == "yes"
 HARBOURFLAGS   = $(HARBOURFLAGS) -l-
 !endif
-LDFLAGS        =  $(LDFLAGS) $(L_USR)
+LDFLAGS        = $(LDFLAGS) $(L_USR)
 
 #**********************************************************
 # COMPILE Rules

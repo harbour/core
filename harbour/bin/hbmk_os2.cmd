@@ -28,6 +28,7 @@ if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
 if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
 
 set _HB_MT=%HB_MT%
+
 if not "%1" == "-mt" goto NO_MT
    set _HB_MT=yes
    shift
@@ -51,8 +52,8 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
    echo Notes:
    echo.
    echo   - 'filename' is the .prg filename _without_ extension.
-   echo   - Don't forget to make a MAIN() function for you application.
-   echo   - Environment variable HB_COMPILER myst be set.
+   echo   - Don't forget to create a MAIN() function in your application.
+   echo   - Environment variable HB_COMPILER must be set.
    echo     The following values are currently supported:
    echo.
    echo     HB_COMPILER:

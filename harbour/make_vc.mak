@@ -159,27 +159,27 @@ CEXEFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS)
 
 # Linker Flags
 !if "$(HB_BUILD_WINCE)" == "yes"
-LDFLAGS        = /NOLOGO /SUBSYSTEM:WINDOWSCE,4.20 /MACHINE:ARM /ARMPADCODE \
-                 /STACK:65536,4096 /NODEFAULTLIB:"oldnames.lib" \
-                 /NODEFAULTLIB:"kernel32.lib" /ALIGN:4096 /OPT:REF /OPT:ICF \
-                 /LIBPATH:$(LIB_DIR) $(L_USR)
-#                /ERRORREPORT:PROMPT /ENTRY:"mainWCRTStartup"
+LDFLAGS        = /nologo /subsystem:windowsce,4.20 /machine:ARM /ARMPADCODE \
+                 /stack:65536,4096 /nodefaultlib:"oldnames.lib" \
+                 /nodefaultlib:"kernel32.lib" /align:4096 /opt:REF /opt:ICF \
+                 /libpath:$(LIB_DIR) $(L_USR)
+#                /errorreport:PROMPT /entry:"mainWCRTStartup"
 !if $(HB_VISUALC_VER) >= 80
-LDFLAGS        = $(LDFLAGS) /MANIFEST:NO
+LDFLAGS        = $(LDFLAGS) /manifest:NO
 !endif
-LDFLAGSDLL     = /DLL \
-                 /NOLOGO /SUBSYSTEM:WINDOWSCE,4.20 /MACHINE:ARM /ARMPADCODE \
-                 /STACK:65536,4096 /NODEFAULTLIB:"oldnames.lib" \
-                 /LIBPATH:$(LIB_DIR) $(L_USR)
+LDFLAGSDLL     = /dll \
+                 /nologo /subsystem:WINDOWSCE,4.20 /machine:ARM /ARMPADCODE \
+                 /stack:65536,4096 /nodefaultlib:"oldnames.lib" \
+                 /libpath:$(LIB_DIR) $(L_USR)
 !else
-LDFLAGS        = /NOLOGO /LIBPATH:$(LIB_DIR) $(L_USR)
-LDFLAGSDLL     = /DLL \
-                 /NOLOGO /LIBPATH:$(LIB_DIR) $(L_USR)
+LDFLAGS        = /nologo /libpath:$(LIB_DIR) $(L_USR)
+LDFLAGSDLL     = /dll \
+                 /nologo /libpath:$(LIB_DIR) $(L_USR)
 !endif
 
 !if "$(HB_BUILD_DEBUG)" == "yes"
-LDFLAGS        = /DEBUG $(LDFLAGS)
-LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
+LDFLAGS        = /debug $(LDFLAGS)
+LDFLAGSDLL     = /debug $(LDFLAGSDLL)
 !endif
 
 !if "$(HB_BUILD_WINCE)" == "yes"
@@ -801,7 +801,7 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
     IF EXIST "$(HARBOUR_EXE)" $(DEL) "$(HARBOUR_EXE)" > nul
     $(LINKER) @<<
 $(LDFLAGS)
-/OUT:$(HARBOUR_EXE)
+/out:$(HARBOUR_EXE)
 $(**: = ^
 )
 $(COMMON_LIB)
@@ -816,7 +816,7 @@ $(HBPP_EXE) : $(HBPP_EXE_OBJS)
     IF EXIST "$(HBPP_EXE)" $(DEL) "$(HBPP_EXE)" > nul
     $(LINKER) @<<
 $(LDFLAGS)
-/OUT:$(HBPP_EXE)
+/out:$(HBPP_EXE)
 $(**: = ^
 )
 $(COMMON_LIB)
@@ -829,7 +829,7 @@ $(HBRUN_EXE)  : $(HBRUN_EXE_OBJS)
     IF EXIST "$(HBRUN_EXE)" $(DEL) "$(HBRUN_EXE)" > nul
     $(LINKER) @<<
 $(LDFLAGS)
-/OUT:$(HBRUN_EXE)
+/out:$(HBRUN_EXE)
 $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
@@ -842,7 +842,7 @@ $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
     IF EXIST "$(HBTEST_EXE)" $(DEL) "$(HBTEST_EXE)" > nul
     $(LINKER) @<<
 $(LDFLAGS)
-/OUT:$(HBTEST_EXE)
+/out:$(HBTEST_EXE)
 $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
@@ -855,7 +855,7 @@ $(HBDOC_EXE)  : $(HBDOC_EXE_OBJS)
     IF EXIST "$(HBDOC_EXE)" $(DEL) "$(HBDOC_EXE)" > nul
     $(LINKER) @<<
 $(LDFLAGS)
-/OUT:$(HBDOC_EXE)
+/out:$(HBDOC_EXE)
 $(**: = ^
 )
 $(MINIMAL_STATIC_HBLIBS)
@@ -869,7 +869,7 @@ $(HBMAKE_EXE) : $(HBMAKE_EXE_OBJS)
     IF EXIST "$(HBMAKE_EXE)" $(DEL) "$(HBMAKE_EXE)" > nul
     $(LINKER) @<<
 $(LDFLAGS)
-/OUT:$(HBMAKE_EXE)
+/out:$(HBMAKE_EXE)
 $(**: = ^
 )
 $(MINIMAL_STATIC_HBLIBS)
@@ -882,8 +882,8 @@ $(STANDARD_SYSLIBS)
 #**********************************************************
 $(HARBOUR_DLL) : $(HB) $(DLL_OBJS)
     $(LINKER) @<<
-$(LDFLAGSDLL) /OUT:$(@)
-/IMPLIB:$(@:.dll=.lib)
+$(LDFLAGSDLL) /out:$(@)
+/implib:$(@:.dll=.lib)
 $(DLL_OBJS: = ^
 )
 $(STANDARD_SYSLIBS)
@@ -895,7 +895,7 @@ HBTESTDLL_OBJS = $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBTEST_EXE_OBJS:obj\vc=obj\dl
 $(HBTESTDLL_EXE) : $(HARBOUR_DLL) $(HBTESTDLL_OBJS)
     $(LINKER) @<<
 $(LDFLAGS)
-/OUT:$(HBTESTDLL_EXE)
+/out:$(HBTESTDLL_EXE)
 $(HBTESTDLL_OBJS: = ^
 )
 $(HARBOUR_DLL:.dll=.lib)

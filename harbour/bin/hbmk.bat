@@ -31,16 +31,17 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
 set _HB_USR_C=
 set _HB_USR_L=
 
+set _HB_MT=%HB_MT%
+set _HB_GUI=%HB_GUI%
+
 :REPEAT
 
-set _HB_MT=%HB_MT%
 if not "%1" == "-mt" goto NO_MT
    set _HB_MT=yes
    shift
    goto REPEAT
 :NO_MT
 
-set _HB_GUI=%HB_GUI%
 if not "%1" == "-gui" goto NO_GUI
    set _HB_GUI=yes
    shift
@@ -65,9 +66,8 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
    echo.
    echo Notes:
    echo.
-   echo   - 'filename' is the .prg filename (without extension in pre-NT systems).
-   echo   - Don't forget to create a MAIN() function for you application.
-   echo   - If both -mt and -gui are used, -mt should always be the first.
+   echo   - 'filename' is the .prg filename (without extension on pre-NT systems).
+   echo   - Don't forget to create a MAIN() function in your application.
    echo   - Environment variables HB_ARCHITECTURE, HB_COMPILER must be set.
    echo     The following values are currently supported:
    echo.
@@ -204,7 +204,7 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
 
       if "%_HB_GUI%" == "yes" set _HB_USR_L=/subsystem:windows
 
-      cl -nologo -W3 %C_USR% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /LIBPATH:%HB_LIB_INSTALL% %L_USR% %_HB_USR_L% %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
+      cl -nologo -W3 %C_USR% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /libpath:%HB_LIB_INSTALL% %L_USR% %_HB_USR_L% %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
       goto CLEANUP
 
 :A_WIN_MSVC_NOT

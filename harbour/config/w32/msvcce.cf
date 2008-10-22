@@ -28,9 +28,9 @@ LD_OUT = -Fe
 
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
-LINKPATHS += -link -LIBPATH:$(LIB_DIR)
+LINKPATHS += /link /libpath:$(LIB_DIR)
 else
-LINKPATHS += -link -LIBPATH:$(HB_LIB_COMPILE)
+LINKPATHS += /link /libpath:$(HB_LIB_COMPILE)
 endif
 LINKLIBS += $(foreach lib, $(CONTRIBS), $(subst lib,,$(lib))$(LIB_EXT))
 LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))

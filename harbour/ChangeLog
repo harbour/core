@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-22 20:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hbmk.bat
+    ! Fix to previous change. (MT and GUI status was reset in the loop).
+
+  * bin/hbmk.bat
+  * bin/hbmk_os2.cmd
+    ! Help message corrections.
+
+  * bin/hbmk.bat
+  * make_vc.mak
+  * config/w32/msvc.cf
+  * config/w32/msvcce.cf
+    * Using lowercase linker options for MSVC. Just for consistency.
+    * Using '/' as a switch char for MSVC linker. This works fo all 
+      old version.
+
+  * contrib/mtpl_vc.mak
+    * Minor formatting.
+
 2008-10-22 19:52 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gttrm/gttrm.c
     * use CP437 for BOX characters when terminal is in UTF-8 mode
