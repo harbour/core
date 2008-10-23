@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-23 12:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/mtpl_vc.mak
+    ! Fixed MSVC not rebuilding .prg files after changing them.
+      Current solution is to simply delete the intermediate .c 
+      file after C compiler returned. This also saves space, 
+      so even if it's a hack, it might be good to add this 
+      for other build paths.
+
 2008-10-23 12:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.mak
     ! Changed '!' (non-working) echo supression char to '@'.

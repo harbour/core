@@ -155,6 +155,7 @@ $(OBJ_DIR):
 {.}.prg{$(OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+    @if exist $(OBJ_DIR)\$(*B).c $(DEL) $(OBJ_DIR)\$(*B).c > nul
 #**********************************************************
 
 !include common.mak
