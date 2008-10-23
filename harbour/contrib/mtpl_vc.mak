@@ -137,20 +137,22 @@ LDFLAGS        = $(LDFLAGS) $(L_USR)
 # COMPILE Rules
 #**********************************************************
 
+all: $(OBJ_DIR) $(LIB_PATH)
+
+$(OBJ_DIR):
+    @if not exist $@\nul mkdir $@
+
 #**********************************************************
 # General *.c --> *.obj COMPILE rule for STATIC Libraries
 {.}.c{$(OBJ_DIR)}$(OBJEXT)::
-    @if not exist "$(OBJ_DIR)" md "$(OBJ_DIR)" > nul
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #**********************************************************
 # General *.cpp --> *.obj COMPILE rule for STATIC Libraries
 {.}.cpp{$(OBJ_DIR)}$(OBJEXT)::
-    @if not exist "$(OBJ_DIR)" md "$(OBJ_DIR)" > nul
     $(CC) $(CLIBFLAGS: -TC= -TP) -Fo$(OBJ_DIR)\ $<
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for STATIC Libraries
 {.}.prg{$(OBJ_DIR)}$(OBJEXT):
-    @if not exist "$(OBJ_DIR)" md "$(OBJ_DIR)" > nul
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #**********************************************************

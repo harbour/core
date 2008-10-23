@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-23 12:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_vc.mak
+    ! Changed '!' (non-working) echo supression char to '@'.
+
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_vc.mak
+    % Changed to create the obj dir as a separate build rule 
+      (just like for core) rather than for each file.
+
 2008-10-23 12:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak

@@ -693,7 +693,7 @@ all : $(HB_DEST_DIRS) $(HB_BUILD_TARGETS)
 #**********************************************************
 
 $(HB_DEST_DIRS) $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL):
-    !if not exist $@\nul mkdir $@
+    @if not exist $@\nul mkdir $@
 
 #**********************************************************
 # LIBRARY Targets BUILD rules
