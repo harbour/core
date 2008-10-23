@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-23 14:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbcurl/hbcurl.c
+    ! Fixed compilation against libcurl 7.16.1.
+    ; Untested.
+
 2008-10-23 12:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/mtpl_vc.mak
     ! Fixed MSVC not rebuilding .prg files after changing them.

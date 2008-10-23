@@ -1067,9 +1067,11 @@ HB_FUNC( CURL_EASY_SETOPT )
          case HB_CURLOPT_FTPSSLAUTH:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_FTPSSLAUTH, hb_parnl( 3 ) );
             break;
+#if LIBCURL_VERSION_NUM >= 0x071001
          case HB_CURLOPT_FTP_SSL_CCC:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_FTP_SSL_CCC, hb_parnl( 3 ) );
             break;
+#endif
 #if LIBCURL_VERSION_NUM >= 0x070C03
          case HB_CURLOPT_FTP_ACCOUNT:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_FTP_ACCOUNT, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
