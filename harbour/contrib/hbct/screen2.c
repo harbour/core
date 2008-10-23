@@ -403,7 +403,7 @@ HB_FUNC( STRSCREEN )
 HB_FUNC( _HB_CTDSPTIME )
 {
    SHORT sRow, sCol;
-   int iColor, iLen, i;
+   int iColor, iLen;
    char szTime[ 10 ];
 
    sRow = ( SHORT ) hb_parni( 1 );

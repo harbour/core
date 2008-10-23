@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-23 04:39 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * removed unnecessary initialization
+
+  * harbour/contrib/hbct/screen2.c
+    * removed unused variable
+
 2008-10-23 04:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtapi.c
     * LOCK/UNLOCK GT in hb_gtBeginWrite()/hb_gtEndWrite()

@@ -1554,7 +1554,7 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
 
 static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow )
 {
-   HWND     hWnd = ( HWND ) 0;
+   HWND     hWnd;
    LPTSTR   szAppName;
 
    HB_SYMBOL_UNUSED( hPrevInstance );
