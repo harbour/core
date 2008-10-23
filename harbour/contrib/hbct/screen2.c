@@ -442,8 +442,5 @@ HB_FUNC( _HB_CTDSPTIME )
    if( szTime[0] == '0' )
       szTime[0] = ' ';
 
-   hb_gtDispBegin();
-   for( i = 0; i < iLen; ++sCol, ++i )
-      hb_gtPutScrChar( sRow, sCol, iColor, 0, szTime[i] );
-   hb_gtDispEnd();
+   hb_gtPutText( sRow, sCol, ( BYTE * ) szTime, iLen, iColor );
 }

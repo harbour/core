@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-23 04:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtapi.c
+    * LOCK/UNLOCK GT in hb_gtBeginWrite()/hb_gtEndWrite()
+
+  * harbour/contrib/hbct/showtime.prg
+    ! added missing common.ch
+
+  * harbour/contrib/hbct/screen2.c
+    % use hb_gtPutText() in _HB_CTDSPTIME()
+
+  * harbour/contrib/hbct/screen1.c
+    * forrmatting
+
 2008-10-23 04:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtxwc/gtxwc.h
   * harbour/source/rtl/gtxwc/gtxwc.c

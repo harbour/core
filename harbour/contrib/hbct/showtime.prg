@@ -51,6 +51,8 @@
  *
  */
 
+#include "common.ch"
+
 FUNCTION SHOWTIME( nRow, nCol, lNoSec, cColor, l12, lAmPm )
    STATIC s_hTimer := NIL
 

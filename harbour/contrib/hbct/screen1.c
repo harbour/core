@@ -389,7 +389,7 @@ HB_FUNC( INVERTWIN )
          {
             BYTE bColor, bAttr;
             USHORT usChar;
-   
+
             hb_gtGetChar( iTop, iCol, &bColor, &bAttr, &usChar );
             bColor = ( bColor & 0x88 ) |
                      ( ( bColor & 0x07 ) << 4 ) |

@@ -675,11 +675,20 @@ HB_EXPORT ERRCODE hb_gtPutChar( USHORT uiRow, USHORT uiCol, BYTE bColor, BYTE bA
 
 HB_EXPORT ERRCODE hb_gtBeginWrite( void )
 {
+   ERRCODE errCode = FAILURE;
+   PHB_GT pGT;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gtBeginWrite()"));
 
-   /* Do nothing in Harbour */
+   pGT = hb_gt_Base();
+   if( pGT )
+   {
+      if( HB_GTSELF_LOCK( pGT ) )
+         errCode = SUCCESS;
+      hb_gt_BaseFree( pGT );
+   }
 
-   return SUCCESS;
+   return errCode;
 }
 
 HB_EXPORT ERRCODE hb_gtEndWrite( void )
@@ -692,6 +701,7 @@ HB_EXPORT ERRCODE hb_gtEndWrite( void )
    if( pGT )
    {
       HB_GTSELF_FLUSH( pGT );
+      HB_GTSELF_UNLOCK( pGT );
       hb_gt_BaseFree( pGT );
       return SUCCESS;
    }
