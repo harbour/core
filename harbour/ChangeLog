@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-23 04:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtxwc/gtxwc.h
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    ! use XInitThreads() for MT safe thread access when linked with MT HVM
+    + added optional mutex protection enabled by HB_XWC_XLIB_NEEDLOCKS macro
+      to use when XLib does not support XInitThreads()
+
 2008-10-22 20:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hbmk.bat
     ! Fix to previous change. (MT and GUI status was reset in the loop).

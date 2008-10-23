@@ -6,7 +6,7 @@
  * [x]Harbour Project source code:
  *    XWindow Console
  * Copyright 2003 - Giancarlo Niccolai <antispam /at/ niccolai.ws>
- * Copyright 2004/2006 - Przemys³aw Czerpak <druzus /at/ priv.onet.pl>
+ * Copyright 2004/2006 - Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  *
  * www - http://www.harbour-project.org
  * www - http://www.xharbour.org
@@ -69,6 +69,7 @@
 #include "inkey.ch"
 #include "hbgfxdef.ch"
 #include "hbapicdp.h"
+#include "hbthread.h"
 
 #include <unistd.h>
 #include <signal.h>
