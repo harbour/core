@@ -161,7 +161,7 @@ ALL_HEADERS = $(PRG_HEADERS) $(C_HEADERS)
 
 #**********************************************************
 $(LIB_PATH) : $(LIB_OBJS)
-    if exist "$@" $(DEL) "$@" > nul
+    @if exist "$@" $(DEL) "$@" > nul
     $(MKLIB) /nologo /out:$@ @<<
 $**
 <<$(HB_KEEPSTATE)

@@ -1347,7 +1347,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 #if defined(UNICODE)
          usChar = hb_cdpGetU16( pWVT->hostCDP, TRUE, ( BYTE ) usChar );
 #else
-         usChar = pWVT->chrTransTbl[ usChar & 0xff ];
+         usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
 #endif
          if( len == 0 )
          {

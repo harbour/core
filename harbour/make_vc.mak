@@ -107,9 +107,9 @@ CFLAGS_VER     = -Oxsb1 -EHsc -YX -GF
 # TOFIX: These should be cleaned from everything not absolutely necessary:
 
 CFLAGS         = -nologo -W3 -I$(INCLUDE_DIR) -I$(CFLAGS_VER) \
-                 -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -D"WIN32_PLATFORM_PSPC" \
-                 -D"WINCE" -D"_WINCE" -D"_WINDOWS" -D"ARM" -D"_ARM_" -D"ARMV4" \
-                 -D"POCKETPC2003_UI_MODEL" -D"_M_ARM" -D"UNICODE" -D"_UNICODE" \
+                 -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -DWIN32_PLATFORM_PSPC \
+                 -DWINCE -D_WINCE -D_WINDOWS -DARM -D_ARM_ -DARMV4 \
+                 -DPOCKETPC2003_UI_MODEL -D_M_ARM -DUNICODE -D_UNICODE \
                  $(C_USR) -D_UWIN -I$(OBJ_DIR)
 
 #-----------
@@ -147,49 +147,42 @@ CFLAGSMT = -MT$(DBGMARKER) -DHB_MT_VM
 #**********************************************************
 
 CLIBFLAGS      = -c $(CFLAGS)
-!if "$(HB_BUILD_WINCE)" == "yes"
 CLIBFLAGSDLL   = $(CLIBFLAGS) -DHB_DYNLIB
 CEXEFLAGSDLL   = $(CLIBFLAGS)
-!else
-CLIBFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS) -DHB_DYNLIB
-CEXEFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS)
+!if "$(HB_BUILD_WINCE)" != "yes"
+CLIBFLAGSDLL   = $(CLIBFLAGSDLL) -MT$(DBGMARKER)
+CEXEFLAGSDLL   = $(CEXEFLAGSDLL) -MT$(DBGMARKER)
 !endif
 
 #**********************************************************
 
 # Linker Flags
 !if "$(HB_BUILD_WINCE)" == "yes"
-LDFLAGS        = /nologo /subsystem:windowsce,4.20 /machine:ARM /ARMPADCODE \
+LDFLAGS        = /nologo /subsystem:windowsce,4.20 /machine:ARM /armpadcode \
                  /stack:65536,4096 /nodefaultlib:"oldnames.lib" \
                  /nodefaultlib:"kernel32.lib" /align:4096 /opt:REF /opt:ICF \
                  /libpath:$(LIB_DIR) $(L_USR)
-#                /errorreport:PROMPT /entry:"mainWCRTStartup"
 !if $(HB_VISUALC_VER) >= 80
 LDFLAGS        = $(LDFLAGS) /manifest:NO
 !endif
 LDFLAGSDLL     = /dll \
-                 /nologo /subsystem:WINDOWSCE,4.20 /machine:ARM /ARMPADCODE \
+                 /nologo /subsystem:WINDOWSCE,4.20 /machine:ARM /armpadcode \
                  /stack:65536,4096 /nodefaultlib:"oldnames.lib" \
                  /libpath:$(LIB_DIR) $(L_USR)
-!else
-LDFLAGS        = /nologo /libpath:$(LIB_DIR) $(L_USR)
-LDFLAGSDLL     = /dll \
-                 /nologo /libpath:$(LIB_DIR) $(L_USR)
-!endif
-
-!if "$(HB_BUILD_DEBUG)" == "yes"
-LDFLAGS        = /debug $(LDFLAGS)
-LDFLAGSDLL     = /debug $(LDFLAGSDLL)
-!endif
-
-!if "$(HB_BUILD_WINCE)" == "yes"
 STANDARD_SYSLIBS = coredll.lib corelibc.lib winsock.lib ws2.lib
 !else
+LDFLAGS        = /nologo /libpath:$(LIB_DIR) $(L_USR)
+LDFLAGSDLL     = /dll $(LDFLAGS)
 # user32.lib: *Clipboard*(), CharToOemBuff(), OemToCharBuff(), GetKeyState(), GetKeyboardState(), SetKeyboardState()
 # wsock32.lib: hbinet
 # advapi32.lib: GetUserName()
 # gdi32.lib: gtwvt
 STANDARD_SYSLIBS = user32.lib wsock32.lib advapi32.lib gdi32.lib
+!endif
+
+!if "$(HB_BUILD_DEBUG)" == "yes"
+LDFLAGS        = /debug $(LDFLAGS)
+LDFLAGSDLL     = /debug $(LDFLAGSDLL)
 !endif
 
 #**********************************************************
@@ -798,7 +791,7 @@ $(GTGUI_LIB)    : $(GTGUI_LIB_OBJS)
 # HARBOUR build rule
 #**********************************************************
 $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
-    IF EXIST "$(HARBOUR_EXE)" $(DEL) "$(HARBOUR_EXE)" > nul
+    @if exist "$(HARBOUR_EXE)" $(DEL) "$(HARBOUR_EXE)" > nul
     $(LINKER) @<<
 $(LDFLAGS)
 /out:$(HARBOUR_EXE)
@@ -813,7 +806,7 @@ $(STANDARD_SYSLIBS)
 # HBPP build rule
 #**********************************************************
 $(HBPP_EXE) : $(HBPP_EXE_OBJS)
-    IF EXIST "$(HBPP_EXE)" $(DEL) "$(HBPP_EXE)" > nul
+    @if exist "$(HBPP_EXE)" $(DEL) "$(HBPP_EXE)" > nul
     $(LINKER) @<<
 $(LDFLAGS)
 /out:$(HBPP_EXE)
@@ -826,7 +819,7 @@ $(STANDARD_SYSLIBS)
 # HBRUN build rule
 #**********************************************************
 $(HBRUN_EXE)  : $(HBRUN_EXE_OBJS)
-    IF EXIST "$(HBRUN_EXE)" $(DEL) "$(HBRUN_EXE)" > nul
+    @if exist "$(HBRUN_EXE)" $(DEL) "$(HBRUN_EXE)" > nul
     $(LINKER) @<<
 $(LDFLAGS)
 /out:$(HBRUN_EXE)
@@ -839,7 +832,7 @@ $(STANDARD_SYSLIBS)
 # HBTEST build rule
 #**********************************************************
 $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
-    IF EXIST "$(HBTEST_EXE)" $(DEL) "$(HBTEST_EXE)" > nul
+    @if exist "$(HBTEST_EXE)" $(DEL) "$(HBTEST_EXE)" > nul
     $(LINKER) @<<
 $(LDFLAGS)
 /out:$(HBTEST_EXE)
@@ -852,7 +845,7 @@ $(STANDARD_SYSLIBS)
 # HBDOC build rule
 #**********************************************************
 $(HBDOC_EXE)  : $(HBDOC_EXE_OBJS)
-    IF EXIST "$(HBDOC_EXE)" $(DEL) "$(HBDOC_EXE)" > nul
+    @if exist "$(HBDOC_EXE)" $(DEL) "$(HBDOC_EXE)" > nul
     $(LINKER) @<<
 $(LDFLAGS)
 /out:$(HBDOC_EXE)
@@ -866,7 +859,7 @@ $(STANDARD_SYSLIBS)
 # HBMAKE build rule
 #**********************************************************
 $(HBMAKE_EXE) : $(HBMAKE_EXE_OBJS)
-    IF EXIST "$(HBMAKE_EXE)" $(DEL) "$(HBMAKE_EXE)" > nul
+    @if exist "$(HBMAKE_EXE)" $(DEL) "$(HBMAKE_EXE)" > nul
     $(LINKER) @<<
 $(LDFLAGS)
 /out:$(HBMAKE_EXE)
@@ -915,11 +908,11 @@ $(OBJ_DIR)\pptable.obj     : $(OBJ_DIR)\pptable.c
 $(DLL_OBJ_DIR)\pptable.obj : $(DLL_OBJ_DIR)\pptable.c
 
 $(OBJ_DIR)\pptable.c     : $(INCLUDE_DIR)\hbstdgen.ch $(INCLUDE_DIR)\std.ch ChangeLog $(PP_DIR)\ppcore.c $(PP_DIR)\hbpp.c
-    IF EXIST "$(OBJ_DIR)\pptable.c" $(DEL) "$(OBJ_DIR)\pptable.c" > nul
+    @if exist "$(OBJ_DIR)\pptable.c" $(DEL) "$(OBJ_DIR)\pptable.c" > nul
     $(HBPP) $(INCLUDE_DIR)/hbstdgen.ch -o$(OBJ_DIR)/pptable.c -q -cChangeLog -v$(INCLUDE_DIR)/hbverbld.h
 
 $(DLL_OBJ_DIR)\pptable.c : $(INCLUDE_DIR)\hbstdgen.ch $(INCLUDE_DIR)\std.ch ChangeLog $(PP_DIR)\ppcore.c $(PP_DIR)\hbpp.c
-    IF EXIST "$(DLL_OBJ_DIR)\pptable.c" $(DEL) "$(DLL_OBJ_DIR)\pptable.c" > nul
+    @if exist "$(DLL_OBJ_DIR)\pptable.c" $(DEL) "$(DLL_OBJ_DIR)\pptable.c" > nul
     $(HBPP) $(INCLUDE_DIR)/hbstdgen.ch -o$(DLL_OBJ_DIR)/pptable.c -q -cChangeLog -v$(INCLUDE_DIR)/hbverbld.h
 
 #**********************************************************
@@ -976,32 +969,32 @@ Clean: doClean
 CLEAN: doClean
 
 doClean:
-    -if exist *.idb                     $(DEL) *.idb                     > nul
-    -if exist *.pch                     $(DEL) *.pch                     > nul
-    -if exist *.pdb                     $(DEL) *.pdb                     > nul
-    -if exist $(BIN_DIR)\*.exe          $(DEL) $(BIN_DIR)\*.exe          > nul
-    -if exist $(BIN_DIR)\*.pdb          $(DEL) $(BIN_DIR)\*.pdb          > nul
-    -if exist $(BIN_DIR)\*.ilk          $(DEL) $(BIN_DIR)\*.ilk          > nul
-    -if exist $(BIN_DIR)\*.map          $(DEL) $(BIN_DIR)\*.map          > nul
-    -if exist $(BIN_DIR)\*.dll          $(DEL) $(BIN_DIR)\*.dll          > nul
-    -if exist $(BIN_DIR)\*.lib          $(DEL) $(BIN_DIR)\*.lib          > nul
-    -if exist $(BIN_DIR)\*.exp          $(DEL) $(BIN_DIR)\*.exp          > nul
-    -if exist $(LIB_DIR)\*.lib          $(DEL) $(LIB_DIR)\*.lib          > nul
-    -if exist $(OBJ_DIR)\*.obj          $(DEL) $(OBJ_DIR)\*.obj          > nul
-    -if exist $(OBJ_DIR)\*.c            $(DEL) $(OBJ_DIR)\*.c            > nul
-    -if exist $(OBJ_DIR)\*.h            $(DEL) $(OBJ_DIR)\*.h            > nul
-    -if exist $(OBJ_DIR)\*.pch          $(DEL) $(OBJ_DIR)\*.pch          > nul
-    -if exist $(MT_OBJ_DIR)\*.obj       $(DEL) $(MT_OBJ_DIR)\*.obj       > nul
-    -if exist $(MT_OBJ_DIR)\*.c         $(DEL) $(MT_OBJ_DIR)\*.c         > nul
-    -if exist $(MT_OBJ_DIR)\*.h         $(DEL) $(MT_OBJ_DIR)\*.h         > nul
-    -if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
-    -if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
-    -if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul
-    -if exist $(INCLUDE_DIR)\hbverbld.h $(DEL) $(INCLUDE_DIR)\hbverbld.h > nul
-    -if exist inst_$(HB_CC_NAME).log    $(DEL) inst_$(HB_CC_NAME).log    > nul
-    -if exist bin\*.exe                 $(DEL) bin\*.exe                 > nul
-    -if exist bin\*.dll                 $(DEL) bin\*.dll                 > nul
-    -if exist lib\*.lib                 $(DEL) lib\*.lib                 > nul
+    @if exist *.idb                     $(DEL) *.idb                     > nul
+    @if exist *.pch                     $(DEL) *.pch                     > nul
+    @if exist *.pdb                     $(DEL) *.pdb                     > nul
+    @if exist $(BIN_DIR)\*.exe          $(DEL) $(BIN_DIR)\*.exe          > nul
+    @if exist $(BIN_DIR)\*.pdb          $(DEL) $(BIN_DIR)\*.pdb          > nul
+    @if exist $(BIN_DIR)\*.ilk          $(DEL) $(BIN_DIR)\*.ilk          > nul
+    @if exist $(BIN_DIR)\*.map          $(DEL) $(BIN_DIR)\*.map          > nul
+    @if exist $(BIN_DIR)\*.dll          $(DEL) $(BIN_DIR)\*.dll          > nul
+    @if exist $(BIN_DIR)\*.lib          $(DEL) $(BIN_DIR)\*.lib          > nul
+    @if exist $(BIN_DIR)\*.exp          $(DEL) $(BIN_DIR)\*.exp          > nul
+    @if exist $(LIB_DIR)\*.lib          $(DEL) $(LIB_DIR)\*.lib          > nul
+    @if exist $(OBJ_DIR)\*.obj          $(DEL) $(OBJ_DIR)\*.obj          > nul
+    @if exist $(OBJ_DIR)\*.c            $(DEL) $(OBJ_DIR)\*.c            > nul
+    @if exist $(OBJ_DIR)\*.h            $(DEL) $(OBJ_DIR)\*.h            > nul
+    @if exist $(OBJ_DIR)\*.pch          $(DEL) $(OBJ_DIR)\*.pch          > nul
+    @if exist $(MT_OBJ_DIR)\*.obj       $(DEL) $(MT_OBJ_DIR)\*.obj       > nul
+    @if exist $(MT_OBJ_DIR)\*.c         $(DEL) $(MT_OBJ_DIR)\*.c         > nul
+    @if exist $(MT_OBJ_DIR)\*.h         $(DEL) $(MT_OBJ_DIR)\*.h         > nul
+    @if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
+    @if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
+    @if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul
+    @if exist $(INCLUDE_DIR)\hbverbld.h $(DEL) $(INCLUDE_DIR)\hbverbld.h > nul
+    @if exist inst_$(HB_CC_NAME).log    $(DEL) inst_$(HB_CC_NAME).log    > nul
+    @if exist bin\*.exe                 $(DEL) bin\*.exe                 > nul
+    @if exist bin\*.dll                 $(DEL) bin\*.dll                 > nul
+    @if exist lib\*.lib                 $(DEL) lib\*.lib                 > nul
 
 #**********************************************************
 # INSTALL rules
@@ -1012,14 +1005,14 @@ Install : doInstall
 INSTALL : doInstall
 
 doInstall: $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL)
-    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.exe   copy /B $(BIN_DIR)\*.exe $(HB_BIN_INSTALL) >  inst_$(HB_CC_NAME).log
-    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.dll   copy /B $(BIN_DIR)\*.dll $(HB_BIN_INSTALL) >> inst_$(HB_CC_NAME).log
-    -if exist $(HB_LIB_INSTALL)\nul if exist $(BIN_DIR)\*.lib   copy /B $(BIN_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(HB_CC_NAME).log
-    -if exist $(HB_LIB_INSTALL)\nul if exist $(LIB_DIR)\*.lib   copy /B $(LIB_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(HB_CC_NAME).log
+    @if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.exe   copy /B $(BIN_DIR)\*.exe $(HB_BIN_INSTALL) >  inst_$(HB_CC_NAME).log
+    @if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.dll   copy /B $(BIN_DIR)\*.dll $(HB_BIN_INSTALL) >> inst_$(HB_CC_NAME).log
+    @if exist $(HB_LIB_INSTALL)\nul if exist $(BIN_DIR)\*.lib   copy /B $(BIN_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(HB_CC_NAME).log
+    @if exist $(HB_LIB_INSTALL)\nul if exist $(LIB_DIR)\*.lib   copy /B $(LIB_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(HB_CC_NAME).log
 !if "$(HB_INSTALL_PREFIX)" != "."
-    -if exist $(HB_INC_INSTALL)\nul   copy /B $(INCLUDE_DIR)\*.api $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
-    -if exist $(HB_INC_INSTALL)\nul   copy /B $(INCLUDE_DIR)\*.ch  $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
-    -if exist $(HB_INC_INSTALL)\nul   copy /B $(INCLUDE_DIR)\*.h   $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
+    @if exist $(HB_INC_INSTALL)\nul   copy /B $(INCLUDE_DIR)\*.api $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
+    @if exist $(HB_INC_INSTALL)\nul   copy /B $(INCLUDE_DIR)\*.ch  $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
+    @if exist $(HB_INC_INSTALL)\nul   copy /B $(INCLUDE_DIR)\*.h   $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
 !endif
 
 #**********************************************************

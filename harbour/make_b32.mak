@@ -180,7 +180,7 @@ ARFLAGS = /P32 $(A_USR)
 
 # General Library BUILD rule
 #{$(OBJ_DIR)}.obj{$(LIB_DIR)}.lib:
-#    IF EXIST "$@" $(DEL) "$@" > NUL
+#    @if exist "$@" $(DEL) "$@" > NUL
 #    $(MKLIB) "$@" $(ARFLAGS) @&&!
 #+$(**: = &^
 #+)
@@ -207,27 +207,27 @@ StdLibs   : $(STANDARD_STATIC_HBLIBS)
 #**********************************************************
 
 $(HB_DEST_DIRS) $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL):
-    !if not exist $@\nul mkdir $@
+    @if not exist $@\nul mkdir $@
 
 #**********************************************************
 # LIBRARY Targets BUILD rules
 #**********************************************************
 $(COMMON_LIB)   : $(COMMON_LIB_OBJS)
-    IF EXIST "$(COMMON_LIB)" $(DEL) "$(COMMON_LIB)" > NUL
+    @if exist "$(COMMON_LIB)" $(DEL) "$(COMMON_LIB)" > NUL
     $(MKLIB) "$(COMMON_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(PP_LIB)       : $(PP_LIB_OBJS)
-    IF EXIST "$(PP_LIB)" $(DEL) "$(PP_LIB)" > NUL
+    @if exist "$(PP_LIB)" $(DEL) "$(PP_LIB)" > NUL
     $(MKLIB) "$(PP_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
-    IF EXIST "$(COMPILER_LIB)" $(DEL) "$(COMPILER_LIB)" > NUL
+    @if exist "$(COMPILER_LIB)" $(DEL) "$(COMPILER_LIB)" > NUL
     $(MKLIB) "$(COMPILER_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
@@ -235,7 +235,7 @@ $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
 #**********************************************************
 $(VM_LIB)       :: BasicExes
 $(VM_LIB)       :: $(VM_LIB_OBJS)
-    IF EXIST "$(VM_LIB)" $(DEL) "$(VM_LIB)" > NUL
+    @if exist "$(VM_LIB)" $(DEL) "$(VM_LIB)" > NUL
     $(MKLIB) "$(VM_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
@@ -243,7 +243,7 @@ $(VM_LIB)       :: $(VM_LIB_OBJS)
 #**********************************************************
 $(VMMT_LIB)     :: BasicExes
 $(VMMT_LIB)     :: $(VMMT_LIB_OBJS)
-    IF EXIST "$(VMMT_LIB)" $(DEL) "$(VMMT_LIB)" > NUL
+    @if exist "$(VMMT_LIB)" $(DEL) "$(VMMT_LIB)" > NUL
     $(MKLIB) "$(VMMT_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
@@ -251,14 +251,14 @@ $(VMMT_LIB)     :: $(VMMT_LIB_OBJS)
 #**********************************************************
 $(RTL_LIB)      :: BasicExes
 $(RTL_LIB)      :: $(RTL_LIB_OBJS)
-    IF EXIST "$(RTL_LIB)" $(DEL) "$(RTL_LIB)" > NUL
+    @if exist "$(RTL_LIB)" $(DEL) "$(RTL_LIB)" > NUL
     $(MKLIB) "$(RTL_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(MACRO_LIB)    : $(MACRO_LIB_OBJS)
-    IF EXIST "$(MACRO_LIB)" $(DEL) "$(MACRO_LIB)" > NUL
+    @if exist "$(MACRO_LIB)" $(DEL) "$(MACRO_LIB)" > NUL
     $(MKLIB) "$(MACRO_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
@@ -266,42 +266,42 @@ $(MACRO_LIB)    : $(MACRO_LIB_OBJS)
 #**********************************************************
 $(DEBUG_LIB)    :: BasicExes
 $(DEBUG_LIB)    :: $(DEBUG_LIB_OBJS)
-    IF EXIST "$(DEBUG_LIB)" $(DEL) "$(DEBUG_LIB)" > NUL
+    @if exist "$(DEBUG_LIB)" $(DEL) "$(DEBUG_LIB)" > NUL
     $(MKLIB) "$(DEBUG_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(LANG_LIB)     : $(LANG_LIB_OBJS)
-    IF EXIST "$(LANG_LIB)" $(DEL) "$(LANG_LIB)" > NUL
+    @if exist "$(LANG_LIB)" $(DEL) "$(LANG_LIB)" > NUL
     $(MKLIB) "$(LANG_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(CODEPAGE_LIB) : $(CODEPAGE_LIB_OBJS)
-    IF EXIST "$(CODEPAGE_LIB)" $(DEL) "$(CODEPAGE_LIB)" > NUL
+    @if exist "$(CODEPAGE_LIB)" $(DEL) "$(CODEPAGE_LIB)" > NUL
     $(MKLIB) "$(CODEPAGE_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(PCRE_LIB)     : $(PCRE_LIB_OBJS)
-    IF EXIST "$(PCRE_LIB)" $(DEL) "$(PCRE_LIB)" > NUL
+    @if exist "$(PCRE_LIB)" $(DEL) "$(PCRE_LIB)" > NUL
     $(MKLIB) "$(PCRE_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(HBZLIB_LIB)   : $(HBZLIB_LIB_OBJS)
-    IF EXIST "$(HBZLIB_LIB)" $(DEL) "$(HBZLIB_LIB)" > NUL
+    @if exist "$(HBZLIB_LIB)" $(DEL) "$(HBZLIB_LIB)" > NUL
     $(MKLIB) "$(HBZLIB_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(HBEXTERN_LIB) : $(HBEXTERN_LIB_OBJS)
-    IF EXIST "$(HBEXTERN_LIB)" $(DEL) "$(HBEXTERN_LIB)" > NUL
+    @if exist "$(HBEXTERN_LIB)" $(DEL) "$(HBEXTERN_LIB)" > NUL
     $(MKLIB) "$(HBEXTERN_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
@@ -309,14 +309,14 @@ $(HBEXTERN_LIB) : $(HBEXTERN_LIB_OBJS)
 #**********************************************************
 $(RDD_LIB)      :: BasicExes
 $(RDD_LIB)      :: $(RDD_LIB_OBJS)
-    IF EXIST "$(RDD_LIB)" $(DEL) "$(RDD_LIB)" > NUL
+    @if exist "$(RDD_LIB)" $(DEL) "$(RDD_LIB)" > NUL
     $(MKLIB) "$(RDD_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(NULSYS_LIB)   : $(NULSYS_LIB_OBJS)
-    IF EXIST "$(NULSYS_LIB)" $(DEL) "$(NULSYS_LIB)" > NUL
+    @if exist "$(NULSYS_LIB)" $(DEL) "$(NULSYS_LIB)" > NUL
     $(MKLIB) "$(NULSYS_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
@@ -324,91 +324,91 @@ $(NULSYS_LIB)   : $(NULSYS_LIB_OBJS)
 #**********************************************************
 $(DBFNTX_LIB)   :: BasicExes
 $(DBFNTX_LIB)   :: $(DBFNTX_LIB_OBJS)
-    IF EXIST "$(DBFNTX_LIB)" $(DEL) "$(DBFNTX_LIB)" > NUL
+    @if exist "$(DBFNTX_LIB)" $(DEL) "$(DBFNTX_LIB)" > NUL
     $(MKLIB) "$(DBFNTX_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(DBFCDX_LIB)   : $(DBFCDX_LIB_OBJS)
-    IF EXIST "$(DBFCDX_LIB)" $(DEL) "$(DBFCDX_LIB)" > NUL
+    @if exist "$(DBFCDX_LIB)" $(DEL) "$(DBFCDX_LIB)" > NUL
     $(MKLIB) "$(DBFCDX_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(DBFFPT_LIB)   : $(DBFFPT_LIB_OBJS)
-    IF EXIST "$(DBFFPT_LIB)" $(DEL) "$(DBFFPT_LIB)" > NUL
+    @if exist "$(DBFFPT_LIB)" $(DEL) "$(DBFFPT_LIB)" > NUL
     $(MKLIB) "$(DBFFPT_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(HBSIX_LIB)    : $(HBSIX_LIB_OBJS)
-    IF EXIST "$(HBSIX_LIB)" $(DEL) "$(HBSIX_LIB)" > NUL
+    @if exist "$(HBSIX_LIB)" $(DEL) "$(HBSIX_LIB)" > NUL
     $(MKLIB) "$(HBSIX_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(HSX_LIB)      : $(HSX_LIB_OBJS)
-    IF EXIST "$(HSX_LIB)" $(DEL) "$(HSX_LIB)" > NUL
+    @if exist "$(HSX_LIB)" $(DEL) "$(HSX_LIB)" > NUL
     $(MKLIB) "$(HSX_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(USRRDD_LIB)   : $(USRRDD_LIB_OBJS)
-    IF EXIST "$(USRRDD_LIB)" $(DEL) "$(USRRDD_LIB)" > NUL
+    @if exist "$(USRRDD_LIB)" $(DEL) "$(USRRDD_LIB)" > NUL
     $(MKLIB) "$(USRRDD_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(GTCGI_LIB)    : $(GTCGI_LIB_OBJS)
-    IF EXIST "$(GTCGI_LIB)" $(DEL) "$(GTCGI_LIB)" > NUL
+    @if exist "$(GTCGI_LIB)" $(DEL) "$(GTCGI_LIB)" > NUL
     $(MKLIB) "$(GTCGI_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(GTDOS_LIB)    : $(GTDOS_LIB_OBJS)
-    IF EXIST "$(GTDOS_LIB)" $(DEL) "$(GTDOS_LIB)" > NUL
+    @if exist "$(GTDOS_LIB)" $(DEL) "$(GTDOS_LIB)" > NUL
     $(MKLIB) "$(GTDOS_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(GTPCA_LIB)    : $(GTPCA_LIB_OBJS)
-    IF EXIST "$(GTPCA_LIB)" $(DEL) "$(GTPCA_LIB)" > NUL
+    @if exist "$(GTPCA_LIB)" $(DEL) "$(GTPCA_LIB)" > NUL
     $(MKLIB) "$(GTPCA_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(GTSTD_LIB)    : $(GTSTD_LIB_OBJS)
-    IF EXIST "$(GTSTD_LIB)" $(DEL) "$(GTSTD_LIB)" > NUL
+    @if exist "$(GTSTD_LIB)" $(DEL) "$(GTSTD_LIB)" > NUL
     $(MKLIB) "$(GTSTD_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(GTWIN_LIB)    : $(GTWIN_LIB_OBJS)
-    IF EXIST "$(GTWIN_LIB)" $(DEL) "$(GTWIN_LIB)" > NUL
+    @if exist "$(GTWIN_LIB)" $(DEL) "$(GTWIN_LIB)" > NUL
     $(MKLIB) "$(GTWIN_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(GTWVT_LIB)    : $(GTWVT_LIB_OBJS)
-    IF EXIST "$(GTWVT_LIB)" $(DEL) "$(GTWVT_LIB)" > NUL
+    @if exist "$(GTWVT_LIB)" $(DEL) "$(GTWVT_LIB)" > NUL
     $(MKLIB) "$(GTWVT_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
 #**********************************************************
 $(GTGUI_LIB)    : $(GTGUI_LIB_OBJS)
-    IF EXIST "$(GTGUI_LIB)" $(DEL) "$(GTGUI_LIB)" > NUL
+    @if exist "$(GTGUI_LIB)" $(DEL) "$(GTGUI_LIB)" > NUL
     $(MKLIB) "$(GTGUI_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
@@ -424,7 +424,7 @@ $(GTGUI_LIB)    : $(GTGUI_LIB_OBJS)
 #**********************************************************
 $(HARBOUR_EXE) :: BasicLibs
 $(HARBOUR_EXE) :: $(HARBOUR_EXE_OBJS)
-    IF EXIST "$(HARBOUR_EXE)" $(DEL) "$(HARBOUR_EXE)" > NUL
+    @if exist "$(HARBOUR_EXE)" $(DEL) "$(HARBOUR_EXE)" > NUL
     $(CC) @&&!
 $(CFLAGS)
 -e$(HARBOUR_EXE)
@@ -439,7 +439,7 @@ $(PP_LIB)
 #**********************************************************
 $(HBPP_EXE) :: $(COMMON_LIB)
 $(HBPP_EXE) :: $(HBPP_EXE_OBJS)
-    IF EXIST "$(HBPP_EXE)" $(DEL) "$(HBPP_EXE)" > NUL
+    @if exist "$(HBPP_EXE)" $(DEL) "$(HBPP_EXE)" > NUL
     $(CC) @&&!
 $(CFLAGS)
 -e$(HBPP_EXE)
@@ -452,7 +452,7 @@ $(COMMON_LIB)
 #**********************************************************
 $(HBRUN_EXE)  :: BasicLibs BasicExes StdLibs
 $(HBRUN_EXE)  :: $(HBRUN_EXE_OBJS)
-    IF EXIST "$(HBRUN_EXE)" $(DEL) "$(HBRUN_EXE)" > NUL
+    @if exist "$(HBRUN_EXE)" $(DEL) "$(HBRUN_EXE)" > NUL
     $(CC) @&&!
 $(CFLAGS)
 -e$(HBRUN_EXE)
@@ -466,7 +466,7 @@ $(STANDARD_STATIC_HBLIBS)
 #**********************************************************
 $(HBTEST_EXE) :: BasicLibs BasicExes StdLibs
 $(HBTEST_EXE) :: $(HBTEST_EXE_OBJS)
-    IF EXIST "$(HBTEST_EXE)" $(DEL) "$(HBTEST_EXE)" > NUL
+    @if exist "$(HBTEST_EXE)" $(DEL) "$(HBTEST_EXE)" > NUL
     $(CC) @&&!
 $(CFLAGS)
 -e$(HBTEST_EXE)
@@ -480,7 +480,7 @@ $(STANDARD_STATIC_HBLIBS)
 #**********************************************************
 $(HBDOC_EXE)  :: BasicLibs BasicExes StdLibs
 $(HBDOC_EXE)  :: $(HBDOC_EXE_OBJS)
-    IF EXIST "$(HBDOC_EXE)" $(DEL) "$(HBDOC_EXE)" > NUL
+    @if exist "$(HBDOC_EXE)" $(DEL) "$(HBDOC_EXE)" > NUL
     $(CC) @&&!
 $(CFLAGS)
 -e$(HBDOC_EXE)
@@ -494,7 +494,7 @@ $(MINIMAL_STATIC_HBLIBS) $(HBDOC_LIBS)
 #**********************************************************
 $(HBMAKE_EXE) :: BasicLibs BasicExes StdLibs
 $(HBMAKE_EXE) :: $(HBMAKE_EXE_OBJS)
-    IF EXIST "$(HBMAKE_EXE)" $(DEL) "$(HBMAKE_EXE)" > NUL
+    @if exist "$(HBMAKE_EXE)" $(DEL) "$(HBMAKE_EXE)" > NUL
     $(CC) @&&!
 $(CFLAGS)
 -e$(HBMAKE_EXE)
@@ -538,11 +538,11 @@ $(OBJ_DIR)\pptable.obj     : $(OBJ_DIR)\pptable.c
 $(DLL_OBJ_DIR)\pptable.obj : $(DLL_OBJ_DIR)\pptable.c
 
 $(OBJ_DIR)\pptable.c     : $(INCLUDE_DIR)\hbstdgen.ch $(INCLUDE_DIR)\std.ch ChangeLog $(PP_DIR)\ppcore.c $(PP_DIR)\hbpp.c
-    IF EXIST "$(OBJ_DIR)\pptable.c" $(DEL) "$(OBJ_DIR)\pptable.c" > nul
+    @if exist "$(OBJ_DIR)\pptable.c" $(DEL) "$(OBJ_DIR)\pptable.c" > nul
     $(HBPP) $(INCLUDE_DIR)/hbstdgen.ch -o$(OBJ_DIR)/pptable.c -q -cChangeLog -v$(INCLUDE_DIR)/hbverbld.h
 
 $(DLL_OBJ_DIR)\pptable.c : $(INCLUDE_DIR)\hbstdgen.ch $(INCLUDE_DIR)\std.ch ChangeLog $(PP_DIR)\ppcore.c $(PP_DIR)\hbpp.c
-    IF EXIST "$(DLL_OBJ_DIR)\pptable.c" $(DEL) "$(DLL_OBJ_DIR)\pptable.c" > nul
+    @if exist "$(DLL_OBJ_DIR)\pptable.c" $(DEL) "$(DLL_OBJ_DIR)\pptable.c" > nul
     $(HBPP) $(INCLUDE_DIR)/hbstdgen.ch -o$(DLL_OBJ_DIR)/pptable.c -q -cChangeLog -v$(INCLUDE_DIR)/hbverbld.h
 
 #**********************************************************
@@ -600,28 +600,28 @@ Clean: doClean
 CLEAN: doClean
 
 doClean:
-    -if exist $(BIN_DIR)\*.exe          $(DEL) $(BIN_DIR)\*.exe          > nul
-    -if exist $(BIN_DIR)\*.tds          $(DEL) $(BIN_DIR)\*.tds          > nul
-    -if exist $(BIN_DIR)\*.tr?          $(DEL) $(BIN_DIR)\*.tr?          > nul
-    -if exist $(BIN_DIR)\*.map          $(DEL) $(BIN_DIR)\*.map          > nul
-    -if exist $(BIN_DIR)\*.dll          $(DEL) $(BIN_DIR)\*.dll          > nul
-    -if exist $(BIN_DIR)\*.lib          $(DEL) $(BIN_DIR)\*.lib          > nul
-    -if exist $(LIB_DIR)\*.lib          $(DEL) $(LIB_DIR)\*.lib          > nul
-    -if exist $(LIB_DIR)\*.bak          $(DEL) $(LIB_DIR)\*.bak          > nul
-    -if exist $(OBJ_DIR)\*.obj          $(DEL) $(OBJ_DIR)\*.obj          > nul
-    -if exist $(OBJ_DIR)\*.c            $(DEL) $(OBJ_DIR)\*.c            > nul
-    -if exist $(OBJ_DIR)\*.h            $(DEL) $(OBJ_DIR)\*.h            > nul
-    -if exist $(MT_OBJ_DIR)\*.obj       $(DEL) $(MT_OBJ_DIR)\*.obj       > nul
-    -if exist $(MT_OBJ_DIR)\*.c         $(DEL) $(MT_OBJ_DIR)\*.c         > nul
-    -if exist $(MT_OBJ_DIR)\*.h         $(DEL) $(MT_OBJ_DIR)\*.h         > nul
-    -if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
-    -if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
-    -if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul
-    -if exist $(INCLUDE_DIR)\hbverbld.h $(DEL) $(INCLUDE_DIR)\hbverbld.h > nul
-    -if exist inst_$(HB_CC_NAME).log    $(DEL) inst_$(HB_CC_NAME).log    > nul
-    -if exist bin\*.exe                 $(DEL) bin\*.exe                 > nul
-    -if exist bin\*.dll                 $(DEL) bin\*.dll                 > nul
-    -if exist lib\*.lib                 $(DEL) lib\*.lib                 > nul
+    @if exist $(BIN_DIR)\*.exe          $(DEL) $(BIN_DIR)\*.exe          > nul
+    @if exist $(BIN_DIR)\*.tds          $(DEL) $(BIN_DIR)\*.tds          > nul
+    @if exist $(BIN_DIR)\*.tr?          $(DEL) $(BIN_DIR)\*.tr?          > nul
+    @if exist $(BIN_DIR)\*.map          $(DEL) $(BIN_DIR)\*.map          > nul
+    @if exist $(BIN_DIR)\*.dll          $(DEL) $(BIN_DIR)\*.dll          > nul
+    @if exist $(BIN_DIR)\*.lib          $(DEL) $(BIN_DIR)\*.lib          > nul
+    @if exist $(LIB_DIR)\*.lib          $(DEL) $(LIB_DIR)\*.lib          > nul
+    @if exist $(LIB_DIR)\*.bak          $(DEL) $(LIB_DIR)\*.bak          > nul
+    @if exist $(OBJ_DIR)\*.obj          $(DEL) $(OBJ_DIR)\*.obj          > nul
+    @if exist $(OBJ_DIR)\*.c            $(DEL) $(OBJ_DIR)\*.c            > nul
+    @if exist $(OBJ_DIR)\*.h            $(DEL) $(OBJ_DIR)\*.h            > nul
+    @if exist $(MT_OBJ_DIR)\*.obj       $(DEL) $(MT_OBJ_DIR)\*.obj       > nul
+    @if exist $(MT_OBJ_DIR)\*.c         $(DEL) $(MT_OBJ_DIR)\*.c         > nul
+    @if exist $(MT_OBJ_DIR)\*.h         $(DEL) $(MT_OBJ_DIR)\*.h         > nul
+    @if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
+    @if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
+    @if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul
+    @if exist $(INCLUDE_DIR)\hbverbld.h $(DEL) $(INCLUDE_DIR)\hbverbld.h > nul
+    @if exist inst_$(HB_CC_NAME).log    $(DEL) inst_$(HB_CC_NAME).log    > nul
+    @if exist bin\*.exe                 $(DEL) bin\*.exe                 > nul
+    @if exist bin\*.dll                 $(DEL) bin\*.dll                 > nul
+    @if exist lib\*.lib                 $(DEL) lib\*.lib                 > nul
 
 #**********************************************************
 # INSTALL rules
@@ -632,14 +632,14 @@ Install : doInstall
 INSTALL : doInstall
 
 doInstall: $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL)
-    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.exe   copy /B $(BIN_DIR)\*.exe $(HB_BIN_INSTALL) >  inst_$(HB_CC_NAME).log
-    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.dll   copy /B $(BIN_DIR)\*.dll $(HB_BIN_INSTALL) >> inst_$(HB_CC_NAME).log
-    -if exist $(HB_LIB_INSTALL)\nul if exist $(BIN_DIR)\*.lib   copy /B $(BIN_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(HB_CC_NAME).log
-    -if exist $(HB_LIB_INSTALL)\nul if exist $(LIB_DIR)\*.lib   copy /B $(LIB_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(HB_CC_NAME).log
+    @if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.exe   copy /B $(BIN_DIR)\*.exe $(HB_BIN_INSTALL) >  inst_$(HB_CC_NAME).log
+    @if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.dll   copy /B $(BIN_DIR)\*.dll $(HB_BIN_INSTALL) >> inst_$(HB_CC_NAME).log
+    @if exist $(HB_LIB_INSTALL)\nul if exist $(BIN_DIR)\*.lib   copy /B $(BIN_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(HB_CC_NAME).log
+    @if exist $(HB_LIB_INSTALL)\nul if exist $(LIB_DIR)\*.lib   copy /B $(LIB_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(HB_CC_NAME).log
 !if "$(HB_INSTALL_PREFIX)" != "."
-    -if exist $(HB_INC_INSTALL)\nul   copy /B $(INCLUDE_DIR)\*.api $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
-    -if exist $(HB_INC_INSTALL)\nul   copy /B $(INCLUDE_DIR)\*.ch  $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
-    -if exist $(HB_INC_INSTALL)\nul   copy /B $(INCLUDE_DIR)\*.h   $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
+    @if exist $(HB_INC_INSTALL)\nul   copy /B $(INCLUDE_DIR)\*.api $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
+    @if exist $(HB_INC_INSTALL)\nul   copy /B $(INCLUDE_DIR)\*.ch  $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
+    @if exist $(HB_INC_INSTALL)\nul   copy /B $(INCLUDE_DIR)\*.h   $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
 !endif
 
 #**********************************************************

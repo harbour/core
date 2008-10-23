@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-23 12:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_vc.mak
+    * "IF EXIST" -> "if exist" for consistency.
+    * "-" echo supression char consistently changed to "@", 
+      and added where it was missing (for 'if exist' commands).
+
+  * make_vc.mak
+    % Cleaned WinCE C options from unnecessary quotes.
+    % Minor opt in .dll flag assembly.
+    % Some commented options removed.
+    * WinCE LDFLAGS uppercase to lowercase.
+    % Minor opt in non-WinCE LDFLAGSDLL assembly.
+
+  * source/rtl/gtwvt/gtwvt.c
+    * Minor formatting.
+
 2008-10-22 20:58 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/tests/demowvg.prg
     ! Yet another cosmetic change to demonstrate Fonts and Size of the windows.

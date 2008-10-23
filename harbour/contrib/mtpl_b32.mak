@@ -164,7 +164,7 @@ ALL_HEADERS = $(PRG_HEADERS) $(C_HEADERS)
 
 #**********************************************************
 $(LIB_PATH) : $(LIB_OBJS)
-    if exist "$(LIB_PATH)" $(DEL) "$(LIB_PATH)" > NUL
+    @if exist "$(LIB_PATH)" $(DEL) "$(LIB_PATH)" > NUL
     $(MKLIB) "$(LIB_PATH)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
