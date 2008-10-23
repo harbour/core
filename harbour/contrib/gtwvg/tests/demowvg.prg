@@ -92,7 +92,7 @@ REQUEST DbfCdx
 //-------------------------------------------------------------------//
 
 #ifndef __SQL__
-//ANNOUNCE Hb_NoStartUpWindow
+ANNOUNCE Hb_NoStartUpWindow
 #endif
 
 //-------------------------------------------------------------------//
@@ -296,7 +296,8 @@ Function HB_GTSYS()
 PROCEDURE WvtNextGets()
 
    #ifdef __MW__
-      Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), Wvt_setFont( 'Lucida Console',20,10), WvtNextGets_X() } )
+   Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), Wvt_setFont( 'Terminal',20 ), ;
+                        Wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
    #else
       WvtNextGets_X()
    #endif
@@ -630,7 +631,7 @@ FUNCTION VouChoice( aChoices )
 FUNCTION WvtMyBrowse()
 
    #ifdef __MW__
-      Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), WvtMyBrowse_X() } )
+      Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), SetMode( 35,70 ), Wvt_ShowWindow( SW_RESTORE ), WvtMyBrowse_X() } )
    #else
       WvtMyBrowse_X()
    #endif
