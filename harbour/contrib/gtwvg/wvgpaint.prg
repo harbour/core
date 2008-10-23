@@ -64,7 +64,7 @@
 
 //-------------------------------------------------------------------//
 
-static paint_:= { { '', {} } }
+thread static paint_:= { { '', {} } }
 
 //-------------------------------------------------------------------//
 //
@@ -144,7 +144,7 @@ function WvtPaintObjects()
 
 function WvtSetPaint( a_ )
    local o
-   static s := {}
+   thread static s := {}
 
    o := s
 

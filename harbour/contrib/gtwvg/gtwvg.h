@@ -268,6 +268,10 @@ typedef struct
 
    PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
+#if !defined(UNICODE)
+   BYTE     keyTransTbl[ 256 ];
+   BYTE     chrTransTbl[ 256 ];
+#endif
 
    int      CodePage;                     /* Code page to use for display characters */
    BOOL     Win9X;                        /* Flag to say if running on Win9X not NT/2000/XP */

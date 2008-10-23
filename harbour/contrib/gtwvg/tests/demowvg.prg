@@ -105,13 +105,13 @@ MEMVAR cCdxExp, First, Last, City
 
 //-------------------------------------------------------------------//
 
-static wvtScreen := {}
-static pic_:= { , , , , , , , , , , , , , , , , , , , }
-static keys_:= { , , , , , , , , , , , , , , , , , , , }
+thread static wvtScreen := {}
+thread static pic_:= { , , , , , , , , , , , , , , , , , , , }
+thread static keys_:= { , , , , , , , , , , , , , , , , , , , }
 
-static ahFonts := {}
-static shIcon, shImage
-static aSlides := {}
+thread static ahFonts := {}
+thread static aSlides := {}
+thread static shIcon, shImage
 
 #ifdef __XCC__
 static paint_:= { { "", {} } }
@@ -294,6 +294,18 @@ Function HB_GTSYS()
 //------------------------------------------------------------------//
 
 PROCEDURE WvtNextGets()
+
+   #ifdef __MW__
+      Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), Wvt_setFont( 'Lucida Console',20,10), WvtNextGets_X() } )
+   #else
+      WvtNextGets_X()
+   #endif
+
+   RETURN
+
+//----------------------------------------------------------------------//
+
+PROCEDURE WvtNextGets_X()
 
    LOCAL aLastPaint, clr
    LOCAL dDate      := ctod( "" )
@@ -535,7 +547,7 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )
 FUNCTION WvtSetBlocks( a_ )
 
    LOCAL o
-   STATIC s := {}
+   THREAD STATIC s := {}
 
    o := aclone( s )
 
@@ -550,7 +562,7 @@ FUNCTION WvtSetBlocks( a_ )
 FUNCTION WvtSetObjects( aObject )
 
    LOCAL oObjects
-   STATIC aObjects := {}
+   THREAD STATIC aObjects := {}
 
    oObjects := aclone( aObjects )
 
@@ -583,7 +595,6 @@ FUNCTION SetMouseCheck( lYes )
 
    RETURN lOYes
 //-------------------------------------------------------------------//
-
 FUNCTION WvtWindowExpand( nUnits )
 
    STATIC sUnits := 18
@@ -616,6 +627,15 @@ FUNCTION VouChoice( aChoices )
 //-------------------------------------------------------------------//
 FUNCTION WvtMyBrowse()
 
+   #ifdef __MW__
+      Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), WvtMyBrowse_X() } )
+   #else
+      WvtMyBrowse_X()
+   #endif
+
+   Return nil
+//----------------------------------------------------------------------//
+FUNCTION WvtMyBrowse_X()
    LOCAL nKey, bBlock, oBrowse , aLastPaint, i
    LOCAL lEnd    := .f.
    LOCAL aBlocks := {}
@@ -1131,7 +1151,7 @@ FUNCTION Popups( nID, lDestroy )
    LOCAL hPop, hPop1
    LOCAL nPrompt := MF_ENABLED+MF_STRING
 
-   static hPop_:= { , , , , , , , , }
+   THREAD STATIC hPop_:= { , , , , , , , , }
 
    if nID == nil
       Wvt_SetPopupMenu()
@@ -2061,7 +2081,7 @@ FUNCTION DlgSlideShow()
 
 FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
    LOCAL  aRect, hDC
-   STATIC nSlide := 1
+   THREAD STATIC nSlide := 1
 
    Switch nMsg
 
