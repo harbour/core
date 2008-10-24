@@ -318,7 +318,7 @@ HB_FUNC( HB_AINS )
       if( lPos == 0 )
          lPos = 1;
 
-      if( hb_pcount() >= 4 && ISLOG( 4 ) && hb_parl( 4 ) )
+      if( ISLOG( 4 ) && hb_parl( 4 ) )
       {
          ULONG ulLen = hb_arrayLen( pArray ) + 1;
          if( lPos >= 1 && ( ULONG ) lPos <= ulLen )
@@ -327,9 +327,10 @@ HB_FUNC( HB_AINS )
 
       if( hb_arrayIns( pArray, lPos ) )
       {
-         if( hb_pcount() >= 3 && !ISNIL( 3 ) )
+         if( ! ISNIL( 3 ) )
             hb_arraySet( pArray, lPos, hb_param( 3, HB_IT_ANY ) );
       }
+
       hb_itemReturn( pArray ); /* AIns() returns the array itself */
    }
 }
@@ -347,13 +348,13 @@ HB_FUNC( HB_ADEL )
 
       if( hb_arrayDel( pArray, lPos ) )
       {
-         if( hb_pcount() >= 3 && ISLOG( 3 ) && hb_parl( 3 ) )
+         if( ISLOG( 3 ) && hb_parl( 3 ) )
             hb_arraySize( pArray, hb_arrayLen( pArray ) - 1 );
       }
+
       hb_itemReturn( pArray ); /* ADel() returns the array itself */
    }
 }
-
 
 /* TODO: In Xbase++ fifth parameter determines whether array elements
          are passed by reference to the code block. [vszakats] */
