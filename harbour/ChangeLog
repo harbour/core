@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-24 12:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+    + Added recent .prg level functions.
+
 2008-10-24 12:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtxwc/gtxwc.c
     * added hack for problems with some XLIB versions in heavy stress
@@ -99,7 +103,7 @@
   * harbour/contrib/gtwvg/wvgpaint.prg
   * harbour/contrib/gtwvg/tests/demowvg.prg
     ! Updated to current GTWVT changes for multi-windows support.
-    ;NOTE Compile demowvg.prg with -d__MW__ and execute repeatedly 
+    ; NOTE: Compile demowvg.prg with -d__MW__ and execute repeatedly 
      <Traditonal><Next Gets | Browser>. Also paly with other parts as usual.
 
 2008-10-23 04:39 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
