@@ -8,6 +8,33 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-24 12:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    * added hack for problems with some XLIB versions in heavy stress
+      MT tests
+
+  * harbour/include/hbapigt.h
+  * harbour/source/vm/thread.c
+    * added parameter to hb_gtAlloc() C function
+
+  * harbour/include/hbapigt.h
+  * harbour/source/rtl/hbgtcore.c
+    + added hb_gtCreate() and hb_gtSwap() C functions
+    + added new .prg functions:
+         HB_GTCREATE( <cGtName> ) -> <pGT>
+         HB_GTSELECT( <pGT> ) -> <pPrevGT>
+      Using this functions is possible to create many console window
+      if GT supports such possibilities (f.e. GTXWC or GTWVT) even in
+      single thread programs and switch between them.
+
+  * harbour/source/rtl/box.c
+    ! fixed one of recent DISPBOX() modifications - it should use:
+      hb_gtBoxEx() instead of hb_gtDrawBox() to set cursor position.
+
+  + harbour/tests/gtwin.prg
+    + added demonstration/test code for using more then one console window
+      also in single thread programs.
+
 2008-10-24 10:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/arrayshb.c
     % Removed unnecessary pcount() calls.

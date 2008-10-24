@@ -3180,9 +3180,18 @@ HB_EXPORT PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSup
    return NULL;
 }
 
-HB_EXPORT void * hb_gtAlloc( void )
+HB_EXPORT void * hb_gtAlloc( void * hGT )
 {
-   PHB_GT pGT = hb_gt_Base();
+   PHB_GT pGT;
+
+   if( hGT )
+   {
+      pGT = ( PHB_GT ) hGT;
+      if( !HB_GTSELF_LOCK( pGT ) )
+         pGT = NULL;
+   }
+   else
+      pGT = hb_gt_Base();
 
    if( pGT )
    {
@@ -3229,6 +3238,15 @@ HB_EXPORT void hb_gtAttach( void * hGT )
    }
 }
 
+HB_EXPORT void * hb_gtSwap( void * hGT )
+{
+   void * hCurrGT = hb_stackGetGT();
+
+   hb_stackSetGT( hGT );
+
+   return hCurrGT;
+}
+
 HB_EXPORT BOOL hb_gtReload( const char * szGtName,
                             HB_FHANDLE hFilenoStdin,
                             HB_FHANDLE hFilenoStdout,
@@ -3243,6 +3261,25 @@ HB_EXPORT BOOL hb_gtReload( const char * szGtName,
       hb_gtInit( hFilenoStdin, hFilenoStdout, hFilenoStderr );
    }
    return fResult;
+}
+
+HB_EXPORT void * hb_gtCreate( const char * szGtName,
+                              HB_FHANDLE hFilenoStdin,
+                              HB_FHANDLE hFilenoStdout,
+                              HB_FHANDLE hFilenoStderr )
+{
+   void * hCurrGT = hb_gtSwap( NULL );
+
+   if( szGtName && hb_gt_FindEntry( szGtName ) != -1 )
+   {
+      PHB_GT pGT = hb_gtLoad( szGtName, NULL, NULL );
+      if( pGT )
+      {
+         hb_stackSetGT( pGT );
+         hb_gtInit( hFilenoStdin, hFilenoStdout, hFilenoStderr );
+      }
+   }
+   return hb_gtSwap( hCurrGT );
 }
 
 static BOOL hb_gtTryInit( const char * szGtName, BOOL fFree )
@@ -3284,10 +3321,74 @@ HB_EXPORT void hb_gtStartupInit( void )
 
 HB_GT_ANNOUNCE( HB_GT_NAME )
 
+static HB_GARBAGE_FUNC( hb_gt_Destructor )
+{
+   void ** gtHolder = ( void ** ) Cargo;
+
+   if( *gtHolder )
+   {
+      hb_gtRelease( *gtHolder );
+      *gtHolder = NULL;
+   }
+}
+
+static void * hb_gtParam( int iParam )
+{
+   void ** gtHolder = ( void ** ) hb_parptrGC( hb_gt_Destructor, iParam );
+
+   if( gtHolder && *gtHolder )
+      return *gtHolder;
+
+   hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   return NULL;
+}
+
 HB_FUNC( HB_GTRELOAD )
 {
-   hb_retl( hb_gtReload( hb_parc( 1 ), 
+   hb_retl( hb_gtReload( hb_parc( 1 ),
             ISNUM( 2 ) ? hb_numToHandle( hb_parnint( 1 ) ) : HB_STDIN_HANDLE,
             ISNUM( 3 ) ? hb_numToHandle( hb_parnint( 2 ) ) : HB_STDOUT_HANDLE,
             ISNUM( 4 ) ? hb_numToHandle( hb_parnint( 3 ) ) : HB_STDERR_HANDLE ) );
+}
+
+HB_FUNC( HB_GTCREATE )
+{
+   void * hGT;
+
+   hGT = hb_gtCreate( hb_parc( 1 ),
+            ISNUM( 2 ) ? hb_numToHandle( hb_parnint( 1 ) ) : HB_STDIN_HANDLE,
+            ISNUM( 3 ) ? hb_numToHandle( hb_parnint( 2 ) ) : HB_STDOUT_HANDLE,
+            ISNUM( 4 ) ? hb_numToHandle( hb_parnint( 3 ) ) : HB_STDERR_HANDLE );
+
+   if( hGT )
+   {
+      void ** gtHolder = ( void ** ) hb_gcAlloc( sizeof( void * ), hb_gt_Destructor );
+      *gtHolder = hGT;
+      hb_retptrGC( gtHolder );
+   }
+}
+
+HB_FUNC( HB_GTSELECT )
+{
+   void * hGT;
+
+   if( hb_pcount() > 0 )
+   {
+      hGT = hb_gtParam( 1 );
+      if( hGT )
+      {
+         hGT = hb_gtAlloc( hGT );
+         if( hGT )
+            hGT = hb_gtSwap( hGT );
+      }
+   }
+   else
+      hGT = hb_gtAlloc( NULL );
+
+   if( hGT )
+   {
+      void ** gtHolder = ( void ** ) hb_gcAlloc( sizeof( void * ), hb_gt_Destructor );
+      *gtHolder = hGT;
+      hb_retptrGC( gtHolder );
+   }
 }

@@ -577,7 +577,7 @@ PHB_THREADSTATE hb_threadStateNew( void )
    pThread->pszCDP  = HB_MACRO2STRING( HB_CODEPAGE_DEFAULT );
    pThread->pszLang = HB_MACRO2STRING( HB_LANG_DEFAULT );
    pThread->pThItm  = pThItm;
-   pThread->hGT     = hb_gtAlloc();
+   pThread->hGT     = hb_gtAlloc( NULL );
 
    return pThread;
 }

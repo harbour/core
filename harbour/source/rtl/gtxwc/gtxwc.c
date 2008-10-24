@@ -468,18 +468,26 @@ static int s_updateMode = XWC_ASYNC_UPDATE;
 #endif
 static int s_iUpdateCounter;
 
+static BOOL s_fIgnoreErrors = FALSE;
+
 /* *********************************************************************** */
 
 static int s_errorHandler( Display *dpy, XErrorEvent *e )
 {
    char errorText[1024];
 
-   snprintf( errorText, sizeof( errorText ), "%s", "Xlib error: " );
-   XGetErrorText( dpy, e->error_code,
-                  errorText + strlen( errorText ),
-                  sizeof(errorText) - strlen( errorText ) );
-   s_fNoXServer = TRUE;
-   hb_errInternal( 10001, errorText, NULL, NULL );
+   hb_strncpy( errorText, "Xlib error: ", sizeof( errorText ) - 1 );
+   XGetErrorText( dpy, e->error_code, errorText + strlen( errorText ),
+                  sizeof( errorText ) - strlen( errorText ) );
+
+   if( !s_fIgnoreErrors )
+   {
+      s_fNoXServer = TRUE;
+      hb_errInternal( 10001, errorText, NULL, NULL );
+   }
+
+   fprintf( stderr, "%s\n", errorText );
+
    return 1;
 }
 
@@ -2080,6 +2088,12 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          break;
       }
 
+      case CreateNotify:
+#ifdef XWC_DEBUG
+         printf( "Event: CreateNotify\r\n" ); fflush(stdout);
+#endif
+         break;
+
       case MappingNotify:
 #ifdef XWC_DEBUG
          printf( "Event: MappingNotify\r\n" ); fflush(stdout);
@@ -2852,8 +2866,6 @@ static ULONG hb_gt_xwc_CurrentTime( void )
 
 static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
 {
-   XEvent evt;
-
    if( wnd->cursorType != SC_NONE )
    {
       if( wnd->cursorBlinkRate == 0 )
@@ -2886,6 +2898,7 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
    {
       while( XEventsQueued( wnd->dpy, QueuedAfterFlush ) )
       {
+         XEvent evt;
          XNextEvent( wnd->dpy, &evt );
          hb_gt_xwc_WndProc( wnd, &evt );
       }
@@ -2900,6 +2913,7 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
    BOOL fRepeat;
    do
    {
+      XEvent evt;
       fRepeat = FALSE;
       while( XCheckWindowEvent( wnd->dpy, wnd->window, XWC_STD_MASK, &evt ) )
       {
@@ -3109,13 +3123,13 @@ static void hb_gt_xwc_DissConnectX( PXWND_DEF wnd )
 {
    HB_XWC_XLIB_LOCK
 
-   hb_gt_xwc_DestroyCharTrans( wnd );
-
    if( wnd->dpy != NULL )
    {
+      hb_gt_xwc_DestroyCharTrans( wnd );
+
       if( wnd->pm )
       {
-         XFreePixmap( wnd->dpy, wnd->pm);
+         XFreePixmap( wnd->dpy, wnd->pm );
          wnd->pm = 0;
       }
       if( wnd->xfs )
@@ -3128,11 +3142,22 @@ static void hb_gt_xwc_DissConnectX( PXWND_DEF wnd )
          XFreeGC( wnd->dpy, wnd->gc );
          wnd->gc = 0;
       }
+      if( wnd->window )
+      {
+         XDestroyWindow( wnd->dpy, wnd->window );
+         wnd->window = 0;
+      }
 
+      XSync( wnd->dpy, True );
 
       XCloseDisplay( wnd->dpy );
       wnd->dpy = NULL;
 
+      /* Hack to avoid race condition inside some XLIB library - it looks
+       * in heavy stres MT tests that it can receive some events bound with
+       * destroyed objects and executes our error handler.
+       */
+      s_fIgnoreErrors = TRUE;
    }
 
    HB_XWC_XLIB_UNLOCK
@@ -3243,6 +3268,9 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
    XSetWMProtocols( wnd->dpy, wnd->window, &s_atomDelWin, 1 );
 
    XSelectInput( wnd->dpy, wnd->window, XWC_STD_MASK );
+#ifdef XWC_DEBUG
+   printf( "Window created\r\n" ); fflush(stdout);
+#endif
 
    HB_XWC_XLIB_UNLOCK
 }

@@ -76,12 +76,12 @@ HB_FUNC( DISPBOX )
             iColor = hb_parni( 6 );
          else
             iColor = -1;
-         hb_gtDrawBox( ( SHORT ) hb_itemGetNI( pTop ),
-                       ( SHORT ) hb_itemGetNI( pLeft),
-                       ( SHORT ) hb_itemGetNI( pBottom ),
-                       ( SHORT ) hb_itemGetNI( pRight ),
-                       ( BYTE * ) ( *pszBox ? pszBox : "         " ),
-                       iColor );
+         hb_gtBoxEx( hb_itemGetNI( pTop ),
+                     hb_itemGetNI( pLeft),
+                     hb_itemGetNI( pBottom ),
+                     hb_itemGetNI( pRight ),
+                     ( BYTE * ) ( *pszBox ? pszBox : "         " ),
+                     iColor );
       }
       else
       {
