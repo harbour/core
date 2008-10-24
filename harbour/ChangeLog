@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-24 13:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/arrayshb.c
+    * Changed the default for the last logical parameter of 
+      HB_AINS()/HB_ADEL() to be .T.
+      This way there is no need to pass this parameter if someone 
+      wants to actually use the extended nature of these functions.
+      Passing a .F. will result in equivalent functionality to 
+      AINS()/ADEL(). Essentially the last parameter is just there 
+      for compatibility.
+
 2008-10-24 12:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
     + Added recent .prg level functions.
