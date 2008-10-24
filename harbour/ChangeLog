@@ -606,6 +606,7 @@
   * utils/hbrun/hbrun.prg
     * Renamed hb_N2S() to hb_NToS() which feels more
       natural in Clipper.
+      [TOMERGE 1.0] (only the addition of new function hb_NToS())
 
 2008-10-19 00:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/assert.ch
@@ -2083,6 +2084,7 @@
   * source/rtl/inkey.c
     + Added HB_KEYCLEAR() a documented function equivalent
       to "CLEAR TYPEAHEAD" command, or undocumented __KEYBOARD() function.
+      [TOMERGE 1.0]
 
   * contrib/rddads/rddads.h
   * contrib/rddads/ads1.c
