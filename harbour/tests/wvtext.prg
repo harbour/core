@@ -215,12 +215,22 @@ FUNCTION RunInSysTray()
 //----------------------------------------------------------------------//
 
 PROCEDURE thFunc()
-   Local cTitle
+   Local cTitle, oBrowse, lEnd, nKey, i, aStruct
    Local aColor := { 'W+/N', 'W+/B', 'W+/G', 'W+/BG', 'W+/N*', 'W+/RB', 'N/W*', 'N/GR*' }
+
+   static nBrowser := 0
+   nBrowser++
 
    /* allocate own GT driver */
    hb_gtReload( 'WVT' )
    Hb_GtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
+
+   if ( nBrowser % 2 ) != 0
+      Hb_GtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
+   endif
+   Hb_GtInfo( HB_GTI_WINTITLE, 'Test.dbf    ['+if( ( nBrowser % 2 ) != 0, 'RESIZABLE_BY_ROWS', 'RESIZABLE_BY_FONT' )+']' )
+
+   SetCursor( 0 )
 
    nColorIndex++
    if nColorIndex > len( aColor )
@@ -229,17 +239,172 @@ PROCEDURE thFunc()
 
    nRows++
    nCols += 2
-   cTitle := 'New Window with '+ltrim( str( nRows ) )+;
-                                        ' Rows and '+ltrim( str( nCols ) )+' Columns'
 
    SetMode( nRows,nCols )
    SetColor( aColor[ nColorIndex ] )
    Hb_GtInfo( HB_GTI_WINTITLE, cTitle )
+
+   cTitle := 'New Window with '+ltrim( str( MaxRow() ) )+;
+                          ' Rows and '+ltrim( str( MaxCol() ) )+' Columns'
    DispOutAt( 0, 0, padc( cTitle, maxcol()+1 ), 'N/GR*' )
 
    use test shared
-   browse()
+   aStruct := DbStruct()
 
-   return
+   oBrowse := TBrowse():New( 1, 0, maxrow(), maxcol() )
 
+   oBrowse:ColSep        := " ³ "
+   oBrowse:HeadSep       := "ÄÂÄ"
+   oBrowse:GoTopBlock    := { || dbGoTop() }
+   oBrowse:GoBottomBlock := { || dbGoBottom() }
+   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
+
+   for i := 1 to len( aStruct )
+      oBrowse:AddColumn( TBColumnNew( aStruct[ i,1 ], BlockField( i ) ) )
+   next
+
+   oBrowse:configure()
+
+   lEnd := .f.
+   While !lEnd
+      oBrowse:ForceStable()
+
+      nKey := InKey( 0 )
+
+      if BrwHandleKey( oBrowse, nKey, @lEnd )
+         //
+      else
+         if nKey == K_HB_RESIZE
+            cTitle := 'New Window with '+ltrim( str( MaxRow() ) )+;
+                          ' Rows and '+ltrim( str( MaxCol() ) )+' Columns'
+            DispOutAt( 0, 0, padc( cTitle, maxcol()+1 ), 'N/GR*' )
+
+            oBrowse:nBottom := MaxRow()
+            oBrowse:nRight := MaxCol()
+            oBrowse:Configure()
+            oBrowse:RefreshAll()
+         endif
+      endif
+   end
+
+   DbCloseArea()
+
+   RETURN
 //----------------------------------------------------------------------//
+STATIC FUNCTION DbSkipBlock( n, oTbr )
+
+   LOCAL nSkipped := 0
+
+   if n == 0
+      DBSkip( 0 )
+
+   elseif n > 0
+      do while nSkipped != n .and. TBNext( oTbr )
+         nSkipped++
+      enddo
+   else
+      do while nSkipped != n .and. TBPrev( oTbr )
+         nSkipped--
+      enddo
+   endif
+
+   RETURN  nSkipped
+//-------------------------------------------------------------------//
+STATIC FUNCTION TBNext( oTbr )
+
+   LOCAL nSaveRecNum := recno()
+   LOCAL lMoved := .T.
+
+   if Eof()
+      lMoved := .F.
+   else
+      DBSkip( 1 )
+      if Eof()
+         lMoved := .F.
+         DBGoTo( nSaveRecNum )
+      endif
+   endif
+
+   RETURN lMoved
+//-------------------------------------------------------------------//
+STATIC FUNCTION TBPrev( oTbr )
+   LOCAL nSaveRecNum := Recno()
+   LOCAL lMoved := .T.
+
+   DBSkip( -1 )
+
+   if Bof()
+      DBGoTo( nSaveRecNum )
+      lMoved := .F.
+   endif
+
+   RETURN lMoved
+//-------------------------------------------------------------------//
+STATIC FUNCTION BlockField( i )
+   RETURN  {|| fieldget( i ) }
+//-------------------------------------------------------------------//
+STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
+   LOCAL lRet := .t.
+
+   do case
+   case nKey == K_ESC
+      lEnd := .t.
+
+   case nKey == K_ENTER
+      lEnd := .t.
+
+   case nKey == K_DOWN
+      oBrowse:Down()
+
+   case nKey == K_UP
+      oBrowse:Up()
+
+   case nKey == K_LEFT
+      oBrowse:Left()
+
+   case nKey == K_RIGHT
+      oBrowse:Right()
+
+   case nKey == K_PGDN
+      oBrowse:pageDown()
+
+   case nKey == K_PGUP
+      oBrowse:pageUp()
+
+   case nKey == K_CTRL_PGUP
+      oBrowse:goTop()
+
+   case nKey == K_CTRL_PGDN
+      oBrowse:goBottom()
+
+   case nKey == K_HOME
+      oBrowse:home()
+
+   case nKey == K_END
+      oBrowse:end()
+
+   case nKey == K_CTRL_LEFT
+      oBrowse:panLeft()
+
+   case nKey == K_CTRL_RIGHT
+      oBrowse:panRight()
+
+   case nKey == K_CTRL_HOME
+      oBrowse:panHome()
+
+   case nKey == K_CTRL_END
+      oBrowse:panEnd()
+
+   case nKey == K_MWBACKWARD
+      oBrowse:down()
+
+   case nKey == K_MWFORWARD
+      oBrowse:up()
+
+   otherwise
+      lRet := .f.
+
+   endcase
+
+   RETURN lRet
+//-------------------------------------------------------------------//

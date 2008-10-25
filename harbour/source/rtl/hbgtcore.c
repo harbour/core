@@ -1584,6 +1584,10 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+      case HB_GTI_RESIZEMODE:
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, HB_GTI_RESIZEMODE_FONT );
+         break;
+
       default:
          return FALSE;
    }

@@ -8,6 +8,41 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-25 14:49 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/rtl/gtwvt/gtwvt.h
+    + Added <ResizeMode> member to HB_GTWVT
+
+  * harbour/include/hbgtinfo.ch
+    + Added HB_GTI_RESIZEMODE 
+    + Added HB_GTI_RESIZEMODE_FONT
+    + Added HB_GTI_RESIZEMODE_ROWS
+
+  * harbour/include/inkey.ch
+    + Added K_HB_RESIZE  1101
+
+  * harbour/rtl/gtwvt/gtwvt.c
+    ! Updated to accomodate HB_GTI_RESIZEMODE.
+
+  * harbour/rtl/hbgtcore.c
+    ! static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
+      {
+         case HB_GTI_RESIZEMODE:
+            pInfo->pResult = hb_itemPutNInt( pInfo->pResult, HB_GTI_RESIZEMODE_FONT );
+            break;
+
+  * harbour/tests/wvtext.prg
+    ! Updated to demonstrate K_HB_RESIZE event in navigation loop.
+    ; Odd numbered windows will have HB_GTI_RESIZEMODE_ROWS mode
+      Even numbered windows will have HB_GTI_RESIZEMODE_FONT mode.
+      Open two or more browsers to see the effects. 
+
+    ; To activate HB_GTI_RESIZEMODE_ROWS mode call
+         hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
+      and whenever window will be resized you can retrieve it via 
+         if inkey() == K_HB_RESIZE
+            // Reconfigure browser/your screen accordingly
+         endif
+
 2008-10-25 09:35 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
   * harbour/contrib/gtwvg/gtwvg.h

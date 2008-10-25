@@ -129,6 +129,8 @@
 #define HB_GTI_SCREENSIZE       52  /* Get/Set height/width of application window in pixels */
 #define HB_GTI_PALETTE          53  /* Get/Set console colors 1 - 16 given an array of 16 elements containing RGB colors */
 
+#define HB_GTI_RESIZEMODE       54  /* Get/Set console resize mode : HB_GTI_RESIZEMODE_FONT | HB_GTI_RESIZEMODE_ROWS */
+
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
 #define HB_GTI_FONTW_NORMAL     2
@@ -162,6 +164,11 @@
 #define HB_GTE_KILLFOCUS        3
 #define HB_GTE_CLOSE            4
 #define HB_GTE_RESIZED          5
+
+/* Harbour GT Reszing mode constants */
+#define HB_GTI_RESIZEMODE_FONT  0   /* Default */
+#define HB_GTI_RESIZEMODE_ROWS  1
+
 
 /* Compatibility #defines.
    These codes are deprecated, _don't use them_. Please upgrade to the above versions.

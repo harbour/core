@@ -170,6 +170,8 @@ typedef struct
    char *   pszSelectCopy;
    BOOL     bClosable;
 
+   int      ResizeMode;                   /* Sets the resizing mode either to FONT or ROWS */
+
 } HB_GTWVT, * PHB_GTWVT;
 
 /* xHarbour compatible definitions */

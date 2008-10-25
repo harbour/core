@@ -289,6 +289,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
    pWVT->bResizable        = TRUE;
    pWVT->bClosable         = TRUE;
 
+   pWVT->ResizeMode        = HB_GTI_RESIZEMODE_FONT;
+
    return pWVT;
 }
 
@@ -525,6 +527,43 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
    }
    SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
    HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+}
+
+static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
+{
+   RECT wi;
+   RECT ci;
+   int maxWidth;
+   int maxHeight;
+   int borderWidth;
+   int borderHeight;
+
+   GetClientRect( pWVT->hWnd, &ci );
+   GetWindowRect( pWVT->hWnd, &wi );
+
+   borderWidth = ( wi.right - wi.left - ( ci.right - ci.left ) );
+   borderHeight = ( wi.bottom - wi.top - ( ci.bottom - ci.top ) );
+
+   if( pWVT->bMaximized )
+   {
+      SystemParametersInfo( SPI_GETWORKAREA, 0, &wi, 0 );
+
+      maxHeight = wi.bottom - wi.top - borderHeight;
+      maxWidth  = wi.right - wi.left - borderWidth;
+   }
+   else
+   {
+      maxWidth = ci.right - ci.left;
+      maxHeight = ci.bottom - ci.top;
+   }
+
+   if ( maxHeight > 0 )
+   {
+      BOOL bOldCentre = pWVT->CentreWindow;
+      pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
+      HB_GTSELF_SETMODE( pWVT->pGT, (USHORT) ( maxHeight / pWVT->PTEXTSIZE.y ), (USHORT) ( maxWidth / pWVT->PTEXTSIZE.x ) );
+      pWVT->CentreWindow = bOldCentre;
+   }
 }
 
 static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
@@ -1523,7 +1562,13 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_SIZE:
-         hb_gt_wvt_FitSize( pWVT );
+         if ( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
+            hb_gt_wvt_FitSize( pWVT );
+         else
+         {
+            hb_gt_wvt_FitRows( pWVT );
+            hb_gt_wvt_AddCharToInputQueue( pWVT, K_HB_RESIZE );
+         } 
          return 0;
 
       case WM_SYSCOMMAND:
@@ -1532,8 +1577,16 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             case SC_MAXIMIZE:
             {
                pWVT->bMaximized = TRUE;
-
-               hb_gt_wvt_FitSize( pWVT );
+               
+               if ( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
+               { 
+                  hb_gt_wvt_FitSize( pWVT );
+               }
+               else
+               {
+                  hb_gt_wvt_FitRows( pWVT );
+                  hb_gt_wvt_AddCharToInputQueue( pWVT, K_HB_RESIZE );
+               }
 
                /* Disable "maximize" button */
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
@@ -2342,6 +2395,15 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
                }
             }
+         }
+         break;
+      }     
+      case HB_GTI_RESIZEMODE:
+      {
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->ResizeMode );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         {
+            pWVT->ResizeMode = hb_itemGetNI( pInfo->pNewVal );
          }
          break;
       }
