@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-25 12:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.h
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * eliminated few static variables
+    ! fixed possible race condition when new window is created by adding
+      mutex protection
+
 2008-10-24 13:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/arrayshb.c
     * Changed the default for the last logical parameter of 

@@ -93,15 +93,14 @@ static HB_GT_FUNCS   SuperTable;
 
 #define HB_GTWVT_GET(p) ( ( PHB_GTWVT ) HB_GTLOCAL( p ) )
 
+static HB_CRITICAL_NEW( s_wvtMtx );
+#define HB_WVT_LOCK     hb_threadEnterCriticalSection( &s_wvtMtx );
+#define HB_WVT_UNLOCK   hb_threadLeaveCriticalSection( &s_wvtMtx );
+
 static PHB_GTWVT  s_wvtWindows[WVT_MAX_WINDOWS];
 static int        s_wvtCount = 0;
 
-static HANDLE  s_hInstance;
-static HANDLE  s_hPrevInstance;
-static int     s_iCmdShow;
-
 static const TCHAR s_szClassName[] = TEXT( "Harbour_WVT_Class" );
-static int     s_iClassUsers = 0;
 
 static const int K_Ctrl[] =
 {
@@ -111,25 +110,60 @@ static const int K_Ctrl[] =
    K_CTRL_V, K_CTRL_W, K_CTRL_X, K_CTRL_Y, K_CTRL_Z
 };
 
+static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
+
+static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
+{
+   WNDCLASS wndclass;
+
+   memset( &wndclass, 0, sizeof( WNDCLASS ) );
+   wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+   wndclass.lpfnWndProc   = hb_gt_wvt_WndProc;
+   /* wndclass.cbClsExtra    = 0; */
+   /* wndclass.cbWndExtra    = 0; */
+   wndclass.hInstance     = hInstance;
+   /* wndclass.hIcon         = NULL; */
+   wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
+   /* wndclass.hbrBackground = NULL; */
+   /* wndclass.lpszMenuName  = NULL; */
+   wndclass.lpszClassName = s_szClassName;
+
+   if( ! RegisterClass( &wndclass ) )
+      hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
+}
+
 static PHB_GTWVT hb_gt_wvt_Find( HWND hWnd )
 {
    int iCount = s_wvtCount, iPos = 0;
+   PHB_GTWVT pWVT = NULL;
+
+   HB_WVT_LOCK
 
    while( iCount && iPos < WVT_MAX_WINDOWS )
    {
       if( s_wvtWindows[iPos] )
       {
          if( s_wvtWindows[iPos]->hWnd == hWnd )
-            return s_wvtWindows[iPos];
+         {
+            pWVT = s_wvtWindows[iPos];
+            break;
+         }
          --iCount;
       }
       ++iPos;
    }
-   return NULL;
+
+   HB_WVT_UNLOCK
+
+   return pWVT;
 }
 
 static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 {
+   BOOL fOK = FALSE;
+
+   HB_WVT_LOCK
+
    if( s_wvtCount < WVT_MAX_WINDOWS )
    {
       int iPos = 0;
@@ -137,22 +171,36 @@ static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
       {
          if( s_wvtWindows[iPos] == NULL )
          {
-            ++s_wvtCount;
             s_wvtWindows[iPos] = pWVT;
             pWVT->iHandle = iPos;
-            return TRUE;
+            if( ++s_wvtCount == 1 )
+               hb_gt_wvt_RegisterClass( pWVT->hInstance );
+            fOK = TRUE;
+            break;
          }
          ++iPos;
       }
       while( iPos < WVT_MAX_WINDOWS );
    }
-   return FALSE;
+
+   HB_WVT_UNLOCK
+
+   return fOK;
 }
 
 static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 {
-   --s_wvtCount;
+   HB_WVT_LOCK
+
    s_wvtWindows[pWVT->iHandle] = NULL;
+
+   if( --s_wvtCount == 0 )
+   {
+      if( pWVT->hInstance )
+         UnregisterClass( s_szClassName, pWVT->hInstance );
+   }
+
+   HB_WVT_UNLOCK
 
    if( pWVT->pszSelectCopy )
       hb_xfree( pWVT->pszSelectCopy );
@@ -1552,35 +1600,12 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
    return ( width <= maxWidth ) && ( height <= maxHeight );
 }
 
-static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow )
+static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, int iCmdShow )
 {
    HWND     hWnd;
    LPTSTR   szAppName;
 
-   HB_SYMBOL_UNUSED( hPrevInstance );
-   HB_SYMBOL_UNUSED( szCmdLine );
-
    /* InitCommonControls(); */
-
-   if( ++s_iClassUsers == 1 )
-   {
-      WNDCLASS wndclass;
-
-      memset( &wndclass, 0, sizeof( WNDCLASS ) );
-      wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-      wndclass.lpfnWndProc   = hb_gt_wvt_WndProc;
-      /* wndclass.cbClsExtra    = 0; */
-      /* wndclass.cbWndExtra    = 0; */
-      wndclass.hInstance     = hInstance;
-      /* wndclass.hIcon         = NULL; */
-      wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
-      /* wndclass.hbrBackground = NULL; */
-      /* wndclass.lpszMenuName  = NULL; */
-      wndclass.lpszClassName = s_szClassName;
-
-      if( ! RegisterClass( &wndclass ) )
-         hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
-   }
 
    szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
 
@@ -1620,26 +1645,24 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
 
 static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
+   HANDLE    hInstance;
+   int       iCmdShow;
    PHB_GTWVT pWVT;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
 
-   if( ! hb_winmainArgGet( &s_hInstance, &s_hPrevInstance, &s_iCmdShow ) )
+   if( ! hb_winmainArgGet( &hInstance, NULL, &iCmdShow ) )
    {
       hb_errInternal( 10001, "It's not a GUI program", NULL, NULL );
    }
 
    pWVT = hb_gt_wvt_New( pGT );
    if( !pWVT )
-   {
       hb_errInternal( 10001, "Maximum number of WVT windows reached, cannot create another one", NULL, NULL );
-   }
 
    HB_GTLOCAL( pGT ) = ( void * ) pWVT;
-
-   pWVT->hWnd = hb_gt_wvt_CreateWindow( ( HINSTANCE ) s_hInstance,
-                                        ( HINSTANCE ) s_hPrevInstance,
-                                        NULL, s_iCmdShow );
+   pWVT->hInstance = ( HINSTANCE ) hInstance;
+   pWVT->hWnd = hb_gt_wvt_CreateWindow( ( HINSTANCE ) hInstance, iCmdShow );
    if( !pWVT->hWnd )
       return;
 
@@ -1694,11 +1717,7 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
    HB_GTSUPER_EXIT( pGT );
 
    if( pWVT )
-   {
-      if( --s_iClassUsers == 0 )
-         UnregisterClass( s_szClassName, ( HINSTANCE ) s_hInstance );
       hb_gt_wvt_Free( pWVT );
-   }
 }
 
 /* ********************************************************************** */
@@ -2099,12 +2118,12 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             LPTSTR lpIcon = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
-            hIcon = LoadIcon( ( HINSTANCE ) s_hInstance, lpIcon );
+            hIcon = LoadIcon( pWVT->hInstance, lpIcon );
             HB_TCHAR_FREE( lpIcon );
          }
          else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
-            hIcon = LoadIcon( ( HINSTANCE ) s_hInstance,
+            hIcon = LoadIcon( pWVT->hInstance,
                               MAKEINTRESOURCE( ( HB_LONG )
                                           hb_itemGetNInt( pInfo->pNewVal ) ) );
          }
