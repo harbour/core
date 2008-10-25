@@ -91,6 +91,7 @@
 #include "inkey.ch"
 #include "error.ch"
 #include "hbvm.h"
+#include "hbthread.h"
 #include "hbgfxdef.ch"
 
 #include "hbgtwvg.ch"
@@ -236,6 +237,8 @@ typedef struct
 {
    PHB_GT   pGT;                          /* core GT pointer */
    int      iHandle;                      /* window number */
+
+   HINSTANCE hInstance;
 
    USHORT   ROWS;                         /* number of displayable rows in window */
    USHORT   COLS;                         /* number of displayable columns in window */
