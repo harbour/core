@@ -1329,7 +1329,7 @@ static void* win32direct_mmap(size_t size) {
 /* This function supports releasing coalesed segments */
 static int win32munmap(void* ptr, size_t size) {
   MEMORY_BASIC_INFORMATION minfo;
-  char* cptr = ptr;
+  char* cptr = (char*)ptr; /* NOTE: Harbour fix for MSVC C++ mode compile error. Also fixed in dlmalloc 2.8.4b. [vszakats] */
   while (size) {
     if (VirtualQuery(cptr, &minfo, sizeof(minfo)) == 0)
       return -1;

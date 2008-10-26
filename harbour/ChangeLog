@@ -8,6 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-26 22:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/common/hbfopen.c
+    * Changed hb_fopen() to use fopen_s(), secure version of 
+      fopen() for MSVS 2005 and upper.
+
+  * source/common/hbstr.c
+    + Added hb_snprintf() Harbour wrapper for snprintf() which 
+      terminates the buffer with a '\0' char for CRTLs that 
+      need this (like MSVC).
+      MSVC _snprintf() doesn't do so.
+    * hb_snprintf() used _snprintf_s(), secure version of 
+      _snprintf() for MSVS 2005 and upper.
+    ; TOFIX: There is still one strcpy() marked as non-secure 
+             in debug lib. Could someone please take a look 
+             at it and replace it with hb_strncpy() or something 
+             else secure? The code is cryptic and as someone 
+             not using the debugger, I didn't dare to touch it, 
+             and this is the only one such call left.
+    ; TODO: Change all snprintf() calls to hb_snprintf().
+            When that happens, Harbour will no more use anything 
+            depicted as "non-secure" by MSVS 2005/2008.
+    ; NOTE: This function may need tweaking, pls review and 
+            fix if/where needed.
+
+  * source/vm/dlmalloc.c
+    ! Fixed MSVC C++ mode compile error. This fix also exists 
+      as part of the next dlmalloc version (2.8.4b).
+
 2008-10-26 07:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbdbgfx/dbgfx.prg
     * Minor cleanup.

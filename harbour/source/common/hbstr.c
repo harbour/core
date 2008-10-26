@@ -1108,3 +1108,35 @@ char * hb_compDecodeString( int iMethod, const char * szText, ULONG * pulLen )
    }
    return pBuffer;
 }
+
+#undef _HB_SNPRINTF_ADD_EOS
+#undef snprintf
+/* NOTE: The full size of the buffer is expected as nSize. [vszakats] */
+HB_EXPORT void hb_snprintf( char * buffer, ULONG nSize, ... )
+{
+   va_list va;
+
+   va_start( va, nSize );
+
+#if defined( __DJGPP__ ) && ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ <= 3 ) )
+   /* Use sprintf() for DJGPP <= 2.03.
+      This is a temporary hack, should implement a C99 snprintf() ourselves. */
+   sprintf( buffer, va );
+#elif defined( _MSC_VER ) && _MSC_VER >= 1400
+   _snprintf_s( buffer, nSize, _TRUNCATE, va );
+#elif defined( _MSC_VER ) || defined( __DMC__ ) && !defined( __XCC__ )
+   _snprintf( buffer, nSize, va );
+   #define _HB_SNPRINTF_ADD_EOS
+#elif defined( __WATCOMC__ ) && __WATCOMC__ < 1200
+   _bprintf( buffer, nSize, va );
+#else
+   snprintf( buffer, nSize, va );
+#endif
+
+   va_end( va );
+
+#ifdef _HB_SNPRINTF_ADD_EOS
+   if( buffer && nSize )
+      buffer[ nSize - 1 ] = '\0';
+#endif
+}
