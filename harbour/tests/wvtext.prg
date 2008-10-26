@@ -219,7 +219,12 @@ PROCEDURE thFunc()
    Local aColor := { 'W+/N', 'W+/B', 'W+/G', 'W+/BG', 'W+/N*', 'W+/RB', 'N/W*', 'N/GR*' }
 
    static nBrowser := 0
+   static nZx := 0
+   static nZy := 0
+
    nBrowser++
+   nZx += 20
+   nZy += 20
 
    /* allocate own GT driver */
    hb_gtReload( 'WVT' )
@@ -243,6 +248,7 @@ PROCEDURE thFunc()
    SetMode( nRows,nCols )
    SetColor( aColor[ nColorIndex ] )
    Hb_GtInfo( HB_GTI_WINTITLE, cTitle )
+   Hb_GtInfo( HB_GTI_SETPOS_XY, nZx, nZy )
 
    cTitle := 'New Window with '+ltrim( str( MaxRow() ) )+;
                           ' Rows and '+ltrim( str( MaxCol() ) )+' Columns'

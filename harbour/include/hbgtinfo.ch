@@ -130,6 +130,8 @@
 #define HB_GTI_PALETTE          53  /* Get/Set console colors 1 - 16 given an array of 16 elements containing RGB colors */
 
 #define HB_GTI_RESIZEMODE       54  /* Get/Set console resize mode : HB_GTI_RESIZEMODE_FONT | HB_GTI_RESIZEMODE_ROWS */
+#define HB_GTI_SETPOS_XY        55  /* Get/Set current top-left position coordinates of the window by pixels */
+#define HB_GTI_SETPOS_ROWCOL    56  /* Set current top-left position coordinates of the window by row/cols */
 
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1

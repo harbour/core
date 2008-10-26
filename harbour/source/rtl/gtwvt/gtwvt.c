@@ -1568,7 +1568,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          {
             hb_gt_wvt_FitRows( pWVT );
             hb_gt_wvt_AddCharToInputQueue( pWVT, K_HB_RESIZE );
-         } 
+         }
          return 0;
 
       case WM_SYSCOMMAND:
@@ -1577,9 +1577,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             case SC_MAXIMIZE:
             {
                pWVT->bMaximized = TRUE;
-               
+
                if ( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-               { 
+               {
                   hb_gt_wvt_FitSize( pWVT );
                }
                else
@@ -2397,13 +2397,38 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             }
          }
          break;
-      }     
+      }
       case HB_GTI_RESIZEMODE:
       {
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->ResizeMode );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
             pWVT->ResizeMode = hb_itemGetNI( pInfo->pNewVal );
+         }
+         break;
+      }
+      case HB_GTI_SETPOS_XY:
+      case HB_GTI_SETPOS_ROWCOL:
+      {
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) && ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
+         {
+            int x, y;
+            RECT rect = { 0,0,0,0 };
+            GetWindowRect( pWVT->hWnd, &rect );
+
+            x = hb_itemGetNI( pInfo->pNewVal );
+            y = hb_itemGetNI( pInfo->pNewVal2 );
+            if ( iType == HB_GTI_SETPOS_ROWCOL )
+            {
+               x *= pWVT->PTEXTSIZE.x;
+               y *= pWVT->PTEXTSIZE.y;
+            }
+            hb_retl( SetWindowPos( pWVT->hWnd, NULL,
+                                   x,
+                                   y,
+                                   rect.right - rect.left,
+                                   rect.bottom - rect.top,
+                                   SWP_NOSIZE + SWP_NOZORDER ) );
          }
          break;
       }
@@ -2665,9 +2690,9 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
       {
          for( i = 0; i < cdpHost->nChars; ++i )
          {
-            pWVT->chrTransTbl[ ( BYTE ) cdpHost->CharsUpper[ i ] ] = 
+            pWVT->chrTransTbl[ ( BYTE ) cdpHost->CharsUpper[ i ] ] =
                                ( BYTE ) cdpTerm->CharsUpper[ i ];
-            pWVT->chrTransTbl[ ( BYTE ) cdpHost->CharsLower[ i ] ] = 
+            pWVT->chrTransTbl[ ( BYTE ) cdpHost->CharsLower[ i ] ] =
                                ( BYTE ) cdpTerm->CharsLower[ i ];
          }
       }
@@ -2724,9 +2749,9 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
       {
          for( i = 0; i < cdpHost->nChars; ++i )
          {
-            pWVT->keyTransTbl[ ( BYTE ) cdpTerm->CharsUpper[ i ] ] = 
+            pWVT->keyTransTbl[ ( BYTE ) cdpTerm->CharsUpper[ i ] ] =
                                ( BYTE ) cdpHost->CharsUpper[ i ];
-            pWVT->keyTransTbl[ ( BYTE ) cdpTerm->CharsLower[ i ] ] = 
+            pWVT->keyTransTbl[ ( BYTE ) cdpTerm->CharsLower[ i ] ] =
                                ( BYTE ) cdpHost->CharsLower[ i ];
          }
       }

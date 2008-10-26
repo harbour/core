@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-25 17:55 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/include/hbgtinfo.ch
+    + Added HB_GTI_SETPOS_XY
+    + Added HB_GTI_SETPOS_ROWCOL
+  
+  * harbour/rtl/gtwvt/gtwvt.c
+    ! Updated to honor HB_GTI_SETPOS_XY | HB_GTI_SETPOS_ROWCOL commands.
+
+  * harbour/tests/wvtext.prg
+    ! Updated to demonstrate HB_GTI_SETPOS_XY|ROWCOL window positioning.
+
+    ; Now every next browser window opens 20x20 pixels away from 
+      previous window, a GT imposed Z-Order.
+  
 2008-10-25 14:49 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/rtl/gtwvt/gtwvt.h
     + Added <ResizeMode> member to HB_GTWVT
