@@ -134,3 +134,9 @@ HB_EXPORT void hb_ToLogFile( const char * sFile, const char * sTraceMsg, ... )
       }
    }
 }
+
+HB_FUNC( HB_OUTDEBUG )
+{
+   hb_ToOutDebug( hb_parc( 1 ) );
+}
+

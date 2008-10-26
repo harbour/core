@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-25 19:10 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbdbgfx/dbgfxc.c
+    + HB_FUNC( HB_OUTDEBUG ). 
+      May be I am missing something. Please correct.
+
 2008-10-25 17:55 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/include/hbgtinfo.ch
     + Added HB_GTI_SETPOS_XY
