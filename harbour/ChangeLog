@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-26 07:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbdbgfx/dbgfx.prg
+    * Minor cleanup.
+ 
+  * contrib/hbdbgfx/dbgfxc.c
+    ! Fixed GPF when non-string parameter passed to 
+      hb_outdebug().
+
 2008-10-25 19:10 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbdbgfx/dbgfxc.c
     + HB_FUNC( HB_OUTDEBUG ). 

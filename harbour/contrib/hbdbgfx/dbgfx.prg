@@ -54,9 +54,9 @@
 #include "common.ch"
 #include "fileio.ch"
 
-STATIC s_lToOutDebug   := TRUE
-STATIC s_lToLogFile    := TRUE
-STATIC s_lEmptyLogFile := TRUE
+STATIC s_lToOutDebug   := .T.
+STATIC s_lToLogFile    := .T.
+STATIC s_lEmptyLogFile := .T.
 
 FUNCTION HB_ToOutDebugOnOff( lOnOff )
    LOCAL lOld := s_lToOutDebug
@@ -97,19 +97,19 @@ PROCEDURE HB_ToLogFile( cLogFile, ... )
    IF cLogFile != NIL
 
       IF !s_lEmptyLogFile .AND. hb_FileExists( cLogFile )
-         nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED)
+         nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED )
       ELSE
          nHandle := FCreate( cLogFile )
-         s_lEmptyLogFile := FALSE
+         s_lEmptyLogFile := .F.
          // After I have create it I have to close and open in shared way
-         IF Ferror() == 0 .AND. nHandle > 0
+         IF FError() == 0 .AND. nHandle != F_ERROR
             FClose( nHandle )
-            nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED)
+            nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED )
          ENDIF
       ENDIF
 
       // Writing
-      IF nHandle > 0
+      IF nHandle != F_ERROR
          FSeek( nHandle, 0, FS_END )
          FWrite( nHandle, hb_sprintf( ... ) )
          FWrite( nHandle, HB_OSNewLine() )

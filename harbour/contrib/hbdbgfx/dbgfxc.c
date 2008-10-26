@@ -70,7 +70,7 @@ HB_EXPORT BOOL hb_ToOutDebugOnOff( BOOL bOnOff )
 
 HB_EXPORT void hb_ToOutDebug( const char * sTraceMsg, ... )
 {
-   if( s_bToOutputDebug )
+   if( sTraceMsg && s_bToOutputDebug )
    {
 #if defined( HB_OS_WIN_32 )
      /* TOFIX: Convert to/from Unicode */
@@ -139,4 +139,3 @@ HB_FUNC( HB_OUTDEBUG )
 {
    hb_ToOutDebug( hb_parc( 1 ) );
 }
-
