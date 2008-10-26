@@ -528,21 +528,17 @@ char * hb_verCompiler( void )
       hb_strncpy( pszCompiler, "(unknown)", COMPILER_BUF_SIZE - 1 );
 
 #if defined(__DJGPP__)
-
    snprintf( szSub, sizeof( szSub ), " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );
    hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE - 1 );
-
-#else
+#endif
 
    #if defined( HB_ARCH_16BIT )
-      hb_strncat( pszCompiler, " (16 bit)", COMPILER_BUF_SIZE - 1 );
+      hb_strncat( pszCompiler, " (16-bit)", COMPILER_BUF_SIZE - 1 );
    #elif defined( HB_ARCH_32BIT )
-      hb_strncat( pszCompiler, " (32 bit)", COMPILER_BUF_SIZE - 1 );
+      hb_strncat( pszCompiler, " (32-bit)", COMPILER_BUF_SIZE - 1 );
    #elif defined( HB_ARCH_64BIT )
-      hb_strncat( pszCompiler, " (64 bit)", COMPILER_BUF_SIZE - 1 );
+      hb_strncat( pszCompiler, " (64-bit)", COMPILER_BUF_SIZE - 1 );
    #endif
-
-#endif
 
    return pszCompiler;
 }

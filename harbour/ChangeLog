@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-27 00:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/common/hbver.c
+    * Changed to include bitness even for DJGPP.
+    * Changed "(* bit)" to "(*-bit)"
+    ; NOTE: We have __ARCH*BIT__ but this macro is misleading 
+            and cannot be used properly on platforms where the 
+            compiler is able to generate multiple targets in 
+            one build pass. Such system is Darwin/OSX.
+            I'd suggest to consider removing this macro, and 
+            rather adding a function to return bitness.
+            Any opininons?
+
 2008-10-26 22:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbfopen.c
     * Changed hb_fopen() to use fopen_s(), secure version of 
