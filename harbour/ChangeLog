@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-27 14:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+  * source/rtl/philes.c
+    + Added HB_FLOCK() / HB_FUNLOCK() file locking 
+      functions.
+      [TOMERGE 1.0]
+
+  * source/rtl/tget.prg
+    ! Accessing of Get() variables below made 
+      C5.x compatible when a new value was 
+      assigned to them as function call, rather 
+      then normal assigment.
+      :buffer, :changed, :clear, :col, :colorSpec
+      :minus, :pos, :row, :subScript, :postBlock, 
+      :preBlock, :cargo, :exitState, :reader.
+    ; NOTE: Please report if any of the side cases 
+            still don't work.
+      [TOMERGE 1.0]
+
 2008-10-27 12:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.mak
   * contrib/mtpl_vc.mak

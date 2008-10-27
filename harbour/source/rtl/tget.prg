@@ -78,31 +78,33 @@ CREATE CLASS Get STATIC
 CREATE CLASS Get
 #endif
 
-   EXPORTED:
+   PROTECTED:
 
    /* === Start of CA-Cl*pper compatible TGet instance area === */
-   VAR bBlock         PROTECTED         /* 01. */
-   VAR subScript                        /* 02. */
-   VAR cPicture       PROTECTED         /* 03. */
-   VAR postBlock                        /* 04. */
-   VAR preBlock                         /* 05. */
-   VAR cargo                            /* 06. */
-   VAR cName          PROTECTED         /* 07. */
+   VAR bBlock                           /* 01. */
+   VAR xSubScript                       /* 02. */
+   VAR cPicture                         /* 03. */
+   VAR bPostBlock                       /* 04. */
+   VAR bPreBlock                        /* 05. */
+   VAR xCargo                           /* 06. */
+   VAR cName                            /* 07. */
    VAR cInternal1     HIDDEN            /* 08. U2Bin( ::nRow ) + U2Bin( ::nCol ) + trash. Not implemented in Harbour. */
-   VAR exitState                        /* 09. */
-   VAR reader                           /* 10. */
+   VAR xExitState                       /* 09. */
+   VAR bReader                          /* 10. */
 #ifdef HB_COMPAT_C53
-   VAR oControl       PROTECTED         /* 11. CA-Cl*pper 5.3 only. */
-   VAR cCaption       PROTECTED INIT "" /* 12. CA-Cl*pper 5.3 only. */
-   VAR nCapCol        PROTECTED INIT 0  /* 13. CA-Cl*pper 5.3 only. */
-   VAR nCapRow        PROTECTED INIT 0  /* 14. CA-Cl*pper 5.3 only. */
-   VAR cMessage       PROTECTED INIT "" /* 15. CA-Cl*pper 5.3 only. */
-   VAR nDispLen       PROTECTED         /* 16. CA-Cl*pper 5.3 places it here. */
+   VAR oControl                         /* 11. CA-Cl*pper 5.3 only. */
+   VAR cCaption                 INIT "" /* 12. CA-Cl*pper 5.3 only. */
+   VAR nCapCol                  INIT 0  /* 13. CA-Cl*pper 5.3 only. */
+   VAR nCapRow                  INIT 0  /* 14. CA-Cl*pper 5.3 only. */
+   VAR cMessage                 INIT "" /* 15. CA-Cl*pper 5.3 only. */
+   VAR nDispLen                         /* 16. CA-Cl*pper 5.3 places it here. */
 #endif
-   VAR cType          PROTECTED         /* +1. Only accessible in CA-Cl*pper when ::hasFocus == .T. In CA-Cl*pper the field may contain random chars after the first one, which is the type. */
-   VAR cBuffer        PROTECTED         /* +2. Only accessible in CA-Cl*pper when ::hasFocus == .T. */
-   VAR xVarGet        PROTECTED         /* +3. Only accessible in CA-Cl*pper when ::hasFocus == .T. */
+   VAR cType                            /* +1. Only accessible in CA-Cl*pper when ::hasFocus == .T. In CA-Cl*pper the field may contain random chars after the first one, which is the type. */
+   VAR cBuffer                          /* +2. Only accessible in CA-Cl*pper when ::hasFocus == .T. */
+   VAR xVarGet                          /* +3. Only accessible in CA-Cl*pper when ::hasFocus == .T. */
    /* === End of CA-Cl*pper compatible TGet instance area === */
+
+   EXPORTED:
 
    VAR decPos         INIT 0   READONLY /* ; CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
    VAR hasFocus       INIT .F. READONLY
@@ -115,12 +117,17 @@ CREATE CLASS Get
    METHOD assign()
    METHOD badDate()
    METHOD block( bBlock ) SETGET
-   METHOD buffer( cBuffer ) SETGET
-   METHOD changed( lChanged ) SETGET
-   METHOD clear( lClear ) SETGET
-   METHOD col( nCol ) SETGET
+   ACCESS buffer METHOD getBuffer()
+   ASSIGN buffer METHOD setBuffer( cBuffer )
+   ACCESS changed METHOD getChanged()
+   ASSIGN changed METHOD setChanged( lChanged )
+   ACCESS clear METHOD getClear()
+   ASSIGN clear METHOD setClear( lClear )
+   ACCESS col METHOD getCol()
+   ASSIGN col METHOD setCol( nCol )
    METHOD colorDisp( cColorSpec )
-   METHOD colorSpec( cColorSpec ) SETGET
+   ACCESS colorSpec METHOD getColorSpec()
+   ASSIGN colorSpec METHOD setColorSpec( cColorSpec )
    METHOD display()
 #ifdef HB_COMPAT_C53
    METHOD hitTest( nMRow, nMCol )
@@ -131,10 +138,12 @@ CREATE CLASS Get
    METHOD capCol( nCapCol ) SETGET      /* NOTE: Undocumented CA-Cl*pper 5.3 method. */
 #endif
    METHOD killFocus()
-   METHOD minus( lMinus ) SETGET
+   ACCESS minus METHOD getMinus()
+   ASSIGN minus METHOD setMinus( lMinus )
    METHOD name( cName ) SETGET
    METHOD picture( cPicture ) SETGET
-   METHOD pos( nPos ) SETGET
+   ACCESS pos METHOD getPos()
+   ASSIGN pos METHOD setPos( nPos )
 #ifdef HB_COMPAT_XPP
    METHOD posInBuffer( nRow, nCol )
 #endif
@@ -142,7 +151,8 @@ CREATE CLASS Get
    METHOD reform()
 #endif
    METHOD reset()
-   METHOD row( nRow ) SETGET
+   ACCESS row METHOD getRow()
+   ASSIGN row METHOD setRow( nRow )
    METHOD setFocus()
    METHOD type()
    METHOD undo()
@@ -169,6 +179,13 @@ CREATE CLASS Get
 
    METHOD insert( cChar )
    METHOD overStrike( cChar )
+
+   METHOD subScript( xValue ) SETGET
+   METHOD postBlock( xValue ) SETGET
+   METHOD preBlock( xValue ) SETGET
+   METHOD cargo( xValue ) SETGET
+   METHOD exitState( xValue ) SETGET
+   METHOD reader( xValue ) SETGET
 
 #ifdef HB_EXTENSION
    METHOD hideInput( lHideInput ) SETGET
@@ -509,7 +526,7 @@ METHOD varPut( xValue ) CLASS Get
    LOCAL aValue
 
    IF ISBLOCK( ::bBlock ) .AND. ValType( xValue ) $ "CNDLU"
-      aSubs := ::subScript
+      aSubs := ::xSubScript
       IF ISARRAY( aSubs ) .AND. ! Empty( aSubs ) 
          nLen := Len( aSubs )
          aValue := Eval( ::bBlock )
@@ -540,7 +557,7 @@ METHOD varGet() CLASS Get
    LOCAL xValue
 
    IF ISBLOCK( ::bBlock )
-      aSubs := ::subScript
+      aSubs := ::xSubScript
       IF ISARRAY( aSubs ) .AND. ! Empty( aSubs ) 
          nLen := Len( aSubs )
          xValue := Eval( ::bBlock )
@@ -926,15 +943,14 @@ METHOD delWordRight() CLASS Get
  * be used for GET_CLR_UNSELECTED and GET_CLR_ENHANCED.
  */
 
-METHOD colorSpec( cColorSpec ) CLASS Get
+METHOD getColorSpec() CLASS Get
+   RETURN ::cColorSpec
+
+METHOD setColorSpec( cColorSpec ) CLASS Get
 
    LOCAL nClrUns
    LOCAL nClrOth
    LOCAL cClrOth
-
-   IF PCount() == 0
-      RETURN ::cColorSpec
-   ENDIF
 
    IF ISCHARACTER( cColorSpec )
 
@@ -973,13 +989,12 @@ METHOD colorSpec( cColorSpec ) CLASS Get
 
    RETURN cColorSpec
 
-METHOD pos( nPos ) CLASS Get
+METHOD getPos() CLASS Get
+   RETURN ::nPos
+
+METHOD setPos( nPos ) CLASS Get
 
    LOCAL tmp
-
-   IF PCount() == 0
-      RETURN ::nPos
-   ENDIF
 
    IF ISNUMBER( nPos )
 
@@ -1807,21 +1822,18 @@ METHOD Input( cChar ) CLASS Get
 
 /* ------------------------------------------------------------------------- */
 
-METHOD buffer( cBuffer ) CLASS Get
+METHOD getBuffer() CLASS Get
+   RETURN ::cBuffer
 
-   IF PCount() == 0
-      RETURN ::cBuffer
-   ENDIF
-
+METHOD setBuffer( cBuffer ) CLASS Get
    RETURN iif( ::hasFocus, ::cBuffer := cBuffer, cBuffer )
 
 /* NOTE: In contrary to CA-Cl*pper docs, this var is assignable. [vszakats] */
 
-METHOD changed( lChanged ) CLASS Get
+METHOD getChanged() CLASS Get
+   RETURN ::lChanged
 
-   IF PCount() == 0
-      RETURN ::lChanged
-   ENDIF
+METHOD setChanged( lChanged ) CLASS Get
 
    IF ISLOGICAL( lChanged )
       RETURN iif( ::hasFocus, ::lChanged := lChanged, lChanged )
@@ -1829,11 +1841,10 @@ METHOD changed( lChanged ) CLASS Get
 
    RETURN .F.
 
-METHOD clear( lClear ) CLASS Get
+METHOD getClear() CLASS Get
+   RETURN ::lClear
 
-   IF PCount() == 0
-      RETURN ::lClear
-   ENDIF
+METHOD setClear( lClear ) CLASS Get
 
    IF ISLOGICAL( lClear )
       RETURN iif( ::hasFocus, ::lClear := lClear, lClear )
@@ -1841,11 +1852,10 @@ METHOD clear( lClear ) CLASS Get
 
    RETURN .F.
 
-METHOD minus( lMinus ) CLASS Get
+METHOD getMinus() CLASS Get
+   RETURN ::lMinus
 
-   IF PCount() == 0
-      RETURN ::lMinus
-   ENDIF
+METHOD setMinus( lMinus ) CLASS Get
 
    IF ISLOGICAL( lMinus )
       RETURN iif( ::hasFocus, ::lMinus := lMinus, lMinus )
@@ -1856,24 +1866,20 @@ METHOD minus( lMinus ) CLASS Get
 /* NOTE: CA-Cl*pper has a bug where negative nRow value will be translated to 16bit unsigned int, 
          so the behaviour will be different in this case. [vszakats] */
 
-METHOD row( nRow ) CLASS Get
-
-   IF PCount() > 0
-      ::nRow := iif( ISNUMBER( nRow ), Int( nRow ), 0 )
-   ENDIF
-
+METHOD getRow() CLASS Get
    RETURN ::nRow
+
+METHOD setRow( nRow ) CLASS Get
+   RETURN ::nRow := iif( ISNUMBER( nRow ), Int( nRow ), 0 )
 
 /* NOTE: CA-Cl*pper has a bug where negative nCol value will be translated to 16bit unsigned int, 
          so the behaviour will be different in this case. [vszakats] */
 
-METHOD col( nCol ) CLASS Get
-
-   IF PCount() > 0
-      ::nCol := iif( ISNUMBER( nCol ), Int( nCol ), 0 )
-   ENDIF
-
+METHOD getCol() CLASS Get
    RETURN ::nCol
+
+METHOD setCol( nCol ) CLASS Get
+   RETURN ::nCol := iif( ISNUMBER( nCol ), Int( nCol ), 0 )
 
 METHOD name( cName ) CLASS Get
 
@@ -1882,6 +1888,54 @@ METHOD name( cName ) CLASS Get
    ENDIF
 
    RETURN ::cName
+
+METHOD SubScript( xValue ) CLASS Get
+
+   IF xValue != NIL
+      ::xSubScript := xValue
+   ENDIF
+
+   RETURN ::xSubScript
+
+METHOD PostBlock( xValue ) CLASS Get
+
+   IF xValue != NIL
+      ::bPostBlock := xValue
+   ENDIF
+
+   RETURN ::bPostBlock
+
+METHOD PreBlock( xValue ) CLASS Get
+
+   IF xValue != NIL
+      ::bPreBlock := xValue
+   ENDIF
+
+   RETURN ::bPreBlock
+
+METHOD Cargo( xValue ) CLASS Get
+
+   IF xValue != NIL
+      ::xCargo := xValue
+   ENDIF
+
+   RETURN ::xCargo
+
+METHOD ExitState( xValue ) CLASS Get
+
+   IF xValue != NIL
+      ::xExitState := xValue
+   ENDIF
+
+   RETURN ::xExitState
+
+METHOD Reader( xValue ) CLASS Get
+
+   IF xValue != NIL
+      ::bReader := xValue
+   ENDIF
+
+   RETURN ::bReader
 
 #ifdef HB_EXTENSION
 

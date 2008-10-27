@@ -39,6 +39,8 @@
  *
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    CURDIR()
+ *    HB_FLOCK()
+ *    HB_FUNLOCK()
  *
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
  *    HB_FEOF()
@@ -288,6 +290,16 @@ HB_FUNC( HB_FCOMMIT )
    }
 
    hb_fsSetFError( uiError );
+}
+
+HB_FUNC( HB_FLOCK )
+{
+   hb_retl( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) ? hb_fsLockLarge( hb_numToHandle( hb_parnint( 1 ) ), ( HB_FOFFSET ) hb_parnint( 2 ), ( HB_FOFFSET ) hb_parnint( 3 ), FL_LOCK ) : FALSE );
+}
+
+HB_FUNC( HB_FUNLOCK )
+{
+   hb_retl( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) ? hb_fsLockLarge( hb_numToHandle( hb_parnint( 1 ) ), ( HB_FOFFSET ) hb_parnint( 2 ), ( HB_FOFFSET ) hb_parnint( 3 ), FL_UNLOCK ) : FALSE );
 }
 
 HB_FUNC( HB_OSERROR )
