@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-27 15:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/tbrowse.prg
+  * source/debug/debugger.prg
+    ! Cleaned hb_AINS()/hb_ADEL() usage after changing the 
+      default of the last parameter.
+      Should fix the recent TBrowse() crash.
+    ; NOTE: I'll rethink the defaulting situation at least 
+            for hb_AINS().
+
 2008-10-27 14:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * source/rtl/philes.c

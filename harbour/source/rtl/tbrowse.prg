@@ -597,10 +597,10 @@ METHOD scrollBuffer( nRows ) CLASS TBROWSE
          ENDDO
       ELSEIF nRows < 0
          DO WHILE ++nRows <= 0
-            HB_AIns( ::aCellValues, 1, ATail( ::aCellValues ) )
-            HB_AIns( ::aCellColors, 1, ATail( ::aCellColors ) )
-            HB_AIns( ::aCellStatus, 1, .F. )
-            HB_AIns( ::aDispStatus, 1, .T. )
+            HB_AIns( ::aCellValues, 1, ATail( ::aCellValues ), .F. )
+            HB_AIns( ::aCellColors, 1, ATail( ::aCellColors ), .F. )
+            HB_AIns( ::aCellStatus, 1, .F., .F. )
+            HB_AIns( ::aDispStatus, 1, .T., .F. )
          ENDDO
       ENDIF
    ENDIF
