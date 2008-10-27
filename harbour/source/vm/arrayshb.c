@@ -318,7 +318,7 @@ HB_FUNC( HB_AINS )
       if( lPos == 0 )
          lPos = 1;
 
-      if( ! ISLOG( 4 ) || hb_parl( 4 ) )
+      if( ISLOG( 4 ) && hb_parl( 4 ) )
       {
          ULONG ulLen = hb_arrayLen( pArray ) + 1;
          if( lPos >= 1 && ( ULONG ) lPos <= ulLen )
@@ -348,7 +348,7 @@ HB_FUNC( HB_ADEL )
 
       if( hb_arrayDel( pArray, lPos ) )
       {
-         if( ! ISLOG( 3 ) || hb_parl( 3 ) )
+         if( ISLOG( 3 ) && hb_parl( 3 ) )
             hb_arraySize( pArray, hb_arrayLen( pArray ) - 1 );
       }
 

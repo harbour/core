@@ -2383,14 +2383,6 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
          else
             fError = TRUE;
       }
-      else if( hb_pp_tokenValueCmp( pToken, "TEXTHIDDEN", HB_PP_CMP_DBASE ) )
-      {
-         pValue = hb_pp_pragmaGetLogical( pToken->pNext, &fValue );
-         if( pValue )
-            fError = hb_pp_setCompilerSwitch( pState, "texthidden", ( int ) fValue );
-         else
-            fError = TRUE;
-      }
       else if( hb_pp_tokenValueCmp( pToken, "DYNAMICMEMVAR", HB_PP_CMP_DBASE ) )
       {
          pValue = hb_pp_pragmaGetLogical( pToken->pNext, &fValue );
