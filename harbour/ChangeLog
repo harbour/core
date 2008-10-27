@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-27 11:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapi.h
+  * source/common/hbstr.c
+    + Added return value to hb_snprintf().
+
 2008-10-27 11:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbstr.c
     * Some tweaks to hb_snprintf(). It still doesn't work 
