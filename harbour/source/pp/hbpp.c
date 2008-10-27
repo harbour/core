@@ -156,13 +156,13 @@ static int hb_pp_writeRules( FILE * fout, PHB_PP_RULE pFirst, const char * szNam
       ++iRule;
       if( pRule->pMatch )
       {
-         snprintf( szMatch, sizeof( szMatch ), "s_%cm%03d", szName[0], iRule );
+         hb_snprintf( szMatch, sizeof( szMatch ), "s_%cm%03d", szName[0], iRule );
          hb_pp_writeTokenList( fout, pRule->pMatch, szMatch );
       }
 
       if( pRule->pResult )
       {
-         snprintf( szResult, sizeof( szResult ), "s_%cr%03d", szName[0], iRule );
+         hb_snprintf( szResult, sizeof( szResult ), "s_%cr%03d", szName[0], iRule );
          hb_pp_writeTokenList( fout, pRule->pResult, szResult );
       }
       pRule = pRule->pPrev;
@@ -177,11 +177,11 @@ static int hb_pp_writeRules( FILE * fout, PHB_PP_RULE pFirst, const char * szNam
    {
       ++iRule;
       if( pRule->pMatch )
-         snprintf( szMatch, sizeof( szMatch ), "s_%cm%03d", szName[0], iRule );
+         hb_snprintf( szMatch, sizeof( szMatch ), "s_%cm%03d", szName[0], iRule );
       else
          hb_strncpy( szMatch, "NULL   ", sizeof( szMatch ) - 1 );
       if( pRule->pResult )
-         snprintf( szResult, sizeof( szResult ), "s_%cr%03d", szName[0], iRule );
+         hb_snprintf( szResult, sizeof( szResult ), "s_%cr%03d", szName[0], iRule );
       else
          hb_strncpy( szResult, "NULL   ", sizeof( szResult ) - 1 );
 

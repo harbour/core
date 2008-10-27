@@ -25,7 +25,7 @@
 
    char *sqlite3_mprintf(const char*,...);
    char *sqlite3_vmprintf(const char*, va_list);
-   char *sqlite3_snprintf(int,char*,const char*, ...);
+   char *sqlite3_hb_snprintf(int,char*,const char*, ...);
 */
 
 #if defined( __WATCOMC__ ) || (defined(__POCC__) && __POCC__ <= 450)

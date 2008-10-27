@@ -83,6 +83,8 @@ HB_EXPORT void hb_ToOutDebug( const char * sTraceMsg, ... )
      va_end( ap );
 
      OutputDebugString( ( LPCWSTR ) buffer );
+#else
+     /* TODO: Implement. */
 #endif
    }
 }

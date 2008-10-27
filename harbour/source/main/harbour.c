@@ -300,13 +300,13 @@ void hb_xexit( void )
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
-      snprintf( szBuffer, sizeof( szBuffer ), "Total memory allocated: %lu bytes (%lu blocks)", s_ulMemoryMaxConsumed, s_ulMemoryMaxBlocks );
+      hb_snprintf( szBuffer, sizeof( szBuffer ), "Total memory allocated: %lu bytes (%lu blocks)", s_ulMemoryMaxConsumed, s_ulMemoryMaxBlocks );
       hb_conOutErr( szBuffer, 0 );
 
       if( s_ulMemoryBlocks )
       {
          hb_conOutErr( hb_conNewLine(), 0 );
-         snprintf( szBuffer, sizeof( szBuffer ), "WARNING! Memory allocated but not released: %lu bytes (%lu blocks)", s_ulMemoryConsumed, s_ulMemoryBlocks );
+         hb_snprintf( szBuffer, sizeof( szBuffer ), "WARNING! Memory allocated but not released: %lu bytes (%lu blocks)", s_ulMemoryConsumed, s_ulMemoryBlocks );
          hb_conOutErr( szBuffer, 0 );
       }
 
@@ -330,11 +330,11 @@ void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, 
    HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
 
    hb_conOutErr( hb_conNewLine(), 0 );
-   snprintf( buffer, sizeof( buffer ), "Unrecoverable error %lu: ", ulIntCode );
+   hb_snprintf( buffer, sizeof( buffer ), "Unrecoverable error %lu: ", ulIntCode );
    hb_conOutErr( buffer, 0 );
    if( szText )
    {
-      snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
+      hb_snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
       hb_conOutErr( buffer, 0 );
    }
    hb_conOutErr( hb_conNewLine(), 0 );

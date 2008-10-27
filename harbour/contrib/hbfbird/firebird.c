@@ -96,7 +96,7 @@ HB_FUNC( FBCREATEDB )
       char *         charset = hb_parcx( 5 );
       unsigned short dialect = ( unsigned short ) hb_parni( 6 );
        
-      snprintf( create_db, sizeof( create_db ), 
+      hb_snprintf( create_db, sizeof( create_db ), 
                 "CREATE DATABASE '%s' USER '%s' PASSWORD '%s' PAGE_SIZE = %i DEFAULT CHARACTER SET %s",
                 db_name, user, pass, page, charset );
       
@@ -120,7 +120,7 @@ HB_FUNC( FBCONNECT )
    short         i = 0;
    int           len;
 
-   /* TOFIX: Possible buffer overflow. Use snprintf(). */
+   /* TOFIX: Possible buffer overflow. Use hb_snprintf(). */
    dpb[ i++ ] = isc_dpb_version1;
    dpb[ i++ ] = isc_dpb_user_name;
    len = strlen( user );
@@ -483,7 +483,7 @@ HB_FUNC( FBGETDATA )
 
       case SQL_TIMESTAMP:
          isc_decode_timestamp ( ( ISC_TIMESTAMP * ) var->sqldata, &times );
-         snprintf( date_s, sizeof( date_s ), "%04d-%02d-%02d %02d:%02d:%02d.%04d",
+         hb_snprintf( date_s, sizeof( date_s ), "%04d-%02d-%02d %02d:%02d:%02d.%04d",
                    times.tm_year + 1900,
                    times.tm_mon + 1,
                    times.tm_mday,
@@ -491,27 +491,27 @@ HB_FUNC( FBGETDATA )
                    times.tm_min,
                    times.tm_sec,
                    ( int ) ( ( ( ISC_TIMESTAMP * ) var->sqldata )->timestamp_time % 10000 ) );
-         snprintf( data, sizeof( data ), "%*s ", 24, date_s );
+         hb_snprintf( data, sizeof( data ), "%*s ", 24, date_s );
 
          hb_retc( data );
          break;
 
       case SQL_TYPE_DATE:
          isc_decode_sql_date( ( ISC_DATE * ) var->sqldata, &times );
-         snprintf( date_s, sizeof( date_s ), "%04d-%02d-%02d", times.tm_year + 1900, times.tm_mon + 1, times.tm_mday );
-         snprintf( data, sizeof( data ), "%*s ", 8, date_s );
+         hb_snprintf( date_s, sizeof( date_s ), "%04d-%02d-%02d", times.tm_year + 1900, times.tm_mon + 1, times.tm_mday );
+         hb_snprintf( data, sizeof( data ), "%*s ", 8, date_s );
 
          hb_retc( data );
          break;
 
       case SQL_TYPE_TIME:
          isc_decode_sql_time ( ( ISC_TIME * ) var->sqldata, &times );
-         snprintf( date_s, sizeof( date_s ), "%02d:%02d:%02d.%04d",
+         hb_snprintf( date_s, sizeof( date_s ), "%02d:%02d:%02d.%04d",
                    times.tm_hour,
                    times.tm_min,
                    times.tm_sec,
                    ( int ) ( ( *( ( ISC_TIME * ) var->sqldata ) ) % 10000 ) );
-         snprintf( data, sizeof( data ), "%*s ", 13, date_s );
+         hb_snprintf( data, sizeof( data ), "%*s ", 13, date_s );
 
          hb_retc( data );
          break;
@@ -563,40 +563,40 @@ HB_FUNC( FBGETDATA )
                   tens *= 10;
 
                if( value >= 0 )
-                  snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
+                  hb_snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
                             field_width - 1 + dscale,
                             ( ISC_INT64 ) value / tens,
                             -dscale,
                             ( ISC_INT64 ) value % tens);
                else if( ( value / tens ) != 0 )
-                  snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
+                  hb_snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
                             field_width - 1 + dscale,
                             ( ISC_INT64 ) ( value / tens ),
                             -dscale,
                             ( ISC_INT64 ) -( value % tens ) );
                else
-                  snprintf( data, sizeof( data ), "%*s.%0*" ISC_INT64_FORMAT "d",
+                  hb_snprintf( data, sizeof( data ), "%*s.%0*" ISC_INT64_FORMAT "d",
                             field_width - 1 + dscale,
                             "-0",
                             -dscale,
                             ( ISC_INT64 ) -( value % tens ) );
             }
             else if( dscale )
-               snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d%0*d", field_width, ( ISC_INT64 ) value, dscale, 0 );
+               hb_snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d%0*d", field_width, ( ISC_INT64 ) value, dscale, 0 );
             else
-               snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d", field_width, ( ISC_INT64 ) value );
+               hb_snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d", field_width, ( ISC_INT64 ) value );
          }
 
          hb_retc( data );
          break;
 
       case SQL_FLOAT:
-         snprintf( data, sizeof( data ), "%15g ", *( float * ) ( var->sqldata ) );
+         hb_snprintf( data, sizeof( data ), "%15g ", *( float * ) ( var->sqldata ) );
          hb_retc( data );
          break;
 
       case SQL_DOUBLE:
-         snprintf( data, sizeof( data ), "%24f ", *( double * ) ( var->sqldata ) );
+         hb_snprintf( data, sizeof( data ), "%24f ", *( double * ) ( var->sqldata ) );
          hb_retc( data );
          break;
 
@@ -650,7 +650,7 @@ HB_FUNC( FBGETBLOB )
          PHB_ITEM temp;
 
          /* p = ( char * ) hb_xgrab( blob_seg_len + 1 ); */
-         snprintf( p, sizeof( p ), "%*.*s", blob_seg_len, blob_seg_len, blob_segment );
+         hb_snprintf( p, sizeof( p ), "%*.*s", blob_seg_len, blob_seg_len, blob_segment );
       
          temp = hb_itemPutC( NULL, p );
          hb_arrayAdd( aNew, temp );

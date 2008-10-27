@@ -203,7 +203,7 @@ HB_FUNC( NTOCOLOR )
       if( ISLOG( 2 ) && hb_parl( 2 ) )
          hb_gtColorsToString( &iColor, 1, szColorString, 10 );
       else
-         snprintf( szColorString, 10, "%02d/%02d", iColor & 0x0f, iColor >> 4 );
+         hb_snprintf( szColorString, 10, "%02d/%02d", iColor & 0x0f, iColor >> 4 );
       hb_retc( szColorString );
    }
    else

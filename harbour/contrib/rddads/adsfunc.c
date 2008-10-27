@@ -1614,11 +1614,11 @@ HB_FUNC( ADSVERSION )
    switch( hb_parni( 1 ) /* iVersionType */ )
    {
       case 0:
-         snprintf( ucVersion, sizeof( ucVersion ), "%lu.%lu%c",
+         hb_snprintf( ucVersion, sizeof( ucVersion ), "%lu.%lu%c",
                    ( ULONG ) ulMajor, ( ULONG ) ulMinor, ucLetter );
          break;
       case 3:
-         snprintf( ucVersion, sizeof( ucVersion ), "%s, v%lu.%lu%c",
+         hb_snprintf( ucVersion, sizeof( ucVersion ), "%s, v%lu.%lu%c",
                    ( char * ) ucDesc, ( ULONG ) ulMajor, ( ULONG ) ulMinor, ucLetter );
          break;
       default:

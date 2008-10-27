@@ -437,7 +437,7 @@ void hb_pp_Init( void )
          The check below is to ensure that __HARBOUR__ gets the
          value of 1 by default
        */
-      snprintf( szResult, sizeof( szResult ), "%05d", ( usHarbour ? usHarbour : 1 ) );
+      hb_snprintf( szResult, sizeof( szResult ), "%05d", ( usHarbour ? usHarbour : 1 ) );
       hb_pp_AddDefine_( "__HARBOUR__", szResult );
    }
 
@@ -462,7 +462,7 @@ void hb_pp_Init( void )
    {
       char szResult[11];
 
-      snprintf( szResult, sizeof( szResult ), "%d", ( int ) sizeof( void * ) );
+      hb_snprintf( szResult, sizeof( szResult ), "%d", ( int ) sizeof( void * ) );
 #if defined( HB_ARCH_16BIT )
       hb_pp_AddDefine_( "__ARCH16BIT__", szResult );
 #elif defined( HB_ARCH_32BIT )

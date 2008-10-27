@@ -131,7 +131,7 @@ HB_FUNC( PQCONNECT )
    {
       char conninfo[ 512 ];
 
-      snprintf( conninfo, sizeof( conninfo ), "dbname = %s host = %s user = %s password = %s port = %i",
+      hb_snprintf( conninfo, sizeof( conninfo ), "dbname = %s host = %s user = %s password = %s port = %i",
          hb_parcx( 1 ), hb_parcx( 2 ), hb_parcx( 3 ), hb_parcx( 4 ), ( int ) hb_parni( 5 ) );
 
       PGconn_ret( PQconnectdb( conninfo ) );

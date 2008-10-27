@@ -178,7 +178,7 @@ int hb_pp_Internal_( FILE * handl_o, char * sOut )
             s_szLine[ 0 ] = '[';
             s_szLine[ lens++ ] = ']';
             s_szLine[ lens ] = '\0';
-            lens = snprintf( s_szOutLine, HB_PP_STR_SIZE, s_TextOutFunc, s_szLine );
+            lens = hb_snprintf( s_szOutLine, HB_PP_STR_SIZE, s_TextOutFunc, s_szLine );
             memcpy( s_szLine, s_szOutLine, lens+1 );
             hb_pp_NestedLiteralString = TRUE;
             break;
@@ -273,7 +273,7 @@ int hb_pp_Internal_( FILE * handl_o, char * sOut )
      if( hb_comp_files.iFiles == 1 )
         hb_pp_LastOutLine = hb_comp_iLine;
 
-     snprintf( ptrOut, HB_PP_STR_SIZE, "#line %d \"%s\"", ( hb_comp_files.pLast->iLine ) , hb_comp_files.pLast->szFileName );
+     hb_snprintf( ptrOut, HB_PP_STR_SIZE, "#line %d \"%s\"", ( hb_comp_files.pLast->iLine ) , hb_comp_files.pLast->szFileName );
 
      while( *ptrOut ) ptrOut++;
 
@@ -347,13 +347,13 @@ static void pp_ParseBuffer( PFILE pFile, int *plLine )
 
             if( *plLine )
             {
-               snprintf( s_szLine, HB_PP_STR_SIZE, "#line %d \"%s\"\n", pFile->iLine, pFile->szFileName );
+               hb_snprintf( s_szLine, HB_PP_STR_SIZE, "#line %d \"%s\"\n", pFile->iLine, pFile->szFileName );
                *plLine = 0;
             }
             else
                *s_szLine = '\0';
 
-            snprintf( s_szLine + strlen(s_szLine), HB_PP_STR_SIZE - strlen(s_szLine),
+            hb_snprintf( s_szLine + strlen(s_szLine), HB_PP_STR_SIZE - strlen(s_szLine),
                       "#line 1 \"%s\"", hb_comp_files.pLast->szFileName );
             bCont = FALSE;
          }
@@ -520,7 +520,7 @@ BOOL hb_pp_StreamBlockBegin( char * ptr, int iStreamType )
 static void pp_StreamBlockFinish( void )
 {
    hb_pp_StreamBlock = 0;
-   snprintf( s_szOutLine, HB_PP_STR_SIZE, s_TextOutFunc, s_szLine );
+   hb_snprintf( s_szOutLine, HB_PP_STR_SIZE, s_TextOutFunc, s_szLine );
    s_szLine[ 0 ] = '\0';
    if( s_TextStartFunc )
    {

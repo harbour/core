@@ -50,7 +50,7 @@ static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg 
    /* Check current dir first  */
    if( hb_fsFileExists( ( const char * ) pszFile ) )
    {
-      snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s", pszFile );
+      hb_snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s", pszFile );
       return ( char * ) pszFile;
    }
    else
@@ -70,7 +70,7 @@ static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg 
          }
          if( *pszPath )
          {
-            snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s%c%s", pszPath, HB_OS_PATH_DELIM_CHR, pszFile );
+            hb_snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s%c%s", pszPath, HB_OS_PATH_DELIM_CHR, pszFile );
             if( hb_fsFileExists( ( const char * ) pszCfg ) )
             {
                bFound = TRUE;
@@ -203,12 +203,12 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
                   /* Checks compiler name */
                   if( ! hb_stricmp( szStr, "CC" ) )
                   {
-                     snprintf( szCompiler, sizeof( szCompiler ), "%s", szToken );
+                     hb_snprintf( szCompiler, sizeof( szCompiler ), "%s", szToken );
                   }
                   /* Checks optional switches */
                   else if( ! hb_stricmp( szStr, "CFLAGS" ) )
                   {
-                     snprintf( szOptions, sizeof( szCompiler ), "%s", szToken );
+                     hb_snprintf( szOptions, sizeof( szCompiler ), "%s", szToken );
                   }
                   /* Wanna see C compiler output ? */
                   else if( ! hb_stricmp( szStr, "VERBOSE" ) )
@@ -231,7 +231,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    }
    else
    {
-      snprintf( buffer, sizeof( buffer ),
+      hb_snprintf( buffer, sizeof( buffer ),
                 "\nError: Can't find %s file in %s.\n"
                 "%s should be a text file that contains:\n"
                 "CC=C compiler binary name eg. CC=gcc\n"
@@ -254,7 +254,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 
    if( ! HB_COMP_PARAM->fQuiet )
    {
-      snprintf( buffer, sizeof( buffer ),
+      hb_snprintf( buffer, sizeof( buffer ),
                 "\nBuilding object module for \'%s\'\nusing C compiler \'%s\' as defined in \'%s\'...\n",
                 szFileName, szCompiler, pszCfgFileName );
       hb_compOutStd( HB_COMP_PARAM, buffer );
@@ -290,11 +290,11 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 
    if( *szCompiler )
    {
-      snprintf( szCommandLine, sizeof( szCommandLine ), "%s %s %s %s", szCompiler, szOptions, szOutPath, szFileName );
+      hb_snprintf( szCommandLine, sizeof( szCommandLine ), "%s %s %s %s", szCompiler, szOptions, szOutPath, szFileName );
 
       if( bVerbose )
       {
-         snprintf( buffer, sizeof( buffer ), "Exec: %s\n", szCommandLine );
+         hb_snprintf( buffer, sizeof( buffer ), "Exec: %s\n", szCommandLine );
          hb_compOutStd( HB_COMP_PARAM, buffer );
       }
       else
@@ -309,7 +309,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       {
          if( bVerbose )
          {
-            snprintf( buffer, sizeof( buffer ), "Deleting: \"%s\"\n", szFileName );
+            hb_snprintf( buffer, sizeof( buffer ), "Deleting: \"%s\"\n", szFileName );
             hb_compOutStd( HB_COMP_PARAM, buffer );
          }
          remove( ( char * ) szFileName );
@@ -321,7 +321,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
             hb_compOutStd( HB_COMP_PARAM, "Done.\n" );
          else
          {
-            snprintf( buffer, sizeof( buffer ),
+            hb_snprintf( buffer, sizeof( buffer ),
                       "\nFailed to execute: \"%s\"\n", szCommandLine );
             hb_compOutErr( HB_COMP_PARAM, buffer );
          }
@@ -329,7 +329,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    }
    else
    {
-      snprintf( buffer, sizeof( buffer ),
+      hb_snprintf( buffer, sizeof( buffer ),
                 "\nError: No compiler defined in %s\n", pszCfgFileName );
       hb_compOutErr( HB_COMP_PARAM, buffer );
    }

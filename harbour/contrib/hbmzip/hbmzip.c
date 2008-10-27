@@ -406,7 +406,7 @@ HB_FUNC( HB_UNZIPFILEINFO )
          hb_itemRelease( pItem );
 
 
-         snprintf( buf, sizeof( buf ), "%02d:%02d:%02d", ufi.tmu_date.tm_hour,  
+         hb_snprintf( buf, sizeof( buf ), "%02d:%02d:%02d", ufi.tmu_date.tm_hour,  
                    ufi.tmu_date.tm_min, ufi.tmu_date.tm_sec );
          hb_storc( buf, 4 );
          hb_stornl( ufi.internal_fa, 5 );

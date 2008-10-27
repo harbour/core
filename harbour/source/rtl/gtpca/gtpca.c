@@ -301,7 +301,7 @@ static void hb_gt_pca_AnsiSetCursorPos( int iRow, int iCol )
    if( s_iRow != iRow || s_iCol != iCol )
    {
       char buff[16];
-      snprintf( buff, sizeof( buff ), "\x1B[%d;%dH", iRow + 1, iCol + 1 );
+      hb_snprintf( buff, sizeof( buff ), "\x1B[%d;%dH", iRow + 1, iCol + 1 );
       hb_gt_pca_termOut( ( BYTE * ) buff, strlen( buff ) );
       s_iRow = iRow;
       s_iCol = iCol;

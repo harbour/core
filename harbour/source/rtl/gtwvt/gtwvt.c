@@ -1567,7 +1567,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          else
          {
             hb_gt_wvt_FitRows( pWVT );
-            hb_gt_wvt_AddCharToInputQueue( pWVT, K_HB_RESIZE );
+            hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
          }
          return 0;
 
@@ -1585,7 +1585,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                else
                {
                   hb_gt_wvt_FitRows( pWVT );
-                  hb_gt_wvt_AddCharToInputQueue( pWVT, K_HB_RESIZE );
+                  hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
                }
 
                /* Disable "maximize" button */

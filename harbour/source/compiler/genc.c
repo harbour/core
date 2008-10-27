@@ -79,7 +79,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
    if( ! HB_COMP_PARAM->fQuiet )
    {
       char buffer[ 80 + _POSIX_PATH_MAX ];
-      snprintf( buffer, sizeof( buffer ),
+      hb_snprintf( buffer, sizeof( buffer ),
                 "Generating C source output to \'%s\'... ", szFileName );
       hb_compOutStd( HB_COMP_PARAM, buffer );
    }

@@ -87,7 +87,7 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
 
    if( hb_arrayGetL( pArray, B_DISPLAYNUM ) )
    {
-      snprintf( szPct, sizeof( szPct ), "%3.0f%%", fPercent * 100 );
+      hb_snprintf( szPct, sizeof( szPct ), "%3.0f%%", fPercent * 100 );
       hb_gtWriteAt( ( SHORT ) hb_arrayGetNI( pArray, B_TOP ),
                     iCenter + 2,
                     ( BYTE * ) szPct, 4 );

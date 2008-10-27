@@ -344,7 +344,7 @@ char * hb_langName( void )
    if( lang )
    {
       pszName = ( char * ) hb_xgrab( 128 );
-      snprintf( pszName, 128, "Harbour Language: %s %s (%s)",
+      hb_snprintf( pszName, 128, "Harbour Language: %s %s (%s)",
          ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ),
          ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAME ),
          ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAMENAT ) );

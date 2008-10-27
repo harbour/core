@@ -95,7 +95,7 @@
 #define K_MINMOUSE              1001
 #define K_MAXMOUSE              1016
 
-#define K_HB_RESIZE             1101 
+#define HB_K_RESIZE             1101
 
 /* Harbour extension - this marks that multi-characters keycode will be
    returned - call INKEY() until ZERO will be returned

@@ -101,18 +101,18 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
 
    hb_conOutErr( hb_conNewLine(), 0 );
    if( fLang )
-      snprintf( buffer, sizeof( buffer ), ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), ulIntCode );
+      hb_snprintf( buffer, sizeof( buffer ), ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), ulIntCode );
    else
-      snprintf( buffer, sizeof( buffer ), "Unrecoverable error %lu: ", ulIntCode );
+      hb_snprintf( buffer, sizeof( buffer ), "Unrecoverable error %lu: ", ulIntCode );
 
    hb_conOutErr( buffer, 0 );
    if( hLog )
       fwrite( buffer, sizeof( buffer[ 0 ] ), strlen( buffer ), hLog );
 
    if( szText )
-      snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
+      hb_snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
    else if( fLang )
-      snprintf( buffer, sizeof( buffer ), ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 ), szPar1, szPar2 );
+      hb_snprintf( buffer, sizeof( buffer ), ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 ), szPar1, szPar2 );
    else
       buffer[ 0 ] = '\0';
 
@@ -126,7 +126,7 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
    {
       char msg[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
 
-      snprintf( msg, sizeof( msg ), HB_I_("Called from %s(%hu)%s%s\n"), buffer, uiLine, *file ? HB_I_(" in ") : "", file );
+      hb_snprintf( msg, sizeof( msg ), HB_I_("Called from %s(%hu)%s%s\n"), buffer, uiLine, *file ? HB_I_(" in ") : "", file );
 
       hb_conOutErr( msg, 0 );
       if( hLog )

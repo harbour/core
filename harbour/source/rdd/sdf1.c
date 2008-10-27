@@ -749,11 +749,11 @@ static ERRCODE hb_sdfInfo( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          int iSub = hb_itemGetNI( pItem );
 
          if( iSub == 1 )
-            snprintf( szBuf, sizeof( szBuf ), "%d.%d (%s)", 0, 1, "SDF" );
+            hb_snprintf( szBuf, sizeof( szBuf ), "%d.%d (%s)", 0, 1, "SDF" );
          else if( iSub == 2 )
-            snprintf( szBuf, sizeof( szBuf ), "%d.%d (%s:%d)", 0, 1, "SDF", pArea->rddID );
+            hb_snprintf( szBuf, sizeof( szBuf ), "%d.%d (%s:%d)", 0, 1, "SDF", pArea->rddID );
          else
-            snprintf( szBuf, sizeof( szBuf ), "%d.%d", 0, 1 );
+            hb_snprintf( szBuf, sizeof( szBuf ), "%d.%d", 0, 1 );
          hb_itemPutC( pItem, szBuf );
          break;
       }

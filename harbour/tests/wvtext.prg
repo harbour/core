@@ -280,7 +280,7 @@ PROCEDURE thFunc()
       if BrwHandleKey( oBrowse, nKey, @lEnd )
          //
       else
-         if nKey == K_HB_RESIZE
+         if nKey == HB_K_RESIZE
             cTitle := 'New Window with '+ltrim( str( MaxRow() ) )+;
                           ' Rows and '+ltrim( str( MaxCol() ) )+' Columns'
             DispOutAt( 0, 0, padc( cTitle, maxcol()+1 ), 'N/GR*' )

@@ -380,7 +380,7 @@ static PHB_ITEM hb_GetFileNamesFromZip( char * szFile, BOOL bVerbose )
 
             hb_arraySetC( pTempArray, HBZA_FI_METHOD, szMethod );
 
-            snprintf( szCRC, sizeof( szCRC ), "%8.8lx", ( ULONG ) fh.m_uCrc32 );
+            hb_snprintf( szCRC, sizeof( szCRC ), "%8.8lx", ( ULONG ) fh.m_uCrc32 );
 
             hb_arraySetCL( pTempArray, HBZA_FI_CRC32, szCRC, 8 );
             hb_arraySetDL( pTempArray, HBZA_FI_DATE, hb_dateEncode( ( LONG ) ( fh.m_uModDate >> 9 ) + 1980, ( LONG ) ( ( fh.m_uModDate & ~0xFE00 ) >> 5 ), ( LONG ) fh.m_uModDate & ~0xFFE0 ) );
@@ -389,7 +389,7 @@ static PHB_ITEM hb_GetFileNamesFromZip( char * szFile, BOOL bVerbose )
                time_t theTime = fh.GetTime();
                tm * SzTime = localtime( &theTime );
 
-               snprintf( szTime, sizeof( szTime ), "%02d:%02d:%02d", SzTime->tm_hour, SzTime->tm_min, SzTime->tm_sec );
+               hb_snprintf( szTime, sizeof( szTime ), "%02d:%02d:%02d", SzTime->tm_hour, SzTime->tm_min, SzTime->tm_sec );
             }
 
             hb_arraySetCL( pTempArray, HBZA_FI_TIME, szTime, 8 );

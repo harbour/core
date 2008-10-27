@@ -153,7 +153,7 @@ HB_EXPORT ERRCODE hb_rddGetTempAlias( char * szAliasTmp )
 
    for( i = 1; i < 1000; i++ )
    {
-      snprintf( szAliasTmp, 11, "__HBTMP%03i", i);
+      hb_snprintf( szAliasTmp, 11, "__HBTMP%03i", i);
       if( hb_rddGetAliasNumber( szAliasTmp, &iArea ) != SUCCESS )
          return SUCCESS;
    }

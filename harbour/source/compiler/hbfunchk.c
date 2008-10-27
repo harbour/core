@@ -164,13 +164,13 @@ BOOL hb_compFunCallCheck( HB_COMP_DECL, const char * szFuncCall, int iArgs )
          if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_HARBOUR ) )
          {
             if( pFunc->iMinParam == pFunc->iMaxParam )
-               snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected: %i", iArgs, pFunc->iMinParam );
+               hb_snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected: %i", iArgs, pFunc->iMinParam );
             else if( pFunc->iMaxParam == -1 )
-               snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected at least: %i", iArgs, pFunc->iMinParam );
+               hb_snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected at least: %i", iArgs, pFunc->iMinParam );
             else if( pFunc->iMinParam == -1 )
-               snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected less than: %i", iArgs, pFunc->iMaxParam );
+               hb_snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected less than: %i", iArgs, pFunc->iMaxParam );
             else
-               snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected from: %i to: %i", iArgs, pFunc->iMinParam, pFunc->iMaxParam );
+               hb_snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected from: %i to: %i", iArgs, pFunc->iMinParam, pFunc->iMaxParam );
          }
          else
             szMsg[ 0 ] = '\0';

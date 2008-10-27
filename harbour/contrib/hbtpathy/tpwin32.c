@@ -70,7 +70,7 @@ HB_FUNC( P_INITPORTSPEED )
    FillMemory( &dcb, sizeof( dcb ), 0 );
    dcb.DCBlength = sizeof( dcb );
 
-   snprintf( values, sizeof( values ), "%lu,%1s,%1lu,%1lu", hb_parnl( 2 ), hb_parcx( 4 ), hb_parnl( 3 ), hb_parnl( 5 ) );
+   hb_snprintf( values, sizeof( values ), "%lu,%1s,%1lu,%1lu", hb_parnl( 2 ), hb_parcx( 4 ), hb_parnl( 3 ), hb_parnl( 5 ) );
    lpValues = HB_TCHAR_CONVTO( values );
 
    if( BuildCommDCB( lpValues, &dcb ) )

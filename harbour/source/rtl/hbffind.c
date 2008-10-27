@@ -782,7 +782,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       hb_dateStrPut( ffind->szDate, nYear, nMonth, nDay );
       ffind->szDate[ 8 ] = '\0';
 
-      snprintf( ffind->szTime, sizeof( ffind->szTime ), "%02d:%02d:%02d", nHour, nMin, nSec );
+      hb_snprintf( ffind->szTime, sizeof( ffind->szTime ), "%02d:%02d:%02d", nHour, nMin, nSec );
    }
    hb_vmLock();
 

@@ -631,7 +631,7 @@ void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
    if( ! HB_COMP_PARAM->fQuiet )
    {
       char buffer[ 80 + _POSIX_PATH_MAX ];
-      snprintf( buffer, sizeof( buffer ),
+      hb_snprintf( buffer, sizeof( buffer ),
                 "Generating Windows/DOS OBJ32 output to \'%s\'... ", szFileName );
       hb_compOutStd( HB_COMP_PARAM, buffer );
    }

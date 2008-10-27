@@ -1819,7 +1819,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                      }
                      else 
                      {
-                        snprintf( buf, sizeof( buf ), "%d", (int) usCount );
+                        hb_snprintf( buf, sizeof( buf ), "%d", (int) usCount );
                         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_COUNT, buf, "1 or 2" );
                      }
                   }
@@ -1855,7 +1855,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                      }
                      else 
                      {
-                        snprintf( buf, sizeof( buf ), "%d", (int) usCount );
+                        hb_snprintf( buf, sizeof( buf ), "%d", (int) usCount );
                         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_COUNT, buf, "1 or 2" );
                      }
 

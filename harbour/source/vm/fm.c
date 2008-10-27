@@ -773,7 +773,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
-      snprintf( buffer, sizeof( buffer ), HB_I_("Total memory allocated: %li bytes (%li block(s))"), s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
+      hb_snprintf( buffer, sizeof( buffer ), HB_I_("Total memory allocated: %li bytes (%li block(s))"), s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
       hb_conOutErr( buffer, 0 );
 
       if( s_lMemoryBlocks )
@@ -794,7 +794,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
          }
 
          hb_conOutErr( hb_conNewLine(), 0 );
-         snprintf( buffer, sizeof( buffer ), HB_I_("Warning, memory allocated but not released: %li bytes (%li block(s))"), s_lMemoryConsumed, s_lMemoryBlocks );
+         hb_snprintf( buffer, sizeof( buffer ), HB_I_("Warning, memory allocated but not released: %li bytes (%li block(s))"), s_lMemoryConsumed, s_lMemoryBlocks );
          hb_conOutErr( buffer, 0 );
 
          if( hLog )

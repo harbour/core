@@ -2495,7 +2495,7 @@ HB_EXPORT char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
          buffer = ( char * ) hb_xgrab( size );
          do
          {
-            n = snprintf( buffer, size, "%p", hb_itemGetPtr( pItem ) );
+            n = hb_snprintf( buffer, size, "%p", hb_itemGetPtr( pItem ) );
             if( (n > -1) && (n < size) )
             {
                bFail = FALSE;

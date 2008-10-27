@@ -55,16 +55,17 @@ then
    export HB_ARCHITECTURE=w32
 fi
 
-if [ "${HB_INC_ALLEGRO}"   != "" ]; then _HB_DIRS="${_HB_DIRS} gtalleg"; fi;
+if [ "${HB_INC_ALLEGRO}"   != "" ]; then _HB_DIRS="${_HB_DIRS} gtalleg" ; fi;
 if [ "${HB_INC_APOLLO}"    != "" ]; then _HB_DIRS="${_HB_DIRS} hbapollo"; fi;
-if [ "${HB_INC_CURL}"      != "" ]; then _HB_DIRS="${_HB_DIRS} hbcurl  "; fi;
-if [ "${HB_INC_FIREBIRD}"  != "" ]; then _HB_DIRS="${_HB_DIRS} hbfbird "; fi;
+if [ "${HB_INC_CURL}"      != "" ]; then _HB_DIRS="${_HB_DIRS} hbcurl"  ; fi;
+if [ "${HB_INC_FIREBIRD}"  != "" ]; then _HB_DIRS="${_HB_DIRS} hbfbird" ; fi;
 if [ "${HB_INC_FREEIMAGE}" != "" ]; then _HB_DIRS="${_HB_DIRS} hbfimage"; fi;
-if [ "${HB_INC_GD}"        != "" ]; then _HB_DIRS="${_HB_DIRS} hbgd    "; fi;
-if [ "${HB_INC_LIBHARU}"   != "" ]; then _HB_DIRS="${_HB_DIRS} hbhpdf  "; fi;
-if [ "${HB_INC_MYSQL}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbmysql "; fi;
-if [ "${HB_INC_PGSQL}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbpgsql "; fi;
-if [ "${HB_INC_ADS}"       != "" ]; then _HB_DIRS="${_HB_DIRS} rddads  "; fi;
+if [ "${HB_INC_GD}"        != "" ]; then _HB_DIRS="${_HB_DIRS} hbgd"    ; fi;
+if [ "${HB_INC_LIBHARU}"   != "" ]; then _HB_DIRS="${_HB_DIRS} hbhpdf"  ; fi;
+if [ "${HB_INC_MYSQL}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbmysql" ; fi;
+if [ "${HB_INC_PGSQL}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbpgsql" ; fi;
+if [ "${HB_INC_ADS}"       != "" ]; then _HB_DIRS="${_HB_DIRS} rddads"  ; fi;
+if [ "${HB_INC_MYSQL}"     != "" ]; then _HB_DIRS="${_HB_DIRS} rddsql"  ; fi;
 
 _HB_DIRS="${_HB_DIRS} ${_HB_DIRS_ADD}"
 

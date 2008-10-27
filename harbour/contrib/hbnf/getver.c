@@ -70,7 +70,7 @@ HB_FUNC( _GET_DOSVER )
       regs.h.ah = 0x30;
       HB_DOS_INT86( 0x21, &regs, &regs );
 
-      snprintf( pszPlatform, 256, "%d.%02d", regs.h.al, regs.h.ah );
+      hb_snprintf( pszPlatform, 256, "%d.%02d", regs.h.al, regs.h.ah );
 
       hb_retc_buffer( pszPlatform );
    }

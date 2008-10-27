@@ -89,11 +89,11 @@ static void debugInit( void )
    {
       int iRand = (int) (hb_random_num()*1000000);
       pFileName = hb_fsFNameSplit( hb_cmdargARGV()[0] );
-      snprintf( szDebugName, 127, "/tmp/%s%d_dbg", pFileName->szName, iRand );
+      hb_snprintf( szDebugName, sizeof( szDebugName ) - 1, "/tmp/%s%d_dbg", pFileName->szName, iRand );
    }
    else
    {
-      snprintf(szDebugName, 127, "/tmp/%s_dbg", s_szDebugName );
+      hb_snprintf( szDebugName, sizeof( szDebugName ) - 1, "/tmp/%s_dbg", s_szDebugName );
       pFileName = hb_fsFNameSplit( szDebugName );
    }
 
@@ -108,7 +108,7 @@ static void debugInit( void )
       {
          ( ( char * ) pFileName->szName )[20] = 0;
       }
-      snprintf( szDebugTitle, sizeof( szDebugTitle ), "%s - Debug", pFileName->szName );
+      hb_snprintf( szDebugTitle, sizeof( szDebugTitle ), "%s - Debug", pFileName->szName );
 
 
       iPid = fork();

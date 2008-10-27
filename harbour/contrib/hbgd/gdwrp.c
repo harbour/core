@@ -559,7 +559,7 @@ HB_FUNC( GDVERSION )
 {
 #if ( GD_VERS >= 2034 )
    char szVer[ 30 ];
-   snprintf( szVer, sizeof( szVer ), "GD Version %s", GD_VERSION_STRING );
+   hb_snprintf( szVer, sizeof( szVer ), "GD Version %s", GD_VERSION_STRING );
    hb_retc( szVer );
 #elif ( GD_VERS >= 2033 )
    hb_retc( "GD Version 2.0.33" );

@@ -401,8 +401,6 @@
    #include "hbfixdj.h"
 #endif
 
-#define snprintf hb_snprintf
-
 /* ***********************************************************************
  * Extern "C" detection
  */

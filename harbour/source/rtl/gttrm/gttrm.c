@@ -1508,7 +1508,7 @@ static void hb_gt_trm_LinuxTone( PHB_GTTRM pTerm, double dFrequency, double dDur
       hb_gt_trm_termOut( pTerm, ( BYTE * ) "\033[10m", 5 );
       pTerm->iACSC = 0;
    }
-   snprintf( escseq, sizeof( escseq ), "\033[10;%d]\033[11;%d]\007",
+   hb_snprintf( escseq, sizeof( escseq ), "\033[10;%d]\033[11;%d]\007",
              ( int ) dFrequency, ( int ) ( dDuration * 1000.0 / 18.2 ) );
    hb_gt_trm_termOut( pTerm, ( BYTE * ) escseq, strlen( escseq ) );
    hb_gt_trm_termFlush( pTerm );
@@ -1550,7 +1550,7 @@ static void hb_gt_trm_LinuxSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
       if( lcurs != -1 )
       {
          char escseq[64];
-         snprintf( escseq, sizeof( escseq ), "\033[?25%c\033[?%hdc",
+         hb_snprintf( escseq, sizeof( escseq ), "\033[?25%c\033[?%hdc",
                    iStyle == SC_NONE ? 'l' : 'h', lcurs );
          hb_gt_trm_termOut( pTerm, ( BYTE * ) escseq, strlen( escseq ) );
          pTerm->iCursorStyle = iStyle;
@@ -1570,7 +1570,7 @@ static BOOL hb_gt_trm_XtermSetMode( PHB_GTTRM pTerm, int * piRows, int * piCols 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_XtermSetMode(%p,%d,%d)", pTerm, *piRows, *piCols));
 
    HB_GTSELF_GETSIZE( pTerm->pGT, &iHeight, &iWidth );
-   snprintf( escseq, sizeof( escseq ), "\033[8;%d;%dt", *piRows, *piCols );
+   hb_snprintf( escseq, sizeof( escseq ), "\033[8;%d;%dt", *piRows, *piCols );
    hb_gt_trm_termOut( pTerm, ( BYTE * ) escseq, strlen( escseq ) );
    hb_gt_trm_termFlush( pTerm );
 
@@ -1828,7 +1828,7 @@ static void hb_gt_trm_AnsiSetCursorPos( PHB_GTTRM pTerm, int iRow, int iCol )
    if( pTerm->iRow != iRow || pTerm->iCol != iCol )
    {
       char buff[16];
-      snprintf( buff, sizeof( buff ), "\x1B[%d;%dH", iRow + 1, iCol + 1 );
+      hb_snprintf( buff, sizeof( buff ), "\x1B[%d;%dH", iRow + 1, iCol + 1 );
       hb_gt_trm_termOut( pTerm, ( BYTE * ) buff, strlen( buff ) );
       pTerm->iRow = iRow;
       pTerm->iCol = iCol;

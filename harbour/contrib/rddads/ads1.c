@@ -2626,14 +2626,14 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
          case HB_FT_IMAGE:
             if( pField->uiTypeExtended != ADS_VARCHAR )
             {
-               uiFldLen = snprintf( ( char * ) ucBuffer, MAX_STR_LEN, "%.*s,%s;",
+               uiFldLen = hb_snprintf( ( char * ) ucBuffer, MAX_STR_LEN, "%.*s,%s;",
                                     ( int ) pArea->uiMaxFieldNameLength,
                                     hb_dynsymName( ( PHB_DYNS ) pField->sym ),
                                     cType );
                break;
             }
          default:
-            uiFldLen = snprintf( ( char * ) ucBuffer, MAX_STR_LEN, "%.*s,%s,%d,%d;",
+            uiFldLen = hb_snprintf( ( char * ) ucBuffer, MAX_STR_LEN, "%.*s,%s,%d,%d;",
                                  ( int ) pArea->uiMaxFieldNameLength,
                                  hb_dynsymName( ( PHB_DYNS ) pField->sym ),
                                  cType, pField->uiLen, pField->uiDec );
@@ -2642,7 +2642,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
 
       if( uiFldLen == 0 )
       {
-         uiFldLen = strlen( ( char * ) ucBuffer );  /* should have been set by snprintf above. */
+         uiFldLen = strlen( ( char * ) ucBuffer );  /* should have been set by hb_snprintf above. */
       }
       if( uiFldLen >= uiLen )
       {
@@ -2819,7 +2819,7 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
          AdsGetVersion( &ulMajor, &ulMinor, &ucLetter, ucDesc, &usDescLen);
 
-         snprintf( ( char * ) ucVersion, sizeof( ucVersion ), "%s, v%lu.%lu%c",
+         hb_snprintf( ( char * ) ucVersion, sizeof( ucVersion ), "%s, v%lu.%lu%c",
                    ( char * ) ucDesc, ( ULONG ) ulMajor, ( ULONG ) ulMinor, ucLetter );
          hb_itemPutC( pItem, ( char * ) ucVersion );
          break;

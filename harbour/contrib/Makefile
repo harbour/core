@@ -43,6 +43,7 @@ DIRS +=\
 	hbmysql \
 	hbpgsql \
 	rddads \
+	rddsql \
 
 else
 

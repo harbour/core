@@ -1103,7 +1103,7 @@ void hb_stackDispCall( void )
    while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
    {
       int l = strlen( buffer );
-      snprintf( buffer + l, sizeof( buffer ) - l, "(%hu)%s%s", uiLine, *file ? HB_I_(" in ") : "", file );
+      hb_snprintf( buffer + l, sizeof( buffer ) - l, "(%hu)%s%s", uiLine, *file ? HB_I_(" in ") : "", file );
 
       hb_conOutErr( "Called from ", 0 );
       hb_conOutErr( buffer, 0 );

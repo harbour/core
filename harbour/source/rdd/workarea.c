@@ -2123,7 +2123,7 @@ HB_EXPORT int hb_rddRegister( const char * szDriver, USHORT uiType )
    if( hb_rddFindNode( szDriver, NULL ) )    /* Duplicated RDD */
       return 1;
 
-   snprintf( szGetFuncTable, sizeof( szGetFuncTable ), "%s_GETFUNCTABLE",
+   hb_snprintf( szGetFuncTable, sizeof( szGetFuncTable ), "%s_GETFUNCTABLE",
              szDriver );
    pGetFuncTable = hb_dynsymFindName( szGetFuncTable );
    if( !pGetFuncTable )

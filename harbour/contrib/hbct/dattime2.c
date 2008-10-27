@@ -322,7 +322,7 @@ HB_FUNC( DMY )
       }
       else
       {
-         snprintf( szMDY + iLen, 3, "%02d", iDay );
+         hb_snprintf( szMDY + iLen, 3, "%02d", iDay );
          iLen += 2;
       }
 
@@ -341,12 +341,12 @@ HB_FUNC( DMY )
 
       if( hb_setGetCentury() )
       {
-         snprintf( szMDY + iLen, 5, "%04d", iYear );
+         hb_snprintf( szMDY + iLen, 5, "%04d", iYear );
          iLen += 4;
       }
       else
       {
-         snprintf( szMDY + iLen, 3, "%02d", iYear % 100 );
+         hb_snprintf( szMDY + iLen, 3, "%02d", iYear % 100 );
          iLen += 2;
       }
 
@@ -420,19 +420,19 @@ HB_FUNC( MDY )
       }
       else
       {
-         snprintf( szMDY + iLen, 3, "%02d", iDay );
+         hb_snprintf( szMDY + iLen, 3, "%02d", iDay );
          iLen += 2;
       }
       szMDY[iLen++] = ' ';
 
       if( hb_setGetCentury() )
       {
-         snprintf( szMDY + iLen, 5, "%04d", iYear );
+         hb_snprintf( szMDY + iLen, 5, "%04d", iYear );
          iLen += 4;
       }
       else
       {
-         snprintf( szMDY + iLen, 3, "%02d", iYear % 100 );
+         hb_snprintf( szMDY + iLen, 3, "%02d", iYear % 100 );
          iLen += 2;
       }
 

@@ -115,7 +115,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
       unsigned int      j;
       int               i;
       
-      snprintf( errmsg, errmsglen,
+      hb_snprintf( errmsg, errmsglen,
                 "\n\n"
                 "    Exception Code:%08X\n"
                 "    Exception Address:%08X\n"
@@ -139,7 +139,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
       {
          if( IsBadReadPtr( pc, 1 ) )
             break;
-         snprintf( buf, sizeof( buf ) - 1, " %02X", ( int ) pc[ i ] );
+         hb_snprintf( buf, sizeof( buf ) - 1, " %02X", ( int ) pc[ i ] );
          hb_strncat( errmsg, buf, errmsglen );
       }
       hb_strncat( errmsg, "\n    SS:ESP:", errmsglen );
@@ -148,7 +148,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
       {
          if( IsBadReadPtr( sc, 4 ) )
             break;
-         snprintf( buf, sizeof( buf ), " %08X", sc[ i ] );
+         hb_snprintf( buf, sizeof( buf ), " %08X", sc[ i ] );
          hb_strncat( errmsg, buf, errmsglen );
       }
       hb_strncat( errmsg, "\n\n", errmsglen );
@@ -162,11 +162,11 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
          {
             if( ( unsigned int ) ebp % 4 != 0 || IsBadWritePtr( ebp, 40 ) || ( unsigned int ) ebp >= ebp[ 0 ] )
                break;
-            snprintf( buf, sizeof( buf ), "    %08X %08X  ", ( int ) eip, ( int ) ebp );
+            hb_snprintf( buf, sizeof( buf ), "    %08X %08X  ", ( int ) eip, ( int ) ebp );
             hb_strncat( errmsg, buf, errmsglen );
             for( j = 0; j < 10 && ( unsigned int )( ebp + j ) < ebp[ 0 ]; j++ )
             {
-               snprintf( buf, sizeof( buf ), " %08X", ebp[ j ] );
+               hb_snprintf( buf, sizeof( buf ), " %08X", ebp[ j ] );
                hb_strncat( errmsg, buf, errmsglen );
             }
             hb_strncat( errmsg, "\n", errmsglen );
@@ -229,26 +229,26 @@ static void hb_signalExceptionHandler( int sig, siginfo_t * si, void * ucp )
    {
    case SIGSEGV:
       signame = "SIGSEGV";
-      snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+      hb_snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
       sigaddr = buffer;
       break;
    case SIGILL:
       signame = "SIGILL";
-      snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+      hb_snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
       sigaddr = buffer;
       break;
    case SIGFPE:
       signame = "SIGFPE";
-      snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+      hb_snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
       sigaddr = buffer;
       break;
    case SIGBUS:
       signame = "SIGBUS";
-      snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+      hb_snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
       sigaddr = buffer;
       break;
    default:
-      snprintf( buffer, sizeof( buffer ), "sig:%d", sig );
+      hb_snprintf( buffer, sizeof( buffer ), "sig:%d", sig );
       signame = buffer;
       sigaddr = "UNKNOWN";
       break;

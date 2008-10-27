@@ -303,7 +303,7 @@ HB_EXPORT void hb_dateTimeStr( char * pszTime )
    {
       SYSTEMTIME st;
       GetLocalTime( &st );
-      snprintf( pszTime, 9, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
+      hb_snprintf( pszTime, 9, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
    }
 #elif defined( HB_OS_UNIX ) && _POSIX_C_SOURCE >= 199506L && !defined( HB_OS_DARWIN_5 )
    {
@@ -313,7 +313,7 @@ HB_EXPORT void hb_dateTimeStr( char * pszTime )
       time( &t );
       localtime_r( &t, &st );
 
-      snprintf( pszTime, 9, "%02d:%02d:%02d", st.tm_hour, st.tm_min, st.tm_sec );
+      hb_snprintf( pszTime, 9, "%02d:%02d:%02d", st.tm_hour, st.tm_min, st.tm_sec );
    }
 #else
    {
@@ -322,7 +322,7 @@ HB_EXPORT void hb_dateTimeStr( char * pszTime )
 
       time( &t );
       oTime = localtime( &t );
-      snprintf( pszTime, 9, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
+      hb_snprintf( pszTime, 9, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
    }
 #endif
 }
@@ -383,7 +383,7 @@ HB_EXPORT char * hb_timeStampStr( char * szTime, LONG lMillisec )
    HB_TRACE(HB_TR_DEBUG, ("hb_timeStampStr(%p, %ld)", szTime, lMillisec));
 
    hb_timeStampDecode( lMillisec, &iHour, &iMinutes, &iSeconds, &iMSec );
-   snprintf( szTime, 13, "%02d:%02d:%02d.%03d",
+   hb_snprintf( szTime, 13, "%02d:%02d:%02d.%03d",
              iHour, iMinutes, iSeconds, iMSec );
    szTime[ 12 ] = '\0';
 
@@ -401,7 +401,7 @@ HB_EXPORT char * hb_dateTimeStampStr( char * szDateTime, LONG lJulian, LONG lMil
 
    hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
    hb_timeStampDecode( lMillisec, &iHour, &iMinutes, &iSeconds, &iMSec );
-   snprintf( szDateTime, 24, "%04d-%02d-%02d %02d:%02d:%02d.%03d",
+   hb_snprintf( szDateTime, 24, "%04d-%02d-%02d %02d:%02d:%02d.%03d",
              iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec );
    szDateTime[ 23 ] = '\0';
 

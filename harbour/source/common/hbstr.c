@@ -1110,7 +1110,7 @@ char * hb_compDecodeString( int iMethod, const char * szText, ULONG * pulLen )
 }
 
 #undef _HB_SNPRINTF_ADD_EOS
-#undef snprintf
+#undef hb_snprintf
 /* NOTE: The full size of the buffer is expected as nSize. [vszakats] */
 ULONG hb_snprintf( char * buffer, ULONG nSize, const char * format, ... )
 {

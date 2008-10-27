@@ -197,7 +197,7 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, const char * szRspName )
    if( !inFile )
    {
       char buffer[ _POSIX_PATH_MAX + 80 ];
-      snprintf( buffer, sizeof( buffer ),
+      hb_snprintf( buffer, sizeof( buffer ),
                 "Cannot open input file: %s\n", szRspName );
       hb_compOutErr( HB_COMP_PARAM, buffer );
       iStatus = EXIT_FAILURE;
@@ -447,7 +447,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, BYTE cValueType )
    else if( HB_COMP_PARAM->iVarScope != VS_PARAMETER )
    {
       char buffer[ 80 ];
-      snprintf( buffer, sizeof( buffer ),
+      hb_snprintf( buffer, sizeof( buffer ),
                 "Wrong type of codeblock parameter, is: %d, should be: %d\r\n",
                 HB_COMP_PARAM->iVarScope, VS_PARAMETER );
       hb_compOutErr( HB_COMP_PARAM, buffer );
@@ -1743,7 +1743,7 @@ static void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined fu
             if( pVar->szName && pFunc->szName && pFunc->szName[0] && (! ( pVar->iUsed & VU_USED )) )
             {
                char szFun[ 256 ];
-               snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, pVar->iDeclLine );
+               hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, pVar->iDeclLine );
                hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
             }
 
@@ -1756,7 +1756,7 @@ static void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined fu
             if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! ( pVar->iUsed & VU_USED ) )
             {
                char szFun[ 256 ];
-               snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, pVar->iDeclLine );
+               hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, pVar->iDeclLine );
                hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
             }
 
@@ -4176,7 +4176,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
       }
       else if( !hb_pp_inFile( HB_COMP_PARAM->pLex->pPP, szFileName, FALSE, NULL, FALSE ) )
       {
-         snprintf( buffer, sizeof( buffer ),
+         hb_snprintf( buffer, sizeof( buffer ),
                    "Cannot open input file: %s\n", szFileName );
          hb_compOutErr( HB_COMP_PARAM, buffer );
          iStatus = EXIT_FAILURE;
@@ -4216,11 +4216,11 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
             if( ! HB_COMP_PARAM->fQuiet )
             {
                if( HB_COMP_PARAM->fPPO )
-                  snprintf( buffer, sizeof( buffer ),
+                  hb_snprintf( buffer, sizeof( buffer ),
                             "Compiling '%s' and generating preprocessed output to '%s'...\n",
                             szFileName, szPpoName );
                else
-                  snprintf( buffer, sizeof( buffer ), "Compiling '%s'...\n", szFileName );
+                  hb_snprintf( buffer, sizeof( buffer ), "Compiling '%s'...\n", szFileName );
                hb_compOutStd( HB_COMP_PARAM, buffer );
             }
 
@@ -4250,7 +4250,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
          }
          else
          {
-            snprintf( buffer, sizeof( buffer ), "Reading '%s'...\n", szFileName );
+            hb_snprintf( buffer, sizeof( buffer ), "Reading '%s'...\n", szFileName );
             hb_compOutStd( HB_COMP_PARAM, buffer );
          }
 
@@ -4286,7 +4286,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
             HB_COMP_PARAM->pInitFunc->pCode[ 4 ] = HB_HIBYTE( HB_COMP_PARAM->iStaticCnt );
             HB_COMP_PARAM->pInitFunc->iStaticsBase = HB_COMP_PARAM->iStaticCnt;
             /* Update pseudo function name */
-            snprintf( szNewName, sizeof( szNewName ), "(_INITSTATICS%05d)", HB_COMP_PARAM->iStaticCnt );
+            hb_snprintf( szNewName, sizeof( szNewName ), "(_INITSTATICS%05d)", HB_COMP_PARAM->iStaticCnt );
             HB_COMP_PARAM->pInitFunc->szName = hb_compIdentifierNew( HB_COMP_PARAM, szNewName, HB_IDENT_COPY );
 
             hb_compAddInitFunc( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc );
@@ -4336,7 +4336,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
             {
                iStatus = EXIT_FAILURE;
                bSkipGen = TRUE;
-               snprintf( buffer, sizeof( buffer ),
+               hb_snprintf( buffer, sizeof( buffer ),
                          "\r%i error%s\n\nNo code generated\n",
                          HB_COMP_PARAM->iErrorCount,
                          HB_COMP_PARAM->iErrorCount > 1 ? "s" : "" );
@@ -4404,7 +4404,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
 
             if( ! HB_COMP_PARAM->fQuiet )
             {
-               snprintf( buffer, sizeof( buffer ),
+               hb_snprintf( buffer, sizeof( buffer ),
                          "\rLines %i, Functions/Procedures %i\n",
                          hb_pp_lineTot( HB_COMP_PARAM->pLex->pPP ),
                          HB_COMP_PARAM->iFunctionCnt );
@@ -4500,7 +4500,7 @@ static int hb_compAutoOpen( HB_COMP_DECL, const char * szPrg, BOOL * pbSkipGen, 
 
       if( !hb_pp_inFile( HB_COMP_PARAM->pLex->pPP, szFileName, FALSE, NULL, FALSE ) )
       {
-         snprintf( buffer, sizeof( buffer ),
+         hb_snprintf( buffer, sizeof( buffer ),
                    "Cannot open %s, assumed external\n", szFileName );
          hb_compOutErr( HB_COMP_PARAM, buffer );
          iStatus = EXIT_FAILURE;
@@ -4529,11 +4529,11 @@ static int hb_compAutoOpen( HB_COMP_DECL, const char * szPrg, BOOL * pbSkipGen, 
          if( ! HB_COMP_PARAM->fQuiet )
          {
             if( HB_COMP_PARAM->fPPO )
-               snprintf( buffer, sizeof( buffer ),
+               hb_snprintf( buffer, sizeof( buffer ),
                          "Compiling module '%s' and generating preprocessed output to '%s'...\n",
                          szFileName, szPpoName );
             else
-               snprintf( buffer, sizeof( buffer ),
+               hb_snprintf( buffer, sizeof( buffer ),
                          "Compiling module '%s'...\n", szFileName );
             hb_compOutStd( HB_COMP_PARAM, buffer );
          }

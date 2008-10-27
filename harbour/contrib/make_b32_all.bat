@@ -59,6 +59,7 @@ if not "%HB_INC_LIBHARU%%HB_DIR_LIBHARU%"     == "" set _HB_DIRS=%_HB_DIRS% hbhp
 if not "%HB_INC_MYSQL%%HB_DIR_MYSQL%"         == "" set _HB_DIRS=%_HB_DIRS% hbmysql
 if not "%HB_INC_PGSQL%%HB_DIR_PGSQL%"         == "" set _HB_DIRS=%_HB_DIRS% hbpgsql
 if not "%HB_INC_ADS%%HB_DIR_ADS%"             == "" set _HB_DIRS=%_HB_DIRS% rddads
+if not "%HB_INC_MYSQL%%HB_DIR_MYSQL%"         == "" set _HB_DIRS=%_HB_DIRS% rddsql
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem *******************************************************

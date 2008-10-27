@@ -3001,10 +3001,10 @@ static BOOL hb_gt_xwc_SetFont( PXWND_DEF wnd, const char *fontFace,
    XFontStruct *xfs;
 
 /*
-   snprintf( fontString, sizeof(fontString)-1, "-*-%s-%s-r-normal--%d-*-*-*-*-*-%s",
+   hb_snprintf( fontString, sizeof(fontString)-1, "-*-%s-%s-r-normal--%d-*-*-*-*-*-%s",
              fontFace, weight, size, encoding == NULL ? "*-*" : encoding );
 */
-   snprintf( fontString, sizeof(fontString)-1, "-*-%s-%s-r-*--%d-*-*-*-*-*-%s",
+   hb_snprintf( fontString, sizeof(fontString)-1, "-*-%s-%s-r-*--%d-*-*-*-*-*-%s",
              fontFace, weight, size, encoding == NULL ? "*-*" : encoding );
 
    xfs = XLoadQueryFont( wnd->dpy, fontString );

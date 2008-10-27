@@ -7326,7 +7326,7 @@ static void hb_vmVerifyPCodeVersion( const char * szModuleName, USHORT uiPCodeVe
           uiPCodeVer < HB_PCODE_VER_MIN )  /* the module is compiled with old not longer supported by HVM compiler version */
       {
          char szPCode[ 10 ];
-         snprintf( szPCode, sizeof( szPCode ), "%i.%i", uiPCodeVer>>8, uiPCodeVer &0xff );
+         hb_snprintf( szPCode, sizeof( szPCode ), "%i.%i", uiPCodeVer>>8, uiPCodeVer &0xff );
 
          hb_errInternal( HB_EI_ERRUNRECOV, "Module '%s'\n"
                          "was compiled with unsupported PCODE version %s.\n"
@@ -7946,7 +7946,7 @@ void hb_vmRequestCancel( void )
       while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
       {
          l = strlen( buffer );
-         snprintf( buffer + l, sizeof( buffer ) - l, " (%hu)%s%s", uiLine, *file ? HB_I_(" in ") : "", file );
+         hb_snprintf( buffer + l, sizeof( buffer ) - l, " (%hu)%s%s", uiLine, *file ? HB_I_(" in ") : "", file );
 
          hb_conOutErr( buffer, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );

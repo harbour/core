@@ -77,7 +77,7 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 {
    ULONG s;
 
-   /* NOTE: In DJGPP (4.2.3) snprintf() will be preprocessed to sprintf(), which
+   /* NOTE: In DJGPP (4.2.3) hb_snprintf() will be preprocessed to sprintf(), which
             makes ulMaxBuf unused, and this in turn causes a warning, so we're
             manually suppressing it. [vszakats] */
    #if defined(__DJGPP__)
@@ -87,49 +87,49 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
    if( IsIndW && IsIndP ){
       switch( iCOut ){
       case 'p':
-         s = snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetPtr( pItmPar ) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetPtr( pItmPar ) );
          break;
       case 's': case 'S':
-         s = snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetCPtr( pItmPar ) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetCPtr( pItmPar ) );
          break;
       case 'e': case 'E': case 'f': case 'g': case 'G': case 'a': case 'A':
-         s = snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetND( pItmPar ) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetND( pItmPar ) );
          break;
       /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
       default:
-         s = snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, (HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar )) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, (HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar )) );
       }
    }else if( IsIndW || IsIndP ){
       int iInd = (IsIndW ? iIndWidth : iIndPrec);
 
       switch( iCOut ){
       case 'p':
-         s = snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetPtr( pItmPar ) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetPtr( pItmPar ) );
          break;
       case 's': case 'S':
-         s = snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetCPtr( pItmPar ) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetCPtr( pItmPar ) );
          break;
       case 'e': case 'E': case 'f': case 'g': case 'G': case 'a': case 'A':
-         s = snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetND( pItmPar ) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetND( pItmPar ) );
          break;
       /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
       default:
-         s = snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, (HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar )) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, (HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar )) );
       }
    }else{
       switch( iCOut ){
       case 'p':
-         s = snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetPtr( pItmPar ) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetPtr( pItmPar ) );
          break;
       case 's': case 'S':
-         s = snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetCPtr( pItmPar ) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetCPtr( pItmPar ) );
          break;
       case 'e': case 'E': case 'f': case 'g': case 'G': case 'a': case 'A':
-         s = snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetND( pItmPar ) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetND( pItmPar ) );
          break;
       /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
       default:
-         s = snprintf( cBuffer, ulMaxBuf, cParFrm, (HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar )) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, (HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar )) );
       }
    }
    return s;

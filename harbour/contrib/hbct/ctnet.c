@@ -216,7 +216,7 @@ HB_FUNC( NETREDIR )
       if( bShowError )
       {
          char szCommand[80];
-         snprintf( szCommand, 80, "NETREDIR( \"%s\", \"%s\", \"%s\" )",
+         hb_snprintf( szCommand, 80, "NETREDIR( \"%s\", \"%s\", \"%s\" )",
                    hb_parcx( 1 ), hb_parcx( 2 ), hb_parcx( 3 ) );
          WNetErrorHandler( dwResult, szCommand );
       }
