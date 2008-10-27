@@ -821,12 +821,13 @@ extern HB_EXPORT char *    hb_strndup( const char * pszText, ULONG ulLen ); /* r
 extern HB_EXPORT char *    hb_strduptrim( const char * pszText ); /* returns a pointer to a newly allocated copy of the trimmed source string */
 extern HB_EXPORT ULONG     hb_strlentrim( const char * pszText ); /* like strlen() but result is the length of trimmed text */
 extern HB_EXPORT ULONG     hb_strnlen( const char * pszText, ULONG ulLen ); /* like strlen() but result is limited to ulLen */
-extern HB_EXPORT char *    hb_xstrcat( char *dest, const char *src, ... ); /* Concatenates multiple strings into a single result */
-extern HB_EXPORT char *    hb_xstrcpy( char *szDest, const char *szSrc, ...); /* Concatenates multiple strings into a single result */
-extern HB_EXPORT BOOL      hb_compStrToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns TRUE if results is double, used by compiler */
-extern HB_EXPORT BOOL      hb_valStrnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns TRUE if results is double, used by VAL() */
-extern HB_EXPORT BOOL      hb_strToNum( const char* szNum, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
-extern HB_EXPORT BOOL      hb_strnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
+extern HB_EXPORT char *    hb_xstrcat( char * dest, const char * src, ... ); /* Concatenates multiple strings into a single result */
+extern HB_EXPORT char *    hb_xstrcpy( char * szDest, const char * szSrc, ... ); /* Concatenates multiple strings into a single result */
+extern HB_EXPORT BOOL      hb_compStrToNum( const char * szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns TRUE if results is double, used by compiler */
+extern HB_EXPORT BOOL      hb_valStrnToNum( const char * szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns TRUE if results is double, used by VAL() */
+extern HB_EXPORT BOOL      hb_strToNum( const char * szNum, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
+extern HB_EXPORT BOOL      hb_strnToNum( const char * szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
+extern HB_EXPORT void      hb_snprintf( char * buffer, ULONG nSize, const char * format, ... ); /* snprintf() wrapper */
 
 extern HB_EXPORT BOOL      hb_strMatchFile( const char * pszString, const char * szPattern ); /* compare two strings using platform dependent rules for file matching */
 extern HB_EXPORT BOOL      hb_strMatchRegExp( const char * szString, const char * szPattern ); /* compare two strings using a regular expression pattern */

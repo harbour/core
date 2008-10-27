@@ -1112,28 +1112,26 @@ char * hb_compDecodeString( int iMethod, const char * szText, ULONG * pulLen )
 #undef _HB_SNPRINTF_ADD_EOS
 #undef snprintf
 /* NOTE: The full size of the buffer is expected as nSize. [vszakats] */
-HB_EXPORT void hb_snprintf( char * buffer, ULONG nSize, ... )
+HB_EXPORT void hb_snprintf( char * buffer, ULONG nSize, const char * format, ... )
 {
-   va_list va;
+   va_list arglist;
 
-   va_start( va, nSize );
+   va_start( arglist, format );
 
 #if defined( __DJGPP__ ) && ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ <= 3 ) )
    /* Use sprintf() for DJGPP <= 2.03.
       This is a temporary hack, should implement a C99 snprintf() ourselves. */
-   sprintf( buffer, va );
+   sprintf( buffer, format, arglist );
 #elif defined( _MSC_VER ) && _MSC_VER >= 1400
-   _snprintf_s( buffer, nSize, _TRUNCATE, va );
+   _snprintf_s( buffer, nSize, _TRUNCATE, format, arglist );
 #elif defined( _MSC_VER ) || defined( __DMC__ ) && !defined( __XCC__ )
-   _snprintf( buffer, nSize, va );
+   _snprintf( buffer, nSize, format, arglist );
    #define _HB_SNPRINTF_ADD_EOS
 #elif defined( __WATCOMC__ ) && __WATCOMC__ < 1200
-   _bprintf( buffer, nSize, va );
+   _bprintf( buffer, nSize, format, arglist );
 #else
-   snprintf( buffer, nSize, va );
+   snprintf( buffer, nSize, format, arglist );
 #endif
-
-   va_end( va );
 
 #ifdef _HB_SNPRINTF_ADD_EOS
    if( buffer && nSize )
