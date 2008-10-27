@@ -102,11 +102,11 @@ function sxChar( nLen, xKeyVal )
          xKeyVal := iif( xKeyVal, "T", "F" )
          exit
       otherwise
-         xKeyVal := iif( valType( nLen ) == "N", "", space( 10 ) )
+         xKeyVal := iif( ISNUMBER( nLen ), "", space( 10 ) )
          exit
    endswitch
 
-return iif( valType( nLen ) == "N", padr( ltrim( xKeyVal ), nLen ), xKeyVal )
+return iif( ISNUMBER( nLen ), padr( ltrim( xKeyVal ), nLen ), xKeyVal )
 
 function sxNum( xKeyVal )
 
@@ -204,9 +204,9 @@ return xRetVal
 function Sx_TagInfo( cIndex )
    local aInfo, nOrds, nFirst, i
 
-   if Used() && ( nOrds := OrdCount( cIndex ) ) > 0
+   if Used() .AND. ( nOrds := OrdCount( cIndex ) ) > 0
       aInfo := array( nOrds, 6 )
-      if valType( cIndex ) == "C"
+      if ISCHARACTER( cIndex )
          nFirst := dbOrderInfo( DBOI_BAGORDER, cIndex )
          nOrds += nFirst - 1
       else
@@ -228,12 +228,12 @@ return aInfo
 function Sx_TagCount( xIndex )
    local nTags := 0, cIndex, nOrder
    if Used()
-      if valtype( xIndex ) == "N"
+      if ISNUMBER( xIndex )
          nOrder := Sx_TagOrder( 1, xIndex )
          if nOrder != 0
             cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
          endif
-      elseif valtype( xIndex ) == "C" .and. !Empty( xIndex )
+      elseif ISCHARACTER( xIndex ) .and. !Empty( xIndex )
          cIndex := xIndex
       else
          cIndex := dbOrderInfo( DBOI_FULLPATH )
@@ -247,9 +247,9 @@ return nTags
 function Sx_Tags( xIndex )
    local aTagNames := {}, nOrder, nTags
    if Used()
-      if valtype( xIndex ) == "N"
+      if ISNUMBER( xIndex )
          nOrder := Sx_TagOrder( 1, xIndex )
-      elseif valtype( xIndex ) == "C" .and. !Empty( xIndex )
+      elseif ISCHARACTER( xIndex ) .and. !Empty( xIndex )
          nOrder := dbOrderInfo( DBOI_BAGORDER, xIndex )
       else
          nOrder := OrdNumber()
@@ -266,10 +266,10 @@ return aTagNames
 function Sx_SetTag( xTag, xIndex )
    local lRet := .f., nOrder := 0, nOldOrd, cIndex
    if Used() .and. valtype( xTag ) $ "CN"
-      if valtype( xTag ) == "N"
+      if ISNUMBER( xTag )
          if empty( xIndex ) .or. !valtype( xIndex ) $ "CN"
             nOrder := xTag
-         elseif valtype( xIndex ) == "C"
+         elseif ISCHARACTER( xIndex )
             if xTag >= 1 .and. xTag <= ordCount( xIndex )
                nOrder := dbOrderInfo( DBOI_BAGORDER, xIndex ) + xTag - 1
             endif
@@ -279,7 +279,7 @@ function Sx_SetTag( xTag, xIndex )
       else
          if empty( xIndex ) .or. !valtype( xIndex ) $ "CN"
             nOrder := OrdNumber( xTag )
-         elseif valtype( xIndex ) == "C"
+         elseif ISCHARACTER( xIndex )
             nOrder := Sx_TagOrder( xTag, xIndex )
          else
             nOrder := Sx_TagOrder( 1, xIndex )
@@ -309,13 +309,13 @@ return lRet
 
 function Sx_KillTag( xTag, xIndex )
    local lRet := .f., nOrder, cIndex
-   if valtype( xTag ) == "L"
+   if ISLOGICAL( xTag )
       if xTag
          if empty( xIndex )
             cIndex := Sx_IndexName()
-         elseif valtype( xIndex ) == "N"
+         elseif ISNUMBER( xIndex )
             cIndex := Sx_IndexName( 1, xIndex )
-         elseif valtype( xIndex ) == "C"
+         elseif ISCHARACTER( xIndex )
             nOrder := dbOrderInfo( DBOI_BAGORDER, xIndex )
             if nOrder != 0
                cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
@@ -328,10 +328,10 @@ function Sx_KillTag( xTag, xIndex )
          endif
       endif
    else
-      if valtype( xTag ) == "N"
+      if ISNUMBER( xTag )
          if empty( xIndex ) .or. !valtype( xIndex ) $ "CN"
             nOrder := xTag
-         elseif valtype( xIndex ) == "C"
+         elseif ISCHARACTER( xIndex )
             if xTag >= 1 .and. xTag <= ordCount( xIndex )
                nOrder := dbOrderInfo( DBOI_BAGORDER, xIndex ) + xTag - 1
             else
@@ -343,7 +343,7 @@ function Sx_KillTag( xTag, xIndex )
       else
          if empty( xIndex ) .or. !valtype( xIndex ) $ "CN"
             nOrder := OrdNumber( xTag )
-         elseif valtype( xIndex ) == "C"
+         elseif ISCHARACTER( xIndex )
             nOrder := Sx_TagOrder( xTag, xIndex )
          else
             nOrder := Sx_TagOrder( 1, xIndex )
@@ -367,7 +367,7 @@ function Sx_FileOrder()
 return dbOrderInfo( DBOI_BAGNUMBER )
 
 function Sx_SetFileOrd( nIndex )
-return iif( valtype( nIndex ) == "N", ;
+return iif( ISNUMBER( nIndex ), ;
             OrdSetFocus( Sx_TagOrder( 1, nIndex ) ), ;
             OrdSetFocus() )
 
@@ -377,7 +377,7 @@ return len( RDDList() )
 function RDD_Name( nRDD )
    local aRDD
 
-   if valType( nRDD ) == "N" .and. nRDD >= 1
+   if ISNUMBER( nRDD ) .and. nRDD >= 1
       aRDD := RDDList()
       if nRDD <= len( aRDD )
          return aRDD[ nRDD ]
@@ -388,11 +388,11 @@ return ""
 function RDD_Info( xID )
    local aInfo, cRDD
 
-   if valType( xID ) == "N"
+   if ISNUMBER( xID )
       if !empty( alias( xID ) )
          ( xID )->( RDDName() )
       endif
-   elseif valType( xID ) == "C"
+   elseif ISCHARACTER( xID )
       cRDD := upper( alltrim( xID ) )
       if ascan( RDDList(), {|x| upper( x ) == cRDD } ) == 0
          cRDD := NIL
@@ -470,7 +470,7 @@ function Sx_dbCreate( cFileName, aStruct, cRDD )
                aField[ 2 ] := "V"
             endif
             exit
-      end
+      endswitch
    next
 
 return dbCreate( cFileName, aDbStruct, cRDD )
@@ -479,9 +479,9 @@ function Sx_VSigLen( xField )
    local nResult := 0, nField := 0
 
    if Used()
-      if valtype( xField ) == "C"
+      if ISCHARACTER( xField )
          nField := FieldPos( xField )
-      elseif valtype( xField ) == "N"
+      elseif ISNUMBER( xField )
          nField := xField
       endif
       if nField >= 1 .and. nField <= FCount()
@@ -527,9 +527,9 @@ return lResult
 function Sx_SetTrigger( nAction, cTriggerName, cRDD /* Harbour extensions */ )
    local cPrevTrigger := ""
 
-   if valtype( nAction ) == "N"
+   if ISNUMBER( nAction )
       if nAction == TRIGGER_PENDING
-         if valtype( cTriggerName ) == "C"
+         if ISCHARACTER( cTriggerName )
             rddInfo( RDDI_PENDINGTRIGGER, cTriggerName, cRDD )
          endif
       elseif Used()
@@ -545,11 +545,11 @@ function Sx_SetTrigger( nAction, cTriggerName, cRDD /* Harbour extensions */ )
                dbInfo( DBI_TRIGGER, "" )
                exit
             case TRIGGER_INSTALL
-               if valtype( cTriggerName ) == "C"
+               if ISCHARACTER( cTriggerName )
                   dbInfo( DBI_TRIGGER, cTriggerName )
                endif
                exit
-         end
+         endswitch
       endif
    endif
 

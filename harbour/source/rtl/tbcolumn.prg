@@ -60,7 +60,7 @@
          and there is no public class function like TBColumn(). There is 
          in XPP though. */ 
 
-#if defined( HB_C52_STRICT ) && !defined( HB_COMPAT_XPP )
+#if defined( HB_C52_STRICT ) .AND. !defined( HB_COMPAT_XPP )
 CREATE CLASS TBColumn STATIC
 #else
 CREATE CLASS TBColumn

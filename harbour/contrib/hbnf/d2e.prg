@@ -79,8 +79,8 @@ function ft_d2e( nDec, nPrecision )
   elseif abs( nDec ) < 1
      nExp := int( log10( nDec ) ) - 1
   else
-     nExp := int( log10( abs(nDec)+0.00001 ) )   && 0.00001 == kludge
-  endif           && for imprecise logs
+     nExp := int( log10( abs(nDec)+0.00001 ) )   /* 0.00001 == kludge */
+  endif           /* for imprecise logs */
 
   nDec /= 10 ^ nExp
 

@@ -3388,7 +3388,7 @@ METHOD DelItem( nItemNum ) CLASS wvtMenu
 METHOD EnableItem( nItemNum ) CLASS wvtMenu
    LOCAL nPrevious:= -1
 
-   IF !EMPTY( ::hMenu ) && !EMPTY( nItemNum )
+   IF !EMPTY( ::hMenu ) .AND. !EMPTY( nItemNum )
       nPrevious:= Wvt_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_ENABLED )
    ENDIF
 
@@ -3399,7 +3399,7 @@ METHOD EnableItem( nItemNum ) CLASS wvtMenu
 METHOD DisableItem( nItemNum ) CLASS wvtMenu
    LOCAL nPrevious:= -1
 
-   IF !EMPTY( ::hMenu ) && !EMPTY( nItemNum )
+   IF !EMPTY( ::hMenu ) .AND. !EMPTY( nItemNum )
       nPrevious:= Wvt_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_GRAYED )
    ENDIF
 

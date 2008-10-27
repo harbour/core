@@ -286,9 +286,9 @@ RETURN NIL                     // no function output
  *    of a double click.
  * $EXAMPLES$
  *   IF FT_MISREGION( 10, 10, 11, 20 ) .AND.;
- *      FT_MDBLCLK(0,1,,FT_MGETX(),FT_MGETY())  && double click, right button
- *                                              && at current location with
- *                                              && default interval
+ *      FT_MDBLCLK(0,1,,FT_MGETX(),FT_MGETY())  // double click, right button
+ *                                              // at current location with
+ *                                              // default interval
  *
  *         MnuItem1()
  *   ENDIF

@@ -91,6 +91,6 @@ function Sx_DefTrigger( nEvent, nArea, nFieldPos, xTrigVal )
          exit
       case EVENT_POSTMEMOPACK
          exit
-   end
+   endswitch
 
 return .T.

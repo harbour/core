@@ -112,7 +112,7 @@
 /* NOTE: In CA-Cl*pper TBROWSE class does not inherit from any other classes
          and there is no public class function like TBrowse(). There is 
          in XPP though. */ 
-#if defined( HB_C52_STRICT ) && !defined( HB_COMPAT_XPP )
+#if defined( HB_C52_STRICT ) .AND. !defined( HB_COMPAT_XPP )
 CREATE CLASS TBrowse STATIC
 #else
 CREATE CLASS TBrowse

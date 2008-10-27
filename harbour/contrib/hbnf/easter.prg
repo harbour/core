@@ -49,7 +49,7 @@
  *     This function can be useful in calender type programs that indicate
  *     when holidays occur.
  *  $EXAMPLES$
- *     dEdate := FT_EASTER( 1990 )     && returns 04/15/1990
+ *     dEdate := FT_EASTER( 1990 )     // returns 04/15/1990
  *  $END$
  */
 

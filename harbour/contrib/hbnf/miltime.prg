@@ -169,7 +169,7 @@ function FT_MIL2CIV(cMILTIME)
         else
            cCIVTIME = "12:" + cMINS + " pm"
         endif
-     case (nHRS < 12)                                    && AM
+     case (nHRS < 12)                                    // AM
         if nHRS == 0
            cHRS = "12"
         else
@@ -177,7 +177,7 @@ function FT_MIL2CIV(cMILTIME)
         endif
         cCIVTIME = cHRS + ":" + cMINS + " am"
 
-  otherwise                                           && PM
+  otherwise                                           // PM
      cCIVTIME = right("  " + ltrim(str(int(nHRS - 12))), 2) + ;
                 ":" + cMINS + " pm"
   endcase
@@ -233,26 +233,26 @@ endif
 cKEY = substr(ltrim(cTIME), 7, 1)
 
 do case
-case upper(cKEY) == "N"                           && noon
+case upper(cKEY) == "N"                           // noon
       if left(cTIME,2) + substr(cTIME,4,2) == "0000"
          cMILTIME = "1200"
       else
          cMILTIME = "    "
       endif
-   case upper(cKEY) == "M"                           && midnight
+   case upper(cKEY) == "M"                           // midnight
       if left(cTIME,2) + substr(cTIME,4,2) == "0000"
          cMILTIME = "0000"
       else
          cMILTIME = "    "
       endif
-   case upper(cKEY) == "A"                           && am
+   case upper(cKEY) == "A"                           // am
       cMILTIME = right("00" + ltrim(str(val(left(cTIME,2)))),2) + ;
                  substr(cTIME,4,2)
-   case upper(cKEY) == "P"                           && pm
+   case upper(cKEY) == "P"                           // pm
       cMILTIME = right("00" + ltrim(str(val(left(cTIME,2))+12)),2) + ;
                  substr(cTIME,4,2)
    otherwise
-      cMILTIME = "    "                              && error
+      cMILTIME = "    "                              // error
 endcase
 
   return cMILTIME

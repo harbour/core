@@ -72,7 +72,7 @@ static function _sx_INIlogical( cVal )
       case "NO"
       case "OFF"
          return .F.
-   end
+   endswitch
 return NIL
 
 function _sx_INIinit( nArea )
@@ -116,7 +116,7 @@ function _sx_INIinit( nArea )
                case "TRIGGER"
                   xTrigger := item
                   exit
-            end
+            endswitch
          next
          if xTrigger != NIL
             ( nArea )->( Sx_SetTrigger( TRIGGER_INSTALL, xTrigger ) )

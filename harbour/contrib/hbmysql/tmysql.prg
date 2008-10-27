@@ -1426,10 +1426,10 @@ METHOD SelectDB(cDBName) CLASS TMySQLServer
 
    ::lError := .F.
 
-   if sqlSelectD(::nSocket, cDBName) != 0     && tabela nao existe
+   if sqlSelectD(::nSocket, cDBName) != 0     /* tabela nao existe */
       ::cDBName :=""
       ::lError := .T.
-   else                                       && tabela existe
+   else                                       /* tabela existe */
       ::cDBName :=cDBName
       ::lError := .F.
       return .T.

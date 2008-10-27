@@ -222,7 +222,7 @@ PRIVATE str_bar := "-■"
       SETCOLOR( LI_CLR )
       EVAL( LI_B1, mslist )
       //     IF predit>1
-      //      SETCOLOR(LI_CLRV+"*")                 && Выделить строку
+      //      SETCOLOR(LI_CLRV+"*")                 // Выделить строку
       //     ELSE
       SETCOLOR( LI_CLRV )
       //     ENDIF
