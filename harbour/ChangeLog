@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-27 15:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/compiler/gencc.c
+    ! Fixed -gc3 double number handling problem.
+      Many thanks to Przemek for the fix.
+      [TOMERGE 1.0]
+
 2008-10-27 15:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/tbrowse.prg
   * source/debug/debugger.prg

@@ -1093,7 +1093,10 @@ static HB_GENC_FUNC( hb_p_pushdouble )
     * This version keeps double calculation compatible with RT FL functions
     */
    fprintf( cargo->yyc, "\thb_xvmPushDouble( * ( double * ) " );
-   hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 1 ], sizeof( double ) );
+   {
+      double d = HB_PCODE_MKDOUBLE( &pFunc->pCode[ lPCodePos + 1 ] );
+      hb_compGenCString( cargo->yyc, ( BYTE * ) &d, sizeof( double ) );
+   }
    fprintf( cargo->yyc, ", %d, %d );\n",
             pFunc->pCode[ lPCodePos + 1 + sizeof( double ) ],
             pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( BYTE ) ] );
