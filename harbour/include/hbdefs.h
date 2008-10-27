@@ -1236,6 +1236,12 @@ typedef PHB_FUNC HB_FUNC_PTR;
 
 #endif
 
+#if defined( __GNUC__ )
+   #define HB_PRINTF_FORMAT( _nStr, _nParam ) \
+                     __attribute__ (( format (printf, _nStr, _nParam)))
+#else
+   #define HB_PRINTF_FORMAT( _nStr, _nParam )
+#endif
 
 /* Function declaration macros */
 

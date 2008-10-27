@@ -294,12 +294,36 @@ HB_FUNC( HB_FCOMMIT )
 
 HB_FUNC( HB_FLOCK )
 {
-   hb_retl( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) ? hb_fsLockLarge( hb_numToHandle( hb_parnint( 1 ) ), ( HB_FOFFSET ) hb_parnint( 2 ), ( HB_FOFFSET ) hb_parnint( 3 ), FL_LOCK ) : FALSE );
+   USHORT uiError = 0;
+   BOOL fResult = FALSE;
+
+   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) )
+   {
+      fResult = hb_fsLockLarge( hb_numToHandle( hb_parnint( 1 ) ),
+                                ( HB_FOFFSET ) hb_parnint( 2 ),
+                                ( HB_FOFFSET ) hb_parnint( 3 ),
+                                FL_LOCK | ( ( USHORT ) hb_parni( 4 ) & ~FL_MASK ) );
+      uiError = hb_fsError();
+   }
+   hb_fsSetFError( uiError );
+   hb_retl( fResult );
 }
 
 HB_FUNC( HB_FUNLOCK )
 {
-   hb_retl( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) ? hb_fsLockLarge( hb_numToHandle( hb_parnint( 1 ) ), ( HB_FOFFSET ) hb_parnint( 2 ), ( HB_FOFFSET ) hb_parnint( 3 ), FL_UNLOCK ) : FALSE );
+   USHORT uiError = 0;
+   BOOL fResult = FALSE;
+
+   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) )
+   {
+      fResult = hb_fsLockLarge( hb_numToHandle( hb_parnint( 1 ) ),
+                                ( HB_FOFFSET ) hb_parnint( 2 ),
+                                ( HB_FOFFSET ) hb_parnint( 3 ),
+                                FL_UNLOCK );
+      uiError = hb_fsError();
+   }
+   hb_fsSetFError( uiError );
+   hb_retl( fResult );
 }
 
 HB_FUNC( HB_OSERROR )

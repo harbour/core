@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-27 18:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+    + added HB_PRINTF_FORMAT() macro to declare functions with printf()
+      like formatting parameters - now it works only for GCC compilers.
+
+  * harbour/include/hbapi.h
+    * declare hb_snprintf() with HB_PRINTF_FORMAT() attribute
+
+  * harbour/source/rtl/philes.c
+    + set FERROR() in HB_FLOCK()/HB_FUNLOCK()
+    + accept extended lock attributes (WAIT/SHARE) in HB_FLOCK()
+
 2008-10-27 15:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/compiler/gencc.c
     ! Fixed -gc3 double number handling problem.
