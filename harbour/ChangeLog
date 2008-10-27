@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-27 10:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/pp/ppcore.c
+    + Added '#pragma TEXTHIDDEN=<ON | OFF>' to control the 
+      existing -texthidden option to add light encoding to 
+      strings embedded in code. Since this goes with a slight 
+      performance hit and it's rarely used, it might be useful 
+      to turn it on only for code parts that really needs this.
+
+  * source/rtl/tget.prg
+    * Corrected an assigment to follow official syntax.
+
 2008-10-27 00:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbver.c
     * Changed to include bitness even for DJGPP.

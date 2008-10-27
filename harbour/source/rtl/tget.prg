@@ -367,7 +367,7 @@ METHOD display() CLASS Get
 
 METHOD colorDisp( cColorSpec ) CLASS Get
 
-   ::colorSpec( cColorSpec )
+   ::colorSpec := cColorSpec
    ::display()
 
    RETURN Self
