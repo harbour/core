@@ -252,12 +252,10 @@ HB_FUNC( HB_SETKEYGET )
 
       if( sk_list_tmp )
       {
-         PHB_ITEM pIsActive = hb_param( 2, HB_IT_ANY );
-
          hb_itemReturn( sk_list_tmp->pAction );
 
-         if( pIsActive )
-            hb_itemCopy( pIsActive, sk_list_tmp->pIsActive );
+         if( sk_list_tmp->pIsActive )
+            hb_itemParamStore( 2, sk_list_tmp->pIsActive );
       }
    }
 }

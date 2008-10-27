@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-27 20:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/setkey.c
+    ! fixed GPF in HB_SETKEYGET() when bActive block is used
+
 2008-10-27 18:38 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/pp/ppcore.c
     - Removed duplicate TEXTHIDDEN #pragma implementation.
