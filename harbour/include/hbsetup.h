@@ -55,6 +55,7 @@
 
 #include <limits.h>
 
+
 /* ***********************************************************************
  * Include settings common for .prg and .c files
  */
@@ -396,23 +397,11 @@
  */
 
 #if defined( __DJGPP__ )
-   /* Fix DJGPP in call to: toupper(), tolower(), is...()
-    */
+   /* Fix DJGPP in call to: toupper(), tolower(), is...() */
    #include "hbfixdj.h"
-
-   /* Substitute snprintf() by sprintf() for DJGPP <= 2.03.
-    * This is a temporary hack, should implement a C99 snprintf() ourselves.
-    */
-   #if ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ <= 3 ) )
-      #define snprintf(s, len, args...) sprintf( (s), ##args )
-   #endif
-#elif defined( _MSC_VER ) || defined( __DMC__ ) && !defined( __XCC__ )
-   #define snprintf _snprintf
-#elif defined( __WATCOMC__ )
-   #if __WATCOMC__ < 1200
-      #define snprintf _bprintf
-   #endif
 #endif
+
+#define snprintf hb_snprintf
 
 /* ***********************************************************************
  * Extern "C" detection

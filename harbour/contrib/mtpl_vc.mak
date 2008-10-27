@@ -109,7 +109,7 @@ HB_VISUALC_VER = 80
 
 # C Compiler Flags
 !if $(HB_VISUALC_VER) >= 80
-CFLAGS_VER     = -Ot2b1 -EHs-c- -D_CRT_SECURE_NO_DEPRECATE
+CFLAGS_VER     = -Ot2b1 -EHs-c-
 !else
 CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX
 !endif

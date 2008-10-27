@@ -99,7 +99,7 @@ VMMT_LIB_OBJS = $(VM_LIB_OBJS:obj\vc=obj\vc_mt)
 !if "$(HB_BUILD_WINCE)" == "yes"
 
 !if $(HB_VISUALC_VER) >= 80
-CFLAGS_VER     = -Od -Os -Gy -GS- -EHsc- -Gm -Zi -GR- -D_CRT_SECURE_NO_DEPRECATE
+CFLAGS_VER     = -Od -Os -Gy -GS- -EHsc- -Gm -Zi -GR-
 !else
 CFLAGS_VER     = -Oxsb1 -EHsc -YX -GF
 !endif
@@ -126,7 +126,7 @@ DBGMARKER = d
 # NOTE: See here: http://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
 
 !if $(HB_VISUALC_VER) >= 80
-CFLAGS_VER     = -Ot2b1 -EHs-c- -D_CRT_SECURE_NO_DEPRECATE
+CFLAGS_VER     = -Ot2b1 -EHs-c-
 !else
 CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX
 !endif

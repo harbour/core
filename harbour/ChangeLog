@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-27 12:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_vc.mak
+  * contrib/mtpl_vc.mak
+    - Removed no longer necessary '-D_CRT_SECURE_NO_DEPRECATE' 
+      for MSVS 2005 and upper.
+
+  * include/hbsetup.h
+    * Mapping snprintf() calls to hb_snprintf().
+    ; TODO: Replace the calls in source code.
+
+  * source/common/hbstr.c
+    ! Fixed hb_snprintf(). Please verify on your platforms.
+    ; TODO: It may need further tweaking to smooth out the 
+            platform implementation differences.
+
 2008-10-27 11:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapi.h
   * source/common/hbstr.c
