@@ -55,35 +55,35 @@
     % Some other minor updates.
 
 2008-10-27 22:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
-   * tests/db_brows.prg
-   * contrib/hbmysql/tmysql.prg
-   * contrib/hbnf/miltime.prg
-   * contrib/hbnf/mouse1.prg
-   * contrib/hbnf/sleep.prg
-   * contrib/hbnf/d2e.prg
-   * contrib/hbnf/easter.prg
-     * '&&' comments changed to '//' for all Harbour SVN.
+  * tests/db_brows.prg
+  * contrib/hbmysql/tmysql.prg
+  * contrib/hbnf/miltime.prg
+  * contrib/hbnf/mouse1.prg
+  * contrib/hbnf/sleep.prg
+  * contrib/hbnf/d2e.prg
+  * contrib/hbnf/easter.prg
+    * '&&' comments changed to '//' for all Harbour SVN.
 
-   * contrib/gtwvg/wvgclass.prg
-   * source/rdd/hbsix/sxcompat.prg
-     ! Fixed '&&' being used instead of '.AND.' in code.
-     ; NOTE: This '&&' comment compatibility is a lot more 
-             dangerous than it's useful. It'd vote for 
-             a compiler warnings switch for any of it's 
-             occurences.
+  * contrib/gtwvg/wvgclass.prg
+  * source/rdd/hbsix/sxcompat.prg
+    ! Fixed '&&' being used instead of '.AND.' in code.
+    ; NOTE: This '&&' comment compatibility is a lot more 
+            dangerous than it's useful. It'd vote for 
+            a compiler warnings switch for any of it's 
+            occurences.
 
-   * source/rtl/tbcolumn.prg
-   * source/rtl/tget.prg
-   * source/rtl/tbrowse.prg
-   * contrib/xhb/hbcompat.ch
-     ! Fixed '&&' being used instead of '.AND.' in #ifs.
+  * source/rtl/tbcolumn.prg
+  * source/rtl/tget.prg
+  * source/rtl/tbrowse.prg
+  * contrib/xhb/hbcompat.ch
+    ! Fixed '&&' being used instead of '.AND.' in #ifs.
 
-   * source/rdd/hbsix/sxini.prg
-   * source/rdd/hbsix/sxcompat.prg
-   * source/rdd/hbsix/sxtrig.prg
-     * 'end' -> 'endswitch'
-     % 'ValType() == "x"' -> 'IS*()'
-     ; TODO: Reformat to Harbour standards.
+  * source/rdd/hbsix/sxini.prg
+  * source/rdd/hbsix/sxcompat.prg
+  * source/rdd/hbsix/sxtrig.prg
+    * 'end' -> 'endswitch'
+    % 'ValType() == "x"' -> 'IS*()'
+    ; TODO: Reformat to Harbour standards.
 
 2008-10-27 21:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/Makefile
