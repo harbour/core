@@ -50,11 +50,6 @@
  *
  */
 
-/*
- *
- * See doc/license files for licensing terms.
- *
- */
 #include "gd.ch"
 #include "hbclass.ch"
 #include "common.ch"
@@ -377,9 +372,4 @@ METHOD Finish( image_style, quality, nFG  ) CLASS TBarCode
 Return .T.
 
 FUNCTION IsInt( pvar )
-
-   If Valtype( pvar ) == "C"
-      Return .F.
-   EndIf
-
-Return .T.
+Return ! ISCHARACTER( pvar )

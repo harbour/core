@@ -141,7 +141,7 @@ METHOD FieldPut(cnField, Value) CLASS TMySQLRow
       if Valtype(Value) == Valtype(::aRow[nNum]) .OR. ::aRow[nNum]==NIL
 
          // if it is a char field remove trailing spaces
-         if ValType(Value) == "C"
+         if ISCHARACTER(Value)
             Value := RTrim(Value)
          endif
 
@@ -584,8 +584,8 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
 
                otherwise
 
-                  //DAVID: Alert("Unknown type from SQL Server Field: " + LTrim(Str(i))+" is type "+LTrim(Str(::aFieldStruct[i][MYSQL_FS_TYPE])))
-                  // QOUT("Unknown type from SQL Server Field: " + LTrim(Str(i))+" is type "+LTrim(Str(::aFieldStruct[i][MYSQL_FS_TYPE])))
+                  //DAVID: Alert("Unknown type from SQL Server Field: " + hb_NToS(i)+" is type "+hb_NToS(::aFieldStruct[i][MYSQL_FS_TYPE]))
+                  // QOUT("Unknown type from SQL Server Field: " + hb_NToS(i)+" is type "+hb_NToS(::aFieldStruct[i][MYSQL_FS_TYPE]))
 
             endcase
 
@@ -662,7 +662,7 @@ METHOD FieldGet(cnField) CLASS TMySQLQuery
 
    local nNum,Value
 
-   if ValType(cnField) == "C"
+   if ISCHARACTER(cnField)
       nNum := ::FieldPos(cnField)
    else
       nNum := cnField
@@ -1228,7 +1228,7 @@ METHOD FieldPut(cnField, Value) CLASS TMySQLTable
 
    local nNum
 
-   if ValType(cnField) == "C"
+   if ISCHARACTER(cnField)
       nNum := ::FieldPos(cnField)
    else
       nNum := cnField
@@ -1240,7 +1240,7 @@ METHOD FieldPut(cnField, Value) CLASS TMySQLTable
       if Valtype(Value) == Valtype(::aRow[nNum]) .OR. ::aRow[nNum]==NIL
 
          // if it is a char field remove trailing spaces
-         if ValType(Value) == "C"
+         if ISCHARACTER(Value)
             Value := RTrim(Value)
          endif
 
@@ -1463,7 +1463,7 @@ METHOD CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) CLASS TMySQLSer
    for i := 1 to Len(aStruct)
       do case
       case aStruct[i][DBS_TYPE] == "C"
-         ::cCreateQuery += aStruct[i][DBS_NAME] + " char(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i])+ iif(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ ","
+         ::cCreateQuery += aStruct[i][DBS_NAME] + " char(" + hb_NToS(aStruct[i][DBS_LEN]) + ")" + Eval(cNN, aStruct[i])+ iif(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ ","
 
       case aStruct[i][DBS_TYPE] == "M"
          ::cCreateQuery += aStruct[i][DBS_NAME] + " text" + Eval(cNN, aStruct[i]) + ","
@@ -1471,25 +1471,25 @@ METHOD CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) CLASS TMySQLSer
       case aStruct[i][DBS_TYPE] == "N"
          /*
          if aStruct[i][DBS_DEC] == 0
-            ::cCreateQuery += aStruct[i][DBS_NAME] + " int(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + iif(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ iif(aStruct[i][DBS_NAME]==cAuto," auto_increment ",'' ) + ","
+            ::cCreateQuery += aStruct[i][DBS_NAME] + " int(" + hb_NToS(aStruct[i][DBS_LEN]) + ")" + Eval(cNN, aStruct[i]) + iif(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ iif(aStruct[i][DBS_NAME]==cAuto," auto_increment ",'' ) + ","
          else
-            ::cCreateQuery += aStruct[i][DBS_NAME] + " real(" + AllTrim(Str(aStruct[i][DBS_LEN])) + "," + AllTrim(Str(aStruct[i][DBS_DEC])) + ")" + Eval(cNN, aStruct[i]) + ","
+            ::cCreateQuery += aStruct[i][DBS_NAME] + " real(" + hb_NToS(aStruct[i][DBS_LEN]) + "," + hb_NToS(aStruct[i][DBS_DEC]) + ")" + Eval(cNN, aStruct[i]) + ","
          endif
          */
          if (aStruct[i][DBS_DEC] == 0) .and. (aStruct[i][DBS_LEN] <= 18)
             do case
                case (aStruct[i][DBS_LEN] <= 4)
-                  ::cCreateQuery += aStruct[i][DBS_NAME] + " smallint(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")"
+                  ::cCreateQuery += aStruct[i][DBS_NAME] + " smallint(" + hb_NToS(aStruct[i][DBS_LEN]) + ")"
                case (aStruct[i][DBS_LEN] <= 6)
-                  ::cCreateQuery += aStruct[i][DBS_NAME] + " mediumint(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")"
+                  ::cCreateQuery += aStruct[i][DBS_NAME] + " mediumint(" + hb_NToS(aStruct[i][DBS_LEN]) + ")"
                case (aStruct[i][DBS_LEN] <= 9)
-                  ::cCreateQuery += aStruct[i][DBS_NAME] + " int(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")"
+                  ::cCreateQuery += aStruct[i][DBS_NAME] + " int(" + hb_NToS(aStruct[i][DBS_LEN]) + ")"
                otherwise
-                  ::cCreateQuery += aStruct[i][DBS_NAME] + " bigint(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")"
+                  ::cCreateQuery += aStruct[i][DBS_NAME] + " bigint(" + hb_NToS(aStruct[i][DBS_LEN]) + ")"
             endcase
             ::cCreateQuery += Eval(cNN, aStruct[i]) + iif(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ iif(aStruct[i][DBS_NAME]==cAuto," auto_increment ",'' ) + ","
          else
-            ::cCreateQuery += aStruct[i][DBS_NAME] + " real(" + AllTrim(Str(aStruct[i][DBS_LEN])) + "," + AllTrim(Str(aStruct[i][DBS_DEC])) + ")" + Eval(cNN, aStruct[i]) + ","
+            ::cCreateQuery += aStruct[i][DBS_NAME] + " real(" + hb_NToS(aStruct[i][DBS_LEN]) + "," + hb_NToS(aStruct[i][DBS_DEC]) + ")" + Eval(cNN, aStruct[i]) + ","
          endif
       case aStruct[i][DBS_TYPE] == "D"
          ::cCreateQuery += aStruct[i][DBS_NAME] + " date " + Eval(cNN, aStruct[i]) + ","
@@ -1504,7 +1504,7 @@ METHOD CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) CLASS TMySQLSer
          ::cCreateQuery += aStruct[i][DBS_NAME] + " mediumint " + Eval(cNN, aStruct[i]) + ","
 
       otherwise
-         ::cCreateQuery += aStruct[i][DBS_NAME] + " char(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + ","
+         ::cCreateQuery += aStruct[i][DBS_NAME] + " char(" + hb_NToS(aStruct[i][DBS_LEN]) + ")" + Eval(cNN, aStruct[i]) + ","
 
       endcase
 
@@ -1719,10 +1719,10 @@ static function ClipValue2SQL(Value)
    local cValue
 
    do case
-      case Valtype(Value) == "N"
-         cValue := AllTrim(Str(Value))
+      case ISNUMBER(Value)
+         cValue := hb_NToS(Value)
 
-      case Valtype(Value) == "D"
+      case ISDATE(Value)
          if !Empty(Value)
             // MySQL dates are like YYYY-MM-DD
             cValue := "'"+StrZero(Year(Value), 4) + "-" + StrZero(Month(Value), 2) + "-" + StrZero(Day(Value), 2) + "'"
@@ -1731,7 +1731,7 @@ static function ClipValue2SQL(Value)
          endif
 
       case Valtype(Value) $ "CM"
-         IF Empty( Value)
+         IF Empty( Value )
             cValue="''"
          ELSE
             cValue := "'"
@@ -1739,8 +1739,8 @@ static function ClipValue2SQL(Value)
             cValue+= value+ "'"
          ENDIF
 
-      case Valtype(Value) == "L"
-         cValue := AllTrim(Str(iif(Value == .F., 0, 1)))
+      case ISLOGICAL(Value)
+         cValue := iif(Value, "1", "0")
 
       otherwise
          cValue := "''"       // NOTE: Here we lose values we cannot convert

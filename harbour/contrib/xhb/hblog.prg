@@ -191,9 +191,9 @@ FUNCTION HB_BldLogMsg( ... )
    LOCAL cMsg := ""
 
    FOR EACH xVar IN HB_aParams()
-      IF ValType( xVar ) == "N"
+      IF ISNUMBER( xVar )
          cMsg += AllTrim( CStr( xVar ) )
-      ELSEIF ValType( xVar ) != "C"
+      ELSEIF ! ISCHARACTER( xVar )
          cMsg += CStr( xVar )
       ELSE
          cMsg += xVar

@@ -289,12 +289,12 @@ METHOD ErrHandler( xError ) CLASS TIpCgi
 
    ::Print( '<tr><td>SCRIPT NAME:</td><td>' + getenv( 'SCRIPT_NAME' ) + '</td></tr>' )
 
-   if valtype( xError ) == "O"
+   if ISOBJECT( xError )
       ::Print( '<tr><td>CRITICAL ERROR:</td><td>' + xError:Description + '</td></tr>' )
       ::Print( '<tr><td>OPERATION:</td><td>' + xError:Operation + '</td></tr>' )
       ::Print( '<tr><td>OS ERROR:</td><td>' + alltrim( str( xError:OsCode ) ) + ' IN ' + xError:SubSystem + '/' + alltrim( str( xError:SubCode ) ) + '</td></tr>' )
       ::Print( '<tr><td>FILENAME:</td><td>' + right( xError:FileName, 40 ) + '</td></tr>' )
-   elseif valtype( xError ) == "C"
+   elseif ISCHARACTER( xError )
       ::Print( '<tr><td>ERROR MESSAGE:</td><td>' + xError + '</td></tr>' )
    endif
 
@@ -560,10 +560,10 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
          if valtype( cVal ) == "H"
             if ( nPos := hb_HPos( cVal, "src" ) ) != 0
                cVal := hb_HValueAt( cVal, nPos )
-               if valtype( cVal ) == "C"
+               if ISCHARACTER( cVal )
                   cVal := { cVal }
                endif
-               if valtype( cVal ) == "A"
+               if ISARRAY( cVal )
                   cTmp := ""
                   ascan( cVal, { |cFile| cTmp += '<script src="' + cFile + '" type="text/javascript">' + _CRLF } )
                   cVal := cTmp
@@ -571,10 +571,10 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
             endif
             if ( nPos := hb_HPos( cVal, "var" ) ) != 0
                cVal := hb_HValueAt( cVal, nPos )
-               if valtype( cVal ) == "C"
+               if ISCHARACTER( cVal )
                   cVal := { cVal }
                endif
-               if valtype( cVal ) == "A"
+               if ISARRAY( cVal )
                   cTmp := ""
                   ascan( cVal, { |cVar| cTmp += cVar } )
                   cVal := '<script type="text/javascript">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</script>' + _CRLF
@@ -601,10 +601,10 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
          if valtype( cVal ) == "H"
             if ( nPos := hb_HPos( cVal, "src" ) ) != 0
                cVal := hb_HValueAt( cVal, nPos )
-               if valtype( cVal ) == "C"
+               if ISCHARACTER( cVal )
                   cVal := { cVal }
                endif
-               if valtype( cVal ) == "A"
+               if ISARRAY( cVal )
                   cTmp := ""
                   ascan( cVal, { |cFile| cTmp += '<link rel="StyleSheet" href="' + cFile + '" type="text/css" />' + _CRLF } )
                   cVal := cTmp
@@ -612,10 +612,10 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
             endif
             if ( nPos := hb_HPos( cVal, "var" ) ) != 0
                cVal := hb_HValueAt( cVal, nPos )
-               if valtype( cVal ) == "C"
+               if ISCHARACTER( cVal )
                   cVal := { cVal }
                endif
-               if valtype( cVal ) == "A"
+               if ISARRAY( cVal )
                   cTmp := ""
                   ascan( cVal, { |cVar| cTmp += cVar } )
                   cVal := '<style type="text/css">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</style>' + _CRLF

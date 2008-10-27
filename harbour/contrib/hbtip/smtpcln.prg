@@ -98,10 +98,10 @@ local n:=1
       if !file("sendmail.log")
          ::nHandle := fcreate("sendmail.log")
       else
-         while file(cFile+alltrim(str(n,4))+".log")
+         while file(cFile+hb_NToS(n)+".log")
            n++
          enddo
-         ::nHandle := fcreate(cFile+alltrim(str(n,4))+".log")
+         ::nHandle := fcreate(cFile+hb_NToS(n)+".log")
       endif
    endif
 RETURN Self

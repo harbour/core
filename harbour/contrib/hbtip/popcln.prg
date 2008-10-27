@@ -57,6 +57,7 @@
 */
 
 #include "hbclass.ch"
+#include "common.ch"
 
 /**
 * Inet service manager: pop3
@@ -96,10 +97,10 @@ METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClientPOP
       if !file("pop3.log")
          ::nHandle := fcreate("pop3.log")
       else
-         while file(cFile+alltrim(str(n,2))+".log")
+         while file(cFile+hb_NToS(n)+".log")
            n++
          enddo
-         ::nHandle := fcreate(cFile+alltrim(str(n,2))+".log")
+         ::nHandle := fcreate(cFile+hb_NToS(n)+".log")
       endif
    endif
 
@@ -361,7 +362,7 @@ RETURN -1
 METHOD retrieveAll( lDelete )
    LOCAL aMails, i, imax, cMail
 
-   IF !( Valtype( lDelete ) == "L" )
+   IF ! ISLOGICAL( lDelete )
       lDelete := .F.
    ENDIF
 

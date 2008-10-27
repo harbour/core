@@ -776,7 +776,7 @@ METHOD LoadData(nPos) CLASS TODBC
          .or. nType == SQL_INTEGER;
          .or. nType == SQL_FLOAT;
          .or. nType == SQL_REAL
-            IF VALTYPE(uData) =="C" 
+            IF ISCHARACTER(uData)
                uData := strtran(uData,",",".")
                uData := Round( Val(uData), ::Fields[ i ]:DataSize )
             ENDIF      

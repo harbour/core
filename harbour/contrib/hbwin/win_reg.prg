@@ -141,20 +141,20 @@ FUNCTION w32_regWrite( cRegPath, xValue )
 FUNCTION QueryRegistry( nHKEYHandle, cKeyName, cEntryName, xValue, lSetIt )
    LOCAL xKey := GetRegistry( nHKEYHandle, cKeyName, cEntryName )
 
-   LOCAL cValType := VALTYPE( xValue )
+   LOCAL cValType := ValType( xValue )
    LOCAL rVal
 
    DEFAULT lSetIT TO .F.
 
    IF cValType == "L"
-      xValue := IIF( xValue, 1, 0 )
-      cValType := VALTYPE( xValue )
+      xValue := iif( xValue, 1, 0 )
+      cValType := ValType( xValue )
    ELSEIF cValType == "D"
-      xValue := DTOS( xValue )
-      cValType := VALTYPE( xValue )
+      xValue := DToS( xValue )
+      cValType := ValType( xValue )
    ENDIF
 
-   rVal := ( xKey != NIL .AND. xValue != NIL .AND. cValType == VALTYPE( xKey ) .AND. xValue == xKey )
+   rVal := ( xKey != NIL .AND. xValue != NIL .AND. cValType == ValType( xKey ) .AND. xValue == xKey )
    IF ! rVal .AND. lSetIt
       rVal := SetRegistry( nHKEYHandle, cKeyName, cEntryName, xValue )
    ENDIF
@@ -178,9 +178,9 @@ FUNCTION GetRegistry( nHKEYHandle, cKeyName, cEntryName )
             nValueType == REG_DWORD_LITTLE_ENDIAN .OR. ;
             nValueType == REG_DWORD_BIG_ENDIAN .OR. ;
             nValueType == REG_BINARY
-            xRetVal := BIN2U( xRetVal )
+            xRetVal := Bin2U( xRetVal )
          ELSE
-            xRetVal := STRTRAN( xRetVal, CHR( 0 ) )
+            xRetVal := StrTran( xRetVal, Chr( 0 ) )
          ENDIF
       ENDIF
 
@@ -202,15 +202,15 @@ FUNCTION SetRegistry( nHKEYHandle, cKeyName, cEntryName, xValue )
    IF win32_RegCreateKeyEx( nHKEYHandle, cKeyName, 0, 0, 0, KEY_SET_VALUE, 0, @nKeyHandle, @nResult ) == ERROR_SUCCESS
 
       /* no support for Arrays, Codeblock ... */
-      cType := VALTYPE( xValue )
+      cType := ValType( xValue )
 
       DO CASE
       CASE cType == "L"
          nValueType := REG_DWORD
-         cName := IIF( xValue, 1, 0 )
+         cName := iif( xValue, 1, 0 )
       CASE cType == "D"
          nValueType := REG_SZ
-         cName := DTOS( xValue )
+         cName := DToS( xValue )
       CASE cType == "N"
          nValueType := REG_DWORD
          cName := xValue

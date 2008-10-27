@@ -51,6 +51,7 @@
  */
 
 #include "cstruct.ch"
+#include "common.ch"
 #include "hboo.ch"
 #include "error.ch"
 #include "xhb.ch"
@@ -104,10 +105,10 @@ Function __ActiveStructure( cStructure, nAlign )
 
          // In most cases we can simply ignore the redefinition, by returning a FAKED Structure Array!
          //TraceLog( "Redefinition of C Structure: " + cStructure )
-         RETURN ( s_aActiveStructure := { cStructure, NIL, {}, {}, IIF( ValType( nAlign ) == "N", nAlign, 8 ) } )
+         RETURN ( s_aActiveStructure := { cStructure, NIL, {}, {}, iif( ISNUMBER( nAlign ), nAlign, 8 ) } )
       END
 
-      aAdd( s_aClasses, { cStructure, NIL, {}, {}, IIF( ValType( nAlign ) == "N", nAlign, 8 ) } )
+      aAdd( s_aClasses, { cStructure, NIL, {}, {}, iif( ISNUMBER( nAlign ), nAlign, 8 ) } )
       //TraceLog( "Registered: " + cStructure, s_aClasses[-1][5] )
 
       s_aActiveStructure := atail(s_aClasses)
@@ -525,7 +526,7 @@ RETURN QSelf()
 //---------------------------------------------------------------------------//
 STATIC Function Buffer( Buffer, lAdopt )
 
-   IF ValType( Buffer ) == "C"
+   IF ISCHARACTER( Buffer )
       IF Len( Buffer ) < QSelf():SizeOf
          //TraceLog( Buffer )
          Buffer := PadR( Buffer, QSelf():SizeOf, Chr(0) )
@@ -535,7 +536,7 @@ STATIC Function Buffer( Buffer, lAdopt )
       QSelf():DeValue( lAdopt )
    ENDIF
 
-   IF ValType( QSelf():InternalBuffer ) != "C"
+   IF ! ISCHARACTER( QSelf():InternalBuffer )
       QSelf():InternalBuffer := QSelf():Value()
    ENDIF
 
@@ -572,7 +573,7 @@ STATIC Function DeValue( lAdopt )
 
    //aEval( QSelf(), {|xVal| aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
 
-   IF ValType( Buffer ) != "C" .OR. Len( Buffer ) == 0
+   IF ! ISCHARACTER( Buffer ) .OR. Len( Buffer ) == 0
       //TraceLog( "EMPTY Buffer passed to " + ProcName() )
    ELSEIF Len( Buffer ) < QSelf():SizeOf
       //TraceLog( "Should have been caught at ::Buffer()!!!", Buffer )

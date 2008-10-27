@@ -779,7 +779,7 @@ oChm:writeText("<br>")  //:endpar()
          ENDIF
 
          IF !lClassDoc .AND. lEof
-            IF VALTYPE( oChm ) == "O"
+            IF ISOBJECT( oChm )
                oChm:WriteText( "</p></dd></dl>" )
                oChm:Close()
             ENDIF

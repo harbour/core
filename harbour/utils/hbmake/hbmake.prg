@@ -316,11 +316,11 @@ FUNCTION MAIN()
    IF ParseMakeFile( cFile ) == RET_ERR
 
       IF s_nLang     == LANG_PT        /* portuguese brazilian */
-         cAlertMsg := "<" + cFile + "> n∆o pode ser aberto. FERROR(" + Ltrim(Str(FError())) + "). O HbMake ser† fechado."
+         cAlertMsg := "<" + cFile + "> n∆o pode ser aberto. FERROR(" + hb_NToS(FError()) + "). O HbMake ser† fechado."
       ELSEIF s_nLang == LANG_ES        /* spanish              */
-         cAlertMsg := "<" + cFile + "> no pode ser abierto. FERROR(" + Ltrim(Str(FError())) + "). Lo HbMake ser† cerrado."
+         cAlertMsg := "<" + cFile + "> no pode ser abierto. FERROR(" + hb_NToS(FError()) + "). Lo HbMake ser† cerrado."
       ELSE                             /* english             */
-         cAlertMsg := "<" + cFile + "> cannot be opened. FERROR(" + Ltrim(Str(FError())) + "). HbMake will close."
+         cAlertMsg := "<" + cFile + "> cannot be opened. FERROR(" + hb_NToS(FError()) + "). HbMake will close."
       ENDIF
 
       ShowHelp( cAlertMsg )
@@ -977,7 +977,7 @@ FUNCTION SetBuild( nFHandle )
          ELSE                          /* english             */
             cAlertMsg := "<"+s_cLinkFile + "> cannot be created."
          ENDIF
-         ALERT( cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
+         ALERT( cAlertMsg+" FERROR ("+hb_NToS(FError())+")" )
          RETURN NIL
       ENDIF
 
@@ -1475,7 +1475,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
                cAlertMsg := "<"+cFile + "> cannot be openned for editing."
             ENDIF
 
-            ALERT( cAlertMsg+" FERROR ("+LTrim(Str(FError()))+")" )
+            ALERT( cAlertMsg+" FERROR ("+hb_NToS(FError())+")" )
 
             RESTSCREEN( ,,,, cOldScreen )
             RETURN RET_ERR
@@ -1622,7 +1622,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
                cAlertMsg := "<"+cFile + "> cannot be created."
             ENDIF
 
-            ALERT( cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
+            ALERT( cAlertMsg+" FERROR ("+hb_NToS(FError())+")" )
             RESTSCREEN( ,,,, cOldScreen )
             RETURN RET_ERR
 
@@ -1650,7 +1650,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
             cAlertMsg := "<"+cFile + "> cannot be created."
          ENDIF
 
-         ALERT( cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
+         ALERT( cAlertMsg+" FERROR ("+hb_NToS(FError())+")" )
          RESTSCREEN( ,,,, cOldScreen )
          RETURN RET_ERR
 
@@ -3357,7 +3357,7 @@ FUNCTION CreateLibMakeFile( cFile )
                cAlertMsg := "<"+cFile + "> cannot be openned for edition."
             ENDIF
 
-            ALERT( cAlertMsg+" FERROR ("+LTrim(Str(FError()))+")" )
+            ALERT( cAlertMsg+" FERROR ("+hb_NToS(FError())+")" )
 
             RETURN RET_ERR
          else
@@ -3435,7 +3435,7 @@ FUNCTION CreateLibMakeFile( cFile )
                cAlertMsg := "<"+cFile + "> cannot be openned for edition."
             ENDIF
 
-            ALERT( cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
+            ALERT( cAlertMsg+" FERROR ("+hb_NToS(FError())+")" )
 
             RETURN RET_ERR
 
@@ -3477,7 +3477,7 @@ FUNCTION CreateLibMakeFile( cFile )
                cAlertMsg := "<"+cFile + "> cannot be created."
             ENDIF
 
-            ALERT( cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
+            ALERT( cAlertMsg+" FERROR ("+hb_NToS(FError())+")" )
 
             RETURN RET_ERR
 
@@ -3505,7 +3505,7 @@ FUNCTION CreateLibMakeFile( cFile )
             cAlertMsg := "<"+cFile + "> cannot be created."
          ENDIF
 
-         ALERT( cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
+         ALERT( cAlertMsg+" FERROR ("+hb_NToS(FError())+")" )
 
          RETURN RET_ERR
 
@@ -4029,7 +4029,7 @@ FUNCTION SetBuildLib( nFHandle )
          cAlertMsg := "<"+s_cLinkFile + "> cannot be created."
       ENDIF
 
-      ALERT( cAlertMsg+" FERROR ("+Ltrim(Str(FError()))+")" )
+      ALERT( cAlertMsg+" FERROR ("+hb_NToS(FError())+")" )
       RETURN RET_ERR
 
    ENDIF

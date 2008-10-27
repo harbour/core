@@ -50,12 +50,6 @@
  *
  */
 
-/*
- *
- * See doc/license files for licensing terms.
- *
- */
-
 #include "common.ch"
 
 FUNCTION gdImageChar( im, font, x, y, char, color )
@@ -187,7 +181,7 @@ FUNCTION gdImageToString( oImage )
   //Tracelog( "oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' )", ;
   //          oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' ) )
 
-  IF ValType( oImage ) == "O" .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
+  IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
      WITH OBJECT oImage
         IF :cType != NIL
            DO CASE
@@ -211,7 +205,7 @@ PROCEDURE gdImageToFile( oImage, cFile )
   //Tracelog( "oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' )", ;
   //          oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' ) )
 
-  IF ValType( oImage ) == "O" .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
+  IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
      WITH OBJECT oImage
         IF :cType != NIL
            DO CASE
@@ -243,7 +237,7 @@ PROCEDURE gdImageToHandle( oImage, nHandle )
   //Tracelog( "oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' )", ;
   //          oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' ) )
 
-  IF ValType( oImage ) == "O" .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
+  IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
      WITH OBJECT oImage
         IF :cType != NIL
            DO CASE

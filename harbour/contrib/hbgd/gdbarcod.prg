@@ -50,11 +50,6 @@
  *
  */
 
-/*
- *
- * See doc/license files for licensing terms.
- *
- */
 #include "hbclass.ch"
 #include "common.ch"
 
@@ -444,7 +439,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
     ::settext( cText )
 
     If !Empty( cModeCode )
-        If valtype(cModeCode)='C' .and. Upper(cModeCode) $'ABC'
+        If ISCHARACTER( cModeCode ) .and. Upper(cModeCode) $'ABC'
             cModeCode := Upper(cModeCode)
         Else
            ::DrawError("Code 128 Modes are A,B o C. Character values.")

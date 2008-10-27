@@ -1798,7 +1798,7 @@ ENDCLASS
 
 METHOD new( cFile ) CLASS TNortonGuide
 
-   IF VALTYPE( cFile ) != NIL .AND. VALTYPE( cFile ) == "C"
+   IF ISCHARACTER( cFile )
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
    ENDIF

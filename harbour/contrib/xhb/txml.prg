@@ -362,12 +362,12 @@ METHOD New( xElem, nStyle ) CLASS TXmlDocument
       ::oRoot := TXmlNode():New( HBXML_TYPE_DOCUMENT )
    ELSE
       SWITCH ValType( xElem )
-         CASE 'O'
+         CASE "O"
             ::oRoot := xElem
             EXIT
 
-         CASE 'N'
-         CASE 'C'
+         CASE "N"
+         CASE "C"
             ::oRoot := TXmlNode():New( HBXML_TYPE_DOCUMENT )
             ::Read( xElem, nStyle )
       ENDSWITCH

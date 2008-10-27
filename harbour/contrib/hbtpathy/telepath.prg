@@ -209,9 +209,9 @@ function tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
       a full name on cPortName
    */
    #ifdef __PLATFORM__LINUX
-   cPortname := AllTrim( cPortname ) + iif( ValType( nPort ) == "N", AllTrim( Str( nPort - 1 ) ), "" )
+   cPortname := AllTrim( cPortname ) + iif( ISNUMBER( nPort ), hb_NToS( nPort - 1 ), "" )
    #else
-   cPortname := AllTrim( cPortname ) + iif( ValType( nPort ) == "N", AllTrim( Str( nPort ) ), "" )
+   cPortname := AllTrim( cPortname ) + iif( ISNUMBER( nPort ), hb_NToS( nPort ), "" )
    #endif
 
    #ifdef __PLATFORM__LINUX
@@ -388,7 +388,7 @@ function tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
       return ""
    endif
 
-   if !( ValType( cDelim ) == "C" ) .OR. Empty( cDelim )
+   if ! ISCHARACTER( cDelim ) .OR. Empty( cDelim )
       return ""
    endif
 
@@ -775,7 +775,7 @@ return s_aPorts[ nPort, TPFP_OC ]
 
 static function isport( nPort )
 
-   if valtype( nPort ) != "N" .or. nPort < 1 .or. nPort > TP_MAXPORTS
+   if ! ISNUMBER( nPort ) .OR. nPort < 1 .OR. nPort > TP_MAXPORTS
       return .f.
    endif
 

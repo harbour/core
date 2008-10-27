@@ -383,13 +383,13 @@ METHOD CreateTable( cTable, aStruct ) CLASS TPQserver
         cQuery += aStruct[i, 1]
 
         if aStruct[ i, 2 ] == "C"
-            cQuery += ' Char(' + ltrim(str(aStruct[i, 3])) + ')'
+            cQuery += ' Char(' + hb_NToS(aStruct[i, 3]) + ')'
 
         elseif aStruct[ i, 2 ] == "D"
             cQuery += ' Date '
 
         elseif aStruct[ i, 2 ] == "N"
-            cQuery += ' Numeric(' + ltrim(str(aStruct[i, 3])) + ',' + ltrim(str(aStruct[i,4])) + ')'
+            cQuery += ' Numeric(' + hb_NToS(aStruct[i, 3]) + ',' + hb_NToS(aStruct[i,4]) + ')'
 
         elseif aStruct[ i, 2 ] == "L"
             cQuery += ' boolean '
@@ -830,7 +830,7 @@ METHOD Delete(oRow) CLASS TPQquery
             nField := oRow:Fieldpos(::aKeys[i])
             xField := oRow:FieldGetOld(nField)
 
-            cWhere += ::aKeys[i] + ' = $' + ltrim(str(i))
+            cWhere += ::aKeys[i] + ' = $' + hb_NToS(i)
 
             AADD( aParams, ValueToString(xField) )
 
@@ -885,7 +885,7 @@ METHOD Append( oRow ) CLASS TPQquery
         For i := 1 to oRow:FCount()
             if ::lallCols .or. oRow:Changed(i)
                 nParams++
-                cQuery += '$' + ltrim(str(nParams)) + ','
+                cQuery += '$' + hb_NToS(nParams) + ','
                 aadd( aParams, ValueToString(oRow:FieldGet(i)) )
             endif
         Next
@@ -947,7 +947,7 @@ METHOD Update(oRow) CLASS TPQquery
             if ::lallcols .or. oRow:Changed(i)
                 lChanged := .t.
                 nParams++
-                cQuery += oRow:Fieldname(i) + ' = $' + ltrim(str(nParams)) + ','
+                cQuery += oRow:Fieldname(i) + ' = $' + hb_NToS(nParams) + ','
                 aadd( aParams, ValueToString(oRow:FieldGet(i)) )
             end
         Next

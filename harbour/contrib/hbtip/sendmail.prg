@@ -116,7 +116,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ENDIF
 
    // cTo
-   IF Valtype( aTo ) == "A"
+   IF ISARRAY( aTo )
       IF Len( aTo ) > 1
          FOR EACH cTo IN aTo
             IF cTo:__enumIndex() != 1
@@ -135,27 +135,27 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
 
    // CC (Carbon Copy)
-   IF Valtype(aCC) =="A"
+   IF ISARRAY( aCC )
       IF Len(aCC) >0
          FOR EACH cTmp IN aCC
             cCC += cTmp + ","
          NEXT
          cCC := Substr( cCC, 1, Len( cCC ) - 1 )
       ENDIF
-   ELSEIF Valtype(aCC) =="C"
+   ELSEIF ISCHARACTER(aCC)
       cCC := Alltrim( aCC )
    ENDIF
 
 
    // BCC (Blind Carbon Copy)
-   IF Valtype(aBCC) =="A"
+   IF ISARRAY(aBCC)
       IF Len(aBCC)>0
          FOR EACH cTmp IN aBCC
             cBCC += cTmp + ","
          NEXT
          cBCC := Substr( cBCC, 1, Len( cBCC ) - 1 )
       ENDIF
-   ELSEIF Valtype(aBCC) =="C"
+   ELSEIF ISCHARACTER(aBCC)
       cBCC := Alltrim( aBCC )
    ENDIF
 
@@ -309,10 +309,10 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    FOR EACH aThisFile IN AFiles
 
-      IF Valtype( aThisFile ) == "C"
+      IF ISCHARACTER( aThisFile )
          cFile := aThisFile
          cData := Memoread( cFile ) + chr( 13 ) + chr( 10 )
-      ELSEIF Valtype( aThisFile ) == "A" .AND. Len( aThisFile ) >= 2
+      ELSEIF ISARRAY( aThisFile ) .AND. Len( aThisFile ) >= 2
          cFile := aThisFile[ 1 ]
          cData := aThisFile[ 2 ] + chr( 13 ) + chr( 10 )
       ELSE

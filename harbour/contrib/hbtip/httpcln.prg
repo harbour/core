@@ -171,7 +171,7 @@ METHOD Post( cPostData, cQuery ) CLASS tIPClientHTTP
    ENDIF
 
    ::InetSendall( ::SocketCon, "Content-Length: " + ;
-         LTrim(Str( Len( cData ) ) ) + ::cCRLF )
+         hb_NToS( Len( cData ) ) + ::cCRLF )
 
    // End of header
    ::InetSendall( ::SocketCon, ::cCRLF )
@@ -597,7 +597,7 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
    ENDIF
 
    ::InetSendall( ::SocketCon, "Content-Length: " + ;
-         LTrim(Str( Len( cData ) ) ) + ::cCRLF )
+         hb_NToS( Len( cData ) ) + ::cCRLF )
    // End of header
    ::InetSendall( ::SocketCon, ::cCRLF )
 

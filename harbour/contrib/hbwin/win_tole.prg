@@ -216,7 +216,7 @@ METHOD New( uObj, cClass, cLicense ) CLASS TOleAuto
       RETURN HB_ExecFromArray( Self, "_New", HB_aParams() )
    ENDIF
    
-   IF ValType( uObj ) == 'C'
+   IF ISCHARACTER( uObj )
       ::hObj := CreateOleObject( uObj, , cLicense )
 
       IF OleError() != 0
@@ -252,11 +252,11 @@ METHOD New( uObj, cClass, cLicense ) CLASS TOleAuto
       ENDIF
 
       ::cClassName := uObj
-   ELSEIF ValType( uObj ) == 'N'
+   ELSEIF ISNUMBER( uObj )
       OleAddRef( uObj )
       ::hObj := uObj
 
-      IF ValType( cClass ) == 'C'
+      IF ISCHARACTER( cClass )
          ::cClassName := cClass
       ELSE
          ::cClassName := LTrim( Str( uObj ) )
@@ -298,7 +298,7 @@ METHOD GetActiveObject( cClass ) CLASS TOleAuto
 
    LOCAL oErr
 
-   IF ValType( cClass ) == 'C'
+   IF ISCHARACTER( cClass )
       ::hObj := GetOleObject( cClass )
 
       IF OleError() != 0
@@ -352,7 +352,7 @@ METHOD OleCollection( xIndex, xValue ) CLASS TOleAuto
       RETURN ::Item( xIndex )
    ENDIF
 
-   IF ValType( xIndex ) == 'N' .AND. xIndex < 0
+   IF ISNUMBER( xIndex ) .AND. xIndex < 0
       xIndex += ( ::Count + 1 )
    ENDIF
 
@@ -380,7 +380,7 @@ METHOD OleValuePlus( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '+'
+      oErr:Operation     := "+"
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1081
       oErr:SubSystem     := "BASE"
@@ -405,7 +405,7 @@ METHOD OleValueMinus( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '-'
+      oErr:Operation     := "-"
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1082
       oErr:SubSystem     := "BASE"
@@ -430,7 +430,7 @@ METHOD OleValueMultiply( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '*'
+      oErr:Operation     := "*"
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1083
       oErr:SubSystem     := "BASE"
@@ -455,7 +455,7 @@ METHOD OleValueDivide( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '/'
+      oErr:Operation     := "/"
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1084
       oErr:SubSystem     := "BASE"
@@ -480,7 +480,7 @@ METHOD OleValueModulus( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '%'
+      oErr:Operation     := "%"
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1085
       oErr:SubSystem     := "BASE"
@@ -505,7 +505,7 @@ METHOD OleValueInc() CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '++'
+      oErr:Operation     := "++"
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1086
       oErr:SubSystem     := "BASE"
@@ -530,7 +530,7 @@ METHOD OleValueDec() CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '--'
+      oErr:Operation     := "--"
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1087
       oErr:SubSystem     := "BASE"
@@ -555,7 +555,7 @@ METHOD OleValuePower( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '^'
+      oErr:Operation     := "^"
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1088
       oErr:SubSystem     := "BASE"
@@ -580,7 +580,7 @@ METHOD OleValueEqual( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '='
+      oErr:Operation     := "="
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1085
       oErr:SubSystem     := "BASE"
@@ -605,7 +605,7 @@ METHOD OleValueExactEqual( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '=='
+      oErr:Operation     := "=="
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1085
       oErr:SubSystem     := "BASE"
@@ -630,7 +630,7 @@ METHOD OleValueNotEqual( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '!='
+      oErr:Operation     := "!="
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1085
       oErr:SubSystem     := "BASE"

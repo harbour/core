@@ -179,10 +179,10 @@ METHOD New( oUrl,lTrace, oCredentials) CLASS tIPClientFTP
       if !file("ftp.log")
          ::nHandle := fcreate("ftp.log")
       else
-         while file(cFile+LTrim(str(Int(n)))+".log")
+         while file(cFile+hb_NToS(Int(n))+".log")
            n++
          enddo
-         ::cLogFile:= cFile+LTrim(str(Int(n)))+".log"
+         ::cLogFile:= cFile+hb_NToS(Int(n))+".log"
          ::nHandle := fcreate(::cLogFile)
       endif
    endif
@@ -242,7 +242,7 @@ METHOD GetReply() CLASS tIPClientFTP
    // now, if the reply has a "-" as fourth character, we need to proceed...
    DO WHILE .not. Empty(cRep) .and. SubStr( cRep, 4, 1 ) == "-"
       ::cReply := ::InetRecvLine( ::SocketCon, @nLen, 128 )
-      cRep := IIf(ValType(::cReply) == "C", ::cReply, "")
+      cRep := IIf(ISCHARACTER(::cReply), ::cReply, "")
    ENDDO
 
    // 4 and 5 are error codes
@@ -661,7 +661,7 @@ METHOD MPUT( cFileSpec, cAttr ) CLASS tIPClientFTP
    LOCAL nCount := 0
    LOCAL cStr := ""
 
-   IF !( Valtype( cFileSpec ) == "C" )
+   IF ! ISCHARACTER( cFileSpec )
       RETURN 0
    ENDIF
 

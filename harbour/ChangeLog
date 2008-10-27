@@ -8,6 +8,52 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-27 23:38 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbmysql/tmysql.prg
+  * contrib/xhb/hbcompat.ch
+  * contrib/xhb/dirrec.prg
+  * contrib/xhb/txml.prg
+  * contrib/xhb/hblog.prg
+  * contrib/xhb/cstruct.prg
+  * contrib/hbodbc/todbc.prg
+  * contrib/hbtpathy/telepath.prg
+  * contrib/hbmsql/tmsql.prg
+  * contrib/hbpgsql/tpostgre.prg
+  * contrib/hbgd/gd.prg
+  * contrib/hbgd/gdimage.prg
+  * contrib/hbgd/gdbarcod.prg
+  * contrib/hbgd/gdchart.prg
+  * contrib/hbgd/gdbar.prg
+  * contrib/hbmisc/stringp.prg
+  * contrib/hbtip/thtml.prg
+  * contrib/hbtip/popcln.prg
+  * contrib/hbtip/sendmail.prg
+  * contrib/hbtip/cgi.prg
+  * contrib/hbtip/httpcln.prg
+  * contrib/hbtip/encoder.prg
+  * contrib/hbtip/smtpcln.prg
+  * contrib/hbtip/mail.prg
+  * contrib/hbtip/ftpcln.prg
+  * contrib/hbwin/win_reg.prg
+  * contrib/hbwin/win_tole.prg
+  * source/rdd/usrrdd/rdds/arrayrdd.prg
+  * source/rdd/usrrdd/rdds/hscdx.prg
+  * source/rdd/usrrdd/rdds/rlcdx.prg
+  * utils/hbdoc/genos2.prg
+  * utils/hbdoc/genng.prg
+  * utils/hbdoc/genchm.prg
+  * utils/hbdoc/genhtm.prg
+  * utils/hbdoc/genrtf.prg
+  * utils/hbdoc/gentrf.prg
+  * utils/hbmake/hbmake.prg
+    % 'ValType() == "?"' -> IS*()
+    % *trim( Str() ) -> hb_NToS()
+    ; In few places in hbtip the length limit 
+      was removed from Str(), as it was used 
+      inconsistently and could also cause 
+      infinite loops and invalid filenames.
+    % Some other minor updates.
+
 2008-10-27 22:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * tests/db_brows.prg
    * contrib/hbmysql/tmysql.prg

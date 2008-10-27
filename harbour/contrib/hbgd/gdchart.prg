@@ -50,13 +50,6 @@
  *
  */
 
-/*
- *
- * See doc/license files for licensing terms.
- *
- */
-
-
 #include "common.ch"
 #include "hbclass.ch"
 #include "gd.ch"
@@ -117,13 +110,13 @@ METHOD AddData( hData ) CLASS GDChart
 RETURN Self
 
 METHOD SetData( aData ) CLASS GDChart
-   IF ValType( aData ) == "A"
+   IF ISARRAY( aData )
       ::aDataOfHashes := aData
    ENDIF
 RETURN Self
 
 METHOD AddDef( cDefKey, xDefVal ) CLASS GDChart
-   IF ValType( cDefKey ) == "C"
+   IF ISCHARACTER( cDefKey )
       HB_hSet( ::hDefs, Upper( cDefKey ), xDefVal )
    ENDIF
 RETURN Self

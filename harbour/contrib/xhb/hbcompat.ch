@@ -175,7 +175,7 @@
    #xtranslate CStr([<x,...>])             => hb_CStr(<x>)
    #xtranslate IsDirectory(<x>)            => hb_DirExists(<x>)
    #xtranslate SecondsSleep([<x,...>])     => hb_idleSleep(<x>)
-   #xtranslate NetName(<n>)                => iif( ValType( <n> ) == "N" .AND. <n> == 1, hb_UserName(), NetName() )
+   #xtranslate NetName(<n>)                => iif( hb_isNumeric( <n> ) .AND. <n> == 1, hb_UserName(), NetName() )
    #xtranslate FileSize(<x>)               => hb_FSize(<x>)
    #xtranslate WildMatch([<x,...>])        => hb_WildMatch(<x>)
    #xtranslate hb_DeserialNext(<x>)        => hb_Deserialize(<x>)

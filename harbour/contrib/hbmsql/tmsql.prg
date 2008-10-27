@@ -121,7 +121,7 @@ METHOD FieldPut(nNum, Value) CLASS TmSQLRow
    if nNum > 0 .AND. nNum <= Len(::aRow)
       if Valtype(Value) == Valtype(::aRow[nNum]) .OR. Empty(::aRow[nNum])
          // if it's a char field encode singole quotes
-         if ValType(Value) == "C"
+         if ISCHARACTER(Value)
             ::aRow[nNum] := StrTran(Value, "'", "\'")
          else
             ::aRow[nNum] := Value
@@ -430,11 +430,11 @@ METHOD Update(oRow) CLASS TmSQLTable
       for i := 1 to Len(oRow:aRow)
          if oRow:aDirty[i]
             do case
-            case Valtype(oRow:aRow[i]) == "N"
-               cField := AllTrim(Str(oRow:aRow[i]))
+            case ISNUMBER(oRow:aRow[i])
+               cField := hb_NToS(oRow:aRow[i])
                cUpdateQuery += oRow:aFieldStruct[i][MSQL_FS_NAME] + "=" + cField + ","
 
-            case Valtype(oRow:aRow[i]) == "D"
+            case ISDATE(oRow:aRow[i])
                if !Empty(oRow:aRow[i])
                   // mSQL dates are like this 1-Oct-1900
                   cUpdateQuery += oRow:aFieldStruct[i][MSQL_FS_NAME] + "=" + "'" + Str(Day(oRow:aRow[i]), 2) + "-" + Left(CMonth(oRow:aRow[i]), 3) + "-" + Str(Year(oRow:aRow[i]), 4) +  "',"
@@ -442,11 +442,11 @@ METHOD Update(oRow) CLASS TmSQLTable
                   cUpdateQuery += oRow:aFieldStruct[i][MSQL_FS_NAME] + "=" + "'',"
                endif
 
-            case Valtype(oRow:aRow[i]) == "C"
+            case ISCHARACTER(oRow:aRow[i])
                cUpdateQuery += oRow:aFieldStruct[i][MSQL_FS_NAME] + "='" + oRow:aRow[i] + "',"
 
-            case Valtype(oRow:aRow[i]) == "L"
-               cField := AllTrim(Str(iif(oRow:aRow[i] == .F., 0, 1)))
+            case ISLOGICAL(oRow:aRow[i])
+               cField := iif(oRow:aRow[i], "1", "0")
                cUpdateQuery += oRow:aFieldStruct[i][MSQL_FS_NAME] + "=" + cField + ","
 
             otherwise
@@ -459,7 +459,7 @@ METHOD Update(oRow) CLASS TmSQLTable
       // remove last comma
       cUpdateQuery := Left(cUpdateQuery, Len(cUpdateQuery) -1)
 
-      cUpdateQuery += " WHERE _rowid=" + AllTrim(Str(oRow:nRowID))
+      cUpdateQuery += " WHERE _rowid=" + hb_NToS(oRow:nRowID)
 
       if msqlQuery(::nSocket, cUpdateQuery) == 1
          // All values are commited
@@ -480,7 +480,7 @@ METHOD Delete(oRow) CLASS TmSQLTable
    // is this a row of this table ?
    if oRow:cTable == ::cTable
 
-      cDeleteQuery += AllTrim(Str(oRow:nRowID))
+      cDeleteQuery += hb_NToS(oRow:nRowID)
 
       if msqlQuery(::nSocket, cDeleteQuery) == 1
          return .T.
@@ -512,14 +512,14 @@ METHOD Append(oRow) CLASS TmSQLTable
       for i := 1 to Len(oRow:aRow)
 
          do case
-         case Valtype(oRow:aRow[i]) == "N"
-            cField := AllTrim(Str(oRow:aRow[i]))
+         case ISNUMBER(oRow:aRow[i])
+            cField := hb_NToS(oRow:aRow[i])
             cInsertQuery += cField + ","
 
-         case Valtype(oRow:aRow[i]) == "C"
+         case ISCHARACTER(oRow:aRow[i])
             cInsertQuery += "'" + oRow:aRow[i] + "',"
 
-         case Valtype(oRow:aRow[i]) == "D"
+         case ISDATE(oRow:aRow[i])
             if !Empty(oRow:aRow[i])
                // mSQL dates have this form " 1-Oct-1990"
                /* NOTE: current implementation CANNOT retrieve from mSQL dates BEFORE 1st January 1970 */
@@ -528,8 +528,8 @@ METHOD Append(oRow) CLASS TmSQLTable
                cInsertQuery += "'',"
             endif
 
-        case Valtype(oRow:aRow[i]) == "L"
-            cField := AllTrim(Str(iif(oRow:aRow[i] == .F., 0, 1)))
+        case ISLOGICAL(oRow:aRow[i])
+            cField := iif(oRow:aRow[i], "1", "0")
             cInsertQuery += cField + ","
 
          otherwise
@@ -650,7 +650,7 @@ METHOD CreateTable(cTable, aStruct) CLASS TmSQLServer
    for i := 1 to Len(aStruct)
       do case
       case aStruct[i][DBS_TYPE] == "C"
-         cCreateQuery += aStruct[i][DBS_NAME] + " char(" + AllTrim(Str(aStruct[i][DBS_LEN])) + "),"
+         cCreateQuery += aStruct[i][DBS_NAME] + " char(" + hb_NToS(aStruct[i][DBS_LEN]) + "),"
 
       case aStruct[i][DBS_TYPE] == "N"
          if aStruct[i][DBS_DEC] == 0
@@ -666,7 +666,7 @@ METHOD CreateTable(cTable, aStruct) CLASS TmSQLServer
          cCreateQuery += aStruct[i][DBS_NAME] + " uint,"
 
       otherwise
-         cCreateQuery += aStruct[i][DBS_NAME] + " char(" + AllTrim(Str(aStruct[i][DBS_LEN])) + "),"
+         cCreateQuery += aStruct[i][DBS_NAME] + " char(" + hb_NToS(aStruct[i][DBS_LEN]) + "),"
 
       endcase
 

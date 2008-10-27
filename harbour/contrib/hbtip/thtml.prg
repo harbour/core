@@ -143,7 +143,7 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
                     ' </body>' + hb_OSNewLine() +;
                     '</html>'
 
-   IF !( Valtype( cHtmlString ) == "C" )
+   IF ! ISCHARACTER( cHtmlString )
       ::root := THtmlNode():new( cEmptyHtmlDoc )
    ELSE
       IF .NOT. "<html" $ Lower( Left( cHtmlString, 4096 ) )
@@ -600,7 +600,7 @@ METHOD new( oParent, cTagName, cAttrib, cContent ) CLASS THtmlNode
       THtmlInit(.T.)
    ENDIF
 
-   IF Valtype( oParent ) == "C"
+   IF ISCHARACTER( oParent )
       // a HTML string is passed -> build new tree of objects
       IF Chr(9) $ oParent
          oParent := StrTran( oParent, Chr(9), Chr(32) )
@@ -610,11 +610,11 @@ METHOD new( oParent, cTagName, cAttrib, cContent ) CLASS THtmlNode
       ::htmlTagType    := THtmlTagType( "_root_" )
       ::htmlContent    := {}
       ::parseHtml( P_PARSER( oParent ) )
-   ELSEIF Valtype( oParent ) == "O"
+   ELSEIF ISOBJECT( oParent )
       // a HTML object is passed -> we are in the course of building an object tree
       ::root           := oParent:root
       ::parent         := oParent
-      IF Valtype( cAttrib ) == "C"
+      IF ISCHARACTER( cAttrib )
          IF Right( cAttrib, 1 ) == "/"
             cAttrib := Stuff( cAttrib, Len( cAttrib ), 1, " " )
             ::htmlEndTagName := "/"
@@ -664,7 +664,7 @@ RETURN hb_bitAnd( ::htmlTagType[2], CM_OPT ) > 0
 
 // checks if this is a node (leafs contain no further nodes, e.g. <br>,<hr>,_text_)
 METHOD isNode CLASS THtmlNode
-RETURN Valtype( ::htmlContent ) == "A" .AND. Len( ::htmlContent ) > 0
+RETURN ISARRAY( ::htmlContent ) .AND. Len( ::htmlContent ) > 0
 
 
 // checks if this is a block node that must be closed with an ending tag: eg: <table></table>, <ul></ul>
@@ -904,7 +904,7 @@ METHOD insertBefore( oTHtmlNode ) CLASS THtmlNode
       ::root:_document:changed := .T.
    ENDIF
 
-   IF Valtype( ::parent:htmlContent ) == "A"
+   IF ISARRAY( ::parent:htmlContent )
       hb_AIns( ::parent:htmlContent, 1, oTHtmlNode, .T. )
    ENDIF
 RETURN oTHtmlNode
@@ -947,7 +947,7 @@ METHOD delete()  CLASS THtmlNode
       ::root:_document:changed := .T.
    ENDIF
 
-   IF Valtype( ::parent:htmlContent ) == "A"
+   IF ISARRAY( ::parent:htmlContent )
       nPos := AScan( ::parent:htmlContent, self )
       hb_ADel( ::parent:htmlContent, nPos, .T. )
    ENDIF
@@ -959,7 +959,7 @@ RETURN self
 
 // returns first node in subtree (.F.) or first node of entire tree (.T.)
 METHOD firstNode( lRoot ) CLASS THtmlNode
-   IF !( Valtype( lRoot ) == "L" )
+   IF ! ISLOGICAL( lRoot )
       lRoot := .F.
    ENDIF
 
@@ -975,7 +975,7 @@ RETURN IIF( Empty(::htmlContent), NIL, ::htmlContent[1] )
 // returns last node in subtree (.F.) or last node of entire tree (.T.)
 METHOD lastNode( lRoot ) CLASS THtmlNode
    LOCAL aNodes
-   IF !( Valtype( lRoot ) == "L" )
+   IF ! ISLOGICAL( lRoot )
       lRoot := .F.
    ENDIF
    IF ::htmlTagName == "_text_"
@@ -1051,7 +1051,7 @@ METHOD toString( nIndent ) CLASS THtmlNode
       ENDIF
    ENDIF
 
-   IF Valtype( ::htmlContent ) == "A"
+   IF ISARRAY( ::htmlContent )
 
 #ifdef FOR_EACH_NESTING_LIMIT_IS_ONLY_16_AND_FAR_TOO_SMALL
        imax := Len( ::htmlContent )
@@ -1071,7 +1071,7 @@ METHOD toString( nIndent ) CLASS THtmlNode
       NEXT
 #endif
 
-   ELSEIF Valtype( ::htmlContent ) == "C"
+   ELSEIF ISCHARACTER( ::htmlContent )
       cHtml += ::htmlContent
    ENDIF
 
@@ -1096,7 +1096,7 @@ METHOD attrToString() CLASS THtmlNode
    IF ::htmlAttributes == NIL
       cAttr := ""
 
-   ELSEIF Valtype( ::htmlAttributes ) == "C"
+   ELSEIF ISCHARACTER( ::htmlAttributes )
       cAttr := " " + ::htmlAttributes
 
    ELSE
@@ -1250,7 +1250,7 @@ METHOD getAttributes() CLASS THtmlNode
       ::htmlAttributes := {=>}
       hb_hCaseMatch( ::htmlAttributes, .F. )
 
-   ELSEIF Valtype( ::htmlAttributes ) == "C"
+   ELSEIF ISCHARACTER( ::htmlAttributes )
       IF ::htmlAttributes == "/"
          ::htmlAttributes := {=>}
          hb_hCaseMatch( ::htmlAttributes, .F. )
@@ -1495,7 +1495,7 @@ METHOD findNodesByTagName( cName, nOrdinal ) CLASS THtmlNode
       ENDIF
    NEXT
 
-   IF Valtype( nOrdinal ) == "N"
+   IF ISNUMBER( nOrdinal )
       IF nOrdinal < 1 .OR. nOrdinal > Len( aRet )
          RETURN NIL
       ENDIF
@@ -1596,7 +1596,7 @@ RETURN cLeftPart
 
 
 FUNCTION THtmlInit( lInit )
-   IF Valtype( lInit ) == "L" .AND. .NOT. lInit
+   IF ISLOGICAL( lInit ) .AND. .NOT. lInit
       saHtmlAttr         := NIL
       shTagTypes         := NIL
       saHtmlAnsiEntities := NIL

@@ -789,7 +789,7 @@ oHtm:writeText("<br>")  //:endpar()
          ENDIF
 
          IF !lClassDoc .AND. lEof
-            IF VALTYPE( oHtm ) == "O"
+            IF ISOBJECT( oHtm )
                oHtm:WriteText( "</p></dd></dl>" )
                oHtm:Close()
             ENDIF
@@ -1981,13 +1981,13 @@ METHOD New( cFile, aMetaContents ) CLASS THTML
       FCLOSE( Self:nHandle )
    ENDIF
 
-   IF VALTYPE( cFile ) != NIL .AND. VALTYPE( cFile ) == "C"
+   IF ISCHARACTER( cFile )
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
    ENDIF
    FWRITE( Self:nHandle, "<HTML>" + CRLF )
    FWRITE( Self:nHandle, "<HEAD>" + CRLF )
-   if Valtype(aMetaContents) != NIL .and. Valtype(aMetaContents)=="A"
+   if ISARRAY( aMetaContents )
       For nCount:=1 to len(aMetaContents)
          Self:WriteMetaTag(aMetaContents[nCount,1],aMetaContents[nCount,2])
       NEXT
@@ -2104,12 +2104,12 @@ METHOD NewChm( cFile, aMetaContents, cFuncName ) CLASS THTML
       FCLOSE( Self:nHandle )
    ENDIF
 
-   IF VALTYPE( cFile ) != NIL .AND. VALTYPE( cFile ) == "C"
+   IF ISCHARACTER( cFile )
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
    ENDIF
    FWRITE( Self:nHandle, "<HTML>" + CRLF +"<HEAD>" +CRLF)
-   if Valtype(aMetaContents) != NIL .and. Valtype(aMetaContents)=="A"
+   if ISARRAY( aMetaContents )
    For nCount:=1 to len(aMetaContents)
       Self:WriteMetaTag(aMetaContents[nCount,1],aMetaContents[nCount,2])
    NEXT
@@ -2124,7 +2124,7 @@ METHOD NewChm( cFile, aMetaContents, cFuncName ) CLASS THTML
    RETURN Self
 
 method ADDOBJECT(cType,cClassId) Class THTML
-   IF VALTYPE(cClassId)!=NIL .and. VALTYPE(cClassId)=="C"
+   IF ISCHARACTER( cClassId )
       FWRITE( Self:nHandle,'<Object type="'+cType+'" classid="'+cClassId+'">'+CRLF)
    ELSE
       FWRITE( Self:nHandle,'<Object type="'+ cType +'">'+CRLF)
@@ -2145,7 +2145,7 @@ METHOD NewContent( cFile ) CLASS THTML
       FCLOSE( Self:nHandle )
    ENDIF
 
-   IF VALTYPE( cFile ) != NIL .AND. VALTYPE( cFile ) == "C"
+   IF ISCHARACTER( cFile )
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
    ENDIF

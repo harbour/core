@@ -99,7 +99,7 @@ function ToChar( xTxt, cSeparator, lDebug )
          cOut := iif( lDebug, '"'+xTxt+'"', xTxt )
 
       case cValTxt=="N"                         // Numeric
-         cOut := Alltrim(Str(xTxt))
+         cOut := hb_NToS(xTxt)
 
       case cValTxt=="U"                         // Nothing to write
          cOut := iif( lDebug, "NIL", "" )

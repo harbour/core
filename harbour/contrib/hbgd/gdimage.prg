@@ -50,12 +50,6 @@
  *
  */
 
-/*
- *
- * See doc/license files for licensing terms.
- *
- */
-
 #include "common.ch"
 #include "hbclass.ch"
 #include "gd.ch"

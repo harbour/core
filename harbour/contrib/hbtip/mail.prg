@@ -61,6 +61,7 @@
 */
 
 #include "hbclass.ch"
+#include "common.ch"
 
 CLASS TipMail
    DATA hHeaders
@@ -534,29 +535,29 @@ RETURN cBound
 METHOD setHeader( cSubject, cFrom, cTo, cCC, cBCC ) CLASS TipMail
    LOCAL aTo, aCC, aBCC, i, imax
 
-   IF !( Valtype( csubject ) == "C" )
+   IF ! ISCHARACTER( csubject )
       cSubject := ""
    ENDIF
 
-   IF !( Valtype( cFrom ) == "C" )
+   IF ! ISCHARACTER( cFrom )
       RETURN .F.
    ENDIF
 
-   IF Valtype( cTo ) == "C"
+   IF ISCHARACTER( cTo )
       aTo := { cTo }
-   ELSEIF Valtype( cTo ) == "A"
+   ELSEIF ISARRAY( cTo )
       aTo := cTo
    ENDIF
 
-   IF Valtype( cCC ) == "C"
+   IF ISCHARACTER( cCC )
       aCC := { cCC }
-   ELSEIF Valtype( cCC ) == "A"
+   ELSEIF ISARRAY( cCC )
       aCC := cCC
    ENDIF
 
-   IF Valtype( cBCC ) == "C"
+   IF ISCHARACTER( cBCC )
       aBCC := { cBCC }
-   ELSEIF Valtype( cBCC ) == "A"
+   ELSEIF ISARRAY( cBCC )
       aBCC := cBCC
    ENDIF
 
@@ -642,7 +643,7 @@ METHOD detachFile( cPath ) CLASS TipMail
       RETURN .F.
    ENDIF
 
-   IF Valtype( cPath ) == "C"
+   IF ISCHARACTER( cPath )
       cFileName := StrTran( cPath + cDelim + cFileName, cDelim+cDelim, cDelim )
    ENDIF
 
