@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-27 20:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * config/rules.cf
+    * Synced Harbour flags with non-GNU make.
+      (added -gc3, -l)
+
 2008-10-27 20:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/setkey.c
     ! fixed GPF in HB_SETKEYGET() when bActive block is used
