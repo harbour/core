@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-28 12:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.h
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    + added support for creating console window after 1-st screen update
+      Please remember that it interacts with inkey() code which does not
+      work until windows is not created.
+      Now it should be quite easy to add support for some initializations
+      before window is created. Probably it will be necessary to change
+      INFO() method and store settings in some pWVT variables if pWVT->hWND
+      is NULL and then use them as parameters for new console window.
+      I'd like to leave this modification to MS-Windows developers.
+
+  * harbour/contrib/xhb/xhbcopyf.c
+    ! fixed name conflict with hb_fsCopy()
+
 2008-10-28 12:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbcurl/make_b32.bat
   * contrib/hbcurl/make_vc.bat

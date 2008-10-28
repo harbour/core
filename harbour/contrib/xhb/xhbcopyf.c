@@ -63,12 +63,12 @@
 
 #define BUFFER_SIZE 8192
 
-static BOOL hb_fsCopy( char * szSource, char * szDest, PHB_ITEM pBlock )
+static BOOL hb_copyfile( char * szSource, char * szDest, PHB_ITEM pBlock )
 {
    BOOL bRetVal = FALSE;
    HB_FHANDLE fhndSource;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsCopy(%s, %s)", szSource, szDest));
+   HB_TRACE(HB_TR_DEBUG, ("hb_copyfile(%s, %s)", szSource, szDest));
 
    while( ( fhndSource = hb_spOpen( ( BYTE * ) szSource, FO_READ | FO_SHARED | FO_PRIVATE ) ) == FS_ERROR )
    {
@@ -149,7 +149,7 @@ HB_FUNC( XHB_COPYFILE )
 {
    if( ISCHAR( 1 ) && ISCHAR( 2 ) )
    {
-      if( ! hb_fsCopy( hb_parc( 1 ), hb_parc( 2 ), hb_param( 3, HB_IT_BLOCK ) ) )
+      if( ! hb_copyfile( hb_parc( 1 ), hb_parc( 2 ), hb_param( 3, HB_IT_BLOCK ) ) )
          hb_retl( FALSE );
    }
    else

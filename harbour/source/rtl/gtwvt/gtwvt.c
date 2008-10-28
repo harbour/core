@@ -13,7 +13,7 @@
  *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *   Video subsystem for Win32 compilers
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
- *     Copyright 2002 Przemys³aw Czerpak <druzus@polbox.com>
+ *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  *    Adopted to new GT API
@@ -206,15 +206,12 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
       hb_xfree( pWVT->pszSelectCopy );
 
    if( pWVT->hWnd )
-   {
       DestroyWindow( pWVT->hWnd );
-      pWVT->hWnd = NULL;
-   }
 
    hb_xfree( pWVT );
 }
 
-static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
+static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 {
    PHB_GTWVT pWVT;
    OSVERSIONINFO osvi;
@@ -231,6 +228,9 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
       hb_xfree( pWVT );
       return NULL;
    }
+
+   pWVT->hInstance         = ( HINSTANCE ) hInstance;
+   pWVT->iCmdShow          = iCmdShow;
 
    pWVT->ROWS              = WVT_DEFAULT_ROWS;
    pWVT->COLS              = WVT_DEFAULT_COLS;
@@ -290,6 +290,19 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
    pWVT->bClosable         = TRUE;
 
    pWVT->ResizeMode        = HB_GTI_RESIZEMODE_FONT;
+
+#ifndef HB_CDP_SUPPORT_OFF
+   pWVT->hostCDP    = hb_vmCDP();
+#if defined(UNICODE)
+   pWVT->inCDP      = hb_vmCDP();
+#else
+   {
+      int i;
+      for( i = 0; i < 256; ++i )
+         pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( BYTE ) i;
+   }
+#endif
+#endif
 
    return pWVT;
 }
@@ -1464,7 +1477,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
    if( pWVT ) switch( message )
    {
       case WM_CREATE:
-         return hb_gt_wvt_InitWindow( pWVT, WVT_DEFAULT_ROWS, WVT_DEFAULT_COLS );
+         return hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
 
       case WM_PAINT:
       {
@@ -1683,12 +1696,41 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, int iCmdShow )
       ShowWindow( hWnd, iCmdShow );
       UpdateWindow( hWnd );
    }
-   else
-      hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 
    return hWnd;
 }
 
+static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
+{
+   if( !pWVT->hWnd )
+   {
+      pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT->hInstance, pWVT->iCmdShow );
+      if( !pWVT->hWnd )
+         hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
+
+      hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
+
+      /* Set default window title */
+      {
+         PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
+         hb_gt_wvt_SetWindowTitle( pWVT->hWnd, pFileName->szName );
+         hb_xfree( pFileName );
+      }
+
+      /* Create "Mark" prompt in SysMenu to allow console type copy operation */
+      {
+         HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+         if( hSysMenu )
+         {
+            LPTSTR buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
+            AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, buffer );
+            HB_TCHAR_FREE( buffer );
+         }
+      }
+   }
+
+   return TRUE;
+}
 
 /* ********************************************************************** */
 /*
@@ -1709,53 +1751,18 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       hb_errInternal( 10001, "It's not a GUI program", NULL, NULL );
    }
 
-   pWVT = hb_gt_wvt_New( pGT );
+   pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
    if( !pWVT )
       hb_errInternal( 10001, "Maximum number of WVT windows reached, cannot create another one", NULL, NULL );
 
    HB_GTLOCAL( pGT ) = ( void * ) pWVT;
-   pWVT->hInstance = ( HINSTANCE ) hInstance;
-   pWVT->hWnd = hb_gt_wvt_CreateWindow( ( HINSTANCE ) hInstance, iCmdShow );
-   if( !pWVT->hWnd )
-      return;
-
-   hb_gt_wvt_InitWindow( pWVT, WVT_DEFAULT_ROWS, WVT_DEFAULT_COLS );
-
-#ifndef HB_CDP_SUPPORT_OFF
-   pWVT->hostCDP    = hb_vmCDP();
-#if defined(UNICODE)
-   pWVT->inCDP      = hb_vmCDP();
-#else
-   {
-      int i;
-      for( i = 0; i < 256; ++i )
-         pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( BYTE ) i;
-   }
-#endif
-#endif
-
-   /* Set default window title */
-   {
-      PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
-      hb_gt_wvt_SetWindowTitle( pWVT->hWnd, pFileName->szName );
-      hb_xfree( pFileName );
-   }
-
-   /* Create "Mark" prompt in SysMenu to allow console type copy operation */
-   {
-      HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-      if( hSysMenu )
-      {
-         LPTSTR buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
-         AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, buffer );
-         HB_TCHAR_FREE( buffer );
-      }
-   }
 
    /* SUPER GT initialization */
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
-   HB_GTSELF_EXPOSEAREA( pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+   HB_GTSELF_SEMICOLD( pGT );
+
+   /* hb_gt_wvt_CreateConsoleWindow( pWVT ); */
 }
 
 /* ********************************************************************** */
@@ -1808,6 +1815,7 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
       else
       {
          hb_gt_wvt_SetWindowSize( pWVT, iRow, iCol );
+         HB_GTSELF_SEMICOLD( pGT );
       }
    }
 
@@ -1842,7 +1850,9 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 
    pWVT = HB_GTWVT_GET( pGT );
 
-   hb_gt_wvt_ProcessMessages();
+   if( pWVT->hWnd ) /* Is the window already open */
+      hb_gt_wvt_ProcessMessages();
+
    fKey = hb_gt_wvt_GetCharFromInputQueue( pWVT, &c );
 
    return fKey ? c : 0;
@@ -2126,30 +2136,33 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
       }
       case HB_GTI_WINTITLE:
-      {
-         char * szTitle = NULL;
-         if( hb_gt_wvt_GetWindowTitle( pWVT->hWnd, &szTitle ) )
-            pInfo->pResult = hb_itemPutCPtr2( pInfo->pResult, szTitle );
-         else
-            pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-            hb_gt_wvt_SetWindowTitle( pWVT->hWnd, hb_itemGetCPtr( pInfo->pNewVal ) );
+         if( pWVT->hWnd )
+         {
+            char * szTitle = NULL;
+            if( hb_gt_wvt_GetWindowTitle( pWVT->hWnd, &szTitle ) )
+               pInfo->pResult = hb_itemPutCPtr2( pInfo->pResult, szTitle );
+            else
+               pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
+            if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+               hb_gt_wvt_SetWindowTitle( pWVT->hWnd, hb_itemGetCPtr( pInfo->pNewVal ) );
+         }
          break;
-      }
+
       case HB_GTI_CODEPAGE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->CodePage );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 && iVal != pWVT->CodePage )
          {
             pWVT->CodePage = iVal;
-            hb_gt_wvt_ResetWindowSize( pWVT );
+            if( pWVT->hWnd )
+               hb_gt_wvt_ResetWindowSize( pWVT );
          }
          break;
 
       case HB_GTI_ICONFILE:
       {
          HICON hIcon = 0;
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) && pWVT->hWnd )
          {
             LPTSTR lpImage = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
             hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpImage,
@@ -2168,24 +2181,27 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_ICONRES:
       {
          HICON hIcon = 0;
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         if( pWVT->hWnd )
          {
-            LPTSTR lpIcon = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
-            hIcon = LoadIcon( pWVT->hInstance, lpIcon );
-            HB_TCHAR_FREE( lpIcon );
+            if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+            {
+               LPTSTR lpIcon = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
+               hIcon = LoadIcon( pWVT->hInstance, lpIcon );
+               HB_TCHAR_FREE( lpIcon );
+            }
+            else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+            {
+               hIcon = LoadIcon( pWVT->hInstance,
+                                 MAKEINTRESOURCE( ( HB_LONG )
+                                             hb_itemGetNInt( pInfo->pNewVal ) ) );
+            }
+            if( hIcon )
+            {
+               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); /* Set Title Bar Icon */
+               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) hIcon ); /* Set Task List Icon */
+            }
+            pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) hIcon );
          }
-         else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-         {
-            hIcon = LoadIcon( pWVT->hInstance,
-                              MAKEINTRESOURCE( ( HB_LONG )
-                                          hb_itemGetNInt( pInfo->pNewVal ) ) );
-         }
-         if( hIcon )
-         {
-            SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); /* Set Title Bar Icon */
-            SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) hIcon ); /* Set Task List Icon */
-         }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) hIcon );
          break;
       }
       case HB_GTI_VIEWMAXWIDTH:
@@ -2258,44 +2274,41 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
       }
-
       case HB_GTI_RESIZABLE:
-      {
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bResizable );
          if( pInfo->pNewVal )
          {
             BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bResizable )
             {
-#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-               LONG style;
-#else
-               LONG_PTR style;
-#endif
-
                pWVT->bResizable = bNewValue;
-
-               if( pWVT->bResizable )
-                  style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME;
-               else
-                  style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
+               if( pWVT->hWnd )
+               {
+#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+                  LONG style;
+#else
+                  LONG_PTR style;
+#endif
+                  if( pWVT->bResizable )
+                     style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME;
+                  else
+                     style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
 
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-               SetWindowLong( pWVT->hWnd, GWL_STYLE, style );
+                  SetWindowLong( pWVT->hWnd, GWL_STYLE, style );
 #else
-               SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
+                  SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
 #endif
-
-               SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                         SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
-               ShowWindow( pWVT->hWnd, SW_HIDE );
-               ShowWindow( pWVT->hWnd, SW_NORMAL );
+                  SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
+                                SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
+                  ShowWindow( pWVT->hWnd, SW_HIDE );
+                  ShowWindow( pWVT->hWnd, SW_NORMAL );
+               }
             }
          }
          break;
-      }
+
       case HB_GTI_SELECTCOPY:
-      {
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bSelectCopy );
 
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
@@ -2304,8 +2317,8 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
             if( hb_itemGetCLen( pInfo->pNewVal ) )
             {
-               HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-               if( hSysMenu )
+               HMENU hSysMenu = pWVT->hWnd ? GetSystemMenu( pWVT->hWnd, FALSE ) : NULL;
+               if( hSysMenu || !pWVT->hWnd )
                {
                   if( pWVT->pszSelectCopy )
                      hb_xfree( pWVT->pszSelectCopy );
@@ -2313,6 +2326,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   pWVT->bSelectCopy = TRUE;
 
 #if !defined(HB_WINCE)  /* WinCE does not support ModifyMenu */
+                  if( hSysMenu )
                   {
                      LPTSTR buffer;
                      buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
@@ -2328,36 +2342,44 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bSelectCopy )
             {
-               HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-               if( hSysMenu )
+               if( pWVT->hWnd )
                {
-                  EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
-                  pWVT->bSelectCopy = bNewValue;
+                  HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+                  if( hSysMenu )
+                  {
+                     EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
+                     pWVT->bSelectCopy = bNewValue;
+                  }
                }
+               else
+                  pWVT->bSelectCopy = bNewValue;
             }
          }
          break;
-      }
+
       case HB_GTI_CLOSABLE:
-      {
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bClosable );
          if( pInfo->pNewVal )
          {
             BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bClosable )
             {
-               HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-               if( hSysMenu )
+               if( pWVT->hWnd )
                {
-                  EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
-                  pWVT->bClosable = bNewValue;
+                  HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+                  if( hSysMenu )
+                  {
+                     EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
+                     pWVT->bClosable = bNewValue;
+                  }
                }
+               else
+                  pWVT->bClosable = bNewValue;
             }
          }
          break;
-      }
+
       case HB_GTI_PALETTE:
-      {
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
             int iIndex = hb_itemGetNI( pInfo->pNewVal );
@@ -2370,7 +2392,8 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                {
                   pWVT->COLORS[ iIndex - 1 ] = hb_itemGetNL( pInfo->pNewVal2 );
 
-                  HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+                  if( pWVT->hWnd )
+                     HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
                }
             }
          }
@@ -2392,25 +2415,25 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   for( i = 0; i < 16; i++ )
                      pWVT->COLORS[ i ] = hb_arrayGetNL( pInfo->pNewVal, i + 1 );
 
-                  HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+                  if( pWVT->hWnd )
+                     HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
                }
             }
          }
          break;
-      }
+
       case HB_GTI_RESIZEMODE:
-      {
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->ResizeMode );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
             pWVT->ResizeMode = hb_itemGetNI( pInfo->pNewVal );
          }
          break;
-      }
+
       case HB_GTI_SETPOS_XY:
       case HB_GTI_SETPOS_ROWCOL:
-      {
-         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) && ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
+         if( pWVT->hWnd && ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
+                           ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
          {
             int x, y;
             RECT rect = { 0,0,0,0 };
@@ -2431,7 +2454,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                    SWP_NOSIZE + SWP_NOZORDER ) );
          }
          break;
-      }
+
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
@@ -2612,17 +2635,22 @@ static void hb_gt_wvt_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
    pWVT = HB_GTWVT_GET( pGT );
-   if( pWVT && pWVT->hWnd )
+   if( pWVT )
    {
-      RECT rect;
+      if( pWVT->hWnd )
+      {
+         RECT rect;
 
-      rect.top = rect.bottom = ( SHORT ) iRow;
-      rect.left = ( SHORT ) iCol;
-      rect.right = ( SHORT ) ( iCol + iSize - 1 );
+         rect.top = rect.bottom = ( SHORT ) iRow;
+         rect.left = ( SHORT ) iCol;
+         rect.right = ( SHORT ) ( iCol + iSize - 1 );
 
-      rect = hb_gt_wvt_GetXYFromColRowRect( pWVT, rect );
+         rect = hb_gt_wvt_GetXYFromColRowRect( pWVT, rect );
 
-      InvalidateRect( pWVT->hWnd, &rect, FALSE );
+         InvalidateRect( pWVT->hWnd, &rect, FALSE );
+      }
+      else
+         pWVT->fInit = TRUE;
    }
 }
 
@@ -2637,10 +2665,16 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
    HB_GTSUPER_REFRESH( pGT );
 
    pWVT = HB_GTWVT_GET( pGT );
-   if( pWVT && pWVT->hWnd )
+   if( pWVT )
    {
-      SendNotifyMessage( pWVT->hWnd, WM_MY_UPDATE_CARET, 0, 0 );
-      hb_gt_wvt_ProcessMessages();
+      if( !pWVT->hWnd && pWVT->fInit )
+         hb_gt_wvt_CreateConsoleWindow( pWVT );
+
+      if( pWVT->hWnd )
+      {
+         SendNotifyMessage( pWVT->hWnd, WM_MY_UPDATE_CARET, 0, 0 );
+         hb_gt_wvt_ProcessMessages();
+      }
    }
 }
 

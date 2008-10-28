@@ -117,6 +117,7 @@ typedef struct
    int      iHandle;                      /* window number */
 
    HINSTANCE hInstance;                   /* parent window instance */
+   int       iCmdShow;
 
    USHORT   ROWS;                         /* number of displayable rows in window */
    USHORT   COLS;                         /* number of displayable columns in window */
@@ -146,6 +147,7 @@ typedef struct
    HFONT    hFont;                        /* current font handle */
 
    HWND     hWnd;                         /* the window handle */
+   BOOL     fInit;                        /* logical variable indicating that window should be open */
 
    PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
