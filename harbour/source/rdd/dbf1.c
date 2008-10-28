@@ -65,6 +65,7 @@
 #include "hbmath.h"
 #include "hbdbsort.h"
 #include "hbsxfunc.h"
+#include "hbstack.h"
 #include "error.ch"
 #include "rddsys.ch"
 #include "hbsxdef.ch"
@@ -5318,16 +5319,42 @@ static ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItem
    return hb_spFile( ( BYTE * ) szFileName, NULL ) ? SUCCESS : FAILURE;
 }
 
+static void hb_dbfInitTSD( void * Cargo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfInitTSD(%p)", Cargo));
+
+   ( ( LPDBFDATA ) Cargo )->bTableType = DB_DBF_STD;
+   ( ( LPDBFDATA ) Cargo )->bCryptType = DB_CRYPT_NONE;
+   ( ( LPDBFDATA ) Cargo )->uiDirtyRead = HB_IDXREAD_CLEANMASK;
+}
+
+static void hb_dbfDestroyTSD( void * Cargo )
+{
+   LPDBFDATA pData;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfDestroyTSD(%p)", Cargo));
+
+   pData = ( LPDBFDATA ) Cargo;
+
+   if( pData->szTrigger )
+      hb_xfree( pData->szTrigger );
+   if( pData->szPendingTrigger )
+      hb_xfree( pData->szPendingTrigger );
+   if( pData->szPasswd )
+      hb_xfree( pData->szPasswd );
+   if( pData->szPendingPasswd )
+      hb_xfree( pData->szPendingPasswd );
+}
+
 static ERRCODE hb_dbfInit( LPRDDNODE pRDD )
 {
+   PHB_TSD pTSD;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfInit(%p)", pRDD));
 
-   pRDD->lpvCargo = hb_xgrab( sizeof( DBFDATA ) );
-   memset( pRDD->lpvCargo, 0, sizeof( DBFDATA ) );
-
-   ( ( LPDBFDATA ) pRDD->lpvCargo )->bTableType = DB_DBF_STD;
-   ( ( LPDBFDATA ) pRDD->lpvCargo )->bCryptType = DB_CRYPT_NONE;
-   ( ( LPDBFDATA ) pRDD->lpvCargo )->uiDirtyRead = HB_IDXREAD_CLEANMASK;
+   pTSD = ( PHB_TSD ) hb_xgrab( sizeof( HB_TSD ) );
+   HB_TSD_INIT( pTSD, sizeof( DBFDATA ), hb_dbfInitTSD, hb_dbfDestroyTSD );
+   pRDD->lpvCargo = ( void * ) pTSD;
 
    return SUCCESS;
 }
@@ -5338,17 +5365,7 @@ static ERRCODE hb_dbfExit( LPRDDNODE pRDD )
 
    if( pRDD->lpvCargo )
    {
-      LPDBFDATA pData = ( LPDBFDATA ) pRDD->lpvCargo;
-
-      if( pData->szTrigger )
-         hb_xfree( pData->szTrigger );
-      if( pData->szPendingTrigger )
-         hb_xfree( pData->szPendingTrigger );
-      if( pData->szPasswd )
-         hb_xfree( pData->szPasswd );
-      if( pData->szPendingPasswd )
-         hb_xfree( pData->szPendingPasswd );
-
+      hb_stackReleaseTSD( ( PHB_TSD ) pRDD->lpvCargo );
       hb_xfree( pRDD->lpvCargo );
       pRDD->lpvCargo = NULL;
    }
@@ -5363,7 +5380,7 @@ static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
 
-   pData = ( LPDBFDATA ) pRDD->lpvCargo;
+   pData = ( LPDBFDATA ) hb_stackGetTSD( ( PHB_TSD ) pRDD->lpvCargo );
 
    switch( uiIndex )
    {

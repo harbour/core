@@ -76,12 +76,13 @@
 #include "hbapilng.h"
 #include "hbvm.h"
 #include "hbset.h"
+#include "hbstack.h"
 #include "hbrddcdx.h"
 #include "hbmath.h"
 #include "rddsys.ch"
 #include "hbregex.h"
 
-#define CDXNODE_DATA( p )     ( ( LPDBFDATA ) ( p )->lpvCargo )
+#define CDXNODE_DATA( p )     ( ( LPDBFDATA ) hb_stackGetTSD( ( PHB_TSD ) ( p )->lpvCargo ) )
 #define CDXAREA_DATA( p )     CDXNODE_DATA( SELF_RDDNODE( p ) )
 
 #ifndef HB_CDP_SUPPORT_OFF
@@ -8598,7 +8599,7 @@ static ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
 
-   pData = ( LPDBFDATA ) pRDD->lpvCargo;
+   pData = CDXNODE_DATA( pRDD );
 
    switch( uiIndex )
    {

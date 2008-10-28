@@ -140,6 +140,7 @@
 #include "hbapilng.h"
 #include "hbvm.h"
 #include "hbset.h"
+#include "hbstack.h"
 #include "hbmath.h"
 #include "hbrddntx.h"
 #include "rddsys.ch"
@@ -156,7 +157,7 @@ static RDDFUNCS ntxSuper;
 static USHORT s_uiRddId;
 
 
-#define NTXNODE_DATA( p )     ( ( LPDBFDATA ) ( p )->lpvCargo )
+#define NTXNODE_DATA( p )     ( ( LPDBFDATA ) hb_stackGetTSD( ( PHB_TSD ) ( p )->lpvCargo ) )
 #define NTXAREA_DATA( p )     NTXNODE_DATA( SELF_RDDNODE( p ) )
 
 #define hb_ntxKeyFree(K)      hb_xfree(K)
@@ -6086,6 +6087,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
         szTagName[ NTX_MAX_TAGNAME + 1 ], * szKey, * szFor = NULL;
    LPNTXINDEX pIndex, * pIndexPtr;
    LPTAGINFO pTag = NULL;
+   LPDBFDATA pData;
    ERRCODE errCode;
    ULONG ulRecNo;
    BOOL fCompound, fTagName, fBagName, fProd, fLocked = FALSE,
@@ -6223,6 +6225,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    SELF_GOTO( ( AREAP ) pArea, ulRecNo );
 
+   pData = NTXAREA_DATA( pArea );
    /*
     * abBagName -> cBag, atomBagName -> cTag
     * The following scheme implemented:
@@ -6237,7 +6240,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 #if defined( HB_NTX_NOMULTITAG )
    fCompound = FALSE;
 #else
-   fCompound = fTagName && NTXAREA_DATA( pArea )->fMultiTag;
+   fCompound = fTagName && pData->fMultiTag;
 #endif
    hb_ntxCreateFName( pArea, ( char * ) ( ( fBagName || fCompound ) ?
                       pOrderInfo->abBagName : pOrderInfo->atomBagName ),
@@ -6412,7 +6415,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       pTag = hb_ntxTagNew( pIndex, szTagName, fTagName,
                            szKey, pKeyExp, bType, (USHORT) iLen, (USHORT) iDec,
                            szFor, pForExp,
-                           fAscend, pOrderInfo->fUnique, fCustom, NTXAREA_DATA( pArea )->fSortRecNo );
+                           fAscend, pOrderInfo->fUnique, fCustom, pData->fSortRecNo );
       pTag->Partial = ( pArea->lpdbOrdCondInfo && !pArea->lpdbOrdCondInfo->fAll );
 
       if( ! pIndex->Compound )
@@ -6480,8 +6483,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       *pIndexPtr = pIndex;
    }
    if( pIndex->Production && !pArea->fHasTags &&
-       NTXAREA_DATA( pArea )->fStruct &&
-       ( NTXAREA_DATA( pArea )->fStrictStruct || hb_setGetAutOpen() ) )
+       pData->fStruct && ( pData->fStrictStruct || hb_setGetAutOpen() ) )
    {
       pArea->fHasTags = TRUE;
       if( !pArea->fReadonly && ( pArea->dbfHeader.bHasTags & 0x01 ) == 0 )
@@ -7481,7 +7483,7 @@ static ERRCODE ntxInit( LPRDDNODE pRDD )
    if( errCode == SUCCESS )
       NTXNODE_DATA( pRDD )->fMultiTag = TRUE;
 #endif
-      
+
    return errCode;
 }
 

@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-28 20:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+    + added hb_stackReleaseTSD() function - this function can be called
+      only in HVM cleanup state when all threads except the main one are
+      released
+
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * make RDDINFO settings in BDF* based RDDs thread local
+
+  * harbour/include/hbclass.ch
+    * minor modification
+
 2008-10-28 17:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/dynlibhb.c
     ! added #define INCL_DOSMODULEMGR for OS2 builds

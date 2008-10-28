@@ -281,6 +281,7 @@ extern void       hb_stackIncrease( void );   /* increase the stack size */
 /* thread specific data */
 extern void *     hb_stackGetTSD( PHB_TSD pTSD );
 extern void *     hb_stackTestTSD( PHB_TSD pTSD );
+extern void       hb_stackReleaseTSD( PHB_TSD pTSD );
 
 extern BYTE *     hb_stackDirBuffer( void );
 extern PHB_IOERRORS hb_stackIOErrors( void );

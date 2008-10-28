@@ -319,6 +319,24 @@ void * hb_stackTestTSD( PHB_TSD pTSD )
 #endif
 }
 
+void hb_stackReleaseTSD( PHB_TSD pTSD )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackReleaseTSD(%p)", pTSD));
+
+   if( pTSD->iHandle && pTSD->iHandle <= hb_stack.iTSD &&
+       hb_stack.pTSD[pTSD->iHandle].value )
+   {
+      if( pTSD->pCleanFunc )
+         pTSD->pCleanFunc( hb_stack.pTSD[pTSD->iHandle].value );
+      hb_xfree( hb_stack.pTSD[pTSD->iHandle].value );
+      hb_stack.pTSD[pTSD->iHandle].value = NULL;
+      hb_stack.pTSD[pTSD->iHandle].pTSD = NULL;
+      pTSD->iHandle = 0;
+   }
+}
+
 void hb_stackInit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stackInit()"));
