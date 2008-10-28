@@ -10316,6 +10316,16 @@ HB_EXPORT void hb_xvmPushLongLong( LONGLONG llNumber )
 }
 #endif
 
+HB_EXPORT void hb_xvmPushStringHidden( int iMethod, const char * szText, ULONG ulSize )
+{
+   char * szString;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushStringHidden(%d, %s, %lu)", iMethod, szText, ulSize));
+
+   szString = hb_compDecodeString( iMethod, szText, &ulSize );
+   hb_itemPutCLPtr( hb_stackAllocItem(), szString, ulSize );
+}
+
 HB_EXPORT void hb_xvmLocalName( USHORT uiLocal, char * szLocalName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalName(%hu, %s)", uiLocal, szLocalName));

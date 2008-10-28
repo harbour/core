@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-28 10:24 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbxvm.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/compiler/gencc.c
+    + added finished by mistake support for hidden strings in -gc3 mode
+
 2008-10-28 09:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/guestbk/inifiles.prg
   * contrib/examples/guestbk/testcgi.prg

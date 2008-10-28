@@ -1343,7 +1343,8 @@ static HB_GENC_FUNC( hb_p_pushstrhidden )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushStringHidden( " );
+   fprintf( cargo->yyc, "\thb_xvmPushStringHidden( %d, ",
+            pFunc->pCode[ lPCodePos + 1 ] );
    hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 4 ], usLen );
    fprintf( cargo->yyc, ", %hu );\n", usLen );
 

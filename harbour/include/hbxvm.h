@@ -208,7 +208,7 @@ extern HB_EXPORT BOOL   hb_xvmMacroPopAliased( BYTE bFlags );
 extern HB_EXPORT BOOL   hb_xvmMacroSymbol( void );
 extern HB_EXPORT BOOL   hb_xvmMacroText( void );
 
-extern HB_EXPORT void   hb_xvmPushStringHidden( char * szText, ULONG length );
+extern HB_EXPORT void   hb_xvmPushStringHidden( int iMethod, const char * szText, ULONG ulSize );
 extern HB_EXPORT void   hb_xvmPushDouble( double dNumber, int iWidth, int iDec );
 #ifdef HB_LONG_LONG_OFF
 extern HB_EXPORT void   hb_xvmPushLongLong( double dNumber );
