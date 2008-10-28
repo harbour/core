@@ -18,7 +18,7 @@ goto POST_EXIT
 :DIR_OK
 
 if "%HB_INC_CURL%" == "" set HB_INC_CURL=%HB_DIR_CURL%\include
-set CFLAGS=-I"%HB_INC_CURL%"
+set CFLAGS=-I"%HB_INC_CURL%" %HB_HBCURL_USR_C%
 set _HB_DLL_NAME=libcurl
 if exist "%HB_DIR_CURL%\bin\%_HB_DLL_NAME%.dll" set _HB_DLL_DIR=%HB_DIR_CURL%\bin
 if exist "%HB_DIR_CURL%\%_HB_DLL_NAME%.dll"     set _HB_DLL_DIR=%HB_DIR_CURL%

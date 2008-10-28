@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-28 12:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbcurl/make_b32.bat
+  * contrib/hbcurl/make_vc.bat
+  * contrib/hbcurl/Makefile
+    + Added HB_HBCURL_USR_C envvar to customize C switches 
+      specifically for this contrib.
+
 2008-10-28 11:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * config/w32/gcc.cf
   * config/w32/mingw.cf
