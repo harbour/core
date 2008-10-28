@@ -13,6 +13,7 @@
   * harbour/source/vm/hvm.c
   * harbour/source/compiler/gencc.c
     + added finished by mistake support for hidden strings in -gc3 mode
+      [TOMERGE 1.0]
 
 2008-10-28 09:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/guestbk/inifiles.prg
