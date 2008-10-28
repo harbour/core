@@ -155,12 +155,14 @@
             dangerous than it's useful. It'd vote for 
             a compiler warnings switch for any of it's 
             occurences.
+      [TOMERGE 1.0]
 
   * source/rtl/tbcolumn.prg
   * source/rtl/tget.prg
   * source/rtl/tbrowse.prg
   * contrib/xhb/hbcompat.ch
     ! Fixed '&&' being used instead of '.AND.' in #ifs.
+      [TOMERGE 1.0]
 
   * source/rdd/hbsix/sxini.prg
   * source/rdd/hbsix/sxcompat.prg
