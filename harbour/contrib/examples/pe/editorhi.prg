@@ -11,6 +11,7 @@
 #include "setcurs.ch"
 #include "fileio.ch"
 #include "box.ch"
+#include "common.ch"
 
 
 #define EXPORT
@@ -277,7 +278,7 @@ LOCAL nSize
     IF lSave == NIL
         lSave := .T.
     ENDIF
-    IF VALTYPE(xInput) == "C"
+    IF ISCHARACTER(xInput)
         nHandle := FOPEN( xInput )
         lClose := .T.
     ELSE

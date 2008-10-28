@@ -3,8 +3,7 @@ rem
 rem $Id$
 rem
 
-..\..\..\bin\harbour /n pe       /i..\..\..\include\
-..\..\..\bin\harbour /n editorhi /i..\..\..\include\
+..\..\..\bin\harbour /n /i..\..\..\include\ pe editorhi
 
 echo -O2 -I..\..\..\include -L..\..\..\lib > build.tmp
 echo pe.c >> build.tmp
@@ -27,8 +26,6 @@ bcc32 @build.tmp
 del build.tmp
 
 del *.obj
-
-del pe.c
-del editorhi.c
+del pe.c editorhi.c
 
 pe

@@ -3,9 +3,7 @@ rem
 rem $Id$
 rem
 
-..\..\..\bin\harbour /n guestbk  /i..\..\..\include\
-..\..\..\bin\harbour /n inifiles /i..\..\..\include\
-..\..\..\bin\harbour /n testcgi  /i..\..\..\include\
+..\..\..\bin\harbour /n /i..\..\..\include\ guestbk inifiles testcgi
 
 echo -O2 -I..\..\..\include -L..\..\..\lib > build.tmp
 echo guestbk.c >> build.tmp
@@ -29,8 +27,6 @@ del build.tmp
 
 del *.obj
 
-del guestbk.c
-del inifiles.c
-del testcgi.c
+del guestbk.c inifiles.c testcgi.c
 
 guestbk

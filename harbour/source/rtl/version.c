@@ -96,18 +96,7 @@ HB_FUNC( HB_VERSION )
    case HB_V_FLAG_HARBOUR:   hb_retc_const( hb_verFlagsPRG() ); break;
    case HB_V_FLAG_C:         hb_retc_const( hb_verFlagsC() ); break;
    case HB_V_FLAG_LINKER:    hb_retc_const( hb_verFlagsL() ); break;
-
-   case HB_V_BITWIDTH:
-      #if defined( HB_ARCH_16BIT )
-         hb_retni( 16 );
-      #elif defined( HB_ARCH_32BIT )
-         hb_retni( 32 );
-      #elif defined( HB_ARCH_64BIT )
-         hb_retni( 64 );
-      #else
-         hb_retni( 0 );
-      #endif
-      break;
+   case HB_V_BITWIDTH:       hb_retni( ( int ) sizeof( void * ) ); break;
 
    case HB_V_ENDIANNESS:
       #if defined( HB_LITTLE_ENDIAN )

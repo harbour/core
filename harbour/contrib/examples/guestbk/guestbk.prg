@@ -3,13 +3,13 @@
  */
 
 /*
-   Harbour Project source code
-
-   This file contains source for a script of a Guestbook
-
-   Copyright (C) 1999 Felipe G. Coury <fcoury@creation.com.br>
-   www - http://www.harbour-project.org
-
+ * Harbour Project source code
+ *
+ * This file contains source for a script of a Guestbook
+ *
+ * Copyright (C) 1999 Felipe G. Coury <fcoury@creation.com.br>
+ * www - http://www.harbour-project.org
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)

@@ -37,7 +37,7 @@ FUNCTION ParseString( cString, cDelim, nRet )
 
    LOCAL cBuf, aElem, nPosFim, nSize, i
 
-   nSize := len( cString ) - len( StrTran( cString, cDelim, '' ) ) + 1
+   nSize := len( cString ) - len( StrTran( cString, cDelim, "" ) ) + 1
    aElem := array( nSize )
 
    cBuf := cString

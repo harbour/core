@@ -55,6 +55,10 @@
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
+#ifdef __HARBOUR__
+   #include "hbver.ch"
+#endif
+
 PROCEDURE Main_STR()
 
    /* VAL() */
@@ -530,11 +534,11 @@ PROCEDURE Main_STR()
    /* REPLICATE() */
 
 #ifdef __HARBOUR__
-   #ifdef __ARCH64BIT__
+   IF hb_version( HB_V_BITWIDTH ) >= 64
       TEST_LINE( Replicate("XXX", 9000000000000000000) , "E BASE 1234 String overflow REPLICATE A:2:C:XXX;N:9000000000000000000 F:S" )
-   #else
+   ELSE
       TEST_LINE( Replicate("XXX", 2000000000)    , "E BASE 1234 String overflow REPLICATE A:2:C:XXX;N:2000000000 F:S" )
-   #endif
+   ENDIF
 #else
    TEST_LINE( Replicate("XXX", 30000)         , "E BASE 1234 String overflow REPLICATE A:2:C:XXX;N:30000 F:S" )
 #endif

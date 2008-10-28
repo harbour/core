@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-28 09:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/examples/guestbk/inifiles.prg
+  * contrib/examples/guestbk/testcgi.prg
+  * contrib/examples/guestbk/guestbk.prg
+  * contrib/examples/guestbk/bld_b32.bat
+  * contrib/examples/guestbk/bld_vc.bat
+  * contrib/examples/pe/bld_b32.bat
+  * contrib/examples/pe/bld_vc.bat
+  * contrib/examples/pe/editorhi.prg
+    * Minor updates, optimizations.
+
+  * source/rtl/version.c
+    % Using better method to return HB_V_BITWIDTH.
+
+  * utils/hbtest/rt_str.prg
+    ! Changed to use 'hb_version( HB_V_BITWIDTH ) >= 64' 
+      instead of #ifdef __ARCH64BIT__.
+
 2008-10-28 01:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/Makefile
   * include/hbextern.ch
