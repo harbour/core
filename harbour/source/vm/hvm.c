@@ -10318,6 +10318,7 @@ HB_EXPORT void hb_xvmPushLongLong( LONGLONG llNumber )
 
 HB_EXPORT void hb_xvmPushStringHidden( int iMethod, const char * szText, ULONG ulSize )
 {
+   HB_STACK_TLS_PRELOAD
    char * szString;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushStringHidden(%d, %s, %lu)", iMethod, szText, ulSize));
