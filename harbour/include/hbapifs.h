@@ -208,6 +208,7 @@ extern HB_EXPORT void       hb_fsSetFError  ( USHORT uiError ); /* set FERROR() 
 extern HB_EXPORT BOOL       hb_fsNameExists ( const char * pszFileName ); /* check if a name exists in the filesystem (wildcard chars not accepted). */
 extern HB_EXPORT BOOL       hb_fsFileExists ( const char * pszFileName ); /* check if a file exists (wildcard chars not accepted). */
 extern HB_EXPORT BOOL       hb_fsDirExists  ( const char * pszDirName ); /* check if a directory exists (wildcard chars not accepted). */
+extern HB_EXPORT BOOL       hb_fsCopy       ( const BYTE * pSource, const BYTE * pDest );
 
 #define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )

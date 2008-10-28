@@ -8,6 +8,59 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-28 01:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/Makefile
+  * include/hbextern.ch
+  + include/hbver.ch
+  * source/rtl/version.c
+    + Added HB_VERSION() unified version information 
+      function. This can return these version related data:
+      hb_version( HB_V_HARBOUR )        => <string>
+      hb_version( HB_V_COMPILER )       => <string> 
+      hb_version( HB_V_MAJOR )          => <num> 
+      hb_version( HB_V_MINOR )          => <num> 
+      hb_version( HB_V_REV )            => <num> 
+      hb_version( HB_V_STATUS )         => <string> 
+      hb_version( HB_V_COUNT )          => <num> 
+      hb_version( HB_V_DATE_TIME )      => <string> 
+      hb_version( HB_V_DATE )           => <date> 
+      hb_version( HB_V_TIME )           => <string>
+      hb_version( HB_V_PCODE )          => <num> 
+      hb_version( HB_V_PCODE_STR )      => <string> 
+      hb_version( HB_V_CHANGELOG_LAST ) => <string> 
+      hb_version( HB_V_CHANGELOG_REV )  => <string> 
+      hb_version( HB_V_FLAG_HARBOUR )   => <string> 
+      hb_version( HB_V_FLAG_C )         => <string> 
+      hb_version( HB_V_FLAG_LINKER )    => <string> 
+      hb_version( HB_V_BITWIDTH )       => <num> 
+      hb_version( HB_V_ENDIANNESS )     => <num> 
+      This function makes deprecated following functions:
+      - HB_COMPILER() => hb_version( HB_V_COMPILER )
+      - HB_PCODEVER() => hb_version( HB_V_PCODE_VER_STR )
+      - HB_BUILDDATE() => hb_version( HB_V_DATE_TIME )
+      and macros:
+      - __ARCH16BIT__
+      - __ARCH32BIT__
+      - __ARCH64BIT__
+      - __LITTLE_ENDIAN__
+      - __BIG_ENDIAN__
+      - __PDP_ENDIAN__
+    ; NOTE: If there are no objections, I'd remove the 
+            __ARCH*BIT__ and __*ENDIAN__ predefined macros, 
+            as these can be misleading on some systems.
+    ; TODO: Implement HB_V_DATE and HB_V_TIME.
+    ; TODO: Add HB_MTVM() functionality.
+    ; TODO: Add __PLATFORM__* equivalent.
+    ; TODO: Add HB_OS_UNIX_COMPATIBLE equivalent.
+
+  * include/hbextern.ch
+  * include/hbapifs.h
+  * common.mak
+  * source/rtl/Makefile
+  + source/rtl/fscopy.c
+    + Added C level hb_fsCopy() function.
+    + Added .prg level HB_FCOPY() function.
+
 2008-10-28 00:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * source/vm/cmdarg.c

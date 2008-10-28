@@ -496,6 +496,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\filesys$(OBJEXT)  \
     $(OBJ_DIR)\fkmax$(OBJEXT)    \
     $(OBJ_DIR)\fnsplit$(OBJEXT)  \
+    $(OBJ_DIR)\fscopy$(OBJEXT)   \
     $(OBJ_DIR)\fserror$(OBJEXT)  \
     $(OBJ_DIR)\fssize$(OBJEXT)   \
     $(OBJ_DIR)\fstemp$(OBJEXT)   \
