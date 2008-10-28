@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-28 11:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * config/w32/gcc.cf
+  * config/w32/mingw.cf
+    + Added -march=i486 to default C switches.
+
 2008-10-28 10:43 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     ! added missing HB_STACK_PRELOAD
