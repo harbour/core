@@ -64,6 +64,11 @@
 static int     s_argc = 0;
 static char ** s_argv = NULL;
 
+#if defined( HB_OS_WIN_32 )
+static char    s_szAppName[ MAX_PATH ];
+static TCHAR   s_lpAppName[ MAX_PATH ];
+#endif
+
 #if defined( HB_OS_WIN_32 ) && defined( HB_OS_WIN_32_USED )
 
 HB_EXTERN_BEGIN
@@ -114,6 +119,20 @@ HB_EXPORT void hb_cmdargInit( int argc, char * argv[] )
 
    s_argc = argc;
    s_argv = argv;
+
+#if defined( HB_OS_WIN_32 )
+
+   /* NOTE: Manually setup the executable name in Windows, 
+            because in console apps the name may be truncated 
+            in some cases, and in GUI apps it's not filled 
+            at all. [vszakats] */
+   if( GetModuleFileName( NULL, s_lpAppName, MAX_PATH ) != 0 )
+   {
+      HB_TCHAR_GETFROM( s_szAppName, s_lpAppName, MAX_PATH );
+      s_argv[ 0 ] = s_szAppName;
+   }
+
+#endif
 }
 
 int hb_cmdargARGC( void )
@@ -329,6 +348,32 @@ HB_FUNC( HB_ARGV )
    int argc = hb_parni( 1 );
 
    hb_retc( ( argc >= 0 && argc < s_argc ) ? s_argv[ argc ] : NULL );
+}
+
+HB_FUNC( HB_CMDLINE )
+{
+   char * pszBuffer;
+
+   int nLen;
+   int nPos;
+
+   int argc = hb_cmdargARGC();
+   char** argv = hb_cmdargARGV();
+
+   nLen = 1;
+   for( nPos = 1; nPos < argc; nPos++ )
+      nLen += ( int ) strlen( argv[ nPos ] ) + 1;
+
+   pszBuffer = ( char * ) hb_xgrab( nLen + 1 );
+
+   pszBuffer[ 0 ] = '\0';
+   for( nPos = 1; nPos < argc; nPos++ )
+   {
+      hb_strncat( pszBuffer, argv[ nPos ], nLen );
+      hb_strncat( pszBuffer, " ", nLen );
+   }
+
+   hb_retc_buffer( pszBuffer );
 }
 
 /* Check for command line internal arguments */

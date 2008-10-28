@@ -53,6 +53,7 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
+#include "common.ch"
 
 #include "hbclass.ch"
 

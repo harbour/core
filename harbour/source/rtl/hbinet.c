@@ -66,7 +66,7 @@
 #include "hbvm.h"
 
 /* Compile in Unix mode under Cygwin */
-#ifdef HB_OS_UNIX_COMPATIBLE
+#if defined( HB_OS_UNIX_COMPATIBLE )
    #undef HB_OS_WIN_32
 #endif
 
@@ -113,42 +113,67 @@
 
    typedef struct _HB_SOCKET_STRUCT
    {
-       HB_SOCKET_T com;
-       const char *errorDesc;
-       int errorCode;
-       struct sockaddr_in remote;
-       LONG count;
-       int timeout;
-       int timelimit;
-       PHB_ITEM caPeriodic;
+      HB_SOCKET_T com;
+      char errorDesc_buffer[ 128 ];
+      const char * errorDesc;
+      int errorCode;
+      struct sockaddr_in remote;
+      LONG count;
+      int timeout;
+      int timelimit;
+      PHB_ITEM caPeriodic;
    } HB_SOCKET_STRUCT;
 
    #define HB_PARSOCKET( n )     ( ( HB_SOCKET_STRUCT * ) hb_parptrGC( hb_inetSocketFinalize, n ) )
 
    #define HB_SOCKET_ZERO_ERROR( s )   \
-               do { s->errorCode = 0; s->errorDesc = ""; } while( 0 )
+      do { s->errorCode = 0; s->errorDesc = ""; } while( 0 )
 
    #if defined( HB_OS_WIN_32 )
-       #define HB_SOCKET_SET_ERROR( s )   \
-               do { \
-                  s->errorCode = WSAGetLastError(); \
-                  s->errorDesc = strerror( s->errorCode );\
-                  WSASetLastError( 0 ); \
-               } while( 0 )
-
+      #if defined( _MSC_VER ) && _MSC_VER >= 1400
+         #define HB_SOCKET_SET_ERROR( s )   \
+            do { \
+               s->errorCode = WSAGetLastError(); \
+               strerror_s( s->errorDesc_buffer, sizeof( s->errorDesc_buffer ), s->errorCode ); \
+               s->errorDesc = s->errorDesc_buffer; \
+               WSASetLastError( 0 ); \
+            } while( 0 )
+      #else
+         #define HB_SOCKET_SET_ERROR( s )   \
+            do { \
+               s->errorCode = WSAGetLastError(); \
+               s->errorDesc = strerror( s->errorCode ); \
+               WSASetLastError( 0 ); \
+            } while( 0 )
+      #endif
    #else
-       #define HB_SOCKET_SET_ERROR( s )      \
-               do { s->errorCode = errno; s->errorDesc = strerror( errno ); } while( 0 )
+      #define HB_SOCKET_SET_ERROR( s )      \
+         do { s->errorCode = errno; s->errorDesc = strerror( errno ); } while( 0 )
    #endif
 
-   #define HB_SOCKET_SET_ERROR1( s, code )   \
-               do { s->errorCode = code; s->errorDesc = strerror( code ); } while( 0 )
+   #if defined( _MSC_VER ) && _MSC_VER >= 1400
+      #define HB_SOCKET_SET_ERROR1( s, code )   \
+         do { \
+            s->errorCode = code; \
+            strerror_s( s->errorDesc_buffer, sizeof( s->errorDesc_buffer ), code ); \
+            s->errorDesc = s->errorDesc_buffer; \
+         } while( 0 )
+   #else
+      #define HB_SOCKET_SET_ERROR1( s, code )   \
+         do { \
+            s->errorCode = code; \
+            s->errorDesc = strerror( code ); \
+         } while( 0 )
+   #endif
    #define HB_SOCKET_SET_ERROR2( s, code, desc )   \
-               do { s->errorCode = code; s->errorDesc = desc; } while( 0 )
+      do { \
+         s->errorCode = code; \
+         s->errorDesc = desc; \
+      } while( 0 )
 
    #define HB_SOCKET_INIT( s, p ) \
       do { \
-         s = ( HB_SOCKET_STRUCT *) hb_gcAlloc( sizeof( HB_SOCKET_STRUCT ), hb_inetSocketFinalize );\
+         s = ( HB_SOCKET_STRUCT * ) hb_gcAlloc( sizeof( HB_SOCKET_STRUCT ), hb_inetSocketFinalize );\
          memset( s, '\0', sizeof( HB_SOCKET_STRUCT ) );\
          s->com = ( HB_SOCKET_T ) -1;\
          s->timeout = -1;\
@@ -223,7 +248,7 @@
    #define FD_ISSET( s, f ) ( 0 )
 #endif
 
-#ifdef HB_OS_LINUX
+#if defined( HB_OS_LINUX )
 #include <signal.h>
 /* #define HB_INET_LINUX_INTERRUPT     SIGUSR1+90 */
 #  ifdef HB_INET_LINUX_INTERRUPT
@@ -396,7 +421,7 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
 
 static void hb_socketSetNonBlocking( HB_SOCKET_STRUCT *Socket )
 {
-#ifdef HB_OS_WIN_32
+#if defined( HB_OS_WIN_32 )
    ULONG mode = 1;
    ioctlsocket( Socket->com, FIONBIO, &mode );
 
@@ -415,7 +440,7 @@ static void hb_socketSetNonBlocking( HB_SOCKET_STRUCT *Socket )
 
 static void hb_socketSetBlocking( HB_SOCKET_STRUCT *Socket )
 {
-#ifdef HB_OS_WIN_32
+#if defined( HB_OS_WIN_32 )
    ULONG mode = 0;
    ioctlsocket( Socket->com, FIONBIO, &mode );
 #else

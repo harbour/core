@@ -8,6 +8,37 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-28 00:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+  * source/vm/cmdarg.c
+    + Added HB_CMDLINE() .prg level function to return 
+      the full command line. Currently it does reassemble 
+      it from hb_argc/hb_argv.
+
+  * contrib/rddsql/mysqldd.c
+    ! Fixed MSVC casting errors in C++ mode.
+
+  * include/hbwmain.c
+  * source/vm/cmdarg.c
+    * Moved argv[ 0 ] generation on Windows platform, so 
+      that it now gets properly filled with the full 
+      executable file path for console mode (GTWIN) 
+      apps in all situations (f.e. when run from a 
+      batch file using '%~n1.exe' macro).
+
+  * source/rtl/hbinet.c
+    ! Fixed to use safe strerror() (named strerror_s()) 
+      under MSVS 2005 and upper.
+      Please test.
+
+  * source/hbzlib/gzio.c
+    + Added _CRT_SECURE_NO_DEPRECATE locally to suppress 
+      various MSVC unsafe CRT API usage warnings. Maybe it'd 
+      be better to fix these by using Harbour APIs.
+
+  * utils/hbdoc/gentrf.prg
+    ! Fixed missing "common.ch"
+
 2008-10-27 23:38 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbmysql/tmysql.prg
   * contrib/xhb/hbcompat.ch

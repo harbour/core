@@ -56,8 +56,6 @@
 
 static int    s_argc = 0;
 static char * s_argv[ HB_MAX_ARGS ];
-static char   s_szAppName[ MAX_PATH ];
-static TCHAR  s_lpAppName[ MAX_PATH ];
 
 #if defined( HB_WINCE )
 #  define HB_LPSTR      LPWSTR
@@ -76,9 +74,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    /* HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow)); */
 
-   GetModuleFileName( hInstance, s_lpAppName, MAX_PATH );
-   HB_TCHAR_GETFROM( s_szAppName, s_lpAppName, MAX_PATH );
-   s_argv[ s_argc++ ] = s_szAppName;
+   s_argv[ s_argc++ ] = "";
 
    pArg = NULL;
 

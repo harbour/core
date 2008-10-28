@@ -190,7 +190,7 @@ static ERRCODE mysqlConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 
 static ERRCODE mysqlDisconnect( SQLDDCONNECTION* pConnection )
 {
-   mysql_close( pConnection->hConnection );
+   mysql_close( ( MYSQL * ) pConnection->hConnection );
    return SUCCESS;
 }
 
@@ -206,9 +206,9 @@ static ERRCODE mysqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
       pConnection->iError = (int) mysql_errno( (MYSQL*) pConnection->hConnection );
       szError = mysql_error( (MYSQL*) pConnection->hConnection );
       if ( pConnection->szError )
-         pConnection->szError = hb_xrealloc( pConnection->szError, strlen( szError ) + 1 );
+         pConnection->szError = ( char * ) hb_xrealloc( pConnection->szError, strlen( szError ) + 1 );
       else
-         pConnection->szError = hb_xgrab( strlen( szError ) + 1 );
+         pConnection->szError = ( char * ) hb_xgrab( strlen( szError ) + 1 );
       hb_strncpy( pConnection->szError, szError, strlen( szError ) );
       return FAILURE;
    }
@@ -234,9 +234,9 @@ static ERRCODE mysqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
          pConnection->iError = (int) mysql_errno( (MYSQL*) pConnection->hConnection );
          szError = mysql_error( (MYSQL*) pConnection->hConnection );
          if ( pConnection->szError )
-            pConnection->szError = hb_xrealloc( pConnection->szError, strlen( szError ) + 1 );
+            pConnection->szError = ( char * ) hb_xrealloc( pConnection->szError, strlen( szError ) + 1 );
          else
-            pConnection->szError = hb_xgrab( strlen( szError ) + 1 );
+            pConnection->szError = ( char * ) hb_xgrab( strlen( szError ) + 1 );
          hb_strncpy( pConnection->szError, szError, strlen( szError ) );
          return FAILURE;
       }
@@ -466,9 +466,9 @@ static ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 
       if ( ! ( pArea->bRecordFlags & SQLDD_FLAG_CACHED ) )
       {
-         mysql_row_seek( (MYSQL_RES*) pArea->pResult, pArea->pRecord );
-         pArea->pNatRecord = (void*) mysql_fetch_row( (MYSQL_RES*) pArea->pResult );
-         pArea->pNatLength = (void*) mysql_fetch_lengths( (MYSQL_RES*) pArea->pResult );
+         mysql_row_seek( ( MYSQL_RES * ) pArea->pResult, ( MYSQL_ROW_OFFSET ) pArea->pRecord );
+         pArea->pNatRecord = ( void * ) mysql_fetch_row( ( MYSQL_RES * ) pArea->pResult );
+         pArea->pNatLength = ( void * ) mysql_fetch_lengths( ( MYSQL_RES * ) pArea->pResult );
       }
 
       pArea->fPositioned = TRUE;
