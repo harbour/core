@@ -174,7 +174,7 @@ typedef struct
    HB_PRIVATE_STACK privates; /* private variables stack */
    HB_SET_STRUCT set;
    int        iKeyPoll;       /* counter for GT/keyboard polling */
-   int        fDebugRequest;  /* request debugger activation */
+   BOOL       fDebugRequest;  /* request debugger activation */
    void *     pDebugInfo;     /* internal debugger structure */
 #if defined( HB_MT_VM )
    int        iUnlocked;      /* counter for nested hb_vmUnlock() calls */
