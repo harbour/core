@@ -56,6 +56,7 @@
  */
 
 #define HB_OS_WIN_32_USED
+#define INCL_DOSMODULEMGR
 
 #include "hbvmopt.h"
 #include "hbapi.h"
