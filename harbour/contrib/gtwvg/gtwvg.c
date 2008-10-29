@@ -251,7 +251,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 {
    PHB_GTWVT pWVT;
    OSVERSIONINFO osvi;
-hb_ToOutDebug( "hb_gt_wvt_New" );
+
    osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
    GetVersionEx( &osvi );
 
@@ -1877,7 +1877,7 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, int iCmdShow )
 {
    HWND     hWnd;
    LPTSTR   szAppName;
-hb_ToOutDebug( "hb_gt_wvt_CreateWindow" );
+
    /* InitCommonControls(); */
 
    szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
@@ -1920,7 +1920,6 @@ hb_ToOutDebug( "hb_gt_wvt_CreateWindow" );
 
 static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 {
-hb_ToOutDebug( "hb_gt_wvt_CreateConsoleWindow" );
    if( !pWVT->hWnd )
    {
       pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT->hInstance, pWVT->iCmdShow );
@@ -1974,7 +1973,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    PHB_GTWVT pWVT;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
-hb_ToOutDebug( "hb_gt_wvt_Init" );
+
    if( ! hb_winmainArgGet( &hInstance, NULL, &iCmdShow ) )
    {
       hb_errInternal( 10001, "It's not a GUI program", NULL, NULL );
@@ -2810,7 +2809,6 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                break;
             }
             case HB_GTS_SHOWWINDOW:
-hb_ToOutDebug( "info- HB_GTS_SHOWWINDOW hwnd=%i", pWVT->hWnd );
                if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
                   ShowWindow( pWVT->hWnd, hb_itemGetNI( pInfo->pNewVal2 ) );
                break;
@@ -3336,7 +3334,7 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
    LOGBRUSH    lb;
    HINSTANCE   h;
    int         iIndex;
-hb_ToOutDebug( "hb_wvt_gtCreateObjects" );
+
    pWVT->bResizing          = FALSE;
 
    pWVT->penWhite           = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 255,255,255 ) );
@@ -3509,7 +3507,6 @@ static void hb_wvt_gtExitGui( PHB_GTWVT pWVT )
 
 static void hb_wvt_gtInitGui( PHB_GTWVT pWVT )
 {
-hb_ToOutDebug( "hb_wvt_gtInitGui" );
    pWVT->iGuiWidth  = pWVT->COLS * pWVT->PTEXTSIZE.x;
    pWVT->iGuiHeight = pWVT->ROWS * pWVT->PTEXTSIZE.y;
 
