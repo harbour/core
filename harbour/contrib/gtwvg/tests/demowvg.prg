@@ -25,9 +25,10 @@
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 
-#include    "inkey.ch"
-#include   "common.ch"
-#include   "wvtwin.ch"
+#include      "inkey.ch"
+#include     "common.ch"
+#include     "wvtwin.ch"
+#include   "hbgtinfo.ch"
 
 REQUEST DbfCdx
 
@@ -143,25 +144,21 @@ PROCEDURE Main( cDSN )
    LOCAL oMenu
    LOCAL nConxn
 
-   WVT_Core()
-   WVT_Utils()
-
    SET DATE BRITISH
-
+hb_ToOutDebug( "1" )
    SET( _SET_EVENTMASK, INKEY_ALL )
 
    Wvt_SetGui( .t. )
    WvtSetKeys( .t. )
    Popups( 1 )
-
    Wvt_SetFont( "Courier New", 18, 0, 0 )
-
    Wvt_SetMouseMove( .t. )
+   CLS
    Wvt_ShowWindow( SW_RESTORE )
 
    hPopup  := Wvt_SetPopupMenu()
    oMenu   := CreateMainMenu()
-
+hb_ToOutDebug( "2" )
    //  Force mouse pointer right below the xHarbour label
    //
    Wvt_SetMousePos( 2,40 )
@@ -271,9 +268,9 @@ PROCEDURE Main( cDSN )
    @ 15, nColGet GET cAdd2
    @ 17, nColGet GET cAdd3
    @ 17, 61      GET nSlry PICTURE "@Z 9999999.99"
-
+hb_ToOutDebug( "3" )
    READ
-
+hb_ToOutDebug( "4" )
    //  Restore Environment
    //
    WvtSetBlocks( aLastPaint )
@@ -297,7 +294,7 @@ PROCEDURE WvtNextGets()
 
    #ifdef __MW__
    Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), Wvt_setFont( 'Terminal',20 ), ;
-                        Wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
+                        hb_clear(), Wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
    #else
       WvtNextGets_X()
    #endif
@@ -628,10 +625,19 @@ FUNCTION VouChoice( aChoices )
 
    RETURN nChoice
 //-------------------------------------------------------------------//
+FUNCTION Hb_Clear()
+   CLS
+   RETURN .f.
+//----------------------------------------------------------------------//
 FUNCTION WvtMyBrowse()
 
    #ifdef __MW__
-      Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), SetMode( 35,70 ), Wvt_ShowWindow( SW_RESTORE ), WvtMyBrowse_X() } )
+   Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), ;
+                        SetMode( 35,70 ),     ;
+                        hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS ),;
+                        hb_clear(),           ;
+                        Wvt_ShowWindow( SW_RESTORE ), ;
+                        WvtMyBrowse_X() } )
    #else
       WvtMyBrowse_X()
    #endif
@@ -707,22 +713,34 @@ FUNCTION WvtMyBrowse_X()
 
    aAdd( aBlocks, {|| Wvt_SetIcon( "dia_excl.ico" ) } )
    aAdd( aBlocks, {|| Wvt_SetTitle( "WVT Gui TBrowse()" ) } )
-   aAdd( aBlocks, {|| Wvt_DrawBoxRaised( nTop, nLeft, nBottom, nRight ) } )
-   aAdd( aBlocks, {|| Wvt_DrawBoxRecessed( nTop+3, nLeft+2, nBottom-1, nRight-2 ) } )
+   aAdd( aBlocks, {|| Wvt_DrawBoxRaised( oBrowse:nTop-3, oBrowse:nLeft-2, oBrowse:nBottom+1, oBrowse:nRight+2 ) } )
+   aAdd( aBlocks, {|| Wvt_DrawBoxRecessed( oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
    aAdd( aBlocks, {|| Wvt_DrawGridHorz( oBrowse:nTop+3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
    aAdd( aBlocks, {|| Wvt_DrawGridVert( oBrowse:nTop, oBrowse:nBottom, oBrowse:aColumnsSep, len( oBrowse:aColumnsSep ) ) } )
 
    aLastPaint := WvtSetBlocks( aBlocks )
 
    DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
-   DispOutAt( nTop + 1, nleft, padc( CurDrive()+":\"+CurDir()+"\"+"test.dbf", nRight - nLeft + 1 ), "W+/W" )
+   DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( CurDrive()+":\"+CurDir()+"\"+"test.dbf", oBrowse:nRight-oBrowse:nLeft+1 ), "W+/W" )
 
    While !lEnd
       oBrowse:ForceStable()
 
       nKey := InKey( 0 )
 
-      BrwHandleKey( oBrowse, nKey, @lEnd )
+      if BrwHandleKey( oBrowse, nKey, @lEnd )
+
+      else
+         if nKey == HB_K_RESIZE
+            oBrowse:nBottom := maxrow() - 2
+            oBrowse:nRight  := maxcol() - 5
+
+            DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
+            DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( CurDrive()+":\"+CurDir()+"\"+"test.dbf", oBrowse:nRight - oBrowse:nLeft + 1 ), "W+/W" )
+
+            oBrowse:configure()
+         endif
+      endif
 
       if nKey == K_F2
          nIndex := IndexOrd()

@@ -239,6 +239,7 @@ typedef struct
    int      iHandle;                      /* window number */
 
    HINSTANCE hInstance;
+   int       iCmdShow;
 
    USHORT   ROWS;                         /* number of displayable rows in window */
    USHORT   COLS;                         /* number of displayable columns in window */
@@ -268,6 +269,7 @@ typedef struct
    HFONT    hFont;                        /* current font handle */
 
    HWND     hWnd;                         /* the window handle */
+   BOOL     fInit;                        /* logical variable indicating that window should be open */
 
    PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
@@ -291,6 +293,8 @@ typedef struct
    BOOL     bSelectCopy;
    char *   pszSelectCopy;
    BOOL     bClosable;
+
+   int      ResizeMode;                   /* Sets the resizing mode either to FONT or ROWS */
 
    //          To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed>            //
 
