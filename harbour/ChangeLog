@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-29 18:33 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+    + added PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT )
+
 2008-10-29 17:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompdf.h
   * harbour/include/hbexprb.c

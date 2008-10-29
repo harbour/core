@@ -360,6 +360,7 @@ typedef struct _HB_GT_BASE
 
 extern PHB_GT hb_gt_Base( void );
 extern void hb_gt_BaseFree( PHB_GT pGT );
+extern PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
 
 #define HB_GTLOCAL(g)   (g)->pGTData[*HB_GTID_PTR]
 
