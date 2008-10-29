@@ -891,6 +891,7 @@ HB_EXPR_PTR hb_compExprReduceNE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                 pRight->ExprType == HB_ET_STRING ||
                 pRight->ExprType == HB_ET_CODEBLOCK ||
                 pRight->ExprType == HB_ET_ARRAY ||
+                pRight->ExprType == HB_ET_HASH ||
                 pRight->ExprType == HB_ET_FUNREF ) ) ||
             ( pRight->ExprType == HB_ET_NIL &&
               ( pLeft->ExprType == HB_ET_NUMERIC ||
@@ -899,6 +900,7 @@ HB_EXPR_PTR hb_compExprReduceNE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                 pLeft->ExprType == HB_ET_STRING ||
                 pLeft->ExprType == HB_ET_CODEBLOCK ||
                 pLeft->ExprType == HB_ET_ARRAY ||
+                pLeft->ExprType == HB_ET_HASH ||
                 pLeft->ExprType == HB_ET_FUNREF ) ) )
    {
       HB_COMP_EXPR_FREE( pLeft );
@@ -1260,6 +1262,7 @@ HB_EXPR_PTR hb_compExprReduceEQ( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                 pRight->ExprType == HB_ET_STRING ||
                 pRight->ExprType == HB_ET_CODEBLOCK ||
                 pRight->ExprType == HB_ET_ARRAY ||
+                pRight->ExprType == HB_ET_HASH ||
                 pRight->ExprType == HB_ET_FUNREF ) ) ||
             ( pRight->ExprType == HB_ET_NIL &&
               ( pLeft->ExprType == HB_ET_NUMERIC ||
@@ -1268,6 +1271,7 @@ HB_EXPR_PTR hb_compExprReduceEQ( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                 pLeft->ExprType == HB_ET_STRING ||
                 pLeft->ExprType == HB_ET_CODEBLOCK ||
                 pLeft->ExprType == HB_ET_ARRAY ||
+                pLeft->ExprType == HB_ET_HASH ||
                 pLeft->ExprType == HB_ET_FUNREF ) ) )
    {
       HB_COMP_EXPR_FREE( pLeft );
@@ -1488,6 +1492,7 @@ HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             pExpr->ExprType == HB_ET_STRING ||
             pExpr->ExprType == HB_ET_CODEBLOCK ||
             pExpr->ExprType == HB_ET_ARRAY ||
+            pExpr->ExprType == HB_ET_HASH ||
             pExpr->ExprType == HB_ET_VARREF ||
             pExpr->ExprType == HB_ET_REFERENCE ||
             pExpr->ExprType == HB_ET_FUNREF )

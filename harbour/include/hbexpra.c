@@ -543,16 +543,23 @@ HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR pArray, HB_EXPR_PTR pIndex, HB_CO
 /* ************************************************************************* */
 
 #ifndef HB_MACRO_SUPPORT
-static void hb_compExprCheckStaticInitializers( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightExpr, HB_COMP_DECL )
+static void hb_compExprCheckStaticInitializer( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightExpr, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pElem = pRightExpr->value.asList.pExprList;
-   HB_EXPR_PTR pNext;
-   HB_EXPR_PTR * pPrev;
-
-   pPrev = &pRightExpr->value.asList.pExprList;
-   while( pElem )
+   if( pRightExpr->ExprType > HB_ET_FUNREF ||
+       pRightExpr->ExprType == HB_ET_SELF )
    {
-      pNext = pElem->pNext; /* store next expression in case the current will be reduced */
+      /* Illegal initializer for static variable (not a constant value)
+       */
+      hb_compErrorStatic( HB_COMP_PARAM, pLeftExpr->value.asSymbol, pRightExpr );
+   }
+}
+
+static void hb_compExprCheckStaticListInitializers( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightExpr, HB_COMP_DECL )
+{
+   HB_EXPR_PTR * pExpr = &pRightExpr->value.asList.pExprList;
+
+   while( *pExpr )
+   {
       if( !HB_SUPPORT_HARBOUR )
       {
          /* When -kc switch is used expression list is not stripped
@@ -562,14 +569,21 @@ static void hb_compExprCheckStaticInitializers( HB_EXPR_PTR pLeftExpr, HB_EXPR_P
           *       new one - this will break the linked list of expressions.
           *       (classical case of replacing an item in a linked list)
           */
-         pElem = hb_compExprListStrip( pElem, HB_COMP_PARAM );
-         *pPrev = pElem;   /* store a new expression into the previous one */
-         pElem->pNext = pNext;  /* restore the link to next expression */
-         pPrev  = &pElem->pNext;
+         HB_EXPR_PTR pNext = (*pExpr)->pNext;   /* store next expression in case the current will be reduced */
+         *pExpr = hb_compExprListStrip( *pExpr, HB_COMP_PARAM );
+         (*pExpr)->pNext = pNext;               /* restore the link to next expression */
       }
-      if( pElem->ExprType > HB_ET_FUNREF )
-         hb_compErrorStatic( HB_COMP_PARAM, pLeftExpr->value.asSymbol, pElem );
-      pElem  = pNext;
+
+      if( (*pExpr)->ExprType == HB_ET_ARRAY ||
+          (*pExpr)->ExprType == HB_ET_HASH )
+      {
+         hb_compExprCheckStaticListInitializers( pLeftExpr, *pExpr, HB_COMP_PARAM );
+      }
+      else
+      {
+         hb_compExprCheckStaticInitializer( pLeftExpr, *pExpr, HB_COMP_PARAM );
+      }
+      pExpr = &(*pExpr)->pNext;
    }
 }
 
@@ -605,7 +619,7 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
         * was used - we have to check if all array dimensions are
         * constant values
         */
-      hb_compExprCheckStaticInitializers( pLeftExpr, pRightExpr, HB_COMP_PARAM );
+      hb_compExprCheckStaticListInitializers( pLeftExpr, pRightExpr, HB_COMP_PARAM );
    }
    else if( pRightExpr->ExprType == HB_ET_ARRAY )
    {
@@ -613,13 +627,19 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
        * Scan an array for illegal initializers.
        * An array item have to be a const value too.
        */
-      hb_compExprCheckStaticInitializers( pLeftExpr, pRightExpr, HB_COMP_PARAM );
+      hb_compExprCheckStaticListInitializers( pLeftExpr, pRightExpr, HB_COMP_PARAM );
    }
-   else if( pRightExpr->ExprType > HB_ET_FUNREF )
+   else if( pRightExpr->ExprType == HB_ET_HASH )
    {
-      /* Illegal initializer for static variable (not a constant value)
+      /* { idx1=>var1, idx2=>var2, idxN=>varN } was used as initializer
+       * Scan a hash array for illegal initializers.
+       * A hash item have to be a const value too.
        */
-      hb_compErrorStatic( HB_COMP_PARAM, pLeftExpr->value.asSymbol, pRightExpr );
+      hb_compExprCheckStaticListInitializers( pLeftExpr, pRightExpr, HB_COMP_PARAM );
+   }
+   else
+   {
+      hb_compExprCheckStaticInitializer( pLeftExpr, pRightExpr, HB_COMP_PARAM );
    }
 
    return pExpr;

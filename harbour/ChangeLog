@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-29 17:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+    ! change the expressions precedence - references to variables were
+      wrongly marked as simple expressions
+
+  * harbour/include/hbexpra.c
+    ! fixed protection against wrong static initializers. Now code like:
+         static s_var := { { func(), M->var } }
+      or:
+         static s_var := { "A" => { func() => M->var } }
+      or:
+         static s_var := { @M->var }
+      or:
+         static s_var := QSelf()
+      is not accepted by compiler and error is generated at compile
+      time instead of crashing at HVM startup when static variables
+      are initialized
+
 2008-10-29 08:10 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/tests/demowvg.prg
     ! Cleaned debug call left by mistake.

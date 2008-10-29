@@ -70,7 +70,7 @@ static const char * s_OperTable[ HB_EXPR_COUNT ] = {
    "SELF",
    "Array",
    "Hash",
-   "@",
+   "@func()",
    "@",
    "@",
    "IIF",
@@ -134,9 +134,9 @@ static const BYTE s_PrecedTable[ HB_EXPR_COUNT ] = {
    HB_ET_NIL,                 /*   HB_ET_SELF,        */
    HB_ET_NIL,                 /*   HB_ET_ARRAY,       */
    HB_ET_NIL,                 /*   HB_ET_HASH,        */
+   HB_ET_NIL,                 /*   HB_ET_FUNREF,      */
    HB_ET_NIL,                 /*   HB_ET_VARREF,      */
    HB_ET_NIL,                 /*   HB_ET_REFERENCE,   */
-   HB_ET_NIL,                 /*   HB_ET_FUNREF,      */
    HB_ET_NIL,                 /*   HB_ET_IIF,         */
    HB_ET_NIL,                 /*   HB_ET_LIST,        */
    HB_ET_NIL,                 /*   HB_ET_ARGLIST,     */
