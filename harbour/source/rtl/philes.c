@@ -338,7 +338,7 @@ HB_FUNC( HB_OSPATHSEPARATOR )
 
 HB_FUNC( HB_OSPATHLISTSEPARATOR )
 {
-   static const char s_ret[ 2 ] = { HB_OS_PATH_LIST_SEP_CHR, 0 };
+   static const char s_ret[ 2 ] = { HB_OS_PATH_LIST_SEP_CHR, '\0' };
    hb_retc_const( s_ret );
 }
 
@@ -350,7 +350,7 @@ HB_FUNC( HB_OSPATHDELIMITERS )
 HB_FUNC( HB_OSDRIVESEPARATOR )
 {
 #ifdef HB_OS_HAS_DRIVE_LETTER
-   static const char s_ret[ 2 ] = { HB_OS_DRIVE_DELIM_CHR, 0 };
+   static const char s_ret[ 2 ] = { HB_OS_DRIVE_DELIM_CHR, '\0' };
    hb_retc_const( s_ret );
 #else
    hb_retc_null();

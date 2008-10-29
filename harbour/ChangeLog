@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-30 00:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+    + Clarification to previous entry.
+
+  * source/common/hbgete.c
+  * source/common/hbfsapi.c
+    ! Blind fix for OS/2 compiler warnings. David, please test.
+
+  * source/rtl/philes.c
+    * Minor (0 -> '\0').
+
+  * source/compiler/hbusage.c
+    ! Fixed old typo in help text.
+    ; BTW: What is missing for gettext support?
+
 2008-10-29 12:46 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
     ! Cleaned debug call left by mistake.
@@ -413,7 +428,7 @@
 
 2008-10-27 15:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/compiler/gencc.c
-    ! Fixed -gc3 double number handling problem.
+    ! Fixed -gc3 double number handling problem (on non-Intel CPUs).
       Many thanks to Przemek for the fix.
       [TOMERGE 1.0]
 

@@ -85,15 +85,13 @@ char * hb_getenv( const char * szName )
 
    {
    #ifdef __GNUC__
-      PSZ EnvValue = "";
+      PSZ EnvValue = ( PSZ ) "";
    #else
       PCSZ EnvValue = "";
    #endif
 
-      if( DosScanEnv( szName, &EnvValue ) == NO_ERROR )
-      {
-         pszBuffer = hb_strdup( EnvValue );
-      }
+      if( DosScanEnv( ( PSZ ) szName, &EnvValue ) == NO_ERROR )
+         pszBuffer = hb_strdup( ( char * ) EnvValue );
    }
 
 #else
@@ -102,9 +100,7 @@ char * hb_getenv( const char * szName )
       char * pszTemp = getenv( szName );
 
       if( pszTemp != NULL )
-      {
          pszBuffer = hb_strdup( pszTemp );
-      }
    }
 
 #endif
@@ -124,16 +120,16 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 #elif defined(HB_OS_OS2)
    {
       #ifdef __GNUC__
-         PSZ EnvValue = "";
+         PSZ EnvValue = ( PSZ ) "";
       #else
          PCSZ EnvValue = "";
       #endif
 
-      if( DosScanEnv( szName, &EnvValue ) == NO_ERROR )
+      if( DosScanEnv( ( PSZ ) szName, &EnvValue ) == NO_ERROR )
       {
          bRetVal = TRUE;
          if( szBuffer != NULL && nSize != 0 )
-            hb_strncpy( szBuffer, EnvValue, nSize - 1 );
+            hb_strncpy( szBuffer, ( char * ) EnvValue, nSize - 1 );
       }
       else
          bRetVal = FALSE;
