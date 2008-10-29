@@ -145,7 +145,7 @@ PROCEDURE Main( cDSN )
    LOCAL nConxn
 
    SET DATE BRITISH
-hb_ToOutDebug( "1" )
+
    SET( _SET_EVENTMASK, INKEY_ALL )
 
    Wvt_SetGui( .t. )
@@ -158,7 +158,7 @@ hb_ToOutDebug( "1" )
 
    hPopup  := Wvt_SetPopupMenu()
    oMenu   := CreateMainMenu()
-hb_ToOutDebug( "2" )
+
    //  Force mouse pointer right below the xHarbour label
    //
    Wvt_SetMousePos( 2,40 )
@@ -268,9 +268,9 @@ hb_ToOutDebug( "2" )
    @ 15, nColGet GET cAdd2
    @ 17, nColGet GET cAdd3
    @ 17, 61      GET nSlry PICTURE "@Z 9999999.99"
-hb_ToOutDebug( "3" )
+
    READ
-hb_ToOutDebug( "4" )
+
    //  Restore Environment
    //
    WvtSetBlocks( aLastPaint )
@@ -732,7 +732,7 @@ FUNCTION WvtMyBrowse_X()
 
       else
          if nKey == HB_K_RESIZE
-            oBrowse:nBottom := maxrow() - 2
+            oBrowse:nBottom := maxrow() - 3
             oBrowse:nRight  := maxcol() - 5
 
             DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
