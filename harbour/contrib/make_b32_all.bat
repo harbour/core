@@ -39,6 +39,9 @@ rem *******************************************************
 rem Compiling contrib dirs ...
 rem *******************************************************
 
+set _HB_DIRS=%HB_CONTRIBLIBS%
+if not "%_HB_DIRS%" == "" goto :OVERRIDE
+
 set _HB_DIRS=gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
@@ -60,7 +63,12 @@ if not "%HB_INC_MYSQL%%HB_DIR_MYSQL%"         == "" set _HB_DIRS=%_HB_DIRS% hbmy
 if not "%HB_INC_PGSQL%%HB_DIR_PGSQL%"         == "" set _HB_DIRS=%_HB_DIRS% hbpgsql
 if not "%HB_INC_ADS%%HB_DIR_ADS%"             == "" set _HB_DIRS=%_HB_DIRS% rddads
 if not "%HB_INC_MYSQL%%HB_DIR_MYSQL%"         == "" set _HB_DIRS=%_HB_DIRS% rddsql
+:OVERRIDE
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
+
+if not "%HB_CONTRIB_ADDONS%" == "" goto :NO_ADDONS
+for %%n in ( %HB_CONTRIB_ADDONS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
+:NO_ADDONS
 
 rem *******************************************************
 rem Cleaning ...

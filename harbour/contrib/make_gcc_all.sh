@@ -38,15 +38,19 @@ fi
 
 #**************************************************************
 
-_HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit3 hbtpathy hbvpdf hbziparc xhb"
+if [ "$HB_CONTRIBLIBS" != "" ]; then
+   _HB_DIRS="${HB_CONTRIBLIBS}"
+else
+   _HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit3 hbtpathy hbvpdf hbziparc xhb"
 
-case "$HB_ARCHITECTURE" in
-   w32|cyg|os2)
-        _HB_DIRS_ADD="gtwvg hbole hbodbc hbwin hbwhat rddado"
-        ;;
-   *)
-        _HB_DIRS_ADD=;;
-esac
+   case "$HB_ARCHITECTURE" in
+      w32|cyg|os2)
+           _HB_DIRS_ADD="gtwvg hbole hbodbc hbwin hbwhat rddado"
+           ;;
+      *)
+           _HB_DIRS_ADD=;;
+   esac
+fi
 
 # Revert Cygwin architecture to w32.
 # After all it's under Windows OS.
@@ -67,7 +71,7 @@ if [ "${HB_INC_PGSQL}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbpgsql" ; fi;
 if [ "${HB_INC_ADS}"       != "" ]; then _HB_DIRS="${_HB_DIRS} rddads"  ; fi;
 if [ "${HB_INC_MYSQL}"     != "" ]; then _HB_DIRS="${_HB_DIRS} rddsql"  ; fi;
 
-_HB_DIRS="${_HB_DIRS} ${_HB_DIRS_ADD}"
+_HB_DIRS="${_HB_DIRS} ${_HB_DIRS_ADD} ${HB_CONTRIB_ADDONS}"
 
 #**************************************************************
 

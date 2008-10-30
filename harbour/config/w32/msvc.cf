@@ -16,7 +16,7 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -nologo -W4 -Gs -Zi
 
 ifeq ($(HB_VISUALC_VER_PRE80),)
-CFLAGS += -Ot2b1 -EHs-c- -D_CRT_SECURE_NO_DEPRECATE
+CFLAGS += -Ot2b1 -EHs-c-
 else
 CFLAGS += -Ogt2yb1p -GX- -G6 -YX
 endif
