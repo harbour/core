@@ -74,6 +74,7 @@
 #define HB_GTS_SHOWWINDOW                10
 #define HB_GTS_UPDATEWINDOW              11
 #define HB_GTS_SYSTRAYICON               12
+#define HB_GTS_FACTOR                    13
 
 /* Window States */
 #define WNDS_SETONTOP                     1

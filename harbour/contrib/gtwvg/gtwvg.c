@@ -2917,6 +2917,24 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                }
                break;
             }
+
+            case HB_GTS_FACTOR:
+            {
+               if ( pWVT->pfnLayered )
+               {
+                  BOOL bGF;
+
+                  SetWindowLong( pWVT->hWnd,
+                                 GWL_EXSTYLE,
+                                 GetWindowLong( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
+
+                  pWVT->pfnLayered( pWVT->hWnd,
+                                    RGB( 255,255,255 ),
+                                    hb_itemGetNI( pInfo->pNewVal2 ),
+                                    LWA_COLORKEY|LWA_ALPHA );
+               }
+               break;
+            }
          }
          break;
       }
@@ -3384,6 +3402,7 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
    pWVT->colStart           = 0;
    pWVT->colStop            = 0;
    pWVT->bToolTipActive     = FALSE;
+   pWVT->iFactor            = 255;
 
    h = LoadLibraryEx( TEXT( "msimg32.dll" ), NULL, 0 );
    if( h )
@@ -3397,6 +3416,21 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
       if( pWVT->pfnGF )
       {
          pWVT->hMSImg32 = h;
+      }
+   }
+
+   h = LoadLibraryEx( TEXT( "user32.dll" ), NULL, 0 );
+   if( h )
+   {
+      /* workaround for wrong declarations in some old C compilers */
+#if defined( UNICODE ) && defined( GetProcAddress )
+      pWVT->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddressW( h, TEXT( "SetLayeredWindowAttributes" ) );
+#else
+      pWVT->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );
+#endif
+      if( pWVT->pfnLayered )
+      {
+         pWVT->hUser32 = h;
       }
    }
 

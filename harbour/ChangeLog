@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-29 19:06 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/gtwvg/gtwvg.h
+  * harbour/contrib/gtwvg/hbgtwvg.ch
+    + Added the possibility to have transparency on Window. Work-in-progress
+    ! Rearranged .H structure for future seggregations into 
+      smaller structures
+  
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    + Added functionality to make a window transparent.
+      ; <Traditional><Browser> : Press F11 and F12 to increase/decrese transparency.
+
 2008-10-30 00:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
     + Clarification to previous entry.

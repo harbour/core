@@ -29,6 +29,7 @@
 #include     "common.ch"
 #include     "wvtwin.ch"
 #include   "hbgtinfo.ch"
+#include    "hbgtwvg.ch"
 
 REQUEST DbfCdx
 
@@ -656,13 +657,14 @@ FUNCTION WvtMyBrowse_X()
    LOCAL nCursor := setCursor( 0 )
    LOCAL nRow    := row()
    LOCAL nCol    := col()
-   LOCAL cColor  := SetColor( "N/W*,N/GR*,,,N/W*" )
+   LOCAL cColor  := SetColor( "N/BG,N/GR*,,,N/W*" )//SetColor( "N/W*,N/GR*,,,N/W*" )
    LOCAL cScr    := SaveScreen( 0,0,maxrow(),maxcol() )
    LOCAL aObjects:= WvtSetObjects( {} )
    LOCAL hPopup  := Wvt_SetPopupMenu()
    LOCAL stru_:={}, cDbfFile, cSqlFile, cFileIndex, cFileDbf, cRDD, nIndex
 
    STATIC nStyle := 0
+   THREAD STATIC nFactor := 200
 
    cRDD       := "DBFCDX"
    cFileDbf   := "test.dbf"
@@ -687,7 +689,6 @@ FUNCTION WvtMyBrowse_X()
 
    Popups( 2 )
 
-   //oBrowse := TBrowseNew( nTop + 3, nLeft + 2, nBottom - 1, nRight - 2 )
    oBrowse := TBrowseWVG():New( nTop + 3, nLeft + 2, nBottom - 1, nRight - 2 )
 
    oBrowse:ColSep        := "  "
@@ -726,23 +727,29 @@ FUNCTION WvtMyBrowse_X()
    While !lEnd
       oBrowse:ForceStable()
 
-      nKey := InKey( 0 )
+      nKey := InKey( 0, INKEY_ALL )
 
-      if BrwHandleKey( oBrowse, nKey, @lEnd )
+      do case
+      case nKey == K_F12
+         nFactor -= 10
+         hb_gtInfo( HB_GTI_SPEC, HB_GTS_FACTOR, nFactor )
 
-      else
-         if nKey == HB_K_RESIZE
-            oBrowse:nBottom := maxrow() - 3
-            oBrowse:nRight  := maxcol() - 5
+      case nKey == K_F11
+         nFactor += 10
+         hb_gtInfo( HB_GTI_SPEC, HB_GTS_FACTOR, nFactor )
 
-            DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
-            DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( CurDrive()+":\"+CurDir()+"\"+"test.dbf", oBrowse:nRight - oBrowse:nLeft + 1 ), "W+/W" )
+      case BrwHandleKey( oBrowse, nKey, @lEnd )
 
-            oBrowse:configure()
-         endif
-      endif
+      case nKey == HB_K_RESIZE
+         oBrowse:nBottom := maxrow() - 3
+         oBrowse:nRight  := maxcol() - 5
 
-      if nKey == K_F2
+         DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
+         DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( CurDrive()+":\"+CurDir()+"\"+"test.dbf", oBrowse:nRight - oBrowse:nLeft + 1 ), "W+/W" )
+
+         oBrowse:configure()
+
+      case nKey == K_F2
          nIndex := IndexOrd()
          nIndex++
          if nIndex > 3
@@ -750,7 +757,8 @@ FUNCTION WvtMyBrowse_X()
          endif
          Set Order To ( nIndex )
          oBrowse:RefreshAll()
-      endif
+
+      endcase
    end
 
    Wvt_SetPen( 0 )
@@ -1586,6 +1594,8 @@ STATIC FUNCTION MyDialogOne()
       oWvtBrw1 := CfgMyBrowse( { 1,2,3,4,5,6 }, cUseAlias1, { 43,4,51,120 }, "test.dbf - 1,2,3,4,5,6",oDlg, "N/BG*,N/W*",1002 )
       oDlg:AddObject( oWvtBrw1 )
    endif
+
+   Setkey( K_F12, {|| hb_gtInfo( HB_GTI_SPEC, HB_GTS_FACTOR, 200 ) } )
 
    oDlg:Create()
    oDlg:Execute()
