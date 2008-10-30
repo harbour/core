@@ -92,6 +92,25 @@ struct _HB_SYMB;
                   } \
                } while( 0 )
 
+#define HB_VM_ISFUNC( pSym ) ( ( pSym )->value.pFunPtr )
+
+#define HB_VM_FUNCUNREF( pSym ) \
+               do { \
+                  if( ( ( pSym )->scope.value & HB_FS_DEFERRED ) && \
+                      ( pSym )->pDynSym ) \
+                     pSym = ( pSym )->pDynSym->pSymbol; \
+               } while( 0 )
+
+#define HB_VM_EXECUTE( pSym ) \
+               do { \
+                  /* Running pCode dynamic function from .hrb? */ \
+                  if( ( pSym )->scope.value & HB_FS_PCODEFUNC ) \
+                     hb_vmExecute( ( pSym )->value.pCodeFunc->pCode, \
+                                   ( pSym )->value.pCodeFunc->pSymbols ); \
+                  else \
+                     ( pSym )->value.pFunPtr(); \
+               } while( 0 )
+
    /* dynamic symbol structure */
    typedef struct _HB_DYNS
    {

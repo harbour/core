@@ -5363,17 +5363,13 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
       PHB_SYMB pExecSym;
 
       pExecSym = hb_objGetMethod( pSelf, pSym, &sStackState );
-      if( pExecSym && ( pExecSym->scope.value & HB_FS_DEFERRED ) && pExecSym->pDynSym )
-         pExecSym = pExecSym->pDynSym->pSymbol;
-      if( pExecSym && pExecSym->value.pFunPtr )
+      if( pExecSym )
+         HB_VM_FUNCUNREF( pExecSym );
+      if( pExecSym && HB_VM_ISFUNC( pExecSym ) )
       {
          HB_TRACE_PRG(("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
-         if( pExecSym->scope.value & HB_FS_PCODEFUNC )
-            /* Running pCode dynamic function from .hrb */
-            hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
-                          pExecSym->value.pCodeFunc->pSymbols );
-         else
-            pExecSym->value.pFunPtr();
+
+         HB_VM_EXECUTE( pExecSym );
 
 #ifndef HB_NO_PROFILER
          if( bProfiler )
@@ -5387,21 +5383,17 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
    }
    else /* it is a function */
    {
-      if( ( pSym->scope.value & HB_FS_DEFERRED ) && pSym->pDynSym )
-         pSym = pSym->pDynSym->pSymbol;
-      if( pSym->value.pFunPtr )
+      HB_VM_FUNCUNREF( pSym );
+      if( HB_VM_ISFUNC( pSym ) )
       {
          HB_TRACE_PRG(("Calling: %s", pSym->szName));
+
 #ifndef HB_NO_PROFILER
          if( bProfiler && pSym->pDynSym )
             pSym->pDynSym->ulRecurse++;
 #endif
-         /* Running pCode dynamic function from .hrb? */
-         if( pSym->scope.value & HB_FS_PCODEFUNC )
-            hb_vmExecute( pSym->value.pCodeFunc->pCode,
-                          pSym->value.pCodeFunc->pSymbols );
-         else
-            pSym->value.pFunPtr();
+
+         HB_VM_EXECUTE( pSym );
 
 #ifndef HB_NO_PROFILER
          if( bProfiler && pSym->pDynSym )
@@ -5454,18 +5446,13 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    pSelf = hb_stackSelfItem();   /* NIL, OBJECT or BLOCK */
 
    pExecSym = hb_objGetMethod( pSelf, pSym, &sStackState );
-   if( pExecSym && ( pExecSym->scope.value & HB_FS_DEFERRED ) && pExecSym->pDynSym )
-      pExecSym = pExecSym->pDynSym->pSymbol;
-   if( pExecSym && pExecSym->value.pFunPtr )
+   if( pExecSym )
+      HB_VM_FUNCUNREF( pExecSym );
+   if( pExecSym && HB_VM_ISFUNC( pExecSym ) )
    {
       HB_TRACE_PRG(("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
 
-      if( pExecSym->scope.value & HB_FS_PCODEFUNC )
-         /* Running pCode dynamic function from .hrb */
-         hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
-                    pExecSym->value.pCodeFunc->pSymbols );
-      else
-         pExecSym->value.pFunPtr();
+      HB_VM_EXECUTE( pExecSym );
 
 #ifndef HB_NO_PROFILER
       if( bProfiler )

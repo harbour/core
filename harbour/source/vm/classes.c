@@ -4133,14 +4133,11 @@ static HARBOUR hb___msgDelegate( void )
    PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
    PHB_SYMB pExecSym = pClass->pMethods[ pMethod->uiData ].pFuncSym;
 
-   if( pExecSym && pExecSym->value.pFunPtr )
+   if( pExecSym )
+      HB_VM_FUNCUNREF( pExecSym );
+   if( pExecSym && HB_VM_ISFUNC( pExecSym ) )
    {
-      if( pExecSym->scope.value & HB_FS_PCODEFUNC )
-         /* Running pCode dynamic function from .hrb */
-         hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
-                       pExecSym->value.pCodeFunc->pSymbols );
-      else
-         pExecSym->value.pFunPtr();
+      HB_VM_EXECUTE( pExecSym );
    }
    else
    {
@@ -4155,7 +4152,9 @@ static HARBOUR hb___msgSync( void )
    PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
    PHB_SYMB pExecSym = pMethod->pRealSym;
 
-   if( pExecSym && pExecSym->value.pFunPtr )
+   if( pExecSym )
+      HB_VM_FUNCUNREF( pExecSym );
+   if( pExecSym && HB_VM_ISFUNC( pExecSym ) )
    {
       PHB_ITEM pObject = hb_stackSelfItem();
       USHORT uiClass = hb_objGetClass( pObject );
@@ -4166,13 +4165,7 @@ static HARBOUR hb___msgSync( void )
 
       if( !pMutex || hb_threadMutexLock( pMutex ) )
       {
-         if( pExecSym->scope.value & HB_FS_PCODEFUNC )
-            /* Running pCode dynamic function from .hrb */
-            hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
-                          pExecSym->value.pCodeFunc->pSymbols );
-         else
-            pExecSym->value.pFunPtr();
-
+         HB_VM_EXECUTE( pExecSym );
          if( pMutex )
             hb_threadMutexUnlock( pMutex );
       }
@@ -4190,18 +4183,15 @@ static HARBOUR hb___msgSyncClass( void )
    PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
    PHB_SYMB pExecSym = pMethod->pRealSym;
 
-   if( pExecSym && pExecSym->value.pFunPtr )
+   if( pExecSym )
+      HB_VM_FUNCUNREF( pExecSym );
+   if( pExecSym && HB_VM_ISFUNC( pExecSym ) )
    {
-      if( hb_threadMutexLock( pClass->pMutex ) )
+      if( !pClass->pMutex || hb_threadMutexLock( pClass->pMutex ) )
       {
-         if( pExecSym->scope.value & HB_FS_PCODEFUNC )
-            /* Running pCode dynamic function from .hrb */
-            hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
-                          pExecSym->value.pCodeFunc->pSymbols );
-         else
-            pExecSym->value.pFunPtr();
-
-         hb_threadMutexUnlock( pClass->pMutex );
+         HB_VM_EXECUTE( pExecSym );
+         if( pClass->pMutex )
+            hb_threadMutexUnlock( pClass->pMutex );
       }
    }
    else
