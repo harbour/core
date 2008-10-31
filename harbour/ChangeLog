@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-31 13:02 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/make_b32_all.bat
+    + hbdbgfx librray for auto build.
+
 2008-10-31 13:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/dynlibhb.c
   * harbour/source/common/hbgete.c
