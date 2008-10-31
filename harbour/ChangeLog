@@ -8,6 +8,37 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-31 02:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * contrib/mtpl_b32.mak
+  * config/w32/bcc32.cf
+    - Added -4 switch, which means Intel 386 CPUs are not 
+      not supported by default.
+
+  * make_vc.mak
+    + Added -GA switch to MSVC 32/64 which creates smaller 
+      (and only slightly faster) TLS access code.
+
+  * source/compiler/cmdcheck.c
+  * source/compiler/hbusage.c
+    + Added -/+ suboptions to -k? options to make it 
+      possible to set them to the opposite setting.
+    ; NOTE: BTW, shouldn't -ki option also disable 
+            #pragma BEGINDUMP/ENDDUMP? IMO it should, 
+            otherwise it doesn't really enforce C 
+            out of .prg code.
+
+  * config/w32/gcc.cf
+  * config/w32/mingw.cf
+    * Changed -march=i486 to -march=i586.
+
+  ; NOTE: Please comment on CPU optimization switches, IMO 
+          we can quite safely target Pentium/586 as the 
+          minimum CPU requirement these days for default 
+          Harbour builds. If someone needs to run it on 
+          386 (Win95) or 486 (Win98/WinME), a special built 
+          can be created.
+
 2008-10-30 21:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/make_b32_all.bat
   * contrib/make_vc_all.bat

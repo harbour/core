@@ -372,7 +372,13 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                      case 'h':
                      case 'H':
                         /* default Harbour mode */
-                        HB_COMP_PARAM->supported |= HB_COMPFLAG_HARBOUR;
+                        if( s[i] == '-' )
+                        {
+                           i++;
+                           HB_COMP_PARAM->supported &= ~HB_COMPFLAG_HARBOUR;
+                        }
+                        else
+                           HB_COMP_PARAM->supported |= HB_COMPFLAG_HARBOUR;
                         break;
 
                      case 'c':
@@ -385,32 +391,68 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
                      case 'x':
                      case 'X':
-                        HB_COMP_PARAM->supported |= HB_COMPFLAG_XBASE;
+                        if( s[i] == '-' )
+                        {
+                           i++;
+                           HB_COMP_PARAM->supported &= ~HB_COMPFLAG_XBASE;
+                        }
+                        else
+                           HB_COMP_PARAM->supported |= HB_COMPFLAG_XBASE;
                         break;
 
                      case 'i':
                      case 'I':
-                        HB_COMP_PARAM->supported |= HB_COMPFLAG_HB_INLINE;
+                        if( s[i] == '-' )
+                        {
+                           i++;
+                           HB_COMP_PARAM->supported &= ~HB_COMPFLAG_HB_INLINE;
+                        }
+                        else
+                           HB_COMP_PARAM->supported |= HB_COMPFLAG_HB_INLINE;
                         break;
 
                      case 'j':
                      case 'J':
-                        HB_COMP_PARAM->supported &= ~HB_COMPFLAG_OPTJUMP;
+                        if( s[i] == '+' )
+                        {
+                           i++;
+                           HB_COMP_PARAM->supported |= HB_COMPFLAG_OPTJUMP;
+                        }
+                        else
+                           HB_COMP_PARAM->supported &= ~HB_COMPFLAG_OPTJUMP;
                         break;
 
                      case 'm':
                      case 'M':
-                        HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;
+                        if( s[i] == '+' )
+                        {
+                           i++;
+                           HB_COMP_PARAM->supported |= HB_COMPFLAG_MACROTEXT;
+                        }
+                        else
+                           HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;
                         break;
 
                      case 'r':
                      case 'R':
-                        HB_COMP_PARAM->supported |= HB_COMPFLAG_RT_MACRO;
+                        if( s[i] == '-' )
+                        {
+                           i++;
+                           HB_COMP_PARAM->supported &= ~HB_COMPFLAG_RT_MACRO;
+                        }
+                        else
+                           HB_COMP_PARAM->supported |= HB_COMPFLAG_RT_MACRO;
                         break;
 
                      case 's':
                      case 'S':
-                        HB_COMP_PARAM->supported |= HB_COMPFLAG_ARRSTR;
+                        if( s[i] == '-' )
+                        {
+                           i++;
+                           HB_COMP_PARAM->supported &= ~HB_COMPFLAG_ARRSTR;
+                        }
+                        else
+                           HB_COMP_PARAM->supported |= HB_COMPFLAG_ARRSTR;
                         break;
 
                      default:

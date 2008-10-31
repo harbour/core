@@ -113,7 +113,7 @@ CFLAGS = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)
 !endif
 #-----------
 !if !$d(BCC_NOOPTIM)
-    CFLAGS = -O2 -OS -Ov -Oi -Oc $(CFLAGS)
+    CFLAGS = -4 -O2 -OS -Ov -Oi -Oc $(CFLAGS)
 !endif
 #-----------
 

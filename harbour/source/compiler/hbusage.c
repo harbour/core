@@ -130,13 +130,13 @@ void hb_compPrintModes( HB_COMP_DECL )
    static const char * szOptions [] =
    {
            "\nOptions:  c               clear all flags (strict Clipper mode)",
-           "\n          h               Harbour mode",
-           "\n          i               enable support for HB_INLINE",
-           "\n          r               runtime settings enabled",
-           "\n          s               allow indexed assignment on all types",
-           "\n          x               extended Xbase++ mode",
-           "\n          j               turn off jump optimization in pcode",
-           "\n          m               turn off macrotext substitution",
+           "\n          h[-]            Harbour mode",
+           "\n          i[-]            enable support for HB_INLINE",
+           "\n          r[-]            runtime settings enabled",
+           "\n          s[-]            allow indexed assignment on all types",
+           "\n          x[-]            extended Xbase++ mode",
+           "\n          j[+]            turn off jump optimization in pcode",
+           "\n          m[+]            turn off macrotext substitution",
            "\n          ?               this info",
            "\n"
    };
