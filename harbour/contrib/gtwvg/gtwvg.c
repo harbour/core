@@ -2012,6 +2012,7 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
       }
       hb_gt_wvt_Free( pWVT );
    }
+   //HB_GTSUPER_EXIT( pGT );
 }
 
 /* ********************************************************************** */
@@ -2922,8 +2923,6 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             {
                if ( pWVT->pfnLayered )
                {
-                  BOOL bGF;
-
                   SetWindowLong( pWVT->hWnd,
                                  GWL_EXSTYLE,
                                  GetWindowLong( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
@@ -2931,9 +2930,24 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   pWVT->pfnLayered( pWVT->hWnd,
                                     RGB( 255,255,255 ),
                                     hb_itemGetNI( pInfo->pNewVal2 ),
-                                    LWA_COLORKEY|LWA_ALPHA );
+                                    /*LWA_COLORKEY|*/ LWA_ALPHA );
                }
                break;
+            }
+         }
+         break;
+      }
+      case HB_GTI_PRESPARAM:
+      {
+         if ( ! pWVT->hWnd )
+         {
+            if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
+            {
+               int iParam = hb_arrayLength( pInfo->nNewVal );
+               if( iParam == HB_GTI_PP_SIZE )
+               {
+                  int mode = hb_arrayGetNI( pInfo->pNewVal, 1 );
+               }
             }
          }
          break;

@@ -241,6 +241,20 @@ typedef BOOL ( WINAPI *wvtSetLayeredWindowAttributes )(
 
 typedef struct
 {
+   DWORD     exStyle;
+   DWORD     style;
+   int       x;
+   int       y;
+   int       width;
+   int       height;
+   HWND      hWndParent;
+   BOOL      bVisible;
+   BOOL      byPixel;
+
+} HB_GT_PARAM, * PHB_GT_PARAM;
+
+typedef struct
+{
    HPEN      penWhite;                      // White pen to draw GDI elements
    HPEN      penBlack;                      // Black pen to draw GDI elements
    HPEN      penWhiteDim;                   // White dim pen to draw GDI elements
@@ -394,7 +408,9 @@ typedef struct
    PHB_ITEM  pcbFuncModal[ WVT_DLGMD_MAX ]; // codeblock for WndProc
    int       iTypeModal[ WVT_DLGMD_MAX ];   // Type of Function Pointers - Function 1, Block 2, Method 3
 
-   PHB_GUIDATA * pGui;                      // GUI Data Structure
+   PHB_GUIDATA * pGUI;                      // GUI Data Structure
+
+   PHB_GT_PARAM * pPP;                      // Presentation Parameters
 
 } HB_GTWVT, * PHB_GTWVT;
 

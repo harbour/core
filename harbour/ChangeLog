@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-30 21:24 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gtwvt/gtwvt.h
+    + Transfereed two static variables to HB_GTWVT structure.
+      Multi-thread/console protection.
+
 2008-10-31 02:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.mak
     - Removed -GS- option for WinCE. MS recommends this to 
