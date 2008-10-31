@@ -99,7 +99,7 @@ VMMT_LIB_OBJS = $(VM_LIB_OBJS:obj\vc=obj\vc_mt)
 !if "$(HB_BUILD_WINCE)" == "yes"
 
 !if $(HB_VISUALC_VER) >= 80
-CFLAGS_VER     = -Od -Os -Gy -GS- -EHsc- -Gm -Zi -GR-
+CFLAGS_VER     = -Od -Os -Gy -EHsc- -Gm -Zi -GR-
 !else
 CFLAGS_VER     = -Oxsb1 -EHsc -YX -GF
 !endif

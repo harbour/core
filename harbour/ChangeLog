@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-31 02:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_vc.mak
+    - Removed -GS- option for WinCE. MS recommends this to 
+      be there for safety. If someone wants to disable, it 
+      can be done with C_USR.
+
 2008-10-31 02:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/dlmalloc.c
     ! Fixed minor MinGW warning. This fix also exists 
