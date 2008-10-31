@@ -90,7 +90,7 @@ char * hb_getenv( const char * szName )
       PCSZ EnvValue = "";
    #endif
 
-      if( DosScanEnv( ( PSZ ) szName, &EnvValue ) == NO_ERROR )
+      if( DosScanEnv( ( PCSZ ) szName, &EnvValue ) == NO_ERROR )
          pszBuffer = hb_strdup( ( char * ) EnvValue );
    }
 
@@ -125,7 +125,7 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
          PCSZ EnvValue = "";
       #endif
 
-      if( DosScanEnv( ( PSZ ) szName, &EnvValue ) == NO_ERROR )
+      if( DosScanEnv( ( PCSZ ) szName, &EnvValue ) == NO_ERROR )
       {
          bRetVal = TRUE;
          if( szBuffer != NULL && nSize != 0 )

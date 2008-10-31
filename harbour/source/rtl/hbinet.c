@@ -225,8 +225,8 @@
     * that when you're passing by value.  But when you're passing by reference
     * this creates a gross source incompatibility with existing programs.  On
     * 32-bit architectures it creates only a warning.  On 64-bit architectures it
-    * creates broken code -- because "int *" is a pointer to a 64-bit quantity and
-    * "size_t *" is frequently a pointer to a 32-bit quantity.
+    * creates broken code -- because "int *" is a pointer to a 32-bit quantity and
+    * "size_t *" is frequently a pointer to a 64-bit quantity.
     *
     * Some Unixes adopted "size_t *" for the sake of POSIX compliance.  Others
     * ignored it because it was such a broken interface.  Chaos ensued.  POSIX
@@ -1717,13 +1717,7 @@ HB_FUNC( HB_INETACCEPT )
    HB_SOCKET_T incoming = 0;
    int iError = EAGAIN;
    struct sockaddr_in si_remote;
-#if defined(_XOPEN_SOURCE_EXTENDED)
    socklen_t Len;
-#elif defined(HB_OS_WIN_32)
-   int Len;
-#else
-   unsigned int Len;
-#endif
 
    if( Socket == NULL )
    {
@@ -2124,11 +2118,7 @@ HB_FUNC( HB_INETDGRAMRECV )
    int iLen, iMaxLen;
    char *Buffer;
    BOOL fRepeat;
-#if defined(HB_OS_WIN_32)
-   int iDtLen = sizeof( struct sockaddr );
-#else
-   socklen_t iDtLen = (socklen_t) sizeof( struct sockaddr );
-#endif
+   socklen_t iDtLen = ( socklen_t ) sizeof( struct sockaddr );
 
    if( Socket == NULL || pBuffer == NULL || !ISBYREF( 2 ) )
    {

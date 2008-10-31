@@ -107,7 +107,7 @@ MRESULT EXPENTRY WndProc( HWND hWnd, ULONG Msg, MPARAM mp1, MPARAM mp2 )
 HB_FUNC( WINREGISTERCLASS )
 {
    hb_retl( WinRegisterClass( hb_pm_GetHab(),               /* anchor block handle */
-                              hb_parc( 1 ),                 /* Class Name */
+                              ( PCSZ ) hb_parc( 1 ),        /* Class Name */
                               ( PFNWP ) WndProc,            /* default Class procedure */
                               hb_parnl( 2 ),                /* style */
                               hb_parnl( 3 ) ) );            /* extra bytes */
@@ -140,8 +140,8 @@ HB_FUNC( WINCREATESTDWINDOW )
    hb_retnl( (LONG) WinCreateStdWindow( ( HWND ) hb_parnl( 1 ),             /* hWndParent */
                                         hb_parnl( 2 ),                      /* style */
                                         &lFrame,                            /* lFrame */
-                                        hb_parc( 4 ),                       /* cClassName */
-                                        hb_parc( 5 ),                       /* cCaption */
+                                        ( PCSZ ) hb_parc( 4 ),              /* cClassName */
+                                        ( PCSZ ) hb_parc( 5 ),              /* cCaption */
                                         hb_parnl( 6 ),                      /* lStyleClient */
                                         hb_parnl( 7 ),                      /* hModule */
                                         hb_parnl( 8 ),                      /* nId */
@@ -177,15 +177,15 @@ HB_FUNC( NOR )
 
 HB_FUNC( WINSETWINDOWTEXT )
 {
-   hb_retl( WinSetWindowText( ( HWND ) hb_parnl( 1 ), hb_parc( 2 ) ) );
+   hb_retl( WinSetWindowText( ( HWND ) hb_parnl( 1 ), ( PCSZ ) hb_parc( 2 ) ) );
 }
 
 
 HB_FUNC( WINGETTEXT )
 {
-   BYTE bBuffer[ 255 ];
+   char bBuffer[ 255 ];
 
-   WinQueryWindowText( ( HWND ) hb_parnl( 1 ), sizeof( bBuffer ) - 1, bBuffer );
+   WinQueryWindowText( ( HWND ) hb_parnl( 1 ), sizeof( bBuffer ) - 1, ( PSZ ) bBuffer );
    hb_retc( bBuffer );
 }
 
@@ -193,9 +193,9 @@ HB_FUNC( WINGETTEXT )
 HB_FUNC( MSGINFO )
 {
    HWND hWnd = WinQueryActiveWindow( HWND_DESKTOP);
-   PSZ szCaption = ( hb_pcount() > 1 && ISCHAR( 2 ) ? hb_parc( 2 ) : "Information");
+   PCSZ szCaption = ISCHAR( 2 ) ? ( PCSZ ) hb_parc( 2 ) : ( PCSZ ) "Information";
 
-   hb_retnl( WinMessageBox( HWND_DESKTOP, hWnd, hb_parc( 1 ), szCaption,
+   hb_retnl( WinMessageBox( HWND_DESKTOP, hWnd, ( PCSZ ) hb_parc( 1 ), szCaption,
              0, MB_INFORMATION | MB_OK | MB_MOVEABLE | MB_APPLMODAL ) );
 }
 

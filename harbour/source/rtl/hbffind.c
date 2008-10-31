@@ -512,7 +512,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          info->hFindFile = HDIR_CREATE;
          info->findCount = 1;
 
-         bFound = DosFindFirst( ffind->pszFileMask,
+         bFound = DosFindFirst( ( PCSZ ) ffind->pszFileMask,
                                 &info->hFindFile,
                                 ( LONG ) hb_fsAttrToRaw( ffind->attrmask ),
                                 &info->entry,

@@ -744,8 +744,8 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
       FILESTATUS3 fs3;
       APIRET ulrc;
       ULONG ulAttr;
-    
-      ulrc = DosQueryPathInfo( szName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+
+      ulrc = DosQueryPathInfo( ( PCSZ ) szName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
       if( ulrc == NO_ERROR )
       {
          ulAttr = 0;
@@ -948,7 +948,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
          {
             FILETIME    ftutc, ft;
             SYSTEMTIME  st;
-            
+
             st.wSecond = ( WORD ) ufi.tmu_date.tm_sec;
             st.wMinute = ( WORD ) ufi.tmu_date.tm_min;
             st.wHour = ( WORD ) ufi.tmu_date.tm_hour;
@@ -971,7 +971,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
       {
          iResult = -200 - hb_fsError();
       }
-   }  
+   }
    unzCloseCurrentFile( hUnzip );
 
 
@@ -1036,7 +1036,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
       APIRET ulrc;
       ULONG ulAttr = FILE_NORMAL;
       int iAttr = ufi.external_fa & 0xFF;
-    
+
       if( iAttr & HB_FA_READONLY )
          ulAttr |= FILE_READONLY;
       if( iAttr & HB_FA_HIDDEN )
@@ -1045,8 +1045,8 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
          ulAttr |= FILE_SYSTEM;
       if( iAttr & HB_FA_ARCHIVE )
          ulAttr |= FILE_ARCHIVED;
-    
-      ulrc = DosQueryPathInfo( szName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+
+      ulrc = DosQueryPathInfo( ( PCSZ ) szName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
       if( ulrc == NO_ERROR )
       {
          FDATE   fdate;
@@ -1063,7 +1063,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
 
          fs3.fdateCreation = fs3.fdateLastAccess = fs3.fdateLastWrite = fdate;
          fs3.ftimeCreation = fs3.ftimeLastAccess = fs3.ftimeLastWrite = ftime;
-         ulrc = DosSetPathInfo( szName, FIL_STANDARD,
+         ulrc = DosSetPathInfo( ( PCSZ ) szName, FIL_STANDARD,
                                 &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
       }
    }

@@ -101,7 +101,7 @@ HB_FUNC( HB_LIBLOAD )
             UCHAR LoadError[256] = "";    /* Area for load failure information */
             HMODULE hDynModule;
             if( DosLoadModule( LoadError, sizeof( LoadError ),
-                               hb_parc( 1 ), &hDynModule ) == NO_ERROR )
+                               ( PCSZ ) hb_parc( 1 ), &hDynModule ) == NO_ERROR )
                hDynLib = ( void * ) hDynModule;
          }
 #elif defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )

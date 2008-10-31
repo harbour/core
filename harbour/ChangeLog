@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-10-31 13:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/dynlibhb.c
+  * harbour/source/common/hbgete.c
+  * harbour/source/common/hbfsapi.c
+  * harbour/source/rtl/hbinet.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/filesys.c
+  * harbour/contrib/hbct/files.c
+  * harbour/contrib/hbmzip/hbmzip.c
+  * harbour/contrib/hbgf/hbgfos2/os2pm.c
+    * cleanup casting in OS2 builds (use PCSZ/PSZ)
+
 2008-10-30 21:24 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/source/rtl/gtwvt/gtwvt.c
   * harbour/source/rtl/gtwvt/gtwvt.h

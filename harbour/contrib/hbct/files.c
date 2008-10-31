@@ -270,7 +270,7 @@ HB_FUNC( SETFDATI )
          FILESTATUS3 fs3;
          APIRET ulrc;
 
-         ulrc = DosQueryPathInfo( szFile, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+         ulrc = DosQueryPathInfo( ( PCSZ ) szFile, FIL_STANDARD, &fs3, sizeof( fs3 ) );
          if( ulrc == NO_ERROR )
          {
             FDATE fdate;
@@ -304,7 +304,7 @@ HB_FUNC( SETFDATI )
             }
             fs3.fdateCreation = fs3.fdateLastAccess = fs3.fdateLastWrite = fdate;
             fs3.ftimeCreation = fs3.ftimeLastAccess = fs3.ftimeLastWrite = ftime;
-            ulrc = DosSetPathInfo( szFile, FIL_STANDARD,
+            ulrc = DosSetPathInfo( ( PCSZ ) szFile, FIL_STANDARD,
                                    &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
          }
          hb_retl( ulrc == NO_ERROR );

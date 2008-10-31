@@ -1054,7 +1054,7 @@ HB_EXPORT BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
       APIRET ulrc;
 
       hb_vmUnlock();
-      ulrc = DosQueryPathInfo( ( PSZ ) pszFileName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+      ulrc = DosQueryPathInfo( ( PCSZ ) pszFileName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
       if( ulrc == NO_ERROR )
       {
          *pulAttr = hb_fsAttrFromRaw( fs3.attrFile );
@@ -1148,7 +1148,7 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
       pszFileName = hb_fsNameConv( pszFileName, &fFree );
 
       hb_vmUnlock();
-      ulrc = DosQueryPathInfo( ( PSZ ) pszFileName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+      ulrc = DosQueryPathInfo( ( PCSZ ) pszFileName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
       if( ulrc == NO_ERROR )
       {
          FDATE fdate;
@@ -1182,7 +1182,7 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
 
          fs3.fdateCreation = fs3.fdateLastAccess = fs3.fdateLastWrite = fdate;
          fs3.ftimeCreation = fs3.ftimeLastAccess = fs3.ftimeLastWrite = ftime;
-         ulrc = DosSetPathInfo( ( PSZ ) pszFileName, FIL_STANDARD,
+         ulrc = DosSetPathInfo( ( PCSZ ) pszFileName, FIL_STANDARD,
                                 &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
       }
       fResult = ulrc == NO_ERROR;
@@ -1302,11 +1302,11 @@ HB_EXPORT BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
          ulOsAttr |= FILE_ARCHIVED;
 
       hb_vmUnlock();
-      ulrc = DosQueryPathInfo( ( PSZ ) pszFileName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+      ulrc = DosQueryPathInfo( ( PCSZ ) pszFileName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
       if( ulrc == NO_ERROR )
       {
          fs3.attrFile = ulOsAttr;
-         ulrc = DosSetPathInfo( ( PSZ ) pszFileName, FIL_STANDARD,
+         ulrc = DosSetPathInfo( ( PCSZ ) pszFileName, FIL_STANDARD,
                                 &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
       }
       fResult = ulrc == NO_ERROR;
