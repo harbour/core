@@ -173,6 +173,8 @@ typedef struct
    BOOL     bClosable;
 
    int      ResizeMode;                   /* Sets the resizing mode either to FONT or ROWS */
+   RECT     sRectNew;
+   RECT     sRectOld;
 
 } HB_GTWVT, * PHB_GTWVT;
 

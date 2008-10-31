@@ -290,6 +290,14 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->bClosable         = TRUE;
 
    pWVT->ResizeMode        = HB_GTI_RESIZEMODE_FONT;
+   pWVT->sRectNew.left     = 0;
+   pWVT->sRectNew.top      = 0;
+   pWVT->sRectNew.right    = 0;
+   pWVT->sRectNew.bottom   = 0;
+   pWVT->sRectOld.left     = 0;
+   pWVT->sRectOld.top      = 0;
+   pWVT->sRectOld.right    = 0;
+   pWVT->sRectOld.bottom   = 0;
 
 #ifndef HB_CDP_SUPPORT_OFF
    pWVT->hostCDP    = hb_vmCDP();
@@ -847,9 +855,6 @@ static void hb_gt_wvt_SetMousePos( PHB_GTWVT pWVT, int iRow, int iCol )
 
 static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
 {
-   static RECT s_rectOld = { 0, 0, 0, 0 };
-   static RECT s_rectNew = { 0, 0, 0, 0 };
-
    POINT xy, colrow;
    SHORT keyCode = 0;
    SHORT keyState;
@@ -881,15 +886,15 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          {
             pWVT->bBeingMarked = TRUE;
 
-            s_rectNew.left     = xy.x;
-            s_rectNew.top      = xy.y;
-            s_rectNew.right    = xy.x;
-            s_rectNew.bottom   = xy.y;
+            pWVT->sRectNew.left     = xy.x;
+            pWVT->sRectNew.top      = xy.y;
+            pWVT->sRectNew.right    = xy.x;
+            pWVT->sRectNew.bottom   = xy.y;
 
-            s_rectOld.left   = 0;
-            s_rectOld.top    = 0;
-            s_rectOld.right  = 0;
-            s_rectOld.bottom = 0;
+            pWVT->sRectOld.left   = 0;
+            pWVT->sRectOld.top    = 0;
+            pWVT->sRectOld.right  = 0;
+            pWVT->sRectOld.bottom = 0;
 
             return;
          }
@@ -923,10 +928,10 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                RECT   rect = { 0, 0, 0, 0 };
                RECT   colrowRC = { 0, 0, 0, 0 };
 
-               rect.left   = HB_MIN( s_rectNew.left, s_rectNew.right  );
-               rect.top    = HB_MIN( s_rectNew.top , s_rectNew.bottom );
-               rect.right  = HB_MAX( s_rectNew.left, s_rectNew.right  );
-               rect.bottom = HB_MAX( s_rectNew.top , s_rectNew.bottom );
+               rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
+               rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
+               rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
+               rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
 
                colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
 
@@ -993,25 +998,25 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             RECT rect     = { 0, 0, 0, 0 };
             RECT colrowRC = { 0, 0, 0, 0 };
 
-            s_rectNew.right  = xy.x;
-            s_rectNew.bottom = xy.y;
+            pWVT->sRectNew.right  = xy.x;
+            pWVT->sRectNew.bottom = xy.y;
 
-            rect.left   = HB_MIN( s_rectNew.left, s_rectNew.right  );
-            rect.top    = HB_MIN( s_rectNew.top , s_rectNew.bottom );
-            rect.right  = HB_MAX( s_rectNew.left, s_rectNew.right  );
-            rect.bottom = HB_MAX( s_rectNew.top , s_rectNew.bottom );
+            rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
+            rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
+            rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
+            rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
 
             colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
             rect     = hb_gt_wvt_GetXYFromColRowRect( pWVT, colrowRC );
 
-            if( rect.left   != s_rectOld.left   ||
-                rect.top    != s_rectOld.top    ||
-                rect.right  != s_rectOld.right  ||
-                rect.bottom != s_rectOld.bottom  )
+            if( rect.left   != pWVT->sRectOld.left   ||
+                rect.top    != pWVT->sRectOld.top    ||
+                rect.right  != pWVT->sRectOld.right  ||
+                rect.bottom != pWVT->sRectOld.bottom  )
             {
 #if !defined(HB_WINCE)  /* WinCE does not support InvertRgn */
                /* Concept forwarded by Andy Wos - thanks. */
-               HRGN rgn1 = CreateRectRgn( s_rectOld.left, s_rectOld.top, s_rectOld.right, s_rectOld.bottom );
+               HRGN rgn1 = CreateRectRgn( pWVT->sRectOld.left, pWVT->sRectOld.top, pWVT->sRectOld.right, pWVT->sRectOld.bottom );
                HRGN rgn2 = CreateRectRgn( rect.left, rect.top, rect.right, rect.bottom );
                HRGN rgn3 = CreateRectRgn( 0, 0, 0, 0 );
 
@@ -1026,10 +1031,10 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                DeleteObject( rgn2 );
                DeleteObject( rgn3 );
 #endif
-               s_rectOld.left   = rect.left;
-               s_rectOld.top    = rect.top;
-               s_rectOld.right  = rect.right;
-               s_rectOld.bottom = rect.bottom;
+               pWVT->sRectOld.left   = rect.left;
+               pWVT->sRectOld.top    = rect.top;
+               pWVT->sRectOld.right  = rect.right;
+               pWVT->sRectOld.bottom = rect.bottom;
             }
             return;
          }
@@ -2443,8 +2448,8 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             y = hb_itemGetNI( pInfo->pNewVal2 );
             if ( iType == HB_GTI_SETPOS_ROWCOL )
             {
-               x *= pWVT->PTEXTSIZE.x;
-               y *= pWVT->PTEXTSIZE.y;
+               y *= pWVT->PTEXTSIZE.x;
+               x *= pWVT->PTEXTSIZE.y;
             }
             hb_retl( SetWindowPos( pWVT->hWnd, NULL,
                                    x,
