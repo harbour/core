@@ -563,7 +563,7 @@ static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
       maxHeight = ci.bottom - ci.top;
    }
 
-   if ( maxHeight > 0 )
+   if( maxHeight > 0 )
    {
       BOOL bOldCentre = pWVT->CentreWindow;
       pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
@@ -1577,7 +1577,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_SIZE:
-         if ( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
+         if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
             hb_gt_wvt_FitSize( pWVT );
          else
          {
@@ -1593,10 +1593,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             {
                pWVT->bMaximized = TRUE;
 
-               if ( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-               {
+               if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
                   hb_gt_wvt_FitSize( pWVT );
-               }
                else
                {
                   hb_gt_wvt_FitRows( pWVT );

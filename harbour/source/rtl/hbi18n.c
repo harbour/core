@@ -145,7 +145,7 @@ static PHB_ITEM hb_i18n_load_from_memory( BYTE * memory, ULONG memsize )
          {
             if( hb_i18n_memread( memory, memsize, &buffer, 2, &offset ) )
             {
-               USHORT nStrLen = ( USHORT ) HB_GET_LE_UINT16( buffer );
+               ULONG nStrLen = ( ULONG ) HB_GET_LE_UINT16( buffer );
 
                if( nStrLen > 0 && hb_i18n_memread( memory, memsize, &buffer, nStrLen, &offset ) && buffer[ nStrLen - 1 ] == '\0' )
                {
@@ -203,7 +203,7 @@ static PHB_ITEM hb_i18n_load( PHB_FILE file )
          {
             if( hb_fileReadAt( file, buffer, 2, offset ) == 2 )
             {
-               ULONG nStrLen = ( USHORT ) HB_GET_LE_UINT16( buffer );
+               ULONG nStrLen = ( ULONG ) HB_GET_LE_UINT16( buffer );
 
                offset += 2;
 
@@ -260,29 +260,33 @@ HB_FUNC( __I18N_LOAD )
 HB_FUNC( __I18N_GETTEXT )
 {
    PHB_ITEM pFind = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM pTable = hb_param( 2, HB_IT_ARRAY );
 
-   if( pFind && pTable )
+   if( pFind )
    {
-      char * pszFind = hb_itemGetCPtr( pFind );
+      PHB_ITEM pTable = hb_param( 2, HB_IT_ARRAY );
 
-      ULONG nLow = 1;
-      ULONG nHigh = ( hb_arrayLen( pTable ) >> 1 );
-      ULONG nMiddle;
-
-      while( nLow <= nHigh )
+      if( pTable )
       {
-         int result = strcmp( hb_arrayGetCPtr( pTable, ( ( nMiddle = ( nLow + nHigh ) / 2 ) << 1 ) - 1 ), pszFind );
-
-         if( result == 0 )
+         char * pszFind = hb_itemGetCPtr( pFind );
+         
+         ULONG nLow = 1;
+         ULONG nHigh = ( hb_arrayLen( pTable ) >> 1 );
+         ULONG nMiddle;
+         
+         while( nLow <= nHigh )
          {
-            hb_itemParamStore( 1, hb_arrayGetItemPtr( pTable, nMiddle << 1 ) );
-            break;
+            int result = strcmp( hb_arrayGetCPtr( pTable, ( ( nMiddle = ( nLow + nHigh ) / 2 ) << 1 ) - 1 ), pszFind );
+         
+            if( result == 0 )
+            {
+               hb_itemParamStore( 1, hb_arrayGetItemPtr( pTable, nMiddle << 1 ) );
+               break;
+            }
+            else if( result > 0 )
+               nHigh = nMiddle - 1;
+            else
+               nLow = nMiddle + 1;
          }
-         else if( result > 0 )
-            nHigh = nMiddle - 1;
-         else
-            nLow = nMiddle + 1;
       }
    }
    else
