@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-01 )7:31 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/make_vc_all.bat
+  * harbour/contrib/make_gcc_all.sh
+    + hbdbgfx librray for auto build.
+
 2008-11-01 15:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbdefs.h
     + added #define INCL_LONGLONG to include native compiler LONGLONG

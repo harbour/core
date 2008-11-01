@@ -41,7 +41,7 @@ fi
 if [ "$HB_CONTRIBLIBS" != "" ]; then
    _HB_DIRS="${HB_CONTRIBLIBS}"
 else
-   _HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit3 hbtpathy hbvpdf hbziparc xhb"
+   _HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbdbgfx hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit3 hbtpathy hbvpdf hbziparc xhb"
 
    case "$HB_ARCHITECTURE" in
       w32|cyg|os2)
