@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-01 12:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+  * source/rtl/memofile.c
+    + Added HB_MEMOREAD() which is identical to MEMOREAD() 
+      except it won't truncate the last byte (on non-UNIX 
+      compatible systems) if it's a EOF char.
+      See also existing HB_MEMOWRIT().
+      [TOMERGE 1.0]
+
 2008-11-01 11:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/hbi18n.c
     * Minor change in header to separate it visually from comment 

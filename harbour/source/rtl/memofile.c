@@ -58,7 +58,7 @@
          this limit is extended, so we are not *strictly* compatible here.
          [vszakats] */
 
-HB_FUNC( MEMOREAD )
+static void hb_memoread( BOOL bHandleEOF )
 {
    PHB_ITEM pFileName = hb_param( 1, HB_IT_STRING );
 
@@ -76,7 +76,8 @@ HB_FUNC( MEMOREAD )
 
             /* Don't read the file terminating EOF character */
 
-            #if ! defined(HB_OS_UNIX_COMPATIBLE)
+#if ! defined(HB_OS_UNIX_COMPATIBLE)
+            if( bHandleEOF )
             {
                BYTE byEOF = HB_CHAR_NUL;
 
@@ -86,7 +87,9 @@ HB_FUNC( MEMOREAD )
                if( byEOF == HB_CHAR_EOF )
                   ulSize--;
             }
-            #endif
+#else
+            HB_SYMBOL_UNUSED( bHandleEOF );
+#endif
 
             pbyBuffer = ( BYTE * ) hb_xgrab( ulSize + sizeof( char ) );
 
@@ -107,7 +110,17 @@ HB_FUNC( MEMOREAD )
       hb_retc( NULL );
 }
 
-static BOOL hb_memowrit( BOOL bWriteEOF )
+HB_FUNC( HB_MEMOREAD )
+{
+   hb_memoread( FALSE );
+}
+
+HB_FUNC( MEMOREAD )
+{
+   hb_memoread( TRUE );
+}
+
+static BOOL hb_memowrit( BOOL bHandleEOF )
 {
    PHB_ITEM pFileName = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pString   = hb_param( 2, HB_IT_STRING );
@@ -126,13 +139,13 @@ static BOOL hb_memowrit( BOOL bWriteEOF )
          /* NOTE: CA-Cl*pper will add the EOF even if the write failed. [vszakats] */
          /* NOTE: CA-Cl*pper will not return .F. when the EOF could not be written. [vszakats] */
 #if ! defined(HB_OS_UNIX_COMPATIBLE)
-         if( bWriteEOF )  /* if true, then write EOF */
+         if( bHandleEOF )  /* if true, then write EOF */
          {
             BYTE byEOF = HB_CHAR_EOF;
             hb_fsWrite( fhnd, &byEOF, sizeof( BYTE ) );
          }
 #else
-         HB_SYMBOL_UNUSED( bWriteEOF );
+         HB_SYMBOL_UNUSED( bHandleEOF );
 #endif
 
          hb_fsClose( fhnd );
