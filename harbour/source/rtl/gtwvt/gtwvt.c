@@ -262,8 +262,9 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    hb_strncpy( pWVT->fontFace, WVT_DEFAULT_FONT_NAME, sizeof( pWVT->fontFace ) - 1 );
 
    pWVT->CaretExist        = FALSE;
-   pWVT->CaretHidden       = FALSE;
-   pWVT->CaretSize         = HB_MAX( ( pWVT->PTEXTSIZE.y >> 2 ) - 1, 1 );
+   pWVT->CaretHidden       = TRUE;
+   pWVT->CaretSize         = 0;
+   pWVT->CaretWidth        = 0;
    pWVT->MousePos.x        = 0;
    pWVT->MousePos.y        = 0;
    pWVT->MouseMove         = TRUE;
@@ -290,14 +291,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->bClosable         = TRUE;
 
    pWVT->ResizeMode        = HB_GTI_RESIZEMODE_FONT;
-   pWVT->sRectNew.left     = 0;
-   pWVT->sRectNew.top      = 0;
-   pWVT->sRectNew.right    = 0;
-   pWVT->sRectNew.bottom   = 0;
-   pWVT->sRectOld.left     = 0;
-   pWVT->sRectOld.top      = 0;
-   pWVT->sRectOld.right    = 0;
-   pWVT->sRectOld.bottom   = 0;
 
 #ifndef HB_CDP_SUPPORT_OFF
    pWVT->hostCDP    = hb_vmCDP();
@@ -334,18 +327,6 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent )
    }
 
    return nResult;
-}
-
-static BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRow, int iCol )
-{
-   if( HB_GTSELF_RESIZE( pWVT->pGT, iRow, iCol ) )
-   {
-      pWVT->ROWS = ( USHORT ) iRow;
-      pWVT->COLS = ( USHORT ) iCol;
-      return TRUE;
-   }
-
-   return FALSE;
 }
 
 /*
@@ -447,9 +428,11 @@ static void hb_gt_wvt_UpdateCaret( PHB_GTWVT pWVT )
    }
    else
    {
-      if( iCaretSize != pWVT->CaretSize || !pWVT->CaretExist )
+      if( iCaretSize != pWVT->CaretSize || pWVT->PTEXTSIZE.x != pWVT->CaretWidth ||
+          !pWVT->CaretExist )
       {
          pWVT->CaretSize = iCaretSize;
+         pWVT->CaretWidth = pWVT->PTEXTSIZE.x;
          pWVT->CaretExist = CreateCaret( pWVT->hWnd, ( HBITMAP ) NULL, pWVT->PTEXTSIZE.x,
                                          pWVT->CaretSize < 0 ? - pWVT->CaretSize : pWVT->CaretSize );
       }
@@ -474,7 +457,6 @@ static void hb_gt_wvt_KillCaret( PHB_GTWVT pWVT )
    }
 }
 
-
 static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 {
    HDC        hdc;
@@ -489,13 +471,12 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
     * set the font and get it's size to determine the size of the client area
     * for the required number of rows and columns
     */
-   hdc      = GetDC( pWVT->hWnd );
    hFont    = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
                                  pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
-
    if( pWVT->hFont )
       DeleteObject( pWVT->hFont );
    pWVT->hFont = hFont;
+   hdc      = GetDC( pWVT->hWnd );
    hOldFont = ( HFONT ) SelectObject( hdc, hFont );
    GetTextMetrics( hdc, &tm );
    SetTextCharacterExtra( hdc, 0 ); /* do not add extra char spacing even if bold */
@@ -534,9 +515,6 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
    width  += ( USHORT ) ( wi.right - wi.left - ci.right );
    height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
 
-   hb_gt_wvt_KillCaret( pWVT );
-   hb_gt_wvt_UpdateCaret( pWVT );
-
    /*
     * Centre the window within the CLIENT area on the screen
     * but only if pWVT->CentreWindow == TRUE
@@ -547,7 +525,11 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
       wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
    }
    SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
+
    HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+
+   if( pWVT->CaretExist && !pWVT->CaretHidden )
+      hb_gt_wvt_UpdateCaret( pWVT );
 }
 
 static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
@@ -688,10 +670,10 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
                top = ( top  < 0 ? 0 : top  );
             }
 
-            hb_gt_wvt_KillCaret( pWVT );
-            hb_gt_wvt_UpdateCaret( pWVT );
-
             SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
+
+            if( pWVT->CaretExist && !pWVT->CaretHidden )
+               hb_gt_wvt_UpdateCaret( pWVT );
          }
          else
          {
@@ -728,6 +710,18 @@ static BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
    }
 
    *title = NULL;
+   return FALSE;
+}
+
+static BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRow, int iCol )
+{
+   if( HB_GTSELF_RESIZE( pWVT->pGT, iRow, iCol ) )
+   {
+      pWVT->ROWS = ( USHORT ) iRow;
+      pWVT->COLS = ( USHORT ) iCol;
+      return TRUE;
+   }
+
    return FALSE;
 }
 
@@ -1671,7 +1665,7 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
    return ( width <= maxWidth ) && ( height <= maxHeight );
 }
 
-static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, int iCmdShow )
+static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance )
 {
    HWND     hWnd;
    LPTSTR   szAppName;
@@ -1679,6 +1673,7 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, int iCmdShow )
    /* InitCommonControls(); */
 
    szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
+
 
    hWnd = CreateWindow(
                s_szClassName,                               /* classname */
@@ -1696,12 +1691,6 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, int iCmdShow )
 
    HB_TCHAR_FREE( szAppName );
 
-   if( hWnd )
-   {
-      ShowWindow( hWnd, iCmdShow );
-      UpdateWindow( hWnd );
-   }
-
    return hWnd;
 }
 
@@ -1709,7 +1698,7 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 {
    if( !pWVT->hWnd )
    {
-      pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT->hInstance, pWVT->iCmdShow );
+      pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT->hInstance );
       if( !pWVT->hWnd )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 
@@ -1732,6 +1721,9 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
             HB_TCHAR_FREE( buffer );
          }
       }
+
+      ShowWindow( pWVT->hWnd, pWVT->iCmdShow );
+      UpdateWindow( pWVT->hWnd );
    }
 
    return TRUE;
@@ -1977,7 +1969,6 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                if( pWVT->hWnd )
                {
                   hb_gt_wvt_ResetWindowSize( pWVT );
-                  hb_gt_wvt_UpdateCaret( pWVT );
                   HB_GTSELF_REFRESH( pGT );
                }
                DeleteObject( hFont );
@@ -2444,12 +2435,15 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             RECT rect = { 0,0,0,0 };
             GetWindowRect( pWVT->hWnd, &rect );
 
-            x = hb_itemGetNI( pInfo->pNewVal );
-            y = hb_itemGetNI( pInfo->pNewVal2 );
-            if ( iType == HB_GTI_SETPOS_ROWCOL )
+            if( iType == HB_GTI_SETPOS_ROWCOL )
             {
-               y *= pWVT->PTEXTSIZE.x;
-               x *= pWVT->PTEXTSIZE.y;
+               y = hb_itemGetNI( pInfo->pNewVal ) * pWVT->PTEXTSIZE.y;
+               x = hb_itemGetNI( pInfo->pNewVal2 ) * pWVT->PTEXTSIZE.x;
+            }
+            else
+            {
+               x = hb_itemGetNI( pInfo->pNewVal );
+               y = hb_itemGetNI( pInfo->pNewVal2 );
             }
             hb_retl( SetWindowPos( pWVT->hWnd, NULL,
                                    x,

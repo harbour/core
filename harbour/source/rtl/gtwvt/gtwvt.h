@@ -126,7 +126,8 @@ typedef struct
 
    BOOL     CaretExist;                   /* TRUE if a caret has been created */
    BOOL     CaretHidden;                  /* TRUE if a caret has been hiden */
-   int      CaretSize;                    /* Size of solid caret */
+   int      CaretSize;                    /* Height of solid caret */
+   int      CaretWidth;                   /* Width of solid caret */
 
    POINT    MousePos;                     /* the last mouse position */
    BOOL     MouseMove;                    /* Flag to say whether to return mouse movement events */
