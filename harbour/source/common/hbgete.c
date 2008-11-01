@@ -84,11 +84,7 @@ char * hb_getenv( const char * szName )
 #elif defined(HB_OS_OS2)
 
    {
-   #ifdef __GNUC__
       PSZ EnvValue = ( PSZ ) "";
-   #else
-      PCSZ EnvValue = "";
-   #endif
 
       if( DosScanEnv( ( PCSZ ) szName, &EnvValue ) == NO_ERROR )
          pszBuffer = hb_strdup( ( char * ) EnvValue );
@@ -119,11 +115,7 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 
 #elif defined(HB_OS_OS2)
    {
-      #ifdef __GNUC__
-         PSZ EnvValue = ( PSZ ) "";
-      #else
-         PCSZ EnvValue = "";
-      #endif
+      PSZ EnvValue = ( PSZ ) "";
 
       if( DosScanEnv( ( PCSZ ) szName, &EnvValue ) == NO_ERROR )
       {

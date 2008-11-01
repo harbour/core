@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-01 13:41 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbgete.c
+    ! fixed OS2 casting for non GCC compilers
+
 2008-11-01 12:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * source/rtl/memofile.c
