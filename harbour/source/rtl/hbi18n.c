@@ -97,7 +97,7 @@ HB_FUNC( __I18N_SAVE )
    if( ISCHAR( 1 ) )
    {
       HB_FHANDLE handle = hb_fsCreate( ( BYTE * ) hb_parc( 1 ), FC_NORMAL );
-   
+
       if( handle != FS_ERROR )
       {
          hb_retl( hb_i18n_save( handle, hb_param( 2, HB_IT_ARRAY ) ) );
@@ -136,7 +136,7 @@ static PHB_ITEM hb_i18n_load_from_memory( BYTE * memory, ULONG memsize )
    {
       ULONG count = ( ULONG ) HB_GET_LE_UINT32( buffer );
       ULONG i, j;
-      
+
       pTable = hb_itemArrayNew( count << 1 );
 
       for( i = 0; i < count; i++ )
@@ -146,7 +146,7 @@ static PHB_ITEM hb_i18n_load_from_memory( BYTE * memory, ULONG memsize )
             if( hb_i18n_memread( memory, memsize, &buffer, 2, &offset ) )
             {
                USHORT nStrLen = ( USHORT ) HB_GET_LE_UINT16( buffer );
-              
+
                if( nStrLen > 0 && hb_i18n_memread( memory, memsize, &buffer, nStrLen, &offset ) && buffer[ nStrLen - 1 ] == '\0' )
                {
                   hb_arraySetCL( pTable, ( i << 1 ) + j, ( char * ) buffer, nStrLen - 1 );
@@ -194,23 +194,23 @@ static PHB_ITEM hb_i18n_load( PHB_FILE file )
       ULONG i, j;
 
       offset += 4;
-      
+
       pTable = hb_itemArrayNew( count << 1 );
-      
+
       for( i = 0; i < count; i++ )
       {
          for( j = 1; j <= 2; j++ )
          {
             if( hb_fileReadAt( file, buffer, 2, offset ) == 2 )
             {
-               USHORT nStrLen = ( USHORT ) HB_GET_LE_UINT16( buffer );
+               ULONG nStrLen = ( USHORT ) HB_GET_LE_UINT16( buffer );
 
                offset += 2;
-              
+
                if( nStrLen > 0 )
                {
                   BYTE * string = ( BYTE * ) hb_xgrab( nStrLen );
-              
+
                   if( hb_fileReadAt( file, string, nStrLen, offset ) == nStrLen && string[ nStrLen - 1 ] == '\0' )
                   {
                      offset += nStrLen;
@@ -221,7 +221,7 @@ static PHB_ITEM hb_i18n_load( PHB_FILE file )
                      hb_xfree( string );
                }
             }
-      
+
             hb_itemRelease( pTable );
             pTable = NULL;
          }

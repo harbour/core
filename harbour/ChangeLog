@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-01 21:13 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/itemseri.c
+    ! fixed 8-bytes integer numbers deserialization
+    + added support for serializing number with information about size
+      and decimal places. It can be activated by passing .T. as second
+      parameter to HB_SERIALIZE() function.
+      Mindaugas please test if this is what you asked for.
+
+  * harbour/source/rtl/hbi18n.c
+    * changed USHORT to ULONG to pacify warning and minor speed increase
+      (it eliminates later conversions to 32bits when variable is used)
+
 2008-11-01 20:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwvt/gtwvt.h
   * harbour/source/rtl/gtwvt/gtwvt.c
