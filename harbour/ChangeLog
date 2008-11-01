@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-01 15:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/hbi18n.c
+    % Removed 'comment' field from language file header. Any text 
+      can be added simply by adding it to the translation table.
+
+  * contrib/Makefile
+    ! Missing hbdbgfx added here, too.
+    ; BTW, I've intentionally left this lib out from the liblist 
+      until we decide where to put these functions. There is 
+      not much point maintaining for the sake of just a few functions.
+      If there are no objections, I'll be moving these functions 
+      to hbwin (until someone updates the code to work outside 
+      Windows).
+
 2008-11-01 )7:31 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/make_vc_all.bat
   * harbour/contrib/make_gcc_all.sh

@@ -58,26 +58,17 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-static const BYTE s_szHead[ 5 ] = { 193, 'H', 'B', 'L', '\0' };
+static const BYTE s_szHead[ 4 ] = { 193, 'H', 'B', 'L' };
 
-#define HB_I18N_COMMENT_SIZE 64 /* NOTE: Must be larger than 4 bytes. */
-
-static BOOL hb_i18n_save( HB_FHANDLE handle, char * pszComment, PHB_ITEM pTable )
+static BOOL hb_i18n_save( HB_FHANDLE handle, PHB_ITEM pTable )
 {
    ULONG i, j;
-   BYTE buffer[ HB_I18N_COMMENT_SIZE ];
-
-   memset( buffer, 0, sizeof( buffer ) );
-
-   hb_strncpy( ( char * ) buffer, pszComment, sizeof( buffer ) - 1 );
-
-   if( hb_fsWrite( handle, ( BYTE * ) s_szHead, sizeof( s_szHead ) ) != sizeof( s_szHead ) || 
-       hb_fsWrite( handle, buffer, sizeof( buffer ) ) != sizeof( buffer ) )
-      return FALSE;
+   BYTE buffer[ 4 ];
 
    HB_PUT_LE_UINT32( buffer, ( UINT32 ) hb_arrayLen( pTable ) );
 
-   if( hb_fsWrite( handle, buffer, 4 ) != 4 )
+   if( hb_fsWrite( handle, ( BYTE * ) s_szHead, sizeof( s_szHead ) ) != sizeof( s_szHead ) || 
+       hb_fsWrite( handle, buffer, 4 ) != 4 )
       return FALSE;
 
    for( i = 1; i <= hb_arrayLen( pTable ); i++ )
@@ -100,7 +91,7 @@ static BOOL hb_i18n_save( HB_FHANDLE handle, char * pszComment, PHB_ITEM pTable 
 }
 
 /* Saves a table to disk. aSortedTable must be sorted by original text.
-   __I18N_SAVE( cFileName | nHandle, aSortedTable [, cComment ] ) => lSuccess */
+   __I18N_SAVE( cFileName | nHandle, aSortedTable ) => lSuccess */
 HB_FUNC( __I18N_SAVE )
 {
    if( ISCHAR( 1 ) )
@@ -109,14 +100,14 @@ HB_FUNC( __I18N_SAVE )
    
       if( handle != FS_ERROR )
       {
-         hb_retl( hb_i18n_save( handle, hb_parcx( 3 ), hb_param( 2, HB_IT_ARRAY ) ) );
+         hb_retl( hb_i18n_save( handle, hb_param( 2, HB_IT_ARRAY ) ) );
          hb_fsClose( handle );
       }
       else
          hb_retl( FALSE );
    }
    else if( ISNUM( 1 ) )
-      hb_retl( hb_i18n_save( hb_numToHandle( hb_parnint( 1 ) ), hb_parcx( 3 ), hb_param( 2, HB_IT_ARRAY ) ) );
+      hb_retl( hb_i18n_save( hb_numToHandle( hb_parnint( 1 ) ), hb_param( 2, HB_IT_ARRAY ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -141,7 +132,6 @@ static PHB_ITEM hb_i18n_load_from_memory( BYTE * memory, ULONG memsize )
 
    if( hb_i18n_memread( memory, memsize, &buffer, sizeof( s_szHead ), &offset ) &&
        memcmp( buffer, s_szHead, sizeof( s_szHead ) ) == 0 &&
-       hb_i18n_memread( memory, memsize, &buffer, HB_I18N_COMMENT_SIZE, &offset ) &&
        hb_i18n_memread( memory, memsize, &buffer, 4, &offset ) )
    {
       ULONG count = ( ULONG ) HB_GET_LE_UINT32( buffer );
@@ -193,12 +183,11 @@ HB_FUNC( __I18N_LOADFROMMEMORY )
 static PHB_ITEM hb_i18n_load( PHB_FILE file )
 {
    PHB_ITEM pTable = NULL;
-   BYTE buffer[ HB_I18N_COMMENT_SIZE ];
+   BYTE buffer[ 4 ];
    HB_FOFFSET offset = 0;
 
    if( hb_fileReadAt( file, buffer, sizeof( s_szHead ), offset ) == sizeof( s_szHead ) &&
        memcmp( buffer, s_szHead, sizeof( s_szHead ) ) == 0 &&
-       hb_fileReadAt( file, buffer, sizeof( buffer ), offset += sizeof( s_szHead ) ) == sizeof( buffer ) &&
        hb_fileReadAt( file, buffer, 4, offset += sizeof( buffer ) ) == 4 )
    {
       ULONG count = ( ULONG ) HB_GET_LE_UINT32( buffer );
