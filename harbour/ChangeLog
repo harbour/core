@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-01 15:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+    + added #define INCL_LONGLONG to include native compiler LONGLONG
+      definition. It's necessary for OpenWatcom. Please check how it will
+      interact with other OS2 compilers (GCC)
+
 2008-11-01 13:41 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbgete.c
     ! fixed OS2 casting for non GCC compilers

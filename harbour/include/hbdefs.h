@@ -134,6 +134,7 @@
    #define INCL_TYPES
    #define INCL_DOSEXCEPTIONS    /* DOS exception values */
    #define INCL_ERRORS           /* DOS error values     */
+   #define INCL_LONGLONG         /* include native compiler LONGLONG definition */
 
    #include <os2.h>
    #undef INT
