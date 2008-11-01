@@ -522,6 +522,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hbffind$(OBJEXT)  \
     $(OBJ_DIR)\hbfile$(OBJEXT)   \
     $(OBJ_DIR)\hbgtcore$(OBJEXT) \
+    $(OBJ_DIR)\hbi18n$(OBJEXT)   \
     $(OBJ_DIR)\hbinet$(OBJEXT)   \
     $(OBJ_DIR)\hbstrsh$(OBJEXT)  \
     $(OBJ_DIR)\hbrandom$(OBJEXT) \

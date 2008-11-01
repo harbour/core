@@ -8,6 +8,80 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-01 08:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+  * common.mak
+  * source/rtl/Makefile
+  + source/rtl/hbi18n.c
+    + Added basic/low level i18n functions:
+      __I18N_SAVE( cFileName | nHandle, aSortedTable [, cComment ] ) => lSuccess
+      __I18N_LOAD( cFileName | nHandle ) => trs
+      __I18N_GETTEXT( @cText, trs ) => NIL
+    ; NOTE: These were originally based on Giancarlo Niccolai's work in xhb, 
+            but everything was completely reworked, fixed, internals removed, 
+            made portable, lighter, shorter and probably quicker. The used file 
+            format is incompatible, slightly smaller and portable.
+    ; NOTE: The internal format of 'trs' (loaded translation) is also 
+            different. For minimal memory/speed overhead, I've choosen a one 
+            dimensional array, as opposed to the original two dimensional 
+            (like the input aSortedTable array).
+    ; TODO: Higher level functions to handle selecting a default 
+            language, loading files automatically, possibly caching 
+            multiple loaded language translations in memory and providing 
+            a high level HB_I18N_GETTEXT() function. We may also readd 
+            a low-level function to create 'trs' from a memory object 
+            instead of loading it from the disk. We should in any case make 
+            the higher level the lightest and less app specific as possible.
+
+  * include/hbver.ch
+  * source/rtl/version.c
+  * utils/hbtest/rt_str.prg
+  * ChangeLog
+    ! Fixed returning bit width.
+    * Reworked hb_version() parameter values as follows:
+      (also fixed some differences between docs here in the 
+      previous entry and actual code)
+      HB_VERSION_HARBOUR        (was: HB_V_HARBOUR        )
+      HB_VERSION_COMPILER       (was: HB_V_COMPILER       )
+      HB_VERSION_MAJOR          (was: HB_V_MAJOR          )
+      HB_VERSION_MINOR          (was: HB_V_MINOR          )
+      HB_VERSION_MICRO          (was: HB_V_REV            )
+      HB_VERSION_STATUS         (was: HB_V_STATUS         )
+      HB_VERSION_REVISION       (was: HB_V_COUNT          )
+      HB_VERSION_BLD_DATE_STR   (was: HB_V_DATE_TIME      )
+      HB_VERSION_BLD_DATE       (was: HB_V_DATE           )
+      HB_VERSION_BLD_TIME       (was: HB_V_TIME           )
+      HB_VERSION_PCODE_VER      (was: HB_V_PCODE          )
+      HB_VERSION_PCODE_VER_STR  (was: HB_V_PCODE_STR      )
+      HB_VERSION_CHANGELOG_LAST (was: HB_V_CHANGELOG_LAST )
+      HB_VERSION_CHANGELOG_REV  (was: HB_V_CHANGELOG_REV  )
+      HB_VERSION_FLAG_PRG       (was: HB_V_FLAG_HARBOUR   )
+      HB_VERSION_FLAG_C         (was: HB_V_FLAG_C         )
+      HB_VERSION_FLAG_LINKER    (was: HB_V_FLAG_LINKER    )
+      HB_VERSION_BITWIDTH       (was: HB_V_BITWIDTH       )
+      HB_VERSION_ENDIANNESS     (was: HB_V_ENDIANNESS     )
+      This function makes deprecated following functions:
+      - HB_COMPILER() => hb_version( HB_VERSION_COMPILER )
+      - HB_PCODEVER() => hb_version( HB_VERSION_PCODE_VER_STR )
+      - HB_BUILDDATE() => hb_version( HB_VERSION_BLD_DATE_STR )
+      and macros:
+      - __ARCH16BIT__
+      - __ARCH32BIT__
+      - __ARCH64BIT__
+      - __LITTLE_ENDIAN__
+      - __BIG_ENDIAN__
+      - __PDP_ENDIAN__
+      - HB_VER_SVNID
+      - HB_VER_CHLID
+      - HB_VER_LENTRY 
+      - HB_VER_C_USR
+      - HB_VER_L_USR
+      - HB_VER_PRG_USR
+    ; TOFIX: Some term anomalies regarding 'REVISION'.
+
+  * source/vm/runner.c
+    * Minor formatting and added "s_" prefix to static var.
+
 2008-10-31 13:02 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/make_b32_all.bat
     + hbdbgfx librray for auto build.
@@ -286,6 +360,10 @@
       - __LITTLE_ENDIAN__
       - __BIG_ENDIAN__
       - __PDP_ENDIAN__
+      - HB_VER_SVNID
+      - HB_VER_CHLID
+      - HB_VER_LENTRY
+      - HB_VER_C_USR
     ; NOTE: If there are no objections, I'd remove the 
             __ARCH*BIT__ and __*ENDIAN__ predefined macros, 
             as these can be misleading on some systems.

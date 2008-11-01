@@ -89,7 +89,7 @@ typedef struct
    PHB_SYMBOLS    pModuleSymbols;
 } HRB_BODY, * PHRB_BODY;
 
-static const BYTE szHead[ 4 ] = { 192,'H','R','B' };
+static const BYTE s_szHead[ 4 ] = { 192, 'H', 'R', 'B' };
 
 
 #define SYM_NOLINK   0              /* symbol does not have to be linked */
@@ -105,7 +105,7 @@ static int hb_hrbReadHead( char * szBody, ULONG ulBodySize, ULONG * pulBodyOffse
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadHead(%p,%lu,%p)", szBody, ulBodySize, pulBodyOffset ));
 
-   if( ulBodySize < 6 || memcmp( szHead, szBody, 4 ) )
+   if( ulBodySize < 6 || memcmp( s_szHead, szBody, 4 ) )
       return 0;
 
    pVersion = szBody + 4;
@@ -630,7 +630,7 @@ HB_FUNC( HB_HRBRUN )
       char * fileOrBody = hb_parc( 1 );
       PHRB_BODY pHrbBody;
 
-      if( ulLen > 4 && memcmp( szHead, fileOrBody, 4 ) == 0 )
+      if( ulLen > 4 && memcmp( s_szHead, fileOrBody, 4 ) == 0 )
          pHrbBody = hb_hrbLoad( fileOrBody, ulLen );
       else
          pHrbBody = hb_hrbLoadFromFile( fileOrBody );
@@ -671,7 +671,7 @@ HB_FUNC( HB_HRBLOAD )
       char * fileOrBody = hb_parc( 1 );
       PHRB_BODY pHrbBody;
 
-      if( ulLen > 4 && memcmp( szHead, fileOrBody, 4 ) == 0 )
+      if( ulLen > 4 && memcmp( s_szHead, fileOrBody, 4 ) == 0 )
          pHrbBody = hb_hrbLoad( fileOrBody, ulLen );
       else
          pHrbBody = hb_hrbLoadFromFile( fileOrBody );

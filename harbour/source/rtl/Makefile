@@ -64,6 +64,7 @@ C_SOURCES=\
 	hbffind.c    \
 	hbfile.c     \
 	hbgtcore.c   \
+	hbi18n.c     \
 	hbinet.c     \
 	hbstrsh.c    \
 	hbrandom.c   \

@@ -56,29 +56,29 @@
 #define HB_VER_CH_
 
 /* hb_version() parameters. */
-#define HB_V_HARBOUR         0  /* default */
-#define HB_V_COMPILER        1
-#define HB_V_VER_MAJOR       2
-#define HB_V_VER_MINOR       3
-#define HB_V_VER_REV         4
-#define HB_V_VER_STATUS      5
-#define HB_V_VER_COUNT       6
-#define HB_V_DATE_TIME       7
-#define HB_V_DATE            8
-#define HB_V_TIME            9
-#define HB_V_PCODE_VER       10
-#define HB_V_PCODE_VER_STR   11
-#define HB_V_CHANGELOG_LAST  12
-#define HB_V_CHANGELOG_REV   13
-#define HB_V_FLAG_HARBOUR    14
-#define HB_V_FLAG_C          15
-#define HB_V_FLAG_LINKER     16
-#define HB_V_BITWIDTH        17
-#define HB_V_ENDIANNESS      18
+#define HB_VERSION_HARBOUR          0  /* default */
+#define HB_VERSION_COMPILER         1
+#define HB_VERSION_MAJOR            2
+#define HB_VERSION_MINOR            3
+#define HB_VERSION_MICRO            4
+#define HB_VERSION_STATUS           5
+#define HB_VERSION_REVISION         6
+#define HB_VERSION_BLD_DATE_STR     7
+#define HB_VERSION_BLD_DATE         8
+#define HB_VERSION_BLD_TIME         9
+#define HB_VERSION_PCODE_VER        10
+#define HB_VERSION_PCODE_VER_STR    11
+#define HB_VERSION_CHANGELOG_LAST   12
+#define HB_VERSION_CHANGELOG_REV    13
+#define HB_VERSION_FLAG_PRG         14
+#define HB_VERSION_FLAG_C           15
+#define HB_VERSION_FLAG_LINKER      16
+#define HB_VERSION_BITWIDTH         17
+#define HB_VERSION_ENDIANNESS       18
 
 /* hb_version( HB_V_ENDIANNESS ) return values. */
-#define HB_V_ENDIAN_LITTLE   1
-#define HB_V_ENDIAN_BIG      2
-#define HB_V_ENDIAN_PDP      3
+#define HB_VERSION_ENDIAN_LITTLE    1
+#define HB_VERSION_ENDIAN_BIG       2
+#define HB_VERSION_ENDIAN_PDP       3
 
 #endif /* HB_VER_CH_ */

@@ -79,32 +79,32 @@ HB_FUNC( HB_VERSION )
 {
    switch( hb_parni( 1 ) )
    {
-   case HB_V_HARBOUR:        hb_retc_buffer( hb_verHarbour() ); break;
-   case HB_V_COMPILER:       hb_retc_buffer( hb_verCompiler() ); break;
-   case HB_V_VER_MAJOR:      hb_retni( HB_VER_MAJOR ); break;
-   case HB_V_VER_MINOR:      hb_retni( HB_VER_MINOR ); break;
-   case HB_V_VER_REV:        hb_retni( HB_VER_REVISION ); break;
-   case HB_V_VER_STATUS:     hb_retc( HB_VER_STATUS ); break;
-   case HB_V_VER_COUNT:      hb_retni( hb_verSvnID() ); break;
-   case HB_V_DATE_TIME:      hb_retc_buffer( hb_verBuildDate() ); break;
-   case HB_V_DATE:           hb_retds( NULL ); break; /* TODO */
-   case HB_V_TIME:           hb_retc( NULL ); break; /* TODO */
-   case HB_V_PCODE_VER:      hb_retni( HB_PCODE_VER ); break;
-   case HB_V_PCODE_VER_STR:  hb_retc_buffer( hb_verPCode() ); break;
-   case HB_V_CHANGELOG_LAST: hb_retc_const( hb_verSvnLastEntry() ); break;
-   case HB_V_CHANGELOG_REV:  hb_retc_const( hb_verSvnChangeLogID() ); break;
-   case HB_V_FLAG_HARBOUR:   hb_retc_const( hb_verFlagsPRG() ); break;
-   case HB_V_FLAG_C:         hb_retc_const( hb_verFlagsC() ); break;
-   case HB_V_FLAG_LINKER:    hb_retc_const( hb_verFlagsL() ); break;
-   case HB_V_BITWIDTH:       hb_retni( ( int ) sizeof( void * ) ); break;
+   case HB_VERSION_HARBOUR:        hb_retc_buffer( hb_verHarbour() ); break;
+   case HB_VERSION_COMPILER:       hb_retc_buffer( hb_verCompiler() ); break;
+   case HB_VERSION_MAJOR:          hb_retni( HB_VER_MAJOR ); break;
+   case HB_VERSION_MINOR:          hb_retni( HB_VER_MINOR ); break;
+   case HB_VERSION_MICRO:          hb_retni( HB_VER_REVISION ); break;
+   case HB_VERSION_STATUS:         hb_retc( HB_VER_STATUS ); break;
+   case HB_VERSION_REVISION:       hb_retni( hb_verSvnID() ); break;
+   case HB_VERSION_BLD_DATE_STR:   hb_retc_buffer( hb_verBuildDate() ); break;
+   case HB_VERSION_BLD_DATE:       hb_retds( NULL ); break; /* TODO */
+   case HB_VERSION_BLD_TIME:       hb_retc( NULL ); break; /* TODO */
+   case HB_VERSION_PCODE_VER:      hb_retni( HB_PCODE_VER ); break;
+   case HB_VERSION_PCODE_VER_STR:  hb_retc_buffer( hb_verPCode() ); break;
+   case HB_VERSION_CHANGELOG_LAST: hb_retc_const( hb_verSvnLastEntry() ); break;
+   case HB_VERSION_CHANGELOG_REV:  hb_retc_const( hb_verSvnChangeLogID() ); break;
+   case HB_VERSION_FLAG_PRG:       hb_retc_const( hb_verFlagsPRG() ); break;
+   case HB_VERSION_FLAG_C:         hb_retc_const( hb_verFlagsC() ); break;
+   case HB_VERSION_FLAG_LINKER:    hb_retc_const( hb_verFlagsL() ); break;
+   case HB_VERSION_BITWIDTH:       hb_retni( ( int ) sizeof( void * ) * 8 ); break;
 
-   case HB_V_ENDIANNESS:
+   case HB_VERSION_ENDIANNESS:
       #if defined( HB_LITTLE_ENDIAN )
-         hb_retni( HB_V_ENDIAN_LITTLE );
+         hb_retni( HB_VERSION_ENDIAN_LITTLE );
       #elif defined( HB_BIG_ENDIAN )
-         hb_retni( HB_V_ENDIAN_BIG );
+         hb_retni( HB_VERSION_ENDIAN_BIG );
       #elif defined( HB_PDP_ENDIAN )
-         hb_retni( HB_V_ENDIAN_PDP );
+         hb_retni( HB_VERSION_ENDIAN_PDP );
       #else
          hb_retni( 0 );
       #endif
