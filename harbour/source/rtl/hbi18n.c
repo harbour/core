@@ -58,7 +58,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-static const BYTE s_szHead[ 4 ] = { 193, 'H', 'B', 'L' };
+static const BYTE s_szHead[ 5 ] = { 193, 'H', 'B', 'L', '\0' };
 
 #define HB_I18N_COMMENT_SIZE 64 /* NOTE: Must be larger than 4 bytes. */
 
