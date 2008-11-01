@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-01 17:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/gtwvt/gtwvt.h
+  * source/rtl/gtwvt/gtwvt.c
+    + Added support for HB_GTI_ICONRES, HB_GTI_ICONFILE 
+      before the window is created.
+    ! Fixed resource leak when HB_GTI_ICONFILE was used.
+    ! Fixed problem with HB_GTI_ICONRES when it was resetting 
+      the icon if a non-string/non-numeric parameter was passed
+      passed, which included simply trying to read the value 
+      using hb_gtInfo( HB_GTI_ICONRES ). If this was an intented 
+      feature, pls speak up.
+    ; Please review these changes.
+
 2008-11-01 15:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/hbi18n.c
     % Removed 'comment' field from language file header. Any text 

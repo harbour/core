@@ -156,6 +156,9 @@ typedef struct
    BYTE     chrTransTbl[ 256 ];
 #endif
 
+   HICON    hIcon;                        /* Title Bar and Task List icon. Can be NULL. */
+   BOOL     bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
+
    int      CodePage;                     /* Code page to use for display characters */
    BOOL     Win9X;                        /* Flag to say if running on Win9X not NT/2000/XP */
    BOOL     AltF4Close;                   /* Can use Alt+F4 to close application */
