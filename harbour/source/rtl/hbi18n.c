@@ -60,10 +60,12 @@
 
 static const BYTE s_szHead[ 4 ] = { 193, 'H', 'B', 'L' };
 
-static BOOL hb_i18n_write( HB_FHANDLE handle, char * pszComment, PHB_ITEM pTable )
+#define HB_I18N_COMMENT_SIZE 64 /* NOTE: Must be larger than 4 bytes. */
+
+static BOOL hb_i18n_save( HB_FHANDLE handle, char * pszComment, PHB_ITEM pTable )
 {
    ULONG i, j;
-   BYTE buffer[ 64 ];
+   BYTE buffer[ HB_I18N_COMMENT_SIZE ];
 
    memset( buffer, 0, sizeof( buffer ) );
 
@@ -107,47 +109,122 @@ HB_FUNC( __I18N_SAVE )
    
       if( handle != FS_ERROR )
       {
-         hb_retl( hb_i18n_write( handle, hb_parcx( 3 ), hb_param( 2, HB_IT_ARRAY ) ) );
+         hb_retl( hb_i18n_save( handle, hb_parcx( 3 ), hb_param( 2, HB_IT_ARRAY ) ) );
          hb_fsClose( handle );
       }
       else
          hb_retl( FALSE );
    }
    else if( ISNUM( 1 ) )
-      hb_retl( hb_i18n_write( hb_numToHandle( hb_parnint( 1 ) ), hb_parcx( 3 ), hb_param( 2, HB_IT_ARRAY ) ) );
+      hb_retl( hb_i18n_save( hb_numToHandle( hb_parnint( 1 ) ), hb_parcx( 3 ), hb_param( 2, HB_IT_ARRAY ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-static PHB_ITEM hb_i18n_read( HB_FHANDLE handle )
+static BOOL hb_i18n_memread( BYTE * memory, ULONG memsize, BYTE ** buffer, ULONG nSize, ULONG * offset )
+{
+   if( *offset + nSize <= memsize )
+   {
+      *buffer = memory + *offset;
+      *offset += nSize;
+      return TRUE;
+   }
+
+   return FALSE;
+}
+
+static PHB_ITEM hb_i18n_load_from_memory( BYTE * memory, ULONG memsize )
 {
    PHB_ITEM pTable = NULL;
-   BYTE buffer[ 64 ];
+   BYTE * buffer;
+   ULONG offset = 0;
 
-   if( hb_fsRead( handle, buffer, sizeof( s_szHead ) ) == sizeof( s_szHead ) &&
+   if( hb_i18n_memread( memory, memsize, &buffer, sizeof( s_szHead ), &offset ) &&
        memcmp( buffer, s_szHead, sizeof( s_szHead ) ) == 0 &&
-       hb_fsRead( handle, buffer, sizeof( buffer ) ) == sizeof( buffer ) &&
-       hb_fsRead( handle, buffer, 4 ) == 4 )
+       hb_i18n_memread( memory, memsize, &buffer, HB_I18N_COMMENT_SIZE, &offset ) &&
+       hb_i18n_memread( memory, memsize, &buffer, 4, &offset ) )
    {
       ULONG count = ( ULONG ) HB_GET_LE_UINT32( buffer );
       ULONG i, j;
       
-      pTable = hb_itemArrayNew( count * 2 );
+      pTable = hb_itemArrayNew( count << 1 );
+
+      for( i = 0; i < count; i++ )
+      {
+         for( j = 1; j <= 2; j++ )
+         {
+            if( hb_i18n_memread( memory, memsize, &buffer, 2, &offset ) )
+            {
+               USHORT nStrLen = ( USHORT ) HB_GET_LE_UINT16( buffer );
+              
+               if( nStrLen > 0 && hb_i18n_memread( memory, memsize, &buffer, nStrLen, &offset ) && buffer[ nStrLen - 1 ] == '\0' )
+               {
+                  hb_arraySetCL( pTable, ( i << 1 ) + j, ( char * ) buffer, nStrLen - 1 );
+                  continue;
+               }
+            }
+
+            hb_itemRelease( pTable );
+            pTable = NULL;
+         }
+      }
+   }
+
+   return pTable;
+}
+
+/* Loads a table from memory into a flat array.
+   __I18N_LOADFROMMEMORY( cBuffer ) => trs */
+HB_FUNC( __I18N_LOADFROMMEMORY )
+{
+   if( ISCHAR( 1 ) )
+   {
+      PHB_ITEM pTable = hb_i18n_load_from_memory( ( BYTE * ) hb_parc( 1 ), hb_parclen( 1 ) );
+
+      if( pTable )
+         hb_itemReturnRelease( pTable );
+      else
+         hb_reta( 0 );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+static PHB_ITEM hb_i18n_load( PHB_FILE file )
+{
+   PHB_ITEM pTable = NULL;
+   BYTE buffer[ HB_I18N_COMMENT_SIZE ];
+   HB_FOFFSET offset = 0;
+
+   if( hb_fileReadAt( file, buffer, sizeof( s_szHead ), offset ) == sizeof( s_szHead ) &&
+       memcmp( buffer, s_szHead, sizeof( s_szHead ) ) == 0 &&
+       hb_fileReadAt( file, buffer, sizeof( buffer ), offset += sizeof( s_szHead ) ) == sizeof( buffer ) &&
+       hb_fileReadAt( file, buffer, 4, offset += sizeof( buffer ) ) == 4 )
+   {
+      ULONG count = ( ULONG ) HB_GET_LE_UINT32( buffer );
+      ULONG i, j;
+
+      offset += 4;
+      
+      pTable = hb_itemArrayNew( count << 1 );
       
       for( i = 0; i < count; i++ )
       {
          for( j = 1; j <= 2; j++ )
          {
-            if( hb_fsRead( handle, buffer, 2 ) == 2 )
+            if( hb_fileReadAt( file, buffer, 2, offset ) == 2 )
             {
                USHORT nStrLen = ( USHORT ) HB_GET_LE_UINT16( buffer );
+
+               offset += 2;
               
                if( nStrLen > 0 )
                {
                   BYTE * string = ( BYTE * ) hb_xgrab( nStrLen );
               
-                  if( hb_fsRead( handle, string, nStrLen ) == nStrLen && string[ nStrLen - 1 ] == '\0' )
+                  if( hb_fileReadAt( file, string, nStrLen, offset ) == nStrLen && string[ nStrLen - 1 ] == '\0' )
                   {
+                     offset += nStrLen;
                      hb_arraySetCPtr( pTable, ( i << 1 ) + j, ( char * ) string, nStrLen - 1 );
                      continue;
                   }
@@ -166,24 +243,19 @@ static PHB_ITEM hb_i18n_read( HB_FHANDLE handle )
 }
 
 /* Loads a table in a flat array.
-   __I18N_LOAD( cFileName | nHandle ) => aTable. */
+   __I18N_LOAD( cFileName ) => trs */
 HB_FUNC( __I18N_LOAD )
 {
-   if( ISCHAR( 1 ) || ISNUM( 1 ) )
+   if( ISCHAR( 1 ) )
    {
       PHB_ITEM pTable = NULL;
+      PHB_FILE file = hb_fileExtOpen( ( BYTE * ) hb_parc( 1 ), NULL, FO_READ | FO_DENYNONE, NULL, NULL );
 
-      if( ISCHAR( 1 ) )
+      if( file )
       {
-         HB_FHANDLE handle = hb_fsOpen( ( BYTE * ) hb_parc( 1 ), FO_READ | FO_DENYNONE );
-         if( handle != F_ERROR )
-         {
-            pTable = hb_i18n_read( handle );
-            hb_fsClose( handle );
-         }
+         pTable = hb_i18n_load( file );
+         hb_fileClose( file );
       }
-      else
-         pTable = hb_i18n_read( hb_numToHandle( hb_parnint( 1 ) ) );
 
       if( pTable )
          hb_itemReturnRelease( pTable );

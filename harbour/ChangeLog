@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-01 11:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+  * source/rtl/hbi18n.c
+    % Using buffered hb_file*() API in __I18N_LOAD() 
+      instead of plain hb_fs*(). This will cause speedup when 
+      buffering gets implemented in hb_file*(), because 
+      currently two hb_fsRead() will be executed for each 
+      string stored in the language file.
+    - __I18N_LOAD(): Because of the above, passing a file handle 
+      is no longer possible.
+    + Added __I18N_LOADFROMMEMORY( <mem> ) => trs
+    % Minor internal cleanups.
+
 2008-11-01 08:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * common.mak
