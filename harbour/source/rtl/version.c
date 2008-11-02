@@ -62,6 +62,7 @@
  */
 
 #include "hbapi.h"
+#include "hbvm.h"
 
 #include "hbver.ch"
 
