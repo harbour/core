@@ -3,8 +3,8 @@
  */
 
 /*
- * xHarbour Project source code:
- * 
+ * Harbour Project source code:
+ * ISO-8859-5 <--> Unicode conversion table
  *
  * Copyright 1999-2005 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org

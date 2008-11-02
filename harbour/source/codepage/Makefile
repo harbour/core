@@ -42,6 +42,8 @@ C_SOURCES=\
 	cpplwin.c  \
 	cppt850.c  \
 	cpptiso.c  \
+	cpro852.c  \
+	cprowin.c  \
 	cpru866.c  \
 	cpruiso.c  \
 	cprukoi.c  \

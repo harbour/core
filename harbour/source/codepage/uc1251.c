@@ -4,7 +4,7 @@
 
 /*
  * xHarbour Project source code:
- * 
+ *
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  * www - http://www.xharbour.org

@@ -862,6 +862,8 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpplwin$(OBJEXT)  \
     $(OBJ_DIR)\cppt850$(OBJEXT)  \
     $(OBJ_DIR)\cpptiso$(OBJEXT)  \
+    $(OBJ_DIR)\cpro852$(OBJEXT)  \
+    $(OBJ_DIR)\cprowin$(OBJEXT)  \
     $(OBJ_DIR)\cpru866$(OBJEXT)  \
     $(OBJ_DIR)\cpruiso$(OBJEXT)  \
     $(OBJ_DIR)\cprukoi$(OBJEXT)  \

@@ -5,6 +5,7 @@
 /*
  * Harbour Project source code:
  *
+ *
  * Copyright 2006 Vojtech Obrdlik <vobrdlik@centrum.cz>
  * adapted from David Kozub - http://linux.fjfi.cvut.cz/%7Ezub/cp895/
  * www - http://www.harbour-project.org

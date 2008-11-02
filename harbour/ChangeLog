@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-02 16:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+  * common.mak
+  * source/codepage/Makefile
+  + source/codepage/cpro852.c
+  + source/codepage/cprowin.c
+    + Added Romanian codepages.
+    ; TODO: Add ROISO variant.
+
+  * source/codepage/uc1250.c
+  * source/codepage/uc1251.c
+  * source/codepage/uc1252.c
+  * source/codepage/uc8859_5.c
+  * source/codepage/uckam.c
+    * Minor formatting.
+
 2008-11-02 14:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
     ! Readded HB_LANG_EN.
