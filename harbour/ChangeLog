@@ -8,6 +8,41 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-02 22:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/codepage/uc1250.c
+  * source/codepage/uc1251.c
+  * source/codepage/uc1252.c
+  * source/codepage/uc1253.c
+  * source/codepage/uc1254.c
+  * source/codepage/uc1257.c
+  * source/codepage/uc737.c
+  * source/codepage/uc850.c
+  * source/codepage/uc852.c
+  * source/codepage/uc857.c
+  * source/codepage/uc866.c
+  * source/codepage/uc8859_1.c
+  * source/codepage/uc8859_2.c
+  * source/codepage/uc8859_3.c
+  * source/codepage/uc8859_4.c
+  * source/codepage/uc8859_5.c
+  * source/codepage/uc8859_6.c
+  * source/codepage/uc8859_7.c
+  * source/codepage/uc8859_8.c
+  * source/codepage/uc8859_9.c
+  * source/codepage/uc885910.c
+  * source/codepage/uc885911.c
+  * source/codepage/uc885913.c
+  * source/codepage/uc885914.c
+  * source/codepage/uc885915.c
+  * source/codepage/uc885916.c
+  * source/codepage/uc88591b.c
+  * source/codepage/uckam.c
+  * source/codepage/uckoi8.c
+  * source/codepage/uckoi8u.c
+  * source/codepage/ucmaz.c
+  * source/codepage/ucmik.c
+    * Formatting.
+
 2008-11-02 21:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapicdp.h
   * common.mak
