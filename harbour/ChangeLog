@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-02 14:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+    ! Readded HB_LANG_EN.
+
 2008-11-02 14:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
     ! Added all missing LANG and CODEPAGE modules.
