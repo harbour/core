@@ -1861,7 +1861,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
 
                      /* hb_i18n_gettext_noop() is not a real function. It is used to 
                         force writing of string to .pot file. So, we should try to 
-                        replaced function call by first argument regardless fI18n flag 
+                        replace function call by first argument regardless fI18n flag 
                         and warnings. 
                      */
                      if( usCount )
@@ -1871,8 +1871,8 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                         HB_COMP_EXPR_FREE( pParms );
                         HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
                         memcpy( pSelf, pArg, sizeof( HB_EXPR ) );
-                        /* TODO: Why do we need to free this? It is used instead of pSelf. */
-                        HB_COMP_EXPR_FREE( pArg );
+                        /* free pArg expression body but without freeing its subexpressions */
+                        HB_COMP_EXPR_CLEAR( pArg );
                      }
                   }
                }

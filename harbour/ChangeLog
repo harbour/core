@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-02 13:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    ! fixed possible GPF/internal memory corruption in code like:
+         ? HB_I18N_GETTEXT_NOOP( "Ala ma kota" + " !!!" )
+      Mindaugas, the fix is also the answer for the question you left
+      in TODO.
+
 2008-11-02 12:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/dynlibhb.c
     * forced casting in OS2 builds to eliminate problems with possible
