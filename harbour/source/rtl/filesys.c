@@ -120,7 +120,6 @@
 
 #if defined(HB_OS_UNIX_COMPATIBLE)
    #include <unistd.h>
-   #include <signal.h>
    #include <time.h>
    #include <utime.h>
    #include <sys/types.h>
@@ -188,9 +187,6 @@
    #include <time.h>
    #include <utime.h>
 #elif defined(HB_OS_OS2)
-   #include <sys/signal.h>
-   #include <sys/process.h>
-   #include <sys/wait.h>
    #include <time.h>
    #include <share.h>
    #ifndef SH_COMPAT
@@ -2590,7 +2586,7 @@ HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen 
     * It will allow us to add drive emulation in hb_fsCurDrv()/hb_fsChDrv()
     * and hb_fsNameConv()
     */
-#if !defined(HB_OS_OS2) && !defined(__MINGW32__)
+#if !( defined(__GNUC__) && ( defined(HB_OS_OS2) || !defined(__MINGW32__) ) )
    if( uiDrive )
    {
       uiCurDrv = hb_fsCurDrv() + 1;
@@ -2606,7 +2602,7 @@ HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen 
    hb_fsSetIOError( fResult, 0 );
    hb_vmLock();
 
-#elif defined(HB_OS_OS2)
+#elif defined(HB_OS_OS2) && defined(__GNUC__)
 
    hb_vmUnlock();
    fResult = ( _getcwd1( (char *) pbyBuffer, uiDrive + 'A' - 1 ) == 0 );

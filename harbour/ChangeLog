@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-02 12:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/dynlibhb.c
+    * forced casting in OS2 builds to eliminate problems with possible
+      differences between compilers in 'char' type sign
+
+  * harbour/source/rtl/filesys.c
+    ! use _getcwd1() only in GCC OS2 builds - it's local GCC function
+    * removed some header files from OS2 build - please test if it does
+      not break GCC builds
+
 2008-11-02 00:40 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
   * harbour/contrib/gtwvg/gtwvg.h
