@@ -90,7 +90,7 @@ static HB_CODEPAGE s_codepage = { "CS852",
     "a~†~Ñbcüd~‘e~Ç~ÿ~âfgh.ch.i~°jklmn~Âo~¢~îpqr˝sÁt~úu~£~Ö~Åvwxy~Ïzß",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( CS852 );
+HB_CODEPAGE_INIT( CS852 )
 
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup hb_codepage_Init_CS852

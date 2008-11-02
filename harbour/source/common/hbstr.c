@@ -553,7 +553,7 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
    {
       fNeg = FALSE;
    }
-   else if( szNum[ulPos] == '-' )
+   else if( szNum[ ulPos ] == '-' )
    {
       fNeg = TRUE;
       ulPos++;
@@ -561,22 +561,22 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
    else
    {
       fNeg = FALSE;
-      if( szNum[ulPos] == '+' )
+      if( szNum[ ulPos ] == '+' )
          ulPos++;
    }
 
    *lVal = 0;
 
    /* Hex Number */
-   if( fPCode && ulPos + 1 < ulLen && szNum[ulPos] == '0' &&
-       ( szNum[ulPos+1] == 'X' || szNum[ulPos+1] == 'x' ) )
+   if( fPCode && ulPos + 1 < ulLen && szNum[ ulPos ] == '0' &&
+       ( szNum[ ulPos + 1 ] == 'X' || szNum[ ulPos + 1 ] == 'x' ) )
    {
       ulPos += 2;
       iWidth = HB_DEFAULT_WIDTH;
       fHex = TRUE;
       for( ; ulPos < ulLen; ulPos++ )
       {
-         c = szNum[ulPos];
+         c = szNum[ ulPos ];
          if( c >= '0' && c <= '9' )
             c -= '0';
          else if( c >= 'A' && c <= 'F' )
@@ -600,7 +600,7 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
 
       for( ; ulPos < ulLen; ulPos++ )
       {
-         c = szNum[ulPos];
+         c = szNum[ ulPos ];
          if( c >= '0' && c <= '9' )
          {
             if( fDbl )
@@ -613,7 +613,7 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
             }
             else
             {
-               *dVal = (double) *lVal * 10.0 + ( c - '0' );
+               *dVal = ( double ) *lVal * 10.0 + ( c - '0' );
                fDbl = TRUE;
             }
             if( fDec )
@@ -629,7 +629,7 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
          {
             while( !fDec && ulPos < ulLen )
             {
-               if( szNum[ulPos++] == '.' )
+               if( szNum[ ulPos++ ] == '.' )
                   fDec = TRUE;
                else
                   iWidth++;
@@ -654,7 +654,7 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
 #endif
         fDec ) )
    {
-      *dVal = (double) *lVal;
+      *dVal = ( double ) *lVal;
       fDbl = TRUE;
    }
    if( iDec )

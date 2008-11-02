@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * OS(), VERSION(), HB_COMPILER() functions
+ * Version related functions
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999-2008 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -47,17 +47,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999-2008 Viktor Szakats <viktor.szakats@syenar.hu>
- *    HB_VERSION(), HB_COMPILER()
- *
- * See doc/license.txt for licensing terms.
  *
  */
 

@@ -2605,7 +2605,7 @@ HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen 
 #elif defined(HB_OS_OS2) && defined(__GNUC__)
 
    hb_vmUnlock();
-   fResult = ( _getcwd1( (char *) pbyBuffer, uiDrive + 'A' - 1 ) == 0 );
+   fResult = ( _getcwd1( ( char * ) pbyBuffer, uiDrive + 'A' - 1 ) == 0 );
    hb_fsSetIOError( fResult, 0 );
    hb_vmLock();
 

@@ -89,7 +89,7 @@ static HB_CODEPAGE s_codepage = { "SK852",
     "a~ ~„bcŸd~Ô.dz..d§.e~‚fgh.ch.i~¡jkl~’~–mn~åo~¢~“pqr~êsçt~œu~£vwxy~ìz§",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( SK852 );
+HB_CODEPAGE_INIT( SK852 )
 
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup hb_codepage_Init_SK852

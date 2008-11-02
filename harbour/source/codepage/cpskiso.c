@@ -89,7 +89,7 @@ static HB_CODEPAGE s_codepage = { "SKISO",
     "a~á~äbcèd~ï.dz..d¾.e~éfgh.ch.i~íjkl~å~µmn~òo~ó~ôpqr~às¹t~»u~úvwxy~ýz¾",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( SKISO );
+HB_CODEPAGE_INIT( SKISO )
 
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup hb_codepage_Init_SKISO

@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-02 14:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+    ! Added all missing LANG and CODEPAGE modules.
+      [TOMERGE 1.0]
+
+  * ChangeLog
+    - Removed duplicate entry of mine.
+
+  * source/common/hbstr.c
+  * source/rtl/version.c
+  * source/rtl/filesys.c
+    * Minor formatting.
+
+  * source/codepage/cpcs852.c
+  * source/codepage/cpsk852.c
+  * source/codepage/cpcsiso.c
+  * source/codepage/cpcswin.c
+  * source/codepage/cpskiso.c
+  * source/codepage/cpskwin.c
+  * source/codepage/cpcskam.c
+  * source/codepage/cpskkam.c
+    * Removed unnecessary ending ';'
+
 2008-11-02 13:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c
     ! fixed possible GPF/internal memory corruption in code like:
@@ -119,15 +142,6 @@
 2008-11-01 22:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/hbi18n.c
     * Modified __I18N_GETTEXT() to not RTE when trs table 
-      is non-array (like NIL).
-    * USHORT -> ULONG in a few places.
-
-  * source/rtl/gtwvt/gtwvt.c
-    * Minor formatting.
-
-2008-11-01 22:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
-  * source/rtl/hbi18n.c
-    * Modified __i18n_gettext() to not RTE when trs table 
       is non-array (like NIL).
     * USHORT -> ULONG in a few places.
 

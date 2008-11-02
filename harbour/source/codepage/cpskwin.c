@@ -89,7 +89,7 @@ static HB_CODEPAGE s_codepage = { "SKWIN",
     "a~·~‰bcËd~Ô.dz..dû.e~Èfgh.ch.i~Ìjkl~Â~æmn~Úo~Û~Ùpqr~‡söt~ùu~˙vwxy~˝zû",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( SKWIN );
+HB_CODEPAGE_INIT( SKWIN )
 
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup hb_codepage_Init_SKWIN
