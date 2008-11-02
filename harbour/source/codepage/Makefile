@@ -79,7 +79,19 @@ C_SOURCES=\
 	uc8859_1.c \
 	uc88591b.c \
 	uc8859_2.c \
+	uc8859_3.c \
+	uc8859_4.c \
 	uc8859_5.c \
+	uc8859_6.c \
+	uc8859_7.c \
+	uc8859_8.c \
+	uc8859_9.c \
+	uc885910.c \
+	uc885911.c \
+	uc885913.c \
+	uc885914.c \
+	uc885915.c \
+	uc885916.c \
 	uckam.c    \
 	uckoi8.c   \
 	uckoi8u.c  \

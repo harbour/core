@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-02 21:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapicdp.h
+  * common.mak
+  * source/codepage/Makefile
+  + source/codepage/uc8859_3.c
+  + source/codepage/uc8859_4.c
+  + source/codepage/uc8859_6.c
+  + source/codepage/uc8859_7.c
+  + source/codepage/uc8859_8.c
+  + source/codepage/uc8859_9.c
+  + source/codepage/uc885910.c
+  + source/codepage/uc885911.c
+  + source/codepage/uc885913.c
+  + source/codepage/uc885914.c
+  + source/codepage/uc885915.c
+  + source/codepage/uc885916.c
+    + Added remaining 8859 codepages.
+      0x00-0x1F chars are unstandard (following existing files).
+
+  * source/codepage/uc8859_1.c
+  * source/codepage/uc8859_2.c
+    * Comments.
+
 2008-11-02 16:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * common.mak

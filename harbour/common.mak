@@ -897,9 +897,21 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\uc857$(OBJEXT)    \
     $(OBJ_DIR)\uc866$(OBJEXT)    \
     $(OBJ_DIR)\uc8859_1$(OBJEXT) \
-    $(OBJ_DIR)\uc8859_2$(OBJEXT) \
-    $(OBJ_DIR)\uc8859_5$(OBJEXT) \
     $(OBJ_DIR)\uc88591b$(OBJEXT) \
+    $(OBJ_DIR)\uc8859_2$(OBJEXT) \
+    $(OBJ_DIR)\uc8859_3$(OBJEXT) \
+    $(OBJ_DIR)\uc8859_4$(OBJEXT) \
+    $(OBJ_DIR)\uc8859_5$(OBJEXT) \
+    $(OBJ_DIR)\uc8859_6$(OBJEXT) \
+    $(OBJ_DIR)\uc8859_7$(OBJEXT) \
+    $(OBJ_DIR)\uc8859_8$(OBJEXT) \
+    $(OBJ_DIR)\uc8859_9$(OBJEXT) \
+    $(OBJ_DIR)\uc885910$(OBJEXT) \
+    $(OBJ_DIR)\uc885911$(OBJEXT) \
+    $(OBJ_DIR)\uc885913$(OBJEXT) \
+    $(OBJ_DIR)\uc885914$(OBJEXT) \
+    $(OBJ_DIR)\uc885915$(OBJEXT) \
+    $(OBJ_DIR)\uc885916$(OBJEXT) \
     $(OBJ_DIR)\uckoi8$(OBJEXT)   \
     $(OBJ_DIR)\uckoi8u$(OBJEXT)  \
     $(OBJ_DIR)\ucmaz$(OBJEXT)    \
