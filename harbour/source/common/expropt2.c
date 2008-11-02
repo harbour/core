@@ -1861,7 +1861,7 @@ BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          {
             if( pArg->ulLength == 1 )
             {
-               szValue = ( char * ) hb_szAscii[ toupper( (unsigned char)
+               szValue = ( char * ) hb_szAscii[ toupper( ( unsigned char )
                                           pArg->value.asString.string[ 0 ] ) ];
                fDealloc = FALSE;
             }

@@ -97,6 +97,37 @@ HB_FUNC( HB_VERSION )
    case HB_VERSION_FLAG_C:         hb_retc_const( hb_verFlagsC() ); break;
    case HB_VERSION_FLAG_LINKER:    hb_retc_const( hb_verFlagsL() ); break;
    case HB_VERSION_BITWIDTH:       hb_retni( ( int ) sizeof( void * ) * 8 ); break;
+   case HB_VERSION_MT:             hb_retl( hb_vmIsMt() );
+
+   case HB_VERSION_UNIX_COMPAT:
+      #if defined( HB_OS_UNIX_COMPATIBLE )
+         hb_retl( TRUE );
+      #else
+         hb_retl( FALSE );
+      #endif
+      break;
+
+   case HB_VERSION_PLATFORM:
+      #if defined( HB_OS_DOS )
+         hb_retc_const( "DOS" );
+      #elif defined( HB_OS_OS2 )
+         hb_retc_const( "OS2" );
+      #elif defined( HB_OS_WIN_32 )
+         hb_retc_const( "WINDOWS" );
+      #elif defined( HB_OS_LINUX )
+         hb_retc_const( "LINUX" );
+      #elif defined( HB_OS_SUNOS )
+         hb_retc_const( "SUNOS" );
+      #elif defined( HB_OS_HPUX )
+         hb_retc_const( "HPUX" );
+      #elif defined( HB_OS_DARWIN )
+         hb_retc_const( "DARWIN" );
+      #elif defined( HB_OS_BSD )
+         hb_retc_const( "BSD" );
+      #else
+         hb_retc_null();
+      #endif
+      break;
 
    case HB_VERSION_ENDIANNESS:
       #if defined( HB_LITTLE_ENDIAN )
@@ -110,6 +141,16 @@ HB_FUNC( HB_VERSION )
       #endif
       break;
    }
+}
+
+HB_FUNC( HB_OSISWINNT )
+{
+   hb_retl( hb_iswinnt() );
+}
+
+HB_FUNC( HB_OSISWINCE )
+{
+   hb_retl( hb_iswince() );
 }
 
 /* Legacy functions */

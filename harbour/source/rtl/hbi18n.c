@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_I18N low-level Harbour functions
+ * __I18N low-level Harbour functions
  *
  * Copyright 2008 Viktor Szakats <harbour.01 syenar.hu>
  * www - http://www.harbour-project.org

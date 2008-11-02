@@ -229,7 +229,7 @@ HB_EXPORT PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
    else
    {
       ulAlloc = 0;
-      szText = ( char * ) ( ulLen ? hb_szAscii[ ( unsigned char ) ( szText[0] ) ] : "" );
+      szText = ( char * ) ( ulLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
    }
 
    if( pItem )
@@ -263,7 +263,7 @@ HB_EXPORT PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLe
    else
    {
       ulAlloc = 0;
-      szText = ( char * ) ( ulLen ? hb_szAscii[ ( unsigned char ) ( szText[0] ) ] : "" );
+      szText = ( char * ) ( ulLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
    }
 
    if( pItem )
@@ -374,7 +374,7 @@ HB_EXPORT PHB_ITEM hb_itemPutCPtr2( PHB_ITEM pItem, char * szText )
    else if( ulLen == 1 )
    {
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = ( char * ) hb_szAscii[ (unsigned char) ( szText[0] ) ];
+      pItem->item.asString.value     = ( char * ) hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ];
       hb_xfree( szText );
    }
    else
@@ -415,7 +415,7 @@ HB_EXPORT PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
    else if( ulLen == 1 )
    {
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = ( char * ) hb_szAscii[ (unsigned char) ( szText[0] ) ];
+      pItem->item.asString.value     = ( char * ) hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ];
       hb_xfree( szText );
    }
    else
@@ -2313,7 +2313,7 @@ HB_EXPORT BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
          lNumber = pNumber->item.asDate.value;
 
       else if( HB_IS_STRING( pNumber ) )
-         lNumber = pNumber->item.asString.value[0];
+         lNumber = pNumber->item.asString.value[ 0 ];
 
       else
       {
@@ -2495,7 +2495,7 @@ HB_EXPORT char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
          buffer = ( char * ) hb_xgrab( size );
          do
          {
-            n = hb_snprintf( buffer, size, "%p", hb_itemGetPtr( pItem ) );
+            n = snprintf( buffer, size, "%p", hb_itemGetPtr( pItem ) );
             if( (n > -1) && (n < size) )
             {
                bFail = FALSE;

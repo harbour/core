@@ -63,7 +63,6 @@
 #undef HB_VER_MINOR
 #undef HB_VER_REVISION
 #undef HB_VER_STATUS
-#undef HB_VERSION
 
 #undef __DATE__
 #undef __TIME__

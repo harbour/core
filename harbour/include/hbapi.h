@@ -810,7 +810,7 @@ extern void hb_hashRefGrabage( PHB_ITEM pHash );
 #define HB_ISNEXTIDCHAR(c)    ( HB_ISFIRSTIDCHAR(c) || \
                                 ( ( (c) >= '0' && (c) <= '9' ) ) )
 
-extern const char * hb_szAscii[256];      /* array of 1 character length strings */
+extern const char * hb_szAscii[ 256 ];      /* array of 1 character length strings */
 
 extern HB_EXPORT int       hb_stricmp( const char * s1, const char * s2 ); /* compare two strings without regards to case */
 extern HB_EXPORT int       hb_strnicmp( const char * s1, const char * s2, ULONG ulLen ); /* compare two string without regards to case, limited by length */
@@ -959,8 +959,8 @@ extern char *   hb_conSetColor( const char * szColor ); /* retrieve and optional
 
 /* compiler and macro compiler */
 extern const char * hb_compReservedName( const char * szName ); /* determines if a string contains a reserve word */
-extern char *   hb_compEncodeString( int iMethod, const char * szText, ULONG * pulLen );
-extern char *   hb_compDecodeString( int iMethod, const char * szText, ULONG * pulLen );
+extern char *       hb_compEncodeString( int iMethod, const char * szText, ULONG * pulLen );
+extern char *       hb_compDecodeString( int iMethod, const char * szText, ULONG * pulLen );
 
 /* misc */
 extern char *   hb_procname( int iLevel, char * szName, BOOL bskipBlock ); /* retrieve a procedure name into a buffer */
@@ -993,12 +993,12 @@ extern void   hb_idleReset( void ); /* services a single idle state */
 extern void   hb_idleSleep( double dSeconds ); /* sleep for a given time serving idle task */
 
 /* misc */
-extern char * hb_verPlatform( void );  /* retrieves a newly allocated buffer containing platform version */
-extern char * hb_verCompiler( void );  /* retrieves a newly allocated buffer containing compiler version */
-extern char * hb_verHarbour( void );   /* retrieves a newly allocated buffer containing harbour version */
-extern char * hb_verPCode( void );     /* retrieves a newly allocated buffer containing PCode version */
-extern char * hb_verBuildDate( void ); /* retrieves a newly allocated buffer containing build date and time */
-extern void   hb_verBuildInfo( void ); /* display harbour, compiler, and platform versions to standard console */
+extern char *       hb_verPlatform( void );        /* retrieves a newly allocated buffer containing platform version */
+extern char *       hb_verCompiler( void );        /* retrieves a newly allocated buffer containing compiler version */
+extern char *       hb_verHarbour( void );         /* retrieves a newly allocated buffer containing harbour version */
+extern char *       hb_verPCode( void );           /* retrieves a newly allocated buffer containing PCode version */
+extern char *       hb_verBuildDate( void );       /* retrieves a newly allocated buffer containing build date and time */
+extern void         hb_verBuildInfo( void );       /* display harbour, compiler, and platform versions to standard console */
 extern int          hb_verSvnID( void );           /* retrieves ChangeLog SVN revision number */
 extern const char * hb_verSvnChangeLogID( void );  /* retrieves a static buffer containing ChangeLog ID string */
 extern const char * hb_verSvnLastEntry( void );    /* retrieves a static buffer containing ChangeLog last entry string */
@@ -1006,7 +1006,7 @@ extern const char * hb_verFlagsC( void );          /* retrieves a static buffer 
 extern const char * hb_verFlagsL( void );          /* retrieves a static buffer containing build time linker flags in L_USR envvar */
 extern const char * hb_verFlagsPRG( void );        /* retrieves a static buffer containing build time Harbour compiler flags in PRG_USR envvar */
 
-extern HB_EXPORT BOOL   hb_iswinnt( void ); /* return .T. if OS == WinNt, 2000, XP */
+extern HB_EXPORT BOOL   hb_iswinnt( void ); /* return .T. if OS == Windows NT, 2000, XP */
 extern HB_EXPORT BOOL   hb_iswince( void ); /* return .T. if OS is Windows CE or Windows Mobile */
 extern HB_EXPORT BOOL   hb_printerIsReady( char * pszPrinterName );
 

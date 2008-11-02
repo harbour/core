@@ -73,7 +73,7 @@ HB_FUNC( CHR )
       szChar[ 1 ] = '\0';
       hb_retclen( szChar, 1 );
 #else
-      hb_retclen( hb_szAscii[ hb_parni( 1 ) & 0xff ], 1 );
+      hb_retclen( hb_szAscii[ hb_parni( 1 ) & 0xFF ], 1 );
 #endif
    }
    else

@@ -8,6 +8,37 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-02 07:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbstdgen.ch
+    - Removed HB_VERSION mistakenly left there.
+
+  * include/hbextern.ch
+  * source/rtl/version.c
+    + Added HB_OSISWINNT()
+    + Added HB_OSISWINCE()
+      [TOMERGE 1.0]
+
+  * include/hbver.ch
+  * source/rtl/version.c
+    + Added:
+      hb_version( HB_VERSION_MT )          -> <logical>
+      hb_version( HB_VERSION_UNIX_COMPAT ) -> <logical>
+      hb_version( HB_VERSION_PLATFORM )    -> <string> (same as ending of __PLATFORM__* macros)
+      This makes these functions/macros deprecated:
+      - HB_MTVM()
+      - __PLATFORM__* (not for all possible situations)
+    ; TOFIX: Cleanup REVISION/SVN term usage in source.
+    ; TOFIX: Remove HB_VER_* predefined macro usage on .prg level.
+    ; TODO: Removed some deprecated by hb_version() functions/macros.
+
+  * include/hbapi.h
+  * source/vm/itemapi.c
+  * source/common/hbstr.c
+  * source/common/expropt2.c
+  * source/rtl/chrasc.c
+  * source/rtl/hbi18n.c
+    * Minor formatting.
+
 2008-11-01 22:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/hbi18n.c
     * Modified __I18N_GETTEXT() to not RTE when trs table 
