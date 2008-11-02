@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-02 23:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapicdp.h
+  * common.mak
+  * source/codepage/Makefile
+  + source/codepage/uc855.c
+  + source/codepage/uc874.c
+  + source/codepage/uc1256.c
+  + source/codepage/uc1258.c
+  + source/codepage/uc860.c
+  + source/codepage/uc862.c
+  + source/codepage/uc864.c
+  + source/codepage/uc775.c
+  + source/codepage/uc1255.c
+  + source/codepage/uc861.c
+  + source/codepage/uc863.c
+  + source/codepage/uc865.c
+  + source/codepage/uc869.c
+    + Added missing IBM/Windows codepages.
+
+  * source/rtl/cdpapi.c
+    * Formatting.
+
 2008-11-02 22:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/codepage/uc1250.c
   * source/codepage/uc1251.c

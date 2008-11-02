@@ -70,12 +70,25 @@ C_SOURCES=\
 	uc1252.c   \
 	uc1253.c   \
 	uc1254.c   \
+	uc1255.c   \
+	uc1256.c   \
 	uc1257.c   \
+	uc1258.c   \
 	uc737.c    \
+	uc775.c    \
 	uc850.c    \
 	uc852.c    \
+	uc855.c    \
 	uc857.c    \
+	uc860.c    \
+	uc861.c    \
+	uc862.c    \
+	uc863.c    \
+	uc864.c    \
+	uc865.c    \
 	uc866.c    \
+	uc869.c    \
+	uc874.c    \
 	uc8859_1.c \
 	uc88591b.c \
 	uc8859_2.c \

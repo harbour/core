@@ -54,22 +54,23 @@
 
 #ifndef HB_CDP_SUPPORT_OFF
 
-#   include "hbapiitm.h"
-#   include "hbapicdp.h"
-#   include "hbapierr.h"
+#include "hbapiitm.h"
+#include "hbapicdp.h"
+#include "hbapierr.h"
 
-    /* Now we are using only 16bit Unicode values so the maximum size
-     * of single character encoded in UTF8 is 3 though ISO 10646 Universal
-     * Character Set (UCS) occupies even a 31-bit code space and to encode
-     * all UCS values we will need 6 bytes. Now in practice no one uses
-     * Unicode character over 0xFFFF but it may change in the future so
-     * it's safer to use macro for maximum UTF8 character size. [druzus]
-     */
-#   define HB_MAX_UTF8        3
+/* Now we are using only 16bit Unicode values so the maximum size
+ * of single character encoded in UTF8 is 3 though ISO 10646 Universal
+ * Character Set (UCS) occupies even a 31-bit code space and to encode
+ * all UCS values we will need 6 bytes. Now in practice no one uses
+ * Unicode character over 0xFFFF but it may change in the future so
+ * it's safer to use macro for maximum UTF8 character size. [druzus]
+ */
+#define HB_MAX_UTF8        3
 
-#   define NUMBER_OF_CHARS    256
+#define NUMBER_OF_CHARS    256
 
-static USHORT s_uniCodes[NUMBER_OF_CHARS] = {
+static USHORT s_uniCodes[ NUMBER_OF_CHARS ] =
+{
    0x0020, 0x263A, 0x263B, 0x2665, 0x2666, 0x2663, 0x2660, 0x2022,
    0x25D8, 0x25CB, 0x25D9, 0x2642, 0x2640, 0x266A, 0x266B, 0x263C,
    0x25BA, 0x25C4, 0x2195, 0x203C, 0x00B6, 0x00A7, 0x25AC, 0x21A8,
@@ -101,7 +102,7 @@ static USHORT s_uniCodes[NUMBER_OF_CHARS] = {
    0x03B1, 0x00DF, 0x0393, 0x03C0, 0x03A3, 0x03C3, 0x00B5, 0x03C4,
    0x03A6, 0x0398, 0x03A9, 0x03B4, 0x221E, 0x03C6, 0x03B5, 0x2229,
    0x2261, 0x00B1, 0x2265, 0x2264, 0x2320, 0x2321, 0x00F7, 0x2248,
-   0x00B0, 0x2219, 0x00B7, 0x221A, 0x207F, 0x00B2, 0x25A0, 0x00A0,
+   0x00B0, 0x2219, 0x00B7, 0x221A, 0x207F, 0x00B2, 0x25A0, 0x00A0
 };
 
 HB_UNITABLE hb_uniTbl_437 = { HB_CPID_437, NUMBER_OF_CHARS, FALSE, s_uniCodes };

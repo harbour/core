@@ -890,12 +890,25 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\uc1252$(OBJEXT)   \
     $(OBJ_DIR)\uc1253$(OBJEXT)   \
     $(OBJ_DIR)\uc1254$(OBJEXT)   \
+    $(OBJ_DIR)\uc1255$(OBJEXT)   \
+    $(OBJ_DIR)\uc1256$(OBJEXT)   \
     $(OBJ_DIR)\uc1257$(OBJEXT)   \
+    $(OBJ_DIR)\uc1258$(OBJEXT)   \
     $(OBJ_DIR)\uc737$(OBJEXT)    \
+    $(OBJ_DIR)\uc775$(OBJEXT)    \
     $(OBJ_DIR)\uc850$(OBJEXT)    \
     $(OBJ_DIR)\uc852$(OBJEXT)    \
+    $(OBJ_DIR)\uc855$(OBJEXT)    \
     $(OBJ_DIR)\uc857$(OBJEXT)    \
+    $(OBJ_DIR)\uc860$(OBJEXT)    \
+    $(OBJ_DIR)\uc861$(OBJEXT)    \
+    $(OBJ_DIR)\uc862$(OBJEXT)    \
+    $(OBJ_DIR)\uc863$(OBJEXT)    \
+    $(OBJ_DIR)\uc864$(OBJEXT)    \
+    $(OBJ_DIR)\uc865$(OBJEXT)    \
     $(OBJ_DIR)\uc866$(OBJEXT)    \
+    $(OBJ_DIR)\uc869$(OBJEXT)    \
+    $(OBJ_DIR)\uc874$(OBJEXT)    \
     $(OBJ_DIR)\uc8859_1$(OBJEXT) \
     $(OBJ_DIR)\uc88591b$(OBJEXT) \
     $(OBJ_DIR)\uc8859_2$(OBJEXT) \
