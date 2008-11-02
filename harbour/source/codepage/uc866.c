@@ -3,8 +3,8 @@
  */
 
 /*
- * xHarbour Project source code:
- * 
+ * Harbour Project source code:
+ * IBM866 <-> Unicode conversion table
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  * www - http://www.xharbour.org

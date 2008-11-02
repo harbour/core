@@ -3,8 +3,8 @@
  */
 
 /*
- * xHarbour Project source code:
- * ISO-8859-1 <--> Unicode conversion table
+ * Harbour Project source code:
+ * ISO-8859-1 <-> Unicode conversion table
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  * www - http://www.xharbour.org

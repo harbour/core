@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ISO-8859-14 <--> Unicode conversion table
+ * ISO-8859-14 <-> Unicode conversion table
  *
  * Copyright 2008 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
