@@ -325,7 +325,7 @@ HB_EXPORT void hb_md5file( HB_FHANDLE hFile, BYTE * ucDigest )
    UCHAR buf[ 128 ], * readbuf = ( UCHAR * ) hb_xgrab( MAX_FBUF );
 
    hb_md5accinit( md5.accum );
-   n = hb_fsReadLarge( hFile, readbuf, MAX_FBUF );
+   n = hb_fsReadLarge( hFile, ( BYTE * ) readbuf, MAX_FBUF );
    flen += n;
    while( n == MAX_FBUF )
    {
@@ -334,7 +334,7 @@ HB_EXPORT void hb_md5file( HB_FHANDLE hFile, BYTE * ucDigest )
          memcpy( md5.buf, readbuf + ( i << 6 ), 64 );
          hb_md5go( &md5 );
       }
-      n = hb_fsReadLarge( hFile, readbuf, MAX_FBUF );
+      n = hb_fsReadLarge( hFile, ( BYTE * ) readbuf, MAX_FBUF );
       flen += n;
    }
    hb_fsClose( hFile );

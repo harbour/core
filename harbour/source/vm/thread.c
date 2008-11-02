@@ -74,6 +74,12 @@
 #  include <sys/time.h>
 #endif
 
+/* temporary workaround for non GCC ST builds */
+#if !defined( HB_MT_VM ) && defined( HB_OS_OS2 ) && !defined( __GNUC__ )
+#  define _gettid()     0
+#endif
+
+
 static volatile BOOL s_fThreadInit = FALSE;
 static PHB_ITEM s_pOnceMutex = NULL;
 
