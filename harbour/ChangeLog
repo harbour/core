@@ -8,6 +8,58 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-02 00:40 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/gtwvg/gtwvg.h
+  * harbour/contrib/gtwvg/hbgtwvg.ch
+  * harbour/contrib/gtwvg/wvgpaint.prg
+
+    ! Synchronized with GTWVT.
+
+    + Added HB_GTI_* hb_gtInfo() constants:
+         HB_GTI_PRESPARAMS  // provides mechanism to configure windows appearance and behavior
+         HB_GTI_ENABLE      // enables window to receive input focus with specified GT
+         HB_GTI_DISABLE     // disables window to accept input focus with specified GT
+         HB_GTI_SETFOCUS    // sets the input focus to specified GT
+
+    + Added HB_GT_PP structure supporting design-time presentation
+      parameters via HB_GTI_PRESPARAMS:
+         HB_GTI_PP_EXSTYLE  // extended style of the window
+         HB_GTI_PP_STYLE    // normal style of the window
+         HB_GTI_PP_X        // left position by pixel | top position by row
+         HB_GTI_PP_Y        // top position by pixel | left position by col
+         HB_GTI_PP_WIDTH    // width of the window by pixel | number of rows in window
+         HB_GTI_PP_HEIGHT   // height of the window by pixel | number of columns in window
+         HB_GTI_PP_PARENT   // parent GT if window needs to be modal and/or other usage
+         HB_GTI_PP_VISIBLE  // flag to specify if the window is made visible immediate after this call
+         HB_GTI_PP_ROWCOLS  // flag to interpret X,Y,WIDTH,HEIGHT as Top,Left,Rows,Cols
+       
+      ;IMPLEMENTS the behavioral changes to current GT window invoked 
+                  either by hb_gtCreate() or hb_gtSelect() functions by specifying
+                  an array of 9 elements ( bound to increase in future ) via
+                  hb_gtInfo( HB_GTI_PRESPARAMS, aPresParams ) where <aPresParams>
+                  contains elements described as above:
+                     1. ExStyle                N   [D] 0
+                     2. Style                  N       WS_OVERLAPPEDWINDOW
+                     3. x[pxl] top[row]        N       0
+                     4. y[pxl] left[col]       N       0
+                     5. width[pxl]  rows[row]  N       CW_USEDEFAULT
+                     6. height[pxl] cols[col]  N       CW_USEDEFAULT
+                     7. Parent GT              P       NIL
+                     8. Visibility             L       FALSE
+                     9. RowCols                L       FALSE
+              <aPresParams> must be passed with all 9 elements even if
+              you want only few to be changed.
+
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    ! Updated to demonstrate above concept to show up a modal dialog in the 
+      same thread on top of a threaded window. Try to click on the parent window.
+      <Traditional><Browser><F3> will show up this modal dialog. 
+
+    ;NOTE : Please do not use literals to define members, always use
+            #defines from hbgtwvg.ch as it is a work in progress and is possible
+            that few of the definitions may change in future.
+
 2008-11-02 07:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/version.c
     ! Added missing header from previous change.

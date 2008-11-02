@@ -739,37 +739,37 @@ FUNCTION Wvt_KillTimer( nTimerID )
 
 FUNCTION Wvt_SetOnTop()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, WNDS_SETONTOP )
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETONTOP )
 
 //-------------------------------------------------------------------//
 
 FUNCTION Wvt_SetAsNormal()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, WNDS_SETASNORMAL )
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETASNORMAL )
 
 //-------------------------------------------------------------------//
 
 FUNCTION Wvt_Minimize()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, WNDS_MINIMIZED )
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MINIMIZED )
 
 //-------------------------------------------------------------------//
 
 FUNCTION Wvt_Maximize()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, WNDS_MAXIMIZED )
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
 
 //-------------------------------------------------------------------//
 
 FUNCTION Wvt_Hide()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, WNDS_HIDDEN )
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_HIDDEN )
 
 //-------------------------------------------------------------------//
 
 FUNCTION Wvt_Show()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, WNDS_NORMAL )
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_NORMAL )
 
 //-------------------------------------------------------------------//
 

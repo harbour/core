@@ -636,9 +636,11 @@ FUNCTION WvtMyBrowse()
    Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), ;
                         SetMode( 35,70 ),     ;
                         hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS ),;
-                        hb_clear(),           ;
+                        hb_clear(),                   ;
+                        Wvt_SetGui( .t. ),            ;
                         Wvt_ShowWindow( SW_RESTORE ), ;
-                        WvtMyBrowse_X() } )
+                        WvtMyBrowse_X();
+                     } )
    #else
       WvtMyBrowse_X()
    #endif
@@ -646,7 +648,7 @@ FUNCTION WvtMyBrowse()
    Return nil
 //----------------------------------------------------------------------//
 FUNCTION WvtMyBrowse_X()
-   LOCAL nKey, bBlock, oBrowse , aLastPaint, i
+   LOCAL nKey, bBlock, oBrowse , aLastPaint, i, aLastPaint1
    LOCAL lEnd    := .f.
    LOCAL aBlocks := {}
    LOCAL info_   := {}
@@ -657,11 +659,12 @@ FUNCTION WvtMyBrowse_X()
    LOCAL nCursor := setCursor( 0 )
    LOCAL nRow    := row()
    LOCAL nCol    := col()
-   LOCAL cColor  := SetColor( "N/BG,N/GR*,,,N/W*" )//SetColor( "N/W*,N/GR*,,,N/W*" )
+   LOCAL cColor  := SetColor( "N/W*,N/GR*,,,N/W*" )
    LOCAL cScr    := SaveScreen( 0,0,maxrow(),maxcol() )
    LOCAL aObjects:= WvtSetObjects( {} )
    LOCAL hPopup  := Wvt_SetPopupMenu()
    LOCAL stru_:={}, cDbfFile, cSqlFile, cFileIndex, cFileDbf, cRDD, nIndex
+   Local pGT, pGT1, nStStyle, nExStyle
 
    STATIC nStyle := 0
    THREAD STATIC nFactor := 200
@@ -712,8 +715,9 @@ FUNCTION WvtMyBrowse_X()
 
    nStyle++
 
-   aAdd( aBlocks, {|| Wvt_SetIcon( "dia_excl.ico" ) } )
-   aAdd( aBlocks, {|| Wvt_SetTitle( "WVT Gui TBrowse()" ) } )
+   hb_gtInfo( HB_GTI_ICONFILE, "dia_excl.ico" )
+   hb_gtInfo( HB_GTI_WINTITLE, "WVT Gui TBrowse()" )
+
    aAdd( aBlocks, {|| Wvt_DrawBoxRaised( oBrowse:nTop-3, oBrowse:nLeft-2, oBrowse:nBottom+1, oBrowse:nRight+2 ) } )
    aAdd( aBlocks, {|| Wvt_DrawBoxRecessed( oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
    aAdd( aBlocks, {|| Wvt_DrawGridHorz( oBrowse:nTop+3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
@@ -723,6 +727,7 @@ FUNCTION WvtMyBrowse_X()
 
    DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
    DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( CurDrive()+":\"+CurDir()+"\"+"test.dbf", oBrowse:nRight-oBrowse:nLeft+1 ), "W+/W" )
+   DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F11 Transp++> <F12 Transp-->',maxcol()+1), 'B/W' )
 
    While !lEnd
       oBrowse:ForceStable()
@@ -731,11 +736,11 @@ FUNCTION WvtMyBrowse_X()
 
       do case
       case nKey == K_F12
-         nFactor -= 10
+         nFactor--
          hb_gtInfo( HB_GTI_SPEC, HB_GTS_FACTOR, nFactor )
 
       case nKey == K_F11
-         nFactor += 10
+         nFactor++
          hb_gtInfo( HB_GTI_SPEC, HB_GTS_FACTOR, nFactor )
 
       case BrwHandleKey( oBrowse, nKey, @lEnd )
@@ -746,7 +751,7 @@ FUNCTION WvtMyBrowse_X()
 
          DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
          DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( CurDrive()+":\"+CurDir()+"\"+"test.dbf", oBrowse:nRight - oBrowse:nLeft + 1 ), "W+/W" )
-
+         DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F11 Transp++> <F12 Transp-->',maxcol()+1), 'B/W' )
          oBrowse:configure()
 
       case nKey == K_F2
@@ -758,6 +763,36 @@ FUNCTION WvtMyBrowse_X()
          Set Order To ( nIndex )
          oBrowse:RefreshAll()
 
+      case nKey == K_F3
+         aLastPaint1 := WvtSetBlocks( {} )
+
+         pGT1 := hb_gtCreate( 'WVG' )
+         pGT  := hb_gtSelect( pGT1 )
+
+         /*  If coordinates are in row/cols */
+         /*  Extended Style, Standard Style, Top, Left, Rows, Columns, ParentGT, Visible, RowCols */
+         /*  If coordinates are in pixels   */
+         /*  Extended Style, Standard Style, x, y, width, height, ParentGT, Visible, RowCols */
+         nExStyle := WS_EX_DLGMODALFRAME
+         nStStyle := WS_POPUP + WS_CAPTION + WS_MINIMIZEBOX
+         hb_gtInfo( HB_GTI_PRESPARAMS, { nExStyle, nStStyle, 4, 8, 13, 50, pGT, .F., .T. } )
+
+         SetColor( 'W+/W' )
+         CLS
+         hb_gtInfo( HB_GTI_RESIZABLE    , .F.    )
+         Hb_GtInfo( HB_GTI_CLOSABLE     , .F.    )
+         hb_gtInfo( HB_GTI_WINTITLE     , 'Information! [R:4 C:8]' )
+         hb_gtInfo( HB_GTI_DISABLE      , pGT    )
+
+         Hb_GtInfo( HB_GTI_SPEC         , HB_GTS_SHOWWINDOW, SW_NORMAL )
+
+         alert( 'I am in modal window !' )
+
+         pGT1 := NIL
+         hb_gtSelect( pGT )
+         hb_gtInfo( HB_GTI_ENABLE, pGT )
+         hb_gtInfo( HB_GTI_SETFOCUS, pGT )
+         WvtSetBlocks( aLastPaint1 )
       endcase
    end
 

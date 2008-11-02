@@ -247,11 +247,12 @@ typedef struct
    int       y;
    int       width;
    int       height;
-   HWND      hWndParent;
+   PHB_ITEM  pParentGT;
    BOOL      bVisible;
-   BOOL      byPixel;
+   BOOL      bRowCols;
+   BOOL      bConfigured;
 
-} HB_GT_PARAM, * PHB_GT_PARAM;
+} HB_GT_PARAMS, * PHB_GT_PARAMS;
 
 typedef struct
 {
@@ -290,7 +291,8 @@ typedef struct
 
    BOOL     CaretExist;                     /* TRUE if a caret has been created */
    BOOL     CaretHidden;                    /* TRUE if a caret has been hiden */
-   int      CaretSize;                      /* Size of solid caret */
+   int      CaretSize;                      /* Height of solid caret */
+   int      CaretWidth;                     /* Width of solid caret */
 
    POINT    MousePos;                       /* the last mouse position */
    BOOL     MouseMove;                      /* Flag to say whether to return mouse movement events */
@@ -320,6 +322,9 @@ typedef struct
    BYTE     chrTransTbl[ 256 ];
 #endif
 
+   HICON    hIcon;                          /* Title Bar and Task List icon. Can be NULL. */
+   BOOL     bIconToFree;                    /* Do we need to free this icon when it's not NULL? */
+
    int      CodePage;                       /* Code page to use for display characters */
    BOOL     Win9X;                          /* Flag to say if running on Win9X not NT/2000/XP */
    BOOL     AltF4Close;                     /* Can use Alt+F4 to close application */
@@ -337,6 +342,8 @@ typedef struct
    BOOL     bClosable;
 
    int      ResizeMode;                     /* Sets the resizing mode either to FONT or ROWS */
+   RECT     sRectNew;
+   RECT     sRectOld;
 
    //          To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed>            //
 
@@ -408,9 +415,9 @@ typedef struct
    PHB_ITEM  pcbFuncModal[ WVT_DLGMD_MAX ]; // codeblock for WndProc
    int       iTypeModal[ WVT_DLGMD_MAX ];   // Type of Function Pointers - Function 1, Block 2, Method 3
 
-   PHB_GUIDATA * pGUI;                      // GUI Data Structure
+   PHB_GUIDATA  pGUI;                      // GUI Data Structure
 
-   PHB_GT_PARAM * pPP;                      // Presentation Parameters
+   PHB_GT_PARAMS  pPP;                     // Presentation Parameters
 
 } HB_GTWVT, * PHB_GTWVT;
 
@@ -519,6 +526,7 @@ void        HB_EXPORT   hb_wvt_wvtUtils( void );
 
 PHB_GTWVT   HB_EXPORT   hb_wvt_gtGetWVT( void );
 
+void        HB_EXPORT   hb_ToOutDebug( const char * sTraceMsg, ... );
 //----------------------------------------------------------------------//
 
 #endif /* HB_WVT_H_ */

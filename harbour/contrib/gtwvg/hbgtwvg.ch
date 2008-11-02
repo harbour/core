@@ -58,10 +58,28 @@
 //----------------------------------------------------------------------//
 
 #define HB_GTI_SETFONT                   71
+#define HB_GTI_PRESPARAMS                72
+#define HB_GTI_ENABLE                    73
+#define HB_GTI_DISABLE                   74
+#define HB_GTI_SETFOCUS                  75
+
+/* Presentation Parameters | HB_GTI_PRESPARAMS */
+#define HB_GTI_PP_EXSTYLE                 1
+#define HB_GTI_PP_STYLE                   2
+#define HB_GTI_PP_X                       3
+#define HB_GTI_PP_Y                       4
+#define HB_GTI_PP_WIDTH                   5
+#define HB_GTI_PP_HEIGHT                  6
+#define HB_GTI_PP_PARENT                  7
+#define HB_GTI_PP_VISIBLE                 8
+#define HB_GTI_PP_ROWCOLS                 9
+
+#define HB_GTI_PP_SIZE                    9
+
 
 #define HB_GTI_SPEC                    1000
 
-/* Window Specifications */
+/* Window Specifications | HB_GTI_SPEC */
 #define HB_GTS_WINDOWHANDLE               1
 #define HB_GTS_CENTERWINDOW               2
 #define HB_GTS_PROCESSMESSAGES            3
@@ -76,18 +94,28 @@
 #define HB_GTS_SYSTRAYICON               12
 #define HB_GTS_FACTOR                    13
 
-/* Window States */
-#define WNDS_SETONTOP                     1
-#define WNDS_SETASNORMAL                  2
-#define WNDS_MINIMIZED                    3
-#define WNDS_MAXIMIZED                    4
-#define WNDS_HIDDEN                       5
-#define WNDS_NORMAL                       6
 
-/* SysTrayIcon Types */
-#define NIT_FILE                          0
-#define NIT_RESOURCEBYNAME                1
-#define NIT_RESOURCEBYID                  2
+/* Window States | HB_GTS_WNDSTATE */
+#define HB_GTS_WS_SETONTOP                1
+#define HB_GTS_WS_SETASNORMAL             2
+#define HB_GTS_WS_MINIMIZED               3
+#define HB_GTS_WS_MAXIMIZED               4
+#define HB_GTS_WS_HIDDEN                  5
+#define HB_GTS_WS_NORMAL                  6
+
+/* SysTrayIcon Types | HB_GTS_SYSTRAYICON */
+#define HB_GTS_NIT_FILE                   0
+#define HB_GTS_NIT_RESOURCEBYNAME         1
+#define HB_GTS_NIT_RESOURCEBYID           2
+
+/* ShowWindow modes | HB_GTS_SHOWWINDOW */
+#define HB_GTS_SW_NORMAL                  1
+#define HB_GTS_SW_RESTORE                 2
+#define HB_GTS_SW_HIDE                    3
+#define HB_GTS_SW_MINIMIZED               4
+#define HB_GTS_SW_MAXIMIZED               5
+
+#define HB_GTI_GUI                     1001
 
 //----------------------------------------------------------------------//
 
