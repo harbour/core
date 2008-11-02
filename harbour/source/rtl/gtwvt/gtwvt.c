@@ -122,7 +122,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 /* wndclass.cbClsExtra    = 0; */
 /* wndclass.cbWndExtra    = 0; */
    wndclass.hInstance     = hInstance;
-/* wndclass.hIcon         = 0; */
+/* wndclass.hIcon         = NULL; */
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
 /* wndclass.hbrBackground = NULL; */
 /* wndclass.lpszMenuName  = NULL; */
