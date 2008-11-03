@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( Spanish Modern WIN )
+ * National Collation Support Module (ESISOM - Spanish Modern)
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
@@ -84,21 +84,21 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "ESMWIN",
+static HB_CODEPAGE s_codepage = { "ESISOM",
     HB_CPID_8859_1, HB_UNITB_8859_1, NUMBER_OF_CHARACTERS,
     "AÁÀÄBCÇDEÉÈËFGHIÍÌÏJKLMNÑOÓÒÖPQRSTUÚÙÜVWXYZ",
     "aáàäbcçdeéèëfghiíìïjklmnñoóòöpqrstuúùüvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( ESMWIN )
+HB_CODEPAGE_INIT( ESISOM )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_ESMWIN
+   #pragma startup hb_codepage_Init_ESISOM
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_ESMWIN = hb_codepage_Init_ESMWIN;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_ESISOM = hb_codepage_Init_ESISOM;
    #pragma data_seg()
 #endif

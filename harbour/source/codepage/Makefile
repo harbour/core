@@ -19,8 +19,10 @@ C_SOURCES=\
 	cpel737.c  \
 	cpelwin.c  \
 	cpes850.c  \
+	cpesiso.c  \
+	cpesisom.c \
 	cpeswin.c  \
-	cpesmwin.c \
+	cpeswinm.c \
 	cpfr850.c  \
 	cpfriso.c  \
 	cpfrwin.c  \

@@ -839,8 +839,10 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpel737$(OBJEXT)  \
     $(OBJ_DIR)\cpelwin$(OBJEXT)  \
     $(OBJ_DIR)\cpes850$(OBJEXT)  \
-    $(OBJ_DIR)\cpesmwin$(OBJEXT) \
+    $(OBJ_DIR)\cpesiso$(OBJEXT)  \
+    $(OBJ_DIR)\cpesisom$(OBJEXT) \
     $(OBJ_DIR)\cpeswin$(OBJEXT)  \
+    $(OBJ_DIR)\cpeswinm$(OBJEXT) \
     $(OBJ_DIR)\cpfr850$(OBJEXT)  \
     $(OBJ_DIR)\cpfriso$(OBJEXT)  \
     $(OBJ_DIR)\cpfrwin$(OBJEXT)  \

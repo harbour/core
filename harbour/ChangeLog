@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-03 11:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * common.mak
+  * source/codepage/Makefile
+  - source/codepage/cpesmwin.c
+  + source/codepage/cpeswinm.c
+  + source/codepage/cpesiso.c
+  + source/codepage/cpesisom.c
+    * Renamed cpesmwin -> cpeswinm (ESMWIN -> ESWINM) (INCOMPATIBLE)
+    + Added Spanish ISO natsort modules. Besides their ID, 
+      they are idendical with current ESWIN* natsorts, because 
+      the WIN versions for some reason are using ISO-8859 CP 
+      instead of Windows-*. This is IMO wrong, even if these CPs 
+      are similar or identical for the Spanish language.
+
 2008-11-03 09:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/fileio.ch
     * Formatting.
