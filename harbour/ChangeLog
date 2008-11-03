@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-03 14:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * common.mak
+  * source/codepage/Makefile
+  + source/codepage/cpsviso.c
+    + Added SVISO, which is the same as SVWIN, except it's 
+      internally using ISO-8859-1 CP in sync with its name.
+
+  * source/codepage/cpsvwin.c
+    ! Changed internal CP to Windows-1252 from ISO-8859-1, 
+      so that it's in sync with its name.
+
 2008-11-03 14:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbthread.h
   * harbour/source/vm/thread.c

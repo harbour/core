@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (SVWIN)
+ * National Collation Support Module (SVISO)
  *
  * Copyright 2006 Klas Engwall <klas dot engwall at engwall dot com>
  * www - http://www.harbour-project.org
@@ -52,7 +52,7 @@
 
 /* Language name: Swedish */
 /* ISO language code (2 chars): SV */
-/* Codepage: Windows-1252 */
+/* Codepage: ISO-8859-1 */
 
 #include <ctype.h>
 #include "hbapi.h"
@@ -83,21 +83,21 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "SVWIN",
-    HB_CPID_1252,HB_UNITB_1252,NUMBER_OF_CHARACTERS,
+static HB_CODEPAGE s_codepage = { "SVISO",
+    HB_CPID_8859_1,HB_UNITB_8859_1,NUMBER_OF_CHARACTERS,
     "A~Á~À~Â~ÃBC~ÇD~ÐE~É~È~Ê~ËFGHI~Í~Ì~Î~ÏJKLMN~ÑO~Ó~Ò~Ô~ÕPQRSTU~Ú~Ù~ÛV~WXY~Ý~Ÿ~ÜZÅÄ~ÆÖ~Ø~Œ",
     "a~á~à~â~ãbc~çd~ðe~é~è~ê~ëfghi~í~ì~î~ïjklmn~ño~ó~ò~ô~õpqrstu~ú~ù~ûv~wxy~ý~ÿ~üzåä~æö~ø~œ",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( SVWIN )
+HB_CODEPAGE_INIT( SVISO )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_SVWIN
+   #pragma startup hb_codepage_Init_SVISO
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_SVWIN = hb_codepage_Init_SVWIN;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_SVISO = hb_codepage_Init_SVISO;
    #pragma data_seg()
 #endif

@@ -884,6 +884,7 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpsrwin$(OBJEXT)  \
     $(OBJ_DIR)\cpsv850$(OBJEXT)  \
     $(OBJ_DIR)\cpsvclip$(OBJEXT) \
+    $(OBJ_DIR)\cpsviso$(OBJEXT)  \
     $(OBJ_DIR)\cpsvwin$(OBJEXT)  \
     $(OBJ_DIR)\cptr857$(OBJEXT)  \
     $(OBJ_DIR)\cptrwin$(OBJEXT)  \

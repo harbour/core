@@ -64,6 +64,7 @@ C_SOURCES=\
 	cpsrwin.c  \
 	cpsv850.c  \
 	cpsvclip.c \
+	cpsviso.c  \
 	cpsvwin.c  \
 	cptr857.c  \
 	cptrwin.c  \
