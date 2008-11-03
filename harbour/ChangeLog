@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-03 14:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbthread.h
+  * harbour/source/vm/thread.c
+    + added ULONG _hb_gettid( void ) to OS2 builds - thanks to Maurilio
+
+  * harbour/source/rtl/hbinet.c
+    * changed a little bit the order of including header files in OS2 builds
+      (blink fix for OpenWatcom OS2 builds).
+
 2008-11-03 12:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
     ! Synced codepage list with recent changes.

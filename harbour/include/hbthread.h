@@ -167,13 +167,19 @@ HB_EXTERN_BEGIN
    typedef HMTX               HB_RAWCRITICAL_T;
    typedef HEV                HB_RAWCOND_T;
 
+   extern ULONG _hb_gettid( void );
+
 #  define HB_THREAD_STARTFUNC( func )     void func( void * Cargo )
 #  define HB_THREAD_END                   _endthread(); return;
 #  define HB_THREAD_RAWEND                return;
 
 #  define HB_CRITICAL_INITVAL ( ( HMTX ) 0 )
 #  define HB_COND_INITVAL     ( ( HEV ) 0 )
-#  define HB_THREAD_SELF()    ( ( TID ) _gettid() )
+#  if defined( __GNUC__ )
+#     define HB_THREAD_SELF()    ( ( TID ) _gettid() )
+#  else
+#     define HB_THREAD_SELF()    ( ( TID ) _hb_gettid() )
+#  endif
 
 #  define HB_CRITICAL_INIT(v)       DosCreateMutexSem( NULL, &(v), 0L, FALSE )
 #  define HB_CRITICAL_DESTROY(v)    DosCloseMutexSem( v )

@@ -74,11 +74,6 @@
 #  include <sys/time.h>
 #endif
 
-/* temporary workaround for non GCC ST builds */
-#if !defined( HB_MT_VM ) && defined( HB_OS_OS2 ) && !defined( __GNUC__ )
-#  define _gettid()     0
-#endif
-
 
 static volatile BOOL s_fThreadInit = FALSE;
 static PHB_ITEM s_pOnceMutex = NULL;
@@ -187,6 +182,19 @@ void hb_threadExit( void )
       s_pOnceMutex = NULL;
    }
 }
+
+#if defined( HB_OS_OS2 )
+ULONG _hb_gettid( void )
+{
+   ULONG tid = 0;
+   PTIB  ptib = NULL;
+
+   if( DosGetInfoBlocks( &ptib, NULL ) == NO_ERROR )
+      tid = ptib->tib_ptib2->tib2_ultid;
+
+   return tid;
+}
+#endif
 
 void hb_threadEnterCriticalSection( HB_CRITICAL_T * critical )
 {

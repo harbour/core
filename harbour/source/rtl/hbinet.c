@@ -96,8 +96,18 @@
 
       #define HB_SOCKET_T int
       #include <unistd.h>
+#if defined( HB_OS_OS2 )
+      #if defined( __WATCOMC__ )
+         #include <types.h>
+      #endif
       #include <sys/types.h>
       #include <sys/socket.h>
+      #include <sys/select.h>
+      #include <sys/ioctl.h>
+#else
+      #include <sys/types.h>
+      #include <sys/socket.h>
+#endif
       #include <netdb.h>
       #include <netinet/in.h>
       #include <arpa/inet.h>
@@ -206,15 +216,10 @@
    #include <errno.h>
 #endif
 
-#if defined( HB_OS_UNIX ) || defined( HB_OS_UNIX_COMPATIBLE ) || defined( HB_OS_BSD ) || defined( HB_OS_OS2 )
+#if defined( HB_OS_UNIX ) || defined( HB_OS_UNIX_COMPATIBLE ) || defined( HB_OS_OS2 )
    #include <sys/time.h>
 #endif
 
-#if defined( HB_OS_OS2 )
-   #include <sys/socket.h>
-   #include <sys/select.h>
-   #include <sys/ioctl.h>
-#endif
 
 #if defined( HB_OS_OS2 ) || defined( HB_OS_WIN_32 )
    /* NET_SIZE_T exists because of shortsightedness on the POSIX committee.  BSD
