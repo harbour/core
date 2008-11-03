@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-03 17:49 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbthread.h
+    * include <process.h> in OpenWatcom OS2 builds
+
 2008-11-03 14:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * common.mak
   * source/codepage/Makefile

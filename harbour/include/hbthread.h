@@ -63,6 +63,10 @@
 #elif defined( HB_OS_WIN_32 )
 #  include <windows.h>
 #  include <process.h>
+#elif defined( HB_OS_WIN_OS2 )
+#  if defined( __WATCOMC__ )
+#     include <process.h>
+#  endif
 #endif
 
 HB_EXTERN_BEGIN
