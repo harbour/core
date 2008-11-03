@@ -22,9 +22,11 @@ C_SOURCES=\
 	cpeswin.c  \
 	cpesmwin.c \
 	cpfr850.c  \
-	cphr1250.c \
+	cpfriso.c  \
+	cpfrwin.c  \
 	cphr437.c  \
 	cphr852.c  \
+	cphrwin.c  \
 	cphu852.c  \
 	cphu852s.c \
 	cphuiso.c  \
@@ -43,6 +45,7 @@ C_SOURCES=\
 	cppt850.c  \
 	cpptiso.c  \
 	cpro852.c  \
+	cproiso.c  \
 	cprowin.c  \
 	cpru866.c  \
 	cpruiso.c  \

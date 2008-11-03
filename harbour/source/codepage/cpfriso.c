@@ -4,12 +4,10 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (French MS-DOS 850)
+ * National Collation Support Module (French ISO-8859-1)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
+ * Copyright 2008 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
- * French collating sequence (FR) done by
- * Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +52,7 @@
 
 /* Language name: French */
 /* ISO language code (2 chars): FR */
-/* Codepage: 850 */
+/* Codepage: ISO-8859-1 */
 
 #include <ctype.h>
 #include "hbapi.h"
@@ -85,21 +83,21 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "FR850",
-    HB_CPID_850, HB_UNITB_850, NUMBER_OF_CHARACTERS,
-    "A~µ~∑~∂~éBCDE~ê~‘~“~”FGHI~÷~ﬁ~◊~ÿJKLMNO~‡~„~‚~ôPQRSTU~È~Î~Í~öVWXYZ",
-    "a~†~Ö~É~Ñbcde~Ç~ä~à~âfghi~°~ç~å~ãjklmno~¢~ï~ì~îpqrstu~£~ó~ñ~Åvwxyz",
+static HB_CODEPAGE s_codepage = { "FRISO",
+    HB_CPID_8859_1, HB_UNITB_8859_1, NUMBER_OF_CHARACTERS,
+    "A~¡~¿~¬~ƒBCDE~…~»~ ~ÀFGHI~Õ~Ã~Œ~œJKLMNO~”~“~‘~÷PQRSTU~⁄~Ÿ~€~‹VWXYZ",
+    "a~·~‡~‚~‰bcde~È~Ë~Í~Îfghi~Ì~Ï~Ó~Ôjklmno~Û~Ú~Ù~ˆpqrstu~˙~˘~˚~¸vwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( FR850 )
+HB_CODEPAGE_INIT( FRISO )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_FR850
+   #pragma startup hb_codepage_Init_FRISO
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_FR850 = hb_codepage_Init_FR850;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_FRISO = hb_codepage_Init_FRISO;
    #pragma data_seg()
 #endif

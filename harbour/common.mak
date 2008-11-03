@@ -842,9 +842,11 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpesmwin$(OBJEXT) \
     $(OBJ_DIR)\cpeswin$(OBJEXT)  \
     $(OBJ_DIR)\cpfr850$(OBJEXT)  \
-    $(OBJ_DIR)\cphr1250$(OBJEXT) \
+    $(OBJ_DIR)\cpfriso$(OBJEXT)  \
+    $(OBJ_DIR)\cpfrwin$(OBJEXT)  \
     $(OBJ_DIR)\cphr437$(OBJEXT)  \
     $(OBJ_DIR)\cphr852$(OBJEXT)  \
+    $(OBJ_DIR)\cphrwin$(OBJEXT)  \
     $(OBJ_DIR)\cphu852$(OBJEXT)  \
     $(OBJ_DIR)\cphu852s$(OBJEXT) \
     $(OBJ_DIR)\cphuiso$(OBJEXT)  \
@@ -863,6 +865,7 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cppt850$(OBJEXT)  \
     $(OBJ_DIR)\cpptiso$(OBJEXT)  \
     $(OBJ_DIR)\cpro852$(OBJEXT)  \
+    $(OBJ_DIR)\cproiso$(OBJEXT)  \
     $(OBJ_DIR)\cprowin$(OBJEXT)  \
     $(OBJ_DIR)\cpru866$(OBJEXT)  \
     $(OBJ_DIR)\cpruiso$(OBJEXT)  \

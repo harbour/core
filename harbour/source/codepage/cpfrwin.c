@@ -4,12 +4,10 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( HR1250 )
+ * National Collation Support Module (French Windows-1252)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
+ * Copyright 2008 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
- * 2003 Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
- * 2003 Vlado Miholic <Vladimir.Miholic@sk.hinet.hr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,20 +50,20 @@
  *
  */
 
-/* Language name: Croatien */
-/* ISO language code (2 chars): HR */
-/* Codepage: 1250 */
+/* Language name: French */
+/* ISO language code (2 chars): FR */
+/* Codepage: Windows-1252 */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  31    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  46    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
+#define ACCENTED_EQUAL         1    /* Should be 1, if accented character
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
@@ -85,22 +83,21 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "HR1250",
-    HB_CPID_1250,HB_UNITB_1250,NUMBER_OF_CHARACTERS,
-    "ABCCCDÐEFGHIJKLMNOPQRSŠTUVWZŽXY",
-    "abcccddefghijklmnopqrsštuvwzžxy",
+static HB_CODEPAGE s_codepage = { "FRWIN",
+    HB_CPID_1252, HB_UNITB_1252, NUMBER_OF_CHARACTERS,
+    "A~Á~À~Â~ÄBCDE~É~È~Ê~ËFGHI~Í~Ì~Î~ÏJKLMNO~Ó~Ò~Ô~ÖPQRSTU~Ú~Ù~Û~ÜVWXYZ",
+    "a~á~à~â~äbcde~é~è~ê~ëfghi~í~ì~î~ïjklmno~ó~ò~ô~öpqrstu~ú~ù~û~üvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( HR1250 )
+HB_CODEPAGE_INIT( FRWIN )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_HR1250
+   #pragma startup hb_codepage_Init_FRWIN
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_HR1250 = hb_codepage_Init_HR1250;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_FRWIN = hb_codepage_Init_FRWIN;
    #pragma data_seg()
 #endif
-

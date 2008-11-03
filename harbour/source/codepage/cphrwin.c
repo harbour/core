@@ -4,12 +4,12 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (French MS-DOS 850)
+ * National Collation Support Module (HRWIN)
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
- * French collating sequence (FR) done by
- * Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
+ * 2003 Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
+ * 2003 Vlado Miholic <Vladimir.Miholic@sk.hinet.hr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,20 +52,20 @@
  *
  */
 
-/* Language name: French */
-/* ISO language code (2 chars): FR */
-/* Codepage: 850 */
+/* Language name: Croatien */
+/* ISO language code (2 chars): HR */
+/* Codepage: Windows-1250 */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  46    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  31    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         1    /* Should be 1, if accented character
+#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
@@ -85,21 +85,21 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "FR850",
-    HB_CPID_850, HB_UNITB_850, NUMBER_OF_CHARACTERS,
-    "A~µ~∑~∂~éBCDE~ê~‘~“~”FGHI~÷~ﬁ~◊~ÿJKLMNO~‡~„~‚~ôPQRSTU~È~Î~Í~öVWXYZ",
-    "a~†~Ö~É~Ñbcde~Ç~ä~à~âfghi~°~ç~å~ãjklmno~¢~ï~ì~îpqrstu~£~ó~ñ~Åvwxyz",
+static HB_CODEPAGE s_codepage = { "HRWIN",
+    HB_CPID_1250,HB_UNITB_1250,NUMBER_OF_CHARACTERS,
+    "ABCCCD–EFGHIJKLMNOPQRSäTUVWZéXY",
+    "abcccddefghijklmnopqrsötuvwzûxy",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( FR850 )
+HB_CODEPAGE_INIT( HRWIN )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_FR850
+   #pragma startup hb_codepage_Init_HRWIN
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_FR850 = hb_codepage_Init_FR850;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_HRWIN = hb_codepage_Init_HRWIN;
    #pragma data_seg()
 #endif
