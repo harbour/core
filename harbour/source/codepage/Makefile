@@ -39,6 +39,7 @@ C_SOURCES=\
 	cpit850.c  \
 	cpitisb.c  \
 	cpitiso.c  \
+	cpitwin.c  \
 	cpltwin.c  \
 	cppl852.c  \
 	cppliso.c  \

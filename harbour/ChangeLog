@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-04 00:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * common.mak
+  * source/codepage/Makefile
+  + source/codepage/cpitwin.c
+    + Added ITWIN. Same as ITISO, with a different attached CP 
+      and name.
+
 2008-11-03 17:49 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbthread.h
     * include <process.h> in OpenWatcom OS2 builds
