@@ -66,10 +66,6 @@
  *     a snapshot of it to a file for later inspection, such as when a
  *     program error occurs.  If the value of ONE SPECIFIC variable is
  *     desired, use Clipper's built-in GETE() function.
- *
- *     This function uses the undocumented internal variable "_environ",
- *     as well as the functions _strcpy(), _strcat(), and _strlen() from
- *     CLIPPER.LIB
  *  $EXAMPLES$
  *     Get the environment in text form and browse it:
  *
@@ -117,16 +113,9 @@ extern char **_environ;
 #define CHARTYPE   1
 #define ARRAYTYPE  2
 #define CRLF       "\x0D\x0A"
-/*
-unsigned int strlen( char * );
-char * strcpy( char *, char * );
-char * strcat( char *, char * );
-*/
+
 HB_FUNC( FT_GETE )
 {
-   /* INTERNALS WARNING: All references to 'environ', strlen(), ;
-      strcpy(), and strcat() are undocumented Clipper 5.0 internals.
-    */
 #if defined(HB_OS_DOS) || defined(HB_OS_UNIX_COMPATIBLE)
    {
 

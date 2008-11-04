@@ -35,7 +35,7 @@ HB_FUNC( VWN_LISTVIEW_ENSUREVISIBLE )
 
 HB_FUNC( VWN_LISTVIEW_INSERTCOLUMN )
 {
-   LV_COLUMN *lvColumn = ( LV_COLUMN *) hb_parc( 3 ); //hb_param( 3, HB_IT_STRING )->item.asString.value ;
+   LV_COLUMN *lvColumn = ( LV_COLUMN *) hb_parc( 3 );
    ( void ) ListView_InsertColumn( (HWND)HB_PARWH(1), hb_parni(2), lvColumn );
 }
 
@@ -85,8 +85,9 @@ HB_FUNC( VWN_LISTVIEWNOTIFY )
                hb_vmPushString( cAlias,strlen(cAlias) );
                hb_vmPushInteger( hb_parni(6) );
                hb_vmDo( 6 );
-               cRet=hb_itemGetC( hb_param( -1, HB_IT_ANY ) );
-               lstrcpy(lpdi->item.pszText, cRet);
+               cRet = hb_itemGetCPtr( hb_param( -1, HB_IT_ANY ) );
+               /* TOFIX: Unicode conversion, buffer allocation for item.pszText */
+               hb_strncpy(lpdi->item.pszText, cRet, hb_itemGetCLen( hb_param( -1, HB_IT_ANY ) ) );
                }
             }
          }
@@ -110,8 +111,9 @@ HB_FUNC( VWN_LISTVIEWNOTIFY )
                hb_vmPushString( cAlias,strlen(cAlias) );
                hb_vmPushInteger( hb_parni(6) );
                hb_vmDo( 6 );
-               cRet=hb_itemGetC( hb_param( -1, HB_IT_ANY ) );
-               lstrcpy(lpdi->item.pszText, cRet);
+               cRet = hb_itemGetCPtr( hb_param( -1, HB_IT_ANY ) );
+               /* TOFIX: Unicode conversion, buffer allocation for item.pszText */
+               hb_strncpy(lpdi->item.pszText, cRet, hb_itemGetCLen( hb_param( -1, HB_IT_ANY ) ) );
                }
             }
          if(lpdi->item.mask & LVIF_IMAGE)

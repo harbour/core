@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-04 19:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbnf/getenvrn.c
+    - Removed some obsolete comments.
+
+  * contrib/hbwhat/whtlv.c
+    ! Fixed memory leak.
+    ! Fixed to use hb_strncpy() instead of unsafe lstrcpy().
+      TOFIX: The destination address isn't properly allocated and the 
+             size of it is unknown, so this modification is not enough.
+    ; TOFIX: Unicode conversion, buffer allocation for item.pszText.
+
 2008-11-04 19:32 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_gcc.mak
   * contrib/mtpl_gcc.mak
