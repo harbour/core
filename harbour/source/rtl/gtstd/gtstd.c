@@ -72,12 +72,12 @@
    #include <sys/types.h>
    #include <sys/wait.h>
 #else
-   #if defined( HB_WIN32_IO )
-      #include <windows.h>
-   #endif
-   #if defined( _MSC_VER ) && !defined( HB_WINCE )
-      #include <conio.h>
-   #endif
+#  if defined( HB_WIN32_IO )
+#     include <windows.h>
+#  endif
+#  if ( defined( _MSC_VER ) || defined( __WATCOMC__ ) ) && !defined( HB_WINCE )
+#     include <conio.h>
+#  endif
 #endif
 
 static int           s_GtId;
@@ -338,7 +338,22 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
 
    pGTSTD = HB_GTSTD_GET( pGT );
 
-#if defined( _MSC_VER ) && !defined( HB_WINCE )
+#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+   {
+      struct timeval tv;
+      fd_set rfds;
+      tv.tv_sec = 0;
+      tv.tv_usec = 0;
+      FD_ZERO( &rfds );
+      FD_SET( pGTSTD->hStdin, &rfds );
+      if( select( pGTSTD->hStdin + 1, &rfds, NULL, NULL, &tv ) > 0 )
+      {
+         BYTE bChar;
+         if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
+            ch = pGTSTD->keyTransTbl[ bChar ];
+      }
+   }
+#elif defined( _MSC_VER ) && !defined( HB_WINCE )
    if( pGTSTD->fStdinConsole )
    {
       if( _kbhit() )
@@ -361,27 +376,35 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
       if( _read( pGTSTD->hStdin, &bChar, 1 ) == 1 )
          ch = pGTSTD->keyTransTbl[ bChar ];
    }
-#elif defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
-   {
-      struct timeval tv;
-      fd_set rfds;
-      tv.tv_sec = 0;
-      tv.tv_usec = 0;
-      FD_ZERO( &rfds );
-      FD_SET( pGTSTD->hStdin, &rfds);
-      if( select( pGTSTD->hStdin + 1, &rfds, NULL, NULL, &tv ) > 0 )
-      {
-         BYTE bChar;
-         if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
-            ch = pGTSTD->keyTransTbl[ bChar ];
-      }
-   }
 #elif defined( HB_WIN32_IO )
    if( !pGTSTD->fStdinConsole ||
        WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( pGTSTD->hStdin ), 0 ) == 0x0000 )
    {
       BYTE bChar;
       if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
+         ch = pGTSTD->keyTransTbl[ bChar ];
+   }
+#elif defined( __WATCOMC__ )
+   if( pGTSTD->fStdinConsole )
+   {
+      if( kbhit() )
+      {
+         ch = getch();
+         if( ( ch == 0 || ch == 224 ) && kbhit() )
+         {
+            /* It was a function key lead-in code, so read the actual
+               function key and then offset it by 256 */
+            ch = getch() + 256;
+         }
+         ch = hb_gt_dos_keyCodeTranslate( ch );
+         if( ch > 0 && ch <= 255 )
+            ch = pGTSTD->keyTransTbl[ ch ];
+      }
+   }
+   else if( !eof( pGTSTD->hStdin ) )
+   {
+      BYTE bChar;
+      if( read( pGTSTD->hStdin, &bChar, 1 ) == 1 )
          ch = pGTSTD->keyTransTbl[ bChar ];
    }
 #else

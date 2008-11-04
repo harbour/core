@@ -82,7 +82,7 @@
 void nxs_crypt(
    const unsigned char *source, ULONG srclen,
    const unsigned char *key, ULONG keylen,
-   BYTE *cipher )
+   unsigned char *cipher )
 {
 
    if( keylen > NXS_MAX_KEYLEN )
@@ -110,7 +110,7 @@ void nxs_crypt(
 void nxs_decrypt(
    const unsigned char *cipher, ULONG cipherlen,
    const unsigned char *key, ULONG keylen,
-   BYTE *result )
+   unsigned char *result )
 {
    if( keylen > NXS_MAX_KEYLEN )
    {
@@ -135,7 +135,7 @@ void nxs_decrypt(
 void nxs_scramble(
       const unsigned char *source, ULONG srclen,
       const unsigned char *key, ULONG keylen,
-      BYTE *cipher )
+      unsigned char *cipher )
 {
    int scramble[ NXS_MAX_KEYLEN ];
    ULONG len;
@@ -164,7 +164,7 @@ void nxs_scramble(
 
 
 void nxs_partial_scramble(
-   const unsigned char *source, BYTE *cipher,
+   const unsigned char *source, unsigned char *cipher,
    int *scramble,
    ULONG len, ULONG keylen )
 {
@@ -187,7 +187,7 @@ void nxs_partial_scramble(
 
 /* Reversing scramble process */
 void nxs_unscramble(
-      BYTE *cipher, ULONG cipherlen,
+      unsigned char *cipher, ULONG cipherlen,
       const unsigned char *key, ULONG keylen)
 {
    int scramble[ NXS_MAX_KEYLEN ];
@@ -217,13 +217,13 @@ void nxs_unscramble(
 
 
 void nxs_partial_unscramble(
-   BYTE *cipher,
+   unsigned char *cipher,
    int *scramble,
    ULONG len, ULONG keylen )
 {
    ULONG pos;
    USHORT kpos;
-   BYTE buf[ NXS_MAX_KEYLEN ];
+   unsigned char buf[ NXS_MAX_KEYLEN ];
 
    pos = 0l;
    kpos = 0;
@@ -243,12 +243,12 @@ void nxs_partial_unscramble(
 /* pass two: xor the source with the key
    threebit mutual shift is done also here */
 void nxs_xorcode(
-   BYTE *cipher, ULONG cipherlen,
+   unsigned char *cipher, ULONG cipherlen,
    const unsigned char *key, ULONG keylen )
 {
    ULONG pos = 0l;
    USHORT keypos = 0;
-   BYTE c_bitrest;
+   unsigned char c_bitrest;
 
    c_bitrest = cipher[ 0 ] >>5;
 
@@ -278,12 +278,12 @@ void nxs_xorcode(
 }
 
 void nxs_xordecode(
-   BYTE *cipher, ULONG cipherlen,
+   unsigned char *cipher, ULONG cipherlen,
    const unsigned char *key, ULONG keylen )
 {
    ULONG pos = 0l;
    USHORT keypos = 0;
-   BYTE c_bitrest, c_bitleft;
+   unsigned char c_bitrest, c_bitleft;
 
    /* A very short block? */
    if ( keylen > cipherlen - pos )
@@ -320,7 +320,7 @@ void nxs_xordecode(
 
 /* pass three: xor the source with the cyclic key */
 void nxs_xorcyclic(
-   BYTE *cipher, ULONG cipherlen,
+   unsigned char *cipher, ULONG cipherlen,
    const unsigned char *key, ULONG keylen )
 {
    ULONG pos=0l, crcpos=0l;
@@ -341,16 +341,16 @@ void nxs_xorcyclic(
       if ( crcpos < 4 )
       {
          /* this ensures portability across platforms */
-         cipher[ pos ] ^= (BYTE) (crc1l % 256 );
+         cipher[ pos ] ^= (unsigned char) (crc1l % 256 );
          crc1l /= 256l;
       }
       else if ( crcpos < 8 )
       {
-         cipher[ pos ] ^= (BYTE) (crc2l % 256 );
+         cipher[ pos ] ^= (unsigned char) (crc2l % 256 );
          crc2l /= 256l;
       }
       else {
-         cipher[ pos ] ^= (BYTE) (crc3l % 256 );
+         cipher[ pos ] ^= (unsigned char) (crc3l % 256 );
          crc3l /= 256l;
       }
       crcpos++;
@@ -420,11 +420,11 @@ HB_FUNC( HB_CRYPT )
    PHB_ITEM pSource = hb_param( 1, HB_IT_ANY );
    PHB_ITEM pKey = hb_param( 2, HB_IT_ANY );
 
-   BYTE * cRes = ( BYTE * ) hb_xgrab( hb_itemGetCLen( pSource ) + 8 );
+   unsigned char * cRes = ( unsigned char * ) hb_xgrab( hb_itemGetCLen( pSource ) + 8 );
 
    nxs_crypt(
-      ( BYTE * ) hb_itemGetCPtr( pSource ), hb_itemGetCLen( pSource ),
-      ( BYTE * ) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
+      ( unsigned char * ) hb_itemGetCPtr( pSource ), hb_itemGetCLen( pSource ),
+      ( unsigned char * ) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
       cRes );
 
    hb_retclenAdopt( ( char * ) cRes, hb_itemGetCLen( pSource ) );
@@ -441,11 +441,11 @@ HB_FUNC( HB_DECRYPT )
    PHB_ITEM pSource = hb_param( 1, HB_IT_ANY );
    PHB_ITEM pKey = hb_param( 2, HB_IT_ANY );
 
-   BYTE * cRes = ( BYTE * ) hb_xgrab( hb_itemGetCLen( pSource ) + 8 );
+   unsigned char * cRes = ( unsigned char * ) hb_xgrab( hb_itemGetCLen( pSource ) + 8 );
 
    nxs_decrypt(
-      ( BYTE * ) hb_itemGetCPtr( pSource ), hb_itemGetCLen( pSource ),
-      ( BYTE * ) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
+      ( unsigned char * ) hb_itemGetCPtr( pSource ), hb_itemGetCLen( pSource ),
+      ( unsigned char * ) hb_itemGetCPtr( pKey ), hb_itemGetCLen( pKey ),
       cRes );
 
    hb_retclenAdopt( ( char * ) cRes, hb_itemGetCLen( pSource ) );

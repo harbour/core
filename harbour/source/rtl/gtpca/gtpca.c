@@ -81,12 +81,12 @@
    #include <sys/types.h>
    #include <sys/wait.h>
 #else
-   #if defined( HB_WIN32_IO )
-      #include <windows.h>
-   #endif
-   #if defined( _MSC_VER ) && !defined( HB_WINCE )
-      #include <conio.h>
-   #endif
+#  if defined( HB_WIN32_IO )
+#     include <windows.h>
+#  endif
+#  if ( defined( _MSC_VER ) || defined( __WATCOMC__ ) ) && !defined( HB_WINCE )
+#     include <conio.h>
+#  endif
 #endif
 
 static int           s_GtId;
@@ -586,6 +586,21 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
    ch = hb_gt_dos_keyCodeTranslate( ch );
    if( ch > 0 && ch <= 255 )
       ch = s_keyTransTbl[ ch ];
+#elif defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+   {
+      struct timeval tv;
+      fd_set rfds;
+      tv.tv_sec = 0;
+      tv.tv_usec = 0;
+      FD_ZERO( &rfds );
+      FD_SET( s_hFilenoStdin, &rfds );
+      if( select( s_hFilenoStdin + 1, &rfds, NULL, NULL, &tv ) > 0 )
+      {
+         BYTE bChar;
+         if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
+            ch = s_keyTransTbl[ bChar ];
+      }
+   }
 #elif defined( _MSC_VER ) && !defined( HB_WINCE )
    if( s_bStdinConsole )
    {
@@ -609,18 +624,35 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
       if( _read( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
    }
-#elif defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
-   {
-      BYTE bChar;
-      if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
-         ch = s_keyTransTbl[ bChar ];
-   }
 #elif defined( HB_WIN32_IO )
    if( !s_bStdinConsole ||
        WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( s_hFilenoStdin ), 0 ) == 0x0000 )
    {
       BYTE bChar;
       if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
+         ch = s_keyTransTbl[ bChar ];
+   }
+#elif defined( __WATCOMC__ )
+   if( s_bStdinConsole )
+   {
+      if( kbhit() )
+      {
+         ch = getch();
+         if( ( ch == 0 || ch == 224 ) && kbhit() )
+         {
+            /* It was a function key lead-in code, so read the actual
+               function key and then offset it by 256 */
+            ch = getch() + 256;
+         }
+         ch = hb_gt_dos_keyCodeTranslate( ch );
+         if( ch > 0 && ch <= 255 )
+            ch = s_keyTransTbl[ ch ];
+      }
+   }
+   else if( !eof( s_hFilenoStdin ) )
+   {
+      BYTE bChar;
+      if( read( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
    }
 #else
