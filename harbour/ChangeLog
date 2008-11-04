@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-04 12:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/rddsql/mysqldd.c
+    ! Excluded sizeof() in #ifdef to compile with MinGW.
+
+  * contrib/hbhpdf/make_gcc.sh
+    ! Fixed missing quote char.
+
+  * contrib/mtpl_gcc.mak
+    ! Fixed to create its own OBJ dir. Not the ultimate 
+      solution, pls enhance if you think.
+
+  * source/codepage/cpeswinm.c
+  * source/codepage/cpeswin.c
+    ! Fixed linked codepage to be Windows-1252 instead of 
+      ISO-8859-1. For the ISO versions, pls see ESISO variants.
+
+  * source/codepage/cpes850.c
+  * source/codepage/cpesisom.c
+    * Comments.
+
+  * contrib/make_gcc_all.sh
+    ! Fixed to not include externally dependent contribs, 
+      when HB_CONTRIBLIBS is specified by user.
+
 2008-11-04 09:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
     + Added HB_CODEPAGE_SVISO.

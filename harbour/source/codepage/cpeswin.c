@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( Spanish WIN )
+ * National Collation Support Module (ESWIN - Spanish)
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
@@ -53,7 +53,7 @@
 
 /* Language name: Spanish */
 /* ISO language code (2 chars): ES (please look it up in /doc/lang_id.txt) */
-/* Codepage: ISO-8859-1 */
+/* Codepage: Windows-1252 */
 
 #include <ctype.h>
 #include "hbapi.h"
@@ -85,7 +85,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "ESWIN",
-    HB_CPID_8859_1, HB_UNITB_8859_1, NUMBER_OF_CHARACTERS,
+    HB_CPID_1252, HB_UNITB_1252, NUMBER_OF_CHARACTERS,
     "AÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚÜVWXYZ",
     "aábcdeéfghiíjklmnñoópqrstuúüvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };

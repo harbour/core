@@ -7,7 +7,7 @@
 if [ "${HB_INC_LIBHARU}" = "" ]
 then
     echo "---------------------------------------------------------------"
-    echo "IMPORTANT: You will need Haru Free PDF Library (libharu) DLL 
+    echo "IMPORTANT: You will need Haru Free PDF Library (libharu) DLL"
     echo "           package installed and this envvar to be set to"
     echo "           successfully build this library:"
     echo "           export HB_INC_LIBHARU=C:/libharu/include"

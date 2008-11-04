@@ -63,7 +63,7 @@ typedef int my_socket;
 #include "mysql.h"
 
 /* TOFIX: HACK to make it compile under MSVC to avoid 'invalid integer constant expression' errors. */
-#if !defined( _MSC_VER )
+#if !defined( _MSC_VER ) && !defined( __MINGW32__ )
 
 #if sizeof( MYSQL_ROW_OFFSET ) != sizeof( void* )
    #error "MySQLDD error: sizeof( MYSQL_ROW_OFFSET ) != sizeof( void* )"

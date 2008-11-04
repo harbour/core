@@ -133,14 +133,17 @@ LDFLAGS        := $(LDFLAGS)
 #**********************************************************
 # General *.c --> *.obj COMPILE rule for STATIC Libraries
 $(OBJ_DIR)%$(OBJEXT) : %.c
+	@if [ ! -f "$(OBJ_DIR)" ]; then mkdir -p $(OBJ_DIR); fi
 	$(CC) $(CLIBFLAGS) -o$@ $<
 #**********************************************************
 # General *.cpp --> *.obj COMPILE rule for STATIC Libraries
 $(OBJ_DIR)%$(OBJEXT) : %.cpp
+	@if [ ! -d "$(OBJ_DIR)" ]; then mkdir -p $(OBJ_DIR); fi
 	$(CXX) $(CLIBFLAGS) -o$@ $<
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for STATIC Libraries
 $(OBJ_DIR)%$(OBJEXT) : %.prg
+	@if [ ! -d "$(OBJ_DIR)" ]; then mkdir -p $(OBJ_DIR); fi
 	$(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)/ $<
 	$(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)/$(<F:.prg=.c)
 #**********************************************************
