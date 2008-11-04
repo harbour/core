@@ -1037,11 +1037,6 @@ ULONG hb_xquery( USHORT uiMode )
    return ulResult;
 }
 
-HB_FUNC( MEMORY )
-{
-   hb_retnint( hb_xquery( ( USHORT ) hb_parni( 1 ) ) );
-}
-
 #ifdef HB_FM_STATISTICS
 HB_FUNC( HB_FM_STAT ) {}
 #else

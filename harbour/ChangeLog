@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-04 15:54 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * source/vm/fm.c
+    * removed unneeded HB_FUNC( MEMORY ), now in fmhb.c
+
 2008-11-04 23:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * common.mak
   * source/vm/Makefile
