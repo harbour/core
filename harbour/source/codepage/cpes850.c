@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (ESISO - Modern Spanish)
+ * National Collation Support Module (ES850 - Modern Spanish)
  *
  * Copyright 2008 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
@@ -84,21 +84,21 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "ESISO",
-    HB_CPID_8859_1, HB_UNITB_8859_1, NUMBER_OF_CHARACTERS,
-    "A¡¿ƒBC«DE…»ÀFGHIÕÃœJKLMN—O”“÷PQRSTU⁄Ÿ‹VWXYZ",
-    "a·‡‰bcÁdeÈËÎfghiÌÏÔjklmnÒoÛÚˆpqrstu˙˘¸vwxyz",
+static HB_CODEPAGE s_codepage = { "ES850",
+    HB_CPID_850, HB_UNITB_850, NUMBER_OF_CHARACTERS,
+    "Aµ∑éBCÄDEê‘”FGHI÷ﬁÿJKLMN•O‡„ôPQRSTUÈÎöVWXYZ",
+    "a†ÖÑbcádeÇäâfghi°çãjklmn§o¢ïîpqrstu£óÅvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( ESISO )
+HB_CODEPAGE_INIT( ES850 )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_ESISO
+   #pragma startup hb_codepage_Init_ES850
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_ESISO = hb_codepage_Init_ESISO;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_ES850 = hb_codepage_Init_ES850;
    #pragma data_seg()
 #endif

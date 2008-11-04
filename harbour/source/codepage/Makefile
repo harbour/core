@@ -18,6 +18,7 @@ C_SOURCES=\
 	cpdewin.c  \
 	cpel737.c  \
 	cpelwin.c  \
+	cpes850.c  \
 	cpes850c.c \
 	cpesiso.c  \
 	cpesisoc.c \

@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-04 22:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+  * common.mak
+  * source/codepage/Makefile
+  + source/codepage/cpes850.c
+    + Added ES850 - Modern Spanish.
+
+  * include/hbextern.ch
+    ! Added ITWIN.
+
+  * source/codepage/cpesisoc.c
+  * source/codepage/cpsviso.c
+  * source/codepage/cpesiso.c
+  * source/codepage/cpitwin.c
+    + Added my copyright.
+
+  * ChangeLog
+    ; Some TODO/TOFIXes marked as [DONE]
+
 2008-11-04 22:39 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/source/vm/hashfunc.c
@@ -50,7 +69,7 @@
     + Some changes marked as TOMERGE 1.0.
 
   * contrib/hbtip/base64x.c
-    ! Fixed and ages old problem with BUILDUSERPASSSTRING() 
+    ! Fixed an ages old problem with BUILDUSERPASSSTRING() 
       function, which always returned an empty string thus 
       making SMTP "AUTH PLAIN" broken. I wonder how this went 
       unnoticed for this long.
@@ -92,7 +111,7 @@
                 (this collation has wrong CP linkage, so everyone is 
                 encouraged to use ESWIN or ESISO instead.)
                 Intentionally not added to hbextern.ch.
-     ; TODO: Add ES850.
+     ; TODO: Add ES850. [DONE]
      ; TODO: Check whether Clipper compatibility is indeed true.
 
 2008-11-04 12:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -356,7 +375,7 @@
   + source/codepage/cpro852.c
   + source/codepage/cprowin.c
     + Added Romanian codepages.
-    ; TODO: Add ROISO variant.
+    ; TODO: Add ROISO variant. [DONE]
 
   * source/codepage/uc1250.c
   * source/codepage/uc1251.c
@@ -963,9 +982,9 @@
             __ARCH*BIT__ and __*ENDIAN__ predefined macros, 
             as these can be misleading on some systems.
     ; TODO: Implement HB_V_DATE and HB_V_TIME.
-    ; TODO: Add HB_MTVM() functionality.
-    ; TODO: Add __PLATFORM__* equivalent.
-    ; TODO: Add HB_OS_UNIX_COMPATIBLE equivalent.
+    ; TODO: Add HB_MTVM() functionality. [DONE]
+    ; TODO: Add __PLATFORM__* equivalent. [DONE]
+    ; TODO: Add HB_OS_UNIX_COMPATIBLE equivalent. [DONE]
 
   * include/hbextern.ch
   * include/hbapifs.h
@@ -1161,7 +1180,7 @@
   * source/compiler/hbgenerr.c
   * utils/hbmake/hbmgauge.c
     * Changed snprintf() calls to hb_snprintf().
-    ; TODO: Finish the mappings in headers.
+    ; TODO: Finish the mappings in headers. [DONE]
 
   * tests/wvtext.prg
   * include/inkey.ch
@@ -1241,7 +1260,7 @@
 
   * include/hbsetup.h
     * Mapping snprintf() calls to hb_snprintf().
-    ; TODO: Replace the calls in source code.
+    ; TODO: Replace the calls in source code. [DONE]
 
   * source/common/hbstr.c
     ! Fixed hb_snprintf(). Please verify on your platforms.
@@ -1305,10 +1324,10 @@
              at it and replace it with hb_strncpy() or something 
              else secure? The code is cryptic and as someone 
              not using the debugger, I didn't dare to touch it, 
-             and this is the only one such call left.
+             and this is the only one such call left. [DONE - TOVERIFY]
     ; TODO: Change all snprintf() calls to hb_snprintf().
             When that happens, Harbour will no more use anything 
-            depicted as "non-secure" by MSVS 2005/2008.
+            depicted as "non-secure" by MSVS 2005/2008. [DONE]
     ; NOTE: This function may need tweaking, pls review and 
             fix if/where needed.
 
@@ -1813,6 +1832,7 @@
     * Changed 'BYTE val[]' to 'BYTE * val' in struct decl.
     ; TOFIX: It doesn't compile on MSVC due to this error:
              .\mysqldd.c(65) : fatal error C1017: invalid integer constant expression
+             [DONE]
 
   * ChangeLog
     + Marked one change as TOMERGE.
@@ -2395,7 +2415,7 @@
       in HBBrwText class
     ! fixed processing source code with TABs (chr(9))
     ; TOFIX: "Mono Display" causes RT error due to missing color index
-             range checking. It also does not change all colors immediately
+             range checking. It also does not change all colors immediately [DONE]
     ; TOFIX: getdbginput(): writing out of window area, scrolling internal
              buffer, cursor navigation, interrupting by ESC
 

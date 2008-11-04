@@ -6,8 +6,9 @@
  * Harbour Project source code:
  * National Collation Support Module (SVISO)
  *
- * Copyright 2006 Klas Engwall <klas dot engwall at engwall dot com>
+ * Copyright 2008 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
+ * Copyright 2006 Klas Engwall <klas dot engwall at engwall dot com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
