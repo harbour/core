@@ -95,10 +95,12 @@
       #endif
 
       #define HB_SOCKET_T int
-      #include <unistd.h>
+
+      #include <errno.h>
 #if defined( HB_OS_OS2 )
       #if defined( __WATCOMC__ )
          #include <types.h>
+         #include <nerrno.h>
       #endif
       #include <sys/types.h>
       #include <sys/socket.h>
@@ -111,14 +113,16 @@
       #include <netdb.h>
       #include <netinet/in.h>
       #include <arpa/inet.h>
+      #include <unistd.h>
 
-      #if defined(__WATCOMC__)
-         #define h_errno errno
-      #else
-         extern int h_errno;
+      #if !defined(h_errno)
+         #if defined(__WATCOMC__)
+            #define h_errno errno
+         #else
+            extern int h_errno;
+         #endif
       #endif
       #define HB_INET_CLOSE( x )    close( x )
-      #include <errno.h>
    #endif
 
    typedef struct _HB_SOCKET_STRUCT
@@ -429,14 +433,15 @@ static void hb_socketSetNonBlocking( HB_SOCKET_STRUCT *Socket )
 #if defined( HB_OS_WIN_32 )
    ULONG mode = 1;
    ioctlsocket( Socket->com, FIONBIO, &mode );
-
-#else
+#elif defined( O_NONBLOCK )
    int flags = fcntl( Socket->com, F_GETFL, 0 );
    if( flags != -1 )
    {
       flags |= O_NONBLOCK;
       fcntl( Socket->com, F_SETFL, (LONG) flags );
    }
+#else
+   HB_SYMBOL_UNUSED( Socket );
 #endif
 }
 
@@ -448,13 +453,15 @@ static void hb_socketSetBlocking( HB_SOCKET_STRUCT *Socket )
 #if defined( HB_OS_WIN_32 )
    ULONG mode = 0;
    ioctlsocket( Socket->com, FIONBIO, &mode );
-#else
+#elif defined( O_NONBLOCK )
    int flags = fcntl( Socket->com, F_GETFL, 0 );
    if( flags != -1 )
    {
       flags &= ~O_NONBLOCK;
       fcntl( Socket->com, F_SETFL, ( long ) flags );
    }
+#else
+   HB_SYMBOL_UNUSED( Socket );
 #endif
 }
 
