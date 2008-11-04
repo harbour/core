@@ -263,9 +263,9 @@ static void hb_itemSerialRefFree( PHB_CYCLIC_REF pRef )
 {
    while( pRef )
    {
-      PHB_CYCLIC_REF pNext = pRef->pNext;
-      hb_xfree( pRef );
-      pRef = pNext;
+      PHB_CYCLIC_REF pFree = pRef;
+      pRef = pRef->pNext;
+      hb_xfree( pFree );
    }
 }
 
@@ -708,6 +708,7 @@ static ULONG hb_deserializeHash( PHB_ITEM pItem, UCHAR * pBuffer, ULONG ulOffset
 
    if( ulLen )
    {
+#if 0
       PHB_ITEM pKey = hb_itemNew( NULL );
       PHB_ITEM pVal = hb_itemNew( NULL );
 
@@ -720,6 +721,20 @@ static ULONG hb_deserializeHash( PHB_ITEM pItem, UCHAR * pBuffer, ULONG ulOffset
       }
       hb_itemRelease( pKey );
       hb_itemRelease( pVal );
+#else
+      PHB_ITEM pKey, pVal;
+
+      hb_hashSetFlags( pItem, HB_HASH_BINARY | HB_HASH_RESORT );
+      hb_hashPreallocate( pItem, ulLen );
+      while( ulLen-- )
+      {
+         if( hb_hashAllocNewPair( pItem, &pKey, &pVal ) )
+         {
+            ulOffset = hb_deserializeItem( pKey, pBuffer, ulOffset, pRef );
+            ulOffset = hb_deserializeItem( pVal, pBuffer, ulOffset, pRef );
+         }
+      }
+#endif
    }
 
    return ulOffset;

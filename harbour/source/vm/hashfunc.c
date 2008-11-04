@@ -604,6 +604,19 @@ HB_FUNC( HB_HSCAN )
       hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( HB_HSORT )
+{
+   PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
+
+   if( pHash )
+   {
+      hb_hashSetFlags( pHash, HB_HASH_RESORT );
+      hb_itemReturn( pHash );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_HCASEMATCH )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -611,13 +624,53 @@ HB_FUNC( HB_HCASEMATCH )
 
    if( pHash )
    {
-      hb_retl( ( hb_hashGetFlags( pHash ) & HB_HASH_IGNORECASE ) == 0 );
+      int iFlags = hb_hashGetFlags( pHash );
+      hb_retl( ( iFlags & HB_HASH_IGNORECASE ) == 0 );
       if( pValue )
       {
          if( hb_itemGetL( pValue ) )
-            hb_hashClearFlags( pHash, HB_HASH_IGNORECASE );
-         else
-            hb_hashSetFlags( pHash, HB_HASH_IGNORECASE );
+         {
+            if( ( iFlags & HB_HASH_IGNORECASE ) != 0 )
+            {
+               hb_hashClearFlags( pHash, HB_HASH_IGNORECASE );
+               hb_hashSetFlags( pHash, HB_HASH_RESORT );
+            }
+         }
+         else if( ( iFlags & HB_HASH_IGNORECASE ) == 0 )
+         {
+            hb_hashClearFlags( pHash, HB_HASH_BINARY );
+            hb_hashSetFlags( pHash, HB_HASH_IGNORECASE | HB_HASH_RESORT );
+         }
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_HBINARY )
+{
+   PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
+   PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL );
+
+   if( pHash )
+   {
+      int iFlags = hb_hashGetFlags( pHash );
+      hb_retl( ( iFlags & HB_HASH_BINARY ) != 0 );
+      if( pValue )
+      {
+         if( hb_itemGetL( pValue ) )
+         {
+            if( ( iFlags & HB_HASH_BINARY ) == 0 )
+            {
+               hb_hashClearFlags( pHash, HB_HASH_IGNORECASE );
+               hb_hashSetFlags( pHash, HB_HASH_BINARY | HB_HASH_RESORT );
+            }
+         }
+         else if( ( iFlags & HB_HASH_BINARY ) != 0 )
+         {
+            hb_hashClearFlags( pHash, HB_HASH_BINARY );
+            hb_hashSetFlags( pHash, HB_HASH_RESORT );
+         }
       }
    }
    else
@@ -688,3 +741,4 @@ HB_FUNC( HB_HDEFAULT )
 
 HB_FUNC( HB_HSETAUTOADD )     { HB_FUNC_EXEC( HB_HAUTOADD ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
 HB_FUNC( HB_HSETCASEMATCH )   { HB_FUNC_EXEC( HB_HCASEMATCH ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
+HB_FUNC( HB_HSETBINARY )      { HB_FUNC_EXEC( HB_HBINARY ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }

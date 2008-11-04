@@ -136,13 +136,19 @@ static HB_GARBAGE_FUNC( hb_hashReleaseGarbage )
    }
 }
 
-static int hb_hashItemCmp( PHB_ITEM pKey1, PHB_ITEM pKey2, BOOL fIgnoreCase )
+static int hb_hashItemCmp( PHB_ITEM pKey1, PHB_ITEM pKey2, int iFlags )
 {
    if( HB_IS_STRING( pKey1 ) )
    {
       if( HB_IS_STRING( pKey2 ) )
       {
-         if( fIgnoreCase )
+         if( iFlags & HB_HASH_BINARY )
+            return pKey1->item.asString.length < pKey2->item.asString.length ? -1 :
+                 ( pKey1->item.asString.length > pKey2->item.asString.length ? 1 :
+                   memcmp( pKey1->item.asString.value,
+                           pKey2->item.asString.value,
+                           pKey1->item.asString.length ) );
+         else if( iFlags & HB_HASH_IGNORECASE )
             return hb_itemStrICmp( pKey1, pKey2, TRUE );
          else
             return hb_itemStrCmp( pKey1, pKey2, TRUE );
@@ -184,16 +190,48 @@ static int hb_hashItemCmp( PHB_ITEM pKey1, PHB_ITEM pKey2, BOOL fIgnoreCase )
    return -1;
 }
 
+static void hb_hashResort( PHB_BASEHASH pBaseHash )
+{
+   ULONG ulPos, ulFrom;
+   int iFlags = pBaseHash->iFlags;
+
+   /* The hash array is probably quite well sorted so this trivial
+    * algorithm is the most efficient one [druzus]
+    */
+   for( ulFrom = 1; ulFrom < pBaseHash->ulLen; ++ulFrom )
+   {
+      ulPos = ulFrom;
+      while( ulPos > 0 && hb_hashItemCmp( &pBaseHash->pPairs[ ulPos - 1 ].key,
+                                          &pBaseHash->pPairs[ ulPos ].key,
+                                          iFlags ) > 0 )
+      {
+         HB_HASHPAIR pair;
+         memcpy( &pair, pBaseHash->pPairs + ulPos - 1, sizeof( HB_HASHPAIR ) );
+         memcpy( pBaseHash->pPairs + ulPos - 1, pBaseHash->pPairs + ulPos, sizeof( HB_HASHPAIR ) );
+         memcpy( pBaseHash->pPairs + ulPos, &pair, sizeof( HB_HASHPAIR ) );
+         --ulPos;
+      }
+   }
+
+   pBaseHash->iFlags &= ~HB_HASH_RESORT;
+}
+
 static BOOL hb_hashFind( PHB_BASEHASH pBaseHash, PHB_ITEM pKey, ULONG * pulPos )
 {
-   ULONG ulLeft = 0, ulRight = pBaseHash->ulLen, ulMiddle;
-   BOOL fIgnoreCase = ( pBaseHash->iFlags & HB_HASH_IGNORECASE ) != 0;
+   ULONG ulLeft, ulRight, ulMiddle;
+   int iFlags = pBaseHash->iFlags;
    int i;
+
+   if( iFlags & HB_HASH_RESORT )
+      hb_hashResort( pBaseHash );
+
+   ulLeft = 0;
+   ulRight = pBaseHash->ulLen;
 
    while( ulLeft < ulRight )
    {
       ulMiddle = ( ulLeft + ulRight ) >> 1;
-      i = hb_hashItemCmp( &pBaseHash->pPairs[ ulMiddle ].key, pKey, fIgnoreCase );
+      i = hb_hashItemCmp( &pBaseHash->pPairs[ ulMiddle ].key, pKey, iFlags );
       if( i == 0 )
       {
          if( pulPos )
@@ -301,6 +339,16 @@ static BOOL hb_hashNewValue( PHB_BASEHASH pBaseHash, PHB_ITEM pKey, PHB_ITEM pVa
    return FALSE;
 }
 
+static void hb_hashNewPair( PHB_BASEHASH pBaseHash, PHB_ITEM * pKeyPtr, PHB_ITEM * pValPtr )
+{
+   if( pBaseHash->ulSize == pBaseHash->ulLen )
+      hb_hashResize( pBaseHash, pBaseHash->ulSize + HB_HASH_ITEM_ALLOC );
+
+   * pKeyPtr = &pBaseHash->pPairs[ pBaseHash->ulLen ].key;
+   * pValPtr = &pBaseHash->pPairs[ pBaseHash->ulLen ].value;
+   pBaseHash->ulLen++;
+}
+
 static void hb_hashDelPair( PHB_BASEHASH pBaseHash, ULONG ulPos )
 {
    if( --pBaseHash->ulLen == 0 )
@@ -314,23 +362,19 @@ static void hb_hashDelPair( PHB_BASEHASH pBaseHash, ULONG ulPos )
          hb_itemClear( &pPairs->value );
       hb_xfree( pPairs );
    }
-   else if( ulPos == pBaseHash->ulLen )
-   {
-      hb_itemSetNil( &pBaseHash->pPairs[ ulPos ].key );
-      hb_itemSetNil( &pBaseHash->pPairs[ ulPos ].value );
-   }
    else
    {
-      HB_HASHPAIR pair;
-      memcpy( &pair, pBaseHash->pPairs + ulPos, sizeof( HB_HASHPAIR ) );
-      memmove( pBaseHash->pPairs + ulPos, pBaseHash->pPairs + ulPos + 1,
-               ( pBaseHash->ulLen - ulPos ) * sizeof( HB_HASHPAIR ) );
-      pBaseHash->pPairs[ pBaseHash->ulLen ].key.type = HB_IT_NIL;
-      pBaseHash->pPairs[ pBaseHash->ulLen ].value.type = HB_IT_NIL;
-      if( HB_IS_COMPLEX( &pair.key ) )
-         hb_itemClear( &pair.key );
-      if( HB_IS_COMPLEX( &pair.value ) )
-         hb_itemClear( &pair.value );
+      if( ulPos != pBaseHash->ulLen )
+      {
+         HB_HASHPAIR pair;
+         memcpy( &pair, pBaseHash->pPairs + ulPos, sizeof( HB_HASHPAIR ) );
+         memmove( pBaseHash->pPairs + ulPos, pBaseHash->pPairs + ulPos + 1,
+                  ( pBaseHash->ulLen - ulPos ) * sizeof( HB_HASHPAIR ) );
+         ulPos = pBaseHash->ulLen;
+         memcpy( pBaseHash->pPairs + ulPos, &pair, sizeof( HB_HASHPAIR ) );
+      }
+      hb_itemSetNil( &pBaseHash->pPairs[ ulPos ].key );
+      hb_itemSetNil( &pBaseHash->pPairs[ ulPos ].value );
       if( pBaseHash->ulSize - pBaseHash->ulLen > ( HB_HASH_ITEM_ALLOC << 1 ) )
       {
          pBaseHash->ulSize -= HB_HASH_ITEM_ALLOC;
@@ -355,7 +399,7 @@ HB_EXPORT PHB_ITEM hb_hashNew( PHB_ITEM pItem )
    pBaseHash->pPairs   = NULL;
    pBaseHash->ulSize   = 0;
    pBaseHash->ulLen    = 0;
-   pBaseHash->iFlags   = HB_HASH_AUTOADD_ASSIGN;
+   pBaseHash->iFlags   = HB_HASH_FLAG_DEFAULT;
    pBaseHash->pDefault = NULL;
 
    pItem->type = HB_IT_HASH;
@@ -378,6 +422,19 @@ HB_EXPORT void hb_hashPreallocate( PHB_ITEM pHash, ULONG ulNewSize )
 {
    if( HB_IS_HASH( pHash ) )
       hb_hashResize( pHash->item.asHash.value, ulNewSize );
+}
+
+HB_EXPORT BOOL hb_hashAllocNewPair( PHB_ITEM pHash, PHB_ITEM * pKeyPtr, PHB_ITEM * pValPtr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashAllocNewPair(%p,%p,%p)", pHash, pKeyPtr, pValPtr));
+
+   if( HB_IS_HASH( pHash ) )
+   {
+      hb_hashNewPair( pHash->item.asHash.value, pKeyPtr, pValPtr );
+      return TRUE;
+   }
+   else
+      return FALSE;
 }
 
 HB_EXPORT PHB_ITEM hb_hashGetItemPtr( PHB_ITEM pHash, PHB_ITEM pKey, int iFlags )

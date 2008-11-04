@@ -756,6 +756,7 @@ extern HB_EXPORT BOOL      hb_hashDel( PHB_ITEM pHash, PHB_ITEM pKey );
 extern HB_EXPORT BOOL      hb_hashAdd( PHB_ITEM pHash, PHB_ITEM pKey, PHB_ITEM pValue );
 extern HB_EXPORT BOOL      hb_hashAddNew( PHB_ITEM pHash, PHB_ITEM pKey, PHB_ITEM pValue );
 extern HB_EXPORT BOOL      hb_hashRemove( PHB_ITEM pHash, PHB_ITEM pItem );
+extern HB_EXPORT BOOL      hb_hashAllocNewPair( PHB_ITEM pHash, PHB_ITEM * pKeyPtr, PHB_ITEM * pValPtr );
 extern HB_EXPORT PHB_ITEM  hb_hashClone( PHB_ITEM pSource );
 extern HB_EXPORT void      hb_hashJoin( PHB_ITEM pDest, PHB_ITEM pSource, int iType );
 extern HB_EXPORT BOOL      hb_hashScan( PHB_ITEM pHash, PHB_ITEM pKey, ULONG * pulPos );
@@ -785,7 +786,13 @@ extern HB_EXPORT BOOL      hb_hashDelAt( PHB_ITEM pHash, ULONG ulPos );
 #define HB_HASH_AUTOADD_REFERENCE   HB_HASH_AUTOADD_ALWAYS
 #define HB_HASH_AUTOADD_MASK        0x03
 
+#define HB_HASH_RESORT              0x08
+
 #define HB_HASH_IGNORECASE          0x10
+#define HB_HASH_BINARY              0x20
+
+#define HB_HASH_FLAG_MASK           0xFFFF
+#define HB_HASH_FLAG_DEFAULT        ( HB_HASH_AUTOADD_ASSIGN | HB_HASH_BINARY )
 
 #ifdef _HB_API_INTERNAL_
 /* internal hash API not exported */

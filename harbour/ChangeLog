@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-04 22:39 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/hashfunc.c
+  * harbour/source/vm/hashes.c
+    + added support for binary key order
+    % enable binary internal key order by default for new hash arrays
+    + added .prg function to enable/disable/retrive binary order in hash
+      items:
+         hb_hSetBinary( <hValue>, <lOnOff> ) => <hValue>
+         hb_hBinary( <hValue> [, <lBinary> ] ) => <lBinary>
+    + added support for hash array resorting. It's activated automatically
+      on 1-st key access/assign after changing binary or casematch hash
+      array flag
+    + added .prg function hb_hSort( <hValue> ) => <hValue> which marks
+      hash array for sorting
+
+  * harbour/source/rtl/itemseri.c
+    % improved performance of hash array deserialization
+      TODO: add support for hash array flags and hash default value
+            serialization
+
 2008-11-04 19:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbnf/getenvrn.c
     - Removed some obsolete comments.
