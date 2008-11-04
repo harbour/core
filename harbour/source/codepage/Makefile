@@ -18,10 +18,11 @@ C_SOURCES=\
 	cpdewin.c  \
 	cpel737.c  \
 	cpelwin.c  \
-	cpes850.c  \
+	cpes850c.c \
 	cpesiso.c  \
-	cpesisom.c \
+	cpesisoc.c \
 	cpeswin.c  \
+	cpeswinc.c \
 	cpeswinm.c \
 	cpfr850.c  \
 	cpfriso.c  \

@@ -4,11 +4,11 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (ESISO - Spanish)
+ * National Collation Support Module (ESISO - Modern Spanish)
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
- * Spanish support by Antonio Linares <alinares@fivetechsoft.com>
+ * Spanish Windows support by Antonio Linares <alinares@fivetechsoft.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@
  *
  */
 
-/* Language name: Spanish */
+/* Language name: Spanish (Modern)*/
 /* ISO language code (2 chars): ES */
 /* Codepage: ISO-8859-1 */
 
@@ -59,7 +59,7 @@
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  33    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  43    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
@@ -75,7 +75,7 @@
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
    accented characters with the symbol '~' before each of them, for example:
-    a~€
+      a~_
    If there is two-character sequence, which is considered as one, it should
    be marked with '.' before and after it, for example:
       ... h.ch.i ...
@@ -86,8 +86,8 @@
 
 static HB_CODEPAGE s_codepage = { "ESISO",
     HB_CPID_8859_1, HB_UNITB_8859_1, NUMBER_OF_CHARACTERS,
-    "AÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚÜVWXYZ",
-    "aábcdeéfghiíjklmnñoópqrstuúüvwxyz",
+    "AÁÀÄBCÇDEÉÈËFGHIÍÌÏJKLMNÑOÓÒÖPQRSTUÚÙÜVWXYZ",
+    "aáàäbcçdeéèëfghiíìïjklmnñoóòöpqrstuúùüvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( ESISO )

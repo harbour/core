@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (ESWIN - Spanish)
+ * National Collation Support Module (ESWIN - Modern Spanish)
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
@@ -51,15 +51,15 @@
  *
  */
 
-/* Language name: Spanish */
-/* ISO language code (2 chars): ES (please look it up in /doc/lang_id.txt) */
+/* Language name: Spanish (Modern)*/
+/* ISO language code (2 chars): ES */
 /* Codepage: Windows-1252 */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  33    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  43    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
@@ -75,7 +75,7 @@
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
    accented characters with the symbol '~' before each of them, for example:
-    a~€
+      a~_
    If there is two-character sequence, which is considered as one, it should
    be marked with '.' before and after it, for example:
       ... h.ch.i ...
@@ -86,8 +86,8 @@
 
 static HB_CODEPAGE s_codepage = { "ESWIN",
     HB_CPID_1252, HB_UNITB_1252, NUMBER_OF_CHARACTERS,
-    "AÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚÜVWXYZ",
-    "aábcdeéfghiíjklmnñoópqrstuúüvwxyz",
+    "AÁÀÄBCÇDEÉÈËFGHIÍÌÏJKLMNÑOÓÒÖPQRSTUÚÙÜVWXYZ",
+    "aáàäbcçdeéèëfghiíìïjklmnñoóòöpqrstuúùüvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( ESWIN )

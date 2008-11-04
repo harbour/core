@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (ES850 - Spanish)
+ * National Collation Support Module (ES850C - Spanish Clipper compatible)
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
@@ -75,7 +75,7 @@
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
    accented characters with the symbol '~' before each of them, for example:
-    a~Ä
+      a~_
    If there is two-character sequence, which is considered as one, it should
    be marked with '.' before and after it, for example:
       ... h.ch.i ...
@@ -84,21 +84,21 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "ES850", 
-   HB_CPID_850, HB_UNITB_850, NUMBER_OF_CHARACTERS,
-   "AµBCDEêFGHI÷JKLMN•O‡PQRSTUÈöVWXYZ", 
-   "a†bcdeÇfghi°jklmn§o¢pqrstu£Åvwxyz",
-   IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
+static HB_CODEPAGE s_codepage = { "ES850C", 
+    HB_CPID_850, HB_UNITB_850, NUMBER_OF_CHARACTERS,
+    "AµBCDEêFGHI÷JKLMN•O‡PQRSTUÈöVWXYZ", 
+    "a†bcdeÇfghi°jklmn§o¢pqrstu£Åvwxyz",
+    IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( ES850 )
+HB_CODEPAGE_INIT( ES850C )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_ES850
+   #pragma startup hb_codepage_Init_ES850C
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_ES850 = hb_codepage_Init_ES850;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_ES850C = hb_codepage_Init_ES850C;
    #pragma data_seg()
 #endif

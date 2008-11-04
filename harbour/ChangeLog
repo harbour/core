@@ -8,6 +8,36 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-04 13:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbextern.ch
+   * common.mak
+   * source/codepage/Makefile
+   * source/codepage/cpeswinm.c
+   - source/codepage/cpes850.c
+   + source/codepage/cpes850c.c
+   * source/codepage/cpesiso.c
+   + source/codepage/cpesisoc.c
+   * source/codepage/cpeswin.c
+   + source/codepage/cpeswinc.c
+   * source/codepage/cpesisom.c
+     * Spanish language support cleaned:
+       Modern collation made the default, fixed 
+       CP linkage in ESWIN collations, Clipper 
+       compatibility versions renamed to have an 
+       ending 'C'
+       Now the following collations are supported:
+       ES850C - Clipper compatibility CP: IBM850
+       ESWINC - Clipper compatibility CP: Windows-1252
+       ESISOC - Clipper compatibility CP: ISO-8859-1
+       ESWIN  - Modern CP: Windows-1252
+       ESISO  - Modern CP: ISO-8859-1
+       ESMWIN - Compatibility with previous Harbour versions and xhb.
+                (this collation has wrong linkage, so everyone is 
+                encouraged to use ESWIN or ESISO instead.)
+                Intentionally not added to hbextern.ch.
+     ; TODO: Add ES850.
+     ; TODO: Check whether Clipper compatibility is indeed true.
+
 2008-11-04 12:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/rddsql/mysqldd.c
     ! Excluded sizeof() in #ifdef to compile with MinGW.

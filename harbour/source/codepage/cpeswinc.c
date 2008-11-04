@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (ESISOM - Modern Spanish)
+ * National Collation Support Module (ESWINC - Spanish Clipper compatible)
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
@@ -51,15 +51,15 @@
  *
  */
 
-/* Language name: Spanish (Modern)*/
-/* ISO language code (2 chars): ES */
-/* Codepage: ISO-8859-1 */
+/* Language name: Spanish */
+/* ISO language code (2 chars): ES (please look it up in /doc/lang_id.txt) */
+/* Codepage: Windows-1252 */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  43    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  33    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
@@ -75,7 +75,7 @@
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
    accented characters with the symbol '~' before each of them, for example:
-      a~€
+      a~_
    If there is two-character sequence, which is considered as one, it should
    be marked with '.' before and after it, for example:
       ... h.ch.i ...
@@ -84,21 +84,21 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "ESISOM",
-    HB_CPID_8859_1, HB_UNITB_8859_1, NUMBER_OF_CHARACTERS,
-    "AÁÀÄBCÇDEÉÈËFGHIÍÌÏJKLMNÑOÓÒÖPQRSTUÚÙÜVWXYZ",
-    "aáàäbcçdeéèëfghiíìïjklmnñoóòöpqrstuúùüvwxyz",
+static HB_CODEPAGE s_codepage = { "ESWINC",
+    HB_CPID_1252, HB_UNITB_1252, NUMBER_OF_CHARACTERS,
+    "AÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚÜVWXYZ",
+    "aábcdeéfghiíjklmnñoópqrstuúüvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( ESISOM )
+HB_CODEPAGE_INIT( ESWINC )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_ESISOM
+   #pragma startup hb_codepage_Init_ESWINC
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_ESISOM = hb_codepage_Init_ESISOM;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_ESWINC = hb_codepage_Init_ESWINC;
    #pragma data_seg()
 #endif
