@@ -78,6 +78,9 @@
 #if defined( HB_OS_OS2 )
    #define BUFSIZE   16 * 1024
    #include <unistd.h>
+   #if defined( __WATCOMC__ )
+      #include <process.h>
+   #endif
 #endif
 
 HB_EXPORT void hb_dateTimeStamp( LONG * plJulian, LONG * plMilliSec )
