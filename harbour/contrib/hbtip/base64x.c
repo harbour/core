@@ -110,18 +110,18 @@ static char * base64enc( char *s, size_t s_len )
 
 HB_FUNC( BUILDUSERPASSSTRING )
 {
-   char * s;
    char * szUser = hb_parcx( 1 );
    char * szPass = hb_parcx( 2 );
    size_t p_len = strlen( szPass );
    size_t u_len = strlen( szUser );
+   char * s = ( char * ) hb_xgrab( u_len + p_len + 3 );
 
-   s = ( char * ) hb_xgrab( ( u_len + p_len + 3 ) * sizeof( char ) );
-   s[0] = '\0';
-   strcpy( s + 1, szUser );
-   strcpy( s + u_len + 2, szPass );
+   s[ 0 ] = '\0';
+   memcpy( s + 1, szUser, u_len );
+   s[ u_len + 1 ] = '\0';
+   memcpy( s + u_len + 2, szPass, p_len );
 
-   hb_retc_buffer( s );
+   hb_retclen_buffer( s, u_len + p_len + 2 );
 }
 
 HB_FUNC( HB_BASE64 )

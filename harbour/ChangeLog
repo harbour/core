@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-04 19:32 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_gcc.mak
+   * contrib/mtpl_gcc.mak
+     + Added '-march=i586' for Windows platform. 
+       (Sync with other make systems.)
+
+   * ChangeLog
+     + Some changes marked as TOMERGE 1.0.
+
+   * contrib/hbtip/base64x.c
+     ! Fixed and ages old problem with BUILDUSERPASSSTRING() 
+       function, which always returned an empty string thus 
+       making "AUTH PLAIN" broken. I wonder how this went 
+       unnoticed for this long.
+       This also fixes unsafe strcpy() usage.
+       [TOMERGE 1.0]
+
 2008-11-04 17:28 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
   * harbour/source/vm/mainstd.c
@@ -40,7 +57,7 @@
        ESWIN  - Modern CP: Windows-1252
        ESISO  - Modern CP: ISO-8859-1
        ESMWIN - Compatibility with previous Harbour versions and xhb.
-                (this collation has wrong linkage, so everyone is 
+                (this collation has wrong CP linkage, so everyone is 
                 encouraged to use ESWIN or ESISO instead.)
                 Intentionally not added to hbextern.ch.
      ; TODO: Add ES850.
@@ -52,6 +69,7 @@
 
   * contrib/hbhpdf/make_gcc.sh
     ! Fixed missing quote char.
+      [TOMERGE 1.0]
 
   * contrib/mtpl_gcc.mak
     ! Fixed to create its own OBJ dir. Not the ultimate 

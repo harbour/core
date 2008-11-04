@@ -150,6 +150,9 @@ CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) -I$(OBJ_DIR)
 CFLAGSMT       := -DHB_MT_VM
 #-----------
 ifndef GCC_NOOPTIM
+ifeq ($(HB_ARCHITECTURE),w32)
+CFLAGS         := -march=i586 $(CFLAGS)
+endif
 CFLAGS         := -O3 $(CFLAGS)
 endif
 #-----------
