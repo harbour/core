@@ -421,9 +421,11 @@ VM_COMMON_LIB_OBJS = \
     $(OBJ_DIR)\extend$(OBJEXT)   \
     $(OBJ_DIR)\extrap$(OBJEXT)   \
     $(OBJ_DIR)\fm$(OBJEXT)       \
+    $(OBJ_DIR)\fmhb$(OBJEXT)     \
     $(OBJ_DIR)\garbage$(OBJEXT)  \
     $(OBJ_DIR)\hashes$(OBJEXT)   \
     $(OBJ_DIR)\hashfunc$(OBJEXT) \
+    $(OBJ_DIR)\hbmem$(OBJEXT)    \
     $(OBJ_DIR)\hvm$(OBJEXT)      \
     $(OBJ_DIR)\initexit$(OBJEXT) \
     $(OBJ_DIR)\initsymb$(OBJEXT) \

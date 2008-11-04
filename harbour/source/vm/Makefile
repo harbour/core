@@ -42,9 +42,11 @@ C_SOURCES=\
 	extend.c     \
 	extrap.c     \
 	fm.c         \
+	fmhb.c       \
 	garbage.c    \
 	hashes.c     \
 	hashfunc.c   \
+	hbmem.c      \
 	hvm.c        \
 	initexit.c   \
 	initsymb.c   \

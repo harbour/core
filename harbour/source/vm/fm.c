@@ -54,13 +54,8 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_xmemcpy()
- *    hb_xmemset()
- *
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    hb_xquery()
- *    MEMORY()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -837,86 +832,6 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 
 #endif
 
-/* hb_xmemcpy and hb_xmemset are only needed when
-   unsigned int and unsigned long differ in length */
-
-/* unfortunately it's not true - on 64bit platforms int is 32 bit
-   and long is 64.
-   we need these functions only when max(size_t) < max(long)
-   what could be detected and set in header files. Here check
-   only for hb_xmem* macro definition
-
-   #if UINT_MAX != ULONG_MAX
-*/
-#ifndef hb_xmemcpy
-void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
-{
-   BYTE * pDest;
-   BYTE * pSource;
-   ULONG  ulRemaining;
-   int    iCopySize;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_xmemcpy(%p, %p, %lu)", pDestArg, pSourceArg, ulLen));
-
-   pDest = ( BYTE * ) pDestArg;
-   pSource = ( BYTE * ) pSourceArg;
-   ulRemaining = ulLen;
-
-   while( ulRemaining )
-   {
-      /* Overcome the memcpy() size_t limitation */
-      if( ulRemaining > UINT_MAX )
-      {
-         iCopySize = UINT_MAX;
-         ulRemaining -= ( ULONG ) iCopySize;
-      }
-      else
-      {
-         iCopySize = ( int ) ulRemaining;
-         ulRemaining = 0;
-      }
-      memcpy( pDest, pSource, iCopySize );
-      pDest += iCopySize;
-      pSource += iCopySize;
-   }
-
-   return pDestArg;
-}
-#endif
-
-#ifndef hb_xmemset
-void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
-{
-   BYTE * pDest;
-   ULONG  ulRemaining;
-   int    iSetSize;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_xmemset(%p, %d, %lu)", pDestArg, iFill, ulLen));
-
-   pDest = ( BYTE * ) pDestArg;
-   ulRemaining = ulLen;
-
-   while( ulRemaining )
-   {
-      /* Overcome the memset() size_t limitation */
-      if( ulRemaining > UINT_MAX )
-      {
-         iSetSize = UINT_MAX;
-         ulRemaining -= ( ULONG ) iSetSize;
-      }
-      else
-      {
-         iSetSize = ( int ) ulRemaining;
-         ulRemaining = 0;
-      }
-      memset( pDest, iFill, iSetSize );
-      pDest += iSetSize;
-   }
-
-   return pDestArg;
-}
-#endif
-
 ULONG hb_xquery( USHORT uiMode )
 {
    ULONG ulResult;
@@ -927,7 +842,7 @@ ULONG hb_xquery( USHORT uiMode )
 
    switch( uiMode )
    {
-   case HB_MEM_CHAR:       /*               (Free Variable Space [KB])          */
+   case HB_MEM_CHAR:       /*               (Free Variable Space [KB]) */
       #if defined(HB_OS_WIN_32)
       {
          MEMORYSTATUS memorystatus;
@@ -948,7 +863,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case HB_MEM_BLOCK:      /*               (Largest String [KB])               */
+   case HB_MEM_BLOCK:      /*               (Largest String [KB]) */
       #if defined(HB_OS_WIN_32)
       {
          MEMORYSTATUS memorystatus;
@@ -969,7 +884,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case HB_MEM_RUN:        /*               (RUN Memory [KB])                   */
+   case HB_MEM_RUN:        /*               (RUN Memory [KB]) */
       #if defined(HB_OS_WIN_32)
       {
          MEMORYSTATUS memorystatus;
@@ -990,7 +905,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case HB_MEM_VM:         /* UNDOCUMENTED! (Virtual Memory [KB])               */
+   case HB_MEM_VM:         /* UNDOCUMENTED! (Virtual Memory [KB]) */
       #if defined(HB_OS_WIN_32)
       {
          MEMORYSTATUS memorystatus;
@@ -1011,7 +926,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case HB_MEM_EMS:        /* UNDOCUMENTED! (Free Expanded Memory [KB]) (?)     */
+   case HB_MEM_EMS:        /* UNDOCUMENTED! (Free Expanded Memory [KB]) (?) */
       #if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
          ulResult = 0;
       #else
@@ -1019,7 +934,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case HB_MEM_FM:         /* UNDOCUMENTED! (Fixed Memory/Heap [KB]) (?)        */
+   case HB_MEM_FM:         /* UNDOCUMENTED! (Fixed Memory/Heap [KB]) (?) */
       #if defined(HB_OS_WIN_32)
       {
          MEMORYSTATUS memorystatus;
@@ -1048,7 +963,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case HB_MEM_SWAP:       /* UNDOCUMENTED! (Free Swap Memory [KB])             */
+   case HB_MEM_SWAP:       /* UNDOCUMENTED! (Free Swap Memory [KB]) */
       #if defined(HB_OS_WIN_32)
       {
          MEMORYSTATUS memorystatus;
@@ -1067,7 +982,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case HB_MEM_CONV:       /* UNDOCUMENTED! (Free Conventional [KB])            */
+   case HB_MEM_CONV:       /* UNDOCUMENTED! (Free Conventional [KB]) */
       #if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
          ulResult = 0;
       #else
@@ -1075,11 +990,11 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case HB_MEM_EMSUSED:    /* UNDOCUMENTED! (Used Expanded Memory [KB]) (?)     */
+   case HB_MEM_EMSUSED:    /* UNDOCUMENTED! (Used Expanded Memory [KB]) (?) */
       ulResult = 0;
       break;
 
-   case HB_MEM_USED:       /* Harbour extension (Memory used [bytes])           */
+   case HB_MEM_USED:       /* Harbour extension (Memory used [bytes]) */
 #ifdef HB_FM_STATISTICS
       ulResult = s_lMemoryConsumed;
 #else
@@ -1087,7 +1002,7 @@ ULONG hb_xquery( USHORT uiMode )
 #endif
       break;
 
-   case HB_MEM_BLOCKS:     /* Harbour extension (Memory blocks used)            */
+   case HB_MEM_BLOCKS:     /* Harbour extension (Memory blocks used) */
 #ifdef HB_FM_STATISTICS
       ulResult = s_lMemoryBlocks;
 #else
@@ -1095,7 +1010,7 @@ ULONG hb_xquery( USHORT uiMode )
 #endif
       break;
 
-   case HB_MEM_USEDMAX:    /* Harbour extension (Maximum memory used [bytes])   */
+   case HB_MEM_USEDMAX:    /* Harbour extension (Maximum memory used [bytes]) */
 #ifdef HB_FM_STATISTICS
       ulResult = s_lMemoryMaxConsumed;
 #else
@@ -1103,7 +1018,7 @@ ULONG hb_xquery( USHORT uiMode )
 #endif
       break;
 
-   case HB_MEM_STACKITEMS: /* Harbour extension (Total items allocated for the stack)      */
+   case HB_MEM_STACKITEMS: /* Harbour extension (Total items allocated for the stack) */
       ulResult = hb_stackTotalItems();
       break;
 
@@ -1111,7 +1026,7 @@ ULONG hb_xquery( USHORT uiMode )
       ulResult = hb_stackTotalItems() * sizeof( HB_ITEM );
       break;
 
-   case HB_MEM_STACK_TOP : /* Harbour extension (Total items currently on the stack)      */
+   case HB_MEM_STACK_TOP : /* Harbour extension (Total items currently on the stack) */
       ulResult = hb_stackTopOffset( );
       break;
 
