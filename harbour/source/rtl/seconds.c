@@ -314,11 +314,15 @@ HB_EXPORT double hb_secondsCPU( int n )
    if( s_timer_interval == 0 )
       DosQuerySysInfo( QSV_TIMER_INTERVAL, QSV_TIMER_INTERVAL, ( PVOID ) &s_timer_interval, sizeof( ULONG ) );
 
-   pBuf = hb_xalloc( BUFSIZE );
+   pBuf = ( QSGREC ** ) hb_xalloc( BUFSIZE );
 
    if( pBuf )
    {
+#if defined( __GNUC__ )
       APIRET rc = DosQuerySysState( QS_PROCESS, 0L, _getpid(), 0L, pBuf, BUFSIZE );
+#else
+      APIRET rc = DosQuerySysState( QS_PROCESS, 0L, getpid(), 0L, pBuf, BUFSIZE );
+#endif
 
       if( rc == NO_ERROR )
       {

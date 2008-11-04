@@ -399,7 +399,7 @@ HB_THREAD_HANDLE hb_threadCreate( HB_THREAD_ID * th_id, PHB_THREAD_STARTFUNC sta
    if( !th_h )
       *th_id = ( HB_THREAD_ID ) 0;
 #elif defined( HB_OS_OS2 )
-   *th_id = _beginthread( ( void * ) start_func, NULL, 128 * 1024, Cargo );
+   *th_id = _beginthread( start_func, NULL, 128 * 1024, Cargo );
    th_h = *th_id;
 #else
    { int TODO_MT; }

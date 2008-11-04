@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-04 02:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/thread.c
+    * removed casting to void* thread startup function passed
+      as _beginthread() parameter in OS2 builds. It should be checked if
+      it does not breaks GCC builds.
+
+  * harbour/source/rtl/seconds.c
+    * use getpid() instead of _getpid() in non GCC OS2 builds
+
 2008-11-04 01:04 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbthread.h
     ! fixed typo
