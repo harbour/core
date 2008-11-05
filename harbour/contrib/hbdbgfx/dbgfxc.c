@@ -82,7 +82,15 @@ HB_EXPORT void hb_ToOutDebug( const char * sTraceMsg, ... )
      vsnprintf( buffer, sizeof( buffer ), sTraceMsg, ap );
      va_end( ap );
 
-     OutputDebugString( ( LPCWSTR ) buffer );
+#if defined(UNICODE)
+     {
+       TCHAR buf[1024];
+       HB_TCHAR_CPTO( buf, buffer, sizeof( buffer ) - 1 );
+       OutputDebugString( buf );
+     }
+#else
+     OutputDebugString( ( LPCTSTR ) buffer );
+#endif
 #else
      /* TODO: Implement. */
 #endif

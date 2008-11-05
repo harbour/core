@@ -610,7 +610,7 @@ HB_FUNC( HB_HSORT )
 
    if( pHash )
    {
-      hb_hashSetFlags( pHash, HB_HASH_RESORT );
+      hb_hashSort( pHash );
       hb_itemReturn( pHash );
    }
    else

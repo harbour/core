@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-05 03:01 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/hashes.c
+  * harbour/source/vm/hashfunc.c
+    * changed hb_hSort() to execute sorting when hash is marked as needed
+      resorting instead of marking hash for resorting
+
+  * harbour/source/vm/fm.c
+    * formatting
+
+  * harbour/contrib/hbdbgfx/dbgfxc.c
+    ! fixed casting in ASCII build
+    + added support for UNICODE builds
+
+  * harbour/contrib/gtwvg/gtwvg.c
+    * cover LWA_ALPHA usage by #if ( _WIN32_WINNT >= 0x0500 )
+      to keep at least compile time compatibility with older systems
+
 2008-11-04 15:54 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * source/vm/fm.c
     * removed unneeded HB_FUNC( MEMORY ), now in fmhb.c

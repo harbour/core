@@ -420,6 +420,8 @@ HB_EXPORT ULONG hb_hashLen( PHB_ITEM pHash )
 
 HB_EXPORT void hb_hashPreallocate( PHB_ITEM pHash, ULONG ulNewSize )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashPreallocate(%p,%lu)", pHash, ulNewSize));
+
    if( HB_IS_HASH( pHash ) )
       hb_hashResize( pHash->item.asHash.value, ulNewSize );
 }
@@ -435,6 +437,17 @@ HB_EXPORT BOOL hb_hashAllocNewPair( PHB_ITEM pHash, PHB_ITEM * pKeyPtr, PHB_ITEM
    }
    else
       return FALSE;
+}
+
+HB_EXPORT void hb_hashSort( PHB_ITEM pHash )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashSort(%p)", pHash));
+
+   if( HB_IS_HASH( pHash ) )
+   {
+      if( pHash->item.asHash.value->iFlags & HB_HASH_RESORT )
+         hb_hashResort( pHash->item.asHash.value );
+   }
 }
 
 HB_EXPORT PHB_ITEM hb_hashGetItemPtr( PHB_ITEM pHash, PHB_ITEM pKey, int iFlags )
