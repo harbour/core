@@ -33,34 +33,7 @@ if exist hb_dbu.dif patch -N -i hb_dbu.dif
 ..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUUTIL.PRG
 ..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUVIEW.PRG
 
-echo -O2 -I..\..\..\include -L..\..\..\lib > build.tmp
-
-echo dbu.c     >> build.tmp
-echo dbucopy.c >> build.tmp
-echo dbuedit.c >> build.tmp
-echo dbuhelp.c >> build.tmp
-echo dbuindx.c >> build.tmp
-echo dbunet.c  >> build.tmp
-echo dbustru.c >> build.tmp
-echo dbuutil.c >> build.tmp
-echo dbuview.c >> build.tmp
-
-echo hbdebug.lib >> build.tmp
-echo hbvm.lib >> build.tmp
-echo hbrtl.lib >> build.tmp
-echo gtwin.lib >> build.tmp
-echo hblang.lib >> build.tmp
-echo hbrdd.lib >> build.tmp
-echo hbmacro.lib >> build.tmp
-echo hbpp.lib >> build.tmp
-echo rddntx.lib >> build.tmp
-echo rddcdx.lib >> build.tmp
-echo rddfpt.lib >> build.tmp
-echo hbsix.lib >> build.tmp
-echo hbcommon.lib >> build.tmp
-
-bcc32 @build.tmp
-del build.tmp
+bcc32 -O2 -I..\..\..\include -L..\..\..\lib dbu.c dbucopy.c dbuedit.c dbuhelp.c dbuindx.c dbunet.c dbustru.c dbuutil.c dbuview.c hbdebug.lib hbvm.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib
 
 del *.obj
 

@@ -33,7 +33,7 @@ if exist hb_dbu.dif patch -N -i hb_dbu.dif
 ..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUUTIL.PRG
 ..\..\..\bin\harbour -q -n -l -i..\..\..\include %HB_DIR_DBU%\DBUVIEW.PRG
 
-cl -D_CRT_SECURE_NO_DEPRECATE -nologo -O2 -W3 -I..\..\..\include dbu.c dbucopy.c dbuedit.c dbuhelp.c dbuindx.c dbunet.c dbustru.c dbuutil.c dbuview.c /link /subsystem:CONSOLE /LIBPATH:..\..\..\lib hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib gdi32.lib
+cl -nologo -O2 -W3 -I..\..\..\include dbu.c dbucopy.c dbuedit.c dbuhelp.c dbuindx.c dbunet.c dbustru.c dbuutil.c dbuview.c /link /subsystem:CONSOLE /libpath:..\..\..\lib hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib gdi32.lib
 
 del *.obj
 

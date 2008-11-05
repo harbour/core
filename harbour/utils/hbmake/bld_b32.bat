@@ -5,21 +5,7 @@ rem
 
 ..\..\bin\harbour -w3 -q -n -km -l -i..\..\include hbmake
 
-echo -O2 -I..\..\include -L..\..\lib > build.tmp
-
-echo hbmake.c     >> build.tmp
-echo hbmfrdln.c   >> build.tmp
-echo hbmgauge.c   >> build.tmp
-echo hbmlang.c    >> build.tmp
-echo hbvm.lib     >> build.tmp
-echo hbrtl.lib    >> build.tmp
-echo gtwin.lib    >> build.tmp
-echo hbnulrdd.lib >> build.tmp
-echo hbmacro.lib  >> build.tmp
-echo hbcommon.lib >> build.tmp
-
-bcc32 @build.tmp
-del build.tmp
+bcc32 -O2 -I..\..\include -L..\..\lib hbmake.c hbmfrdln.c hbmgauge.c hbmlang.c hbvm.lib hbrtl.lib gtwin.lib hbnulrdd.lib hbmacro.lib hbcommon.lib
 
 del *.obj
 del hbmake.c
