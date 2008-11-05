@@ -14,12 +14,12 @@ if "%1" =="/htm" goto HTM
 ECHO Assembling input files
 :help
     echo.
-    echo. Usage gendoc type
-    echo. where type is:
-    echo. /rtf for Winhelp output
-    echo. /os2 for Os/2 help output
-    echo. /ngi for Norton Guide output
-    echo. /htm for HTML output
+    echo Usage gendoc type
+    echo where type is:
+    echo /rtf for Winhelp output
+    echo /os2 for Os/2 help output
+    echo /ngi for Norton Guide output
+    echo /htm for HTML output
     goto END
 
 

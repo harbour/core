@@ -59,23 +59,23 @@ rem Checking if HB and HBPP are set
 
 if not "%HB%" == "" if exist %HB% goto CHECK_HBPP
    echo.
-   echo. *******************************************
-   echo. You must set HB environment variable to a
-   echo. working copy of Harbour compiler executable
-   echo. harbour.exe.
-   echo. Example: set HB=C:\harbour\harbour.exe
-   echo. *******************************************
+   echo *******************************************
+   echo You must set HB environment variable to a
+   echo working copy of Harbour compiler executable
+   echo harbour.exe.
+   echo Example: set HB=C:\harbour\harbour.exe
+   echo *******************************************
    echo.
    goto EXIT
 
 :CHECK_HBPP
 if not "%HBPP%" == "" if exist %HBPP% goto BUILD
    echo.
-   echo. **********************************************
-   echo. You must set HBPP environment variable to a
-   echo. working copy of hbpp.exe helper executable
-   echo. Example: set HBPP=C:\harbour\hbpp.exe
-   echo. **********************************************
+   echo **********************************************
+   echo You must set HBPP environment variable to a
+   echo working copy of hbpp.exe helper executable
+   echo Example: set HBPP=C:\harbour\hbpp.exe
+   echo **********************************************
    echo.
    goto EXIT
 
