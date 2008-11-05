@@ -140,9 +140,12 @@ CFLAGS         = -Zi $(CFLAGS)
 DBGMARKER      =  d
 !endif
 
-# NOTE: -GA flag should be disabled when building MT .dlls, 
-#       as it creates bad code as per MS docs [vszakats].
-CFLAGSMT = -MT$(DBGMARKER) -DHB_MT_VM -GA
+CFLAGSMT = -MT$(DBGMARKER) -DHB_MT_VM
+# NOTE: -GA flag should be disabled when building MT _.dlls_, 
+#       as it creates bad code according to MS docs [vszakats].
+!if $(HB_VISUALC_VER) >= 70
+CFLAGSMT = $(CFLAGSMT) -GA
+!endif
 
 !endif
 

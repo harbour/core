@@ -73,16 +73,16 @@ HB_FUNC( HB_VERSION )
    case HB_VERSION_COMPILER:       hb_retc_buffer( hb_verCompiler() ); break;
    case HB_VERSION_MAJOR:          hb_retni( HB_VER_MAJOR ); break;
    case HB_VERSION_MINOR:          hb_retni( HB_VER_MINOR ); break;
-   case HB_VERSION_MICRO:          hb_retni( HB_VER_REVISION ); break;
+   case HB_VERSION_RELEASE:        hb_retni( HB_VER_REVISION ); break;
    case HB_VERSION_STATUS:         hb_retc( HB_VER_STATUS ); break;
    case HB_VERSION_REVISION:       hb_retni( hb_verSvnID() ); break;
-   case HB_VERSION_BLD_DATE_STR:   hb_retc_buffer( hb_verBuildDate() ); break;
-   case HB_VERSION_BLD_DATE:       hb_retds( NULL ); break; /* TODO */
-   case HB_VERSION_BLD_TIME:       hb_retc( NULL ); break; /* TODO */
+   case HB_VERSION_BUILD_DATE_STR: hb_retc_buffer( hb_verBuildDate() ); break;
+   case HB_VERSION_BUILD_DATE:     hb_retds( NULL ); break; /* TODO */
+   case HB_VERSION_BUILD_TIME:     hb_retc( NULL ); break; /* TODO */
    case HB_VERSION_PCODE_VER:      hb_retni( HB_PCODE_VER ); break;
    case HB_VERSION_PCODE_VER_STR:  hb_retc_buffer( hb_verPCode() ); break;
    case HB_VERSION_CHANGELOG_LAST: hb_retc_const( hb_verSvnLastEntry() ); break;
-   case HB_VERSION_CHANGELOG_REV:  hb_retc_const( hb_verSvnChangeLogID() ); break;
+   case HB_VERSION_CHANGELOG_ID:   hb_retc_const( hb_verSvnChangeLogID() ); break;
    case HB_VERSION_FLAG_PRG:       hb_retc_const( hb_verFlagsPRG() ); break;
    case HB_VERSION_FLAG_C:         hb_retc_const( hb_verFlagsC() ); break;
    case HB_VERSION_FLAG_LINKER:    hb_retc_const( hb_verFlagsL() ); break;

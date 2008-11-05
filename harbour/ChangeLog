@@ -8,6 +8,33 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-05 13:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_vc.mak
+    * -GA option only used for HB_VISUALC_VER >= 70.
+      Please update this if older versions also support it.
+
+  * include/hbver.ch
+  * source/common/hbver.c
+    * Some more fiddling with version number terminology and 
+      hb_version() values:
+      HB_VERSION_MICRO          -> HB_VERSION_RELEASE
+      HB_VERSION_BLD_DATE_STR   -> HB_VERSION_BUILD_DATE_STR
+      HB_VERSION_BLD_DATE       -> HB_VERSION_BUILD_DATE
+      HB_VERSION_BLD_TIME       -> HB_VERSION_BUILD_TIME
+      HB_VERSION_CHANGELOG_REV  -> HB_VERSION_CHANGELOG_ID
+      Third part of version number could also be: PATCH, MICRO, BUILD
+      SVN revision could also be: BUILD
+      BUILD is inherently connected with a physical binary, so 
+      I dropped it, PATCH is limiting and negativ, MICRO is not 
+      very common (otherwise good), so a finally opted for 
+      RELEASE. REVISION kept as is.
+    ; If there are no objections I'll HB_VER_REVISION macro to 
+      HB_VER_RELEASE. This will be an INCOMPATIBLE change, but 
+      I expect not too many ppl being affected.
+
+  * TODO
+    - Removed MT as a TODO. Thanks Przemek for the nice job.
+
 2008-11-05 03:01 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/source/vm/hashes.c

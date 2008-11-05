@@ -36,12 +36,6 @@ Status...: Open.
 ***
 
 Assign to: <nobody>
-Detail...: Multithreading support.
-Status...: Open.
-
-***
-
-Assign to: <nobody>
 Detail...: Add support for virtual file handles and registering some
            meta handles so it will be possible to make:
               h := fopen( "gzip:/tmp/myarchive.gz", FO_WRITE )
