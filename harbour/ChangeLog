@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-05 19:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbcurl/hbcurl.c
+    % Removed two Harbour level functions not really 
+      adding to functionality but forcing linkage of these 
+      (otherwise unused) curl interfaces.
+      CURL_SHARE_STRERROR()
+      CURL_MULTI_STRERROR()
+      INCOMPATIBLE (but I doubt even a single user would be affected)
+
+  * source/rtl/version.c
+    ! Fix to prev.
+
 2008-11-05 19:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-func.sh
   * include/hbstdgen.ch

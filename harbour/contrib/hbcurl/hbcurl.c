@@ -55,7 +55,9 @@
 #include "curl/curl.h"
 #include "curl/types.h"
 #include "curl/easy.h"
+#if 0
 #include "curl/multi.h"
+#endif
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -1832,6 +1834,7 @@ HB_FUNC( CURL_EASY_STRERROR )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+#if 0
 HB_FUNC( CURL_SHARE_STRERROR )
 {
    if( ISNUM( 1 ) )
@@ -1847,6 +1850,7 @@ HB_FUNC( CURL_MULTI_STRERROR )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+#endif
 
 #endif
 
