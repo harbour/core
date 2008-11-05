@@ -61,7 +61,7 @@
 
 #undef HB_VER_MAJOR
 #undef HB_VER_MINOR
-#undef HB_VER_REVISION
+#undef HB_VER_RELEASE
 #undef HB_VER_STATUS
 
 #undef __DATE__

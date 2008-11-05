@@ -45,10 +45,10 @@ get_hbver()
 
     hb_rootdir="${1-.}"
     FVER="${hb_rootdir}/include/hbver.h"
-    MAJOR=`sed -e '/HB_VER_MAJOR/    !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
-    MINOR=`sed -e '/HB_VER_MINOR/    !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
-    REVIS=`sed -e '/HB_VER_REVISION/ !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
-    echo "${MAJOR}.${MINOR}.${REVIS}"
+    MAJOR=`sed -e '/HB_VER_MAJOR/   !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
+    MINOR=`sed -e '/HB_VER_MINOR/   !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
+    RELEA=`sed -e '/HB_VER_RELEASE/ !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
+    echo "${MAJOR}.${MINOR}.${RELEA}"
 }
 
 get_hbverstat()

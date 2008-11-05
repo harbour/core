@@ -578,7 +578,7 @@ int main( int argc, char * argv[] )
    PHB_PP_STATE pState;
 
    printf( "Harbour Preprocessor %d.%d.%d\n",
-      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION );
+      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE );
    printf( "Copyright (c) 1999-2008, http://www.harbour-project.org/\n" );
 
    pState = hb_pp_new();

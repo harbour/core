@@ -5220,7 +5220,7 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
 #endif
 
 #if defined( __HARBOUR__ )
-   hb_snprintf( szResult, sizeof( szResult ), "0x%02X%02X%02X", HB_VER_MAJOR & 0xFF, HB_VER_MINOR & 0xFF, HB_VER_REVISION & 0xFF );
+   hb_snprintf( szResult, sizeof( szResult ), "0x%02X%02X%02X", HB_VER_MAJOR & 0xFF, HB_VER_MINOR & 0xFF, HB_VER_RELEASE & 0xFF );
    hb_pp_addDefine( pState, "__HARBOUR__", szResult );
 #endif
 

@@ -114,8 +114,8 @@ int main( int argc, char * argv[] )
 
   HB_TRACE(HB_TR_DEBUG, ("main(%d, %p)", argc, argv));
 
-  printf( "Harbour Preprocessor (old revision) %d.%d.%d\n",
-     HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION );
+  printf( "Harbour Preprocessor (old version) %d.%d.%d\n",
+     HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE );
   printf( "Copyright (c) 1999-2008, http://www.harbour-project.org/\n" );
 
   hb_pp_Table();
