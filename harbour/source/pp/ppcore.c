@@ -4334,14 +4334,24 @@ static PHB_PP_TOKEN hb_pp_calcPrecedence( PHB_PP_TOKEN pToken,
          *piNextPrec = HB_PP_PREC_NOT;
          break;
 
+      case HB_PP_TOKEN_LT:
+      case HB_PP_TOKEN_GT:
+         if( pNext && HB_PP_TOKEN_TYPE( pNext->type ) == *piNextOper &&
+             pNext->spaces == 0 )
+         {
+            *piNextPrec = HB_PP_PREC_BIT;
+            *piNextOper = *piNextOper == HB_PP_TOKEN_LT ? HB_PP_TOKEN_SHIFTL :
+                                                          HB_PP_TOKEN_SHIFTR;
+            pNext = pNext->pNext;
+            break;
+         }
+         /* no break */
       /* relational */
       case HB_PP_TOKEN_EQUAL:
       case HB_PP_TOKEN_HASH:
       case HB_PP_TOKEN_NE:
       case HB_PP_TOKEN_LE:
       case HB_PP_TOKEN_GE:
-      case HB_PP_TOKEN_LT:
-      case HB_PP_TOKEN_GT:
          *piNextPrec = HB_PP_PREC_REL;
          break;
 
@@ -4353,36 +4363,37 @@ static PHB_PP_TOKEN hb_pp_calcPrecedence( PHB_PP_TOKEN pToken,
 
       /* bit */
       case HB_PP_TOKEN_PIPE:
-         *piNextPrec = HB_PP_PREC_BIT;
          if( pNext && HB_PP_TOKEN_TYPE( pNext->type ) == HB_PP_TOKEN_PIPE &&
              pNext->spaces == 0 )
          {
+            *piNextPrec = HB_PP_PREC_LOG;
             *piNextOper = HB_PP_TOKEN_OR;
             pNext = pNext->pNext;
          }
+         else
+            *piNextPrec = HB_PP_PREC_BIT;
          break;
       case HB_PP_TOKEN_AMPERSAND:
-         *piNextPrec = HB_PP_PREC_BIT;
          /* It will not work because && will be stripped as comment */
          if( pNext && HB_PP_TOKEN_TYPE( pNext->type ) == HB_PP_TOKEN_AMPERSAND &&
              pNext->spaces == 0 )
          {
+            *piNextPrec = HB_PP_PREC_LOG;
             *piNextOper = HB_PP_TOKEN_AND;
             pNext = pNext->pNext;
          }
+         else
+            *piNextPrec = HB_PP_PREC_BIT;
          break;
       case HB_PP_TOKEN_POWER:
          *piNextPrec = HB_PP_PREC_BIT;
          break;
 
-/* xhb stuff */
-#if 0
       case HB_PP_TOKEN_BITXOR:
       case HB_PP_TOKEN_SHIFTL:
       case HB_PP_TOKEN_SHIFTR:
          *piNextPrec = HB_PP_PREC_BIT;
          break;
-#endif
 
       /* math plus/minus */
       case HB_PP_TOKEN_PLUS:
@@ -4405,8 +4416,28 @@ static PHB_PP_TOKEN hb_pp_calcPrecedence( PHB_PP_TOKEN pToken,
    return pNext;
 }
 
+static BOOL hb_pp_calcReduce( HB_LONG * plValue, int iOperation )
+{
+   switch( iOperation )
+   {
+      case HB_PP_TOKEN_AND:
+         if( * plValue == 0 )
+            return TRUE;
+         break;
+      case HB_PP_TOKEN_OR:
+         if( * plValue )
+         {
+            * plValue = 1;
+            return TRUE;
+         }
+         break;
+   }
+
+   return FALSE;
+}
+
 static HB_LONG hb_pp_calcOperation( HB_LONG lValueLeft, HB_LONG lValueRight,
-                                    int iOperation )
+                                    int iOperation, BOOL * pfError )
 {
    switch( iOperation )
    {
@@ -4444,8 +4475,6 @@ static HB_LONG hb_pp_calcOperation( HB_LONG lValueLeft, HB_LONG lValueRight,
          lValueLeft &= lValueRight;
          break;
       case HB_PP_TOKEN_POWER:
-/* xhb stuff */
-#if 0
       case HB_PP_TOKEN_BITXOR:
          lValueLeft ^= lValueRight;
          break;
@@ -4455,7 +4484,6 @@ static HB_LONG hb_pp_calcOperation( HB_LONG lValueLeft, HB_LONG lValueRight,
       case HB_PP_TOKEN_SHIFTR:
          lValueLeft >>= lValueRight;
          break;
-#endif
 
       case HB_PP_TOKEN_PLUS:
          lValueLeft += lValueRight;
@@ -4467,10 +4495,16 @@ static HB_LONG hb_pp_calcOperation( HB_LONG lValueLeft, HB_LONG lValueRight,
          lValueLeft *= lValueRight;
          break;
       case HB_PP_TOKEN_DIV:
-         lValueLeft /= lValueRight;
+         if( lValueRight == 0 )
+            * pfError = TRUE;
+         else
+            lValueLeft /= lValueRight;
          break;
       case HB_PP_TOKEN_MOD:
-         lValueLeft %= lValueRight;
+         if( lValueRight == 0 )
+            * pfError = TRUE;
+         else
+            lValueLeft %= lValueRight;
          break;
    }
 
@@ -4478,28 +4512,29 @@ static HB_LONG hb_pp_calcOperation( HB_LONG lValueLeft, HB_LONG lValueRight,
 }
 
 static PHB_PP_TOKEN hb_pp_calcValue( PHB_PP_TOKEN pToken, int iPrecedense,
-                                     HB_LONG * plValue, BOOL * pfError )
+                                     HB_LONG * plValue, BOOL * pfError,
+                                     BOOL * pfUndef )
 {
    if( HB_PP_TOKEN_ISEOC( pToken ) )
       * pfError = TRUE;
    else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MINUS )
    {
-      pToken = hb_pp_calcValue( pToken->pNext, HB_PP_PREC_NEG, plValue, pfError );
+      pToken = hb_pp_calcValue( pToken->pNext, HB_PP_PREC_NEG, plValue, pfError, pfUndef );
       * plValue = - * plValue;
    }
    else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_PLUS )
    {
-      pToken = hb_pp_calcValue( pToken->pNext, iPrecedense, plValue, pfError );
+      pToken = hb_pp_calcValue( pToken->pNext, iPrecedense, plValue, pfError, pfUndef );
    }
    else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_NOT )
    {
-      pToken = hb_pp_calcValue( pToken->pNext, HB_PP_PREC_NOT, plValue, pfError );
+      pToken = hb_pp_calcValue( pToken->pNext, HB_PP_PREC_NOT, plValue, pfError, pfUndef );
       * plValue = * plValue ? 0 : 1;
    }
    else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_PB )
    {
       * pfError = TRUE;
-      pToken = hb_pp_calcValue( pToken->pNext, HB_PP_PREC_NUL, plValue, pfError );
+      pToken = hb_pp_calcValue( pToken->pNext, HB_PP_PREC_NUL, plValue, pfError, pfUndef );
       if( ! * pfError && !HB_PP_TOKEN_ISEOC( pToken ) &&
           HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_RIGHT_PB )
          pToken = pToken->pNext;
@@ -4528,6 +4563,13 @@ static PHB_PP_TOKEN hb_pp_calcValue( PHB_PP_TOKEN pToken, int iPrecedense,
       * pfError = FALSE;
       pToken = pToken->pNext;
    }
+   else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_KEYWORD )
+   {
+      *plValue = 0;
+      pToken = pToken->pNext;
+      * pfUndef = TRUE;
+      * pfError = FALSE;
+   }
    else
       * pfError = TRUE;
 
@@ -4541,13 +4583,14 @@ static PHB_PP_TOKEN hb_pp_calcValue( PHB_PP_TOKEN pToken, int iPrecedense,
          * pfError = TRUE;
       else if( iNextPrec > iPrecedense )
       {
+         BOOL fDefined = ( ! * pfUndef ) && hb_pp_calcReduce( plValue, iNextOper );
          HB_LONG lValue = 0;
          * pfError = TRUE;
-         pToken = hb_pp_calcValue( pNext, iNextPrec, &lValue, pfError );
+         pToken = hb_pp_calcValue( pNext, iNextPrec, &lValue, pfError, pfUndef );
          if( ! * pfError )
-         {
-            * plValue = hb_pp_calcOperation( * plValue, lValue, iNextOper );
-         }
+            * plValue = hb_pp_calcOperation( * plValue, lValue, iNextOper, pfError );
+         if( fDefined )
+            * pfUndef = FALSE;
       }
       else
          break;
@@ -4556,18 +4599,20 @@ static PHB_PP_TOKEN hb_pp_calcValue( PHB_PP_TOKEN pToken, int iPrecedense,
    return pToken;
 }
 
-static HB_LONG hb_pp_calculateValue( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
+static HB_LONG hb_pp_calculateValue( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
+                                     BOOL fNoError )
 {
-   BOOL fError = TRUE;
+   BOOL fError = TRUE, fUndef = FALSE;
    HB_LONG lValue = 0;
 
-   pToken = hb_pp_calcValue( pToken, HB_PP_PREC_NUL, &lValue, &fError );
-   if( !HB_PP_TOKEN_ISEOC( pToken ) )
+   pToken = hb_pp_calcValue( pToken, HB_PP_PREC_NUL, &lValue, &fError, &fUndef );
+   if( !HB_PP_TOKEN_ISEOC( pToken ) || fUndef )
       fError = TRUE;
 
    if( fError )
    {
-      hb_pp_error( pState, 'E', HB_PP_ERR_DIRECTIVE_IF, NULL );
+      if( !fNoError )
+         hb_pp_error( pState, 'E', HB_PP_ERR_DIRECTIVE_IF, NULL );
       lValue = 0;
    }
 
@@ -4618,7 +4663,8 @@ static void hb_pp_condCompileIf( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    /* preprocess all define(s) */
    hb_pp_processCondDefined( pState, pToken->pNext );
    hb_pp_processDefine( pState, &pToken->pNext );
-   hb_pp_conditionPush( pState, hb_pp_calculateValue( pState, pToken->pNext ) != 0 );
+   hb_pp_conditionPush( pState, hb_pp_calculateValue( pState, pToken->pNext,
+                                             pState->iCondCompile != 0 ) != 0 );
 }
 
 static void hb_pp_condCompileElif( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
@@ -4630,7 +4676,7 @@ static void hb_pp_condCompileElif( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
          /* preprocess all define(s) */
          hb_pp_processCondDefined( pState, pToken->pNext );
          hb_pp_processDefine( pState, &pToken->pNext );
-         if( hb_pp_calculateValue( pState, pToken->pNext ) != 0 )
+         if( hb_pp_calculateValue( pState, pToken->pNext, FALSE ) != 0 )
             pState->iCondCompile ^= HB_PP_COND_ELSE;
       }
       else

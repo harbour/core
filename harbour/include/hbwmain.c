@@ -128,6 +128,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    hb_vmInit( TRUE );
    iErrorCode = hb_vmQuit();
 #else
+   HB_SYMBOL_UNUSED( hInstance );
    HB_SYMBOL_UNUSED( hPrevInstance );
    HB_SYMBOL_UNUSED( iCmdShow );
 

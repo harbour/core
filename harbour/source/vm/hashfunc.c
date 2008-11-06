@@ -118,7 +118,7 @@ HB_FUNC( HB_HGET )
    {
       PHB_ITEM pDest = hb_hashGetItemPtr( pHash, pKey, HB_HASH_AUTOADD_ACCESS );
       if( pDest )
-         hb_itemReturn( HB_IS_BYREF( pDest ) ? hb_itemUnRef( pDest ) : pDest );
+         hb_itemReturn( pDest );
       else
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pHash, pKey );
    }
