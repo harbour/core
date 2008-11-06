@@ -375,13 +375,18 @@ PP_LIB_OBJS = \
 
 #**********************************************************
 
+# NOTE: harboury must stay at the top of the list.
 COMPILER_LIB_OBJS = \
     $(OBJ_DIR)\hbmain$(OBJEXT)   \
+    $(OBJ_DIR)\harboury$(OBJEXT) \
     $(OBJ_DIR)\cmdcheck$(OBJEXT) \
     $(OBJ_DIR)\complex$(OBJEXT)  \
     $(OBJ_DIR)\expropta$(OBJEXT) \
     $(OBJ_DIR)\exproptb$(OBJEXT) \
-    $(OBJ_DIR)\harboury$(OBJEXT) \
+    $(OBJ_DIR)\genc$(OBJEXT)     \
+    $(OBJ_DIR)\gencc$(OBJEXT)    \
+    $(OBJ_DIR)\gencobj$(OBJEXT)  \
+    $(OBJ_DIR)\genhrb$(OBJEXT)   \
     $(OBJ_DIR)\hbcomp$(OBJEXT)   \
     $(OBJ_DIR)\hbcmplib$(OBJEXT) \
     $(OBJ_DIR)\hbdbginf$(OBJEXT) \
