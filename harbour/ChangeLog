@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-07 00:39 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+    ! fixed typo in previous ChangeLog entry. Instead of:
+         #ifdef DEFINE && DEFINE >= 0x100
+      should be:
+         #if defined( DEFINE ) .and. DEFINE >= 0x100
+
 2008-11-07 00:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbwmain.c
     * pacified unused variable warning
@@ -24,7 +31,7 @@
          #endif
     + added logical expression reduction to not report #if expression errors
       in code like:
-         #ifdef DEFINE && DEFINE >= 0x100
+         #if defined( DEFINE ) && DEFINE >= 0x100
             ...
          #endif
     ! fixed possible division by 0error in #if exporessions like #if 1 / 0
