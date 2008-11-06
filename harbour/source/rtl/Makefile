@@ -38,6 +38,7 @@ C_SOURCES=\
 	filehb.c     \
 	filesys.c    \
 	fkmax.c      \
+	fmhb.c       \
 	fnsplit.c    \
 	fscopy.c     \
 	fserror.c    \

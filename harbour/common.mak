@@ -351,54 +351,51 @@ COMMON_LIB_OBJS = \
     $(OBJ_DIR)\expropt1$(OBJEXT) \
     $(OBJ_DIR)\expropt2$(OBJEXT) \
     $(OBJ_DIR)\hbarch$(OBJEXT)   \
-    $(OBJ_DIR)\hbfsapi$(OBJEXT)  \
-    $(OBJ_DIR)\hbfopen$(OBJEXT)  \
-    $(OBJ_DIR)\hbgete$(OBJEXT)   \
-    $(OBJ_DIR)\hbwince$(OBJEXT)  \
-    $(OBJ_DIR)\hbhash$(OBJEXT)   \
     $(OBJ_DIR)\hbdate$(OBJEXT)   \
+    $(OBJ_DIR)\hbfopen$(OBJEXT)  \
+    $(OBJ_DIR)\hbfsapi$(OBJEXT)  \
+    $(OBJ_DIR)\hbgete$(OBJEXT)   \
+    $(OBJ_DIR)\hbhash$(OBJEXT)   \
+    $(OBJ_DIR)\hbmem$(OBJEXT)    \
     $(OBJ_DIR)\hbstr$(OBJEXT)    \
     $(OBJ_DIR)\hbtrace$(OBJEXT)  \
     $(OBJ_DIR)\hbver$(OBJEXT)    \
     $(OBJ_DIR)\hbverdsp$(OBJEXT) \
-    $(OBJ_DIR)\reserved$(OBJEXT)
+    $(OBJ_DIR)\hbwince$(OBJEXT)  \
+    $(OBJ_DIR)\reserved$(OBJEXT) \
 
 #**********************************************************
 
 PP_LIB_OBJS = \
-    $(OBJ_DIR)\pptable$(OBJEXT)  \
     $(OBJ_DIR)\ppcore$(OBJEXT)   \
     $(OBJ_DIR)\pplib$(OBJEXT)    \
     $(OBJ_DIR)\pplib2$(OBJEXT)   \
     $(OBJ_DIR)\pplib3$(OBJEXT)   \
+    $(OBJ_DIR)\pptable$(OBJEXT)  \
 
 #**********************************************************
 
 COMPILER_LIB_OBJS = \
     $(OBJ_DIR)\hbmain$(OBJEXT)   \
-    $(OBJ_DIR)\harboury$(OBJEXT) \
-    $(OBJ_DIR)\complex$(OBJEXT)  \
     $(OBJ_DIR)\cmdcheck$(OBJEXT) \
+    $(OBJ_DIR)\complex$(OBJEXT)  \
+    $(OBJ_DIR)\expropta$(OBJEXT) \
+    $(OBJ_DIR)\exproptb$(OBJEXT) \
+    $(OBJ_DIR)\harboury$(OBJEXT) \
     $(OBJ_DIR)\hbcomp$(OBJEXT)   \
     $(OBJ_DIR)\hbcmplib$(OBJEXT) \
     $(OBJ_DIR)\hbdbginf$(OBJEXT) \
     $(OBJ_DIR)\hbdead$(OBJEXT)   \
+    $(OBJ_DIR)\hbfix$(OBJEXT)    \
+    $(OBJ_DIR)\hbfunchk$(OBJEXT) \
+    $(OBJ_DIR)\hbgenerr$(OBJEXT) \
+    $(OBJ_DIR)\hbident$(OBJEXT)  \
+    $(OBJ_DIR)\hblbl$(OBJEXT)    \
+    $(OBJ_DIR)\hbopt$(OBJEXT)    \
+    $(OBJ_DIR)\hbpcode$(OBJEXT)  \
     $(OBJ_DIR)\hbstripl$(OBJEXT) \
     $(OBJ_DIR)\hbusage$(OBJEXT)  \
-    $(OBJ_DIR)\hbident$(OBJEXT)  \
-    $(OBJ_DIR)\hbgenerr$(OBJEXT) \
-    $(OBJ_DIR)\hblbl$(OBJEXT)    \
-    $(OBJ_DIR)\hbpcode$(OBJEXT)  \
-    $(OBJ_DIR)\hbfunchk$(OBJEXT) \
-    $(OBJ_DIR)\hbfix$(OBJEXT)    \
-    $(OBJ_DIR)\hbopt$(OBJEXT)    \
     $(OBJ_DIR)\ppcomp$(OBJEXT)   \
-    $(OBJ_DIR)\genc$(OBJEXT)     \
-    $(OBJ_DIR)\gencc$(OBJEXT)    \
-    $(OBJ_DIR)\gencobj$(OBJEXT)  \
-    $(OBJ_DIR)\genhrb$(OBJEXT)   \
-    $(OBJ_DIR)\expropta$(OBJEXT) \
-    $(OBJ_DIR)\exproptb$(OBJEXT) \
 
 #**********************************************************
 
@@ -421,11 +418,9 @@ VM_COMMON_LIB_OBJS = \
     $(OBJ_DIR)\extend$(OBJEXT)   \
     $(OBJ_DIR)\extrap$(OBJEXT)   \
     $(OBJ_DIR)\fm$(OBJEXT)       \
-    $(OBJ_DIR)\fmhb$(OBJEXT)     \
     $(OBJ_DIR)\garbage$(OBJEXT)  \
     $(OBJ_DIR)\hashes$(OBJEXT)   \
     $(OBJ_DIR)\hashfunc$(OBJEXT) \
-    $(OBJ_DIR)\hbmem$(OBJEXT)    \
     $(OBJ_DIR)\hvm$(OBJEXT)      \
     $(OBJ_DIR)\initexit$(OBJEXT) \
     $(OBJ_DIR)\initsymb$(OBJEXT) \
@@ -497,6 +492,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\filehb$(OBJEXT)   \
     $(OBJ_DIR)\filesys$(OBJEXT)  \
     $(OBJ_DIR)\fkmax$(OBJEXT)    \
+    $(OBJ_DIR)\fmhb$(OBJEXT)     \
     $(OBJ_DIR)\fnsplit$(OBJEXT)  \
     $(OBJ_DIR)\fscopy$(OBJEXT)   \
     $(OBJ_DIR)\fserror$(OBJEXT)  \

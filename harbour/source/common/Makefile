@@ -12,6 +12,7 @@ C_SOURCES=\
 	hbhash.c \
 	hbstr.c \
 	hbdate.c \
+	hbmem.c \
 	hbtrace.c \
 	hbver.c \
 	hbverdsp.c \
