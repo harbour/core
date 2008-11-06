@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-06 02:18 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/wcecon.prg
+    ! added missing REQUEST DBFCDX
+
+  * harbour/contrib/rddsql/Makefile
+    ! added missing include $(TOP)$(ROOT)config/lib.cf
+
+  * harbour/contrib/rddsql/hbsqldd.h
+  * harbour/contrib/rddsql/sqlbase.c
+  * harbour/contrib/rddsql/mysqldd.c
+    * added missing const to some char * parameters/members
+    ; added note about using sizeof() in preprocesor conditional directives
+
+  * harbour/contrib/rddsql/sqlmix.c
+    ! fixed printf() format
+
+    TOFIX for author:
+	mysqldd.c:258: warning: ‘pItemEof’ may be used uninitialized in this function
+	sqlbase.c:509: warning: comparison of unsigned expression < 0 is always false
+    Mindaugas can you look at it?
+
 2008-11-05 23:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.bat
   * contrib/hbgt/doc/gendoc.bat

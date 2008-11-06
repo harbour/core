@@ -63,7 +63,15 @@ typedef int my_socket;
 #include "mysql.h"
 
 /* TOFIX: HACK to make it compile under MSVC to avoid 'invalid integer constant expression' errors. */
-#if !defined( _MSC_VER ) && !defined( __MINGW32__ )
+
+/* sizeof() inside #if will not work with any C compiler which has
+ * preprocessor separated from compiler so it will not work with most of
+ * existing C compilers. To make it working is necessary to mix preprocessor
+ * and compiler logic so sizeof() for newly defined types by 'typedef' will
+ * work. It's rather seldom situation when C compiler authors make sth like
+ * that.
+ */
+#if defined( __BORLANDC__ )
 
 #if sizeof( MYSQL_ROW_OFFSET ) != sizeof( void* )
    #error "MySQLDD error: sizeof( MYSQL_ROW_OFFSET ) != sizeof( void* )"
@@ -132,7 +140,7 @@ HB_FUNC( MYSQLDD ) {;}
 
 
 HB_INIT_SYMBOLS_BEGIN( mysqldd__InitSymbols )
-{ "MYSQLDD", HB_FS_PUBLIC, HB_FUNCNAME( MYSQLDD ), NULL },
+{ "MYSQLDD", {HB_FS_PUBLIC}, {HB_FUNCNAME( MYSQLDD )}, NULL },
 HB_INIT_SYMBOLS_END( mysqldd__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_mysqldd_init_ )
@@ -154,7 +162,7 @@ HB_CALL_ON_STARTUP_END( _hb_mysqldd_init_ )
 
 
 /*=====================================================================================*/
-static USHORT hb_errRT_MySQLDD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode )
+static USHORT hb_errRT_MySQLDD( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation, USHORT uiOsCode )
 {
    USHORT uiAction;
    PHB_ITEM pError;

@@ -323,7 +323,7 @@ typedef struct _SDDNODE
 {
    struct _SDDNODE *    pNext;
 
-   char*                Name;
+   const char*          Name;
    SDDFUNC_CONNECT      Connect;
    SDDFUNC_DISCONNECT   Disconnect;
    SDDFUNC_EXECUTE      Execute;

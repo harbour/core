@@ -94,7 +94,7 @@ static ULONG              s_ulConnectionCurrent = 0;
 static RDDFUNCS sqlbaseSuper;
 
 
-static ERRCODE hb_errRT_SQLBASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+static ERRCODE hb_errRT_SQLBASE( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation )
 {
    PHB_ITEM pError;
    ERRCODE iRet = FAILURE;
@@ -1132,8 +1132,8 @@ HB_FUNC( SQLBASE_GETFUNCTABLE )
 
 
 HB_INIT_SYMBOLS_BEGIN( sqlbase1__InitSymbols )
-{ "SQLBASE",              HB_FS_PUBLIC, HB_FUNCNAME( SQLBASE ), NULL },
-{ "SQLBASE_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( SQLBASE_GETFUNCTABLE ), NULL }
+{ "SQLBASE",              {HB_FS_PUBLIC}, {HB_FUNCNAME( SQLBASE )}, NULL },
+{ "SQLBASE_GETFUNCTABLE", {HB_FS_PUBLIC}, {HB_FUNCNAME( SQLBASE_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( sqlbase1__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_sqlbase_init_ )

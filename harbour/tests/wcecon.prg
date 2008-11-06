@@ -13,6 +13,8 @@
 
 #include "hbgtinfo.ch"
 
+request DBFCDX
+
 proc main()
 
    field F1, F2, FX

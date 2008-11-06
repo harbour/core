@@ -388,7 +388,7 @@ static void hb_mixTagPrintNode( PMIXTAG pTag, PMIXNODE pNode, int iLevel )
 
          hb_mixTagPrintNode( pTag, pNode->Child[ i ], iLevel + 1 );
       }
-      printf("%*d %*s\n", iLevel * 10 + 5, MIX_KEY( pTag, pNode, i )->rec, pTag->uiKeyLen, 
+      printf("%*ld %*s\n", iLevel * 10 + 5, MIX_KEY( pTag, pNode, i )->rec, pTag->uiKeyLen, 
              MIX_KEY( pTag, pNode, i )->notnul ? ( char * ) MIX_KEY( pTag, pNode, i )->val : "NULL" );
    }
 

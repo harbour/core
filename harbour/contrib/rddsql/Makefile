@@ -23,6 +23,7 @@ C_SOURCES=\
 	sqlbase.c \
 	sqlmix.c \
 
+include $(TOP)$(ROOT)config/lib.cf
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
