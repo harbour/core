@@ -216,7 +216,15 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    ENDIF
 
    /* Check if database is already present in memory slots */
-   IF !( cFullName $ hRDDData:Keys )
+   /*
+      07/11/2008 FSG - dbCreate() doesn't check if a dbf file exists. So I will not check it.
+      If you need to check if a table exists use hb_FileArrayRdd() function that works in
+      similar way of File(), i.e.:
+      IF hb_FileArrayRdd( cFullName )
+         dbCreate( cFullName, aStructure, "ARRAYRDD" )
+         ....
+   */
+   //IF !( cFullName $ hRDDData:Keys )
 
       /* Setting file attribs */
       aDBFData[ DATABASE_FILENAME ] := cFullName
@@ -225,6 +233,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
       /* Adding new database in RDD memory slots using filename as key */
       hb_hSet( hRDDData, cFullName, aDBFData )
 
+   /* TODO: to clean this part
    ELSE
 
       /* ERROR: database already exists */
@@ -242,6 +251,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
       RETURN FAILURE
 
    ENDIF
+   */
 
    // Set WorkArea Info
    aWAData[ WADATA_WORKAREA ] := nWA
@@ -357,11 +367,13 @@ STATIC FUNCTION AR_CLOSE( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
    LOCAL aDBFData  := aWAData[ WADATA_DATABASE ]
 
-   // decrease open number
-   aDBFData[ DATABASE_OPENNUMBER ]--
+   IF HB_ISARRAY( aDBFData )
+      // decrease open number
+      aDBFData[ DATABASE_OPENNUMBER ]--
 
-   // unlock file
-   aDBFData[ DATABASE_LOCKED     ] := FALSE  // Exclusive mode
+      // unlock file
+      aDBFData[ DATABASE_LOCKED     ] := FALSE  // Exclusive mode
+   ENDIF
 
    RETURN UR_SUPER_CLOSE( nWA )
 
@@ -396,7 +408,7 @@ STATIC FUNCTION AR_PUTVALUE( nWA, nField, xValue )
    LOCAL xVal
 
    IF nField > 0 .AND. nField <= Len( aStruct ) .AND. ;
-      ValType( xValue ) == aStruct[ nField ][ DBS_TYPE ]
+      IIF( ValType( xValue ) == "C" .AND. aStruct[ nField ][ DBS_TYPE ] == "M", TRUE, ValType( xValue ) == aStruct[ nField ][ DBS_TYPE ] )
 
       xVal := PutValue( xValue, aStruct[ nField ][ DBS_TYPE ], aStruct[ nField ][ DBS_LEN ], aStruct[ nField ][ DBS_DEC ] )
 
@@ -841,10 +853,10 @@ INIT PROCEDURE ARRAYRDD_INIT()
 /* -------------------------------------------------- */
 
 /*
-  EraseArrayRdd() function is equivalent of FErase() function, but works here in memory
+  hb_EraseArrayRdd() function is equivalent of FErase() function, but works here in memory
 */
 
-FUNCTION EraseArrayRdd( cFullName )
+FUNCTION hb_EraseArrayRdd( cFullName )
    LOCAL nReturn := FAILURE
    LOCAL aDBFData, oError
    LOCAL nRDD, aRDDList
@@ -931,6 +943,73 @@ FUNCTION EraseArrayRdd( cFullName )
 
    RETURN nReturn
 
+/*
+  hb_FileArrayRdd( cFullName ) --> lExist
+  This function is equivalent of File() function, but works here in memory
+*/
+
+FUNCTION hb_FileArrayRdd( cFullName )
+   LOCAL nReturn := FAILURE
+   LOCAL aDBFData, oError
+   LOCAL nRDD, aRDDList
+   LOCAL hRDDData
+
+   aRDDList := RDDLIST( RDT_FULL )
+   nRDD     := AScan( aRDDList, "ARRAYRDD" )
+
+   IF nRDD > 0
+
+      nRDD -- // HACK: Possibly an error of nRDD value in AR_INIT() ? - TODO
+
+      hRDDData := USRRDD_RDDDATA( nRDD )
+
+      IF hRDDData != NIL
+
+         IF ISCHARACTER( cFullName )
+            cFullName := Upper( cFullName )
+            // First search if memory dbf exists
+            IF cFullName IN hRDDData:Keys
+
+               nReturn := SUCCESS
+
+            ENDIF
+         ENDIF
+
+      ELSE
+
+         oError := ErrorNew()
+
+         oError:GenCode     := EG_UNSUPPORTED
+         oError:SubCode     := 1000  // EDBF_UNSUPPORTED
+         oError:Description := HB_LANGERRMSG( EG_UNSUPPORTED ) + " (" + ;
+                               "ARRAYRDD not inizialized)"
+         oError:FileName    := cFullName
+         oError:CanDefault  := .T.
+         //UR_SUPER_ERROR( 0, oError )
+         Throw( oError )
+
+         nReturn := FAILURE
+
+      ENDIF
+
+   ELSE
+
+      oError := ErrorNew()
+
+      oError:GenCode     := EG_UNSUPPORTED
+      oError:SubCode     := 1000  // EDBF_UNSUPPORTED
+      oError:Description := HB_LANGERRMSG( EG_UNSUPPORTED ) + " (" + ;
+                            "ARRAYRDD not in use)"
+      oError:FileName    := cFullName
+      oError:CanDefault  := .T.
+      //UR_SUPER_ERROR( 0, oError )
+      Throw( oError )
+
+      nReturn := FAILURE
+
+   ENDIF
+   RETURN ( nReturn == SUCCESS )
+
 STATIC FUNCTION BlankRecord( aStruct )
    LOCAL nLenStruct := Len( aStruct )
    LOCAL aRecord    := Array( nLenStruct )
@@ -946,8 +1025,10 @@ STATIC FUNCTION PutValue( xValue, cType, nLen, nDec )
    LOCAL xVal
 
    DO CASE
-   CASE cType == "C" .OR. cType == "M"
+   CASE cType == "C"
         xVal := PadR( xValue, nLen )
+   CASE cType == "M"
+        xVal := xValue  // No limit for a memo field
    CASE cType == "N"
         xVal := Val( Str( xValue, nLen, nDec ) )
    OTHERWISE
@@ -988,20 +1069,20 @@ STATIC FUNCTION HB_Decode(...)
    LOCAL aParams, nParams, xDefault
    LOCAL xVal, cKey, xRet
    LOCAL aValues, aResults, n, i, nPos, nLen
-  
+
    aParams  := hb_aParams()
    nParams  := PCount()
    xDefault := NIL
-  
+
    DO CASE
-  
+
    CASE nParams > 1     // More parameters, real case
-  
+
         xVal := aParams[ 1 ]
-  
+
         aDel( aParams, 1, TRUE ) // Resize params
         nParams := Len( aParams )
-  
+
         // if I have a odd number of members, last is default
         IF ( nParams % 2 <> 0 )
            xDefault := aTail( aParams )
@@ -1009,127 +1090,127 @@ STATIC FUNCTION HB_Decode(...)
            aDel( aParams, nParams, TRUE )
            nParams := Len( aParams )
         ENDIF
-  
+
         // Ok because I have no other value than default, I will check if it is a complex value
         // like an array or an hash, so I can get it to decode values
         IF xDefault <> NIL .AND. ;
            ( ISARRAY( xDefault ) .OR. ;
              ValType( xDefault ) == "H" )
-  
+
            // If it is an array I will restart this function creating a linear call
            IF ISARRAY( xDefault ) .AND. Len( xDefault ) > 0
-  
+
               // I can have a linear array like { 1, "A", 2, "B", 3, "C" }
               // or an array of array couples like { { 1, "A" }, { 2, "B" }, { 3, "C" } }
               // first element tell me what type is
-  
+
               // couples of values
               IF ISARRAY( xDefault[ 1 ] )
-  
+
                  //// If i have an array as default, this contains couples of key / value
                  //// so I have to convert in a linear array
-  
+
                  nLen := Len( xDefault )
-  
+
                  // Check if array has a default value, this will be last value and has a value
                  // different from an array
                  IF ! ISARRAY( ValType( xDefault[ nLen ] )
-  
+
                     aParams := Array( ( nLen - 1 ) * 2 )
-  
+
                     n := 1
                     FOR i := 1 TO nLen - 1
                         aParams[ n++ ] := xDefault[ i ][ 1 ]
                         aParams[ n++ ] := xDefault[ i ][ 2 ]
                     NEXT
-  
+
                     aAdd( aParams, xDefault[ nLen ] )
-  
+
                  ELSE
-  
+
                     // I haven't a default
-  
+
                     aParams := Array( Len( xDefault ) * 2 )
-  
+
                     n := 1
                     FOR i := 1 TO Len( xDefault )
                         aParams[ n++ ] := xDefault[ i ][ 1 ]
                         aParams[ n++ ] := xDefault[ i ][ 2 ]
                     NEXT
-  
+
                  ENDIF
               ELSE
                  // I have a linear array
-  
+
                  aParams := xDefault
               ENDIF
-  
-  
+
+
            // If it is an hash, translate it in an array
            ELSEIF ValType( xDefault ) == "H"
-  
+
               aParams := Array( Len( xDefault ) * 2 )
-  
+
               i := 1
               FOR EACH cKey IN xDefault:Keys
                   aParams[ i++ ] := cKey
                   aParams[ i++ ] := xDefault[ cKey ]
               NEXT
-  
+
            ENDIF
-  
+
            // Then add Decoding value at beginning
            aIns( aParams, 1, xVal, TRUE )
-  
+
            // And run decode() again
            xRet := hb_ExecFromArray( @hb_Decode(), aParams )
-  
+
         ELSE
-  
+
            // Ok let's go ahead with real function
-  
+
            // Combine in 2 lists having elements as { value } and { decode }
            aValues  := Array( nParams / 2 )
            aResults := Array( nParams / 2 )
-  
+
            i := 1
            FOR n := 1 TO nParams - 1 STEP 2
                aValues[ i ]  := aParams[ n ]
                aResults[ i ] := aParams[ n + 1 ]
                i++
            NEXT
-  
+
            // Check if value exists (valtype of values MUST be same of xVal,
            // otherwise I will get a runtime error)
            // TODO: Have I to check also between different valtypes, jumping different ?
            nPos := AScan( aValues, {|e| e == xVal } )
-  
+
            IF nPos == 0 // Not Found, returning default
-  
+
               xRet := xDefault   // it could be also nil because not present
-  
+
            ELSE
-  
+
               xRet := aResults[ nPos ]
-  
+
            ENDIF
-  
+
         ENDIF
-  
+
    CASE nParams == 0    // No parameters
         xRet := NIL
-  
+
    CASE nParams == 1    // Only value to decode as parameter, return an empty value of itself
         xRet := DecEmptyValue( aParams[ 1 ] )
-  
+
    ENDCASE
-  
+
    RETURN xRet
 
 STATIC FUNCTION DecEmptyValue( xVal )
    LOCAL xRet
    LOCAL cType := ValType( xVal )
-  
+
    SWITCH cType
    CASE 'C'  // Char
    CASE 'M'  // Memo

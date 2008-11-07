@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+
+2008-11-07 23:39 UTC+0100 Francesco Saverio Giudice (info fsgiudice com)
+  * source/rdd/usrrdd/rdds/arrayrdd.prg
+    * Changed AR_CREATE( nWA, aOpenInfo ) behaviour, now it not checks
+      if a table exists in memory but act as dbCreate() does.
+    + Added hb_FileArrayRDD() function to check existence of a table
+      in memory.
+    * Changed EraseArrayRDD() -> hb_EraseArrayRDD()
+    * removed string lenght limit in case of a Memo field
+
 2008-11-07 22:45 UTC+0100 Francesco Saverio Giudice (info fsgiudice com)
   * contrib/xhb/hboutdbg.c
     + Added hb_OutDebug() and hb_OutDebugName() functions at
