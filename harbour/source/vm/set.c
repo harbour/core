@@ -281,8 +281,6 @@ static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL
       {
          USHORT uiAction;
 
-         /* NOTE: using switch() here will result in a compiler warning.
-                  [vszakats] */
          if( set_specifier == HB_SET_ALTFILE )
             uiAction = hb_errRT_TERM( EG_CREATE, 2013, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
          else if( set_specifier == HB_SET_PRINTFILE )
@@ -1208,6 +1206,16 @@ int hb_setListenerRemove( int listener )
    return listener;
 }
 
+static BOOL hb_setSetFile( HB_set_enum set_specifier, const char * szFile, BOOL fAdditive )
+{
+   /* TODO: */
+   HB_SYMBOL_UNUSED( set_specifier );
+   HB_SYMBOL_UNUSED( szFile );
+   HB_SYMBOL_UNUSED( fAdditive );
+
+   return FALSE;
+}
+
 HB_EXPORT BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
 {
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
@@ -1221,6 +1229,16 @@ HB_EXPORT BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
 
       switch( set_specifier )
       {
+         case HB_SET_ALTFILE:
+         case HB_SET_EXTRAFILE:
+         case HB_SET_PRINTFILE:
+            /* This sets needs 3-rd parameter to indicate additive mode
+             * so they cannot be fully supported by this function
+             */
+            fResult = hb_setSetFile( set_specifier, HB_IS_STRING( pItem ) ?
+                                     hb_itemGetCPtr( pItem ) : NULL, FALSE );
+            break;
+
          case HB_SET_ALTERNATE:
             if( HB_IS_LOGICAL( pItem ) )
             {
@@ -1446,6 +1464,28 @@ HB_EXPORT BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
             }
             break;
 
+         case HB_SET_DECIMALS:
+            if( HB_IS_NUMERIC( pItem ) )
+            {
+               iValue = hb_itemGetNI( pItem );
+               if( iValue >= 0 )
+               {
+                  pSet->HB_SET_DECIMALS = iValue;
+                  fResult = TRUE;
+               }
+            }
+            break;
+         case HB_SET_EPOCH:
+            if( HB_IS_NUMERIC( pItem ) )
+            {
+               iValue = hb_itemGetNI( pItem );
+               if( iValue >= 0 )
+               {
+                  pSet->HB_SET_EPOCH = iValue;
+                  fResult = TRUE;
+               }
+            }
+            break;
          case HB_SET_MBLOCKSIZE:
             if( HB_IS_NUMERIC( pItem ) )
             {
@@ -1480,23 +1520,19 @@ HB_EXPORT BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
             }
             break;
 
-         case HB_SET_ALTFILE:
+         /* TODO */
          case HB_SET_AUTORDER:
          case HB_SET_AUTOSHARE:
          case HB_SET_COLOR:
          case HB_SET_CURSOR:
          case HB_SET_DATEFORMAT:
-         case HB_SET_DECIMALS:
          case HB_SET_DEFAULT:
          case HB_SET_DELIMCHARS:
          case HB_SET_DEVICE:
-         case HB_SET_EPOCH:
          case HB_SET_EVENTMASK:
-         case HB_SET_EXTRAFILE:
          case HB_SET_MARGIN:
          case HB_SET_MESSAGE:
          case HB_SET_PATH:
-         case HB_SET_PRINTFILE:
          case HB_SET_TYPEAHEAD:
          case HB_SET_VIDEOMODE:
          case HB_SET_LANGUAGE:
@@ -1507,6 +1543,7 @@ HB_EXPORT BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
          case HB_SET_EOL:
          case HB_SET_HBOUTLOG:
          case HB_SET_HBOUTLOGINFO:
+
          case HB_SET_INVALID_:
             break;
 #if 0
@@ -1521,6 +1558,29 @@ HB_EXPORT BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
       hb_setListenerNotify( set_specifier, HB_SET_LISTENER_AFTER );
    }
 
+   return fResult;
+}
+
+HB_EXPORT BOOL hb_setSetItem2( HB_set_enum set_specifier, PHB_ITEM pItem1, PHB_ITEM pItem2 )
+{
+   BOOL fResult = FALSE;
+
+   if( pItem1 )
+   {
+      switch( set_specifier )
+      {
+         case HB_SET_ALTFILE:
+         case HB_SET_EXTRAFILE:
+         case HB_SET_PRINTFILE:
+            hb_setListenerNotify( set_specifier, HB_SET_LISTENER_BEFORE );
+            fResult = hb_setSetFile( set_specifier, HB_IS_STRING( pItem1 ) ?
+                                     hb_itemGetCPtr( pItem1 ) : NULL,
+                                     pItem2 && set_logical( pItem2, FALSE ) );
+            hb_setListenerNotify( set_specifier, HB_SET_LISTENER_AFTER );
+         default:
+            fResult = hb_setSetItem( set_specifier, pItem1 );
+      }
+   }
    return fResult;
 }
 

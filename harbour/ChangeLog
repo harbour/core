@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-07 13:01 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbset.h
+  * harbour/source/vm/set.c
+    + added hb_setSetItem2() C function for SETs which needs two parameters
+    + added support for HB_SET_DECIMALS and HB_SET_EPOCH in hb_setSetItem()
+      Still 22 SETs are marked as TODO
+    + added internal function hb_setSetFile() for HB_SET_ALTFILE,
+      HB_SET_EXTRAFILE, HB_SET_PRINTFILE - function body marked as TODO.
+      I'll implement it later.
+
 2008-11-07 00:39 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
     ! fixed typo in previous ChangeLog entry. Instead of:
