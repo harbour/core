@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-07 22:45 UTC+0100 Francesco Saverio Giudice (info fsgiudice com)
+  * contrib/xhb/hboutdbg.c
+    + Added hb_OutDebug() and hb_OutDebugName() functions at
+      C level
+
 2008-11-07 19:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/gtwvt/gtwvt.c
     * Formatting.
@@ -15,7 +20,7 @@
   * config/w32/owatcom.cf
     * Added support for L_USR in link options.
     * Removed debug switch -d2 from compiler command line.
-      For debug builds 'C_USR=-d2' and 'L_USR=debug all' 
+      For debug builds 'C_USR=-d2' and 'L_USR=debug all'
       should be added.
 
   ; Untested.
@@ -23,10 +28,10 @@
 2008-11-07 17:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hbmk.bat
     + Added support for 'owatcom' as HB_COMPILER.
-    ; NOTE: If there are no objections I'll remove Harbour 
-            support for 'watcom' HB_COMPILER, which was 
-            used for old non-opensource version of this 
-            compiler, but I guess it doesn't make too much 
+    ; NOTE: If there are no objections I'll remove Harbour
+            support for 'watcom' HB_COMPILER, which was
+            used for old non-opensource version of this
+            compiler, but I guess it doesn't make too much
             sense having them anymore.
 
   * source/common/hbverdsp.c
@@ -38,10 +43,10 @@
 
   * bin/hbmk.bat
   * config/w32/owatcom.cf
-    * Removed 'debug all' linker option to make executable sizes 
-      significantly smaller by default. If you need debug info, 
+    * Removed 'debug all' linker option to make executable sizes
+      significantly smaller by default. If you need debug info,
       use 'L_USR=debug all'.
-    ; NOTE: I'd suggest doing the same for other platform supported 
+    ; NOTE: I'd suggest doing the same for other platform supported
             by owatcom. If there are no objections I can do this.
 
   * source/rtl/gtwvt/gtwvt.c
@@ -100,7 +105,7 @@
 2008-11-06 09:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * common.mak
     ! Fixed mistakes in previous commit.
-    + Added NOTE about requirement that harboury stays at the top of 
+    + Added NOTE about requirement that harboury stays at the top of
       the obj list.
 
 2008-11-06 09:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -160,8 +165,8 @@
 
 2008-11-05 19:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbcurl/hbcurl.c
-    % Removed two Harbour level functions not really 
-      adding to functionality but forcing linkage of these 
+    % Removed two Harbour level functions not really
+      adding to functionality but forcing linkage of these
       (otherwise unused) curl interfaces.
       CURL_SHARE_STRERROR()
       CURL_MULTI_STRERROR()
@@ -188,7 +193,7 @@
 
   * include/hbver.ch
   * source/common/hbver.c
-    * Some more fiddling with version number terminology and 
+    * Some more fiddling with version number terminology and
       hb_version() values:
       HB_VERSION_MICRO          -> HB_VERSION_RELEASE
       HB_VERSION_BLD_DATE_STR   -> HB_VERSION_BUILD_DATE_STR
@@ -197,12 +202,12 @@
       HB_VERSION_CHANGELOG_REV  -> HB_VERSION_CHANGELOG_ID
       Third part of version number could also be: PATCH, MICRO, BUILD
       SVN revision could also be: BUILD
-      BUILD is inherently connected with a physical binary, so 
-      I dropped it, PATCH is limiting and negativ, MICRO is not 
-      very common (otherwise good), so a finally opted for 
+      BUILD is inherently connected with a physical binary, so
+      I dropped it, PATCH is limiting and negativ, MICRO is not
+      very common (otherwise good), so a finally opted for
       RELEASE. REVISION kept as is.
-    ; If there are no objections I'll HB_VER_REVISION macro to 
-      HB_VER_RELEASE. This will be an INCOMPATIBLE change, but 
+    ; If there are no objections I'll HB_VER_REVISION macro to
+      HB_VER_RELEASE. This will be an INCOMPATIBLE change, but
       I expect not too many ppl being affected.
 
   * TODO
@@ -237,9 +242,9 @@
   * source/vm/fm.c
   + source/vm/fmhb.c
   + source/vm/hbmem.c
-    + Moved functions not depending on FM_STATISTICS setting, 
+    + Moved functions not depending on FM_STATISTICS setting,
       to separate files.
-    ; NOTE: MEMORY() function should IMO move to rtl, and 
+    ; NOTE: MEMORY() function should IMO move to rtl, and
             hb_xmem*() functions to common lib.
 
 2008-11-04 22:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -293,23 +298,23 @@
   * contrib/hbwhat/whtlv.c
     ! Fixed memory leak.
     ! Fixed to use hb_strncpy() instead of unsafe lstrcpy().
-      TOFIX: The destination address isn't properly allocated and the 
+      TOFIX: The destination address isn't properly allocated and the
              size of it is unknown, so this modification is not enough.
     ; TOFIX: Unicode conversion, buffer allocation for item.pszText.
 
 2008-11-04 19:32 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_gcc.mak
   * contrib/mtpl_gcc.mak
-    + Added '-march=i586' for Windows platform. 
+    + Added '-march=i586' for Windows platform.
       (Sync with other make systems.)
 
   * ChangeLog
     + Some changes marked as TOMERGE 1.0.
 
   * contrib/hbtip/base64x.c
-    ! Fixed an ages old problem with BUILDUSERPASSSTRING() 
-      function, which always returned an empty string thus 
-      making SMTP "AUTH PLAIN" broken. I wonder how this went 
+    ! Fixed an ages old problem with BUILDUSERPASSSTRING()
+      function, which always returned an empty string thus
+      making SMTP "AUTH PLAIN" broken. I wonder how this went
       unnoticed for this long.
       This also fixes unsafe strcpy() usage.
       [TOMERGE 1.0]
@@ -335,9 +340,9 @@
    + source/codepage/cpeswinc.c
    * source/codepage/cpesisom.c
      * Spanish language support cleaned:
-       Modern collation made the default, fixed 
-       CP linkage in ESWIN collations, Clipper 
-       compatibility versions renamed to have an 
+       Modern collation made the default, fixed
+       CP linkage in ESWIN collations, Clipper
+       compatibility versions renamed to have an
        ending 'C'
        Now the following collations are supported:
        ES850C - Clipper compatibility CP: IBM850
@@ -346,7 +351,7 @@
        ESWIN  - Modern CP: Windows-1252
        ESISO  - Modern CP: ISO-8859-1
        ESMWIN - Compatibility with previous Harbour versions and xhb.
-                (this collation has wrong CP linkage, so everyone is 
+                (this collation has wrong CP linkage, so everyone is
                 encouraged to use ESWIN or ESISO instead.)
                 Intentionally not added to hbextern.ch.
      ; TODO: Add ES850. [DONE]
@@ -361,12 +366,12 @@
       [TOMERGE 1.0]
 
   * contrib/mtpl_gcc.mak
-    ! Fixed to create its own OBJ dir. Not the ultimate 
+    ! Fixed to create its own OBJ dir. Not the ultimate
       solution, pls enhance if you think.
 
   * source/codepage/cpeswinm.c
   * source/codepage/cpeswin.c
-    ! Fixed linked codepage to be Windows-1252 instead of 
+    ! Fixed linked codepage to be Windows-1252 instead of
       ISO-8859-1. For the ISO versions, pls see ESISO variants.
 
   * source/codepage/cpes850.c
@@ -374,7 +379,7 @@
     * Comments.
 
   * contrib/make_gcc_all.sh
-    ! Fixed to not include externally dependent contribs, 
+    ! Fixed to not include externally dependent contribs,
       when HB_CONTRIBLIBS is specified by user.
 
 2008-11-04 09:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -423,7 +428,7 @@
   * common.mak
   * source/codepage/Makefile
   + source/codepage/cpitwin.c
-    + Added ITWIN. Same as ITISO, with a different attached CP 
+    + Added ITWIN. Same as ITISO, with a different attached CP
       and name.
 
 2008-11-03 17:49 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -434,11 +439,11 @@
   * common.mak
   * source/codepage/Makefile
   + source/codepage/cpsviso.c
-    + Added SVISO, which is the same as SVWIN, except it's 
+    + Added SVISO, which is the same as SVWIN, except it's
       internally using ISO-8859-1 CP in sync with its name.
 
   * source/codepage/cpsvwin.c
-    ! Changed internal CP to Windows-1252 from ISO-8859-1, 
+    ! Changed internal CP to Windows-1252 from ISO-8859-1,
       so that it's in sync with its name.
 
 2008-11-03 14:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -462,10 +467,10 @@
   + source/codepage/cpesiso.c
   + source/codepage/cpesisom.c
     * Renamed cpesmwin -> cpeswinm (ESMWIN -> ESWINM) (INCOMPATIBLE)
-    + Added Spanish ISO natsort modules. Besides their ID, 
-      they are idendical with current ESWIN* natsorts, because 
-      the WIN versions for some reason are using ISO-8859 CP 
-      instead of Windows-*. This is IMO wrong, even if these CPs 
+    + Added Spanish ISO natsort modules. Besides their ID,
+      they are idendical with current ESWIN* natsorts, because
+      the WIN versions for some reason are using ISO-8859 CP
+      instead of Windows-*. This is IMO wrong, even if these CPs
       are similar or identical for the Spanish language.
 
 2008-11-03 09:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -691,8 +696,8 @@
          HB_GTI_PP_PARENT   // parent GT if window needs to be modal and/or other usage
          HB_GTI_PP_VISIBLE  // flag to specify if the window is made visible immediate after this call
          HB_GTI_PP_ROWCOLS  // flag to interpret X,Y,WIDTH,HEIGHT as Top,Left,Rows,Cols
-       
-      ;IMPLEMENTS the behavioral changes to current GT window invoked 
+
+      ;IMPLEMENTS the behavioral changes to current GT window invoked
                   either by hb_gtCreate() or hb_gtSelect() functions by specifying
                   an array of 9 elements ( bound to increase in future ) via
                   hb_gtInfo( HB_GTI_PRESPARAMS, aPresParams ) where <aPresParams>
@@ -710,9 +715,9 @@
               you want only few to be changed.
 
   * harbour/contrib/gtwvg/tests/demowvg.prg
-    ! Updated to demonstrate above concept to show up a modal dialog in the 
+    ! Updated to demonstrate above concept to show up a modal dialog in the
       same thread on top of a threaded window. Try to click on the parent window.
-      <Traditional><Browser><F3> will show up this modal dialog. 
+      <Traditional><Browser><F3> will show up this modal dialog.
 
     ;NOTE : Please do not use literals to define members, always use
             #defines from hbgtwvg.ch as it is a work in progress and is possible
@@ -759,7 +764,7 @@
 
 2008-11-01 22:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/hbi18n.c
-    * Modified __I18N_GETTEXT() to not RTE when trs table 
+    * Modified __I18N_GETTEXT() to not RTE when trs table
       is non-array (like NIL).
     * USHORT -> ULONG in a few places.
 
@@ -794,28 +799,28 @@
 2008-11-01 17:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/gtwvt/gtwvt.h
   * source/rtl/gtwvt/gtwvt.c
-    + Added support for HB_GTI_ICONRES, HB_GTI_ICONFILE 
+    + Added support for HB_GTI_ICONRES, HB_GTI_ICONFILE
       before the window is created.
     ! Fixed resource leak when HB_GTI_ICONFILE was used.
-    ! Fixed problem with HB_GTI_ICONRES when it was resetting 
+    ! Fixed problem with HB_GTI_ICONRES when it was resetting
       the icon if a non-string/non-numeric parameter was passed
-      passed, which included simply trying to read the value 
-      using hb_gtInfo( HB_GTI_ICONRES ). If this was an intented 
+      passed, which included simply trying to read the value
+      using hb_gtInfo( HB_GTI_ICONRES ). If this was an intented
       feature, pls speak up.
     ; Please review these changes.
 
 2008-11-01 15:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/hbi18n.c
-    % Removed 'comment' field from language file header. Any text 
+    % Removed 'comment' field from language file header. Any text
       can be added simply by adding it to the translation table.
 
   * contrib/Makefile
     ! Missing hbdbgfx added here, too.
-    ; BTW, I've intentionally left this lib out from the liblist 
-      until we decide where to put these functions. There is 
+    ; BTW, I've intentionally left this lib out from the liblist
+      until we decide where to put these functions. There is
       not much point maintaining for the sake of just a few functions.
-      If there are no objections, I'll be moving these functions 
-      to hbwin (until someone updates the code to work outside 
+      If there are no objections, I'll be moving these functions
+      to hbwin (until someone updates the code to work outside
       Windows).
 
 2008-11-01 )7:31 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
@@ -836,26 +841,26 @@
 2008-11-01 12:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * source/rtl/memofile.c
-    + Added HB_MEMOREAD() which is identical to MEMOREAD() 
-      except it won't truncate the last byte (on non-UNIX 
+    + Added HB_MEMOREAD() which is identical to MEMOREAD()
+      except it won't truncate the last byte (on non-UNIX
       compatible systems) if it's a EOF char.
       See also existing HB_MEMOWRIT().
       [TOMERGE 1.0]
 
 2008-11-01 11:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/hbi18n.c
-    * Minor change in header to separate it visually from comment 
+    * Minor change in header to separate it visually from comment
       field.
 
 2008-11-01 11:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * source/rtl/hbi18n.c
-    % Using buffered hb_file*() API in __I18N_LOAD() 
-      instead of plain hb_fs*(). This will cause speedup when 
-      buffering gets implemented in hb_file*(), because 
-      currently two hb_fsRead() will be executed for each 
+    % Using buffered hb_file*() API in __I18N_LOAD()
+      instead of plain hb_fs*(). This will cause speedup when
+      buffering gets implemented in hb_file*(), because
+      currently two hb_fsRead() will be executed for each
       string stored in the language file.
-    - __I18N_LOAD(): Because of the above, passing a file handle 
+    - __I18N_LOAD(): Because of the above, passing a file handle
       is no longer possible.
     + Added __I18N_LOADFROMMEMORY( <mem> ) => trs
     % Minor internal cleanups.
@@ -869,20 +874,20 @@
       __I18N_SAVE( cFileName | nHandle, aSortedTable [, cComment ] ) => lSuccess
       __I18N_LOAD( cFileName | nHandle ) => trs
       __I18N_GETTEXT( @cText, trs ) => NIL
-    ; NOTE: These were originally based on Giancarlo Niccolai's work in xhb, 
-            but everything was completely reworked, fixed, internals removed, 
-            made portable, lighter, shorter and probably quicker. The used file 
+    ; NOTE: These were originally based on Giancarlo Niccolai's work in xhb,
+            but everything was completely reworked, fixed, internals removed,
+            made portable, lighter, shorter and probably quicker. The used file
             format is incompatible, slightly smaller and portable.
-    ; NOTE: The internal format of 'trs' (loaded translation) is also 
-            different. For minimal memory/speed overhead, I've choosen a one 
-            dimensional array, as opposed to the original two dimensional 
+    ; NOTE: The internal format of 'trs' (loaded translation) is also
+            different. For minimal memory/speed overhead, I've choosen a one
+            dimensional array, as opposed to the original two dimensional
             (like the input aSortedTable array).
-    ; TODO: Higher level functions to handle selecting a default 
-            language, loading files automatically, possibly caching 
-            multiple loaded language translations in memory and providing 
-            a high level HB_I18N_GETTEXT() function. We may also readd 
-            a low-level function to create 'trs' from a memory object 
-            instead of loading it from the disk. We should in any case make 
+    ; TODO: Higher level functions to handle selecting a default
+            language, loading files automatically, possibly caching
+            multiple loaded language translations in memory and providing
+            a high level HB_I18N_GETTEXT() function. We may also readd
+            a low-level function to create 'trs' from a memory object
+            instead of loading it from the disk. We should in any case make
             the higher level the lightest and less app specific as possible.
 
   * include/hbver.ch
@@ -891,7 +896,7 @@
   * ChangeLog
     ! Fixed returning bit width.
     * Reworked hb_version() parameter values as follows:
-      (also fixed some differences between docs here in the 
+      (also fixed some differences between docs here in the
       previous entry and actual code)
       HB_VERSION_HARBOUR        (was: HB_V_HARBOUR        )
       HB_VERSION_COMPILER       (was: HB_V_COMPILER       )
@@ -925,7 +930,7 @@
       - __PDP_ENDIAN__
       - HB_VER_SVNID
       - HB_VER_CHLID
-      - HB_VER_LENTRY 
+      - HB_VER_LENTRY
       - HB_VER_C_USR
       - HB_VER_L_USR
       - HB_VER_PRG_USR
@@ -958,51 +963,51 @@
 
 2008-10-31 02:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.mak
-    - Removed -GS- option for WinCE. MS recommends this to 
-      be there for safety. If someone wants to disable, it 
+    - Removed -GS- option for WinCE. MS recommends this to
+      be there for safety. If someone wants to disable, it
       can be done with C_USR.
 
 2008-10-31 02:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/dlmalloc.c
-    ! Fixed minor MinGW warning. This fix also exists 
+    ! Fixed minor MinGW warning. This fix also exists
       as part of the next dlmalloc version (2.8.4b).
 
 2008-10-31 02:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * contrib/mtpl_b32.mak
   * config/w32/bcc32.cf
-    - Added -4 switch, which means Intel 386 CPUs are not 
+    - Added -4 switch, which means Intel 386 CPUs are not
       not supported by default.
 
   * make_vc.mak
-    + Added -GA switch to MSVC 32/64 which creates smaller 
+    + Added -GA switch to MSVC 32/64 which creates smaller
       (and only slightly faster) TLS access code.
 
   * source/compiler/cmdcheck.c
   * source/compiler/hbusage.c
-    + Added -/+ suboptions to -k? options to make it 
+    + Added -/+ suboptions to -k? options to make it
       possible to set them to the opposite setting.
-    ; NOTE: BTW, shouldn't -ki option also disable 
-            #pragma BEGINDUMP/ENDDUMP? IMO it should, 
-            otherwise it doesn't really enforce C 
+    ; NOTE: BTW, shouldn't -ki option also disable
+            #pragma BEGINDUMP/ENDDUMP? IMO it should,
+            otherwise it doesn't really enforce C
             out of .prg code.
 
   * config/w32/gcc.cf
   * config/w32/mingw.cf
     * Changed -march=i486 to -march=i586.
 
-  ; NOTE: Please comment on CPU optimization switches, IMO 
-          we can quite safely target Pentium/586 as the 
-          minimum CPU requirement these days for default 
-          Harbour builds. If someone needs to run it on 
-          386 (Win95) or 486 (Win98/WinME), a special built 
+  ; NOTE: Please comment on CPU optimization switches, IMO
+          we can quite safely target Pentium/586 as the
+          minimum CPU requirement these days for default
+          Harbour builds. If someone needs to run it on
+          386 (Win95) or 486 (Win98/WinME), a special built
           can be created.
 
 2008-10-30 21:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/make_b32_all.bat
   * contrib/make_vc_all.bat
   * contrib/make_gcc_all.sh
-    + Added support for GNU-make features HB_CONTRIBLIBS, 
+    + Added support for GNU-make features HB_CONTRIBLIBS,
       and HB_CONTRIB_ADDONS.
       Not tested in make_gcc_all.sh.
 
@@ -1027,9 +1032,9 @@
   * harbour/contrib/gtwvg/gtwvg.h
   * harbour/contrib/gtwvg/hbgtwvg.ch
     + Added the possibility to have transparency on Window. Work-in-progress
-    ! Rearranged .H structure for future seggregations into 
+    ! Rearranged .H structure for future seggregations into
       smaller structures
-  
+
   * harbour/contrib/gtwvg/tests/demowvg.prg
     + Added functionality to make a window transparent.
       ; <Traditional><Browser> : Press F11 and F12 to increase/decrese transparency.
@@ -1134,7 +1139,7 @@
   * contrib/hbcurl/make_b32.bat
   * contrib/hbcurl/make_vc.bat
   * contrib/hbcurl/Makefile
-    + Added HB_HBCURL_USR_C envvar to customize C switches 
+    + Added HB_HBCURL_USR_C envvar to customize C switches
       specifically for this contrib.
 
 2008-10-28 11:54 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -1172,7 +1177,7 @@
     % Using better method to return HB_V_BITWIDTH.
 
   * utils/hbtest/rt_str.prg
-    ! Changed to use 'hb_version( HB_V_BITWIDTH ) >= 64' 
+    ! Changed to use 'hb_version( HB_V_BITWIDTH ) >= 64'
       instead of #ifdef __ARCH64BIT__.
 
 2008-10-28 01:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -1180,27 +1185,27 @@
   * include/hbextern.ch
   + include/hbver.ch
   * source/rtl/version.c
-    + Added HB_VERSION() unified version information 
+    + Added HB_VERSION() unified version information
       function. This can return these version related data:
       hb_version( HB_V_HARBOUR )        => <string>
-      hb_version( HB_V_COMPILER )       => <string> 
-      hb_version( HB_V_MAJOR )          => <num> 
-      hb_version( HB_V_MINOR )          => <num> 
-      hb_version( HB_V_REV )            => <num> 
-      hb_version( HB_V_STATUS )         => <string> 
-      hb_version( HB_V_COUNT )          => <num> 
-      hb_version( HB_V_DATE_TIME )      => <string> 
-      hb_version( HB_V_DATE )           => <date> 
+      hb_version( HB_V_COMPILER )       => <string>
+      hb_version( HB_V_MAJOR )          => <num>
+      hb_version( HB_V_MINOR )          => <num>
+      hb_version( HB_V_REV )            => <num>
+      hb_version( HB_V_STATUS )         => <string>
+      hb_version( HB_V_COUNT )          => <num>
+      hb_version( HB_V_DATE_TIME )      => <string>
+      hb_version( HB_V_DATE )           => <date>
       hb_version( HB_V_TIME )           => <string>
-      hb_version( HB_V_PCODE )          => <num> 
-      hb_version( HB_V_PCODE_STR )      => <string> 
-      hb_version( HB_V_CHANGELOG_LAST ) => <string> 
-      hb_version( HB_V_CHANGELOG_REV )  => <string> 
-      hb_version( HB_V_FLAG_HARBOUR )   => <string> 
-      hb_version( HB_V_FLAG_C )         => <string> 
-      hb_version( HB_V_FLAG_LINKER )    => <string> 
-      hb_version( HB_V_BITWIDTH )       => <num> 
-      hb_version( HB_V_ENDIANNESS )     => <num> 
+      hb_version( HB_V_PCODE )          => <num>
+      hb_version( HB_V_PCODE_STR )      => <string>
+      hb_version( HB_V_CHANGELOG_LAST ) => <string>
+      hb_version( HB_V_CHANGELOG_REV )  => <string>
+      hb_version( HB_V_FLAG_HARBOUR )   => <string>
+      hb_version( HB_V_FLAG_C )         => <string>
+      hb_version( HB_V_FLAG_LINKER )    => <string>
+      hb_version( HB_V_BITWIDTH )       => <num>
+      hb_version( HB_V_ENDIANNESS )     => <num>
       This function makes deprecated following functions:
       - HB_COMPILER() => hb_version( HB_V_COMPILER )
       - HB_PCODEVER() => hb_version( HB_V_PCODE_VER_STR )
@@ -1216,8 +1221,8 @@
       - HB_VER_CHLID
       - HB_VER_LENTRY
       - HB_VER_C_USR
-    ; NOTE: If there are no objections, I'd remove the 
-            __ARCH*BIT__ and __*ENDIAN__ predefined macros, 
+    ; NOTE: If there are no objections, I'd remove the
+            __ARCH*BIT__ and __*ENDIAN__ predefined macros,
             as these can be misleading on some systems.
     ; TODO: Implement HB_V_DATE and HB_V_TIME.
     ; TODO: Add HB_MTVM() functionality. [DONE]
@@ -1235,8 +1240,8 @@
 2008-10-28 00:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * source/vm/cmdarg.c
-    + Added HB_CMDLINE() .prg level function to return 
-      the full command line. Currently it does reassemble 
+    + Added HB_CMDLINE() .prg level function to return
+      the full command line. Currently it does reassemble
       it from hb_argc/hb_argv.
 
   * contrib/rddsql/mysqldd.c
@@ -1244,20 +1249,20 @@
 
   * include/hbwmain.c
   * source/vm/cmdarg.c
-    * Moved argv[ 0 ] generation on Windows platform, so 
-      that it now gets properly filled with the full 
-      executable file path for console mode (GTWIN) 
-      apps in all situations (f.e. when run from a 
+    * Moved argv[ 0 ] generation on Windows platform, so
+      that it now gets properly filled with the full
+      executable file path for console mode (GTWIN)
+      apps in all situations (f.e. when run from a
       batch file using '%~n1.exe' macro).
 
   * source/rtl/hbinet.c
-    ! Fixed to use safe strerror() (named strerror_s()) 
+    ! Fixed to use safe strerror() (named strerror_s())
       under MSVS 2005 and upper.
       Please test.
 
   * source/hbzlib/gzio.c
-    + Added _CRT_SECURE_NO_DEPRECATE locally to suppress 
-      various MSVC unsafe CRT API usage warnings. Maybe it'd 
+    + Added _CRT_SECURE_NO_DEPRECATE locally to suppress
+      various MSVC unsafe CRT API usage warnings. Maybe it'd
       be better to fix these by using Harbour APIs.
 
   * utils/hbdoc/gentrf.prg
@@ -1303,9 +1308,9 @@
   * utils/hbmake/hbmake.prg
     % 'ValType() == "?"' -> IS*()
     % *trim( Str() ) -> hb_NToS()
-    ; In few places in hbtip the length limit 
-      was removed from Str(), as it was used 
-      inconsistently and could also cause 
+    ; In few places in hbtip the length limit
+      was removed from Str(), as it was used
+      inconsistently and could also cause
       infinite loops and invalid filenames.
     % Some other minor updates.
 
@@ -1322,9 +1327,9 @@
   * contrib/gtwvg/wvgclass.prg
   * source/rdd/hbsix/sxcompat.prg
     ! Fixed '&&' being used instead of '.AND.' in code.
-    ; NOTE: This '&&' comment compatibility is a lot more 
-            dangerous than it's useful. It'd vote for 
-            a compiler warnings switch for any of it's 
+    ; NOTE: This '&&' comment compatibility is a lot more
+            dangerous than it's useful. It'd vote for
+            a compiler warnings switch for any of it's
             occurences.
       [TOMERGE 1.0]
 
@@ -1423,9 +1428,9 @@
   * tests/wvtext.prg
   * include/inkey.ch
   * source/rtl/gtwvt/gtwvt.c
-    * Changed K_HB_RESIZE to HB_K_RESIZE. The reason is 
-      that we already got a HB_K_MULTICODE code (few lines 
-      below, I didn't know about it before), and it's better 
+    * Changed K_HB_RESIZE to HB_K_RESIZE. The reason is
+      that we already got a HB_K_MULTICODE code (few lines
+      below, I didn't know about it before), and it's better
       to keep consistency with that.
 
 2008-10-27 20:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -1465,35 +1470,35 @@
 2008-10-27 15:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/tbrowse.prg
   * source/debug/debugger.prg
-    ! Cleaned hb_AINS()/hb_ADEL() usage after changing the 
+    ! Cleaned hb_AINS()/hb_ADEL() usage after changing the
       default of the last parameter.
       Should fix the recent TBrowse() crash.
-    ; NOTE: I'll rethink the defaulting situation at least 
+    ; NOTE: I'll rethink the defaulting situation at least
             for hb_AINS().
 
 2008-10-27 14:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * source/rtl/philes.c
-    + Added HB_FLOCK() / HB_FUNLOCK() file locking 
+    + Added HB_FLOCK() / HB_FUNLOCK() file locking
       functions.
       [TOMERGE 1.0]
 
   * source/rtl/tget.prg
-    ! Accessing of Get() variables below made 
-      C5.x compatible when a new value was 
-      assigned to them as function call, rather 
+    ! Accessing of Get() variables below made
+      C5.x compatible when a new value was
+      assigned to them as function call, rather
       then normal assigment.
       :buffer, :changed, :clear, :col, :colorSpec
-      :minus, :pos, :row, :subScript, :postBlock, 
+      :minus, :pos, :row, :subScript, :postBlock,
       :preBlock, :cargo, :exitState, :reader.
-    ; NOTE: Please report if any of the side cases 
+    ; NOTE: Please report if any of the side cases
             still don't work.
       [TOMERGE 1.0]
 
 2008-10-27 12:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.mak
   * contrib/mtpl_vc.mak
-    - Removed no longer necessary '-D_CRT_SECURE_NO_DEPRECATE' 
+    - Removed no longer necessary '-D_CRT_SECURE_NO_DEPRECATE'
       for MSVS 2005 and upper.
 
   * include/hbsetup.h
@@ -1502,7 +1507,7 @@
 
   * source/common/hbstr.c
     ! Fixed hb_snprintf(). Please verify on your platforms.
-    ; TODO: It may need further tweaking to smooth out the 
+    ; TODO: It may need further tweaking to smooth out the
             platform implementation differences.
 
 2008-10-27 11:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -1512,22 +1517,22 @@
 
 2008-10-27 11:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbstr.c
-    * Some tweaks to hb_snprintf(). It still doesn't work 
+    * Some tweaks to hb_snprintf(). It still doesn't work
       for some reason.
 
   * include/hbapi.h
     + Added hb_snprintf() to header.
 
   * source/debug/dbgentry.c
-    * Changed strcpy() to hb_strncpy(). Chances are high 
+    * Changed strcpy() to hb_strncpy(). Chances are high
       this is wrong. Please review and test.
 
 2008-10-27 10:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/pp/ppcore.c
-    + Added '#pragma TEXTHIDDEN=<ON | OFF>' to control the 
-      existing -texthidden option to add light encoding to 
-      strings embedded in code. Since this goes with a slight 
-      performance hit and it's rarely used, it might be useful 
+    + Added '#pragma TEXTHIDDEN=<ON | OFF>' to control the
+      existing -texthidden option to add light encoding to
+      strings embedded in code. Since this goes with a slight
+      performance hit and it's rarely used, it might be useful
       to turn it on only for code parts that really needs this.
 
   * source/rtl/tget.prg
@@ -1537,75 +1542,75 @@
   * source/common/hbver.c
     * Changed to include bitness even for DJGPP.
     * Changed "(* bit)" to "(*-bit)"
-    ; NOTE: We have __ARCH*BIT__ but this macro is misleading 
-            and cannot be used properly on platforms where the 
-            compiler is able to generate multiple targets in 
+    ; NOTE: We have __ARCH*BIT__ but this macro is misleading
+            and cannot be used properly on platforms where the
+            compiler is able to generate multiple targets in
             one build pass. Such system is Darwin/OSX.
-            I'd suggest to consider removing this macro, and 
+            I'd suggest to consider removing this macro, and
             rather adding a function to return bitness.
             Any opininons?
 
 2008-10-26 22:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbfopen.c
-    * Changed hb_fopen() to use fopen_s(), secure version of 
+    * Changed hb_fopen() to use fopen_s(), secure version of
       fopen() for MSVS 2005 and upper.
 
   * source/common/hbstr.c
-    + Added hb_snprintf() Harbour wrapper for snprintf() which 
-      terminates the buffer with a '\0' char for CRTLs that 
+    + Added hb_snprintf() Harbour wrapper for snprintf() which
+      terminates the buffer with a '\0' char for CRTLs that
       need this (like MSVC).
       MSVC _snprintf() doesn't do so.
-    * hb_snprintf() used _snprintf_s(), secure version of 
+    * hb_snprintf() used _snprintf_s(), secure version of
       _snprintf() for MSVS 2005 and upper.
-    ; TOFIX: There is still one strcpy() marked as non-secure 
-             in debug lib. Could someone please take a look 
-             at it and replace it with hb_strncpy() or something 
-             else secure? The code is cryptic and as someone 
-             not using the debugger, I didn't dare to touch it, 
+    ; TOFIX: There is still one strcpy() marked as non-secure
+             in debug lib. Could someone please take a look
+             at it and replace it with hb_strncpy() or something
+             else secure? The code is cryptic and as someone
+             not using the debugger, I didn't dare to touch it,
              and this is the only one such call left. [DONE - TOVERIFY]
     ; TODO: Change all snprintf() calls to hb_snprintf().
-            When that happens, Harbour will no more use anything 
+            When that happens, Harbour will no more use anything
             depicted as "non-secure" by MSVS 2005/2008. [DONE]
-    ; NOTE: This function may need tweaking, pls review and 
+    ; NOTE: This function may need tweaking, pls review and
             fix if/where needed.
 
   * source/vm/dlmalloc.c
-    ! Fixed MSVC C++ mode compile error. This fix also exists 
+    ! Fixed MSVC C++ mode compile error. This fix also exists
       as part of the next dlmalloc version (2.8.4b).
 
 2008-10-26 07:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbdbgfx/dbgfx.prg
     * Minor cleanup.
- 
+
   * contrib/hbdbgfx/dbgfxc.c
-    ! Fixed GPF when non-string parameter passed to 
+    ! Fixed GPF when non-string parameter passed to
       hb_outdebug().
 
 2008-10-25 19:10 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbdbgfx/dbgfxc.c
-    + HB_FUNC( HB_OUTDEBUG ). 
+    + HB_FUNC( HB_OUTDEBUG ).
       May be I am missing something. Please correct.
 
 2008-10-25 17:55 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/include/hbgtinfo.ch
     + Added HB_GTI_SETPOS_XY
     + Added HB_GTI_SETPOS_ROWCOL
-  
+
   * harbour/rtl/gtwvt/gtwvt.c
     ! Updated to honor HB_GTI_SETPOS_XY | HB_GTI_SETPOS_ROWCOL commands.
 
   * harbour/tests/wvtext.prg
     ! Updated to demonstrate HB_GTI_SETPOS_XY|ROWCOL window positioning.
 
-    ; Now every next browser window opens 20x20 pixels away from 
+    ; Now every next browser window opens 20x20 pixels away from
       previous window, a GT imposed Z-Order.
-  
+
 2008-10-25 14:49 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/rtl/gtwvt/gtwvt.h
     + Added <ResizeMode> member to HB_GTWVT
 
   * harbour/include/hbgtinfo.ch
-    + Added HB_GTI_RESIZEMODE 
+    + Added HB_GTI_RESIZEMODE
     + Added HB_GTI_RESIZEMODE_FONT
     + Added HB_GTI_RESIZEMODE_ROWS
 
@@ -1626,11 +1631,11 @@
     ! Updated to demonstrate K_HB_RESIZE event in navigation loop.
     ; Odd numbered windows will have HB_GTI_RESIZEMODE_ROWS mode
       Even numbered windows will have HB_GTI_RESIZEMODE_FONT mode.
-      Open two or more browsers to see the effects. 
+      Open two or more browsers to see the effects.
 
     ; To activate HB_GTI_RESIZEMODE_ROWS mode call
          hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
-      and whenever window will be resized you can retrieve it via 
+      and whenever window will be resized you can retrieve it via
          if inkey() == K_HB_RESIZE
             // Reconfigure browser/your screen accordingly
          endif
@@ -1649,12 +1654,12 @@
 
 2008-10-24 13:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/arrayshb.c
-    * Changed the default for the last logical parameter of 
+    * Changed the default for the last logical parameter of
       HB_AINS()/HB_ADEL() to be .T.
-      This way there is no need to pass this parameter if someone 
+      This way there is no need to pass this parameter if someone
       wants to actually use the extended nature of these functions.
-      Passing a .F. will result in equivalent functionality to 
-      AINS()/ADEL(). Essentially the last parameter is just there 
+      Passing a .F. will result in equivalent functionality to
+      AINS()/ADEL(). Essentially the last parameter is just there
       for compatibility.
 
 2008-10-24 12:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -1705,9 +1710,9 @@
 2008-10-23 12:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/mtpl_vc.mak
     ! Fixed MSVC not rebuilding .prg files after changing them.
-      Current solution is to simply delete the intermediate .c 
-      file after C compiler returned. This also saves space, 
-      so even if it's a hack, it might be good to add this 
+      Current solution is to simply delete the intermediate .c
+      file after C compiler returned. This also saves space,
+      so even if it's a hack, it might be good to add this
       for other build paths.
 
 2008-10-23 12:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -1716,7 +1721,7 @@
 
   * contrib/mtpl_b32.mak
   * contrib/mtpl_vc.mak
-    % Changed to create the obj dir as a separate build rule 
+    % Changed to create the obj dir as a separate build rule
       (just like for core) rather than for each file.
 
 2008-10-23 12:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -1725,7 +1730,7 @@
   * contrib/mtpl_b32.mak
   * contrib/mtpl_vc.mak
     * "IF EXIST" -> "if exist" for consistency.
-    * "-" echo supression char consistently changed to "@", 
+    * "-" echo supression char consistently changed to "@",
       and added where it was missing (for 'if exist' commands).
 
   * make_vc.mak
@@ -1752,7 +1757,7 @@
   * harbour/contrib/gtwvg/wvgpaint.prg
   * harbour/contrib/gtwvg/tests/demowvg.prg
     ! Updated to current GTWVT changes for multi-windows support.
-    ; NOTE: Compile demowvg.prg with -d__MW__ and execute repeatedly 
+    ; NOTE: Compile demowvg.prg with -d__MW__ and execute repeatedly
      <Traditonal><Next Gets | Browser>. Also paly with other parts as usual.
 
 2008-10-23 04:39 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -1795,7 +1800,7 @@
   * config/w32/msvc.cf
   * config/w32/msvcce.cf
     * Using lowercase linker options for MSVC. Just for consistency.
-    * Using '/' as a switch char for MSVC linker. This works fo all 
+    * Using '/' as a switch char for MSVC linker. This works fo all
       old version.
 
   * contrib/mtpl_vc.mak
@@ -1845,20 +1850,20 @@
 2008-10-22 17:17 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   + contrib/rddads/adsx.c
     + added implementation of local indexing support for ADS driver.
-      Local indexing is used in case server can not do index 
+      Local indexing is used in case server can not do index
       creation, for example: index key depends on relation child area
       fields, index key uses user defined functions, index is created
       using codeblock, but not expression, etc.
-    ; This code implements no update index! Partial index update could 
-      also be implemented, but I didn't have a need for this. Besides 
-      that partial index implementation will be a little more 
-      complicated than in other RDD. Database update operations are 
-      not done in a single goCold() method. So, index update should 
-      be called, from many methods: append(), putValue(), delete(), 
-      recall(), etc., or ADS RDD structure should be changed to 
-      support real goCold(). For implementation of partial index, 
-      I'd suggest to use tree index (instead of a simple sorted array 
-      and binary search). B-tree code could be found in 
+    ; This code implements no update index! Partial index update could
+      also be implemented, but I didn't have a need for this. Besides
+      that partial index implementation will be a little more
+      complicated than in other RDD. Database update operations are
+      not done in a single goCold() method. So, index update should
+      be called, from many methods: append(), putValue(), delete(),
+      recall(), etc., or ADS RDD structure should be changed to
+      support real goCold(). For implementation of partial index,
+      I'd suggest to use tree index (instead of a simple sorted array
+      and binary search). B-tree code could be found in
       contrib/rddsql/sqlmix.c.
     ; Please check makefiles, and other compilers, platforms.
 
@@ -1886,13 +1891,13 @@
     + Added support for 'set HB_GUI=yes'
       Currently implemented for BCC32 and MSVC.
     + Added support for 'set HB_MT=yes' (instead of 'MT')
-      for consistency. MT seems to be an xhb heritage and 
+      for consistency. MT seems to be an xhb heritage and
       it may be removed in the future.
-    + Added support for optional -mt switch as an equivalent 
+    + Added support for optional -mt switch as an equivalent
       to 'set HB_MT=yes'
-    + Added support for optional -gui switch as an equivalent 
+    + Added support for optional -gui switch as an equivalent
       to 'set HB_GUI=yes'
-    ; NOTE: Ordering (first -mt, then -gui) and casing (everything 
+    ; NOTE: Ordering (first -mt, then -gui) and casing (everything
             is lowercase) of the above options are significant.
 
   * bin/hbmk.bat
@@ -1905,17 +1910,17 @@
 
 2008-10-22 14:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * tests/rto_get.prg
-    + Added tests for assigments as function calls (o:col( 10 ) 
+    + Added tests for assigments as function calls (o:col( 10 )
       and some for assigments as _function calls (o:_col( 10 )).
 
   * bin/hbmk.bat
   * make_vc.mak
-    - Removed /subsystem:console from LDFLAGS. This seems to 
+    - Removed /subsystem:console from LDFLAGS. This seems to
       be the default so it's not necessary.
 
   * bin/hbmk.bat
-    + Added L_USR support for MSVC. Now it's possible to 
-      build GUI (and GTWVT) programs using 
+    + Added L_USR support for MSVC. Now it's possible to
+      build GUI (and GTWVT) programs using
       'set L_USR=/subsystem:WINDOWS' switch.
 
   * contrib/gtwvg/tests/bld_vc.bat
@@ -1935,8 +1940,8 @@
 2008-10-22 23:01 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/tests/wvtext.prg
     Updated to demonstrate multi-windows GT capabilities.
-    
-    A REMINDER : This development alone places Harbour much higher than 
+
+    A REMINDER : This development alone places Harbour much higher than
                  so many dialects. Mind-blowing feature. I had ever longed
                  for this functionality since I started with Xbase++.
                  But the ease of use of a MW-GT in Harbour is far superior
@@ -2030,7 +2035,7 @@
 
 2008-10-21 14:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/box.c
-    ! Fixed GPF in hb_dispBox() when box drawing chars 
+    ! Fixed GPF in hb_dispBox() when box drawing chars
       were not passed.
 
 2008-10-21 13:17 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
@@ -2064,8 +2069,8 @@
   + contrib/rddsql/sqlmix.c
   + contrib/rddsql/hbsqldd.h
     + Added SQL RDD sent to the list by Mindaugas.
-    * Changed strcpy(), unused vars, startup code, 
-      added make files, fixed all MSVS/BCC warnings, 
+    * Changed strcpy(), unused vars, startup code,
+      added make files, fixed all MSVS/BCC warnings,
       other minor cleanups.
     * Changed 'BYTE val[]' to 'BYTE * val' in struct decl.
     ; TOFIX: It doesn't compile on MSVC due to this error:
@@ -16926,7 +16931,7 @@
      + Added hbsqlit2 SQLite 2.x interface library.
 
        With kind permission from the author:
-       Alejandro de Gárate <alex_degarate/at/hotmail.com>
+       Alejandro de Gà±¡te <alex_degarate/at/hotmail.com>
 
      + Some renames were done here too to better fit into
        the contrib structure.
@@ -17140,7 +17145,7 @@
        Thanks goes to Petr Chornyj <myorg63/at/mail.ru> for
        creating this code and making it available for this project.
 
-       (The code also based on Alejandro de Gárate
+       (The code also based on Alejandro de Gà±¡te
        <alex_degarate/at/hotmail.com> SQLite 2 interface work)
 
      + Added make files, arranged std contrib layout.
@@ -21923,12 +21928,12 @@
 2008-01-14 13:44 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
   * source/vm/extend.c
     * Undo Added conversion from logical params in hb_par* functions.
-      ( thks to Juan Gálvez )
+      ( thks to Juan Gà«¶ez )
 
 2008-01-14 12:28 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
   * source/vm/extend.c
     * Added conversion from logical params in hb_par* functions.
-      ( thks to Juan Gálvez )
+      ( thks to Juan Gà«¶ez )
 
 2008-01-15 10:31 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbdefs.h
@@ -22423,7 +22428,7 @@
 
 2007-12-17 13:41 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
     * common.mak
-      + Added some missing files (suggested by Juan Gálvez)
+      + Added some missing files (suggested by Juan Gà«¶ez)
 
 2007-12-16 15:42 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbgtwvg/gtwvg.h
@@ -24738,7 +24743,7 @@
 
 2007-11-20 17:02 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
     * contrib/xhb/common.mak
-      + Added some missing lines (suggested by Juan Gálvez)
+      + Added some missing lines (suggested by Juan Gà«¶ez)
 
 2007-11-20 13:45 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
   * contrib/bmdbfcdx/bmdbfcdx1.c
@@ -31162,7 +31167,7 @@
   * harbour/contrib/libct/Makefile
   * harbour/contrib/libct/makefile.bc
   * harbour/contrib/libct/makefile.vc
-    * added new files and Juan Gálvez fixes
+    * added new files and Juan Gà«¶ez fixes
   * harbour/contrib/libct/like.c
   * harbour/contrib/libct/keyset.c
     ! fixed typo
@@ -31952,7 +31957,7 @@
   * harbour/harbour.spec
     * restored original national characters which were unintentionally
       damaged on 2006-06-29 08:25 UTC+0200 Tomaz Zupan
-      Toma¾ please do not use editors which will change national characters
+      TomaÂ¾ please do not use editors which will change national characters
       in the whole file when you will change harbour.spec in the future
 
 2007-06-07 11:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -33100,7 +33105,7 @@
 
     Examples
 
-     ¦  The following example enables optimization for the Inventor
+     Â¦  The following example enables optimization for the Inventor
         database file using the SET OPTIMIZE command:
 
         USE Inventor NEW VIA "BMDBFCDX"
@@ -47089,7 +47094,7 @@ NOTE:
      ! Changed return values for empty or failed calles to MemoRead() to return an
        empty string instead of a NULL
      ! Close file when MemoRead() was successful, but file was empty (was being left open)
-   Above solutions reported and provided by David Arturo Macías Corona.  Thanks!
+   Above solutions reported and provided by David Arturo Macì ³ Corona.  Thanks!
 
 2004-02-19 12:48 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * contrib/rdd_ads/adsfunc.c
@@ -47653,7 +47658,7 @@ NOTE:
 2003-12-03 17:28 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * source/rdd/dbcmd.c
     ! Fixed OrdKeyNo() bug that set RecNo() to LastRec() + 1
-      reported by Roberto López - borrowed from xharbour
+      reported by Roberto Lò¯¤º - borrowed from xharbour
 
 2003-12-03 14:24 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * include/hbapirdd.h
@@ -49523,7 +49528,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2003-04-16 14:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
-    * A bug in hb_ntxTagKeyCount() fixed - reported by Jos© Luis Capel
+    * A bug in hb_ntxTagKeyCount() fixed - reported by JosÂ© Luis Capel
 
 2003-04-15 13:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   + contrib/ole
@@ -49532,7 +49537,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
   + contrib/ole/hbtest.prg
   + contrib/ole/ole2.c
   + contrib/ole/oleauto.prg
-    + With a kind permission of the author, José F. Giménez <jfgimenez@wanadoo.es>,
+    + With a kind permission of the author, JosçŸ†. Gimè­¥z <jfgimenez@wanadoo.es>,
       ole library for harbour added.
       Some unused stuff is removed from the original files, few bug fixes are made.
 
@@ -49958,7 +49963,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
           DBOI_ISCOND, DBOI_ISDESC, DBOI_UNIQUE, DBOI_POSITION, DBOI_RECNO,
           DBOI_KEYNORAW, DBOI_KEYCOUNT, DBOI_KEYCOUNTRAW.
           This makes ordKeyNo() = recno() and ordKeyCount() = lastrec()
-          in such case. Reported by Hernán Diego Ceccarelli
+          in such case. Reported by Hernà¬ Diego Ceccarelli
           <hceccarelli@cesotech.com.ar>
         + added helper function hb_cdxOrdListClear
         ! structural index isn't closed anymore
@@ -50089,7 +50094,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2002-11-27 13:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
-    ! Bug fixed, reported by Carlos Andr©s
+    ! Bug fixed, reported by Carlos AndrÂ©s
   * source/rtl/cdpapi.c
     ! Bug fixed in HB_TRANSLATE()
 
@@ -50435,7 +50440,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2002-10-22 18:53 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * source/rtl/filesys.c
-    ! minor fix reported by José Fco. Pérez
+    ! minor fix reported by JosçŸ†co. Pè±¥z
 
 2002-10-22 12:00 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * source/rdd/dbcmd.c
@@ -52762,7 +52767,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
      ! fixed bug seek and set deleted on, reported by Lorenzo Fiorini
        also fix bug with set filter
      ! fixed bug with ordkeyno() and ordkeycount(),
-       reported by Manuel Mercado Gómez
+       reported by Manuel Mercado Gò¬¤º
 
 2002-03-04 22:33 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/rtl/set.c
@@ -53222,7 +53227,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
          ...
          __hrbUnload( hrbLib )
 
-2002-02-01 10:30 UTC-0300 Horacio Roldán <harbour_ar@yahoo.com.ar>
+2002-02-01 10:30 UTC-0300 Horacio Roldà¬ <harbour_ar@yahoo.com.ar>
    * utils/hbmake/hbmake.prg
      utils/hbmake/hbmutils.prg
      * Better support for big project(Read and Generations)
@@ -53531,7 +53536,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2002-01-28 14:21 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbf1.c
-    * Bug fixed in dbfGetMemo(), reported by Jos© Luis Capel
+    * Bug fixed in dbfGetMemo(), reported by JosÂ© Luis Capel
 
 2002-01-28 13:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
@@ -54020,7 +54025,7 @@ ed
 2002-01-11 08:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   * source/rdd/dbf1.c
     ! Fixed problem with numeric field.
-      From Horacio Roldán <harbour_ar@yahoo.com.ar>
+      From Horacio Roldà¬ <harbour_ar@yahoo.com.ar>
 
 2002-01-10 22:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   * source/common/hbffind.c
@@ -54034,7 +54039,7 @@ ed
 2002-01-10 14:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/spfiles.c
     ! Fix to remove spurious ISCHAR(1) tests from C routines.
-      From Horacio Roldán <harbour_ar@yahoo.com.ar>
+      From Horacio Roldà¬ <harbour_ar@yahoo.com.ar>
 
 2002-01-10 17:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/pp/pptable.c
@@ -58184,7 +58189,7 @@ e.vc
 
 2001-07-24 20:45  GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +doc/es/math.txt
-      *Math docs translated to spanish. Thanks for Ricardo Ramírez R.
+      *Math docs translated to spanish. Thanks for Ricardo Ramì±¥z R.
 
 2001-07-24  08:45 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>/Jose Lalin <dezac@corevia.com>
    * source/compiler/gencobj.c
@@ -59551,7 +59556,7 @@ e.vc
       new Harbour License and Exception with permission from
       Andi Jahja <andijahja@cbn.net.id>,
       April White <awhite@mail.rosecom.ca>,
-      Ignacio_Ortiz_de_Zúñiga <ignacio@ozs.com>,
+      Ignacio_Ortiz_de_Zï¿½ <ignacio@ozs.com>,
       Kwon,OJun (Charles Kwon) <charles@fivetech.net>, and
       Phil Barnett <midnight@the-oasis.net>
 
@@ -61998,7 +62003,7 @@ NOTE: there is no hb_gcLockItem/hb_gcUnlockItem functions - please remove
 
 2001-03-14 04:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/classes.c
-     ! Fixed hb_param() to hb_stackItemFromBase() (posted by José F. Giménez)
+     ! Fixed hb_param() to hb_stackItemFromBase() (posted by JosçŸ†. Gimè­¥z)
 
 2001-03-13 03:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.txt
@@ -62023,7 +62028,7 @@ NOTE: there is no hb_gcLockItem/hb_gcUnlockItem functions - please remove
   * source/lang/msgeo.c
     ! Updated
     + Added harbour license
-    ( provided by Jos© Lal­n <dezac@corevia.com> )
+    ( provided by JosÂ© LalÂ­n <dezac@corevia.com> )
 
 2001-03-11 21:43 UTC+0500 April <awhite@user.rose.com>
    * doc/en/hb_macro.txt
@@ -80919,7 +80924,7 @@ Tue Nov 09 11:56:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
       rewritten and continued in C++, which is also Open Source, and you can
       find it at http://www.nexus.hu/cccpp/
 
-      This great contribution was made by Levente Csisz r <lcsiszar@index.hu>
+      This great contribution was made by Levente CsiszÂ r <lcsiszar@index.hu>
 
 19991109-01:09 GMT+1 Viktor Szakats <info@szelvesz.hu>
   * source/rtl/filesys.c
@@ -83237,7 +83242,7 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
    * source/rtl/memoline.c
      source/rtl/mlcount.c
      ! TAB handling fixes for MEMOLINE() and MLCOUNT() by
-       Ignacio Ortiz de Zúniga <ignacio@fivetech.com>
+       Ignacio Ortiz de Zï¿½ <ignacio@fivetech.com>
      * All USHORTs changed to ULONG.
 
 19991006-13:05 GMT+1 Viktor Szakats <info@szelvesz.hu>
@@ -83439,7 +83444,7 @@ Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     source/rtl/Makefile
     doc/funclist.txt
     + MEMOLINE() added
-      (thanks to Ignacio Ortiz de Zúniga <ignacio@fivetech.com>)
+      (thanks to Ignacio Ortiz de Zï¿½ <ignacio@fivetech.com>)
       !! WARNING !! Please modify non-GNU make files.
 
 19991005-18:20 GMT+1 Viktor Szakats <info@szelvesz.hu>
@@ -83654,7 +83659,7 @@ Mon Oct 04 12:52:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     source/rtl/Makefile
     doc/funclist.txt
     + MLCOUNT() added
-      (thanks to Ignacio Ortiz de Zúniga <ignacio@fivetech.com>)
+      (thanks to Ignacio Ortiz de Zï¿½ <ignacio@fivetech.com>)
   - source/runner/stdalone/runner.prg
     - Removed (now for sure)
 

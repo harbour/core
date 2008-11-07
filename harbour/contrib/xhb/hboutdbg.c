@@ -101,7 +101,7 @@ static void debugInit( void )
    if ( iFifoResult == -1 )
    {
       iFifoResult = errno;
-   }   
+   }
    if ( iFifoResult == 0 || iFifoResult == EEXIST )
    {
       if ( strlen( pFileName->szName ) > 20 )
@@ -139,31 +139,33 @@ static void debugInit( void )
 
 #endif
 
-HB_FUNC( HB_OUTDEBUGNAME )
+BOOL hb_OutDebugName( PHB_ITEM pName )
 {
 #if defined(HB_OS_UNIX)
-   PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
+   BOOL bRet;
 
    if ( s_iDebugFd == 0 && pName != NULL)
    {
       hb_strncpy( s_szDebugName, hb_itemGetCPtr( pName ), sizeof( s_szDebugName ) - 1 );
       s_iUseDebugName = 1;
 
-      hb_retl( TRUE );
+      bRet = TRUE;
    }
    else if ( pName == NULL)
    {
       s_iUseDebugName = 0;
-      hb_retl( TRUE );
+      bRet = TRUE;
    }
    else
    {
-      hb_retl( FALSE );
+      bRet = FALSE;
    }
+
+   return bRet;
 #endif
 }
 
-HB_FUNC( HB_OUTDEBUG )
+void hb_OutDebug( const char * szMsg, ULONG ulMsgLen )
 {
    #if defined(HB_OS_UNIX)
    int iStatus, iPid;
@@ -204,20 +206,36 @@ HB_FUNC( HB_OUTDEBUG )
 
          if( select( s_iDebugFd + 1, NULL, &wrds, NULL, &tv ) > 0 )
          {
-            write( s_iDebugFd, hb_parcx(1), hb_parclen(1) );
+            write( s_iDebugFd, szMsg, ulMsgLen );
             write( s_iDebugFd, "\n", 1 );
          }
       }
    }
    #elif defined(__WIN32__)
 
-   if( ISCHAR(1) )
    {
-      LPTSTR lpMsg = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+      LPTSTR lpMsg = HB_TCHAR_CONVTO( szMsg );
       OutputDebugString( lpMsg );
       HB_TCHAR_FREE( lpMsg );
+
+      HB_SYMBOL_UNUSED(ulMsgLen);
    }
 
    #endif
 }
 
+HB_FUNC( HB_OUTDEBUGNAME )
+{
+#if defined(HB_OS_UNIX)
+   PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
+
+   hb_retl( hb_OutDebugName( pName ) );
+#endif
+}
+
+HB_FUNC( HB_OUTDEBUG )
+{
+   if( ISCHAR(1) )
+       hb_OutDebug( hb_parcx(1), hb_parclen(1) );
+
+}
