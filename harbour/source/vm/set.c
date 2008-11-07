@@ -1208,12 +1208,62 @@ int hb_setListenerRemove( int listener )
 
 static BOOL hb_setSetFile( HB_set_enum set_specifier, const char * szFile, BOOL fAdditive )
 {
-   /* TODO: */
-   HB_SYMBOL_UNUSED( set_specifier );
-   HB_SYMBOL_UNUSED( szFile );
-   HB_SYMBOL_UNUSED( fAdditive );
+   PHB_SET_STRUCT pSet = hb_stackSetStruct();
+   BOOL fResult = TRUE;
 
-   return FALSE;
+   switch( set_specifier )
+   {
+      case HB_SET_ALTFILE:
+         if( pSet->HB_SET_ALTFILE )
+            hb_xfree( pSet->HB_SET_ALTFILE );
+         /* Limit size of SET strings to 64K, truncating if source is longer */
+         pSet->HB_SET_ALTFILE = szFile ? hb_strndup( szFile, USHRT_MAX ) : NULL;
+         close_text( pSet, pSet->hb_set_althan );
+         if( pSet->HB_SET_ALTFILE && pSet->HB_SET_ALTFILE[0] != '\0' )
+            pSet->hb_set_althan = open_handle( pSet, pSet->HB_SET_ALTFILE,
+                                               fAdditive, ".txt", HB_SET_ALTFILE );
+         else
+            pSet->hb_set_althan = FS_ERROR;
+         break;
+
+      case HB_SET_EXTRAFILE:
+         if( pSet->HB_SET_EXTRAFILE )
+            hb_xfree( pSet->HB_SET_EXTRAFILE );
+         /* Limit size of SET strings to 64K, truncating if source is longer */
+         pSet->HB_SET_EXTRAFILE = szFile ? hb_strndup( szFile, USHRT_MAX ) : NULL;
+         if( szFile )
+         {
+            close_text( pSet, pSet->hb_set_extrahan );
+            if( pSet->HB_SET_EXTRAFILE && pSet->HB_SET_EXTRAFILE[0] != '\0' )
+               pSet->hb_set_extrahan = open_handle( pSet, pSet->HB_SET_EXTRAFILE,
+                                                    fAdditive, ".prn", HB_SET_EXTRAFILE );
+            else
+               pSet->hb_set_extrahan = FS_ERROR;
+         }
+         break;
+
+      case HB_SET_PRINTFILE:
+         if( pSet->HB_SET_PRINTFILE )
+            hb_xfree( pSet->HB_SET_PRINTFILE );
+         /* Limit size of SET strings to 64K, truncating if source is longer */
+         pSet->HB_SET_PRINTFILE = szFile ? hb_strndup( szFile, USHRT_MAX ) : NULL;
+         if( szFile )
+         {
+            close_binary( pSet->hb_set_printhan );
+            if( pSet->HB_SET_PRINTFILE && pSet->HB_SET_PRINTFILE[0] != '\0' )
+               pSet->hb_set_printhan = open_handle( pSet, pSet->HB_SET_PRINTFILE,
+                                                    fAdditive, ".prn", HB_SET_PRINTFILE );
+            else
+               pSet->hb_set_printhan = FS_ERROR;
+         }
+         break;
+
+      default:
+         fResult = FALSE;
+         break;
+   }
+
+   return fResult;
 }
 
 HB_EXPORT BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
