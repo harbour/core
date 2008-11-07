@@ -8,6 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-07 17:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hbmk.bat
+    + Added support for 'owatcom' as HB_COMPILER.
+    ; NOTE: If there are no objections I'll remove Harbour 
+            support for 'watcom' HB_COMPILER, which was 
+            used for old non-opensource version of this 
+            compiler, but I guess it doesn't make too much 
+            sense having them anymore.
+
+  * source/common/hbverdsp.c
+    * Minor change in /build output.
+
+  * include/hbver.ch
+  * source/rtl/version.c
+    * Changed ordering of parameter constants to make more sense.
+
+  * bin/hbmk.bat
+  * config/w32/owatcom.cf
+    * Removed 'debug all' linker option to make executable sizes 
+      significantly smaller by default. If you need debug info, 
+      use 'L_USR=debug all'.
+    ; NOTE: I'd suggest doing the same for other platform supported 
+            by owatcom. If there are no objections I can do this.
+
+  * source/rtl/gtwvt/gtwvt.c
+    * Typo, minor formatting.
+
+
 2008-11-07 14:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/set.c
     + finished hb_setSetFile() used internally for HB_SET_ALTFILE,

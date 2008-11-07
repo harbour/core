@@ -255,7 +255,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->COLORS[14]        = YELLOW;
    pWVT->COLORS[15]        = BRIGHT_WHITE;
 
-   /* THEESE are the default font parameters, if not changed by user */
+   /* THESE are the default font parameters, if not changed by user */
    pWVT->PTEXTSIZE.x       = WVT_DEFAULT_FONT_WIDTH;
    pWVT->PTEXTSIZE.y       = WVT_DEFAULT_FONT_HEIGHT;
    pWVT->fontWidth         = WVT_DEFAULT_FONT_WIDTH;
@@ -486,10 +486,10 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
    SelectObject( hdc, hOldFont );
    ReleaseDC( pWVT->hWnd, hdc );
 
-  /*
-   * we will need to use the font size to handle the transformations from
-   * row column space in the future, so we keep it around in a static!
-   */
+   /*
+    * we will need to use the font size to handle the transformations from
+    * row column space in the future, so we keep it around in a static!
+    */
 
    pWVT->PTEXTSIZE.x = pWVT->fontWidth < 0 ? -pWVT->fontWidth :
                     tm.tmAveCharWidth; /* For fixed FONT should == tm.tmMaxCharWidth */
@@ -1675,7 +1675,6 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance )
 
    szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
 
-
    hWnd = CreateWindow(
                s_szClassName,                               /* classname */
                szAppName,                                   /* window name */
@@ -1752,9 +1751,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
 
    if( ! hb_winmainArgGet( &hInstance, NULL, &iCmdShow ) )
-   {
       hb_errInternal( 10001, "It's not a GUI program", NULL, NULL );
-   }
 
    pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
    if( !pWVT )

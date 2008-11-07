@@ -59,7 +59,7 @@ echo LIB kernel32.lib, user32.lib, wsock32.lib, winspool.lib, oleaut32.lib, uuid
 endef
 
 LD = wlink
-LDFLAGS = debug all OP osn=NT OP stack=65536 OP CASEEXACT
+LDFLAGS = OP osn=NT OP stack=65536 OP CASEEXACT
 
 ifeq ($(HB_LIB_COMPILE),)
    LINKLIBS = $(foreach lib, $(CONTRIBS), $(LIB_DIR)/$(lib))

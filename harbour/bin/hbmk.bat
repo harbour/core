@@ -78,6 +78,7 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
    echo     HB_COMPILER:
    echo       - When HB_ARCHITECTURE=dos
    echo         - djgpp   (Delorie GNU C, DOS 32-bit)
+   echo         - owatcom (OpenWatcom, DOS 32-bit)
    echo         - watcom  (OpenWatcom, DOS 32-bit)
    echo         - rxs32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)
    echo       - When HB_ARCHITECTURE=w32
@@ -85,6 +86,7 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
    echo         - mingw   (MinGW GNU C, Windows 32-bit)
    echo         - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)
    echo         - bcc32   (Borland C++ 4.x, 5.x, 6.x, Windows 32-bit)
+   echo         - owatcom (OpenWatcom, Windows 32-bit)
    echo         - watcom  (OpenWatcom, Windows 32-bit)
    echo         - rxsnt   (EMX/RSXNT/Win32 GNU C, Windows 32-bit)
    goto END
@@ -158,10 +160,13 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
 
 :A_DOS_RSX32_NOT
 
+   if "%HB_COMPILER%" == "owatcom" goto A_DOS_WATCOM
    if not "%HB_COMPILER%" == "watcom" goto END
 
+      :A_DOS_WATCOM
+
       wpp386 -j -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS %_HB_PRG_NAME%.c -fo=%_HB_PRG_NAME%.obj
-      echo debug all OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe NAME %_HB_PRG_NAME%.exe > _hb_mk.tmp
+      echo OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe %L_USR% NAME %_HB_PRG_NAME%.exe > _hb_mk.tmp
       echo FILE %_HB_PRG_NAME%.obj >> _hb_mk.tmp
       echo LIB hbcpage.lib >> _hb_mk.tmp
       echo LIB hbdebug.lib >> _hb_mk.tmp
@@ -224,10 +229,13 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
 
 :A_WIN_RSXNT_NOT
 
+   if "%HB_COMPILER%" == "owatcom" goto A_WIN_WATCOM
    if not "%HB_COMPILER%" == "watcom" goto END
 
+      :A_WIN_WATCOM
+
       wpp386 -j -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT %_HB_PRG_NAME%.c -fo=%_HB_PRG_NAME%.obj
-      echo debug all OP osn=NT OP stack=65536 OP CASEEXACT NAME %_HB_PRG_NAME%.exe > _hb_mk.tmp
+      echo OP osn=NT OP stack=65536 OP CASEEXACT %L_USR% NAME %_HB_PRG_NAME%.exe > _hb_mk.tmp
       echo FILE %_HB_PRG_NAME%.obj >> _hb_mk.tmp
       echo LIB hbcpage.lib >> _hb_mk.tmp
       echo LIB hbdebug.lib >> _hb_mk.tmp
