@@ -297,7 +297,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
 #ifndef HB_CDP_SUPPORT_OFF
    pWVT->hostCDP    = hb_vmCDP();
-#if defined(UNICODE)
+#if defined( UNICODE )
    pWVT->inCDP      = hb_vmCDP();
 #else
    {
@@ -503,10 +503,10 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
                      ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
 #endif
 
-   for( n = 0; n < pWVT->COLS; n++ )   /* pWVT->FixedSize[] is used by ExtTextOut() to emulate */
-   {                                   /* fixed font when a proportional font is used */
+   /* pWVT->FixedSize[] is used by ExtTextOut() to emulate 
+      fixed font when a proportional font is used */         
+   for( n = 0; n < pWVT->COLS; n++ )   
       pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
-   }
 
    /* resize the window to get the specified number of rows and columns */
    GetWindowRect( pWVT->hWnd, &wi );
@@ -518,10 +518,8 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
    width  += ( USHORT ) ( wi.right - wi.left - ci.right );
    height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
 
-   /*
-    * Centre the window within the CLIENT area on the screen
-    * but only if pWVT->CentreWindow == TRUE
-    */
+   /* Center the window within the CLIENT area on the screen
+      but only if pWVT->CentreWindow == TRUE */
    if( pWVT->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA,0, &rcWorkArea, 0 ) )
    {
       wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
@@ -567,7 +565,7 @@ static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
    {
       BOOL bOldCentre = pWVT->CentreWindow;
       pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
-      HB_GTSELF_SETMODE( pWVT->pGT, (USHORT) ( maxHeight / pWVT->PTEXTSIZE.y ), (USHORT) ( maxWidth / pWVT->PTEXTSIZE.x ) );
+      HB_GTSELF_SETMODE( pWVT->pGT, ( USHORT ) ( maxHeight / pWVT->PTEXTSIZE.y ), ( USHORT ) ( maxWidth / pWVT->PTEXTSIZE.x ) );
       pWVT->CentreWindow = bOldCentre;
    }
 }
@@ -1246,7 +1244,7 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
                   default:
                      if( pWVT->inCDP )
                      {
-#if defined(UNICODE)
+#if defined( UNICODE )
                         c = hb_cdpGetChar( pWVT->inCDP, FALSE, ( USHORT ) c );
 #else
                         if( c > 0 && c <= 255 && pWVT->keyTransTbl[ c ] )
@@ -1446,7 +1444,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
 
-#if defined(UNICODE)
+#if defined( UNICODE )
          usChar = hb_cdpGetU16( pWVT->hostCDP, TRUE, ( BYTE ) usChar );
 #else
          usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
@@ -1651,8 +1649,8 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
 
    SystemParametersInfo( SPI_GETWORKAREA,0, &rcWorkArea, 0 );
 
-   maxWidth  = (USHORT) ( rcWorkArea.right - rcWorkArea.left );
-   maxHeight = (USHORT) ( rcWorkArea.bottom - rcWorkArea.top );
+   maxWidth  = ( USHORT ) ( rcWorkArea.right - rcWorkArea.left );
+   maxHeight = ( USHORT ) ( rcWorkArea.bottom - rcWorkArea.top );
 
    hdc       = GetDC( hWnd );
    hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
@@ -1660,8 +1658,8 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
    SelectObject( hdc, hOldFont ); /* Put old font back */
    ReleaseDC( hWnd, hdc );
 
-   width     = (USHORT) ( iWidth < 0 ? -iWidth : tm.tmAveCharWidth * cols );  /* Total pixel width this setting would take */
-   height    = (USHORT) ( tm.tmHeight * rows ); /* Total pixel height this setting would take */
+   width     = ( USHORT ) ( iWidth < 0 ? -iWidth : tm.tmAveCharWidth * cols );  /* Total pixel width this setting would take */
+   height    = ( USHORT ) ( tm.tmHeight * rows ); /* Total pixel height this setting would take */
 
    return ( width <= maxWidth ) && ( height <= maxHeight );
 }
@@ -1940,7 +1938,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_ISUNICODE:
-#if defined(UNICODE)
+#if defined( UNICODE )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
 #else
          pInfo->pResult = hb_itemPutL( pInfo->pResult, FALSE );
@@ -2085,7 +2083,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            HB_GTSELF_SETMODE( pGT, (USHORT) ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
+            HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
          }
          break;
 
@@ -2094,7 +2092,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            HB_GTSELF_SETMODE( pGT, pWVT->ROWS, (USHORT) ( iVal / pWVT->PTEXTSIZE.x ) );
+            HB_GTSELF_SETMODE( pGT, pWVT->ROWS, ( USHORT ) ( iVal / pWVT->PTEXTSIZE.x ) );
          }
          break;
 
@@ -2293,7 +2291,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             BOOL bOldCentre = pWVT->CentreWindow;
             pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
-            HB_GTSELF_SETMODE( pGT, (USHORT) ( iY / pWVT->PTEXTSIZE.y ), (USHORT) ( iX / pWVT->PTEXTSIZE.x ) );
+            HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x ) );
             pWVT->CentreWindow = bOldCentre;
          }
          break;
@@ -2713,7 +2711,7 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
 
 #ifndef HB_CDP_SUPPORT_OFF
 
-#if defined(UNICODE)
+#if defined( UNICODE )
    /*
     * We are displaying text in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
@@ -2772,7 +2770,7 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
 
 #ifndef HB_CDP_SUPPORT_OFF
 
-#if defined(UNICODE)
+#if defined( UNICODE )
    /*
     * We are receiving WM_CHAR events in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
