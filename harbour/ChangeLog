@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-08 19:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gcc.mak
+    ! corrected missing $(HARBOUR_EXE) dependence in .prg files rules
+    ! replaced non indirect rules (::) which are strictly file base with
+      indirect ones to not confuse dependence logic when parallel
+      compilation is enabled
+    ! marked harbour.c and cmdarg.c as dependent on pptable.c to fix
+      compilation order - these files needs hbverbld.h which is generated
+      together with pptable.c
+    ! fixed HBTESTDLL_EXE dependencies - static library were used instead
+      of harbour share library. BTW probably it will be good to create also
+      HBRUNDLL_EXE
+
+      With above modification parallel compilation can be enabled for
+      make_gcc.sh (-j<N> GNU make option). It greatly improves compilation
+      speed. Probably also make_{bcc,vc}.mak should be fixed even if they
+      do not support parallel compilation.
+
 2008-11-08 10:23 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
     ! Updated to match current GTWVT.

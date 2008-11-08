@@ -219,12 +219,12 @@ ARFLAGS = rc $(A_USR)
 # COMPILE Rules
 #**********************************************************
 # General *.prg --> *.o COMPILE rule for STATIC Libraries
-$(OBJ_DIR)/%$(OBJEXT) : %.prg
+$(OBJ_DIR)/%$(OBJEXT) : %.prg $(HARBOUR_EXE)
 	$(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)/ $<
 	$(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)/$(<F:.prg=.c)
 #----------------------------------------------------------
 # General *.prg --> *.o COMPILE rule for STATIC MT Libraries
-$(MT_OBJ_DIR)/%$(OBJEXT) : %.prg
+$(MT_OBJ_DIR)/%$(OBJEXT) : %.prg $(HARBOUR_EXE)
 	$(HB) $(HARBOURFLAGS) -o$(MT_OBJ_DIR)/ $<
 	$(CC) $(CLIBFLAGS) $(CFLAGSMT) -o$@ $(MT_OBJ_DIR)/$(<F:.prg=.c)
 #----------------------------------------------------------
@@ -237,7 +237,7 @@ $(MT_OBJ_DIR)/%$(OBJEXT) : %.c
 	$(CC) $(CLIBFLAGS) $(CFLAGSMT) -o$@ $<
 #*******************************************************
 # General *.prg --> *.o COMPILE rule for SHARED Libraries
-$(DLL_OBJ_DIR)/%$(OBJEXT) : %.prg
+$(DLL_OBJ_DIR)/%$(OBJEXT) : %.prg $(HARBOUR_EXE)
 	$(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)/ $<
 	$(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)/$(<F:.prg=.c)
 #----------------------------------------------------------
@@ -262,9 +262,12 @@ all : $(HB_DEST_DIRS) $(HB_BUILD_TARGETS)
 # Helper targets
 #**********************************************************
 BasicLibs : $(COMMON_LIB) $(HBPP_EXE) $(PP_LIB) $(COMPILER_LIB)
-BasicExes : BasicLibs $(HB)
+BasicExes : BasicLibs $(HARBOUR_EXE)
 StdLibs   : BasicExes $(STANDARD_STATIC_HBLIBS)
 MinLibs   : $(MINIMAL_STATIC_HBLIBS)
+#**********************************************************
+$(MAIN_DIR)/harbour.c : $(OBJ_DIR)/pptable.c
+$(VM_DIR)/cmdarg.c : $(OBJ_DIR)/pptable.c
 #**********************************************************
 
 
@@ -393,34 +396,34 @@ $(HBPP_EXE)     : $(HBPP_EXE_OBJS) $(COMMON_LIB)
 $(HARBOUR_EXE)  : $(HARBOUR_EXE_OBJS) $(COMPILER_LIB) $(PP_LIB) $(COMMON_LIB)
 	$(CC) $(CFLAGS) -o $@ $^ $(HB_OS_LIBS)
 #**********************************************************
-$(HBRUN_EXE)    :: $(StdLibs)
-$(HBRUN_EXE)    :: $(HBRUN_EXE_OBJS)
+$(HBRUN_EXE)    : $(StdLibs)
+$(HBRUN_EXE)    : $(HBRUN_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBTEST_EXE)   :: $(StdLibs)
-$(HBTEST_EXE)   :: $(HBTEST_EXE_OBJS)
+$(HBTEST_EXE)   : $(StdLibs)
+$(HBTEST_EXE)   : $(HBTEST_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBDOC_EXE)    :: $(MinLibs)
-$(HBDOC_EXE)    :: $(HBDOC_EXE_OBJS)
+$(HBDOC_EXE)    : $(MinLibs)
+$(HBDOC_EXE)    : $(HBDOC_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBMAKE_EXE)   :: $(MinLibs)
-$(HBMAKE_EXE)   :: $(HBMAKE_EXE_OBJS)
+$(HBMAKE_EXE)   : $(MinLibs)
+$(HBMAKE_EXE)   : $(HBMAKE_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
 
 #**********************************************************
 # DLL Targets
 #**********************************************************
-$(HARBOUR_DLL) :: $(StdLibs)
-$(HARBOUR_DLL) :: $(DLL_OBJS)
+$(HARBOUR_DLL) : $(StdLibs)
+$(HARBOUR_DLL) : $(DLL_OBJS)
 	$(CC) $(LDFLAGSDLL) -o $@ $^ $(HB_OS_LIBS) $(HB_IMPLIB_PART)
 #**********************************************************
 # DLL EXECUTABLE Targets
 #**********************************************************
-$(HBTESTDLL_EXE) :: $(StdLibs)
-$(HBTESTDLL_EXE) :: $(DLL_OBJ_DIR)/mainstd$(OBJEXT) \
+$(HBTESTDLL_EXE) : $(HARBOUR_DLL)
+$(HBTESTDLL_EXE) : $(DLL_OBJ_DIR)/mainstd$(OBJEXT) \
                     $(HBTEST_EXE_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
 	$(CC) $(CEXEFLAGSDLL) -o$@ $^ $(HARBOUR_DLL) $(HB_OS_LIBS)
 #----------------------------------------------------------
