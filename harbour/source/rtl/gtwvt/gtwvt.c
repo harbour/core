@@ -454,77 +454,83 @@ static void hb_gt_wvt_KillCaret( PHB_GTWVT pWVT )
    }
 }
 
-static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
+/*
+ *  functions for handling the input queues for the mouse and keyboard
+ */
+static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
 {
-   HDC        hdc;
-   HFONT      hFont, hOldFont;
-   USHORT     height, width;
-   RECT       wi, ci;
-   TEXTMETRIC tm;
-   RECT       rcWorkArea;
-   int        n;
+   int iPos = pWVT->keyPointerIn;
 
-   /*
-    * set the font and get it's size to determine the size of the client area
-    * for the required number of rows and columns
-    */
-   hFont    = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
-                                 pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
-   if( pWVT->hFont )
-      DeleteObject( pWVT->hFont );
-   pWVT->hFont = hFont;
-   hdc      = GetDC( pWVT->hWnd );
-   hOldFont = ( HFONT ) SelectObject( hdc, hFont );
-   GetTextMetrics( hdc, &tm );
-   SetTextCharacterExtra( hdc, 0 ); /* do not add extra char spacing even if bold */
-   SelectObject( hdc, hOldFont );
-   ReleaseDC( pWVT->hWnd, hdc );
-
-   /*
-    * we will need to use the font size to handle the transformations from
-    * row column space in the future, so we keep it around in a static!
-    */
-
-   pWVT->PTEXTSIZE.x = pWVT->fontWidth < 0 ? -pWVT->fontWidth :
-                    tm.tmAveCharWidth; /* For fixed FONT should == tm.tmMaxCharWidth */
-   pWVT->PTEXTSIZE.y = tm.tmHeight;    /* but seems to be a problem on Win9X so */
-                                       /* assume proportional fonts always for Win9X */
-#if defined(HB_WINCE)
-   pWVT->FixedFont = FALSE;
-#else
-   pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
-                     ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
-                     ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
-#endif
-
-   /* pWVT->FixedSize[] is used by ExtTextOut() to emulate 
-      fixed font when a proportional font is used */         
-   for( n = 0; n < pWVT->COLS; n++ )   
-      pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
-
-   /* resize the window to get the specified number of rows and columns */
-   GetWindowRect( pWVT->hWnd, &wi );
-   GetClientRect( pWVT->hWnd, &ci );
-
-   height = ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
-   width  = ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
-
-   width  += ( USHORT ) ( wi.right - wi.left - ci.right );
-   height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
-
-   /* Center the window within the CLIENT area on the screen
-      but only if pWVT->CentreWindow == TRUE */
-   if( pWVT->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA,0, &rcWorkArea, 0 ) )
+   if( iKey == K_MOUSEMOVE || iKey == K_NCMOUSEMOVE )
    {
-      wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
-      wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
+      /* Clipper strips repeated mouse movemnt - let's do the same */
+      if( pWVT->keyLast == iKey && pWVT->keyPointerIn != pWVT->keyPointerOut )
+         return;
    }
-   SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
 
-   HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+   /*
+    * When the buffer is full new event overwrite the last one
+    * in the buffer - it's Clipper behavior, [druzus]
+    */
+   pWVT->Keys[ iPos ] = pWVT->keyLast = iKey;
+   if( ++iPos >= WVT_CHAR_QUEUE_SIZE )
+      iPos = 0;
+   if( iPos != pWVT->keyPointerOut )
+      pWVT->keyPointerIn = iPos;
+}
 
-   if( pWVT->CaretExist && !pWVT->CaretHidden )
-      hb_gt_wvt_UpdateCaret( pWVT );
+static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
+{
+   if( pWVT->keyPointerOut != pWVT->keyPointerIn )
+   {
+      *iKey = pWVT->Keys[ pWVT->keyPointerOut ];
+      if( ++pWVT->keyPointerOut >= WVT_CHAR_QUEUE_SIZE )
+      {
+         pWVT->keyPointerOut = 0;
+      }
+      return TRUE;
+   }
+
+   *iKey = 0;
+   return FALSE;
+}
+
+static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int altkey, int controlkey )
+{
+   int nVirtKey = GetKeyState( VK_MENU );
+
+   if( nVirtKey & 0x8000 ) /* alt + key */
+   {
+      hb_gt_wvt_AddCharToInputQueue( pWVT, altkey );
+   }
+   else
+   {
+      nVirtKey = GetKeyState( VK_CONTROL );
+      if( nVirtKey & 0x8000 ) /* control + key */
+      {
+         hb_gt_wvt_AddCharToInputQueue( pWVT, controlkey );
+      }
+      else
+      {
+         nVirtKey = GetKeyState( VK_SHIFT );
+         if( nVirtKey & 0x8000 ) /* shift + key */
+            hb_gt_wvt_AddCharToInputQueue( pWVT, shiftkey );
+         else /* just key */
+            hb_gt_wvt_AddCharToInputQueue( pWVT, key );
+      }
+   }
+}
+
+static int hb_gt_wvt_key_ansi_to_oem( int c )
+{
+   BYTE pszAnsi[ 2 ];
+   BYTE pszOem[ 2 ];
+
+   pszAnsi[ 0 ] = ( BYTE ) c;
+   pszAnsi[ 1 ] = 0;
+   CharToOemBuffA( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
+
+   return * pszOem;
 }
 
 static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
@@ -683,6 +689,109 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    }
 }
 
+static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
+{
+   HDC        hdc;
+   HFONT      hFont, hOldFont;
+   USHORT     height, width;
+   RECT       wi, ci;
+   TEXTMETRIC tm;
+   RECT       rcWorkArea;
+   int        n;
+
+   /*
+    * set the font and get it's size to determine the size of the client area
+    * for the required number of rows and columns
+    */
+   hFont    = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+                                 pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+   if( pWVT->hFont )
+      DeleteObject( pWVT->hFont );
+   pWVT->hFont = hFont;
+   hdc      = GetDC( pWVT->hWnd );
+   hOldFont = ( HFONT ) SelectObject( hdc, hFont );
+   GetTextMetrics( hdc, &tm );
+   SetTextCharacterExtra( hdc, 0 ); /* do not add extra char spacing even if bold */
+   SelectObject( hdc, hOldFont );
+   ReleaseDC( pWVT->hWnd, hdc );
+
+   /*
+    * we will need to use the font size to handle the transformations from
+    * row column space in the future, so we keep it around in a static!
+    */
+
+   pWVT->PTEXTSIZE.x = pWVT->fontWidth < 0 ? -pWVT->fontWidth :
+                    tm.tmAveCharWidth; /* For fixed FONT should == tm.tmMaxCharWidth */
+   pWVT->PTEXTSIZE.y = tm.tmHeight;    /* but seems to be a problem on Win9X so */
+                                       /* assume proportional fonts always for Win9X */
+#if defined(HB_WINCE)
+   pWVT->FixedFont = FALSE;
+#else
+   pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
+                     ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
+                     ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
+#endif
+
+   /* pWVT->FixedSize[] is used by ExtTextOut() to emulate 
+      fixed font when a proportional font is used */         
+   for( n = 0; n < pWVT->COLS; n++ )   
+      pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
+
+   /* resize the window to get the specified number of rows and columns */
+   GetWindowRect( pWVT->hWnd, &wi );
+   GetClientRect( pWVT->hWnd, &ci );
+
+   height = ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
+   width  = ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
+
+   width  += ( USHORT ) ( wi.right - wi.left - ci.right );
+   height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+
+   /* Center the window within the CLIENT area on the screen
+      but only if pWVT->CentreWindow == TRUE */
+   if( pWVT->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
+   {
+      wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
+      wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
+   }
+
+   if( wi.left < 0 || wi.top < 0 )
+   {
+      if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
+         hb_gt_wvt_FitSize( pWVT );
+      else
+      {
+         hb_gt_wvt_FitRows( pWVT );
+         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+      }
+
+      /* resize the window to get the specified number of rows and columns */
+      GetWindowRect( pWVT->hWnd, &wi );
+      GetClientRect( pWVT->hWnd, &ci );
+
+      height = ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
+      width  = ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
+
+      width  += ( USHORT ) ( wi.right - wi.left - ci.right );
+      height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+
+      /* Center the window within the CLIENT area on the screen
+         but only if pWVT->CentreWindow == TRUE */
+      if( pWVT->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
+      {
+         wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
+         wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
+      }
+   }
+
+   SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
+
+   HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+
+   if( pWVT->CaretExist && !pWVT->CaretHidden )
+      hb_gt_wvt_UpdateCaret( pWVT );
+}
+
 static void hb_gt_wvt_SetWindowTitle( HWND hWnd, const char * title )
 {
    LPTSTR text = HB_TCHAR_CONVTO( title );
@@ -755,85 +864,6 @@ static RECT hb_gt_wvt_GetColRowFromXYRect( PHB_GTWVT pWVT, RECT xy )
                    ( xy.bottom % pWVT->PTEXTSIZE.y ? 0 : 1 ); /* EXACTLY overlaps characters */
 
    return colrow;
-}
-
-/*
- *  functions for handling the input queues for the mouse and keyboard
- */
-static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
-{
-   int iPos = pWVT->keyPointerIn;
-
-   if( iKey == K_MOUSEMOVE || iKey == K_NCMOUSEMOVE )
-   {
-      /* Clipper strips repeated mouse movemnt - let's do the same */
-      if( pWVT->keyLast == iKey && pWVT->keyPointerIn != pWVT->keyPointerOut )
-         return;
-   }
-
-   /*
-    * When the buffer is full new event overwrite the last one
-    * in the buffer - it's Clipper behavior, [druzus]
-    */
-   pWVT->Keys[ iPos ] = pWVT->keyLast = iKey;
-   if( ++iPos >= WVT_CHAR_QUEUE_SIZE )
-      iPos = 0;
-   if( iPos != pWVT->keyPointerOut )
-      pWVT->keyPointerIn = iPos;
-}
-
-static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
-{
-   if( pWVT->keyPointerOut != pWVT->keyPointerIn )
-   {
-      *iKey = pWVT->Keys[ pWVT->keyPointerOut ];
-      if( ++pWVT->keyPointerOut >= WVT_CHAR_QUEUE_SIZE )
-      {
-         pWVT->keyPointerOut = 0;
-      }
-      return TRUE;
-   }
-
-   *iKey = 0;
-   return FALSE;
-}
-
-static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int altkey, int controlkey )
-{
-   int nVirtKey = GetKeyState( VK_MENU );
-
-   if( nVirtKey & 0x8000 ) /* alt + key */
-   {
-      hb_gt_wvt_AddCharToInputQueue( pWVT, altkey );
-   }
-   else
-   {
-      nVirtKey = GetKeyState( VK_CONTROL );
-      if( nVirtKey & 0x8000 ) /* control + key */
-      {
-         hb_gt_wvt_AddCharToInputQueue( pWVT, controlkey );
-      }
-      else
-      {
-         nVirtKey = GetKeyState( VK_SHIFT );
-         if( nVirtKey & 0x8000 ) /* shift + key */
-            hb_gt_wvt_AddCharToInputQueue( pWVT, shiftkey );
-         else /* just key */
-            hb_gt_wvt_AddCharToInputQueue( pWVT, key );
-      }
-   }
-}
-
-static int hb_gt_wvt_key_ansi_to_oem( int c )
-{
-   BYTE pszAnsi[ 2 ];
-   BYTE pszOem[ 2 ];
-
-   pszAnsi[ 0 ] = ( BYTE ) c;
-   pszAnsi[ 1 ] = 0;
-   CharToOemBuffA( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
-
-   return * pszOem;
 }
 
 static void hb_gt_wvt_SetMousePos( PHB_GTWVT pWVT, int iRow, int iCol )

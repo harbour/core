@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-08 12:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/gtwvt/gtwvt.c
+    * hb_gt_wvt_ResetWindowSize(): Not very good looking (or 
+      overly efficient) solution added for the windows 
+      resize/positioning problem in case the initally set size 
+      cannot fit on the screen (Windows desktop).
+
 2008-11-08 10:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/set.c
     + Implemented rest of hb_setSetItem() values.
