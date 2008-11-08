@@ -1,4 +1,4 @@
-/*
+﻿/*
  * $Id$
  */
 
@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-08 10:23 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+    ! Updated to match current GTWVT.
+
+  * harbour/contrib/gtwvg/wvgutils.c
+    + HB_FUNC( WIN_DESTROYWINDOW ) - Winapi compatible function.
+    
 2008-11-08 18:40 UTC+0100 Francesco Saverio Giudice (info fsgiudice com)
   - contrib/hbdbgfx
   - contrib/hbdbgfx/common.mak

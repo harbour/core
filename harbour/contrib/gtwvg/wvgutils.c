@@ -1826,6 +1826,13 @@ HB_FUNC( WIN_ISWINDOW )
 
 //-------------------------------------------------------------------//
 
+HB_FUNC( WIN_DESTROYWINDOW )
+{
+   hb_retl( IsWindow( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+}
+
+//-------------------------------------------------------------------//
+
 HB_FUNC( WVT_GETFONTHANDLE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();

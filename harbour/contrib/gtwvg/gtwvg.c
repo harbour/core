@@ -132,7 +132,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 /* wndclass.cbClsExtra    = 0; */
 /* wndclass.cbWndExtra    = 0; */
    wndclass.hInstance     = hInstance;
-/* wndclass.hIcon         = 0; */
+/* wndclass.hIcon         = NULL; */
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
 /* wndclass.hbrBackground = NULL; */
 /* wndclass.lpszMenuName  = NULL; */
@@ -291,7 +291,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->COLORS[14]        = YELLOW;
    pWVT->COLORS[15]        = BRIGHT_WHITE;
 
-   /* THEESE are the default font parameters, if not changed by user */
+   /* THESE are the default font parameters, if not changed by user */
    pWVT->PTEXTSIZE.x       = WVT_DEFAULT_FONT_WIDTH;
    pWVT->PTEXTSIZE.y       = WVT_DEFAULT_FONT_HEIGHT;
    pWVT->fontWidth         = WVT_DEFAULT_FONT_WIDTH;
@@ -345,7 +345,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
 #ifndef HB_CDP_SUPPORT_OFF
    pWVT->hostCDP    = hb_vmCDP();
-#if defined(UNICODE)
+#if defined( UNICODE )
    pWVT->inCDP      = hb_vmCDP();
 #else
    {
@@ -388,8 +388,6 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent )
  */
 static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
 {
-   HFONT hFont;
-
    if( iHeight > 0 )
    {
       LOGFONT logfont;
@@ -405,20 +403,16 @@ static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, i
       logfont.lfOutPrecision   = 0;
       logfont.lfClipPrecision  = 0;
       logfont.lfQuality        = ( BYTE ) iQuality;       /* DEFAULT_QUALITY, DRAFT_QUALITY or PROOF_QUALITY */
-      logfont.lfPitchAndFamily = FIXED_PITCH + FF_MODERN; /* all mapping depends on fixed width fonts! */
+      logfont.lfPitchAndFamily = FIXED_PITCH | FF_MODERN; /* all mapping depends on fixed width fonts! */
       logfont.lfHeight         = iHeight;
       logfont.lfWidth          = iWidth < 0 ? -iWidth : iWidth;
 
       HB_TCHAR_CPTO( logfont.lfFaceName, pszFace, sizeof( logfont.lfFaceName ) - 1 );
 
-      hFont = CreateFontIndirect( &logfont );
+      return CreateFontIndirect( &logfont );
    }
    else
-   {
-      /* hFont = ( HFONT ) GetStockObject( SYSTEM_FIXED_FONT ); */
-      hFont = ( HFONT ) GetStockObject( OEM_FIXED_FONT );
-   }
-   return hFont;
+      return ( HFONT ) GetStockObject( OEM_FIXED_FONT /* SYSTEM_FIXED_FONT */ );
 }
 
 static POINT hb_gt_wvt_GetXYFromColRow( PHB_GTWVT pWVT, USHORT col, USHORT row )
@@ -511,84 +505,95 @@ static void hb_gt_wvt_KillCaret( PHB_GTWVT pWVT )
    }
 }
 
-static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
+/*
+ *  functions for handling the input queues for the mouse and keyboard
+ */
+static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
 {
-   HDC        hdc;
-   HFONT      hFont, hOldFont;
-   USHORT     height, width;
-   RECT       wi, ci;
-   TEXTMETRIC tm;
-   RECT       rcWorkArea;
-   int        n;
+   int iPos = pWVT->keyPointerIn;
+
+   if( iKey == K_MOUSEMOVE || iKey == K_NCMOUSEMOVE )
+   {
+      /* Clipper strips repeated mouse movemnt - let's do the same */
+      if( pWVT->keyLast == iKey && pWVT->keyPointerIn != pWVT->keyPointerOut )
+         return;
+   }
 
    /*
-    * set the font and get it's size to determine the size of the client area
-    * for the required number of rows and columns
+    * When the buffer is full new event overwrite the last one
+    * in the buffer - it's Clipper behavior, [druzus]
     */
-   hFont    = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
-                                 pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
-   if( pWVT->hFont )
-      DeleteObject( pWVT->hFont );
-   pWVT->hFont = hFont;
-   hdc      = GetDC( pWVT->hWnd );
-   hOldFont = ( HFONT ) SelectObject( hdc, hFont );
-   GetTextMetrics( hdc, &tm );
-   SetTextCharacterExtra( hdc, 0 ); /* do not add extra char spacing even if bold */
-   SelectObject( hdc, hOldFont );
-   ReleaseDC( pWVT->hWnd, hdc );
+   pWVT->Keys[ iPos ] = pWVT->keyLast = iKey;
+   if( ++iPos >= WVT_CHAR_QUEUE_SIZE )
+      iPos = 0;
+   if( iPos != pWVT->keyPointerOut )
+      pWVT->keyPointerIn = iPos;
 
-  /*
-   * we will need to use the font size to handle the transformations from
-   * row column space in the future, so we keep it around in a static!
-   */
-
-   pWVT->PTEXTSIZE.x = pWVT->fontWidth < 0 ? -pWVT->fontWidth :
-                    tm.tmAveCharWidth; /* For fixed FONT should == tm.tmMaxCharWidth */
-   pWVT->PTEXTSIZE.y = tm.tmHeight;    /* but seems to be a problem on Win9X so */
-                                       /* assume proportional fonts always for Win9X */
-#if defined(HB_WINCE)
-   pWVT->FixedFont = FALSE;
-#else
-   pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
-                     ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
-                     ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
-#endif
-
-   for( n = 0; n < pWVT->COLS; n++ )   /* pWVT->FixedSize[] is used by ExtTextOut() to emulate */
-   {                                   /* fixed font when a proportional font is used */
-      pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
-   }
-
-   /* resize the window to get the specified number of rows and columns */
-   GetWindowRect( pWVT->hWnd, &wi );
-   GetClientRect( pWVT->hWnd, &ci );
-
-   height = ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
-   width  = ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
-
-   width  += ( USHORT ) ( wi.right - wi.left - ci.right );
-   height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
-
-   /*
-    * Centre the window within the CLIENT area on the screen
-    * but only if pWVT->CentreWindow == TRUE
-    */
-   if( pWVT->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA,0, &rcWorkArea, 0 ) )
+   if( pWVT->pSymWVT_KEY )
    {
-      wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
-      wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
+      if( hb_vmRequestReenter() )
+      {
+         hb_vmPushDynSym( pWVT->pSymWVT_KEY );
+         hb_vmPushNil();
+         hb_vmPushInteger( iKey );
+         hb_vmDo( 1 );
+         hb_vmRequestRestore();
+      }
    }
-   SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
+}
 
-   HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
-
-   if( pWVT->CaretExist && !pWVT->CaretHidden )
-      hb_gt_wvt_UpdateCaret( pWVT );
-
-   if( pWVT->bGui )
+static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
+{
+   if( pWVT->keyPointerOut != pWVT->keyPointerIn )
    {
-      hb_wvt_gtInitGui( pWVT );
+      *iKey = pWVT->Keys[ pWVT->keyPointerOut ];
+      if( ++pWVT->keyPointerOut >= WVT_CHAR_QUEUE_SIZE )
+      {
+         pWVT->keyPointerOut = 0;
+      }
+      return TRUE;
    }
+
+   *iKey = 0;
+   return FALSE;
+}
+
+static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int altkey, int controlkey )
+{
+   int nVirtKey = GetKeyState( VK_MENU );
+
+   if( nVirtKey & 0x8000 ) /* alt + key */
+   {
+      hb_gt_wvt_AddCharToInputQueue( pWVT, altkey );
+   }
+   else
+   {
+      nVirtKey = GetKeyState( VK_CONTROL );
+      if( nVirtKey & 0x8000 ) /* control + key */
+      {
+         hb_gt_wvt_AddCharToInputQueue( pWVT, controlkey );
+      }
+      else
+      {
+         nVirtKey = GetKeyState( VK_SHIFT );
+         if( nVirtKey & 0x8000 ) /* shift + key */
+            hb_gt_wvt_AddCharToInputQueue( pWVT, shiftkey );
+         else /* just key */
+            hb_gt_wvt_AddCharToInputQueue( pWVT, key );
+      }
+   }
+}
+
+static int hb_gt_wvt_key_ansi_to_oem( int c )
+{
+   BYTE pszAnsi[ 2 ];
+   BYTE pszOem[ 2 ];
+
+   pszAnsi[ 0 ] = ( BYTE ) c;
+   pszAnsi[ 1 ] = 0;
+   CharToOemBuffA( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
+
+   return * pszOem;
 }
 
 static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
@@ -623,7 +628,7 @@ static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
    {
       BOOL bOldCentre = pWVT->CentreWindow;
       pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
-      HB_GTSELF_SETMODE( pWVT->pGT, (USHORT) ( maxHeight / pWVT->PTEXTSIZE.y ), (USHORT) ( maxWidth / pWVT->PTEXTSIZE.x ) );
+      HB_GTSELF_SETMODE( pWVT->pGT, ( USHORT ) ( maxHeight / pWVT->PTEXTSIZE.y ), ( USHORT ) ( maxWidth / pWVT->PTEXTSIZE.x ) );
       pWVT->CentreWindow = bOldCentre;
    }
 }
@@ -726,7 +731,7 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
                top = ( ( wi.bottom - height ) / 2 );
 
                left = ( left < 0 ? 0 : left );
-               top = ( top  < 0 ? 0 : top  );
+               top = ( top < 0 ? 0 : top );
             }
 
             SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
@@ -745,6 +750,109 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
          HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
       }
    }
+}
+
+static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
+{
+   HDC        hdc;
+   HFONT      hFont, hOldFont;
+   USHORT     height, width;
+   RECT       wi, ci;
+   TEXTMETRIC tm;
+   RECT       rcWorkArea;
+   int        n;
+
+   /*
+    * set the font and get it's size to determine the size of the client area
+    * for the required number of rows and columns
+    */
+   hFont    = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+                                 pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+   if( pWVT->hFont )
+      DeleteObject( pWVT->hFont );
+   pWVT->hFont = hFont;
+   hdc      = GetDC( pWVT->hWnd );
+   hOldFont = ( HFONT ) SelectObject( hdc, hFont );
+   GetTextMetrics( hdc, &tm );
+   SetTextCharacterExtra( hdc, 0 ); /* do not add extra char spacing even if bold */
+   SelectObject( hdc, hOldFont );
+   ReleaseDC( pWVT->hWnd, hdc );
+
+   /*
+    * we will need to use the font size to handle the transformations from
+    * row column space in the future, so we keep it around in a static!
+    */
+
+   pWVT->PTEXTSIZE.x = pWVT->fontWidth < 0 ? -pWVT->fontWidth :
+                    tm.tmAveCharWidth; /* For fixed FONT should == tm.tmMaxCharWidth */
+   pWVT->PTEXTSIZE.y = tm.tmHeight;    /* but seems to be a problem on Win9X so */
+                                       /* assume proportional fonts always for Win9X */
+#if defined(HB_WINCE)
+   pWVT->FixedFont = FALSE;
+#else
+   pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
+                     ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
+                     ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
+#endif
+
+   /* pWVT->FixedSize[] is used by ExtTextOut() to emulate 
+      fixed font when a proportional font is used */         
+   for( n = 0; n < pWVT->COLS; n++ )   
+      pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
+
+   /* resize the window to get the specified number of rows and columns */
+   GetWindowRect( pWVT->hWnd, &wi );
+   GetClientRect( pWVT->hWnd, &ci );
+
+   height = ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
+   width  = ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
+
+   width  += ( USHORT ) ( wi.right - wi.left - ci.right );
+   height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+
+   /* Center the window within the CLIENT area on the screen
+      but only if pWVT->CentreWindow == TRUE */
+   if( pWVT->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
+   {
+      wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
+      wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
+   }
+
+   if( wi.left < 0 || wi.top < 0 )
+   {
+      if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
+         hb_gt_wvt_FitSize( pWVT );
+      else
+      {
+         hb_gt_wvt_FitRows( pWVT );
+         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+      }
+
+      /* resize the window to get the specified number of rows and columns */
+      GetWindowRect( pWVT->hWnd, &wi );
+      GetClientRect( pWVT->hWnd, &ci );
+
+      height = ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
+      width  = ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
+
+      width  += ( USHORT ) ( wi.right - wi.left - ci.right );
+      height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+
+      /* Center the window within the CLIENT area on the screen
+         but only if pWVT->CentreWindow == TRUE */
+      if( pWVT->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
+      {
+         wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
+         wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
+      }
+   }
+
+   SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
+
+   HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+
+   if( pWVT->CaretExist && !pWVT->CaretHidden )
+      hb_gt_wvt_UpdateCaret( pWVT );
 }
 
 static void hb_gt_wvt_SetWindowTitle( HWND hWnd, const char * title )
@@ -819,97 +927,6 @@ static RECT hb_gt_wvt_GetColRowFromXYRect( PHB_GTWVT pWVT, RECT xy )
                    ( xy.bottom % pWVT->PTEXTSIZE.y ? 0 : 1 ); /* EXACTLY overlaps characters */
 
    return colrow;
-}
-
-/*
- *  functions for handling the input queues for the mouse and keyboard
- */
-static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
-{
-   int iPos = pWVT->keyPointerIn;
-
-   if( iKey == K_MOUSEMOVE || iKey == K_NCMOUSEMOVE )
-   {
-      /* Clipper strips repeated mouse movemnt - let's do the same */
-      if( pWVT->keyLast == iKey && pWVT->keyPointerIn != pWVT->keyPointerOut )
-         return;
-   }
-
-   /*
-    * When the buffer is full new event overwrite the last one
-    * in the buffer - it's Clipper behavior, [druzus]
-    */
-   pWVT->Keys[ iPos ] = pWVT->keyLast = iKey;
-   if( ++iPos >= WVT_CHAR_QUEUE_SIZE )
-      iPos = 0;
-   if( iPos != pWVT->keyPointerOut )
-      pWVT->keyPointerIn = iPos;
-
-   if( pWVT->pSymWVT_KEY )
-   {
-      if( hb_vmRequestReenter() )
-      {
-         hb_vmPushDynSym( pWVT->pSymWVT_KEY );
-         hb_vmPushNil();
-         hb_vmPushInteger( iKey );
-         hb_vmDo( 1 );
-         hb_vmRequestRestore();
-      }
-   }
-}
-
-static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
-{
-   if( pWVT->keyPointerOut != pWVT->keyPointerIn )
-   {
-      *iKey = pWVT->Keys[ pWVT->keyPointerOut ];
-      if( ++pWVT->keyPointerOut >= WVT_CHAR_QUEUE_SIZE )
-      {
-         pWVT->keyPointerOut = 0;
-      }
-      return TRUE;
-   }
-
-   *iKey = 0;
-   return FALSE;
-}
-
-static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int altkey, int controlkey )
-{
-   int nVirtKey = GetKeyState( VK_MENU );
-
-   if( nVirtKey & 0x8000 ) /* alt + key */
-   {
-      hb_gt_wvt_AddCharToInputQueue( pWVT, altkey );
-   }
-   else
-   {
-      nVirtKey = GetKeyState( VK_CONTROL );
-      if( nVirtKey & 0x8000 ) /* control + key */
-      {
-         hb_gt_wvt_AddCharToInputQueue( pWVT, controlkey );
-      }
-      else
-      {
-         nVirtKey = GetKeyState( VK_SHIFT );
-         if( nVirtKey & 0x8000 ) /* shift + key */
-            hb_gt_wvt_AddCharToInputQueue( pWVT, shiftkey );
-         else /* just key */
-            hb_gt_wvt_AddCharToInputQueue( pWVT, key );
-      }
-   }
-}
-
-static int hb_gt_wvt_key_ansi_to_oem( int c )
-{
-   BYTE pszAnsi[ 2 ];
-   BYTE pszOem[ 2 ];
-
-   pszAnsi[ 0 ] = ( BYTE ) c;
-   pszAnsi[ 1 ] = 0;
-   CharToOemBuffA( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
-
-   return * pszOem;
 }
 
 static void hb_gt_wvt_SetMousePos( PHB_GTWVT pWVT, int iRow, int iCol )
@@ -1077,7 +1094,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             if( rect.left   != pWVT->sRectOld.left   ||
                 rect.top    != pWVT->sRectOld.top    ||
                 rect.right  != pWVT->sRectOld.right  ||
-                rect.bottom != pWVT->sRectOld.bottom  )
+                rect.bottom != pWVT->sRectOld.bottom )
             {
 #if !defined(HB_WINCE)  /* WinCE does not support InvertRgn */
                /* Concept forwarded by Andy Wos - thanks. */
@@ -1296,7 +1313,7 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
             }
             else if( bCtrl && ( c >= 1 && c <= 26 ) )  /* K_CTRL_A - Z */
             {
-               hb_gt_wvt_AddCharToInputQueue( pWVT, K_Ctrl[c - 1]  );
+               hb_gt_wvt_AddCharToInputQueue( pWVT, K_Ctrl[ c - 1 ] );
             }
             else
             {
@@ -1318,7 +1335,7 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
                   default:
                      if( pWVT->inCDP )
                      {
-#if defined(UNICODE)
+#if defined( UNICODE )
                         c = hb_cdpGetChar( pWVT->inCDP, FALSE, ( USHORT ) c );
 #else
                         if( c > 0 && c <= 255 && pWVT->keyTransTbl[ c ] )
@@ -1489,7 +1506,7 @@ static BOOL hb_gt_wvt_TextOut( PHB_GTWVT pWVT, HDC hdc, USHORT col, USHORT row, 
    xy = hb_gt_wvt_GetXYFromColRow( pWVT, col, row );
    SetRect( &rClip, xy.x, xy.y, xy.x + cbString * pWVT->PTEXTSIZE.x, xy.y + pWVT->PTEXTSIZE.y );
 
-   return ExtTextOut( hdc, xy.x, xy.y, ETO_CLIPPED|ETO_OPAQUE, &rClip,
+   return ExtTextOut( hdc, xy.x, xy.y, ETO_CLIPPED | ETO_OPAQUE, &rClip,
                       lpString, cbString, pWVT->FixedFont ? NULL : pWVT->FixedSize );
 }
 
@@ -1541,7 +1558,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
 
-#if defined(UNICODE)
+#if defined( UNICODE )
          usChar = hb_cdpGetU16( pWVT->hostCDP, TRUE, ( BYTE ) usChar );
 #else
          usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
@@ -1779,6 +1796,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                ShowWindow( pWVT->hWnd, SW_NORMAL );
 
                hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
+               hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
 
                return 0;
             }
@@ -1870,8 +1888,8 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
 
    SystemParametersInfo( SPI_GETWORKAREA,0, &rcWorkArea, 0 );
 
-   maxWidth  = (USHORT) ( rcWorkArea.right - rcWorkArea.left );
-   maxHeight = (USHORT) ( rcWorkArea.bottom - rcWorkArea.top );
+   maxWidth  = ( USHORT ) ( rcWorkArea.right - rcWorkArea.left );
+   maxHeight = ( USHORT ) ( rcWorkArea.bottom - rcWorkArea.top );
 
    hdc       = GetDC( hWnd );
    hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
@@ -1879,8 +1897,8 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
    SelectObject( hdc, hOldFont ); /* Put old font back */
    ReleaseDC( hWnd, hdc );
 
-   width     = (USHORT) ( iWidth < 0 ? -iWidth : tm.tmAveCharWidth * cols );  /* Total pixel width this setting would take */
-   height    = (USHORT) ( tm.tmHeight * rows ); /* Total pixel height this setting would take */
+   width     = ( USHORT ) ( iWidth < 0 ? -iWidth : tm.tmAveCharWidth * cols );  /* Total pixel width this setting would take */
+   height    = ( USHORT ) ( tm.tmHeight * rows ); /* Total pixel height this setting would take */
 
    return ( width <= maxWidth ) && ( height <= maxHeight );
 }
@@ -2043,9 +2061,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
 
    if( ! hb_winmainArgGet( &hInstance, NULL, &iCmdShow ) )
-   {
       hb_errInternal( 10001, "It's not a GUI program", NULL, NULL );
-   }
 
    pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
    if( !pWVT )
@@ -2253,7 +2269,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_ISUNICODE:
-#if defined(UNICODE)
+#if defined( UNICODE )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
 #else
          pInfo->pResult = hb_itemPutL( pInfo->pResult, FALSE );
@@ -2442,7 +2458,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            HB_GTSELF_SETMODE( pGT, (USHORT) ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
+            HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
          }
          break;
 
@@ -2451,7 +2467,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            HB_GTSELF_SETMODE( pGT, pWVT->ROWS, (USHORT) ( iVal / pWVT->PTEXTSIZE.x ) );
+            HB_GTSELF_SETMODE( pGT, pWVT->ROWS, ( USHORT ) ( iVal / pWVT->PTEXTSIZE.x ) );
          }
          break;
 
@@ -2650,7 +2666,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             BOOL bOldCentre = pWVT->CentreWindow;
             pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
-            HB_GTSELF_SETMODE( pGT, (USHORT) ( iY / pWVT->PTEXTSIZE.y ), (USHORT) ( iX / pWVT->PTEXTSIZE.x ) );
+            HB_GTSELF_SETMODE( pGT, ( USHORT ) ( iY / pWVT->PTEXTSIZE.y ), ( USHORT ) ( iX / pWVT->PTEXTSIZE.x ) );
             pWVT->CentreWindow = bOldCentre;
          }
          break;
@@ -2728,7 +2744,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
                   if( hSysMenu )
                   {
-                     EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
+                     EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED ) );
                      pWVT->bSelectCopy = bNewValue;
                   }
                }
@@ -2750,7 +2766,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
                   if( hSysMenu )
                   {
-                     EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
+                     EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED ) );
                      pWVT->bClosable = bNewValue;
                   }
                }
@@ -2835,7 +2851,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                    y,
                                    rect.right - rect.left,
                                    rect.bottom - rect.top,
-                                   SWP_NOSIZE + SWP_NOZORDER ) );
+                                   SWP_NOSIZE | SWP_NOZORDER ) );
          }
          break;
 
@@ -3372,7 +3388,7 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char
 
 #ifndef HB_CDP_SUPPORT_OFF
 
-#if defined(UNICODE)
+#if defined( UNICODE )
    /*
     * We are displaying text in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
@@ -3431,7 +3447,7 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char 
 
 #ifndef HB_CDP_SUPPORT_OFF
 
-#if defined(UNICODE)
+#if defined( UNICODE )
    /*
     * We are receiving WM_CHAR events in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
