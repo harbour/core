@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-08 14:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hbmk.bat
+    + Added C_USR support for OpenWatcom.
+    - Removed debug switches from OpenWatcom C compiler cmdline.
+
+  * bin/hbmk_os2.cmd
+    + Added OpenWatcom support. Pls update it, f.e. I don't know 
+      what is the name of the compiler executable.
+    ! Fixed HB_COMPILER branching. Looks like nobody uses this 
+      file if this problem didn't show up so far, so I'd like to 
+      propose again to remove this file completely, as there is 
+      not much point spending time on maintaining stuff which 
+      nobody uses or needs, is there?
+
+  * bin/hbmk.bat
+  - config/dos/watcom.cf
+  - config/w32/watcom.cf
+    - Removed rather obsolete Watcom support. Pls use OpenWatcom.
+      Update you envvar HB_COMPILER from 'watcom' to 'owatcom'.
+
 2008-11-08 14:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.bat
   * make_vc.bat
