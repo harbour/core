@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-08 13:55 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/set.c
+    ! _SET_EVENTMASK RTE removed to be Clipper compatible.
+    ! _SET_VIDEOMODE RTE removed to be Clipper compatible.
+    ! _SET_MBLOCKSIZE default value set to 64 (was 0) to be Clipper compatible.
+      (pls correct me if this was intentionally wrong)
+
+  * utils/hbtest/rt_misc.prg
+    + Added one C5.2 SET()s for two simple tests.
+    + Added all C5.3 SET()s for two simple tests each.
+    ; NOFIX: _SET_VIDEOMODE has the type wrong.
+    ; NOTE: It wouldn't be a bad idea to add some more comprehensive 
+            tests for SET()s.
+
 2008-11-08 13:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gcc.sh
   * harbour/make_gnu.bat

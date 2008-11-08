@@ -84,6 +84,33 @@ PROCEDURE Main_MISC()
    TEST_LINE( Len( oError )                   , 12                        )
 #endif
 
+   /* SET()s */
+
+   TEST_LINE( Set( _SET_MARGIN     )       , 0 )
+   TEST_LINE( Set( _SET_MARGIN    , -1 )   , "E BASE 2020 Argument error SET A:2:N:25;N:-1 " )
+
+#ifdef HB_COMPAT_C53
+   TEST_LINE( Set( _SET_EVENTMASK  )       , 128 )
+   TEST_LINE( Set( _SET_VIDEOMODE  )       , NIL )
+   TEST_LINE( Set( _SET_MBLOCKSIZE )       , 64 )
+   TEST_LINE( Set( _SET_MFILEEXT   )       , "" )
+   TEST_LINE( Set( _SET_STRICTREAD )       , .F. )
+   TEST_LINE( Set( _SET_OPTIMIZE   )       , .T. )
+   TEST_LINE( Set( _SET_AUTOPEN    )       , .T. )
+   TEST_LINE( Set( _SET_AUTORDER   )       , 0 )
+   TEST_LINE( Set( _SET_AUTOSHARE  )       , 0 )
+
+   TEST_LINE( Set( _SET_EVENTMASK , -1 )   , "E BASE 2020 Argument error SET A:2:N:39;N:-1 " )
+   TEST_LINE( Set( _SET_VIDEOMODE , -1 )   , NIL )
+   TEST_LINE( Set( _SET_MBLOCKSIZE, -1 )   , "E BASE 2020 Argument error SET A:2:N:41;N:-1 " )
+   TEST_LINE( Set( _SET_MFILEEXT  , {} )   , "" )
+   TEST_LINE( Set( _SET_STRICTREAD, {} )   , .F. )
+   TEST_LINE( Set( _SET_OPTIMIZE  , {} )   , .T. )
+   TEST_LINE( Set( _SET_AUTOPEN   , {} )   , .T. )
+   TEST_LINE( Set( _SET_AUTORDER  , -1 )   , "E BASE 2020 Argument error SET A:2:N:46;N:-1 " )
+   TEST_LINE( Set( _SET_AUTOSHARE , -1 )   , "E BASE 2020 Argument error SET A:2:N:47;N:-1 " )
+#endif
+
    /* Some color handling tests */
 
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "T"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )

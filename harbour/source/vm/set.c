@@ -605,7 +605,12 @@ HB_FUNC( SET )
       case HB_SET_EVENTMASK:
          hb_retni( pSet->HB_SET_EVENTMASK );
          if( args > 1 )
-            pSet->HB_SET_EVENTMASK = set_number( pArg2, pSet->HB_SET_EVENTMASK );
+         {
+            if( set_number( pArg2, pSet->HB_SET_EVENTMASK ) < 0 )
+               hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+            else
+               pSet->HB_SET_EVENTMASK = set_number( pArg2, pSet->HB_SET_EVENTMASK );
+         }
          break;
       case HB_SET_EXACT:
          hb_retl( pSet->HB_SET_EXACT );
@@ -812,12 +817,7 @@ HB_FUNC( SET )
       case HB_SET_VIDEOMODE:
          hb_retni( pSet->HB_SET_VIDEOMODE );
          if( args > 1 )
-         {
-            if( set_number( pArg2, pSet->HB_SET_VIDEOMODE ) < 0 )
-               hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-            else
-               pSet->HB_SET_VIDEOMODE = set_number( pArg2, pSet->HB_SET_VIDEOMODE );
-         }
+            pSet->HB_SET_VIDEOMODE = set_number( pArg2, pSet->HB_SET_VIDEOMODE );
          break;
       case HB_SET_WRAP:
          hb_retl( pSet->HB_SET_WRAP );
@@ -1030,7 +1030,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_INSERT = FALSE;
    pSet->HB_SET_INTENSITY = TRUE;
    pSet->HB_SET_MARGIN = 0;
-   pSet->HB_SET_MBLOCKSIZE = 0;
+   pSet->HB_SET_MBLOCKSIZE = 64;
    pSet->HB_SET_MCENTER = FALSE;
    pSet->HB_SET_MESSAGE = 0;
    pSet->HB_SET_MFILEEXT = hb_strdup( "" );
@@ -1595,8 +1595,12 @@ HB_EXPORT BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
          case HB_SET_EVENTMASK:
             if( HB_IS_NUMERIC( pItem ) )
             {
-               pSet->HB_SET_EVENTMASK = hb_itemGetNI( pItem );
-               fResult = TRUE;
+               iValue = hb_itemGetNI( pItem );
+               if( iValue >= 0 )
+               {
+                  pSet->HB_SET_EVENTMASK = iValue;
+                  fResult = TRUE;
+               }
             }
             break;
          case HB_SET_MARGIN:
@@ -1640,12 +1644,8 @@ HB_EXPORT BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
          case HB_SET_VIDEOMODE:
             if( HB_IS_NUMERIC( pItem ) )
             {
-               iValue = hb_itemGetNI( pItem );
-               if( iValue >= 0 )
-               {
-                  pSet->HB_SET_VIDEOMODE = iValue;
-                  fResult = TRUE;
-               }
+               pSet->HB_SET_VIDEOMODE = hb_itemGetNI( pItem );
+               fResult = TRUE;
             }
             break;
 
