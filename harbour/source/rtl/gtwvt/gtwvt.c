@@ -295,6 +295,9 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
    pWVT->ResizeMode        = HB_GTI_RESIZEMODE_FONT;
 
+   pWVT->bResizing         = FALSE;
+   pWVT->bAlreadySizing    = FALSE;
+
 #ifndef HB_CDP_SUPPORT_OFF
    pWVT->hostCDP    = hb_vmCDP();
 #if defined( UNICODE )
@@ -701,13 +704,20 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 
    /*
     * set the font and get it's size to determine the size of the client area
-    * for the required number of rows and columns
+    * for the required number of rows and columns .
+    * No need to call hb_gt_wvt_GetFont() if font is already existant [prtpal 20081108]
     */
-   hFont    = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+   if( !pWVT->hFont )
+   {
+      hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
                                  pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
-   if( pWVT->hFont )
-      DeleteObject( pWVT->hFont );
-   pWVT->hFont = hFont;
+      pWVT->hFont = hFont;
+   }
+   else
+   {
+      hFont = pWVT->hFont;
+   }
+
    hdc      = GetDC( pWVT->hWnd );
    hOldFont = ( HFONT ) SelectObject( hdc, hFont );
    GetTextMetrics( hdc, &tm );
@@ -732,9 +742,9 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
                      ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
 #endif
 
-   /* pWVT->FixedSize[] is used by ExtTextOut() to emulate 
-      fixed font when a proportional font is used */         
-   for( n = 0; n < pWVT->COLS; n++ )   
+   /* pWVT->FixedSize[] is used by ExtTextOut() to emulate
+      fixed font when a proportional font is used */
+   for( n = 0; n < pWVT->COLS; n++ )
       pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
 
    /* resize the window to get the specified number of rows and columns */
@@ -1592,19 +1602,29 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             ShowWindow( pWVT->hWnd, SW_HIDE );
             ShowWindow( pWVT->hWnd, SW_NORMAL );
          }
+         pWVT->bResizing = TRUE;
          return 0;
 
       case WM_EXITSIZEMOVE:
+         pWVT->bResizing = FALSE;
+
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
+         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
          return 0;
 
       case WM_SIZE:
-         if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-            hb_gt_wvt_FitSize( pWVT );
-         else
+         if( pWVT->bResizing )
          {
-            hb_gt_wvt_FitRows( pWVT );
-            hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+            if( !pWVT->bAlreadySizing )
+            {
+               pWVT->bAlreadySizing = TRUE;
+
+               if ( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
+                  hb_gt_wvt_FitSize( pWVT );
+               else
+                  hb_gt_wvt_FitRows( pWVT );
+            }
+            pWVT->bAlreadySizing = FALSE;
          }
          return 0;
 
@@ -1620,7 +1640,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                else
                {
                   hb_gt_wvt_FitRows( pWVT );
-                  hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
                }
 
                /* Disable "maximize" button */
@@ -1635,6 +1654,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                ShowWindow( pWVT->hWnd, SW_NORMAL );
 
                hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
+               hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
 
                return 0;
             }

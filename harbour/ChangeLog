@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-08 15:40 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/gtwvg/gtwvg.h
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gtwvt/gtwvt.h
+    
+    + BOOL bResizing
+    + BOOL bAlreadySizing
+      To control unnecessary code execution while sizing operation is 
+      being carried out. Now the flickering of console window should be
+      greatly minimized, IMO, please test.
+
+    ! Fixed behavior of some function not to recreate font if one is already
+      created given other parameters are the same. SetMode() does nothing if
+      nRows, nCols are the same as with console prior to calling this function.
+     
+    ; NOTE: Please test extensively as this is one gray area of GTWVT we all
+      are in a quest to fix.
+    
 2008-11-08 19:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gcc.mak
     ! corrected missing $(HARBOUR_EXE) dependence in .prg files rules

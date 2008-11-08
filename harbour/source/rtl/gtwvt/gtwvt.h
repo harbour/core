@@ -180,6 +180,9 @@ typedef struct
    RECT     sRectNew;
    RECT     sRectOld;
 
+   BOOL     bResizing;
+   BOOL     bAlreadySizing;
+
 } HB_GTWVT, * PHB_GTWVT;
 
 /* xHarbour compatible definitions */

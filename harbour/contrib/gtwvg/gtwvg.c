@@ -331,6 +331,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
    pWVT->ResizeMode        = HB_GTI_RESIZEMODE_FONT;
 
+   pWVT->bAlreadySizing    = FALSE;
+
    pWVT->pPP               = ( HB_GT_PARAMS * ) hb_xgrab( sizeof( HB_GT_PARAMS ) );
    pWVT->pPP->style        = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
    pWVT->pPP->exStyle      = 0;
@@ -764,13 +766,20 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 
    /*
     * set the font and get it's size to determine the size of the client area
-    * for the required number of rows and columns
+    * for the required number of rows and columns .
+    * No need to call hb_gt_wvt_GetFont() if font is already existant [prtpal 20081108]
     */
-   hFont    = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+   if( !pWVT->hFont )
+   {
+      hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
                                  pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
-   if( pWVT->hFont )
-      DeleteObject( pWVT->hFont );
-   pWVT->hFont = hFont;
+      pWVT->hFont = hFont;
+   }
+   else
+   {
+      hFont = pWVT->hFont;
+   }
+
    hdc      = GetDC( pWVT->hWnd );
    hOldFont = ( HFONT ) SelectObject( hdc, hFont );
    GetTextMetrics( hdc, &tm );
@@ -795,9 +804,9 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
                      ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
 #endif
 
-   /* pWVT->FixedSize[] is used by ExtTextOut() to emulate 
-      fixed font when a proportional font is used */         
-   for( n = 0; n < pWVT->COLS; n++ )   
+   /* pWVT->FixedSize[] is used by ExtTextOut() to emulate
+      fixed font when a proportional font is used */
+   for( n = 0; n < pWVT->COLS; n++ )
       pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
 
    /* resize the window to get the specified number of rows and columns */
@@ -1761,10 +1770,16 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_SIZE:
          if( pWVT->bResizing )
          {
-            if ( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-               hb_gt_wvt_FitSize( pWVT );
-            else
-               hb_gt_wvt_FitRows( pWVT );
+            if( !pWVT->bAlreadySizing )
+            {
+               pWVT->bAlreadySizing = TRUE;
+
+               if ( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
+                  hb_gt_wvt_FitSize( pWVT );
+               else
+                  hb_gt_wvt_FitRows( pWVT );
+            }
+            pWVT->bAlreadySizing = FALSE;
          }
          return 0;
 
@@ -1780,7 +1795,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                else
                {
                   hb_gt_wvt_FitRows( pWVT );
-                  hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
                }
                hb_wvt_gtSaveGuiState( pWVT );
 
@@ -2073,7 +2087,6 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
    HB_GTSELF_SEMICOLD( pGT );
-
    /* hb_gt_wvt_CreateConsoleWindow( pWVT ); */
 }
 
@@ -2109,12 +2122,27 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 
    pWVT = HB_GTWVT_GET( pGT );
 
-   if( iRow <= WVT_MAX_ROWS && iCol <= WVT_MAX_COLS )
+   /* Only execute if iRow|iCol is different then previous settings [pritpal 20081108]*/
+   if( iRow <= WVT_MAX_ROWS && iCol <= WVT_MAX_COLS && ( iRow != pWVT->ROWS || iCol != pWVT->COLS ) )
    {
       if( pWVT->hWnd ) /* Is the window already open */
       {
-         HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+         /* SETMODE() is supposed to retain the same font as is current */
+         /* So no need to recreate it if one is already created [pritpal 20081108] */
+         HFONT hFont;
+         BOOL bCreated;
+
+         if( !pWVT->hFont )
+         {
+            hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
                                           pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+            bCreated = TRUE;
+         }
+         else
+         {
+            hFont = pWVT->hFont;
+            bCreated = FALSE;
+         }
 
          if( hFont )
          {
@@ -2126,7 +2154,8 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
             {
                fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol );
             }
-            DeleteObject( hFont );
+            if( bCreated )
+               DeleteObject( hFont );
             HB_GTSELF_REFRESH( pGT );
          }
       }
@@ -2330,6 +2359,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( iVal > 0 )
          {
             HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, iVal, pWVT->fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+
             if( hFont )
             {
                pWVT->fontHeight = iVal;

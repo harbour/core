@@ -345,6 +345,9 @@ typedef struct
    RECT     sRectNew;
    RECT     sRectOld;
 
+   BOOL      bResizing;
+   BOOL      bAlreadySizing;
+
    //          To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed>            //
 
    int       rowStart;                      // Holds nTop    of last WM_PAINT rectangle returned by Wvt_GetPaintRect()
@@ -354,7 +357,6 @@ typedef struct
 
    int       iFactor;                       // Transparency factor 0~255
 
-   BOOL      bResizing;
    HDC       hdc;                           // Handle to Windows Device Context
    HDC       hCompDC;                       // Compatible DC to _s.hdc
 
