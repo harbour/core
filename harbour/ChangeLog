@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-08 16:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/version.c
+    + Implemented:
+      hb_version( HB_VERSION_BUILD_DATE )
+      hb_version( HB_VERSION_BUILD_TIME )
+
+  * source/rtl/gtwvt/gtwvt.c
+    * Formatting.
+
+  * source/rdd/hbsix/sxini.prg
+  * source/rdd/hbsix/sxcompat.prg
+  * source/rdd/hbsix/sxtrig.prg
+    * Formatted to std Harbour. Generated pcode unchanged.
+
+  * ChangeLog
+    * Marked finished TODO/TOFIXes as [DONE].
+
 2008-11-08 14:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * bin/hbmk.bat
     + Added C_USR support for OpenWatcom.
@@ -86,7 +103,7 @@
 2008-11-08 10:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/set.c
     + Implemented rest of hb_setSetItem() values.
-    ; TODO: Please review.
+    ; TODO: Please review. [DONE]
     ! Fixed HB_SET_FILECASE and HB_SET_DIRCASE to not allow 
       invalid numeric values to be set.
     ! Added missing 'break;' to hb_setSetItem2();
@@ -95,7 +112,7 @@
     ! Fixed a few places where '+' operator was used 
       instead of '|'.
     * Minor opt/formatting.
-    ; TOFIX: The window positioning bug is still to be solved.
+    ; TOFIX: The window positioning bug is still to be solved. [DONE]
 
 2008-11-07 23:39 UTC+0100 Francesco Saverio Giudice (info fsgiudice com)
   * source/rdd/usrrdd/rdds/arrayrdd.prg
@@ -160,9 +177,9 @@
   * harbour/source/vm/set.c
     + added hb_setSetItem2() C function for SETs which needs two parameters
     + added support for HB_SET_DECIMALS and HB_SET_EPOCH in hb_setSetItem()
-      Still 22 SETs are marked as TODO
+      Still 22 SETs are marked as TODO [DONE]
     + added internal function hb_setSetFile() for HB_SET_ALTFILE,
-      HB_SET_EXTRAFILE, HB_SET_PRINTFILE - function body marked as TODO.
+      HB_SET_EXTRAFILE, HB_SET_PRINTFILE - function body marked as TODO [DONE].
       I'll implement it later.
 
 2008-11-07 00:39 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -395,7 +412,7 @@
   * contrib/hbwhat/whtlv.c
     ! Fixed memory leak.
     ! Fixed to use hb_strncpy() instead of unsafe lstrcpy().
-      TOFIX: The destination address isn't properly allocated and the
+    ; TOFIX: The destination address isn't properly allocated and the
              size of it is unknown, so this modification is not enough.
     ; TOFIX: Unicode conversion, buffer allocation for item.pszText.
 
@@ -1031,7 +1048,7 @@
       - HB_VER_C_USR
       - HB_VER_L_USR
       - HB_VER_PRG_USR
-    ; TOFIX: Some term anomalies regarding 'REVISION'.
+    ; TOFIX: Some term anomalies regarding 'REVISION'. [DONE]
 
   * source/vm/runner.c
     * Minor formatting and added "s_" prefix to static var.
@@ -1321,7 +1338,7 @@
     ; NOTE: If there are no objections, I'd remove the
             __ARCH*BIT__ and __*ENDIAN__ predefined macros,
             as these can be misleading on some systems.
-    ; TODO: Implement HB_V_DATE and HB_V_TIME.
+    ; TODO: Implement HB_V_DATE and HB_V_TIME. [DONE]
     ; TODO: Add HB_MTVM() functionality. [DONE]
     ; TODO: Add __PLATFORM__* equivalent. [DONE]
     ; TODO: Add HB_OS_UNIX_COMPATIBLE equivalent. [DONE]
@@ -1442,7 +1459,7 @@
   * source/rdd/hbsix/sxtrig.prg
     * 'end' -> 'endswitch'
     % 'ValType() == "x"' -> 'IS*()'
-    ; TODO: Reformat to Harbour standards.
+    ; TODO: Reformat to Harbour standards. [DONE]
 
 2008-10-27 21:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * contrib/Makefile

@@ -58,99 +58,99 @@
 
 #define HB_SIX_SECTION "SXKEYWORDS"
 
-memvar SxIniInfo
+MEMVAR SxIniInfo
 
-static function _sx_INIlogical( cVal )
-   switch Upper( cVal )
-      case ".T."
-      case "TRUE"
-      case "YES"
-      case "ON"
-         return .T.
-      case ".F."
-      case "FALSE"
-      case "NO"
-      case "OFF"
-         return .F.
-   endswitch
-return NIL
+STATIC FUNCTION _sx_INIlogical( cVal )
+   SWITCH Upper( cVal )
+      CASE ".T."
+      CASE "TRUE"
+      CASE "YES"
+      CASE "ON"
+         RETURN .T.
+      CASE ".F."
+      CASE "FALSE"
+      CASE "NO"
+      CASE "OFF"
+         RETURN .F.
+   ENDSWITCH
+   RETURN NIL
 
-function _sx_INIinit( nArea )
-   local cFile, cPath, cName, cExt, cDrive
-   local xShared, xReadOnly, xAlias, xTrigger
-   local hIni, item, sect, h, a
+FUNCTION _sx_INIinit( nArea )
+   LOCAL cFile, cPath, cName, cExt, cDrive
+   LOCAL xShared, xReadOnly, xAlias, xTrigger
+   LOCAL hIni, item, sect, h, a
 
    /* SIX3 keeps information about ini sections in array[250] stored
     * in public variable called "SxIniInfo". This array is indexed
     * by workarea number. In Harbour we are using hash arrays.
     */
 
-   if Type( "SxIniInfo" ) = "U" /* NOTE: Intentionally using '=' operator */
+   IF Type( "SxIniInfo" ) = "U" /* NOTE: Intentionally using '=' operator */
       public SxIniInfo := {=>}
-      HB_HCaseMatch( SxIniInfo, .f. )
+      HB_HCaseMatch( SxIniInfo, .F. )
       HB_HAutoAdd( SxIniInfo, HB_HAUTOADD_ASSIGN )
-   endif
+   ENDIF
 
-   if nArea == NIL
-      return .f.
-   endif
+   IF nArea == NIL
+      RETURN .F.
+   ENDIF
 
    cFile := ( nArea )->( dbInfo( DBI_FULLPATH ) )
    hb_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
    cFile := hb_FNameMerge( cPath, cName, ".ini", cDrive )
    hIni := hb_IniRead( cFile, .F.,, .F. )
 
-   if !Empty( hIni )
-      if hb_HHasKey( hIni, HB_SIX_SECTION )
-         for each item in hIni[ HB_SIX_SECTION ]
-            switch item:__enumKey()
-               case "SHARED"
+   IF !Empty( hIni )
+      IF hb_HHasKey( hIni, HB_SIX_SECTION )
+         FOR EACH item IN hIni[ HB_SIX_SECTION ]
+            SWITCH item:__enumKey()
+               CASE "SHARED"
                   xShared := _sx_INIlogical( item )
-                  exit
-               case "READONLY"
+                  EXIT
+               CASE "READONLY"
                   xReadOnly := _sx_INIlogical( item )
-                  exit
-               case "ALIAS"
+                  EXIT
+               CASE "ALIAS"
                   xAlias := item
-                  exit
-               case "TRIGGER"
+                  EXIT
+               CASE "TRIGGER"
                   xTrigger := item
-                  exit
-            endswitch
-         next
-         if xTrigger != NIL
+                  EXIT
+            ENDSWITCH
+         NEXT
+         IF xTrigger != NIL
             ( nArea )->( Sx_SetTrigger( TRIGGER_INSTALL, xTrigger ) )
-         endif
+         ENDIF
          _sxOpenInit( nArea, xShared, xReadOnly, xAlias )
-      endif
+      ENDIF
 
       /* convert hash array into normal array */
-      for each item in hIni
-         if HB_IsHash( item )
+      FOR EACH item IN hIni
+         IF hb_isHash( item )
             sect := Array( Len( item ) )
-            for each h, a in item, sect
+            FOR EACH h, a IN item, sect
                a := { h:__enumKey(), h }
-            next
+            NEXT
             item := sect
-         endif
-      next
+         ENDIF
+      NEXT
 
       SxIniInfo[ nArea ] := hIni
 
-   endif
+   ENDIF
 
-return .f.
+   RETURN .F.
 
-function Sx_INIheader( cHeaderName, nArea )
+FUNCTION Sx_INIheader( cHeaderName, nArea )
 
-   if nArea == NIL
+   IF nArea == NIL
       nArea := Select()
-   endif
+   ENDIF
 
-   if hb_HHasKey( SxIniInfo, nArea )
-      if hb_HHasKey( SxIniInfo[ nArea ], cHeaderName )
-         return SxIniInfo[ nArea, cHeaderName ]
-      endif
-   endif
+   IF hb_HHasKey( SxIniInfo, nArea )
+      IF hb_HHasKey( SxIniInfo[ nArea ], cHeaderName )
+         RETURN SxIniInfo[ nArea, cHeaderName ]
+      ENDIF
+   ENDIF
 
-return {}
+   RETURN {}

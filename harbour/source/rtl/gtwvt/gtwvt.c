@@ -668,7 +668,7 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
                top = ( ( wi.bottom - height ) / 2 );
 
                left = ( left < 0 ? 0 : left );
-               top = ( top  < 0 ? 0 : top  );
+               top = ( top < 0 ? 0 : top );
             }
 
             SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
@@ -1031,7 +1031,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             if( rect.left   != pWVT->sRectOld.left   ||
                 rect.top    != pWVT->sRectOld.top    ||
                 rect.right  != pWVT->sRectOld.right  ||
-                rect.bottom != pWVT->sRectOld.bottom  )
+                rect.bottom != pWVT->sRectOld.bottom )
             {
 #if !defined(HB_WINCE)  /* WinCE does not support InvertRgn */
                /* Concept forwarded by Andy Wos - thanks. */
@@ -1246,7 +1246,7 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
             }
             else if( bCtrl && ( c >= 1 && c <= 26 ) )  /* K_CTRL_A - Z */
             {
-               hb_gt_wvt_AddCharToInputQueue( pWVT, K_Ctrl[c - 1]  );
+               hb_gt_wvt_AddCharToInputQueue( pWVT, K_Ctrl[ c - 1 ] );
             }
             else
             {
@@ -2393,7 +2393,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
                   if( hSysMenu )
                   {
-                     EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
+                     EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED ) );
                      pWVT->bSelectCopy = bNewValue;
                   }
                }
@@ -2415,7 +2415,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
                   if( hSysMenu )
                   {
-                     EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
+                     EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED ) );
                      pWVT->bClosable = bNewValue;
                   }
                }

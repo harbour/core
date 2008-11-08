@@ -54,43 +54,43 @@
 #include "common.ch"
 #include "hbsxdef.ch"
 
-function Sx_DefTrigger( nEvent, nArea, nFieldPos, xTrigVal )
+FUNCTION Sx_DefTrigger( nEvent, nArea, nFieldPos, xTrigVal )
 
    HB_SYMBOL_UNUSED( nArea )
    HB_SYMBOL_UNUSED( nFieldPos )
    HB_SYMBOL_UNUSED( xTrigVal )
 
-   switch nEvent
-      case EVENT_PREUSE
+   SWITCH nEvent
+      CASE EVENT_PREUSE
 //       _sx_INIinit( nArea )
          Sx_SetTrigger( TRIGGER_REMOVE )
-         exit
-      case EVENT_POSTUSE
-         exit
-      case EVENT_UPDATE
-         exit
-      case EVENT_APPEND
-         exit
-      case EVENT_DELETE
-         exit
-      case EVENT_RECALL
-         exit
-      case EVENT_PACK
-         exit
-      case EVENT_ZAP
-         exit
-      case EVENT_PUT
-         exit
-      case EVENT_GET
-         exit
-      case EVENT_PRECLOSE
-         exit
-      case EVENT_POSTCLOSE
-         exit
-      case EVENT_PREMEMOPACK
-         exit
-      case EVENT_POSTMEMOPACK
-         exit
-   endswitch
+         EXIT
+      CASE EVENT_POSTUSE
+         EXIT
+      CASE EVENT_UPDATE
+         EXIT
+      CASE EVENT_APPEND
+         EXIT
+      CASE EVENT_DELETE
+         EXIT
+      CASE EVENT_RECALL
+         EXIT
+      CASE EVENT_PACK
+         EXIT
+      CASE EVENT_ZAP
+         EXIT
+      CASE EVENT_PUT
+         EXIT
+      CASE EVENT_GET
+         EXIT
+      CASE EVENT_PRECLOSE
+         EXIT
+      CASE EVENT_POSTCLOSE
+         EXIT
+      CASE EVENT_PREMEMOPACK
+         EXIT
+      CASE EVENT_POSTMEMOPACK
+         EXIT
+   ENDSWITCH
 
-return .T.
+   RETURN .T.

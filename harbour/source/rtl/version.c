@@ -81,8 +81,43 @@ HB_FUNC( HB_VERSION )
    case HB_VERSION_PCODE_VER:      hb_retni( HB_PCODE_VER ); break;
    case HB_VERSION_PCODE_VER_STR:  hb_retc_buffer( hb_verPCode() ); break;
    case HB_VERSION_BUILD_DATE_STR: hb_retc_buffer( hb_verBuildDate() ); break;
-   case HB_VERSION_BUILD_DATE:     hb_retds( NULL ); break; /* TODO */
-   case HB_VERSION_BUILD_TIME:     hb_retc( NULL ); break; /* TODO */
+   case HB_VERSION_BUILD_DATE:
+   {
+      char * pszBuildDate = hb_verBuildDate();
+
+      if( strlen( pszBuildDate ) >= 11 )
+      {
+         static const char * s_months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+         char szDate[ 9 ];
+         int iMonth;
+
+         memcpy( szDate, pszBuildDate + 7, 4 );
+         szDate[ 4 ] = szDate[ 5 ] = '0';
+         szDate[ 6 ] = pszBuildDate[ 4 ] == ' ' ? '0' : pszBuildDate[ 4 ];
+         szDate[ 7 ] = pszBuildDate[ 5 ];
+         szDate[ 8 ] = '\0';
+
+         for( iMonth = 11; iMonth >= 0; iMonth-- )
+         {
+            if( memcmp( pszBuildDate, s_months[ iMonth ], 3 ) == 0 )
+               hb_snprintf( szDate + 4, 2, "%02d", iMonth );
+         }
+
+         hb_retds( szDate );
+      }
+      else
+         hb_retds( NULL );
+
+      hb_xfree( pszBuildDate );
+      break;
+   }
+   case HB_VERSION_BUILD_TIME:
+   {
+      char * pszBuildDate = hb_verBuildDate();
+      hb_retc( strlen( pszBuildDate ) >= 20 ? pszBuildDate + 12 : NULL );
+      hb_xfree( pszBuildDate );
+      break;
+   }
    case HB_VERSION_FLAG_PRG:       hb_retc_const( hb_verFlagsPRG() ); break;
    case HB_VERSION_FLAG_C:         hb_retc_const( hb_verFlagsC() ); break;
    case HB_VERSION_FLAG_LINKER:    hb_retc_const( hb_verFlagsL() ); break;
