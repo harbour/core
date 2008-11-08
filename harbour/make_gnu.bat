@@ -106,7 +106,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%/include
    rem ---------------------------------------------------------------
    rem Start the GNU make system
 
-   make -r %1 %2 %3 %4 %5 %6 %7 %8 %9 > make_gnu.log
+   make -r %MK_USR% %1 %2 %3 %4 %5 %6 %7 %8 %9 > make_gnu.log
    goto END
 
 :END

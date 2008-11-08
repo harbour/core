@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-08 13:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gcc.sh
+  * harbour/make_gnu.bat
+  * harbour/make_gnu.sh
+  * harbour/config/lib.cf
+  * harbour/config/bin.cf
+    + added MK_USR to pass GNU MAKE flags
+
+  * harbour/source/vm/set.c
+    * minor cleanup and simplifications in hb_setSetItem().
+    * grouped SETs with the same item type in hb_setSetItem() function
+      together.
+
 2008-11-08 12:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/gtwvt/gtwvt.c
     * hb_gt_wvt_ResetWindowSize(): Not very good looking (or 

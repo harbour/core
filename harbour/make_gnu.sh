@@ -179,9 +179,9 @@ else
 
    if [ "$HB_ARCHITECTURE" = "bsd" ] || [ "$HB_ARCHITECTURE" = "hpux" ]
    then
-      gmake $*
+      gmake $MK_USR $*
    else
-      make $*
+      make $MK_USR $*
    fi
 
    if [ "$*" = "clean" ]; then
