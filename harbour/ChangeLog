@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-08 18:40 UTC+0100 Francesco Saverio Giudice (info fsgiudice com)
+  - contrib/hbdbgfx
+  - contrib/hbdbgfx/common.mak
+  - contrib/hbdbgfx/dbgfx.prg
+  - contrib/hbdbgfx/dbgfxc.c
+  - contrib/hbdbgfx/hbdbgfx.h
+  - contrib/hbdbgfx/make_b32.bat
+  - contrib/hbdbgfx/make_gcc.sh
+  - contrib/hbdbgfx/make_vc.bat
+  - contrib/hbdbgfx/Makefile
+  - contrib/hbdbgfx/sprintf.prg
+  + contrib/xhb/dbgfx.prg
+  + contrib/xhb/dbgfxc.c
+  + contrib/xhb/sprintf.prg
+  + contrib/xhb/xhb.h
+  * contrib/make_b32_all.bat
+  * contrib/make_vc_all.bat
+  * contrib/xhb/common.mak
+  * contrib/xhb/Makefile
+    * moved hbdbgfx to xhb folder
+
 2008-11-08 16:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/version.c
     % Minor.
@@ -35,12 +56,12 @@
     - Removed debug switches from OpenWatcom C compiler cmdline.
 
   * bin/hbmk_os2.cmd
-    + Added OpenWatcom support. Pls update it, f.e. I don't know 
+    + Added OpenWatcom support. Pls update it, f.e. I don't know
       what is the name of the compiler executable.
-    ! Fixed HB_COMPILER branching. Looks like nobody uses this 
-      file if this problem didn't show up so far, so I'd like to 
-      propose again to remove this file completely, as there is 
-      not much point spending time on maintaining stuff which 
+    ! Fixed HB_COMPILER branching. Looks like nobody uses this
+      file if this problem didn't show up so far, so I'd like to
+      propose again to remove this file completely, as there is
+      not much point spending time on maintaining stuff which
       nobody uses or needs, is there?
 
   * bin/hbmk.bat
@@ -57,9 +78,9 @@
   * contrib/mtpl_vc.bat
     * Sync with GNU make system:
       HB_MAKE_FLAGS -> MK_USR
-    ; TOFIX: Maybe it's a good time now to resolve the missing HB_ 
+    ; TOFIX: Maybe it's a good time now to resolve the missing HB_
              prefixes for C_USR, L_USR, A_USR, MK_USR.
-             If there are no objections / better ideas I'd like 
+             If there are no objections / better ideas I'd like
              to make these changes:
              HB_USER_LIBS -> HB_USR_LIBS
              PRG_USR      -> HB_USR_PRG
@@ -67,7 +88,7 @@
              L_USR        -> HB_USR_LINK (or HB_USR_L ?)
              A_USR        -> HB_USR_LIB (or HB_USR_A ?)
              MK_USR       -> HB_USR_MAKE (or HB_USR_MAK ?)
-             As an option we may keep the old names for 
+             As an option we may keep the old names for
              compatibility to give some transition time.
 
 2008-11-08 13:55 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -81,7 +102,7 @@
     + Added one C5.2 SET()s for two simple tests.
     + Added all C5.3 SET()s for two simple tests each.
     ; NOFIX: _SET_VIDEOMODE has the type wrong.
-    ; NOTE: It wouldn't be a bad idea to add some more comprehensive 
+    ; NOTE: It wouldn't be a bad idea to add some more comprehensive
             tests for SET()s.
 
 2008-11-08 13:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -99,21 +120,21 @@
 
 2008-11-08 12:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/gtwvt/gtwvt.c
-    * hb_gt_wvt_ResetWindowSize(): Not very good looking (or 
-      overly efficient) solution added for the windows 
-      resize/positioning problem in case the initally set size 
+    * hb_gt_wvt_ResetWindowSize(): Not very good looking (or
+      overly efficient) solution added for the windows
+      resize/positioning problem in case the initally set size
       cannot fit on the screen (Windows desktop).
 
 2008-11-08 10:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/set.c
     + Implemented rest of hb_setSetItem() values.
     ; TODO: Please review. [DONE]
-    ! Fixed HB_SET_FILECASE and HB_SET_DIRCASE to not allow 
+    ! Fixed HB_SET_FILECASE and HB_SET_DIRCASE to not allow
       invalid numeric values to be set.
     ! Added missing 'break;' to hb_setSetItem2();
 
   * source/rtl/gtwvt/gtwvt.c
-    ! Fixed a few places where '+' operator was used 
+    ! Fixed a few places where '+' operator was used
       instead of '|'.
     * Minor opt/formatting.
     ; TOFIX: The window positioning bug is still to be solved. [DONE]

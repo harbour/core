@@ -19,9 +19,11 @@ C_SOURCES=\
 	xhbwith.c \
 	hbcomprs.c \
 	xstrdel.c \
+	dbgfxc.c \
 
 C_HEADERS=\
 	hbcompat.h \
+	xhb.h \
 
 PRG_SOURCES=\
 	arrayblk.prg \
@@ -32,6 +34,8 @@ PRG_SOURCES=\
 	hbstruct.prg \
 	dirrec.prg \
 	xhbcomp.prg \
+	dbgfx.prg \
+	sprintf.prg \
 
 PRG_HEADERS=\
 	hbcompat.ch \

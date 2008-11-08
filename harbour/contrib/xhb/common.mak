@@ -8,6 +8,7 @@ LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 
 C_HEADERS = \
     hbcompat.h \
+    xhb.h \
 
 PRG_HEADERS = \
     hbcompat.ch \
@@ -28,6 +29,7 @@ LIB_OBJS = \
     $(OBJ_DIR)xhbwith$(OBJEXT) \
     $(OBJ_DIR)hbcomprs$(OBJEXT) \
     $(OBJ_DIR)xstrdel$(OBJEXT) \
+    $(OBJ_DIR)dbgfxc$(OBJEXT) \
     \
     $(OBJ_DIR)arrayblk$(OBJEXT) \
     $(OBJ_DIR)txml$(OBJEXT) \
@@ -37,6 +39,8 @@ LIB_OBJS = \
     $(OBJ_DIR)hbstruct$(OBJEXT) \
     $(OBJ_DIR)dirrec$(OBJEXT) \
     $(OBJ_DIR)xhbcomp$(OBJEXT) \
+    $(OBJ_DIR)dbgfx$(OBJEXT) \
+    $(OBJ_DIR)sprintf$(OBJEXT) \
 
 all: \
     $(LIB_PATH) \
