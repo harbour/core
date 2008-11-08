@@ -100,7 +100,10 @@ HB_FUNC( HB_VERSION )
          for( iMonth = 11; iMonth >= 0; iMonth-- )
          {
             if( memcmp( pszBuildDate, s_months[ iMonth ], 3 ) == 0 )
+            {
                hb_snprintf( szDate + 4, 2, "%02d", iMonth );
+               break;
+            }
          }
 
          hb_retds( szDate );
