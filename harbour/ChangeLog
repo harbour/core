@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-08 14:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.bat
+  * make_vc.bat
+  * contrib/mtpl_b32.bat
+  * contrib/mtpl_gcc.sh
+  * contrib/mtpl_vc.bat
+    * Sync with GNU make system:
+      HB_MAKE_FLAGS -> MK_USR
+    ; TOFIX: Maybe it's a good time now to resolve the missing HB_ 
+             prefixes for C_USR, L_USR, A_USR, MK_USR.
+             If there are no objections / better ideas I'd like 
+             to make these changes:
+             HB_USER_LIBS -> HB_USR_LIBS
+             PRG_USR      -> HB_USR_PRG
+             C_USR        -> HB_USR_C
+             L_USR        -> HB_USR_LINK (or HB_USR_L ?)
+             A_USR        -> HB_USR_LIB (or HB_USR_A ?)
+             MK_USR       -> HB_USR_MAKE (or HB_USR_MAK ?)
+             As an option we may keep the old names for 
+             compatibility to give some transition time.
+
 2008-11-08 13:55 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/set.c
     ! _SET_EVENTMASK RTE removed to be Clipper compatible.
