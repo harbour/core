@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-08 10:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/set.c
+    + Implemented rest of hb_setSetItem() values.
+    ; TODO: Please review.
+    ! Fixed HB_SET_FILECASE and HB_SET_DIRCASE to not allow 
+      invalid numeric values to be set.
+    ! Added missing 'break;' to hb_setSetItem2();
+
+  * source/rtl/gtwvt/gtwvt.c
+    ! Fixed a few places where '+' operator was used 
+      instead of '|'.
+    * Minor opt/formatting.
+    ; TOFIX: The window positioning bug is still to be solved.
 
 2008-11-07 23:39 UTC+0100 Francesco Saverio Giudice (info fsgiudice com)
   * source/rdd/usrrdd/rdds/arrayrdd.prg
@@ -61,7 +74,6 @@
 
   * source/rtl/gtwvt/gtwvt.c
     * Typo, minor formatting.
-
 
 2008-11-07 14:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/set.c

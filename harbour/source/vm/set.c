@@ -510,7 +510,7 @@ HB_FUNC( SET )
             iLen = ( unsigned int ) strlen( pSet->HB_SET_DATEFORMAT );
             for( i = 0; i < iLen; i++ )
             {
-               ch = pSet->HB_SET_DATEFORMAT[i];
+               ch = pSet->HB_SET_DATEFORMAT[ i ];
                if( !flag && ( ch == 'Y' || ch == 'y' ) )
                   year++;   /* Only count the first set of consecutive "Y"s. */
                else if( year )
@@ -578,7 +578,7 @@ HB_FUNC( SET )
             /* If the print file is not already open, open it in overwrite mode. */
             pSet->HB_SET_DEVICE = set_string( pArg2, pSet->HB_SET_DEVICE );
             if( hb_stricmp( pSet->HB_SET_DEVICE, "PRINTER" ) == 0 && pSet->hb_set_printhan == FS_ERROR &&
-                pSet->HB_SET_PRINTFILE && pSet->HB_SET_PRINTFILE[0] != '\0' )
+                pSet->HB_SET_PRINTFILE && pSet->HB_SET_PRINTFILE[ 0 ] != '\0' )
                pSet->hb_set_printhan = open_handle( pSet, pSet->HB_SET_PRINTFILE, FALSE, NULL, HB_SET_PRINTFILE );
          }
          break;
@@ -793,8 +793,7 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             /* Set the value and limit the range */
-            int old = pSet->HB_SET_TYPEAHEAD;
-            pSet->HB_SET_TYPEAHEAD = set_number( pArg2, old );
+            pSet->HB_SET_TYPEAHEAD = set_number( pArg2, pSet->HB_SET_TYPEAHEAD );
             if( pSet->HB_SET_TYPEAHEAD == 0 )
                /* Do nothing */ ;
             else if( pSet->HB_SET_TYPEAHEAD < 16 )
@@ -857,10 +856,13 @@ HB_FUNC( SET )
             }
             else if( HB_IS_NUMERIC( pArg2 ) )
             {
-               if( set_number( pArg2, pSet->HB_SET_FILECASE ) < 0 )
-                  hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+               int iValue = set_number( pArg2, pSet->HB_SET_FILECASE );
+               if( iValue == HB_SET_CASE_LOWER || 
+                   iValue == HB_SET_CASE_UPPER || 
+                   iValue == HB_SET_CASE_MIXED )
+                  pSet->HB_SET_FILECASE = iValue;
                else
-                  pSet->HB_SET_FILECASE = set_number( pArg2, pSet->HB_SET_FILECASE );
+                  hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             }
             else
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -883,10 +885,13 @@ HB_FUNC( SET )
             }
             else if( HB_IS_NUMERIC( pArg2 ) )
             {
-               if( set_number( pArg2, pSet->HB_SET_DIRCASE ) < 0 )
-                  hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+               int iValue = set_number( pArg2, pSet->HB_SET_DIRCASE );
+               if( iValue == HB_SET_CASE_LOWER || 
+                   iValue == HB_SET_CASE_UPPER || 
+                   iValue == HB_SET_CASE_MIXED )
+                  pSet->HB_SET_DIRCASE = iValue;
                else
-                  pSet->HB_SET_DIRCASE = set_number( pArg2, pSet->HB_SET_DIRCASE );
+                  hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             }
             else
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1558,7 +1563,6 @@ HB_EXPORT BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
                }
             }
             break;
-
          case HB_SET_MFILEEXT:
             if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
             {
@@ -1570,29 +1574,291 @@ HB_EXPORT BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
             }
             break;
 
-         /* TODO */
+         /* TOREVIEW  */
+
          case HB_SET_AUTORDER:
+            if( HB_IS_NUMERIC( pItem ) )
+            {
+               iValue = hb_itemGetNI( pItem );
+               if( iValue >= 0 )
+               {
+                  pSet->HB_SET_AUTORDER = iValue;
+                  fResult = TRUE;
+               }
+            }
+            break;
          case HB_SET_AUTOSHARE:
+            if( HB_IS_NUMERIC( pItem ) )
+            {
+               iValue = hb_itemGetNI( pItem );
+               if( iValue >= 0 )
+               {
+                  pSet->HB_SET_AUTOSHARE = iValue;
+                  fResult = TRUE;
+               }
+            }
+            break;
          case HB_SET_COLOR:
+            hb_conSetColor( HB_IS_STRING( pItem ) ? hb_itemGetCPtr( pItem ) : ( char * ) NULL );
+            fResult = TRUE;
+            break;
          case HB_SET_CURSOR:
+            if( HB_IS_NUMERIC( pItem ) )
+               hb_conSetCursor( TRUE, ( USHORT ) hb_itemGetNI( pItem ) );
+            else
+               hb_conSetCursor( FALSE, 0 );
+            fResult = TRUE;
+            break;
          case HB_SET_DATEFORMAT:
+            if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
+            {
+               BOOL flag = FALSE;
+               unsigned int i, iLen;
+               int ch, year = 0;
+    
+               szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
+               if( pSet->HB_SET_DATEFORMAT )
+                  hb_xfree( pSet->HB_SET_DATEFORMAT );
+               pSet->HB_SET_DATEFORMAT = szValue;
+
+               iLen = ( unsigned int ) strlen( pSet->HB_SET_DATEFORMAT );
+               for( i = 0; i < iLen; i++ )
+               {
+                  ch = pSet->HB_SET_DATEFORMAT[ i ];
+                  if( !flag && ( ch == 'Y' || ch == 'y' ) )
+                     year++;   /* Only count the first set of consecutive "Y"s. */
+                  else if( year )
+                     flag = TRUE; /* Indicate non-consecutive. */
+               }
+
+               flag = ( year >= 4 );
+
+               if( flag != pSet->hb_set_century )
+               {
+                  /* CENTURY is not controlled directly by SET, so there is no
+                     notification for changing it indirectly via DATE FORMAT. */
+                  pSet->hb_set_century = flag;
+               }
+
+               fResult = TRUE;
+            }
+            break;
          case HB_SET_DEFAULT:
+            if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
+            {
+               szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
+               if( pSet->HB_SET_DEFAULT )
+                  hb_xfree( pSet->HB_SET_DEFAULT );
+               pSet->HB_SET_DEFAULT = szValue;
+               fResult = TRUE;
+            }
+            break;
          case HB_SET_DELIMCHARS:
+            if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
+            {
+               szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
+               if( pSet->HB_SET_DELIMCHARS )
+                  hb_xfree( pSet->HB_SET_DELIMCHARS );
+               pSet->HB_SET_DELIMCHARS = szValue;
+               fResult = TRUE;
+            }
+            break;
          case HB_SET_DEVICE:
+            if( HB_IS_STRING( pItem ) )
+            {
+               szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
+               if( pSet->HB_SET_DEVICE )
+                  hb_xfree( pSet->HB_SET_DEVICE );
+               pSet->HB_SET_DEVICE = szValue;
+
+               /* If the print file is not already open, open it in overwrite mode. */
+               if( hb_stricmp( pSet->HB_SET_DEVICE, "PRINTER" ) == 0 && pSet->hb_set_printhan == FS_ERROR &&
+                   pSet->HB_SET_PRINTFILE && pSet->HB_SET_PRINTFILE[ 0 ] != '\0' )
+                  pSet->hb_set_printhan = open_handle( pSet, pSet->HB_SET_PRINTFILE, FALSE, NULL, HB_SET_PRINTFILE );
+               fResult = TRUE;
+            }
+            break;
          case HB_SET_EVENTMASK:
+            pSet->HB_SET_EVENTMASK = hb_itemGetNI( pItem );
+            fResult = TRUE;
+            break;
          case HB_SET_MARGIN:
+            if( HB_IS_NUMERIC( pItem ) )
+            {
+               iValue = hb_itemGetNI( pItem );
+               if( iValue >= 0 )
+               {
+                  pSet->HB_SET_MARGIN = iValue;
+                  fResult = TRUE;
+               }
+            }
+            break;
          case HB_SET_MESSAGE:
+            if( HB_IS_NUMERIC( pItem ) )
+            {
+               iValue = hb_itemGetNI( pItem );
+               if( iValue >= 0 )
+               {
+                  pSet->HB_SET_MESSAGE = iValue;
+                  fResult = TRUE;
+               }
+            }
+            break;
          case HB_SET_PATH:
+            if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
+            {
+               szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
+               if( pSet->HB_SET_PATH )
+                  hb_xfree( pSet->HB_SET_PATH );
+               pSet->HB_SET_PATH = szValue;
+
+               hb_fsFreeSearchPath( pSet->hb_set_path );
+               pSet->hb_set_path = NULL;
+               hb_fsAddSearchPath( pSet->HB_SET_PATH, &pSet->hb_set_path );
+
+               fResult = TRUE;
+            }
+            break;
          case HB_SET_TYPEAHEAD:
+            /* Set the value and limit the range */
+            pSet->HB_SET_TYPEAHEAD = hb_itemGetNI( pItem );
+            if( pSet->HB_SET_TYPEAHEAD == 0 )
+               /* Do nothing */ ;
+            else if( pSet->HB_SET_TYPEAHEAD < 16 )
+               pSet->HB_SET_TYPEAHEAD = 16;
+            else if( pSet->HB_SET_TYPEAHEAD > 4096 )
+               pSet->HB_SET_TYPEAHEAD = 4096;
+            /* reset keyboard buffer */
+            hb_inkeyReset();
+
+            fResult = TRUE;
+            break;
          case HB_SET_VIDEOMODE:
+            if( HB_IS_NUMERIC( pItem ) )
+            {
+               iValue = hb_itemGetNI( pItem );
+               if( iValue >= 0 )
+               {
+                  pSet->HB_SET_VIDEOMODE = iValue;
+                  fResult = TRUE;
+               }
+            }
+            break;
          case HB_SET_LANGUAGE:
+            if( HB_IS_STRING( pItem ) )
+            {
+               hb_langSelectID( hb_itemGetCPtr( pItem ) );
+               fResult = TRUE;
+            }
+            break;
          case HB_SET_CODEPAGE:
+            if( HB_IS_STRING( pItem ) )
+            {
+               hb_cdpSelectID( hb_itemGetCPtr( pItem ) );
+               fResult = TRUE;
+            }
+            break;
          case HB_SET_FILECASE:
+            if( HB_IS_STRING( pItem ) )
+            {
+               if( ! hb_stricmp( hb_itemGetCPtr( pItem ), "LOWER" ) )
+               {
+                  pSet->HB_SET_FILECASE = HB_SET_CASE_LOWER;
+                  fResult = TRUE;
+               }
+               else if( ! hb_stricmp( hb_itemGetCPtr( pItem ), "UPPER" ) )
+               {
+                  pSet->HB_SET_FILECASE = HB_SET_CASE_UPPER;
+                  fResult = TRUE;
+               }
+               else if( ! hb_stricmp( hb_itemGetCPtr( pItem ), "MIXED" ) )
+               {
+                  pSet->HB_SET_FILECASE = HB_SET_CASE_MIXED;
+                  fResult = TRUE;
+               }
+            }
+            else if( HB_IS_NUMERIC( pItem ) )
+            {
+               iValue = hb_itemGetNI( pItem );
+               if( iValue == HB_SET_CASE_LOWER || 
+                   iValue == HB_SET_CASE_UPPER || 
+                   iValue == HB_SET_CASE_MIXED )
+               {
+                  pSet->HB_SET_FILECASE = iValue;
+                  fResult = TRUE;
+               }
+            }
+            break;
          case HB_SET_DIRCASE:
+            if( HB_IS_STRING( pItem ) )
+            {
+               if( ! hb_stricmp( hb_itemGetCPtr( pItem ), "LOWER" ) )
+               {
+                  pSet->HB_SET_DIRCASE = HB_SET_CASE_LOWER;
+                  fResult = TRUE;
+               }
+               else if( ! hb_stricmp( hb_itemGetCPtr( pItem ), "UPPER" ) )
+               {
+                  pSet->HB_SET_DIRCASE = HB_SET_CASE_UPPER;
+                  fResult = TRUE;
+               }
+               else if( ! hb_stricmp( hb_itemGetCPtr( pItem ), "MIXED" ) )
+               {
+                  pSet->HB_SET_DIRCASE = HB_SET_CASE_MIXED;
+                  fResult = TRUE;
+               }
+            }
+            else if( HB_IS_NUMERIC( pItem ) )
+            {
+               iValue = hb_itemGetNI( pItem );
+               if( iValue == HB_SET_CASE_LOWER || 
+                   iValue == HB_SET_CASE_UPPER || 
+                   iValue == HB_SET_CASE_MIXED )
+               {
+                  pSet->HB_SET_DIRCASE = iValue;
+                  fResult = TRUE;
+               }
+            }
+            break;
          case HB_SET_DIRSEPARATOR:
+            if( HB_IS_STRING( pItem ) && hb_itemGetCLen( pItem ) > 0 )
+            {
+               pSet->HB_SET_DIRSEPARATOR = hb_itemGetCPtr( pItem )[ 0 ];
+               fResult = TRUE;
+            }
+            break;
          case HB_SET_EOL:
+            if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
+            {
+               szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
+               if( pSet->HB_SET_EOL )
+                  hb_xfree( pSet->HB_SET_EOL );
+               pSet->HB_SET_EOL = szValue;
+               fResult = TRUE;
+            }
+            break;
          case HB_SET_HBOUTLOG:
+            if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
+            {
+               szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
+               if( pSet->HB_SET_HBOUTLOG )
+                  hb_xfree( pSet->HB_SET_HBOUTLOG );
+               pSet->HB_SET_HBOUTLOG = szValue;
+               hb_xsetfilename( pSet->HB_SET_HBOUTLOG );
+               fResult = TRUE;
+            }
+            break;
          case HB_SET_HBOUTLOGINFO:
+            if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
+            {
+               szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
+               if( pSet->HB_SET_HBOUTLOGINFO )
+                  hb_xfree( pSet->HB_SET_HBOUTLOGINFO );
+               pSet->HB_SET_HBOUTLOGINFO = szValue;
+               hb_xsetinfo( pSet->HB_SET_HBOUTLOGINFO );
+               fResult = TRUE;
+            }
+            break;
 
          case HB_SET_INVALID_:
             break;
@@ -1627,6 +1893,7 @@ HB_EXPORT BOOL hb_setSetItem2( HB_set_enum set_specifier, PHB_ITEM pItem1, PHB_I
                                      hb_itemGetCPtr( pItem1 ) : NULL,
                                      pItem2 && set_logical( pItem2, FALSE ) );
             hb_setListenerNotify( set_specifier, HB_SET_LISTENER_AFTER );
+            break;
          default:
             fResult = hb_setSetItem( set_specifier, pItem1 );
       }

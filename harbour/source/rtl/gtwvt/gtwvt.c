@@ -337,8 +337,6 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent )
  */
 static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
 {
-   HFONT hFont;
-
    if( iHeight > 0 )
    {
       LOGFONT logfont;
@@ -354,20 +352,16 @@ static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, i
       logfont.lfOutPrecision   = 0;
       logfont.lfClipPrecision  = 0;
       logfont.lfQuality        = ( BYTE ) iQuality;       /* DEFAULT_QUALITY, DRAFT_QUALITY or PROOF_QUALITY */
-      logfont.lfPitchAndFamily = FIXED_PITCH + FF_MODERN; /* all mapping depends on fixed width fonts! */
+      logfont.lfPitchAndFamily = FIXED_PITCH | FF_MODERN; /* all mapping depends on fixed width fonts! */
       logfont.lfHeight         = iHeight;
       logfont.lfWidth          = iWidth < 0 ? -iWidth : iWidth;
 
       HB_TCHAR_CPTO( logfont.lfFaceName, pszFace, sizeof( logfont.lfFaceName ) - 1 );
 
-      hFont = CreateFontIndirect( &logfont );
+      return CreateFontIndirect( &logfont );
    }
    else
-   {
-      /* hFont = ( HFONT ) GetStockObject( SYSTEM_FIXED_FONT ); */
-      hFont = ( HFONT ) GetStockObject( OEM_FIXED_FONT );
-   }
-   return hFont;
+      return ( HFONT ) GetStockObject( OEM_FIXED_FONT /* SYSTEM_FIXED_FONT */ );
 }
 
 static POINT hb_gt_wvt_GetXYFromColRow( PHB_GTWVT pWVT, USHORT col, USHORT row )
@@ -1415,7 +1409,7 @@ static BOOL hb_gt_wvt_TextOut( PHB_GTWVT pWVT, HDC hdc, USHORT col, USHORT row, 
    xy = hb_gt_wvt_GetXYFromColRow( pWVT, col, row );
    SetRect( &rClip, xy.x, xy.y, xy.x + cbString * pWVT->PTEXTSIZE.x, xy.y + pWVT->PTEXTSIZE.y );
 
-   return ExtTextOut( hdc, xy.x, xy.y, ETO_CLIPPED|ETO_OPAQUE, &rClip,
+   return ExtTextOut( hdc, xy.x, xy.y, ETO_CLIPPED | ETO_OPAQUE, &rClip,
                       lpString, cbString, pWVT->FixedFont ? NULL : pWVT->FixedSize );
 }
 
@@ -2476,7 +2470,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                    y,
                                    rect.right - rect.left,
                                    rect.bottom - rect.top,
-                                   SWP_NOSIZE + SWP_NOZORDER ) );
+                                   SWP_NOSIZE | SWP_NOZORDER ) );
          }
          break;
 
