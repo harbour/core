@@ -23,7 +23,7 @@
       - HB_WIN32_IO     -> HB_IO_WIN
     ; NOTE: INCOMPATIBLE if someone happens to disable 
             Windows native IO. Users don't normally 
-            needs this though.
+            need this though.
 
 2008-11-09 20:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   - contrib/hbmysql/utils/bld_b32.bat
