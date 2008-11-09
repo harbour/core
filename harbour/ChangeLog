@@ -8,6 +8,57 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 12:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+    ! Fixed again the UNICODE problem (I've uploaded a wrong 
+      version apparently).
+    + Added my last entry which was lost due to above.
+    ! Removed all ending whitespaces.
+    ! Stripped all non-ASCII chars. Sorry to all who's names 
+      were thus modified.
+    ; NOTE: Please don't use any high chars in the future, 
+            only 7-bit ASCII. Same goes for all Harbour source 
+            comments BTW.
+            This way everyone can read what the other are typing 
+            and it's much easier to fix files if someone 
+            accidentally saves with the wrong codepage.
+    ; TOFIX: We should also possibly fix all high chars in 
+             .prg and .c code _strings_.
+
+2008-11-09 11:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+    ! Restored last non-UNICODE version, and readded
+      all entries and reapplied all changes since then.
+    ; NOTE: Please never save any Harbour files in
+            UNICODE mode. Thank you.
+
+  * contrib/make_gcc_all.sh
+  * contrib/Makefile
+    - Removed hbdbgfx.
+
+  * source/pp/hbpp.c
+  * source/main/harbour.c
+    * Excluded hbwmain for __POCC__ WinCE.
+    ; TOFIX: Warning: Not proper fix.
+             This way it won't link but at least it compiles.
+
+  * source/compiler/gencc.c
+    * Switched to hexadecimal format for high chars, because
+      octal was tried to be converted to Windows codepage, by
+      PellesC.
+
+  * config/w32/poccce.cf
+    - Removed -DSTRSAFE_NO_DEPRECATE switch.
+
+  * config/w32/pocc.cf
+    + Added -MT switch.
+
+  * contrib/hbwin/win_prn2.c
+  * contrib/hbwin/win_dll.c
+  * source/rtl/hbhex.c
+  * source/rdd/hbsix/sxcompat.prg
+    * Minor formatting.
+
 2008-11-09 11:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gcc.mak
     ! declared non file helper rules as .PHONY ones.
@@ -25,20 +76,20 @@
   * harbour/contrib/gtwvg/gtwvg.h
   * harbour/source/rtl/gtwvt/gtwvt.c
   * harbour/source/rtl/gtwvt/gtwvt.h
-    
+
     + BOOL bResizing
     + BOOL bAlreadySizing
-      To control unnecessary code execution while sizing operation is 
+      To control unnecessary code execution while sizing operation is
       being carried out. Now the flickering of console window should be
       greatly minimized, IMO, please test.
 
     ! Fixed behavior of some function not to recreate font if one is already
       created given other parameters are the same. SetMode() does nothing if
       nRows, nCols are the same as with console prior to calling this function.
-     
+
     ; NOTE: Please test extensively as this is one gray area of GTWVT we all
       are in a quest to fix.
-    
+
 2008-11-08 19:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gcc.mak
     ! corrected missing $(HARBOUR_EXE) dependence in .prg files rules
@@ -63,7 +114,7 @@
 
   * harbour/contrib/gtwvg/wvgutils.c
     + HB_FUNC( WIN_DESTROYWINDOW ) - Winapi compatible function.
-    
+
 2008-11-08 18:40 UTC+0100 Francesco Saverio Giudice (info fsgiudice com)
   - contrib/hbdbgfx
   - contrib/hbdbgfx/common.mak
@@ -247,6 +298,7 @@
 
   * source/rtl/gtwvt/gtwvt.c
     * Typo, minor formatting.
+
 
 2008-11-07 14:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/set.c
@@ -17126,7 +17178,7 @@
      + Added hbsqlit2 SQLite 2.x interface library.
 
        With kind permission from the author:
-       Alejandro de Gౡte <alex_degarate/at/hotmail.com>
+       Alejandro de Garate <alex_degarate/at/hotmail.com>
 
      + Some renames were done here too to better fit into
        the contrib structure.
@@ -17340,7 +17392,7 @@
        Thanks goes to Petr Chornyj <myorg63/at/mail.ru> for
        creating this code and making it available for this project.
 
-       (The code also based on Alejandro de Gౡte
+       (The code also based on Alejandro de Garate
        <alex_degarate/at/hotmail.com> SQLite 2 interface work)
 
      + Added make files, arranged std contrib layout.
@@ -22123,12 +22175,12 @@
 2008-01-14 13:44 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
   * source/vm/extend.c
     * Undo Added conversion from logical params in hb_par* functions.
-      ( thks to Juan G૶ez )
+      ( thks to Juan Galvez )
 
 2008-01-14 12:28 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
   * source/vm/extend.c
     * Added conversion from logical params in hb_par* functions.
-      ( thks to Juan G૶ez )
+      ( thks to Juan Galvez )
 
 2008-01-15 10:31 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbdefs.h
@@ -22623,7 +22675,7 @@
 
 2007-12-17 13:41 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
     * common.mak
-      + Added some missing files (suggested by Juan G૶ez)
+      + Added some missing files (suggested by Juan Galvez)
 
 2007-12-16 15:42 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbgtwvg/gtwvg.h
@@ -24938,7 +24990,7 @@
 
 2007-11-20 17:02 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
     * contrib/xhb/common.mak
-      + Added some missing lines (suggested by Juan G૶ez)
+      + Added some missing lines (suggested by Juan Galvez)
 
 2007-11-20 13:45 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
   * contrib/bmdbfcdx/bmdbfcdx1.c
@@ -31362,7 +31414,7 @@
   * harbour/contrib/libct/Makefile
   * harbour/contrib/libct/makefile.bc
   * harbour/contrib/libct/makefile.vc
-    * added new files and Juan G૶ez fixes
+    * added new files and Juan Galvez fixes
   * harbour/contrib/libct/like.c
   * harbour/contrib/libct/keyset.c
     ! fixed typo
@@ -32152,7 +32204,7 @@
   * harbour/harbour.spec
     * restored original national characters which were unintentionally
       damaged on 2006-06-29 08:25 UTC+0200 Tomaz Zupan
-      Toma¾ please do not use editors which will change national characters
+      Tomaz please do not use editors which will change national characters
       in the whole file when you will change harbour.spec in the future
 
 2007-06-07 11:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -33300,7 +33352,7 @@
 
     Examples
 
-     ¦  The following example enables optimization for the Inventor
+     *  The following example enables optimization for the Inventor
         database file using the SET OPTIMIZE command:
 
         USE Inventor NEW VIA "BMDBFCDX"
@@ -47289,7 +47341,7 @@ NOTE:
      ! Changed return values for empty or failed calles to MemoRead() to return an
        empty string instead of a NULL
      ! Close file when MemoRead() was successful, but file was empty (was being left open)
-   Above solutions reported and provided by David Arturo Mac젳 Corona.  Thanks!
+   Above solutions reported and provided by David Arturo Macias Corona.  Thanks!
 
 2004-02-19 12:48 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * contrib/rdd_ads/adsfunc.c
@@ -47853,7 +47905,7 @@ NOTE:
 2003-12-03 17:28 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * source/rdd/dbcmd.c
     ! Fixed OrdKeyNo() bug that set RecNo() to LastRec() + 1
-      reported by Roberto L򯤺 - borrowed from xharbour
+      reported by Roberto Lopez - borrowed from xharbour
 
 2003-12-03 14:24 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * include/hbapirdd.h
@@ -49723,7 +49775,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2003-04-16 14:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
-    * A bug in hb_ntxTagKeyCount() fixed - reported by Jos© Luis Capel
+    * A bug in hb_ntxTagKeyCount() fixed - reported by Jose Luis Capel
 
 2003-04-15 13:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   + contrib/ole
@@ -49732,7 +49784,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
   + contrib/ole/hbtest.prg
   + contrib/ole/ole2.c
   + contrib/ole/oleauto.prg
-    + With a kind permission of the author, Jos矆. Gim譥z <jfgimenez@wanadoo.es>,
+    + With a kind permission of the author, Jose F. Gimenez <jfgimenez@wanadoo.es>,
       ole library for harbour added.
       Some unused stuff is removed from the original files, few bug fixes are made.
 
@@ -50158,7 +50210,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
           DBOI_ISCOND, DBOI_ISDESC, DBOI_UNIQUE, DBOI_POSITION, DBOI_RECNO,
           DBOI_KEYNORAW, DBOI_KEYCOUNT, DBOI_KEYCOUNTRAW.
           This makes ordKeyNo() = recno() and ordKeyCount() = lastrec()
-          in such case. Reported by HernଠDiego Ceccarelli
+          in such case. Reported by Hernan Diego Ceccarelli
           <hceccarelli@cesotech.com.ar>
         + added helper function hb_cdxOrdListClear
         ! structural index isn't closed anymore
@@ -50289,7 +50341,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2002-11-27 13:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
-    ! Bug fixed, reported by Carlos Andr©s
+    ! Bug fixed, reported by Carlos Andres
   * source/rtl/cdpapi.c
     ! Bug fixed in HB_TRANSLATE()
 
@@ -50635,7 +50687,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2002-10-22 18:53 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * source/rtl/filesys.c
-    ! minor fix reported by Jos矆co. P豥z
+    ! minor fix reported by Jose Fco. Perez
 
 2002-10-22 12:00 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * source/rdd/dbcmd.c
@@ -52962,7 +53014,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
      ! fixed bug seek and set deleted on, reported by Lorenzo Fiorini
        also fix bug with set filter
      ! fixed bug with ordkeyno() and ordkeycount(),
-       reported by Manuel Mercado G򬤺
+       reported by Manuel Mercado Gomez
 
 2002-03-04 22:33 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/rtl/set.c
@@ -53422,7 +53474,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
          ...
          __hrbUnload( hrbLib )
 
-2002-02-01 10:30 UTC-0300 Horacio Roldଠ<harbour_ar@yahoo.com.ar>
+2002-02-01 10:30 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * utils/hbmake/hbmake.prg
      utils/hbmake/hbmutils.prg
      * Better support for big project(Read and Generations)
@@ -53731,7 +53783,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2002-01-28 14:21 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbf1.c
-    * Bug fixed in dbfGetMemo(), reported by Jos© Luis Capel
+    * Bug fixed in dbfGetMemo(), reported by Jose Luis Capel
 
 2002-01-28 13:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
@@ -54220,7 +54272,7 @@ ed
 2002-01-11 08:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   * source/rdd/dbf1.c
     ! Fixed problem with numeric field.
-      From Horacio Roldଠ<harbour_ar@yahoo.com.ar>
+      From Horacio Roldan <harbour_ar@yahoo.com.ar>
 
 2002-01-10 22:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   * source/common/hbffind.c
@@ -54234,7 +54286,7 @@ ed
 2002-01-10 14:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/spfiles.c
     ! Fix to remove spurious ISCHAR(1) tests from C routines.
-      From Horacio Roldଠ<harbour_ar@yahoo.com.ar>
+      From Horacio Roldan <harbour_ar@yahoo.com.ar>
 
 2002-01-10 17:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/pp/pptable.c
@@ -58384,7 +58436,7 @@ e.vc
 
 2001-07-24 20:45  GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +doc/es/math.txt
-      *Math docs translated to spanish. Thanks for Ricardo Ram챥z R.
+      *Math docs translated to spanish. Thanks for Ricardo Ramirez R.
 
 2001-07-24  08:45 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>/Jose Lalin <dezac@corevia.com>
    * source/compiler/gencobj.c
@@ -59751,7 +59803,7 @@ e.vc
       new Harbour License and Exception with permission from
       Andi Jahja <andijahja@cbn.net.id>,
       April White <awhite@mail.rosecom.ca>,
-      Ignacio_Ortiz_de_Z� <ignacio@ozs.com>,
+      Ignacio_Ortiz_de_Zuniga <ignacio@ozs.com>,
       Kwon,OJun (Charles Kwon) <charles@fivetech.net>, and
       Phil Barnett <midnight@the-oasis.net>
 
@@ -62198,7 +62250,7 @@ NOTE: there is no hb_gcLockItem/hb_gcUnlockItem functions - please remove
 
 2001-03-14 04:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/classes.c
-     ! Fixed hb_param() to hb_stackItemFromBase() (posted by Jos矆. Gim譥z)
+     ! Fixed hb_param() to hb_stackItemFromBase() (posted by Jose F. Gimenez)
 
 2001-03-13 03:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.txt
@@ -62223,7 +62275,7 @@ NOTE: there is no hb_gcLockItem/hb_gcUnlockItem functions - please remove
   * source/lang/msgeo.c
     ! Updated
     + Added harbour license
-    ( provided by Jos© Lal­n <dezac@corevia.com> )
+    ( provided by Jose Lalin <dezac@corevia.com> )
 
 2001-03-11 21:43 UTC+0500 April <awhite@user.rose.com>
    * doc/en/hb_macro.txt
@@ -81119,7 +81171,7 @@ Tue Nov 09 11:56:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
       rewritten and continued in C++, which is also Open Source, and you can
       find it at http://www.nexus.hu/cccpp/
 
-      This great contribution was made by Levente Csisz r <lcsiszar@index.hu>
+      This great contribution was made by Levente Csiszar <lcsiszar@index.hu>
 
 19991109-01:09 GMT+1 Viktor Szakats <info@szelvesz.hu>
   * source/rtl/filesys.c
@@ -83437,7 +83489,7 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
    * source/rtl/memoline.c
      source/rtl/mlcount.c
      ! TAB handling fixes for MEMOLINE() and MLCOUNT() by
-       Ignacio Ortiz de Z� <ignacio@fivetech.com>
+       Ignacio Ortiz de Zuniga <ignacio@fivetech.com>
      * All USHORTs changed to ULONG.
 
 19991006-13:05 GMT+1 Viktor Szakats <info@szelvesz.hu>
@@ -83639,7 +83691,7 @@ Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     source/rtl/Makefile
     doc/funclist.txt
     + MEMOLINE() added
-      (thanks to Ignacio Ortiz de Z� <ignacio@fivetech.com>)
+      (thanks to Ignacio Ortiz de Zuniga <ignacio@fivetech.com>)
       !! WARNING !! Please modify non-GNU make files.
 
 19991005-18:20 GMT+1 Viktor Szakats <info@szelvesz.hu>
@@ -83854,7 +83906,7 @@ Mon Oct 04 12:52:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     source/rtl/Makefile
     doc/funclist.txt
     + MLCOUNT() added
-      (thanks to Ignacio Ortiz de Z� <ignacio@fivetech.com>)
+      (thanks to Ignacio Ortiz de Zuniga <ignacio@fivetech.com>)
   - source/runner/stdalone/runner.prg
     - Removed (now for sure)
 
