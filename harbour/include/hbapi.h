@@ -958,12 +958,12 @@ extern PHB_ITEM   hb_memvarGetItem( PHB_SYMB pMemvarSymb );
 /* console I/O subsystem */
 extern void     hb_conInit( void ); /* initialize the console API system */
 extern void     hb_conRelease( void ); /* release the console API system */
-extern char *   hb_conNewLine( void ); /* retrieve a pointer to a static buffer containing new-line characters */
-extern void     hb_conOutStd( const char * pStr, ULONG ulLen ); /* output an string to STDOUT */
-extern void     hb_conOutErr( const char * pStr, ULONG ulLen ); /* output an string to STDERR */
-extern void     hb_conOutAlt( const char * pStr, ULONG ulLen ); /* output an string to the screen and/or printer and/or alternate */
-extern USHORT   hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor ); /* retrieve and optionally set cursor shape */
-extern char *   hb_conSetColor( const char * szColor ); /* retrieve and optionally set console color */
+extern HB_EXPORT char *   hb_conNewLine( void ); /* retrieve a pointer to a static buffer containing new-line characters */
+extern HB_EXPORT void     hb_conOutStd( const char * pStr, ULONG ulLen ); /* output an string to STDOUT */
+extern HB_EXPORT void     hb_conOutErr( const char * pStr, ULONG ulLen ); /* output an string to STDERR */
+extern HB_EXPORT void     hb_conOutAlt( const char * pStr, ULONG ulLen ); /* output an string to the screen and/or printer and/or alternate */
+extern HB_EXPORT USHORT   hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor ); /* retrieve and optionally set cursor shape */
+extern HB_EXPORT char *   hb_conSetColor( const char * szColor ); /* retrieve and optionally set console color */
 
 /* compiler and macro compiler */
 extern const char * hb_compReservedName( const char * szName ); /* determines if a string contains a reserve word */
@@ -1001,18 +1001,18 @@ extern void   hb_idleReset( void ); /* services a single idle state */
 extern void   hb_idleSleep( double dSeconds ); /* sleep for a given time serving idle task */
 
 /* misc */
-extern char *       hb_verPlatform( void );        /* retrieves a newly allocated buffer containing platform version */
-extern char *       hb_verCompiler( void );        /* retrieves a newly allocated buffer containing compiler version */
-extern char *       hb_verHarbour( void );         /* retrieves a newly allocated buffer containing harbour version */
-extern char *       hb_verPCode( void );           /* retrieves a newly allocated buffer containing PCode version */
-extern char *       hb_verBuildDate( void );       /* retrieves a newly allocated buffer containing build date and time */
-extern void         hb_verBuildInfo( void );       /* display harbour, compiler, and platform versions to standard console */
-extern int          hb_verSvnID( void );           /* retrieves ChangeLog SVN revision number */
-extern const char * hb_verSvnChangeLogID( void );  /* retrieves a static buffer containing ChangeLog ID string */
-extern const char * hb_verSvnLastEntry( void );    /* retrieves a static buffer containing ChangeLog last entry string */
-extern const char * hb_verFlagsC( void );          /* retrieves a static buffer containing build time C compiler flags in C_USR envvar */
-extern const char * hb_verFlagsL( void );          /* retrieves a static buffer containing build time linker flags in L_USR envvar */
-extern const char * hb_verFlagsPRG( void );        /* retrieves a static buffer containing build time Harbour compiler flags in PRG_USR envvar */
+extern HB_EXPORT char *       hb_verPlatform( void );        /* retrieves a newly allocated buffer containing platform version */
+extern HB_EXPORT char *       hb_verCompiler( void );        /* retrieves a newly allocated buffer containing compiler version */
+extern HB_EXPORT char *       hb_verHarbour( void );         /* retrieves a newly allocated buffer containing harbour version */
+extern HB_EXPORT char *       hb_verPCode( void );           /* retrieves a newly allocated buffer containing PCode version */
+extern HB_EXPORT char *       hb_verBuildDate( void );       /* retrieves a newly allocated buffer containing build date and time */
+extern HB_EXPORT void         hb_verBuildInfo( void );       /* display harbour, compiler, and platform versions to standard console */
+extern HB_EXPORT int          hb_verSvnID( void );           /* retrieves ChangeLog SVN revision number */
+extern HB_EXPORT const char * hb_verSvnChangeLogID( void );  /* retrieves a static buffer containing ChangeLog ID string */
+extern HB_EXPORT const char * hb_verSvnLastEntry( void );    /* retrieves a static buffer containing ChangeLog last entry string */
+extern HB_EXPORT const char * hb_verFlagsC( void );          /* retrieves a static buffer containing build time C compiler flags in C_USR envvar */
+extern HB_EXPORT const char * hb_verFlagsL( void );          /* retrieves a static buffer containing build time linker flags in L_USR envvar */
+extern HB_EXPORT const char * hb_verFlagsPRG( void );        /* retrieves a static buffer containing build time Harbour compiler flags in PRG_USR envvar */
 
 extern HB_EXPORT BOOL   hb_iswinnt( void ); /* return .T. if OS == Windows NT, 2000, XP */
 extern HB_EXPORT BOOL   hb_iswince( void ); /* return .T. if OS is Windows CE or Windows Mobile */

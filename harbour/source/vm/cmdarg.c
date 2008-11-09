@@ -466,25 +466,25 @@ ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
 }
 
 /* ChangeLog SVN revision number */
-int hb_verSvnID( void )
+HB_EXPORT int hb_verSvnID( void )
 {
    return HB_VER_SVNID;
 }
 
 /* ChangeLog ID string */
-const char * hb_verSvnChangeLogID( void )
+HB_EXPORT const char * hb_verSvnChangeLogID( void )
 {
    return HB_VER_CHLID;
 }
 
 /* ChangeLog last entry string */
-const char * hb_verSvnLastEntry( void )
+HB_EXPORT const char * hb_verSvnLastEntry( void )
 {
    return HB_VER_LENTRY;
 }
 
 /* build time C compiler flags in C_USR envvar */
-const char * hb_verFlagsC( void )
+HB_EXPORT const char * hb_verFlagsC( void )
 {
 #ifdef HB_VER_C_USR
    return HB_VER_C_USR;
@@ -494,7 +494,7 @@ const char * hb_verFlagsC( void )
 }
 
 /* build time linker flags in L_USR envvar */
-const char * hb_verFlagsL( void )
+HB_EXPORT const char * hb_verFlagsL( void )
 {
 #ifdef HB_VER_L_USR
    return HB_VER_L_USR;
@@ -504,7 +504,7 @@ const char * hb_verFlagsL( void )
 }
 
 /* build time Harbour compiler flags in PRG_USR envvar */
-const char * hb_verFlagsPRG( void )
+HB_EXPORT const char * hb_verFlagsPRG( void )
 {
 #ifdef HB_VER_PRG_USR
    return HB_VER_PRG_USR;

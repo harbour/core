@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 16:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+    ! Added hbpp.lib and hbcommon.lib to HBRUN_DLL liblist.
+
+  * include/hbapi.h
+  * source/vm/cmdarg.c
+  * source/common/hbver.c
+  * source/common/hbverdsp.c
+  * source/rtl/console.c
+  * source/rtl/setcolor.c
+  * source/rtl/setcurs.c
+    + Added HB_EXPORT to some functions to make it possible 
+      to build hbrun-dll.exe.
+      For other reasons, it only works if Harbour built with 
+      set C_USR=-DHB_DYNLIB.
+    ; TODO: Make HB_DYNLIB the default build mode, do gradual 
+            steps to remove separate DLL building pass, and 
+            finally to remove HB_BUILD_DLL option.
+            The only drawback will be about 10-100K 
+            (currently) overhead in final executable size due 
+            to included export table for BCC and MSVC builds.
+
 2008-11-09 15:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/xhb/hboutdbg.c
     ! Fixed to compile without warnings and with more 

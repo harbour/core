@@ -910,7 +910,7 @@ $(LDFLAGS)
 $(HBRUNDLL_OBJS: = ^
 )
 $(HARBOUR_DLL:.dll=.lib)
-$(COMPILER_LIB)
+$(COMPILER_LIB) $(PP_LIB) $(COMMON_LIB)
 <<$(HB_KEEPSTATE)
 #----------------------------------------------------------
 $(DLL_OBJ_DIR)\mainstd$(OBJEXT) : $(VM_DIR)\mainstd.c

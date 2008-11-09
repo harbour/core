@@ -54,7 +54,7 @@
 #include "hbapigt.h"
 #include "hbset.h"
 
-char * hb_conSetColor( const char * szColor )
+HB_EXPORT char * hb_conSetColor( const char * szColor )
 {
    char * szOldColor;
 

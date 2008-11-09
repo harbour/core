@@ -104,7 +104,7 @@
          osVer.szCSDVersion (Win32). [vszakats] */
 #define PLATFORM_BUF_SIZE 255
 
-char * hb_verPlatform( void )
+HB_EXPORT char * hb_verPlatform( void )
 {
    char * pszPlatform;
 
@@ -343,7 +343,7 @@ HB_EXPORT BOOL hb_iswince( void )
 
 #define COMPILER_BUF_SIZE 80
 
-char * hb_verCompiler( void )
+HB_EXPORT char * hb_verCompiler( void )
 {
    char * pszCompiler;
    const char * pszName;
@@ -550,7 +550,7 @@ char * hb_verCompiler( void )
    CA-Cl*pper 5.3b returns: "Clipper (R) 5.3b Intl. (Rev. 338) (1997.04.25)"
 */
 
-char * hb_verHarbour( void )
+HB_EXPORT char * hb_verHarbour( void )
 {
    char * pszVersion;
 
@@ -564,7 +564,7 @@ char * hb_verHarbour( void )
    return pszVersion;
 }
 
-char * hb_verPCode( void )
+HB_EXPORT char * hb_verPCode( void )
 {
    char * pszPCode;
 
@@ -577,7 +577,7 @@ char * hb_verPCode( void )
    return pszPCode;
 }
 
-char * hb_verBuildDate( void )
+HB_EXPORT char * hb_verBuildDate( void )
 {
    char * pszDate;
 
