@@ -521,6 +521,12 @@ $(HBTESTDLL_EXE) :: $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBTEST_EXE_OBJS:$(OBJ_DIR)
     $(LINKER) $(LDFLAGS) @&&!
 c0x32.obj $**, $@,,$(HARBOUR_DLL:$(DLLEXT)=$(LIBEXT)) cw32mt$(RTLIBSUFFIX).lib import32.lib
 !
+#**********************************************************
+$(HBRUNDLL_EXE) :: BasicLibs BasicExes
+$(HBRUNDLL_EXE) :: $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBRUN_EXE_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
+    $(LINKER) $(LDFLAGS) @&&!
+c0x32.obj $**, $@,,$(HARBOUR_DLL:$(DLLEXT)=$(LIBEXT)) cw32mt$(RTLIBSUFFIX).lib import32.lib $(COMPILER_LIB)
+!
 #----------------------------------------------------------
 $(DLL_OBJ_DIR)\mainstd$(OBJEXT) : $(VM_DIR)\mainstd.c
     $(CC) $(CEXEFLAGSDLL) -o$@ $**

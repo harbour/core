@@ -901,6 +901,17 @@ $(HBTESTDLL_OBJS: = ^
 )
 $(HARBOUR_DLL:.dll=.lib)
 <<$(HB_KEEPSTATE)
+#**********************************************************
+HBRUNDLL_OBJS = $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBRUN_EXE_OBJS:obj\vc=obj\dll\vc)
+$(HBRUNDLL_EXE) : $(HARBOUR_DLL) $(HBRUNDLL_OBJS)
+    $(LINKER) @<<
+$(LDFLAGS)
+/out:$(HBRUNDLL_EXE)
+$(HBRUNDLL_OBJS: = ^
+)
+$(HARBOUR_DLL:.dll=.lib)
+$(COMPILER_LIB)
+<<$(HB_KEEPSTATE)
 #----------------------------------------------------------
 $(DLL_OBJ_DIR)\mainstd$(OBJEXT) : $(VM_DIR)\mainstd.c
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $**
