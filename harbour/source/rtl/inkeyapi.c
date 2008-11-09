@@ -52,7 +52,7 @@
 
 #include "hbgtcore.h"
 
-HB_EXPORT int  hb_inkey( BOOL fWait, double dSeconds, int iEventMask )
+int  hb_inkey( BOOL fWait, double dSeconds, int iEventMask )
 {
    int iKey = 0;
    PHB_GT pGT;
@@ -68,7 +68,7 @@ HB_EXPORT int  hb_inkey( BOOL fWait, double dSeconds, int iEventMask )
    return iKey;
 }
 
-HB_EXPORT void hb_inkeyPut( int iKey )
+void hb_inkeyPut( int iKey )
 {
    PHB_GT pGT;
 
@@ -82,7 +82,7 @@ HB_EXPORT void hb_inkeyPut( int iKey )
    }
 }
 
-HB_EXPORT void hb_inkeyIns( int iKey )
+void hb_inkeyIns( int iKey )
 {
    PHB_GT pGT;
 
@@ -96,7 +96,7 @@ HB_EXPORT void hb_inkeyIns( int iKey )
    }
 }
 
-HB_EXPORT int  hb_inkeyLast( int iEventMask )
+int  hb_inkeyLast( int iEventMask )
 {
    int iKey = 0;
    PHB_GT pGT;
@@ -112,7 +112,7 @@ HB_EXPORT int  hb_inkeyLast( int iEventMask )
    return iKey;
 }
 
-HB_EXPORT int  hb_inkeyNext( int iEventMask )
+int  hb_inkeyNext( int iEventMask )
 {
    int iKey = 0;
    PHB_GT pGT;
@@ -128,7 +128,7 @@ HB_EXPORT int  hb_inkeyNext( int iEventMask )
    return iKey;
 }
 
-HB_EXPORT void hb_inkeyPoll( void )
+void hb_inkeyPoll( void )
 {
    PHB_GT pGT;
 
@@ -142,7 +142,7 @@ HB_EXPORT void hb_inkeyPoll( void )
    }
 }
 
-HB_EXPORT int  hb_inkeySetLast( int iKey )
+int  hb_inkeySetLast( int iKey )
 {
    int iLast = 0;
    PHB_GT pGT;
@@ -158,7 +158,7 @@ HB_EXPORT int  hb_inkeySetLast( int iKey )
    return iLast;
 }
 
-HB_EXPORT void hb_inkeySetText( const char * szText, ULONG ulLen )
+void hb_inkeySetText( const char * szText, ULONG ulLen )
 {
    PHB_GT pGT;
 
@@ -172,7 +172,7 @@ HB_EXPORT void hb_inkeySetText( const char * szText, ULONG ulLen )
    }
 }
 
-HB_EXPORT void hb_inkeyReset( void )
+void hb_inkeyReset( void )
 {
    PHB_GT pGT;
 
@@ -186,7 +186,7 @@ HB_EXPORT void hb_inkeyReset( void )
    }
 }
 
-HB_EXPORT void hb_inkeySetCancelKeys( int iCancelKey, int iCancelKeyEx )
+void hb_inkeySetCancelKeys( int iCancelKey, int iCancelKeyEx )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeySetCancelKeys(%d,%d)", iCancelKey, iCancelKeyEx));
 

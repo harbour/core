@@ -80,10 +80,10 @@ static PHB_DYNS s_pBUFFER;
 static PHB_DYNS s_pDEVALUE;
 
 HB_EXTERN_BEGIN
-HB_EXPORT char * hb_parcstruct( int iParam, ... );
+char * hb_parcstruct( int iParam, ... );
 HB_EXTERN_END
 
-HB_EXPORT char * hb_parcstruct( int iParam, ... )
+char * hb_parcstruct( int iParam, ... )
 {
    HB_THREAD_STUB_ANY
 

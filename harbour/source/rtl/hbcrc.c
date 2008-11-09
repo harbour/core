@@ -149,7 +149,7 @@ static const ULONG crc16_tab[] =
 };
 
 
-HB_EXPORT ULONG hb_crc32( ULONG crc, const BYTE *buf, ULONG len )
+ULONG hb_crc32( ULONG crc, const BYTE *buf, ULONG len )
 {
    crc ^= 0xffffffffL;
    if( buf && len )
@@ -161,7 +161,7 @@ HB_EXPORT ULONG hb_crc32( ULONG crc, const BYTE *buf, ULONG len )
    return crc ^ 0xffffffffL;
 }
 
-HB_EXPORT ULONG hb_crc16( ULONG crc, const BYTE *buf, ULONG len )
+ULONG hb_crc16( ULONG crc, const BYTE *buf, ULONG len )
 {
    crc ^= 0xffff;
    if( buf && len )
@@ -173,7 +173,7 @@ HB_EXPORT ULONG hb_crc16( ULONG crc, const BYTE *buf, ULONG len )
    return crc ^ 0xffff;
 }
 
-HB_EXPORT HB_ULONG hb_crc( HB_ULONG crc, const BYTE * buf, ULONG len, HB_ULONG poly )
+HB_ULONG hb_crc( HB_ULONG crc, const BYTE * buf, ULONG len, HB_ULONG poly )
 {
    if( buf && len )
    {
@@ -203,7 +203,7 @@ HB_EXPORT HB_ULONG hb_crc( HB_ULONG crc, const BYTE * buf, ULONG len, HB_ULONG p
    return crc;
 }
 
-HB_EXPORT HB_ULONG hb_crcct( HB_ULONG crc, const BYTE * buf, ULONG len, HB_ULONG poly )
+HB_ULONG hb_crcct( HB_ULONG crc, const BYTE * buf, ULONG len, HB_ULONG poly )
 {
    if( buf && len )
    {

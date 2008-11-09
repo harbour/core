@@ -87,7 +87,7 @@ extern void hb_fhnd_ForceLink( void );
 /*
  * Function that adds zero or more paths to a list of pathnames to search
  */
-HB_EXPORT void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList )
+void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList )
 {
    char * pPath;
    char * pDelim;
@@ -118,7 +118,7 @@ HB_EXPORT void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchL
 /*
  * free list of pathnames to search
  */
-HB_EXPORT void hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList )
+void hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList )
 {
    HB_PATHNAMES * pNext;
 
@@ -137,7 +137,7 @@ HB_EXPORT void hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList )
 }
 
 /* Split given filename into path, name and extension, plus determine drive */
-HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
+PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 {
    PHB_FNAME pFileName;
    char * pszPos, cDirSep;
@@ -230,7 +230,7 @@ HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
  */
 
 /* This function joins path, name and extension into a string with a filename */
-HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
+char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 {
    const char * pszName;
    char cDirSep;
@@ -291,7 +291,7 @@ HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
    return pszFileName;
 }
 
-HB_EXPORT BOOL hb_fsNameExists( const char * pszFileName )
+BOOL hb_fsNameExists( const char * pszFileName )
 {
    BOOL fExist;
    BOOL fFree;
@@ -342,7 +342,7 @@ HB_EXPORT BOOL hb_fsNameExists( const char * pszFileName )
    return fExist;
 }
 
-HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
+BOOL hb_fsFileExists( const char * pszFileName )
 {
    BOOL fExist;
    BOOL fFree;
@@ -402,7 +402,7 @@ HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
    return fExist;
 }
 
-HB_EXPORT BOOL hb_fsDirExists( const char * pszDirName )
+BOOL hb_fsDirExists( const char * pszDirName )
 {
    BOOL fExist;
    BOOL fFree;
@@ -461,7 +461,7 @@ HB_EXPORT BOOL hb_fsDirExists( const char * pszDirName )
    return fExist;
 }
 
-HB_EXPORT BOOL hb_fsMaxFilesError( void )
+BOOL hb_fsMaxFilesError( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsMaxFilesError()"));
 

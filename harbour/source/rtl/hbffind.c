@@ -789,7 +789,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    return bFound;
 }
 
-HB_EXPORT PHB_FFIND hb_fsFindFirst( const char * pszFileMask, ULONG attrmask )
+PHB_FFIND hb_fsFindFirst( const char * pszFileMask, ULONG attrmask )
 {
    PHB_FFIND ffind;
 
@@ -820,7 +820,7 @@ HB_EXPORT PHB_FFIND hb_fsFindFirst( const char * pszFileMask, ULONG attrmask )
 /* Finds next matching file, and applies a filter which makes 
    searching CA-Cl*pper/MS-DOS compatible. */
 
-HB_EXPORT BOOL hb_fsFindNext( PHB_FFIND ffind )
+BOOL hb_fsFindNext( PHB_FFIND ffind )
 {
    while( hb_fsFindNextLow( ffind ) )
    {
@@ -838,7 +838,7 @@ HB_EXPORT BOOL hb_fsFindNext( PHB_FFIND ffind )
    return FALSE;
 }
 
-HB_EXPORT void hb_fsFindClose( PHB_FFIND ffind )
+void hb_fsFindClose( PHB_FFIND ffind )
 {
    if( ffind )
    {

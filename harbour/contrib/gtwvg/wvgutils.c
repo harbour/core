@@ -1298,7 +1298,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 //  Helper routine.  Take an input pointer, return closest
 //  pointer that is aligned on a DWORD (4 byte) boundary.
 //
-HB_EXPORT LPWORD lpwAlign( LPWORD lpIn )
+LPWORD lpwAlign( LPWORD lpIn )
 {
    HB_PTRDIFF ul = ( HB_PTRDIFF ) lpIn;
 
@@ -1310,7 +1310,7 @@ HB_EXPORT LPWORD lpwAlign( LPWORD lpIn )
 
 //-----------------------------------------------------------------------------
 
-HB_EXPORT int nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn )
+int nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn )
 {
    int nChar = 0;
 

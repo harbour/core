@@ -61,14 +61,14 @@ static BOOL s_bToLogFile     = TRUE;
 
 static BOOL s_bEmptyLogFile  = TRUE;
 
-HB_EXPORT BOOL hb_ToOutDebugOnOff( BOOL bOnOff )
+BOOL hb_ToOutDebugOnOff( BOOL bOnOff )
 {
    BOOL bOld = s_bToOutputDebug;
    s_bToOutputDebug = bOnOff;
    return bOld;
 }
 
-HB_EXPORT void hb_ToOutDebug( const char * sTraceMsg, ... )
+void hb_ToOutDebug( const char * sTraceMsg, ... )
 {
    if( sTraceMsg && s_bToOutputDebug )
    {
@@ -83,21 +83,21 @@ HB_EXPORT void hb_ToOutDebug( const char * sTraceMsg, ... )
    }
 }
 
-HB_EXPORT BOOL hb_ToLogFileOnOff( BOOL bOnOff )
+BOOL hb_ToLogFileOnOff( BOOL bOnOff )
 {
    BOOL bOld = s_bToLogFile;
    s_bToLogFile = bOnOff;
    return bOld;
 }
 
-HB_EXPORT BOOL hb_EmptyLogFile( BOOL bOnOff )
+BOOL hb_EmptyLogFile( BOOL bOnOff )
 {
    BOOL bOld = s_bEmptyLogFile;
    s_bEmptyLogFile = bOnOff;
    return bOld;
 }
 
-HB_EXPORT void hb_ToLogFile( const char * sFile, const char * sTraceMsg, ... )
+void hb_ToLogFile( const char * sFile, const char * sTraceMsg, ... )
 {
    if( s_bToLogFile )
    {

@@ -71,7 +71,7 @@
 #define HB_EXPONENT_MASK      ( ( 1 << HB_EXPONENT_BITS ) - 1 )
 #define HB_EXPONENT_ADD       0x3ff
 
-HB_EXPORT void hb_put_ieee754( BYTE * ptr, double d )
+void hb_put_ieee754( BYTE * ptr, double d )
 {
    int iExp, iSig;
    double df;
@@ -119,7 +119,7 @@ HB_EXPORT void hb_put_ieee754( BYTE * ptr, double d )
 #endif
 }
 
-HB_EXPORT double hb_get_ieee754( BYTE * ptr )
+double hb_get_ieee754( BYTE * ptr )
 {
    int iExp, iSig;
 #if defined( HB_LONG_LONG_OFF )
@@ -159,7 +159,7 @@ HB_EXPORT double hb_get_ieee754( BYTE * ptr )
 #endif
 }
 
-HB_EXPORT void hb_put_ord_ieee754( BYTE * ptr, double d )
+void hb_put_ord_ieee754( BYTE * ptr, double d )
 {
    int iExp, iSig;
    double df;
@@ -194,7 +194,7 @@ HB_EXPORT void hb_put_ord_ieee754( BYTE * ptr, double d )
    HB_PUT_BE_UINT32( ptr + 4, l1 );
 }
 
-HB_EXPORT double hb_get_ord_ieee754( BYTE * ptr )
+double hb_get_ord_ieee754( BYTE * ptr )
 {
    int iExp, iSig;
    UINT32 l1, l2;
@@ -225,7 +225,7 @@ HB_EXPORT double hb_get_ord_ieee754( BYTE * ptr )
  * some compilers does not like constraction used by in HB_GET_LE_DOUBLE
  * macro => d = { ... }
  */
-HB_EXPORT double hb_get_rev_double( BYTE * ptr )
+double hb_get_rev_double( BYTE * ptr )
 {
    union {
       double dbl;
@@ -246,7 +246,7 @@ HB_EXPORT double hb_get_rev_double( BYTE * ptr )
    return u.dbl;
 }
 
-HB_EXPORT double hb_get_std_double( BYTE * ptr )
+double hb_get_std_double( BYTE * ptr )
 {
    union {
       double dbl;
@@ -275,7 +275,7 @@ HB_EXPORT double hb_get_std_double( BYTE * ptr )
  * values. They are necessary for extracting such number from PCODE,
  * databases or serialization streams in RPC
  */
-HB_EXPORT double hb_get_le_uint64( BYTE * ptr )
+double hb_get_le_uint64( BYTE * ptr )
 {
    UINT32 l1, l2;
 
@@ -286,7 +286,7 @@ HB_EXPORT double hb_get_le_uint64( BYTE * ptr )
    return ldexp( ( double ) l2, 32 ) + ( double ) l1;
 }
 
-HB_EXPORT double hb_get_le_int64( BYTE * ptr )
+double hb_get_le_int64( BYTE * ptr )
 {
    UINT32 l1;
    INT32 l2;
@@ -298,7 +298,7 @@ HB_EXPORT double hb_get_le_int64( BYTE * ptr )
    return ldexp( ( double ) l2, 32 ) + ( double ) l1;
 }
 
-HB_EXPORT void hb_put_le_uint64( BYTE * ptr, double d )
+void hb_put_le_uint64( BYTE * ptr, double d )
 {
    UINT32 l1, l2;
 

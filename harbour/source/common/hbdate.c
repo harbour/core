@@ -82,7 +82,7 @@
 
 #define HB_STR_DATE_BASE      1721060     /* 0000/01/01 */
 
-HB_EXPORT LONG hb_dateEncode( int iYear, int iMonth, int iDay )
+LONG hb_dateEncode( int iYear, int iMonth, int iDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateEncode(%d, %d, %d)", iYear, iMonth, iDay));
 
@@ -111,7 +111,7 @@ HB_EXPORT LONG hb_dateEncode( int iYear, int iMonth, int iDay )
    return 0;
 }
 
-HB_EXPORT void hb_dateDecode( LONG lJulian, int *piYear, int *piMonth, int *piDay )
+void hb_dateDecode( LONG lJulian, int *piYear, int *piMonth, int *piDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateDecode(%ld, %p, %p, %p)", lJulian, piYear, piMonth, piDay));
 
@@ -139,7 +139,7 @@ HB_EXPORT void hb_dateDecode( LONG lJulian, int *piYear, int *piMonth, int *piDa
    }
 }
 
-HB_EXPORT void hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay )
+void hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateStrPut(%p, %d, %d, %d)", szDate, iYear, iMonth, iDay));
 
@@ -162,7 +162,7 @@ HB_EXPORT void hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay )
    }
 }
 
-HB_EXPORT void hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, int * piDay )
+void hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, int * piDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateStrGet(%s, %p, %p, %p)", szDate, piYear, piMonth, piDay));
 
@@ -200,7 +200,7 @@ HB_EXPORT void hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, 
 /* This function always closes the date with a zero byte, so it needs a
    9 character long buffer. */
 
-HB_EXPORT char * hb_dateDecStr( char * szDate, LONG lJulian )
+char * hb_dateDecStr( char * szDate, LONG lJulian )
 {
    int iYear, iMonth, iDay;
 
@@ -220,7 +220,7 @@ HB_EXPORT char * hb_dateDecStr( char * szDate, LONG lJulian )
    return szDate;
 }
 
-HB_EXPORT LONG hb_dateEncStr( const char * szDate )
+LONG hb_dateEncStr( const char * szDate )
 {
    int  iYear, iMonth, iDay;
 
@@ -231,7 +231,7 @@ HB_EXPORT LONG hb_dateEncStr( const char * szDate )
    return hb_dateEncode( iYear, iMonth, iDay );
 }
 
-HB_EXPORT int hb_dateJulianDOW( LONG lJulian )
+int hb_dateJulianDOW( LONG lJulian )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateJulianDOW(%ld)", lJulian));
 
@@ -241,7 +241,7 @@ HB_EXPORT int hb_dateJulianDOW( LONG lJulian )
       return 0;
 }
 
-HB_EXPORT int hb_dateDOW( int iYear, int iMonth, int iDay )
+int hb_dateDOW( int iYear, int iMonth, int iDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateDOW(%d, %d, %d)", iYear, iMonth, iDay));
 
@@ -257,7 +257,7 @@ HB_EXPORT int hb_dateDOW( int iYear, int iMonth, int iDay )
             iYear + iYear / 4 - iYear / 100 + iYear / 400 + 6 ) % 7 + 1;
 }
 
-HB_EXPORT void hb_dateToday( int * piYear, int * piMonth, int * piDay )
+void hb_dateToday( int * piYear, int * piMonth, int * piDay )
 {
 #if defined(HB_OS_WIN_32)
 
@@ -297,7 +297,7 @@ HB_EXPORT void hb_dateToday( int * piYear, int * piMonth, int * piDay )
 
 /* NOTE: The passed buffer must be at least 9 chars long */
 
-HB_EXPORT void hb_dateTimeStr( char * pszTime )
+void hb_dateTimeStr( char * pszTime )
 {
 #if defined(HB_OS_WIN_32)
    {
@@ -327,7 +327,7 @@ HB_EXPORT void hb_dateTimeStr( char * pszTime )
 #endif
 }
 
-HB_EXPORT LONG hb_timeStampEncode( int iHour, int iMinutes, int iSeconds, int iMSec )
+LONG hb_timeStampEncode( int iHour, int iMinutes, int iSeconds, int iMSec )
 {
    LONG lMillisec;
 
@@ -349,7 +349,7 @@ HB_EXPORT LONG hb_timeStampEncode( int iHour, int iMinutes, int iSeconds, int iM
    return lMillisec;
 }
 
-HB_EXPORT void hb_timeStampDecode( LONG lMillisec, int * piHour, int * piMinutes,
+void hb_timeStampDecode( LONG lMillisec, int * piHour, int * piMinutes,
                                    int * piSeconds, int * piMSec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_timeStampDecode(%ld, %p, %p, %p, %p)", lMillisec, piHour, piMinutes, piSeconds, piMSec));
@@ -376,7 +376,7 @@ HB_EXPORT void hb_timeStampDecode( LONG lMillisec, int * piHour, int * piMinutes
 /* This function always closes the time with a zero byte, so it needs a
    13 character long buffer. */
 
-HB_EXPORT char * hb_timeStampStr( char * szTime, LONG lMillisec )
+char * hb_timeStampStr( char * szTime, LONG lMillisec )
 {
    int iHour, iMinutes, iSeconds, iMSec;
 
@@ -393,7 +393,7 @@ HB_EXPORT char * hb_timeStampStr( char * szTime, LONG lMillisec )
 /* This function always closes the time with a zero byte, so it needs a
    24 character long buffer. */
 
-HB_EXPORT char * hb_dateTimeStampStr( char * szDateTime, LONG lJulian, LONG lMillisec )
+char * hb_dateTimeStampStr( char * szDateTime, LONG lJulian, LONG lMillisec )
 {
    int iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec;
 
@@ -408,7 +408,7 @@ HB_EXPORT char * hb_dateTimeStampStr( char * szDateTime, LONG lJulian, LONG lMil
    return szDateTime;
 }
 
-HB_EXPORT void hb_timeStrGet( const char * szTime, int * piHour, int * piMinutes,
+void hb_timeStrGet( const char * szTime, int * piHour, int * piMinutes,
                               int * piSeconds, int * piMSec )
 {
    int iHour, iMinutes, iSeconds, iMSec;
@@ -459,7 +459,7 @@ HB_EXPORT void hb_timeStrGet( const char * szTime, int * piHour, int * piMinutes
       *piMSec = iMSec;
 }
 
-HB_EXPORT void hb_dateTimeStampStrGet( const char * szDateTime, LONG * plJulian, LONG * plMillisec )
+void hb_dateTimeStampStrGet( const char * szDateTime, LONG * plJulian, LONG * plMillisec )
 {
    int iLen;
 

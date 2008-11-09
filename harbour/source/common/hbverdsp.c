@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbmemory.ch"
 
-HB_EXPORT void hb_verBuildInfo( void )
+void hb_verBuildInfo( void )
 {
    hb_conOutErr( "Harbour Build Info", 0 );
    hb_conOutErr( hb_conNewLine(), 0 );

@@ -145,7 +145,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant );
 static PHB_ITEM SafeArrayToArray( SAFEARRAY * parray, UINT iDim, long * rgIndices, VARTYPE vt );
 
 /* ----------------------------------------------------------------------- */
-HB_EXPORT BSTR hb_oleAnsiToSysString( const char * cString )
+BSTR hb_oleAnsiToSysString( const char * cString )
 {
    int nConvertedLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cString, -1, NULL, 0 );
 
@@ -163,7 +163,7 @@ HB_EXPORT BSTR hb_oleAnsiToSysString( const char * cString )
 }
 
 /* ----------------------------------------------------------------------- */
-HB_EXPORT LPWSTR hb_oleAnsiToWide( LPSTR cString )
+LPWSTR hb_oleAnsiToWide( LPSTR cString )
 {
    int nConvertedLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cString, -1, NULL, 0 );
 
@@ -249,7 +249,7 @@ HB_FUNC( ANSITOWIDE )  /* ( cAnsiStr ) -> cWideStr */
 }
 
 /* ----------------------------------------------------------------------- */
-HB_EXPORT LPSTR hb_oleWideToAnsi( BSTR wString )
+LPSTR hb_oleWideToAnsi( BSTR wString )
 {
    int nConvertedLen = WideCharToMultiByte( CP_ACP, 0, wString, -1, NULL, 0, NULL, NULL );
 
@@ -286,7 +286,7 @@ HB_FUNC( WIDETOANSI )  /* ( cWideStr, nLen ) -> cAnsiStr */
 }
 
 /* ----------------------------------------------------------------------- */
-HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
+void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
 {
    BOOL bByRef;
    VARIANT mVariant;

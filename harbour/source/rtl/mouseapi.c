@@ -70,7 +70,7 @@
  */
 /* C callable interface */
 
-HB_EXPORT BOOL hb_mouseIsPresent( void )
+BOOL hb_mouseIsPresent( void )
 {
    BOOL fPresent = FALSE;
    PHB_GT pGT;
@@ -86,7 +86,7 @@ HB_EXPORT BOOL hb_mouseIsPresent( void )
    return fPresent;
 }
 
-HB_EXPORT BOOL hb_mouseGetCursor( void )
+BOOL hb_mouseGetCursor( void )
 {
    BOOL fVisible = FALSE;
    PHB_GT pGT;
@@ -102,7 +102,7 @@ HB_EXPORT BOOL hb_mouseGetCursor( void )
    return fVisible;
 }
 
-HB_EXPORT void hb_mouseSetCursor( BOOL fVisible )
+void hb_mouseSetCursor( BOOL fVisible )
 {
    PHB_GT pGT;
 
@@ -116,7 +116,7 @@ HB_EXPORT void hb_mouseSetCursor( BOOL fVisible )
    }
 }
 
-HB_EXPORT int hb_mouseCol( void )
+int hb_mouseCol( void )
 {
    int iCol = 0;
    PHB_GT pGT;
@@ -132,7 +132,7 @@ HB_EXPORT int hb_mouseCol( void )
    return iCol;
 }
 
-HB_EXPORT int hb_mouseRow( void )
+int hb_mouseRow( void )
 {
    int iRow = 0;
    PHB_GT pGT;
@@ -148,7 +148,7 @@ HB_EXPORT int hb_mouseRow( void )
    return iRow;
 }
 
-HB_EXPORT void hb_mouseGetPos( int * piRow, int * piCol )
+void hb_mouseGetPos( int * piRow, int * piCol )
 {
    PHB_GT pGT;
 
@@ -162,7 +162,7 @@ HB_EXPORT void hb_mouseGetPos( int * piRow, int * piCol )
    }
 }
 
-HB_EXPORT void hb_mouseSetPos( int iRow, int iCol )
+void hb_mouseSetPos( int iRow, int iCol )
 {
    PHB_GT pGT;
 
@@ -176,7 +176,7 @@ HB_EXPORT void hb_mouseSetPos( int iRow, int iCol )
    }
 }
 
-HB_EXPORT void hb_mouseSetBounds( int iTop, int iLeft, int iBottom, int iRight )
+void hb_mouseSetBounds( int iTop, int iLeft, int iBottom, int iRight )
 {
    PHB_GT pGT;
 
@@ -190,7 +190,7 @@ HB_EXPORT void hb_mouseSetBounds( int iTop, int iLeft, int iBottom, int iRight )
    }
 }
 
-HB_EXPORT void hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
+void hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
 {
    PHB_GT pGT;
 
@@ -204,7 +204,7 @@ HB_EXPORT void hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int
    }
 }
 
-HB_EXPORT int hb_mouseStorageSize( void )
+int hb_mouseStorageSize( void )
 {
    int iSize = 0;
    PHB_GT pGT;
@@ -220,7 +220,7 @@ HB_EXPORT int hb_mouseStorageSize( void )
    return iSize;
 }
 
-HB_EXPORT void hb_mouseSaveState( BYTE * pBuffer )
+void hb_mouseSaveState( BYTE * pBuffer )
 {
    PHB_GT pGT;
 
@@ -234,7 +234,7 @@ HB_EXPORT void hb_mouseSaveState( BYTE * pBuffer )
    }
 }
 
-HB_EXPORT void hb_mouseRestoreState( BYTE * pBuffer )
+void hb_mouseRestoreState( BYTE * pBuffer )
 {
    PHB_GT pGT;
 
@@ -248,7 +248,7 @@ HB_EXPORT void hb_mouseRestoreState( BYTE * pBuffer )
    }
 }
 
-HB_EXPORT int hb_mouseGetDoubleClickSpeed( void )
+int hb_mouseGetDoubleClickSpeed( void )
 {
    int iSpeed = 0;
    PHB_GT pGT;
@@ -264,7 +264,7 @@ HB_EXPORT int hb_mouseGetDoubleClickSpeed( void )
    return iSpeed;
 }
 
-HB_EXPORT void hb_mouseSetDoubleClickSpeed( int iSpeed )
+void hb_mouseSetDoubleClickSpeed( int iSpeed )
 {
    PHB_GT pGT;
 
@@ -278,7 +278,7 @@ HB_EXPORT void hb_mouseSetDoubleClickSpeed( int iSpeed )
    }
 }
 
-HB_EXPORT int hb_mouseCountButton( void )
+int hb_mouseCountButton( void )
 {
    int iButtons = 0;
    PHB_GT pGT;
@@ -294,7 +294,7 @@ HB_EXPORT int hb_mouseCountButton( void )
    return iButtons;
 }
 
-HB_EXPORT BOOL hb_mouseButtonState( int iButton )
+BOOL hb_mouseButtonState( int iButton )
 {
    BOOL fPressed = FALSE;
    PHB_GT pGT;
@@ -310,7 +310,7 @@ HB_EXPORT BOOL hb_mouseButtonState( int iButton )
    return fPressed;
 }
 
-HB_EXPORT BOOL hb_mouseButtonPressed( int iButton, int * piRow, int * piCol )
+BOOL hb_mouseButtonPressed( int iButton, int * piRow, int * piCol )
 {
    BOOL fPressed = FALSE;
    PHB_GT pGT;
@@ -326,7 +326,7 @@ HB_EXPORT BOOL hb_mouseButtonPressed( int iButton, int * piRow, int * piCol )
    return fPressed;
 }
 
-HB_EXPORT BOOL hb_mouseButtonReleased( int iButton, int * piRow, int * piCol )
+BOOL hb_mouseButtonReleased( int iButton, int * piRow, int * piCol )
 {
    BOOL fReleased = FALSE;
    PHB_GT pGT;
@@ -342,7 +342,7 @@ HB_EXPORT BOOL hb_mouseButtonReleased( int iButton, int * piRow, int * piCol )
    return fReleased;
 }
 
-HB_EXPORT int hb_mouseReadKey( int iEventMask )
+int hb_mouseReadKey( int iEventMask )
 {
    int iKey = 0;
    PHB_GT pGT;

@@ -8,6 +8,57 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 17:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtwvg/wvgcore.c
+  * contrib/gtwvg/wvgutils.c
+  * contrib/hbwin/win_dll.c
+  * contrib/hbwin/win_ole.c
+  * contrib/xhb/cstructc.c
+  * contrib/xhb/dbgfxc.c
+  * source/common/hbarch.c
+  * source/common/hbdate.c
+  * source/common/hbfsapi.c
+  * source/common/hbstr.c
+  * source/common/hbver.c
+  * source/common/hbverdsp.c
+  * source/debug/dbgentry.c
+  * source/main/harbour.c
+  * source/rdd/dbf1.c
+  * source/rdd/nulsys/nulsys.c
+  * source/rdd/wacore.c
+  * source/rdd/wafunc.c
+  * source/rdd/workarea.c
+  * source/rtl/cdpapi.c
+  * source/rtl/console.c
+  * source/rtl/dates.c
+  * source/rtl/errorint.c
+  * source/rtl/file.c
+  * source/rtl/filesys.c
+  * source/rtl/fscopy.c
+  * source/rtl/fserror.c
+  * source/rtl/fstemp.c
+  * source/rtl/gtapi.c
+  * source/rtl/gtapiu.c
+  * source/rtl/hbadler.c
+  * source/rtl/hbcrc.c
+  * source/rtl/hbffind.c
+  * source/rtl/hbgtcore.c
+  * source/rtl/hbmd5.c
+  * source/rtl/inkeyapi.c
+  * source/rtl/isprint.c
+  * source/rtl/math.c
+  * source/rtl/mouseapi.c
+  * source/rtl/seconds.c
+  * source/rtl/setcolor.c
+  * source/rtl/setcurs.c
+  * source/rtl/strmatch.c
+  * source/vm/hvm.c
+    % Removed HB_EXPORT from function definitions.
+      Placing it in declaration is enough.
+
+  * source/debug/dbgentry.c
+    * Formatting.
+
 2008-11-09 16:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbcurl/hbcurl.c
   * contrib/hbcurl/hbcurl.ch

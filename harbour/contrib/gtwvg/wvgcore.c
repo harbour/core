@@ -99,7 +99,7 @@ HB_FUNC( WVT_CORE )
 
 //-------------------------------------------------------------------//
 
-HB_EXPORT void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
+void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
 {
    USHORT irow, icol, j;
 
@@ -124,7 +124,7 @@ HB_EXPORT void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, U
 
 //-------------------------------------------------------------------//
 
-HB_EXPORT void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
+void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
 {
    USHORT irow, icol, j;
 
@@ -147,7 +147,7 @@ HB_EXPORT void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, U
 //
 //               Courtesy - Augusto Infante - Thanks
 //
-HB_EXPORT IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection )
+IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection )
 {
    HRSRC  res      = 0;
    LPVOID iPicture = NULL;
@@ -186,7 +186,7 @@ HB_EXPORT IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR 
 
 //--------------------------------------------------------------------//
 
-HB_EXPORT IPicture * hb_wvt_gtLoadPicture( char * cImage )
+IPicture * hb_wvt_gtLoadPicture( char * cImage )
 {
    IStream  *iStream;
    LPVOID   iPicture = NULL;
@@ -225,7 +225,7 @@ HB_EXPORT IPicture * hb_wvt_gtLoadPicture( char * cImage )
 
 //-------------------------------------------------------------------//
 
-BOOL HB_EXPORT hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture )
+BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -321,7 +321,7 @@ BOOL HB_EXPORT hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture 
 
 //-------------------------------------------------------------------//
 
-BOOL HB_EXPORT hb_wvt_gtDestroyPicture( IPicture * iPicture )
+BOOL hb_wvt_gtDestroyPicture( IPicture * iPicture )
 {
    BOOL bResult = FALSE;
 
@@ -336,7 +336,7 @@ BOOL HB_EXPORT hb_wvt_gtDestroyPicture( IPicture * iPicture )
 
 //-------------------------------------------------------------------//
 
-POINT  HB_EXPORT hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row )
+POINT  hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -354,7 +354,7 @@ POINT  HB_EXPORT hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row )
 //
 //-------------------------------------------------------------------//
 
-HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
+BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -460,7 +460,7 @@ HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM w
 
 //-------------------------------------------------------------------//
 
-HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
+BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -574,7 +574,7 @@ HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM w
 
 //-------------------------------------------------------------------//
 
-HB_EXPORT BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image )
+BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image )
 {
   HGLOBAL  hGlobal;
   HANDLE   hFile;

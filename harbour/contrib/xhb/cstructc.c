@@ -113,7 +113,7 @@ static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, ULONG
 #ifdef hb_retclenAdoptRaw
    #undef hb_retclenAdoptRaw
 #endif
-HB_EXPORT void hb_retclenAdoptRaw( const char * szText, ULONG ulLen )
+void hb_retclenAdoptRaw( const char * szText, ULONG ulLen )
 {
    hb_itemPutCRaw( hb_stackReturnItem(), szText, ulLen );
 }
@@ -121,7 +121,7 @@ HB_EXPORT void hb_retclenAdoptRaw( const char * szText, ULONG ulLen )
 #ifdef hb_retclenStatic
    #undef hb_retclenStatic
 #endif
-HB_EXPORT void hb_retclenStatic( const char * szText, ULONG ulLen )
+void hb_retclenStatic( const char * szText, ULONG ulLen )
 {
    hb_itemPutCRawStatic( hb_stackReturnItem(), szText, ulLen );
 }

@@ -140,7 +140,7 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
    }
 }
 
-HB_EXPORT void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
+void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
 {
    hb_errInternalRaw( ulIntCode, szText, szPar1, szPar2 );
 

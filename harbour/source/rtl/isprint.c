@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-HB_EXPORT BOOL hb_printerIsReady( char * pszPrinterName )
+BOOL hb_printerIsReady( char * pszPrinterName )
 {
    BOOL bIsPrinter;
 

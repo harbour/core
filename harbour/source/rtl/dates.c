@@ -56,7 +56,7 @@
 #include "hbdate.h"
 #include "hbset.h"
 
-HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat )
+char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat )
 {
    /*
     * NOTE: szFormattedDate must point to a buffer of at least 11 bytes.
@@ -234,7 +234,7 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
    return szFormattedDate;
 }
 
-HB_EXPORT long hb_dateUnformat( const char * szDate, const char * szDateFormat )
+long hb_dateUnformat( const char * szDate, const char * szDateFormat )
 {
    int d_value = 0, m_value = 0, y_value = 0;
 

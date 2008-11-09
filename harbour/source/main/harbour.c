@@ -359,7 +359,7 @@ static int  s_iDirCase  = HB_SET_CASE_MIXED;
 static BOOL s_fFnTrim   = FALSE;
 static char s_cDirSep   = HB_OS_PATH_DELIM_CHR;
 
-HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
+BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 {
    if( s_fFnTrim || s_cDirSep != HB_OS_PATH_DELIM_CHR ||
        s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
@@ -451,7 +451,7 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
    return szFileName;
 }
 
-HB_EXPORT int hb_setGetDirSeparator( void )
+int hb_setGetDirSeparator( void )
 {
    return s_cDirSep;
 }

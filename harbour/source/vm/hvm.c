@@ -10882,7 +10882,7 @@ HB_LANG_REQUEST( HB_LANG_DEFAULT )
 
 #ifdef HB_FORCE_LINK_MAIN
 HB_EXTERN_BEGIN
-extern HB_EXPORT void HB_FORCE_LINK_MAIN( void );
+extern void HB_FORCE_LINK_MAIN( void );
 HB_EXTERN_END
 void _hb_forceLinkMain()
 {

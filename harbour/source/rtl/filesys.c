@@ -536,7 +536,7 @@ static USHORT convert_seek_flags( USHORT uiFlags )
  * filesys.api functions:
  */
 
-HB_EXPORT HB_FHANDLE hb_fsGetOsHandle( HB_FHANDLE hFileHandle )
+HB_FHANDLE hb_fsGetOsHandle( HB_FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsGetOsHandle(%p)", hFileHandle));
 
@@ -547,7 +547,7 @@ HB_EXPORT HB_FHANDLE hb_fsGetOsHandle( HB_FHANDLE hFileHandle )
 #endif
 }
 
-HB_EXPORT HB_FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
+HB_FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
 {
    HB_FHANDLE hFileHandle = FS_ERROR;
 
@@ -652,7 +652,7 @@ HB_EXPORT HB_FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
    return hFileHandle;
 }
 
-HB_EXPORT HB_FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
+HB_FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 {
    HB_FHANDLE hFileHandle;
    BOOL fFree;
@@ -712,7 +712,7 @@ HB_EXPORT HB_FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
    return hFileHandle;
 }
 
-HB_EXPORT HB_FHANDLE hb_fsCreate( BYTE * pFilename, ULONG ulAttr )
+HB_FHANDLE hb_fsCreate( BYTE * pFilename, ULONG ulAttr )
 {
    HB_FHANDLE hFileHandle;
    BOOL fFree;
@@ -772,7 +772,7 @@ HB_EXPORT HB_FHANDLE hb_fsCreate( BYTE * pFilename, ULONG ulAttr )
          [vszakats]
  */
 
-HB_EXPORT HB_FHANDLE hb_fsCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFlags )
+HB_FHANDLE hb_fsCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFlags )
 {
    HB_FHANDLE hFileHandle;
    BOOL fFree;
@@ -824,7 +824,7 @@ HB_EXPORT HB_FHANDLE hb_fsCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFla
    return hFileHandle;
 }
 
-HB_EXPORT void hb_fsClose( HB_FHANDLE hFileHandle )
+void hb_fsClose( HB_FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsClose(%p)", hFileHandle));
 
@@ -845,7 +845,7 @@ HB_EXPORT void hb_fsClose( HB_FHANDLE hFileHandle )
 #endif
 }
 
-HB_EXPORT BOOL hb_fsSetDevMode( HB_FHANDLE hFileHandle, USHORT uiDevMode )
+BOOL hb_fsSetDevMode( HB_FHANDLE hFileHandle, USHORT uiDevMode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetDevMode(%p, %hu)", hFileHandle, uiDevMode));
 
@@ -926,7 +926,7 @@ HB_EXPORT BOOL hb_fsSetDevMode( HB_FHANDLE hFileHandle, USHORT uiDevMode )
 #endif
 }
 
-HB_EXPORT BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plMillisec )
+BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plMillisec )
 {
    BOOL fResult;
 
@@ -1002,7 +1002,7 @@ HB_EXPORT BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plM
    return fResult;
 }
 
-HB_EXPORT BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
+BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
 {
    BOOL fResult;
    BOOL fFree;
@@ -1087,7 +1087,7 @@ HB_EXPORT BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
    return fResult;
 }
 
-HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )
+BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )
 {
    BOOL fResult;
    int iYear, iMonth, iDay;
@@ -1256,7 +1256,7 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
    return fResult;
 }
 
-HB_EXPORT BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
+BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
 {
    BOOL fResult;
    BOOL fFree;
@@ -1360,7 +1360,7 @@ HB_EXPORT BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
    return fResult;
 }
 
-HB_EXPORT USHORT hb_fsRead( HB_FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
+USHORT hb_fsRead( HB_FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 {
    USHORT uiRead;
 
@@ -1400,7 +1400,7 @@ HB_EXPORT USHORT hb_fsRead( HB_FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount
    return uiRead;
 }
 
-HB_EXPORT USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const BYTE * pBuff, USHORT uiCount )
+USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const BYTE * pBuff, USHORT uiCount )
 {
    USHORT uiWritten;
 
@@ -1460,7 +1460,7 @@ HB_EXPORT USHORT hb_fsWrite( HB_FHANDLE hFileHandle, const BYTE * pBuff, USHORT 
    return uiWritten;
 }
 
-HB_EXPORT ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
+ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
    ULONG ulRead;
 
@@ -1540,7 +1540,7 @@ HB_EXPORT ULONG hb_fsReadLarge( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCo
    return ulRead;
 }
 
-HB_EXPORT ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount )
+ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount )
 {
    ULONG ulWritten;
 
@@ -1642,7 +1642,7 @@ HB_EXPORT ULONG hb_fsWriteLarge( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULO
    return ulWritten;
 }
 
-HB_EXPORT ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
+ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
 {
    ULONG ulRead;
 
@@ -1701,7 +1701,7 @@ HB_EXPORT ULONG hb_fsReadAt( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount
    return ulRead;
 }
 
-HB_EXPORT ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
+ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount, HB_FOFFSET llOffset )
 {
    ULONG ulWritten;
 
@@ -1760,7 +1760,7 @@ HB_EXPORT ULONG hb_fsWriteAt( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG 
    return ulWritten;
 }
 
-HB_EXPORT BOOL hb_fsTruncAt( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset )
+BOOL hb_fsTruncAt( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset )
 {
    BOOL fResult;
 
@@ -1805,7 +1805,7 @@ HB_EXPORT BOOL hb_fsTruncAt( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset )
    return fResult;
 }
 
-HB_EXPORT void hb_fsCommit( HB_FHANDLE hFileHandle )
+void hb_fsCommit( HB_FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCommit(%p)", hFileHandle));
 
@@ -1886,7 +1886,7 @@ HB_EXPORT void hb_fsCommit( HB_FHANDLE hFileHandle )
 #endif
 }
 
-HB_EXPORT BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
+BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
                           ULONG ulLength, USHORT uiMode )
 {
    BOOL bResult;
@@ -2090,7 +2090,7 @@ HB_EXPORT BOOL hb_fsLock( HB_FHANDLE hFileHandle, ULONG ulStart,
    return bResult;
 }
 
-HB_EXPORT BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
+BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
                                HB_FOFFSET ulLength, USHORT uiMode )
 {
    BOOL bResult;
@@ -2204,7 +2204,7 @@ HB_EXPORT BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
    return bResult;
 }
 
-HB_EXPORT ULONG hb_fsSeek( HB_FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
+ULONG hb_fsSeek( HB_FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 {
    ULONG ulPos;
 
@@ -2290,7 +2290,7 @@ HB_EXPORT ULONG hb_fsSeek( HB_FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags 
    return ulPos;
 }
 
-HB_EXPORT HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT uiFlags )
+HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT uiFlags )
 {
    HB_FOFFSET llPos;
 
@@ -2356,14 +2356,14 @@ HB_EXPORT HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset
    return llPos;
 }
 
-HB_EXPORT ULONG hb_fsTell( HB_FHANDLE hFileHandle )
+ULONG hb_fsTell( HB_FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsTell(%p)", hFileHandle));
 
    return hb_fsSeek( hFileHandle, 0, FS_RELATIVE );
 }
 
-HB_EXPORT BOOL hb_fsDelete( BYTE * pFilename )
+BOOL hb_fsDelete( BYTE * pFilename )
 {
    BOOL bResult;
    BOOL fFree;
@@ -2399,7 +2399,7 @@ HB_EXPORT BOOL hb_fsDelete( BYTE * pFilename )
    return bResult;
 }
 
-HB_EXPORT BOOL hb_fsRename( BYTE * pOldName, BYTE * pNewName )
+BOOL hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 {
    BOOL bResult;
    BOOL fFreeOld, fFreeNew;
@@ -2438,7 +2438,7 @@ HB_EXPORT BOOL hb_fsRename( BYTE * pOldName, BYTE * pNewName )
    return bResult;
 }
 
-HB_EXPORT BOOL hb_fsMkDir( BYTE * pDirname )
+BOOL hb_fsMkDir( BYTE * pDirname )
 {
    BOOL bResult;
    BOOL fFree;
@@ -2482,7 +2482,7 @@ HB_EXPORT BOOL hb_fsMkDir( BYTE * pDirname )
    return bResult;
 }
 
-HB_EXPORT BOOL hb_fsChDir( BYTE * pDirname )
+BOOL hb_fsChDir( BYTE * pDirname )
 {
    BOOL bResult;
    BOOL fFree;
@@ -2518,7 +2518,7 @@ HB_EXPORT BOOL hb_fsChDir( BYTE * pDirname )
    return bResult;
 }
 
-HB_EXPORT BOOL hb_fsRmDir( BYTE * pDirname )
+BOOL hb_fsRmDir( BYTE * pDirname )
 {
    BOOL bResult;
    BOOL fFree;
@@ -2557,7 +2557,7 @@ HB_EXPORT BOOL hb_fsRmDir( BYTE * pDirname )
 /* NOTE: This is not thread safe function, it's there for compatibility. */
 /* NOTE: 0 = current drive, 1 = A, 2 = B, 3 = C, etc. */
 
-HB_EXPORT BYTE * hb_fsCurDir( USHORT uiDrive )
+BYTE * hb_fsCurDir( USHORT uiDrive )
 {
    BYTE * pbyDirBuffer;
 
@@ -2572,7 +2572,7 @@ HB_EXPORT BYTE * hb_fsCurDir( USHORT uiDrive )
 /* NOTE: Thread safe version of hb_fsCurDir() */
 /* NOTE: 0 = current drive, 1 = A, 2 = B, 3 = C, etc. */
 
-HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
+USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
 {
    USHORT uiCurDrv = uiDrive, usError;
    BOOL fResult;
@@ -2678,7 +2678,7 @@ HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen 
 
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
 
-HB_EXPORT USHORT hb_fsChDrv( BYTE nDrive )
+USHORT hb_fsChDrv( BYTE nDrive )
 {
    USHORT uiResult;
 
@@ -2726,7 +2726,7 @@ HB_EXPORT USHORT hb_fsChDrv( BYTE nDrive )
           the drive before checking. hb_fsIsDrv only returns TRUE
           if there is a disk in the drive. */
 
-HB_EXPORT USHORT hb_fsIsDrv( BYTE nDrive )
+USHORT hb_fsIsDrv( BYTE nDrive )
 {
    USHORT uiResult;
 
@@ -2784,7 +2784,7 @@ HB_EXPORT USHORT hb_fsIsDrv( BYTE nDrive )
    return uiResult;
 }
 
-HB_EXPORT BOOL hb_fsIsDevice( HB_FHANDLE hFileHandle )
+BOOL hb_fsIsDevice( HB_FHANDLE hFileHandle )
 {
    BOOL bResult;
 
@@ -2821,7 +2821,7 @@ HB_EXPORT BOOL hb_fsIsDevice( HB_FHANDLE hFileHandle )
 
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
 
-HB_EXPORT BYTE hb_fsCurDrv( void )
+BYTE hb_fsCurDrv( void )
 {
    UINT uiResult;
 
@@ -2846,7 +2846,7 @@ HB_EXPORT BYTE hb_fsCurDrv( void )
 /* convert file name for hb_fsExtOpen
  * caller must free the returned buffer
  */
-HB_EXPORT BYTE * hb_fsExtName( BYTE * pFilename, BYTE * pDefExt,
+BYTE * hb_fsExtName( BYTE * pFilename, BYTE * pDefExt,
                                USHORT uiExFlags, BYTE * pPaths )
 {
    HB_PATHNAMES * pNextPath;
@@ -2921,7 +2921,7 @@ HB_EXPORT BYTE * hb_fsExtName( BYTE * pFilename, BYTE * pDefExt,
    return szPath;
 }
 
-HB_EXPORT HB_FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
+HB_FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
                                    USHORT uiExFlags, BYTE * pPaths,
                                    PHB_ITEM pError )
 {
@@ -3036,7 +3036,7 @@ HB_EXPORT HB_FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
    return hFile;
 }
 
-HB_EXPORT BOOL hb_fsEof( HB_FHANDLE hFileHandle )
+BOOL hb_fsEof( HB_FHANDLE hFileHandle )
 {
    BOOL fResult;
 
@@ -3075,7 +3075,7 @@ HB_EXPORT BOOL hb_fsEof( HB_FHANDLE hFileHandle )
    return fResult;
 }
 
-HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
+BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 {
    int iFileCase, iDirCase;
    char cDirSep;
@@ -3187,7 +3187,7 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 
 #ifdef HB_LEGACY_LEVEL
 
-HB_EXPORT BYTE * hb_fileNameConv( char * szFileName )
+BYTE * hb_fileNameConv( char * szFileName )
 {
    BOOL fFree;
    BYTE * szNew;

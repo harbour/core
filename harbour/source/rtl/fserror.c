@@ -177,7 +177,7 @@ static int hb_WinToDosError( ULONG ulError )
 #endif
 
 /* return FERROR() code */
-HB_EXPORT USHORT hb_fsGetFError( void )
+USHORT hb_fsGetFError( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsGetFError()"));
 
@@ -185,7 +185,7 @@ HB_EXPORT USHORT hb_fsGetFError( void )
 }
 
 /* return DOS error code of last operation */
-HB_EXPORT USHORT hb_fsError( void )
+USHORT hb_fsError( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsError()"));
 
@@ -193,7 +193,7 @@ HB_EXPORT USHORT hb_fsError( void )
 }
 
 /* return real error code of last operation */
-HB_EXPORT USHORT hb_fsOsError( void )
+USHORT hb_fsOsError( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsOsError()"));
 
@@ -201,7 +201,7 @@ HB_EXPORT USHORT hb_fsOsError( void )
 }
 
 /* set FERROR() code */
-HB_EXPORT void hb_fsSetFError( USHORT uiError )
+void hb_fsSetFError( USHORT uiError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetFError(%hu)", uiError));
 
@@ -209,7 +209,7 @@ HB_EXPORT void hb_fsSetFError( USHORT uiError )
 }
 
 /* set DOS error code for last operation */
-HB_EXPORT void  hb_fsSetError( USHORT uiError )
+void  hb_fsSetError( USHORT uiError )
 {
    PHB_IOERRORS pIOErrors;
 
@@ -221,7 +221,7 @@ HB_EXPORT void  hb_fsSetError( USHORT uiError )
 }
 
 /* set error code for last operation */
-HB_EXPORT void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
+void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
 {
    USHORT uiOsErrorLast, uiErrorLast;
    PHB_IOERRORS pIOErrors;

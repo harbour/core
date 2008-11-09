@@ -54,33 +54,33 @@
 #include "hbapi.h"
 #include "hbapirdd.h"
 
-HB_EXPORT ERRCODE hb_rddSelectWorkAreaAlias( const char * szName )
+ERRCODE hb_rddSelectWorkAreaAlias( const char * szName )
 {
    HB_SYMBOL_UNUSED( szName );
 
    return FAILURE;
 }
 
-HB_EXPORT ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
+ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
 {
    HB_SYMBOL_UNUSED( iArea );
 
    return FAILURE;
 }
 
-HB_EXPORT ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
+ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
 {
    HB_SYMBOL_UNUSED( pSymAlias );
 
    return FAILURE;
 }
 
-HB_EXPORT int hb_rddGetCurrentWorkAreaNumber( void )
+int hb_rddGetCurrentWorkAreaNumber( void )
 {
    return 0;
 }
 
-HB_EXPORT ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
@@ -88,7 +88,7 @@ HB_EXPORT ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
    return FAILURE;
 }
 
-HB_EXPORT ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
@@ -96,7 +96,7 @@ HB_EXPORT ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
    return FAILURE;
 }
 
-HB_EXPORT ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
@@ -104,7 +104,7 @@ HB_EXPORT ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol 
    return FAILURE;
 }
 
-HB_EXPORT ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
@@ -112,7 +112,7 @@ HB_EXPORT ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol 
    return FAILURE;
 }
 
-HB_EXPORT ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
+ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
 {
    HB_SYMBOL_UNUSED( szAlias );
    HB_SYMBOL_UNUSED( iArea );
@@ -120,9 +120,9 @@ HB_EXPORT ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
    return FAILURE;
 }
 
-HB_EXPORT void hb_rddCloseAll( void ) {}
+void hb_rddCloseAll( void ) {}
 
-HB_EXPORT void hb_rddShutDown( void ) {}
+void hb_rddShutDown( void ) {}
 
 
 HB_FUNC( RDDSYS ) {}

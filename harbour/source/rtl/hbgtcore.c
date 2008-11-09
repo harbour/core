@@ -3061,19 +3061,19 @@ static const HB_GT_FUNCS s_gtCoreFunc =
 static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
 
 #if defined(HB_GT_LIB)
-   HB_EXPORT const char * hb_gt_szNameDefault = HB_GT_DRVNAME( HB_GT_LIB );
+   const char * hb_gt_szNameDefault = HB_GT_DRVNAME( HB_GT_LIB );
 #elif defined(HB_WINCE)
-   HB_EXPORT const char * hb_gt_szNameDefault = "wvt";
+   const char * hb_gt_szNameDefault = "wvt";
 #elif defined(HB_OS_WIN_32)
-   HB_EXPORT const char * hb_gt_szNameDefault = "win";
+   const char * hb_gt_szNameDefault = "win";
 #elif defined(HB_OS_DOS)
-   HB_EXPORT const char * hb_gt_szNameDefault = "dos";
+   const char * hb_gt_szNameDefault = "dos";
 #elif defined(HB_OS_OS2)
-   HB_EXPORT const char * hb_gt_szNameDefault = "os2";
+   const char * hb_gt_szNameDefault = "os2";
 #elif defined(HB_OS_UNIX)
-   HB_EXPORT const char * hb_gt_szNameDefault = "trm";
+   const char * hb_gt_szNameDefault = "trm";
 #else
-   HB_EXPORT const char * hb_gt_szNameDefault = "std";
+   const char * hb_gt_szNameDefault = "std";
 #endif
 
 static const HB_GT_INIT * s_gtInit[ HB_GT_MAX_ ];
@@ -3115,13 +3115,13 @@ static int hb_gt_FindEntry( const char * pszID )
    return -1;
 }
 
-HB_EXPORT void hb_gtSetDefault( const char * szGtName )
+void hb_gtSetDefault( const char * szGtName )
 {
    hb_strncpy( s_gtNameBuf, szGtName, sizeof( s_gtNameBuf ) - 1 );
    hb_gt_szNameDefault = s_gtNameBuf;
 }
 
-HB_EXPORT BOOL hb_gtRegister( const HB_GT_INIT * gtInit )
+BOOL hb_gtRegister( const HB_GT_INIT * gtInit )
 {
    if( s_iGtCount < HB_GT_MAX_ && hb_gt_FindEntry( gtInit->id ) == -1 )
    {
@@ -3133,7 +3133,7 @@ HB_EXPORT BOOL hb_gtRegister( const HB_GT_INIT * gtInit )
    return FALSE;
 }
 
-HB_EXPORT PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
+PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
 {
    int iPos;
 
@@ -3184,7 +3184,7 @@ HB_EXPORT PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSup
    return NULL;
 }
 
-HB_EXPORT void * hb_gtAlloc( void * hGT )
+void * hb_gtAlloc( void * hGT )
 {
    PHB_GT pGT;
 
@@ -3206,7 +3206,7 @@ HB_EXPORT void * hb_gtAlloc( void * hGT )
    return ( void * ) pGT;
 }
 
-HB_EXPORT void hb_gtRelease( void * hGT )
+void hb_gtRelease( void * hGT )
 {
    PHB_GT pGT;
 
@@ -3233,7 +3233,7 @@ HB_EXPORT void hb_gtRelease( void * hGT )
    }
 }
 
-HB_EXPORT void hb_gtAttach( void * hGT )
+void hb_gtAttach( void * hGT )
 {
    if( hGT && hGT != hb_stackGetGT() )
    {
@@ -3242,7 +3242,7 @@ HB_EXPORT void hb_gtAttach( void * hGT )
    }
 }
 
-HB_EXPORT void * hb_gtSwap( void * hGT )
+void * hb_gtSwap( void * hGT )
 {
    void * hCurrGT = hb_stackGetGT();
 
@@ -3251,7 +3251,7 @@ HB_EXPORT void * hb_gtSwap( void * hGT )
    return hCurrGT;
 }
 
-HB_EXPORT BOOL hb_gtReload( const char * szGtName,
+BOOL hb_gtReload( const char * szGtName,
                             HB_FHANDLE hFilenoStdin,
                             HB_FHANDLE hFilenoStdout,
                             HB_FHANDLE hFilenoStderr )
@@ -3267,7 +3267,7 @@ HB_EXPORT BOOL hb_gtReload( const char * szGtName,
    return fResult;
 }
 
-HB_EXPORT void * hb_gtCreate( const char * szGtName,
+void * hb_gtCreate( const char * szGtName,
                               HB_FHANDLE hFilenoStdin,
                               HB_FHANDLE hFilenoStdout,
                               HB_FHANDLE hFilenoStderr )
@@ -3300,7 +3300,7 @@ static BOOL hb_gtTryInit( const char * szGtName, BOOL fFree )
    return hb_stackGetGT() != NULL;
 }
 
-HB_EXPORT void hb_gtStartupInit( void )
+void hb_gtStartupInit( void )
 {
    if( hb_gtTryInit( hb_cmdargString( "GT" ), TRUE ) )
       return;

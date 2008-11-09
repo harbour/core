@@ -55,7 +55,7 @@
 
 #define HB_FSCOPY_BUFFERSIZE    16384
 
-HB_EXPORT BOOL hb_fsCopy( const BYTE * pSource, const BYTE * pDest )
+BOOL hb_fsCopy( const BYTE * pSource, const BYTE * pDest )
 {
    BOOL bRetVal = TRUE;
    HB_FHANDLE fhndSource;

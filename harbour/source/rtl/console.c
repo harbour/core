@@ -187,7 +187,7 @@ void hb_conRelease( void )
    hb_fsSetDevMode( s_hFilenoStderr, FD_TEXT );
 }
 
-HB_EXPORT char * hb_conNewLine( void )
+char * hb_conNewLine( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conNewLine()"));
 
@@ -200,7 +200,7 @@ HB_FUNC( HB_OSNEWLINE )
 }
 
 /* Output an item to STDOUT */
-HB_EXPORT void hb_conOutStd( const char * pStr, ULONG ulLen )
+void hb_conOutStd( const char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutStd(%s, %lu)", pStr, ulLen));
 
@@ -212,7 +212,7 @@ HB_EXPORT void hb_conOutStd( const char * pStr, ULONG ulLen )
 }
 
 /* Output an item to STDERR */
-HB_EXPORT void hb_conOutErr( const char * pStr, ULONG ulLen )
+void hb_conOutErr( const char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutErr(%s, %lu)", pStr, ulLen));
 
@@ -224,7 +224,7 @@ HB_EXPORT void hb_conOutErr( const char * pStr, ULONG ulLen )
 }
 
 /* Output an item to the screen and/or printer and/or alternate */
-HB_EXPORT void hb_conOutAlt( const char * pStr, ULONG ulLen )
+void hb_conOutAlt( const char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutAlt(%s, %lu)", pStr, ulLen));
 

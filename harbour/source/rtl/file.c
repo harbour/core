@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-HB_EXPORT BOOL hb_fsFile( BYTE * pFilename )
+BOOL hb_fsFile( BYTE * pFilename )
 {
    PHB_FFIND ffind;
    BOOL fFree;
@@ -76,7 +76,7 @@ HB_EXPORT BOOL hb_fsFile( BYTE * pFilename )
    return FALSE;
 }
 
-HB_EXPORT BOOL hb_fsIsDirectory( BYTE * pFilename )
+BOOL hb_fsIsDirectory( BYTE * pFilename )
 {
    BOOL bResult = FALSE, fFree;
    PHB_FFIND ffind;

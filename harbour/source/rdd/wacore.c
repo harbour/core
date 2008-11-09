@@ -166,7 +166,7 @@ static void hb_waNodeDelete( PHB_STACKRDD pRddInfo )
 /*
  * Return the next free WorkArea for later use.
  */
-HB_EXPORT ERRCODE hb_rddSelectFirstAvailable( void )
+ERRCODE hb_rddSelectFirstAvailable( void )
 {
    PHB_STACKRDD pRddInfo;
    USHORT uiArea;
@@ -191,7 +191,7 @@ HB_EXPORT ERRCODE hb_rddSelectFirstAvailable( void )
 /*
  * Creare and insert the new WorkArea node
  */
-HB_EXPORT USHORT hb_rddInsertAreaNode( const char *szDriver )
+USHORT hb_rddInsertAreaNode( const char *szDriver )
 {
    PHB_STACKRDD pRddInfo;
    LPRDDNODE pRddNode;
@@ -227,7 +227,7 @@ HB_EXPORT USHORT hb_rddInsertAreaNode( const char *szDriver )
  * Closes and releases the current WorkArea preparing it
  * to be used with a new database.
  */
-HB_EXPORT void hb_rddReleaseCurrentArea( void )
+void hb_rddReleaseCurrentArea( void )
 {
    PHB_STACKRDD pRddInfo;
    AREAP pArea;
@@ -250,7 +250,7 @@ HB_EXPORT void hb_rddReleaseCurrentArea( void )
 /*
  * Closes all WorkAreas.
  */
-HB_EXPORT void hb_rddCloseAll( void )
+void hb_rddCloseAll( void )
 {
    PHB_STACKRDD pRddInfo;
 
@@ -301,7 +301,7 @@ HB_EXPORT void hb_rddCloseAll( void )
    }
 }
 
-HB_EXPORT void hb_rddFlushAll( void )
+void hb_rddFlushAll( void )
 {
    PHB_STACKRDD pRddInfo = hb_stackRDD();
    USHORT uiArea = hb_rddGetCurrentWorkAreaNumber(), uiIndex;
@@ -314,7 +314,7 @@ HB_EXPORT void hb_rddFlushAll( void )
    hb_rddSelectWorkAreaNumber( uiArea );
 }
 
-HB_EXPORT void hb_rddUnLockAll( void )
+void hb_rddUnLockAll( void )
 {
    PHB_STACKRDD pRddInfo = hb_stackRDD();
    USHORT uiArea = hb_rddGetCurrentWorkAreaNumber(), uiIndex;
@@ -330,7 +330,7 @@ HB_EXPORT void hb_rddUnLockAll( void )
 /*
  * call a pCallBack function with all open workareas ###
  */
-HB_EXPORT ERRCODE hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo )
+ERRCODE hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo )
 {
    PHB_STACKRDD pRddInfo;
    ERRCODE errCode = SUCCESS;
@@ -348,12 +348,12 @@ HB_EXPORT ERRCODE hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo )
    return errCode;
 }
 
-HB_EXPORT BOOL hb_rddGetNetErr( void )
+BOOL hb_rddGetNetErr( void )
 {
    return hb_stackRDD()->fNetError;
 }
 
-HB_EXPORT void hb_rddSetNetErr( BOOL fNetErr )
+void hb_rddSetNetErr( BOOL fNetErr )
 {
    hb_stackRDD()->fNetError = fNetErr;
 }
@@ -361,7 +361,7 @@ HB_EXPORT void hb_rddSetNetErr( BOOL fNetErr )
 /*
  * Get (/set) default RDD driver
  */
-HB_EXPORT const char * hb_rddDefaultDrv( const char * szDriver )
+const char * hb_rddDefaultDrv( const char * szDriver )
 {
    PHB_STACKRDD pRddInfo = hb_stackRDD();
 
@@ -398,7 +398,7 @@ HB_EXPORT const char * hb_rddDefaultDrv( const char * szDriver )
 /*
  * Function for getting given workarea pointer
  */
-HB_EXPORT void * hb_rddGetWorkAreaPointer( int iArea )
+void * hb_rddGetWorkAreaPointer( int iArea )
 {
    PHB_STACKRDD pRddInfo;
 
@@ -417,7 +417,7 @@ HB_EXPORT void * hb_rddGetWorkAreaPointer( int iArea )
 /*
  * Function for getting current workarea pointer
  */
-HB_EXPORT void * hb_rddGetCurrentWorkAreaPointer( void )
+void * hb_rddGetCurrentWorkAreaPointer( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddGetCurrentWorkAreaPointer()"));
 
@@ -427,7 +427,7 @@ HB_EXPORT void * hb_rddGetCurrentWorkAreaPointer( void )
 /*
  * Return the current WorkArea number.
  */
-HB_EXPORT int hb_rddGetCurrentWorkAreaNumber( void )
+int hb_rddGetCurrentWorkAreaNumber( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddGetCurrentWorkAreaNumber()"));
 
@@ -437,7 +437,7 @@ HB_EXPORT int hb_rddGetCurrentWorkAreaNumber( void )
 /*
  * Select a WorkArea by the number.
  */
-HB_EXPORT ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
+ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
 {
    PHB_STACKRDD pRddInfo;
 
@@ -500,7 +500,7 @@ void hb_rddCloseDetachedAreas( void )
       hb_itemRelease( pDetachedArea );
 }
 
-HB_EXPORT ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
+ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
 {
    AREAP * pHolder;
    PHB_ITEM pDetachedArea;
@@ -563,7 +563,7 @@ HB_EXPORT ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
    return SUCCESS;
 }
 
-HB_EXPORT AREAP hb_rddRequestArea( char * szAlias, PHB_ITEM pCargo,
+AREAP hb_rddRequestArea( char * szAlias, PHB_ITEM pCargo,
                                    BOOL fNewArea, BOOL fWait )
 {
    PHB_DYNS pSymAlias = NULL;

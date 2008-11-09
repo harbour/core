@@ -274,7 +274,7 @@ static void hb_md5digest( BYTE * md5val, char * digest )
    }
 }
 
-HB_EXPORT void hb_md5( BYTE * ucData, ULONG ulLen, BYTE * ucDigest )
+void hb_md5( BYTE * ucData, ULONG ulLen, BYTE * ucDigest )
 {
    UCHAR buf[ 128 ];
    MD5_BUF md5;
@@ -316,7 +316,7 @@ HB_EXPORT void hb_md5( BYTE * ucData, ULONG ulLen, BYTE * ucDigest )
    hb_md5val( md5.accum, ucDigest );
 }
 
-HB_EXPORT void hb_md5file( HB_FHANDLE hFile, BYTE * ucDigest )
+void hb_md5file( HB_FHANDLE hFile, BYTE * ucDigest )
 {
    MD5_BUF md5;
    ULONG n;

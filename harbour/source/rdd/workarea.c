@@ -2026,14 +2026,14 @@ static USHORT      s_uiRddCount = 0;      /* Number of registered RDD */
 /*
  * Get RDD node poionter
  */
-HB_EXPORT LPRDDNODE hb_rddGetNode( USHORT uiNode )
+LPRDDNODE hb_rddGetNode( USHORT uiNode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddGetNode(%hu)", uiNode));
 
    return uiNode < s_uiRddCount ? s_RddList[ uiNode ] : NULL;
 }
 
-HB_EXPORT PHB_ITEM hb_rddList( USHORT uiType )
+PHB_ITEM hb_rddList( USHORT uiType )
 {
    USHORT uiCount, uiIndex, uiRdds;
    PHB_ITEM pRddArray;
@@ -2059,7 +2059,7 @@ HB_EXPORT PHB_ITEM hb_rddList( USHORT uiType )
 /*
  * Find a RDD node.
  */
-HB_EXPORT LPRDDNODE hb_rddFindNode( const char * szDriver, USHORT * uiIndex )
+LPRDDNODE hb_rddFindNode( const char * szDriver, USHORT * uiIndex )
 {
    USHORT uiCount;
 
@@ -2083,7 +2083,7 @@ HB_EXPORT LPRDDNODE hb_rddFindNode( const char * szDriver, USHORT * uiIndex )
 /*
  * Shutdown the RDD system.
  */
-HB_EXPORT void hb_rddShutDown( void )
+void hb_rddShutDown( void )
 {
    USHORT uiCount;
 
@@ -2110,7 +2110,7 @@ HB_EXPORT void hb_rddShutDown( void )
 /*
  * Register a RDD driver.
  */
-HB_EXPORT int hb_rddRegister( const char * szDriver, USHORT uiType )
+int hb_rddRegister( const char * szDriver, USHORT uiType )
 {
    LPRDDNODE pRddNewNode;
    PHB_DYNS pGetFuncTable;
@@ -2185,7 +2185,7 @@ HB_EXPORT int hb_rddRegister( const char * szDriver, USHORT uiType )
  * pSuperTable - a current table in a RDDNODE
  * szDrvName - a driver name that will be inherited
  */
-HB_EXPORT ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, RDDFUNCS * pSuperTable, const char * szDrvName )
+ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, RDDFUNCS * pSuperTable, const char * szDrvName )
 {
    LPRDDNODE pRddNode;
    USHORT uiCount;

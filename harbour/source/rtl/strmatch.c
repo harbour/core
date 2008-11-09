@@ -59,7 +59,7 @@
 
 #define HB_MAX_WILDPATTERN     256
 
-HB_EXPORT BOOL hb_strMatchWild( const char *szString, const char *szPattern )
+BOOL hb_strMatchWild( const char *szString, const char *szPattern )
 {
    BOOL fMatch = TRUE, fAny = FALSE;
    ULONG pulBufPosP[ HB_MAX_WILDPATTERN ], pulBufPosV[ HB_MAX_WILDPATTERN ],
@@ -129,7 +129,7 @@ HB_EXPORT BOOL hb_strMatchWild( const char *szString, const char *szPattern )
    return fMatch;
 }
 
-HB_EXPORT BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
+BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
 {
    BOOL fMatch = TRUE, fAny = FALSE;
    ULONG pulBufPosP[ HB_MAX_WILDPATTERN ], pulBufPosV[ HB_MAX_WILDPATTERN ],
@@ -200,7 +200,7 @@ HB_EXPORT BOOL hb_strMatchWildExact( const char *szString, const char *szPattern
    return fMatch;
 }
 
-HB_EXPORT BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
+BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
 {
    BOOL fMatch = TRUE, fAny = FALSE;
    ULONG pulBufPosP[ HB_MAX_WILDPATTERN ], pulBufPosV[ HB_MAX_WILDPATTERN ],
@@ -290,7 +290,7 @@ BOOL hb_strMatchRegExp( const char * szString, const char * szPattern )
       return hb_strMatchWildExact( szString, szPattern );
 }
 
-HB_EXPORT BOOL hb_strMatchFile( const char * szString, const char * szPattern )
+BOOL hb_strMatchFile( const char * szString, const char * szPattern )
 {
 #if defined( HB_OS_UNIX )
 #  if defined( __WATCOMC__ )

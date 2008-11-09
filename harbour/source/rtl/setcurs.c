@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-HB_EXPORT USHORT hb_conSetCursor( BOOL bSetCursor, USHORT uiNewCursor )
+USHORT hb_conSetCursor( BOOL bSetCursor, USHORT uiNewCursor )
 {
    USHORT uiCursor;
 

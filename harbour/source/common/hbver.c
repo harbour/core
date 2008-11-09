@@ -104,7 +104,7 @@
          osVer.szCSDVersion (Win32). [vszakats] */
 #define PLATFORM_BUF_SIZE 255
 
-HB_EXPORT char * hb_verPlatform( void )
+char * hb_verPlatform( void )
 {
    char * pszPlatform;
 
@@ -310,7 +310,7 @@ HB_EXPORT char * hb_verPlatform( void )
    return pszPlatform;
 }
 
-HB_EXPORT BOOL hb_iswinnt( void )
+BOOL hb_iswinnt( void )
 {
 #if defined(HB_OS_WIN_32)
    static BOOL s_fWinNT = FALSE;
@@ -330,7 +330,7 @@ HB_EXPORT BOOL hb_iswinnt( void )
 #endif
 }
 
-HB_EXPORT BOOL hb_iswince( void )
+BOOL hb_iswince( void )
 {
 #if defined(HB_WINCE)
    return TRUE;
@@ -343,7 +343,7 @@ HB_EXPORT BOOL hb_iswince( void )
 
 #define COMPILER_BUF_SIZE 80
 
-HB_EXPORT char * hb_verCompiler( void )
+char * hb_verCompiler( void )
 {
    char * pszCompiler;
    const char * pszName;
@@ -550,7 +550,7 @@ HB_EXPORT char * hb_verCompiler( void )
    CA-Cl*pper 5.3b returns: "Clipper (R) 5.3b Intl. (Rev. 338) (1997.04.25)"
 */
 
-HB_EXPORT char * hb_verHarbour( void )
+char * hb_verHarbour( void )
 {
    char * pszVersion;
 
@@ -564,7 +564,7 @@ HB_EXPORT char * hb_verHarbour( void )
    return pszVersion;
 }
 
-HB_EXPORT char * hb_verPCode( void )
+char * hb_verPCode( void )
 {
    char * pszPCode;
 
@@ -577,7 +577,7 @@ HB_EXPORT char * hb_verPCode( void )
    return pszPCode;
 }
 
-HB_EXPORT char * hb_verBuildDate( void )
+char * hb_verBuildDate( void )
 {
    char * pszDate;
 
