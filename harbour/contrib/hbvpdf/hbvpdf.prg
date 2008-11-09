@@ -2224,7 +2224,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                Type = ASCII
                Copyright notice of the person or organization that claims the copyright to the
                image. The complete copyright statement should be listed in this field including
-               any dates and statements of claims. For example, “Copyright, John Smith, 19xx.
+               any dates and statements of claims. For example, Copyright, John Smith, 19xx.
                All rights reserved.
                */
             //??'Copyright'

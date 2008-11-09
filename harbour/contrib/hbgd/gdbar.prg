@@ -6,7 +6,7 @@
  * xHarbour Project source code:
  * BAR engine library class
  *
- * Copyright 2005-2005 Laverson Espíndola <laverson.espindola@gmail.com>
+ * Copyright 2005-2005 Laverson Espindola <laverson.espindola@gmail.com>
  * www - http://www.xharbour.org http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

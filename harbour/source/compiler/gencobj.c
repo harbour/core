@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Native compiler object module generation from Harbour C output.
  *
- * Copyright 2001 Jos‚ Lal¡n <dezac@corevia.com>
+ * Copyright 2001 Jose Lalin <dezac@corevia.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

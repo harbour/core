@@ -7,7 +7,7 @@
  * Get Class
  *
  * Copyright 2007-2008 Viktor Szakats <viktor.szakats@syenar.hu>
- * Copyright 1999 Ignacio Ortiz de Z£niga <ignacio@fivetech.com>
+ * Copyright 1999 Ignacio Ortiz de Zuniga <ignacio@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

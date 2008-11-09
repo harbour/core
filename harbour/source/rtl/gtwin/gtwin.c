@@ -5,12 +5,12 @@
 /*
  * Harbour Project source code:
  * Video subsystem for Win32 compilers ver.2
- * Copyright 2002 Przemys³aw Czerpak <druzus@polbox.com>
+ * Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
  * based on
  *   Bcc ConIO Video subsystem by
  *     Copyright 2002 Marek Paliwoda <paliwoda@inteia.pl>
- *     Copyright 2002 Przemys³aw Czerpak <druzus@polbox.com>
+ *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *   Video subsystem for Win32 compilers
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     (with 2004 work on Readkey)

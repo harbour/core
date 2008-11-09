@@ -6,7 +6,7 @@
  *------------------------------------------------------------------------
  *                  HARBOUR INTERFACE for SQLITE
  *------------------------------------------------------------------------
- * Copyright 2003 Alejandro de Gárate <alex_degarate@hotmail.com>
+ * Copyright 2003 Alejandro de Garate <alex_degarate@hotmail.com>
  * License: General Public License (GNU)
  *
  * History:

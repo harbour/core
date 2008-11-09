@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * OLE library
  *
- * Copyright 2000,2003 José F. Giménez (JFG) <jfgimenez@wanadoo.es>
+ * Copyright 2000,2003 Jose F. Gimenez (JFG) <jfgimenez@wanadoo.es>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

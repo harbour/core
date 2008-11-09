@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright 2002  José F. Giménez (JFG) - <jfgimenez@wanadoo.es>
+ * Copyright 2002  Jose F. Gimenez (JFG) - <jfgimenez@wanadoo.es>
  *                 Ron Pinkas            - <ron@ronpinkas.com>
  *
  * www - http://www.xharbour.org
