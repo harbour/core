@@ -196,7 +196,7 @@ typedef struct
 #        endif
 #     else
          extern HB_TLS_KEY hb_stack_key;
-#        if defined( __BORLANDC__ )
+#        if defined( __BORLANDC__ ) && defined( HB_STACK_PRELOAD )
             static __inline void* hb_stack_ptr_from_tls( void )
             {
                /* mov ecx,hb_stack_key */
