@@ -714,9 +714,7 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
       pWVT->hFont = hFont;
    }
    else
-   {
       hFont = pWVT->hFont;
-   }
 
    hdc      = GetDC( pWVT->hWnd );
    hOldFont = ( HFONT ) SelectObject( hdc, hFont );
