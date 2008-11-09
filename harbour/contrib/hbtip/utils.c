@@ -731,7 +731,7 @@ HB_FUNC( PSTRCOMPI )
 }
 
 /* Case insensitive hb_strAt() function */
-static ULONG HB_EXPORT hb_strAtI( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
+static ULONG hb_strAtI( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strAtI(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
 

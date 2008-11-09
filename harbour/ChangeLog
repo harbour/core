@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 13:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbtip/utils.c
+    ! Fixed static function also marked as HB_EXPORT.
+
+  * contrib/xhb/dbgfx.prg
+    * Minor formatting.
+
 2008-11-09 12:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
     ! Fixed again the UNICODE problem (I've uploaded a wrong 
