@@ -154,7 +154,7 @@ static char * set_string( PHB_ITEM pItem, char * szOldString )
 
 static void close_binary( HB_FHANDLE handle )
 {
-   HB_TRACE(HB_TR_DEBUG, ("close_binary(%p)", handle));
+   HB_TRACE(HB_TR_DEBUG, ("close_binary(%p)", ( void * ) ( HB_PTRDIFF ) handle));
 
    if( handle != FS_ERROR )
    {
@@ -166,7 +166,7 @@ static void close_binary( HB_FHANDLE handle )
 
 static void close_text( PHB_SET_STRUCT pSet, HB_FHANDLE handle )
 {
-   HB_TRACE(HB_TR_DEBUG, ("close_text(%p,%p)", pSet, handle));
+   HB_TRACE(HB_TR_DEBUG, ("close_text(%p,%p)", pSet, ( void * ) ( HB_PTRDIFF ) handle));
 
    if( handle != FS_ERROR )
    {

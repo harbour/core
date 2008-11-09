@@ -220,7 +220,7 @@ extern int    hb_tracestate( int new_state );
 extern int    hb_tracelevel( int new_level );
 
 extern int    hb_tr_level( void );
-extern void   hb_tr_trace( const char * fmt, ... );
+extern void   hb_tr_trace( const char * fmt, ... ) HB_PRINTF_FORMAT( 1, 2 );
 
 HB_EXTERN_END
 

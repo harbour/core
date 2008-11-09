@@ -507,7 +507,7 @@ void hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame )
          if ( info->bQuit )
             return;
 
-         HB_TRACE( HB_TR_DEBUG, ( "ENDPROC", nLine ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ENDPROC %d", nLine ) );
 
          if ( info->bInitLines )
          {

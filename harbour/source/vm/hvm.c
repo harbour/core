@@ -5552,7 +5552,7 @@ HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, ULONG ulArgCount, ... )
    va_list va;
    ULONG i;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlockV(%p, %hu, ...)", pBlock, ulArgCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlockV(%p, %lu, ...)", pBlock, ulArgCount));
 
    hb_vmPushSymbol( &hb_symEval );
    hb_vmPush( pBlock );
@@ -5986,7 +5986,7 @@ static void hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmInitThreadStatics(%p,%hu,%p)", uiCount, pCode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmInitThreadStatics(%hu,%p)", uiCount, pCode));
 
    while( uiCount-- )
    {
@@ -5999,7 +5999,7 @@ static void hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode )
 #else
 static void hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmInitThreadStatics(%p,%hu,%p)", uiCount, pCode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmInitThreadStatics(%hu,%p)", uiCount, pCode));
 
    /* single thread VM - do nothing, use normal static variables */
 
@@ -6253,7 +6253,7 @@ void hb_vmPushPointer( void * pPointer )
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_stackAllocItem();
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushPointer(%ld)", pPointer));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushPointer(%p)", pPointer));
 
    pItem->type = HB_IT_POINTER;
    pItem->item.asPointer.value = pPointer;
@@ -6369,7 +6369,7 @@ static void hb_vmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols, ULONG ul
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_stackAllocItem();
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushBlockShort(%p,%p,%hu)", pCode, pSymbols, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushBlockShort(%p,%p,%lu)", pCode, pSymbols, ulLen));
 
    pItem->item.asBlock.value =
          hb_codeblockNew( pCode,                    /* pcode buffer         */
@@ -8711,7 +8711,7 @@ void hb_xvmLocalSetInt( int iLocal, LONG lValue )
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pLocal;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalSetInt(%d, %d)", iLocal, lValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalSetInt(%d, %ld)", iLocal, lValue));
 
    if( iLocal >= 0 )
    {

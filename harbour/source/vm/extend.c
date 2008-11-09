@@ -845,7 +845,7 @@ void hb_retnll( LONGLONG llNumber )
 #undef hb_retnint
 void hb_retnint( HB_LONG lNumber )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnl(%ld)", lNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retnl(%" PFHL "d )", lNumber));
 
    hb_itemPutNInt( hb_stackReturnItem(), lNumber );
 }

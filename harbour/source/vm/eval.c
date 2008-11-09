@@ -204,7 +204,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
 {
    PHB_ITEM pResult = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemDo(%p, %hu, ...)", pItem, ulPCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemDo(%p, %lu, ...)", pItem, ulPCount));
 
    if( pItem )
    {
@@ -274,7 +274,7 @@ PHB_ITEM hb_itemDoC( const char * szFunc, ULONG ulPCount, ... )
 {
    PHB_ITEM pResult = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemDoC(%s, %hu, ...)", szFunc, ulPCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemDoC(%s, %lu, ...)", szFunc, ulPCount));
 
    if( szFunc )
    {

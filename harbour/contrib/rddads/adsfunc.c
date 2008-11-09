@@ -966,7 +966,7 @@ HB_FUNC( ADSGETFILTER )
       }
       else
       {
-         HB_TRACE(HB_TR_DEBUG, ("adsGetFilter() error %lu", ulRetVal));
+         HB_TRACE(HB_TR_DEBUG, ("adsGetFilter() error %lu", ( ULONG ) ulRetVal));
          hb_retc( NULL );
       }
 

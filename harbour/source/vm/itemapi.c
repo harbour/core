@@ -514,7 +514,7 @@ BOOL hb_itemFreeC( char * szText )
 
 char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetDS(%p, %s)", szDate));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetDS(%p, %s)", pItem, szDate));
 
    if( pItem && HB_IS_DATE( pItem ) )
       return hb_dateDecStr( szDate, pItem->item.asDate.value );

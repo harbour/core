@@ -8,6 +8,51 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-10 00:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/rules.cf
+    ! fixed recursive HB_FLAGS declaration
+
+  * harbour/include/hbdefs.h
+  * harbour/include/hbsetup.h
+  * harbour/include/hbtrace.h
+    * declared hb_tr_trace() parameters as printf() compatible in GCC
+      builds. It enabled format string with parameters validation
+
+  * harbour/source/rtl/errorapi.c
+    ! fixed GPF caused by HB_ERR_FUNCNAME which is not longer valid
+      string
+
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/memvars.c
+  * harbour/source/vm/eval.c
+  * harbour/source/vm/extend.c
+  * harbour/source/vm/set.c
+  * harbour/source/debug/dbgentry.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/contrib/gtalleg/gtalleg.c
+  * harbour/contrib/xhb/freadlin.c
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/rddads/adsfunc.c
+  * harbour/contrib/rddads/ads1.c
+  * harbour/contrib/hbwin/win_ole.c
+  * harbour/utils/hbdoc/hbdfrdln.c
+  * harbour/utils/hbmake/hbmfrdln.c
+    ! fixed bugs in HB_TRACE massages reported in GCC builds
+
 2008-11-09 20:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbdefs.h
   * include/hbapigt.h

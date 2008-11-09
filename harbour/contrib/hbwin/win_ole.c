@@ -563,7 +563,7 @@ ItemToVariant_StringArray:
                      break;
 
                   default:
-                     HB_TRACE(HB_TR_INFO, ("Unexpected VT type %p in: %s(%i)!\n", pVariant->n1.n2.vt, __FILE__, __LINE__));
+                     HB_TRACE(HB_TR_INFO, ("Unexpected VT type %p in: %s(%i)!\n", ( void * ) ( HB_PTRDIFF ) pVariant->n1.n2.vt, __FILE__, __LINE__));
                }
 
                break;
@@ -840,7 +840,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
                  }
                  else
                  {
-                    HB_TRACE(HB_TR_INFO, ("Unexpected type %p in: %s(%i)!\n", pVariant->n1.n2.vt, __FILE__, __LINE__));
+                    HB_TRACE(HB_TR_INFO, ("Unexpected type %p in: %s(%i)!\n", ( void * ) ( HB_PTRDIFF ) pVariant->n1.n2.vt, __FILE__, __LINE__));
                  }
             }
          }
@@ -848,7 +848,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
          {
             if( pVariant->n1.n2.vt & VT_BYREF )
             {
-               HB_TRACE(HB_TR_INFO, ("Unexpected type %p in: %s(%i)!\n", pVariant->n1.n2.vt, __FILE__, __LINE__));
+               HB_TRACE(HB_TR_INFO, ("Unexpected type %p in: %s(%i)!\n", ( void * ) ( HB_PTRDIFF ) pVariant->n1.n2.vt, __FILE__, __LINE__));
             }
          }
 
@@ -1244,7 +1244,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
          }
          else
          {
-            HB_TRACE(HB_TR_INFO, ("Unexpected type %p in: %s(%i)!\n", pVariant->n1.n2.vt, __FILE__, __LINE__));
+            HB_TRACE(HB_TR_INFO, ("Unexpected type %p in: %s(%i)!\n", ( void * ) ( HB_PTRDIFF ) pVariant->n1.n2.vt, __FILE__, __LINE__));
             return E_FAIL;
          }
    }
@@ -1336,7 +1336,7 @@ static char * Ole2TxtError( void )
       case MK_E_UNAVAILABLE:         return "MK_E_UNAVAILABLE";
    }
 
-   HB_TRACE(HB_TR_INFO, ("TOleAuto Error %p\n", s_nOleError));
+   HB_TRACE(HB_TR_INFO, ("TOleAuto Error %p\n", ( void * ) ( HB_PTRDIFF ) s_nOleError));
 
    return "Unknown error";
 }

@@ -701,7 +701,7 @@ static ERRCODE hb_dbfUnlockAllRecords( DBFAREAP pArea )
 {
    ERRCODE uiError = SUCCESS;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbfUnlockAllRecords(%p, %p)", pArea ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfUnlockAllRecords(%p)", pArea ));
 
    if( pArea->pLocksPos )
    {

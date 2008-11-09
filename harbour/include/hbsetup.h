@@ -414,4 +414,12 @@
    #define HB_EXTERN_END
 #endif
 
+#if defined( __GNUC__ )
+   #define HB_PRINTF_FORMAT( _nStr, _nParam ) \
+                     __attribute__ (( format (printf, _nStr, _nParam)))
+#else
+   #define HB_PRINTF_FORMAT( _nStr, _nParam )
+#endif
+
+
 #endif /* HB_SETUP_H_ */

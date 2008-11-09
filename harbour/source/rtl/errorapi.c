@@ -791,7 +791,7 @@ char * hb_errGetOperation( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutOperation( PHB_ITEM pError, const char * szOperation )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_errPutOperation(%p, %s)", pError, szOperation));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutOperation(%p, %s)", pError, szOperation == HB_ERR_FUNCNAME ? "HB_ERR_FUNCNAME" : szOperation));
 
    if( szOperation == HB_ERR_FUNCNAME )
    {
@@ -908,7 +908,7 @@ PHB_ITEM hb_errPutArgs( PHB_ITEM pError, ULONG ulArgCount, ... )
    ULONG ulArgPos;
    va_list va;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_errPutArgs(%p, %hu, ...)", pError, ulArgCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutArgs(%p, %lu, ...)", pError, ulArgCount));
 
    pArray = hb_itemArrayNew( ulArgCount );
 

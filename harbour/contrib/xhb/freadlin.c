@@ -67,7 +67,7 @@ BYTE * hb_fsReadLine( HB_FHANDLE hFileHandle, LONG * plBuffLen, char ** Term, in
    LONG lRead = 0, lOffset, lSize;
    BYTE * pBuff;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLine(%p, %ld, %p, %p, %hu, %i, %i)", hFileHandle, *plBuffLen, Term, iTermSizes, iTerms, *bFound, *bEOF ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLine(%p, %ld, %p, %p, %hu, %i, %i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, *plBuffLen, Term, iTermSizes, iTerms, *bFound, *bEOF ));
 
    *bFound  = FALSE;
    *bEOF    = FALSE;

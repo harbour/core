@@ -671,7 +671,7 @@ ERRCODE hb_adsCloseCursor( ADSAREAP pArea )
 
       if( u32RetVal != AE_SUCCESS )
       {
-         HB_TRACE(HB_TR_DEBUG, ("adsCloseTable(%lu, %s) failed", u32RetVal, pArea->szDataFileName));
+         HB_TRACE(HB_TR_DEBUG, ("adsCloseTable(%lu, %s) failed", ( ULONG ) u32RetVal, pArea->szDataFileName));
       }
       pArea->hTable = 0;
    }
@@ -3190,7 +3190,7 @@ static ERRCODE adsSysName( ADSAREAP pArea, BYTE * pBuffer )
       u32RetVal = AdsGetTableType( pArea->hTable, &u16TableType );
       if( u32RetVal != AE_SUCCESS )
       {
-         HB_TRACE(HB_TR_DEBUG, ("Error in adsSysName: %d  pArea->hTable %d\n", u32RetVal, pArea->hTable));
+         HB_TRACE(HB_TR_DEBUG, ("Error in adsSysName: %lu  pArea->hTable %p\n", ( ULONG ) u32RetVal, ( void * ) ( HB_PTRDIFF ) pArea->hTable));
          u16TableType = ( UNSIGNED16 ) pArea->iFileType;
       }
    }
