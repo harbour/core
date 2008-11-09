@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 11:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gcc.mak
+    ! declared non file helper rules as .PHONY ones.
+    ! fixed bad typo in helper rules usage - strange that I haven't seen
+      it before.
+    * restored non indirect rules - now they should work as expected
+      also in parallel builds.
+      TODO: remove static libraries from HB_BUILD_TARGETS in common.mak
+      if everything is correct then they should be created to satisfy
+      hbrun and other tools dependencies. It's not necessary to explicitly
+      duplicate it.
+
 2008-11-08 15:40 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
   * harbour/contrib/gtwvg/gtwvg.h

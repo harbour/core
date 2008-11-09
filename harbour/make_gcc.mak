@@ -261,6 +261,7 @@ all : $(HB_DEST_DIRS) $(HB_BUILD_TARGETS)
 #**********************************************************
 # Helper targets
 #**********************************************************
+.PHONY : BasicLibs BasicExes StdLibs MinLibs
 BasicLibs : $(COMMON_LIB) $(HBPP_EXE) $(PP_LIB) $(COMPILER_LIB)
 BasicExes : BasicLibs $(HARBOUR_EXE)
 StdLibs   : BasicExes $(STANDARD_STATIC_HBLIBS)
@@ -396,28 +397,28 @@ $(HBPP_EXE)     : $(HBPP_EXE_OBJS) $(COMMON_LIB)
 $(HARBOUR_EXE)  : $(HARBOUR_EXE_OBJS) $(COMPILER_LIB) $(PP_LIB) $(COMMON_LIB)
 	$(CC) $(CFLAGS) -o $@ $^ $(HB_OS_LIBS)
 #**********************************************************
-$(HBRUN_EXE)    : $(StdLibs)
-$(HBRUN_EXE)    : $(HBRUN_EXE_OBJS)
+$(HBRUN_EXE)    :: StdLibs
+$(HBRUN_EXE)    :: $(HBRUN_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBTEST_EXE)   : $(StdLibs)
-$(HBTEST_EXE)   : $(HBTEST_EXE_OBJS)
+$(HBTEST_EXE)   :: StdLibs
+$(HBTEST_EXE)   :: $(HBTEST_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBDOC_EXE)    : $(MinLibs)
-$(HBDOC_EXE)    : $(HBDOC_EXE_OBJS)
+$(HBDOC_EXE)    :: MinLibs
+$(HBDOC_EXE)    :: $(HBDOC_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBMAKE_EXE)   : $(MinLibs)
-$(HBMAKE_EXE)   : $(HBMAKE_EXE_OBJS)
+$(HBMAKE_EXE)   :: MinLibs
+$(HBMAKE_EXE)   :: $(HBMAKE_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
 
 #**********************************************************
 # DLL Targets
 #**********************************************************
-$(HARBOUR_DLL) : $(StdLibs)
-$(HARBOUR_DLL) : $(DLL_OBJS)
+$(HARBOUR_DLL) :: StdLibs
+$(HARBOUR_DLL) :: $(DLL_OBJS)
 	$(CC) $(LDFLAGSDLL) -o $@ $^ $(HB_OS_LIBS) $(HB_IMPLIB_PART)
 #**********************************************************
 # DLL EXECUTABLE Targets
