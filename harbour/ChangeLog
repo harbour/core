@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 20:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  - contrib/hbmysql/utils/bld_b32.bat
+  - contrib/hbmysql/utils/bld_vc.bat
+  + contrib/hbmysql/utils/hbmk_b32.bat
+  + contrib/hbmysql/utils/hbmk_vc.bat
+  - contrib/hbgd/tests/bld.sh
+  + contrib/hbgd/tests/hbmk_gnu.sh
+  * contrib/hbbtree/tests/hbmk_b32.bat
+  * contrib/hbbtree/tests/hbmk_vc.bat
+  * contrib/examples/pp/hbmk_b32.bat
+  * contrib/examples/pp/hbmk_vc.bat
+  * contrib/examples/guestbk/hbmk_b32.bat
+  * contrib/examples/guestbk/hbmk_vc.bat
+  * contrib/examples/pe/hbmk_b32.bat
+  * contrib/examples/pe/hbmk_vc.bat
+  * contrib/examples/hscript/hbmk_vc.bat
+    * Some remaining renames.
+    * Got rid of temp files in BCC batch files. Win9x is no longer 
+      supported.
+    * Some other minor cleanups.
+
 2008-11-09 20:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   - contrib/examples/dbu/bld_b32.bat
   - contrib/examples/dbu/bld_vc.bat

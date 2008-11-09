@@ -5,25 +5,7 @@ rem
 
 ..\..\..\bin\harbour /n /i..\..\..\include\ pe editorhi
 
-echo -O2 -I..\..\..\include -L..\..\..\lib > build.tmp
-echo pe.c >> build.tmp
-echo editorhi.c >> build.tmp
-echo editorlo.c >> build.tmp
-echo hbdebug.lib >> build.tmp
-echo hbvm.lib >> build.tmp
-echo hbrtl.lib >> build.tmp
-echo gtwin.lib >> build.tmp
-echo hblang.lib >> build.tmp
-echo hbrdd.lib >> build.tmp
-echo hbmacro.lib >> build.tmp
-echo hbpp.lib >> build.tmp
-echo rddntx.lib >> build.tmp
-echo rddcdx.lib >> build.tmp
-echo rddfpt.lib >> build.tmp
-echo hbsix.lib >> build.tmp
-echo hbcommon.lib >> build.tmp
-bcc32 @build.tmp
-del build.tmp
+bcc32 -O2 -I..\..\..\include -L..\..\..\lib pe.c editorhi.c editorlo.c hbdebug.lib hbvm.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib
 
 del *.obj
 del pe.c editorhi.c
