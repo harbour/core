@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 20:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbdefs.h
+  * include/hbapigt.h
+  * source/common/hbfsapi.c
+  * source/rtl/console.c
+  * source/rtl/fserror.c
+  * source/rtl/fstemp.c
+  * source/rtl/gtstd/gtstd.c
+  * source/rtl/gtpca/gtpca.c
+  * source/rtl/filesys.c
+    * Macro rename:
+      - HB_WIN32_IO_OFF -> HB_IO_WIN_OFF
+      - HB_WIN32_IO     -> HB_IO_WIN
+    ; NOTE: INCOMPATIBLE if someone happens to disable 
+            Windows native IO. Users don't normally 
+            needs this though.
+
 2008-11-09 20:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   - contrib/hbmysql/utils/bld_b32.bat
   - contrib/hbmysql/utils/bld_vc.bat

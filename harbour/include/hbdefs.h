@@ -93,15 +93,15 @@
       #endif
    #endif
 
-   #if !defined( HB_WIN32_IO_OFF )
-      #define HB_WIN32_IO
+   #if !defined( HB_IO_WIN_OFF )
+      #define HB_IO_WIN
    #endif
-   #if defined( HB_WIN32_IO ) && !defined( HB_OS_WIN_32_USED )
+   #if defined( HB_IO_WIN ) && !defined( HB_OS_WIN_32_USED )
       /* disabled to avoid problems with windows.h */
       /* #define HB_OS_WIN_32_USED */
    #endif
 #else
-   #undef HB_WIN32_IO
+   #undef HB_IO_WIN
    #undef HB_OS_WIN_32_USED
 #endif
 
@@ -546,7 +546,7 @@ typedef unsigned long HB_COUNTER;
    typedef LONGLONG HB_FOFFSET;
 #endif
 
-#if defined( HB_WIN32_IO )
+#if defined( HB_IO_WIN )
 #if 1
    typedef HB_PTRDIFF HB_FHANDLE;
 #else

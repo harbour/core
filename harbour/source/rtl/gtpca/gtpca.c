@@ -81,7 +81,7 @@
    #include <sys/types.h>
    #include <sys/wait.h>
 #else
-#  if defined( HB_WIN32_IO )
+#  if defined( HB_IO_WIN )
 #     include <windows.h>
 #  endif
 #  if ( defined( _MSC_VER ) || defined( __WATCOMC__ ) ) && !defined( HB_WINCE )
@@ -624,7 +624,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
       if( _read( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
    }
-#elif defined( HB_WIN32_IO )
+#elif defined( HB_IO_WIN )
    if( !s_bStdinConsole ||
        WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( s_hFilenoStdin ), 0 ) == 0x0000 )
    {

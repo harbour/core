@@ -72,7 +72,7 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 
    hb_vmUnlock();
 
-#if defined(HB_WIN32_IO)
+#if defined(HB_IO_WIN)
    {
       char cTempDir[ _POSIX_PATH_MAX + 1 ];
 

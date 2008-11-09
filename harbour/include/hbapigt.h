@@ -130,7 +130,7 @@ HB_EXTERN_BEGIN
 
 
 /* standard input/output handles
- * when HB_WIN32_IO is set file handles with numbers 0, 1, 2 are
+ * when HB_IO_WIN is set file handles with numbers 0, 1, 2 are
  * transalted inside filesys to
  *    GetStdHandle( STD_INPUT_HANDLE )
  *    GetStdHandle( STD_OUTPUT_HANDLE )

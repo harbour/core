@@ -72,7 +72,7 @@
    #include <sys/types.h>
    #include <sys/wait.h>
 #else
-#  if defined( HB_WIN32_IO )
+#  if defined( HB_IO_WIN )
 #     include <windows.h>
 #  endif
 #  if ( defined( _MSC_VER ) || defined( __WATCOMC__ ) ) && !defined( HB_WINCE )
@@ -279,7 +279,7 @@ static void hb_gt_std_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       }
    }
 #endif
-#elif defined( HB_WIN32_IO ) && ! defined( HB_WINCE )
+#elif defined( HB_IO_WIN ) && ! defined( HB_WINCE )
    if( pGTSTD->fStdinConsole )
    {
       SetConsoleMode( ( HANDLE ) hb_fsGetOsHandle( pGTSTD->hStdin ), 0x0000 );
@@ -376,7 +376,7 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
       if( _read( pGTSTD->hStdin, &bChar, 1 ) == 1 )
          ch = pGTSTD->keyTransTbl[ bChar ];
    }
-#elif defined( HB_WIN32_IO )
+#elif defined( HB_IO_WIN )
    if( !pGTSTD->fStdinConsole ||
        WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( pGTSTD->hStdin ), 0 ) == 0x0000 )
    {
