@@ -2815,7 +2815,7 @@ static void hb_gt_def_WhoCares( PHB_GT pGT, void * pCargo )
 /* ************************************************************************* */
 
 #if defined( __GNUC__ ) && 0
-static HB_GT_FUNCS s_gtCoreFunc =
+static const HB_GT_FUNCS s_gtCoreFunc =
 {
    Lock                       : hb_gt_def_Lock                          ,
    Unlock                     : hb_gt_def_Unlock                        ,
@@ -2935,7 +2935,7 @@ static HB_GT_FUNCS s_gtCoreFunc =
    WhoCares                   : hb_gt_def_WhoCares
 };
 #else
-static HB_GT_FUNCS s_gtCoreFunc =
+static const HB_GT_FUNCS s_gtCoreFunc =
 {
    hb_gt_def_Lock                         ,
    hb_gt_def_Unlock                       ,

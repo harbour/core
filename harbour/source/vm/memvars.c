@@ -330,14 +330,15 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarSetValue(%p, %p)", pMemvarSymb, pItem));
 
-   pDyn = ( PHB_DYNS ) pMemvarSymb->pDynSym;
+   pDyn = pMemvarSymb->pDynSym;
    if( pDyn )
    {
       PHB_ITEM pMemvar;
 
-      HB_TRACE(HB_TR_INFO, ("Memvar item (%i)(%s) assigned", hb_dynsymGetMemvar( pDyn ), pMemvarSymb->szName));
-
       pMemvar = hb_dynsymGetMemvar( pDyn );
+
+      HB_TRACE(HB_TR_INFO, ("Memvar item (%p)(%s) assigned", pMemvar, pMemvarSymb->szName));
+
       if( pMemvar )
       {
          /* value is already created */
@@ -363,14 +364,16 @@ ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarGet(%p, %p)", pItem, pMemvarSymb));
 
-   pDyn = ( PHB_DYNS ) pMemvarSymb->pDynSym;
+   pDyn = pMemvarSymb->pDynSym;
    if( pDyn )
    {
       PHB_ITEM pMemvar;
 
-      HB_TRACE(HB_TR_INFO, ("Memvar item (%i)(%s) queried", hb_dynsymGetMemvar( pDyn ), pMemvarSymb->szName));
 
       pMemvar = hb_dynsymGetMemvar( pDyn );
+
+      HB_TRACE(HB_TR_INFO, ("Memvar item (%p)(%s) queried", pMemvar, pMemvarSymb->szName));
+
       if( pMemvar )
       {
          /* value is already created
@@ -423,9 +426,10 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
    {
       PHB_ITEM pMemvar;
 
-      HB_TRACE(HB_TR_INFO, ("Memvar item (%i)(%s) referenced", hb_dynsymGetMemvar( pDyn ), pMemvarSymb->szName));
-
       pMemvar = hb_dynsymGetMemvar( pDyn );
+
+      HB_TRACE(HB_TR_INFO, ("Memvar item (%p)(%s) referenced", pMemvar, pMemvarSymb->szName));
+
       if( pMemvar )
       {
          if( HB_IS_BYREF( pMemvar ) && !HB_IS_ENUM( pMemvar ) )

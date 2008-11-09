@@ -65,11 +65,11 @@ void hb_compGenCString( FILE * yyc, BYTE * pText, ULONG ulLen )
          fprintf( yyc, "\\%c", uchr );
       else if( uchr < ( BYTE ) ' ' || uchr >= 127 )
       {
-         BYTE uchrnext = pText[ ulPos + 1 ];
+         BYTE uchrnext = ulPos < ulLen - 1 ? pText[ ulPos + 1 ] : 0;
 
-         fprintf( yyc, "\\x%02X%s", uchr, ulPos < ulLen - 1 &&
-                  ( uchrnext >= ( BYTE ) '0' && uchrnext <= ( BYTE ) '9' ) || 
-                  ( uchrnext >= ( BYTE ) 'a' && uchrnext <= ( BYTE ) 'z' ) || 
+         fprintf( yyc, "\\x%02X%s", uchr,
+                  ( uchrnext >= ( BYTE ) '0' && uchrnext <= ( BYTE ) '9' ) ||
+                  ( uchrnext >= ( BYTE ) 'a' && uchrnext <= ( BYTE ) 'z' ) ||
                   ( uchrnext >= ( BYTE ) 'A' && uchrnext <= ( BYTE ) 'Z' ) ? "\" \"" : "" );
       }
       else
