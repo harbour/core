@@ -299,7 +299,7 @@ PHB_ITEM  hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, LONG iItemPos )
 
 /* retrieves the codeblock unique ID
  */
-HB_EXPORT void * hb_codeblockId( PHB_ITEM pItem )
+void * hb_codeblockId( PHB_ITEM pItem )
 {
    if( HB_IS_BLOCK( pItem ) )
       return ( void * ) pItem->item.asBlock.value;

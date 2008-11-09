@@ -62,7 +62,7 @@
 
 #if !defined(HB_DYNLIB) && ( defined(__DMC__) || defined(__WATCOMC__) || defined(__MINGW32__) )
 HB_EXTERN_BEGIN
-HB_EXPORT void hb_forceLinkMainWin( void ) {}
+void hb_forceLinkMainWin( void ) {}
 HB_EXTERN_END
 #endif
 

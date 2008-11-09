@@ -276,7 +276,7 @@ typedef void * PHB_MEMINFO;
 #endif
 
 
-HB_EXPORT void hb_xsetfilename( char * szValue )
+void hb_xsetfilename( char * szValue )
 {
 #ifdef HB_FM_STATISTICS
    hb_strncpy( s_szFileName, szValue, sizeof( s_szFileName ) - 1 );
@@ -285,7 +285,7 @@ HB_EXPORT void hb_xsetfilename( char * szValue )
 #endif
 }
 
-HB_EXPORT void hb_xsetinfo( char * szValue )
+void hb_xsetinfo( char * szValue )
 {
 #ifdef HB_FM_STATISTICS
    hb_strncpy( s_szInfo, szValue, sizeof( s_szInfo ) - 1 );
@@ -295,7 +295,7 @@ HB_EXPORT void hb_xsetinfo( char * szValue )
 }
 
 
-HB_EXPORT void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
+void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
 {
    PHB_MEMINFO pMem;
 
@@ -365,7 +365,7 @@ HB_EXPORT void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
    return HB_MEM_PTR( pMem );
 }
 
-HB_EXPORT void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
+void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
 {
    PHB_MEMINFO pMem;
 
@@ -435,7 +435,7 @@ HB_EXPORT void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
    return HB_MEM_PTR( pMem );
 }
 
-HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
+void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 {
    HB_TRACE_FM(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
@@ -547,7 +547,7 @@ HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
    return HB_MEM_PTR( pMem );
 }
 
-HB_EXPORT void hb_xfree( void * pMem )            /* frees fixed memory */
+void hb_xfree( void * pMem )            /* frees fixed memory */
 {
    HB_TRACE_FM(HB_TR_DEBUG, ("hb_xfree(%p)", pMem));
 
@@ -688,7 +688,7 @@ void * hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize )
 /* NOTE: Debug function, it will always return 0 when HB_FM_STATISTICS is
          not defined, don't use it for final code [vszakats] */
 
-HB_EXPORT ULONG  hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
+ULONG  hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xsize(%p)", pMem));
 
@@ -701,7 +701,7 @@ HB_EXPORT ULONG  hb_xsize( void * pMem ) /* returns the size of an allocated mem
 #endif
 }
 
-HB_EXPORT void hb_xinit( void ) /* Initialize fixed memory subsystem */
+void hb_xinit( void ) /* Initialize fixed memory subsystem */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xinit()"));
 }
@@ -750,7 +750,7 @@ static char * hb_mem2str( char * membuffer, void * pMem, UINT uiSize )
 }
 
 #define HB_MAX_MEM2STR_BLOCK 256
-HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
+void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xexit()"));
 
@@ -825,7 +825,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 
 #else
 
-HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
+void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xexit()"));
 }

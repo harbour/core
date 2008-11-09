@@ -1225,7 +1225,7 @@ void hb_clsIsClassRef( void )
 #endif
 }
 
-HB_EXPORT BOOL hb_clsIsParent( USHORT uiClass, const char * szParentName )
+BOOL hb_clsIsParent( USHORT uiClass, const char * szParentName )
 {
    if( uiClass && uiClass <= s_uiClasses )
    {
@@ -1245,7 +1245,7 @@ HB_EXPORT BOOL hb_clsIsParent( USHORT uiClass, const char * szParentName )
    return FALSE;
 }
 
-HB_EXPORT USHORT hb_objGetClass( PHB_ITEM pItem )
+USHORT hb_objGetClass( PHB_ITEM pItem )
 {
    if( pItem && HB_IS_ARRAY( pItem ) )
       return pItem->item.asArray.value->uiClass;
@@ -1254,7 +1254,7 @@ HB_EXPORT USHORT hb_objGetClass( PHB_ITEM pItem )
 }
 
 /* get object class handle using class name and class function name */
-HB_EXPORT USHORT hb_objSetClass( PHB_ITEM pItem, const char * szClass, const char * szFunc )
+USHORT hb_objSetClass( PHB_ITEM pItem, const char * szClass, const char * szFunc )
 {
    USHORT uiClass = 0;
 
@@ -1317,7 +1317,7 @@ static USHORT hb_objGetClassH( PHB_ITEM pObject )
 /*
  * Get the class name of an object
  */
-HB_EXPORT const char * hb_objGetClsName( PHB_ITEM pObject )
+const char * hb_objGetClsName( PHB_ITEM pObject )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_objGetClsName(%p)", pObject));
 
@@ -1360,7 +1360,7 @@ HB_EXPORT const char * hb_objGetClsName( PHB_ITEM pObject )
       return "UNKNOWN";
 }
 
-HB_EXPORT const char * hb_clsName( USHORT uiClass )
+const char * hb_clsName( USHORT uiClass )
 {
    if( uiClass && uiClass <= s_uiClasses )
       return s_pClasses[ uiClass ]->szName;
@@ -1368,7 +1368,7 @@ HB_EXPORT const char * hb_clsName( USHORT uiClass )
       return NULL;
 }
 
-HB_EXPORT const char * hb_clsFuncName( USHORT uiClass )
+const char * hb_clsFuncName( USHORT uiClass )
 {
    if( uiClass && uiClass <= s_uiClasses )
       return s_pClasses[ uiClass ]->pClassFuncSym ?
@@ -1378,7 +1378,7 @@ HB_EXPORT const char * hb_clsFuncName( USHORT uiClass )
       return NULL;
 }
 
-HB_EXPORT USHORT hb_clsFindClass( const char * szClass, const char * szFunc )
+USHORT hb_clsFindClass( const char * szClass, const char * szFunc )
 {
    USHORT uiClass;
 
@@ -1413,7 +1413,7 @@ static USHORT hb_clsFindClassByFunc( PHB_SYMB pClassFuncSym )
  * Will return the class name from wich the message is inherited in case
  * of inheritance.
  */
-HB_EXPORT const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szName )
+const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szName )
 {
    USHORT uiClass;
 
@@ -2219,7 +2219,7 @@ BOOL hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObjec
 /*
  * return TRUE if object has a given message
  */
-HB_EXPORT BOOL hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage )
+BOOL hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage )
 {
    return hb_objGetMethod( pObject, pMessage->pSymbol, NULL ) != NULL;
 }
@@ -2231,7 +2231,7 @@ HB_EXPORT BOOL hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage )
  *
  * <uPtr> should be read as a boolean
  */
-HB_EXPORT BOOL hb_objHasMsg( PHB_ITEM pObject, const char *szString )
+BOOL hb_objHasMsg( PHB_ITEM pObject, const char *szString )
 {
    PHB_DYNS pDynSym;
 
@@ -2248,7 +2248,7 @@ HB_EXPORT BOOL hb_objHasMsg( PHB_ITEM pObject, const char *szString )
    }
 }
 
-HB_EXPORT PHB_ITEM hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG ulArg, ... )
+PHB_ITEM hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG ulArg, ... )
 {
    if( pObject && pMsgSym )
    {
@@ -2275,7 +2275,7 @@ HB_EXPORT PHB_ITEM hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG 
    return hb_stackReturnItem();
 }
 
-HB_EXPORT PHB_ITEM hb_objSendMsg( PHB_ITEM pObject, const char *sMsg, ULONG ulArg, ... )
+PHB_ITEM hb_objSendMsg( PHB_ITEM pObject, const char *sMsg, ULONG ulArg, ... )
 {
    hb_vmPushSymbol( hb_dynsymGet( sMsg )->pSymbol );
    hb_vmPush( pObject );
@@ -2339,7 +2339,7 @@ static PHB_SYMB hb_objGetFuncSym( PHB_ITEM pItem )
 }
 
 /* send message which allows to set execution context for debugger */
-HB_EXPORT void hb_dbgObjSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage, int iParamOffset )
+void hb_dbgObjSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage, int iParamOffset )
 {
    PHB_DYNS pMsgSym;
 

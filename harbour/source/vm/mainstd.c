@@ -78,7 +78,7 @@ char ** __crt0_glob_function( char * _arg )
 #endif
 
 #if defined(__WATCOMC__) && ( defined(HB_OS_LINUX) || defined(HB_OS_OS2) )
-HB_EXPORT void hb_forceLinkMainStd( void ) {}
+void hb_forceLinkMainStd( void ) {}
 #endif
 
 HB_EXTERN_END

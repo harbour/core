@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 17:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/arrays.c
+  * source/vm/classes.c
+  * source/vm/cmdarg.c
+  * source/vm/codebloc.c
+  * source/vm/debug.c
+  * source/vm/dynsym.c
+  * source/vm/extend.c
+  * source/vm/fm.c
+  * source/vm/hashes.c
+  * source/vm/hvm.c
+  * source/vm/itemapi.c
+  * source/vm/maindll.c
+  * source/vm/maindllh.c
+  * source/vm/maindllp.c
+  * source/vm/mainstd.c
+  * source/vm/mainwin.c
+  * source/vm/set.c
+  * source/vm/vm.c
+    % Removed HB_EXPORT from remaining function definitions.
+
 2008-11-09 17:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/gtwvg/wvgcore.c
   * contrib/gtwvg/wvgutils.c

@@ -184,7 +184,7 @@ HB_FUNC( __DBGVMPARLLIST )
    hb_itemReturnRelease( hb_arrayFromParams( hb_parni( 1 ) + 1 ) );
 }
 
-HB_EXPORT PHB_ITEM hb_dbg_vmVarLGet( int iLevel, int iLocal )
+PHB_ITEM hb_dbg_vmVarLGet( int iLevel, int iLocal )
 {
    PHB_ITEM pLocal = NULL;
    LONG lBaseOffset;

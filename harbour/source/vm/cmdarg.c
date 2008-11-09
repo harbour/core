@@ -91,7 +91,7 @@ HB_EXTERN_BEGIN
 
 HB_EXTERN_END
 
-HB_EXPORT void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow )
+void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow )
 {
    s_hInstance = hInstance;
    s_hPrevInstance = hPrevInstance;
@@ -99,7 +99,7 @@ HB_EXPORT void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iC
    s_WinMainParam = TRUE;
 }
 
-HB_EXPORT BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow )
+BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow )
 {
    if( phInstance )
       *phInstance = s_hInstance;
@@ -113,7 +113,7 @@ HB_EXPORT BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, i
 
 #endif
 
-HB_EXPORT void hb_cmdargInit( int argc, char * argv[] )
+void hb_cmdargInit( int argc, char * argv[] )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargInit(%d, %p)", argc, argv));
 
@@ -466,25 +466,25 @@ ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
 }
 
 /* ChangeLog SVN revision number */
-HB_EXPORT int hb_verSvnID( void )
+int hb_verSvnID( void )
 {
    return HB_VER_SVNID;
 }
 
 /* ChangeLog ID string */
-HB_EXPORT const char * hb_verSvnChangeLogID( void )
+const char * hb_verSvnChangeLogID( void )
 {
    return HB_VER_CHLID;
 }
 
 /* ChangeLog last entry string */
-HB_EXPORT const char * hb_verSvnLastEntry( void )
+const char * hb_verSvnLastEntry( void )
 {
    return HB_VER_LENTRY;
 }
 
 /* build time C compiler flags in C_USR envvar */
-HB_EXPORT const char * hb_verFlagsC( void )
+const char * hb_verFlagsC( void )
 {
 #ifdef HB_VER_C_USR
    return HB_VER_C_USR;
@@ -494,7 +494,7 @@ HB_EXPORT const char * hb_verFlagsC( void )
 }
 
 /* build time linker flags in L_USR envvar */
-HB_EXPORT const char * hb_verFlagsL( void )
+const char * hb_verFlagsL( void )
 {
 #ifdef HB_VER_L_USR
    return HB_VER_L_USR;
@@ -504,7 +504,7 @@ HB_EXPORT const char * hb_verFlagsL( void )
 }
 
 /* build time Harbour compiler flags in PRG_USR envvar */
-HB_EXPORT const char * hb_verFlagsPRG( void )
+const char * hb_verFlagsPRG( void )
 {
 #ifdef HB_VER_PRG_USR
    return HB_VER_PRG_USR;

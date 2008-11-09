@@ -57,7 +57,7 @@
 
 #include "hbapi.h"
 
-HB_EXPORT HB_VMHANDLE hb_xvalloc( ULONG nSize, USHORT nFlags )
+HB_VMHANDLE hb_xvalloc( ULONG nSize, USHORT nFlags )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( nSize );
@@ -65,13 +65,13 @@ HB_EXPORT HB_VMHANDLE hb_xvalloc( ULONG nSize, USHORT nFlags )
    return 0;
 }
 
-HB_EXPORT void hb_xvfree( HB_VMHANDLE h )
+void hb_xvfree( HB_VMHANDLE h )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
 }
 
-HB_EXPORT HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, ULONG nSize, USHORT nFlags )
+HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, ULONG nSize, USHORT nFlags )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
@@ -80,14 +80,14 @@ HB_EXPORT HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, ULONG nSize, USHORT nFlags )
    return 0;
 }
 
-HB_EXPORT void * hb_xvlock( HB_VMHANDLE h )
+void * hb_xvlock( HB_VMHANDLE h )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
    return NULL;
 }
 
-HB_EXPORT void hb_xvunlock( HB_VMHANDLE h )
+void hb_xvunlock( HB_VMHANDLE h )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
@@ -95,14 +95,14 @@ HB_EXPORT void hb_xvunlock( HB_VMHANDLE h )
 
 /* Wire */
 
-HB_EXPORT void * hb_xvwire( HB_VMHANDLE h )
+void * hb_xvwire( HB_VMHANDLE h )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
    return NULL;
 }
 
-HB_EXPORT void hb_xvunwire( HB_VMHANDLE h )
+void hb_xvunwire( HB_VMHANDLE h )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
@@ -111,14 +111,14 @@ HB_EXPORT void hb_xvunwire( HB_VMHANDLE h )
 
 /* State */
 
-HB_EXPORT ULONG hb_xvlockcount( HB_VMHANDLE h )
+ULONG hb_xvlockcount( HB_VMHANDLE h )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
    return 0;
 }
 
-HB_EXPORT ULONG hb_xvsize( HB_VMHANDLE h )
+ULONG hb_xvsize( HB_VMHANDLE h )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
@@ -127,28 +127,20 @@ HB_EXPORT ULONG hb_xvsize( HB_VMHANDLE h )
 
 /* Heap */
 
-HB_EXPORT HB_VMHANDLE hb_xvheapnew( ULONG nSize )
+HB_VMHANDLE hb_xvheapnew( ULONG nSize )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( nSize );
    return 0;
 }
 
-HB_EXPORT void hb_xvheapdestroy( HB_VMHANDLE h )
+void hb_xvheapdestroy( HB_VMHANDLE h )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
 }
 
-HB_EXPORT HB_VMHANDLE hb_xvheapresize( HB_VMHANDLE h, ULONG nSize )
-{
-   /* TODO */
-   HB_SYMBOL_UNUSED( h );
-   HB_SYMBOL_UNUSED( nSize );
-   return 0;
-}
-
-HB_EXPORT ULONG hb_xvheapalloc( HB_VMHANDLE h, ULONG nSize )
+HB_VMHANDLE hb_xvheapresize( HB_VMHANDLE h, ULONG nSize )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
@@ -156,14 +148,22 @@ HB_EXPORT ULONG hb_xvheapalloc( HB_VMHANDLE h, ULONG nSize )
    return 0;
 }
 
-HB_EXPORT void hb_xvheapfree( HB_VMHANDLE h, ULONG nOffset )
+ULONG hb_xvheapalloc( HB_VMHANDLE h, ULONG nSize )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+   HB_SYMBOL_UNUSED( nSize );
+   return 0;
+}
+
+void hb_xvheapfree( HB_VMHANDLE h, ULONG nOffset )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
    HB_SYMBOL_UNUSED( nOffset );
 }
 
-HB_EXPORT void * hb_xvheaplock( HB_VMHANDLE h, ULONG nOffset )
+void * hb_xvheaplock( HB_VMHANDLE h, ULONG nOffset )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
@@ -171,7 +171,7 @@ HB_EXPORT void * hb_xvheaplock( HB_VMHANDLE h, ULONG nOffset )
    return NULL;
 }
 
-HB_EXPORT void hb_xvheapunlock( HB_VMHANDLE h, ULONG nOffset )
+void hb_xvheapunlock( HB_VMHANDLE h, ULONG nOffset )
 {
    /* TODO */
    HB_SYMBOL_UNUSED( h );
