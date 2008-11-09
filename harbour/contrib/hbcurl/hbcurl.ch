@@ -224,6 +224,12 @@
 #define HB_CURLOPT_CRLFILE                    169
 #define HB_CURLOPT_ISSUERCERT                 170
 #define HB_CURLOPT_ADDRESS_SCOPE              171
+#define HB_CURLOPT_CERTINFO                   172
+#define HB_CURLOPT_POSTREDIR                  173
+#define HB_CURLOPT_USERNAME                   174
+#define HB_CURLOPT_PASSWORD                   175
+#define HB_CURLOPT_PROXYUSERNAME              176
+#define HB_CURLOPT_PROXYPASSWORD              177
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_PROGRESSBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
@@ -366,6 +372,7 @@
 #define HB_CURLINFO_FTP_ENTRY_PATH            31
 #define HB_CURLINFO_PRIMARY_IP                32
 #define HB_CURLINFO_APPCONNECT_TIME           33
+#define HB_CURLINFO_CERTINFO                  34
 
 /* curl result codes. */
 

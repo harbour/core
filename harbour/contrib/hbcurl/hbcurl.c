@@ -809,9 +809,25 @@ HB_FUNC( CURL_EASY_SETOPT )
          case HB_CURLOPT_USERPWD:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_USERPWD, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
             break;
+#if LIBCURL_VERSION_NUM >= 0x071301
+         case HB_CURLOPT_USERNAME:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_USERNAME, hb_parc( 3 ) );
+            break;
+         case HB_CURLOPT_PASSWORD:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_PASSWORD, hb_parc( 3 ) );
+            break;
+#endif
          case HB_CURLOPT_PROXYUSERPWD:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROXYUSERPWD, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
             break;
+#if LIBCURL_VERSION_NUM >= 0x071301
+         case HB_CURLOPT_PROXYUSERNAME:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROXYUSERNAME, hb_parc( 3 ) );
+            break;
+         case HB_CURLOPT_PROXYPASSWORD:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROXYPASSWORD, hb_parc( 3 ) );
+            break;
+#endif
          case HB_CURLOPT_HTTPAUTH:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPAUTH, hb_parnl( 3 ) );
             break;
@@ -838,7 +854,12 @@ HB_FUNC( CURL_EASY_SETOPT )
             break;
 #if LIBCURL_VERSION_NUM >= 0x071101
          case HB_CURLOPT_POST301:
+         case HB_CURLOPT_POSTREDIR:
+#if LIBCURL_VERSION_NUM >= 0x071301
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_POSTREDIR, HB_CURL_OPT_BOOL( 3 ) );
+#else
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_POST301, HB_CURL_OPT_BOOL( 3 ) );
+#endif
             break;
 #endif
          case HB_CURLOPT_PUT:
@@ -850,7 +871,7 @@ HB_FUNC( CURL_EASY_SETOPT )
 #if LIBCURL_VERSION_NUM >= 0x071101
          case HB_CURLOPT_POSTFIELDS:
          case HB_CURLOPT_COPYPOSTFIELDS:
-            res = curl_easy_setopt( hb_curl->curl, CURLOPT_COPYPOSTFIELDS, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_COPYPOSTFIELDS, hb_parc( 3 ) );
             break;
 #endif
          case HB_CURLOPT_POSTFIELDSIZE:
@@ -1253,10 +1274,15 @@ HB_FUNC( CURL_EASY_SETOPT )
             break;
 #if LIBCURL_VERSION_NUM > 0x071300
          case HB_CURLOPT_CRLFILE:
-            res = curl_easy_setopt( hb_curl->curl, CURLOPT_CRLFILE, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_CRLFILE, hb_parc( 3 ) );
             break;
          case HB_CURLOPT_ISSUERCERT:
-            res = curl_easy_setopt( hb_curl->curl, CURLOPT_ISSUERCERT, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_ISSUERCERT, hb_parc( 3 ) );
+            break;
+#endif
+#if LIBCURL_VERSION_NUM > 0x071301
+         case HB_CURLOPT_CERTINFO:
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_CERTINFO, HB_CURL_OPT_BOOL( 3 ) );
             break;
 #endif
 
@@ -1269,7 +1295,7 @@ HB_FUNC( CURL_EASY_SETOPT )
 #endif
 #if LIBCURL_VERSION_NUM >= 0x071101
          case HB_CURLOPT_SSH_HOST_PUBLIC_KEY_MD5:
-            res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_HOST_PUBLIC_KEY_MD5, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_HOST_PUBLIC_KEY_MD5, hb_parc( 3 ) );
             break;
 #endif
 #if LIBCURL_VERSION_NUM >= 0x071001
@@ -1645,6 +1671,12 @@ HB_FUNC( CURL_EASY_GETINFO )
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_APPCONNECT_TIME, &ret_double );
 #endif
          type = HB_CURL_INFO_TYPE_DOUBLE;
+         break;
+      case HB_CURLINFO_CERTINFO:
+#if LIBCURL_VERSION_NUM >= 0x071301
+         res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_CERTINFO, &ret_ptr );
+#endif
+         type = HB_CURL_INFO_TYPE_PTR;
          break;
       }
 

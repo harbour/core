@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 16:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbcurl/hbcurl.c
+  * contrib/hbcurl/hbcurl.ch
+    + Added libcurl 7.19.1 features.
+    % Removed hashing calls from some parts which are 
+      only compiled for libcurl versions which don't need 
+      hashing anyway.
+
+  * ChangeLog
+    * Changed CVS ID tag name in some very old entries to 
+      avoid them being replaced by versioning system.
+
 2008-11-09 16:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak
@@ -96736,7 +96748,7 @@ Mon Jun 07 12:58:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
   * include/ctoharb.h
     - Added word wDec parameter to PushDouble prototype (needed by C++ compilers)
   * include/gtapi.h
-    - Added $Id$ block at top
+    - Added CVS ID
     - Added gtWhereX()
     - Added gtWhereY()
   * source/rtl/console.c
@@ -96748,7 +96760,7 @@ Mon Jun 07 12:58:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     - Borland support now takes into account that older compiler versions
       don't have the POSIX S_ flags.
   * source/rtl/gtapi.c
-    - Added $Id$ block at top
+    - Added CVS ID
     - Changed #include <types.h> to #include <extend.h>
     - Modified _gtWriteCon() to process control characters
   * source/rtl/set.c
@@ -96757,27 +96769,27 @@ Mon Jun 07 12:58:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
   * source/rtl/transfrm.c
     - Added use of wDec parameter in calls to PushDouble()
   * source/rtl/gt/gtdos.c
-    - Added $Id$ block at top
+    - Added CVS ID
     - Added gtWhereX()
     - Added gtWhereY()
     - Removed screen coordinate adjustments (i.e., - 1), because
       Clipper (and therefore Harbour) screen origin is (0,0)
   * source/rtl/gt/gtos2.c
-    - Added $Id$ block at top
+    - Added CVS ID
     - Added gtWhereX()
     - Added gtWhereY()
     - Removed screen coordinate adjustments (i.e., - 1), because
       Clipper (and therefore Harbour) screen origin is (0,0)
     - Note: Still needs some work - doesn't match output from gtdos.c
   * source/rtl/gt/gtwin.c
-    - Added $Id$ block at top
+    - Added CVS ID
     - Added gtWhereX()
     - Added gtWhereY()
     - Removed screen coordinate adjustments (i.e., - 1), because
       Clipper (and therefore Harbour) screen origin is (0,0)
     - Note: Needs to be tested, because I don't have a Windows compiler
   * source/rtl/gt/gtxxx.c
-    - Added $Id$ block at top
+    - Added CVS ID
     - Added gtWhereX()
     - Added gtWhereY()
   * source/vm/hvm.c
