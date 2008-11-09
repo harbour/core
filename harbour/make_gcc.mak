@@ -423,10 +423,15 @@ $(HARBOUR_DLL) :: $(DLL_OBJS)
 #**********************************************************
 # DLL EXECUTABLE Targets
 #**********************************************************
-$(HBTESTDLL_EXE) : $(HARBOUR_DLL)
-$(HBTESTDLL_EXE) : $(DLL_OBJ_DIR)/mainstd$(OBJEXT) \
-                    $(HBTEST_EXE_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
-	$(CC) $(CEXEFLAGSDLL) -o$@ $^ $(HARBOUR_DLL) $(HB_OS_LIBS)
+$(HBTESTDLL_EXE) :: $(HARBOUR_DLL)
+$(HBTESTDLL_EXE) :: $(DLL_OBJ_DIR)/mainstd$(OBJEXT) \
+                    $(HBTEST_EXE_OBJS:$(OBJ_DIR)/%=$(DLL_OBJ_DIR)/%)
+	$(CC) $(CEXEFLAGSDLL) -o$@ $^ -L$(BIN_DIR) -l$(HARBOUR_DLL:$(BIN_DIR)/lib%.so=%) $(HB_OS_LIBS)
+#**********************************************************
+$(HBRUNDLL_EXE) :: $(HARBOUR_DLL)
+$(HBRUNDLL_EXE) :: $(DLL_OBJ_DIR)/mainstd$(OBJEXT) \
+                    $(HBRUN_EXE_OBJS:$(OBJ_DIR)/%=$(DLL_OBJ_DIR)/%)
+	$(CC) $(CEXEFLAGSDLL) -o$@ $^ -L$(BIN_DIR) -l$(HARBOUR_DLL:$(BIN_DIR)/lib%.so=%) $(COMPILER_LIB) $(HB_OS_LIBS)
 #----------------------------------------------------------
 $(DLL_OBJ_DIR)/mainstd$(OBJEXT) : $(VM_DIR)/mainstd.c
 	$(CC) $(CLIBFLAGS) -o$@ $<

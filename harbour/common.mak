@@ -276,6 +276,7 @@ HBMAKE_EXE   = $(BIN_DIR)\hbmake$(EXEEXT)
 HB_DLLVER    = 11
 HARBOUR_DLL  = $(BIN_DIR)\$(LIBPREF)harbour-$(HB_DLLVER)-$(HB_CC_NAME)$(DLLEXT)
 HBTESTDLL_EXE= $(BIN_DIR)\hbtest-dll$(EXEEXT)
+HBRUNDLL_EXE = $(BIN_DIR)\hbrun-dll$(EXEEXT)
 
 #**********************************************************
 
@@ -1259,7 +1260,7 @@ HB_BUILD_TARGETS = \
 # variable HB_BUILD_DLL to yes
 
 !if "$(HB_BUILD_DLL)" == "yes"
-HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(HARBOUR_DLL) $(HBTESTDLL_EXE)
+HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(HARBOUR_DLL) $(HBTESTDLL_EXE) $(HBRUNDLL_EXE)
 !endif
 
 #**********************************************************

@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 14:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/make_gcc.mak
+    ! fixed hbtest-dll linking - the path to used harbour shared library
+      was hardcoded in final binaries
+    + added hbrun-dll. Please update make_b32.mak and make_vc.mak
+
 2008-11-09 14:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.mak
     + Added /nxcompat linker flag for non-WinCE, non-DLL, 
