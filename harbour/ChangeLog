@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 14:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_vc.mak
+    + Added /nxcompat linker flag for non-WinCE, non-DLL, 
+      HB_VISUALC_VER >= 80 MSVC executables. 
+      This should add extra safety.
+
+  * include/hbextern.ch
+  * source/rtl/rat.c
+    + Added HB_RAT() which is similar to RAT(), but also accepts 
+      <nStart> and <nEnd> optional paramaters, similarly to HB_AT().
+    ; Please test.
+
+  * source/rtl/at.c
+    * Minor formatting.
+
 2008-11-09 13:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/memvars.c
     ! fixed 3 tracelog messages

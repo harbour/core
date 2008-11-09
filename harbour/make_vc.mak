@@ -163,21 +163,24 @@ CEXEFLAGSDLL   = $(CEXEFLAGSDLL) -MT$(DBGMARKER)
 
 # Linker Flags
 !if "$(HB_BUILD_WINCE)" == "yes"
-LDFLAGS        = /nologo /subsystem:windowsce,4.20 /machine:ARM /armpadcode \
+LDFLAGS        = /nologo /subsystem:windowsce,4.20 /machine:arm /armpadcode \
                  /stack:65536,4096 /nodefaultlib:"oldnames.lib" \
-                 /nodefaultlib:"kernel32.lib" /align:4096 /opt:REF /opt:ICF \
+                 /nodefaultlib:"kernel32.lib" /align:4096 /opt:ref /opt:icf \
                  /libpath:$(LIB_DIR) $(L_USR)
 !if $(HB_VISUALC_VER) >= 80
-LDFLAGS        = $(LDFLAGS) /manifest:NO
+LDFLAGS        = $(LDFLAGS) /manifest:no
 !endif
 LDFLAGSDLL     = /dll \
-                 /nologo /subsystem:WINDOWSCE,4.20 /machine:ARM /armpadcode \
+                 /nologo /subsystem:windowsce,4.20 /machine:arm /armpadcode \
                  /stack:65536,4096 /nodefaultlib:"oldnames.lib" \
                  /libpath:$(LIB_DIR) $(L_USR)
 STANDARD_SYSLIBS = coredll.lib corelibc.lib winsock.lib ws2.lib
 !else
 LDFLAGS        = /nologo /libpath:$(LIB_DIR) $(L_USR)
 LDFLAGSDLL     = /dll $(LDFLAGS)
+!if $(HB_VISUALC_VER) >= 80
+LDFLAGS        = $(LDFLAGS) /nxcompat /dynamicbase /fixed:no
+!endif
 # user32.lib: *Clipboard*(), CharToOemBuff(), OemToCharBuff(), GetKeyState(), GetKeyboardState(), SetKeyboardState()
 # wsock32.lib: hbinet
 # advapi32.lib: GetUserName()

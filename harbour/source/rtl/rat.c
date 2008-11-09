@@ -83,3 +83,58 @@ HB_FUNC( RAT )
       hb_retni( 0 );
 }
 
+HB_FUNC( HB_RAT )
+{
+   ULONG ulSubLen = hb_parclen( 1 );
+
+   if( ulSubLen )
+   {
+      long lPos = hb_parclen( 2 ) - ulSubLen;
+
+      if( lPos >= 0 )
+      {
+         char * pszSub = hb_parc( 1 );
+         char * pszText = hb_parc( 2 );
+         BOOL bFound = FALSE;
+         long lStart;
+
+         if( ISNUM( 3 ) )
+         {
+            lStart = hb_parnl( 3 );
+            if( lStart >= 1 )
+               --lStart;
+            else
+               lStart = 0;
+         }
+         else
+            lStart = 0;
+         
+         if( ISNUM( 4 ) )
+         {
+            long lEnd = hb_parnl( 4 );
+
+            if( lEnd >= 1 )
+            {
+               --lEnd;
+
+               if( lEnd < lPos )
+                  lPos = lEnd;
+            }
+         }
+
+         while( lPos >= lStart && !bFound )
+         {
+            if( *( pszText + lPos ) == *pszSub )
+               bFound = ( memcmp( pszSub, pszText + lPos, ulSubLen ) == 0 );
+            lPos--;
+         }
+
+         hb_retnl( bFound ? lPos + 2 : 0 );
+      }
+      else
+         hb_retni( 0 );
+   }
+   else
+      /* This function never seems to raise an error */
+      hb_retni( 0 );
+}

@@ -78,7 +78,7 @@ HB_FUNC( HB_AT )
          ulPos = hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
                            hb_itemGetCPtr( pText ) + ulStart - 1, ulEnd - ulStart + 1 );
 
-         if( ulPos > 0)
+         if( ulPos > 0 )
             ulPos += ( ulStart - 1 );
 
          hb_retnl( ulPos );
