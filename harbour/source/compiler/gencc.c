@@ -58,17 +58,20 @@ void hb_compGenCString( FILE * yyc, BYTE * pText, ULONG ulLen )
        * NOTE: After optimization some CHR(n) can be converted
        *       into a string containing nonprintable characters.
        *
-       * TODO: add switch to use hexadecimal format "%#04x"
-       *
        * ? is escaped to avoid conflicts with trigraph sequences which
        * are part of ANSI C standard
        */
       if( uchr == '"' || uchr == '\\' || uchr == '?' )
          fprintf( yyc, "\\%c", uchr );
       else if( uchr < ( BYTE ) ' ' || uchr >= 127 )
-         fprintf( yyc, "\\%03o%s", uchr, ulPos < ulLen - 1 &&
-                  pText[ ulPos + 1 ] >= ( BYTE ) '0' &&
-                  pText[ ulPos + 1 ] <= ( BYTE ) '9' ? "\" \"" : "" );
+      {
+         BYTE uchrnext = pText[ ulPos + 1 ];
+
+         fprintf( yyc, "\\x%02X%s", uchr, ulPos < ulLen - 1 &&
+                  ( uchrnext >= ( BYTE ) '0' && uchrnext <= ( BYTE ) '9' ) || 
+                  ( uchrnext >= ( BYTE ) 'a' && uchrnext <= ( BYTE ) 'z' ) || 
+                  ( uchrnext >= ( BYTE ) 'A' && uchrnext <= ( BYTE ) 'Z' ) ? "\" \"" : "" );
+      }
       else
          fprintf( yyc, "%c", uchr );
    }

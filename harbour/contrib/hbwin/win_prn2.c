@@ -174,11 +174,11 @@ BOOL hb_GetDefaultPrinter( char * pPrinterName, LPDWORD pdwBufferSize )
       if( dwSize && dwSize < *pdwBufferSize )
       {
          dwSize = 0;
-         while( pPrinterName[dwSize] != '\0' && pPrinterName[dwSize] != ',' )
+         while( pPrinterName[ dwSize ] != '\0' && pPrinterName[ dwSize ] != ',' )
          {
             dwSize++;
          }
-         pPrinterName[dwSize] = '\0';
+         pPrinterName[ dwSize ] = '\0';
          *pdwBufferSize = dwSize + 1;
          Result = TRUE;
       }
@@ -323,7 +323,7 @@ HB_FUNC( PRINTERPORTTONAME )
 
 LONG hb_PrintFileRaw( UCHAR * cPrinterName, UCHAR * cFileName, UCHAR * cDocName )
 {
-   UCHAR printBuffer[BIG_PRINT_BUFFER];
+   UCHAR printBuffer[ BIG_PRINT_BUFFER ];
    HANDLE hPrinter, hFile;
    DOC_INFO_1 DocInfo;
    DWORD nRead, nWritten;
@@ -348,7 +348,7 @@ LONG hb_PrintFileRaw( UCHAR * cPrinterName, UCHAR * cFileName, UCHAR * cDocName 
                while( ReadFile( hFile, printBuffer, BIG_PRINT_BUFFER, &nRead, NULL )
                       && ( nRead > 0 ) )
                {
-                  if( printBuffer[nRead - 1] == 26 )
+                  if( printBuffer[ nRead - 1 ] == 26 )
                   {
                      nRead--;   /* Skip the EOF() character */
                   }

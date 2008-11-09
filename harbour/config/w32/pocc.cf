@@ -16,7 +16,7 @@ CC_IN = -c
 CC_OUT = -Fo
 CPPFLAGS = -I.
 
-CPPFLAGS += -Ze -Go
+CPPFLAGS += -Ze -Go -MT
 
 # optimizations
 CPPFLAGS += -Ot -Ox

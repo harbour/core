@@ -23,7 +23,7 @@ CPPFLAGS += -Ze -Go
 CPPFLAGS += -Ot -Ox
 
 # For Pocket PC and ARM processors (including XScale)
-CPPFLAGS += -Tarm-coff -DSTRSAFE_NO_DEPRECATE
+CPPFLAGS += -Tarm-coff
 
 ifneq ($(HB_INC_COMPILE),)
 CPPFLAGS += -I$(HB_INC_COMPILE)

@@ -322,7 +322,7 @@ FUNCTION Sx_KillTag( xTag, xIndex )
          ENDIF
          IF !Empty( cIndex )
             IF ordBagClear( cIndex )
-               lRet := ferase( cIndex ) != -1
+               lRet := FErase( cIndex ) != -1
             ENDIF
          ENDIF
       ENDIF
@@ -389,11 +389,11 @@ FUNCTION RDD_Info( xID )
 
    IF ISNUMBER( xID )
       IF !Empty( Alias( xID ) )
-         ( xID )->( RDDName() )
+         ( xID )->( rddName() )
       ENDIF
    ELSEIF ISCHARACTER( xID )
       cRDD := Upper( AllTrim( xID ) )
-      IF ascan( RDDList(), {|x| Upper( x ) == cRDD } ) == 0
+      IF AScan( rddList(), {|x| Upper( x ) == cRDD } ) == 0
          cRDD := NIL
       ENDIF
    ELSEIF xID == NIL
@@ -442,11 +442,11 @@ FUNCTION Sx_BLOB2File( cFileName, cFldName )
 
 FUNCTION Sx_File2BLOB( cFileName, cFldName, nActionCode )
    LOCAL nAction := 0
-   IF HB_BITAND( nActionCode, BLOB_FILECOMPRESS ) != 0
-      nAction := HB_BITOR( nAction, FILEPUT_COMPRESS )
+   IF hb_bitAnd( nActionCode, BLOB_FILECOMPRESS ) != 0
+      nAction := hb_bitOr( nAction, FILEPUT_COMPRESS )
    ENDIF
-   IF HB_BITAND( nActionCode, BLOB_FILEENCRYPT ) != 0
-      nAction := HB_BITOR( nAction, FILEPUT_ENCRYPT )
+   IF hb_bitAnd( nActionCode, BLOB_FILEENCRYPT ) != 0
+      nAction := hb_bitOr( nAction, FILEPUT_ENCRYPT )
    ENDIF
    RETURN dbFileGet( cFldName, cFileName, nAction )
 

@@ -258,7 +258,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
    #if defined( __MINGW32__ )
    #elif defined( __BORLANDC__ ) || defined(__DMC__)
    #else
-      DWORD *pESP;
+      DWORD * pESP;
    #endif
 
    /* Reserve 256 bytes of stack space for our arguments */
@@ -267,7 +267,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
                     "\tsubl $0x100, %%esp\n"
                     : "=r" (pStack) );
    #elif defined( __BORLANDC__ ) || defined(__DMC__)
-      pStack = (DWORD *)_ESP;
+      pStack = ( DWORD * ) _ESP;
       _ESP -= 0x100;
    #else
       _asm mov pStack, esp
@@ -279,10 +279,10 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
       4-byte boundary. We start at the rightmost argument. */
    for( i = 0; i < nArgs; i++ )
    {
-      nInd  = (nArgs - 1) - i;
+      nInd  = ( nArgs - 1 ) - i;
       /* Start at the back of the arg ptr, aligned on a DWORD */
-      nSize = (Parm[nInd].nWidth + 3) / 4 * 4;
-      pArg  = (BYTE *) Parm[nInd].pArg + nSize - 4;
+      nSize = ( Parm[ nInd ].nWidth + 3 ) / 4 * 4;
+      pArg  = ( BYTE * ) Parm[ nInd ].pArg + nSize - 4;
       dwStSize += ( DWORD ) nSize; /* Count no of bytes on stack */
 
       nLoops = ( nSize / 4 ) - 1;
@@ -290,7 +290,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
       while( nSize > 0 )
       {
          /* Copy argument to the stack */
-         if( Parm[nInd].dwFlags & DC_FLAG_ARGPTR )
+         if( Parm[ nInd ].dwFlags & DC_FLAG_ARGPTR )
          {
             /* Arg has a ptr to a variable that has the arg */
             dwVal = ( DWORD ) pArg; /* Get first four bytes */
@@ -299,7 +299,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
          else
          {
             /* Arg has the real arg */
-            dwVal = *( (DWORD *)( (BYTE *) ( &( Parm[nInd].numargs.dwArg ) ) + ( nLoops * 4 ) ) );
+            dwVal = *( ( DWORD * )( ( BYTE * ) ( &( Parm[ nInd ].numargs.dwArg ) ) + ( nLoops * 4 ) ) );
          }
 
          /* Do push dwVal */
@@ -344,18 +344,18 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
       else if( pRet == NULL )
       {
          Res.Int = dwEAX;
-         (&Res.Int)[1] = dwEDX;
+         ( &Res.Int )[ 1 ] = dwEDX;
       }
       else if( ( ( iFlags & DC_BORLAND ) == 0 ) && ( nRetSiz <= 8 ) )
       {
          /* Microsoft optimized less than 8-bytes structure passing */
-         ((int *)pRet)[0] = dwEAX;
-         ((int *)pRet)[1] = dwEDX;
+         ( ( int * ) pRet )[ 0 ] = dwEAX;
+         ( ( int * ) pRet )[ 1 ] = dwEDX;
       }
    #elif defined( __BORLANDC__ ) || defined(__DMC__)
-      _ESP += (0x100 - dwStSize);
+      _ESP += ( 0x100 - dwStSize );
       _EDX =  ( DWORD ) &lpFunction;
-      __emit__(0xff,0x12); /* call [edx]; */
+      __emit__( 0xFF, 0x12 ); /* call [edx]; */
       dwEAX = _EAX;
       dwEDX = _EDX;
 
@@ -370,14 +370,14 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
          _EBX = ( DWORD ) &Res;
          _EAX = dwEAX;
          _EDX = dwEDX;
-         __emit__(0xd9,0x1b);   /*     _asm fnstp float ptr [ebx] */
+         __emit__( 0xD9, 0x1B );   /*     _asm fnstp float ptr [ebx] */
       }
       else if( iFlags & DC_RETVAL_MATH8 )
       {
          _EBX = ( DWORD ) &Res;
          _EAX = dwEAX;
          _EDX = dwEDX;
-         __emit__(0xdd,0x1b);   /*     _asm fnstp qword ptr [ebx] */
+         __emit__( 0xDD, 0x1B );   /*     _asm fnstp qword ptr [ebx] */
       }
       else if( pRet == NULL )
       {
@@ -386,7 +386,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
          _EDX = dwEDX;
 /*       _asm mov DWORD PTR [ebx], eax */
 /*       _asm mov DWORD PTR [ebx + 4], edx */
-         __emit__(0x89,0x03,0x89,0x53,0x04);
+         __emit__( 0x89, 0x03, 0x89, 0x53, 0x04 );
       }
       else if( ( ( iFlags & DC_BORLAND ) == 0 ) && ( nRetSiz <= 8 ) )
       {
@@ -395,7 +395,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
          _EDX = dwEDX;
 /*       _asm mov DWORD PTR [ebx], eax */
 /*       _asm mov DWORD PTR [ebx + 4], edx */
-         __emit__(0x89,0x03,0x89,0x53,0x04);
+         __emit__( 0x89, 0x03, 0x89, 0x53, 0x04 );
       }
    #else
       _asm add esp, 0x100       /* Restore to original position */
