@@ -130,7 +130,7 @@ LDFLAGS        = $(LDFLAGS) $(L_USR)
 
 # This is needed, otherwise the libs may overflow when
 # debug info is requested with -v -y
-ARFLAGS = /P32 $(A_USR)
+ARFLAGS = /P64 $(A_USR)
 
 #**********************************************************
 # COMPILE Rules

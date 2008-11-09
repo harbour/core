@@ -8,6 +8,178 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 20:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  - contrib/examples/dbu/bld_b32.bat
+  - contrib/examples/dbu/bld_vc.bat
+  + contrib/examples/dbu/hbmk_b32.bat
+  + contrib/examples/dbu/hbmk_vc.bat
+  - contrib/examples/guestbk/bld_b32.bat
+  - contrib/examples/guestbk/bld_vc.bat
+  + contrib/examples/guestbk/hbmk_b32.bat
+  + contrib/examples/guestbk/hbmk_vc.bat
+  - contrib/examples/hbsqlit2/tests/bld_b32.bat
+  - contrib/examples/hbsqlit2/tests/bld_vc.bat
+  + contrib/examples/hbsqlit2/tests/hbmk_b32.bat
+  + contrib/examples/hbsqlit2/tests/hbmk_vc.bat
+  - contrib/examples/hscript/bld_b32.bat
+  - contrib/examples/hscript/bld_vc.bat
+  + contrib/examples/hscript/hbmk_b32.bat
+  + contrib/examples/hscript/hbmk_vc.bat
+  - contrib/examples/pe/bld_b32.bat
+  - contrib/examples/pe/bld_vc.bat
+  + contrib/examples/pe/hbmk_b32.bat
+  + contrib/examples/pe/hbmk_vc.bat
+  - contrib/examples/pp/bld_b32.bat
+  - contrib/examples/pp/bld_vc.bat
+  + contrib/examples/pp/hbmk_b32.bat
+  + contrib/examples/pp/hbmk_vc.bat
+  - contrib/gtwvg/tests/bld_b32.bat
+  - contrib/gtwvg/tests/bld_vc.bat
+  + contrib/gtwvg/tests/hbmk_b32.bat
+  + contrib/gtwvg/tests/hbmk_vc.bat
+  - contrib/hbapollo/tests/bld_b32.bat
+  - contrib/hbapollo/tests/bld_vc.bat
+  + contrib/hbapollo/tests/hbmk_b32.bat
+  + contrib/hbapollo/tests/hbmk_vc.bat
+  - contrib/hbbtree/tests/bld_b32.bat
+  - contrib/hbbtree/tests/bld_djgp.bat
+  - contrib/hbbtree/tests/bld_vc.bat
+  + contrib/hbbtree/tests/hbmk_b32.bat
+  + contrib/hbbtree/tests/hbmk_djg.bat
+  + contrib/hbbtree/tests/hbmk_vc.bat
+  - contrib/hbclipsm/tests/bld_b32.bat
+  - contrib/hbclipsm/tests/bld_vc.bat
+  + contrib/hbclipsm/tests/hbmk_b32.bat
+  + contrib/hbclipsm/tests/hbmk_vc.bat
+  - contrib/hbct/tests/bld_b32.bat
+  - contrib/hbct/tests/bld_vc.bat
+  + contrib/hbct/tests/hbmk_b32.bat
+  + contrib/hbct/tests/hbmk_vc.bat
+  - contrib/hbcurl/tests/bld_b32.bat
+  - contrib/hbcurl/tests/bld_vc.bat
+  + contrib/hbcurl/tests/hbmk_b32.bat
+  + contrib/hbcurl/tests/hbmk_vc.bat
+  - contrib/hbfbird/tests/bld_b32.bat
+  - contrib/hbfbird/tests/bld_vc.bat
+  + contrib/hbfbird/tests/hbmk_b32.bat
+  + contrib/hbfbird/tests/hbmk_vc.bat
+  - contrib/hbfimage/tests/bld_b32.bat
+  - contrib/hbfimage/tests/bld_vc.bat
+  + contrib/hbfimage/tests/hbmk_b32.bat
+  + contrib/hbfimage/tests/hbmk_vc.bat
+  - contrib/hbgd/tests/bld_b32.bat
+  - contrib/hbgd/tests/bld_vc.bat
+  + contrib/hbgd/tests/hbmk_b32.bat
+  + contrib/hbgd/tests/hbmk_vc.bat
+  - contrib/hbgf/tests/bld_b32.bat
+  - contrib/hbgf/tests/bld_vc.bat
+  + contrib/hbgf/tests/hbmk_b32.bat
+  + contrib/hbgf/tests/hbmk_vc.bat
+  - contrib/hbhpdf/tests/bld_b32.bat
+  - contrib/hbhpdf/tests/bld_vc.bat
+  + contrib/hbhpdf/tests/hbmk_b32.bat
+  + contrib/hbhpdf/tests/hbmk_vc.bat
+  - contrib/hbmisc/tests/bld_b32.bat
+  - contrib/hbmisc/tests/bld_vc.bat
+  + contrib/hbmisc/tests/hbmk_b32.bat
+  + contrib/hbmisc/tests/hbmk_vc.bat
+  - contrib/hbmysql/tests/bld_b32.bat
+  - contrib/hbmysql/tests/bld_vc.bat
+  + contrib/hbmysql/tests/hbmk_b32.bat
+  + contrib/hbmysql/tests/hbmk_vc.bat
+  - contrib/hbmzip/tests/bld_b32.bat
+  - contrib/hbmzip/tests/bld_vc.bat
+  + contrib/hbmzip/tests/hbmk_b32.bat
+  + contrib/hbmzip/tests/hbmk_vc.bat
+  - contrib/hbnf/tests/bld_b32.bat
+  - contrib/hbnf/tests/bld_vc.bat
+  + contrib/hbnf/tests/hbmk_b32.bat
+  + contrib/hbnf/tests/hbmk_vc.bat
+  - contrib/hbodbc/tests/bld_b32.bat
+  - contrib/hbodbc/tests/bld_vc.bat
+  + contrib/hbodbc/tests/hbmk_b32.bat
+  + contrib/hbodbc/tests/hbmk_vc.bat
+  - contrib/hbole/tests/bld_b32.bat
+  - contrib/hbole/tests/bld_vc.bat
+  + contrib/hbole/tests/hbmk_b32.bat
+  + contrib/hbole/tests/hbmk_vc.bat
+  - contrib/hbpgsql/tests/bld_b32.bat
+  - contrib/hbpgsql/tests/bld_vc.bat
+  + contrib/hbpgsql/tests/hbmk_b32.bat
+  + contrib/hbpgsql/tests/hbmk_vc.bat
+  - contrib/hbsqlit3/tests/bld_b32.bat
+  - contrib/hbsqlit3/tests/bld_vc.bat
+  + contrib/hbsqlit3/tests/hbmk_b32.bat
+  + contrib/hbsqlit3/tests/hbmk_vc.bat
+  - contrib/hbtip/tests/bld_b32.bat
+  - contrib/hbtip/tests/bld_vc.bat
+  + contrib/hbtip/tests/hbmk_b32.bat
+  + contrib/hbtip/tests/hbmk_vc.bat
+  - contrib/hbtpathy/tests/bld_b32.bat
+  - contrib/hbtpathy/tests/bld_vc.bat
+  + contrib/hbtpathy/tests/hbmk_b32.bat
+  + contrib/hbtpathy/tests/hbmk_vc.bat
+  - contrib/hbvpdf/tests/bld_b32.bat
+  - contrib/hbvpdf/tests/bld_vc.bat
+  + contrib/hbvpdf/tests/hbmk_b32.bat
+  + contrib/hbvpdf/tests/hbmk_vc.bat
+  - contrib/hbwhat/tests/bld_b32.bat
+  - contrib/hbwhat/tests/bld_vc.bat
+  + contrib/hbwhat/tests/hbmk_b32.bat
+  + contrib/hbwhat/tests/hbmk_vc.bat
+  - contrib/hbwin/tests/bld_b32.bat
+  - contrib/hbwin/tests/bld_vc.bat
+  + contrib/hbwin/tests/hbmk_b32.bat
+  + contrib/hbwin/tests/hbmk_vc.bat
+  - contrib/hbziparc/tests/bld_b32.bat
+  - contrib/hbziparc/tests/bld_vc.bat
+  + contrib/hbziparc/tests/hbmk_b32.bat
+  + contrib/hbziparc/tests/hbmk_vc.bat
+  - contrib/rddado/tests/bld_b32.bat
+  - contrib/rddado/tests/bld_vc.bat
+  + contrib/rddado/tests/hbmk_b32.bat
+  + contrib/rddado/tests/hbmk_vc.bat
+  - contrib/rddads/tests/bld_b32.bat
+  - contrib/rddads/tests/bld_vc.bat
+  + contrib/rddads/tests/hbmk_b32.bat
+  + contrib/rddads/tests/hbmk_vc.bat
+  - contrib/rddsql/tests/bld_b32.bat
+  - contrib/rddsql/tests/bld_vc.bat
+  + contrib/rddsql/tests/hbmk_b32.bat
+  + contrib/rddsql/tests/hbmk_vc.bat
+  - contrib/xhb/tests/bld_b32.bat
+  - contrib/xhb/tests/bld_vc.bat
+  + contrib/xhb/tests/hbmk_b32.bat
+  + contrib/xhb/tests/hbmk_vc.bat
+  - tests/bld_b32.bat
+  - tests/bld_b32_dll.bat
+  - tests/bld_gnu.bat
+  - tests/bld_vc.bat
+  + tests/hbmk_b32.bat
+  + tests/hbmk_b32_dll.bat
+  + tests/hbmk_gnu.bat
+  + tests/hbmk_vc.bat
+  - utils/hbdoc/bld_b32.bat
+  - utils/hbdoc/bld_vc.bat
+  + utils/hbdoc/hbmk_b32.bat
+  + utils/hbdoc/hbmk_vc.bat
+  - utils/hbmake/bld_b32.bat
+  - utils/hbmake/bld_vc.bat
+  + utils/hbmake/hbmk_b32.bat
+  + utils/hbmake/hbmk_vc.bat
+    * bld*.bat -> hbmk*.bat
+
+  * contrib/mtpl_b32.mak
+    * /P32 -> /P64
+
+  + contrib/hbmsql/tests/hbmk_b32.bat
+  + contrib/hbmsql/tests/hbmk_vc.bat
+    + Added make files.
+
+  - contrib/hbclip
+    - Removed this contrib. It was incomplete and not 
+      updated since 2001.
+
 2008-11-09 17:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.mak
   * config/rules.cf
@@ -413,7 +585,7 @@
   * utils/hbtest/rt_misc.prg
     + Added one C5.2 SET()s for two simple tests.
     + Added all C5.3 SET()s for two simple tests each.
-    ; NOFIX: _SET_VIDEOMODE has the type wrong.
+    ; TOFIX: _SET_VIDEOMODE has the type wrong.
     ; NOTE: It wouldn't be a bad idea to add some more comprehensive
             tests for SET()s.
 
