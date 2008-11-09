@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-09 17:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_vc.mak
+  * config/rules.cf
+  * config/w32/mingwce.cf
+  * config/w32/poccce.cf
+  * config/w32/msvcce.cf
+    * Use Harbour option -gc0 for WinCE builds.
+    * Use C option -O2 (instead of -O3) for MinGWCE builds.
+    ; None of these were tested.
+
 2008-11-09 17:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/arrays.c
   * source/vm/classes.c

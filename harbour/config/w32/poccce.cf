@@ -12,6 +12,9 @@ EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 
+rem Favor size for CE builds.
+HB_FLAGS = -gc0
+
 CC = pocc.exe
 CC_IN = -c
 CC_OUT = -Fo

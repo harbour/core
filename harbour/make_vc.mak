@@ -91,6 +91,11 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
 
 VMMT_LIB_OBJS = $(VM_LIB_OBJS:obj\vc=obj\vc_mt)
 
+!if "$(HB_BUILD_WINCE)" == "yes"
+HARBOURFLAGS    = $(HARBOURFLAGS) -gc0
+HARBOURFLAGSDLL = $(HARBOURFLAGSDLL) -gc0
+!endif
+
 #**********************************************************
 # C compiler, Harbour compiler and Linker flags.
 #**********************************************************
