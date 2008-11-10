@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-10 02:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/w32/poccce.cf
+    + Added -D_WINCE to C compiler options.
+
+  * source/pp/hbpp.c
+  * source/main/harbour.c
+    ! Reenabled hbwmain.c for __POCC__.
+
+  * source/pp/hbpp.c
+    * WinCE cleanup. (__MINGW32CE__ is always defined 
+      when HB_WINCE is, so checking for HB_WINCE seems enough)
+    % Removed #include <windows.h>.
+    ; Please verify me.
+
 2008-11-10 01:24 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/hbzlib/zconf.h
     * Removed commented Harbour additions.

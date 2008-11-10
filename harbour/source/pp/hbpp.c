@@ -54,10 +54,6 @@
 
 #include "hbset.h"
 
-#if defined(__MINGW32CE__) || defined(HB_WINCE)
-#include <windows.h>
-#endif
-
 /*
  * library functions used by PP core code
  * necessary to create standalone binaries
@@ -289,7 +285,7 @@ static int hb_pp_preprocesfile( PHB_PP_STATE pState, const char * szRuleFile )
       foutr = hb_fopen( szRuleFile, "w" );
       if( !foutr )
       {
-#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
+#if !defined(HB_WINCE)
          perror( szRuleFile );
 #endif
          iResult = 1;
@@ -348,7 +344,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
    fout = hb_fopen( szVerFile, "w" );
    if( !fout )
    {
-#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
+#if !defined(HB_WINCE)
       perror( szVerFile );
 #endif
       iResult = 1;
@@ -442,7 +438,7 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
    {
          if( !fQuiet )
          {
-#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
+#if !defined(HB_WINCE)
             perror( pszFile );
 #else
             fprintf( stderr, "Cannot open the %s file.\n", pszFile );
@@ -738,6 +734,6 @@ int main( int argc, char * argv[] )
    return iResult;
 }
 
-#if defined( HB_WINCE ) && !defined( __CEGCC__ ) && !defined( __POCC__ )
+#if defined( HB_WINCE ) && !defined( __CEGCC__ )
 #  include "hbwmain.c"
 #endif
