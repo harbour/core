@@ -8,13 +8,6 @@
 #ifndef ZCONF_H
 #define ZCONF_H
 
-/* Harbour addition */
-#if 0
-   #if defined(HB_DYNLIB) && !defined(ZLIB_DLL)
-      #define ZLIB_DLL
-   #endif
-#endif
-
 /*
  * If you *really* need a unique prefix for all types and library functions,
  * compile with -DZ_PREFIX. The "standard" zlib should be compiled without it.

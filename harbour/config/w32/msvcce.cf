@@ -11,7 +11,7 @@ EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 
-rem Favor size for CE builds.
+# Favor size for CE builds.
 HB_FLAGS = -gc0
 
 CC = cl.exe

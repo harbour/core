@@ -9,14 +9,14 @@ EXE_EXT = .exe
 LIB_PREF = lib
 LIB_EXT = .a
 
-rem Favor size for CE builds.
+# Favor size for CE builds.
 HB_FLAGS = -gc0
 
 CC = $(CCPREFIX)gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-rem Use -O2 instead of -O3 here.
+# Use -O2 instead of -O3 here.
 CFLAGS = -Wall -W -O2
 
 LD = $(CCPREFIX)gcc

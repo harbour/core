@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-10 01:24 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/hbzlib/zconf.h
+    * Removed commented Harbour additions.
+
+  * config/w32/mingwce.cf
+  * config/w32/poccce.cf
+  * config/w32/msvcce.cf
+    ! Fixed typo in previous today's commit.
+
 2008-11-10 00:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/rules.cf
     ! fixed recursive HB_FLAGS declaration
