@@ -26,7 +26,7 @@ CPPFLAGS += -Ze -Go
 CPPFLAGS += -Ot -Ox
 
 # For Pocket PC and ARM processors (including XScale)
-CPPFLAGS += -Tarm-coff -D_WINCE -DUNICODE
+CPPFLAGS += -Tarm-coff -D_WINCE -DUNICODE -DHB_NO_WIN_CONSOLE
 
 ifneq ($(HB_INC_COMPILE),)
 CPPFLAGS += -I$(HB_INC_COMPILE)
