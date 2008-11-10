@@ -4,8 +4,8 @@
 
 /*
  * Harbour Project source code:
- * Tprinter.cpp
  * Harbour THarbourPrinter C++ Class for Harbour print support
+ *
  * Copyright 2002 Luiz Rafael Culik<culikr@uol.com.br>
  * www - http://www.harbour-project.org
  *

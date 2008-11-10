@@ -11,6 +11,7 @@ PRG_HEADERS = \
 
 LIB_OBJS = \
     $(OBJ_DIR)hbcurl$(OBJEXT) \
+    $(OBJ_DIR)hbcurlm$(OBJEXT) \
 
 all: \
     $(LIB_PATH) \

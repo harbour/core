@@ -26,6 +26,7 @@ C_USR += $(foreach d, $(HB_INC_CURL_OK), -I$(d)) $(HB_HBCURL_USR_C)
 
 C_SOURCES=\
 	hbcurl.c \
+	hbcurlm.c \
 
 PRG_HEADERS=\
 	hbcurl.ch \
