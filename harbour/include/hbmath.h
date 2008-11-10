@@ -94,6 +94,11 @@ HB_EXTERN_BEGIN
    #define exception _exception
 #elif defined(__DJGPP__)
    #define HB_MATH_HANDLER
+#elif defined( HB_WINCE ) && defined( __POCC__ )
+   /* NOTE: Workaround for Pellec C 5.00 not having an 'inf' (HUGE_VAL) 
+            in '-Tarm-coff' mode. [vszakats] */
+   #undef HUGE_VAL
+   #define HUGE_VAL   ( 1.0 / ( 1.0, 0.0 ) )
 #endif
 
 #if !defined(HB_MATH_HANDLER) && defined(__GNUC__) /* && defined(HB_OS_UNIX) */

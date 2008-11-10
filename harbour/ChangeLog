@@ -8,6 +8,98 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-10 09:50 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbmath.h
+    ! Fixed Pelles C 5.00 not having an 'inf' (HUGE_VAL) symbol 
+      when in -Tarm-coff (~WinCE) mode. Pelles C bug (?).
+
+    ; NOTE: Now core fully compiles in WinCE mode. So we have 
+            a new port.
+
+    ; TOFIX: (this is a complete list of all Pelles C WinCE problems)
+             [except hbmysql errors]
+
+      --- WARNINGS
+      POLINK: warning: Multiple '.rdata' sections found with different flags (0x40000040 and 0xc0000040).
+      POLINK: warning: Multiple '.rdata' sections found with different flags (0x40000040 and 0xc0000040).
+      ../../ctnet.c(119): warning #2027: Missing prototype for 'WNetGetLastError'.
+      ../../ctnet.c(167): warning #2027: Missing prototype for 'WNetCancelConnection'.
+      ../../ctnet.c(208): warning #2027: Missing prototype for 'WNetAddConnection'.
+      ../../ctnet.c(210): warning #2027: Missing prototype for 'WNetAddConnection'.
+      ../../ctnet.c(251): warning #2027: Missing prototype for 'WNetGetProviderName'.
+      ../../ctnet.c(271): warning #2027: Missing prototype for 'WNetGetProviderName'.
+      ../../disk.c(127): warning #2027: Missing prototype for 'GetDriveType'.
+      ../../disk.c(244): warning #2027: Missing prototype for 'SetVolumeLabel'.
+      ../../disk.c(270): warning #2027: Missing prototype for 'GetVolumeInformation'.
+      ../../disk.c(307): warning #2027: Missing prototype for 'GetVolumeInformation'.
+      ../../disk.c(337): warning #2027: Missing prototype for 'GetFullPathName'.
+      ../../winapi.c(194): warning #2027: Missing prototype for 'InsertMenuItem'.
+      ../../winapi.c(219): warning #2027: Missing prototype for 'SetMenu'.
+      ../../getenvrn.c(177): warning #2027: Missing prototype for 'GetEnvironmentStrings'.
+      ../../getenvrn.c(246): warning #2027: Missing prototype for 'FreeEnvironmentStrings'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(9936): warning #2027: Missing prototype for 'localtime'.
+      ../../tpwin32.c(75): warning #2027: Missing prototype for 'BuildCommDCB'.
+      ../../wincorec.c(164): warning #2027: Missing prototype for 'CreateMDIWindow'.
+      ../../fi_winfu.c(97): warning #2027: Missing prototype for 'CreateDIBitmap'.
+      ../../fi_winfu.c(147): warning #2027: Missing prototype for 'GetDIBits'.
+      ../../sqlbase.c(509): warning #2130: Result of unsigned comparison is constant.
+
+      --- ERRORS
+      contrib\gtwvg\gtwvg.h(78): fatal error #1035: Can't find include file <olectl.h>.
+      ../../ctnet.c(119): warning #2027: Missing prototype for 'WNetGetLastError'.
+      ../../disk.c(129): error #2048: Undeclared identifier 'DRIVE_RAMDISK'.
+      ../../disk.c(129): error #2045: Case label must be a constant integer expression.
+      ../../disk.c(132): error #2048: Undeclared identifier 'DRIVE_REMOVABLE'.
+      ../../disk.c(132): error #2045: Case label must be a constant integer expression.
+      ../../disk.c(135): error #2048: Undeclared identifier 'DRIVE_FIXED'.
+      ../../disk.c(135): error #2045: Case label must be a constant integer expression.
+      ../../disk.c(138): error #2048: Undeclared identifier 'DRIVE_CDROM'.
+      ../../disk.c(138): error #2045: Case label must be a constant integer expression.
+      ../../disk.c(141): error #2048: Undeclared identifier 'DRIVE_REMOTE'.
+      ../../disk.c(141): error #2045: Case label must be a constant integer expression.
+      ../../winapi.c(70): error #2048: Undeclared identifier 'CS_OWNDC'.
+      ../../winapi.c(75): error #2048: Undeclared identifier 'IDI_APPLICATION'.
+      ../../winapi.c(75): error #2140: Type error in argument 2 to 'LoadIconW'; found 'int', expected 'const wchar_t *'.
+      ../../winapi.c(181): error #2048: Undeclared identifier 'MFS_DISABLED'.
+      ../../getenvrn.c(177): error #2168: Operands of = have incompatible types 'wchar_t *' and 'int'.
+      ../../odbc.c(94): fatal error #1035: Can't find include file <sql.h>.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(9936): error #2168: Operands of = have incompatible types '(incomplete) struct tm *' and 'int'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(9937): error #2152: Unknown field 'tm_year' of '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(9938): error #2152: Unknown field 'tm_mon' of '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(9939): error #2152: Unknown field 'tm_mday' of '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(9940): error #2152: Unknown field 'tm_hour' of '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(9941): error #2152: Unknown field 'tm_min' of '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(9942): error #2152: Unknown field 'tm_sec' of '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(22136): error #2120: Redeclaration of 'localtime' previously declared at contrib\hbsqlit3\sqlite3\sqlite3.c(9936): found '(incomplete) struct tm * __cdecl function(const unsigned long int *)', expected 'int __cdecl function()'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(22137): error #2149: Undefined size for 'y' with type '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(22137): error #2149: Undefined size for 'y' with type '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(22147): error #2152: Unknown field 'tm_year' of '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(22148): error #2152: Unknown field 'tm_mon' of '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(22149): error #2152: Unknown field 'tm_wday' of '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(22150): error #2152: Unknown field 'tm_mday' of '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(22151): error #2152: Unknown field 'tm_hour' of '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(22152): error #2152: Unknown field 'tm_min' of '(incomplete) struct tm'.
+      contrib\hbsqlit3\sqlite3\sqlite3.c(22153): error #2152: Unknown field 'tm_sec' of '(incomplete) struct tm'.
+      ../../win_ole.c(77): fatal error #1035: Can't find include file <olectl.h>.
+      ../../wincorec.c(150): error #2048: Undeclared identifier 'WS_MAXIMIZE'.
+      ../../wincorec.c(166): error #2168: Operands of = have incompatible types 'HWND' and 'int'.
+      C:\devl\allegro-4.2.2\include\allegro\platform\almsvc.h(23): fatal error #1035: Can't find include file <malloc.h>.
+      ../../firebird.c(456): error #2149: Undefined size for 'times' with type '(incomplete) struct tm'.
+      ../../firebird.c(487): error #2152: Unknown field 'tm_year' of '(incomplete) struct tm'.
+      ../../firebird.c(488): error #2152: Unknown field 'tm_mon' of '(incomplete) struct tm'.
+      ../../firebird.c(489): error #2152: Unknown field 'tm_mday' of '(incomplete) struct tm'.
+      ../../firebird.c(490): error #2152: Unknown field 'tm_hour' of '(incomplete) struct tm'.
+      ../../firebird.c(491): error #2152: Unknown field 'tm_min' of '(incomplete) struct tm'.
+      ../../firebird.c(492): error #2152: Unknown field 'tm_sec' of '(incomplete) struct tm'.
+      ../../firebird.c(501): error #2152: Unknown field 'tm_year' of '(incomplete) struct tm'.
+      ../../firebird.c(501): error #2152: Unknown field 'tm_mon' of '(incomplete) struct tm'.
+      ../../firebird.c(501): error #2152: Unknown field 'tm_mday' of '(incomplete) struct tm'.
+      ../../firebird.c(510): error #2152: Unknown field 'tm_hour' of '(incomplete) struct tm'.
+      ../../firebird.c(511): error #2152: Unknown field 'tm_min' of '(incomplete) struct tm'.
+      ../../firebird.c(512): error #2152: Unknown field 'tm_sec' of '(incomplete) struct tm'.
+      ../../fi_winfu.c(98): error #2048: Undeclared identifier 'CBM_INIT'.
+      ../../fi_winfu.c(99): error #2168: Operands of = have incompatible types 'HBITMAP' and 'int'.
+
 2008-11-10 03:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/fm.c
     ! Fixed missing abort() on WinCE. (for Pelles C only, but 
