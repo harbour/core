@@ -519,7 +519,7 @@ c0d32.obj $**, $@,, cw32mt$(RTLIBSUFFIX).lib import32.lib
 $(HBTESTDLL_EXE) :: BasicLibs BasicExes
 $(HBTESTDLL_EXE) :: $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBTEST_EXE_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
     $(LINKER) $(LDFLAGS) @&&!
-c0x32.obj $**, $@,,$(HARBOUR_DLL:$(DLLEXT)=$(LIBEXT)) cw32mt$(RTLIBSUFFIX).lib import32.lib
+c0x32.obj $**, $@,,$(HARBOUR_DLL:$(DLLEXT)=$(LIBEXT)) cw32mt$(RTLIBSUFFIX).lib import32.lib $(COMMON_LIB)
 !
 #**********************************************************
 $(HBRUNDLL_EXE) :: BasicLibs BasicExes

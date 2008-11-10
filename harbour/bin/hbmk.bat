@@ -33,6 +33,7 @@ set _HB_USR_L=
 
 set _HB_MT=%HB_MT%
 set _HB_GUI=%HB_GUI%
+set _HB_SHARED=%HB_SHARED%
 
 :REPEAT
 
@@ -48,6 +49,12 @@ if not "%1" == "-gui" goto NO_GUI
    goto REPEAT
 :NO_GUI
 
+if not "%1" == "-shared" goto NO_SHARED
+   set _HB_SHARED=yes
+   shift
+   goto REPEAT
+:NO_SHARED
+
 set _HBVM_LIB=hbvm
 if "%_HB_MT%" == "yes" set _HBVM_LIB=hbvmmt
 if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
@@ -62,7 +69,7 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
 :HELP
 
    echo.
-   echo Usage: hbmk [-mt] [-gui] filename
+   echo Usage: hbmk [-mt] [-gui] [-shared] filename
    echo.
    echo Notes:
    echo.
@@ -195,7 +202,9 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
 
       if "%_HB_GUI%" == "yes" set _HB_USR_C=-tW
 
-      bcc32 -q -tWM -O2 -OS -Ov -Oi -Oc -d %C_USR% %_HB_USR_C% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %_HB_PRG_NAME%.c %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddfpt.lib rddntx.lib rddcdx.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib
+      if not "%_HB_SHARED%" == "yes" bcc32 -q -tWM -O2 -OS -Ov -Oi -Oc -d %C_USR% %_HB_USR_C% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %_HB_PRG_NAME%.c %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddfpt.lib rddntx.lib rddcdx.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib
+      if     "%_HB_SHARED%" == "yes" bcc32 -q -tWM -O2 -OS -Ov -Oi -Oc -d %C_USR% %_HB_USR_C% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %_HB_PRG_NAME%.c ..\source\vm\mainstd.c ..\source\vm\mainwin.c %HB_USER_LIBS% harbour-11-b32.lib
+
       goto CLEANUP
 
 :A_WIN_BCC_NOT
@@ -270,6 +279,7 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
 
 set _HB_MT=
 set _HB_GUI=
+set _HB_SHARED=
 set _HBVM_LIB=
 set _HB_USR_C=
 set _HB_USR_L=

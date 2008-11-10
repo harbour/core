@@ -905,6 +905,7 @@ $(LDFLAGS)
 $(HBTESTDLL_OBJS: = ^
 )
 $(HARBOUR_DLL:.dll=.lib)
+$(COMMON_LIB)
 <<$(HB_KEEPSTATE)
 #**********************************************************
 HBRUNDLL_OBJS = $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBRUN_EXE_OBJS:obj\vc=obj\dll\vc)

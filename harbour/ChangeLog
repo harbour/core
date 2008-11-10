@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-11 00:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+    ! Fixed linking hbtest-dll.exe with tracing enabled.
+
+  * bin/hbmk.bat
+    + Added '-shared' option.
+    ; TOFIX: - '-shared' won't work in binary installations.
+             - '-shared' cannot create MT apps.
+             - '-shared' only works for BCC32 yet.
+
+  - tests/hbmk_b32_dll.bat
+    - Removed. Use 'hbmk_b32 -shared' instead.
+
+  * source/rtl/treport.prg
+    * Minor formatting.
+
+  * make_b32.bat
+  * make_vc.bat
+  * common.mak
+    * Changed default of HB_BUILD_DLL to 'yes'.
+
 2008-11-10 15:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbcurl/common.mak
   * contrib/hbcurl/Makefile

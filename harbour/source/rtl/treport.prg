@@ -173,7 +173,7 @@ CREATE CLASS HBReportForm
                nNext AS NUMERIC,;
                nRecord AS NUMERIC,;
                lRest AS LOGICAL,;
-               lPlain AS LOGICAL, ;
+               lPlain AS LOGICAL,;
                cHeading AS STRING,;
                lBEject AS LOGICAL,;
                lSummary AS LOGICAL )

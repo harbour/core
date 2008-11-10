@@ -1259,7 +1259,7 @@ HB_BUILD_TARGETS = \
 # It can be enabled by setting env
 # variable HB_BUILD_DLL to yes
 
-!if "$(HB_BUILD_DLL)" == "yes"
+!if "$(HB_BUILD_DLL)" != "no"
 HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(HARBOUR_DLL) $(HBTESTDLL_EXE) $(HBRUNDLL_EXE)
 !endif
 
