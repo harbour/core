@@ -127,6 +127,8 @@
 #     pragma warn -ngu
 #     pragma warn -prc
 #     pragma warn -rch
+#  elif defined( HB_WINCE ) && defined( __POCC__ )
+#     define ABORT TerminateProcess( GetCurrentProcess(), 0 )
 #  elif defined( _MSC_VER )
 #     define USE_DL_PREFIX
 #  endif

@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-10 03:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/fm.c
+    ! Fixed missing abort() on WinCE. (for Pelles C only, but 
+      the fix should work for any WinCE compilers).
+    ; TOFIX: Now the only remaining showstopper for PellesC5 WinCE 
+             support is:
+             ../../math.c(652): error #3120: [asm] Symbol 'inf' is undefined.
+
 2008-11-10 03:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/w32/poccce.cf
     ! Added -DHB_NO_WIN_CONSOLE.
