@@ -862,7 +862,7 @@ extern HB_EXPORT ULONG     hb_strRTrimLen( const char * szText, ULONG ulLen, BOO
 extern HB_EXPORT double    hb_strVal( const char * szText, ULONG ulLen );
 extern HB_EXPORT HB_LONG   hb_strValInt( const char * szText, int * iOverflow );
 extern HB_EXPORT char *    hb_strRemEscSeq( char * szText, ULONG * ulLen ); /* remove C ESC sequences and converts them to Clipper chars */
-                          
+extern HB_EXPORT char *    hb_numToStr( char * szBuf, ULONG ulSize, HB_LONG lNumber );
 extern HB_EXPORT double    hb_numRound( double dResult, int iDec ); /* round a number to a specific number of digits */
 extern HB_EXPORT double    hb_numInt( double dNum ); /* take the integer part of the number */
 extern HB_EXPORT double    hb_numDecConv( double dNum, int iDec );

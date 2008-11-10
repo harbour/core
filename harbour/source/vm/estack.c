@@ -1081,8 +1081,11 @@ void hb_stackDispLocal( void )
             break;
 
          case HB_IT_LONG:
-            printf( HB_I_("LONG = %" PFHL "i ") , hb_itemGetNInt( *pBase ) );
+         {
+            char szBuf[ 24 ];
+            printf( HB_I_("LONG = %s ") , hb_numToStr( szBuf, sizeof( szBuf ), hb_itemGetNInt( *pBase ) ) );
             break;
+         }
 
          case HB_IT_INTEGER:
             printf( HB_I_("INTEGER = %i "), hb_itemGetNI( *pBase ) );

@@ -756,6 +756,41 @@ HB_LONG hb_strValInt( const char * szText, int * iOverflow )
    return lVal;
 }
 
+char * hb_numToStr( char * szBuf, ULONG ulSize, HB_LONG lNumber )
+{
+   int iPos = ( int ) ulSize;
+   BOOL fNeg = FALSE;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_numToStr(%p, %lu, %" PFHL "i)", szBuf, ulSize, lNumber));
+
+   szBuf[ --iPos ] = '\0';
+   if( lNumber < 0 )
+   {
+      fNeg = TRUE;
+      lNumber = -lNumber;
+   }
+
+   while( --iPos >= 0 )
+   {
+      szBuf[ iPos ] = '0' + ( char ) ( lNumber % 10 );
+      lNumber /= 10;
+      if( lNumber == 0 )
+         break;
+   }
+   if( fNeg && --iPos >= 0 )
+      szBuf[ iPos ] = '-';
+
+   if( iPos > 0 )
+      memset( szBuf, ' ', iPos );
+   else if( iPos < 0 )
+   {
+      memset( szBuf, '*', ulSize - 1 );
+      iPos = 0;
+   }
+
+   return &szBuf[ iPos ];
+}
+
 /*
  * This function copies szText to destination buffer.
  * NOTE: Unlike the documentation for strncpy, this routine will always append
@@ -1023,7 +1058,6 @@ char * hb_strRemEscSeq( char *str, ULONG *pLen )
          }
          else
             break;
-            
       }
       *dst++ = ch;
    }

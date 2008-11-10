@@ -1141,7 +1141,9 @@ int mspace_mallopt(int, int);
 /*------------------------------ internal #includes ---------------------- */
 
 #ifdef WIN32
+#ifndef __MINGW32__
 #pragma warning( disable : 4146 ) /* no "unsigned" warnings */
+#endif /* __MINGW32__ */
 #endif /* WIN32 */
 
 #include <stdio.h>       /* for printing in malloc_stats */

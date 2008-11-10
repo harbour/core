@@ -1583,7 +1583,9 @@ static HB_GENC_FUNC( hb_p_pushlonglong )
 #ifdef HB_LONG_LONG_OFF
       fprintf( cargo->yyc, "\t/* %f */", HB_PCODE_MKLONGLONG( &pFunc->pCode[ lPCodePos + 1 ] ) );
 #else
-      fprintf( cargo->yyc, "\t/* %" PFLL "i */", HB_PCODE_MKLONGLONG( &pFunc->pCode[ lPCodePos + 1 ] ) );
+      char szBuf[ 24 ];
+      fprintf( cargo->yyc, "\t/* %s */", hb_numToStr( szBuf, sizeof( szBuf ),
+               HB_PCODE_MKLONGLONG( &pFunc->pCode[ lPCodePos + 1 ] ) ) );
 #endif
    }
    fprintf( cargo->yyc, "\n" );
