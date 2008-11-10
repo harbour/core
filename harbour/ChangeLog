@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-10 02:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/w32/poccce.cf
+    ! Added -DUNICODE switch.
+
+  ; TOFIX: (important ones only)
+
+    --- ERRORS
+    ../../math.c(652): error #3120: [asm] Symbol 'inf' is undefined.
+    contrib\gtwvg\gtwvg.h(78): fatal error #1035: Can't find include file <olectl.h>.
+    ../../ctmath2.c(324): error #3120: [asm] Symbol 'inf' is undefined.
+    ../../getenvrn.c(177): error #2168: Operands of = have incompatible types 'wchar_t *' and 'int'.
+
+    --- WARNINGS
+    source\vm\dlmalloc.c(2486): warning #2027: Missing prototype for 'abort'.
+    source\vm\dlmalloc.c(3253): warning #2027: [ LOTS MORE ]
+    ../../getenvrn.c(177): warning #2027: Missing prototype for 'GetEnvironmentStrings'.
+    ../../getenvrn.c(246): warning #2027: Missing prototype for 'FreeEnvironmentStrings'.
+    contrib\hbsqlit3\sqlite3\sqlite3.c(9936): warning #2027: Missing prototype for 'localtime'.
+
 2008-11-10 02:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/w32/poccce.cf
     + Added -D_WINCE to C compiler options.
