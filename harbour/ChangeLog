@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-11 02:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hbmk.bat
+    + Added '-shared' support for MSVC.
+    ! Fixed to cleanup mainstd.obj and mainwin.obj.
+
+  * ChangeLog
+    * Some TODO/TOFIX marked as [DONE]. One [DONE] marked 
+      as [DONE - REOPENED].
+
 2008-11-11 02:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak
@@ -32,9 +41,9 @@
 
   * bin/hbmk.bat
     + Added '-shared' option.
-    ; TOFIX: - '-shared' won't work in binary installations.
-             - '-shared' cannot create MT apps.
-             - '-shared' only works for BCC32 yet.
+    ; TOFIX: '-shared' won't work in binary installations.
+    ; TOFIX: '-shared' cannot create MT apps.
+    ; TOFIX: '-shared' only works for BCC32 yet. [DONE]
 
   - tests/hbmk_b32_dll.bat
     - Removed. Use 'hbmk_b32 -shared' instead.
@@ -165,9 +174,10 @@
   * source/vm/fm.c
     ! Fixed missing abort() on WinCE. (for Pelles C only, but 
       the fix should work for any WinCE compilers).
-    ; TOFIX: Now the only remaining showstopper for PellesC5 WinCE 
+    ; TOFIX: Now the only remaining showstopper for PellesC5 WinCE
              support is:
              ../../math.c(652): error #3120: [asm] Symbol 'inf' is undefined.
+             [DONE]
 
 2008-11-10 03:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/w32/poccce.cf
@@ -609,7 +619,7 @@
   * make_vc.mak
     + Added HBRUN_DLL.
     ; TOFIX: It doesn't work. Maybe more eyeballs will spot the 
-             problem more easily.
+             problem more easily. [DONE]
 
 2008-11-09 14:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * tests/longstr.prg
@@ -708,6 +718,7 @@
     * Excluded hbwmain for __POCC__ WinCE.
     ; TOFIX: Warning: Not proper fix.
              This way it won't link but at least it compiles.
+             [DONE]
 
   * source/compiler/gencc.c
     * Switched to hexadecimal format for high chars, because
@@ -911,7 +922,7 @@
     ! Fixed a few places where '+' operator was used
       instead of '|'.
     * Minor opt/formatting.
-    ; TOFIX: The window positioning bug is still to be solved. [DONE]
+    ; TOFIX: The window positioning bug is still to be solved. [DONE -> REOPENED]
 
 2008-11-07 23:39 UTC+0100 Francesco Saverio Giudice (info fsgiudice com)
   * source/rdd/usrrdd/rdds/arrayrdd.prg

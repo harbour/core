@@ -211,9 +211,11 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
 
    if not "%HB_COMPILER%" == "msvc" goto A_WIN_MSVC_NOT
 
-      if "%_HB_GUI%" == "yes" set _HB_USR_L=/subsystem:windows
+      if not "%_HB_GUI%" == "yes" set _HB_USR_L=/subsystem:console
+      if     "%_HB_GUI%" == "yes" set _HB_USR_L=/subsystem:windows
 
-      cl -nologo -W3 %C_USR% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /libpath:%HB_LIB_INSTALL% %L_USR% %_HB_USR_L% %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
+      if not "%_HB_SHARED%" == "yes" cl -nologo -W3 %C_USR% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /libpath:%HB_LIB_INSTALL% %L_USR% %_HB_USR_L% %HB_USER_LIBS% hbcpage.lib hbdebug.lib %_HBVM_LIB%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
+      if     "%_HB_SHARED%" == "yes" cl -nologo -W3 %C_USR% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c ..\source\vm\mainstd.c ..\source\vm\mainwin.c /link /libpath:%HB_LIB_INSTALL% %L_USR% %_HB_USR_L% %HB_USER_LIBS% harbour-11-vc.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
       goto CLEANUP
 
 :A_WIN_MSVC_NOT
@@ -272,6 +274,8 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
    if exist %_HB_PRG_NAME%.c del %_HB_PRG_NAME%.c
    if exist %_HB_PRG_NAME%.o del %_HB_PRG_NAME%.o
    if exist %_HB_PRG_NAME%.obj del %_HB_PRG_NAME%.obj
+   if exist mainstd.obj del mainstd.obj
+   if exist mainwin.obj del mainwin.obj
    rem Borland stuff
    if exist %_HB_PRG_NAME%.tds del %_HB_PRG_NAME%.tds
 
