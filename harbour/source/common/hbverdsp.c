@@ -69,13 +69,6 @@ void hb_verBuildInfo( void )
    }
 
    {
-      char * pszPCode = hb_verPCode();
-      hb_conOutErr( pszPCode, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
-      hb_xfree( pszPCode );
-   }
-
-   {
       char * pszVersion = hb_verCompiler();
       hb_conOutErr( "Compiler: ", 0 );
       hb_conOutErr( pszVersion, 0 );
@@ -91,14 +84,11 @@ void hb_verBuildInfo( void )
       hb_xfree( pszVersion );
    }
 
-   hb_conOutErr( hb_conNewLine(), 0 );
-
    {
-      char * pszBuildDate = hb_verBuildDate();
-      hb_conOutErr( "Built on: ", 0 );
-      hb_conOutErr( pszBuildDate, 0 );
+      char * pszPCode = hb_verPCode();
+      hb_conOutErr( pszPCode, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
-      hb_xfree( pszBuildDate );
+      hb_xfree( pszPCode );
    }
 
    hb_conOutErr( "ChangeLog last entry: ", 0 );
@@ -109,11 +99,21 @@ void hb_verBuildInfo( void )
    hb_conOutErr( hb_verSvnChangeLogID(), 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 
+   hb_conOutErr( hb_conNewLine(), 0 );
+
+   {
+      char * pszBuildDate = hb_verBuildDate();
+      hb_conOutErr( "Built on: ", 0 );
+      hb_conOutErr( pszBuildDate, 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
+      hb_xfree( pszBuildDate );
+   }
+
    {
       const char * pszFlags = hb_verFlagsPRG();
       if( pszFlags && *pszFlags )
       {
-         hb_conOutErr( "Extra Harbour compiler switches: ", 0 );
+         hb_conOutErr( "Extra Harbour compiler options: ", 0 );
          hb_conOutErr( pszFlags, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );
       }
@@ -123,7 +123,7 @@ void hb_verBuildInfo( void )
       const char * pszFlags = hb_verFlagsC();
       if( pszFlags && *pszFlags )
       {
-         hb_conOutErr( "Extra C compiler switches: ", 0 );
+         hb_conOutErr( "Extra C compiler options: ", 0 );
          hb_conOutErr( pszFlags, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );
       }
@@ -133,123 +133,60 @@ void hb_verBuildInfo( void )
       const char * pszFlags = hb_verFlagsL();
       if( pszFlags && *pszFlags )
       {
-         hb_conOutErr( "Extra linker switches: ", 0 );
+         hb_conOutErr( "Extra linker options: ", 0 );
          hb_conOutErr( pszFlags, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );
       }
    }
 
-   hb_conOutErr( "Other build settings: ", 0 );
+   hb_conOutErr( "Build options: ", 0 );
+   if( hb_xquery( HB_MEM_USEDMAX ) != 0 )
+      hb_conOutErr( "(memory tracking) ", 0 );
+#if defined( HB_TR_LEVEL )
+   hb_conOutErr( "(tracing) ", 0 );
+#endif
+#if ! defined( HB_NO_PROFILER )
+   hb_conOutErr( "(profiler) ", 0 );
+#endif
 #if defined(__cplusplus)
    hb_conOutErr( "(C++ mode) ", 0 );
 #else
    hb_conOutErr( "(C mode) ", 0 );
 #endif
-#if defined( HB_STRICT_ANSI_C )
-   hb_conOutErr( "(ANSI C symbol initialization) ", 0 );
-#endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "Clipper 5.3b compatible extensions: ", 0 );
+   hb_conOutErr( "Language options: ", 0 );
 #if defined( HB_COMPAT_C53 )
-   hb_conOutErr( "yes", 0 );
-#else
-   hb_conOutErr( "no", 0 );
+   hb_conOutErr( "(C5.3) ", 0 );
 #endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "Clipper 5.2e/5.3b compatible undocumented: ", 0 );
 #if defined( HB_C52_UNDOC )
-   hb_conOutErr( "yes", 0 );
-#else
-   hb_conOutErr( "no", 0 );
+   hb_conOutErr( "(C5.x undoc) ", 0 );
 #endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "Clipper 5.2e/5.3b strict compatibility: ", 0 );
 #if defined( HB_C52_STRICT )
-   hb_conOutErr( "yes", 0 );
-#else
-   hb_conOutErr( "no", 0 );
+   hb_conOutErr( "(C5.x strict) ", 0 );
 #endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "Xbase++ compatible extensions: ", 0 );
 #if defined( HB_COMPAT_XPP )
-   hb_conOutErr( "yes", 0 );
-#else
-   hb_conOutErr( "no", 0 );
+   hb_conOutErr( "(XBase++) ", 0 );
 #endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "FlagShip compatible extensions: ", 0 );
 #if defined( HB_COMPAT_FLAGSHIP )
-   hb_conOutErr( "yes", 0 );
-#else
-   hb_conOutErr( "no", 0 );
+   hb_conOutErr( "(Flagship) ", 0 );
 #endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "Visual Objects compatible extensions: ", 0 );
 #if defined( HB_COMPAT_VO )
-   hb_conOutErr( "yes", 0 );
-#else
-   hb_conOutErr( "no", 0 );
+   hb_conOutErr( "(VO) ", 0 );
 #endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "FoxPro compatible extensions: ", 0 );
 #if defined( HB_COMPAT_FOXPRO )
-   hb_conOutErr( "yes", 0 );
-#else
-   hb_conOutErr( "no", 0 );
+   hb_conOutErr( "(FoxPro) ", 0 );
 #endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "dBase compatible extensions: ", 0 );
 #if defined( HB_COMPAT_DBASE )
-   hb_conOutErr( "yes", 0 );
-#else
-   hb_conOutErr( "no", 0 );
+   hb_conOutErr( "(dBase) ", 0 );
 #endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "CLIP compatible extensions: ", 0 );
 #if defined( HB_COMPAT_CLIP )
-   hb_conOutErr( "yes", 0 );
-#else
-   hb_conOutErr( "no", 0 );
+   hb_conOutErr( "(CLIP) ", 0 );
 #endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "Non-portable Harbour extensions: ", 0 );
 #if defined( HB_EXTENSION )
-   hb_conOutErr( "yes", 0 );
-#else
-   hb_conOutErr( "no", 0 );
+   hb_conOutErr( "(dirty extensions) ", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "Profiler: ", 0 );
-#if defined( HB_NO_PROFILER )
-   hb_conOutErr( "off", 0 );
-#else
-   hb_conOutErr( "on", 0 );
-#endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "Memory tracing and statistics: ", 0 );
-   hb_conOutErr( hb_xquery( HB_MEM_USEDMAX ) != 0 ? "on" : "off", 0 );
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   {
-      char buffer[ 64 ];
-      hb_snprintf( buffer, sizeof( buffer ), "Maximum symbol name length: %i", HB_SYMBOL_NAME_LEN );
-      hb_conOutErr( buffer, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
-   }
 
    hb_conOutErr( "---------------------------", 0 );
    hb_conOutErr( hb_conNewLine(), 0 );

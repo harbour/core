@@ -55,6 +55,11 @@
 
 #include "hbdefs.h"
 
+/* Maximum symbol name length handled by Harbour compiler and runtime.
+   For strict CA-Cl*pper compatibility a value of 10 would have 
+   to be used, but Harbour won't properly compile using this setting. */
+#define HB_SYMBOL_NAME_LEN   63
+
 HB_EXTERN_BEGIN
 
 #ifdef _HB_API_INTERNAL_

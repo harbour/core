@@ -181,19 +181,6 @@
 /* #define HB_MAIN_WIN */
 
 /* ***********************************************************************
- * You can set here the maximum symbol name length handled by Harbour
- * compiler and runtime. You can override this setting in the make process.
- * Setting this too low, may result in clashing symbols in Harbour 
- * itself. For strict CA-Cl*pper compatibility a value of 10 would have 
- * to be used, but Harbour won't properly compile using this setting.
- *
- * By default this value is 63
- */
-#ifndef HB_SYMBOL_NAME_LEN
-   #define HB_SYMBOL_NAME_LEN   63
-#endif
-
-/* ***********************************************************************
  * You can enable here support for multiline strings concatenated by ';'
  * f.e.:
  *       cVar := "line 1;

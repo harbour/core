@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-11 21:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/common/hbverdsp.c
+    * Streamlined the /build information screen. It's now 
+      more compact and now show if tracing is enabled. Max 
+      symbol length got removed, ANSI C startup also, because 
+      it needs a custom C flag anyway.
+
+  * include/hbvmpub.h
+  * include/hbsetup.h
+    * HB_SYMBOL_NAME_LEN moved away from custom setup.
+      This isn't an option users should normally tinker.
+
+  * tests/run_prg.bat
+    * Minor.
+
 2008-11-11 15:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompdf.h
   * harbour/source/compiler/harbour.yyc
