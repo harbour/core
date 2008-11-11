@@ -159,7 +159,7 @@ ARFLAGS = /P64 $(A_USR)
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for SHARED MT Libraries
 {$(ALL_SRC_DIRS)}.prg{$(MTDLL_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(MTDLL_OBJ_DIR)\ $**
+    $(HB) $(HARBOURFLAGSDLL) -o$(MTDLL_OBJ_DIR)\ $**
     $(CC) $(CLIBFLAGSDLL) $(CFLAGSMT) -o$@ $(MTDLL_OBJ_DIR)\$&.c
 #**********************************************************
 

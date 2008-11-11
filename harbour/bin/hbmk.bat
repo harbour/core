@@ -34,6 +34,7 @@ set _HB_USR_L=
 set _HB_MT=%HB_MT%
 set _HB_GUI=%HB_GUI%
 set _HB_SHARED=%HB_SHARED%
+set _HB_DEBUG=%HB_DEBUG%
 
 :REPEAT
 
@@ -55,6 +56,12 @@ if not "%1" == "-shared" goto NO_SHARED
    goto REPEAT
 :NO_SHARED
 
+if not "%1" == "-debug" goto NO_DEBUG
+   set _HB_DEBUG=yes
+   shift
+   goto REPEAT
+:NO_DEBUG
+
 if not "%_HB_MT%" == "yes" set _HB_MT=
 if     "%_HB_MT%" == "MT"  set _HB_MT=mt
 if     "%_HB_MT%" == "yes" set _HB_MT=mt
@@ -69,7 +76,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
 :HELP
 
    echo.
-   echo Usage: hbmk [-mt] [-gui] [-shared] filename
+   echo Usage: hbmk [-mt] [-gui] [-shared] [-debug] filename
    echo.
    echo Notes:
    echo.
@@ -200,7 +207,9 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
 
    if not "%HB_COMPILER%" == "bcc32" goto A_WIN_BCC_NOT
 
-      if "%_HB_GUI%" == "yes" set _HB_USR_C=-tW
+      if "%_HB_DEBUG%" == "yes" set _HB_USR_C=-y -v
+
+      if "%_HB_GUI%" == "yes" set _HB_USR_C=%_HB_USR_C% -tW
 
       if not "%_HB_SHARED%" == "yes" bcc32 -q -tWM -O2 -OS -Ov -Oi -Oc -d %C_USR% %_HB_USR_C% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %_HB_PRG_NAME%.c %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm%_HB_MT%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddfpt.lib rddntx.lib rddcdx.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib
       if     "%_HB_SHARED%" == "yes" bcc32 -q -tWM -O2 -OS -Ov -Oi -Oc -d %C_USR% %_HB_USR_C% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %_HB_PRG_NAME%.c %HB_USER_LIBS% harbour%_HB_MT%-11-b32.lib hbmainstd.lib hbmainwin.lib hbcommon.lib
@@ -211,11 +220,13 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
 
    if not "%HB_COMPILER%" == "msvc" goto A_WIN_MSVC_NOT
 
+      if "%_HB_DEBUG%" == "yes" set _HB_USR_C=-MTd -Zi
+
       if not "%_HB_GUI%" == "yes" set _HB_USR_L=/subsystem:console
       if     "%_HB_GUI%" == "yes" set _HB_USR_L=/subsystem:windows
 
-      if not "%_HB_SHARED%" == "yes" cl -nologo -W3 %C_USR% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /libpath:%HB_LIB_INSTALL% %L_USR% %_HB_USR_L% %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm%_HB_MT%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
-      if     "%_HB_SHARED%" == "yes" cl -nologo -W3 %C_USR% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /libpath:%HB_LIB_INSTALL% %L_USR% %_HB_USR_L% %HB_USER_LIBS% harbour%_HB_MT%-11-vc.lib hbmainstd.lib hbmainwin.lib hbcommon.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
+      if not "%_HB_SHARED%" == "yes" cl -nologo -W3 %C_USR% %_HB_USR_C% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /libpath:%HB_LIB_INSTALL% %L_USR% %_HB_USR_L% %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm%_HB_MT%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
+      if     "%_HB_SHARED%" == "yes" cl -nologo -W3 %C_USR% %_HB_USR_C% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /libpath:%HB_LIB_INSTALL% %L_USR% %_HB_USR_L% %HB_USER_LIBS% harbour%_HB_MT%-11-vc.lib hbmainstd.lib hbmainwin.lib hbcommon.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
       goto CLEANUP
 
 :A_WIN_MSVC_NOT
@@ -275,13 +286,14 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
    if exist %_HB_PRG_NAME%.o del %_HB_PRG_NAME%.o
    if exist %_HB_PRG_NAME%.obj del %_HB_PRG_NAME%.obj
    rem Borland stuff
-   if exist %_HB_PRG_NAME%.tds del %_HB_PRG_NAME%.tds
+   if not "%_HB_DEBUG%" == "yes" if exist %_HB_PRG_NAME%.tds del %_HB_PRG_NAME%.tds
 
 :END
 
 set _HB_MT=
 set _HB_GUI=
 set _HB_SHARED=
+set _HB_DEBUG=
 set _HBVM_LIB=
 set _HB_USR_C=
 set _HB_USR_L=

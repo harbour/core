@@ -461,7 +461,7 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
 # General *.prg --> *.obj COMPILE rules for SHARED MT Libraries
 #*******************************************************
 {$(VM_DIR)}.prg{$(MTDLL_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(MTDLL_OBJ_DIR)\ $<
+    $(HB) $(HARBOURFLAGSDLL) -o$(MTDLL_OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGSDLL) $(CFLAGSMT) -Fo$(MTDLL_OBJ_DIR)\ $(MTDLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 

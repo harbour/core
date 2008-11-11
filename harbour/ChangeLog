@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-11 13:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * ChangeLog
+    ! Fixed MT mode .dll not starting up properly. IOW now 
+      'hbmk -shared -mt' works. Relevant entries marked as 
+      [DONE]
+
+  * bin/hbmk.bat
+    + Added '-debug' switch. Currently supported in BCC and MSVC.
+
 2008-11-11 12:08 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/console.c
     ! Fixed __EJECT() writing an EJECT only if output device 
@@ -30,7 +41,7 @@
   * bin/hbmk.bat
     + Added generation of MT harbour .dlls for BCC and MSVC.
     ; TOFIX: 'hbmk -shared -mt' doesn't seem to work, resulting 
-             app simply exists for both BCC and MSVC.
+             app simply exists for both BCC and MSVC. [DONE]
     ; TODO: Please update make_gcc.mak.
 
 2008-11-11 04:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -120,7 +131,7 @@
   * bin/hbmk.bat
     + Added '-shared' option.
     ; TOFIX: '-shared' won't work in binary installations. [DONE]
-    ; TOFIX: '-shared' cannot create MT apps.
+    ; TOFIX: '-shared' cannot create MT apps. [DONE]
     ; TOFIX: '-shared' only works for BCC32 yet. [DONE]
 
   - tests/hbmk_b32_dll.bat
