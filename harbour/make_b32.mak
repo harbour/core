@@ -70,9 +70,11 @@ MKLIB  = tlib.exe
 # Some definitions cannot be kept in common.mak
 # due to serious limitations of Microsoft Nmake
 
-DLL_OBJS = $(TMP_DLL_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
-
+VMMTDLL_LIB_OBJS = $(VM_DLL_OBJS:$(OBJ_DIR)=$(MTDLL_OBJ_DIR))
 VMMT_LIB_OBJS = $(VM_LIB_OBJS:$(OBJ_DIR)=$(MT_OBJ_DIR))
+
+DLL_OBJS = $(TMP_DLL_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR)) $(VM_DLL_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
+MTDLL_OBJS = $(TMP_DLL_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR)) $(VMMTDLL_LIB_OBJS)
 
 #**********************************************************
 # C compiler, Harbour compiler and Linker flags.
@@ -148,6 +150,17 @@ ARFLAGS = /P64 $(A_USR)
 {$(ALL_SRC_DIRS)}.prg{$(MT_OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGS) -o$(MT_OBJ_DIR)\ $**
     $(CC) $(CLIBFLAGS) $(CFLAGSMT) -o$@ $(MT_OBJ_DIR)\$&.c
+#**********************************************************
+
+#**********************************************************
+# General *.c --> *.obj COMPILE rule for SHARED MT Libraries
+{$(ALL_SRC_DIRS)}.c{$(MTDLL_OBJ_DIR)}$(OBJEXT):
+    $(CC) $(CLIBFLAGSDLL) $(CFLAGSMT) -o$@ $<
+#**********************************************************
+# General *.prg --> *.obj COMPILE rule for SHARED MT Libraries
+{$(ALL_SRC_DIRS)}.prg{$(MTDLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(MTDLL_OBJ_DIR)\ $**
+    $(CC) $(CLIBFLAGSDLL) $(CFLAGSMT) -o$@ $(MTDLL_OBJ_DIR)\$&.c
 #**********************************************************
 
 #**********************************************************
@@ -524,6 +537,12 @@ $(MINIMAL_STATIC_HBLIBS)
 #**********************************************************
 $(HARBOUR_DLL) :: BasicLibs BasicExes
 $(HARBOUR_DLL) :: $(DLL_OBJS)
+    $(LINKER) $(LDFLAGSDLL) @&&!
+c0d32.obj $**, $@,, cw32mt$(RTLIBSUFFIX).lib import32.lib
+!
+#**********************************************************
+$(HARBOURMT_DLL) :: BasicLibs BasicExes
+$(HARBOURMT_DLL) :: $(MTDLL_OBJS)
     $(LINKER) $(LDFLAGSDLL) @&&!
 c0d32.obj $**, $@,, cw32mt$(RTLIBSUFFIX).lib import32.lib
 !

@@ -87,9 +87,11 @@ MKLIB  = lib.exe
 # Nmake does not support macros in string
 # substitution, so we have to hardcode it
 
-DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll)
-
+VMMTDLL_LIB_OBJS = $(VM_DLL_OBJS:obj\vc=obj\vc\mt_dll)
 VMMT_LIB_OBJS = $(VM_LIB_OBJS:obj\vc=obj\vc\mt)
+
+DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll) $(VM_DLL_OBJS:obj\vc=obj\vc\dll)
+MTDLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll) $(VMMTDLL_LIB_OBJS)
 
 !if "$(HB_BUILD_WINCE)" == "yes"
 HARBOURFLAGS    = $(HARBOURFLAGS) -gc0
@@ -446,6 +448,21 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
 {$(VM_DIR)}.prg{$(MT_OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGS) -o$(MT_OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) $(CFLAGSMT) -Fo$(MT_OBJ_DIR)\ $(MT_OBJ_DIR)\$(*B).c
+#*******************************************************
+
+#*******************************************************
+# General *.c --> *.obj COMPILE rules for SHARED MT Libraries
+#*******************************************************
+{$(VM_DIR)}.c{$(MTDLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) $(CFLAGSMT) -Fo$(MTDLL_OBJ_DIR)\ $<
+#*******************************************************
+
+#*******************************************************
+# General *.prg --> *.obj COMPILE rules for SHARED MT Libraries
+#*******************************************************
+{$(VM_DIR)}.prg{$(MTDLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(MTDLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) $(CFLAGSMT) -Fo$(MTDLL_OBJ_DIR)\ $(MTDLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 
 #*******************************************************
@@ -897,6 +914,15 @@ $(HARBOUR_DLL) : $(HB) $(DLL_OBJS)
 $(LDFLAGSDLL) /out:$(@)
 /implib:$(@:.dll=.lib)
 $(DLL_OBJS: = ^
+)
+$(STANDARD_SYSLIBS)
+<<$(HB_KEEPSTATE)
+#**********************************************************
+$(HARBOURMT_DLL) : $(HB) $(MTDLL_OBJS)
+    $(LINKER) @<<
+$(LDFLAGSDLL) /out:$(@)
+/implib:$(@:.dll=.lib)
+$(MTDLL_OBJS: = ^
 )
 $(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)

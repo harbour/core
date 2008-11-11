@@ -122,6 +122,7 @@ HB_DEST_DIRS = \
     $(LIB_DIR) \
     \
     $(MT_OBJ_DIR) \
+    $(MTDLL_OBJ_DIR) \
     $(DLL_OBJ_DIR)
 
 MAIN_DIR     = source\main
@@ -274,6 +275,7 @@ HBMAKE_EXE   = $(BIN_DIR)\hbmake$(EXEEXT)
 
 HB_DLLVER    = 11
 HARBOUR_DLL  = $(BIN_DIR)\$(LIBPREF)harbour-$(HB_DLLVER)-$(HB_CC_NAME)$(DLLEXT)
+HARBOURMT_DLL= $(BIN_DIR)\$(LIBPREF)harbourmt-$(HB_DLLVER)-$(HB_CC_NAME)$(DLLEXT)
 HBTESTDLL_EXE= $(BIN_DIR)\hbtest-dll$(EXEEXT)
 HBRUNDLL_EXE = $(BIN_DIR)\hbrun-dll$(EXEEXT)
 
@@ -1192,7 +1194,6 @@ DLL_GT_OBJS = \
 TMP_DLL_OBJS = \
     $(COMMON_LIB_OBJS)      \
     $(PP_LIB_OBJS)          \
-    $(VM_DLL_OBJS)          \
     $(RTL_LIB_OBJS)         \
     $(MACRO_LIB_OBJS)       \
     $(LANG_LIB_OBJS)        \
@@ -1267,7 +1268,7 @@ HB_BUILD_TARGETS = \
 # variable HB_BUILD_DLL to yes
 
 !if "$(HB_BUILD_DLL)" != "no"
-HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(HARBOUR_DLL) $(HBTESTDLL_EXE) $(HBRUNDLL_EXE)
+HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(HARBOUR_DLL) $(HARBOURMT_DLL) $(HBTESTDLL_EXE) $(HBRUNDLL_EXE)
 !endif
 
 #**********************************************************
