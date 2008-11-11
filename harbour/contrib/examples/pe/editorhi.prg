@@ -15,8 +15,8 @@
 
 
 #define EXPORT
-#define IFANY( x ) IIF( (x) != NIL )
-#define IFNIL( x ) IIF( (x) == NIL )
+#define IFANY( x ) IF ( (x) != NIL )
+#define IFNIL( x ) IF ( (x) == NIL )
 #define IIFNIL( isnil, notnil ) IIF(notnil==NIL, isnil, notnil)
 
 #define EDIT_LOWER      0       // convert to lowercase

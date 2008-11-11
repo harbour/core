@@ -6,7 +6,7 @@ rem
 rem NOTE: This sample program needs hbnf.lib from contrib/hbnf
 
 ..\..\..\bin\harbour hscript /n /i..\..\..\include
-cl -nologo -O2 -W3 -I..\..\..\include hscript.c /link /subsystem:console /libpath:..\..\..\lib hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib hbnf.lib user32.lib winspool.lib
+cl -nologo -O2 -W3 -I..\..\..\include hscript.c /link /libpath:..\..\..\lib hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib hbnf.lib user32.lib gdi32.lib
 del *.obj
 del hscript.c
 
