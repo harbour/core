@@ -219,9 +219,6 @@ METHOD New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nReco
       ENDIF
    ENDIF
 
-#ifdef OLDCODE
-   DEFAULT lPrinter TO .F.
-#endif
    DEFAULT cHeading TO ""
 
    // Set output devices
@@ -271,6 +268,8 @@ METHOD New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nReco
 
       ::nLinesLeft  := ::aReportData[ RPT_LINES ]
 
+      QOUT()       // output additional line on first page (S87 compatibility)
+      ::nLinesLeft--
 
       // Check to see if a "before report" eject, or TO FILE has been specified
       IF ::aReportData[ RPT_BEJECT ]
@@ -508,6 +507,8 @@ METHOD ReportHeader() CLASS HBReportForm
       NEXT nHeadLine
 
    NEXT nLine
+
+   AADD( aPageHeader, "" ) // S87 compat.
 
    nLinesInHeader := Len( aPageHeader)
    nMaxColLength :=0

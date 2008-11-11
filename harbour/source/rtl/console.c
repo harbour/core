@@ -382,10 +382,10 @@ HB_FUNC( __EJECT ) /* Ejects the current page from the printer */
 {
    PHB_PRNPOS pPrnPos;
 
-   if( hb_setGetPrintHan() != FS_ERROR && hb_stricmp( hb_setGetDevice(), "PRINTER" ) == 0 )
+   if( hb_setGetPrintHan() != FS_ERROR )
    {
-      static const BYTE byEop[ 4 ] = { 0x0C, 0x0D, 0x00, 0x00 }; /* Buffer is 4 bytes to make CodeGuard happy */
-      hb_fsWrite( hb_setGetPrintHan(), byEop, 2 );
+      static const BYTE s_byEop[ 4 ] = { 0x0C, 0x0D, 0x00, 0x00 }; /* Buffer is 4 bytes to make CodeGuard happy */
+      hb_fsWrite( hb_setGetPrintHan(), s_byEop, 2 );
    }
 
    pPrnPos = hb_prnPos();

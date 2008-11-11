@@ -269,9 +269,11 @@ static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL
                   }
                }
             }
-            else bCreate = TRUE; /* Otherwise create a new file. */
+            else
+               bCreate = TRUE; /* Otherwise create a new file. */
          }
-         else bCreate = TRUE; /* Always create a new file for overwrite mode. */
+         else
+            bCreate = TRUE; /* Always create a new file for overwrite mode. */
 
          if( bCreate )
             handle = hb_fsCreate( ( BYTE * ) path, FC_NORMAL );
@@ -434,7 +436,7 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             close_text( pSet, pSet->hb_set_althan );
-            if( pSet->HB_SET_ALTFILE && pSet->HB_SET_ALTFILE[0] != '\0' )
+            if( pSet->HB_SET_ALTFILE && pSet->HB_SET_ALTFILE[ 0 ] != '\0' )
                pSet->hb_set_althan = open_handle( pSet, pSet->HB_SET_ALTFILE, bFlag, ".txt", HB_SET_ALTFILE );
             else
                pSet->hb_set_althan = FS_ERROR;
@@ -660,7 +662,7 @@ HB_FUNC( SET )
          if( args > 1 && ! HB_IS_NIL( pArg2 ) )
          {
             close_text( pSet, pSet->hb_set_extrahan );
-            if( pSet->HB_SET_EXTRAFILE && pSet->HB_SET_EXTRAFILE[0] != '\0' )
+            if( pSet->HB_SET_EXTRAFILE && pSet->HB_SET_EXTRAFILE[ 0 ] != '\0' )
                pSet->hb_set_extrahan = open_handle( pSet, pSet->HB_SET_EXTRAFILE, bFlag, ".prn", HB_SET_EXTRAFILE );
             else
                pSet->hb_set_extrahan = FS_ERROR;
@@ -774,7 +776,7 @@ HB_FUNC( SET )
          {
             close_binary( pSet->hb_set_printhan );
             pSet->hb_set_printhan = FS_ERROR;
-            if( pSet->HB_SET_PRINTFILE && pSet->HB_SET_PRINTFILE[0] != '\0' )
+            if( pSet->HB_SET_PRINTFILE && pSet->HB_SET_PRINTFILE[ 0 ] != '\0' )
                pSet->hb_set_printhan = open_handle( pSet, pSet->HB_SET_PRINTFILE, bFlag, ".prn", HB_SET_PRINTFILE );
          }
          break;
@@ -1224,7 +1226,7 @@ static BOOL hb_setSetFile( HB_set_enum set_specifier, const char * szFile, BOOL 
          /* Limit size of SET strings to 64K, truncating if source is longer */
          pSet->HB_SET_ALTFILE = szFile ? hb_strndup( szFile, USHRT_MAX ) : NULL;
          close_text( pSet, pSet->hb_set_althan );
-         if( pSet->HB_SET_ALTFILE && pSet->HB_SET_ALTFILE[0] != '\0' )
+         if( pSet->HB_SET_ALTFILE && pSet->HB_SET_ALTFILE[ 0 ] != '\0' )
             pSet->hb_set_althan = open_handle( pSet, pSet->HB_SET_ALTFILE,
                                                fAdditive, ".txt", HB_SET_ALTFILE );
          else
@@ -1239,7 +1241,7 @@ static BOOL hb_setSetFile( HB_set_enum set_specifier, const char * szFile, BOOL 
          if( szFile )
          {
             close_text( pSet, pSet->hb_set_extrahan );
-            if( pSet->HB_SET_EXTRAFILE && pSet->HB_SET_EXTRAFILE[0] != '\0' )
+            if( pSet->HB_SET_EXTRAFILE && pSet->HB_SET_EXTRAFILE[ 0 ] != '\0' )
                pSet->hb_set_extrahan = open_handle( pSet, pSet->HB_SET_EXTRAFILE,
                                                     fAdditive, ".prn", HB_SET_EXTRAFILE );
             else
@@ -1255,7 +1257,7 @@ static BOOL hb_setSetFile( HB_set_enum set_specifier, const char * szFile, BOOL 
          if( szFile )
          {
             close_binary( pSet->hb_set_printhan );
-            if( pSet->HB_SET_PRINTFILE && pSet->HB_SET_PRINTFILE[0] != '\0' )
+            if( pSet->HB_SET_PRINTFILE && pSet->HB_SET_PRINTFILE[ 0 ] != '\0' )
                pSet->hb_set_printhan = open_handle( pSet, pSet->HB_SET_PRINTFILE,
                                                     fAdditive, ".prn", HB_SET_PRINTFILE );
             else

@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-11 12:08 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/console.c
+    ! Fixed __EJECT() writing an EJECT only if output device 
+      was "PRINTER". This fixes problem reported by Ciro, and 
+      also a very old TOFIX which was removed very long ago 
+      by mistake. (see thread "Bug: __EJECT() (David)" on 2000-07-27)
+      [TOMERGE 1.0]
+
+  * source/rtl/treport.prg
+    ! Fixed some linefeed differences.
+      [TOMERGE 1.0]
+
+  * source/vm/set.c
+    * Minor formatting.
+
 2008-11-11 05:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak
