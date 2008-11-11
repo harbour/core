@@ -157,7 +157,7 @@ CFLAGS         := -O3 $(CFLAGS)
 endif
 #-----------
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS         := -g $(CFLAGS)
+CFLAGS         := -g -DHB_TR_LEVEL_DEBUG $(CFLAGS)
 endif
 #-----------
 CLIBFLAGS      := -c $(CFLAGS)

@@ -141,7 +141,7 @@ CFLAGS         = -nologo -W4 -wd4127 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) \
 
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
-CFLAGS         = -Zi $(CFLAGS)
+CFLAGS         = -Zi -DHB_TR_LEVEL_DEBUG $(CFLAGS)
 DBGMARKER      =  d
 !endif
 

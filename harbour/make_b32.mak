@@ -88,7 +88,7 @@ CFLAGSMT = -DHB_MT_VM
 !endif
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
-    CFLAGS = -y -v $(CFLAGS)
+    CFLAGS = -y -v -DHB_TR_LEVEL_DEBUG $(CFLAGS)
 !endif
 #-----------
 !if "$(HB_BCCDLL_DYNRT)" == "-tWR"

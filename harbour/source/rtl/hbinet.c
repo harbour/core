@@ -141,7 +141,10 @@
    #define HB_PARSOCKET( n )     ( ( HB_SOCKET_STRUCT * ) hb_parptrGC( hb_inetSocketFinalize, n ) )
 
    #define HB_SOCKET_ZERO_ERROR( s )   \
-      do { s->errorCode = 0; s->errorDesc = ""; } while( 0 )
+      do { \
+         s->errorCode = 0; \
+         s->errorDesc = ""; \
+      } while( 0 )
 
    #if defined( HB_OS_WIN_32 )
       #if defined( _MSC_VER ) && _MSC_VER >= 1400
@@ -162,7 +165,10 @@
       #endif
    #else
       #define HB_SOCKET_SET_ERROR( s )      \
-         do { s->errorCode = errno; s->errorDesc = strerror( errno ); } while( 0 )
+         do { \
+            s->errorCode = errno; \
+            s->errorDesc = strerror( errno ); \
+         } while( 0 )
    #endif
 
    #if defined( _MSC_VER ) && _MSC_VER >= 1400
@@ -187,13 +193,13 @@
 
    #define HB_SOCKET_INIT( s, p ) \
       do { \
-         s = ( HB_SOCKET_STRUCT * ) hb_gcAlloc( sizeof( HB_SOCKET_STRUCT ), hb_inetSocketFinalize );\
-         memset( s, '\0', sizeof( HB_SOCKET_STRUCT ) );\
-         s->com = ( HB_SOCKET_T ) -1;\
-         s->timeout = -1;\
-         s->timelimit = -1;\
-         s->errorDesc = "";\
-         p = hb_itemPutPtrGC( p, s );\
+         s = ( HB_SOCKET_STRUCT * ) hb_gcAlloc( sizeof( HB_SOCKET_STRUCT ), hb_inetSocketFinalize ); \
+         memset( s, '\0', sizeof( HB_SOCKET_STRUCT ) ); \
+         s->com = ( HB_SOCKET_T ) -1; \
+         s->timeout = -1; \
+         s->timelimit = -1; \
+         s->errorDesc = ""; \
+         p = hb_itemPutPtrGC( p, s ); \
       } while( 0 )
 
    #ifndef MSG_NOSIGNAL

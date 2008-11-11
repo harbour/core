@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-11 02:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+    + Added -DHB_TR_LEVEL_DEBUG C compiler option when 
+      HB_BUILD_DEBUG=yes.
+
+  * source/rtl/hbinet.c
+    * Minor formatting.
+
 2008-11-11 01:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + config/w32/pocc64.cf
     + Added Pelles C x64 GNU-make file.
