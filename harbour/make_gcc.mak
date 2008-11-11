@@ -551,10 +551,13 @@ doClean:
 	-$(DEL) $(MT_OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(MT_OBJ_DIR)/*.c
 	-$(DEL) $(MT_OBJ_DIR)/*.h
-	-$(DEL) $(INCLUDE_DIR)/hbverbld.h
+	-$(DEL) $(MTDLL_OBJ_DIR)/*$(OBJEXT)
+	-$(DEL) $(MTDLL_OBJ_DIR)/*.c
+	-$(DEL) $(MTDLL_OBJ_DIR)/*.h
 	-$(DEL) $(DLL_OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(DLL_OBJ_DIR)/*.c
 	-$(DEL) $(DLL_OBJ_DIR)/*.h
+	-$(DEL) $(INCLUDE_DIR)/hbverbld.h
 	-$(DEL) inst_$(HB_CC_NAME).log
 	-$(DEL) common.cf
 

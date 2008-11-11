@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-11 04:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+  * common.mak
+    * Changed dll and mt obj locations to reside inside the platform dir:
+      obj/dll/* -> obj/*/dll
+      obj/*_mt -> obj/*/mt
+    + Added provisions for new obj location:
+      obj/*/mt_dll
+
 2008-11-11 03:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak

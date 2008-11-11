@@ -87,9 +87,9 @@ MKLIB  = lib.exe
 # Nmake does not support macros in string
 # substitution, so we have to hardcode it
 
-DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
+DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll)
 
-VMMT_LIB_OBJS = $(VM_LIB_OBJS:obj\vc=obj\vc_mt)
+VMMT_LIB_OBJS = $(VM_LIB_OBJS:obj\vc=obj\vc\mt)
 
 !if "$(HB_BUILD_WINCE)" == "yes"
 HARBOURFLAGS    = $(HARBOURFLAGS) -gc0
@@ -903,7 +903,7 @@ $(STANDARD_SYSLIBS)
 #**********************************************************
 # DLL EXECUTABLE Targets
 #**********************************************************
-HBTESTDLL_OBJS = $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBTEST_EXE_OBJS:obj\vc=obj\dll\vc)
+HBTESTDLL_OBJS = $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBTEST_EXE_OBJS:obj\vc=obj\vc\dll)
 $(HBTESTDLL_EXE) : $(HARBOUR_DLL) $(HBTESTDLL_OBJS)
     $(LINKER) @<<
 $(LDFLAGS)
@@ -914,7 +914,7 @@ $(HARBOUR_DLL:.dll=.lib)
 $(COMMON_LIB)
 <<$(HB_KEEPSTATE)
 #**********************************************************
-HBRUNDLL_OBJS = $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBRUN_EXE_OBJS:obj\vc=obj\dll\vc)
+HBRUNDLL_OBJS = $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBRUN_EXE_OBJS:obj\vc=obj\vc\dll)
 $(HBRUNDLL_EXE) : $(HARBOUR_DLL) $(HBRUNDLL_OBJS)
     $(LINKER) @<<
 $(LDFLAGS)
@@ -1018,6 +1018,9 @@ doClean:
     @if exist $(MT_OBJ_DIR)\*.obj       $(DEL) $(MT_OBJ_DIR)\*.obj       > nul
     @if exist $(MT_OBJ_DIR)\*.c         $(DEL) $(MT_OBJ_DIR)\*.c         > nul
     @if exist $(MT_OBJ_DIR)\*.h         $(DEL) $(MT_OBJ_DIR)\*.h         > nul
+    @if exist $(MTDLL_OBJ_DIR)\*.obj    $(DEL) $(MTDLL_OBJ_DIR)\*.obj    > nul
+    @if exist $(MTDLL_OBJ_DIR)\*.c      $(DEL) $(MTDLL_OBJ_DIR)\*.c      > nul
+    @if exist $(MTDLL_OBJ_DIR)\*.h      $(DEL) $(MTDLL_OBJ_DIR)\*.h      > nul
     @if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
     @if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
     @if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul

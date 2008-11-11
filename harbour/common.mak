@@ -111,20 +111,17 @@ BIN_DIR = bin\$(HB_CC_NAME)
 OBJ_DIR = obj\$(HB_CC_NAME)
 LIB_DIR = lib\$(HB_CC_NAME)
 
-MT_OBJ_DIR = obj\$(HB_CC_NAME)_mt
-
-DLL_ROOTDIR = obj\dll
-DLL_OBJ_DIR = $(DLL_ROOTDIR)\$(HB_CC_NAME)
+MT_OBJ_DIR = obj\$(HB_CC_NAME)\mt
+MTDLL_OBJ_DIR = obj\$(HB_CC_NAME)\mt_dll
+DLL_OBJ_DIR = obj\$(HB_CC_NAME)\dll
 
 # Targets Destination Directories
 HB_DEST_DIRS = \
-    $(BIN_DIR)      \
-    $(OBJ_DIR)      \
-    $(LIB_DIR)      \
+    $(BIN_DIR) \
+    $(OBJ_DIR) \
+    $(LIB_DIR) \
     \
-    $(MT_OBJ_DIR)   \
-    \
-    $(DLL_ROOTDIR)  \
+    $(MT_OBJ_DIR) \
     $(DLL_OBJ_DIR)
 
 MAIN_DIR     = source\main
