@@ -41,7 +41,7 @@
   * bin/hbmk.bat
     + Added generation of MT harbour .dlls for BCC and MSVC.
     ; TOFIX: 'hbmk -shared -mt' doesn't seem to work, resulting 
-             app simply exists for both BCC and MSVC. [DONE]
+             app simply exits for both BCC and MSVC. [DONE]
     ; TODO: Please update make_gcc.mak.
 
 2008-11-11 04:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
