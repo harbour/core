@@ -228,6 +228,8 @@ ALL_SRC_DIRS     = $(ALL_SRC_DIRS_TMP: =)
 # Macros to define our library and executable names
 #
 
+HBMAINSTD_LIB= $(LIB_DIR)\$(LIBPREF)hbmainstd$(LIBEXT)
+HBMAINWIN_LIB= $(LIB_DIR)\$(LIBPREF)hbmainwin$(LIBEXT)
 COMMON_LIB   = $(LIB_DIR)\$(LIBPREF)hbcommon$(LIBEXT)
 COMPILER_LIB = $(LIB_DIR)\$(LIBPREF)hbcplr$(LIBEXT)
 PP_LIB       = $(LIB_DIR)\$(LIBPREF)hbpp$(LIBEXT)
@@ -442,6 +444,12 @@ VM_COMMON_LIB_OBJS = \
     $(OBJ_DIR)\thread$(OBJEXT)   \
     $(OBJ_DIR)\vm$(OBJEXT)       \
     $(OBJ_DIR)\harbinit$(OBJEXT) \
+
+HBMAINSTD_LIB_OBJS = \
+    $(OBJ_DIR)\mainstd$(OBJEXT)  \
+
+HBMAINWIN_LIB_OBJS = \
+    $(OBJ_DIR)\mainwin$(OBJEXT)
 
 # Specific VM Objects for building STATIC library
 VM_STATIC_LIB_OBJS = \
@@ -1223,6 +1231,8 @@ DISABLED_SHARED_MODULES=    \
 #
 
 HB_BUILD_TARGETS = \
+    $(HBMAINSTD_LIB)        \
+    $(HBMAINWIN_LIB)        \
     $(COMMON_LIB)           \
     $(HBPP_EXE)             \
     $(PP_LIB)               \

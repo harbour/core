@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-11 03:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+  * common.mak
+    + Added generation of hbmainstd and hbmainwin libs.
+
+  * bin/hbmk.bat
+    + Changed to use above libs. This also means that '-shared' 
+      can now be used in Harbour binary distributions, too.
+
 2008-11-11 03:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + contrib/examples/rl
   + contrib/examples/rl/Makefile
@@ -72,7 +83,7 @@
 
   * bin/hbmk.bat
     + Added '-shared' option.
-    ; TOFIX: '-shared' won't work in binary installations.
+    ; TOFIX: '-shared' won't work in binary installations. [DONE]
     ; TOFIX: '-shared' cannot create MT apps.
     ; TOFIX: '-shared' only works for BCC32 yet. [DONE]
 

@@ -282,6 +282,12 @@ $(HB_DEST_DIRS) $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL):
 #**********************************************************
 # LIBRARY Targets BUILD rules
 #**********************************************************
+$(HBMAINSTD_LIB): $(HBMAINSTD_LIB_OBJS)
+	$(MKLIB) $(ARFLAGS) $@ $^
+#**********************************************************
+$(HBMAINWIN_LIB): $(HBMAINWIN_LIB_OBJS)
+	$(MKLIB) $(ARFLAGS) $@ $^
+#**********************************************************
 $(COMMON_LIB)   : $(COMMON_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
