@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-11 15:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.y
+    ! fixed compile time warnings for __enum* messages used in
+      simpled code block variables inside FOR EACH statement,
+
 2008-11-11 13:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak

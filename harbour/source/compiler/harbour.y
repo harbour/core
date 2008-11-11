@@ -1039,11 +1039,16 @@ BlockVarList : IdentName AsType                    { HB_COMP_PARAM->iVarScope = 
              | BlockVarList ',' IdentName AsType   { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
              ;
 
-BlockExpList : Expression                    { $$ = hb_compExprAddCodeblockExpr( $<asExpr>0, $1 ); }
-             | BlockExpList ',' Expression   { $$ = hb_compExprAddCodeblockExpr( $<asExpr>0, $3 ); }
+BlockExpList : Expression                    { $$ = hb_compExprAddCodeblockExpr( $<asExpr>-1, $1 ); }
+             | BlockExpList ',' Expression   { $$ = hb_compExprAddCodeblockExpr( $<asExpr>-1, $3 ); }
              ;
 
-CodeBlock   : BlockHead BlockExpList '}'
+CodeBlock   : BlockHead
+              { $<bTrue>$ = HB_COMP_PARAM->functions.pLast->bBlock;
+                HB_COMP_PARAM->functions.pLast->bBlock = TRUE; }
+              BlockExpList
+              { HB_COMP_PARAM->functions.pLast->bBlock = $<bTrue>2; }
+              '}'
             | BlockHead Crlf
             {  /* 3 */
                HB_CBVAR_PTR pVar;
@@ -1648,7 +1653,7 @@ ForExpr    : '@' IdentName       { $$ = hb_compExprNewVarRef( $2, HB_COMP_PARAM 
 
 ForArgs    : ForExpr             { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
            | ForArgs ',' ForExpr { $$ = hb_compExprAddListExpr( $1, $3 ); }
-           ;           
+           ;
 
 
 ForEach    : FOREACH ForList IN ForArgs          /* 1  2  3  4 */
@@ -1664,7 +1669,7 @@ ForEach    : FOREACH ForList IN ForArgs          /* 1  2  3  4 */
                 $2 = hb_compExprReduce( $2, HB_COMP_PARAM );
                 $4 = hb_compExprReduce( $4, HB_COMP_PARAM );
                 hb_compEnumStart( HB_COMP_PARAM, $2, $4, $6 );
-                
+
                 hb_compLoopStart( HB_COMP_PARAM, TRUE );
                 $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
              }
@@ -2215,7 +2220,7 @@ static void hb_compLoopEnd( HB_COMP_DECL )
 void hb_compLoopKill( PFUNCTION pFunc )
 {
    HB_LOOPEXIT_PTR pLoop, pFree;
-   
+
    while( pFunc->pLoops )   
    {
       pLoop = pFunc->pLoops;
@@ -2269,7 +2274,7 @@ static void hb_compElseIfFix( HB_COMP_DECL, void * pFixElseIfs )
 {
    HB_ELSEIF_PTR pFix = ( HB_ELSEIF_PTR ) pFixElseIfs;
    HB_ELSEIF_PTR pDel;
-   
+
    HB_COMP_PARAM->functions.pLast->elseif = pFix->pPrev;
    while( pFix )
    {
@@ -2363,7 +2368,7 @@ static void hb_compRTVariableGen( HB_COMP_DECL, const char * szCreateFun )
 void hb_compRTVariableKill( HB_COMP_DECL, PFUNCTION pFunc )
 {
    HB_RTVAR_PTR pVar;
-   
+
    while( pFunc->rtvars )
    {
       pVar = pFunc->rtvars;
@@ -2434,7 +2439,7 @@ static void hb_compVariableDim( const char * szName, HB_EXPR_PTR pInitValue, HB_
 static void hb_compForStart( HB_COMP_DECL, const char *szVarName, BOOL bForEach )
 {
    HB_ENUMERATOR_PTR pEnumVar;
-   
+
    pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
    if( pEnumVar == NULL )
    {
@@ -2471,9 +2476,9 @@ static void hb_compForStart( HB_COMP_DECL, const char *szVarName, BOOL bForEach 
 BOOL hb_compForEachVarError( HB_COMP_DECL, const char *szVarName )
 {
    HB_ENUMERATOR_PTR pEnumVar;
-   
+
    pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
-   if( pEnumVar )
+   if( pEnumVar && !HB_COMP_PARAM->functions.pLast->bBlock )
    {
       while( pEnumVar )
       {
@@ -2492,15 +2497,15 @@ BOOL hb_compForEachVarError( HB_COMP_DECL, const char *szVarName )
    }
 
    hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_ENUM_INVALID, szVarName, NULL );
-   return TRUE;            
+   return TRUE;
 }
 
 static void hb_compForEnd( HB_COMP_DECL, const char *szVar )
 {
    HB_ENUMERATOR_PTR * pEnumVar;
-   
+
    HB_SYMBOL_UNUSED( szVar );
-   
+
    pEnumVar = &HB_COMP_PARAM->functions.pLast->pEnum;
    if( *pEnumVar )
    {
@@ -2525,14 +2530,14 @@ static HB_CARGO2_FUNC( hb_compEnumEvalStart )
 static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend )
 {
    ULONG ulLen;
-   
+
    if( hb_compExprListLen(pVars) != hb_compExprListLen(pExprs) )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FORVAR_DIFF, NULL, NULL );
    }
 
    ulLen = hb_compExprListEval2( HB_COMP_PARAM, pVars, pExprs, hb_compEnumEvalStart );
-   
+
    if( ulLen > 255 )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FORVAR_TOOMANY, NULL, NULL );
@@ -2632,11 +2637,10 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
          pFunc->pSwitch->iCount++;
       }
    }
-   
 }
 
 static void hb_compSwitchEnd( HB_COMP_DECL )
-{ 
+{
    BOOL fLongOptimize = HB_COMP_PARAM->fLongOptimize;
    BOOL fTextSubst = HB_COMP_PARAM->fTextSubst;
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;

@@ -392,6 +392,7 @@ typedef struct __FUNC
    BOOL         bLateEval;                /* TRUE if accessing of declared (compile time) variables is allowed */
    BOOL         fVParams;                 /* TRUE if variable number of parameters is used */
    BOOL         bError;                   /* error during function compilation */
+   BOOL         bBlock;                   /* TRUE if simple codeblock body is compiled */
    struct __FUNC * pOwner;                /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;                 /* pointer to the next defined function */
    HB_ENUMERATOR_PTR pEnum;               /* pointer to FOR EACH variables */
