@@ -29,6 +29,7 @@
 #                           dll in addition to normal static build
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
 #       HB_BUILD_VERBOSE  - Controls echoing commands being executed
+#       HB_BUILD_OPTIM    - Setting it to 'no' disables compiler optimizations
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
 #                           Bison (you must use Bison 2.3 or later)
 #       HB_INSTALL_PREFIX - Path to installation directory into which
@@ -100,10 +101,12 @@ MTDLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll) $(VMMTDLL_LIB_OBJS)
 # C Compiler Flags
 !if "$(HB_BUILD_WINCE)" == "yes"
 
+!if "$(HB_BUILD_OPTIM)" != "no"
 !if $(HB_VISUALC_VER) >= 80
 CFLAGS_VER     = -Od -Os -Gy -EHsc- -Gm -Zi -GR-
 !else
 CFLAGS_VER     = -Oxsb1 -EHsc -YX -GF
+!endif
 !endif
 
 # TOFIX: These should be cleaned from everything not absolutely necessary:
@@ -127,10 +130,12 @@ DBGMARKER = d
 
 # NOTE: See here: http://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
 
+!if "$(HB_BUILD_OPTIM)" != "no"
 !if $(HB_VISUALC_VER) >= 80
 CFLAGS_VER     = -Ot2b1 -EHs-c-
 !else
 CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX
+!endif
 !endif
 
 CFLAGS         = -nologo -W4 -wd4127 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) \
@@ -1036,15 +1041,15 @@ doClean:
     @if exist $(OBJ_DIR)\*.c            $(DEL) $(OBJ_DIR)\*.c            > nul
     @if exist $(OBJ_DIR)\*.h            $(DEL) $(OBJ_DIR)\*.h            > nul
     @if exist $(OBJ_DIR)\*.pch          $(DEL) $(OBJ_DIR)\*.pch          > nul
+    @if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
+    @if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
+    @if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul
     @if exist $(MT_OBJ_DIR)\*.obj       $(DEL) $(MT_OBJ_DIR)\*.obj       > nul
     @if exist $(MT_OBJ_DIR)\*.c         $(DEL) $(MT_OBJ_DIR)\*.c         > nul
     @if exist $(MT_OBJ_DIR)\*.h         $(DEL) $(MT_OBJ_DIR)\*.h         > nul
     @if exist $(MTDLL_OBJ_DIR)\*.obj    $(DEL) $(MTDLL_OBJ_DIR)\*.obj    > nul
     @if exist $(MTDLL_OBJ_DIR)\*.c      $(DEL) $(MTDLL_OBJ_DIR)\*.c      > nul
     @if exist $(MTDLL_OBJ_DIR)\*.h      $(DEL) $(MTDLL_OBJ_DIR)\*.h      > nul
-    @if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
-    @if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
-    @if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul
     @if exist $(INCLUDE_DIR)\hbverbld.h $(DEL) $(INCLUDE_DIR)\hbverbld.h > nul
     @if exist inst_$(HB_CC_NAME).log    $(DEL) inst_$(HB_CC_NAME).log    > nul
     @if exist bin\*.exe                 $(DEL) bin\*.exe                 > nul

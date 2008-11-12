@@ -29,6 +29,7 @@
 #                           dll in addition to normal static build
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
 #       HB_BUILD_VERBOSE  - Controls echoing commands being executed
+#       HB_BUILD_OPTIM    - Setting it to 'no' disables compiler optimizations
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
 #                           Bison (you must use Bison 2.3 or later)
 #       HB_INSTALL_PREFIX - Path to installation directory into which
@@ -85,7 +86,7 @@ CFLAGS = -I$(INCLUDE_DIR) -I$(OBJ_DIR) $(C_USR)
 CFLAGSMT = -DHB_MT_VM
 
 #-----------
-!ifndef BCC_NOOPTIM
+!if "$(HB_BUILD_OPTIM)" != "no"
     CFLAGS = -4 -O2 -OS -Ov -Oi -Oc $(CFLAGS)
 !endif
 #-----------
@@ -655,15 +656,15 @@ doClean:
     @if exist $(OBJ_DIR)\*.obj          $(DEL) $(OBJ_DIR)\*.obj          > nul
     @if exist $(OBJ_DIR)\*.c            $(DEL) $(OBJ_DIR)\*.c            > nul
     @if exist $(OBJ_DIR)\*.h            $(DEL) $(OBJ_DIR)\*.h            > nul
+    @if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
+    @if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
+    @if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul
     @if exist $(MT_OBJ_DIR)\*.obj       $(DEL) $(MT_OBJ_DIR)\*.obj       > nul
     @if exist $(MT_OBJ_DIR)\*.c         $(DEL) $(MT_OBJ_DIR)\*.c         > nul
     @if exist $(MT_OBJ_DIR)\*.h         $(DEL) $(MT_OBJ_DIR)\*.h         > nul
     @if exist $(MTDLL_OBJ_DIR)\*.obj    $(DEL) $(MTDLL_OBJ_DIR)\*.obj    > nul
     @if exist $(MTDLL_OBJ_DIR)\*.c      $(DEL) $(MTDLL_OBJ_DIR)\*.c      > nul
     @if exist $(MTDLL_OBJ_DIR)\*.h      $(DEL) $(MTDLL_OBJ_DIR)\*.h      > nul
-    @if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
-    @if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
-    @if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul
     @if exist $(INCLUDE_DIR)\hbverbld.h $(DEL) $(INCLUDE_DIR)\hbverbld.h > nul
     @if exist inst_$(HB_CC_NAME).log    $(DEL) inst_$(HB_CC_NAME).log    > nul
     @if exist bin\*.exe                 $(DEL) bin\*.exe                 > nul

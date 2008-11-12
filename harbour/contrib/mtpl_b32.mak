@@ -112,7 +112,7 @@ CFLAGS = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)
     CFLAGS  = -y -v $(CFLAGS)
 !endif
 #-----------
-!if !$d(BCC_NOOPTIM)
+!if "$(HB_BUILD_OPTIM)" != "no"
     CFLAGS = -4 -O2 -OS -Ov -Oi -Oc $(CFLAGS)
 !endif
 #-----------

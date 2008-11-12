@@ -114,7 +114,7 @@ endif
 
 # C Compiler Flags
 
-ifndef GCC_NOOPTIM
+ifneq ($(HB_BUILD_OPTIM),no)
 ifeq ($(HB_ARCHITECTURE),w32)
 CFLAGS         := -march=i586 $(CFLAGS)
 endif

@@ -29,6 +29,7 @@
 #                           dll in addition to normal static build (currently not working)
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
 #       HB_BUILD_VERBOSE  - Controls echoing commands being executed
+#       HB_BUILD_OPTIM    - Setting it to 'no' disables compiler optimizations
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
 #                           Bison (you must use Bison 2.3 or later)
 #       HB_INSTALL_PREFIX - Path to installation directory into which
@@ -149,7 +150,7 @@ endif
 CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) -I$(OBJ_DIR)
 CFLAGSMT       := -DHB_MT_VM
 #-----------
-ifndef GCC_NOOPTIM
+ifneq ($(HB_BUILD_OPTIM),no)
 ifeq ($(HB_ARCHITECTURE),w32)
 CFLAGS         := -march=i586 $(CFLAGS)
 endif
@@ -548,15 +549,15 @@ doClean:
 	-$(DEL) $(OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(OBJ_DIR)/*.c
 	-$(DEL) $(OBJ_DIR)/*.h
+	-$(DEL) $(DLL_OBJ_DIR)/*$(OBJEXT)
+	-$(DEL) $(DLL_OBJ_DIR)/*.c
+	-$(DEL) $(DLL_OBJ_DIR)/*.h
 	-$(DEL) $(MT_OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(MT_OBJ_DIR)/*.c
 	-$(DEL) $(MT_OBJ_DIR)/*.h
 	-$(DEL) $(MTDLL_OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(MTDLL_OBJ_DIR)/*.c
 	-$(DEL) $(MTDLL_OBJ_DIR)/*.h
-	-$(DEL) $(DLL_OBJ_DIR)/*$(OBJEXT)
-	-$(DEL) $(DLL_OBJ_DIR)/*.c
-	-$(DEL) $(DLL_OBJ_DIR)/*.h
 	-$(DEL) $(INCLUDE_DIR)/hbverbld.h
 	-$(DEL) inst_$(HB_CC_NAME).log
 	-$(DEL) common.cf

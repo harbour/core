@@ -14,6 +14,7 @@ rem Set any of the below settings to customize your build process:
 rem    set HB_BUILD_DLL=no
 rem    set HB_BUILD_DEBUG=yes
 rem    set HB_BUILD_VERBOSE=no
+rem    set HB_BUILD_OPTIM=no
 rem    set HB_REBUILD_PARSER=yes
 rem    set HB_MAKE_PROGRAM=
 rem    set HB_SHOW_ERRORS=

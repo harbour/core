@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-12 19:11 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.bat
+  * make_b32.mak
+  * make_vc.bat
+  * make_vc.mak
+  * make_gcc.mak
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_gcc.mak
+  * contrib/mtpl_vc.mak
+    + Added 'set HB_BUILD_OPTIM=no' option to disable 
+      all C compiler optimization for all compilers in 
+      non-GNU make system. This replaces old envvars 
+      BCC_NOOPTIM and GCC_NOOPTIM and add MSVC support 
+      for this option.
+
+  * common.mak
+    * Formatting.
+
 2008-11-12 18:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbverdsp.c
     * Don't show '(C mode)', only C++.

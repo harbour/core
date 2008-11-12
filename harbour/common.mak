@@ -114,9 +114,9 @@ BIN_DIR = bin\$(HB_CC_NAME)
 OBJ_DIR = obj\$(HB_CC_NAME)
 LIB_DIR = lib\$(HB_CC_NAME)
 
-MT_OBJ_DIR = $(OBJ_DIR)\mt
+MT_OBJ_DIR    = $(OBJ_DIR)\mt
 MTDLL_OBJ_DIR = $(OBJ_DIR)\mt_dll
-DLL_OBJ_DIR = $(OBJ_DIR)\dll
+DLL_OBJ_DIR   = $(OBJ_DIR)\dll
 
 # Targets Destination Directories
 HB_DEST_DIRS = \
