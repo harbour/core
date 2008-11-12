@@ -150,8 +150,6 @@ void hb_verBuildInfo( void )
 #endif
 #if defined(__cplusplus)
    hb_conOutErr( "(C++ mode) ", 0 );
-#else
-   hb_conOutErr( "(C mode) ", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 

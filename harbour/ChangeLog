@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-12 18:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/common/hbverdsp.c
+    * Don't show '(C mode)', only C++.
+
 2008-11-12 14:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.mak
     + TOFIX added for the case when HB_CC_NAME is overridden 
