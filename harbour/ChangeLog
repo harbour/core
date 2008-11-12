@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-12 23:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/fm.c
+    + added support for enabling/disabling memory statistic when
+      application starts. To enable memory statistic it's enough
+      to set HB_FM_STAT environment variable to non empty value.
+      To disable memory statistic it's enough to set HB_NO_FM_STAT
+      envvar. The default setting may depend on build time option.
+      Now is enabled when memory statistic is compiled when harbour
+      is created. It may not work if C compiler does not allow to
+      check environment variables from startup code. F.e. functions
+      to access environment can be also part of dynamic library
+      registered after harbour.dll or harbour core code startup
+      functions.
+      Viktor I would like to ask you only about one thing.
+      Please do not remove current support for HB_FM_STATISTICS_OFF
+      from GNU make builds so Harbour user can still create binaries
+      without any memory statistic code using -[no]fmstat switch in
+      hb* scripts. The above feature is only for users who need support
+      for enabling/disabling memory statistic to test application
+      if foreign environment, f.e. at client computers. Of course if
+      it will work with given C compiler and/or type of application
+      (linked dynamically or statically). Please check.
+
 2008-11-12 20:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * doc/linux1st.txt
     * Updated for Ubuntu 8.10.

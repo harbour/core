@@ -108,6 +108,11 @@
    #endif
 #endif
 
+#if defined( HB_FM_STATISTICS_OFF )
+#  undef HB_FM_STATISTICS
+#endif
+
+
 /* #define HB_FM_WIN32_ALLOC */
 /* #define HB_FM_STATISTICS */
 /* #define HB_PARANOID_MEM_CHECK */
@@ -193,24 +198,31 @@ typedef struct _HB_MEMINFO
 } HB_MEMINFO, * PHB_MEMINFO;
 
 #ifdef HB_ALLOC_ALIGNMENT
-#  define HB_MEMINFO_SIZE     ( ( ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) - \
+#  define _HB_MEMINFO_SIZE    ( ( ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) - \
                                   ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) % HB_ALLOC_ALIGNMENT ) + \
                                 HB_COUNTER_OFFSET )
 #else
-#  define HB_MEMINFO_SIZE     ( sizeof( HB_MEMINFO ) + HB_COUNTER_OFFSET )
+#  define _HB_MEMINFO_SIZE    ( sizeof( HB_MEMINFO ) + HB_COUNTER_OFFSET )
 #endif
 
-#define HB_ALLOC_SIZE( n )    ( ( n ) + HB_MEMINFO_SIZE + sizeof( UINT32 ) )
+#define HB_MEMINFO_SIZE       ( s_fStatistic ? sizeof( HB_MEMINFO ) + HB_COUNTER_OFFSET : HB_COUNTER_OFFSET )
+
+#define HB_FM_GETSIG( p, n )  HB_GET_UINT32( ( BYTE * ) ( p ) + ( n ) )
+#define HB_FM_SETSIG( p, n )  HB_PUT_UINT32( ( BYTE * ) ( p ) + ( n ), HB_MEMINFO_SIGNATURE )
+#define HB_FM_CLRSIG( p, n )  HB_PUT_UINT32( ( BYTE * ) ( p ) + ( n ), 0 )
+
+#define HB_ALLOC_SIZE( n )    ( ( n ) + ( s_fStatistic ? _HB_MEMINFO_SIZE + sizeof( UINT32 ) : HB_COUNTER_OFFSET ) )
 #define HB_FM_PTR( p )        ( ( PHB_MEMINFO ) ( ( BYTE * ) ( p ) - HB_MEMINFO_SIZE ) )
 
-#define HB_FM_GETSIG( p, n )  HB_GET_UINT32( ( BYTE * )( p ) + ( n ) )
-#define HB_FM_SETSIG( p, n )  HB_PUT_UINT32( ( BYTE * )( p ) + ( n ), HB_MEMINFO_SIGNATURE )
-#define HB_FM_CLRSIG( p, n )  HB_PUT_UINT32( ( BYTE * )( p ) + ( n ), 0 )
+#define HB_FM_BLOCKSIZE( p )  ( s_fStatistic ? HB_FM_PTR( pMem )->ulSize : 0 )
 
 /* NOTE: we cannot use here HB_TRACE because it will overwrite the
  * function name/line number of code which called hb_xalloc/hb_xgrab
  */
 #define HB_TRACE_FM           HB_TRACE_STEALTH
+
+static BOOL s_fInited = FALSE;
+static BOOL s_fStatistic = FALSE;
 
 static LONG s_lMemoryBlocks = 0;      /* memory blocks used */
 static LONG s_lMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
@@ -296,7 +308,6 @@ void hb_xsetinfo( char * szValue )
 #endif
 }
 
-
 void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
 {
    PHB_MEMINFO pMem;
@@ -306,6 +317,11 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
    if( ulSize == 0 )
       hb_errInternal( HB_EI_XALLOCNULLSIZE, NULL, NULL, NULL );
 
+#ifdef HB_FM_STATISTICS
+   if( !s_fInited )
+      hb_xinit();
+#endif
+
    pMem = ( PHB_MEMINFO ) malloc( HB_ALLOC_SIZE( ulSize ) );
 
    if( ! pMem )
@@ -313,54 +329,58 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
 
 #ifdef HB_FM_STATISTICS
 
-   HB_FM_LOCK
-
-   if( ! s_pFirstBlock )
+   if( s_fStatistic )
    {
-      pMem->pPrevBlock = NULL;
-      s_pFirstBlock = pMem;
-   }
-   else
-   {
-      pMem->pPrevBlock = s_pLastBlock;
-      s_pLastBlock->pNextBlock = pMem;
-   }
-   s_pLastBlock = pMem;
+      HB_FM_LOCK
 
-   pMem->pNextBlock = NULL;
-   pMem->u32Signature = HB_MEMINFO_SIGNATURE;
-   HB_FM_SETSIG( HB_MEM_PTR( pMem ), ulSize );
-   pMem->ulSize = ulSize;  /* size of the memory block */
+      if( ! s_pFirstBlock )
+      {
+         pMem->pPrevBlock = NULL;
+         s_pFirstBlock = pMem;
+      }
+      else
+      {
+         pMem->pPrevBlock = s_pLastBlock;
+         s_pLastBlock->pNextBlock = pMem;
+      }
+      s_pLastBlock = pMem;
 
-   if( hb_tr_level() >= HB_TR_DEBUG )
-   {
-      /* NOTE: PRG line number/procname is not very useful during hunting
-      * for memory leaks - this is why we are using the previously stored
-      * function/line info - this is a location of code that called
-      * hb_xalloc/hb_xgrab
-      */
-      pMem->uiProcLine = hb_tr_line_; /* C line number */
-      hb_strncpy( pMem->szProcName, hb_tr_file_, sizeof( pMem->szProcName ) - 1 );
-   }
-   else
-   {
-      hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
-   }
+      pMem->pNextBlock = NULL;
+      pMem->u32Signature = HB_MEMINFO_SIGNATURE;
+      HB_FM_SETSIG( HB_MEM_PTR( pMem ), ulSize );
+      pMem->ulSize = ulSize;  /* size of the memory block */
 
-   s_lMemoryConsumed += ulSize + sizeof( HB_COUNTER );
-   if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
-      s_lMemoryMaxConsumed = s_lMemoryConsumed;
-   s_lMemoryBlocks++;
-   if( s_lMemoryMaxBlocks < s_lMemoryBlocks )
-      s_lMemoryMaxBlocks = s_lMemoryBlocks;
+      if( hb_tr_level() >= HB_TR_DEBUG )
+      {
+         /* NOTE: PRG line number/procname is not very useful during hunting
+         * for memory leaks - this is why we are using the previously stored
+         * function/line info - this is a location of code that called
+         * hb_xalloc/hb_xgrab
+         */
+         pMem->uiProcLine = hb_tr_line_; /* C line number */
+         hb_strncpy( pMem->szProcName, hb_tr_file_, sizeof( pMem->szProcName ) - 1 );
+      }
+      else
+      {
+         hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
+      }
 
-   HB_FM_UNLOCK
+      s_lMemoryConsumed += ulSize + sizeof( HB_COUNTER );
+      if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
+         s_lMemoryMaxConsumed = s_lMemoryConsumed;
+      s_lMemoryBlocks++;
+      if( s_lMemoryMaxBlocks < s_lMemoryBlocks )
+         s_lMemoryMaxBlocks = s_lMemoryBlocks;
+
+      HB_FM_UNLOCK
 
 #ifdef HB_PARANOID_MEM_CHECK
-   memset( HB_MEM_PTR( pMem ), HB_MEMFILER, ulSize );
+      memset( HB_MEM_PTR( pMem ), HB_MEMFILER, ulSize );
 #endif
 
-#endif
+   }
+
+#endif /* HB_FM_STATISTICS */
 
    HB_ATOM_SET( HB_COUNTER_PTR( HB_MEM_PTR( pMem ) ), 1 );
 
@@ -376,6 +396,11 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
    if( ulSize == 0 )
       hb_errInternal( HB_EI_XGRABNULLSIZE, NULL, NULL, NULL );
 
+#ifdef HB_FM_STATISTICS
+   if( !s_fInited )
+      hb_xinit();
+#endif
+
    pMem = ( PHB_MEMINFO ) malloc( HB_ALLOC_SIZE( ulSize ) );
 
    if( ! pMem )
@@ -383,54 +408,58 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 
 #ifdef HB_FM_STATISTICS
 
-   HB_FM_LOCK
-
-   if( ! s_pFirstBlock )
+   if( s_fStatistic )
    {
-      pMem->pPrevBlock = NULL;
-      s_pFirstBlock = pMem;
-   }
-   else
-   {
-      pMem->pPrevBlock = s_pLastBlock;
-      s_pLastBlock->pNextBlock = pMem;
-   }
-   s_pLastBlock = pMem;
+      HB_FM_LOCK
 
-   pMem->pNextBlock = NULL;
-   pMem->u32Signature = HB_MEMINFO_SIGNATURE;
-   HB_FM_SETSIG( HB_MEM_PTR( pMem ), ulSize );
-   pMem->ulSize = ulSize;  /* size of the memory block */
+      if( ! s_pFirstBlock )
+      {
+         pMem->pPrevBlock = NULL;
+         s_pFirstBlock = pMem;
+      }
+      else
+      {
+         pMem->pPrevBlock = s_pLastBlock;
+         s_pLastBlock->pNextBlock = pMem;
+      }
+      s_pLastBlock = pMem;
 
-   if( hb_tr_level() >= HB_TR_DEBUG )
-   {
-      /* NOTE: PRG line number/procname is not very useful during hunting
-      * for memory leaks - this is why we are using the previously stored
-      * function/line info - this is a location of code that called
-      * hb_xalloc/hb_xgrab
-      */
-      pMem->uiProcLine = hb_tr_line_; /* C line number */
-      hb_strncpy( pMem->szProcName, hb_tr_file_, sizeof( pMem->szProcName ) - 1 );
-   }
-   else
-   {
-      hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
-   }
+      pMem->pNextBlock = NULL;
+      pMem->u32Signature = HB_MEMINFO_SIGNATURE;
+      HB_FM_SETSIG( HB_MEM_PTR( pMem ), ulSize );
+      pMem->ulSize = ulSize;  /* size of the memory block */
 
-   s_lMemoryConsumed += ulSize + sizeof( HB_COUNTER );
-   if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
-      s_lMemoryMaxConsumed = s_lMemoryConsumed;
-   s_lMemoryBlocks++;
-   if( s_lMemoryMaxBlocks < s_lMemoryBlocks )
-      s_lMemoryMaxBlocks = s_lMemoryBlocks;
+      if( hb_tr_level() >= HB_TR_DEBUG )
+      {
+         /* NOTE: PRG line number/procname is not very useful during hunting
+         * for memory leaks - this is why we are using the previously stored
+         * function/line info - this is a location of code that called
+         * hb_xalloc/hb_xgrab
+         */
+         pMem->uiProcLine = hb_tr_line_; /* C line number */
+         hb_strncpy( pMem->szProcName, hb_tr_file_, sizeof( pMem->szProcName ) - 1 );
+      }
+      else
+      {
+         hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
+      }
 
-   HB_FM_UNLOCK
+      s_lMemoryConsumed += ulSize + sizeof( HB_COUNTER );
+      if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
+         s_lMemoryMaxConsumed = s_lMemoryConsumed;
+      s_lMemoryBlocks++;
+      if( s_lMemoryMaxBlocks < s_lMemoryBlocks )
+         s_lMemoryMaxBlocks = s_lMemoryBlocks;
+
+      HB_FM_UNLOCK
 
 #ifdef HB_PARANOID_MEM_CHECK
-   memset( HB_MEM_PTR( pMem ), HB_MEMFILER, ulSize );
+      memset( HB_MEM_PTR( pMem ), HB_MEMFILER, ulSize );
 #endif
 
-#endif
+   }
+
+#endif /* HB_FM_STATISTICS */
 
    HB_ATOM_SET( HB_COUNTER_PTR( HB_MEM_PTR( pMem ) ), 1 );
 
@@ -462,7 +491,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
       hb_xfree( pMem );
       return NULL;
    }
-   else
+   else if( s_fStatistic )
    {
       PHB_MEMINFO pMemBlock;
       ULONG ulMemSize;
@@ -519,10 +548,13 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
       }
 
       HB_FM_UNLOCK
-
-      if( ! pMem )
-         hb_errInternal( HB_EI_XREALLOC, NULL, NULL, NULL );
    }
+   else
+      pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE( ulSize ) );
+
+   if( ! pMem )
+      hb_errInternal( HB_EI_XREALLOC, NULL, NULL, NULL );
+
 #else
 
    if( pMem == NULL )
@@ -559,35 +591,37 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
 
       PHB_MEMINFO pMemBlock = HB_FM_PTR( pMem );
 
-      if( pMemBlock->u32Signature != HB_MEMINFO_SIGNATURE )
-         hb_errInternal( HB_EI_XFREEINV, NULL, NULL, NULL );
+      if( s_fStatistic )
+      {
+         if( pMemBlock->u32Signature != HB_MEMINFO_SIGNATURE )
+            hb_errInternal( HB_EI_XFREEINV, NULL, NULL, NULL );
 
-      if( HB_FM_GETSIG( pMem, pMemBlock->ulSize ) != HB_MEMINFO_SIGNATURE )
-         hb_errInternal( HB_EI_XMEMOVERFLOW, NULL, NULL, NULL );
+         if( HB_FM_GETSIG( pMem, pMemBlock->ulSize ) != HB_MEMINFO_SIGNATURE )
+            hb_errInternal( HB_EI_XMEMOVERFLOW, NULL, NULL, NULL );
 
-      HB_FM_LOCK
+         HB_FM_LOCK
 
-      s_lMemoryConsumed -= pMemBlock->ulSize + sizeof( HB_COUNTER );
-      s_lMemoryBlocks--;
+         s_lMemoryConsumed -= pMemBlock->ulSize + sizeof( HB_COUNTER );
+         s_lMemoryBlocks--;
 
-      if( pMemBlock->pPrevBlock )
-         pMemBlock->pPrevBlock->pNextBlock = pMemBlock->pNextBlock;
-      else
-         s_pFirstBlock = pMemBlock->pNextBlock;
+         if( pMemBlock->pPrevBlock )
+            pMemBlock->pPrevBlock->pNextBlock = pMemBlock->pNextBlock;
+         else
+            s_pFirstBlock = pMemBlock->pNextBlock;
 
-      if( pMemBlock->pNextBlock )
-         pMemBlock->pNextBlock->pPrevBlock = pMemBlock->pPrevBlock;
-      else
-         s_pLastBlock = pMemBlock->pPrevBlock;
+         if( pMemBlock->pNextBlock )
+            pMemBlock->pNextBlock->pPrevBlock = pMemBlock->pPrevBlock;
+         else
+            s_pLastBlock = pMemBlock->pPrevBlock;
 
-      HB_FM_UNLOCK
+         HB_FM_UNLOCK
 
-      pMemBlock->u32Signature = 0;
-      HB_FM_CLRSIG( pMem, pMemBlock->ulSize );
-
+         pMemBlock->u32Signature = 0;
+         HB_FM_CLRSIG( pMem, pMemBlock->ulSize );
 #ifdef HB_PARANOID_MEM_CHECK
-      memset( pMemBlock, HB_MEMFILER, HB_ALLOC_SIZE( pMemBlock->ulSize ) );
+         memset( pMemBlock, HB_MEMFILER, HB_ALLOC_SIZE( pMemBlock->ulSize ) );
 #endif
+      }
 
       free( ( void * ) pMemBlock );
 
@@ -621,7 +655,7 @@ void hb_xRefFree( void * pMem )
 {
 #ifdef HB_FM_STATISTICS
 
-   if( HB_FM_PTR( pMem )->u32Signature != HB_MEMINFO_SIGNATURE )
+   if( s_fStatistic && HB_FM_PTR( pMem )->u32Signature != HB_MEMINFO_SIGNATURE )
       hb_errInternal( HB_EI_XFREEINV, NULL, NULL, NULL );
 
    if( HB_ATOM_DEC( HB_COUNTER_PTR( pMem ) ) == 0 )
@@ -695,7 +729,7 @@ ULONG  hb_xsize( void * pMem ) /* returns the size of an allocated memory block 
    HB_TRACE(HB_TR_DEBUG, ("hb_xsize(%p)", pMem));
 
 #ifdef HB_FM_STATISTICS
-   return HB_FM_PTR( pMem )->ulSize;
+   return HB_FM_BLOCKSIZE( pMem );
 #else
    HB_SYMBOL_UNUSED( pMem );
 
@@ -706,6 +740,20 @@ ULONG  hb_xsize( void * pMem ) /* returns the size of an allocated memory block 
 void hb_xinit( void ) /* Initialize fixed memory subsystem */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xinit()"));
+
+#ifdef HB_FM_STATISTICS
+   if( !s_fInited )
+   {
+      if( hb_getenv_buffer( "HB_FM_STAT", NULL, 0 ) )
+         s_fStatistic = TRUE;
+      else if( hb_getenv_buffer( "HB_NO_FM_STAT", NULL, 0 ) )
+         s_fStatistic = FALSE;
+      else
+         s_fStatistic = TRUE;  /* enabled by default */
+
+      s_fInited = TRUE;
+   }
+#endif
 }
 
 /* Returns pointer to string containing printable version
@@ -804,15 +852,15 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       {
          HB_TRACE( HB_TR_ERROR, ( "Block %i (size %lu) %s(%i), \"%s\"", ui,
             pMemBlock->ulSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
-            hb_mem2str( membuffer, ( char * ) pMemBlock + HB_MEMINFO_SIZE,
+            hb_mem2str( membuffer, ( char * ) HB_MEM_PTR( pMemBlock ),
                         HB_MIN( pMemBlock->ulSize, HB_MAX_MEM2STR_BLOCK ) ) ) );
 
          if( hLog )
          {
             fprintf( hLog, HB_I_("Block %i %p (size %lu) %s(%i), \"%s\"\n"), ui,
-               ( char * ) pMemBlock + HB_MEMINFO_SIZE,
+               ( char * ) HB_MEM_PTR( pMemBlock ),
                pMemBlock->ulSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
-               hb_mem2str( membuffer, ( char * ) pMemBlock + HB_MEMINFO_SIZE,
+               hb_mem2str( membuffer, ( char * ) HB_MEM_PTR( pMemBlock ),
                            HB_MIN( pMemBlock->ulSize, HB_MAX_MEM2STR_BLOCK ) ) );
          }
       }
