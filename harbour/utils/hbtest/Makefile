@@ -40,4 +40,6 @@ LIBS=\
 	hbpp \
 	hbcommon \
 
+PRG_USR += -gc0
+
 include $(TOP)$(ROOT)config/bin.cf

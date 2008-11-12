@@ -89,15 +89,18 @@ INCLUDE_DIR = include
 # Harbour Compiler Flags
 #**********************************************************
 
-HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -gc3 -km -l $(PRG_USR)
+HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -km -l
 !if "$(HB_BUILD_DEBUG)" == "yes"
 HBFLAGSCMN     = $(HBFLAGSCMN) -l-
 !endif
 !if "$(HB_BUILD_WINCE)" == "yes"
 HBFLAGSCMN     = $(HBFLAGSCMN) -D__PLATFORM__WINCE
+!else
+HBFLAGSCMN     = $(HBFLAGSCMN) -gc3
 !endif
-HARBOURFLAGS   = -n $(HBFLAGSCMN)
-HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN)
+HARBOURFLAGS   = -n $(HBFLAGSCMN) $(PRG_USR)
+HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN) $(PRG_USR)
+HARBOURFLAGSEXE= -n $(HBFLAGSCMN) -gc0 $(PRG_USR)
 
 #**********************************************************
 # Directory macros. These should never have to change.

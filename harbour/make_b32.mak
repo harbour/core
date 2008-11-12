@@ -140,6 +140,11 @@ ARFLAGS = /P64 $(A_USR)
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
     $(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)\$&.c
 #**********************************************************
+# General *.prg --> *.obj COMPILE rule for STATIC exe
+{$(ALL_EXE_SRC_DIRS)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSEXE) -o$(OBJ_DIR)\ $**
+    $(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)\$&.c
+#**********************************************************
 
 #**********************************************************
 # General *.c --> *.obj COMPILE rule for STATIC MT Libraries
@@ -183,7 +188,7 @@ ARFLAGS = /P64 $(A_USR)
 # General *.prg --> *.obj COMPILE rules for EXECUTABLES,
 # which use Harbour SHARED Library compiled as DLL
 {$(ALL_EXE_SRC_DIRS)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $**
+    $(HB) $(HARBOURFLAGSEXE) -o$(DLL_OBJ_DIR)\ $**
     $(CC) $(CEXEFLAGSDLL) -o$@ $(DLL_OBJ_DIR)\$&.c
 #**********************************************************
 

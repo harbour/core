@@ -93,11 +93,6 @@ VMMT_LIB_OBJS = $(VM_LIB_OBJS:obj\vc=obj\vc\mt)
 DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll) $(VM_DLL_OBJS:obj\vc=obj\vc\dll)
 MTDLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll) $(VMMTDLL_LIB_OBJS)
 
-!if "$(HB_BUILD_WINCE)" == "yes"
-HARBOURFLAGS    = $(HARBOURFLAGS) -gc0
-HARBOURFLAGSDLL = $(HARBOURFLAGSDLL) -gc0
-!endif
-
 #**********************************************************
 # C compiler, Harbour compiler and Linker flags.
 #**********************************************************
@@ -186,7 +181,7 @@ STANDARD_SYSLIBS = coredll.lib corelibc.lib winsock.lib ws2.lib
 LDFLAGS        = /nologo /libpath:$(LIB_DIR) $(L_USR)
 LDFLAGSDLL     = /dll $(LDFLAGS)
 !if $(HB_VISUALC_VER) >= 80
-LDFLAGS        = $(LDFLAGS) /nxcompat /dynamicbase /fixed:no
+LDFLAGS        = $(LDFLAGS) /nxcompat
 !endif
 # user32.lib: *Clipboard*(), CharToOemBuff(), OemToCharBuff(), GetKeyState(), GetKeyboardState(), SetKeyboardState()
 # wsock32.lib: hbinet
@@ -419,19 +414,19 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBRUN_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(HB) $(HARBOURFLAGSEXE) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBTEST_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(HB) $(HARBOURFLAGSEXE) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBDOC_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(HB) $(HARBOURFLAGSEXE) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBMAKE_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(HB) $(HARBOURFLAGSEXE) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
 
@@ -690,19 +685,19 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
 #    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBRUN_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
+    $(HB) $(HARBOURFLAGSEXE) -o$(DLL_OBJ_DIR)\ $<
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBTEST_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
+    $(HB) $(HARBOURFLAGSEXE) -o$(DLL_OBJ_DIR)\ $<
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBDOC_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
+    $(HB) $(HARBOURFLAGSEXE) -o$(DLL_OBJ_DIR)\ $<
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBMAKE_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
+    $(HB) $(HARBOURFLAGSEXE) -o$(DLL_OBJ_DIR)\ $<
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #**********************************************************
 

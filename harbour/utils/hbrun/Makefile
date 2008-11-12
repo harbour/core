@@ -38,4 +38,6 @@ ifeq ($(findstring -DHB_EXT_ZLIB, $(C_USR)),)
 LIBS += hbzlib
 endif
 
+PRG_USR += -gc0
+
 include $(TOP)$(ROOT)config/bin.cf

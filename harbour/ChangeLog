@@ -8,11 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-12 12:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * common.mak
+  * utils/hbdoc/Makefile
+  * utils/hbmake/Makefile
+  * utils/hbtest/Makefile
+  * utils/hbrun/Makefile
+    % Setup to build shipped Harbour executables with -gc0.
+    ; TODO: Please update make_gcc.mak.
+
+  * ChangeLog
+    + Marked one change as [TOMERGE 1.0]
+
 2008-11-12 01:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbfcdx/dbfcdx1.c
     ! fixed bug in joined leaf pages size calculation which activated
       error massage enabled by HB_CDX_DBGCODE_EXT macro.
       Thanks to Saulius for reporting the problem.
+      [TOMERGE 1.0]
 
 2008-11-11 21:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbverdsp.c
