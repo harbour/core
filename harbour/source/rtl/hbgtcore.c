@@ -3411,27 +3411,3 @@ HB_FUNC( HB_GTSELECT )
    }
 }
 
-
-HB_FUNC( HB_GTINFOEX )
-{
-   if( ISPOINTER( 1 ) && ISNUM( 2 ) )
-   {
-      PHB_GT pGT = hb_gt_ItemBase( hb_param( 1, HB_IT_ANY ) );
-
-      if( pGT )
-      {
-         HB_GT_INFO gtInfo;
-         gtInfo.pNewVal  = hb_param( 3, HB_IT_ANY );
-         gtInfo.pNewVal2 = hb_param( 4, HB_IT_ANY );
-         gtInfo.pResult  = NULL;
-
-         HB_GTSELF_INFO( pGT, hb_parni( 2 ), &gtInfo );
-         hb_gt_BaseFree( pGT );
-
-         if( gtInfo.pResult )
-            hb_itemReturnRelease( gtInfo.pResult );
-      }
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
