@@ -143,7 +143,7 @@ void hb_verBuildInfo( void )
    if( hb_xquery( HB_MEM_USEDMAX ) != 0 )
       hb_conOutErr( "(memory tracking) ", 0 );
 #if defined( HB_TR_INFO ) && ( HB_TR_LEVEL == HB_TR_INFO || HB_TR_LEVEL == HB_TR_DEBUG )
-   hb_conOutErr( "(tracing)", 0 );
+   hb_conOutErr( "(tracing) ", 0 );
 #endif
 #if ! defined( HB_NO_PROFILER )
    hb_conOutErr( "(profiler) ", 0 );
