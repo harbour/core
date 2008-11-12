@@ -164,7 +164,7 @@ void hb_verBuildInfo( void )
    hb_conOutErr( "(C5.x strict) ", 0 );
 #endif
 #if defined( HB_COMPAT_XPP )
-   hb_conOutErr( "(XBase++) ", 0 );
+   hb_conOutErr( "(Xbase++) ", 0 );
 #endif
 #if defined( HB_COMPAT_FLAGSHIP )
    hb_conOutErr( "(Flagship) ", 0 );
