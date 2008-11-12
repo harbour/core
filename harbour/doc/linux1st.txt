@@ -33,6 +33,8 @@ sudo apt-get install libcurl4-gnutls-dev
 
 For contrib/hbfbird lib:
 sudo apt-get install libfirebird2.0-dev
+or
+sudo apt-get install firebird2.1-dev
 
 For contrib/hbfimage lib:
 sudo apt-get install libfreeimage-dev
