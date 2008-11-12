@@ -55,10 +55,10 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    hb_verPlatform() (support for determining the windows version)
+ *    hb_verPlatform() (support for determining the Windows version)
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    hb_verPlatform() (support for determining many windows flavours)
+ *    hb_verPlatform() (support for determining many Windows flavours)
  *    hb_verCompiler() (support for determining some compiler version/revision)
  *
  * Copyright 2000-2001 Viktor Szakats <viktor.szakats@syenar.hu>
@@ -205,18 +205,18 @@ char * hb_verPlatform( void )
 
       if( GetVersionExA( &osVer ) )
       {
-         char * pszName = "Windows";
+         char * pszName = "";
 
          switch( osVer.dwPlatformId )
          {
             case VER_PLATFORM_WIN32_WINDOWS:
 
                if( osVer.dwMajorVersion == 4 && osVer.dwMinorVersion < 10 )
-                  pszName = "Windows 95";
+                  pszName = " 95";
                else if( osVer.dwMajorVersion == 4 && osVer.dwMinorVersion == 10 )
-                  pszName = "Windows 98";
+                  pszName = " 98";
                else
-                  pszName = "Windows ME";
+                  pszName = " ME";
 
                break;
 
@@ -232,35 +232,35 @@ char * hb_verPlatform( void )
                   if( GetVersionExA( ( OSVERSIONINFOA * ) &osVerEx ) )
                   {
                      if( osVerEx.wProductType == VER_NT_WORKSTATION )
-                        pszName = "Windows Vista";
+                        pszName = " Vista";
                      else
-                        pszName = "Windows Server 2008";
+                        pszName = " Server 2008";
                   }
                   else
 #endif
-                     pszName = "Windows";
+                     pszName = "";
                }
                else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion >= 2 )
-                  pszName = "Windows Server 2003 / XP x64";
+                  pszName = " Server 2003 / XP x64";
                else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion == 1 )
-                  pszName = "Windows XP";
+                  pszName = " XP";
                else if( osVer.dwMajorVersion == 5 )
-                  pszName = "Windows 2000";
+                  pszName = " 2000";
                else
-                  pszName = "Windows NT";
+                  pszName = " NT";
 
                break;
 
             case VER_PLATFORM_WIN32s:
-               pszName = "Windows 32s";
+               pszName = " 32s";
                break;
 
             case VER_PLATFORM_WIN32_CE:
-               pszName = "Windows CE";
+               pszName = " CE";
                break;
          }
 
-         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "%s %lu.%lu.%04d",
+         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s %lu.%lu.%04d",
                    pszName,
                    ( ULONG ) osVer.dwMajorVersion,
                    ( ULONG ) osVer.dwMinorVersion,

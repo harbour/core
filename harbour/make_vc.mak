@@ -87,9 +87,9 @@ MKLIB  = lib.exe
 # Nmake does not support macros in string
 # substitution, so we have to hardcode it
 
+# TOFIX: This won't work properly if HB_CC_NAME is overridden by user (f.e. for WinCE builds).
 VMMTDLL_LIB_OBJS = $(VM_DLL_OBJS:obj\vc=obj\vc\mt_dll)
 VMMT_LIB_OBJS = $(VM_LIB_OBJS:obj\vc=obj\vc\mt)
-
 DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll) $(VM_DLL_OBJS:obj\vc=obj\vc\dll)
 MTDLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll) $(VMMTDLL_LIB_OBJS)
 
