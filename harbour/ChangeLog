@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-12 01:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    ! fixed bug in joined leaf pages size calculation which activated
+      error massage enabled by HB_CDX_DBGCODE_EXT macro.
+      Thanks to Saulius for reporting the problem.
+
 2008-11-11 21:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbverdsp.c
     * Streamlined the /build information screen. It's now 
