@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-12 13:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/common/hbverdsp.c
+    ! Fixed displaying tracing status. (INFO and DEBUG level 
+      counts as 'on'.)
+
 2008-11-12 12:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak
