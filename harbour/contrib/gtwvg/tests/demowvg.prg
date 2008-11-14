@@ -2240,7 +2240,6 @@ Function ExecuteActiveX( nActiveX )
    Return nil
 //----------------------------------------------------------------------//
 #define ie_evBeforeNavigate    100
-#define ie_ev
 
 #define evClick     1
 #define evDblClk    2
@@ -2249,9 +2248,6 @@ Function ExecuteActiveX( nActiveX )
 #define evBtnUp     5
 
 Static Function ExeActiveX( oCrt, nActiveX )
-   #ifdef HB_ACTIVEX
-
-   Local ev_  := Hash()
    Local oCOM, nKey
    Local cServer
    Local cNavigate
@@ -2266,7 +2262,7 @@ Static Function ExeActiveX( oCrt, nActiveX )
       hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'http://www.harbour.vouch.info'+'  ]' )
 
       oCOM:CLSID := 'Shell.Explorer.2'
-      oCOM:mapEvent( 269, { {|| hb_ToOutDebug( ' E X P L O R E R - 2 9 2' ) } } )
+      oCOM:mapEvent( 269, { {|| QOut( ' E X P L O R E R - 2 9 2' ) } } )
 
    case nActiveX == 2
       hb_gtInfo( HB_GTI_WINTITLE, 'AnalogClockControl.AnalogClock' )
@@ -2317,7 +2313,6 @@ Static Function ExeActiveX( oCrt, nActiveX )
 
    oCOM:Destroy()
 
-   #endif
    Return nil
 //----------------------------------------------------------------------//
 Static Function DoModalWindow()
@@ -2368,8 +2363,8 @@ Static Function DoModalWindowByClass()
    oCrt:title       := 'Information! [R:4 C:8]'
 
    oCrt:lbDblClick  := {|aPos,uNIL,obj| MyCallback( aPos, uNIL, obj ) }
-   oCrt:leave       := {|| hb_ToOutDebug( 'Left the window client area' ) }
-   oCrt:enter       := {|| hb_ToOutDebug( 'Entered the window client area' ) }
+   oCrt:leave       := {|| QOut( 'Left the window client area' ) }
+   oCrt:enter       := {|| QOut( 'Entered the window client area' ) }
 
    oCrt:Create()
    oCrt:show()

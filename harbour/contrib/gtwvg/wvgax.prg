@@ -103,7 +103,7 @@ CLASS WvgActiveXControl FROM TOleAuto, WvgWindow
 
    DATA   lSubStdEvents                      INIT .f.
 
-   DATA   hEvents                            INIT Hash()
+   DATA   hEvents                            INIT hb_hash()
    DATA   Id                                 INIT 0
    DATA   hContainer
    DATA   hSink

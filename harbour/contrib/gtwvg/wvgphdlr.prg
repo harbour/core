@@ -86,7 +86,7 @@ CLASS WvgPartHandler
    METHOD   setOwner( oWvg )
    METHOD   setParent( oWvg )
 
-   DATA     hChildren                             INIT    Hash()
+   DATA     hChildren                             INIT    hb_hash()
    DATA     nNameId
    DATA     oParent
    DATA     oOwner
