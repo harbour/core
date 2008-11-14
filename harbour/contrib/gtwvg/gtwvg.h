@@ -101,7 +101,7 @@
 #define WVT_CHAR_QUEUE_SIZE         128
 #define WVT_MAX_TITLE_SIZE          128
 #define WVT_MAX_ROWS                256
-#define WVT_MAX_COLS                256
+#define WVT_MAX_COLS                512
 #define WVT_MAX_WINDOWS             256
 #if defined( HB_WINCE )
 #  define WVT_DEFAULT_ROWS          15
@@ -530,5 +530,15 @@ PHB_GTWVT   HB_EXPORT   hb_wvt_gtGetWVT( void );
 
 void        HB_EXPORT   hb_ToOutDebug( const char * sTraceMsg, ... );
 //----------------------------------------------------------------------//
+
+extern BOOL     wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );
+extern PHB_ITEM wvt_Rect2Array( RECT *rc  );
+extern BOOL     wvt_Array2Point(PHB_ITEM aPoint, POINT *pt );
+extern PHB_ITEM wvt_Point2Array( POINT *pt  );
+extern BOOL     wvt_Array2Size(PHB_ITEM aSize, SIZE *siz );
+extern PHB_ITEM wvt_Size2Array( SIZE *siz  );
+extern void     wvt_Rect2ArrayEx( RECT *rc ,PHB_ITEM aRect );
+extern void     wvt_Point2ArrayEx( POINT *pt  , PHB_ITEM aPoint);
+extern void     wvt_Size2ArrayEx( SIZE *siz ,PHB_ITEM aSize );
 
 #endif /* HB_WVT_H_ */

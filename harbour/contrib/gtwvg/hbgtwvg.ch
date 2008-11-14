@@ -57,6 +57,9 @@
 //                 Extended GT Manipulation Constants
 //----------------------------------------------------------------------//
 
+#define HB_GTE_MOUSE            6
+#define HB_GTE_KEYBOARD         7
+
 #define HB_GTI_SETFONT                   71
 #define HB_GTI_PRESPARAMS                72
 #define HB_GTI_ENABLE                    73
@@ -116,6 +119,15 @@
 #define HB_GTS_SW_MAXIMIZED               5
 
 #define HB_GTI_GUI                     1001
+
+//----------------------------------------------------------------------//
+//                        Class Framework Constants
+//----------------------------------------------------------------------//
+
+#define objTypeNone       0
+#define objTypeCrt        1
+#define objTypeWindow     2
+#define objTypeActiveX    3
 
 //----------------------------------------------------------------------//
 

@@ -359,9 +359,7 @@
 #define WM_NCMOUSEMOVE                 160
 #define WM_NCLBUTTONDOWN               161
 #define WM_NCLBUTTONUP                 162
-
 #define WM_NCLBUTTONDBLCLK             163
-
 #define WM_NCRBUTTONDOWN               164
 #define WM_NCRBUTTONUP                 165
 #define WM_NCRBUTTONDBLCLK             166
@@ -415,6 +413,9 @@
 #define WM_XBUTTONDOWN                 523
 #define WM_XBUTTONUP                   524
 #define WM_XBUTTONDBLCLK               525
+#define WM_MOUSEHOVER                0x2A1
+#define WM_MOUSELEAVE                0x2A3
+
 
 #define WM_PARENTNOTIFY                528
 #define WM_ENTERMENULOOP               529

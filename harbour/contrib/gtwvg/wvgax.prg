@@ -1,0 +1,352 @@
+
+/*
+ * Harbour Project source code:
+ * Source file for the Wvg*Classes
+ *
+ * Copyright 2008 Andy Wos
+ * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//
+//                               EkOnkar
+//                         ( The LORD is ONE )
+//
+//              Xbase++ Compatible xbpActiveXControl Class
+//
+//                 Pritpal Bedi  <pritpal@vouchcac.com>
+//                              08Nov2008
+//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+
+#include "hbclass.ch"
+#include "common.ch"
+#include "hbgtwvg.ch"
+#include "wvtwin.ch"
+
+//----------------------------------------------------------------------//
+
+STATIC  nRef := 0
+
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//
+//                               EkOnkar
+//                         ( The LORD is ONE )
+//
+//              Xbase++ Compatible xhbActiveXControl Class
+//
+//                 Pritpal Bedi  <pritpal@vouchcac.com>
+//                             08Nov2008
+//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+
+CLASS WvgActiveXControl FROM TOleAuto, WvgWindow
+
+   DATA   CLSID                              INIT ''
+   DATA   server                             INIT NIL
+   DATA   license                            INIT NIL
+   DATA   controlFlags                       INIT 0
+   DATA   visible                            INIT .T.
+   DATA   default                            INIT .F.
+   DATA   cancel                             INIT .F.
+
+   DATA   interface
+   DATA   interfaceName
+
+   DATA   lSubStdEvents                      INIT .f.
+
+   DATA   hEvents                            INIT Hash()
+   DATA   Id                                 INIT 0
+   DATA   hContainer
+   DATA   hSink
+
+   DATA   style                              INIT WS_CHILD + WS_VISIBLE + WS_CLIPCHILDREN + WS_CLIPSIBLINGS
+
+   METHOD New()
+   METHOD Create()
+   METHOD Destroy()
+
+   METHOD inheritPresParams()
+   METHOD presParamsChanged()
+   METHOD setInputFocus()
+
+   METHOD subscribeStdEvents()
+   METHOD unsubscribeStdEvents()
+
+   METHOD keyDown()
+   METHOD click()
+   METHOD dblClick()
+   METHOD mouseDown()
+   METHOD mouseUp()
+   METHOD mouseMove()
+
+   METHOD activate()
+
+   METHOD mapEvent( nEvent, bBlock )
+
+PROTECTED:
+   METHOD adviseEvents()
+   METHOD unadviseEvents()
+
+   ENDCLASS
+
+//----------------------------------------------------------------------//
+METHOD New( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgActiveXControl
+
+   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLicense ) CLASS WvgActiveXControl
+   LOCAL hx
+
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   DEFAULT cCLSID   TO ::CLSID
+   DEFAULT cLicense TO ::license
+
+   ::CLSID      := cCLSID
+   ::license    := cLicense
+
+   ::objType    := objTypeActiveX
+   ::className  := 'WVGACTIVEX'
+
+   ::hObj       := 0
+   ::hSink      := 0
+
+   ::hContainer := ::oParent:getHWND()
+
+   IF ValType( ::hContainer ) + ValType( ::CLSID ) != "NC"
+      RETURN( NIL )
+   ELSEIF HB_AX_AtlAxWinInit()
+      nRef++
+   ENDIF
+
+   ::hObj := HB_AX_AtlAxGetControl( "ATLAXWin", ::hContainer, ::CLSID, ::Id, ;
+                   ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ::style, ::exStyle, @hx )
+   ::hWnd := hx
+
+   IF ::hObj <> 0  .AND. !Empty( ::hEvents )
+      ::AdviseEvents()
+   ENDIF
+
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD Destroy() CLASS WvgActiveXControl
+
+   ::UnadviseEvents()
+   IF Win_IsWindow( ::hWnd )
+      Win_DestroyWindow( ::hWnd )
+   ENDIF
+
+   //::hObj := NIL
+
+   IF --nRef == 0
+      HB_AX_AtlAxWinTerm()
+   ENDIF
+   RETURN NIL
+//----------------------------------------------------------------------//
+METHOD inheritPresParams() CLASS WvgActiveXControl
+   Local lSuccess := .t.
+
+   RETURN lSuccess
+//----------------------------------------------------------------------//
+METHOD presParamsChanged() CLASS WvgActiveXControl
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD setInputFocus() CLASS WvgActiveXControl
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD subscribeStdEvents() CLASS WvgActiveXControl
+   RETURN NIL
+//----------------------------------------------------------------------//
+METHOD unsubscribeStdEvents() CLASS WvgActiveXControl
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD keyDown() CLASS WvgActiveXControl
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD click() CLASS WvgActiveXControl
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD dblClick() CLASS WvgActiveXControl
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD mouseDown() CLASS WvgActiveXControl
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD mouseUp() CLASS WvgActiveXControl
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD mouseMove() CLASS WvgActiveXControl
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD activate() CLASS WvgActiveXControl
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD adviseEvents() CLASS WvgActiveXControl
+   LOCAL  n
+
+   RETURN HB_AX_SetupConnectionPoint( ::hObj, @::hSink, @n, ::hEvents )
+//----------------------------------------------------------------------//
+METHOD unadviseEvents() CLASS WvgActiveXControl
+
+   IF ::hSink <> 0
+      HB_AX_ShutDownConnectionPoint( ::hSink )
+      ::hSink := 0
+   ENDIF
+
+   RETURN NIL
+//----------------------------------------------------------------------//
+METHOD mapEvent( nEvent, bBlock )
+
+   if hb_isNumeric( nEvent ) .and. hb_isBlock( bBlock )
+      ::hEvents[ nEvent ] := { bBlock }
+   endif
+
+   RETURN Self
+//----------------------------------------------------------------------//
+//                       Class AutomationObject
+//----------------------------------------------------------------------//
+#if 0
+CLASS AutomationObject
+
+   DATA   interface             AS NUMERIC   READONLY
+   DATA   interfaceName         AS CHARACTER READONLY
+   DATA   CLSID                 AS CHARACTER READONLY INIT ' '
+   DATA   server                AS CHARACTER READONLY INIT ' '
+   DATA   license               AS CHARACTER READONLY INIT ' '
+   DATA   cargo
+
+   METHOD create( cProgID, cServerName, cLicense )
+   METHOD destroy()
+   METHOD dynamicCast()
+   METHOD addRef()
+   METHOD release()
+   METHOD queryInterface( cGUID )
+   METHOD getIDsOfNames( aNames )
+   METHOD invoke( cNameORnID, nNamedArgs /*, ...*/ )
+   METHOD loadTypeLib( cTypeLib )
+   METHOD getProperty( cNameORnID )
+   METHOD setProperty( cNameORnID, xValue /*, ...*/ )
+   METHOD callMethod( cNameORnID /*, ...*/ )
+   METHOD onError( oError )
+
+   ENDCLASS
+
+//----------------------------------------------------------------------//
+METHOD create( cProgID, cServerName, cLicense )CLASS AutomationObject
+   Local xValue
+
+   RETURN xValue
+//----------------------------------------------------------------------//
+METHOD destroy() CLASS AutomationObject
+   Local xValue
+
+   RETURN xValue
+//----------------------------------------------------------------------//
+METHOD dynamicCast() CLASS AutomationObject
+   Local xValue
+
+   RETURN xValue
+//----------------------------------------------------------------------//
+METHOD addRef() CLASS AutomationObject
+   Local xValue
+
+   RETURN xValue
+//----------------------------------------------------------------------//
+METHOD release() CLASS AutomationObject
+   Local xValue
+
+   RETURN xValue
+//----------------------------------------------------------------------//
+METHOD queryInterface( cGUID ) CLASS AutomationObject
+   Local xValue
+
+   RETURN xValue
+//----------------------------------------------------------------------//
+METHOD getIDsOfNames( aNames ) CLASS AutomationObject
+   Local xValue
+
+   RETURN xValue
+//----------------------------------------------------------------------//
+METHOD invoke( cNameORnID, nNamedArgs, ... ) CLASS AutomationObject
+   Local xValue
+
+   RETURN xValue
+//----------------------------------------------------------------------//
+METHOD loadTypeLib( cTypeLib ) CLASS AutomationObject
+   Local xValue
+
+   RETURN xValue
+//----------------------------------------------------------------------//
+METHOD getProperty( cNameORnID ) CLASS AutomationObject
+   Local xValue
+
+   RETURN xValue
+//----------------------------------------------------------------------//
+METHOD setProperty( cNameORnID, xValue, ... ) CLASS AutomationObject
+   Local lValue
+
+   RETURN lValue
+//----------------------------------------------------------------------//
+METHOD callMethod( cNameORnID, ... ) CLASS AutomationObject
+   Local xValue
+
+   RETURN xValue
+//----------------------------------------------------------------------//
+METHOD onError( oError ) CLASS AutomationObject
+   Local xValue
+
+   RETURN xValue
+#endif
+//----------------------------------------------------------------------//
+

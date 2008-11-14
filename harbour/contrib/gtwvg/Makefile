@@ -12,10 +12,16 @@ C_SOURCES=\
 	gtwvg.c \
 	wvgcore.c \
 	wvgutils.c \
+	wvgwin.c \
+	wvgsink.c \
 
 PRG_SOURCES=\
 	wvgclass.prg \
 	wvgpaint.prg \
+	wvgphdlr.prg \
+	wvgwnd.prg \
+	wvgcrt.prg \
+	wvgax.prg \
 
 PRG_HEADERS=\
 	hbgtwvg.ch \

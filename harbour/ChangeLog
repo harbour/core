@@ -1,4 +1,4 @@
-/*
+﻿/*
  * $Id$
  */
 
@@ -7,6 +7,58 @@
    For example:
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
+
+2008-11-14 00:45 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+    + New HB_GTI_ + HB_GTE_ messages.
+
+  * harbour/contrib/gtwvg/wvgutils.c
+    - Excluded WIN_*  Windows API functions.
+
+  + harbour/contrib/gtwvg/wvgwin.c
+    + Included WIN_* Windows API functions.
+
+  + harbour/contrib/gtwvg/wvgsink.c
+    ! ActiveX container functions contributed by Andy Wos, a big thanks to him.
+
+  + harbour/contrib/gtwvg/wvgphdlr.prg
+  + harbour/contrib/gtwvg/wvgwnd.prg
+  + harbour/contrib/gtwvg/wvgcrt.prg
+  + harbour/contrib/gtwvg/wvgax.prg
+    ! Xbase++ compatible class skeleton and implementation.
+    ! Partially but sufficient functional WvgCrt() class.
+ 
+  * harbour/contrib/gtwvg/gtwvg.h
+  * harbour/contrib/gtwvg/hbgtwvg.ch
+  * harbour/contrib/gtwvg/wvtwin.ch
+    + Added few new members.
+
+  * harbour/contrib/gtwvg/common.mak
+  * harbour/contrib/gtwvg/makefile
+    ! Updated to include added files.
+
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    ! updated to include WvgCrt() class implementation.
+    ! Updated to host ActiveX controls in WvtCrt() terminal.
+
+  ; It is a humble effort to introduce a common and portable class framework
+    to build futuristic CUI/GUI applications development and maintainability
+    easier. I had been a fairly good user of Xbase++ in early years
+    and was an admirer of their intuitive object modal especially
+    uniform way of parameters passing almost for all their objects.
+    So when Multi-threading and Multi-windows(GT) capability is introduced
+    Przemek, I thought it is the right moment to start in this direction too.
+
+    The firts efforts are encouraging and I see a great hope in the future.
+    But for sure I cannot accomplish this task at my own. Someone has to join
+    this effort. I know all have their own preferences but also realize that
+    it can ease all of us in a big way. In the past many developers put their
+    hands on the GUI front but without a clear framework. I based this effort
+    on Xbase++ because it is the only compiler which offers such functionality
+    on console level if we do not talk about GUI. Also it has extensive
+    documentation which is a force in itself.
+
+    I ever wished if Przemek would been a Windows user too!
 
 2008-11-12 23:28 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbgtcore.c
