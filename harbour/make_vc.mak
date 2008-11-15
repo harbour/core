@@ -1026,35 +1026,35 @@ Clean: doClean
 CLEAN: doClean
 
 doClean:
-    @if exist *.idb                     $(DEL) *.idb                     > nul
-    @if exist *.pch                     $(DEL) *.pch                     > nul
-    @if exist *.pdb                     $(DEL) *.pdb                     > nul
-    @if exist $(BIN_DIR)\*.exe          $(DEL) $(BIN_DIR)\*.exe          > nul
-    @if exist $(BIN_DIR)\*.pdb          $(DEL) $(BIN_DIR)\*.pdb          > nul
-    @if exist $(BIN_DIR)\*.ilk          $(DEL) $(BIN_DIR)\*.ilk          > nul
-    @if exist $(BIN_DIR)\*.map          $(DEL) $(BIN_DIR)\*.map          > nul
-    @if exist $(BIN_DIR)\*.dll          $(DEL) $(BIN_DIR)\*.dll          > nul
-    @if exist $(BIN_DIR)\*.lib          $(DEL) $(BIN_DIR)\*.lib          > nul
-    @if exist $(BIN_DIR)\*.exp          $(DEL) $(BIN_DIR)\*.exp          > nul
-    @if exist $(LIB_DIR)\*.lib          $(DEL) $(LIB_DIR)\*.lib          > nul
-    @if exist $(OBJ_DIR)\*.obj          $(DEL) $(OBJ_DIR)\*.obj          > nul
-    @if exist $(OBJ_DIR)\*.c            $(DEL) $(OBJ_DIR)\*.c            > nul
-    @if exist $(OBJ_DIR)\*.h            $(DEL) $(OBJ_DIR)\*.h            > nul
-    @if exist $(OBJ_DIR)\*.pch          $(DEL) $(OBJ_DIR)\*.pch          > nul
-    @if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
-    @if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
-    @if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul
-    @if exist $(MT_OBJ_DIR)\*.obj       $(DEL) $(MT_OBJ_DIR)\*.obj       > nul
-    @if exist $(MT_OBJ_DIR)\*.c         $(DEL) $(MT_OBJ_DIR)\*.c         > nul
-    @if exist $(MT_OBJ_DIR)\*.h         $(DEL) $(MT_OBJ_DIR)\*.h         > nul
-    @if exist $(MTDLL_OBJ_DIR)\*.obj    $(DEL) $(MTDLL_OBJ_DIR)\*.obj    > nul
-    @if exist $(MTDLL_OBJ_DIR)\*.c      $(DEL) $(MTDLL_OBJ_DIR)\*.c      > nul
-    @if exist $(MTDLL_OBJ_DIR)\*.h      $(DEL) $(MTDLL_OBJ_DIR)\*.h      > nul
-    @if exist $(INCLUDE_DIR)\hbverbld.h $(DEL) $(INCLUDE_DIR)\hbverbld.h > nul
-    @if exist inst_$(HB_CC_NAME).log    $(DEL) inst_$(HB_CC_NAME).log    > nul
-    @if exist bin\*.exe                 $(DEL) bin\*.exe                 > nul
-    @if exist bin\*.dll                 $(DEL) bin\*.dll                 > nul
-    @if exist lib\*.lib                 $(DEL) lib\*.lib                 > nul
+    -if exist *.idb                     $(DEL) *.idb                     > nul
+    -if exist *.pch                     $(DEL) *.pch                     > nul
+    -if exist *.pdb                     $(DEL) *.pdb                     > nul
+    -if exist $(BIN_DIR)\*.exe          $(DEL) $(BIN_DIR)\*.exe          > nul
+    -if exist $(BIN_DIR)\*.pdb          $(DEL) $(BIN_DIR)\*.pdb          > nul
+    -if exist $(BIN_DIR)\*.ilk          $(DEL) $(BIN_DIR)\*.ilk          > nul
+    -if exist $(BIN_DIR)\*.map          $(DEL) $(BIN_DIR)\*.map          > nul
+    -if exist $(BIN_DIR)\*.dll          $(DEL) $(BIN_DIR)\*.dll          > nul
+    -if exist $(BIN_DIR)\*.lib          $(DEL) $(BIN_DIR)\*.lib          > nul
+    -if exist $(BIN_DIR)\*.exp          $(DEL) $(BIN_DIR)\*.exp          > nul
+    -if exist $(LIB_DIR)\*.lib          $(DEL) $(LIB_DIR)\*.lib          > nul
+    -if exist $(OBJ_DIR)\*.obj          $(DEL) $(OBJ_DIR)\*.obj          > nul
+    -if exist $(OBJ_DIR)\*.c            $(DEL) $(OBJ_DIR)\*.c            > nul
+    -if exist $(OBJ_DIR)\*.h            $(DEL) $(OBJ_DIR)\*.h            > nul
+    -if exist $(OBJ_DIR)\*.pch          $(DEL) $(OBJ_DIR)\*.pch          > nul
+    -if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
+    -if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
+    -if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul
+    -if exist $(MT_OBJ_DIR)\*.obj       $(DEL) $(MT_OBJ_DIR)\*.obj       > nul
+    -if exist $(MT_OBJ_DIR)\*.c         $(DEL) $(MT_OBJ_DIR)\*.c         > nul
+    -if exist $(MT_OBJ_DIR)\*.h         $(DEL) $(MT_OBJ_DIR)\*.h         > nul
+    -if exist $(MTDLL_OBJ_DIR)\*.obj    $(DEL) $(MTDLL_OBJ_DIR)\*.obj    > nul
+    -if exist $(MTDLL_OBJ_DIR)\*.c      $(DEL) $(MTDLL_OBJ_DIR)\*.c      > nul
+    -if exist $(MTDLL_OBJ_DIR)\*.h      $(DEL) $(MTDLL_OBJ_DIR)\*.h      > nul
+    -if exist $(INCLUDE_DIR)\hbverbld.h $(DEL) $(INCLUDE_DIR)\hbverbld.h > nul
+    -if exist inst_$(HB_CC_NAME).log    $(DEL) inst_$(HB_CC_NAME).log    > nul
+    -if exist bin\*.exe                 $(DEL) bin\*.exe                 > nul
+    -if exist bin\*.dll                 $(DEL) bin\*.dll                 > nul
+    -if exist lib\*.lib                 $(DEL) lib\*.lib                 > nul
 
 #**********************************************************
 # INSTALL rules

@@ -306,12 +306,12 @@ Function HB_GTSYS()
 
 PROCEDURE WvtNextGets()
 
-   #ifdef __MW__
-   Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), Wvt_setFont( 'Terminal',20 ), ;
-                        hb_clear(), Wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
-   #else
+   IF hb_mtvm()
+      Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), Wvt_setFont( 'Terminal',20 ), ;
+                           hb_clear(), Wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
+   ELSE
       WvtNextGets_X()
-   #endif
+   ENDIF
 
    RETURN
 
@@ -645,7 +645,7 @@ FUNCTION Hb_Clear()
 //----------------------------------------------------------------------//
 FUNCTION WvtMyBrowse()
 
-   #ifdef __MW__
+   IF hb_mtvm()
 #if 0
    Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), ;
                         SetMode( 35,70 ),     ;
@@ -665,9 +665,9 @@ FUNCTION WvtMyBrowse()
                             oCrt:destroy();
                   } )
 
-   #else
+   ELSE
       WvtMyBrowse_X()
-   #endif
+   ENDIF
 
    Return nil
 //----------------------------------------------------------------------//

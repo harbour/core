@@ -8,6 +8,61 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-15 01:43 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_vc.mak
+    * Minor fix.
+
+  * contrib/hbcurl/make_b32.bat
+  * contrib/hbcurl/make_vc.bat
+  * contrib/hbcurl/Makefile
+    - Removed recently added HB_HBCURL_USR_C.
+
+  * contrib/gtwvg/tests/demowvg.prg
+    * Replaced '#if __MW__' with 'IF hb_vmmt()'.
+      (not tested)
+
+  * contrib/gtwvg/tests/hbmk_b32.bat
+  * contrib/gtwvg/tests/hbmk_vc.bat
+    ! Added hbwin.lib to HB_USER_LIBS list.
+
+  * contrib/gtwvg/gtwvg.c
+  * contrib/gtwvg/wvgclass.prg
+  * contrib/gtwvg/wvgax.prg
+  * contrib/gtwvg/wvgphdlr.prg
+  * contrib/gtwvg/wvgpaint.prg
+  * contrib/gtwvg/wvgcore.c
+  * contrib/gtwvg/wvgwin.c
+  * contrib/gtwvg/wvgwnd.prg
+  * contrib/gtwvg/wvgcrt.prg
+  * contrib/gtwvg/wvgutils.c
+  * contrib/gtwvg/wvgsink.c
+    ! SVN IDs missing, mistyped. SVN tags now reset.
+    ; TOFIX: GTWVG is now broken with MSVC 8 and/or C++ and/or 64-bit modes, 
+             also unsafe string function is used:
+             - strcat() should be hb_strncat().
+             - Usual but wrong HRESULT to ULONG conversions break in 64-bit.
+             - Some newest Windows features should be probably guarded.
+      .\gtwvg.c(1913) : warning C4013: 'TrackMouseEvent' undefined; assuming extern returning int
+      .\gtwvg.c(3205) : error C2065: 'WS_EX_LAYERED' : undeclared identifier
+      .\wvgsink.c(128) : warning C4244: 'return' : conversion from 'HB_THREAD_NO' to 'int', possible loss of data
+      .\wvgsink.c(339) : warning C4245: 'return' : conversion from 'HRESULT' to 'ULONG', signed/unsigned mismatch
+      .\wvgsink.c(352) : warning C4245: 'return' : conversion from 'HRESULT' to 'ULONG', signed/unsigned mismatch
+      .\wvgsink.c(368) : warning C4245: 'return' : conversion from 'HRESULT' to 'ULONG', signed/unsigned mismatch
+      .\wvgsink.c(392) : warning C4245: 'return' : conversion from 'HRESULT' to 'ULONG', signed/unsigned mismatch
+      .\wvgsink.c(455) : error C2039: 'n1' : is not a member of 'tagVARIANT'
+      .\wvgsink.c(457) : error C2039: 'n1' : is not a member of 'tagVARIANT'
+      .\wvgsink.c(460) : error C2039: 'n1' : is not a member of 'tagVARIANT'
+      .\wvgsink.c(463) : error C2039: 'n1' : is not a member of 'tagVARIANT'
+      .\wvgsink.c(466) : error C2039: 'n1' : is not a member of 'tagVARIANT'
+      .\wvgsink.c(469) : error C2039: 'n1' : is not a member of 'tagVARIANT'
+      .\wvgsink.c(472) : error C2039: 'n1' : is not a member of 'tagVARIANT'
+      .\wvgsink.c(475) : error C2039: 'n1' : is not a member of 'tagVARIANT'
+      .\wvgsink.c(633) : warning C4305: 'type cast' : truncation from 'HB_LONG' to 'device_interface *'
+      .\wvgsink.c(652) : warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+
 2008-11-14 20:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak
@@ -4183,7 +4238,7 @@
   * source/rdd/Makefile
   * source/rdd/dbdetach.c
   + source/rdd/dbdetacx.c
-    * Moved XBase++ compatibility functions to separate file.
+    * Moved Xbase++ compatibility functions to separate file.
 
 2008-10-13 21:44 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbwin/win_tole.prg

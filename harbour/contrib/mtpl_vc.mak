@@ -179,32 +179,32 @@ Clean: doClean
 CLEAN: doClean
 
 doClean:
-    @if exist $(LIB_PATH) $(DEL) $(LIB_PATH) > nul
-    @$(ECHO) @echo off                        > _hbdeloo.bat
-    @$(ECHO) if %%1x == x goto SKIP          >> _hbdeloo.bat
-    @$(ECHO) if exist %%1.c   $(DEL) %%1.c   >> _hbdeloo.bat
-    @$(ECHO) if exist %%1.obj $(DEL) %%1.obj >> _hbdeloo.bat
-    @$(ECHO) :SKIP                           >> _hbdeloo.bat
+    -if exist $(LIB_PATH) $(DEL) $(LIB_PATH) > nul
+    -$(ECHO) @echo off                        > _hbdeloo.bat
+    -$(ECHO) if %%1x == x goto SKIP          >> _hbdeloo.bat
+    -$(ECHO) if exist %%1.c   $(DEL) %%1.c   >> _hbdeloo.bat
+    -$(ECHO) if exist %%1.obj $(DEL) %%1.obj >> _hbdeloo.bat
+    -$(ECHO) :SKIP                           >> _hbdeloo.bat
     <<_hbdeloa.bat
 @call _hbdeloo.bat $(LIB_OBJS:.obj=^
 @call _hbdeloo.bat )
 <<KEEP
-    @if exist _hbdeloa.bat $(DEL) _hbdeloa.bat > nul
-    @if exist _hbdeloo.bat $(DEL) _hbdeloo.bat > nul
-    @if exist "$(OBJ_DIR)" rd "$(OBJ_DIR)" > nul 2> nul
+    -if exist _hbdeloa.bat $(DEL) _hbdeloa.bat > nul
+    -if exist _hbdeloo.bat $(DEL) _hbdeloo.bat > nul
+    -if exist "$(OBJ_DIR)" rd "$(OBJ_DIR)" > nul 2> nul
 
 !if "$(HB_INSTALL_PREFIX)" == "$(HB_ROOT)"
-    @if exist $(HB_LIB_INSTALL)\$(LIBNAME)$(LIBEXT) $(DEL) $(HB_LIB_INSTALL)\$(LIBNAME)$(LIBEXT) > nul
-    @$(ECHO) @echo off                        > _hbdelho.bat
-    @$(ECHO) if %%1x == x goto SKIP          >> _hbdelho.bat
-    @$(ECHO) if exist $(HB_INC_INSTALL)\%%1 $(DEL) $(HB_INC_INSTALL)\%%1 >> _hbdelho.bat
-    @$(ECHO) :SKIP                           >> _hbdelho.bat
+    -if exist $(HB_LIB_INSTALL)\$(LIBNAME)$(LIBEXT) $(DEL) $(HB_LIB_INSTALL)\$(LIBNAME)$(LIBEXT) > nul
+    -$(ECHO) @echo off                        > _hbdelho.bat
+    -$(ECHO) if %%1x == x goto SKIP          >> _hbdelho.bat
+    -$(ECHO) if exist $(HB_INC_INSTALL)\%%1 $(DEL) $(HB_INC_INSTALL)\%%1 >> _hbdelho.bat
+    -$(ECHO) :SKIP                           >> _hbdelho.bat
     <<_hbdelha.bat
 @call _hbdelho.bat $(ALL_HEADERS: =^
 @call _hbdelho.bat )
 <<KEEP
-    @if exist _hbdelha.bat $(DEL) _hbdelha.bat > nul
-    @if exist _hbdelho.bat $(DEL) _hbdelho.bat > nul
+    -if exist _hbdelha.bat $(DEL) _hbdelha.bat > nul
+    -if exist _hbdelho.bat $(DEL) _hbdelho.bat > nul
 !endif
 
 #**********************************************************
@@ -223,18 +223,18 @@ if exist $(HB_LIB_INSTALL)\$(LIBNAME)$(LIBEXT) $(DEL) $(HB_LIB_INSTALL)\$(LIBNAM
 copy $(LIB_PATH) $(HB_LIB_INSTALL) > nul
 :SKIP
 <<KEEP
-    @_hbcpyla.bat
-    @if exist _hbcpyla.bat $(DEL) _hbcpyla.bat > nul
-    @$(ECHO) @echo off                                > _hbcpyho.bat
-    @$(ECHO) if %%1x == x goto SKIP                  >> _hbcpyho.bat
-    @$(ECHO) if exist $(HB_INC_INSTALL)\%%1 $(DEL) $(HB_INC_INSTALL)\%%1 >> _hbcpyho.bat
-    @$(ECHO) if exist %%1 copy %%1 $(HB_INC_INSTALL) >> _hbcpyho.bat
-    @$(ECHO) :SKIP                                   >> _hbcpyho.bat
+    -_hbcpyla.bat
+    -if exist _hbcpyla.bat $(DEL) _hbcpyla.bat > nul
+    -$(ECHO) @echo off                                > _hbcpyho.bat
+    -$(ECHO) if %%1x == x goto SKIP                  >> _hbcpyho.bat
+    -$(ECHO) if exist $(HB_INC_INSTALL)\%%1 $(DEL) $(HB_INC_INSTALL)\%%1 >> _hbcpyho.bat
+    -$(ECHO) if exist %%1 copy %%1 $(HB_INC_INSTALL) >> _hbcpyho.bat
+    -$(ECHO) :SKIP                                   >> _hbcpyho.bat
     <<_hbcpyha.bat
 @call _hbcpyho.bat $(ALL_HEADERS: =^
 @call _hbcpyho.bat )
 <<KEEP
-    @if exist _hbcpyha.bat $(DEL) _hbcpyha.bat > nul
-    @if exist _hbcpyho.bat $(DEL) _hbcpyho.bat > nul
+    -if exist _hbcpyha.bat $(DEL) _hbcpyha.bat > nul
+    -if exist _hbcpyho.bat $(DEL) _hbcpyho.bat > nul
 
 #**********************************************************
