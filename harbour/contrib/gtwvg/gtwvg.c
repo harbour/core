@@ -331,8 +331,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
    pWVT->ResizeMode        = HB_GTI_RESIZEMODE_FONT;
 
-   pWVT->bAlreadySizing    = FALSE;
-
    pWVT->pPP               = ( HB_GT_PARAMS * ) hb_xgrab( sizeof( HB_GT_PARAMS ) );
    pWVT->pPP->style        = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
    pWVT->pPP->exStyle      = 0;
@@ -605,7 +603,7 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
    return * pszOem;
 }
 
-static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
+static BOOL hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
 {
    RECT wi;
    RECT ci;
@@ -615,6 +613,12 @@ static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
    int borderHeight;
 
    GetClientRect( pWVT->hWnd, &ci );
+   if( !pWVT->bMaximized && ( ci.right - ci.left ) == ( pWVT->PTEXTSIZE.x * pWVT->COLS )
+                                                   &&
+                            ( ci.bottom - ci.top ) == ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) )
+   {
+      return( FALSE );
+   }
    GetWindowRect( pWVT->hWnd, &wi );
 
    borderWidth = ( wi.right - wi.left - ( ci.right - ci.left ) );
@@ -639,10 +643,12 @@ static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
       pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
       HB_GTSELF_SETMODE( pWVT->pGT, ( USHORT ) ( maxHeight / pWVT->PTEXTSIZE.y ), ( USHORT ) ( maxWidth / pWVT->PTEXTSIZE.x ) );
       pWVT->CentreWindow = bOldCentre;
+      return( TRUE );
    }
+   return( FALSE );
 }
 
-static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
+static BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
 {
    RECT wi;
    RECT ci;
@@ -654,6 +660,12 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    int top;
 
    GetClientRect( pWVT->hWnd, &ci );
+   if( !pWVT->bMaximized && ( ci.right - ci.left ) == ( pWVT->PTEXTSIZE.x * pWVT->COLS )
+                                                   &&
+                            ( ci.bottom - ci.top ) == ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) )
+   {
+      return( FALSE );
+   }
    GetWindowRect( pWVT->hWnd, &wi );
 
    borderWidth = ( wi.right - wi.left - ( ci.right - ci.left ) );
@@ -678,7 +690,7 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
       top  = wi.top;
    }
 
-   {
+   {  /* Just a block */
       HFONT      hOldFont;
       HFONT      hFont;
       int        fontHeight;
@@ -759,6 +771,30 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
          HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
       }
    }
+   return( TRUE );
+}
+
+static BOOL hb_gt_wvt_IsSizeChanged( PHB_GTWVT pWVT )
+{
+   BOOL bSizeChanged = FALSE;
+
+   if( pWVT->bResizable )
+   {
+      if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
+          bSizeChanged = hb_gt_wvt_FitSize( pWVT );
+      else
+          bSizeChanged = hb_gt_wvt_FitRows( pWVT );
+
+      if( bSizeChanged )
+      {
+         PHB_ITEM pEvParams = hb_itemNew( NULL );
+
+         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+         hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED, pEvParams );
+         hb_itemRelease( pEvParams );
+      }
+   }
+   return( bSizeChanged );
 }
 
 static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
@@ -836,12 +872,9 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 
    if( wi.left < 0 || wi.top < 0 )
    {
-      if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-         hb_gt_wvt_FitSize( pWVT );
-      else
+      if( hb_gt_wvt_IsSizeChanged( pWVT ) )
       {
-         hb_gt_wvt_FitRows( pWVT );
-         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+         //hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
       }
 
       /* resize the window to get the specified number of rows and columns */
@@ -1153,6 +1186,15 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   break;
                default:
                   keyCode = K_MOUSEMOVE;
+            }
+            if( !pWVT->bTracking )
+            {
+               TRACKMOUSEEVENT tmi;
+               tmi.cbSize = sizeof( TRACKMOUSEEVENT );
+               tmi.dwFlags = TME_LEAVE | TME_HOVER ;
+               tmi.hwndTrack = pWVT->hWnd;
+               tmi.dwHoverTime = 1;
+               pWVT->bTracking = _TrackMouseEvent( &tmi );
             }
             break;
          }
@@ -1795,34 +1837,11 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             ShowWindow( pWVT->hWnd, SW_HIDE );
             ShowWindow( pWVT->hWnd, SW_NORMAL );
          }
-         pWVT->bResizing = TRUE;
          return 0;
 
       case WM_EXITSIZEMOVE:
-      {
-         PHB_ITEM pEvParams = hb_itemNew( NULL );
-
-         pWVT->bResizing = FALSE;
-         hb_wvt_gtSaveGuiState( pWVT );
-         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
-         hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED, pEvParams );
-         hb_itemRelease( pEvParams );
-         return 0;
-      }
-      case WM_SIZE:
-         if( pWVT->bResizing )
-         {
-            if( !pWVT->bAlreadySizing )
-            {
-               pWVT->bAlreadySizing = TRUE;
-
-               if ( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-                  hb_gt_wvt_FitSize( pWVT );
-               else
-                  hb_gt_wvt_FitRows( pWVT );
-            }
-            pWVT->bAlreadySizing = FALSE;
-         }
+         if( hb_gt_wvt_IsSizeChanged( pWVT ) )
+            hb_wvt_gtSaveGuiState( pWVT );
          return 0;
 
       case WM_SYSCOMMAND:
@@ -1830,17 +1849,10 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          {
             case SC_MAXIMIZE:
             {
-               PHB_ITEM pEvParams = hb_itemNew( NULL );
-
                pWVT->bMaximized = TRUE;
 
-               if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
-                  hb_gt_wvt_FitSize( pWVT );
-               else
-               {
-                  hb_gt_wvt_FitRows( pWVT );
-               }
-               hb_wvt_gtSaveGuiState( pWVT );
+               if( hb_gt_wvt_IsSizeChanged( pWVT ) )
+                  hb_wvt_gtSaveGuiState( pWVT );
 
                /* Disable "maximize" button */
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
@@ -1852,14 +1864,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                                          SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                ShowWindow( pWVT->hWnd, SW_HIDE );
                ShowWindow( pWVT->hWnd, SW_NORMAL );
-
-               hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
-               hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED, pEvParams );
-               hb_itemRelease( pEvParams );
-
                return 0;
             }
-
             case SYS_EV_MARK:
             {
                pWVT->bBeginMarked = TRUE;
@@ -1913,15 +1919,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_MOUSE, pEvParams );
 
          hb_itemRelease( pEvParams );
-
-         {
-            TRACKMOUSEEVENT tmi;
-            tmi.cbSize = sizeof( TRACKMOUSEEVENT );
-            tmi.dwFlags = TME_LEAVE;
-            tmi.hwndTrack = pWVT->hWnd;
-            tmi.dwHoverTime = HOVER_DEFAULT;
-            TrackMouseEvent( &tmi );
-         }
          return 0;
       }
       case WM_MOUSELEAVE:
@@ -1935,16 +1932,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_MOUSE, pEvParams );
 
          hb_itemRelease( pEvParams );
-
-         {
-            TRACKMOUSEEVENT tmi;
-            tmi.cbSize = sizeof( TRACKMOUSEEVENT );
-            tmi.dwFlags = TME_HOVER;
-            tmi.hwndTrack = pWVT->hWnd;
-            tmi.dwHoverTime = HOVER_DEFAULT;
-            TrackMouseEvent( &tmi );
-         }
-         return 0;
+         pWVT->bTracking = FALSE;
+         return DefWindowProc( hWnd, message, wParam, lParam );;
       }
    }
 
@@ -2168,16 +2157,6 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 
          if( b_MouseEnable )
             hb_wvt_gtCreateToolTipWindow( pWVT );
-      }
-
-      /* Make sure that first tracking event is generated */
-      {
-         TRACKMOUSEEVENT tmi;
-         tmi.cbSize = sizeof( TRACKMOUSEEVENT );
-         tmi.dwFlags = TME_LEAVE | TME_HOVER ;
-         tmi.hwndTrack = pWVT->hWnd;
-         tmi.dwHoverTime = HOVER_DEFAULT;
-         TrackMouseEvent( &tmi );
       }
    }
 
@@ -3747,8 +3726,8 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
    HINSTANCE   h;
    int         iIndex;
 
-   pWVT->bResizing          = FALSE;
    pWVT->bDeferPaint        = FALSE;
+   pWVT->bTracking          = FALSE;
 
    pWVT->penWhite           = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 255,255,255 ) );
    pWVT->penBlack           = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB(   0,  0,  0 ) );

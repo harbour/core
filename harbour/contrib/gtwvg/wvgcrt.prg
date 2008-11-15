@@ -1108,7 +1108,6 @@ METHOD dragDrop( xParam, xParam1 ) CLASS WvgCrt
 METHOD notifier( nEvent, xParams ) CLASS WvgCrt
    Local aPos, nReturn := 0
 
-//hb_ToOutDebug( "............ %i %i %i %i", nEvent, WM_MOUSEHOVER, WM_MOUSELEAVE, if( hb_isArray(xParams), xParams[ 1 ], 0 ) )
    DO CASE
 
    CASE nEvent == HB_GTE_MOUSE
@@ -1143,13 +1142,13 @@ METHOD notifier( nEvent, xParams ) CLASS WvgCrt
          endif
          EXIT
       case WM_RBUTTONUP      ////
-         if hb_isBlock( ::sl_rbClick )
-            eval( ::sl_rbClick, aPos, NIL, self )
+         if hb_isBlock( ::sl_rbUp )
+            eval( ::sl_rbUp, aPos, NIL, self )
          endif
          EXIT
       case WM_LBUTTONUP      ////
-         if hb_isBlock( ::sl_lbClick )
-            eval( ::sl_lbClick, aPos, NIL, self )
+         if hb_isBlock( ::sl_lbUp )
+            eval( ::sl_lbUp, aPos, NIL, self )
          endif
          EXIT
       case WM_RBUTTONDBLCLK

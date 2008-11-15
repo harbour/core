@@ -345,9 +345,6 @@ typedef struct
    RECT     sRectNew;
    RECT     sRectOld;
 
-   BOOL      bResizing;
-   BOOL      bAlreadySizing;
-
    //          To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed>            //
 
    int       rowStart;                      // Holds nTop    of last WM_PAINT rectangle returned by Wvt_GetPaintRect()
@@ -422,6 +419,7 @@ typedef struct
    PHB_GT_PARAMS  pPP;                      // Presentation Parameters
 
    BOOL      bDeferPaint;                   // To create pure Windows dialogs
+   BOOL      bTracking;                     // To track if mouse has eneter or left the window area
 
 } HB_GTWVT, * PHB_GTWVT;
 

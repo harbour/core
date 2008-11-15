@@ -753,7 +753,7 @@ FUNCTION WvtMyBrowse_X()
 
    DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
    DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( CurDrive()+":\"+CurDir()+"\"+"test.dbf", oBrowse:nRight-oBrowse:nLeft+1 ), "W+/W" )
-   DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F11 Transp++> <F12 Transp--> <Thread'+str(ThreadID(),3)+'>',maxcol()+1), 'B/W' )
+   DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F4 Maximize> <F11 Transp++> <F12 Transp--> <Thread'+str(ThreadID(),3)+'>',maxcol()+1), 'B/W' )
 
    While !lEnd
       oBrowse:ForceStable()
@@ -777,7 +777,7 @@ FUNCTION WvtMyBrowse_X()
 
          DispBox( 0, 0, maxrow(), maxcol(), "         ", "N/W" )
          DispOutAt( oBrowse:nTop-2, oBrowse:nleft, padc( CurDrive()+":\"+CurDir()+"\"+"test.dbf", oBrowse:nRight - oBrowse:nLeft + 1 ), "W+/W" )
-         DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F11 Transp++> <F12 Transp--> <Thread'+str(ThreadID(),3)+'>',maxcol()+1), 'B/W' )
+         DispOutAt( maxrow(), 0, padc( '<F3 Modal Window> <F4 Maximize> <F11 Transp++> <F12 Transp--> <Thread'+str(ThreadID(),3)+'>',maxcol()+1), 'B/W' )
          oBrowse:configure()
 
       case nKey == K_F2
@@ -791,37 +791,12 @@ FUNCTION WvtMyBrowse_X()
 
       case nKey == K_F3
          aLastPaint1 := WvtSetBlocks( {} )
-
-         DoModalWindowByClass()
-         #if 0
-         pGT1 := hb_gtCreate( 'WVG' )
-         pGT  := hb_gtSelect( pGT1 )
-
-         /*  If coordinates are in row/cols */
-         /*  Extended Style, Standard Style, Top, Left, Rows, Columns, ParentGT, Visible, RowCols */
-         /*  If coordinates are in pixels   */
-         /*  Extended Style, Standard Style, x, y, width, height, ParentGT, Visible, RowCols */
-         nExStyle := WS_EX_DLGMODALFRAME
-         nStStyle := WS_POPUP + WS_CAPTION + WS_MINIMIZEBOX
-         hb_gtInfo( HB_GTI_PRESPARAMS, { nExStyle, nStStyle, 4, 8, 13, 50, pGT, .F., .T. } )
-
-         SetColor( 'W+/W' )
-         CLS
-         hb_gtInfo( HB_GTI_RESIZABLE    , .F.    )
-         Hb_GtInfo( HB_GTI_CLOSABLE     , .F.    )
-         hb_gtInfo( HB_GTI_WINTITLE     , 'Information! [R:4 C:8]' )
-         hb_gtInfo( HB_GTI_DISABLE      , pGT    )
-
-         Hb_GtInfo( HB_GTI_SPEC         , HB_GTS_SHOWWINDOW, SW_NORMAL )
-
-         alert( 'I am in modal window !' )
-
-         pGT1 := NIL
-         hb_gtSelect( pGT )
-         hb_gtInfo( HB_GTI_ENABLE, pGT )
-         hb_gtInfo( HB_GTI_SETFOCUS, pGT )
-         #endif
+         DoModalWindow()
          WvtSetBlocks( aLastPaint1 )
+
+      case nKey == K_F4
+         hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
+
       endcase
    end
 
@@ -2228,6 +2203,8 @@ FUNCTION DrawSlide( hDlg, nSlide )
 
    Return nil
 //----------------------------------------------------------------------//
+// The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
+//
 Function ExecuteActiveX( nActiveX )
    Local oCrt
 
@@ -2235,80 +2212,78 @@ Function ExecuteActiveX( nActiveX )
    oCrt:closable := .f.
    oCrt:create()
 
-   //hb_gtReload( 'WVG' )
    SetCursor( 0 )
    SetColor( 'N/W' )
    CLS
-   //SetMode( 30,60 )
-   //Wvt_ShowWindow( 1 )
+
    oCrt:show()
-   //hb_gtInfo( HB_GTI_CLOSABLE, .F. )
+
    ExeActiveX( oCrt, nActiveX )
 
+   oCrt:Destroy()
    Return nil
 //----------------------------------------------------------------------//
-#define ie_evBeforeNavigate    100
-
-#define evClick     1
-#define evDblClk    2
-#define evBtnDown   3
-#define evMouseMove 4
-#define evBtnUp     5
-
 Static Function ExeActiveX( oCrt, nActiveX )
-   Local oCOM, nKey, cDhtml
+   Local oCom, nKey, cDhtml
    Local cServer
    Local cNavigate
    Local lEnd := .f.
 
    hb_gtInfo( HB_GTI_DEFERPAINT, .T. )
-//hb_toOutDebug( 'oCrt:hwnd=%i', Wvt_GetWindowHandle() )
+
    DEFAULT nActiveX TO 2
 
-   oCOM := WvgActiveXControl():New( oCrt, , { 0,0 }, { 200,200 }, , .t. )
+   oCom := WvgActiveXControl():New( oCrt, , { 0,0 }, { 200,200 }, , .t. )
 
    do case
    case nActiveX == 1
       hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'http://www.harbour.vouch.info'+'  ]' )
-      oCOM:CLSID := 'Shell.Explorer.2'
-      oCOM:mapEvent( 269, { {|| QOut( ' E X P L O R E R - 2 6 9' ) } } )
+      oCom:CLSID := 'Shell.Explorer.2'
+      oCom:mapEvent( 269, { {|| QOut( ' E X P L O R E R - 2 6 9' ) } } )
 
    case nActiveX == 11
       hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'MSHTML Demo'+'  ]' )
       oCom:CLSID := "MSHTML:" + "<html><h1>Stream Test</h1><p>This HTML content is being loaded from a stream.</html>"
 
    case nActiveX == 2
-      hb_gtInfo( HB_GTI_WINTITLE, 'AnalogClockControl.AnalogClock' )
-      oCOM:CLSID := 'AnalogClockControl.AnalogClock'
-      oCOM:Id    := 5
-      oCOM:mapEvent( evDblClk, {|| DoModalWindow()               ,;
-                               oCOM:Value     := .75632          ,;
-                               oCOM:BackColor := RGB( 0,140,210 ),;
-                               oCOM:Refresh()                    ,;
-                               oCOM:ShowSecondsHand := .t.       ,;
-                               oCOM:Hands3D   := .t.             ,;
-                               oCOM:Refresh()                   } )
+      #define evClick     1
+      #define evDblClk    2
+      #define evBtnDown   3
+      #define evMouseMove 4
+      #define evBtnUp     5
 
-      oCOM:mapEvent( evBtnUp, {|nBtn,nShift,nX,nY| if( nBtn == 2, lEnd := .t., NIL ) } )
+      hb_gtInfo( HB_GTI_WINTITLE, 'AnalogClockControl.AnalogClock' )
+      oCom:CLSID := 'AnalogClockControl.AnalogClock'
+      oCom:Id    := 5
+      oCom:mapEvent( evDblClk, {|| DoModalWindow()               ,;
+                               oCom:Value     := .75632          ,;
+                               oCom:BackColor := RGB( 0,140,210 ),;
+                               oCom:Refresh()                    ,;
+                               oCom:ShowSecondsHand := .t.       ,;
+                               oCom:Hands3D   := .t.             ,;
+                               oCom:Refresh()                   } )
+
+      oCom:mapEvent( evBtnUp, {|nBtn,nShift,nX,nY| if( nBtn == 2, lEnd := .t., NIL ) } )
 
    case nActiveX == 3
       hb_gtInfo( HB_GTI_WINTITLE, 'file://C:\harbour\contrib\gtwvg\tests\myharu.pdf' )
-      oCOM:CLSID := 'file://C:\harbour\contrib\gtwvg\tests\myharu.pdf'
+      oCom:CLSID := 'file://C:\harbour\contrib\gtwvg\tests\myharu.pdf'
 
    case nActiveX == 4
       hb_gtInfo( HB_GTI_WINTITLE, 'Frontpage.Application' )
       //oCom:CLSID := 'Frontpage.Application'
       oCom:CLSID := 'Excel.Application'
       oCom:visible := .t.
+
    endcase
 
-   oCOM:create()
+   oCom:create()
 
    // After :CREATE() Messages
    //
    if nActiveX == 1
-      oCOM:AddressBar := .t.
-      oCOM:Navigate( 'http://www.harbour.vouch.info' )
+      oCom:AddressBar := .t.
+      oCom:Navigate( 'http://www.harbour.vouch.info' )
    elseif nActiveX == 4
       oCom:visible := .t.
       oCom:Display()
@@ -2318,7 +2293,7 @@ Static Function ExeActiveX( oCrt, nActiveX )
       nKey := inkey()
 
       if nKey == HB_K_RESIZE
-         Win_MoveWindow( oCOM:hWnd, 0, 0, hb_gtInfo( HB_GTI_SCREENWIDTH ),  hb_gtInfo( HB_GTI_SCREENHEIGHT ), .F. )
+         Win_MoveWindow( oCom:hWnd, 0, 0, hb_gtInfo( HB_GTI_SCREENWIDTH ),  hb_gtInfo( HB_GTI_SCREENHEIGHT ), .F. )
 
       elseif nKey == K_LBUTTONDOWN
          //hb_ToOutDebug( "Key is passed to the window procedure also!" )
@@ -2333,44 +2308,11 @@ Static Function ExeActiveX( oCrt, nActiveX )
       endif
    enddo
 
-   oCOM:Destroy()
+   oCom:Destroy()
 
    Return nil
 //----------------------------------------------------------------------//
 Static Function DoModalWindow()
-
-   DoModalWindowByClass()
-
-   #if 0
-   Local pGT1, pGT, nExStyle, nStStyle
-
-   pGT1 := hb_gtCreate( 'WVG' )
-   pGT  := hb_gtSelect( pGT1 )
-
-   nExStyle := WS_EX_DLGMODALFRAME
-   nStStyle := WS_POPUP + WS_CAPTION + WS_MINIMIZEBOX
-   hb_gtInfo( HB_GTI_PRESPARAMS, { nExStyle, nStStyle, 4, 8, 13, 50, pGT, .F., .T. } )
-
-   SetColor( 'W+/W' )
-   CLS
-   hb_gtInfo( HB_GTI_RESIZABLE    , .F.    )
-   Hb_GtInfo( HB_GTI_CLOSABLE     , .F.    )
-   hb_gtInfo( HB_GTI_WINTITLE     , 'Information! [R:4 C:8]' )
-   hb_gtInfo( HB_GTI_DISABLE      , pGT    )
-
-   Hb_GtInfo( HB_GTI_SPEC         , HB_GTS_SHOWWINDOW, SW_NORMAL )
-
-   alert( 'I am in modal window !' )
-
-   pGT1 := NIL
-   hb_gtSelect( pGT )
-   hb_gtInfo( HB_GTI_ENABLE, pGT )
-   hb_gtInfo( HB_GTI_SETFOCUS, pGT )
-   #endif
-
-   Return nil
-//----------------------------------------------------------------------//
-Static Function DoModalWindowByClass()
    Local oCrt, nSel
 
    /* This part can be clubbed in a separate prg for different dialogs
@@ -2384,9 +2326,10 @@ Static Function DoModalWindowByClass()
    oCrt:closable    := .f.
    oCrt:title       := 'Information! [R:4 C:8]'
 
-   oCrt:lbDblClick  := {|aPos,uNIL,obj| MyCallback( aPos, uNIL, obj ) }
-   oCrt:leave       := {|| QOut( 'Left the window client area' ) }
-   oCrt:enter       := {|| QOut( 'Entered the window client area' ) }
+   oCrt:rbUp        := {|aPos,uNIL,obj| DispOutAt( maxrow(), 0, padc( 'rbUp', maxcol()+1 ),'W+/R*' ) }
+   oCrt:lbUp        := {|aPos,uNIL,obj| DispOutAt( maxrow(), 0, padc( 'lbUp', maxcol()+1 ),'W+/B*' ) }
+   oCrt:leave       := {|| DispOutAt( maxrow(), 0, padc( 'Leaving', maxcol()+1 ), 'W+/RB' ) }
+   oCrt:enter       := {|| DispOutAt( maxrow(), 0, padc( 'Entering', maxcol()+1 ), 'W+/B' ) }
 
    oCrt:Create()
    oCrt:show()
@@ -2404,7 +2347,7 @@ Static Function DoModalWindowByClass()
    SetColor( 'N/W' )
    CLS
    do while .t.
-      nSel := alert( 'I am in modal window !;Change parent position?',{'Yes','No','Exit'} )
+      nSel := alert( 'I am in modal window !;< Try: MMove LBUp RBUp >;Click Parent Window', { 'OK' } )
 
       if nSel == 0  .or. nSel == 3
          exit
@@ -2423,13 +2366,5 @@ Static Function DoModalWindowByClass()
    pGT_[ 3 ] := NIL
    oCrt:Destroy()
 
-   Return nil
-//----------------------------------------------------------------------//
-Static Function MyCallBack( aPos, uNIL, oObj )
-   Local scr := SaveScreen( 0,0,maxrow(),maxcol() )
-
-   Alert( 'Hi '+str( aPos[ 1 ] ) +':'+ str( aPos[ 2 ] ) )
-
-   RestScreen( 0,0,maxrow(),maxcol(),scr )
    Return nil
 //----------------------------------------------------------------------//
