@@ -417,9 +417,11 @@ typedef struct
    PHB_ITEM  pcbFuncModal[ WVT_DLGMD_MAX ]; // codeblock for WndProc
    int       iTypeModal[ WVT_DLGMD_MAX ];   // Type of Function Pointers - Function 1, Block 2, Method 3
 
-   PHB_GUIDATA  pGUI;                      // GUI Data Structure
+   PHB_GUIDATA  pGUI;                       // GUI Data Structure
 
-   PHB_GT_PARAMS  pPP;                     // Presentation Parameters
+   PHB_GT_PARAMS  pPP;                      // Presentation Parameters
+
+   BOOL      bDeferPaint;                   // To create pure Windows dialogs
 
 } HB_GTWVT, * PHB_GTWVT;
 

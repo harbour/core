@@ -1378,11 +1378,19 @@ FUNCTION CreateMainMenu()
    oMenu:AddItem( "Slide Show"   ,{|| DlgSlideShow() } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "Dialog Scond" ,{|| DynDialog_1() } )
-   oMenu:AddItem( "-")
-   oMenu:AddItem( "ActiveX - Analog Clock"     , {|| Hb_ThreadStart( {|| ExecuteActiveX( 2 ) } ) } )
-   oMenu:AddItem( "ActiveX - Internet Explorer", {|| Hb_ThreadStart( {|| ExecuteActiveX( 1 ) } ) } )
-   oMenu:AddItem( "ActiveX - Visualize a PDF"  , {|| Hb_ThreadStart( {|| ExecuteActiveX( 3 ) } ) } )
+   g_oMenuBar:addItem( "",oMenu)
 
+   oMenu := wvtMenu():new():create()
+   oMenu:Caption:= "Active-X Controls"
+   oMenu:AddItem( "ActiveX - Analog Clock"     , {|| Hb_ThreadStart( {|| ExecuteActiveX( 2 ) } ) } )
+   oMenu:AddItem( "-")
+   oMenu:AddItem( "ActiveX - Internet Explorer", {|| Hb_ThreadStart( {|| ExecuteActiveX( 1 ) } ) } )
+   oMenu:AddItem( "-")
+   oMenu:AddItem( "ActiveX - Visualize a PDF"  , {|| Hb_ThreadStart( {|| ExecuteActiveX( 3 ) } ) } )
+   oMenu:AddItem( "-")
+   oMenu:AddItem( "ActiveX - Explorer . DHTML" , {|| Hb_ThreadStart( {|| ExecuteActiveX( 11 ) } ) } )
+   oMenu:AddItem( "-")
+   oMenu:AddItem( "ActiveX - Excel"            , {|| Hb_ThreadStart( {|| ExecuteActiveX( 4 ) } ) } )
    g_oMenuBar:addItem( "",oMenu)
 
    RETURN g_oMenuBar
@@ -2248,11 +2256,13 @@ Function ExecuteActiveX( nActiveX )
 #define evBtnUp     5
 
 Static Function ExeActiveX( oCrt, nActiveX )
-   Local oCOM, nKey
+   Local oCOM, nKey, cDhtml
    Local cServer
    Local cNavigate
    Local lEnd := .f.
 
+   hb_gtInfo( HB_GTI_DEFERPAINT, .T. )
+//hb_toOutDebug( 'oCrt:hwnd=%i', Wvt_GetWindowHandle() )
    DEFAULT nActiveX TO 2
 
    oCOM := WvgActiveXControl():New( oCrt, , { 0,0 }, { 200,200 }, , .t. )
@@ -2260,15 +2270,17 @@ Static Function ExeActiveX( oCrt, nActiveX )
    do case
    case nActiveX == 1
       hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'http://www.harbour.vouch.info'+'  ]' )
-
       oCOM:CLSID := 'Shell.Explorer.2'
-      oCOM:mapEvent( 269, { {|| QOut( ' E X P L O R E R - 2 9 2' ) } } )
+      oCOM:mapEvent( 269, { {|| QOut( ' E X P L O R E R - 2 6 9' ) } } )
+
+   case nActiveX == 11
+      hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'MSHTML Demo'+'  ]' )
+      oCom:CLSID := "MSHTML:" + "<html><h1>Stream Test</h1><p>This HTML content is being loaded from a stream.</html>"
 
    case nActiveX == 2
       hb_gtInfo( HB_GTI_WINTITLE, 'AnalogClockControl.AnalogClock' )
-
       oCOM:CLSID := 'AnalogClockControl.AnalogClock'
-      oCOM:Id := 5
+      oCOM:Id    := 5
       oCOM:mapEvent( evDblClk, {|| DoModalWindow()               ,;
                                oCOM:Value     := .75632          ,;
                                oCOM:BackColor := RGB( 0,140,210 ),;
@@ -2281,18 +2293,25 @@ Static Function ExeActiveX( oCrt, nActiveX )
 
    case nActiveX == 3
       hb_gtInfo( HB_GTI_WINTITLE, 'file://C:\harbour\contrib\gtwvg\tests\myharu.pdf' )
-
       oCOM:CLSID := 'file://C:\harbour\contrib\gtwvg\tests\myharu.pdf'
 
+   case nActiveX == 4
+      hb_gtInfo( HB_GTI_WINTITLE, 'Frontpage.Application' )
+      //oCom:CLSID := 'Frontpage.Application'
+      oCom:CLSID := 'Excel.Application'
+      oCom:visible := .t.
    endcase
 
    oCOM:create()
 
+   // After :CREATE() Messages
+   //
    if nActiveX == 1
-      // After CREATE Messages
-      //
       oCOM:AddressBar := .t.
       oCOM:Navigate( 'http://www.harbour.vouch.info' )
+   elseif nActiveX == 4
+      oCom:visible := .t.
+      oCom:Display()
    endif
 
    do while !( lEnd )
@@ -2303,6 +2322,9 @@ Static Function ExeActiveX( oCrt, nActiveX )
 
       elseif nKey == K_LBUTTONDOWN
          //hb_ToOutDebug( "Key is passed to the window procedure also!" )
+
+      elseif nKey == K_F12
+         oCom:Navigate( 'www.vouch.info' )
 
       endif
 

@@ -1657,8 +1657,18 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          RECT updateRect;
 
          if( GetUpdateRect( hWnd, &updateRect, FALSE ) )
-            hb_gt_wvt_PaintText( pWVT, updateRect );
-
+         {
+            if( !pWVT->bDeferPaint )
+            {
+//hb_ToOutDebug( "LLLLLLLLLLLLLLLLLLL  hWnd=%i", hWnd );
+               hb_gt_wvt_PaintText( pWVT, updateRect );
+            }
+            else
+            {
+//hb_ToOutDebug( "...................  hWnd=%i", hWnd );
+               return DefWindowProc( hWnd, message, wParam, lParam );
+            }
+         }
          return 0;
       }
 
@@ -3173,12 +3183,12 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      }
 
                      case HB_GTS_WS_MINIMIZED:
-                        ShowWindow( pWVT->hWnd, SW_MINIMIZE );
+                        SendNotifyMessage( pWVT->hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0 );
                         break;
 
                      case HB_GTS_WS_MAXIMIZED:
                         if( pWVT->bResizable )
-                           ShowWindow( pWVT->hWnd, SW_MAXIMIZE );
+                           SendNotifyMessage( pWVT->hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0 );
                         else
                            ShowWindow( pWVT->hWnd, SW_RESTORE );
                         break;
@@ -3311,6 +3321,14 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             PHB_GTWVT pWVTp = HB_GTWVT_GET( pGTp );
             SetFocus( pWVTp->hWnd );
             hb_gt_BaseFree( pGTp );
+         }
+         break;
+      }
+      case HB_GTI_DEFERPAINT:
+      {
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+         {
+            pWVT->bDeferPaint = hb_itemGetL( pInfo->pNewVal );
          }
          break;
       }
@@ -3730,6 +3748,7 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
    int         iIndex;
 
    pWVT->bResizing          = FALSE;
+   pWVT->bDeferPaint        = FALSE;
 
    pWVT->penWhite           = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 255,255,255 ) );
    pWVT->penBlack           = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB(   0,  0,  0 ) );

@@ -65,6 +65,7 @@
 #define HB_GTI_ENABLE                    73
 #define HB_GTI_DISABLE                   74
 #define HB_GTI_SETFOCUS                  75
+#define HB_GTI_DEFERPAINT                76
 
 /* Presentation Parameters | HB_GTI_PRESPARAMS */
 #define HB_GTI_PP_EXSTYLE                 1

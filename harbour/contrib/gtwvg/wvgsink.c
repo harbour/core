@@ -357,15 +357,12 @@ static ULONG STDMETHODCALLTYPE Invoke( IEventHandler *this, DISPID dispid, REFII
 {
    int        iArg;
    int        i;
-//   int        iEvPos ; // = -1;
-//   int        iEvEnum;
    ULONG      ulRefMask = 0;
    ULONG      ulPos;
    PHB_ITEM   pItem;
-//   PHB_DYNS   pSymbol;
    PHB_ITEM   pItemArray[ 32 ]; // max 32 parameters?
    PHB_ITEM   *pItems;
-   PHB_ITEM   Key = hb_itemNew( NULL );
+   PHB_ITEM   Key;
 
    // We implement only a "default" interface
    if ( !IsEqualIID( riid, &IID_NULL ) )
@@ -378,7 +375,7 @@ static ULONG STDMETHODCALLTYPE Invoke( IEventHandler *this, DISPID dispid, REFII
    HB_SYMBOL_UNUSED( pexcepinfo );
    HB_SYMBOL_UNUSED( puArgErr );
 
-
+   Key = hb_itemNew( NULL );
    if ( hb_hashScan( ( ( MyRealIEventHandler * ) this )->pEvents, hb_itemPutNL( Key, dispid ), &ulPos ) )
    {
       PHB_ITEM pArray = hb_hashGetValueAt( ( ( MyRealIEventHandler * ) this )->pEvents, ulPos );
@@ -419,7 +416,7 @@ static ULONG STDMETHODCALLTYPE Invoke( IEventHandler *this, DISPID dispid, REFII
             pItem = hb_itemNew( NULL );
             hb_oleVariantToItem( pItem, &( params->rgvarg[ iArg-i ] ) ); // VARIANT *pVariant )
             pItemArray[ i-1 ] = pItem;
-            ulRefMask |= ( 1L << (i-1) );                            // set bit i
+            ulRefMask |= ( 1L << (i-1) );                                // set bit i
          }
 
          if( iArg )
@@ -435,6 +432,9 @@ static ULONG STDMETHODCALLTYPE Invoke( IEventHandler *this, DISPID dispid, REFII
          {
             if( ( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.vt & VT_BYREF ) == VT_BYREF )
             {
+               hb_oleItemToVariant( &( params->rgvarg[ iArg-i ] ), pItemArray[ iArg-i ] );
+
+               #if 0
                switch( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.vt )
                {
                case VT_I2|VT_BYREF:
@@ -456,6 +456,7 @@ static ULONG STDMETHODCALLTYPE Invoke( IEventHandler *this, DISPID dispid, REFII
                   *( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.n3.pdate )    = ( DATE ) ( double ) ( hb_itemGetDL( pItemArray[i-1] )-2415019 );
                   break;
                }
+               #endif
             }
          }
 
@@ -510,10 +511,7 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
    HRESULT                     hr;
    IID                         rriid;
    register IEventHandler*     thisobj;
-//   DWORD                       m_Points;
    DWORD                       dwCookie = 0;
-//   ITypeLib*                   pITypeLib;
-//   DISPID                      dispid;
 
    HB_SYMBOL_UNUSED( riid );
    HB_SYMBOL_UNUSED( pn );
@@ -630,7 +628,7 @@ HB_FUNC( HB_AX_ATLAXWININIT )
    if( !hLib )
    {
       GetSystemDirectory( szLibName, MAX_PATH );
-      strcat( szLibName, "\\atl.dll" );
+      hb_strncat( szLibName, "\\atl.dll", MAX_PATH -1 );
       hLib = LoadLibrary( ( LPCSTR ) szLibName );
 
       if( hLib )
@@ -682,15 +680,20 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
    AtlAxCreateControl = ( PATLAXCREATECONTROL ) GetProcAddress( hLib, "AtlAxCreateControl" );
    if ( AtlAxCreateControl )
    {
-      hContainer = ( HWND ) CreateWindowEx( Exstyle, class, Caption, Style, x, y, w, h, hParent, id, GetModuleHandle( NULL ), NULL );
+      LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
+      LPTSTR cClass = HB_TCHAR_CONVTO( class );
+      hContainer = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id, GetModuleHandle( NULL ), NULL );
+      HB_TCHAR_FREE( cCaption );
+      HB_TCHAR_FREE( cClass );
+
       if( hContainer )
       {
          SendMessage( ( HWND ) hContainer, ( UINT ) WM_SETFONT, ( WPARAM ) GetStockObject( DEFAULT_GUI_FONT ), ( LPARAM ) ( MAKELPARAM( FALSE, 0 ) ) );
          uLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, Caption, strlen( Caption )+1, NULL, 0 );
-         wString = (BSTR) malloc( uLen * sizeof(WCHAR));
+         wString = ( BSTR ) malloc( uLen * sizeof( WCHAR ) );
          MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, Caption, strlen( Caption )+1, wString, uLen );
 
-         ( AtlAxCreateControl ) ( wString, hContainer,NULL, &pUnk );
+         ( AtlAxCreateControl ) ( wString, hContainer, NULL, &pUnk );
 
          free( wString );
 
@@ -739,7 +742,12 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
    AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( hLib, "AtlAxGetControl" );
    if( AtlAxGetControl )
    {
-      hWnd = ( HWND ) CreateWindowEx( Exstyle, lpcclass, Caption, Style, x, y, w, h, hParent, id, GetModuleHandle( NULL ), NULL );
+      LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
+      LPTSTR cClass = HB_TCHAR_CONVTO( lpcclass );
+      hWnd = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id, GetModuleHandle( NULL ), NULL );
+      HB_TCHAR_FREE( cCaption );
+      HB_TCHAR_FREE( cClass );
+
       if( hWnd )
       {
          SendMessage( hWnd,
