@@ -780,8 +780,8 @@ static BOOL hb_gt_wvt_IsSizeChanged( PHB_GTWVT pWVT )
 
    if( pWVT->bResizable )
    {
-      int iw = pWVT->iGuiWidth;
-      int ih = pWVT->iGuiHeight;
+      int iw = pWVT->PTEXTSIZE.x * pWVT->COLS;
+      int ih = pWVT->PTEXTSIZE.y * pWVT->ROWS;
 
       if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
           bSizeChanged = hb_gt_wvt_FitSize( pWVT );
@@ -795,8 +795,8 @@ static BOOL hb_gt_wvt_IsSizeChanged( PHB_GTWVT pWVT )
          hb_arrayNew( pEvParams, 4 );
          hb_arraySetNI( pEvParams, 1, iw );
          hb_arraySetNI( pEvParams, 2, ih );
-         hb_arraySetNI( pEvParams, 3, pWVT->iGuiWidth );
-         hb_arraySetNI( pEvParams, 4, pWVT->iGuiHeight );
+         hb_arraySetNI( pEvParams, 3, pWVT->PTEXTSIZE.x * pWVT->COLS );
+         hb_arraySetNI( pEvParams, 4, pWVT->PTEXTSIZE.y * pWVT->ROWS );
 
          hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED, pEvParams );

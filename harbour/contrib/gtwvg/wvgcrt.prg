@@ -991,12 +991,7 @@ METHOD quit( xParam, xParam1 ) CLASS WvgCrt
 
 //----------------------------------------------------------------------//
 
-METHOD resize( xParam, xParam1 ) CLASS WvgCrt
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_resize )
-      eval( ::sl_resize, xParam, xParam1, Self )
-      RETURN Self
-   endif
+METHOD resize( xParam ) CLASS WvgCrt
 
    if hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_resize := xParam
@@ -1208,8 +1203,8 @@ METHOD notifier( nEvent, xParams ) CLASS WvgCrt
       ::lHasInputFocus := .f.
 
    CASE nEvent == HB_GTE_RESIZED
-      if hb_isBlock( ::resize )
-         eval( ::resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
+      if hb_isBlock( ::sl_resize )
+         eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
       endif
 
    CASE nEvent == HB_GTE_CLOSE

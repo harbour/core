@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-15 23:59 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/gtwvg/wvgcrt.prg
+    ! Further tuned up the resizing behavior. Silly typos.
+
 2008-11-15 23:01 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
     ! Further tuned up the resizing behavior.
