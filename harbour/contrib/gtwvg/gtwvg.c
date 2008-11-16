@@ -359,6 +359,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    /* GUI Related members initialized */
    hb_wvt_gtCreateObjects( pWVT );
 
+   pWVT->bResizing         = FALSE;
+
    return pWVT;
 }
 
@@ -788,6 +790,8 @@ static BOOL hb_gt_wvt_IsSizeChanged( PHB_GTWVT pWVT )
       else
           bSizeChanged = hb_gt_wvt_FitRows( pWVT );
 
+      pWVT->bResizing = FALSE;
+
       if( bSizeChanged )
       {
          PHB_ITEM pEvParams = hb_itemNew( NULL );
@@ -805,6 +809,15 @@ static BOOL hb_gt_wvt_IsSizeChanged( PHB_GTWVT pWVT )
 
          hb_itemRelease( pEvParams );
       }
+      else
+      {
+         InvalidateRect( pWVT->hWnd, NULL, FALSE );
+      }
+   }
+   else
+   {
+      pWVT->bResizing = FALSE;
+      InvalidateRect( pWVT->hWnd, NULL, FALSE );
    }
    return( bSizeChanged );
 }
@@ -1712,18 +1725,23 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       {
          RECT updateRect;
 
-         if( GetUpdateRect( hWnd, &updateRect, FALSE ) )
+         if( !pWVT->bDeferPaint )
          {
-            if( !pWVT->bDeferPaint )
+            if( pWVT->bResizing )
             {
-//hb_ToOutDebug( "LLLLLLLLLLLLLLLLLLL  hWnd=%i", hWnd );
-               hb_gt_wvt_PaintText( pWVT, updateRect );
+               return DefWindowProc( hWnd, message, wParam, lParam );
             }
             else
             {
-//hb_ToOutDebug( "...................  hWnd=%i", hWnd );
-               return DefWindowProc( hWnd, message, wParam, lParam );
+               if( GetUpdateRect( hWnd, &updateRect, FALSE ) )
+               {
+                  hb_gt_wvt_PaintText( pWVT, updateRect );
+               }
             }
+         }
+         else
+         {
+            return DefWindowProc( hWnd, message, wParam, lParam );
          }
          return 0;
       }
@@ -1851,6 +1869,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             ShowWindow( pWVT->hWnd, SW_HIDE );
             ShowWindow( pWVT->hWnd, SW_NORMAL );
          }
+         pWVT->bResizing = TRUE;
          return 0;
 
       case WM_EXITSIZEMOVE:

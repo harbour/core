@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-16 07:29 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/gtwvg/gtwvg.h
+    ! Further tuned up the resizing behavior. Viktor please check.
+
 2008-11-16 15:32 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbatomic.h
     + added support for built in GCC atomic functions: __sync_*()

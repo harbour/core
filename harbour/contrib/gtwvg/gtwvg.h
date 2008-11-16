@@ -421,6 +421,8 @@ typedef struct
    BOOL      bDeferPaint;                   // To create pure Windows dialogs
    BOOL      bTracking;                     // To track if mouse has eneter or left the window area
 
+   BOOL      bResizing;                     // To know when it is in resizing mode
+
 } HB_GTWVT, * PHB_GTWVT;
 
 //----------------------------------------------------------------------//
