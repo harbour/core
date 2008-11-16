@@ -1209,7 +1209,7 @@ METHOD notifier( nEvent, xParams ) CLASS WvgCrt
 
    CASE nEvent == HB_GTE_RESIZED
       if hb_isBlock( ::resize )
-         eval( ::resize, xParams[ 1 ], xParams[ 2 ], Self )
+         eval( ::resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
       endif
 
    CASE nEvent == HB_GTE_CLOSE

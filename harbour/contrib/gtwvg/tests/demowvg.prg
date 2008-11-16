@@ -2349,7 +2349,7 @@ Static Function DoModalWindow()
    do while .t.
       nSel := alert( 'I am in modal window !;< Try: MMove LBUp RBUp >;Click Parent Window', { 'OK' } )
 
-      if nSel == 0  .or. nSel == 3
+      if nSel == 0  .or. nSel == 1
          exit
 
       elseif nSel == 1

@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-15 23:01 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+    ! Further tuned up the resizing behavior.
+
+    ! Fixed a nasty bug present since begining. The bug was causing 
+      window to loose gui contents and even text buffer in certain
+      circumstances. Now you can be assured that all GTs open 
+      with/without gui contents will never be out of synchronization.
+      Play with contrib/gtwvg/tests/demowvg.prg, open many browsers,
+      Active-X controls, get windows and so on, every window will 
+      behave as a gentleman.
+
+  * harbour/contrib/gtwvg/wvgcrt.prg
+    ! Fixed ::resize method.
+
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    ! Fine tuned to respect above fixes.
+
 2008-11-15 13:12 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
   * harbour/contrib/gtwvg/gtwvg.h

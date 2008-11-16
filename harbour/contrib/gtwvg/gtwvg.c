@@ -780,6 +780,9 @@ static BOOL hb_gt_wvt_IsSizeChanged( PHB_GTWVT pWVT )
 
    if( pWVT->bResizable )
    {
+      int iw = pWVT->iGuiWidth;
+      int ih = pWVT->iGuiHeight;
+
       if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
           bSizeChanged = hb_gt_wvt_FitSize( pWVT );
       else
@@ -789,8 +792,17 @@ static BOOL hb_gt_wvt_IsSizeChanged( PHB_GTWVT pWVT )
       {
          PHB_ITEM pEvParams = hb_itemNew( NULL );
 
+         hb_arrayNew( pEvParams, 4 );
+         hb_arraySetNI( pEvParams, 1, iw );
+         hb_arraySetNI( pEvParams, 2, ih );
+         hb_arraySetNI( pEvParams, 3, pWVT->iGuiWidth );
+         hb_arraySetNI( pEvParams, 4, pWVT->iGuiHeight );
+
          hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED, pEvParams );
+
+         hb_wvt_gtSaveGuiState( pWVT );
+
          hb_itemRelease( pEvParams );
       }
    }
@@ -872,10 +884,12 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 
    if( wi.left < 0 || wi.top < 0 )
    {
+      #if 0  // IMO not required [pritpal]
       if( hb_gt_wvt_IsSizeChanged( pWVT ) )
       {
-         //hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
       }
+      #endif
 
       /* resize the window to get the specified number of rows and columns */
       GetWindowRect( pWVT->hWnd, &wi );
@@ -1840,8 +1854,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_EXITSIZEMOVE:
-         if( hb_gt_wvt_IsSizeChanged( pWVT ) )
-            hb_wvt_gtSaveGuiState( pWVT );
+         hb_gt_wvt_IsSizeChanged( pWVT );
          return 0;
 
       case WM_SYSCOMMAND:
@@ -1851,10 +1864,10 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             {
                pWVT->bMaximized = TRUE;
 
-               if( hb_gt_wvt_IsSizeChanged( pWVT ) )
-                  hb_wvt_gtSaveGuiState( pWVT );
+               hb_gt_wvt_IsSizeChanged( pWVT );
 
                /* Disable "maximize" button */
+
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
                SetWindowLong( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
 #else
@@ -3952,13 +3965,22 @@ static void hb_wvt_gtSaveGuiState( PHB_GTWVT pWVT )
       GetClientRect( pWVT->hWnd, &rc );
       pWVT->iGuiWidth = rc.right - rc.left;
       pWVT->iGuiHeight = rc.bottom - rc.top;
+
+      if( pWVT->hGuiDC )
+      {
+         DeleteDC( pWVT->hGuiDC );
+      }
+      pWVT->hGuiDC = CreateCompatibleDC( pWVT->hdc );
+
       if( pWVT->hGuiBmp )
       {
          DeleteObject( pWVT->hGuiBmp );
       }
       pWVT->hGuiBmp = CreateCompatibleBitmap( pWVT->hdc, pWVT->iGuiWidth, pWVT->iGuiHeight );
-
       SelectObject( pWVT->hGuiDC, pWVT->hGuiBmp );
+
+      BitBlt( pWVT->hGuiDC, 0, 0, pWVT->iGuiWidth, pWVT->iGuiHeight, pWVT->hdc, 0, 0, SRCCOPY );
+
       SetTextCharacterExtra( pWVT->hGuiDC,0 );
       SelectObject( pWVT->hGuiDC, pWVT->hFont );
    }
