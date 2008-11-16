@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-16 15:32 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbatomic.h
+    + added support for built in GCC atomic functions: __sync_*()
+      They are present in GCC >= 4.1 if given CPU supports them. For
+      x86 CPU family the ones we use need at least i486 CPU. Please make
+      tests with other CPUs like PPC. If given platform/CPU does not support
+      them then GCC generate call to function __sync_*_<N>() where <N>
+      is size of given type used in atomic operation instead of storing
+      inlined assembler code.
+
 2008-11-15 23:59 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
   * harbour/contrib/gtwvg/wvgcrt.prg

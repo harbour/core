@@ -99,7 +99,7 @@ HB_EXTERN_BEGIN
 #        define HB_ATOM_INC( p )    ( hb_atomic_inc32( ( volatile int * ) (p) ) )
 #        define HB_ATOM_DEC( p )    ( hb_atomic_dec32( ( volatile int * ) (p) ) )
 #        define HB_ATOM_GET( p )    (*(int volatile *)(p))
-#        define HB_ATOM_SET( p, n ) do { (*(int volatile *)(p)) = (n); } while(0)
+#        define HB_ATOM_SET( p, n ) do { *((int volatile *)(p)) = (n); } while(0)
 
 #     elif HB_COUNTER_SIZE == 8
 
@@ -125,7 +125,7 @@ HB_EXTERN_BEGIN
 #        define HB_ATOM_INC( p )    ( hb_atomic_inc64( ( volatile long long int * ) (p) ) )
 #        define HB_ATOM_DEC( p )    ( hb_atomic_dec64( ( volatile long long int * ) (p) ) )
 #        define HB_ATOM_GET( p )    (*(long long int volatile *)(p))
-#        define HB_ATOM_SET( p, n ) do { (*(long long int volatile *)(p)) = (n); } while(0)
+#        define HB_ATOM_SET( p, n ) do { *((long long int volatile *)(p)) = (n); } while(0)
 
 #     endif
 
@@ -176,6 +176,43 @@ HB_EXTERN_BEGIN
 #     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
 #     define HB_SPINLOCK_RELEASE(l) hb_spinlock_release(l)
 
+#  elif ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1) )
+
+#     define HB_ATOM_INC( p )       __sync_add_and_fetch( (p), 1 )
+#     define HB_ATOM_DEC( p )       __sync_sub_and_fetch( (p), 1 )
+#     define HB_ATOM_GET( p )       ( *(p) )
+#     define HB_ATOM_SET( p, n )    do { *(p) = (n); } while(0)
+
+      static __inline__ void hb_spinlock_acquire( int * l )
+      {
+         for( ;; )
+         {
+            if( !__sync_lock_test_and_set( l, 1 ) )
+               return;
+
+            #ifdef HB_SPINLOCK_SLEEP
+               if( !__sync_lock_test_and_set( l, 1 ) )
+                  return;
+               #if defined( HB_OS_WIN_32 )
+                  Sleep( 0 );
+               #elif defined( HB_OS_OS2 ) 
+                  DosSleep( 0 );
+               #elif defined( __SVR4 )
+                  thr_yield();
+               #elif defined( HB_OS_UNIX )
+                  sched_yield();
+               #else
+                  sleep( 0 );
+               #endif
+            #endif
+         }
+      }
+
+#     define HB_SPINLOCK_T          int
+#     define HB_SPINLOCK_INIT       0
+#     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
+#     define HB_SPINLOCK_RELEASE(l) __sync_lock_release(l)
+
 #  elif defined( __powerpc__ ) || defined( __ppc )
 
 #     if HB_COUNTER_SIZE == 4
@@ -211,7 +248,7 @@ HB_EXTERN_BEGIN
 #        define HB_ATOM_INC( p )    ( hb_atomic_inc32( ( volatile int * ) (p) ) )
 #        define HB_ATOM_DEC( p )    ( hb_atomic_dec32( ( volatile int * ) (p) ) )
 #        define HB_ATOM_GET( p )    (*(int volatile *)(p))
-#        define HB_ATOM_SET( p, n ) do { (*(int volatile *)(p)) = (n); } while(0)
+#        define HB_ATOM_SET( p, n ) do { *((int volatile *)(p)) = (n); } while(0)
 
 #     elif HB_COUNTER_SIZE == 8
 
@@ -274,12 +311,12 @@ HB_EXTERN_BEGIN
 #        define HB_ATOM_INC( p )    (OSAtomicIncrement64((volatile int64_t *)(p)))
 #        define HB_ATOM_DEC( p )    (OSAtomicDecrement64((volatile int64_t *)(p)))
 #        define HB_ATOM_GET( p )    (*(int64_t volatile *)(p))
-#        define HB_ATOM_SET( p, n ) do { (*(int64_t volatile *)(p)) = (n); } while(0)
+#        define HB_ATOM_SET( p, n ) do { *((int64_t volatile *)(p)) = (n); } while(0)
 #     else
 #        define HB_ATOM_INC( p )    (OSAtomicIncrement32((volatile int32_t *)(p)))
 #        define HB_ATOM_DEC( p )    (OSAtomicDecrement32((volatile int32_t *)(p)))
 #        define HB_ATOM_GET( p )    (*(volatile int32_t *)(p))
-#        define HB_ATOM_SET( p, n ) do { (*(volatile int32_t *)(p)) = (n); } while(0)
+#        define HB_ATOM_SET( p, n ) do { *((volatile int32_t *)(p)) = (n); } while(0)
 #     endif
 #  endif
 
