@@ -622,13 +622,13 @@ HB_FUNC( HB_AX_SETUPCONNECTIONPOINT )
 HB_FUNC( HB_AX_ATLAXWININIT )
 {
    PATLAXWININIT AtlAxWinInit;
-   char szLibName[ MAX_PATH + 1 ] = { 0 } ;
+   char szLibName[ MAX_PATH + 1 ] = { 0 };
    BOOL bRet = FALSE;
 
    if( !hLib )
    {
       GetSystemDirectory( szLibName, MAX_PATH );
-      hb_strncat( szLibName, "\\atl.dll", MAX_PATH -1 );
+      hb_strncat( szLibName, "\\atl.dll", sizeof( szLibName ) - 1 );
       hLib = LoadLibrary( ( LPCSTR ) szLibName );
 
       if( hLib )
@@ -654,7 +654,7 @@ HB_FUNC( HB_AX_ATLAXWININIT )
       bRet = TRUE;
    }
 
-   hb_retl( bRet);
+   hb_retl( bRet );
 }
 //---------------------------------------------------------------------------//
 HB_FUNC( HB_AX_ATLAXCREATECONTROL )
