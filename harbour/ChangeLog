@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-16 13:00 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+    ! Slight fix in WM_PAINT message.
+
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    + Added menu option to open a GET session in GTWVT console.
+      ; I was studying to call multiple GTs ( GTWVG and GTWVT ) same time.
+        It can be and it also opens up a lot more possibilities.
+    
+      ; Thanks Przemek for superb basic engine.
+
+    + Added RMChart Active-X manipulation. It is free OCX and 
+      can be downloaded from http://www.rmchart.com/
+      ; Select from the <Active-X Controls> option.
+        Press F11 repeatedly to see 6 different charts.
+        Press F12 to change some attributes.
+
 2008-11-16 07:29 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
   * harbour/contrib/gtwvg/gtwvg.h

@@ -1741,7 +1741,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          }
          else
          {
-            return DefWindowProc( hWnd, message, wParam, lParam );
+            if( GetUpdateRect( hWnd, &updateRect, FALSE ) )
+               return DefWindowProc( hWnd, message, wParam, lParam );
          }
          return 0;
       }
