@@ -175,6 +175,11 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
 
    ::hObj := HB_AX_AtlAxGetControl( "ATLAXWin", ::hContainer, ::CLSID, ::Id, ;
                    ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ::style, ::exStyle, @hx )
+
+   if ::hObj == 0
+      Return NIL
+   endif
+
    ::hWnd := hx
 
    IF ::hObj <> 0  .AND. !Empty( ::hEvents )

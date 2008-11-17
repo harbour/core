@@ -196,15 +196,15 @@ PROCEDURE Main( cDSN )
    #define btnFBDown  WVT_BTN_FORMAT_RECESSED
    #define btnFBUp    WVT_BTN_FORMAT_FLAT
 
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 1,  nBtnRow, 6,nBtnRow+1, 9, ;
-       {|| Wvt_DrawButton( nBtnRow, 6,nBtnRow+1, 9,  ,IMAGE_VOUCH,btnFDisp  ) },;
-       {|| Wvt_DrawButton( nBtnRow, 6,nBtnRow+1, 9,  ,IMAGE_VOUCH,btnFMOver ) },;
-       {|| Wvt_DrawButton( nBtnRow, 6,nBtnRow+1, 9,  ,IMAGE_VOUCH,btnFBDown ) },;
-       {|| Wvt_DrawButton( nBtnRow, 6,nBtnRow+1, 9,  ,IMAGE_VOUCH,btnFBUp   )  ,;
+   WvtSetObjects( { OBJ_TYPE_BUTTON, 1,  nBtnRow, 6, nBtnRow+1, 9, ;
+       {|| Wvt_DrawButton( nBtnRow, 6,nBtnRow+1, 9,  ,IMAGE_VOUCH, btnFDisp  ) },;
+       {|| Wvt_DrawButton( nBtnRow, 6,nBtnRow+1, 9,  ,IMAGE_VOUCH, btnFMOver ) },;
+       {|| Wvt_DrawButton( nBtnRow, 6,nBtnRow+1, 9,  ,IMAGE_VOUCH, btnFBDown ) },;
+       {|| Wvt_DrawButton( nBtnRow, 6,nBtnRow+1, 9,  ,IMAGE_VOUCH, btnFBUp   )  ,;
               eval( SetKey( K_F2 ) ) } ;
                     } )
 
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 2,  nBtnRow,11,nBtnRow+1,14, ;
+   WvtSetObjects( { OBJ_TYPE_BUTTON, 2,  nBtnRow,11, nBtnRow+1,14, ;
        {|| Wvt_DrawButton( nBtnRow,11,nBtnRow+1,14,  ,IMAGE_BROWSE, btnFDisp  ) },;
        {|| Wvt_DrawButton( nBtnRow,11,nBtnRow+1,14,  ,IMAGE_BROWSE, btnFMOver ) },;
        {|| Wvt_DrawButton( nBtnRow,11,nBtnRow+1,14,  ,IMAGE_BROWSE, btnFBDown ) },;
@@ -212,7 +212,7 @@ PROCEDURE Main( cDSN )
               eval( SetKey( K_F5 ) ) } ;
                     } )
 
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 3,  nBtnRow,16,nBtnRow+1,19, ;
+   WvtSetObjects( { OBJ_TYPE_BUTTON, 3,  nBtnRow,16, nBtnRow+1,19, ;
        {|| Wvt_DrawButton( nBtnRow,16,nBtnRow+1,19,"Expand",IMAGE_NOTES,btnFDisp  ) },;
        {|| Wvt_DrawButton( nBtnRow,16,nBtnRow+1,19,"Expand",IMAGE_NOTES,btnFMOver ) },;
        {|| Wvt_DrawButton( nBtnRow,16,nBtnRow+1,19,"Expand",IMAGE_NOTES,btnFBDown ) },;
@@ -220,7 +220,7 @@ PROCEDURE Main( cDSN )
               eval( SetKey( K_F3 ) ) } ;
                    } )
 
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 4,  nBtnRow,21,nBtnRow+1,24, ;
+   WvtSetObjects( { OBJ_TYPE_BUTTON, 4,  nBtnRow,21, nBtnRow+1,24, ;
        {|| Wvt_DrawButton( nBtnRow,21,nBtnRow+1,24,"Shrink",  , btnFDisp , rgb( 100,22,241 ), rgb( 0,100,0 ) ) },;
        {|| Wvt_DrawButton( nBtnRow,21,nBtnRow+1,24,"Shrink",  , btnFMOver, rgb( 100,22,241 ), rgb( 0,100,0 ) ) },;
        {|| Wvt_DrawButton( nBtnRow,21,nBtnRow+1,24,"Shrink",  , btnFBDown, rgb( 100,22,241 ), rgb( 0,100,0 ) ) },;
@@ -228,7 +228,7 @@ PROCEDURE Main( cDSN )
               eval( SetKey( K_F4 ) ) } ;
                    } )
 
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 5,  nBtnRow,26,nBtnRow+1,29, ;
+   WvtSetObjects( { OBJ_TYPE_BUTTON, 5,  nBtnRow,26, nBtnRow+1,29, ;
        {|| Wvt_DrawButton( nBtnRow,26,nBtnRow+1,29,"Minimize",IMAGE_TOOLS, btnFDisp  ) },;
        {|| Wvt_DrawButton( nBtnRow,26,nBtnRow+1,29,"Minimize",IMAGE_TOOLS, btnFMOver ) },;
        {|| Wvt_DrawButton( nBtnRow,26,nBtnRow+1,29,"Minimize",IMAGE_TOOLS, btnFBDown ) },;
@@ -236,7 +236,7 @@ PROCEDURE Main( cDSN )
               eval( SetKey( K_F6 ) ) },;
                    } )
 
-   WvtSetObjects( { OBJ_TYPE_BUTTON, 6, nBtnRow,31,nBtnRow+1,34, ;
+   WvtSetObjects( { OBJ_TYPE_BUTTON, 6, nBtnRow,31, nBtnRow+1,34, ;
        {|| Wvt_DrawButton( nBtnRow,31,nBtnRow+1,34,"Partial",IMAGE_HELP, btnFDisp  ) },;
        {|| Wvt_DrawButton( nBtnRow,31,nBtnRow+1,34,"Partial",IMAGE_HELP, btnFMOver ) },;
        {|| Wvt_DrawButton( nBtnRow,31,nBtnRow+1,34,"Partial",IMAGE_HELP, btnFBDown ) },;
@@ -299,13 +299,16 @@ PROCEDURE Main( cDSN )
 Function HB_GTSYS()
    REQUEST HB_GT_WVG_DEFAULT
    REQUEST HB_GT_WVT
+   REQUEST HB_GT_WGU
    Return NIL
 //------------------------------------------------------------------//
 PROCEDURE WvtConsoleGets()
 
    IF hb_mtvm()
-      Hb_ThreadStart( {||  hb_gtReload( 'WVT' ), ;
-                           WvtNextGetsConsole();
+      Hb_ThreadStart( {|oCrt|  hb_gtReload( 'WVT' ) , ;
+                               oCrt := hb_gtSelect(), ;
+                               WvtNextGetsConsole() , ;
+                               oCrt := NIL            ;
                     } )
    ENDIF
 
@@ -356,9 +359,7 @@ PROCEDURE WvtNextGets()
    ENDIF
 
    RETURN
-
 //----------------------------------------------------------------------//
-
 PROCEDURE WvtNextGets_X()
 
    LOCAL aLastPaint, clr
@@ -445,7 +446,6 @@ PROCEDURE WvtNextGets_X()
    Wvt_RestScreen( wvtScr )
    SetPos( nRow, nCol )
    RETURN
-
 //-------------------------------------------------------------------//
 FUNCTION WvtSetKeys( lSet )
 
@@ -963,9 +963,7 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
    endcase
 
    RETURN lRet
-
 //-------------------------------------------------------------------//
-
 STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
    LOCAL lRet := .t., lRefAll := .f.
 
@@ -1069,9 +1067,7 @@ STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
    endif
 
    RETURN lRet
-
 //-------------------------------------------------------------------//
-
 STATIC FUNCTION CfgMyBrowse( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, nID )
    LOCAL info_, oWvtBrw, oBrowse, i, bBlock
    LOCAL aPopup := {}
@@ -1120,9 +1116,7 @@ STATIC FUNCTION CfgMyBrowse( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSp
    oWvtBrw:bHandleEvent := {|oWvtBrw,cPaintID,oBrowse,nKey| BrwOnEvent( oWvtBrw,cPaintID,oBrowse,nKey ) }
 
    RETURN oWvtBrw
-
 //-------------------------------------------------------------------//
-
 FUNCTION WvtPartialScreen()
    LOCAL scr        := SaveScreen( 7,20,15,60 )
    LOCAL wvtScr     := Wvt_SaveScreen( 0, 0, MaxRow(), MaxCol() )
@@ -1163,9 +1157,7 @@ FUNCTION WvtPartialScreen()
    Wvt_SetPopupMenu( hPopup )
 
    RETURN NIL
-
 //-------------------------------------------------------------------//
-
 function WvtLines()
    LOCAL scr        := SaveScreen( 0,0,maxrow(),maxcol() )
    LOCAL clr        := SetColor( "N/W" )
@@ -1224,17 +1216,13 @@ function WvtLines()
    RestScreen( 0,0,maxrow(),maxcol(), scr )
 
    RETURN nil
-
 //-------------------------------------------------------------------//
-
 FUNCTION DispStatusMsg( cMsg )
 
    Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, rgb(198,198,198), "Arial", 18, , 900 )
 
    RETURN .t.
-
 //-------------------------------------------------------------------//
-
 FUNCTION ClearStatusMsg()
    LOCAL nRow := Row()
    LOCAL nCol := Col()
@@ -1244,9 +1232,7 @@ FUNCTION ClearStatusMsg()
    SetPos( nRow, nCol )
 
    RETURN .t.
-
 //-------------------------------------------------------------------//
-
 FUNCTION Popups( nID, lDestroy )
    LOCAL hPop, hPop1
    LOCAL nPrompt := MF_ENABLED+MF_STRING
@@ -1314,9 +1300,7 @@ FUNCTION Popups( nID, lDestroy )
    hPop_[ nID ] := hPop
 
    RETURN Wvt_SetPopupMenu( hPop_[ nID ] )
-
 //-------------------------------------------------------------------//
-
 FUNCTION WvtPictures( nSlot,cFilePic )
 
    if nSlot != nil .and. nSlot <= 20 .and. file( cFilePic )
@@ -1328,9 +1312,7 @@ FUNCTION WvtPictures( nSlot,cFilePic )
    endif
 
    RETURN nil
-
 //-------------------------------------------------------------------//
-
 FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
 
    if pic_[ nSlot ] != nil
@@ -1338,9 +1320,7 @@ FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
    endif
 
    RETURN nil
-
 //-------------------------------------------------------------------//
-
 FUNCTION CreateMainMenu()
    LOCAL oMenu
    LOCAL g_oMenuBar := wvtMenu():new():create()
@@ -1385,6 +1365,8 @@ FUNCTION CreateMainMenu()
    oMenu:AddItem( "Slide Show"   ,{|| DlgSlideShow() } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "Dialog Scond" ,{|| DynDialog_1() } )
+   oMenu:AddItem( "-")
+   oMenu:AddItem( "An Experiment",{|| Experiment_1() } )
    g_oMenuBar:addItem( "",oMenu)
 
    oMenu := wvtMenu():new():create()
@@ -1401,9 +1383,7 @@ FUNCTION CreateMainMenu()
    g_oMenuBar:addItem( "",oMenu)
 
    RETURN g_oMenuBar
-
 //-------------------------------------------------------------------//
-
 STATIC FUNCTION ActivateMenu( oMenu )
    LOCAL nMenu := Wvt_GetLastMenuEvent()
    LOCAL aMenuItem
@@ -1420,10 +1400,34 @@ STATIC FUNCTION ActivateMenu( oMenu )
    ENDIF
 
    RETURN ( NIL )
-
 //-------------------------------------------------------------------//
-
 STATIC FUNCTION MyDialogOne()
+   Local bBlock
+
+   static n := 0
+
+   if hb_mtvm()
+      n++
+      if n%2 == 0
+         MyDialogOne_X()
+      else
+         bBlock := { |oCrt| ;
+                        hb_gtReload( 'WVG' )        ,;
+                        oCrt := WvgCrt():New( , , { -1,-1 }, { 54,184 }, , .f. ), ;
+                        oCrt:fontName   := 'Courier',;
+                        oCrt:fontHeight := 13       ,;
+                        oCrt:fontWidth  := 0        ,;
+                        oCrt:Create()               ,;
+                        MyDialogOne_X( oCrt )        ;
+                   }
+         hb_threadStart( bBlock )
+      endif
+   else
+      MyDialogOne_X()
+   endif
+   RETURN Nil
+//----------------------------------------------------------------------//
+STATIC FUNCTION MyDialogOne_X( oCrt )
    LOCAL aObjects:= WvtSetBlocks( {} )
    Local nWinRows, nWinCols, cWinTitle, cFont, nHeight, nWidth
    Local oDlg, obj_, oBar, d_, nN, cUseAlias
@@ -1456,7 +1460,8 @@ STATIC FUNCTION MyDialogOne()
    aadd( aImg_, "v_index.bmp"  )
    aadd( aImg_, "v_notes1.bmp" )
    aadd( aImg_, "v_selct1.bmp" )
-
+   ? '.'
+   Wvt_ShowWindow( 1 )
    nWinRows  := 55
    nWinCols  := 185
    cWinTitle := "WvtGui Dialog One"
@@ -2306,7 +2311,7 @@ Static Function ExeActiveX( oCrt, nActiveX )
       oCom:CLSID := 'file://C:\harbour\contrib\gtwvg\tests\myharu.pdf'
 
    case nActiveX == 4
-      hb_gtInfo( HB_GTI_WINTITLE, 'RM Chart [ F12:Attributes F11:Other Charts ]' )
+      hb_gtInfo( HB_GTI_WINTITLE, 'RM Chart [ <F12> Attributes  <F11> Next Charts ]' )
       oCom:CLSID := 'RMChart.RMChartX'
 
       // RMChart does not have event interface.
@@ -2316,205 +2321,205 @@ Static Function ExeActiveX( oCrt, nActiveX )
    endcase
 
    oCom:create()
+   if hb_isObject( oCom )
 
-   // After :CREATE() Messages
-   //
-   if nActiveX == 1
-      oCom:AddressBar := .t.
-      oCom:Navigate( 'http://www.harbour.vouch.info' )
+      // After :CREATE() Messages
+      //
+      if nActiveX == 1
+         oCom:AddressBar := .t.
+         oCom:Navigate( 'http://www.harbour.vouch.info' )
 
-   elseif nActiveX == 4
-      ConfigureRMChart( oCom )
+      elseif nActiveX == 4
+         ConfigureRMChart( oCom )
 
-      oCom:Draw( .t. )
-      oCom:Draw2Clipboard()
+         oCom:Draw( .t. )
+         oCom:Draw2Clipboard()
 
-   endif
+      endif
 
-   do while !( lEnd )
-      nKey := inkey()
+      do while !( lEnd )
+         nKey := inkey()
 
-      if nKey == HB_K_RESIZE
-         Resize( oCom )
-
-      elseif nKey == K_F12
-         if nActiveX == 1
-            oCom:Navigate( 'www.vouch.info' )
-
-         elseif nActiveX == 4
-            oCom:RMCBackColor     := 23456142
-            oCom:RMCStyle         := 1
-            oCom:RMCUserWatermark := 'Vouch'
-
-            //oCom:AddRegion()
-            oCom:Region(1):SetProperties( 5.0,5.0,-5.0,-5.0 )
-
-            oCom:Draw( .t. )
-         endif
-
-      elseif nKey == K_F11
-         if nActiveX == 4
-            nTurn++
-            if nTurn > 6
-               nTurn := 1
-            endif
-            sData := ''
-
-            do case
-            case nTurn == 1
-               hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] ' + 'Stacked Bars' )
-               SetMode( 30,100 )
-
-               sData += "00003600|00004450|000051|000061|000073|00008-6972|00009412|00011Tahoma|100011|10"
-               sData += "0035|1000410|10005-5|10006-5|1000911|100101|100111|100181|100200|1002150000|1002"
-               sData += "211|100238|100331|100341|100356|100378|100411|100468|100484|100494|10051-6972|10"
-               sData += "052-16777216|10053-1828|100541|100558|10056-16777216|10057-16777216|10060-167772"
-               sData += "16|10061-16777216|1006315|10064-32|100652|10066-16776961|10180this is the footer"
-               sData += "|10181Example of stacked bars|10182Apples*Pears*Cherries*Strawberries|10183 $|10"
-               sData += "184This is an optional axis text, sized 9 points and bold\9b|10187Label Nr. 1*La"
-               sData += "bel Nr. 2*Label Nr. 3*Label Nr. 4*Label Nr. 5*Label Nr. 6|10196This is an option"
-               sData += "al label axis text|110011|110023|110033|110045|110055|11006-1|1100923|110131|110"
-               sData += "14-1|110171|11019-16777077|1102111|110221|110236|1105310000*10000*16000*12000*20"
-               sData += "000*10000|120011|120023|120033|120045|120055|12006-1|1200927|120131|12014-1|1201"
-               sData += "71|12019-16751616|1202111|120221|120236|120535000*7000*4000*15000*10000*10000|13"
-               sData += "0011|130023|130033|130045|130055|13006-1|1300982|130131|13014-1|130171|13019-838"
-               sData += "8608|1302111|130221|130236|1305310000*3000*12000*10000*5000*20000|140011|140023|"
-               sData += "140033|140045|140055|14006-1|1400925|140131|14014-1|140171|14019-4684277|1402111"
-               sData += "|140221|140236|140535000*9000*12000*6000*10000*5000"
-
-            case nTurn == 2
-               hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'Floating Bars' )
-               SetMode( 20,90 )
-
-               sData += "00003550|00004300|000051|000073|00008-2894893|00009412|00011Tahoma|100011|100035"
-               sData += "|100045|10005-5|10006-5|1000911|100101|100111|100131|100181|100201|1002113|10022"
-               sData += "13|100238|100331|100341|100356|100378|100411|100468|100482|10052-16777216|10053-"
-               sData += "1120086|100544|100555|10056-16777216|10057-16777216|10060-16777216|10061-1677721"
-               sData += "6|1006316|10064-5383962|100652|10066-16777011|10181Birth of a Killer App|10182Sc"
-               sData += "hedule*Reality|10187Design*Development*Testing*Bug Fixing*Documentation*Marketin"
-               sData += "g|1020104/01*04/02*04/03*04/04*04/05*04/06*04/07*04/08*04/09*04/10*04/11*04/12*0"
-               sData += "5/01|110011|110026|110044|110101|110131|11019-6751336|1102111|110221|1102312|110"
-               sData += "531*3*4*6*6*4*7*4*9*3*10*3|120011|120026|120044|120101|120132|12019-47872|120211"
-               sData += "1|120221|1202312|120531*.5*1.5*10.5*12*1*12*1*12.5*.5*2*11"
-
-            case nTurn == 3
-               hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'Four Regions' )
-               SetMode( 40,120 )
-
-               sData += "00003700|00004500|000054|000061|000071|00008-984833|00009412|00011Tahoma|100011|"
-               sData += "100032|100042|10005348|10006248|1000910|100101|100111|100181|100200|10021100|100"
-               sData += "2211|100238|100331|100341|100355|100378|100481|100491|10051-984833|10052-1677721"
-               sData += "6|10053-657956|100541|100558|10056-16777216|10057-16777216|10060-16777216|10061-"
-               sData += "16777216|10187Label 1*Label 2*Label 3*Label 4*Label 5|110011|110021|110031|11004"
-               sData += "6|110056|11006-1|110091|110131|11014-1|110171|1102111|110221|110235|1105330*40*7"
-               sData += "0*60*20|200011|20003352|200042|20005-2|20006248|2000910|200101|200111|200181|200"
-               sData += "200|20021100|2002211|200238|200331|200341|200355|200378|200484|200491|20051-9848"
-               sData += "33|20052-16777216|20053-657956|200544|200555|20056-16777216|20057-16777216|20060"
-               sData += "-16777216|20061-16777216|20187Label 1*Label 2*Label 3*Label 4*Label 5|210011|210"
-               sData += "023|210033|210045|210055|21006-1|210091|210101|210131|21014-1|210171|2102111|210"
-               sData += "221|210235|2105320*10*15*25*30|220011|220023|220033|220045|220055|22006-1|220091"
-               sData += "|220101|220131|22014-1|220171|2202111|220221|220235|2205325*30*10*20*15|230011|2"
-               sData += "30023|230033|230045|230055|23006-1|230091|230101|230131|23014-1|230171|2302111|2"
-               sData += "30221|230235|2305310*20*40*20*30|240011|240023|240033|240045|240055|24006-1|2400"
-               sData += "91|240101|240131|24014-1|240171|2402111|240221|240235|2405340*30*20*30*20|300011"
-               sData += "|300032|30004252|30005348|30006-2|3000910|300101|300181|300481|300491|30051-9848"
-               sData += "33|30052-16777216|30053-657956|310011|3100251|310031|3100454|310054|310071|31009"
-               sData += "1|310121|310151|310161|310171|310182|310211|310221|310235|3105330*50*20*40*60|40"
-               sData += "0011|40003352|40004252|40005-2|40006-2|4000910|400101|400111|400131|400181|40020"
-               sData += "100|40021250|4002211|400238|400281|400292|400300|400310|400322|400331|400341|400"
-               sData += "3510|400378|400482|400492|40051-984833|40052-16777216|40053-984833|400541|400558"
-               sData += "|40056-16776961|40057-16777216|400592|40060-16777216|40061-16777216|40183$ |4018"
-               sData += "5 %|410011|410021|410031|410043|410053|41006-1|4100950|410131|41014-1|410171|410"
-               sData += "19-10496|4102111|410221|4102310|41053240*230*220*180*170*160*145*130*125*115|420"
-               sData += "011|4200221|420035|4200422|420052|420061|420071|4200963|420111|420121|420131|420"
-               sData += "171|42019-16744448|4202115|420221|4202310|420261|420538.1*6.2*4.3*2.2*1.2*3.1*5."
-               sData += "2*11.4*7.3*4.2"
-
-            case nTurn == 4
-               hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'10 Biggest Companies' )
-               SetMode( 25,90 )
-
-               sData += "00003670|00004450|000051|000061|000071|00008-10185235|00009412|00011Tahoma|10001"
-               sData += "1|100035|1000410|10005-5|10006-5|1000912|100101|100111|100131|100181|10020100000"
-               sData += "|10021250000|1002211|100239|100281|100292|100300|100310|100322|100331|100341|100"
-               sData += "3510|100378|100482|100492|10051-32944|10052-1296|10053-983041|100541|100558|1005"
-               sData += "6-1828|10057-16777216|100592|10060-1828|10061-16777216|10180data source: F.A.Z|1"
-               sData += "0181The world's 10 biggest industrial companies 2003|10183$ |10184Total turnover"
-               sData += " in Mill. Dollar|10185 %|10186Net operating margin|10187Exxon Mobil*Royal Dutch "
-               sData += "/ Shell*BP*General Motors*Daimler Chrysler*Ford Motor*Toyota Motor*General Elect"
-               sData += "ric*TOTAL*Chevron Texaco|110011|110021|110031|110043|110053|11006-1|1100950|1101"
-               sData += "31|11014-1|110171|11019-10496|1102111|110221|1102310|11053242365*235598*232571*1"
-               sData += "85524*170457*164196*149321*132797*130067*119703|120011|1200221|120035|1200422|12"
-               sData += "0052|120061|120071|1200970|120111|120121|120131|1201421|120171|12019-16744448|12"
-               sData += "02115|120221|1202310|120261|120538.9*4.1*4.4*2.1*.3*.3*5.9*11.3*6.7*6"
-
-            case nTurn == 5
-               hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'Grouped Bars' )
-               SetMode( 25,80 )
-
-               sData += "00003600|00004450|000051|000061|000075|00008-2|00009412|00010paper.jpg|00011Taho"
-               sData += "ma|100011|100035|100045|10005-5|10006-5|1000910|100101|100111|100181|100200|1002"
-               sData += "1100|1002211|100238|100331|100341|100355|100378|100468|100484|10053-2|100541|100"
-               sData += "558|100631|100651|10182First quarter*Second quarter*Third quarter*Fourth quarter"
-               sData += "|101872000*2001*2002*2003*2004|110011|110022|110044|110131|1102111|110221|110235"
-               sData += "|1105330*20*40*60*10|120011|120022|120044|120131|1202111|120221|120235|1205330*2"
-               sData += "0*50*70*60|130011|130022|130044|130131|1302111|130221|130235|1305340*10*30*20*80"
-               sData += "|140011|140022|140044|140131|1402111|140221|140235|1405370*50*80*40*30"
-
-            case nTurn == 6
-               hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'Flow Chart' )
-               SetMode( 30,50 )
-
-               sData += "00003305|00004400|000051|00008-984833|00009412|00011Tahoma|100011|100035|100045|"
-               sData += "10005-5|10006-5|10180\7C|010011|010051|010072|010081|0101050|0101125|01012100|01"
-               sData += "01325|01014-5952982|01015-5952982|01016255|010191|0102010|01026Start|01030-256|0"
-               sData += "10012|010054|0100721|01014-16776961|010222|01024100*100|0102550*75|01026|010272|"
-               sData += "010293|010013|010051|010071|010081|0101050|0101175|01012100|0101325|01014-669788"
-               sData += "2|01015-6697882|01016255|010191|0102010|01026i = 1|01030-16777216|010014|010054|"
-               sData += "0100721|01014-16776961|010222|01024100*100|01025100*150|01026|010272|010293|0100"
-               sData += "15|010051|010073|010081|0101050|01011150|01012100|0101350|01014-65536|01015-6553"
-               sData += "6|01016255|010191|0102010|01026i = 39?|01030-256|010016|010054|0100721|01014-167"
-               sData += "76961|010222|01024100*100|01025200*225|01026|010272|010293|010017|010051|010071|"
-               sData += "010081|0101050|01011225|01012100|0101325|01014-6697882|01015-6697882|01016255|01"
-               sData += "0191|0102010|01026i =  i + 1|01030-16777216|010018|010054|0100721|01014-16776961"
-               sData += "|010222|01024100*100|01025250*275|01026|010272|010293|010019|010051|010073|01008"
-               sData += "1|0101050|01011275|01012100|0101350|01014-65536|01015-65536|01016255|010191|0102"
-               sData += "010|01026i <= 100|01030-256|0100110|010054|0100721|01014-16776961|010222|0102410"
-               sData += "0*100|01025325*350|01026|010272|010293|0100111|010051|010072|010081|0101050|0101"
-               sData += "1350|01012100|0101325|01014-5952982|01015-5952982|01016255|010191|0102010|01026S"
-               sData += "top|01030-256|0100113|010054|0100721|01014-16776961|010222|01024150*200|01025175"
-               sData += "*175|01026|010272|010293|0100114|010051|010081|01010145|01011157|0101250|01014-1"
-               sData += "6776961|01015-5383962|01016255|010191|0102010|01026yes|01030-16777216|0100115|01"
-               sData += "0051|010071|010081|01010200|01011162|01012100|0101325|01014-6697882|01015-669788"
-               sData += "2|01016255|010191|0102010|01026i = 69|01030-16777216|0100116|010054|0100721|0101"
-               sData += "4-16776961|010224|0102450*10*10*100|01025300*300*125*125|01026|010272|010293|010"
-               sData += "0117|010054|0100721|01014-16776961|010223|01024250*250*100|01025162*125*125|0102"
-               sData += "6|010272|010293|0100118|010051|010081|01010100|01011200|0101250|0101325|01014-16"
-               sData += "776961|01016255|010191|0102010|01026no|01030-16777216|0100119|010051|010081|0101"
-               sData += "010|01011280|0101240|01014-16776961|01016255|010191|0102010|01026yes|01030-16777"
-               sData += "216|0100120|010051|010081|01010100|01011322|0101250|01014-16776961|01016255|0101"
-               sData += "91|0102010|01026no|01030-16777216|0100120|010051|010079|01010180|01011280|010121"
-               sData += "20|01013100|01015-39322|010191|010209|01026RMChart is not a flowchart tool. This"
-               sData += " is just an example for the use of CustomObjects!|01030-256"
-
-            endcase
-
-            oCom:Reset()
-            oCom:RMCFile := sData
-            oCom:Draw( .t. )
+         if nKey == HB_K_RESIZE
             Resize( oCom )
 
+         elseif nKey == K_F12
+            if nActiveX == 1
+               oCom:Navigate( 'www.vouch.info' )
+
+            elseif nActiveX == 4
+               oCom:RMCBackColor     := 23456142
+               oCom:RMCStyle         := 2
+               oCom:RMCUserWatermark := 'Vouch'
+
+               oCom:Region(1):SetProperties( 5.0,5.0,-5.0,-5.0 )
+
+               oCom:Draw( .t. )
+            endif
+
+         elseif nKey == K_F11
+            if nActiveX == 4
+               nTurn++
+               if nTurn > 6
+                  nTurn := 1
+               endif
+               sData := ''
+
+               do case
+               case nTurn == 1
+                  hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] ' + 'Stacked Bars' )
+                  SetMode( 30,100 )
+
+                  sData += "00003600|00004450|000051|000061|000073|00008-6972|00009412|00011Tahoma|100011|10"
+                  sData += "0035|1000410|10005-5|10006-5|1000911|100101|100111|100181|100200|1002150000|1002"
+                  sData += "211|100238|100331|100341|100356|100378|100411|100468|100484|100494|10051-6972|10"
+                  sData += "052-16777216|10053-1828|100541|100558|10056-16777216|10057-16777216|10060-167772"
+                  sData += "16|10061-16777216|1006315|10064-32|100652|10066-16776961|10180this is the footer"
+                  sData += "|10181Example of stacked bars|10182Apples*Pears*Cherries*Strawberries|10183 $|10"
+                  sData += "184This is an optional axis text, sized 9 points and bold\9b|10187Label Nr. 1*La"
+                  sData += "bel Nr. 2*Label Nr. 3*Label Nr. 4*Label Nr. 5*Label Nr. 6|10196This is an option"
+                  sData += "al label axis text|110011|110023|110033|110045|110055|11006-1|1100923|110131|110"
+                  sData += "14-1|110171|11019-16777077|1102111|110221|110236|1105310000*10000*16000*12000*20"
+                  sData += "000*10000|120011|120023|120033|120045|120055|12006-1|1200927|120131|12014-1|1201"
+                  sData += "71|12019-16751616|1202111|120221|120236|120535000*7000*4000*15000*10000*10000|13"
+                  sData += "0011|130023|130033|130045|130055|13006-1|1300982|130131|13014-1|130171|13019-838"
+                  sData += "8608|1302111|130221|130236|1305310000*3000*12000*10000*5000*20000|140011|140023|"
+                  sData += "140033|140045|140055|14006-1|1400925|140131|14014-1|140171|14019-4684277|1402111"
+                  sData += "|140221|140236|140535000*9000*12000*6000*10000*5000"
+
+               case nTurn == 2
+                  hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'Floating Bars' )
+                  SetMode( 20,90 )
+
+                  sData += "00003550|00004300|000051|000073|00008-2894893|00009412|00011Tahoma|100011|100035"
+                  sData += "|100045|10005-5|10006-5|1000911|100101|100111|100131|100181|100201|1002113|10022"
+                  sData += "13|100238|100331|100341|100356|100378|100411|100468|100482|10052-16777216|10053-"
+                  sData += "1120086|100544|100555|10056-16777216|10057-16777216|10060-16777216|10061-1677721"
+                  sData += "6|1006316|10064-5383962|100652|10066-16777011|10181Birth of a Killer App|10182Sc"
+                  sData += "hedule*Reality|10187Design*Development*Testing*Bug Fixing*Documentation*Marketin"
+                  sData += "g|1020104/01*04/02*04/03*04/04*04/05*04/06*04/07*04/08*04/09*04/10*04/11*04/12*0"
+                  sData += "5/01|110011|110026|110044|110101|110131|11019-6751336|1102111|110221|1102312|110"
+                  sData += "531*3*4*6*6*4*7*4*9*3*10*3|120011|120026|120044|120101|120132|12019-47872|120211"
+                  sData += "1|120221|1202312|120531*.5*1.5*10.5*12*1*12*1*12.5*.5*2*11"
+
+               case nTurn == 3
+                  hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'Four Regions' )
+                  SetMode( 40,120 )
+
+                  sData += "00003700|00004500|000054|000061|000071|00008-984833|00009412|00011Tahoma|100011|"
+                  sData += "100032|100042|10005348|10006248|1000910|100101|100111|100181|100200|10021100|100"
+                  sData += "2211|100238|100331|100341|100355|100378|100481|100491|10051-984833|10052-1677721"
+                  sData += "6|10053-657956|100541|100558|10056-16777216|10057-16777216|10060-16777216|10061-"
+                  sData += "16777216|10187Label 1*Label 2*Label 3*Label 4*Label 5|110011|110021|110031|11004"
+                  sData += "6|110056|11006-1|110091|110131|11014-1|110171|1102111|110221|110235|1105330*40*7"
+                  sData += "0*60*20|200011|20003352|200042|20005-2|20006248|2000910|200101|200111|200181|200"
+                  sData += "200|20021100|2002211|200238|200331|200341|200355|200378|200484|200491|20051-9848"
+                  sData += "33|20052-16777216|20053-657956|200544|200555|20056-16777216|20057-16777216|20060"
+                  sData += "-16777216|20061-16777216|20187Label 1*Label 2*Label 3*Label 4*Label 5|210011|210"
+                  sData += "023|210033|210045|210055|21006-1|210091|210101|210131|21014-1|210171|2102111|210"
+                  sData += "221|210235|2105320*10*15*25*30|220011|220023|220033|220045|220055|22006-1|220091"
+                  sData += "|220101|220131|22014-1|220171|2202111|220221|220235|2205325*30*10*20*15|230011|2"
+                  sData += "30023|230033|230045|230055|23006-1|230091|230101|230131|23014-1|230171|2302111|2"
+                  sData += "30221|230235|2305310*20*40*20*30|240011|240023|240033|240045|240055|24006-1|2400"
+                  sData += "91|240101|240131|24014-1|240171|2402111|240221|240235|2405340*30*20*30*20|300011"
+                  sData += "|300032|30004252|30005348|30006-2|3000910|300101|300181|300481|300491|30051-9848"
+                  sData += "33|30052-16777216|30053-657956|310011|3100251|310031|3100454|310054|310071|31009"
+                  sData += "1|310121|310151|310161|310171|310182|310211|310221|310235|3105330*50*20*40*60|40"
+                  sData += "0011|40003352|40004252|40005-2|40006-2|4000910|400101|400111|400131|400181|40020"
+                  sData += "100|40021250|4002211|400238|400281|400292|400300|400310|400322|400331|400341|400"
+                  sData += "3510|400378|400482|400492|40051-984833|40052-16777216|40053-984833|400541|400558"
+                  sData += "|40056-16776961|40057-16777216|400592|40060-16777216|40061-16777216|40183$ |4018"
+                  sData += "5 %|410011|410021|410031|410043|410053|41006-1|4100950|410131|41014-1|410171|410"
+                  sData += "19-10496|4102111|410221|4102310|41053240*230*220*180*170*160*145*130*125*115|420"
+                  sData += "011|4200221|420035|4200422|420052|420061|420071|4200963|420111|420121|420131|420"
+                  sData += "171|42019-16744448|4202115|420221|4202310|420261|420538.1*6.2*4.3*2.2*1.2*3.1*5."
+                  sData += "2*11.4*7.3*4.2"
+
+               case nTurn == 4
+                  hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'10 Biggest Companies' )
+                  SetMode( 25,90 )
+
+                  sData += "00003670|00004450|000051|000061|000071|00008-10185235|00009412|00011Tahoma|10001"
+                  sData += "1|100035|1000410|10005-5|10006-5|1000912|100101|100111|100131|100181|10020100000"
+                  sData += "|10021250000|1002211|100239|100281|100292|100300|100310|100322|100331|100341|100"
+                  sData += "3510|100378|100482|100492|10051-32944|10052-1296|10053-983041|100541|100558|1005"
+                  sData += "6-1828|10057-16777216|100592|10060-1828|10061-16777216|10180data source: F.A.Z|1"
+                  sData += "0181The world's 10 biggest industrial companies 2003|10183$ |10184Total turnover"
+                  sData += " in Mill. Dollar|10185 %|10186Net operating margin|10187Exxon Mobil*Royal Dutch "
+                  sData += "/ Shell*BP*General Motors*Daimler Chrysler*Ford Motor*Toyota Motor*General Elect"
+                  sData += "ric*TOTAL*Chevron Texaco|110011|110021|110031|110043|110053|11006-1|1100950|1101"
+                  sData += "31|11014-1|110171|11019-10496|1102111|110221|1102310|11053242365*235598*232571*1"
+                  sData += "85524*170457*164196*149321*132797*130067*119703|120011|1200221|120035|1200422|12"
+                  sData += "0052|120061|120071|1200970|120111|120121|120131|1201421|120171|12019-16744448|12"
+                  sData += "02115|120221|1202310|120261|120538.9*4.1*4.4*2.1*.3*.3*5.9*11.3*6.7*6"
+
+               case nTurn == 5
+                  hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'Grouped Bars' )
+                  SetMode( 25,80 )
+
+                  sData += "00003600|00004450|000051|000061|000075|00008-2|00009412|00010paper.jpg|00011Taho"
+                  sData += "ma|100011|100035|100045|10005-5|10006-5|1000910|100101|100111|100181|100200|1002"
+                  sData += "1100|1002211|100238|100331|100341|100355|100378|100468|100484|10053-2|100541|100"
+                  sData += "558|100631|100651|10182First quarter*Second quarter*Third quarter*Fourth quarter"
+                  sData += "|101872000*2001*2002*2003*2004|110011|110022|110044|110131|1102111|110221|110235"
+                  sData += "|1105330*20*40*60*10|120011|120022|120044|120131|1202111|120221|120235|1205330*2"
+                  sData += "0*50*70*60|130011|130022|130044|130131|1302111|130221|130235|1305340*10*30*20*80"
+                  sData += "|140011|140022|140044|140131|1402111|140221|140235|1405370*50*80*40*30"
+
+               case nTurn == 6
+                  hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'Flow Chart' )
+                  SetMode( 30,50 )
+
+                  sData += "00003305|00004400|000051|00008-984833|00009412|00011Tahoma|100011|100035|100045|"
+                  sData += "10005-5|10006-5|10180\7C|010011|010051|010072|010081|0101050|0101125|01012100|01"
+                  sData += "01325|01014-5952982|01015-5952982|01016255|010191|0102010|01026Start|01030-256|0"
+                  sData += "10012|010054|0100721|01014-16776961|010222|01024100*100|0102550*75|01026|010272|"
+                  sData += "010293|010013|010051|010071|010081|0101050|0101175|01012100|0101325|01014-669788"
+                  sData += "2|01015-6697882|01016255|010191|0102010|01026i = 1|01030-16777216|010014|010054|"
+                  sData += "0100721|01014-16776961|010222|01024100*100|01025100*150|01026|010272|010293|0100"
+                  sData += "15|010051|010073|010081|0101050|01011150|01012100|0101350|01014-65536|01015-6553"
+                  sData += "6|01016255|010191|0102010|01026i = 39?|01030-256|010016|010054|0100721|01014-167"
+                  sData += "76961|010222|01024100*100|01025200*225|01026|010272|010293|010017|010051|010071|"
+                  sData += "010081|0101050|01011225|01012100|0101325|01014-6697882|01015-6697882|01016255|01"
+                  sData += "0191|0102010|01026i =  i + 1|01030-16777216|010018|010054|0100721|01014-16776961"
+                  sData += "|010222|01024100*100|01025250*275|01026|010272|010293|010019|010051|010073|01008"
+                  sData += "1|0101050|01011275|01012100|0101350|01014-65536|01015-65536|01016255|010191|0102"
+                  sData += "010|01026i <= 100|01030-256|0100110|010054|0100721|01014-16776961|010222|0102410"
+                  sData += "0*100|01025325*350|01026|010272|010293|0100111|010051|010072|010081|0101050|0101"
+                  sData += "1350|01012100|0101325|01014-5952982|01015-5952982|01016255|010191|0102010|01026S"
+                  sData += "top|01030-256|0100113|010054|0100721|01014-16776961|010222|01024150*200|01025175"
+                  sData += "*175|01026|010272|010293|0100114|010051|010081|01010145|01011157|0101250|01014-1"
+                  sData += "6776961|01015-5383962|01016255|010191|0102010|01026yes|01030-16777216|0100115|01"
+                  sData += "0051|010071|010081|01010200|01011162|01012100|0101325|01014-6697882|01015-669788"
+                  sData += "2|01016255|010191|0102010|01026i = 69|01030-16777216|0100116|010054|0100721|0101"
+                  sData += "4-16776961|010224|0102450*10*10*100|01025300*300*125*125|01026|010272|010293|010"
+                  sData += "0117|010054|0100721|01014-16776961|010223|01024250*250*100|01025162*125*125|0102"
+                  sData += "6|010272|010293|0100118|010051|010081|01010100|01011200|0101250|0101325|01014-16"
+                  sData += "776961|01016255|010191|0102010|01026no|01030-16777216|0100119|010051|010081|0101"
+                  sData += "010|01011280|0101240|01014-16776961|01016255|010191|0102010|01026yes|01030-16777"
+                  sData += "216|0100120|010051|010081|01010100|01011322|0101250|01014-16776961|01016255|0101"
+                  sData += "91|0102010|01026no|01030-16777216|0100120|010051|010079|01010180|01011280|010121"
+                  sData += "20|01013100|01015-39322|010191|010209|01026RMChart is not a flowchart tool. This"
+                  sData += " is just an example for the use of CustomObjects!|01030-256"
+
+               endcase
+
+               oCom:Reset()
+               oCom:RMCFile := sData
+               oCom:Draw( .t. )
+               Resize( oCom )
+
+            endif
+
          endif
 
-      endif
+         if nKey == 27
+            exit
+         endif
+      enddo
 
-      if nKey == 27
-         exit
-      endif
-   enddo
-
-   oCom:Destroy()
-
+      oCom:Destroy()
+   endif
    Return nil
 //----------------------------------------------------------------------//
 Function ConfigureRMChart( RMChart )
@@ -2615,3 +2620,26 @@ Static Function DoModalWindow()
 
    Return nil
 //----------------------------------------------------------------------//
+Function Experiment_1()
+   hb_threadStart( {|| ExperimentWGU() } )
+   Return nil
+//----------------------------------------------------------------------//
+Static Function ExperimentWGU()
+   Local nKey
+
+   hb_gtReload( 'WGU' )
+   //hb_gtInfo( HB_GTI_RESIZABLE, .f. )
+   hb_gtInfo( HB_GTI_WINTITLE, 'WGU Dialog Under GT Control' )
+
+   do while .t.
+      nKey := inkey( 0.1 )
+      if nKey <> 0
+//hb_toOutDebug( 'inkey == %i rows=%i cols=%i', nKey, maxrow(), maxcol() )
+      endif
+      if nKey == 27
+         exit
+      endif
+   enddo
+   Return NIL
+//----------------------------------------------------------------------//
+

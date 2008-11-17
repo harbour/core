@@ -1,4 +1,4 @@
-/*
+﻿/*
  * $Id$
  */
 
@@ -7,6 +7,31 @@
    For example:
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
+
+2008-11-16 23:22 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+    ! Resizing: some recent changes reverted back.
+    ; TODO: reversal in GTWVT also. It breaks some pre-initialization issues.
+
+  * harbour/contrib/gtwvg/wvgax.prg
+    ! Better detection if COM object fails to be created.
+
+  + harbour/contrib/gtwvg/wvggui.c
+  + harbour/contrib/gtwvg/wvggui.h
+    + Initial commit of pure GUI GT based on GTWVG named WGU.
+      ; Subject to heavy changes onwards.
+        WGU will become the basis of WvgDialog() plus inherited 
+        sub-classes.
+
+  * harbour/contrib/gtwvg/makefile
+  * harbour/contrib/gtwvg/common.mak
+    + Added new files.
+
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    + Now <Dialog One> is working properly. 
+      It now opens in new thread if it is odd and as usual if even.
+    + <Modeless Dialogs><Experiment #1>
+      ! Just to have experiments on WGU GT.
 
 2008-11-16 23:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/gtwvg/wvgsink.c

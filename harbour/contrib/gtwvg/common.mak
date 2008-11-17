@@ -23,6 +23,7 @@ LIB_OBJS = \
    $(OBJ_DIR)wvgutils$(OBJEXT) \
    $(OBJ_DIR)wvgsink$(OBJEXT) \
    $(OBJ_DIR)wvgwin$(OBJEXT) \
+   $(OBJ_DIR)wvggui$(OBJEXT) \
 
 all: \
    $(LIB_PATH) \

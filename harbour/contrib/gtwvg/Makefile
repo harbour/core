@@ -14,6 +14,7 @@ C_SOURCES=\
 	wvgutils.c \
 	wvgwin.c \
 	wvgsink.c \
+	wvggui.c \
 
 PRG_SOURCES=\
 	wvgclass.prg \
