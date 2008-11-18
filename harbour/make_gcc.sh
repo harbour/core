@@ -163,7 +163,8 @@ export HB_GT_LIST="$HB_GT_LIST $GT_LIST"
 export HB_GT_OBJS="$HB_GT_OBJS $GT_OBJS"
 export CC LD
 
-mkdir -p obj/$HB_CC_NAME lib/$HB_CC_NAME bin/$HB_CC_NAME
+mkdir -p obj/$HB_CC_NAME/mt obj/$HB_CC_NAME/mt_dll obj/$HB_CC_NAME/dll \
+         lib/$HB_CC_NAME bin/$HB_CC_NAME
 
 # Convert common.mak (for BCC/VC) to common.cf (GCC)
 
@@ -175,6 +176,7 @@ then
 fi
 
 sed -e 's/;/ /g'             \
+    -e 's!\\\\!/!g'          \
     -e 's!\\\(.\)!/\1!g'     \
     -e 's/^!if "\($([A-Za-z0-9_]*)\)" != "\(.*\)"/ifneq (\1,\2)/g'      \
     -e 's/^!if "\($([A-Za-z0-9_]*)\)" == "\(.*\)"/ifeq (\1,\2)/g'       \
@@ -184,6 +186,7 @@ sed -e 's/;/ /g'             \
     -e 's/^!endif/endif/g'                                              \
     -e 's/^!include/include/g'                                          \
     -e 's/^HB_BUILD_TARGETS \=/HB_BUILD_TARGETS \:\=/g'                 \
+    -e 's/^HBFLAGSCMN     \=/HBFLAGSCMN     \:\=/g'                     \
     common.mak > common.cf
 
 $MAKE -r -f make_gcc.mak $MK_USR $*

@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-18 01:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gcc.sh
+  * harbour/make_gcc.mak
+    ! fixed GCC builds broken by modifications in common.mak
+
 2008-11-16 23:22 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
     ! Resizing: some recent changes reverted back.

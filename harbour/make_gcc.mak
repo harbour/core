@@ -130,17 +130,22 @@ VMMT_LIB_OBJS = $(subst $(OBJ_DIR),$(MT_OBJ_DIR),$(VM_LIB_OBJS))
 
 # Do not perform an extra compilation phase for shared libraries
 # if gcc -fPIC compilation flag is already passed to a makefile
-ifeq ($(findstring -fPIC,$(C_USR)),-fPIC)
-DLL_OBJS := $(TMP_DLL_OBJS)
+ifneq ($(findstring -fPIC,$(C_USR)),)
+DLL_OBJS = $(TMP_DLL_OBJS) $(VM_DLL_OBJS)
+MTDLL_OBJS = $(TMP_DLL_OBJS) $(VM_DLL_OBJS:$(OBJ_DIR)/%=$(MT_OBJ_DIR)/%)
 else
-DLL_OBJS := $(patsubst $(OBJ_DIR)%,$(DLL_OBJ_DIR)%,$(TMP_DLL_OBJS))
+DLL_OBJS := $(patsubst $(OBJ_DIR)/%,$(DLL_OBJ_DIR)/%,$(TMP_DLL_OBJS) $(VM_DLL_OBJS))
+MTDLL_OBJS := $(TMP_DLL_OBJS:$(OBJ_DIR)/%=$(DLL_OBJ_DIR)/%) $(VM_DLL_OBJS:$(OBJ_DIR)/%=$(MTDLL_OBJ_DIR)/%)
 endif
+
 
 # DLLs on Windows require IMPORT lib
 # and an additional compiler phase
 ifneq ($(findstring $(HB_ARCHITECTURE),w32),)
-HB_DLL_IMPLIB := $(HARBOUR_DLL:$(DLLEXT)=$(LIBEXT))
+HB_DLL_IMPLIB := $(HARBOUR_DLL:%$(DLLEXT)=%$(LIBEXT))
 HB_IMPLIB_PART := -Wl,--out-implib,$(HB_DLL_IMPLIB)
+HB_DLL_IMPLIBMT := $(HARBOURMT_DLL:%$(DLLEXT)=%$(LIBEXT))
+HB_IMPLIBMT_PART := -Wl,--out-implib,$(HB_DLL_IMPLIBMT)
 endif
 
 #**********************************************************
@@ -242,9 +247,18 @@ $(DLL_OBJ_DIR)/%$(OBJEXT) : %.prg $(HARBOUR_EXE)
 	$(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)/ $<
 	$(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)/$(<F:.prg=.c)
 #----------------------------------------------------------
+# General *.prg --> *.o COMPILE rule for SHARED MT Libraries
+$(MTDLL_OBJ_DIR)/%$(OBJEXT) : %.prg $(HARBOUR_EXE)
+	$(HB) $(HARBOURFLAGSDLL) -o$(MTDLL_OBJ_DIR)/ $<
+	$(CC) $(CLIBFLAGSDLL) $(CFLAGSMT) -o$@ $(MTDLL_OBJ_DIR)/$(<F:.prg=.c)
+#----------------------------------------------------------
 # General *.c --> *.o COMPILE rule for SHARED Libraries
 $(DLL_OBJ_DIR)/%$(OBJEXT) : %.c
 	$(CC) $(CLIBFLAGSDLL) -o$@ $<
+#----------------------------------------------------------
+# General *.c --> *.o COMPILE rule for SHARED MT Libraries
+$(MTDLL_OBJ_DIR)/%$(OBJEXT) : %.c
+	$(CC) $(CLIBFLAGSDLL) $(CFLAGSMT) -o$@ $<
 #**********************************************************
 # General *.o -> *.a LIBRARY CREATION rule
 #$(LIB_DIR)/%$(LIBEXT) : %$(OBJEXT)
@@ -428,20 +442,19 @@ $(HARBOUR_DLL) :: StdLibs
 $(HARBOUR_DLL) :: $(DLL_OBJS)
 	$(CC) $(LDFLAGSDLL) -o $@ $^ $(HB_OS_LIBS) $(HB_IMPLIB_PART)
 #**********************************************************
+$(HARBOURMT_DLL) :: StdLibs
+$(HARBOURMT_DLL) :: $(MTDLL_OBJS)
+	$(CC) $(LDFLAGSDLL) -o $@ $^ $(HB_OS_LIBS) $(HB_IMPLIBMT_PART)
+#**********************************************************
 # DLL EXECUTABLE Targets
 #**********************************************************
 $(HBTESTDLL_EXE) :: $(HARBOUR_DLL)
-$(HBTESTDLL_EXE) :: $(DLL_OBJ_DIR)/mainstd$(OBJEXT) \
-                    $(HBTEST_EXE_OBJS:$(OBJ_DIR)/%=$(DLL_OBJ_DIR)/%)
+$(HBTESTDLL_EXE) :: $(OBJ_DIR)/mainstd$(OBJEXT) $(HBTEST_EXE_OBJS)
 	$(CC) $(CEXEFLAGSDLL) -o$@ $^ -L$(BIN_DIR) -l$(HARBOUR_DLL:$(BIN_DIR)/lib%.so=%) $(HB_OS_LIBS)
 #**********************************************************
 $(HBRUNDLL_EXE) :: $(HARBOUR_DLL)
-$(HBRUNDLL_EXE) :: $(DLL_OBJ_DIR)/mainstd$(OBJEXT) \
-                    $(HBRUN_EXE_OBJS:$(OBJ_DIR)/%=$(DLL_OBJ_DIR)/%)
+$(HBRUNDLL_EXE) :: $(OBJ_DIR)/mainstd$(OBJEXT) $(HBRUN_EXE_OBJS)
 	$(CC) $(CEXEFLAGSDLL) -o$@ $^ -L$(BIN_DIR) -l$(HARBOUR_DLL:$(BIN_DIR)/lib%.so=%) $(COMPILER_LIB) $(HB_OS_LIBS)
-#----------------------------------------------------------
-$(DLL_OBJ_DIR)/mainstd$(OBJEXT) : $(VM_DIR)/mainstd.c
-	$(CC) $(CLIBFLAGS) -o$@ $<
 #**********************************************************
 
 #**********************************************************
@@ -464,10 +477,10 @@ $(DLL_OBJ_DIR)/pptable.c : $(HBPP) $(INCLUDE_DIR)/hbstdgen.ch $(INCLUDE_DIR)/std
 ifeq ("$(HB_REBUILD_PARSER)","yes")
 
 $(OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.y
-	bison --no-line -d $** -o$@
+	bison --no-line -d $^ -o$@
 
 $(OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.y
-	bison --no-line -d $** -o$@
+	bison --no-line -d $^ -o$@
 
 else
 
@@ -484,28 +497,23 @@ endif
 #**********************************************************
 
 #$(OBJ_DIR)/macrol.c : $(MACRO_DIR)/macro.l
-#	flex -Phb_macro -i -8 -o$@ $**
+#	flex -Phb_macro -i -8 -o$@ $^
 
 #$(OBJ_DIR)/harbourl.c : $(COMPILER_DIR)/harbour.l
-#	flex -Phb_comp -i -8 -o$@ $**
+#	flex -Phb_comp -i -8 -o$@ $^
 
 #$(OBJ_DIR)/harbourl$(OBJEXT) : $(OBJ_DIR)/harbourl.c
 #$(OBJ_DIR)/macrol$(OBJEXT)   : $(OBJ_DIR)/macrol.c
 
 #**********************************************************
 
-$(OBJ_DIR)/harboury$(OBJEXT) : $(OBJ_DIR)/harboury.c
-$(OBJ_DIR)/macroy$(OBJEXT)   : $(OBJ_DIR)/macroy.c
-
-#**********************************************************
-
 ifeq ("$(HB_REBUILD_PARSER)","yes")
 
 $(DLL_OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.y
-	bison --no-line -d $** -o$@
+	bison --no-line -d $^ -o$@
 
 $(DLL_OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.y
-	bison --no-line -d $** -o$@
+	bison --no-line -d $^ -o$@
 
 else
 
@@ -522,10 +530,10 @@ endif
 #**********************************************************
 
 #$(DLL_OBJ_DIR)/macrol.c : $(MACRO_DIR)/macro.l
-#	flex -Phb_macro -i -8 -o$@ $**
+#	flex -Phb_macro -i -8 -o$@ $^
 
 #$(DLL_OBJ_DIR)/harbourl.c : $(COMPILER_DIR)/harbour.l
-#	flex -Phb_comp -i -8 -o$@ $**
+#	flex -Phb_comp -i -8 -o$@ $^
 
 #$(DLL_OBJ_DIR)/harbourl$(OBJEXT) : $(DLL_OBJ_DIR)/harbourl.c
 #$(DLL_OBJ_DIR)/macrol$(OBJEXT)   : $(DLL_OBJ_DIR)/macrol.c
@@ -546,6 +554,7 @@ CLEAN: doClean
 doClean:
 	-$(DEL) $(HB_BUILD_TARGETS)
 	-$(DEL) $(HB_DLL_IMPLIB)
+	-$(DEL) $(HB_DLL_IMPLIBMT)
 	-$(DEL) $(OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(OBJ_DIR)/*.c
 	-$(DEL) $(OBJ_DIR)/*.h
