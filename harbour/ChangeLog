@@ -1598,8 +1598,8 @@
     ! fixed printf() format
 
     TOFIX for author:
-	mysqldd.c:258: warning: ‘pItemEof’ may be used uninitialized in this function
-	sqlbase.c:509: warning: comparison of unsigned expression < 0 is always false
+    mysqldd.c:258: warning: pItemEof may be used uninitialized in this function
+    sqlbase.c:509: warning: comparison of unsigned expression < 0 is always false
     Mindaugas can you look at it?
 
 2008-11-05 23:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
