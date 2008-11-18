@@ -140,6 +140,9 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDi
    RETURN Self
 //----------------------------------------------------------------------//
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDialog
+
+   ::WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
    RETURN Self
 //----------------------------------------------------------------------//
 METHOD destroy() CLASS WvgDialog

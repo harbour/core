@@ -9,6 +9,13 @@
 */
 
 
+2008-11-18 00:43 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvggui.c
+  * harbour/contrib/gtwvg/common.mak
+  * harbour/contrib/gtwvg/wvgdlg.prg
+  * harbour/contrib/gtwvg/wvgwnd.prg
+    ! Minor typos - strict Harbour code quality warnings.
+
 2008-11-17 23:59 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/Makefile
   * harbour/contrib/gtwvg/common.mak
