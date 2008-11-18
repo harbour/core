@@ -744,12 +744,19 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
 #ifdef HB_FM_STATISTICS
    if( !s_fInited )
    {
-      if( hb_getenv_buffer( "HB_FM_STAT", NULL, 0 ) )
-         s_fStatistic = TRUE;
-      else if( hb_getenv_buffer( "HB_NO_FM_STAT", NULL, 0 ) )
-         s_fStatistic = FALSE;
+      char buffer[ 5 ];
+
+      if( hb_getenv_buffer( "HB_FM_STAT", buffer, sizeof( buffer ) ) )
+      {
+         if( hb_stricmp( "yes", buffer ) == 0 )
+            s_fStatistic = TRUE;
+         else if( hb_stricmp( "no", buffer ) == 0 )
+            s_fStatistic = FALSE;
+      }
+#ifndef HB_FM_STATISTICS_DYN_OFF
       else
          s_fStatistic = TRUE;  /* enabled by default */
+#endif
 
       s_fInited = TRUE;
    }

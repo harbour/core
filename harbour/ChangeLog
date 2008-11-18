@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-18 02:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/gtwvt/gtwvt.c
+    ! Fix to previous fix to maximize the window when the initial 
+      size would be too big to fit on screen (stupid omission).
+      Now the previously cited sizing problem is alright.
+
+  * source/vm/fm.c
+    + Replaced HB_NO_FM_STAT and HB_FM_STAT envvars 
+      with HB_FM_STAT=yes|no (maybe 0|1 or on|off woud be 
+      better or could be accepted as alternatives or 
+      replacement). This is to avoid ambiguity when both 
+      envvars were set or the app default is not known.
+    + Added HB_FM_STATISTICS_DYN_OFF to turn off mem tracking 
+      by default when stat module is linked in.
+
+  * source/common/hbverdsp.c
+    * Minor cosmetic.
+
 2008-11-18 01:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gcc.sh
   * harbour/make_gcc.mak

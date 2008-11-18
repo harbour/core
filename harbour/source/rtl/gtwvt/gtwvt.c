@@ -765,13 +765,12 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 
    if( wi.left < 0 || wi.top < 0 )
    {
+      pWVT->bMaximized = TRUE;
+
       if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
          hb_gt_wvt_FitSize( pWVT );
       else
-      {
          hb_gt_wvt_FitRows( pWVT );
-         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
-      }
 
       /* resize the window to get the specified number of rows and columns */
       GetWindowRect( pWVT->hWnd, &wi );
@@ -809,7 +808,7 @@ static void hb_gt_wvt_SetWindowTitle( HWND hWnd, const char * title )
 
 static BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
 {
-   TCHAR buffer[WVT_MAX_TITLE_SIZE];
+   TCHAR buffer[ WVT_MAX_TITLE_SIZE ];
    int iResult;
 
    iResult = GetWindowText( hWnd, buffer, WVT_MAX_TITLE_SIZE );
@@ -1636,9 +1635,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
                   hb_gt_wvt_FitSize( pWVT );
                else
-               {
                   hb_gt_wvt_FitRows( pWVT );
-               }
 
                /* Disable "maximize" button */
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
