@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-18 03:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+    * Two recent TODOs in entries marked as [DONE] by this change:
+      2008-11-18 01:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+      (It was "broken" due to enhancements, see the TODOs. Thanks anyway.)
+
 2008-11-18 02:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/gtwvt/gtwvt.c
     ! Fix to previous fix to maximize the window when the initial 
@@ -364,7 +370,7 @@
   * utils/hbtest/Makefile
   * utils/hbrun/Makefile
     % Setup to build shipped Harbour executables with -gc0.
-    ; TODO: Please update make_gcc.mak.
+    ; TODO: Please update make_gcc.mak. [DONE]
 
   * ChangeLog
     + Marked one change as [TOMERGE 1.0]
@@ -437,7 +443,7 @@
     + Added generation of MT harbour .dlls for BCC and MSVC.
     ; TOFIX: 'hbmk -shared -mt' doesn't seem to work, resulting 
              app simply exits for both BCC and MSVC. [DONE]
-    ; TODO: Please update make_gcc.mak.
+    ; TODO: Please update make_gcc.mak. [DONE]
 
 2008-11-11 04:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
