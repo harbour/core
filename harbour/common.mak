@@ -8,7 +8,7 @@
 # ---------------------------------------------------------------
 
 #**********************************************************
-# Common makefile.bc and makefile.vc definitions
+# Common make_*.mak definitions
 #**********************************************************
 
 #
@@ -91,16 +91,16 @@ INCLUDE_DIR = include
 
 HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -km -l
 !if "$(HB_BUILD_DEBUG)" == "yes"
-HBFLAGSCMN     = $(HBFLAGSCMN) -l-
+HBFLAGSDBG     = -l-
 !endif
 !if "$(HB_BUILD_WINCE)" == "yes"
-HBFLAGSCMN     = $(HBFLAGSCMN) -D__PLATFORM__WINCE
+HBFLAGSPLT     = -D__PLATFORM__WINCE
 !else
-HBFLAGSCMN     = $(HBFLAGSCMN) -gc3
+HBFLAGSPLT     = -gc3
 !endif
-HARBOURFLAGS   = -n $(HBFLAGSCMN) $(PRG_USR)
-HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN) $(PRG_USR)
-HARBOURFLAGSEXE= -n $(HBFLAGSCMN) -gc0 $(PRG_USR)
+HARBOURFLAGS   = -n  $(HBFLAGSCMN) $(HBFLAGSDBG) $(HBFLAGSPLT) $(PRG_USR)
+HARBOURFLAGSDLL= -n1 $(HBFLAGSCMN) $(HBFLAGSDBG) $(HBFLAGSPLT) $(PRG_USR)
+HARBOURFLAGSEXE= -n  $(HBFLAGSCMN) $(HBFLAGSDBG) $(HBFLAGSPLT) -gc0 $(PRG_USR)
 
 #**********************************************************
 # Directory macros. These should never have to change.
@@ -1231,7 +1231,7 @@ DISABLED_SHARED_MODULES=    \
 # Our default Targets
 #
 
-HB_BUILD_TARGETS = \
+HB_BUILD_TARGETS_MAIN = \
     $(HBMAINSTD_LIB)        \
     $(HBMAINWIN_LIB)        \
     $(COMMON_LIB)           \
@@ -1271,18 +1271,20 @@ HB_BUILD_TARGETS = \
 # variable HB_BUILD_DLL to yes
 
 !if "$(HB_BUILD_DLL)" != "no"
-HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(HARBOUR_DLL) $(HARBOURMT_DLL) $(HBTESTDLL_EXE) $(HBRUNDLL_EXE)
+HB_BUILD_TARGETS = $(HB_BUILD_TARGETS_MAIN) $(HARBOUR_DLL) $(HARBOURMT_DLL) $(HBTESTDLL_EXE) $(HBRUNDLL_EXE)
+!else
+HB_BUILD_TARGETS = $(HB_BUILD_TARGETS_MAIN)
 !endif
 
 #**********************************************************
-# Allows to do cross-compiling if neccesary.
+# Allows to do cross-compiling if necessary.
 #**********************************************************
 
 !ifndef HB
 HB = $(HARBOUR_EXE)
 !endif
 
-# allows to do cross-compiling if neccesary.
+# allows to do cross-compiling if necessary.
 !ifndef HBPP
 HBPP = $(HBPP_EXE)
 !endif

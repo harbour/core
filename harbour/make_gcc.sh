@@ -185,8 +185,6 @@ sed -e 's/;/ /g'             \
     -e 's/^!else/else/g'                                                \
     -e 's/^!endif/endif/g'                                              \
     -e 's/^!include/include/g'                                          \
-    -e 's/^HB_BUILD_TARGETS \=/HB_BUILD_TARGETS \:\=/g'                 \
-    -e 's/^HBFLAGSCMN     \=/HBFLAGSCMN     \:\=/g'                     \
     common.mak > common.cf
 
 $MAKE -r -f make_gcc.mak $MK_USR $*
