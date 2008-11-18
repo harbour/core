@@ -256,28 +256,6 @@ typedef struct
 
 typedef struct
 {
-   HPEN      penWhite;                      // White pen to draw GDI elements
-   HPEN      penBlack;                      // Black pen to draw GDI elements
-   HPEN      penWhiteDim;                   // White dim pen to draw GDI elements
-   HPEN      penDarkGray;                   // Dark gray pen to draw GDI elements
-   HPEN      penGray;                       // Gray pen equivilant to Clipper White
-   HPEN      penNull;                       // Null pen
-   HPEN      currentPen;                    // Handle to current pen settable at runtime
-   HBRUSH    currentBrush;                  // Handle to current brush settable by runtime
-   HBRUSH    diagonalBrush;                 // Handle to diaoganl brush to draw scrollbars
-   HBRUSH    solidBrush;                    // Handle to solid brush
-   HBRUSH    wvtWhiteBrush;                 // Wvt specific White colored brush
-   IPicture  *iPicture[ WVT_PICTURES_MAX ]; // Array to hold the Picture Streams to avoid recurring loading and unloading
-   HFONT     hUserFonts[ WVT_FONTS_MAX ] ;  // User defined font handles
-   HPEN      hUserPens[ WVT_PENS_MAX ];     // User defined pens
-   HINSTANCE hMSImg32;                      // Handle to the loaded library msimg32.dll
-   wvtGradientFill pfnGF;                   // Pointer to Address of the GradientFill function in MSImg32.dll
-   wvtSetLayeredWindowAttributes pfnLayered;// Pointer to set Windows attribute - transparency.
-
-} HB_GUIDATA, * PHB_GUIDATA;
-
-typedef struct
-{
    PHB_GT   pGT;                            /* core GT pointer */
    int      iHandle;                        /* window number */
 
@@ -320,12 +298,10 @@ typedef struct
 
    int      CodePage;                       /* Code page to use for display characters */
    BOOL     Win9X;                          /* Flag to say if running on Win9X not NT/2000/XP */
-   BOOL     AltF4Close;                     /* Can use Alt+F4 to close application */
    BOOL     CentreWindow;                   /* True if window is to be Reset into centre of window */
 
    BOOL     IgnoreWM_SYSCHAR;
 
-   BOOL     bMaximized;                     /* Flag is set when window has been maximized */
    BOOL     bResizable;
    BOOL     bClosable;
 
@@ -338,9 +314,6 @@ typedef struct
 
    int       iFactor;                       // Transparency factor 0~255
 
-   HDC       hdc;                           // Handle to Windows Device Context
-   HDC       hCompDC;                       // Compatible DC to _s.hdc
-
    int       LastMenuEvent;                 // Last menu item selected
    int       MenuKeyEvent;                  // User definable event number for windows menu command
    BOOL      InvalidateWindow;              // Flag for controlling whether to use ScrollWindowEx()
@@ -351,13 +324,6 @@ typedef struct
    BOOL      bSetFocus;
    BOOL      bKillFocus;
 
-   PHB_DYNS  pSymWVT_PAINT;                 // Stores pointer to WVT_PAINT function
-   PHB_DYNS  pSymWVT_SETFOCUS;              // Stores pointer to WVT_SETFOCUS function
-   PHB_DYNS  pSymWVT_KILLFOCUS;             // Stores pointer to WVT_KILLFOCUS function
-   PHB_DYNS  pSymWVT_MOUSE;                 // Stores pointer to WVT_MOUSE function
-   PHB_DYNS  pSymWVT_TIMER;                 // Stores pointer to WVT_TIMER function
-   PHB_DYNS  pSymWVT_KEY;
-
    HINSTANCE hMSImg32;                      // Handle to the loaded library msimg32.dll
    wvtGradientFill pfnGF;                   // Pointer to Address of the GradientFill function in MSImg32.dll
    HINSTANCE hUser32;                       // Handle to the loaded library user32.dll
@@ -366,8 +332,9 @@ typedef struct
    PHB_GT_PARAMS  pPP;                      // Presentation Parameters
 
    BOOL      bTracking;                     // To track if mouse has eneter or left the window area
-
    BOOL      bResizing;                     // To know when it is in resizing mode
+   int       width;
+   int       height;
 
 } HB_GTWVT, * PHB_GTWVT;
 

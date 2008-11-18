@@ -2994,6 +2994,7 @@ HB_FUNC( WVT_SAVESCREEN )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
+   HDC      hCompDC;
    HBITMAP  hBmp, oldBmp;
    POINT    xy = { 0,0 };
    int      iTop, iLeft, iBottom, iRight, iWidth, iHeight;
@@ -3011,10 +3012,18 @@ HB_FUNC( WVT_SAVESCREEN )
    iHeight   = iBottom - iTop + 1;
 
    hBmp      = CreateCompatibleBitmap( _s->hdc, iWidth, iHeight ) ;
+
+   #if 0
    oldBmp = (HBITMAP) SelectObject( _s->hCompDC, hBmp );
    BitBlt( _s->hCompDC, 0, 0, iWidth, iHeight, _s->hdc, iLeft, iTop, SRCCOPY );
    SelectObject( _s->hCompDC, oldBmp );
-
+   #else
+   hCompDC = CreateCompatibleDC( _s->hdc );
+   oldBmp = (HBITMAP) SelectObject( hCompDC, hBmp );
+   BitBlt( hCompDC, 0, 0, iWidth, iHeight, _s->hdc, iLeft, iTop, SRCCOPY );
+   SelectObject( hCompDC, oldBmp );
+   DeleteDC( hCompDC );
+   #endif
    hb_arraySetNI( info, 1, iWidth );
    hb_arraySetNI( info, 2, iHeight );
    hb_arraySetNInt( info, 3, ( HB_PTRDIFF ) hBmp );
@@ -3033,6 +3042,7 @@ HB_FUNC( WVT_RESTSCREEN )
    POINT   xy = { 0,0 };
    int     iTop, iLeft, iBottom, iRight, iWidth, iHeight;
    HBITMAP hBmp;
+   HDC     hCompDC;
 
    BOOL    bResult = FALSE;
    BOOL    bDoNotDestroyBMP = ISNIL( 6 ) ? FALSE : hb_parl( 6 );
@@ -3048,6 +3058,38 @@ HB_FUNC( WVT_RESTSCREEN )
    iWidth  = iRight - iLeft + 1 ;
    iHeight = iBottom - iTop + 1 ;
 
+   #if 1
+   hCompDC = CreateCompatibleDC( _s->hdc );
+   hBmp    = (HBITMAP) SelectObject( hCompDC, ( HBITMAP ) ( HB_PTRDIFF ) hb_parnint( 5,3 ) );
+   if ( hBmp )
+   {
+      if ( ( iWidth == hb_parni( 5,1 ) )  && ( iHeight == hb_parni( 5,2 ) ) )
+      {
+         if ( BitBlt( _s->hdc,
+                      iLeft,   iTop,   iWidth,  iHeight,
+                      hCompDC,
+                      0,  0,
+                      SRCCOPY ) )
+         {
+            bResult = TRUE;
+         }
+      }
+      else
+      {
+         if ( StretchBlt( _s->hdc,
+                          iLeft,   iTop,   iWidth,  iHeight,
+                          hCompDC,
+                          0,  0,
+                          hb_parni( 5,1 ),
+                          hb_parni( 5,2 ),
+                          SRCCOPY ) )
+         {
+            bResult = TRUE;
+         }
+      }
+   }
+   DeleteDC( hCompDC );
+   #else
    hBmp    = (HBITMAP) SelectObject( _s->hCompDC, ( HBITMAP ) ( HB_PTRDIFF ) hb_parnint( 5,3 ) );
    if ( hBmp )
    {
@@ -3084,6 +3126,7 @@ HB_FUNC( WVT_RESTSCREEN )
          }
       }
    }
+   #endif
 
    SelectObject( _s->hCompDC, hBmp );
 

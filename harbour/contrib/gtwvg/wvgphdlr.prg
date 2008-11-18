@@ -67,12 +67,16 @@
 
 #include 'hbclass.ch'
 #include 'common.ch'
+#include 'hbgtinfo.ch'
+#include 'hbgtwvg.ch'
+#include 'wvtwin.ch'
+#include 'inkey.ch'
 
 //----------------------------------------------------------------------//
 
 CLASS WvgPartHandler
 
-   DATA     Cargo
+   DATA     cargo
 
    METHOD   init( oParent, oOwner )
    METHOD   create( oParent, oOwner )
@@ -88,6 +92,8 @@ CLASS WvgPartHandler
    METHOD   setName( nNameId )
    METHOD   setOwner( oWvg )
    METHOD   setParent( oWvg )
+
+   METHOD   notifier( nEvent, xParams )
 
    DATA     hChildren                             INIT    hb_hash()
    DATA     nNameId
@@ -226,3 +232,120 @@ METHOD setParent( oWvg ) CLASS WvgPartHandler
 
 //----------------------------------------------------------------------//
 
+METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
+   Local aPos, nReturn := 0
+
+   DO CASE
+
+   CASE nEvent == HB_GTE_MOUSE
+      if     xParams[ 1 ] == WM_MOUSEHOVER
+         aPos := { xParams[ 3 ], xParams[ 4 ] }
+      elseif xParams[ 1 ] == WM_MOUSELEAVE
+         // Nothing
+      else
+         aPos := if( ::mouseMode == 2, { xParams[ 3 ], xParams[ 4 ] }, { xParams[ 5 ], xParams[ 6 ] } )
+      endif
+
+      SWITCH xParams[ 1 ]
+
+      case WM_MOUSEHOVER
+         if hb_isBlock( ::sl_enter )
+            eval( ::sl_enter, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_MOUSELEAVE
+         if hb_isBlock( ::sl_leave )
+            eval( ::sl_leave, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_RBUTTONDOWN
+         if hb_isBlock( ::sl_rbDown )
+            eval( ::sl_rbDown, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_LBUTTONDOWN
+         if hb_isBlock( ::sl_lbDown )
+            eval( ::sl_lbDown, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_RBUTTONUP      ////
+         if hb_isBlock( ::sl_rbUp )
+            eval( ::sl_rbUp, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_LBUTTONUP      ////
+         if hb_isBlock( ::sl_lbUp )
+            eval( ::sl_lbUp, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_RBUTTONDBLCLK
+         if hb_isBlock( ::sl_rbDblClick )
+            eval( ::sl_rbDblClick, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_LBUTTONDBLCLK
+         if hb_isBlock( ::sl_lbDblClick )
+            eval( ::sl_lbDblClick, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_MBUTTONDOWN
+         if hb_isBlock( ::sl_mbDown )
+            eval( ::sl_mbDown, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_MBUTTONUP       ////
+         if hb_isBlock( ::sl_mbClick )
+            eval( ::sl_mbClick, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_MBUTTONDBLCLK
+         if hb_isBlock( ::sl_mbDblClick )
+            eval( ::sl_mbDblClick, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_MOUSEMOVE
+         if hb_isBlock( ::sl_motion )
+            eval( ::sl_motion, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_MOUSEWHEEL
+         if hb_isBlock( ::sl_wheel )
+            eval( ::sl_wheel, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_NCMOUSEMOVE
+         EXIT
+      END
+
+   CASE nEvent == HB_GTE_KEYBOARD
+      if hb_isBlock( ::keyboard )
+         eval( ::keyboard, xParams, NIL, Self )
+      endif
+
+   CASE nEvent == HB_GTE_SETFOCUS
+      if hb_isBlock( ::setInputFocus )
+         eval( ::setInputFocus, NIL, NIL, Self )
+      endif
+      ::lHasInputFocus := .t.
+
+   CASE nEvent == HB_GTE_KILLFOCUS
+      if hb_isBlock( ::killInputFocus )
+         eval( ::killInputFocus, NIL, NIL, Self )
+      endif
+      ::lHasInputFocus := .f.
+
+   CASE nEvent == HB_GTE_RESIZED
+      if hb_isBlock( ::sl_resize )
+         eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
+      endif
+
+   CASE nEvent == HB_GTE_CLOSE
+      if hb_isBlock( ::close )
+         nReturn := eval( ::close, NIL, NIL, Self )
+      endif
+
+   ENDCASE
+
+   RETURN nReturn
+
+//----------------------------------------------------------------------//

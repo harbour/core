@@ -2245,13 +2245,21 @@ FUNCTION DrawSlide( hDlg, nSlide )
 Function ExecuteActiveX( nActiveX )
    Local oCrt
 
-   oCrt := WvgCrt():New( , , { 5,5 }, { 29,59 }, , .f. )
-   oCrt:closable := .f.
-   oCrt:create()
+   #if 0
+      oCrt := WvgCrt():New( , , { 5,5 }, { 29,59 }, , .f. )
 
-   SetCursor( 0 )
-   SetColor( 'N/W' )
-   CLS
+      oCrt:closable := .f.
+      oCrt:create()
+
+      SetCursor( 0 )
+      SetColor( 'N/W' )
+      CLS
+   #else
+      oCrt := WvgDialog():init( , , { 30,30 }, { 400,500 }, , .f. )
+
+      oCrt:closable := .f.
+      oCrt:create()
+   #endif
 
    oCrt:show()
 
@@ -2260,8 +2268,14 @@ Function ExecuteActiveX( nActiveX )
    oCrt:Destroy()
    Return nil
 //----------------------------------------------------------------------//
-Static Function Resize( oCom )
-   Win_MoveWindow( oCom:hWnd, 0, 0, hb_gtInfo( HB_GTI_SCREENWIDTH ),  hb_gtInfo( HB_GTI_SCREENHEIGHT ), .F. )
+Static Function ResizeMe( oCom )
+   Local nW, nH
+
+   nW := hb_gtInfo( HB_GTI_SCREENWIDTH  )
+   nH := hb_gtInfo( HB_GTI_SCREENHEIGHT )
+
+   oCom:SetSize( { nW, nH }, .t. )
+
    Return nil
 //----------------------------------------------------------------------//
 Static Function ExeActiveX( oCrt, nActiveX )
@@ -2322,7 +2336,6 @@ Static Function ExeActiveX( oCrt, nActiveX )
 
    oCom:create()
    if hb_isObject( oCom )
-
       // After :CREATE() Messages
       //
       if nActiveX == 1
@@ -2339,9 +2352,13 @@ Static Function ExeActiveX( oCrt, nActiveX )
 
       do while !( lEnd )
          nKey := inkey()
-
+#if 0
+if nKey <> 0
+   hb_toOutDebug( 'nKey = %i : %i ', nKey, HB_K_RESIZE )
+endif
+#endif
          if nKey == HB_K_RESIZE
-            Resize( oCom )
+            ResizeMe( oCom )
 
          elseif nKey == K_F12
             if nActiveX == 1
@@ -2363,12 +2380,13 @@ Static Function ExeActiveX( oCrt, nActiveX )
                if nTurn > 6
                   nTurn := 1
                endif
+               sData := NIL
                sData := ''
 
                do case
                case nTurn == 1
                   hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] ' + 'Stacked Bars' )
-                  SetMode( 30,100 )
+                  //SetMode( 30,100 )
 
                   sData += "00003600|00004450|000051|000061|000073|00008-6972|00009412|00011Tahoma|100011|10"
                   sData += "0035|1000410|10005-5|10006-5|1000911|100101|100111|100181|100200|1002150000|1002"
@@ -2389,7 +2407,7 @@ Static Function ExeActiveX( oCrt, nActiveX )
 
                case nTurn == 2
                   hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'Floating Bars' )
-                  SetMode( 20,90 )
+                  //SetMode( 20,90 )
 
                   sData += "00003550|00004300|000051|000073|00008-2894893|00009412|00011Tahoma|100011|100035"
                   sData += "|100045|10005-5|10006-5|1000911|100101|100111|100131|100181|100201|1002113|10022"
@@ -2404,7 +2422,7 @@ Static Function ExeActiveX( oCrt, nActiveX )
 
                case nTurn == 3
                   hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'Four Regions' )
-                  SetMode( 40,120 )
+                  //SetMode( 40,120 )
 
                   sData += "00003700|00004500|000054|000061|000071|00008-984833|00009412|00011Tahoma|100011|"
                   sData += "100032|100042|10005348|10006248|1000910|100101|100111|100181|100200|10021100|100"
@@ -2437,7 +2455,7 @@ Static Function ExeActiveX( oCrt, nActiveX )
 
                case nTurn == 4
                   hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'10 Biggest Companies' )
-                  SetMode( 25,90 )
+                  //SetMode( 25,90 )
 
                   sData += "00003670|00004450|000051|000061|000071|00008-10185235|00009412|00011Tahoma|10001"
                   sData += "1|100035|1000410|10005-5|10006-5|1000912|100101|100111|100131|100181|10020100000"
@@ -2455,7 +2473,7 @@ Static Function ExeActiveX( oCrt, nActiveX )
 
                case nTurn == 5
                   hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'Grouped Bars' )
-                  SetMode( 25,80 )
+                  //SetMode( 25,80 )
 
                   sData += "00003600|00004450|000051|000061|000075|00008-2|00009412|00010paper.jpg|00011Taho"
                   sData += "ma|100011|100035|100045|10005-5|10006-5|1000910|100101|100111|100181|100200|1002"
@@ -2468,7 +2486,7 @@ Static Function ExeActiveX( oCrt, nActiveX )
 
                case nTurn == 6
                   hb_gtInfo( HB_GTI_WINTITLE,'RMChart [ Next:F11 ] '+'Flow Chart' )
-                  SetMode( 30,50 )
+                  //SetMode( 30,50 )
 
                   sData += "00003305|00004400|000051|00008-984833|00009412|00011Tahoma|100011|100035|100045|"
                   sData += "10005-5|10006-5|10180\7C|010011|010051|010072|010081|0101050|0101125|01012100|01"
@@ -2507,8 +2525,7 @@ Static Function ExeActiveX( oCrt, nActiveX )
                oCom:Reset()
                oCom:RMCFile := sData
                oCom:Draw( .t. )
-               Resize( oCom )
-
+               ResizeMe( oCom )
             endif
 
          endif
@@ -2633,9 +2650,6 @@ Static Function ExperimentWGU()
 
    do while .t.
       nKey := inkey( 0.1 )
-      if nKey <> 0
-//hb_toOutDebug( 'inkey == %i rows=%i cols=%i', nKey, maxrow(), maxcol() )
-      endif
       if nKey == 27
          exit
       endif

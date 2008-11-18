@@ -477,7 +477,8 @@ HB_FUNC( WIN_GETWINDOWRECT )
 }
 
 //-------------------------------------------------------------------//
-
+// Win_MoveWindow( hWnd, nLeft, nTop, nWidth, nHeight, lRePaint )
+//
 HB_FUNC( WIN_MOVEWINDOW )
 {
    MoveWindow( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parnl( 2 ), hb_parnl( 3 ), hb_parnl( 4 ), hb_parnl( 5 ), hb_parl( 6 ) );

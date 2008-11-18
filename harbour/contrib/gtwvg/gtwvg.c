@@ -776,7 +776,7 @@ static BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    return( TRUE );
 }
 
-static BOOL hb_gt_wvt_IsSizeChanged( PHB_GTWVT pWVT )
+static BOOL hb_gt_wvt_FitSizeRows( PHB_GTWVT pWVT )
 {
    BOOL bSizeChanged = FALSE;
 
@@ -891,12 +891,8 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 
    if( wi.left < 0 || wi.top < 0 )
    {
-      #if 1  // IMO not required [pritpal]
-      if( hb_gt_wvt_IsSizeChanged( pWVT ) )
-      {
-         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
-      }
-      #endif
+      pWVT->bMaximized = TRUE;
+      hb_gt_wvt_FitSizeRows( pWVT );
 
       /* resize the window to get the specified number of rows and columns */
       GetWindowRect( pWVT->hWnd, &wi );
@@ -1718,7 +1714,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_PAINT:
       {
          RECT updateRect;
-
          if( !pWVT->bDeferPaint )
          {
             if( pWVT->bResizing )
@@ -1868,7 +1863,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_EXITSIZEMOVE:
-         hb_gt_wvt_IsSizeChanged( pWVT );
+         hb_gt_wvt_FitSizeRows( pWVT );
          return 0;
 
       case WM_SYSCOMMAND:
@@ -1878,7 +1873,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             {
                pWVT->bMaximized = TRUE;
 
-               hb_gt_wvt_IsSizeChanged( pWVT );
+               hb_gt_wvt_FitSizeRows( pWVT );
 
                /* Disable "maximize" button */
 
@@ -2460,6 +2455,8 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      hb_gt_wvt_ResetWindowSize( pWVT );
                      hb_gt_wvt_UpdateCaret( pWVT );
                      HB_GTSELF_REFRESH( pGT );
+
+                     hb_wvt_gtSaveGuiState( pWVT );
                   }
                }
                DeleteObject( hFont );
@@ -3936,9 +3933,11 @@ static void hb_wvt_gtInitGui( PHB_GTWVT pWVT )
 static void hb_wvt_gtRestGuiState( PHB_GTWVT pWVT, LPRECT rect )
 {
    if( pWVT->bGui )
+   {
       BitBlt( pWVT->hdc, rect->left, rect->top,
               rect->right - rect->left, rect->bottom - rect->top,
               pWVT->hGuiDC, rect->left, rect->top, SRCCOPY );
+   }
 }
 
 static void hb_wvt_gtSaveGuiState( PHB_GTWVT pWVT )
@@ -3948,6 +3947,7 @@ static void hb_wvt_gtSaveGuiState( PHB_GTWVT pWVT )
       RECT rc = { 0, 0, 0, 0 };
 
       GetClientRect( pWVT->hWnd, &rc );
+
       pWVT->iGuiWidth = rc.right - rc.left;
       pWVT->iGuiHeight = rc.bottom - rc.top;
 

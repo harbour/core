@@ -67,7 +67,10 @@
 
 #include 'hbclass.ch'
 #include 'common.ch'
+#include 'hbgtinfo.ch'
 #include 'hbgtwvg.ch'
+#include 'wvtwin.ch'
+#include 'inkey.ch'
 
 //----------------------------------------------------------------------//
 
@@ -98,6 +101,8 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    DATA     aPresParams                           INIT  {}
    DATA     objType                               INIT  objTypeNone
    DATA     ClassName                             INIT  ''
+   DATA     title                                 INIT  ' '
+   DATA     icon                                  INIT  0
 
    //  CALLBACK SLOTS
    DATA     sl_enter
@@ -215,6 +220,34 @@ EXPORTED:
    METHOD   setDisplayFocus()                     SETGET
    METHOD   killDisplayFocus()                    SETGET
 
+   //  HARBOUR implementation
+   DATA     closable                              INIT  .T.
+   DATA     resizable                             INIT  .t.
+   DATA     resizeMode                            INIT  0
+   DATA     style                                 INIT  WS_OVERLAPPEDWINDOW
+   DATA     exStyle                               INIT  0
+   DATA     lModal                                INIT  .f.
+   DATA     pGTp
+   DATA     pGT
+   DATA     objType                               INIT  objTypeNone
+   DATA     ClassName                             INIT  ''
+
+   METHOD   notifier()
+   METHOD   setFocus()
+   METHOD   sendMessage()
+
+PROTECTED:
+   DATA     hWnd
+   DATA     aPos                                  INIT  { 0,0 }
+   DATA     aSize                                 INIT  { 0,0 }
+   DATA     aPresParams                           INIT  {}
+   DATA     lHasInputFocus                        INIT  .F.
+   DATA     nFrameState                           INIT  0  // normal
+
+   DATA     maxCol                                INIT  79
+   DATA     maxRow                                INIT  24
+   DATA     mouseMode                             INIT  1
+
    ENDCLASS
 
 //----------------------------------------------------------------------//
@@ -228,8 +261,16 @@ METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgWind
    DEFAULT aPresParams TO ::aPresParams
    DEFAULT lVisible    TO ::visible
 
+   ::oParent     := oParent
+   ::oOwner      := oOwner
+   ::aPos        := aPos
+   ::aSize       := aSize
+   ::aPresParams := aPresParams
+   ::visible     := lVisible
+
    ::WvgPartHandler:init( oParent, oOwner )
 
+   #if 0
    if hb_isArray( aPos )
       ::aPos := aPos
    endif
@@ -242,7 +283,7 @@ METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgWind
    if hb_isLogical( lVisible )
       ::visible := lVisible
    endif
-
+   #endif
    RETURN Self
 
 //----------------------------------------------------------------------//
@@ -361,14 +402,31 @@ METHOD setPosAndSize() CLASS WvgWindow
 
 //----------------------------------------------------------------------//
 
-METHOD setSize() CLASS WvgWindow
+METHOD setSize( aSize, lPaint ) CLASS WvgWindow
 
+   if hb_isArray( aSize )
+      DEFAULT lPaint TO .T.
+
+      switch ::objType
+      case objTypeDialog
+      case objTypeActiveX
+         Win_MoveWindow( ::hWnd, 0, 0, aSize[ 1 ], aSize[ 2 ], lPaint )
+         exit
+
+      case objTypeCrt
+         hb_gtInfo( HB_GTI_SCREENWIDTH , aSize[ 1 ] )
+         hb_gtInfo( HB_GTI_SCREENHEIGHT, aSize[ 2 ] )
+         exit
+
+      end
+   endif
    RETURN Self
 
 //----------------------------------------------------------------------//
 
 METHOD show() CLASS WvgWindow
-
+   Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
+   ::lHasInputFocus := .t.
    RETURN Self
 
 //----------------------------------------------------------------------//
@@ -968,4 +1026,135 @@ METHOD dragDrop( xParam, xParam1 ) CLASS WvgWindow
 
    RETURN Self
 
+//----------------------------------------------------------------------//
+//                          HARBOUR SPECIFIC
+//----------------------------------------------------------------------//
+
+METHOD notifier( nEvent, xParams ) CLASS WvgWindow
+   Local aPos, nReturn := 0
+
+   DO CASE
+
+   CASE nEvent == HB_GTE_MOUSE
+      if     xParams[ 1 ] == WM_MOUSEHOVER
+         aPos := { xParams[ 3 ], xParams[ 4 ] }
+      elseif xParams[ 1 ] == WM_MOUSELEAVE
+         // Nothing
+      else
+         aPos := if( ::mouseMode == 2, { xParams[ 3 ], xParams[ 4 ] }, { xParams[ 5 ], xParams[ 6 ] } )
+      endif
+
+      SWITCH xParams[ 1 ]
+
+      case WM_MOUSEHOVER
+         if hb_isBlock( ::sl_enter )
+            eval( ::sl_enter, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_MOUSELEAVE
+         if hb_isBlock( ::sl_leave )
+            eval( ::sl_leave, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_RBUTTONDOWN
+         if hb_isBlock( ::sl_rbDown )
+            eval( ::sl_rbDown, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_LBUTTONDOWN
+         if hb_isBlock( ::sl_lbDown )
+            eval( ::sl_lbDown, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_RBUTTONUP      ////
+         if hb_isBlock( ::sl_rbUp )
+            eval( ::sl_rbUp, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_LBUTTONUP      ////
+         if hb_isBlock( ::sl_lbUp )
+            eval( ::sl_lbUp, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_RBUTTONDBLCLK
+         if hb_isBlock( ::sl_rbDblClick )
+            eval( ::sl_rbDblClick, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_LBUTTONDBLCLK
+         if hb_isBlock( ::sl_lbDblClick )
+            eval( ::sl_lbDblClick, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_MBUTTONDOWN
+         if hb_isBlock( ::sl_mbDown )
+            eval( ::sl_mbDown, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_MBUTTONUP       ////
+         if hb_isBlock( ::sl_mbClick )
+            eval( ::sl_mbClick, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_MBUTTONDBLCLK
+         if hb_isBlock( ::sl_mbDblClick )
+            eval( ::sl_mbDblClick, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_MOUSEMOVE
+         if hb_isBlock( ::sl_motion )
+            eval( ::sl_motion, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_MOUSEWHEEL
+         if hb_isBlock( ::sl_wheel )
+            eval( ::sl_wheel, aPos, NIL, self )
+         endif
+         EXIT
+      case WM_NCMOUSEMOVE
+         EXIT
+      END
+
+   CASE nEvent == HB_GTE_KEYBOARD
+      if hb_isBlock( ::keyboard )
+         eval( ::keyboard, xParams, NIL, Self )
+      endif
+
+   CASE nEvent == HB_GTE_SETFOCUS
+      if hb_isBlock( ::setInputFocus )
+         eval( ::setInputFocus, NIL, NIL, Self )
+      endif
+      ::lHasInputFocus := .t.
+
+   CASE nEvent == HB_GTE_KILLFOCUS
+      if hb_isBlock( ::killInputFocus )
+         eval( ::killInputFocus, NIL, NIL, Self )
+      endif
+      ::lHasInputFocus := .f.
+
+   CASE nEvent == HB_GTE_RESIZED
+      if hb_isBlock( ::sl_resize )
+         eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
+      endif
+
+   CASE nEvent == HB_GTE_CLOSE
+      if hb_isBlock( ::close )
+         nReturn := eval( ::close, NIL, NIL, Self )
+      endif
+
+   ENDCASE
+
+   RETURN nReturn
+//----------------------------------------------------------------------//
+METHOD setFocus() CLASS WvgWindow
+
+   ::sendMessage( WM_ACTIVATE, 1, 0 )
+
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD sendMessage( nMessage, nlParam, nwParam ) CLASS WvgWindow
+
+   Win_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
+
+   RETURN Self
 //----------------------------------------------------------------------//

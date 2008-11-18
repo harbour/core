@@ -56,9 +56,16 @@
 //----------------------------------------------------------------------//
 //                 Extended GT Manipulation Constants
 //----------------------------------------------------------------------//
-
-#define HB_GTE_MOUSE            6
-#define HB_GTE_KEYBOARD         7
+#if 0  // Already in hbgtinfo.ch
+   #define HB_GTE_ACTIVATE                1
+   #define HB_GTE_SETFOCUS                2
+   #define HB_GTE_KILLFOCUS               3
+   #define HB_GTE_CLOSE                   4
+   #define HB_GTE_RESIZED                 5
+#endif
+#define HB_GTE_MOUSE                      6
+#define HB_GTE_KEYBOARD                   7
+#define HB_GTE_TIMER                      8
 
 #define HB_GTI_SETFONT                   71
 #define HB_GTI_PRESPARAMS                72
@@ -125,10 +132,11 @@
 //                        Class Framework Constants
 //----------------------------------------------------------------------//
 
-#define objTypeNone       0
-#define objTypeCrt        1
-#define objTypeWindow     2
-#define objTypeActiveX    3
+#define objTypeNone                       0
+#define objTypeCrt                        1
+#define objTypeWindow                     2
+#define objTypeActiveX                    3
+#define objTypeDialog                     4
 
 //----------------------------------------------------------------------//
 
