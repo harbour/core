@@ -15,6 +15,7 @@ PRG_HEADERS = \
     xhb.ch \
 
 LIB_OBJS = \
+    $(OBJ_DIR)filestat$(OBJEXT) \
     $(OBJ_DIR)freadlin$(OBJEXT) \
     $(OBJ_DIR)hbcrypt$(OBJEXT) \
     $(OBJ_DIR)hbxml$(OBJEXT) \

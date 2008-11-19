@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-19 19:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapi.h
+  * source/vm/extend.c
+    + Added hb_stordl() which is similar to hb_stords() but 
+      accepts a Julian date in long numeric format similarly 
+      to hb_retdl().
+
+  * contrib/xhb/Makefile
+  * contrib/xhb/common.mak
+  + contrib/xhb/filestat.c
+    + Added FILESTATS() function.
+      Work of Giancarlo Niccolai / xhb.
+      Minor cleanups made.
+    ; Please test. (Only Win32/BCC platform was tested.)
+
 2008-11-19 18:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/codepage/cpuakoi.c
     ! Fixed CP reference to point to KOI8-U instead of KOI8.

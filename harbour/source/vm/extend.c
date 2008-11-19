@@ -1043,6 +1043,37 @@ int hb_stords( const char * szDate, int iParam, ... )
    return 0;
 }
 
+int hb_stordl( long lJulian, int iParam, ... )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_stordl(%ld, %d, ...)", lJulian, iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+      BOOL bByRef = HB_IS_BYREF( pItem );
+
+      if( bByRef  )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_ARRAY( pItem ) )
+      {
+         int iRetVal;
+         va_list va;
+         va_start( va, iParam );
+         iRetVal = hb_arraySetDL( pItem, va_arg( va, ULONG ), lJulian ) ? 1 : 0;
+         va_end( va );
+         return iRetVal;
+      }
+      else if( bByRef || iParam == -1 )
+      {
+         hb_itemPutDL( pItem, lJulian );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
 int hb_storl( int iLogical, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storl(%d, %d, ...)", iLogical, iParam));

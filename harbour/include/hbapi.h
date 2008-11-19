@@ -668,6 +668,7 @@ extern HB_EXPORT int    hb_storc( const char * szText, int iParam, ... ); /* sto
 extern HB_EXPORT int    hb_storclen( const char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
 extern HB_EXPORT int    hb_storclen_buffer( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string buffer on a variable by reference */
 extern HB_EXPORT int    hb_stords( const char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
+extern HB_EXPORT int    hb_stordl( long lJulian, int iParam, ... ); /* lJulian must be a date in Julian format */
 extern HB_EXPORT int    hb_storl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
 extern HB_EXPORT int    hb_storni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
 extern HB_EXPORT int    hb_stornl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
