@@ -75,12 +75,12 @@ _HB_DIRS="${_HB_DIRS} ${HB_CONTRIB_ADDONS}"
 #**************************************************************
 
 for n in ${_HB_DIRS}; do
-  if [ -d $n ]; then
-    echo Entering $n ... \( $1 $2 $3 $4 $5\)
-    cd $n
-    [ -f ./make_gcc.sh ] && ${SHELL} -c "./make_gcc.sh $1 $2 $3 $4 $5"
-    cd ..
-  fi
+   if [ -d $n ]; then
+      echo Entering $n ... \( $1 $2 $3 $4 $5\)
+      cd $n
+      [ -f ./make_gcc.sh ] && ${SHELL} -c "./make_gcc.sh $1 $2 $3 $4 $5"
+      cd ..
+   fi
 done
 
 #**************************************************************

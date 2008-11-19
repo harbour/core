@@ -226,12 +226,12 @@ ARFLAGS = rc $(A_USR)
 #**********************************************************
 # General *.prg --> *.o COMPILE rule for STATIC Libraries
 $(OBJ_DIR)/%$(OBJEXT) : %.prg $(HARBOUR_EXE)
-	$(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)/ $<
+	$(HB) $(HARBOURFLAGSLIB) -o$(OBJ_DIR)/ $<
 	$(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)/$(<F:.prg=.c)
 #----------------------------------------------------------
 # General *.prg --> *.o COMPILE rule for STATIC MT Libraries
 $(MT_OBJ_DIR)/%$(OBJEXT) : %.prg $(HARBOUR_EXE)
-	$(HB) $(HARBOURFLAGS) -o$(MT_OBJ_DIR)/ $<
+	$(HB) $(HARBOURFLAGSLIB) -o$(MT_OBJ_DIR)/ $<
 	$(CC) $(CLIBFLAGS) $(CFLAGSMT) -o$@ $(MT_OBJ_DIR)/$(<F:.prg=.c)
 #----------------------------------------------------------
 # General *.c --> *.o COMPILE rule for STATIC Libraries
@@ -244,12 +244,12 @@ $(MT_OBJ_DIR)/%$(OBJEXT) : %.c
 #*******************************************************
 # General *.prg --> *.o COMPILE rule for SHARED Libraries
 $(DLL_OBJ_DIR)/%$(OBJEXT) : %.prg $(HARBOUR_EXE)
-	$(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)/ $<
+	$(HB) $(HARBOURFLAGSLIB) -o$(DLL_OBJ_DIR)/ $<
 	$(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)/$(<F:.prg=.c)
 #----------------------------------------------------------
 # General *.prg --> *.o COMPILE rule for SHARED MT Libraries
 $(MTDLL_OBJ_DIR)/%$(OBJEXT) : %.prg $(HARBOUR_EXE)
-	$(HB) $(HARBOURFLAGSDLL) -o$(MTDLL_OBJ_DIR)/ $<
+	$(HB) $(HARBOURFLAGSLIB) -o$(MTDLL_OBJ_DIR)/ $<
 	$(CC) $(CLIBFLAGSDLL) $(CFLAGSMT) -o$@ $(MTDLL_OBJ_DIR)/$(<F:.prg=.c)
 #----------------------------------------------------------
 # General *.c --> *.o COMPILE rule for SHARED Libraries

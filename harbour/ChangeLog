@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-19 13:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * common.mak
+  * make_b32.mak
+  * make_gcc.mak
+  * make_vc.mak
+    * Smoothened the difference between HARBOURFLAGS and 
+      HARBOURFLAGSDLL under the name HARBOURFLAGSLIB.
+      Now all core .prg modules will be compiled with -n1 
+      Harbour switch. This also means double compilation 
+      of .prg modules for static/dynamic libs could be 
+      optimized out as the object files are the same in 
+      both modes.
+      TODO: Make -n1 switch unnecessary.
+
+  * contrib/mtpl_gcc.mak
+    + Added -n1 to HARBOURFLAGS. This way Harbour functions 
+      in libs will never be considered as entry points in 
+      executables or when any such module is built as dynamic 
+      lib in the future.
+
+  * contrib/make_gcc_all.sh
+    * Minor formatting.
+
 2008-11-19 09:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-func.sh
   * mpkg_tgz.sh
