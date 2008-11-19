@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-19 18:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/codepage/cpuakoi.c
+    ! Fixed CP reference to point to KOI8-U instead of KOI8.
+      Reasons: 1) KOI8-U was used in the _comment_.
+               2) Ukrainian quasi standard is KOI8-U instead of KOI8.
+                  http://aspell.net/charsets/cyrillic.html
+               3) CP KOI8-U wasn't used previously anywhere, yet 
+                  was added by same author.
+      I hope the author (Pavel Tsarenko) will be able to verify 
+      this change.
+
 2008-11-19 13:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * common.mak
   * make_b32.mak

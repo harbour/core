@@ -52,14 +52,14 @@
 
 /* Language name: Ukrainian */
 /* ISO language code (2 chars): UA */
-/* Codepage: KOI-8U */
+/* Codepage: KOI8-U */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
 static HB_CODEPAGE s_codepage = { "UAKOI8",
-    HB_CPID_KOI_8,HB_UNITB_KOI_8,36,
+    HB_CPID_KOI_8U, HB_UNITB_KOI_8U, 36,
     "áâ÷çäå³´öúé¶·êëìíîïğòóôõæèãşûıÿùøüàñ",
     "ÁÂ×ÇÄÅ£¤ÖÚÉ¦§ÊËÌÍÎÏĞÒÓÔÕÆÈÃŞÛİßÙØÜÀÑ",
     0,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
