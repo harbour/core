@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-19 09:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-func.sh
+  * mpkg_tgz.sh
+    ! Fixed OSX/Darwin builds:
+      - to not require harbour.dylib for binary tools supplied 
+        in .tgz package. This way, hbrun/hbmake/hbdoc/hbtest 
+        will work out of the box without the need for any 
+        special installation or extra manual procedure, or 
+        any change whatsoever in the user/system environment. 
+        The change also doesn't prevent user installing Harbour 
+        to system dirs and/or to utilize harbour.dylib in every way.
+      - so that hbmk script creates '-static' executables by default.
+        This will make all programs created by hbmk to work out of the 
+        box without any special trick described above, or explicit 
+        need to use '-static' switch.
+        You can override this with '-shared' switch.
+      ; [ The price to pay is slightly larger binary package 
+          and executable sizes. ]
+
+  * make_gnu.sh
+    * Minor sync in help text with recent change.
+
+  * common.mak
+    ! Old typo.
+
 2008-11-19 06:27 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * updated OS release version checking for new OpenSuse distros

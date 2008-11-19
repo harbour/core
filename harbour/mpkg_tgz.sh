@@ -91,6 +91,7 @@ case "$HB_ARCHITECTURE" in
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
         HB_INSTALL_GROUP=wheel
         ETC="/private/etc"
+        hb_lnkso="no"
         ;;
     linux)
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr"

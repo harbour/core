@@ -29,7 +29,7 @@
 #    set DEL=cmd /c del
 #
 # The above might be needed on Windows 2000 and XP.
-# The macros are referenced in makefile.bc
+# The macros are referenced in make_b32.mak
 # ---------------------------------------------------------------
 
 !ifndef ECHO

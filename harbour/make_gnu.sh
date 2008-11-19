@@ -150,7 +150,7 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
    echo "        - bcc16   (Borland C++ 3.x, 4.x, 5.0x, DOS 16-bit)"
    echo "        - djgpp   (Delorie GNU C, DOS 32-bit)"
    echo "        - rsx32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)"
-   echo "        - watcom  (Watcom C++ 9.x, 10.x, 11.x, DOS 32-bit)"
+   echo "        - owatcom (Watcom C++ 9.x, 10.x, 11.x, DOS 32-bit)"
    echo "      - When HB_ARCHITECTURE=w32"
    echo "        - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)"
    echo "        - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)"

@@ -130,6 +130,17 @@ mk_hbtools()
             hb_shared_default=" (default)"
         fi
         hb_exesuf=".exe"
+    elif [ "${HB_ARCHITECTURE}" = "darwin" ]; then
+        hb_tool="$1/${hb_pref}-build"
+        hb_path_separator=":"
+        if [ "${HB_MK_STATIC}" != "no" ]; then
+            hb_static="yes"
+            hb_static_default=" (default)"
+        else
+            hb_static="no"
+            hb_shared_default=" (default)"
+        fi
+        hb_exesuf=""
     else
         hb_tool="$1/${hb_pref}-build"
         hb_path_separator=":"
