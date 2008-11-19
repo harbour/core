@@ -23,7 +23,7 @@ hb_platform=`get_hbplatform`
 [ "${HB_XBUILD}" = "" ] || hb_platform="-${HB_XBUILD}"
 hb_archfile="${name}-${hb_ver}${hb_platform}.bin.tar.gz"
 # disabled self extracting shell envelop
-# hb_instfile="${name}-${hb_ver}${hb_platform}.inst.sh"
+hb_instfile="${name}-${hb_ver}${hb_platform}.inst.sh"
 hb_lnkso="yes"
 hb_pref="hb"
 hb_contrib=""
@@ -303,11 +303,12 @@ if [ -n "${hb_instfile}" ]; then
    fi
    # In the generated script use tar instead of $TAR because we can't be sure
    # if $TAR exists in the installation environment
+   size=`wc -c "${hb_archfile}"|(read size file; echo $size)`
    cat > "${hb_instfile}" <<EOF
 #!/bin/sh
 [ "\$BASH" ] || exec bash \`which \$0\` \${1+"\$@"}
 if [ "\$1" = "--extract" ]; then
-    sed -e '1,/^HB_INST_EOF\$/ d' "\$0" > "${hb_archfile}"
+    tail -c $size "\$0" > "${hb_archfile}"
     exit
 fi
 if [ \`id -u\` != 0 ]; then
@@ -319,7 +320,7 @@ read ASK
 if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then
     exit 1
 fi
-(sed -e '1,/^HB_INST_EOF\$/ d' "\$0" | gzip -cd | tar ${UNTAR_OPT} - -C /) ${DO_LDCONFIG}
+(tail -c $size "\$0" | gzip -cd | (cd /;tar ${UNTAR_OPT} -)) ${DO_LDCONFIG}
 exit \$?
 HB_INST_EOF
 EOF

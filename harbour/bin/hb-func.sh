@@ -26,11 +26,12 @@ get_hbplatform()
         [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' mandrake-release 2>/dev/null) && echo "mdk$rel"|tr -d "."`
         [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' redhat-release 2>/dev/null) && echo "rh$rel"|tr -d "."`
         [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' fedora-release 2>/dev/null) && echo "fc$rel"|tr -d "."`
-        [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' suse-release 2>/dev/null) && echo "fc$rel"|tr -d "."`
+        [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' suse-release 2>/dev/null) && echo "sus$rel"|tr -d "."`
+        [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' openSUSE-release 2>/dev/null) && echo "sus$rel"|tr -d "."`
         [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' conectiva-release 2>/dev/null) && echo "cl$rel"|tr -d "."`
         [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' aurox-release 2>/dev/null) && echo "cl$rel"|tr -d "."`
         [ "${id}" = "" ] && id=`[ -f /etc/pld-release ] && cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/'`
-        [ "${id}" = "" ] && id=`uname -sr | tr '[ A-Z]' '[_a-z]'`
+        [ "${id}" = "" ] && id=`uname -s | tr '[ A-Z]' '[_a-z]'`
         case "${id}" in
             mingw*) id="mingw" ;;
             *) ;;
@@ -121,14 +122,24 @@ mk_hbtools()
     elif [ "${HB_ARCHITECTURE}" = "w32" ]; then
         hb_tool="$1/${hb_pref}-build"
         hb_path_separator=":"
-        hb_static="yes"
-        hb_static_default=" (default)"
+        if [ "${HB_MK_STATIC}" != "no" ]; then
+            hb_static="yes"
+            hb_static_default=" (default)"
+        else
+            hb_static="no"
+            hb_shared_default=" (default)"
+        fi
         hb_exesuf=".exe"
     else
         hb_tool="$1/${hb_pref}-build"
         hb_path_separator=":"
-        hb_static="no"
-        hb_shared_default=" (default)"
+        if [ "${HB_MK_STATIC}" = "yes" ]; then
+            hb_static="yes"
+            hb_static_default=" (default)"
+        else
+            hb_static="no"
+            hb_shared_default=" (default)"
+        fi
         hb_exesuf=""
     fi
     hb_libs=`mk_hbgetlibs "$2"`

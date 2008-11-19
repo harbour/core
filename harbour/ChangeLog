@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-19 06:27 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * updated OS release version checking for new OpenSuse distros
+    * removed r from uname parameters used in get_hbplatform() function
+    + added support for HB_MK_STATIC=yes|no envvar which allows to control
+      default -static/-shared hbmk switch. It should be set before hb*
+      scripts are created
+
+  * harbour/harbour.spec
+    * updated OS release version checking for new OpenSuse distros
+
+  * harbour/mpkg_tgz.sh
+    * changed installer envelope code to not use 'sed' and reenabled it
+      in default builds. Now it should work with different *nixes.
+      Please test.
+
 2008-11-18 13:55 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_gcc.sh
   * common.mak
