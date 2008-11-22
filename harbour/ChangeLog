@@ -8,6 +8,9 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-22 15:57 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  + harbour/contrib/gtwvg/tests/myharu.pdf
+
 2008-11-22 15:39 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
     ! Fixed to honor parent GT if that is alien.
