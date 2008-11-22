@@ -319,7 +319,6 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
 
    /* CreateWindow() be forced to execute */
    ? ' '
-
    ::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
    hb_gtInfo( HB_GTI_RESIZABLE , ::resizable )
@@ -338,7 +337,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
    endif
 
    if ::lModal
-      hb_gtInfo( HB_GTI_DISABLE, ::pGTp )
+      //hb_gtInfo( HB_GTI_DISABLE, ::pGTp )
    endif
 
    if ::visible

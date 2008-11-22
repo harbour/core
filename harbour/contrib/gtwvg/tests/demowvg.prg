@@ -292,6 +292,7 @@ PROCEDURE Main( cDSN )
    WvtSetKeys( .f. )
    Wvt_SetPopupMenu( hPopup )
 
+   Popups( 1, .t. )
    pGT_[ 1 ] := NIL
 
    RETURN
@@ -1327,7 +1328,9 @@ FUNCTION CreateMainMenu()
 
    oMenu := WvtMenu():new():create()
    oMenu:Caption:= "Wvt*Classes"
-   oMenu:AddItem( "Dialog One", {|| MyDialogOne() } )
+   oMenu:AddItem( "Dialog One . New Window . Threaded", {|| MyDialogOne( 1 ) } )
+   oMenu:AddItem( "Dialog One . Main Window . Primary Thread", {|| MyDialogOne( 2 ) } )
+   oMenu:AddItem( "-" )
    oMenu:AddItem( "Dialog Two", {|| MyDialogTwo() } )
    oMenu:AddItem( "-" )
    oMenu:AddItem( "Exit"      , {|| __keyboard( K_ESC ) } )
@@ -1335,12 +1338,15 @@ FUNCTION CreateMainMenu()
 
    oMenu := wvtMenu():new():create()
    oMenu:Caption := "Traditional"
-   oMenu:AddItem( "Next Gets"     , {|| WvtNextGets()      } )
-   oMenu:AddItem( "Gets : Console", {|| WvtConsoleGets()   } )
-   oMenu:AddItem( "Browser"       , {|| WvtMyBrowse()      } )
-   oMenu:AddItem( "Partial Screen", {|| WvtPartialScreen() } )
+   oMenu:AddItem( "Gets . GTWVG . Threaded"     , {|| WvtNextGets()      } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "Wvt Lines"     , {|| WvtLines()         } )
+   oMenu:AddItem( "Gets . GTWVT . Threaded"     , {|| WvtConsoleGets()   } )
+   oMenu:AddItem( "-")
+   oMenu:AddItem( "Browser . GTWVG . Threaded " , {|| WvtMyBrowse()      } )
+   oMenu:AddItem( "-")
+   oMenu:AddItem( "Partial Screen . Main Window", {|| WvtPartialScreen() } )
+   oMenu:AddItem( "-")
+   oMenu:AddItem( "Wvt Lines . Main Window"     , {|| WvtLines()         } )
    g_oMenuBar:addItem( "",oMenu )
 
    oMenu := wvtMenu():new():create()
@@ -1356,17 +1362,15 @@ FUNCTION CreateMainMenu()
    oMenu:AddItem( "Shrink" ,{|| WvtWindowExpand( -1 ) } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "Minimize",{|| Wvt_Minimize() } )
+   oMenu:AddItem( "Maximize",{|| hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED ) } )
    g_oMenuBar:addItem( "",oMenu)
 
    oMenu := wvtMenu():new():create()
    oMenu:Caption:= "Modeless Dialogs"
-   oMenu:AddItem( "Dialog First" ,{|| DynDialog_2() } )
+   oMenu:AddItem( "Dynamic Dialog . Modeless" ,{|| DynDialog_2( 1 ) } )
+   oMenu:AddItem( "Dynamic Dialog . Modal "   ,{|| DynDialog_2( 2 ) } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "Slide Show"   ,{|| DlgSlideShow() } )
-   oMenu:AddItem( "-")
-   oMenu:AddItem( "Dialog Scond" ,{|| DynDialog_1() } )
-   oMenu:AddItem( "-")
-   oMenu:AddItem( "An Experiment",{|| Experiment_1() } )
+   oMenu:AddItem( "Slide Show . Modeless"     ,{|| DlgSlideShow() } )
    g_oMenuBar:addItem( "",oMenu)
 
    oMenu := wvtMenu():new():create()
@@ -1401,24 +1405,21 @@ STATIC FUNCTION ActivateMenu( oMenu )
 
    RETURN ( NIL )
 //-------------------------------------------------------------------//
-STATIC FUNCTION MyDialogOne()
+STATIC FUNCTION MyDialogOne( nMode )
    Local bBlock
 
-   static n := 0
-
    if hb_mtvm()
-      n++
-      if n%2 == 0
+      if nMode == 2
          MyDialogOne_X()
       else
          bBlock := { |oCrt| ;
-                        hb_gtReload( 'WVG' )        ,;
                         oCrt := WvgCrt():New( , , { -1,-1 }, { 54,184 }, , .f. ), ;
                         oCrt:fontName   := 'Courier',;
                         oCrt:fontHeight := 13       ,;
                         oCrt:fontWidth  := 0        ,;
                         oCrt:Create()               ,;
-                        MyDialogOne_X( oCrt )        ;
+                        MyDialogOne_X( oCrt )       ,;
+                        oCrt:destroy()               ;
                    }
          hb_threadStart( bBlock )
       endif
@@ -1811,73 +1812,6 @@ STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
 
 //-------------------------------------------------------------------//
 
-Function DynDialog_1()
-   Local hDlg, aDlg, nStyle
-
-   Static nInfo := 1
-   nInfo++
-
-   nStyle := + WS_CAPTION    + WS_SYSMENU               ;
-             + WS_GROUP      + WS_TABSTOP + DS_SETFONT  ;
-             + WS_THICKFRAME + WS_VISIBLE + WS_POPUP
-
-   aDlg := Wvt_MakeDlgTemplate( 1, 2, 15, 40, {0,0,0,0},  ;
-                     ltrim( str( nInfo,10,0 ) ) + " - Modeless Dialog", nStyle )
-
-   nStyle := WS_VISIBLE + WS_TABSTOP + ES_AUTOVSCROLL + ES_MULTILINE + ES_WANTRETURN + WS_BORDER + WS_VSCROLL
-   aDlg   := Wvt_AddDlgItem( aDlg,  1, 2, 9, 28, {}, 10, "EDIT"  , nStyle, /* cText, nHelpId, nExStyle */ )
-
-   nStyle := WS_VISIBLE + SS_ETCHEDHORZ
-   aDlg   := Wvt_AddDlgItem( aDlg, 12, 2, 1, 36, {}, 12, "STATIC", nStyle )
-
-   nStyle := WS_VISIBLE + WS_TABSTOP + BS_AUTOCHECKBOX
-   aDlg   := Wvt_AddDlgItem( aDlg, 13, 2, 1, 10, {}, 11, "BUTTON", nStyle, "Is It Checked?" )
-
-   hDlg := Wvt_CreateDialog( aDlg, .f., "DynDlgProc_1" )
-
-   Return hDlg
-
-//-------------------------------------------------------------------//
-
-Function DynDlgProc_1( hDlg, nMsg, wParam, lParam )
-   Local cText, lClicked
-
-   Switch ( nMsg )
-
-   case WM_INITDIALOG
-      Win_SetDlgItemText( hDlg, 10, "This is multiline text which will be displayed in the edit window!" )
-      Win_CheckDlgButton( hDlg, 11, .t. )
-      exit
-
-   case WM_DESTROY
-      // Do whatevert you want to do with cText
-      // Each box will retrieve its own text.
-      //
-      cText := Win_GetDlgItemText( hDlg, 10 )
-
-      exit
-
-   case WM_TIMER
-      // Do some processing
-
-      exit
-
-   case WM_COMMAND
-      do case
-
-      case wParam == 11
-         lClicked := ( Win_IsDlgButtonChecked( hDlg,11 ) == 1 )
-         Win_MessageBox( hDlg, "Button " + iif( lClicked, "Clicked", "Unclicked" ), "CheckBoxStatus" )
-
-      endcase
-      exit
-
-   end
-
-   Return .f.
-
-//-------------------------------------------------------------------//
-
 #define ID_BTN_OK          1
 #define ID_MLE            10
 #define ID_CHK_SATIS      11
@@ -1900,11 +1834,8 @@ Function DynDlgProc_1( hDlg, nMsg, wParam, lParam )
 
 //-------------------------------------------------------------------//
 
-Function DynDialog_2()
+Function DynDialog_2( nInfo )
    Local hDlg, aDlg, nStyle, nTimerTicks, cDlgIcon, cDlgProc, lOnTop, hMenu, nProc, bDlgProc
-
-   Static nInfo := 0
-   nInfo++
 
    nStyle := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
 
@@ -1977,7 +1908,7 @@ Function DynDialog_2()
    cDlgIcon    := "v_notes.ico"
    nTimerTicks := 1000  // 1 second
 
-   if nInfo % 2 == 1
+   if nInfo == 2
       // Modal Dialog
       //
       //hDlg := Wvt_DialogBox( aDlg, bDlgProc, Wvt_GetWindowHandle() )
@@ -2255,8 +2186,7 @@ Function ExecuteActiveX( nActiveX )
       SetColor( 'N/W' )
       CLS
    #else
-      oCrt := WvgDialog():init( , , { 30,30 }, { 400,500 }, , .f. )
-
+      oCrt := WvgDialog():new( , , { 30,30 }, { 500,550 }, , .f. )
       oCrt:closable := .f.
       oCrt:create()
    #endif
@@ -2294,11 +2224,12 @@ Static Function ExeActiveX( oCrt, nActiveX )
    case nActiveX == 1
       hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'http://www.harbour.vouch.info'+'  ]' )
       oCom:CLSID := 'Shell.Explorer.2'
-      oCom:mapEvent( 269, { {|| QOut( ' E X P L O R E R - 2 6 9' ) } } )
+      oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
 
    case nActiveX == 11
       hb_gtInfo( HB_GTI_WINTITLE, 'Shell.Explorer.2'+'  [  '+'MSHTML Demo'+'  ]' )
       oCom:CLSID := "MSHTML:" + "<html><h1>Stream Test</h1><p>This HTML content is being loaded from a stream.</html>"
+      oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
 
    case nActiveX == 2
       #define evClick     1
@@ -2310,19 +2241,20 @@ Static Function ExeActiveX( oCrt, nActiveX )
       hb_gtInfo( HB_GTI_WINTITLE, 'AnalogClockControl.AnalogClock' )
       oCom:CLSID := 'AnalogClockControl.AnalogClock'
       oCom:Id    := 5
-      oCom:mapEvent( evDblClk, {|| DoModalWindow()               ,;
-                               oCom:Value     := .75632          ,;
-                               oCom:BackColor := RGB( 0,140,210 ),;
-                               oCom:Refresh()                    ,;
-                               oCom:ShowSecondsHand := .t.       ,;
-                               oCom:Hands3D   := .t.             ,;
-                               oCom:Refresh()                   } )
+
+      oCom:mapEvent( evDblClk, {|| oCom:Value     := .75632          ,;
+                                   oCom:BackColor := RGB( 0,140,210 ),;
+                                   oCom:Refresh()                    ,;
+                                   oCom:ShowSecondsHand := .t.       ,;
+                                   oCom:Hands3D   := .t.             ,;
+                                   oCom:Refresh()                   } )
 
       oCom:mapEvent( evBtnUp, {|nBtn,nShift,nX,nY| if( nBtn == 2, lEnd := .t., NIL ) } )
 
    case nActiveX == 3
       hb_gtInfo( HB_GTI_WINTITLE, 'file://C:\harbour\contrib\gtwvg\tests\myharu.pdf' )
       oCom:CLSID := 'file://C:\harbour\contrib\gtwvg\tests\myharu.pdf'
+      oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
 
    case nActiveX == 4
       hb_gtInfo( HB_GTI_WINTITLE, 'RM Chart [ <F12> Attributes  <F11> Next Charts ]' )
@@ -2351,18 +2283,17 @@ Static Function ExeActiveX( oCrt, nActiveX )
       endif
 
       do while !( lEnd )
-         nKey := inkey()
-#if 0
-if nKey <> 0
-   hb_toOutDebug( 'nKey = %i : %i ', nKey, HB_K_RESIZE )
-endif
-#endif
+         nKey := inkey( 0.1 )
+
          if nKey == HB_K_RESIZE
             ResizeMe( oCom )
 
          elseif nKey == K_F12
             if nActiveX == 1
                oCom:Navigate( 'www.vouch.info' )
+
+            elseif nActiveX == 11
+               //oCom:document( 0 ):InnerHTML := "<html><h1>Stream Test</h1><p>This HTML content in a document.</html>"
 
             elseif nActiveX == 4
                oCom:RMCBackColor     := 23456142
@@ -2536,7 +2467,9 @@ endif
       enddo
 
       oCom:Destroy()
+      oCom := NIL
    endif
+
    Return nil
 //----------------------------------------------------------------------//
 Function ConfigureRMChart( RMChart )
@@ -2605,12 +2538,6 @@ Static Function DoModalWindow()
 
    pGT_[ 3 ] := hb_gtSelect()
 
-   #if 0
-   hb_toOutDebug( "Browser:title     = %s", hb_gtInfoEx( pGT_[ 2 ], HB_GTI_WINTITLE ) )
-   hb_toOutDebug( "Application:title = %s", hb_gtInfoEx( pGT_[ 1 ], HB_GTI_WINTITLE ) )
-   hb_toOutDebug( "This:title        = %s", hb_gtInfoEx( pGT_[ 3 ], HB_GTI_WINTITLE ) )
-   #endif
-
    // Here goes the Clipper Code
    //
    SetColor( 'N/W' )
@@ -2620,12 +2547,6 @@ Static Function DoModalWindow()
 
       if nSel == 0  .or. nSel == 1
          exit
-
-      elseif nSel == 1
-         #if 0
-         hb_gtInfoEx( pGT_[ 2 ], HB_GTI_SETPOS_XY, 40, 40 )
-         hb_gtInfoEx( pGT_[ 2 ], HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
-         #endif
 
       endif
    enddo
@@ -2637,23 +2558,3 @@ Static Function DoModalWindow()
 
    Return nil
 //----------------------------------------------------------------------//
-Function Experiment_1()
-   hb_threadStart( {|| ExperimentWGU() } )
-   Return nil
-//----------------------------------------------------------------------//
-Static Function ExperimentWGU()
-   Local nKey
-
-   hb_gtReload( 'WGU' )
-   //hb_gtInfo( HB_GTI_RESIZABLE, .f. )
-   hb_gtInfo( HB_GTI_WINTITLE, 'WGU Dialog Under GT Control' )
-
-   do while .t.
-      nKey := inkey( 0.1 )
-      if nKey == 27
-         exit
-      endif
-   enddo
-   Return NIL
-//----------------------------------------------------------------------//
-

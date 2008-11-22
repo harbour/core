@@ -2023,19 +2023,27 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
 {
    HWND     hWnd, hWndParent;
    LPTSTR   szAppName;
+   BOOL     bByConf;
 
    szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
 
+   bByConf = FALSE;
    hWndParent = NULL;
    if( pWVT->pPP->bConfigured )
    {
-      PHB_GT pGTp = hb_gt_ItemBase( pWVT->pPP->pParentGT );
+      PHB_GT pGTp = NULL;
+      if( pWVT->pPP->pParentGT )
+      {
+         pGTp = hb_gt_ItemBase( pWVT->pPP->pParentGT );
+      }
       if( pGTp )
       {
          PHB_GTWVT pWVTp = HB_GTWVT_GET( pGTp );
-         hWndParent = pWVTp->hWnd;
+         if( pWVTp )
+         {
+            hWndParent = pWVTp->hWnd;
+         }
          hb_gt_BaseFree( pGTp );
-
          if( hWndParent )
          {
             RECT rc;
@@ -2060,31 +2068,36 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
 
             pWVT->pPP->x = pt.x;
             pWVT->pPP->y = pt.y;
+
+            bByConf = TRUE;
          }
+      }
+   }
+
+   // This can happen if the pGTp is alien to this GT
+   // TOFIX:
+   if( !bByConf )
+   {
+      POINT pt;
+
+      if( pWVT->pPP->bRowCols )
+      {
+         pt.x = ( pWVT->PTEXTSIZE.x * pWVT->pPP->y );
+         pt.y = ( pWVT->PTEXTSIZE.y * pWVT->pPP->x );
+
+         pWVT->ROWS = pWVT->pPP->width;
+         pWVT->COLS = pWVT->pPP->height;
       }
       else
       {
-         POINT pt;
-
-         if( pWVT->pPP->bRowCols )
-         {
-            pt.x = ( pWVT->PTEXTSIZE.x * pWVT->pPP->y );
-            pt.y = ( pWVT->PTEXTSIZE.y * pWVT->pPP->x );
-
-            pWVT->ROWS = pWVT->pPP->width;
-            pWVT->COLS = pWVT->pPP->height;
-         }
-         else
-         {
-            pt.x = pWVT->pPP->x;
-            pt.y = pWVT->pPP->y;
-         }
-         pWVT->pPP->x = pt.x;
-         pWVT->pPP->y = pt.y;
-
-         if( pWVT->pPP->y < 0 )
-            pWVT->CentreWindow = TRUE;
+         pt.x = pWVT->pPP->x;
+         pt.y = pWVT->pPP->y;
       }
+      pWVT->pPP->x = pt.x;
+      pWVT->pPP->y = pt.y;
+
+      if( pWVT->pPP->y < 0 )
+         pWVT->CentreWindow = TRUE;
    }
 
    hWnd = CreateWindowEx(
@@ -2117,21 +2130,18 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 
       hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
-
       /* Set icon */
       if( pWVT->hIcon )
       {
          SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
          SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
       }
-
       /* Set default window title */
       {
          PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
          hb_gt_wvt_SetWindowTitle( pWVT->hWnd, pFileName->szName );
          hb_xfree( pFileName );
       }
-
       /* Create "Mark" prompt in SysMenu to allow console type copy operation */
       {
          HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
@@ -2166,7 +2176,6 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
                iCmdShow = SW_SHOWNORMAL;
             }
          }
-
          ShowWindow( pWVT->hWnd, iCmdShow );
          UpdateWindow( pWVT->hWnd );
       }
@@ -2181,7 +2190,6 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
             hb_wvt_gtCreateToolTipWindow( pWVT );
       }
    }
-
    return TRUE;
 }
 
@@ -2506,93 +2514,12 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          break;
 
-         /*
-         switch( pWVT->fontWeight )
-         {
-            case FW_THIN:
-            case FW_EXTRALIGHT:
-            case FW_LIGHT:
-               iVal = HB_GTI_FONTW_THIN;
-            break;
-
-            case FW_DONTCARE:
-            case FW_NORMAL:
-            case FW_MEDIUM:
-               iVal = HB_GTI_FONTW_NORMAL;
-            break;
-
-            case FW_SEMIBOLD:
-            case FW_BOLD:
-            case FW_EXTRABOLD:
-            case FW_HEAVY:
-               iVal = HB_GTI_FONTW_BOLD;
-            break;
-
-            default:
-               iVal = 0;
-            break;
-         }
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, iVal );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-         {
-            // store font status for next operation on fontsize //
-            switch( hb_itemGetNI( pInfo->pNewVal ) )
-            {
-               case HB_GTI_FONTW_THIN:
-                  pWVT->fontWeight = FW_LIGHT;
-                  break;
-               case HB_GTI_FONTW_NORMAL:
-                  pWVT->fontWeight = FW_NORMAL;
-                  break;
-               case HB_GTI_FONTW_BOLD:
-                  pWVT->fontWeight = FW_BOLD;
-                  break;
-            }
-         }
-         break;
-         */
       case HB_GTI_FONTQUALITY:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->fontQuality );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             pWVT->fontQuality =  hb_itemGetNI( pInfo->pNewVal );
 
          break;
-         /*
-         switch( pWVT->fontQuality )
-         {
-            case ANTIALIASED_QUALITY:
-               iVal = HB_GTI_FONTQ_HIGH;
-               break;
-            case DEFAULT_QUALITY:
-            case DRAFT_QUALITY:
-               iVal = HB_GTI_FONTQ_NORMAL;
-               break;
-            case NONANTIALIASED_QUALITY:
-            case PROOF_QUALITY:
-               iVal = HB_GTI_FONTQ_DRAFT;
-               break;
-            default:
-               iVal = 0;
-               break;
-         }
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, iVal );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-         {
-            switch( hb_itemGetNI( pInfo->pNewVal ) )
-            {
-               case HB_GTI_FONTQ_HIGH:
-                  pWVT->fontQuality = ANTIALIASED_QUALITY;
-                  break;
-               case HB_GTI_FONTQ_NORMAL:
-                  pWVT->fontQuality = DEFAULT_QUALITY;
-                  break;
-               case HB_GTI_FONTQ_DRAFT:
-                  pWVT->fontQuality = DRAFT_QUALITY;
-                  break;
-            }
-         }
-         break;
-         */
 
       case HB_GTI_SCREENHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.y * pWVT->ROWS );
@@ -3826,6 +3753,13 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
 static void hb_wvt_gtExitGui( PHB_GTWVT pWVT )
 {
    int i;
+   HMENU hMenu;
+
+   hMenu = GetMenu( pWVT->hWnd );
+   if( hMenu )
+   {
+      DestroyMenu( hMenu );
+   }
 
    for( i = 0; i < WVT_DLGML_MAX; i++ )
    {

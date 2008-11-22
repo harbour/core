@@ -509,7 +509,14 @@ HB_FUNC( WIN_ISWINDOW )
 
 HB_FUNC( WIN_DESTROYWINDOW )
 {
-   hb_retl( IsWindow( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+   hb_retl( DestroyWindow( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+}
+
+//-------------------------------------------------------------------//
+
+HB_FUNC( WIN_DESTROYMENU )
+{
+   hb_retl( DestroyMenu( (HMENU) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -646,6 +653,13 @@ HB_FUNC( WIN_FINDWINDOW )
    {
       hb_retnint( -1 );
    }
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_SLEEP )
+{
+   Sleep( hb_parni( 1 ) );
 }
 
 //----------------------------------------------------------------------//

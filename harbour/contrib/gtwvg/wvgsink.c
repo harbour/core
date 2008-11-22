@@ -117,18 +117,8 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem );
 
 HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant );
 
-static int s_ev_iid_[ 100 ];
-//----------------------------------------------------------------------//
-static int ThisThreadId( void )
-{
-   PHB_THREADSTATE pThread;
+void HB_EXPORT hb_ToOutDebug( const char * sTraceMsg, ... );
 
-   pThread = ( PHB_THREADSTATE ) hb_vmThreadState();
-   if( pThread )
-      return( ( int ) pThread->th_no );
-   else
-      return( 0 );
-}
 //----------------------------------------------------------------------//
 // these 2 functions are required to send parameters by reference
 //
@@ -217,10 +207,9 @@ typedef struct {
    DWORD                   dwEventCookie;
    char*                   parent_on_invoke;
    IID                     device_event_interface_iid;
-   PHB_ITEM                pSelf;        // object to handle the events (optional)
-   EventMap*               pEventMap;    // event map
-   int                     iEventMapLen; // length of the eventMap
+   PHB_ITEM                pSelf;              // object to handle the events (optional)
    PHB_ITEM                pEvents;
+   int                     iID_riid;
 } MyRealIEventHandler;
 
 //----------------------------------------------------------------------//
@@ -244,8 +233,8 @@ static HRESULT STDMETHODCALLTYPE QueryInterface( IEventHandler *this, REFIID vTa
    if ( IsEqualIID( vTableGuid, &IID_IUnknown ) )
    {
       *ppv = ( IUnknown * ) this;
-
       /* Increment the count of callers who have an outstanding pointer to this object */
+//hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, &IID_IUnknown ) )" );
       this->lpVtbl->AddRef( this );
       return S_OK;
    }
@@ -253,16 +242,17 @@ static HRESULT STDMETHODCALLTYPE QueryInterface( IEventHandler *this, REFIID vTa
    if ( IsEqualIID( vTableGuid, &IID_IDispatch ) )
    {
       *ppv = ( IDispatch * ) this;
+//hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, &IID_IDispatch ) )" );
       this->lpVtbl->AddRef( this );
       return S_OK;
    }
 
    if ( IsEqualIID( vTableGuid, &( ( ( MyRealIEventHandler * ) this )->device_event_interface_iid ) ) )
    {
-      if( s_ev_iid_[ ThisThreadId() ] == 0 )
+      if( ++( ( MyRealIEventHandler * ) this )->iID_riid == 1 )
       {
-         s_ev_iid_[ ThisThreadId() ]++;
          *ppv = ( IDispatch* ) this;
+//hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, &( ( ( MyRealIEventHandler * ) this )->device_event_interface_iid ) ) )" );
          this->lpVtbl->AddRef( this );
       }
       return S_OK;
@@ -285,8 +275,8 @@ static ULONG STDMETHODCALLTYPE AddRef( IEventHandler *this )
    // Rather they are defined only above in our MyRealIEventHandler
    // struct. So typecast to that in order to access those data members
 
+//hb_ToOutDebug( "AddRef->count=%i", ( ( MyRealIEventHandler * ) this )->count + 1 );
    return( ++( ( MyRealIEventHandler * ) this )->count );
-
 }
 //----------------------------------------------------------------------//
 //
@@ -294,19 +284,25 @@ static ULONG STDMETHODCALLTYPE AddRef( IEventHandler *this )
 
 static ULONG STDMETHODCALLTYPE Release( IEventHandler *this )
 {
+#if 0
+hb_ToOutDebug( "static ULONG STDMETHODCALLTYPE Release( IEventHandler *this )->count = %i",
+                                           ( ( MyRealIEventHandler * ) this )->count - 1 );
+#endif
    if ( --( ( MyRealIEventHandler * ) this )->count == 0 )
    {
-
       if( ( ( MyRealIEventHandler * ) this)->pSelf )
+      {
          hb_itemRelease( ( ( MyRealIEventHandler * ) this )->pSelf );
+      }
 
-      if( ( ( MyRealIEventHandler * ) this )->pEventMap )
-         hb_xfree( ( ( MyRealIEventHandler * ) this )->pEventMap );
-
-      GlobalFree( this );
-      return( 0 );
+      if( ( MyRealIEventHandler * ) this )
+      {
+         GlobalFree( ( MyRealIEventHandler * ) this );
+      }
+//hb_ToOutDebug( "       ULONG STDMETHODCALLTYPE Release( IEventHandler *this )->this" );
+      return( (ULONG) 0 );
    }
-   return( ( ( MyRealIEventHandler * ) this )->count );
+   return( ( ( MyRealIEventHandler * ) this )->count < 0 ? ( ( MyRealIEventHandler * ) this )->count : 0 );
 }
 //----------------------------------------------------------------------//
 //
@@ -363,7 +359,7 @@ static ULONG STDMETHODCALLTYPE Invoke( IEventHandler *this, DISPID dispid, REFII
    PHB_ITEM   pItemArray[ 32 ]; // max 32 parameters?
    PHB_ITEM   *pItems;
    PHB_ITEM   Key;
-
+//hb_ToOutDebug( "event = %i",(int)dispid );
    // We implement only a "default" interface
    if ( !IsEqualIID( riid, &IID_NULL ) )
    {
@@ -430,7 +426,8 @@ static ULONG STDMETHODCALLTYPE Invoke( IEventHandler *this, DISPID dispid, REFII
 
          for( i=iArg; i > 0; i-- )
          {
-            if( ( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.vt & VT_BYREF ) == VT_BYREF )
+            //if( ( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.vt & VT_BYREF ) == VT_BYREF )
+            if( HB_IS_BYREF( pItemArray[ iArg-i ] ) )
             {
                hb_oleItemToVariant( &( params->rgvarg[ iArg-i ] ), pItemArray[ iArg-i ] );
 
@@ -524,7 +521,9 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
    {
       thisobj->lpVtbl = ( IEventHandlerVtbl * ) &IEventHandler_Vtbl;
 
+      ( ( MyRealIEventHandler * ) thisobj )->pSelf = NULL;
       ( ( MyRealIEventHandler * ) thisobj )->count = 0;
+      ( ( MyRealIEventHandler * ) thisobj )->iID_riid = 0;
 
       hr = thisobj->lpVtbl->QueryInterface( thisobj, &IID_IUnknown, (void**) &pIUnknown);
       if (hr == S_OK && pIUnknown)
@@ -538,16 +537,15 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
                do
                {
                   hr = m_pIEnumConnectionPoints->lpVtbl->Next( m_pIEnumConnectionPoints, 1, &m_pIConnectionPoint, NULL );
-
                   if( hr == S_OK )
                   {
                      hr = m_pIConnectionPoint->lpVtbl->GetConnectionInterface( m_pIConnectionPoint, &rriid );
-
                      if ( hr == S_OK )
                      {
                         ( ( MyRealIEventHandler* ) thisobj )->device_event_interface_iid = rriid;
 
                         hr = m_pIConnectionPoint->lpVtbl->Advise( m_pIConnectionPoint, pIUnknown, &dwCookie );
+
                         if ( hr == S_OK )
                         {
                            ( ( MyRealIEventHandler* ) thisobj )->pIConnectionPoint = m_pIConnectionPoint;
@@ -564,15 +562,12 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
                      }
                   }
                } while( hr == S_OK );
-
                m_pIEnumConnectionPoints->lpVtbl->Release( m_pIEnumConnectionPoints );
                m_pIEnumConnectionPoints = NULL;
             }
-
             pIConnectionPointContainerTemp->lpVtbl->Release( pIConnectionPointContainerTemp );
             pIConnectionPointContainerTemp = NULL;
          }
-
          pIUnknown->lpVtbl->Release( pIUnknown );
          pIUnknown = NULL;
       }
@@ -583,25 +578,42 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
    return hr;
 }
 //----------------------------------------------------------------------//
-static void ShutdownConnectionPoint( MyRealIEventHandler *this )
-{
-    if ( this->pIConnectionPoint )
-    {
-       this->dwEventCookie = 0;
-       this->pIConnectionPoint->lpVtbl->Release( this->pIConnectionPoint );
-       this->pIConnectionPoint = NULL;
-    }
-}
-//----------------------------------------------------------------------//
 HB_FUNC( HB_AX_SHUTDOWNCONNECTIONPOINT )
 {
-   MyRealIEventHandler* hSink = ( MyRealIEventHandler * ) hb_parnl( 1 );
-   ShutdownConnectionPoint( hSink );
-   hb_itemRelease( hSink->pEvents );
+   MyRealIEventHandler* hSink = ( MyRealIEventHandler * ) hb_parnint( 1 );
 
-   s_ev_iid_[ ThisThreadId() ] = 0;
+//hb_ToOutDebug( "---------------------------------------------" );
+   #if 1
+   if ( hSink->pIConnectionPoint )
+   {
+      hSink->dwEventCookie = 0;
+      hSink->pIConnectionPoint->lpVtbl->Release( hSink->pIConnectionPoint );
+      hSink->pIConnectionPoint = NULL;
+   }
+   #endif
+
+   #if 1
+   if( hSink->pEvents )
+   {
+      hb_itemRelease( hSink->pEvents );
+   }
+   #endif
+
+   #if 0
+   if( ( MyRealIEventHandler * ) hSink )
+   {
+      GlobalFree( ( MyRealIEventHandler * ) hSink );
+   }
+   #endif
+//hb_ToOutDebug( "=============================================" );
 }
 //----------------------------------------------------------------------//
+HB_FUNC( HB_AX_RELEASEOBJECT )
+{
+   IDispatch * pDisp = ( IDispatch * ) hb_parnint( 1 );
+   s_nOleError = pDisp->lpVtbl->Release( pDisp );
+}
+//---------------------------------------------------------------------------//
 HB_FUNC( HB_AX_SETUPCONNECTIONPOINT )
 {
    HRESULT              hr;
@@ -609,10 +621,11 @@ HB_FUNC( HB_AX_SETUPCONNECTIONPOINT )
    LPIID                riid  = ( LPIID ) &IID_IDispatch;
    int                  n;
 
-   hr = SetupConnectionPoint( ( device_interface* ) hb_parnint( 1 ), ( REFIID ) riid, ( void** ) &hSink, &n ) ;
+   hr = SetupConnectionPoint( ( device_interface* ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( REFIID ) riid, ( void** ) &hSink, &n ) ;
 
    hSink->pEvents = hb_itemNew( hb_param( 4, HB_IT_ANY ) );
-   hb_stornl( ( LONG ) hSink, 2 );
+
+   hb_stornint( ( LONG ) hSink, 2 );
    hb_storni( n, 3 );
    hb_retnl( hr );
 }
@@ -762,7 +775,7 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
             pUnk->lpVtbl->Release( pUnk );
             GetClientRect( hParent, &rc );
             MoveWindow( GetDlgItem( hParent, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
-            hb_retnl( ( long ) obj );
+            hb_retnint( ( long ) obj );
          }
          else
          {
@@ -782,17 +795,8 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
    // return the control handle
    if ISBYREF( 11 )
    {
-      hb_stornl( ( long ) hWnd, 11 );
+      hb_stornint( ( long ) hWnd, 11 );
    }
-}
-//---------------------------------------------------------------------------//
-//
-// (hOleObject)
-//
-HB_FUNC( HB_AX_AXRELEASEOBJECT )
-{
-   IDispatch * pDisp = ( IDispatch * ) hb_parnl( 1 );
-   s_nOleError = pDisp->lpVtbl->Release( pDisp );
 }
 //---------------------------------------------------------------------------//
 //

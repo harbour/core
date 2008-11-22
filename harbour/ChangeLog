@@ -8,6 +8,42 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-22 15:39 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+    ! Fixed to honor parent GT if that is alien.
+
+  * harbour/contrib/gtwvg/wvggui.c
+    ! Thorough synchronized hb_gtInfo() slots.
+      Every info gives results as expected, the only 
+      poiint to remeber is that those values are based on :fontHeight/Width
+      set by the user at startup, though the font is never created.
+      So MaxCol() will return the ( Windows client area size / fontWidth ).
+      At any given moment this value is measured from actual size of the
+      window. Though this information is irrelevant in this context
+      but still it works.
+
+  * harbour/contrib/gtwvg/wvgsink.c
+    ! Fixed few left-over unreleased memory blocks.
+      More synchronized code.
+
+    ; TOFIX: With some active-x's, for example, Shell.Explorer.2, 
+      object never unreference itself to 0 and hence GlobalAlloc()ated
+      memory never gets released. Though I made extensive debugging 
+      but do not know where I should look into this matter.     
+
+  * harbour/contrib/gtwvg/wvgwin.c
+    + Added few more Win_* functions.
+
+  * harbour/contrib/gtwvg/wvgax.prg
+  * harbour/contrib/gtwvg/wvgcrt.prg
+  * harbour/contrib/gtwvg/wvgdlg.prg
+    ! More synchronizations, method implementations, etc.
+      Still a work in progress.
+
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    ! Changed menu prompts to depict correct usage.
+    + Added more prompts and deleted unwanted ones.
+
 2008-11-19 21:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-func.sh
     ! hbw32 -> hbwin

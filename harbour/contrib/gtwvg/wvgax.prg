@@ -138,7 +138,6 @@ CLASS WvgActiveXControl FROM TOleAuto, WvgWindow
 
 PROTECTED:
    METHOD adviseEvents()
-   METHOD unadviseEvents()
 
    ENDCLASS
 
@@ -191,17 +190,44 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
 //----------------------------------------------------------------------//
 METHOD Destroy() CLASS WvgActiveXControl
 
-   ::UnadviseEvents()
-   IF Win_IsWindow( ::hWnd )
-      Win_DestroyWindow( ::hWnd )
+   BEGIN SEQUENCE
+   IF hb_IsNumeric( ::hObj ) .and. ::hObj <> 0
+//hb_ToOutDebug( '......................Release....................' )
+
+      IF Win_IsWindow( ::hWnd )
+         Win_DestroyWindow( ::hWnd )
+      ENDIF
+
+      IF ::hSink <> 0
+         HB_AX_ShutDownConnectionPoint( ::hSink )
+         ::hSink := NIL
+      ENDIF
+
+      IF --nRef == 0
+//         HB_AX_AtlAxWinTerm()
+      ENDIF
+//hb_ToOutDebug( '<<                    Release                  >>' )
    ENDIF
 
-   //::hObj := NIL
+   ENDSEQUENCE
 
-   IF --nRef == 0
-      HB_AX_AtlAxWinTerm()
-   ENDIF
    RETURN NIL
+//----------------------------------------------------------------------//
+METHOD adviseEvents() CLASS WvgActiveXControl
+   LOCAL  n, hSink, xRet
+
+   xRet := HB_AX_SetupConnectionPoint( ::hObj, @hSink, @n, ::hEvents )
+   ::hSink := hSink
+
+   RETURN xRet
+//----------------------------------------------------------------------//
+METHOD mapEvent( nEvent, bBlock )
+
+   if hb_isNumeric( nEvent ) .and. hb_isBlock( bBlock )
+      ::hEvents[ nEvent ] := { bBlock }
+   endif
+
+   RETURN Self
 //----------------------------------------------------------------------//
 METHOD inheritPresParams() CLASS WvgActiveXControl
    Local lSuccess := .t.
@@ -239,28 +265,6 @@ METHOD mouseMove() CLASS WvgActiveXControl
    RETURN Self
 //----------------------------------------------------------------------//
 METHOD activate() CLASS WvgActiveXControl
-   RETURN Self
-//----------------------------------------------------------------------//
-METHOD adviseEvents() CLASS WvgActiveXControl
-   LOCAL  n
-
-   RETURN HB_AX_SetupConnectionPoint( ::hObj, @::hSink, @n, ::hEvents )
-//----------------------------------------------------------------------//
-METHOD unadviseEvents() CLASS WvgActiveXControl
-
-   IF ::hSink <> 0
-      HB_AX_ShutDownConnectionPoint( ::hSink )
-      ::hSink := 0
-   ENDIF
-
-   RETURN NIL
-//----------------------------------------------------------------------//
-METHOD mapEvent( nEvent, bBlock )
-
-   if hb_isNumeric( nEvent ) .and. hb_isBlock( bBlock )
-      ::hEvents[ nEvent ] := { bBlock }
-   endif
-
    RETURN Self
 //----------------------------------------------------------------------//
 //                       Class AutomationObject

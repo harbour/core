@@ -108,7 +108,13 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDi
    endif
 
    hb_gtInfo( HB_GTI_PRESPARAMS, { ::exStyle, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
-                                   ::aSize[ 1 ], ::aSize[ 2 ], ::pGTp, .F., .f. } )
+                                   ::aSize[ 1 ], ::aSize[ 2 ], ::pGTp, .F., .F. } )
+
+   if ::visible
+      hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
+   else
+      hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_HIDE   )
+   endif
 
    ::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
@@ -131,7 +137,6 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDi
    endif
 
    if ::visible
-      hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
       ::lHasInputFocus := .t.
    endif
 
@@ -146,5 +151,9 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
    RETURN Self
 //----------------------------------------------------------------------//
 METHOD destroy() CLASS WvgDialog
+
+   ::pGT  := NIL
+   ::pGTp := NIL
+
    RETURN Self
 //----------------------------------------------------------------------//
