@@ -24,6 +24,7 @@ PRG_SOURCES=\
 	wvgcrt.prg \
 	wvgax.prg \
 	wvgdlg.prg \
+	wvgmenub.prg \
 
 PRG_HEADERS=\
 	hbgtwvg.ch \

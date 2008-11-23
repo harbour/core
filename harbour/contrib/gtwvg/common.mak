@@ -18,6 +18,7 @@ LIB_OBJS = \
    $(OBJ_DIR)wvgcrt$(OBJEXT) \
    $(OBJ_DIR)wvgax$(OBJEXT) \
    $(OBJ_DIR)wvgdlg$(OBJEXT) \
+   $(OBJ_DIR)wvgmenub$(OBJEXT) \
    \
    $(OBJ_DIR)gtwvg$(OBJEXT) \
    $(OBJ_DIR)wvgcore$(OBJEXT) \
