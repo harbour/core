@@ -693,7 +693,7 @@ FUNCTION WvtMyBrowse()
                             oCrt:icon := "dia_excl.ico",;
                             oCrt:create(),;
                             Wvt_SetGui( .t. ),;
-                            WvtMyBrowse_X(),;
+                            WvtMyBrowse_X( oCrt ),;
                             oCrt:destroy();
                   } )
 
@@ -703,7 +703,47 @@ FUNCTION WvtMyBrowse()
 
    Return NIL
 //----------------------------------------------------------------------//
-FUNCTION WvtMyBrowse_X()
+STATIC FUNCTION BrwBuildMenu( oCrt )
+   Local oMenu, oSMenu
+
+   oMenu := WvgMenuBar():new( oCrt, , .t. ):create()
+
+   oSMenu := WvgMenu():new( oMenu ):create()
+   oSMenu:addItem( { '~First' , {|| alert( 'First'  ) } } )
+   oSMenu:addItem( { '~Second', {|| alert( 'Second' ) } } )
+   oSMenu:addItem()
+   oSMenu:addItem( { '~Third' , {|| alert( 'Third'  ) } } )
+   oMenu:addItem( { oSMenu, '~Hello' } )
+
+   oSMenu := WvgMenu():new( oMenu ):create()
+   oSMenu:addItem( { '~First' , {|| alert( 'First'  ) } } )
+   oSMenu:addItem( '-' )
+   oSMenu:addItem( { '~Second', {|| alert( 'Second' ) } } )
+   oSMenu:addItem( { '~Third' , {|| alert( 'Third'  ) } } )
+   oMenu:addItem( { oSMenu, '~MyFriends' } )
+
+   oSMenu := WvgMenu():new( oMenu ):create()
+   oSMenu:title := "~Procedural"
+   oSMenu:addItem( { "Procedure ~1", } )
+   oSMenu:addItem( { "Procedure ~2", } )
+   oSMenu:itemSelected := {|mp1| MyMenuProcedure( 100+mp1 ) }
+   oSMenu:checkItem( 2 )
+
+   oMenu:addItem( { oSMenu, NIL } )
+
+   Return oMenu
+//----------------------------------------------------------------------//
+Static Function MyMenuProcedure( nID )
+   do case
+   case nID == 101
+      alert( 'Procedure 101' )
+   case nID == 102
+      alert( 'Procedure 102' )
+   endcase
+   Return .t.
+//----------------------------------------------------------------------//
+
+FUNCTION WvtMyBrowse_X( oCrt )
    LOCAL nKey, bBlock, oBrowse , aLastPaint, i, aLastPaint1
    LOCAL lEnd    := .f.
    LOCAL aBlocks := {}
@@ -721,9 +761,12 @@ FUNCTION WvtMyBrowse_X()
    LOCAL hPopup  := Wvt_SetPopupMenu()
    LOCAL stru_:={}, cDbfFile, cSqlFile, cFileIndex, cFileDbf, cRDD, nIndex
    Local pGT, pGT1, nStStyle, nExStyle
+   Local oMenu
 
    STATIC nStyle := 0
    THREAD STATIC nFactor := 200
+
+   BrwBuildMenu( oCrt )
 
    pGT_[ 2 ] := hb_gtSelect()
 
@@ -2171,6 +2214,65 @@ FUNCTION DrawSlide( hDlg, nSlide )
 
    Return nil
 //----------------------------------------------------------------------//
+Static Function MyFunction( nMode )
+
+   #define MUSIC_WAITON          {800, 1600}
+
+   do case
+   case nMode == 1
+      tone( MUSIC_WAITON[1], 1 )
+      tone( MUSIC_WAITON[2], 1 )
+
+   case nMode == 2
+      tone( MUSIC_WAITON[2], 1 )
+      tone( MUSIC_WAITON[1], 1 )
+
+   case nMode == 3    // THUD
+      tone( 60,0.5 )
+
+   case nMode == 101  // Charge
+      Eval( {|| tone(523,2),tone(698,2),tone(880,2),tone(1046,4),tone(880,2),tone(1046,8) } )
+
+   case nMode == 102  // NannyBoo
+      AEval( {{196,2},{196,2},{164,2},{220,2},{196,4},{164,4}}, {|a| tone(a[1],a[2]) } )
+
+   case nMode == 103  // BADKEY
+      tone( 480,0.25 )
+      tone( 240,0.25 )
+
+   endcase
+
+   Return nil
+//----------------------------------------------------------------------//
+Static Function ActiveXBuildMenu( oCrt )
+   Local oMenuBar, oSubMenu
+
+   oMenuBar := WvgMenuBar():new( oCrt ):create()
+
+   // Define submenu in procedural style.
+   // The numeric index of the selected menu item
+   // is passed to the Callback code block -> mp1
+
+   oSubMenu       := WvgMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Procedural"
+   oSubMenu:addItem( { "Play Charge ~1", } )
+   oSubMenu:addItem( { "Play Nannyboo ~2", } )
+   oSubMenu:itemSelected := {|mp1| MyFunction( 100+mp1 ) }
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+
+   // Define submenu in the functional style:
+   // A menu item executes a code block that
+   // calls a function
+   oSubMenu       := WvgMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Functional"
+   oSubMenu:addItem( { "Play Opening ~1", {|| MyFunction( 1 ) } } )
+   oSubMenu:addItem( { "Play Closing ~2", {|| MyFunction( 2 ) } } )
+   oSubMenu:addItem( { "~Play Badkey"   , {|| MyFunction( 3 ) } } )
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+   Return nil
+//----------------------------------------------------------------------//
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
 //
 Function ExecuteActiveX( nActiveX )
@@ -2189,6 +2291,7 @@ Function ExecuteActiveX( nActiveX )
       oCrt := WvgDialog():new( , , { 30,30 }, { 500,550 }, , .f. )
       oCrt:closable := .f.
       oCrt:create()
+      ActiveXBuildMenu( oCrt )
    #endif
 
    oCrt:show()
@@ -2247,7 +2350,9 @@ Static Function ExeActiveX( oCrt, nActiveX )
                                    oCom:Refresh()                    ,;
                                    oCom:ShowSecondsHand := .t.       ,;
                                    oCom:Hands3D   := .t.             ,;
-                                   oCom:Refresh()                   } )
+                                   oCom:Refresh()                    ,;
+                                   oCom:showAboutBox()                ;
+                                } )
 
       oCom:mapEvent( evBtnUp, {|nBtn,nShift,nX,nY| if( nBtn == 2, lEnd := .t., NIL ) } )
 

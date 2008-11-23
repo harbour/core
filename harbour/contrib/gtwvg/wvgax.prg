@@ -186,6 +186,10 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
       ::AdviseEvents()
    ENDIF
 
+   #if 0
+   HB_AX_LoadTypeInfo( ::hObj )
+   #endif
+
    RETURN Self
 //----------------------------------------------------------------------//
 METHOD Destroy() CLASS WvgActiveXControl

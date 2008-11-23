@@ -237,13 +237,6 @@ HB_FUNC( WIN_GETDIALOGBASEUNITS )
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( WIN_SETMENU )
-{
-   SetMenu( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) ;
-}
-
-//-------------------------------------------------------------------//
-
 HB_FUNC( WIN_SETDLGITEMTEXT )
 {
    LPTSTR lpBuffer = HB_TCHAR_CONVTO( hb_parc( 3 ) );
@@ -514,13 +507,6 @@ HB_FUNC( WIN_DESTROYWINDOW )
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( WIN_DESTROYMENU )
-{
-   hb_retl( DestroyMenu( (HMENU) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
-}
-
-//-------------------------------------------------------------------//
-
 HB_FUNC( WIN_CLIENTTOSCREEN )
 {
    POINT    Point ;
@@ -660,6 +646,139 @@ HB_FUNC( WIN_FINDWINDOW )
 HB_FUNC( WIN_SLEEP )
 {
    Sleep( hb_parni( 1 ) );
+}
+
+//----------------------------------------------------------------------//
+//                         Menu Manipulations
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_SETMENU )
+{
+   HWND hWnd = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
+
+   #if 1
+   BOOL bSet;
+   RECT wi = { 0, 0, 0, 0 };
+   RECT ci = { 0, 0, 0, 0 };
+   USHORT height, width;
+
+   bSet = SetMenu( hWnd, ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
+
+   GetWindowRect( hWnd, &wi );
+   GetClientRect( hWnd, &ci );
+
+   height = ( USHORT ) ( ci.bottom - ci.top );
+   width  = ( USHORT ) ( ci.right - ci.left );
+
+   width  += ( USHORT ) ( wi.right - wi.left - ci.right );
+   height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+
+   SetWindowPos( hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
+
+   hb_retl( bSet );
+   #endif
+
+   #if 0
+   hb_retl( SetMenu( hWnd, ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
+   #endif
+}
+
+//-------------------------------------------------------------------//
+
+HB_FUNC( WIN_CREATEMENU )
+{
+  hb_retnint( ( HB_PTRDIFF ) CreateMenu() );
+}
+
+//-------------------------------------------------------------------//
+
+HB_FUNC( WIN_CREATEPOPUPMENU )
+{
+  hb_retnint( ( HB_PTRDIFF ) CreatePopupMenu() );
+}
+
+//-------------------------------------------------------------------//
+
+HB_FUNC( WIN_APPENDMENU )
+{
+  char    ucBuf[ 256 ];
+  int     i,iLen ;
+  LPCTSTR lpszCaption;
+
+  if ( ISCHAR( 4 ) )
+  {
+    iLen = hb_parclen( 4 );
+    if ( iLen > 0 && iLen < 256 )   // Translate '~' to '&'
+    {
+      lpszCaption = HB_TCHAR_CONVTO( hb_parc( 4 ) );
+      for ( i = 0; i < iLen; i++ )
+      {
+        ucBuf[ i ] = ( *lpszCaption == '~' ) ? '&' : ( char ) *lpszCaption;
+        lpszCaption++;
+      }
+      ucBuf[ iLen ]= '\0';
+      lpszCaption = HB_TCHAR_CONVTO( ucBuf );
+    }
+    else
+    {
+       lpszCaption = HB_TCHAR_CONVTO( hb_parc( 4 ) );
+    }
+  }
+  else
+  {
+    lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 ) ; // It is a SEPARATOR or Submenu
+  }
+
+  hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), ( LPCTSTR ) lpszCaption ) ) ;
+}
+
+//-------------------------------------------------------------------//
+
+HB_FUNC( WIN_DELETEMENU )
+{
+  hb_retl( DeleteMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+}
+
+//-------------------------------------------------------------------//
+
+HB_FUNC( WIN_DESTROYMENU )
+{
+  hb_retl( DestroyMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+}
+
+//-------------------------------------------------------------------//
+
+HB_FUNC( WIN_ENABLEMENUITEM )
+{
+   hb_retl( EnableMenuItem( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+}
+
+//-------------------------------------------------------------------//
+
+HB_FUNC( WIN_CHECKMENUITEM )
+{
+   hb_retni( CheckMenuItem( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_DRAWMENUBAR )
+{
+   DrawMenuBar( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) ;
+}
+
+//-------------------------------------------------------------------//
+
+HB_FUNC( WIN_UPDATEWINDOW )
+{
+   hb_retl( UpdateWindow( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_SHOWWINDOW )
+{
+   hb_retl( ShowWindow( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ) );
 }
 
 //----------------------------------------------------------------------//

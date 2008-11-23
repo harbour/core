@@ -8,6 +8,39 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-23 13:27 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+    + static void hb_gt_wvt_FireMenuEvent( PHB_GTWVT pWVT, int iMode, int menuIndex )
+    + WM_ENTERMENULOOP
+    + WM_EXITMENULOOP
+    ! WM_COMMAND - Enhanced
+
+  * harbour/contrib/gtwvg/wvggui.c
+    + Same as with gtwvg.c
+
+  * harbour/contrib/gtwvg/wvgsink.c
+    + Experimental TypeLib info extraction function. Disabled for now.
+
+  * harbour/contrib/gtwvg/wvgwin.c
+    + Many new Win_* winapi functions.
+
+  * harbour/contrib/gtwvg/hbgtwvg.ch
+    + HB_GTI_MENU
+
+  * harbour/contrib/gtwvg/wvgax.prg
+  * harbour/contrib/gtwvg/wvgcrt.prg
+  * harbour/contrib/gtwvg/wvgdlg.prg
+  + harbour/contrib/gtwvg/wvgmenub.prg
+  * harbour/contrib/gtwvg/wvgphdlr.prg
+    + Implemented ( partially but functional ) Xbase++ compatible
+      WvgMenuBar() and WvgMenu() classes.
+
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    + Demonstrated WvgMenuBar() and WvgMenu() implementation
+      by picking up the real-time Xbase++ code.
+
+  ; NEXT: WvtToolBar() class per XbpToolBar().  
+
 2008-11-22 15:57 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   + harbour/contrib/gtwvg/tests/myharu.pdf
 

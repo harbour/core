@@ -75,6 +75,8 @@
 //----------------------------------------------------------------------//
 CLASS WvgDialog FROM WvgWindow
 
+   DATA   oMenu
+
    METHOD init()
    METHOD create()
    METHOD configure()
@@ -151,6 +153,10 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
    RETURN Self
 //----------------------------------------------------------------------//
 METHOD destroy() CLASS WvgDialog
+
+   IF hb_isObject( ::oMenu )
+      ::oMenu:destroy()
+   ENDIF
 
    ::pGT  := NIL
    ::pGTp := NIL

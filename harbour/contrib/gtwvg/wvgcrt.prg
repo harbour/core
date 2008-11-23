@@ -76,6 +76,8 @@
 
 CLASS WvgCrt  INHERIT  WvgPartHandler
 
+   DATA     oMenu
+
    //  CONFIGURATION
    //
    DATA     alwaysOnTop                           INIT  .F.        // Determines whether the dialog can be covered by other windows
@@ -372,6 +374,10 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
 METHOD destroy() CLASS WvgCrt
 
+   IF hb_isObject( ::oMenu )
+      ::oMenu:destroy()
+   ENDIF
+
    if ::lModal
       ::pGT := NIL
       hb_gtSelect( ::pGTp )
@@ -485,8 +491,15 @@ METHOD lockUpdate() CLASS WvgCrt
 //----------------------------------------------------------------------//
 
 METHOD menuBar() CLASS WvgCrt
+   LOCAL oMenuBar
 
-   RETURN Self
+   IF !hb_isObject( ::oMenu )
+      oMenuBar := WvgMenuBar():New( self ):create()
+   ELSE
+      oMenuBar := ::oMenu
+   ENDIF
+
+   RETURN oMenuBar
 
 //----------------------------------------------------------------------//
 

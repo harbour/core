@@ -326,6 +326,20 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams )
 
    return nResult;
 }
+
+static void hb_gt_wvt_FireMenuEvent( PHB_GTWVT pWVT, int iMode, int menuIndex )
+{
+   PHB_ITEM pEvParams = hb_itemNew( NULL );
+
+   hb_arrayNew( pEvParams, 2 );
+   hb_arraySetNI( pEvParams, 1, iMode );
+   hb_arraySetNI( pEvParams, 2, menuIndex );
+
+   hb_gt_wvt_FireEvent( pWVT, HB_GTE_MENU, pEvParams );
+
+   hb_itemRelease( pEvParams );
+}
+
 /*
  *  functions for handling the input queues for the mouse and keyboard
  */
@@ -996,10 +1010,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       {
          return( hb_gt_wvt_SizeChanged( pWVT ) );
       }
-      case WM_COMMAND:
-      {
-         return 0;
-      }
       case WM_SYSCOMMAND:
       {
          switch( wParam )
@@ -1032,6 +1042,24 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             Shell_NotifyIcon( NIM_DELETE, &tnid );
             ShowWindow( hWnd, SW_RESTORE );
          }
+         return 0;
+      }
+      case WM_COMMAND:
+      {
+         if( HIWORD( wParam ) == 0 )
+         {
+            hb_gt_wvt_FireMenuEvent( pWVT, 0, ( int ) LOWORD( wParam ) );
+         }
+         return 0;
+      }
+      case WM_ENTERMENULOOP:
+      {
+         hb_gt_wvt_FireMenuEvent( pWVT, 1, ( int ) wParam );
+         return 0;
+      }
+      case WM_EXITMENULOOP:
+      {
+         hb_gt_wvt_FireMenuEvent( pWVT, 2, ( int ) wParam );
          return 0;
       }
       case WM_MOUSEHOVER:

@@ -66,6 +66,7 @@
 #define HB_GTE_MOUSE                      6
 #define HB_GTE_KEYBOARD                   7
 #define HB_GTE_TIMER                      8
+#define HB_GTE_MENU                       9
 
 #define HB_GTI_SETFONT                   71
 #define HB_GTI_PRESPARAMS                72

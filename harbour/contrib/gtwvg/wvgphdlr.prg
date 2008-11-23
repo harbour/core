@@ -176,9 +176,9 @@ METHOD addChild( oWvg ) CLASS WvgPartHandler
 METHOD childFromName( nNameId ) CLASS WvgPartHandler
    LOCAL oWvg
 
-   if ::hChildren[ nNameId ] <> NIL
+   IF ::hChildren[ nNameId ] <> NIL
       oWvg := ::hChildren[ nNameId ]           // ???
-   endif
+   ENDIF
 
    RETURN oWvg
 
@@ -202,9 +202,9 @@ METHOD delChild( oWvg ) CLASS WvgPartHandler
 METHOD setName( nNameId ) CLASS WvgPartHandler
    LOCAL nOldNameId := ::nNameId
 
-   if Valtype( nNameId ) == 'N'
+   IF Valtype( nNameId ) == 'N'
       ::nNameId := nNameId
-   endif
+   ENDIF
 
    RETURN nOldNameId
 
@@ -213,9 +213,9 @@ METHOD setName( nNameId ) CLASS WvgPartHandler
 METHOD setOwner( oWvg ) CLASS WvgPartHandler
    LOCAL oOldXbp := ::oOwner
 
-   if valtype( oWvg ) == 'O'
+   IF valtype( oWvg ) == 'O'
       ::oOwner := oWvg
-   endif
+   ENDIF
 
    RETURN oOldXbp
 
@@ -224,126 +224,155 @@ METHOD setOwner( oWvg ) CLASS WvgPartHandler
 METHOD setParent( oWvg ) CLASS WvgPartHandler
    LOCAL oOldXbp := ::oParent
 
-   if valtype( oWvg ) == 'O'
+   IF valtype( oWvg ) == 'O'
       ::oParent := oWvg
-   endif
+   ENDIF
 
    RETURN oOldXbp
 
 //----------------------------------------------------------------------//
 
 METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
-   Local aPos, nReturn := 0
+   Local xResult, n, aPos
+   LOCAL nReturn := 0
+   LOCAL aMenuItem, bBlock, nPos
 
    DO CASE
 
    CASE nEvent == HB_GTE_MOUSE
-      if     xParams[ 1 ] == WM_MOUSEHOVER
+      IF     xParams[ 1 ] == WM_MOUSEHOVER
          aPos := { xParams[ 3 ], xParams[ 4 ] }
       elseif xParams[ 1 ] == WM_MOUSELEAVE
          // Nothing
       else
          aPos := if( ::mouseMode == 2, { xParams[ 3 ], xParams[ 4 ] }, { xParams[ 5 ], xParams[ 6 ] } )
-      endif
+      ENDIF
 
       SWITCH xParams[ 1 ]
 
-      case WM_MOUSEHOVER
-         if hb_isBlock( ::sl_enter )
+      CASE WM_MOUSEHOVER
+         IF hb_isBlock( ::sl_enter )
             eval( ::sl_enter, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_MOUSELEAVE
-         if hb_isBlock( ::sl_leave )
+      CASE WM_MOUSELEAVE
+         IF hb_isBlock( ::sl_leave )
             eval( ::sl_leave, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_RBUTTONDOWN
-         if hb_isBlock( ::sl_rbDown )
+      CASE WM_RBUTTONDOWN
+         IF hb_isBlock( ::sl_rbDown )
             eval( ::sl_rbDown, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_LBUTTONDOWN
-         if hb_isBlock( ::sl_lbDown )
+      CASE WM_LBUTTONDOWN
+         IF hb_isBlock( ::sl_lbDown )
             eval( ::sl_lbDown, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_RBUTTONUP      ////
-         if hb_isBlock( ::sl_rbUp )
+      CASE WM_RBUTTONUP      ////
+         IF hb_isBlock( ::sl_rbUp )
             eval( ::sl_rbUp, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_LBUTTONUP      ////
-         if hb_isBlock( ::sl_lbUp )
+      CASE WM_LBUTTONUP      ////
+         IF hb_isBlock( ::sl_lbUp )
             eval( ::sl_lbUp, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_RBUTTONDBLCLK
-         if hb_isBlock( ::sl_rbDblClick )
+      CASE WM_RBUTTONDBLCLK
+         IF hb_isBlock( ::sl_rbDblClick )
             eval( ::sl_rbDblClick, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_LBUTTONDBLCLK
-         if hb_isBlock( ::sl_lbDblClick )
+      CASE WM_LBUTTONDBLCLK
+         IF hb_isBlock( ::sl_lbDblClick )
             eval( ::sl_lbDblClick, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_MBUTTONDOWN
-         if hb_isBlock( ::sl_mbDown )
+      CASE WM_MBUTTONDOWN
+         IF hb_isBlock( ::sl_mbDown )
             eval( ::sl_mbDown, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_MBUTTONUP       ////
-         if hb_isBlock( ::sl_mbClick )
+      CASE WM_MBUTTONUP       ////
+         IF hb_isBlock( ::sl_mbClick )
             eval( ::sl_mbClick, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_MBUTTONDBLCLK
-         if hb_isBlock( ::sl_mbDblClick )
+      CASE WM_MBUTTONDBLCLK
+         IF hb_isBlock( ::sl_mbDblClick )
             eval( ::sl_mbDblClick, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_MOUSEMOVE
-         if hb_isBlock( ::sl_motion )
+      CASE WM_MOUSEMOVE
+         IF hb_isBlock( ::sl_motion )
             eval( ::sl_motion, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_MOUSEWHEEL
-         if hb_isBlock( ::sl_wheel )
+      CASE WM_MOUSEWHEEL
+         IF hb_isBlock( ::sl_wheel )
             eval( ::sl_wheel, aPos, NIL, self )
-         endif
+         ENDIF
          EXIT
-      case WM_NCMOUSEMOVE
+      CASE WM_NCMOUSEMOVE
          EXIT
       END
 
    CASE nEvent == HB_GTE_KEYBOARD
-      if hb_isBlock( ::keyboard )
+      IF hb_isBlock( ::keyboard )
          eval( ::keyboard, xParams, NIL, Self )
-      endif
+      ENDIF
 
    CASE nEvent == HB_GTE_SETFOCUS
-      if hb_isBlock( ::setInputFocus )
+      IF hb_isBlock( ::setInputFocus )
          eval( ::setInputFocus, NIL, NIL, Self )
-      endif
+      ENDIF
       ::lHasInputFocus := .t.
 
    CASE nEvent == HB_GTE_KILLFOCUS
-      if hb_isBlock( ::killInputFocus )
+      IF hb_isBlock( ::killInputFocus )
          eval( ::killInputFocus, NIL, NIL, Self )
-      endif
+      ENDIF
       ::lHasInputFocus := .f.
 
    CASE nEvent == HB_GTE_RESIZED
-      if hb_isBlock( ::sl_resize )
+      IF hb_isBlock( ::sl_resize )
          eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
-      endif
+      ENDIF
 
    CASE nEvent == HB_GTE_CLOSE
-      if hb_isBlock( ::close )
+      IF hb_isBlock( ::close )
          nReturn := eval( ::close, NIL, NIL, Self )
-      endif
+      ENDIF
 
+   CASE nEvent == HB_GTE_MENU
+      DO CASE
+
+      CASE xParams[ 1 ] == 0  // menu selected
+         IF hb_isObject( ::oMenu )
+            IF !empty( aMenuItem := ::oMenu:FindMenuItemById( xParams[ 2 ] ) )
+               IF hb_isBlock( aMenuItem[ 2 ] )
+                  Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
+
+               ELSEIF hb_isBlock( aMenuItem[ 3 ] )
+                  Eval( aMenuItem[ 3 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
+
+               ENDIF
+            ENDIF
+         ENDIF
+
+      CASE xParams[ 1 ] == 1  // enter menu loop
+         IF hb_isBlock( ::oMenu:sl_beginMenu )
+            Eval( ::oMenu:sl_beginMenu, NIL, NIL, Self )
+         ENDIF
+
+      CASE xParams[ 1 ] == 2  // exit menu loop
+         IF hb_isBlock( ::oMenu:sl_endMenu )
+            Eval( ::oMenu:sl_endMenu, NIL, NIL, Self )
+         ENDIF
+
+      ENDCASE
    ENDCASE
 
    RETURN nReturn
