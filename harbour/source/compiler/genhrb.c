@@ -167,7 +167,10 @@ void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME pFileName )
    }
 
    hb_compGenBufPortObj( HB_COMP_PARAM, &pHrbBody, &ulSize );
-   fwrite( pHrbBody, ulSize, 1, yyc );
+
+   if( fwrite( pHrbBody, ulSize, 1, yyc ) != 1 )
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FILE_WRITE, szFileName, NULL );
+
    hb_xfree( pHrbBody );
 
    fclose( yyc );

@@ -127,10 +127,11 @@ HB_EXTERN_BEGIN
 #define HB_COMP_ERR_NOT_VPARAMS                 65
 #define HB_COMP_ERR_OPEN_CFG                    66
 #define HB_COMP_ERR_ALWAYS_AFTER_EXIT           67
-#define HB_COMP_ERR_HISTORICAL_1                68
-#define HB_COMP_ERR_HISTORICAL_2                69
-#define HB_COMP_ERR_HISTORICAL_3                70
-#define HB_COMP_ERR_HISTORICAL_4                71
+#define HB_COMP_ERR_FILE_WRITE                  68
+#define HB_COMP_ERR_HISTORICAL_1                69
+#define HB_COMP_ERR_HISTORICAL_2                70
+#define HB_COMP_ERR_HISTORICAL_3                71
+#define HB_COMP_ERR_HISTORICAL_4                72
 
 #define HB_COMP_WARN_AMBIGUOUS_VAR              1
 #define HB_COMP_WARN_MEMVAR_ASSUMED             2

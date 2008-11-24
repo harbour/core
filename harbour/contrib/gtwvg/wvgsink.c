@@ -80,6 +80,8 @@
 */
 //----------------------------------------------------------------------//
 
+#define NONAMELESSUNION
+
 #ifdef __XHARBOUR__
    #include "hbvmopt.h"
 #else

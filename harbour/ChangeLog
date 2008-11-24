@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-24 12:34 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hberrors.h
+  * harbour/source/compiler/hbgenerr.c
+    + added new compile time error (file write error)
+
+  * harbour/source/pp/ppcore.c
+  * harbour/source/rtl/errorint.c
+  * harbour/source/compiler/genhrb.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/rtl/run.c
+  * harbour/source/vm/estack.c
+    * pacified warnings - Lorenzo please verify it compiling with C header
+      files from Ubuntu.
+
+  * harbour/contrib/xhb/filestat.c
+    ! fixed UNICODE compilation
+
+  * harbour/contrib/gtwvg/wvgsink.c
+    ! added #define NONAMELESSUNION to fix MinGW compilation
+
 2008-11-23 17:28 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/Makefile
   * harbour/contrib/gtwvg/common.mak

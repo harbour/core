@@ -410,16 +410,16 @@ static void hb_compGenCFunc( FILE * yyc, const char *cDecor, const char *szName,
       if( cDecor[i] == '%' && cDecor[i+1] == 's' )
       {
          int j=0;
-         while( szName[j+iStrip] )
+         while( szName[ j + iStrip ] )
          {
-            fwrite( (void*)(szName+j), 1, 1, yyc );
+            fputc( ( UCHAR ) szName[ j ], yyc );
             j++;
          }
          i +=2;
       }
       else
       {
-         fwrite( (void*)(cDecor+i), 1, 1, yyc );
+         fputc( ( UCHAR ) cDecor[ i ], yyc );
          i++;
       }
    }
@@ -437,12 +437,8 @@ static void hb_compGenCByteStr( FILE * yyc, BYTE * pText, ULONG ulLen )
        *
        * TODO: add switch to use hexadecimal format "%#04x"
        */
-      if( ( uchr < ( BYTE ) ' ' ) || ( uchr >= 127 ) )
-         fprintf( yyc, "%i, ", uchr );
-      else if( strchr( "\'\\\"", uchr ) )
-         fprintf( yyc, "%i, ", uchr );
-      else
-         fprintf( yyc, "\'%c\', ", uchr );
+      fprintf( yyc, ( uchr < ( BYTE ) ' ' || uchr >= 127 || uchr == '\\' ||
+                      uchr == '\'' ) ? "%i, " : "\'%c\', ", uchr );
    }
 }
 

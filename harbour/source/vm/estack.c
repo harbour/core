@@ -1037,16 +1037,16 @@ void hb_stackDispLocal( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDispLocal()"));
 
-   printf( hb_conNewLine() );
+   printf( "%s", hb_conNewLine() );
    printf( HB_I_("Virtual Machine Stack Dump at %s(%i):"),
            ( *hb_stack.pBase )->item.asSymbol.value->szName,
            ( *hb_stack.pBase )->item.asSymbol.stackstate->uiLineNo );
-   printf( hb_conNewLine() );
+   printf( "%s", hb_conNewLine() );
    printf( "--------------------------" );
 
    for( pBase = hb_stack.pBase; pBase <= hb_stack.pPos; pBase++ )
    {
-      printf( hb_conNewLine() );
+      printf( "%s", hb_conNewLine() );
 
       switch( hb_itemType( *pBase ) )
       {

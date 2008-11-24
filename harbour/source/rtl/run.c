@@ -61,7 +61,7 @@ HB_FUNC( __RUN )
 {
    if( ISCHAR( 1 ) && hb_gtSuspend() == 0 )
    {
-      system( hb_parc( 1 ) );
+      ( void ) system( hb_parc( 1 ) );
 
       if( hb_gtResume() != 0 )
       {

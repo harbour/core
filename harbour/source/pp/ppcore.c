@@ -837,7 +837,7 @@ static void hb_pp_dumpEnd( PHB_PP_STATE pState )
          pBuffer = hb_membufPtr( pState->pDumpBuffer );
          ulLen = hb_membufLen( pState->pDumpBuffer );
          fputs( "#pragma BEGINDUMP\n", pState->file_out );
-         fwrite( pBuffer, sizeof( char ), ulLen, pState->file_out );
+         ( void ) fwrite( pBuffer, sizeof( char ), ulLen, pState->file_out );
          fputs( "#pragma ENDDUMP\n", pState->file_out );
 
          while( ulLen-- )
@@ -2516,8 +2516,8 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
       hb_membufAddCh( pState->pBuffer, '\n' );
       if( pState->fWriteTrace )
       {
-         fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
-                 hb_membufLen( pState->pBuffer ), pState->file_trace );
+         ( void ) fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
+                          hb_membufLen( pState->pBuffer ), pState->file_trace );
       }
       if( pState->fTracePragmas )
       {
@@ -5124,8 +5124,8 @@ PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState )
                       pState->usLastType );
 #endif
       pState->usLastType = HB_PP_TOKEN_TYPE( pState->pTokenOut->type );
-      fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
-              hb_membufLen( pState->pBuffer ), pState->file_out );
+      ( void ) fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
+                       hb_membufLen( pState->pBuffer ), pState->file_out );
    }
 
    return pState->pTokenOut;
@@ -5873,8 +5873,8 @@ void hb_pp_tokenToString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
       {
          if( !fError )
             hb_membufAddCh( pState->pBuffer, ']' );
-         fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
-                 hb_membufLen( pState->pBuffer ), pState->file_out );
+         ( void ) fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
+                          hb_membufLen( pState->pBuffer ), pState->file_out );
       }
    }
 

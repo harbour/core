@@ -186,26 +186,26 @@ static BOOL hb_fsFileStats(
       HANDLE hFind;
       FILETIME filetime;
       SYSTEMTIME time;
-      
+
       /* Get attributes... */
-      dwAttribs = GetFileAttributes( (char*) pszFileName );
+      dwAttribs = GetFileAttributesA( ( char * ) pszFileName );
       if ( dwAttribs == INVALID_FILE_ATTRIBUTES )
       {
          /* return */
          return FALSE;
       }
-      
-      hb_fsAttrDecode( hb_fsAttrFromRaw( dwAttribs ), (char*) pszAttr );
-      
+
+      hb_fsAttrDecode( hb_fsAttrFromRaw( dwAttribs ), ( char * ) pszAttr );
+
       /* If file existed, do a findfirst */
-      hFind = FindFirstFile( (char*) pszFileName, &ffind );
+      hFind = FindFirstFileA( ( char * ) pszFileName, &ffind );
       if ( hFind != INVALID_HANDLE_VALUE )
       {
          CloseHandle( hFind );
-      
+
          /* get file times and work them out */
          *llSize = ( HB_FOFFSET ) ffind.nFileSizeLow + ( ( HB_FOFFSET ) ffind.nFileSizeHigh << 32 );
-      
+
          if ( FileTimeToLocalFileTime( &ffind.ftCreationTime, &filetime ) &&
               FileTimeToSystemTime( &filetime, &time ) )
          {
@@ -217,7 +217,7 @@ static BOOL hb_fsFileStats(
             *lcDate = hb_dateEncode( 0, 0, 0 );
             *lcTime = 0;
          }
-      
+
          if ( FileTimeToLocalFileTime( &ffind.ftLastAccessTime, &filetime ) &&
               FileTimeToSystemTime( &filetime, &time ) )
          {
@@ -237,11 +237,11 @@ static BOOL hb_fsFileStats(
 
    /* Generic algorithm based on findfirst */
    {
-      PHB_FFIND findinfo = hb_fsFindFirst( (char*) pszFileName, HB_FA_ALL );
+      PHB_FFIND findinfo = hb_fsFindFirst( ( char * ) pszFileName, HB_FA_ALL );
 
       if( findinfo )
       {
-         hb_fsAttrDecode( findinfo->attr, (char*) pszAttr );
+         hb_fsAttrDecode( findinfo->attr, ( char * ) pszAttr );
          *llSize = ( HB_FOFFSET ) findinfo->size;
          *lcDate = findinfo->lDate;
          *lcTime = (findinfo->szTime[0] - '0') * 36000 +
