@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-24 16:41 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+  * harbour/source/rtl/run.c
+  * harbour/source/rtl/errorint.c
+  * harbour/source/rtl/trace.c
+  * harbour/contrib/xhb/hboutdbg.c
+    * pacified warnings and updated some possibly danger constructions
+
+  * harbour/source/vm/memvars.c
+    % improved the performance of __MVRESTORE()
+    ; TOFIX: this code has Clipper incompatible extension which may cause
+      that incorrect values will be restored - numeric double values with
+      0 as default number of decimal places for str() formatting are
+      wrongly converted to integers loosing fractional part of number.
+
 2008-11-24 12:34 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hberrors.h
   * harbour/source/compiler/hbgenerr.c

@@ -100,6 +100,7 @@
 #define HB_PP_ERR_NESTED_INCLUDES               31    /* C3009 */
 #define HB_PP_ERR_INVALID_DIRECTIVE             32    /* C3010 */
 #define HB_PP_ERR_CANNOT_OPEN_RULES             33    /* C3011 */
+#define HB_PP_ERR_WRITE_FILE                    34    /* C3029 */
 
 
 /* warning messages */
@@ -148,6 +149,7 @@ static const char * hb_pp_szErrors[] =
    "Too many nested #includes",                                         /* C3009 */
    "Invalid name follows #",                                            /* C3010 */
    "Can't open standard rule file '%s'"                                 /* C3011 */
+   "Write error to intermediate file '%s'"                              /* C3029 */
 };
 
 
@@ -837,7 +839,8 @@ static void hb_pp_dumpEnd( PHB_PP_STATE pState )
          pBuffer = hb_membufPtr( pState->pDumpBuffer );
          ulLen = hb_membufLen( pState->pDumpBuffer );
          fputs( "#pragma BEGINDUMP\n", pState->file_out );
-         ( void ) fwrite( pBuffer, sizeof( char ), ulLen, pState->file_out );
+         if( fwrite( pBuffer, sizeof( char ), ulLen, pState->file_out ) != ulLen )
+            hb_pp_error( pState, 'F', HB_PP_ERR_WRITE_FILE, pState->szOutFileName );
          fputs( "#pragma ENDDUMP\n", pState->file_out );
 
          while( ulLen-- )
@@ -2516,8 +2519,12 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
       hb_membufAddCh( pState->pBuffer, '\n' );
       if( pState->fWriteTrace )
       {
-         ( void ) fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
-                          hb_membufLen( pState->pBuffer ), pState->file_trace );
+         if( fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
+                     hb_membufLen( pState->pBuffer ), pState->file_out ) !=
+             hb_membufLen( pState->pBuffer ) )
+         {
+            hb_pp_error( pState, 'F', HB_PP_ERR_WRITE_FILE, pState->szTraceFileName );
+         }
       }
       if( pState->fTracePragmas )
       {
@@ -5124,8 +5131,12 @@ PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState )
                       pState->usLastType );
 #endif
       pState->usLastType = HB_PP_TOKEN_TYPE( pState->pTokenOut->type );
-      ( void ) fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
-                       hb_membufLen( pState->pBuffer ), pState->file_out );
+      if( fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
+                  hb_membufLen( pState->pBuffer ), pState->file_out ) !=
+          hb_membufLen( pState->pBuffer ) )
+      {
+         hb_pp_error( pState, 'F', HB_PP_ERR_WRITE_FILE, pState->szOutFileName );
+      }
    }
 
    return pState->pTokenOut;
@@ -5873,8 +5884,12 @@ void hb_pp_tokenToString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
       {
          if( !fError )
             hb_membufAddCh( pState->pBuffer, ']' );
-         ( void ) fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
-                          hb_membufLen( pState->pBuffer ), pState->file_out );
+         if( fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
+                     hb_membufLen( pState->pBuffer ), pState->file_out ) !=
+             hb_membufLen( pState->pBuffer ) )
+         {
+            hb_pp_error( pState, 'F', HB_PP_ERR_WRITE_FILE, pState->szOutFileName );
+         }
       }
    }
 

@@ -204,8 +204,17 @@ void hb_OutDebug( const char * szMsg, ULONG ulMsgLen )
 
          if( select( s_iDebugFd + 1, NULL, &wrds, NULL, &tv ) > 0 )
          {
-            write( s_iDebugFd, szMsg, ulMsgLen );
-            write( s_iDebugFd, "\n", 1 );
+            if( ( ULONG ) write( s_iDebugFd, szMsg, ulMsgLen ) == ulMsgLen )
+            {
+               tv.tv_sec = 0;
+               tv.tv_usec = 100000;
+               FD_ZERO(&wrds);
+               FD_SET(s_iDebugFd, &wrds);
+               if( select( s_iDebugFd + 1, NULL, &wrds, NULL, &tv ) > 0 )
+               {
+                  if( write( s_iDebugFd, "\n", 1 ) != 1 ) {}
+               }
+            }
          }
       }
    }

@@ -107,7 +107,7 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
 
    hb_conOutErr( buffer, 0 );
    if( hLog )
-      ( void ) fwrite( buffer, sizeof( buffer[ 0 ] ), strlen( buffer ), hLog );
+      fprintf( hLog, "%s", buffer );
 
    if( szText )
       hb_snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
@@ -130,7 +130,7 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
 
       hb_conOutErr( msg, 0 );
       if( hLog )
-         ( void ) fwrite( msg, sizeof( msg[ 0 ] ), strlen( msg ), hLog );
+         fprintf( hLog, "%s", msg );
    }
 
    if( hLog )

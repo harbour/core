@@ -1509,6 +1509,8 @@ HB_FUNC( __MVRESTORE )
          BOOL bIncludeMask;
          BYTE buffer[ HB_MEM_REC_LEN ];
          const char * pszMask;
+         char *szName;
+         PHB_ITEM pItem = NULL;
 
 #ifdef HB_C52_STRICT
          pszMask = "*";
@@ -1520,11 +1522,13 @@ HB_FUNC( __MVRESTORE )
 
          while( hb_fsRead( fhnd, buffer, HB_MEM_REC_LEN ) == HB_MEM_REC_LEN )
          {
-            char *szName = hb_strdup( ( char * ) buffer );
             USHORT uiType = ( USHORT ) ( buffer[ 11 ] - 128 );
             USHORT uiWidth = ( USHORT ) buffer[ 16 ];
             USHORT uiDec = ( USHORT ) buffer[ 17 ];
-            PHB_ITEM pItem = NULL;
+
+            /* protect against corrupted files */
+            buffer[ 10 ] = '\0';
+            szName = ( char * ) buffer;
 
             switch( uiType )
             {
@@ -1536,9 +1540,12 @@ HB_FUNC( __MVRESTORE )
                   pbyString = ( BYTE * ) hb_xgrab( uiWidth );
 
                   if( hb_fsRead( fhnd, pbyString, uiWidth ) == uiWidth )
-                     pItem = hb_itemPutCL( NULL, ( char * ) pbyString, uiWidth - 1 );
-
-                  hb_xfree( pbyString );
+                     pItem = hb_itemPutCLPtr( pItem, ( char * ) pbyString, uiWidth - 1 );
+                  else
+                  {
+                     hb_xfree( pbyString );
+                     szName = NULL;
+                  }
 
                   break;
                }
@@ -1548,7 +1555,9 @@ HB_FUNC( __MVRESTORE )
                   BYTE pbyNumber[ HB_MEM_NUM_LEN ];
 
                   if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
-                     pItem = hb_itemPutNLen( NULL, HB_GET_LE_DOUBLE( pbyNumber ), uiWidth - ( uiDec ? ( uiDec + 1 ) : 0 ), uiDec );
+                     pItem = hb_itemPutNLen( pItem, HB_GET_LE_DOUBLE( pbyNumber ), uiWidth - ( uiDec ? ( uiDec + 1 ) : 0 ), uiDec );
+                  else
+                     szName = NULL;
 
                   break;
                }
@@ -1558,7 +1567,9 @@ HB_FUNC( __MVRESTORE )
                   BYTE pbyNumber[ HB_MEM_NUM_LEN ];
 
                   if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
-                     pItem = hb_itemPutDL( NULL, ( long ) HB_GET_LE_DOUBLE( pbyNumber ) );
+                     pItem = hb_itemPutDL( pItem, ( long ) HB_GET_LE_DOUBLE( pbyNumber ) );
+                  else
+                     szName = NULL;
 
                   break;
                }
@@ -1568,13 +1579,18 @@ HB_FUNC( __MVRESTORE )
                   BYTE pbyLogical[ 1 ];
 
                   if( hb_fsRead( fhnd, pbyLogical, 1 ) == 1 )
-                     pItem = hb_itemPutL( NULL, pbyLogical[ 0 ] != 0 );
+                     pItem = hb_itemPutL( pItem, pbyLogical[ 0 ] != 0 );
+                  else
+                     szName = NULL;
 
                   break;
                }
+
+               default:
+                  szName = NULL;
             }
 
-            if( pItem )
+            if( szName )
             {
                BOOL bMatch = hb_strMatchCaseWildExact( szName, pszMask );
 
@@ -1590,18 +1606,13 @@ HB_FUNC( __MVRESTORE )
                   else
                      /* attempt to assign a value to undeclared variable create the PRIVATE one */
                      hb_memvarCreateFromDynSymbol( hb_dynsymGet( szName ), VS_PRIVATE, pItem );
-
-                  hb_itemReturn( pItem );
                }
-
-               hb_itemRelease( pItem );
             }
-
-            hb_xfree( szName );
          }
 
          hb_fsClose( fhnd );
          hb_memvarUpdatePrivatesBase();
+         hb_itemReturnRelease( pItem );
       }
       else
          hb_retl( FALSE );
