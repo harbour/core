@@ -476,14 +476,20 @@ METHOD setPresParam() CLASS WvgWindow
 //----------------------------------------------------------------------//
 
 METHOD currentPos() CLASS WvgWindow
+   LOCAL aRect
 
-   RETURN Self
+   aRect := Win_GetWindowRect( ::hWnd )
+
+   RETURN { aRect[ 1 ], aRect[ 2 ] }
 
 //----------------------------------------------------------------------//
 
 METHOD currentSize() CLASS WvgWindow
+   LOCAL aRect
 
-   RETURN Self
+   aRect := Win_GetClientRect( ::hWnd )
+
+   RETURN { aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ] }
 
 //----------------------------------------------------------------------//
 

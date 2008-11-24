@@ -77,6 +77,8 @@ CLASS WvgDialog FROM WvgWindow
 
    DATA   oMenu
 
+   DATA   drawingArea
+
    METHOD init()
    METHOD create()
    METHOD configure()
@@ -88,12 +90,14 @@ METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDial
 
    ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::className  := 'WVGDIALOG'
-   ::resizeMode := 0
-   ::mouseMode  := 0
-   ::objType    := objTypeDialog
+   ::className   := 'WVGDIALOG'
+   ::resizeMode  := 0
+   ::mouseMode   := 0
+   ::objType     := objTypeDialog
 
-   ::style      := WS_THICKFRAME+WS_OVERLAPPED+WS_CAPTION+WS_SYSMENU+WS_MINIMIZEBOX+WS_MAXIMIZEBOX;
+   ::style       := WS_THICKFRAME+WS_OVERLAPPED+WS_CAPTION+WS_SYSMENU+WS_MINIMIZEBOX+WS_MAXIMIZEBOX;
+
+   ::drawingArea := Self
 
    RETURN Self
 //----------------------------------------------------------------------//

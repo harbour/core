@@ -233,9 +233,9 @@ METHOD setParent( oWvg ) CLASS WvgPartHandler
 //----------------------------------------------------------------------//
 
 METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
-   Local xResult, n, aPos
+   Local aPos
    LOCAL nReturn := 0
-   LOCAL aMenuItem, bBlock, nPos
+   LOCAL aMenuItem
 
    DO CASE
 

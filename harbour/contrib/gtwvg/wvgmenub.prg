@@ -252,7 +252,7 @@ METHOD delItem( nItemNum ) CLASS wvgMenuBar
 // { xCaption, bAction, nStyle, nAttrb }
 //
 METHOD addItem( aItem, p2, p3, p4 ) CLASS wvgMenuBar
-   LOCAL nItemIndex, nMenuItemID, cCaption
+   LOCAL nItemIndex, cCaption
    LOCAL xCaption, bAction, nStyle, nAttrib
 
    if PCount() == 1 .and. valtype( aItem ) == 'A'
