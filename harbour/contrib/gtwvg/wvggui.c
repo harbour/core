@@ -1098,17 +1098,20 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          LPNMMOUSE nmm = ( LPNMMOUSE ) lParam;
          NMHDR nmh = nmm->hdr;
 
-         hb_arrayNew( pEvParams, 5 );
-         hb_arraySetNI( pEvParams, 1, ( int ) wParam );
-         hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.hwndFrom );
-         hb_arraySetNI( pEvParams, 3, nmh.idFrom );
-         hb_arraySetNI( pEvParams, 4, nmh.code );
-         hb_arraySetNL( pEvParams, 5, nmm->dwItemSpec );
+         if( nmh.code == NM_CLICK )
+         {
+            hb_arrayNew( pEvParams, 5 );
+            hb_arraySetNI( pEvParams, 1, ( int ) wParam );
+            hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.hwndFrom );
+            hb_arraySetNI( pEvParams, 3, nmh.idFrom );
+            hb_arraySetNI( pEvParams, 4, nmh.code );
+            hb_arraySetNL( pEvParams, 5, nmm->dwItemSpec );
 
-         hb_gt_wvt_FireEvent( pWVT, HB_GTE_NOTIFY, pEvParams );
+            hb_gt_wvt_FireEvent( pWVT, HB_GTE_NOTIFY, pEvParams );
 
-         hb_itemRelease( pEvParams );
-         return TRUE;
+            hb_itemRelease( pEvParams );
+            return TRUE;
+         }
       }
       case WM_CREATE:
       {

@@ -226,10 +226,16 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 METHOD destroy() CLASS WvgToolBar
    LOCAL i, nItems
 
-   IF ( nItems := ::numItems() ) > 0
+   IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems
-         IF ::aItems[ i ]:image <> NIL
-            Win_DeleteObject( ::aItems[ i ]:image )
+         IF ::aItems[ i,2 ]:image <> NIL
+            Win_DeleteObject( ::aItems[ i,2 ]:image )
+         ENDIF
+         IF ::aItems[ i,2 ]:disabledImage <> NIL
+            Win_DeleteObject( ::aItems[ i,2 ]:disabledImage )
+         ENDIF
+         IF ::aItems[ i,2 ]:hotImage <> NIL
+            Win_DeleteObject( ::aItems[ i,2 ]:hotImage )
          ENDIF
       NEXT
    ENDIF

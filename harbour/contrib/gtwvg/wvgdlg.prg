@@ -162,6 +162,10 @@ METHOD destroy() CLASS WvgDialog
       ::oMenu:destroy()
    ENDIF
 
+   IF Len( ::aChildren ) > 0
+      aeval( ::aChildren, {|o| o:destroy() } )
+   ENDIF
+
    ::pGT  := NIL
    ::pGTp := NIL
 
