@@ -49,10 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-
+//----------------------------------------------------------------------//
 #ifndef _WVGWIN_CH
 #define _WVGWIN_CH
-
 //-------------------------------------------------------------------//
 //
 //                         GTWVT Specific
@@ -1236,5 +1235,238 @@
 #define OFN_FORCESHOWHIDDEN       268435456  // Show All files including System and hidden files
 
 //----------------------------------------------------------------------//
+/* Common Control Constants */
+#define CCS_TOP                           1
+#define CCS_NOMOVEY                       2
+#define CCS_BOTTOM                        3
+#define CCS_NORESIZE                      4
+#define CCS_NOPARENTALIGN                 8
+#define CCS_ADJUSTABLE                   32
+#define CCS_NODIVIDER                    64
+#define CCS_VERT                        128
+#define CCS_LEFT                (CCS_VERT + CCS_TOP)
+#define CCS_RIGHT               (CCS_VERT + CCS_BOTTOM)
+#define CCS_NOMOVEX             (CCS_VERT + CCS_NOMOVEY)
+//----------------------------------------------------------------------//
 
+#define TOOLBARCLASSNAME       "ToolbarWindow32"
+
+/* Toolbar messages */
+#define TB_SAVERESTOREA         (WM_USER + 26)
+#define TB_SAVERESTOREW         (WM_USER + 76)
+#define TB_CUSTOMIZE            (WM_USER + 27)
+#define TB_ADDSTRINGA           (WM_USER + 28)
+#define TB_ADDSTRINGW           (WM_USER + 77)
+#define TB_GETITEMRECT          (WM_USER + 29)
+#define TB_BUTTONSTRUCTSIZE     (WM_USER + 30)
+#define TB_SETBUTTONSIZE        (WM_USER + 31)
+#define TB_SETBITMAPSIZE        (WM_USER + 32)
+#define TB_AUTOSIZE             (WM_USER + 33)
+#define TB_GETTOOLTIPS          (WM_USER + 35)
+#define TB_SETTOOLTIPS          (WM_USER + 36)
+#define TB_SETPARENT            (WM_USER + 37)
+#define TB_SETROWS              (WM_USER + 39)
+#define TB_GETROWS              (WM_USER + 40)
+#define TB_GETBITMAPFLAGS       (WM_USER + 41)
+#define TB_SETCMDID             (WM_USER + 42)
+#define TB_CHANGEBITMAP         (WM_USER + 43)
+#define TB_GETBITMAP            (WM_USER + 44)
+#define TB_GETBUTTONTEXTA       (WM_USER + 45)
+#define TB_GETBUTTONTEXTW       (WM_USER + 75)
+#define TB_REPLACEBITMAP        (WM_USER + 46)
+#define TB_SETINDENT            (WM_USER + 47)
+#define TB_SETIMAGELIST         (WM_USER + 48)
+#define TB_GETIMAGELIST         (WM_USER + 49)
+#define TB_LOADIMAGES           (WM_USER + 50)
+#define TB_GETRECT              (WM_USER + 51) // wParam is the Cmd instead of index
+#define TB_SETHOTIMAGELIST      (WM_USER + 52)
+#define TB_GETHOTIMAGELIST      (WM_USER + 53)
+#define TB_SETDISABLEDIMAGELIST (WM_USER + 54)
+#define TB_GETDISABLEDIMAGELIST (WM_USER + 55)
+#define TB_SETSTYLE             (WM_USER + 56)
+#define TB_GETSTYLE             (WM_USER + 57)
+#define TB_GETBUTTONSIZE        (WM_USER + 58)
+#define TB_SETBUTTONWIDTH       (WM_USER + 59)
+#define TB_SETMAXTEXTROWS       (WM_USER + 60)
+#define TB_GETTEXTROWS          (WM_USER + 61)
+
+#ifdef UNICODE
+#define TB_GETBUTTONTEXT        TB_GETBUTTONTEXTW
+#define TB_SAVERESTORE          TB_SAVERESTOREW
+#define TB_ADDSTRING            TB_ADDSTRINGW
+#else
+#define TB_GETBUTTONTEXT        TB_GETBUTTONTEXTA
+#define TB_SAVERESTORE          TB_SAVERESTOREA
+#define TB_ADDSTRING            TB_ADDSTRINGA
 #endif
+
+#define TB_GETOBJECT            (WM_USER + 62)  // wParam == IID, lParam void **ppv
+#define TB_GETHOTITEM           (WM_USER + 71)
+#define TB_SETHOTITEM           (WM_USER + 72)  // wParam == iHotItem
+#define TB_SETANCHORHIGHLIGHT   (WM_USER + 73)  // wParam == TRUE/FALSE
+#define TB_GETANCHORHIGHLIGHT   (WM_USER + 74)
+#define TB_MAPACCELERATORA      (WM_USER + 78)  // wParam == ch, lParam int * pidBtn
+
+
+#define TB_GETINSERTMARK        (WM_USER + 79)  // lParam == LPTBINSERTMARK
+#define TB_SETINSERTMARK        (WM_USER + 80)  // lParam == LPTBINSERTMARK
+#define TB_INSERTMARKHITTEST    (WM_USER + 81)  // wParam == LPPOINT lParam == LPTBINSERTMARK
+#define TB_MOVEBUTTON           (WM_USER + 82)
+#define TB_GETMAXSIZE           (WM_USER + 83)  // lParam == LPSIZE
+#define TB_SETEXTENDEDSTYLE     (WM_USER + 84)  // For TBSTYLE_EX_*
+#define TB_GETEXTENDEDSTYLE     (WM_USER + 85)  // For TBSTYLE_EX_*
+#define TB_GETPADDING           (WM_USER + 86)
+#define TB_SETPADDING           (WM_USER + 87)
+#define TB_SETINSERTMARKCOLOR   (WM_USER + 88)
+#define TB_GETINSERTMARKCOLOR   (WM_USER + 89)
+
+#define TB_SETCOLORSCHEME       CCM_SETCOLORSCHEME  // lParam is color scheme
+#define TB_GETCOLORSCHEME       CCM_GETCOLORSCHEME      // fills in COLORSCHEME pointed to by lParam
+
+#define TB_SETUNICODEFORMAT     CCM_SETUNICODEFORMAT
+#define TB_GETUNICODEFORMAT     CCM_GETUNICODEFORMAT
+
+#define TB_MAPACCELERATORW      (WM_USER + 90)  // wParam == ch, lParam int * pidBtn
+#ifdef UNICODE
+#define TB_MAPACCELERATOR       TB_MAPACCELERATORW
+#else
+#define TB_MAPACCELERATOR       TB_MAPACCELERATORA
+#endif
+
+#define TBIMHT_AFTER                      1     // TRUE = insert After iButton, otherwise before
+#define TBIMHT_BACKGROUND                 2     // TRUE iff missed buttons completely
+
+#define TBBF_LARGE                        1
+
+
+#define TBIF_IMAGE                        1
+#define TBIF_TEXT                         2
+#define TBIF_STATE                        4
+#define TBIF_STYLE                        8
+#define TBIF_LPARAM                      16
+#define TBIF_COMMAND                     32
+#define TBIF_SIZE                        64
+
+#define TBIF_BYINDEX             2147483648 // this specifies that the wparam in Get/SetButtonInfo is an index, not id
+
+#ifdef UNICODE
+#define TBBUTTONINFO   TBBUTTONINFOW
+#define LPTBBUTTONINFO LPTBBUTTONINFOW
+#else
+#define TBBUTTONINFO   TBBUTTONINFOA
+#define LPTBBUTTONINFO LPTBBUTTONINFOA
+#endif
+
+#define TB_GETBUTTONINFOW       (WM_USER + 63)
+#define TB_SETBUTTONINFOW       (WM_USER + 64)
+#define TB_GETBUTTONINFOA       (WM_USER + 65)
+#define TB_SETBUTTONINFOA       (WM_USER + 66)
+#ifdef UNICODE
+#define TB_GETBUTTONINFO        TB_GETBUTTONINFOW
+#define TB_SETBUTTONINFO        TB_SETBUTTONINFOW
+#else
+#define TB_GETBUTTONINFO        TB_GETBUTTONINFOA
+#define TB_SETBUTTONINFO        TB_SETBUTTONINFOA
+#endif
+
+#define TB_INSERTBUTTONW        (WM_USER + 67)
+#define TB_ADDBUTTONSW          (WM_USER + 68)
+#define TB_HITTEST              (WM_USER + 69)
+#ifdef UNICODE
+#define TB_INSERTBUTTON         TB_INSERTBUTTONW
+#define TB_ADDBUTTONS           TB_ADDBUTTONSW
+#else
+#define TB_INSERTBUTTON         TB_INSERTBUTTONA
+#define TB_ADDBUTTONS           TB_ADDBUTTONSA
+#endif
+
+#define TB_SETDRAWTEXTFLAGS     (WM_USER + 70)  // wParam == mask lParam == bit values
+
+#define TB_GETSTRING            (WM_USER + 92)
+
+#define TBN_GETBUTTONINFOA      (TBN_FIRST-0)
+#define TBN_BEGINDRAG           (TBN_FIRST-1)
+#define TBN_ENDDRAG             (TBN_FIRST-2)
+#define TBN_BEGINADJUST         (TBN_FIRST-3)
+#define TBN_ENDADJUST           (TBN_FIRST-4)
+#define TBN_RESET               (TBN_FIRST-5)
+#define TBN_QUERYINSERT         (TBN_FIRST-6)
+#define TBN_QUERYDELETE         (TBN_FIRST-7)
+#define TBN_TOOLBARCHANGE       (TBN_FIRST-8)
+#define TBN_CUSTHELP            (TBN_FIRST-9)
+#define TBN_DROPDOWN            (TBN_FIRST-10)
+#define TBN_GETOBJECT           (TBN_FIRST-12)
+
+/* Toolbar Control Constants */
+#define TBSTATE_CHECKED                   1
+#define TBSTATE_PRESSED                   2
+#define TBSTATE_ENABLED                   4
+#define TBSTATE_HIDDEN                    8
+#define TBSTATE_INDETERMINATE            16
+#define TBSTATE_WRAP                     32
+#define TBSTATE_ELLIPSES                 64
+#define TBSTATE_MARKED                  128
+
+#define TBSTYLE_BUTTON                    0  // obsolete; use BTNS_BUTTON instead
+#define TBSTYLE_SEP                       1  // obsolete; use BTNS_SEP instead
+#define TBSTYLE_CHECK                     2  // obsolete; use BTNS_CHECK instead
+#define TBSTYLE_GROUP                     4  // obsolete; use BTNS_GROUP instead
+#define TBSTYLE_CHECKGROUP      (TBSTYLE_GROUP + TBSTYLE_CHECK)     // obsolete; use BTNS_CHECKGROUP instead
+#define TBSTYLE_DROPDOWN                  8  // obsolete; use BTNS_DROPDOWN instead
+#define TBSTYLE_AUTOSIZE                 16  // obsolete; use BTNS_AUTOSIZE instead
+#define TBSTYLE_NOPREFIX                 32  // obsolete; use BTNS_NOPREFIX instead
+
+#define TBSTYLE_TOOLTIPS                256
+#define TBSTYLE_WRAPABLE                512
+#define TBSTYLE_ALTDRAG                1024
+#define TBSTYLE_FLAT                   2048
+#define TBSTYLE_LIST                   4096
+#define TBSTYLE_CUSTOMERASE            8192
+#define TBSTYLE_REGISTERDROP          16384
+#define TBSTYLE_TRANSPARENT           32768
+
+
+#define BTNS_BUTTON                TBSTYLE_BUTTON      // 0x0000
+#define BTNS_SEP                   TBSTYLE_SEP         // 0x0001
+#define BTNS_CHECK                 TBSTYLE_CHECK       // 0x0002
+#define BTNS_GROUP                 TBSTYLE_GROUP       // 0x0004
+#define BTNS_CHECKGROUP            TBSTYLE_CHECKGROUP  // (TBSTYLE_GROUP | TBSTYLE_CHECK)
+#define BTNS_DROPDOWN              TBSTYLE_DROPDOWN    // 0x0008
+#define BTNS_AUTOSIZE              TBSTYLE_AUTOSIZE    // 0x0010; automatically calculate the cx of the button
+#define BTNS_NOPREFIX              TBSTYLE_NOPREFIX    // 0x0020; this button should not have accel prefix
+#define BTNS_SHOWTEXT                    64            // ignored unless TBSTYLE_EX_MIXEDBUTTONS is set
+#define BTNS_WHOLEDROPDOWN              128            // draw drop-down arrow, but without split arrow section
+
+#define TBSTYLE_EX_DRAWDDARROWS           1
+#define TBSTYLE_EX_MIXEDBUTTONS           8
+#define TBSTYLE_EX_HIDECLIPPEDBUTTONS    16            // don't show partially obscured buttons
+#define TBSTYLE_EX_DOUBLEBUFFER  0x00000080
+
+//----------------------------------------------------------------------//
+//  WM_NOTIFY codes (NMHDR.code values)
+
+#define NM_FIRST                (0-  0)         // generic to all controls
+#define NM_LAST                 (0- 99)
+
+#define NM_OUTOFMEMORY          (NM_FIRST-1)
+#define NM_CLICK                (NM_FIRST-2)    // uses NMCLICK struct
+#define NM_DBLCLK               (NM_FIRST-3)
+#define NM_RETURN               (NM_FIRST-4)
+#define NM_RCLICK               (NM_FIRST-5)    // uses NMCLICK struct
+#define NM_RDBLCLK              (NM_FIRST-6)
+#define NM_SETFOCUS             (NM_FIRST-7)
+#define NM_KILLFOCUS            (NM_FIRST-8)
+#define NM_CUSTOMDRAW           (NM_FIRST-12)
+#define NM_HOVER                (NM_FIRST-13)
+#define NM_NCHITTEST            (NM_FIRST-14)   // uses NMMOUSE struct
+#define NM_KEYDOWN              (NM_FIRST-15)   // uses NMKEY struct
+#define NM_RELEASEDCAPTURE      (NM_FIRST-16)
+#define NM_SETCURSOR            (NM_FIRST-17)   // uses NMMOUSE struct
+#define NM_CHAR                 (NM_FIRST-18)   // uses NMCHAR struct
+#define NM_TOOLTIPSCREATED      (NM_FIRST-19)   // notify of when the tooltips window is create
+#define NM_LDOWN                (NM_FIRST-20)
+#define NM_RDOWN                (NM_FIRST-21)
+
+//----------------------------------------------------------------------//
+#endif
+//----------------------------------------------------------------------//

@@ -129,9 +129,9 @@ EXIT PROCEDURE KillGTs()
 
    RETURN
 //----------------------------------------------------------------------//
-PROCEDURE Main( cDSN )
+PROCEDURE Main()
 
-   LOCAL aLastPaint, clr, scr, bWhen, bValid, a_:={}
+   LOCAL aLastPaint, clr, scr, a_:={}
    LOCAL dDate   := ctod( "" )
    LOCAL cName   := Pad( "Pritpal Bedi", 35 )
    LOCAL cAdd1   := Pad( "60, New Professor Colony", 35 )
@@ -152,8 +152,7 @@ PROCEDURE Main( cDSN )
    LOCAL aObj    := {}
    LOCAL hPopup
    LOCAL oMenu
-   LOCAL nConxn
-   LOCAL pGT
+
    SET DATE BRITISH
 
    SET( _SET_EVENTMASK, INKEY_ALL )
@@ -303,12 +302,14 @@ Function HB_GTSYS()
    REQUEST HB_GT_WGU
    Return NIL
 //------------------------------------------------------------------//
-PROCEDURE WvtConsoleGets()
+PROCEDURE WvtConsoleGets( nMode )
+
+   DEFAULT nMode TO 0
 
    IF hb_mtvm()
       Hb_ThreadStart( {|oCrt|  hb_gtReload( 'WVT' ) , ;
                                oCrt := hb_gtSelect(), ;
-                               WvtNextGetsConsole() , ;
+                               IF( nMode == 0, WvtNextGetsConsole(), GoogleMap() ) , ;
                                oCrt := NIL            ;
                     } )
    ENDIF
@@ -490,7 +491,7 @@ FUNCTION Wvt_Paint()
 //      needs to process messages sent through WM_SETFOCUS message
 //      received by the window.
 //-------------------------------------------------------------------//
-FUNCTION Wvt_SetFocus( hWnd )
+FUNCTION Wvt_SetFocus()
 
    LOCAL nRow := row()
    LOCAL nCol := col()
@@ -505,7 +506,7 @@ FUNCTION Wvt_SetFocus( hWnd )
 //      needs to process messages sent through WM_KILLFOCUS message
 //      received by the window.
 //-------------------------------------------------------------------//
-FUNCTION Wvt_KillFocus( hWnd )
+FUNCTION Wvt_KillFocus()
 
    LOCAL nRow := row()
    LOCAL nCol := col()
@@ -522,7 +523,7 @@ FUNCTION Wvt_KillFocus( hWnd )
 //
 //-------------------------------------------------------------------//
 FUNCTION Wvt_Mouse( nKey, nRow, nCol )
-   LOCAL i, nLen, aObjects := WvtSetObjects()
+   LOCAL nLen, aObjects := WvtSetObjects()
    LOCAL nObj
 
    STATIC nLastObj := 0
@@ -759,9 +760,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
    LOCAL cScr    := SaveScreen( 0,0,maxrow(),maxcol() )
    LOCAL aObjects:= WvtSetObjects( {} )
    LOCAL hPopup  := Wvt_SetPopupMenu()
-   LOCAL stru_:={}, cDbfFile, cSqlFile, cFileIndex, cFileDbf, cRDD, nIndex
-   Local pGT, pGT1, nStStyle, nExStyle
-   Local oMenu
+   LOCAL stru_:={}, cFileIndex, cFileDbf, cRDD, nIndex
 
    STATIC nStyle := 0
    THREAD STATIC nFactor := 200
@@ -890,7 +889,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
 
    RETURN nil
 //-------------------------------------------------------------------//
-STATIC FUNCTION DbSkipBlock( n, oTbr )
+STATIC FUNCTION DbSkipBlock( n )
 
    LOCAL nSkipped := 0
 
@@ -898,18 +897,18 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
       DBSkip( 0 )
 
    elseif n > 0
-      do while nSkipped != n .and. TBNext( oTbr )
+      do while nSkipped != n .and. TBNext()
          nSkipped++
       enddo
    else
-      do while nSkipped != n .and. TBPrev( oTbr )
+      do while nSkipped != n .and. TBPrev()
          nSkipped--
       enddo
    endif
 
    RETURN  nSkipped
 //-------------------------------------------------------------------//
-STATIC FUNCTION TBNext( oTbr )
+STATIC FUNCTION TBNext()
 
    LOCAL nSaveRecNum := recno()
    LOCAL lMoved := .T.
@@ -926,7 +925,7 @@ STATIC FUNCTION TBNext( oTbr )
 
    RETURN lMoved
 //-------------------------------------------------------------------//
-STATIC FUNCTION TBPrev( oTbr )
+STATIC FUNCTION TBPrev()
    LOCAL nSaveRecNum := Recno()
    LOCAL lMoved := .T.
 
@@ -1010,6 +1009,8 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 //-------------------------------------------------------------------//
 STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
    LOCAL lRet := .t., lRefAll := .f.
+
+   HB_SYMBOL_UNUSED( cPaintID )
 
    do case
    case nKey == K_DOWN
@@ -1381,15 +1382,17 @@ FUNCTION CreateMainMenu()
 
    oMenu := wvtMenu():new():create()
    oMenu:Caption := "Traditional"
-   oMenu:AddItem( "Gets . GTWVG . Threaded"     , {|| WvtNextGets()      } )
+   oMenu:AddItem( "Gets . GTWVG . Threaded"     , {|| WvtNextGets()       } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "Gets . GTWVT . Threaded"     , {|| WvtConsoleGets()   } )
+   oMenu:AddItem( "Gets . GTWVT . Threaded"     , {|| WvtConsoleGets( 0 ) } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "Browser . GTWVG . Threaded " , {|| WvtMyBrowse()      } )
+   oMenu:AddItem( "Browser . GTWVG . Threaded " , {|| WvtMyBrowse()       } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "Partial Screen . Main Window", {|| WvtPartialScreen() } )
+   oMenu:AddItem( "Partial Screen . Main Window", {|| WvtPartialScreen()  } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "Wvt Lines . Main Window"     , {|| WvtLines()         } )
+   oMenu:AddItem( "Wvt Lines . Main Window"     , {|| WvtLines()          } )
+   oMenu:AddItem( "-")
+   oMenu:AddItem( "Google Maps"                 , {|| WvtConsoleGets( 1 ) } )
    g_oMenuBar:addItem( "",oMenu )
 
    oMenu := wvtMenu():new():create()
@@ -1473,14 +1476,16 @@ STATIC FUNCTION MyDialogOne( nMode )
 //----------------------------------------------------------------------//
 STATIC FUNCTION MyDialogOne_X( oCrt )
    LOCAL aObjects:= WvtSetBlocks( {} )
-   Local nWinRows, nWinCols, cWinTitle, cFont, nHeight, nWidth
-   Local oDlg, obj_, oBar, d_, nN, cUseAlias
+   Local nWinRows, nWinCols, cWinTitle, cFont, nHeight
+   Local oDlg, oBar, cUseAlias
    Local oText, oTBar, aImg_, oImg, oLine, oBox, oBtn, oBtn2
-   Local oBBox, oCon, oGet, oGet2, nRowG, oBBox2, oBnr, oTBx
+   Local oBBox, oCon, oGet, oBBox2, oBnr, oTBx
    Local oBRsd, cTxt, oRct, nGetCol, nSayCol, bBlock, bBlock1
-   Local oMnu, oWvtBrw, oWvtBrw1, lOpen, lOpen1, cUseAlias1, oGetArea, oGet1
+   Local oWvtBrw, oWvtBrw1, lOpen, lOpen1, cUseAlias1, oGetArea, oGet1
    LOCAL hPopup, nGetRow, aGets_, lChkMouse
-   LOCAL g_oMenuBar, oMenu, oPBar2,oPBar3
+   LOCAL g_oMenuBar, oPBar2,oPBar3, oMenu
+
+   HB_SYMBOL_UNUSED( oCrt )
 
    WvtSetKeys( .f. )
    lChkMouse := SetMouseCheck( .f. )
@@ -1541,7 +1546,7 @@ STATIC FUNCTION MyDialogOne_X( oCrt )
    oText:nBackColorHoverOn := RGB( 255, 100,  12 )
    oText:lItalic           := .t.
    oText:ToolTip           := "Software that GROWS with you"
-   oText:bOnSelect         := {|o,v| .t. }
+   oText:bOnSelect         := {|| .t. }
    oDlg:AddObject( oText )
 
    oImg := WvtImage():New( oDlg,102,20,oDlg:MaxCol()-40,37,oDlg:MaxCol()-2 )
@@ -1878,7 +1883,7 @@ STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
 //-------------------------------------------------------------------//
 
 Function DynDialog_2( nInfo )
-   Local hDlg, aDlg, nStyle, nTimerTicks, cDlgIcon, cDlgProc, lOnTop, hMenu, nProc, bDlgProc
+   Local hDlg, aDlg, nStyle, nTimerTicks, cDlgIcon, cDlgProc, lOnTop, hMenu, bDlgProc
 
    nStyle := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
 
@@ -2174,8 +2179,11 @@ FUNCTION DlgSlideShow()
 //-------------------------------------------------------------------//
 
 FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
-   LOCAL  aRect, hDC
+
    THREAD STATIC nSlide := 1
+
+   HB_SYMBOL_UNUSED( wParam )
+   HB_SYMBOL_UNUSED( lParam )
 
    Switch nMsg
 
@@ -2227,8 +2235,8 @@ Static Function MyFunction( nMode )
       tone( MUSIC_WAITON[2], 1 )
       tone( MUSIC_WAITON[1], 1 )
 
-   case nMode == 3    // THUD
-      tone( 60,0.5 )
+   case nMode == 3
+      Win_MessageBox( , "Button clicked!" )
 
    case nMode == 101  // Charge
       Eval( {|| tone(523,2),tone(698,2),tone(880,2),tone(1046,4),tone(880,2),tone(1046,8) } )
@@ -2268,15 +2276,50 @@ Static Function ActiveXBuildMenu( oCrt )
    oSubMenu:title := "~Functional"
    oSubMenu:addItem( { "Play Opening ~1", {|| MyFunction( 1 ) } } )
    oSubMenu:addItem( { "Play Closing ~2", {|| MyFunction( 2 ) } } )
-   oSubMenu:addItem( { "~Play Badkey"   , {|| MyFunction( 3 ) } } )
+   oSubMenu:addItem( { "~MessageBox"    , {|| MyFunction( 3 ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    Return nil
 //----------------------------------------------------------------------//
+STATIC FUNCTION ActiveXBuildToolBar( oCrt, nActiveX )
+   LOCAL oTBar
+
+   oTBar := WvgToolBar():new( oCrt , , { 0,0 }, { oCrt:currentSize()[ 1 ], 30 }, , .T. )
+
+   oTBar:borderStyle  := WVGFRAME_RECT
+
+   oTBar:buttonWidth  := 26
+   oTBar:buttonHeight := 26
+
+   oTBar:imageWidth   := 24
+   oTBar:imageHeight  := 24
+
+   IF ( nActiveX % 2 ) == 1
+      oTBar:showToolTips := .f.
+   ENDIF
+
+   // After setting properties, create toolbar.
+   oTBar:create()
+
+   oTBar:addItem( "New"       , 'c:\harbour\contrib\gtwvg\tests\v_new.bmp'    )
+   oTBar:addItem( "Select"    , 'c:\harbour\contrib\gtwvg\tests\v_selct1.bmp' )
+   oTBar:addItem( "Calendar"  , 'c:\harbour\contrib\gtwvg\tests\v_calend.bmp' )
+   oTBar:addItem( "Lock"      , 'c:\harbour\contrib\gtwvg\tests\v_lock.bmp'   )
+   oTBar:addItem( "Index"     , 'c:\harbour\contrib\gtwvg\tests\v_index.bmp'  )
+   oTBar:addItem( "Calculator", 'c:\harbour\contrib\gtwvg\tests\v_clclt.bmp'  )
+   oTBar:addItem( "Notes"     , 'c:\harbour\contrib\gtwvg\tests\v_notes1.bmp' )
+
+   //oTBar:addItem("Button #2", 101)
+   //oTBar:transparentColor := WVG_CLR_INVALID
+
+   oTBar:buttonClick := {|oButton| Win_MessageBox( , "Button [" + oButton:caption + "] clicked!" ) }
+
+   RETURN oTBar
+//----------------------------------------------------------------------//
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
 //
-Function ExecuteActiveX( nActiveX )
-   Local oCrt
+Function ExecuteActiveX( nActiveX, xParam )
+   Local oCrt, oTBar
 
    #if 0
       oCrt := WvgCrt():New( , , { 5,5 }, { 29,59 }, , .f. )
@@ -2291,28 +2334,33 @@ Function ExecuteActiveX( nActiveX )
       oCrt := WvgDialog():new( , , { 30,30 }, { 500,550 }, , .f. )
       oCrt:closable := .f.
       oCrt:create()
-      ActiveXBuildMenu( oCrt )
    #endif
 
+   ActiveXBuildMenu( oCrt )
+   oTBar := ActiveXBuildToolBar( oCrt, nActiveX )
+
    oCrt:show()
-
-   ExeActiveX( oCrt, nActiveX )
-
+   ExeActiveX( nActiveX, oCrt, oTBar, xParam )
    oCrt:Destroy()
+
    Return nil
 //----------------------------------------------------------------------//
-Static Function ResizeMe( oCom )
-   Local nW, nH
+Static Function ResizeMe( oCom, oTBar )
+   Local nW, nH, aSize
 
    nW := hb_gtInfo( HB_GTI_SCREENWIDTH  )
    nH := hb_gtInfo( HB_GTI_SCREENHEIGHT )
 
-   oCom:SetSize( { nW, nH }, .t. )
+   aSize := oTBar:currentSize()
+
+   oTBar:SetSize( { nW, 30 }, .t. )
+
+   oCom:SetPosAndSize( { 0, aSize[ 2 ] }, { nW, nH - aSize[ 2 ] }, .t. )
 
    Return nil
 //----------------------------------------------------------------------//
-Static Function ExeActiveX( oCrt, nActiveX )
-   Local oCom, nKey, cDhtml, cServer, cNavigate, sData, cTitle
+Static Function ExeActiveX( nActiveX, oCrt, oTBar, xParam )
+   Local oCom, nKey, sData
    Local lEnd := .f.
 
    static nTurn := 0
@@ -2321,7 +2369,7 @@ Static Function ExeActiveX( oCrt, nActiveX )
 
    DEFAULT nActiveX TO 2
 
-   oCom := WvgActiveXControl():New( oCrt, , { 0,0 }, { 200,200 }, , .t. )
+   oCom := WvgActiveXControl():New( oCrt, , { 0,27 }, { 200,200 }, , .t. )
 
    do case
    case nActiveX == 1
@@ -2345,7 +2393,7 @@ Static Function ExeActiveX( oCrt, nActiveX )
       oCom:CLSID := 'AnalogClockControl.AnalogClock'
       oCom:Id    := 5
 
-      oCom:mapEvent( evDblClk, {|| oCom:Value     := .75632          ,;
+      oCom:mapEvent( evDblClk, {|| oCom:Value     := seconds()/86400 ,;
                                    oCom:BackColor := RGB( 0,140,210 ),;
                                    oCom:Refresh()                    ,;
                                    oCom:ShowSecondsHand := .t.       ,;
@@ -2354,7 +2402,7 @@ Static Function ExeActiveX( oCrt, nActiveX )
                                    oCom:showAboutBox()                ;
                                 } )
 
-      oCom:mapEvent( evBtnUp, {|nBtn,nShift,nX,nY| if( nBtn == 2, lEnd := .t., NIL ) } )
+      oCom:mapEvent( evBtnUp, {|nBtn| if( nBtn == 2, lEnd := .t., NIL ) } )
 
    case nActiveX == 3
       hb_gtInfo( HB_GTI_WINTITLE, 'file://C:\harbour\contrib\gtwvg\tests\myharu.pdf' )
@@ -2377,7 +2425,8 @@ Static Function ExeActiveX( oCrt, nActiveX )
       //
       if nActiveX == 1
          oCom:AddressBar := .t.
-         oCom:Navigate( 'http://www.harbour.vouch.info' )
+         hb_gtInfo( HB_GTI_WINTITLE, IF( empty( xParam ), 'http://www.harbour.vouch.info', xParam ) )
+         oCom:Navigate( IF( empty( xParam ), 'http://www.harbour.vouch.info', xParam ) )
 
       elseif nActiveX == 4
          ConfigureRMChart( oCom )
@@ -2390,8 +2439,12 @@ Static Function ExeActiveX( oCrt, nActiveX )
       do while !( lEnd )
          nKey := inkey( 0.1 )
 
+         IF nActiveX == 2
+            oCom:Value := seconds()/86400
+         ENDIF
+
          if nKey == HB_K_RESIZE
-            ResizeMe( oCom )
+            ResizeMe( oCom, oTBar )
 
          elseif nKey == K_F12
             if nActiveX == 1
@@ -2633,8 +2686,8 @@ Static Function DoModalWindow()
    oCrt:closable    := .f.
    oCrt:title       := 'Information! [R:4 C:8]'
 
-   oCrt:rbUp        := {|aPos,uNIL,obj| DispOutAt( maxrow(), 0, padc( 'rbUp', maxcol()+1 ),'W+/R*' ) }
-   oCrt:lbUp        := {|aPos,uNIL,obj| DispOutAt( maxrow(), 0, padc( 'lbUp', maxcol()+1 ),'W+/B*' ) }
+   oCrt:rbUp        := {|| DispOutAt( maxrow(), 0, padc( 'rbUp', maxcol()+1 ),'W+/R*' ) }
+   oCrt:lbUp        := {|| DispOutAt( maxrow(), 0, padc( 'lbUp', maxcol()+1 ),'W+/B*' ) }
    oCrt:leave       := {|| DispOutAt( maxrow(), 0, padc( 'Leaving', maxcol()+1 ), 'W+/RB' ) }
    oCrt:enter       := {|| DispOutAt( maxrow(), 0, padc( 'Entering', maxcol()+1 ), 'W+/B' ) }
 
@@ -2662,4 +2715,44 @@ Static Function DoModalWindow()
    oCrt:Destroy()
 
    Return nil
+//----------------------------------------------------------------------//
+FUNCTION GoogleMap()
+   Local mfrom1, mto1, mfrom2, mto2, mfrom3, mto3, mweb
+   Local nCursor := setcursor()
+   LOCAL getlist := {}
+
+   SetMode( 22,65 )
+   setcolor( 'N/W,N/GR*,,,N/W*' )
+   cls
+   hb_gtInfo( HB_GTI_WINTITLE, 'Google Maps' )
+
+   mfrom1  := mto1  := space(20)
+   mfrom2  := mto2  := space(40)
+   mfrom3  := mto3  := space(50)
+
+   while .T.
+
+      @ 05, 01 say "FROM :"
+      @ 07, 01 say "State ...:" get mfrom1  picture "@!"
+      @ 08, 01 say "City ....:" get mfrom2  picture "@!"
+      @ 09, 01 say "Street ..:" get mfrom3  picture "@!"
+      @ 11, 01 say "TO :"
+      @ 13, 01 say "State ...:" get mto1    picture "@!"
+      @ 14, 01 say "City ....:" get mto2    picture "@!"
+      @ 15, 01 say "Street ..:" get mto3    picture "@!"
+
+      setcursor(1); read; setcursor(nCursor)
+
+      if lastkey() == K_ESC
+         exit
+      endif
+
+      mweb := "http://maps.google.com/maps?q=from "         +;
+              alltrim( mfrom3 ) +" "+ alltrim( mfrom2 ) +" "+ alltrim( mfrom1 ) + " to " +;
+              alltrim( mto3 )   +" "+ alltrim( mto2 )   +" "+ alltrim( mto1 )
+
+      Hb_ThreadStart( {|| ExecuteActiveX( 1, mweb ) } )
+   ENDDO
+
+   RETURN nil
 //----------------------------------------------------------------------//

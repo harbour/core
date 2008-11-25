@@ -67,6 +67,7 @@
 #define HB_GTE_KEYBOARD                   7
 #define HB_GTE_TIMER                      8
 #define HB_GTE_MENU                       9
+#define HB_GTE_NOTIFY                    10
 
 #define HB_GTI_SETFONT                   71
 #define HB_GTI_PRESPARAMS                72
@@ -141,6 +142,8 @@
 #define objTypeToolBar                    5
 #define objTypeToolBarButton              6
 #define objTypeMenu                       7
+
+//----------------------------------------------------------------------//
 
 #define WVGALIGN_TOP                      0
 #define WVGALIGN_LEFT                     0

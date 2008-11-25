@@ -123,7 +123,7 @@ CLASS WvgToolBar  INHERIT  WvgActiveXControl
    ENDCLASS
 //----------------------------------------------------------------------//
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -141,11 +141,69 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
+   ::style       := WS_CHILD + TBSTYLE_FLAT + CCS_ADJUSTABLE //+ CCS_NODIVIDER    //+CCS_VERT
+   ::exStyle     := TBSTYLE_EX_DOUBLEBUFFER
+   ::className   := TOOLBARCLASSNAME
+   ::objType     := objTypeToolBar
+
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
+
+   DEFAULT oParent     TO ::oParent
+   DEFAULT oOwner      TO ::oOwner
+   DEFAULT aPos        TO ::aPos
+   DEFAULT aSize       TO ::aSize
+   DEFAULT aPresParams TO ::aPresParams
+   DEFAULT lVisible    TO ::visible
+
+   ::oParent     := oParent
+   ::oOwner      := oOwner
+   ::aPos        := aPos
+   ::aSize       := aSize
+   ::aPresParams := aPresParams
+   ::visible     := lVisible
+
+   IF ::visible
+      ::style += WS_VISIBLE
+   ENDIF
+   IF ::wrappable
+      ::style += TBSTYLE_WRAPABLE
+   ENDIF
+   IF ::showToolTips
+      ::style += TBSTYLE_TOOLTIPS
+   ENDIF
+   IF ::borderStyle == WVGFRAME_RECT
+      ::style += WS_BORDER
+   ENDIF
+   #if 0
+   IF ::appearance == WVG_APPEARANCE_3D
+   ENDIF
+   #endif
+
+   ::oParent:AddChild( SELF )
+
+   ::createControl()
+
+   IF ::showToolTips
+      ::sendMessage( TB_SETMAXTEXTROWS, 0, 0 )
+   ENDIF
+
+   //::sendMessage( TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DOUBLEBUFFER )
+   //::sendMessage( TB_SETPADDING      , 0, Win_MakeLParam( 3,3 ) )
+   //::sendMessage( TB_SETLISTGAP, 4, 0 )  // vista
+
+   IF ::visible
+      ::show()
+   ENDIF
+
+   RETURN Self
+
+//----------------------------------------------------------------------//
+
+METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
 
    DEFAULT oParent     TO ::oParent
    DEFAULT oOwner      TO ::oOwner
@@ -165,93 +223,112 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 //----------------------------------------------------------------------//
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD destroy() CLASS WvgToolBar
+   LOCAL i, nItems
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT oOwner      TO ::oOwner
-   DEFAULT aPos        TO ::aPos
-   DEFAULT aSize       TO ::aSize
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
-
-   ::oParent     := oParent
-   ::oOwner      := oOwner
-   ::aPos        := aPos
-   ::aSize       := aSize
-   ::aPresParams := aPresParams
-   ::visible     := lVisible
-
-   RETURN Self
-
-//----------------------------------------------------------------------//
-
-METHOD destroy()
+   IF ( nItems := ::numItems() ) > 0
+      FOR i := 1 TO nItems
+         IF ::aItems[ i ]:image <> NIL
+            Win_DeleteObject( ::aItems[ i ]:image )
+         ENDIF
+      NEXT
+   ENDIF
 
    RETURN NIL
 
 //----------------------------------------------------------------------//
 
-METHOD addItem()
+METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey ) CLASS WvgToolBar
+   LOCAL oBtn, hBitmap, cType
+
+   HB_SYMBOL_UNUSED( xDisabledImage )
+   HB_SYMBOL_UNUSED( xHotImage )
+   HB_SYMBOL_UNUSED( cDLL )
+
+
+   oBtn := WvgToolbarButton():new( cCaption, nStyle, cKey )
+
+   oBtn:index   := ::numItems + 1
+   oBtn:command := 100 + oBtn:index
+
+   cType := valtype( xImage )
+
+   DO CASE
+
+   CASE cType == 'C'
+      hBitmap = Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
+
+      IF hBitmap <> 0
+         oBtn:image := hBitmap
+         Wvg_AddToolbarButton( ::hWnd, oBtn:image, oBtn:caption, oBtn:command, 1 )
+
+      endif
+
+   ENDCASE
+
+   aadd( ::aItems, { oBtn:command, oBtn } )
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD delItem()
+METHOD delItem() CLASS WvgToolBar
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD getItem()
+METHOD getItem() CLASS WvgToolBar
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD clear()
+METHOD clear() CLASS WvgToolBar
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD customize()
+METHOD customize() CLASS WvgToolBar
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD loadImageSet()
+METHOD loadImageSet() CLASS WvgToolBar
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD saveToolbar()
+METHOD saveToolbar() CLASS WvgToolBar
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD restToolbar()
+METHOD restToolbar() CLASS WvgToolBar
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD setPosAndSize()
+METHOD setPosAndSize() CLASS WvgToolBar
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD setSize()
+METHOD setSize() CLASS WvgToolBar
+
+   ::sendMessage( TB_AUTOSIZE, 0, 0 )
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD buttonClick( xParam )
+METHOD buttonClick( xParam ) CLASS WvgToolBar
 
    IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_buttonClick := xParam
@@ -261,7 +338,7 @@ METHOD buttonClick( xParam )
 
 //----------------------------------------------------------------------//
 
-METHOD change( xParam )
+METHOD change( xParam ) CLASS WvgToolBar
 
    IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_change := xParam
@@ -271,7 +348,7 @@ METHOD change( xParam )
 
 //----------------------------------------------------------------------//
 
-METHOD buttonMenuClick( xParam )
+METHOD buttonMenuClick( xParam ) CLASS WvgToolBar
 
    IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_buttonMenuClick := xParam
@@ -281,7 +358,7 @@ METHOD buttonMenuClick( xParam )
 
 //----------------------------------------------------------------------//
 
-METHOD buttonDropDown( xParam )
+METHOD buttonDropDown( xParam ) CLASS WvgToolBar
 
    IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
       ::sl_buttonDropDown := xParam
@@ -290,4 +367,50 @@ METHOD buttonDropDown( xParam )
    RETURN Self
 
 //----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//
+//       WvgToolbarButton() Class compatible with XbpToolbarButton()
+//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
 
+CLASS WvgToolbarButton
+
+   DATA     enabled                               INIT .T.
+   DATA     index                                 INIT 0
+   DATA     key                                   INIT ''
+   DATA     style                                 INIT WVGTOOLBAR_BUTTON_DEFAULT
+   DATA     caption                               INIT ''
+   DATA     image                                 INIT NIL
+   DATA     disabledImage                         INIT NIL
+   DATA     hotImage                              INIT NIL
+   DATA     mixedState                            INIT .F.
+   DATA     pressed                               INIT .F.
+   DATA     visible                               INIT .T.
+   DATA     left                                  INIT 0
+   DATA     bottom                                INIT 0
+   DATA     top                                   INIT 0
+   DATA     width                                 INIT 0
+   DATA     height                                INIT 0
+   DATA     description                           INIT ''
+   DATA     tooltipText                           INIT ''
+   DATA     command                               INIT 0
+
+   METHOD   new()
+
+   ENDCLASS
+//----------------------------------------------------------------------//
+METHOD new( cCaption, nStyle, cKey ) CLASS WvgToolbarButton
+
+   DEFAULT cCaption       TO ::caption
+   DEFAULT nStyle         TO ::style
+   DEFAULT cKey           TO ::key
+
+   ::caption        := cCaption
+   ::style          := nStyle
+   ::key            := cKey
+
+   RETURN Self
+//----------------------------------------------------------------------//

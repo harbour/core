@@ -95,7 +95,7 @@ CLASS WvgPartHandler
 
    METHOD   notifier( nEvent, xParams )
 
-   DATA     hChildren                             INIT    hb_hash()
+   DATA     aChildren                             INIT    {}
    DATA     nNameId
    DATA     oParent
    DATA     oOwner
@@ -167,7 +167,7 @@ METHOD status() CLASS WvgPartHandler
 
 METHOD addChild( oWvg ) CLASS WvgPartHandler
 
-   HB_SYMBOL_UNUSED( oWvg )
+   aadd( ::aChildren, oWvg )
 
    RETURN Self
 
@@ -235,7 +235,7 @@ METHOD setParent( oWvg ) CLASS WvgPartHandler
 METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
    Local aPos
    LOCAL nReturn := 0
-   LOCAL aMenuItem
+   LOCAL aMenuItem, nIndex, nCtrlID, nObj
 
    DO CASE
 
@@ -373,6 +373,25 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
          ENDIF
 
       ENDCASE
+
+   CASE nEvent == HB_GTE_NOTIFY
+      nCtrlID := xParams[ 1 ]
+
+      nIndex := ascan( ::aChildren, {|o| o:nID == nCtrlID } )
+      IF nIndex > 0
+         DO CASE
+
+         CASE xParams[ 4 ] == NM_CLICK
+            IF hb_isBlock( ::aChildren[ nIndex ]:sl_buttonClick )
+               nObj := ascan( ::aChildren[ nIndex ]:aItems, {|e_| e_[ 1 ] == xParams[ 5 ] } )
+               Eval( ::aChildren[ nIndex ]:sl_buttonClick, ::aChildren[ nIndex ]:aItems[ nObj,2 ] )
+
+            ENDIF
+
+
+         ENDCASE
+      ENDIF
+
    ENDCASE
 
    RETURN nReturn

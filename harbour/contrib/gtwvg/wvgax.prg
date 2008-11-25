@@ -111,9 +111,6 @@ CLASS WvgActiveXControl FROM TOleAuto, WvgWindow
    DATA   hContainer
    DATA   hSink
 
-   DATA   style                              INIT WS_CHILD + WS_VISIBLE + WS_CLIPCHILDREN + WS_CLIPSIBLINGS
-   DATA   hWnd
-
    METHOD New()
    METHOD Create()
    METHOD Destroy()
@@ -145,6 +142,8 @@ PROTECTED:
 METHOD New( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgActiveXControl
 
    ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   ::style := WS_CHILD + WS_VISIBLE + WS_CLIPCHILDREN + WS_CLIPSIBLINGS
 
    RETURN Self
 //----------------------------------------------------------------------//

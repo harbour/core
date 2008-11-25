@@ -226,7 +226,6 @@ EXPORTED:
    METHOD   setFocus()
    METHOD   sendMessage()
 
-PROTECTED:
    DATA     hWnd
    DATA     aPos                                  INIT  { 0,0 }
    DATA     aSize                                 INIT  { 0,0 }
@@ -237,6 +236,11 @@ PROTECTED:
    DATA     maxCol                                INIT  79
    DATA     maxRow                                INIT  24
    DATA     mouseMode                             INIT  1
+
+   DATA     nID                                   INIT  0
+   DATA     nControlID                            INIT  100
+   METHOD   createControl()
+   METHOD   getControlID()                        INLINE ++::nControlID
 
    ENDCLASS
 
@@ -386,7 +390,24 @@ METHOD setPos() CLASS WvgWindow
 
 //----------------------------------------------------------------------//
 
-METHOD setPosAndSize() CLASS WvgWindow
+METHOD setPosAndSize( aPos, aSize, lPaint ) CLASS WvgWindow
+
+   if hb_isArray( aPos ) .and. hb_isArray( aSize )
+      DEFAULT lPaint TO .T.
+
+      switch ::objType
+      case objTypeDialog
+      case objTypeActiveX
+         Win_MoveWindow( ::hWnd, aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ], lPaint )
+         exit
+
+      case objTypeCrt
+         hb_gtInfo( HB_GTI_SCREENWIDTH , aSize[ 1 ] )
+         hb_gtInfo( HB_GTI_SCREENHEIGHT, aSize[ 2 ] )
+         exit
+
+      end
+   endif
 
    RETURN Self
 
@@ -1033,6 +1054,60 @@ METHOD setFocus() CLASS WvgWindow
 METHOD sendMessage( nMessage, nlParam, nwParam ) CLASS WvgWindow
 
    Win_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
+
+   RETURN Self
+//----------------------------------------------------------------------//
+METHOD createControl() CLASS WvgWindow
+   LOCAL hWnd
+
+   DO CASE
+
+   CASE ::objType == objTypeToolBar
+
+      ::nID := ::oParent:GetControlId()
+
+      #if 1
+      hWnd := Win_CreateToolBarEx( ::oParent:hWnd,; // hWnd - window handle hosting the toolbar
+                                   ::style,;        // ws - style of the toolbar
+                                   ::nID,;          // wID - control identifier supplied with WM_COMMAND
+                                   0,;              // nBitmaps - number of button images
+                                   NIL,;            // hBMInst - mudule instance which hosts the bitmap resource
+                                   NIL,;            // wBPID - resource identifier of the bitmap
+                                   NIL,;            // lpButton - TBUTTON structure
+                                   0,;              // number of buttons
+                                   ::buttonWidth,;  //
+                                   ::buttonHeight,;
+                                   ::imageWidth,;
+                                   ::imageHeight )
+      //Win_SendMessage( hWnd, TB_AUTOSIZE, 0, 0 )
+      #else
+      hWnd := Win_CreateWindowEx( ::exStyle, ;
+                                  TOOLBARCLASSNAME, ;
+                                  NIL, ;                              // window name
+                                  ::style, ;
+                                  ::aPos[ 1 ], ::aPos[ 2 ],;
+                                  ::aSize[ 1 ], ::aSize[ 2 ],;
+                                  ::oParent:hWnd,;
+                                  NIL,;                              // hMenu
+                                  NIL,;                              // hInstance
+                                  NIL )                              // lParam
+      #endif
+   OTHERWISE
+      hWnd := Win_CreateWindowEx( ::exStyle, ;
+                                  ::className, ;
+                                  "", ;                              // window name
+                                  ::style, ;
+                                  ::aPos[ 1 ], ::aPos[ 2 ],;
+                                  ::aSize[ 1 ], ::aSize[ 2 ],;
+                                  ::oParent:hWnd,;
+                                  NIL,;                              // hMenu
+                                  NIL,;                              // hInstance
+                                  NIL )                              // lParam
+   ENDCASE
+
+   IF ( hWnd <> 0 )
+      ::hWnd := hWnd
+   ENDIF
 
    RETURN Self
 //----------------------------------------------------------------------//

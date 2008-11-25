@@ -1006,6 +1006,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_itemRelease( pEvParams );
          return 0;
       }
+      case WM_SIZING:
       case WM_SIZE:
       {
          return( hb_gt_wvt_SizeChanged( pWVT ) );
@@ -1090,6 +1091,24 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_itemRelease( pEvParams );
          pWVT->bTracking = FALSE;
          return DefWindowProc( pWVT->hWnd, message, wParam, lParam );;
+      }
+      case WM_NOTIFY:
+      {
+         PHB_ITEM pEvParams = hb_itemNew( NULL );
+         LPNMMOUSE nmm = ( LPNMMOUSE ) lParam;
+         NMHDR nmh = nmm->hdr;
+
+         hb_arrayNew( pEvParams, 5 );
+         hb_arraySetNI( pEvParams, 1, ( int ) wParam );
+         hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.hwndFrom );
+         hb_arraySetNI( pEvParams, 3, nmh.idFrom );
+         hb_arraySetNI( pEvParams, 4, nmh.code );
+         hb_arraySetNL( pEvParams, 5, nmm->dwItemSpec );
+
+         hb_gt_wvt_FireEvent( pWVT, HB_GTE_NOTIFY, pEvParams );
+
+         hb_itemRelease( pEvParams );
+         return TRUE;
       }
       case WM_CREATE:
       {
