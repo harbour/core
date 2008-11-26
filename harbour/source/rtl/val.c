@@ -72,7 +72,7 @@ HB_FUNC( VAL )
       if( !fDbl )
          hb_retnintlen( lValue, iWidth );
       else
-         hb_retnlen( dValue, iWidth, iDec );
+         hb_retndlen( dValue, iWidth, iDec );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1098, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

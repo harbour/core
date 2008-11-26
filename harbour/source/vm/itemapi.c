@@ -956,18 +956,24 @@ PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
    if( iDec < 0 )
       iDec = hb_stackSetStruct()->HB_SET_DECIMALS;
 
-   if( iDec > 0 )
-      return hb_itemPutNDLen( pItem, dNumber, iWidth, iDec );
-   else if( HB_DBL_LIM_INT( dNumber ) )
-      return hb_itemPutNILen( pItem, ( int ) dNumber, iWidth );
-   else if( HB_DBL_LIM_LONG( dNumber ) )
+   if( iDec == 0 )
+   {
+      HB_LONG lNumber = ( HB_LONG ) dNumber;
+
+      if( ( double ) lNumber == dNumber )
+      {
+         if( HB_LIM_INT( lNumber ) )
+            return hb_itemPutNILen( pItem, ( int ) lNumber, iWidth );
+         else
 #ifdef HB_LONG_LONG_OFF
-      return hb_itemPutNLLen( pItem, ( long ) dNumber, iWidth );
+            return hb_itemPutNLLen( pItem, ( long ) lNumber, iWidth );
 #else
-      return hb_itemPutNLLLen( pItem, ( LONGLONG ) dNumber, iWidth );
+            return hb_itemPutNLLLen( pItem, ( LONGLONG ) lNumber, iWidth );
 #endif
-   else
-      return hb_itemPutNDLen( pItem, dNumber, iWidth, 0 );
+      }
+   }
+
+   return hb_itemPutNDLen( pItem, dNumber, iWidth, iDec );
 }
 
 PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
