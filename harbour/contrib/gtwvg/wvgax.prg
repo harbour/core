@@ -66,10 +66,14 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
-#include "hbclass.ch"
-#include "common.ch"
-#include "hbgtwvg.ch"
-#include "wvtwin.ch"
+#include 'hbclass.ch'
+#include 'common.ch'
+#include 'inkey.ch'
+#include 'hbgtinfo.ch'
+
+#include 'hbgtwvg.ch'
+#include 'wvtwin.ch'
+#include 'wvgparts.ch'
 
 //----------------------------------------------------------------------//
 
@@ -107,7 +111,6 @@ CLASS WvgActiveXControl FROM TOleAuto, WvgWindow
    DATA   lSubStdEvents                      INIT .f.
 
    DATA   hEvents                            INIT hb_hash()
-   DATA   Id                                 INIT 0
    DATA   hContainer
    DATA   hSink
 
@@ -143,7 +146,9 @@ METHOD New( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgActiv
 
    ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style := WS_CHILD + WS_VISIBLE + WS_CLIPCHILDREN + WS_CLIPSIBLINGS
+   ::style      := WS_CHILD + WS_VISIBLE + WS_CLIPCHILDREN + WS_CLIPSIBLINGS
+   ::objType    := objTypeActiveX
+   ::className  := 'WVGACTIVEX'
 
    RETURN Self
 //----------------------------------------------------------------------//
@@ -158,9 +163,6 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
    ::CLSID      := cCLSID
    ::license    := cLicense
 
-   ::objType    := objTypeActiveX
-   ::className  := 'WVGACTIVEX'
-
    ::hObj       := 0
    ::hSink      := 0
 
@@ -172,13 +174,15 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
       nRef++
    ENDIF
 
-   ::hObj := HB_AX_AtlAxGetControl( "ATLAXWin", ::hContainer, ::CLSID, ::Id, ;
-                   ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ::style, ::exStyle, @hx )
+   ::nID := ::oParent:GetControlId()
 
+   ::hObj := HB_AX_AtlAxGetControl( "ATLAXWin", ::hContainer, ::CLSID, ::nID, ;
+                   ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ::style, ::exStyle, @hx )
    if ::hObj == 0
       Return NIL
    endif
 
+   ::oParent:addChild( SELF )
    ::hWnd := hx
 
    IF ::hObj <> 0  .AND. !Empty( ::hEvents )
@@ -192,10 +196,11 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
    RETURN Self
 //----------------------------------------------------------------------//
 METHOD Destroy() CLASS WvgActiveXControl
+   LOCAL bError := ErrorBlock()
 
    BEGIN SEQUENCE
+
    IF hb_IsNumeric( ::hObj ) .and. ::hObj <> 0
-//hb_ToOutDebug( '......................Release....................' )
 
       IF Win_IsWindow( ::hWnd )
          Win_DestroyWindow( ::hWnd )
@@ -209,11 +214,10 @@ METHOD Destroy() CLASS WvgActiveXControl
       IF --nRef == 0
 //         HB_AX_AtlAxWinTerm()
       ENDIF
-//hb_ToOutDebug( '<<                    Release                  >>' )
    ENDIF
 
    ENDSEQUENCE
-
+   ErrorBlock( bError )
    RETURN NIL
 //----------------------------------------------------------------------//
 METHOD adviseEvents() CLASS WvgActiveXControl

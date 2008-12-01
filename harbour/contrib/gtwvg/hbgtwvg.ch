@@ -68,6 +68,7 @@
 #define HB_GTE_TIMER                      8
 #define HB_GTE_MENU                       9
 #define HB_GTE_NOTIFY                    10
+#define HB_GTE_COMMAND                   11
 
 #define HB_GTI_SETFONT                   71
 #define HB_GTI_PRESPARAMS                72
@@ -129,56 +130,6 @@
 #define HB_GTS_SW_MAXIMIZED               5
 
 #define HB_GTI_GUI                     1001
-
-//----------------------------------------------------------------------//
-//                        Class Framework Constants
-//----------------------------------------------------------------------//
-
-#define objTypeNone                       0
-#define objTypeCrt                        1
-#define objTypeWindow                     2
-#define objTypeActiveX                    3
-#define objTypeDialog                     4
-#define objTypeToolBar                    5
-#define objTypeToolBarButton              6
-#define objTypeMenu                       7
-
-//----------------------------------------------------------------------//
-
-#define WVGALIGN_TOP                      0
-#define WVGALIGN_LEFT                     0
-#define WVGALIGN_HCENTER                  1
-#define WVGALIGN_RIGHT                    2
-#define WVGALIGN_VCENTER                  4
-#define WVGALIGN_BOTTOM                   8
-#define WVGALIGN_WORDBREAK               16
-
-#define WVGFRAME_NONE                     0
-#define WVGFRAME_RECT                     1
-#define WVGFRAME_BOX                      2
-#define WVGFRAME_RAISED                  16
-#define WVGFRAME_RECESSED                32
-#define WVGFRAME_THICK                  128
-
-#define WVGTOOLBAR_STYLE_STANDARD         0
-#define WVGTOOLBAR_STYLE_FLAT             1
-
-#define WVGTOOLBAR_BUTTON_UNPRESSED       0
-#define WVGTOOLBAR_BUTTON_PRESSED         1
-
-#define WVGTOOLBAR_BUTTON_DEFAULT         0
-#define WVGTOOLBAR_BUTTON_TOGGLE          1
-#define WVGTOOLBAR_BUTTON_BUTTONGROUP     2
-#define WVGTOOLBAR_BUTTON_SEPARATOR       3
-#define WVGTOOLBAR_BUTTON_PLACEHOLDER     4
-#define WVGTOOLBAR_BUTTON_DROPDOWN        5
-
-#define WVGTOOLBAR_STDIMAGES_SMALL        0
-#define WVGTOOLBAR_STDIMAGES_LARGE        1
-#define WVGTOOLBAR_VIEWIMAGES_SMALL       4
-#define WVGTOOLBAR_VIEWIMAGES_LARGE       5
-#define WVGTOOLBAR_EXPLORERIMAGES_SMALL   8
-#define WVGTOOLBAR_EXPLORERIMAGES_LARGE   9
 
 //----------------------------------------------------------------------//
 

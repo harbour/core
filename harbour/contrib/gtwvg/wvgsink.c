@@ -105,6 +105,16 @@
 #include <ole2.h>
 #include <oleauto.h>
 
+//#include <strsafe.h>
+
+//----------------------------------------------------------------------//
+
+#if defined(__BORLANDC__) && !defined(HB_ARCH_64BIT)
+    #undef MAKELONG
+    #define MAKELONG(a,b) ((LONG)(((WORD)((DWORD_PTR)(a) & 0xffff)) | \
+                          (((DWORD)((WORD)((DWORD_PTR)(b) & 0xffff))) << 16)))
+#endif
+
 //----------------------------------------------------------------------//
 static HRESULT  s_nOleError;
 static HMODULE  hLib = NULL;
@@ -120,6 +130,57 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem );
 HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant );
 
 void HB_EXPORT hb_ToOutDebug( const char * sTraceMsg, ... );
+
+//----------------------------------------------------------------------//
+
+#if !defined( StringCchCat )
+   #ifdef UNICODE
+      #define StringCchCat(d,n,s)   hb_wcncpy( (d), (s), (n) - 1 )
+   #else
+      #define StringCchCat(d,n,s)   hb_xstrncpy( (d), (s), (n) - 1 )
+   #endif
+#endif
+
+/*
+ * This function copies szText to destination buffer.
+ * NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null
+ */
+char * hb_xstrncpy( char * pDest, const char * pSource, ULONG ulLen )
+{
+   ULONG ulDst, ulSrc;
+
+   pDest[ ulLen ] = 0;
+   ulDst = strlen( pDest );
+   if( ulDst < ulLen )
+   {
+      ulSrc = strlen( pSource );
+      if( ulDst + ulSrc > ulLen )
+         ulSrc = ulLen - ulDst;
+
+      memcpy( &pDest[ ulDst ], pSource, ulSrc );
+      pDest[ ulDst + ulSrc ] = 0;
+   }
+   return pDest;
+}
+
+
+wchar_t *hb_wcncpy( wchar_t *dstW, const wchar_t *srcW, unsigned long ulLen )
+{
+   ULONG ulDst, ulSrc;
+
+   dstW[ ulLen ] = 0;
+   ulDst = lstrlenW( dstW );
+   if( ulDst < ulLen )
+   {
+      ulSrc = lstrlenW( srcW );
+      if( ulDst + ulSrc > ulLen )
+         ulSrc = ulLen - ulDst;
+      memcpy( &dstW[ ulDst ], srcW, ulSrc * sizeof( wchar_t ) );
+      dstW[ ulDst + ulSrc ] = 0;
+   }
+   return dstW;
+}
 
 //----------------------------------------------------------------------//
 // these 2 functions are required to send parameters by reference
@@ -515,7 +576,8 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
    HB_SYMBOL_UNUSED( riid );
    HB_SYMBOL_UNUSED( pn );
 
-   if( !( thisobj = ( IEventHandler * ) GlobalAlloc( GMEM_FIXED, sizeof( MyRealIEventHandler ) ) ) )
+   thisobj = ( IEventHandler * ) GlobalAlloc( GMEM_FIXED, sizeof( MyRealIEventHandler ) );
+   if( !( thisobj ) )
    {
       hr = E_OUTOFMEMORY;
    }
@@ -636,15 +698,59 @@ HB_FUNC( HB_AX_SETUPCONNECTIONPOINT )
 //----------------------------------------------------------------------//
 HB_FUNC( HB_AX_ATLAXWININIT )
 {
-   PATLAXWININIT AtlAxWinInit;
-   char szLibName[ MAX_PATH + 1 ] = { 0 };
    BOOL bRet = FALSE;
 
    if( !hLib )
    {
+      PATLAXWININIT AtlAxWinInit;
+
+      #if 0
+      /* the code below needs TCHAR strcat of szLibName and dll name */
+      char szLibName[ MAX_PATH + 1 ] = { 0 };
+
       GetSystemDirectory( szLibName, MAX_PATH );
       hb_strncat( szLibName, "\\atl.dll", sizeof( szLibName ) - 1 );
       hLib = LoadLibrary( ( LPCSTR ) szLibName );
+      #endif
+
+      //hLib = LoadLibrary( TEXT( "atl.dll" ) );
+
+      #if 1
+      TCHAR szLibName[ MAX_PATH + 1 ] = { 0 };
+
+      /* please always check if given function need size in TCHARs or bytes
+       * in MS documentation.
+       */
+      GetSystemDirectory( szLibName, MAX_PATH );
+
+      /* TEXT() macro can be used for literal (and only for literal) string
+       * values. It creates array of TCHAR items with given text. It cannot
+       * be used to ecapsulate non literal values. In different [x]Harbour
+       * source code you may find things like TEXT( hb_parc( 1 ) ) - it's
+       * a technical nonsense written by someone who has no idea what this
+       * macro does.
+       * Use new string functions (StringCchCat() in this case) which always
+       * set trailing 0 in the given buffer just like hb_strn*() functions.
+       * [l]str[n]cat() is absolute and should not be used by new code. It does
+       * not guarantee buffer overflow protection and/or setting trailing 0.
+       * StringCch*() functions operate on TCHAR types.
+       */
+      StringCchCat( szLibName, MAX_PATH + 1, TEXT( "\\atl.dll" ) );
+
+       /* Please note that I intentionally removed any casting when szLibName
+        * is passed to WinAPI functions. Such casting can pacify warnings so
+        * program will be compiled but code will be still wrong so it does not
+        * fix anything and only makes much harder later fixing when someone
+        * will look for wrong code which is not UNICODE ready. The wrong casting
+        * related to different character representations used only to pacify
+        * warnings is the biggest problem in MS-Win 3-rd party code written
+        * for [x]Harbour because it only hides bugs and then people have to
+        * look for the code line by line to fix it. I dedicated above note to
+        * developers of few well known MS-Win GUI projects for [x]Harbour.
+        * Please remember about it.
+        */
+      hLib = LoadLibrary( szLibName );
+      #endif
 
       if( hLib )
       {
@@ -703,7 +809,8 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
 
       if( hContainer )
       {
-         SendMessage( ( HWND ) hContainer, ( UINT ) WM_SETFONT, ( WPARAM ) GetStockObject( DEFAULT_GUI_FONT ), ( LPARAM ) ( MAKELPARAM( FALSE, 0 ) ) );
+         LPARAM lParam = MAKELPARAM( FALSE, 0 );
+         SendMessage( ( HWND ) hContainer, ( UINT ) WM_SETFONT, ( WPARAM ) GetStockObject( DEFAULT_GUI_FONT ), lParam );
          uLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, Caption, strlen( Caption )+1, NULL, 0 );
          wString = ( BSTR ) malloc( uLen * sizeof( WCHAR ) );
          MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, Caption, strlen( Caption )+1, wString, uLen );

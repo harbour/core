@@ -67,10 +67,12 @@
 
 #include 'hbclass.ch'
 #include 'common.ch'
+#include 'inkey.ch'
 #include 'hbgtinfo.ch'
+
 #include 'hbgtwvg.ch'
 #include 'wvtwin.ch'
-#include 'inkey.ch'
+#include 'wvgparts.ch'
 
 //----------------------------------------------------------------------//
 
@@ -242,6 +244,8 @@ EXPORTED:
    METHOD   createControl()
    METHOD   getControlID()                        INLINE ++::nControlID
 
+   METHOD   Initialize()
+
    ENDCLASS
 
 //----------------------------------------------------------------------//
@@ -264,20 +268,6 @@ METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgWind
 
    ::WvgPartHandler:init( oParent, oOwner )
 
-   #if 0
-   if hb_isArray( aPos )
-      ::aPos := aPos
-   endif
-   if hb_isArray( aSize )
-      ::aSize := aSize
-   endif
-   if hb_isArray( aPresParams )
-      ::aPresParams := aPresParams
-   endif
-   if hb_isLogical( lVisible )
-      ::visible := lVisible
-   endif
-   #endif
    RETURN Self
 
 //----------------------------------------------------------------------//
@@ -319,6 +309,18 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 //----------------------------------------------------------------------//
 
 METHOD destroy() CLASS WvgWindow
+
+   IF Len( ::aChildren ) > 0
+      aeval( ::aChildren, {|o| hb_toOutDebug( '<   '+o:className+'    >' ), o:destroy() } )
+      ::aChildren := {}
+   ENDIF
+
+   ::destroy()
+
+   IF Win_IsWindow( ::hWnd )
+      Win_DestroyWindow( ::hWnd )
+      ::hWnd := NIL
+   ENDIF
 
    RETURN Self
 
@@ -396,7 +398,9 @@ METHOD setPosAndSize( aPos, aSize, lPaint ) CLASS WvgWindow
       DEFAULT lPaint TO .T.
 
       switch ::objType
+
       case objTypeDialog
+      case objTypeStatic
       case objTypeActiveX
          Win_MoveWindow( ::hWnd, aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ], lPaint )
          exit
@@ -419,6 +423,8 @@ METHOD setSize( aSize, lPaint ) CLASS WvgWindow
       DEFAULT lPaint TO .T.
 
       switch ::objType
+
+      case objTypeStatic
       case objTypeDialog
       case objTypeActiveX
          Win_MoveWindow( ::hWnd, 0, 0, aSize[ 1 ], aSize[ 2 ], lPaint )
@@ -1045,6 +1051,26 @@ METHOD dragDrop( xParam, xParam1 ) CLASS WvgWindow
 
 //----------------------------------------------------------------------//
 
+METHOD Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgWindow
+
+   DEFAULT oParent     TO ::oParent
+   DEFAULT oOwner      TO ::oOwner
+   DEFAULT aPos        TO ::aPos
+   DEFAULT aSize       TO ::aSize
+   DEFAULT aPresParams TO ::aPresParams
+   DEFAULT lVisible    TO ::visible
+
+   ::oParent     := oParent
+   ::oOwner      := oOwner
+   ::aPos        := aPos
+   ::aSize       := aSize
+   ::aPresParams := aPresParams
+   ::visible     := lVisible
+
+   RETURN Self
+
+//----------------------------------------------------------------------//
+
 METHOD setFocus() CLASS WvgWindow
 
    ::sendMessage( WM_ACTIVATE, 1, 0 )
@@ -1060,13 +1086,12 @@ METHOD sendMessage( nMessage, nlParam, nwParam ) CLASS WvgWindow
 METHOD createControl() CLASS WvgWindow
    LOCAL hWnd
 
+   ::nID := ::oParent:GetControlId()
+
    DO CASE
 
    CASE ::objType == objTypeToolBar
 
-      ::nID := ::oParent:GetControlId()
-
-      #if 1
       hWnd := Win_CreateToolBarEx( ::oParent:hWnd,; // hWnd - window handle hosting the toolbar
                                    ::style,;        // ws - style of the toolbar
                                    ::nID,;          // wID - control identifier supplied with WM_COMMAND
@@ -1079,20 +1104,8 @@ METHOD createControl() CLASS WvgWindow
                                    ::buttonHeight,;
                                    ::imageWidth,;
                                    ::imageHeight )
-      //Win_SendMessage( hWnd, TB_AUTOSIZE, 0, 0 )
-      #else
-      hWnd := Win_CreateWindowEx( ::exStyle, ;
-                                  TOOLBARCLASSNAME, ;
-                                  NIL, ;                              // window name
-                                  ::style, ;
-                                  ::aPos[ 1 ], ::aPos[ 2 ],;
-                                  ::aSize[ 1 ], ::aSize[ 2 ],;
-                                  ::oParent:hWnd,;
-                                  NIL,;                              // hMenu
-                                  NIL,;                              // hInstance
-                                  NIL )                              // lParam
-      #endif
    OTHERWISE
+
       hWnd := Win_CreateWindowEx( ::exStyle, ;
                                   ::className, ;
                                   "", ;                              // window name
@@ -1100,7 +1113,7 @@ METHOD createControl() CLASS WvgWindow
                                   ::aPos[ 1 ], ::aPos[ 2 ],;
                                   ::aSize[ 1 ], ::aSize[ 2 ],;
                                   ::oParent:hWnd,;
-                                  NIL,;                              // hMenu
+                                  ::nID,;                              // hMenu
                                   NIL,;                              // hInstance
                                   NIL )                              // lParam
    ENDCASE

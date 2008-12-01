@@ -9,6 +9,7 @@ LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 PRG_HEADERS=\
    hbgtwvg.ch \
    wvtwin.ch \
+   wvgparts.ch \
 
 LIB_OBJS = \
    $(OBJ_DIR)wvgclass$(OBJEXT) \
@@ -20,6 +21,13 @@ LIB_OBJS = \
    $(OBJ_DIR)wvgdlg$(OBJEXT) \
    $(OBJ_DIR)wvgmenub$(OBJEXT) \
    $(OBJ_DIR)wvgtoolb$(OBJEXT) \
+   $(OBJ_DIR)wvgcombo$(OBJEXT) \
+   $(OBJ_DIR)wvglistb$(OBJEXT) \
+   $(OBJ_DIR)wvgpushb$(OBJEXT) \
+   $(OBJ_DIR)wvgstatb$(OBJEXT) \
+   $(OBJ_DIR)wvgstatc$(OBJEXT) \
+   $(OBJ_DIR)wvgtreev$(OBJEXT) \
+   $(OBJ_DIR)wincback$(OBJEXT) \
    \
    $(OBJ_DIR)gtwvg$(OBJEXT) \
    $(OBJ_DIR)wvgcore$(OBJEXT) \
@@ -27,6 +35,7 @@ LIB_OBJS = \
    $(OBJ_DIR)wvgsink$(OBJEXT) \
    $(OBJ_DIR)wvgwin$(OBJEXT) \
    $(OBJ_DIR)wvggui$(OBJEXT) \
+   $(OBJ_DIR)wincallb$(OBJEXT) \
 
 all: \
    $(LIB_PATH) \

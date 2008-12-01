@@ -8,6 +8,77 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-11-30 23:05 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/makefile
+  * harbour/contrib/gtwvg/common.mak
+    + wvgparts.ch
+    + wincallb.c
+    + wincback.prg
+    + wvglistb.prg
+    + wvgpushb.prg
+    + wvgstatb.prg
+    + wvgstatc.prg
+    + wvgtreev.prg
+
+  * harbour/contrib/gtwvg/wvggui.c
+  * harbour/contrib/gtwvg/wvgsink.c
+  * harbour/contrib/gtwvg/wvgutils.c
+  * harbour/contrib/gtwvg/wvgwin.c
+  * harbour/contrib/gtwvg/hbgtwvg.ch
+  * harbour/contrib/gtwvg/wvgparts.ch
+  * harbour/contrib/gtwvg/wvtwin.ch
+  * harbour/contrib/gtwvg/wvgax.prg
+  * harbour/contrib/gtwvg/wvgcrt.prg
+  * harbour/contrib/gtwvg/wvgdlg.prg
+  * harbour/contrib/gtwvg/wvgmenub.prg
+  * harbour/contrib/gtwvg/wvgphdlr.prg
+  * harbour/contrib/gtwvg/wvgtoolb.prg
+  * harbour/contrib/gtwvg/wvgwnd.prg
+    ! More synchronization, more events firings, etc.
+
+  + harbour/contrib/gtwvg/wincback.prg
+  + harbour/contrib/gtwvg/wincallb.c
+    Now PRG/C level callback procedures/code blocks/methods 
+    are made available by Andy Wos. A big thank you. 
+
+       :nWndProc := HB_AsCallBack( 'MYWNDPROC', Self )
+
+       METHOD MYWndProc( hWnd, nMessage, nwParam, nlParam )
+          IF nMessage == WM_LBUTTONDOWN
+             Win_MessageBox( , 'Prg level callback procedure!, 'Info' )
+             RETURN 0
+	  ENDIF
+ 
+          RETURN 1
+
+       Before this mechanism was available with only C callbacks which 
+       were of limiting nature. It has made our life so easy.
+
+  + harbour/contrib/gtwvg/wvglistb.prg
+  + harbour/contrib/gtwvg/wvgcombo.prg
+  + harbour/contrib/gtwvg/wvgpushb.prg
+  + harbour/contrib/gtwvg/wvgstatb.prg
+  + harbour/contrib/gtwvg/wvgstatc.prg
+  + harbour/contrib/gtwvg/wvgtreev.prg
+    + Added Xbase++ compatible new classes. 
+       NOTE: Still a work-in-progress, subject to heavy changes.
+       Basic functionality is working and class skeletons are in place.
+       The partially functional classes added are:
+          WvgStatusBar()
+          WvgStatic()
+          WvgPushButton()
+
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    + Added functionality of new classes.
+
+    ; TOFIX: harbour/contrib/gtwvg/wvggui.c
+             Przemek, can you please look into this stripped down
+             version of gtwvg.c. It has memory leak in inkey() and 
+             hb_gtInfo() functions. To test, just resize the window
+             and exit, boooom, a big hb_out.log with above mem leak 
+             entries. I am sure I just stripped some important loop
+             but am unable to locate where.     
+
 2008-11-26 18:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/itemapi.c
     * changed hb_itemPutNLen() function to create integer item only

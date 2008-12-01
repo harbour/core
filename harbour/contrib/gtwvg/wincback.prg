@@ -53,129 +53,92 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 //
-//                               EkOnkar
-//                         ( The LORD is ONE )
-//
-//                  Xbase++ Compatible xbpDialog Class
-//
-//                 Pritpal Bedi <pritpal@vouchcac.com>
-//                             17Nov2008
+//                      A Contribution from Andy Wos
+//                                   .
+//                            A Big Thank You
 //
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
-#include 'hbclass.ch'
 #include 'common.ch'
-#include 'inkey.ch'
-#include 'hbgtinfo.ch'
-
-#include 'hbgtwvg.ch'
-#include 'wvtwin.ch'
-#include 'wvgparts.ch'
 
 //----------------------------------------------------------------------//
-CLASS WvgDialog FROM WvgWindow
+//
+// Calback pointer interface
+// ( to be used with _winccback.c )
+// 6 June 2004, 13 June 2004
+// 5 April 2005 (added VOID return option)
 
-   DATA   oMenu
-
-   DATA   drawingArea
-
-   METHOD init()
-   METHOD create()
-   METHOD configure()
-   METHOD destroy()
-
-   ENDCLASS
 //----------------------------------------------------------------------//
-METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDialog
+// Universal 32 bit callback procedure interface
+//
+// Syntax:
+//   AsCallback( <@MyFunc()>, , [<nQtyParams>], [<xCargo>], [<lVoid>] )  => pProcPtr
+//   or
+//   AsCallback( <bBlock>, , [<nQtyParams>], [<xCargo>], [<lVoid>] )  => pProcPtr
+//   or
+//   AsCallback( <MethPtr>, <oObject>, [<nQtyParams>], [<xCargo>], [<lVoid>] )  => pProcPtr
+//   or
+//   you can replace <@MyFunc()> or <MethPtr> with the acual name, eg: "MYFUNC", MYMETH"
 
-   ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+// Returns: <pProcPtr> - true callback function pointer, or 0 on failure
+//
 
-   ::className   := 'WVGDIALOG'
-   ::resizeMode  := 0
-   ::mouseMode   := 0
-   ::objType     := objTypeDialog
+// Note: Must call FreeCallback( <pProcPtr> ), when no longer needed
+//       or memory leak will occur on the application exit.
+//       All parameters are treated as LONG (32bit) values.
+//       Also the return value is treated as a numerical LONG (32bit), unless <lVoid> is TRUE.
+//
+//       [<nQtyParams>] - optional number of formal parameters (not incl. <xCargo>)
+//                        as passed by the caller, eg. Windows, the default is 4.
+//                        The number of parameters must be exactly as specified.
+//                        Min value is 0, and the maximum is 10.
+//
+//       [<xCargo>]     - any extra value to pass to the callback procedure
+//                        (if you intend to change it, it has to be passed by
+//                        reference). It will be passed to the procedure, after
+//                        all formal parameters.
+//
+//       [<lVoid>]      - an optional indication that the callback function is not to return
+//                        any value (void) to the calling process (default FALSE).
 
-   ::style       := WS_THICKFRAME+WS_OVERLAPPED+WS_CAPTION+WS_SYSMENU+WS_MINIMIZEBOX+WS_MAXIMIZEBOX;
+// [<cDebug>] - debugging only (not to be used in normal operation)
+//              if passed by reference, it returns the actual generated
+//              assembler code for inspection and debugging
+//
+FUNCTION HB_AsCallback( pbcFunc, oObj, nNumParam, xCargo, lVoid, cDebug )
+   LOCAL pCallback
+   LOCAL nPos := 0
 
-   ::drawingArea := Self
+   HB_SYMBOL_UNUSED( xCargo )
 
-   RETURN Self
+   pCallback := _AsCallback( pbcFunc, oObj, nNumParam, lVoid, @cDebug )
+
+   RETURN pCallback
 //----------------------------------------------------------------------//
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDialog
+// Syntax: FreeCallback( < nProcPtr > ) => lSuccess
+//
+// Note: The callback procedure must have been obtained
+//       through the AsCallback() function
+//       You should not call this function from within
+//       the callback function itself !!!!!!
+//       If it is a window procedure, the window must be
+//       destroyed first, or it must be "unsubclassed"
+//
+FUNCTION HB_FreeCallback( pCallback )
+   LOCAL lSuccess := .F.
 
-   ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   lSuccess := _FreeCallback( pCallback )
 
-   if ::lModal
-      ::pGT  := hb_gtCreate( 'WGU' )
-      ::pGTp := hb_gtSelect( ::pGT )
-   else
-      hb_gtReload( 'WGU' )
-      ::pGT := hb_gtSelect()
-   endif
-
-   hb_gtInfo( HB_GTI_PRESPARAMS, { ::exStyle, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
-                                   ::aSize[ 1 ], ::aSize[ 2 ], ::pGTp, .F., .F. } )
-
-   if ::visible
-      hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
-   else
-      hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_HIDE   )
-   endif
-
-   ::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
-
-   hb_gtInfo( HB_GTI_RESIZABLE , ::resizable )
-   hb_gtInfo( HB_GTI_CLOSABLE  , ::closable  )
-   hb_gtInfo( HB_GTI_WINTITLE  , ::title     )
-
-   if !empty( ::icon )
-      if hb_isNumeric( ::icon )
-         hb_gtInfo( HB_GTI_ICONRES, ::icon )
-
-      elseif hb_isChar( ::icon )
-         hb_gtInfo( HB_GTI_ICONFILE, ::icon )
-
-      endif
-   endif
-
-   if ::lModal
-      hb_gtInfo( HB_GTI_DISABLE, ::pGTp )
-   endif
-
-   if ::visible
-      ::lHasInputFocus := .t.
-   endif
-
-   hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| ::notifier( nEvent, ... ) } )
-
-   RETURN Self
+   RETURN .T. //lSuccess
 //----------------------------------------------------------------------//
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDialog
+// free all oustanding unreleased callback pointers on exit from the application
+// could be changed to EXIT PROCEDURE
+//
+PROCEDURE _ExitCallbacks
 
-   ::WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   _FreeAllCallbacks()
 
-   RETURN Self
-//----------------------------------------------------------------------//
-METHOD destroy() CLASS WvgDialog
-   LOCAL bError := ErrorBlock()
-
-   //BEGIN SEQUENCE
-
-   IF hb_isObject( ::oMenu )
-      ::oMenu:destroy()
-   ENDIF
-
-   IF Len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| hb_toOutDebug( o:className ), o:destroy() } )
-   ENDIF
-
-   ::pGT  := NIL
-   ::pGTp := NIL
-
-   //END SEQUENCE
-
-   ErrorBlock( bError )
-   RETURN Self
+   RETURN
 //----------------------------------------------------------------------//

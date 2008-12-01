@@ -126,7 +126,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
    wndclass.hInstance     = hInstance;
 /* wndclass.hIcon         = NULL; */
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
-   wndclass.hbrBackground = NULL; /* ( HBRUSH ) ( COLOR_BTNFACE + 1 ) */;
+   wndclass.hbrBackground = ( HBRUSH ) ( COLOR_BTNFACE + 1 );
 /* wndclass.lpszMenuName  = NULL; */
    wndclass.lpszClassName = s_szClassName;
 
@@ -346,14 +346,14 @@ static void hb_gt_wvt_FireMenuEvent( PHB_GTWVT pWVT, int iMode, int menuIndex )
 static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
 {
    int iPos = pWVT->keyPointerIn;
-
+   #if 1
    if( iKey == K_MOUSEMOVE || iKey == K_NCMOUSEMOVE )
    {
       /* Clipper strips repeated mouse movemnt - let's do the same */
       if( pWVT->keyLast == iKey && pWVT->keyPointerIn != pWVT->keyPointerOut )
          return;
    }
-
+   #endif
    /*
     * When the buffer is full new event overwrite the last one
     * in the buffer - it's Clipper behavior, [druzus]
@@ -363,7 +363,7 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
       iPos = 0;
    if( iPos != pWVT->keyPointerOut )
       pWVT->keyPointerIn = iPos;
-
+   #if 0
    /* Fire event to be trapped by the application */
    {
       PHB_ITEM pEvParams = hb_itemNew( NULL );
@@ -371,6 +371,7 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
       hb_gt_wvt_FireEvent( pWVT, HB_GTE_KEYBOARD, pEvParams );
       hb_itemRelease( pEvParams );
    }
+   #endif
 }
 
 static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
@@ -440,7 +441,7 @@ static int hb_gt_wvt_SizeChanged( PHB_GTWVT pWVT )
    hb_arraySetNI( pEvParams, 3, rc.right - rc.left );
    hb_arraySetNI( pEvParams, 4, rc.bottom - rc.top );
 
-   hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+   //hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
 
    hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED, pEvParams );
 
@@ -934,7 +935,7 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_GTWVT pWVT = hb_gt_wvt_Find( hWnd );
-
+//hb_ToOutDebug( "h=%i m=%i w=%i l=%i", hWnd, message, wParam, lParam );
    if( pWVT ) switch( message )
    {
       case WM_PAINT:
@@ -1009,7 +1010,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_SIZING:
       case WM_SIZE:
       {
-         return( hb_gt_wvt_SizeChanged( pWVT ) );
+         hb_gt_wvt_SizeChanged( pWVT );
+         return DefWindowProc( hWnd, message, wParam, lParam );
       }
       case WM_SYSCOMMAND:
       {
@@ -1047,9 +1049,30 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       }
       case WM_COMMAND:
       {
-         if( HIWORD( wParam ) == 0 )
+         if( ( int ) lParam == 0 )
          {
-            hb_gt_wvt_FireMenuEvent( pWVT, 0, ( int ) LOWORD( wParam ) );
+            // Menu command
+            if( HIWORD( wParam ) == 0 )
+            {
+               hb_gt_wvt_FireMenuEvent( pWVT, 0, ( int ) LOWORD( wParam ) );
+            }
+         }
+         else
+         {
+            PHB_ITEM pEvParams = hb_itemNew( NULL );
+            int iLo, iHi;
+
+            iLo = LOWORD( wParam );
+            iHi = HIWORD( wParam );
+hb_ToOutDebug( "%i %i %i", iHi, iLo, lParam );
+            hb_arrayNew( pEvParams, 3 );
+            hb_arraySetNI( pEvParams, 1, iHi );                              // Notification Code
+            hb_arraySetNI( pEvParams, 2, iLo );                              // Control identifier
+            hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) ( HWND ) lParam ); // Controls hWnd
+
+            hb_gt_wvt_FireEvent( pWVT, HB_GTE_COMMAND, pEvParams );
+
+            hb_itemRelease( pEvParams );
          }
          return 0;
       }
@@ -1097,7 +1120,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          PHB_ITEM pEvParams = hb_itemNew( NULL );
          LPNMMOUSE nmm = ( LPNMMOUSE ) lParam;
          NMHDR nmh = nmm->hdr;
-
+//hb_ToOutDebug( "WM_NOTIFY" );
          if( nmh.code == NM_CLICK )
          {
             hb_arrayNew( pEvParams, 5 );
@@ -1305,7 +1328,7 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
       hb_gt_wvt_ProcessMessages( pWVT );
 
    fKey = hb_gt_wvt_GetCharFromInputQueue( pWVT, &c );
-
+//hb_ToOutDebug( "fKey = %i ", fKey );
    return fKey ? c : 0;
 }
 

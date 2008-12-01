@@ -15,6 +15,7 @@ C_SOURCES=\
 	wvgwin.c \
 	wvgsink.c \
 	wvggui.c \
+	wincallb.c \
 
 PRG_SOURCES=\
 	wvgclass.prg \
@@ -26,11 +27,19 @@ PRG_SOURCES=\
 	wvgdlg.prg \
 	wvgmenub.prg \
 	wvgtoolb.prg \
+	wvgcombo.prg \
+	wvglistb.prg \
+	wvgpushb.prg \
+	wvgstatb.prg \
+	wvgstatc.prg \
+	wvgtreev.prg \
+	wincback.prg \	
 
 
 PRG_HEADERS=\
 	hbgtwvg.ch \
 	wvtwin.ch \
+	wvgparts.ch \
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
