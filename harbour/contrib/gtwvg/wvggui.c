@@ -1064,7 +1064,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
             iLo = LOWORD( wParam );
             iHi = HIWORD( wParam );
-hb_ToOutDebug( "%i %i %i", iHi, iLo, lParam );
+//hb_ToOutDebug( "%i %i %i", iHi, iLo, lParam );
             hb_arrayNew( pEvParams, 3 );
             hb_arraySetNI( pEvParams, 1, iHi );                              // Notification Code
             hb_arraySetNI( pEvParams, 2, iLo );                              // Control identifier

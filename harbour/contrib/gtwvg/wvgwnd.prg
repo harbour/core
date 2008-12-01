@@ -311,7 +311,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 METHOD destroy() CLASS WvgWindow
 
    IF Len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| hb_toOutDebug( '<   '+o:className+'    >' ), o:destroy() } )
+      aeval( ::aChildren, {|o| /*hb_toOutDebug( '<   '+o:className+'    >' ),*/ o:destroy() } )
       ::aChildren := {}
    ENDIF
 

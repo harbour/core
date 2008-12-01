@@ -168,7 +168,7 @@ METHOD destroy() CLASS WvgDialog
    ENDIF
 
    IF Len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| hb_toOutDebug( o:className ), o:destroy() } )
+      aeval( ::aChildren, {|o| /*hb_toOutDebug( o:className ),*/ o:destroy() } )
    ENDIF
 
    ::pGT  := NIL

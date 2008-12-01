@@ -364,7 +364,7 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       ENDIF
 
    CASE nEvent == HB_GTE_MENU
-hb_ToOutDebug( "   CASE nEvent == HB_GTE_MENU" )
+//hb_ToOutDebug( "   CASE nEvent == HB_GTE_MENU" )
 
       DO CASE
       CASE xParams[ 1 ] == 0  // menu selected
