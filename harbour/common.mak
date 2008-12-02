@@ -385,6 +385,7 @@ COMPILER_LIB_OBJS = \
     $(OBJ_DIR)\harboury$(OBJEXT) \
     $(OBJ_DIR)\cmdcheck$(OBJEXT) \
     $(OBJ_DIR)\complex$(OBJEXT)  \
+    $(OBJ_DIR)\compi18n$(OBJEXT) \
     $(OBJ_DIR)\expropta$(OBJEXT) \
     $(OBJ_DIR)\exproptb$(OBJEXT) \
     $(OBJ_DIR)\genc$(OBJEXT)     \

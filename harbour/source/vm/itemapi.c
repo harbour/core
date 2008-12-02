@@ -1406,7 +1406,7 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
    if( HB_IS_COMPLEX( pDest ) )
       hb_itemClear( pDest );
 
-   memcpy( pDest, pSource, sizeof( HB_ITEM ) );
+   hb_itemRawCpy( pDest, pSource );
    pDest->type &= ~HB_IT_DEFAULT;
 
    if( HB_IS_COMPLEX( pSource ) )
@@ -1519,7 +1519,7 @@ void hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
       hb_itemClear( pDest );
 
    /* GCLOCK enter */
-   memcpy( pDest, pSource, sizeof( HB_ITEM ) );
+   hb_itemRawCpy( pDest, pSource );
    pDest->type &= ~HB_IT_DEFAULT;
    pSource->type = HB_IT_NIL;
    /* GCLOCK leave */
@@ -1550,7 +1550,7 @@ void hb_itemMoveRef( PHB_ITEM pDest, PHB_ITEM pSource )
       hb_itemClear( pDest );
 
    /* GCLOCK enter */
-   memcpy( pDest, pSource, sizeof( HB_ITEM ) );
+   hb_itemRawCpy( pDest, pSource );
    pDest->type &= ~HB_IT_DEFAULT;
    pSource->type = HB_IT_NIL;
    /* GCLOCK leave */
@@ -1599,7 +1599,7 @@ void hb_itemMoveToRef( PHB_ITEM pDest, PHB_ITEM pSource )
       hb_itemClear( pDest );
 
    /* GCLOCK enter */
-   memcpy( pDest, pSource, sizeof( HB_ITEM ) );
+   hb_itemRawCpy( pDest, pSource );
    pDest->type &= ~HB_IT_DEFAULT;
    pSource->type = HB_IT_NIL;
    /* GCLOCK leave */
@@ -1634,9 +1634,9 @@ void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
     * activated inside memcpy()
     */
    /* GCLOCK enter */
-   memcpy( &temp, pItem2, sizeof( HB_ITEM ) );
-   memcpy( pItem2, pItem1, sizeof( HB_ITEM ) );
-   memcpy( pItem1, &temp, sizeof( HB_ITEM ) );
+   hb_itemRawCpy( &temp, pItem2 );
+   hb_itemRawCpy( pItem2, pItem1 );
+   hb_itemRawCpy( pItem1, &temp );
    pItem1->type &= ~HB_IT_DEFAULT;
    pItem2->type &= ~HB_IT_DEFAULT;
    /* GCLOCK leave */

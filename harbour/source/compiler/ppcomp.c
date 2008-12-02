@@ -139,6 +139,11 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             HB_COMP_PARAM->fDebugInfo = iValue != 0;
             break;
 
+         case 'j':
+         case 'J':
+            HB_COMP_PARAM->fI18n = iValue != 0;
+            break;
+
          case 'l':
          case 'L':
             HB_COMP_PARAM->fLineNumbers = iValue != 0;

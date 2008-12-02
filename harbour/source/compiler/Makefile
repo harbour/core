@@ -45,6 +45,7 @@ C_SOURCES=\
 	expropta.c \
 	exproptb.c \
 	complex.c \
+	compi18n.c \
 	hbmain.c \
 
 LIBNAME=hbcplr

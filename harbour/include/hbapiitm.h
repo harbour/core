@@ -187,12 +187,14 @@ extern HB_EXPORT void       hb_itemSwap      ( PHB_ITEM pItem1, PHB_ITEM pItem2 
                                                 (item)->type = HB_IT_NIL; \
                                           } while( 0 )
 
+#  define hb_itemRawCpy( dst, src )       do { *(dst) = *(src); } while( 0 )
+
 #if 0
 #  define hb_itemRawMove( dst, src )      do { \
                                              memcpy( (dst), (src), sizeof( HB_ITEM ) ); \
                                              (src)->type = HB_IT_NIL; \
                                           } while( 0 )
-#else
+#else /* _HB_API_INTERNAL_ */
 #  define hb_itemRawMove( dst, src )      hb_itemMove( (dst), (src) )
 #endif
 
@@ -202,7 +204,7 @@ extern HB_EXPORT void       hb_itemSwap      ( PHB_ITEM pItem1, PHB_ITEM pItem2 
 
 #  define hb_itemRawMove( dst, src )      hb_itemMove( (dst), (src) )
 
-#endif
+#endif /* _HB_API_INTERNAL_ */
 
 /* xHarbour compatible function */
 #define hb_itemForwardValue( dst, src )   hb_itemMove( (dst), (src) )

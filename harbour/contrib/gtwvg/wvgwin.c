@@ -841,7 +841,7 @@ HB_FUNC( WIN_CREATETOOLBAREX )
                            hb_parni( 3 ),
                            hb_parni( 4 ),
                            ISNIL( 5 ) ? NULL : ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 5 ),
-                           ISNIL( 6 ) ? NULL : hb_parnint( 6 ),
+                           ISNIL( 6 ) ? 0 : hb_parnint( 6 ),
                            ISNIL( 7 ) ? NULL : ( HANDLE ) ( HB_PTRDIFF ) hb_parnint( 7 ),
                            hb_parni(  8 ),
                            hb_parni(  9 ),
@@ -992,7 +992,7 @@ static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
                                BOOL bMap3Dcolors,
                                HWND hCtrl )
 {
-   HBITMAP hBitmap;
+   HBITMAP hBitmap = NULL;
 
    if( szBitmapX )
    {
@@ -1241,7 +1241,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
       {
          int    ptArray[ WIN_STATUSBAR_MAX_PARTS ];
          int    iParts;
-         RECT   rc = { 0 };
+         RECT   rc = { 0, 0, 0, 0 };
          int    n ;
          USHORT width;
 
@@ -1263,7 +1263,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
       }
       case -1:
       {
-         RECT rc = { 0 };
+         RECT rc = { 0, 0, 0, 0 };
          int  ptArray[ WIN_STATUSBAR_MAX_PARTS ];
 
          if ( GetClientRect( hWndSB, &rc ) )

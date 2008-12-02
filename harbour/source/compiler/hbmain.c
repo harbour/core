@@ -230,7 +230,7 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, const char * szRspName )
 
          while( i == 0 && HB_ISSPACE( ch ) )
             ch = fgetc( inFile );
-            
+
          if( ch == EOF || HB_ISSPACE( ch ) || ch == '#' )
          {
             szFile[ i ] = '\0';
@@ -250,7 +250,7 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, const char * szRspName )
       fclose( inFile );
 
       HB_COMP_PARAM->fAutoOpen = bAutoOpen;
-      
+
       hb_fsFNameMerge( szFile, pFileName );
       hb_compCompile( HB_COMP_PARAM, szFile, HB_COMP_AUTOADDFILE );
    }
@@ -3280,7 +3280,7 @@ void hb_compStaticDefStart( HB_COMP_DECL )
       hb_compGenPCodeN( pBuffer, 5, HB_COMP_PARAM );
 
       hb_compGenPCode3( HB_P_SFRAME, 0, 0, HB_COMP_PARAM );     /* frame for statics variables */
-      
+
       if( HB_COMP_PARAM->fDebugInfo )
       {
          /* uncomment this if you want to always set main module name
@@ -3648,260 +3648,6 @@ void hb_compCodeBlockRewind( HB_COMP_DECL )
    }
 }
 
-/* ============================ I18N ============================ */
-static PHB_I18NTABLE hb_compI18nCreate( void )
-{
-   PHB_I18NTABLE  pI18n;
-
-   pI18n = ( PHB_I18NTABLE ) hb_xgrab( sizeof( HB_I18NTABLE ) );
-   pI18n->pString = NULL;
-   pI18n->uiCount = 0;
-   pI18n->uiAllocated = 0;
-   return pI18n;
-}
-
-static void hb_compI18nFree( PHB_I18NTABLE pI18n )
-{
-   UINT    ui;
-
-   if( pI18n->pString )
-   {
-      for( ui = 0; ui < pI18n->uiCount; ui++ )
-      {
-         if( pI18n->pString[ ui ].szText )
-            hb_xfree( pI18n->pString[ ui ].szText );
-      
-         if( pI18n->pString[ ui ].szContext )
-            hb_xfree( pI18n->pString[ ui ].szContext );
-      
-         if( pI18n->pString[ ui ].pLine )
-            hb_xfree( pI18n->pString[ ui ].pLine );
-      }
-      hb_xfree( pI18n->pString );
-   }
-   hb_xfree( pI18n );
-}
-
-static int hb_compI18nCompare( PHB_I18NSTRING pString, const char* pText, const char* pContext )
-{
-   int  i;
-
-   i = strcmp( pString->szText, pText );
-
-   if( i == 0 )
-   {
-      if( pContext )
-      {
-         if( pString->szContext )
-            return strcmp( pString->szContext, pContext );
-         else
-            return -1;
-      }
-      else
-      {
-         if( pString->szContext )
-            return 1;
-         else 
-            return 0;
-      }
-   }
-   return i;
-}
-
-void hb_compI18nAdd( HB_COMP_DECL, const char* szText, const char* szContext, UINT uiLine )
-{
-   PHB_I18NTABLE    pI18n;
-   PHB_I18NSTRING   pString;
-   UINT             uiLeft, uiRight, uiMiddle;
-   int              iCompare;
-
-   pI18n = HB_COMP_PARAM->pI18n;
-
-   if( ! pI18n )
-      return;
-
-   if( pI18n->uiCount >= pI18n->uiAllocated )
-   {
-      if( pI18n->pString )
-      {
-         pI18n->uiAllocated += 32;
-         pI18n->pString = ( PHB_I18NSTRING ) hb_xrealloc( pI18n->pString, sizeof( HB_I18NSTRING ) 
-                                                                          * pI18n->uiAllocated );
-      }
-      else
-      {
-         pI18n->pString = ( PHB_I18NSTRING ) hb_xgrab( sizeof( HB_I18NSTRING ) * 32 );
-         pI18n->uiAllocated = 32;
-      }
-   }
-
-   uiLeft = 0;
-   uiRight = pI18n->uiCount;
-
-   while( uiLeft < uiRight )
-   {
-      uiMiddle = ( uiLeft + uiRight ) >> 1;
-
-      iCompare = hb_compI18nCompare( & pI18n->pString[ uiMiddle ], szText, szContext );
-
-      if( iCompare == 0 )
-      {
-         pString = & pI18n->pString[ uiMiddle ];
-
-         if( pString->pLine )
-         {
-            pString->pLine = ( UINT* ) hb_xrealloc( pString->pLine, ( pString->uiLineCount + 1 ) * sizeof( UINT ) );
-            pString->pLine[ pString->uiLineCount ] = uiLine;
-            pString->uiLineCount++;
-         }
-         else
-         {
-            pString->pLine = ( UINT* ) hb_xgrab( sizeof( UINT ) );
-            pString->pLine[ 0 ] = uiLine;
-            pString->uiLineCount = 1;
-         }
-         return;
-      }
-      else if( iCompare < 0 )
-         uiLeft = uiMiddle + 1;
-      else
-         uiRight = uiMiddle;
-   }
-
-   memmove( &pI18n->pString[ uiLeft + 1 ], &pI18n->pString[ uiLeft ],
-            ( pI18n->uiCount - uiLeft ) * sizeof( HB_I18NSTRING ) );
-
-   pString = & pI18n->pString[ uiLeft ];
-   pString->szText = hb_strdup( szText );
-   if( szContext )
-      pString->szContext = hb_strdup( szContext );
-   else
-      pString->szContext = NULL;
-   pString->uiLine = uiLine;
-   pString->pLine = NULL;
-   pString->uiLineCount = 0;
-
-   pI18n->uiCount++;
-}
-
-
-static void hb_compI18nEscapeString( FILE* file, char* szText )
-{
-   while( * szText )
-   {
-      if( (unsigned char) * szText < ' ' )
-      {
-        if( * szText == '\t' )
-           fprintf( file, "\\t" );
-        else if( * szText == '\n' )
-           fprintf( file, "\\n" );
-        else if( * szText == '\r' )
-           fprintf( file, "\\r" );
-        else
-           fprintf( file, "\\x%02X", * szText );
-      }
-      else if( * szText == '"' )
-      {
-        fprintf( file, "\\\"" );
-      }
-      else if( * szText == '\\' )
-      {
-        fprintf( file, "\\\\" );
-      }
-      else
-      {
-        fprintf( file, "%c", * szText );
-      }
-
-      szText++;
-   }
-}
-
-
-static BOOL hb_compI18nSave( HB_COMP_DECL )
-{
-   PHB_I18NTABLE    pI18n;
-   PHB_I18NSTRING   pString;
-   HB_FNAME         FileName;
-   char             szFileName[ _POSIX_PATH_MAX + 1 ];
-   char*            szText;
-   UINT             uiIndex, uiLine;
-   FILE*            file; 
-
-   pI18n = HB_COMP_PARAM->pI18n;
-
-   FileName.szPath = FileName.szName = FileName.szExtension = FileName.szDrive = NULL;
-
-   if( HB_COMP_PARAM->pOutPath )
-   {
-      FileName.szDrive = HB_COMP_PARAM->pOutPath->szDrive;
-      FileName.szPath = HB_COMP_PARAM->pOutPath->szPath;
-   }
-
-   if( HB_COMP_PARAM->pI18nFileName )
-   {
-      if( HB_COMP_PARAM->pI18nFileName->szName )
-         FileName.szName = HB_COMP_PARAM->pI18nFileName->szName;
-
-      if( HB_COMP_PARAM->pI18nFileName->szExtension )
-         FileName.szExtension = HB_COMP_PARAM->pI18nFileName->szExtension;
-
-      if( HB_COMP_PARAM->pI18nFileName->szPath )
-      {
-         FileName.szDrive = HB_COMP_PARAM->pI18nFileName->szDrive;
-         FileName.szPath = HB_COMP_PARAM->pI18nFileName->szPath;
-      }
-   }
-
-   if( ! FileName.szName )
-      FileName.szName = HB_COMP_PARAM->pFileName->szName;
-
-   if( ! FileName.szExtension )
-      FileName.szExtension = ".pot";
-
-   hb_fsFNameMerge( szFileName, &FileName );
-
-   file = hb_fopen( szFileName, "wb" );
-
-   if( ! file )
-   {
-      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
-      return FALSE;
-   }
-
-   szText = hb_verHarbour();
-   fprintf( file, "#\n# This file is generated by %s\n#\n\n", szText );
-   hb_xfree( szText );
-
-   hb_strncpy( szFileName, HB_COMP_PARAM->pFileName->szName, sizeof( szFileName ) - 1 );
-
-   for( uiIndex = 0; uiIndex < pI18n->uiCount; uiIndex++ )
-   {
-      pString = & pI18n->pString[ uiIndex ];
-
-      fprintf( file, "#: %s:%d", szFileName, pString->uiLine );
-
-      for( uiLine = 0; uiLine < pString->uiLineCount; uiLine++ )
-         fprintf( file, " %s:%d", szFileName, pString->pLine[ uiLine ] );
-
-      fprintf( file, "\n#, c-format\n" );
-
-      if( pString->szContext )
-      {
-         fprintf( file, "msgctxt \"" );
-         hb_compI18nEscapeString( file, pString->szContext );
-         fprintf( file, "\"\n" );
-      }
-
-      fprintf( file, "msgid \"" );
-      hb_compI18nEscapeString( file, pString->szText );
-      fprintf( file, "\"\nmsgstr \"\"\n\n" );
-   }
-
-   fclose( file );
-   return TRUE;
-}
-
 /* ************************************************************************* */
 
 /* initialize support variables */
@@ -4021,11 +3767,7 @@ static void hb_compAddInitFunc( HB_COMP_DECL, PFUNCTION pFunc )
 
 void hb_compCompileEnd( HB_COMP_DECL )
 {
-   if( HB_COMP_PARAM->pI18n )
-   {
-      hb_compI18nFree( HB_COMP_PARAM->pI18n );
-      HB_COMP_PARAM->pI18n = NULL;
-   }
+   hb_compI18nFree( HB_COMP_PARAM );
 
    if( HB_COMP_PARAM->pI18nFileName )
    {
@@ -4224,11 +3966,6 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
                hb_compOutStd( HB_COMP_PARAM, buffer );
             }
 
-            if( HB_COMP_PARAM->fI18n )
-            {
-               HB_COMP_PARAM->pI18n = hb_compI18nCreate();
-            }
-
             /* Generate the starting procedure frame */
             if( HB_COMP_PARAM->fStartProc )
             {
@@ -4412,10 +4149,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
             }
 
             hb_compGenOutput( HB_COMP_PARAM, HB_COMP_PARAM->iLanguage );
-            if( HB_COMP_PARAM->pI18n )
-            {
-               hb_compI18nSave( HB_COMP_PARAM );
-            }
+            hb_compI18nSave( HB_COMP_PARAM );
          }
       }
    }

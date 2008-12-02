@@ -340,10 +340,16 @@ extern void hb_compGenBufPortObj( HB_COMP_DECL, BYTE ** pBufPtr, ULONG * pulSize
 extern void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
 extern void hb_compGenCString( FILE * yyc, BYTE * pText, ULONG ulLen );
 
-/* hbident.c   */
+/* hbident.c */
 extern const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType ); /* create the reusable identifier */
 extern void hb_compIdentifierOpen( HB_COMP_DECL ); /* prepare the table of identifiers */
 extern void hb_compIdentifierClose( HB_COMP_DECL ); /* release the table of identifiers */
+
+/* compi18n.c */
+extern void hb_compI18nFree( HB_COMP_DECL );
+extern BOOL hb_compI18nSave( HB_COMP_DECL );
+extern void hb_compI18nAdd( HB_COMP_DECL, const char* szText, const char* szContext, const char * szModule, UINT uiLine );
+extern void hb_compI18nAddPlural( HB_COMP_DECL, const char** szTexts, ULONG ulCount, const char* szContext, const char * szModule, UINT uiLine );
 
 /* global readonly variables used by compiler
  */

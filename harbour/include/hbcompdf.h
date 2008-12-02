@@ -566,13 +566,23 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
 #define HB_COMP_PARAM         pComp
 #define HB_COMP_DECL          HB_COMP_PTR HB_COMP_PARAM
 
+#define HB_I18N_PLURAL_MAX    8
+
+typedef struct _HB_I18NPOS
+{
+   const char *   szFile;
+   UINT           uiLine;
+} HB_I18NPOS, *PHB_I18NPOS;
+
 typedef struct _HB_I18NSTRING
 {
-   char*      szText;
-   char*      szContext;
-   UINT       uiLine;
-   UINT*      pLine;
-   UINT       uiLineCount;
+   const char *   szText;
+   const char *   szContext;
+   const char *   szPlurals[ HB_I18N_PLURAL_MAX ];
+   UINT           uiPlurals;
+   HB_I18NPOS     pPos;
+   HB_I18NPOS *   pPosLst;
+   UINT           uiPosCount;
 } HB_I18NSTRING, * PHB_I18NSTRING;
 
 typedef struct _HB_I18NTABLE
@@ -637,7 +647,7 @@ typedef struct _HB_COMP
    void              ( * outStdFunc ) ( void *, const char* );
    void              ( * outErrFunc ) ( void *, const char* );
    void *            cargo;
-   
+
    ULONG             ulOutBufSize;        /* memory output buffer size */
    BYTE *            pOutBuf;             /* memory output buffer address */
 

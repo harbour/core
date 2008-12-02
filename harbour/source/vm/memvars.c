@@ -203,7 +203,7 @@ HB_ITEM_PTR hb_memvarDetachLocal( PHB_ITEM pLocal )
    {
       PHB_ITEM pMemvar = hb_memvarValueNew();
 
-      memcpy( pMemvar, pLocal, sizeof( HB_ITEM ) );
+      hb_itemRawCpy( pMemvar, pLocal );
       pMemvar->type &= ~HB_IT_DEFAULT;
 
       pLocal->type = HB_IT_BYREF | HB_IT_MEMVAR;

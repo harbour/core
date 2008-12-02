@@ -523,7 +523,11 @@ HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR pArray, HB_EXPR_PTR pIndex, HB_CO
 {
    HB_EXPR_PTR pExpr;
 
+#ifdef HB_MACRO_SUPPORT
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprNewArrayAt()"));
+#else
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewArrayAt()"));
+#endif
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_ARRAYAT );
 

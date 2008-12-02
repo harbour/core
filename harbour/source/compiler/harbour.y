@@ -291,13 +291,13 @@ Line       : LINE NUM_LONG LITERAL Crlf
                   { HB_COMP_PARAM->currModule = hb_compIdentifierNew( HB_COMP_PARAM, $3.string, $3.dealloc ? HB_IDENT_FREE : HB_IDENT_STATIC );
                     HB_COMP_PARAM->currLine = ( int ) $2.lNumber;
                     HB_COMP_PARAM->pLex->fEol = FALSE;
-                    if( $3.dealloc ) { hb_xfree( $3.string ); $3.dealloc = FALSE; } }
+                    $3.dealloc = FALSE; }
            | LINE NUM_LONG LITERAL '@' LITERAL Crlf   /* Xbase++ style */
                   { HB_COMP_PARAM->currModule = hb_compIdentifierNew( HB_COMP_PARAM, $5.string, $5.dealloc ? HB_IDENT_FREE : HB_IDENT_STATIC );
                     HB_COMP_PARAM->currLine = ( int ) $2.lNumber;
                     HB_COMP_PARAM->pLex->fEol = FALSE;
                     if( $3.dealloc ) { hb_xfree( $3.string ); $3.dealloc = FALSE; }
-                    if( $5.dealloc ) { hb_xfree( $5.string ); $5.dealloc = FALSE; } }
+                    $5.dealloc = FALSE; }
            ;
 
 Function   : FunScope FUNCTION  IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf

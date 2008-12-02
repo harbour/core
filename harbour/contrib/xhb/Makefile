@@ -12,6 +12,7 @@ C_SOURCES=\
 	hbsyslog.c \
 	hboutdbg.c \
 	cstructc.c \
+	xhbarr.c \
 	xhbcopyf.c \
 	xhbenum.c \
 	xhbfunc.c \

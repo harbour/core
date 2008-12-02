@@ -4342,7 +4342,7 @@ yyreduce:
     { HB_COMP_PARAM->currModule = hb_compIdentifierNew( HB_COMP_PARAM, (yyvsp[(3) - (4)].valChar).string, (yyvsp[(3) - (4)].valChar).dealloc ? HB_IDENT_FREE : HB_IDENT_STATIC );
                     HB_COMP_PARAM->currLine = ( int ) (yyvsp[(2) - (4)].valLong).lNumber;
                     HB_COMP_PARAM->pLex->fEol = FALSE;
-                    if( (yyvsp[(3) - (4)].valChar).dealloc ) { hb_xfree( (yyvsp[(3) - (4)].valChar).string ); (yyvsp[(3) - (4)].valChar).dealloc = FALSE; } ;}
+                    (yyvsp[(3) - (4)].valChar).dealloc = FALSE; ;}
     break;
 
   case 17:
@@ -4351,7 +4351,7 @@ yyreduce:
                     HB_COMP_PARAM->currLine = ( int ) (yyvsp[(2) - (6)].valLong).lNumber;
                     HB_COMP_PARAM->pLex->fEol = FALSE;
                     if( (yyvsp[(3) - (6)].valChar).dealloc ) { hb_xfree( (yyvsp[(3) - (6)].valChar).string ); (yyvsp[(3) - (6)].valChar).dealloc = FALSE; }
-                    if( (yyvsp[(5) - (6)].valChar).dealloc ) { hb_xfree( (yyvsp[(5) - (6)].valChar).string ); (yyvsp[(5) - (6)].valChar).dealloc = FALSE; } ;}
+                    (yyvsp[(5) - (6)].valChar).dealloc = FALSE; ;}
     break;
 
   case 18:

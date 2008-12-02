@@ -77,7 +77,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-void extern hb_ToOutDebug( const char * sTraceMsg, ... );
+extern void hb_ToOutDebug( const char * sTraceMsg, ... );
 
 #define MAX_FUNC_SIZE 128 // this must be higher than the largest possible generated
                           // machine code plus size of CALLBACKDATA structure
@@ -476,6 +476,7 @@ static LPVOID FuncMemAlloc( void )
       dwFuncsInPage  = dwPageSize/MAX_FUNC_SIZE;
    }
 
+   k            = 0;
    bFound       = FALSE;
    bError       = FALSE;
    lpReturn     = NULL;

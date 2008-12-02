@@ -33,7 +33,7 @@ PRG_SOURCES=\
 	wvgstatb.prg \
 	wvgstatc.prg \
 	wvgtreev.prg \
-	wincback.prg \	
+	wincback.prg \
 
 
 PRG_HEADERS=\

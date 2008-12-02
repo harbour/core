@@ -50,7 +50,9 @@
  *
  */
 
-#define _HB_HASH_INTERNAL_
+#ifndef _HB_HASH_INTERNAL_
+#  define _HB_HASH_INTERNAL_
+#endif
 
 #include "hbvmopt.h"
 #include "hbapi.h"

@@ -8,6 +8,113 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-02 11:27 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/xhb/Makefile
+  * harbour/contrib/xhb/common.mak
+  + harbour/contrib/xhb/xhbarr.c
+    + added aSplice(), aRemove() and aMerge() functions - code borrowed
+      from xHarbour by Ron Pinkas.
+    ! fixed GPF trap in these functions
+
+  * harbour/contrib/xhb/xhbfunc.c
+    + added CSTR()
+
+  * harbour/contrib/xhb/hbcompat.ch
+    ! changed name of xHarbour include files - they where changed few
+      months ago and now they are the same as in Harbour.
+      To xHarbour users: please update hbcompat.ch in xHarbour CVS
+
+  * harbour/contrib/xhb/filestat.c
+    ! fixed UNICODE compilation
+
+  * harbour/contrib/xhb/hblognet.prg
+  * harbour/contrib/xhb/hblog.prg
+    * formatting
+
+  * harbour/contrib/hbnf/tempfile.prg
+    ! do not use HB_ISBYREF() .prg function - this function does not
+      exist in Harbour and does not work correctly in xHarbour
+
+  * harbour/include/hbapiitm.h
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/hashes.c
+  * harbour/source/vm/garbage.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/memvars.c
+    * cleanup
+
+  * harbour/contrib/gtwvg/Makefile
+    ! fixed typo
+
+  * harbour/contrib/gtwvg/hbgtwvg.ch
+    * added new line at the end of file and changed non ANSI C // comments
+      to /* */ - this file is included by C code too.
+
+  * harbour/contrib/gtwvg/wvgwin.c
+  * harbour/contrib/gtwvg/wincallb.c
+    * pacified some warnings and fixed possible access to uninitialized data
+
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    ! fixed possible double freeing of memory blocks in #line directives
+      TOMERGE[1.0]
+
+  * harbour/common.mak
+  * harbour/source/compiler/hbmain.c
+  + harbour/source/compiler/compi18n.c
+    * moved hb_compI18n*() functions to separate file covered by GPL with
+      Harbour exception - Thank to Mindaugas
+
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprop.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/ppcomp.c
+    * added support for plural forms:
+         hb_i18n_ngettext[_noop|_strict]( <nExp>, <cText> | <acText> ;
+                                          [, <cContext> )
+      <acText> is accepted only as array of literal strings even if
+      _strict suffix is missing - if it's a problem then we can change it.
+      hb_i18n_ngettext_noop() is reduced only when it has valid parameters
+      The default plural index expression used for reduction at compile
+      time is: iif( <nExp> == 1, 1, 2 )
+      If second parameter of hb_i18n_ngettext_noop() is <cText> or <acText>
+      length is 1 then it's reduced to <cText> or acText[1] else if second
+      parameter is <acText> with more then 1 item then it's reduced to
+         <acText>[ iif( <nExp> == 1, 1, 2 ) ]
+      and if <nExp> is literal numeric expression is farther reduced to
+      given array item. Otherwise is not reduced and warning is generated.
+      The plural forms in .pot files are generated as:
+         msgid ""
+         msgid_plural ""
+         msgid_plural2 ""
+         [...]
+         msgid_pluralN ""
+         msgstr[0] ""
+      Then real message ID is only msgid (with context if any) and
+      msgid_plural* is used only for information. When the same msgid
+      is used more then once in different hb_i18n_ngettext*() calls then
+      plural messages are merged.
+      Please remember that for strict gettext compatibility only two plural
+      forms are allowed.
+    * extended i18n warnings for simple types validation, f.e.:
+         hb_i18n_gettext( .t. )
+    * do not generate empty .pot file when source code does not contain any
+      hb_i18n_*() functions
+    * store in .pot files references to real source file names with paths
+      respecting #include directives
+    * use hb_compIdentifierNew() to hash i18n messages at compile time
+    ! fixed possible bad escape encoding of i18n strings
+    + added support to control -j[01] flag using #pragma directive
+
+      Before I'll begin to work on runtime support please test these
+      modifications and inform me about problems you can see with the
+      above version and missing functionality.
+
 2008-11-30 23:05 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/makefile
   * harbour/contrib/gtwvg/common.mak

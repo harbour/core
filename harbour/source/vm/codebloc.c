@@ -182,7 +182,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
          pLocalPosTable += 2;
 
          pLocal = hb_memvarDetachLocal( pLocal );
-         memcpy( pLocals + ui, pLocal, sizeof( HB_ITEM ) );
+         hb_itemRawCpy( pLocals + ui, pLocal );
          /* Increment the reference counter so this value will not be
           * released if other codeblock will be deleted
           */

@@ -52,10 +52,11 @@
 
 #ifdef __HARBOUR__
 
+#include "hbgtinfo.ch"
+#include "hbgfx.ch"
+
 #ifdef __XHARBOUR__
 
-   #include "gtinfo.ch"
-   #include "gfx.ch"
 
    #if defined(__PLATFORM__Windows) .AND. !defined(__PLATFORM__WINDOWS)
       #define __PLATFORM__WINDOWS
@@ -134,9 +135,6 @@
    #endif
 
 #else
-
-   #include "hbgtinfo.ch"
-   #include "hbgfx.ch"
 
    #if defined(__PLATFORM__WINDOWS) .AND. !defined(__PLATFORM__Windows)
       #define __PLATFORM__Windows

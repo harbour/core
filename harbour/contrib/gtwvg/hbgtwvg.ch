@@ -53,10 +53,10 @@
 #ifndef _HBGTWVG_CH
 #define _HBGTWVG_CH
 
-//----------------------------------------------------------------------//
-//                 Extended GT Manipulation Constants
-//----------------------------------------------------------------------//
-#if 0  // Already in hbgtinfo.ch
+/*----------------------------------------------------------------------*/
+/*                 Extended GT Manipulation Constants                   */
+/*----------------------------------------------------------------------*/
+#if 0  /*Already in hbgtinfo.ch */
    #define HB_GTE_ACTIVATE                1
    #define HB_GTE_SETFOCUS                2
    #define HB_GTE_KILLFOCUS               3
@@ -131,6 +131,6 @@
 
 #define HB_GTI_GUI                     1001
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
-#endif // _HBGTWVG_CH
+#endif /* _HBGTWVG_CH */

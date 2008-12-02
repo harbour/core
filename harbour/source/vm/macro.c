@@ -52,7 +52,9 @@
 
 /* this #define HAVE TO be placed before all #include directives
  */
-#define HB_MACRO_SUPPORT
+#ifndef HB_MACRO_SUPPORT
+#  define HB_MACRO_SUPPORT
+#endif
 
 #include "hbvmopt.h"
 #include "hbmacro.h"

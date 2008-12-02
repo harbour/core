@@ -1215,6 +1215,24 @@ ULONG hb_compExprListLen( HB_EXPR_PTR pExpr )
    return ulLen;
 }
 
+BOOL hb_compExprListTypeCheck( HB_EXPR_PTR pExpr, HB_EXPRTYPE ExprType )
+{
+   pExpr = pExpr->value.asList.pExprList;
+   if( pExpr )
+   {
+      do
+      {
+         if( pExpr->ExprType != ExprType )
+            break;
+         pExpr = pExpr->pNext;
+      }
+      while( pExpr );
+
+      return pExpr == NULL;
+   }
+   return FALSE;
+}
+
 /*  Return a number of parameters passed to function or method
  */
 ULONG hb_compExprParamListLen( HB_EXPR_PTR pExpr )
@@ -1410,7 +1428,7 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_COMP_DECL )
    /* create ( var==NIL, <pExpr>, */
    pIIF = hb_compExprAddListExpr( pIIF, pExpr );
    /* create var */
-   pSet =hb_compExprNewVar( "~1", HB_COMP_PARAM );           
+   pSet =hb_compExprNewVar( "~1", HB_COMP_PARAM );
    /* create <pExpr>:=var */
    pSet = hb_compExprAssign( hb_compExprClone( pExpr ), pSet, HB_COMP_PARAM );
    /* create ( var==nil, <pExpr>, <pExpr>:=var ) */

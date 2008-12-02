@@ -126,7 +126,7 @@
      */
 
     if !ft_isBitOn( aRegs[3], FLAG_CARRY )
-       if hb_isbyref( @nHandle )
+       if pcount() >= 3
           nHandle = aRegs[1]
        else
           fclose( aRegs[1] )
@@ -154,7 +154,7 @@
 
   nHandle := HB_FTempCreate( cPath, nil, iif( lHide, FC_HIDDEN, FC_NORMAL ), @cFile )
 
-  if !hb_isbyref( @nHandle )
+  if pcount() <= 2
      fclose( nHandle )
   endif
 

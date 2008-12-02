@@ -120,7 +120,7 @@ typedef struct HB_GARBAGE_
 
 #endif /* !defined( HB_GC_PTR ) */
 
-#define HB_MEM_PTR( p )       ( ( void * ) ( ( BYTE * ) ( p ) + HB_GARBAGE_SIZE ) )
+#define HB_BLOCK_PTR( p )       ( ( void * ) ( ( BYTE * ) ( p ) + HB_GARBAGE_SIZE ) )
 
 /* we may use a cache later */
 #define HB_GARBAGE_NEW( ulSize )    ( ( HB_GARBAGE_PTR ) hb_xgrab( HB_GARBAGE_SIZE + ( ulSize ) ) )
@@ -210,7 +210,7 @@ void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
       hb_gcLink( &s_pCurrBlock, pAlloc );
       HB_GC_UNLOCK
 
-      return HB_MEM_PTR( pAlloc );        /* hide the internal data */
+      return HB_BLOCK_PTR( pAlloc );        /* hide the internal data */
    }
    else
       return NULL;
@@ -354,7 +354,7 @@ HB_ITEM_PTR hb_gcGripGet( HB_ITEM_PTR pOrigin )
    pAlloc = HB_GARBAGE_NEW( sizeof( HB_ITEM ) );
    if( pAlloc )
    {
-      HB_ITEM_PTR pItem = ( HB_ITEM_PTR ) HB_MEM_PTR( pAlloc );
+      HB_ITEM_PTR pItem = ( HB_ITEM_PTR ) HB_BLOCK_PTR( pAlloc );
 
       pAlloc->pFunc  = hb_gcGripRelease;
       pAlloc->locked = 1;
@@ -690,7 +690,7 @@ void hb_gcCollectAll( BOOL fForce )
          {  /* it is not very elegant method but it works well */
             if( pAlloc->pFunc == hb_gcGripRelease )
             {
-               hb_gcItemRef( ( HB_ITEM_PTR ) HB_MEM_PTR( pAlloc ) );
+               hb_gcItemRef( ( HB_ITEM_PTR ) HB_BLOCK_PTR( pAlloc ) );
             }
             pAlloc = pAlloc->pNext;
          } while( s_pLockedBlock != pAlloc );
@@ -747,7 +747,7 @@ void hb_gcCollectAll( BOOL fForce )
          do
          {
             if( s_pDeletedBlock->pFunc )
-               ( s_pDeletedBlock->pFunc )( HB_MEM_PTR( s_pDeletedBlock ) );
+               ( s_pDeletedBlock->pFunc )( HB_BLOCK_PTR( s_pDeletedBlock ) );
 
             s_pDeletedBlock = s_pDeletedBlock->pNext;
 
@@ -798,7 +798,7 @@ void hb_gcReleaseAll( void )
             HB_TRACE( HB_TR_INFO, ( "Cleanup, %p", s_pCurrBlock ) );
 
             s_pCurrBlock->used |= HB_GC_DELETE | HB_GC_DELETELST;
-            ( s_pCurrBlock->pFunc )( HB_MEM_PTR( s_pCurrBlock ) );
+            ( s_pCurrBlock->pFunc )( HB_BLOCK_PTR( s_pCurrBlock ) );
          }
 
          s_pCurrBlock = s_pCurrBlock->pNext;

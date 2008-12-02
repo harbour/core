@@ -182,7 +182,7 @@ static BOOL hb_fsFileStats(
 
    {
       DWORD dwAttribs;
-      WIN32_FIND_DATA ffind;
+      WIN32_FIND_DATAA ffind;
       HANDLE hFind;
       FILETIME filetime;
       SYSTEMTIME time;
