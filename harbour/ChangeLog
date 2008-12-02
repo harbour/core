@@ -123,6 +123,13 @@
       modifications and inform me about problems you can see with the
       above version and missing functionality.
 
+2008-11-30 23:49 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvggui.c
+  * harbour/contrib/gtwvg/wvgdlg.prg
+  * harbour/contrib/gtwvg/wvgphdlr.prg
+  * harbour/contrib/gtwvg/wvgwnd.prg
+    ! Cleanup - leftover trace calls.
+
 2008-11-30 23:05 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/makefile
   * harbour/contrib/gtwvg/common.mak
