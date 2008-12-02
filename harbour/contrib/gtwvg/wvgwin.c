@@ -1104,7 +1104,7 @@ static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
    else  /* loading from resources */
    {
       UINT uiOptions = bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR;
-      char szResname[ _MAX_PATH+1 ];
+      char szResname[ MAX_PATH + 1 ];
 
       sprintf( szResname, "?%u", uiBitmap );
 

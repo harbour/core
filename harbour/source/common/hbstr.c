@@ -1117,7 +1117,7 @@ ULONG hb_snprintf( char * buffer, ULONG nSize, const char * format, ... )
    result = vsprintf( buffer, format, arglist );
 #elif defined( _MSC_VER ) && _MSC_VER >= 1400
    result = _vsnprintf_s( buffer, nSize, _TRUNCATE, format, arglist );
-#elif defined( _MSC_VER ) || defined( __DMC__ ) && !defined( __XCC__ )
+#elif ( defined( _MSC_VER ) || defined( __DMC__ ) ) && !defined( __XCC__ )
    result = _vsnprintf( buffer, nSize, format, arglist );
    #define _HB_SNPRINTF_ADD_EOS
 #elif defined( __WATCOMC__ ) && __WATCOMC__ < 1200

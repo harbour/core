@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-02 13:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbstr.c
+  * harbour/config/w32/xcc.cf
+    ! fixed XCC compilation
+
+  * harbour/contrib/gtwvg/wvgwin.c
+    ! changed _MAX_PATH to MAX_PATH - not all compilers support _MAX_PATH
+
 2008-12-02 11:27 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/xhb/Makefile
   * harbour/contrib/xhb/common.mak
