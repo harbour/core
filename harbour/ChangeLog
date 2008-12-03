@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-03 15:05 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+   * contrib/hbziparc/hbziparc.prg
+     ! hb_UnzipFile() to accept empty password like ""
+
 2008-12-02 13:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbstr.c
   * harbour/config/w32/xcc.cf

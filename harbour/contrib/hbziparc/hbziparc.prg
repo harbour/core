@@ -942,6 +942,10 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
    HB_SYMBOL_UNUSED( lWithPath )
    HB_SYMBOL_UNUSED( bProgress )
 
+   IF Empty( cPassword )
+      cPassword = NIL
+   ENDIF
+
    IF Set( _SET_DEFEXTENSIONS )
       hb_FNameSplit( cFileName, NIL, NIL, @cExt )
       IF Empty( cExt )
