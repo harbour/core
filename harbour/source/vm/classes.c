@@ -4707,7 +4707,8 @@ HB_FUNC( __CLSUNLOCKDEF )
 /* Real dirty function, though very usefull under certain circunstances:
  * It allows to change the class handle of an object into another class handle,
  * so the object behaves like a different Class of object.
- * Based on objects.lib SetClsHandle() */
+ * Based on objects.lib SetClsHandle()
+ */
 
 HB_FUNC( HB_SETCLSHANDLE ) /* ( oObject, nClassHandle ) --> nPrevClassHandle */
 {
@@ -4724,6 +4725,24 @@ HB_FUNC( HB_SETCLSHANDLE ) /* ( oObject, nClassHandle ) --> nPrevClassHandle */
    }
 
    hb_retnl( uiPrevClassHandle );
+}
+
+/* Dirty functions which converts array to object of given class
+ * __OBJSETCLASS( <oObject>, <cClassName> [, <cClassFuncName> ] ) -> <oObject>
+ */
+HB_FUNC( __OBJSETCLASS )
+{
+   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
+
+   if( pObject && pObject->item.asArray.value->uiClass == 0 )
+   {
+      const char * szClass = hb_parc( 2 );
+
+      if( szClass )
+         hb_objSetClass( pObject, szClass, hb_parc( 3 ) );
+   }
+
+   hb_itemReturn( pObject );
 }
 
 /* Harbour equivalent for Clipper internal __mdCreate() */

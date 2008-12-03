@@ -72,12 +72,18 @@ FUNCTION hb_VALTOEXP( xVal )
          cVal := "@" + xVal:name + "()"
          EXIT
       CASE "A"
-      CASE "O"
          cVal := "{"
          FOR EACH v IN xVal
             cVal += iif( v:__enumIndex() == 1, "", ", " ) + hb_ValToExp( v )
          NEXT
          cVal += "}"
+         EXIT
+      CASE "O"
+         cVal := "__objSetClass( {"
+         FOR EACH v IN xVal
+            cVal += iif( v:__enumIndex() == 1, "", ", " ) + hb_ValToExp( v )
+         NEXT
+         cVal += "}, '" + xVal:className() + "')"
          EXIT
       CASE "H"
          IF Empty( xVal )

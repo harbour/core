@@ -57,7 +57,6 @@
 
 #ifdef __XHARBOUR__
 
-
    #if defined(__PLATFORM__Windows) .AND. !defined(__PLATFORM__WINDOWS)
       #define __PLATFORM__WINDOWS
    #endif
@@ -109,7 +108,6 @@
    #xtranslate hb_ADel([<x,...>])          => ADel(<x>)
    #xtranslate hb_At([<x,...>])            => At(<x>)
 
-   #xtranslate hb_ISPOINTER( <xValue> )    => ISPOINTER( <xValue> )
    #xtranslate hb_ARGV([<x,...>])          => hb_CMDARGARGV(<x>)
 
    #xtranslate hb_IniSetComment([<x,...>]) => hb_SetIniComment(<x>)

@@ -1126,6 +1126,8 @@ ULONG hb_snprintf( char * buffer, ULONG nSize, const char * format, ... )
    result = vsnprintf( buffer, nSize, format, arglist );
 #endif
 
+   va_end( arglist );
+
 #ifdef _HB_SNPRINTF_ADD_EOS
    if( buffer && nSize )
       buffer[ nSize - 1 ] = '\0';

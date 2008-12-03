@@ -67,62 +67,74 @@ HB_FUNC( HB_VALTOSTR )
 
 HB_FUNC( HB_STRTOEXP )
 {
-   char * pszString = hb_parc( 1 );
+   const char * pszString = hb_parc( 1 );
+
    if( pszString )
    {
-      ULONG ulLen = hb_parclen( 1 ), ulRet, ul;
-      int iType = 0, iQ = 0;
+      ULONG ulLen = hb_parclen( 1 ), ulRet, ul, uQ = 0;
+      int iType = 0;
       char ch, * pDst, * pszResult;
 
       for( ul = 0; ul < ulLen; ++ul )
       {
-         if( pszString[ ul ] == '"' )
+         switch( pszString[ ul ] )
          {
-            ++iQ;
-            iType |= 1;
-         }
-         else if( pszString[ ul ] == '\\' )
-            ++iQ;
-         else if( pszString[ ul ] == '\'' )
-            iType |= 2;
-         else if( pszString[ ul ] == ']' )
-            iType |= 4;
-         else if( pszString[ ul ] == '\r' ||
-                  pszString[ ul ] == '\n' ||
-                  pszString[ ul ] == '\0' )
-         {
-            iType |= 7;
-            iQ += 3;
+            case '\\':
+               ++uQ;
+               break;
+            case '"':
+               ++uQ;
+               iType |= 1;
+               break;
+            case '\'':
+               iType |= 2;
+               break;
+            case ']':
+               iType |= 4;
+               break;
+            case '\r':
+            case '\n':
+               iType |= 7;
+               ++uQ;
+               break;
+            case '\0':
+               iType |= 7;
+               uQ += 3;
+               break;
          }
       }
       if( iType == 7 )
       {
-         ulRet = ulLen + 3 + iQ;
+         ulRet = ulLen + 3 + uQ;
          pDst = pszResult = ( char * ) hb_xgrab( ulRet + 1 );
          *pDst++ = 'e';
          *pDst++ = '"';
          for( ul = 0; ul < ulLen; ++ul )
          {
             ch = pszString[ ul ];
-            if( ch == '"' )
+            switch( ch )
             {
-               *pDst++ = '\\';
-               *pDst++ = '"';
+               case '\r':
+                  *pDst++ = '\\';
+                  *pDst++ = 'r';
+                  break;
+               case '\n':
+                  *pDst++ = '\\';
+                  *pDst++ = 'n';
+                  break;
+               case '\0':
+                  *pDst++ = '\\';
+                  *pDst++ = '0';
+                  *pDst++ = '0' + ( ch >> 3 );
+                  *pDst++ = '0' + ( ch & 7 );
+                  break;
+               case '\\':
+               case '"':
+                  *pDst++ = '\\';
+               default:
+                  *pDst++ = ch;
+                  break;
             }
-            else if( ch == '\\' )
-            {
-               *pDst++ = '\\';
-               *pDst++ = '\\';
-            }
-            else if( ch == '\r' || ch == '\n' || ch == '\0' )
-            {
-               *pDst++ = '\\';
-               *pDst++ = '0';
-               *pDst++ = '0' + ( ch >> 3 );
-               *pDst++ = '0' + ( ch & 7 );
-            }
-            else
-               *pDst++ = ch;
          }
          *pDst++ = '"';
       }
