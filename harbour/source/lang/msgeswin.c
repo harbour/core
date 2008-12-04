@@ -188,14 +188,14 @@ static HB_LANG s_lang =
       "Desbordamiento negativo en la Pila",
       "Un item estaba siendo copiado sobre sí mismo desde %s",
       "Símbolo item no válido pasado como memvar %s",
-      "Memory buffer overflow",
-      "hb_xgrab requested to allocate zero bytes",
-      "hb_xrealloc requested to resize to zero bytes",
-      "hb_xalloc requested to allocate zero bytes",
+      "Desbordamiento de buffer de memoria",
+      "hb_xgrab requirió apartar cero bytes",
+      "hb_xrealloc requirió redimensionar a cero bytes",
+      "hb_xalloc requirió apartar cero bytes",
 
       /* Texts */
 
-      "YYYY/MM/DD",
+      "DD/MM/YYYY",
       "S",
       "N"
    }

@@ -80,7 +80,7 @@ HB_FUNC( DESCEND )
          {
             char * szBuffer = ( char * ) hb_xgrab( ulLen + 1 );
             hb_strDescend( szBuffer, hb_itemGetCPtr( pItem ), ulLen );
-            hb_retclen_buffer( szBuffer, ulLen  );
+            hb_retclen_buffer( szBuffer, ulLen );
          }
          else
             hb_retc( NULL );
