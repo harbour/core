@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-04 11:09 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
+  * contrib/hbbmcdx/bmdbfcdx.c
+  * contrib/hbbmcdx/hbbmcdx.h
+    ! fixed partially BM_DbSetFilterArray, and added new features to rdd synced
+      with dbfcdx.
+
 2008-12-03 18:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbstr.c
     ! added missing call to va_end() in hb_snprintf()
