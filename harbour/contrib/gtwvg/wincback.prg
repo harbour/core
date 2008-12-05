@@ -109,7 +109,6 @@
 //
 FUNCTION HB_AsCallback( pbcFunc, oObj, nNumParam, xCargo, lVoid, cDebug )
    LOCAL pCallback
-   LOCAL nPos := 0
 
    HB_SYMBOL_UNUSED( xCargo )
 

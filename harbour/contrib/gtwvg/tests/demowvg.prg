@@ -2341,14 +2341,28 @@ FUNCTION GoogleMap()
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
 //
 Function ExecuteActiveX( nActiveX, xParam )
-   Local oCrt, oTBar, oSBar, oPanel, oStatic, oCom, oXbp
+   Local oCrt, oTBar, oSBar, oPanel, oStatic, oCom, oXbp, oTree, oItem1, oItem2, oListBox
+   LOCAL bComSize := {|m1,m2,o,w,x,y| m1 := m1, m2 := m2, o := o, ;
+                        w := oCrt:currentSize()   ,;
+                        x := oTBar:currentSize()  ,;
+                        y := oSBar:currentSize()  ,;
+                        oCom:setPosAndSize( { 0, x[2] }, { w[1], w[2]-x[2]-y[2] }, .t. ), 1 }
 
    HB_SYMBOL_UNUSED( xParam )
    HB_SYMBOL_UNUSED( oCom )
 
-   oCrt := WvgDialog():new( , , { 30,30 }, { 600,500 }, , .f. )
+   #if 1
+   oCrt := WvgDialog():new( , , { 30,30 }, { 800,600 }, , .f. )
+   //oCrt:resizable := .f.
    oCrt:closable := .t.
    oCrt:create()
+   #else
+   oCrt := WvgCrt():new( , , { 5,5 }, { 30,60 }, , .t. )
+   oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS
+   oCrt:closable := .t.
+   oCrt:create()
+   SetCursor( .f. )
+   #endif
 
    // Menu
    ActiveXBuildMenu( oCrt )
@@ -2368,29 +2382,64 @@ Function ExecuteActiveX( nActiveX, xParam )
 
    // Static text
    oStatic := WvgStatic():new( oCrt )
-   oStatic:caption := 'This is a Harbour dialog and is compatible with Xbase++ Parts. '+;
-                      'XbpDialog(), XbpMenuBar(), XbpToolBar(), XbpStatusBar(), ' +;
-                      'XbpStatic() classes have been implemented'
-   oStatic:options := WVGSTATIC_TEXT_LEFT + WVGSTATIC_TEXT_WORDBREAK
-   oStatic:create( , , { 0, oTBar:currentSize()[2] }, { 120, oCrt:currentSize()[2]-;
-                                         oTBar:currentSize()[2]-oSBar:currentSize()[2] }, , .t. )
+
+   oStatic:caption := chr(13)+'This is a Harbour dialog and is compatible with Xbase++ Parts. '+CRLF+;
+                      'XbpDialog()  XbpMenuBar()  XbpToolBar()  XbpStatusBar()  ' +;
+                      'XbpStatic()  XbpTreeView()  XbpActiveX()  XbpListBox()  '+CRLF+;
+                      'classes have been implemented'
+
+   oStatic:options := WVGSTATIC_TEXT_CENTER
+
+   oStatic:create( , , { 0, oTBar:currentSize()[2]+3 }, { 120, oCrt:currentSize()[2]-;
+                               oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
+
    oStatic:resize := {|mp1,mp2,oSelf,w,x,y| mp1 := mp1, mp2 := mp2, oSelf := oSelf, ;
                         w := oCrt:currentSize()   ,;
                         x := oTBar:currentSize()  ,;
                         y := oSBar:currentSize()  ,;
-                        oStatic:setPosAndSize( { 0, x[2]+3 }, { 120, w[2]-x[2]-y[2]-4 }, .f. ) }
+                        oStatic:setPosAndSize( { 0, x[2]+3 }, { 120, w[2]-x[2]-y[2]-4 }, .t. ) }
+
+   HB_SYMBOL_UNUSED( oListBox )
+
+   // ListBox
+   oListBox := WvgListbox():new()
+   oListBox:create( oStatic, , { 5, 280 }, { 107, 100 } )
+   aeval( { 'Apple','Bat','Cat','Data','Elephant','Thanks','Links','Phantom' }, {|e| oListBox:addItem( e ) } )
+   oListBox:itemSelected := {|| Win_MessageBox( , oListBox:getItem( 2 ) ) }
 
    // Pushbuttons
    oXbp := WvgPushButton():new( oStatic )
    oXbp:caption := "A"
-   oXbp:create( , , { 20,250 }, {80,40} )
+   oXbp:create( , , { 20,400 }, {80,30} )
    oXbp:activate:= {|| Win_MessageBox( , "Pushbutton A" ) }
    // Pushbuttons
    oXbp := WvgPushButton():new( oStatic )
-   oXbp:caption := "B"
-   oXbp:create( , , { 20,300 }, {80,40} )
-   oXbp:activate:= {|| Win_MessageBox( , "Pushbutton B" ) }
+   oXbp:caption := "Hide"
+   oXbp:create( , , { 20,440 }, {80,30} )
+   oXbp:activate:= {|| oCom:resize := bComSize, oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
+   // Treeview
+   oTree := WvgTreeView():new( oCrt, , { oCrt:currentSize()[1]-160,oTBar:currentSize()[2]+3 }, ;
+                                       { 160, oCrt:currentSize()[2]-;
+                               oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
+   oTree:hasLines   := .T.
+   oTree:hasButtons := .T.
+   oTree:alwaysShowSelection := .T.
+   oTree:create()
+   oTree:setColorBG( RGB( 120,15,240 ) )
+   oTree:setColorFG( RGB( 15,240,120 ) )
+   oTree:itemSelected := {|oItem| IF( oItem <> NIL, Win_MessageBox( , oItem:caption ), NIL ) }
+
+   oItem1 := oTree:rootItem:addItem( "First level A" )
+
+   oTree:rootItem:addItem( "First level B" )
+
+   oItem2 := oItem1:addItem( "Second level A" )
+   oItem1:addItem( "Second level B" )
+
+   oItem2:addItem( "Third level A" )
+   oItem2:addItem( "Third level B" )
+   oItem2:addItem( "Third level C" )
 
    #if 1
    // ActiveX Controls
@@ -2400,15 +2449,52 @@ Function ExecuteActiveX( nActiveX, xParam )
                         x := oTBar:currentSize()  ,;
                         y := oSBar:currentSize()  ,;
                         z := oStatic:currentSize(),;
-                        oCom:setPosAndSize( { z[1], x[2] }, { w[1]-z[1], w[2]-x[2]-y[2] }, .t. ), 1 }
+                        oCom:setPosAndSize( { z[1], x[2] }, { w[1]-z[1]-160, w[2]-x[2]-y[2] }, .t. ), 1 }
    if hb_isObject( oCom )
       oCrt:sendMessage( WM_SIZE, 0, 0 )
       oCrt:show()
       ExeActiveX( nActiveX, oCom, xParam )
    ENDIF
+   #else
+   oCrt:sendMessage( WM_SIZE, 0, 0 )
+   oCrt:show()
+   DO WHILE .t.
+      IF inkey() == 27
+         EXIT
+      ENDIF
+   ENDDO
    #endif
 
    oCrt:Destroy()
+   Return nil
+//----------------------------------------------------------------------//
+Static Function ActiveXBuildMenu( oCrt )
+   Local oMenuBar, oSubMenu
+
+   oMenuBar := WvgMenuBar():new( oCrt ):create()
+
+   // Define submenu in procedural style.
+   // The numeric index of the selected menu item
+   // is passed to the Callback code block -> mp1
+
+   oSubMenu       := WvgMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Procedural"
+   oSubMenu:addItem( { "Play Charge ~1", } )
+   oSubMenu:addItem( { "Play Nannyboo ~2", } )
+   oSubMenu:itemSelected := {|mp1| MyFunction( 100+mp1 ) }
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+
+   // Define submenu in the functional style:
+   // A menu item executes a code block that
+   // calls a function
+   oSubMenu       := WvgMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~Functional"
+   oSubMenu:addItem( { "Play Opening ~1", {|| MyFunction( 1 ) } } )
+   oSubMenu:addItem( { "Play Closing ~2", {|| MyFunction( 2 ) } } )
+   oSubMenu:addItem( { "~MessageBox"    , {|| MyFunction( 3 ) } } )
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
    Return nil
 //----------------------------------------------------------------------//
 STATIC FUNCTION ActiveXBuildToolBar( oCrt, nActiveX )
@@ -2441,41 +2527,9 @@ STATIC FUNCTION ActiveXBuildToolBar( oCrt, nActiveX )
    oTBar:addItem( "Calculator", 'c:\harbour\contrib\gtwvg\tests\v_clclt.bmp'  )
    oTBar:addItem( "Notes"     , 'c:\harbour\contrib\gtwvg\tests\v_notes1.bmp' )
 
-   //oTBar:addItem("Button #2", 101)
-   //oTBar:transparentColor := WVG_CLR_INVALID
-
    oTBar:buttonClick := {|oButton| Win_MessageBox( , "Button [" + oButton:caption + "] clicked!" ) }
 
    RETURN oTBar
-//----------------------------------------------------------------------//
-Static Function ActiveXBuildMenu( oCrt )
-   Local oMenuBar, oSubMenu
-
-   oMenuBar := WvgMenuBar():new( oCrt ):create()
-
-   // Define submenu in procedural style.
-   // The numeric index of the selected menu item
-   // is passed to the Callback code block -> mp1
-
-   oSubMenu       := WvgMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Procedural"
-   oSubMenu:addItem( { "Play Charge ~1", } )
-   oSubMenu:addItem( { "Play Nannyboo ~2", } )
-   oSubMenu:itemSelected := {|mp1| MyFunction( 100+mp1 ) }
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-
-   // Define submenu in the functional style:
-   // A menu item executes a code block that
-   // calls a function
-   oSubMenu       := WvgMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Functional"
-   oSubMenu:addItem( { "Play Opening ~1", {|| MyFunction( 1 ) } } )
-   oSubMenu:addItem( { "Play Closing ~2", {|| MyFunction( 2 ) } } )
-   oSubMenu:addItem( { "~MessageBox"    , {|| MyFunction( 3 ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   Return nil
 //----------------------------------------------------------------------//
 STATIC FUNCTION BuildActiveXControl( nActiveX, oCrt )
    LOCAL oCom
@@ -2556,8 +2610,8 @@ Static Function ExeActiveX( nActiveX, oCom, xParam )
    endif
 
    do while .t.
-      nKey := inkey()
-
+      nKey := inkey( 0.1 )
+//hb_ToOutDebug( "inkey() %i", nKey )
       IF nActiveX == 2
          oCom:Value := seconds()/86400
       ENDIF

@@ -76,6 +76,12 @@
 
 //----------------------------------------------------------------------//
 
+#ifndef __xDBG_TB__
+#   xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#endif
+
+//----------------------------------------------------------------------//
+
 CLASS WvgStatic  INHERIT  WvgWindow
 
    DATA     autoSize                              INIT .F.
@@ -93,6 +99,11 @@ CLASS WvgStatic  INHERIT  WvgWindow
 
    METHOD   setCaption( xCaption, cDll )
 
+   DATA     nOldProc                              INIT 0
+   DATA     nWndProc
+
+   METHOD   handleEvent()
+
    ENDCLASS
 //----------------------------------------------------------------------//
 
@@ -105,6 +116,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStati
    // + SS_NOTIFY + SS_ETCHEDFRAME //SS_SUNKEN //+ SS_WHITERECT
    //
    ::style       := WS_CHILD + WS_CLIPCHILDREN
+   ::exStyle     := WS_EX_NOPARENTNOTIFY
    ::className   := 'STATIC'
    ::objType     := objTypeStatic
 
@@ -124,13 +136,13 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
    SWITCH ::type
    CASE WVGSTATIC_TYPE_TEXT
       IF ( Win_AND( ::options, WVGSTATIC_TEXT_LEFT ) == WVGSTATIC_TEXT_LEFT )
-         ::style += SS_LEFT + SS_LEFTNOWORDWRAP
+         ::style += SS_LEFT //+ SS_LEFTNOWORDWRAP
       ENDIF
       IF ( Win_AND( ::options, WVGSTATIC_TEXT_RIGHT ) == WVGSTATIC_TEXT_RIGHT )
-         ::style += SS_RIGHT + SS_LEFTNOWORDWRAP
+         ::style += SS_RIGHT
       ENDIF
       IF ( Win_AND( ::options, WVGSTATIC_TEXT_CENTER ) == WVGSTATIC_TEXT_CENTER )
-         ::style += SS_CENTER + SS_LEFTNOWORDWRAP
+         ::style += SS_CENTER
       ENDIF
       IF ( Win_AND( ::options, WVGSTATIC_TEXT_WORDBREAK ) == WVGSTATIC_TEXT_WORDBREAK )
          ::style -= SS_LEFTNOWORDWRAP
@@ -188,19 +200,37 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
       ENDIF
    ENDIF
 
+   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self, 4 )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
+METHOD handleEvent( nMessage, aInfo ) CLASS WvgStatic
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+hb_ToOutDebug( "WvgStatic:handleEvent  %i", nMessage )
 
-   RETURN Self
+   HB_SYMBOL_UNUSED( aInfo )
+
+   SWITCH nMessage
+
+   CASE WM_SIZE
+      IF hb_isBlock( ::sl_resize )
+         eval( ::sl_resize, NIL, NIL, self )
+         RETURN ( 0 )
+      ENDIF
+      EXIT
+
+   END
+
+   RETURN ( 1 )
 
 //----------------------------------------------------------------------//
 
 METHOD destroy() CLASS WvgStatic
+
+hb_ToOutDebug( "WvgStatic:destroy()" )
 
    IF len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
@@ -209,8 +239,17 @@ METHOD destroy() CLASS WvgStatic
    IF Win_IsWindow( ::hWnd )
       Win_DestroyWindow( ::hWnd )
    ENDIF
+   HB_FreeCallback( ::nWndProc )
 
    RETURN NIL
+
+//----------------------------------------------------------------------//
+
+METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
+
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   RETURN Self
 
 //----------------------------------------------------------------------//
 

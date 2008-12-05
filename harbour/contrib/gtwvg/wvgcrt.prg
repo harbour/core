@@ -418,7 +418,7 @@ METHOD currentPos() CLASS WvgCrt
 
 METHOD currentSize() CLASS WvgCrt
 
-   RETURN Self
+   RETURN { hb_gtInfo( HB_GTI_SCREENWIDTH ), hb_gtInfo( HB_GTI_SCREENHEIGHT ) }
 
 //----------------------------------------------------------------------//
 

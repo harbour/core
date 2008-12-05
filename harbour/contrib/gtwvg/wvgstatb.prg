@@ -76,6 +76,12 @@
 
 //----------------------------------------------------------------------//
 
+#ifndef __DBG_TB__
+#   xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#endif
+
+//----------------------------------------------------------------------//
+
 CLASS WvgStatusBar  INHERIT  WvgActiveXControl
 
    DATA     caption                               INIT ''
@@ -96,6 +102,11 @@ CLASS WvgStatusBar  INHERIT  WvgActiveXControl
 
    METHOD   panelClick()                          SETGET
    METHOD   panelDblClick()                       SETGET
+
+   DATA     nOldProc                              INIT 0
+   DATA     nWndProc
+
+   METHOD   handleEvent()
 
    ENDCLASS
 //----------------------------------------------------------------------//
@@ -135,20 +146,60 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
       ::show()
    ENDIF
 
+   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatusBar
+METHOD handleEvent( nMessage, aNM ) CLASS WvgStatusBar
+   LOCAL nHandled := 1
+   LOCAL nObj, aNMH
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   SWITCH nMessage
 
-   RETURN Self
+   CASE WM_SIZE
+      ::sendMessage( WM_SIZE, 0, 0 )
+      RETURN 0
+
+   CASE WM_COMMAND
+      IF hb_isBlock( ::sl_lbClick )
+         eval( ::sl_lbClick, NIL, NIL, self )
+
+      ENDIF
+      nHandled := 0
+      EXIT
+
+   CASE WM_NOTIFY
+      aNMH := Wvg_GetNMMouseInfo( aNM[ 2 ] )
+
+      DO CASE
+
+      CASE aNMH[ NMH_code ] == NM_CLICK
+
+         IF hb_isBlock( ::sl_lbClick )
+            IF aNMH[ NMH_dwItemSpec ] >= 0
+               nObj := aNMH[ NMH_dwItemSpec ] + 1
+
+               Eval( ::sl_lbClick, ::aItems[ nObj ], NIL, Self )
+
+            ENDIF
+
+            nHandled := 0
+         ENDIF
+
+      ENDCASE
+      EXIT
+   END
+
+   RETURN nHandled
 
 //----------------------------------------------------------------------//
 
 METHOD destroy() CLASS WvgStatusBar
    LOCAL i, nItems
+hb_ToOutDebug( "WvgStatusBar:destroy()" )
 
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems
@@ -159,8 +210,17 @@ METHOD destroy() CLASS WvgStatusBar
    IF Win_IsWindow( ::hWnd )
       Win_DestroyWindow( ::hWnd )
    ENDIF
+   HB_FreeCallback( ::nWndProc )
 
    RETURN NIL
+
+//----------------------------------------------------------------------//
+
+METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatusBar
+
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   RETURN Self
 
 //----------------------------------------------------------------------//
 

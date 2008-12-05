@@ -76,13 +76,74 @@
 
 //----------------------------------------------------------------------//
 
+#ifndef __xDBG_TB__
+#   xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#endif
+
+//----------------------------------------------------------------------//
+
 CLASS WvgListBox  INHERIT  WvgWindow
 
+   DATA     adjustHeight                          INIT .F.
+   DATA     horizScroll                           INIT .F.
+   DATA     markMode                              INIT WVGLISTBOX_MM_SINGLE
+   DATA     multiColumn                           INIT .F.
+   DATA     vertScroll                            INIT .T.
+   DATA     drawMode                              INIT WVG_DRAW_NORMAL
 
    METHOD   new()
    METHOD   create()
    METHOD   configure()
    METHOD   destroy()
+
+   METHOD   handleEvent()
+
+   METHOD   getData()                             VIRTUAL
+   METHOD   getItemHeight()                       INLINE  ::sendMessage( LB_GETITEMHEIGHT, 0, 0 )
+   METHOD   getTopItem()                          INLINE  ::sendMessage( LB_GETTOPINDEX, 0, 0 )
+   METHOD   getVisibleItems()                     VIRTUAL
+   METHOD   numItems()                            INLINE  ::sendMessage( LB_GETCOUNT, 0, 0 )
+   METHOD   setData()                             VIRTUAL
+   METHOD   setItemsHeight( nPixel )              INLINE  ::sendMessage( LB_SETITEMHEIGHT, 0, nPixel )
+   METHOD   setTopItem( nIndex )                  INLINE  ::sendMessage( LB_SETTOPINDEX, nIndex-1, 0 )
+
+   METHOD   addItem( cItem )                      INLINE  Win_SendMessageText( ::hWnd, LB_ADDSTRING, 0, cItem )
+   METHOD   clear()                               VIRTUAL
+   METHOD   delItem( nIndex )                     INLINE  ::sendMessage( LB_DELETESTRING, nIndex-1, 0 )
+   METHOD   getItem( nIndex )                     INLINE  Win_LbGetText( ::hWnd, nIndex-1 )
+   METHOD   getTabstops()                         VIRTUAL
+   METHOD   insItem( nIndex, cItem )              INLINE  Win_SendMessageText( ::hWnd, LB_INSERTSTRING, nIndex-1, cItem )
+   METHOD   setColumnWidth()                      VIRTUAL
+   METHOD   setItem( nIndex, cItem )              INLINE  ::delItem( nIndex ), ::insItem( nIndex, cItem )
+   METHOD   setTabstops()                         VIRTUAL
+
+
+   DATA     sl_hScroll
+   ACCESS   hScroll                               INLINE ::sl_hScroll
+   ASSIGN   hScroll( bBlock )                     INLINE ::sl_hScroll := bBlock
+
+   DATA     sl_vScroll
+   ACCESS   vScroll                               INLINE ::sl_vScroll
+   ASSIGN   vScroll( bBlock )                     INLINE ::sl_vScroll := bBlock
+
+   DATA     sl_itemMarked
+   ACCESS   itemMarked                            INLINE ::sl_itemMarked
+   ASSIGN   itemMarked( bBlock )                  INLINE ::sl_itemMarked := bBlock
+
+   DATA     sl_itemSelected
+   ACCESS   itemSelected                          INLINE ::sl_itemSelected
+   ASSIGN   itemSelected( bBlock )                INLINE ::sl_itemSelected := bBlock
+
+   DATA     sl_drawItem
+   ACCESS   drawItem                              INLINE ::sl_drawItem
+   ASSIGN   drawItem( bBlock )                    INLINE ::sl_drawItem := bBlock
+
+   DATA     sl_measureItem
+   ACCESS   measureItem                           INLINE ::sl_measureItem
+   ASSIGN   measureItem( bBlock )                 INLINE ::sl_measureItem := bBlock
+
+   DATA     nCurSelected                          INIT 0
+   METHOD   getCurItem()                          INLINE ::getItem( ::nCurSelected )
 
    ENDCLASS
 //----------------------------------------------------------------------//
@@ -91,11 +152,12 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListB
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD
-   ::className   := 'BUTTON'
-   ::objType     := objTypePushButton
+   ::style       := WS_CHILD + WS_OVERLAPPED + WS_TABSTOP + LBS_NOTIFY
+   ::exStyle     := WS_EX_CLIENTEDGE + WS_EX_LEFT + WS_EX_LTRREADING + WS_EX_RIGHTSCROLLBAR
+   ::className   := "LISTBOX"
+   ::objType     := objTypeListBox
 
    RETURN Self
 
@@ -108,6 +170,15 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
    IF ::visible
       ::style += WS_VISIBLE
    ENDIF
+   IF ::horizScroll
+      ::style += WS_HSCROLL
+   ENDIF
+   IF ::vertScroll
+      ::style += WS_VSCROLL
+   ENDIF
+   IF ::multiColumn
+      ::style += LBS_MULTICOLUMN
+   ENDIF
 
    ::oParent:AddChild( SELF )
 
@@ -117,7 +188,34 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
       ::show()
    ENDIF
 
+   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+
    RETURN Self
+
+//----------------------------------------------------------------------//
+
+METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
+   LOCAL nHandled := 1
+
+   SWITCH nMessage
+
+   CASE WM_COMMAND
+      IF aNM[ 1 ] == LBN_SELCHANGE
+         //::nCurSelected := ::sendMessage( LB_GETCURSEL, 0, 0 ) + 1
+         IF hb_isBlock( ::sl_itemSelected )
+            eval( ::sl_itemSelected, NIL, NIL, self )
+         ENDIF
+      ENDIF
+      EXIT
+
+   CASE WM_SIZE
+      ::sendMessage( WM_SIZE, 0, 0 )
+      RETURN 0
+
+   END
+
+   RETURN nHandled
 
 //----------------------------------------------------------------------//
 
@@ -130,6 +228,16 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 //----------------------------------------------------------------------//
 
 METHOD destroy() CLASS WvgListBox
+
+   IF Len( ::aChildren ) > 0
+      aeval( ::aChildren, {|o| o:destroy() } )
+      ::aChildren := {}
+   ENDIF
+
+   IF Win_IsWindow( ::hWnd )
+      Win_DestroyWindow( ::hWnd )
+   ENDIF
+   HB_FreeCallback( ::nWndProc )
 
    RETURN NIL
 

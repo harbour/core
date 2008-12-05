@@ -76,7 +76,13 @@
 
 //----------------------------------------------------------------------//
 
-CLASS WvgToolBar  INHERIT  WvgActiveXControl
+#ifndef __DBG_TB__
+#   xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#endif
+
+//----------------------------------------------------------------------//
+
+CLASS WvgToolBar  INHERIT  WvgWindow //WvgActiveXControl
 
    DATA     appearance
    DATA     style                                 INIT WVGTOOLBAR_STYLE_STANDARD
@@ -120,6 +126,8 @@ CLASS WvgToolBar  INHERIT  WvgActiveXControl
    METHOD   buttonMenuClick()                     SETGET
    METHOD   buttonDropDown()                      SETGET
 
+   METHOD   handleEvent( nMessage, aInfo )
+
    ENDCLASS
 //----------------------------------------------------------------------//
 
@@ -127,7 +135,8 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolB
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   //::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + TBSTYLE_FLAT + CCS_ADJUSTABLE //+ CCS_NODIVIDER    //+CCS_VERT
    ::exStyle     := TBSTYLE_EX_DOUBLEBUFFER
@@ -171,20 +180,56 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
       ::show()
    ENDIF
 
+   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
+METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
+   LOCAL nHandled := 1
+   LOCAL nObj, aNMMouse
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   SWITCH nMessage
 
-   RETURN Self
+   CASE WM_SIZE
+      ::sendMessage( WM_SIZE, 0, 0 )
+      RETURN 0
+
+   CASE WM_COMMAND
+      EXIT
+
+   CASE WM_NOTIFY
+      aNMMouse := Wvg_GetNMMouseInfo( aNM[ 2 ] )
+
+      DO CASE
+
+      CASE aNMMouse[ NMH_code ] == NM_CLICK
+         IF ( nObj := ascan( ::aItems, {|e_| e_[ 1 ] == aNMMouse[ NMH_dwItemSpec ] } ) ) > 0
+            IF hb_isBlock( ::sl_lbClick )
+               Eval( ::sl_lbClick, ::aItems[ nObj,2 ], NIL, Self )
+
+            ENDIF
+         ENDIF
+         RETURN 0
+
+      OTHERWISE
+         RETURN 1
+
+      ENDCASE
+
+      EXIT
+   END
+
+   RETURN nHandled
 
 //----------------------------------------------------------------------//
 
 METHOD destroy() CLASS WvgToolBar
    LOCAL i, nItems
+
+hb_ToOutDebug( "WvgToolBar:destroy()" )
 
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems
@@ -203,8 +248,17 @@ METHOD destroy() CLASS WvgToolBar
    IF Win_IsWindow( ::hWnd )
       Win_DestroyWindow( ::hWnd )
    ENDIF
+   HB_FreeCallback( ::nWndProc )
 
    RETURN NIL
+
+//----------------------------------------------------------------------//
+
+METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
+
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   RETURN Self
 
 //----------------------------------------------------------------------//
 
@@ -231,15 +285,11 @@ METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey 
          oBtn:image := hBitmap
          Wvg_AddToolbarButton( ::hWnd, oBtn:image, oBtn:caption, oBtn:command, 1 )
 
-      endif
+      ENDIF
 
    ENDCASE
 
    aadd( ::aItems, { oBtn:command, oBtn } )
-
-   //::sendMessage( TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DOUBLEBUFFER )
-   //::sendMessage( TB_SETPADDING, 0, MAKELPARAM( 3,3 ) )
-   //::sendMessage( TB_SETLISTGAP, 4, 0 )  // vista
 
    RETURN oBtn
 

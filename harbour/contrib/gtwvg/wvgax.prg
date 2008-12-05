@@ -136,6 +136,8 @@ CLASS WvgActiveXControl FROM TOleAuto, WvgWindow
 
    METHOD mapEvent( nEvent, bBlock )
 
+   METHOD handleEvent()
+
 PROTECTED:
    METHOD adviseEvents()
 
@@ -195,6 +197,25 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
 
    RETURN Self
 //----------------------------------------------------------------------//
+
+METHOD handleEvent( nEvent, aInfo ) CLASS WvgActiveXControl
+   LOCAL nHandled := 0
+
+   HB_SYMBOL_UNUSED( aInfo )
+
+   SWITCH nEvent
+
+   CASE WM_SIZE
+      IF hb_isBlock( ::sl_resize )
+         eval( ::sl_resize, NIL, NIL, self )
+      ENDIF
+      EXIT
+   END
+
+   RETURN nHandled
+
+//----------------------------------------------------------------------//
+
 METHOD Destroy() CLASS WvgActiveXControl
    LOCAL bError := ErrorBlock()
 

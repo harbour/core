@@ -240,11 +240,18 @@ EXPORTED:
    DATA     mouseMode                             INIT  1
 
    DATA     nID                                   INIT  0
-   DATA     nControlID                            INIT  100
+   DATA     nControlID                            INIT  5000
    METHOD   createControl()
    METHOD   getControlID()                        INLINE ++::nControlID
 
    METHOD   Initialize()
+
+   DATA     nOldProc                              INIT 0
+   DATA     nWndProc
+
+   DATA     oMenu
+   METHOD   HandleEvent()                         INLINE ( 1 )
+   METHOD   ControlWndProc()
 
    ENDCLASS
 
@@ -311,16 +318,13 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 METHOD destroy() CLASS WvgWindow
 
    IF Len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| /*hb_toOutDebug( '<   '+o:className+'    >' ),*/ o:destroy() } )
+      aeval( ::aChildren, {|o| o:destroy() } )
       ::aChildren := {}
    ENDIF
-
-   ::destroy()
-
    IF Win_IsWindow( ::hWnd )
       Win_DestroyWindow( ::hWnd )
-      ::hWnd := NIL
    ENDIF
+   hb_FreeCallBack( ::nWndProc )
 
    RETURN Self
 
@@ -346,13 +350,17 @@ METHOD enable() CLASS WvgWindow
 
 METHOD hide() CLASS WvgWindow
 
+   IF Win_IsWindow( ::hWnd )
+      Win_ShowWindow( ::hWnd, SW_HIDE )
+   ENDIF
+
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD invalidateRect() CLASS WvgWindow
+METHOD invalidateRect( aRect ) CLASS WvgWindow
 
-   RETURN Self
+   RETURN Win_InvalidateRect( ::hWnd, aRect )
 
 //----------------------------------------------------------------------//
 
@@ -394,24 +402,27 @@ METHOD setPos() CLASS WvgWindow
 
 METHOD setPosAndSize( aPos, aSize, lPaint ) CLASS WvgWindow
 
-   if hb_isArray( aPos ) .and. hb_isArray( aSize )
+   IF hb_isArray( aPos ) .and. hb_isArray( aSize )
       DEFAULT lPaint TO .T.
 
-      switch ::objType
+      SWITCH ::objType
 
-      case objTypeDialog
-      case objTypeStatic
-      case objTypeActiveX
-         Win_MoveWindow( ::hWnd, aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ], lPaint )
-         exit
-
-      case objTypeCrt
+      CASE objTypeCrt
          hb_gtInfo( HB_GTI_SCREENWIDTH , aSize[ 1 ] )
          hb_gtInfo( HB_GTI_SCREENHEIGHT, aSize[ 2 ] )
          exit
 
-      end
-   endif
+      #if 0
+      CASE objTypeDialog
+      CASE objTypeStatic
+      CASE objTypeActiveX
+      #endif
+      OTHERWISE
+         Win_MoveWindow( ::hWnd, aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ], lPaint )
+         EXIT
+
+      END
+   ENDIF
 
    RETURN Self
 
@@ -419,31 +430,37 @@ METHOD setPosAndSize( aPos, aSize, lPaint ) CLASS WvgWindow
 
 METHOD setSize( aSize, lPaint ) CLASS WvgWindow
 
-   if hb_isArray( aSize )
+   IF hb_isArray( aSize )
       DEFAULT lPaint TO .T.
 
-      switch ::objType
+      SWITCH ::objType
 
-      case objTypeStatic
-      case objTypeDialog
-      case objTypeActiveX
-         Win_MoveWindow( ::hWnd, 0, 0, aSize[ 1 ], aSize[ 2 ], lPaint )
-         exit
-
-      case objTypeCrt
+      CASE objTypeCrt
          hb_gtInfo( HB_GTI_SCREENWIDTH , aSize[ 1 ] )
          hb_gtInfo( HB_GTI_SCREENHEIGHT, aSize[ 2 ] )
-         exit
+         EXIT
 
-      end
-   endif
+      #if 0
+      CASE objTypePushButton
+      CASE objTypeStatic
+      CASE objTypeDialog
+      CASE objTypeActiveX
+      #endif
+      OTHERWISE
+         Win_MoveWindow( ::hWnd, 0, 0, aSize[ 1 ], aSize[ 2 ], lPaint )
+         EXIT
+
+      END
+   ENDIF
    RETURN Self
 
 //----------------------------------------------------------------------//
 
 METHOD show() CLASS WvgWindow
-   Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
+
+   Win_ShowWindow( ::hWnd, SW_NORMAL )
    ::lHasInputFocus := .t.
+
    RETURN Self
 
 //----------------------------------------------------------------------//
@@ -1106,16 +1123,16 @@ METHOD createControl() CLASS WvgWindow
                                    ::imageHeight )
    OTHERWISE
 
-      hWnd := Win_CreateWindowEx( ::exStyle, ;
-                                  ::className, ;
-                                  "", ;                              // window name
-                                  ::style, ;
-                                  ::aPos[ 1 ], ::aPos[ 2 ],;
-                                  ::aSize[ 1 ], ::aSize[ 2 ],;
-                                  ::oParent:hWnd,;
-                                  ::nID,;                              // hMenu
-                                  NIL,;                              // hInstance
-                                  NIL )                              // lParam
+      hWnd := Win_CreateWindowEx(  ::exStyle, ;
+                                   ::className, ;
+                                   "", ;                              // window name
+                                   ::style, ;
+                                   ::aPos[ 1 ], ::aPos[ 2 ],;
+                                   ::aSize[ 1 ], ::aSize[ 2 ],;
+                                   ::oParent:hWnd,;
+                                   ::nID,;                            // hMenu
+                                   NIL,;                              // hInstance
+                                   NIL )                              // lParam
    ENDCASE
 
    IF ( hWnd <> 0 )
@@ -1124,3 +1141,55 @@ METHOD createControl() CLASS WvgWindow
 
    RETURN Self
 //----------------------------------------------------------------------//
+
+METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
+   LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem
+
+hb_ToOutDebug( "Control:wndProc:%s(   %i    %i    %i    %i   )", __ObjGetClsName( self ), hWnd, nMessage, nwParam, nlParam )
+
+   SWITCH nMessage
+
+   CASE WM_COMMAND
+      nCtrlID   := Win_LOWORD( nwParam )
+      nNotifctn := Win_HIWORD( nwParam )
+      hWndCtrl  := nlParam
+
+      IF hWndCtrl == 0                            // It is menu
+         IF hb_isObject( ::oMenu )
+            IF !empty( aMenuItem := ::oMenu:FindMenuItemById( nCtrlID ) )
+               IF hb_isBlock( aMenuItem[ 2 ] )
+                  Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
+
+               ELSEIF hb_isBlock( aMenuItem[ 3 ] )
+                  Eval( aMenuItem[ 3 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
+
+               ENDIF
+            ENDIF
+         ENDIF
+         RETURN 0
+      ELSE
+         IF ( nObj := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
+hb_ToOutDebug( "Control:wndProc:%s( %i )", __ObjGetClsName( self ), nCtrlID )
+            RETURN ::aChildren[ nObj ]:handleEvent( WM_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
+
+         ENDIF
+      ENDIF
+      EXIT
+
+   CASE WM_NOTIFY
+      IF ( nObj := ascan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
+         RETURN ::aChildren[ nObj ]:handleEvent( WM_NOTIFY, { nwParam, nlParam } )
+
+      ENDIF
+      EXIT
+
+   CASE WM_CTLCOLORLISTBOX
+      Win_SetTextColor( nwParam, RGB( 100,55,255 ) )
+      RETURN ( Win_GetStockObject( WHITE_BRUSH ) )
+
+   END
+
+   RETURN Win_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
+
+//----------------------------------------------------------------------//
+

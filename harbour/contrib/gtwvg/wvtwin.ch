@@ -592,6 +592,21 @@
 #define BS_OWNERDRAW                    11    // 0x0000000BL
 #define BS_LEFTTEXT                     32    // 0x00000020L
 
+#define BS_TEXT                          0    // 0x00000000L
+#define BS_ICON                         64    // 0x00000040L
+#define BS_BITMAP                      128    // 0x00000080L
+#define BS_LEFT                        256    // 0x00000100L
+#define BS_RIGHT                       512    // 0x00000200L
+#define BS_CENTER                      768    // 0x00000300L
+#define BS_TOP                        1024    // 0x00000400L
+#define BS_BOTTOM                     2048    // 0x00000800L
+#define BS_VCENTER                    3072    // 0x00000C00L
+#define BS_PUSHLIKE                   4096    // 0x00001000L
+#define BS_MULTILINE                  8192    // 0x00002000L
+#define BS_NOTIFY                    16384    // 0x00004000L
+#define BS_FLAT                      32768    // 0x00008000L
+#define BS_RIGHTBUTTON         BS_LEFTTEXT
+
 //-------------------------------------------------------------------//
 /*
  * User Button Notification Codes
@@ -1470,6 +1485,38 @@
 
 #define SBARS_SIZEGRIP                            256
 #define SBARS_TOOLTIPS                            2048
+
+//----------------------------------------------------------------------//
+//                         Tree View Constants
+//----------------------------------------------------------------------//
+
+#define TVS_HASBUTTONS                            1
+#define TVS_HASLINES                              2
+#define TVS_LINESATROOT                           4
+#define TVS_EDITLABELS                            8
+#define TVS_DISABLEDRAGDROP                       16
+#define TVS_SHOWSELALWAYS                         32
+#define TVS_RTLREADING                            64
+
+#define TVS_NOTOOLTIPS                            128
+#define TVS_CHECKBOXES                            256
+#define TVS_TRACKSELECT                           512
+#define TVS_SINGLEEXPAND                          1024
+#define TVS_INFOTIP                               2048
+#define TVS_FULLROWSELECT                         4096
+#define TVS_NOSCROLL                              8192
+#define TVS_NONEVENHEIGHT                         16384
+#define TVS_NOHSCROLL                             32768           // TVS_NOSCROLL overrides this
+
+#define TVN_FIRST                                 (0-400)
+
+#define TVN_SELCHANGEDA                           (TVN_FIRST-2)
+#define TVN_SELCHANGEDW                           (TVN_FIRST-51)
+#ifdef  UNICODE
+#define TVN_SELCHANGED                            TVN_SELCHANGEDW
+#else
+#define TVN_SELCHANGED                            TVN_SELCHANGEDA
+#endif
 
 //----------------------------------------------------------------------//
 #endif

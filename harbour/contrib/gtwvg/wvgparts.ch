@@ -76,12 +76,13 @@
 #define objTypeTreeViewItem                       14
 
 //----------------------------------------------------------------------//
-/*    Constants identifying WM_NOTIFY members fired as HB_GTE_NOTIFY    */
-#define NM_controlID                              1
-#define NM_hWnd                                   2
-#define NM_idFrom                                 3
-#define NM_code                                   4
-#define NM_dwItemSpec                             5
+//  NMHDR info
+//
+#define NMH_code                                  1
+#define NMH_controlID                             2
+#define NMH_hWnd                                  3
+#define NMH_dwItemSpec                            4  // NMHMOUSE
+#define NMH_action                                4  // NMHTREEVIEW
 
 //----------------------------------------------------------------------//
 
@@ -158,6 +159,10 @@
 
 #define WVGSTATIC_BITMAP_TILED                    1
 #define WVGSTATIC_BITMAP_SCALED                   2
+
+#define WVG_DRAW_NORMAL                           0
+
+#define WVGLISTBOX_MM_SINGLE                      1
 
 #endif // #ifndef _WVG_CH
 

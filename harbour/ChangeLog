@@ -8,6 +8,37 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-04 23:56 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/tests/hbmk_b32.bat
+    + xhb.lib - just to take use of hb_ToOutDebug(). While under heavy
+      changes I need to keep the debugging info intact. Final sources
+      will not have this included.
+
+  * harbour/contrib/gtwvg/wvggui.c
+  * harbour/contrib/gtwvg/wvgwin.c
+  * harbour/contrib/gtwvg/wvgparts.ch
+  * harbour/contrib/gtwvg/wvtwin.ch
+  * harbour/contrib/gtwvg/winback.prg
+  * harbour/contrib/gtwvg/wvgax.prg
+  * harbour/contrib/gtwvg/wvgcrt.prg
+  * harbour/contrib/gtwvg/wvgdlg.prg
+  * harbour/contrib/gtwvg/wvglistb.prg
+  * harbour/contrib/gtwvg/wvgphdlr.prg
+  * harbour/contrib/gtwvg/wvgpushb.prg
+  * harbour/contrib/gtwvg/wvgstatb.prg
+  * harbour/contrib/gtwvg/wvgstatc.prg
+  * harbour/contrib/gtwvg/wvgtoolb.prg
+  * harbour/contrib/gtwvg/wvgtreev.prg
+  * harbour/contrib/gtwvg/wvghwnd.prg
+    + Implemented ( partially ) WvgTreeView(), WvgListBox() classes.
+    ; Heavy changes in class structure, introduction  of new functions,
+      refinement of old ones, heavy implementtaion of hb_ACallBack()s. 
+    
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    + Added functionality of WvtTreeView() and WvtListBox() classes.
+
+    ;TODO : Few functions in wvgwin.c are not UNICODE compliant yet.
+
 2008-12-04 11:09 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
   * contrib/hbbmcdx/bmdbfcdx.c
   * contrib/hbbmcdx/hbbmcdx.h

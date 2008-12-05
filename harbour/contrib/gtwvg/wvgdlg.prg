@@ -159,9 +159,6 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
    RETURN Self
 //----------------------------------------------------------------------//
 METHOD destroy() CLASS WvgDialog
-   LOCAL bError := ErrorBlock()
-
-   //BEGIN SEQUENCE
 
    IF hb_isObject( ::oMenu )
       ::oMenu:destroy()
@@ -174,8 +171,6 @@ METHOD destroy() CLASS WvgDialog
    ::pGT  := NIL
    ::pGTp := NIL
 
-   //END SEQUENCE
-
-   ErrorBlock( bError )
    RETURN Self
 //----------------------------------------------------------------------//
+

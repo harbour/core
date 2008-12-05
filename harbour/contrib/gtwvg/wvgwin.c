@@ -77,8 +77,22 @@
 #define HB_OS_WIN_32_USED
 
 #include "gtwvg.h"
+#include <windowsx.h>
 
 #define WIN_STATUSBAR_MAX_PARTS         256
+
+//----------------------------------------------------------------------//
+
+//#define wvg_parwparam( n )  ( ( WPARAM ) hb_parnint( n ) )
+//#define wvg_parlparam( n )  ( ( LPARAM ) hb_parnint( n ) )
+
+#define wvg_parwparam( n )  ( ( WPARAM ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parlparam( n )  ( ( LPARAM ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhandle( n )  ( ( HANDLE ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhwnd( n )    ( ( HWND )   ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parwndproc( n ) ( ( WNDPROC )( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_rethandle( n )  ( hb_retnint( ( HB_PTRDIFF ) n ) )
+#define wvg_parcolor( n )   ( ( COLORREF ) hb_parnint( n ) )
 
 //----------------------------------------------------------------------//
 
@@ -327,7 +341,19 @@ HB_FUNC( WIN_MESSAGEBOX )
 
 HB_FUNC( WIN_INVALIDATERECT )
 {
-   InvalidateRect( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), NULL, TRUE );
+   if( ISNIL( 2 ) )
+      hb_retl( InvalidateRect( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), NULL, TRUE ) );
+   else
+   {
+      RECT rc = { 0, 0, 0, 0 };
+
+      rc.left   = hb_parni( 2,1 );
+      rc.top    = hb_parni( 2,2 );
+      rc.right  = hb_parni( 2,3 );
+      rc.bottom = hb_parni( 2,4 );
+
+      hb_retl( InvalidateRect( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), &rc, TRUE ) );
+   }
 }
 
 //-------------------------------------------------------------------//
@@ -1341,7 +1367,7 @@ HB_FUNC( WIN_SENDMESSAGETEXT )
    HB_TCHAR_FREE( lpBuffer );
 }
 
-//-------------------------------------------------------------------//
+//----------------------------------------------------------------------//
 
 HB_FUNC( WIN_SETWNDPROC )
 {
@@ -1352,16 +1378,224 @@ HB_FUNC( WIN_SETWNDPROC )
    oldProc = ( WNDPROC ) SetWindowLong( hWnd, GWL_WNDPROC, ( long ) wndProc ) ;
 
    hb_retnint( ( HB_PTRDIFF ) oldProc );
+   //wvg_rethandle( oldProc );
 }
 
 //----------------------------------------------------------------------//
 
 HB_FUNC( WIN_DEFWINDOWPROC )
 {
-   hb_retni( DefWindowProc( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
-                                                    hb_parni( 2 ),
-                                      ( WPARAM )    hb_parnint( 3 ),
-                                      ( LPARAM )    hb_parnint( 4 ) ) );
+   hb_retnint( DefWindowProc( wvg_parhwnd( 1 ),
+                              hb_parni( 2 ),
+                              wvg_parwparam( 3 ),
+                              wvg_parlparam( 4 ) ) );
 }
 
 //----------------------------------------------------------------------//
+
+HB_FUNC( WIN_CALLWINDOWPROC )
+{
+   hb_retnint( CallWindowProc( wvg_parwndproc( 1 ),
+                               wvg_parhwnd( 2 ),
+                               hb_parnint( 3 ),
+                               wvg_parwparam( 4 ),
+                               wvg_parlparam( 5 ) ) );
+}
+
+//----------------------------------------------------------------------//
+// Wvg_GetNMHInfo( nlParam )
+//
+HB_FUNC( WVG_GETNMHDRINFO )
+{
+   LPNMHDR  lpnmh     = ( LPNMHDR ) wvg_parlparam( 1 );
+   PHB_ITEM pEvParams = hb_itemNew( NULL );
+
+   hb_arrayNew( pEvParams, 3 );
+
+   hb_arraySetNInt( pEvParams, 1, lpnmh->code );
+   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lpnmh->idFrom   );
+   hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lpnmh->hwndFrom );
+
+   hb_itemReturnRelease( pEvParams );
+}
+//----------------------------------------------------------------------//
+// Wvg_GetNMMouseInfo( nlParam )
+//
+HB_FUNC( WVG_GETNMMOUSEINFO )
+{
+   LPNMMOUSE nmm       = ( LPNMMOUSE ) wvg_parlparam( 1 );
+   NMHDR     nmh       = nmm->hdr;
+   PHB_ITEM  pEvParams = hb_itemNew( NULL );
+
+   hb_arrayNew( pEvParams, 4 );
+
+   hb_arraySetNI( pEvParams  , 1, nmh.code );
+   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom   );
+   hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) nmh.hwndFrom );
+   hb_arraySetNL( pEvParams  , 4, nmm->dwItemSpec );
+
+   hb_itemReturnRelease( pEvParams );
+}
+//----------------------------------------------------------------------//
+// Wvg_GetNMTreeViewInfo( nlParam )
+//
+HB_FUNC( WVG_GETNMTREEVIEWINFO )
+{
+   LPNMTREEVIEW pnmtv  = ( LPNMTREEVIEW ) wvg_parlparam( 1 );
+   NMHDR        nmh    = pnmtv->hdr;
+
+   PHB_ITEM  pEvParams = hb_itemNew( NULL );
+
+   hb_arrayNew( pEvParams, 4 );
+
+   hb_arraySetNI( pEvParams  , 1, nmh.code );
+   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom   );
+   hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) nmh.hwndFrom );
+   hb_arraySetNI( pEvParams  , 4, pnmtv->action );
+
+   hb_itemReturnRelease( pEvParams );
+}
+//----------------------------------------------------------------------//
+// Wvg_GetNotifyInfo( wParam, lParam )
+//
+HB_FUNC( WVG_GETNOTIFYINFO )
+{
+   PHB_ITEM  pEvParams = hb_itemNew( NULL );
+   LPNMMOUSE nmm       = ( LPNMMOUSE ) wvg_parlparam( 2 );
+   NMHDR     nmh       = nmm->hdr;
+
+   hb_arrayNew( pEvParams, 7 );
+
+   hb_arraySetNI( pEvParams, 1, ( int ) wvg_parwparam( 1 ) );
+   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.hwndFrom );
+   hb_arraySetNI( pEvParams, 3, nmh.idFrom );
+   hb_arraySetNI( pEvParams, 4, nmh.code );
+   hb_arraySetNL( pEvParams, 5, nmm->dwItemSpec );
+   hb_arraySetNInt( pEvParams, 6, ( HB_PTRDIFF ) wvg_parwparam( 1 ) );
+   hb_arraySetNInt( pEvParams, 7, ( HB_PTRDIFF ) wvg_parlparam( 2 ) );
+
+   hb_itemReturnRelease( pEvParams );
+}
+
+//----------------------------------------------------------------------//
+//                         TreeView Functions
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_TREEVIEW_SETTEXTCOLOR )
+{
+   hb_retl( TreeView_SetTextColor( wvg_parhwnd( 1 ), wvg_parcolor( 2 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_TREEVIEW_SETBKCOLOR )
+{
+   hb_retl( TreeView_SetBkColor( wvg_parhwnd( 1 ), wvg_parcolor( 2 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_TREEVIEW_SETLINECOLOR )
+{
+   //hb_retl( TreeView_SetLineColor( wvg_parhwnd( 1 ), wvg_parcolor( 2 ) ) );
+}
+
+//----------------------------------------------------------------------//
+//  Wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected )
+//
+HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
+{
+   LPNMTREEVIEW pnmtv     = ( LPNMTREEVIEW ) wvg_parlparam( 2 );
+   HTREEITEM    hSelected = pnmtv->itemNew.hItem;
+   HTREEITEM    hParent;
+
+   if( hSelected != NULL )
+   {
+      char *textDisp   = ( char* ) hb_xgrab( MAX_PATH + 1 );
+      char *ParentDisp = ( char* ) hb_xgrab( MAX_PATH + 1 );
+      TV_ITEM item;
+
+      hb_stornl( ( long ) hSelected, 6 );
+
+      item.mask        = TVIF_HANDLE | TVIF_TEXT | TVIF_IMAGE;
+      item.hItem       = hSelected;
+      item.pszText     = textDisp;
+      item.cchTextMax  = MAX_PATH;
+
+      if( SendMessage( wvg_parhwnd( 1 ), ( UINT ) TVM_GETITEM, ( WPARAM ) 0, ( LPARAM ) &item ) )
+      {
+         hb_storclenAdopt( textDisp, strlen( textDisp ), 4 );
+      }
+
+      hParent = TreeView_GetParent( wvg_parhwnd( 1 ), hSelected );
+      hb_stornl( ( long ) hParent, 5 );
+
+      //hParent = SendMessage( wvg_parhwnd( 2 ), ( UINT ) TVM_GETNEXTITEM, ( WPARAM ) TVGN_PARENT, ( LPARAM ) hSelected );
+      item.mask        = TVIF_HANDLE | TVIF_TEXT;
+      item.hItem       = hParent;
+      item.pszText     = ParentDisp;
+      item.cchTextMax  = MAX_PATH;
+
+      if( SendMessage( wvg_parhwnd( 1 ), ( UINT ) TVM_GETITEM, ( WPARAM ) 0, ( LPARAM ) &item ) )
+      {
+         hb_storclenAdopt( ParentDisp, strlen( ParentDisp ), 3 );
+      }
+      else
+      {
+         hb_xfree( ParentDisp );
+      }
+   }
+}
+
+//----------------------------------------------------------------------//
+//
+//   hItem := Wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:Caption )
+//
+HB_FUNC( WVG_TREEVIEW_ADDITEM )
+{
+   typedef struct tagTVINSERTSTRUCTA
+   {
+     HTREEITEM hParent;
+     HTREEITEM hInsertAfter;
+     TV_ITEMA  item;
+   } TVINSERTSTRUCTA, FAR *LPTVINSERTSTRUCTA;
+
+   TVINSERTSTRUCT tvis;
+
+   tvis.hInsertAfter    = TVI_LAST;
+   tvis.item.mask       = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_STATE;
+   tvis.item.cchTextMax = MAX_PATH + 1;
+   tvis.item.stateMask  = TVIS_BOLD | TVIS_CUT | TVIS_DROPHILITED |
+                          TVIS_EXPANDEDONCE | TVIS_EXPANDPARTIAL | TVIS_SELECTED |
+                          TVIS_OVERLAYMASK | TVIS_STATEIMAGEMASK | TVIS_USERMASK ;
+
+   tvis.item.state      = NULL;       // TVI_BOLD
+   tvis.hParent         = ISNIL( 2 ) ? NULL : wvg_parhandle( 2 );
+   tvis.item.pszText    = hb_parc( 3 );
+
+   hb_retnint( ( long ) SendMessage( wvg_parhwnd( 1 ), TVM_INSERTITEM, ( WPARAM ) 0, ( LPARAM ) &tvis ) );
+}
+
+//----------------------------------------------------------------------//
+//                          ListBox Functions
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_LBGETTEXT )
+{
+   USHORT iLen = ( USHORT ) SendMessage( wvg_parhwnd( 1 ), LB_GETTEXTLEN, 0, 0 ) + 1 ;
+   LPTSTR cText = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
+   char * szText;
+   UINT iResult;
+
+   iResult = SendMessage( wvg_parhwnd( 1 ), LB_GETTEXT, ( WPARAM ) hb_parni( 2 ), ( LPARAM ) cText  );
+
+   cText[ iResult ] = '\0';
+   szText = HB_TCHAR_CONVFROM( cText );
+   hb_retc( szText );
+   HB_TCHAR_FREE( szText );
+   hb_xfree( cText );
+}
+
+//-------------------------------------------------------------------//
+
+

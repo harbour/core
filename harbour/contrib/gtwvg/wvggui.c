@@ -126,7 +126,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
    wndclass.hInstance     = hInstance;
 /* wndclass.hIcon         = NULL; */
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
-   wndclass.hbrBackground = ( HBRUSH ) ( COLOR_BTNFACE + 1 );
+   wndclass.hbrBackground = NULL; /*( HBRUSH ) ( COLOR_BTNFACE + 1 ); */
 /* wndclass.lpszMenuName  = NULL; */
    wndclass.lpszClassName = s_szClassName;
 
@@ -144,6 +144,8 @@ static PHB_GTWVT hb_gt_wvt_Find( HWND hWnd )
 {
    int iCount = s_wvtCount, iPos = 0;
    PHB_GTWVT pWVT = NULL;
+
+//hb_ToOutDebug( "hb_gt_wvt_Find()" );
 
    HB_WVT_LOCK
 
@@ -169,6 +171,10 @@ static PHB_GTWVT hb_gt_wvt_Find( HWND hWnd )
 static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 {
    BOOL fOK = FALSE;
+
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_Alloc()" );
+#endif
 
    HB_WVT_LOCK
 
@@ -200,6 +206,10 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 {
    HB_WVT_LOCK
 
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_Free()" );
+#endif
+
    s_wvtWindows[ pWVT->iHandle ] = NULL;
 
    if( --s_wvtCount == 0 )
@@ -228,6 +238,10 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 {
    PHB_GTWVT pWVT;
    OSVERSIONINFO osvi;
+
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_New()" );
+#endif
 
    osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
    GetVersionEx( &osvi );
@@ -310,6 +324,10 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams )
 {
    int nResult = 0; /* Unhandled */
 
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_FireEvent()" );
+#endif
+
    if( pWVT->pGT->pNotifierBlock )
    {
       if( hb_vmRequestReenter() )
@@ -323,6 +341,7 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams )
          hb_vmRequestRestore();
       }
    }
+   hb_itemRelease( pParams );
 
    return nResult;
 }
@@ -331,13 +350,15 @@ static void hb_gt_wvt_FireMenuEvent( PHB_GTWVT pWVT, int iMode, int menuIndex )
 {
    PHB_ITEM pEvParams = hb_itemNew( NULL );
 
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_FireMenuEvent()" );
+#endif
+
    hb_arrayNew( pEvParams, 2 );
    hb_arraySetNI( pEvParams, 1, iMode );
    hb_arraySetNI( pEvParams, 2, menuIndex );
 
    hb_gt_wvt_FireEvent( pWVT, HB_GTE_MENU, pEvParams );
-
-   hb_itemRelease( pEvParams );
 }
 
 /*
@@ -346,14 +367,18 @@ static void hb_gt_wvt_FireMenuEvent( PHB_GTWVT pWVT, int iMode, int menuIndex )
 static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
 {
    int iPos = pWVT->keyPointerIn;
-   #if 1
+
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_AddCharToInputQueue()" );
+#endif
+
    if( iKey == K_MOUSEMOVE || iKey == K_NCMOUSEMOVE )
    {
       /* Clipper strips repeated mouse movemnt - let's do the same */
       if( pWVT->keyLast == iKey && pWVT->keyPointerIn != pWVT->keyPointerOut )
          return;
    }
-   #endif
+
    /*
     * When the buffer is full new event overwrite the last one
     * in the buffer - it's Clipper behavior, [druzus]
@@ -363,19 +388,18 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
       iPos = 0;
    if( iPos != pWVT->keyPointerOut )
       pWVT->keyPointerIn = iPos;
-   #if 0
+
    /* Fire event to be trapped by the application */
    {
       PHB_ITEM pEvParams = hb_itemNew( NULL );
       hb_itemPutNI( pEvParams, iKey );
       hb_gt_wvt_FireEvent( pWVT, HB_GTE_KEYBOARD, pEvParams );
-      hb_itemRelease( pEvParams );
    }
-   #endif
 }
 
 static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
 {
+//hb_ToOutDebug( "wvggui:hb_gt_wvt_GetCharFromInputQueue()" );
    if( pWVT->keyPointerOut != pWVT->keyPointerIn )
    {
       *iKey = pWVT->Keys[ pWVT->keyPointerOut ];
@@ -393,6 +417,10 @@ static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
 static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int altkey, int controlkey )
 {
    int nVirtKey = GetKeyState( VK_MENU );
+
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_TranslateKey()" );
+#endif
 
    if( nVirtKey & 0x8000 ) /* alt + key */
    {
@@ -421,6 +449,10 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
    BYTE pszAnsi[ 2 ];
    BYTE pszOem[ 2 ];
 
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_key_ansi_to_oem()" );
+#endif
+
    pszAnsi[ 0 ] = ( BYTE ) c;
    pszAnsi[ 1 ] = 0;
    CharToOemBuffA( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
@@ -433,6 +465,10 @@ static int hb_gt_wvt_SizeChanged( PHB_GTWVT pWVT )
    PHB_ITEM pEvParams = hb_itemNew( NULL );
    RECT rc;
 
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_SizeChanged()" );
+#endif
+
    GetClientRect( pWVT->hWnd, &rc );
 
    hb_arrayNew( pEvParams, 4 );
@@ -441,14 +477,12 @@ static int hb_gt_wvt_SizeChanged( PHB_GTWVT pWVT )
    hb_arraySetNI( pEvParams, 3, rc.right - rc.left );
    hb_arraySetNI( pEvParams, 4, rc.bottom - rc.top );
 
-   //hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+   hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
 
    hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED, pEvParams );
 
    pWVT->width  = rc.right - rc.left;
    pWVT->height = rc.bottom - rc.top;
-
-   hb_itemRelease( pEvParams );
 
    return 0;
 }
@@ -456,6 +490,11 @@ static int hb_gt_wvt_SizeChanged( PHB_GTWVT pWVT )
 static void hb_gt_wvt_SetWindowTitle( HWND hWnd, const char * title )
 {
    LPTSTR text = HB_TCHAR_CONVTO( title );
+
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_SetWindowTitle()" );
+#endif
+
    SetWindowText( hWnd, text );
    HB_TCHAR_FREE( text );
 }
@@ -464,6 +503,10 @@ static BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
 {
    TCHAR buffer[WVT_MAX_TITLE_SIZE];
    int iResult;
+
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_GetWindowTitle()" );
+#endif
 
    iResult = GetWindowText( hWnd, buffer, WVT_MAX_TITLE_SIZE );
    if( iResult > 0 )
@@ -484,8 +527,11 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
    SHORT keyCode = 0;
    SHORT keyState;
 
-   HB_SYMBOL_UNUSED( wParam );
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_MouseEvent()" );
+#endif
 
+   HB_SYMBOL_UNUSED( wParam );
    if( ! pWVT->MouseMove && ( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE ) )
       return;
 
@@ -583,8 +629,6 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
    {
       PHB_ITEM pEvParams = hb_itemNew( NULL );
 
-      hb_gt_wvt_AddCharToInputQueue( pWVT, keyCode );
-
       hb_arrayNew( pEvParams, 6 );
       hb_arraySetNL( pEvParams, 1, message );
       hb_arraySetNI( pEvParams, 2, keyCode );
@@ -594,12 +638,16 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
       hb_arraySetNI( pEvParams, 6, xy.y );
 
       hb_gt_wvt_FireEvent( pWVT, HB_GTE_MOUSE, pEvParams );
-      hb_itemRelease( pEvParams );
    }
 }
 
 static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
 {
+
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_KeyEvent()" );
+#endif
+
    switch( message )
    {
       case WM_KEYDOWN:
@@ -935,26 +983,21 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_GTWVT pWVT = hb_gt_wvt_Find( hWnd );
-//hb_ToOutDebug( "h=%i m=%i w=%i l=%i", hWnd, message, wParam, lParam );
+
+#ifdef __DBG_GUI_C__
+//hb_ToOutDebug( "wvggui:hb_gt_wvt_WndPro(   %i    %i    %i    %i   )", hWnd, message, wParam, lParam );
+#endif
+
    if( pWVT ) switch( message )
    {
-      case WM_PAINT:
-         return DefWindowProc( hWnd, message, wParam, lParam );;
+      //case WM_PAINT:
+         //return DefWindowProc( hWnd, message, wParam, lParam );;
 
       case WM_SETFOCUS:
       {
-         if( pWVT->bGetFocus )
-         {
-            PHB_ITEM pEvParams = hb_itemNew( NULL );
-            hb_itemPutNL( pEvParams, ( HB_LONG ) ( HB_PTRDIFF ) hWnd   );
-            hb_gt_wvt_FireEvent( pWVT, HB_GTE_SETFOCUS, pEvParams );
-            hb_itemRelease( pEvParams );
-            return 0;
-            }
-         else
-         {
-            pWVT->bGetFocus = TRUE;
-         }
+         PHB_ITEM pEvParams = hb_itemNew( NULL );
+         hb_itemPutNL( pEvParams, ( HB_LONG ) ( HB_PTRDIFF ) hWnd   );
+         hb_gt_wvt_FireEvent( pWVT, HB_GTE_SETFOCUS, pEvParams );
          return 0;
       }
       case WM_KILLFOCUS:
@@ -962,7 +1005,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          PHB_ITEM pEvParams = hb_itemNew( NULL );
          hb_itemPutNL( pEvParams, ( HB_LONG ) ( HB_PTRDIFF ) hWnd   );
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_KILLFOCUS, pEvParams );
-         hb_itemRelease( pEvParams );
          return 0;
       }
       case WM_KEYDOWN:
@@ -1004,14 +1046,13 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       {
          PHB_ITEM pEvParams = hb_itemNew( NULL );
          hb_gt_wvt_FireEvent( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? HB_GTE_KILLFOCUS : HB_GTE_SETFOCUS ), pEvParams );
-         hb_itemRelease( pEvParams );
+         SendMessage( hWnd, WM_SIZE, 0, 0 );
          return 0;
       }
       case WM_SIZING:
       case WM_SIZE:
       {
-         hb_gt_wvt_SizeChanged( pWVT );
-         return DefWindowProc( hWnd, message, wParam, lParam );
+         return hb_gt_wvt_SizeChanged( pWVT );
       }
       case WM_SYSCOMMAND:
       {
@@ -1029,7 +1070,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          PHB_ITEM pEvParams = hb_itemNew( NULL );
          hb_itemPutNI( pEvParams, ( int ) wParam  );
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_TIMER, pEvParams );
-         hb_itemRelease( pEvParams );
          return 0;
       }
       case HB_MSG_NOTIFYICON:
@@ -1044,35 +1084,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             tnid.hIcon            = NULL;
             Shell_NotifyIcon( NIM_DELETE, &tnid );
             ShowWindow( hWnd, SW_RESTORE );
-         }
-         return 0;
-      }
-      case WM_COMMAND:
-      {
-         if( ( int ) lParam == 0 )
-         {
-            // Menu command
-            if( HIWORD( wParam ) == 0 )
-            {
-               hb_gt_wvt_FireMenuEvent( pWVT, 0, ( int ) LOWORD( wParam ) );
-            }
-         }
-         else
-         {
-            PHB_ITEM pEvParams = hb_itemNew( NULL );
-            int iLo, iHi;
-
-            iLo = LOWORD( wParam );
-            iHi = HIWORD( wParam );
-//hb_ToOutDebug( "%i %i %i", iHi, iLo, lParam );
-            hb_arrayNew( pEvParams, 3 );
-            hb_arraySetNI( pEvParams, 1, iHi );                              // Notification Code
-            hb_arraySetNI( pEvParams, 2, iLo );                              // Control identifier
-            hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) ( HWND ) lParam ); // Controls hWnd
-
-            hb_gt_wvt_FireEvent( pWVT, HB_GTE_COMMAND, pEvParams );
-
-            hb_itemRelease( pEvParams );
          }
          return 0;
       }
@@ -1097,8 +1108,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_arraySetNI( pEvParams, 4, HIWORD( lParam ) );
 
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_MOUSE, pEvParams );
-
-         hb_itemRelease( pEvParams );
          return 0;
       }
       case WM_MOUSELEAVE:
@@ -1111,30 +1120,48 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_MOUSE, pEvParams );
 
-         hb_itemRelease( pEvParams );
          pWVT->bTracking = FALSE;
-         return DefWindowProc( pWVT->hWnd, message, wParam, lParam );;
+         break;
+      }
+      case WM_COMMAND:
+      {
+         if( ( int ) lParam == 0 )
+         {
+            // Menu command
+            if( HIWORD( wParam ) == 0 )
+            {
+               hb_gt_wvt_FireMenuEvent( pWVT, 0, ( int ) LOWORD( wParam ) );
+            }
+         }
+         else
+         {
+            PHB_ITEM pEvParams = hb_itemNew( NULL );
+            int iLo, iHi;
+
+            iLo = LOWORD( wParam );
+            iHi = HIWORD( wParam );
+
+            hb_arrayNew( pEvParams, 3 );
+            hb_arraySetNI( pEvParams, 1, iHi );                              // Notification Code
+            hb_arraySetNI( pEvParams, 2, iLo );                              // Control identifier
+            hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) ( HWND ) lParam ); // Controls hWnd
+
+            hb_gt_wvt_FireEvent( pWVT, HB_GTE_COMMAND, pEvParams );
+         }
+         return 0;
       }
       case WM_NOTIFY:
       {
+         int iResult;
          PHB_ITEM pEvParams = hb_itemNew( NULL );
-         LPNMMOUSE nmm = ( LPNMMOUSE ) lParam;
-         NMHDR nmh = nmm->hdr;
-//hb_ToOutDebug( "WM_NOTIFY" );
-         if( nmh.code == NM_CLICK )
-         {
-            hb_arrayNew( pEvParams, 5 );
-            hb_arraySetNI( pEvParams, 1, ( int ) wParam );
-            hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.hwndFrom );
-            hb_arraySetNI( pEvParams, 3, nmh.idFrom );
-            hb_arraySetNI( pEvParams, 4, nmh.code );
-            hb_arraySetNL( pEvParams, 5, nmm->dwItemSpec );
 
-            hb_gt_wvt_FireEvent( pWVT, HB_GTE_NOTIFY, pEvParams );
+         hb_arrayNew( pEvParams, 2 );
 
-            hb_itemRelease( pEvParams );
-            return TRUE;
-         }
+         hb_arraySetNI( pEvParams  , 1, ( int ) wParam );
+         hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lParam );
+
+         hb_gt_wvt_FireEvent( pWVT, HB_GTE_NOTIFY, pEvParams );
+         break;
       }
       case WM_CREATE:
       {
@@ -1144,7 +1171,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       {
          PHB_ITEM pEvParams = hb_itemNew( NULL );
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE, pEvParams );
-         hb_itemRelease( pEvParams );
          return 0;
       }
       case WM_QUIT:
@@ -1173,6 +1199,10 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
 {
    HWND     hWnd, hWndParent;
    LPTSTR   szAppName;
+
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_CreateWindow()" );
+#endif
 
    szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
 
@@ -1231,6 +1261,11 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
 
 static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 {
+
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_CreateConsoleWindow()" );
+#endif
+
    if( !pWVT->hWnd )
    {
       RECT rc = { 0,0,0,0 };
@@ -1275,6 +1310,10 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
 
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_Init()" );
+#endif
+
    if( ! hb_winmainArgGet( &hInstance, NULL, &iCmdShow ) )
       hb_errInternal( 10001, "It's not a GUI program", NULL, NULL );
 
@@ -1301,6 +1340,10 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Exit(%p)", pGT));
 
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_Exit()" );
+#endif
+
    pWVT = HB_GTWVT_GET( pGT );
    HB_GTSUPER_EXIT( pGT );
 
@@ -1320,6 +1363,10 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ReadKey(%p,%d)", pGT, iEventMask ) );
 
+#ifdef __DBG_GUI_C__
+//hb_ToOutDebug( "wvggui:hb_gt_wvt_ReadKey()" );
+#endif
+
    HB_SYMBOL_UNUSED( iEventMask ); /* we ignore the eventmask! */
 
    pWVT = HB_GTWVT_GET( pGT );
@@ -1328,7 +1375,7 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
       hb_gt_wvt_ProcessMessages( pWVT );
 
    fKey = hb_gt_wvt_GetCharFromInputQueue( pWVT, &c );
-//hb_ToOutDebug( "fKey = %i ", fKey );
+
    return fKey ? c : 0;
 }
 
@@ -1337,6 +1384,10 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
+
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_Tone()" );
+#endif
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -1349,6 +1400,10 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    PHB_GTWVT pWVT;
    int iVal;
+
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_wvt_Info()" );
+#endif
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
@@ -2136,6 +2191,10 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
+
+#ifdef __DBG_GUI_C__
+hb_ToOutDebug( "wvggui:hb_gt_FuncInit() " );
+#endif
 
    pFuncTable->Init                 = hb_gt_wvt_Init;
    pFuncTable->Exit                 = hb_gt_wvt_Exit;

@@ -76,6 +76,12 @@
 
 //----------------------------------------------------------------------//
 
+#ifndef __DBG_TB__
+#   xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#endif
+
+//----------------------------------------------------------------------//
+
 CLASS WvgPushButton  INHERIT  WvgWindow
 
    DATA     autosize                              INIT .F.
@@ -98,7 +104,9 @@ CLASS WvgPushButton  INHERIT  WvgWindow
    METHOD   draw()                                SETGET
 
    DATA     nWndProc
-   METHOD   PBWndProc()
+   DATA     nOldProc                              INIT 0
+
+   METHOD   handleEvent( nEvent, aInfo )
 
    ENDCLASS
 //----------------------------------------------------------------------//
@@ -107,7 +115,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushB
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD
+   ::style       := WS_CHILD + BS_PUSHBUTTON  //+ BS_NOTIFY + BS_PUSHLIKE
    ::className   := 'BUTTON'
    ::objType     := objTypePushButton
 
@@ -133,23 +141,46 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPu
 
    ::setCaption( ::caption )
 
-   ::nWndProc := HB_AsCallBack( 'PBWNDPROC', Self )
-
-   Win_SetWndProc( ::hWnd, ::nWndProc )
+   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushButton
+METHOD handleEvent( nEvent, aInfo ) CLASS WvgPushButton
+   LOCAL nHandled := 0
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   HB_SYMBOL_UNUSED( aInfo )
 
-   RETURN Self
+   SWITCH nEvent
+
+   CASE WM_SIZE
+      IF hb_isBlock( ::sl_resize )
+         eval( ::sl_resize, NIL, NIL, self )
+         nHandled := 0
+      ENDIF
+      EXIT
+
+   CASE WM_COMMAND
+      IF hb_isBlock( ::sl_lbClick )
+         eval( ::sl_lbClick, NIL, NIL, self )
+         RETURN 0
+      ENDIF
+      EXIT
+
+   CASE WM_NOTIFY
+
+      EXIT
+   END
+
+   RETURN nHandled
 
 //----------------------------------------------------------------------//
 
 METHOD destroy() CLASS WvgPushButton
+
+hb_ToOutDebug( "WvgPushButton:destroy()" )
 
    IF len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
@@ -158,10 +189,17 @@ METHOD destroy() CLASS WvgPushButton
    IF Win_IsWindow( ::hWnd )
       Win_DestroyWindow( ::hWnd )
    ENDIF
-
    HB_FreeCallback( ::nWndProc )
 
    RETURN NIL
+
+//----------------------------------------------------------------------//
+
+METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushButton
+
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   RETURN Self
 
 //----------------------------------------------------------------------//
 
@@ -196,23 +234,6 @@ METHOD draw( xParam ) CLASS WvgPushButton
 
    RETURN Self
 
-//----------------------------------------------------------------------//
-
-METHOD PBWndProc( h,m,w,l ) CLASS WvgPushButton
-
-   HB_SYMBOL_UNUSED( h )
-   HB_SYMBOL_UNUSED( w )
-   HB_SYMBOL_UNUSED( l )
-
-   DO CASE
-   CASE m == WM_LBUTTONUP
-      Win_MessageBox( ::hWnd, "Hiding the Parent", "Info" )
-      Win_ShowWindow( ::oParent:hWnd, SW_HIDE )
-      RETURN 0
-
-   ENDCASE
-
-   RETURN Win_DefWindowProc( h, m, w, l )
 //----------------------------------------------------------------------//
 //                         MSDN on Button Control
 //----------------------------------------------------------------------//

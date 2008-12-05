@@ -235,9 +235,8 @@ METHOD setParent( oWvg ) CLASS WvgPartHandler
 //----------------------------------------------------------------------//
 
 METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
-   Local aPos
+   Local aPos, aMenuItem, nIndex, nCtrlID
    LOCAL nReturn := 0
-   LOCAL aMenuItem, nIndex, nCtrlID, nObj
 
    DO CASE
 
@@ -342,21 +341,7 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       IF hb_isBlock( ::sl_resize )
          eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
       ENDIF
-
-      FOR nObj := 1 TO len( ::aChildren )
-
-         IF ::aChildren[ nObj ]:objType == objTypeToolBar
-            ::aChildren[ nObj ]:sendMessage( WM_SIZE, 0, 0 )
-
-         ELSEIF ::aChildren[ nObj ]:objType == objTypeStatusBar
-            ::aChildren[ nObj ]:sendMessage( WM_SIZE, 0, 0 )
-
-         ELSEIF hb_isBlock( ::aChildren[ nObj ]:sl_resize )
-            eval( ::aChildren[ nObj ]:sl_resize, { xParams[ 1 ], xParams[ 2 ] }, ;
-                                                 { xParams[ 3 ], xParams[ 4 ] }, ::aChildren[ nObj ] )
-
-         ENDIF
-      NEXT
+      aeval( ::aChildren, {|o| o:handleEvent( WM_SIZE, { 0, 0, 0, 0, 0 } ) } )
 
    CASE nEvent == HB_GTE_CLOSE
       IF hb_isBlock( ::close )
@@ -364,7 +349,6 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       ENDIF
 
    CASE nEvent == HB_GTE_MENU
-//hb_ToOutDebug( "   CASE nEvent == HB_GTE_MENU" )
 
       DO CASE
       CASE xParams[ 1 ] == 0  // menu selected
@@ -393,38 +377,15 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       ENDCASE
 
    CASE nEvent == HB_GTE_NOTIFY
-      nCtrlID := xParams[ NM_controlID ]
+      nCtrlID := xParams[ 1 ]
+      IF ( nIndex := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
+         RETURN ( ::aChildren[ nIndex ]:handleEvent( WM_NOTIFY, xParams ) )
 
-      nIndex := ascan( ::aChildren, {|o| o:nID == nCtrlID } )
-      IF nIndex > 0
-         DO CASE
-
-         CASE xParams[ NM_code ] == NM_CLICK
-            IF hb_isBlock( ::aChildren[ nIndex ]:sl_lbClick )
-
-               DO CASE
-               CASE ::aChildren[ nIndex ]:objType == objTypeToolBar
-                  nObj := ascan( ::aChildren[ nIndex ]:aItems, {|e_| e_[ 1 ] == xParams[ NM_dwItemSpec ] } )
-                  Eval( ::aChildren[ nIndex ]:sl_lbClick, ::aChildren[ nIndex ]:aItems[ nObj,2 ], ;
-                                                                        NIL, ::aChildren[ nIndex ] )
-
-               CASE ::aChildren[ nIndex ]:objType == objTypeStatusBar
-                  IF xParams[ NM_dwItemSpec ] >= 0
-                     nObj := xParams[ NM_dwItemSpec ] + 1       // zero based
-                     Eval( ::aChildren[ nIndex ]:sl_lbClick, ::aChildren[ nIndex ]:aItems[ nObj ], ;
-                                                                        NIL, ::aChildren[ nIndex ] )
-                  ENDIF
-               ENDCASE
-            ENDIF
-
-         ENDCASE
       ENDIF
 
    CASE nEvent == HB_GTE_COMMAND
       nCtrlID := xParams[ 2 ]                                   // Control Identifier
-
-      nIndex := ascan( ::aChildren, {|o| o:nID == nCtrlID } )   // Theoretically it must be present
-      IF nIndex > 0
+      IF ( nIndex := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
          DO CASE
          CASE xParams[ 1 ] == BN_CLICKED
             IF hb_isBlock( ::aChildren[ nIndex ]:sl_lbClick )
