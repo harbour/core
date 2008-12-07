@@ -9,13 +9,13 @@ EXE_EXT =
 LIB_PREF = lib
 LIB_EXT = .a
 
-CC = gcc
+CC = $(HB_CCACHE) gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -Wall -W -O3
 
-LD = gcc
+LD = $(HB_CCACHE) gcc
 LD_OUT = -o
 
 # Add all libraries specified in CONTRIBS and LIBS.

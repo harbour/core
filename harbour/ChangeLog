@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-07 17:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-mkslib.sh
+    ! added support for absolute paths in passed object or static library
+      list
+
+  * harbour/config/bsd/gcc.cf
+    ! added missing HB_CCACHE in gcc calls
+
 2008-12-06 19:08 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/makefile
   * harbour/contrib/gtwvg/common.mak

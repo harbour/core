@@ -89,14 +89,20 @@ if [ "${SLIB_EXT}" != ".dylib" ]; then
     do
         case "${f}" in
             *.o)
-                if [ ! -r "${dir}/${f}" ]; then
+                if [ "${f#/}" == "${f}" ]; then
+                    f="${dir}/${f}"
+                fi
+                if [ ! -r "${f}" ]; then
                     echo "cannot read file: ${f}"
                     exit 1
                 fi
                 cp "${dir}/${f}" "${OTMPDIR}" || exit 1
                 ;;
             *.a)
-                if [ ! -r "${dir}/${f}" ]; then
+                if [ "${f#/}" == "${f}" ]; then
+                    f="${dir}/${f}"
+                fi
+                if [ ! -r "${f}" ]; then
                     echo "cannot read file: ${f}"
                     exit 1
                 fi
