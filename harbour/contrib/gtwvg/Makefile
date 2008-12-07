@@ -34,6 +34,9 @@ PRG_SOURCES=\
 	wvgstatc.prg \
 	wvgtreev.prg \
 	wincback.prg \
+	wvgcheck.prg \
+	wvgdatar.prg \
+	wvgradio.prg \
 
 
 PRG_HEADERS=\

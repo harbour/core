@@ -1377,9 +1377,9 @@ FUNCTION CreateMainMenu()
    oMenu:AddItem( "Dialog One . New Window . Threaded", {|| MyDialogOne( 1 ) } )
    oMenu:AddItem( "Dialog One . Main Window . Primary Thread", {|| MyDialogOne( 2 ) } )
    oMenu:AddItem( "-" )
-   oMenu:AddItem( "Dialog Two", {|| MyDialogTwo() } )
+   oMenu:AddItem( "Dialog Two"                  , {|| MyDialogTwo()       } )
    oMenu:AddItem( "-" )
-   oMenu:AddItem( "Exit"      , {|| __keyboard( K_ESC ) } )
+   oMenu:AddItem( "Exit"                        , {|| __keyboard( K_ESC ) } )
    g_oMenuBar:addItem( "",oMenu )
 
    oMenu := wvtMenu():new():create()
@@ -1399,39 +1399,39 @@ FUNCTION CreateMainMenu()
 
    oMenu := wvtMenu():new():create()
    oMenu:Caption:= "Common Dialogs"
-   oMenu:AddItem( "Fonts" ,{|| Wvt_ChooseFont() } )
+   oMenu:AddItem( "Fonts"                       , {|| Wvt_ChooseFont()  } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "Colors",{|| Wvt_ChooseColor() } )
+   oMenu:AddItem( "Colors"                      , {|| Wvt_ChooseColor() } )
    g_oMenuBar:addItem( "",oMenu)
 
    oMenu := wvtMenu():new():create()
    oMenu:Caption:= "Functionality"
-   oMenu:AddItem( "Expand" ,{|| WvtWindowExpand( 1 ) } )
-   oMenu:AddItem( "Shrink" ,{|| WvtWindowExpand( -1 ) } )
+   oMenu:AddItem( "Expand"                      , {|| WvtWindowExpand(  1 ) } )
+   oMenu:AddItem( "Shrink"                      , {|| WvtWindowExpand( -1 ) } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "Minimize",{|| Wvt_Minimize() } )
-   oMenu:AddItem( "Maximize",{|| hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED ) } )
+   oMenu:AddItem( "Minimize"                    , {|| Wvt_Minimize()   } )
+   oMenu:AddItem( "Maximize"                    , {|| hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED ) } )
    g_oMenuBar:addItem( "",oMenu)
 
    oMenu := wvtMenu():new():create()
    oMenu:Caption:= "Modeless Dialogs"
-   oMenu:AddItem( "Dynamic Dialog . Modeless" ,{|| DynDialog_2( 1 ) } )
-   oMenu:AddItem( "Dynamic Dialog . Modal "   ,{|| DynDialog_2( 2 ) } )
+   oMenu:AddItem( "Dynamic Dialog . Modeless"   , {|| DynDialog_2( 1 ) } )
+   oMenu:AddItem( "Dynamic Dialog . Modal "     , {|| DynDialog_2( 2 ) } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "Slide Show . Modeless"     ,{|| DlgSlideShow() } )
+   oMenu:AddItem( "Slide Show . Modeless"       , {|| DlgSlideShow()   } )
    g_oMenuBar:addItem( "",oMenu)
 
    oMenu := wvtMenu():new():create()
-   oMenu:Caption:= "Active-X Controls"
-   oMenu:AddItem( "ActiveX - Analog Clock"     , {|| Hb_ThreadStart( {|| ExecuteActiveX( 2 ) } ) } )
+   oMenu:Caption:= "~XbpDialog()s"
+   oMenu:AddItem( "ActiveX - Internet Explorer" , {|| Hb_ThreadStart( {|| ExecuteActiveX(  1 ) } ) } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "ActiveX - Internet Explorer", {|| Hb_ThreadStart( {|| ExecuteActiveX( 1 ) } ) } )
+   oMenu:AddItem( "ActiveX - Visualize a PDF"   , {|| Hb_ThreadStart( {|| ExecuteActiveX(  3 ) } ) } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "ActiveX - Visualize a PDF"  , {|| Hb_ThreadStart( {|| ExecuteActiveX( 3 ) } ) } )
+   oMenu:AddItem( "ActiveX - Explorer . DHTML"  , {|| Hb_ThreadStart( {|| ExecuteActiveX( 11 ) } ) } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "ActiveX - Explorer . DHTML" , {|| Hb_ThreadStart( {|| ExecuteActiveX( 11 ) } ) } )
+   oMenu:AddItem( "ActiveX - RMChart"           , {|| Hb_ThreadStart( {|| ExecuteActiveX(  4 ) } ) } )
    oMenu:AddItem( "-")
-   oMenu:AddItem( "ActiveX - RMChart"          , {|| Hb_ThreadStart( {|| ExecuteActiveX( 4 ) } ) } )
+   oMenu:AddItem( "ActiveX - Analog Clock"      , {|| Hb_ThreadStart( {|| ExecuteActiveX(  2 ) } ) } )
    g_oMenuBar:addItem( "",oMenu)
 
    RETURN g_oMenuBar
@@ -2341,19 +2341,16 @@ FUNCTION GoogleMap()
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
 //
 Function ExecuteActiveX( nActiveX, xParam )
-   Local oCrt, oTBar, oSBar, oPanel, oStatic, oCom, oXbp, oTree, oItem1, oItem2, oListBox
-   LOCAL bComSize := {|m1,m2,o,w,x,y| m1 := m1, m2 := m2, o := o, ;
-                        w := oCrt:currentSize()   ,;
-                        x := oTBar:currentSize()  ,;
-                        y := oSBar:currentSize()  ,;
-                        oCom:setPosAndSize( { 0, x[2] }, { w[1], w[2]-x[2]-y[2] }, .t. ), 1 }
+   Local oCrt, oTBar, oSBar, oPanel, oStatic, oCom, oXbp, oTree, oItem1, oItem2
+   LOCAL oListBox, oCheck, oRadio, oStatic2
+   LOCAL aParts :={}
 
    HB_SYMBOL_UNUSED( xParam )
    HB_SYMBOL_UNUSED( oCom )
 
+   //--------------------------- Dialog -------------------------------\\
    #if 1
    oCrt := WvgDialog():new( , , { 30,30 }, { 800,600 }, , .f. )
-   //oCrt:resizable := .f.
    oCrt:closable := .t.
    oCrt:create()
    #else
@@ -2364,13 +2361,13 @@ Function ExecuteActiveX( nActiveX, xParam )
    SetCursor( .f. )
    #endif
 
-   // Menu
-   ActiveXBuildMenu( oCrt )
+   //--------------------------- Menu --------------------------------\\
+   ActiveXBuildMenu( oCrt, @oStatic, @oStatic2 )
 
-   // Toolbar
-   oTBar  := ActiveXBuildToolBar( oCrt, nActiveX )
+   //--------------------------- ToolBar -----------------------------\\
+   oTBar := ActiveXBuildToolBar( oCrt, nActiveX )
 
-   // Statusbar
+   //--------------------------- StatusBar ---------------------------\\
    oSBar  := WvgStatusBar():new( oCrt ):create( , , , , , .t. )
    oSBar:panelClick := {|oPanel| Win_MessageBox( , oPanel:caption ) }
    oPanel := oSBar:getItem( 1 )
@@ -2380,45 +2377,67 @@ Function ExecuteActiveX( nActiveX, xParam )
    oPanel := oSBar:addItem()
    oPanel:caption := 'Click on any part!'
 
-   // Static text
+   //--------------------------- Static ------------------------------\\
    oStatic := WvgStatic():new( oCrt )
-
-   oStatic:caption := chr(13)+'This is a Harbour dialog and is compatible with Xbase++ Parts. '+CRLF+;
-                      'XbpDialog()  XbpMenuBar()  XbpToolBar()  XbpStatusBar()  ' +;
-                      'XbpStatic()  XbpTreeView()  XbpActiveX()  XbpListBox()  '+CRLF+;
-                      'classes have been implemented'
-
    oStatic:options := WVGSTATIC_TEXT_CENTER
-
+   oStatic:caption := chr(13)+'Implemented   Xbase++ Parts'
    oStatic:create( , , { 0, oTBar:currentSize()[2]+3 }, { 120, oCrt:currentSize()[2]-;
                                oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
 
-   oStatic:resize := {|mp1,mp2,oSelf,w,x,y| mp1 := mp1, mp2 := mp2, oSelf := oSelf, ;
-                        w := oCrt:currentSize()   ,;
-                        x := oTBar:currentSize()  ,;
-                        y := oSBar:currentSize()  ,;
-                        oStatic:setPosAndSize( { 0, x[2]+3 }, { 120, w[2]-x[2]-y[2]-4 }, .t. ) }
+   //--------------------------- Static + Radio----------------------\\
+   oStatic2 := WvgStatic():New( oCrt, , { 200,200 }, { 300, 200 }, , .f. )
+   oStatic2:options := WVGSTATIC_FRAMETHICK
+   oStatic2:create()
+   oStatic2:setColorBG( RGB( 198,198,198 ) )
+   oXbp := WvgPushButton():new( oStatic2 )
+   oXbp:caption     := "Hide"
+   oXbp:create( , , { 230,160 }, {60, 30} )
+   oXbp:activate    := {|| oStatic2:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
-   HB_SYMBOL_UNUSED( oListBox )
+   oRadio := WvgRadioButton():new( oStatic2,, { 10,10 }, { 100,15 } )
+   oRadio:caption   := "Com 1"
+   oRadio:selection := .T.
+   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, Win_MessageBox( , obj:caption + IF( obj:selection, '< S >', '< N >' ) ) }
+   oRadio:create()
+   oRadio := WvgRadioButton():new( oStatic2,, { 10,35 }, { 100,15 } )
+   oRadio:caption   := "Com 2"
+   oRadio:create()
 
-   // ListBox
+   //--------------------------- CheckBox ---------------------------\\
+   oCheck := WvgCheckBox():New( oStatic2, , { 10, 70 }, { 100,15 }, , .t. )
+   oCheck:caption := 'First Checkbox'
+   oCheck:create()
+   oCheck:selected := {|m1,m2,o| m1:=m1,m2:=m2, Win_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
+
+   //--------------------------- ListBox -----------------------------\\
    oListBox := WvgListbox():new()
-   oListBox:create( oStatic, , { 5, 280 }, { 107, 100 } )
-   aeval( { 'Apple','Bat','Cat','Data','Elephant','Thanks','Links','Phantom' }, {|e| oListBox:addItem( e ) } )
-   oListBox:itemSelected := {|| Win_MessageBox( , oListBox:getItem( 2 ) ) }
+   oListBox:create( oStatic, , { 5, 55 }, { 107, 380 } )
 
-   // Pushbuttons
-   oXbp := WvgPushButton():new( oStatic )
-   oXbp:caption := "A"
-   oXbp:create( , , { 20,400 }, {80,30} )
-   oXbp:activate:= {|| Win_MessageBox( , "Pushbutton A" ) }
-   // Pushbuttons
+   oListBox:setColorFG( RGB( 218,61,34 ) )
+
+   aadd( aParts, 'XbpDialog'     )
+   aadd( aParts, 'XbpMenuBar'    )
+   aadd( aParts, 'XbpToolBar'    )
+   aadd( aParts, 'XbpStatusBar'  )
+   aadd( aParts, 'XbpStatic'     )
+   aadd( aParts, 'XbpTreeView'   )
+   aadd( aParts, 'XbpActiveX'    )
+   aadd( aParts, 'XbpListBox'    )
+   aadd( aParts, 'XbpPushButton' )
+   aadd( aParts, 'XbpCheckBox'   )
+   aadd( aParts, 'XbpRadioButton')
+   aadd( aParts, 'DataRef'       )
+
+   aeval( aParts, {|e| oListBox:addItem( e ) } )
+   oListBox:itemSelected := {|| Win_MessageBox( , oListBox:getCurItem() ) }
+
+   //--------------------------- PushButton --------------------------\\
    oXbp := WvgPushButton():new( oStatic )
    oXbp:caption := "Hide"
    oXbp:create( , , { 20,440 }, {80,30} )
-   oXbp:activate:= {|| oCom:resize := bComSize, oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
+   oXbp:activate:= {|| oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
-   // Treeview
+   //--------------------------- TreeView ---------------------------\\
    oTree := WvgTreeView():new( oCrt, , { oCrt:currentSize()[1]-160,oTBar:currentSize()[2]+3 }, ;
                                        { 160, oCrt:currentSize()[2]-;
                                oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
@@ -2441,22 +2460,28 @@ Function ExecuteActiveX( nActiveX, xParam )
    oItem2:addItem( "Third level B" )
    oItem2:addItem( "Third level C" )
 
+   #if 0
+   oItem1:expand( .t. )
+   #else
+   oTree:showExpanded( .t., 2 )
+   #endif
+
+   //--------------------------- Misc Config ------------------------\\
+   oTBar:buttonClick := {|oBtn| IF( oBtn:caption == 'Hide', oStatic:hide(), nil ),;
+                                   IF( oBtn:caption == 'Show', oStatic:show(), nil ),;
+                                   IF( oBtn:caption == 'Static', oStatic2:show():toFront(), nil ),;
+                                       Win_MessageBox( , "Button [" + oBtn:caption + "] clicked!" ) }
+   oCrt:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree ) }
+
    #if 1
-   // ActiveX Controls
+   //--------------------------- Active-X ---------------------------\\
    oCom := BuildActiveXControl( nActiveX, oCrt )
-   oCom:resize := {|m1,m2,o,w,x,y,z| m1 := m1, m2 := m2, o := o, ;
-                        w := oCrt:currentSize()   ,;
-                        x := oTBar:currentSize()  ,;
-                        y := oSBar:currentSize()  ,;
-                        z := oStatic:currentSize(),;
-                        oCom:setPosAndSize( { z[1], x[2] }, { w[1]-z[1]-160, w[2]-x[2]-y[2] }, .t. ), 1 }
    if hb_isObject( oCom )
       oCrt:sendMessage( WM_SIZE, 0, 0 )
       oCrt:show()
       ExeActiveX( nActiveX, oCom, xParam )
    ENDIF
    #else
-   oCrt:sendMessage( WM_SIZE, 0, 0 )
    oCrt:show()
    DO WHILE .t.
       IF inkey() == 27
@@ -2468,7 +2493,32 @@ Function ExecuteActiveX( nActiveX, xParam )
    oCrt:Destroy()
    Return nil
 //----------------------------------------------------------------------//
-Static Function ActiveXBuildMenu( oCrt )
+STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
+   LOCAL aCrt, aTBar, aSBar, aStatic, aCom, aTree
+   LOCAL nH, nT
+
+   aCrt    := oCrt:currentSize()
+   aTBar   := oTBar:currentSize()
+   aSBar   := oSBar:currentSize()
+   aStatic := oStatic:currentSize()
+   aTree   := oTree:currentSize()
+   aCom    := oCom:currentSize()
+
+   nT := aTBar[2]
+   nH := aCrt[2]-aTBar[2]-aSBar[2]
+
+   IF oStatic:isVisible
+      oStatic:setPosAndSize( { 0, nT+3 }, { 120, nH-4 }, .t. )
+      oCom:setPosAndSize( { 120, nT }, { aCrt[1]-120-150, nH }, .t. )
+      oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .t. )
+   ELSE
+      oCom:setPosAndSize( { 0, nT }, { aCrt[1]-150, nH }, .t. )
+      oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .t. )
+   ENDIF
+
+   RETURN 1
+//----------------------------------------------------------------------//
+Static Function ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
    Local oMenuBar, oSubMenu
 
    oMenuBar := WvgMenuBar():new( oCrt ):create()
@@ -2484,7 +2534,6 @@ Static Function ActiveXBuildMenu( oCrt )
    oSubMenu:itemSelected := {|mp1| MyFunction( 100+mp1 ) }
    oMenuBar:addItem( { oSubMenu, NIL } )
 
-
    // Define submenu in the functional style:
    // A menu item executes a code block that
    // calls a function
@@ -2492,7 +2541,15 @@ Static Function ActiveXBuildMenu( oCrt )
    oSubMenu:title := "~Functional"
    oSubMenu:addItem( { "Play Opening ~1", {|| MyFunction( 1 ) } } )
    oSubMenu:addItem( { "Play Closing ~2", {|| MyFunction( 2 ) } } )
+   oSubMenu:addItem()
    oSubMenu:addItem( { "~MessageBox"    , {|| MyFunction( 3 ) } } )
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+   oSubMenu       := WvgMenu():new( oMenuBar ):create()
+   oSubMenu:title := "F~eatures"
+   oSubMenu:addItem( { "~Hide or Show Left Panel" , {|| IF( oStatic:isVisible, ;
+                              oStatic:hide(), oStatic:show() ), oCrt:sendMessage( WM_SIZE,0,0 ) } } )
+   oSubMenu:addItem( { "~Show My Panel" , {|| oStatic2:show() } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    Return nil
@@ -2522,12 +2579,10 @@ STATIC FUNCTION ActiveXBuildToolBar( oCrt, nActiveX )
    oTBar:addItem( "New"       , 'c:\harbour\contrib\gtwvg\tests\v_new.bmp'    )
    oTBar:addItem( "Select"    , 'c:\harbour\contrib\gtwvg\tests\v_selct1.bmp' )
    oTBar:addItem( "Calendar"  , 'c:\harbour\contrib\gtwvg\tests\v_calend.bmp' )
-   oTBar:addItem( "Lock"      , 'c:\harbour\contrib\gtwvg\tests\v_lock.bmp'   )
+   oTBar:addItem( "Static"    , 'c:\harbour\contrib\gtwvg\tests\v_lock.bmp'   )
    oTBar:addItem( "Index"     , 'c:\harbour\contrib\gtwvg\tests\v_index.bmp'  )
-   oTBar:addItem( "Calculator", 'c:\harbour\contrib\gtwvg\tests\v_clclt.bmp'  )
-   oTBar:addItem( "Notes"     , 'c:\harbour\contrib\gtwvg\tests\v_notes1.bmp' )
-
-   oTBar:buttonClick := {|oButton| Win_MessageBox( , "Button [" + oButton:caption + "] clicked!" ) }
+   oTBar:addItem( "Show"      , 'c:\harbour\contrib\gtwvg\tests\v_clclt.bmp'  )
+   oTBar:addItem( "Hide"      , 'c:\harbour\contrib\gtwvg\tests\v_notes1.bmp' )
 
    RETURN oTBar
 //----------------------------------------------------------------------//

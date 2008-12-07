@@ -76,8 +76,8 @@
 
 //----------------------------------------------------------------------//
 
-#ifndef __DBG_TB__
-#   xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#ifndef __DBG_PARTS__
+#xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 //----------------------------------------------------------------------//
@@ -172,16 +172,16 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
 
    ::createControl()
 
-   IF ::showToolTips
-      ::sendMessage( TB_SETMAXTEXTROWS, 0, 0 )
-   ENDIF
+   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
 
    IF ::visible
       ::show()
    ENDIF
 
-   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   IF ::showToolTips
+      ::sendMessage( TB_SETMAXTEXTROWS, 0, 0 )
+   ENDIF
 
    RETURN Self
 
@@ -190,6 +190,8 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
 METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
    LOCAL nHandled := 1
    LOCAL nObj, aNMMouse
+
+   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    SWITCH nMessage
 
@@ -229,7 +231,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
 METHOD destroy() CLASS WvgToolBar
    LOCAL i, nItems
 
-hb_ToOutDebug( "WvgToolBar:destroy()" )
+   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems

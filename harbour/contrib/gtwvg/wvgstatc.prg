@@ -76,8 +76,8 @@
 
 //----------------------------------------------------------------------//
 
-#ifndef __xDBG_TB__
-#   xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#ifndef __DBG_PARTS__
+//#xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 //----------------------------------------------------------------------//
@@ -98,9 +98,6 @@ CLASS WvgStatic  INHERIT  WvgWindow
    METHOD   destroy()
 
    METHOD   setCaption( xCaption, cDll )
-
-   DATA     nOldProc                              INIT 0
-   DATA     nWndProc
 
    METHOD   handleEvent()
 
@@ -133,28 +130,45 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
       ::style += WS_VISIBLE
    ENDIF
 
+   #if 0
+   SS_ETCHEDFRAME
+   SS_SUNKEN
+   SS_LEFTNOWORDWRAP
+   SS_SIMPLE
+   SS_CENTERIMAGE
+   SS_REALSIZEIMAGE
+   SS_ENHMETAFILE
+   SS_ETCHEDHORZ
+   SS_ETCHEDVERT
+   SS_RIGHTJUST
+   #endif
+
+
    SWITCH ::type
    CASE WVGSTATIC_TYPE_TEXT
-      IF ( Win_AND( ::options, WVGSTATIC_TEXT_LEFT ) == WVGSTATIC_TEXT_LEFT )
+      IF ( hb_bitAnd( ::options, WVGSTATIC_TEXT_LEFT ) == WVGSTATIC_TEXT_LEFT )
          ::style += SS_LEFT //+ SS_LEFTNOWORDWRAP
       ENDIF
-      IF ( Win_AND( ::options, WVGSTATIC_TEXT_RIGHT ) == WVGSTATIC_TEXT_RIGHT )
+      IF ( hb_bitAnd( ::options, WVGSTATIC_TEXT_RIGHT ) == WVGSTATIC_TEXT_RIGHT )
          ::style += SS_RIGHT
       ENDIF
-      IF ( Win_AND( ::options, WVGSTATIC_TEXT_CENTER ) == WVGSTATIC_TEXT_CENTER )
+      IF ( hb_bitAnd( ::options, WVGSTATIC_TEXT_CENTER ) == WVGSTATIC_TEXT_CENTER )
          ::style += SS_CENTER
       ENDIF
-      IF ( Win_AND( ::options, WVGSTATIC_TEXT_WORDBREAK ) == WVGSTATIC_TEXT_WORDBREAK )
+      IF ( hb_bitAnd( ::options, WVGSTATIC_TEXT_WORDBREAK ) == WVGSTATIC_TEXT_WORDBREAK )
          ::style -= SS_LEFTNOWORDWRAP
       ENDIF
       EXIT
+
    CASE WVGSTATIC_TYPE_GROUPBOX
       EXIT
    CASE WVGSTATIC_TYPE_ICON
+      ::style += SS_ICON
       EXIT
    CASE WVGSTATIC_TYPE_SYSICON
       EXIT
    CASE WVGSTATIC_TYPE_BITMAP
+      ::style += SS_BITMAP
       IF     ::options == WVGSTATIC_BITMAP_TILED
 
       ELSEIF ::options == WVGSTATIC_BITMAP_SCALED
@@ -164,54 +178,73 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
       ENDIF
       EXIT
    CASE WVGSTATIC_TYPE_FGNDRECT
+      ::style += SS_WHITERECT
       EXIT
    CASE WVGSTATIC_TYPE_BGNDRECT
-      EXIT
-   CASE WVGSTATIC_TYPE_FGNDFRAME
-      EXIT
-   CASE WVGSTATIC_TYPE_BGNDFRAME
+      ::style += SS_BLACKRECT
       EXIT
    CASE WVGSTATIC_TYPE_HALFTONERECT
+      ::style += SS_GRAYRECT
+      EXIT
+   CASE WVGSTATIC_TYPE_FGNDFRAME
+      ::style += SS_WHITEFRAME
+      EXIT
+   CASE WVGSTATIC_TYPE_BGNDFRAME
+      ::style += SS_BLACKFRAME
       EXIT
    CASE WVGSTATIC_TYPE_HALFTONEFRAME
+      ::style += SS_GRAYFRAME
       EXIT
+
    CASE WVGSTATIC_TYPE_RAISEDBOX
       EXIT
    CASE WVGSTATIC_TYPE_RECESSEDBOX
       EXIT
+
    CASE WVGSTATIC_TYPE_RAISEDRECT
       EXIT
    CASE WVGSTATIC_TYPE_RECESSEDRECT
       EXIT
+
    CASE WVGSTATIC_TYPE_RAISEDLINE
       EXIT
    CASE WVGSTATIC_TYPE_RECESSEDLINE
       EXIT
-   END
+   END  // ::type
 
-   ::createControl()
+   // Options
+   IF ( ascan( { WVGSTATIC_TYPE_FGNDFRAME, WVGSTATIC_TYPE_BGNDFRAME, WVGSTATIC_TYPE_HALFTONEFRAME }, ::type ) > 0 )
+      IF     ( hb_bitAnd( ::options, WVGSTATIC_FRAMETHIN ) == WVGSTATIC_FRAMETHIN )
+         ::style += WS_BORDER
 
-   IF Win_IsWindow( ::hWnd )
-      ::oParent:addChild( SELF )
+      ELSEIF ( hb_bitAnd( ::options, WVGSTATIC_FRAMETHICK ) == WVGSTATIC_FRAMETHICK )
+         ::style += WS_DLGFRAME
 
-      ::setCaption( ::caption )
-      IF ::visible
-         ::show()
       ENDIF
    ENDIF
 
-   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self, 4 )
+   //------------------- API request to create control ----------------//
+   ::oParent:addChild( SELF )
+
+   ::createControl()
+
+   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self, 4 )
    ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+
+   IF ::visible
+      ::show()
+   ENDIF
+
+   //------------------- After creation settings------------------------//
+   ::setCaption( ::caption )
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD handleEvent( nMessage, aInfo ) CLASS WvgStatic
+METHOD handleEvent( nMessage/*, aNM */) CLASS WvgStatic
 
-hb_ToOutDebug( "WvgStatic:handleEvent  %i", nMessage )
-
-   HB_SYMBOL_UNUSED( aInfo )
+   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    SWITCH nMessage
 
@@ -230,12 +263,11 @@ hb_ToOutDebug( "WvgStatic:handleEvent  %i", nMessage )
 
 METHOD destroy() CLASS WvgStatic
 
-hb_ToOutDebug( "WvgStatic:destroy()" )
+   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
    IF len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
    ENDIF
-
    IF Win_IsWindow( ::hWnd )
       Win_DestroyWindow( ::hWnd )
    ENDIF
@@ -255,7 +287,6 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
 METHOD setCaption( xCaption, cDll )
 
-   HB_SYMBOL_UNUSED( xCaption )
    HB_SYMBOL_UNUSED( cDll )
 
    DEFAULT xCaption TO ::caption

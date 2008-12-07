@@ -28,6 +28,9 @@ LIB_OBJS = \
    $(OBJ_DIR)wvgstatc$(OBJEXT) \
    $(OBJ_DIR)wvgtreev$(OBJEXT) \
    $(OBJ_DIR)wincback$(OBJEXT) \
+   $(OBJ_DIR)wvgcheck$(OBJEXT) \
+   $(OBJ_DIR)wvgdatar$(OBJEXT) \
+   $(OBJ_DIR)wvgradio$(OBJEXT) \
    \
    $(OBJ_DIR)gtwvg$(OBJEXT) \
    $(OBJ_DIR)wvgcore$(OBJEXT) \

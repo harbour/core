@@ -8,6 +8,47 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-06 19:08 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/makefile
+  * harbour/contrib/gtwvg/common.mak
+    + wvgcheck.prg
+    + wvgdatar.prg
+    + wvgradio.prg
+
+  + harbour/contrib/gtwvg/wvgcheck.prg
+  + harbour/contrib/gtwvg/wvgdatar.prg
+  + harbour/contrib/gtwvg/wvgradio.prg
+    + Added WvgCheckBox(), WvgRadioButton(), DataRef() Xbase++ compatible classes.
+
+  * harbour/contrib/gtwvg/wvggui.c
+  * harbour/contrib/gtwvg/wvgwin.c
+  * harbour/contrib/gtwvg/wvgparts.ch
+  * harbour/contrib/gtwvg/wvglistb.prg
+  * harbour/contrib/gtwvg/wvgpushb.prg
+  * harbour/contrib/gtwvg/wvgstatb.prg
+  * harbour/contrib/gtwvg/wvgstatc.prg
+  * harbour/contrib/gtwvg/wvgtoolb.prg
+  * harbour/contrib/gtwvg/wvgtreev.prg
+  * harbour/contrib/gtwvg/wvghwnd.prg
+    ; Heavy changes in class framework.
+    + Many new winapi functions.
+    ! Optimized use of hb_ACallBack().
+    - WinApi functions replaced by Harbour core functions.
+    
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    + Added functionality of WvgCheckBox() and WvgRadioButton() classes.
+      Now thses classes implement DataRef() class also. Work-in-progress.
+
+    ;TODO : Few functions in wvgwin.c are not UNICODE compliant yet.
+     DONE   All functions are now UNICODE compliant.
+
+    ;Viktor, can you compile GTWVG on 64bits platform ?
+
+    ;REQUEST : Can someone familiar with Xbase++ come forward to 
+               write a small test program based on implemented classes.
+               Please exclude all that functionality which is not yet
+               implemented.
+
 2008-12-04 23:56 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/tests/hbmk_b32.bat
     + xhb.lib - just to take use of hb_ToOutDebug(). While under heavy

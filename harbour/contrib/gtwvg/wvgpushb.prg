@@ -56,7 +56,7 @@
 //                                EkOnkar
 //                          ( The LORD is ONE )
 //
-//                Xbase++ xbpPushButton Compatible Class
+//                 Xbase++ xbpPushButton Compatible Class
 //
 //                  Pritpal Bedi <pritpal@vouchcac.com>
 //                               26Nov2008
@@ -76,8 +76,8 @@
 
 //----------------------------------------------------------------------//
 
-#ifndef __DBG_TB__
-#   xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#ifndef __DBG_PARTS__
+#xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 //----------------------------------------------------------------------//
@@ -89,7 +89,7 @@ CLASS WvgPushButton  INHERIT  WvgWindow
    DATA     caption                               INIT ''
    DATA     pointerFocus                          INIT .T.
    DATA     preSelect                             INIT .F.
-   DATA     drawMode                              INIT 0 //WVG_DRAW_NORMAL
+   DATA     drawMode                              INIT WVG_DRAW_NORMAL
    DATA     default                               INIT .F.
    DATA     cancel                                INIT .F.
 
@@ -102,9 +102,6 @@ CLASS WvgPushButton  INHERIT  WvgWindow
 
    METHOD   activate()                            SETGET
    METHOD   draw()                                SETGET
-
-   DATA     nWndProc
-   DATA     nOldProc                              INIT 0
 
    METHOD   handleEvent( nEvent, aInfo )
 
@@ -135,25 +132,27 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPu
 
    ::createControl()
 
+   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+
    IF ::visible
       ::show()
    ENDIF
 
    ::setCaption( ::caption )
 
-   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
-
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD handleEvent( nEvent, aInfo ) CLASS WvgPushButton
+METHOD handleEvent( nMessage, aInfo ) CLASS WvgPushButton
    LOCAL nHandled := 0
+
+   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    HB_SYMBOL_UNUSED( aInfo )
 
-   SWITCH nEvent
+   SWITCH nMessage
 
    CASE WM_SIZE
       IF hb_isBlock( ::sl_resize )
@@ -180,7 +179,7 @@ METHOD handleEvent( nEvent, aInfo ) CLASS WvgPushButton
 
 METHOD destroy() CLASS WvgPushButton
 
-hb_ToOutDebug( "WvgPushButton:destroy()" )
+   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
    IF len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )

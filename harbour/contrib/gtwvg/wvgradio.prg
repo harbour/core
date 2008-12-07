@@ -1,0 +1,206 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * Source file for the Wvg*Classes
+ *
+ * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//
+//                                EkOnkar
+//                          ( The LORD is ONE )
+//
+//                 Xbase++ xbpPushButton Compatible Class
+//
+//                  Pritpal Bedi <pritpal@vouchcac.com>
+//                               06Dec2008
+//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+
+#include 'hbclass.ch'
+#include 'common.ch'
+#include 'inkey.ch'
+#include 'hbgtinfo.ch'
+
+#include 'hbgtwvg.ch'
+#include 'wvtwin.ch'
+#include 'wvgparts.ch'
+
+//----------------------------------------------------------------------//
+
+#ifndef __DBG_PARTS__
+#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#endif
+
+//----------------------------------------------------------------------//
+
+CLASS WvgRadioButton  INHERIT  WvgWindow
+
+   DATA     autosize                              INIT .F.
+   DATA     caption                               INIT ''
+   DATA     pointerFocus                          INIT .T.
+   DATA     selection                             INIT .F.
+
+   METHOD   new()
+   METHOD   create()
+   METHOD   configure()
+   METHOD   destroy()
+
+   METHOD   editBuffer()                          INLINE ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+   METHOD   getData()                             INLINE ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+   METHOD   setData( lCheck )                     INLINE ::sendMessage( BM_SETCHECK, IF( lCheck, BST_CHECKED, BST_UNCHECKED ), 0 )
+   METHOD   setCaption( cCaption )
+
+   ACCESS   selected                              INLINE ::sl_lbClick
+   ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
+
+   METHOD   handleEvent( nEvent, aInfo )
+
+   ENDCLASS
+//----------------------------------------------------------------------//
+
+METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
+
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   ::style       := WS_CHILD + BS_AUTORADIOBUTTON
+   ::className   := 'BUTTON'
+   ::objType     := objTypeRadioButton
+
+   RETURN Self
+
+//----------------------------------------------------------------------//
+
+METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
+
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF ::visible
+      ::style += WS_VISIBLE
+   ENDIF
+
+   ::oParent:addChild( SELF )
+
+   ::createControl()
+
+   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+
+   IF ::visible
+      ::show()
+   ENDIF
+
+   ::setCaption( ::caption )
+
+   IF ::selection
+      ::sendMessage( BM_SETCHECK, BST_CHECKED, 0 )
+   ENDIF
+
+   RETURN Self
+
+//----------------------------------------------------------------------//
+
+METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
+
+   hb_ToOutDebug( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
+
+   SWITCH nMessage
+
+   CASE WM_COMMAND
+      IF aNM[ NMH_code ] == BN_CLICKED
+         IF hb_isBlock( ::sl_lbClick )
+            eval( ::sl_lbClick, NIL, NIL, self )
+            RETURN 0
+         ENDIF
+      ENDIF
+      EXIT
+
+   END
+
+   RETURN 1
+
+//----------------------------------------------------------------------//
+
+METHOD destroy() CLASS WvgRadioButton
+
+   hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
+
+   IF len( ::aChildren ) > 0
+      aeval( ::aChildren, {|o| o:destroy() } )
+   ENDIF
+   IF Win_IsWindow( ::hWnd )
+      Win_DestroyWindow( ::hWnd )
+   ENDIF
+   HB_FreeCallback( ::nWndProc )
+
+   RETURN NIL
+
+//----------------------------------------------------------------------//
+
+METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
+
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   RETURN Self
+
+//----------------------------------------------------------------------//
+
+METHOD setCaption( xCaption ) CLASS WvgRadioButton
+
+   IF hb_isChar( xCaption )
+      ::caption := xCaption
+      Win_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+   ENDIF
+
+   RETURN Self
+
+//----------------------------------------------------------------------//
+

@@ -76,6 +76,12 @@
 
 //----------------------------------------------------------------------//
 
+#ifndef __DBG_PARTS__
+//#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#endif
+
+//----------------------------------------------------------------------//
+
 CLASS WvgWindow  INHERIT  WvgPartHandler
 
    //  CONFIGURATION
@@ -94,6 +100,11 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    DATA     dropZone                              INIT  .F.
    DATA     helpLink
    DATA     tooltipText                           INIT  ''
+
+   DATA     clr_FG
+   DATA     clr_BG
+   DATA     fnt_COMMPOUNDNAME
+   DATA     fnt_hFont
 
    //  CALLBACK SLOTS
    DATA     sl_enter
@@ -158,8 +169,8 @@ EXPORTED:
    METHOD   winDevice()
 
    //  SETTINGS
-   METHOD   setColorBG()
-   METHOD   setColorFG()
+   METHOD   setColorBG( nRGB )                    INLINE ::clr_BG := nRGB
+   METHOD   setColorFG( nRGB )                    INLINE ::clr_FG := nRGB, ::invalidateRect()
    METHOD   setFont()
    METHOD   setFontCompoundName()
    METHOD   setPresParam()
@@ -170,8 +181,11 @@ EXPORTED:
    METHOD   getHWND()
    METHOD   getModalState()
    METHOD   hasInputFocus()
-   METHOD   isEnabled()
-   METHOD   isVisible()
+
+   DATA     is_hidden                             INIT   .F.
+   DATA     is_enabled                            INIT   .T.
+   METHOD   isEnabled()                           INLINE ::is_enabled
+   METHOD   isVisible()                           INLINE !( ::is_hidden )
 
    //  CALLBACKS
    //
@@ -212,46 +226,47 @@ EXPORTED:
    METHOD   killDisplayFocus()                    SETGET
 
 
-   DATA     title                                 INIT  ' '
-   DATA     icon                                  INIT  0
-   DATA     closable                              INIT  .T.
-   DATA     resizable                             INIT  .t.
-   DATA     resizeMode                            INIT  0
-   DATA     style                                 INIT  WS_OVERLAPPEDWINDOW
-   DATA     exStyle                               INIT  0
-   DATA     lModal                                INIT  .f.
+   DATA     title                                 INIT   ' '
+   DATA     icon                                  INIT   0
+   DATA     closable                              INIT   .T.
+   DATA     resizable                             INIT   .t.
+   DATA     resizeMode                            INIT   0
+   DATA     style                                 INIT   WS_OVERLAPPEDWINDOW
+   DATA     exStyle                               INIT   0
+   DATA     lModal                                INIT   .f.
    DATA     pGTp
    DATA     pGT
-   DATA     objType                               INIT  objTypeNone
-   DATA     className                             INIT  ''
+   DATA     objType                               INIT   objTypeNone
+   DATA     className                             INIT   ''
 
    METHOD   setFocus()
    METHOD   sendMessage()
 
    DATA     hWnd
-   DATA     aPos                                  INIT  { 0,0 }
-   DATA     aSize                                 INIT  { 0,0 }
-   DATA     aPresParams                           INIT  {}
-   DATA     lHasInputFocus                        INIT  .F.
-   DATA     nFrameState                           INIT  0  // normal
+   DATA     aPos                                  INIT   { 0,0 }
+   DATA     aSize                                 INIT   { 0,0 }
+   DATA     aPresParams                           INIT   {}
+   DATA     lHasInputFocus                        INIT   .F.
+   DATA     nFrameState                           INIT   0  // normal
 
-   DATA     maxCol                                INIT  79
-   DATA     maxRow                                INIT  24
-   DATA     mouseMode                             INIT  1
+   DATA     maxCol                                INIT   79
+   DATA     maxRow                                INIT   24
+   DATA     mouseMode                             INIT   1
 
-   DATA     nID                                   INIT  0
-   DATA     nControlID                            INIT  5000
+   DATA     nID                                   INIT   0
+   DATA     nControlID                            INIT   5000
    METHOD   createControl()
    METHOD   getControlID()                        INLINE ++::nControlID
 
    METHOD   Initialize()
 
-   DATA     nOldProc                              INIT 0
+   DATA     nOldProc                              INIT   0
    DATA     nWndProc
 
    DATA     oMenu
    METHOD   HandleEvent()                         INLINE ( 1 )
    METHOD   ControlWndProc()
+   METHOD   findObjectByHandle( hWnd )
 
    ENDCLASS
 
@@ -338,13 +353,23 @@ METHOD captureMouse() CLASS WvgWindow
 
 METHOD disable() CLASS WvgWindow
 
-   RETURN Self
+   IF Win_EnableWindow( ::hWnd, .f. )
+      ::is_enabled := .f.
+      RETURN .t.
+   ENDIF
+
+   RETURN .f.
 
 //----------------------------------------------------------------------//
 
 METHOD enable() CLASS WvgWindow
 
-   RETURN Self
+   IF Win_EnableWindow( ::hWnd, .t. )
+      ::is_enabled := .t.
+      RETURN .t.
+   ENDIF
+
+   RETURN .f.
 
 //----------------------------------------------------------------------//
 
@@ -352,6 +377,7 @@ METHOD hide() CLASS WvgWindow
 
    IF Win_IsWindow( ::hWnd )
       Win_ShowWindow( ::hWnd, SW_HIDE )
+      ::is_hidden := .t.
    ENDIF
 
    RETURN Self
@@ -459,6 +485,7 @@ METHOD setSize( aSize, lPaint ) CLASS WvgWindow
 METHOD show() CLASS WvgWindow
 
    Win_ShowWindow( ::hWnd, SW_NORMAL )
+   ::is_hidden      := .f.
    ::lHasInputFocus := .t.
 
    RETURN Self
@@ -473,7 +500,7 @@ METHOD toBack() CLASS WvgWindow
 
 METHOD toFront() CLASS WvgWindow
 
-   RETURN Self
+   RETURN Win_SetForegroundWindow( ::hWnd )
 
 //----------------------------------------------------------------------//
 
@@ -484,18 +511,6 @@ METHOD unlockPS() CLASS WvgWindow
 //----------------------------------------------------------------------//
 
 METHOD winDevice() CLASS WvgWindow
-
-   RETURN Self
-
-//----------------------------------------------------------------------//
-
-METHOD setColorBG() CLASS WvgWindow
-
-   RETURN Self
-
-//----------------------------------------------------------------------//
-
-METHOD setColorFG() CLASS WvgWindow
 
    RETURN Self
 
@@ -550,18 +565,6 @@ METHOD getModalState() CLASS WvgWindow
 //----------------------------------------------------------------------//
 
 METHOD hasInputFocus() CLASS WvgWindow
-
-   RETURN Self
-
-//----------------------------------------------------------------------//
-
-METHOD isEnabled() CLASS WvgWindow
-
-   RETURN Self
-
-//----------------------------------------------------------------------//
-
-METHOD isVisible() CLASS WvgWindow
 
    RETURN Self
 
@@ -1093,13 +1096,30 @@ METHOD setFocus() CLASS WvgWindow
    ::sendMessage( WM_ACTIVATE, 1, 0 )
 
    RETURN Self
+
 //----------------------------------------------------------------------//
+
 METHOD sendMessage( nMessage, nlParam, nwParam ) CLASS WvgWindow
 
    Win_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
 
    RETURN Self
+
 //----------------------------------------------------------------------//
+
+METHOD findObjectByHandle( hWnd ) CLASS WvgWindow
+   LOCAL nObj
+
+   IF len( ::aChildren ) > 0
+      IF ( nObj := ascan( ::aChildren, {|o| o:hWnd == hWnd } ) ) > 0
+         RETURN ::aChildren[ nObj ]
+      ENDIF
+   ENDIF
+
+   RETURN NIL
+
+//----------------------------------------------------------------------//
+
 METHOD createControl() CLASS WvgWindow
    LOCAL hWnd
 
@@ -1143,9 +1163,11 @@ METHOD createControl() CLASS WvgWindow
 //----------------------------------------------------------------------//
 
 METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
-   LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem
+   LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj
 
-hb_ToOutDebug( "Control:wndProc:%s(   %i    %i    %i    %i   )", __ObjGetClsName( self ), hWnd, nMessage, nwParam, nlParam )
+   #if 0
+   hb_ToOutDebug( "%s:wndProc( %i  %i  %i  %i )", __ObjGetClsName( self ), hWnd, nMessage, nwParam, nlParam )
+   #endif
 
    SWITCH nMessage
 
@@ -1169,7 +1191,6 @@ hb_ToOutDebug( "Control:wndProc:%s(   %i    %i    %i    %i   )", __ObjGetClsName
          RETURN 0
       ELSE
          IF ( nObj := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
-hb_ToOutDebug( "Control:wndProc:%s( %i )", __ObjGetClsName( self ), nCtrlID )
             RETURN ::aChildren[ nObj ]:handleEvent( WM_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
 
          ENDIF
@@ -1184,9 +1205,15 @@ hb_ToOutDebug( "Control:wndProc:%s( %i )", __ObjGetClsName( self ), nCtrlID )
       EXIT
 
    CASE WM_CTLCOLORLISTBOX
-      Win_SetTextColor( nwParam, RGB( 100,55,255 ) )
-      RETURN ( Win_GetStockObject( WHITE_BRUSH ) )
+      oObj := ::findObjectByHandle( nlParam )
+      IF hb_isObject( oObj )
+         IF oObj:clr_FG <> NIL
+            Win_SetTextColor( nwParam, oObj:clr_FG )
+            RETURN ( Win_GetStockObject( WHITE_BRUSH ) )
+         ENDIF
+      ENDIF
 
+      EXIT
    END
 
    RETURN Win_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )

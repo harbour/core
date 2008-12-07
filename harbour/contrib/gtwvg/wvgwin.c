@@ -523,6 +523,20 @@ HB_FUNC( WIN_SETPARENT )
 
 //-------------------------------------------------------------------//
 
+HB_FUNC( WIN_BRINGWINDOWTOTOP )
+{
+   hb_retl( BringWindowToTop( wvg_parhwnd( 1 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_SETFOREGROUNDWINDOW )
+{
+   hb_retl( BringWindowToTop( wvg_parhwnd( 1 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
 HB_FUNC( WIN_SETWINDOWLONG )
 {
    hb_retnl( SetWindowLong( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parnl( 3 ) ) );
@@ -533,6 +547,13 @@ HB_FUNC( WIN_SETWINDOWLONG )
 HB_FUNC( WIN_ISWINDOW )
 {
    hb_retl( IsWindow( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+}
+
+//-------------------------------------------------------------------//
+
+HB_FUNC( WIN_ENABLEWINDOW )
+{
+   hb_retl( EnableWindow( wvg_parhwnd( 1 ), hb_parl( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1507,42 +1528,41 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 {
    LPNMTREEVIEW pnmtv     = ( LPNMTREEVIEW ) wvg_parlparam( 2 );
    HTREEITEM    hSelected = pnmtv->itemNew.hItem;
-   HTREEITEM    hParent;
 
    if( hSelected != NULL )
    {
-      char *textDisp   = ( char* ) hb_xgrab( MAX_PATH + 1 );
-      char *ParentDisp = ( char* ) hb_xgrab( MAX_PATH + 1 );
-      TV_ITEM item;
+      TCHAR     text[ MAX_PATH + 1 ];
+      TCHAR     Parent[ MAX_PATH + 1 ];
+      TV_ITEM   item;
+      HTREEITEM hParent;
 
       hb_stornl( ( long ) hSelected, 6 );
 
       item.mask        = TVIF_HANDLE | TVIF_TEXT | TVIF_IMAGE;
       item.hItem       = hSelected;
-      item.pszText     = textDisp;
+      item.pszText     = text;
       item.cchTextMax  = MAX_PATH;
 
       if( SendMessage( wvg_parhwnd( 1 ), ( UINT ) TVM_GETITEM, ( WPARAM ) 0, ( LPARAM ) &item ) )
       {
-         hb_storclenAdopt( textDisp, strlen( textDisp ), 4 );
+         char * szText = HB_TCHAR_CONVFROM( text );
+         hb_storclen( szText, strlen( szText ), 4 );
+         HB_TCHAR_FREE( szText );
       }
 
       hParent = TreeView_GetParent( wvg_parhwnd( 1 ), hSelected );
       hb_stornl( ( long ) hParent, 5 );
 
-      //hParent = SendMessage( wvg_parhwnd( 2 ), ( UINT ) TVM_GETNEXTITEM, ( WPARAM ) TVGN_PARENT, ( LPARAM ) hSelected );
       item.mask        = TVIF_HANDLE | TVIF_TEXT;
       item.hItem       = hParent;
-      item.pszText     = ParentDisp;
+      item.pszText     = Parent;
       item.cchTextMax  = MAX_PATH;
 
       if( SendMessage( wvg_parhwnd( 1 ), ( UINT ) TVM_GETITEM, ( WPARAM ) 0, ( LPARAM ) &item ) )
       {
-         hb_storclenAdopt( ParentDisp, strlen( ParentDisp ), 3 );
-      }
-      else
-      {
-         hb_xfree( ParentDisp );
+         char * szText = HB_TCHAR_CONVFROM( Parent );
+         hb_storclen( szText, strlen( szText ), 3 );
+         HB_TCHAR_FREE( szText );
       }
    }
 }
@@ -1553,14 +1573,24 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 //
 HB_FUNC( WVG_TREEVIEW_ADDITEM )
 {
+   #ifdef UNICODE
+   typedef struct tagTVINSERTSTRUCTA
+   {
+     HTREEITEM hParent;
+     HTREEITEM hInsertAfter;
+     TV_ITEMW  item;
+   } TVINSERTSTRUCTW, FAR *LPTVINSERTSTRUCTW;
+   #else
    typedef struct tagTVINSERTSTRUCTA
    {
      HTREEITEM hParent;
      HTREEITEM hInsertAfter;
      TV_ITEMA  item;
    } TVINSERTSTRUCTA, FAR *LPTVINSERTSTRUCTA;
+   #endif
 
    TVINSERTSTRUCT tvis;
+   LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
 
    tvis.hInsertAfter    = TVI_LAST;
    tvis.item.mask       = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_STATE;
@@ -1571,9 +1601,77 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
 
    tvis.item.state      = NULL;       // TVI_BOLD
    tvis.hParent         = ISNIL( 2 ) ? NULL : wvg_parhandle( 2 );
-   tvis.item.pszText    = hb_parc( 3 );
+   tvis.item.pszText    = text;
 
    hb_retnint( ( long ) SendMessage( wvg_parhwnd( 1 ), TVM_INSERTITEM, ( WPARAM ) 0, ( LPARAM ) &tvis ) );
+
+   HB_TCHAR_FREE( text );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_TREEVIEW_EXPAND )
+{
+   hb_retl( TreeView_Expand( wvg_parhwnd( 1 ), wvg_parhandle( 2 ), ( hb_parl( 3 ) ? TVE_EXPAND : TVE_COLLAPSE ) ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_TVIS_EXPANDED )
+{
+   //hb_retl( TreeView_GetItemState( wvg_parhwnd( 1 ), wvg_parhandle( 2 ), ( UINT ) TVIS_EXPANDED ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
+{
+   HWND      hwnd = wvg_parhwnd( 1 );
+   HTREEITEM hroot, hitem, hitem1, hitem2, hitem3;
+   int       iExpand = ( hb_parl( 2 ) ? TVE_EXPAND : TVE_COLLAPSE );
+   int       iLevels = hb_parni( 3 ) <= 0 ? 5 : hb_parni( 3 );
+
+   hroot = ( HTREEITEM ) SendMessage( hwnd, TVM_GETNEXTITEM, TVGN_ROOT, NULL );
+   if( hroot )
+   {
+      TreeView_Expand( hwnd, hroot, iExpand );
+      if( iLevels >= 2 )
+      {
+         hitem = TreeView_GetNextItem( hwnd, hroot, TVGN_CHILD );
+         while( hitem )
+         {
+            TreeView_Expand( hwnd, hitem, iExpand );
+            if( iLevels >= 3 )
+            {
+               hitem1 = TreeView_GetNextItem( hwnd, hitem, TVGN_CHILD );
+               while( hitem1 )
+               {
+                  TreeView_Expand( hwnd, hitem1, iExpand );
+                  if( iLevels >= 4 )
+                  {
+                     hitem2 = TreeView_GetNextItem( hwnd, hitem1, TVGN_CHILD );
+                     while( hitem2 )
+                     {
+                        TreeView_Expand( hwnd, hitem2, iExpand );
+                        if( iLevels >= 5 )
+                        {
+                           hitem3 = TreeView_GetNextItem( hwnd, hitem2, TVGN_CHILD );
+                           while( hitem3 )
+                           {
+                              TreeView_Expand( hwnd, hitem3, iExpand );
+                              hitem3 = TreeView_GetNextItem( hwnd, hitem3, TVGN_NEXT );
+                           }
+                        }
+                        hitem2 = TreeView_GetNextItem( hwnd, hitem2, TVGN_NEXT );
+                     }
+                  }
+                  hitem1 = TreeView_GetNextItem( hwnd, hitem1, TVGN_NEXT );
+               }
+            }
+            hitem = TreeView_GetNextItem( hwnd, hitem, TVGN_NEXT );
+         }
+      }
+   }
 }
 
 //----------------------------------------------------------------------//
@@ -1582,20 +1680,33 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
 
 HB_FUNC( WIN_LBGETTEXT )
 {
-   USHORT iLen = ( USHORT ) SendMessage( wvg_parhwnd( 1 ), LB_GETTEXTLEN, 0, 0 ) + 1 ;
-   LPTSTR cText = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
+   TCHAR  text[ MAX_PATH + 1 ];
    char * szText;
-   UINT iResult;
 
-   iResult = SendMessage( wvg_parhwnd( 1 ), LB_GETTEXT, ( WPARAM ) hb_parni( 2 ), ( LPARAM ) cText  );
+   SendMessage( wvg_parhwnd( 1 ), LB_GETTEXT, ( WPARAM ) hb_parni( 2 ), ( LPARAM ) text  );
 
-   cText[ iResult ] = '\0';
-   szText = HB_TCHAR_CONVFROM( cText );
+   szText = HB_TCHAR_CONVFROM( text );
    hb_retc( szText );
    HB_TCHAR_FREE( szText );
-   hb_xfree( cText );
 }
 
-//-------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_LBGETCURSEL )
+{
+   hb_retni( ListBox_GetCurSel( wvg_parhwnd( 1 ) ) );
+}
+
+//----------------------------------------------------------------------//
+//                                Buttons
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_BUTTON_GETCHECK )
+{
+   hb_retnl( Button_GetCheck( wvg_parhwnd( 1 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
 
 

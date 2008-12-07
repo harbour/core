@@ -74,6 +74,8 @@
 #define objTypeStatic                             12
 #define objTypeTreeView                           13
 #define objTypeTreeViewItem                       14
+#define objTypeCheckBox                           15
+#define objTypeRadioButton                        16
 
 //----------------------------------------------------------------------//
 //  NMHDR info
@@ -163,6 +165,12 @@
 #define WVG_DRAW_NORMAL                           0
 
 #define WVGLISTBOX_MM_SINGLE                      1
+
+// Generic Pres Parameters
+#define WVG_PP_FGCLR                              2
+#define WVG_PP_BGCLR                              4
+#define WVG_PP_COMPOUNDNAME                       15
+#define WVG_PP_FONT                               16
 
 #endif // #ifndef _WVG_CH
 

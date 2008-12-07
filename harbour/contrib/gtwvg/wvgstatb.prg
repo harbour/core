@@ -76,8 +76,8 @@
 
 //----------------------------------------------------------------------//
 
-#ifndef __DBG_TB__
-#   xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#ifndef __DBG_PARTS__
+#xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 //----------------------------------------------------------------------//
@@ -102,9 +102,6 @@ CLASS WvgStatusBar  INHERIT  WvgActiveXControl
 
    METHOD   panelClick()                          SETGET
    METHOD   panelDblClick()                       SETGET
-
-   DATA     nOldProc                              INIT 0
-   DATA     nWndProc
 
    METHOD   handleEvent()
 
@@ -140,14 +137,14 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
 
    ::createControl()
 
-   ::addItem( , , , , , -1 )
+   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
 
    IF ::visible
       ::show()
    ENDIF
 
-   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   ::addItem( , , , , , -1 )
 
    RETURN Self
 
@@ -156,6 +153,8 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
 METHOD handleEvent( nMessage, aNM ) CLASS WvgStatusBar
    LOCAL nHandled := 1
    LOCAL nObj, aNMH
+
+   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
    SWITCH nMessage
 
@@ -199,7 +198,8 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatusBar
 
 METHOD destroy() CLASS WvgStatusBar
    LOCAL i, nItems
-hb_ToOutDebug( "WvgStatusBar:destroy()" )
+
+   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems

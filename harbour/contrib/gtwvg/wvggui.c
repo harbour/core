@@ -114,6 +114,16 @@ static const int K_Ctrl[] =
 
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 
+//----------------------------------------------------------------------//
+
+#ifdef __DBG_GTWGU__
+#define WVGDEBUG( d )     hb_ToOutDebug d
+#else
+#define WVGDEBUG( d )
+#endif
+
+//----------------------------------------------------------------------//
+
 static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 {
    WNDCLASS wndclass;
@@ -145,7 +155,7 @@ static PHB_GTWVT hb_gt_wvt_Find( HWND hWnd )
    int iCount = s_wvtCount, iPos = 0;
    PHB_GTWVT pWVT = NULL;
 
-//hb_ToOutDebug( "hb_gt_wvt_Find()" );
+//WVGDEBUG( ( "hb_gt_wvt_Find()" ) );
 
    HB_WVT_LOCK
 
@@ -172,9 +182,7 @@ static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 {
    BOOL fOK = FALSE;
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_Alloc()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_Alloc()" ) );
 
    HB_WVT_LOCK
 
@@ -206,9 +214,7 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 {
    HB_WVT_LOCK
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_Free()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_Free()" ) );
 
    s_wvtWindows[ pWVT->iHandle ] = NULL;
 
@@ -239,9 +245,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    PHB_GTWVT pWVT;
    OSVERSIONINFO osvi;
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_New()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_New()" ) );
 
    osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
    GetVersionEx( &osvi );
@@ -324,9 +328,7 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams )
 {
    int nResult = 0; /* Unhandled */
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_FireEvent()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_FireEvent()" ) );
 
    if( pWVT->pGT->pNotifierBlock )
    {
@@ -350,9 +352,7 @@ static void hb_gt_wvt_FireMenuEvent( PHB_GTWVT pWVT, int iMode, int menuIndex )
 {
    PHB_ITEM pEvParams = hb_itemNew( NULL );
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_FireMenuEvent()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_FireMenuEvent()" ) );
 
    hb_arrayNew( pEvParams, 2 );
    hb_arraySetNI( pEvParams, 1, iMode );
@@ -368,9 +368,7 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
 {
    int iPos = pWVT->keyPointerIn;
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_AddCharToInputQueue()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_AddCharToInputQueue()" ) );
 
    if( iKey == K_MOUSEMOVE || iKey == K_NCMOUSEMOVE )
    {
@@ -399,7 +397,8 @@ hb_ToOutDebug( "wvggui:hb_gt_wvt_AddCharToInputQueue()" );
 
 static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
 {
-//hb_ToOutDebug( "wvggui:hb_gt_wvt_GetCharFromInputQueue()" );
+   //WVGDEBUG( ( "wvggui:hb_gt_wvt_GetCharFromInputQueue()" ) );
+
    if( pWVT->keyPointerOut != pWVT->keyPointerIn )
    {
       *iKey = pWVT->Keys[ pWVT->keyPointerOut ];
@@ -418,9 +417,7 @@ static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int a
 {
    int nVirtKey = GetKeyState( VK_MENU );
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_TranslateKey()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_TranslateKey()" ) );
 
    if( nVirtKey & 0x8000 ) /* alt + key */
    {
@@ -449,9 +446,7 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
    BYTE pszAnsi[ 2 ];
    BYTE pszOem[ 2 ];
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_key_ansi_to_oem()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_key_ansi_to_oem()" ) );
 
    pszAnsi[ 0 ] = ( BYTE ) c;
    pszAnsi[ 1 ] = 0;
@@ -465,9 +460,7 @@ static int hb_gt_wvt_SizeChanged( PHB_GTWVT pWVT )
    PHB_ITEM pEvParams = hb_itemNew( NULL );
    RECT rc;
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_SizeChanged()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_SizeChanged()" ) );
 
    GetClientRect( pWVT->hWnd, &rc );
 
@@ -491,9 +484,7 @@ static void hb_gt_wvt_SetWindowTitle( HWND hWnd, const char * title )
 {
    LPTSTR text = HB_TCHAR_CONVTO( title );
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_SetWindowTitle()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_SetWindowTitle()" ) );
 
    SetWindowText( hWnd, text );
    HB_TCHAR_FREE( text );
@@ -504,9 +495,7 @@ static BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
    TCHAR buffer[WVT_MAX_TITLE_SIZE];
    int iResult;
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_GetWindowTitle()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_GetWindowTitle()" ) );
 
    iResult = GetWindowText( hWnd, buffer, WVT_MAX_TITLE_SIZE );
    if( iResult > 0 )
@@ -527,9 +516,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
    SHORT keyCode = 0;
    SHORT keyState;
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_MouseEvent()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_MouseEvent()" ) );
 
    HB_SYMBOL_UNUSED( wParam );
    if( ! pWVT->MouseMove && ( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE ) )
@@ -643,10 +630,7 @@ hb_ToOutDebug( "wvggui:hb_gt_wvt_MouseEvent()" );
 
 static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
 {
-
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_KeyEvent()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_KeyEvent()" ) );
 
    switch( message )
    {
@@ -984,15 +968,10 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 {
    PHB_GTWVT pWVT = hb_gt_wvt_Find( hWnd );
 
-#ifdef __DBG_GUI_C__
-//hb_ToOutDebug( "wvggui:hb_gt_wvt_WndPro(   %i    %i    %i    %i   )", hWnd, message, wParam, lParam );
-#endif
+   WVGDEBUG( ( "wvggui:wndproc( %i  %i  %i  %i )", hWnd, message, wParam, lParam ) );
 
    if( pWVT ) switch( message )
    {
-      //case WM_PAINT:
-         //return DefWindowProc( hWnd, message, wParam, lParam );;
-
       case WM_SETFOCUS:
       {
          PHB_ITEM pEvParams = hb_itemNew( NULL );
@@ -1200,9 +1179,7 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
    HWND     hWnd, hWndParent;
    LPTSTR   szAppName;
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_CreateWindow()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_CreateWindow()" ) );
 
    szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
 
@@ -1261,10 +1238,7 @@ hb_ToOutDebug( "wvggui:hb_gt_wvt_CreateWindow()" );
 
 static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 {
-
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_CreateConsoleWindow()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_CreateConsoleWindow()" ) );
 
    if( !pWVT->hWnd )
    {
@@ -1310,9 +1284,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_Init()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_Init()" ) );
 
    if( ! hb_winmainArgGet( &hInstance, NULL, &iCmdShow ) )
       hb_errInternal( 10001, "It's not a GUI program", NULL, NULL );
@@ -1339,10 +1311,7 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
    PHB_GTWVT pWVT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Exit(%p)", pGT));
-
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_Exit()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_Exit()" ) );
 
    pWVT = HB_GTWVT_GET( pGT );
    HB_GTSUPER_EXIT( pGT );
@@ -1362,10 +1331,7 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
    BOOL fKey;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ReadKey(%p,%d)", pGT, iEventMask ) );
-
-#ifdef __DBG_GUI_C__
-//hb_ToOutDebug( "wvggui:hb_gt_wvt_ReadKey()" );
-#endif
+   //WVGDEBUG( ( "wvggui:hb_gt_wvt_ReadKey()" ) );
 
    HB_SYMBOL_UNUSED( iEventMask ); /* we ignore the eventmask! */
 
@@ -1384,10 +1350,7 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
-
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_Tone()" );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_Tone()" ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -1401,11 +1364,8 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    PHB_GTWVT pWVT;
    int iVal;
 
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_wvt_Info()" );
-#endif
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Info(%p,%d,%p)", pGT, iType, pInfo ) );
+   WVGDEBUG( ( "wvggui:hb_gt_wvt_Info()" ) );
 
    pWVT = HB_GTWVT_GET( pGT );
 
@@ -2191,10 +2151,7 @@ hb_ToOutDebug( "wvggui:hb_gt_wvt_Info()" );
 static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
-
-#ifdef __DBG_GUI_C__
-hb_ToOutDebug( "wvggui:hb_gt_FuncInit() " );
-#endif
+   WVGDEBUG( ( "wvggui:hb_gt_FuncInit() " ) );
 
    pFuncTable->Init                 = hb_gt_wvt_Init;
    pFuncTable->Exit                 = hb_gt_wvt_Exit;

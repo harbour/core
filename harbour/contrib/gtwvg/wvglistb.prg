@@ -76,8 +76,8 @@
 
 //----------------------------------------------------------------------//
 
-#ifndef __xDBG_TB__
-#   xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#ifndef __DBG_PARTS__
+#xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 //----------------------------------------------------------------------//
@@ -184,12 +184,12 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
 
    ::createControl()
 
+   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+
    IF ::visible
       ::show()
    ENDIF
-
-   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
 
    RETURN Self
 
@@ -198,11 +198,13 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
 METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
    LOCAL nHandled := 1
 
+   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+
    SWITCH nMessage
 
    CASE WM_COMMAND
       IF aNM[ 1 ] == LBN_SELCHANGE
-         //::nCurSelected := ::sendMessage( LB_GETCURSEL, 0, 0 ) + 1
+         ::nCurSelected := Win_LbGetCurSel( ::hWnd )+ 1
          IF hb_isBlock( ::sl_itemSelected )
             eval( ::sl_itemSelected, NIL, NIL, self )
          ENDIF
@@ -228,6 +230,8 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 //----------------------------------------------------------------------//
 
 METHOD destroy() CLASS WvgListBox
+
+   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
    IF Len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
@@ -261,8 +265,6 @@ filename, or directory name.
 
 GetListBoxInfo
 Retrieves information about the specified list box.
-
-
 
 Messages
 ========
@@ -581,7 +583,6 @@ LBS_WANTKEYBOARDINPUT
 Specifies that the owner of the list box receives WM_VKEYTOITEM messages whenever
 the user presses a key and the list box has the input focus. This enables an application
 to perform special processing on the keyboard input.
-
 
 #endif
 //----------------------------------------------------------------------//
