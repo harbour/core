@@ -56,7 +56,7 @@
 //                                EkOnkar
 //                          ( The LORD is ONE )
 //
-//                    Xbase++ dataRef Compatible Class
+//                   Xbase++ xbpBitmap compatible Class
 //
 //                  Pritpal Bedi <pritpal@vouchcac.com>
 //                               06Dec2008
@@ -82,108 +82,68 @@
 
 //----------------------------------------------------------------------//
 
-CLASS DataRef
+CLASS WvgBitmap
 
-   DATA     changed                               INIT .F.
-   DATA     dataLink                              INIT NIL
-   DATA     lastValid                             INIT .T.
-   DATA     sl_undo                               INIT NIL
-   DATA     undoBuffer                            INIT NIL
-   DATA     sl_validate                           INIT NIL
+   DATA     bits                                  INIT 0        READONLY
+   DATA     bufferOffset                          INIT 0        READONLY
+   DATA     planes                                INIT 0        READONLY
+   DATA     transparentClr                        INIT 0
+   DATA     xSize                                 INIT 0        READONLY
+   DATA     ySize                                 INIT 0        READONLY
+
+   DATA     hBitmap
+   DATA     hDCcompat
+   DATA     lDCToDestroy                          INIT .f.
 
    METHOD   new()
+   METHOD   create()
+   METHOD   configure()                           VIRTUAL
+   METHOD   destroy()
 
-   DATA     sl_editBuffer
-   DATA     sl_buffer
-
-   ACCESS   editBuffer                             INLINE ::sl_editBuffer
-   ASSIGN   editBuffer( xData )                    INLINE ::sl_editBuffer := xData
-
-   METHOD   getData()
-   METHOD   setData()
-   METHOD   undo()
-
-   METHOD   validate( xParam )                     SETGET
+   METHOD   draw()                                VIRTUAL
+   METHOD   getColorTable()                       VIRTUAL
+   METHOD   getDefaultBGColor()                   VIRTUAL
+   METHOD   load()                                VIRTUAL
+   METHOD   loadFile()                            VIRTUAL
+   METHOD   make()                                VIRTUAL
+   METHOD   presSpace()                           VIRTUAL
+   METHOD   saveFile()                            VIRTUAL
+   METHOD   setBuffer()                           VIRTUAL
+   METHOD   getPicture()                          VIRTUAL
+   METHOD   setPicture()                          VIRTUAL
 
    ENDCLASS
 
 //----------------------------------------------------------------------//
 
-METHOD new() CLASS DataRef
+METHOD new() CLASS WvgBitmap
 
-   RETURN self
+   RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD getData() CLASS DataRef
+METHOD create( oPScompat ) CLASS WvgBitmap
 
-   DO CASE
-   CASE ::className == "EDIT"
-      ::sl_editBuffer := Win_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
-   ENDCASE
-
-   IF hb_isBlock( ::dataLink )
-      eval( ::dataLink, ::sl_editBuffer )
+   IF oPScompat == NIL
+      ::hDCComp := Win_GetDC()
+      ::lDCToDestroy := .t.
+   ELSE
+      ::hDCComp := oPScompat:hDC
    ENDIF
 
-   RETURN ::sl_editBuffer
+   RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD setData( xValue, mp2 ) CLASS DataRef
+METHOD destroy() CLASS WvgBitmap
 
-   HB_SYMBOL_UNUSED( mp2 )
-
-   IF hb_isBlock( ::dataLink )
-      ::sl_editBuffer := eval( ::dataLink  )
-
-   ELSEIF xValue <> NIL
-      ::sl_editBuffer := xValue
-
+   IF ::hBitmap <> nil
+      Win_DeleteObject( ::hBitmap )
+   ENDIF
+   IF ::lDCtoDestroy
+      Win_ReleaseDC( ::hDCcompat )
    ENDIF
 
-   DO CASE
-
-   CASE ::className == 'BUTTON'     // CheckBox, Radio, 3State
-      ::sendMessage( BM_SETCHECK, IF( ::sl_editBuffer, BST_CHECKED, BST_UNCHECKED ), 0 )
-
-   CASE ::className == 'LISTBOX'    // Single Selection
-      IF !empty( ::sl_editBuffer )
-         RETURN Win_LbSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
-      ENDIF
-      RETURN .f.
-
-   CASE ::className == "SysTreeView32"
-      IF ::sl_editBuffer <> NIL .and. ::sl_editBuffer:hItem <> NIL
-         Win_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
-      ENDIF
-
-   CASE ::className == "EDIT"
-      IF hb_isChar( ::sl_editBuffer )
-         Win_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
-      ENDIF
-
-   ENDCASE
-
-   RETURN ::sl_editBuffer
+   RETURN Self
 
 //----------------------------------------------------------------------//
-
-METHOD undo() CLASS DataRef
-
-   RETURN .f.
-
-//----------------------------------------------------------------------//
-
-METHOD validate( xParam ) CLASS DataRef
-
-   IF PCount() == 0 .and. hb_isBlock( ::sl_validate )
-      RETURN eval( ::sl_validate, self )
-   ELSEIF hb_isBlock( xParam )
-      ::sl_validate := xParam
-   ENDIF
-
-   RETURN .t.
-
-//----------------------------------------------------------------------//
-

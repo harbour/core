@@ -82,7 +82,7 @@
 
 //----------------------------------------------------------------------//
 
-CLASS WvgListBox  INHERIT  WvgWindow
+CLASS WvgListBox  INHERIT  WvgWindow, DataRef
 
    DATA     adjustHeight                          INIT .F.
    DATA     horizScroll                           INIT .F.
@@ -98,12 +98,10 @@ CLASS WvgListBox  INHERIT  WvgWindow
 
    METHOD   handleEvent()
 
-   METHOD   getData()                             VIRTUAL
    METHOD   getItemHeight()                       INLINE  ::sendMessage( LB_GETITEMHEIGHT, 0, 0 )
    METHOD   getTopItem()                          INLINE  ::sendMessage( LB_GETTOPINDEX, 0, 0 )
    METHOD   getVisibleItems()                     VIRTUAL
    METHOD   numItems()                            INLINE  ::sendMessage( LB_GETCOUNT, 0, 0 )
-   METHOD   setData()                             VIRTUAL
    METHOD   setItemsHeight( nPixel )              INLINE  ::sendMessage( LB_SETITEMHEIGHT, 0, nPixel )
    METHOD   setTopItem( nIndex )                  INLINE  ::sendMessage( LB_SETTOPINDEX, nIndex-1, 0 )
 
@@ -205,10 +203,19 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
    CASE WM_COMMAND
       IF aNM[ 1 ] == LBN_SELCHANGE
          ::nCurSelected := Win_LbGetCurSel( ::hWnd )+ 1
+
+         IF hb_isBlock( ::sl_itemMarked )
+            eval( ::sl_itemMarked, NIL, NIL, self )
+         ENDIF
+
+      ELSEIF aNM[ 1 ] == LBN_DBLCLK
+         ::editBuffer := ::nCurSelected
+
          IF hb_isBlock( ::sl_itemSelected )
             eval( ::sl_itemSelected, NIL, NIL, self )
          ENDIF
       ENDIF
+
       EXIT
 
    CASE WM_SIZE

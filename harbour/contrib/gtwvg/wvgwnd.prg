@@ -77,7 +77,7 @@
 //----------------------------------------------------------------------//
 
 #ifndef __DBG_PARTS__
-//#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 //----------------------------------------------------------------------//
@@ -1219,4 +1219,8 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
    RETURN Win_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
 
 //----------------------------------------------------------------------//
-
+#if 0
+FUNCTION hb_toOut( ... )
+   RETURN hb_ToOutDebug( ... )
+#endif
+//----------------------------------------------------------------------//

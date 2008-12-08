@@ -56,10 +56,10 @@
 //                                EkOnkar
 //                          ( The LORD is ONE )
 //
-//                    Xbase++ dataRef Compatible Class
+//                  Xbase++ xbp3State Compatible Class
 //
 //                  Pritpal Bedi <pritpal@vouchcac.com>
-//                               06Dec2008
+//                               07Dec2008
 //
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
@@ -82,108 +82,127 @@
 
 //----------------------------------------------------------------------//
 
-CLASS DataRef
+CLASS Wvg3State  INHERIT  WvgWindow, DataRef
 
-   DATA     changed                               INIT .F.
-   DATA     dataLink                              INIT NIL
-   DATA     lastValid                             INIT .T.
-   DATA     sl_undo                               INIT NIL
-   DATA     undoBuffer                            INIT NIL
-   DATA     sl_validate                           INIT NIL
+   DATA     autosize                              INIT .F.
+   DATA     caption                               INIT ''
+   DATA     pointerFocus                          INIT .T.
+   DATA     selection                             INIT .F.
 
    METHOD   new()
+   METHOD   create()
+   METHOD   configure()
+   METHOD   destroy()
 
-   DATA     sl_editBuffer
-   DATA     sl_buffer
+   METHOD   setCaption( cCaption )
 
-   ACCESS   editBuffer                             INLINE ::sl_editBuffer
-   ASSIGN   editBuffer( xData )                    INLINE ::sl_editBuffer := xData
+   ACCESS   selected                              INLINE ::sl_lbClick
+   ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
 
-   METHOD   getData()
-   METHOD   setData()
-   METHOD   undo()
-
-   METHOD   validate( xParam )                     SETGET
+   METHOD   handleEvent( nEvent, aInfo )
 
    ENDCLASS
+//----------------------------------------------------------------------//
+
+METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wvg3State
+
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   ::style       := WS_CHILD + BS_AUTO3STATE
+   ::className   := 'BUTTON'
+   ::objType     := objType3State
+
+   RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD new() CLASS DataRef
+METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wvg3State
 
-   RETURN self
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-//----------------------------------------------------------------------//
-
-METHOD getData() CLASS DataRef
-
-   DO CASE
-   CASE ::className == "EDIT"
-      ::sl_editBuffer := Win_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
-   ENDCASE
-
-   IF hb_isBlock( ::dataLink )
-      eval( ::dataLink, ::sl_editBuffer )
+   IF ::visible
+      ::style += WS_VISIBLE
    ENDIF
 
-   RETURN ::sl_editBuffer
+   ::oParent:AddChild( SELF )
 
-//----------------------------------------------------------------------//
+   ::createControl()
 
-METHOD setData( xValue, mp2 ) CLASS DataRef
+   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
 
-   HB_SYMBOL_UNUSED( mp2 )
-
-   IF hb_isBlock( ::dataLink )
-      ::sl_editBuffer := eval( ::dataLink  )
-
-   ELSEIF xValue <> NIL
-      ::sl_editBuffer := xValue
-
+   IF ::visible
+      ::show()
    ENDIF
 
-   DO CASE
+   ::setCaption( ::caption )
 
-   CASE ::className == 'BUTTON'     // CheckBox, Radio, 3State
-      ::sendMessage( BM_SETCHECK, IF( ::sl_editBuffer, BST_CHECKED, BST_UNCHECKED ), 0 )
-
-   CASE ::className == 'LISTBOX'    // Single Selection
-      IF !empty( ::sl_editBuffer )
-         RETURN Win_LbSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
-      ENDIF
-      RETURN .f.
-
-   CASE ::className == "SysTreeView32"
-      IF ::sl_editBuffer <> NIL .and. ::sl_editBuffer:hItem <> NIL
-         Win_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
-      ENDIF
-
-   CASE ::className == "EDIT"
-      IF hb_isChar( ::sl_editBuffer )
-         Win_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
-      ENDIF
-
-   ENDCASE
-
-   RETURN ::sl_editBuffer
-
-//----------------------------------------------------------------------//
-
-METHOD undo() CLASS DataRef
-
-   RETURN .f.
-
-//----------------------------------------------------------------------//
-
-METHOD validate( xParam ) CLASS DataRef
-
-   IF PCount() == 0 .and. hb_isBlock( ::sl_validate )
-      RETURN eval( ::sl_validate, self )
-   ELSEIF hb_isBlock( xParam )
-      ::sl_validate := xParam
+   IF ::selection
+      ::sendMessage( BM_SETCHECK, BST_CHECKED, 0 )
    ENDIF
 
-   RETURN .t.
+   ::editBuffer := Win_Button_GetCheck( ::hWnd )
+
+   RETURN Self
+
+//----------------------------------------------------------------------//
+
+METHOD handleEvent( nMessage, aNM ) CLASS Wvg3State
+
+   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+
+   SWITCH nMessage
+
+   CASE WM_COMMAND
+      IF aNM[ NMH_code ] == BN_CLICKED
+         ::editBuffer := Win_Button_GetCheck( ::hWnd )
+
+         IF hb_isBlock( ::sl_lbClick )
+            eval( ::sl_lbClick, ::editBuffer, NIL, self )
+            RETURN 0
+
+         ENDIF
+      ENDIF
+      EXIT
+
+   END
+
+   RETURN 1
+
+//----------------------------------------------------------------------//
+
+METHOD destroy() CLASS Wvg3State
+
+   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
+
+   IF len( ::aChildren ) > 0
+      aeval( ::aChildren, {|o| o:destroy() } )
+   ENDIF
+   IF Win_IsWindow( ::hWnd )
+      Win_DestroyWindow( ::hWnd )
+   ENDIF
+   HB_FreeCallback( ::nWndProc )
+
+   RETURN NIL
+
+//----------------------------------------------------------------------//
+
+METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wvg3State
+
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   RETURN Self
+
+//----------------------------------------------------------------------//
+
+METHOD setCaption( xCaption ) CLASS Wvg3State
+
+   IF hb_isChar( xCaption )
+      ::caption := xCaption
+      Win_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+   ENDIF
+
+   RETURN Self
 
 //----------------------------------------------------------------------//
 

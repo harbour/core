@@ -326,14 +326,14 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       ENDIF
 
    CASE nEvent == HB_GTE_SETFOCUS
-      IF hb_isBlock( ::setInputFocus )
-         eval( ::setInputFocus, NIL, NIL, Self )
+      IF hb_isBlock( ::sl_setInputFocus )
+         eval( ::sl_setInputFocus, NIL, NIL, Self )
       ENDIF
       ::lHasInputFocus := .t.
 
    CASE nEvent == HB_GTE_KILLFOCUS
-      IF hb_isBlock( ::killInputFocus )
-         eval( ::killInputFocus, NIL, NIL, Self )
+      IF hb_isBlock( ::sl_killInputFocus )
+         eval( ::sl_killInputFocus, NIL, NIL, Self )
       ENDIF
       ::lHasInputFocus := .f.
 

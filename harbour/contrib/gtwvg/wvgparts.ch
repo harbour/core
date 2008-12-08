@@ -76,6 +76,9 @@
 #define objTypeTreeViewItem                       14
 #define objTypeCheckBox                           15
 #define objTypeRadioButton                        16
+#define objType3State                             17
+#define objTypeSLE                                18
+#define objTypeMLE                                19
 
 //----------------------------------------------------------------------//
 //  NMHDR info
@@ -171,6 +174,12 @@
 #define WVG_PP_BGCLR                              4
 #define WVG_PP_COMPOUNDNAME                       15
 #define WVG_PP_FONT                               16
+
+#define WVGSLE_LEFT                               1
+#define WVGSLE_RIGHT                              2
+#define WVGSLE_CENTER                             3
+
+
 
 #endif // #ifndef _WVG_CH
 

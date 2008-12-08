@@ -56,10 +56,10 @@
 //                                EkOnkar
 //                          ( The LORD is ONE )
 //
-//                 Xbase++ xbpPushButton Compatible Class
+//                    Xbase++ xbpMLE compatible Class
 //
 //                  Pritpal Bedi <pritpal@vouchcac.com>
-//                               05Dec2008
+//                               07Dec2008
 //
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
@@ -82,52 +82,101 @@
 
 //----------------------------------------------------------------------//
 
-CLASS WvgCheckBox  INHERIT  WvgWindow, DataRef
+CLASS WvgMLE INHERIT WvgWindow, DataRef
 
-   DATA     autosize                              INIT .F.
-   DATA     caption                               INIT ''
-   DATA     pointerFocus                          INIT .T.
-   DATA     selection                             INIT .F.
+   DATA     border                                INIT    .T.
+   DATA     editable                              INIT    .T.
+   DATA     horizScroll                           INIT    .T.
+   DATA     vertScroll                            INIT    .T.
+   DATA     wordWrap                              INIT    .T.
+   DATA     ignoreTab                             INIT    .F.
+
+   DATA     bufferLength                          INIT    32000
+   DATA     changed                               INIT    .F.
 
    METHOD   new()
    METHOD   create()
-   METHOD   configure()
+   METHOD   configure()                           VIRTUAL
    METHOD   destroy()
+   METHOD   handleEvent()
 
-   //METHOD   editBuffer()                          INLINE ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-   //METHOD   getData()                             INLINE ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-   //METHOD   setData( lCheck )                     INLINE ::sendMessage( BM_SETCHECK, IF( lCheck, BST_CHECKED, BST_UNCHECKED ), 0 )
-   METHOD   setCaption( cCaption )
+   METHOD   clear()                               VIRTUAL
+   METHOD   copyMarked()                          VIRTUAL
+   METHOD   cutMarked()                           VIRTUAL
+   METHOD   deleteMarked()                        VIRTUAL
+   METHOD   delete()                              VIRTUAL
+   METHOD   pasteMarked()                         VIRTUAL
+   METHOD   queryFirstChar()                      VIRTUAL
+   METHOD   queryMarked()                         VIRTUAL
+   METHOD   setFirstChar()                        VIRTUAL
+   METHOD   setMarked()                           VIRTUAL
+   METHOD   insert()                              VIRTUAL
+   METHOD   charFromLine()                        VIRTUAL
+   METHOD   lineFromChar()                        VIRTUAL
+   METHOD   pos()                                 VIRTUAL
 
-   ACCESS   selected                              INLINE ::sl_lbClick
-   ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
+   DATA     sl_undo                               INIT    .T.
+   ACCESS   undo                                  INLINE  IF( ::sl_undo, NIL, NIL )
+   ASSIGN   undo( lUndo )                         INLINE  ::sl_undo := lUndo
 
-   METHOD   handleEvent( nEvent, aInfo )
+   METHOD   setEditable()                         VIRTUAL
+   METHOD   setWrap()                             VIRTUAL
+
+   DATA     sl_hScroll
+   ACCESS   hScroll                               INLINE  ::sl_hScroll
+   ASSIGN   hScroll( bBlock )                     INLINE  ::sl_hScroll := bBlock
+
+   DATA     sl_vScroll
+   ACCESS   vScroll                               INLINE  ::sl_vScroll
+   ASSIGN   vScroll( bBlock )                     INLINE  ::sl_vScroll := bBlock
 
    ENDCLASS
+
 //----------------------------------------------------------------------//
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheckBox
+METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgMLE
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + BS_PUSHBUTTON + BS_AUTOCHECKBOX //+ BS_NOTIFY
-   ::className   := 'BUTTON'
-   ::objType     := objTypeCheckBox
+   ::style       := WS_CHILD + ES_MULTILINE + ES_WANTRETURN
+   ::exStyle     := WS_EX_CLIENTEDGE
+   ::className   := 'EDIT'
+   ::objType     := objTypeMLE
 
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheckBox
+METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgMLE
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF ::visible
       ::style += WS_VISIBLE
    ENDIF
+   IF ::tabStop
+      ::style += WS_TABSTOP
+   ENDIF
+   IF !::editable
+      ::style += ES_READONLY
+   ENDIF
+   IF ::border
+      ::style += WS_BORDER
+   ENDIF
+   IF !( ::wordWrap )
+      IF ::horizScroll
+         ::style += WS_HSCROLL
+      ELSE
+         ::style += ES_AUTOHSCROLL
+      ENDIF
+   ENDIF
+   IF ::vertScroll
+      ::style += WS_VSCROLL
+   ELSE
+      ::style += ES_AUTOVSCROLL
+   ENDIF
 
-   ::oParent:AddChild( SELF )
+   ::oParent:addChild( Self )
 
    ::createControl()
 
@@ -138,45 +187,53 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCh
       ::show()
    ENDIF
 
-   ::setCaption( ::caption )
-
-   IF ::selection
-      ::sendMessage( BM_SETCHECK, BST_CHECKED, 0 )
-   ENDIF
-
-   ::editBuffer := ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-
    RETURN Self
 
 //----------------------------------------------------------------------//
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgCheckBox
+METHOD handleEvent( nMessage, aNM ) CLASS WvgMLE
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+   hb_ToOutDebug( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
 
-   SWITCH nMessage
+   IF nMessage == WM_COMMAND
+      DO CASE
+      CASE aNM[ NMH_code ] == EN_CHANGE
+         ::changed := .t.
 
-   CASE WM_COMMAND
-      IF aNM[ NMH_code ] == BN_CLICKED
-         ::editBuffer := ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+      CASE aNM[ NMH_code ] == EN_UPDATE
 
-         IF hb_isBlock( ::sl_lbClick )
-            eval( ::sl_lbClick, ::editBuffer, NIL, self )
-            RETURN 0
+      CASE aNM[ NMH_code ] == EN_MAXTEXT
 
+      CASE aNM[ NMH_code ] == EN_KILLFOCUS
+         IF hb_isBlock( ::sl_killInputFocus )
+            eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
-      ENDIF
-      EXIT
 
-   END
+      CASE aNM[ NMH_code ] == EN_SETFOCUS
+         IF hb_isBlock( ::sl_setInputFocus )
+            eval( ::sl_setInputFocus, NIL, NIL, Self )
+         ENDIF
+
+      CASE aNM[ NMH_code ] == EN_HSCROLL
+         IF hb_isBlock( ::sl_hScroll )
+            eval( ::sl_hScroll, NIL, NIL, Self )
+         ENDIF
+
+      CASE aNM[ NMH_code ] == EN_VSCROLL
+         IF hb_isBlock( ::sl_vScroll )
+            eval( ::sl_vScroll, NIL, NIL, Self )
+         ENDIF
+
+      ENDCASE
+   ENDIF
 
    RETURN 1
 
 //----------------------------------------------------------------------//
 
-METHOD destroy() CLASS WvgCheckBox
+METHOD destroy() CLASS WvgMLE
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
+   hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
 
    IF len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
@@ -187,25 +244,6 @@ METHOD destroy() CLASS WvgCheckBox
    HB_FreeCallback( ::nWndProc )
 
    RETURN NIL
-
-//----------------------------------------------------------------------//
-
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCheckBox
-
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   RETURN Self
-
-//----------------------------------------------------------------------//
-
-METHOD setCaption( xCaption ) CLASS WvgCheckBox
-
-   IF hb_isChar( xCaption )
-      ::caption := xCaption
-      Win_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
-   ENDIF
-
-   RETURN Self
 
 //----------------------------------------------------------------------//
 

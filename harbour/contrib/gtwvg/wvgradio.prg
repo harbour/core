@@ -82,7 +82,7 @@
 
 //----------------------------------------------------------------------//
 
-CLASS WvgRadioButton  INHERIT  WvgWindow
+CLASS WvgRadioButton  INHERIT  WvgWindow, DataRef
 
    DATA     autosize                              INIT .F.
    DATA     caption                               INIT ''
@@ -94,9 +94,6 @@ CLASS WvgRadioButton  INHERIT  WvgWindow
    METHOD   configure()
    METHOD   destroy()
 
-   METHOD   editBuffer()                          INLINE ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-   METHOD   getData()                             INLINE ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-   METHOD   setData( lCheck )                     INLINE ::sendMessage( BM_SETCHECK, IF( lCheck, BST_CHECKED, BST_UNCHECKED ), 0 )
    METHOD   setCaption( cCaption )
 
    ACCESS   selected                              INLINE ::sl_lbClick
@@ -156,8 +153,10 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
    CASE WM_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
+         ::editBuffer := ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+
          IF hb_isBlock( ::sl_lbClick )
-            eval( ::sl_lbClick, NIL, NIL, self )
+            eval( ::sl_lbClick, ::editBuffer, NIL, self )
             RETURN 0
          ENDIF
       ENDIF

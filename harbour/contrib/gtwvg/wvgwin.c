@@ -441,7 +441,7 @@ HB_FUNC( WIN_DRAWIMAGE )
 
 HB_FUNC( WIN_GETDC )
 {
-   hb_retnint( ( HB_PTRDIFF ) GetDC( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+   hb_retnint( ( HB_PTRDIFF ) GetDC( ISNIL( 1 ) ? NULL : ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1390,6 +1390,21 @@ HB_FUNC( WIN_SENDMESSAGETEXT )
 
 //----------------------------------------------------------------------//
 
+HB_FUNC( WIN_GETMESSAGETEXT )
+{
+   TCHAR cText[ 32000 ];
+
+   SendMessage( wvg_parhwnd( 1 ), ( UINT ) hb_parni( 2 ), wvg_parwparam( 3 ), ( LPARAM ) &cText );
+
+   {
+      char * szText = HB_TCHAR_CONVFROM( cText );
+      hb_retc( szText );
+      HB_TCHAR_FREE( szText );
+   }
+}
+
+//-------------------------------------------------------------------//
+
 HB_FUNC( WIN_SETWNDPROC )
 {
    HWND    hWnd = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
@@ -1433,7 +1448,7 @@ HB_FUNC( WVG_GETNMHDRINFO )
 
    hb_arrayNew( pEvParams, 3 );
 
-   hb_arraySetNInt( pEvParams, 1, lpnmh->code );
+   hb_arraySetNI( pEvParams, 1, lpnmh->code );
    hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lpnmh->idFrom   );
    hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lpnmh->hwndFrom );
 
@@ -1477,28 +1492,6 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
    hb_itemReturnRelease( pEvParams );
 }
 //----------------------------------------------------------------------//
-// Wvg_GetNotifyInfo( wParam, lParam )
-//
-HB_FUNC( WVG_GETNOTIFYINFO )
-{
-   PHB_ITEM  pEvParams = hb_itemNew( NULL );
-   LPNMMOUSE nmm       = ( LPNMMOUSE ) wvg_parlparam( 2 );
-   NMHDR     nmh       = nmm->hdr;
-
-   hb_arrayNew( pEvParams, 7 );
-
-   hb_arraySetNI( pEvParams, 1, ( int ) wvg_parwparam( 1 ) );
-   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.hwndFrom );
-   hb_arraySetNI( pEvParams, 3, nmh.idFrom );
-   hb_arraySetNI( pEvParams, 4, nmh.code );
-   hb_arraySetNL( pEvParams, 5, nmm->dwItemSpec );
-   hb_arraySetNInt( pEvParams, 6, ( HB_PTRDIFF ) wvg_parwparam( 1 ) );
-   hb_arraySetNInt( pEvParams, 7, ( HB_PTRDIFF ) wvg_parlparam( 2 ) );
-
-   hb_itemReturnRelease( pEvParams );
-}
-
-//----------------------------------------------------------------------//
 //                         TreeView Functions
 //----------------------------------------------------------------------//
 
@@ -1519,6 +1512,13 @@ HB_FUNC( WIN_TREEVIEW_SETBKCOLOR )
 HB_FUNC( WIN_TREEVIEW_SETLINECOLOR )
 {
    //hb_retl( TreeView_SetLineColor( wvg_parhwnd( 1 ), wvg_parcolor( 2 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_TREEVIEW_SELECTITEM )
+{
+   hb_retl( TreeView_SelectItem( wvg_parhwnd( 1 ), wvg_parhandle( 2 ) ) );
 }
 
 //----------------------------------------------------------------------//
@@ -1683,7 +1683,7 @@ HB_FUNC( WIN_LBGETTEXT )
    TCHAR  text[ MAX_PATH + 1 ];
    char * szText;
 
-   SendMessage( wvg_parhwnd( 1 ), LB_GETTEXT, ( WPARAM ) hb_parni( 2 ), ( LPARAM ) text  );
+   SendMessage( wvg_parhwnd( 1 ), LB_GETTEXT, wvg_parwparam( 2 ), ( LPARAM ) text  );
 
    szText = HB_TCHAR_CONVFROM( text );
    hb_retc( szText );
@@ -1695,6 +1695,13 @@ HB_FUNC( WIN_LBGETTEXT )
 HB_FUNC( WIN_LBGETCURSEL )
 {
    hb_retni( ListBox_GetCurSel( wvg_parhwnd( 1 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_LBSETCURSEL )
+{
+   hb_retni( ListBox_SetCurSel( wvg_parhwnd( 1 ), hb_parni( 2 ) ) );
 }
 
 //----------------------------------------------------------------------//

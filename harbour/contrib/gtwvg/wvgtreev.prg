@@ -188,6 +188,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTreeView
    LOCAL hItemSelected, hParentOfSelected, n, aNMHdr
    LOCAL cParent := space( 20 )
    LOCAL cText   := space( 20 )
+   LOCAL aHdr
 
    hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
@@ -205,12 +206,20 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTreeView
       EXIT
 
    CASE WM_NOTIFY
+      aHdr   := Wvg_GetNMHdrInfo( aNM[ 2 ] )
       aNMHdr := Wvg_GetNMTreeViewInfo( aNM[ 2 ] )
 
       DO CASE
 
-      CASE aNMHdr[ NMH_code ] == TVN_SELCHANGED
+      CASE aHdr[ NMH_code ] == NM_DBLCLK .OR. aHdr[ NMH_code ] == NM_RETURN
+         ::editBuffer := ::oItemSelected
+         IF hb_isBlock( ::sl_itemSelected )
+            Eval( ::sl_itemSelected, ::oItemSelected, { 0,0,0,0 }, Self )
+         ENDIF
 
+         RETURN .t.
+
+      CASE aNMHdr[ NMH_code ] == TVN_SELCHANGED
          Wvg_TreeView_GetSelectionInfo( ::hWnd, aNM[ 2 ], @cParent, @cText, @hParentOfSelected, @hItemSelected )
 
          ::hParentSelected    := hParentOfSelected
@@ -224,8 +233,8 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTreeView
             ::oItemSelected := NIL
          ENDIF
 
-         IF hb_isBlock( ::sl_itemSelected )
-            Eval( ::sl_itemSelected, ::oItemSelected, { 0,0,0,0 }, Self )
+         IF hb_isBlock( ::sl_itemMarked )
+            Eval( ::sl_itemMarked, ::oItemSelected, { 0,0,0,0 }, Self )
          ENDIF
 
          RETURN .t.

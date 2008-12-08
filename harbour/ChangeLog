@@ -8,6 +8,49 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-07 22:22 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/makefile
+  * harbour/contrib/gtwvg/common.mak
+    + wvg3stat.prg
+    + wvgbitmp.prg
+    + wvgmle.prg
+    + wvgsle.prg
+
+  * harbour/contrib/gtwvg/wvgparts.ch
+    + New constants to handle new classes.
+
+  + harbour/contrib/gtwvg/wvgbitmp.prg
+    + Code skelton of WvgBitmap class ( non-functional yet ).
+  + harbour/contrib/gtwvg/wvg3stat.prg
+    + Wvg3State() class compatible to Xbase++ Xbp3State().
+  + harbour/contrib/gtwvg/wvgmle.prg
+    + WvgMLE() class compatible with Xbase++ XbpMLE().
+  + harbour/contrib/gtwvg/wvgsle.prg
+    + WvgSLE() class compatible with Xbase++ XbpSLE().
+
+  * harbour/contrib/gtwvg/wvgwin.c
+    + Added new functions for new classes.
+
+  * harbour/contrib/gtwvg/wvgcheck.prg
+  * harbour/contrib/gtwvg/wvgdatar.prg
+  * harbour/contrib/gtwvg/wvglistb.prg
+  * harbour/contrib/gtwvg/wvgphdlr.prg
+  * harbour/contrib/gtwvg/wvgstatb.prg
+  * harbour/contrib/gtwvg/wvgradio.prg
+  * harbour/contrib/gtwvg/wvgstatc.prg
+  * harbour/contrib/gtwvg/wvgtreev.prg
+  * harbour/contrib/gtwvg/wvghwnd.prg
+    ; Heavy changes in class framework.
+    
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    + Added functionality of Wvg3State() and WvgSLE(), WvgMLE() classes.
+
+    ; IMPLEMENTATION : Point to <Xbase++ Dialogs> menu option, click on any
+                       Active-X Control, Play with all controls : clicks,
+                       double clicks, resize. Watch statusbar panels, click on 
+                       <Tools> toolbar button, the resulting panel contains
+                       latest classes SLE, MLE, CHECKBOX, RADIO, 3STATE.
+
 2008-12-07 17:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-mkslib.sh
     ! added support for absolute paths in passed object or static library

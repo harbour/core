@@ -77,7 +77,7 @@
 //----------------------------------------------------------------------//
 
 #ifndef __DBG_PARTS__
-//#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 //----------------------------------------------------------------------//
@@ -88,8 +88,8 @@ CLASS WvgStatic  INHERIT  WvgWindow
    DATA     caption                               INIT ''
    DATA     clipParent                            INIT .T.
    DATA     clipSiblings                          INIT .F.
-   DATA     options                               INIT WVGSTATIC_TEXT_LEFT
-   DATA     type                                  INIT WVGSTATIC_TYPE_TEXT
+   DATA     options                               INIT -1//WVGSTATIC_TEXT_LEFT
+   DATA     type                                  INIT -1//WVGSTATIC_TYPE_TEXT
 
 
    METHOD   new()
@@ -110,7 +110,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStati
 
    ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   // + SS_NOTIFY + SS_ETCHEDFRAME //SS_SUNKEN //+ SS_WHITERECT
+   // SS_NOTIFY  SS_ETCHEDFRAME  SS_SUNKEN  SS_WHITERECT
    //
    ::style       := WS_CHILD + WS_CLIPCHILDREN
    ::exStyle     := WS_EX_NOPARENTNOTIFY
@@ -197,6 +197,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
       EXIT
 
    CASE WVGSTATIC_TYPE_RAISEDBOX
+      ::style += SS_ETCHEDFRAME
       EXIT
    CASE WVGSTATIC_TYPE_RECESSEDBOX
       EXIT
@@ -212,6 +213,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
       EXIT
    END  // ::type
 
+   #if 1
    // Options
    IF ( ascan( { WVGSTATIC_TYPE_FGNDFRAME, WVGSTATIC_TYPE_BGNDFRAME, WVGSTATIC_TYPE_HALFTONEFRAME }, ::type ) > 0 )
       IF     ( hb_bitAnd( ::options, WVGSTATIC_FRAMETHIN ) == WVGSTATIC_FRAMETHIN )
@@ -222,7 +224,16 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
 
       ENDIF
    ENDIF
-
+   #endif
+   #if 0
+   IF ::type == WVGSTATIC_TYPE_TEXT
+      IF ::options == WVGSTATIC_FRAMETHIN
+         ::style += WS_BORDER
+      ELSEIF ::options == WVGSTATIC_FRAMETHICK
+         ::style += WS_DLGFRAME
+      ENDIF
+   ENDIF
+   #endif
    //------------------- API request to create control ----------------//
    ::oParent:addChild( SELF )
 

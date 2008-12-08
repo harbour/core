@@ -37,7 +37,10 @@ PRG_SOURCES=\
 	wvgcheck.prg \
 	wvgdatar.prg \
 	wvgradio.prg \
-
+	wvg3stat.prg \
+	wvgbitmp.prg \
+	wvgsle.prg \
+	wvgmle.prg \
 
 PRG_HEADERS=\
 	hbgtwvg.ch \

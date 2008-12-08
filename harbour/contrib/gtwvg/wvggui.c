@@ -1131,7 +1131,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       }
       case WM_NOTIFY:
       {
-         int iResult;
          PHB_ITEM pEvParams = hb_itemNew( NULL );
 
          hb_arrayNew( pEvParams, 2 );

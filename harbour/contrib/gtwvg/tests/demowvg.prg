@@ -2341,9 +2341,12 @@ FUNCTION GoogleMap()
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
 //
 Function ExecuteActiveX( nActiveX, xParam )
-   Local oCrt, oTBar, oSBar, oPanel, oStatic, oCom, oXbp, oTree, oItem1, oItem2
-   LOCAL oListBox, oCheck, oRadio, oStatic2
-   LOCAL aParts :={}
+   Local oCrt, oTBar, oSBar, oStatic, oCom, oXbp, oTree, oItem1, oItem2
+   LOCAL oListBox, oCheck, oRadio, oStatic2, oMLE
+   LOCAL oPanel, oPanel1, oPanel2, cText
+   LOCAL cVarA  := "Test A", cVarB := "Test B"
+   LOCAL aState := {"not selected", "selected", "undefined"}
+   LOCAL aParts := {}
 
    HB_SYMBOL_UNUSED( xParam )
    HB_SYMBOL_UNUSED( oCom )
@@ -2372,26 +2375,30 @@ Function ExecuteActiveX( nActiveX, xParam )
    oSBar:panelClick := {|oPanel| Win_MessageBox( , oPanel:caption ) }
    oPanel := oSBar:getItem( 1 )
    oPanel:caption := 'My Root Panel'
-   oPanel := oSBar:addItem()
-   oPanel:caption := 'Ready'
-   oPanel := oSBar:addItem()
-   oPanel:caption := 'Click on any part!'
+   oPanel1 := oSBar:addItem()
+   oPanel1:caption := 'Ready'
+   oPanel2 := oSBar:addItem()
+   oPanel2:caption := 'Click on any part!'
 
    //--------------------------- Static ------------------------------\\
    oStatic := WvgStatic():new( oCrt )
+   oStatic:type    := WVGSTATIC_TYPE_TEXT
    oStatic:options := WVGSTATIC_TEXT_CENTER
    oStatic:caption := chr(13)+'Implemented   Xbase++ Parts'
    oStatic:create( , , { 0, oTBar:currentSize()[2]+3 }, { 120, oCrt:currentSize()[2]-;
                                oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
 
-   //--------------------------- Static + Radio----------------------\\
-   oStatic2 := WvgStatic():New( oCrt, , { 200,200 }, { 300, 200 }, , .f. )
-   oStatic2:options := WVGSTATIC_FRAMETHICK
+   //--------------------------- Static + Radio + Checkbox ----------\\
+   oStatic2 := WvgStatic():New( oCrt, , { 150, 150 }, { 500,310 }, , .f. )
+   //oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
+   oStatic2:exStyle += WS_EX_WINDOWEDGE
+   //oStatic2:options := WVGSTATIC_FRAMETHICK
    oStatic2:create()
-   oStatic2:setColorBG( RGB( 198,198,198 ) )
+   //oStatic2:setColorBG( RGB( 198,198,198 ) )
+
    oXbp := WvgPushButton():new( oStatic2 )
    oXbp:caption     := "Hide"
-   oXbp:create( , , { 230,160 }, {60, 30} )
+   oXbp:create( , , { 430,275 }, { 60,25 } )
    oXbp:activate    := {|| oStatic2:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
    oRadio := WvgRadioButton():new( oStatic2,, { 10,10 }, { 100,15 } )
@@ -2399,18 +2406,65 @@ Function ExecuteActiveX( nActiveX, xParam )
    oRadio:selection := .T.
    oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, Win_MessageBox( , obj:caption + IF( obj:selection, '< S >', '< N >' ) ) }
    oRadio:create()
+
    oRadio := WvgRadioButton():new( oStatic2,, { 10,35 }, { 100,15 } )
    oRadio:caption   := "Com 2"
    oRadio:create()
 
-   //--------------------------- CheckBox ---------------------------\\
-   oCheck := WvgCheckBox():New( oStatic2, , { 10, 70 }, { 100,15 }, , .t. )
-   oCheck:caption := 'First Checkbox'
+   oCheck := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .t. )
+   oCheck:caption   := 'Checkbox A'
    oCheck:create()
-   oCheck:selected := {|m1,m2,o| m1:=m1,m2:=m2, Win_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
+   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, Win_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
+
+   // Create first 3State button, passing the position to :create()
+   oXbp := Wvg3State():new()
+   oXbp:caption := "3 State A"
+   oXbp:create( oStatic2, , { 10,100 }, { 100,15 } )
+   // Determine current state using mp1
+   oXbp:selected := {| m1,m2,oBtn | m2:=m2, oBtn:=oBtn, oPanel1:caption := "3State A ["+aState[ m1+1 ]+"]" }
+
+   // Create second 3State Button, passing the position to :new()
+   oXbp := Wvg3State():new( oStatic2, , { 10,125 }, { 100,15 } )
+   oXbp:caption := "3 State B"
+   oXbp:create( oStatic2 )
+   // Determine current state using :getData()
+   oXbp:selected := {| m1,m2,oBtn | m1:=m1,m2:=m2, Win_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
+
+   // Create first SLE, specify position using :create()
+   // On :typeOut set the focus to the second SLE
+   oXbp                := WvgSLE():new()
+   oXbp:autoTab        := .T.
+   oXbp:bufferLength   := 20
+   // Data code block containing assignment to LOCAL variable
+   oXbp:dataLink       := {|x| IIf( x == NIL, cVarA, cVarA := x ) }
+   oXbp:create( oStatic2, , { 10,170 }, { 150,20 } )
+   oXbp:setData()
+   // Assign the value of the edit buffer to a LOCAL variable when the input focus is lost
+   oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarA =" + cVarA }
+
+   // Create second SLE, specify position using :new()
+   oXbp                := WvgSLE():new( , , { 10,200 }, { 150,20 } )
+   oXbp:tabStop        := .T.
+   oXbp:bufferLength   := 15
+   oXbp:dataLink       := {|x| IIf( x == NIL, cVarB, cVarB := x ) }
+   oXbp:create( oStatic2 )
+   oXbp:setData()
+   oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
+
+   // Read file into LOCAL variable
+   cText := MemoRead( 'hbmk_b32.bat' )
+   // Create MLE, specify position using :create() and
+   // assign data code block accessing LOCAL variable
+   oMLE          := WvgMLE():new()
+   oMLE:wordWrap := .F.
+   oMLE:border   := .t.
+   oMLE:dataLink := {|x| IIf( x==NIL, cText, cText := x ) }
+   oMLE:create( oStatic2, , { 180,10 }, { 310,250 } )
+   // Copy text from LOCAL variable into edit buffer via :dataLink
+   oMLE:setData()
 
    //--------------------------- ListBox -----------------------------\\
-   oListBox := WvgListbox():new()
+   oListBox := WvgListBox():new()
    oListBox:create( oStatic, , { 5, 55 }, { 107, 380 } )
 
    oListBox:setColorFG( RGB( 218,61,34 ) )
@@ -2426,10 +2480,14 @@ Function ExecuteActiveX( nActiveX, xParam )
    aadd( aParts, 'XbpPushButton' )
    aadd( aParts, 'XbpCheckBox'   )
    aadd( aParts, 'XbpRadioButton')
+   aadd( aParts, 'Xbp3State'     )
+   aadd( aParts, 'XbpSLE'        )
+   aadd( aParts, 'XbpMLE'        )
    aadd( aParts, 'DataRef'       )
 
    aeval( aParts, {|e| oListBox:addItem( e ) } )
    oListBox:itemSelected := {|| Win_MessageBox( , oListBox:getCurItem() ) }
+   oListBox:setData( 3 )
 
    //--------------------------- PushButton --------------------------\\
    oXbp := WvgPushButton():new( oStatic )
@@ -2466,11 +2524,13 @@ Function ExecuteActiveX( nActiveX, xParam )
    oTree:showExpanded( .t., 2 )
    #endif
 
+   oTree:setData( oItem2 )
+
    //--------------------------- Misc Config ------------------------\\
-   oTBar:buttonClick := {|oBtn| IF( oBtn:caption == 'Hide', oStatic:hide(), nil ),;
-                                   IF( oBtn:caption == 'Show', oStatic:show(), nil ),;
-                                   IF( oBtn:caption == 'Static', oStatic2:show():toFront(), nil ),;
-                                       Win_MessageBox( , "Button [" + oBtn:caption + "] clicked!" ) }
+   oTBar:buttonClick := {|oBtn| IF( oBtn:caption == 'Hide' , oStatic:hide(), nil ),;
+                                IF( oBtn:caption == 'Show' , oStatic:show(), nil ),;
+                                IF( oBtn:caption == 'Tools', oStatic2:show():toFront(), nil ),;
+                                 oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
    oCrt:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree ) }
 
    #if 1
@@ -2579,7 +2639,7 @@ STATIC FUNCTION ActiveXBuildToolBar( oCrt, nActiveX )
    oTBar:addItem( "New"       , 'c:\harbour\contrib\gtwvg\tests\v_new.bmp'    )
    oTBar:addItem( "Select"    , 'c:\harbour\contrib\gtwvg\tests\v_selct1.bmp' )
    oTBar:addItem( "Calendar"  , 'c:\harbour\contrib\gtwvg\tests\v_calend.bmp' )
-   oTBar:addItem( "Static"    , 'c:\harbour\contrib\gtwvg\tests\v_lock.bmp'   )
+   oTBar:addItem( "Tools"     , 'c:\harbour\contrib\gtwvg\tests\v_lock.bmp'   )
    oTBar:addItem( "Index"     , 'c:\harbour\contrib\gtwvg\tests\v_index.bmp'  )
    oTBar:addItem( "Show"      , 'c:\harbour\contrib\gtwvg\tests\v_clclt.bmp'  )
    oTBar:addItem( "Hide"      , 'c:\harbour\contrib\gtwvg\tests\v_notes1.bmp' )
@@ -2891,32 +2951,4 @@ Function ConfigureRMChart( RMChart )
    END
 
    Return nil
-//----------------------------------------------------------------------//
-#if 0
-  * harbour/contrib/gtwvg/makefile
-  * harbour/contrib/gtwvg/wincallb.c
-  * harbour/contrib/gtwvg/wvggui.c
-  * harbour/contrib/gtwvg/wvgsink.c
-  * harbour/contrib/gtwvg/wvgutils.c
-  * harbour/contrib/gtwvg/wvgwin.c
-  * harbour/contrib/gtwvg/hbgtwvg.ch
-  * harbour/contrib/gtwvg/wvgparts.ch
-  * harbour/contrib/gtwvg/wvtwin.ch
-  * harbour/contrib/gtwvg/common.mak
-  * harbour/contrib/gtwvg/wincback.prg
-  * harbour/contrib/gtwvg/wvgax.prg
-  * harbour/contrib/gtwvg/wvgcombo.prg
-  * harbour/contrib/gtwvg/wvgcrt.prg
-  * harbour/contrib/gtwvg/wvgdlg.prg
-  * harbour/contrib/gtwvg/wvglistb.prg
-  * harbour/contrib/gtwvg/wvgmenub.prg
-  * harbour/contrib/gtwvg/wvgphdlr.prg
-  * harbour/contrib/gtwvg/wvgpushb.prg
-  * harbour/contrib/gtwvg/wvgstatb.prg
-  * harbour/contrib/gtwvg/wvgstatc.prg
-  * harbour/contrib/gtwvg/wvgtoolb.prg
-  * harbour/contrib/gtwvg/wvgtreev.prg
-  * harbour/contrib/gtwvg/wvgwnd.prg
-  * harbour/contrib/gtwvg/tests/demowvg.prg
-#endif
 //----------------------------------------------------------------------//
