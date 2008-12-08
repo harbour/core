@@ -6,6 +6,7 @@ ROOT = ../
 
 DOC_FILES=\
 	c_std.txt \
+	cmpopt.txt \
 	class_tp.txt \
 	cmdline.txt \
 	codebloc.txt \

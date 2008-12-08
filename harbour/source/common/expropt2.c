@@ -756,6 +756,16 @@ HB_EXPR_PTR hb_compExprReduceNegate( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       HB_COMP_EXPR_FREE( pSelf );
       pSelf = pExpr;
    }
+   else if( pExpr->ExprType == HB_EO_NEGATE && HB_SUPPORT_HARBOUR )
+   {
+      /* NOTE: This will not generate a runtime error if incompatible
+       * data type is used
+       */
+      pExpr->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
+      pExpr = pExpr->value.asOperator.pLeft;
+      HB_COMP_EXPR_FREE( pSelf );
+      pSelf = pExpr;
+   }
 
    return pSelf;
 }
@@ -875,6 +885,17 @@ HB_EXPR_PTR hb_compExprReduceNE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             }
             break;
 
+         case HB_ET_DATE:
+            {
+               BOOL bResult = pLeft->value.asNum.val.l != pRight->value.asNum.val.l;
+               HB_COMP_EXPR_FREE( pLeft );
+               HB_COMP_EXPR_FREE( pRight );
+               pSelf->ExprType = HB_ET_LOGICAL;
+               pSelf->ValType  = HB_EV_LOGICAL;
+               pSelf->value.asLogical = bResult;
+            }
+            break;
+
          case HB_ET_NIL:
             HB_COMP_EXPR_FREE( pLeft );
             HB_COMP_EXPR_FREE( pRight );
@@ -972,6 +993,17 @@ HB_EXPR_PTR hb_compExprReduceGE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             }
             break;
 
+         case HB_ET_DATE:
+            {
+               BOOL bResult = pLeft->value.asNum.val.l >= pRight->value.asNum.val.l;
+               HB_COMP_EXPR_FREE( pLeft );
+               HB_COMP_EXPR_FREE( pRight );
+               pSelf->ExprType = HB_ET_LOGICAL;
+               pSelf->ValType  = HB_EV_LOGICAL;
+               pSelf->value.asLogical = bResult;
+            }
+            break;
+
       }
    /* TODO: add checking of incompatible types
    else
@@ -1028,6 +1060,17 @@ HB_EXPR_PTR hb_compExprReduceLE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                      }
                      break;
                }
+               HB_COMP_EXPR_FREE( pLeft );
+               HB_COMP_EXPR_FREE( pRight );
+               pSelf->ExprType = HB_ET_LOGICAL;
+               pSelf->ValType  = HB_EV_LOGICAL;
+               pSelf->value.asLogical = bResult;
+            }
+            break;
+
+         case HB_ET_DATE:
+            {
+               BOOL bResult = pLeft->value.asNum.val.l <= pRight->value.asNum.val.l;
                HB_COMP_EXPR_FREE( pLeft );
                HB_COMP_EXPR_FREE( pRight );
                pSelf->ExprType = HB_ET_LOGICAL;
@@ -1100,6 +1143,17 @@ HB_EXPR_PTR hb_compExprReduceGT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             }
             break;
 
+         case HB_ET_DATE:
+            {
+               BOOL bResult = pLeft->value.asNum.val.l > pRight->value.asNum.val.l;
+               HB_COMP_EXPR_FREE( pLeft );
+               HB_COMP_EXPR_FREE( pRight );
+               pSelf->ExprType = HB_ET_LOGICAL;
+               pSelf->ValType  = HB_EV_LOGICAL;
+               pSelf->value.asLogical = bResult;
+            }
+            break;
+
       }
    /* TODO: add checking of incompatible types
    else
@@ -1164,8 +1218,17 @@ HB_EXPR_PTR hb_compExprReduceLT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             }
             break;
 
-         default:
+         case HB_ET_DATE:
+            {
+               BOOL bResult = pLeft->value.asNum.val.l < pRight->value.asNum.val.l;
+               HB_COMP_EXPR_FREE( pLeft );
+               HB_COMP_EXPR_FREE( pRight );
+               pSelf->ExprType = HB_ET_LOGICAL;
+               pSelf->ValType  = HB_EV_LOGICAL;
+               pSelf->value.asLogical = bResult;
+            }
             break;
+
       }
    /* TODO: add checking of incompatible types
    else
@@ -1238,6 +1301,17 @@ HB_EXPR_PTR hb_compExprReduceEQ( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                         bResult = ( pLeft->value.asNum.val.d == pRight->value.asNum.val.l );
                      break;
                }
+               HB_COMP_EXPR_FREE( pLeft );
+               HB_COMP_EXPR_FREE( pRight );
+               pSelf->ExprType = HB_ET_LOGICAL;
+               pSelf->ValType  = HB_EV_LOGICAL;
+               pSelf->value.asLogical = bResult;
+            }
+            break;
+
+         case HB_ET_DATE:
+            {
+               BOOL bResult = pLeft->value.asNum.val.l == pRight->value.asNum.val.l;
                HB_COMP_EXPR_FREE( pLeft );
                HB_COMP_EXPR_FREE( pRight );
                pSelf->ExprType = HB_ET_LOGICAL;

@@ -547,10 +547,35 @@ HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR pArray, HB_EXPR_PTR pIndex, HB_CO
 /* ************************************************************************* */
 
 #ifndef HB_MACRO_SUPPORT
+
+/* List of functions which can be used as static initializers */
+static const char * s_szStaticFun[] = {
+   "HB_MUTEXCREATE"
+};
+
+#define STATIC_FUNCTIONS      ( sizeof( s_szStaticFun ) / sizeof( char * ) )
+
+static BOOL hb_compStaticFunction( const char * szName )
+{
+   unsigned int ui;
+   for( ui = 0; ui < STATIC_FUNCTIONS; ++ui )
+   {
+      if( strcmp( szName, s_szStaticFun[ ui ] ) == 0 )
+         return TRUE;
+   }
+   return FALSE;
+}
+
+
 static void hb_compExprCheckStaticInitializer( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightExpr, HB_COMP_DECL )
 {
-   if( pRightExpr->ExprType > HB_ET_FUNREF ||
-       pRightExpr->ExprType == HB_ET_SELF )
+   if( ( pRightExpr->ExprType > HB_ET_FUNREF ||
+         pRightExpr->ExprType == HB_ET_SELF ) &&
+       !( pRightExpr->ExprType == HB_ET_FUNCALL &&
+          pRightExpr->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME &&
+          hb_compStaticFunction( pRightExpr->value.asFunCall.pFunName->
+                                 value.asSymbol ) &&
+          hb_compExprParamListLen( pRightExpr->value.asFunCall.pParms ) == 0 ) )
    {
       /* Illegal initializer for static variable (not a constant value)
        */

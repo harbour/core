@@ -96,7 +96,7 @@ if [ "${SLIB_EXT}" != ".dylib" ]; then
                     echo "cannot read file: ${f}"
                     exit 1
                 fi
-                cp "${dir}/${f}" "${OTMPDIR}" || exit 1
+                cp "${f}" "${OTMPDIR}" || exit 1
                 ;;
             *.a)
                 if [ "${f#/}" == "${f}" ]; then
@@ -110,7 +110,7 @@ if [ "${SLIB_EXT}" != ".dylib" ]; then
                 d="${f##*/}"
                 mkdir $d
                 cd $d
-                ${CCPREFIX}ar -x "${dir}/${f}" || exit 1
+                ${CCPREFIX}ar -x "${f}" || exit 1
                 cd ..
                 ;;
             *)

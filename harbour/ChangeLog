@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-08 16:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-mkslib.sh
+    ! fixed last modification
+
+  * harbour/doc/Makefile
+  + harbour/doc/cmpopt.txt
+    + added small description for Harbour compile time optimization
+
+  * harbour/include/hbexpra.c
+    + allow to use hb_mutexCreate() as static variable initializer, f.e.:
+         static s_mtxarr := { "MTX1" => hb_mutexCreate(), ;
+                              "MTX2" => hb_mutexCreate(), ;
+                              "MTX3" => hb_mutexCreate() }
+  * harbour/include/hbexprb.c
+    % comment
+
+  * harbour/source/common/expropt2.c
+    + added some missing optimizations for date constants
+    + added optimization for multiple negate expressions
+
 2008-12-07 22:22 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/makefile
   * harbour/contrib/gtwvg/common.mak

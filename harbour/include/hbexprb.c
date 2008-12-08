@@ -3127,6 +3127,8 @@ static HB_EXPR_FUNC( hb_compExprUseNot )
    return pSelf;
 }
 
+/* handler for = operator
+ */
 static HB_EXPR_FUNC( hb_compExprUseEqual )
 {
    switch( iMessage )
