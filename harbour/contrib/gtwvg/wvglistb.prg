@@ -194,13 +194,12 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
 //----------------------------------------------------------------------//
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
-   LOCAL nHandled := 1
 
    hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
-   SWITCH nMessage
+   DO CASE
 
-   CASE WM_COMMAND
+   CASE nMessage == HB_GTE_COMMAND
       IF aNM[ 1 ] == LBN_SELCHANGE
          ::nCurSelected := Win_LbGetCurSel( ::hWnd )+ 1
 
@@ -216,15 +215,24 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgListBox
          ENDIF
       ENDIF
 
-      EXIT
-
-   CASE WM_SIZE
+   CASE nMessage == HB_GTE_RESIZED
       ::sendMessage( WM_SIZE, 0, 0 )
       RETURN 0
 
-   END
+   CASE nMessage == HB_GTE_CTLCOLOR
+      IF hb_isNumeric( ::clr_FG )
+         Win_SetTextColor( aNM[ 1 ], ::clr_FG )
+      ENDIF
+      IF hb_isNumeric( ::hBrushBG )
+         Win_SetBkMode( aNM[ 1 ], 1 )
+         RETURN ( ::hBrushBG )
+      ELSE
+         RETURN Win_GetCurrentBrush( aNM[ 1 ] )
+      ENDIF
 
-   RETURN nHandled
+   ENDCASE
+
+   RETURN 0
 
 //----------------------------------------------------------------------//
 
@@ -240,6 +248,8 @@ METHOD destroy() CLASS WvgListBox
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
+   ::WvgWindow:destroy()
+   #if 0
    IF Len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
       ::aChildren := {}
@@ -249,7 +259,7 @@ METHOD destroy() CLASS WvgListBox
       Win_DestroyWindow( ::hWnd )
    ENDIF
    HB_FreeCallback( ::nWndProc )
-
+   #endif
    RETURN NIL
 
 //----------------------------------------------------------------------//

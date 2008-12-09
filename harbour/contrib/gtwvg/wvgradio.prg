@@ -151,7 +151,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
    SWITCH nMessage
 
-   CASE WM_COMMAND
+   CASE HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
          ::editBuffer := ( Win_Button_GetCheck( ::hWnd ) == BST_CHECKED )
 

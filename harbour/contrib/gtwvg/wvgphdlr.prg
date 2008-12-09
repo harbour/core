@@ -235,7 +235,7 @@ METHOD setParent( oWvg ) CLASS WvgPartHandler
 //----------------------------------------------------------------------//
 
 METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
-   Local aPos, aMenuItem, nIndex, nCtrlID
+   Local aPos, aMenuItem, nIndex, nCtrlID, oObj
    LOCAL nReturn := 0
 
    DO CASE
@@ -337,19 +337,12 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       ENDIF
       ::lHasInputFocus := .f.
 
-   CASE nEvent == HB_GTE_RESIZED
-      IF hb_isBlock( ::sl_resize )
-         eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
-      ENDIF
-      aeval( ::aChildren, {|o| o:handleEvent( WM_SIZE, { 0, 0, 0, 0, 0 } ) } )
-
    CASE nEvent == HB_GTE_CLOSE
       IF hb_isBlock( ::close )
          nReturn := eval( ::close, NIL, NIL, Self )
       ENDIF
 
    CASE nEvent == HB_GTE_MENU
-
       DO CASE
       CASE xParams[ 1 ] == 0  // menu selected
          IF hb_isObject( ::oMenu )
@@ -376,22 +369,28 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
 
       ENDCASE
 
+   CASE nEvent == HB_GTE_RESIZED
+      IF hb_isBlock( ::sl_resize )
+         eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
+      ENDIF
+      aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
+
    CASE nEvent == HB_GTE_NOTIFY
       nCtrlID := xParams[ 1 ]
       IF ( nIndex := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
-         RETURN ( ::aChildren[ nIndex ]:handleEvent( WM_NOTIFY, xParams ) )
-
+         RETURN ( ::aChildren[ nIndex ]:handleEvent( HB_GTE_NOTIFY, xParams ) )
       ENDIF
 
    CASE nEvent == HB_GTE_COMMAND
-      nCtrlID := xParams[ 2 ]                                   // Control Identifier
+      nCtrlID := xParams[ 2 ]
       IF ( nIndex := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
-         DO CASE
-         CASE xParams[ 1 ] == BN_CLICKED
-            IF hb_isBlock( ::aChildren[ nIndex ]:sl_lbClick )
-               eval( ::aChildren[ nIndex ]:sl_lbClick, NIL, NIL, ::aChildren[ nIndex ] )
-            ENDIF
-         ENDCASE
+         RETURN ::aChildren[ nIndex ]:handleEvent( HB_GTE_COMMAND, xParams )
+      ENDIF
+
+   CASE nEvent == HB_GTE_CTLCOLOR
+      oObj := ::findObjectByHandle( xParams[ 2 ] )
+      IF hb_isObject( oObj )
+         RETURN oObj:handleEvent( HB_GTE_CTLCOLOR, xParams )
       ENDIF
 
    ENDCASE

@@ -195,7 +195,8 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgMLE
 
    hb_ToOutDebug( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
 
-   IF nMessage == WM_COMMAND
+   DO CASE
+   CASE nMessage == HB_GTE_COMMAND
       DO CASE
       CASE aNM[ NMH_code ] == EN_CHANGE
          ::changed := .t.
@@ -225,9 +226,21 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgMLE
          ENDIF
 
       ENDCASE
-   ENDIF
 
-   RETURN 1
+   CASE nMessage ==  HB_GTE_CTLCOLOR
+      IF hb_isNumeric( ::clr_FG )
+         Win_SetTextColor( aNM[ 1 ], ::clr_FG )
+      ENDIF
+      IF hb_isNumeric( ::hBrushBG )
+         Win_SetBkMode( aNM[ 1 ], 1 )
+         RETURN ( ::hBrushBG )
+      ELSE
+         RETURN Win_GetCurrentBrush( aNM[ 1 ] )
+      ENDIF
+
+   ENDCASE
+
+   RETURN 0
 
 //----------------------------------------------------------------------//
 
@@ -235,6 +248,8 @@ METHOD destroy() CLASS WvgMLE
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
 
+   ::WvgWindow:destroy()
+   #if 0
    IF len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
    ENDIF
@@ -242,6 +257,7 @@ METHOD destroy() CLASS WvgMLE
       Win_DestroyWindow( ::hWnd )
    ENDIF
    HB_FreeCallback( ::nWndProc )
+   #endif
 
    RETURN NIL
 

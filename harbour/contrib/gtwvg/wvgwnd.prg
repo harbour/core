@@ -77,7 +77,7 @@
 //----------------------------------------------------------------------//
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+//#xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 //----------------------------------------------------------------------//
@@ -169,7 +169,8 @@ EXPORTED:
    METHOD   winDevice()
 
    //  SETTINGS
-   METHOD   setColorBG( nRGB )                    INLINE ::clr_BG := nRGB
+   DATA     hBrushBG
+   METHOD   setColorBG( nRGB )
    METHOD   setColorFG( nRGB )                    INLINE ::clr_FG := nRGB, ::invalidateRect()
    METHOD   setFont()
    METHOD   setFontCompoundName()
@@ -341,6 +342,10 @@ METHOD destroy() CLASS WvgWindow
    ENDIF
    hb_FreeCallBack( ::nWndProc )
 
+   IF ::hBrushBG <> NIL
+      Win_DeleteObject( ::hBrushBG )
+   ENDIF
+
    RETURN Self
 
 //----------------------------------------------------------------------//
@@ -397,6 +402,21 @@ METHOD lockPS() CLASS WvgWindow
 //----------------------------------------------------------------------//
 
 METHOD lockUpdate() CLASS WvgWindow
+
+   RETURN Self
+
+//----------------------------------------------------------------------//
+
+METHOD setColorBG( nRGB ) CLASS WvgWindow
+   LOCAL hBrush
+
+   IF hb_isNumeric( nRGB )
+      hBrush := Win_CreateBrush( BS_SOLID, nRGB, 0 )
+      IF hBrush <> 0
+         ::clr_BG := nRGB
+         ::hBrushBG := hBrush
+      ENDIF
+   ENDIF
 
    RETURN Self
 
@@ -1163,7 +1183,7 @@ METHOD createControl() CLASS WvgWindow
 //----------------------------------------------------------------------//
 
 METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
-   LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj
+   LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
 
    #if 0
    hb_ToOutDebug( "%s:wndProc( %i  %i  %i  %i )", __ObjGetClsName( self ), hWnd, nMessage, nwParam, nlParam )
@@ -1191,7 +1211,7 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
          RETURN 0
       ELSE
          IF ( nObj := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
-            RETURN ::aChildren[ nObj ]:handleEvent( WM_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
+            RETURN ::aChildren[ nObj ]:handleEvent( HB_GTE_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
 
          ENDIF
       ENDIF
@@ -1199,17 +1219,27 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
 
    CASE WM_NOTIFY
       IF ( nObj := ascan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
-         RETURN ::aChildren[ nObj ]:handleEvent( WM_NOTIFY, { nwParam, nlParam } )
+         RETURN ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, nlParam } )
 
       ENDIF
       EXIT
 
    CASE WM_CTLCOLORLISTBOX
+   CASE WM_CTLCOLORMSGBOX
+   CASE WM_CTLCOLOREDIT
+   CASE WM_CTLCOLORBTN
+   CASE WM_CTLCOLORDLG
+   CASE WM_CTLCOLORSCROLLBAR
+   CASE WM_CTLCOLORSTATIC
+
       oObj := ::findObjectByHandle( nlParam )
       IF hb_isObject( oObj )
-         IF oObj:clr_FG <> NIL
-            Win_SetTextColor( nwParam, oObj:clr_FG )
-            RETURN ( Win_GetStockObject( WHITE_BRUSH ) )
+         nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
+
+         IF nReturn == 0
+            RETURN Win_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
+         ELSE
+            RETURN nReturn
          ENDIF
       ENDIF
 

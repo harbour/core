@@ -387,12 +387,14 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
    if( iPos != pWVT->keyPointerOut )
       pWVT->keyPointerIn = iPos;
 
+   #if 0
    /* Fire event to be trapped by the application */
    {
       PHB_ITEM pEvParams = hb_itemNew( NULL );
       hb_itemPutNI( pEvParams, iKey );
       hb_gt_wvt_FireEvent( pWVT, HB_GTE_KEYBOARD, pEvParams );
    }
+   #endif
 }
 
 static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
@@ -1148,13 +1150,39 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_CLOSE:  /* Clicked 'X' on system menu */
       {
          PHB_ITEM pEvParams = hb_itemNew( NULL );
-         hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE, pEvParams );
+         if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE, pEvParams ) == 0 )
+         {
+            hb_gt_wvt_AddCharToInputQueue( pWVT, 27 );      // post ESCape
+         }
          return 0;
       }
       case WM_QUIT:
       case WM_DESTROY:
       {
          return 0;
+      }
+      case WM_CTLCOLORLISTBOX:
+      case WM_CTLCOLORMSGBOX:
+      case WM_CTLCOLOREDIT:
+      case WM_CTLCOLORBTN:
+      case WM_CTLCOLORDLG:
+      case WM_CTLCOLORSCROLLBAR:
+      case WM_CTLCOLORSTATIC:
+      {
+         int iResult;
+         PHB_ITEM pEvParams = hb_itemNew( NULL );
+
+         hb_arrayNew( pEvParams, 2 );
+
+         hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) wParam );
+         hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lParam );
+
+         iResult = hb_gt_wvt_FireEvent( pWVT, HB_GTE_CTLCOLOR, pEvParams );
+
+         if( iResult == 0 )
+            break;
+         else
+            return( iResult );
       }
    }
 

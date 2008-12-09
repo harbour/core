@@ -156,21 +156,19 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatusBar
 
    hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
-   SWITCH nMessage
+   DO CASE
 
-   CASE WM_SIZE
+   CASE nMessage == HB_GTE_RESIZED
       ::sendMessage( WM_SIZE, 0, 0 )
       RETURN 0
 
-   CASE WM_COMMAND
+   CASE nMessage == HB_GTE_COMMAND
       IF hb_isBlock( ::sl_lbClick )
          eval( ::sl_lbClick, NIL, NIL, self )
-
+         RETURN 0
       ENDIF
-      nHandled := 0
-      EXIT
 
-   CASE WM_NOTIFY
+   CASE nMessage == HB_GTE_NOTIFY
       aNMH := Wvg_GetNMMouseInfo( aNM[ 2 ] )
 
       DO CASE
@@ -189,8 +187,19 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatusBar
          ENDIF
 
       ENDCASE
-      EXIT
-   END
+
+   CASE nMessage == HB_GTE_CTLCOLOR
+      IF hb_isNumeric( ::clr_FG )
+         Win_SetTextColor( aNM[ 1 ], ::clr_FG )
+      ENDIF
+      IF hb_isNumeric( ::hBrushBG )
+         Win_SetBkMode( aNM[ 1 ], 1 )
+         RETURN ( ::hBrushBG )
+      ELSE
+         RETURN Win_GetCurrentBrush( aNM[ 1 ] )
+      ENDIF
+
+   ENDCASE
 
    RETURN nHandled
 
@@ -207,11 +216,14 @@ METHOD destroy() CLASS WvgStatusBar
       NEXT
    ENDIF
 
+   ::WvgWindow:destroy()
+
+   #if 0
    IF Win_IsWindow( ::hWnd )
       Win_DestroyWindow( ::hWnd )
    ENDIF
    HB_FreeCallback( ::nWndProc )
-
+   #endif
    RETURN NIL
 
 //----------------------------------------------------------------------//

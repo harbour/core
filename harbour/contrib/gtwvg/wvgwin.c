@@ -86,13 +86,15 @@
 //#define wvg_parwparam( n )  ( ( WPARAM ) hb_parnint( n ) )
 //#define wvg_parlparam( n )  ( ( LPARAM ) hb_parnint( n ) )
 
-#define wvg_parwparam( n )  ( ( WPARAM ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parlparam( n )  ( ( LPARAM ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhandle( n )  ( ( HANDLE ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhwnd( n )    ( ( HWND )   ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parwndproc( n ) ( ( WNDPROC )( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parwparam( n )  ( ( WPARAM )  ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parlparam( n )  ( ( LPARAM )  ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhandle( n )  ( ( HANDLE )  ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhwnd( n )    ( ( HWND )    ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parwndproc( n ) ( ( WNDPROC ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhdc( n )     ( ( HDC )     ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parcolor( n )   ( ( COLORREF )( HB_PTRDIFF ) hb_parnint( n ) )
+
 #define wvg_rethandle( n )  ( hb_retnint( ( HB_PTRDIFF ) n ) )
-#define wvg_parcolor( n )   ( ( COLORREF ) hb_parnint( n ) )
 
 //----------------------------------------------------------------------//
 
@@ -1711,6 +1713,20 @@ HB_FUNC( WIN_LBSETCURSEL )
 HB_FUNC( WIN_BUTTON_GETCHECK )
 {
    hb_retnl( Button_GetCheck( wvg_parhwnd( 1 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_GETCURRENTOBJECT )
+{
+   wvg_rethandle( GetCurrentObject( wvg_parhdc( 1 ), hb_parni( 2 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_GETCURRENTBRUSH )
+{
+   wvg_rethandle( GetCurrentObject( wvg_parhdc( 1 ), OBJ_BRUSH ) );
 }
 
 //----------------------------------------------------------------------//

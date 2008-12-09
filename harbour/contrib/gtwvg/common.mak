@@ -35,6 +35,7 @@ LIB_OBJS = \
    $(OBJ_DIR)wvgbitmp$(OBJEXT) \
    $(OBJ_DIR)wvgsle$(OBJEXT) \
    $(OBJ_DIR)wvgmle$(OBJEXT) \
+   $(OBJ_DIR)wvghtmlv$(OBJEXT) \
    \
    $(OBJ_DIR)gtwvg$(OBJEXT) \
    $(OBJ_DIR)wvgcore$(OBJEXT) \

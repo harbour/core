@@ -3261,6 +3261,13 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
       }
+      case HB_GTI_ACTIVATESELECTCOPY:
+      {
+         if( pWVT->bSelectCopy )
+         {
+            pWVT->bBeginMarked = TRUE;
+         }
+      }
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }

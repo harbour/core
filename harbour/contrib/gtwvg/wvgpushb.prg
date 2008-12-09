@@ -105,6 +105,9 @@ CLASS WvgPushButton  INHERIT  WvgWindow
 
    METHOD   handleEvent( nEvent, aInfo )
 
+   METHOD   setColorFG()                          INLINE NIL
+   METHOD   setColorBG()                          INLINE NIL
+
    ENDCLASS
 //----------------------------------------------------------------------//
 
@@ -145,35 +148,40 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPu
 
 //----------------------------------------------------------------------//
 
-METHOD handleEvent( nMessage, aInfo ) CLASS WvgPushButton
-   LOCAL nHandled := 0
+METHOD handleEvent( nMessage, aNM ) CLASS WvgPushButton
 
    hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
-   HB_SYMBOL_UNUSED( aInfo )
+   DO CASE
 
-   SWITCH nMessage
-
-   CASE WM_SIZE
+   CASE nMessage == HB_GTE_RESIZED
       IF hb_isBlock( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
-         nHandled := 0
+         RETURN 0
       ENDIF
-      EXIT
 
-   CASE WM_COMMAND
+   CASE nMessage == HB_GTE_COMMAND
       IF hb_isBlock( ::sl_lbClick )
          eval( ::sl_lbClick, NIL, NIL, self )
          RETURN 0
       ENDIF
-      EXIT
 
-   CASE WM_NOTIFY
+   CASE nMessage == HB_GTE_NOTIFY
 
-      EXIT
-   END
+   CASE nMessage == HB_GTE_CTLCOLOR
+      IF hb_isNumeric( ::clr_FG )
+         Win_SetTextColor( aNM[ 1 ], ::clr_FG )
+      ENDIF
+      IF hb_isNumeric( ::hBrushBG )
+         Win_SetBkMode( aNM[ 1 ], 1 )
+         RETURN ( ::hBrushBG )
+      ELSE
+         RETURN Win_GetCurrentBrush( aNM[ 1 ] )
+      ENDIF
 
-   RETURN nHandled
+   ENDCASE
+
+   RETURN 1
 
 //----------------------------------------------------------------------//
 

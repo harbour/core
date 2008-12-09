@@ -166,6 +166,10 @@ PROCEDURE Main()
    CLS
    Wvt_ShowWindow( SW_RESTORE )
 
+   SetKey( K_F12        , {|| hb_gtInfo( HB_GTI_ACTIVATESELECTCOPY ) } )
+   SetKey( K_CTRL_V     , {|| __KeyBoard( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) ) } )
+   SetKey( K_RBUTTONDOWN, {|| __KeyBoard( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) ) } )
+
    hPopup  := Wvt_SetPopupMenu()
    oMenu   := CreateMainMenu()
 
@@ -2371,9 +2375,9 @@ Function ExecuteActiveX( nActiveX, xParam )
    oTBar := ActiveXBuildToolBar( oCrt, nActiveX )
 
    //--------------------------- StatusBar ---------------------------\\
-   oSBar  := WvgStatusBar():new( oCrt ):create( , , , , , .t. )
+   oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .t. )
    oSBar:panelClick := {|oPanel| Win_MessageBox( , oPanel:caption ) }
-   oPanel := oSBar:getItem( 1 )
+   oPanel  := oSBar:getItem( 1 )
    oPanel:caption := 'My Root Panel'
    oPanel1 := oSBar:addItem()
    oPanel1:caption := 'Ready'
@@ -2389,42 +2393,42 @@ Function ExecuteActiveX( nActiveX, xParam )
                                oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
 
    //--------------------------- Static + Radio + Checkbox ----------\\
-   oStatic2 := WvgStatic():New( oCrt, , { 150, 150 }, { 500,310 }, , .f. )
+   oStatic2:= WvgStatic():New( oCrt, , { 150, 150 }, { 500,310 }, , .f. )
    //oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
    oStatic2:exStyle += WS_EX_WINDOWEDGE
    //oStatic2:options := WVGSTATIC_FRAMETHICK
    oStatic2:create()
    //oStatic2:setColorBG( RGB( 198,198,198 ) )
 
-   oXbp := WvgPushButton():new( oStatic2 )
+   oXbp    := WvgPushButton():new( oStatic2 )
    oXbp:caption     := "Hide"
    oXbp:create( , , { 430,275 }, { 60,25 } )
    oXbp:activate    := {|| oStatic2:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
-   oRadio := WvgRadioButton():new( oStatic2,, { 10,10 }, { 100,15 } )
+   oRadio  := WvgRadioButton():new( oStatic2,, { 10,10 }, { 100,15 } )
    oRadio:caption   := "Com 1"
    oRadio:selection := .T.
    oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, Win_MessageBox( , obj:caption + IF( obj:selection, '< S >', '< N >' ) ) }
    oRadio:create()
 
-   oRadio := WvgRadioButton():new( oStatic2,, { 10,35 }, { 100,15 } )
+   oRadio  := WvgRadioButton():new( oStatic2,, { 10,35 }, { 100,15 } )
    oRadio:caption   := "Com 2"
    oRadio:create()
 
-   oCheck := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .t. )
+   oCheck  := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .t. )
    oCheck:caption   := 'Checkbox A'
    oCheck:create()
    oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, Win_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
 
    // Create first 3State button, passing the position to :create()
-   oXbp := Wvg3State():new()
+   oXbp    := Wvg3State():new()
    oXbp:caption := "3 State A"
    oXbp:create( oStatic2, , { 10,100 }, { 100,15 } )
    // Determine current state using mp1
    oXbp:selected := {| m1,m2,oBtn | m2:=m2, oBtn:=oBtn, oPanel1:caption := "3State A ["+aState[ m1+1 ]+"]" }
 
    // Create second 3State Button, passing the position to :new()
-   oXbp := Wvg3State():new( oStatic2, , { 10,125 }, { 100,15 } )
+   oXbp    := Wvg3State():new( oStatic2, , { 10,125 }, { 100,15 } )
    oXbp:caption := "3 State B"
    oXbp:create( oStatic2 )
    // Determine current state using :getData()
@@ -2452,10 +2456,10 @@ Function ExecuteActiveX( nActiveX, xParam )
    oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
-   cText := MemoRead( 'hbmk_b32.bat' )
+   cText   := MemoRead( 'hbmk_b32.bat' )
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
-   oMLE          := WvgMLE():new()
+   oMLE    := WvgMLE():new()
    oMLE:wordWrap := .F.
    oMLE:border   := .t.
    oMLE:dataLink := {|x| IIf( x==NIL, cText, cText := x ) }
@@ -2530,6 +2534,7 @@ Function ExecuteActiveX( nActiveX, xParam )
    oTBar:buttonClick := {|oBtn| IF( oBtn:caption == 'Hide' , oStatic:hide(), nil ),;
                                 IF( oBtn:caption == 'Show' , oStatic:show(), nil ),;
                                 IF( oBtn:caption == 'Tools', oStatic2:show():toFront(), nil ),;
+                                IF( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ),;
                                  oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
    oCrt:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree ) }
 
@@ -2725,7 +2730,7 @@ Static Function ExeActiveX( nActiveX, oCom, xParam )
    endif
 
    do while .t.
-      nKey := inkey( 0.1 )
+      nKey := inkey()
 //hb_ToOutDebug( "inkey() %i", nKey )
       IF nActiveX == 2
          oCom:Value := seconds()/86400

@@ -194,18 +194,18 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTreeView
 
    SWITCH nMessage
 
-   CASE WM_SIZE
+   CASE HB_GTE_RESIZED
       ::sendMessage( WM_SIZE, 0, 0 )
       RETURN 0
 
-   CASE WM_COMMAND
+   CASE HB_GTE_COMMAND
       IF hb_isBlock( ::sl_lbClick )
          eval( ::sl_lbClick, NIL, NIL, self )
          nHandled := 0
       ENDIF
       EXIT
 
-   CASE WM_NOTIFY
+   CASE HB_GTE_NOTIFY
       aHdr   := Wvg_GetNMHdrInfo( aNM[ 2 ] )
       aNMHdr := Wvg_GetNMTreeViewInfo( aNM[ 2 ] )
 
@@ -255,6 +255,9 @@ METHOD destroy() CLASS WvgTreeView
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
+   ::WvgWindow:destroy()
+
+   #if 0
    IF len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
    ENDIF
@@ -263,6 +266,7 @@ METHOD destroy() CLASS WvgTreeView
       Win_DestroyWindow( ::hWnd )
    ENDIF
    HB_FreeCallback( ::nWndProc )
+   #endif
 
    RETURN NIL
 

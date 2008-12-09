@@ -253,20 +253,30 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
 
 //----------------------------------------------------------------------//
 
-METHOD handleEvent( nMessage/*, aNM */) CLASS WvgStatic
+METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
 
    hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
-   SWITCH nMessage
+   DO CASE
 
-   CASE WM_SIZE
+   CASE nMessage == HB_GTE_RESIZED
       IF hb_isBlock( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
          RETURN ( 0 )
       ENDIF
-      EXIT
 
-   END
+   CASE nMessage == HB_GTE_CTLCOLOR
+      IF hb_isNumeric( ::clr_FG )
+         Win_SetTextColor( aNM[ 1 ], ::clr_FG )
+      ENDIF
+      IF hb_isNumeric( ::hBrushBG )
+         Win_SetBkMode( aNM[ 1 ], 1 )
+         RETURN ( ::hBrushBG )
+      ELSE
+         RETURN Win_GetCurrentBrush( aNM[ 1 ] )
+      ENDIF
+
+   ENDCASE
 
    RETURN ( 1 )
 
@@ -276,6 +286,8 @@ METHOD destroy() CLASS WvgStatic
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
+   ::WvgWindow:destroy()
+   #if 0
    IF len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
    ENDIF
@@ -283,7 +295,7 @@ METHOD destroy() CLASS WvgStatic
       Win_DestroyWindow( ::hWnd )
    ENDIF
    HB_FreeCallback( ::nWndProc )
-
+   #endif
    RETURN NIL
 
 //----------------------------------------------------------------------//

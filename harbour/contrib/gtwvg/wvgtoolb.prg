@@ -195,14 +195,14 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
 
    SWITCH nMessage
 
-   CASE WM_SIZE
+   CASE HB_GTE_RESIZED
       ::sendMessage( WM_SIZE, 0, 0 )
       RETURN 0
 
-   CASE WM_COMMAND
+   CASE HB_GTE_COMMAND
       EXIT
 
-   CASE WM_NOTIFY
+   CASE HB_GTE_NOTIFY
       aNMMouse := Wvg_GetNMMouseInfo( aNM[ 2 ] )
 
       DO CASE

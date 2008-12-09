@@ -151,9 +151,9 @@ METHOD handleEvent( nMessage, aNM ) CLASS Wvg3State
 
    hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
 
-   SWITCH nMessage
+   DO CASE
 
-   CASE WM_COMMAND
+   CASE nMessage == HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
          ::editBuffer := Win_Button_GetCheck( ::hWnd )
 
@@ -163,9 +163,19 @@ METHOD handleEvent( nMessage, aNM ) CLASS Wvg3State
 
          ENDIF
       ENDIF
-      EXIT
 
-   END
+   CASE nMessage ==  HB_GTE_CTLCOLOR
+      IF hb_isNumeric( ::clr_FG )
+         Win_SetTextColor( aNM[ 1 ], ::clr_FG )
+      ENDIF
+      IF hb_isNumeric( ::hBrushBG )
+         Win_SetBkMode( aNM[ 1 ], 1 )
+         RETURN ( ::hBrushBG )
+      ELSE
+         RETURN Win_GetCurrentBrush( aNM[ 1 ] )
+      ENDIF
+
+   ENDCASE
 
    RETURN 1
 

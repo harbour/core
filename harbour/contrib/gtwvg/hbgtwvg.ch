@@ -69,6 +69,7 @@
 #define HB_GTE_MENU                       9
 #define HB_GTE_NOTIFY                    10
 #define HB_GTE_COMMAND                   11
+#define HB_GTE_CTLCOLOR                  12
 
 #define HB_GTI_SETFONT                   71
 #define HB_GTI_PRESPARAMS                72
@@ -76,6 +77,7 @@
 #define HB_GTI_DISABLE                   74
 #define HB_GTI_SETFOCUS                  75
 #define HB_GTI_DEFERPAINT                76
+#define HB_GTI_ACTIVATESELECTCOPY        77
 
 /* Presentation Parameters | HB_GTI_PRESPARAMS */
 #define HB_GTI_PP_EXSTYLE                 1

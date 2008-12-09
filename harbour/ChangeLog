@@ -8,6 +8,68 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-09 12:46 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/makefile
+  * harbour/contrib/gtwvg/common.mak
+    + wvghtmlv.prg
+
+  * harbour/contrib/gtwvg/hbgtwvg.ch
+    + HB_GTI_ACTIVATESELECTCOPY
+    + HB_GTE_CTLCOLOR
+
+  * harbour/contrib/gtwvg/gtwvg.c
+    + hb_gtInfo( HB_GTI_ACTIVATESELECTCOPY )
+      This has the same effect as to activating the select/copy operation
+      from the sys menu of the application. This way you can define
+      any key to begin this operation as:
+
+         SetKey( K_RBUTTONUP, {|| hb_gtInfo( HB_GTI_ACTIVATESELECTCOPY ) } )
+
+      and to start copy operation it will be enough to perform right
+      click and then dragging the text with left button down.
+    
+      :TODO: Implementation in GTWVT.
+
+  + harbour/contrib/gtwvg/wvghtmlv.prg
+    + Added WvgHTMLViewer() class compatible with XbpHTMLViewer().
+      It is a fully functional implementation as per Xbase++ documentation
+      except for method :setHTML( cHTMLtext )
+
+  * harbour/contrib/gtwvg/wvggui.c
+    + Added evenh handlling for WV_CTLCOLOR* messages.
+
+  * harbour/contrib/gtwvg/wvgwin.c
+    + Added more winapi functions.
+
+  * harbour/contrib/gtwvg/wvg3stat.prg
+  * harbour/contrib/gtwvg/wvgax.prg
+  * harbour/contrib/gtwvg/wvgcheck.prg
+  * harbour/contrib/gtwvg/wvglistb.prg
+  * harbour/contrib/gtwvg/wvgmle.prg
+  * harbour/contrib/gtwvg/wvgphdlr.prg
+  * harbour/contrib/gtwvg/wvgpushb.prg
+  * harbour/contrib/gtwvg/wvgradio.prg
+  * harbour/contrib/gtwvg/wvgsle.prg
+  * harbour/contrib/gtwvg/wvgstatb.prg
+  * harbour/contrib/gtwvg/wvgstatc.prg
+  * harbour/contrib/gtwvg/wvgtoolb.prg
+  * harbour/contrib/gtwvg/wvgtreev.prg
+  * harbour/contrib/gtwvg/wvgwnd.prg
+    ! Heavy changes especially in event handlling management.
+    + ::setColorFG( nRGB ) and ::setColorBG( nRGB ) implemented for
+      WvgSLE(), WvgMLE(), WvgStatic(), WvgCheckBox(), WvgRadioButton(),
+      WvgTreeView(), WvgListBox().
+  
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    ! Some finer additions.
+
+  + harbour/contrib/gtwvg/tests/demoxbp.prg
+    Added new demo with pure Xbase++ code clubbing all the committed classes
+    till date including WvgHTMLViewer().
+    ;
+    Compile as : hbmk_b32 -mt demoxbp
+
+
 2008-12-08 16:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-mkslib.sh
     ! fixed last modification
