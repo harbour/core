@@ -939,7 +939,7 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
                if( struMacro.pError )
                {
                   ULONG ulGenCode;
-                  
+
                   ulGenCode = hb_errGetGenCode( struMacro.pError );
                   if( ulGenCode == EG_NOVAR || ulGenCode == EG_NOALIAS )
                   {

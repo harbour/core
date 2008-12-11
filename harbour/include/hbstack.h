@@ -168,6 +168,7 @@ typedef struct
    char       szDate[ 9 ];    /* last returned date from _pards() yyyymmdd format */
    void *     pCDP;           /* current codepage module */
    void *     pLang;          /* current language module */
+   void *     pI18N;          /* current I18N module */
    void *     hGT;            /* current GT module */
    int        iTSD;           /* number of allocated TSD holders */
    PHB_TSD_HOLDER pTSD;       /* thread specific data holder */
@@ -322,6 +323,8 @@ extern void *      hb_stackGetCDP( void );
 extern void        hb_stackSetCDP( void * );
 extern void *      hb_stackGetLang( void );
 extern void        hb_stackSetLang( void * );
+extern void *      hb_stackGetI18N( void );
+extern void        hb_stackSetI18N( void * );
 
 extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
 
@@ -369,6 +372,8 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
 #define hb_stackSetCDP( p )         do { hb_stack.pCDP = ( p ); } while ( 0 )
 #define hb_stackGetLang( )          ( hb_stack.pLang )
 #define hb_stackSetLang( p )        do { hb_stack.pLang = ( p ); } while ( 0 )
+#define hb_stackGetI18N( )          ( hb_stack.pI18N )
+#define hb_stackSetI18N( p )        do { hb_stack.pI18N = ( p ); } while ( 0 )
 
 #define hb_stackId( )               ( ( void * ) &hb_stack )
 #if defined( HB_MT_VM )

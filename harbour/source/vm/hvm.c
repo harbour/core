@@ -752,6 +752,9 @@ void hb_vmThreadInit( void * Cargo )
       hb_cdpSelectID( pState->pszCDP );
       hb_langSelectID( pState->pszLang );
 
+      hb_vmSetI18N( pState->pI18N );
+      pState->pI18N = NULL;
+
       if( pState->pSet )
       {
          /* TODO: add set sharing */
@@ -814,6 +817,7 @@ void hb_vmThreadQuit( void )
    hb_rddCloseAll();             /* close all workareas */
    hb_stackRemove( 1 );          /* clear stack items, leave only initial symbol item */
    hb_memvarsClear();            /* clear all PUBLIC (and PRIVATE if any) variables */
+   hb_vmSetI18N( NULL );         /* remove i18n translation table */
 #ifndef HB_NO_DEBUG
    hb_vmDebuggerExit( FALSE );   /* deactivate debugger */
 #endif
@@ -884,6 +888,8 @@ void hb_vmInit( BOOL bStartMainProc )
    /* Check for some internal switches */
    s_VMFlags = hb_cmdargProcessVM( &s_VMCancelKey, &s_VMCancelKeyEx );
    hb_inkeySetCancelKeys( s_VMCancelKey, s_VMCancelKeyEx );
+
+   hb_i18n_init();            /* initialize i18n module */
 
 #ifndef HB_NO_PROFILER
    /* Initialize opcodes profiler support arrays */
@@ -1021,8 +1027,6 @@ int hb_vmQuit( void )
    hb_itemClear( hb_stackReturnItem() );
    hb_stackRemove( 1 );          /* clear stack items, leave only initial symbol item */
 
-   hb_memvarsClear();            /* clear all PUBLIC (and PRIVATE if any) variables */
-
    /* intentionally here to allow executing object destructors for all
     * cross referenced items before we release classy subsystem
     */
@@ -1034,7 +1038,12 @@ int hb_vmQuit( void )
    hb_stackSetActionRequest( 0 );
    hb_rddCloseAll();             /* close all workareas */
    hb_rddShutDown();             /* remove all registered RDD drivers */
+   hb_memvarsClear();            /* clear all PUBLIC (and PRIVATE if any) variables */
+   hb_vmSetI18N( NULL );         /* remove i18n translation table */
+   hb_i18n_exit();               /* unregister i18n module */
 
+   hb_itemClear( hb_stackReturnItem() );
+   hb_gcCollectAll( TRUE );
 #ifndef HB_NO_DEBUG
    /* deactivate debugger */
    hb_vmDebuggerExit( TRUE );
@@ -8018,6 +8027,21 @@ void hb_vmSetLang( PHB_LANG pLang )
    HB_STACK_TLS_PRELOAD
 
    hb_stackSetLang( ( void * ) pLang );
+}
+
+void * hb_vmI18N( void )
+{
+   HB_STACK_TLS_PRELOAD
+
+   return hb_stackGetI18N();
+}
+
+void hb_vmSetI18N( void * pI18N )
+{
+   HB_STACK_TLS_PRELOAD
+
+   hb_i18n_release( hb_stackGetI18N() );
+   hb_stackSetI18N( pI18N );
 }
 
 #if defined( HB_MT_VM )

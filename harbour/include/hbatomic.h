@@ -63,7 +63,7 @@
 #if defined( __SVR4 )
 #  include <thread.h>
 #endif
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
 #  include <sched.h>
 #endif
 
@@ -258,7 +258,7 @@ HB_EXTERN_BEGIN
 
 #  endif  /* ???CPU?? */
 
-#endif
+#endif  /* __GNUC__ */
 
 
 #if defined( HB_OS_WIN_32 )
@@ -332,7 +332,7 @@ HB_EXTERN_BEGIN
 #     define HB_SPINLOCK_RELEASE(l) OSSpinLockUnlock(l)
 #  endif
 
-#endif
+#endif  /* HB_OS_??? */
 
 HB_EXTERN_END
 

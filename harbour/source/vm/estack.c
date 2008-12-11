@@ -945,6 +945,20 @@ void hb_stackSetLang( void * pLang )
    hb_stack.pLang = pLang;
 }
 
+#undef hb_stackGetI18N
+void * hb_stackGetI18N( void )
+{
+   HB_STACK_TLS_PRELOAD
+   return hb_stack.pI18N;
+}
+
+#undef hb_stackSetI18N
+void hb_stackSetI18N( void * pI18N )
+{
+   HB_STACK_TLS_PRELOAD
+   hb_stack.pI18N = pI18N;
+}
+
 #undef hb_stackItemBasePtr
 PHB_ITEM ** hb_stackItemBasePtr( void )
 {

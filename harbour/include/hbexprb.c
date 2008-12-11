@@ -1770,10 +1770,10 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                else if( strncmp( "HB_I18N_", pName->value.asSymbol, 8 ) == 0 )
                {
                   HB_EXPR_PTR pArg = pParms->value.asList.pExprList, pCount = NULL;
-                  BOOL        fStrict, fNoop, fPlural, fUnknown;
+                  BOOL        fStrict, fNoop, fPlural, fI18nFunc;
                   ULONG       ulPos = 8;
 
-                  fStrict = fNoop = fPlural = fUnknown = FALSE;
+                  fStrict = fNoop = fPlural = fI18nFunc = FALSE;
                   if( pName->value.asSymbol[ ulPos ] == 'N' )
                   {
                      fPlural = TRUE;
@@ -1786,16 +1786,14 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                      {
                         ++ulPos;
                         if( strcmp( "STRICT", &pName->value.asSymbol[ ulPos ] ) == 0 )
-                           fStrict = TRUE;
+                           fI18nFunc = fStrict = TRUE;
                         else if( strcmp( "NOOP", &pName->value.asSymbol[ ulPos ] ) == 0 )
-                           fNoop = TRUE;
-                        else
-                           fUnknown = TRUE;
+                           fI18nFunc = fNoop = TRUE;
                      }
-                     else if( pName->value.asSymbol[ ulPos ] )
-                        fUnknown = TRUE;
+                     else if( !pName->value.asSymbol[ ulPos ] )
+                        fI18nFunc = TRUE;
                   }
-                  if( !fUnknown )
+                  if( fI18nFunc )
                   {
                      int            iWarning = 0;
                      HB_EXPR_PTR    pBadParam = NULL;

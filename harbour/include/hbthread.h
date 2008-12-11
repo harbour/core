@@ -275,6 +275,7 @@ typedef struct _HB_THREADSTATE
    const char *   pszLang;
    const char *   pszDefRDD;
    PHB_SET_STRUCT pSet;
+   void *         pI18N;
    void *         hGT;
    void *         pStackId;
    BOOL           fActive;
@@ -295,10 +296,17 @@ extern void hb_threadExit( void );
 
 extern PHB_THREADSTATE hb_threadStateNew( void );
 
+/* atomic oprtations */
+void        hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value );
+HB_COUNTER  hb_atomic_get( volatile HB_COUNTER * pCounter );
+void        hb_atomic_inc( volatile HB_COUNTER * pCounter );
+BOOL        hb_atomic_dec( volatile HB_COUNTER * pCounter ); /* returns TRUE when counter reach after decrementation */
+
 /* Critical sections or fast non recursive MUTEXes */
 extern void hb_threadEnterCriticalSection( HB_CRITICAL_T * critical );
 extern void hb_threadLeaveCriticalSection( HB_CRITICAL_T * critical );
 
+/* conditional variables */
 extern BOOL hb_threadCondSignal( HB_COND_T * cond );
 extern BOOL hb_threadCondBroadcast( HB_COND_T * cond );
 extern BOOL hb_threadCondWait( HB_COND_T * cond, HB_CRITICAL_T * mutex );

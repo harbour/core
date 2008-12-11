@@ -1001,6 +1001,19 @@ extern void   hb_idleState( void ); /* services a single idle state */
 extern void   hb_idleReset( void ); /* services a single idle state */
 extern void   hb_idleSleep( double dSeconds ); /* sleep for a given time serving idle task */
 
+/* I18N public API */
+extern PHB_ITEM hb_i18n_ngettext( PHB_ITEM pNum, PHB_ITEM pMsgID, PHB_ITEM pContext );
+extern PHB_ITEM hb_i18n_gettext( PHB_ITEM pMsgID, PHB_ITEM pContext );
+/* I18N internal HVM API */
+#if defined( _HB_API_INTERNAL_ ) || defined( _HB_I18N_INTERNAL_ )
+extern void *   hb_vmI18N( void );
+extern void     hb_vmSetI18N( void * );
+extern void     hb_i18n_init( void );
+extern void     hb_i18n_exit( void );
+extern void     hb_i18n_release( void * cargo );
+extern void *   hb_i18n_alloc( void * cargo );
+#endif /* _HB_API_INTERNAL_ || _HB_I18N_INTERNAL_ */
+
 /* misc */
 extern HB_EXPORT char *       hb_verPlatform( void );        /* retrieves a newly allocated buffer containing platform version */
 extern HB_EXPORT char *       hb_verCompiler( void );        /* retrieves a newly allocated buffer containing compiler version */

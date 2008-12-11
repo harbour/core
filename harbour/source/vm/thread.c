@@ -59,6 +59,7 @@
 
 #include "hbvmopt.h"
 #include "hbthread.h"
+#include "hbatomic.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapicdp.h"
@@ -193,6 +194,87 @@ ULONG _hb_gettid( void )
       tid = ptib->tib_ptib2->tib2_ultid;
 
    return tid;
+}
+#endif
+
+/*
+ * atomic increment/decrement operations
+ */
+#if !defined( HB_MT_VM )
+void hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value )
+{
+   *pCounter = value;
+}
+
+HB_COUNTER hb_atomic_get( volatile HB_COUNTER * pCounter )
+{
+   return *pCounter;
+}
+
+void hb_atomic_inc( volatile HB_COUNTER * pCounter )
+{
+   ++( *pCounter );
+}
+
+BOOL hb_atomic_dec( volatile HB_COUNTER * pCounter )
+{
+   return --( *pCounter ) == 0;
+}
+#elif defined( HB_ATOM_INC ) && defined( HB_ATOM_DEC ) && \
+      defined( HB_ATOM_GET ) && defined( HB_ATOM_SET )
+void hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value )
+{
+   HB_ATOM_SET( pCounter, value );
+}
+
+HB_COUNTER hb_atomic_get( volatile HB_COUNTER * pCounter )
+{
+   return HB_ATOM_GET( pCounter );
+}
+
+void hb_atomic_inc( volatile HB_COUNTER * pCounter )
+{
+   HB_ATOM_INC( pCounter );
+}
+
+BOOL hb_atomic_dec( volatile HB_COUNTER * pCounter )
+{
+   return HB_ATOM_DEC( pCounter ) == 0;
+}
+#else
+static HB_CRITICAL_NEW( s_atomicMtx );
+void hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value )
+{
+   /* NOTE: on some platforms it may be necessary to protect this
+    * by cirtical section, f.e. when HB_COUNTER cannot be accessed
+    * using single memory access by CPU.
+    */
+   *pCounter = value;
+}
+
+HB_COUNTER hb_atomic_get( volatile HB_COUNTER * pCounter )
+{
+   /* NOTE: on some platforms it may be necessary to protect this
+    * by cirtical section, f.e. when HB_COUNTER cannot be accessed
+    * using single memory access by CPU.
+    */
+   return *pCounter;
+}
+
+void hb_atomic_inc( volatile HB_COUNTER * pCounter )
+{
+   hb_threadEnterCriticalSection( &s_atomicMtx );
+   ++( *pCounter );
+   hb_threadLeaveCriticalSection( &s_atomicMtx );
+}
+
+BOOL hb_atomic_dec( volatile HB_COUNTER * pCounter )
+{
+   BOOL fResult;
+   hb_threadEnterCriticalSection( &s_atomicMtx );
+   fResult = --( *pCounter ) == 0;
+   hb_threadLeaveCriticalSection( &s_atomicMtx );
+   return fResult;
 }
 #endif
 
@@ -480,6 +562,11 @@ static HB_GARBAGE_FUNC( hb_threadDestructor )
       hb_itemRelease( pThread->pResult );
       pThread->pResult = NULL;
    }
+   if( pThread->pI18N )
+   {
+      hb_i18n_release( pThread->pI18N );
+      pThread->pI18N = NULL;
+   }
    if( pThread->pSet )
    {
       hb_setRelease( pThread->pSet );
@@ -657,6 +744,7 @@ HB_FUNC( HB_THREADSTART )
 
       pThread->pszCDP    = hb_cdpID();
       pThread->pszLang   = hb_langID();
+      pThread->pI18N     = hb_i18n_alloc( hb_vmI18N() );
       pThread->pszDefRDD = hb_stackRDD()->szDefaultRDD;
       pThread->pSet      = hb_setClone( hb_stackSetStruct() );
       pThread->pParams   = hb_arrayBaseParams();

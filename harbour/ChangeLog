@@ -8,6 +8,243 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-11 19:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbthread.h
+  * harbour/source/vm/thread.c
+    + added hb_atomic_set(), hb_atomic_get(), hb_atomic_inc() and
+      hb_atomic_dec() functions which operates on HB_COUNTER or smaller
+      type if it's necessary for some platforms which can be access/assign
+      increment/decrement in MT safe atom operations.
+      hb_atomic_dec() returns true if counter is 0 after decrementation
+
+  * harbour/include/hbatomic.h
+    ! fixed compilation in Linux and OpenWatcom
+
+  * harbour/include/hbapiitm.h
+  * harbour/source/rtl/itemseri.c
+    + make hb_itemSerialize() and hb_itemDeserialize() public functions
+    ! fixed serialization items with internal item references
+
+  * harbour/source/vm/hvm.c
+    * release memvars after closing RDDs
+
+  * harbour/source/debug/dbgentry.c
+    ! fixed buffer overflow reported by Rodrigo
+
+  * harbour/source/vm/macro.c
+  * harbour/source/compiler/hbmain.c
+    * formatting
+
+  * harbour/include/hbexprb.c
+    ! fixed wrongly recognized functions with HB_I18N_ prefix as
+      HB_I18N_GETTEXT()
+
+  * harbour/include/hbapi.h
+  * harbour/include/hbstack.h
+  * harbour/include/hbthread.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/thread.c
+  * harbour/source/vm/hvm.c
+    + added support for I18N in HVM.
+      Each thread can have it's own i18n set.
+      When new thread is created then it inherits i18n set from parent
+      thread and both uses the same set (please remember about it if you
+      will want to make some direct modifications on active i18n set
+      internals).
+      When thread change active i18n set then it effects only this thread
+      and new threads which will be create later. It does not change i18n
+      in other existing threads.
+    + added functions to set/get pointer to active i18n set in HVM
+         void * hb_vmI18N( void )
+         void   hb_vmSetI18N( void * )
+
+  * harbour/include/hbapi.h
+  * harbour/source/rtl/hbi18n.c
+    + added i18n module. Now only for internal Harbour usage without support
+      for optional switching to alternative implementations.
+      I'll add such functionality later when I will work on native gettext
+      support.
+
+      The following public .prg functions has been added:
+         HB_I18N_GETTEXT[_STRICT]( <cMsgID> [, <cContext> ] )
+               -> <cTranslatedMsgID> | <cMsgID>
+         HB_I18N_NGETTEXT[_STRICT]( <nValue>, <cMsgID> | <acMsgID> ;
+                                    [, <cContext> ] )
+               -> <cTranslatedMsgID> | <cMsgID> | <acMsgID>[ <nIndex> ]
+      This is minimal support necessary for .prg code which has to exists
+      in each i18n module working with Harbour.
+
+      The following functions had been added as public C API:
+         PHB_ITEM hb_i18n_gettext( PHB_ITEM pMsgID, PHB_ITEM pContext )
+         PHB_ITEM hb_i18n_ngettext( PHB_ITEM pNum,
+                                    PHB_ITEM pMsgID, PHB_ITEM pContext )
+
+      The following functions had been added as private HVM C API:
+         void   hb_i18n_init( void )
+         void   hb_i18n_exit( void )
+         void   hb_i18n_release( void * cargo )
+         void * hb_i18n_alloc( void * cargo )
+      They have to be supported by alternative i18n modules
+
+      The following functions has been added to manage Harbour i18n
+      translations sets:
+
+         HB_I18N_CREATE()
+                  -> <pI18N>
+            Creates new empty I18N translation set
+
+         HB_I18N_CODEPAGE( [<pI18N>,] [<cNewCP>], [<lBase>], [<lTranslate>] )
+                  -> <cOldCP>
+            Gets or sets Harbour codepage used by translation set
+            <pI18N> - I18N translation set,
+                      if it's not given then currently active I18N set is used
+            <cNewCP> - new CP ID. Must be linked with application
+            <lBase> - when it's .T. then get/set base massages CP instead of
+                      translated massages CP
+            <lTranslate> - if it's .T. then translate base (<lBase>==.T.) or
+                           final messages in I18N set from previous CP to
+                           given one. Base messages translation in synced
+                           with context ID translation.
+
+         HB_I18N_PLURALFORM( [<pI18N>,] [<cNewForm>|<bNewForm>], [<lBase>] )
+                  -> <cOldForm>|<bOldForm>
+            Gets or sets plural form used for final or base messages
+            <pI18N> - I18N translation set,
+                      if it's not given then currently active I18N set is used
+            <cNewForm> - language ID of plural form, f.e.: "EN", "PL", "LT".
+                         Now only three above are supported. Please add rules
+                         for other languages to source/rtl/hbi18n.c.
+            <bNewForm> - codeblock used to calculate plural form indexes.
+                         can be used instead of character representation but
+                         it's not storred in serialized I18N set
+            <lBase> - when it's .T. then get/set base massages plural form
+                      instead of translated massages one.
+
+         HB_I18N_DESCRIPTION( [<pI18N>,] [<cNewDescription>] )
+                  -> <cOldDescription>
+            Gets or sets translation set description. After serialization
+            up to 32 bytes is stored in header which can be easy used to
+            determinate type of translation file.
+            <pI18N> - I18N translation set,
+                      if it's not given then currently active I18N set is used
+            <cNewDescription> - new description
+
+         HB_I18N_ADDTEXT( <pI18N>, <cMsgID>, <cTrans> | <acTrans> [, <cContext> ] )
+                  -> NIL
+            Adds new message with translation to i18n translation set
+            <pI18N> - I18N translation set
+            <cMsgID> - original message
+            <cTrans> - translated message
+            <acTrans> - array with translated messages used for plural forms
+            <cContext> - message context
+
+         HB_I18N_SET( [ <pI18N> | NIL ] )
+                  -> <lActive>
+            Sets given I18N translation set as default one used by
+            HB_I18N_[N]GETTEXT[_STRICT]() functions or remove translation
+            set for calling thread when passed parameter is NIL
+            <pI18N> - I18N translation set
+            Returns logical value which is .T. when i18n set is active
+
+         HB_I18N_SAVETABLE( [<pI18N>] )
+                  -> <cTable>
+            Returns I18N translation as string item which can be stored
+            in file or database
+            <pI18N> - I18N translation set, if it's not given then currently
+                      active I18N set is used
+
+         HB_I18N_RESTORETABLE( <cTable> )
+                  -> <pI18N> | NIL
+            Restores I18N translation set from strin item.
+            <cTable> - I18N translation set in string representation
+            On success it returns new <pI18N> set otherwise NIL if <cTable>
+            is not valid item created by HB_I18N_SAVETABLE() or it's corrupted.
+
+         HB_I18N_HEADERSIZE()
+                  -> <nHeaderSize>
+            Returns size of header used by i18n serialized version
+
+         HB_I18N_CHEK( <cTable> | <cHeader> [, @<cDescription> ] )
+                  -> <lValid>
+            <cTable> - i18n translation set serialized by HB_I18N_SAVETABLE
+            <cHeader> - header of i18n translation set
+                        ( LEFT( <cTable>, HB_I18N_HEADERSIZE() )
+            <cDescription> - optional parameter passed by reference where
+                             will be sored i18n translation set description
+                             extracted from valid header
+            Returns logical value indicating if given table or header is
+            valid serialized by HB_I18N_SAVETABLE() data. It does not
+            decode the table though it validates size and control sums.
+
+      These functions are optional and some future alternative implementations
+      may not support all of them and/or may provide some other functions.
+
+    + added unofficial .prg function __I18N_HASHTABLE() which allows to
+      access hash table used by i18n translation set or create new translation
+      set with given hash table. It's helper functions for developers which
+      will work on Harbour i18n tools and should not be used by Harbour users.
+
+      Unlike original gettext Harbour allows to use language with many
+      plural forms as base one. In such case programmer should activate
+      at application startup default i18n translation set with base plural
+      form valid for base application language, f.e. by:
+         pI18N := hb_i18n_create()
+         hb_i18n_pluralForm( pI18N, <cLangID> | <bForm>, .t. )
+         hb_i18n_set( pI18N )
+      .prg code example:
+
+         #xtranslate _( <x,...> ) => hb_i18n_gettext_strict( <x> )
+         #xtranslate _N( <x,...> ) => hb_i18n_ngettext_strict( <x> )
+
+         proc main()
+            local pI18N, i
+
+            pI18N := hb_i18n_create()
+            hb_i18n_pluralForm( pI18N, "PL", .t. )
+            hb_i18n_set( pI18N )
+
+            for i := 0 to 30
+               ? i, _N( i, {"grosz", "grosze", "groszy"} )
+               if i > 0 .and. i % 10 == 0
+                  wait
+               endif
+            next
+         return
+
+      In .pot files created during compilation by Harbour with -j option
+      for above code we have the following entries for message with plural
+      forms:
+            msgid "grosz"
+            msgid_plural "grosze"
+            msgid_plural2 "groszy"
+            msgstr[0] ""
+      The msgid_plural2 (and others if language has more plural forms)
+      is Harbour extension which is not gettext compatible.
+
+
+      The above implementation is base version but should be fully functional.
+      Now we will need functions to safe/read i18n files and tools to mange
+      .pot files: merge them, edit translations, create final binary i18n
+      translation sets. Because we are using gettext compatible .pot files
+      then for some of such jobs we can use original gettext tools but we
+      need at least function which will create translation set from one or
+      more .pot files.
+      We should also agree some default localization(s) for files containing
+      translated data, their name convention and environment variable(s)
+      to set default language. It's not strictly necessary and each user
+      can have his own implementation but it would help in adding new
+      translations by final users to any Harbour application which will
+      respect them. We can use LANG envvar to extract preferred language
+      and use the same path as executed application looking for files
+      <appname>-<lang>.hil files though it may create some problems for
+      OSes which support only 8.3 file names so we can also define that
+      HB_I18N envvar has higher priority and points to expected translation
+      file.
+
+  * harbour/include/hbextern.ch
+    - removed old __i18n_*() functions
+    + added current i18n functions
+
 2008-12-09 12:46 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/makefile
   * harbour/contrib/gtwvg/common.mak

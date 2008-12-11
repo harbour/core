@@ -2388,7 +2388,7 @@ void hb_compGenStaticName( const char *szVarName, HB_COMP_DECL )
       BYTE bGlobal = 0;
       PFUNCTION pFunc;
       int iVar;
-      
+
       if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 )
       {
          /* Variable declaration is outside of function/procedure body.
