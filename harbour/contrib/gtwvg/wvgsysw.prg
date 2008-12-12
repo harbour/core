@@ -121,9 +121,11 @@ METHOD new( oParent, oOwner, aPos ) CLASS WvgSysWindow
 
    DEFAULT oParent TO ::oParent
    DEFAULT oOwner  TO ::oOwner
+   DEFAULT aPos    TO ::aPos
 
    ::oParent := oParent
    ::oOwner  := oOwner
+   ::aPos    := aPos
 
    ::WvgPartHandler:INIT( oParent, oOwner )
 
@@ -135,9 +137,11 @@ METHOD create( oParent, oOwner, aPos ) CLASS WvgSysWindow
 
    DEFAULT oParent TO ::oParent
    DEFAULT oOwner  TO ::oOwner
+   DEFAULT aPos    TO ::aPos
 
    ::oParent := oParent
    ::oOwner  := oOwner
+   ::aPos    := aPos
 
    ::WvgPartHandler:create( oParent, oOwner )
 
@@ -259,7 +263,7 @@ CLASS WvgFontDialog INHERIT WvgSysWindow
 
    DATA     sl_activateReset
    ACCESS   activateReset                         INLINE ::sl_activateReset
-   ASSIGN   activateReset( bBlock )               INLINE ::sl_activateReset
+   ASSIGN   activateReset( bBlock )               INLINE ::sl_activateReset := bBlock
 
    DATA     hFont
 

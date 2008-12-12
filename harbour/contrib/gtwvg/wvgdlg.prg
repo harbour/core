@@ -193,13 +193,13 @@ METHOD setFrameState( nState ) CLASS WvgDialog
    DO CASE
 
    CASE nState == WVGDLG_FRAMESTAT_MINIMIZED
-      RETURN ( ::sendMessage( WM_SYSCOMMAND, SC_SHOWMINIMIZED, 0 ) <> 0 )
+      RETURN ( ::sendMessage( WM_SYSCOMMAND, SC_MINIMIZE, 0 ) <> 0 )
 
    CASE nState == WVGDLG_FRAMESTAT_MAXIMIZED
-      RETURN ( ::sendMessage( WM_SYSCOMMAND, SC_SHOWMAXIMIZED, 0 ) <> 0 )
+      RETURN ( ::sendMessage( WM_SYSCOMMAND, SC_MAXIMIZE, 0 ) <> 0 )
 
    CASE nState == WVGDLG_FRAMESTAT_NORMALIZED
-      RETURN ( ::sendMessage( WM_SYSCOMMAND, SC_SHOWNORMAL, 0 ) <> 0 )
+      RETURN ( ::sendMessage( WM_SYSCOMMAND, SC_RESTORE, 0 ) <> 0 )
 
    ENDCASE
 

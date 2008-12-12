@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-12 12:10 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvtwin.ch
+    + Added more constants.
+  * harbour/contrib/gtwvg/wvgcrt.prg
+  * harbour/contrib/gtwvg/wvgdlg.prg
+  * harbour/contrib/gtwvg/wvgwnd.prg
+  * harbour/contrib/gtwvg/wvgsysw.prg
+    ! Fixed some variable usages. Sorry for reckless uplod a couple of hours before.
+
 2008-12-12 10:06 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/makefile
   * harbour/contrib/gtwvg/common.mak

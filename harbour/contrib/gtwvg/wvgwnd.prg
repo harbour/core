@@ -448,8 +448,6 @@ METHOD setPos( aPos, lPaint ) CLASS WvgWindow
       SWITCH ::objType
 
       CASE objTypeCrt
-         hb_gtInfo( HB_GTI_SCREENWIDTH , aSize[ 1 ] )
-         hb_gtInfo( HB_GTI_SCREENHEIGHT, aSize[ 2 ] )
          exit
 
       OTHERWISE
@@ -472,8 +470,6 @@ METHOD setPosAndSize( aPos, aSize, lPaint ) CLASS WvgWindow
       SWITCH ::objType
 
       CASE objTypeCrt
-         hb_gtInfo( HB_GTI_SCREENWIDTH , aSize[ 1 ] )
-         hb_gtInfo( HB_GTI_SCREENHEIGHT, aSize[ 2 ] )
          exit
 
       OTHERWISE
@@ -556,7 +552,7 @@ METHOD setFontCompoundName( xFont ) CLASS WvgWindow
    LOCAL cOldFont, s, n, cAttr := '', nPoint := 0, cFace := '', cFont
    LOCAL aAttr := { 'normal','italic','bold' }
 
-   cOlfFont := ::fnt_COMMPOUNDNAME
+   cOldFont := ::fnt_COMMPOUNDNAME
 
    IF hb_isNumeric( cFont )
 

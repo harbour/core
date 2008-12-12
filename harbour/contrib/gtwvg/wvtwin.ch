@@ -542,6 +542,28 @@
 #define WS_EX_NOACTIVATE         134217728    // 0x08000000L
 
 //-------------------------------------------------------------------//
+
+#define SC_SIZE                      61440    // 0xF000
+#define SC_MOVE                      61456    // 0xF010
+#define SC_MINIMIZE                  61472    // 0xF020
+#define SC_MAXIMIZE                  61488    // 0xF030
+#define SC_NEXTWINDOW                61504    // 0xF040
+#define SC_PREVWINDOW                61520    // 0xF050
+#define SC_CLOSE                     61536    // 0xF060
+#define SC_VSCROLL                   61552    // 0xF070
+#define SC_HSCROLL                   61568    // 0xF080
+#define SC_MOUSEMENU                 61584    // 0xF090
+#define SC_KEYMENU                   61696    // 0xF100
+#define SC_ARRANGE                   61712    // 0xF110
+#define SC_RESTORE                   61728    // 0xF120
+#define SC_TASKLIST                  61744    // 0xF130
+#define SC_SCREENSAVE                61760    // 0xF140
+#define SC_HOTKEY                    61776    // 0xF150
+#define SC_DEFAULT                   61792    // 0xF160
+#define SC_MONITORPOWER              61808    // 0xF170
+#define SC_CONTEXTHELP               61824    // 0xF180
+#define SC_SEPARATOR                 61455    // 0xF00F
+
 //-------------------------------------------------------------------//
 /*
  * Dialog styles

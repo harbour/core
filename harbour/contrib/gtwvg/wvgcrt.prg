@@ -551,17 +551,18 @@ METHOD setFontCompoundName() CLASS WvgCrt
 //----------------------------------------------------------------------//
 
 METHOD setFrameState( nState ) CLASS WvgCrt
+   Local lSuccess := .f.
 
    DO CASE
 
    CASE nState == WVGDLG_FRAMESTAT_MINIMIZED
-      ::sendMessage( WM_SYSCOMMAND, SC_SHOWMINIMIZED, 0 )
+      lSuccess := ::sendMessage( WM_SYSCOMMAND, SC_MINIMIZE, 0 )
 
    CASE nState == WVGDLG_FRAMESTAT_MAXIMIZED
-      ::sendMessage( WM_SYSCOMMAND, SC_SHOWMAXIMIZED, 0 )
+      lSuccess := ::sendMessage( WM_SYSCOMMAND, SC_MAXIMIZE, 0 )
 
    CASE nState == WVGDLG_FRAMESTAT_NORMALIZED
-      ::sendMessage( WM_SYSCOMMAND, SC_SHOWNORMAL, 0 )
+      lSuccess := ::sendMessage( WM_SYSCOMMAND, SC_RESTORE, 0 )
 
    ENDCASE
 
