@@ -1545,7 +1545,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
       item.pszText     = text;
       item.cchTextMax  = MAX_PATH;
 
-      if( SendMessage( wvg_parhwnd( 1 ), ( UINT ) TVM_GETITEM, ( WPARAM ) 0, ( LPARAM ) &item ) )
+      if( TreeView_GetItem( wvg_parhwnd( 1 ), &item ) )
       {
          char * szText = HB_TCHAR_CONVFROM( text );
          hb_storclen( szText, strlen( szText ), 4 );
@@ -1560,7 +1560,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
       item.pszText     = Parent;
       item.cchTextMax  = MAX_PATH;
 
-      if( SendMessage( wvg_parhwnd( 1 ), ( UINT ) TVM_GETITEM, ( WPARAM ) 0, ( LPARAM ) &item ) )
+      if( TreeView_GetItem( wvg_parhwnd( 1 ), &item ) )
       {
          char * szText = HB_TCHAR_CONVFROM( Parent );
          hb_storclen( szText, strlen( szText ), 3 );
@@ -1576,7 +1576,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 HB_FUNC( WVG_TREEVIEW_ADDITEM )
 {
    #ifdef UNICODE
-   typedef struct tagTVINSERTSTRUCTA
+   typedef struct tagTVINSERTSTRUCTW
    {
      HTREEITEM hParent;
      HTREEITEM hInsertAfter;
@@ -1598,14 +1598,14 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
    tvis.item.mask       = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_STATE;
    tvis.item.cchTextMax = MAX_PATH + 1;
    tvis.item.stateMask  = TVIS_BOLD | TVIS_CUT | TVIS_DROPHILITED |
-                          TVIS_EXPANDEDONCE | TVIS_EXPANDPARTIAL | TVIS_SELECTED |
+                          TVIS_EXPANDEDONCE | TVIS_SELECTED | TVIS_EXPANDPARTIAL |
                           TVIS_OVERLAYMASK | TVIS_STATEIMAGEMASK | TVIS_USERMASK ;
 
    tvis.item.state      = NULL;       // TVI_BOLD
    tvis.hParent         = ISNIL( 2 ) ? NULL : wvg_parhandle( 2 );
    tvis.item.pszText    = text;
 
-   hb_retnint( ( long ) SendMessage( wvg_parhwnd( 1 ), TVM_INSERTITEM, ( WPARAM ) 0, ( LPARAM ) &tvis ) );
+   hb_retnint( ( long ) TreeView_InsertItem( wvg_parhwnd( 1 ), &tvis ) );
 
    HB_TCHAR_FREE( text );
 }
@@ -1628,12 +1628,12 @@ HB_FUNC( WIN_TVIS_EXPANDED )
 
 HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
 {
-   HWND      hwnd = wvg_parhwnd( 1 );
+   HWND      hwnd    = wvg_parhwnd( 1 );
    HTREEITEM hroot, hitem, hitem1, hitem2, hitem3;
    int       iExpand = ( hb_parl( 2 ) ? TVE_EXPAND : TVE_COLLAPSE );
    int       iLevels = hb_parni( 3 ) <= 0 ? 5 : hb_parni( 3 );
 
-   hroot = ( HTREEITEM ) SendMessage( hwnd, TVM_GETNEXTITEM, TVGN_ROOT, NULL );
+   hroot = TreeView_GetRoot( hwnd );
    if( hroot )
    {
       TreeView_Expand( hwnd, hroot, iExpand );
@@ -1717,19 +1717,97 @@ HB_FUNC( WIN_BUTTON_GETCHECK )
 
 //----------------------------------------------------------------------//
 
+HB_FUNC( WIN_ISICONIC )
+{
+   hb_retl( IsIconic( wvg_parhwnd( 1 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_ISZOOMED )
+{
+   hb_retl( IsZoomed( wvg_parhwnd( 1 ) ) );
+}
+
+//----------------------------------------------------------------------//
+// Win_SetDCBrushColor( hDC, nRGB )
+//
+HB_FUNC( WIN_SETDCBRUSHCOLOR )
+{
+   wvg_rethandle( SetDCBrushColor( wvg_parhdc( 1 ), wvg_parcolor( 2 ) ) );
+}
+
+//----------------------------------------------------------------------//
+// Win_SetDCPenColor( hDC, nRGB )
+//
+HB_FUNC( WIN_SETDCPENCOLOR )
+{
+   wvg_rethandle( SetDCPenColor( wvg_parhdc( 1 ), wvg_parcolor( 2 ) ) );
+}
+
+//----------------------------------------------------------------------//
+// Win_GetCurrentObject( hDC, nObjType )
+//
 HB_FUNC( WIN_GETCURRENTOBJECT )
 {
    wvg_rethandle( GetCurrentObject( wvg_parhdc( 1 ), hb_parni( 2 ) ) );
 }
 
 //----------------------------------------------------------------------//
-
+// Win_GetCurrentBrush( hDC )
+//
 HB_FUNC( WIN_GETCURRENTBRUSH )
 {
    wvg_rethandle( GetCurrentObject( wvg_parhdc( 1 ), OBJ_BRUSH ) );
 }
 
 //----------------------------------------------------------------------//
+// Win_GetCurrentFornt( hDC )
+//
+HB_FUNC( WIN_GETCURRENTFONT )
+{
+   wvg_rethandle( GetCurrentObject( wvg_parhdc( 1 ), OBJ_FONT ) );
+}
 
+//----------------------------------------------------------------------//
 
+HB_FUNC( WIN_SETWINDOWPOSTOBACK )
+{
+   hb_retl( SetWindowPos( wvg_parhwnd( 1 ), HWND_BOTTOM, 0, 0, 0, 0 ,
+                  SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
+}
 
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_SETWINDOWPOSTOTOP )
+{
+   hb_retl( SetWindowPos( wvg_parhwnd( 1 ), HWND_BOTTOM, 0, 0, 0, 0 ,
+                                  SWP_NOSIZE | SWP_NOMOVE  ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_SETWINDOWSIZE )
+{
+   hb_retl( SetWindowPos( wvg_parhwnd( 1 ), NULL, NULL, NULL, hb_parni( 2 ), hb_parni( 3 ),
+                 hb_parl( 4 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE  ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_SETWINDOWPOSITION )
+{
+   hb_retl( SetWindowPos( wvg_parhwnd( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ), 0, 0,
+                hb_parl( 4 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_SETWINDOWPOSANDSIZE )
+{
+   hb_retl( SetWindowPos( wvg_parhwnd( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ),
+                                                  hb_parni( 4 ), hb_parni( 5 ),
+                hb_parl( 6 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOACTIVATE ) );
+}
+
+//----------------------------------------------------------------------//

@@ -42,6 +42,7 @@ PRG_SOURCES=\
 	wvgsle.prg \
 	wvgmle.prg \
 	wvghtmlv.prg \
+	wvgsysw.prg \
 
 PRG_HEADERS=\
 	hbgtwvg.ch \

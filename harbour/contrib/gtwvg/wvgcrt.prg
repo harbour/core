@@ -162,6 +162,9 @@ EXPORTED:
    METHOD   configure()
    METHOD   destroy()
 
+   METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
+   METHOD   getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
+
    //  METHODS
    METHOD   currentPos()
    METHOD   currentSize()
@@ -446,7 +449,14 @@ METHOD enable() CLASS WvgCrt
 
 METHOD getFrameState() CLASS WvgCrt
 
-   RETURN Self
+   IF Win_IsIconic( ::hWnd )
+      RETURN WVGDLG_FRAMESTAT_MINIMIZED
+   ENDIF
+   IF Win_IsZoomed( ::hWnd )
+      RETURN WVGDLG_FRAMESTAT_MAXIMIZED
+   ENDIF
+
+   RETURN WVGDLG_FRAMESTAT_NORMALIZED
 
 //----------------------------------------------------------------------//
 
@@ -507,15 +517,12 @@ METHOD lockUpdate() CLASS WvgCrt
 //----------------------------------------------------------------------//
 
 METHOD menuBar() CLASS WvgCrt
-   LOCAL oMenuBar
 
-   IF !hb_isObject( ::oMenu )
-      oMenuBar := WvgMenuBar():New( self ):create()
-   ELSE
-      oMenuBar := ::oMenu
+   IF !( hb_isObject( ::oMenu ) )
+      ::oMenu := WvgMenuBar():New( self ):create()
    ENDIF
 
-   RETURN oMenuBar
+   RETURN ::oMenu
 
 //----------------------------------------------------------------------//
 
@@ -539,14 +546,26 @@ METHOD setFont() CLASS WvgCrt
 
 METHOD setFontCompoundName() CLASS WvgCrt
 
-   RETURN Self
+   RETURN ''
 
 //----------------------------------------------------------------------//
 
-METHOD setFrameState() CLASS WvgCrt
+METHOD setFrameState( nState ) CLASS WvgCrt
 
-   RETURN Self
+   DO CASE
 
+   CASE nState == WVGDLG_FRAMESTAT_MINIMIZED
+      ::sendMessage( WM_SYSCOMMAND, SC_SHOWMINIMIZED, 0 )
+
+   CASE nState == WVGDLG_FRAMESTAT_MAXIMIZED
+      ::sendMessage( WM_SYSCOMMAND, SC_SHOWMAXIMIZED, 0 )
+
+   CASE nState == WVGDLG_FRAMESTAT_NORMALIZED
+      ::sendMessage( WM_SYSCOMMAND, SC_SHOWNORMAL, 0 )
+
+   ENDCASE
+
+   RETURN lSuccess
 //----------------------------------------------------------------------//
 
 METHOD setModalState() CLASS WvgCrt

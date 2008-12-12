@@ -154,6 +154,10 @@
 #define WVGSTATIC_FRAMETHIN                       1
 #define WVGSTATIC_FRAMETHICK                      2
 
+#define WVGDLG_FRAMESTAT_MINIMIZED                1
+#define WVGDLG_FRAMESTAT_MAXIMIZED                2
+#define WVGDLG_FRAMESTAT_NORMALIZED               3
+
 #define WVGSTATIC_TEXT_LEFT                       WVGALIGN_LEFT
 #define WVGSTATIC_TEXT_RIGHT                      WVGALIGN_RIGHT
 #define WVGSTATIC_TEXT_CENTER                     WVGALIGN_HCENTER

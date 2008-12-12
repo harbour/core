@@ -77,14 +77,28 @@
 //----------------------------------------------------------------------//
 CLASS WvgDialog FROM WvgWindow
 
-   DATA   oMenu
+   DATA     oMenu
+   DATA     aRect
 
-   DATA   drawingArea
+   DATA     drawingArea
 
-   METHOD init()
-   METHOD create()
-   METHOD configure()
-   METHOD destroy()
+   METHOD   init()
+   METHOD   create()
+   METHOD   configure()
+   METHOD   destroy()
+
+   METHOD   showModal()                           INLINE NIL
+   METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
+   METHOD   getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
+
+   METHOD   menuBar()
+   METHOD   setFrameState( nState )
+   METHOD   getFrameState()
+   METHOD   calcClientRect()                      INLINE ::aRect := Win_GetClientRect( ::hWnd ), ;
+                                                         { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
+   METHOD   calcFrameRect()                       INLINE ::aRect := Win_GetWindowRect( ::hWnd ),;
+                                                         { ::aRect[ 1 ], ::aRect[ 2 ], ;
+                                                         ::aRect[ 3 ]-::aRect[ 1 ], ::aRect[ 4 ]-::aRect[ 2 ] }
 
    ENDCLASS
 //----------------------------------------------------------------------//
@@ -165,12 +179,49 @@ METHOD destroy() CLASS WvgDialog
    ENDIF
 
    IF Len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| /*hb_toOutDebug( o:className ),*/ o:destroy() } )
+      aeval( ::aChildren, {|o| o:destroy() } )
    ENDIF
 
    ::pGT  := NIL
    ::pGTp := NIL
 
    RETURN Self
+//----------------------------------------------------------------------//
+METHOD setFrameState( nState ) CLASS WvgDialog
+   LOCAL lSuccess := .f.
+
+   DO CASE
+
+   CASE nState == WVGDLG_FRAMESTAT_MINIMIZED
+      RETURN ( ::sendMessage( WM_SYSCOMMAND, SC_SHOWMINIMIZED, 0 ) <> 0 )
+
+   CASE nState == WVGDLG_FRAMESTAT_MAXIMIZED
+      RETURN ( ::sendMessage( WM_SYSCOMMAND, SC_SHOWMAXIMIZED, 0 ) <> 0 )
+
+   CASE nState == WVGDLG_FRAMESTAT_NORMALIZED
+      RETURN ( ::sendMessage( WM_SYSCOMMAND, SC_SHOWNORMAL, 0 ) <> 0 )
+
+   ENDCASE
+
+   RETURN lSuccess
+//----------------------------------------------------------------------//
+METHOD getFrameState() CLASS WvgDialog
+
+   IF Win_IsIconic( ::hWnd )
+      RETURN WVGDLG_FRAMESTAT_MINIMIZED
+   ENDIF
+   IF Win_IsZoomed( ::hWnd )
+      RETURN WVGDLG_FRAMESTAT_MAXIMIZED
+   ENDIF
+
+   RETURN WVGDLG_FRAMESTAT_NORMALIZED
+//----------------------------------------------------------------------//
+METHOD menuBar() CLASS WvgDialog
+
+   IF !( hb_isObject( ::oMenu ) )
+      ::oMenu := WvgMenuBar():New( self ):create()
+   ENDIF
+
+   RETURN ::oMenu
 //----------------------------------------------------------------------//
 

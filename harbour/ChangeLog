@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-12 10:06 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/makefile
+  * harbour/contrib/gtwvg/common.mak
+    + wvgsysw.prg
+
+  + harbour/contrib/gtwvg/wvgsysw.prg
+    + Started WvtSysWindow(), WvgFontDialog() classes compatible with Xbase++.
+
+  * harbour/contrib/gtwvg/wvgcrt.prg
+  * harbour/contrib/gtwvg/wvgdlg.prg
+  * harbour/contrib/gtwvg/wvgwnd.prg
+    ! Implemented more methods and properties upto Xbase++ documentation.
+
+  * harbour/contrib/gtwvg/wvgwin.c
+    ! More functions and cleanup of existing ones.
+
+  * harbour/contrib/gtwvg/wvgparts.ch
+    + Added More constants.  
+
+  * harbour/contrib/gtwvg/tests/demoxbp.prg
+    ! Added more feature implemenattion.
+
+    ;THANKS: Przemek for fixing mingw compilation.
+
 2008-12-12 18:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapicls.h
   * harbour/source/vm/codebloc.c

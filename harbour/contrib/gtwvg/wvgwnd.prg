@@ -440,7 +440,25 @@ METHOD setTrackPointer() CLASS WvgWindow
 
 //----------------------------------------------------------------------//
 
-METHOD setPos() CLASS WvgWindow
+METHOD setPos( aPos, lPaint ) CLASS WvgWindow
+
+   IF hb_isArray( aPos )
+      DEFAULT lPaint TO .T.
+
+      SWITCH ::objType
+
+      CASE objTypeCrt
+         hb_gtInfo( HB_GTI_SCREENWIDTH , aSize[ 1 ] )
+         hb_gtInfo( HB_GTI_SCREENHEIGHT, aSize[ 2 ] )
+         exit
+
+      OTHERWISE
+         Win_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], lPaint )
+         EXIT
+
+      END
+   ENDIF
+
 
    RETURN Self
 
@@ -458,13 +476,9 @@ METHOD setPosAndSize( aPos, aSize, lPaint ) CLASS WvgWindow
          hb_gtInfo( HB_GTI_SCREENHEIGHT, aSize[ 2 ] )
          exit
 
-      #if 0
-      CASE objTypeDialog
-      CASE objTypeStatic
-      CASE objTypeActiveX
-      #endif
       OTHERWISE
-         Win_MoveWindow( ::hWnd, aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ], lPaint )
+         //Win_MoveWindow( ::hWnd, aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ], lPaint )
+         Win_SetWindowPosAndSize( ::hWnd, aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ], lPaint )
          EXIT
 
       END
@@ -486,14 +500,9 @@ METHOD setSize( aSize, lPaint ) CLASS WvgWindow
          hb_gtInfo( HB_GTI_SCREENHEIGHT, aSize[ 2 ] )
          EXIT
 
-      #if 0
-      CASE objTypePushButton
-      CASE objTypeStatic
-      CASE objTypeDialog
-      CASE objTypeActiveX
-      #endif
       OTHERWISE
-         Win_MoveWindow( ::hWnd, 0, 0, aSize[ 1 ], aSize[ 2 ], lPaint )
+         //Win_MoveWindow( ::hWnd, 0, 0, aSize[ 1 ], aSize[ 2 ], lPaint )
+         Win_SetWindowSize( ::hWnd, aSize[ 1 ], aSize[ 2 ], lPaint )
          EXIT
 
       END
@@ -514,13 +523,14 @@ METHOD show() CLASS WvgWindow
 
 METHOD toBack() CLASS WvgWindow
 
-   RETURN Self
+   RETURN Win_SetWindowPosToBack( ::hWnd )
 
 //----------------------------------------------------------------------//
 
 METHOD toFront() CLASS WvgWindow
 
    RETURN Win_SetForegroundWindow( ::hWnd )
+   //RETURN Win_SetWindowPosToTop( ::hWnd )
 
 //----------------------------------------------------------------------//
 
@@ -542,9 +552,37 @@ METHOD setFont() CLASS WvgWindow
 
 //----------------------------------------------------------------------//
 
-METHOD setFontCompoundName() CLASS WvgWindow
+METHOD setFontCompoundName( xFont ) CLASS WvgWindow
+   LOCAL cOldFont, s, n, cAttr := '', nPoint := 0, cFace := '', cFont
+   LOCAL aAttr := { 'normal','italic','bold' }
 
-   RETURN Self
+   cOlfFont := ::fnt_COMMPOUNDNAME
+
+   IF hb_isNumeric( cFont )
+
+   ELSE
+      IF !empty( xFont )
+         cFont := xFont
+         s := lower( cFont )
+         n := ascan( aAttr, {|e| at( e, cFont ) > 0 } )
+         IF n > 0
+            cAttr := aAttr[ n ]
+            n := at( cAttr, s )
+            cFont := substr( cFont,1,n-1 )
+         ELSE
+            cAttr := 'normal'
+         ENDIF
+
+         IF ( n := at( '.', cFont ) ) > 0
+            nPoint := val( substr( cFont,1,n-1 ) )
+            cFont  := substr( cFont,n+1 )
+         ENDIF
+
+         cFace := alltrim( cFont )
+      ENDIF
+   ENDIF
+
+   RETURN cOldFont
 
 //----------------------------------------------------------------------//
 
@@ -1121,9 +1159,7 @@ METHOD setFocus() CLASS WvgWindow
 
 METHOD sendMessage( nMessage, nlParam, nwParam ) CLASS WvgWindow
 
-   Win_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
-
-   RETURN Self
+   RETURN Win_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
 
 //----------------------------------------------------------------------//
 
@@ -1177,6 +1213,7 @@ METHOD createControl() CLASS WvgWindow
 
    IF ( hWnd <> 0 )
       ::hWnd := hWnd
+      ::sendMessage( WM_SETFONT, Win_GetStockObject( DEFAULT_GUI_FONT ), 1 )
    ENDIF
 
    RETURN Self

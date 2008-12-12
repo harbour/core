@@ -33,7 +33,7 @@ FUNCTION Main()
 
    //--------------------------- Dialog -------------------------------\\
    #if 1
-   oCrt := WvgDialog():new( , , { 30,30 }, { 900,600 }, , .f. )
+   oCrt := WvgDialog():new( , , { 30,30 }, { 900,600 }, , .t. )
    oCrt:closable := .t.
    oCrt:icon := "vr_1.ico"
    oCrt:create()
@@ -44,6 +44,8 @@ FUNCTION Main()
    oCrt:create()
    SetCursor( .f. )
    #endif
+
+   oCrt:setFontCompoundName( '12.Courier italic' )
 
    //--------------------------- Menu --------------------------------\\
    ActiveXBuildMenu( oCrt, @oStatic, @oStatic2 )
@@ -166,6 +168,8 @@ FUNCTION Main()
    aadd( aParts, 'Xbp3State'     )
    aadd( aParts, 'XbpSLE'        )
    aadd( aParts, 'XbpMLE'        )
+   aadd( aParts, 'XbpHTMLViewer' )
+   aadd( aParts, '-------------' )
    aadd( aParts, 'DataRef'       )
 
    aeval( aParts, {|e| oListBox:addItem( e ) } )
@@ -271,14 +275,23 @@ STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr )
    nH := aCrt[2]-aTBar[2]-aSBar[2]
 
    IF oStatic:isVisible
+      #if 1
       oStatic:setPosAndSize( { 0, nT+3 }, { 120, nH-4 }, .t. )
       oAddr:setPosAndSize( { 120, nT+2 }, { aCrt[1]-120-150, 20 }, .t. )
       oCom:setPosAndSize( { 120, nT+2+20 }, { aCrt[1]-120-150, nH-20 }, .t. )
       oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .t. )
+      #else
+      oStatic:setSize( { 120, nH-4 }, .t. )
+      oAddr:setSize( { aCrt[1]-120-150, 20 }, .t. )
+      oCom:setSize( { aCrt[1]-120-150, nH-20 }, .t. )
+      oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .t. )
+      #endif
+
    ELSE
       oAddr:setPosAndSize( { 0, nT+2 }, { aCrt[1]-150, 20 }, .t. )
       oCom:setPosAndSize( { 0, nT+2+20 }, { aCrt[1]-150, nH-20 }, .t. )
       oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .t. )
+
    ENDIF
 
    RETURN 1
