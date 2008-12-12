@@ -66,7 +66,7 @@
    #define CINTERFACE 1
 #endif
 
-#define NONAMELESSUNION
+/* #define NONAMELESSUNION */
 
 //-------------------------------------------------------------------//
 
@@ -445,6 +445,10 @@ typedef struct
 
 #ifndef GCLP_HCURSOR
    #define GCLP_HCURSOR (-12)
+#endif
+
+#ifndef TVIS_EXPANDPARTIAL
+   #define TVIS_EXPANDPARTIAL 0x0080
 #endif
 
 //----------------------------------------------------------------------//

@@ -1378,6 +1378,18 @@ const char * hb_clsFuncName( USHORT uiClass )
       return NULL;
 }
 
+const char * hb_clsMethodName( USHORT uiClass, USHORT uiMethod )
+{
+   if( uiClass && uiClass <= s_uiClasses &&
+       uiMethod < hb_clsMthNum( s_pClasses[ uiClass ] ) )
+   {
+      PMETHOD pMethod = s_pClasses[ uiClass ]->pMethods + uiMethod;
+      if( pMethod->pMessage )
+         return pMethod->pMessage->pSymbol->szName;
+   }
+   return NULL;
+}
+
 USHORT hb_clsFindClass( const char * szClass, const char * szFunc )
 {
    USHORT uiClass;
@@ -1406,6 +1418,32 @@ static USHORT hb_clsFindClassByFunc( PHB_SYMB pClassFuncSym )
       }
    }
    return 0;
+}
+
+/*
+ * Get the real method symbol for given stack symbol
+ */
+PHB_SYMB hb_clsMethodSym( PHB_ITEM pBaseSymbol )
+{
+   PHB_STACK_STATE pStack = pBaseSymbol->item.asSymbol.stackstate;
+
+   if( pStack->uiClass )
+   {
+      PMETHOD pMethod = s_pClasses[ pStack->uiClass ]->pMethods + pStack->uiMethod;
+
+      if( pMethod->pFuncSym == &s___msgEvalInline )
+         return hb_arrayGetItemPtr( s_pClasses[ pMethod->uiSprClass ]->pInlines,
+                                    pMethod->uiData )->item.asBlock.value->pDefSymb;
+/*
+      else if( pMethod->pFuncSym == &s___msgPerform )
+*/
+      else if( pMethod->pFuncSym == &s___msgDelegate )
+         return s_pClasses[ pStack->uiClass ]->pMethods[ pMethod->uiData ].pFuncSym;
+      else
+         return pMethod->pFuncSym;
+   }
+
+   return pBaseSymbol->item.asSymbol.value;
 }
 
 /*
@@ -4509,17 +4547,14 @@ void hb_mthAddTime( ULONG ulClockTicks )
 {
    PHB_ITEM pObject = hb_stackSelfItem();
    PCLASS pClass = s_pClasses[ hb_objGetClassH( pObject ) ];
+   USHORT uiMethod = hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
 
-   if( pClass )
+   if( pClass && uiMethod < hb_clsMthNum( pClass ) )
    {
-      PMETHOD pMethod = pClass->pMethods;
-      if( pMethod )
-      {
-         pMethod += hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
-         pMethod->ulCalls++;
-         pMethod->ulTime += ulClockTicks;
-         return;
-      }
+      PMETHOD pMethod = pClass->pMethods + uiMethod;
+      pMethod->ulCalls++;
+      pMethod->ulTime += ulClockTicks;
+      return;
    }
 
    if( HB_IS_BLOCK( pObject ) )

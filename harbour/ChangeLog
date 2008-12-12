@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-12 18:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/proc.c
+  * harbour/source/vm/classes.c
+    + added support for messages in PROCFILE()
+    * modified PROCFILE() and HB_METHODNAME() output - PROCFILE()
+      should be fully Clipper compatible and HB_METHODNAME() works
+      in a little bit different way for evaluated codeblocks created
+      in methods or associated with method and returns (b)<class>:<msg>
+      instead of (b)<method> so the output is more similar to xHarbour.
+
+  * harbour/contrib/gtwvg/gtwvg.h
+    ! disabled NONAMELESSUNION - wvgwin.c uses TVINSERTSTRUCT item
+      member without union name what breaks MINGW compilation
+    * added hardcoded TVIS_EXPANDPARTIAL when it does not exist
+      in header files - MINGW 3.4 does not have it.
+
 2008-12-11 19:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbthread.h
   * harbour/source/vm/thread.c

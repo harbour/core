@@ -124,18 +124,22 @@ HB_FUNC( PROCFILE )
 
       if( lOffset > 0 )
       {
-         pSym = hb_stackItem( lOffset )->item.asSymbol.value;
+         PHB_ITEM pBase = hb_stackItem( lOffset );
 
+         pSym = pBase->item.asSymbol.value;
          if( pSym == &hb_symEval || pSym->pDynSym == hb_symEval.pDynSym )
          {
             PHB_ITEM pSelf = hb_stackItem( lOffset + 1 );
 
             if( HB_IS_BLOCK( pSelf ) )
                pSym = pSelf->item.asBlock.value->pDefSymb;
+            else if( pBase->item.asSymbol.stackstate->uiClass )
+               pSym = hb_clsMethodSym( pBase );
          }
+         else if( pBase->item.asSymbol.stackstate->uiClass )
+            pSym = hb_clsMethodSym( pBase );
       }
    }
-
    hb_retc( hb_vmFindModuleSymbolName( hb_vmGetRealFuncSym( pSym ) ) );
 #else
    hb_retc( NULL );
@@ -179,8 +183,16 @@ char * hb_procname( int iLevel, char * szName, BOOL fMethodName )
           pBase->item.asSymbol.value->pDynSym == hb_symEval.pDynSym )
       {
          hb_strncat( szName, "(b)", HB_PROCBUF_LEN );
-
-         if( HB_IS_BLOCK( pSelf ) )
+         /* it is a method name? */
+         if( fMethodName && pBase->item.asSymbol.stackstate->uiClass )
+         {
+            hb_strncat( szName, hb_clsName( pBase->item.asSymbol.stackstate->uiClass ),
+                        HB_PROCBUF_LEN );
+            hb_strncat( szName, ":", HB_PROCBUF_LEN );
+            hb_strncat( szName, hb_clsMethodName( pBase->item.asSymbol.stackstate->uiClass,
+                                                  pBase->item.asSymbol.stackstate->uiMethod ), HB_PROCBUF_LEN );
+         }
+         else if( HB_IS_BLOCK( pSelf ) )
             hb_strncat( szName, pSelf->item.asBlock.value->pDefSymb->szName,
                         HB_PROCBUF_LEN );
          else
@@ -251,11 +263,13 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
 
       if( szFile )
       {
-         char * szModule;
+         const char * szModule;
 
          if( HB_IS_BLOCK( pSelf ) &&
              ( pSym == &hb_symEval || pSym->pDynSym == hb_symEval.pDynSym ) )
             pSym = pSelf->item.asBlock.value->pDefSymb;
+         else if( pBase->item.asSymbol.stackstate->uiClass )
+            pSym = hb_clsMethodSym( pBase );
 
          szModule = hb_vmFindModuleSymbolName( hb_vmGetRealFuncSym( pSym ) );
 

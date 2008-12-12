@@ -55,6 +55,7 @@
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapicls.h"
 #include "hbvm.h"
 #include "hbstack.h"
 #include "hbpcode.h"
@@ -121,7 +122,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
                                   ULONG ulLen )
 {
    HB_CODEBLOCK_PTR pCBlock;
-   PHB_ITEM pLocals;
+   PHB_ITEM pLocals, pBase;
    BYTE * pCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p, %lu)", pBuffer, uiLocals, pLocalPosTable, pSymbols, ulLen));
@@ -212,11 +213,13 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
          pLocals = NULL;
    }
 
+   pBase = hb_stackBaseItem();
    pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAlloc( sizeof( HB_CODEBLOCK ), hb_codeblockDeleteGarbage );
 
    pCBlock->pCode     = pCode;
    pCBlock->dynBuffer = ulLen != 0;
-   pCBlock->pDefSymb  = hb_stackBaseItem()->item.asSymbol.value;
+   pCBlock->pDefSymb  = pBase->item.asSymbol.stackstate->uiClass ?
+                        hb_clsMethodSym( pBase ) : pBase->item.asSymbol.value;
    pCBlock->pSymbols  = pSymbols;
    pCBlock->lStatics  = hb_stackGetStaticsBase();
    pCBlock->uiLocals  = uiLocals;
@@ -230,6 +233,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
 HB_CODEBLOCK_PTR hb_codeblockMacroNew( const BYTE * pBuffer, ULONG ulLen )
 {
    HB_CODEBLOCK_PTR pCBlock;
+   PHB_ITEM pBase;
    BYTE * pCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockMacroNew(%p, %lu)", pBuffer, ulLen));
@@ -248,10 +252,12 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const BYTE * pBuffer, ULONG ulLen )
    memcpy( pCode, pBuffer, ulLen );
 
    pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAlloc( sizeof( HB_CODEBLOCK ), hb_codeblockDeleteGarbage );
+   pBase = hb_stackBaseItem();
    /* Store the number of referenced local variables */
    pCBlock->pCode     = pCode;
    pCBlock->dynBuffer = TRUE;
-   pCBlock->pDefSymb  = hb_stackBaseItem()->item.asSymbol.value;
+   pCBlock->pDefSymb  = pBase->item.asSymbol.stackstate->uiClass ?
+                        hb_clsMethodSym( pBase ) : pBase->item.asSymbol.value;
    pCBlock->pSymbols  = NULL; /* macro-compiled codeblock cannot acces a local symbol table */
    pCBlock->lStatics  = hb_stackGetStaticsBase();
    pCBlock->uiLocals  = 0;

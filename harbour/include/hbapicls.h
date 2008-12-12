@@ -95,6 +95,7 @@ extern void       hb_clsDoInit( void );         /* initialize Classy/OO system .
 extern void       hb_clsReleaseAll( void );     /* releases all defined classes */
 extern void       hb_clsIsClassRef( void );     /* classes.c - mark all class internals as used */
 extern BOOL       hb_clsHasDestructor( USHORT uiClass );
+extern PHB_SYMB   hb_clsMethodSym( PHB_ITEM pBaseSymbol ); /* returns the real method symbol for given stack symbol */
 
 extern PHB_SYMB   hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg, PHB_STACK_STATE pStack ); /* returns the method pointer of an object class */
 extern BOOL       hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage, PHB_STACK_STATE pStack ); /* create object variable reference */
@@ -107,11 +108,12 @@ extern void       hb_objDestructorCall( PHB_ITEM pObject );
 extern void       hb_mthAddTime( ULONG );       /* profiler from classes.c */
 #endif
 
-#endif
+#endif   /* _HB_API_INTERNAL_ */
 
 /* class management */
 HB_EXPORT extern const char * hb_clsName( USHORT uiClass );
 HB_EXPORT extern const char * hb_clsFuncName( USHORT uiClass );
+HB_EXPORT extern const char * hb_clsMethodName( USHORT uiClass, USHORT uiMethod );
 HB_EXPORT extern BOOL       hb_clsIsParent( USHORT uiClass, const char * szParentName ); /* is a class handle inherited from szParentName Class ? */
 HB_EXPORT extern USHORT     hb_clsFindClass( const char * szClass, const char * szFunc );
 
