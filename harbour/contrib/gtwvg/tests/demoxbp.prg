@@ -154,23 +154,28 @@ FUNCTION Main()
    oListBox:setColorFG( RGB( 218,61,34 ) )
    //oListBox:setColorBG( RGB( 250,244,182 ) )
 
-   aadd( aParts, 'XbpDialog'     )
-   aadd( aParts, 'XbpMenuBar'    )
-   aadd( aParts, 'XbpToolBar'    )
-   aadd( aParts, 'XbpStatusBar'  )
-   aadd( aParts, 'XbpStatic'     )
-   aadd( aParts, 'XbpTreeView'   )
-   aadd( aParts, 'XbpActiveX'    )
-   aadd( aParts, 'XbpListBox'    )
-   aadd( aParts, 'XbpPushButton' )
-   aadd( aParts, 'XbpCheckBox'   )
-   aadd( aParts, 'XbpRadioButton')
-   aadd( aParts, 'Xbp3State'     )
-   aadd( aParts, 'XbpSLE'        )
-   aadd( aParts, 'XbpMLE'        )
-   aadd( aParts, 'XbpHTMLViewer' )
-   aadd( aParts, '-------------' )
-   aadd( aParts, 'DataRef'       )
+   aadd( aParts, 'XbpDialog'        )
+   aadd( aParts, 'XbpMenuBar'       )
+   aadd( aParts, 'XbpToolBar'       )
+   aadd( aParts, 'XbpToolBarButton' )
+   aadd( aParts, 'XbpStatusBar'     )
+   aadd( aParts, 'XbpStatic'        )
+   aadd( aParts, 'XbpTreeView'      )
+   aadd( aParts, 'XbpTreeViewItem'  )
+   aadd( aParts, 'XbpActiveXControl')
+   aadd( aParts, 'XbpListBox'       )
+   aadd( aParts, 'XbpPushButton'    )
+   aadd( aParts, 'XbpCheckBox'      )
+   aadd( aParts, 'XbpRadioButton'   )
+   aadd( aParts, 'Xbp3State'        )
+   aadd( aParts, 'XbpSLE'           )
+   aadd( aParts, 'XbpMLE'           )
+   aadd( aParts, 'XbpHTMLViewer'    )
+   aadd( aParts, 'XbpSysWindow'     )
+   aadd( aParts, 'XbpFontDialog'    )
+   aadd( aParts, 'XbpFont'          )
+   aadd( aParts, '-------------'    )
+   aadd( aParts, 'DataRef'          )
 
    aeval( aParts, {|e| oListBox:addItem( e ) } )
    oListBox:itemSelected := {|| Win_MessageBox( , oListBox:getCurItem() ) }
@@ -242,6 +247,7 @@ FUNCTION Main()
    oTBar:buttonClick := {|oBtn| IF( oBtn:caption == 'Hide' , oStatic:hide(), nil ),;
                                 IF( oBtn:caption == 'Show' , oStatic:show(), nil ),;
                                 IF( oBtn:caption == 'Tools', oStatic2:show():toFront(), nil ),;
+                                IF( oBtn:caption == 'Font Dlg', ExeFontDialog( oCrt ), nil ),;
                                 IF( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ),;
                                  oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
    oCrt:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr ) }
@@ -257,6 +263,17 @@ FUNCTION Main()
 
    oCrt:Destroy()
    Return nil
+
+//----------------------------------------------------------------------//
+
+STATIC FUNCTION HB_GTSYS()
+
+   REQUEST HB_GT_GUI_DEFAULT
+   REQUEST HB_GT_WVG
+   REQUEST HB_GT_WVT
+   REQUEST HB_GT_WGU
+
+   RETURN NIL
 
 //----------------------------------------------------------------------//
 
@@ -330,6 +347,9 @@ Static Function ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
    oSubMenu:addItem( { "~Hide or Show Left Panel" , {|| IF( oStatic:isVisible, ;
                               oStatic:hide(), oStatic:show() ), oCrt:sendMessage( WM_SIZE,0,0 ) } } )
    oSubMenu:addItem( { "~Show My Panel" , {|| oStatic2:show() } } )
+   oSubMenu:addItem()
+   oSubMenu:addItem( { "~Font Dialog"   , {|| ExeFontDialog( oCrt ) } } )
+
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    Return nil
@@ -354,7 +374,7 @@ STATIC FUNCTION ActiveXBuildToolBar( oCrt )
 
    oTBar:addItem( "New"       , 'c:\harbour\contrib\gtwvg\tests\v_new.bmp'    )
    oTBar:addItem( "Select"    , 'c:\harbour\contrib\gtwvg\tests\v_selct1.bmp' )
-   oTBar:addItem( "Calendar"  , 'c:\harbour\contrib\gtwvg\tests\v_calend.bmp' )
+   oTBar:addItem( "Font Dlg"  , 'c:\harbour\contrib\gtwvg\tests\v_calend.bmp' )
    oTBar:addItem( "Tools"     , 'c:\harbour\contrib\gtwvg\tests\v_lock.bmp'   )
    oTBar:addItem( "Index"     , 'c:\harbour\contrib\gtwvg\tests\v_index.bmp'  )
    oTBar:addItem( "Show"      , 'c:\harbour\contrib\gtwvg\tests\v_clclt.bmp'  )
@@ -396,14 +416,35 @@ Static Function MyFunction( nMode )
 
 //----------------------------------------------------------------------//
 
-Function HB_GTSYS()
+STATIC FUNCTION ExeFontDialog( oCrt )
+   LOCAL oFontDlg, oWvgFont
 
-   REQUEST HB_GT_GUI_DEFAULT
-   REQUEST HB_GT_WVG
-   REQUEST HB_GT_WVT
-   REQUEST HB_GT_WGU
+   STATIC nMode := 0
 
-   Return NIL
+   oFontDlg := WvgFontDialog():new( oCrt )
+
+   oFontDlg:title            := 'Select a Screen Font'
+   oFontDlg:aPos             := { 150,150 }
+   oFontDlg:buttonApply      := .t.
+   oFontDlg:activateApply    := {|| NIL }
+   oFontDlg:familyName       := "Courier New"
+   oFontDlg:strikeout        := .T.
+   oFontDlg:underscore       := .f.
+   //oFontDlg:activateOk       := {|| Win_MessageBox( , 'activateOK Event Handelled in Windows!' ) }
+   oFontDlg:nominalPointSize := 12
+
+   //oFontDlg:size             := .f.
+   //oFontDlg:style            := .f.
+
+   oFontDlg:create()
+   //  Every 2nd FontDialog will be MODAL
+   oWvgFont := oFontDlg:display( ++nMode % 2 )
+   oFontDlg:destroy()
+
+   #if 0
+   hb_ToOutDebug( '%s  %i', oWvgFont:compoundName, oWvgFont:nominalPointSize )
+   #endif
+   RETURN nil
 
 //----------------------------------------------------------------------//
 

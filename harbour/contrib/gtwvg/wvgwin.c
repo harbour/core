@@ -518,6 +518,13 @@ HB_FUNC( WIN_MOVEWINDOW )
 
 //-------------------------------------------------------------------//
 
+HB_FUNC( WIN_GETDESKTOPWINDOW )
+{
+   wvg_rethandle( GetDesktopWindow() );
+}
+
+//----------------------------------------------------------------------//
+
 HB_FUNC( WIN_SETPARENT )
 {
    hb_retnint( ( HB_PTRDIFF ) SetParent( (HWND) ( HB_PTRDIFF ) hb_parnint( 1 ), (HWND) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
@@ -535,6 +542,15 @@ HB_FUNC( WIN_BRINGWINDOWTOTOP )
 HB_FUNC( WIN_SETFOREGROUNDWINDOW )
 {
    hb_retl( BringWindowToTop( wvg_parhwnd( 1 ) ) );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_SETWINDOWTEXT )
+{
+   LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 2 ) );
+   SetWindowText( wvg_parhwnd( 1 ), text );
+   HB_TCHAR_FREE( text );
 }
 
 //----------------------------------------------------------------------//
@@ -1808,6 +1824,225 @@ HB_FUNC( WIN_SETWINDOWPOSANDSIZE )
    hb_retl( SetWindowPos( wvg_parhwnd( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ),
                                                   hb_parni( 4 ), hb_parni( 5 ),
                 hb_parl( 6 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOACTIVATE ) );
+}
+
+//----------------------------------------------------------------------//
+//                            WvgFontDialog()
+//----------------------------------------------------------------------//
+
+PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, BOOL bEmpty )
+{
+   PHB_ITEM aFont = hb_itemNew( NULL );
+   hb_arrayNew( aFont, 15 );
+
+   if( bEmpty )
+   {
+      hb_arraySetC( aFont ,   1, "" );
+      hb_arraySetNL( aFont,   2, 0  );
+      hb_arraySetNL( aFont,   3, 0  );
+      hb_arraySetNL( aFont,   4, 0  );
+      hb_arraySetL(  aFont,   5, 0  );
+      hb_arraySetL(  aFont,   6, 0  );
+      hb_arraySetL(  aFont,   7, 0  );
+      hb_arraySetNI( aFont,   8, 0  );
+      hb_arraySetNI( aFont,   9, 0  );
+      hb_arraySetNI( aFont,  10, 0  );
+      hb_arraySetNI( aFont,  11, 0  );
+      hb_arraySetNI( aFont,  12, 0  );
+      hb_arraySetNI( aFont,  13, 0  );
+      hb_arraySetNI( aFont,  14, 0  );
+      hb_arraySetNInt( aFont,15, 0  );
+   }
+   else
+   {
+      char *szFaceName = HB_TCHAR_CONVFROM( lf->lfFaceName );
+
+      hb_arraySetC(  aFont,  1, szFaceName           );
+      hb_arraySetNL( aFont,  2, lf->lfHeight         );
+      hb_arraySetNL( aFont,  3, lf->lfWidth          );
+      hb_arraySetNL( aFont,  4, lf->lfWeight         );
+      hb_arraySetL(  aFont,  5, lf->lfItalic         );
+      hb_arraySetL(  aFont,  6, lf->lfUnderline      );
+      hb_arraySetL(  aFont,  7, lf->lfStrikeOut      );
+      hb_arraySetNI( aFont,  8, lf->lfCharSet        );
+      hb_arraySetNI( aFont,  9, lf->lfEscapement     );
+      hb_arraySetNI( aFont, 10, lf->lfOrientation    );
+      hb_arraySetNI( aFont, 11, lf->lfOutPrecision   );
+      hb_arraySetNI( aFont, 12, lf->lfClipPrecision  );
+      hb_arraySetNI( aFont, 13, lf->lfQuality        );
+      hb_arraySetNI( aFont, 14, lf->lfPitchAndFamily );
+
+      HB_TCHAR_FREE( szFaceName );
+   }
+
+   return( aFont );
+}
+
+//----------------------------------------------------------------------//
+// Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize, ;
+//                 viewScreenFonts, viewPrinterFonts )
+//
+HB_FUNC( WVG_CHOOSEFONT )
+{
+   CHOOSEFONT  cf;  // = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+   LOGFONT     lf;  // = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+   DWORD       Flags;
+   LONG        PointSize = 0;
+   HWND        hWnd  = wvg_parhwnd( 1 );
+   TCHAR       szStyle[ MAX_PATH + 1 ];
+
+   if ( ISCHAR( 3 ) )
+   {
+      HB_TCHAR_CPTO( lf.lfFaceName, hb_parc( 3 ), sizeof( lf.lfFaceName ) - 1 );
+   }
+   if ( ( ! ISNIL( 4 ) ) && hb_parnl( 4 ) )
+   {
+      HDC hdc = GetDC( hWnd );
+      PointSize = -MulDiv( ( LONG ) hb_parnl( 4 ), GetDeviceCaps( hdc, LOGPIXELSY ), 72 ) ;
+      ReleaseDC( hWnd, hdc );
+   }
+   lf.lfHeight         = PointSize;
+   lf.lfWidth          = 0;
+   lf.lfWeight         = 0;
+   lf.lfItalic         = 0;
+   lf.lfUnderline      = 0;
+   lf.lfStrikeOut      = 0;
+   lf.lfCharSet        = DEFAULT_CHARSET;
+   lf.lfQuality        = DEFAULT_QUALITY;
+   lf.lfPitchAndFamily = FF_DONTCARE;
+
+   Flags = CF_EFFECTS | CF_SHOWHELP | CF_APPLY | CF_INITTOLOGFONTSTRUCT | CF_ENABLEHOOK;
+
+   #if 0
+   Flags = Flags | CF_TTONLY;
+   Flags = Flags | CF_FIXEDPITCHONLY;
+   Flags = Flags | CF_SCALABLEONLY;
+   Flags = Flags | CF_NOVECTORFONTS;
+   Flags = Flags | CF_NOSCRIPTSEL;
+   Flags = Flags | CF_NOSIMULATIONS;        // ::synthesizeFonts  == .f.
+   #endif
+
+   if( ISLOG( 5 ) &&  hb_parl( 5 ) )
+      Flags = Flags | CF_SCREENFONTS;
+   if( ISLOG( 6 ) &&  hb_parl( 6 ) )
+      Flags = Flags | CF_PRINTERFONTS;
+
+   cf.lStructSize      = sizeof( CHOOSEFONT );
+   cf.hwndOwner        = hWnd;
+   cf.hDC              = ( HDC ) NULL;      // only when ::oPrinterPS is defined
+   cf.lpLogFont        = &lf;
+   cf.iPointSize       = PointSize;
+   cf.Flags            = Flags;
+   cf.rgbColors        = RGB( 0,0,0 );
+   cf.lCustData        = 0L;
+   cf.lpfnHook         = ( LPCFHOOKPROC ) wvg_parwndproc( 2 );
+   cf.lpTemplateName   = ( LPTSTR ) NULL;
+   cf.hInstance        = ( HINSTANCE ) NULL;
+   cf.lpszStyle        = ( LPTSTR ) szStyle;
+   cf.nFontType        = SCREEN_FONTTYPE;   // ??
+   cf.nSizeMin         = 0;
+   cf.nSizeMax         = 0;
+
+   if ( ChooseFont( &cf ) )
+   {
+      PHB_ITEM aFont = wvg_logfontTOarray( &lf, FALSE );
+      PHB_ITEM aInfo = hb_itemNew( NULL );
+
+      hb_arrayNew( aInfo, 4 );
+      hb_arraySetNI( aInfo, 1, cf.iPointSize );
+      hb_arraySetNInt( aInfo, 2, cf.rgbColors  );
+      hb_arraySetNI( aInfo, 3, cf.nFontType  );
+      {
+         char * szText = HB_TCHAR_CONVFROM( cf.lpszStyle );
+         hb_arraySetC( aInfo, 4, szText );
+         HB_TCHAR_FREE( szText );
+      }
+      hb_arraySet( aFont, 15, aInfo );
+
+      hb_itemReturnRelease( aFont );
+      hb_itemRelease( aInfo );
+   }
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
+{
+   LOGFONT  lf;
+   PHB_ITEM aFont;
+
+   memset( &lf, 0, sizeof( LOGFONT ) );
+
+   SendMessage( wvg_parhwnd( 1 ), WM_CHOOSEFONT_GETLOGFONT, ( WPARAM ) 0, ( LPARAM ) &lf );
+
+   aFont = wvg_logfontTOarray( &lf, FALSE );
+
+   hb_itemReturnRelease( aFont );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WVG_FONTCREATE )
+{
+   LOGFONT lf;
+   HFONT   hFont;
+
+   memset( &lf, 0, sizeof( LOGFONT ) );
+
+   HB_TCHAR_CPTO( lf.lfFaceName,  hb_parc( 1, 1 ), sizeof( lf.lfFaceName ) - 1 );
+   lf.lfHeight         = ( LONG ) hb_parnl( 1, 2 );
+   lf.lfWidth          = ( LONG ) hb_parnl( 1, 3 );
+   lf.lfWeight         = ( LONG ) hb_parnl( 1, 4 );
+   lf.lfItalic         = ( BYTE ) hb_parl(  1, 5 );
+   lf.lfUnderline      = ( BYTE ) hb_parl(  1, 6 );
+   lf.lfStrikeOut      = ( BYTE ) hb_parl(  1, 7 );
+   lf.lfCharSet        = ( BYTE ) hb_parni( 1, 8 );
+   lf.lfEscapement     = ( BYTE ) hb_parni( 1, 9 );
+   lf.lfOrientation    = ( BYTE ) hb_parni( 1,10 );
+   lf.lfOutPrecision   = ( BYTE ) hb_parni( 1,11 );
+   lf.lfClipPrecision  = ( BYTE ) hb_parni( 1,12 );
+   lf.lfQuality        = ( BYTE ) hb_parni( 1,13 );
+   lf.lfPitchAndFamily = ( BYTE ) hb_parni( 1,14 );
+
+   hFont = CreateFontIndirect( &lf );
+
+   if( hFont )
+   {
+      PHB_ITEM aFont = wvg_logfontTOarray( &lf, FALSE );
+      hb_arraySetNInt( aFont, 15, ( HB_PTRDIFF ) hFont );
+      hb_itemReturnRelease( aFont );
+   }
+   else
+   {
+      PHB_ITEM aFont = wvg_logfontTOarray( &lf, TRUE );
+      hb_itemReturnRelease( aFont );
+   }
+}
+
+//----------------------------------------------------------------------//
+// Wvg_PointSizeToHeight( hdc, nPointSize )
+//
+HB_FUNC( WVG_POINTSIZETOHEIGHT )
+{
+   HDC hdc = ISNIL( 1 ) ? GetDC( GetDesktopWindow() ) : wvg_parhdc( 1 );
+
+   hb_retnl( ( LONG ) -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( hdc, LOGPIXELSY ), 72 ) ) ;
+
+   if( ISNIL( 1 ) )
+      ReleaseDC( GetDesktopWindow(), hdc );
+}
+
+//----------------------------------------------------------------------//
+// Wvg_HeightToPointSize( hdc, nHeight )
+//
+HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
+{
+   HDC hdc = ISNIL( 1 ) ? GetDC( GetDesktopWindow() ) : wvg_parhdc( 1 );
+
+   hb_retnl( ( LONG ) -MulDiv( hb_parnl( 2 ), 72, GetDeviceCaps( hdc, LOGPIXELSY ) ) ) ;
+
+   if( ISNIL( 1 ) )
+      ReleaseDC( GetDesktopWindow(), hdc );
 }
 
 //----------------------------------------------------------------------//
