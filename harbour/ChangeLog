@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-16 10:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    * pacified BCC warning
+
+  + harbour/tests/mt/mttest11.prg
+    + added new test for asynchronous screen updating in MT mode
+
 2008-12-15 08:07 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvtwin.ch
     + Added more constants.

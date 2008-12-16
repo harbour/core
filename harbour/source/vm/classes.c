@@ -1381,7 +1381,7 @@ const char * hb_clsFuncName( USHORT uiClass )
 const char * hb_clsMethodName( USHORT uiClass, USHORT uiMethod )
 {
    if( uiClass && uiClass <= s_uiClasses &&
-       uiMethod < hb_clsMthNum( s_pClasses[ uiClass ] ) )
+       ( UINT ) uiMethod < ( UINT ) hb_clsMthNum( s_pClasses[ uiClass ] ) )
    {
       PMETHOD pMethod = s_pClasses[ uiClass ]->pMethods + uiMethod;
       if( pMethod->pMessage )
