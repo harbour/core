@@ -803,8 +803,8 @@ RETURN nResult
 STATIC FUNCTION ADO_RECINFO( nWA, nRecord, nInfoType, uInfo )
 
    LOCAL nResult := SUCCESS
-   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
-
+   //LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   HB_SYMOL_USED( nWA )
 #ifdef UR_DBRI_DELETED
    DO CASE
    CASE nInfoType == UR_DBRI_DELETED
@@ -850,7 +850,6 @@ RETURN nResult
 STATIC FUNCTION ADO_FIELDINFO( nWA, nField, nInfoType, uInfo )
 
    LOCAL nType, nLen
-   LOCAL nResult := SUCCESS
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    DO CASE
@@ -957,7 +956,8 @@ RETURN SUCCESS
 
 STATIC FUNCTION ADO_PACK( nWA )
 
-   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   //LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   HB_SYMOL_USED( nWA )
 
 RETURN SUCCESS
 
@@ -974,7 +974,8 @@ RETURN SUCCESS
 
 STATIC FUNCTION ADO_LOCK( nWA, aLockInfo  )
 
-   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   //LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+   HB_SYMOL_USED( nWA )
 
    aLockInfo[ UR_LI_METHOD ] := DBLM_MULTIPLE
    aLockInfo[ UR_LI_RECORD ] := RECNO()
@@ -1253,7 +1254,7 @@ STATIC FUNCTION ADO_EVALBLOCK( nArea, bBlock, uResult )
 RETURN SUCCESS
 
 STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
-   LOCAL n
+   //LOCAL n
    LOCAL lRet := FAILURE
    LOCAL aRData := USRRDD_RDDDATA( nRDD )
 
@@ -1261,13 +1262,13 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
 
    IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
       TRY
-         n := aRData[ WA_CATALOG ]:Tables( cTable )
+         //n := aRData[ WA_CATALOG ]:Tables( cTable )
          lRet := SUCCESS
       CATCH
       END TRY
       IF ! Empty( cIndex )
          TRY
-            n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes( cIndex )
+            //n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes( cIndex )
             lRet := SUCCESS
          CATCH
          END TRY
@@ -1277,7 +1278,7 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
 RETURN lRet
 
 STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
-   LOCAL n
+   //LOCAL n
    LOCAL lRet := FAILURE
    LOCAL aRData := USRRDD_RDDDATA( nRDD )
 
@@ -1285,13 +1286,13 @@ STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
 
    IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
       TRY
-         n := aRData[ WA_CATALOG ]:Tables:Delete( cTable )
+         //n := aRData[ WA_CATALOG ]:Tables:Delete( cTable )
          lRet := SUCCESS
       CATCH
       END TRY
       IF ! Empty( cIndex )
          TRY
-            n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes:Delete( cIndex )
+            //n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes:Delete( cIndex )
             lRet := SUCCESS
          CATCH
          END TRY

@@ -254,12 +254,12 @@ DECLARE HBClass ;
 /* #xtranslate __HB_CLS_SCOPE( <export>, <protect>, <hidde> ) => ;
       iif( <export>, HB_OO_CLSTP_EXPORTED , ;
       iif( <protect>, HB_OO_CLSTP_PROTECTED, ;
-      iif( <hidde>, HB_OO_CLSTP_HIDDEN, _nowarn_nScope ) ) ) */
+      iif( <hidde>, HB_OO_CLSTP_HIDDEN, nScope ) ) ) */
 #xtranslate __HB_CLS_SCOPE( <x,...> )        => ) __HB_CLS_ERR( Can not use multiple scope qualifiers! )
 #xtranslate __HB_CLS_SCOPE( .T., .F., .F. )  => HB_OO_CLSTP_EXPORTED
 #xtranslate __HB_CLS_SCOPE( .F., .T., .F. )  => HB_OO_CLSTP_PROTECTED
 #xtranslate __HB_CLS_SCOPE( .F., .F., .T. )  => HB_OO_CLSTP_HIDDEN
-#xtranslate __HB_CLS_SCOPE( .F., .F., .F. )  => _nowarn_nScope /* Default */
+#xtranslate __HB_CLS_SCOPE( .F., .F., .F. )  => nScope /* Default */
 
 
 #xcommand CLASS <ClassName> [METACLASS <metaClass>] ;
@@ -269,10 +269,10 @@ DECLARE HBClass ;
    _HB_CLASS <ClassName> <FuncName> ;;
    <static> function __HB_CLS_OPT([<FuncName>,] <ClassName>) ( HB_CLS_PARAM_LIST ) ;;
       static s_oClass ;;
-      local _nowarn_nScope, oClass, oInstance ;;
+      local nScope, oClass, oInstance ;;
       if s_oClass == NIL .and. __clsLockDef( @s_oClass ) ;;
          begin sequence ;;
-            _nowarn_nScope := HB_OO_CLSTP_EXPORTED ;;
+            nScope := HB_OO_CLSTP_EXPORTED ; __HB_CLS_SYMBOL_UNUSED( nScope ) ;;
             oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR( [ @<SuperClass1>() ] [ , @<SuperClassN>() ] ), @__HB_CLS_OPT([__HB_CLS_ASID(<FuncName>),] <ClassName>)() [, <.modulfriend.> ] ) ) ;;
    #undef  _CLASS_NAME_ ; #define _CLASS_NAME_ <ClassName> ;;
    #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_DECLARATION_ ;
@@ -482,11 +482,11 @@ DECLARE HBClass ;
    #xtranslate _HB_MEMBER {AS Char     => _HB_MEMBER {AS Character
    #xtranslate _HB_MEMBER {AS Block    => _HB_MEMBER {AS CodeBlock
 
-   #xcommand EXPORTED:   =>    _nowarn_nScope := HB_OO_CLSTP_EXPORTED
-   #xcommand EXPORT:     =>    _nowarn_nScope := HB_OO_CLSTP_EXPORTED
-   #xcommand VISIBLE:    =>    _nowarn_nScope := HB_OO_CLSTP_EXPORTED
-   #xcommand HIDDEN:     =>    _nowarn_nScope := HB_OO_CLSTP_HIDDEN
-   #xcommand PROTECTED:  =>    _nowarn_nScope := HB_OO_CLSTP_PROTECTED
+   #xcommand EXPORTED:   =>    nScope := HB_OO_CLSTP_EXPORTED ; __HB_CLS_SYMBOL_UNUSED( nScope )
+   #xcommand EXPORT:     =>    nScope := HB_OO_CLSTP_EXPORTED ; __HB_CLS_SYMBOL_UNUSED( nScope )
+   #xcommand VISIBLE:    =>    nScope := HB_OO_CLSTP_EXPORTED ; __HB_CLS_SYMBOL_UNUSED( nScope )
+   #xcommand HIDDEN:     =>    nScope := HB_OO_CLSTP_HIDDEN   ; __HB_CLS_SYMBOL_UNUSED( nScope )
+   #xcommand PROTECTED:  =>    nScope := HB_OO_CLSTP_PROTECTED; __HB_CLS_SYMBOL_UNUSED( nScope )
 
 
    /* Classy compatibility... Added By JF Lefebvre (mafact) 2006/11/07 */

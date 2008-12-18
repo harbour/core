@@ -359,16 +359,14 @@ Return
 //---------------------------------------------------------------------------//
 Function HB_CStructureFromID( nID, nAlign )
 
-   LOCAL hClass, oStructure, lInplace
+   LOCAL hClass, oStructure
    LOCAL oErr
 
    //TraceLog( nId, s_aClasses )
 
    IF nID > CTYPE_STRUCTURE_PTR
-      lInplace := .F.
       nID -= CTYPE_STRUCTURE_PTR
    ELSEIF nID > CTYPE_STRUCTURE
-      lInplace := .T.
       nID -= CTYPE_STRUCTURE
    ELSE
       oErr := ErrorNew()
@@ -566,7 +564,6 @@ RETURN QSelf():InternalBuffer
 STATIC Function DeValue( lAdopt )
 
    //LOCAL aValues := {}
-   LOCAL nLen := Len( QSelf() ) - CLASS_PROPERTIES
    LOCAL Buffer := QSelf():InternalBuffer
 
    //TraceLog( QSelf():ClassName(), QSelf():nAlign, Buffer, Len( Buffer ), lAdopt )
@@ -577,7 +574,7 @@ STATIC Function DeValue( lAdopt )
       //TraceLog( "EMPTY Buffer passed to " + ProcName() )
    ELSEIF Len( Buffer ) < QSelf():SizeOf
       //TraceLog( "Should have been caught at ::Buffer()!!!", Buffer )
-      Buffer := PadR( Buffer, QSelf():SizeOf, Chr(0) )
+      //Buffer := PadR( Buffer, QSelf():SizeOf, Chr(0) )
    ELSE
       HB_StructureToArray( Buffer, QSelf():aCTypes, QSelf():nAlign, lAdopt, QSelf()  )
    ENDIF

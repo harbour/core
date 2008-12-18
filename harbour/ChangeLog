@@ -7,6 +7,21 @@
    For example:
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
+2008-12-18 19:53 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * source/compiler/hbopt.c
+    ! one more try to fix passing informatino about redundant variable 
+      assignment by preprocessor rules, i.e., _nowarn_* hack removed, 
+      using HB_SYMBOL_UNUSED() technique
+
+  * include/hbclass.ch
+  * include/std.ch
+    ! fixed redundant nScope and GetList assignment
+
+  * contrib/rddado/adordd.prg
+  * contrib/xhb/cstruct.prg
+  * contrib/xhb/hblog.prg
+  * contrib/xhb/sprintf.prg
+    ! fixed assigned but not used variable
 
 2008-12-18 17:30 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * source/compiler/hbopt.c

@@ -1292,11 +1292,10 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
          /* These should be unused and does not have any POP pcode */
          assert( pLocals[ isLocal - 1 ].bFlags != 0 ); 
 
-         /* Skip detachables, referenced, optimizable self, and _nowarn_* */
+         /* Skip detachables, referenced, optimizable self */
          if( ( pLocals[ isLocal - 1 ].bFlags & ( OPT_LOCAL_FLAG_BLOCK | OPT_LOCAL_FLAG_PUSHREF ) ) == 0 && 
              pLocals[ isLocal - 1 ].bFlags != OPT_LOCAL_FLAG_POPSELF && 
-             pLocals[ isLocal - 1 ].bFlags != ( OPT_LOCAL_FLAG_PUSH | OPT_LOCAL_FLAG_POPSELF ) && 
-             strncmp( pVar->szName, "_NOWARN_", 8 ) != 0 )
+             pLocals[ isLocal - 1 ].bFlags != ( OPT_LOCAL_FLAG_PUSH | OPT_LOCAL_FLAG_POPSELF ) )
          {
             memset( pMap, 0, pFunc->lPCodePos );
             pMap[ ulPos ] = 1;
