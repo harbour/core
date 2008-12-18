@@ -555,7 +555,7 @@ METHOD Refresh(lQuery,lMeta) CLASS TPQquery
     Local cTableCodes := ''
     Local cFieldCodes := ''
     Local aStruct := {}
-    Local aTemp := {}
+    Local aTemp 
     Local i
     Local cType, nDec, nSize
 

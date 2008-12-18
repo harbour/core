@@ -54,12 +54,7 @@
 #include "hbcomp.h"
 #include "hbassert.h"
 
-typedef struct HB_stru_opt_info
-{
-   HB_COMP_DECL;
-} HB_OPT_INFO, * HB_OPT_INFO_PTR;
-
-#define HB_OPT_FUNC( func ) HB_PCODE_FUNC( func, HB_OPT_INFO_PTR )
+#define HB_OPT_FUNC( func ) HB_PCODE_FUNC( func, void* )
 typedef HB_OPT_FUNC( HB_OPT_FUNC_ );
 typedef HB_OPT_FUNC_ * HB_OPT_FUNC_PTR;
 
@@ -85,20 +80,22 @@ static HB_OPT_FUNC( hb_p_pushlocal )
    BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
    SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
+   HB_SYMBOL_UNUSED( cargo );
+
    if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POPLOCAL &&
       HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) == iVar &&
-      ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+      ! hb_compHasJump( pFunc, lPCodePos + 3 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 6, FALSE, FALSE );
    }
    else if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POPLOCALNEAR &&
             ( SCHAR ) pFunc->pCode[ lPCodePos + 4 ] == iVar &&
-            ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+            ! hb_compHasJump( pFunc, lPCodePos + 3 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 5, FALSE, FALSE );
    }
    else if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POP &&
-            ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+            ! hb_compHasJump( pFunc, lPCodePos + 3 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
    }
@@ -113,21 +110,23 @@ static HB_OPT_FUNC( hb_p_pushlocal )
 
 static HB_OPT_FUNC( hb_p_pushlocalnear )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    if( pFunc->pCode[ lPCodePos + 2 ] == HB_P_POPLOCAL &&
       ( SCHAR ) pFunc->pCode[ lPCodePos + 1 ] ==
       HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 3 ] ) &&
-      ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 2 ) )
+      ! hb_compHasJump( pFunc, lPCodePos + 2 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 5, FALSE, FALSE );
    }
    else if( pFunc->pCode[ lPCodePos + 2 ] == HB_P_POPLOCALNEAR &&
             pFunc->pCode[ lPCodePos + 1 ] == pFunc->pCode[ lPCodePos + 3 ] &&
-            ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 2 ) )
+            ! hb_compHasJump( pFunc, lPCodePos + 2 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
    }
    else if( pFunc->pCode[ lPCodePos + 2 ] == HB_P_POP &&
-            ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 2 ) )
+            ! hb_compHasJump( pFunc, lPCodePos + 2 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 3, FALSE, FALSE );
    }
@@ -154,15 +153,17 @@ static HB_OPT_FUNC( hb_p_localaddint )
 
 static HB_OPT_FUNC( hb_p_pushstatic )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POPSTATIC &&
        HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) ==
        HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) &&
-       ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+       ! hb_compHasJump( pFunc, lPCodePos + 3 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 6, FALSE, FALSE );
    }
    else if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POP &&
-            ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+            ! hb_compHasJump( pFunc, lPCodePos + 3 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
    }
@@ -172,15 +173,17 @@ static HB_OPT_FUNC( hb_p_pushstatic )
 
 static HB_OPT_FUNC( hb_p_pushmemvar )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POPMEMVAR &&
        HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) ==
        HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) &&
-       ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+       ! hb_compHasJump( pFunc, lPCodePos + 3 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 6, FALSE, FALSE );
    }
    else if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POP &&
-            ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+            ! hb_compHasJump( pFunc, lPCodePos + 3 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
    }
@@ -190,8 +193,10 @@ static HB_OPT_FUNC( hb_p_pushmemvar )
 
 static HB_OPT_FUNC( hb_p_pushnil )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    if( pFunc->pCode[ lPCodePos + 1 ] == HB_P_POP &&
-       ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) )
+       ! hb_compHasJump( pFunc, lPCodePos + 1 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 2, FALSE, FALSE );
    }
@@ -201,6 +206,8 @@ static HB_OPT_FUNC( hb_p_pushnil )
 
 static HB_OPT_FUNC( hb_p_false )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    switch( pFunc->pCode[ lPCodePos + 1 ] )
    {
       case HB_P_POP:
@@ -211,7 +218,7 @@ static HB_OPT_FUNC( hb_p_false )
       case HB_P_JUMPTRUENEAR:
       case HB_P_JUMPTRUE:
       case HB_P_JUMPTRUEFAR:
-         if( ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) )
+         if( ! hb_compHasJump( pFunc, lPCodePos + 1 ) )
          {
             int iCount = 1;
 
@@ -251,6 +258,8 @@ static HB_OPT_FUNC( hb_p_false )
 
 static HB_OPT_FUNC( hb_p_true )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    switch( pFunc->pCode[ lPCodePos + 1 ] )
    {
       case HB_P_POP:
@@ -261,7 +270,7 @@ static HB_OPT_FUNC( hb_p_true )
       case HB_P_JUMPFALSENEAR:
       case HB_P_JUMPFALSE:
       case HB_P_JUMPFALSEFAR:
-         if( ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) )
+         if( ! hb_compHasJump( pFunc, lPCodePos + 1 ) )
          {
             int iCount = 1;
    
@@ -301,6 +310,8 @@ static HB_OPT_FUNC( hb_p_true )
 
 static HB_OPT_FUNC( hb_p_duplicate )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    switch( pFunc->pCode[ lPCodePos + 1 ] )
    {
       case HB_P_JUMPTRUEFAR:
@@ -317,7 +328,7 @@ static HB_OPT_FUNC( hb_p_duplicate )
                if( pFunc->pCode[ ulNewPos ] == HB_P_DUPLICATE )
                {
                   if( lOffset > 0 )
-                     hb_p_duplicate( pFunc, ulNewPos, cargo );
+                     hb_p_duplicate( pFunc, ulNewPos, NULL );
                }
 
                if( pFunc->pCode[ ulNewPos ] == HB_P_NOOP )
@@ -353,8 +364,8 @@ static HB_OPT_FUNC( hb_p_duplicate )
 
             if( ( pFunc->pCode[ ulNewPos ] == HB_P_JUMPTRUEFAR ||
                   pFunc->pCode[ ulNewPos ] == HB_P_JUMPFALSEFAR ) &&
-                !hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) &&
-                !hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 5 ) )
+                !hb_compHasJump( pFunc, lPCodePos + 1 ) &&
+                !hb_compHasJump( pFunc, lPCodePos + 5 ) )
             {
                if( pFunc->pCode[ ulNewPos ] != pFunc->pCode[ lPCodePos + 1 ] )
                   fNot = !fNot;
@@ -380,6 +391,8 @@ static HB_OPT_FUNC( hb_p_duplicate )
 static HB_OPT_FUNC( hb_p_not )
 {
    BYTE opcode;
+
+   HB_SYMBOL_UNUSED( cargo );
 
    switch( pFunc->pCode[ lPCodePos + 1 ] )
    {
@@ -416,14 +429,14 @@ static HB_OPT_FUNC( hb_p_not )
 
             if( lOffset > 0 )
             {
-               hb_p_duplicate( pFunc, lPCodePos + 1, cargo );
+               hb_p_duplicate( pFunc, lPCodePos + 1, NULL );
                lOffset = HB_PCODE_MKINT24( pAddr );
             }
 
             if( ( pFunc->pCode[ lPCodePos + 1 ] == HB_P_NOT ||
                   ( pFunc->pCode[ lPCodePos + 1 ] == HB_P_DUPLICATE &&
                     pFunc->pCode[ lPCodePos + lOffset + 2 ] == HB_P_NOT ) ) &&
-                ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) )
+                ! hb_compHasJump( pFunc, lPCodePos + 1 ) )
             {
                hb_compNOOPfill( pFunc, lPCodePos, 1, FALSE, FALSE );
                if( pFunc->pCode[ lPCodePos + 2 ] == HB_P_JUMPTRUEFAR )
@@ -445,7 +458,7 @@ static HB_OPT_FUNC( hb_p_not )
    }
 
    if( opcode < HB_P_LAST_PCODE &&
-       ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) )
+       ! hb_compHasJump( pFunc, lPCodePos + 1 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 1, FALSE, FALSE );
       if( opcode == HB_P_NOOP )
@@ -521,7 +534,7 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
    HB_SYMBOL_UNUSED( cargo );
 
    if( lOffset == 8 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_JUMPFAR &&
-       ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 4 ) )
+       ! hb_compHasJump( pFunc, lPCodePos + 4 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
       pFunc->pCode[ lPCodePos + 4 ] = HB_P_JUMPTRUEFAR;
@@ -531,8 +544,8 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
             pFunc->pCode[ lPCodePos + 7 ] == HB_P_JUMPFAR &&
             pFunc->pCode[ lPCodePos + 7 +
                HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 8 ] ) ] == HB_P_LINE &&
-            ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 4 ) &&
-            ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 7 ) )
+            ! hb_compHasJump( pFunc, lPCodePos + 4 ) &&
+            ! hb_compHasJump( pFunc, lPCodePos + 7 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 7, FALSE, FALSE );
       pFunc->pCode[ lPCodePos + 7 ] = HB_P_JUMPTRUEFAR;
@@ -565,7 +578,7 @@ static HB_OPT_FUNC( hb_p_jumptruefar )
    HB_SYMBOL_UNUSED( cargo );
 
    if( lOffset == 8 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_JUMPFAR &&
-       ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 4 ) )
+       ! hb_compHasJump( pFunc, lPCodePos + 4 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
       pFunc->pCode[ lPCodePos + 4 ] = HB_P_JUMPFALSEFAR;
@@ -575,8 +588,8 @@ static HB_OPT_FUNC( hb_p_jumptruefar )
             pFunc->pCode[ lPCodePos + 7 ] == HB_P_JUMPFAR &&
             pFunc->pCode[ lPCodePos + 7 +
                HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 8 ] ) ] == HB_P_LINE &&
-            ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 4 ) &&
-            ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 7 ) )
+            ! hb_compHasJump( pFunc, lPCodePos + 4 ) &&
+            ! hb_compHasJump( pFunc, lPCodePos + 7 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 7, FALSE, FALSE );
       pFunc->pCode[ lPCodePos + 7 ] = HB_P_JUMPFALSEFAR;
@@ -659,8 +672,10 @@ static HB_OPT_FUNC( hb_p_switch )
 
 static HB_OPT_FUNC( hb_p_function )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_RETVALUE &&
-       ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+       ! hb_compHasJump( pFunc, lPCodePos + 3 ) )
    {
       pFunc->pCode[ lPCodePos ] = HB_P_DO;
       hb_compNOOPfill( pFunc, lPCodePos + 3, 1, FALSE, FALSE );
@@ -670,8 +685,10 @@ static HB_OPT_FUNC( hb_p_function )
 
 static HB_OPT_FUNC( hb_p_functionshort )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    if( pFunc->pCode[ lPCodePos + 2 ] == HB_P_RETVALUE &&
-       ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 2 ) )
+       ! hb_compHasJump( pFunc, lPCodePos + 2 ) )
    {
       pFunc->pCode[ lPCodePos ] = HB_P_DOSHORT;
       hb_compNOOPfill( pFunc, lPCodePos + 2, 1, FALSE, FALSE );
@@ -681,8 +698,10 @@ static HB_OPT_FUNC( hb_p_functionshort )
 
 static HB_OPT_FUNC( hb_p_macrofunc )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_RETVALUE &&
-       ! hb_compHasJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+       ! hb_compHasJump( pFunc, lPCodePos + 3 ) )
    {
       pFunc->pCode[ lPCodePos ] = HB_P_MACRODO;
       hb_compNOOPfill( pFunc, lPCodePos + 3, 1, FALSE, FALSE );
@@ -905,12 +924,12 @@ static const HB_OPT_FUNC_PTR s_opt_table[] =
 void hb_compOptimizePCode( HB_COMP_DECL, PFUNCTION pFunc )
 {
    const HB_OPT_FUNC_PTR * pFuncTable = s_opt_table;
-   HB_OPT_INFO opt_info;
 
-   opt_info.HB_COMP_PARAM = HB_COMP_PARAM;
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
+
    assert( HB_P_LAST_PCODE == sizeof( s_opt_table ) / sizeof( HB_OPT_FUNC_PTR ) );
 
-   hb_compPCodeEval( pFunc, ( const HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &opt_info );
+   hb_compPCodeEval( pFunc, ( const HB_PCODE_FUNC_PTR * ) pFuncTable, NULL );
 }
 
 
@@ -1019,7 +1038,7 @@ static LONG hb_compJumpGetOffset( BYTE * pCode )
 }
 
 
-static void hb_compPCodeEnumScanLocals( HB_COMP_DECL, PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
+static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 {
    ULONG   ulPos = 0, ulLastPos = 0; 
    SHORT   isVar;
@@ -1057,7 +1076,7 @@ static void hb_compPCodeEnumScanLocals( HB_COMP_DECL, PFUNCTION pFunc, PHB_OPT_L
             if( isVar > 0 )
             {
                if( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHSELF &&
-                   ! hb_compHasJump( HB_COMP_PARAM, pFunc, ulPos ) && ! fWasJump )
+                   ! hb_compHasJump( pFunc, ulPos ) && ! fWasJump )
                {
                   /* For real POPSELF support we need to do backward tree 
                      tracing. This is not implemented, but using fWasJump 
@@ -1125,7 +1144,7 @@ static void hb_compPCodeEnumScanLocals( HB_COMP_DECL, PFUNCTION pFunc, PHB_OPT_L
 }
 
 
-static void hb_compPCodeEnumSelfifyLocal( HB_COMP_DECL, PFUNCTION pFunc, SHORT isLocal )
+static void hb_compPCodeEnumSelfifyLocal( PFUNCTION pFunc, SHORT isLocal )
 {
    ULONG   ulPos = 0, ulLastPos = 0;
 
@@ -1153,7 +1172,7 @@ static void hb_compPCodeEnumSelfifyLocal( HB_COMP_DECL, PFUNCTION pFunc, SHORT i
             if( isLocal == ( signed char ) pFunc->pCode[ ulPos + 1 ] )
             {
                assert( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHSELF &&
-                       ! hb_compHasJump( HB_COMP_PARAM, pFunc, ulPos ) );
+                       ! hb_compHasJump( pFunc, ulPos ) );
                hb_compNOOPfill( pFunc, ulLastPos, 1, FALSE, FALSE );
                hb_compNOOPfill( pFunc, ulPos, 2, FALSE, FALSE );
             }
@@ -1163,7 +1182,7 @@ static void hb_compPCodeEnumSelfifyLocal( HB_COMP_DECL, PFUNCTION pFunc, SHORT i
             if( isLocal == HB_PCODE_MKSHORT( &pFunc->pCode[ ulPos + 1 ] ) )
             {
                assert( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHSELF &&
-                       ! hb_compHasJump( HB_COMP_PARAM, pFunc, ulPos ) );
+                       ! hb_compHasJump( pFunc, ulPos ) );
 
                hb_compNOOPfill( pFunc, ulLastPos, 1, FALSE, FALSE );
                hb_compNOOPfill( pFunc, ulPos, 3, FALSE, FALSE );
@@ -1429,7 +1448,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    /* Initial scan */
    pLocals = ( PHB_OPT_LOCAL ) hb_xgrab( sizeof( HB_OPT_LOCAL ) * usLocalCount );
    memset( pLocals, 0, sizeof( HB_OPT_LOCAL ) * usLocalCount );
-   hb_compPCodeEnumScanLocals( HB_COMP_PARAM, pFunc, pLocals );
+   hb_compPCodeEnumScanLocals( pFunc, pLocals );
 
    /* Check */
    usIndex = 0;
@@ -1437,8 +1456,8 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    while( pVar )
    {
       /* Compiler and optimizer should have the same opinion about variable usage */
-      assert( ! ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags == 0 || 
-                ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags != 0 );
+      assert( ( ! ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags == 0 ) || 
+              ( ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags != 0 ) );
 
       pVar = pVar->pNext;
       usIndex++;
@@ -1457,7 +1476,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
              pLocals[ usIndex ].bFlags == OPT_LOCAL_FLAG_POPSELF ) 
          {
             /* printf( "Info: %s(%d) selfifying variable '%s'\n", pFunc->szName, pVar->iDeclLine, pVar->szName ); */
-            hb_compPCodeEnumSelfifyLocal( HB_COMP_PARAM, pFunc, usIndex + 1 );
+            hb_compPCodeEnumSelfifyLocal( pFunc, usIndex + 1 );
             pLocals[ usIndex ].bFlags = 0;
          }
          pVar = pVar->pNext;

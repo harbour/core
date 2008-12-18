@@ -8,13 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-18 15:30 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * include/hbcomp.h
+  * source/compiler/hbmain.c
+  * source/compiler/hbopt.c
+    ! fixed warnings of last commit
+
+  * contrib/hbpgsql/tpostgre.prg
+    ! fixed assigned but not used variable
+
 2008-12-18 05:02 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * include/hbclass.ch
-  * include/hbcomp.ch
+  * include/hbcomp.h
   * include/hberrors.h
-  * include/hbgenerr.c
-  * include/hbmain.c
-  * include/hbopt.c
+  * source/compiler/hbgenerr.c
+  * source/compiler/hbmain.c
+  * source/compiler/hbopt.c
     + PCode optimizations:
         1) Self := QSELF(), Self:method -> QSELF():method
         2) Declared, but unused variables are removed from code

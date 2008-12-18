@@ -3100,7 +3100,7 @@ static void hb_compRemovePCODE( HB_COMP_DECL, ULONG ulPos, ULONG ulCount,
    }
 }
 
-BOOL hb_compHasJump( HB_COMP_DECL, PFUNCTION pFunc, ULONG ulPos )
+BOOL hb_compHasJump( PFUNCTION pFunc, ULONG ulPos )
 {
    ULONG iJump;
 

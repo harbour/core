@@ -316,7 +316,7 @@ extern void hb_compPrintModes( HB_COMP_DECL );
 
 /* Misc functions defined in harbour.c */
 extern void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL fCheck );
-extern BOOL hb_compHasJump( HB_COMP_DECL, PFUNCTION pFunc, ULONG ulPos );
+extern BOOL hb_compHasJump( PFUNCTION pFunc, ULONG ulPos );
 
 /* Misc functions defined in hbfix.c */
 extern void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION pFunc );
@@ -324,7 +324,7 @@ extern void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION pFunc );
 extern void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc );
 /* Misc functions defined in hbopt.c */
 extern void hb_compOptimizePCode( HB_COMP_DECL, PFUNCTION pFunc );
-extern void hb_compPCodeTreeOptimizer( HB_COMP_DECL );
+extern void hb_compPCodeTraceOptimizer( HB_COMP_DECL );
 /* Misc functions defined in hbstripl.c */
 extern void hb_compStripFuncLines( PFUNCTION pFunc );
 
