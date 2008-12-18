@@ -327,7 +327,6 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
 
    LOCAL cKey
    LOCAL bKeyBlock
-   LOCAL lSetKey
 
 #ifdef HB_COMPAT_C53
    LOCAL nMRow
@@ -339,7 +338,7 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
    DEFAULT oGet TO ::oGet
 
    IF ( bKeyBlock := SetKey( nKey ) ) != NIL
-      IF ( lSetKey := ::GetDoSetKey( bKeyBlock, oGet ) )
+      IF ::GetDoSetKey( bKeyBlock, oGet )
          RETURN Self
       ENDIF
    ENDIF
@@ -923,11 +922,10 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
    LOCAL nMRow
    LOCAL nMCol
    LOCAL nButton
-   LOCAL lSetKey
 
    // Check for SET KEY first
    IF ( bKeyBlock := SetKey( nKey ) ) != NIL
-      IF ( lSetKey := ::GetDoSetKey( bKeyBlock, oGet ) )
+      IF ::GetDoSetKey( bKeyBlock, oGet ) 
          RETURN Self
       ENDIF
    ENDIF
@@ -1197,11 +1195,10 @@ METHOD TBApplyKey( oGet, oTB, nKey, oMenu, aMsg ) CLASS HBGetList
    LOCAL nMCol
    LOCAL nButton
    LOCAL nHotItem
-   LOCAL lSetKey
 
    // Check for SET KEY first
    IF ( bKeyBlock := SetKey( nKey ) ) != NIL
-      IF ( lSetKey := ::GetDoSetKey( bKeyBlock, oGet ) )
+      IF ::GetDoSetKey( bKeyBlock, oGet )
          RETURN Self
       ENDIF
    ENDIF
@@ -1266,7 +1263,7 @@ METHOD TBApplyKey( oGet, oTB, nKey, oMenu, aMsg ) CLASS HBGetList
       ENDIF
 
       IF nButton != 0
-      ELSEIF ( nButton := oTB:hitTest( nMRow, nMCol ) ) == HTNOWHERE
+      ELSEIF oTB:hitTest( nMRow, nMCol ) == HTNOWHERE
          IF ::hitTest( nMRow, nMCol, aMsg ) != 0
             oGet:exitState := GE_MOUSEHIT
             ::nLastExitState := GE_MOUSEHIT

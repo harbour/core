@@ -1133,8 +1133,7 @@ METHOD EditSet( nSet, oBrwSets ) CLASS HBDebugger
 METHOD EditVar( nVar ) CLASS HBDebugger
 
    LOCAL cVarName   := ::aVars[ nVar ][ 1 ]
-   LOCAL uVarValue  := ::aVars[ nVar ][ 2 ]
-   LOCAL cVarType   := ::aVars[ nVar ][ 3 ]
+   LOCAL uVarValue
    LOCAL cVarStr
    LOCAL oErr
 
@@ -1614,7 +1613,6 @@ METHOD ListBox( cCaption, aItems ) CLASS HBDebugger
    LOCAL nBottom
    LOCAL nRight
    LOCAL oWndList
-   LOCAL cSelected := ""
    LOCAL aColors
    LOCAL n
 
@@ -1922,7 +1920,7 @@ METHOD Open() CLASS HBDebugger
 
 METHOD OpenPPO() CLASS HBDebugger
 
-   LOCAL lSuccess := .F.
+   LOCAL lSuccess
    LOCAL cDir
    LOCAL cName
    LOCAL cExt
@@ -2547,7 +2545,6 @@ METHOD ShowHelp( nTopic ) CLASS HBDebugger
 
 METHOD ShowVars() CLASS HBDebugger
 
-   LOCAL nWidth
    LOCAL oCol
    LOCAL lRepaint := .F.
    LOCAL nTop
@@ -2632,7 +2629,6 @@ METHOD ShowVars() CLASS HBDebugger
                                ::oBrwVars:Cargo[ 1 ] := Min( Max( ::oBrwVars:Cargo[ 1 ], 1 ), Len( ::aVars ) ),;
                                ::oBrwVars:Cargo[ 1 ] - nOld }
 
-      nWidth := ::oWndVars:nWidth() - 1
       oCol := HBDbColumnNew( "", ;
            { || PadR( hb_NToS( ::oBrwVars:Cargo[ 1 ] - 1 ) + ") " + ;
                       ::VarGetInfo( ::aVars[ Max( ::oBrwVars:Cargo[ 1 ], 1 ) ] ), ;
@@ -3048,7 +3044,6 @@ METHOD WatchpointsHide() CLASS HBDebugger
 
 METHOD WatchpointsShow() CLASS HBDebugger
 
-   LOCAL nWidth
    LOCAL oCol
    LOCAL lRepaint := .F.
    LOCAL nTop
@@ -3097,7 +3092,6 @@ METHOD WatchpointsShow() CLASS HBDebugger
                                                              Len( ::aWatch ) ),;
                                iif( Len(::aWatch) > 0, ::oBrwPnt:Cargo[ 1 ] - nOld, 0 ) }
 
-      nWidth := ::oWndPnt:nWidth() - 1
       oCol := HBDbColumnNew( "", ;
          { || PadR( iif( Len( ::aWatch ) > 0, ;
                        hb_NToS( ::oBrwPnt:Cargo[ 1 ] - 1 ) + ") " + ;

@@ -26,16 +26,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 2000 RonPinkas <Ron@Profit-Master.com>
- *    hb_compStrongType()
- *
- * See doc/license.txt for licensing terms.
- *
- */
 
 #include "hbcomp.h"
 #include "hbassert.h"

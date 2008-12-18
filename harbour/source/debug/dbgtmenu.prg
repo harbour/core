@@ -110,8 +110,6 @@ ENDCLASS
 
 METHOD New() CLASS HBDbMenu
 
-   LOCAL nCol := 0
-
    IF ::aMenus == NIL
       ::aMenus := {}
       ::lPopup := .F.

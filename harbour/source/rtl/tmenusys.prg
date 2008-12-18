@@ -362,13 +362,11 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ::oMenu      := ::aMenuList[ ::nMenuLevel ]
 
             nMenuItem := ::oMenu:current
-            oMenuItem := ::oMenu:getItem( nMenuItem )
             IF ( oMenuItem := ::oMenu:getItem( ::oMenu:Current ) ):isPopUp()
                oMenuItem:data:close()
             ENDIF
 
             IF nMenuItem != nNewItem
-               nMenuItem := nNewItem
                ::oMenu:select( nNewItem )
                ::oMenu:display()
                ::PushMenu()

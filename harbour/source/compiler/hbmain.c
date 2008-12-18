@@ -28,7 +28,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2000 RonPinkas <Ron@Profit-Master.com>
- *    hb_compPrepareOptimize()
+ *    hb_compPrepareJumps()
  *    hb_compOptimizeJumps()
  *    hb_compOptimizeFrames()
  *    hb_compAutoOpenAdd()
@@ -1712,27 +1712,6 @@ static void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined fu
       hb_compElseIfKill( pFunc );
       hb_compLoopKill( pFunc );
 
-      if( !pFunc->bError )
-      {
-         if( pFunc->wParamCount && !( pFunc->bFlags & FUN_USES_LOCAL_PARAMS ) )
-         {
-            /* There was a PARAMETERS statement used.
-             * NOTE: This fixes local variables references in a case when
-             * there is PARAMETERS statement after a LOCAL variable declarations.
-             * All local variables are numbered from 1 - which means use first
-             * item from the eval stack. However if PARAMETERS statement is used
-             * then there are additional items on the eval stack - the
-             * function arguments. Then first local variable is at the position
-             * (1 + <number of arguments>). We cannot fix this numbering
-             * because the PARAMETERS statement can be used even at the end
-             * of function body when all local variables are already created.
-             */
-            hb_compFixFuncPCode( HB_COMP_PARAM, pFunc );
-         }
-
-         hb_compOptimizeJumps( HB_COMP_PARAM );
-      }
-
       if( HB_COMP_PARAM->iWarnings )
       {
          PVAR pVar;
@@ -1769,6 +1748,28 @@ static void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined fu
              (pFunc->bFlags & FUN_PROCEDURE) == 0 )
             hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
                                pFunc->szName, NULL );
+      }
+
+      if( !pFunc->bError )
+      {
+         if( pFunc->wParamCount && !( pFunc->bFlags & FUN_USES_LOCAL_PARAMS ) )
+         {
+            /* There was a PARAMETERS statement used.
+             * NOTE: This fixes local variables references in a case when
+             * there is PARAMETERS statement after a LOCAL variable declarations.
+             * All local variables are numbered from 1 - which means use first
+             * item from the eval stack. However if PARAMETERS statement is used
+             * then there are additional items on the eval stack - the
+             * function arguments. Then first local variable is at the position
+             * (1 + <number of arguments>). We cannot fix this numbering
+             * because the PARAMETERS statement can be used even at the end
+             * of function body when all local variables are already created.
+             */
+            hb_compFixFuncPCode( HB_COMP_PARAM, pFunc );
+         }
+
+         hb_compPCodeTraceOptimizer( HB_COMP_PARAM );
+         hb_compOptimizeJumps( HB_COMP_PARAM );
       }
    }
 }
@@ -2214,21 +2215,15 @@ static void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos )
    pFunc->pNOOPs[ pFunc->iNOOPs++ ] = ulPos;
 }
 
-/* NOTE: To disable jump optimization, just make this function a dummy one.
- [vszakats] */
-
-static void hb_compPrepareOptimize( HB_COMP_DECL )
+static void hb_compPrepareJumps( HB_COMP_DECL )
 {
-   if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
-   {
-      PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
 
-      if( pFunc->iJumps )
-         pFunc->pJumps = ( ULONG * ) hb_xrealloc( pFunc->pJumps, sizeof( ULONG ) * ( pFunc->iJumps + 1 ) );
-      else
-         pFunc->pJumps = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
-      pFunc->pJumps[ pFunc->iJumps++ ] = ( ULONG ) ( pFunc->lPCodePos - 4 );
-   }
+   if( pFunc->iJumps )
+      pFunc->pJumps = ( ULONG * ) hb_xrealloc( pFunc->pJumps, sizeof( ULONG ) * ( pFunc->iJumps + 1 ) );
+   else
+      pFunc->pJumps = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
+   pFunc->pJumps[ pFunc->iJumps++ ] = ( ULONG ) ( pFunc->lPCodePos - 4 );
 }
 
 ULONG hb_compGenJump( LONG lOffset, HB_COMP_DECL )
@@ -2237,7 +2232,7 @@ ULONG hb_compGenJump( LONG lOffset, HB_COMP_DECL )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 
    hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
-   hb_compPrepareOptimize( HB_COMP_PARAM );
+   hb_compPrepareJumps( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
 }
@@ -2248,7 +2243,7 @@ ULONG hb_compGenJumpFalse( LONG lOffset, HB_COMP_DECL )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 
    hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
-   hb_compPrepareOptimize( HB_COMP_PARAM );
+   hb_compPrepareJumps( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
 }
@@ -2259,7 +2254,7 @@ ULONG hb_compGenJumpTrue( LONG lOffset, HB_COMP_DECL )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 
    hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
-   hb_compPrepareOptimize( HB_COMP_PARAM );
+   hb_compPrepareJumps( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
 }
@@ -3105,15 +3100,9 @@ static void hb_compRemovePCODE( HB_COMP_DECL, ULONG ulPos, ULONG ulCount,
    }
 }
 
-BOOL hb_compIsJump( HB_COMP_DECL, PFUNCTION pFunc, ULONG ulPos )
+BOOL hb_compHasJump( HB_COMP_DECL, PFUNCTION pFunc, ULONG ulPos )
 {
    ULONG iJump;
-   /*
-    * Do not allow any optimization (code striping) when Jump Optimization
-    * is disabled and we do not have any information about jump addreses
-    */
-   if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) )
-      return TRUE;
 
    for( iJump = 0; iJump < pFunc->iJumps; iJump++ )
    {
@@ -3159,10 +3148,10 @@ BOOL hb_compIsJump( HB_COMP_DECL, PFUNCTION pFunc, ULONG ulPos )
 ULONG hb_compSequenceBegin( HB_COMP_DECL )
 {
    hb_compGenPCode4( HB_P_SEQALWAYS, 0, 0, 0, HB_COMP_PARAM );
-   hb_compPrepareOptimize( HB_COMP_PARAM );
+   hb_compPrepareJumps( HB_COMP_PARAM );
 
    hb_compGenPCode4( HB_P_SEQBEGIN, 0, 0, 0, HB_COMP_PARAM );
-   hb_compPrepareOptimize( HB_COMP_PARAM );
+   hb_compPrepareJumps( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
 }
@@ -3178,7 +3167,7 @@ ULONG hb_compSequenceEnd( HB_COMP_DECL )
 {
    hb_compGenPCode4( HB_P_SEQEND, 0, 0, 0, HB_COMP_PARAM );
 
-   hb_compPrepareOptimize( HB_COMP_PARAM );
+   hb_compPrepareJumps( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
 }
@@ -3187,7 +3176,7 @@ ULONG hb_compSequenceAlways( HB_COMP_DECL )
 {
    hb_compGenPCode4( HB_P_ALWAYSBEGIN, 0, 0, 0, HB_COMP_PARAM );
 
-   hb_compPrepareOptimize( HB_COMP_PARAM );
+   hb_compPrepareJumps( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
 }

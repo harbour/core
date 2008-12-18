@@ -143,7 +143,8 @@ const char * hb_comp_szWarnings[] =
    "2Unreachable code",
    "1Redundant 'ANNOUNCE %s' statement ignored",
    "0Duplicate variable '%s' in nested FOR loop",
-   "0Invalid variable '%s' for enumerator message"
+   "0Invalid variable '%s' for enumerator message",
+   "3Variable '%s' assigned but not used in function '%s'"
 };
 
 static void hb_compDispMessage( HB_COMP_DECL, char cPrefix, int iValue,

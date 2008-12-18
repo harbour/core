@@ -950,18 +950,17 @@ METHOD setColorSpec( cColorSpec ) CLASS Get
 
    LOCAL nClrUns
    LOCAL nClrOth
-   LOCAL cClrOth
 
    IF ISCHARACTER( cColorSpec )
 
 #ifdef HB_COMPAT_C53
       ::cColorSpec := hb_NToColor( nClrUns := Max( hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ), 0 ) ) +;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != -1, nClrOth, nClrUns ) ) +;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_CAPTION  ) ) ) != -1, nClrOth, nClrUns ) ) +;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ACCEL    ) ) ) != -1, nClrOth, nClrUns ) )
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != -1, nClrOth, nClrUns ) ) +;
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_CAPTION  ) ) ) != -1, nClrOth, nClrUns ) ) +;
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ACCEL    ) ) ) != -1, nClrOth, nClrUns ) )
 #else
       ::cColorSpec := hb_NToColor( nClrUns := Max( hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ), 0 ) ) +;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != -1, nClrOth, nClrUns ) )
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != -1, nClrOth, nClrUns ) )
 #endif
 
    /* NOTE: CA-Cl*pper oddity. [vszakats] */
@@ -1179,7 +1178,6 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
    LOCAL cPicFunc := ::cPicFunc
    LOCAL cPicMask := ::cPicMask
    LOCAL nFor
-   LOCAL nNoEditable := 0
 
    DEFAULT lEdit TO ::hasFocus
 

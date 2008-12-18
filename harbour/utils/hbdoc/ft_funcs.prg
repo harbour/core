@@ -50,6 +50,8 @@
  *
  */
 
+#pragma -w2
+
 #include "hbclass.ch"
 
 #include "common.ch"

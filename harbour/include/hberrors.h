@@ -164,6 +164,7 @@ HB_EXTERN_BEGIN
 #define HB_COMP_WARN_DUPL_ANNOUNCE              29
 #define HB_COMP_WARN_FORVAR_DUPL                30
 #define HB_COMP_WARN_ENUM_INVALID               31
+#define HB_COMP_WARN_ASSIGNED_UNUSED            32
 
 HB_EXTERN_END
 

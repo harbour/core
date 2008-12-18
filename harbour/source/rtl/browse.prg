@@ -57,7 +57,7 @@
 FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 
    LOCAL oBrw
-   LOCAL lExit, lGotKey, lAppend, lKeyPressed, lRefresh
+   LOCAL lExit, lAppend, lKeyPressed, lRefresh
    LOCAL n, nOldCursor, nKey
    LOCAL cOldScreen
    LOCAL bAction
@@ -66,7 +66,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
       RETURN .F.
    ENDIF
 
-   lExit := lGotKey := lAppend := lKeyPressed := lRefresh := .F.
+   lExit := lAppend := lKeyPressed := lRefresh := .F.
 
    IF PCount() < 4
       nTop    := 1

@@ -345,19 +345,18 @@ METHOD SampleLabels() CLASS HBLabelForm
    RETURN Self
 
 METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
-   LOCAL i, j       := 0                  // Counters
+   LOCAL i                                // Counters
    LOCAL cBuff      := Space( BUFFSIZE )  // File buffer
-   LOCAL nHandle    := 0                  // File handle
-   LOCAL nReadCount := 0                  // Bytes read from file
-   LOCAL lStatus    := .F.                // Status
+   LOCAL nHandle                          // File handle
+   LOCAL nReadCount                       // Bytes read from file
    LOCAL nOffset    := FILEOFFSET         // Offset into file
-   LOCAL nFileError := F_OK               // File error
-   LOCAL cFieldText := ""                 // Text expression container
+   LOCAL nFileError                       // File error
+   LOCAL cFieldText                       // Text expression container
    LOCAL err                              // error object
 
    LOCAL cDefPath          // contents of SET DEFAULT string
    LOCAL aPaths            // array of paths
-   LOCAL nPathIndex := 0   // iteration counter
+   LOCAL nPathIndex        // iteration counter
 
    // Create and initialize default label array
    LOCAL aLabel[ LBL_COUNT ]
@@ -454,8 +453,6 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
       // Close file
       FClose( nHandle )
-
-      nFileError := FError()
 
    ENDIF
 

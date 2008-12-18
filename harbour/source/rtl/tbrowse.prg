@@ -2527,7 +2527,7 @@ METHOD hitTest( mRow, mCol ) CLASS TBROWSE
 #ifndef HB_BRW_STATICMOUSE
 STATIC PROCEDURE _mBrwPos( oBrw, mRow, mCol )
 
-   LOCAL nTop, nLeft, nBottom, nRight, nPos, nCol, aCol
+   LOCAL nTop, nLeft, nBottom, nPos, nCol, aCol
 
    mRow := MRow()
    mCol := MCol()
@@ -2535,7 +2535,7 @@ STATIC PROCEDURE _mBrwPos( oBrw, mRow, mCol )
    IF mRow >= ( nTop    := _TBR_COORD( oBrw:n_Top    ) ) .AND. ;
       mRow <= ( nBottom := _TBR_COORD( oBrw:n_Bottom ) ) .AND. ;
       mCol >= ( nLeft   := _TBR_COORD( oBrw:n_Left   ) ) .AND. ;
-      mCol <= ( nRight  := _TBR_COORD( oBrw:n_Right  ) )
+      mCol <= (            _TBR_COORD( oBrw:n_Right  ) )
 
       IF mRow < nTop + oBrw:nHeadHeight + iif( oBrw:lHeadSep, 1, 0 ) .OR. ;
          mRow > nBottom - oBrw:nFootHeight - iif( oBrw:lFootSep, 1, 0 )

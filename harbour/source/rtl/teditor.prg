@@ -1074,7 +1074,6 @@ STATIC FUNCTION WhichEOL( cString )
 // Converts a string to an array of strings splitting input string at EOL boundaries
 STATIC FUNCTION Text2Array( cString, nWordWrapCol )
 
-   LOCAL nTokNum := 1
    LOCAL aArray := {}
    LOCAL cEOL := WhichEOL( cString )
    LOCAL nEOLLen := Len( cEOL )

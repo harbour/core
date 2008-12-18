@@ -210,7 +210,6 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
 METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
 
    LOCAL nSet := oBrwSets:Cargo
-   LOCAL cOldname := ::objname
 
    DO CASE
    CASE nKey == K_UP

@@ -67,7 +67,6 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
 
    LOCAL nFrom := 1
    LOCAL cLine
-   LOCAL cToken
    LOCAL lStart := .t.
 
    PRIVATE oSelf
@@ -95,13 +94,13 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
          cLine := StrTran( cLine, "::", "oSelf:" )
          cLine := StrTran( cLine, " LEN ", " = Array( " )
          cLine := RTrim( StrTran( cLine, "=", ":=", , 1 ) ) + " )"
-         cLine := &( cLine )
+         &( cLine )
 
-      CASE Left( cToken := LTrim( hb_TokenGet( cLine, 1, "=" ) ), 2 ) == "::"
+      CASE Left( LTrim( hb_TokenGet( cLine, 1, "=" ) ), 2 ) == "::"
          MEMVAR->oSelf := Self
          cLine := StrTran( cLine, "::", "oSelf:" )
          cLine := StrTran( cLine, "=", ":=", , 1 )
-         cLine := &( cLine )
+         &( cLine )
 
       ENDCASE
 

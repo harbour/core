@@ -54,6 +54,7 @@
  * Modified By Sandro Freire sandrorrfreire at yahoo.com.br
  * added support for Unix OS
  */
+#pragma -w2
 
 #include "hbclass.ch"
 

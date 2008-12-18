@@ -456,7 +456,7 @@ METHOD EjectPage() CLASS HBReportForm
 
 METHOD ReportHeader() CLASS HBReportForm
 
-   LOCAL nLinesInHeader := 0
+   LOCAL nLinesInHeader
    LOCAL aPageHeader    := {}
    LOCAL nHeadingLength := ::aReportData[RPT_WIDTH] - ::aReportData[RPT_LMARGIN] -30
    LOCAL nCol, nLine, nMaxColLength, cHeader
@@ -693,7 +693,7 @@ METHOD ExecuteReport() CLASS HBReportForm
 
          //  put CRFF after group
          IF nGroup == 1 .AND. !::lFirstPass .AND. !lAnySubTotals
-            IF lEjectGrp := ::aReportData[ RPT_GROUPS, nGroup, RGT_AEJECT ]
+            IF ::aReportData[ RPT_GROUPS, nGroup, RGT_AEJECT ]
                ::nLinesLeft  := 0
             ENDIF
          ENDIF
@@ -877,13 +877,13 @@ METHOD LoadReportFile( cFrmFile ) CLASS HBReportForm
    LOCAL cParamsBuff
    LOCAL nFieldOffset   := 0
    LOCAL cFileBuff      := Space( SIZE_FILE_BUFF )
-   LOCAL cGroupExp      := Space( 200 )
-   LOCAL cSubGroupExp   := Space( 200 )
-   LOCAL nColCount      := 0        // Number of columns in report
+   LOCAL cGroupExp
+   LOCAL cSubGroupExp
+   LOCAL nColCount                  // Number of columns in report
    LOCAL nCount
    LOCAL nFrmHandle                 // (.frm) file handle
    LOCAL nBytesRead                 // Read/write and content record counter
-   LOCAL nPointer       := 0        // Points to an offset into EXPR_BUFF string
+   LOCAL nPointer                   // Points to an offset into EXPR_BUFF string
    LOCAL nFileError                 // Contains current file error
    LOCAL cOptionByte                // Contains option byte
 
@@ -892,7 +892,7 @@ METHOD LoadReportFile( cFrmFile ) CLASS HBReportForm
 
    LOCAL cDefPath          // contents of SET DEFAULT string
    LOCAL aPaths            // array of paths
-   LOCAL nPathIndex := 0   // iteration counter
+   LOCAL nPathIndex        // iteration counter
 
    LOCAL aHeader                           // temporary storage for report form headings
    LOCAL nHeaderIndex              // index into temporary header array
@@ -1143,8 +1143,8 @@ METHOD LoadReportFile( cFrmFile ) CLASS HBReportForm
 */
 
 METHOD GetExpr( nPointer ) CLASS HBReportForm
-   LOCAL nExprOffset   := 0
-   LOCAL nExprLength   := 0
+   LOCAL nExprOffset       
+   LOCAL nExprLength       
    LOCAL nOffsetOffset := 0
    LOCAL cString := ""
 
@@ -1275,7 +1275,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
 *
 */
 METHOD GetColumn( cFieldsBuffer, nOffset ) CLASS HBReportForm
-   LOCAL nPointer := 0, nNumber := 0, aColumn[ RCT_COUNT ], cType, cExpr
+   LOCAL nPointer, aColumn[ RCT_COUNT ], cType, cExpr
 
    // Column width
    aColumn[ RCT_WIDTH ] := BIN2W(SubStr(cFieldsBuffer, nOffset + ;

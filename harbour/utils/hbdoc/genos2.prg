@@ -49,6 +49,8 @@
  * If you do not wish that, delete this exception notice.
  */
 
+#pragma -w2
+
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"

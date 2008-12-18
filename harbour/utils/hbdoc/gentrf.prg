@@ -50,6 +50,8 @@
  *
  */
 
+#pragma -w2
+
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"

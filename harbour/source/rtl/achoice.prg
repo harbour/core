@@ -25,19 +25,17 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    LOCAL nNumCols                          // Number of columns in the window
    LOCAL nNumRows                          // Number of rows in the window
    LOCAL nRowsClr                          // Number of rows to clear
-   LOCAL acCopy    := {}                   // A padded copy of the items
    LOCAL alSelect                          // Select permission
    LOCAL nNewPos   := 0                    // The next item to be selected
    LOCAL lFinished                         // Is processing finished?
    LOCAL nKey      := 0                    // The keystroke to be processed
-   LOCAL nMode     := AC_IDLE              // The current operating mode
-   LOCAL nAtTop    := 1                    // The number of the item at the top
-   LOCAL nAtBtm    := 1                    // The number of the item at the bottom
+   LOCAL nMode                             // The current operating mode
+   LOCAL nAtTop                            // The number of the item at the top
    LOCAL nItems    := 0                    // The number of items
-   LOCAL nGap      := 0                    // The number of lines between top and current lines
+   LOCAL nGap                              // The number of lines between top and current lines
                                            // Block used to search for items
    LOCAL lUserFunc                         // Is a user function to be used?
-   LOCAL nUserFunc := 0                    // Return value from user function
+   LOCAL nUserFunc                         // Return value from user function
    LOCAL nSaveCsr  := SetCursor( SC_NONE )
    LOCAL nFrstItem := 0
    LOCAL nLastItem := 0
