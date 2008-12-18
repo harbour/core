@@ -349,7 +349,7 @@ return NIL
 function FT_MenuTo( bGetSet, cReadVar, lCold )
 
 local nMenu   := nLevel++
-local nActive := 1
+local nActive
 local nCount  := len( aRow[ nMenu ] )
 local lChoice := .F.
 local nCursor := set( _SET_CURSOR,SC_NONE )

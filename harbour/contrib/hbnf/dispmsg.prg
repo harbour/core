@@ -208,7 +208,6 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
          y,                ;
          aPos := {},       ;
          nLeft,            ;
-         nTop,             ;
          aLeft
 
    FOR i := 1 TO LEN( aInfo[1] )
@@ -236,10 +235,11 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
       nLeft := nBoxLeft + 2
    ENDIF
 
+/*
    IF nBoxTop == NIL
       nTop := ( MAXROW() - LEN( aInfo[1] ) - 2 ) / 2 + 2
    ENDIF
-
+*/
 
    /* calculate location of box */
    IF nBoxLeft == NIL

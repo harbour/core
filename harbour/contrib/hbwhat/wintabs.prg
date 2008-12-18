@@ -191,7 +191,6 @@ METHOD Configure()
    LOCAL aTab :=VWN_GetClientRect(::hTab)
    local acRect:={0,0,0,0}
    LOCAL aTemp
-   LOCAL aWnd:={}
    LOCAL hCtrl
    LOCAL i
    LOCAL aPt

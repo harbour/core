@@ -196,7 +196,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
    *  NOTE: When evaluated a code block is passed the array element to
    *          be edited
 
-   LOCAL exit_requested := .F., nKey, meth_no, ;
+   LOCAL exit_requested, nKey, meth_no, ;
          cSaveWin, i, b, column
    LOCAL nDim, cType, cVal
    LOCAL tb_methods := ;

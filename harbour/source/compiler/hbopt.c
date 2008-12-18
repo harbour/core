@@ -1445,6 +1445,19 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    if( ! usLocalCount )
       return;
 
+   /* TOFIX: Support for PARAMETER sentence is not implemented.
+             The temporary solution is to disable optmisation at all if PARAMETER is used.  */
+   {
+      ULONG   ulPos = 0;
+
+      while( ulPos < pFunc->lPCodePos )
+      {
+         if( pFunc->pCode[ ulPos ] == HB_P_PARAMETER )
+            return;
+         ulPos += hb_compPCodeSize( pFunc, ulPos );
+      }
+   }
+
    /* Initial scan */
    pLocals = ( PHB_OPT_LOCAL ) hb_xgrab( sizeof( HB_OPT_LOCAL ) * usLocalCount );
    memset( pLocals, 0, sizeof( HB_OPT_LOCAL ) * usLocalCount );
@@ -1455,10 +1468,12 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    pVar = pFunc->pLocals;
    while( pVar )
    {
+      /* TOFIX: PARAMETERS sentence 
+                The temporary solution is to disable optmisation if PARAMETERS is used.
+       */
       /* Compiler and optimizer should have the same opinion about variable usage */
       assert( ( ! ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags == 0 ) || 
-              ( ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags != 0 ) );
-
+              (   ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags != 0 ) );
       pVar = pVar->pNext;
       usIndex++;
    }

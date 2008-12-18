@@ -262,7 +262,7 @@ LOCAL nB, nT, nL, nR
 LOCAL nChoice := 1
 LOCAL nLen    := 0
 LOCAL aPrompt := {}
-LOCAL aClrPal := {}
+LOCAL aClrPal
 LOCAL aClrTab := { "N","B","G","BG","R","RB","GR","W" }
 LOCAL aClrBW  := { "N","B","W" }
 LOCAL nRowSav := ROW()
@@ -348,11 +348,11 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
 // Return -> aOpt with modified colour strings
 
 LOCAL nB, nT, nL, nR
-LOCAL nX      := 0
+LOCAL nX
 LOCAL aClrs   := {}
-LOCAL cClr    := ""
+LOCAL cClr 
 LOCAL nChoice := 1
-LOCAL aPrompt := {}
+LOCAL aPrompt
 LOCAL nLen    := 0
 LOCAL cColour := SETCOLOR()
 LOCAL cScrSav := SAVESCREEN( 18, 00, MAXROW(), MAXCOL() )
@@ -559,10 +559,10 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
 // cClr is the current colour being modified
 // Return -> selected colour combination
 
-LOCAL nR     := 1
+LOCAL nR  
 LOCAL nC     := 1
 LOCAL lFound := .F.
-LOCAL nKey   := 0
+LOCAL nKey
 LOCAL nDim   := LEN( aClrPal )
 LOCAL nTop    := 0
 LOCAL nLeft   := 28

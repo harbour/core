@@ -693,7 +693,7 @@ RETURN ::Next()
 
 METHOD eof() CLASS TODBC
 
-   LOCAL lResult := .F.
+   LOCAL lResult
 
    // Do we have any data in recordset?
    

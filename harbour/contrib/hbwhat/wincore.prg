@@ -216,7 +216,7 @@ Function WHT__ProcessMsg( hWnd, nMsg, nwParam, nlParam, nIndex )
    Local anWM
    Local bProc
    Local nType := WT_WINDOW
-   Local nRet  := 0
+   Local nRet
    Local nProc //:=s_aProc[nIndex]
    Local oObj
    Local xCargo
@@ -323,9 +323,9 @@ Function __KillWindow( hWnd )
 // to the codeblock
 //
 Function WHT__ProcessDlgMsg( hDlg, nMsg, nwParam, nlParam )
-   Local nIndex := 0
+   Local nIndex 
    Local nResult
-   Local n := 0
+   Local n
 
    If ( ( nIndex := aScan( s_aDialog, { | x | hDlg == x[ 1 ] } ) ) == 0 )
       If ( ( nIndex := aScan( s_aDialog, { | x | 0 == x[ 1 ] } ) ) == 0 )
@@ -347,7 +347,7 @@ Function WHT__ProcessDlgMsg( hDlg, nMsg, nwParam, nlParam )
 
    If nMsg == WM_NCDESTROY
       s_aDialog[ nIndex ] := { NIL , NIL , NIL, NIL, NIL }
-      If ( n := aScan( s_aWindow, { | x | hDlg == x[ 1 ] .AND. WT_DIALOG == x[ 2 ] .AND. Empty( x[ 3 ] ) } ) ) > 0
+      If aScan( s_aWindow, { | x | hDlg == x[ 1 ] .AND. WT_DIALOG == x[ 2 ] .AND. Empty( x[ 3 ] ) } ) > 0
          __KillWindow( hDlg )
       EndIf
    EndIf
@@ -357,7 +357,7 @@ Function WHT__ProcessDlgMsg( hDlg, nMsg, nwParam, nlParam )
 //----------------------------------------------------------------------//
 
 Function WHT_DialogBox( hInst, acnDlg, hWnd, bAction, oObj, xCargo )
-   Local nResult := 0
+   Local nResult
    Local nIndex
    Local cTemplate
 

@@ -196,7 +196,6 @@ METHOD addstring( cText )
 //----------------------------------------------------------------------//
 METHOD Create(hParent,nStyle,nId,nImg,hBMInst,nBMId,xBtn,yBtn,xBmp,yBmp)
    LOCAL cButtons:=""
-   LOCAL cStrings:=""
    LOCAL tbb IS TBBUTTON
    LOCAL i
 
@@ -270,7 +269,7 @@ METHOD tbProc(nMsg,nwParam,nlParam)
      CASE Hdr:code==TBN_DROPDOWN
          Nmt IS NMTOOLBAR
          nmt:buffer( WHT_Peek(nlParam,nmt:sizeof))
-         IF (n:=ASCAN( ::aMenus,{|a| a[1]==nmt:iItem})) > 0
+         IF ASCAN( ::aMenus,{|a| a[1]==nmt:iItem}) > 0
             ::nBtn:=nmt:iItem
             hMenu := VWN_CreatePopupMenu()
             FOR x:=1 TO len(::aMenus)

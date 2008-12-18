@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-18 17:30 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * source/compiler/hbopt.c
+    ! suppressed optimisation if PARAMETER sentence is used
+      ; TODO: PARAMETER sentence support
+
+  * contrib/hbmisc/fileread.prg
+  * contrib/hbmisc/nconvert.prg
+  * contrib/hbnf/aredit.prg
+  * contrib/hbnf/clrsel.prg
+  * contrib/hbnf/dfile.prg
+  * contrib/hbnf/dispmsg.prg
+  * contrib/hbnf/dosver.prg
+  * contrib/hbnf/menu1.prg
+  * contrib/hbnf/menutonf.prg
+  * contrib/hbodbc/browodbc.prg
+  * contrib/hbodbc/todbc.prg
+  * contrib/hbwhat/whatutil.prg
+  * contrib/hbwhat/wincore.prg
+  * contrib/hbwhat/windebug.prg
+  * contrib/hbwhat/winerror.prg
+  * contrib/hbwhat/wintabs.prg
+  * contrib/hbwhat/wintbar.prg
+  * contrib/hbziparc/hbziparc.prg
+    ! fixed assigned but not used variable
+
 2008-12-18 15:30 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * include/hbcomp.h
   * source/compiler/hbmain.c

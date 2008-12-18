@@ -121,7 +121,6 @@ METHOD ReadLine() CLASS TFileRead
          ELSE
             // Add what was read to the readahead buffer.
             ::cBuffer += cLine
-            cLine := ""
          ENDIF
          // Is there a whole line in the readahead buffer yet?
          nPos := ::EOL_pos()

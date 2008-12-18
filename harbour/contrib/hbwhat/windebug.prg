@@ -98,7 +98,7 @@ STATIC FUNCTION DSINGLE_VIEW( heading, data_type, value )
    RETURN NIL
 //----------------------------------------------------------------------//
 STATIC FUNCTION DQOUT( a, b, c, d, show_len )
-   LOCAL e := ''
+   LOCAL e
 
    IF ValType( show_len ) == 'L' .AND. show_len
       e := ' (' + LEFT(ALLTRIM(a),1)+ ALLTRIM(STR( Len( d ) , 4, 0 ))+')'
@@ -108,8 +108,6 @@ STATIC FUNCTION DQOUT( a, b, c, d, show_len )
    ELSE
      e:=' ('+LEFT(ALLTRIM(a),1)+')'
    ENDIF
-
-   e:=""
 
    VWN_OutputDebugString( b + e + c + asstring( d ) +CRLF)
    RETURN NIL

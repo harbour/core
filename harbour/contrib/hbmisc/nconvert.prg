@@ -96,7 +96,7 @@ FUNCTION IsHexa(cString)
 
 FUNCTION DecToBin(nNumber)
    local cNewString:=''
-   local nTemp:=0
+   local nTemp
    WHILE(nNumber > 0)
       nTemp:=(nNumber%2)
       cNewString:=SubStr('01',(nTemp+1),1)+cNewString
@@ -106,7 +106,7 @@ FUNCTION DecToBin(nNumber)
 
 FUNCTION DecToOctal(nNumber)
    local cNewString:=''
-   local nTemp:=0
+   local nTemp
    WHILE(nNumber > 0)
       nTemp:=(nNumber%8)
       cNewString:=SubStr('01234567',(nTemp+1),1)+cNewString
@@ -116,7 +116,7 @@ FUNCTION DecToOctal(nNumber)
 
 FUNCTION DecToHexa(nNumber)
    local cNewString:=''
-   local nTemp:=0
+   local nTemp
    WHILE(nNumber > 0)
       nTemp:=(nNumber%16)
       cNewString:=SubStr('0123456789ABCDEF',(nTemp+1),1)+cNewString
@@ -125,7 +125,7 @@ FUNCTION DecToHexa(nNumber)
    RETURN(cNewString)
 
 FUNCTION BinToDec(cString)
-   local nNumber:=0,nX:=0
+   local nNumber:=0,nX
    local cNewString:=AllTrim(cString)
    local nLen:=Len(cNewString)
    FOR nX:=1 to nLen
@@ -135,7 +135,7 @@ FUNCTION BinToDec(cString)
    RETURN(nNumber)
 
 FUNCTION OctalToDec(cString)
-   local nNumber:=0,nX:=0
+   local nNumber:=0,nX
    local cNewString:=AllTrim(cString)
    local nLen:=Len(cNewString)
    FOR nX:=1 to nLen
@@ -145,7 +145,7 @@ FUNCTION OctalToDec(cString)
    RETURN(nNumber)
                         
 FUNCTION HexaToDec(cString)
-   local nNumber:=0,nX:=0
+   local nNumber:=0,nX
    local cNewString:=AllTrim(cString)
    local nLen:=Len(cNewString)
    FOR nX:=1 to nLen

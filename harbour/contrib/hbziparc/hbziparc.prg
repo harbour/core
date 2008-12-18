@@ -739,7 +739,7 @@ FUNCTION hb_ZipFile( cFileName,;
    LOCAL nLen
    LOCAL cBuffer := Space( s_nReadBuffer )
    LOCAL cFileToZip
-   LOCAL nPos := 1
+   LOCAL nPos
    LOCAL nRead
    LOCAL cName, cExt, cDrive, cPath
    LOCAL nSize

@@ -83,8 +83,8 @@ Function WHT_Alert( cMsg, aChoices )
 
    Local aDlg, i, n, aChoose, amSG
    Local hWnd, hDC
-   Local lErr := .F., w , h, t := 0, cTitle, msgh, butwidth
-   Local crpos := 0, txth := 0, atm := { }
+   Local w , h, t := 0, cTitle, msgh, butwidth
+   Local crpos, txth
    LOCAL hFont:= VWN_CreateFont( { 8, 0, 0, 0, 700, 0, 0, 0, 0, 1, 2, 1, 34, "MS Sans Serif" } )
    LOCAL hOldFont
    LOCAL xBase
@@ -265,8 +265,6 @@ Function WHT_UnMapDialogRect(cText,hfont)
   Local aTextExt := VWN_GetTextExtentPoint32( hDC,;
                              "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
 
-  Local arect := { 0,0,100,100 }
-
   nW:=aTextExt[ 1 ]
   nH:=aTextExt[ 2 ]
 
@@ -288,11 +286,11 @@ Function WHT_UnMapDialogRect(cText,hfont)
 //----------------------------------------------------------------------//
 
 Function WHT_CenterWindow( hWnd, NewX, NewY, hParent )
-   Local aChild_[ 4 ]
+   Local aChild_
    Local iCWidth
    Local iCHeight
-   Local aParent_[ 4 ]
-   Local aPoint_[ 2 ]
+   Local aParent_
+   Local aPoint_
 
    aChild_ := VWN_GetWindowRect( hWnd )
    iCWidth := aChild_[ 3 ] - aChild_[ 1 ]
@@ -378,7 +376,7 @@ Function WHT_asString( x )
 
 Function WHT_str2a( string, parser )
    Local retar    := { }
-   Local commapos := 0
+   Local commapos
 
    If parser == NIL
       parser := ","
@@ -709,7 +707,7 @@ FUNCTION WHT_WinColors( nfg, nbg )
   LOCAL ishibg := ( "*" $ ccolor )
   LOCAL cfg := Upper(StrTran( Left( ccolor, at( "/", ccolor ) - 1 ) , "*", "" ))
   LOCAL cbg := Upper(StrTran(SubStr( ccolor, at( "/", ccolor ) + 1 ),"*","")) + iif( ishibg, "+", "" )
-  LOCAL npos := 0
+  LOCAL npos
 
   nfg := VWN_RGB( 255, 255, 255 )
   nbg := VWN_RGB( 0, 0, 0 )

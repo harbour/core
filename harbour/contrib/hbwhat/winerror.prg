@@ -78,8 +78,6 @@ STATIC FUNCTION DefError( e )
       aAdd( aOptions, "Default" )
    END
 
-   nChoice := 0
-
    IF ( Empty( e:osCode ) )
       nChoice := eAlert( cMessage, aOptions, cErr )
    ELSE
@@ -149,7 +147,6 @@ STATIC FUNCTION ErrorMessage( e )
 //----------------------------------------------------------------------//
 STATIC FUNCTION LogError( e, cProcStack )
    LOCAL Args := ConvertArgs( e:args )
-   LOCAL i    := 3
    LOCAL cErr := ''
    LOCAL dVer
 
@@ -259,7 +256,7 @@ STATIC FUNCTION ConvertArgs( a )
    RETURN ifempty( Ret_Val )
 //----------------------------------------------------------------------//
 STATIC FUNCTION GetAliasCount()
-   LOCAL Counter  := 0
+   LOCAL Counter
    LOCAL nCounter := 0
 
    FOR Counter := 1 TO 255
@@ -449,8 +446,8 @@ STATIC FUNCTION eAlert( cMsg, aChoices, cDetail )
 
    LOCAL aDlg, i, n, aChoose, aMsg
    LOCAL hWnd, hDC
-   LOCAL lErr     := .F., w , h, t := 0, cTitle, Msgh, ButWidth
-   LOCAL crPos    := 0, txth := 0, atm := { }
+   LOCAL w , h, t := 0, cTitle, Msgh, ButWidth
+   LOCAL crPos, txth
    LOCAL isDetail := .F.
 
    IF !ISCHARACTER( cMsg )
