@@ -105,7 +105,6 @@ FUNCTION TIP_CHECKSID( cSID, cCRCKey )
    local nSIDCRC, cSIDCRC, n, cTemp
    local nLenSID     := SID_LENGTH
    local cBaseKeys   := BASE_KEY_STRING
-   local nLenKeys    := Len( cBaseKeys )
    local nRand, nKey := 0
 
    DEFAULT cCRCKey  TO CRC_KEY_STRING
@@ -129,7 +128,7 @@ FUNCTION TIP_CHECKSID( cSID, cCRCKey )
    RETURN Right( cSID, 5 ) == cSIDCRC
 
 FUNCTION TIP_DATETOGMT( dDate, cTime )
-   LOCAL cStr := ""
+   LOCAL cStr
    LOCAL cOldDateFormat := Set( _SET_DATEFORMAT, "dd-mm-yy" )
    LOCAL nDay, nMonth, nYear, nDoW
    LOCAL aDays   := { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }

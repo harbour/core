@@ -72,8 +72,6 @@ THREAD STATIC s_nErrorCode := 0      // Error code from last operation, 0 if no 
 
 function tp_baud( nPort, nNewBaud )
 
-   local nRes
-
    default nNewBaud to 0
 
    if ! isport( nPort ) .OR. Empty( s_aPorts[ nPort, TPFP_NAME ] )
@@ -85,11 +83,11 @@ function tp_baud( nPort, nNewBaud )
    endif
 
    if nNewBaud > 0
-      if ( nRes := p_InitPortSpeed( s_aPorts[ nPort, TPFP_HANDLE ] ,;
-                                    nNewBaud,;
-                                    s_aPorts[ nPort, TPFP_DBITS  ] ,;
-                                    s_aPorts[ nPort, TPFP_PARITY ] ,;
-                                    s_aPorts[ nPort, TPFP_SBITS  ] ) ) == 0
+      if p_InitPortSpeed( s_aPorts[ nPort, TPFP_HANDLE ] ,;
+                          nNewBaud,;
+                          s_aPorts[ nPort, TPFP_DBITS  ] ,;
+                          s_aPorts[ nPort, TPFP_PARITY ] ,;
+                          s_aPorts[ nPort, TPFP_SBITS  ] ) == 0
 
          s_aPorts[ nPort, TPFP_BAUD ] := nNewBaud
 
@@ -289,7 +287,7 @@ return TE_CONFL   // maybe should return something different?
 function tp_recv( nPort, nLength, nTimeout )
 
    local nDone
-   local cRet := ""
+   local cRet
 
    default nLength to s_aPorts[ nPort, TPFP_INBUF_SIZE  ]
    default nTimeout to 0
@@ -336,7 +334,7 @@ function tp_send( nPort, cString, nTimeout )
    endif
 
    nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0)
-   nWritten := nTotWritten := 0
+   nTotWritten := 0
 
    while nTotWritten < Len( cString ) .AND. ;
          ( nTimeout < 0 .OR. Seconds() <= nDone )
@@ -536,18 +534,18 @@ return p_CRC32( cString )
 function tp_waitfor( ... )
 
    local aParam := hb_AParams()
-   local nPort, nTimeout, lIgnorecase
+   local nPort//, nTimeout, lIgnorecase
 
    nPort := aParam[ 1 ]
-   nTimeout := aParam[ 2 ]
-   lIgnorecase := aParam[ Len( aParam ) ]
+   //nTimeout := aParam[ 2 ]
+   //lIgnorecase := aParam[ Len( aParam ) ]
 
    if ! isopenport( nPort )
       return 0
    endif
 
-   default nTimeout to -1
-   default lIgnorecase to .f.
+   //default nTimeout to -1
+   //default lIgnorecase to .f.
 
    /*
 
@@ -785,7 +783,7 @@ return .t.
 
 static function FetchChars( nPort )
 
-   local cStr := ""
+   local cStr
 
    if ! isopenport( nPort )
       return 0

@@ -263,7 +263,7 @@ Function WHT__ProcessMsg( hWnd, nMsg, nwParam, nlParam, nIndex )
                   Return VWN_CallWindowProc( nProc, hWnd, nMsg, nwParam, nlParam ) // external
                EndIf
             Else
-               i := 0 // end of the road, call default
+               //i := 0 // end of the road, call default
             EndIf
          Else
             Exit  // ok, we got it

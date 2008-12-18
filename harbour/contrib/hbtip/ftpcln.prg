@@ -658,7 +658,6 @@ RETURN cStr
 METHOD MPUT( cFileSpec, cAttr ) CLASS tIPClientFTP
 
    LOCAL cPath,cFile, cExt, aFile, aFiles
-   LOCAL nCount := 0
    LOCAL cStr := ""
 
    IF ! ISCHARACTER( cFileSpec )

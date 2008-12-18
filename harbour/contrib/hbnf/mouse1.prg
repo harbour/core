@@ -229,7 +229,7 @@ FUNCTION FT_MMICKEYS( nX, nY ) // read mouse motion counters
    aReg[AX] = 11                // set mouse function call 11
    FT_INT86( 51, aReg )        // execute mouse interrupt
    */
-   Local areturn:={}
+   Local areturn
    areturn:=_mget_mics()
    nX := areturn[1]               // store horizontal motion units
    nY := areturn[2]               // store vertical motion units
@@ -300,7 +300,7 @@ RETURN NIL                     // no function output
 FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
 
 LOCAL nVert, nHorz  // local row and col coordinates
-LOCAL lDouble:=.F.  // double click actually occurred
+LOCAL lDouble       // double click actually occurred
 LOCAL lDone          // loop flag
 LOCAL nPrs           // number of presses which occurred
 
@@ -647,7 +647,7 @@ RETURN NIL
  */
 
 FUNCTION FT_MVERSION(nMinor, nType, nIRQ)
-Local aReturn:={}
+Local aReturn
 // Set up register
 /*
 aReg[AX] := 36
@@ -994,7 +994,7 @@ RETURN NIL               // no output from function
 
 
 FUNCTION FT_MGETPOS( nX, nY )
-   Local amse:={}
+   Local amse
    nX := iif( nX == NIL, 0, nX )
    nY := iif( nY == NIL, 0, nY )
 /*
@@ -1329,7 +1329,7 @@ RETURN aReg[4]                 // return button status
 
 
 FUNCTION FT_MBUTREL( nButton, nButRel, nX, nY ) // get button release information
-local areg:={}
+local areg
 Local iButton
    areg:=_m_MBUTREL(nButton)
    nButRel := aReg[1]  // store updated release count
@@ -1455,7 +1455,7 @@ RETURN NIL              // no function output
 FUNCTION FT_MGETCOORD( nX, nY )
 
 * Duplicated code from FT_MGETPOS() for speed reasons
-local aReg:={}
+local aReg
 local iButton
    nX := iif( nX == NIL, 0, nX )
    nY := iif( nY == NIL, 0, nY )

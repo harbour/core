@@ -111,8 +111,8 @@ ENDCLASS
 
 METHOD New() CLASS TIpCgi
 
-   local aTemp := {}
-   local aVar := {}
+   local aTemp 
+   local aVar
    local lPost
    local nCount
    local nLen

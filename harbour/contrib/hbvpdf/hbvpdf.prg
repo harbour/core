@@ -145,7 +145,7 @@ return Nil
 =================================================                             */
 static function pdfBookCount( nRecno, nCurLevel )                             /*
 =================================================                             */
-local nTempLevel := 0, nCount := 0, nLen := len( s_aReport[ BOOKMARK ] )
+local nTempLevel, nCount := 0, nLen := len( s_aReport[ BOOKMARK ] )
    ++nRecno
    while nRecno <= nLen
       nTempLevel := s_aReport[ BOOKMARK ][ nRecno ][ BOOKLEVEL ]
@@ -192,7 +192,7 @@ return IIF( nLast == 0, nLast, nObj + nLast )
 ======================================================                        */
 static function pdfBookNext( nRecno, nCurLevel, nObj )                        /*
 ======================================================                        */
-local nTempLevel := 0, nNext := 0, nLen := len( s_aReport[ BOOKMARK ] )
+local nTempLevel, nNext := 0, nLen := len( s_aReport[ BOOKMARK ] )
    ++nRecno
    while nRecno <= nLen
       nTempLevel := s_aReport[ BOOKMARK ][ nRecno ][ BOOKLEVEL ]
@@ -217,7 +217,7 @@ return Nil
 ========================================================                      */
 static function pdfBookParent( nRecno, nCurLevel, nObj )                      /*
 ========================================================                      */
-local nTempLevel := 0
+local nTempLevel
 local nParent := 0
    --nRecno
    while nRecno > 0
@@ -233,7 +233,7 @@ return IIF( nParent == 0, nObj - 1, nObj + nParent )
 ======================================================                        */
 static function pdfBookPrev( nRecno, nCurLevel, nObj )                        /*
 ======================================================                        */
-local nTempLevel := 0
+local nTempLevel
 local nPrev := 0
    --nRecno
    while nRecno > 0
@@ -832,7 +832,7 @@ return s_aReport[ REPORTLINE ]
 ==========================================================================================*/
 function pdfNewPage( _cPageSize, _cPageOrient, _nLpi, _cFontName, _nFontType, _nFontSize )/*
 ==========================================================================================*/
-local nAdd := 76.2
+
 DEFAULT _cPageSize to s_aReport[ PAGESIZE ]
 DEFAULT _cPageOrient to s_aReport[ PAGEORIENT ]
 DEFAULT _nLpi to s_aReport[ LPI ]
@@ -1155,7 +1155,6 @@ DEFAULT cColor to ""
 
    cString := alltrim( cString )
    nTokens := numtoken( cString, cDelim )
-   nTokenLen := 0.00
    nStart := 1
 
    IF nJustify == 1 .or. nJustify == 4
@@ -1229,7 +1228,7 @@ DEFAULT cColor to ""
             nLines += nCRLF - 1
          ENDIF
          IF lPrint
-            nRow := pdfNewLine( nCRLF - 1 )
+            /* nRow := */pdfNewLine( nCRLF - 1 )
          ENDIF
 
       ELSE
@@ -1325,7 +1324,7 @@ static function TimeAsAMPM( cTime )                                           /*
 return cTime
 
 function pdfOpenHeader( cFile )
-local nErrorCode := 0, nAt
+local nAt //, nErrorCode:=0
 DEFAULT cFile to ""
    IF !empty( cFile )
       cFile := alltrim( cFile )
@@ -1392,7 +1391,6 @@ local nId
 return nil
 
 function pdfSaveHeader( cFile )
-local nErrorCode := 0
    Array2File( 'temp.tmp', s_aReport[ HEADER ] )
    copy file temp.tmp to (cFile)
 return nil
@@ -1762,10 +1760,10 @@ return aTemp
 
 function pdfTIFFInfo( cFile )
 local c40 := chr(0)+chr(0)+chr(0)+chr(0)
-local aType := {"BYTE","ASCII","SHORT","LONG","RATIONAL","SBYTE","UNDEFINED","SSHORT","SLONG","SRATIONAL","FLOAT","DOUBLE"}
+//local aType := {"BYTE","ASCII","SHORT","LONG","RATIONAL","SBYTE","UNDEFINED","SSHORT","SLONG","SRATIONAL","FLOAT","DOUBLE"}
 local aCount := { 1, 1, 2, 4, 8, 1, 1, 2, 4, 8, 4, 8 }
 local nTemp, nHandle, cValues, c2, nFieldType, nCount, nPos, nTag, nValues
-local nOffset, cTemp, cIFDNext, nIFD, nFields, cTag, nPages, nn
+local nOffset, cTemp, cIFDNext, nIFD, nFields, nn//, cTag, nPages
 
 local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0, yRes := 0, aTemp := {}, nSpace
 
@@ -1778,7 +1776,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
    fread( nHandle, @cIFDNext, 4 )
 
    cTemp := space(12)
-   nPages := 0
+   //nPages := 0
 
    while !( cIFDNext == c40 ) //read IFD's
 
@@ -1836,7 +1834,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
          ENDIF
          //?'Tag'
          //??' ' + padr( nTag, 10 )
-         cTag := ''
+         //cTag := ''
          do case
          case nTag == 256
                /*
@@ -1846,7 +1844,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                The number of columns in the image, i.e., the number of pixels per scanline.
                */
             //??'ImageWidth'
-            cTag := 'ImageWidth'
+            //cTag := 'ImageWidth'
 /*
                IF nFieldType != SHORT .and. nFieldType != LONG
                   alert('Wrong Type for ImageWidth')
@@ -1866,7 +1864,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                The number of rows (sometimes described as scanlines) in the image.
                */
             //??'ImageLength'
-            cTag := 'ImageLength'
+            //cTag := 'ImageLength'
 /*
                IF nFieldType != SHORT .and. nFieldType != LONG
                   alert('Wrong Type for ImageLength')
@@ -1888,7 +1886,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                16 or 256 distinct shades of gray.
                */
             //??'BitsPerSample'
-            cTag := 'BitsPerSample'
+            //cTag := 'BitsPerSample'
             nTemp := 0
             IF nFieldType == SHORT
                nTemp := bin2w( cValues )
@@ -1917,13 +1915,13 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                Baseline TIFF readers must handle all three compression schemes.
                */
             //??'Compression'
-            cTag := 'Compression'
-            nTemp := 0
+            //cTag := 'Compression'
+            /*nTemp := 0
             IF nFieldType == SHORT
                nTemp := bin2w( cValues )
             ELSE
                //alert('Wrong Type for Compression')
-            ENDIF
+            ENDIF*/
             //IF nTemp != 1 .and. nTemp != 2 .and. nTemp != 32773
             //   alert('Wrong Value for Compression')
             //ENDIF
@@ -1940,7 +1938,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                image should display and print reversed.
                */
             //??'PhotometricInterpretation'
-            cTag := 'PhotometricInterpretation'
+            //cTag := 'PhotometricInterpretation'
             nTemp := -1
             IF nFieldType == SHORT
                nTemp := bin2w( cValues )
@@ -1960,7 +1958,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                No default. See also Threshholding.
                */
             //??'CellWidth'
-            cTag := 'CellWidth'
+            //cTag := 'CellWidth'
             IF nFieldType != SHORT
                //alert('Wrong Type for CellWidth')
             ENDIF
@@ -1976,7 +1974,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                No default. See also Threshholding.
                */
             //??'CellLength'
-            cTag := 'CellLength'
+            //cTag := 'CellLength'
             IF nFieldType != SHORT
                //alert('Wrong Type for CellLength')
             ENDIF
@@ -1989,7 +1987,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                N = 1
                */
             //??'FillOrder'
-            cTag := 'FillOrder'
+            //cTag := 'FillOrder'
             IF nFieldType != SHORT
                //alert('Wrong Type for FillOrder')
             ENDIF
@@ -2001,7 +1999,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                For each strip, the byte offset of that strip.
                */
             //??'StripOffsets'
-            cTag := 'StripOffsets'
+            //cTag := 'StripOffsets'
             IF nFieldType != SHORT .and. nFieldType != LONG
                //alert('Wrong Type for StripOffsets')
             ENDIF
@@ -2021,7 +2019,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                extra samples are present. See the ExtraSamples field for further information.
                */
             //??'SamplesPerPixel'
-            cTag := 'SamplesPerPixel'
+            //cTag := 'SamplesPerPixel'
             IF nFieldType != SHORT
                //alert('Wrong Type for SamplesPerPixel')
             ENDIF
@@ -2037,7 +2035,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                data.)
                */
             //??'RowsPerStrip'
-            cTag := 'RowsPerStrip'
+            //cTag := 'RowsPerStrip'
             IF nFieldType != SHORT .and. nFieldType != LONG
                //alert('Wrong Type for RowsPerStrip')
             ENDIF
@@ -2049,7 +2047,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                For each strip, the number of bytes in that strip after any compression.
                */
             //??'StripByteCounts'
-            cTag := 'StripByteCounts'
+            //cTag := 'StripByteCounts'
             IF nFieldType != SHORT .and. nFieldType != LONG
                //alert('Wrong Type for StripByteCounts')
             ENDIF
@@ -2071,7 +2069,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                - see Orientation) direction.
                */
             //??'XResolution'
-            cTag := 'XResolution'
+            //cTag := 'XResolution'
             IF nFieldType != RATIONAL
                //alert('Wrong Type for XResolution')
             ENDIF
@@ -2085,14 +2083,14 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                direction.
                */
             //??'YResolution'
-            cTag := 'YResolution'
+            //cTag := 'YResolution'
             IF nFieldType != RATIONAL
                //alert('Wrong Type for YResolution')
             ENDIF
             yRes := bin2l(substr( cValues, 1, 4 ))
          case nTag == 284
             //??'PlanarConfiguration'
-            cTag := 'PlanarConfiguration'
+            //cTag := 'PlanarConfiguration'
             IF nFieldType != SHORT
                //alert('Wrong Type for PlanarConfiguration')
             ENDIF
@@ -2107,7 +2105,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                See also FreeByteCounts.
                */
             //??'FreeOffsets'
-            cTag := 'FreeOffsets'
+            //cTag := 'FreeOffsets'
             IF nFieldType != LONG
                //alert('Wrong Type for FreeOffsets')
             ENDIF
@@ -2122,7 +2120,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                See also FreeOffsets.
                */
             //??'FreeByteCounts'
-            cTag := 'FreeByteCounts'
+            //cTag := 'FreeByteCounts'
             IF nFieldType != LONG
                //alert('Wrong Type for FreeByteCounts')
             ENDIF
@@ -2139,7 +2137,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                Default = 2 (inch).
                */
             //??'ResolutionUnit'
-            cTag := 'ResolutionUnit'
+            //cTag := 'ResolutionUnit'
             nTemp := 0
             IF nFieldType == SHORT
                nTemp := bin2w( cValues )
@@ -2151,7 +2149,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
             ENDIF
          case nTag == 305
             //??'Software'
-            cTag := 'Software'
+            //cTag := 'Software'
             IF nFieldType != ASCII
                //alert('Wrong Type for Software')
             ENDIF
@@ -2167,7 +2165,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                string, including the terminating NUL, is 20 bytes.
                */
             //??'DateTime'
-            cTag := 'DateTime'
+            //cTag := 'DateTime'
             IF nFieldType != ASCII
                //alert('Wrong Type for DateTime')
             ENDIF
@@ -2180,7 +2178,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                Note: some older TIFF files used this tag for storing Copyright information.
                */
             //??'Artist'
-            cTag := 'Artist'
+            //cTag := 'Artist'
             IF nFieldType != ASCII
                //alert('Wrong Type for Artist')
             ENDIF
@@ -2199,7 +2197,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                represented by 65535, 65535, 65535.
                */
             //??'ColorMap'
-            cTag := 'ColorMap'
+            //cTag := 'ColorMap'
             IF nFieldType != SHORT
                //alert('Wrong Type for ColorMap')
             ENDIF
@@ -2212,7 +2210,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                N = m
                */
             //??'ExtraSamples'
-            cTag := 'ExtraSamples'
+            //cTag := 'ExtraSamples'
             IF nFieldType != SHORT
                //alert('Wrong Type for ExtraSamples')
             ENDIF
@@ -2228,13 +2226,13 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                All rights reserved.
                */
             //??'Copyright'
-            cTag := 'Copyright'
+            //cTag := 'Copyright'
             IF nFieldType != ASCII
                //alert('Wrong Type for Copyright')
             ENDIF
          otherwise
             //??'Unknown'
-            cTag := 'Unknown'
+            //cTag := 'Unknown'
          endcase
       /*
       ??padr( cTag, 30 )
@@ -2310,9 +2308,9 @@ return aTemp
 
 function pdfJPEGInfo( cFile )
 local c255, nAt, nHandle
-local nWidth := 0, nHeight := 0, nBits := 8, nFrom := 0, nLength := 0, xRes := 0, yRes := 0, aTemp := {}
+local nWidth, nHeight, nBits := 8, nFrom := 0, nLength, xRes, yRes, aTemp := {}
 local nBuffer := 20000
-local nSpace := 3 // 3 - RGB, 1 - GREY, 4 - CMYK
+local nSpace  // := 3 // 3 - RGB, 1 - GREY, 4 - CMYK
 
    nHandle := fopen( cFile )
 
@@ -2359,7 +2357,7 @@ STATIC FUNCTION AtToken( cString, cDelimiter, nPointer )
 RETURN AllToken( cString, cDelimiter, nPointer, 2 )
 
 STATIC FUNCTION AllToken( cString, cDelimiter, nPointer, nAction )
-LOCAL nTokens := 0, nPos := 1, nLen := len( cString ), nStart := 0, cToken := "", cRet
+LOCAL nTokens := 0, nPos := 1, nLen := len( cString ), nStart, cRet
 DEFAULT cDelimiter to chr(0)+chr(9)+chr(10)+chr(13)+chr(26)+chr(32)+chr(138)+chr(141)
 DEFAULT nAction to 0
 
@@ -2395,7 +2393,7 @@ DEFAULT nAction to 0
 RETURN cRet
 
 STATIC FUNCTION NumAt( cSearch, cString )
-   LOCAL n := 0, nAt := 0, nPos := 0
+   LOCAL n := 0, nAt, nPos := 0
    WHILE ( nAt := at( cSearch, substr( cString, nPos + 1 ) )) > 0
            nPos += nAt
            ++n

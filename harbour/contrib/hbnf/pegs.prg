@@ -111,7 +111,6 @@ LOCAL XX, MOVE, MPOS, POSSIBLE_, BUFFER, TOPROW, OLDSCORE, MOVE2, ;
 */
 scanblock := { | a | a[2] == move2 }
 cls
-xx := 1
 setcolor('w/r')
 SINGLEBOX(22, 31, 24, 48)
 @ 23, 33 say "Your move:"

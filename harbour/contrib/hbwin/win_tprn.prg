@@ -331,7 +331,7 @@ METHOD Destroy() CLASS WIN32PRN
   RETURN(.T.)
 
 METHOD StartDoc(cDocName) CLASS WIN32PRN
-  LOCAL Result:= .F.
+  LOCAL Result
   IF cDocName == NIL
     cDocName:= win32_GetExeFileName()+" ["+DTOC(DATE())+' - '+TIME()+"]"
   ENDIF
@@ -566,7 +566,7 @@ METHOD TextOutAt(nPosX,nPosY, cString, lNewLine, lUpdatePosX, nAlign) CLASS WIN3
   RETURN(.T.)
 
 METHOD GetCharWidth() CLASS WIN32PRN
-  LOCAL nWidth:= 0
+  LOCAL nWidth
   IF ::FontWidth[2] < 0 .AND. !EMPTY(::FontWidth[1])
     nWidth:= win32_MulDiv(::FontWidth[1], ::PixelsPerInchX,::FontWidth[2])
   ELSE
@@ -578,7 +578,7 @@ METHOD GetCharHeight() CLASS WIN32PRN
   RETURN win32_GetCharSize(::hPrinterDC, .T.)
 
 METHOD GetTextWidth(cString) CLASS WIN32PRN
-  LOCAL nWidth:= 0
+  LOCAL nWidth
   IF ::FontWidth[2] < 0 .AND. !EMPTY(::FontWidth[1])
     nWidth:= LEN(cString) * ::CharWidth
   ELSE

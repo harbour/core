@@ -274,7 +274,8 @@ FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
            nLeft      TO 2, ;
            nBottom    TO MaxRow() - 2, ;
            nRight     TO MaxCol() - 2
-   lKeepScrn := (PCOUNT() > 6)
+
+   lKeepScrn := PCOUNT() > 6
 
    SEEK cKey
    IF .NOT. FOUND() .OR. LASTREC() == 0
@@ -335,7 +336,7 @@ FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    ENDIF
    cColorSave := SetColor()
 
-   /* Background Color Is Based On First Color In Passed cColorList
+   /* Background Color Is Based On First Color In Passed cColorList */
    cColorBack := iif(',' $ cColorList, ;
       SUBSTR(cColorList, 1, AT(',', cColorList) - 1), cColorList )
 

@@ -766,7 +766,7 @@ METHOD tPdf:NewPage( _cPageSize, _cPageOrient, _nLpi, _cFontName, _nFontType, _n
 METHOD NewPage( _cPageSize, _cPageOrient, _nLpi, _cFontName, _nFontType, _nFontSize ) 
 #endif
 
-local nAdd := 76.2
+
 
 DEFAULT _cPageSize   TO ::aReport[ PAGESIZE ]
 DEFAULT _cPageOrient TO ::aReport[ PAGEORIENT ]
@@ -1021,7 +1021,7 @@ DEFAULT cColor   TO ""
    nNew      := nTab
    cString   := alltrim( cString )
    nTokens   := numtoken( cString, cDelim )
-   nTokenLen := 0.00
+
    nStart    := 1
 
    IF nJustify == 1 .or. nJustify == 4
@@ -1095,7 +1095,7 @@ DEFAULT cColor   TO ""
             nLines += nCRLF - 1
          ENDIF
          IF lPrint
-            nRow := ::NewLine( nCRLF - 1 )
+            /*nRow :=*/ ::NewLine( nCRLF - 1 )
          ENDIF
 
       ELSE
@@ -1124,7 +1124,7 @@ METHOD tPdf:OpenHeader( cFile )
 METHOD OpenHeader( cFile ) 
 #endif
 
-local nErrorCode := 0, nAt, cCmd 
+local nAt, cCmd 
 
 DEFAULT cFile TO ""
 
@@ -1248,7 +1248,7 @@ METHOD tPdf:SaveHeader( cFile )
 METHOD SaveHeader( cFile ) 
 #endif
 
-local nErrorCode := 0, cCmd
+local cCmd
 
 Array2File( "temp.tmp", ::aReport[ HEADER ] )
 
@@ -1661,10 +1661,10 @@ METHOD TIFFInfo( cFile )
 #endif
 
 local c40    := chr(0)+chr(0)+chr(0)+chr(0)
-local aType  := {"BYTE","ASCII","SHORT","LONG","RATIONAL","SBYTE","UNDEFINED","SSHORT","SLONG","SRATIONAL","FLOAT","DOUBLE"}
+//local aType  := {"BYTE","ASCII","SHORT","LONG","RATIONAL","SBYTE","UNDEFINED","SSHORT","SLONG","SRATIONAL","FLOAT","DOUBLE"}
 local aCount := { 1, 1, 2, 4, 8, 1, 1, 2, 4, 8, 4, 8 }
 local nTemp, nHandle, cValues, c2, nFieldType, nCount, nPos, nTag, nValues
-local nOffset, cTemp, cIFDNext, nIFD, nFields, cTag, nPages, nn
+local nOffset, cTemp, cIFDNext, nIFD, nFields, cTag, nn
 
 local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0, yRes := 0, aTemp := {}
 
@@ -1678,7 +1678,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
    fread( nHandle, @cIFDNext, 4 )
 
    cTemp  := space(12)
-   nPages := 0
+
 
    while !( cIFDNext == c40 ) //read IFD's
 
@@ -1712,7 +1712,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
          IF nFieldType ==  ASCII
             --nCount
          ENDIF
-         cTag := ""
+         //cTag := ""
          do case
          case nTag == 256
             cTag := "ImageWidth"
@@ -1740,16 +1740,16 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
             nBits := nTemp
          case nTag == 259
             cTag := "Compression"
-            nTemp := 0
+            /*nTemp := 0
             IF nFieldType == SHORT
                nTemp := bin2w( cValues )
-            ENDIF
+            ENDIF*/
          case nTag == 262
             cTag := "PhotometricInterpretation"
-            nTemp := -1
+            /*nTemp := -1
             IF nFieldType == SHORT
                nTemp := bin2w( cValues )
-            ENDIF
+            ENDIF*/
          case nTag == 264
             cTag := "CellWidth"
          case nTag == 265
@@ -1792,10 +1792,10 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
             cTag := "FreeByteCounts"
          case nTag == 296
             cTag := "ResolutionUnit"
-            nTemp := 0
+            /*nTemp := 0
             IF nFieldType == SHORT
                nTemp := bin2w( cValues )
-            ENDIF
+            ENDIF*/
          case nTag == 305
             cTag := "Software"
          case nTag == 306
@@ -1814,7 +1814,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
       next
       fread( nHandle, @cIFDNext, 4 )
    enddo
-
+   HB_SYMBOL_UNUSED( cTag )  // TOFIX
    fclose( nHandle )
 
    aadd( aTemp, nWidth )
@@ -1836,8 +1836,8 @@ METHOD JPEGInfo( cFile )
 #endif
 
 local c255, nAt, nHandle
-local nWidth := 0, nHeight := 0, nBits := 8, nFrom := 0
-local nLength := 0, xRes := 0, yRes := 0, aTemp := {}
+local nWidth, nHeight, nBits := 8, nFrom := 0
+local nLength, xRes, yRes, aTemp := {}
 
    nHandle := fopen( cFile )
 
@@ -1873,7 +1873,7 @@ METHOD tPdf:BookCount( nRecno, nCurLevel )
 METHOD BookCount( nRecno, nCurLevel ) 
 #endif
 
-local nTempLevel := 0, nCount := 0, nLen := len( ::aReport[ BOOKMARK ] )
+local nTempLevel, nCount := 0, nLen := len( ::aReport[ BOOKMARK ] )
    ++nRecno
    while nRecno <= nLen
       nTempLevel := ::aReport[ BOOKMARK ][ nRecno ][ BOOKLEVEL ]
@@ -1935,7 +1935,7 @@ METHOD tPdf:BookNext( nRecno, nCurLevel, nObj )
 METHOD BookNext( nRecno, nCurLevel, nObj ) 
 #endif
 
-local nTempLevel := 0, nNext := 0, nLen := len( ::aReport[ BOOKMARK ] )
+local nTempLevel, nNext := 0, nLen := len( ::aReport[ BOOKMARK ] )
    ++nRecno
    while nRecno <= nLen
       nTempLevel := ::aReport[ BOOKMARK ][ nRecno ][ BOOKLEVEL ]
@@ -1959,7 +1959,7 @@ METHOD tPdf:BookParent( nRecno, nCurLevel, nObj )
 METHOD BookParent( nRecno, nCurLevel, nObj ) 
 #endif
 
-local nTempLevel := 0
+local nTempLevel
 local nParent := 0
    --nRecno
    while nRecno > 0
@@ -1980,7 +1980,7 @@ METHOD tPdf:BookPrev( nRecno, nCurLevel, nObj )
 METHOD BookPrev( nRecno, nCurLevel, nObj ) 
 #endif
 
-local nTempLevel := 0
+local nTempLevel
 local nPrev := 0
    --nRecno
    while nRecno > 0
@@ -2456,8 +2456,7 @@ static function AllToken( cString, cDelimiter, nPointer, nAction )
 local nTokens := 0
 local nPos    := 1
 local nLen    := len( cString )
-local nStart  := 0
-local cToken  := ""
+local nStart
 local cRet    := 0
 
 DEFAULT cDelimiter TO chr(0)+chr(9)+chr(10)+chr(13)+chr(26)+chr(32)+chr(138)+chr(141)
@@ -2610,7 +2609,7 @@ return ( aRay )
 
 static FUNCTION NumAt( cSearch, cString )
 
-   LOCAL n := 0, nAt := 0, nPos := 0
+   LOCAL n := 0, nAt, nPos := 0
    WHILE ( nAt := at( cSearch, substr( cString, nPos + 1 ) )) > 0
            nPos += nAt
            ++n

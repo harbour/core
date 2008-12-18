@@ -7,6 +7,28 @@
    For example:
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
+
+2008-12-18 21:27 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * contrib/hbnf/mouse1.prg
+  * contrib/hbnf/pegs.prg
+  * contrib/hbnf/popadder.prg
+  * contrib/hbnf/tbwhile.prg
+  * contrib/hbtip/cgi.prg
+  * contrib/hbtip/ftpcln.prg
+  * contrib/hbtip/httpcln.prg
+  * contrib/hbtip/popcln.prg
+  * contrib/hbtip/sendmail.prg
+  * contrib/hbtip/sessid.prg
+  * contrib/hbtip/smtpcln.prg
+  * contrib/hbtpathy/telepath.prg
+  * contrib/hbvpdf/hbvpdf.prg
+  * contrib/hbvpdf/hbvpdt.prg
+  * contrib/hbwhat/wincore.prg
+  * contrib/hbwin/win_tprn.prg
+    ! fixed assigned but not used variable
+    ; NOTE: the only unfixed code is contrib/gtwvg, utils/hbdoc, 
+            utils/hbmake/hbmake.prg
+
 2008-12-18 19:53 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * source/compiler/hbopt.c
     ! one more try to fix passing informatino about redundant variable 

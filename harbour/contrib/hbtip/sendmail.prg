@@ -289,7 +289,6 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
 
       IF !oInMail:Open()
-         lConnect := .F.
          oInmail:Close()
          RETURN .F.
       ENDIF

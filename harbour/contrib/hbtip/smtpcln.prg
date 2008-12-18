@@ -193,7 +193,6 @@ RETURN ::getOk()
 
 METHOD AUTH( cUser, cPass) CLASS tIPClientSMTP
 
-   Local cs:=""
    Local cEncodedUser
    Local cEncodedPAss
 

@@ -1309,8 +1309,7 @@ STATIC FUNCTION _ftQuest(cMessage,xVarVal,cPict,bValid,lNoESC,nWinColor,nTop)
                        IIF(cVarType=="L",1,IIF(cVarType=="N",IIF(cPict==NIL,9,     ;
                        LEN(cPict)),0))))
   LOCAL nOldLastKey := LASTKEY()
-  LOCAL GETLIST := {},                                                       ;
-        cOldDevice  := SET(_SET_DEVICE, "SCREEN"),                           ;
+  LOCAL cOldDevice  := SET(_SET_DEVICE, "SCREEN"),                           ;
         lOldPrint   := SET(_SET_PRINTER, .F.)
 
   nOldRow   := ROW()
@@ -1509,8 +1508,7 @@ RETURN NIL
 */
 STATIC FUNCTION _ftStuffComma(cStrToStuff,lTrimStuffedStr)
 
-  LOCAL nDecPosit, x,                                                        ;
-        nOrLen := LEN(cStrToStuff)
+  LOCAL nDecPosit, x
 
   lTrimStuffedStr := IIF(lTrimStuffedStr==NIL,.F.,lTrimStuffedStr)
   IF !("." $ cStrToStuff)
