@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-19 01:15 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * contrib/rddsql/mysqldd.c
+  * contrib/rddsql/sqlbase.c
+    ! moved pArea->uiFieldCount checking to sqlbase
+
 2008-12-18 21:27 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * contrib/hbnf/mouse1.prg
   * contrib/hbnf/pegs.prg

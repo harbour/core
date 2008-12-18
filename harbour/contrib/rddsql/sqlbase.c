@@ -648,6 +648,10 @@ static ERRCODE sqlbaseOpen( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* filename is a query */
    pArea->szQuery = (char*) hb_strdup( (char*) pOpenInfo->abName );
 
+   if ( ! pArea->uiFieldCount ) 
+      /* This should not happen (in __dbTrans()), because RDD is registered with RDT_FULL */
+      return FAILURE; 
+
    errCode = pArea->pSDD->Open( pArea );
 
    if ( errCode == SUCCESS )

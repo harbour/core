@@ -278,152 +278,148 @@ static ERRCODE mysqlOpen( SQLBASEAREAP pArea )
       return FAILURE;
    }
 
-   /* TODO: In what cases pArea->uiFieldCount can be equal to zero? Do we need to assign pItemEof in that case? */
-   if ( ! pArea->uiFieldCount ) 
-   { 
-      uiFields = mysql_num_fields( (MYSQL_RES*) pArea->pResult );
-      SELF_SETFIELDEXTENT( (AREAP) pArea, uiFields );
-    
-      pItemEof = hb_itemArrayNew( uiFields );
+   uiFields = mysql_num_fields( (MYSQL_RES*) pArea->pResult );
+   SELF_SETFIELDEXTENT( (AREAP) pArea, uiFields );
+   
+   pItemEof = hb_itemArrayNew( uiFields );
 
-      pBuffer = (BYTE*) hb_xgrab( 256 );
-    
-      bError = FALSE;
-      for ( uiCount = 0; uiCount < uiFields; uiCount++  )
+   pBuffer = (BYTE*) hb_xgrab( 256 );
+   
+   bError = FALSE;
+   for ( uiCount = 0; uiCount < uiFields; uiCount++  )
+   {
+      pMyField = mysql_fetch_field_direct( (MYSQL_RES*) pArea->pResult, uiCount );
+     
+      hb_strncpy( ( char * ) pBuffer, pMyField->name, 256 - 1 );
+      pFieldInfo.atomName = pBuffer;
+      pFieldInfo.atomName[ MAX_FIELD_NAME ] = '\0';
+      hb_strUpper( (char *) pFieldInfo.atomName, MAX_FIELD_NAME + 1 );
+     
+      pFieldInfo.uiLen = pMyField->length;
+      pFieldInfo.uiDec = 0;
+     
+      switch( pMyField->type )
       {
-         pMyField = mysql_fetch_field_direct( (MYSQL_RES*) pArea->pResult, uiCount );
-        
-         hb_strncpy( ( char * ) pBuffer, pMyField->name, 256 - 1 );
-         pFieldInfo.atomName = pBuffer;
-         pFieldInfo.atomName[ MAX_FIELD_NAME ] = '\0';
-         hb_strUpper( (char *) pFieldInfo.atomName, MAX_FIELD_NAME + 1 );
-        
-         pFieldInfo.uiLen = pMyField->length;
-         pFieldInfo.uiDec = 0;
-        
-         switch( pMyField->type )
-         {
-            case MYSQL_TYPE_TINY:
-            case MYSQL_TYPE_SHORT:
-              pFieldInfo.uiType = HB_FT_INTEGER;
-              break;
+         case MYSQL_TYPE_TINY:
+         case MYSQL_TYPE_SHORT:
+           pFieldInfo.uiType = HB_FT_INTEGER;
+           break;
 
-            case MYSQL_TYPE_LONG:
-            case MYSQL_TYPE_LONGLONG:
-            case MYSQL_TYPE_INT24:
-              pFieldInfo.uiType = HB_FT_LONG;
-              break;
-          
-            case MYSQL_TYPE_DECIMAL:
-            case MYSQL_TYPE_NEWDECIMAL:
-            case MYSQL_TYPE_FLOAT:
-            case MYSQL_TYPE_DOUBLE:
-              pFieldInfo.uiType = HB_FT_DOUBLE;
-              pFieldInfo.uiDec = pMyField->decimals;
-              break;
-          
-            case MYSQL_TYPE_STRING:
-            case MYSQL_TYPE_VAR_STRING:
-            case MYSQL_TYPE_ENUM:
-            case MYSQL_TYPE_DATETIME:
-              pFieldInfo.uiType = HB_FT_STRING;
-              break;
-          
-            case MYSQL_TYPE_DATE:
-              pFieldInfo.uiType = HB_FT_DATE;
-              break;
-          
-            case MYSQL_TYPE_TINY_BLOB:
-            case MYSQL_TYPE_MEDIUM_BLOB:
-            case MYSQL_TYPE_LONG_BLOB:
-            case MYSQL_TYPE_BLOB:
-              pFieldInfo.uiType = HB_FT_MEMO;
-              break;
-          
+         case MYSQL_TYPE_LONG:
+         case MYSQL_TYPE_LONGLONG:
+         case MYSQL_TYPE_INT24:
+           pFieldInfo.uiType = HB_FT_LONG;
+           break;
+       
+         case MYSQL_TYPE_DECIMAL:
+         case MYSQL_TYPE_NEWDECIMAL:
+         case MYSQL_TYPE_FLOAT:
+         case MYSQL_TYPE_DOUBLE:
+           pFieldInfo.uiType = HB_FT_DOUBLE;
+           pFieldInfo.uiDec = pMyField->decimals;
+           break;
+       
+         case MYSQL_TYPE_STRING:
+         case MYSQL_TYPE_VAR_STRING:
+         case MYSQL_TYPE_ENUM:
+         case MYSQL_TYPE_DATETIME:
+           pFieldInfo.uiType = HB_FT_STRING;
+           break;
+       
+         case MYSQL_TYPE_DATE:
+           pFieldInfo.uiType = HB_FT_DATE;
+           break;
+       
+         case MYSQL_TYPE_TINY_BLOB:
+         case MYSQL_TYPE_MEDIUM_BLOB:
+         case MYSQL_TYPE_LONG_BLOB:
+         case MYSQL_TYPE_BLOB:
+           pFieldInfo.uiType = HB_FT_MEMO;
+           break;
+       
 /*
-            case MYSQL_TYPE_TIMESTAMP:
-            case MYSQL_TYPE_TIME:
-            case MYSQL_TYPE_DATETIME:
-            case MYSQL_TYPE_YEAR:
-            case MYSQL_TYPE_NEWDATE:
-            case MYSQL_TYPE_ENUM:
-            case MYSQL_TYPE_SET:
+         case MYSQL_TYPE_TIMESTAMP:
+         case MYSQL_TYPE_TIME:
+         case MYSQL_TYPE_DATETIME:
+         case MYSQL_TYPE_YEAR:
+         case MYSQL_TYPE_NEWDATE:
+         case MYSQL_TYPE_ENUM:
+         case MYSQL_TYPE_SET:
 */
 
-            default:
-              bError = TRUE;
-              uiError = (USHORT) pMyField->type;
-              pFieldInfo.uiType = 0;
-              break;
-         }
-        
-         if ( ! bError )
+         default:
+           bError = TRUE;
+           uiError = (USHORT) pMyField->type;
+           pFieldInfo.uiType = 0;
+           break;
+      }
+     
+      if ( ! bError )
+      {
+         switch ( pFieldInfo.uiType )
          {
-            switch ( pFieldInfo.uiType )
+            case HB_FT_STRING:
             {
-               case HB_FT_STRING:
-               {
-                  char*    pStr;
+               char*    pStr;
 
-                  pStr = (char*) hb_xgrab( pFieldInfo.uiLen + 1 );
-                  memset( pStr, ' ', pFieldInfo.uiLen );
-                  pStr[ pFieldInfo.uiLen ] = '\0';
+               pStr = (char*) hb_xgrab( pFieldInfo.uiLen + 1 );
+               memset( pStr, ' ', pFieldInfo.uiLen );
+               pStr[ pFieldInfo.uiLen ] = '\0';
 
-                  pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
-                  hb_xfree( pStr );
-                  break;
-               }
-
-               case HB_FT_MEMO:
-                  pItem = hb_itemPutC( NULL, "" );
-                  break;
-
-               case HB_FT_INTEGER:
-                  pItem = hb_itemPutNI( NULL, 0 );
-                  break;
-
-               case HB_FT_LONG:
-                  pItem = hb_itemPutNL( NULL, 0 );
-                  break;
-
-               case HB_FT_DOUBLE:
-                  pItem = hb_itemPutND( NULL, 0.0 );
-                  break;
-
-               case HB_FT_DATE:
-                  pItem = hb_itemPutDS( NULL, "" );
-                  break;
-
-               default:
-                  pItem = hb_itemNew( NULL );
-                  bError = TRUE;
-                  break;
+               pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
+               hb_xfree( pStr );
+               break;
             }
 
-            hb_arraySetForward( pItemEof, uiCount + 1, pItem );
-            hb_itemRelease( pItem );
+            case HB_FT_MEMO:
+               pItem = hb_itemPutC( NULL, "" );
+               break;
 
-/*            if ( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
-            {
-               pFieldInfo.uiType = HB_IT_LONG;
-            }*/
+            case HB_FT_INTEGER:
+               pItem = hb_itemPutNI( NULL, 0 );
+               break;
 
-            if ( ! bError )
-               bError = ( SELF_ADDFIELD( (AREAP) pArea, &pFieldInfo ) == FAILURE );
+            case HB_FT_LONG:
+               pItem = hb_itemPutNL( NULL, 0 );
+               break;
+
+            case HB_FT_DOUBLE:
+               pItem = hb_itemPutND( NULL, 0.0 );
+               break;
+
+            case HB_FT_DATE:
+               pItem = hb_itemPutDS( NULL, "" );
+               break;
+
+            default:
+               pItem = hb_itemNew( NULL );
+               bError = TRUE;
+               break;
          }
-        
-         if ( bError )
-            break;
+
+         hb_arraySetForward( pItemEof, uiCount + 1, pItem );
+         hb_itemRelease( pItem );
+
+/*         if ( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
+         {
+            pFieldInfo.uiType = HB_IT_LONG;
+         }*/
+
+         if ( ! bError )
+            bError = ( SELF_ADDFIELD( (AREAP) pArea, &pFieldInfo ) == FAILURE );
       }
-    
-      hb_xfree( pBuffer );
-    
+     
       if ( bError )
-      {
-        hb_itemRelease( pItemEof );
-        hb_errRT_MySQLDD( EG_CORRUPTION, ESQLDD_INVALIDFIELD, "Invalid field type", pArea->szQuery, uiError );
-        return FAILURE;
-      }
+         break;
+   }
+   
+   hb_xfree( pBuffer );
+   
+   if ( bError )
+   {
+     hb_itemRelease( pItemEof );
+     hb_errRT_MySQLDD( EG_CORRUPTION, ESQLDD_INVALIDFIELD, "Invalid field type", pArea->szQuery, uiError );
+     return FAILURE;
    }
  
    pArea->ulRecCount = (ULONG) mysql_num_rows( (MYSQL_RES*) pArea->pResult );
