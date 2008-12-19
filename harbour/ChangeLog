@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-19 19:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/filesys.c
+    * do not respect _SET_PATH when hb_{file|fs}ExtOpen() is called
+      with create file attributes - Clipper compatibility.
+
+  * harbour/source/vm/set.c
+    * recognize files starting with "/dev/" as devices in *nixes
+    * check if given file name is a name of existing device (character,
+      block, fifo, socket) in *nix builds
+    * ignore _SET_DEFAULT and default extension in _SET_PRINTFILE,
+      _SET_ALTFILE and _SET_EXTRAFILE when given file name is device name.
+      In DOS/Windows/OS2 builds devices are recognized by name:
+      "PRN", "CON", "LPT[1-3]", "COM[1-9]"
+
 2008-12-19 18:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/hbopt.c
     * pacified GCC warning

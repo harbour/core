@@ -178,6 +178,40 @@ static void close_text( PHB_SET_STRUCT pSet, HB_FHANDLE handle )
    }
 }
 
+static BOOL is_devicename( const char * szFileName )
+{
+   if( szFileName && *szFileName )
+   {
+#if defined(HB_OS_OS2) || defined(HB_OS_W32) || defined(HB_OS_DOS)
+      int iLen = ( int ) strlen( szFileName );
+      if( ( iLen == 3 &&
+            ( hb_stricmp( szFileName, "PRN" ) == 0 ||
+              hb_stricmp( szFileName, "CON" ) == 0 ) ) ||
+          ( iLen == 4 &&
+            ( ( hb_strnicmp( szFileName, "LPT", 3 ) == 0 &&
+                szFileName[3] >= '1' && szFileName[3] <= '3' ) ||
+              ( hb_strnicmp( szFileName, "COM", 3 ) == 0 &&
+                szFileName[3] >= '1' && szFileName[3] <= '9' ) ) ) )
+      {
+         return TRUE;
+      }
+#elif defined(HB_OS_UNIX)
+      if( strncmp( szFileName, "/dev/", 5 ) == 0 )
+         return TRUE;
+      else
+      {
+         ULONG ulAttr = 0;
+         if( hb_fsGetAttr( ( BYTE * ) szFileName, &ulAttr ) )
+         {
+            if( ulAttr & ( HB_FA_CHRDEVICE | HB_FA_BLKDEVICE | HB_FA_FIFO | HB_FA_SOCKET ) )
+               return TRUE;
+         }
+      }
+#endif
+   }
+   return FALSE;
+}
+
 static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL bAppend, const char * def_ext, HB_set_enum set_specifier )
 {
    PHB_ITEM pError = NULL;
@@ -199,31 +233,20 @@ static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL
    {
       PHB_FNAME pFilename = hb_fsFNameSplit( file_name );
 
-      if( pSet->HB_SET_DEFEXTENSIONS && pFilename->szExtension == NULL && def_ext )
+      if( is_devicename( file_name ) )
       {
 #if defined(HB_OS_OS2) || defined(HB_OS_W32) || defined(HB_OS_DOS)
-         if( pFilename->szName )
-         {
-            int iLen = ( int ) strlen( pFilename->szName );
-            if( ( iLen == 3 &&
-                  ( hb_stricmp( pFilename->szName, "PRN" ) == 0 ||
-                    hb_stricmp( pFilename->szName, "CON" ) == 0 ) ) ||
-                ( iLen == 4 &&
-                  ( ( hb_strnicmp( pFilename->szName, "LPT", 3 ) == 0 &&
-                      pFilename->szName[3] >= '1' && pFilename->szName[3] <= '3' ) ||
-                    ( hb_strnicmp( pFilename->szName, "COM", 3 ) == 0 &&
-                      pFilename->szName[3] >= '1' && pFilename->szName[3] <= '9' ) ) ) )
-            {
-               hb_strupr( ( char * ) pFilename->szName );
-               def_ext = NULL;
-            }
-         }
+         hb_strupr( ( char * ) pFilename->szName );
 #endif
-         pFilename->szExtension = def_ext;
       }
-      if( pFilename->szPath == NULL && pSet->HB_SET_DEFAULT )
-         pFilename->szPath = pSet->HB_SET_DEFAULT;
+      else
+      {
+         if( pFilename->szExtension == NULL && def_ext && pSet->HB_SET_DEFEXTENSIONS )
+            pFilename->szExtension = def_ext;
 
+         if( pFilename->szPath == NULL && pSet->HB_SET_DEFAULT )
+            pFilename->szPath = pSet->HB_SET_DEFAULT;
+      }
       hb_fsFNameMerge( path, pFilename );
       hb_xfree( pFilename );
    }

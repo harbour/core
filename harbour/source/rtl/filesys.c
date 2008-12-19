@@ -2876,7 +2876,9 @@ BYTE * hb_fsExtName( BYTE * pFilename, BYTE * pDefExt,
          hb_fsFNameMerge( ( char * ) szPath, pFilepath );
          fIsFile = hb_fsFile( szPath );
       }
-      if( !fIsFile && hb_setGetPath() )
+      if( !fIsFile &&
+          ( uiExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) ) == 0 &&
+          hb_setGetPath() )
       {
          pNextPath = hb_setGetFirstSetPath();
          while( !fIsFile && pNextPath )
