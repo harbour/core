@@ -57,12 +57,6 @@
 
 PROCEDURE Main_HVM()
 
-/* NOTE: CA-Cl*pper PP fails on these
-   TEST_LINE( "1" .AND. "2"                   , "E BASE 1066 Argument error conditional " )
-   TEST_LINE( "1" .AND. .F.                   , .F.                                       )
-   TEST_LINE( "A" > 1                         , "E BASE 1075 Argument error > F:S"                )
-*/
-
    /* VALTYPE() */
 
    TEST_LINE( ValType(  scString  )           , "C"   )
@@ -487,6 +481,7 @@ PROCEDURE Main_HVM()
    TEST_LINE( "" == suNIL                     , .F.                                               )
    TEST_LINE( suNIL == ""                     , .F.                                               )
    TEST_LINE( scString == NIL                 , .F.                                               )
+   TEST_LINE( "A" == 1                        , "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:C:A;N:1 F:S" )
    TEST_LINE( scString == 1                   , "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
    TEST_LINE( soObject == ""                  , "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
    TEST_LINE( soObject == soObject            , .T.                                               )
@@ -501,6 +496,7 @@ PROCEDURE Main_HVM()
 
    TEST_LINE( NIL = NIL                       , .T.                                               )
    TEST_LINE( scString = NIL                  , .F.                                               )
+   TEST_LINE( "A" = 1                         , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:C:A;N:1 F:S" )
    TEST_LINE( scString = 1                    , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
    TEST_LINE( soObject = ""                   , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
    TEST_LINE( soObject = soObject             , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
@@ -515,6 +511,7 @@ PROCEDURE Main_HVM()
 
    TEST_LINE( NIL != NIL                      , .F.                                               )
    TEST_LINE( scString != NIL                 , .T.                                               )
+   TEST_LINE( "A" != 1                        , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:C:A;N:1 F:S" )
    TEST_LINE( scString != 1                   , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
    TEST_LINE( soObject != ""                  , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
    TEST_LINE( soObject != soObject            , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
@@ -529,6 +526,7 @@ PROCEDURE Main_HVM()
 
    TEST_LINE( NIL < NIL                       , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
    TEST_LINE( scString < NIL                  , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:HELLO;U:NIL F:S" )
+   TEST_LINE( "A" < 1                         , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:A;N:1 F:S" )
    TEST_LINE( scString < 1                    , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
    TEST_LINE( soObject < ""                   , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
    TEST_LINE( soObject < soObject             , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
@@ -543,6 +541,7 @@ PROCEDURE Main_HVM()
 
    TEST_LINE( NIL <= NIL                      , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
    TEST_LINE( scString <= NIL                 , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:C:HELLO;U:NIL F:S" )
+   TEST_LINE( "A" <= 1                        , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:C:A;N:1 F:S" )
    TEST_LINE( scString <= 1                   , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
    TEST_LINE( soObject <= ""                  , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
    TEST_LINE( soObject <= soObject            , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
@@ -557,6 +556,7 @@ PROCEDURE Main_HVM()
 
    TEST_LINE( NIL > NIL                       , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
    TEST_LINE( scString > NIL                  , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:C:HELLO;U:NIL F:S" )
+   TEST_LINE( "A" > 1                         , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:C:A;N:1 F:S" )
    TEST_LINE( scString > 1                    , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
    TEST_LINE( soObject > ""                   , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
    TEST_LINE( soObject > soObject             , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
@@ -571,6 +571,7 @@ PROCEDURE Main_HVM()
 
    TEST_LINE( NIL >= NIL                      , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
    TEST_LINE( scString >= NIL                 , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:C:HELLO;U:NIL F:S" )
+   TEST_LINE( "A" >= 1                        , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:C:A;N:1 F:S" )
    TEST_LINE( scString >= 1                   , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
    TEST_LINE( soObject >= ""                  , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
    TEST_LINE( soObject >= soObject            , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )

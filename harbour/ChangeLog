@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-19 06:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/utils/hbtest/rt_hvm.prg
+  * harbour/utils/hbtest/rt_hvma.prg
+    * updated error messages for compilation with -z (no shortcut
+      optimization)
+
 2008-12-19 04:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbmysql/tmysql.prg
   * harbour/contrib/hbpgsql/pgrdd.prg
