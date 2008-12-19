@@ -1041,7 +1041,7 @@ static LONG hb_compJumpGetOffset( BYTE * pCode )
 static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 {
    ULONG   ulPos = 0, ulLastPos = 0; 
-   SHORT   isVar;
+   SHORT   isVar = 0;
    BOOL    fWasJump = 0;
 
    while( ulPos < pFunc->lPCodePos )
@@ -1081,7 +1081,7 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
                   /* For real POPSELF support we need to do backward tree 
                      tracing. This is not implemented, but using fWasJump 
                      we can easy optimize Self := QSelf() at the beginning 
-                     of functions. [Mindaugas]                                             
+                     of functions. [Mindaugas]
                    */
                   pLocals[ isVar - 1 ].bFlags |= OPT_LOCAL_FLAG_POPSELF;
                }
@@ -1403,7 +1403,7 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
                if( isVar > 0 && pLocals[ isVar - 1 ].isNumber != isVar )
                {
                   isVar = pLocals[ isVar - 1 ].isNumber;
-                  
+
                   assert( isVar > 0 );  /*  We do not allow removal of detached locals */
 
                   pVar[ 0 ] = HB_LOBYTE( isVar );
@@ -1483,7 +1483,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
       pVar = pFunc->pLocals;
       for( usIndex = 0; usIndex < pFunc->wParamCount; usIndex++ )
          pVar = pVar->pNext;
-      
+
       for( usIndex = pFunc->wParamCount; usIndex < usLocalCount; usIndex++ )
       {
          if( pLocals[ usIndex ].bFlags == ( OPT_LOCAL_FLAG_PUSH | OPT_LOCAL_FLAG_POPSELF ) || 
@@ -1512,7 +1512,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
             break;
          }
       }
-    
+
       if( fBool )
       {
          usIndex = usLocalCount = 0;
@@ -1529,7 +1529,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
             else
             {
                /* printf( "Info: %s(%d) removing unused variable '%s'\n", pFunc->szName, pVar->iDeclLine, pVar->szName ); */
-    
+
                /* Delete pVar from the linked list */
                *ppVar = pVar->pNext;
                hb_xfree( pVar );
