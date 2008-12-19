@@ -329,7 +329,7 @@ ENDCLASS
 
 METHOD New(nSocket, cQuery) CLASS TMySQLQuery
 
-   local nI, aField, rc
+   local nI, aField
 
    ::nSocket := nSocket
    ::cQuery := cQuery
@@ -347,7 +347,7 @@ METHOD New(nSocket, cQuery) CLASS TMySQLQuery
    ::lFieldAsData := .T.     //Use fields as object DATA. For compatibility
    ::aRow := {}              //Values of fields of current row
 
-   if (rc := sqlQuery(nSocket, cQuery)) == 0
+   if sqlQuery(nSocket, cQuery) == 0
 
       // save result set
       if !Empty(::nResultHandle := sqlStoreR(nSocket))
@@ -393,14 +393,12 @@ return Self
 
 METHOD Refresh() CLASS TMySQLQuery
 
-   local rc
-
    // free present result handle
    sqlFreeR(::nResultHandle)
 
    ::lError := .F.
 
-   if (rc := sqlQuery(::nSocket, ::cQuery)) == 0
+   if sqlQuery(::nSocket, ::cQuery) == 0
 
       // save result set
       ::nResultHandle := sqlStoreR(::nSocket)
@@ -628,14 +626,16 @@ return sqlGetErr(::nSocket)
 // Given a field name returns it's position
 METHOD FieldPos(cFieldName) CLASS TMySQLQuery
 
-   local cUpperName, nPos := 0
+   local cUpperName, nPos
 
    cUpperName := Upper(cFieldName)
 
    //DAVID: nPos := AScan(::aFieldStruct, {|aItem| iif(Upper(aItem[MYSQL_FS_NAME]) == cUpperName, .T., .F.)})
    nPos := AScan(::aFieldStruct, {|aItem| (Upper(aItem[MYSQL_FS_NAME]) == cUpperName)})
 
-   /*while ++nPos <= Len(::aFieldStruct)
+   /*
+   nPos := 0
+   while ++nPos <= Len(::aFieldStruct)
       if Upper(::aFieldStruct[nPos][MYSQL_FS_NAME]) == cUpperName
          exit
       endif
@@ -644,7 +644,8 @@ METHOD FieldPos(cFieldName) CLASS TMySQLQuery
    // I haven't found field name
    if nPos > Len(::aFieldStruct)
       nPos := 0
-   endif*/
+   endif
+   */
 
 return nPos
 
@@ -792,7 +793,8 @@ ENDCLASS
 
 METHOD New(nSocket, cQuery, cTableName) CLASS TMySQLTable
 
-Local i := 0
+   local i
+
    super:New(nSocket, AllTrim(cQuery))
 
    ::cTable := Lower(cTableName)
@@ -808,7 +810,7 @@ return Self
 
 METHOD GetRow(nRow) CLASS TMySQLTable
 
-   local oRow := super:GetRow(nRow),i := 0
+   local oRow := super:GetRow(nRow), i
 
    if oRow != NIL
       oRow:cTable := ::cTable
@@ -816,7 +818,6 @@ METHOD GetRow(nRow) CLASS TMySQLTable
 
    ::aOldvalue:={}
    for i := 1 to ::nNumFields
-
        // ::aOldValue[i] := ::FieldGet(i)
        aadd(::aOldvalue,::fieldget(i))
    next
@@ -825,12 +826,12 @@ return oRow
 
 
 METHOD Skip(nRow) CLASS TMySQLTable
-   Local i
-     super:skip(nRow)
+   local i
+   super:skip(nRow)
 
-     for i := 1 to ::nNumFields
-         ::aOldValue[i] := ::FieldGet(i)
-     next
+   for i := 1 to ::nNumFields
+      ::aOldValue[i] := ::FieldGet(i)
+   next
 
 //DAVID: DBSKIP() return NIL  return Self
 return nil
@@ -1259,14 +1260,12 @@ return nil
 
 METHOD Refresh() CLASS TMySQLTABLE
 
-   local rc
-
    // free present result handle
    sqlFreeR(::nResultHandle)
 
    ::lError := .F.
 
-   if (rc := sqlQuery(::nSocket, ::cQuery)) == 0
+   if sqlQuery(::nSocket, ::cQuery) == 0
 
       // save result set
       ::nResultHandle := sqlStoreR(::nSocket)

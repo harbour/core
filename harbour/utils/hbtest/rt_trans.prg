@@ -63,79 +63,79 @@ PROCEDURE Main_TRANS()
 
    /* TRANSFORM() */
 
-   TEST_LINE( Transform( NIL       , NIL        )          , "E BASE 1122 Argument error TRANSFORM A:2:U:NIL;U:NIL F:S"          )
-   TEST_LINE( Transform( NIL       , ""         )          , "E BASE 1122 Argument error TRANSFORM A:2:U:NIL;C: F:S"             )
-   TEST_LINE( Transform( NIL       , "@"        )          , "E BASE 1122 Argument error TRANSFORM A:2:U:NIL;C:@ F:S"            )
-   TEST_LINE( Transform( {}        , NIL        )          , "E BASE 1122 Argument error TRANSFORM A:2:A:{.[0].};U:NIL F:S"      )
-   TEST_LINE( Transform( {}        , ""         )          , "E BASE 1122 Argument error TRANSFORM A:2:A:{.[0].};C: F:S"         )
-   TEST_LINE( Transform( {}        , "@"        )          , "E BASE 1122 Argument error TRANSFORM A:2:A:{.[0].};C:@ F:S"        )
-   TEST_LINE( Transform( ErrorNew(), NIL        )          , "E BASE 1122 Argument error TRANSFORM A:2:O:ERROR Object;U:NIL F:S" )
-   TEST_LINE( Transform( ErrorNew(), ""         )          , "E BASE 1122 Argument error TRANSFORM A:2:O:ERROR Object;C: F:S"    )
-   TEST_LINE( Transform( ErrorNew(), "@"        )          , "E BASE 1122 Argument error TRANSFORM A:2:O:ERROR Object;C:@ F:S"   )
-   TEST_LINE( Transform( {|| NIL } , NIL        )          , "E BASE 1122 Argument error TRANSFORM A:2:B:{||...};U:NIL F:S"      )
-   TEST_LINE( Transform( {|| NIL } , ""         )          , "E BASE 1122 Argument error TRANSFORM A:2:B:{||...};C: F:S"         )
-   TEST_LINE( Transform( {|| NIL } , "@"        )          , "E BASE 1122 Argument error TRANSFORM A:2:B:{||...};C:@ F:S"        )
+   TEST_LINE( Transform( NIL       , NIL        )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
+   TEST_LINE( Transform( NIL       , ""         )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:U:NIL;C: F:S" )
+   TEST_LINE( Transform( NIL       , "@"        )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:U:NIL;C:@ F:S" )
+   TEST_LINE( Transform( {}        , NIL        )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:A:{.[0].};U:NIL F:S" )
+   TEST_LINE( Transform( {}        , ""         )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:A:{.[0].};C: F:S" )
+   TEST_LINE( Transform( {}        , "@"        )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:A:{.[0].};C:@ F:S" )
+   TEST_LINE( Transform( ErrorNew(), NIL        )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:O:ERROR Object;U:NIL F:S" )
+   TEST_LINE( Transform( ErrorNew(), ""         )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
+   TEST_LINE( Transform( ErrorNew(), "@"        )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:O:ERROR Object;C:@ F:S" )
+   TEST_LINE( Transform( {|| NIL } , NIL        )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:B:{||...};U:NIL F:S" )
+   TEST_LINE( Transform( {|| NIL } , ""         )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:B:{||...};C: F:S" )
+   TEST_LINE( Transform( {|| NIL } , "@"        )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:B:{||...};C:@ F:S" )
 
    TEST_LINE( Transform( "", "" )                          , ""                                         )
    TEST_LINE( Transform( "", "@" )                         , ""                                         )
 #ifndef __XPP__
    TEST_LINE( Transform( "", NIL )                         , ""                                         )
 #endif
-   TEST_LINE( Transform( "", 100 )                         , "E BASE 1122 Argument error TRANSFORM A:2:C:;N:100 F:S" )
+   TEST_LINE( Transform( "", 100 )                         , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:C:;N:100 F:S" )
    TEST_LINE( Transform( "hello", "" )                     , "hello"                                    )
    TEST_LINE( Transform( "hello", "@" )                    , "hello"                                    )
 #ifndef __XPP__
    TEST_LINE( Transform( "hello", NIL )                    , "hello"                                    )
 #endif
-   TEST_LINE( Transform( "hello", 100 )                    , "E BASE 1122 Argument error TRANSFORM A:2:C:hello;N:100 F:S" )
+   TEST_LINE( Transform( "hello", 100 )                    , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:C:hello;N:100 F:S" )
    TEST_LINE( Transform( 100.2, "" )                       , "       100.2"                             )
    TEST_LINE( Transform( 100.2, "@" )                      , "       100.2"                             )
 #ifndef __XPP__
    TEST_LINE( Transform( 100.2, NIL )                      , "       100.2"                             )
 #endif
-   TEST_LINE( Transform( 100.2, 100 )                      , "E BASE 1122 Argument error TRANSFORM A:2:N:100.2;N:100 F:S" )
+   TEST_LINE( Transform( 100.2, 100 )                      , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:N:100.2;N:100 F:S" )
    TEST_LINE( Transform( 100.20, "" )                      , "       100.20"                            )
    TEST_LINE( Transform( 100.20, "@" )                     , "       100.20"                            )
 #ifndef __XPP__
    TEST_LINE( Transform( 100.20, NIL )                     , "       100.20"                            )
 #endif
-   TEST_LINE( Transform( 100.20, 100 )                     , "E BASE 1122 Argument error TRANSFORM A:2:N:100.20;N:100 F:S" )
+   TEST_LINE( Transform( 100.20, 100 )                     , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:N:100.20;N:100 F:S" )
    TEST_LINE( Transform( Val("100.2"), "" )                , "100.2"                                    )
    TEST_LINE( Transform( Val("100.2"), "@" )               , "100.2"                                    )
 #ifndef __XPP__
    TEST_LINE( Transform( Val("100.2"), NIL )               , "100.2"                                    )
 #endif
-   TEST_LINE( Transform( Val("100.2"), 100 )               , "E BASE 1122 Argument error TRANSFORM A:2:N:100.2;N:100 F:S" )
+   TEST_LINE( Transform( Val("100.2"), 100 )               , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:N:100.2;N:100 F:S" )
    TEST_LINE( Transform( Val("100.20"), "" )               , "100.20"                                   )
 // TEST_LINE( Transform( Val("100.20"), "@" )              , "100.20"                                   )
 #ifndef __XPP__
    TEST_LINE( Transform( Val("100.20"), NIL )              , "100.20"                                   )
 #endif
-   TEST_LINE( Transform( Val("100.20"), 100 )              , "E BASE 1122 Argument error TRANSFORM A:2:N:100.20;N:100 F:S" )
+   TEST_LINE( Transform( Val("100.20"), 100 )              , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:N:100.20;N:100 F:S" )
    TEST_LINE( Transform( sdDate, "" )                      , "1984.03.25"                               )
    TEST_LINE( Transform( sdDate, "@" )                     , "1984.03.25"                               )
 #ifndef __XPP__
    TEST_LINE( Transform( sdDate, NIL )                     , "1984.03.25"                               )
 #endif
-   TEST_LINE( Transform( sdDate, 100 )                     , "E BASE 1122 Argument error TRANSFORM A:2:D:19840325;N:100 F:S" )
+   TEST_LINE( Transform( sdDate, 100 )                     , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:D:19840325;N:100 F:S" )
    TEST_LINE( Transform( .T., "" )                         , "T"                                        )
    TEST_LINE( Transform( .T., "@" )                        , "T"                                        )
 #ifndef __XPP__
    TEST_LINE( Transform( .F., NIL )                        , "F"                                        )
 #endif
-   TEST_LINE( Transform( .F., 100 )                        , "E BASE 1122 Argument error TRANSFORM A:2:L:.F.;N:100 F:S" )
+   TEST_LINE( Transform( .F., 100 )                        , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:L:.F.;N:100 F:S" )
 
    TEST_LINE( Transform( scStringM , "!!!!!"    )          , "HELLO"                       )
    TEST_LINE( Transform( scStringM , "@!"       )          , "HELLO"                       )
 #ifdef __HARBOUR__
-   TEST_LINE( Transform( @scStringM, "!!!!!"    )          , "HELLO"                       ) /* Bug in CA-Cl*pper, it returns: "E BASE 1122 Argument error TRANSFORM F:S" */
-   TEST_LINE( Transform( @scStringM, "@!"       )          , "HELLO"                       ) /* Bug in CA-Cl*pper, it returns: "E BASE 1122 Argument error TRANSFORM F:S" */
+   TEST_LINE( Transform( @scStringM, "!!!!!"    )          , "HELLO"                       ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:U:Hello;C:!!!!! F:S" */
+   TEST_LINE( Transform( @scStringM, "@!"       )          , "HELLO"                       ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:U:Hello;C:@! F:S" */
 #endif
    TEST_LINE( Transform( scStringM , "" )                  , "Hello"                       )
 #ifndef __XPP__
    TEST_LINE( Transform( scStringM , NIL )                 , "Hello"                       )
 #endif
-   TEST_LINE( Transform( scStringM , 100 )                 , "E BASE 1122 Argument error TRANSFORM A:2:C:Hello;N:100 F:S" )
+   TEST_LINE( Transform( scStringM , 100 )                 , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:C:Hello;N:100 F:S" )
 
    TEST_LINE( Transform("abcdef", "@! !lkm!")              , "ABkmE"                       )
    TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@! 1234567890"), "12345678I0" )
@@ -300,12 +300,7 @@ PROCEDURE Main_TRANS()
    TEST_LINE( Transform("abcdef","@! !LKM!")                                           , "ABKME"                            )
    TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@! !lkm!x")                     , "ABkmEF"                           )
    TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@! abcdefghijklmnopqrstuvwxyz") , "AbcdefghijkLmNopqrstuvwXYz"       )
-// Harbour PP fails on this.
-#ifndef __HARBOUR__
-#ifndef __XPP__
    TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@! `~!@#$%^&*()_+-={}[]\|;':")  , "`~C@E$%^&*()_+-={}[]\|;':"        )
-#endif
-#endif
    TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@! ,./<>?")                     , ",./<>?"                           )
    TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@R! ,./<>?" )                   , ",./<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ" )
    TEST_LINE( Transform("abcdefghijklmnopqrstuvwxyz", "@R! ,./<>" )                    , ",./<>ABCDEFGHIJKLMNOPQRSTUVWXYZ"  )

@@ -180,6 +180,7 @@ static void close_text( PHB_SET_STRUCT pSet, HB_FHANDLE handle )
 
 static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL bAppend, const char * def_ext, HB_set_enum set_specifier )
 {
+   PHB_ITEM pError = NULL;
    HB_FHANDLE handle;
    char path[ _POSIX_PATH_MAX + 1 ];
    BOOL bPipe = FALSE;
@@ -281,21 +282,23 @@ static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL
 
       if( handle == FS_ERROR )
       {
-         USHORT uiAction;
-
          if( set_specifier == HB_SET_ALTFILE )
-            uiAction = hb_errRT_TERM( EG_CREATE, 2013, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+            pError = hb_errRT_FileError( pError, HB_ERR_SS_TERMINAL, EG_CREATE, 2013, path );
          else if( set_specifier == HB_SET_PRINTFILE )
-            uiAction = hb_errRT_TERM( EG_CREATE, 2014, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+            pError = hb_errRT_FileError( pError, HB_ERR_SS_TERMINAL, EG_CREATE, 2014, path );
          else if( set_specifier == HB_SET_EXTRAFILE )
-            uiAction = hb_errRT_TERM( EG_CREATE, 2015, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+            pError = hb_errRT_FileError( pError, HB_ERR_SS_TERMINAL, EG_CREATE, 2015, path );
          else
-            uiAction = E_DEFAULT;
+            break;
 
-         if( uiAction != E_RETRY )
+         if( hb_errLaunch( pError ) != E_RETRY )
             break;
       }
    }
+
+   if( pError )
+      hb_itemRelease( pError );
+
    return handle;
 }
 

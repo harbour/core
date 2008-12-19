@@ -1388,6 +1388,7 @@ HB_FUNC( __MVSAVE )
    /* Clipper also checks for the number of arguments here */
    if( hb_pcount() == 3 && ISCHAR( 1 ) && ISCHAR( 2 ) && ISLOG( 3 ) )
    {
+      PHB_ITEM pError = NULL;
       PHB_FNAME pFileName;
       char szFileName[ _POSIX_PATH_MAX + 1 ];
       HB_FHANDLE fhnd;
@@ -1406,22 +1407,20 @@ HB_FUNC( __MVSAVE )
       hb_xfree( pFileName );
 
       /* Create .mem file */
-
       do
       {
-         fhnd = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL );
+         fhnd = hb_fsExtOpen( ( BYTE * ) szFileName, NULL,
+                              FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE |
+                              FXO_DEFAULTS | FXO_SHARELOCK,
+                              NULL, pError );
+         if( fhnd == FS_ERROR )
+         {
+            pError = hb_errRT_FileError( pError, NULL, EG_CREATE, 2006, szFileName );
+            if( hb_errLaunch( pError ) != E_RETRY )
+               break;
+         }
       }
-#ifdef HB_C52_STRICT
-      while( fhnd == FS_ERROR &&
-             hb_errRT_BASE_Ext1( EG_CREATE, 2006, NULL, szFileName,
-                                 hb_fsError(), EF_CANDEFAULT | EF_CANRETRY,
-                                 0 ) == E_RETRY );
-#else
-      while( fhnd == FS_ERROR &&
-             hb_errRT_BASE_Ext1( EG_CREATE, 2006, NULL, szFileName,
-                                 hb_fsError(), EF_CANDEFAULT | EF_CANRETRY,
-                                 HB_ERR_ARGS_BASEPARAMS ) == E_RETRY );
-#endif
+      while( fhnd == FS_ERROR );
 
       if( fhnd != FS_ERROR )
       {
@@ -1442,6 +1441,9 @@ HB_FUNC( __MVSAVE )
 
          hb_fsClose( fhnd );
       }
+
+      if( pError )
+         hb_itemRelease( pError );
    }
    else
       /* NOTE: Undocumented error message in CA-Cl*pper 5.2e and 5.3x. [ckedem] */
@@ -1462,6 +1464,7 @@ HB_FUNC( __MVRESTORE )
    if( ISCHAR( 1 ) && ISLOG( 2 ) )
 #endif
    {
+      PHB_ITEM pError = NULL;
       PHB_FNAME pFileName;
       char szFileName[ _POSIX_PATH_MAX + 1 ];
       HB_FHANDLE fhnd;
@@ -1487,22 +1490,19 @@ HB_FUNC( __MVRESTORE )
       hb_xfree( pFileName );
 
       /* Open .mem file */
-
       do
       {
-         fhnd = hb_fsOpen( ( BYTE * ) szFileName, FO_READ | FO_DENYWRITE | FO_PRIVATE );
+         fhnd = hb_fsExtOpen( ( BYTE * ) szFileName, NULL,
+                              FO_READ | FXO_DEFAULTS | FXO_SHARELOCK,
+                              NULL, pError );
+         if( fhnd == FS_ERROR )
+         {
+            pError = hb_errRT_FileError( pError, NULL, EG_OPEN, 2005, szFileName );
+            if( hb_errLaunch( pError ) != E_RETRY )
+               break;
+         }
       }
-#ifdef HB_C52_STRICT
-      while( fhnd == FS_ERROR &&
-             hb_errRT_BASE_Ext1( EG_OPEN, 2005, NULL, szFileName,
-                                 hb_fsError(), EF_CANDEFAULT | EF_CANRETRY,
-                                 0 ) == E_RETRY );
-#else
-      while( fhnd == FS_ERROR &&
-             hb_errRT_BASE_Ext1( EG_OPEN, 2005, NULL, szFileName,
-                                 hb_fsError(), EF_CANDEFAULT | EF_CANRETRY,
-                                 HB_ERR_ARGS_BASEPARAMS ) == E_RETRY );
-#endif
+      while( fhnd == FS_ERROR );
 
       if( fhnd != FS_ERROR )
       {
@@ -1616,6 +1616,9 @@ HB_FUNC( __MVRESTORE )
       }
       else
          hb_retl( FALSE );
+
+      if( pError )
+         hb_itemRelease( pError );
    }
    else
       /* NOTE: Undocumented error message in CA-Cl*pper 5.2e and 5.3x. [ckedem] */

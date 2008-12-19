@@ -52,6 +52,7 @@
 
 #include "hbapi.h"
 #include "hbapierr.h"
+#include "hbapiitm.h"
 #include "hbapifs.h"
 
 #if defined(HB_OS_UNIX_COMPATIBLE)
@@ -61,32 +62,46 @@
 
 #define BUFFER_SIZE 8192
 
-static BOOL hb_copyfile( char * szSource, char * szDest )
+static BOOL hb_copyfile( const char * szSource, const char * szDest )
 {
    BOOL bRetVal = FALSE;
    HB_FHANDLE fhndSource;
+   PHB_ITEM pError = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_copyfile(%s, %s)", szSource, szDest));
 
-   while( ( fhndSource = hb_spOpen( ( BYTE * ) szSource, FO_READ | FO_SHARED | FO_PRIVATE ) ) == FS_ERROR )
+   do
    {
-      USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
-
-      if( uiAction != E_RETRY )
-         break;
+      fhndSource = hb_fsExtOpen( ( BYTE * ) szSource, NULL,
+                                 FO_READ | FXO_DEFAULTS | FXO_SHARELOCK,
+                                 NULL, pError );
+      if( fhndSource == FS_ERROR )
+      {
+         pError = hb_errRT_FileError( pError, NULL, EG_OPEN, 2012, szSource );
+         if( hb_errLaunch( pError ) != E_RETRY )
+            break;
+      }
    }
+   while( fhndSource == FS_ERROR );
 
    if( fhndSource != FS_ERROR )
    {
       HB_FHANDLE fhndDest;
 
-      while( ( fhndDest = hb_spCreate( ( BYTE * ) szDest, FC_NORMAL ) ) == FS_ERROR )
+      do
       {
-         USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
-
-         if( uiAction != E_RETRY )
-            break;
+         fhndDest = hb_fsExtOpen( ( BYTE * ) szDest, NULL,
+                                  FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE |
+                                  FXO_DEFAULTS | FXO_SHARELOCK,
+                                  NULL, pError );
+         if( fhndDest == FS_ERROR )
+         {
+            pError = hb_errRT_FileError( pError, NULL, EG_CREATE, 2012, szDest );
+            if( hb_errLaunch( pError ) != E_RETRY )
+               break;
+         }
       }
+      while( fhndDest == FS_ERROR );
 
       if( fhndDest != FS_ERROR )
       {
@@ -105,9 +120,8 @@ static BOOL hb_copyfile( char * szSource, char * szDest )
          {
             while( hb_fsWrite( fhndDest, buffer, usRead ) != usRead )
             {
-               USHORT uiAction = hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
-
-               if( uiAction != E_RETRY )
+               pError = hb_errRT_FileError( pError, NULL, EG_WRITE, 2016, szDest );
+               if( hb_errLaunch( pError ) != E_RETRY )
                {
                   bRetVal = FALSE;
                   break;
@@ -127,6 +141,9 @@ static BOOL hb_copyfile( char * szSource, char * szDest )
 
       hb_fsClose( fhndSource );
    }
+
+   if( pError )
+      hb_itemRelease( pError );
 
    return bRetVal;
 }

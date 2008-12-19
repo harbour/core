@@ -82,6 +82,7 @@
 #include "hbapierr.h"
 #include "hbapilng.h"
 #include "hbapicls.h"
+#include "hbapifs.h"
 #include "hbvm.h"
 #include "hbstack.h"
 
@@ -208,7 +209,7 @@ HB_FUNC_STATIC( _CANDEFAULT )
    {
       PHB_ITEM pError = hb_stackSelfItem();
       BOOL fCan = hb_parl( 1 );
-      
+
       if( fCan )
          hb_errPutFlags( pError, ( USHORT ) ( hb_errGetFlags( pError ) | EF_CANDEFAULT ) );
       else
@@ -230,7 +231,7 @@ HB_FUNC_STATIC( _CANRETRY )
    {
       PHB_ITEM pError = hb_stackSelfItem();
       BOOL fCan = hb_parl( 1 );
-      
+
       if( fCan )
          hb_errPutFlags( pError, ( USHORT ) ( hb_errGetFlags( pError ) | EF_CANRETRY ) );
       else
@@ -252,7 +253,7 @@ HB_FUNC_STATIC( _CANSUBST )
    {
       PHB_ITEM pError = hb_stackSelfItem();
       BOOL fCan = hb_parl( 1 );
-      
+
       if( fCan )
          hb_errPutFlags( pError, ( USHORT ) ( hb_errGetFlags( pError ) | EF_CANSUBSTITUTE ) );
       else
@@ -414,7 +415,7 @@ HB_FUNC_STATIC( _TRIES )
 static USHORT hb_errClassCreate( void )
 {
    USHORT usClassH = hb_clsCreate( HB_TERROR_IVARCOUNT, "ERROR" );
-                     
+
    hb_clsAdd( usClassH, "ARGS"          , HB_FUNCNAME( ARGS )         );
    hb_clsAdd( usClassH, "_ARGS"         , HB_FUNCNAME( _ARGS )        );
    hb_clsAdd( usClassH, "CANDEFAULT"    , HB_FUNCNAME( CANDEFAULT )   );
@@ -454,7 +455,7 @@ HB_FUNC( ERRORNEW )
 
 /* There's a similar undocumented, internal function in CA-Cl*pper named
    ErrorInHandler(). [vszakats] */
-   
+
 HB_FUNC( __ERRINHANDLER )
 {
    hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
@@ -549,6 +550,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
    if( pError )
    {
       PHB_ERRDATA pErrData = ( PHB_ERRDATA ) hb_stackGetTSD( &s_errData );
+      USHORT uiFlags = hb_errGetFlags( pError );
       PHB_ITEM pResult;
 
       /* Check if we have a valid error handler */
@@ -564,6 +566,10 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 
       /* set DOSERROR() to last OS error code */
       pErrData->uiErrorDOS = hb_errGetOsCode( pError );
+
+      /* Add one try to the counter. */
+      if( uiFlags & EF_CANRETRY )
+         hb_errPutTries( pError, ( USHORT ) ( hb_errGetTries( pError ) + 1 ) );
 
       if( pErrData->errorHandler )
       {
@@ -590,7 +596,6 @@ USHORT hb_errLaunch( PHB_ITEM pError )
       else if( pResult )
       {
          BOOL bFailure = FALSE;
-         USHORT uiFlags = hb_errGetFlags( pError );
 
          /* If the error block didn't return a logical value, */
          /* or the canSubstitute flag has been set, consider it as a failure */
@@ -610,9 +615,6 @@ USHORT hb_errLaunch( PHB_ITEM pError )
          if( bFailure )
             hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
 
-         /* Add one try to the counter. */
-         if( uiAction == E_RETRY )
-            hb_errPutTries( pError, ( USHORT ) ( hb_errGetTries( pError ) + 1 ) );
       }
       else
          hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
@@ -643,6 +645,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
    if( pError )
    {
       PHB_ERRDATA pErrData = ( PHB_ERRDATA ) hb_stackGetTSD( &s_errData );
+      USHORT uiFlags = hb_errGetFlags( pError );
 
       /* Check if we have a valid error handler */
       if( !pErrData->errorBlock || hb_itemType( pErrData->errorBlock ) != HB_IT_BLOCK )
@@ -657,6 +660,10 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 
       /* set DOSERROR() to last OS error code */
       pErrData->uiErrorDOS = hb_errGetOsCode( pError );
+
+      /* Add one try to the counter. */
+      if( uiFlags & EF_CANRETRY )
+         hb_errPutTries( pError, ( USHORT ) ( hb_errGetTries( pError ) + 1 ) );
 
       if( pErrData->errorHandler )
       {
@@ -684,7 +691,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       {
          /* If the canSubstitute flag has not been set,
             consider it as a failure. */
-         if( ! ( hb_errGetFlags( pError ) & EF_CANSUBSTITUTE ) )
+         if( ! ( uiFlags & EF_CANSUBSTITUTE ) )
             hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
       }
    }
@@ -1005,6 +1012,25 @@ PHB_ITEM hb_errRT_SubstParams( const char *szSubSystem, ULONG ulGenCode, ULONG u
    return pRetVal;
 }
 
+PHB_ITEM hb_errRT_FileError( PHB_ITEM pError, const char * szSubSystem,
+                             ULONG ulGenCode, ULONG ulSubCode,
+                             const char * szFileName )
+{
+   if( !pError )
+   {
+      pError = hb_errNew();
+      hb_errPutSeverity( pError, ES_ERROR );
+      hb_errPutSubSystem( pError, szSubSystem ? szSubSystem : HB_ERR_SS_BASE );
+      hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
+      hb_errPutFileName( pError, szFileName );
+   }
+   hb_errPutGenCode( pError, ( USHORT ) ulGenCode );
+   hb_errPutDescription( pError, hb_langDGetErrorDesc( ulGenCode ) );
+   hb_errPutSubCode( pError, ( USHORT ) ulSubCode );
+   hb_errPutOsCode( pError, hb_fsError() );
+
+   return pError;
+}
 
 HB_FUNC( __ERRRT_BASE )
 {

@@ -2847,7 +2847,7 @@ BYTE hb_fsCurDrv( void )
  * caller must free the returned buffer
  */
 BYTE * hb_fsExtName( BYTE * pFilename, BYTE * pDefExt,
-                               USHORT uiExFlags, BYTE * pPaths )
+                     USHORT uiExFlags, BYTE * pPaths )
 {
    HB_PATHNAMES * pNextPath;
    PHB_FNAME pFilepath;

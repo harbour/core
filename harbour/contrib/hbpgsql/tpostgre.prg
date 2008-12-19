@@ -552,8 +552,6 @@ RETURN .T.
 
 METHOD Refresh(lQuery,lMeta) CLASS TPQquery
     Local res
-    Local cTableCodes := ''
-    Local cFieldCodes := ''
     Local aStruct := {}
     Local aTemp 
     Local i
@@ -915,7 +913,6 @@ RETURN ! ::lError
 
 
 METHOD Update(oRow) CLASS TPQquery
-    Local result := .F.
     Local cQuery
     Local i
     Local nField
@@ -980,7 +977,6 @@ RETURN ! ::lError
 METHOD FieldGet( nField, nRow ) CLASS TPQquery
     Local result
     Local cType
-    Local nSize
 
     if ISCHARACTER(nField)
         nField := ::Fieldpos(nField)
@@ -996,7 +992,7 @@ METHOD FieldGet( nField, nRow ) CLASS TPQquery
 
         result := PQgetvalue( ::pQuery, nRow, nField)
         cType := ::aStruct[ nField, 2 ]
-        nSize := ::aStruct[ nField, 3 ]
+        //nSize := ::aStruct[ nField, 3 ]
 
         if cType == "C"
             if ISNIL(result)
@@ -1242,7 +1238,7 @@ RETURN result
 
 
 METHOD FieldPos( cField ) CLASS TPQrow
-    Local result  := 0
+    Local result
 
     result := AScan( ::aStruct, {|x| x[1] == trim(lower(cField)) })
 

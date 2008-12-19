@@ -137,8 +137,6 @@ STATIC FUNCTION PG_OPEN( nWA, aOpenInfo )
    LOCAL oServer, oQuery, aStruct, aFieldStruct
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
 
-   lError := .F.
-
    if !empty( aOpenInfo[ UR_OI_CONNECT ] ) .and. aOpenInfo[ UR_OI_CONNECT ] <= len( s_aConnections )
       oServer := s_aConnections[ aOpenInfo[ UR_OI_CONNECT ] ]
    endif
@@ -165,7 +163,7 @@ STATIC FUNCTION PG_OPEN( nWA, aOpenInfo )
    ELSE
       aWAData[ AREA_QUERY ] := oQuery
    ENDIF
-     
+ 
    UR_SUPER_SETFIELDEXTENT( nWA, oQuery:nFields )
 
    aStruct := oQuery:Struct()

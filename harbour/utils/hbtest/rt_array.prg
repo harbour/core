@@ -74,11 +74,11 @@ PROCEDURE Main_ARRAY()
    TEST_LINE( AClone( {} )                    , "{.[0].}"                                  )
    TEST_LINE( AClone( ErrorNew() )            , NIL                                        )
 #ifndef __XPP__
-   TEST_LINE( AEval()                         , "E BASE 2017 Argument error AEVAL "        )
-   TEST_LINE( AEval( NIL )                    , "E BASE 2017 Argument error AEVAL A:1:U:NIL "     )
-   TEST_LINE( AEval( {} )                     , "E BASE 2017 Argument error AEVAL A:1:A:{.[0].} " )
+   TEST_LINE( AEval()                         , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 " )
+   TEST_LINE( AEval( NIL )                    , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:1:U:NIL " )
+   TEST_LINE( AEval( {} )                     , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:1:A:{.[0].} " )
 #endif
-   TEST_LINE( AEval( {}, NIL )                , "E BASE 2017 Argument error AEVAL A:2:A:{.[0].};U:NIL " )
+   TEST_LINE( AEval( {}, NIL )                , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:2:A:{.[0].};U:NIL " )
    TEST_LINE( AEval( {}, {|| NIL } )          , "{.[0].}"                                  )
    TEST_LINE( AEval( ErrorNew(), {|| NIL } )  , "ERROR Object"                             )
 #ifndef __XPP__
@@ -97,14 +97,14 @@ PROCEDURE Main_ARRAY()
    TEST_LINE( ASort(ErrorNew())               , NIL                                        )
 #ifdef HB_C52_STRICT
 #ifndef __XPP__
-   TEST_LINE( AFill()                         , "E BASE 2017 Argument error AEVAL A:4:U:NIL;B:{||...};U:NIL;U:NIL " )
+   TEST_LINE( AFill()                         , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:4:U:NIL;B:{||...};U:NIL;U:NIL " )
 #endif
-   TEST_LINE( AFill( NIL )                    , "E BASE 2017 Argument error AEVAL A:4:U:NIL;B:{||...};U:NIL;U:NIL " )
+   TEST_LINE( AFill( NIL )                    , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:4:U:NIL;B:{||...};U:NIL;U:NIL " )
 #else
 #ifndef __XPP__
-   TEST_LINE( AFill()                         , "E BASE 6004 Argument error AFILL "        )
+   TEST_LINE( AFill()                         , "E 1 BASE 6004 Argument error (AFILL) OS:0 #:0 " )
 #endif
-   TEST_LINE( AFill( NIL )                    , "E BASE 6004 Argument error AFILL "        )
+   TEST_LINE( AFill( NIL )                    , "E 1 BASE 6004 Argument error (AFILL) OS:0 #:0 A:1:U:NIL " )
 #endif
    TEST_LINE( AFill( {} )                     , "{.[0].}"                                  )
    TEST_LINE( AFill( {}, 1 )                  , "{.[0].}"                                  )
@@ -160,10 +160,10 @@ PROCEDURE Main_ARRAY()
    TEST_LINE( ATail( ErrorNew() )             , NIL                                        )
 #ifndef __XPP__
 #ifdef HB_COMPAT_C53
-   TEST_LINE( ASize()                         , "E BASE 2023 Argument error ASIZE "        )
-   TEST_LINE( ASize( NIL )                    , "E BASE 2023 Argument error ASIZE "        )
-   TEST_LINE( ASize( {} )                     , "E BASE 2023 Argument error ASIZE "        )
-   TEST_LINE( ASize( ErrorNew() )             , "E BASE 2023 Argument error ASIZE "        )
+   TEST_LINE( ASize()                         , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
+   TEST_LINE( ASize( NIL )                    , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
+   TEST_LINE( ASize( {} )                     , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
+   TEST_LINE( ASize( ErrorNew() )             , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
 #else
    TEST_LINE( ASize()                         , NIL                                        )
    TEST_LINE( ASize( NIL )                    , NIL                                        )
@@ -172,9 +172,9 @@ PROCEDURE Main_ARRAY()
 #endif
 #endif
 #ifdef HB_COMPAT_C53
-   TEST_LINE( ASize( NIL, 0 )                 , "E BASE 2023 Argument error ASIZE "        )
-   TEST_LINE( ASize( NIL, 1 )                 , "E BASE 2023 Argument error ASIZE "        )
-   TEST_LINE( ASize( NIL, -1 )                , "E BASE 2023 Argument error ASIZE "        )
+   TEST_LINE( ASize( NIL, 0 )                 , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
+   TEST_LINE( ASize( NIL, 1 )                 , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
+   TEST_LINE( ASize( NIL, -1 )                , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
 #else
    TEST_LINE( ASize( NIL, 0 )                 , NIL                                        )
    TEST_LINE( ASize( NIL, 1 )                 , NIL                                        )
@@ -196,7 +196,7 @@ PROCEDURE Main_ARRAY()
 #endif
    TEST_LINE( ASize( ErrorNew(), -1 )         , "ERROR Object"                             )
    TEST_LINE( ASize( ErrorNew(), 100 )        , "ERROR Object"                             )
-   TEST_LINE( AAdd( NIL, NIL )                , "E BASE 1123 Argument error AADD A:2:U:NIL;U:NIL F:S" )
+   TEST_LINE( AAdd( NIL, NIL )                , "E 1 BASE 1123 Argument error (AADD) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
    TEST_LINE( AAdd( {}, NIL )                 , NIL                                        )
    TEST_LINE( AAdd( {}, "A" )                 , "A"                                        )
    TEST_LINE( AAdd( ErrorNew(), NIL )         , NIL                                        )
@@ -208,11 +208,11 @@ PROCEDURE Main_ARRAY()
 #ifdef __HARBOUR__
    TEST_LINE( Array( 5000 )                   , "{.[5000].}"                               )
 #else
-   TEST_LINE( Array( 5000 )                   , "E BASE 1131 Bound error array dimension " )
+   TEST_LINE( Array( 5000 )                   , "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 " )
 #endif
    TEST_LINE( Array( 1 )                      , "{.[1].}"                                  )
-   TEST_LINE( Array( -1 )                     , "E BASE 1131 Bound error array dimension " )
-   TEST_LINE( Array( 1, 0, -10 )              , "E BASE 1131 Bound error array dimension " )
+   TEST_LINE( Array( -1 )                     , "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 " )
+   TEST_LINE( Array( 1, 0, -10 )              , "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 " )
    TEST_LINE( Array( 1, 0, "A" )              , NIL                                        )
    TEST_LINE( Array( 1, 0, 2 )                , "{.[1].}"                                  )
    TEST_LINE( Array( 4, 3, 2 )                , "{.[4].}"                                  )

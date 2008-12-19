@@ -63,8 +63,8 @@ PROCEDURE Main_STR()
 
    /* VAL() */
 
-   TEST_LINE( Val( NIL )                      , "E BASE 1098 Argument error VAL A:1:U:NIL F:S" )
-   TEST_LINE( Val( 10 )                       , "E BASE 1098 Argument error VAL A:1:N:10 F:S"  )
+   TEST_LINE( Val( NIL )                      , "E 1 BASE 1098 Argument error (VAL) OS:0 #:0 A:1:U:NIL F:S" )
+   TEST_LINE( Val( 10 )                       , "E 1 BASE 1098 Argument error (VAL) OS:0 #:0 A:1:N:10 F:S" )
 
 #ifndef RT_NO_C
    TEST_LINE( Str(R_PASSENL(  1860637360 ))   , "          1860637360"                 )
@@ -155,15 +155,15 @@ PROCEDURE Main_STR()
 
    /* CHR() */
 
-   TEST_LINE( Chr( NIL )                      , "E BASE 1104 Argument error CHR A:1:U:NIL F:S"     )
-   TEST_LINE( Chr( "A" )                      , "E BASE 1104 Argument error CHR A:1:C:A F:S"       )
-   TEST_LINE( Chr( "ADDDDDD" )                , "E BASE 1104 Argument error CHR A:1:C:ADDDDDD F:S" )
+   TEST_LINE( Chr( NIL )                      , "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:U:NIL F:S" )
+   TEST_LINE( Chr( "A" )                      , "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:C:A F:S" )
+   TEST_LINE( Chr( "ADDDDDD" )                , "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:C:ADDDDDD F:S" )
    TEST_LINE( Chr( -10000000.0 )              , "€"                                    )
    TEST_LINE( Chr( -100000 )                  , "`"                                    )
    TEST_LINE( Chr( -65 )                      , "¿"                                    )
    TEST_LINE( Chr( snIntP1 )                  , "A"                                    )
 #ifdef __HARBOUR__
-   TEST_LINE( Chr( @snIntP1 )                 , "A"                                    ) /* Bug in CA-Cl*pper, it returns: "E BASE 1104 Argument error CHR F:S" */
+   TEST_LINE( Chr( @snIntP1 )                 , "A"                                    ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:U:65 F:S" */
 #endif
 
    /* disable Harbour extensions in compiler to replicate Clipper bugs */
@@ -217,16 +217,16 @@ PROCEDURE Main_STR()
 
    /* ASC() */
 
-   TEST_LINE( Asc( NIL )                      , "E BASE 1107 Argument error ASC A:1:U:NIL F:S"   )
-   TEST_LINE( Asc( 100 )                      , "E BASE 1107 Argument error ASC A:1:N:100 F:S"   )
-   TEST_LINE( Asc( 20000 )                    , "E BASE 1107 Argument error ASC A:1:N:20000 F:S" )
+   TEST_LINE( Asc( NIL )                      , "E 1 BASE 1107 Argument error (ASC) OS:0 #:0 A:1:U:NIL F:S" )
+   TEST_LINE( Asc( 100 )                      , "E 1 BASE 1107 Argument error (ASC) OS:0 #:0 A:1:N:100 F:S" )
+   TEST_LINE( Asc( 20000 )                    , "E 1 BASE 1107 Argument error (ASC) OS:0 #:0 A:1:N:20000 F:S" )
    TEST_LINE( Asc( "HELLO" )                  , 72                                   )
    TEST_LINE( Asc( Chr(0) )                   , 0                                    )
    TEST_LINE( Asc( "a" )                      , 97                                   )
    TEST_LINE( Asc( "A" )                      , 65                                   )
    TEST_LINE( Asc( scString )                 , 72                                   )
 #ifdef __HARBOUR__
-   TEST_LINE( Asc( @scString )                , 72                                   ) /* Bug in CA-Cl*pper, it returns: "E BASE 1107 Argument error ASC F:S" */
+   TEST_LINE( Asc( @scString )                , 72                                   ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1107 Argument error (ASC) OS:0 #:0 A:1:U:HELLO F:S" */
 #endif
 
    /* ISDIGIT() */
@@ -323,8 +323,8 @@ PROCEDURE Main_STR()
 
 #ifdef HB_COMPAT_C53
    /* These lines will cause CA-Cl*pper 5.2e to trash memory and later crash, it was fixed in 5.3 */
-   TEST_LINE( AllTrim( NIL )                  , "E BASE 2022 Argument error ALLTRIM F:S" )
-   TEST_LINE( AllTrim( 100 )                  , "E BASE 2022 Argument error ALLTRIM F:S" )
+   TEST_LINE( AllTrim( NIL )                  , "E 1 BASE 2022 Argument error (ALLTRIM) OS:0 #:0 A:1:U:NIL F:S" )
+   TEST_LINE( AllTrim( 100 )                  , "E 1 BASE 2022 Argument error (ALLTRIM) OS:0 #:0 A:1:N:100 F:S" )
 #endif
 #ifdef __HARBOUR__
    TEST_LINE( AllTrim(@scString)              , "HELLO"          ) /* CA-Cl*pper bug, it will terminate the program on this line. */
@@ -347,8 +347,8 @@ PROCEDURE Main_STR()
 
    /* TRIM() */
 
-   TEST_LINE( Trim( 100 )                     , "E BASE 1100 Argument error TRIM A:1:N:100 F:S" )
-   TEST_LINE( Trim( NIL )                     , "E BASE 1100 Argument error TRIM A:1:U:NIL F:S" )
+   TEST_LINE( Trim( 100 )                     , "E 1 BASE 1100 Argument error (TRIM) OS:0 #:0 A:1:N:100 F:S" )
+   TEST_LINE( Trim( NIL )                     , "E 1 BASE 1100 Argument error (TRIM) OS:0 #:0 A:1:U:NIL F:S" )
 #ifdef __HARBOUR__
    TEST_LINE( Trim(@scString)                 , "HELLO"                   ) /* CA-Cl*pper bug, it will throw an error here. */
 #endif
@@ -370,8 +370,8 @@ PROCEDURE Main_STR()
 
    /* RTRIM() */
 
-   TEST_LINE( RTrim( 100 )                    , "E BASE 1100 Argument error TRIM A:1:N:100 F:S" )
-   TEST_LINE( RTrim( NIL )                    , "E BASE 1100 Argument error TRIM A:1:U:NIL F:S" )
+   TEST_LINE( RTrim( 100 )                    , "E 1 BASE 1100 Argument error (TRIM) OS:0 #:0 A:1:N:100 F:S" )
+   TEST_LINE( RTrim( NIL )                    , "E 1 BASE 1100 Argument error (TRIM) OS:0 #:0 A:1:U:NIL F:S" )
 #ifdef __HARBOUR__
    TEST_LINE( RTrim(@scString)                , "HELLO"                   ) /* CA-Cl*pper bug, it will throw an error here. */
 #endif
@@ -393,8 +393,8 @@ PROCEDURE Main_STR()
 
    /* LTRIM() */
 
-   TEST_LINE( LTrim( 100 )                    , "E BASE 1101 Argument error LTRIM A:1:N:100 F:S" )
-   TEST_LINE( LTrim( NIL )                    , "E BASE 1101 Argument error LTRIM A:1:U:NIL F:S" )
+   TEST_LINE( LTrim( 100 )                    , "E 1 BASE 1101 Argument error (LTRIM) OS:0 #:0 A:1:N:100 F:S" )
+   TEST_LINE( LTrim( NIL )                    , "E 1 BASE 1101 Argument error (LTRIM) OS:0 #:0 A:1:U:NIL F:S" )
 #ifdef __HARBOUR__
    TEST_LINE( LTrim(@scString)                , "HELLO"                   ) /* CA-Cl*pper bug, it will throw an error here. */
 #endif
@@ -423,11 +423,11 @@ PROCEDURE Main_STR()
          This bug is fixed in CA-Cl*pper 5.3 [vszakats] */
 #ifndef __CLIPPER__
 #ifndef __XPP__
-   TEST_LINE( StrTran()                       , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */
-   TEST_LINE( StrTran( NIL )                  , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */
-   TEST_LINE( StrTran( 100 )                  , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */
+   TEST_LINE( StrTran()                       , "E 1 BASE 1126 Argument error (STRTRAN) OS:0 #:0 F:S" ) /* CA-Cl*pper bug, it will exit on this */
+   TEST_LINE( StrTran( NIL )                  , "E 1 BASE 1126 Argument error (STRTRAN) OS:0 #:0 A:1:U:NIL F:S" ) /* CA-Cl*pper bug, it will exit on this */
+   TEST_LINE( StrTran( 100 )                  , "E 1 BASE 1126 Argument error (STRTRAN) OS:0 #:0 A:1:N:100 F:S" ) /* CA-Cl*pper bug, it will exit on this */
 #endif
-   TEST_LINE( StrTran( "AA", 1 )              , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */
+   TEST_LINE( StrTran( "AA", 1 )              , "E 1 BASE 1126 Argument error (STRTRAN) OS:0 #:0 A:2:C:AA;N:1 F:S" ) /* CA-Cl*pper bug, it will exit on this */
 #endif
    TEST_LINE( StrTran( "AA", "A" )            , "" )
    TEST_LINE( StrTran( "AA", "A", "1" )       , "11" )
@@ -439,7 +439,7 @@ PROCEDURE Main_STR()
 #ifdef __HARBOUR__
    TEST_LINE( Upper( @scString )              , "HELLO"                                ) /* Bug in CA-Cl*pper, it will return argument error */
 #endif
-   TEST_LINE( Upper( 100 )                    , "E BASE 1102 Argument error UPPER A:1:N:100 F:S" )
+   TEST_LINE( Upper( 100 )                    , "E 1 BASE 1102 Argument error (UPPER) OS:0 #:0 A:1:N:100 F:S" )
    TEST_LINE( Upper( "" )                     , ""                                     )
    TEST_LINE( Upper( " " )                    , " "                                    )
    TEST_LINE( Upper( "2" )                    , "2"                                    )
@@ -458,7 +458,7 @@ PROCEDURE Main_STR()
 #ifdef __HARBOUR__
    TEST_LINE( Lower( @scString )              , "hello"                                ) /* Bug in CA-Cl*pper, it will return argument error */
 #endif
-   TEST_LINE( Lower( 100 )                    , "E BASE 1103 Argument error LOWER A:1:N:100 F:S" )
+   TEST_LINE( Lower( 100 )                    , "E 1 BASE 1103 Argument error (LOWER) OS:0 #:0 A:1:N:100 F:S" )
    TEST_LINE( Lower( "" )                     , ""                                     )
    TEST_LINE( Lower( " " )                    , " "                                    )
    TEST_LINE( Lower( "2" )                    , "2"                                    )
@@ -473,9 +473,9 @@ PROCEDURE Main_STR()
 
    /* AT() */
 
-   TEST_LINE( At(90, 100)                     , "E BASE 1108 Argument error AT A:2:N:90;N:100 F:S" )
-   TEST_LINE( At("", 100)                     , "E BASE 1108 Argument error AT A:2:C:;N:100 F:S"   )
-   TEST_LINE( At(100, "")                     , "E BASE 1108 Argument error AT A:2:N:100;C: F:S"   )
+   TEST_LINE( At(90, 100)                     , "E 1 BASE 1108 Argument error (AT) OS:0 #:0 A:2:N:90;N:100 F:S" )
+   TEST_LINE( At("", 100)                     , "E 1 BASE 1108 Argument error (AT) OS:0 #:0 A:2:C:;N:100 F:S" )
+   TEST_LINE( At(100, "")                     , "E 1 BASE 1108 Argument error (AT) OS:0 #:0 A:2:N:100;C: F:S" )
    /* disable Harbour extensions in compiler to replicate Clipper bugs */
 #ifdef __HARBOUR__
    #pragma -kh-
@@ -535,17 +535,17 @@ PROCEDURE Main_STR()
 
 #ifdef __HARBOUR__
    IF hb_version( HB_VERSION_BITWIDTH ) >= 64
-      TEST_LINE( Replicate("XXX", 9000000000000000000) , "E BASE 1234 String overflow REPLICATE A:2:C:XXX;N:9000000000000000000 F:S" )
+      TEST_LINE( Replicate("XXX", 9000000000000000000) , "E 3 BASE 1234 String overflow (REPLICATE) OS:0 #:0 A:2:C:XXX;N:9000000000000000000 F:S" )
    ELSE
-      TEST_LINE( Replicate("XXX", 2000000000)    , "E BASE 1234 String overflow REPLICATE A:2:C:XXX;N:2000000000 F:S" )
+      TEST_LINE( Replicate("XXX", 2000000000)    , "E 3 BASE 1234 String overflow (REPLICATE) OS:0 #:0 A:2:C:XXX;N:2000000000 F:S" )
    ENDIF
 #else
-   TEST_LINE( Replicate("XXX", 30000)         , "E BASE 1234 String overflow REPLICATE A:2:C:XXX;N:30000 F:S" )
+   TEST_LINE( Replicate("XXX", 30000)         , "E 3 BASE 1234 String overflow (REPLICATE) OS:0 #:0 A:2:C:XXX;N:30000 F:S" )
 #endif
-   TEST_LINE( Replicate(200  , 0 )            , "E BASE 1106 Argument error REPLICATE A:2:N:200;N:0 F:S" )
+   TEST_LINE( Replicate(200  , 0 )            , "E 1 BASE 1106 Argument error (REPLICATE) OS:0 #:0 A:2:N:200;N:0 F:S" )
    TEST_LINE( Replicate(""   , 10 )           , "" )
    TEST_LINE( Replicate(""   , 0 )            , "" )
-   TEST_LINE( Replicate("A"  , "B" )          , "E BASE 1106 Argument error REPLICATE A:2:C:A;C:B F:S" )
+   TEST_LINE( Replicate("A"  , "B" )          , "E 1 BASE 1106 Argument error (REPLICATE) OS:0 #:0 A:2:C:A;C:B F:S" )
    TEST_LINE( Replicate("A"  , 1 )            , "A"                                        )
    TEST_LINE( Replicate("A"  , 2 )            , "AA"                                       )
    TEST_LINE( Replicate("HE", 3 )             , "HEHEHE"                                   )
@@ -557,7 +557,7 @@ PROCEDURE Main_STR()
 
    /* SPACE() */
 
-   TEST_LINE( Space( "A" )                    , "E BASE 1105 Argument error SPACE A:1:C:A F:S" )
+   TEST_LINE( Space( "A" )                    , "E 1 BASE 1105 Argument error (SPACE) OS:0 #:0 A:1:C:A F:S" )
    TEST_LINE( Space( 0 )                      , "" )
    TEST_LINE( Space( -10 )                    , "" )
    TEST_LINE( Space( 10 )                     , "          " )
@@ -567,10 +567,10 @@ PROCEDURE Main_STR()
 
    /* SUBSTR() */
 
-   TEST_LINE( SubStr(100     , 0, -1)         , "E BASE 1110 Argument error SUBSTR A:3:N:100;N:0;N:-1 F:S"   )
-   TEST_LINE( SubStr("abcdef", 1, "a")        , "E BASE 1110 Argument error SUBSTR A:3:C:abcdef;N:1;C:a F:S" )
-   TEST_LINE( SubStr("abcdef", "a")           , "E BASE 1110 Argument error SUBSTR A:2:C:abcdef;C:a F:S"     )
-   TEST_LINE( SubStr("abcdef", "a", 1)        , "E BASE 1110 Argument error SUBSTR A:3:C:abcdef;C:a;N:1 F:S" )
+   TEST_LINE( SubStr(100     , 0, -1)         , "E 1 BASE 1110 Argument error (SUBSTR) OS:0 #:0 A:3:N:100;N:0;N:-1 F:S" )
+   TEST_LINE( SubStr("abcdef", 1, "a")        , "E 1 BASE 1110 Argument error (SUBSTR) OS:0 #:0 A:3:C:abcdef;N:1;C:a F:S" )
+   TEST_LINE( SubStr("abcdef", "a")           , "E 1 BASE 1110 Argument error (SUBSTR) OS:0 #:0 A:2:C:abcdef;C:a F:S" )
+   TEST_LINE( SubStr("abcdef", "a", 1)        , "E 1 BASE 1110 Argument error (SUBSTR) OS:0 #:0 A:3:C:abcdef;C:a;N:1 F:S" )
    TEST_LINE( SubStr("abcdef", 0, -1)         , ""               )
    TEST_LINE( SubStr("abcdef", 0, 0)          , ""               )
    TEST_LINE( SubStr("abcdef", 0, 1)          , "a"              )
@@ -608,8 +608,8 @@ PROCEDURE Main_STR()
 
    /* LEFT() */
 
-   TEST_LINE( Left(100     , -10)                , "E BASE 1124 Argument error LEFT A:2:N:100;N:-10 F:S"  )
-   TEST_LINE( Left("abcdef", "A")                , "E BASE 1124 Argument error LEFT A:2:C:abcdef;C:A F:S" )
+   TEST_LINE( Left(100     , -10)                , "E 1 BASE 1124 Argument error (LEFT) OS:0 #:0 A:2:N:100;N:-10 F:S" )
+   TEST_LINE( Left("abcdef", "A")                , "E 1 BASE 1124 Argument error (LEFT) OS:0 #:0 A:2:C:abcdef;C:A F:S" )
    TEST_LINE( Left("abcdef", -10)                , ""               )
    TEST_LINE( Left("abcdef", -2)                 , ""               )
    TEST_LINE( Left("abcdef", 0)                  , ""               )

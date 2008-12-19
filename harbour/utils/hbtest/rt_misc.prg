@@ -87,7 +87,7 @@ PROCEDURE Main_MISC()
    /* SET()s */
 
    TEST_LINE( Set( _SET_MARGIN     )       , 0 )
-   TEST_LINE( Set( _SET_MARGIN    , -1 )   , "E BASE 2020 Argument error SET A:2:N:25;N:-1 " )
+   TEST_LINE( Set( _SET_MARGIN    , -1 )   , "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:25;N:-1 " )
 
 #ifdef HB_COMPAT_C53
    TEST_LINE( Set( _SET_EVENTMASK  )       , 128 )
@@ -100,16 +100,20 @@ PROCEDURE Main_MISC()
    TEST_LINE( Set( _SET_AUTORDER   )       , 0 )
    TEST_LINE( Set( _SET_AUTOSHARE  )       , 0 )
 
-   TEST_LINE( Set( _SET_EVENTMASK , -1 )   , "E BASE 2020 Argument error SET A:2:N:39;N:-1 " )
+   TEST_LINE( Set( _SET_EVENTMASK , -1 )   , "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:39;N:-1 " )
    TEST_LINE( Set( _SET_VIDEOMODE , -1 )   , NIL )
-   TEST_LINE( Set( _SET_MBLOCKSIZE, -1 )   , "E BASE 2020 Argument error SET A:2:N:41;N:-1 " )
+   TEST_LINE( Set( _SET_MBLOCKSIZE, -1 )   , "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:41;N:-1 " )
    TEST_LINE( Set( _SET_MFILEEXT  , {} )   , "" )
    TEST_LINE( Set( _SET_STRICTREAD, {} )   , .F. )
    TEST_LINE( Set( _SET_OPTIMIZE  , {} )   , .T. )
    TEST_LINE( Set( _SET_AUTOPEN   , {} )   , .T. )
-   TEST_LINE( Set( _SET_AUTORDER  , -1 )   , "E BASE 2020 Argument error SET A:2:N:46;N:-1 " )
-   TEST_LINE( Set( _SET_AUTOSHARE , -1 )   , "E BASE 2020 Argument error SET A:2:N:47;N:-1 " )
+   TEST_LINE( Set( _SET_AUTORDER  , -1 )   , "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:46;N:-1 " )
+   TEST_LINE( Set( _SET_AUTOSHARE , -1 )   , "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:47;N:-1 " )
 #endif
+
+   TEST_LINE( Set( _SET_ALTFILE,   BADFNAME2() ), "E 20 TERM 2013 Create error <" + BADFNAME2() + "> OS:2 #:1 F:DR" )
+   TEST_LINE( Set( _SET_PRINTFILE, BADFNAME2() ), "E 20 TERM 2014 Create error <" + BADFNAME2() + "> OS:2 #:1 F:DR" )
+   TEST_LINE( Set( _SET_EXTRAFILE, BADFNAME2() ), "E 20 TERM 2015 Create error <" + BADFNAME2() + "> OS:2 #:1 F:DR" )
 
    /* Some color handling tests */
 
@@ -484,24 +488,24 @@ PROCEDURE Main_MISC()
 
    /* FOR/NEXT */
 
-   TEST_LINE( TFORNEXT( .F., .T., NIL )       , "E BASE 1086 Argument error ++ A:1:L:.F. F:S" )
+   TEST_LINE( TFORNEXT( .F., .T., NIL )       , "E 1 BASE 1086 Argument error (++) OS:0 #:0 A:1:L:.F. F:S" )
    TEST_LINE( TFORNEXT( .T., .F., NIL )       , .T.                                       )
-   TEST_LINE( TFORNEXT( .F., .F., NIL )       , "E BASE 1086 Argument error ++ A:1:L:.F. F:S" )
+   TEST_LINE( TFORNEXT( .F., .F., NIL )       , "E 1 BASE 1086 Argument error (++) OS:0 #:0 A:1:L:.F. F:S" )
    TEST_LINE( TFORNEXT( 100, 101, NIL )       , 102                                       )
-   TEST_LINE( TFORNEXT( "A", "A", NIL )       , "E BASE 1086 Argument error ++ A:1:C:A F:S"        )
-   TEST_LINE( TFORNEXT( NIL, NIL, NIL )       , "E BASE 1075 Argument error > A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( TFORNEXT( .F., .T.,   1 )       , "E BASE 1081 Argument error + A:2:L:.F.;N:1 F:S"   )
+   TEST_LINE( TFORNEXT( "A", "A", NIL )       , "E 1 BASE 1086 Argument error (++) OS:0 #:0 A:1:C:A F:S" )
+   TEST_LINE( TFORNEXT( NIL, NIL, NIL )       , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
+   TEST_LINE( TFORNEXT( .F., .T.,   1 )       , "E 1 BASE 1081 Argument error (+) OS:0 #:0 A:2:L:.F.;N:1 F:S" )
    TEST_LINE( TFORNEXT( .F., .T.,  -1 )       , .F.                                       )
-   TEST_LINE( TFORNEXT( .F., .T., .F. )       , "E BASE 1073 Argument error < A:2:L:.F.;N:0 F:S" )
+   TEST_LINE( TFORNEXT( .F., .T., .F. )       , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:L:.F.;N:0 F:S" )
    TEST_LINE( TFORNEXT( .T., .F.,   1 )       , .T.                                       )
-   TEST_LINE( TFORNEXT( .T., .F.,  -1 )       , "E BASE 1081 Argument error + A:2:L:.T.;N:-1 F:S" )
-   TEST_LINE( TFORNEXT( .T., .F., .T. )       , "E BASE 1073 Argument error < A:2:L:.T.;N:0 F:S"  )
+   TEST_LINE( TFORNEXT( .T., .F.,  -1 )       , "E 1 BASE 1081 Argument error (+) OS:0 #:0 A:2:L:.T.;N:-1 F:S" )
+   TEST_LINE( TFORNEXT( .T., .F., .T. )       , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:L:.T.;N:0 F:S" )
    TEST_LINE( TFORNEXT( 100, 101,   1 )       , 102                                       )
    TEST_LINE( TFORNEXT( 101, 100,  -1 )       , 99                                        )
-   TEST_LINE( TFORNEXT( "A", "A", "A" )       , "E BASE 1073 Argument error < A:2:C:A;N:0 F:S"     )
-   TEST_LINE( TFORNEXT( "A", "B", "A" )       , "E BASE 1073 Argument error < A:2:C:A;N:0 F:S"     )
-   TEST_LINE( TFORNEXT( "B", "A", "A" )       , "E BASE 1073 Argument error < A:2:C:A;N:0 F:S"     )
-   TEST_LINE( TFORNEXT( NIL, NIL, NIL )       , "E BASE 1075 Argument error > A:2:U:NIL;U:NIL F:S" )
+   TEST_LINE( TFORNEXT( "A", "A", "A" )       , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:A;N:0 F:S" )
+   TEST_LINE( TFORNEXT( "A", "B", "A" )       , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:A;N:0 F:S" )
+   TEST_LINE( TFORNEXT( "B", "A", "A" )       , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:A;N:0 F:S" )
+   TEST_LINE( TFORNEXT( NIL, NIL, NIL )       , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
 
    TEST_LINE( TFORNEXTX(   1, 10,NIL )        , "FTTTTTTTTTTT"                            )
    TEST_LINE( TFORNEXTX(  10,  1,NIL )        , "FT"                                      )
@@ -527,9 +531,9 @@ PROCEDURE Main_MISC()
 
    /* EVAL(), :EVAL(), :EVAL */
 
-   TEST_LINE( Eval( NIL )                     , "E BASE 1004 No exported method EVAL A:1:U:NIL F:S" )
-   TEST_LINE( Eval( 1 )                       , "E BASE 1004 No exported method EVAL A:1:N:1 F:S"   )
-   TEST_LINE( Eval( @sbBlock )                , "E BASE 1004 No exported method EVAL A:1:B:{||...} F:S" ) /* CA-Cl*pper returns "E BASE 1004 No exported method EVAL A:1:U:{||...} F:S" */
+   TEST_LINE( Eval( NIL )                     , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S" )
+   TEST_LINE( Eval( 1 )                       , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:1 F:S" )
+   TEST_LINE( Eval( @sbBlock )                , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:B:{||...} F:S" ) /* CA-Cl*pper returns "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:{||...} F:S" */
    TEST_LINE( Eval( {|p1| p1 },"A","B")       , "A"                                       )
    TEST_LINE( Eval( {|p1,p2| p1+p2 },"A","B") , "AB"                                      )
 #ifdef __HARBOUR__
@@ -537,22 +541,22 @@ PROCEDURE Main_MISC()
 #else
    TEST_LINE( Eval( {|p1,p2,p3| p1 },"A","B") , "A"                                       )
 #endif
-   TEST_LINE( suNIL:Eval()                    , "E BASE 1004 No exported method EVAL A:1:U:NIL F:S" )
-   TEST_LINE( scString:Eval()                 , "E BASE 1004 No exported method EVAL A:1:C:HELLO F:S"    )
-   TEST_LINE( snIntP:Eval()                   , "E BASE 1004 No exported method EVAL A:1:N:10 F:S"       )
-   TEST_LINE( sdDateE:Eval()                  , "E BASE 1004 No exported method EVAL A:1:D:         F:S" )
-   TEST_LINE( slFalse:Eval()                  , "E BASE 1004 No exported method EVAL A:1:L:.F. F:S"      )
+   TEST_LINE( suNIL:Eval()                    , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S" )
+   TEST_LINE( scString:Eval()                 , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:C:HELLO F:S" )
+   TEST_LINE( snIntP:Eval()                   , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:10 F:S" )
+   TEST_LINE( sdDateE:Eval()                  , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:         F:S" )
+   TEST_LINE( slFalse:Eval()                  , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:L:.F. F:S" )
    TEST_LINE( sbBlock:Eval()                  , NIL                                       )
-   TEST_LINE( saArray:Eval()                  , "E BASE 1004 No exported method EVAL A:1:A:{.[1].} F:S"      )
-   TEST_LINE( soObject:Eval()                 , "E BASE 1004 No exported method EVAL A:1:O:ERROR Object F:S" )
-   TEST_LINE( suNIL:Eval                      , "E BASE 1004 No exported method EVAL A:1:U:NIL F:S" )
-   TEST_LINE( scString:Eval                   , "E BASE 1004 No exported method EVAL A:1:C:HELLO F:S"    )
-   TEST_LINE( snIntP:Eval                     , "E BASE 1004 No exported method EVAL A:1:N:10 F:S"       )
-   TEST_LINE( sdDateE:Eval                    , "E BASE 1004 No exported method EVAL A:1:D:         F:S" )
-   TEST_LINE( slFalse:Eval                    , "E BASE 1004 No exported method EVAL A:1:L:.F. F:S"      )
+   TEST_LINE( saArray:Eval()                  , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:A:{.[1].} F:S" )
+   TEST_LINE( soObject:Eval()                 , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:O:ERROR Object F:S" )
+   TEST_LINE( suNIL:Eval                      , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S" )
+   TEST_LINE( scString:Eval                   , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:C:HELLO F:S" )
+   TEST_LINE( snIntP:Eval                     , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:10 F:S" )
+   TEST_LINE( sdDateE:Eval                    , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:         F:S" )
+   TEST_LINE( slFalse:Eval                    , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:L:.F. F:S" )
    TEST_LINE( sbBlock:Eval                    , NIL                                       )
-   TEST_LINE( saArray:Eval                    , "E BASE 1004 No exported method EVAL A:1:A:{.[1].} F:S"      )
-   TEST_LINE( soObject:Eval                   , "E BASE 1004 No exported method EVAL A:1:O:ERROR Object F:S" )
+   TEST_LINE( saArray:Eval                    , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:A:{.[1].} F:S" )
+   TEST_LINE( soObject:Eval                   , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:O:ERROR Object F:S" )
 
    /* HB_STOD() */
 
@@ -690,9 +694,9 @@ PROCEDURE Main_MISC()
    TEST_LINE( FKMax()                         , 40               )
    TEST_LINE( FKMax( 1 )                      , 40               )
 #ifdef __HARBOUR__
-   TEST_LINE( FKLabel()                       , ""               ) /* Bug in CA-Cl*pper, it returns: "E BASE 1074 Argument error <= F:S" */
-   TEST_LINE( FKLabel( NIL )                  , ""               ) /* Bug in CA-Cl*pper, it returns: "E BASE 1074 Argument error <= F:S" */
-   TEST_LINE( FKLabel( "A" )                  , ""               ) /* Bug in CA-Cl*pper, it returns: "E BASE 1074 Argument error <= F:S" */
+   TEST_LINE( FKLabel()                       , ""               ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:U:NIL;N:40 F:S" */
+   TEST_LINE( FKLabel( NIL )                  , ""               ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:U:NIL;N:40 F:S" */
+   TEST_LINE( FKLabel( "A" )                  , ""               ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:C:A;N:40 F:S" */
 #endif
    TEST_LINE( FKLabel( -1 )                   , ""               )
    TEST_LINE( FKLabel( 0 )                    , ""               )
@@ -805,10 +809,10 @@ PROCEDURE Main_MISC()
    /* NOTE: Cannot yet test the return value of the function on a DEFAULT-ed
             failure. */
 
-   TEST_LINE( __CopyFile("$$COPYFR.TMP")                 , "E BASE 2010 Argument error __COPYFILE A:1:C:$$COPYFR.TMP " )
+   TEST_LINE( __CopyFile("$$COPYFR.TMP")                 , "E 1 BASE 2010 Argument error (__COPYFILE) OS:0 #:0 A:1:C:$$COPYFR.TMP " )
    TEST_LINE( __CopyFile("$$COPYFR.TMP", "$$COPYTO.TMP") , NIL                                        )
-   TEST_LINE( __CopyFile("NOT_HERE.$$$", "$$COPYTO.TMP") , "E BASE 2012 Open error NOT_HERE.$$$ F:DR" )
-   TEST_LINE( __CopyFile("$$COPYFR.TMP", BADFNAME())     , "E BASE 2012 Create error " + BADFNAME() + " F:DR" )
+   TEST_LINE( __CopyFile("NOT_HERE.$$$", "$$COPYTO.TMP") , "E 21 BASE 2012 Open error <NOT_HERE.$$$> OS:2 #:1 F:DR" )
+   TEST_LINE( __CopyFile("$$COPYFR.TMP", BADFNAME())     , "E 20 BASE 2012 Create error <" + BADFNAME() + "> OS:2 #:1 F:DR" )
 
    FErase("$$COPYFR.TMP")
    FErase("$$COPYTO.TMP")

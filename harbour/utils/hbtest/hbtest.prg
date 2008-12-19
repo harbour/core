@@ -172,16 +172,16 @@ STATIC PROCEDURE Main_LAST()
 
    TEST_LINE( MEMVARBLOCK( "mcString" )           , "{||...}"                                         )
 #ifndef __XPP__
-   TEST_LINE( __MRestore()                        , "E BASE 2007 Argument error __MRESTORE "          )
+   TEST_LINE( __MRestore()                        , "E 1 BASE 2007 Argument error (__MRESTORE) OS:0 #:0 " )
 #endif
    TEST_LINE( MEMVARBLOCK( "mcString" )           , "{||...}"                                         )
 #ifndef __XPP__
-   TEST_LINE( __MSave()                           , "E BASE 2008 Argument error __MSAVE "             )
-   TEST_LINE( __MRestore( "$NOTHERE.MEM", .F. )   , "E BASE 2005 Open error $NOTHERE.MEM F:DR"        )
+   TEST_LINE( __MSave()                           , "E 1 BASE 2008 Argument error (__MSAVE) OS:0 #:0 " )
+   TEST_LINE( __MRestore( "$NOTHERE.MEM", .F. )   , "E 21 BASE 2005 Open error <$NOTHERE.MEM> OS:2 #:1 F:DR" )
 #endif
    TEST_LINE( MEMVARBLOCK( "mcString" )           , NIL                                               )
 #ifndef __XPP__
-   TEST_LINE( __MSave( BADFNAME(), "*", .T. ) , "E BASE 2006 Create error " + BADFNAME() + " F:DR"    )
+   TEST_LINE( __MSave( BADFNAME(), "*", .T. )     , "E 20 BASE 2006 Create error <" + BADFNAME() + "> OS:2 #:1 F:DR" )
 #endif
 
    RETURN
@@ -543,6 +543,9 @@ STATIC FUNCTION ErrorMessage( oError )
       CASE oError:severity == ES_CATASTROPHIC ; cMessage += "C "
       ENDCASE
    ENDIF
+   IF ValType( oError:genCode ) == "N"
+      cMessage += LTrim( Str( oError:genCode ) ) + " "
+   ENDIF
    IF ValType( oError:subsystem ) == "C"
       cMessage += oError:subsystem + " "
    ENDIF
@@ -553,10 +556,16 @@ STATIC FUNCTION ErrorMessage( oError )
       cMessage += oError:description + " "
    ENDIF
    IF !Empty( oError:operation )
-      cMessage += oError:operation + " "
+      cMessage += "(" + oError:operation + ") "
    ENDIF
    IF !Empty( oError:filename )
-      cMessage += oError:filename + " "
+      cMessage += "<" + oError:filename + "> "
+   ENDIF
+   IF ValType( oError:osCode ) == "N"
+      cMessage += "OS:" + LTrim( Str( oError:osCode ) ) + " "
+   ENDIF
+   IF ValType( oError:tries ) == "N"
+      cMessage += "#:" + LTrim( Str( oError:tries ) ) + " "
    ENDIF
 
    IF ValType( oError:Args ) == "A"
