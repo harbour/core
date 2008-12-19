@@ -141,7 +141,7 @@ FUNCTION FT_XBOX(cJustType,; // "L" = left, otherwise centered
                 cLine1, cLine2, cLine3, cLine4, cLine5, cLine6, cLine7, cLine8)
 
   LOCAL nLLen := 0, ;
-        cOldColor,  ;
+    ;// cOldColor,  ;
         nLCol,      ;
         nRCol,      ;
         nTRow,      ;
@@ -187,7 +187,7 @@ FUNCTION FT_XBOX(cJustType,; // "L" = left, otherwise centered
   // form box and border
 
   // save screen color and set new color
-  cOldColor = SetColor(cBoxColor)
+  //cOldColor = SetColor(cBoxColor)
   @ nTRow,nLCol Clear to nBRow,nRCol
 
   // draw border

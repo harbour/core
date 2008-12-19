@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-19 03:55 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * source/compiler/hbopt.c
+    ! fixed compiler memory leaks
+
+  * contrib/hbnf/xbox.prg
+  * contrib/hbtpathy/telepath.prg
+    ! fixed assigned but not used variable
+
 2008-12-19 01:15 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * contrib/rddsql/mysqldd.c
   * contrib/rddsql/sqlbase.c
@@ -36,7 +44,7 @@
 
 2008-12-18 19:53 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * source/compiler/hbopt.c
-    ! one more try to fix passing informatino about redundant variable 
+    ! one more try to fix passing information about redundant variable 
       assignment by preprocessor rules, i.e., _nowarn_* hack removed, 
       using HB_SYMBOL_UNUSED() technique
 

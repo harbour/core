@@ -691,7 +691,7 @@ return p_iscts( s_aPorts[ nPort, TPFP_HANDLE ] )
 //     I'll wait as long as it takes to drain the port.
 function tp_flush( nPort, nTimeout )
 
-   local nStart := Seconds()
+   //local nStart := Seconds()
    local nRes
 
    default nTimeout to 0

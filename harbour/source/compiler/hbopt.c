@@ -1532,9 +1532,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
     
                /* Delete pVar from the linked list */
                *ppVar = pVar->pNext;
-               /* TOFIX: If I free these, I get GPF. Is it destroyed by some bison garbage collector?
-               hb_xfree( pVar->szName );
-               hb_xfree( pVar );  */
+               hb_xfree( pVar );
                pVar = *ppVar;
             }
             usLocalCount++;
@@ -1542,4 +1540,5 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
          hb_compPCodeEnumRenumberLocals( pFunc, pLocals );
       }
    }
+   hb_xfree( pLocals );
 }
