@@ -415,7 +415,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
 }
 
 static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
-                                 BOOL fQuiet, int * piSVNID,
+                                 int iQuiet, int * piSVNID,
                                  char ** pszChangeLogID, char ** pszLastEntry )
 {
    int iResult = 0;
@@ -436,7 +436,7 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
    file_in = hb_fopen( pszFile, "r" );
    if( !file_in )
    {
-         if( !fQuiet )
+         if( iQuiet < 2 )
          {
 #if !defined(HB_WINCE)
             perror( pszFile );
@@ -463,15 +463,25 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
 
          if( !*szId )
          {
-            szFrom = strstr( szLine, "$Id: " );
+            szFrom = strstr( szLine, "$Id" );
             if( szFrom )
             {
-               szFrom += 5;
-               szTo = strstr( szFrom, " $" );
+               szFrom += 3;
+               szTo = strchr( szFrom, '$' );
                if( szTo )
                {
-                  *szTo = 0;
-                  hb_strncpy( szId, szFrom, sizeof( szId ) - 1 );
+                  /* Is it tarball SVN package? */
+                  if( szTo == szFrom )
+                  {
+                     /* we do not have revision number :-( */
+                     hb_strncpy( szId, "unknown -1 (SVN tarball without keyword expanding)", sizeof( szId ) - 1 );
+                  }
+                  else if( szTo - szFrom > 3 && szTo[ -1 ] == ' ' &&
+                           szFrom[ 0 ] == ':' && szFrom[ 1 ] == ' ' )
+                  {
+                     szTo[ -1 ] = '\0';
+                     hb_strncpy( szId, szFrom + 2, sizeof( szId ) - 1 );
+                  }
                }
             }
          }
@@ -494,8 +504,8 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
 
       if( !*szLog )
       {
-         if( !fQuiet )
-            fprintf( stderr, "Cannot find valid $Id end log entry in the %s file.\n", pszFile );
+         if( iQuiet < 2 )
+            fprintf( stderr, "Cannot find valid $Id entry in the %s file.\n", pszFile );
          iResult = 1;
       }
       else
@@ -521,6 +531,8 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
             while( *szFrom == ' ' )
                ++szFrom;
             iLen = 0;
+            if( *szFrom == '-' )
+               ++iLen;
             while( HB_PP_ISDIGIT( szFrom[ iLen ] ) )
                ++iLen;
             if( iLen && szFrom[ iLen ] == ' ' )
@@ -528,14 +540,13 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
             else
                szFrom = NULL;
          }
-         if( szFrom )
-         {
+         *piSVNID = szFrom ? ( int ) hb_strValInt( szFrom, &iLen ) : 0;
+
+         if( *piSVNID )
             hb_pp_addDefine( pState, "HB_VER_SVNID", szFrom );
-            *piSVNID = ( int ) hb_strValInt( szFrom, &iLen );
-         }
          else
          {
-            if( !fQuiet )
+            if( iQuiet < 2 )
                fprintf( stderr, "Unrecognized Id entry in the %s file.\n", pszFile );
             iResult = 1;
          }
@@ -559,7 +570,7 @@ static void hb_pp_usage( char * szName )
            "          -o<file>      \tcreates .c file with PP rules\n"
            "          -v<file>      \tcreates .h file with version information\n"
            "          -w            \twrite preprocessed (.ppo) file\n"
-           "          -q            \tdisable information messages\n"
+           "          -q[012]       \tdisable information messages\n"
            "\n"
            "Note:  if neither -o nor -v is specified then -w is default action\n\n" );
 }
@@ -568,9 +579,9 @@ int main( int argc, char * argv[] )
 {
    char * szFile = NULL, * szRuleFile = NULL, * szVerFile = NULL;
    char * szStdCh = NULL, * szLogFile = NULL, * szInclude;
-   BOOL fQuiet = FALSE, fWrite = FALSE, fChgLog = FALSE;
+   BOOL fWrite = FALSE, fChgLog = FALSE;
    char * szChangeLogID = NULL, * szLastEntry = NULL;
-   int iSVNID = 0, iResult = 0, i;
+   int iSVNID = 0, iResult = 0, iQuiet = 0, i;
    PHB_PP_STATE pState;
 
    printf( "Harbour Preprocessor %d.%d.%d\n",
@@ -592,10 +603,14 @@ int main( int argc, char * argv[] )
             {
                case 'q':
                case 'Q':
-                  if( argv[i][2] )
-                     szFile = NULL;
+                  if( !argv[i][2] )
+                     iQuiet = 1;
+                  else if( argv[i][2] == '-' && !argv[i][3] )
+                     iQuiet = 0;
+                  else if( argv[i][2] >= '0' && argv[i][2] <= '1' && !argv[i][3] )
+                     iQuiet = argv[i][2] - '0';
                   else
-                     fQuiet = TRUE;
+                     szFile = NULL;
                   break;
 
                case 'd':
@@ -674,7 +689,7 @@ int main( int argc, char * argv[] )
       if( !szRuleFile && !szVerFile )
          fWrite = TRUE;
 
-      hb_pp_init( pState, fQuiet, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
+      hb_pp_init( pState, iQuiet != 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
 
       szInclude = hb_getenv( "INCLUDE" );
       if( szInclude )
@@ -703,7 +718,7 @@ int main( int argc, char * argv[] )
          }
 
          if( fChgLog )
-            iResult = hb_pp_parseChangelog( pState, szLogFile, fQuiet,
+            iResult = hb_pp_parseChangelog( pState, szLogFile, iQuiet,
                                             &iSVNID, &szChangeLogID, &szLastEntry );
 
          if( iResult == 0 )

@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-19 14:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/hbpp.c
+    * accept empty $Id keywords in ChangeLog file. It allows to compile
+      Harbour from source taken directly from SVN as tarball without
+      keyword expanding, f.e. by:
+         http://harbour-project.svn.sourceforge.net/viewvc/
+              harbour-project/trunk/harbour.tar.gz?view=tar
+      In such case revision number is not unknown and set arbitrary to -1
+    * change -q parameter to accept 0, 1 and 2 levels to disable standard
+      messages and also warning/error ones
+
 2008-12-19 06:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/utils/hbtest/rt_hvm.prg
   * harbour/utils/hbtest/rt_hvma.prg
