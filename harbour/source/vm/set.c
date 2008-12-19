@@ -462,10 +462,9 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             close_text( pSet, pSet->hb_set_althan );
+            pSet->hb_set_althan = FS_ERROR;
             if( pSet->HB_SET_ALTFILE && pSet->HB_SET_ALTFILE[ 0 ] != '\0' )
                pSet->hb_set_althan = open_handle( pSet, pSet->HB_SET_ALTFILE, bFlag, ".txt", HB_SET_ALTFILE );
-            else
-               pSet->hb_set_althan = FS_ERROR;
          }
          break;
       case HB_SET_AUTOPEN:
@@ -607,7 +606,7 @@ HB_FUNC( SET )
             pSet->HB_SET_DEVICE = set_string( pArg2, pSet->HB_SET_DEVICE );
             if( hb_stricmp( pSet->HB_SET_DEVICE, "PRINTER" ) == 0 && pSet->hb_set_printhan == FS_ERROR &&
                 pSet->HB_SET_PRINTFILE && pSet->HB_SET_PRINTFILE[ 0 ] != '\0' )
-               pSet->hb_set_printhan = open_handle( pSet, pSet->HB_SET_PRINTFILE, FALSE, NULL, HB_SET_PRINTFILE );
+               pSet->hb_set_printhan = open_handle( pSet, pSet->HB_SET_PRINTFILE, FALSE, ".prn", HB_SET_PRINTFILE );
          }
          break;
       case HB_SET_EOF:
@@ -688,10 +687,9 @@ HB_FUNC( SET )
          if( args > 1 && ! HB_IS_NIL( pArg2 ) )
          {
             close_text( pSet, pSet->hb_set_extrahan );
+            pSet->hb_set_extrahan = FS_ERROR;
             if( pSet->HB_SET_EXTRAFILE && pSet->HB_SET_EXTRAFILE[ 0 ] != '\0' )
                pSet->hb_set_extrahan = open_handle( pSet, pSet->HB_SET_EXTRAFILE, bFlag, ".prn", HB_SET_EXTRAFILE );
-            else
-               pSet->hb_set_extrahan = FS_ERROR;
          }
          break;
       case HB_SET_FIXED:
@@ -1252,11 +1250,10 @@ static BOOL hb_setSetFile( HB_set_enum set_specifier, const char * szFile, BOOL 
          /* Limit size of SET strings to 64K, truncating if source is longer */
          pSet->HB_SET_ALTFILE = szFile ? hb_strndup( szFile, USHRT_MAX ) : NULL;
          close_text( pSet, pSet->hb_set_althan );
+         pSet->hb_set_althan = FS_ERROR;
          if( pSet->HB_SET_ALTFILE && pSet->HB_SET_ALTFILE[ 0 ] != '\0' )
             pSet->hb_set_althan = open_handle( pSet, pSet->HB_SET_ALTFILE,
                                                fAdditive, ".txt", HB_SET_ALTFILE );
-         else
-            pSet->hb_set_althan = FS_ERROR;
          break;
 
       case HB_SET_EXTRAFILE:
@@ -1267,11 +1264,10 @@ static BOOL hb_setSetFile( HB_set_enum set_specifier, const char * szFile, BOOL 
          if( szFile )
          {
             close_text( pSet, pSet->hb_set_extrahan );
+            pSet->hb_set_extrahan = FS_ERROR;
             if( pSet->HB_SET_EXTRAFILE && pSet->HB_SET_EXTRAFILE[ 0 ] != '\0' )
                pSet->hb_set_extrahan = open_handle( pSet, pSet->HB_SET_EXTRAFILE,
                                                     fAdditive, ".prn", HB_SET_EXTRAFILE );
-            else
-               pSet->hb_set_extrahan = FS_ERROR;
          }
          break;
 
@@ -1283,11 +1279,10 @@ static BOOL hb_setSetFile( HB_set_enum set_specifier, const char * szFile, BOOL 
          if( szFile )
          {
             close_binary( pSet->hb_set_printhan );
+            pSet->hb_set_printhan = FS_ERROR;
             if( pSet->HB_SET_PRINTFILE && pSet->HB_SET_PRINTFILE[ 0 ] != '\0' )
                pSet->hb_set_printhan = open_handle( pSet, pSet->HB_SET_PRINTFILE,
                                                     fAdditive, ".prn", HB_SET_PRINTFILE );
-            else
-               pSet->hb_set_printhan = FS_ERROR;
          }
          break;
 
@@ -1765,7 +1760,8 @@ BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
                /* If the print file is not already open, open it in overwrite mode. */
                if( hb_stricmp( szValue, "PRINTER" ) == 0 && pSet->hb_set_printhan == FS_ERROR &&
                    pSet->HB_SET_PRINTFILE && pSet->HB_SET_PRINTFILE[ 0 ] != '\0' )
-                  pSet->hb_set_printhan = open_handle( pSet, pSet->HB_SET_PRINTFILE, FALSE, NULL, HB_SET_PRINTFILE );
+                  pSet->hb_set_printhan = open_handle( pSet, pSet->HB_SET_PRINTFILE,
+                                                       FALSE, ".prn", HB_SET_PRINTFILE );
                fResult = TRUE;
             }
             break;

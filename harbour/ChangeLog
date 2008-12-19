@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-19 20:26 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/set.c
+    ! fixed long existing bug in _SET_PRINTFILE, _SET_DEFAULT, _SET_EXTRAFILE
+      It was possible to use closed handle for the above file inside error
+      handler executed during their reopening.
+
 2008-12-19 19:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/filesys.c
     * do not respect _SET_PATH when hb_{file|fs}ExtOpen() is called
