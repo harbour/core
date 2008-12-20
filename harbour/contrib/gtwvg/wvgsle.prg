@@ -140,7 +140,6 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
    LOCAL es_:= { ES_LEFT, ES_RIGHT, ES_CENTER }
-   LOCAL xVar
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -178,7 +177,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSL
    ENDIF
 
    IF hb_isObject( ::datalink )
-      xVar := eval( ::datalink )
+      eval( ::datalink )
    ENDIF
 
    ::sendMessage( EM_SETLIMITTEXT, ::bufferLength )

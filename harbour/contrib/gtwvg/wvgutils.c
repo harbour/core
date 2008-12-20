@@ -1448,7 +1448,7 @@ HB_FUNC( WVT_GETFONTHANDLE )
    int   iSlot = hb_parni( 1 ) - 1;
 
    if ( iSlot >= 0 && iSlot < WVT_PICTURES_MAX )
-      hFont = _s->hUserFonts[ iSlot ];
+      hFont = _s->pGUI->hUserFonts[ iSlot ];
 
    hb_retnint( ( HB_PTRDIFF ) hFont );
 }

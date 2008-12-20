@@ -549,7 +549,7 @@ METHOD setFont() CLASS WvgWindow
 //----------------------------------------------------------------------//
 
 METHOD setFontCompoundName( xFont ) CLASS WvgWindow
-   LOCAL cOldFont, s, n, cAttr := '', nPoint := 0, cFace := '', cFont
+   LOCAL cOldFont, s, n, nPoint, cFont, cAttr, cFace
    LOCAL aAttr := { 'normal','italic','bold' }
 
    cOldFont := ::fnt_COMMPOUNDNAME
@@ -572,9 +572,15 @@ METHOD setFontCompoundName( xFont ) CLASS WvgWindow
          IF ( n := at( '.', cFont ) ) > 0
             nPoint := val( substr( cFont,1,n-1 ) )
             cFont  := substr( cFont,n+1 )
+         ELSE
+            nPoint := 0
          ENDIF
 
          cFace := alltrim( cFont )
+
+         HB_SYMBOL_UNUSED( cFace )
+         HB_SYMBOL_UNUSED( cAttr )
+         HB_SYMBOL_UNUSED( nPoint )
       ENDIF
    ENDIF
 

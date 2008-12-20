@@ -394,6 +394,8 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
       nL := Win_LoWord( nwParam )
       nH := Win_HiWord( nwParam )
 
+      HB_SYMBOL_UNUSED( nH )
+
       DO CASE
 
       CASE nL == IDOK

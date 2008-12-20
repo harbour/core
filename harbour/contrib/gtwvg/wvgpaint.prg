@@ -64,7 +64,11 @@
 
 //-------------------------------------------------------------------//
 
+#if 0  // Until THREAD STATIC is made true thread sttaic
 thread static paint_:= { { '', {} } }
+#else
+thread static paint_
+#endif
 
 //-------------------------------------------------------------------//
 //
@@ -144,7 +148,11 @@ function WvtPaintObjects()
 
 function WvtSetPaint( a_ )
    local o
-   thread static s := {}
+   thread static s
+
+   IF s == nil
+      s := {}
+   ENDIF
 
    o := s
 
@@ -158,6 +166,10 @@ function WvtSetPaint( a_ )
 
 function SetPaint( cID, nAction, xData, aAttr )
    local n, n1, oldData
+
+   IF paint_== NIL
+      paint_:= { { '', {} } }
+   ENDIF
 
    if xData <> nil
       if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
@@ -182,6 +194,10 @@ function SetPaint( cID, nAction, xData, aAttr )
 function GetPaint( cID )
    local n
 
+   IF paint_== NIL
+      paint_:= { { '', {} } }
+   ENDIF
+
    if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
       return paint_[ n,2 ]
    endif
@@ -192,6 +208,10 @@ function GetPaint( cID )
 
 function DelPaint( cID, nAction )
    local xData, n1, n
+
+   IF paint_== NIL
+      paint_:= { { '', {} } }
+   ENDIF
 
    if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
       if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
@@ -208,6 +228,10 @@ function PurgePaint( cID,lDummy )
    local n, aPaint
 
    DEFAULT lDummy TO .f.
+
+   IF paint_== NIL
+      paint_:= { { '', {} } }
+   ENDIF
 
    if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
       aPaint := paint_[ n ]
@@ -227,6 +251,10 @@ function InsertPaint( cID, aPaint, lSet )
    local n
 
    DEFAULT lSet TO .f.
+
+   IF paint_== NIL
+      paint_:= { { '', {} } }
+   ENDIF
 
    if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
       paint_[ n ] := aPaint
@@ -391,7 +419,6 @@ Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
       cbDlgProc := upper( cbDlgProc )
    endif
 
-   hDlg     := 0
    cType    := Valtype( acnDlg )
    nDlgMode := iif( cType == 'C', 0, iif( cType == 'N', 1, 2 ) )
 

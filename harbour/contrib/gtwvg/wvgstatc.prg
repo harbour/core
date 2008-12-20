@@ -122,7 +122,6 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStati
 //----------------------------------------------------------------------//
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
-   LOCAL wm_:= {}
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

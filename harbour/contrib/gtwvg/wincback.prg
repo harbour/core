@@ -126,11 +126,10 @@ FUNCTION HB_AsCallback( pbcFunc, oObj, nNumParam, xCargo, lVoid, cDebug )
 //       destroyed first, or it must be "unsubclassed"
 //
 FUNCTION HB_FreeCallback( pCallback )
-   LOCAL lSuccess := .F.
 
-   lSuccess := _FreeCallback( pCallback )
+   _FreeCallback( pCallback )
 
-   RETURN .T. //lSuccess
+   RETURN .T.
 //----------------------------------------------------------------------//
 // free all oustanding unreleased callback pointers on exit from the application
 // could be changed to EXIT PROCEDURE

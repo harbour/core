@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-20 09:36 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.h
+    ! Seperated PHB_GTWVT structure for GUI elements as PHB_GUIDATA + PHB_GTWVT.
+
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/gtwvg/wvgcore.c
+  * harbour/contrib/gtwvg/wvgutils.c
+    ! Modified to respect PHB_GUIDATA structure.
+
+  * harbour/contrib/gtwvg/wvgpaint.prg
+    ! Modified THREAD STATIC paint_ behavior to respect true thread oriented
+      until THREAD STATIC is modified to respect its true meaning.
+
+  * harbour/contrib/gtwvg/wincback.prg
+  * harbour/contrib/gtwvg/wvgmenub.prg
+  * harbour/contrib/gtwvg/wvgclass.prg
+  * harbour/contrib/gtwvg/wvgsle.prg
+  * harbour/contrib/gtwvg/wvgstatc.prg
+  * harbour/contrib/gtwvg/wvgsysw.prg
+  * harbour/contrib/gtwvg/wvgwnd.prg
+    ! Fixed to respect new compiler warnings. 
+      Thanks Mindaugus for this great addition.
+      Hope code will be faster than before.
+
 2008-12-20 18:35 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * contrib/hbfbird/tfirebrd.prg
   * contrib/hbgd/gdbar.prg

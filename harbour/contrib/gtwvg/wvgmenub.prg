@@ -270,6 +270,9 @@ METHOD addItem( aItem, p2, p3, p4 ) CLASS wvgMenuBar
       nAttrib  := p4
    endif
 
+   HB_SYMBOL_UNUSED( nStyle )
+   HB_SYMBOL_UNUSED( nAttrib )
+
    nItemIndex  := ::numItems() + 1
 
    // xCaption : NIL | cPrompt | ncResource | oMenu
@@ -317,7 +320,7 @@ METHOD addItem( aItem, p2, p3, p4 ) CLASS wvgMenuBar
 //----------------------------------------------------------------------//
 
 METHOD findMenuItemById( nId ) CLASS wvgMenuBar
-   LOCAL x, aResult :={}, aRes :={}
+   LOCAL x, aResult :={}
 
    IF !empty( nId )
       x := ::numItems()

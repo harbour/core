@@ -97,8 +97,9 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 #define HB_WVT_LOCK     hb_threadEnterCriticalSection( &s_wvtMtx );
 #define HB_WVT_UNLOCK   hb_threadLeaveCriticalSection( &s_wvtMtx );
 
-static PHB_GTWVT  s_wvtWindows[ WVT_MAX_WINDOWS ];
-static int        s_wvtCount = 0;
+static PHB_GTWVT   s_wvtWindows[ WVT_MAX_WINDOWS ];
+static int         s_wvtCount = 0;
+static PHB_GUIDATA s_guiData;
 
 static const TCHAR s_szClassName[] = TEXT( "Harbour_WVG_Class" );
 
@@ -119,6 +120,8 @@ static void hb_wvt_gtCreateToolTipWindow( PHB_GTWVT pWVT );
 static void hb_wvt_gtHandleMenuSelection( PHB_GTWVT pWVT, int );
 static void hb_wvt_gtSaveGuiState( PHB_GTWVT pWVT );
 static void hb_wvt_gtRestGuiState( PHB_GTWVT pWVT, LPRECT rect );
+static void hb_wvt_gtLoadGuiData( void );
+static void hb_wvt_gtReleaseGuiData( void );
 
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 
@@ -184,7 +187,10 @@ static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
             s_wvtWindows[ iPos ] = pWVT;
             pWVT->iHandle = iPos;
             if( ++s_wvtCount == 1 )
+            {
                hb_gt_wvt_RegisterClass( pWVT->hInstance );
+               hb_wvt_gtLoadGuiData();
+            }
             fOK = TRUE;
             break;
          }
@@ -208,6 +214,9 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 
    if( --s_wvtCount == 0 )
    {
+      hb_wvt_gtReleaseGuiData();
+      s_guiData = NULL;
+
       if( pWVT->hInstance )
          UnregisterClass( s_szClassName, pWVT->hInstance );
    }
@@ -356,10 +365,12 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 #endif
 #endif
 
+   pWVT->bResizing         = FALSE;
+
    /* GUI Related members initialized */
    hb_wvt_gtCreateObjects( pWVT );
 
-   pWVT->bResizing         = FALSE;
+   pWVT->pGUI              = s_guiData;
 
    return pWVT;
 }
@@ -3138,13 +3149,13 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                if( pWVT->hWnd )
                {
 #if ( _WIN32_WINNT >= 0x0500 )
-                  if ( pWVT->pfnLayered )
+                  if ( s_guiData->pfnLayered )
                   {
                      SetWindowLong( pWVT->hWnd,
                                     GWL_EXSTYLE,
                                     GetWindowLong( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
 
-                     pWVT->pfnLayered( pWVT->hWnd,
+                     s_guiData->pfnLayered( pWVT->hWnd,
                                        RGB( 255,255,255 ),
                                        hb_itemGetNI( pInfo->pNewVal2 ),
                                        /*LWA_COLORKEY|*/ LWA_ALPHA );
@@ -3677,6 +3688,111 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 
+static void hb_wvt_gtLoadGuiData( void )
+{
+   HINSTANCE   h;
+
+   s_guiData = ( PHB_GUIDATA ) hb_xgrab( sizeof( HB_GUIDATA ) );
+   memset( s_guiData, 0, sizeof( HB_GUIDATA ) );
+
+   s_guiData->penWhite       = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 255,255,255 ) );
+   s_guiData->penBlack       = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB(   0,  0,  0 ) );
+   s_guiData->penWhiteDim    = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 205,205,205 ) );
+   s_guiData->penDarkGray    = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 150,150,150 ) );
+   s_guiData->penGray        = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 198,198,198 ) );
+   s_guiData->penNull        = CreatePen( PS_NULL , 0, ( COLORREF ) RGB( 198,198,198 ) );
+
+   s_guiData->diagonalBrush  = CreateHatchBrush( HS_DIAGCROSS, RGB( 210,210,210 ) );
+   s_guiData->solidBrush     = CreateSolidBrush( RGB( 0,0,0 ) );
+   s_guiData->whiteBrush     = CreateSolidBrush( RGB( 198,198,198 ) );
+
+   h = LoadLibraryEx( TEXT( "msimg32.dll" ), NULL, 0 );
+   if( h )
+   {
+      /* workaround for wrong declarations in some old C compilers */
+#if defined( UNICODE ) && defined( GetProcAddress )
+      s_guiData->pfnGF = ( wvtGradientFill ) GetProcAddressW( h, TEXT( "GradientFill" ) );
+#else
+      s_guiData->pfnGF = ( wvtGradientFill ) GetProcAddress( h, "GradientFill" );
+#endif
+      if( s_guiData->pfnGF )
+      {
+         s_guiData->hMSImg32 = h;
+      }
+   }
+
+   h = LoadLibraryEx( TEXT( "user32.dll" ), NULL, 0 );
+   if( h )
+   {
+      /* workaround for wrong declarations in some old C compilers */
+#if defined( UNICODE ) && defined( GetProcAddress )
+      s_guiData->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddressW( h, TEXT( "SetLayeredWindowAttributes" ) );
+#else
+      s_guiData->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );
+#endif
+      if( s_guiData->pfnLayered )
+      {
+         s_guiData->hUser32 = h;
+      }
+   }
+}
+
+static void hb_wvt_gtReleaseGuiData( void )
+{
+   int i;
+
+   DeleteObject( ( HPEN   ) s_guiData->penWhite      );
+   DeleteObject( ( HPEN   ) s_guiData->penWhiteDim   );
+   DeleteObject( ( HPEN   ) s_guiData->penBlack      );
+   DeleteObject( ( HPEN   ) s_guiData->penDarkGray   );
+   DeleteObject( ( HPEN   ) s_guiData->penGray       );
+   DeleteObject( ( HPEN   ) s_guiData->penNull       );
+   DeleteObject( ( HBRUSH ) s_guiData->diagonalBrush );
+   DeleteObject( ( HBRUSH ) s_guiData->solidBrush    );
+   DeleteObject( ( HBRUSH ) s_guiData->whiteBrush    );
+
+   if( s_guiData->hMSImg32 )
+   {
+      FreeLibrary( s_guiData->hMSImg32 );
+      s_guiData->hMSImg32 = NULL;
+   }
+   if( s_guiData->hUser32 )
+   {
+      FreeLibrary( s_guiData->hUser32 );
+      s_guiData->hUser32 = NULL;
+   }
+
+   for( i = 0; i < WVT_PICTURES_MAX; i++ )
+   {
+      if( s_guiData->iPicture[ i ] )
+      {
+         s_guiData->iPicture[ i ]->lpVtbl->Release( s_guiData->iPicture[ i ] );
+         s_guiData->iPicture[ i ] = NULL;
+      }
+   }
+
+   for( i = 0; i < WVT_FONTS_MAX; i++ )
+   {
+      if( s_guiData->hUserFonts[ i ] )
+      {
+         DeleteObject( s_guiData->hUserFonts[ i ] );
+         s_guiData->hUserFonts[ i ] = NULL;
+      }
+   }
+
+   for( i = 0; i < WVT_PENS_MAX; i++ )
+   {
+      if( s_guiData->hUserPens[ i ] )
+      {
+         DeleteObject( s_guiData->hUserPens[ i ] );
+         s_guiData->hUserPens[ i ] = NULL;
+      }
+   }
+
+   hb_xfree( s_guiData );
+   s_guiData = NULL;
+}
+
 static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
 {
    LOGBRUSH    lb;
@@ -3686,35 +3802,12 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
    pWVT->bDeferPaint        = FALSE;
    pWVT->bTracking          = FALSE;
 
-   pWVT->penWhite           = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 255,255,255 ) );
-   pWVT->penBlack           = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB(   0,  0,  0 ) );
-   pWVT->penWhiteDim        = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 205,205,205 ) );
-   pWVT->penDarkGray        = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 150,150,150 ) );
-   pWVT->penGray            = CreatePen( PS_SOLID, 0, ( COLORREF ) pWVT->COLORS[ 7 ] );
-   pWVT->penNull            = CreatePen( PS_NULL , 0, ( COLORREF ) pWVT->COLORS[ 7 ] );
-
    pWVT->currentPen         = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB(   0,  0,  0 ) );
-
+   //
    lb.lbStyle               = BS_NULL;
    lb.lbColor               = RGB( 198,198,198 );
    lb.lbHatch               = 0;
    pWVT->currentBrush       = CreateBrushIndirect( &lb );
-
-   lb.lbStyle               = BS_HATCHED;
-   lb.lbColor               = RGB( 210,210,210 );
-   lb.lbHatch               = HS_DIAGCROSS; // HS_BDIAGONAL;
-   pWVT->diagonalBrush      = CreateHatchBrush( HS_DIAGCROSS, RGB( 210,210,210 ) ); //CreateBrushIndirect( &lb );
-
-   lb.lbStyle               = BS_SOLID;
-   lb.lbColor               = 0; // NULL;  // RGB( 0,0,0 );
-   lb.lbHatch               = 0;
-   pWVT->solidBrush         = CreateSolidBrush( RGB( 0,0,0 ) ); //CreateBrushIndirect( &lb );
-
-   lb.lbStyle               = BS_SOLID;
-   lb.lbColor               = pWVT->COLORS[ 7 ];
-   lb.lbHatch               = 0;
-   pWVT->wvtWhiteBrush      = CreateSolidBrush( pWVT->COLORS[ 7 ] ); //CreateBrushIndirect( &lb );
-
 
    /* GUI members of global structure */
    pWVT->LastMenuEvent      = 0;
@@ -3734,36 +3827,6 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
    pWVT->colStop            = 0;
    pWVT->bToolTipActive     = FALSE;
    pWVT->iFactor            = 255;
-
-   h = LoadLibraryEx( TEXT( "msimg32.dll" ), NULL, 0 );
-   if( h )
-   {
-      /* workaround for wrong declarations in some old C compilers */
-#if defined( UNICODE ) && defined( GetProcAddress )
-      pWVT->pfnGF = ( wvtGradientFill ) GetProcAddressW( h, TEXT( "GradientFill" ) );
-#else
-      pWVT->pfnGF = ( wvtGradientFill ) GetProcAddress( h, "GradientFill" );
-#endif
-      if( pWVT->pfnGF )
-      {
-         pWVT->hMSImg32 = h;
-      }
-   }
-
-   h = LoadLibraryEx( TEXT( "user32.dll" ), NULL, 0 );
-   if( h )
-   {
-      /* workaround for wrong declarations in some old C compilers */
-#if defined( UNICODE ) && defined( GetProcAddress )
-      pWVT->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddressW( h, TEXT( "SetLayeredWindowAttributes" ) );
-#else
-      pWVT->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );
-#endif
-      if( pWVT->pfnLayered )
-      {
-         pWVT->hUser32 = h;
-      }
-   }
 
    for( iIndex = 0; iIndex < WVT_DLGML_MAX; iIndex++ )
    {
@@ -3805,17 +3868,8 @@ static void hb_wvt_gtExitGui( PHB_GTWVT pWVT )
       }
    }
 
-   DeleteObject( ( HPEN   ) pWVT->penWhite      );
-   DeleteObject( ( HPEN   ) pWVT->penWhiteDim   );
-   DeleteObject( ( HPEN   ) pWVT->penBlack      );
-   DeleteObject( ( HPEN   ) pWVT->penDarkGray   );
-   DeleteObject( ( HPEN   ) pWVT->penGray       );
-   DeleteObject( ( HPEN   ) pWVT->penNull       );
    DeleteObject( ( HPEN   ) pWVT->currentPen    );
    DeleteObject( ( HBRUSH ) pWVT->currentBrush  );
-   DeleteObject( ( HBRUSH ) pWVT->diagonalBrush );
-   DeleteObject( ( HBRUSH ) pWVT->solidBrush    );
-   DeleteObject( ( HBRUSH ) pWVT->wvtWhiteBrush );
 
    if( pWVT->hdc )
    {
@@ -3844,36 +3898,6 @@ static void hb_wvt_gtExitGui( PHB_GTWVT pWVT )
    {
       DeleteObject( pWVT->hGuiBmp );
       pWVT->hGuiBmp = NULL;
-   }
-
-   for( i = 0; i < WVT_PICTURES_MAX; i++ )
-   {
-      if( pWVT->iPicture[ i ] )
-      {
-         pWVT->iPicture[ i ]->lpVtbl->Release( pWVT->iPicture[ i ] );
-         pWVT->iPicture[ i ] = NULL;
-      }
-   }
-   for( i = 0; i < WVT_FONTS_MAX; i++ )
-   {
-      if( pWVT->hUserFonts[ i ] )
-      {
-         DeleteObject( pWVT->hUserFonts[ i ] );
-         pWVT->hUserFonts[ i ] = NULL;
-      }
-   }
-   for( i = 0; i < WVT_PENS_MAX; i++ )
-   {
-      if( pWVT->hUserPens[ i ] )
-      {
-         DeleteObject( pWVT->hUserPens[ i ] );
-         pWVT->hUserPens[ i ] = NULL;
-      }
-   }
-   if( pWVT->hMSImg32 )
-   {
-      FreeLibrary( pWVT->hMSImg32 );
-      pWVT->hMSImg32 = NULL;
    }
 }
 

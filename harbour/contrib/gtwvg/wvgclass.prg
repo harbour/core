@@ -255,7 +255,7 @@ METHOD New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth,nFontBold,nFont
 //-------------------------------------------------------------------//
 
 METHOD Create() CLASS wvtDialog
-   LOCAL aPalette, n, i, j  // , cScr, cQry
+   LOCAL aPalette, i, j  // , cScr, cQry
 
    ::oldToolTipActive := Wvt_SetToolTipActive( .t. )
    if ::nTooltipWidth <> nil
@@ -309,7 +309,7 @@ METHOD Create() CLASS wvtDialog
    next
    WvtSetPaint( GetPaint( ::cPaintBlockID ) )
 
-   if ( n := ascan( ::aObjects, {|o| o:lTabStop } ) ) > 0
+   if ascan( ::aObjects, {|o| o:lTabStop } ) > 0
       ::lTabStops := .t.
    endif
 
@@ -2609,8 +2609,7 @@ METHOD SetPos( nTotal, nCurrent ) CLASS WvtScrollBar
 //-------------------------------------------------------------------//
 
 METHOD ThumbPos() CLASS WvtScrollBar
-   LOCAL  nNewPos     := ::nThumbPos
-   LOCAL  nRecPerUnit, nCurUnit
+   LOCAL  nNewPos, nRecPerUnit, nCurUnit
 
    if ::nBarType == WVT_SCROLLBAR_VERT
       nRecPerUnit := ::nTotal / ::nScrollUnits
@@ -2624,9 +2623,9 @@ METHOD ThumbPos() CLASS WvtScrollBar
       nNewPos     := ::nSTop + nCurUnit
 
       if nNewPos < ::nSTop
-         nNewPos := ::nSTop
+         nNewPos  := ::nSTop
       elseif nNewPos > ::nSBottom
-         nNewPos := ::nSBottom
+         nNewPos  := ::nSBottom
       endif
 
    else
@@ -2643,12 +2642,12 @@ METHOD ThumbPos() CLASS WvtScrollBar
          nCurUnit := ::nScrollUnits
       endif
 
-        nNewPos := ::nSLeft + nCurUnit
+      nNewPos := ::nSLeft + nCurUnit
 
-        if nNewPos < ::nSLeft
-           nNewPos := ::nSLeft
+      if nNewPos < ::nSLeft
+         nNewPos := ::nSLeft
       elseif nNewPos > ::nSRight - 1
-           nNewPos := ::nSRight-1
+         nNewPos := ::nSRight-1
       endif
 
    endif

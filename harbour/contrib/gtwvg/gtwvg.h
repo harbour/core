@@ -262,16 +262,15 @@ typedef struct
    HPEN      penDarkGray;                   // Dark gray pen to draw GDI elements
    HPEN      penGray;                       // Gray pen equivilant to Clipper White
    HPEN      penNull;                       // Null pen
-   HPEN      currentPen;                    // Handle to current pen settable at runtime
-   HBRUSH    currentBrush;                  // Handle to current brush settable by runtime
    HBRUSH    diagonalBrush;                 // Handle to diaoganl brush to draw scrollbars
    HBRUSH    solidBrush;                    // Handle to solid brush
-   HBRUSH    wvtWhiteBrush;                 // Wvt specific White colored brush
+   HBRUSH    whiteBrush;                    // Wvt specific White colored brush
    IPicture  *iPicture[ WVT_PICTURES_MAX ]; // Array to hold the Picture Streams to avoid recurring loading and unloading
    HFONT     hUserFonts[ WVT_FONTS_MAX ] ;  // User defined font handles
    HPEN      hUserPens[ WVT_PENS_MAX ];     // User defined pens
    HINSTANCE hMSImg32;                      // Handle to the loaded library msimg32.dll
    wvtGradientFill pfnGF;                   // Pointer to Address of the GradientFill function in MSImg32.dll
+   HINSTANCE hUser32;                       // Handle to the loaded library user32.dll
    wvtSetLayeredWindowAttributes pfnLayered;// Pointer to set Windows attribute - transparency.
 
 } HB_GUIDATA, * PHB_GUIDATA;
@@ -380,24 +379,11 @@ typedef struct
    PHB_DYNS  pSymWVT_TIMER;                 // Stores pointer to WVT_TIMER function
    PHB_DYNS  pSymWVT_KEY;
 
-   HPEN      penWhite;                      // White pen to draw GDI elements
-   HPEN      penBlack;                      // Black pen to draw GDI elements
-   HPEN      penWhiteDim;                   // White dim pen to draw GDI elements
-   HPEN      penDarkGray;                   // Dark gray pen to draw GDI elements
-   HPEN      penGray;                       // Gray pen equivilant to Clipper White
-   HPEN      penNull;                       // Null pen
    HPEN      currentPen;                    // Handle to current pen settable at runtime
    HBRUSH    currentBrush;                  // Handle to current brush settable by runtime
-   HBRUSH    diagonalBrush;                 // Handle to diaoganl brush to draw scrollbars
-   HBRUSH    solidBrush;                    // Handle to solid brush
-   HBRUSH    wvtWhiteBrush;                 // Wvt specific White colored brush
-   IPicture  *iPicture[ WVT_PICTURES_MAX ]; // Array to hold the Picture Streams to avoid recurring loading and unloading
-   HFONT     hUserFonts[ WVT_FONTS_MAX ] ;  // User defined font handles
-   HPEN      hUserPens[ WVT_PENS_MAX ];     // User defined pens
-   HINSTANCE hMSImg32;                      // Handle to the loaded library msimg32.dll
-   wvtGradientFill pfnGF;                   // Pointer to Address of the GradientFill function in MSImg32.dll
-   HINSTANCE hUser32;                       // Handle to the loaded library user32.dll
-   wvtSetLayeredWindowAttributes pfnLayered;// Pointer to set Windows attribute - transparency.
+
+   PHB_GUIDATA  pGUI;                       // GUI Data Structure
+
 
    HMENU     hPopup;                        // Handle of context menu invokable with right click
    HWND      hWndTT;                        // Handle to hold tooltip information
@@ -413,8 +399,6 @@ typedef struct
    /* TODO: pcbFuncModal is redundant and should be removed */
    PHB_ITEM  pcbFuncModal[ WVT_DLGMD_MAX ]; // codeblock for WndProc
    int       iTypeModal[ WVT_DLGMD_MAX ];   // Type of Function Pointers - Function 1, Block 2, Method 3
-
-   PHB_GUIDATA  pGUI;                       // GUI Data Structure
 
    PHB_GT_PARAMS  pPP;                      // Presentation Parameters
 
