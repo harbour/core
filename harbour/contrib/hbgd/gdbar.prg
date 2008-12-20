@@ -196,8 +196,8 @@ Return ::SetColor(R,G,B)
 
 METHOD DrawSingleBar( pcode ) CLASS TBarCode
 
-    LOCAL i := 0
-    LOCAL j := 0
+    LOCAL i
+    LOCAL j
 
     For j := 1 To Len( pcode )
 
@@ -214,8 +214,7 @@ Return NIL
 
 METHOD DrawSingleI25( pcode ) CLASS TBarCode
 
-    LOCAL i      := 0
-    LOCAL j      := 0
+    LOCAL j
 
     LOCAL widthSlimBar  := 1
     LOCAL widthFatBar   := 3

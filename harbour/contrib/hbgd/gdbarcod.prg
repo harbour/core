@@ -308,7 +308,7 @@ METHOD Draw8( cText ) CLASS TCode
 
    LOCAL lerror := .f.
    LOCAL ii,jj
-   LOCAL xParity
+   //LOCAL xParity
    LOCAL nchkSum := 0
    LOCAL nChk    := 0
 
@@ -323,7 +323,7 @@ METHOD Draw8( cText ) CLASS TCode
 
       ::positionX := iif( ::textfont == 0 , 0, 10 )
 
-      xParity := ::Parity[ 7 ]
+      //xParity := ::Parity[ 7 ]
 
   		// First Bar
 		::positionX := 10
@@ -426,8 +426,8 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
 
     Local nSum       := 0
     Local nC         := 0
-    LOCAL npos       := 0
-    LOCAL value_test := 0
+    LOCAL npos
+    //LOCAL value_test := 0
     Local lTypeCodeC := .F.
     Local lTypeCodeA := .F.
     LOCAL lerror     := .F.
@@ -605,8 +605,8 @@ Return NIL
 METHOD GenCodei25() CLASS TCode
 
    LOCAL lError   := .F.
-   LOCAL bc_string := ::text
-   LOCAL new_string := ""
+   LOCAL bc_string //:= ::text
+   //LOCAL new_string := ""
 
    If ( Len(::text) % 2 )!= 0
       ::DrawError("Invalid barcode lenght")

@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-20 18:35 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * contrib/hbfbird/tfirebrd.prg
+  * contrib/hbgd/gdbar.prg
+  * contrib/hbgd/gdbarcod.prg
+  * contrib/hbgd/gdchart.prg
+    ! fixed assigned but not used variable
+
 2008-12-19 20:26 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/set.c
     ! fixed long existing bug in _SET_PRINTFILE, _SET_DEFAULT, _SET_EXTRAFILE
