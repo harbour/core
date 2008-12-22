@@ -457,9 +457,9 @@ typedef ULONG HB_VMHANDLE;
 extern HB_EXPORT void   hb_xinit( void );                           /* Initialize fixed memory subsystem */
 extern HB_EXPORT void   hb_xexit( void );                           /* Deinitialize fixed memory subsystem */
 extern HB_EXPORT void * hb_xalloc( ULONG ulSize );                  /* allocates memory, returns NULL on failure */
-extern HB_EXPORT void * hb_xgrab( ULONG ulSize );                   /* allocates memory, exits on failure */
+extern HB_EXPORT void * hb_xgrab( ULONG ulSize ) HB_MALLOC_ATTR HB_ALLOC_SIZE_ATTR( 1 ); /* allocates memory, exits on failure */
 extern HB_EXPORT void   hb_xfree( void * pMem );                    /* frees memory */
-extern HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize );   /* reallocates memory */
+extern HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize ) HB_ALLOC_SIZE_ATTR( 2 ); /* reallocates memory */
 extern HB_EXPORT ULONG  hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
 extern HB_EXPORT ULONG  hb_xquery( USHORT uiMode );                 /* Query different types of memory information */
 extern HB_EXPORT void   hb_xsetfilename( char * szValue );

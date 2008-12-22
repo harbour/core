@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-22 16:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+    ! cleaned some typos in my recent ChangeLog entries
+
+  * harbour/include/hbvm.h
+  * harbour/include/hbvmpub.h
+  * harbour/include/hbsetup.h
+  * harbour/include/hbapi.h
+  * harbour/include/hbapierr.h
+    * added some function attributes which can improve code optimization
+      or introduce some additional warnings.
+      Now it works only in GCC builds.
+
+  * harbour/source/vm/hvm.c
+    ! fixed missing double decimal places initialization in some number
+      negating
+    ! fixed setting number of decimal places in plus and minus operations
+      if integer overflow forces conversion to double item
+    * some minor optimizations
+
+  * harbour/source/rtl/rat.c
+    * formatting
+
 2008-12-20 09:36 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.h
     ! Seperated PHB_GTWVT structure for GUI elements as PHB_GUIDATA + PHB_GTWVT.
@@ -67,10 +90,10 @@
   * harbour/source/pp/hbpp.c
     * accept empty $Id keywords in ChangeLog file. It allows to compile
       Harbour from source taken directly from SVN as tarball without
-      keyword expanding, f.e. by:
+      keyword expanding, f.e. from:
          http://harbour-project.svn.sourceforge.net/viewvc/
               harbour-project/trunk/harbour.tar.gz?view=tar
-      In such case revision number is not unknown and set arbitrary to -1
+      In such case revision number is unknown and set arbitrary to -1
     * change -q parameter to accept 0, 1 and 2 levels to disable standard
       messages and also warning/error ones
 
@@ -97,7 +120,7 @@
   * harbour/source/rtl/hbtoken.c
     * changed the behavior of " " token delimiter - now it works as
       any other tokens. The old behavior can be still reach using empty
-      string "" as token delimiter. "" is not default token.
+      string "" as token delimiter. "" is now default token.
 
   * harbour/utils/hbtest/hbtest.prg
     * change error object to text conversion in hbtest so now it detects also

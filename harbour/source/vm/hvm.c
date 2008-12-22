@@ -161,8 +161,6 @@ static void    hb_vmVFrame( USHORT usLocals, BYTE bParams ); /* increases the st
 static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
 static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the global statics array to hold a PRG statics */
 static void    hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode ); /* mark thread static variables */
-static void    hb_vmEndBlock( void );            /* copies the last codeblock pushed value into the return value */
-static void    hb_vmRetValue( void );            /* pops the latest stack value into stack.Return */
 /* Push */
 static void    hb_vmPushAlias( void );            /* pushes the current workarea number */
 static void    hb_vmPushAliasedField( PHB_SYMB ); /* pushes an aliased field on the eval stack */
@@ -1570,7 +1568,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             hb_vmSend( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
 
-            /* Is This OK??? */
+            /* Small opt */
             if( pCode[ w ] == HB_P_POP )
                w++;
             else
@@ -1582,6 +1580,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             hb_vmSend( pCode[ w + 1 ] );
             w += 2;
 
+            /* Small opt */
             if( pCode[ w ] == HB_P_POP )
                w++;
             else
@@ -1650,11 +1649,6 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
          }
 
-         case HB_P_RETVALUE:
-            hb_vmRetValue();
-            w++;
-            break;
-
          case HB_P_LOCALNAME:
 #ifndef HB_NO_DEBUG
             hb_vmLocalName( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ),
@@ -1681,9 +1675,15 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             while( pCode[ w++ ] ) {};
             break;
 
+         case HB_P_RETVALUE:
+            hb_stackPopReturn();
+            hb_stackReturnItem()->type &= ~HB_IT_MEMOFLAG;
+            w++;
+            break;
+
          case HB_P_ENDBLOCK:
             HB_TRACE(HB_TR_INFO, ("HB_P_ENDBLOCK"));
-            hb_vmEndBlock();
+            hb_stackPopReturn();
             /* manually inlined hb_vmRequestEndProc() for some C compilers
              * which does not make such optimisation
              */
@@ -2905,6 +2905,7 @@ static void hb_vmNegate( void )
          pItem->type = HB_IT_DOUBLE;
          pItem->item.asDouble.value = -dValue;
          pItem->item.asDouble.length = HB_DBL_LENGTH( -dValue );
+         pItem->item.asDouble.decimal = 0;
 #endif
       }
       else
@@ -2924,6 +2925,7 @@ static void hb_vmNegate( void )
          pItem->type = HB_IT_DOUBLE;
          pItem->item.asDouble.value = -dValue;
          pItem->item.asDouble.length = HB_DBL_LENGTH( -dValue );
+         pItem->item.asDouble.decimal = 0;
       }
       else
 #endif
@@ -2967,7 +2969,11 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
       }
       else
       {
-         hb_itemPutND( pResult, ( double ) lNumber1 + ( double ) lNumber2 );
+         double dResult = ( double ) lNumber1 + ( double ) lNumber2;
+         pResult->type = HB_IT_DOUBLE;
+         pResult->item.asDouble.value = dResult;
+         pResult->item.asDouble.length = HB_DBL_LENGTH( dResult );
+         pResult->item.asDouble.decimal = 0;
       }
    }
    else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
@@ -3050,7 +3056,11 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
       }
       else
       {
-         hb_itemPutND( pResult, ( double ) lNumber1 - ( double ) lNumber2 );
+         double dResult = ( double ) lNumber1 - ( double ) lNumber2;
+         pResult->type = HB_IT_DOUBLE;
+         pResult->item.asDouble.value = dResult;
+         pResult->item.asDouble.length = HB_DBL_LENGTH( dResult );
+         pResult->item.asDouble.decimal = 0;
       }
    }
    else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
@@ -3122,17 +3132,17 @@ static void hb_vmMult( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMult(%p,%p,%p)", pResult, pItem1, pItem2));
 
-   /* if( HB_IS_NUMINT( pItem1 ) && HB_IS_NUMINT( pItem2 ) )
+#if HB_LONG_MAX > HB_INT_MAX * HB_INT_MAX && \
+    HB_LONG_MIN < HB_INT_MIN * HB_INT_MIN && 1
+   if( HB_IS_INTEGER( pItem1 ) && HB_IS_INTEGER( pItem2 ) )
    {
-      HB_LONG lNumber1 = HB_ITEM_GET_NUMINTRAW( pItem1 )
-      HB_LONG lNumber2 = HB_ITEM_GET_NUMINTRAW( pItem2 );
-      HB_LONG lResult = lNumber1 * lNumber2;
-      if( lNumber2 == 0 || lResult / lNumber2 == lNumber1 )
-         HB_ITEM_PUT_NUMINTRAW( pResult, lResult );
-      else
-         hb_itemPutNLen( pResult, ( double ) lNumber1 * lNumber2, 0, 0 );
+      HB_LONG lResult = ( HB_LONG ) pItem1->item.asInteger.value *
+                        ( HB_LONG ) pItem2->item.asInteger.value;
+      HB_ITEM_PUT_NUMINTRAW( pResult, lResult );
    }
-   else */ if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
+   else
+#endif
+   if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
    {
       int iDec1, iDec2;
       double dNumber1 = hb_itemGetNDDec( pItem1, &iDec1 );
@@ -6016,25 +6026,6 @@ static void hb_vmInitThreadStatics( USHORT uiCount, const BYTE * pCode )
    HB_SYMBOL_UNUSED( pCode );
 }
 #endif
-
-static void hb_vmEndBlock( void )
-{
-   HB_STACK_TLS_PRELOAD
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmEndBlock()"));
-
-   hb_stackPopReturn();
-}
-
-static void hb_vmRetValue( void )
-{
-   HB_STACK_TLS_PRELOAD
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmRetValue()"));
-
-   hb_stackPopReturn();
-   hb_stackReturnItem()->type &= ~HB_IT_MEMOFLAG;
-}
 
 /* ------------------------------- */
 /* Push                            */

@@ -108,7 +108,7 @@ HB_FUNC( HB_RAT )
          }
          else
             lStart = 0;
-         
+
          if( ISNUM( 4 ) )
          {
             long lEnd = hb_parnl( 4 );

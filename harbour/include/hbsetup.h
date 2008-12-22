@@ -404,23 +404,34 @@
 #if defined( __GNUC__ )
    #define HB_PRINTF_FORMAT( _nStr, _nParam ) \
                      __attribute__ (( format (printf, _nStr, _nParam)))
-   #define HB_ALLOC_SIZE_ATTR( _nParam ) \
-                     __attribute__ (( alloc (_nParam)))
    #define HB_MALLOC_ATTR \
                      __attribute__ (( malloc ))
    #define HB_NORETURN_ATTR \
                      __attribute__ (( noreturn ))
-
    #define HB_HOT_ATTR \
                      __attribute__ (( hot ))
    #define HB_COLD_ATTR \
                      __attribute__ (( cold ))
+#  if ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1 ) )
+   #define HB_FLATTEN_ATTR \
+                     __attribute__ (( flatten ))
+#  else
+   #define HB_FLATTEN_ATTR
+#  endif
+#  if ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 3 ) )
+   #define HB_ALLOC_SIZE_ATTR( _nParam ) \
+                     __attribute__ (( alloc_size (_nParam)))
+#  else
+   #define HB_ALLOC_SIZE_ATTR( _nParam )
+#  endif
 #else
    #define HB_PRINTF_FORMAT( _nStr, _nParam )
-   #define HB_ALLOC_SIZE_ATTR( _nParam )
    #define HB_MALLOC_ATTR
    #define HB_NORETURN_ATTR
    #define HB_HOT_ATTR
+   #define HB_COLD_ATTR
+   #define HB_FLATTEN_ATTR
+   #define HB_ALLOC_SIZE_ATTR( _nParam )
 #endif
 
 
