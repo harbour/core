@@ -21,7 +21,7 @@ optimized at compile time:
 
    - Harbour extension:
 
-      INT( <cConst> )
+      INT( <nConst> )
       ASC( <cConst> [ , ... ] )
       MIN( <xConst1>, <xConst2> )   // <xConstN> is N, D or L value
       MAX( <xConst1>, <xConst2> )   // <xConstN> is N, D or L value
@@ -128,7 +128,8 @@ arguments are well known and can be callculated at compile time:
 
       <nConst1> ^ <nConst2>   => <nConst>
       <aValue> [ <nConst> ]   => <xArrayItem>
-      ( <expr> ) => <expr>    // it allows to optimize expresions like: 1+(2)
+      ( <expr> )              => <expr>         // it allows to optimize
+                                                // expresions like: 1+(2)
 
    - Harbour extension which may disable RT errors in wrong expressions:
       .NOT. .NOT. <expr>      => <expr>
@@ -139,9 +140,9 @@ arguments are well known and can be callculated at compile time:
       "" + <expr>             => <expr>
 
    In cases when result is miningless Harbour compiler can skip code
-   for operation, f.e. such line of .prg code:
+   for operation, i.e. for such line of .prg code:
       ( <exp1> <op> <exp2> )
-   where result of <op> operation is ignored Harbour reduced the code
+   where result of <op> operation is ignored Harbour reduces the code
    to:
       ( <exp1>, <exp2> )
 
@@ -153,7 +154,7 @@ Unlike Clipper Harbour tries to optimize all expressions.
 If some code needs strict Clipper behavior then it can be forced by using
 -kc Harbour compiler switch. It disabled Harbour extensions and enables
 replicating some Clipper bugs like optimizing "" $ <cConst> to .T. at
-compile time when it runtime it's .F.
+compile time when at runtime it's always .F.
 
 Expressions fully optimized to constant values at compile time can be used
 to intialize static variables, f.e.:

@@ -11,7 +11,6 @@
  *
  */
 
-
 #define N_TESTS 54
 #define N_LOOPS 1000000
 #define ARR_LEN 16
@@ -241,7 +240,13 @@ return
 
 /* initialize mutex in hb_trheadDoOnce() */
 init proc once_init()
+   set workarea private
    hb_threadOnce()
+   /* initialize error object to reduce possible crashes when two
+    * threads will try to create new error class simultaneously
+    * xHarbour does not have any protection against such situation
+    */
+   errorNew()
 return
 
 function hb_threadOnce( xOnceControl, bAction )
@@ -253,11 +258,11 @@ function hb_threadOnce( xOnceControl, bAction )
    if xOnceControl == NIL
       hb_mutexLock( s_mutex )
       if xOnceControl == NIL
-         xOnceControl := .t.
-         lFirstCall := .t.
          if bAction != NIL
             eval( bAction )
          endif
+         xOnceControl := .t.
+         lFirstCall := .t.
       endif
       hb_mutexUnlock( s_mutex )
    endif
@@ -275,15 +280,15 @@ TEST t002 WITH L_N:=112345.67    CODE x := L_N
 TEST t003 WITH L_D:=date()       CODE x := L_D
 
 TEST t004 INIT _( static s_once, S_C ) ;
-          INIT iif( hb_threadOnce( @s_once ), S_C := dtos(date()), ) ;
+          INIT hb_threadOnce( @s_once, {|| S_C := dtos( date() ) } ) ;
           CODE x := S_C
 
 TEST t005 INIT _( static s_once, S_N ) ;
-          INIT iif( hb_threadOnce( @s_once ), S_N := 112345.67, ) ;
+          INIT hb_threadOnce( @s_once, {|| S_N := 112345.67 } ) ;
           CODE x := S_N
 
 TEST t006 INIT _( static s_once, S_D ) ;
-          INIT iif( hb_threadOnce( @s_once ), S_D := date(), ) ;
+          INIT hb_threadOnce( @s_once, {|| S_D := date() } ) ;
           CODE x := S_D
 
 TEST t007 INIT _( memvar M_C ) INIT _( private M_C := dtos( date() ) ) ;
@@ -298,19 +303,19 @@ TEST t009 INIT _( memvar M_D ) INIT _( private M_D := date() ) ;
 TEST t010 INIT _( memvar P_C ) ;
           INIT _( static s_once ) ;
           INIT _( public P_C ) ;
-          INIT iif( hb_threadOnce( @s_once ), P_C := dtos( date() ), ) ;
+          INIT hb_threadOnce( @s_once, {|| P_C := dtos( date() ) } ) ;
           CODE x := P_C
 
 TEST t011 INIT _( memvar P_N ) ;
           INIT _( static s_once ) ;
           INIT _( public P_N ) ;
-          INIT iif( hb_threadOnce( @s_once ), P_N := 112345.67, ) ;
+          INIT hb_threadOnce( @s_once, {|| P_N := 112345.67 } ) ;
           CODE x := P_N
 
 TEST t012 INIT _( memvar P_D ) ;
           INIT _( static s_once ) ;
           INIT _( public P_D ) ;
-          INIT iif( hb_threadOnce( @s_once ), P_D := date(), ) ;
+          INIT hb_threadOnce( @s_once, {|| P_D := date() } ) ;
           CODE x := P_D
 
 TEST t013 INIT _( field F_C ) INIT use_dbsh() EXIT close_db() ;

@@ -328,6 +328,7 @@ HB_EXPR_PTR hb_compExprNewLong( HB_LONG lValue, HB_COMP_DECL )
    pExpr = HB_COMP_EXPR_NEW( HB_ET_NUMERIC );
 
    pExpr->value.asNum.val.l   = lValue;
+   pExpr->value.asNum.bWidth  = HB_DEFAULT_WIDTH;
    pExpr->value.asNum.bDec    = 0;
    pExpr->value.asNum.NumType = HB_ET_LONG;
    pExpr->ValType = HB_EV_NUMERIC;

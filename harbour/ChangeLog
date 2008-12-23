@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-24 00:04 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+    ! fixed wrongly modified expression during optimization for
+      ( <numConst> / 0.0 )
+    * cleaned bDec/bWidth updating in compile time optimizations
+
+  * harbour/tests/speedtst.prg
+    ! fixed possible race condition in initialization
+    + added set workarea private for xHarbour builds - thanks to Phil
+
+  * harbour/doc/cmpopt.txt
+    * small cleanup
+
+  * harbour/include/hbvmpub.h
+  * harbour/source/vm/hvm.c
+    % some optimizations mostly for MT mode or compilers which do
+      not support function autoinline optimization
+
 2008-12-23 15:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbsetup.h
     * temporary disabled noreturn function attributes - we have some

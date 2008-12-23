@@ -135,6 +135,7 @@ HB_EXPR_PTR hb_compExprReduceMod( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             {
                pSelf->value.asNum.val.l = pLeft->value.asNum.val.l % pRight->value.asNum.val.l;
                pSelf->value.asNum.bDec = 0;
+               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                pSelf->value.asNum.NumType = HB_ET_LONG;
                pSelf->ExprType = HB_ET_NUMERIC;
                pSelf->ValType  = HB_EV_NUMERIC;
@@ -204,10 +205,10 @@ HB_EXPR_PTR hb_compExprReduceDiv( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                {
                   /* Return non-integer results as double */
                   pSelf->value.asNum.val.d = ( double ) pLeft->value.asNum.val.l / ( double ) pRight->value.asNum.val.l;
-                  pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                   pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
                   pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                }
+               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                pSelf->ExprType = HB_ET_NUMERIC;
             }
             break;
@@ -233,6 +234,8 @@ HB_EXPR_PTR hb_compExprReduceDiv( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                   pSelf->value.asNum.val.d = pLeft->value.asNum.val.d / ( double ) pRight->value.asNum.val.l;
                   pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                   pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
+                  pSelf->value.asNum.NumType = HB_ET_DOUBLE;
+                  pSelf->ExprType = HB_ET_NUMERIC;
                }
             }
             else
@@ -242,11 +245,10 @@ HB_EXPR_PTR hb_compExprReduceDiv( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                   pSelf->value.asNum.val.d = ( double ) pLeft->value.asNum.val.l / pRight->value.asNum.val.d;
                   pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                   pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
+                  pSelf->value.asNum.NumType = HB_ET_DOUBLE;
+                  pSelf->ExprType = HB_ET_NUMERIC;
                }
             }
-
-            pSelf->value.asNum.NumType = HB_ET_DOUBLE;
-            pSelf->ExprType = HB_ET_NUMERIC;
 
       } /* switch bType */
 
@@ -286,17 +288,15 @@ HB_EXPR_PTR hb_compExprReduceMult( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             if( HB_DBL_LIM_LONG( dVal ) )
             {
                pSelf->value.asNum.val.l = pLeft->value.asNum.val.l * pRight->value.asNum.val.l;
-               pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.NumType = HB_ET_LONG;
             }
             else
             {
                pSelf->value.asNum.val.d = ( double ) dVal;
-               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
-               pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.NumType = HB_ET_DOUBLE;
             }
-
+            pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+            pSelf->value.asNum.bDec = 0;
             break;
          }
 
@@ -306,7 +306,6 @@ HB_EXPR_PTR hb_compExprReduceMult( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
             pSelf->value.asNum.bDec = ( UCHAR ) ( pLeft->value.asNum.bDec + pRight->value.asNum.bDec );
             pSelf->value.asNum.NumType = HB_ET_DOUBLE;
-
             break;
          }
 
@@ -315,15 +314,14 @@ HB_EXPR_PTR hb_compExprReduceMult( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             if( pLeft->value.asNum.NumType == HB_ET_DOUBLE )
             {
                pSelf->value.asNum.val.d = pLeft->value.asNum.val.d * ( double ) pRight->value.asNum.val.l;
-               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                pSelf->value.asNum.bDec = pLeft->value.asNum.bDec;
             }
             else
             {
                pSelf->value.asNum.val.d = ( double ) pLeft->value.asNum.val.l * pRight->value.asNum.val.d;
-               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                pSelf->value.asNum.bDec = pRight->value.asNum.bDec;
             }
+            pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
             pSelf->value.asNum.NumType = HB_ET_DOUBLE;
          }
       }
@@ -408,16 +406,15 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             if( HB_DBL_LIM_LONG( dVal ) )
             {
                pSelf->value.asNum.val.l = pLeft->value.asNum.val.l - pRight->value.asNum.val.l;
-               pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.NumType = HB_ET_LONG;
             }
             else
             {
                pSelf->value.asNum.val.d = ( double ) dVal;
-               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
-               pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.NumType = HB_ET_DOUBLE;
             }
+            pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+            pSelf->value.asNum.bDec = 0;
 
             break;
          }
@@ -440,15 +437,14 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             if( pLeft->value.asNum.NumType == HB_ET_DOUBLE )
             {
                pSelf->value.asNum.val.d = pLeft->value.asNum.val.d - ( double ) pRight->value.asNum.val.l;
-               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                pSelf->value.asNum.bDec = pLeft->value.asNum.bDec;
             }
             else
             {
                pSelf->value.asNum.val.d = ( double ) pLeft->value.asNum.val.l - pRight->value.asNum.val.d;
-               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                pSelf->value.asNum.bDec = pRight->value.asNum.bDec;
             }
+            pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
             pSelf->value.asNum.NumType = HB_ET_DOUBLE;
          }
       }
@@ -562,16 +558,15 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                if( HB_DBL_LIM_LONG( dVal ) )
                {
                   pSelf->value.asNum.val.l = pLeft->value.asNum.val.l + pRight->value.asNum.val.l;
-                  pSelf->value.asNum.bDec = 0;
                   pSelf->value.asNum.NumType = HB_ET_LONG;
                }
                else
                {
                   pSelf->value.asNum.val.d = ( double ) dVal;
-                  pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
-                  pSelf->value.asNum.bDec = 0;
                   pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                }
+               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+               pSelf->value.asNum.bDec = 0;
                break;
             }
 
@@ -589,15 +584,14 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                if( pLeft->value.asNum.NumType == HB_ET_DOUBLE )
                {
                   pSelf->value.asNum.val.d = pLeft->value.asNum.val.d + ( double ) pRight->value.asNum.val.l;
-                  pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                   pSelf->value.asNum.bDec = pLeft->value.asNum.bDec;
                }
                else
                {
                   pSelf->value.asNum.val.d = ( double ) pLeft->value.asNum.val.l + pRight->value.asNum.val.d;
-                  pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                   pSelf->value.asNum.bDec = pRight->value.asNum.bDec;
                }
+               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                pSelf->value.asNum.NumType = HB_ET_DOUBLE;
          }
          pSelf->ExprType = HB_ET_NUMERIC;
@@ -742,15 +736,14 @@ HB_EXPR_PTR hb_compExprReduceNegate( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          {
             pExpr->value.asNum.NumType = HB_ET_DOUBLE;
             pExpr->value.asNum.val.d = - ( double ) pExpr->value.asNum.val.l;
-            pExpr->value.asNum.bWidth = HB_DEFAULT_WIDTH;
             pExpr->value.asNum.bDec = 0;
          }
          else
 #endif
          {
             pExpr->value.asNum.val.l = - pExpr->value.asNum.val.l;
-            pExpr->value.asNum.bWidth = HB_DEFAULT_WIDTH;
          }
+         pExpr->value.asNum.bWidth = HB_DEFAULT_WIDTH;
       }
       pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
       HB_COMP_EXPR_FREE( pSelf );

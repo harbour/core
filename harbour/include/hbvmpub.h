@@ -78,8 +78,8 @@ struct _HB_SYMB;
 #  endif
 
 #  define HB_ITEM_GET_NUMINTRAW( p )  ( HB_IS_INTEGER( p ) ? \
-                                        ( HB_LONG ) p->item.asInteger.value : \
-                                        ( HB_LONG ) p->item.asLong.value )
+                                        ( HB_LONG ) (p)->item.asInteger.value : \
+                                        ( HB_LONG ) (p)->item.asLong.value )
 
 #  define HB_ITEM_PUT_NUMINTRAW( p, v )  \
                do { \
@@ -96,6 +96,12 @@ struct _HB_SYMB;
                      (p)->item.asLong.length = HB_LONG_EXPLENGTH( v ); \
                   } \
                } while( 0 )
+
+#  define HB_ITEM_GET_NUMDBLRAW( p )   ( HB_IS_INTEGER( p ) ? \
+                                          ( double ) (p)->item.asInteger.value : \
+                                          ( HB_IS_LONG( p ) ? \
+                                             ( double ) (p)->item.asLong.value : \
+                                                        (p)->item.asDouble.value ) )
 
 #define HB_VM_ISFUNC( pSym ) ( ( pSym )->value.pFunPtr )
 
