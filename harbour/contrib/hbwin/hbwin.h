@@ -50,26 +50,26 @@
  *
  */
 
-#define FCNCREATEFILE				1
-#define FCNGETCOMMSTATE				2
-#define FCNSETCOMMSTATE				3
-#define FCNSETUPCOMM				4
-#define FCNGETCOMMTIMEOUTS  		5
-#define FCNSETCOMMTIMEOUTS  		6
-#define FCNCLOSEHANDLE      		7
-#define FCNWRITEFILE				8
-#define FCNREADFILE					9
-#define FCNGETCOMMMODEMSTATUS		10      /* WinPort:Status() */
-#define FCNPURGECOMM				11
-#define FCNCLEARCOMMERROR			12		/* WinPort:QueueStatus() */
+#define FCNCREATEFILE               1
+#define FCNGETCOMMSTATE             2
+#define FCNSETCOMMSTATE             3
+#define FCNSETUPCOMM                4
+#define FCNGETCOMMTIMEOUTS          5
+#define FCNSETCOMMTIMEOUTS          6
+#define FCNCLOSEHANDLE              7
+#define FCNWRITEFILE                8
+#define FCNREADFILE                 9
+#define FCNGETCOMMMODEMSTATUS       10    /* WinPort:Status() */
+#define FCNPURGECOMM                11
+#define FCNCLEARCOMMERROR           12    /* WinPort:QueueStatus() */
 #define ESCAPECOMMFUNCTION          13
 #define FCNGETCOMMPROPERTIES        14
-#define FCNMAX              		14
+#define FCNMAX                      14
 
-#define	WPDBGBASIC					0x01
-#define WPDBGFLOW					0x02
-#define WPDBGXTRAFLOW				0x04
-#define WPDBGOTHER					0x08
-#define WPDBGTIMEOUTS 				0x10
-#define WPDBGQUEUE    				0x20
-#define WPDBGALL      				0x3F
+#define WPDBGBASIC                  0x01
+#define WPDBGFLOW                   0x02
+#define WPDBGXTRAFLOW               0x04
+#define WPDBGOTHER                  0x08
+#define WPDBGTIMEOUTS               0x10
+#define WPDBGQUEUE                  0x20
+#define WPDBGALL                    0x3F

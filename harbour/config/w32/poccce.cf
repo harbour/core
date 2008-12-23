@@ -13,7 +13,7 @@ LIB_PREF =
 LIB_EXT = .lib
 
 # Favor size for CE builds.
-HB_FLAGS = -gc0
+HB_GCMODE=0
 
 CC = pocc.exe
 CC_IN = -c

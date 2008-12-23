@@ -10,7 +10,7 @@ LIB_PREF = lib
 LIB_EXT = .a
 
 # Favor size for CE builds.
-HB_FLAGS = -gc0
+HB_GCMODE=0
 
 CC = $(CCPREFIX)gcc
 CC_IN = -c

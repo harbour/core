@@ -269,7 +269,7 @@ extern HB_EXPORT int           hb_cdpcmp( const char *, ULONG, const char *, ULO
 extern HB_EXPORT int           hb_cdpicmp( const char *, ULONG, const char *, ULONG, PHB_CODEPAGE, BOOL );
 extern HB_EXPORT int           hb_cdpchrcmp( char, char, PHB_CODEPAGE );
 extern HB_EXPORT void          hb_cdpReleaseAll( void );
-       
+
 extern HB_EXPORT USHORT        hb_cdpGetU16( PHB_CODEPAGE, BOOL, BYTE );
 extern HB_EXPORT UCHAR         hb_cdpGetChar( PHB_CODEPAGE, BOOL, USHORT );
 extern HB_EXPORT BOOL          hb_cdpGetFromUTF8( PHB_CODEPAGE, BOOL, BYTE, int *, USHORT * );

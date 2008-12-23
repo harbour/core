@@ -73,9 +73,9 @@
 #define adInteger               3
 #define adBigInt               20
 #define adUnsignedTinyInt      17
-#define adUnsignedSmallInt 	 18
-#define adUnsignedInt 			 19
-#define adUnsignedBigInt 		 21
+#define adUnsignedSmallInt     18
+#define adUnsignedInt          19
+#define adUnsignedBigInt       21
 #define adSingle                4
 #define adDouble                5
 #define adCurrency              6
@@ -95,18 +95,18 @@
 #define adBSTR                  8
 #define adChar                129
 #define adVarChar             200
-#define adLongVarChar 			201
+#define adLongVarChar         201
 #define adWChar               130
 #define adVarWChar            202
-#define adLongVarWChar 			203
+#define adLongVarWChar        203
 #define adBinary              128
-#define adVarBinary 				204
-#define adLongVarBinary 		205
+#define adVarBinary           204
+#define adLongVarBinary       205
 #define adChapter             136
 #define adFileTime             64
-#define adPropVariant 			138
+#define adPropVariant         138
 #define adVarNumeric          139
-#define adArray 							// &H2000
+#define adArray                     // &H2000
 
 #define adRecDeleted          4
 
