@@ -16,13 +16,31 @@
 #define N_LOOPS 1000000
 #define ARR_LEN 16
 
+#ifdef __XHARBOUR__
+   /* By default build xHarbour binaries without MT support
+    * xHarbour needs separated version for MT and ST mode
+    * because standard MT functions are not available in
+    * ST libraries.
+    */
+   #ifndef __ST__
+      #ifndef __MT__
+         #ifndef MT
+            #ifndef HB_THREAD_SUPPORT
+               #define __ST__
+            #endif
+         #endif
+      #endif
+   #endif
+#endif
+
+
 #command ? => outstd(EOL)
 #command ? <xx,...> => outstd(EOL);outstd(<xx>)
 
 #include "common.ch"
 
 #ifdef __HARBOUR__
-    #define EOL hb_OSNewLine()
+   #define EOL hb_OSNewLine()
 #else
    #define HB_SYMBOL_UNUSED( symbol )  ( ( symbol ) )
    #ifndef __CLIP__

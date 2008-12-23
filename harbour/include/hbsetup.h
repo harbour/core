@@ -406,12 +406,16 @@
                      __attribute__ (( format (printf, _nStr, _nParam)))
    #define HB_MALLOC_ATTR \
                      __attribute__ (( malloc ))
-   #define HB_NORETURN_ATTR \
-                     __attribute__ (( noreturn ))
    #define HB_HOT_ATTR \
                      __attribute__ (( hot ))
    #define HB_COLD_ATTR \
                      __attribute__ (( cold ))
+#if 0
+   #define HB_NORETURN_ATTR \
+                     __attribute__ (( noreturn ))
+#  else
+   #define HB_NORETURN_ATTR
+#  endif
 #  if ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1 ) )
    #define HB_FLATTEN_ATTR \
                      __attribute__ (( flatten ))

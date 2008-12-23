@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-23 15:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbsetup.h
+    * temporary disabled noreturn function attributes - we have some
+      code which puts references to some functions after hb_errInternal()
+      call to force link bindings which is fully optimized if hb_errInternal
+      is declared with noreturn attribute so we cannot use it as long as we
+      will not clean them.
+
+  * harbour/tests/speedtst.prg
+    * build default xHarbour binaries without support.
+      xHarbour needs separated version for MT and ST mode
+      because standard MT functions are not available in
+      ST libraries.
+
 2008-12-23 03:11 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
   * harbour/contrib/rddado/adordd.ch
