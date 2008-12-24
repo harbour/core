@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-24 04:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rddado/adordd.prg
+    * removed cSupperRDD never assigned local variable detected by new
+      compiler logic added by Mindaugas.
+
 2008-12-24 03:23 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * include/hberrors.h
   * source/compiler/hbgenerr.c

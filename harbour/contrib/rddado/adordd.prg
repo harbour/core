@@ -1391,7 +1391,6 @@ return SUCCESS
 
 FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 
-   LOCAL cSuperRDD   /* NO SUPER RDD */
    LOCAL aADOFunc[ UR_METHODCOUNT ]
 
    aADOFunc[ UR_INIT ]         := ( @ADO_INIT() )
@@ -1446,8 +1445,8 @@ FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aADOFunc[ UR_EXISTS ]       := ( @ADO_EXISTS() )
    aADOFunc[ UR_DROP ]         := ( @ADO_DROP() )
 
-RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, cSuperRDD,;
-                            aADOFunc )
+RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
+                            /* NO SUPER RDD */, aADOFunc )
 
 INIT PROCEDURE ADORDD_INIT()
    rddRegister( "ADORDD", RDT_FULL )
