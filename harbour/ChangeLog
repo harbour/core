@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-24 11:52 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * harbour.spec
+    + added rddnsx to rpm builds. Thanks Przemek.
+    ; Also I would like to wish you all a happy xmas holidays
+    ; and a new year full of health, love and Harbour business :)
+
 2008-12-24 14:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hbmk.bat
   * harbour/bin/hbmk_os2.cmd

@@ -615,6 +615,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/librddfpt.a
 %{_libdir}/%{name}/librddcdx.a
 %{_libdir}/%{name}/librddntx.a
+%{_libdir}/%{name}/librddnsx.a
 %{_libdir}/%{name}/libgt*.a
 %{_libdir}/%{name}/libhblang.a
 %{_libdir}/%{name}/libhbmacro.a
