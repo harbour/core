@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-24 09:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/include/hbrddnsx.h
+  + harbour/source/rdd/dbfnsx
+  + harbour/source/rdd/dbfnsx/dbfnsx1.c
+  + harbour/source/rdd/dbfnsx/Makefile
+  * harbour/config/global.cf
+  * harbour/make_b32.mak
+  * harbour/make_vc.mak
+  * harbour/make_gcc.mak
+  * harbour/common.mak
+    + added new DBFNSX RDD. Those of you who knows SIX3 should also
+      know NSX index format. It's very interesting format and in some
+      cases much better then CDX. I hope you will find it interesting.
+      In hbrddnsx.h you can find detail information about Harbour NSX
+      implementation.
+      It's a small gift from me for Christmas ;-)
+
+      I would like to wish all of you Marry Christmas and Happy new Year.
+
+      best regards,
+      Przemek
+
 2008-12-24 04:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/rddado/adordd.prg
     * removed cSupperRDD never assigned local variable detected by new

@@ -363,6 +363,14 @@ $(DBFNTX_LIB)   :: $(DBFNTX_LIB_OBJS)
 +)
 !
 #**********************************************************
+$(DBFNSX_LIB)   :: BasicExes
+$(DBFNSX_LIB)   :: $(DBFNSX_LIB_OBJS)
+    @if exist "$(DBFNSX_LIB)" $(DEL) "$(DBFNSX_LIB)" > NUL
+    $(MKLIB) "$(DBFNSX_LIB)" $(ARFLAGS) @&&!
++$(**: = &^
++)
+!
+#**********************************************************
 $(DBFCDX_LIB)   : $(DBFCDX_LIB_OBJS)
     @if exist "$(DBFCDX_LIB)" $(DEL) "$(DBFCDX_LIB)" > NUL
     $(MKLIB) "$(DBFCDX_LIB)" $(ARFLAGS) @&&!

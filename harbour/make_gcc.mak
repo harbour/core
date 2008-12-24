@@ -356,6 +356,9 @@ $(NULSYS_LIB)   : $(NULSYS_LIB_OBJS)
 $(DBFNTX_LIB)   : $(DBFNTX_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
+$(DBFNSX_LIB)   : $(DBFNSX_LIB_OBJS)
+	$(MKLIB) $(ARFLAGS) $@ $^
+#**********************************************************
 $(DBFCDX_LIB)   : $(DBFCDX_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************

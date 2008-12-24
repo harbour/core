@@ -258,6 +258,9 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
 {$(DBFNTX_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
+{$(DBFNSX_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+#*******************************************************
 {$(DBFCDX_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
@@ -367,6 +370,10 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(DBFNTX_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSLIB) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+#*******************************************************
+{$(DBFNSX_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGSLIB) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
@@ -519,6 +526,9 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
 {$(DBFNTX_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
+{$(DBFNSX_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+#*******************************************************
 {$(DBFCDX_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
@@ -633,6 +643,10 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(DBFNTX_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSLIB) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+#*******************************************************
+{$(DBFNSX_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGSLIB) -o$(DLL_OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
@@ -780,6 +794,9 @@ $(NULSYS_LIB)   : $(NULSYS_LIB_OBJS)
     $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(DBFNTX_LIB)   : $(DBFNTX_LIB_OBJS)
+    $(MKLIB) /nologo /out:$@ $**
+#**********************************************************
+$(DBFNSX_LIB)   : $(DBFNSX_LIB_OBJS)
     $(MKLIB) /nologo /out:$@ $**
 #**********************************************************
 $(DBFCDX_LIB)   : $(DBFCDX_LIB_OBJS)

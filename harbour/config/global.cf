@@ -8,6 +8,7 @@ HB_ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 #names of valid RDD libraries
 HB_DB_DRIVERS=\
 	rddntx \
+	rddnsx \
 	rddcdx \
 	rddfpt \
 	hbsix \
@@ -17,6 +18,7 @@ HB_DB_DRIVERS=\
 #names of valid RDD subdirectories
 HB_DB_DIRS=\
 	dbfntx \
+	dbfnsx \
 	dbfcdx \
 	dbffpt \
 	hbsix \

@@ -143,6 +143,7 @@ HBEXTERN_DIR = source\hbextern
 RDD_DIR      = source\rdd
 NULSYS_DIR   = source\rdd\nulsys
 DBFNTX_DIR   = source\rdd\dbfntx
+DBFNSX_DIR   = source\rdd\dbfnsx
 DBFCDX_DIR   = source\rdd\dbfcdx
 DBFFPT_DIR   = source\rdd\dbffpt
 HBSIX_DIR    = source\rdd\hbsix
@@ -188,6 +189,7 @@ $(HBEXTERN_DIR);\
 $(RDD_DIR);\
 $(NULSYS_DIR);\
 $(DBFNTX_DIR);\
+$(DBFNSX_DIR);\
 $(DBFCDX_DIR);\
 $(DBFFPT_DIR);\
 $(HBSIX_DIR);\
@@ -250,6 +252,7 @@ NULSYS_LIB   = $(LIB_DIR)\$(LIBPREF)hbnulrdd$(LIBEXT)
 USRRDD_LIB   = $(LIB_DIR)\$(LIBPREF)hbusrrdd$(LIBEXT)
 
 DBFNTX_LIB   = $(LIB_DIR)\$(LIBPREF)rddntx$(LIBEXT)
+DBFNSX_LIB   = $(LIB_DIR)\$(LIBPREF)rddnsx$(LIBEXT)
 DBFCDX_LIB   = $(LIB_DIR)\$(LIBPREF)rddcdx$(LIBEXT)
 DBFFPT_LIB   = $(LIB_DIR)\$(LIBPREF)rddfpt$(LIBEXT)
 
@@ -337,6 +340,7 @@ STANDARD_STATIC_HBLIBS = \
     $(MACRO_LIB)         \
     $(DEBUG_LIB)         \
     $(DBFNTX_LIB)        \
+    $(DBFNSX_LIB)        \
     $(DBFCDX_LIB)        \
     $(DBFFPT_LIB)        \
     $(HBSIX_LIB)         \
@@ -1011,6 +1015,11 @@ DBFNTX_LIB_OBJS = \
 
 #**********************************************************
 
+DBFNSX_LIB_OBJS = \
+    $(OBJ_DIR)\dbfnsx1$(OBJEXT)  \
+
+#**********************************************************
+
 DBFCDX_LIB_OBJS = \
     $(OBJ_DIR)\dbfcdx1$(OBJEXT)  \
     $(OBJ_DIR)\sixcdx1$(OBJEXT)  \
@@ -1206,6 +1215,7 @@ TMP_DLL_OBJS = \
     $(HBEXTERN_LIB_OBJS)    \
     $(RDD_LIB_OBJS)         \
     $(DBFNTX_LIB_OBJS)      \
+    $(DBFNSX_LIB_OBJS)      \
     $(DBFCDX_LIB_OBJS)      \
     $(DBFFPT_LIB_OBJS)      \
     $(HBSIX_LIB_OBJS)       \
@@ -1254,6 +1264,7 @@ HB_BUILD_TARGETS_MAIN = \
     $(RDD_LIB)              \
     $(NULSYS_LIB)           \
     $(DBFNTX_LIB)           \
+    $(DBFNSX_LIB)           \
     $(DBFCDX_LIB)           \
     $(DBFFPT_LIB)           \
     $(HBSIX_LIB)            \
