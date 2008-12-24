@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-24 13:32 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbfnsx/Makefile
+    ! fixed typo in library name. Should be rddnsx instead of dbfnsx.
+      Thanks to Lorenzo.
+
 2008-12-24 09:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/include/hbrddnsx.h
   + harbour/source/rdd/dbfnsx

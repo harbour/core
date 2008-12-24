@@ -7,6 +7,6 @@ ROOT = ../../../
 C_SOURCES=\
 	dbfnsx1.c \
 
-LIBNAME=dbfnsx
+LIBNAME=rddnsx
 
 include $(TOP)$(ROOT)config/lib.cf
