@@ -463,7 +463,6 @@ METHOD ReportHeader() CLASS HBReportForm
    LOCAL nHeadline
    LOCAL nRPageSize
    LOCAL aTempPgHeader
-   LOCAL nHeadSize
 
    nRPageSize := ::aReportData[RPT_WIDTH] - ::aReportData[RPT_RMARGIN]
 
@@ -495,12 +494,12 @@ METHOD ReportHeader() CLASS HBReportForm
    ENDIF
    FOR nLine := 1 TO Len( ::aReportData[ RPT_HEADER])
       nLinesInHeader := Max( XMLCOUNT(LTrim( ::aReportData[RPT_HEADER,;
-         nLine ] ), nHeadSize),1 )
+         nLine ] )),1 )
 
       FOR nHeadLine := 1 to nLinesInHeader
 
-         cHeader := RTrim( XMEMOLINE( LTrim( ::aReportData[RPT_HEADER, nLine ]),;
-            nHeadSize,nHeadLine))
+         cHeader := RTrim( XMEMOLINE( LTrim( ::aReportData[RPT_HEADER, nLine ]),,;
+            nHeadLine))
          AAdd( aPageHeader, Space((nRPageSize - ::aReportData[ RPT_LMARGIN ] -;
              Len( cHeader ) ) / 2   ) + cHeader )
 

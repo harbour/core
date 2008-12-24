@@ -1467,12 +1467,18 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    pVar = pFunc->pLocals;
    while( pVar )
    {
-      /* TOFIX: PARAMETERS sentence 
-                The temporary solution is to disable optmisation if PARAMETERS is used.
-       */
       /* Compiler and optimizer should have the same opinion about variable usage */
       assert( ( ! ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags == 0 ) || 
               (   ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags != 0 ) );
+
+      if( usIndex >= pFunc->wParamCount && pLocals[ usIndex ].bFlags == OPT_LOCAL_FLAG_PUSH )
+      {
+         char    szFun[ 256 ];
+
+         hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, pVar->iDeclLine );
+         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_NEVER_ASSIGNED, pVar->szName, szFun );
+      }
+
       pVar = pVar->pNext;
       usIndex++;
    }

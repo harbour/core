@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-24 03:23 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * include/hberrors.h
+  * source/compiler/hbgenerr.c
+  * source/compiler/hbopt.c
+    + implemented warning: Variable '%s' is never assigned in function %s(%d).
+      This variable can be replaced by value NIL
+
+  * source/rtl/treport.prg
+    % removed never assigned variable  
+
 2008-12-24 00:04 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/expropt1.c
   * harbour/source/common/expropt2.c
