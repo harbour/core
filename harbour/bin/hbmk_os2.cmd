@@ -80,14 +80,14 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
 
    if not "%HB_COMPILER%" == "gcc" goto A_OS2_GCC_NOT
 
-      gcc %1.c -O3 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -l_HBVM_LIB -lhbrtl -lgtcgi -lgtstd -lgtos2 -lgtpca -lhblang -lhbrdd -lhbrtl -l_HBVM_LIB -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+      gcc %1.c -O3 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -l_HBVM_LIB -lhbrtl -lgtcgi -lgtstd -lgtos2 -lgtpca -lhblang -lhbrdd -lhbrtl -l_HBVM_LIB -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddnsx -lrddcdx -lhbsix -lhbcommon -lhbpcre -lhbzlib
       goto CLEANUP
 
 :A_OS2_GCC_NOT
 
    if not "%HB_COMPILER%" == "icc" goto A_OS2_ICC_NOT
 
-      icc /Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp %C_USR% -I%HB_INC_INSTALL% %1.c %HB_LIB_INSTALL%\hbcpage.lib %HB_LIB_INSTALL%\hbdebug.lib %HB_LIB_INSTALL%\_HBVM_LIB.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\gtcgi.lib %HB_LIB_INSTALL%\gtstd.lib %HB_LIB_INSTALL%\gtos2.lib %HB_LIB_INSTALL%\gtpca.lib %HB_LIB_INSTALL%\hblang.lib %HB_LIB_INSTALL%\hbrdd.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\_HBVM_LIB.lib %HB_LIB_INSTALL%\hbmacro.lib %HB_LIB_INSTALL%\hbpp.lib %HB_LIB_INSTALL%\rddfpt.lib %HB_LIB_INSTALL%\rddntx.lib %HB_LIB_INSTALL%\rddcdx.lib %HB_LIB_INSTALL%\hbsix.lib %HB_LIB_INSTALL%\hbcommon.lib %HB_LIB_INSTALL%\hbpcre.lib %HB_LIB_INSTALL%\hbzlib.lib
+      icc /Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp %C_USR% -I%HB_INC_INSTALL% %1.c %HB_LIB_INSTALL%\hbcpage.lib %HB_LIB_INSTALL%\hbdebug.lib %HB_LIB_INSTALL%\_HBVM_LIB.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\gtcgi.lib %HB_LIB_INSTALL%\gtstd.lib %HB_LIB_INSTALL%\gtos2.lib %HB_LIB_INSTALL%\gtpca.lib %HB_LIB_INSTALL%\hblang.lib %HB_LIB_INSTALL%\hbrdd.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\_HBVM_LIB.lib %HB_LIB_INSTALL%\hbmacro.lib %HB_LIB_INSTALL%\hbpp.lib %HB_LIB_INSTALL%\rddfpt.lib %HB_LIB_INSTALL%\rddntx.lib %HB_LIB_INSTALL%\rddnsx.lib %HB_LIB_INSTALL%\rddcdx.lib %HB_LIB_INSTALL%\hbsix.lib %HB_LIB_INSTALL%\hbcommon.lib %HB_LIB_INSTALL%\hbpcre.lib %HB_LIB_INSTALL%\hbzlib.lib
       goto CLEANUP
 
 :A_OS2_ICC_NOT
@@ -111,6 +111,7 @@ if "%_HB_MT%" == "MT"  set _HBVM_LIB=hbvmmt
       echo LIB hbmacro.lib >> _hb_mk.tmp
       echo LIB hbpp.lib >> _hb_mk.tmp
       echo LIB rddntx.lib >> _hb_mk.tmp
+      echo LIB rddnsx.lib >> _hb_mk.tmp
       echo LIB rddcdx.lib >> _hb_mk.tmp
       echo LIB rddfpt.lib >> _hb_mk.tmp
       echo LIB hbhsx.lib >> _hb_mk.tmp

@@ -82,7 +82,7 @@ mk_hbgetlibs()
         then
             libs="$libs gtwin"
         fi
-        echo "hbextern hbvm hbpp hbrtl hbrdd rddfpt rddcdx rddntx hbhsx hbsix hbusrrdd ${HB_DB_DRVEXT} hbmacro hbcommon hblang hbcpage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 hbdebug profiler hbcplr hbpcre hbzlib"
+        echo "hbextern hbvm hbpp hbrtl hbrdd rddfpt rddcdx rddnsx rddntx hbhsx hbsix hbusrrdd ${HB_DB_DRVEXT} hbmacro hbcommon hblang hbcpage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 hbdebug profiler hbcplr hbpcre hbzlib"
     else
         echo "$@"
     fi
