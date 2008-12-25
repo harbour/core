@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-25 11:32 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * ChangeLog
+    * fixed ChangeLog entry of last commit. Sorry, wrong result 
+      file was pasted
+
 2008-12-25 11:14 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * include/hbextern.ch
   * source/rtl/seconds.c
@@ -22,9 +27,9 @@
         Min/avg/max interval (ms): 15.000 / 15.724 / 47.000
         Loops per tick:      13035.09
       Results on openSUSE on VirtualBox on WinXP:
-        Ticks per second: 384306.138
-        Min/avg/max interval (ms): 0.001 / 0.003 / 11.112
-        Loops per tick:      1.04
+        Ticks per second: 991.799
+        Min/avg/max interval (ms): 1.000 / 1.008 / 22.000
+        Loops per tick:        765.71
 
 2008-12-25 08:20 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * contrib/rddsql/sqlpg/make_b32.bat
