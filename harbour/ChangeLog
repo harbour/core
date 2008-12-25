@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-26 00:35 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  + contrib/rddsql/sddfb
+  + contrib/rddsql/sddfb/fbirddd.c
+  + contrib/rddsql/sddfb/common.mak
+  + contrib/rddsql/sddfb/make_b32.bat
+  + contrib/rddsql/sddfb/make_vc.bat
+    + added SQL database driver for Firebird
+
+  * contrib/rddsql/sddmy/mysqldd.c
+  * contrib/rddsql/sddpg/pgsqldd.c
+    * minor adjustment of error subsystem name
+
+  * contrib/rddsql/sddmy/make_vc.bat
+  * contrib/rddsql/sddpg/make_b32.bat
+  * contrib/rddsql/sddpg/make_vc.bat
+    * removed unused enviroment variable assignment
+
+  * contrib/rddsql/sddpg/common.mak
+    * svn properties adjustment
+
 2008-12-25 23:08 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * contrib/gtwvg/wvgclass.prg
   * contrib/hbgd/gdchart.prg

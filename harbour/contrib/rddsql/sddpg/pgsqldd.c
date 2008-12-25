@@ -1,5 +1,5 @@
 /*
- * $Id:$
+ * $Id$
  */
 
 /*
@@ -166,7 +166,7 @@ static USHORT hb_errRT_PostgreSQLDD( ULONG ulGenCode, ULONG ulSubCode, char * sz
    USHORT uiAction;
    PHB_ITEM pError;
 
-   pError = hb_errRT_New( ES_ERROR, "SDDPOSTGRE", ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, EF_NONE );
+   pError = hb_errRT_New( ES_ERROR, "SDDPG", ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, EF_NONE );
 
    uiAction = hb_errLaunch( pError );
 

@@ -165,7 +165,7 @@ static USHORT hb_errRT_MySQLDD( ULONG ulGenCode, ULONG ulSubCode, const char * s
    USHORT uiAction;
    PHB_ITEM pError;
 
-   pError = hb_errRT_New( ES_ERROR, "MYSQLDD", ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, EF_NONE );
+   pError = hb_errRT_New( ES_ERROR, "SDDMY", ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, EF_NONE );
 
    uiAction = hb_errLaunch( pError );
 
