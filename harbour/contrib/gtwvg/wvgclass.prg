@@ -2361,7 +2361,7 @@ METHOD Read() CLASS WvtGets
 //-------------------------------------------------------------------//
 
 METHOD GetData() CLASS WvtGets
-   LOCAL aData
+   LOCAL aData := NIL
 
    RETURN aData
 

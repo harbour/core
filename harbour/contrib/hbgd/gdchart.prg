@@ -223,22 +223,22 @@ METHOD PieChart() CLASS GDChart
          ::Arc( nPosX, nPosY, nWidth, nWidth, nDegree, nDegree + nDim, TRUE, colorp, gdNoFill + gdEdged )
       ENDIF
       IF cLabel <> NIL
-         //hFont := HGetValue( hElement, "FONT" )
-         //IF hFont == NIL
-         //   ::SetFontMediumBold()
+         hFont := HGetValue( hElement, "FONT" )
+         IF hFont == NIL
+            ::SetFontMediumBold()
             cFontName := NIL
             nPitch    := NIL
             nAngle    := NIL
             textcolor := NIL
-         //ELSE
-         //   cFontName := HGetValue( hFont, "NAME" )
-         //   nPitch    := HGetValue( hFont, "PITCH" )
-         //   nAngle    := HGetValue( hFont, "ANGLE" )
-         //   textcolor := HGetValue( hFont, "COLOR" )
-         //   DEFAULT cFontName TO "Arial"
-         //   DEFAULT nPitch    TO 8
-         //   DEFAULT nAngle    TO 0
-         //ENDIF
+         ELSE
+            cFontName := HGetValue( hFont, "NAME" )
+            nPitch    := HGetValue( hFont, "PITCH" )
+            nAngle    := HGetValue( hFont, "ANGLE" )
+            textcolor := HGetValue( hFont, "COLOR" )
+            DEFAULT cFontName TO "Arial"
+            DEFAULT nPitch    TO 8
+            DEFAULT nAngle    TO 0
+         ENDIF
          nPosX   := nPosX + ( (nExtrude + nWidth) / 4 ) * cos(::Radians( nDegree + nDim / 2 ))
          nPosY   := nPosY + ( (nExtrude + nWidth) / 4 ) * sin(::Radians( nDegree + nDim / 2 ))
          IF textcolor == NIL
