@@ -228,10 +228,18 @@ double hb_dateSeconds( void )
 #endif
 }
 
+
 HB_FUNC( SECONDS )
 {
    hb_retnd( hb_dateSeconds() );
 }
+
+
+HB_FUNC( HB_MILLISECONDS )
+{
+   hb_retnint( ( HB_LONG ) hb_dateMilliSeconds() );
+}
+
 
 HB_FUNC( HB_CLOCKS2SECS )
 {
