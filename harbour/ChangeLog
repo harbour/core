@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-25 08:20 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * contrib/rddsql/sqlpg/make_b32.bat
+  * contrib/rddsql/sqlpg/make_vc.bat
+    ! fixed import library building
+
 2008-12-25 08:05 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * contrib/rddsql/sqlbase.c
   * contrib/rddsql/sqlmix.c

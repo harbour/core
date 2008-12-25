@@ -19,7 +19,7 @@ goto POST_EXIT
 
 if "%HB_INC_PGSQL%" == "" set HB_INC_PGSQL=%HB_DIR_PGSQL%\include
 set CFLAGS=-I"%HB_INC_PGSQL%"
-set _HB_DLL_NAME=libpg
+set _HB_DLL_NAME=libpq
 set _HB_DLL_DIR=%HB_DIR_PGSQL%\bin
 set HB_MAKEFILE=..\..\mtpl_b32.mak
 set HB_ROOT = ..\..\..
@@ -47,7 +47,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD
 
-   implib ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll" >> %_HB_MAKELOG%
+   implib ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib "%HB_DIR_PGSQL%\lib\%_HB_DLL_NAME%.dll" >> %_HB_MAKELOG%
    goto POST_EXIT
 
 :POST_CLEAN
