@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
-#include "hbsqldd.h"
+#include "../hbrddsql.h"
 
 #ifndef my_socket_defined
 #define my_socket_defined
@@ -135,12 +135,10 @@ static void hb_mysqldd_init( void * cargo )
    #define HB_PRG_PCODE_VER HB_PCODE_VER
 #endif
 
-
-HB_FUNC( MYSQLDD ) {;}
-
+HB_FUNC( SDDMY ) {;}
 
 HB_INIT_SYMBOLS_BEGIN( mysqldd__InitSymbols )
-{ "MYSQLDD", {HB_FS_PUBLIC}, {HB_FUNCNAME( MYSQLDD )}, NULL },
+{ "SDDMY", {HB_FS_PUBLIC}, {HB_FUNCNAME( SDDMY )}, NULL },
 HB_INIT_SYMBOLS_END( mysqldd__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_mysqldd_init_ )

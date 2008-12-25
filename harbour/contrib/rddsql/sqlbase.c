@@ -53,7 +53,7 @@
 #include "hbapiitm.h"
 #include "hbvm.h"
 #include "hbset.h"
-#include "hbsqldd.h"
+#include "hbrddsql.h"
 #include "rddsys.ch"
 
 

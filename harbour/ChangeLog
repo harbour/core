@@ -8,6 +8,58 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-25 08:05 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * contrib/rddsql/sqlbase.c
+  * contrib/rddsql/sqlmix.c
+  * contrib/rddsql/tests/test1.prg
+  * contrib/rddsql/common.mak
+  - contrib/rddsql/hbsqldd.h
+  + contrib/rddsql/hbrddsql.h
+  * contrib/rddsql/make_b32.bat
+  * contrib/rddsql/make_vc.bat
+  * contrib/rddsql/make_gcc.sh
+  + contrib/rddsql/sddmy
+  - contrib/rddsql/mysqldd.c
+  + contrib/rddsql/sddmy/mysqldd.c
+  + contrib/rddsql/sddmy/Makefile
+  + contrib/rddsql/sddmy/make_gcc.sh
+  + contrib/rddsql/sddmy/common.mak
+  + contrib/rddsql/sddmy/make_b32.bat
+  + contrib/rddsql/sddmy/make_vc.bat
+    * changed structure and names of rddsql libraries. Since it can 
+      support many SQL databases, each backend moved to a separate 
+      library. Otherwise (all backend in the same library) nobody will 
+      be able to compile library without installing packages of ALL 
+      supported SQL databases. Now:
+         rddsql - RDD for interfacing to SQL database drivers
+         sddmy  - MySQL database driver
+         sddpg  - Postgre SQL database driver
+         ...
+    ; TOFIX: I was unable to manage build files. 
+      contrib/sqlrdd/sddmy/make_b32.bat sets HB_ROOT variable:
+        set HB_ROOT = ..\..\..
+      but this variable is lost and contrib/make_b32.mak reassign it:
+        !ifndef HB_ROOT
+        HB_ROOT = ..\..
+        !endif
+      This breaks building of library. To fix this problem, I've added 
+      a two hacks:
+        - added additional include path into CFLAGS (see make_b32.bat)
+        - added "..\" to LIB_PATH (see common.mak)
+      The same problem is for both make_b32 and make_vc, and for both 
+      sddmy and sddpg libraries.
+    ; TODO: check (and adjust if neccessary) build files for unix
+
+  + contrib/rddsql/sddpg
+  + contrib/rddsql/sddpg/pgsqldd.c
+  + contrib/rddsql/sddpg/Makefile
+  + contrib/rddsql/sddpg/make_gcc.sh
+  + contrib/rddsql/sddpg/common.mak
+  + contrib/rddsql/sddpg/make_b32.bat
+  + contrib/rddsql/sddpg/make_vc.bat
+    + added SQL database driver for Postgre SQL
+    ; does anyone have more RDD for Christmas gift? :)
+
 2008-12-24 12:23 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * include/Makefile
     + added hbrddnsx.h header

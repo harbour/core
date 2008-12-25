@@ -63,7 +63,7 @@
 #include "hbvm.h"
 #include "rddsys.ch"
 
-#include "hbsqldd.h"
+#include "hbrddsql.h"
 
 #include <ctype.h>
 
