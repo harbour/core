@@ -19,7 +19,7 @@ ifneq ($(strip $(HB_INC_FIREBIRD_OK)),)
 C_USR += $(foreach d, $(HB_INC_FIREBIRD_OK), -I$(d))
 
 C_SOURCES=\
-	fbsqldd.c \
+	fbirddd.c \
 
 include $(TOP)$(ROOT)config/lib.cf
 else

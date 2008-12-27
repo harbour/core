@@ -8,6 +8,39 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-27 17:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    + added support for rddsql and sdd* libraries in hb* scripts
+
+  * harbour/harbour-win-spec
+  * harbour/harbour-wce-spec
+    ! added rddnsx library
+
+  * harbour/mpkg_rpm.sh
+  * harbour/harbour.spec
+    + added harbour-fbird RPM and support for sqlrdd and sdd* libraries
+
+  * harbour/contrib/rddsql/sddpg/Makefile
+    + added other paths checking for postgresql header files
+
+  * harbour/contrib/rddsql/sddfb/Makefile
+    ! fixed file name
+
+  * harbour/contrib/rddsql/sddpg/pgsqldd.c
+  * harbour/contrib/rddsql/sddfb/fbirddd.c
+    * cleanup init symbol declaration
+    ! casting for C++ compilation
+    * added missing const in some char * declarations
+
+  * harbour/contrib/rddsql/sddfb/fbirddd.c
+    * changed some parameters passed to firebird functions.
+      Mindaugas please verify me because these modifications changes
+      the code behavior. I do not know FireBird API and I modified it to
+      only pass C++ compilation checking error messages. At least these
+      lines should be checked: 233, 236, 244, 245, 260, 261, 440, 445
+      If possible please also check casting I added in in other lines
+      because it may hide some mistakes.
+
 2008-12-27 18:08 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * source/compiler/hbopt.c
     + added logic to generate 'assigned but unused' warning in case

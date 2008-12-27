@@ -13,8 +13,9 @@
 ######################################################################
 # Conditional build:
 # --with static      - link all binaries with static libs
-# --with mysql       - build hbmysql lib
-# --with pgsql       - build hbpgsql lib 
+# --with mysql       - build hbmysql lib and sddmy for sqlrdd
+# --with pgsql       - build hbpgsql lib and sddpg for sqlrdd
+# --with fbsql       - build hbfbird lib and sddfb for sqlrdd
 # --with gd          - build hbgd lib 
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build rddads RDD
@@ -80,7 +81,7 @@
 %define hb_idir  export HB_INC_INSTALL=%{_includedir}/%{name}
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbsqlit3 hbtip hbtpathy hbvpdf hbziparc xhb %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_hbhpdf:hbhpdf} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_allegro:gtalleg}"
+%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbsqlit3 hbtip hbtpathy hbvpdf hbziparc xhb rddsql %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_hbhpdf:hbhpdf} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_fbsql:hbfbird} %{?_with_allegro:gtalleg}"
 %define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host  www.harbour-project.org
 %define readme   README.RPM
@@ -332,6 +333,21 @@ statikus szerkesztéshez.
 %{?_with_pgsql:%description -l pl pgsql}
 %{?_with_pgsql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
 %{?_with_pgsql:Ten pakiet udostêpnia statyczn± biliotekê PGSQL dla kompilatora %{dname}.}
+
+## fbird library
+%{?_with_fbsql:%package fbird}
+%{?_with_fbsql:Summary:        FireBird libarary for %{dname} compiler}
+%{?_with_fbsql:Summary(pl):    Bilioteka FireBird dla kompilatora %{dname}}
+%{?_with_fbsql:Group:          Development/Languages}
+%{?_with_fbsql:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_fbsql:%description fbird}
+%{?_with_fbsql:%{dname} is a Clipper compatible compiler.}
+%{?_with_fbsql:This package provides %{dname} FireBird library for program linking.}
+
+%{?_with_fbsql:%description -l pl fbird}
+%{?_with_fbsql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
+%{?_with_fbsql:Ten pakiet udostêpnia statyczn± biliotekê FireBird dla kompilatora %{dname}.}
 
 ## gd library
 %{?_with_gd:%package gd}
@@ -646,6 +662,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbgt.a
 %{_libdir}/%{name}/libhbbmcdx.a
 %{_libdir}/%{name}/libhbclipsm.a
+%{_libdir}/%{name}/librddsql.a
 %{_libdir}/%{name}/libhbmsql.a
 %{_libdir}/%{name}/libhbsqlit3.a
 %{_libdir}/%{name}/libhbtpathy.a
@@ -681,11 +698,19 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_mysql:%defattr(644,root,root,755)}
 %{?_with_mysql:%dir %{_libdir}/%{name}}
 %{?_with_mysql:%{_libdir}/%{name}/libhbmysql.a}
+%{?_with_mysql:%{_libdir}/%{name}/libsddmy.a}
 
 %{?_with_pgsql:%files pgsql}
 %{?_with_pgsql:%defattr(644,root,root,755)}
 %{?_with_pgsql:%dir %{_libdir}/%{name}}
 %{?_with_pgsql:%{_libdir}/%{name}/libhbpgsql.a}
+%{?_with_pgsql:%{_libdir}/%{name}/libsddpg.a}
+
+%{?_with_fbsql:%files fbird}
+%{?_with_fbsql:%defattr(644,root,root,755)}
+%{?_with_fbsql:%dir %{_libdir}/%{name}}
+%{?_with_fbsql:%{_libdir}/%{name}/libhbfbird.a}
+%{?_with_fbsql:%{_libdir}/%{name}/libsddfb.a}
 
 %{?_with_gd:%files gd}
 %{?_with_gd:%defattr(644,root,root,755)}

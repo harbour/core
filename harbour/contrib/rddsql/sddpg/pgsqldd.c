@@ -139,7 +139,7 @@ static void hb_pgsqldd_init( void * cargo )
 HB_FUNC( SDDPG ) {;}
 
 HB_INIT_SYMBOLS_BEGIN( sddpostgre__InitSymbols )
-{ "SDDPG", HB_FS_PUBLIC, HB_FUNCNAME( SDDPG ), NULL },
+{ "SDDPG", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( SDDPG )}, NULL },
 HB_INIT_SYMBOLS_END( sddpostgre__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_sddpostgre_init_ )
@@ -161,7 +161,7 @@ HB_CALL_ON_STARTUP_END( _hb_sddpostgre_init_ )
 
 
 /* ===================================================================================== */
-static USHORT hb_errRT_PostgreSQLDD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode )
+static USHORT hb_errRT_PostgreSQLDD( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation, USHORT uiOsCode )
 {
    USHORT uiAction;
    PHB_ITEM pError;
@@ -182,7 +182,7 @@ static ERRCODE pgsqlConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 {
    PGconn*          pConn;
    ConnStatusType   status;
-   
+
    pConn = PQsetdbLogin( hb_arrayGetCPtr( pItem, 2 ), NULL, NULL, NULL, hb_arrayGetCPtr( pItem, 5 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ) );
 
    if ( ! pConn )  /* Low memory, etc */
@@ -204,7 +204,7 @@ static ERRCODE pgsqlDisconnect( SQLDDCONNECTION* pConnection )
 {
    if ( ! pConnection->hConnection )
       return FAILURE;
-   PQfinish( pConnection->hConnection );
+   PQfinish( (PGconn *) pConnection->hConnection );
    return SUCCESS;
 }
 
@@ -222,7 +222,7 @@ static ERRCODE pgsqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
       return FAILURE;
    }
 
-   pResult = PQexec( pConnection->hConnection, szQuery );
+   pResult = PQexec( (PGconn *) pConnection->hConnection, szQuery );
    if ( ! pResult )
    {  
       hb_itemClear( pItem );
@@ -252,10 +252,10 @@ static ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    BYTE*           pBuffer;
    DBFIELDINFO     pFieldInfo;
 
- 
-   pResult = PQexec( pArea->pConnection->hConnection, pArea->szQuery );
+
+   pResult = PQexec( (PGconn *) pArea->pConnection->hConnection, pArea->szQuery );
    if ( ! pResult )
-   {  
+   {
       hb_errRT_PostgreSQLDD( EG_OPEN, ESQLDD_LOWMEMORY, "Query failed", NULL, 0 );  /* Low memory, etc */
       return FAILURE;
    }
@@ -271,11 +271,11 @@ static ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
    uiFields = PQnfields( pResult );
    SELF_SETFIELDEXTENT( (AREAP) pArea, uiFields );
-   
+
    pItemEof = hb_itemArrayNew( uiFields );
 
    pBuffer = ( BYTE* ) hb_xgrab( 256 );
-   
+
    bError = FALSE;
    for ( uiCount = 0; uiCount < uiFields; uiCount++  )
    {
@@ -283,9 +283,9 @@ static ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
       pFieldInfo.atomName = ( BYTE* ) pBuffer;
       pFieldInfo.atomName[ MAX_FIELD_NAME ] = '\0';
       hb_strUpper( ( char* ) pFieldInfo.atomName, MAX_FIELD_NAME + 1 );
-   
+
       pFieldInfo.uiDec = 0;
-     
+
       switch( PQftype( pResult, (int) uiCount ) )
       {
          case BPCHAROID:
@@ -293,7 +293,7 @@ static ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             pFieldInfo.uiType = HB_FT_STRING;
             pFieldInfo.uiLen = (USHORT) PQfsize( pResult, uiCount ) - 4;
             break;
-       
+
          case NUMERICOID:
             pFieldInfo.uiType = HB_FT_DOUBLE;
             pFieldInfo.uiLen = ( ( PQfsize( pResult, uiCount ) - 4 ) >> 16 ) & 0xFFFF;
@@ -309,12 +309,12 @@ static ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             pFieldInfo.uiType = HB_FT_INTEGER;
             pFieldInfo.uiLen = 11;
             break;
-       
+
          case INT8OID:
             pFieldInfo.uiType = HB_FT_LONG;
             pFieldInfo.uiLen = 20;
             break;
-       
+
          case FLOAT4OID:
          case FLOAT8OID:
          case CASHOID:  /* TODO: ??? */
@@ -322,7 +322,7 @@ static ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             pFieldInfo.uiLen = 16;
             pFieldInfo.uiDec = 2;    /* TODO: hb_set.SET_DECIMALS ??? */
             break;
-       
+
          case BOOLOID:
             pFieldInfo.uiType = HB_FT_LOGICAL;
             pFieldInfo.uiLen = 1;
@@ -384,7 +384,7 @@ static ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             break;
       }
       /* printf( "field:%s \ttype:%d \tsize:%d \tformat:%d \tmod:%d err=%d\n", pBuffer, PQftype( pResult, (int) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ) , PQfmod( pResult, uiCount ), bError ); */
-     
+
       if ( ! bError )
       {
          switch ( pFieldInfo.uiType )
@@ -439,13 +439,13 @@ static ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
          if ( ! bError )
             bError = ( SELF_ADDFIELD( (AREAP) pArea, &pFieldInfo ) == FAILURE );
       }
-     
+
       if ( bError )
          break;
    }
-   
+
    hb_xfree( pBuffer );
-   
+
    if ( bError )
    {
      hb_itemClear( pItemEof );
@@ -453,7 +453,7 @@ static ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
      hb_errRT_PostgreSQLDD( EG_CORRUPTION, ESQLDD_INVALIDFIELD, "Invalid field type", pArea->szQuery, 0 );
      return FAILURE;
    }
-   
+
    pArea->ulRecCount = (ULONG) PQntuples( pResult );
 
    pArea->pRow = (void**) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void* ) );
@@ -471,7 +471,7 @@ static ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 static ERRCODE pgsqlClose( SQLBASEAREAP pArea )
 {
    if ( pArea->pResult )
-      PQclear( pArea->pResult );
+      PQclear( (PGresult *) pArea->pResult );
    return SUCCESS;
 }
 
@@ -508,11 +508,11 @@ static ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
    uiIndex--;
    pField = pArea->lpFields + uiIndex;
 
-   if ( PQgetisnull( pArea->pResult, pArea->ulRecNo - 1, uiIndex ) )
+   if ( PQgetisnull( (PGresult *) pArea->pResult, pArea->ulRecNo - 1, uiIndex ) )
       return SUCCESS;
 
-   pValue = PQgetvalue( pArea->pResult, pArea->ulRecNo - 1, uiIndex );
-   ulLen = (ULONG) PQgetlength( pArea->pResult, pArea->ulRecNo - 1, uiIndex );
+   pValue = PQgetvalue( (PGresult *) pArea->pResult, pArea->ulRecNo - 1, uiIndex );
+   ulLen = (ULONG) PQgetlength( (PGresult *) pArea->pResult, pArea->ulRecNo - 1, uiIndex );
 
 /*   printf( "fieldget recno:%d index:%d value:%s len:%d\n", pArea->ulRecNo, uiIndex, pValue, ulLen ); */
 
@@ -536,7 +536,7 @@ static ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             else
                hb_itemPutNLLen( pItem, atol( pValue ), (int) pField->uiLen );
          break;
-        
+
       case HB_FT_LOGICAL: 
          hb_itemPutL( pItem, pValue[ 0 ] == 'T' || pValue[ 0 ] == 'Y' );
          break;
@@ -545,7 +545,7 @@ static ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
       case HB_FT_DATE: 
       {
          char  szDate[ 9 ];
-        
+
          szDate[ 0 ] = pValue[ 0 ];
          szDate[ 1 ] = pValue[ 1 ];
          szDate[ 2 ] = pValue[ 2 ];

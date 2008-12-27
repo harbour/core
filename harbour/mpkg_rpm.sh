@@ -14,8 +14,9 @@
 ######################################################################
 # Conditional build:
 # --with static      - link all binaries with static libs
-# --with mysql       - build hbmysql lib
-# --with pgsql       - build hbpgsql lib
+# --with mysql       - build hbmysql lib and sddmy for sqlrdd
+# --with pgsql       - build hbpgsql lib and sddpg for sqlrdd
+# --with fbsql       - build hbfbird lib and sddfb for sqlrdd
 # --with gd          - build hbgd lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build rddads RDD
@@ -81,6 +82,7 @@ do
                 [ "$1" = "odbc" ] && NEED_RPM="${NEED_RPM} unixODBC-devel"
             fi
             [ "$1" = "pgsql" ] && NEED_RPM="${NEED_RPM} postgresql-devel"
+            [ "$1" = "fbsql" ] && NEED_RPM="${NEED_RPM} firebird-devel"
             [ "$1" = "allegro" ] && NEED_RPM="${NEED_RPM} allegro-devel"
         fi
     fi
@@ -95,6 +97,10 @@ fi
 if test_reqrpm "postgresql-devel"
 then 
     INST_PARAM="${INST_PARAM} --with pgsql"
+fi
+if test_reqrpm "firebird-devel"
+then 
+    INST_PARAM="${INST_PARAM} --with fbsql"
 fi
 if test_reqrpm "gd-devel"
 then 
