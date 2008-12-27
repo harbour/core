@@ -152,12 +152,12 @@ HB_DYN_HANDLES, * PHB_DYN_HANDLES;
 /* stack managed by the virtual machine */
 typedef struct
 {
-   PHB_ITEM * pItems;         /* pointer to the stack items */
    PHB_ITEM * pPos;           /* pointer to the latest used item */
    PHB_ITEM * pEnd;           /* pointer to the end of stack items */
-   LONG       wItems;         /* total items that may be holded on the stack */
-   HB_ITEM    Return;         /* latest returned value */
+   PHB_ITEM * pItems;         /* pointer to the stack items */
    PHB_ITEM * pBase;          /* stack frame position for the current function call */
+   HB_ITEM    Return;         /* latest returned value */
+   LONG       wItems;         /* total items that may be holded on the stack */
    LONG       lStatics;       /* statics base for the current function call */
    LONG       lWithObject;    /* stack offset to base current WITH OBJECT item */
    LONG       lRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */

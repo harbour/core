@@ -192,9 +192,9 @@ extern HB_EXPORT PHB_ITEM   hb_itemDeserialize( const char ** pBufferPtr, ULONG 
 
 #  define hb_itemRawCpy( dst, src )       do { *(dst) = *(src); } while( 0 )
 
-#if 0
+#if 1
 #  define hb_itemRawMove( dst, src )      do { \
-                                             memcpy( (dst), (src), sizeof( HB_ITEM ) ); \
+                                             hb_itemRawCpy( dst, src ); \
                                              (src)->type = HB_IT_NIL; \
                                           } while( 0 )
 #else /* _HB_API_INTERNAL_ */

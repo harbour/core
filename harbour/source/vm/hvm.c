@@ -3140,8 +3140,8 @@ static void hb_vmMult( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMult(%p,%p,%p)", pResult, pItem1, pItem2));
 
-#if HB_LONG_MAX > HB_INT_MAX * HB_INT_MAX && \
-    HB_LONG_MIN < HB_INT_MIN * HB_INT_MIN && 1
+#if HB_LONG_MAX / HB_INT_MAX >= HB_INT_MAX && \
+    HB_LONG_MIN / HB_INT_MIN >= HB_INT_MIN && 1
    if( HB_IS_INTEGER( pItem1 ) && HB_IS_INTEGER( pItem2 ) )
    {
       HB_LONG lResult = ( HB_LONG ) pItem1->item.asInteger.value *

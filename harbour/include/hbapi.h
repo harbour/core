@@ -271,6 +271,13 @@ struct hb_struBlock
    USHORT method;
 };
 
+struct hb_struPointer
+{
+   void * value;
+   BOOL collect;
+   BOOL single;
+};
+
 struct hb_struDate
 {
    long value;
@@ -278,33 +285,26 @@ struct hb_struDate
 
 struct hb_struDouble
 {
+   double value;
    USHORT length;
    USHORT decimal;
-   double value;
 };
 
 struct hb_struInteger
 {
+   int    value;
    USHORT length;
-   int value;
+};
+
+struct hb_struLong
+{
+   HB_LONG value;
+   USHORT length;
 };
 
 struct hb_struLogical
 {
    BOOL value;
-};
-
-struct hb_struLong
-{
-   USHORT length;
-   HB_LONG value;
-};
-
-struct hb_struPointer
-{
-   void * value;
-   BOOL collect;
-   BOOL single;
 };
 
 struct hb_struMemvar
@@ -435,14 +435,7 @@ typedef struct _HB_NESTED_CLONED
    struct _HB_NESTED_CLONED * pNext;
 } HB_NESTED_CLONED, * PHB_NESTED_CLONED;
 
-typedef struct _HB_GRIP
-{
-   HB_ITEM     value;
-   HB_COUNTER  counter;
-} HB_GRIP, * PHB_GRIP, * HB_GRIP_PTR;
-
-
-#endif
+#endif /* _HB_API_INTERNAL_ */
 
 
 /* RDD method return codes */

@@ -8,7 +8,7 @@ LIBNAME=sddpg
 
 ifeq ($(HB_INC_PGSQL),)
 ifeq ($(HB_XBUILD),)
-HB_INC_MYSQL = /usr/include/postgresql
+HB_INC_PGSQL = /usr/include/postgresql
 endif
 endif
 

@@ -75,10 +75,10 @@ typedef struct _HB_HASHPAIR
 typedef struct _HB_BASEHASH
 {
    PHB_HASHPAIR   pPairs;     /* pointer to the array of key/value pairs */
+   PHB_ITEM       pDefault;   /* default autoadd value */
    ULONG          ulSize;     /* size of allocated pair array */
    ULONG          ulLen;      /* number of used items in pair array */
    int            iFlags;     /* hash item flags */
-   PHB_ITEM       pDefault;   /* default autoadd value */
 } HB_BASEHASH, * PHB_BASEHASH, * HB_BASEHASH_PTR;
 
 
