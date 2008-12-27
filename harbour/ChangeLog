@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-27 18:08 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * source/compiler/hbopt.c
+    + added logic to generate 'assigned but unused' warning in case
+      op= is used. Ex.:
+         nI += nJ
+         nI := 5
+    ; This type of redundancy is not found in core code
+
 2008-12-27 15:31 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbstack.h
   * harbour/include/hbapi.h

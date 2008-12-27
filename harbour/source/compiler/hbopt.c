@@ -953,10 +953,6 @@ typedef struct
 
 static BOOL hb_compIsJump( BYTE bPCode )
 {
-   /* TOFIX: Can "jump" be done from inside of ALWAYS sentence to HB_P_ALWAYSEND mark? 
-             Should we include HB_P_SEQBEGIN and HB_P_ALWAYSBEGIN here? Is everything 
-             OK with BREAK logic here?  */
-
    return ( bPCode >= HB_P_JUMPNEAR && bPCode <= HB_P_JUMPTRUEFAR ) || /* All jumps */
             bPCode == HB_P_SEQBEGIN || bPCode == HB_P_SEQEND || 
             bPCode == HB_P_SEQALWAYS || bPCode == HB_P_ALWAYSBEGIN;
@@ -1098,7 +1094,57 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 
          case HB_P_PUSHLOCALREF:
             if( isVar > 0 )
-               pLocals[ isVar - 1 ].bFlags |= OPT_LOCAL_FLAG_PUSHREF;
+            {
+               ULONG  ulPosNext = ulPos + hb_compPCodeSize( pFunc, ulPos );
+               BYTE   bCodeNext = pFunc->pCode[ ulPosNext ];
+               BYTE   bCodeNext2 = pFunc->pCode[ ulPosNext + hb_compPCodeSize( pFunc, ulPosNext ) ];
+
+               if( ( bCodeNext == HB_P_PUSHBLOCK ||
+                     bCodeNext == HB_P_PUSHBLOCKSHORT ||
+                     bCodeNext == HB_P_PUSHFIELD ||
+                     bCodeNext == HB_P_PUSHBYTE ||
+                     bCodeNext == HB_P_PUSHINT ||
+                     bCodeNext == HB_P_PUSHLOCAL ||
+                     bCodeNext == HB_P_PUSHLOCALNEAR ||
+                     bCodeNext == HB_P_PUSHLONG ||
+                     bCodeNext == HB_P_PUSHMEMVAR ||
+                     bCodeNext == HB_P_PUSHNIL ||
+                     bCodeNext == HB_P_PUSHDOUBLE ||
+                     bCodeNext == HB_P_PUSHSELF ||
+                     bCodeNext == HB_P_PUSHSTATIC ||
+                     bCodeNext == HB_P_PUSHSTR ||
+                     bCodeNext == HB_P_PUSHSTRSHORT ||
+                     bCodeNext == HB_P_PUSHVARIABLE ||
+                     bCodeNext == HB_P_PUSHLONGLONG ||
+                     bCodeNext == HB_P_PUSHDATE ||
+                     bCodeNext == HB_P_PUSHSTRHIDDEN ||
+                     bCodeNext == HB_P_PUSHBLOCKLARGE ||
+                     bCodeNext == HB_P_PUSHSTRLARGE ||
+                     bCodeNext == HB_P_LOCALINCPUSH ) &&
+                   ( bCodeNext2 == HB_P_PLUSEQPOP ||
+                     bCodeNext2 == HB_P_MINUSEQPOP ||
+                     bCodeNext2 == HB_P_MULTEQPOP ||
+                     bCodeNext2 == HB_P_DIVEQPOP ||
+                     bCodeNext2 == HB_P_PLUSEQ ||
+                     bCodeNext2 == HB_P_MINUSEQ ||
+                     bCodeNext2 == HB_P_MULTEQ ||
+                     bCodeNext2 == HB_P_DIVEQ ||
+                     bCodeNext2 == HB_P_MODEQPOP ||
+                     bCodeNext2 == HB_P_EXPEQPOP ||
+                     bCodeNext2 == HB_P_MODEQ ||
+                     bCodeNext2 == HB_P_EXPEQ ||
+                     bCodeNext2 == HB_P_DECEQPOP ||
+                     bCodeNext2 == HB_P_INCEQPOP ||
+                     bCodeNext2 == HB_P_DECEQ ||
+                     bCodeNext2 == HB_P_INCEQ ) )
+               {
+                  pLocals[ isVar - 1 ].bFlags |= OPT_LOCAL_FLAG_CHANGE;
+               }
+               else
+               {
+                  pLocals[ isVar - 1 ].bFlags |= OPT_LOCAL_FLAG_PUSHREF;
+               }
+            }
             break;
 
          case HB_P_LOCALADDINT:
@@ -1277,11 +1323,63 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
 
    while( ulPos < pFunc->lPCodePos )
    {
-      /* skip pop NIL (var := NIL), to allow garbage collection */
-      if( ( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL || 
-            pFunc->pCode[ ulPos ] == HB_P_POPLOCALNEAR ) &&
-            ! ( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHNIL ) &&
-          ( isLocal = hb_compLocalGetNumber( &pFunc->pCode[ ulPos ] ) ) > pFunc->wParamCount )
+      BOOL  fCheck;
+
+      /* skip pop NIL (var := NIL), to allow force garbage collection */
+      fCheck = ( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL || 
+                 pFunc->pCode[ ulPos ] == HB_P_POPLOCALNEAR ) &&
+                 ! ( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHNIL );
+
+      if( !fCheck && pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF )
+      {
+         ULONG  ulPosNext = ulPos + hb_compPCodeSize( pFunc, ulPos );
+         BYTE   bCodeNext = pFunc->pCode[ ulPosNext ];
+         BYTE   bCodeNext2 = pFunc->pCode[ ulPosNext + hb_compPCodeSize( pFunc, ulPosNext ) ];
+
+         if( ( bCodeNext == HB_P_PUSHBLOCK ||
+               bCodeNext == HB_P_PUSHBLOCKSHORT ||
+               bCodeNext == HB_P_PUSHFIELD ||
+               bCodeNext == HB_P_PUSHBYTE ||
+               bCodeNext == HB_P_PUSHINT ||
+               bCodeNext == HB_P_PUSHLOCAL ||
+               bCodeNext == HB_P_PUSHLOCALNEAR ||
+               bCodeNext == HB_P_PUSHLONG ||
+               bCodeNext == HB_P_PUSHMEMVAR ||
+               bCodeNext == HB_P_PUSHNIL ||
+               bCodeNext == HB_P_PUSHDOUBLE ||
+               bCodeNext == HB_P_PUSHSELF ||
+               bCodeNext == HB_P_PUSHSTATIC ||
+               bCodeNext == HB_P_PUSHSTR ||
+               bCodeNext == HB_P_PUSHSTRSHORT ||
+               bCodeNext == HB_P_PUSHVARIABLE ||
+               bCodeNext == HB_P_PUSHLONGLONG ||
+               bCodeNext == HB_P_PUSHDATE ||
+               bCodeNext == HB_P_PUSHSTRHIDDEN ||
+               bCodeNext == HB_P_PUSHBLOCKLARGE ||
+               bCodeNext == HB_P_PUSHSTRLARGE ||
+               bCodeNext == HB_P_LOCALINCPUSH ) &&
+             ( bCodeNext2 == HB_P_PLUSEQPOP ||
+               bCodeNext2 == HB_P_MINUSEQPOP ||
+               bCodeNext2 == HB_P_MULTEQPOP ||
+               bCodeNext2 == HB_P_DIVEQPOP ||
+               bCodeNext2 == HB_P_PLUSEQ ||
+               bCodeNext2 == HB_P_MINUSEQ ||
+               bCodeNext2 == HB_P_MULTEQ ||
+               bCodeNext2 == HB_P_DIVEQ ||
+               bCodeNext2 == HB_P_MODEQPOP ||
+               bCodeNext2 == HB_P_EXPEQPOP ||
+               bCodeNext2 == HB_P_MODEQ ||
+               bCodeNext2 == HB_P_EXPEQ ||
+               bCodeNext2 == HB_P_DECEQPOP ||
+               bCodeNext2 == HB_P_INCEQPOP ||
+               bCodeNext2 == HB_P_DECEQ ||
+               bCodeNext2 == HB_P_INCEQ ) )
+         {
+            fCheck = 1;
+         }
+      }
+
+      if( fCheck && ( isLocal = hb_compLocalGetNumber( &pFunc->pCode[ ulPos ] ) ) > pFunc->wParamCount )
       {
          PVAR    pVar = pFunc->pLocals;
          SHORT   is;
@@ -1289,7 +1387,6 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
          for( is = 1; is < isLocal; is++ )
             pVar = pVar->pNext;
 
-         /* These should be unused and does not have any POP pcode */
          assert( pLocals[ isLocal - 1 ].bFlags != 0 ); 
 
          /* Skip detachables, referenced, optimizable self */
