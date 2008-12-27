@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-27 18:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbfnsx/dbfnsx1.c
+    * added some missing const in char * declarations
+
+  * harbour/contrib/hbtip/sendmail.prg
+    * cleaned unused assigned detected by new Mindaugas logic
+
 2008-12-27 17:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     + added support for rddsql and sdd* libraries in hb* scripts

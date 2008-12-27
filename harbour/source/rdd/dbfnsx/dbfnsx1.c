@@ -451,7 +451,7 @@ static USHORT hb_nsxLeafPutKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiOffse
 /*
  * generate Run-Time error
  */
-static ERRCODE hb_nsxErrorRT( NSXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char * szFileName, USHORT uiOsCode, USHORT uiFlags )
+static ERRCODE hb_nsxErrorRT( NSXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, const char * szFileName, USHORT uiOsCode, USHORT uiFlags )
 {
    PHB_ITEM pError;
    ERRCODE iRet = FAILURE;
@@ -805,8 +805,8 @@ static int hb_nsxValCompare( LPTAGINFO pTag, UCHAR * val1, int len1,
       {
 #ifndef HB_CDP_SUPPORT_OFF
          if( pTag->pIndex->pArea->cdPage->lSort )
-            iResult = hb_cdpcmp( ( char * ) val1, ( ULONG ) iLimit,
-                                 ( char * ) val2, ( ULONG ) iLimit,
+            iResult = hb_cdpcmp( ( const char * ) val1, ( ULONG ) iLimit,
+                                 ( const char * ) val2, ( ULONG ) iLimit,
                                  pTag->pIndex->pArea->cdPage, 0 );
          else
 #endif
@@ -1577,10 +1577,10 @@ static ULONG hb_nsxPageGetFree( LPTAGINFO pTag )
 /*
  * create the new tag structure
  */
-static LPTAGINFO hb_nsxTagNew( LPNSXINDEX pIndex, char * szTagName,
-                               char *szKeyExpr, PHB_ITEM pKeyExpr,
+static LPTAGINFO hb_nsxTagNew( LPNSXINDEX pIndex, const char * szTagName,
+                               const char *szKeyExpr, PHB_ITEM pKeyExpr,
                                UCHAR ucKeyType, USHORT uiKeyLen, BYTE bTrail,
-                               char *szForExpr, PHB_ITEM pForExpr,
+                               const char *szForExpr, PHB_ITEM pForExpr,
                                BOOL fAscendKey, BOOL fUnique, BOOL fCustom )
 {
    LPTAGINFO pTag;
@@ -1696,7 +1696,7 @@ static ERRCODE hb_nsxTagAdd( LPNSXINDEX pIndex, LPTAGINFO pTag )
  * create new tag and load it from index file
  */
 static LPTAGINFO hb_nsxTagLoad( LPNSXINDEX pIndex, ULONG ulBlock,
-                                char * szTagName, LPNSXTAGHEADER lpNSX )
+                                const char * szTagName, LPNSXTAGHEADER lpNSX )
 {
    LPTAGINFO pTag;
    PHB_ITEM pKeyExp, pForExp = NULL;
@@ -1729,9 +1729,9 @@ static LPTAGINFO hb_nsxTagLoad( LPNSXINDEX pIndex, ULONG ulBlock,
       pIndex->pArea->valResult = NULL;
    }
    pTag = hb_nsxTagNew( pIndex, szTagName,
-                        (char *) lpNSX->KeyExpr, pKeyExp,
+                        (const char *) lpNSX->KeyExpr, pKeyExp,
                         ucType, uiKeySize, ucTrail,
-                        (char *) lpNSX->ForExpr, pForExp,
+                        (const char *) lpNSX->ForExpr, pForExp,
                         uiDescend == 0, uiUnique != 0,
                         ( lpNSX->TagFlags[0] & NSX_TAG_NOUPDATE ) != 0 );
 
@@ -1753,14 +1753,14 @@ static void hb_nsxIndexTagAdd( LPNSXINDEX pIndex, LPTAGINFO pTag )
 
    for( i = 0; i < iTags; pTagItem++, i++ )
    {
-      if( !hb_strnicmp( ( char * ) pTagItem->TagName, pTag->TagName, NSX_TAGNAME ) )
+      if( !hb_strnicmp( ( const char * ) pTagItem->TagName, pTag->TagName, NSX_TAGNAME ) )
          break;
    }
    if( i == iTags )
    {
       ++iTags;
       HB_PUT_LE_UINT16( pIndex->HeaderBuff.TagCount, iTags );
-      strncpy( ( char * ) pTagItem->TagName, pTag->TagName, NSX_TAGNAME );
+      hb_strncpy( ( char * ) pTagItem->TagName, pTag->TagName, NSX_TAGNAME );
    }
    HB_PUT_LE_UINT32( pTagItem->TagOffset, pTag->HeadBlock );
    pIndex->Update = TRUE;
@@ -1769,14 +1769,14 @@ static void hb_nsxIndexTagAdd( LPNSXINDEX pIndex, LPTAGINFO pTag )
 /*
  * delete tag from NSX header
  */
-static void hb_nsxIndexTagDel( LPNSXINDEX pIndex, char * szTagName )
+static void hb_nsxIndexTagDel( LPNSXINDEX pIndex, const char * szTagName )
 {
    int iTags = HB_GET_LE_UINT16( pIndex->HeaderBuff.TagCount ), i;
    LPNSXTAGITEM pTagItem = pIndex->HeaderBuff.TagList;
 
    for( i = 0; i < iTags; pTagItem++, i++ )
    {
-      if( !hb_strnicmp( ( char * ) pTagItem->TagName, szTagName, NSX_TAGNAME ) )
+      if( !hb_strnicmp( ( const char * ) pTagItem->TagName, szTagName, NSX_TAGNAME ) )
       {
          memmove( pTagItem, pTagItem + 1, ( iTags - i ) * sizeof( NSXTAGITEM ) );
          memset( pTagItem + iTags - 1, 0, sizeof( NSXTAGITEM ) );
@@ -1791,14 +1791,14 @@ static void hb_nsxIndexTagDel( LPNSXINDEX pIndex, char * szTagName )
 /*
  * find tag header block in NSX header
  */
-static ULONG hb_nsxIndexTagFind( LPNSXROOTHEADER lpNSX, char * szTagName )
+static ULONG hb_nsxIndexTagFind( LPNSXROOTHEADER lpNSX, const char * szTagName )
 {
    int iTags = HB_GET_LE_UINT16( lpNSX->TagCount ), i;
    LPNSXTAGITEM pTagItem = lpNSX->TagList;
 
    for( i = 0; i < iTags; pTagItem++, i++ )
    {
-      if( !hb_strnicmp( ( char * ) pTagItem->TagName, szTagName, NSX_TAGNAME ) )
+      if( !hb_strnicmp( ( const char * ) pTagItem->TagName, szTagName, NSX_TAGNAME ) )
          return HB_GET_LE_UINT32( pTagItem->TagOffset );
    }
    return NSX_DUMMYNODE;
@@ -1832,6 +1832,7 @@ static ERRCODE hb_nsxTagHeaderSave( LPTAGINFO pTag )
    if( pIndex->Update )
    {
       USHORT type = hb_nsxKeyTypeRaw( pTag->KeyType );
+      int iLen;
 
       memset( ( BYTE * ) &Header + 6, 0, sizeof( Header ) - 6 );
 
@@ -1839,9 +1840,18 @@ static ERRCODE hb_nsxTagHeaderSave( LPTAGINFO pTag )
       HB_PUT_LE_UINT16( Header.KeySize,  pTag->KeyLength );
       Header.Unique[0]  = pTag->UniqueKey ? 1 : 0;
       Header.Descend[0] = pTag->AscendKey ? 0 : 1;
-      strncpy( ( char * ) Header.KeyExpr, pTag->KeyExpr, NSX_MAXEXPLEN );
+
+      iLen = ( int ) strlen( pTag->KeyExpr );
+      if( iLen > NSX_MAXEXPLEN )
+         iLen = NSX_MAXEXPLEN;
+      memcpy( Header.KeyExpr, pTag->KeyExpr, iLen );
       if( pTag->ForExpr )
-         strncpy( ( char * ) Header.ForExpr, pTag->ForExpr, NSX_MAXEXPLEN );
+      {
+         iLen = ( int ) strlen( pTag->ForExpr );
+         if( iLen > NSX_MAXEXPLEN )
+            iLen = NSX_MAXEXPLEN;
+         memcpy( Header.ForExpr, pTag->ForExpr, iLen );
+      }
       iSize = sizeof( Header );
    }
 
@@ -1968,7 +1978,7 @@ static ERRCODE hb_nsxIndexLoad( LPNSXINDEX pIndex )
          if( !hb_nsxBlockRead( pIndex, ulBlock,
                                ( BYTE * ) &tagbuffer, sizeof( NSXTAGHEADER ) ) )
             return FAILURE;
-         pTag = hb_nsxTagLoad( pIndex, ulBlock, ( char * ) pTagItem->TagName, &tagbuffer );
+         pTag = hb_nsxTagLoad( pIndex, ulBlock, ( const char * ) pTagItem->TagName, &tagbuffer );
          if( !pTag )
             return FAILURE;
          hb_nsxTagAdd( pIndex, pTag );
@@ -3642,7 +3652,7 @@ static ERRCODE hb_nsxTagSpaceFree( LPTAGINFO pTag )
 /*
  * create index file name
  */
-static void hb_nsxCreateFName( NSXAREAP pArea, char * szBagName, BOOL * fProd,
+static void hb_nsxCreateFName( NSXAREAP pArea, const char * szBagName, BOOL * fProd,
                                char * szFileName, char * szTagName )
 {
    PHB_FNAME pFileName;
@@ -3706,7 +3716,7 @@ static void hb_nsxCreateFName( NSXAREAP pArea, char * szBagName, BOOL * fProd,
 /*
  * find order bag by its name
  */
-static LPNSXINDEX hb_nsxFindBag( NSXAREAP pArea, char * szBagName )
+static LPNSXINDEX hb_nsxFindBag( NSXAREAP pArea, const char * szBagName )
 {
    LPNSXINDEX pIndex;
    PHB_FNAME pSeek, pName;
@@ -3714,14 +3724,14 @@ static LPNSXINDEX hb_nsxFindBag( NSXAREAP pArea, char * szBagName )
 
    pSeek = hb_fsFNameSplit( szBagName );
    if( ! pSeek->szName )
-      pSeek->szName = ( char * ) "";
+      pSeek->szName = "";
 
    pIndex = pArea->lpIndexes;
    while( pIndex )
    {
       pName = hb_fsFNameSplit( pIndex->IndexName );
       if( ! pName->szName )
-         pName->szName = ( char * ) "";
+         pName->szName = "";
       fFound = !hb_stricmp( pName->szName, pSeek->szName ) &&
                ( !pSeek->szPath || ( pName->szPath &&
                   !hb_stricmp( pName->szPath, pSeek->szPath ) ) ) &&
@@ -3739,7 +3749,7 @@ static LPNSXINDEX hb_nsxFindBag( NSXAREAP pArea, char * szBagName )
 /*
  * Find tag by name in index bag
  */
-static int hb_nsxFindTagByName( LPNSXINDEX pIndex, char * szTag )
+static int hb_nsxFindTagByName( LPNSXINDEX pIndex, const char * szTag )
 {
    int i;
 
@@ -3797,7 +3807,7 @@ static LPTAGINFO hb_nsxFindTag( NSXAREAP pArea, PHB_ITEM pTagItem,
    {
       if( hb_itemType( pTagItem ) & HB_IT_STRING )
       {
-         char * szTag = hb_itemGetCPtr( pTagItem );
+         const char * szTag = hb_itemGetCPtr( pTagItem );
          int iTag;
 
          if( fBag )
@@ -4518,14 +4528,14 @@ static BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
 
          while( fForward ? !pTag->TagEOF : !pTag->TagBOF )
          {
-            if( hb_strMatchWild( ( char * ) pTag->CurKeyInfo->val, szPattern ) )
+            if( hb_strMatchWild( ( const char * ) pTag->CurKeyInfo->val, szPattern ) )
             {
                ULONG ulRecNo = pTag->CurKeyInfo->rec;
                if( SELF_GOTO( ( AREAP ) pArea, ulRecNo ) != SUCCESS )
                   break;
                if( SELF_SKIPFILTER( ( AREAP ) pArea, fForward ? 1 : -1 ) != SUCCESS ||
                    pArea->ulRecNo == ulRecNo ||
-                   hb_strMatchWild( ( char * ) pTag->CurKeyInfo->val, szPattern ) )
+                   hb_strMatchWild( ( const char * ) pTag->CurKeyInfo->val, szPattern ) )
                {
                   fFound = TRUE;
                   break;
@@ -4568,7 +4578,7 @@ static BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
    return fFound;
 }
 
-static BOOL hb_nsxRegexMatch( LPTAGINFO pTag, PHB_REGEX pRegEx, char * szKey )
+static BOOL hb_nsxRegexMatch( LPTAGINFO pTag, PHB_REGEX pRegEx, const char * szKey )
 {
 #ifndef HB_CDP_SUPPORT_OFF
    char szBuff[ NSX_MAXKEYLEN + 1 ];
@@ -4626,12 +4636,12 @@ static BOOL hb_nsxOrdSkipRegEx( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pRegExIt
             if( SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->rec ) != SUCCESS )
                break;
 
-            if( hb_nsxRegexMatch( pTag, pRegEx, ( char * ) pTag->CurKeyInfo->val ) )
+            if( hb_nsxRegexMatch( pTag, pRegEx, ( const char * ) pTag->CurKeyInfo->val ) )
             {
                ULONG ulRecNo = pArea->ulRecNo;
                if( SELF_SKIPFILTER( ( AREAP ) pArea, fForward ? 1 : -1 ) != SUCCESS ||
                    pArea->ulRecNo == ulRecNo ||
-                   hb_nsxRegexMatch( pTag, pRegEx, ( char * ) pTag->CurKeyInfo->val ) )
+                   hb_nsxRegexMatch( pTag, pRegEx, ( const char * ) pTag->CurKeyInfo->val ) )
                {
                   fFound = TRUE;
                   break;
@@ -5067,9 +5077,9 @@ static void hb_nsxSortWritePage( LPNSXSORTINFO pSort )
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if( pSort->hTempFile == FS_ERROR )
          hb_nsxErrorRT( pSort->pTag->pIndex->pArea, EG_CREATE, EDBF_CREATE_TEMP,
-                        ( char * ) szName, 0, 0 );
+                        ( const char * ) szName, 0, 0 );
       else
-         pSort->szTempFileName = hb_strdup( ( char * ) szName );
+         pSort->szTempFileName = hb_strdup( ( const char * ) szName );
    }
 
    pSort->pSwapPage[ pSort->ulCurPage ].ulKeys = pSort->ulKeys;
@@ -5216,7 +5226,7 @@ static BOOL hb_nsxSortKeyGet( LPNSXSORTINFO pSort, UCHAR ** pKeyVal, ULONG *pulR
    return FALSE;
 }
 
-static void hb_nsxSortKeyAdd( LPNSXSORTINFO pSort, ULONG ulRec, char * pKeyVal, int iKeyLen )
+static void hb_nsxSortKeyAdd( LPNSXSORTINFO pSort, ULONG ulRec, const char * pKeyVal, int iKeyLen )
 {
    int iLen = pSort->keyLen;
    UCHAR *pDst;
@@ -6464,7 +6474,8 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    PHB_ITEM pResult, pKeyExp, pForExp = NULL;
    int iLen, iTag;
    char szFileName[ _POSIX_PATH_MAX + 1 ], szSpFile[ _POSIX_PATH_MAX + 1 ],
-        szTagName[ NSX_TAGNAME + 1 ], * szKey, * szFor = NULL;
+        szTagName[ NSX_TAGNAME + 1 ];
+   const char * szKey, * szFor = NULL;
    LPNSXINDEX pIndex, * pIndexPtr;
    LPTAGINFO pTag = NULL;
    ERRCODE errCode;
@@ -6555,7 +6566,7 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       fTemporary = pArea->lpdbOrdCondInfo->fTemporary;
       fExclusive = pArea->lpdbOrdCondInfo->fExclusive;
       /* Check conditional expression */
-      szFor = ( char * ) pArea->lpdbOrdCondInfo->abFor;
+      szFor = ( const char * ) pArea->lpdbOrdCondInfo->abFor;
       if( pArea->lpdbOrdCondInfo->itmCobFor )
          /* If we have a codeblock for the conditional expression, use it */
          pForExp = hb_itemNew( pArea->lpdbOrdCondInfo->itmCobFor );
@@ -6610,10 +6621,10 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
     * 3. add the Tag to index file
     */
    fNewFile = !pOrderInfo->atomBagName || !pOrderInfo->atomBagName[0];
-   hb_nsxCreateFName( pArea, ( char * ) pOrderInfo->abBagName,
+   hb_nsxCreateFName( pArea, ( const char * ) pOrderInfo->abBagName,
                       &fProd, szFileName, szTagName );
    if( !fNewFile )
-      hb_strncpyUpperTrim( szTagName, ( char * ) pOrderInfo->atomBagName, NSX_TAGNAME );
+      hb_strncpyUpperTrim( szTagName, ( const char * ) pOrderInfo->atomBagName, NSX_TAGNAME );
 
    pIndex = hb_nsxFindBag( pArea, szFileName );
    if( pIndex )
@@ -7064,7 +7075,7 @@ static ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
                                  pTag->ForExpr ? pTag->ForExpr : "" );
             if( hb_itemType( pInfo->itmNewVal ) & HB_IT_STRING )
             {
-               char * szForExpr = hb_itemGetCPtr( pInfo->itmNewVal );
+               const char * szForExpr = hb_itemGetCPtr( pInfo->itmNewVal );
                if( pTag->ForExpr ?
                    strncmp( pTag->ForExpr, szForExpr, NSX_MAXEXPLEN ) != 0 :
                    *szForExpr )
