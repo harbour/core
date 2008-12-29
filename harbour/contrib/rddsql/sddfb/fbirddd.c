@@ -192,7 +192,7 @@ static ERRCODE fbDisconnect( SQLDDCONNECTION* pConnection )
 {
    ISC_STATUS       status[ 5 ];
 
-   isc_detach_database( status, (isc_db_handle*) pConnection->hConnection );
+   isc_detach_database( status, (isc_db_handle*) &pConnection->hConnection );
    return SUCCESS;
 }
 
@@ -220,7 +220,7 @@ static ERRCODE fbOpen( SQLBASEAREAP pArea )
    int              iType;
 
 
-   if ( isc_start_transaction ( status, &pTrans, 1, (isc_db_handle) pArea->pConnection->hConnection, 0, NULL ) )
+   if ( isc_start_transaction ( status, &pTrans, 1, (isc_db_handle*) &pArea->pConnection->hConnection, 0, NULL ) )
    {
       hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_START, "Start transaction failed", NULL, status[ 1 ] );
       return FAILURE;
