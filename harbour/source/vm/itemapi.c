@@ -1859,13 +1859,12 @@ PHB_ITEM hb_itemReSizeString( PHB_ITEM pItem, ULONG ulSize )
    else
    {
       ULONG ulAlloc = ulSize + 1 +
-                ( pItem->item.asString.allocated < ulSize ? ulSize : 0 );
+                ( pItem->item.asString.allocated <= ulSize ? ulSize : 0 );
       pItem->item.asString.value = ( char* )
                      hb_xRefResize( pItem->item.asString.value,
                                     pItem->item.asString.length,
-                                    ulAlloc );
+                                    ulAlloc, &pItem->item.asString.allocated );
       pItem->item.asString.length = ulSize;
-      pItem->item.asString.allocated = ulAlloc;
       pItem->item.asString.value[ ulSize ] = '\0';
    }
    pItem->type &= ~HB_IT_DEFAULT;

@@ -8,6 +8,37 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-29 19:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbmacro.ch
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/compiler/hbusage.c
+  * harbour/source/compiler/cmdcheck.c
+    + added -ko (allow operator optimizations) compiler switch
+      It's disabled by default.
+
+  * harbour/include/hbexprb.c
+    * removed HB_ADD_SUB_ONE_OPT macro and enable optimizations covered
+      by it when -ko switch is used.
+
+  * harbour/source/common/expropt2.c
+    * disabled <exp> + 0 => <exp>, <exp> + "" => <exp>, - - <exp> => <exp>
+      optimizations for default compiler settings. They can be enabled by
+      -ko compiler switch
+    + added optimizations for numeric values and + operator which uses
+      standard mathematical + behavior for real numbers:
+         a + b + c == a + ( b + c )
+         a + b == b + a
+      It's disabled by default and can be enabled by -ko compiler switch.
+      There are also other similar optimizations which can be added in
+      this way.
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/fm.c
+    ! fixed redundant call to hb_xrealloc() in string resize operation.
+      Thanks to Mindaugas for locating it.
+
 2008-12-29 19:33 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/contrib/rddsql/sddfb/fbirddd.c
     ! fixed a few type castings

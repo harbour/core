@@ -131,6 +131,7 @@ void hb_compPrintModes( HB_COMP_DECL )
    {
            "\nOptions:  c               clear all flags (strict Clipper mode)",
            "\n          h[-]            Harbour mode",
+           "\n          o[-]            allow operator optimizations",
            "\n          i[-]            enable support for HB_INLINE",
            "\n          r[-]            runtime settings enabled",
            "\n          s[-]            allow indexed assignment on all types",
@@ -144,6 +145,7 @@ void hb_compPrintModes( HB_COMP_DECL )
    {
       0,
       HB_COMPFLAG_HARBOUR,
+      HB_COMPFLAG_EXTOPT,
       HB_COMPFLAG_HB_INLINE,
       HB_COMPFLAG_RT_MACRO,
       HB_COMPFLAG_ARRSTR,

@@ -480,7 +480,7 @@ extern void       hb_xRefInc( void * pMem );    /* increment reference counter *
 extern BOOL       hb_xRefDec( void * pMem );    /* decrement reference counter, return TRUE when 0 reached */
 extern void       hb_xRefFree( void * pMem );   /* decrement reference counter and free the block when 0 reached */
 extern HB_COUNTER hb_xRefCount( void * pMem );  /* return number of references */
-extern void *     hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize );   /* reallocates memory, create copy if reference counter greater then 1 */
+extern void *     hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize, ULONG * pulAllocated );   /* reallocates memory, create copy if reference counter greater then 1 */
 
 #if 0
 

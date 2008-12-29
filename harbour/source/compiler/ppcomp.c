@@ -206,6 +206,9 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             case 'h':
                iFlag = HB_COMPFLAG_HARBOUR;
                break;
+            case 'o':
+               iFlag = HB_COMPFLAG_EXTOPT;
+               break;
             case 'i':
                iFlag = HB_COMPFLAG_HB_INLINE;
                break;

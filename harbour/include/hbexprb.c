@@ -3603,8 +3603,7 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
          break;
 
       case HB_EA_PUSH_PCODE:
-#if defined( HB_ADD_SUB_ONE_OPT )
-         if( HB_SUPPORT_HARBOUR )
+         if( HB_SUPPORT_EXTOPT )
          {
             HB_EXPR_PTR pLeft, pRight;
             pLeft  = pSelf->value.asOperator.pLeft;
@@ -3648,7 +3647,6 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
                }
             }
          }
-#endif
          HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_PUSH_PCODE );
          HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
          HB_GEN_FUNC1( PCode1, HB_P_PLUS );
@@ -3706,8 +3704,7 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
          break;
 
       case HB_EA_PUSH_PCODE:
-#if defined( HB_ADD_SUB_ONE_OPT )
-         if( HB_SUPPORT_HARBOUR )
+         if( HB_SUPPORT_EXTOPT )
          {
             HB_EXPR_PTR pRight = pSelf->value.asOperator.pRight;
             if( pRight->ExprType == HB_ET_NUMERIC )
@@ -3730,7 +3727,6 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
                }
             }
          }
-#endif
          HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_PUSH_PCODE );
          HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
          HB_GEN_FUNC1( PCode1, HB_P_MINUS );

@@ -60,6 +60,7 @@
 #define HB_SM_XBASE      2    /* extended Xbase++ compatibility */
 #define HB_SM_SHORTCUTS  8    /* enable/disable sortcuts for logical operators */
 #define HB_SM_ARRSTR     16   /* enable/disable strings as array of bytes */
+#define HB_SM_EXTOPT     32   /* enable/disable operator optimizations */
 #define HB_SM_RT_MACRO   64   /* disable automatic setup of macro flag */
 #define HB_SM_PARSER     128  /* address of macro parser (TODO) */
 

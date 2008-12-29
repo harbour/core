@@ -536,6 +536,64 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
+static BOOL hb_compExprReducePlusNums( HB_EXPR_PTR pSelf, HB_EXPR_PTR pAdd )
+{
+   HB_EXPR_PTR pLeft, pRight, pNum;
+
+   pLeft  = pSelf->value.asOperator.pLeft;
+   pRight = pSelf->value.asOperator.pRight;
+
+   if( pLeft->ExprType == HB_ET_NUMERIC )
+      pNum = pLeft;
+   else if( pRight->ExprType == HB_ET_NUMERIC )
+      pNum = pRight;
+   else if( pLeft->ExprType == HB_EO_PLUS )
+      return hb_compExprReducePlusNums( pLeft, pAdd );
+   else if( pRight->ExprType == HB_EO_PLUS )
+      return hb_compExprReducePlusNums( pRight, pAdd );
+   else
+      return FALSE;
+
+   switch( pNum->value.asNum.NumType & pAdd->value.asNum.NumType )
+   {
+      case HB_ET_LONG:
+      {
+         HB_MAXDBL dVal = ( HB_MAXDBL ) pNum->value.asNum.val.l + ( HB_MAXDBL ) pAdd->value.asNum.val.l;
+         if( HB_DBL_LIM_LONG( dVal ) )
+            pNum->value.asNum.val.l += pAdd->value.asNum.val.l;
+         else
+         {
+            pNum->value.asNum.val.d = ( double ) dVal;
+            pNum->value.asNum.NumType = HB_ET_DOUBLE;
+         }
+         pNum->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+         pNum->value.asNum.bDec = 0;
+         break;
+      }
+
+      case HB_ET_DOUBLE:
+         pNum->value.asNum.val.d += pAdd->value.asNum.val.d;
+         pNum->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+         if( pNum->value.asNum.bDec < pAdd->value.asNum.bDec )
+            pNum->value.asNum.bDec = pAdd->value.asNum.bDec;
+         break;
+
+      default:
+         if( pNum->value.asNum.NumType == HB_ET_DOUBLE )
+            pNum->value.asNum.val.d += ( double ) pAdd->value.asNum.val.l;
+         else
+         {
+            pNum->value.asNum.val.d = ( double ) pNum->value.asNum.val.l + pAdd->value.asNum.val.d;
+            pNum->value.asNum.bDec = pAdd->value.asNum.bDec;
+            pNum->value.asNum.NumType = HB_ET_DOUBLE;
+         }
+         pNum->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+         break;
+   }
+
+   return TRUE;
+}
+
 HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
    HB_EXPR_PTR pLeft, pRight;
@@ -610,7 +668,7 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          HB_COMP_EXPR_FREE( pLeft );
          HB_COMP_EXPR_FREE( pRight );
       }
-      else if( HB_SUPPORT_HARBOUR &&
+      else if( HB_SUPPORT_EXTOPT &&
                ( pLeft->value.asNum.NumType == HB_ET_LONG ?
                  pLeft->value.asNum.val.l == 0 :
                  pLeft->value.asNum.val.d == 0 ) )
@@ -623,10 +681,20 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          pSelf = pRight;
          HB_COMP_EXPR_FREE( pLeft );
       }
+      else if( HB_SUPPORT_EXTOPT && pRight->ExprType == HB_EO_PLUS )
+      {
+         if( hb_compExprReducePlusNums( pRight, pLeft ) )
+         {
+            pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
+            HB_COMP_EXPR_FREE( pSelf );
+            pSelf = pRight;
+            HB_COMP_EXPR_FREE( pLeft );
+         }
+      }
       else
       {
          /* TODO: Check for incompatible types e.g. "txt" + 3
-         */
+          */
       }
    }
    else if( pRight->ExprType == HB_ET_NUMERIC )
@@ -642,7 +710,7 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          HB_COMP_EXPR_FREE( pLeft );
          HB_COMP_EXPR_FREE( pRight );
       }
-      else if( HB_SUPPORT_HARBOUR &&
+      else if( HB_SUPPORT_EXTOPT &&
                ( pRight->value.asNum.NumType == HB_ET_LONG ?
                  pRight->value.asNum.val.l == 0 :
                  pRight->value.asNum.val.d == 0 ) )
@@ -654,6 +722,16 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          HB_COMP_EXPR_FREE( pSelf );
          pSelf = pLeft;
          HB_COMP_EXPR_FREE( pRight );
+      }
+      else if( HB_SUPPORT_EXTOPT && pLeft->ExprType == HB_EO_PLUS )
+      {
+         if( hb_compExprReducePlusNums( pLeft, pRight ) )
+         {
+            pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
+            HB_COMP_EXPR_FREE( pSelf );
+            pSelf = pLeft;
+            HB_COMP_EXPR_FREE( pRight );
+         }
       }
       else
       {
@@ -749,7 +827,7 @@ HB_EXPR_PTR hb_compExprReduceNegate( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       HB_COMP_EXPR_FREE( pSelf );
       pSelf = pExpr;
    }
-   else if( pExpr->ExprType == HB_EO_NEGATE && HB_SUPPORT_HARBOUR )
+   else if( pExpr->ExprType == HB_EO_NEGATE && HB_SUPPORT_EXTOPT )
    {
       /* NOTE: This will not generate a runtime error if incompatible
        * data type is used

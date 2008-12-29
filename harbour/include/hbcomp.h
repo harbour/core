@@ -384,6 +384,7 @@ extern const BYTE    hb_comp_pcode_len[];
 #define HB_COMPFLAG_XBASE        HB_SM_XBASE       /* 2 -kx */
 #define HB_COMPFLAG_SHORTCUTS    HB_SM_SHORTCUTS   /* 8 -z enable sortcuts for logical operators */
 #define HB_COMPFLAG_ARRSTR       HB_SM_ARRSTR      /* 16 -ks strings as array of bytes */
+#define HB_COMPFLAG_EXTOPT       HB_SM_EXTOPT      /* 32 -ko clipper incompatible optimizations */
 #define HB_COMPFLAG_RT_MACRO     HB_SM_RT_MACRO    /* 64 -kr */
 #define HB_COMPFLAG_OPTJUMP      256               /* -kj turn off jump optimalization */
 #define HB_COMPFLAG_HB_INLINE    512               /* -ki hb_inLine(...) { ... } support */
@@ -394,6 +395,7 @@ extern const BYTE    hb_comp_pcode_len[];
 #define HB_SUPPORT_XBASE            ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_XBASE) )
 #define HB_SUPPORT_HARBOUR          ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
 #define HB_SUPPORT_ARRSTR           ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_ARRSTR) )
+#define HB_SUPPORT_EXTOPT           ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_EXTOPT) )
 
 #if defined( HB_MACRO_SUPPORT )
 #  define HB_MACRO_GENFLAGS   HB_COMPFLAG_RT_MACRO
@@ -403,6 +405,7 @@ extern const BYTE    hb_comp_pcode_len[];
                                   HB_COMPFLAG_XBASE | \
                                   HB_COMPFLAG_SHORTCUTS | \
                                   HB_COMPFLAG_ARRSTR | \
+                                  HB_COMPFLAG_EXTOPT | \
                                   HB_COMPFLAG_RT_MACRO ) )
 #endif
 

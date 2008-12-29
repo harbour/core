@@ -678,7 +678,7 @@ HB_COUNTER hb_xRefCount( void * pMem )
 
 /* reallocates memory, create copy if reference counter greater then 1 */
 #undef hb_xRefResize
-void * hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize )
+void * hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize, ULONG * pulAllocated )
 {
 
 #ifdef HB_FM_STATISTICS
@@ -689,9 +689,13 @@ void * hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize )
       if( HB_ATOM_DEC( HB_COUNTER_PTR( pMem ) ) == 0 )
          hb_xfree( pMem );
 
+      *pulAllocated = ulSize;
       return pMemNew;
    }
+   else if( ulSize <= *pulAllocated )
+      return pMem;
 
+   *pulAllocated = ulSize;
    return hb_xrealloc( pMem, ulSize );
 
 #else
@@ -706,12 +710,16 @@ void * hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize )
          memcpy( HB_MEM_PTR( pMemNew ), pMem, HB_MIN( ulSave, ulSize ) );
          if( HB_ATOM_DEC( HB_COUNTER_PTR( pMem ) ) == 0 )
             free( HB_FM_PTR( pMem ) );
+         *pulAllocated = ulSize;
          return HB_MEM_PTR( pMemNew );
       }
    }
+   else if( ulSize <= *pulAllocated )
+      return pMem;
    else
    {
-      pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE ( ulSize ) );
+      *pulAllocated = ulSize;
+      pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE( ulSize ) );
       if( pMem )
          return HB_MEM_PTR( pMem );
    }
