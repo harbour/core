@@ -101,9 +101,21 @@ HB_FUNC( DIRMAKE )
 HB_FUNC( DIRNAME )
 {
    BYTE *pbyBuffer = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+   unsigned char *pszDrive = ( unsigned char * ) hb_parc( 1 );
+   USHORT uiDrive = 0;
 
+   if( pszDrive )
+   {
+      /* some network drivers (f.e. NETX from Novel Netware) allow
+       * to create drives after 'Z' letter.
+       */
+      if( *pszDrive >= 'A' && *pszDrive < 'A' + 32 )
+         uiDrive = *pszDrive - ( 'A' - 1 );
+      else if( *pszDrive >= 'a' && *pszDrive < 'a' + 32 )
+         uiDrive = *pszDrive - ( 'a' - 1 );
+   }
    pbyBuffer[0] = HB_OS_PATH_DELIM_CHR;
-   hb_fsCurDirBuff( hb_fsCurDrv(), pbyBuffer + 1, _POSIX_PATH_MAX );
+   hb_fsCurDirBuff( uiDrive, pbyBuffer + 1, _POSIX_PATH_MAX );
 
    hb_retc_buffer( ( char * ) pbyBuffer );
 }

@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-29 20:23 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbct/disk.c
+    ! fixed dirname() - thanks to Saulius
+
 2008-12-29 19:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcomp.h
   * harbour/include/hbmacro.ch
