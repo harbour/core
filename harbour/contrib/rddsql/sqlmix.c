@@ -367,6 +367,7 @@ static int hb_mixKeyCompare( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, UINT ui
 /* -------------------------- Tag management ---------------------------- */
 /* hb_mixTag*() */
 
+/* This function is used for debugging purposes. Uncomment it, if you need it.
 static void hb_mixTagPrintNode( PMIXTAG pTag, PMIXNODE pNode, int iLevel )
 {
    UINT     i;
@@ -400,7 +401,7 @@ static void hb_mixTagPrintNode( PMIXTAG pTag, PMIXNODE pNode, int iLevel )
       hb_mixTagPrintNode( pTag, pNode->Child[ pNode->KeyCount ], iLevel + 1 );
    }
 }
-
+*/
 
 static PMIXNODE hb_mixTagCreateNode( PMIXTAG pTag, BOOL fLeaf ) 
 {

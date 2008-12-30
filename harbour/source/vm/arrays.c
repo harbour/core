@@ -183,7 +183,7 @@ BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
    pBaseArray->ulLen      = ulLen;
    pBaseArray->uiClass    = 0;
    pBaseArray->uiPrevCls  = 0;
-
+   pBaseArray->ulAllocated= ulLen;
    pItem->type = HB_IT_ARRAY;
    pItem->item.asArray.value = pBaseArray;
 
@@ -205,6 +205,7 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
          if( pBaseArray->ulLen == 0 )
          {
             pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( ulLen * sizeof( HB_ITEM ) );
+            pBaseArray->ulAllocated = ulLen;
 
             for( ulPos = 0; ulPos < ulLen; ulPos++ )
                ( pBaseArray->pItems + ulPos )->type = HB_IT_NIL;
@@ -213,7 +214,23 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
          {
             if( pBaseArray->ulLen < ulLen )
             {
-               pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
+
+               if( pBaseArray->ulAllocated < ulLen )
+               {
+                  /* 
+                     A common practice is to double allocation buffer size. Thus, making
+                     reallocation count logarithmic to total number of added numbers.
+                     I've used here a little different formula. ulAllocated is divided by 
+                     factor 2 ( >> 1 ) and 1 is added to requested size. This algorithm 
+                     has properties:
+                       - reallocation count remains asymptoticaly logarithmic;
+                       - saves memory for large arrays, because reallocation buffer 
+                         size is not doubled, but multiplied by 1.5;
+                       - adding of 1, allows reduce reallocation count for small arrays.
+                   */
+                  pBaseArray->ulAllocated = ( pBaseArray->ulAllocated >> 1 ) + 1 + ulLen;
+                  pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * pBaseArray->ulAllocated );
+               }
 
                /* set value for new items */
                for( ulPos = pBaseArray->ulLen; ulPos < ulLen; ulPos++ )
@@ -233,8 +250,11 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
                   hb_xfree( pBaseArray->pItems );
                   pBaseArray->pItems = NULL;
                }
-               else
+               else if( ulLen < ( pBaseArray->ulAllocated >> 1 ) )
+               {
+                  pBaseArray->ulAllocated = ulLen;
                   pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
+               }
             }
          }
 

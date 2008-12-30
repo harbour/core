@@ -506,7 +506,7 @@ static ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pArea->ulConnection = pOpenInfo->ulConnection ? pOpenInfo->ulConnection : s_ulConnectionCurrent;
  
-   if ( pArea->ulConnection < 0 || pArea->ulConnection > s_ulConnectionCount || 
+   if ( pArea->ulConnection > s_ulConnectionCount || 
         ( pArea->ulConnection && ! s_pConnection[ pArea->ulConnection - 1 ].hConnection ) )
    {
       hb_errRT_SQLBASE( EG_OPEN, ESQLDD_NOTCONNECTED, "Not connected", NULL );

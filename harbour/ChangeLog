@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-30 18:10 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/arrays.c
+    + added array preallocation
+
+  * harbour/contrib/rddsql/sqlbase.c
+  * harbour/contrib/rddsql/sqlmix.c
+    * fixed a few compile time warnings
+
 2008-12-30 12:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcomp.h
   * harbour/include/hbcompdf.h
