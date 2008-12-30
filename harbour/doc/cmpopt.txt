@@ -62,7 +62,9 @@ arguments are well known and can be callculated at compile time:
                                  // In Clipper neither <cConst1> nor <cConst2>
                                  // can contain '&' character. Harbour checks
                                  // if concatenation can change existing valid
-                                 // macro expression
+                                 // macro name or ignore '&' when -kM compiler
+                                 // switch which disable macro substitution
+                                 // is used
       <nConst1> - <nConst2>   => <nConst>
       <dConst1> - <dConst2>   => <dConst>
       <dConst1> - <nConst2>   => <dConst>
@@ -70,16 +72,30 @@ arguments are well known and can be callculated at compile time:
                                  // In Clipper neither <cConst1> nor <cConst2>
                                  // can contain '&' character. Harbour checks
                                  // if concatenation can change existing valid
-                                 // macro expression
+                                 // macro name or ignore '&' when -kM compiler
+                                 // switch which disable macro substitution
+                                 // is used
       <nConst1> * <nConst2>   => <nConst>
       <nConst1> / <nConst2>   => <nConst> // Clipper optimize only integers
       <nConst1> % <nConst2>   => <nConst>
-      <cConst1> $ <cConst2>   => <lConst> // Clipper wrongly calculates
-                                          // "" $ <cConst> as .T.
+      <cConst1> $ <cConst2>   => <lConst>
+                                 // Clipper wrongly calculates
+                                 // "" $ <cConst> as .T.
+                                 // In Clipper neither <cConst1> nor <cConst2>
+                                 // can contain '&' character. Harbour checks
+                                 // if after '&' is potentially valid macro
+                                 // name or ignore '&' when -kM compiler switch
+                                 // which disable macro substitution is used
       <lConst1> == <lConst2>  => <lConst>
       <nConst1> == <nConst2>  => <lConst>
       <dConst1> == <dConst2>  => <lConst>
       <cConst1> == <cConst2>  => <lConst>
+                                 // In Clipper neither <cConst1> nor <cConst2>
+                                 // can contain '&' character. Harbour checks
+                                 // if after '&' is potentially valid macro
+                                 // name or ignore '&' when -kM compiler switch
+                                 // which disable macro substitution is used
+
       NIL       == <xConst>   => <lConst>
       <xConst>  == NIL        => <lConst>
       <lConst1> = <lConst2>   => <lConst>
@@ -113,7 +129,7 @@ arguments are well known and can be callculated at compile time:
       IIF( .T., <expr1>, <expr2> ) => <expr1>
       IIF( .F., <expr1>, <expr2> ) => <expr2>
 
-   - optimizations disabled by -z compiler switch
+   - optimizations which can be disabled by -z compiler switch
 
       .T. .AND. <expr>        => <expr>
       <expr> .AND. .T.        => <expr>
@@ -131,20 +147,22 @@ arguments are well known and can be callculated at compile time:
       ( <expr> )              => <expr>         // it allows to optimize
                                                 // expresions like: 1+(2)
 
-   - Harbour extension which may disable RT errors in wrong expressions:
-      .NOT. .NOT. <expr>      => <expr>
-      - -  <expr>             => <expr>
-      <expr> + 0              => <expr>
-      0 + <expr>              => <expr>
-      <expr> + ""             => <expr>
-      "" + <expr>             => <expr>
+   - Harbour extensions which may disable RT errors in wrong expressions
+     or can change used operators using basic math rules. Enabled by -ko
+     compiler switch:
+         .NOT. .NOT. <expr>      => <expr>
+         - -  <expr>             => <expr>
+         <expr> + 0              => <expr>
+         0 + <expr>              => <expr>
+         <expr> + ""             => <expr>
+         "" + <expr>             => <expr>
 
-   In cases when result is miningless Harbour compiler can skip code
-   for operation, i.e. for such line of .prg code:
-      ( <exp1> <op> <exp2> )
-   where result of <op> operation is ignored Harbour reduces the code
-   to:
-      ( <exp1>, <exp2> )
+     In cases when result is miningless Harbour compiler can skip code
+     for operation, i.e. for such line of .prg code:
+         ( <exp1> <op> <exp2> )
+     where result of <op> operation is ignored Harbour reduces the code
+     to:
+         ( <exp1>, <exp2> )
 
 In Clipper in some places optiomization is not enabled, f.e. Clipper
 does not optimize <exp> in expressions like:
@@ -154,7 +172,8 @@ Unlike Clipper Harbour tries to optimize all expressions.
 If some code needs strict Clipper behavior then it can be forced by using
 -kc Harbour compiler switch. It disabled Harbour extensions and enables
 replicating some Clipper bugs like optimizing "" $ <cConst> to .T. at
-compile time when at runtime it's always .F.
+compile time (at runtime and in macrocompiler it's always .F. in Clipper
+and Harbour).
 
 Expressions fully optimized to constant values at compile time can be used
 to intialize static variables, f.e.:
@@ -163,4 +182,7 @@ to intialize static variables, f.e.:
 Harbour has additional optimization phase which operates on generated PCODE.
 It can also reduce expressions, joins jumps, removes death or meaningless
 code which can appear after all other optimizations and were not optimized
-by expression optimizer.
+by expression optimizer. It can also optimize readonly local variables
+keeping the QSelf() value. QSelf() is not real function call but very fast
+single PCODE often used in OOP code. Harbour can replace local variables
+keeping it by direct QSelf() usage.

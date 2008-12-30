@@ -698,7 +698,6 @@ typedef struct _HB_COMP
    BOOL              fBuildInfo;          /* print build info */
    BOOL              fLogo;               /* print logo */
    BOOL              fSyntaxCheckOnly;    /* syntax check only */
-   BOOL              fTextSubst;          /* check if string variables are macros (&) which needs substitution */
    BOOL              fLongOptimize;       /* optimize PCODEs generated for integers */
    BOOL              fAutoOpen;           /* automatically compile DO...[WITH...] external modules (-m) */
    BOOL              fError;              /* error appeared during compilation */

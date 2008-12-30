@@ -8,6 +8,35 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-30 12:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    ! fixed <cConst1> == <cConst2> => <lConst> optimizations if
+      <cConst1> or <cConst2> contains valid &macro. Such expressions
+      cannot be optimized if -kM compiler switch is not used, f.e.:
+         M->V := "ABC"
+         ? "[&V]" == "[ABC]"
+    ! fixed <cConst1> $ <cConst2> => <lConst> optimizations if
+      <cConst1> or <cConst2> contains valid &macro. Such expressions
+      cannot be optimized if -kM compiler switch is not used, f.e.:
+         M->V := "ABC"
+         ? "[&V]" $ " [ABC] "
+    % do not disable <cConst1> + <cConst2> => <cConst> and
+      <cConst1> - <cConst2> => <cConst> optimization when <cConst1> or
+      <cConst2> contains valid &macro but -kM compiler switch is used.
+
+  * harbour/include/hbexprb.c
+    * cover ! ! <exp> => <exp> optimization by -ko compile time switch
+
+  * harbour/doc/cmpopt.txt
+    * updated compiler optimization description
+
 2008-12-29 20:23 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbct/disk.c
     ! fixed dirname() - thanks to Saulius

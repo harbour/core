@@ -60,6 +60,23 @@
 #include "hbcomp.h"
 #include "hbdate.h"
 
+static BOOL hb_compExprHasMacro( const char * szText, ULONG ulLen, HB_COMP_DECL )
+{
+   while( ulLen-- )
+   {
+      if( *szText++ == '&' )
+      {
+         if( ! HB_SUPPORT_HARBOUR || ( ulLen && ( *szText == '_' ||
+             ( *szText >= 'A' && *szText <= 'Z' ) ||
+             ( *szText >= 'a' && *szText <= 'z' ) ) ) )
+         {
+            return TRUE;
+         }
+      }
+   }
+   return FALSE;
+}
+
 static HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight, HB_COMP_DECL )
 {
    if( pLeft->value.asString.dealloc )
@@ -496,26 +513,28 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       }
       else
       {
-         /* Do not reduce strings with the macro operator '&'
-         */
-         char * szText = pLeft->value.asString.string;
-         ULONG ulLen = pLeft->ulLength;
          BOOL fReduce = TRUE;
 
-         while( ulLen && szText[ ulLen - 1 ] == ' ' )
-            --ulLen;
-
-         while( ulLen-- )
+         /* Do not reduce strings with the macro operator '&'
+          */
+         if( HB_SUPPORT_MACROTEXT )
          {
-            if( *szText++ == '&' )
+            char * szText = pLeft->value.asString.string;
+            ULONG ulLen = pLeft->ulLength;
+            while( ulLen && szText[ ulLen - 1 ] == ' ' )
+               --ulLen;
+            while( ulLen-- )
             {
-               char ch = ulLen ? *szText : *pRight->value.asString.string;
-               if( ( ch >= 'A' && ch <= 'Z' ) ||
-                   ( ch >= 'a' && ch <= 'z' ) || ch == '_' ||
-                   ! HB_SUPPORT_HARBOUR )
+               if( *szText++ == '&' )
                {
-                  fReduce = FALSE;
-                  break;
+                  char ch = ulLen ? *szText : *pRight->value.asString.string;
+                  if( ( ch >= 'A' && ch <= 'Z' ) ||
+                      ( ch >= 'a' && ch <= 'z' ) || ch == '_' ||
+                      ! HB_SUPPORT_HARBOUR )
+                  {
+                     fReduce = FALSE;
+                     break;
+                  }
                }
             }
          }
@@ -757,27 +776,30 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       }
       else
       {
-         /* Do not reduce strings with the macro operator '&'
-         */
-         char * szText = pLeft->value.asString.string;
-         ULONG ulLen = pLeft->ulLength;
          BOOL fReduce = TRUE;
 
-         while( ulLen-- )
+         /* Do not reduce strings with the macro operator '&'
+          */
+         if( HB_SUPPORT_MACROTEXT )
          {
-            if( *szText++ == '&' )
+            char * szText = pLeft->value.asString.string;
+            ULONG ulLen = pLeft->ulLength;
+
+            while( ulLen-- )
             {
-               char ch = ulLen ? *szText : *pRight->value.asString.string;
-               if( ( ch >= 'A' && ch <= 'Z' ) ||
-                   ( ch >= 'a' && ch <= 'z' ) || ch == '_' ||
-                   ! HB_SUPPORT_HARBOUR )
+               if( *szText++ == '&' )
                {
-                  fReduce = FALSE;
-                  break;
+                  char ch = ulLen ? *szText : *pRight->value.asString.string;
+                  if( ( ch >= 'A' && ch <= 'Z' ) ||
+                      ( ch >= 'a' && ch <= 'z' ) || ch == '_' ||
+                      ! HB_SUPPORT_HARBOUR )
+                  {
+                     fReduce = FALSE;
+                     break;
+                  }
                }
             }
          }
-
          if( fReduce )
          {
             pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
@@ -844,38 +866,50 @@ HB_EXPR_PTR hb_compExprReduceNegate( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
 HB_EXPR_PTR hb_compExprReduceIN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
-   if( pSelf->value.asOperator.pLeft->ExprType == pSelf->value.asOperator.pRight->ExprType &&
-       pSelf->value.asOperator.pLeft->ExprType == HB_ET_STRING )
+   HB_EXPR_PTR pLeft, pRight;
+
+   pLeft  = pSelf->value.asOperator.pLeft;
+   pRight = pSelf->value.asOperator.pRight;
+
+   if( pLeft->ExprType == pRight->ExprType && pLeft->ExprType == HB_ET_STRING )
    {
       /* Both arguments are literal strings
        */
-      BOOL bResult;
 
-      /* NOTE: CA-Cl*pper has a bug where the $ operator returns .T.
-       *       when an empty string is searched [vszakats]
-       *
-       *       But this bug exist only in compiler and CA-Cl*pper macro
-       *       compiler does not have optimizer. This bug is replicated
-       *       by us only when Harbour extensions in compiler (-kh) are
-       *       not enabled f.e. in strict Clipper cmpatible mode (-kc)
-       *       [druzus]
+      /* NOTE: If macro substitiution is not didabled (-kM compiler
+       *       switch) then we cannot reduce also strings which
+       *       have macro operator '&'
        */
-      if( pSelf->value.asOperator.pLeft->ulLength == 0 )
-         bResult = HB_COMP_PARAM->mode == HB_MODE_COMPILER &&
-                   ! HB_SUPPORT_HARBOUR;
-      else
-         bResult = ( hb_strAt( pSelf->value.asOperator.pLeft->value.asString.string, pSelf->value.asOperator.pLeft->ulLength,
-                     pSelf->value.asOperator.pRight->value.asString.string, pSelf->value.asOperator.pRight->ulLength ) != 0 );
+      if( !HB_SUPPORT_MACROTEXT ||
+          ( !hb_compExprHasMacro( pLeft->value.asString.string,
+                                  pLeft->ulLength, HB_COMP_PARAM ) &&
+            !hb_compExprHasMacro( pRight->value.asString.string,
+                                  pRight->ulLength, HB_COMP_PARAM ) ) )
+      {
+         BOOL bResult;
 
-      /* NOTE:
-       * "" $ "XXX" = .T.
-       * "" $ "" = .T.
-       */
-      HB_COMP_EXPR_FREE( pSelf->value.asOperator.pLeft );
-      HB_COMP_EXPR_FREE( pSelf->value.asOperator.pRight );
-      pSelf->ExprType = HB_ET_LOGICAL;
-      pSelf->ValType  = HB_EV_LOGICAL;
-      pSelf->value.asLogical = bResult;
+         /* NOTE: CA-Cl*pper has a bug where the $ operator returns .T.
+             *       when an empty string is searched [vszakats]
+             *
+             *       But this bug exist only in compiler and CA-Cl*pper macro
+             *       compiler does not have optimizer. This bug is replicated
+             *       by us only when Harbour extensions in compiler (-kh) are
+             *       not enabled f.e. in strict Clipper cmpatible mode (-kc)
+             *       [druzus]
+             */
+         if( pLeft->ulLength == 0 )
+            bResult = HB_COMP_PARAM->mode == HB_MODE_COMPILER &&
+                      ! HB_SUPPORT_HARBOUR;
+         else
+            bResult = ( hb_strAt( pLeft->value.asString.string, pLeft->ulLength,
+                                  pRight->value.asString.string, pRight->ulLength ) != 0 );
+
+         HB_COMP_EXPR_FREE( pLeft );
+         HB_COMP_EXPR_FREE( pRight );
+         pSelf->ExprType = HB_ET_LOGICAL;
+         pSelf->ValType  = HB_EV_LOGICAL;
+         pSelf->value.asLogical = bResult;
+      }
    }
    /* TODO: add checking for incompatible types
     */
@@ -1321,25 +1355,33 @@ HB_EXPR_PTR hb_compExprReduceEQ( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       switch( pLeft->ExprType )
       {
          case HB_ET_LOGICAL:
-            {
-               BOOL bResult = ( pLeft->value.asLogical == pRight->value.asLogical );
-               HB_COMP_EXPR_FREE( pLeft );
-               HB_COMP_EXPR_FREE( pRight );
-               pSelf->ExprType = HB_ET_LOGICAL;
-               pSelf->ValType  = HB_EV_LOGICAL;
-               pSelf->value.asLogical = bResult;
-            }
+         {
+            BOOL bResult = ( pLeft->value.asLogical == pRight->value.asLogical );
+            HB_COMP_EXPR_FREE( pLeft );
+            HB_COMP_EXPR_FREE( pRight );
+            pSelf->ExprType = HB_ET_LOGICAL;
+            pSelf->ValType  = HB_EV_LOGICAL;
+            pSelf->value.asLogical = bResult;
             break;
+         }
 
          case HB_ET_STRING:
             /* NOTE: when not exact comparison (==) is used 
              * the result depends on SET EXACT setting then it
              * cannot be optimized except the case when NULL string are
              * compared - "" = "" is always TRUE regardless of EXACT
-             * setting
+             * setting.
+             * If macro substitiution is not didabled (-kM compiler
+             * switch) then we cannot reduce also strings which
+             * have macro operator '&'
              */
-            if( pSelf->ExprType == HB_EO_EQ ||
-                ( pLeft->ulLength | pRight->ulLength ) == 0 )
+            if( ( pLeft->ulLength | pRight->ulLength ) == 0 ||
+                ( pSelf->ExprType == HB_EO_EQ &&
+                  ( !HB_SUPPORT_MACROTEXT ||
+                    ( !hb_compExprHasMacro( pLeft->value.asString.string,
+                                            pLeft->ulLength, HB_COMP_PARAM ) &&
+                      !hb_compExprHasMacro( pRight->value.asString.string,
+                                            pRight->ulLength, HB_COMP_PARAM ) ) ) ) )
             {
                BOOL bResult = pLeft->ulLength == pRight->ulLength &&
                               memcmp( pLeft->value.asString.string,
@@ -1354,42 +1396,42 @@ HB_EXPR_PTR hb_compExprReduceEQ( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             break;
 
          case HB_ET_NUMERIC:
-            {
-               BOOL bResult;
+         {
+            BOOL bResult;
 
-               switch( pLeft->value.asNum.NumType & pRight->value.asNum.NumType )
-               {
-                  case HB_ET_LONG:
-                     bResult = ( pLeft->value.asNum.val.l == pRight->value.asNum.val.l );
-                     break;
-                  case HB_ET_DOUBLE:
-                     bResult = ( pLeft->value.asNum.val.d == pRight->value.asNum.val.d );
-                     break;
-                  default:
-                     if( pLeft->value.asNum.NumType == HB_ET_LONG )
-                        bResult = ( pLeft->value.asNum.val.l == pRight->value.asNum.val.d );
-                     else
-                        bResult = ( pLeft->value.asNum.val.d == pRight->value.asNum.val.l );
-                     break;
-               }
-               HB_COMP_EXPR_FREE( pLeft );
-               HB_COMP_EXPR_FREE( pRight );
-               pSelf->ExprType = HB_ET_LOGICAL;
-               pSelf->ValType  = HB_EV_LOGICAL;
-               pSelf->value.asLogical = bResult;
+            switch( pLeft->value.asNum.NumType & pRight->value.asNum.NumType )
+            {
+               case HB_ET_LONG:
+                  bResult = ( pLeft->value.asNum.val.l == pRight->value.asNum.val.l );
+                  break;
+               case HB_ET_DOUBLE:
+                  bResult = ( pLeft->value.asNum.val.d == pRight->value.asNum.val.d );
+                  break;
+               default:
+                  if( pLeft->value.asNum.NumType == HB_ET_LONG )
+                     bResult = ( pLeft->value.asNum.val.l == pRight->value.asNum.val.d );
+                  else
+                     bResult = ( pLeft->value.asNum.val.d == pRight->value.asNum.val.l );
+                  break;
             }
+            HB_COMP_EXPR_FREE( pLeft );
+            HB_COMP_EXPR_FREE( pRight );
+            pSelf->ExprType = HB_ET_LOGICAL;
+            pSelf->ValType  = HB_EV_LOGICAL;
+            pSelf->value.asLogical = bResult;
             break;
+         }
 
          case HB_ET_DATE:
-            {
-               BOOL bResult = pLeft->value.asNum.val.l == pRight->value.asNum.val.l;
-               HB_COMP_EXPR_FREE( pLeft );
-               HB_COMP_EXPR_FREE( pRight );
-               pSelf->ExprType = HB_ET_LOGICAL;
-               pSelf->ValType  = HB_EV_LOGICAL;
-               pSelf->value.asLogical = bResult;
-            }
+         {
+            BOOL bResult = pLeft->value.asNum.val.l == pRight->value.asNum.val.l;
+            HB_COMP_EXPR_FREE( pLeft );
+            HB_COMP_EXPR_FREE( pRight );
+            pSelf->ExprType = HB_ET_LOGICAL;
+            pSelf->ValType  = HB_EV_LOGICAL;
+            pSelf->value.asLogical = bResult;
             break;
+         }
 
          case HB_ET_NIL:
             HB_COMP_EXPR_FREE( pLeft );

@@ -2642,7 +2642,7 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 static void hb_compSwitchEnd( HB_COMP_DECL )
 {
    BOOL fLongOptimize = HB_COMP_PARAM->fLongOptimize;
-   BOOL fTextSubst = HB_COMP_PARAM->fTextSubst;
+   BOOL fMacroText = ( HB_COMP_PARAM->supported & HB_COMPFLAG_MACROTEXT ) != 0;
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
    HB_SWITCHCASE_PTR pCase = pFunc->pSwitch->pCases;
    HB_SWITCHCASE_PTR pTmp;
@@ -2652,12 +2652,12 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
    /* skip switch pcode if there was no EXIT in the last CASE
     * or in the DEFAULT case
    */
-   ulExitPos = hb_compGenJump( 0, HB_COMP_PARAM ); 
+   ulExitPos = hb_compGenJump( 0, HB_COMP_PARAM );
 
    hb_compGenJumpHere( pFunc->pSwitch->ulOffset + 1, HB_COMP_PARAM );
    hb_compGenPCode3( HB_P_SWITCH, HB_LOBYTE( pFunc->pSwitch->iCount ), HB_HIBYTE( pFunc->pSwitch->iCount ), HB_COMP_PARAM );
-   HB_COMP_PARAM->fLongOptimize = FALSE;   
-   HB_COMP_PARAM->fTextSubst = FALSE;
+   HB_COMP_PARAM->fLongOptimize = FALSE;
+   HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;
    while( pCase )
    {
       if( pCase->pExpr )
@@ -2683,7 +2683,8 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
    }
 
    HB_COMP_PARAM->fLongOptimize = fLongOptimize;
-   HB_COMP_PARAM->fTextSubst = fTextSubst;
+   if( fMacroText )
+      HB_COMP_PARAM->supported |= HB_COMPFLAG_MACROTEXT;
 
    hb_compGenJumpHere( ulExitPos, HB_COMP_PARAM );
 

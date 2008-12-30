@@ -3652,7 +3652,6 @@ static void hb_compInitVars( HB_COMP_DECL )
    HB_COMP_PARAM->funcalls.pFirst  = NULL;
    HB_COMP_PARAM->funcalls.pLast   = NULL;
    HB_COMP_PARAM->szAnnounce       = NULL;
-   HB_COMP_PARAM->fTextSubst       = ( HB_COMP_PARAM->supported & HB_COMPFLAG_MACROTEXT ) != 0;
    HB_COMP_PARAM->fLongOptimize    = TRUE;
 
    HB_COMP_PARAM->symbols.iCount   = 0;

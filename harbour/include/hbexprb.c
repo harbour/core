@@ -358,7 +358,7 @@ static HB_EXPR_FUNC( hb_compExprUseString )
          HB_GEN_FUNC2( PushString, pSelf->value.asString.string,
                        pSelf->ulLength + 1 );
 #if ! defined( HB_MACRO_SUPPORT )
-         if( HB_COMP_PARAM->fTextSubst &&
+         if( HB_SUPPORT_MACROTEXT &&
              hb_compIsValidMacroText( HB_COMP_PARAM,
                                       pSelf->value.asString.string,
                                       pSelf->ulLength ) )
@@ -3067,7 +3067,7 @@ static HB_EXPR_FUNC( hb_compExprUseNot )
             HB_COMP_EXPR_DELETE( pSelf );
             pSelf = pExpr;
          }
-         else if( pExpr->ExprType == HB_EO_NOT && HB_SUPPORT_HARBOUR )
+         else if( pExpr->ExprType == HB_EO_NOT && HB_SUPPORT_EXTOPT )
          {
             /* NOTE: This will not generate a runtime error if incompatible
              * data type is used

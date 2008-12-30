@@ -218,7 +218,6 @@ HB_COMP_PTR hb_comp_new( void )
                          HB_COMPFLAG_MACROTEXT |
                          HB_COMPFLAG_SHORTCUTS;
 
-      pComp->fTextSubst       = ( pComp->supported & HB_COMPFLAG_MACROTEXT ) != 0;
       pComp->fLongOptimize    = TRUE;
       pComp->fPPO             = FALSE;    /* flag indicating, is ppo output needed */
       pComp->fStartProc       = TRUE;     /* holds if we need to create the starting procedure */
