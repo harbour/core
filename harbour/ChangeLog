@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2008-12-31 14:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    + added optimizations for var := var <op> <exp> => var <op>= <exp>
+      when <op> is +, -, *, / %, ^ operator
+    % cleanup up checking if message can be used as LValue
+
 2008-12-30 18:10 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/include/hbapi.h
   * harbour/source/vm/arrays.c
