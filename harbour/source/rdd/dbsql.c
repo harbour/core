@@ -388,8 +388,8 @@ HB_FUNC( __DBSQL )
                   hb_errPutFileName( pError, szFileName );
                   hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
                   hb_errPutSubSystem( pError, "DBF2SQL" );
+                  hb_errPutOsCode( pError, hb_fsError() );
                }
-               hb_errPutOsCode( pError, hb_fsError() );
                fRetry = hb_errLaunch( pError ) == E_RETRY;
             }
             else

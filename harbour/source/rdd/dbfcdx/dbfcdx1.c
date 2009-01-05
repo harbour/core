@@ -349,24 +349,34 @@ static void hb_cdxErrInternal( const char * szMsg )
 /*
  * generate Run-Time error
  */
-static ERRCODE hb_cdxErrorRT( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, const char * filename, USHORT uiOsCode, USHORT uiFlags )
+static ERRCODE hb_cdxErrorRT( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
+                              const char * filename, USHORT uiOsCode,
+                              USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
    PHB_ITEM pError;
    ERRCODE iRet = FAILURE;
 
-   if ( hb_vmRequestQuery() == 0 )
+   if( hb_vmRequestQuery() == 0 )
    {
-      pError = hb_errNew();
+      if( pErrorPtr )
+      {
+         if( ! *pErrorPtr )
+            *pErrorPtr = hb_errNew();
+         pError = *pErrorPtr;
+      }
+      else
+         pError = hb_errNew();
       hb_errPutGenCode( pError, uiGenCode );
       hb_errPutSubCode( pError, uiSubCode );
       hb_errPutOsCode( pError, uiOsCode );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( uiGenCode ) );
-      if ( filename )
+      if( filename )
          hb_errPutFileName( pError, filename );
-      if ( uiFlags )
+      if( uiFlags )
          hb_errPutFlags( pError, uiFlags );
       iRet = SELF_ERROR( ( AREAP ) pArea, pError );
-      hb_errRelease( pError );
+      if( !pErrorPtr )
+         hb_errRelease( pError );
    }
    return iRet;
 }
@@ -1293,7 +1303,7 @@ static BOOL hb_cdxIndexLockRead( LPCDXINDEX pIndex )
    ret = hb_dbfLockIdxFile( pIndex->pFile, pIndex->pArea->bLockType,
                             FL_LOCK | FLX_SHARED | FLX_WAIT, &pIndex->ulLockPos );
    if ( !ret )
-      hb_cdxErrorRT( pIndex->pArea, EG_LOCK, EDBF_LOCK, pIndex->szFileName, hb_fsError(), 0 );
+      hb_cdxErrorRT( pIndex->pArea, EG_LOCK, EDBF_LOCK, pIndex->szFileName, hb_fsError(), 0, NULL );
 
    if ( ret )
    {
@@ -1335,7 +1345,7 @@ static BOOL hb_cdxIndexLockWrite( LPCDXINDEX pIndex )
                                FL_LOCK | FLX_EXCLUSIVE | FLX_WAIT, &pIndex->ulLockPos );
    }
    if ( !ret )
-      hb_cdxErrorRT( pIndex->pArea, EG_LOCK, EDBF_LOCK, pIndex->szFileName, hb_fsError(), 0 );
+      hb_cdxErrorRT( pIndex->pArea, EG_LOCK, EDBF_LOCK, pIndex->szFileName, hb_fsError(), 0, NULL );
 
    if ( ret )
    {
@@ -3467,7 +3477,7 @@ static void hb_cdxTagHeaderStore( LPCDXTAG pTag )
 
    if( uiKeyLen + uiForLen > CDX_HEADEREXPLEN - 2 )
    {
-      hb_cdxErrorRT( pTag->pIndex->pArea, EG_DATAWIDTH, EDBF_KEYLENGTH, NULL, 0, 0 );
+      hb_cdxErrorRT( pTag->pIndex->pArea, EG_DATAWIDTH, EDBF_KEYLENGTH, NULL, 0, 0, NULL );
    }
    else
    {
@@ -6530,7 +6540,7 @@ static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pKeyItm, BOO
 
    if ( ! pTag )
    {
-      hb_cdxErrorRT( pArea, EG_NOORDER, EDBF_NOTINDEXED, NULL, 0, EF_CANDEFAULT );
+      hb_cdxErrorRT( pArea, EG_NOORDER, EDBF_NOTINDEXED, NULL, 0, EF_CANDEFAULT, NULL );
       return FAILURE;
    }
    else
@@ -7180,6 +7190,7 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
    char szFileName[ _POSIX_PATH_MAX + 1 ];
    LPCDXINDEX pIndex, * pIndexPtr;
    BOOL fProd, bRetry;
+   PHB_ITEM pError = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderListAdd(%p, %p)", pArea, pOrderInfo));
 
@@ -7215,10 +7226,11 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
    {
       pFile = hb_fileExtOpen( ( BYTE * ) szFileName, NULL, uiFlags |
                               FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                              NULL, NULL );
+                              NULL, pError );
       if( !pFile )
-         bRetry = ( hb_cdxErrorRT( pArea, EG_OPEN, EDBF_OPEN_INDEX, szFileName,
-                                   hb_fsError(), EF_CANRETRY | EF_CANDEFAULT ) == E_RETRY );
+         bRetry = hb_cdxErrorRT( pArea, EG_OPEN, EDBF_OPEN_INDEX, szFileName,
+                                 hb_fsError(), EF_CANRETRY | EF_CANDEFAULT,
+                                 &pError ) == E_RETRY;
       else
       {
          if( hb_fileSize( pFile ) <= ( HB_FOFFSET ) sizeof( CDXTAGHEADER ) )
@@ -7226,12 +7238,15 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
             hb_fileClose( pFile );
             pFile = NULL;
             hb_cdxErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT,
-                           szFileName, hb_fsError(), EF_CANDEFAULT );
+                           szFileName, hb_fsError(), EF_CANDEFAULT, NULL );
          }
          bRetry = FALSE;
       }
 
    } while( bRetry );
+
+   if( pError )
+      hb_errRelease( pError );
 
    if( !pFile )
    {
@@ -7255,7 +7270,7 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
       *pIndexPtr = NULL;
       hb_cdxIndexFree( pIndex );
       hb_cdxErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT,
-                     szFileName, hb_fsError(), EF_CANDEFAULT );
+                     szFileName, hb_fsError(), EF_CANDEFAULT, NULL );
       return FAILURE;
    }
 
@@ -7373,12 +7388,12 @@ static ERRCODE hb_cdxOrderListRebuild( CDXAREAP pArea )
 
    if ( pArea->fShared )
    {
-      hb_cdxErrorRT( pArea, EG_SHARED, EDBF_SHARED, pArea->szDataFileName, 0, 0 );
+      hb_cdxErrorRT( pArea, EG_SHARED, EDBF_SHARED, pArea->szDataFileName, 0, 0, NULL );
       return FAILURE;
    }
    if ( pArea->fReadonly )
    {
-      hb_cdxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pArea->szDataFileName, 0, 0 );
+      hb_cdxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pArea->szDataFileName, 0, 0, NULL );
       return FAILURE;
    }
 
@@ -7440,7 +7455,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          hb_strlentrim( ( const char * ) pArea->lpdbOrdCondInfo->abFor ) : 0 ) >
        CDX_HEADEREXPLEN - 2 )
    {
-      hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_KEYLENGTH, NULL, 0, 0 );
+      hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_KEYLENGTH, NULL, 0, 0, NULL );
       return FAILURE;
    }
 
@@ -7496,13 +7511,13 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    {
       hb_vmDestroyBlockOrMacro( pKeyExp );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
-      hb_cdxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, 0 );
+      hb_cdxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, 0, NULL );
       return FAILURE;
    }
 #if defined(HB_COMPAT_C53) && defined(HB_C52_STRICT)
    else if ( bType == 'C' && uiLen > CDX_MAXKEY )
    {
-      if( hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, EF_CANDEFAULT ) == E_DEFAULT )
+      if( hb_cdxErrorRT( pArea, EG_DATAWIDTH, EDBF_INVALIDKEY, NULL, 0, EF_CANDEFAULT, NULL ) == E_DEFAULT )
         uiLen = CDX_MAXKEY;
       else
       {
@@ -7560,7 +7575,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          hb_vmDestroyBlockOrMacro( pKeyExp );
          hb_vmDestroyBlockOrMacro( pForExp );
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
-         hb_cdxErrorRT( pArea, EG_DATATYPE, EDBF_INVALIDFOR, NULL, 0, 0 );
+         hb_cdxErrorRT( pArea, EG_DATATYPE, EDBF_INVALIDFOR, NULL, 0, 0, NULL );
          return FAILURE;
       }
    }
@@ -7617,6 +7632,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    {
       PHB_FILE pFile;
       BOOL bRetry, fShared = pArea->fShared && !fTemporary && !fExclusive;
+      PHB_ITEM pError = NULL;
 
       do
       {
@@ -7631,11 +7647,12 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
                                     ( fShared ? FO_DENYNONE : FO_EXCLUSIVE ) |
                                     ( fNewFile ? FXO_TRUNCATE : FXO_APPEND ) |
                                     FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                                    NULL, NULL );
+                                    NULL, pError );
          }
          if( !pFile )
-            bRetry = ( hb_cdxErrorRT( pArea, EG_CREATE, EDBF_CREATE, szFileName,
-                                      hb_fsError(), EF_CANRETRY | EF_CANDEFAULT ) == E_RETRY );
+            bRetry = hb_cdxErrorRT( pArea, EG_CREATE, EDBF_CREATE, szFileName,
+                                    hb_fsError(), EF_CANRETRY | EF_CANDEFAULT,
+                                    &pError ) == E_RETRY;
          else
          {
             bRetry = FALSE;
@@ -7644,6 +7661,9 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          }
       }
       while( bRetry );
+
+      if( pError )
+         hb_errRelease( pError );
 
       if( pFile )
       {
@@ -7667,7 +7687,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
                hb_fileClose( pFile );
                pFile = NULL;
                hb_cdxErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT,
-                              szFileName, hb_fsError(), EF_CANDEFAULT );
+                              szFileName, hb_fsError(), EF_CANDEFAULT, NULL );
                */
                hb_cdxIndexFreeTags( pIndex );
                fNewFile = TRUE;
@@ -8422,7 +8442,7 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
             }
             else
             {
-               hb_cdxErrorRT( pArea, 0, EDBF_NOTCUSTOM, NULL, 0, 0 );
+               hb_cdxErrorRT( pArea, 0, EDBF_NOTCUSTOM, NULL, 0, 0, NULL );
             }
          }
          break;
@@ -8470,7 +8490,7 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
             }
             else
             {
-               hb_cdxErrorRT( pArea, 0, EDBF_NOTCUSTOM, NULL, 0, 0 );
+               hb_cdxErrorRT( pArea, 0, EDBF_NOTCUSTOM, NULL, 0, 0, NULL );
             }
          }
          break;

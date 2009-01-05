@@ -451,14 +451,23 @@ static USHORT hb_nsxLeafPutKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiOffse
 /*
  * generate Run-Time error
  */
-static ERRCODE hb_nsxErrorRT( NSXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, const char * szFileName, USHORT uiOsCode, USHORT uiFlags )
+static ERRCODE hb_nsxErrorRT( NSXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
+                              const char * szFileName, USHORT uiOsCode,
+                              USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
    PHB_ITEM pError;
    ERRCODE iRet = FAILURE;
 
    if( hb_vmRequestQuery() == 0 )
    {
-      pError = hb_errNew();
+      if( pErrorPtr )
+      {
+         if( ! *pErrorPtr )
+            *pErrorPtr = hb_errNew();
+         pError = *pErrorPtr;
+      }
+      else
+         pError = hb_errNew();
       hb_errPutGenCode( pError, uiGenCode );
       hb_errPutSubCode( pError, uiSubCode );
       hb_errPutOsCode( pError, uiOsCode );
@@ -468,7 +477,8 @@ static ERRCODE hb_nsxErrorRT( NSXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode
       if( uiFlags )
          hb_errPutFlags( pError, uiFlags );
       iRet = SELF_ERROR( ( AREAP ) pArea, pError );
-      hb_errRelease( pError );
+      if( !pErrorPtr )
+         hb_errRelease( pError );
    }
    return iRet;
 }
@@ -476,7 +486,7 @@ static ERRCODE hb_nsxErrorRT( NSXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode
 static void hb_nsxCorruptError( LPNSXINDEX pIndex )
 {
    hb_nsxErrorRT( pIndex->pArea, EG_CORRUPTION, EDBF_CORRUPT,
-                  pIndex->IndexName, 0, 0 );
+                  pIndex->IndexName, 0, 0, NULL );
 }
 
 /*
@@ -1117,7 +1127,7 @@ static BOOL hb_nsxBlockRead( LPNSXINDEX pIndex, ULONG ulBlock, BYTE *buffer, int
                       hb_nsxFileOffset( pIndex, ulBlock ) ) != ( ULONG ) iSize )
    {
       hb_nsxErrorRT( pIndex->pArea, EG_READ, EDBF_READ,
-                     pIndex->IndexName, hb_fsError(), 0 );
+                     pIndex->IndexName, hb_fsError(), 0, NULL );
       return FALSE;
    }
    return TRUE;
@@ -1135,7 +1145,7 @@ static BOOL hb_nsxBlockWrite( LPNSXINDEX pIndex, ULONG ulBlock, BYTE *buffer, in
                        hb_nsxFileOffset( pIndex, ulBlock ) ) != ( ULONG ) iSize )
    {
       hb_nsxErrorRT( pIndex->pArea, EG_WRITE, EDBF_WRITE,
-                     pIndex->IndexName, hb_fsError(), 0 );
+                     pIndex->IndexName, hb_fsError(), 0, NULL );
       return FALSE;
    }
    return TRUE;
@@ -2093,7 +2103,7 @@ static BOOL hb_nsxIndexLockRead( LPNSXINDEX pIndex )
       }
    }
    if( !fOK )
-      hb_nsxErrorRT( pIndex->pArea, EG_LOCK, EDBF_LOCK, pIndex->IndexName, hb_fsError(), 0 );
+      hb_nsxErrorRT( pIndex->pArea, EG_LOCK, EDBF_LOCK, pIndex->IndexName, hb_fsError(), 0, NULL );
 
    return fOK;
 }
@@ -2136,7 +2146,7 @@ static BOOL hb_nsxIndexLockWrite( LPNSXINDEX pIndex, BOOL fCheck )
       }
    }
    if( !fOK )
-      hb_nsxErrorRT( pIndex->pArea, EG_LOCK, EDBF_LOCK, pIndex->IndexName, hb_fsError(), 0 );
+      hb_nsxErrorRT( pIndex->pArea, EG_LOCK, EDBF_LOCK, pIndex->IndexName, hb_fsError(), 0, NULL );
 
    return fOK;
 }
@@ -4943,7 +4953,7 @@ static void hb_nsxSortBufferFlush( LPNSXSORTINFO pSort )
                     hb_nsxFileOffset( pIndex, pSort->ulFirstIO ) ) != ulSize )
       {
          hb_nsxErrorRT( pIndex->pArea, EG_WRITE, EDBF_WRITE,
-                        pIndex->IndexName, hb_fsError(), 0 );
+                        pIndex->IndexName, hb_fsError(), 0, NULL );
       }
       pSort->ulPagesIO = 0;
       pIndex->fFlush = TRUE;
@@ -5077,7 +5087,7 @@ static void hb_nsxSortWritePage( LPNSXSORTINFO pSort )
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if( pSort->hTempFile == FS_ERROR )
          hb_nsxErrorRT( pSort->pTag->pIndex->pArea, EG_CREATE, EDBF_CREATE_TEMP,
-                        ( const char * ) szName, 0, 0 );
+                        ( const char * ) szName, 0, 0, NULL );
       else
          pSort->szTempFileName = hb_strdup( ( const char * ) szName );
    }
@@ -5088,7 +5098,7 @@ static void hb_nsxSortWritePage( LPNSXSORTINFO pSort )
       pSort->pSwapPage[ pSort->ulCurPage ].nOffset = hb_fsSeekLarge( pSort->hTempFile, 0, FS_END );
       if( hb_fsWriteLarge( pSort->hTempFile, pSort->pStartKey, ulSize ) != ulSize )
          hb_nsxErrorRT( pSort->pTag->pIndex->pArea, EG_WRITE, EDBF_WRITE_TEMP,
-                        pSort->szTempFileName, 0, 0 );
+                        pSort->szTempFileName, 0, 0, NULL );
    }
    else
       pSort->pSwapPage[ pSort->ulCurPage ].nOffset = 0;
@@ -5111,7 +5121,7 @@ static void hb_nsxSortGetPageKey( LPNSXSORTINFO pSort, ULONG ulPage,
            hb_fsReadLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].pKeyPool, ulSize ) != ulSize ) )
       {
          hb_nsxErrorRT( pSort->pTag->pIndex->pArea, EG_READ, EDBF_READ_TEMP,
-                        pSort->szTempFileName, 0, 0 );
+                        pSort->szTempFileName, 0, 0, NULL );
       }
       pSort->pSwapPage[ ulPage ].nOffset += ulSize;
       pSort->pSwapPage[ ulPage ].ulKeyBuf = ulKeys;
@@ -5809,7 +5819,7 @@ static ERRCODE hb_nsxTagCreate( LPTAGINFO pTag, BOOL fReindex )
 
                default:
                   hb_nsxErrorRT( pArea, EG_DATATYPE, EDBF_INVALIDKEY,
-                                 pTag->pIndex->IndexName, 0, 0 );
+                                 pTag->pIndex->IndexName, 0, 0, NULL );
                   errCode = FAILURE;
                   pTag->Partial = TRUE;
                   pEvalItem = NULL;
@@ -5990,7 +6000,7 @@ static ERRCODE hb_nsxSeek( NSXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pItem, BOOL 
 
    if( ! pArea->lpCurTag )
    {
-      hb_nsxErrorRT( pArea, EG_NOORDER, EDBF_NOTINDEXED, NULL, 0, EF_CANDEFAULT );
+      hb_nsxErrorRT( pArea, EG_NOORDER, EDBF_NOTINDEXED, NULL, 0, EF_CANDEFAULT, NULL );
       return FAILURE;
    }
    else
@@ -6555,7 +6565,7 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       hb_vmDestroyBlockOrMacro( pKeyExp );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       hb_nsxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH,
-                     1026, NULL, 0, 0 );
+                     1026, NULL, 0, 0, NULL );
       return FAILURE;
    }
 
@@ -6606,7 +6616,7 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          hb_vmDestroyBlockOrMacro( pKeyExp );
          hb_vmDestroyBlockOrMacro( pForExp );
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
-         hb_nsxErrorRT( pArea, EG_DATATYPE, EDBF_INVALIDFOR, NULL, 0, 0 );
+         hb_nsxErrorRT( pArea, EG_DATATYPE, EDBF_INVALIDFOR, NULL, 0, 0, NULL );
          return FAILURE;
       }
    }
@@ -6634,7 +6644,7 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          hb_vmDestroyBlockOrMacro( pKeyExp );
          if( pForExp != NULL )
             hb_vmDestroyBlockOrMacro( pForExp );
-         hb_nsxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pIndex->IndexName, 0, 0 );
+         hb_nsxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pIndex->IndexName, 0, 0, NULL );
          return FAILURE;
       }
 #if 0 /* enable this code if you want to forbid tag deleting in shared mode */
@@ -6643,7 +6653,7 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          hb_vmDestroyBlockOrMacro( pKeyExp );
          if( pForExp != NULL )
             hb_vmDestroyBlockOrMacro( pForExp );
-         hb_nsxErrorRT( pArea, EG_SHARED, EDBF_SHARED, pIndex->IndexName, 0, 0 );
+         hb_nsxErrorRT( pArea, EG_SHARED, EDBF_SHARED, pIndex->IndexName, 0, 0, NULL );
          return FAILURE;
       }
 #endif
@@ -6653,6 +6663,7 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       PHB_FILE pFile;
       BOOL bRetry, fShared = pArea->fShared && !fTemporary && !fExclusive;
       USHORT uiFlags = FO_READWRITE | ( fShared ? FO_DENYNONE : FO_EXCLUSIVE );
+      PHB_ITEM pError = NULL;
 
       do
       {
@@ -6666,11 +6677,12 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
             pFile = hb_fileExtOpen( ( BYTE * ) szFileName, NULL, uiFlags |
                                     ( fNewFile ? FXO_TRUNCATE : FXO_APPEND ) |
                                     FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                                    NULL, NULL );
+                                    NULL, pError );
          }
          if( !pFile )
-            bRetry = ( hb_nsxErrorRT( pArea, EG_CREATE, EDBF_CREATE, szFileName,
-                                      hb_fsError(), EF_CANRETRY | EF_CANDEFAULT ) == E_RETRY );
+            bRetry = hb_nsxErrorRT( pArea, EG_CREATE, EDBF_CREATE, szFileName,
+                                    hb_fsError(), EF_CANRETRY | EF_CANDEFAULT,
+                                    &pError ) == E_RETRY;
          else
          {
             bRetry = FALSE;
@@ -6679,6 +6691,9 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          }
       }
       while( bRetry );
+
+      if( pError )
+         hb_errRelease( pError );
 
       if( !pFile )
       {
@@ -6719,7 +6734,7 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
             if( pForExp != NULL )
                hb_vmDestroyBlockOrMacro( pForExp );
             /* hb_nsxSetTagNumbers() */
-            hb_nsxErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT, szFileName, 0, 0 );
+            hb_nsxErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT, szFileName, 0, 0, NULL );
             return errCode;
          }
       }
@@ -6747,7 +6762,7 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       if( pForExp != NULL )
          hb_vmDestroyBlockOrMacro( pForExp );
       /* hb_nsxSetTagNumbers() */
-      hb_nsxErrorRT( pArea, EG_LIMIT, EDBF_LIMITEXCEEDED, pIndex->IndexName, 0, 0 );
+      hb_nsxErrorRT( pArea, EG_LIMIT, EDBF_LIMITEXCEEDED, pIndex->IndexName, 0, 0, NULL );
       errCode = FAILURE;
    }
 
@@ -6880,13 +6895,13 @@ static ERRCODE hb_nsxOrderDestroy( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
          }
          else if( pIndex->fReadonly )
          {
-            hb_nsxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pIndex->IndexName, 0, 0 );
+            hb_nsxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pIndex->IndexName, 0, 0, NULL );
             return FAILURE;
          }
 #if 0 /* enable this code if you want to forbid tag deleting in shared mode */
          else if( pIndex->fShared )
          {
-            hb_nsxErrorRT( pArea, EG_SHARED, EDBF_SHARED, pIndex->IndexName, 0, 0 );
+            hb_nsxErrorRT( pArea, EG_SHARED, EDBF_SHARED, pIndex->IndexName, 0, 0, NULL );
             return FAILURE;
          }
 #endif
@@ -7287,7 +7302,7 @@ static ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
          case DBOI_KEYADD:
             if( pTag->pIndex->fReadonly )
             {
-               hb_nsxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pTag->pIndex->IndexName, 0, 0 );
+               hb_nsxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pTag->pIndex->IndexName, 0, 0, NULL );
                return FAILURE;
             }
             if( pTag->Custom )
@@ -7297,14 +7312,14 @@ static ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
             }
             else
             {
-               hb_nsxErrorRT( pArea, 0, 1052, NULL, 0, 0 );
+               hb_nsxErrorRT( pArea, 0, 1052, NULL, 0, 0, NULL );
                return FAILURE;
             }
             break;
          case DBOI_KEYDELETE:
             if( pTag->pIndex->fReadonly )
             {
-               hb_nsxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pTag->pIndex->IndexName, 0, 0 );
+               hb_nsxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pTag->pIndex->IndexName, 0, 0, NULL );
                return FAILURE;
             }
             if( pTag->Custom )
@@ -7314,7 +7329,7 @@ static ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
             }
             else
             {
-               hb_nsxErrorRT( pArea, 0, 1052, NULL, 0, 0 );
+               hb_nsxErrorRT( pArea, 0, 1052, NULL, 0, 0, NULL );
                return FAILURE;
             }
             break;
@@ -7609,6 +7624,7 @@ static ERRCODE hb_nsxOrderListAdd( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    if( ! pIndex )
    {
+      PHB_ITEM pError = NULL;
       fReadonly = pArea->fReadonly;
       fShared = pArea->fShared;
       uiFlags = ( fReadonly ? FO_READ : FO_READWRITE ) |
@@ -7618,14 +7634,18 @@ static ERRCODE hb_nsxOrderListAdd( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
          fRetry = FALSE;
          pFile = hb_fileExtOpen( ( BYTE * ) szFileName, NULL, uiFlags |
                                  FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                                 NULL, NULL );
+                                 NULL, pError );
          if( !pFile )
          {
-            fRetry = ( hb_nsxErrorRT( pArea, EG_OPEN, EDBF_OPEN_INDEX, szFileName,
-                     hb_fsError(), EF_CANRETRY | EF_CANDEFAULT ) == E_RETRY );
+            fRetry = hb_nsxErrorRT( pArea, EG_OPEN, EDBF_OPEN_INDEX, szFileName,
+                                    hb_fsError(), EF_CANRETRY | EF_CANDEFAULT,
+                                    &pError ) == E_RETRY;
          }
       }
       while( fRetry );
+
+      if( pError )
+         hb_errRelease( pError );
 
       if( !pFile )
          return FAILURE;
@@ -7648,7 +7668,7 @@ static ERRCODE hb_nsxOrderListAdd( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
       if( errCode != SUCCESS )
       {
          hb_nsxIndexFree( pIndex );
-         hb_nsxErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT, szFileName, 0, 0 );
+         hb_nsxErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT, szFileName, 0, 0, NULL );
          return errCode;
       }
 
@@ -7776,12 +7796,12 @@ static ERRCODE hb_nsxOrderListRebuild( NSXAREAP pArea )
 
    if( pArea->fShared )
    {
-      hb_nsxErrorRT( pArea, EG_SHARED, EDBF_SHARED, pArea->szDataFileName, 0, 0 );
+      hb_nsxErrorRT( pArea, EG_SHARED, EDBF_SHARED, pArea->szDataFileName, 0, 0, NULL );
       return FAILURE;
    }
    if( pArea->fReadonly )
    {
-      hb_nsxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pArea->szDataFileName, 0, 0 );
+      hb_nsxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pArea->szDataFileName, 0, 0, NULL );
       return FAILURE;
    }
 

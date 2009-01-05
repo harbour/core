@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-05 18:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbsql.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfnsx/dbfnsx1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/contrib/rddads/ads1.c
+    ! reuse the same error object when CANRETRY flag is set for valid
+      TRIES member update
+
 2009-01-05 13:33 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbgtcore.h
   * harbour/source/rtl/hbgtcore.c

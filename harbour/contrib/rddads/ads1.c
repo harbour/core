@@ -149,24 +149,35 @@ static void adsSetSend( void )
 }
 
 static ERRCODE commonError( ADSAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
-                            USHORT uiOsCode, char * szFileName, USHORT uiFlags )
+                            USHORT uiOsCode, const char * szFileName,
+                            USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
-   ERRCODE errCode;
    PHB_ITEM pError;
+   ERRCODE errCode = FAILURE;
 
-   pError = hb_errNew();
-   hb_errPutGenCode( pError, uiGenCode );
-   hb_errPutSubCode( pError, uiSubCode );
-   hb_errPutDescription( pError, hb_langDGetErrorDesc( uiGenCode ) );
-   if( uiOsCode )
-      hb_errPutOsCode( pError, uiOsCode );
-   if( szFileName )
-      hb_errPutFileName( pError, szFileName );
-   if( uiFlags )
-      hb_errPutFlags( pError, uiFlags );
-   errCode = SUPER_ERROR( ( AREAP ) pArea, pError );
-   hb_itemRelease( pError );
-
+   if( hb_vmRequestQuery() == 0 )
+   {
+      if( pErrorPtr )
+      {
+         if( ! *pErrorPtr )
+            *pErrorPtr = hb_errNew();
+         pError = *pErrorPtr;
+      }
+      else
+         pError = hb_errNew();
+      hb_errPutGenCode( pError, uiGenCode );
+      hb_errPutSubCode( pError, uiSubCode );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( uiGenCode ) );
+      if( uiOsCode )
+         hb_errPutOsCode( pError, uiOsCode );
+      if( szFileName )
+         hb_errPutFileName( pError, szFileName );
+      if( uiFlags )
+         hb_errPutFlags( pError, uiFlags );
+      errCode = SUPER_ERROR( ( AREAP ) pArea, pError );
+      if( !pErrorPtr )
+         hb_itemRelease( pError );
+   }
    return errCode;
 }
 
@@ -388,7 +399,7 @@ static ERRCODE hb_adsCheckLock( ADSAREAP pArea )
       }
       if( !u16Locked )
       {
-         commonError( pArea, EG_UNLOCKED, EDBF_UNLOCKED, 0, NULL, 0 );
+         commonError( pArea, EG_UNLOCKED, EDBF_UNLOCKED, 0, NULL, 0, NULL );
          return FAILURE;
       }
    }
@@ -860,7 +871,7 @@ static ERRCODE adsGoToId( ADSAREAP pArea, PHB_ITEM pItem )
    }
    else
    {
-      commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0 );
+      commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0, NULL );
       return FAILURE;
    }
 }
@@ -899,7 +910,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 
    if( ! pArea->hOrdCurrent )
    {
-      commonError( pArea, EG_NOORDER, 1201, 0, NULL, EF_CANDEFAULT );
+      commonError( pArea, EG_NOORDER, 1201, 0, NULL, EF_CANDEFAULT, NULL );
       return FAILURE;
    }
 
@@ -946,7 +957,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
    }
    else
    {
-      commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0 );
+      commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0, NULL );
       return FAILURE;
    }
 
@@ -1335,13 +1346,13 @@ static ERRCODE adsAppend( ADSAREAP pArea, BOOL fUnLockAll )
    }
    else if( u32RetVal == AE_TABLE_READONLY )
    {
-      commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0 );
+      commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0, NULL );
    }
    else
    {
       /* 1001 and 7008 are standard ADS Open Errors that will usually be sharing issues */
       USHORT uiOsCOde = u32RetVal == 1001 || u32RetVal == 7008 ? 32 : 0;
-      commonError( pArea, EG_APPENDLOCK, ( USHORT ) u32RetVal, uiOsCOde, NULL, EF_CANDEFAULT );
+      commonError( pArea, EG_APPENDLOCK, ( USHORT ) u32RetVal, uiOsCOde, NULL, EF_CANDEFAULT, NULL );
    }
 
    return FAILURE;
@@ -2347,20 +2358,20 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
    if( bTypeError )
    {
-      commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0 );
+      commonError( pArea, EG_DATATYPE, 1020, 0, NULL, 0, NULL );
       return FAILURE;
    }
 
    if( ulRetVal != AE_SUCCESS )
    {
       if( ulRetVal == AE_LOCK_FAILED || ulRetVal == AE_RECORD_NOT_LOCKED )
-         commonError( pArea, EG_UNLOCKED, EDBF_UNLOCKED, 0, NULL, 0 );
+         commonError( pArea, EG_UNLOCKED, EDBF_UNLOCKED, 0, NULL, 0, NULL );
       else if( ulRetVal == AE_TABLE_READONLY )
-         commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0 );
+         commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0, NULL );
       else if( ulRetVal == AE_DATA_TOO_LONG )
-         commonError( pArea, EG_DATAWIDTH, EDBF_DATAWIDTH, 0, NULL, 0 );
+         commonError( pArea, EG_DATAWIDTH, EDBF_DATAWIDTH, 0, NULL, 0, NULL );
       else
-         commonError( pArea, EG_WRITE, ( USHORT ) ulRetVal, 0, NULL, 0 );
+         commonError( pArea, EG_WRITE, ( USHORT ) ulRetVal, 0, NULL, 0, NULL );
       return FAILURE;
    }
 
@@ -2952,12 +2963,13 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       }
       else
       {
-         commonError( pArea, EG_OPEN, ( USHORT ) u32RetVal, 0, ( char * ) pOpenInfo->abName, 0 );
+         commonError( pArea, EG_OPEN, ( USHORT ) u32RetVal, 0, ( char * ) pOpenInfo->abName, 0, NULL );
          return FAILURE;
       }
    }
    else
    {
+      PHB_ITEM pError = NULL;
       BOOL fRetry;
 
       /* Use an  Advantage Data Dictionary
@@ -2980,13 +2992,16 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             /* 1001 and 7008 are standard ADS Open Errors that will usually be sharing issues */
             USHORT uiOsCOde = u32RetVal == 1001 || u32RetVal == 7008 ? 32 : 0;
             fRetry = commonError( pArea, EG_OPEN, ( USHORT ) u32RetVal, uiOsCOde,
-                                  ( char * ) pOpenInfo->abName,
-                                  EF_CANRETRY | EF_CANDEFAULT ) == E_RETRY;
+                                  ( const char * ) pOpenInfo->abName,
+                                  EF_CANRETRY | EF_CANDEFAULT, &pError ) == E_RETRY;
          }
          else
             fRetry = FALSE;
       }
       while( fRetry );
+
+      if( pError )
+         hb_errRelease( pError );
 
       if( u32RetVal != AE_SUCCESS )
          return FAILURE;
@@ -3226,12 +3241,12 @@ static ERRCODE adsPack( ADSAREAP pArea )
 
    if( pArea->fReadonly )
    {
-      commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0 );
+      commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0, NULL );
       return FAILURE;
    }
    if( pArea->fShared )
    {
-      commonError( pArea, EG_SHARED, EDBF_SHARED, 0, NULL, 0 );
+      commonError( pArea, EG_SHARED, EDBF_SHARED, 0, NULL, 0, NULL );
       return FAILURE;
    }
 
@@ -3251,12 +3266,12 @@ static ERRCODE adsZap( ADSAREAP pArea )
 
    if( pArea->fReadonly )
    {
-      commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0 );
+      commonError( pArea, EG_READONLY, EDBF_READONLY, 0, NULL, 0, NULL );
       return FAILURE;
    }
    if( pArea->fShared )
    {
-      commonError( pArea, EG_SHARED, EDBF_SHARED, 0, NULL, 0 );
+      commonError( pArea, EG_SHARED, EDBF_SHARED, 0, NULL, 0, NULL );
       return FAILURE;
    }
 
@@ -3387,7 +3402,8 @@ static ERRCODE adsOrderListAdd( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
       /* 1001 and 7008 are standard ADS Open Errors that will usually be sharing issues */
       USHORT uiOsCOde = u32RetVal == 1001 || u32RetVal == 7008 ? 32 : 0;
       commonError( pArea, EG_OPEN, ( USHORT ) u32RetVal, uiOsCOde,
-                   ( char * ) hb_itemGetCPtr( pOrderInfo->atomBagName ), EF_CANDEFAULT );
+                   ( char * ) hb_itemGetCPtr( pOrderInfo->atomBagName ),
+                   EF_CANDEFAULT, NULL );
       return FAILURE;
    }
    if( !pArea->hOrdCurrent && u16ArrayLen > 0 )
@@ -3628,7 +3644,7 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    if( u32RetVal != AE_SUCCESS )
    {
-      commonError( pArea, EG_CREATE, ( USHORT ) u32RetVal, 0, ( char * ) pOrderInfo->abBagName, 0 );
+      commonError( pArea, EG_CREATE, ( USHORT ) u32RetVal, 0, ( char * ) pOrderInfo->abBagName, 0, NULL );
       return FAILURE;
    }
    else
@@ -4357,7 +4373,7 @@ static ERRCODE adsGetValueFile( ADSAREAP pArea, USHORT uiIndex, BYTE * szFile, U
                                 ( UNSIGNED8* ) szFile );
    if( u32RetVal != AE_SUCCESS )
    {
-      /* commonError( pArea, EG_READ, ( USHORT ) u32RetVal, 0, NULL, 0 ); */
+      /* commonError( pArea, EG_READ, ( USHORT ) u32RetVal, 0, NULL, 0, NULL ); */
       return FAILURE;
    }
    return SUCCESS;
@@ -4394,7 +4410,7 @@ static ERRCODE adsPutValueFile( ADSAREAP pArea, USHORT uiIndex, BYTE * szFile, U
                                 ( UNSIGNED8* ) szFile );
    if( u32RetVal != AE_SUCCESS )
    {
-      commonError( pArea, EG_WRITE, ( USHORT ) u32RetVal, 0, NULL, 0 );
+      commonError( pArea, EG_WRITE, ( USHORT ) u32RetVal, 0, NULL, 0, NULL );
       return FAILURE;
    }
    return SUCCESS;
