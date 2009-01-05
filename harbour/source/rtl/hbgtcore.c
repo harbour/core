@@ -97,7 +97,7 @@ static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
    pGT->uiDispCount  = 0;
    pGT->uiExtCount   = 0;
    pGT->uiClearChar  = ' ';
-   pGT->bClearColor  = 0x07;
+   pGT->uiClearColor = 0x07;
    pGT->iHeight      = 24;
    pGT->iWidth       = 80;
    pGT->hStdIn       = HB_STDIN_HANDLE;
@@ -304,12 +304,12 @@ static void hb_gt_def_GetColorData( PHB_GT pGT, int ** pColorsPtr, int * piColor
 
 static int  hb_gt_def_GetClearColor( PHB_GT pGT )
 {
-   return pGT->bClearColor;
+   return pGT->uiClearColor;
 }
 
 static void hb_gt_def_SetClearColor( PHB_GT pGT, int iColor )
 {
-   pGT->bClearColor = iColor;
+   pGT->uiClearColor = ( USHORT ) ( iColor & 0xff );
 }
 
 static int  hb_gt_def_GetClearChar( PHB_GT pGT )

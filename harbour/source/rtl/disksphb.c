@@ -207,7 +207,7 @@ HB_FUNC( HB_DISKSPACE )
          }
 #else
          P_GDFSE pGetDiskFreeSpaceEx = ( P_GDFSE )
-                           GetProcAddress( GetModuleHandleA( "kernel32.dll" ),
+                           GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
                                            "GetDiskFreeSpaceExA" );
          if( pGetDiskFreeSpaceEx )
          {

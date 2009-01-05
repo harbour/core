@@ -136,7 +136,7 @@ HB_FUNC( DISKSPACE )
 #else
       char szPath[ 4 ];
       P_GDFSE pGetDiskFreeSpaceEx = ( P_GDFSE )
-                           GetProcAddress( GetModuleHandleA( "kernel32.dll" ),
+                           GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
                                            "GetDiskFreeSpaceExA" );
       szPath[ 0 ] = ( char ) uiDrive + 'A' - 1;
       szPath[ 1 ] = ':';

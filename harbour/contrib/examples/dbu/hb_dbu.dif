@@ -1,7 +1,17 @@
 diff -u -x make_dif.bat ..\ori_src\DBU.PRG .\DBU.PRG
---- ..\ori_src\DBU.PRG	Thu Mar 04 05:20:00 1993
-+++ .\DBU.PRG	Fri May 30 15:37:11 2008
-@@ -378,13 +378,13 @@
+--- ..\ori_src\DBU.PRG	Thu Mar 04 04:20:00 1993
++++ .\DBU.PRG	Fri Dec 19 12:56:30 2008
+@@ -60,6 +60,9 @@
+    SAVE SCREEN                                   && the screen you save...
+    SET SCOREBOARD OFF                            && who's keeping score, anyhow
+    SET KEY 28 TO                                 && some folks need help
++
++   SET DATE ANSI
++   SET CENTURY ON
+    
+    IF (ISCOLOR() .OR. "/C" $ UPPER(param2)) .AND. .NOT. "/M" $ UPPER(param2)
+       * make it pretty
+@@ -378,13 +381,13 @@
              
           ENDIF
           
@@ -19,7 +29,7 @@ diff -u -x make_dif.bat ..\ori_src\DBU.PRG .\DBU.PRG
           
        OTHERWISE
           * file not found..ignore command line
-@@ -395,7 +395,7 @@
+@@ -395,7 +398,7 @@
        IF .NOT. EMPTY(com_line)
           * command line file exists
           
@@ -29,8 +39,8 @@ diff -u -x make_dif.bat ..\ori_src\DBU.PRG .\DBU.PRG
              view_file = com_line
              set_from(.F.)                        && restore view
 diff -u -x make_dif.bat ..\ori_src\DBUCOPY.PRG .\DBUCOPY.PRG
---- ..\ori_src\DBUCOPY.PRG	Thu Mar 04 05:20:00 1993
-+++ .\DBUCOPY.PRG	Fri May 30 15:41:33 2008
+--- ..\ori_src\DBUCOPY.PRG	Thu Mar 04 04:20:00 1993
++++ .\DBUCOPY.PRG	Fri May 30 14:41:33 2008
 @@ -104,7 +104,7 @@
  
  	* DBF for normal mode
@@ -86,8 +96,8 @@ diff -u -x make_dif.bat ..\ori_src\DBUCOPY.PRG .\DBUCOPY.PRG
  
  			ENDIF
 diff -u -x make_dif.bat ..\ori_src\DBUINDX.PRG .\DBUINDX.PRG
---- ..\ori_src\DBUINDX.PRG	Thu Mar 04 05:20:00 1993
-+++ .\DBUINDX.PRG	Fri May 30 15:40:42 2008
+--- ..\ori_src\DBUINDX.PRG	Thu Mar 04 04:20:00 1993
++++ .\DBUINDX.PRG	Fri May 30 14:40:42 2008
 @@ -240,7 +240,7 @@
  		INDEX ON &k_exp TO &filename
  		CLOSE INDEX
@@ -98,8 +108,8 @@ diff -u -x make_dif.bat ..\ori_src\DBUINDX.PRG .\DBUINDX.PRG
  			* add only .ntx files in the current directory
  
 diff -u -x make_dif.bat ..\ori_src\DBUSTRU.PRG .\DBUSTRU.PRG
---- ..\ori_src\DBUSTRU.PRG	Thu Mar 04 05:20:00 1993
-+++ .\DBUSTRU.PRG	Fri May 30 15:34:49 2008
+--- ..\ori_src\DBUSTRU.PRG	Thu Mar 04 04:20:00 1993
++++ .\DBUSTRU.PRG	Fri May 30 14:34:49 2008
 @@ -811,7 +811,7 @@
  			is_insert = .F.
  			filename = stru_name
@@ -143,8 +153,8 @@ diff -u -x make_dif.bat ..\ori_src\DBUSTRU.PRG .\DBUSTRU.PRG
  				i = afull(dbf_list) + 1
  
 diff -u -x make_dif.bat ..\ori_src\DBUUTIL.PRG .\DBUUTIL.PRG
---- ..\ori_src\DBUUTIL.PRG	Thu Mar 04 05:20:00 1993
-+++ .\DBUUTIL.PRG	Fri May 30 15:36:26 2008
+--- ..\ori_src\DBUUTIL.PRG	Thu Mar 04 04:20:00 1993
++++ .\DBUUTIL.PRG	Fri May 30 14:36:26 2008
 @@ -2152,7 +2152,7 @@
  IF FILE(M->filename)
  	* only if the file exists
@@ -155,8 +165,8 @@ diff -u -x make_dif.bat ..\ori_src\DBUUTIL.PRG .\DBUUTIL.PRG
  		k_pos = 23
  
 diff -u -x make_dif.bat ..\ori_src\DBUVIEW.PRG .\DBUVIEW.PRG
---- ..\ori_src\DBUVIEW.PRG	Thu Mar 04 05:20:00 1993
-+++ .\DBUVIEW.PRG	Fri May 30 15:36:04 2008
+--- ..\ori_src\DBUVIEW.PRG	Thu Mar 04 04:20:00 1993
++++ .\DBUVIEW.PRG	Fri May 30 14:36:04 2008
 @@ -1110,7 +1110,7 @@
  
  			IF .NOT. (RAT(".", M->filename) > RAT("\", M->filename))

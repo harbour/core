@@ -89,14 +89,14 @@
    {
       struct find_t    entry;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
-   
+
    #define FA_ARCH      _A_ARCH
    #define FA_DIREC     _A_SUBDIR
    #define FA_HIDDEN    _A_HIDDEN
    #define FA_RDONLY    _A_RDONLY
    #define FA_LABEL     _A_VOLID
    #define FA_SYSTEM    _A_SYSTEM
-   
+
    #define ff_name   name
    #define ff_fsize  size
    #define ff_attrib attrib
@@ -408,8 +408,8 @@ char * hb_fsAttrDecode( ULONG ulAttr, char * szAttr )
    return szAttr;
 }
 
-/* Finds the first then the next matching file on 
-   each call. Does low-level (platform dependent 
+/* Finds the first then the next matching file on
+   each call. Does low-level (platform dependent
    filtering if needed. */
 
 static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
@@ -441,7 +441,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
-      /* Handling HB_FA_LABEL doesn't need any special tricks 
+      /* Handling HB_FA_LABEL doesn't need any special tricks
          under the DOS platform. */
 
       if( ffind->bFirst )
@@ -521,9 +521,9 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                                 FIL_STANDARD ) == NO_ERROR && info->findCount > 0;
       }
       else
-         bFound = DosFindNext( info->hFindFile, 
-                               &info->entry, 
-                               sizeof( info->entry ), 
+         bFound = DosFindNext( info->hFindFile,
+                               &info->entry,
+                               sizeof( info->entry ),
                                &info->findCount ) == NO_ERROR && info->findCount > 0;
 
       /* Fill Harbour found file info */
@@ -572,7 +572,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             ffind->bFirst = FALSE;
             ffind->szName[ 0 ] = '\0';
 
-            bFound = GetVolumeInformationA( ffind->pszFileMask, ffind->szName, _POSIX_PATH_MAX, NULL, NULL, NULL, NULL, 0 );
+            bFound = GetVolumeInformationA( ffind->pszFileMask, ffind->szName, sizeof( ffind->szName ) - 1, NULL, NULL, NULL, NULL, 0 );
          }
       }
       else
@@ -611,7 +611,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             else
             {
 #if defined(__XCC__) || __POCC__ >= 500
-               /* NOTE: PellesC 5.00.1 will go into an infinite loop if we don't 
+               /* NOTE: PellesC 5.00.1 will go into an infinite loop if we don't
                         split this into two operations. [vszakats] */
                ffind->size = ( HB_FOFFSET ) info->pFindFileData.nFileSizeLow;
                ffind->size += ( HB_FOFFSET ) info->pFindFileData.nFileSizeHigh << 32;
@@ -669,7 +669,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          info->pattern[ 0 ] = '\0';
 
          /* hb_strncpy( string, pszFileName, sizeof( string ) - 1 ); */
-         hb_strncpy( string, ffind->pszFileMask, sizeof( string ) - 1 ); 
+         hb_strncpy( string, ffind->pszFileMask, sizeof( string ) - 1 );
          pos = strrchr( string, HB_OS_PATH_DELIM_CHR );
          if( pos )
          {
@@ -774,7 +774,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    if( bFound )
    {
       /* Do the conversions common for all platforms */
-      ffind->szName[ _POSIX_PATH_MAX ] = '\0';
+      ffind->szName[ sizeof( ffind->szName ) - 1 ] = '\0';
 
       ffind->attr = hb_fsAttrFromRaw( raw_attr );
 
@@ -817,7 +817,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileMask, ULONG attrmask )
    return NULL;
 }
 
-/* Finds next matching file, and applies a filter which makes 
+/* Finds next matching file, and applies a filter which makes
    searching CA-Cl*pper/MS-DOS compatible. */
 
 BOOL hb_fsFindNext( PHB_FFIND ffind )

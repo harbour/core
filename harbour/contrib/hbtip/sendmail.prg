@@ -93,17 +93,42 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    LOCAL lConnect      := .T.
    LOCAL oPop
 
-   DEFAULT cUser       TO ""
-   DEFAULT cPass       TO ""
-   DEFAULT nPort       TO 25
-   DEFAULT aFiles      TO {}
-   DEFAULT nPriority   TO 3
-   DEFAULT lRead       TO .F.
-   DEFAULT lTrace      TO .F.
-   DEFAULT lPopAuth    TO .T.
-   DEFAULT lNoAuth     TO .F.
-   DEFAULT nTimeOut    TO 100
-   DEFAULT cReplyTo    TO ""
+   IF ! ISCHARACTER( cServer ) .OR. Empty( cServer )
+      cServer := "localhost"
+   ENDIF
+   IF ! ISCHARACTER( cUser )
+      cUser := ""
+   ENDIF
+   IF ! ISCHARACTER( cPass )
+      cPass := ""
+   ENDIF
+   IF ! ISNUMBER( nPort ) .OR. Empty( nPort )
+      nPort := 25
+   ENDIF
+   IF ! ISARRAY( aFiles )
+      aFiles := {}
+   ENDIF
+   IF ! ISNUMBER( nPriority )
+      nPriority := 3
+   ENDIF
+   IF ! ISLOGICAL( lRead )
+      lRead := .F.
+   ENDIF
+   IF ! ISLOGICAL( lTrace )
+      lTrace := .F.
+   ENDIF
+   IF ! ISLOGICAL( lPopAuth )
+      lPopAuth := .T.
+   ENDIF
+   IF ! ISLOGICAL( lNoAuth )
+      lNoAuth := .F.
+   ENDIF
+   IF ! ISNUMBER( nTimeOut )
+      nTimeOut := 100
+   ENDIF
+   IF ! ISCHARACTER( cReplyTo )
+      cReplyTo := ""
+   ENDIF
 
    cUser := StrTran( cUser, "@", "&at;" )
 
@@ -120,43 +145,49 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       IF Len( aTo ) > 1
          FOR EACH cTo IN aTo
             IF cTo:__enumIndex() != 1
-               cTmp += cTo + ","
+               IF !Empty( cTo )
+                  cTmp += cTo + ","
+               ENDIF
             ENDIF
          NEXT
-         cTmp := Substr( cTmp, 1, Len( cTmp ) - 1 )
+         cTmp := SubStr( cTmp, 1, Len( cTmp ) - 1 )
       ENDIF
       cTo := aTo[ 1 ]
       IF Len( cTmp ) > 0
          cTo += "," + cTmp
       ENDIF
-   ELSE
-      cTo := Alltrim( aTo )
+   ELSEIF ISCHARACTER( aTo )
+      cTo := AllTrim( aTo )
    ENDIF
 
 
    // CC (Carbon Copy)
    IF ISARRAY( aCC )
-      IF Len(aCC) >0
+      IF Len( aCC ) > 0
          FOR EACH cTmp IN aCC
-            cCC += cTmp + ","
+            IF !Empty( cTmp )
+               cCC += cTmp + ","
+            ENDIF
          NEXT
-         cCC := Substr( cCC, 1, Len( cCC ) - 1 )
+         cCC := SubStr( cCC, 1, Len( cCC ) - 1 )
       ENDIF
    ELSEIF ISCHARACTER(aCC)
-      cCC := Alltrim( aCC )
+      cCC := AllTrim( aCC )
    ENDIF
 
 
    // BCC (Blind Carbon Copy)
    IF ISARRAY(aBCC)
-      IF Len(aBCC)>0
+      IF Len(aBCC) > 0
          FOR EACH cTmp IN aBCC
-            cBCC += cTmp + ","
+            IF !Empty( cTmp )
+               cBCC += cTmp + ","
+            ENDIF
          NEXT
-         cBCC := Substr( cBCC, 1, Len( cBCC ) - 1 )
+         cBCC := SubStr( cBCC, 1, Len( cBCC ) - 1 )
       ENDIF
    ELSEIF ISCHARACTER(aBCC)
-      cBCC := Alltrim( aBCC )
+      cBCC := AllTrim( aBCC )
    ENDIF
 
    IF cPopServer != NIL .AND. lPopAuth
@@ -235,7 +266,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    IF !lNoAuth
 
-      IF oInMail:Opensecure()
+      IF oInMail:OpenSecure()
 
          WHILE .T.
             oInMail:GetOk()

@@ -84,6 +84,8 @@
 
 #define HB_OS_WIN_32_USED
 
+#define _WIN32_WINNT   0x0500 /* Set to Windows 2000 for WS_EX_LAYERED */
+
 #include "gtwvt.h"
 
 static int           s_GtId;
@@ -1606,7 +1608,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          pWVT->bResizing = FALSE;
 
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
-         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+         if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
+            hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
          return 0;
 
       case WM_SIZE:
@@ -1616,7 +1619,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             {
                pWVT->bAlreadySizing = TRUE;
 
-               if ( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
+               if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
                   hb_gt_wvt_FitSize( pWVT );
                else
                   hb_gt_wvt_FitRows( pWVT );
@@ -1649,7 +1652,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                ShowWindow( pWVT->hWnd, SW_NORMAL );
 
                hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
-               hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
+               if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
+                  hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
 
                return 0;
             }
@@ -1738,6 +1742,35 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT->hInstance );
       if( !pWVT->hWnd )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
+
+      if( ! GetSystemMetrics( SM_REMOTESESSION ) )
+      {
+         typedef BOOL ( WINAPI * P_SLWA )( HWND, COLORREF, BYTE, DWORD );
+
+#if defined(HB_WINCE)
+         P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
+                  GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
+                                  TEXT( "SetLayeredWindowAttributes" ) );
+#else
+         P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
+                  GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
+                                  "SetLayeredWindowAttributes" );
+#endif
+
+         if( pSetLayeredWindowAttributes )
+         {
+#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+            SetWindowLong( pWVT->hWnd, GWL_EXSTYLE, GetWindowLong( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
+#else
+            SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
+#endif
+
+            pSetLayeredWindowAttributes( pWVT->hWnd,
+               ( COLORREF ) 0 /* COLORREF crKey */,
+               255 /* BYTE bAlpha */,
+               LWA_ALPHA /* DWORD dwFlags */ );
+         }
+      }
 
       hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
 

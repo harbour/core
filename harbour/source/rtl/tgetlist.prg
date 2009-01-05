@@ -364,16 +364,16 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
    DO CASE
    CASE nKey == K_UP
       oGet:exitState := GE_UP
-   
+
    CASE nKey == K_SH_TAB
       oGet:exitState := GE_UP
-   
+
    CASE nKey == K_DOWN
       oGet:exitState := GE_DOWN
-   
+
    CASE nKey == K_TAB
       oGet:exitState := GE_DOWN
-   
+
    CASE nKey == K_ENTER
       oGet:exitState := GE_ENTER
 
@@ -600,7 +600,7 @@ METHOD GetPostValidate( oGet, aMsg ) CLASS HBGetList
 
       ::ShowScoreBoard()
       oGet:updateBuffer()
-      
+
 #ifdef HB_COMPAT_C53
       ::lUpdated := iif( oGet:changed, .T., lUpdated )
 #else
@@ -676,7 +676,7 @@ METHOD Settle( nPos, lInit ) CLASS HBGetList
    ELSE
       IF ::nLastExitState != 0
          nExitState := ::nLastExitState
-      ELSEIF ::nNextGet < ::nLastPos 
+      ELSEIF ::nNextGet < ::nLastPos
          nExitState := GE_UP
       ELSE
          nExitState := GE_DOWN
@@ -704,7 +704,7 @@ METHOD Settle( nPos, lInit ) CLASS HBGetList
    CASE nExitState == GE_ENTER
       nPos++
 
-   CASE nExitState == GE_SHORTCUT 
+   CASE nExitState == GE_SHORTCUT
       RETURN ::nNextGet
 
    CASE nExitState == GE_MOUSEHIT
@@ -904,7 +904,7 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
 
       IF oGUI:ClassName() == "LISTBOX" .AND. ;
          oGUI:dropDown .AND. ;
-         oGUI:isOpen 
+         oGUI:isOpen
 
          oGUI:Close()
       ENDIF
@@ -1186,7 +1186,7 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
 
    ENDIF
 
-   RETURN lValid 
+   RETURN lValid
 
 METHOD TBApplyKey( oGet, oTB, nKey, oMenu, aMsg ) CLASS HBGetList
 
@@ -1215,7 +1215,7 @@ METHOD TBApplyKey( oGet, oTB, nKey, oMenu, aMsg ) CLASS HBGetList
    ENDIF
 
    DO CASE
-   CASE nKey == K_TAB 
+   CASE nKey == K_TAB
       oGet:exitState := GE_DOWN
 
    CASE nKey == K_SH_TAB
@@ -1229,7 +1229,7 @@ METHOD TBApplyKey( oGet, oTB, nKey, oMenu, aMsg ) CLASS HBGetList
 #endif
       oGet:exitState := GE_ENTER
 
-   CASE nKey == K_ESC 
+   CASE nKey == K_ESC
       IF Set( _SET_ESCAPE )
          oGet:exitState := GE_ESCAPE
       ENDIF
@@ -1421,7 +1421,7 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
                RETURN 0
 
             ENDIF
-      
+
             // Test the next GUI-GET or Get PreValidation:
             lGUI := ISOBJECT( oGet:control )
 
@@ -1480,7 +1480,7 @@ METHOD HitTest( nMRow, nMCol, aMsg ) CLASS HBGetList
          RETURN 0  // Changed.
 
       ENDIF
-      
+
       // Test the next GUI-GET or Get PreValidation:
       lGUI := ISOBJECT( ::aGetList[ ::nNextGet ]:control )
 
@@ -1542,11 +1542,11 @@ METHOD ReadStats( nElement, xNewValue ) CLASS HBGetList
    CASE nElement == SXREADVAR      ; xRetVal := ::cVarName
    CASE nElement == SCREADPROCNAME ; xRetVal := ::cReadProcName
    CASE nElement == SNREADPROCLINE ; xRetVal := ::nReadProcLine
-   CASE nElement == SNNEXTGET      ; xRetVal := ::nNextGet     
-   CASE nElement == SNHITCODE      ; xRetVal := ::nHitCode     
+   CASE nElement == SNNEXTGET      ; xRetVal := ::nNextGet
+   CASE nElement == SNHITCODE      ; xRetVal := ::nHitCode
    CASE nElement == SNPOS          ; xRetVal := ::nPos
-   CASE nElement == SCSCRSVMSG     ; xRetVal := ::cMsgSaveS  
-   CASE nElement == SNMENUID       ; xRetVal := ::nMenuID    
+   CASE nElement == SCSCRSVMSG     ; xRetVal := ::cMsgSaveS
+   CASE nElement == SNMENUID       ; xRetVal := ::nMenuID
    CASE nElement == SNSVCURSOR     ; xRetVal := ::nSaveCursor
    OTHERWISE                       ; xRetVal := NIL
    ENDCASE

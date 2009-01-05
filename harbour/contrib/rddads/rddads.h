@@ -66,20 +66,22 @@
 #include "ace.h"
 
 /* Autodetect ACE version. */
-#if   defined(ADS_NOTIFICATION_CONNECTION)
-   #define _ADS_LIB_VERSION 900 /* or upper */
+#if   defined(ADS_KEEP_AOF_PLAN)
+   #define _ADS_LIB_VERSION 910 /* or upper */
+#elif defined(ADS_NOTIFICATION_CONNECTION)
+   #define _ADS_LIB_VERSION 900
 #elif defined(ADS_UDP_IP_CONNECTION)
-   #define _ADS_LIB_VERSION 810 /* or upper */
+   #define _ADS_LIB_VERSION 810
 #elif defined(ADS_REPLICATION_CONNECTION)
-   #define _ADS_LIB_VERSION 800 /* or upper */
+   #define _ADS_LIB_VERSION 800
 #elif defined(ADS_NOT_AUTO_OPEN)
-   #define _ADS_LIB_VERSION 710 /* or upper */
+   #define _ADS_LIB_VERSION 710
 #elif defined(ADS_FTS_INDEX_ORDER)
-   #define _ADS_LIB_VERSION 700 /* or upper */
+   #define _ADS_LIB_VERSION 700
 #elif defined(ADS_COMPRESS_ALWAYS)
-   #define _ADS_LIB_VERSION 620 /* or upper */
+   #define _ADS_LIB_VERSION 620
 #elif defined(ADS_USER_DEFINED)
-   #define _ADS_LIB_VERSION 611 /* or upper */
+   #define _ADS_LIB_VERSION 611
 #else
    #define _ADS_LIB_VERSION 500
 #endif

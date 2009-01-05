@@ -107,6 +107,8 @@ MKLIB  = lib.exe
 HB_VISUALC_VER = 80
 !endif
 
+ARFLAGS = /nologo $(A_USR)
+
 # C Compiler Flags
 !if "$(HB_BUILD_OPTIM)" != "no"
 !if $(HB_VISUALC_VER) >= 80
@@ -167,7 +169,7 @@ ALL_HEADERS = $(PRG_HEADERS) $(C_HEADERS)
 #**********************************************************
 $(LIB_PATH) : $(LIB_OBJS)
     @if exist "$@" $(DEL) "$@" > nul
-    $(MKLIB) /nologo /out:$@ @<<
+    $(MKLIB) $(ARFLAGS) /out:$@ @<<
 $**
 <<$(HB_KEEPSTATE)
 #**********************************************************

@@ -328,7 +328,7 @@ EXTERNAL VERSION
 EXTERNAL WORD
 EXTERNAL YEAR
 
-/* Harbour extensions violating extension namespace rules 
+/* Harbour extensions violating extension namespace rules
    (but not marked as HB_EXTENSION). */
 
 EXTERNAL RDDINFO

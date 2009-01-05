@@ -8,6 +8,113 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-05 13:33 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+    * changed BYTE bClearColor to USHORT uiClearColor
+
+
+  The following modifications were made by Viktor Szakats,
+  (2008-11-22 16:15 UTC+0100 - 2008-12-19 12:56 UTC+0100)
+  Many thanks. It's the first part without CP conversions in OS calls which
+  I will want to check yet. Please tests MS-Windows only modifications.
+
+  * harbour/make_vc.mak
+  * harbour/contrib/mtpl_vc.mak
+    + Added support for A_USR.
+
+  * harbour/include/set.ch
+  * harbour/include/hbextern.ch
+  * harbour/source/vm/cmdarg.c
+  * harbour/source/vm/set.c
+  * harbour/source/rtl/tgetlist.prg
+  * harbour/source/rtl/gete.c
+  * harbour/contrib/hbhpdf/harupdf.c
+    * formatting
+
+  * harbour/source/rtl/hbffind.c
+    * Changed few places to use sizeof() instead of
+      explicit size macro.
+
+  * harbour/source/vm/extrap.c
+    + Added module listing. (also supports Win64)
+
+  * harbour/source/common/hbver.c
+    + Added Intel C compiler detection. (from xhb)
+    + Added Wine detection (unofficial but stable looking
+      detection method. There intentionally doesn't exist
+      an official method to do this detection, yet there
+      are cases when this is necessary. It's also essential
+      for error reports.)
+      See also:
+      http://www.mail-archive.com/wine-devel@winehq.org/msg48659.html
+
+  * harbour/source/common/hbfopen.c
+    ! Reverted recent change to use fopen_s(). fopen_s()
+      will always open in exclusive mode, so it could create
+      incompatibilities.
+
+  * harbour/source/codepage/cpbgmik.c
+    ! Fixed BGMIK collation encoding. Someone familiar with
+      BG CPs please confirm this, but previously it was
+      almost certainly broken, as the collation was identical
+      to BG866.
+
+  * harbour/source/rtl/diskspac.c
+  * harbour/source/rtl/disksphb.c
+    ! GetModuleHandleA() -> GetModuleHandle()
+    ; NOTE: GetModuleHandleA() WinCE emulation in
+            source/common/wince.c might be unnecessary
+            after this change.
+
+  * harbour/source/rtl/memoedit.prg
+  * harbour/source/rtl/teditor.prg
+    ! Cleaned insert handling. It now won't anymore mess up
+      the cursor on instantiation (in New() method). Internal
+      :lInsert state replaced by Set( _SET_INSERT ). Cursor
+      is only touched in the editing loop.
+
+  * harbour/source/rtl/version.c
+    ! HB_VERSION( HB_VERSION_BUILD_DATE ): Fixed month
+      being off by one.
+
+  * harbour/contrib/hbmzip/hbmzip.c
+    ! Fixed typo which caused timestamps stored in .zip files
+      to be wrong.
+
+  * harbour/contrib/hbhpdf/tests/harupdf.prg
+    ! Minor typo in code.
+
+  * harbour/contrib/rddads/rddads.h
+    + Added detection for ACE 9.10.
+
+  * harbour/contrib/hbtip/sendmail.prg
+    ! Stricter parameter checking in hb_SendMail().
+
+  * harbour/contrib/examples/dbu/hb_dbu.dif
+    + Added SET DATE ANSI and SET CENTURY ON
+
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    + Generating HB_K_RESIZE keystrokes on screen resize.
+      This way it's working similarly to gtwvt.
+    ! Typos in comments.
+
+  * harbour/source/rtl/gtwin/gtwin.c
+    ! Fixed HB_GTI_KBDSHIFTS not working in console mode.
+      Replaced GetKeyboardState() call with GetKeyState() calls.
+
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    + Added 'layered' window support. It's enabled on W2K
+      and above (and only when not in Terminal Services
+      environment, because it makes it perform worse). This
+      way the screen is also properly displayed regardless
+      of what the Harbour application does. It also fixes
+      numerous paint artifacts, when GTWVT window was in
+      the background and another window is moved in front
+      of it.
+    ! Fixed only generate HB_K_RESIZE keystrokes when
+      resize mode is HB_GTI_RESIZEMODE_ROWS.
+
 2008-12-31 14:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c
     + added optimizations for var := var <op> <exp> => var <op>= <exp>

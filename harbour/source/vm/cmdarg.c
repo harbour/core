@@ -122,9 +122,9 @@ void hb_cmdargInit( int argc, char * argv[] )
 
 #if defined( HB_OS_WIN_32 )
 
-   /* NOTE: Manually setup the executable name in Windows, 
-            because in console apps the name may be truncated 
-            in some cases, and in GUI apps it's not filled 
+   /* NOTE: Manually setup the executable name in Windows,
+            because in console apps the name may be truncated
+            in some cases, and in GUI apps it's not filled
             at all. [vszakats] */
    if( GetModuleFileName( NULL, s_lpAppName, MAX_PATH ) != 0 )
    {
@@ -149,7 +149,7 @@ BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargIsInternal(%s, %p)", szArg, piLen));
 
-   /* NOTE: Not checking for '--' here, as it would filter out 
+   /* NOTE: Not checking for '--' here, as it would filter out
             valid command line options used by applications. [vszakats] */
 
    if( hb_strnicmp( szArg, "--hb:", 5 ) == 0 ||
@@ -160,8 +160,8 @@ BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
 
       return TRUE;
    }
-   else if( strlen( szArg ) >= 2 && 
-            szArg[ 0 ] == '/' && 
+   else if( strlen( szArg ) >= 2 &&
+            szArg[ 0 ] == '/' &&
             szArg[ 1 ] == '/' )
    {
       if( piLen )
@@ -226,11 +226,11 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
       i = strlen( pszName );
       while( *pszNext )
       {
-         static const char * szSeparator = " ;,\t";
+         static const char * s_szSeparator = " ;,\t";
          char * pszEnd;
 
          /* Skip the separators */
-         while( *pszNext && strchr( szSeparator, *pszNext ) )
+         while( *pszNext && strchr( s_szSeparator, *pszNext ) )
             pszNext++;
 
          /* The // is optional in the envvar */
@@ -239,7 +239,7 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 
          pszEnd = pszNext;
          /* Search for the end of this switch */
-         while( *pszEnd && strchr( szSeparator, *pszEnd ) == NULL )
+         while( *pszEnd && strchr( s_szSeparator, *pszEnd ) == NULL )
             pszEnd++;
 
          /* Check the switch */
@@ -322,8 +322,7 @@ HB_FUNC( HB_ARGSTRING )
 
       if( pszValue )
       {
-         hb_retc( pszValue );
-         hb_xfree( pszValue );
+         hb_retc_buffer( pszValue );
          return;
       }
    }
@@ -340,7 +339,7 @@ HB_FUNC( HB_ARGC )
 }
 
 /* Returns a command line argument passed to the application. Calling it with
-   the parameter zero or no parameter, it will return the name of the executable, 
+   the parameter zero or no parameter, it will return the name of the executable,
    as written in the command line. */
 
 HB_FUNC( HB_ARGV )
@@ -413,7 +412,7 @@ ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
    if( hb_cmdargCheck( "BUILD" ) )
       hb_verBuildInfo();
 
-   if( ( cFlags = hb_cmdargString( "FLAGS" ) ) != NULL ) 
+   if( ( cFlags = hb_cmdargString( "FLAGS" ) ) != NULL )
    {
       int i = 0;
       while( cFlags[ i ] )
@@ -446,7 +445,7 @@ ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
       hb_xfree( cFlags );
    }
 
-   if( ( cFlags = hb_cmdargString( "CANCEL" ) ) != NULL ) 
+   if( ( cFlags = hb_cmdargString( "CANCEL" ) ) != NULL )
    {
       int iVal = atoi( cFlags );
       if( iVal )
@@ -454,7 +453,7 @@ ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
       hb_xfree( cFlags );
    }
 
-   if( ( cFlags = hb_cmdargString( "CANCELEX" ) ) != NULL ) 
+   if( ( cFlags = hb_cmdargString( "CANCELEX" ) ) != NULL )
    {
       int iVal = atoi( cFlags );
       if( iVal )

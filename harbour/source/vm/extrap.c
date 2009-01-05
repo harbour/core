@@ -57,6 +57,9 @@
  * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt)
  *    hb_win32ExceptionHandler() Windows exception info dump code.
  *
+ * Copyright 2008 Viktor Szakats (harbour.01 syenar hu)
+ *    hb_win32ExceptionHandler() Module listing code.
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -80,6 +83,14 @@
 #  endif
 #endif
 
+#if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
+#  include <tlhelp32.h>
+   /* BCC and MinGW doesn't seem to #define this */
+#  ifndef TH32CS_SNAPMODULE32
+#     define TH32CS_SNAPMODULE32  0
+#  endif
+#endif
+
 #if defined( HB_SIGNAL_EXCEPTION_HANDLER )
    static BYTE * s_signal_stack[ SIGSTKSZ ];
 #endif
@@ -88,7 +99,7 @@
 
 LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
 {
-   char errmsg[ 4096 ];
+   char errmsg[ 8192 ];
 
    errmsg[ 0 ] = '\0';
 
@@ -104,7 +115,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
    {
       int errmsglen = sizeof( errmsg ) - 1;
 
-      char              buf[ 32 ];
+      char              buf[ 64 + MAX_PATH ];
       PEXCEPTION_RECORD pExceptionRecord = pExceptionInfo->ExceptionRecord;
       PCONTEXT          pCtx = pExceptionInfo->ContextRecord;
       DWORD             dwExceptCode = pExceptionInfo->ExceptionRecord->ExceptionCode;
@@ -114,7 +125,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
       unsigned int      eip;
       unsigned int      j;
       int               i;
-      
+
       hb_snprintf( errmsg, errmsglen,
                 "\n\n"
                 "    Exception Code:%08X\n"
@@ -164,7 +175,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
                break;
             hb_snprintf( buf, sizeof( buf ), "    %08X %08X  ", ( int ) eip, ( int ) ebp );
             hb_strncat( errmsg, buf, errmsglen );
-            for( j = 0; j < 10 && ( unsigned int )( ebp + j ) < ebp[ 0 ]; j++ )
+            for( j = 0; j < 10 && ( unsigned int ) ( ebp + j ) < ebp[ 0 ]; j++ )
             {
                hb_snprintf( buf, sizeof( buf ), " %08X", ebp[ j ] );
                hb_strncat( errmsg, buf, errmsglen );
@@ -174,6 +185,67 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
             ebp = ( unsigned int * ) ebp[ 0 ];
          }
          hb_strncat( errmsg, "\n", errmsglen );
+      }
+
+      {
+         /* NOTE: Several non-MS sources say that Win9x has these functions
+                  in tlhelp32.dll. Testing shows though, that in Win95, Win95b
+                  and Win98 they are in kernel32.dll, and tlhelp32.dll doesn't
+                  exist. [vszakats] */
+         HMODULE hKernel32 = GetModuleHandle( TEXT( "kernel32.dll" ) );
+
+         if( hKernel32 )
+         {
+            /* NOTE: Hack to force the ASCII versions of these types. [vszakats] */
+            #if defined( UNICODE )
+               #undef MODULEENTRY32
+               #undef LPMODULEENTRY32
+            #endif
+
+            typedef HANDLE ( WINAPI * P_CTH32SSH )( DWORD, DWORD ); /* CreateToolhelp32Snapshot() */
+            typedef BOOL ( WINAPI * P_M32F )( HANDLE, LPMODULEENTRY32 ); /* Module32First() */
+            typedef BOOL ( WINAPI * P_M32N )( HANDLE, LPMODULEENTRY32 ); /* Module32Next() */
+
+            P_CTH32SSH pCreateToolhelp32Snapshot = ( P_CTH32SSH ) GetProcAddress( hKernel32, "CreateToolhelp32Snapshot" );
+            P_M32F     pModule32First            = ( P_M32F     ) GetProcAddress( hKernel32, "Module32First" );
+            P_M32N     pModule32Next             = ( P_M32N     ) GetProcAddress( hKernel32, "Module32Next" );
+
+            if( pCreateToolhelp32Snapshot &&
+                pModule32First &&
+                pModule32Next )
+            {
+               /* Take a snapshot of all modules in the specified process. */
+               HANDLE hModuleSnap = pCreateToolhelp32Snapshot( TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, GetCurrentProcessId() );
+
+               if( hModuleSnap != INVALID_HANDLE_VALUE )
+               {
+                  MODULEENTRY32 me32;
+
+                  /* Set the size of the structure before using it. */
+                  me32.dwSize = sizeof( MODULEENTRY32 );
+
+                  /* Retrieve information about the first module, and exit if unsuccessful */
+                  if( pModule32First( hModuleSnap, &me32 ) )
+                  {
+                     hb_strncat( errmsg, "\nModules:\n", errmsglen );
+
+                     /* Now walk the module list of the process, and display information about each module */
+                     do
+                     {
+#if defined( HB_OS_WIN_64 )
+                        hb_snprintf( buf, sizeof( buf ), "0x%016" PFLL "X 0x%016" PFLL "X %s\n", ( UINT_PTR ) me32.modBaseAddr, ( UINT_PTR ) me32.modBaseSize, me32.szExePath );
+#else
+                        hb_snprintf( buf, sizeof( buf ), "0x%08X 0x%08X %s\n", ( UINT ) me32.modBaseAddr, ( UINT ) me32.modBaseSize, me32.szExePath );
+#endif
+                        hb_strncat( errmsg, buf, errmsglen );
+                     } while( pModule32Next( hModuleSnap, &me32 ) );
+                  }
+
+                  /* Do not forget to clean up the snapshot object. */
+                  CloseHandle( hModuleSnap );
+               }
+            }
+         }
       }
    }
 #endif

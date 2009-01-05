@@ -98,6 +98,8 @@ MTDLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll) $(VMMTDLL_LIB_OBJS)
 # C compiler, Harbour compiler and Linker flags.
 #**********************************************************
 
+ARFLAGS = /nologo $(A_USR)
+
 # C Compiler Flags
 !if "$(HB_BUILD_WINCE)" == "yes"
 
@@ -148,7 +150,7 @@ DBGMARKER      =  d
 !endif
 
 CFLAGSMT = -MT$(DBGMARKER) -DHB_MT_VM
-# NOTE: -GA flag should be disabled when building MT _.dlls_, 
+# NOTE: -GA flag should be disabled when building MT _.dlls_,
 #       as it creates bad code according to MS docs [vszakats].
 !if $(HB_VISUALC_VER) >= 70
 CFLAGSMT = $(CFLAGSMT) -GA
@@ -743,97 +745,97 @@ $(HB_DEST_DIRS) $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL):
 # LIBRARY Targets BUILD rules
 #**********************************************************
 $(HBMAINSTD_LIB): $(HBMAINSTD_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(HBMAINWIN_LIB): $(HBMAINWIN_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(COMMON_LIB)   : $(COMMON_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(PP_LIB)       : $(PP_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(VM_LIB)       : $(VM_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(VMMT_LIB)     : $(VMMT_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(RTL_LIB)      : $(RTL_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(MACRO_LIB)    : $(MACRO_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(DEBUG_LIB)    : $(DEBUG_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(LANG_LIB)     : $(LANG_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(CODEPAGE_LIB) : $(CODEPAGE_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(PCRE_LIB)     : $(PCRE_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(HBZLIB_LIB)   : $(HBZLIB_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(HBEXTERN_LIB) : $(HBEXTERN_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(RDD_LIB)      : $(RDD_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(NULSYS_LIB)   : $(NULSYS_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(DBFNTX_LIB)   : $(DBFNTX_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(DBFNSX_LIB)   : $(DBFNSX_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(DBFCDX_LIB)   : $(DBFCDX_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(DBFFPT_LIB)   : $(DBFFPT_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(HBSIX_LIB)    : $(HBSIX_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(HSX_LIB)      : $(HSX_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(USRRDD_LIB)   : $(USRRDD_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(GTCGI_LIB)    : $(GTCGI_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(GTDOS_LIB)    : $(GTDOS_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(GTPCA_LIB)    : $(GTPCA_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(GTSTD_LIB)    : $(GTSTD_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(GTWIN_LIB)    : $(GTWIN_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(GTWVT_LIB)    : $(GTWVT_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(GTGUI_LIB)    : $(GTGUI_LIB_OBJS)
-    $(MKLIB) /nologo /out:$@ $**
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 
 #**********************************************************

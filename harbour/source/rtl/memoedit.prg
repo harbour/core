@@ -55,6 +55,7 @@
 #include "common.ch"
 #include "inkey.ch"
 #include "memoedit.ch"
+#include "setcurs.ch"
 
 // A specialized HBEditor which can simulate MemoEdit() behaviour
 CREATE CLASS HBMemoEditor INHERIT HBEditor
@@ -280,6 +281,8 @@ FUNCTION MemoEdit( cString,;
 
    LOCAL oEd
 
+   LOCAL nOldCursor
+
    DEFAULT nTop            TO 0
    DEFAULT nLeft           TO 0
    DEFAULT nBottom         TO MaxRow()
@@ -299,12 +302,14 @@ FUNCTION MemoEdit( cString,;
    oEd:display()
 
    IF ! ISLOGICAL( xUserFunction ) .OR. xUserFunction == .T.
+      nOldCursor := SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
       oEd:Edit()
       IF oEd:Changed()
          cString := oEd:GetText()
          // dbu tests for LastKey() == K_CTRL_END, so I try to make it happy
          HB_SetLastKey( K_CTRL_END )
       ENDIF
+      SetCursor( nOldCursor )
    ENDIF
 
    RETURN cString

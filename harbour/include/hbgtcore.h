@@ -319,7 +319,7 @@ typedef struct _HB_GT_BASE
    USHORT         uiDispCount;
    USHORT         uiExtCount;
    USHORT         uiClearChar;
-   BYTE           bClearColor;
+   USHORT         uiClearColor;
    HB_FHANDLE     hStdIn;
    HB_FHANDLE     hStdOut;
    HB_FHANDLE     hStdErr;

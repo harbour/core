@@ -397,7 +397,7 @@ typedef struct tag_x_wnddef
    int col;
    int row;
    int cursorType;
-   
+
    /* last cursor position and shape */
    int lastCursorCol;
    int lastCursorRow;
@@ -2565,7 +2565,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   break;
 
                case CH_PTS:
-                  /* we use CoordModePrevious so only first point posiotion has to be updated */
+                  /* we use CoordModePrevious so only first point position has to be updated */
                   wnd->charTrans[ usCh16 ].u.pts[0].x = (wnd->charTrans[ usCh16 ].u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
                   wnd->charTrans[ usCh16 ].u.pts[0].y = (wnd->charTrans[ usCh16 ].u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
                   XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color >> 4] );
@@ -2579,7 +2579,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   break;
 
                case CH_LINE:
-                  /* we use CoordModePrevious so only first point posiotion has to be updated */
+                  /* we use CoordModePrevious so only first point position has to be updated */
                   wnd->charTrans[ usCh16 ].u.pts[0].x = (wnd->charTrans[ usCh16 ].u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
                   wnd->charTrans[ usCh16 ].u.pts[0].y = (wnd->charTrans[ usCh16 ].u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
                   XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color >> 4] );
@@ -2593,7 +2593,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   break;
 
                case CH_POLY:
-                  /* we use CoordModePrevious so only first point posiotion has to be updated */
+                  /* we use CoordModePrevious so only first point position has to be updated */
                   wnd->charTrans[ usCh16 ].u.pts[0].x = (wnd->charTrans[ usCh16 ].u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
                   wnd->charTrans[ usCh16 ].u.pts[0].y = (wnd->charTrans[ usCh16 ].u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
                   XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color >> 4] );
@@ -2850,6 +2850,7 @@ static void hb_gt_xwc_UpdateSize( PXWND_DEF wnd )
       wnd->fWinResize = FALSE;
       HB_GTSELF_SETMODE( wnd->pGT, wnd->newHeight / wnd->fontHeight,
                                    wnd->newWidth / wnd->fontWidth );
+      hb_gt_xwc_AddCharToInputQueue( wnd, HB_K_RESIZE );
    }
 }
 

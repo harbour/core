@@ -138,7 +138,7 @@ Function DesignHaruPDF( cFileToSave )
    /* output subtitle. */
    HPDF_Page_BeginText( page )
    HPDF_Page_SetFontAndSize( page, def_font, 16 )
-   HPDF_Page_TextOut( page, 60, height - 80, "<Standerd Type1 fonts samples>")
+   HPDF_Page_TextOut( page, 60, height - 80, "<Standard Type1 fonts samples>")
    HPDF_Page_EndText( page )
 
    HPDF_Page_BeginText( page )
@@ -643,7 +643,7 @@ Static Function Page_Text( pdf )
    font := HPDF_GetFont(pdf, "Courier-Bold", NIL)
    HPDF_Page_SetFontAndSize(page, font, 30)
 
-   for i := 0  to len(SAMP_TXT)
+   for i := 1 to len(SAMP_TXT)
        rad1 :=(angle2 - 90) / 180 * 3.141592
        rad2 := angle2 / 180 * 3.141592
 

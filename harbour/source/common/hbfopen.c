@@ -56,14 +56,8 @@ FILE * hb_fopen( const char *path, const char *mode )
 {
    BOOL fFree;
    char * pszFile = ( char * ) hb_fsNameConv( ( BYTE * ) path, &fFree );
-   FILE * file;
 
-#if defined( _MSC_VER ) && _MSC_VER >= 1400
-   file = NULL;
-   fopen_s( &file, pszFile, mode );
-#else
-   file = fopen( pszFile, mode );
-#endif
+   FILE * file = fopen( pszFile, mode );
 
    if( fFree )
       hb_xfree( pszFile );

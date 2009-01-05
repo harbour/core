@@ -807,7 +807,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
    }
    else
    {
-      hFile = hb_fsOpen( (BYTE*) szFileName, FO_READ );
+      hFile = hb_fsOpen( ( BYTE * ) szFileName, FO_READ );
 
       if( hFile != FS_ERROR )
       {
@@ -817,7 +817,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
             SYSTEMTIME  st;
 
             if( GetFileTime( ( HANDLE ) hb_fsGetOsHandle( hFile ), NULL, NULL, &ftutc ) &&
-                FileTimeToLocalFileTime( &ftutc, &ft ) & 
+                FileTimeToLocalFileTime( &ftutc, &ft ) &&
                 FileTimeToSystemTime( &ft, &st ) )
             {
                zfi.tmz_date.tm_sec = st.wSecond;

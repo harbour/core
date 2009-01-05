@@ -205,7 +205,21 @@ char * hb_verPlatform( void )
 
       if( GetVersionExA( &osVer ) )
       {
-         char * pszName = "";
+         /* NOTE: Unofficial Wine detection.
+                  http://www.mail-archive.com/wine-devel@winehq.org/msg48659.html */
+         HMODULE hntdll = GetModuleHandle( TEXT( "ntdll.dll" ) );
+         const char * pszWine = "";
+         const char * pszName = "";
+
+         if( hntdll )
+         {
+#if defined(HB_WINCE)
+            if( GetProcAddress( hntdll, TEXT( "wine_get_version" ) ) )
+#else
+            if( GetProcAddress( hntdll, "wine_get_version" ) )
+#endif
+               pszWine = "Wine ";
+         }
 
          switch( osVer.dwPlatformId )
          {
@@ -260,7 +274,8 @@ char * hb_verPlatform( void )
                break;
          }
 
-         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s %lu.%lu.%04d",
+         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "%sWindows%s %lu.%lu.%04d",
+                   pszWine,
                    pszName,
                    ( ULONG ) osVer.dwMajorVersion,
                    ( ULONG ) osVer.dwMinorVersion,
@@ -400,6 +415,18 @@ char * hb_verCompiler( void )
    pszName = __DMC_VERSION_STRING__;
    iVerMajor = 0;
    iVerMinor = 0;
+   iVerPatch = 0;
+
+#elif defined(__ICL)
+
+   pszName = "Intel(R) C";
+
+   #if defined(__cplusplus)
+      hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
+   #endif
+
+   iVerMajor = __ICL / 100;
+   iVerMinor = __ICL % 100;
    iVerPatch = 0;
 
 #elif defined(_MSC_VER)
@@ -545,7 +572,7 @@ char * hb_verCompiler( void )
 
 /* NOTE: The caller must free the returned buffer. [vszakats] */
 
-/* NOTE: 
+/* NOTE:
    CA-Cl*pper 5.2e returns: "Clipper (R) 5.2e Intl. (x216)  (1995.02.07)"
    CA-Cl*pper 5.3b returns: "Clipper (R) 5.3b Intl. (Rev. 338) (1997.04.25)"
 */

@@ -85,7 +85,7 @@ CREATE CLASS HBEditor
    METHOD LineColor( nRow )                              // Returns color string to use to draw nRow (current line if nRow is empty)
 
    METHOD MoveCursor( nKey )                             // Move cursor inside text / window (needs a movement key)
-   METHOD InsertState( lInsState )                       // Changes lInsert value and insertion / overstrike mode of editor
+   METHOD InsertState( lInsState )                       // Changes insert state and insertion / overstrike mode of editor
    METHOD Edit( nPassedKey )                             // Handles input (can receive a key in which case handles only this key and then exits)
    METHOD ExitState()                                    // Returns ::lExitEdit
 
@@ -117,28 +117,27 @@ CREATE CLASS HBEditor
    PROTECTED:
 
    VAR cFile          AS STRING      INIT ""             // name of file being edited
-                                                           
+
    VAR aText          AS ARRAY       INIT {}             // array with lines of text being edited
    VAR naTextLen      AS NUMERIC     INIT 0              // number of lines of text inside aText.
-                                                           
+
    VAR nTop           AS NUMERIC                         // boundaries of editor window, without box around
-   VAR nLeft          AS NUMERIC                         
-   VAR nBottom        AS NUMERIC                         
-   VAR nRight         AS NUMERIC                         
-                                                           
+   VAR nLeft          AS NUMERIC
+   VAR nBottom        AS NUMERIC
+   VAR nRight         AS NUMERIC
+
    VAR nFirstCol      AS NUMERIC     INIT 1              // FirstCol/Row of current text visible inside editor window
-   VAR nFirstRow      AS NUMERIC     INIT 1              
+   VAR nFirstRow      AS NUMERIC     INIT 1
    VAR nRow           AS NUMERIC     INIT 1              // Cursor position inside aText (nRow) and inside current line of text (nCol)
-   VAR nCol           AS NUMERIC     INIT 1              
-                                                           
+   VAR nCol           AS NUMERIC     INIT 1
+
    VAR nPhysRow       AS NUMERIC     INIT 0              // Hardware cursor position, I cannot rely on Row()/Col() because I could be inside another
    VAR nPhysCol       AS NUMERIC     INIT 0              // application/object and this one could be moving real cursor. If I'm running full
                                                          // screen nPhysRow will always have the same value as Row() and nPhysCol as Col()
-                                                           
+
    VAR nNumCols       AS NUMERIC     INIT 1              // How many columns / rows can be displayed inside editor window
-   VAR nNumRows       AS NUMERIC     INIT 1              
-                                                           
-   VAR lInsert        AS LOGICAL     INIT .F.            // Is editor in Insert mode or in Overstrike one?
+   VAR nNumRows       AS NUMERIC     INIT 1
+
    VAR nTabWidth      AS NUMERIC     INIT 8              // Size of Tab chars
    VAR lEditAllow     AS LOGICAL     INIT .T.            // Are changes to text allowed?
    VAR lSaved         AS LOGICAL     INIT .F.            // True if user exited editor with K_CTRL_W
@@ -146,7 +145,7 @@ CREATE CLASS HBEditor
    VAR nWordWrapCol   AS NUMERIC     INIT 0              // At which column word wrapping occurs
    VAR lDirty         AS LOGICAL     INIT .F.            // .T. if there are changes not saved
    VAR lExitEdit      AS LOGICAL     INIT .F.            // .T. if user requested to end Edit() method
-                                                           
+
    VAR cColorSpec     AS CHARACTER                       // Color string used for screen writes
 
    METHOD GetParagraph( nRow )
@@ -627,11 +626,10 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
 
    RETURN lMoveKey
 
-// Changes lInsert value and insertion / overstrike mode of editor
+// Changes insert state and insertion / overstrike mode of editor
 METHOD InsertState( lInsState ) CLASS HBEditor
 
    IF ISLOGICAL( lInsState )
-      ::lInsert := lInsState
       Set( _SET_INSERT, lInsState )
       IF ::lEditAllow
          SetCursor( iif( lInsState, SC_INSERT, SC_NORMAL ) )
@@ -651,7 +649,6 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
 
    IF ! ::lEditAllow
       ::BrowseText( nPassedKey )
-
    ELSE
 
       // If user pressed an exiting key (K_ESC or K_ALT_W) or I've received a key to handle and then exit
@@ -664,7 +661,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
                ::IdleHook()
             ENDIF
 
-            nKey := InKey( 0 )
+            nKey := Inkey( 0 )
          ELSE
             lSingleKeyProcess := .T.
             nKey := nPassedKey
@@ -686,7 +683,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
                ::aText[ ::nRow ]:cText += Space( ::nCol - ::LineLen( ::nRow ) )
             ENDIF
             // insert char if in insert mode or at end of current line
-            IF ::lInsert .OR. ( ::nCol > ::LineLen( ::nRow ) )
+            IF Set( _SET_INSERT ) .OR. ( ::nCol > ::LineLen( ::nRow ) )
                ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 0, Chr( nKey ) )
             ELSE
                ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 1, Chr( nKey ) )
@@ -697,7 +694,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
 
          CASE nKey == K_RETURN
             ::lDirty := .T.
-            IF ::lInsert .OR. ::nRow == ::naTextLen
+            IF Set( _SET_INSERT ) .OR. ::nRow == ::naTextLen
                IF ::LineLen( ::nRow ) > 0
                   // Split current line at cursor position
                   ::InsertLine( Right( ::aText[ ::nRow ]:cText, ::LineLen( ::nRow ) - ::nCol + 1 ), ::aText[ ::nRow ]:lSoftCR, ::nRow + 1 )
@@ -713,7 +710,8 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
             ::MoveCursor( K_HOME )
 
          CASE nKey == K_INS
-            ::InsertState( !::lInsert )
+            Set( _SET_INSERT, ! Set( _SET_INSERT ) )
+            SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
 
          CASE nKey == K_DEL
             // If there is a wordwrapping limit and I'm past it
@@ -742,7 +740,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
 
          CASE nKey == K_TAB
             // insert char if in insert mode or at end of current line
-            IF ::lInsert .OR. ( ::nCol == ::LineLen( ::nRow ) )
+            IF Set( _SET_INSERT ) .OR. ( ::nCol == ::LineLen( ::nRow ) )
                ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 0, Space( ::nTabWidth ) )
                ::lDirty := .T.
             ENDIF
@@ -935,7 +933,7 @@ METHOD BrowseText( nPassedKey )
             ::IdleHook()
          ENDIF
 
-         nKey := InKey( 0 )
+         nKey := Inkey( 0 )
       ELSE
          nKey := nPassedKey
       ENDIF
@@ -974,9 +972,9 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    DEFAULT nLineLength TO NIL
    DEFAULT nTabSize    TO NIL
    DEFAULT nTextRow    TO 1
-   DEFAULT nTextCol    TO 0 
-   DEFAULT nWndRow     TO 0 
-   DEFAULT nWndCol     TO 0 
+   DEFAULT nTextCol    TO 0
+   DEFAULT nWndRow     TO 0
+   DEFAULT nWndCol     TO 0
 
    ::aText := Text2Array( cString, nLineLength )
    ::naTextLen := Len( ::aText )
@@ -1000,11 +998,6 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
    IF ISLOGICAL( lEditMode )
       ::lEditAllow := lEditMode
-   ENDIF
-
-   // set correct insert state
-   IF ::lEditAllow
-      ::InsertState( ::lInsert )
    ENDIF
 
    // is word wrap required?

@@ -883,8 +883,8 @@ HB_FUNC( SET )
             else if( HB_IS_NUMERIC( pArg2 ) )
             {
                int iValue = set_number( pArg2, pSet->HB_SET_FILECASE );
-               if( iValue == HB_SET_CASE_LOWER || 
-                   iValue == HB_SET_CASE_UPPER || 
+               if( iValue == HB_SET_CASE_LOWER ||
+                   iValue == HB_SET_CASE_UPPER ||
                    iValue == HB_SET_CASE_MIXED )
                   pSet->HB_SET_FILECASE = iValue;
                else
@@ -912,8 +912,8 @@ HB_FUNC( SET )
             else if( HB_IS_NUMERIC( pArg2 ) )
             {
                int iValue = set_number( pArg2, pSet->HB_SET_DIRCASE );
-               if( iValue == HB_SET_CASE_LOWER || 
-                   iValue == HB_SET_CASE_UPPER || 
+               if( iValue == HB_SET_CASE_LOWER ||
+                   iValue == HB_SET_CASE_UPPER ||
                    iValue == HB_SET_CASE_MIXED )
                   pSet->HB_SET_DIRCASE = iValue;
                else
@@ -1708,8 +1708,8 @@ BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
             else if( HB_IS_NUMERIC( pItem ) )
                iValue = hb_itemGetNI( pItem );
 
-            if( iValue == HB_SET_CASE_LOWER || 
-                iValue == HB_SET_CASE_UPPER || 
+            if( iValue == HB_SET_CASE_LOWER ||
+                iValue == HB_SET_CASE_UPPER ||
                 iValue == HB_SET_CASE_MIXED )
             {
                if( set_specifier == HB_SET_FILECASE )

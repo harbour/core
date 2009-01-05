@@ -403,6 +403,24 @@ static const ClipKeyCode extKeyTab[CLIP_EXTKEY_COUNT] = {
 
 };
 
+static int hb_gt_win_getKbdState( void )
+{
+   int iKbdState = 0;
+
+   if( GetKeyState( VK_SHIFT   ) & 0x80 ) iKbdState |= HB_GTI_KBD_SHIFT;
+   if( GetKeyState( VK_CONTROL ) & 0x80 ) iKbdState |= HB_GTI_KBD_CTRL;
+   if( GetKeyState( VK_MENU    ) & 0x80 ) iKbdState |= HB_GTI_KBD_ALT;
+   if( GetKeyState( VK_LWIN    ) & 0x80 ) iKbdState |= HB_GTI_KBD_LWIN;
+   if( GetKeyState( VK_RWIN    ) & 0x80 ) iKbdState |= HB_GTI_KBD_RWIN;
+   if( GetKeyState( VK_APPS    ) & 0x80 ) iKbdState |= HB_GTI_KBD_MENU;
+   if( GetKeyState( VK_SCROLL  ) & 0x01 ) iKbdState |= HB_GTI_KBD_SCROLOCK;
+   if( GetKeyState( VK_NUMLOCK ) & 0x01 ) iKbdState |= HB_GTI_KBD_NUMLOCK;
+   if( GetKeyState( VK_CAPITAL ) & 0x01 ) iKbdState |= HB_GTI_KBD_CAPSLOCK;
+   if( GetKeyState( VK_INSERT  ) & 0x01 ) iKbdState |= HB_GTI_KBD_INSERT;
+
+   return iKbdState;
+}
+
 /* *********************************************************************** */
 
 static void hb_gt_win_xSetCursorPos( void )
@@ -1622,7 +1640,7 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_KBDSHIFTS:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_w32_getKbdState() );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_win_getKbdState() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hb_gt_w32_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;

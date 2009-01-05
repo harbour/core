@@ -106,7 +106,9 @@ HB_FUNC( GETENV )
 
          szValue = hb_getenv( pszName );
          if( szValue && szValue[ 0 ] != '\0' )
+         {
             hb_retc_buffer( szValue );
+         }
          else
          {
             if( szValue )
@@ -134,8 +136,8 @@ HB_FUNC( GETE )
    HB_FUNC_EXEC( GETENV );
 }
 
-/* NOTE: Harbour extended version of GETENV(). The 2nd parameter 
-         can be used to specify a default value, returned if the 
+/* NOTE: Harbour extended version of GETENV(). The 2nd parameter
+         can be used to specify a default value, returned if the
          requested envvar doesn't exist. [vszakats] */
 
 HB_FUNC( HB_GETENV )
@@ -172,7 +174,9 @@ HB_FUNC( HB_GETENV )
 
          szValue = hb_getenv( pszName );
          if( szValue && szValue[ 0 ] != '\0' )
+         {
             hb_retc_buffer( szValue );
+         }
          else
          {
             if( szValue )
