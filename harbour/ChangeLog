@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-07 13:56 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * source/vm/classes.c
+    + addded __objHasMsgAssigned( object, "msgName" )
+      ; this is similar to xHarbour __clsMsgAssigned() and checks
+      ; if a VIRTUAL message has been overrided in a sub-class.
+      ; TODO: Please check this implementation, I'm sure it can be optimized.
+
 2009-01-05 18:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbsql.c
   * harbour/source/rdd/dbfntx/dbfntx1.c

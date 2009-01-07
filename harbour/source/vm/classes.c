@@ -424,7 +424,7 @@ static USHORT hb_clsBucketPos( PHB_DYNS pMsg, USHORT uiMask )
     /* Safely divide it by 16 - it's minimum memory allocated for single
      * HB_DYNS structure
      */
-    /* 
+    /*
     return ( ( USHORT ) ( ( HB_PTRDIFF ) pMsg >> 4 ) & uiMask ) << BUCKETBITS;
     */
 
@@ -1004,7 +1004,7 @@ static void hb_clsAddFriendSymbol( PCLASS pClass, PHB_SYMB pSym )
          pClass->pFriendSyms[ 0 ] = pSym;
          pClass->uiFriendSyms++;
       }
-      else 
+      else
       {
          pClass->pFriendSyms = ( PHB_SYMB * ) hb_xrealloc( pClass->pFriendSyms,
                            ( pClass->uiFriendSyms + 1 ) * sizeof( PHB_SYMB ) );
@@ -1069,7 +1069,7 @@ void hb_clsInit( void )
  */
 void hb_clsDoInit( void )
 {
-   static const char * s_pszFuncNames[] = 
+   static const char * s_pszFuncNames[] =
       { "HBARRAY", "HBBLOCK", "HBCHARACTER", "HBDATE",
         "HBHASH", "HBLOGICAL", "HBNIL", "HBNUMERIC",
         "HBSYMBOL", "HBPOINTER" };
@@ -1356,7 +1356,7 @@ const char * hb_objGetClsName( PHB_ITEM pObject )
    else if( HB_IS_SYMBOL( pObject ) )
       return "SYMBOL";
 
-   else 
+   else
       return "UNKNOWN";
 }
 
@@ -2962,7 +2962,7 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
       }
    }
 
-   return TRUE;   
+   return TRUE;
 }
 
 /*
@@ -3351,8 +3351,8 @@ HB_FUNC( __CLSNEW )
    pModFriend = hb_param( 5, HB_IT_ANY );
    if( pModFriend && HB_IS_NIL( pModFriend ) )
       pModFriend = NULL;
-   
-   if( szClassName && 
+
+   if( szClassName &&
        ( ! pDatas || HB_IS_NUMERIC( pDatas ) ) &&
        ( ! pSuperArray || HB_IS_ARRAY( pSuperArray ) ) &&
        ( ! pClassFunc || HB_IS_SYMBOL( pClassFunc ) ) &&
@@ -3524,7 +3524,7 @@ HB_FUNC( __CLSMODMSG )
          PMETHOD pMethod = hb_clsFindMsg( pClass, pMsg );
 
          if( pMethod )
-         { 
+         {
             PHB_SYMB pFuncSym = pMethod->pFuncSym;
 
             if( pFuncSym == &s___msgSetData || pFuncSym == &s___msgGetData )
@@ -4899,3 +4899,37 @@ const char * hb_clsRealMethodName( void )
    return szName;
 }
 #endif
+
+/* checks if function exists and is not virtual */
+HB_FUNC( __OBJHASMSGASSIGNED )
+{
+   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
+   PHB_ITEM pString = hb_param( 2, HB_IT_STRING );
+   USHORT uiClass;
+   BOOL fResult = FALSE;
+
+   if( pObject )
+   {
+      uiClass = pObject->item.asArray.value->uiClass;
+   }
+   else
+   {
+      uiClass = 0;
+   }
+
+   if( uiClass && pString )
+   {
+      PHB_DYNS pMsg = hb_dynsymFindName( pString->item.asString.value );
+
+      if( pMsg )
+      {
+         PMETHOD pMethod = hb_clsFindMsg( s_pClasses[ uiClass ], pMsg );
+
+         if( pMethod && pMethod->pFuncSym != &s___msgVirtual ) /* NON Virtual method */
+         {
+            fResult = TRUE;
+         }
+      }
+   }
+   hb_retl( fResult );
+}
