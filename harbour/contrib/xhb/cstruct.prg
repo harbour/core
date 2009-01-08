@@ -448,7 +448,7 @@ Function HB_CTypeArrayID( CType, nLen )
       __clsAddMsg( hClass,  "SizeOf"        , Counter++, HB_OO_MSG_PROPERTY, HB_SizeOfCStructure( aCTypes, 1 ), HB_OO_CLSTP_READONLY )
       __clsAddMsg( hClass,  "_nID", Counter++, HB_OO_MSG_PROPERTY, nID )
       // WARNING InternalBuffer *MUST* remain the *LAST* Property!!!
-      __clsAddMsg( hClass,  "InternalBuffer", Counter++, HB_OO_MSG_PROPERTY, , HB_OO_CLSTP_READONLY )
+      __clsAddMsg( hClass,  "InternalBuffer", Counter, HB_OO_MSG_PROPERTY, , HB_OO_CLSTP_READONLY )
       //TraceLog( "Registered: " + cArrayClassName, nID, Len( s_aArrayClasses ), HB_SizeOfCStructure( aCTypes, 1 ), nLen )
    ELSE
       nID := s_aArrayClasses[nID][3]
