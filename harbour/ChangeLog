@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-08 13:12 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/compiler/hbopt.c
+    * improved 'variable assigned but unused' detection logic
+  * harbour/source/rtl/treport.prg
+    * fixed assigned but unused variable
+
 2009-01-07 13:56 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * source/vm/classes.c
     + addded __objHasMsgAssigned( object, "msgName" )

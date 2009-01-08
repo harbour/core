@@ -1040,7 +1040,7 @@ METHOD LoadReportFile( cFrmFile ) CLASS HBReportForm
 
       IF Int( cOptionByte / 1 ) == 1
          aReport[ RPT_BEJECT ] := .F.         // Page eject before report
-         cOptionByte -= 1
+         //cOptionByte -= 1
       ENDIF
 
       // Page heading, report title

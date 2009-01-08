@@ -1255,17 +1255,20 @@ static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, ULONG ulPos, BYTE *
           pFunc->pCode[ ulPos ] == HB_P_PUSHLOCAL ||
           pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALNEAR ||
           pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF ||
-          pFunc->pCode[ ulPos ] == HB_P_LOCALINCPUSH )
+          pFunc->pCode[ ulPos ] == HB_P_LOCALINCPUSH ||
+          pFunc->pCode[ ulPos ] == HB_P_LOCALDEC ||
+          pFunc->pCode[ ulPos ] == HB_P_LOCALINC ||
+          pFunc->pCode[ ulPos ] == HB_P_LOCALADDINT ||
+          pFunc->pCode[ ulPos ] == HB_P_LOCALNEARADDINT )
+
       {
          if( hb_compLocalGetNumber( pFunc->pCode + ulPos ) == isLocal ) 
          {
-            if( pFunc->pCode[ ulPos ] == HB_P_PUSHLOCAL ||
-                pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALNEAR ||
-                pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF ||
-                pFunc->pCode[ ulPos ] == HB_P_LOCALINCPUSH )
-               return 1;
-            else
+            if( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL || 
+                pFunc->pCode[ ulPos ] == HB_P_POPLOCALNEAR )
                return 0;
+            else
+               return 1;
          }
       }
 
@@ -1329,6 +1332,14 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
       fCheck = ( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL || 
                  pFunc->pCode[ ulPos ] == HB_P_POPLOCALNEAR ) &&
                  ! ( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHNIL );
+
+      if( !fCheck && ( pFunc->pCode[ ulPos ] == HB_P_LOCALDEC ||
+                       pFunc->pCode[ ulPos ] == HB_P_LOCALINC ||
+                       pFunc->pCode[ ulPos ] == HB_P_LOCALADDINT ||
+                       pFunc->pCode[ ulPos ] == HB_P_LOCALNEARADDINT ) )
+      {
+         fCheck = TRUE;
+      }
 
       if( !fCheck && pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF )
       {
