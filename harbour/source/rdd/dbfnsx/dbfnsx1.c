@@ -7142,8 +7142,12 @@ static ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
             pInfo->itmResult = hb_itemPutC( pInfo->itmResult, pTag->KeyExpr );
             break;
          case DBOI_BAGNAME:
-            pInfo->itmResult = hb_itemPutC( pInfo->itmResult, pTag->pIndex->IndexName );
+         {
+            PHB_FNAME pFileName = hb_fsFNameSplit( pTag->pIndex->IndexName );
+            pInfo->itmResult = hb_itemPutC( pInfo->itmResult, pFileName->szName );
+            hb_xfree( pFileName );
             break;
+         }
          case DBOI_NAME:
             pInfo->itmResult = hb_itemPutC( pInfo->itmResult, pTag->TagName );
             break;

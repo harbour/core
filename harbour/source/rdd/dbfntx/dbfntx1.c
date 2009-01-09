@@ -6786,8 +6786,12 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             hb_itemPutC( pInfo->itmResult, pTag->KeyExpr );
             break;
          case DBOI_BAGNAME:
-            hb_itemPutC( pInfo->itmResult, pTag->Owner->IndexName );
+         {
+            PHB_FNAME pFileName = hb_fsFNameSplit( pTag->Owner->IndexName );
+            pInfo->itmResult = hb_itemPutC( pInfo->itmResult, pFileName->szName );
+            hb_xfree( pFileName );
             break;
+         }
          case DBOI_NAME:
             hb_itemPutC( pInfo->itmResult, pTag->TagName );
             break;

@@ -129,7 +129,7 @@ function tp_delay( nTime )
 
    endif
 
-   ThreadSleep( nTime * 1000 )
+   hb_idleSleep( nTime )
 
 return nil
 
@@ -348,7 +348,7 @@ function tp_send( nPort, cString, nTimeout )
          if nTotWritten < Len( cString )
 
             if ! tp_idle()
-               ThreadSleep( 1000 )
+               hb_idleSleep( 1 )
             else
                exit
             endif
@@ -705,7 +705,7 @@ function tp_flush( nPort, nTimeout )
    // Sleep rest of timeout
    /*
    if nTimeout > 0 .AND. Seconds() - nStart < nTimeout
-      ThreadSleep( ( nTimeout - ( Seconds() - nStart ) ) * 1000 )
+      hb_idleSleep( nTimeout - ( Seconds() - nStart ) )
    endif
    */
 

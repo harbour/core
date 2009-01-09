@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-09 01:24 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbntos.c
+  * harbour/source/rtl/hbrandom.c
+    * removed dummy spaces
+
+  * harbour/source/rtl/filesys.c
+    * updated HB_TRACE messages
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfnsx/dbfnsx1.c
+    * return pure index name without path and extension for DBOI_BAGNAME just
+      like DBFCDX does. It's not Clipper compatible but looks that people
+      expects ordBagName() behavior implemented in COMIX CDX driver (CL53).
+      Full index name can be accessed by DBOI_FULLPATH.
+      If you think it's wrong and we should keep CL52 DBFNTX behavior then
+      I can revert it but I will want to also change DBFCDX to keep
+      ordBagName() compatible core RDDs.
+      Please let me know your preferences.
+
+  * harbour/contrib/hbtpathy/telepath.prg
+    ! replaced ThreadSleep() with hb_idleSleep()
+
 2009-01-08 20:55 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/xhb/cstruct.prg
     * fixed assigned but unused variable

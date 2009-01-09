@@ -124,12 +124,6 @@
    #include <utime.h>
    #include <sys/types.h>
    #include <sys/wait.h>
-   #if defined( HB_OS_DARWIN )
-      #include <crt_externs.h>
-      #define environ (*_NSGetEnviron())
-   #elif !defined( __WATCOMC__ )
-      extern char **environ;
-   #endif
 #endif
 
 #if ( defined(__DMC__) || defined(__BORLANDC__) || \
@@ -624,7 +618,7 @@ HB_FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
                   close( hNullHandle );
                setuid( getuid() );
                setgid( getgid() );
-               execve( "/bin/sh", argv, environ );
+               execv( "/bin/sh", argv );
                exit(1);
             }
          }
@@ -657,7 +651,7 @@ HB_FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
    HB_FHANDLE hFileHandle;
    BOOL fFree;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsOpen(%p, %hu)", pFilename, uiFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsOpen(%s, %hu)", pFilename, uiFlags));
 
    pFilename = hb_fsNameConv( pFilename, &fFree );
 
@@ -717,7 +711,7 @@ HB_FHANDLE hb_fsCreate( BYTE * pFilename, ULONG ulAttr )
    HB_FHANDLE hFileHandle;
    BOOL fFree;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreate(%p, %lu)", pFilename, ulAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreate(%s, %lu)", pFilename, ulAttr));
 
    pFilename = hb_fsNameConv( pFilename, &fFree );
 
@@ -777,7 +771,7 @@ HB_FHANDLE hb_fsCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFlags )
    HB_FHANDLE hFileHandle;
    BOOL fFree;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreateEx(%p, %lu, %hu)", pFilename, ulAttr, uiFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreateEx(%s, %lu, %hu)", pFilename, ulAttr, uiFlags));
 
    pFilename = hb_fsNameConv( pFilename, &fFree );
 

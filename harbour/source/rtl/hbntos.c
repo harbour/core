@@ -70,7 +70,7 @@ HB_FUNC( HB_NTOS )
 
          if( nToTrim )
             memmove( szResult, szResult + nToTrim, strlen( szResult + nToTrim ) + 1 );
-         
+
          hb_retc_buffer( szResult );
          return;
       }
