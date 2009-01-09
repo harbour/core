@@ -3479,7 +3479,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
 }
 
 /*
- * <oNewObject> := __clsInst( <hClass> )
+ * __clsInst( <hClass> ) -> <oNewObject>
  *
  * Create a new object from class definition <hClass>
  */
@@ -3557,7 +3557,7 @@ HB_FUNC( __CLSMODMSG )
 
 
 /*
- * <cClassName> := __objGetClsName( <hClass> | <oObj> )
+ * __objGetClsName( <hClass> | <oObj> ) -> <cClassName>
  *
  * Returns class name of <oObj> or <hClass>
  */
@@ -3576,7 +3576,7 @@ HB_FUNC( __OBJGETCLSNAME )
 
 
 /*
- * <lRet> := __objHasMsg( <oObj>, <cSymbol> )
+ * __objHasMsg( <oObj>, <cMsgName> | <sMsgName> ) -> <lRet>
  *
  * Is <cSymbol> a valid message for the <oObj>
  */
@@ -3591,7 +3591,26 @@ HB_FUNC( __OBJHASMSG )
 }
 
 /*
- * <xRet> = __objSendMsg( <oObj>, <cSymbol>, <xArg,..>
+ * __objHasMsgAssigned( <oObj>, <cMsgName> | <sMsgName> ) -> <lExists>
+ *
+ * checks if function exists and is not virtual
+ */
+HB_FUNC( __OBJHASMSGASSIGNED )
+{
+   PHB_DYNS pMessage = hb_objGetMsgSym( hb_param( 2, HB_IT_ANY ) );
+
+   if( pMessage )
+   {
+      PHB_SYMB pExecSym = hb_objGetMethod( hb_param( 1, HB_IT_ANY ),
+                                           pMessage->pSymbol, NULL );
+      hb_retl( pExecSym && pExecSym != &s___msgVirtual );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/*
+ * __objSendMsg( <oObj>, <cMsgName> | <sMsgName>, <xArg,..> ) -> <xRet>
  *
  * Send a message to an object
  */
@@ -3620,7 +3639,7 @@ HB_FUNC( __OBJSENDMSG )
 }
 
 /*
- * <oNew> := __objClone( <oOld> )
+ * __objClone( <oSource> ) -> <oNew>
  *
  * Clone an object. Note the similarity with aClone ;-)
  */
@@ -3641,7 +3660,7 @@ HB_FUNC( __OBJCLONE )
 }
 
 /*
- * <hClass> := __clsInstSuper( <cName> )
+ * __clsInstSuper( <cName> ) -> <hClass>
  *
  * Instance super class and return class handle
  */
@@ -3719,7 +3738,7 @@ HB_FUNC( __CLSINSTSUPER )
 }
 
 /*
- * <lOK> = __clsAssocType( <hClass>, <cType> )
+ * __clsAssocType( <hClass>, <cType> ) -> <lOK>
  *
  * Associate class with given basic type
  */
@@ -3777,7 +3796,7 @@ HB_FUNC( __CLSASSOCTYPE )
 }
 
 /*
- * <nSeq> = __ClsCntClasses()
+ * __ClsCntClasses() -> <nCount>
  *
  * Return number of classes
  */
@@ -3787,7 +3806,7 @@ HB_FUNC( __CLSCNTCLASSES )
 }
 
 /*
- * <nSeq> = __cls_CntClsData( <hClass> )
+ * __cls_CntClsData( <hClass> ) -> <nCount>
  *
  * Return number of class datas
  */
@@ -3800,7 +3819,7 @@ HB_FUNC( __CLS_CNTCLSDATA )
 }
 
 /*
- * <nSeq> = __cls_CntShrData( <hClass> )
+ * __cls_CntShrData( <hClass> ) -> <nCount>
  *
  * Return number of class datas
  */
@@ -3813,7 +3832,7 @@ HB_FUNC( __CLS_CNTSHRDATA )
 }
 
 /*
- * <nSeq> = __cls_CntData( <hClass> )
+ * __cls_CntData( <hClass> ) -> <nCount>
  *
  * Return number of datas
  */
@@ -3826,7 +3845,7 @@ HB_FUNC( __CLS_CNTDATA )
 }
 
 /*
- * <nSeq> = __cls_DecData( <hClass> )
+ * __cls_DecData( <hClass> ) -> <nSeq>
  *
  * Decrease number of datas and return new value
  */
@@ -3846,7 +3865,7 @@ HB_FUNC( __CLS_DECDATA )
 }
 
 /*
- * <nSeq> = __cls_IncData( <hClass> )
+ * __cls_IncData( <hClass> ) -> <nSeq>
  * Increase number of datas and return offset to new value
  */
 HB_FUNC( __CLS_INCDATA )
@@ -4899,37 +4918,3 @@ const char * hb_clsRealMethodName( void )
    return szName;
 }
 #endif
-
-/* checks if function exists and is not virtual */
-HB_FUNC( __OBJHASMSGASSIGNED )
-{
-   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
-   PHB_ITEM pString = hb_param( 2, HB_IT_STRING );
-   USHORT uiClass;
-   BOOL fResult = FALSE;
-
-   if( pObject )
-   {
-      uiClass = pObject->item.asArray.value->uiClass;
-   }
-   else
-   {
-      uiClass = 0;
-   }
-
-   if( uiClass && pString )
-   {
-      PHB_DYNS pMsg = hb_dynsymFindName( pString->item.asString.value );
-
-      if( pMsg )
-      {
-         PMETHOD pMethod = hb_clsFindMsg( s_pClasses[ uiClass ], pMsg );
-
-         if( pMethod && pMethod->pFuncSym != &s___msgVirtual ) /* NON Virtual method */
-         {
-            fResult = TRUE;
-         }
-      }
-   }
-   hb_retl( fResult );
-}

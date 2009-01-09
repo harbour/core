@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-09 13:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    * updated __objHasMsgAssigned()
+      + accept also symbols (@methodname()) not only strings as message name
+        (2-nd parameter) just like in __objHasMsg() or __objSendMsg()
+      + added suport for scalar classes in __objHasMsgAssigned()
+      + generate RT error when wrong parameters are passed
+    * updated comments with .prg functions syntax
+
 2009-01-09 12:55 UTC+0100 Maurilio Longo (maurilio.longo@libero.it)
   * harbour/config/os2/global.cf
     * simplified and fixed an error in deleting files
