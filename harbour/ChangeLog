@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-09 17:59 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbct/ftoc.c
+  * harbour/contrib/hbct/misc1.c
+    * changed XTOC(), FTOC() and CTOF() to always store/retirve numbers as
+      double value in little endian order to reduce platform differences
+      ; TOFIX intorduce new macro which can be used instead sizeof( double )
+        for platforms where double size is different then 8 and macro
+        HB_FORCE_IEEE754_DOUBLE is set
+
+  * harbour/contrib/hbct/dattime2.c
+    * changed date functions to use default date like in CT3
+
 2009-01-09 13:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/classes.c
     * updated __objHasMsgAssigned()

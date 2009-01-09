@@ -72,7 +72,8 @@
 
 static BOOL ct_isleap( int iYear )
 {
-   return ( ( ( iYear & 3 ) == 0 && iYear % 100 != 0 ) || iYear % 400 == 0 );
+   return iYear != 0 && ( ( ( iYear & 3 ) == 0 && iYear % 100 != 0 ) ||
+                          iYear % 400 == 0 );
 }
 
 static int ct_daysinmonth( int iMonth, BOOL bLeap )
@@ -294,9 +295,7 @@ HB_FUNC( DMY )
 
    if( ISDATE( 1 ) )
    {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-
-      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
+      hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    }
    else
    {
@@ -395,9 +394,7 @@ HB_FUNC( MDY )
 
    if( ISDATE( 1 ) )
    {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-
-      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
+      hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    }
    else
    {
@@ -477,22 +474,18 @@ HB_FUNC( ADDMONTH )
 {
    int iYear, iMonth, iDay, iNum, iDays;
 
-   if( ISDATE( 1 ) )
-   {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-
-      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      iNum = hb_parni( 2 );
-   }
-   else if( ISNUM( 1 ) )
+   if( ISNUM( 1 ) )
    {
       iNum = hb_parni( 1 );
       hb_dateToday( &iYear, &iMonth, &iDay );
    }
    else
    {
-      hb_retdl( 0 );
-      return;
+      if( ISDATE( 1 ) )
+         hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
+      else
+         hb_dateToday( &iYear, &iMonth, &iDay );
+      iNum = hb_parni( 2 );
    }
 
    iMonth += iNum;
@@ -548,11 +541,10 @@ HB_FUNC( ADDMONTH )
 HB_FUNC( DOY )
 {
    LONG lDate;
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
 
-   if( pDate )
+   if( ISDATE( 1 ) )
    {
-      lDate = hb_itemGetDL( pDate );
+      lDate = hb_pardl( 1 );
    }
    else
    {
@@ -595,11 +587,10 @@ HB_FUNC( DOY )
 HB_FUNC( ISLEAP )
 {
    int iYear, iMonth, iDay;
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
 
-   if( pDate && hb_itemGetDL( pDate ) )
+   if( ISDATE( 1 ) )
    {
-      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
+      hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    }
    else
    {
@@ -716,19 +707,10 @@ HB_FUNC( DAYSINMONTH )
 HB_FUNC( QUARTER )
 {
    int iYear, iMonth, iDay;
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
 
-   if( pDate )
+   if( ISDATE( 1 ) )
    {
-      if( hb_itemGetDL( pDate ) )
-      {
-         hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      }
-      else
-      {
-         hb_retni( 0 );
-         return;
-      }
+      hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    }
    else
    {
@@ -774,28 +756,21 @@ HB_FUNC( LASTDAYOM )
    BOOL bLeap = 0;
    int iYear, iMonth, iDay;
 
-   if( ISDATE( 1 ) )
+   if( ISNUM( 1 ) )
    {
-      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-      LONG lDate = hb_itemGetDL( pDate );
-
-      if( lDate )
+      iMonth = hb_parni( 1 );
+   }
+   else
+   {
+      if( ISDATE( 1 ) )
       {
-         hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
+         hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
       }
       else
       {
          hb_dateToday( &iYear, &iMonth, &iDay );
       }
       bLeap = ct_isleap( iYear );
-   }
-   else if( ISNUM( 1 ) )
-   {
-      iMonth = hb_parni( 1 );
-   }
-   else
-   {
-      iMonth = 0;
    }
 
    hb_retni( ( iMonth && ( iMonth <= 12 ) ? ct_daysinmonth( iMonth, bLeap ) : 0 ) );
@@ -908,22 +883,12 @@ HB_FUNC( NTOCMONTH )
 HB_FUNC( WEEK )
 {
    int iYear, iMonth, iDay, iWeek;
-   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-   LONG lDate = 0;
+   LONG lDate;
    BOOL bSWN = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
 
    if( ISDATE( 1 ) )
    {
-      lDate = hb_itemGetDL( pDate );
-      if( !lDate )
-      {
-         hb_retni( 0 );
-         return;
-      }
-   }
-
-   if( lDate )
-   {
+      lDate = hb_pardl( 1 );
       hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
    }
    else
@@ -932,7 +897,11 @@ HB_FUNC( WEEK )
       lDate = hb_dateEncode( iYear, iMonth, iDay );
    }
 
-   if( bSWN )
+   if( !lDate )
+   {
+      iWeek = 0;
+   }
+   else if( bSWN )
    {
       int iDays = ct_daystomonth( iMonth, ct_isleap( iYear ) ) + iDay;
       int iPart = ( iDays % 7 );

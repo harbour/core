@@ -61,7 +61,7 @@
  *  $ONELINER$
  *  $SYNTAX$
  *      XTOC( <expValue> ) --> cValue
- *           
+ *
  *  $ARGUMENTS$
  *      <expValue> Designate an expression of some of the following data
  *      type: NUMBER, CHARACTER, DATE, LOGICAL.
@@ -69,13 +69,10 @@
  *  $RETURNS$
  *      XTOC() return a string with the representation of data type of 
  *      expValue.
- *      ATTENTION: different implementations or platforms of Harbour, they 
- *      could produce different format in the string returned by XTOC() for
- *      data type NUMBER.
  *
  *  $DESCRIPTION$
  *      Each data type always returns a string with a particular fixed length:
- *      
+ *
  *      -----------------------------------------------------------
  *      Data Type    Result Length      Similar function
  *      -----------------------------------------------------------
@@ -84,7 +81,7 @@
  *      Date         8                  DTOS()
  *      String       Unchanged
  *      -----------------------------------------------------------
- *      
+ *
  *      TODO: add documentation
  *  $EXAMPLES$
  *  $TESTS$
@@ -102,23 +99,20 @@
 
 HB_FUNC( XTOC )
 {
-   union
-   {
-      double value;
-      char string[sizeof( double )];
-   } xConvert;
-
    if( ISCHAR( 1 ) )
       hb_retc( hb_parc( 1 ) );
    else if( ISDATE( 1 ) )
       hb_retc( hb_pards( 1 ) );
    else if( ISNUM( 1 ) )
    {
-      xConvert.value = hb_parnd( 1 );
-      hb_retclen( xConvert.string, sizeof( double ) );
+      char buf[ sizeof( double ) ];
+      double d = hb_parnd( 1 );
+
+      HB_PUT_LE_DOUBLE( buf, d );
+      hb_retclen( buf, sizeof( buf ) );
    }
    else if( ISLOG( 1 ) )
       hb_retclen( hb_parl( 1 ) ? "T" : "F", 1 );
    else
-      hb_retc( NULL );
+      hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
 }
