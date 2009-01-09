@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-09 12:55 UTC+0100 Maurilio Longo (maurilio.longo@libero.it)
+  * harbour/config/os2/global.cf
+    * simplified and fixed an error in deleting files
+  * harbour/source/rtl/hbffind.c
+    ! fixed hb_fsFindNextLow() in OS/2 which was using stat to find file size, but
+      as it seems, st_size contains garbage. Removed call to stat() and used
+      buffer returned by DosFindFirst().
+
 2009-01-09 01:24 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbntos.c
   * harbour/source/rtl/hbrandom.c
@@ -339,15 +347,15 @@
 
 2008-12-25 11:32 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * ChangeLog
-    * fixed ChangeLog entry of last commit. Sorry, wrong result 
+    * fixed ChangeLog entry of last commit. Sorry, wrong result
       file was pasted
 
 2008-12-25 11:14 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * include/hbextern.ch
   * source/rtl/seconds.c
-    + implemented hb_milliseconds(). This function returns time value 
-      from some moment in the past (not midnigth!). It does not start 
-      to cound from zero in midnight, thus, can be safetly used to 
+    + implemented hb_milliseconds(). This function returns time value
+      from some moment in the past (not midnigth!). It does not start
+      to cound from zero in midnight, thus, can be safetly used to
       measure time intervals.
   + tests/ticktime.c
     + Added nice test for hb_milliseconds().
@@ -383,27 +391,27 @@
   + contrib/rddsql/sddmy/common.mak
   + contrib/rddsql/sddmy/make_b32.bat
   + contrib/rddsql/sddmy/make_vc.bat
-    * changed structure and names of rddsql libraries. Since it can 
-      support many SQL databases, each backend moved to a separate 
-      library. Otherwise (all backend in the same library) nobody will 
-      be able to compile library without installing packages of ALL 
+    * changed structure and names of rddsql libraries. Since it can
+      support many SQL databases, each backend moved to a separate
+      library. Otherwise (all backend in the same library) nobody will
+      be able to compile library without installing packages of ALL
       supported SQL databases. Now:
          rddsql - RDD for interfacing to SQL database drivers
          sddmy  - MySQL database driver
          sddpg  - Postgre SQL database driver
          ...
-    ; TOFIX: I was unable to manage build files. 
+    ; TOFIX: I was unable to manage build files.
       contrib/sqlrdd/sddmy/make_b32.bat sets HB_ROOT variable:
         set HB_ROOT = ..\..\..
       but this variable is lost and contrib/make_b32.mak reassign it:
         !ifndef HB_ROOT
         HB_ROOT = ..\..
         !endif
-      This breaks building of library. To fix this problem, I've added 
+      This breaks building of library. To fix this problem, I've added
       a two hacks:
         - added additional include path into CFLAGS (see make_b32.bat)
         - added "..\" to LIB_PATH (see common.mak)
-      The same problem is for both make_b32 and make_vc, and for both 
+      The same problem is for both make_b32 and make_vc, and for both
       sddmy and sddpg libraries.
     ; TODO: check (and adjust if neccessary) build files for unix
 
@@ -473,7 +481,7 @@
       This variable can be replaced by value NIL
 
   * source/rtl/treport.prg
-    % removed never assigned variable  
+    % removed never assigned variable
 
 2008-12-24 00:04 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/expropt1.c
@@ -566,7 +574,7 @@
   * harbour/contrib/gtwvg/wvgstatc.prg
   * harbour/contrib/gtwvg/wvgsysw.prg
   * harbour/contrib/gtwvg/wvgwnd.prg
-    ! Fixed to respect new compiler warnings. 
+    ! Fixed to respect new compiler warnings.
       Thanks Mindaugus for this great addition.
       Hope code will be faster than before.
 
@@ -706,13 +714,13 @@
   * contrib/hbwhat/wincore.prg
   * contrib/hbwin/win_tprn.prg
     ! fixed assigned but not used variable
-    ; NOTE: the only unfixed code is contrib/gtwvg, utils/hbdoc, 
+    ; NOTE: the only unfixed code is contrib/gtwvg, utils/hbdoc,
             utils/hbmake/hbmake.prg
 
 2008-12-18 19:53 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * source/compiler/hbopt.c
-    ! one more try to fix passing information about redundant variable 
-      assignment by preprocessor rules, i.e., _nowarn_* hack removed, 
+    ! one more try to fix passing information about redundant variable
+      assignment by preprocessor rules, i.e., _nowarn_* hack removed,
       using HB_SYMBOL_UNUSED() technique
 
   * include/hbclass.ch
@@ -772,16 +780,16 @@
       These optimizations are enabled if jump optimizations are enabled.
 
     + added recursive pcode tree tracer. It is capable to generate new
-      warning: Variable %s is assigned, but not used. 
+      warning: Variable %s is assigned, but not used.
       Warning is not generated in these cases:
         1) unoptimal Self := QSELF() pcode [generated by preprocessor rules]
-        2) if variable name starts with '_nowarn_'. This allows to 
-           suppress warning in case unoptimal pcode is generated by 
+        2) if variable name starts with '_nowarn_'. This allows to
+           suppress warning in case unoptimal pcode is generated by
            preprocessor rules
         3) assigned value is NIL. This let us force garbage collection
            using oVar := NIL
       Warning has warning level 3.
-      ; NOTE: if you are using -w3 -es2 in makefiles, you'll need to fix your 
+      ; NOTE: if you are using -w3 -es2 in makefiles, you'll need to fix your
               redundant code to compile the project
 
   * source/rtl/achoice.prg
@@ -811,18 +819,18 @@
   * utils/hbdoc/ft_funcs.prg
   * utils/hbmake/hbmake.prg
     * #pragma -w2
-    ; NOTE: I've been fixing warnings in utils/hbdoc/* for 2 hours, 
+    ; NOTE: I've been fixing warnings in utils/hbdoc/* for 2 hours,
       but only fixed half of files. There are a lot of garbage code here.
-      I do not thing this code is working... 
+      I do not thing this code is working...
       I used fallback method: restored original files and used -w2
     ; NOTE: hbmake.prg has about 140 unused assignments.
-      I've also fallback to -w2, because some of unused code is complex, 
-      ex., ASCAN() with block parameters. I'm not using hbmake, and I'm 
-      affraid to break something important. 
+      I've also fallback to -w2, because some of unused code is complex,
+      ex., ASCAN() with block parameters. I'm not using hbmake, and I'm
+      affraid to break something important.
 
   * compiler/hbpcode.c
-    - removed Ron's copyright on hb_compStrongType(). We do not have this 
-      functions in the compiler at all. I guess this text is just a result 
+    - removed Ron's copyright on hb_compStrongType(). We do not have this
+      functions in the compiler at all. I guess this text is just a result
       of .c header copy-paste from xHarbour's hbstrong.c some time ago.
 
 2008-12-16 10:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -845,8 +853,8 @@
   * harbour/contrib/gtwvg/tests/demoxbp.prg
     + Incorporated WvgFontDialog() and WvgFont() functionality.
 
-    ;IMPORTANT: XBase++ documentation describes that WvgFontDialog() 
-                cannot be opened in modeless state under Windows. 
+    ;IMPORTANT: XBase++ documentation describes that WvgFontDialog()
+                cannot be opened in modeless state under Windows.
                 Additionally it also states that its event blocks cannot
                 be implemented in Windows. It is possible only in OS/2.
 
@@ -881,7 +889,7 @@
     ! More functions and cleanup of existing ones.
 
   * harbour/contrib/gtwvg/wvgparts.ch
-    + Added More constants.  
+    + Added More constants.
 
   * harbour/contrib/gtwvg/tests/demoxbp.prg
     ! Added more feature implemenattion.
@@ -1162,7 +1170,7 @@
 
       and to start copy operation it will be enough to perform right
       click and then dragging the text with left button down.
-    
+
       :TODO: Implementation in GTWVT.
 
   + harbour/contrib/gtwvg/wvghtmlv.prg
@@ -1194,7 +1202,7 @@
     + ::setColorFG( nRGB ) and ::setColorBG( nRGB ) implemented for
       WvgSLE(), WvgMLE(), WvgStatic(), WvgCheckBox(), WvgRadioButton(),
       WvgTreeView(), WvgListBox().
-  
+
   * harbour/contrib/gtwvg/tests/demowvg.prg
     ! Some finer additions.
 
@@ -1258,13 +1266,13 @@
   * harbour/contrib/gtwvg/wvgtreev.prg
   * harbour/contrib/gtwvg/wvghwnd.prg
     ; Heavy changes in class framework.
-    
+
   * harbour/contrib/gtwvg/tests/demowvg.prg
     + Added functionality of Wvg3State() and WvgSLE(), WvgMLE() classes.
 
     ; IMPLEMENTATION : Point to <Xbase++ Dialogs> menu option, click on any
                        Active-X Control, Play with all controls : clicks,
-                       double clicks, resize. Watch statusbar panels, click on 
+                       double clicks, resize. Watch statusbar panels, click on
                        <Tools> toolbar button, the resulting panel contains
                        latest classes SLE, MLE, CHECKBOX, RADIO, 3STATE.
 
@@ -1302,7 +1310,7 @@
     + Many new winapi functions.
     ! Optimized use of hb_ACallBack().
     - WinApi functions replaced by Harbour core functions.
-    
+
   * harbour/contrib/gtwvg/tests/demowvg.prg
     + Added functionality of WvgCheckBox() and WvgRadioButton() classes.
       Now thses classes implement DataRef() class also. Work-in-progress.
@@ -1312,7 +1320,7 @@
 
     ;Viktor, can you compile GTWVG on 64bits platform ?
 
-    ;REQUEST : Can someone familiar with Xbase++ come forward to 
+    ;REQUEST : Can someone familiar with Xbase++ come forward to
                write a small test program based on implemented classes.
                Please exclude all that functionality which is not yet
                implemented.
@@ -1341,8 +1349,8 @@
   * harbour/contrib/gtwvg/wvghwnd.prg
     + Implemented ( partially ) WvgTreeView(), WvgListBox() classes.
     ; Heavy changes in class structure, introduction  of new functions,
-      refinement of old ones, heavy implementtaion of hb_ACallBack()s. 
-    
+      refinement of old ones, heavy implementtaion of hb_ACallBack()s.
+
   * harbour/contrib/gtwvg/tests/demowvg.prg
     + Added functionality of WvtTreeView() and WvtListBox() classes.
 
@@ -1526,8 +1534,8 @@
 
   + harbour/contrib/gtwvg/wincback.prg
   + harbour/contrib/gtwvg/wincallb.c
-    Now PRG/C level callback procedures/code blocks/methods 
-    are made available by Andy Wos. A big thank you. 
+    Now PRG/C level callback procedures/code blocks/methods
+    are made available by Andy Wos. A big thank you.
 
        :nWndProc := HB_AsCallBack( 'MYWNDPROC', Self )
 
@@ -1539,7 +1547,7 @@
 
           RETURN 1
 
-       Before this mechanism was available with only C callbacks which 
+       Before this mechanism was available with only C callbacks which
        were of limiting nature. It has made our life so easy.
 
   + harbour/contrib/gtwvg/wvglistb.prg
@@ -1548,7 +1556,7 @@
   + harbour/contrib/gtwvg/wvgstatb.prg
   + harbour/contrib/gtwvg/wvgstatc.prg
   + harbour/contrib/gtwvg/wvgtreev.prg
-    + Added Xbase++ compatible new classes. 
+    + Added Xbase++ compatible new classes.
        NOTE: Still a work-in-progress, subject to heavy changes.
        Basic functionality is working and class skeletons are in place.
        The partially functional classes added are:
@@ -1561,11 +1569,11 @@
 
     ; TOFIX: harbour/contrib/gtwvg/wvggui.c
              Przemek, can you please look into this stripped down
-             version of gtwvg.c. It has memory leak in inkey() and 
+             version of gtwvg.c. It has memory leak in inkey() and
              hb_gtInfo() functions. To test, just resize the window
-             and exit, boooom, a big hb_out.log with above mem leak 
+             and exit, boooom, a big hb_out.log with above mem leak
              entries. I am sure I just stripped some important loop
-             but am unable to locate where.     
+             but am unable to locate where.
 
 2008-11-26 18:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/itemapi.c
@@ -1602,9 +1610,9 @@
   * harbour/contrib/gtwvg/tests/demowvg.prg
     ! Added WvgToolBar() functionality. Click on ActiveX dialogs and
       see the difference between two two types of buttons. It is just
-      limited featured toolbar. Extended version will follow. 
+      limited featured toolbar. Extended version will follow.
 
-    ;THANKS - Bitmap management code is lifted from GTWVW. 
+    ;THANKS - Bitmap management code is lifted from GTWVW.
               Thanks Budyanto for this well written code.
               I examined many implementations but found this piece
               of code satisfying.
@@ -1648,7 +1656,7 @@
 2008-11-23 17:28 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/Makefile
   * harbour/contrib/gtwvg/common.mak
-    + wvgtoolb.prg 
+    + wvgtoolb.prg
 
   * harbour/contrib/gtwvg/hbgtwvg.ch
   * harbour/contrib/gtwvg/wvgdlg.prg
@@ -1657,13 +1665,13 @@
   + harbour/contrib/gtwvg/wvgtoolb.prg
     ! Initial commit.
   * harbour/contrib/gtwvg/wvgwnd.prg
-    
+
     ! Usual cleanup plus new functions/members etc.
 
 2008-11-23 15:00 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/Makefile
   * harbour/contrib/gtwvg/common.mak
-    + wvgmenub.prg 
+    + wvgmenub.prg
 
 2008-11-23 13:27 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
@@ -1696,7 +1704,7 @@
     + Demonstrated WvgMenuBar() and WvgMenu() implementation
       by picking up the real-time Xbase++ code.
 
-  ; NEXT: WvtToolBar() class per XbpToolBar().  
+  ; NEXT: WvtToolBar() class per XbpToolBar().
 
 2008-11-22 15:57 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   + harbour/contrib/gtwvg/tests/myharu.pdf
@@ -1707,7 +1715,7 @@
 
   * harbour/contrib/gtwvg/wvggui.c
     ! Thorough synchronized hb_gtInfo() slots.
-      Every info gives results as expected, the only 
+      Every info gives results as expected, the only
       poiint to remeber is that those values are based on :fontHeight/Width
       set by the user at startup, though the font is never created.
       So MaxCol() will return the ( Windows client area size / fontWidth ).
@@ -1719,10 +1727,10 @@
     ! Fixed few left-over unreleased memory blocks.
       More synchronized code.
 
-    ; TOFIX: With some active-x's, for example, Shell.Explorer.2, 
+    ; TOFIX: With some active-x's, for example, Shell.Explorer.2,
       object never unreference itself to 0 and hence GlobalAlloc()ated
-      memory never gets released. Though I made extensive debugging 
-      but do not know where I should look into this matter.     
+      memory never gets released. Though I made extensive debugging
+      but do not know where I should look into this matter.
 
   * harbour/contrib/gtwvg/wvgwin.c
     + Added few more Win_* functions.
@@ -1744,8 +1752,8 @@
 2008-11-19 19:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapi.h
   * source/vm/extend.c
-    + Added hb_stordl() which is similar to hb_stords() but 
-      accepts a Julian date in long numeric format similarly 
+    + Added hb_stordl() which is similar to hb_stords() but
+      accepts a Julian date in long numeric format similarly
       to hb_retdl().
 
   * contrib/xhb/Makefile
@@ -1762,9 +1770,9 @@
       Reasons: 1) KOI8-U was used in the _comment_.
                2) Ukrainian quasi standard is KOI8-U instead of KOI8.
                   http://aspell.net/charsets/cyrillic.html
-               3) CP KOI8-U wasn't used previously anywhere, yet 
+               3) CP KOI8-U wasn't used previously anywhere, yet
                   was added by same author.
-      I hope the author (Pavel Tsarenko) will be able to verify 
+      I hope the author (Pavel Tsarenko) will be able to verify
       this change.
 
 2008-11-19 13:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -1772,19 +1780,19 @@
   * make_b32.mak
   * make_gcc.mak
   * make_vc.mak
-    * Smoothened the difference between HARBOURFLAGS and 
+    * Smoothened the difference between HARBOURFLAGS and
       HARBOURFLAGSDLL under the name HARBOURFLAGSLIB.
-      Now all core .prg modules will be compiled with -n1 
-      Harbour switch. This also means double compilation 
-      of .prg modules for static/dynamic libs could be 
-      optimized out as the object files are the same in 
+      Now all core .prg modules will be compiled with -n1
+      Harbour switch. This also means double compilation
+      of .prg modules for static/dynamic libs could be
+      optimized out as the object files are the same in
       both modes.
       TODO: Make -n1 switch unnecessary.
 
   * contrib/mtpl_gcc.mak
-    + Added -n1 to HARBOURFLAGS. This way Harbour functions 
-      in libs will never be considered as entry points in 
-      executables or when any such module is built as dynamic 
+    + Added -n1 to HARBOURFLAGS. This way Harbour functions
+      in libs will never be considered as entry points in
+      executables or when any such module is built as dynamic
       lib in the future.
 
   * contrib/make_gcc_all.sh
@@ -1794,19 +1802,19 @@
   * bin/hb-func.sh
   * mpkg_tgz.sh
     ! Fixed OSX/Darwin builds:
-      - to not require harbour.dylib for binary tools supplied 
-        in .tgz package. This way, hbrun/hbmake/hbdoc/hbtest 
-        will work out of the box without the need for any 
-        special installation or extra manual procedure, or 
-        any change whatsoever in the user/system environment. 
-        The change also doesn't prevent user installing Harbour 
+      - to not require harbour.dylib for binary tools supplied
+        in .tgz package. This way, hbrun/hbmake/hbdoc/hbtest
+        will work out of the box without the need for any
+        special installation or extra manual procedure, or
+        any change whatsoever in the user/system environment.
+        The change also doesn't prevent user installing Harbour
         to system dirs and/or to utilize harbour.dylib in every way.
       - so that hbmk script creates '-static' executables by default.
-        This will make all programs created by hbmk to work out of the 
-        box without any special trick described above, or explicit 
+        This will make all programs created by hbmk to work out of the
+        box without any special trick described above, or explicit
         need to use '-static' switch.
         You can override this with '-shared' switch.
-      ; [ The price to pay is slightly larger binary package 
+      ; [ The price to pay is slightly larger binary package
           and executable sizes. ]
 
   * make_gnu.sh
@@ -1834,7 +1842,7 @@
 2008-11-18 13:55 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_gcc.sh
   * common.mak
-    ! Fixed previous and even older workaround for cyclic 
+    ! Fixed previous and even older workaround for cyclic
       reference in common.mak when used with GNU-make.
     ; Please review/test.
 
@@ -1848,8 +1856,8 @@
 2008-11-17 23:59 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/Makefile
   * harbour/contrib/gtwvg/common.mak
-    + wvgdlg.prg 
-      
+    + wvgdlg.prg
+
   * harbour/contrib/gtwvg/gtwvg.c
     ! Fixed one more issue with screen repaint behavior when
       window was changing size due to font settings.
@@ -1865,12 +1873,12 @@
   * harbour/contrib/gtwvg/wvgwnd.prg
     ! A reshuffling exercise, Wvt*Classes inching towards
       Xbase++ compatibility, more synchronizations.
-      
+
   + harbour/contrib/gtwvg/wvgdlg.prg
     + Added WvgDialog() class on lines with XbpDialog().
 
   * harbour/contrib/gtwvg/tests/demowvg.prg
-    ! Active-X controls hosted with WvgDialog(), pure Windows GT. 
+    ! Active-X controls hosted with WvgDialog(), pure Windows GT.
       Previously these were being hosted in WvtCrt() console.
 
 2008-11-18 03:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -1881,17 +1889,17 @@
 
 2008-11-18 02:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/gtwvt/gtwvt.c
-    ! Fix to previous fix to maximize the window when the initial 
+    ! Fix to previous fix to maximize the window when the initial
       size would be too big to fit on screen (stupid omission).
       Now the previously cited sizing problem is alright.
 
   * source/vm/fm.c
-    + Replaced HB_NO_FM_STAT and HB_FM_STAT envvars 
-      with HB_FM_STAT=yes|no (maybe 0|1 or on|off woud be 
-      better or could be accepted as alternatives or 
-      replacement). This is to avoid ambiguity when both 
+    + Replaced HB_NO_FM_STAT and HB_FM_STAT envvars
+      with HB_FM_STAT=yes|no (maybe 0|1 or on|off woud be
+      better or could be accepted as alternatives or
+      replacement). This is to avoid ambiguity when both
       envvars were set or the app default is not known.
-    + Added HB_FM_STATISTICS_DYN_OFF to turn off mem tracking 
+    + Added HB_FM_STATISTICS_DYN_OFF to turn off mem tracking
       by default when stat module is linked in.
 
   * source/common/hbverdsp.c
@@ -1914,7 +1922,7 @@
   + harbour/contrib/gtwvg/wvggui.h
     + Initial commit of pure GUI GT based on GTWVG named WGU.
       ; Subject to heavy changes onwards.
-        WGU will become the basis of WvgDialog() plus inherited 
+        WGU will become the basis of WvgDialog() plus inherited
         sub-classes.
 
   * harbour/contrib/gtwvg/makefile
@@ -1922,20 +1930,20 @@
     + Added new files.
 
   * harbour/contrib/gtwvg/tests/demowvg.prg
-    + Now <Dialog One> is working properly. 
+    + Now <Dialog One> is working properly.
       It now opens in new thread if it is odd and as usual if even.
     + <Modeless Dialogs><Experiment #1>
       ! Just to have experiments on WGU GT.
 
 2008-11-16 23:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/gtwvg/wvgsink.c
-    * Minor cleanup to hb_strncat() (it's best to use 
-      'sizeof( target ) - 1' for size, if target is a char 
+    * Minor cleanup to hb_strncat() (it's best to use
+      'sizeof( target ) - 1' for size, if target is a char
       array. The buffer was off by one on the good direction.)
 
   * ChangeLog
-    ! ChangeLog was again saved as Unicode. Please guys TURN 
-      THIS OFF for good. (fixed in prev commit, but I've left 
+    ! ChangeLog was again saved as Unicode. Please guys TURN
+      THIS OFF for good. (fixed in prev commit, but I've left
       this here anyway)
 
 2008-11-16 13:00 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
@@ -1946,10 +1954,10 @@
     + Added menu option to open a GET session in GTWVT console.
       ; I was studying to call multiple GTs ( GTWVG and GTWVT ) same time.
         It can be and it also opens up a lot more possibilities.
-    
+
       ; Thanks Przemek for superb basic engine.
 
-    + Added RMChart Active-X manipulation. It is free OCX and 
+    + Added RMChart Active-X manipulation. It is free OCX and
       can be downloaded from http://www.rmchart.com/
       ; Select from the <Active-X Controls> option.
         Press F11 repeatedly to see 6 different charts.
@@ -1979,12 +1987,12 @@
   * harbour/contrib/gtwvg/gtwvg.c
     ! Further tuned up the resizing behavior.
 
-    ! Fixed a nasty bug present since begining. The bug was causing 
+    ! Fixed a nasty bug present since begining. The bug was causing
       window to loose gui contents and even text buffer in certain
-      circumstances. Now you can be assured that all GTs open 
+      circumstances. Now you can be assured that all GTs open
       with/without gui contents will never be out of synchronization.
       Play with contrib/gtwvg/tests/demowvg.prg, open many browsers,
-      Active-X controls, get windows and so on, every window will 
+      Active-X controls, get windows and so on, every window will
       behave as a gentleman.
 
   * harbour/contrib/gtwvg/wvgcrt.prg
@@ -1998,13 +2006,13 @@
   * harbour/contrib/gtwvg/gtwvg.h
     - pWVT->bResizing
     - pWVT->bAlreadySizing
-    ; Optimized resizing behavior. Now Window must not flicker until 
+    ; Optimized resizing behavior. Now Window must not flicker until
       resizing is finished. Please test. If this effects the desired
       behavior, let me port it to GTWVT also.
 
   * harbour/contrib/gtwvg/tests/demowvg.prg
     ! Adjusted few parameters. Just play with <Traditional><Browser><F3, F4>.
-    ; TOFIX: INKEY() vs FireEvent() - Not sure what it behave like.  
+    ; TOFIX: INKEY() vs FireEvent() - Not sure what it behave like.
 
   * harbour/contrib/gtwvg/wvgcrt.prg
     ! Fixes to some events behaviors. Copy and Paste syndrome :-(
@@ -2019,7 +2027,7 @@
       Implemented hb_gtInfo( HB_GTI_DEFERPAINT, FALSE | TRUE )
       For consoles hosting ActiveX controls need not be painted text buffer.
       :TOFIX To extend this protocol for resizing buffer too
-   
+
   * harbour/contrib/gtwvg/wvgsink.c
     ! More unicode compliant.
     ! Fixed some errors in -DUNICODE builds, not all.
@@ -2066,7 +2074,7 @@
   * contrib/gtwvg/wvgutils.c
   * contrib/gtwvg/wvgsink.c
     ! SVN IDs missing, mistyped. SVN tags now reset.
-    ; TOFIX: GTWVG is now broken with MSVC 8 and/or C++ and/or 64-bit modes, 
+    ; TOFIX: GTWVG is now broken with MSVC 8 and/or C++ and/or 64-bit modes,
              also unsafe string function is used:
              - strcat() should be hb_strncat().
              - Usual but wrong HRESULT to ULONG conversions break in 64-bit.
@@ -2093,7 +2101,7 @@
   * make_b32.mak
   * make_vc.mak
     * Possible fix to install problem. I can't test at the moment.
-  
+
 2008-11-14 07:26 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgax.prg
   * harbour/contrib/gtwvg/wvgphdlr.prg
@@ -2103,7 +2111,7 @@
     - #ifdef HB_ACTIVEX
 
     Sorry I left few defines untouched.
-       hbmk_b32 -mt -gui demowvg -d__MW__   
+       hbmk_b32 -mt -gui demowvg -d__MW__
 
     But it needs hbwin.lib and you have to include it in link script.
 
@@ -2126,7 +2134,7 @@
   + harbour/contrib/gtwvg/wvgax.prg
     ! Xbase++ compatible class skeleton and implementation.
     ! Partially but sufficient functional WvgCrt() class.
- 
+
   * harbour/contrib/gtwvg/gtwvg.h
   * harbour/contrib/gtwvg/hbgtwvg.ch
   * harbour/contrib/gtwvg/wvtwin.ch
@@ -2199,10 +2207,10 @@
   * contrib/mtpl_b32.mak
   * contrib/mtpl_gcc.mak
   * contrib/mtpl_vc.mak
-    + Added 'set HB_BUILD_OPTIM=no' option to disable 
-      all C compiler optimization for all compilers in 
-      non-GNU make system. This replaces old envvars 
-      BCC_NOOPTIM and GCC_NOOPTIM and add MSVC support 
+    + Added 'set HB_BUILD_OPTIM=no' option to disable
+      all C compiler optimization for all compilers in
+      non-GNU make system. This replaces old envvars
+      BCC_NOOPTIM and GCC_NOOPTIM and add MSVC support
       for this option.
 
   * common.mak
@@ -2214,7 +2222,7 @@
 
 2008-11-12 14:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.mak
-    + TOFIX added for the case when HB_CC_NAME is overridden 
+    + TOFIX added for the case when HB_CC_NAME is overridden
       by user and MT/DLL targets are being created.
 
   * common.mak
@@ -2223,7 +2231,7 @@
 
 2008-11-12 13:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbverdsp.c
-    ! Fixed displaying tracing status. (INFO and DEBUG level 
+    ! Fixed displaying tracing status. (INFO and DEBUG level
       counts as 'on'.)
 
 2008-11-12 12:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -2249,9 +2257,9 @@
 
 2008-11-11 21:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbverdsp.c
-    * Streamlined the /build information screen. It's now 
-      more compact and now show if tracing is enabled. Max 
-      symbol length got removed, ANSI C startup also, because 
+    * Streamlined the /build information screen. It's now
+      more compact and now show if tracing is enabled. Max
+      symbol length got removed, ANSI C startup also, because
       it needs a custom C flag anyway.
 
   * include/hbvmpub.h
@@ -2278,8 +2286,8 @@
   * make_b32.mak
   * make_vc.mak
   * ChangeLog
-    ! Fixed MT mode .dll not starting up properly. IOW now 
-      'hbmk -shared -mt' works. Relevant entries marked as 
+    ! Fixed MT mode .dll not starting up properly. IOW now
+      'hbmk -shared -mt' works. Relevant entries marked as
       [DONE]
 
   * bin/hbmk.bat
@@ -2287,9 +2295,9 @@
 
 2008-11-11 12:08 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/console.c
-    ! Fixed __EJECT() writing an EJECT only if output device 
-      was "PRINTER". This fixes problem reported by Ciro, and 
-      also a very old TOFIX which was removed very long ago 
+    ! Fixed __EJECT() writing an EJECT only if output device
+      was "PRINTER". This fixes problem reported by Ciro, and
+      also a very old TOFIX which was removed very long ago
       by mistake. (see thread "Bug: __EJECT() (David)" on 2000-07-27)
       [TOMERGE 1.0]
 
@@ -2306,7 +2314,7 @@
   * common.mak
   * bin/hbmk.bat
     + Added generation of MT harbour .dlls for BCC and MSVC.
-    ; TOFIX: 'hbmk -shared -mt' doesn't seem to work, resulting 
+    ; TOFIX: 'hbmk -shared -mt' doesn't seem to work, resulting
              app simply exits for both BCC and MSVC. [DONE]
     ; TODO: Please update make_gcc.mak. [DONE]
 
@@ -2329,7 +2337,7 @@
     + Added generation of hbmainstd and hbmainwin libs.
 
   * bin/hbmk.bat
-    + Changed to use above libs. This also means that '-shared' 
+    + Changed to use above libs. This also means that '-shared'
       can now be used in Harbour binary distributions, too.
 
 2008-11-11 03:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -2369,14 +2377,14 @@
     ! Fixed to cleanup mainstd.obj and mainwin.obj.
 
   * ChangeLog
-    * Some TODO/TOFIX marked as [DONE]. One [DONE] marked 
+    * Some TODO/TOFIX marked as [DONE]. One [DONE] marked
       as [DONE - REOPENED].
 
 2008-11-11 02:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak
   * make_gcc.mak
-    + Added -DHB_TR_LEVEL_DEBUG C compiler option when 
+    + Added -DHB_TR_LEVEL_DEBUG C compiler option when
       HB_BUILD_DEBUG=yes.
 
   * source/rtl/hbinet.c
@@ -2416,7 +2424,7 @@
   * contrib/hbcurl/Makefile
   * contrib/hbcurl/hbcurl.c
   + contrib/hbcurl/hbcurlm.c
-    + Some disabled (not mainstream) functions moved to 
+    + Some disabled (not mainstream) functions moved to
       a separate file.
 
   * contrib/hbwin/win_prn2.c
@@ -2439,10 +2447,10 @@
 
 2008-11-10 09:50 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbmath.h
-    ! Fixed Pelles C 5.00 not having an 'inf' (HUGE_VAL) symbol 
+    ! Fixed Pelles C 5.00 not having an 'inf' (HUGE_VAL) symbol
       when in -Tarm-coff (~WinCE) mode. Pelles C bug (?).
 
-    ; NOTE: Now core fully compiles in WinCE mode. So we have 
+    ; NOTE: Now core fully compiles in WinCE mode. So we have
             a new port.
 
     ; TOFIX: (this is a complete list of all Pelles C WinCE problems)
@@ -2527,7 +2535,7 @@
 
 2008-11-10 03:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/fm.c
-    ! Fixed missing abort() on WinCE. (for Pelles C only, but 
+    ! Fixed missing abort() on WinCE. (for Pelles C only, but
       the fix should work for any WinCE compilers).
     ; TOFIX: Now the only remaining showstopper for PellesC5 WinCE
              support is:
@@ -2566,7 +2574,7 @@
     ! Reenabled hbwmain.c for __POCC__.
 
   * source/pp/hbpp.c
-    * WinCE cleanup. (__MINGW32CE__ is always defined 
+    * WinCE cleanup. (__MINGW32CE__ is always defined
       when HB_WINCE is, so checking for HB_WINCE seems enough)
     % Removed #include <windows.h>.
     ; Please verify me.
@@ -2638,8 +2646,8 @@
     * Macro rename:
       - HB_WIN32_IO_OFF -> HB_IO_WIN_OFF
       - HB_WIN32_IO     -> HB_IO_WIN
-    ; NOTE: INCOMPATIBLE if someone happens to disable 
-            Windows native IO. Users don't normally 
+    ; NOTE: INCOMPATIBLE if someone happens to disable
+            Windows native IO. Users don't normally
             need this though.
 
 2008-11-09 20:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -2659,7 +2667,7 @@
   * contrib/examples/pe/hbmk_vc.bat
   * contrib/examples/hscript/hbmk_vc.bat
     * Some remaining renames.
-    * Got rid of temp files in BCC batch files. Win9x is no longer 
+    * Got rid of temp files in BCC batch files. Win9x is no longer
       supported.
     * Some other minor cleanups.
 
@@ -2832,7 +2840,7 @@
     + Added make files.
 
   - contrib/hbclip
-    - Removed this contrib. It was incomplete and not 
+    - Removed this contrib. It was incomplete and not
       updated since 2001.
 
 2008-11-09 17:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -2921,12 +2929,12 @@
   * contrib/hbcurl/hbcurl.c
   * contrib/hbcurl/hbcurl.ch
     + Added libcurl 7.19.1 features.
-    % Removed hashing calls from some parts which are 
-      only compiled for libcurl versions which don't need 
+    % Removed hashing calls from some parts which are
+      only compiled for libcurl versions which don't need
       hashing anyway.
 
   * ChangeLog
-    * Changed CVS ID tag name in some very old entries to 
+    * Changed CVS ID tag name in some very old entries to
       avoid them being replaced by versioning system.
 
 2008-11-09 16:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -2941,20 +2949,20 @@
   * source/rtl/console.c
   * source/rtl/setcolor.c
   * source/rtl/setcurs.c
-    + Added HB_EXPORT to some functions to make it possible 
+    + Added HB_EXPORT to some functions to make it possible
       to build hbrun-dll.exe.
-      For other reasons, it only works if Harbour built with 
+      For other reasons, it only works if Harbour built with
       set C_USR=-DHB_DYNLIB.
-    ; TODO: Make HB_DYNLIB the default build mode, do gradual 
-            steps to remove separate DLL building pass, and 
+    ; TODO: Make HB_DYNLIB the default build mode, do gradual
+            steps to remove separate DLL building pass, and
             finally to remove HB_BUILD_DLL option.
-            The only drawback will be about 10-100K 
-            (currently) overhead in final executable size due 
+            The only drawback will be about 10-100K
+            (currently) overhead in final executable size due
             to included export table for BCC and MSVC builds.
 
 2008-11-09 15:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/xhb/hboutdbg.c
-    ! Fixed to compile without warnings and with more 
+    ! Fixed to compile without warnings and with more
       consistent behavior across platforms.
 
   * source/rtl/gtwvt/gtwvt.c
@@ -2973,7 +2981,7 @@
   * make_b32.mak
   * make_vc.mak
     + Added HBRUN_DLL.
-    ; TOFIX: It doesn't work. Maybe more eyeballs will spot the 
+    ; TOFIX: It doesn't work. Maybe more eyeballs will spot the
              problem more easily. [DONE]
 
 2008-11-09 14:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -2995,9 +3003,9 @@
   * source/rtl/tget.prg
   * source/rtl/tgetint.prg
   * source/compiler/gencobj.c
-    ! Removed high chars from comments. This usually means 
-      copyright holders' names. I apologize for touching 
-      them, I also have one in mine, but it's better to 
+    ! Removed high chars from comments. This usually means
+      copyright holders' names. I apologize for touching
+      them, I also have one in mine, but it's better to
       not use them in source code to avoid encoding problems.
 
 2008-11-09 14:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -3009,13 +3017,13 @@
 
 2008-11-09 14:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.mak
-    + Added /nxcompat linker flag for non-WinCE, non-DLL, 
-      HB_VISUALC_VER >= 80 MSVC executables. 
+    + Added /nxcompat linker flag for non-WinCE, non-DLL,
+      HB_VISUALC_VER >= 80 MSVC executables.
       This should add extra safety.
 
   * include/hbextern.ch
   * source/rtl/rat.c
-    + Added HB_RAT() which is similar to RAT(), but also accepts 
+    + Added HB_RAT() which is similar to RAT(), but also accepts
       <nStart> and <nEnd> optional paramaters, similarly to HB_AT().
     ; Please test.
 
@@ -3042,19 +3050,19 @@
 
 2008-11-09 12:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
-    ! Fixed again the UNICODE problem (I've uploaded a wrong 
+    ! Fixed again the UNICODE problem (I've uploaded a wrong
       version apparently).
     + Added my last entry which was lost due to above.
     ! Removed all ending whitespaces.
-    ! Stripped all non-ASCII chars. Sorry to all who's names 
+    ! Stripped all non-ASCII chars. Sorry to all who's names
       were thus modified.
-    ; NOTE: Please don't use any high chars in the future, 
-            only 7-bit ASCII. Same goes for all Harbour source 
+    ; NOTE: Please don't use any high chars in the future,
+            only 7-bit ASCII. Same goes for all Harbour source
             comments BTW.
-            This way everyone can read what the other are typing 
-            and it's much easier to fix files if someone 
+            This way everyone can read what the other are typing
+            and it's much easier to fix files if someone
             accidentally saves with the wrong codepage.
-    ; TOFIX: We should also possibly fix all high chars in 
+    ; TOFIX: We should also possibly fix all high chars in
              .prg and .c code _strings_.
 
 2008-11-09 11:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)

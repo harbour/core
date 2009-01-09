@@ -530,31 +530,19 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       if( bFound )
       {
-         struct stat sStat;
-
-         stat( info->entry.achName, &sStat );
-
          hb_strncpy( ffind->szName, info->entry.achName, sizeof( ffind->szName ) - 1 );
-         ffind->size = sStat.st_size;
-
+         ffind->size = info->entry.cbFile;
          raw_attr = info->entry.attrFile;
 
-         {
-            time_t ftime;
-            struct tm * ft;
+         nYear  = info->entry.fdateLastWrite.year + 1980;
+         nMonth = info->entry.fdateLastWrite.month;
+         nDay   = info->entry.fdateLastWrite.day;
 
-            ftime = sStat.st_mtime;
-            ft = localtime( &ftime );
-
-            nYear  = ft->tm_year + 1900;
-            nMonth = ft->tm_mon + 1;
-            nDay   = ft->tm_mday;
-
-            nHour  = ft->tm_hour;
-            nMin   = ft->tm_min;
-            nSec   = ft->tm_sec;
-         }
+         nHour  = info->entry.ftimeLastWrite.hours;
+         nMin   = info->entry.ftimeLastWrite.minutes;
+         nSec   = info->entry.ftimeLastWrite.twosecs;
       }
+
       hb_fsSetIOError( bFound, 0 );
    }
 
