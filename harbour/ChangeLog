@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-12 23:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/cdpapi.c
+  * harbour/source/rtl/langapi.c
+    * increase maximum number of lang and codepage modules from 64 to 128
+      (we already have more then 64)
+
+  * harbour/include/hbgtinfo.ch
+    + added HB_GTI_BOXCP - it allows to chose CP for given characters put
+      by DISPBOX() and similar box drawing functions.
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    + added support for HB_GTI_BOXCP. Now it's possible to change the CP
+      used for box drawing characters. Before this modification is was
+      hardcoded to "EN"
+    * use codepage set by HB_SET{DISP|TERM}CP() also for box characters
+      if last parameter <lBox> is true
+    This functionality (using different CP for box drawing characters)
+    is available only if terminal works in Unicode mode (UTF8).
+
 2009-01-12 15:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/fm.c
   * harbour/include/hbwmain.c

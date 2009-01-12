@@ -133,6 +133,8 @@
 #define HB_GTI_SETPOS_XY        55  /* Get/Set current top-left position coordinates of the window by pixels */
 #define HB_GTI_SETPOS_ROWCOL    56  /* Set current top-left position coordinates of the window by row/cols */
 
+#define HB_GTI_BOXCP            57  /* Codepage used for box drawing */
+
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
 #define HB_GTI_FONTW_NORMAL     2

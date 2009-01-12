@@ -58,6 +58,8 @@
 #include "hbapicdp.h"
 #include "hbapierr.h"
 
+#define HB_CDP_MAX_  128
+
 /* Now we are using only 16bit Unicode values so the maximum size
  * of single character encoded in UTF8 is 3 though ISO 10646 Universal
  * Character Set (UCS) occupies even a 31-bit code space and to encode
@@ -112,8 +114,6 @@ static HB_CODEPAGE s_en_codepage =
 
 HB_CODEPAGE_ANNOUNCE( EN )
 
-
-#   define HB_CDP_MAX_ 64
 static PHB_CODEPAGE s_cdpList[HB_CDP_MAX_] = { &s_en_codepage };
 
 static int utf8Size( USHORT uc )

@@ -206,7 +206,7 @@ HB_LANG_ANNOUNCE( EN )
 
 /* NOTE: This is the maximum number of registered languages, later this can be
          made dynamic. */
-#define HB_LANG_MAX_ 64
+#define HB_LANG_MAX_ 128
 
 #define HB_LANG_ITEM_ID_ID         0
 #define HB_LANG_ITEM_ID_NAME       1

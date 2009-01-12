@@ -323,8 +323,8 @@ typedef struct _HB_GTTRM
 #ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpHost;
    PHB_CODEPAGE cdpOut;
+   PHB_CODEPAGE cdpBox;
    PHB_CODEPAGE cdpIn;
-   PHB_CODEPAGE cdpEN;
 #endif
    BOOL       fUTF8;
    BYTE       keyTransTbl[ 256 ];
@@ -724,8 +724,8 @@ static void hb_gt_trm_termOutTrans( PHB_GTTRM pTerm, BYTE * pStr, int iLen, int 
       if( pTerm->fUTF8 )
       {
          if( ( iAttr & ( HB_GTTRM_ATTR_ACSC | HB_GTTRM_ATTR_BOX ) ) &&
-             pTerm->cdpEN )
-            cdp = pTerm->cdpEN;
+             pTerm->cdpBox )
+            cdp = pTerm->cdpBox;
          else if( pTerm->cdpHost )
             cdp = pTerm->cdpHost;
          else
@@ -2837,7 +2837,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
 
 #ifndef HB_CDP_SUPPORT_OFF
    pTerm->cdpHost = pTerm->cdpOut = pTerm->cdpIn = NULL;
-   pTerm->cdpEN = hb_cdpFind( "EN" );
+   pTerm->cdpBox = hb_cdpFind( "EN" );
 #endif
    add_efds( pTerm, pTerm->hFilenoStdin, O_RDONLY, NULL, NULL );
    init_keys( pTerm );
@@ -3255,6 +3255,8 @@ static BOOL hb_gt_trm_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char 
 
       pTerm->cdpOut = hb_cdpFind( pszTermCDP );
       pTerm->cdpHost = hb_cdpFind( pszHostCDP );
+      if( fBox && pTerm->cdpHost )
+         pTerm->cdpBox = pTerm->cdpHost;
 
       if( pTerm->cdpOut && pTerm->cdpHost &&
           pTerm->cdpHost->nChars &&
@@ -3432,6 +3434,18 @@ static BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_ISUNICODE:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pTerm->fUTF8 );
+         break;
+
+      case HB_GTI_BOXCP:
+         pInfo->pResult = hb_itemPutC( pInfo->pResult,
+                                       pTerm->cdpBox ? pTerm->cdpBox->id : NULL );
+         szVal = hb_itemGetCPtr( pInfo->pNewVal );
+         if( szVal && *szVal )
+         {
+            PHB_CODEPAGE cdpBox = hb_cdpFind( szVal );
+            if( cdpBox )
+               pTerm->cdpBox = cdpBox;
+         }
          break;
 
       case HB_GTI_ESCDELAY:
