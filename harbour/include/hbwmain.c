@@ -71,6 +71,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    LPSTR pArgs, pArg, pDst, pSrc, pFree;
    BOOL fQuoted;
    int iErrorCode;
+   HANDLE hHeap;
 
    /* HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow)); */
 
@@ -83,7 +84,8 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 #else
    pSrc = pFree = lpCmdLine;
 #endif
-   pDst = pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( pFree ) + 1 );
+   hHeap = GetProcessHeap();
+   pDst = pArgs = ( LPSTR ) HeapAlloc( hHeap, 0, strlen( pFree ) + 1 );
    fQuoted = FALSE;
 
    while( *pSrc != 0 && s_argc < HB_MAX_ARGS )
@@ -135,7 +137,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    iErrorCode = main( s_argc, s_argv );
 #endif
 
-   LocalFree( pArgs );
+   HeapFree( hHeap, 0, ( void * ) pArgs );
 
    return iErrorCode;
 }

@@ -152,9 +152,15 @@
 #     define free( p )           dlfree( ( p ) )
 #  endif
 #elif defined( HB_FM_WIN32_ALLOC ) && defined( HB_OS_WIN_32 )
-#  define malloc( n )         ( void * ) LocalAlloc( LMEM_FIXED, ( n ) )
-#  define realloc( p, n )     ( void * ) LocalReAlloc( ( HLOCAL ) ( p ), ( n ), LMEM_MOVEABLE )
-#  define free( p )           LocalFree( ( HLOCAL ) ( p ) )
+#  if defined( HB_FM_LOCALALLOC )
+#     define malloc( n )      ( void * ) LocalAlloc( LMEM_FIXED, ( n ) )
+#     define realloc( p, n )  ( void * ) LocalReAlloc( ( HLOCAL ) ( p ), ( n ), LMEM_MOVEABLE )
+#     define free( p )        LocalFree( ( HLOCAL ) ( p ) )
+#  else
+#     define malloc( n )      ( void * ) HeapAlloc( GetProcessHeap(), 0, ( n ) )
+#     define realloc( p, n )  ( void * ) HeapReAlloc( GetProcessHeap(), 0, ( void * ) ( p ), ( n ) )
+#     define free( p )        HeapFree( GetProcessHeap(), 0, ( void * ) ( p ) )
+#  endif
 #endif
 
 #if defined( HB_MT_VM ) && ( defined( HB_FM_STATISTICS ) || \

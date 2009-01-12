@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-12 15:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/fm.c
+  * harbour/include/hbwmain.c
+    * use HeapAlloc( GetProcessHeap(), ... ) instead of LocalAlloc()
+      when HB_FM_WIN32_ALLOC macro is set - Toninho's tests show that
+      it's a little bit more efficient - thanks.
+
 2009-01-09 17:59 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbct/ftoc.c
   * harbour/contrib/hbct/misc1.c
