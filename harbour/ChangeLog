@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-13 20:00 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/contrib/rddads/adsx.c
+    * improved code to solve RDD initialisation order problem
+  * harbour/contrib/rddsql/sqlbase.c
+    ! fixed minor typo
+  * harbour/source/pp/hbpp.c
+  * harbour/source/compiler/hbusage.c
+    * updated copyright year to 2009 
+
 2009-01-13 07:17 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
     ! Synchronized with GTWVT as per change below ( Przemek ):
