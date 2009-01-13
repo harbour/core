@@ -2168,6 +2168,35 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       if( !pWVT->hWnd )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 
+      if( ! GetSystemMetrics( SM_REMOTESESSION ) )
+      {
+         typedef BOOL ( WINAPI * P_SLWA )( HWND, COLORREF, BYTE, DWORD );
+
+#if defined(HB_WINCE)
+         P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
+                  GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
+                                  TEXT( "SetLayeredWindowAttributes" ) );
+#else
+         P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
+                  GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
+                                  "SetLayeredWindowAttributes" );
+#endif
+
+         if( pSetLayeredWindowAttributes )
+         {
+#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+            SetWindowLong( pWVT->hWnd, GWL_EXSTYLE, GetWindowLong( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
+#else
+            SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
+#endif
+
+            pSetLayeredWindowAttributes( pWVT->hWnd,
+               ( COLORREF ) 0 /* COLORREF crKey */,
+               255 /* BYTE bAlpha */,
+               LWA_ALPHA /* DWORD dwFlags */ );
+         }
+      }
+
       hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
       /* Set icon */
       if( pWVT->hIcon )

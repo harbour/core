@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-13 07:17 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+    ! Synchronized with GTWVT as per change below ( Przemek ):
+    + Added 'layered' window support. It's enabled on W2K
+      and above (and only when not in Terminal Services
+      environment, because it makes it perform worse). This
+      way the screen is also properly displayed regardless
+      of what the Harbour application does. It also fixes
+      numerous paint artifacts, when GTWVT window was in
+      the background and another window is moved in front
+      of it.
+
 2009-01-13 14:07 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/rtl/Makefile
