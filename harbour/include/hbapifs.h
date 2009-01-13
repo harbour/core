@@ -258,7 +258,7 @@ typedef struct _HB_PATHNAMES
 
 extern HB_EXPORT void       hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList );
 extern HB_EXPORT void       hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList );
-       
+
 extern HB_EXPORT BOOL       hb_spFile( BYTE * pFilename, BYTE * pRetPath );
 extern HB_EXPORT HB_FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags );
 extern HB_EXPORT HB_FHANDLE hb_spCreate( BYTE * pFilename, ULONG ulAttr );
@@ -288,6 +288,14 @@ typedef struct
 extern HB_EXPORT PHB_FFIND hb_fsFindFirst( const char * pszFileName, ULONG ulAttrMask );
 extern HB_EXPORT BOOL      hb_fsFindNext( PHB_FFIND ffind );
 extern HB_EXPORT void      hb_fsFindClose( PHB_FFIND ffind );
+
+/* functions to create, wait and terminate processes */
+HB_FHANDLE hb_fsOpenProcess( const char *pszFilename,
+                             HB_FHANDLE *phStdin, HB_FHANDLE *phStdout,
+                             HB_FHANDLE *phStderr,
+                             BOOL fDetach, ULONG *pulPID );
+int hb_fsProcessValue( HB_FHANDLE hProcess, BOOL fWait );
+BOOL hb_fsCloseProcess( HB_FHANDLE hProcess, BOOL fGentle );
 
 /* Misc helper functions */
 extern ULONG               hb_fsAttrFromRaw( ULONG raw_attr );

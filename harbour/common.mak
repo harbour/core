@@ -542,11 +542,13 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hbgtcore$(OBJEXT) \
     $(OBJ_DIR)\hbi18n$(OBJEXT)   \
     $(OBJ_DIR)\hbinet$(OBJEXT)   \
-    $(OBJ_DIR)\hbstrsh$(OBJEXT)  \
+    $(OBJ_DIR)\hbproces$(OBJEXT) \
+    $(OBJ_DIR)\hbprocfn$(OBJEXT) \
     $(OBJ_DIR)\hbrandom$(OBJEXT) \
     $(OBJ_DIR)\hbregex$(OBJEXT)  \
     $(OBJ_DIR)\hbregexc$(OBJEXT) \
     $(OBJ_DIR)\hbrunfun$(OBJEXT) \
+    $(OBJ_DIR)\hbstrsh$(OBJEXT)  \
     $(OBJ_DIR)\hbtoken$(OBJEXT)  \
     $(OBJ_DIR)\hbzlib$(OBJEXT)   \
     $(OBJ_DIR)\idle$(OBJEXT)     \

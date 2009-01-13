@@ -67,11 +67,13 @@ C_SOURCES=\
 	hbgtcore.c   \
 	hbi18n.c     \
 	hbinet.c     \
-	hbstrsh.c    \
+	hbproces.c   \
+	hbprocfn.c   \
 	hbrandom.c   \
 	hbregex.c    \
 	hbregexc.c   \
 	hbrunfun.c   \
+	hbstrsh.c    \
 	hbtoken.c    \
 	hbzlib.c     \
 	idle.c       \

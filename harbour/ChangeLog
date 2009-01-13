@@ -8,6 +8,52 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-13 14:07 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  * harbour/include/hbapifs.h
+  * harbour/include/hbextern.ch
+  + harbour/source/rtl/hbproces.c
+  + harbour/source/rtl/hbprocfn.c
+    + added C functions hb_fsOpenProcess(), hb_fsProcessValue(),
+      hb_fsCloseProcess()
+    + added .prg functions HB_OPENPROCESS(), HB_PROCESSVALUE(),
+      HB_CLOSEPROCESS()
+    Based on xHarbour code by Giancarlo Niccolai.
+    Warning: it's possible that they will be changed in the future.
+    Please test current implementation. Now few notes about it.
+    Each handle returned by HB_OPENPROCESS() have to be closed
+    by HB_PROCESSVALUE(). Even if process is killed by HB_CLOSEPROCESS()
+    its handle is still open and HB_PROCESSVALUE() has to be executed.
+    Type of handle depends on OS. In *nixes it's process PID. In MS-Windows
+    it's HANDLE. HB_PROCESSVALUE() attach process exit result in *nixes
+    cleaning zombie processes and in Windows closing the HANDLE. If you
+    do not call this function then you will have resource leak.
+    HB_CLOSEPROCESS() only sends quite request to the process but does
+    not execute any cleanup code.
+    All communication handles returned in parameters by reference by
+    HB_OPENPROCESS() function have to be closed using FCLOSE() function.
+    If hStdOut and hStdErr are references to the same variables then
+    executing process stdout and stderr is redirected to the only one
+    pipe. When handles for stdout, stderr and stdin are not given then
+    executed process inherits them from parent process unless <lDetach>
+    parameter is not given. In such case they are redirected to null
+    device (/dev/null or NUL).
+    The OS2 version is not tested. Please make tests.
+    There is no support for DOS which is single process OS.
+    In WinCE builds std{out,err,in} redirecting and process detaching does
+    not work too.
+    The parameters parsing should be updated. Now MS-Windows version uses
+    native OS command line parsing and quoting by "" can be used for
+    parameters with blank characters. I do not know any escape character
+    which can be used to pass (") as parameter to MS-Windows application.
+    In all other OS-es standard bourne shell rules are used. Parameters can
+    be quoted by "" or '' and escape character is \. Quoting by '' disables
+    special meaning of escape character. In OS2 where \ is path separator
+    escaping and '' quoting is disabled so it works like in MS-Windows
+    but I do not know if parameters divided by calling process are fully
+    respected by low level API calls in this system.
+
 2009-01-12 23:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/cdpapi.c
   * harbour/source/rtl/langapi.c
