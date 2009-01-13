@@ -179,14 +179,14 @@ static void hb_freeArgs( char ** argv )
 
 #endif
 
-HB_FHANDLE hb_fsOpenProcess( const char *pszFilename,
+HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
                              HB_FHANDLE *phStdin, HB_FHANDLE *phStdout,
                              HB_FHANDLE *phStderr,
                              BOOL fDetach, ULONG *pulPID )
 {
    HB_FHANDLE hResult = FS_ERROR;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsOpenProcess(%s, %p, %p, %p, %d, %p)", pszFilename, phStdin, phStdout, phStderr, fDetach, pulPID));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFilename, phStdin, phStdout, phStderr, fDetach, pulPID));
 
 #if defined( HB_IO_WIN )
 {
@@ -673,11 +673,11 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, BOOL fWait )
 /* Closes/kills process. The handle is still valid until you
  * catch it with hb_fsProcessValue.
  */
-BOOL hb_fsCloseProcess( HB_FHANDLE hProcess, BOOL fGentle )
+BOOL hb_fsProcessClose( HB_FHANDLE hProcess, BOOL fGentle )
 {
    BOOL fResult = FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsCloseProcess(%p, %d)", ( void * ) ( HB_PTRDIFF ) hProcess, fGentle));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessClose(%p, %d)", ( void * ) ( HB_PTRDIFF ) hProcess, fGentle));
 
 #if defined( HB_IO_WIN )
 {

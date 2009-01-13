@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-13 22:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    ! restored GCC optimization flags in hb* scripts disabled unintentionally
+      by some other modifications 
+
+  * harbour/include/hbapifs.h
+  * harbour/source/rtl/hbproces.c
+    * renamed hb_fsOpenProcess() and hb_fsCloseProcess() to
+      hb_fsProcessOpen(), hb_fsProcessClose()
+
+  * harbour/include/hbextern.ch
+  * harbour/source/rtl/hbprocfn.c
+    * renamed hb_openProcess() and hb_closeProcess() to
+      hb_processOpen(), hb_processClose()
+
+  * harbour/contrib/xhb/hbcompat.ch
+    * added xHarbour compatible translations
+      hb_openProcess() <-> hb_processOpen()
+      hb_closeProcess() <-> hb_processClose()
+
 2009-01-13 20:00 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/contrib/rddads/adsx.c
     * improved code to solve RDD initialisation order problem

@@ -81,6 +81,9 @@
    #xtranslate hb_FieldDec([<x>])          => FieldDec(<x>)
    #xtranslate hb_FieldType([<x>])         => FieldType(<x>)
 
+   #xtranslate hb_processOpen([<x,...>])   => hb_openProcess(<x>)
+   #xtranslate hb_processClose([<x,...>])  => hb_closeProcess(<x>)
+
    #xtranslate hb_isregex([<x>])           => hb_isregexstring(<x>)
    #xtranslate hb_pvalue([<x,...>])        => pvalue(<x>)
    #xtranslate hb_methodName([<x,...>])    => methodName(<x>)
@@ -160,6 +163,9 @@
    #xtranslate gfxText([<x,...>])          => hb_gfxText(<x>)
    #xtranslate MaxRow(.T.)                 => hb_gtInfo( HB_GTI_VIEWPORTHEIGHT )
    #xtranslate MaxCol(.T.)                 => hb_gtInfo( HB_GTI_VIEWPORTWIDTH )
+
+   #xtranslate hb_openProcess([<x,...>])   => hb_processOpen(<x>)
+   #xtranslate hb_closeProcess([<x,...>])  => hb_processClose(<x>)
 
    #xtranslate hb_isregexstring([<x>])     => hb_isregex(<x>)
    #xtranslate pvalue([<x,...>])           => hb_pvalue(<x>)

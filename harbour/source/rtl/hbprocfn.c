@@ -57,7 +57,7 @@
 #include "hbapifs.h"
 #include "hbapierr.h"
 
-HB_FUNC( HB_OPENPROCESS )
+HB_FUNC( HB_PROCESSOPEN )
 {
    const char *szName = hb_parc( 1 );
    PHB_ITEM pStdIn  = hb_param( 2, HB_IT_BYREF );
@@ -80,7 +80,7 @@ HB_FUNC( HB_OPENPROCESS )
       phStdOut = pStdOut ? &hStdOut : NULL;
       phStdErr = pStdErr ? ( pStdOut == pStdErr ? phStdOut : &hStdErr ) : NULL;
 
-      hProcess = hb_fsOpenProcess( szName, phStdIn, phStdOut, phStdErr,
+      hProcess = hb_fsProcessOpen( szName, phStdIn, phStdOut, phStdErr,
                                    fDetach, &ulPID );
       if( hProcess != FS_ERROR )
       {
@@ -108,12 +108,12 @@ HB_FUNC( HB_PROCESSVALUE )
       hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( HB_CLOSEPROCESS )
+HB_FUNC( HB_PROCESSCLOSE )
 {
    HB_FHANDLE hProcess = hb_numToHandle( hb_parnint( 1 ) );
 
    if( hProcess != 0 && hProcess != FS_ERROR && ( hb_pcount() < 2 || ISLOG( 2 ) ) )
-      hb_retl( hb_fsCloseProcess( hProcess, hb_pcount() < 2 || hb_parl( 2 ) ) );
+      hb_retl( hb_fsProcessClose( hProcess, hb_pcount() < 2 || hb_parl( 2 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

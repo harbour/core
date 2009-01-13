@@ -290,12 +290,12 @@ extern HB_EXPORT BOOL      hb_fsFindNext( PHB_FFIND ffind );
 extern HB_EXPORT void      hb_fsFindClose( PHB_FFIND ffind );
 
 /* functions to create, wait and terminate processes */
-HB_FHANDLE hb_fsOpenProcess( const char *pszFilename,
+HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
                              HB_FHANDLE *phStdin, HB_FHANDLE *phStdout,
                              HB_FHANDLE *phStderr,
                              BOOL fDetach, ULONG *pulPID );
-int hb_fsProcessValue( HB_FHANDLE hProcess, BOOL fWait );
-BOOL hb_fsCloseProcess( HB_FHANDLE hProcess, BOOL fGentle );
+int  hb_fsProcessValue( HB_FHANDLE hProcess, BOOL fWait );
+BOOL hb_fsProcessClose( HB_FHANDLE hProcess, BOOL fGentle );
 
 /* Misc helper functions */
 extern ULONG               hb_fsAttrFromRaw( ULONG raw_attr );
