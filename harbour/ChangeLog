@@ -179,9 +179,6 @@
   * source/rtl/strcase.c
     * Minor formatting.
 
-  * source/rtl/filesys.c
-    ! hb_fsCurDirBuff() fixed potential buffer overrun by one byte.
-
   * source/rtl/hbrunfun.c
   * source/rtl/run.c
     ! Fixed missing header hbapiitm.h (after previous local change).
