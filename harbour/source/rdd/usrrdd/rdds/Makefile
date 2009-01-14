@@ -6,6 +6,7 @@ ROOT = ../../../../
 
 PRG_SOURCES=\
 	arrayrdd.prg \
+	logrdd.prg \
 	fcomma.prg \
 	hscdx.prg \
 	rlcdx.prg \

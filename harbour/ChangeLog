@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-18 21:39 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  + harbour/source/rdd/usrrdd/example/exlog.prg
+  + harbour/source/rdd/usrrdd/rdds/logrdd.prg
+  * harbour/source/rdd/usrrdd/rdds/Makefile
+    + Added new LOGRDD rdd file and related example
+    ; NOTE: A simple RDD which introduce logging to file. It inheriths from
+            any existent RDD but if you write / replace / delete something
+            on tables it writes changes in a log file.
+            It needs to inherit a standard RDD to which it adds logging
+            capabilities.
+            Related functions:
+            hb_LogRddInherit() -> <cRDDName>
+              REQUESTED - It must returns the standard RDD name to be inherited.
+                          This function HAVE to be defined from user in application.
+            hb_LogRddLogFileName( [<cFileName>] ) -> <cOldFileName>
+              OPTIONAL  - Set/Get logging file name (default "changes.log").
+            hb_LogRddTag( [<cTag>] ) -> <cOldTag>
+              OPTIONAL  - Set/Get Tag string added in each log line.
+                          (default COMPUTERNAME\UserName)
+            hb_LogRddActive( [<lActive>] ) -> <lOldActive>
+              OPTIONAL  - Set/Get logging active status (default .F.).
+
 2009-01-14 17:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbmzip/hbmzip.c
     + Added .prg level functions:
