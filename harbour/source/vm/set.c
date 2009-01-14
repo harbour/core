@@ -325,6 +325,43 @@ static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL
    return handle;
 }
 
+static void hb_set_OSCODEPAGE( PHB_SET_STRUCT pSet )
+{
+   int i;
+
+   for( i = 0; i < 256; ++i )
+   {
+      pSet->hb_set_oscptransto[ i ] = ( BYTE ) i;
+      pSet->hb_set_oscptransfrom[ i ] = ( BYTE ) i;
+   }
+
+#ifndef HB_CDP_SUPPORT_OFF
+
+   {
+      char * pszHostCDP = hb_cdpID();
+      char * pszFileCDP = pSet->HB_SET_OSCODEPAGE;
+
+      if( pszFileCDP && pszFileCDP[ 0 ] && pszHostCDP )
+      {
+         PHB_CODEPAGE cdpFile = hb_cdpFind( pszFileCDP );
+         PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
+
+         if( cdpFile && cdpHost && cdpFile != cdpHost &&
+             cdpFile->nChars && cdpFile->nChars == cdpHost->nChars )
+         {
+            for( i = 0; i < cdpHost->nChars; ++i )
+            {
+               pSet->hb_set_oscptransto[ ( BYTE ) cdpHost->CharsUpper[ i ] ] = ( BYTE ) cdpFile->CharsUpper[ i ];
+               pSet->hb_set_oscptransto[ ( BYTE ) cdpHost->CharsLower[ i ] ] = ( BYTE ) cdpFile->CharsLower[ i ];
+               pSet->hb_set_oscptransfrom[ ( BYTE ) cdpFile->CharsUpper[ i ] ] = ( BYTE ) cdpHost->CharsUpper[ i ];
+               pSet->hb_set_oscptransfrom[ ( BYTE ) cdpFile->CharsLower[ i ] ] = ( BYTE ) cdpHost->CharsLower[ i ];
+            }
+         }
+      }
+   }
+#endif
+}
+
 BOOL hb_setSetCentury( BOOL new_century_setting )
 {
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
@@ -977,6 +1014,14 @@ HB_FUNC( SET )
             hb_xsetinfo( pSet->HB_SET_HBOUTLOGINFO );
          }
          break;
+      case HB_SET_OSCODEPAGE:
+         hb_retc( pSet->HB_SET_OSCODEPAGE );
+         if( args > 1 )
+         {
+            pSet->HB_SET_OSCODEPAGE = set_string( pArg2, pSet->HB_SET_OSCODEPAGE );
+            hb_set_OSCODEPAGE( pSet );
+         }
+         break;
 
       case HB_SET_INVALID_:
          /* Return NIL if called with invalid SET specifier */
@@ -1092,9 +1137,11 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_TRIMFILENAME = FALSE;
    pSet->HB_SET_HBOUTLOG = hb_strdup( "hb_out.log" );
    pSet->HB_SET_HBOUTLOGINFO = hb_strdup( "" );
+   pSet->HB_SET_OSCODEPAGE = hb_strdup( "" );
 
    hb_xsetfilename( pSet->HB_SET_HBOUTLOG );
    hb_xsetinfo( pSet->HB_SET_HBOUTLOGINFO );
+   hb_set_OSCODEPAGE( pSet );
 
    pSet->hb_set_listener = NULL;
 }
@@ -1120,6 +1167,7 @@ void hb_setRelease( PHB_SET_STRUCT pSet )
    if( pSet->HB_SET_EOL )           hb_xfree( pSet->HB_SET_EOL );
    if( pSet->HB_SET_HBOUTLOG )      hb_xfree( pSet->HB_SET_HBOUTLOG );
    if( pSet->HB_SET_HBOUTLOGINFO )  hb_xfree( pSet->HB_SET_HBOUTLOGINFO );
+   if( pSet->HB_SET_OSCODEPAGE )    hb_xfree( pSet->HB_SET_OSCODEPAGE );
 
    hb_fsFreeSearchPath( pSet->hb_set_path );
 
@@ -1165,6 +1213,7 @@ PHB_SET_STRUCT hb_setClone( PHB_SET_STRUCT pSrc )
    if( pSet->HB_SET_EOL )          pSet->HB_SET_EOL          = hb_strdup( pSet->HB_SET_EOL );
    if( pSet->HB_SET_HBOUTLOG )     pSet->HB_SET_HBOUTLOG     = hb_strdup( pSet->HB_SET_HBOUTLOG );
    if( pSet->HB_SET_HBOUTLOGINFO ) pSet->HB_SET_HBOUTLOGINFO = hb_strdup( pSet->HB_SET_HBOUTLOGINFO );
+   if( pSet->HB_SET_OSCODEPAGE )   pSet->HB_SET_OSCODEPAGE   = hb_strdup( pSet->HB_SET_OSCODEPAGE );
 
    return pSet;
 }
@@ -1842,6 +1891,17 @@ BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
                fResult = TRUE;
             }
             break;
+         case HB_SET_OSCODEPAGE:
+            if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
+            {
+               szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
+               if( pSet->HB_SET_OSCODEPAGE )
+                  hb_xfree( pSet->HB_SET_OSCODEPAGE );
+               pSet->HB_SET_OSCODEPAGE = szValue;
+               hb_set_OSCODEPAGE( pSet );
+               fResult = TRUE;
+            }
+            break;
 
          case HB_SET_INVALID_:
             break;
@@ -1985,6 +2045,7 @@ BOOL    hb_setGetL( HB_set_enum set_specifier )
       case HB_SET_EOL:
       case HB_SET_HBOUTLOG:
       case HB_SET_HBOUTLOGINFO:
+      case HB_SET_OSCODEPAGE:
       case HB_SET_INVALID_:
          break;
 #if 0
@@ -2033,6 +2094,8 @@ char *  hb_setGetCPtr( HB_set_enum set_specifier )
          return pSet->HB_SET_HBOUTLOG;
       case HB_SET_HBOUTLOGINFO:
          return pSet->HB_SET_HBOUTLOGINFO;
+      case HB_SET_OSCODEPAGE:
+         return pSet->HB_SET_OSCODEPAGE;
       case HB_SET_LANGUAGE:
          return hb_langID();
       case HB_SET_CODEPAGE:
@@ -2183,6 +2246,7 @@ int     hb_setGetNI( HB_set_enum set_specifier )
       case HB_SET_TRIMFILENAME:
       case HB_SET_HBOUTLOG:
       case HB_SET_HBOUTLOGINFO:
+      case HB_SET_OSCODEPAGE:
       case HB_SET_INVALID_:
          break;
 #if 0
@@ -2208,7 +2272,6 @@ HB_PATHNAMES * hb_setGetFirstSetPath( void )
 {
    return hb_stackSetStruct()->hb_set_path;
 }
-
 
 HB_FHANDLE hb_setGetAltHan( void )
 {
@@ -2523,4 +2586,57 @@ char *  hb_setGetHBOUTLOG( void )
 char *  hb_setGetHBOUTLOGINFO( void )
 {
    return hb_stackSetStruct()->HB_SET_HBOUTLOGINFO;
+}
+
+char *  hb_setGetOSCODEPAGE( void )
+{
+   return hb_stackSetStruct()->HB_SET_OSCODEPAGE;
+}
+
+BYTE * hb_osEncode( BYTE * szFileName, BOOL * pfFree )
+{
+   *pfFree = FALSE;
+
+   if( hb_stackId() )
+   {
+      BOOL bCPConv = hb_setGetOSCODEPAGE() && hb_setGetOSCODEPAGE()[ 0 ];
+
+      if( bCPConv )
+      {
+         BYTE * p = szFileName;
+         BYTE * pCPTrans = hb_stackSetStruct()->hb_set_oscptransto;
+
+         while( *p )
+         {
+            *p = pCPTrans[ ( BYTE ) *p ];
+            p++;
+         }
+      }
+   }
+
+   return szFileName;
+}
+
+BYTE * hb_osDecode( BYTE * szFileName, BOOL * pfFree )
+{
+   *pfFree = FALSE;
+
+   if( hb_stackId() )
+   {
+      BOOL bCPConv = hb_setGetOSCODEPAGE() && hb_setGetOSCODEPAGE()[ 0 ];
+
+      if( bCPConv )
+      {
+         BYTE * p = szFileName;
+         BYTE * pCPTrans = hb_stackSetStruct()->hb_set_oscptransfrom;
+
+         while( *p )
+         {
+            *p = pCPTrans[ ( BYTE ) *p ];
+            p++;
+         }
+      }
+   }
+
+   return szFileName;
 }

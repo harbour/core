@@ -466,7 +466,7 @@ PROCEDURE hb_SetBuffer( nWriteBuffer, nExtractBuffer, nReadBuffer )
  *     file. Default is to overwrite the file, otherwise if <lOverWrite> is
  *     false the new files are added to the <cFile>.
  *
- *     If <lWithPath> is used, it tells thats the path should also be stored 
+ *     If <lWithPath> is used, it tells thats the path should also be stored
  *     with the file name. Default is false.
  *
  *     If <lWithDrive> is used, it tells thats the Drive and path should also
@@ -943,7 +943,7 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
    HB_SYMBOL_UNUSED( bProgress )
 
    IF Empty( cPassword )
-      cPassword = NIL
+      cPassword := NIL
    ENDIF
 
    IF Set( _SET_DEFEXTENSIONS )

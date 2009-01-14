@@ -110,8 +110,8 @@
 #define _TBR_COORD( n )       Int( n )
 
 /* NOTE: In CA-Cl*pper TBROWSE class does not inherit from any other classes
-         and there is no public class function like TBrowse(). There is 
-         in XPP though. */ 
+         and there is no public class function like TBrowse(). There is
+         in XPP though. */
 #if defined( HB_C52_STRICT ) .AND. !defined( HB_COMPAT_XPP )
 CREATE CLASS TBrowse STATIC
 #else
@@ -178,10 +178,10 @@ EXPORTED:
    METHOD nRight( nRight ) SETGET               // get/set rightmost column for the TBrowse display
 
    METHOD headSep( cHeadSep ) SETGET            // get/set heading separator characters
-   METHOD colSep( cColSep ) SETGET              // get/set column separator characters 
+   METHOD colSep( cColSep ) SETGET              // get/set column separator characters
    METHOD footSep( cFootSep ) SETGET            // get/set footing separator characters
    METHOD skipBlock( bSkipBlock ) SETGET        // get/set code block used to reposition data source
-   METHOD goTopBlock( bBlock ) SETGET           // get/set code block executed by TBrowse:goTop()   
+   METHOD goTopBlock( bBlock ) SETGET           // get/set code block executed by TBrowse:goTop()
    METHOD goBottomBlock( bBlock ) SETGET        // get/set code block executed by TBrowse:goBottom()
 
    METHOD colorSpec( cColorSpec ) SETGET        // get/set string value with color table for the TBrowse display
@@ -398,8 +398,8 @@ STATIC PROCEDURE _DISP_FHSEP( nRow, nType, cColor, aColData )
          ELSEIF aCol[ _TBCI_LASTSPACE ] < 0
             cSep := Left( cSep, Len( cSep ) + aCol[ _TBCI_LASTSPACE ] )
          ENDIF
-         hb_dispOutAt( nRow, aCol[ _TBCI_COLPOS ] - aCol[ _TBCI_FROZENSPACE ], ;
-                       cSep, cColor )
+         hb_dispOutAtBox( nRow, aCol[ _TBCI_COLPOS ] - aCol[ _TBCI_FROZENSPACE ], ;
+                          cSep, cColor )
       ELSEIF aCol[ _TBCI_CELLWIDTH ] > 0
          lFirst := .F.
       ENDIF
@@ -507,8 +507,8 @@ METHOD dispRow( nRow ) CLASS TBROWSE
             IF lFirst
                lFirst := .F.
             ELSEIF aCol[ _TBCI_SEPWIDTH ] > 0
-               hb_dispOutAt( nRowPos, aCol[ _TBCI_COLPOS ] - aCol[ _TBCI_FROZENSPACE ], ;
-                             aCol[ _TBCI_COLSEP ], cStdColor )
+               hb_dispOutAtBox( nRowPos, aCol[ _TBCI_COLPOS ] - aCol[ _TBCI_FROZENSPACE ], ;
+                                aCol[ _TBCI_COLSEP ], cStdColor )
                nColPos += aCol[ _TBCI_SEPWIDTH ]
             ENDIF
             nColPos += aCol[ _TBCI_CELLPOS ]
@@ -2187,7 +2187,7 @@ METHOD setColumn( nColumn, oCol ) CLASS TBROWSE
       nColumn := __eInstVar53( Self, "COLUMN", nColumn, "N", 1001 )
       oCol := __eInstVar53( Self, "COLUMN", oCol, "O", 1001 )
 
-      /* NOTE: CA-Cl*pper doesn't check nColumn range (and type in C5.3 - I didn't implement this behaviour), 
+      /* NOTE: CA-Cl*pper doesn't check nColumn range (and type in C5.3 - I didn't implement this behaviour),
                but crashes instead. */
 
 #ifndef HB_C52_STRICT
@@ -2201,8 +2201,8 @@ METHOD setColumn( nColumn, oCol ) CLASS TBROWSE
       ENDIF
    ENDIF
 
-   /* NOTE: CA-Cl*pper 5.2 NG says this will return the previously set 
-            column, but it's returning Self instead. In C5.3 this bug 
+   /* NOTE: CA-Cl*pper 5.2 NG says this will return the previously set
+            column, but it's returning Self instead. In C5.3 this bug
             was fixed and it works as expected (except when wrong
             parameter is passed, when it returns NIL). [vszakats] */
 #ifdef HB_C52_STRICT
@@ -2384,11 +2384,11 @@ METHOD viewArea() CLASS TBROWSE
    RETURN { ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ),;
             ::n_Left,;
             ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ),;
-            ::n_Right,; 
+            ::n_Right,;
             nFrozenWidth }
 
 
-/* NOTE: Returns the left margin relative column position of the first 
+/* NOTE: Returns the left margin relative column position of the first
          non-frozen column. Xbase++ compatible method. */
 METHOD firstScrCol() CLASS TBROWSE
 
@@ -2611,7 +2611,7 @@ METHOD border( cBorder ) CLASS TBROWSE
       cBorder := __eInstVar53( Self, "BORDER", cBorder, "C", 1001 )
 
       IF Len( cBorder ) == 0 .OR. Len( cBorder ) == 8
-      
+
          IF Empty( ::cBorder ) .AND. !Empty( cBorder )
             ::n_Top++
             ::n_Left++
@@ -2712,12 +2712,12 @@ METHOD setKey( nKey, bBlock ) CLASS TBROWSE
 
 METHOD setStyle( nStyle, lNewValue ) CLASS TBROWSE
 
-   /* NOTE: CA-Cl*pper 5.3 will initialize this var on the first 
+   /* NOTE: CA-Cl*pper 5.3 will initialize this var on the first
             :setStyle() method call. [vszakats] */
 
    DEFAULT ::styles TO { .F., .F., .F., .F., .F., NIL }
 
-   /* NOTE: CA-Cl*pper 5.3 does no checks on the value of nStyle, so in case 
+   /* NOTE: CA-Cl*pper 5.3 does no checks on the value of nStyle, so in case
             it is zero or non-numeric, a regular RTE will happen. [vszakats] */
 
    IF nStyle > Len( ::styles ) .AND. ;

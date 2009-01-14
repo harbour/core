@@ -107,7 +107,19 @@ HB_FUNC( GETENV )
          szValue = hb_getenv( pszName );
          if( szValue && szValue[ 0 ] != '\0' )
          {
-            hb_retc_buffer( szValue );
+            {
+               /* Convert from OS codepage */
+               BOOL fFree;
+               char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) szValue, &fFree );
+
+               if( fFree )
+               {
+                  hb_retc_buffer( pbyResult );
+                  hb_xfree( szValue );
+               }
+               else
+                  hb_retc_buffer( szValue );
+            }
          }
          else
          {
@@ -138,7 +150,12 @@ HB_FUNC( GETE )
 
 /* NOTE: Harbour extended version of GETENV(). The 2nd parameter
          can be used to specify a default value, returned if the
-         requested envvar doesn't exist. [vszakats] */
+         requested envvar doesn't exist.
+         3rd, optional logical parameter can specify wether to
+         apply automatic codepage conversion (to the codepage
+         specified by Set( _SET_OSCODEPAGE ) on the returned value.
+         The default is .T.
+         [vszakats] */
 
 HB_FUNC( HB_GETENV )
 {
@@ -175,7 +192,22 @@ HB_FUNC( HB_GETENV )
          szValue = hb_getenv( pszName );
          if( szValue && szValue[ 0 ] != '\0' )
          {
-            hb_retc_buffer( szValue );
+            if( ! ISLOG( 3 ) || hb_parl( 3 ) )
+            {
+               /* Convert from OS codepage */
+               BOOL fFree;
+               char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) szValue, &fFree );
+
+               if( fFree )
+               {
+                  hb_retc_buffer( pbyResult );
+                  hb_xfree( szValue );
+               }
+               else
+                  hb_retc_buffer( szValue );
+            }
+            else
+               hb_retc_buffer( szValue );
          }
          else
          {

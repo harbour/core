@@ -53,6 +53,7 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapigt.h"
+#include "hbapiitm.h"
 
 /* TOFIX: The screen buffer handling is not right for all platforms (Win32)
           The output of the launched (DOS?) app is not visible. */
@@ -61,7 +62,15 @@ HB_FUNC( __RUN )
 {
    if( ISCHAR( 1 ) && hb_gtSuspend() == 0 )
    {
-      if( system( hb_parc( 1 ) ) != 0 ) {}
+      char * pszCommand = hb_itemGetC( hb_param( 1, HB_IT_STRING ) );
+      BOOL fFree;
+      char * pszResult = ( char * ) hb_osEncode( ( BYTE * ) pszCommand, &fFree );
+
+      if( system( pszResult ) != 0 ) {}
+
+      hb_itemFreeC( pszCommand );
+      if( fFree )
+         hb_xfree( pszResult );
 
       if( hb_gtResume() != 0 )
       {

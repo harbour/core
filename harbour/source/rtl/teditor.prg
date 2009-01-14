@@ -195,7 +195,7 @@ METHOD LoadFile( cFileName ) CLASS HBEditor
 
    IF File( cFileName )
       ::cFile := cFileName
-      cString := MemoRead( cFileName )
+      cString := hb_MemoRead( cFileName )
    ELSE
       cString := ""
    ENDIF

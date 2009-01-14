@@ -99,12 +99,12 @@ PROCEDURE w32_regPathSplit( cRegPath, nHKEY, cKey, cEntry )
 
    RETURN
 
-FUNCTION w32_regRead( cRegPath )
+FUNCTION w32_regRead( cRegPath, xDefault )
    LOCAL nHKEY, cKey, cEntry
 
    w32_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
 
-   RETURN GetRegistry( nHKEY, cKey, cEntry )
+   RETURN GetRegistry( nHKEY, cKey, cEntry, xDefault )
 
 FUNCTION w32_regWrite( cRegPath, xValue )
    LOCAL nHKEY, cKey, cEntry
@@ -161,8 +161,8 @@ FUNCTION QueryRegistry( nHKEYHandle, cKeyName, cEntryName, xValue, lSetIt )
 
    RETURN rVal
 
-FUNCTION GetRegistry( nHKEYHandle, cKeyName, cEntryName )
-   LOCAL xRetVal := NIL
+FUNCTION GetRegistry( nHKEYHandle, cKeyName, cEntryName, xDefault )
+   LOCAL xRetVal := xDefault
    LOCAL nKeyHandle := 0
    LOCAL nValueType
 

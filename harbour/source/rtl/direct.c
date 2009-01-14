@@ -98,9 +98,9 @@
 
 #include "directry.ch"
 
-/* NOTE: 8.3 support should be added in a separate way, like 
-         as a function which converts full names to 8.3 names, since 
-         this issue is very much platform specific, and this is 
+/* NOTE: 8.3 support should be added in a separate way, like
+         as a function which converts full names to 8.3 names, since
+         this issue is very much platform specific, and this is
          not the only place which may need the conversion [vszakats]. */
 
 HB_FUNC( DIRECTORY )
@@ -139,40 +139,43 @@ HB_FUNC( DIRECTORY )
    if( szDirSpec && *szDirSpec )
    {
       szDirSpec = ( char * ) hb_fsNameConv( ( BYTE * ) szDirSpec, &fFree );
-      if( *szDirSpec )
+      if( ulMask != HB_FA_LABEL )
       {
-         /* CA-Cl*pper compatible behavior - add all file mask when
-          * last character is directory or drive separator
-          */
-         int iLen = strlen( szDirSpec ) - 1;
+         if( *szDirSpec )
+         {
+            /* CA-Cl*pper compatible behavior - add all file mask when
+             * last character is directory or drive separator
+             */
+            int iLen = strlen( szDirSpec ) - 1;
 #ifdef HB_OS_HAS_DRIVE_LETTER
-         if( szDirSpec[ iLen ] == HB_OS_PATH_DELIM_CHR ||
-             szDirSpec[ iLen ] == HB_OS_DRIVE_DELIM_CHR )
+            if( szDirSpec[ iLen ] == HB_OS_PATH_DELIM_CHR ||
+                szDirSpec[ iLen ] == HB_OS_DRIVE_DELIM_CHR )
 #else
-         if( szDirSpec[ iLen ] == HB_OS_PATH_DELIM_CHR )
+            if( szDirSpec[ iLen ] == HB_OS_PATH_DELIM_CHR )
 #endif
+            {
+               if( fFree )
+               {
+                  char * szTemp = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
+                  hb_xfree( szDirSpec );
+                  szDirSpec = szTemp;
+               }
+               else
+               {
+                  szDirSpec = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
+                  fFree = TRUE;
+               }
+            }
+         }
+         else
          {
             if( fFree )
             {
-               char * szTemp = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
                hb_xfree( szDirSpec );
-               szDirSpec = szTemp;
+               fFree = FALSE;
             }
-            else
-            {
-               szDirSpec = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
-               fFree = TRUE;
-            }
+            szDirSpec = ( char * ) HB_OS_ALLFILE_MASK;
          }
-      }
-      else
-      {
-         if( fFree )
-         {
-            hb_xfree( szDirSpec );
-            fFree = FALSE;
-         }
-         szDirSpec = ( char * ) HB_OS_ALLFILE_MASK;
       }
    }
    else

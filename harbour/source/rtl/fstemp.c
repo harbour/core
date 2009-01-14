@@ -111,7 +111,7 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
    return fResult;
 }
 
-/* NOTE: The buffer must be at least _POSIX_PATH_MAX + 1 chars long */
+/* NOTE: The pszName buffer must be at least _POSIX_PATH_MAX + 1 chars long */
 
 HB_FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName )
 {
@@ -260,9 +260,9 @@ HB_FUNC( HB_FTEMPCREATE )
    BYTE szName[ _POSIX_PATH_MAX + 1 ];
 
    hb_retnint( ( HB_NHANDLE ) hb_fsCreateTemp( ( BYTE * ) hb_parc( 1 ),
-               ( BYTE * ) hb_parc( 2 ),
-               ( ULONG ) ( ISNUM( 3 ) ? ( ULONG ) hb_parnl( 3 ) : FC_NORMAL ),
-                szName ) );
+                                               ( BYTE * ) hb_parc( 2 ),
+                                               ( ULONG ) ( ISNUM( 3 ) ? ( ULONG ) hb_parnl( 3 ) : FC_NORMAL ),
+                                               szName ) );
 
-   hb_storc( ( char *) szName, 4 );
+   hb_storc( ( char * ) szName, 4 );
 }

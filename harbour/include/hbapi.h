@@ -444,6 +444,10 @@ typedef USHORT ERRCODE;
 #define SUCCESS            0
 #define FAILURE            1
 
+typedef USHORT HB_ERRCODE;
+#define HB_SUCCESS         0
+#define HB_FAILURE         1
+
 extern HB_SYMB  hb_symEval;
 
 typedef ULONG HB_VMHANDLE;
@@ -841,8 +845,11 @@ extern HB_EXPORT BOOL      hb_strEmpty( const char * szText, ULONG ulLen ); /* r
 extern HB_EXPORT void      hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen ); /* copy a string to a buffer, inverting each character */
 extern HB_EXPORT ULONG     hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen ); /* returns an index to a sub-string within another string */
 extern HB_EXPORT char *    hb_strUpper( char * szText, ULONG ulLen ); /* convert an existing string buffer to upper case */
-extern HB_EXPORT char *    hb_strUpperCopy( char * szText, ULONG ulLen );
 extern HB_EXPORT char *    hb_strLower( char * szText, ULONG ulLen ); /* convert an existing string buffer to lower case */
+extern HB_EXPORT BOOL      hb_charIsDigit( int iChar );
+extern HB_EXPORT BOOL      hb_charIsAlpha( int iChar );
+extern HB_EXPORT BOOL      hb_charIsLower( int iChar );
+extern HB_EXPORT BOOL      hb_charIsUpper( int iChar );
 extern HB_EXPORT int       hb_charUpper( int iChar );  /* converts iChar to upper case */
 extern HB_EXPORT int       hb_charLower( int iChar );  /* converts iChar to lower case */
 extern HB_EXPORT char *    hb_strncpy( char * pDest, const char * pSource, ULONG ulLen ); /* copy at most ulLen bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
@@ -1025,6 +1032,10 @@ extern HB_EXPORT const char * hb_verFlagsPRG( void );        /* retrieves a stat
 extern HB_EXPORT BOOL   hb_iswinnt( void ); /* return .T. if OS == Windows NT, 2000, XP */
 extern HB_EXPORT BOOL   hb_iswince( void ); /* return .T. if OS is Windows CE or Windows Mobile */
 extern HB_EXPORT BOOL   hb_printerIsReady( char * pszPrinterName );
+
+/* OS/Harbour codepage conversion */
+extern HB_EXPORT BYTE * hb_osEncode( BYTE * szFileName, BOOL * pfFree ); /* Convert a string sent to a system call, from Harbour codepage. */
+extern HB_EXPORT BYTE * hb_osDecode( BYTE * szFileName, BOOL * pfFree ); /* Convert a string received from a system call, to Harbour codepage. */
 
 /* environment variables access */
 extern BOOL   hb_getenv_buffer( const char * szName, char * szBuffer, int nSize );

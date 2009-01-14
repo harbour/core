@@ -55,6 +55,63 @@
 #include "hbapi.h"
 #include "hbapicdp.h"
 
+BOOL hb_charIsDigit( int iChar )
+{
+   return isdigit( ( unsigned char ) iChar );
+}
+
+BOOL hb_charIsAlpha( int iChar )
+{
+   if( isalpha( ( unsigned char ) iChar ) )
+      hb_retl( TRUE );
+#ifndef HB_CDP_SUPPORT_OFF
+   else
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp && cdp->nChars && iChar &&
+          ( strchr( cdp->CharsUpper, iChar ) ||
+            strchr( cdp->CharsLower, iChar ) ) )
+         return TRUE;
+   }
+#endif
+
+   return FALSE;
+}
+
+BOOL hb_charIsLower( int iChar )
+{
+   if( isupper( ( unsigned char ) iChar ) )
+      return TRUE;
+#ifndef HB_CDP_SUPPORT_OFF
+   else
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp && cdp->nChars && iChar &&
+          strchr( cdp->CharsUpper, iChar ) )
+         return TRUE;
+   }
+#endif
+
+   return FALSE;
+}
+
+BOOL hb_charIsUpper( int iChar )
+{
+   if( islower( ( unsigned char ) iChar ) )
+      return TRUE;
+#ifndef HB_CDP_SUPPORT_OFF
+   else
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      if( cdp && cdp->nChars && iChar &&
+          strchr( cdp->CharsLower, iChar ) )
+         return TRUE;
+   }
+#endif
+
+   return FALSE;
+}
+
 /* determines if first char of string is letter */
 
 HB_FUNC( ISALPHA )
@@ -63,15 +120,15 @@ HB_FUNC( ISALPHA )
 
    if( szString )
    {
-      if( isalpha( ( unsigned char ) * szString ) )
+      if( isalpha( ( unsigned char ) *szString ) )
          hb_retl( TRUE );
       else
       {
 #ifndef HB_CDP_SUPPORT_OFF
          PHB_CODEPAGE cdp = hb_vmCDP();
-         if( cdp && cdp->nChars && szString[0] &&
-             ( strchr( cdp->CharsUpper,* szString ) ||
-               strchr( cdp->CharsLower,* szString ) ) )
+         if( cdp && cdp->nChars && szString[ 0 ] &&
+             ( strchr( cdp->CharsUpper, *szString ) ||
+               strchr( cdp->CharsLower, *szString ) ) )
             hb_retl( TRUE );
          else
 #endif
@@ -88,7 +145,7 @@ HB_FUNC( ISDIGIT )
 {
    char * szString = hb_parc( 1 );
 
-   hb_retl( szString && isdigit( ( unsigned char ) * szString ) );
+   hb_retl( szString && isdigit( ( unsigned char ) *szString ) );
 }
 
 /* determines if first char of string is upper-case */
@@ -99,14 +156,14 @@ HB_FUNC( ISUPPER )
 
    if( szString )
    {
-      if( isupper( ( unsigned char ) * szString ) )
+      if( isupper( ( unsigned char ) *szString ) )
          hb_retl( TRUE );
       else
       {
 #ifndef HB_CDP_SUPPORT_OFF
          PHB_CODEPAGE cdp = hb_vmCDP();
-         if( cdp && cdp->nChars && szString[0] &&
-             strchr( cdp->CharsUpper, * szString ) )
+         if( cdp && cdp->nChars && szString[ 0 ] &&
+             strchr( cdp->CharsUpper, *szString ) )
             hb_retl( TRUE );
          else
 #endif
@@ -125,17 +182,17 @@ HB_FUNC( ISLOWER )
 
    if( szString )
    {
-      if( islower( ( unsigned char ) * szString ) )
+      if( islower( ( unsigned char ) *szString ) )
          hb_retl( TRUE );
       else
       {
 #ifndef HB_CDP_SUPPORT_OFF
          PHB_CODEPAGE cdp = hb_vmCDP();
-         if( cdp && cdp->nChars && szString[0] &&
-             strchr( cdp->CharsLower,* szString ) )
+         if( cdp && cdp->nChars && szString[ 0 ] &&
+             strchr( cdp->CharsLower, *szString ) )
             hb_retl( TRUE );
-#endif
          else
+#endif
             hb_retl( FALSE );
       }
    }

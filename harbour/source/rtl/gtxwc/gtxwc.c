@@ -2510,14 +2510,14 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
        */
       while( icol <= colStop )
       {
-         if( HB_GTSELF_GETSCRCHAR( wnd->pGT, irow, icol, &color, &attr, &usCh16 ) )
+         if( ! HB_GTSELF_GETSCRCHAR( wnd->pGT, irow, icol, &color, &attr, &usCh16 ) )
          {
             color = 0x07;
             attr = 0;
             usCh16 = ' ';
          }
          else
-            usCh16 &= 0xff;
+            usCh16 &= 0xFF;
          ulCurr = hb_gt_xwc_HashCurrChar( attr, color, usCh16 );
          if( wnd->charTrans[ usCh16 ].inverse )
          {

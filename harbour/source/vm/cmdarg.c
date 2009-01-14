@@ -322,7 +322,18 @@ HB_FUNC( HB_ARGSTRING )
 
       if( pszValue )
       {
-         hb_retc_buffer( pszValue );
+         /* Convert from OS codepage */
+         BOOL fFree;
+         char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) pszValue, &fFree );
+
+         if( fFree )
+         {
+            hb_retc_buffer( pbyResult );
+            hb_xfree( pszValue );
+         }
+         else
+            hb_retc_buffer( pszValue );
+
          return;
       }
    }
@@ -372,7 +383,19 @@ HB_FUNC( HB_CMDLINE )
       hb_strncat( pszBuffer, " ", nLen );
    }
 
-   hb_retc_buffer( pszBuffer );
+   {
+      /* Convert from OS codepage */
+      BOOL fFree;
+      char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) pszBuffer, &fFree );
+
+      if( fFree )
+      {
+         hb_retc_buffer( pbyResult );
+         hb_xfree( pszBuffer );
+      }
+      else
+         hb_retc_buffer( pszBuffer );
+   }
 }
 
 /* Check for command line internal arguments */

@@ -146,12 +146,19 @@ typedef struct
    int      fontQuality;                  /* requested font quality */
    char     fontFace[ LF_FACESIZE ];      /* requested font face name LF_FACESIZE #defined in wingdi.h */
    HFONT    hFont;                        /* current font handle */
+#if ! defined( UNICODE )
+   HFONT    hFontBox;                     /* current font handle to draw lines */
+#endif
 
    HWND     hWnd;                         /* the window handle */
    BOOL     fInit;                        /* logical variable indicating that window should be open */
 
    PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
+#if defined( UNICODE )
+   PHB_CODEPAGE boxCDP;                   /* CodePage for legacy drawing chars: IBM437 */
+#endif
+
 #if !defined(UNICODE)
    BYTE     keyTransTbl[ 256 ];
    BYTE     chrTransTbl[ 256 ];

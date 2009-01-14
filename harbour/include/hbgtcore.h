@@ -63,12 +63,6 @@
 
 HB_EXTERN_BEGIN
 
-/* extended attributes used by core screen buffer */
-#define HB_GT_ATTR_BOX        0x01
-#define HB_GT_ATTR_SHADOW     0x02
-#define HB_GT_ATTR_UNDEF      0x40
-#define HB_GT_ATTR_REFRESH    0x80
-
 /* convert lower case suffixes to upper */
 #define HB_GT_nul    HB_GT_NUL
 #define HB_GT_std    HB_GT_STD

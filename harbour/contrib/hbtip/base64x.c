@@ -51,69 +51,14 @@
  *
  */
 
-#include <string.h>
-#include <limits.h>
-#include <stdlib.h>
 #include "hbapi.h"
-
-/*
- * base64enc()
- *
- * Encode the data in 's' (length of the data is 'len') in BASE64. The returned
- * string should be freed when not used anymore.
- */
-
-static char * base64enc( char *s, size_t s_len )
-{
-   char b64chars[] =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-   char * t;
-   char * p;
-   int x, y;
-   int len;
-
-   if( s_len > ( size_t ) INT_MAX )
-   {
-      return NULL ; /* die("data too long in base64enc()"); */
-   }
-   len = ( int ) s_len;
-   t = ( char * ) hb_xgrab( ( 4 * ( ( len + 2 ) / 3 ) + 1 ) * sizeof( char ) );
-   p = t;
-
-   while( len-- > 0 )
-   {
-      x = *s++;
-      *p++ = b64chars[(x >> 2) & 63];
-      if( len-- <= 0 )
-      {
-         *p++ = b64chars[(x << 4) & 63];
-         *p++ = '=';
-         *p++ = '=';
-         break;
-      }
-      y = *s++;
-      *p++ = b64chars[((x << 4) | ((y >> 4) & 15)) & 63];
-      if( len-- <= 0 )
-      {
-         *p++ = b64chars[(y << 2) & 63];
-         *p++ = '=';
-         break;
-      }
-      x = *s++;
-      *p++ = b64chars[((y << 2) | ((x >> 6) & 3)) & 63];
-      *p++ = b64chars[x & 63];
-   }
-   *p = '\0';
-
-   return t;
-}
 
 HB_FUNC( BUILDUSERPASSSTRING )
 {
    char * szUser = hb_parcx( 1 );
    char * szPass = hb_parcx( 2 );
-   size_t p_len = strlen( szPass );
    size_t u_len = strlen( szUser );
+   size_t p_len = strlen( szPass );
    char * s = ( char * ) hb_xgrab( u_len + p_len + 3 );
 
    s[ 0 ] = '\0';
@@ -126,12 +71,47 @@ HB_FUNC( BUILDUSERPASSSTRING )
 
 HB_FUNC( HB_BASE64 )
 {
-   char * szItem = hb_parc( 1 );
-   int nLen = hb_parni( 2 );
-   char * szRet = szItem ? base64enc( szItem, nLen ) : NULL;
+   ULONG len = hb_parclen( 1 );
 
-   if( szRet )
-      hb_retc_buffer( szRet );
+   if( len <= INT_MAX ) /* TOFIX */
+   {
+      char * s = hb_parcx( 1 );
+      char * t, * p;
+
+      t = p = ( char * ) hb_xgrab( ( 4 * ( ( len + 2 ) / 3 ) + 1 ) * sizeof( *t ) );
+
+      while( len-- > 0 )
+      {
+         static const char s_b64chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+         int x, y;
+
+         x = *s++;
+         *p++ = s_b64chars[ ( x >> 2 ) & 0x3F ];
+
+         if( len-- <= 0 )
+         {
+            *p++ = s_b64chars[ ( x << 4 ) & 0x3F ];
+            *p++ = '=';
+            *p++ = '=';
+            break;
+         }
+         y = *s++;
+         *p++ = s_b64chars[ ( ( x << 4 ) | ( ( y >> 4 ) & 0x0F ) ) & 0x3F ];
+
+         if( len-- <= 0 )
+         {
+            *p++ = s_b64chars[ ( y << 2 ) & 0x3F ];
+            *p++ = '=';
+            break;
+         }
+         x = *s++;
+         *p++ = s_b64chars[ ( ( y << 2 ) | ( ( x >> 6 ) & 3 ) ) & 0x3F ];
+         *p++ = s_b64chars[ x & 0x3F ];
+      }
+      *p = '\0';
+
+      hb_retc_buffer( t );
+   }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }

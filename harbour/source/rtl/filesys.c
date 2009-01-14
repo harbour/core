@@ -60,6 +60,7 @@
  *    hb_fsReadLarge()
  *    hb_fsWriteLarge()
  *    hb_fsCurDirBuff()
+ *    hb_fsBaseDirBuff()
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    hb_fsChDrv()
@@ -1003,6 +1004,7 @@ BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsGetAttr(%s, %p)", pszFileName, pulAttr));
 
+   *pulAttr = 0;
    fResult = FALSE;
    pszFileName = hb_fsNameConv( pszFileName, &fFree );
 
@@ -2665,6 +2667,18 @@ USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
          memmove( pbyBuffer, pbyStart, ulLen );
 
       pbyBuffer[ ulLen ] = '\0';
+
+      /* Convert from OS codepage */
+      {
+         BOOL fFree;
+         BYTE * pbyResult = hb_osDecode( pbyBuffer, &fFree );
+
+         if( fFree )
+         {
+            hb_strncpy( ( char * ) pbyBuffer, ( char * ) pbyResult, ulLen - 1 );
+            hb_xfree( pbyResult );
+         }
+      }
    }
 
    return usError;
@@ -3076,6 +3090,7 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
    int iFileCase, iDirCase;
    char cDirSep;
    BOOL fTrim;
+   BOOL bCPConv;
 /*
    Convert file and dir case. The allowed SET options are:
       LOWER - Convert all caracters of file to lower
@@ -3100,9 +3115,13 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
    cDirSep = ( char ) hb_setGetDirSeparator();
    iFileCase = hb_setGetFileCase();
    iDirCase = hb_setGetDirCase();
+   bCPConv = hb_setGetOSCODEPAGE() && hb_setGetOSCODEPAGE()[ 0 ];
 
-   if( fTrim || cDirSep != HB_OS_PATH_DELIM_CHR ||
-       iFileCase != HB_SET_CASE_MIXED || iDirCase != HB_SET_CASE_MIXED )
+   if( fTrim ||
+       cDirSep != HB_OS_PATH_DELIM_CHR ||
+       iFileCase != HB_SET_CASE_MIXED ||
+       iDirCase != HB_SET_CASE_MIXED ||
+       bCPConv )
    {
       PHB_FNAME pFileName;
       ULONG ulLen;
@@ -3115,14 +3134,27 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
          *pfFree = TRUE;
       }
 
-      if( cDirSep != HB_OS_PATH_DELIM_CHR )
+      if( cDirSep != HB_OS_PATH_DELIM_CHR || bCPConv )
       {
-         BYTE *p = szFileName;
+         BYTE * p = szFileName;
+
          while( *p )
          {
-            if( *p == cDirSep )
+            if( cDirSep != HB_OS_PATH_DELIM_CHR && *p == cDirSep )
                *p = HB_OS_PATH_DELIM_CHR;
             p++;
+         }
+      }
+
+      if( bCPConv )
+      {
+         BOOL fFree;
+         BYTE * pbyResult = hb_osEncode( ( BYTE * ) szFileName, &fFree );
+
+         if( fFree )
+         {
+            hb_strncpy( ( char * ) szFileName, ( char * ) pbyResult, _POSIX_PATH_MAX );
+            hb_xfree( pbyResult );
          }
       }
 
@@ -3136,14 +3168,14 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
             ulLen = strlen( pFileName->szName );
             ulLen = hb_strRTrimLen( pFileName->szName, ulLen, FALSE );
             pFileName->szName = hb_strLTrim( pFileName->szName, &ulLen );
-            ( ( char * ) pFileName->szName )[ulLen] = '\0';
+            ( ( char * ) pFileName->szName )[ ulLen ] = '\0';
          }
          if( pFileName->szExtension )
          {
             ulLen = strlen( pFileName->szExtension );
             ulLen = hb_strRTrimLen( pFileName->szExtension, ulLen, FALSE );
             pFileName->szExtension = hb_strLTrim( pFileName->szExtension, &ulLen );
-            ( ( char * ) pFileName->szExtension )[ulLen] = '\0';
+            ( ( char * ) pFileName->szExtension )[ ulLen ] = '\0';
          }
       }
 
@@ -3200,6 +3232,34 @@ BYTE * hb_fileNameConv( char * szFileName )
 
 #endif
 
+/* NOTE: pbyBuffer must be _POSIX_PATH_MAX + 1 long. */
+void hb_fsBaseDirBuff( BYTE * pbyBuffer )
+{
+   /* TOFIX: In *NIX systems, this will return the dir specified in the
+             program invocation command line. Some suggest that cwd
+             should be prepended, although this doesn't solve the
+             problem if the program is executed from the path. [vszakats] */
+   PHB_FNAME pFName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
+
+   pFName->szName = NULL;
+   pFName->szExtension = NULL;
+
+   hb_fsFNameMerge( ( char * ) pbyBuffer, pFName );
+   hb_xfree( pFName );
+
+   /* Convert from OS codepage */
+   {
+      BOOL fFree;
+      BYTE * pbyResult = hb_osDecode( pbyBuffer, &fFree );
+
+      if( fFree )
+      {
+         hb_strncpy( ( char * ) pbyBuffer, ( char * ) pbyResult, _POSIX_PATH_MAX );
+         hb_xfree( pbyResult );
+      }
+   }
+}
+
 static BOOL hb_fsDisableWaitLocks( int iSet )
 {
    BOOL fRetVal = s_fUseWaitLocks;
@@ -3214,4 +3274,3 @@ HB_FUNC( HB_DISABLEWAITLOCKS )
 {
    hb_retl( hb_fsDisableWaitLocks( ISLOG( 1 ) ? ( hb_parl( 1 ) ? 1 : 0 ) : -1 ) );
 }
-

@@ -14,6 +14,7 @@ PRG_HEADERS = \
 
 LIB_OBJS = \
     $(OBJ_DIR)win_dll$(OBJEXT) \
+    $(OBJ_DIR)win_misc$(OBJEXT) \
     $(OBJ_DIR)win_ole$(OBJEXT) \
     $(OBJ_DIR)win_osc$(OBJEXT) \
     $(OBJ_DIR)win_prn1$(OBJEXT) \

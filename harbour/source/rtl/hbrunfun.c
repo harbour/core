@@ -51,20 +51,30 @@
  */
 
 #include "hbapi.h"
-#include "hbapigt.h"
 #include "hbapierr.h"
+#include "hbapigt.h"
+#include "hbapiitm.h"
 
 HB_FUNC( HB_RUN )
 {
-   char * szCommand = hb_parc( 1 );
+   PHB_ITEM pCommand = hb_param( 1, HB_IT_STRING );
 
-   if( szCommand )
+   if( pCommand )
    {
       int iResult = -1;
 
       if( hb_gtSuspend() == SUCCESS )
       {
-         iResult = system( szCommand );
+         char * pszCommand = hb_itemGetC( pCommand );
+         BOOL fFree;
+         char * pszResult = ( char * ) hb_osEncode( ( BYTE * ) pszCommand, &fFree );
+
+         iResult = system( pszResult );
+
+         hb_itemFreeC( pszCommand );
+         if( fFree )
+            hb_xfree( pszResult );
+
          hb_gtResume();
       }
       hb_retni( iResult );

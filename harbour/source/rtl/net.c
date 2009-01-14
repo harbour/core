@@ -171,8 +171,7 @@ char * hb_username( void )
 #  if defined(__WATCOMC__)
       return hb_getenv( "USER" );
 #  else
-      struct passwd * pwd;
-      pwd = getpwuid( getuid() );
+      struct passwd * pwd = getpwuid( getuid() );
       return pwd ? hb_strdup( pwd->pw_name ) : hb_getenv( "USER" );
 #  endif
 

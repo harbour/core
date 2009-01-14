@@ -15,7 +15,7 @@
  * FILESEEK, FILESIZE, FILEATTR, FILETIME, FILEDATE
  * FILEMOVE, FILESMAX,
  * DELETEFILE, RENAMEFILE
- * 
+ *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * www - http://www.harbour-project.org

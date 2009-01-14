@@ -8,9 +8,324 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-14 16:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/net.c
+  * contrib/hbziparc/hbziparc.prg
+  * contrib/hbct/files.c
+    * Minor formatting.
+
+  * source/rtl/gtxwc/gtxwc.c
+    ! Fix to recent fix. An '!' was missing, Przemek pls check me.
+
+  * source/rtl/philes.c
+    + HB_PROGNAME() now returns absolute path in *NIX systems, too.
+      (please test and refine)
+
+  * source/lang/msgca.c
+    ! Fixes from xhb.
+
+  * contrib/hbziparc/hbziparc.prg
+    * Minor correction ( = -> := )
+
+  * source/rtl/gtwin/gtwin.c
+    + Added HB_GTI_CODEPAGE support.
+      As per MS docs, this works only when non-raster font is used
+      in the console window. Notice that the accepted CP values are
+      different from the GTWVT ones (GTWIN being the more "logical"
+      one, since it's a newer API). Currently, Harbour doesn't try
+      to hide these interface details.
+    ; TODO: UNICODE and BOX char support for GTWIN mode.
+
+  * source/rtl/tbrowse.prg
+    * Using HB_DISPOUTATBOX() to draw column/header/footer separators.
+    ; NOTE: This may cause problems if someone wants to use native
+            CP (accented or other special CP specific) chars to draw
+            these screen elements. Maybe an option should be added,
+            or some sort of markings in the separator strings to
+            control that.
+            Pls REVIEW.
+
+  * include/hbextern.ch
+  * source/rtl/console.c
+    + Added HB_DISPOUTATBOX() which is similar to HB_DISPOUTAT(),
+      but marks the text drawn as HB_GT_ATTR_BOX, so these chars
+      can be properly displayed as drawing chars, regardless of
+      the selected codepage. Another difference is that this
+      function only supports strings to be printed. Other types
+      don't print anything.
+    ; NOTE: Maybe this function could use a better name, pls
+            review and decide.
+
+  * source/rtl/gtwvt/gtwvt.c
+  * source/rtl/gtwvt/gtwvt.h
+    ! Fixed not accepting zero as a HB_GTI_CODEPAGE value.
+    ! Fixed HB_GTI_CODEPAGE to change the codepage.
+    + Added box char support in Unicode mode.
+      For chars marked as HB_GT_ATTR_BOX, chars will be
+      mapped to Unicode according to CP437.
+    + Added box char support in non-Unicode mode.
+      For chars marked as HB_GT_ATTR_BOX, OEM_CHARSET will
+      always be used.
+    ; NOTE: This way it's possible to use ISO/WIN codepages with
+            GTWVT, while still being able to use various drawing
+            chars (lines, blocks, arrows).
+    ; NOTE: The available set of drawing chars depends on the
+            OS OEM_CHARSET mapping _for non-Unicode Harbour_.
+            For Unicode Harbour, full CP437 codepage is
+            always available.
+    ; NOTE: This solution doesn't go as far as (GTWXC) to
+            graphically draw / emulate these chars.
+    ; TODO: Add HB_GTI_BOXCP support to change hard-wired "EN" CP.
+
+  * include/hbapigt.h
+  * include/hbgtcore.h
+    ! Moved HB_GT_ATTR_* macros to public headers, because they
+      are needed for public API functions.
+
+  * contrib/hbwin/win_reg.prg
+    + w32_regRead(): Added second parameter to specify the default
+      value returned in case the reg entry doesn't exist.
+      If not specified, NIL will be returned, just like before.
+    + GetRegistry(): Added 4th parameter with same purpose as above.
+
+  * source/rtl/hbregex.c
+    * Minor opt.
+
+  * contrib/hbwin/win_misc.c
+    * Added command line option parameter to WIN_RUNDETACHED().
+
+  * include/hbapi.h
+    + HB_ERRCODE (to replace ERRCODE)
+    + HB_SUCCESS (to replace SUCCESS)
+    + HB_FAILURE (to replace FAILURE)
+
+  + contrib/hbwin/win_misc.c
+  * contrib/hbwin/common.mak
+  * contrib/hbwin/Makefile
+    + WIN_SHELLEXECUTE()
+      WIN_RUNDETACHED()
+      WIN_LOADRESOURCE()
+      Added some new Windows API wrappers.
+    ; TODO: Add hb_osEncode() to them.
+
+  * source/rtl/diskspac.c
+  * source/rtl/disksphb.c
+    ! Fixed DISKSPACE() and HB_DISKSPACE() for Darwin.
+      Previously they had returned erroneous values.
+    ; TOFIX: Probably HB_DISKSPACE() should be implemented for Watcom and CEGCC,
+             just like DISKSPACE() is.
+
+  * source/rtl/filesys.c
+    ! hb_fsGetAttr() to set the returned attribute to zero
+      in case of error.
+
+  * include/hbextern.ch
+  * source/rtl/philes.c
+    + HB_FSETATTR( <cFileName>, @<nAttr> ) -> <lSuccess>
+    + HB_FGETATTR( <cFileName>, <nAttr> ) -> <lSuccess>
+    + HB_FSETDATETIME( <cFileName>, [<dDate>], [<cTime HH:MM:SS>] ) -> <lSuccess>
+
+  * source/rtl/direct.c
+    ! Fixed DIRECTORY() when called with "V" (label) parameter.
+      Tested under Windows. Please test/correct for other platforms.
+      On Windows, the dirspec should not contain a filemask in order
+      to work.
+
+  * contrib/hbtip/base64x.c
+    % HB_BASE64(): Optimized, cleaned.
+    ! HB_BASE64(): Removed second parameter allowing to pass the length of
+      the string. This could cause GPF if passed incorrectly. Now length
+      is simply determined using hb_parclen().
+    ; TOFIX: Input string size limit checking.
+
+  * include/hbdefs.h
+    + HB_SIZEOFARRAY() macro, which does: ( sizeof( var ) / sizeof( *var ) )
+      To be really precise, f.e. all hb_strncpy() calls should use
+      'hb_strncpy( d, s, HB_SIZEOFARRAY( d ) );' instead of:
+      'hb_strncpy( d, s, sizeof( d ) );' (given that 'd' is allocated at compile time).
+      So that the code adapts to changing character sizes (like UTF-16/32).
+      It's useful in some other places, too.
+
+  * contrib/hbct/dattime2.c
+    * 0 -> FALSE for BOOL types.
+
+  * include/hbextern.ch
+  * source/rtl/strmatch.c
+    + HB_WILDMATCHI(). Case-instenstive, exact match. First
+      two parameters and return value are the same as for
+      HB_WILDMATCH().
+
+  * include/hbextern.ch
+  * source/rtl/cdpapi.c
+    + HB_CDPSELECT() which does the same as HB_SETCODEPAGE(), but
+      aligns well with function naming rules and namespace.
+      HB_SETCODEPAGE() still works, but usage is not recommended.
+    + Added HB_CDPUNIID( <cHarbourCP> ) -> <cCPName>
+      This will return the std CP ID of a Harbour CP, or empty
+      if the Harbour CP isn't linked.
+
+  * include/hbapi.h
+  * source/rtl/is.c
+    ! Fixed compile error when HB_CDP_SUPPORT_OFF is defined.
+    + Added following functions:
+      hb_charIsDigit()
+      hb_charIsAlpha()
+      hb_charIsLower()
+      hb_charIsUpper()
+
+  * include/hbapi.h
+    - hb_strUpperCopy() removed. Implementation was missing.
+
+  * source/rtl/strcase.c
+    * Minor formatting.
+
+  * source/rtl/filesys.c
+    ! hb_fsCurDirBuff() fixed potential buffer overrun by one byte.
+
+  * source/rtl/hbrunfun.c
+  * source/rtl/run.c
+    ! Fixed missing header hbapiitm.h (after previous local change).
+
+  * include/hbapi.h
+  * include/hbset.h
+  * include/hbapifs.h
+  * include/set.ch
+  * source/rtl/hbffind.c
+  * source/rtl/gete.c
+  * source/rtl/filesys.c
+  * source/rtl/hbrunfun.c
+  * source/rtl/run.c
+  * source/rtl/philes.c
+  * source/vm/set.c
+  * source/vm/cmdarg.c
+    + Added file system CP translation.
+      Set( _SET_FNAMECP[, <cCPID> ] ) -> <cOldCPID>
+      All operations passing filenames to/from the
+      OS will convert them to/from the host CP from/to
+      the FS CP specified using _SET_FNAMECP.
+    * hb_fsNameConv() extended to deal with CP
+      conversion, if requested by the app.
+    + hb_fsNameConvFrom() (exported) added to deal
+      with CP conversions for filenames received from OS.
+    + hb_fsNameConvTo() (exported) added to deal
+      with CP conversions for filenames/string sent to the OS.
+    + Added hb_setGetFNAMECP() (exported) function.
+    + Added hb_setGetFileCPTransTo(), hb_setGetFileCPTransFrom()
+      (non-exported) functions.
+    + hb_fsCurDirBuff() and hb_fsFindNextLow() extended
+      to use hb_fsNameConvFrom().
+    + Added hb_fsBaseDirBuff() to return the base
+      directory on the C level (based on argv[0]).
+    + Added HB_PROGNAME() to return the executable
+      program name (based on argv[0]).
+    + Added HB_DIRBASE() to return the executable
+      base directory (based on argv[0]).
+    * Renames done regarding OS/FS CP conversion:
+      hb_fsNameConvFrom()        -> hb_osDecode()
+      hb_fsNameConvTo()          -> hb_osEncode()
+      hb_setGetFileCPTransTo()   -> -
+      hb_setGetFileCPTransFrom() -> -
+      hb_setGetFNAMECP()         -> hb_setGetOSCODEPAGE()
+      _SET_FNAMECP               -> _SET_OSCODEPAGE
+    * hb_osDecode()/hb_osEncode() extended to have a second
+      parameter BOOL * fFree.
+       Changed all calls to handle the case when fFree is set
+      to TRUE by hb_osDecode()/hb_osEncode().
+    + HB_GETENV(): Added 3rd logical parameter to control wether
+      to convert the returned value from OS CP to Harbour CP.
+      The default is TRUE to be in sync with GETE[NV]() and the
+      rest of core.
+    * hb_fsNameConv() is now doing OS CP conversion using std APIs,
+      rather than duplicating such logic. I've traded some speed
+      for modularity.
+    * hb_osDecode/hb_osEncode() function declarations moved to hbapi.h
+    * hb_osDecode/hb_osEncode() function definitions moved to set.c
+    ; NOTE: None of these were extensively tested, and I tend
+            to make mistakes when dealing with pointers.
+            It compiles cleanly with BCC, and some basic tests
+            worked, but bFree = TRUE codepaths are not yet
+            working so this needs more review.
+
+  * source/rtl/teditor.prg
+  * source/rtl/tpersist.prg
+  * utils/hbmake/hbmake.prg
+    * MemoRead() -> hb_MemoRead()
+
+  * contrib/hbct/files.c
+    ; TOFIX: Many functions here are possibly not thread safe.
+    ; TOFIX: Calling hb_fsFindClose() at app exit (and thus keeping
+             the FF handles open for the whole app lifetime) doesn't
+             play well with server side apps (as the app may run for
+             months or even longer), and even worse, they
+             will lock the passed directory so that they cannot be
+             removed (maybe even renamed), until the app exists.
+             At least on Windows.
+
+  * source/rtl/dirdrive.c
+    ! Fixed to use F_ERROR instead of -1.
+
+  * include/hbextern.ch
+    ! Added missing HB_GCSTEP().
+
+  * source/vm/extrap.c
+    + Added CPU dump code for Windows x64.
+    + Enabled module listing for Windows 64-bit platforms.
+    % Minor cleanup in Windows x86 CPU dump code.
+    + Added TODO for Windows IA64 CPU dump.
+    + Added TODO for Windows x64 stack walk, with pointers.
+    + Added TOFIX regarding displaying module names in Windows x64 mode.
+
+  * source/rtl/fstemp.c
+    ! Minor formatting.
+
+  * source/rtl/gete.c
+  * source/rtl/run.c
+  * source/rtl/hbrunfun.c
+  * source/vm/cmdarg.c
+    + Added CP conversion to:
+      GETE[NV](), HB_GETENV(), __RUN(), HB_RUN(),
+      HB_ARGSTRING(), HB_CMDLINE().
+
+  ; TODO: dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, <cDelimArg>, <nConnection> ) -> <lSuccess>
+          Generates and opens a new dbf with a temporary filename
+          in exclusive mode, deletes it automatically when closed.
+          All indexes created for this table, should ideally have
+          the temporary flag on, so those get deleted too, when closed.
+
+  ; TOFIX: hb_regex*() functions will not honor Harbour CP setting,
+           when case insensitivity is selected.
+
+  ; TOFIX: hbct / SetFDaTi() to move any local logic into Harbour core
+           functions and use a simple Harbour API call only.
+           I'm not sure what is the reason with keeping the logic
+           duplicated here; if this isn't by intent, this function
+           could be much simplified.
+
+  ; TOFIX: Avoid using C level toupper()/tolower()/islower()/isupper()
+
+  ; TOFIX: hb_regexMatch()'s 3rd parameter has a double meaning.
+           It controls case-sensitivity (in sync with the documentation),
+           but it also controls if hb_regexMatch() behaves like
+           hb_regexLike() (.T.), or hb_regexHas() (.F.). This means
+           that hb_regexMatch(,, .T.) == hb_regexLike(,, .T.) (case-sensitive) and
+                hb_regexMatch(,, .F.) == hb_regexHas(,, .F.) (case-insensitive)
+           Maybe this was the intent of the original developers, but
+           to me it looks a rather strange behaviour which was added by
+           accidentally forgetting about the 3rd parameter already being
+           utilized. This either needs to be fixed, or properly documented.
+
+  ; NOTE: Noteworthy links:
+          http://docs.python.org/3.0/whatsnew/3.0.html
+            - Unicode/text section
+            - Removed <> (use != instead)
+          http://sphinx.pocoo.org/
+            - Documentation format
+          http://fredeaker.blogspot.com/2007/01/character-encoding-detection.html
+            - Character encoding detection
+
 2009-01-14 15:10 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/compiler/hbopt.c
-    * disabled code optimisation (selfifying local, removing local), 
+    * disabled code optimisation (selfifying local, removing local),
       if code is compiled using -b (debug) switch
 
 2009-01-14 01:38 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -35,7 +350,7 @@
 2009-01-13 22:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     ! restored GCC optimization flags in hb* scripts disabled unintentionally
-      by some other modifications 
+      by some other modifications
 
   * harbour/include/hbapifs.h
   * harbour/source/rtl/hbproces.c
@@ -59,7 +374,7 @@
     ! fixed minor typo
   * harbour/source/pp/hbpp.c
   * harbour/source/compiler/hbusage.c
-    * updated copyright year to 2009 
+    * updated copyright year to 2009
 
 2009-01-13 07:17 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c

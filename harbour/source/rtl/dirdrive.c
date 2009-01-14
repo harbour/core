@@ -64,7 +64,7 @@ HB_FUNC( DIRCHANGE )
    if( ISCHAR( 1 ) )
       hb_retni( hb_fsChDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : hb_fsError() );
    else
-      hb_retni( -1 );
+      hb_retni( F_ERROR );
 }
 
 /* NOTE: Clipper 5.3 NG incorrectly states that the name of this function is
@@ -75,7 +75,7 @@ HB_FUNC( MAKEDIR )
    if( ISCHAR( 1 ) )
       hb_retni( hb_fsMkDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : hb_fsError() );
    else
-      hb_retni( -1 );
+      hb_retni( F_ERROR );
 }
 
 HB_FUNC( DIRREMOVE )
@@ -83,7 +83,7 @@ HB_FUNC( DIRREMOVE )
    if( ISCHAR( 1 ) )
       hb_retni( hb_fsRmDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : hb_fsError() );
    else
-      hb_retni( -1 );
+      hb_retni( F_ERROR );
 }
 
 /* NOTE: Clipper 5.3 undocumented */

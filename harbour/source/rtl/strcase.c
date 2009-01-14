@@ -81,7 +81,6 @@ char * hb_strLower( char * szText, ULONG ulLen )
 /* converts szText to upper case. Does not create a new string! */
 char * hb_strUpper( char * szText, ULONG ulLen )
 {
-
    HB_TRACE(HB_TR_DEBUG, ("hb_strUpper(%s, %lu)", szText, ulLen));
 
    {

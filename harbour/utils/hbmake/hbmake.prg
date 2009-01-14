@@ -596,7 +596,7 @@ FUNCTION ParseMakeFile( cFile )
                                 lErrors   := IIF( hb_run( Atemp[ 2 ] + " > e.txt" ) == 0, .F., .T. )
                                 s_lErrors := IIF( lErrors, .T., s_lErrors )
                                 IF ! lErrors
-                                   aTemp[ 2 ] := ALLTRIM( MEMOREAD( "e.txt" )   )
+                                   aTemp[ 2 ] := ALLTRIM( hb_MEMOREAD( "e.txt" )   )
                                    aTemp[ 2 ] := STRTRAN( aTemp[ 2 ], chr( 13 ), "" )
                                    aTemp[ 2 ] := STRTRAN( aTemp[ 2 ], chr( 10 ), "" )
                                 ENDIF

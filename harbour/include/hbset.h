@@ -135,7 +135,8 @@ typedef enum
    HB_SET_TRIMFILENAME  = 111,
    HB_SET_HBOUTLOG      = 112,
    HB_SET_HBOUTLOGINFO  = 113,
-   HB_SET_CODEPAGE      = 114
+   HB_SET_CODEPAGE      = 114,
+   HB_SET_OSCODEPAGE    = 115
 
 } HB_set_enum;
 
@@ -148,6 +149,8 @@ typedef struct
    HB_FHANDLE     hb_set_extrahan;
    HB_FHANDLE     hb_set_printhan;
    HB_PATHNAMES * hb_set_path;
+   BYTE           hb_set_oscptransto[ 256 ];
+   BYTE           hb_set_oscptransfrom[ 256 ];
    void *         hb_set_listener;
 
    /* Upper case members are directly related to a SET */
@@ -210,6 +213,7 @@ typedef struct
    BOOL       HB_SET_TRIMFILENAME;
    char *     HB_SET_HBOUTLOG;
    char *     HB_SET_HBOUTLOGINFO;
+   char *     HB_SET_OSCODEPAGE;
 
 } HB_SET_STRUCT, * PHB_SET_STRUCT;
 
@@ -239,9 +243,9 @@ typedef enum
 } HB_set_listener_enum;
 typedef void HB_SET_LISTENER_CALLBACK( HB_set_enum, HB_set_listener_enum );
 
-extern int hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * );
+extern int  hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * );
 extern void hb_setListenerNotify( HB_set_enum, HB_set_listener_enum );
-extern int hb_setListenerRemove( int );
+extern int  hb_setListenerRemove( int );
 
 extern HB_EXPORT BOOL       hb_setGetL( HB_set_enum set_specifier );
 extern HB_EXPORT char *     hb_setGetCPtr( HB_set_enum set_specifier );
@@ -317,6 +321,7 @@ extern HB_EXPORT char *     hb_setGetEOL( void );
 extern HB_EXPORT BOOL       hb_setGetTrimFileName( void );
 extern HB_EXPORT char *     hb_setGetHBOUTLOG( void );
 extern HB_EXPORT char *     hb_setGetHBOUTLOGINFO( void );
+extern HB_EXPORT char *     hb_setGetOSCODEPAGE( void );
 
 HB_EXTERN_END
 

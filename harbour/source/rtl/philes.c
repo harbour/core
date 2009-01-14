@@ -37,10 +37,15 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2009 Viktor Szakats <viktor.szakats@syenar.hu>
  *    CURDIR()
  *    HB_FLOCK()
  *    HB_FUNLOCK()
+ *    HB_PROGNAME()
+ *    HB_DIRBASE()
+ *    HB_FSETATTR()
+ *    HB_FGETATTR()
+ *    HB_FSETDATETIME()
  *
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
  *    HB_FEOF()
@@ -55,6 +60,7 @@
 #include "hbapifs.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
+#include "hbdate.h"
 
 HB_FUNC( FOPEN )
 {
@@ -260,7 +266,64 @@ HB_FUNC( CURDIR )
    BYTE byBuffer[ _POSIX_PATH_MAX + 1 ];
 
    hb_fsCurDirBuff( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0, byBuffer, _POSIX_PATH_MAX + 1 );
+      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0, byBuffer, sizeof( byBuffer ) );
+
+   hb_retc( ( char * ) byBuffer );
+}
+
+HB_FUNC( HB_PROGNAME )
+{
+   char byBuffer[ _POSIX_PATH_MAX + 1 ];
+
+#if defined( HB_OS_UNIX_COMPATIBLE )
+   {
+      /* Assemble the full path of the program by taking the
+         current dir and appending the name of the program,
+         as specified on the command-line.
+         HB_OS_UNIX_COMPATIBLE might be too rough to decide
+         for this method, pls test on other platforms and refine.
+         [vszakats] */
+
+      char byCurDir[ _POSIX_PATH_MAX + 1 ];
+      char * pbyARGV0 = hb_cmdargARGV()[ 0 ];
+
+      /* Skip 'current dir' if present, and replace with cwd. */
+      if( pbyARGV0[ 0 ] == '.' && pbyARGV0[ 1 ] == HB_OS_PATH_DELIM_CHR )
+      {
+         pbyARGV0 += 2;
+
+         hb_fsCurDirBuff( 0, ( BYTE * ) byCurDir, sizeof( byCurDir ) );
+
+         hb_strncpy( byBuffer, HB_OS_PATH_DELIM_CHR_STRING, sizeof( byBuffer ) - 1 );
+         if( byCurDir[ 0 ] != '\0' )
+         {
+            hb_strncat( byBuffer, byCurDir, sizeof( byBuffer ) - 1 );
+            hb_strncat( byBuffer, HB_OS_PATH_DELIM_CHR_STRING, sizeof( byBuffer ) - 1 );
+         }
+      }
+      hb_strncat( byBuffer, pbyARGV0, sizeof( byBuffer ) - 1 );
+   }
+#else
+   hb_strncpy( byBuffer, hb_cmdargARGV()[ 0 ], sizeof( byBuffer ) - 1 );
+#endif
+
+   /* Convert from OS codepage */
+   {
+      BOOL fFree;
+      char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) byBuffer, &fFree );
+
+      if( fFree )
+         hb_retc_buffer( pbyResult );
+      else
+         hb_retc( byBuffer );
+   }
+}
+
+HB_FUNC( HB_DIRBASE )
+{
+   BYTE byBuffer[ _POSIX_PATH_MAX + 1 ];
+
+   hb_fsBaseDirBuff( byBuffer );
 
    hb_retc( ( char * ) byBuffer );
 }
@@ -324,6 +387,32 @@ HB_FUNC( HB_FUNLOCK )
    }
    hb_fsSetFError( uiError );
    hb_retl( fResult );
+}
+
+HB_FUNC( HB_FGETATTR )
+{
+   ULONG nAttr;
+
+   hb_retl( hb_fsGetAttr( ( UCHAR * ) hb_parcx( 1 ), &nAttr ) );
+
+   hb_stornl( nAttr, 2 );
+}
+
+HB_FUNC( HB_FSETATTR )
+{
+   hb_retl( hb_fsSetAttr( ( UCHAR * ) hb_parcx( 1 ), hb_parnl( 2 ) ) );
+}
+
+HB_FUNC( HB_FSETDATETIME )
+{
+   int iHour, iMinutes, iSeconds;
+
+   hb_timeStrGet( hb_parcx( 3 ), &iHour, &iMinutes, &iSeconds, NULL );
+
+   hb_retl( hb_fsSetFileTime(
+      ( UCHAR * ) hb_parcx( 1 ),
+      ISDATE( 2 ) ? hb_pardl( 2 ) : -1,
+      ISCHAR( 3 ) ? hb_timeStampEncode( iHour, iMinutes, iSeconds, 0 ) : -1 ) );
 }
 
 HB_FUNC( HB_OSERROR )

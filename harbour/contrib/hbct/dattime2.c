@@ -7,17 +7,17 @@
  *   CT3 Date & Time functions, part II: - ADDMONTH()
  *                                       - CTODOW()
  *                                       - CTOMONTH()
- *                                       - DAYSINMONTH() 
- *                                       - DAYSTOMONTH() 
- *                                       - DMY() 
- *                                       - DOY() 
- *                                       - ISLEAP() 
- *                                       - LASTDAYOM() 
- *                                       - MDY() 
- *                                       - NTOCDOW() 
- *                                       - NTOCMONTH() 
- *                                       - QUARTER() 
- *                                       - WEEK() 
+ *                                       - DAYSINMONTH()
+ *                                       - DAYSTOMONTH()
+ *                                       - DMY()
+ *                                       - DOY()
+ *                                       - ISLEAP()
+ *                                       - LASTDAYOM()
+ *                                       - MDY()
+ *                                       - NTOCDOW()
+ *                                       - NTOCMONTH()
+ *                                       - QUARTER()
+ *                                       - WEEK()
  *
  * Copyright 2006 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://www.harbour-project.org
@@ -271,7 +271,7 @@ HB_FUNC( CTOMONTH )
  *  $ARGUMENTS$
  *  $RETURNS$
  *  $DESCRIPTION$
- *      Returns the date as a string in DD Month YY format. If lmode 
+ *      Returns the date as a string in DD Month YY format. If lmode
  *      is TRUE, a "." is inserted after the DD
  *      TODO: add further documentation
  *  $EXAMPLES$
@@ -613,7 +613,7 @@ HB_FUNC( ISLEAP )
  *  $ARGUMENTS$
  *  $RETURNS$
  *  $DESCRIPTION$
- *      lLeap is FALSE for a non-leap year but TRUE if it is. If so and nMonth 
+ *      lLeap is FALSE for a non-leap year but TRUE if it is. If so and nMonth
  *      is greater than 2, ndays is incremented
  *      TODO: add further documentation
  *  $EXAMPLES$
@@ -633,7 +633,7 @@ HB_FUNC( ISLEAP )
 HB_FUNC( DAYSTOMONTH )
 {
    int iMonth = ( ISNUM( 1 ) ? hb_parni( 1 ) : 0 );
-   BOOL bLeap = ( ISLOG( 2 ) ? hb_parl( 2 ) : 0 );
+   BOOL bLeap = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
 
    hb_retni( ct_daystomonth( iMonth, bLeap ) );
 }
@@ -669,7 +669,7 @@ HB_FUNC( DAYSTOMONTH )
 HB_FUNC( DAYSINMONTH )
 {
    int iMonth = ( ISNUM( 1 ) ? hb_parni( 1 ) : 0 );
-   BOOL bLeap = ( ISLOG( 2 ) ? hb_parl( 2 ) : 0 );
+   BOOL bLeap = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
 
    hb_retni( ct_daysinmonth( iMonth, bLeap ) );
 
@@ -688,7 +688,7 @@ HB_FUNC( DAYSINMONTH )
  *  $ARGUMENTS$
  *  $RETURNS$
  *  $DESCRIPTION$
- *      Returns a number equal to the quarter in which ddate 
+ *      Returns a number equal to the quarter in which ddate
  *      falls. If ddate  is empty, the system date is employed.
  *      TODO: add further documentation
  *  $EXAMPLES$
@@ -733,8 +733,8 @@ HB_FUNC( QUARTER )
  *  $ARGUMENTS$
  *  $RETURNS$
  *  $DESCRIPTION$
- *      <dDate|nMonth> can be a date or a month number. If empty uses the 
- *      system date.  If nMonth is a 2, lastdayom() will not know if it 
+ *      <dDate|nMonth> can be a date or a month number. If empty uses the
+ *      system date.  If nMonth is a 2, lastdayom() will not know if it
  *      is a leap year or not. If dDate is invalid, returns 0
  *      TODO: add further documentation
  *  $EXAMPLES$
@@ -753,7 +753,7 @@ HB_FUNC( QUARTER )
  */
 HB_FUNC( LASTDAYOM )
 {
-   BOOL bLeap = 0;
+   BOOL bLeap = FALSE;
    int iYear, iMonth, iDay;
 
    if( ISNUM( 1 ) )

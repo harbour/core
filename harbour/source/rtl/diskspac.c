@@ -64,11 +64,14 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 
-#if defined(HB_OS_UNIX)
+#if defined( HB_OS_UNIX )
 #  include <unistd.h>
 #  include <sys/types.h>
 #  if defined(__WATCOMC__) || defined(__CEGCC__)
 #     include <sys/stat.h>
+#  elif defined( HB_OS_DARWIN )
+#     include <sys/param.h>
+#     include <sys/mount.h>
 #  else
 #     include <sys/statvfs.h>
 #  endif
@@ -201,8 +204,13 @@ HB_FUNC( DISKSPACE )
          if( !bError )
             dSpace = ( double ) st.st_blocks * ( double ) st.st_blksize;
 #else
+#if defined( HB_OS_DARWIN )
+         struct statfs st;
+         bError = statfs( szName, &st ) != 0;
+#else
          struct statvfs st;
          bError = statvfs( szName, &st ) != 0;
+#endif
          if( !bError )
          {
             if( getuid() == 0 )

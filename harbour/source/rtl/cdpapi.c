@@ -1182,12 +1182,24 @@ void hb_cdpReleaseAll( void )
    }
 }
 
-HB_FUNC( HB_SETCODEPAGE )
+HB_FUNC( HB_CDPSELECT )
 {
    hb_retc( hb_cdpID() );
 
    if( ISCHAR( 1 ) )
       hb_cdpSelectID( hb_parc( 1 ) );
+}
+
+HB_FUNC( HB_CDPUNIID )
+{
+   PHB_CODEPAGE cdp = hb_cdpFind( hb_parcx( 1 ) );
+
+   hb_retc( cdp ? cdp->uniID : NULL );
+}
+
+HB_FUNC( HB_SETCODEPAGE )
+{
+   HB_FUNC_EXEC( HB_CDPSELECT );
 }
 
 HB_FUNC( HB_TRANSLATE )

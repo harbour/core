@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * 
+ *
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -159,7 +159,7 @@ HB_FUNC( HB_REGEXCOMP )
    ULONG ulLen = hb_parclen( 1 );
 
    if( ulLen == 0 )
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameter count/type", 
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameter count/type",
                             HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    else
    {
@@ -285,7 +285,7 @@ static BOOL hb_regex( int iRequest )
                                  HB_REGMATCH_EO( aMatches, i ) -
                                  HB_REGMATCH_SO( aMatches, i ) );
                else
-                  hb_arraySetCL( pRetArray, i + 1, "", 0 );
+                  hb_arraySetCL( pRetArray, i + 1, NULL, 0 );
             }
             hb_itemReturnRelease( pRetArray );
             fResult = TRUE;
@@ -350,7 +350,7 @@ static BOOL hb_regex( int iRequest )
                }
                else
                {
-                  hb_arraySetCL( pMatch, 1, "", 0 );
+                  hb_arraySetCL( pMatch, 1, NULL, 0 );
                   hb_arraySetNI( pMatch, 2, 0 );
                   hb_arraySetNI( pMatch, 3, 0 );
                }
@@ -397,7 +397,7 @@ static BOOL hb_regex( int iRequest )
                         }
                         else
                         {
-                           hb_arraySetCL( pMatch, 1, "", 0 );
+                           hb_arraySetCL( pMatch, 1, NULL, 0 );
                            hb_arraySetNI( pMatch, 2, 0 );
                            hb_arraySetNI( pMatch, 3, 0 );
                         }
@@ -434,7 +434,7 @@ static BOOL hb_regex( int iRequest )
                      }
                      else
                      {
-                        hb_arraySetCL( pMatch, 1, "", 0 );
+                        hb_arraySetCL( pMatch, 1, NULL, 0 );
                         hb_arraySetNI( pMatch, 2, 0 );
                         hb_arraySetNI( pMatch, 3, 0 );
                      }

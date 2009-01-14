@@ -1599,6 +1599,18 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 
+      case HB_GTI_CODEPAGE:
+      {
+         UINT uiCodePage = GetConsoleCP();
+         UINT uiCodePageNew = hb_itemGetNI( pInfo->pNewVal );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, uiCodePage );
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) && uiCodePageNew != uiCodePage )
+         {
+            SetConsoleCP( uiCodePageNew );
+            SetConsoleOutputCP( uiCodePageNew );
+         }
+         break;
+      }
       case HB_GTI_WINTITLE:
       {
          TCHAR buff[ 256 ];

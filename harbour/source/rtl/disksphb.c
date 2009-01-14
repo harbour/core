@@ -62,7 +62,10 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 
-#if defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( __CEGCC__ ) )
+#if defined( HB_OS_DARWIN )
+   #include <sys/param.h>
+   #include <sys/mount.h>
+#elif defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( __CEGCC__ ) )
    #include <sys/statvfs.h>
 #endif
 
@@ -329,12 +332,20 @@ HB_FUNC( HB_DISKSPACE )
    }
 #elif defined(HB_OS_UNIX) && !( defined(__WATCOMC__) || defined(__CEGCC__) )
    {
+#if defined(HB_OS_DARWIN)
+      struct statfs sf;
+#else
       struct statvfs sf;
+#endif
       BOOL fFree = FALSE;
 
       szPath = ( char * ) hb_fsNameConv( ( BYTE * ) szPath, &fFree );
 
+#if defined(HB_OS_DARWIN)
+      if( statfs( szPath, &sf ) == 0 )
+#else
       if( statvfs( szPath, &sf ) == 0 )
+#endif
       {
          switch( uiType )
          {

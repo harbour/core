@@ -310,8 +310,8 @@ BOOL hb_strMatchFile( const char * szString, const char * szPattern )
  * cPattern else it will check if cPatern is a prefix of cValue
  */
 
-/* NOTE: This function is compatible with sx_WildMatch(), except when 
-         the pattern is an empty string where hb_WildMatch() returns 
+/* NOTE: This function is compatible with sx_WildMatch(), except when
+         the pattern is an empty string where hb_WildMatch() returns
          .T., while sx_WildMatch() returns .F. [vszakats] */
 
 HB_FUNC( HB_WILDMATCH )
@@ -319,6 +319,11 @@ HB_FUNC( HB_WILDMATCH )
    hb_retl( ( ! ISCHAR( 1 ) || ! ISCHAR( 2 ) ) ? FALSE :
             hb_parl( 3 ) ? hb_strMatchWildExact( hb_parc( 2 ), hb_parc( 1 ) ) :
                            hb_strMatchWild( hb_parc( 2 ), hb_parc( 1 ) ) );
+}
+
+HB_FUNC( HB_WILDMATCHI )
+{
+   hb_retl( hb_strMatchCaseWildExact( hb_parcx( 2 ), hb_parcx( 1 ) ) );
 }
 
 HB_FUNC( HB_FILEMATCH )

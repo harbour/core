@@ -10,6 +10,7 @@ ifeq ($(HB_ARCHITECTURE),w32)
 
 C_SOURCES=\
 	win_dll.c \
+	win_misc.c \
 	win_ole.c \
 	win_osc.c \
 	win_prn1.c \

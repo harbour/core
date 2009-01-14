@@ -163,6 +163,7 @@ extern HB_EXPORT HB_FHANDLE hb_fsCreateEx   ( BYTE * pszFilename, ULONG ulAttr, 
 extern HB_EXPORT HB_FHANDLE hb_fsCreateTemp ( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName ); /* create a temporary file from components */
 extern HB_EXPORT BYTE *     hb_fsCurDir     ( USHORT uiDrive ); /* retrieve a static pointer containing current directory for specified drive */
 extern HB_EXPORT USHORT     hb_fsCurDirBuff ( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen ); /* copy current directory for given drive into a buffer */
+extern HB_EXPORT void       hb_fsBaseDirBuff( BYTE * pbyBuffer ); /* retrieve the base dir of the executable */
 extern HB_EXPORT BYTE       hb_fsCurDrv     ( void ); /* retrieve current drive number */
 extern HB_EXPORT BOOL       hb_fsDelete     ( BYTE * pszFileName ); /* delete a file */
 extern HB_EXPORT BOOL       hb_fsEof        ( HB_FHANDLE hFileHandle ); /* determine if an open file is position at end-of-file */

@@ -304,6 +304,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->hostCDP    = hb_vmCDP();
 #if defined( UNICODE )
    pWVT->inCDP      = hb_vmCDP();
+   pWVT->boxCDP     = hb_cdpFind( "EN" );
 #else
    {
       int i;
@@ -646,6 +647,12 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
          {
             if( pWVT->hFont )
                DeleteObject( pWVT->hFont );
+#if ! defined( UNICODE )
+            if( pWVT->hFontBox )
+               DeleteObject( pWVT->hFontBox );
+
+            pWVT->hFontBox    = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, OEM_CHARSET );
+#endif
 
             pWVT->hFont       = hFont;
             pWVT->fontHeight  = tm.tmHeight;
@@ -713,6 +720,10 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
    {
       hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
                                  pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+#if ! defined( UNICODE )
+      pWVT->hFontBox = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+                                          pWVT->fontWeight, pWVT->fontQuality, OEM_CHARSET );
+#endif
       pWVT->hFont = hFont;
    }
    else
@@ -1459,11 +1470,13 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    RECT        rcRect;
    int         iRow, iCol, startCol, len;
    BYTE        bColor, bAttr, bOldColor = 0;
+#if ! defined( UNICODE )
+   BYTE        bOldAttr = 0;
+#endif
    USHORT      usChar;
    TCHAR       text[ WVT_MAX_ROWS ];
 
    hdc = BeginPaint( pWVT->hWnd, &ps );
-   SelectObject( hdc, pWVT->hFont );
 
    rcRect = hb_gt_wvt_GetColRowFromXYRect( pWVT, updateRect );
 
@@ -1478,10 +1491,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
             break;
 
 #if defined( UNICODE )
-         usChar = hb_cdpGetU16( pWVT->hostCDP, TRUE, ( BYTE ) usChar );
-#else
-         usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
-#endif
+         usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, TRUE, ( BYTE ) usChar );
          if( len == 0 )
          {
             bOldColor = bColor;
@@ -1493,6 +1503,27 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
             startCol = iCol;
             len = 0;
          }
+#else
+         usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
+         if( len == 0 )
+         {
+            SelectObject( hdc, ( bAttr & HB_GT_ATTR_BOX ) ? pWVT->hFontBox : pWVT->hFont );
+            bOldAttr = bAttr;
+            bOldColor = bColor;
+         }
+         else if( bColor != bOldColor || bAttr != bOldAttr )
+         {
+            hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
+            if( bAttr != bOldAttr )
+            {
+               SelectObject( hdc, ( bAttr & HB_GT_ATTR_BOX ) ? pWVT->hFontBox : pWVT->hFont );
+               bOldAttr = bAttr;
+            }
+            bOldColor = bColor;
+            startCol = iCol;
+            len = 0;
+         }
+#endif
          text[ len++ ] = ( TCHAR ) usChar;
          iCol++;
       }
@@ -2171,9 +2202,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_DESKTOPWIDTH:
       {
          RECT rDesk;
-         HWND hDesk;
-
-         hDesk = GetDesktopWindow();
+         HWND hDesk = GetDesktopWindow();
          GetWindowRect( hDesk, &rDesk );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, rDesk.right - rDesk.left );
          break;
@@ -2189,8 +2218,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_DESKTOPCOLS:
       {
          RECT rDesk;
-         HWND hDesk;
-         hDesk = GetDesktopWindow();
+         HWND hDesk = GetDesktopWindow();
          GetClientRect( hDesk, &rDesk );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult,
                               ( rDesk.right - rDesk.left ) / pWVT->PTEXTSIZE.x );
@@ -2199,8 +2227,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_DESKTOPROWS:
       {
          RECT rDesk;
-         HWND hDesk;
-         hDesk = GetDesktopWindow();
+         HWND hDesk = GetDesktopWindow();
          GetClientRect( hDesk, &rDesk );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult,
                               ( rDesk.bottom - rDesk.top ) / pWVT->PTEXTSIZE.y );
@@ -2222,9 +2249,15 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_CODEPAGE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->CodePage );
          iVal = hb_itemGetNI( pInfo->pNewVal );
-         if( iVal > 0 && iVal != pWVT->CodePage )
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) && iVal != pWVT->CodePage )
          {
             pWVT->CodePage = iVal;
+            if( pWVT->hFont )
+            {
+               DeleteObject( pWVT->hFont );
+               pWVT->hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+                                                pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+            }
             if( pWVT->hWnd )
                hb_gt_wvt_ResetWindowSize( pWVT );
          }

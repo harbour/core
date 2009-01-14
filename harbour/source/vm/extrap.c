@@ -59,6 +59,7 @@
  *
  * Copyright 2008 Viktor Szakats (harbour.01 syenar hu)
  *    hb_win32ExceptionHandler() Module listing code.
+ *    hb_win32ExceptionHandler() x64 support.
  *
  * See doc/license.txt for licensing terms.
  *
@@ -100,25 +101,48 @@
 LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
 {
    char errmsg[ 8192 ];
+   int errmsglen = sizeof( errmsg ) - 1;
 
    errmsg[ 0 ] = '\0';
 
-#if defined(HB_WINCE)
+#if defined(HB_OS_WIN_64) && defined(_M_AMD64)
    {
-      /* TODO */
+      PCONTEXT pCtx = pExceptionInfo->ContextRecord;
+
+      hb_snprintf( errmsg, errmsglen,
+                "\n\n"
+                "    Exception Code:%08X\n"
+                "    Exception Address:0x%016" PFLL "X\n"
+                "    RAX:0x%016" PFLL "X  RBX:0x%016" PFLL "X  RCX:0x%016" PFLL "X  RDX:0x%016" PFLL "X\n"
+                "    RSI:0x%016" PFLL "X  RDI:0x%016" PFLL "X  RBP:0x%016" PFLL "X\n"
+                "    R8 :0x%016" PFLL "X  R9 :0x%016" PFLL "X  R10:0x%016" PFLL "X  R11:0x%016" PFLL "X\n"
+                "    R12:0x%016" PFLL "X  R13:0x%016" PFLL "X  R14:0x%016" PFLL "X  R15:0x%016" PFLL "X\n"
+                "    CS:RIP:%04X:0x%016" PFLL "X  SS:RSP:%04X:0x%016" PFLL "X\n"
+                "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
+                "    Flags:%08X\n",
+                ( UINT32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+                pExceptionInfo->ExceptionRecord->ExceptionAddress,
+                pCtx->Rax, pCtx->Rbx, pCtx->Rcx, pCtx->Rdx,
+                pCtx->Rsi, pCtx->Rdi, pCtx->Rbp,
+                pCtx->R8 , pCtx->R9 , pCtx->R10, pCtx->R11,
+                pCtx->R12, pCtx->R13, pCtx->R14, pCtx->R15,
+                ( UINT32 ) pCtx->SegCs, pCtx->Rip, ( UINT32 ) pCtx->SegSs, pCtx->Rsp,
+                ( UINT32 ) pCtx->SegDs, ( UINT32 ) pCtx->SegEs, ( UINT32 ) pCtx->SegFs, ( UINT32 ) pCtx->SegGs,
+                ( UINT32 ) pCtx->EFlags );
+
+      /* TODO: 64-bit stack trace.
+               See: - StackWalk64()
+                    - http://www.codeproject.com/KB/threads/StackWalker.aspx?fid=202364 */
    }
-#elif defined(HB_OS_WIN_64)
+#elif defined(HB_OS_WIN_64) && defined(_M_IA64)
    {
-      /* TODO */
+      /* TODO: Itanium
+               See: winnt.h for PCONTEXT structure. */
    }
 #else
    {
-      int errmsglen = sizeof( errmsg ) - 1;
-
       char              buf[ 64 + MAX_PATH ];
-      PEXCEPTION_RECORD pExceptionRecord = pExceptionInfo->ExceptionRecord;
       PCONTEXT          pCtx = pExceptionInfo->ContextRecord;
-      DWORD             dwExceptCode = pExceptionInfo->ExceptionRecord->ExceptionCode;
       unsigned char *   pc;
       unsigned int *    sc;
       unsigned int *    ebp;
@@ -135,13 +159,12 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
                 "    CS:EIP:%04X:%08X  SS:ESP:%04X:%08X\n"
                 "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
                 "    Flags:%08X\n",
-                ( UINT32 ) dwExceptCode, ( UINT32 ) pExceptionRecord->ExceptionAddress,
-                ( UINT32 ) pCtx->Eax, ( UINT32 ) pCtx->Ebx, ( UINT32 ) pCtx->Ecx,
-                ( UINT32 ) pCtx->Edx, ( UINT32 ) pCtx->Esi, ( UINT32 ) pCtx->Edi,
-                ( UINT32 ) pCtx->Ebp,
-                ( UINT32 ) pCtx->SegCs, ( UINT32 ) pCtx->Eip, ( UINT32 ) pCtx->SegSs,
-                ( UINT32 ) pCtx->Esp, ( UINT32 ) pCtx->SegDs, ( UINT32 ) pCtx->SegEs,
-                ( UINT32 ) pCtx->SegFs, ( UINT32 ) pCtx->SegGs,
+                ( UINT32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+                ( UINT32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
+                ( UINT32 ) pCtx->Eax, ( UINT32 ) pCtx->Ebx, ( UINT32 ) pCtx->Ecx, ( UINT32 ) pCtx->Edx,
+                ( UINT32 ) pCtx->Esi, ( UINT32 ) pCtx->Edi, ( UINT32 ) pCtx->Ebp,
+                ( UINT32 ) pCtx->SegCs, ( UINT32 ) pCtx->Eip, ( UINT32 ) pCtx->SegSs, ( UINT32 ) pCtx->Esp,
+                ( UINT32 ) pCtx->SegDs, ( UINT32 ) pCtx->SegEs, ( UINT32 ) pCtx->SegFs, ( UINT32 ) pCtx->SegGs,
                 ( UINT32 ) pCtx->EFlags );
 
       hb_strncat( errmsg, "    CS:EIP:", errmsglen );
@@ -186,69 +209,71 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
          }
          hb_strncat( errmsg, "\n", errmsglen );
       }
-
-      {
-         /* NOTE: Several non-MS sources say that Win9x has these functions
-                  in tlhelp32.dll. Testing shows though, that in Win95, Win95b
-                  and Win98 they are in kernel32.dll, and tlhelp32.dll doesn't
-                  exist. [vszakats] */
-         HMODULE hKernel32 = GetModuleHandle( TEXT( "kernel32.dll" ) );
-
-         if( hKernel32 )
-         {
-            /* NOTE: Hack to force the ASCII versions of these types. [vszakats] */
-            #if defined( UNICODE )
-               #undef MODULEENTRY32
-               #undef LPMODULEENTRY32
-            #endif
-
-            typedef HANDLE ( WINAPI * P_CTH32SSH )( DWORD, DWORD ); /* CreateToolhelp32Snapshot() */
-            typedef BOOL ( WINAPI * P_M32F )( HANDLE, LPMODULEENTRY32 ); /* Module32First() */
-            typedef BOOL ( WINAPI * P_M32N )( HANDLE, LPMODULEENTRY32 ); /* Module32Next() */
-
-            P_CTH32SSH pCreateToolhelp32Snapshot = ( P_CTH32SSH ) GetProcAddress( hKernel32, "CreateToolhelp32Snapshot" );
-            P_M32F     pModule32First            = ( P_M32F     ) GetProcAddress( hKernel32, "Module32First" );
-            P_M32N     pModule32Next             = ( P_M32N     ) GetProcAddress( hKernel32, "Module32Next" );
-
-            if( pCreateToolhelp32Snapshot &&
-                pModule32First &&
-                pModule32Next )
-            {
-               /* Take a snapshot of all modules in the specified process. */
-               HANDLE hModuleSnap = pCreateToolhelp32Snapshot( TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, GetCurrentProcessId() );
-
-               if( hModuleSnap != INVALID_HANDLE_VALUE )
-               {
-                  MODULEENTRY32 me32;
-
-                  /* Set the size of the structure before using it. */
-                  me32.dwSize = sizeof( MODULEENTRY32 );
-
-                  /* Retrieve information about the first module, and exit if unsuccessful */
-                  if( pModule32First( hModuleSnap, &me32 ) )
-                  {
-                     hb_strncat( errmsg, "\nModules:\n", errmsglen );
-
-                     /* Now walk the module list of the process, and display information about each module */
-                     do
-                     {
-#if defined( HB_OS_WIN_64 )
-                        hb_snprintf( buf, sizeof( buf ), "0x%016" PFLL "X 0x%016" PFLL "X %s\n", ( UINT_PTR ) me32.modBaseAddr, ( UINT_PTR ) me32.modBaseSize, me32.szExePath );
-#else
-                        hb_snprintf( buf, sizeof( buf ), "0x%08X 0x%08X %s\n", ( UINT ) me32.modBaseAddr, ( UINT ) me32.modBaseSize, me32.szExePath );
+   }
 #endif
-                        hb_strncat( errmsg, buf, errmsglen );
-                     } while( pModule32Next( hModuleSnap, &me32 ) );
-                  }
 
-                  /* Do not forget to clean up the snapshot object. */
-                  CloseHandle( hModuleSnap );
+   {
+      /* NOTE: Several non-MS sources say that Win9x has these functions
+               in tlhelp32.dll. Testing shows though, that in Win95, Win95b
+               and Win98 they are in kernel32.dll, and tlhelp32.dll doesn't
+               exist. [vszakats] */
+      HMODULE hKernel32 = GetModuleHandle( TEXT( "kernel32.dll" ) );
+
+      if( hKernel32 )
+      {
+         /* NOTE: Hack to force the ASCII versions of these types. [vszakats] */
+         #if defined( UNICODE )
+            #undef MODULEENTRY32
+            #undef LPMODULEENTRY32
+         #endif
+
+         typedef HANDLE ( WINAPI * P_CTH32SSH )( DWORD, DWORD ); /* CreateToolhelp32Snapshot() */
+         typedef BOOL ( WINAPI * P_M32F )( HANDLE, LPMODULEENTRY32 ); /* Module32First() */
+         typedef BOOL ( WINAPI * P_M32N )( HANDLE, LPMODULEENTRY32 ); /* Module32Next() */
+
+         P_CTH32SSH pCreateToolhelp32Snapshot = ( P_CTH32SSH ) GetProcAddress( hKernel32, "CreateToolhelp32Snapshot" );
+         P_M32F     pModule32First            = ( P_M32F     ) GetProcAddress( hKernel32, "Module32First" );
+         P_M32N     pModule32Next             = ( P_M32N     ) GetProcAddress( hKernel32, "Module32Next" );
+
+         if( pCreateToolhelp32Snapshot &&
+             pModule32First &&
+             pModule32Next )
+         {
+            /* Take a snapshot of all modules in the specified process. */
+            HANDLE hModuleSnap = pCreateToolhelp32Snapshot( TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, GetCurrentProcessId() );
+
+            if( hModuleSnap != INVALID_HANDLE_VALUE )
+            {
+               MODULEENTRY32 me32;
+
+               /* Set the size of the structure before using it. */
+               me32.dwSize = sizeof( MODULEENTRY32 );
+
+               /* Retrieve information about the first module, and exit if unsuccessful */
+               if( pModule32First( hModuleSnap, &me32 ) )
+               {
+                  hb_strncat( errmsg, "\nModules:\n", errmsglen );
+
+                  /* Now walk the module list of the process, and display information about each module */
+                  do
+                  {
+                     char buf[ 64 ];
+#if defined( HB_OS_WIN_64 )
+                     /* TOFIX: me32.szExePath seemed trashed in some (standalone) tests. */
+                     hb_snprintf( buf, sizeof( buf ), "0x%016" PFLL "X 0x%016" PFLL "X %s\n", me32.modBaseAddr, me32.modBaseSize, me32.szExePath );
+#else
+                     hb_snprintf( buf, sizeof( buf ), "0x%08X 0x%08X %s\n", me32.modBaseAddr, me32.modBaseSize, me32.szExePath );
+#endif
+                     hb_strncat( errmsg, buf, errmsglen );
+                  } while( pModule32Next( hModuleSnap, &me32 ) );
                }
+
+               /* Do not forget to clean up the snapshot object. */
+               CloseHandle( hModuleSnap );
             }
          }
       }
    }
-#endif
 
    hb_errInternalRaw( 6005, "Exception error: %s", errmsg, NULL );
 

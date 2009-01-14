@@ -56,7 +56,7 @@
 CREATE CLASS HBPersistent
 
    METHOD CreateNew() INLINE Self
-   METHOD LoadFromFile( cFileName ) INLINE ::LoadFromText( MemoRead( cFileName ) )
+   METHOD LoadFromFile( cFileName ) INLINE ::LoadFromText( hb_MemoRead( cFileName ) )
    METHOD LoadFromText( cObjectText )
    METHOD SaveToText( cObjectName, nIndent )
    METHOD SaveToFile( cFileName ) INLINE hb_MemoWrit( cFileName, ::SaveToText() )
@@ -239,7 +239,7 @@ STATIC FUNCTION ValToText( uValue )
 STATIC FUNCTION ExtractLine( cText, nFrom )
 
    LOCAL nAt := hb_At( Chr( 10 ), cText, nFrom )
-  
+
    IF nAt > 0
       cText := SubStr( cText, nFrom, nAt - nFrom )
       IF Right( cText, 1 ) == Chr( 13 )

@@ -605,18 +605,38 @@ HB_FUNC( HB_DISPOUTAT )
    }
 }
 
+/* Same as hb_DispOutAt(), but draws with the attribute HB_GT_ATTR_BOX,
+   so we can use it to draw graphical elements. */
+HB_FUNC( HB_DISPOUTATBOX )
+{
+   SHORT nRow = ( SHORT ) hb_parni( 1 );
+   SHORT nCol = ( SHORT ) hb_parni( 2 );
+   char * pszString = hb_parcx( 3 );
+   ULONG nStringLen = hb_parclen( 3 );
+   int iColor;
 
-HB_FUNC( HB_GETSTDIN ) /* Return Handel for STDIN */
+   if( ISCHAR( 4 ) )
+      iColor = hb_gtColorToN( hb_parc( 4 ) );
+   else if( ISNUM( 4 ) )
+      iColor = hb_parni( 4 );
+   else
+      iColor = -1;
+
+   while( nStringLen-- )
+      hb_gtPutChar( nRow, nCol++, ( BYTE ) iColor, HB_GT_ATTR_BOX, ( USHORT ) *pszString++ );
+}
+
+HB_FUNC( HB_GETSTDIN ) /* Return handle for STDIN */
 {
    hb_retnint( ( HB_NHANDLE ) s_hFilenoStdin );
 }
 
-HB_FUNC( HB_GETSTDOUT ) /* Return Handel for STDOUT */
+HB_FUNC( HB_GETSTDOUT ) /* Return handle for STDOUT */
 {
    hb_retnint( ( HB_NHANDLE ) s_hFilenoStdout );
 }
 
-HB_FUNC( HB_GETSTDERR ) /* Return Handel for STDERR */
+HB_FUNC( HB_GETSTDERR ) /* Return handle for STDERR */
 {
    hb_retnint( ( HB_NHANDLE ) s_hFilenoStderr );
 }

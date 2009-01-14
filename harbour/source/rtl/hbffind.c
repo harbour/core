@@ -764,6 +764,18 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       /* Do the conversions common for all platforms */
       ffind->szName[ sizeof( ffind->szName ) - 1 ] = '\0';
 
+      /* Convert from OS codepage */
+      {
+         BOOL fFree;
+         char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) ffind->szName, &fFree );
+
+         if( fFree )
+         {
+            hb_strncpy( ffind->szName, pbyResult, sizeof( ffind->szName ) - 1 );
+            hb_xfree( pbyResult );
+         }
+      }
+
       ffind->attr = hb_fsAttrFromRaw( raw_attr );
 
       ffind->lDate = hb_dateEncode( nYear, nMonth, nDay );
