@@ -1592,7 +1592,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    }
 
    /* Selfifying */
-   if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+   if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) && ! HB_COMP_PARAM->fDebugInfo )
    {
       pVar = pFunc->pLocals;
       for( usIndex = 0; usIndex < pFunc->wParamCount; usIndex++ )
@@ -1615,7 +1615,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    hb_compPCodeEnumAssignedUnused( HB_COMP_PARAM, pFunc, pLocals );
 
    /* Delete unused */
-   if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+   if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) && ! HB_COMP_PARAM->fDebugInfo )
    {
       fBool = 0;
       for( usIndex = pFunc->wParamCount; usIndex < usLocalCount; usIndex++ )

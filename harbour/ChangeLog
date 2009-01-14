@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-14 15:10 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/compiler/hbopt.c
+    * disabled code optimisation (selfifying local, removing local), 
+      if code is compiled using -b (debug) switch
+
 2009-01-14 01:38 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtxwc/gtxwc.c
     ! added protection against inaccessible character cell value
