@@ -5380,7 +5380,7 @@ static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
 
-   pData = ( LPDBFDATA ) hb_stackGetTSD( ( PHB_TSD ) pRDD->lpvCargo );
+   pData = DBFNODE_DATA( pRDD );
 
    switch( uiIndex )
    {

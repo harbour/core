@@ -78,9 +78,6 @@
 #  include "hbapicdp.h"
 #endif
 
-#define FPTNODE_DATA( p )     ( ( LPDBFDATA ) hb_stackGetTSD( ( PHB_TSD ) ( p )->lpvCargo ) )
-#define FPTAREA_DATA( p )     FPTNODE_DATA( SELF_RDDNODE( p ) )
-
 #define FPT_BLOCK_OFFSET( b )       ( ( HB_FOFFSET ) ( b ) * \
                                       ( HB_FOFFSET ) pArea->uiMemoBlockSize )
 
@@ -4685,7 +4682,7 @@ static ERRCODE hb_fptInfo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          }
          else
          {
-            LPDBFDATA pData = FPTAREA_DATA( pArea );
+            LPDBFDATA pData = DBFAREA_DATA( pArea );
             char * szMFileExt;
             if( pData->szMemoExt[ 0 ] )
                hb_itemPutC( pItem, pData->szMemoExt );
@@ -4987,7 +4984,7 @@ static ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fptRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
 
-   pData = FPTNODE_DATA( pRDD );
+   pData = DBFNODE_DATA( pRDD );
 
    switch( uiIndex )
    {

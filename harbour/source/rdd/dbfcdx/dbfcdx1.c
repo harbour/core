@@ -82,9 +82,6 @@
 #include "rddsys.ch"
 #include "hbregex.h"
 
-#define CDXNODE_DATA( p )     ( ( LPDBFDATA ) hb_stackGetTSD( ( PHB_TSD ) ( p )->lpvCargo ) )
-#define CDXAREA_DATA( p )     CDXNODE_DATA( SELF_RDDNODE( p ) )
-
 #ifndef HB_CDP_SUPPORT_OFF
    /* for nation sorting support */
    #include "hbapicdp.h"
@@ -7078,14 +7075,14 @@ static ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
 
    /* open (production) structural index */
-   if( CDXAREA_DATA( pArea )->fStrictStruct ? pArea->fHasTags : hb_setGetAutOpen() )
+   if( DBFAREA_DATA( pArea )->fStrictStruct ? pArea->fHasTags : hb_setGetAutOpen() )
    {
       char szFileName[ _POSIX_PATH_MAX + 1 ];
 
       pArea->fHasTags = FALSE;
       hb_cdxCreateFName( pArea, NULL, NULL, szFileName, NULL );
       if ( hb_spFile( ( BYTE * ) szFileName, NULL ) ||
-           CDXAREA_DATA( pArea )->fStrictStruct )
+           DBFAREA_DATA( pArea )->fStrictStruct )
       {
          DBORDERINFO pOrderInfo;
 
@@ -7300,7 +7297,7 @@ static ERRCODE hb_cdxOrderListClear( CDXAREAP pArea )
    if ( FAST_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
-   hb_cdxOrdListClear( pArea, !( CDXAREA_DATA( pArea )->fStrictStruct ?
+   hb_cdxOrdListClear( pArea, !( DBFAREA_DATA( pArea )->fStrictStruct ?
                        pArea->fHasTags : hb_setGetAutOpen() ), NULL );
    pArea->uiTag = 0;
 
@@ -7323,7 +7320,7 @@ static ERRCODE hb_cdxOrderListDelete( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
    hb_cdxCreateFName( pArea, hb_itemGetCPtr( pOrderInfo->atomBagName ), &fProd,
                       szFileName, szTagName );
 
-   if( fProd && ( CDXAREA_DATA( pArea )->fStrictStruct ?
+   if( fProd && ( DBFAREA_DATA( pArea )->fStrictStruct ?
                   pArea->fHasTags : hb_setGetAutOpen() ) )
       pIndex = NULL;
    else
@@ -7606,7 +7603,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 
    if ( !pArea->lpdbOrdCondInfo ||
         ( pArea->lpdbOrdCondInfo->fAll && !pArea->lpdbOrdCondInfo->fAdditive ) )
-      hb_cdxOrdListClear( pArea, !( CDXAREA_DATA( pArea )->fStrictStruct ?
+      hb_cdxOrdListClear( pArea, !( DBFAREA_DATA( pArea )->fStrictStruct ?
                           pArea->fHasTags : hb_setGetAutOpen() ), NULL );
 
    pIndex = hb_cdxFindBag( pArea, szFileName );
@@ -7730,7 +7727,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    if ( pArea->lpdbOrdCondInfo && ( !pArea->lpdbOrdCondInfo->fAll &&
                                     !pArea->lpdbOrdCondInfo->fAdditive ) )
    {
-      hb_cdxOrdListClear( pArea, !( CDXAREA_DATA( pArea )->fStrictStruct ?
+      hb_cdxOrdListClear( pArea, !( DBFAREA_DATA( pArea )->fStrictStruct ?
                           pArea->fHasTags : hb_setGetAutOpen() ), NULL );
    }
    hb_cdxIndexUnLockWrite( pIndex );
@@ -7739,7 +7736,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    {
       pArea->fHasTags = TRUE;
       if ( !pArea->fReadonly && ( pArea->dbfHeader.bHasTags & 0x01 ) == 0 &&
-           ( hb_setGetAutOpen() || CDXAREA_DATA( pArea )->fStrictStruct ) )
+           ( hb_setGetAutOpen() || DBFAREA_DATA( pArea )->fStrictStruct ) )
          SELF_WRITEDBHEADER( ( AREAP ) pArea );
    }
    else
@@ -7807,7 +7804,7 @@ static ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
                      pArea->fHasTags = FALSE;
                      if ( !pArea->fReadonly && ( pArea->dbfHeader.bHasTags & 0x01 ) != 0 &&
                           ( hb_setGetAutOpen() ||
-                            CDXAREA_DATA( pArea )->fStrictStruct ) )
+                            DBFAREA_DATA( pArea )->fStrictStruct ) )
                         SELF_WRITEDBHEADER( ( AREAP ) pArea );
                   }
                }
@@ -8638,7 +8635,7 @@ static ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
 
-   pData = CDXNODE_DATA( pRDD );
+   pData = DBFNODE_DATA( pRDD );
 
    switch( uiIndex )
    {

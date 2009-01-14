@@ -76,9 +76,6 @@ static RDDFUNCS nsxSuper;
 static USHORT s_uiRddId;
 
 
-#define NSXNODE_DATA( p )     ( ( LPDBFDATA ) hb_stackGetTSD( ( PHB_TSD ) ( p )->lpvCargo ) )
-#define NSXAREA_DATA( p )     NSXNODE_DATA( SELF_RDDNODE( p ) )
-
 #define hb_nsxKeyFree(K)      hb_xfree(K)
 #define hb_nsxFileOffset(I,B) ( (B) << ( (I)->LargeFile ? NSX_PAGELEN_BITS : 0 ) )
 #define hb_nsxGetRecSize(r)   ( (r) < 0x10000 ? 2 : ( (r) < 0x1000000 ? 3 : 4 ) )
@@ -1612,7 +1609,7 @@ static LPTAGINFO hb_nsxTagNew( LPNSXINDEX pIndex, const char * szTagName,
    pTag->fUsrDescend = !pTag->AscendKey;
    pTag->UniqueKey = fUnique;
    pTag->Custom = fCustom;
-   pTag->MultiKey = fCustom && NSXAREA_DATA( pIndex->pArea )->fMultiKey;
+   pTag->MultiKey = fCustom && DBFAREA_DATA( pIndex->pArea )->fMultiKey;
    pTag->KeyType = ucKeyType;
    pTag->KeyLength = uiKeyLen;
    pTag->TrailChar = bTrail;
@@ -6422,14 +6419,14 @@ static ERRCODE hb_nsxOpen( NSXAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    errCode = SUPER_OPEN( ( AREAP ) pArea, pOpenInfo );
 
-   if( errCode == SUCCESS && ( NSXAREA_DATA( pArea )->fStrictStruct ?
+   if( errCode == SUCCESS && ( DBFAREA_DATA( pArea )->fStrictStruct ?
                                pArea->fHasTags : hb_setGetAutOpen() ) )
    {
       char szFileName[ _POSIX_PATH_MAX + 1 ];
 
       hb_nsxCreateFName( pArea, NULL, NULL, szFileName, NULL );
       if( hb_spFile( ( BYTE * ) szFileName, NULL ) ||
-          NSXAREA_DATA( pArea )->fStrictStruct )
+          DBFAREA_DATA( pArea )->fStrictStruct )
       {
          DBORDERINFO pOrderInfo;
 
@@ -6839,7 +6836,7 @@ static ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       *pIndexPtr = pIndex;
    }
    if( pIndex->Production && !pArea->fHasTags &&
-       ( NSXAREA_DATA( pArea )->fStrictStruct || hb_setGetAutOpen() ) )
+       ( DBFAREA_DATA( pArea )->fStrictStruct || hb_setGetAutOpen() ) )
    {
       pArea->fHasTags = TRUE;
       if( !pArea->fReadonly && ( pArea->dbfHeader.bHasTags & 0x01 ) == 0 )
@@ -6886,7 +6883,7 @@ static ERRCODE hb_nsxOrderDestroy( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
             pIndex->fDelete = TRUE;
             hb_nsxIndexFree( pIndex );
             if( fProd && pArea->fHasTags &&
-                ( NSXAREA_DATA( pArea )->fStrictStruct || hb_setGetAutOpen() ) )
+                ( DBFAREA_DATA( pArea )->fStrictStruct || hb_setGetAutOpen() ) )
             {
                pArea->fHasTags = FALSE;
                if( !pArea->fReadonly && ( pArea->dbfHeader.bHasTags & 0x01 ) != 0 )
@@ -7705,7 +7702,7 @@ static ERRCODE hb_nsxOrderListClear( NSXAREAP pArea )
    while( *pIndexPtr )
    {
       pIndex = *pIndexPtr;
-      if( pIndex->Production && ( NSXAREA_DATA( pArea )->fStrictStruct ?
+      if( pIndex->Production && ( DBFAREA_DATA( pArea )->fStrictStruct ?
                                   pArea->fHasTags : hb_setGetAutOpen() ) )
       {
          pIndexPtr = &pIndex->pNext;
@@ -7737,7 +7734,7 @@ static ERRCODE hb_nsxOrderListDelete( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
    pIndex = hb_nsxFindBag( pArea, szFileName );
 
    if( pIndex && !( pIndex->Production &&
-                    ( NSXAREA_DATA( pArea )->fStrictStruct ?
+                    ( DBFAREA_DATA( pArea )->fStrictStruct ?
                       pArea->fHasTags : hb_setGetAutOpen() ) ) )
    {
       pIndexPtr = &pArea->lpIndexes;
@@ -7837,7 +7834,7 @@ static ERRCODE hb_nsxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
 
    HB_TRACE(HB_TR_DEBUG, ("hb_nsxRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
 
-   pData = NSXNODE_DATA( pRDD );
+   pData = DBFNODE_DATA( pRDD );
 
    switch( uiIndex )
    {

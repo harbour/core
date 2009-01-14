@@ -112,9 +112,13 @@ HB_EXTERN_BEGIN
 #define HB_IDXREAD_CLEANMASK  HB_IDXREAD_DIRTY
 #define HB_IDXREAD_DIRTYMASK  (HB_IDXREAD_DIRTY|HB_IDXREAD_DEFAULT)
 
-#define HB_DIRTYREAD(w)       ( ( ( ( LPDBFDATA ) SELF_RDDNODE( w )-> \
-                                    lpvCargo )->uiDirtyRead & \
-                                           (w)->uiDirtyRead ) != 0 )
+#define DBFNODE_DATA( r )     ( ( LPDBFDATA ) hb_stackGetTSD( ( PHB_TSD ) \
+                                                      ( r )->lpvCargo ) )
+#define DBFAREA_DATA( w )     DBFNODE_DATA( SELF_RDDNODE( w ) )
+
+
+#define HB_DIRTYREAD( w )     ( ( DBFAREA_DATA( w )->uiDirtyRead & \
+                                              ( w )->uiDirtyRead ) != 0 )
 
 
 /*

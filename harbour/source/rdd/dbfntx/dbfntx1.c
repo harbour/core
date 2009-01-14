@@ -157,9 +157,6 @@ static RDDFUNCS ntxSuper;
 static USHORT s_uiRddId;
 
 
-#define NTXNODE_DATA( p )     ( ( LPDBFDATA ) hb_stackGetTSD( ( PHB_TSD ) ( p )->lpvCargo ) )
-#define NTXAREA_DATA( p )     NTXNODE_DATA( SELF_RDDNODE( p ) )
-
 #define hb_ntxKeyFree(K)      hb_xfree(K)
 #define hb_ntxFileOffset(I,B) ( (B) << ( (I)->LargeFile ? NTXBLOCKBITS : 0 ) )
 #define hb_ntxPageBuffer(p)   ( (p)->buffer )
@@ -1416,7 +1413,7 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX pIndex,
    pTag->fUsrDescend = !pTag->AscendKey;
    pTag->UniqueKey = fUnique;
    pTag->Custom = fCustom;
-   pTag->MultiKey = fCustom && NTXAREA_DATA( pIndex->Owner )->fMultiKey;
+   pTag->MultiKey = fCustom && DBFAREA_DATA( pIndex->Owner )->fMultiKey;
    pTag->KeyType = bKeyType;
    pTag->KeyLength = uiKeyLen;
    pTag->KeyDec = uiKeyDec;
@@ -6034,14 +6031,14 @@ static ERRCODE ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    errCode = SUPER_OPEN( ( AREAP ) pArea, pOpenInfo );
 
-   if( errCode == SUCCESS && NTXAREA_DATA( pArea )->fStruct &&
-       ( NTXAREA_DATA( pArea )->fStrictStruct ? pArea->fHasTags : hb_setGetAutOpen() ) )
+   if( errCode == SUCCESS && DBFAREA_DATA( pArea )->fStruct &&
+       ( DBFAREA_DATA( pArea )->fStrictStruct ? pArea->fHasTags : hb_setGetAutOpen() ) )
    {
       char szFileName[ _POSIX_PATH_MAX + 1 ];
 
       hb_ntxCreateFName( pArea, NULL, NULL, szFileName, NULL );
       if( hb_spFile( ( BYTE * ) szFileName, NULL ) ||
-          NTXAREA_DATA( pArea )->fStrictStruct )
+          DBFAREA_DATA( pArea )->fStrictStruct )
       {
          DBORDERINFO pOrderInfo;
 
@@ -6237,7 +6234,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    SELF_GOTO( ( AREAP ) pArea, ulRecNo );
 
-   pData = NTXAREA_DATA( pArea );
+   pData = DBFAREA_DATA( pArea );
    /*
     * abBagName -> cBag, atomBagName -> cTag
     * The following scheme implemented:
@@ -6547,8 +6544,8 @@ static ERRCODE ntxOrderDestroy( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
             pIndex->fDelete = TRUE;
             hb_ntxIndexFree( pIndex );
             if( fProd && pArea->fHasTags &&
-                NTXAREA_DATA( pArea )->fStruct &&
-                ( NTXAREA_DATA( pArea )->fStrictStruct || hb_setGetAutOpen() ) )
+                DBFAREA_DATA( pArea )->fStruct &&
+                ( DBFAREA_DATA( pArea )->fStrictStruct || hb_setGetAutOpen() ) )
             {
                pArea->fHasTags = FALSE;
                if( !pArea->fReadonly && ( pArea->dbfHeader.bHasTags & 0x01 ) != 0 )
@@ -7376,8 +7373,8 @@ static ERRCODE ntxOrderListClear( NTXAREAP pArea )
    while( *pIndexPtr )
    {
       pIndex = *pIndexPtr;
-      if( NTXAREA_DATA( pArea )->fStruct && pIndex->Production &&
-          ( NTXAREA_DATA( pArea )->fStrictStruct ? pArea->fHasTags :
+      if( DBFAREA_DATA( pArea )->fStruct && pIndex->Production &&
+          ( DBFAREA_DATA( pArea )->fStrictStruct ? pArea->fHasTags :
                                                    hb_setGetAutOpen() ) )
       {
          pIndexPtr = &pIndex->pNext;
@@ -7408,8 +7405,8 @@ static ERRCODE ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
                       szFileName, szTagName );
    pIndex = hb_ntxFindBag( pArea, szFileName );
 
-   if( pIndex && !( pIndex->Production && NTXAREA_DATA( pArea )->fStruct &&
-                    ( NTXAREA_DATA( pArea )->fStrictStruct ?
+   if( pIndex && !( pIndex->Production && DBFAREA_DATA( pArea )->fStruct &&
+                    ( DBFAREA_DATA( pArea )->fStrictStruct ?
                       pArea->fHasTags : hb_setGetAutOpen() ) ) )
    {
       pIndexPtr = &pArea->lpIndexes;
@@ -7510,7 +7507,7 @@ static ERRCODE ntxInit( LPRDDNODE pRDD )
    errCode = SUPER_INIT( pRDD );
 #if !defined( HB_NTX_NOMULTITAG )
    if( errCode == SUCCESS )
-      NTXNODE_DATA( pRDD )->fMultiTag = TRUE;
+      DBFNODE_DATA( pRDD )->fMultiTag = TRUE;
 #endif
 
    return errCode;
@@ -7522,7 +7519,7 @@ static ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_
 
    HB_TRACE(HB_TR_DEBUG, ("ntxRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
 
-   pData = NTXNODE_DATA( pRDD );
+   pData = DBFNODE_DATA( pRDD );
 
    switch( uiIndex )
    {

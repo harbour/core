@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-14 01:38 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    ! added protection against inaccessible character cell value
+      what could cause accessing uninitialized memory and GPF
+
+  * harbour/include/hbrdddbf.h
+    ! fixed HB_DIRTYREAD() macro not updated when RDDI_* settings were
+      converted from global to thread local
+
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfnsx/dbfnsx1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+    % replaced <RDD>NODE_DATA() and <RDD>AREA_DATA() macros defined
+      in each RDD by common for all DBF bases RDDs DBFNODE_DATA() and
+      DBFAREA_DATA() macros defined in hbrdddbf.h to reduce possible
+      mistakes in code updating in the future
+
 2009-01-13 22:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     ! restored GCC optimization flags in hb* scripts disabled unintentionally
