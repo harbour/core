@@ -6,19 +6,19 @@
 This folder contains compression related files including:
  * zip file support based on minizip library (http://www.winimage.com/zLibDll/minizip.html)
    including:
-   * minizip version 1.01e source files 
+   * minizip version 1.01e source files
    * wrapper functions for minizip
    * some additionl functions to provide a higher level API for zip files
 
-Some small changes (to fix compile time warning and errors) are applied to original 
+Some small changes (to fix compile time warning and errors) are applied to original
 source of minizip 1.01e:
 
   * harbour/contrib/hbzlib/zip.c
-    * added forward definitions of allocate_new_datablock(), 
-      free_datablock(), init_linkedlist(), add_data_in_datablock(), 
+    * added forward definitions of allocate_new_datablock(),
+      free_datablock(), init_linkedlist(), add_data_in_datablock(),
       ziplocal_TmzDateToDosDate()
     * pacified warnings of unused args dosDate and crcForCrypting
-    * fixed 2 warnings: assigned value is not used. See, TOFIX 
+    * fixed 2 warnings: assigned value is not used. See, TOFIX
       comment for one of the fixes
     * fixed BCC warning "function call with no prototype" by changing
            local int zipFlushWriteBuffer(zi)
@@ -32,7 +32,7 @@ source of minizip 1.01e:
   * harbour/contrib/hbzlib/unzip.c
     * added forward definitions of strcmpcasenosensitive_internal(),
       unzlocal_DosDateToTmuDate(), unzlocal_CheckCurrentFileCoherencyHeader()
-    * fixed 8 warnings: assigned value is not used. See, TOFIX 
+    * fixed 8 warnings: assigned value is not used. See, TOFIX
       comment for one of the fixes
 
   * harbour/contrib/hbzlib/ioapi.c
@@ -48,12 +48,14 @@ HB_ZipOpen( cFileName, [ iMode = HB_ZIP_CREATE ],
 HB_ZipClose( hZip, [ cGlobalComment ] ) --> nError
 HB_ZipFileCreate( hZip, cZipName, dDate, cTime,
                   nInternalAttr, nExternalAttr,
-                  [ nMethod = HB_ZLIB_METHOD_DEFLATE ], 
-                  [ nLevel = HB_ZLIB_COMPRESSION_DEFAULT ], 
+                  [ nMethod = HB_ZLIB_METHOD_DEFLATE ],
+                  [ nLevel = HB_ZLIB_COMPRESSION_DEFAULT ],
                   [ cPassword, ulFileCRC32 ], [ cComment ] ) --> nError
 HB_ZipFileWrite( hZip, cData [, nLen ] ) --> nError
 HB_ZipFileClose( hZip ) --> nError
 HB_ZipStoreFile( hZip, cFileName, [ cZipName ], ;
+                 [ cPassword ], [ cComment ] ) --> nError
+HB_ZipStoreFileHandle( hZip, fhnd, cZipName, ;
                  [ cPassword ], [ cComment ] ) --> nError
 HB_zipFileCRC32( cFileName ) --> nError
 
@@ -73,6 +75,7 @@ HB_UnzipFileOpen( hUnzip, [ cPassword ] ) --> nError
 HB_UnzipFileRead( hUnzip, @cBuf [, nLen ] ) --> nRead
 HB_UnzipFileClose( hUnzip ) --> nError
 HB_UnzipExtractCurrentFile( hUnzip, [ cFileName ], [ cPassword ] ) --> nError
+HB_UnzipExtractCurrentFileToHandle( hZip, fhnd, [ cPassword ] ) --> nError
 
 
 HB_ZipDeleteFile( cZipFile, cFileMask ) --> nError

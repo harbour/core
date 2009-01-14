@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-04 17:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbmzip/hbmzip.c
+    + Added .prg level functions:
+      HB_ZIPSTOREFILEHANDLE():
+         To add a new file to a .zip via an already open handle (typically a temp file).
+         Obviously, file date/time/attrib will not be set.
+      HB_UNZIPEXTRACTCURRENTFILETOHANDLE():
+         To extract a file to an already open file handle.
+    ; NOTE: I'm not sure if these new functions are useful
+            enough to be added to official SVN. Except for Windows,
+            there doesn't seem to be a trend that OSes would
+            support native temp files, so that we can use this
+            to avoid race conditions. Opinions are welcome.
+
 2009-01-14 16:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/net.c
   * contrib/hbziparc/hbziparc.prg
