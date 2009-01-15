@@ -4651,7 +4651,7 @@ FUNCTION hbMakeID()
 *--------------------------
 FUNCTION hbMakeCopyright()
 *--------------------------
-   RETURN "Copyright (c) 2000-2008, http://www.harbour-project.org/"
+   RETURN "Copyright (c) 2000-2009, http://www.harbour-project.org/"
 
 *-------------------------------------------------------------------
 * Former tmake.prg

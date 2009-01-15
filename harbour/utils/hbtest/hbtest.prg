@@ -102,7 +102,7 @@ STATIC s_nEndTime
 PROCEDURE Main( cPar1, cPar2 )
 
    OutStd( "Harbour Regression Test Suite" + HB_OSNewLine() +;
-           "Copyright (c) 1999-2008, http://www.harbour-project.org/" + HB_OSNewLine() )
+           "Copyright (c) 1999-2009, http://www.harbour-project.org/" + HB_OSNewLine() )
 
    IF cPar1 == NIL
       cPar1 := ""
@@ -523,7 +523,7 @@ FUNCTION XToStrX( xValue )
             cRetVal += ", "
          ENDIF
       NEXT
-   
+
       RETURN cRetVal + ' }'
 
    CASE cType == "M" ; RETURN 'M:' + xValue

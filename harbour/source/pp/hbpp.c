@@ -357,7 +357,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
          " * Harbour Project source code:\n"
          " *    Version information and build time switches.\n"
          " *\n"
-         " * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
+         " * Copyright 2008-2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
          " * www - http://www.harbour-project.org\n"
          " *\n"
          " * This file is generated automatically by Harbour preprocessor\n"
@@ -487,7 +487,7 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
          }
          else if( !*szLog )
          {
-            if( szLine[ 4 ] == '-' && szLine[ 7 ] == '-' && 
+            if( szLine[ 4 ] == '-' && szLine[ 7 ] == '-' &&
                 szLine[ 10 ] == ' ' && szLine[ 13 ] == ':' )
             {
                int iLen;

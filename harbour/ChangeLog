@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-15 00:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/pp/hbpp.c
+  * utils/hbdoc/hbdoc.prg
+  * utils/hbmake/hbmake.prg
+  * utils/hbtest/hbtest.prg
+  * utils/hbrun/hbrun.prg
+    * More copyrights bumped to 2009.
+
 2009-01-15 03:20 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/include/hbcomp.h
   * harbour/include/hbcompdf.h
@@ -57,7 +65,6 @@
 
 2009-01-14 16:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/net.c
-  * contrib/hbziparc/hbziparc.prg
   * contrib/hbct/files.c
     * Minor formatting.
 
@@ -168,8 +175,8 @@
 
   * include/hbextern.ch
   * source/rtl/philes.c
-    + HB_FSETATTR( <cFileName>, @<nAttr> ) -> <lSuccess>
-    + HB_FGETATTR( <cFileName>, <nAttr> ) -> <lSuccess>
+    + HB_FGETATTR( <cFileName>, @<nAttr> ) -> <lSuccess>
+    + HB_FSETATTR( <cFileName>, <nAttr> ) -> <lSuccess>
     + HB_FSETDATETIME( <cFileName>, [<dDate>], [<cTime HH:MM:SS>] ) -> <lSuccess>
 
   * source/rtl/direct.c
