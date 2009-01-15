@@ -4005,6 +4005,7 @@ yydestruct (yymsg, yytype, yyvaluep, pComp)
 
   if (!yymsg)
     yymsg = "Deleting";
+  YYUSE (yymsg);
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 
   switch (yytype)
@@ -4012,12 +4013,12 @@ yydestruct (yymsg, yytype, yyvaluep, pComp)
       case 19: /* "LITERAL" */
 #line 270 "harbour.y"
 	{ if( (yyvaluep->valChar).dealloc ) hb_xfree( (yyvaluep->valChar).string ); };
-#line 4016 "harboury.c"
+#line 4017 "harboury.c"
 	break;
       case 96: /* "CBSTART" */
 #line 269 "harbour.y"
 	{ if( (yyvaluep->asCodeblock).string )  hb_xfree( (yyvaluep->asCodeblock).string ); };
-#line 4021 "harboury.c"
+#line 4022 "harboury.c"
 	break;
 
       default:
@@ -4203,6 +4204,7 @@ int yynerrs;
 	  goto yyexhaustedlab;
 	YYSTACK_RELOCATE (yyss);
 	YYSTACK_RELOCATE (yyvs);
+	YYUSE (yyptr);
 
 #  undef YYSTACK_RELOCATE
 	if (yyss1 != yyssa)
@@ -7035,8 +7037,8 @@ yyreduce:
     break;
 
 
-/* Line 1267 of yacc.c.  */
-#line 7040 "harboury.c"
+/* Line 1268 of yacc.c.  */
+#line 7042 "harboury.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -7071,6 +7073,7 @@ yyerrlab:
   if (!yyerrstatus)
     {
       ++yynerrs;
+      YYUSE (yynerrs);
 #if ! YYERROR_VERBOSE
       yyerror (pComp, YY_("syntax error"));
 #else
@@ -7137,13 +7140,16 @@ yyerrlab:
 /*---------------------------------------------------.
 | yyerrorlab -- error raised explicitly by YYERROR.  |
 `---------------------------------------------------*/
+#ifndef NO_YYERROR
 yyerrorlab:
 
   /* Pacify compilers like GCC when the user code never invokes
      YYERROR and the label yyerrorlab therefore never appears in user
      code.  */
+#if ! defined( __BORLANDC__ ) && ! defined( __WATCOMC__ )
   if (/*CONSTCOND*/ 0)
      goto yyerrorlab;
+#endif
 
   /* Do not reclaim the symbols of the rule which action triggered
      this YYERROR.  */
@@ -7152,6 +7158,7 @@ yyerrorlab:
   YY_STACK_PRINT (yyss, yyssp);
   yystate = *yyssp;
   goto yyerrlab1;
+#endif /* NO_YYERROR */
 
 
 /*-------------------------------------------------------------.

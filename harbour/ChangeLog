@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-15 04:40 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+    * fixed warnings using bison patch provided by Przemek
+
 2009-01-15 00:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/pp/hbpp.c
   * utils/hbdoc/hbdoc.prg
