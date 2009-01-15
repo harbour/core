@@ -1231,6 +1231,13 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, BYTE * pText, ULONG ulLength )
    iMaxRow = HB_GTSELF_MAXROW( pGT );
    iMaxCol = HB_GTSELF_MAXCOL( pGT );
 
+   /* small hack for scrolling console output when client area is set */
+   {
+      PHB_GTCTW pCTW = HB_GTCTW_GET( pGT );
+      if( pCTW->iCurrWindow > 0 && pCTW->windows[ pCTW->iCurrWindow ]->fClip )
+         iMaxRow = pCTW->windows[ pCTW->iCurrWindow ]->iCliBottom;
+   }
+
    HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
 
    if( iRow > iMaxRow || iCol > iMaxCol )
