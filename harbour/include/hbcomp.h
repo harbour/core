@@ -147,7 +147,8 @@ extern PINLINE   hb_compInlineFind( HB_COMP_DECL, const char * szFunName );
 extern PFUNCALL  hb_compFunCallFind( HB_COMP_DECL, const char * szFunName ); /* locates a previously defined called function */
 extern BOOL      hb_compFunCallCheck( HB_COMP_DECL, const char *, int );
 
-extern void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, BYTE cType ); /* add a new param, local, static variable to a function definition or a public or private */
+extern PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char * szFromClass );
+extern void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarType ); /* add a new param, local, static variable to a function definition or a public or private */
 extern PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int * piScope );
 extern const char * hb_compLocalVariableName( PFUNCTION pFunc, USHORT wVar );   /* returns the name of local variable */
 extern const char * hb_compStaticVariableName( HB_COMP_DECL, USHORT wVar );   /* returns the name of static variable */
@@ -164,7 +165,7 @@ extern PCOMCLASS hb_compClassAdd( HB_COMP_DECL, const char *, const char * );
 extern PCOMCLASS hb_compClassFind( HB_COMP_DECL, const char * );
 extern PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, const char * );
 extern PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, const char * );
-extern void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, BYTE cValueType );
+extern void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarType );
 
 extern void hb_compGenBreak( HB_COMP_DECL );  /* generate code for BREAK statement */
 

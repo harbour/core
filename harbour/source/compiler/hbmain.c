@@ -376,14 +376,12 @@ static USHORT hb_compVarListAdd( PVAR * pVarLst, PVAR pVar )
    return uiVar;
 }
 
-void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, BYTE cValueType )
+void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarType )
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
    PVAR pVar;
    BOOL bFreeVar = TRUE;
    
-   HB_SYMBOL_UNUSED( cValueType );
-
    if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 &&
        ( HB_COMP_PARAM->iVarScope == VS_LOCAL ||
          HB_COMP_PARAM->iVarScope == ( VS_PRIVATE | VS_PARAMETER ) ) )
@@ -461,22 +459,20 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, BYTE cValueType )
    pVar->szName = szVarName;
    pVar->szAlias = NULL;
    pVar->uiFlags = 0;
-   pVar->cType = cValueType;
+   pVar->cType = pVarType->cVarType;
    pVar->iUsed = VU_NOT_USED;
    pVar->pNext = NULL;
    pVar->iDeclLine = HB_COMP_PARAM->currLine;
 
-   if( toupper( cValueType ) == 'S' )
+   if( toupper( pVarType->cVarType ) == 'S' )
    {
-      /* printf( "\nVariable %s is of Class: %s\n", szVarName, HB_COMP_PARAM->szFromClass ); */
-      pVar->pClass = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
+      /* printf( "\nVariable %s is of Class: %s\n", szVarName, pVarType->szFromClass ); */
+      pVar->pClass = hb_compClassFind( HB_COMP_PARAM, pVarType->szFromClass );
       if( ! pVar->pClass )
       {
-         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, HB_COMP_PARAM->szFromClass, szVarName );
+         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, pVarType->szFromClass, szVarName );
          pVar->cType = 'O';
       }
-      /* Resetting */
-      HB_COMP_PARAM->szFromClass = NULL;
    }
 
    if( HB_COMP_PARAM->iVarScope & VS_PARAMETER )
@@ -1137,7 +1133,7 @@ PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, const char * szDeclaredName )
    return pDeclared;
 }
 
-void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, BYTE cValueType )
+void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarType )
 {
    /* Nothing to do since no warnings requested.*/
    if( HB_COMP_PARAM->iWarnings < 3 )
@@ -1167,20 +1163,17 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, BYTE cVa
             pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( PCOMCLASS ) );
          }
 
-         pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = cValueType;
+         pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = pVarType->cVarType;
 
-         if( toupper( cValueType ) == 'S' )
+         if( toupper( pVarType->cVarType ) == 'S' )
          {
-            pDeclared->pParamClasses[ pDeclared->iParamCount - 1 ] = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
-
-            /* Resetting */
-            HB_COMP_PARAM->szFromClass = NULL;
+            pDeclared->pParamClasses[ pDeclared->iParamCount - 1 ] = hb_compClassFind( HB_COMP_PARAM, pVarType->szFromClass );
          }
       }
    }
    else /* Declared Method Parameter */
    {
-      /* printf( "\nAdding parameter: %s Type: %c In Method: %s Class: %s FROM CLASS: %s\n", szVarName, cValueType, HB_COMP_PARAM->pLastMethod->szName, HB_COMP_PARAM->pLastClass->szName, HB_COMP_PARAM->szFromClass ); */
+      /* printf( "\nAdding parameter: %s Type: %c In Method: %s Class: %s FROM CLASS: %s\n", szVarName, pVarType->cVarType, HB_COMP_PARAM->pLastMethod->szName, HB_COMP_PARAM->pLastClass->szName, pVarType->szFromClass ); */
 
       HB_COMP_PARAM->pLastMethod->iParamCount++;
 
@@ -1195,16 +1188,13 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, BYTE cVa
          HB_COMP_PARAM->pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
       }
 
-      HB_COMP_PARAM->pLastMethod->cParamTypes[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ] = cValueType;
+      HB_COMP_PARAM->pLastMethod->cParamTypes[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ] = pVarType->cVarType;
 
-      if( toupper( cValueType ) == 'S' )
+      if( toupper( pVarType->cVarType ) == 'S' )
       {
-         HB_COMP_PARAM->pLastMethod->pParamClasses[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ] = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
+         HB_COMP_PARAM->pLastMethod->pParamClasses[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ] = hb_compClassFind( HB_COMP_PARAM, pVarType->szFromClass );
 
          /* printf( "\nParameter: %s FROM CLASS: %s\n", szVarName, HB_COMP_PARAM->pLastMethod->pParamClasses[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ]->szName ); */
-
-         /* Resetting */
-         HB_COMP_PARAM->szFromClass = NULL;
       }
    }
 }
@@ -3663,7 +3653,6 @@ static void hb_compInitVars( HB_COMP_DECL )
 
    HB_COMP_PARAM->iFunctionCnt     = 0;
    HB_COMP_PARAM->iErrorCount      = 0;
-   HB_COMP_PARAM->cVarType         = ' ';
    HB_COMP_PARAM->lastLinePos      = 0;
    HB_COMP_PARAM->iStaticCnt       = 0;
    HB_COMP_PARAM->iVarScope        = VS_LOCAL;
@@ -4302,4 +4291,31 @@ static int hb_compAutoOpen( HB_COMP_DECL, const char * szPrg, BOOL * pbSkipGen, 
    HB_COMP_PARAM->pFileName = pMainFileName;
 
    return HB_COMP_PARAM->fExit ? EXIT_FAILURE : iStatus;
+}
+
+
+PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char* szFromClass )
+{
+   PHB_VARTYPE   pVT = HB_COMP_PARAM->pVarType;
+   PHB_VARTYPE*  ppVT = &( HB_COMP_PARAM->pVarType ); 
+
+   while( pVT )
+   {
+      if( pVT->cVarType == cVarType && 
+          ( ( ! pVT->szFromClass && ! szFromClass ) ||
+            ( pVT->szFromClass && szFromClass && ! strcmp( pVT->szFromClass, szFromClass ) ) ) )
+         return pVT;
+
+      ppVT = &pVT->pNext;
+      pVT = pVT->pNext;
+   }
+
+   /* Add to the end of list. I hope it will help the most usual type (' ', NULL) 
+      to be in the begining of the list, and it will be found faster. [Mindaugas] */
+   pVT = ( PHB_VARTYPE ) hb_xgrab( sizeof( HB_VARTYPE ) );
+   pVT->pNext = NULL;
+   pVT->cVarType = cVarType;
+   pVT->szFromClass = szFromClass;
+   *ppVT = pVT;
+   return pVT;
 }

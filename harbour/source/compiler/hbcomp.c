@@ -272,6 +272,14 @@ void hb_comp_free( HB_COMP_PTR pComp )
       hb_xfree( pAutoOpen );
    }
 
+   while( pComp->pVarType )
+   {
+      PHB_VARTYPE pVarType = pComp->pVarType;
+
+      pComp->pVarType = pComp->pVarType->pNext;
+      hb_xfree( pVarType );
+   }
+
    if( pComp->pOutBuf )
       hb_xfree( pComp->pOutBuf );
 

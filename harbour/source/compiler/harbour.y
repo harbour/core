@@ -146,6 +146,7 @@ static void hb_compDebugStart( void ) { };
          HB_EXPR_PTR macro;
       } value;
    } asMessage;
+   PHB_VARTYPE asVarType;
 };
 
 %{
@@ -252,6 +253,7 @@ extern void yyerror( HB_COMP_DECL, const char * );     /* parsing error manageme
 %type <asExpr>  ForVar ForList ForExpr ForArgs
 %type <asCodeblock> CBSTART
 %type <asMessage> SendId
+%type <asVarType> AsType StrongType AsArrayType AsArray
 
 /*
    We cannot use destructors for expressions. The internal bison logic cannot
@@ -300,10 +302,10 @@ Line       : LINE NUM_LONG LITERAL Crlf
                     $5.dealloc = FALSE; }
            ;
 
-Function   : FunScope FUNCTION  IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf
-           | FunScope PROCEDURE IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Crlf
-           | FunScope FUNCTION  IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); HB_COMP_PARAM->iVarScope = VS_PARAMETER; } '(' Params ')' Crlf
-           | FunScope PROCEDURE IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); HB_COMP_PARAM->iVarScope = VS_PARAMETER;} '(' Params ')' Crlf
+Function   : FunScope FUNCTION  IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf
+           | FunScope PROCEDURE IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Crlf
+           | FunScope FUNCTION  IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); HB_COMP_PARAM->iVarScope = VS_PARAMETER; } '(' Params ')' Crlf
+           | FunScope PROCEDURE IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); HB_COMP_PARAM->iVarScope = VS_PARAMETER;} '(' Params ')' Crlf
            ;
 
 FunScope   :                  { $$ = HB_FS_PUBLIC; }
@@ -318,38 +320,38 @@ Params     : /*no parameters */ { $$ = 0; }
            | ParamList ',' EPSILON { HB_COMP_PARAM->functions.pLast->fVParams = TRUE; $$ = $1; }
            ;
 
-AsType     : /* not specified */           { HB_COMP_PARAM->cVarType = ' '; }
+AsType     : /* not specified */           { $$ = hb_compVarTypeNew( HB_COMP_PARAM, ' ', NULL ); }
            | StrongType
            ;
 
-AsArrayType: /* not specified */           { HB_COMP_PARAM->cVarType = ' '; }
+AsArrayType: /* not specified */           { $$ = hb_compVarTypeNew( HB_COMP_PARAM, ' ', NULL ); }
            | AsArray
            ;
 
-StrongType : AS_NUMERIC                    { HB_COMP_PARAM->cVarType = 'N'; }
-           | AS_CHARACTER                  { HB_COMP_PARAM->cVarType = 'C'; }
-           | AS_DATE                       { HB_COMP_PARAM->cVarType = 'D'; }
-           | AS_LOGICAL                    { HB_COMP_PARAM->cVarType = 'L'; }
-           | AS_BLOCK                      { HB_COMP_PARAM->cVarType = 'B'; }
-           | AS_OBJECT                     { HB_COMP_PARAM->cVarType = 'O'; }
-           | AS_CLASS IdentName            { HB_COMP_PARAM->cVarType = 'S'; HB_COMP_PARAM->szFromClass = $2; }
-           | AS_VARIANT                    { HB_COMP_PARAM->cVarType = ' '; }
+StrongType : AS_NUMERIC                    { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'N', NULL ); }
+           | AS_CHARACTER                  { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'C', NULL ); }
+           | AS_DATE                       { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'D', NULL ); }
+           | AS_LOGICAL                    { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'L', NULL ); }
+           | AS_BLOCK                      { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'B', NULL ); }
+           | AS_OBJECT                     { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'O', NULL ); }
+           | AS_CLASS IdentName            { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'S', $2 );   }
+           | AS_VARIANT                    { $$ = hb_compVarTypeNew( HB_COMP_PARAM, ' ', NULL ); }
            | AsArray
            ;
 
-AsArray    : AS_ARRAY                      { HB_COMP_PARAM->cVarType = 'A'; }
-           | AS_NUMERIC_ARRAY              { HB_COMP_PARAM->cVarType = 'n'; }
-           | AS_CHARACTER_ARRAY            { HB_COMP_PARAM->cVarType = 'c'; }
-           | AS_DATE_ARRAY                 { HB_COMP_PARAM->cVarType = 'd'; }
-           | AS_LOGICAL_ARRAY              { HB_COMP_PARAM->cVarType = 'l'; }
-           | AS_ARRAY_ARRAY                { HB_COMP_PARAM->cVarType = 'a'; }
-           | AS_BLOCK_ARRAY                { HB_COMP_PARAM->cVarType = 'b'; }
-           | AS_OBJECT_ARRAY               { HB_COMP_PARAM->cVarType = 'o'; }
-           | AS_CLASS_ARRAY IdentName      { HB_COMP_PARAM->cVarType = 's'; HB_COMP_PARAM->szFromClass = $2; }
+AsArray    : AS_ARRAY                      { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'A', NULL ); }
+           | AS_NUMERIC_ARRAY              { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'n', NULL ); }
+           | AS_CHARACTER_ARRAY            { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'c', NULL ); }
+           | AS_DATE_ARRAY                 { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'd', NULL ); }
+           | AS_LOGICAL_ARRAY              { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'l', NULL ); }
+           | AS_ARRAY_ARRAY                { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'a', NULL ); }
+           | AS_BLOCK_ARRAY                { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'b', NULL ); }
+           | AS_OBJECT_ARRAY               { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 'o', NULL ); }
+           | AS_CLASS_ARRAY IdentName      { $$ = hb_compVarTypeNew( HB_COMP_PARAM, 's', $2 );   }
            ;
 
-ParamList  : IdentName AsType                { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); $$ = 1; }
-           | ParamList ',' IdentName AsType  { hb_compVariableAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType ); $$++; }
+ParamList  : IdentName AsType                { hb_compVariableAdd( HB_COMP_PARAM, $1, $2 ); $$ = 1; }
+           | ParamList ',' IdentName AsType  { hb_compVariableAdd( HB_COMP_PARAM, $3, $4 ); $$++; }
            ;
 
 /* NOTE: This allows the use of Expression as a statement.
@@ -403,11 +405,9 @@ Statement  : ExecFlow CrlfStmnt
                         }
                         HB_COMP_PARAM->functions.pLast->bFlags |= FUN_WITH_RETURN | FUN_BREAK_CODE;
                      }
-           | RETURN  {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
+           | RETURN  {  hb_compLinePushIfInside( HB_COMP_PARAM ); }
              Expression Crlf
                      {
-                        HB_COMP_PARAM->cVarType = ' ';
-
                         if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                         {
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
@@ -428,13 +428,13 @@ Statement  : ExecFlow CrlfStmnt
            | PUBLIC  { hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PUBLIC; }
                      ExtVarList
                      {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPUBLIC" );
-                        HB_COMP_PARAM->cVarType = ' ';  HB_COMP_PARAM->iVarScope = VS_NONE;
+                        HB_COMP_PARAM->iVarScope = VS_NONE;
                         HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                      } Crlf
            | PRIVATE {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PRIVATE; }
                      ExtVarList
                      {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPRIVATE" );
-                        HB_COMP_PARAM->cVarType = ' '; HB_COMP_PARAM->iVarScope = VS_NONE;
+                        HB_COMP_PARAM->iVarScope = VS_NONE;
                         HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                      } Crlf
            | VarDefs
@@ -836,7 +836,7 @@ SimpleExpression :
            | CodeBlock
            | Logical
            | SelfValue
-           | SelfValue    {HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
+           | SelfValue    StrongType { $$ = $1; }
            | Array
            | ArrayAt
            | Hash
@@ -846,12 +846,12 @@ SimpleExpression :
            | MacroExpr
            | VariableAt
            | FunCall
-           | FunCall      {HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
+           | FunCall      StrongType { $$ = $1; }
            | IfInline
            | ObjectData
-           | ObjectData   {HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
+           | ObjectData   StrongType { $$ = $1; }
            | ObjectMethod
-           | ObjectMethod {HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
+           | ObjectMethod StrongType { $$ = $1; }
            | ExprAssign
            | ExprOperEq
            | ExprPostOp
@@ -865,8 +865,8 @@ SimpleExpression :
 Expression : SimpleExpression
            | Variable
            | PareExpList
-           | Variable         { HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
-           | PareExpList      { HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
+           | Variable     StrongType { $$ = $1; }
+           | PareExpList  StrongType { $$ = $1; }
            | FunRef
            ;
 
@@ -947,12 +947,12 @@ ExprAssign  : NumValue     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $
             | AliasExpr    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | MacroVar     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | MacroExpr    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | Variable     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' ';}
-            | VariableAt   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' ';}
+            | Variable     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | VariableAt   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | PareExpList  INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | IfInline     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | FunCall      INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | ObjectData   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' ';}
+            | ObjectData   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | ObjectMethod INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             ;
 
@@ -1035,8 +1035,8 @@ BlockVars  : /* empty list */          { $$ = NULL; }
            | BlockVarList ',' EPSILON  { $$ = $1;   $<asExpr>0->value.asCodeblock.flags |= HB_BLOCK_VPARAMS; }
            ;
 
-BlockVarList : IdentName AsType                    { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
-             | BlockVarList ',' IdentName AsType   { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
+BlockVarList : IdentName AsType                    { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, $2->cVarType, HB_COMP_PARAM ); }
+             | BlockVarList ',' IdentName AsType   { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, $4->cVarType, HB_COMP_PARAM ); }
              ;
 
 BlockExpList : Expression                    { $$ = hb_compExprAddCodeblockExpr( $<asExpr>-1, $1 ); }
@@ -1070,7 +1070,7 @@ CodeBlock   : BlockHead
                pVar = $1->value.asCodeblock.pLocals;
                while( pVar )
                {
-                  hb_compVariableAdd( HB_COMP_PARAM, pVar->szName, pVar->bType );
+                  hb_compVariableAdd( HB_COMP_PARAM, pVar->szName, hb_compVarTypeNew( HB_COMP_PARAM, pVar->bType, NULL ) );
                   pVar =pVar->pNext;
                }
             }
@@ -1108,11 +1108,11 @@ IfInlineAlias : IfInline ALIASOP
               ;
 
 VarDefs  : LOCAL { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_COMP_PARAM ); }
-           VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
+           VarList Crlf 
          | STATIC { HB_COMP_PARAM->iVarScope = VS_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
-           VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
+           VarList Crlf 
          | THREAD STATIC { HB_COMP_PARAM->iVarScope = VS_TH_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
-           VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
+           VarList Crlf 
          | PARAMETERS { if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
                         else
@@ -1150,7 +1150,7 @@ ExtVarDef  : VarDef
                }
            ;
 
-VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
+VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, $2 ); }
                {
                   if( HB_COMP_PARAM->iVarScope & VS_STATIC )
                   {
@@ -1168,12 +1168,10 @@ VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_P
                   }
                }
            | IdentName AsType { $<iNumber>$ = HB_COMP_PARAM->iVarScope;
-                                hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType );
+                                hb_compVariableAdd( HB_COMP_PARAM, $1, $2 );
                               }
-             INASSIGN {HB_COMP_PARAM->cVarType = ' ';} Expression
+             INASSIGN { ; } Expression
                {
-                  HB_COMP_PARAM->cVarType = ' ';
-
                   HB_COMP_PARAM->iVarScope = $<iNumber>3;
                   if( HB_COMP_PARAM->iVarScope & VS_STATIC )
                   {
@@ -1216,53 +1214,48 @@ FieldsDef  : FIELD { HB_COMP_PARAM->iVarScope = VS_FIELD; }
              FieldList InAlias Crlf
              {
                if( $4 ) hb_compFieldSetAlias( HB_COMP_PARAM, $4, $3 );
-               HB_COMP_PARAM->cVarType = ' ';
              }
            ;
 
-FieldList  : IdentName AsType                { $$=hb_compFieldsCount( HB_COMP_PARAM ); hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
-           | FieldList ',' IdentName AsType  { hb_compVariableAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType ); }
+FieldList  : IdentName AsType                { $$ = hb_compFieldsCount( HB_COMP_PARAM ); hb_compVariableAdd( HB_COMP_PARAM, $1, $2 ); }
+           | FieldList ',' IdentName AsType  { hb_compVariableAdd( HB_COMP_PARAM, $3, $4 ); }
            ;
 
 InAlias    : /* no alias */   { $$ = NULL; }
            | IN IdentName     { $$ = $2; }
            ;
 
-MemvarDef  : MEMVAR { HB_COMP_PARAM->iVarScope = VS_MEMVAR; } MemvarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
+MemvarDef  : MEMVAR { HB_COMP_PARAM->iVarScope = VS_MEMVAR; } MemvarList Crlf
            ;
 
-MemvarList : IdentName AsType                   { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
-           | MemvarList ',' IdentName AsType    { hb_compVariableAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType ); }
+MemvarList : IdentName AsType                   { hb_compVariableAdd( HB_COMP_PARAM, $1, $2 ); }
+           | MemvarList ',' IdentName AsType    { hb_compVariableAdd( HB_COMP_PARAM, $3, $4 ); }
            ;
 
 Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( HB_COMP_PARAM, $2 ); HB_COMP_PARAM->szDeclaredFun = $2; } DecList ')' AsType Crlf
              {
                if( HB_COMP_PARAM->pLastDeclared )
                {
-                 HB_COMP_PARAM->pLastDeclared->cType = HB_COMP_PARAM->cVarType;
+                 HB_COMP_PARAM->pLastDeclared->cType = $7->cVarType;
 
-                 if ( toupper( HB_COMP_PARAM->cVarType ) == 'S' )
+                 if ( toupper( $7->cVarType ) == 'S' )
                  {
-                   HB_COMP_PARAM->pLastDeclared->pClass = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
+                   HB_COMP_PARAM->pLastDeclared->pClass = hb_compClassFind( HB_COMP_PARAM, $7->szFromClass );
                    if( ! HB_COMP_PARAM->pLastDeclared->pClass )
                    {
-                     hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, HB_COMP_PARAM->szFromClass, HB_COMP_PARAM->pLastDeclared->szName );
-                     HB_COMP_PARAM->pLastDeclared->cType = ( isupper( ( UCHAR ) HB_COMP_PARAM->cVarType ) ? 'O' : 'o' );
+                     hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, $7->szFromClass, HB_COMP_PARAM->pLastDeclared->szName );
+                     HB_COMP_PARAM->pLastDeclared->cType = ( isupper( ( UCHAR ) $7->cVarType ) ? 'O' : 'o' );
                    }
-
-                   /* Resetting */
-                   HB_COMP_PARAM->szFromClass = NULL;
                  }
                }
                HB_COMP_PARAM->szDeclaredFun = NULL;
-               HB_COMP_PARAM->cVarType = ' ';
                HB_COMP_PARAM->iVarScope = VS_NONE;
              }
            | DECLARE IdentName { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2, NULL ); } ClassInfo Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
            | DECLARE_CLASS IdentName Crlf { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2, NULL ); HB_COMP_PARAM->iVarScope = VS_NONE; }
            | DECLARE_CLASS IdentName IdentName Crlf { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2, $3 ); HB_COMP_PARAM->iVarScope = VS_NONE; }
            | DECLARE_MEMBER DecMethod Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
-           | DECLARE_MEMBER '{' AsType { HB_COMP_PARAM->cDataListType = HB_COMP_PARAM->cVarType; } DecDataList '}' Crlf { HB_COMP_PARAM->cDataListType = 0; HB_COMP_PARAM->iVarScope = VS_NONE; }
+           | DECLARE_MEMBER '{' AsType { HB_COMP_PARAM->cDataListType = $3->cVarType; } DecDataList '}' Crlf { HB_COMP_PARAM->cDataListType = 0; HB_COMP_PARAM->iVarScope = VS_NONE; }
            ;
 
 DecDataList: DecData
@@ -1279,21 +1272,18 @@ DecMethod  : IdentName '(' { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_C
              {
                if( HB_COMP_PARAM->pLastMethod )
                {
-                 HB_COMP_PARAM->pLastMethod->cType = HB_COMP_PARAM->cVarType;
-                 if ( toupper( HB_COMP_PARAM->cVarType ) == 'S' )
+                 HB_COMP_PARAM->pLastMethod->cType = $6->cVarType;
+                 if ( toupper( $6->cVarType ) == 'S' )
                  {
-                   HB_COMP_PARAM->pLastMethod->pClass = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
+                   HB_COMP_PARAM->pLastMethod->pClass = hb_compClassFind( HB_COMP_PARAM, $6->szFromClass );
                    if( ! HB_COMP_PARAM->pLastMethod->pClass )
                    {
-                     hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, HB_COMP_PARAM->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
-                     HB_COMP_PARAM->pLastMethod->cType = ( isupper( ( UCHAR ) HB_COMP_PARAM->cVarType ) ? 'O' : 'o' );
+                     hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, $6->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
+                     HB_COMP_PARAM->pLastMethod->cType = ( isupper( ( UCHAR ) $6->cVarType ) ? 'O' : 'o' );
                    }
-
-                   HB_COMP_PARAM->szFromClass = NULL;
                  }
                }
                HB_COMP_PARAM->pLastMethod = NULL;
-               HB_COMP_PARAM->cVarType = ' ';
              }
            ;
 
@@ -1302,21 +1292,23 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                if( HB_COMP_PARAM->pLastMethod )
                {
                   PCOMCLASS pClass;
-                  char szSetData[ HB_SYMBOL_NAME_LEN + 1 ];
-                  int iLen;
+                  char      szSetData[ HB_SYMBOL_NAME_LEN + 1 ];
+                  int       iLen;
+                  char      cVarType = $3->cVarType;
 
                   /* List Type overrides if exists. */
-                  if( HB_COMP_PARAM->cDataListType ) HB_COMP_PARAM->cVarType = HB_COMP_PARAM->cDataListType;
+                  if( HB_COMP_PARAM->cDataListType ) 
+                     cVarType = HB_COMP_PARAM->cDataListType;
 
-                  HB_COMP_PARAM->pLastMethod->cType = HB_COMP_PARAM->cVarType;
-                  if ( toupper( HB_COMP_PARAM->cVarType ) == 'S' )
+                  HB_COMP_PARAM->pLastMethod->cType = cVarType;
+                  if ( toupper( cVarType ) == 'S' )
                   {
-                     pClass = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
+                     pClass = hb_compClassFind( HB_COMP_PARAM, $3->szFromClass );
                      HB_COMP_PARAM->pLastMethod->pClass = pClass;
                      if( ! HB_COMP_PARAM->pLastMethod->pClass )
                      {
-                        hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, HB_COMP_PARAM->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
-                        HB_COMP_PARAM->pLastMethod->cType = ( isupper( ( UCHAR ) HB_COMP_PARAM->cVarType ) ? 'O' :'o' );
+                        hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, $3->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
+                        HB_COMP_PARAM->pLastMethod->cType = ( isupper( ( UCHAR ) cVarType ) ? 'O' :'o' );
                      }
                   }
                   else
@@ -1331,24 +1323,22 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
 
                   HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_PARAM, HB_COMP_PARAM->pLastClass,
                      hb_compIdentifierNew( HB_COMP_PARAM, szSetData, HB_IDENT_COPY ) );
-                  HB_COMP_PARAM->pLastMethod->cType = HB_COMP_PARAM->cVarType;
+                  HB_COMP_PARAM->pLastMethod->cType = cVarType;
                   HB_COMP_PARAM->pLastMethod->iParamCount = 1;
 
                   HB_COMP_PARAM->pLastMethod->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
                   HB_COMP_PARAM->pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
 
-                  HB_COMP_PARAM->pLastMethod->cParamTypes[0] = HB_COMP_PARAM->cVarType;
+                  HB_COMP_PARAM->pLastMethod->cParamTypes[0] = cVarType;
                   HB_COMP_PARAM->pLastMethod->pParamClasses[0] = pClass;
 
-                  if ( toupper( HB_COMP_PARAM->cVarType ) == 'S' )
+                  if ( toupper( cVarType ) == 'S' )
                   {
                      HB_COMP_PARAM->pLastMethod->pClass = pClass;
-                     HB_COMP_PARAM->szFromClass = NULL;
                   }
                }
 
                HB_COMP_PARAM->pLastMethod = NULL;
-               HB_COMP_PARAM->cVarType = ' ';
              }
            ;
 
@@ -1365,20 +1355,20 @@ DummyArgList : DummyArgument
 DummyArgument : EmptyExpression     { HB_COMP_EXPR_DELETE( $1 ); }
               ;
 
-FormalList : IdentName AsType                                  { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $1, ( BYTE ) ( HB_COMP_PARAM->cVarType ) ); }
-           | '@' IdentName AsType                              { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ) ); }
-           | '@' IdentName '(' DummyArgList ')'                { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, ( BYTE ) 'F' ); }
-           | FormalList ',' IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, ( BYTE ) ( HB_COMP_PARAM->cVarType ) ); }
-           | FormalList ',' '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ) ); }
-           | FormalList ',' '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, ( BYTE ) 'F' ); }
+FormalList : IdentName AsType                                  { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $1, $2 ); }
+           | '@' IdentName AsType                              { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, hb_compVarTypeNew( HB_COMP_PARAM, $3->cVarType + VT_OFFSET_BYREF, NULL ) ); }
+           | '@' IdentName '(' DummyArgList ')'                { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, hb_compVarTypeNew( HB_COMP_PARAM, 'F', NULL ) ); }
+           | FormalList ',' IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, $4 ); }
+           | FormalList ',' '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, hb_compVarTypeNew( HB_COMP_PARAM, $5->cVarType + VT_OFFSET_BYREF, NULL ) ); }
+           | FormalList ',' '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, hb_compVarTypeNew( HB_COMP_PARAM, 'F', NULL ) ); }
            ;
 
-OptList    : OPTIONAL IdentName AsType                               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ) ); }
-           | OPTIONAL '@' IdentName AsType                           { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ) ); }
-           | OPTIONAL '@' IdentName '(' DummyArgList ')'             { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ) ); }
-           | OptList ',' OPTIONAL IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ) ); }
-           | OptList ',' OPTIONAL '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ) ); }
-           | OptList ',' OPTIONAL '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ) ); }
+OptList    : OPTIONAL IdentName AsType                               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, hb_compVarTypeNew( HB_COMP_PARAM, $3->cVarType + VT_OFFSET_OPTIONAL, NULL ) ); }
+           | OPTIONAL '@' IdentName AsType                           { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, hb_compVarTypeNew( HB_COMP_PARAM, $4->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF, NULL ) ); }
+           | OPTIONAL '@' IdentName '(' DummyArgList ')'             { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, hb_compVarTypeNew( HB_COMP_PARAM, 'F' + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF, NULL ) ); }
+           | OptList ',' OPTIONAL IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, hb_compVarTypeNew( HB_COMP_PARAM, $5->cVarType + VT_OFFSET_OPTIONAL, NULL ) ); }
+           | OptList ',' OPTIONAL '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, hb_compVarTypeNew( HB_COMP_PARAM, $6->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF, NULL ) ); }
+           | OptList ',' OPTIONAL '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, hb_compVarTypeNew( HB_COMP_PARAM, 'F' + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF, NULL ) ); }
            ;
 
 ExecFlow   : IfEndif
@@ -2401,7 +2391,7 @@ static void hb_compVariableDim( const char * szName, HB_EXPR_PTR pInitValue, HB_
 {
    if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
    {
-      hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
+      hb_compVariableAdd( HB_COMP_PARAM, szName, hb_compVarTypeNew( HB_COMP_PARAM, 'A', NULL ) );
       HB_COMP_EXPR_DELETE( hb_compArrayDimPush( pInitValue, HB_COMP_PARAM ) );
       hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( szName, NULL, HB_COMP_PARAM ), TRUE );
    }
@@ -2411,7 +2401,7 @@ static void hb_compVariableDim( const char * szName, HB_EXPR_PTR pInitValue, HB_
       HB_EXPR_PTR pAssign;
 
       /* create a static variable */
-      hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
+      hb_compVariableAdd( HB_COMP_PARAM, szName, hb_compVarTypeNew( HB_COMP_PARAM, 'A', NULL ) );
 
       hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
       /* create an array */
@@ -2426,7 +2416,7 @@ static void hb_compVariableDim( const char * szName, HB_EXPR_PTR pInitValue, HB_
    }
    else
    {
-      hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
+      hb_compVariableAdd( HB_COMP_PARAM, szName, hb_compVarTypeNew( HB_COMP_PARAM, 'A', NULL ) );
       HB_COMP_EXPR_DELETE( hb_compArrayDimPush( pInitValue, HB_COMP_PARAM ) );
       if( HB_COMP_PARAM->iVarScope != VS_LOCAL ||
           !( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )

@@ -4201,7 +4201,7 @@ static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, BOOL bLateEval, HB_COMP
       pVar = pSelf->value.asCodeblock.pLocals;
       while( pVar )
       {
-         hb_compVariableAdd( HB_COMP_PARAM, pVar->szName, pVar->bType );
+         hb_compVariableAdd( HB_COMP_PARAM, pVar->szName, hb_compVarTypeNew( HB_COMP_PARAM, pVar->bType, NULL ) );
          pVar =pVar->pNext;
       }
    }

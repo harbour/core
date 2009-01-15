@@ -117,6 +117,13 @@ typedef struct HB_CBVAR_
    struct HB_CBVAR_ * pNext;
 } HB_CBVAR, * HB_CBVAR_PTR;
 
+typedef struct _HB_VARTYPE
+{
+   struct _HB_VARTYPE *   pNext;
+   char                   cVarType;            
+   const char *           szFromClass;
+} HB_VARTYPE, * PHB_VARTYPE;
+
 /* value types seen at language level
  */
 #define  HB_EV_UNKNOWN     0x0000
@@ -627,6 +634,7 @@ typedef struct _HB_COMP
    INLINES           inlines;
    PEXTERN           externs;
    PAUTOOPEN         autoopen;
+   PHB_VARTYPE       pVarType;
 
    PCOMDECLARED      pFirstDeclared;
    PCOMDECLARED      pLastDeclared;
@@ -659,12 +667,10 @@ typedef struct _HB_COMP
 
    const char *      szAnnounce;
    char *            szStdCh;             /* standard definitions file name (-u) */
-   const char *      szFromClass;
    const char *      szDeclaredFun;
    const char *      szFile;              /* Source file name of compiled module */
    char              szPrefix[ 20 ];      /* holds the prefix added to the generated symbol init function name (in C output currently) */
 
-   char              cVarType;            /* current declared variable type */
    char              cDataListType;       /* current declared variable list type */
    char              cCastType;           /* current casting type */
 
