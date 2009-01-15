@@ -74,7 +74,7 @@ ANNOUNCE HSCDX
  * always done by low level USRRDD code
  */
 STATIC FUNCTION _HSX_NEW( pWA )
-   LOCAL aWData := { .F., {}, {} } 
+   LOCAL aWData := { .F., {}, {} }
 
    /*
     * Set in our private AREA item the array where we will kepp HSX indexes
@@ -171,7 +171,7 @@ FUNCTION HSX_CREATE( cFile, cExpr, nKeySize, nBufSize, lCase, nFiltSet )
    RETURN nHsx
 
 FUNCTION HSX_OPEN( cFile, nBufSize )
-   LOCAL aWData, nHsx := -1, nOpenMode
+   LOCAL aWData, nHsx, nOpenMode
 
    IF !USED()
    ELSEIF !RDDNAME() == "HSCDX"

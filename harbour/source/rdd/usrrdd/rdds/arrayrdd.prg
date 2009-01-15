@@ -168,7 +168,7 @@ STATIC FUNCTION AR_NEW( pWA )
 STATIC FUNCTION AR_CREATEFIELDS( nWA, aStruct )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
    LOCAL nResult   := SUCCESS
-   LOCAL oError, aFieldStruct, aField
+   LOCAL aFieldStruct, aField
 
    // Setting WA number to current WorkArea
    aWAData[ WADATA_WORKAREA ] := nWA
@@ -200,7 +200,7 @@ STATIC FUNCTION AR_CREATEFIELDS( nWA, aStruct )
 STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
    LOCAL hRDDData  := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
-   LOCAL aField, oError, cName
+   LOCAL cName
    LOCAL cFullName, aDBFData
 
    /* getting database infos from current workarea */
@@ -236,7 +236,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    /* TODO: to clean this part
    ELSE
 
-      /* ERROR: database already exists */
+      // ERROR: database already exists
 
       oError := ErrorNew()
 
@@ -264,7 +264,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
 
 STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
    LOCAL cFullName, cName, hRDDData, aWAData, aDBFData
-   LOCAL aStruct, oError, aFieldStruct, aField, nResult, aRecInfo
+   LOCAL aStruct, oError, aFieldStruct, aField, nResult
 
    cFullName := Upper( aOpenInfo[ UR_OI_NAME ] )
 
@@ -508,7 +508,6 @@ STATIC FUNCTION AR_GOBOTTOM( nWA )
    LOCAL aDBFData  := aWAData[ WADATA_DATABASE ]
    LOCAL aRecords  := aDBFData[ DATABASE_RECORDS ]
    LOCAL aRecInfo  := aDBFData[ DATABASE_RECINFO ]
-   LOCAL nRecCount := Len( aRecords )
 
    IF Len( aRecords ) == 0
 
@@ -532,10 +531,8 @@ STATIC FUNCTION AR_GOBOTTOM( nWA )
 STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
    LOCAL aDBFData  := aWAData[ WADATA_DATABASE ]
-   LOCAL aRecords  := aDBFData[ DATABASE_RECORDS ]
    LOCAL aRecInfo  := aDBFData[ DATABASE_RECINFO ]
-   LOCAL lBof, lEof, nToSkip
-   LOCAL nResult   := SUCCESS
+   LOCAL lBof, nToSkip
 
    nToSkip := IIF( nRecords > 0, 1, IIF( nRecords < 0, -1, 0 ) )
 
@@ -683,6 +680,8 @@ STATIC FUNCTION AR_APPEND( nWA, nRecords )
    LOCAL aOpenInfo := aWAData[ WADATA_OPENINFO ]
    LOCAL oError, aRecord
 
+   HB_SYMBOL_UNUSED( nRecords )
+
    IF aOpenInfo[ UR_OI_READONLY ]
 
       oError := ErrorNew()
@@ -770,6 +769,10 @@ STATIC FUNCTION AR_ZAP( nWA )
    RETURN SUCCESS
 
 STATIC FUNCTION AR_ORDINFO( nWA, xMsg, xValue )
+   HB_SYMBOL_UNUSED( nWA )
+   HB_SYMBOL_UNUSED( xMsg )
+   HB_SYMBOL_UNUSED( xValue )
+
    /*
    LOCAL hRDDData  := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    LOCAL aOpenInfo := hRDDData[ nWA ]:OPENINFO
@@ -950,7 +953,7 @@ FUNCTION hb_EraseArrayRdd( cFullName )
 
 FUNCTION hb_FileArrayRdd( cFullName )
    LOCAL nReturn := FAILURE
-   LOCAL aDBFData, oError
+   LOCAL oError
    LOCAL nRDD, aRDDList
    LOCAL hRDDData
 
@@ -968,7 +971,7 @@ FUNCTION hb_FileArrayRdd( cFullName )
          IF ISCHARACTER( cFullName )
             cFullName := Upper( cFullName )
             // First search if memory dbf exists
-            IF cFullName IN hRDDData:Keys
+            IF cFullName $ hRDDData:Keys
 
                nReturn := SUCCESS
 
@@ -1114,7 +1117,7 @@ STATIC FUNCTION HB_Decode(...)
 
                  // Check if array has a default value, this will be last value and has a value
                  // different from an array
-                 IF ! ISARRAY( ValType( xDefault[ nLen ] )
+                 IF ! ISARRAY( ValType( xDefault[ nLen ] ) )
 
                     aParams := Array( ( nLen - 1 ) * 2 )
 

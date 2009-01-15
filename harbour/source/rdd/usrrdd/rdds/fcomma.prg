@@ -65,6 +65,7 @@
 #include "hbusrrdd.ch"
 #include "fileio.ch"
 #include "error.ch"
+#include "common.ch"
 
 ANNOUNCE FCOMMA
 
@@ -90,7 +91,7 @@ STATIC FUNCTION FCM_INIT( nRDD )
  * always done by low level USRRDD code
  */
 STATIC FUNCTION FCM_NEW( pWA )
-   LOCAL aWData := { -1, .F., .F. } 
+   LOCAL aWData := { -1, .F., .F. }
 
    /*
     * Set in our private AREA item the array with slot number and
@@ -280,6 +281,7 @@ STATIC FUNCTION FCM_EOF( nWA, lEof )
    RETURN SUCCESS
 
 STATIC FUNCTION FCM_DELETED( nWA, lDeleted )
+   HB_SYMBOL_UNUSED( nWA )
    lDeleted := .F.
    RETURN SUCCESS
 

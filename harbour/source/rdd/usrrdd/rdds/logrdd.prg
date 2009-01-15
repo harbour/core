@@ -179,7 +179,7 @@ STATIC FUNCTION LOGRDD_ZAP( nWA )
    LOCAL cAlias := Alias()
    LOCAL nResult := UR_SUPER_ZAP( nWA )
    IF nResult == SUCCESS
-      ToLog( "ZAP", nWA, 'Alias : "' + Alias() + ' Table : "' + cDbf + '"'  )
+      ToLog( "ZAP", nWA, 'Alias : "' + cAlias + ' Table : "' + cDbf + '"'  )
    ENDIF
    RETURN nResult
 

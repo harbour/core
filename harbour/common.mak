@@ -149,6 +149,7 @@ DBFFPT_DIR   = source\rdd\dbffpt
 HBSIX_DIR    = source\rdd\hbsix
 HSX_DIR      = source\rdd\hsx
 USRRDD_DIR   = source\rdd\usrrdd
+HBUDDALL_DIR = source\rdd\usrrdd\rdds
 
 GTCGI_DIR    = source\rtl\gtcgi
 GTSTD_DIR    = source\rtl\gtstd
@@ -195,6 +196,7 @@ $(DBFFPT_DIR);\
 $(HBSIX_DIR);\
 $(HSX_DIR);\
 $(USRRDD_DIR);\
+$(HBUDDALL_DIR);\
 $(GTCGI_DIR);\
 $(GTSTD_DIR);\
 $(GTPCA_DIR);\
@@ -250,6 +252,7 @@ HBSIX_LIB    = $(LIB_DIR)\$(LIBPREF)hbsix$(LIBEXT)
 HSX_LIB      = $(LIB_DIR)\$(LIBPREF)hbhsx$(LIBEXT)
 NULSYS_LIB   = $(LIB_DIR)\$(LIBPREF)hbnulrdd$(LIBEXT)
 USRRDD_LIB   = $(LIB_DIR)\$(LIBPREF)hbusrrdd$(LIBEXT)
+HBUDDALL_LIB = $(LIB_DIR)\$(LIBPREF)hbuddall$(LIBEXT)
 
 DBFNTX_LIB   = $(LIB_DIR)\$(LIBPREF)rddntx$(LIBEXT)
 DBFNSX_LIB   = $(LIB_DIR)\$(LIBPREF)rddnsx$(LIBEXT)
@@ -346,6 +349,7 @@ STANDARD_STATIC_HBLIBS = \
     $(HBSIX_LIB)         \
     $(HSX_LIB)           \
     $(USRRDD_LIB)        \
+    $(HBUDDALL_LIB)      \
 
 #**********************************************************
 #**********************************************************
@@ -1060,6 +1064,19 @@ USRRDD_LIB_OBJS = \
 
 #**********************************************************
 
+HBUDDALL_LIB_OBJS = \
+    $(OBJ_DIR)\arrayrdd$(OBJEXT) \
+    $(OBJ_DIR)\dbtcdx$(OBJEXT)   \
+    $(OBJ_DIR)\fcomma$(OBJEXT)   \
+    $(OBJ_DIR)\fptcdx$(OBJEXT)   \
+    $(OBJ_DIR)\hscdx$(OBJEXT)    \
+    $(OBJ_DIR)\logrdd$(OBJEXT)   \
+    $(OBJ_DIR)\rlcdx$(OBJEXT)    \
+    $(OBJ_DIR)\smtcdx$(OBJEXT)   \
+    $(OBJ_DIR)\vfpcdx$(OBJEXT)   \
+
+#**********************************************************
+
 GTCGI_LIB_OBJS = \
     $(OBJ_DIR)\gtcgi$(OBJEXT)    \
 
@@ -1272,6 +1289,7 @@ HB_BUILD_TARGETS_MAIN = \
     $(HBSIX_LIB)            \
     $(HSX_LIB)              \
     $(USRRDD_LIB)           \
+    $(HBUDDALL_LIB)         \
     $(HB_GT_LIBS)           \
     \
     $(HBRUN_EXE)            \

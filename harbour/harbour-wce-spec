@@ -327,6 +327,7 @@ rm -fR $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbmainstd.a
 %{_libdir}/%{name}/libhbmainwin.a
 %{_libdir}/%{name}/libhbusrrdd.a
+%{_libdir}/%{name}/libhbuddall.a
 
 %{!?_without_nf: %{_libdir}/%{name}/libhbnf.a}
 %{?_with_ads: %{_libdir}/%{name}/librddads.a}

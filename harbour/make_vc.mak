@@ -278,6 +278,9 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
 {$(USRRDD_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
+{$(HBUDDALL_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+#*******************************************************
 {$(GTCGI_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
@@ -396,6 +399,10 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(USRRDD_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSLIB) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+#*******************************************************
+{$(HBUDDALL_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGSLIB) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
@@ -546,6 +553,9 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
 {$(USRRDD_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
+{$(HBUDDALL_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+#*******************************************************
 {$(GTCGI_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
@@ -669,6 +679,10 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(USRRDD_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSLIB) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+#*******************************************************
+{$(HBUDDALL_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGSLIB) -o$(DLL_OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
@@ -814,6 +828,9 @@ $(HSX_LIB)      : $(HSX_LIB_OBJS)
     $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(USRRDD_LIB)   : $(USRRDD_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) /out:$@ $**
+#**********************************************************
+$(HBUDDALL_LIB) : $(HBUDDALL_LIB_OBJS)
     $(MKLIB) $(ARFLAGS) /out:$@ $**
 #**********************************************************
 $(GTCGI_LIB)    : $(GTCGI_LIB_OBJS)

@@ -374,6 +374,9 @@ $(HSX_LIB)      : $(HSX_LIB_OBJS)
 $(USRRDD_LIB)   : $(USRRDD_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
+$(HBUDDALL_LIB) : $(HBUDDALL_LIB_OBJS)
+	$(MKLIB) $(ARFLAGS) $@ $^
+#**********************************************************
 $(GTCGI_LIB)    : $(GTCGI_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************

@@ -406,6 +406,13 @@ $(USRRDD_LIB)   : $(USRRDD_LIB_OBJS)
 +)
 !
 #**********************************************************
+$(HBUDDALL_LIB) : $(HBUDDALL_LIB_OBJS)
+    @if exist "$(HBUDDALL_LIB)" $(DEL) "$(HBUDDALL_LIB)" > NUL
+    $(MKLIB) "$(HBUDDALL_LIB)" $(ARFLAGS) @&&!
++$(**: = &^
++)
+!
+#**********************************************************
 $(GTCGI_LIB)    : $(GTCGI_LIB_OBJS)
     @if exist "$(GTCGI_LIB)" $(DEL) "$(GTCGI_LIB)" > NUL
     $(MKLIB) "$(GTCGI_LIB)" $(ARFLAGS) @&&!

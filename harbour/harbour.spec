@@ -647,6 +647,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbvm.a
 %{_libdir}/%{name}/libhbvmmt.a
 %{_libdir}/%{name}/libhbusrrdd.a
+%{_libdir}/%{name}/libhbuddall.a
 
 %files contrib
 %defattr(644,root,root,755)
