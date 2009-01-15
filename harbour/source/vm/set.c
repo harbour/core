@@ -2597,7 +2597,9 @@ BYTE * hb_osEncode( BYTE * szFileName, BOOL * pfFree )
 {
    *pfFree = FALSE;
 
+#if defined( HB_MT_VM )
    if( hb_stackId() )
+#endif
    {
       BOOL bCPConv = hb_setGetOSCODEPAGE() && hb_setGetOSCODEPAGE()[ 0 ];
 
@@ -2621,7 +2623,9 @@ BYTE * hb_osDecode( BYTE * szFileName, BOOL * pfFree )
 {
    *pfFree = FALSE;
 
+#if defined( HB_MT_VM )
    if( hb_stackId() )
+#endif
    {
       BOOL bCPConv = hb_setGetOSCODEPAGE() && hb_setGetOSCODEPAGE()[ 0 ];
 

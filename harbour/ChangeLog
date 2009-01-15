@@ -8,6 +8,32 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-15 13:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/set.c
+    * do not check for HVM stack existence in ST HVM to avoid compiler
+      warning
+
+  * harbour/contrib/hbct/ctextern.ch
+    ! removed HB_GT_CTW and HB_GT_CTW_DEFAULT added by mistake
+      It caused GPF at HVM startup because CTW was register as
+      default GT driver 
+
+  * harbour/contrib/hbbmcdx/bmdbfcdx.c
+    ! added missing hbstack.h
+    ! fixed accessing RDD node structure
+
+  * harbour/contrib/hbct/ctwin.h
+  * harbour/contrib/hbct/ctwin.c
+  * harbour/contrib/hbct/ctwfunc.c
+    + extended internal CTW API functions to hide/show window, create
+      new window without displaying it, selecting window without moving
+      it to top level, changing existing window shadow attribute.
+    + added support user window levels controlled by user
+      (BOTTOM, DEFAULT, TOP)
+    + added support for selecting client area (possible to update square)
+      in each CT Window
+    It's a work in progress and the above modifications will be updated yet.
+
 2009-01-15 04:40 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/compiler/harbour.yyc
   * harbour/source/compiler/harbour.yyh

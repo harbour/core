@@ -53,6 +53,14 @@
 #ifndef HB_CTWIN_H_
 #define HB_CTWIN_H_
 
+#define HB_CTW_UNDEF   -1
+#define HB_CTW_HIDDEN   0
+#define HB_CTW_VISIBLE  1
+
+#define HB_CTW_BOTTOM   0
+#define HB_CTW_DEFAULT  1
+#define HB_CTW_TOP      2
+
 HB_EXTERN_BEGIN
 
 extern BOOL hb_ctwInit( void );
@@ -61,18 +69,23 @@ extern int  hb_ctwSetMoveMode( int iMode );
 extern int  hb_ctwSetMoveStep( int iVertical, int iHorizontal );
 extern int  hb_ctwSetWindowBoard( int iTop, int iLeft, int iBottom, int iRight );
 extern int  hb_ctwSetBorderMode( int iTop, int iLeft, int iBottom, int iRight );
-extern int  hb_ctwCreateWindow( int iTop, int iLeft, int iBottom, int iRight, BOOL fClear, int iColor );
+extern int  hb_ctwCreateWindow( int iTop, int iLeft, int iBottom, int iRight, BOOL fClear, int iColor, BOOL fVisible );
 extern int  hb_ctwCloseAllWindows( void );
 extern int  hb_ctwCloseWindow( int iWindow );
 extern int  hb_ctwCurrentWindow( void );
-extern int  hb_ctwSelectWindow( int iWindow );
+extern int  hb_ctwSelectWindow( int iWindow, BOOL fToTop );
+extern int  hb_ctwVisible( int iWindow, int iVisible );
+extern int  hb_ctwSetWindowShadow( int iWindow, int iAttr );
+extern int  hb_ctwSetWindowLevel( int iWindow, int iLevel );
 extern int  hb_ctwMaxWindow( void );
 extern int  hb_ctwChangeMargins( int iWindow, int iTop, int iLeft, int iBottom, int iRight );
+extern int  hb_ctwSetWindowClip( int iWindow, int iTop, int iLeft, int iBottom, int iRight );
 extern int  hb_ctwGetWindowCords( int iWindow, BOOL fCenter, int * piTop, int * piLeft, int * piBottom, int * piRight );
 extern int  hb_ctwGetFormatCords( int iWindow, BOOL fRelative, int * piTop, int * piLeft, int * piBottom, int * piRight );
 extern int  hb_ctwMoveWindow( int iWindow, int iRow, int iCol );
 extern int  hb_ctwCenterWindow( int iWindow, BOOL fCenter );
 extern int  hb_ctwAddWindowBox( int iWindow, BYTE * szBox, int iColor );
+extern int  hb_ctwSwapWindows( int iWindow1, int iWindow2 );
 extern int  hb_ctwLastKey( void );
 
 HB_EXTERN_END
