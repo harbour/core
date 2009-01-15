@@ -13,6 +13,14 @@ PRG_HEADERS = \
     ctextern.ch \
     ctvideo.ch \
 
+C_HEADERS = \
+    ct.h \
+    ctmath.h \
+    ctset.h \
+    ctstr.h \
+    ctstrfil.h \
+    ctwin.h \
+
 LIB_OBJS = \
     $(OBJ_DIR)addascii$(OBJEXT) \
     $(OBJ_DIR)asciisum$(OBJEXT) \

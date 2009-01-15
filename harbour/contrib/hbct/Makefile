@@ -83,6 +83,14 @@ C_SOURCES =\
 	wordrepl.c \
 	wordtoch.c \
 
+C_HEADERS = \
+	ct.h \
+	ctmath.h \
+	ctset.h \
+	ctstr.h \
+	ctstrfil.h \
+	ctwin.h \
+
 PRG_SOURCES=\
 	blank.prg \
 	ct.prg \
