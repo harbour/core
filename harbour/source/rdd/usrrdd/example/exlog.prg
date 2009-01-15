@@ -26,6 +26,11 @@ PROCEDURE Main()
    // Activate Logging, it can be stopped/started at any moment
    hb_LogRddActive( .T. )
 
+   // Uncomment next command to change logged string to standard LOGRDD file
+   // hb_LogRddMsgLogBlock( {|cTag, cRDDName, cCmd, nWA, cMsg| DToS( Date() ) + " / " + Time() + " " + cTag + ": " + PadR( cRDDName + "_" + cCmd, 20 ) + " - " + cMsg } )
+   // Uncomment next command to change standard destination logged string
+   // hb_LogRddUserLogBlock( {|cTag, cRDDName, cCmd, nWA, cMsg| hb_toOutDebug( DToS( Date() ) + " : " + Time() + " " + cTag + ": " + PadR( cRDDName + "_" + cCmd, 20 ) + " - " + cMsg + "\n\r" ) } )
+
    // Start program logic
 
    // Open a table with logging (default RDD is LOGRDD)

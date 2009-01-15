@@ -68,11 +68,13 @@
 #include "fileio.ch"
 #include "dbinfo.ch"
 
-#define ARRAY_FILENAME    1
-#define ARRAY_FHANDLE     2
-#define ARRAY_TAG         3
-#define ARRAY_ACTIVE      4
-#define ARRAY_RDDNAME     5
+#define ARRAY_FILENAME     1
+#define ARRAY_FHANDLE      2
+#define ARRAY_TAG          3
+#define ARRAY_ACTIVE       4
+#define ARRAY_RDDNAME      5
+#define ARRAY_MSGLOGBLOCK  6
+#define ARRAY_USERLOGBLOCK 7
 
 ANNOUNCE LOGRDD
 REQUEST  HB_LOGRDDINHERIT  /* To be defined at user level */
@@ -93,8 +95,8 @@ STATIC FUNCTION LOGRDD_INIT( nRDD )
    /* Log File will be open later so user can change parameters */
 
    /* Store data in RDD cargo */
-                        /* cFileName, nHandle, cTag, lActive, cRDDName */
-   USRRDD_RDDDATA( nRDD, { cFileName, NIL, cTag, lActive, cRDDName } )
+                        /* cFileName, nHandle, cTag, lActive, cRDDName, bMsgLogBlock, bUserLogBlock */
+   USRRDD_RDDDATA( nRDD, { cFileName, NIL, cTag, lActive, cRDDName, NIL, NIL } )
 
 RETURN SUCCESS
 
@@ -286,6 +288,52 @@ FUNCTION hb_LogRddActive( lActive )
    ENDIF
    RETURN lOldActive
 
+FUNCTION hb_LogRddMsgLogBlock( bMsgLogBlock )
+   LOCAL nRDD, aRDDList
+   LOCAL aRDDData
+   LOCAL bOldMsgLogBlock
+
+   aRDDList := RDDLIST( RDT_FULL )
+   nRDD     := AScan( aRDDList, "LOGRDD" )
+
+   IF nRDD > 0
+
+      nRDD -- // HACK: Possibly an error of nRDD value in UR_INIT() ? - TODO
+
+      aRDDData := USRRDD_RDDDATA( nRDD )
+
+      bOldMsgLogBlock := aRDDData[ ARRAY_MSGLOGBLOCK ]
+
+      IF HB_ISBLOCK( bMsgLogBlock )
+         aRDDData[ ARRAY_MSGLOGBLOCK ] := bMsgLogBlock
+      ENDIF
+
+   ENDIF
+   RETURN bOldMsgLogBlock
+
+FUNCTION hb_LogRddUserLogBlock( bUserLogBlock )
+   LOCAL nRDD, aRDDList
+   LOCAL aRDDData
+   LOCAL bOldUserLogBlock
+
+   aRDDList := RDDLIST( RDT_FULL )
+   nRDD     := AScan( aRDDList, "LOGRDD" )
+
+   IF nRDD > 0
+
+      nRDD -- // HACK: Possibly an error of nRDD value in UR_INIT() ? - TODO
+
+      aRDDData := USRRDD_RDDDATA( nRDD )
+
+      bOldUserLogBlock := aRDDData[ ARRAY_MSGLOGBLOCK ]
+
+      IF HB_ISBLOCK( bUserLogBlock )
+         aRDDData[ ARRAY_USERLOGBLOCK ] := bUserLogBlock
+      ENDIF
+
+   ENDIF
+   RETURN bOldUserLogBlock
+
 STATIC PROCEDURE OpenLogFile( nWA )
    LOCAL aRDDData  := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    LOCAL cFileName := aRDDData[ ARRAY_FILENAME ]
@@ -321,20 +369,44 @@ STATIC PROCEDURE OpenLogFile( nWA )
 
 STATIC PROCEDURE ToLog( cCmd, nWA, cMsg )
    LOCAL aRDDData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
-   LOCAL nHandle  := aRDDData[ ARRAY_FHANDLE ]
-   LOCAL cTag     := aRDDData[ ARRAY_TAG     ]
-   LOCAL lActive  := aRDDData[ ARRAY_ACTIVE  ]
-   LOCAL cRDDName := aRDDData[ ARRAY_RDDNAME  ]
+   LOCAL lActive  := aRDDData[ ARRAY_ACTIVE ]
+   LOCAL nHandle, cTag, cRDDName, bMsgLogBlock, bUserLogBlock, cLog
 
-   //TraceLog( "nHandle " + cStr( nHandle ) + " cUser " + cUser )
+   // Check if logging system is active
    IF lActive
 
-      IF nHandle == NIL
-         OpenLogFile( nWA )
-      ENDIF
+      cTag          := aRDDData[ ARRAY_TAG ]
+      cRDDName      := aRDDData[ ARRAY_RDDNAME ]
+      bUserLogBlock := aRDDData[ ARRAY_USERLOGBLOCK ]
 
-      IF nHandle != NIL
-         FWrite( nHandle, DToS( Date() ) + " " + Time() + " " + cTag + ": " + PadR( cRDDName + "_" + cCmd, 20 ) + " - " + cMsg + hb_OSNewLine() )
+      // If not defined a User codeblock
+      IF !HB_ISBLOCK( bUserLogBlock )
+
+         nHandle      := aRDDData[ ARRAY_FHANDLE ]
+
+         // If log file is not already open I open now
+         IF nHandle == NIL
+            OpenLogFile( nWA )
+         ENDIF
+
+         IF nHandle != NIL
+
+            bMsgLogBlock := aRDDData[ ARRAY_MSGLOGBLOCK ]
+
+            // If defined a codeblock I send to user infos and he have to return a formatted string
+            IF HB_ISBLOCK( bMsgLogBlock )
+               cLog := Eval( bMsgLogBlock, cTag, cRDDName, cCmd, nWA, cMsg )
+            ELSE
+               cLog := DToS( Date() ) + " " + Time() + " " + cTag + ": " + PadR( cRDDName + "_" + cCmd, 20 ) + " - " + cMsg
+            ENDIF
+            FWrite( nHandle, cLog + hb_OSNewLine() )
+         ENDIF
+
+      ELSE
+
+         // Otherwise I send all to user that is responsible to log
+         Eval( bUserLogBlock, cTag, cRDDName, cCmd, nWA, cMsg )
+
       ENDIF
 
    ENDIF
@@ -397,6 +469,11 @@ PROCEDURE Main()
    hb_LogRddTag( NETNAME() + "\" + hb_USERNAME() )
    // Activate Logging, it can be stopped/started at any moment
    hb_LogRddActive( .T. )
+
+   // Uncomment next command to change logged string to standard LOGRDD file
+   // hb_LogRddMsgLogBlock( {|cTag, cRDDName, cCmd, nWA, cMsg| DToS( Date() ) + " / " + Time() + " " + cTag + ": " + PadR( cRDDName + "_" + cCmd, 20 ) + " - " + cMsg } )
+   // Uncomment next command to change standard destination logged string
+   // hb_LogRddUserLogBlock( {|cTag, cRDDName, cCmd, nWA, cMsg| hb_toOutDebug( DToS( Date() ) + " : " + Time() + " " + cTag + ": " + PadR( cRDDName + "_" + cCmd, 20 ) + " - " + cMsg + "\n\r" ) } )
 
    // Start program logic
 
