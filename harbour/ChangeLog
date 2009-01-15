@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-15 20:52 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    * register default RT symbols after setting exception handler
+
+  * harbour/source/vm/fm.c
+    % keep process heap address in static variable when HeapAlloc()
+      is used.
+
+  * harbour/source/vm/extrap.c
+    * casting to pacify warnings
+
 2009-01-15 13:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/set.c
     * do not check for HVM stack existence in ST HVM to avoid compiler

@@ -850,11 +850,11 @@ void hb_vmInit( BOOL bStartMainProc )
    /* initialize internal data structures */
    s_aStatics.type = HB_IT_NIL;
 
-   hb_vmSymbolInit_RT();      /* initialize symbol table with runtime support functions */
-
    hb_xinit();
 
    hb_vmSetExceptionHandler();
+
+   hb_vmSymbolInit_RT();      /* initialize symbol table with runtime support functions */
 
 #if defined( HB_MT_VM )
    hb_threadInit();

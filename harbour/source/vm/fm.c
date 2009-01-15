@@ -157,9 +157,12 @@
 #     define realloc( p, n )  ( void * ) LocalReAlloc( ( HLOCAL ) ( p ), ( n ), LMEM_MOVEABLE )
 #     define free( p )        LocalFree( ( HLOCAL ) ( p ) )
 #  else
-#     define malloc( n )      ( void * ) HeapAlloc( GetProcessHeap(), 0, ( n ) )
-#     define realloc( p, n )  ( void * ) HeapReAlloc( GetProcessHeap(), 0, ( void * ) ( p ), ( n ) )
-#     define free( p )        HeapFree( GetProcessHeap(), 0, ( void * ) ( p ) )
+      static HANDLE s_hProcessHeap = NULL;
+#     define HB_FM_NEED_INIT
+#     define HB_FM_HEAP_INIT
+#     define malloc( n )      ( void * ) HeapAlloc( s_hProcessHeap, 0, ( n ) )
+#     define realloc( p, n )  ( void * ) HeapReAlloc( s_hProcessHeap, 0, ( void * ) ( p ), ( n ) )
+#     define free( p )        HeapFree( s_hProcessHeap, 0, ( void * ) ( p ) )
 #  endif
 #endif
 
@@ -177,7 +180,11 @@
 
 #endif
 
-#ifndef HB_FM_STATISTICS
+#if defined( HB_FM_STATISTICS )
+#  if !defined( HB_FM_NEED_INIT )
+#     define HB_FM_NEED_INIT
+#  endif
+#else
 #  undef HB_PARANOID_MEM_CHECK
 #endif
 
@@ -185,6 +192,9 @@
 #  define HB_TR_LEVEL HB_TR_ERROR
 #endif
 
+#ifdef HB_FM_NEED_INIT
+static BOOL s_fInited = FALSE;
+#endif
 
 #ifdef HB_FM_STATISTICS
 
@@ -227,7 +237,6 @@ typedef struct _HB_MEMINFO
  */
 #define HB_TRACE_FM           HB_TRACE_STEALTH
 
-static BOOL s_fInited = FALSE;
 static BOOL s_fStatistic = FALSE;
 
 static LONG s_lMemoryBlocks = 0;      /* memory blocks used */
@@ -323,7 +332,7 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
    if( ulSize == 0 )
       hb_errInternal( HB_EI_XALLOCNULLSIZE, NULL, NULL, NULL );
 
-#ifdef HB_FM_STATISTICS
+#ifdef HB_FM_NEED_INIT
    if( !s_fInited )
       hb_xinit();
 #endif
@@ -402,7 +411,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
    if( ulSize == 0 )
       hb_errInternal( HB_EI_XGRABNULLSIZE, NULL, NULL, NULL );
 
-#ifdef HB_FM_STATISTICS
+#ifdef HB_FM_NEED_INIT
    if( !s_fInited )
       hb_xinit();
 #endif
@@ -755,9 +764,11 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xinit()"));
 
-#ifdef HB_FM_STATISTICS
+#ifdef HB_FM_NEED_INIT
    if( !s_fInited )
    {
+
+#ifdef HB_FM_STATISTICS
       char buffer[ 5 ];
 
       if( hb_getenv_buffer( "HB_FM_STAT", buffer, sizeof( buffer ) ) )
@@ -767,14 +778,19 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
          else if( hb_stricmp( "no", buffer ) == 0 )
             s_fStatistic = FALSE;
       }
-#ifndef HB_FM_STATISTICS_DYN_OFF
+#ifdef HB_FM_STATISTICS_DYN_OFF
       else
          s_fStatistic = TRUE;  /* enabled by default */
+#endif /* HB_FM_STATISTICS_DYN_OFF */
+#endif /* HB_FM_STATISTICS */
+
+#if defined( HB_FM_HEAP_INIT )
+      s_hProcessHeap = GetProcessHeap();
 #endif
 
       s_fInited = TRUE;
    }
-#endif
+#endif /* HB_FM_NEED_INIT */
 }
 
 /* Returns pointer to string containing printable version

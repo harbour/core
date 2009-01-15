@@ -260,9 +260,9 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
                      char buf[ 64 ];
 #if defined( HB_OS_WIN_64 )
                      /* TOFIX: me32.szExePath seemed trashed in some (standalone) tests. */
-                     hb_snprintf( buf, sizeof( buf ), "0x%016" PFLL "X 0x%016" PFLL "X %s\n", me32.modBaseAddr, me32.modBaseSize, me32.szExePath );
+                     hb_snprintf( buf, sizeof( buf ), "0x%016" PFLL "X 0x%016" PFLL "X %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, me32.szExePath );
 #else
-                     hb_snprintf( buf, sizeof( buf ), "0x%08X 0x%08X %s\n", me32.modBaseAddr, me32.modBaseSize, me32.szExePath );
+                     hb_snprintf( buf, sizeof( buf ), "0x%08lX 0x%08lX %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, me32.szExePath );
 #endif
                      hb_strncat( errmsg, buf, errmsglen );
                   } while( pModule32Next( hModuleSnap, &me32 ) );
