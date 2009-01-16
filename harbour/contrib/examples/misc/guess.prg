@@ -2,22 +2,22 @@
  * $Id$
  */
 
-//
-// Guess a number
-//
-// Date       : 1999/04/22
-//
-// My first application (big word) written in Harbour
-//
-// Written by Eddie Runia <eddie@runia.com>
-// www - http://www.harbour-project.org
-//
-// Placed in the public domain
-//
+/*
+   Guess a number
 
-extern OutStd
+   Date       : 1999/04/22
 
-function Main()
+   My first application (big word) written in Harbour
+
+   Written by Eddie Runia <eddie@runia.com>
+   www - http://www.harbour-project.org
+
+   Placed in the public domain
+*/
+
+EXTERN OutStd
+
+PROCEDURE Main()
 
   local flGuessed
   local CRLF  := chr(13)+chr(10)
@@ -50,11 +50,8 @@ function Main()
      enddo
 
    enddo
-return nil
 
+   RETURN
 
-function Read( cPrompt )        // Simple read function.
-
-return __Accept( cPrompt )
-
-
+FUNCTION Read( cPrompt )        /* Simple read function */
+   RETURN __Accept( cPrompt )
