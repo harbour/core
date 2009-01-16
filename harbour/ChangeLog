@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-16 01:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbct/video.c
+  * contrib/hbct/pack.c
+  * contrib/hbct/disk.c
+    * Minor formatting.
+
+  * contrib/hbct/common.mak
+  * contrib/hbct/Makefile
+    ! C headers are now installed.
+      (committed in a previous session)
+
+  * config/global.cf
+  * make_b32.bat
+  * make_gcc.mak
+    + Added file ending EOLs.
+      (committed in a previous session)
+
 2009-01-15 15:20 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * source/rdd/usrrdd/rdds/Makefile
     ! Fixed small typos on making library specs

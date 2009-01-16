@@ -1,6 +1,8 @@
 /*
  * $Id$
- *
+ */
+
+/*
  * xHarbour Project source code:
  * CT3 CHARPACK() and CHARUNPACK() functions.
  *
