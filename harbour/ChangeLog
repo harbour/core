@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-16 22:05 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/source/rdd/usrrdd/rdds/logrdd.prg
+    - removed sample at end of file
+    * typos
+  * harbour/source/rdd/usrrdd/example/exlog.prg
+    * Altered to reflect new codeblock parameters and added
+      local MyToString() function to see how handle commands.
+
 2009-01-16 21:48 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/source/rdd/usrrdd/rdds/logrdd.prg
     + Added new function hb_LogRddValueToText()
