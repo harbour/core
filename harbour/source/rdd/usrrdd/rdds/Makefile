@@ -13,9 +13,9 @@ PRG_SOURCES=\
 	dbtcdx.prg \
 	fptcdx.prg \
 	smtcdx.prg \
-	vpfcdx.prg \
+	vfpcdx.prg \
 
 
-LIBNAME=usrrdds
+LIBNAME=hbuddall
 
 include $(TOP)$(ROOT)config/lib.cf

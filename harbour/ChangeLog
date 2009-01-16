@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-15 15:20 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * source/rdd/usrrdd/rdds/Makefile
+    ! Fixed small typos on making library specs
+
 2009-01-16 01:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbrddnsx.h
   * harbour/source/rdd/dbfnsx/dbfnsx1.c
