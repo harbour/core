@@ -115,7 +115,7 @@ RETURN SUCCESS
 STATIC FUNCTION LOGRDD_CREATE( nWA, aOpenInfo )
    LOCAL nResult := UR_SUPER_CREATE( nWA, aOpenInfo )
    IF nResult == SUCCESS
-      ToLog( "CREATE", nWA, aOpenInfo[ UR_OI_NAME ] )
+      ToLog( "CREATE", nWA, aOpenInfo )
    ENDIF
    RETURN nResult
 
@@ -123,7 +123,7 @@ STATIC FUNCTION LOGRDD_CREATE( nWA, aOpenInfo )
 STATIC FUNCTION LOGRDD_CREATEFIELDS( nWA, aStruct )
    LOCAL nResult := UR_SUPER_CREATEFIELDS( nWA, aStruct )
    IF nResult == SUCCESS
-      ToLog( "CREATEFIELDS", nWA, hb_ValToExp( aStruct ) )
+      ToLog( "CREATEFIELDS", nWA, aStruct )
    ENDIF
    RETURN nResult
 
@@ -131,38 +131,38 @@ STATIC FUNCTION LOGRDD_CREATEFIELDS( nWA, aStruct )
 STATIC FUNCTION LOGRDD_OPEN( nWA, aOpenInfo )
    LOCAL nResult := UR_SUPER_OPEN( nWA, aOpenInfo )
    IF nResult == SUCCESS
-      ToLog( "OPEN", nWA, 'Table : "' + aOpenInfo[ UR_OI_NAME ] + '", Alias : "' + Alias() + '", WorkArea : ' + LTrim( Str( nWA ) ) )
+      ToLog( "OPEN", nWA, aOpenInfo )
    ENDIF
    RETURN nResult
 
 // Close workarea
 STATIC FUNCTION LOGRDD_CLOSE( nWA )
-   LOCAL cDbf    := dbInfo( DBI_FULLPATH )
+   LOCAL cFile   := dbInfo( DBI_FULLPATH )
    LOCAL cAlias  := Alias()
    LOCAL nResult := UR_SUPER_CLOSE( nWA )
    IF nResult == SUCCESS
-      ToLog( "CLOSE", nWA, 'Table : "' + cDbf + '", Alias : "' + cAlias + '", WorkArea : ' + LTrim( Str( nWA ) ) )
+      ToLog( "CLOSE", nWA, cFile, cAlias )
    ENDIF
    RETURN nResult
 
 STATIC FUNCTION LOGRDD_APPEND( nWA, lUnlockAll )
    LOCAL nResult := UR_SUPER_APPEND( nWA, lUnlockAll )
    IF nResult == SUCCESS
-      ToLog( "APPEND", nWA, Alias() + "->RecNo() = " + LTrim( Str( RecNo() ) ) )
+      ToLog( "APPEND", nWA, lUnlockAll )
    ENDIF
    RETURN nResult
 
 STATIC FUNCTION LOGRDD_DELETE( nWA )
    LOCAL nResult := UR_SUPER_DELETE( nWA )
    IF nResult == SUCCESS
-      ToLog( "DELETE", nWA, Alias() + "->RecNo() = " + LTrim( Str( RecNo() ) ) )
+      ToLog( "DELETE", nWA )
    ENDIF
    RETURN nResult
 
 STATIC FUNCTION LOGRDD_RECALL( nWA )
    LOCAL nResult := UR_SUPER_RECALL( nWA )
    IF nResult == SUCCESS
-      ToLog( "RECALL", nWA, Alias() + "->RecNo() = " + LTrim( Str( RecNo() ) ) )
+      ToLog( "RECALL", nWA )
    ENDIF
    RETURN nResult
 
@@ -172,16 +172,14 @@ STATIC FUNCTION LOGRDD_PUTVALUE( nWA, nField, xValue )
 
    //Log Only Changes
    IF !( xOldValue == xValue )
-      ToLog( "PUTVALUE", nWA, Alias() + "(" + LTrim( Str( RecNo() ) ) + ")->" + PadR( FieldName( nField ), 10 ) + " := " + ValToText( xValue ) )
+      ToLog( "PUTVALUE", nWA, nField, xValue, xOldValue )
    ENDIF
    RETURN nResult
 
 STATIC FUNCTION LOGRDD_ZAP( nWA )
-   LOCAL cDbf   := dbInfo( DBI_FULLPATH )
-   LOCAL cAlias := Alias()
    LOCAL nResult := UR_SUPER_ZAP( nWA )
    IF nResult == SUCCESS
-      ToLog( "ZAP", nWA, 'Alias : "' + cAlias + ' Table : "' + cDbf + '"'  )
+      ToLog( "ZAP", nWA )
    ENDIF
    RETURN nResult
 
@@ -216,7 +214,7 @@ INIT PROCEDURE _LOGRDD_INIT()
    RETURN
 
 /* -------------------------------------------------- */
-/*           UTILITY FUNCTIONS                        */
+/*           USER UTILITY FUNCTIONS                   */
 /* -------------------------------------------------- */
 
 FUNCTION hb_LogRddLogFileName( cFileName )
@@ -334,6 +332,41 @@ FUNCTION hb_LogRddUserLogBlock( bUserLogBlock )
    ENDIF
    RETURN bOldUserLogBlock
 
+#ifdef __XHARBOUR__
+FUNCTION hb_LogRddValueToText( uValue )
+
+   LOCAL cType := ValType( uValue )
+   LOCAL cText := ValToPrg( uValue )
+
+   RETURN "[" + cType + "]>>>" + cText + "<<<"
+#else
+FUNCTION hb_LogRddValueToText( uValue )
+
+   LOCAL cType := ValType( uValue )
+   LOCAL cText
+
+   DO CASE
+   CASE cType == "C"
+      cText := hb_StrToExp( uValue )
+
+   CASE cType == "N"
+      cText := hb_NToS( uValue )
+
+   CASE cType == "D"
+      cText := DToS( uValue )
+      cText := "0d" + iif( Empty( cText ), "00000000", cText )
+
+   OTHERWISE
+      cText := hb_ValToStr( uValue )
+   ENDCASE
+
+   RETURN "[" + cType + "]>>>" + cText + "<<<"
+#endif
+
+/* -------------------------------------------------- */
+/*           LOCAL UTILITY FUNCTIONS                  */
+/* -------------------------------------------------- */
+
 STATIC PROCEDURE OpenLogFile( nWA )
    LOCAL aRDDData  := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    LOCAL cFileName := aRDDData[ ARRAY_FILENAME ]
@@ -367,7 +400,44 @@ STATIC PROCEDURE OpenLogFile( nWA )
    ENDIF
    RETURN
 
-STATIC PROCEDURE ToLog( cCmd, nWA, cMsg )
+STATIC FUNCTION ToString( cCmd, nWA, xPar1, xPar2, xPar3 )
+   LOCAL cString
+
+   DO CASE
+      CASE cCmd == "CREATE"
+           // Parameters received: xPar1 = aOpenInfo
+           cString := xPar1[ UR_OI_NAME ]
+      CASE cCmd == "CREATEFIELDS"
+           // Parameters received: xPar1 = aStruct
+           cString := hb_ValToExp( xPar1 )
+      CASE cCmd == "OPEN"
+           // Parameters received: xPar1 = aOpenInfo
+           cString := 'Table : "' + xPar1[ UR_OI_NAME ] + '", Alias : "' + Alias() + '", WorkArea : ' + LTrim( Str( nWA ) )
+      CASE cCmd == "CLOSE"
+           // Parameters received: xPar1 = cTableName, xPar2 = cAlias
+           cString := 'Table : "' + xPar1 + '", Alias : "' + xPar2 + '", WorkArea : ' + LTrim( Str( nWA ) )
+      CASE cCmd == "APPEND"
+           // Parameters received: xPar1 = lUnlockAll
+           cString := Alias() + "->RecNo() = " + LTrim( Str( RecNo() ) )
+      CASE cCmd == "DELETE"
+           // Parameters received: none
+           cString := Alias() + "->RecNo() = " + LTrim( Str( RecNo() ) )
+      CASE cCmd == "RECALL"
+           // Parameters received: none
+           cString := Alias() + "->RecNo() = " + LTrim( Str( RecNo() ) )
+      CASE cCmd == "PUTVALUE"
+           // Parameters received: xPar1 = nField, xPar2 = xValue, xPar3 = xOldValue
+#ifndef __XHARBOUR__
+           HB_UNUSED_VAR( xPar3 ) // Here don't log previous value
+#endif
+           cString := Alias() + "(" + LTrim( Str( RecNo() ) ) + ")->" + PadR( FieldName( xPar1 ), 10 ) + " := " + hb_LogRddValueToText( xPar2 )
+      CASE cCmd == "ZAP"
+           // Parameters received: none
+           cString := 'Alias : "' + Alias() + ' Table : "' + dbInfo( DBI_FULLPATH ) + '"'
+   ENDCASE
+   RETURN cString
+
+STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
    LOCAL aRDDData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    LOCAL lActive  := aRDDData[ ARRAY_ACTIVE ]
    LOCAL nHandle, cTag, cRDDName, bMsgLogBlock, bUserLogBlock, cLog
@@ -394,54 +464,27 @@ STATIC PROCEDURE ToLog( cCmd, nWA, cMsg )
             bMsgLogBlock := aRDDData[ ARRAY_MSGLOGBLOCK ]
 
             // If defined a codeblock I send to user infos and he have to return a formatted string
+            // Look at local ToString() function for details
             IF HB_ISBLOCK( bMsgLogBlock )
-               cLog := Eval( bMsgLogBlock, cTag, cRDDName, cCmd, nWA, cMsg )
+               cLog := Eval( bMsgLogBlock, cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 )
             ELSE
-               cLog := DToS( Date() ) + " " + Time() + " " + cTag + ": " + PadR( cRDDName + "_" + cCmd, 20 ) + " - " + cMsg
+               cLog := DToS( Date() ) + " " + Time() + " " + cTag + ": " + PadR( cRDDName + "_" + cCmd, 20 ) + " - " + ToString( cCmd, nWA, xPar1, xPar2, xPar3 )
             ENDIF
-            FWrite( nHandle, cLog + hb_OSNewLine() )
+            // Log to file only if cLog is a valid string
+            IF HB_ISSTRING( cLog )
+               FWrite( nHandle, cLog + hb_OSNewLine() )
+            ENDIF
          ENDIF
 
       ELSE
 
-         // Otherwise I send all to user that is responsible to log
-         Eval( bUserLogBlock, cTag, cRDDName, cCmd, nWA, cMsg )
+         // Otherwise I send all to user that is responsible to log everywhere
+         Eval( bUserLogBlock, cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 )
 
       ENDIF
 
    ENDIF
    RETURN
-
-#ifdef __XHARBOUR__
-STATIC FUNCTION ValToText( uValue )
-
-   LOCAL cType := ValType( uValue )
-   LOCAL cText := ValToPrg( uValue )
-
-   RETURN "[" + cType + "]>>>" + cText + "<<<"
-#else
-STATIC FUNCTION ValToText( uValue )
-
-   LOCAL cType := ValType( uValue )
-   LOCAL cText
-
-   DO CASE
-   CASE cType == "C"
-      cText := hb_StrToExp( uValue )
-
-   CASE cType == "N"
-      cText := hb_NToS( uValue )
-
-   CASE cType == "D"
-      cText := DToS( uValue )
-      cText := "0d" + iif( Empty( cText ), "00000000", cText )
-
-   OTHERWISE
-      cText := hb_ValToStr( uValue )
-   ENDCASE
-
-   RETURN "[" + cType + "]>>>" + cText + "<<<"
-#endif
 
 /*****************************************************************
   EXAMPLE:

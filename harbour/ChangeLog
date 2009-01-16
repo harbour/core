@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-16 21:48 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/source/rdd/usrrdd/rdds/logrdd.prg
+    + Added new function hb_LogRddValueToText()
+    * Changed parameters send at CodeBlocks that user can define
+      using hb_LogRddMsgLogBlock() and hb_LogRddUserLogBlock().
+      See notes.
+
+    ; NOTE: Made LOGRDD more under user control:
+       - hb_LogRddValueToText( <xValue>] ) -> <cValue>
+           cValue is formatted as "[<cValType>]>>><cString><<<"
+           f.e.: date 31/12/2009 is formatted as "[D]>>>0d20091231<<<"
+                 in harbour
+           this function already exists as local function as ValToText()
+       - Now bMsgLogBlock, defined using hb_LogRddMsgLogBlock(), receives
+           follow parameters:
+           cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3
+           and has to returns a valid formatted string or NIL.
+           In last case nothing is written to log file.
+           xPar1, xPar2 and xPar3 change depends from called commands.
+           For details see at ToString() local function.
+       - bUserLogBlock, defined using hb_LogRddUserLogBlock(), receives same
+           parameters of bMsgLogBlock.
+           It have to return nothing, so it is under user control where to
+           log and the format of the log string.
+
 2009-01-16 16:01 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/misc/guess.prg
     * Formatting. (just to test SVN commit hook).
