@@ -427,6 +427,9 @@ typedef struct _TAGINFO
    USHORT      uiNumber;
    USHORT      MaxKeys;
 
+   USHORT      CurKeyOffset;
+   USHORT      CurKeyNo;
+
    USHORT      stackSize;
    USHORT      stackLevel;
    LPTREESTACK stack;

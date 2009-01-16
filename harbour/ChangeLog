@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-16 01:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbrddnsx.h
+  * harbour/source/rdd/dbfnsx/dbfnsx1.c
+    ! fixed typo in descend flag checking
+    % optimized current key decoding
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    * formatting
+
 2009-01-16 00:13 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/source/rdd/usrrdd/rdds/logrdd.prg
     * Added new functions

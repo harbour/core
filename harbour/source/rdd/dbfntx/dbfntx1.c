@@ -850,7 +850,7 @@ static BOOL hb_ntxCheckRecordScope( NTXAREAP pArea, ULONG ulRec )
 {
    LONG lRecNo = ( LONG ) ulRec;
 
-   if ( SELF_COUNTSCOPE( ( AREAP ) pArea, NULL, &lRecNo ) == SUCCESS && lRecNo == 0 )
+   if( SELF_COUNTSCOPE( ( AREAP ) pArea, NULL, &lRecNo ) == SUCCESS && lRecNo == 0 )
    {
       return FALSE;
    }
@@ -5305,7 +5305,7 @@ static ERRCODE hb_ntxTagCreate( LPTAGINFO pTag, BOOL fReindex )
       {
          if( pArea->lpdbOrdCondInfo->itmRecID )
             ulStartRec = hb_itemGetNL( pArea->lpdbOrdCondInfo->itmRecID );
-         if ( ulStartRec )
+         if( ulStartRec )
          {
             ulNextCount = 1;
          }
@@ -7257,7 +7257,7 @@ static ERRCODE ntxCountScope( NTXAREAP pArea, void * pPtr, LONG * plRecNo )
 {
    HB_TRACE(HB_TR_DEBUG, ("ntxCountScope(%p, %p, %p)", pArea, pPtr, plRecNo));
 
-   if ( pPtr == NULL )
+   if( pPtr == NULL )
    {
       return SUCCESS;
    }

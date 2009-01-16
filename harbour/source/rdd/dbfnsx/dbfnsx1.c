@@ -1013,7 +1013,7 @@ static BOOL hb_nsxCheckRecordScope( NSXAREAP pArea, ULONG ulRec )
 {
    LONG lRecNo = ( LONG ) ulRec;
 
-   if ( SELF_COUNTSCOPE( ( AREAP ) pArea, NULL, &lRecNo ) == SUCCESS && lRecNo == 0 )
+   if( SELF_COUNTSCOPE( ( AREAP ) pArea, NULL, &lRecNo ) == SUCCESS && lRecNo == 0 )
    {
       return FALSE;
    }
@@ -2032,6 +2032,7 @@ static ERRCODE hb_nsxIndexHeaderRead( LPNSXINDEX pIndex )
                hb_nsxIndexTagFind( &pIndex->HeaderBuff, pIndex->lpTags[ i ]->TagName );
             if( !pIndex->lpTags[ i ]->HeadBlock )
                pIndex->lpTags[ i ]->RootBlock = 0;
+            pIndex->lpTags[ i ]->CurKeyOffset = 0;
          }
       }
    }
@@ -2320,14 +2321,33 @@ static BOOL hb_nsxPageGetLeafKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiKey
  */
 static BOOL hb_nsxTagGetCurKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiKey )
 {
-   pTag->CurKeyInfo->rec = pTag->CurKeyInfo->page = 0;
    if( hb_nsxIsLeaf( pPage ) )
    {
-      if( uiKey < pPage->uiKeys )
+      if( uiKey >= pPage->uiKeys )
+         pTag->CurKeyInfo->rec = pTag->CurKeyInfo->page = 0;
+      else if( pTag->CurKeyInfo->rec == 0 ||
+          pTag->CurKeyInfo->page != pPage->Page ||
+          uiKey < pTag->CurKeyNo || pTag->CurKeyOffset == 0 )
       {
-         pTag->CurKeyInfo->page = pPage->Page;
-         return hb_nsxPageGetLeafKey( pTag, pPage, uiKey,
-                                      pTag->CurKeyInfo->val, &pTag->CurKeyInfo->rec );
+         pTag->CurKeyOffset = NSX_LEAFKEYOFFSET;
+         pTag->CurKeyNo = ( USHORT ) -1;
+         hb_nsxTagGetPrevKey( pTag, pTag->CurKeyInfo->val, pTag->stackLevel - 1 );
+      }
+      pTag->CurKeyInfo->page = pPage->Page;
+
+      while( pTag->CurKeyNo != uiKey )
+      {
+         pTag->CurKeyOffset = hb_nsxLeafGetKey( pTag, pPage,
+                                                pTag->CurKeyOffset,
+                                                pTag->CurKeyInfo->val,
+                                                &pTag->CurKeyInfo->rec );
+         if( pTag->CurKeyOffset == 0 )
+         {
+            hb_nsxCorruptError( pTag->pIndex );
+            pTag->CurKeyInfo->rec = 0;
+            return FALSE;
+         }
+         pTag->CurKeyNo++;
       }
    }
    else if( uiKey && uiKey <= pPage->uiKeys )
@@ -2338,6 +2358,8 @@ static BOOL hb_nsxTagGetCurKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiKey )
       pTag->CurKeyInfo->rec = hb_nsxGetKeyRec( pPage, pTag->KeyLength, uiKey );
       pTag->CurKeyInfo->page = pPage->Page;
    }
+   else
+      pTag->CurKeyInfo->rec = pTag->CurKeyInfo->page = 0;
 
    return TRUE;
 }
@@ -2550,6 +2572,7 @@ static BOOL hb_nsxTagPrevKey( LPTAGINFO pTag )
       pPage = hb_nsxPageLoad( pTag, pTag->stack[ iLevel ].page );
       if( ! pPage )
          return FALSE;
+
       if( !hb_nsxIsLeaf( pPage ) )
       {
          ulPage = pTag->stack[ iLevel ].ikey == 0 ? 0 :
@@ -2586,6 +2609,7 @@ static BOOL hb_nsxTagPrevKey( LPTAGINFO pTag )
          }
          pTag->stackLevel = iLevel + 1;
       }
+
       fFound = hb_nsxTagGetCurKey( pTag, pPage,
                                    pTag->stack[ pTag->stackLevel - 1 ].ikey );
       hb_nsxPageRelease( pTag, pPage );
@@ -3373,7 +3397,7 @@ static void hb_nsxTagSkipFilter( LPTAGINFO pTag, BOOL fForward )
 {
    BOOL fBack, fEof = fForward ? pTag->TagEOF : pTag->TagBOF;
 
-   fBack = pTag->fUsrDescend ? !fForward : fForward;
+   fBack = pTag->fUsrDescend ? fForward : !fForward;
 
    while( !fEof && !hb_nsxCheckRecordScope( pTag->pIndex->pArea,
                                             pTag->CurKeyInfo->rec ) )
@@ -3934,6 +3958,7 @@ static ULONG hb_nsxOrdKeyCount( LPTAGINFO pTag )
          pTag->keyCount = ulKeyCount;
       hb_nsxTagUnLockRead( pTag );
    }
+
    return ulKeyCount;
 }
 
@@ -4831,7 +4856,15 @@ static ULONG hb_nsxOrdScopeEval( LPTAGINFO pTag,
 {
    ULONG ulCount = 0, ulLen = ( ULONG ) pTag->KeyLength;
    PHB_ITEM pItemTop = hb_itemNew( NULL ), pItemBottom = hb_itemNew( NULL );
+   BOOL fDescend = pTag->fUsrDescend;
 
+   if( fDescend )
+   {
+      PHB_ITEM pTemp = pItemLo;
+      pItemLo = pItemHi;
+      pItemHi = pTemp;
+      pTag->fUsrDescend = FALSE;
+   }
    hb_nsxTagGetScope( pTag, 0, pItemTop );
    hb_nsxTagGetScope( pTag, 1, pItemBottom );
    hb_nsxTagSetScope( pTag, 0, pItemLo );
@@ -4853,6 +4886,8 @@ static ULONG hb_nsxOrdScopeEval( LPTAGINFO pTag,
    hb_nsxTagSetScope( pTag, 1, pItemBottom );
    hb_itemRelease( pItemTop );
    hb_itemRelease( pItemBottom );
+
+   pTag->fUsrDescend = fDescend;
 
    return ulCount;
 }
@@ -7594,7 +7629,7 @@ static ERRCODE hb_nsxCountScope( NSXAREAP pArea, void * pPtr, LONG * plRecNo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_nsxCountScope(%p, %p, %p)", pArea, pPtr, plRecNo));
 
-   if ( pPtr == NULL )
+   if( pPtr == NULL )
       return SUCCESS;
 
    return SUPER_COUNTSCOPE( ( AREAP ) pArea, pPtr, plRecNo );
