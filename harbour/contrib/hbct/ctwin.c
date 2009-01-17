@@ -194,6 +194,17 @@ static void hb_ctw_ClearMap( PHB_GTCTW pCTW )
    memset( pCTW->pShadowMap, 0, ulSize );
 }
 
+static void hb_ctw_TouchLines( PHB_GTCTW pCTW, int iFrom, int iTo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_TouchLines(%p,%d,%d)", pCTW, iFrom, iTo));
+
+   while( iFrom <= iTo )
+   {
+      HB_GTSELF_TOUCHLINE( pCTW->pGT, iFrom );
+      ++iFrom;
+   }
+}
+
 static void hb_ctw_WindowMap( PHB_GTCTW pCTW, int iWindow, BOOL fExpose )
 {
    PHB_CT_WND pWnd;
@@ -227,25 +238,22 @@ static void hb_ctw_WindowMap( PHB_GTCTW pCTW, int iWindow, BOOL fExpose )
                         iLastRow - 1, iLastCol );
       }
       if( fExpose )
-      {
-         HB_GTSUPER_EXPOSEAREA( pCTW->pGT, pWnd->iFirstRow, pWnd->iFirstCol,
-                                iLastRow, iLastCol );
-      }
+         hb_ctw_TouchLines( pCTW, pWnd->iFirstRow, iLastRow );
    }
 }
 
-static void hb_ctw_RemapAllWindows( PHB_GTCTW pCTW )
+static void hb_ctw_RemapAllWindows( PHB_GTCTW pCTW, int iFrom )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_RemapAllWindows(%p)", pCTW));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_RemapAllWindows(%p,%d)", pCTW, iFrom));
 
    if( pCTW->iMaxWindow )
    {
       int i;
 
       hb_ctw_ClearMap( pCTW );
-      for( i = 0; i < pCTW->iOpenWindows; ++i )
+      for( i = iFrom; i < pCTW->iOpenWindows; ++i )
          hb_ctw_WindowMap( pCTW, pCTW->windowStack[ i ], FALSE );
-      HB_GTSUPER_EXPOSEAREA( pCTW->pGT, 0, 0, pCTW->iMapHeight, pCTW->iMapWidth );
+      hb_ctw_TouchLines( pCTW, 0, pCTW->iMapHeight );
    }
 }
 
@@ -311,7 +319,7 @@ static int hb_ctw_SetWindowBoard( PHB_GTCTW pCTW, int iTop, int iLeft, int iBott
       pCTW->iBoardBottom  = iBottom;
       pCTW->iBoardRight   = iRight;
       pCTW->fBoardSet     = TRUE;
-      hb_ctw_RemapAllWindows( pCTW );
+      hb_ctw_RemapAllWindows( pCTW, 0 );
 
       return 0;
    }
@@ -358,28 +366,31 @@ static int hb_ctw_SelectWindow( PHB_GTCTW pCTW, int iWindow, BOOL fToTop )
 
          /* update window level */
          i = pCTW->iOpenWindows - 1;
-         while( i >= 0 && pCTW->windowStack[ i ] != iWindow )
-            --i;
-         if( i >= 0 && i < pCTW->iOpenWindows - 1 )
+         while( i >= 0 )
          {
-            iPos = i;
-            while( i < pCTW->iOpenWindows - 1 &&
-                   pCTW->windows[ pCTW->windowStack[ i + 1 ] ]->iLevel <=
-                   pCTW->windows[ iWindow ]->iLevel )
+            if( pCTW->windowStack[ i ] == iWindow )
             {
-               pCTW->windowStack[ i ] = pCTW->windowStack[ i + 1 ];
-               ++i;
-            }
-            pCTW->windowStack[ i ] = iWindow;
+               iPos = i;
+               while( i < pCTW->iOpenWindows - 1 &&
+                      pCTW->windows[ pCTW->windowStack[ i + 1 ] ]->iLevel <=
+                      pCTW->windows[ iWindow ]->iLevel )
+               {
+                  pCTW->windowStack[ i ] = pCTW->windowStack[ i + 1 ];
+                  ++i;
+               }
+               pCTW->windowStack[ i ] = iWindow;
 
-            if( iPos != i && !pCTW->windows[ iWindow ]->fHidden )
-            {
-               /* INFO: CT effectively calls hb_ctw_RemapAllWindows() here */
-               if( i < pCTW->iOpenWindows - 1 )
-                  hb_ctw_RemapAllWindows( pCTW );
-               else
-                  hb_ctw_WindowMap( pCTW, iWindow, TRUE );
+               if( iPos != i && !pCTW->windows[ iWindow ]->fHidden )
+               {
+                  /* INFO: CT effectively calls hb_ctw_RemapAllWindows() here */
+                  if( i < pCTW->iOpenWindows - 1 )
+                     hb_ctw_RemapAllWindows( pCTW, i );
+                  else
+                     hb_ctw_WindowMap( pCTW, iWindow, TRUE );
+               }
+               break;
             }
+            --i;
          }
       }
    }
@@ -405,7 +416,7 @@ static int hb_ctw_Visible( PHB_GTCTW pCTW, int iWindow, int iVisible )
           pWnd->fHidden != ( iVisible == HB_CTW_HIDDEN ) )
       {
          pWnd->fHidden = ( iVisible == HB_CTW_HIDDEN );
-         hb_ctw_RemapAllWindows( pCTW );
+         hb_ctw_RemapAllWindows( pCTW, 0 );
       }
    }
 
@@ -461,7 +472,7 @@ static int hb_ctw_SetWindowLevel( PHB_GTCTW pCTW, int iWindow, int iLevel )
                   pCTW->windowStack[ i ] = iWindow;
                }
                if( !pWnd->fHidden && iPos != i )
-                  hb_ctw_RemapAllWindows( pCTW );
+                  hb_ctw_RemapAllWindows( pCTW, HB_MIN( iPos, i ) );
             }
          }
       }
@@ -486,7 +497,7 @@ static int hb_ctw_SetWindowShadow( PHB_GTCTW pCTW, int iWindow, int iAttr )
       {
          pWnd->iShadowAttr = iAttr;
          if( !pWnd->fHidden )
-            hb_ctw_RemapAllWindows( pCTW );
+            hb_ctw_RemapAllWindows( pCTW, 0 );
       }
    }
 
@@ -526,7 +537,7 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
       {
          ULONG ulSize;
 
-         HB_GTSUPER_GETSIZE( pCTW->pGT, &pCTW->iMapHeight, &pCTW->iMapWidth );
+         HB_GTSELF_GETSIZE( pCTW->pGT, &pCTW->iMapHeight, &pCTW->iMapWidth );
          pCTW->iShadowWidth = hb_ctw_CalcShadowWidth( pCTW->iMapHeight, pCTW->iMapWidth );
          if( !pCTW->fBoardSet )
             hb_ctw_SetWindowBoard( pCTW, 0, 0, pCTW->iMapHeight - 1, pCTW->iMapWidth - 1 );
@@ -645,7 +656,7 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
    if( !pWnd->fHidden )
    {
       if( iTmp < pCTW->iOpenWindows - 1 )
-         hb_ctw_RemapAllWindows( pCTW );
+         hb_ctw_RemapAllWindows( pCTW, iTmp );
       else
          hb_ctw_WindowMap( pCTW, pWnd->iHandle, TRUE );
    }
@@ -685,7 +696,7 @@ static int hb_ctw_CloseWindow( PHB_GTCTW pCTW, int iWindow )
          pCTW->iCurrWindow = pCTW->iOpenWindows > 0 ? pCTW->windowStack[ pCTW->iOpenWindows - 1 ] : 0;
 
       if( !fHidden )
-         hb_ctw_RemapAllWindows( pCTW );
+         hb_ctw_RemapAllWindows( pCTW, 0 );
       return pCTW->iCurrWindow;
    }
 
@@ -713,7 +724,7 @@ static int hb_ctw_CloseAllWindows( PHB_GTCTW pCTW )
          hb_xfree( pWnd );
       }
       pCTW->iOpenWindows = pCTW->iCurrWindow = 0;
-      hb_ctw_RemapAllWindows( pCTW );
+      hb_ctw_RemapAllWindows( pCTW, 0 );
       return 0;
    }
 
@@ -779,7 +790,7 @@ static int hb_ctw_MoveWindow( PHB_GTCTW pCTW, int iWindow, int iRow, int iCol )
             pWnd->iFirstRow = iRow;
             pWnd->iFirstCol = iCol;
             if( ! pWnd->fHidden )
-               hb_ctw_RemapAllWindows( pCTW );
+               hb_ctw_RemapAllWindows( pCTW, 0 );
             return iWindow;
          }
       }
@@ -1001,7 +1012,7 @@ static int hb_ctw_SwapWindows( PHB_GTCTW pCTW, int iWindow1, int iWindow2 )
       pCTW->windows[ iWindow1 ]->fHidden = fHidden;
 
       if( !fHidden || !pWnd->fHidden )
-         hb_ctw_RemapAllWindows( pCTW );
+         hb_ctw_RemapAllWindows( pCTW, 0 );
       return iWindow1;
    }
 
@@ -1022,7 +1033,7 @@ static void hb_ctw_Init( PHB_GTCTW pCTW )
    pCTW->iVerticalStep   = 2;
    pCTW->iHorizontalStep = 5;
 
-   HB_GTSUPER_GETSIZE( pCTW->pGT, &pCTW->iMapHeight, &pCTW->iMapWidth );
+   HB_GTSELF_GETSIZE( pCTW->pGT, &pCTW->iMapHeight, &pCTW->iMapWidth );
 
    /* update cursor position to the rules used by CTWIN */
    HB_GTSELF_GETPOS( pCTW->pGT, &iRow, &iCol );
@@ -1659,11 +1670,12 @@ static BOOL hb_ctw_gt_PutChar( PHB_GT pGT, int iRow, int iCol,
          pWnd->screenBuffer[ lIndex ].c.bAttr  = bAttr;
          if( ! pWnd->fHidden )
          {
-            if( pCTW->iCurrWindow == 0 )
-               HB_GTSUPER_TOUCHCELL( pGT, iRow, iCol );
-            else if( iRow >= pCTW->iBoardTop  && iRow <= pCTW->iBoardBottom &&
-                     iCol >= pCTW->iBoardLeft && iCol <= pCTW->iBoardRight )
-               HB_GTSUPER_TOUCHCELL( pGT, iRow, iCol );
+            if( pCTW->iCurrWindow == 0 ||
+                ( iRow >= pCTW->iBoardTop  && iRow <= pCTW->iBoardBottom &&
+                  iCol >= pCTW->iBoardLeft && iCol <= pCTW->iBoardRight ) )
+            {
+               HB_GTSELF_TOUCHLINE( pGT, iRow );
+            }
          }
          return TRUE;
       }
@@ -1963,6 +1975,63 @@ static int hb_ctw_gt_ReadKey( PHB_GT pGT, int iEventMask )
       HB_GTCTW_GET( pGT )->iLastKey = iKey;
 
    return iKey;
+}
+
+/* helper function */
+static UINT32 hb_ctw_gt_cellValue( PHB_GT pGT, int iRow, int iCol )
+{
+   HB_SCREENCELL cell;
+
+   cell.uiValue = 0;
+   HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol,
+                         &cell.c.bColor, &cell.c.bAttr, &cell.c.usChar );
+   return cell.uiValue;
+}
+
+static void hb_ctw_gt_RedrawDiff( PHB_GT pGT )
+{
+   if( HB_GTCTW_GET( pGT )->iOpenWindows == 0 )
+      HB_GTSUPER_REDRAWDIFF( pGT );
+   else if( pGT->fRefresh )
+   {
+      int i, l, r;
+      long lIndex;
+
+      for( i = 0; i < pGT->iHeight; ++i )
+      {
+         if( pGT->pLines[ i ] )
+         {
+            lIndex = ( long ) i * pGT->iWidth;
+            for( l = 0; l < pGT->iWidth; ++l, ++lIndex )
+            {
+               if( pGT->prevBuffer[ lIndex ].uiValue !=
+                   hb_ctw_gt_cellValue( pGT, i, l ) )
+                  break;
+            }
+            if( l < pGT->iWidth )
+            {
+               lIndex = ( long ) ( i + 1 ) * pGT->iWidth - 1;
+               for( r = pGT->iWidth - 1; r > l; --r, --lIndex )
+               {
+                  if( pGT->prevBuffer[ lIndex ].uiValue !=
+                      hb_ctw_gt_cellValue( pGT, i, r ) )
+                     break;
+               }
+               HB_GTSELF_REDRAW( pGT, i, l, r - l + 1 );
+               lIndex = ( long ) i * pGT->iWidth + l;
+               do
+               {
+                  pGT->prevBuffer[ lIndex ].uiValue =
+                     hb_ctw_gt_cellValue( pGT, i, l );
+                  ++lIndex;
+               }
+               while( ++l <= r );
+            }
+            pGT->pLines[ i ] = FALSE;
+         }
+      }
+      pGT->fRefresh = FALSE;
+   }
 }
 
 /* PUBLIC FUNCTIONS */
@@ -2296,6 +2365,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Info                       = hb_ctw_gt_Info;
    pFuncTable->Alert                      = hb_ctw_gt_Alert;
    pFuncTable->ReadKey                    = hb_ctw_gt_ReadKey;
+   pFuncTable->RedrawDiff                 = hb_ctw_gt_RedrawDiff;
 
    return TRUE;
 }

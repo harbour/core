@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-17 03:39 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+    + added two new methods:
+      TOUCHLINE() - marks line as modified
+      REDRAWDIFF() - it contains REFRESH() from which is now called so
+      it's possible to overload this method by upper level RDDs without
+      touching REFRESH() method which can be overloaded by intermediate
+      RDDs
+
+  * harbour/contrib/hbct/ctwin.c
+    % do not use EXPOSEAREA() and TOUCHCELL() methods but TOUCHLINE()
+      only and overloaded REDRAWDIFF() - it should gives noticeable
+      speed improvement in some where cost of screen update is very
+      big and GT does not calculate minimal update area.
+
+  * harbour/source/rdd/dbfnsx/dbfnsx1.c
+    % minor speed improvement in key decoding
+
 2009-01-16 22:05 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/source/rdd/usrrdd/rdds/logrdd.prg
     - removed sample at end of file

@@ -2099,6 +2099,15 @@ static void hb_gt_def_ExposeArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
    }
 }
 
+static void hb_gt_def_TouchLine( PHB_GT pGT, int iRow )
+{
+   if( iRow >= 0 && iRow < pGT->iHeight )
+   {
+      pGT->pLines[ iRow ] = TRUE;
+      pGT->fRefresh = TRUE;
+   }
+}
+
 static void hb_gt_def_TouchCell( PHB_GT pGT, int iRow, int iCol )
 {
    long lIndex;
@@ -2119,7 +2128,7 @@ static void hb_gt_def_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    HB_SYMBOL_UNUSED( iSize );
 }
 
-static void hb_gt_def_Refresh( PHB_GT pGT )
+static void hb_gt_def_RedrawDiff( PHB_GT pGT )
 {
    if( pGT->fRefresh )
    {
@@ -2161,6 +2170,11 @@ static void hb_gt_def_Refresh( PHB_GT pGT )
       }
       pGT->fRefresh = FALSE;
    }
+}
+
+static void hb_gt_def_Refresh( PHB_GT pGT )
+{
+   HB_GTSELF_REDRAWDIFF( pGT );
 }
 
 static void hb_gt_def_Flush( PHB_GT pGT )
@@ -2830,8 +2844,10 @@ static const HB_GT_FUNCS s_gtCoreFunc =
    ColdArea                   : hb_gt_def_ColdArea                      ,
    ExposeArea                 : hb_gt_def_ExposeArea                    ,
    ScrollArea                 : hb_gt_def_ScrollArea                    ,
+   TouchLine                  : hb_gt_def_TouchLine                     ,
    TouchCell                  : hb_gt_def_TouchCell                     ,
    Redraw                     : hb_gt_def_Redraw                        ,
+   RedrawDiff                 : hb_gt_def_RedrawDiff                    ,
    Refresh                    : hb_gt_def_Refresh                       ,
    Flush                      : hb_gt_def_Flush                         ,
    MaxCol                     : hb_gt_def_MaxCol                        ,
@@ -2950,8 +2966,10 @@ static const HB_GT_FUNCS s_gtCoreFunc =
    hb_gt_def_ColdArea                     ,
    hb_gt_def_ExposeArea                   ,
    hb_gt_def_ScrollArea                   ,
+   hb_gt_def_TouchLine                    ,
    hb_gt_def_TouchCell                    ,
    hb_gt_def_Redraw                       ,
+   hb_gt_def_RedrawDiff                   ,
    hb_gt_def_Refresh                      ,
    hb_gt_def_Flush                        ,
    hb_gt_def_MaxCol                       ,

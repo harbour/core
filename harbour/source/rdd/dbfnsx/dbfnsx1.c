@@ -85,6 +85,7 @@ static USHORT s_uiRddId;
 #define hb_nsxPageType(p)                 ( hb_nsxPageBuffer(p)[0] )
 #define hb_nsxSetPageType(p,t)            do hb_nsxPageBuffer(p)[0]=(t); while(0)
 #define hb_nsxGetKeyRecSize(p)            (hb_nsxPageBuffer(p)[1])
+#define hb_nsxGetKeyRecSizePtr(p)         ((p)[1])
 #define hb_nsxSetKeyRecSize(p,n)          do hb_nsxPageBuffer(p)[1]=(n); while(0)
 #define hb_nsxGetBranchKeyPtr(p,l,n)      (hb_nsxPageBuffer(p)+(n)*((l)+8)+8)
 #define hb_nsxBranchKeyVal(p)             ((p)+8)
@@ -212,15 +213,19 @@ static void hb_nsxLeafSetFreeOffset( LPPAGEINFO pPage, USHORT uiOffset )
 
 #endif
 
+/* #define HB_NSX_NO_CORRUPT_PROTECT */
+
 static USHORT hb_nsxLeafGetKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiOffset,
                                 UCHAR * bPrevValue, ULONG * pulRecNo )
 {
    UCHAR * ptr = ( UCHAR * ) hb_nsxPageBuffer( pPage );
-   UCHAR ucRecLen = hb_nsxGetKeyRecSize( pPage ), ucSize, ucDupCount;
+   UCHAR ucRecLen = hb_nsxGetKeyRecSizePtr( ptr ), ucSize, ucDupCount;
 
+#ifndef HB_NSX_NO_CORRUPT_PROTECT
    /* protection against corrupted NSX files */
    if( ucRecLen + uiOffset >= pPage->uiOffset )
       return 0;
+#endif /* HB_NSX_NO_CORRUPT_PROTECT */
 
    switch( ucRecLen )
    {
@@ -246,26 +251,31 @@ static USHORT hb_nsxLeafGetKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiOffse
    ucSize = ptr[ uiOffset++ ];
    if( ucSize != ucRecLen + 1 ) /* key value is not fully duplicated */
    {
+      UCHAR len = pTag->KeyLength;
+
       /* ucSize = 0 is a special case when RecLen is 4 and KeySize is 250
        * in such case ucSize - ( ucRecLen + 2 ) gives 250 = NSX_MAXKEYLEN
        */
       ucSize -= ucRecLen + 2;
 
+#ifndef HB_NSX_NO_CORRUPT_PROTECT
       /* protection against corrupted NSX files */
       if( ucSize > NSX_MAXKEYLEN || uiOffset + ucSize >= pPage->uiOffset )
          return 0;
+#endif /* HB_NSX_NO_CORRUPT_PROTECT */
 
       ucDupCount = ptr[ uiOffset++ ];
-      if( ucSize + ucDupCount == pTag->KeyLength )
+      if( ucSize + ucDupCount == len )
       {
          /* key value is stored as raw data and can be copied as is */
          memcpy( &bPrevValue[ ucDupCount ], &ptr[ uiOffset ], ucSize );
          uiOffset += ucSize;
       }
-
+#ifndef HB_NSX_NO_CORRUPT_PROTECT
       /* protection against corrupted NSX files */
-      else if( ucSize + ucDupCount > pTag->KeyLength )
+      else if( ucSize + ucDupCount > len )
          return 0;
+#endif /* HB_NSX_NO_CORRUPT_PROTECT */
 
       else
       {
@@ -277,32 +287,42 @@ static USHORT hb_nsxLeafGetKey( LPTAGINFO pTag, LPPAGEINFO pPage, USHORT uiOffse
             {
                UCHAR ucRepl;
 
+#ifndef HB_NSX_NO_CORRUPT_PROTECT
                /* protection against corrupted NSX files */
                if( !ucSize-- )
                   return 0;
+#else
+               --ucSize;
+#endif /* HB_NSX_NO_CORRUPT_PROTECT */
 
-               ucRepl = ptr[ uiOffset++ ];
-               if( ucRepl != 1 )
+               if( ( ucRepl = ptr[ uiOffset++ ] ) != 1 )
                {
+#ifndef HB_NSX_NO_CORRUPT_PROTECT
                   /* protection against corrupted NSX files */
-                  if( !ucSize-- || ucRepl + ucDupCount > pTag->KeyLength )
+                  if( !ucSize-- || ucRepl + ucDupCount > len )
                      return 0;
+#else
+                  --ucSize;
+#endif /* HB_NSX_NO_CORRUPT_PROTECT */
 
-                  memset( &bPrevValue[ ucDupCount ], ptr[ uiOffset++ ], ucRepl );
-                  ucDupCount += ucRepl;
+                  uc = ptr[ uiOffset++ ];
+                  while( ucRepl-- )
+                     bPrevValue[ ucDupCount++ ] = uc;
                   continue;
                }
             }
 
+#ifndef HB_NSX_NO_CORRUPT_PROTECT
             /* protection against corrupted NSX files */
-            if( ucDupCount >= pTag->KeyLength )
+            if( ucDupCount >= len )
                return 0;
+#endif /* HB_NSX_NO_CORRUPT_PROTECT */
 
             bPrevValue[ ucDupCount++ ] = uc;
          }
-         if( ucDupCount < pTag->KeyLength )
-            memset( &bPrevValue[ ucDupCount ], pTag->TrailChar,
-                    pTag->KeyLength - ucDupCount );
+
+         while( ucDupCount < len )
+            bPrevValue[ ucDupCount++ ] = pTag->TrailChar;
       }
    }
    return uiOffset;

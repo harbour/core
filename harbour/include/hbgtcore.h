@@ -123,8 +123,10 @@ typedef struct
    void     (* ColdArea) ( HB_GT_PTR, int, int, int, int );
    void     (* ExposeArea) ( HB_GT_PTR, int, int, int, int );
    void     (* ScrollArea) ( HB_GT_PTR, int, int, int, int, BYTE, BYTE, int, int );
+   void     (* TouchLine) ( HB_GT_PTR, int );
    void     (* TouchCell) ( HB_GT_PTR, int, int );
    void     (* Redraw) ( HB_GT_PTR, int, int, int );
+   void     (* RedrawDiff) ( HB_GT_PTR );
    void     (* Refresh) ( HB_GT_PTR );
    void     (* Flush) ( HB_GT_PTR );
    int      (* MaxCol) ( HB_GT_PTR );
@@ -235,24 +237,7 @@ typedef struct
    int      (* GfxPrimitive) ( HB_GT_PTR, int, int, int, int, int, int );
    void     (* GfxText) ( HB_GT_PTR, int, int, const char *, int, int, int );
 
-#if 0
-   /* keyboard */
-   int     (* ExtendedKeySupport) ( HB_GT_PTR );
-
-   /* GT CLIPBOARD functions */
-   void    (* GetClipboard) ( HB_GT_PTR, char *, ULONG * );
-   void    (* SetClipboard) ( HB_GT_PTR, char *, ULONG );
-   ULONG   (* GetClipboardSize) ( HB_GT_PTR );
-
-   void    (* ProcessMessages) ( HB_GT_PTR );
-
-   /* GT to DRIVER communication functions */
-   void    (* update ) ( HB_GT_PTR, int );
-   int     (* info ) ( HB_GT_PTR, int, BOOL , int , void * );
-
-#endif
-
-   void    (* WhoCares) ( HB_GT_PTR, void * );
+   void     (* WhoCares) ( HB_GT_PTR, void * );
 
 } HB_GT_FUNCS, * PHB_GT_FUNCS;
 
@@ -371,8 +356,10 @@ extern PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
 #define HB_GTSELF_COLDAREA(g,t,l,b,r)           (g)->pFuncTable->ColdArea(g,t,l,b,r)
 #define HB_GTSELF_EXPOSEAREA(g,t,l,b,r)         (g)->pFuncTable->ExposeArea(g,t,l,b,r)
 #define HB_GTSELF_SCROLLAREA(g,t,l,b,r,m,u,v,h) (g)->pFuncTable->ScrollArea(g,t,l,b,r,m,u,v,h)
+#define HB_GTSELF_TOUCHLINE(g,r)                (g)->pFuncTable->TouchLine(g,r)
 #define HB_GTSELF_TOUCHCELL(g,r,c)              (g)->pFuncTable->TouchCell(g,r,c)
 #define HB_GTSELF_REDRAW(g,r,c,l)               (g)->pFuncTable->Redraw(g,r,c,l)
+#define HB_GTSELF_REDRAWDIFF(g)                 (g)->pFuncTable->RedrawDiff(g)
 #define HB_GTSELF_REFRESH(g)                    (g)->pFuncTable->Refresh(g)
 #define HB_GTSELF_FLUSH(g)                      (g)->pFuncTable->Flush(g)
 #define HB_GTSELF_MAXCOL(g)                     (g)->pFuncTable->MaxCol(g)
@@ -492,8 +479,10 @@ extern PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
 #define HB_GTSUPER_COLDAREA(g,t,l,b,r)           (HB_GTSUPERTABLE(g))->ColdArea(g,t,l,b,r)
 #define HB_GTSUPER_EXPOSEAREA(g,t,l,b,r)         (HB_GTSUPERTABLE(g))->ExposeArea(g,t,l,b,r)
 #define HB_GTSUPER_SCROLLAREA(g,t,l,b,r,m,u,v,h) (HB_GTSUPERTABLE(g))->ScrollArea(g,t,l,b,r,m,u,v,h)
+#define HB_GTSUPER_TOUCHLINE(g,r)                (HB_GTSUPERTABLE(g))->TouchLine(g,r)
 #define HB_GTSUPER_TOUCHCELL(g,r,c)              (HB_GTSUPERTABLE(g))->TouchCell(g,r,c)
 #define HB_GTSUPER_REDRAW(g,r,c,l)               (HB_GTSUPERTABLE(g))->Redraw(g,r,c,l)
+#define HB_GTSUPER_REDRAWDIFF(g)                 (HB_GTSUPERTABLE(g))->RedrawDiff(g)
 #define HB_GTSUPER_REFRESH(g)                    (HB_GTSUPERTABLE(g))->Refresh(g)
 #define HB_GTSUPER_FLUSH(g)                      (HB_GTSUPERTABLE(g))->Flush(g)
 #define HB_GTSUPER_MAXCOL(g)                     (HB_GTSUPERTABLE(g))->MaxCol(g)
