@@ -74,6 +74,10 @@
 #  include <fcntl.h>
 #endif
 
+#if defined( HB_OS_DARWIN )
+#  include <signal.h>
+#endif
+
 #if defined( HB_OS_OS2 ) || defined( HB_OS_UNIX ) || \
     ( defined( HB_OS_WIN_32 ) && !defined( HB_IO_WIN ) )
 
@@ -98,7 +102,7 @@ static char ** hb_buildArgs( const char *pszFilename )
          if( src[ 1 ] )
             ++src;
       }
-      else 
+      else
 #endif
       if( *src == cQuote )
          cQuote = 0;

@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-17 19:21 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * source/rtl/hbproces.c
+    ! Added header for Darwin to cover kill() call.
+
 2009-01-17 03:39 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbgtcore.h
   * harbour/source/rtl/hbgtcore.c
