@@ -476,14 +476,14 @@ static void hb_gt_def_StringToColors( PHB_GT pGT, const char * szColorString, in
          pColors[ nPos ] = 0;
       }
       if( nColor != -1 )
+      {
          pColors[ nPos ] = nColor;
+         if( nPos == HB_CLR_ENHANCED && *piColorCount > HB_CLR_UNSELECTED )
+            pColors[ HB_CLR_UNSELECTED ] = nColor;
+      }
       ++nPos;
    }
    while( szColorString );
-
-   if( nPos >= HB_CLR_ENHANCED && nPos < HB_CLR_UNSELECTED &&
-       *piColorCount > HB_CLR_UNSELECTED )
-      pColors[ HB_CLR_UNSELECTED ] = pColors[ HB_CLR_ENHANCED ];
 }
 
 static void hb_gt_def_ColorsToString( PHB_GT pGT, int * pColors, int iColorCount, char * pszColorString, int iBufSize )

@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-18 22:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbgtcore.c
+    ! fixed UNSELECTED color updating in SetColor(). It should be changed
+      only and always when ENHANCED color is changed
+
+  * harbour/contrib/hbmzip/hbmzip.c
+    ! fixed GPF in hb_zipDeleteFile() when file has comment
+
 2009-01-17 19:21 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * source/rtl/hbproces.c
     ! Added header for Darwin to cover kill() call.

@@ -1361,7 +1361,8 @@ static int hb_zipDeleteFile( const char* szZipFile, const char* szFileMask )
          iResult = unzGetCurrentFileInfo( hUnzip, NULL, NULL, 0,
                                           pExtraField, ufi.size_file_extra,
                                           pszFileComment, ufi.size_file_comment );
-         pszFileComment[ ufi.size_file_comment ] = '\0';
+         if( pszFileComment )
+            pszFileComment[ ufi.size_file_comment ] = '\0';
          if( iResult != UNZ_OK )
             break;
 
