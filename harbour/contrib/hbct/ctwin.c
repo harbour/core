@@ -224,7 +224,7 @@ static void hb_ctw_WindowMap( PHB_GTCTW pCTW, int iWindow, BOOL fExpose )
       hb_ctw_SetMap( pCTW, pCTW->pShadowMap, 0,
                      pWnd->iFirstRow, pWnd->iFirstCol,
                      iLastRow, iLastCol );
-      if( pWnd->iShadowAttr >= 0 &&
+      if( pWnd->iShadowAttr != HB_CTW_SHADOW_OFF &&
           iLastRow >= pCTW->iBoardTop && iLastCol >= pCTW->iBoardLeft &&
           pWnd->iFirstRow <= pCTW->iBoardBottom && pWnd->iFirstCol <= pCTW->iBoardRight )
       {
@@ -264,7 +264,9 @@ static int hb_ctw_SetShadowAttr( PHB_GTCTW pCTW, int iAttr )
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_SetShadowAttr(%p,%d)", pCTW, iAttr));
 
    iOldAttr = pCTW->iShadowAttr;
-   if( iAttr >= -1 )
+   if( iAttr >= 0 ||
+       iAttr == HB_CTW_SHADOW_OFF ||
+       iAttr == HB_CTW_SHADOW_EXT )
       pCTW->iShadowAttr = iAttr;
 
    return iOldAttr;
@@ -493,7 +495,10 @@ static int hb_ctw_SetWindowShadow( PHB_GTCTW pCTW, int iWindow, int iAttr )
       PHB_CT_WND pWnd = pCTW->windows[ iWindow ];
 
       iResult = pWnd->iShadowAttr;
-      if( iAttr >= -1 && pWnd->iShadowAttr != iAttr )
+      if( ( iAttr >= 0 ||
+            iAttr == HB_CTW_SHADOW_OFF ||
+            iAttr == HB_CTW_SHADOW_EXT ) &&
+          pWnd->iShadowAttr != iAttr )
       {
          pWnd->iShadowAttr = iAttr;
          if( !pWnd->fHidden )
@@ -1553,6 +1558,15 @@ static BOOL hb_ctw_gt_GetScrChar( PHB_GT pGT, int iRow, int iCol,
       PHB_CT_WND pWnd = pCTW->windows[ iShadow ];
       if( pWnd->iShadowAttr >= 0 )
          *pbColor = ( BYTE ) pWnd->iShadowAttr;
+      else if( pWnd->iShadowAttr == HB_CTW_SHADOW_EXT )
+      {
+         if( ( *pbColor & 0x80 ) == 0 )
+            *pbColor &= 0x0F;
+         if( ( *pbColor & 0x08 ) == 0 )
+            *pbColor &= 0xF0;
+         if( ( *pbColor &= 0x77 ) == 0 )
+            *pbColor = 0x07;
+      }
       *pbAttr |= HB_GT_ATTR_SHADOW;
    }
 

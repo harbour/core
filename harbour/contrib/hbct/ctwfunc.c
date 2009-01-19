@@ -116,7 +116,7 @@ HB_FUNC( GETCLEARB )
 
 HB_FUNC( WSETSHADOW )
 {
-   hb_retni( hb_ctwSetShadowAttr( hb_ctColorParam( 1, -2 ) ) );
+   hb_retni( hb_ctwSetShadowAttr( hb_ctColorParam( 1, HB_CTW_SHADOW_UNDEF ) ) );
 }
 
 HB_FUNC( WSETMOVE )
@@ -385,7 +385,7 @@ HB_FUNC( WSHADOW )
 {
    int iAttr;
 
-   iAttr = ISNUM( 1 ) ? hb_parni( 1 ) : -2;
+   iAttr = ISNUM( 1 ) ? hb_parni( 1 ) : HB_CTW_SHADOW_UNDEF;
    hb_retni( hb_ctwSetWindowShadow( hb_ctwCurrentWindow(), iAttr ) );
 }
 
