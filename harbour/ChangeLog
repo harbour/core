@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-19 13:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmzip/hbmzip.c
+    ! added missing nInternalAttr and nExternalAttr parameters decoding in
+      function HB_ZIPFILECREATE() - problem located and fixed by Andres Reyes
+      in xHarbour
+
 2009-01-19 12:57 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbproces.c
     ! include signal.h in all *nixes builds - it was my typo and not only

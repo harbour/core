@@ -206,6 +206,9 @@ HB_FUNC( HB_ZIPFILECREATE )
          zfi.tmz_date.tm_min = iM;
          zfi.tmz_date.tm_sec = iD;
 
+         zfi.internal_fa = hb_parnl( 5 );
+         zfi.external_fa = hb_parnl( 6 );
+
          hb_retni( zipOpenNewFileInZip3( hZip, szZipName, &zfi,
                                          NULL, 0, NULL, 0,
                                          hb_parc( 11 ), iMethod, iLevel, 0,
