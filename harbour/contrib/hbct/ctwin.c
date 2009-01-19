@@ -74,6 +74,8 @@ static int           s_GtId;
 #define HB_CTWIN_MAXROWS      255
 #define HB_CTWIN_MAXCOLS      255
 
+#define HB_CTW_SHADOW_MASK    0x8000000
+
 typedef struct
 {
    int iHandle;
@@ -158,12 +160,12 @@ static int hb_ctw_CalcShadowWidth( int iRows, int iCols )
       return 2;
 }
 
-static void hb_ctw_SetMap( PHB_GTCTW pCTW, int * piMap, int iWindow, int iTop, int iLeft, int iBottom, int iRight )
+static void hb_ctw_SetMap( PHB_GTCTW pCTW, int * piMap, int iWindow, int iTop, int iLeft, int iBottom, int iRight, int iNested )
 {
    ULONG lIndex;
    int i;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_SetMap(%p,%p,%d,%d,%d,%d,%d)", pCTW, piMap, iWindow, iTop, iLeft, iBottom, iRight));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_SetMap(%p,%p,%d,%d,%d,%d,%d,%d)", pCTW, piMap, iWindow, iTop, iLeft, iBottom, iRight, iNested));
 
    if( iTop < 0 )
       iTop = 0;
@@ -174,12 +176,25 @@ static void hb_ctw_SetMap( PHB_GTCTW pCTW, int * piMap, int iWindow, int iTop, i
    if( iRight >= pCTW->iMapWidth )
       iRight = pCTW->iMapWidth - 1;
 
-   while( iTop <= iBottom )
+   if( iNested == 0 )
    {
-      lIndex = iTop * pCTW->iMapWidth + iLeft;
-      for( i = iLeft; i <= iRight; ++i, ++lIndex )
-         piMap[ lIndex ] = iWindow;
-      ++iTop;
+      while( iTop <= iBottom )
+      {
+         lIndex = iTop * pCTW->iMapWidth + iLeft;
+         for( i = iLeft; i <= iRight; ++i, ++lIndex )
+            piMap[ lIndex ] = iWindow;
+         ++iTop;
+      }
+   }
+   else
+   {
+      while( iTop <= iBottom )
+      {
+         lIndex = iTop * pCTW->iMapWidth + iLeft;
+         for( i = iLeft; i <= iRight; ++i, ++lIndex )
+            piMap[ lIndex ] = iWindow | ( piMap[ lIndex ] != 0 ? iNested : 0 );
+         ++iTop;
+      }
    }
 }
 
@@ -220,10 +235,10 @@ static void hb_ctw_WindowMap( PHB_GTCTW pCTW, int iWindow, BOOL fExpose )
 
       hb_ctw_SetMap( pCTW, pCTW->pWindowMap, iWindow, 
                      pWnd->iFirstRow, pWnd->iFirstCol,
-                     iLastRow, iLastCol );
+                     iLastRow, iLastCol, 0 );
       hb_ctw_SetMap( pCTW, pCTW->pShadowMap, 0,
                      pWnd->iFirstRow, pWnd->iFirstCol,
-                     iLastRow, iLastCol );
+                     iLastRow, iLastCol, 0 );
       if( pWnd->iShadowAttr != HB_CTW_SHADOW_OFF &&
           iLastRow >= pCTW->iBoardTop && iLastCol >= pCTW->iBoardLeft &&
           pWnd->iFirstRow <= pCTW->iBoardBottom && pWnd->iFirstCol <= pCTW->iBoardRight )
@@ -232,10 +247,12 @@ static void hb_ctw_WindowMap( PHB_GTCTW pCTW, int iWindow, BOOL fExpose )
          iLastCol += pCTW->iShadowWidth;
          hb_ctw_SetMap( pCTW, pCTW->pShadowMap, iWindow,
                         iLastRow, pWnd->iFirstCol + pCTW->iShadowWidth,
-                        iLastRow, iLastCol );
+                        iLastRow, iLastCol,
+                        pWnd->iShadowAttr == HB_CTW_SHADOW_EXT2 ? HB_CTW_SHADOW_MASK : 0 );
          hb_ctw_SetMap( pCTW, pCTW->pShadowMap, iWindow,
                         pWnd->iFirstRow + 1, pWnd->iFirstCol + pWnd->iWidth,
-                        iLastRow - 1, iLastCol );
+                        iLastRow - 1, iLastCol,
+                        pWnd->iShadowAttr == HB_CTW_SHADOW_EXT2 ? HB_CTW_SHADOW_MASK : 0 );
       }
       if( fExpose )
          hb_ctw_TouchLines( pCTW, pWnd->iFirstRow, iLastRow );
@@ -266,7 +283,8 @@ static int hb_ctw_SetShadowAttr( PHB_GTCTW pCTW, int iAttr )
    iOldAttr = pCTW->iShadowAttr;
    if( iAttr >= 0 ||
        iAttr == HB_CTW_SHADOW_OFF ||
-       iAttr == HB_CTW_SHADOW_EXT )
+       iAttr == HB_CTW_SHADOW_EXT ||
+       iAttr == HB_CTW_SHADOW_EXT2 )
       pCTW->iShadowAttr = iAttr;
 
    return iOldAttr;
@@ -497,7 +515,8 @@ static int hb_ctw_SetWindowShadow( PHB_GTCTW pCTW, int iWindow, int iAttr )
       iResult = pWnd->iShadowAttr;
       if( ( iAttr >= 0 ||
             iAttr == HB_CTW_SHADOW_OFF ||
-            iAttr == HB_CTW_SHADOW_EXT ) &&
+            iAttr == HB_CTW_SHADOW_EXT ||
+            iAttr == HB_CTW_SHADOW_EXT2 ) &&
           pWnd->iShadowAttr != iAttr )
       {
          pWnd->iShadowAttr = iAttr;
@@ -1555,16 +1574,17 @@ static BOOL hb_ctw_gt_GetScrChar( PHB_GT pGT, int iRow, int iCol,
 
    if( iShadow > 0 )
    {
-      PHB_CT_WND pWnd = pCTW->windows[ iShadow ];
+      PHB_CT_WND pWnd = pCTW->windows[ iShadow & ~HB_CTW_SHADOW_MASK ];
       if( pWnd->iShadowAttr >= 0 )
          *pbColor = ( BYTE ) pWnd->iShadowAttr;
-      else if( pWnd->iShadowAttr == HB_CTW_SHADOW_EXT )
+      else if( pWnd->iShadowAttr == HB_CTW_SHADOW_EXT ||
+               pWnd->iShadowAttr == HB_CTW_SHADOW_EXT2 )
       {
          if( ( *pbColor & 0x80 ) == 0 )
             *pbColor &= 0x0F;
          if( ( *pbColor & 0x08 ) == 0 )
             *pbColor &= 0xF0;
-         if( ( *pbColor &= 0x77 ) == 0 )
+         if( ( *pbColor &= 0x77 ) == 0 || ( iShadow & HB_CTW_SHADOW_MASK ) )
             *pbColor = 0x07;
       }
       *pbAttr |= HB_GT_ATTR_SHADOW;
@@ -1631,7 +1651,7 @@ static BOOL hb_ctw_gt_PutChar( PHB_GT pGT, int iRow, int iCol,
           */
          if( pCTW->pShadowMap[ lIndex ] != 0 )
          {
-            int iShadow = pCTW->pShadowMap[ lIndex ];
+            int iShadow = pCTW->pShadowMap[ lIndex ] & ~HB_CTW_SHADOW_MASK;
             if( pCTW->windows[ iShadow ]->iShadowAttr >= 0 &&
                 ( BYTE ) pCTW->windows[ iShadow ]->iShadowAttr == bColor )
             {

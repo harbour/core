@@ -58,8 +58,9 @@
 #define HB_CTW_VISIBLE        1
 
 #define HB_CTW_SHADOW_OFF     -1
-#define HB_CTW_SHADOW_EXT     -2
-#define HB_CTW_SHADOW_UNDEF   -3
+#define HB_CTW_SHADOW_UNDEF   -2
+#define HB_CTW_SHADOW_EXT     -3
+#define HB_CTW_SHADOW_EXT2    -4
 
 #define HB_CTW_BOTTOM         0
 #define HB_CTW_DEFAULT        1

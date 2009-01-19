@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-19 21:38 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbct/ctwin.c
+  * harbour/contrib/hbct/ctwin.h
+    + added support for nested window shadows
+
 2009-01-19 19:34 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbct/ctwin.c
   * harbour/contrib/hbct/ctwin.h
