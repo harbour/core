@@ -8,34 +8,38 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-19 23:43 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/Changelog
+    * fixed path of previous upload
+
 2009-01-19 23:39 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   + harbour/contrib/examples/uhttpd
-  + harbour/contrib/examples/socket.c
-  + harbour/contrib/examples/uhttpd.prg
-  + harbour/contrib/examples/hbmk_b32.bat
-  + harbour/contrib/examples/readme.txt
-  + harbour/contrib/examples/home
-  + harbour/contrib/examples/home/cgi-bin
-  + harbour/contrib/examples/home/counter.html
-  + harbour/contrib/examples/home/css
-  + harbour/contrib/examples/home/css/base.css
-  + harbour/contrib/examples/home/favicon.ico
-  + harbour/contrib/examples/home/images
-  + harbour/contrib/examples/home/images/ajax-loader.gif
-  + harbour/contrib/examples/home/index.html
-  + harbour/contrib/examples/home/js
-  + harbour/contrib/examples/home/js/ajax.js
-  + harbour/contrib/examples/home/testajax.html
-  + harbour/contrib/examples/home/testxmldb.html
-  + harbour/contrib/examples/home/xsl
-  + harbour/contrib/examples/home/xsl/based.xsl
-  + harbour/contrib/examples/home/xsl/basep.xsl
-  + harbour/contrib/examples/logs
-  + harbour/contrib/examples/modules
-  + harbour/contrib/examples/modules/bldhrb.bat
-  + harbour/contrib/examples/modules/showcounter.prg
-  + harbour/contrib/examples/modules/tableservletdb.prg
-  + harbour/contrib/examples/modules/testajax.prg
+  + harbour/contrib/examples/uhttpd/socket.c
+  + harbour/contrib/examples/uhttpd/uhttpd.prg
+  + harbour/contrib/examples/uhttpd/hbmk_b32.bat
+  + harbour/contrib/examples/uhttpd/readme.txt
+  + harbour/contrib/examples/uhttpd/home
+  + harbour/contrib/examples/uhttpd/home/cgi-bin
+  + harbour/contrib/examples/uhttpd/home/counter.html
+  + harbour/contrib/examples/uhttpd/home/css
+  + harbour/contrib/examples/uhttpd/home/css/base.css
+  + harbour/contrib/examples/uhttpd/home/favicon.ico
+  + harbour/contrib/examples/uhttpd/home/images
+  + harbour/contrib/examples/uhttpd/home/images/ajax-loader.gif
+  + harbour/contrib/examples/uhttpd/home/index.html
+  + harbour/contrib/examples/uhttpd/home/js
+  + harbour/contrib/examples/uhttpd/home/js/ajax.js
+  + harbour/contrib/examples/uhttpd/home/testajax.html
+  + harbour/contrib/examples/uhttpd/home/testxmldb.html
+  + harbour/contrib/examples/uhttpd/home/xsl
+  + harbour/contrib/examples/uhttpd/home/xsl/based.xsl
+  + harbour/contrib/examples/uhttpd/home/xsl/basep.xsl
+  + harbour/contrib/examples/uhttpd/logs
+  + harbour/contrib/examples/uhttpd/modules
+  + harbour/contrib/examples/uhttpd/modules/bldhrb.bat
+  + harbour/contrib/examples/uhttpd/modules/showcounter.prg
+  + harbour/contrib/examples/uhttpd/modules/tableservletdb.prg
+  + harbour/contrib/examples/uhttpd/modules/testajax.prg
     + Uploaded first version of uHTTPD server.
     ; NOTE:
       This is first version of uHTTPD (micro HTTPD server) based
