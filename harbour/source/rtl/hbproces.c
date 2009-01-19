@@ -67,15 +67,12 @@
 #  include <sys/wait.h>
 #  include <sys/stat.h>
 #  include <fcntl.h>
+#  include <signal.h>
 #elif defined( HB_OS_OS2 ) || defined( HB_OS_UNIX ) || \
       ( defined( HB_OS_WIN_32 ) && !defined( HB_IO_WIN ) )
 #  include <io.h>
 #  include <process.h>
 #  include <fcntl.h>
-#endif
-
-#if defined( HB_OS_DARWIN )
-#  include <signal.h>
 #endif
 
 #if defined( HB_OS_OS2 ) || defined( HB_OS_UNIX ) || \

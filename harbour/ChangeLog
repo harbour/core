@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-19 12:57 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbproces.c
+    ! include signal.h in all *nixes builds - it was my typo and not only
+      Darwin needs it.
+
 2009-01-18 22:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbgtcore.c
     ! fixed UNSELECTED color updating in SetColor(). It should be changed
