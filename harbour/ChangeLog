@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-20 00:20 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  + harbour/contrib/examples/uhttpd/modules/info.prg
+    + New sample showing server variables
+  * harbour/contrib/examples/uhttpd/home/index.html
+  * harbour/contrib/examples/uhttpd/readme.txt
+  * harbour/contrib/examples/uhttpd/uhttpd.prg
+    * updated for new sample
+
 2009-01-19 23:43 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/Changelog
     * fixed path of previous upload

@@ -144,8 +144,9 @@ STATIC s_nServiceConnections, s_nMaxServiceConnections, s_nTotServiceConnections
 STATIC s_aRunningThreads := {}
 STATIC s_aServiceThreads := {}
 
+// ALIASES: you can add here any alias to real file and call it
 // TODO: add aliases from ini file
-STATIC s_hFileAliases    := { "/info" => "/cgi-bin/info.hrb", "/wait" => "/cgi-bin/wait.hrb" }
+STATIC s_hFileAliases    := { "/info" => "/cgi-bin/info.hrb" }
 
 THREAD STATIC s_cResult, s_nStatusCode, s_aHeader, s_cErrorMsg
 
