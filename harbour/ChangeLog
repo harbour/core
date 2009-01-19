@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-19 22:17 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    * clone arrays and hash tables instead of coping when thread static
+      variable is initialized
+
+  + harbour/tests/mt/mttest12.prg
+    + added demonstration/test code which illustrates thread static
+      variables initialization
+
 2009-01-19 21:38 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbct/ctwin.c
   * harbour/contrib/hbct/ctwin.h

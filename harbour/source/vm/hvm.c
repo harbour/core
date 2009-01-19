@@ -5984,7 +5984,14 @@ static PHB_ITEM hb_vmTSVRefRead( PHB_ITEM pRefer )
    if( !pItem )
    {
       pItem = ( PHB_ITEM ) hb_stackGetTSD( &pTSVRef->threadData );
-      hb_itemCopy( pItem, &pTSVRef->source );
+      if( HB_ITEM_TYPERAW( &pTSVRef->source ) & ( HB_IT_ARRAY | HB_IT_HASH ) )
+      {
+         PHB_ITEM pClone = hb_itemClone( &pTSVRef->source );
+         hb_itemCopy( pItem, pClone );
+         hb_itemRelease( pClone );
+      }
+      else
+         hb_itemCopy( pItem, &pTSVRef->source );
    }
    return pItem;
 }
