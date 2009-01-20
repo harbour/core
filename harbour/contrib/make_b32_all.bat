@@ -42,7 +42,7 @@ rem *******************************************************
 set _HB_DIRS=%HB_CONTRIBLIBS%
 if not "%_HB_DIRS%" == "" goto :OVERRIDE
 
-set _HB_DIRS=gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc
+set _HB_DIRS=gtwvg hbbmcdx hbbtree hbclipsm hbcrypt hbct hbgt hbmisc
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set _HB_DIRS=hbmsql hbmzip hbnf hbodbc hbole hbsqlit3

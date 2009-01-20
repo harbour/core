@@ -8,6 +8,49 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-20 20:47 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/make_b32_all.bat
+  * contrib/make_gcc_all.sh
+  * contrib/make_vc_all.bat
+  * contrib/Makefile
+  + contrib/hbcrypt
+  + contrib/hbcrypt/Makefile
+  + contrib/hbcrypt/make_b32.bat
+  + contrib/hbcrypt/make_vc.bat
+  + contrib/hbcrypt/make_gcc.sh
+  + contrib/hbcrypt/common.mak
+  + contrib/hbcrypt/hbsha2.c
+  + contrib/hbcrypt/hbsha2hm.c
+  + contrib/hbcrypt/sha1.h
+  + contrib/hbcrypt/sha1.c
+  + contrib/hbcrypt/sha2.h
+  + contrib/hbcrypt/sha2.c
+  + contrib/hbcrypt/sha1hmac.h
+  + contrib/hbcrypt/sha1hmac.c
+  + contrib/hbcrypt/sha2hmac.h
+  + contrib/hbcrypt/sha2hmac.c
+  + contrib/hbcrypt/tests
+  + contrib/hbcrypt/tests/testsha2.prg
+  + contrib/hbcrypt/tests/hbmk_b32.bat
+  + contrib/hbcrypt/tests/hbmk_vc.bat
+    + Added hbcrypt library. Included .prg level functions:
+      - HB_SHA224( <cMessage> ) -> <cDigest>
+      - HB_SHA256( <cMessage> ) -> <cDigest>
+      - HB_SHA384( <cMessage> ) -> <cDigest>
+      - HB_SHA512( <cMessage> ) -> <cDigest>
+      - HB_HMAC_SHA224( <cMessage>, <cKey> ) -> <cMAC>
+      - HB_HMAC_SHA256( <cMessage>, <cKey> ) -> <cMAC>
+      - HB_HMAC_SHA384( <cMessage>, <cKey> ) -> <cMAC>
+      - HB_HMAC_SHA512( <cMessage>, <cKey> ) -> <cMAC>
+    ; TODO: Add C level wrappers in Harbour namespace.
+    ; TODO: Add .prg level wrappers for SHA1 functions + tests.
+    ; TODO: Convert HB_MD5() work on binary data, rather than
+            doing hexadecimal conversion accessible using
+            standard Harbour functions anyway.
+    ; TODO: Add other crypt functions (AES, ...).
+    ; NOTE: I plan to move these functions to core, after they've
+            matured here.
+
 2009-01-20 17:29 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbhpdf/harupdf.c
     ! HPDF_SETINFODATEATTR() fixed taking date/time from the wrong

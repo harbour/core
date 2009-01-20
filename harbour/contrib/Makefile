@@ -12,6 +12,7 @@ DIRS=\
 	hbbmcdx \
 	hbbtree \
 	hbclipsm \
+	hbcrypt \
 	hbct \
 	hbgf \
 	hbgt \
