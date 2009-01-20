@@ -202,7 +202,7 @@ HB_FUNC( HPDF_HASDOC )
 */
 HB_FUNC( HPDF_SETERRORHANDLER )
 {
-   /* TOFIX: This should be extended to pass a wrapper which calls a 
+   /* TOFIX: This should be extended to pass a wrapper which calls a
              user defined codeblock. */
 
    hb_retnl( ( long ) HPDF_SetErrorHandler( HPDF_Doc_par( 1 ), ( HPDF_Error_Handler ) hb_parptr( 2 ) ) );
@@ -520,12 +520,15 @@ HB_FUNC( HPDF_SETINFODATEATTR )
 {
    HPDF_Date date;
 
-   date.year    = hb_parni( 2,1 );
-   date.month   = hb_parni( 2,2 );
-   date.day     = hb_parni( 2,3 );
-   date.hour    = hb_parni( 2,4 );
-   date.minutes = hb_parni( 2,5 );
-   date.seconds = hb_parni( 2,6 );
+   memset( &date, 0, sizeof( date ) );
+
+   date.year    = hb_parni( 3, 1 );
+   date.month   = hb_parni( 3, 2 );
+   date.day     = hb_parni( 3, 3 );
+   date.hour    = hb_parni( 3, 4 );
+   date.minutes = hb_parni( 3, 5 );
+   date.seconds = hb_parni( 3, 6 );
+   date.ind     = ' ';
 
    hb_retnl( ( long ) HPDF_SetInfoDateAttr( HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ), date ) );
 }
@@ -712,12 +715,12 @@ HB_FUNC( HPDF_PAGE_GETCURRENTPOS )
 {
    HPDF_Point pt;
    PHB_ITEM info = hb_itemArrayNew( 2 );
-   
+
    HPDF_Page_GetCurrentPos2( ( HPDF_Page ) hb_parptr( 1 ), &pt );
-   
+
    hb_arraySetND( info, 1, pt.x );
    hb_arraySetND( info, 2, pt.y );
-   
+
    hb_itemReturnRelease( info );
 }
 /*----------------------------------------------------------------------*/

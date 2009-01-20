@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-20 17:29 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbhpdf/harupdf.c
+    ! HPDF_SETINFODATEATTR() fixed taking date/time from the wrong
+      parameter.
+    ! HPDF_SETINFODATEATTR() fixed to initialize the date structure
+      passed to libharu.
+
+    ; NOTE: I've changed my editor config to automatically clean line
+            ending spaces. This may cause larger diffs even for
+            small modifications until all these spaces are cleaned
+            from the sources. FYI.
+
 2009-01-20 00:20 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   + harbour/contrib/examples/uhttpd/modules/info.prg
     + New sample showing server variables
