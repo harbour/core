@@ -98,7 +98,7 @@ void SHA1_Transform(sha1_quadbyte state[5], sha1_byte buffer[64]) {
     state[3] += d;
     state[4] += e;
     /* Wipe variables */
-    a = b = c = d = e = 0;
+    /* a = b = c = d = e = 0; */
 }
 
 
@@ -135,7 +135,7 @@ void SHA1_Update(SHA_CTX *context, sha1_byte *data, unsigned int len) {
 
 /* Add padding and return the message digest. */
 void SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], SHA_CTX *context) {
-    sha1_quadbyte   i, j;
+    sha1_quadbyte   i;
     sha1_byte   finalcount[8];
 
     for (i = 0; i < 8; i++) {
@@ -153,7 +153,7 @@ void SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], SHA_CTX *context) {
          ((context->state[i>>2] >> ((3-(i & 3)) * 8) ) & 255);
     }
     /* Wipe variables */
-    i = j = 0;
+    /* i = 0; */
     memset(context->buffer, 0, SHA1_BLOCK_LENGTH);
     memset(context->state, 0, SHA1_DIGEST_LENGTH);
     memset(context->count, 0, 8);
