@@ -441,7 +441,7 @@ then
     export L_USR="${CC_L_USR} -L${HB_LIB_INSTALL} -l%{name} %{!?_without_gtcrs:-lncurses} %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11}"
     export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${PRG_USR}"
 
-    for utl in hbmake hbrun hbdoc
+    for utl in hbmake hbrun hbi18n hbdoc
     do
         pushd utils/${utl}
         rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
@@ -614,6 +614,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{hb_pref}mk
 #%{_bindir}/hbtest
 %{_bindir}/hbrun
+%{_bindir}/hbi18n
 %{_bindir}/hbmake
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}

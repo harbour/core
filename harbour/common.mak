@@ -166,6 +166,7 @@ GTXWC_DIR    = source\rtl\gtxwc
 
 HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
+HBI18N_DIR   = utils\hbi18n
 HBDOC_DIR    = utils\hbdoc
 HBMAKE_DIR   = utils\hbmake
 
@@ -213,6 +214,7 @@ $(GTXWC_DIR)\
 ALL_EXE_SRC_DIRS_TMP=\
 $(HBRUN_DIR);\
 $(HBTEST_DIR);\
+$(HBI18N_DIR);\
 $(HBDOC_DIR);\
 $(HBMAKE_DIR)\
 
@@ -278,6 +280,7 @@ HARBOUR_EXE  = $(BIN_DIR)\harbour$(EXEEXT)
 HBPP_EXE     = $(BIN_DIR)\hbpp$(EXEEXT)
 HBRUN_EXE    = $(BIN_DIR)\hbrun$(EXEEXT)
 HBTEST_EXE   = $(BIN_DIR)\hbtest$(EXEEXT)
+HBI18N_EXE   = $(BIN_DIR)\hbi18n$(EXEEXT)
 HBDOC_EXE    = $(BIN_DIR)\hbdoc$(EXEEXT)
 HBMAKE_EXE   = $(BIN_DIR)\hbmake$(EXEEXT)
 
@@ -544,7 +547,8 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hbffind$(OBJEXT)  \
     $(OBJ_DIR)\hbfile$(OBJEXT)   \
     $(OBJ_DIR)\hbgtcore$(OBJEXT) \
-    $(OBJ_DIR)\hbi18n$(OBJEXT)   \
+    $(OBJ_DIR)\hbi18n1$(OBJEXT)  \
+    $(OBJ_DIR)\hbi18n2$(OBJEXT)  \
     $(OBJ_DIR)\hbinet$(OBJEXT)   \
     $(OBJ_DIR)\hbproces$(OBJEXT) \
     $(OBJ_DIR)\hbprocfn$(OBJEXT) \
@@ -1176,6 +1180,11 @@ HBTEST_EXE_OBJS = \
 
 #**********************************************************
 
+HBI18N_EXE_OBJS = \
+    $(OBJ_DIR)\hbi18n$(OBJEXT)   \
+
+#**********************************************************
+
 HBDOC_EXE_OBJS = \
     $(OBJ_DIR)\hbdoc$(OBJEXT)    \
     $(OBJ_DIR)\genasc$(OBJEXT)   \
@@ -1296,6 +1305,7 @@ HB_BUILD_TARGETS_MAIN = \
     \
     $(HBRUN_EXE)            \
     $(HBTEST_EXE)           \
+    $(HBI18N_EXE)           \
     $(HBDOC_EXE)            \
     $(HBMAKE_EXE)           \
 

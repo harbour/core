@@ -65,7 +65,7 @@ C_SOURCES=\
 	hbffind.c    \
 	hbfile.c     \
 	hbgtcore.c   \
-	hbi18n.c     \
+	hbi18n1.c    \
 	hbinet.c     \
 	hbproces.c   \
 	hbprocfn.c   \
@@ -188,6 +188,7 @@ PRG_SOURCES=\
 	getsys.prg   \
 	getsys53.prg \
 	gui.prg      \
+	hbi18n2.prg  \
 	hbini.prg    \
 	input.prg    \
 	listbox.prg  \

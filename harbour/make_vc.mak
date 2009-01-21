@@ -308,6 +308,9 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
 {$(HBTEST_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
+{$(HBI18N_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+#*******************************************************
 {$(HBDOC_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
@@ -439,6 +442,10 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBTEST_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSEXE) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+#*******************************************************
+{$(HBI18N_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGSEXE) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
@@ -588,6 +595,9 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
 {$(HBTEST_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
+{$(HBI18N_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+#*******************************************************
 {$(HBDOC_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
@@ -724,6 +734,10 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBTEST_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSEXE) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+#*******************************************************
+{$(HBI18N_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGSEXE) -o$(DLL_OBJ_DIR)\ $<
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
@@ -911,6 +925,19 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
+$(STANDARD_SYSLIBS)
+<<$(HB_KEEPSTATE)
+#**********************************************************
+# HBI18N build rule
+#**********************************************************
+$(HBI18N_EXE) : $(HBI18N_EXE_OBJS)
+    @if exist "$(HBI18N_EXE)" $(DEL) "$(HBI18N_EXE)" > nul
+    $(LINKER) @<<
+$(LDFLAGS)
+/out:$(HBI18N_EXE)
+$(**: = ^
+)
+$(MINIMAL_STATIC_HBLIBS)
 $(STANDARD_SYSLIBS)
 <<$(HB_KEEPSTATE)
 #**********************************************************

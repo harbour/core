@@ -432,6 +432,10 @@ $(HBTEST_EXE)   :: StdLibs
 $(HBTEST_EXE)   :: $(HBTEST_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
+$(HBI18N_EXE)   :: MinLibs
+$(HBI18N_EXE)   :: $(HBI18N_EXE_OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+#**********************************************************
 $(HBDOC_EXE)    :: MinLibs
 $(HBDOC_EXE)    :: $(HBDOC_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * I18N translation functions Harbour functions
+ * I18N translation Harbour functions
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org

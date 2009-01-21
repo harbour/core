@@ -8,6 +8,88 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-21 17:52 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  - harbour/source/rtl/hbi18n.c
+  + harbour/source/rtl/hbi18n1.c
+    * renamed hbi18n.c to hbi18n1.c to avoid conflicts with hbi18n
+      program - non GNU make files needs unique file names
+    ! fixed bug in internal function __I18N_HASHTABLE()
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/hbi18n2.prg
+    + added new I18N functions to manage .pot files and generate .hbl ones.
+      public functions:
+      HB_I18N_loadPot( <cFile>, [<pI18N>] [, @<cErrorMsg>] ) -> <pI18N> | NIL
+         Reads .pot file and returns Harbour translation set or NIL when
+         error appears. In such case <cErrorMsg> is contains error message
+         string. If second parameter [<pI18N>] is given then translation
+         items read from .pot file are added to this set. Otherwise new
+         Harbour translation set is created.
+      HB_I18N_savePot( <cFile>, <pI18N> [, @<cErrorMsg>] ) -> <lSuccess>
+         Generates .pot file from Harbour translation set. Please note
+         that Harbour translation set does not contain additional
+         information which exists in original .pot files like source
+         code numbers or alternative plural forms.
+      internal functions for Harbour developers which will work on I18N
+      tools:
+      __I18N_potArrayLoad( <cFile> [, @<cErrorMsg>] ) -> <aTrans> | NIL
+         Reads .pot file and returns array with translation items or
+         NIL when error appears. In such case <cErrorMsg> is contains
+         error message string.
+         <aTrans> is an array with translation items containing additional
+         informations from .pot file which are not necessary in final
+         translation sets used at runtime. It's designed for I18N tools
+         written in Harbour to manage .pot files and/or create .hbl ones.
+      __I18N_potArraySave( <cFile>, <aTrans> [, @<cErrorMsg>] ) -> <lSuccess>
+         Generates .pot file from array with translations items.
+      __I18N_potArrayJoin( <aTrans>, <aTrans2> ) -> <aTrans>
+         Join two arrays with translation items. Items from <aTrans2>
+         are added to <aTrans>. If given translation item already exists
+         in <aTrans> (the same msgctxt and msgid) then source code references
+         are merged and translations from <aTrans2> are added only if
+         <aTrans> does not have it.
+      __I18N_potArrayToHash( <aTrans>, [<lEmpty>] [, <hI18N>] ) -> <hI18N>
+         Converts array with translation items to hash table in the format
+         used internally by Harbour translation sets. It's the same format
+         as used __I18N_hashTable() function. The conversion removes data
+         which is not necessary for runtime translations like source code
+         references or alternative source plural forms.
+         If second parameter <hI18N> is given then translation items form
+         <aTrans> are added to it. Otherwise new hash table with is created.
+         If <lEmpty> is .T. then also items with empty translation are added
+         but source strings are used instead of missing destination ones.
+
+  * harbour/include/hbextern.ch
+    + added new I18N functions
+
+  * harbour/harbour-win-spec
+  * harbour/harbour-wce-spec
+  * harbour/harbour.spec
+  * harbour/mpkg_tgz.sh
+  * harbour/make_b32.mak
+  * harbour/make_vc.mak
+  * harbour/make_gcc.mak
+  * harbour/common.mak
+  * harbour/utils/Makefile
+  + harbour/utils/hbi18n
+  + harbour/utils/hbi18n/hbi18n.prg
+  + harbour/utils/hbi18n/Makefile
+    + added very simple application to manage .pot/.hbl files
+      Syntax: hbi18n -m | -g [-o<outfile>] [-e] [-q] <files1[.pot] ...>
+         -m             merge given .pot files
+         -g             generate .hbl file from given .pot files
+         -o<outfile>    output file name
+                        default is first .pot file name with
+                        .po_ (merge) or .hbl extension
+         -e             do not strip empty translation rules from .hbl files
+         -q             quiet mode
+
+      TODO: extend it and add support for interactive mode which will
+            allow to edit translations.
+
 2009-01-21 17:38 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/Changelog
     * missed upload

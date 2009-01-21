@@ -524,6 +524,20 @@ $(STANDARD_STATIC_CLIBS)
 $(STANDARD_STATIC_HBLIBS)
 !
 #**********************************************************
+# HBI18N build rule
+#**********************************************************
+$(HBI18N_EXE) :: BasicLibs BasicExes StdLibs
+$(HBI18N_EXE) :: $(HBI18N_EXE_OBJS)
+    @if exist "$(HBI18N_EXE)" $(DEL) "$(HBI18N_EXE)" > NUL
+    $(CC) @&&!
+$(CFLAGS)
+-e$(HBI18N_EXE)
+$(**: = ^
+)
+$(STANDARD_STATIC_CLIBS)
+$(MINIMAL_STATIC_HBLIBS)
+!
+#**********************************************************
 # HBDOC build rule
 #**********************************************************
 $(HBDOC_EXE)  :: BasicLibs BasicExes StdLibs
