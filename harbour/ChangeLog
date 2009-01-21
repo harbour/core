@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-21 21:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbhpdf/harupdf.ch
+  * contrib/hbhpdf/harupdf.c
+    + Added HPDF_VERSION_TEXT() function which returns the
+      libharu version hbhpdf was linked against.
+    - Removed #defined HPDF_VERSION_TEXT with hard-wired libharu
+      version.
+
 2009-01-21 17:52 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/rtl/Makefile
@@ -105,7 +113,7 @@
   * contrib/hbpgsql/tests/stress.prg
   * contrib/hbpgsql/tests/dbf2pg.prg
     * general cleanup for Harbour
-	 * fix of function and method names, removed hard wired uid and pwd
+    * fix of function and method names, removed hard wired uid and pwd
   * contrib/hbtip/utils.c
     * added new mime types like flash files, rtf, csv
 

@@ -1836,3 +1836,8 @@ HB_FUNC( HPDF_EXTGSTATE_SETBLENDMODE )
    hb_retnl( ( long ) HPDF_ExtGState_SetBlendMode( ( HPDF_ExtGState ) hb_parptr( 1 ), ( HPDF_BlendMode ) hb_parni( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
+
+HB_FUNC( HPDF_VERSION_TEXT )
+{
+   hb_retc_const( HPDF_VERSION_TEXT );
+}
