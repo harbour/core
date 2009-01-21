@@ -31,12 +31,17 @@
 #ifndef __SHA1_H__
 #define __SHA1_H__
 
+#include "hbdefs.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Define this if your machine is LITTLE_ENDIAN, otherwise #undef it: */
-#define LITTLE_ENDIAN
+/* Disabled to avoid conflicts with the same macro defined in system header
+ * files in some OS-es. HB_LITTLE_ENDIAN used instead.
+ */
+/* #define LITTLE_ENDIAN */
 
 /* Make sure you define these types for your architecture: */
 typedef unsigned int sha1_quadbyte;     /* 4 byte type */
