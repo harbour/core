@@ -13,7 +13,7 @@
   * contrib/hbhpdf/harupdf.c
     + Added HPDF_VERSION_TEXT() function which returns the
       libharu version hbhpdf was linked against.
-    - Removed #defined HPDF_VERSION_TEXT with hard-wired libharu
+    - Removed #define HPDF_VERSION_TEXT with hard-wired libharu
       version.
 
 2009-01-21 17:52 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
