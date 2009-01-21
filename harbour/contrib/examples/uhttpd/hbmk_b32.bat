@@ -14,6 +14,12 @@ del *.tds
 del uhttpd.c
 
 if not exist uhttpd.exe goto :EXIT
-if not exist bgd.dll echo.ATTENTION! This program needs bgd.dll
+if not exist bgd.dll goto NOBGD
 echo.Build complete.
+GOTO EXIT
+:NOBGD
+echo.ATTENTION! This program needs bgd.dll
+echo.Please download it from:
+echo.http://www.libgd.org/releases/gd-latest-win32.zip
 :EXIT
+
