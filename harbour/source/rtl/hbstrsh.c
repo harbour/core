@@ -68,9 +68,10 @@ HB_FUNC( HB_STRSHRINK )
             lLen -= lShrinkBy;
          else
             lLen = 0;
+         hb_retclen( hb_itemGetCPtr( pText ), lLen );
       }
-
-      hb_retclen( hb_itemGetCPtr( pText ), lLen );
+      else
+         hb_itemReturn( pText );
    }
    else
       hb_retc( NULL );

@@ -132,9 +132,11 @@ C_SOURCES=\
 	space.c      \
 	spfiles.c    \
 	str.c        \
+	strc.c       \
 	strcase.c    \
 	strmatch.c   \
 	strpeek.c    \
+	strtoexp.c   \
 	strtran.c    \
 	strzero.c    \
 	stuff.c      \

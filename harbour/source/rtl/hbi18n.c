@@ -249,9 +249,9 @@ static PHB_I18N_TRANS hb_i18n_new( void )
    pI18N->table = hb_hashNew( hb_itemNew( NULL ) );
    pI18N->context_table = hb_hashNew( hb_itemNew( NULL ) );
    pI18N->default_context = hb_hashNew( hb_itemNew( NULL ) );
-   pKey = hb_itemPutC( NULL, "CONTEXT" );
+   pKey = hb_itemPutCConst( NULL, "CONTEXT" );
    hb_hashAdd( pI18N->table, pKey, pI18N->context_table );
-   pKey = hb_itemPutC( pKey, "" );
+   pKey = hb_itemPutC( pKey, NULL );
    hb_hashAdd( pI18N->context_table, pKey, pI18N->default_context );
    hb_itemRelease( pKey );
 
@@ -310,11 +310,11 @@ static PHB_I18N_TRANS hb_i18n_initialize( PHB_ITEM pTable )
    {
       PHB_ITEM pKey, pContext, pDefContext = NULL, pValue;
 
-      pKey = hb_itemPutC( NULL, "CONTEXT" );
+      pKey = hb_itemPutCConst( NULL, "CONTEXT" );
       pContext = hb_hashGetItemPtr( pTable, pKey, 0 );
       if( pContext )
       {
-         pKey = hb_itemPutC( pKey, "" );
+         pKey = hb_itemPutC( pKey, NULL );
          pDefContext = hb_hashGetItemPtr( pContext, pKey, 0 );
       }
 
@@ -327,32 +327,32 @@ static PHB_I18N_TRANS hb_i18n_initialize( PHB_ITEM pTable )
          pI18N->context_table = hb_itemNew( pContext );
          pI18N->default_context = hb_itemNew( pDefContext );
 
-         pKey = hb_itemPutC( pKey, "BASE_CODEPAGE" );
+         pKey = hb_itemPutCConst( pKey, "BASE_CODEPAGE" );
          pValue = hb_hashGetItemPtr( pTable, pKey, 0 );
          if( pValue )
             pI18N->base_cdpage = hb_cdpFind( hb_itemGetCPtr( pValue ) );
 
-         pKey = hb_itemPutC( pKey, "CODEPAGE" );
+         pKey = hb_itemPutCConst( pKey, "CODEPAGE" );
          pValue = hb_hashGetItemPtr( pTable, pKey, 0 );
          if( pValue )
             pI18N->cdpage = hb_cdpFind( hb_itemGetCPtr( pValue ) );
 
-         pKey = hb_itemPutC( pKey, "BASE_LANG" );
+         pKey = hb_itemPutCConst( pKey, "BASE_LANG" );
          pValue = hb_hashGetItemPtr( pTable, pKey, 0 );
          if( pValue )
             pI18N->base_plural_form = hb_i18n_pluralformfind( hb_itemGetCPtr( pValue ) );
 
-         pKey = hb_itemPutC( pKey, "LANG" );
+         pKey = hb_itemPutCConst( pKey, "LANG" );
          pValue = hb_hashGetItemPtr( pTable, pKey, 0 );
          if( pValue )
             pI18N->plural_form = hb_i18n_pluralformfind( hb_itemGetCPtr( pValue ) );
 
-         pKey = hb_itemPutC( pKey, "BASE_PLURAL_EXP" );
+         pKey = hb_itemPutCConst( pKey, "BASE_PLURAL_EXP" );
          pValue = hb_hashGetItemPtr( pTable, pKey, 0 );
          if( pValue )
             pI18N->base_plural_block = hb_i18n_pluralexp_compile( pValue );
 
-         pKey = hb_itemPutC( pKey, "PLURAL_EXP" );
+         pKey = hb_itemPutCConst( pKey, "PLURAL_EXP" );
          pValue = hb_hashGetItemPtr( pTable, pKey, 0 );
          if( pValue )
             pI18N->plural_block = hb_i18n_pluralexp_compile( pValue );
@@ -382,7 +382,7 @@ static PHB_ITEM hb_i18n_serialize( PHB_I18N_TRANS pI18N )
       HB_PUT_LE_UINT32( &pI18Nbuffer[ HB_I18N_SIZE_OFFSET ], ulSize );
       HB_PUT_LE_UINT32( &pI18Nbuffer[ HB_I18N_CRC_OFFSET ], ulCRC );
 
-      pKey = hb_itemPutC( NULL, "DESCRIPTION" );
+      pKey = hb_itemPutCConst( NULL, "DESCRIPTION" );
       pValue = hb_hashGetItemPtr( pI18N->table, pKey, 0 );
       if( pValue )
          hb_strncpy( &pI18Nbuffer[ HB_I18N_TXT_OFFSET ],
@@ -502,7 +502,7 @@ static BOOL hb_i18n_getpluralform( PHB_I18N_TRANS pI18N, PHB_ITEM pOldForm,
          else if( iForm )
             hb_itemPutC( pOldForm, hb_i18n_pluralformid( iForm ) );
          else
-            hb_itemPutC( pOldForm, "EN" );      /* default is ENGLISH */
+            hb_itemPutCConst( pOldForm, "EN" ); /* default is ENGLISH */
       }
       fResult = TRUE;
    }
@@ -666,7 +666,7 @@ static const char * hb_i18n_description( PHB_I18N_TRANS pI18N, PHB_ITEM pItem )
 {
    if( pI18N )
    {
-      PHB_ITEM pKey = hb_itemPutC( NULL, "DESCRIPTION" ), pValue;
+      PHB_ITEM pKey = hb_itemPutCConst( NULL, "DESCRIPTION" ), pValue;
 
       pValue = hb_hashGetItemPtr( pI18N->table, pKey, 0 );
       if( pItem )
@@ -1051,12 +1051,15 @@ HB_FUNC( HB_I18N_CHECK )
 HB_FUNC( __I18N_HASHTABLE )
 {
    PHB_I18N_TRANS pI18N;
+   PHB_ITEM pTable = hb_param( 1, HB_IT_HASH );
 
-   if( ISHASH( 1 ) )
+   if( pTable )
    {
-      pI18N = hb_i18n_initialize( hb_param( 1, HB_IT_HASH ) );
+      pI18N = hb_i18n_initialize( hb_itemNew( pTable ) );
       if( pI18N )
          hb_itemReturnRelease( hb_i18n_newitem( pI18N ) );
+      else
+         hb_itemRelease( pTable );
    }
    else
    {

@@ -1,0 +1,164 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * HB_STRDECODESCAPE() - decode string with \ escape sequences
+ * HB_STRCDECODE() - decode string using C compiler rules
+ *
+ * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+
+/* HB_STRDECODESCAPE( <cEscSeqStr> ) -> <cStr>
+ * decode string with \ escape sequences
+ */
+HB_FUNC( HB_STRDECODESCAPE )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+
+   if( pText )
+   {
+      ULONG ulLen = hb_itemGetCLen( pText );
+      if( ulLen > 0 )
+      {
+         char * str = ( char * ) hb_xgrab( ulLen + 1 );
+         hb_xmemcpy( str, hb_itemGetCPtr( pText ), ulLen + 1 );
+         hb_strRemEscSeq( str, &ulLen );
+         hb_retclen_buffer( str, ulLen );
+      }
+      else
+         hb_itemReturn( pText );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* HB_STRCDECODE( <cStr> [, @<lCont> ] ) -> <cResult> | NIL
+ * decode string using C compiler rules
+ * if second parameter <lCont> is passed by reference then it allows
+ * to decode multiline strings. In such case <lCont> is set to .T.
+ * if string ends with unclosed "" quoting.
+ * Function returns decoded string or NIL on syntax error.
+ */
+HB_FUNC( HB_STRCDECODE )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+
+   if( pText )
+   {
+      ULONG ulLen = hb_itemGetCLen( pText );
+      BOOL fCont = ISLOG( 2 ) && hb_parl( 2 );
+      if( ulLen > 0 )
+      {
+         const char * pszSrc = hb_itemGetCPtr( pText );
+         char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
+         ULONG ulDst = 0, ul;
+
+         for( ;; )
+         {
+            if( !fCont )
+            {
+               while( ulLen && HB_ISSPACE( *pszSrc ) )
+               {
+                  ++pszSrc;
+                  --ulLen;
+               }
+               if( ulLen && *pszSrc == '"' )
+               {
+                  ++pszSrc;
+                  --ulLen;
+                  fCont = TRUE;
+               }
+            }
+            if( !fCont || !ulLen )
+               break;
+
+            ul = 0;
+            while( ul < ulLen )
+            {
+               char c = pszSrc[ ul ];
+               if( c == '"' )
+               {
+                  fCont = FALSE;
+                  break;
+               }
+               pszDst[ ulDst + ul ] = c;
+               if( ++ul < ulLen && c == '\\' )
+               {
+                  pszDst[ ulDst + ul ] = pszSrc[ ul ];
+                  ++ul;
+               }
+            }
+            if( ul > 0 )
+            {
+               pszSrc += ul;
+               ulLen -= ul;
+               hb_strRemEscSeq( pszDst + ulDst, &ul );
+               ulDst += ul;
+            }
+            if( !fCont )
+            {
+               ++pszSrc;
+               --ulLen;
+            }
+         }
+         if( ulLen == 0 && ( !fCont || ISBYREF( 2 ) ) )
+         {
+            hb_retclen_buffer( pszDst, ulDst );
+            hb_storl( fCont, 2 );
+         }
+         else
+            hb_xfree( pszDst );
+      }
+      else if( fCont )
+         hb_itemReturn( pText );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}

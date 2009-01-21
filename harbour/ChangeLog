@@ -8,6 +8,35 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-21 10:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+    * cleaned some typos
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/strtoexp.c
+  * harbour/source/rtl/valtostr.c
+    * moved my HB_STRTOEXP() function to separate file
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/strc.c
+    + added two new functions to operate on C like strings:
+      HB_STRDECODESCAPE( <cEscSeqStr> ) -> <cStr>
+         Decode string with \ escape sequences.
+      HB_STRCDECODE( <cStr> [, @<lCont> ] ) -> <cResult> | NIL
+         Decode string using C compiler rules.
+         If second parameter <lCont> is passed by reference then it allows
+         to decode multiline strings. In such case <lCont> is set to .T.
+         if string ends with unclosed "" quoting and next call to this
+         function with lCont parameter continue string decoding.
+         Function returns decoded string or NIL on syntax error.
+      They will be helper functions for decoding .pot files.
+
+  * harbour/source/rtl/hbi18n.c
+  * harbour/source/rtl/hbstrsh.c
+    % small optimizations
+
 2009-01-20 23:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbcrypt/sha1.c
     ! Fixed some BCC warnings.
@@ -1815,7 +1844,7 @@
       will want to make some direct modifications on active i18n set
       internals).
       When thread change active i18n set then it effects only this thread
-      and new threads which will be create later. It does not change i18n
+      and new threads which will be created later. It does not change i18n
       in other existing threads.
     + added functions to set/get pointer to active i18n set in HVM
          void * hb_vmI18N( void )
@@ -1862,11 +1891,11 @@
             <pI18N> - I18N translation set,
                       if it's not given then currently active I18N set is used
             <cNewCP> - new CP ID. Must be linked with application
-            <lBase> - when it's .T. then get/set base massages CP instead of
-                      translated massages CP
+            <lBase> - when it's .T. then get/set base massages' CP instead of
+                      translated massages' CP
             <lTranslate> - if it's .T. then translate base (<lBase>==.T.) or
                            final messages in I18N set from previous CP to
-                           given one. Base messages translation in synced
+                           given one. Base messages translation is synced
                            with context ID translation.
 
          HB_I18N_PLURALFORM( [<pI18N>,] [<cNewForm>|<bNewForm>], [<lBase>] )
@@ -1880,8 +1909,8 @@
             <bNewForm> - codeblock used to calculate plural form indexes.
                          can be used instead of character representation but
                          it's not storred in serialized I18N set
-            <lBase> - when it's .T. then get/set base massages plural form
-                      instead of translated massages one.
+            <lBase> - when it's .T. then get/set base massages' plural form
+                      instead of translated massages' one.
 
          HB_I18N_DESCRIPTION( [<pI18N>,] [<cNewDescription>] )
                   -> <cOldDescription>
@@ -1918,7 +1947,7 @@
 
          HB_I18N_RESTORETABLE( <cTable> )
                   -> <pI18N> | NIL
-            Restores I18N translation set from strin item.
+            Restores I18N translation set from string item.
             <cTable> - I18N translation set in string representation
             On success it returns new <pI18N> set otherwise NIL if <cTable>
             is not valid item created by HB_I18N_SAVETABLE() or it's corrupted.
@@ -1931,7 +1960,7 @@
                   -> <lValid>
             <cTable> - i18n translation set serialized by HB_I18N_SAVETABLE
             <cHeader> - header of i18n translation set
-                        ( LEFT( <cTable>, HB_I18N_HEADERSIZE() )
+                        ( LEFT( <cTable>, HB_I18N_HEADERSIZE() ) )
             <cDescription> - optional parameter passed by reference where
                              will be sored i18n translation set description
                              extracted from valid header
@@ -1998,7 +2027,7 @@
       can have his own implementation but it would help in adding new
       translations by final users to any Harbour application which will
       respect them. We can use LANG envvar to extract preferred language
-      and use the same path as executed application looking for files
+      and use the same path as executed application looking for
       <appname>-<lang>.hil files though it may create some problems for
       OSes which support only 8.3 file names so we can also define that
       HB_I18N envvar has higher priority and points to expected translation
