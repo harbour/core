@@ -226,7 +226,7 @@ typedef struct tag_mime
 #define MIME_FLAG_TRIMTABS      0x0002
 #define MIME_FLAG_CASEINSENS    0x0004
 #define MIME_FLAG_CONTINUE      0x0008
-#define MIME_TABLE_SIZE         68
+#define MIME_TABLE_SIZE         72
 
 static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 {
@@ -336,7 +336,19 @@ static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
    /* 66*/ { 0, "\xFF\xD8", "image/jpeg", 0, 0, 0 },
 
    /* ICO image */
-   /* 67*/ { 2, "\x01\x00", "image/x-icon", 0, 0, 0 }
+   /* 67*/ { 2, "\x01\x00", "image/x-icon", 0, 0, 0 },
+
+   /* OGG file */
+   /* 68*/ { 0, "OggS", "application/ogg", 0, 0, 0 },
+
+   /* FLV file */
+   /* 69*/ { 0, "FLV", "video/x-flv", 0, 0, 0 },
+
+   /* SWF compressed file */
+   /* 70*/ { 0, "CWS", "application/x-shockwave-flash", 0, 0, 0 },
+
+   /* SWF uncompressed file */
+   /* 71*/ { 0, "FWS", "application/x-shockwave-flash", 0, 0, 0 }
 
 };
 
@@ -352,7 +364,7 @@ typedef struct tag_mime_ext
    short unsigned int flags;
 } EXT_MIME_ENTRY;
 
-#define EXT_MIME_TABLE_SIZE 16
+#define EXT_MIME_TABLE_SIZE 19
 
 static EXT_MIME_ENTRY s_extMimeTable[EXT_MIME_TABLE_SIZE] =
 {
@@ -362,6 +374,9 @@ static EXT_MIME_ENTRY s_extMimeTable[EXT_MIME_TABLE_SIZE] =
    /* HTML file */
    /*  1*/ { "HTM", "text/html", MIME_FLAG_CASEINSENS },
    /*  2*/ { "HTML", "text/html", MIME_FLAG_CASEINSENS },
+
+   /* XLS file */
+   /*  3*/ { "xls", "application/vnd.ms-excel", MIME_FLAG_CASEINSENS },
 
    /* XML file */
    /*  4*/ { "XML", "text/xml", MIME_FLAG_CASEINSENS },
@@ -376,17 +391,24 @@ static EXT_MIME_ENTRY s_extMimeTable[EXT_MIME_TABLE_SIZE] =
    /*  7*/ { "ps", "application/postscript", MIME_FLAG_CASEINSENS },
 
    /* C source */
-   /*  7*/ { "c", "text/x-c", MIME_FLAG_CASEINSENS },
-   /*  8*/ { "c++", "text/x-c++", MIME_FLAG_CASEINSENS },
-   /*  9*/ { "cpp", "text/x-c++", MIME_FLAG_CASEINSENS },
-   /* 10*/ { "cxx", "text/x-c++", MIME_FLAG_CASEINSENS },
-   /* 11*/ { "h", "text/x-c-header", MIME_FLAG_CASEINSENS },
-   /* 12*/ { "hpp", "text/x-c++-header", MIME_FLAG_CASEINSENS },
-   /* 13*/ { "hxx", "text/x-c++-header", MIME_FLAG_CASEINSENS },
+   /*  8*/ { "c", "text/x-c", MIME_FLAG_CASEINSENS },
+   /*  9*/ { "c++", "text/x-c++", MIME_FLAG_CASEINSENS },
+   /* 10*/ { "cpp", "text/x-c++", MIME_FLAG_CASEINSENS },
+   /* 11*/ { "cxx", "text/x-c++", MIME_FLAG_CASEINSENS },
+   /* 12*/ { "h", "text/x-c-header", MIME_FLAG_CASEINSENS },
+   /* 13*/ { "hpp", "text/x-c++-header", MIME_FLAG_CASEINSENS },
+   /* 14*/ { "hxx", "text/x-c++-header", MIME_FLAG_CASEINSENS },
 
    /* Java */
-   /* 14*/ { "class", "application/java", 0 }, /* case sensitive! */
-   /* 15*/ { "java", "text/java", 0 }
+   /* 15*/ { "class", "application/java", 0 }, /* case sensitive! */
+   /* 16*/ { "java", "text/java", 0 }, 
+
+   /* RTF file */
+   /* 17*/ { "rtf", "application/rtf", MIME_FLAG_CASEINSENS },
+
+   /* CSV file */
+   /* 18*/ { "csv", "text/csv", MIME_FLAG_CASEINSENS }
+
 };
 
 

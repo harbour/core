@@ -9,13 +9,9 @@
 #include "common.ch"
 #include "../postgres.ch"
 
-Function Main()
+Function Main( cServer, cDatabase, cUser, cPass )
     Local conn, res, oRow, i, x
 
-    Local cServer := '192.168.1.20' 
-    Local cDatabase := 'test'
-    Local cUser := 'rodrigo'
-    Local cPass := 'moreno'
     Local cQuery
 
     CLEAR SCREEN

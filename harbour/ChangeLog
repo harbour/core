@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-21 16:42 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * contrib/hbpgsql/tests/simple.prg
+  * contrib/hbpgsql/tests/async.prg
+  * contrib/hbpgsql/tests/cache.prg
+  * contrib/hbpgsql/tests/stress.prg
+  * contrib/hbpgsql/tests/dbf2pg.prg
+    * general cleanup for Harbour
+	 * fix of function and method names, removed hard wired uid and pwd
+  * contrib/hbtip/utils.c
+    * added new mime types like flash files, rtf, csv
+
 2009-01-21 10:43 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
     + Added new .prg functions.

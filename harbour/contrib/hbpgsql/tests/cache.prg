@@ -43,14 +43,14 @@ STATIC oServer
 STATIC aTableTemp := {}
 STATIC aTempDBF   := {}
 
-Function Main()
+Function Main( cServer, cDatabase, cUser, cPass )
     Local i
     Local cQuery
     Local conn, res
   
     SetMode( 25, 80 )
         
-    if SQLConnect( '127.0.0.1', 'test', 'sysadm', 'masterkey' ) 
+    if SQLConnect( cServer, cDatabase, cUser, cPass ) 
         QuickQuery('DROP TABLE test')
         
         cQuery := 'CREATE TABLE test ( '
@@ -145,7 +145,7 @@ Function SQLApplyUpdates()
 
             oQuery:Append(oRow)        
 
-            cError := oQuery:Error()
+            cError := oQuery:ErrorMsg()
 
             lError := oQuery:NetErr()
 
@@ -165,7 +165,7 @@ Function SQLApplyUpdates()
 
           oQuery:Delete(oRow)          
 
-          cError := oQuery:Error()
+          cError := oQuery:ErrorMsg()
 
           lError := oQuery:NetErr()
 
@@ -197,7 +197,7 @@ Function SQLApplyUpdates()
 
             oQuery:Update(oRow)           
 
-            cError := oQuery:Error()
+            cError := oQuery:ErrorMsg()
 
             lError := oQuery:NetErr()
 
@@ -366,7 +366,7 @@ Function SQLOpen( cAlias, cQuery, xFetch )
   oQuery := oServer:Query(cQuery)
 
   IF oQuery:NetErr() 
-    Alert(oQuery:Error())
+    Alert(oQuery:ErrorMsg())
     RETURN .F.
   END  
     
@@ -423,7 +423,7 @@ Function SQLConnect( cServer, cDatabase, cUser, cPassword, cSchema )
 
   oServer := TPQServer():New(cServer, cDatabase, cUser, cPassWord, 5432, cSchema) 
   if oServer:NetErr() 
-     Alert(oServer:Error())
+     Alert(oServer:ErrorMsg())
      lRetval := .f.    
   end   
   oServer:lAllCols := .F.  
@@ -446,7 +446,7 @@ Function SQLQuery( cQuery )
 
   oQuery := oServer:Query(cQuery)
   IF oQuery:NetErr() 
-    Alert(cQuery + ':' + oQuery:Error())
+    Alert(cQuery + ':' + oQuery:ErrorMsg())
   END 
 Return oQuery
 
@@ -457,7 +457,7 @@ Function SQLExecQuery( cQuery )
 
   oQuery := oServer:Query(cQuery)
   IF oQuery:NetErr() 
-    Alert('Nao foi possível executar ' + cQuery + ':' + oQuery:Error())
+    Alert('Nao foi possível executar ' + cQuery + ':' + oQuery:ErrorMsg())
     
     result := .F.
     
@@ -496,7 +496,7 @@ Function SQLPrepare( cQuery, x01, x02, x03, x04, x05, x06, x07, x08, x09, x10,;
     
     /* Substitui parametros por valores passados */
     for i := 2 to PCount()
-      x := PValue(i)
+      x := hb_PValue(i)
       
       if ! ISNIL(x) .and. Empty(x)
         x := 'null'

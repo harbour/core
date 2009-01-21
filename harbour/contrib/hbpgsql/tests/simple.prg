@@ -6,13 +6,9 @@
 
 #include "common.ch"
 
-Function main()
-    Local oServer, oQuery, oRow, i, x, aTables, aStruct, aKey
+Function main( cHost, cDatabase, cUser, cPass )
+    Local oServer, oQuery, oRow, i, x, aTables, aStruct
 
-    Local cHost := 'localhost'
-    Local cDatabase := 'test'
-    Local cUser := 'user'
-    Local cPass := 'pass'
     Local cQuery
     
     oServer := TPQServer():New(cHost, cDatabase, cUser, cPass)
@@ -99,9 +95,7 @@ Function main()
         ? aStruct[i,1], aStruct[i,2], aStruct[i,3], aStruct[i,4]
     Next
         
-    aKey := oQuery:GetKeyField()
-    
-    ? "Fields: ", oQuery:Fcount(), "Primary Key: ", aKey[1]
+    ? "Fields: ", oQuery:Fcount()
 
     oRow := oQuery:Blank()
     
@@ -122,7 +116,7 @@ Function main()
     
     ? oQuery:Append(oRow)
     
-    ? oQuery:error()
+    ? oQuery:ErrorMsg()
     
     DO WHILE ! oQuery:Eof()
         ? oQuery:Recno(),;

@@ -5,12 +5,12 @@
  *
  */
 
-Function main()
+Function Main( cServer, cDatabase, cUser, cPass )
     Local conn
     
     CLEAR SCREEN
         
-    ? "Connect", conn := PQConnect('test', 'localhost', 'user', 'pass', 5432)
+    ? "Connect", conn := PQConnect( cDatabase, cServer, cUser, cPass, 5432)
                 
     ? "Conection status", PQerrorMessage(conn), PQstatus(conn)
                 
@@ -56,7 +56,7 @@ Procedure Query( conn, cQuery, lCancel )
     enddo        
     
     if inkey() != 27
-        ? "PQgetResult", valtoprg(res := PQgetResult(conn))
+        ? "PQgetResult", hb_valtoexp(res := PQgetResult(conn))
     
         for x := 1 to PQlastrec(res)
             ? 

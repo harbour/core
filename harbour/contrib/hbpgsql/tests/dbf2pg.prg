@@ -94,26 +94,26 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
    // Scan parameters and setup workings
    while (i <= PCount())
       
-      cTok := PValue(i++)
+      cTok := hb_PValue(i++)
 
       do case
       case cTok == "-h"
-         cHostName := PValue(i++)
+         cHostName := hb_PValue(i++)
 
       case cTok == "-d"
-         cDataBase := PValue(i++)
+         cDataBase := hb_PValue(i++)
 
       case cTok == "-t"
-         cTable := PValue(i++)
+         cTable := hb_PValue(i++)
 
       case cTok == "-f"
-         cFile := PValue(i++)
+         cFile := hb_PValue(i++)
 
       case cTok == "-u"
-         cUser := PValue(i++)
+         cUser := hb_PValue(i++)
 
       case cTok == "-p"
-         cPassWord := PValue(i++)
+         cPassWord := hb_PValue(i++)
 
       case cTok == "-c"
          lCreateTable := .T.
@@ -125,13 +125,13 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
          lUseTrans := .T.
          
       case cTok == "-m"
-         nCommit := val(PValue(i++))
+         nCommit := val(hb_PValue(i++))
 
       case cTok == "-r"
-         nRecno := val(PValue(i++))
+         nRecno := val(hb_PValue(i++))
 
       case cTok == "-e"
-         cPath := PValue(i++)
+         cPath := hb_PValue(i++)
 
       otherwise
          help()
@@ -150,7 +150,7 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
 
    oServer := TPQServer():New(cHostName, cDatabase, cUser, cPassWord, nil, cPath)
    if oServer:NetErr()
-      ? oServer:Error()
+      ? oServer:ErrorMsg()
       quit
    endif
    
@@ -160,8 +160,8 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
       if oServer:TableExists(cTable)
          oServer:DeleteTable(cTable)
          if oServer:NetErr()
-            ? oServer:Error()
-            FWrite( nHandle, "Error: " + oServer:Error() + CRLF )
+            ? oServer:ErrorMsg()
+            FWrite( nHandle, "Error: " + oServer:ErrorMsg() + CRLF )
             FClose( nHandle )
             quit
          endif
@@ -169,8 +169,8 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
       oServer:CreateTable(cTable, aDbfStruct)
 
       if oServer:NetErr()
-         ? oServer:Error()
-         FWrite( nHandle, "Error: " + oServer:Error() + CRLF )
+         ? oServer:ErrorMsg()
+         FWrite( nHandle, "Error: " + oServer:ErrorMsg() + CRLF )
          FClose( nHandle )
          quit
       endif
@@ -179,8 +179,8 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
    if lTruncate
         oServer:Execute('truncate table ' + cTable)        
         if oServer:NetErr()
-            ? oServer:Error()
-            FWrite( nHandle, "Error: " + oServer:Error() + CRLF )
+            ? oServer:ErrorMsg()
+            FWrite( nHandle, "Error: " + oServer:ErrorMsg() + CRLF )
             FClose( nHandle )
             quit
         endif        
@@ -188,8 +188,8 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
 
    oTable := oServer:Query("SELECT * FROM " + cTable + " LIMIT 1")
    if oTable:NetErr()
-      Alert(oTable:Error())
-      FWrite( nHandle, "Error: " + oTable:Error() + CRLF )
+      Alert(oTable:ErrorMsg())
+      FWrite( nHandle, "Error: " + oTable:ErrorMsg() + CRLF )
       FClose( nHandle )
       quit
    endif
@@ -265,9 +265,9 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15,
       
       if oTable:NetErr()
          ?
-         ? "Error Record: ", recno(), left(oTable:Error(),70)
+         ? "Error Record: ", recno(), left(oTable:ErrorMsg(),70)
          ? 
-         FWrite( nHandle, "Error at record: " + Str(recno()) + " Description: " + oTable:Error() + CRLF )         
+         FWrite( nHandle, "Error at record: " + Str(recno()) + " Description: " + oTable:ErrorMsg() + CRLF )         
       else
          nCount++         
       endif
