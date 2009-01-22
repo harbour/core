@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-22 18:20 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/pp/hbpp.c
+  * harbour/source/pp/ppcore.c
+    + added __FILE__ define for .prg code
+    ; Please, look if this is implemented the right and optimal way. 
+      I'm a little confused about PP initialization order, and how 
+      __DATE__, etc, survive after hb_pp_reset in compiler.
+
 2009-01-22 10:15 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * bin/hb-func.sh
     * fix darwin detection 

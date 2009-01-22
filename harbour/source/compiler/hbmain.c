@@ -3921,6 +3921,26 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
       {
          BOOL bSkipGen = FALSE ;
 
+         /* Add __FILE__ define */
+         hb_pp_delDefine( HB_COMP_PARAM->pLex->pPP, "__FILE__" );
+         if( iFileType == HB_COMP_SINGLEFILE )
+         {
+            char*  pBuf;
+            ULONG  ulLen = strlen( szFileName );
+       
+            pBuf = ( char* ) hb_xgrab( ulLen + 3 );
+            pBuf[ 0 ] = '"';
+            memcpy( pBuf + 1, szFileName, ulLen );
+            pBuf[ ulLen + 1 ] = '"';
+            pBuf[ ulLen + 2 ] = '\0';
+            hb_pp_addDefine( HB_COMP_PARAM->pLex->pPP, "__FILE__", pBuf );
+            hb_xfree( pBuf );
+         }
+         else
+         {
+            hb_pp_addDefine( HB_COMP_PARAM->pLex->pPP, "__FILE__", "\"\"" );
+         }
+
          HB_COMP_PARAM->szFile = HB_COMP_PARAM->currModule =
             hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY );
          HB_COMP_PARAM->currLine = 1;

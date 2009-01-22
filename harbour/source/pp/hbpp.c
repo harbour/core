@@ -243,6 +243,7 @@ static void hb_pp_undefCompilerRules( PHB_PP_STATE pState )
    const char * szRules[] = { "__HARBOUR__",
                               "__DATE__",
                               "__TIME__",
+                              "__FILE__",
                               "__HB_MAIN__",
                               "__ARCH16BIT__",
                               "__ARCH32BIT__",

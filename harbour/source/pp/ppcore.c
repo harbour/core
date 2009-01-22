@@ -5296,6 +5296,28 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
    szResult[ 10 ] = '\0';
    hb_pp_addDefine( pState, "__TIME__", szResult );
 
+   /* __FILE__ */
+   if( pState->pFile )
+   {
+      char*  pBuf;
+      ULONG  ulLen = strlen( pState->pFile->szFileName );
+
+      pBuf = ( char* ) hb_xgrab( ulLen + 3 );
+      pBuf[ 0 ] = '"';
+      memcpy( pBuf + 1, pState->pFile->szFileName, ulLen );
+      pBuf[ ulLen + 1 ] = '"';
+      pBuf[ ulLen + 2 ] = '\0';
+      hb_pp_addDefine( pState, "__FILE__", pBuf );
+      hb_xfree( pBuf );
+   }
+   else
+   {
+      szResult[ 0 ] = '"';
+      szResult[ 1 ] = '"';
+      szResult[ 2 ] = '\0';
+      hb_pp_addDefine( pState, "__FILE__", szResult );
+   }
+
    hb_snprintf( szResult, sizeof( szResult ), "%d", ( int ) sizeof( void * ) );
 #if defined( HB_ARCH_16BIT )
    hb_pp_addDefine( pState, "__ARCH16BIT__", szResult );
