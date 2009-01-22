@@ -29,6 +29,7 @@ case "$hb_arch" in
     *os/2*)                    hb_arch="os2" ;;
     *dos)                      hb_arch="dos" ;;
     *bsd)                      hb_arch="bsd" ;;
+    *darwin)                   hb_arch="darwin" ;;
 esac
 
 case "$hb_arch" in
@@ -124,7 +125,7 @@ fi
 
 if [ "${SLIB_EXT}" = ".dylib" ]; then
     FULLNAME="${BASE}.${VERSION}${SLIB_EXT}"
-    ${CCPREFIX}libtool -dynamic -install_name "${BASE}.${MAJOR}${SLIB_EXT}" \
+    ${CCPREFIX}libtool -dynamic -install_name "${BASE}${SLIB_EXT}" \
         -compatibility_version ${MAJOR}.${MINOR} -current_version ${VERSION} \
         -flat_namespace -undefined warning -multiply_defined suppress -single_module \
         -o "${DSTDIR}/${FULLNAME}" "$@" && \

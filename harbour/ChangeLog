@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-22 09:30 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * bin/hb-mkslib.sh
+    * fix name of dylibs 
+  * source/compiler/hbgenerr.c
+    * cleaned some ":" in the error messages
+
 2009-01-22 01:08 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpd.prg
      + Added support for ini file (default: uhttpd.ini)
