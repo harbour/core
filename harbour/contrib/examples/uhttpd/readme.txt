@@ -1,9 +1,11 @@
 
-uHTTPD server
+uHTTPD micro web server
 
 Build it using hbmk*.bat
-For parameters run:
-uhttpd -?
+Parameters accepted: --without-gd (disable Lib GD support)
+
+To see accepted parameters run: uhttpd -?
+Parameters can also be defined using uhttpd.ini file.
 
 Before starting please build modules in modules folder using bldhrb.bat
 

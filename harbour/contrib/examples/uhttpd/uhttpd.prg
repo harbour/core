@@ -67,14 +67,14 @@
 
 /*
   TODO:
-  - Add ini file for switches (port it from another project)
-  - Add aliases from ini file
 
 */
 
+// comment out this line to activate hb_toOutDebug()
+#define DEBUG_ACTIVE
 
 #define APP_NAME      "uhttpd"
-#define APP_VERSION   "0.1"
+#define APP_VERSION   "0.2"
 
 #ifndef _XHARBOUR_
   #include "hbcompat.ch"
@@ -84,8 +84,11 @@
 #include "inkey.ch"
 
 #include "hbextern.ch"   // need this to use with HRB
-// adding GD support
-REQUEST GDIMAGE, gdImageChar, GDCHART
+
+#ifdef GD_SUPPORT
+  // adding GD support
+  REQUEST GDIMAGE, gdImageChar, GDCHART
+#endif
 
 #define AF_INET         2
 
@@ -134,8 +137,8 @@ REQUEST GDIMAGE, gdImageChar, GDCHART
 // dynamic call for HRB support
 DYNAMIC HRBMAIN
 
-STATIC hmtxQueue, hmtxServiceThreads, hmtxRunningThreads, hmtxLog, hmtxConsole, hmtxBusy
-STATIC hmtxHRB
+STATIC s_hmtxQueue, s_hmtxServiceThreads, s_hmtxRunningThreads, s_hmtxLog, s_hmtxConsole, s_hmtxBusy
+STATIC s_hmtxHRB
 STATIC s_hfileLogAccess, s_hfileLogError, s_cDocumentRoot, s_lIndexes, s_lConsole, s_nPort
 STATIC s_nThreads, s_nStartThreads, s_nMaxThreads
 STATIC s_nServiceThreads, s_nStartServiceThreads, s_nMaxServiceThreads
@@ -144,21 +147,23 @@ STATIC s_nServiceConnections, s_nMaxServiceConnections, s_nTotServiceConnections
 STATIC s_aRunningThreads := {}
 STATIC s_aServiceThreads := {}
 
-// ALIASES: you can add here any alias to real file and call it
-// TODO: add aliases from ini file
-STATIC s_hFileAliases    := { "/info" => "/cgi-bin/info.hrb" }
+// ALIASES: now read from ini file
+//STATIC s_hFileAliases    := { "/info" => "/cgi-bin/info.hrb" }
+STATIC s_hFileAliases    := { => }
 
-THREAD STATIC s_cResult, s_nStatusCode, s_aHeader, s_cErrorMsg
+THREAD STATIC t_cResult, t_nStatusCode, t_aHeader, t_cErrorMsg
 
 MEMVAR _SERVER, _GET, _POST, _REQUEST, _HTTP_REQUEST, m_cPost
 
 FUNCTION MAIN( ... )
-LOCAL nPort, hListen, hSocket, aRemote, nI, cI
-LOCAL hThread, aThreads, nStartThreads, nMaxThreads, nStartServiceThreads
+LOCAL nPort, hListen, hSocket, aRemote, cI, xVal
+LOCAL aThreads, nStartThreads, nMaxThreads, nStartServiceThreads
 LOCAL i, cPar, lStop
-LOCAL cGT, cDocumentRoot, lIndexes, cConfig, cPort, nNewStartThreads, nNewMaxThreads
+LOCAL cGT, cDocumentRoot, lIndexes, cConfig
 LOCAL lConsole
 LOCAL nProgress := 0
+LOCAL hDefault, cLogAccess, cLogError
+LOCAL cCmdPort, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
 
    IF !HB_MTVM()
       ? "I need multhread support. Please, recompile me!"
@@ -172,15 +177,10 @@ LOCAL nProgress := 0
 
    // ----------------------- Parameters defaults -----------------------------
 
-   // defaults
-   nPort                := LISTEN_PORT
+   // defaults not changeble via ini file
    lStop                := FALSE
-   cDocumentRoot        := EXE_Path() + "\home"
-   lIndexes             := FALSE
    cConfig              := EXE_Path() + "\" + APP_NAME + ".ini"
    lConsole             := TRUE
-   nStartThreads        := START_RUNNING_THREADS
-   nMaxThreads          := MAX_RUNNING_THREADS
    nStartServiceThreads := START_SERVICE_THREADS
 
    // Check GT version - if I have started app with //GT:NUL then I have to disable
@@ -190,7 +190,7 @@ LOCAL nProgress := 0
       lConsole := FALSE
    ENDIF
 
-   // TOCHECK: per il momento non forzo
+   // TOCHECK: now not force case insensitive
    //HB_HSETCASEMATCH( s_hFileAliases, FALSE )
 
    // ----------------- Line command parameters checking ----------------------
@@ -202,13 +202,13 @@ LOCAL nProgress := 0
 
       do case
       case cPar == "--port"             .OR. cPar == "-p"
-         cPort    := hb_PValue( i++ )
+         cCmdPort    := hb_PValue( i++ )
 
       case cPar == "--docroot"          .OR. cPar == "-d"
-         cDocumentRoot := hb_PValue( i++ )
+         cCmdDocumentRoot := hb_PValue( i++ )
 
       case cPar == "--indexes"          .OR. cPar == "-i"
-         lIndexes := TRUE
+         lCmdIndexes := TRUE
 
       case cPar == "--stop"             .OR. cPar == "-s"
          lStop    := TRUE
@@ -217,10 +217,10 @@ LOCAL nProgress := 0
          cConfig     := hb_PValue( i++ )
 
       case cPar == "--start-threads"    .OR. cPar == "-ts"
-         nNewStartThreads := hb_PValue( i++ )
+         nCmdStartThreads := Val( hb_PValue( i++ ) )
 
       case cPar == "--max-threads"      .OR. cPar == "-tm"
-         nNewMaxThreads := hb_PValue( i++ )
+         nCmdMaxThreads := Val( hb_PValue( i++ ) )
 
       case cPar == "--help"             .OR. Lower( cPar ) == "-h" .OR. cPar == "-?"
          help()
@@ -241,15 +241,59 @@ LOCAL nProgress := 0
       FERASE( FILE_STOP )
    ENDIF
 
+   // ----------------- Parse ini file ----------------------------------------
+
+   hDefault := ParseIni( cConfig )
+
+   // ------------------- Parameters changeable from ini file ----------------
+
+   nPort                := hDefault[ "MAIN" ][ "Port" ]
+   cDocumentRoot        := hDefault[ "MAIN" ][ "Document_root" ]
+   lIndexes             := hDefault[ "MAIN" ][ "Show_indexes" ]
+
+   cLogAccess           := hDefault[ "LOGFILES" ][ "access" ]
+   cLogError            := hDefault[ "LOGFILES" ][ "error" ]
+
+   nStartThreads        := hDefault[ "THREADS" ][ "start_num" ]
+   nMaxThreads          := hDefault[ "THREADS" ][ "max_num" ]
+
+   FOR EACH xVal IN hDefault[ "ALIASES" ]
+       IF HB_ISSTRING( xVal )
+          hb_HSet( s_hFileAliases, xVal:__enumKey(), xVal )
+       ENDIF
+   NEXT
+
+   //hb_ToOutDebug( "hDefault = %s\n\r", hb_ValToExp( hDefault ) )
+   //hb_ToOutDebug( "s_hFileAliases = %s\n\r", hb_ValToExp( s_hFileAliases ) )
+
+   // ------------------- Parameters forced from command line ----------------
+
+   IF cCmdPort != NIL
+      nPort := Val( cCmdPort )
+   ENDIF
+
+   IF cCmdDocumentRoot != NIL
+      cDocumentRoot := cCmdDocumentRoot
+   ENDIF
+
+   IF lCmdIndexes != NIL
+      lIndexes := lCmdIndexes
+   ENDIF
+
+   IF nCmdStartThreads != NIL
+      nStartThreads := nCmdStartThreads
+   ENDIF
+
+   IF nCmdMaxThreads != NIL
+      nMaxThreads := nCmdMaxThreads
+   ENDIF
+
    // -------------------- checking starting values ----------------------------
 
-   IF cPort != NIL
-      nPort := VAL( cPort )
-      IF nPort <= 0 .OR. nPort > 65535
-         ? "Invalid port number:", nPort
-         WAIT
-         RETURN 1
-      ENDIF
+   IF nPort <= 0 .OR. nPort > 65535
+      ? "Invalid port number:", nPort
+      WAIT
+      RETURN 1
    ENDIF
 
 
@@ -273,48 +317,44 @@ LOCAL nProgress := 0
       RETURN 3
    ENDIF
 
-   IF HB_ISNUMERIC( nNewMaxThreads ) .AND. ;
-      nNewMaxThreads > 0
-      nMaxThreads := nNewMaxThreads
+   IF nMaxThreads <= 0
+      nMaxThreads := MAX_RUNNING_THREADS
    ENDIF
 
-   IF HB_ISNUMERIC( nNewStartThreads ) .AND. ;
-      nNewStartThreads > 0
-      IF nNewStartThreads <= nMaxThreads
-         nStartThreads := nNewStartThreads
-      ELSE
-         nStartThreads := nMaxThreads
-      ENDIF
+   IF nStartThreads < 0
+      nStartThreads := 0
+   ELSEIF nStartThreads > nMaxThreads
+      nStartThreads := nMaxThreads
    ENDIF
 
    // -------------------- assign STATIC values --------------------------------
 
-   s_lIndexes        := lIndexes
-   s_lConsole        := lConsole
-   s_nPort           := nPort
-   s_nThreads        := 0
-   s_nStartThreads   := nStartThreads
-   s_nMaxThreads     := nMaxThreads
-   s_nServiceThreads := 0
-   s_nStartServiceThreads := nStartServiceThreads
-   s_nMaxServiceThreads := MAX_SERVICE_THREADS
-   s_nConnections    := 0
-   s_nMaxConnections := 0
-   s_nTotConnections := 0
+   s_lIndexes               := lIndexes
+   s_lConsole               := lConsole
+   s_nPort                  := nPort
+   s_nThreads               := 0
+   s_nStartThreads          := nStartThreads
+   s_nMaxThreads            := nMaxThreads
+   s_nServiceThreads        := 0
+   s_nStartServiceThreads   := nStartServiceThreads
+   s_nMaxServiceThreads     := MAX_SERVICE_THREADS
+   s_nConnections           := 0
+   s_nMaxConnections        := 0
+   s_nTotConnections        := 0
    s_nServiceConnections    := 0
    s_nMaxServiceConnections := 0
    s_nTotServiceConnections := 0
 
    // --------------------- Open log files -------------------------------------
 
-   IF ( s_hfileLogAccess := FOPEN( FILE_ACCESS_LOG, FO_CREAT + FO_WRITE ) ) == -1
+   IF ( s_hfileLogAccess := FOPEN( cLogAccess, FO_CREAT + FO_WRITE ) ) == -1
       ? "Can't open access log file"
       WAIT
       RETURN 1
    ENDIF
    FSEEK( s_hfileLogAccess, 0, FS_END )
 
-   IF ( s_hfileLogError := FOPEN( FILE_ERROR_LOG, FO_CREAT + FO_WRITE ) ) == -1
+   IF ( s_hfileLogError := FOPEN( cLogError, FO_CREAT + FO_WRITE ) ) == -1
       ? "Can't open error log file"
       WAIT
       RETURN 1
@@ -327,13 +367,13 @@ LOCAL nProgress := 0
 
    // --------------------- define mutexes -------------------------------------
 
-   hmtxQueue          := hb_mutexCreate()
-   hmtxLog            := hb_mutexCreate()
-   hmtxConsole        := hb_mutexCreate()
-   hmtxBusy           := hb_mutexCreate()
-   hmtxRunningThreads := hb_mutexCreate()
-   hmtxServiceThreads := hb_mutexCreate()
-   hmtxHRB            := hb_mutexCreate()
+   s_hmtxQueue          := hb_mutexCreate()
+   s_hmtxLog            := hb_mutexCreate()
+   s_hmtxConsole        := hb_mutexCreate()
+   s_hmtxBusy           := hb_mutexCreate()
+   s_hmtxRunningThreads := hb_mutexCreate()
+   s_hmtxServiceThreads := hb_mutexCreate()
+   s_hmtxHRB            := hb_mutexCreate()
 
    WriteToConsole( "--- Starting " + APP_NAME + " ---" )
 
@@ -354,9 +394,7 @@ LOCAL nProgress := 0
 
       WriteToConsole( "Starting AcceptConnection Thread" )
       aThreads := {}
-      //FOR nI := 1 TO 1 // s_nMaxThreads
-          AADD( aThreads, hb_threadStart( @AcceptConnections() ) )
-      //NEXT
+      AADD( aThreads, hb_threadStart( @AcceptConnections() ) )
 
       // --------------------------------------------------------------------------------- //
       // main loop
@@ -378,7 +416,7 @@ LOCAL nProgress := 0
          IF s_lConsole
 
             // Show application infos
-            IF hb_mutexLock( hmtxBusy )
+            IF hb_mutexLock( s_hmtxBusy )
                hb_DispOutAt( 5, 5, "Threads           : " + Transform( s_nThreads, "9999999999" ) )
                hb_DispOutAt( 6, 5, "Connections       : " + Transform( s_nConnections, "9999999999" ) )
                hb_DispOutAt( 7, 5, "Max Connections   : " + Transform( s_nMaxConnections, "9999999999" ) )
@@ -388,7 +426,7 @@ LOCAL nProgress := 0
                hb_DispOutAt( 6, 37, "Connections       : " + Transform( s_nServiceConnections, "9999999999" ) )
                hb_DispOutAt( 7, 37, "Max Connections   : " + Transform( s_nMaxServiceConnections, "9999999999" ) )
                hb_DispOutAt( 8, 37, "Total Connections : " + Transform( s_nTotServiceConnections, "9999999999" ) )
-               hb_mutexUnlock( hmtxBusy )
+               hb_mutexUnlock( s_hmtxBusy )
             ENDIF
 
             // Show progress
@@ -396,7 +434,7 @@ LOCAL nProgress := 0
          ENDIF
 
          // Wait a connection
-         IF ( nI := socket_select( { hListen },,, 50 ) ) > 0
+         IF socket_select( { hListen },,, 50 ) > 0
 
             // reset remote values
             aRemote := NIL
@@ -411,7 +449,7 @@ LOCAL nProgress := 0
             ELSE
 
                // Send accepted connection to AcceptConnections() thread
-               hb_mutexNotify( hmtxQueue, hSocket )
+               hb_mutexNotify( s_hmtxQueue, hSocket )
 
             ENDIF
 
@@ -429,7 +467,7 @@ LOCAL nProgress := 0
 
       WriteToConsole( "Waiting threads" )
       // Send to thread that they have to stop
-      AEVAL( aThreads, {|| hb_mutexNotify( hmtxQueue, NIL ) } )
+      AEVAL( aThreads, {|| hb_mutexNotify( s_hmtxQueue, NIL ) } )
       // Wait threads to end
       AEVAL( aThreads, {|h| hb_threadJoin( h ) } )
 
@@ -482,18 +520,18 @@ STATIC FUNCTION AcceptConnections()
      WIN_SYSREFRESH( 1 )
 
      // Waiting a connection from main application loop
-     hb_mutexSubscribe( hmtxQueue,, @hSocket )
+     hb_mutexSubscribe( s_hmtxQueue,, @hSocket )
 
      // I have a QUIT request
      IF hSocket == NIL
 
         // Requesting to Running threads to quit (using -1 value)
-        AEVAL( s_aRunningThreads, {|| hb_mutexNotify( hmtxRunningThreads, -1 ) } )
+        AEVAL( s_aRunningThreads, {|| hb_mutexNotify( s_hmtxRunningThreads, -1 ) } )
         // waiting running threads to quit
         AEVAL( s_aRunningThreads, {|h| hb_threadJoin( h[1] ) } )
 
         // Requesting to Service threads to quit (using -1 value)
-        AEVAL( s_aServiceThreads, {|| hb_mutexNotify( hmtxServiceThreads, -1 ) } )
+        AEVAL( s_aServiceThreads, {|| hb_mutexNotify( s_hmtxServiceThreads, -1 ) } )
         // waiting service threads to quit
         AEVAL( s_aServiceThreads, {|h| hb_threadJoin( h[1] ) } )
 
@@ -501,14 +539,14 @@ STATIC FUNCTION AcceptConnections()
      ENDIF
 
      // Load current state
-     IF hb_mutexLock( hmtxBusy )
+     IF hb_mutexLock( s_hmtxBusy )
         nConnections       := s_nConnections
         nThreads           := s_nThreads
         nMaxThreads        := s_nMaxThreads
         nServiceConnections:= s_nServiceConnections
         nServiceThreads    := s_nServiceThreads
         nMaxServiceThreads := s_nMaxServiceThreads
-        hb_mutexUnlock( hmtxBusy )
+        hb_mutexUnlock( s_hmtxBusy )
      ENDIF
 
      // If I have no more thread to use ...
@@ -527,7 +565,7 @@ STATIC FUNCTION AcceptConnections()
            AADD( s_aServiceThreads, { pThread, nThreadID } )
         ENDIF
         // Otherwise I send connection to service thread
-        hb_mutexNotify( hmtxServiceThreads, hSocket )
+        hb_mutexNotify( s_hmtxServiceThreads, hSocket )
 
         LOOP
 
@@ -538,7 +576,7 @@ STATIC FUNCTION AcceptConnections()
         AADD( s_aRunningThreads, { pThread, nThreadID } )
      ENDIF
      // Otherwise I send connection to running thread
-     hb_mutexNotify( hmtxRunningThreads, hSocket )
+     hb_mutexNotify( s_hmtxRunningThreads, hSocket )
 
   ENDDO
 
@@ -559,9 +597,9 @@ LOCAL nThreadId
 
   WriteToConsole( "Starting ProcessConnections() " + hb_CStr( nThreadId ) )
 
-  IF hb_mutexLock( hmtxBusy )
+  IF hb_mutexLock( s_hmtxBusy )
      s_nThreads++
-     hb_mutexUnlock( hmtxBusy )
+     hb_mutexUnlock( s_hmtxBusy )
   ENDIF
 
   // ProcessConnection Loop
@@ -574,29 +612,29 @@ LOCAL nThreadId
      WIN_SYSREFRESH( 1 )
 
      // Waiting a connection from AcceptConnections() but up to defined time
-     hb_mutexSubscribe( hmtxRunningThreads, THREAD_MAX_WAIT, @hSocket )
+     hb_mutexSubscribe( s_hmtxRunningThreads, THREAD_MAX_WAIT, @hSocket )
 
      // received a -1 value, I have to quit
      IF HB_ISNUMERIC( hSocket )
         EXIT
      // no socket received, thread can graceful quit only if over minimal number
      ELSEIF hSocket == NIL
-        IF hb_mutexLock( hmtxBusy )
+        IF hb_mutexLock( s_hmtxBusy )
            IF s_nThreads <= s_nStartThreads
-              hb_mutexUnlock( hmtxBusy )
+              hb_mutexUnlock( s_hmtxBusy )
               LOOP
            ENDIF
-           hb_mutexUnlock( hmtxBusy )
+           hb_mutexUnlock( s_hmtxBusy )
         ENDIF
         EXIT
      ENDIF
 
      // Connection accepted
-     IF hb_mutexLock( hmtxBusy )
+     IF hb_mutexLock( s_hmtxBusy )
         s_nConnections++
         s_nTotConnections++
         s_nMaxConnections := Max( s_nConnections, s_nMaxConnections )
-        hb_mutexUnlock( hmtxBusy )
+        hb_mutexUnlock( s_hmtxBusy )
      ENDIF
 
      // Save initial time
@@ -620,10 +658,10 @@ LOCAL nThreadId
            //hb_ToOutDebug( "cRequest -- INIZIO --\n\r%s\n\rcRequest -- FINE --\n\r", cRequest )
 
            PRIVATE _SERVER := HB_IHASH(), _GET := HB_IHASH(), _POST := HB_IHASH(), _REQUEST := HB_IHASH(), _HTTP_REQUEST := HB_IHASH(), m_cPost
-           s_cResult     := ""
-           s_aHeader     := {}
-           s_nStatusCode := 200
-           s_cErrorMsg   := ""
+           t_cResult     := ""
+           t_aHeader     := {}
+           t_nStatusCode := 200
+           t_cErrorMsg   := ""
 
            IF socket_getpeername( hSocket, @aI ) != -1
               _SERVER["REMOTE_ADDR"] := aI[2]
@@ -639,7 +677,7 @@ LOCAL nThreadId
            IF ParseRequest( cRequest )
               //hb_ToOutDebug( "_SERVER = %s,\n\r _GET = %s,\n\r _POST = %s,\n\r _REQUEST = %s,\n\r _HTTP_REQUEST = %s\n\r", hb_ValToExp( _SERVER ), hb_ValToExp( _GET ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ), hb_ValToExp( _HTTP_REQUEST ) )
               define_Env( _SERVER )
-              uproc_default( s_cDocumentRoot, s_lIndexes )
+              uproc_default()
            ELSE
               uSetStatusCode( 400 )
            ENDIF
@@ -667,21 +705,21 @@ LOCAL nThreadId
      nParseTime := hb_milliseconds() - nMsecs
      WriteToConsole( "Page served in : " + Str( nParseTime/1000, 10, 7 ) + " seconds" )
 
-     IF hb_mutexLock( hmtxBusy )
+     IF hb_mutexLock( s_hmtxBusy )
         s_nConnections--
-        hb_mutexUnlock( hmtxBusy )
+        hb_mutexUnlock( s_hmtxBusy )
      ENDIF
 
   ENDDO
 
   WriteToConsole( "Quitting ProcessConnections() " + hb_CStr( nThreadId ) )
 
-  IF hb_mutexLock( hmtxBusy )
+  IF hb_mutexLock( s_hmtxBusy )
      s_nThreads--
      IF ( nPos := aScan( s_aRunningThreads, {|h| h[2] == nThreadId } ) > 0 )
         hb_aDel( s_aRunningThreads, nPos, TRUE )
      ENDIF
-     hb_mutexUnlock( hmtxBusy )
+     hb_mutexUnlock( s_hmtxBusy )
   ENDIF
 
 RETURN 0
@@ -697,9 +735,9 @@ LOCAL nError := 500013
 
   WriteToConsole( "Starting ServiceConnections() " + hb_CStr( nThreadId ) )
 
-  IF hb_mutexLock( hmtxBusy )
+  IF hb_mutexLock( s_hmtxBusy )
      s_nServiceThreads++
-     hb_mutexUnlock( hmtxBusy )
+     hb_mutexUnlock( s_hmtxBusy )
   ENDIF
 
   DO WHILE .T.
@@ -711,29 +749,29 @@ LOCAL nError := 500013
      WIN_SYSREFRESH( 1 )
 
      // Waiting a connection from AcceptConnections() but up to defined time
-     hb_mutexSubscribe( hmtxServiceThreads, THREAD_MAX_WAIT, @hSocket )
+     hb_mutexSubscribe( s_hmtxServiceThreads, THREAD_MAX_WAIT, @hSocket )
 
      // received a -1 value, I have to quit
      IF HB_ISNUMERIC( hSocket )
         EXIT
      // no socket received, thread can graceful quit only if over minimal number
      ELSEIF hSocket == NIL
-        IF hb_mutexLock( hmtxBusy )
+        IF hb_mutexLock( s_hmtxBusy )
            IF s_nServiceThreads <= s_nStartServiceThreads
-              hb_mutexUnlock( hmtxBusy )
+              hb_mutexUnlock( s_hmtxBusy )
               LOOP
            ENDIF
-           hb_mutexUnlock( hmtxBusy )
+           hb_mutexUnlock( s_hmtxBusy )
         ENDIF
         EXIT
      ENDIF
 
      // Connection accepted
-     IF hb_mutexLock( hmtxBusy )
+     IF hb_mutexLock( s_hmtxBusy )
         s_nServiceConnections++
         s_nTotServiceConnections++
         s_nMaxServiceConnections := Max( s_nServiceConnections, s_nMaxServiceConnections )
-        hb_mutexUnlock( hmtxBusy )
+        hb_mutexUnlock( s_hmtxBusy )
      ENDIF
 
      // Save initial time
@@ -757,10 +795,10 @@ LOCAL nError := 500013
            //hb_ToOutDebug( "cRequest -- INIZIO --\n\r%s\n\rcRequest -- FINE --\n\r", cRequest )
 
            PRIVATE _SERVER := HB_IHASH(), _GET := HB_IHASH(), _POST := HB_IHASH(), _REQUEST := HB_IHASH(), _HTTP_REQUEST := HB_IHASH(), m_cPost
-           s_cResult     := ""
-           s_aHeader     := {}
-           s_nStatusCode := 200
-           s_cErrorMsg   := ""
+           t_cResult     := ""
+           t_aHeader     := {}
+           t_nStatusCode := 200
+           t_cErrorMsg   := ""
 
            IF socket_getpeername( hSocket, @aI ) != -1
               _SERVER["REMOTE_ADDR"] := aI[2]
@@ -801,21 +839,21 @@ LOCAL nError := 500013
      nParseTime := hb_milliseconds() - nMsecs
      WriteToConsole( "Page served in : " + Str( nParseTime/1000, 10, 7 ) + " seconds" )
 
-     IF hb_mutexLock( hmtxBusy )
+     IF hb_mutexLock( s_hmtxBusy )
         s_nServiceConnections--
-        hb_mutexUnlock( hmtxBusy )
+        hb_mutexUnlock( s_hmtxBusy )
      ENDIF
 
   ENDDO
 
   WriteToConsole( "Quitting ServiceConnections() " + hb_CStr( nThreadId ) )
 
-  IF hb_mutexLock( hmtxBusy )
+  IF hb_mutexLock( s_hmtxBusy )
      s_nServiceThreads--
      IF ( nPos := aScan( s_aServiceThreads, {|h| h[2] == nThreadId } ) > 0 )
         hb_aDel( s_aServiceThreads, nPos, TRUE )
      ENDIF
-     hb_mutexUnlock( hmtxBusy )
+     hb_mutexUnlock( s_hmtxBusy )
   ENDIF
 
 RETURN 0
@@ -953,7 +991,7 @@ LOCAL cRet, cReturnCode
   uAddHeader("Connection", "close")
 
   IF uGetHeader("Location") != NIL
-     s_nStatusCode := 301
+     t_nStatusCode := 301
   ENDIF
   IF uGetHeader("Content-Type") == NIL
      uAddHeader("Content-Type", "text/html")
@@ -962,7 +1000,7 @@ LOCAL cRet, cReturnCode
   cRet := "HTTP/1.1 "
   cReturnCode := DecodeStatusCode()
 
-  SWITCH s_nStatusCode
+  SWITCH t_nStatusCode
     CASE 200
          EXIT
 
@@ -973,33 +1011,33 @@ LOCAL cRet, cReturnCode
     CASE 403
     CASE 404
     CASE 503
-         s_cResult := "<html><body><h1>" + cReturnCode + "</h1></body></html>"
+         t_cResult := "<html><body><h1>" + cReturnCode + "</h1></body></html>"
          EXIT
 
     // extended error messages - from Microsoft IIS Server
     CASE 500013 // error: 500-13 Server too busy
          uAddHeader( "Retry-After", "60" )  // retry after 60 seconds
-         s_cResult := "<html><body><h1>500 Server Too Busy</h1></body></html>"
+         t_cResult := "<html><body><h1>500 Server Too Busy</h1></body></html>"
          EXIT
 
     CASE 500100 // error: 500-100 Undeclared Variable
 
     OTHERWISE
          cReturnCode := "403 Forbidden"
-         s_cResult := "<html><body><h1>" + cReturnCode + "</h1></body></html>"
+         t_cResult := "<html><body><h1>" + cReturnCode + "</h1></body></html>"
   ENDSWITCH
 
   WriteToConsole( cReturnCode )
   cRet += cReturnCode + CR_LF
-  AEVAL( s_aHeader, {|x| cRet += x[1] + ": " + x[2] + CR_LF } )
+  AEVAL( t_aHeader, {|x| cRet += x[1] + ": " + x[2] + CR_LF } )
   cRet += CR_LF
-  cRet += s_cResult
+  cRet += t_cResult
 RETURN cRet
 
 STATIC FUNCTION DecodeStatusCode()
 LOCAL cReturnCode
 
-  SWITCH s_nStatusCode
+  SWITCH t_nStatusCode
     CASE 200
          cReturnCode := "200 OK"
          EXIT
@@ -1046,14 +1084,14 @@ STATIC PROCEDURE WriteToLog( cRequest )
    LOCAL cErrorMsg
    LOCAL cReferer
 
-   IF hb_mutexLock( hmtxLog )
+   IF hb_mutexLock( s_hmtxLog )
 
       //hb_ToOutDebug( "TIP_TimeStamp() = %s \n\r", TIP_TIMESTAMP() )
 
       cTime    := TIME()
       dDate    := Date()
       cDate    := DTOS( dDate )
-      nSize    := LEN( s_cResult )
+      nSize    := LEN( t_cResult )
       cReferer := _SERVER["HTTP_REFERER"]
       cBias    := WIN_TIMEZONEBIAS()
 
@@ -1061,7 +1099,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
                        aMonths[ VAL( SUBSTR( cDate, 5, 2 ) ) ] + ;
                        "/" + LEFT( cDate, 4 ) + ":" + cTime + ' ' + cBias + '] "' + ;
                        LEFT( cRequest, AT( CR_LF, cRequest ) - 1 ) + '" ' + ;
-                       LTRIM( STR( s_nStatusCode ) ) + " " + IIF( nSize == 0, "-", LTRIM( STR( nSize ) ) ) + ;
+                       LTRIM( STR( t_nStatusCode ) ) + " " + IIF( nSize == 0, "-", LTRIM( STR( nSize ) ) ) + ;
                        ' "' + IIF( Empty( cReferer ), "-", cReferer ) + '" "' + _SERVER["HTTP_USER_AGENT"] + ;
                        '"' + HB_OSNewLine()
 
@@ -1069,13 +1107,13 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
       FWRITE( s_hfileLogAccess, cAccess )
 
-      IF !( s_nStatusCode == 200 ) // ok
+      IF !( t_nStatusCode == 200 ) // ok
 
          nDoW   := Dow( dDate )
          nDay   := Day( dDate )
          nMonth := Month( dDate )
          nYear  := Year( dDate )
-         cErrorMsg := s_cErrorMsg
+         cErrorMsg := t_cErrorMsg
 
          cError := "[" + Left( aDays[ nDoW ], 3 ) + " " + aMonths[ nMonth ] + " " + StrZero( nDay, 2 ) + " " + ;
                    PadL( LTrim( cTime ), 8, "0" ) + " " + StrZero( nYear, 4 ) + "] [error] [client " + _SERVER["REMOTE_ADDR"] + "] " + ;
@@ -1086,7 +1124,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
          FWRITE( s_hfileLogError, cError )
       ENDIF
 
-      hb_mutexUnlock( hmtxLog )
+      hb_mutexUnlock( s_hmtxLog )
    ENDIF
 
 RETURN
@@ -1144,17 +1182,17 @@ FUNCTION uOSFileName( cFileName )
 RETURN cFileName
 
 PROCEDURE uSetStatusCode(nStatusCode)
-  s_nStatusCode := nStatusCode
+  t_nStatusCode := nStatusCode
 RETURN
 
 
 PROCEDURE uAddHeader( cType, cValue )
 LOCAL nI
 
-  IF ( nI := ASCAN( s_aHeader, {|x| UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
-     s_aHeader[ nI, 2 ] := cValue
+  IF ( nI := ASCAN( t_aHeader, {|x| UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
+     t_aHeader[ nI, 2 ] := cValue
   ELSE
-     AADD( s_aHeader, { cType, cValue } )
+     AADD( t_aHeader, { cType, cValue } )
   ENDIF
 RETURN
 
@@ -1162,19 +1200,19 @@ RETURN
 FUNCTION uGetHeader( cType )
 LOCAL nI
 
-  IF ( nI := ASCAN( s_aHeader, {|x| UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
-     RETURN s_aHeader[ nI, 2 ]
+  IF ( nI := ASCAN( t_aHeader, {|x| UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
+     RETURN t_aHeader[ nI, 2 ]
   ENDIF
 RETURN NIL
 
 
 PROCEDURE uWrite( cString )
-  s_cResult += cString
+  t_cResult += cString
 RETURN
 
 #define XP_SUCCESS                 0
 
-STATIC PROCEDURE uproc_default( cRoot, lIndex )
+STATIC PROCEDURE uproc_default()
 LOCAL cFileName, nI, cI
 LOCAL cExt, xResult, pHRB, oError
 
@@ -1186,7 +1224,7 @@ LOCAL cExt, xResult, pHRB, oError
   // Security
   IF ".." $ cFileName
      uSetStatusCode( 403 )
-     s_cErrorMsg := "Characters not allowed"
+     t_cErrorMsg := "Characters not allowed"
      RETURN
   ENDIF
 
@@ -1241,7 +1279,7 @@ LOCAL cExt, xResult, pHRB, oError
            // Starting HRB module
 
            TRY
-              IF hb_mutexLock( hmtxHRB )
+              IF hb_mutexLock( s_hmtxHRB )
                  IF !EMPTY( pHRB := __HRBLOAD( uOSFileName(cFileName) ) )
 
                      xResult := HRBMAIN()
@@ -1249,7 +1287,7 @@ LOCAL cExt, xResult, pHRB, oError
                      __HRBUNLOAD( pHRB )
 
                  ENDIF
-                 hb_mutexUnlock( hmtxHRB )
+                 hb_mutexUnlock( s_hmtxHRB )
               ENDIF
 
               IF HB_ISSTRING( xResult )
@@ -1294,8 +1332,8 @@ LOCAL cExt, xResult, pHRB, oError
         uAddHeader( "Location", "http://" + _SERVER[ "HTTP_HOST" ] + _SERVER[ "SCRIPT_NAME" ] + "/" )
         RETURN
      ENDIF
-     IF (nI := ASCAN( { "index.html", "index.htm" }, ;
-                     {|x| IIF( HB_FileExists( uOSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) ) > 0
+     IF ASCAN( { "index.html", "index.htm" }, ;
+               {|x| IIF( HB_FileExists( uOSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
         uAddHeader( "Content-Type", "text/html" )
         uWrite( HB_MEMOREAD( uOSFileName( cFileName ) ) )
         RETURN
@@ -1304,7 +1342,7 @@ LOCAL cExt, xResult, pHRB, oError
      // If I'm here it's means that I have no page, so, if it is defined, I will display content folder
      IF !s_lIndexes
         uSetStatusCode( 403 )
-        s_cErrorMsg := "Display file list not allowed"
+        t_cErrorMsg := "Display file list not allowed"
         RETURN
      ENDIF
 
@@ -1313,7 +1351,7 @@ LOCAL cExt, xResult, pHRB, oError
 
   ELSE
      uSetStatusCode( 404 )
-     s_cErrorMsg := "File does not exist: " + cFileName
+     t_cErrorMsg := "File does not exist: " + cFileName
   ENDIF
 RETURN
 
@@ -1339,7 +1377,7 @@ STATIC PROCEDURE ShowServerStatus()
 
    uWrite( 'SERVER: ' + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + LTrim( Str( _SERVER[ "SERVER_PORT" ] ) ) )
    uWrite( '<br>' )
-   IF hb_mutexLock( hmtxBusy )
+   IF hb_mutexLock( s_hmtxBusy )
       uWrite( '<br>Thread: ' + Str( s_nThreads ) )
       uWrite( '<br>Connections: ' + Str( s_nConnections ) )
       uWrite( '<br>Max Connections: ' + Str( s_nMaxConnections ) )
@@ -1351,7 +1389,7 @@ STATIC PROCEDURE ShowServerStatus()
       uWrite( '<br>Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
       uWrite( '<br>Total Service Connections: ' + Str( s_nTotServiceConnections ) )
       uWrite( '<br>Service Thread: ' + hb_ValToExp( s_aServiceThreads ) )
-      hb_mutexUnlock( hmtxBusy )
+      hb_mutexUnlock( s_hmtxBusy )
    ENDIF
    uWrite( '<br>Time: ' + Time() )
 
@@ -1420,12 +1458,12 @@ RETURN
 // ------------------------------- Utility functions --------------------------------
 
 STATIC PROCEDURE Help()
-   LOCAL cPrg := hb_argv( 0 )
-   LOCAL nPos := RAt( "\", cPrg )
+   //LOCAL cPrg := hb_argv( 0 )
+   //LOCAL nPos := RAt( "\", cPrg )
    //__OutDebug( hb_argv(0) )
-   IF nPos > 0
-      cPrg := SubStr( cPrg, nPos + 1 )
-   ENDIF
+   //IF nPos > 0
+   //   cPrg := SubStr( cPrg, nPos + 1 )
+   //ENDIF
    ?
    ? "(C) 2009 Francesco Saverio Giudice <info@fsgiudice.com>"
    ?
@@ -1462,7 +1500,7 @@ STATIC PROCEDURE SysSettings()
 RETURN
 
 STATIC FUNCTION Exe_Path()
-   LOCAL cPath := Exe_FullPath()
+   LOCAL cPath := hb_argv( 0 ) //Exe_FullPath()
    LOCAL nPos  := RAt( "\", cPath )
    IF nPos == 0
       cPath := ""
@@ -1472,7 +1510,7 @@ STATIC FUNCTION Exe_Path()
 RETURN cPath
 
 STATIC FUNCTION Exe_Name()
-   LOCAL cPrg := Exe_FullPath()
+   LOCAL cPrg := hb_argv( 0 ) //Exe_FullPath()
    LOCAL nPos := RAt( "\", cPrg )
    IF nPos > 0
       cPrg := SubStr( cPrg, nPos+1 )
@@ -1512,7 +1550,7 @@ RETURN
 STATIC PROCEDURE WriteToConsole( ... )
    LOCAL cMsg
 
-   IF hb_mutexLock( hmtxConsole )
+   IF hb_mutexLock( s_hmtxConsole )
       IF s_lConsole
 
          FOR EACH cMsg IN hb_aParams()
@@ -1520,15 +1558,99 @@ STATIC PROCEDURE WriteToConsole( ... )
              Scroll( CONSOLE_FIRSTROW, 0, CONSOLE_LASTROW, MaxCol(), -1 )
              DispOutAt( CONSOLE_FIRSTROW, 0, PadR( "> " + hb_cStr( cMsg ), MaxCol() ) )
 
+#ifdef DEBUG_ACTIVE
              hb_ToOutDebug( ">>> %s\n\r", cMsg )
+#endif
 
          NEXT
 
       ENDIF
-      hb_mutexUnlock( hmtxConsole )
+      hb_mutexUnlock( s_hmtxConsole )
    ENDIF
 
 RETURN
+
+STATIC FUNCTION ParseIni( cConfig )
+   LOCAL hIni := HB_ReadIni( cConfig )
+   LOCAL cSection, hSect, cKey, xVal, cVal
+   LOCAL hDefault
+
+   // Define here what attributes I can have in ini config file and their defaults
+   hDefault := { ;
+                 "MAIN"     => { ;
+                                 "Port"          => LISTEN_PORT          ,;
+                                 "Document_root" => EXE_Path() + "\home" ,;
+                                 "Show_indexes" => FALSE                  ;
+                               },;
+                 "LOGFILES" => { ;
+                                 "access"     => FILE_ACCESS_LOG          ,;
+                                 "error"      => FILE_ERROR_LOG            ;
+                               },;
+                 "THREADS"  => { ;
+                                 "Max_Wait"   => THREAD_MAX_WAIT         ,;
+                                 "start_num"  => START_RUNNING_THREADS   ,;
+                                 "max_num"    => MAX_RUNNING_THREADS      ;
+                               },;
+                 "ALIASES"  => { => } ;
+               }
+
+   // Now read changes from ini file and modify only admited keys
+   IF !Empty( hIni )
+      FOR EACH cSection IN hIni:Keys
+
+          IF cSection $ hDefault
+
+             hSect := hIni[ cSection ]
+
+             IF HB_IsHash( hSect )
+                FOR EACH cKey IN hSect:Keys
+                    IF cSection == "ALIASES"
+                       xVal := hSect[ cKey ]
+                       IF xVal <> NIL
+                          hDefault[ cSection ][ cKey ] := xVal
+                       ENDIF
+                    ELSEIF cKey $ hDefault[ cSection ]
+                       cVal := hSect[ cKey ]
+
+                       DO CASE
+                          CASE cSection == "MAIN"
+                               DO CASE
+                                  CASE cKey == "Port"
+                                       xVal := Val( cVal )
+                                  CASE cKey == "Document_root"
+                                       IF !Empty( cVal )
+                                          // Change APP_DIR macro with current exe path
+                                          xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
+                                       ENDIF
+                               ENDCASE
+                          CASE cSection == "LOGFILES"
+                               DO CASE
+                                  CASE cKey == "access"
+                                       xVal := cVal
+                                  CASE cKey == "error"
+                                       xVal := cVal
+                               ENDCASE
+                          CASE cSection == "THREADS"
+                               DO CASE
+                                  CASE cKey == "Max_Wait"
+                                       xVal := Val( cVal )
+                                  CASE cKey == "start_num"
+                                       xVal := Val( cVal )
+                                  CASE cKey == "max_num"
+                                       xVal := Val( cVal )
+                               ENDCASE
+                       ENDCASE
+                       IF xVal <> NIL
+                          hDefault[ cSection ][ cKey ] := xVal
+                       ENDIF
+                    ENDIF
+                NEXT
+             ENDIF
+          ENDIF
+      NEXT
+   ENDIF
+
+   RETURN hDefault
 
 
 
@@ -1542,15 +1664,6 @@ RETURN
 #include <windows.h>
 #include "hbapi.h"
 #include "hbvm.h"
-
-HB_FUNC_STATIC( EXE_FULLPATH )
-{
-  char szPath[512];
-
-  if ( !(GetModuleFileName( NULL, szPath, 512) == 0) )
-     hb_retc( szPath );
-
-}
 
 BOOL win_SysRefresh( int iMsec )
 {

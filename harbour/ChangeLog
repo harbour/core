@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-22 01:08 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/contrib/examples/uhttpd/uhttpd.prg
+     + Added support for ini file (default: uhttpd.ini)
+     + modified to add support to Lib GD on batch request
+     * changed THREAD STATIC names with t_ prefix
+     * changed all global STATIC names with s_ prefix
+     - removed C level function EXE_FULLNAME (hb_argv( 0 ) does same)
+  * harbour/contrib/examples/uhttpd/hbmk_b32.bat
+    + now support LIBGD on request
+  * harbour/contrib/examples/uhttpd/readme.txt
+    * updated infos
+  + harbour/contrib/examples/uhttpd/uhttpd.ini
+    + Added default ini file
+      if not found are used internal defaults or command line flags
+  * harbour/contrib/examples/uhttpd/home/counter.html
+    * Fixed typo
+    ; NOTE:
+      Hope that will follow multiplatform version.
+
 2009-01-21 21:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbhpdf/harupdf.ch
   * contrib/hbhpdf/harupdf.c
