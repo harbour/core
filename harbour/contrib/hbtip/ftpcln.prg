@@ -407,13 +407,13 @@ METHOD List( cSpec ) CLASS tIPClientFTP
    IF ::bUsePasv
       IF .not. ::Pasv()
          //::bUsePasv := .F.
-         RETURN .F.
+         RETURN NIL
       ENDIF
    ENDIF
 
    IF .not. ::bUsePasv
       IF .not. ::Port()
-         RETURN .F.
+         RETURN NIL
       ENDIF
    ENDIF
 
@@ -535,7 +535,7 @@ METHOD Read( nLen ) CLASS tIPClientFTP
          IF .not. ::CWD( ::oUrl:cPath )
 
             ::bEof := .T.  // no data for this transaction
-            RETURN .F.
+            RETURN NIL
 
          ENDIF
 
@@ -550,7 +550,7 @@ METHOD Read( nLen ) CLASS tIPClientFTP
       IF .not. ::Retr( ::oUrl:cFile )
 
          ::bEof := .T.  // no data for this transaction
-         RETURN .F.
+         RETURN NIL
 
       ENDIF
 

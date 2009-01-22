@@ -122,7 +122,7 @@ mk_hbtools()
     elif [ "${HB_ARCHITECTURE}" = "w32" ]; then
         hb_tool="$1/${hb_pref}-build"
         hb_path_separator=":"
-        if [ "${HB_MK_STATIC}" != "no" ]; then
+        if [ "${HB_MK_STATIC}" = "yes" ]; then
             hb_static="yes"
             hb_static_default=" (default)"
         else
@@ -133,7 +133,7 @@ mk_hbtools()
     elif [ "${HB_ARCHITECTURE}" = "darwin" ]; then
         hb_tool="$1/${hb_pref}-build"
         hb_path_separator=":"
-        if [ "${HB_MK_STATIC}" != "no" ]; then
+        if [ "${HB_MK_STATIC}" = "yes" ]; then
             hb_static="yes"
             hb_static_default=" (default)"
         else

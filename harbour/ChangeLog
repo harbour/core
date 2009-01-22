@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-22 10:15 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * bin/hb-func.sh
+    * fix darwin detection 
+  * make_gnu.sh
+    * fix darwin detection
+	 * added ncurses detection logic like slang one
+  * contrib/hbtip/ftpcln.prg
+    * fixed wrong changes from nil to .f.
+	 * someone in the past has done a mass change of the return values
+	 * without checking the results
+
 2009-01-22 09:30 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * bin/hb-mkslib.sh
     * fix name of dylibs 
