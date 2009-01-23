@@ -25,7 +25,6 @@ if [ -z "$HB_ARCHITECTURE" ]; then
             *os/2*)                    hb_arch="os2" ;;
             *dos)                      hb_arch="dos" ;;
             *bsd)                      hb_arch="bsd" ;;
-            *darwin)                   hb_arch="darwin" ;;
         esac
     fi
     export HB_ARCHITECTURE="$hb_arch"

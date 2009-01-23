@@ -8,29 +8,37 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-23 10:24 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkslib.sh
+  * make_gnu.sh
+    ! Removed unnecessary explicit darwin detection.
+
+  * ChangeLog
+    ! Removed tabs.
+
 2009-01-22 18:20 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/compiler/hbmain.c
   * harbour/source/pp/hbpp.c
   * harbour/source/pp/ppcore.c
     + added __FILE__ define for .prg code
-    ; Please, look if this is implemented the right and optimal way. 
-      I'm a little confused about PP initialization order, and how 
+    ; Please, look if this is implemented the right and optimal way.
+      I'm a little confused about PP initialization order, and how
       __DATE__, etc, survive after hb_pp_reset in compiler.
 
 2009-01-22 10:15 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * bin/hb-func.sh
-    * fix darwin detection 
+    * fix darwin detection
   * make_gnu.sh
     * fix darwin detection
-	 * added ncurses detection logic like slang one
+    * added ncurses detection logic like slang one
   * contrib/hbtip/ftpcln.prg
     * fixed wrong changes from nil to .f.
-	 * someone in the past has done a mass change of the return values
-	 * without checking the results
+    * someone in the past has done a mass change of the return values
+    * without checking the results
 
 2009-01-22 09:30 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * bin/hb-mkslib.sh
-    * fix name of dylibs 
+    * fix name of dylibs
   * source/compiler/hbgenerr.c
     * cleaned some ":" in the error messages
 
