@@ -73,9 +73,6 @@
 // comment out this line to activate hb_toOutDebug()
 #define DEBUG_ACTIVE
 
-#define APP_NAME      "uhttpd"
-#define APP_VERSION   "0.2"
-
 #ifndef _XHARBOUR_
   #include "hbcompat.ch"
 #endif
@@ -88,7 +85,20 @@
 #ifdef GD_SUPPORT
   // adding GD support
   REQUEST GDIMAGE, gdImageChar, GDCHART
+  #define APP_GD_SUPPORT "_GD"
+#else
+  #define APP_GD_SUPPORT ""
 #endif
+
+#ifdef USE_HB_INET
+  #define APP_INET_SUPPORT "_INET"
+#else
+  #define APP_INET_SUPPORT ""
+#endif
+
+#define APP_NAME      "uhttpd_inet"
+#define APP_VER_NUM   "0.3"
+#define APP_VERSION   APP_VER_NUM + APP_GD_SUPPORT + APP_INET_SUPPORT
 
 #define AF_INET         2
 
@@ -146,6 +156,10 @@ STATIC s_nConnections, s_nMaxConnections, s_nTotConnections
 STATIC s_nServiceConnections, s_nMaxServiceConnections, s_nTotServiceConnections
 STATIC s_aRunningThreads := {}
 STATIC s_aServiceThreads := {}
+
+#ifdef USE_HB_INET
+STATIC s_cLocalAddress, s_nLocalPort
+#endif
 
 // ALIASES: now read from ini file
 //STATIC s_hFileAliases    := { "/info" => "/cgi-bin/info.hrb" }
@@ -381,13 +395,24 @@ LOCAL cCmdPort, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
    // SOCKET CREATION
    // --------------------------------------------------------------------------
 
+#ifdef USE_HB_INET
+   hListen := hb_InetServer( nPort )
+
+   IF hb_InetErrorCode( hListen ) != 0
+      ? "Bind Error"
+   ELSE
+
+     s_nLocalPort    := hb_InetPort( hListen )
+     s_cLocalAddress := hb_InetAddress( hListen )
+
+#else
    hListen   := socket_create()
    IF socket_bind( hListen, { AF_INET, "0.0.0.0", nPort } ) == -1
       ? "bind() error", socket_error()
    ELSEIF socket_listen( hListen ) == -1
       ? "listen() error", socket_error()
    ELSE
-
+#endif
       // --------------------------------------------------------------------------------- //
       // Starting Accept connection thread
       // --------------------------------------------------------------------------------- //
@@ -434,17 +459,28 @@ LOCAL cCmdPort, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
          ENDIF
 
          // Wait a connection
+#ifdef USE_HB_INET
+         hb_InetTimeOut( hListen, 50 )
+         IF HB_InetDataReady( hListen ) > 0
+#else
          IF socket_select( { hListen },,, 50 ) > 0
-
+#endif
             // reset remote values
             aRemote := NIL
 
             // Accept a remote connection
+#ifdef USE_HB_INET
+            hSocket := HB_INETACCEPT( hListen )
+#else
             hSocket := socket_accept( hListen, @aRemote )
-
+#endif
             IF hSocket == NIL
 
+#ifdef USE_HB_INET
+               WriteToConsole( hb_sprintf( "accept() error" ) )
+#else
                WriteToConsole( hb_sprintf( "accept() error: %s", socket_error() ) )
+#endif
 
             ELSE
 
@@ -476,7 +512,11 @@ LOCAL cCmdPort, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
    WriteToConsole( "--- Quitting " + APP_NAME + " ---" )
 
    // Close socket
+#ifdef USE_HB_INET
+   hb_InetClose( hListen )
+#else
    socket_close( hListen )
+#endif
 
    // Close log files
    FCLOSE( s_hfileLogAccess )
@@ -555,8 +595,12 @@ STATIC FUNCTION AcceptConnections()
         // If I have no more of service threads to use ... (DOS attack ?)
         IF nServiceConnections > nMaxServiceThreads
             // DROP connection
+#ifdef USE_HB_INET
+           hb_InetClose( hSocket )
+#else
            socket_shutdown( hSocket )
            socket_close( hSocket )
+#endif
 
         // If I have no service threads in use ...
         ELSEIF nServiceConnections >= nServiceThreads
@@ -588,9 +632,14 @@ RETURN 0
 // CONNECTIONS
 // --------------------------------------------------------------------------------- //
 STATIC FUNCTION ProcessConnection( nThreadIdRef )
-LOCAL hSocket, cBuf, nLen, cRequest, cSend, aI
+LOCAL hSocket, cBuf, nLen, cRequest, cSend
 LOCAL nMsecs, nParseTime, nPos
 LOCAL nThreadId
+#ifdef USE_HB_INET
+LOCAL nRcvLen, nContLen
+#else
+LOCAL aI
+#endif
 
   nThreadId    := hb_threadID()
   nThreadIdRef := nThreadId
@@ -643,15 +692,49 @@ LOCAL nThreadId
      BEGIN SEQUENCE
 
         /* receive query */
+#ifdef USE_HB_INET
+        cRequest := ""
+        nLen     := 0
+        nRcvLen  := 1
+        nContLen := 0
+        DO WHILE /* AT( CR_LF + CR_LF, cRequest ) == 0 .AND. */ nRcvLen > 0
+           cBuf := hb_InetRecvLine( hSocket, @nRcvLen )
+           //hb_ToOutDebug( " nRcvLen = %i, cBuf = %s \n\r", nRcvLen, cBuf )
+           cRequest += cBuf + CR_LF
+           nLen += nRcvLen
+           IF nRcvLen > 0 .AND. At( "CONTENT-LENGTH:", Upper( cBuf ) ) == 1
+              cBuf := Substr( cBuf, At( ":", cBuf ) + 1 )
+              nContLen := Val( cBuf )
+           ENDIF
+        ENDDO
+
+        //hb_ToOutDebug( " nLen = %i, nContLen = %i \n\r", nLen, nContLen )
+        // if the request has a content-lenght, we must read it
+        IF nLen > 0 .AND. nContLen > 0
+           // cPostData is autoAllocated
+           cBuf := Space( nContLen )
+           IF InetRecvAll( hSocket, @cBuf, nContLen ) <= 0
+              nLen := -1 // force error check
+           ELSE
+              cRequest += cBuf
+           ENDIF
+        ENDIF
+#else
         cRequest := ""
         nLen     := 1
         DO WHILE AT( CR_LF + CR_LF, cRequest ) == 0 .AND. nLen > 0
            nLen := socket_recv( hSocket, @cBuf )
            cRequest += cBuf
         ENDDO
+#endif
 
         IF nLen == -1
+#ifdef USE_HB_INET
+           ? "recv() error:", HB_INETERRORCODE( hSocket ), HB_INETERRORDESC( hSocket )
+#else
            ? "recv() error:", socket_error()
+#endif
+
         ELSEIF nLen == 0 /* connection closed */
         ELSE
 
@@ -663,6 +746,14 @@ LOCAL nThreadId
            t_nStatusCode := 200
            t_cErrorMsg   := ""
 
+#ifdef USE_HB_INET
+           _SERVER["REMOTE_ADDR"] := hb_InetAddress( hSocket )
+           _SERVER["REMOTE_HOST"] := _SERVER["REMOTE_ADDR"]  // no reverse DNS
+           _SERVER["REMOTE_PORT"] := hb_InetPort( hSocket )
+
+           _SERVER["SERVER_ADDR"] := s_cLocalAddress
+           _SERVER["SERVER_PORT"] := s_nLocalPort
+#else
            IF socket_getpeername( hSocket, @aI ) != -1
               _SERVER["REMOTE_ADDR"] := aI[2]
               _SERVER["REMOTE_HOST"] := _SERVER["REMOTE_ADDR"]  // no reverse DNS
@@ -673,7 +764,7 @@ LOCAL nThreadId
               _SERVER["SERVER_ADDR"] := aI[2]
               _SERVER["SERVER_PORT"] := aI[3]
            ENDIF
-
+#endif
            IF ParseRequest( cRequest )
               //hb_ToOutDebug( "_SERVER = %s,\n\r _GET = %s,\n\r _POST = %s,\n\r _REQUEST = %s,\n\r _HTTP_REQUEST = %s\n\r", hb_ValToExp( _SERVER ), hb_ValToExp( _GET ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ), hb_ValToExp( _HTTP_REQUEST ) )
               define_Env( _SERVER )
@@ -685,6 +776,17 @@ LOCAL nThreadId
 
            //hb_ToOutDebug( "cSend = %s\n\r", cSend )
 
+#ifdef USE_HB_INET
+           DO WHILE LEN( cSend ) > 0
+              IF ( nLen := hb_InetSendAll( hSocket, cSend ) ) == -1
+                 ? "send() error:", hb_InetErrorCode( hSocket ), HB_InetErrorDesc( hSocket )
+                 WriteToConsole( hb_sprintf( "ProcessConnection() - send() error: %s, cSend = %s, hSocket = %s", hb_InetErrorDesc( hSocket ), cSend, hSocket ) )
+                 EXIT
+              ELSEIF nLen > 0
+                 cSend := SUBSTR( cSend, nLen + 1 )
+              ENDIF
+           ENDDO
+#else
            DO WHILE LEN( cSend ) > 0
               IF ( nLen := socket_send( hSocket, cSend ) ) == -1
                  ? "send() error:", socket_error()
@@ -694,12 +796,17 @@ LOCAL nThreadId
                  cSend := SUBSTR( cSend, nLen + 1 )
               ENDIF
            ENDDO
-
+#endif
            WriteToLog( cRequest )
 
         ENDIF
+
+#ifdef USE_HB_INET
+        hb_InetClose( hSocket )
+#else
         socket_shutdown( hSocket )
         socket_close( hSocket )
+#endif
      END SEQUENCE
 
      nParseTime := hb_milliseconds() - nMsecs
@@ -725,10 +832,15 @@ LOCAL nThreadId
 RETURN 0
 
 STATIC FUNCTION ServiceConnection( nThreadIdRef )
-LOCAL hSocket, cBuf, nLen, cRequest, cSend, aI
+LOCAL hSocket, cBuf, nLen, cRequest, cSend
 LOCAL nMsecs, nParseTime, nPos
 LOCAL nThreadId
 LOCAL nError := 500013
+#ifdef USE_HB_INET
+LOCAL nRcvLen, nContLen
+#else
+LOCAL aI
+#endif
 
   nThreadId := hb_threadID()
   nThreadIdRef := nThreadId
@@ -780,15 +892,48 @@ LOCAL nError := 500013
      BEGIN SEQUENCE
 
         /* receive query */
+#ifdef USE_HB_INET
+        cRequest := ""
+        nLen     := 0
+        nRcvLen  := 1
+        nContLen := 0
+        DO WHILE /* AT( CR_LF + CR_LF, cRequest ) == 0 .AND. */ nRcvLen > 0
+           cBuf := hb_InetRecvLine( hSocket, @nRcvLen )
+           //hb_ToOutDebug( " nRcvLen = %i, cBuf = %s \n\r", nRcvLen, cBuf )
+           cRequest += cBuf + CR_LF
+           nLen += nRcvLen
+           IF nRcvLen > 0 .AND. At( "CONTENT-LENGTH:", Upper( cBuf ) ) == 1
+              cBuf := Substr( cBuf, At( ":", cBuf ) + 1 )
+              nContLen := Val( cBuf )
+           ENDIF
+        ENDDO
+
+        //hb_ToOutDebug( " nLen = %i, nContLen = %i \n\r", nLen, nContLen )
+        // if the request has a content-lenght, we must read it
+        IF nLen > 0 .AND. nContLen > 0
+           // cPostData is autoAllocated
+           cBuf := Space( nContLen )
+           IF InetRecvAll( hSocket, @cBuf, nContLen ) <= 0
+              nLen := -1 // force error check
+           ELSE
+              cRequest += cBuf
+           ENDIF
+        ENDIF
+#else
         cRequest := ""
         nLen     := 1
         DO WHILE AT( CR_LF + CR_LF, cRequest ) == 0 .AND. nLen > 0
            nLen := socket_recv( hSocket, @cBuf )
            cRequest += cBuf
         ENDDO
+#endif
 
         IF nLen == -1
+#ifdef USE_HB_INET
+           ? "recv() error:", hb_InetErrorCode( hSocket ), hb_InetErrorDesc( hSocket )
+#else
            ? "recv() error:", socket_error()
+#endif
         ELSEIF nLen == 0 /* connection closed */
         ELSE
 
@@ -800,6 +945,14 @@ LOCAL nError := 500013
            t_nStatusCode := 200
            t_cErrorMsg   := ""
 
+#ifdef USE_HB_INET
+           _SERVER["REMOTE_ADDR"] := hb_InetAddress( hSocket )
+           _SERVER["REMOTE_HOST"] := _SERVER["REMOTE_ADDR"]  // no reverse DNS
+           _SERVER["REMOTE_PORT"] := hb_InetPort( hSocket )
+
+           _SERVER["SERVER_ADDR"] := s_cLocalAddress
+           _SERVER["SERVER_PORT"] := s_nLocalPort
+#else
            IF socket_getpeername( hSocket, @aI ) != -1
               _SERVER["REMOTE_ADDR"] := aI[2]
               _SERVER["REMOTE_HOST"] := _SERVER["REMOTE_ADDR"]  // no reverse DNS
@@ -810,6 +963,7 @@ LOCAL nError := 500013
               _SERVER["SERVER_ADDR"] := aI[2]
               _SERVER["SERVER_PORT"] := aI[3]
            ENDIF
+#endif
 
            IF ParseRequest( cRequest )
               //hb_ToOutDebug( "_SERVER = %s,\n\r _GET = %s,\n\r _POST = %s,\n\r _REQUEST = %s,\n\r _HTTP_REQUEST = %s\n\r", hb_ValToExp( _SERVER ), hb_ValToExp( _GET ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ), hb_ValToExp( _HTTP_REQUEST ) )
@@ -819,6 +973,17 @@ LOCAL nError := 500013
            uSetStatusCode( nError )
            cSend := MakeResponse()
 
+#ifdef USE_HB_INET
+           DO WHILE LEN( cSend ) > 0
+              IF ( nLen := hb_InetSendAll( hSocket, cSend ) ) == -1
+                 ? "send() error:", hb_InetErrorCode( hSocket ), HB_InetErrorDesc( hSocket )
+                 WriteToConsole( hb_sprintf( "ProcessConnection() - send() error: %s, cSend = %s, hSocket = %s", hb_InetErrorDesc( hSocket ), cSend, hSocket ) )
+                 EXIT
+              ELSEIF nLen > 0
+                 cSend := SUBSTR( cSend, nLen + 1 )
+              ENDIF
+           ENDDO
+#else
            DO WHILE LEN( cSend ) > 0
               IF ( nLen := socket_send( hSocket, cSend ) ) == -1
                  ? "send() error:", socket_error()
@@ -828,12 +993,17 @@ LOCAL nError := 500013
                  cSend := SUBSTR( cSend, nLen + 1 )
               ENDIF
            ENDDO
+#endif
 
            WriteToLog( cRequest )
 
         ENDIF
+#ifdef USE_HB_INET
+        hb_InetClose( hSocket )
+#else
         socket_shutdown( hSocket )
         socket_close( hSocket )
+#endif
      END SEQUENCE
 
      nParseTime := hb_milliseconds() - nMsecs
@@ -953,7 +1123,6 @@ LOCAL cReq, aVal, cPost
   // POST vars
   IF "POST" $ Upper( _SERVER[ 'REQUEST_METHOD' ] )
      //hb_ToOutDebug( "POST: %s\n\r", aTail( aRequest ) )
-     //cPost := SubStr( aTail( aRequest ), 1, _SERVER[ 'CONTENT_LENGTH' ] )
      cPost := aTail( aRequest )
      FOR EACH cI IN split( "&", cPost )
         IF ( nI := AT( "=", cI ) ) > 0
@@ -1130,14 +1299,22 @@ STATIC PROCEDURE WriteToLog( cRequest )
 RETURN
 
 INIT PROCEDURE SocketInit()
+#ifdef USE_HB_INET
+  hb_InetInit()
+#else
   IF socket_init() != 0
      ? "socket_init() error"
   ENDIF
+#endif
 RETURN
 
 
 EXIT PROCEDURE Socketxit()
+#ifdef USE_HB_INET
+   hb_InetCleanup()
+#else
    socket_exit()
+#endif
 RETURN
 
 
@@ -1500,7 +1677,7 @@ STATIC PROCEDURE SysSettings()
 RETURN
 
 STATIC FUNCTION Exe_Path()
-   LOCAL cPath := hb_argv( 0 ) //Exe_FullPath()
+   LOCAL cPath := hb_argv( 0 )
    LOCAL nPos  := RAt( "\", cPath )
    IF nPos == 0
       cPath := ""
@@ -1510,7 +1687,7 @@ STATIC FUNCTION Exe_Path()
 RETURN cPath
 
 STATIC FUNCTION Exe_Name()
-   LOCAL cPrg := hb_argv( 0 ) //Exe_FullPath()
+   LOCAL cPrg := hb_argv( 0 )
    LOCAL nPos := RAt( "\", cPrg )
    IF nPos > 0
       cPrg := SubStr( cPrg, nPos+1 )
@@ -1539,6 +1716,7 @@ STATIC PROCEDURE Progress( nProgress )
       nProgress := 0
    ENDIF
 
+   // using hb_dispOutAt() to avoid MT screen updates problem
    hb_dispOutAt( 10,  5, cString )
    hb_dispOutAt(  0, 60, "Time: " + Time() )
 
@@ -1555,8 +1733,8 @@ STATIC PROCEDURE WriteToConsole( ... )
 
          FOR EACH cMsg IN hb_aParams()
 
-             Scroll( CONSOLE_FIRSTROW, 0, CONSOLE_LASTROW, MaxCol(), -1 )
-             DispOutAt( CONSOLE_FIRSTROW, 0, PadR( "> " + hb_cStr( cMsg ), MaxCol() ) )
+             hb_Scroll( CONSOLE_FIRSTROW, 0, CONSOLE_LASTROW, MaxCol(), -1 )
+             hb_DispOutAt( CONSOLE_FIRSTROW, 0, PadR( "> " + hb_cStr( cMsg ), MaxCol() ) )
 
 #ifdef DEBUG_ACTIVE
              hb_ToOutDebug( ">>> %s\n\r", cMsg )
