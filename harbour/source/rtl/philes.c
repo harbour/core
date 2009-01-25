@@ -152,9 +152,18 @@ HB_FUNC( FWRITE )
 
    if( ISNUM( 1 ) && ISCHAR( 2 ) )
    {
+      ULONG nLen = hb_parclen( 2 );
+
+      if( ISNUM( 3 ) )
+      {
+         ULONG nWrite = ( ULONG ) hb_parnl( 3 );
+         if( nWrite < nLen )
+            nLen = nWrite;
+      }
+
       hb_retnl( hb_fsWriteLarge( hb_numToHandle( hb_parnint( 1 ) ),
                                  ( BYTE * ) hb_parc( 2 ),
-                                 ISNUM( 3 ) ? ( ULONG ) hb_parnl( 3 ) : hb_parclen( 2 ) ) );
+                                 nLen ) );
       uiError = hb_fsError();
    }
    else
