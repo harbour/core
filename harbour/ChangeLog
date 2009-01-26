@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 20:24 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/ChangeLog
+    * added missed entry I haven't uploaded and fixed my wrong phrase.
+
 2009-01-26 17:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * include/hbextern.ch
@@ -51,6 +55,15 @@
   * harbour/bin/hb-func.sh
     * updated contrib library last
 
+2009-01-26 16:47 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/source/rdd/usrrdd/rdds/arrayrdd.prg
+    * fixed harbour version without using hbcompat.ch
+      ; TODO: update it using dbCreate() extension params
+  + harbour/source/rdd/usrrdd/example/exarr.prg
+    + ARRAYRDD example
+  + harbour/source/rdd/usrrdd/example/hbmk_b32.bat
+    + BCC make file
+
 2009-01-26 13:11 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/source/rdd/usrrdd/rdds/logrdd.prg
     * changed REQUEST to DYNAMIC HB_LOGRDDINHERIT
@@ -87,7 +100,7 @@
     + Added CGIExec() function
       Now uHTTPD supports external cgi executables.
       A big thank you to Giancarlo Niccolai that wrote Process*() functions
-      a to Przemek that has ported them to harbour.
+      and to Przemek that has ported them to harbour.
     ; NOTE: security has to be checked.
       A minimal executable test can be downloaded from:
       http://www.fsgiudice.com/testcgi.zip
