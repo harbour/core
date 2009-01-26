@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 13:02 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbziparc/hbziparc.prg
+    ! Fixed <acFiles> behavior if the parameter is not passed.
+
 2009-01-26 21:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbprintf.c
   * harbour/source/codepage/cpeswinm.c

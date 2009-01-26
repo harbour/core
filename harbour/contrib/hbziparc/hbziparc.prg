@@ -935,6 +935,7 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
    LOCAL nPos
    LOCAL cZipName
    LOCAL cExt
+   LOCAL lExtract
 
    DEFAULT lWithPath TO .F.
 
@@ -971,15 +972,22 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
          nPos++
 
          IF hb_UnzipFileInfo( hUnzip, @cZipName ) == 0
-
             /* NOTE: As opposed to original hbziparch we don't do a second match without path. */
-            IF AScan( acFiles, nPos ) > 0 .OR. ;
-               AScan( acFiles, {| cMask | hb_FileMatch( cZipName, cMask ) } ) > 0
+            IF !Empty( acFiles )
+               IF AScan( acFiles, nPos ) > 0 .OR. ;
+                  AScan( acFiles, {| cMask | hb_FileMatch( cZipName, cMask ) } ) > 0
+                  lExtract := .t.
+               ELSE
+                  lExtract := .f.
+               ENDIF
+            ELSE
+               lExtract := .t.
+            ENDIF
 
+            IF lExtract    
                IF hb_isBlock( bUpdate )
                   Eval( bUpdate, cZipName, nPos )
                ENDIF
-
                hb_UnzipExtractCurrentFile( hUnzip, cPath + cZipName, cPassword )
             ENDIF
          ENDIF
