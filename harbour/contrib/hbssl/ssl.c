@@ -236,7 +236,7 @@ HB_FUNC( SSL_GET_CIPHER )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_retc_const( SSL_get_cipher( ssl ) );
+         hb_retc( SSL_get_cipher( ssl ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -465,6 +465,38 @@ HB_FUNC( SSL_SET_SSL_METHOD )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_GET_SSL_METHOD )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+      {
+         SSL_METHOD * method = SSL_get_ssl_method( ssl );
+         int nMethod;
+
+         if(      method == SSLv2_method()         ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV2;
+         else if( method == SSLv2_server_method()  ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV2_SERVER;
+         else if( method == SSLv2_client_method()  ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV2_CLIENT;
+         else if( method == SSLv3_method()         ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV3;
+         else if( method == SSLv3_server_method()  ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV3_SERVER;
+         else if( method == SSLv3_client_method()  ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV3_CLIENT;
+         else if( method == TLSv1_method()         ) nMethod = HB_SSL_CTX_NEW_METHOD_TLSV1;
+         else if( method == TLSv1_server_method()  ) nMethod = HB_SSL_CTX_NEW_METHOD_TLSV1_SERVER;
+         else if( method == TLSv1_client_method()  ) nMethod = HB_SSL_CTX_NEW_METHOD_TLSV1_CLIENT;
+         else if( method == SSLv23_method()        ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV23;
+         else if( method == SSLv23_server_method() ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER;
+         else if( method == SSLv23_client_method() ) nMethod = HB_SSL_CTX_NEW_METHOD_SSLV23_CLIENT;
+         else                                        nMethod = 0;
+
+         hb_retni( nMethod );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( SSL_GET_CURRENT_CIPHER )
 {
    if( hb_SSL_is( 1 ) )
@@ -536,17 +568,509 @@ HB_FUNC( SSL_GET_CIPHER_VERSION )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_COPY_SESSION_ID )
+{
+   if( hb_SSL_is( 1 ) && hb_SSL_is( 2 ) )
+   {
+      SSL * ssl1 = hb_SSL_par( 1 );
+      SSL * ssl2 = hb_SSL_par( 2 );
+
+      if( ssl1 && ssl2 )
+         SSL_copy_session_id( ssl1, ssl2 );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_SHARED_CIPHERS )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+      {
+         char buffer[ 128 + 1 ]; /* See: CVE-2006-3738 */
+
+         buffer[ 0 ] = '\0';
+
+         hb_retc( SSL_get_shared_ciphers( ssl, buffer, sizeof( buffer ) - 1 ) );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_ALERT_DESC_STRING )
+{
+   hb_retc( SSL_alert_desc_string( hb_parni( 1 ) ) );
+}
+
+HB_FUNC( SSL_ALERT_DESC_STRING_LONG )
+{
+   hb_retc( SSL_alert_desc_string_long( hb_parni( 1 ) ) );
+}
+
+HB_FUNC( SSL_ALERT_TYPE_STRING )
+{
+   hb_retc( SSL_alert_type_string( hb_parni( 1 ) ) );
+}
+
+HB_FUNC( SSL_ALERT_TYPE_STRING_LONG )
+{
+   hb_retc( SSL_alert_type_string_long( hb_parni( 1 ) ) );
+}
+
+HB_FUNC( SSL_GET_EX_DATA )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retc( SSL_get_ex_data( ssl, hb_parni( 1 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_RSTATE_STRING )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retc( SSL_rstate_string( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_RSTATE_STRING_LONG )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retc( SSL_rstate_string( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_STATE_STRING )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retc( SSL_rstate_string( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_STATE_STRING_LONG )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retc( SSL_rstate_string( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/*
+
+HB_FUNC( SSL_GET_PSK_IDENTITY_HINT )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retc( SSL_get_psk_identity_hint( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_PSK_IDENTITY )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retc( SSL_get_psk_identity( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+*/
+
+HB_FUNC( SSL_CHECK_PRIVATE_KEY )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_check_private_key( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_ERROR )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_get_error( ssl, hb_parni( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_FD )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_get_fd( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_QUIET_SHUTDOWN )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_get_quiet_shutdown( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_SHUTDOWN )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_get_shutdown( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_READ_AHEAD )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_get_read_ahead( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_STATE )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_get_state( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_VERIFY_MODE )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_get_verify_mode( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_IN_ACCEPT_INIT )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_in_accept_init( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_IN_BEFORE )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_in_before( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_IN_CONNECT_INIT )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_in_connect_init( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_IN_INIT )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_in_init( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_IS_INIT_FINISHED )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_is_init_finished( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SET_RFD )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_set_rfd( ssl, hb_parni( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SET_WFD )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_set_wfd( ssl, hb_parni( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_NUM_RENEGOTIATIONS )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retnl( SSL_num_renegotiations( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CLEAR_NUM_RENEGOTIATIONS )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retnl( SSL_clear_num_renegotiations( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_DEFAULT_TIMEOUT )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retnl( SSL_get_default_timeout( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_VERIFY_RESULT )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retnl( SSL_get_verify_result( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SESSION_REUSED )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retnl( SSL_session_reused( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SET_ACCEPT_STATE )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         SSL_set_accept_state( ssl );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SET_CONNECT_STATE )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         SSL_set_connect_state( ssl );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SET_OPTIONS )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         SSL_set_options( ssl, ( unsigned long ) hb_parnl( 2 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SET_QUIET_SHUTDOWN )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         SSL_set_quiet_shutdown( ssl, hb_parni( 2 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SET_READ_AHEAD )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         SSL_set_read_ahead( ssl, hb_parni( 2 ) /* yes */ );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SET_SHUTDOWN )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         SSL_set_shutdown( ssl, hb_parni( 2 ) /* mode */ );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_SET_VERIFY_RESULT )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         SSL_set_verify_result( ssl, hb_parnl( 2 ) /* arg */ );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
 int SSL_add_dir_cert_subjects_to_stack(STACK *stack, const char *dir);
 int SSL_add_file_cert_subjects_to_stack(STACK *stack, const char *file);
 int SSL_add_client_CA(SSL *ssl, X509 *x);
-char *SSL_alert_desc_string(int value);
-char *SSL_alert_desc_string_long(int value);
-char *SSL_alert_type_string(int value);
-char *SSL_alert_type_string_long(int value);
-int SSL_check_private_key(const SSL *ssl);
-long SSL_clear_num_renegotiations(SSL *ssl);
-void SSL_copy_session_id(SSL *t, const SSL *f);
 long SSL_ctrl(SSL *ssl, int cmd, long larg, char *parg);
 STACK *SSL_dup_CA_list(STACK *sk);
 SSL_CTX *SSL_get_SSL_CTX(const SSL *ssl);
@@ -554,61 +1078,27 @@ char *SSL_get_app_data(SSL *ssl);
 X509 *SSL_get_certificate(const SSL *ssl);
 STACK *SSL_get_ciphers(const SSL *ssl);
 STACK *SSL_get_client_CA_list(const SSL *ssl);
-long SSL_get_default_timeout(const SSL *ssl);
-int SSL_get_error(const SSL *ssl, int i);
-char *SSL_get_ex_data(const SSL *ssl, int idx);
 int SSL_get_ex_data_X509_STORE_CTX_idx(void);
 int SSL_get_ex_new_index(long argl, char *argp, int (*new_func);(void), int (*dup_func)(void), void (*free_func)(void))
-int SSL_get_fd(const SSL *ssl);
 void (*SSL_get_info_callback(const SSL *ssl);)()
 STACK *      SSL_get_peer_cert_chain(const SSL *ssl);
 X509 *       SSL_get_peer_certificate(const SSL *ssl);
 EVP_PKEY *   SSL_get_privatekey(SSL *ssl);
-int          SSL_get_quiet_shutdown(const SSL *ssl);
 BIO *        SSL_get_rbio(const SSL *ssl);
-int          SSL_get_read_ahead(const SSL *ssl);
 SSL_SESSION *SSL_get_session(const SSL *ssl);
-char *      SSL_get_shared_ciphers(const SSL *ssl, char *buf, int len);
-int         SSL_get_shutdown(const SSL *ssl);
-const SSL_METHOD *SSL_get_ssl_method(SSL *ssl);
-int         SSL_get_state(const SSL *ssl);
 int (*SSL_get_verify_callback(const SSL *ssl))(int,X509_STORE_CTX *)
-int         SSL_get_verify_mode(const SSL *ssl);
-long        SSL_get_verify_result(const SSL *ssl);
 BIO *       SSL_get_wbio(const SSL *ssl);
-int         SSL_in_accept_init(SSL *ssl);
-int         SSL_in_before(SSL *ssl);
-int         SSL_in_connect_init(SSL *ssl);
-int         SSL_in_init(SSL *ssl);
-int         SSL_is_init_finished(SSL *ssl);
 STACK *     SSL_load_client_CA_file(char *file);
-void        SSL_load_error_strings(void);
-long        SSL_num_renegotiations(SSL *ssl);
-char *      SSL_rstate_string(SSL *ssl);
-char *      SSL_rstate_string_long(SSL *ssl);
-long        SSL_session_reused(SSL *ssl);
-void        SSL_set_accept_state(SSL *ssl);
 void        SSL_set_app_data(SSL *ssl, char *arg);
 void        SSL_set_bio(SSL *ssl, BIO *rbio, BIO *wbio);
 int         SSL_set_cipher_list(SSL *ssl, char *str);
 void        SSL_set_client_CA_list(SSL *ssl, STACK *list);
-void        SSL_set_connect_state(SSL *ssl);
 int         SSL_set_ex_data(SSL *ssl, int idx, char *arg);
-int         SSL_set_fd(SSL *ssl, int fd);
 void        SSL_set_info_callback(SSL *ssl, void (*cb);(void))
 void        SSL_set_msg_callback(SSL *ctx, void (*cb)(int write_p, int version, int content_type, const void *buf, size_t len, SSL *ssl, void *arg));
 void        SSL_set_msg_callback_arg(SSL *ctx, void *arg);
-void        SSL_set_options(SSL *ssl, unsigned long op);
-void        SSL_set_quiet_shutdown(SSL *ssl, int mode);
-void        SSL_set_read_ahead(SSL *ssl, int yes);
-int         SSL_set_rfd(SSL *ssl, int fd);
 int         SSL_set_session(SSL *ssl, SSL_SESSION *session);
-void        SSL_set_shutdown(SSL *ssl, int mode);
 void        SSL_set_verify(SSL *ssl, int mode, int (*callback);(void))
-void        SSL_set_verify_result(SSL *ssl, long arg);
-int         SSL_set_wfd(SSL *ssl, int fd);
-char *      SSL_state_string(const SSL *ssl);
-char *      SSL_state_string_long(const SSL *ssl);
 int         SSL_use_PrivateKey(SSL *ssl, EVP_PKEY *pkey);
 int         SSL_use_PrivateKey_ASN1(int type, SSL *ssl, unsigned char *d, long len);
 int         SSL_use_PrivateKey_file(SSL *ssl, char *file, int type);
@@ -621,6 +1111,4 @@ int         SSL_use_certificate_file(SSL *ssl, char *file, int type);
 void        SSL_set_psk_client_callback(SSL *ssl, unsigned int (*callback)(SSL *ssl, const char *hint, char *identity, unsigned int max_identity_len, unsigned char *psk, unsigned int max_psk_len));
 int         SSL_use_psk_identity_hint(SSL *ssl, const char *hint);
 void        SSL_set_psk_server_callback(SSL *ssl, unsigned int (*callback)(SSL *ssl, const char *identity, unsigned char *psk, int max_psk_len));
-const char *SSL_get_psk_identity_hint(SSL *ssl);
-const char *SSL_get_psk_identity(SSL *ssl);
 */

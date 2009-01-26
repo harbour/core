@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 11:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbssl/sslctx.c
+   * contrib/hbssl/ssl.c
+     + Added more SSL API.
+
+   * TODO
+     * Updated.
+
 2009-01-26 10:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbssl/tests/test.prg
    * contrib/hbssl/ssl.c

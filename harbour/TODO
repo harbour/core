@@ -10,28 +10,23 @@
 Tasks for after v.1 release:
 ----------------------------
 
-Assign to: Jean-Francois Lefebvre (JFL)
-Detail...: The following need to be added to the OO system:
-           Class Method, Multiple Constructor, Class init Support.
+Assign to: <nobody>
+Detail...: Add GTNET driver which will allow to run Harbour application
+           remotely. GTNET will be used on server side and on client
+           side any native GT driver.
 Status...: Open.
 
 ***
 
 Assign to: <nobody>
-Detail...: Add missing Clipper virtual memory functions.
+Detail...: UNICODE (UTF-8) support.
 Status...: Open.
 
 ***
 
-Assign to: <nobody>
-Detail...: Dynamic multi-language compiler/runtime support.
-Status...: Open.
-
-***
-
-Assign to: <nobody>
-Detail...: UNICODE support.
-Status...: Open.
+Assign to: Ryszard
+Detail...: SQLRDD.
+Status...: Working on it.
 
 ***
 
@@ -65,14 +60,6 @@ Status...: Open.
 ***
 
 Assign to: <nobody>
-Detail...: Add GTNET driver which will allow to run Harbour application
-           remotely. GTNET will be used on server side and on client
-           side any native GT driver.
-Status...: Open.
-
-***
-
-Assign to: <nobody>
 Detail...: Add support for remotely controlled GUI objects so we will
            be able to create GUI programs with GTNET.
 Status...: Open.
@@ -100,9 +87,10 @@ Status...: Open.
 
 ***
 
-Assign to: Ryszard
-Detail...: SQLRDD.
-Status...: Working on it.
+Assign to: Jean-Francois Lefebvre (JFL)
+Detail...: The following need to be added to the OO system:
+           Class Method, Multiple Constructor, Class init Support.
+Status...: Open.
 
 ***
 

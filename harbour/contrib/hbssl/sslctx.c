@@ -74,7 +74,7 @@ HB_FUNC( SSLEAY_VERSION )
    case HB_SSLEAY_DIR      : value = SSLEAY_DIR;      break;
    }
 
-   hb_retc_const( SSLeay_version( value ) );
+   hb_retc( SSLeay_version( value ) );
 }
 
 static HB_GARBAGE_FUNC( SSL_CTX_release )
@@ -258,47 +258,337 @@ HB_FUNC( SSL_CTX_SET_SESSION_CACHE_MODE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_CTX_GET_APP_DATA )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retc( SSL_CTX_get_app_data( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_GET_EX_DATA )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retc( SSL_CTX_get_ex_data( ctx, hb_parni( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_CHECK_PRIVATE_KEY )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_check_private_key( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_GET_QUIET_SHUTDOWN )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_get_quiet_shutdown( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_GET_VERIFY_MODE )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_get_verify_mode( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_ACCEPT )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_accept( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_ACCEPT_GOOD )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_accept_good( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_ACCEPT_RENEGOTIATE )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_accept_renegotiate( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_CACHE_FULL )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_cache_full( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_CB_HITS )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_cb_hits( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_CONNECT )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_connect( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_CONNECT_GOOD )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_connect_good( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_CONNECT_RENEGOTIATE )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_connect_renegotiate( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_GET_CACHE_SIZE )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_get_cache_size( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_HITS )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_hits( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_MISSES )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_misses( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_NUMBER )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_number( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_TIMEOUTS )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_sess_timeouts( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SET_DEFAULT_VERIFY_PATHS )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retni( SSL_CTX_set_default_verify_paths( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_NEED_TMP_RSA )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         hb_retnl( SSL_CTX_need_tmp_RSA( ctx ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SESS_SET_CACHE_SIZE )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         SSL_CTX_sess_set_cache_size( ctx, hb_parni( 2 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SET_DEFAULT_READ_AHEAD )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         SSL_CTX_set_default_read_ahead( ctx, hb_parni( 2 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SET_OPTIONS )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         SSL_CTX_set_options( ctx, ( unsigned long ) hb_parnl( 2 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CTX_SET_QUIET_SHUTDOWN )
+{
+   if( hb_SSL_CTX_is( 1 ) )
+   {
+      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
+
+      if( ctx )
+         SSL_CTX_set_quiet_shutdown( ctx, hb_parni( 2 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
 X509_STORE *SSL_CTX_get_cert_store(const SSL_CTX *);
 void SSL_CTX_set_cert_store(SSL_CTX *,X509_STORE *);
-
 int SSL_CTX_add_client_CA(SSL_CTX *ctx, X509 *x);
 long SSL_CTX_add_extra_chain_cert(SSL_CTX *ctx, X509 *x509);
-int SSL_CTX_check_private_key(const SSL_CTX *ctx);
 long SSL_CTX_ctrl(SSL_CTX *ctx, int cmd, long larg, char *parg);
-char *SSL_CTX_get_app_data(SSL_CTX *ctx);
 X509_STORE *SSL_CTX_get_cert_store(SSL_CTX *ctx);
 STACK *SSL_CTX_get_client_CA_list(const SSL_CTX *ctx);
 int (*SSL_CTX_get_client_cert_cb(SSL_CTX *ctx))(SSL *ssl, X509 **x509, EVP_PKEY **pkey);
-char *SSL_CTX_get_ex_data(const SSL_CTX *s, int idx);
 int SSL_CTX_get_ex_new_index(long argl, char *argp, int (*new_func);(void), int (*dup_func)(void), void (*free_func)(void))
 void (*SSL_CTX_get_info_callback(SSL_CTX *ctx))(SSL *ssl, int cb, int ret);
-int SSL_CTX_get_quiet_shutdown(const SSL_CTX *ctx);
-long SSL_CTX_get_timeout(const SSL_CTX *ctx);
 int (*SSL_CTX_get_verify_callback(const SSL_CTX *ctx))(int ok, X509_STORE_CTX *ctx);
-int SSL_CTX_get_verify_mode(SSL_CTX *ctx);
 int SSL_CTX_load_verify_locations(SSL_CTX *ctx, char *CAfile, char *CApath);
-long SSL_CTX_need_tmp_RSA(SSL_CTX *ctx);
-int SSL_CTX_sess_accept(SSL_CTX *ctx);
-int SSL_CTX_sess_accept_good(SSL_CTX *ctx);
-int SSL_CTX_sess_accept_renegotiate(SSL_CTX *ctx);
-int SSL_CTX_sess_cache_full(SSL_CTX *ctx);
-int SSL_CTX_sess_cb_hits(SSL_CTX *ctx);
-int SSL_CTX_sess_connect(SSL_CTX *ctx);
-int SSL_CTX_sess_connect_good(SSL_CTX *ctx);
-int SSL_CTX_sess_connect_renegotiate(SSL_CTX *ctx);
-int SSL_CTX_sess_get_cache_size(SSL_CTX *ctx);
 SSL_SESSION *(*SSL_CTX_sess_get_get_cb(SSL_CTX *ctx))(SSL *ssl, unsigned char *data, int len, int *copy);
 int (*SSL_CTX_sess_get_new_cb(SSL_CTX *ctx)(SSL *ssl, SSL_SESSION *sess);
 void (*SSL_CTX_sess_get_remove_cb(SSL_CTX *ctx)(SSL_CTX *ctx, SSL_SESSION *sess);
-int SSL_CTX_sess_hits(SSL_CTX *ctx);
-int SSL_CTX_sess_misses(SSL_CTX *ctx);
-int SSL_CTX_sess_number(SSL_CTX *ctx);
-void SSL_CTX_sess_set_cache_size(SSL_CTX *ctx,t);
 void SSL_CTX_sess_set_get_cb(SSL_CTX *ctx, SSL_SESSION *(*cb)(SSL *ssl, unsigned char *data, int len, int *copy));
 void SSL_CTX_sess_set_new_cb(SSL_CTX *ctx, int (*cb)(SSL *ssl, SSL_SESSION *sess));
 void SSL_CTX_sess_set_remove_cb(SSL_CTX *ctx, void (*cb)(SSL_CTX *ctx, SSL_SESSION *sess));
-int SSL_CTX_sess_timeouts(SSL_CTX *ctx);
 LHASH *SSL_CTX_sessions(SSL_CTX *ctx);
 void SSL_CTX_set_app_data(SSL_CTX *ctx, void *arg);
 void SSL_CTX_set_cert_store(SSL_CTX *ctx, X509_STORE *cs);
@@ -307,15 +597,10 @@ int SSL_CTX_set_cipher_list(SSL_CTX *ctx, char *str);
 void SSL_CTX_set_client_CA_list(SSL_CTX *ctx, STACK *list);
 void SSL_CTX_set_client_cert_cb(SSL_CTX *ctx, int (*cb)(SSL *ssl, X509 **x509, EVP_PKEY **pkey));
 void SSL_CTX_set_default_passwd_cb(SSL_CTX *ctx, int (*cb);(void))
-void SSL_CTX_set_default_read_ahead(SSL_CTX *ctx, int m);
-int SSL_CTX_set_default_verify_paths(SSL_CTX *ctx);
 int SSL_CTX_set_ex_data(SSL_CTX *s, int idx, char *arg);
 void SSL_CTX_set_info_callback(SSL_CTX *ctx, void (*cb)(SSL *ssl, int cb, int ret));
 void SSL_CTX_set_msg_callback(SSL_CTX *ctx, void (*cb)(int write_p, int version, int content_type, const void *buf, size_t len, SSL *ssl, void *arg));
 void SSL_CTX_set_msg_callback_arg(SSL_CTX *ctx, void *arg);
-void SSL_CTX_set_options(SSL_CTX *ctx, unsigned long op);
-void SSL_CTX_set_quiet_shutdown(SSL_CTX *ctx, int mode);
-void SSL_CTX_set_timeout(SSL_CTX *ctx, long t);
 long SSL_CTX_set_tmp_dh(SSL_CTX* ctx, DH *dh);
 long SSL_CTX_set_tmp_dh_callback(SSL_CTX *ctx, DH *(*cb)(void));
 long SSL_CTX_set_tmp_rsa(SSL_CTX *ctx, RSA *rsa);
