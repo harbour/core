@@ -50,6 +50,8 @@
  *
  */
 
+#if 0
+
 /*
 patterm format:
    '%' [<flags>*] [<field width>] [.<precision>] [<length modifier>]
@@ -1082,3 +1084,4 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
    return ( int ) size;
 }
 
+#endif
