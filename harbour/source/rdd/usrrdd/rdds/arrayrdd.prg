@@ -203,6 +203,8 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    LOCAL cName
    LOCAL cFullName, aDBFData
 
+   //hb_ToOutDebug( "AR_CREATE(): aOpenInfo = %s\n\r", hb_ValToExp( aOpenInfo ) )
+
    /* getting database infos from current workarea */
    aDBFData  := aWAData[ WADATA_DATABASE ]
 
@@ -266,6 +268,8 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
    LOCAL cFullName, cName, hRDDData, aWAData, aDBFData
    LOCAL aStruct, oError, aFieldStruct, aField, nResult
 
+   //hb_ToOutDebug( "AR_OPEN(): aOpenInfo = %s\n\r", hb_ValToExp( aOpenInfo ) )
+
    cFullName := Upper( aOpenInfo[ UR_OI_NAME ] )
 
    /* When there is no ALIAS we will create new one using file name */
@@ -279,7 +283,7 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
 
    hRDDData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
 
-   IF cFullName $ hRDDData:Keys
+   IF HB_HHasKey( hRDDData, cFullName )
 
       aDBFData := hRDDData[ cFullName ]
       aStruct  := aDBFData[ DATABASE_STRUCT ]
@@ -639,7 +643,7 @@ STATIC FUNCTION AR_DELETE( nWA )
 
    ENDIF
 
-   IF aOpenInfo[ UR_OI_SHARED ] .AND. !( aWAData[ WADATA_RECNO ] $ aWAData[ WADATA_LOCKS ] )
+   IF aOpenInfo[ UR_OI_SHARED ] .AND. !( aScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) > 0  )
 
       oError := ErrorNew()
       oError:GenCode     := EG_UNLOCKED
@@ -879,7 +883,7 @@ FUNCTION hb_EraseArrayRdd( cFullName )
          IF ISCHARACTER( cFullName )
             cFullName := Upper( cFullName )
             // First search if memory dbf exists
-            IF cFullName $ hRDDData:Keys
+            IF HB_HHasKey( hRDDData, cFullName )
 
                // Get ARRAY data
                aDBFData := hRDDData[ cFullName ]
@@ -971,7 +975,7 @@ FUNCTION hb_FileArrayRdd( cFullName )
          IF ISCHARACTER( cFullName )
             cFullName := Upper( cFullName )
             // First search if memory dbf exists
-            IF cFullName $ hRDDData:Keys
+            IF HB_HHasKey( hRDDData, cFullName )
 
                nReturn := SUCCESS
 
