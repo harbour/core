@@ -61,6 +61,8 @@ HB_FUNC( SSL_CIPHER_DESCRIPTION )
    {
       char buffer[ 128 ];
 
+      buffer[ 0 ] = '\0';
+
       hb_retc( hb_parptr( 1 ) ? SSL_CIPHER_description( ( SSL_CIPHER * ) hb_parptr( 1 ), buffer, sizeof( buffer ) ) : NULL );
    }
    else
