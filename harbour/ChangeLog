@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 15:07 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/gtwvg/gtwvg.h
+    ! Synchronized with GTWVT per Viktor's changes for box characters.
+    ! Commented out previous change per Przemek's "Layered Attributes".
+      Somehow, this change had increased the flickering of the window as
+      it invalidates the whole window when it regain focus, not desirable
+      behavior in GTWVG with GUI elelments.
+
 2009-01-26 23:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/examples/uhttpd/hbmk_b32.bat
      ! Missed update from previous commit.

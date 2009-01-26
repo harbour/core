@@ -356,6 +356,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->hostCDP    = hb_vmCDP();
 #if defined( UNICODE )
    pWVT->inCDP      = hb_vmCDP();
+   pWVT->boxCDP     = hb_cdpFind( "EN" );
 #else
    {
       int i;
@@ -751,6 +752,12 @@ static BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
          {
             if( pWVT->hFont )
                DeleteObject( pWVT->hFont );
+#if ! defined( UNICODE )
+            if( pWVT->hFontBox )
+               DeleteObject( pWVT->hFontBox );
+
+            pWVT->hFontBox    = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, OEM_CHARSET );
+#endif
 
             pWVT->hFont       = hFont;
             pWVT->fontHeight  = tm.tmHeight;
@@ -866,6 +873,13 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
       DeleteObject( pWVT->hFont );
    pWVT->hFont = hFont;
 
+#if ! defined( UNICODE )
+   if( pWVT->hFontBox )
+      DeleteObject( pWVT->hFontBox );
+   pWVT->hFontBox = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+                                          pWVT->fontWeight, pWVT->fontQuality, OEM_CHARSET );
+#endif
+
    hdc      = GetDC( pWVT->hWnd );
    hOldFont = ( HFONT ) SelectObject( hdc, hFont );
    GetTextMetrics( hdc, &tm );
@@ -954,7 +968,7 @@ static void hb_gt_wvt_SetWindowTitle( HWND hWnd, const char * title )
 
 static BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
 {
-   TCHAR buffer[WVT_MAX_TITLE_SIZE];
+   TCHAR buffer[ WVT_MAX_TITLE_SIZE ];
    int iResult;
 
    iResult = GetWindowText( hWnd, buffer, WVT_MAX_TITLE_SIZE );
@@ -1631,6 +1645,9 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    RECT        rcRect;
    int         iRow, iCol, startCol, len;
    BYTE        bColor, bAttr, bOldColor = 0;
+#if ! defined( UNICODE )
+   BYTE        bOldAttr = 0;
+#endif
    USHORT      usChar;
    TCHAR       text[ WVT_MAX_ROWS ];
 
@@ -1673,10 +1690,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
             break;
 
 #if defined( UNICODE )
-         usChar = hb_cdpGetU16( pWVT->hostCDP, TRUE, ( BYTE ) usChar );
-#else
-         usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
-#endif
+         usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, TRUE, ( BYTE ) usChar );
          if( len == 0 )
          {
             bOldColor = bColor;
@@ -1684,14 +1698,35 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          else if( bColor != bOldColor )
          {
             hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
+            bOldColor = bColor;
+            startCol = iCol;
+            len = 0;
+         }
+#else
+         usChar = pWVT->chrTransTbl[ usChar & 0xFF ];
+         if( len == 0 )
+         {
+            SelectObject( hdc, ( bAttr & HB_GT_ATTR_BOX ) ? pWVT->hFontBox : pWVT->hFont );
+            bOldAttr = bAttr;
+            bOldColor = bColor;
+         }
+         else if( bColor != bOldColor || bAttr != bOldAttr )
+         {
+            hb_gt_wvt_TextOut( pWVT, hdc, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
             if( pWVT->bGui )
             {
                hb_gt_wvt_TextOut( pWVT, pWVT->hGuiDC, ( USHORT ) startCol, ( USHORT ) iRow, bOldColor, text, ( USHORT ) len );
+            }
+            if( bAttr != bOldAttr )
+            {
+               SelectObject( hdc, ( bAttr & HB_GT_ATTR_BOX ) ? pWVT->hFontBox : pWVT->hFont );
+               bOldAttr = bAttr;
             }
             bOldColor = bColor;
             startCol = iCol;
             len = 0;
          }
+#endif
          text[ len++ ] = ( TCHAR ) usChar;
          iCol++;
       }
@@ -2167,7 +2202,7 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT );
       if( !pWVT->hWnd )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
-
+#if 0
       if( ! GetSystemMetrics( SM_REMOTESESSION ) )
       {
          typedef BOOL ( WINAPI * P_SLWA )( HWND, COLORREF, BYTE, DWORD );
@@ -2196,7 +2231,7 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
                LWA_ALPHA /* DWORD dwFlags */ );
          }
       }
-
+#endif
       hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
       /* Set icon */
       if( pWVT->hIcon )
@@ -3825,7 +3860,6 @@ static void hb_wvt_gtReleaseGuiData( void )
 static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
 {
    LOGBRUSH    lb;
-   HINSTANCE   h;
    int         iIndex;
 
    pWVT->bDeferPaint        = FALSE;
