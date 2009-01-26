@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-27 00:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/examples/uhttpd/uhttpd.prg
+    ! Fixed RTE when in socket.c mode.
+
+  * contrib/examples/uhttpd/socket.c
+    ! Fixed leak. Thanks to Mindaugas.
+
+  ; TOFIX: Ajax test (404 Not Found),
+           Counter (image not found),
+           cgi-bin (broken link),
+           XML database (empty boxes in Chrome, empty boxes
+           and error messagebox with IE8)
+           doesn't work here.
+
+           Shall I configure something?
+
 2009-01-27 00:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/uhttpd/uhttpd.prg
     + Added callstack in RTE message (ugly but useful).

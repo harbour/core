@@ -777,7 +777,7 @@ LOCAL aI
 
            IF socket_getsockname( hSocket, @aI ) != -1
               _SERVER["SERVER_ADDR"] := aI[2]
-              _SERVER["SERVER_PORT"] := aI[3]
+              _SERVER["SERVER_PORT"] := LTrim( Str( aI[3] ) )
            ENDIF
 #endif
            IF ParseRequest( cRequest )
@@ -978,7 +978,7 @@ LOCAL aI
 
            IF socket_getsockname( hSocket, @aI ) != -1
               _SERVER["SERVER_ADDR"] := aI[2]
-              _SERVER["SERVER_PORT"] := aI[3]
+              _SERVER["SERVER_PORT"] := LTrim( Str( aI[3] ) )
            ENDIF
 #endif
 

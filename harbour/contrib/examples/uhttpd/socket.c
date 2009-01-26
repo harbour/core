@@ -203,7 +203,9 @@ HB_FUNC ( SOCKET_ACCEPT )
 
    if( ISBYREF( 2 ) )
    {
-      hb_itemParamStoreForward( 2, hb_itemPutSockaddr( NULL, &saddr ) );
+      PHB_ITEM pItem = hb_itemPutSockaddr( NULL, &saddr );
+      hb_itemParamStoreForward( 2, pItem );
+      hb_itemRelease( pItem );
    }
 }
 
@@ -398,7 +400,9 @@ HB_FUNC ( SOCKET_GETSOCKNAME )
    hb_retni( getsockname( hb_parsocket( 1 ), &saddr, &iSize ) );
    if( ISBYREF( 2 ) )
    {
-      hb_itemParamStoreForward( 2, hb_itemPutSockaddr( NULL, &saddr ) );
+      PHB_ITEM pItem = hb_itemPutSockaddr( NULL, &saddr );
+      hb_itemParamStoreForward( 2, pItem );
+      hb_itemRelease( pItem );
    }
 }
 
@@ -411,7 +415,9 @@ HB_FUNC ( SOCKET_GETPEERNAME )
    hb_retni( getpeername( hb_parsocket( 1 ), &saddr, &iSize ) );
    if( ISBYREF( 2 ) )
    {
-      hb_itemParamStoreForward( 2, hb_itemPutSockaddr( NULL, &saddr ) );
+      PHB_ITEM pItem = hb_itemPutSockaddr( NULL, &saddr );
+      hb_itemParamStoreForward( 2, pItem );
+      hb_itemRelease( pItem );
    }
 }
 
