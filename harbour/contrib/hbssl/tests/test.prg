@@ -17,6 +17,8 @@ PROCEDURE Main()
    LOCAL socket
    LOCAL buffer := Space( 1000 )
 
+   LOCAL bits
+
    //
 
    hb_inetInit()
@@ -40,17 +42,23 @@ PROCEDURE Main()
    ? "SSL_CTX_NEW", ssl_ctx := SSL_CTX_NEW()
 
    ? "SSL_NEW", ssl := SSL_NEW( ssl_ctx )
-   ? "SSL_GET_CURRENT_CIPHER", cipher := SSL_GET_CURRENT_CIPHER( ssl )
+
    ? "SSL_VERSION", SSL_VERSION( ssl )
    ? "SSL_GET_VERSION", SSL_GET_VERSION( ssl )
 
+   ? "SSL_SET_FD", SSL_SET_FD( ssl, hb_inetFD( socket ) )
+   ? "SSL_CONNECT", SSL_CONNECT( ssl )
+
+   ? "SSL_GET_CIPHER_BITS"    , SSL_GET_CIPHER_BITS( ssl, @bits ), bits
+   ? "SSL_GET_CIPHER_LIST"    , SSL_GET_CIPHER_LIST( ssl )
+   ? "SSL_GET_CIPHER_NAME"    , SSL_GET_CIPHER_NAME( ssl )
+   ? "SSL_GET_CIPHER_VERSION" , SSL_GET_CIPHER_VERSION( ssl )
+
+   ? "SSL_GET_CURRENT_CIPHER", cipher := SSL_GET_CURRENT_CIPHER( ssl )
    ? "SSL_CIPHER_GET_NAME"   , SSL_CIPHER_GET_NAME( cipher )
    ? "SSL_CIPHER_GET_VERSION", SSL_CIPHER_GET_VERSION( cipher )
    ? "SSL_CIPHER_GET_BITS"   , SSL_CIPHER_GET_BITS( cipher )
    ? "SSL_CIPHER_DESCRIPTION", SSL_CIPHER_DESCRIPTION( cipher )
-
-   ? "SSL_SET_FD", SSL_SET_FD( ssl, hb_inetFD( socket ) )
-   ? "SSL_CONNECT", SSL_CONNECT( ssl )
 
    ? "SSL_WRITE", SSL_WRITE( ssl, "GET / http/1.1" )
    ? "SSL_READ", SSL_READ( ssl, @buffer )

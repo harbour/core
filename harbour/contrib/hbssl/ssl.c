@@ -478,6 +478,64 @@ HB_FUNC( SSL_GET_CURRENT_CIPHER )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_GET_CIPHER_BITS )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+      {
+         int alg_bits = 0;
+
+         hb_retni( SSL_get_cipher_bits( ssl, &alg_bits ) );
+
+         hb_storni( alg_bits, 2 );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_CIPHER_LIST )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retc( SSL_get_cipher_list( ssl, hb_parni( 2 ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_CIPHER_NAME )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retc( SSL_get_cipher_name( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_CIPHER_VERSION )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retc( SSL_get_cipher_version( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /*
 int SSL_add_dir_cert_subjects_to_stack(STACK *stack, const char *dir);
 int SSL_add_file_cert_subjects_to_stack(STACK *stack, const char *file);
@@ -494,10 +552,6 @@ STACK *SSL_dup_CA_list(STACK *sk);
 SSL_CTX *SSL_get_SSL_CTX(const SSL *ssl);
 char *SSL_get_app_data(SSL *ssl);
 X509 *SSL_get_certificate(const SSL *ssl);
-int SSL_get_cipher_bits(const SSL *ssl, int *alg_bits);
-char *SSL_get_cipher_list(const SSL *ssl, int n);
-char *SSL_get_cipher_name(const SSL *ssl);
-char *SSL_get_cipher_version(const SSL *ssl);
 STACK *SSL_get_ciphers(const SSL *ssl);
 STACK *SSL_get_client_CA_list(const SSL *ssl);
 long SSL_get_default_timeout(const SSL *ssl);
