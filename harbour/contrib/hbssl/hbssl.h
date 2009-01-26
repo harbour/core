@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- *    uHTTPD info page
+ * OpenSSL API - C header.
  *
- * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
+ * Copyright 2009 Viktor Szakats <harbour 01 syenar hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,63 +50,17 @@
  *
  */
 
-/*
-  Show internal variables.
-  Call it with: /info
-*/
+#ifndef HBSSL_H_
+#define HBSSL_H_
 
+#include <openssl/ssl.h>
 
-#include "common.ch"
-#include "hbclass.ch"
+#include "hbssl.ch"
 
-MEMVAR _SERVER, _REQUEST, _GET, _POST
+extern void *    hb_SSL_CTX_is( int iParam );
+extern SSL_CTX * hb_SSL_CTX_par( int iParam );
 
-FUNCTION HRBMAIN()
-  LOCAL cHtml
+extern void *    hb_SSL_is( int iParam );
+extern SSL *     hb_SSL_par( int iParam );
 
-  cHtml := ShowServerInfo()
-
-  RETURN cHtml
-
-STATIC FUNCTION ShowServerInfo()
-  LOCAL cHtml := ""
-
-  cHtml += DisplayVars( _Server , "SERVER Vars" )
-  cHtml += "<br>"
-  cHtml += DisplayVars( _Get    , "GET Vars" )
-  cHtml += "<br>"
-  cHtml += DisplayVars( _Post   , "POST Vars" )
-  cHtml += "<br>"
-  //cHtml += DisplayVars( _Cookie , "COOKIE Vars" )
-  //cHtml += "<br>"
-  //cHtml += DisplayVars( _Files  , "FILE Vars" )
-  //cHtml += "<br>"
-  cHtml += DisplayVars( _Request, "REQUEST Vars" )
-  cHtml += "<br>"
-  //cHtml += DisplayVars( _Session, "SESSION Vars" )
-  //cHtml += "<br>"
-  RETURN cHtml
-
-STATIC FUNCTION DisplayVars( hHash, cTitle )
-  LOCAL cHtml := ""
-  cHtml += "<table width='90%' align='center' border='1'>"
-  cHtml += "<th colspan=2>" + hb_cStr( cTitle ) + "</th>"
-  cHtml += "<tr>"
-  cHtml += "<th width='20%'>KEY</th>"
-  cHtml += "<th width='80%'>VALUE</th>"
-  cHtml += "</tr>"
-  cHtml += DisplayHash( hHash )
-  cHtml += "</table>"
-RETURN cHtml
-
-STATIC FUNCTION DisplayHash( hHash )
-  LOCAL cHtml := ""
-  LOCAL cKey, cSubKey
-
-  FOR EACH cKey IN hHash:Keys
-     cHtml += "<tr>"
-     cHtml += "<td>" + hb_cStr( cKey ) + "</td>"
-     cHtml += "<td>" + hb_cStr( hHash[ cKey ] ) + "</td>"
-     cHtml += "</tr>"
-  NEXT
-RETURN cHtml
+#endif /* HBSSL_H_ */

@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- *    uHTTPD info page
+ * OpenSSL API (RAND) - Harbour interface.
  *
- * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
+ * Copyright 2009 Viktor Szakats <harbour 01 syenar hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,63 +50,40 @@
  *
  */
 
-/*
-  Show internal variables.
-  Call it with: /info
-*/
+#define HB_OS_WIN_32_USED
 
+#include "hbapi.h"
+#include "hbapierr.h"
 
-#include "common.ch"
-#include "hbclass.ch"
+#include <openssl/rand.h>
 
-MEMVAR _SERVER, _REQUEST, _GET, _POST
+HB_FUNC( SSL_RAND_SEED )
+{
+   RAND_seed( hb_parcx( 1 ), hb_parclen( 1 ) );
+}
 
-FUNCTION HRBMAIN()
-  LOCAL cHtml
+HB_FUNC( SSL_RAND_ADD )
+{
+   RAND_add( hb_parcx( 1 ), hb_parclen( 1 ), hb_parnd( 2 ) );
+}
 
-  cHtml := ShowServerInfo()
+HB_FUNC( SSL_RAND_STATUS )
+{
+   hb_retni( RAND_status() );
+}
 
-  RETURN cHtml
+HB_FUNC( SSL_RAND_EVENT )
+{
+#if defined( HB_OS_WIN_32 )
+   hb_retni( RAND_event( hb_parni( 1 ), ( WPARAM ) hb_parnint( 2 ), ( LPARAM ) hb_parnint( 3 ) ) );
+#else
+   hb_retni( 0 );
+#endif
+}
 
-STATIC FUNCTION ShowServerInfo()
-  LOCAL cHtml := ""
-
-  cHtml += DisplayVars( _Server , "SERVER Vars" )
-  cHtml += "<br>"
-  cHtml += DisplayVars( _Get    , "GET Vars" )
-  cHtml += "<br>"
-  cHtml += DisplayVars( _Post   , "POST Vars" )
-  cHtml += "<br>"
-  //cHtml += DisplayVars( _Cookie , "COOKIE Vars" )
-  //cHtml += "<br>"
-  //cHtml += DisplayVars( _Files  , "FILE Vars" )
-  //cHtml += "<br>"
-  cHtml += DisplayVars( _Request, "REQUEST Vars" )
-  cHtml += "<br>"
-  //cHtml += DisplayVars( _Session, "SESSION Vars" )
-  //cHtml += "<br>"
-  RETURN cHtml
-
-STATIC FUNCTION DisplayVars( hHash, cTitle )
-  LOCAL cHtml := ""
-  cHtml += "<table width='90%' align='center' border='1'>"
-  cHtml += "<th colspan=2>" + hb_cStr( cTitle ) + "</th>"
-  cHtml += "<tr>"
-  cHtml += "<th width='20%'>KEY</th>"
-  cHtml += "<th width='80%'>VALUE</th>"
-  cHtml += "</tr>"
-  cHtml += DisplayHash( hHash )
-  cHtml += "</table>"
-RETURN cHtml
-
-STATIC FUNCTION DisplayHash( hHash )
-  LOCAL cHtml := ""
-  LOCAL cKey, cSubKey
-
-  FOR EACH cKey IN hHash:Keys
-     cHtml += "<tr>"
-     cHtml += "<td>" + hb_cStr( cKey ) + "</td>"
-     cHtml += "<td>" + hb_cStr( hHash[ cKey ] ) + "</td>"
-     cHtml += "</tr>"
-  NEXT
-RETURN cHtml
+HB_FUNC( SSL_RAND_SCREEN )
+{
+#if defined( HB_OS_WIN_32 )
+   RAND_screen();
+#endif
+}

@@ -8,13 +8,40 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 00:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/make_b32_all.bat
+   * contrib/make_gcc_all.sh
+   * contrib/make_vc_all.bat
+   + contrib/hbssl
+   + contrib/hbssl/Makefile
+   + contrib/hbssl/common.mak
+   + contrib/hbssl/make_b32.bat
+   + contrib/hbssl/make_vc.bat
+   + contrib/hbssl/make_gcc.sh
+   + contrib/hbssl/hbssl.h
+   + contrib/hbssl/hbssl.ch
+   + contrib/hbssl/ssl.c
+   + contrib/hbssl/sslctx.c
+   + contrib/hbssl/sslrand.c
+   + contrib/hbssl/tests
+   + contrib/hbssl/tests/hbmk_b32.bat
+   + contrib/hbssl/tests/hbmk_vc.bat
+   + contrib/hbssl/tests/test.prg
+     + Added Harbour bindings to OpenSSL.
+       Work in progress, but it's theoretically already functional.
+       To build, set your HB_DIR_OPENSSL or HB_INC_OPENSSL envvar.
+     ; TOFIX: Makefile openssl autodetection should be adjusted.
+
+   * contrib/examples/uhttpd
+     ! Fixed SVN attributes. (except for /home dir)
+
 2009-01-25 22:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/philes.c
     ! FWRITE(): Fixed accessing past the string buffer (thus
       causing potential GPF and a huge security hole) when
-      the passed length is greate than the lenght of the string.
+      the passed length is greater than the length of the string.
       Very old bug. In fact CA-Cl*pper suffers from the same
-      problem, and behavior for such case is not documented.
+      problem, and behaviour for such case is not documented.
       Harbour will ignore the length parameter (thus writing
       the whole passed string), if the length is invalid.
 

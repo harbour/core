@@ -61,6 +61,7 @@ if not "%HB_INC_GD%%HB_DIR_GD%"               == "" set _HB_DIRS=%_HB_DIRS% hbgd
 if not "%HB_INC_LIBHARU%%HB_DIR_LIBHARU%"     == "" set _HB_DIRS=%_HB_DIRS% hbhpdf
 if not "%HB_INC_MYSQL%%HB_DIR_MYSQL%"         == "" set _HB_DIRS=%_HB_DIRS% hbmysql
 if not "%HB_INC_PGSQL%%HB_DIR_PGSQL%"         == "" set _HB_DIRS=%_HB_DIRS% hbpgsql
+if not "%HB_INC_OPENSSL%%HB_DIR_OPENSSL%"     == "" set _HB_DIRS=%_HB_DIRS% hbssl
 if not "%HB_INC_ADS%%HB_DIR_ADS%"             == "" set _HB_DIRS=%_HB_DIRS% rddads
 if not "%HB_INC_MYSQL%%HB_DIR_MYSQL%"         == "" set _HB_DIRS=%_HB_DIRS% rddsql
 :OVERRIDE

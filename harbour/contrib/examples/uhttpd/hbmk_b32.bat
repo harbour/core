@@ -1,7 +1,7 @@
 @echo off
 cls
 rem
-rem $Id: hbmk_b32.bat 9884 2008-11-09 19:37:16Z vszakats $
+rem $Id$
 rem
 
 SET UHTTP_INET_SUPPORT=no

@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- *    uHTTPD info page
+ * OpenSSL API - Harbour header.
  *
- * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
+ * Copyright 2009 Viktor Szakats <harbour 01 syenar hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,63 +50,28 @@
  *
  */
 
-/*
-  Show internal variables.
-  Call it with: /info
-*/
+#ifndef HBSSL_CH_
+#define HBSSL_CH_
 
+/* NOTE: This file is also used by C code. */
 
-#include "common.ch"
-#include "hbclass.ch"
+#define HB_SSL_CTX_NEW_METHOD_SSLV2            0
+#define HB_SSL_CTX_NEW_METHOD_SSLV2_SERVER     1
+#define HB_SSL_CTX_NEW_METHOD_SSLV2_CLIENT     2
+#define HB_SSL_CTX_NEW_METHOD_SSLV3            3
+#define HB_SSL_CTX_NEW_METHOD_SSLV3_SERVER     4
+#define HB_SSL_CTX_NEW_METHOD_SSLV3_CLIENT     5
+#define HB_SSL_CTX_NEW_METHOD_TLSV1            6
+#define HB_SSL_CTX_NEW_METHOD_TLSV1_SERVER     7
+#define HB_SSL_CTX_NEW_METHOD_TLSV1_CLIENT     8
+#define HB_SSL_CTX_NEW_METHOD_SSLV23           9
+#define HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER    10
+#define HB_SSL_CTX_NEW_METHOD_SSLV23_CLIENT    11
 
-MEMVAR _SERVER, _REQUEST, _GET, _POST
+#define HB_SSLEAY_VERSION                      0
+#define HB_SSLEAY_CFLAGS                       1
+#define HB_SSLEAY_BUILT_ON                     2
+#define HB_SSLEAY_PLATFORM                     3
+#define HB_SSLEAY_DIR                          4
 
-FUNCTION HRBMAIN()
-  LOCAL cHtml
-
-  cHtml := ShowServerInfo()
-
-  RETURN cHtml
-
-STATIC FUNCTION ShowServerInfo()
-  LOCAL cHtml := ""
-
-  cHtml += DisplayVars( _Server , "SERVER Vars" )
-  cHtml += "<br>"
-  cHtml += DisplayVars( _Get    , "GET Vars" )
-  cHtml += "<br>"
-  cHtml += DisplayVars( _Post   , "POST Vars" )
-  cHtml += "<br>"
-  //cHtml += DisplayVars( _Cookie , "COOKIE Vars" )
-  //cHtml += "<br>"
-  //cHtml += DisplayVars( _Files  , "FILE Vars" )
-  //cHtml += "<br>"
-  cHtml += DisplayVars( _Request, "REQUEST Vars" )
-  cHtml += "<br>"
-  //cHtml += DisplayVars( _Session, "SESSION Vars" )
-  //cHtml += "<br>"
-  RETURN cHtml
-
-STATIC FUNCTION DisplayVars( hHash, cTitle )
-  LOCAL cHtml := ""
-  cHtml += "<table width='90%' align='center' border='1'>"
-  cHtml += "<th colspan=2>" + hb_cStr( cTitle ) + "</th>"
-  cHtml += "<tr>"
-  cHtml += "<th width='20%'>KEY</th>"
-  cHtml += "<th width='80%'>VALUE</th>"
-  cHtml += "</tr>"
-  cHtml += DisplayHash( hHash )
-  cHtml += "</table>"
-RETURN cHtml
-
-STATIC FUNCTION DisplayHash( hHash )
-  LOCAL cHtml := ""
-  LOCAL cKey, cSubKey
-
-  FOR EACH cKey IN hHash:Keys
-     cHtml += "<tr>"
-     cHtml += "<td>" + hb_cStr( cKey ) + "</td>"
-     cHtml += "<td>" + hb_cStr( hHash[ cKey ] ) + "</td>"
-     cHtml += "</tr>"
-  NEXT
-RETURN cHtml
+#endif /* HBSSL_CH_ */
