@@ -76,7 +76,7 @@ STATIC FUNCTION MyToString( cCmd, nWA, xPar1, xPar2, xPar3 )
       CASE cCmd == "PUTVALUE"
            // Parameters received: xPar1 = nField, xPar2 = xValue, xPar3 = xOldValue
 #ifndef __XHARBOUR__
-           HB_UNUSED_VAR( xPar3 ) // Here don't log previous value
+           HB_SYMBOL_UNUSED( xPar3 ) // Here don't log previous value
 #endif
            cString := Alias() + "(" + LTrim( Str( RecNo() ) ) + ")->" + PadR( FieldName( xPar1 ), 10 ) + " := " + hb_LogRddValueToText( xPar2 )
       CASE cCmd == "ZAP"

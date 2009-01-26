@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 13:11 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/source/rdd/usrrdd/rdds/logrdd.prg
+    * changed REQUEST to DYNAMIC HB_LOGRDDINHERIT
+    * fixed typo: HB_UNUSED_VAR() is HB_SYMBOL_UNUSED()
+  * harbour/source/rdd/usrrdd/example/exlog.prg
+    * fixed typo: HB_UNUSED_VAR() is HB_SYMBOL_UNUSED()
+
 2009-01-26 11:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbssl/sslctx.c
    * contrib/hbssl/ssl.c
