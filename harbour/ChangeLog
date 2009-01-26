@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 22:45 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/source/rdd/usrrdd/rdds/arrayrdd.prg
+    * fixed AR_CREATE() to be compatible with dbCreate() extension
+      parameters
+  * harbour/source/rdd/usrrdd/example/exarr.prg
+    * updated
+
 2009-01-26 13:02 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbziparc/hbziparc.prg
     ! Fixed <acFiles> behavior if the parameter is not passed.

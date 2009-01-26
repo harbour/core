@@ -52,8 +52,7 @@
 
 REQUEST ARRAYRDD
 
-// Actually: 20090126 doesn't work
-//#define USE_DBCREATE_EXTENSIONS
+#define USE_DBCREATE_EXTENSIONS
 
 PROCEDURE MAIN()
    LOCAL aStruct
@@ -74,11 +73,14 @@ PROCEDURE MAIN()
 #ifndef USE_DBCREATE_EXTENSIONS
    ? "Create it"
    dbCreate( "arrtest.dbf", aStruct, "ARRAYRDD" )
+   wait
    ? "Open it"
    USE arrtest.dbf VIA "ARRAYRDD"
+   wait
 #else
    ? "Create it and leave opened"
    dbCreate( "arrtest.dbf", aStruct, "ARRAYRDD", .T., "arrtest" )
+   wait
 #endif
 
    ? "Show structure"

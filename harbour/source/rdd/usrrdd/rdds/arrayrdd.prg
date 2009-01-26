@@ -67,6 +67,8 @@
 
 #xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
+//#define ACTIVATE_DEBUG // add xhb.lib to link
+
 ANNOUNCE ARRAYRDD
 
 #define DATABASE_FILENAME    1
@@ -102,8 +104,6 @@ ANNOUNCE ARRAYRDD
  * always done by low level USRRDD code
  */
 STATIC FUNCTION AR_INIT( nRDD )
-
-   //Tracelog( "nRDD = ", nRDD )
 
    /* Init DBF Hash */
    USRRDD_RDDDATA( nRDD, hb_Hash() )
@@ -170,6 +170,10 @@ STATIC FUNCTION AR_CREATEFIELDS( nWA, aStruct )
    LOCAL nResult   := SUCCESS
    LOCAL aFieldStruct, aField
 
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_CREATEFIELDS(): nWA = %i, aStruct = %s\n\r", nWA, hb_ValToExp( aStruct ) )
+#endif
+
    // Setting WA number to current WorkArea
    aWAData[ WADATA_WORKAREA ] := nWA
 
@@ -201,9 +205,11 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
    LOCAL hRDDData  := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    LOCAL cName
-   LOCAL cFullName, aDBFData
+   LOCAL cFullName, aDBFData, nResult//, aFieldStruct, aField, aStruct
 
-   //hb_ToOutDebug( "AR_CREATE(): aOpenInfo = %s\n\r", hb_ValToExp( aOpenInfo ) )
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_CREATE(): nWA = %i, aOpenInfo = %s\n\r", nWA, hb_ValToExp( aOpenInfo ) )
+#endif
 
    /* getting database infos from current workarea */
    aDBFData  := aWAData[ WADATA_DATABASE ]
@@ -259,16 +265,26 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    aWAData[ WADATA_WORKAREA ] := nWA
    aWAData[ WADATA_OPENINFO ] := aOpenInfo // Put open informations
 
-   // increase open number
-   aDBFData[ DATABASE_OPENNUMBER ]++
+   /* Call SUPER OPEN to finish allocating work area (f.e.: alias settings) */
+   nResult := UR_SUPER_OPEN( nWA, aOpenInfo )
 
-   RETURN SUCCESS
+   IF nResult == SUCCESS
+      /* Add a new open number */
+      aDBFData[ DATABASE_OPENNUMBER ]++
+      // default values for Records == 0
+      aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .T.
+      aWAData[ WADATA_RECNO ] := 1
+   ENDIF
+
+   RETURN nResult
 
 STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
    LOCAL cFullName, cName, hRDDData, aWAData, aDBFData
    LOCAL aStruct, oError, aFieldStruct, aField, nResult
 
-   //hb_ToOutDebug( "AR_OPEN(): aOpenInfo = %s\n\r", hb_ValToExp( aOpenInfo ) )
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_OPEN(): nWA = %i, aOpenInfo = %s\n\r", nWA, hb_ValToExp( aOpenInfo ) )
+#endif
 
    cFullName := Upper( aOpenInfo[ UR_OI_NAME ] )
 
@@ -371,6 +387,10 @@ STATIC FUNCTION AR_CLOSE( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
    LOCAL aDBFData  := aWAData[ WADATA_DATABASE ]
 
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_CLOSE(): nWA = %i\n\r", nWA )
+#endif
+
    IF HB_ISARRAY( aDBFData )
       // decrease open number
       aDBFData[ DATABASE_OPENNUMBER ]--
@@ -387,6 +407,10 @@ STATIC FUNCTION AR_GETVALUE( nWA, nField, xValue )
    LOCAL aRecords  := aDBFData[ DATABASE_RECORDS ]
    LOCAL aStruct   := aDBFData[ DATABASE_STRUCT  ]
    LOCAL nRecNo    := aWAData[ WADATA_RECNO ]
+
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_GETVALUE(): nWA = %i, nField = %i, xValue = %s\n\r", nWA, nField, xValue )
+#endif
 
    IF nField > 0 .AND. nField <= Len( aStruct )
 
@@ -411,6 +435,10 @@ STATIC FUNCTION AR_PUTVALUE( nWA, nField, xValue )
    LOCAL nRecNo    := aWAData[ WADATA_RECNO ]
    LOCAL xVal
 
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_PUTVALUE(): nWA = %i, nField = %i, xValue = %s\n\r", nWA, nField, xValue )
+#endif
+
    IF nField > 0 .AND. nField <= Len( aStruct ) .AND. ;
       IIF( ValType( xValue ) == "C" .AND. aStruct[ nField ][ DBS_TYPE ] == "M", TRUE, ValType( xValue ) == aStruct[ nField ][ DBS_TYPE ] )
 
@@ -433,6 +461,10 @@ STATIC FUNCTION AR_GOTO( nWA, nRecord )
    LOCAL aDBFData  := aWAData[ WADATA_DATABASE ]
    LOCAL aRecords  := aDBFData[ DATABASE_RECORDS ]
    LOCAL nRecCount := Len( aRecords )
+
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_GOTO(): nWA = %i, nRecord = %i\n\r", nWA, nRecord )
+#endif
 
    //if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
    //   return FAILURE;
@@ -480,6 +512,9 @@ STATIC FUNCTION AR_GOTO( nWA, nRecord )
    RETURN SUCCESS
 
 STATIC FUNCTION AR_GOTOID( nWA, nRecord )
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_GOTOID(): nWA = %i, nRecord = %i\n\r", nWA, nRecord )
+#endif
    RETURN AR_GOTO( nWA, nRecord )
 
 STATIC FUNCTION AR_GOTOP( nWA )
@@ -488,6 +523,10 @@ STATIC FUNCTION AR_GOTOP( nWA )
    LOCAL aRecords  := aDBFData[ DATABASE_RECORDS ]
    LOCAL aRecInfo  := aDBFData[ DATABASE_RECINFO ]
    LOCAL nRecCount := Len( aRecords )
+
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_GOTOP(): nWA = %i\n\r", nWA )
+#endif
 
    IF nRecCount == 0
 
@@ -513,6 +552,10 @@ STATIC FUNCTION AR_GOBOTTOM( nWA )
    LOCAL aRecords  := aDBFData[ DATABASE_RECORDS ]
    LOCAL aRecInfo  := aDBFData[ DATABASE_RECINFO ]
 
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_GOBOTTOM(): nWA = %i\n\r", nWA )
+#endif
+
    IF Len( aRecords ) == 0
 
       aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .T.
@@ -537,6 +580,10 @@ STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
    LOCAL aDBFData  := aWAData[ WADATA_DATABASE ]
    LOCAL aRecInfo  := aDBFData[ DATABASE_RECINFO ]
    LOCAL lBof, nToSkip
+
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_SKIPFILTER(): nWA = %i, nRecords = %i\n\r", nWA, nRecords )
+#endif
 
    nToSkip := IIF( nRecords > 0, 1, IIF( nRecords < 0, -1, 0 ) )
 
@@ -574,6 +621,10 @@ STATIC FUNCTION AR_SKIPRAW( nWA, nRecords )
    LOCAL lBof, lEof
    LOCAL nResult
 
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_SKIPRAW(): nWA = %i, nRecords = %i\n\r", nWA, nRecords )
+#endif
+
    //if( pArea->lpdbPendingRel )
    //   SELF_FORCEREL( ( AREAP ) pArea );
 
@@ -607,6 +658,10 @@ STATIC FUNCTION AR_SKIPRAW( nWA, nRecords )
 STATIC FUNCTION AR_BOF( nWA, lBof )
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
 
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_BOF(): nWA = %i, lBof = %s\n\r", nWA, lBof )
+#endif
+
    // This is a hack to protect from dbf1.c skipraw hack
    IF aWAData[ WADATA_FORCEBOF ] .AND. lBof
       aWAData[ WADATA_BOF ] := lBof
@@ -620,6 +675,10 @@ STATIC FUNCTION AR_BOF( nWA, lBof )
 STATIC FUNCTION AR_EOF( nWA, lEof )
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
 
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_EOF(): nWA = %i, lEof = %s\n\r", nWA, lEof )
+#endif
+
    lEof := aWAData[ WADATA_EOF ]
 
    RETURN SUCCESS
@@ -630,6 +689,10 @@ STATIC FUNCTION AR_DELETE( nWA )
    LOCAL aRecInfo  := aDBFData[ DATABASE_RECINFO ]
    LOCAL aOpenInfo := aWAData[ WADATA_OPENINFO ]
    LOCAL oError
+
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_DELETE(): nWA = %i\n\r", nWA )
+#endif
 
    IF aOpenInfo[ UR_OI_READONLY ]
 
@@ -666,6 +729,10 @@ STATIC FUNCTION AR_DELETED( nWA, lDeleted )
    LOCAL aDBFData  := aWAData[ WADATA_DATABASE ]
    LOCAL aRecInfo  := aDBFData[ DATABASE_RECINFO ]
 
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_DELETED(): nWA = %i, lDeleted = %s\n\r", nWA, lDeleted )
+#endif
+
    //lDeleted := .F.
    IF Len( aRecInfo ) > 0 .AND. aWAData[ WADATA_RECNO ] <= Len( aRecInfo )
       lDeleted := aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ]
@@ -683,6 +750,10 @@ STATIC FUNCTION AR_APPEND( nWA, nRecords )
    LOCAL aStruct   := aDBFData[ DATABASE_STRUCT  ]
    LOCAL aOpenInfo := aWAData[ WADATA_OPENINFO ]
    LOCAL oError, aRecord
+
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_APPEND(): nWA = %i, nRecords = %s\n\r", nWA, nRecords )
+#endif
 
    HB_SYMBOL_UNUSED( nRecords )
 
@@ -716,6 +787,10 @@ STATIC FUNCTION AR_RECID( nWA, nRecNo )
    LOCAL aRecords  := aDBFData[ DATABASE_RECORDS ]
    LOCAL nRecCount := Len( aRecords )
 
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_RECID(): nWA = %i, nRecNo = %s\n\r", nWA, nRecNo )
+#endif
+
    IF aWAData[ WADATA_EOF ]
       nRecNo := nRecCount + 1
    ELSE
@@ -729,6 +804,10 @@ STATIC FUNCTION AR_RECCOUNT( nWA, nRecords )
    LOCAL aDBFData  := aWAData[ WADATA_DATABASE ]
    LOCAL aRecords  := aDBFData[ DATABASE_RECORDS ]
 
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_RECCOUNT(): nWA = %i, nRecords = %s\n\r", nWA, nRecords )
+#endif
+
    nRecords := Len( aRecords )
 
    RETURN SUCCESS
@@ -738,6 +817,10 @@ STATIC FUNCTION AR_ZAP( nWA )
    LOCAL aDBFData  := aWAData[ WADATA_DATABASE ]
    LOCAL aOpenInfo := aWAData[ WADATA_OPENINFO ]
    LOCAL oError
+
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_ZAP(): nWA = %i\n\r", nWA )
+#endif
 
    IF aOpenInfo[ UR_OI_READONLY ]
 
@@ -776,6 +859,10 @@ STATIC FUNCTION AR_ORDINFO( nWA, xMsg, xValue )
    HB_SYMBOL_UNUSED( nWA )
    HB_SYMBOL_UNUSED( xMsg )
    HB_SYMBOL_UNUSED( xValue )
+
+#ifdef ACTIVATE_DEBUG
+   hb_ToOutDebug( "AR_ORDINFO(): nWA = %i, xMsg = %s, xValue = %s\n\r", nWA, xMsg, xValue )
+#endif
 
    /*
    LOCAL hRDDData  := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
