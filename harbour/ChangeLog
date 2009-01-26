@@ -9,6 +9,7 @@
 */
 
 2009-01-26 00:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/Makefile
    * contrib/make_b32_all.bat
    * contrib/make_gcc_all.sh
    * contrib/make_vc_all.bat
