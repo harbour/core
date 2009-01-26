@@ -84,6 +84,7 @@
 #include "fileio.ch"
 #include "common.ch"
 #include "inkey.ch"
+#include "error.ch"
 
 #include "hbextern.ch"   // need this to use with HRB
 
@@ -176,6 +177,8 @@ THREAD STATIC t_hProc
 
 MEMVAR _SERVER, _GET, _POST, _REQUEST, _HTTP_REQUEST, m_cPost
 
+ANNOUNCE ERRORSYS
+
 FUNCTION MAIN( ... )
 LOCAL nPort, hListen, hSocket, aRemote, cI, xVal
 LOCAL aThreads, nStartThreads, nMaxThreads, nStartServiceThreads
@@ -195,6 +198,8 @@ LOCAL cCmdPort, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
    // ----------------------- Initializations ---------------------------------
 
    SysSettings()
+
+   ErrorBlock( { | oError | httpd_DefError( oError ) } )
 
    // ----------------------- Parameters defaults -----------------------------
 
@@ -652,6 +657,8 @@ LOCAL aI
   nThreadId    := hb_threadID()
   //nThreadIdRef := nThreadId
 
+  ErrorBlock( { | oError | httpd_DefError( oError ) } )
+
   WriteToConsole( "Starting ProcessConnections() " + hb_CStr( nThreadId ) )
 
   IF hb_mutexLock( s_hmtxBusy )
@@ -849,6 +856,8 @@ LOCAL nRcvLen, nContLen
 #else
 LOCAL aI
 #endif
+
+  ErrorBlock( { | oError | httpd_DefError( oError ) } )
 
   nThreadId := hb_threadID()
   //nThreadIdRef := nThreadId
@@ -1670,7 +1679,7 @@ STATIC PROCEDURE ShowServerStatus()
    uWrite( '<title>Server Status</title><body><h1>Server Status</h1><pre>')
    //uWrite( '<table border="0">')
 
-   uWrite( 'SERVER: ' + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + LTrim( Str( _SERVER[ "SERVER_PORT" ] ) ) )
+   uWrite( 'SERVER: ' + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + _SERVER[ "SERVER_PORT" ] )
    uWrite( '<br>' )
    IF hb_mutexLock( s_hmtxBusy )
       uWrite( '<br>Thread: ' + Str( s_nThreads ) )
@@ -1947,3 +1956,142 @@ STATIC FUNCTION ParseIni( cConfig )
    ENDIF
 
    RETURN hDefault
+
+STATIC FUNCTION httpd_DefError( oError )
+   LOCAL cMessage
+   LOCAL cCallstack
+   LOCAL cDOSError
+
+   LOCAL aOptions
+   LOCAL nChoice
+
+   LOCAL n
+
+   // By default, division by zero results in zero
+   IF oError:genCode == EG_ZERODIV .AND. ;
+      oError:canSubstitute
+      RETURN 0
+   ENDIF
+
+   // By default, retry on RDD lock error failure */
+   IF oError:genCode == EG_LOCK .AND. ;
+      oError:canRetry
+      // oError:tries++
+      RETURN .T.
+   ENDIF
+
+   // Set NetErr() of there was a database open error
+   IF oError:genCode == EG_OPEN .AND. ;
+      oError:osCode == 32 .AND. ;
+      oError:canDefault
+      NetErr( .T. )
+      RETURN .F.
+   ENDIF
+
+   // Set NetErr() if there was a lock error on dbAppend()
+   IF oError:genCode == EG_APPENDLOCK .AND. ;
+      oError:canDefault
+      NetErr( .T. )
+      RETURN .F.
+   ENDIF
+
+   cMessage := ErrorMessage( oError )
+   IF ! Empty( oError:osCode )
+      cDOSError := "(DOS Error " + hb_NToS( oError:osCode ) + ")"
+   ENDIF
+
+   // ;
+
+   cCallstack := ""
+   n := 1
+   DO WHILE ! Empty( ProcName( ++n ) )
+      cCallstack += "Called from " + ProcName( n ) + "(" + hb_NToS( ProcLine( n ) ) + ")  "
+   ENDDO
+
+   // Build buttons
+
+   aOptions := {}
+
+   AAdd( aOptions, "Quit" )
+
+   IF oError:canRetry
+      AAdd( aOptions, "Retry" )
+   ENDIF
+
+   IF oError:canDefault
+      AAdd( aOptions, "Default" )
+   ENDIF
+
+   // Show alert box
+
+   nChoice := 0
+   DO WHILE nChoice == 0
+
+      IF ISNIL( cDOSError )
+         nChoice := Alert( cMessage + " " + cCallstack, aOptions )
+      ELSE
+         nChoice := Alert( cMessage + ";" + cDOSError + " " + cCallstack, aOptions )
+      ENDIF
+
+   ENDDO
+
+   IF ! Empty( nChoice )
+      DO CASE
+      CASE aOptions[ nChoice ] == "Break"
+         Break( oError )
+      CASE aOptions[ nChoice ] == "Retry"
+         RETURN .T.
+      CASE aOptions[ nChoice ] == "Default"
+         RETURN .F.
+      ENDCASE
+   ENDIF
+
+   // "Quit" selected
+
+   IF ! ISNIL( cDOSError )
+      cMessage += " " + cDOSError
+   ENDIF
+
+   OutErr( hb_OSNewLine() )
+   OutErr( cMessage )
+   OutErr( hb_OSNewLine() )
+   OutErr( cCallstack )
+
+   ErrorLevel( 1 )
+   QUIT
+
+   RETURN .F.
+
+STATIC FUNCTION ErrorMessage( oError )
+
+   // start error message
+   LOCAL cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
+
+   // add subsystem name if available
+   IF ISCHARACTER( oError:subsystem )
+      cMessage += oError:subsystem()
+   ELSE
+      cMessage += "???"
+   ENDIF
+
+   // add subsystem's error code if available
+   IF ISNUMBER( oError:subCode )
+      cMessage += "/" + hb_NToS( oError:subCode )
+   ELSE
+      cMessage += "/???"
+   ENDIF
+
+   // add error description if available
+   IF ISCHARACTER( oError:description )
+      cMessage += "  " + oError:description
+   ENDIF
+
+   // add either filename or operation
+   DO CASE
+   CASE !Empty( oError:filename )
+      cMessage += ": " + oError:filename
+   CASE !Empty( oError:operation )
+      cMessage += ": " + oError:operation
+   ENDCASE
+
+   RETURN cMessage

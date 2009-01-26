@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-27 00:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/examples/uhttpd/uhttpd.prg
+    + Added callstack in RTE message (ugly but useful).
+    ! Fixed RTE when displaying server status.
+      (might have broken non-inet-mode)
+
+  * contrib/examples/uhttpd/hbmk_b32.bat
+  * contrib/examples/uhttpd/hbmk_vc.bat
+    + Trying to shutdown server before build.
+
 2009-01-26 15:07 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
   * harbour/contrib/gtwvg/gtwvg.h
@@ -18,23 +28,23 @@
       behavior in GTWVG with GUI elelments.
 
 2009-01-26 23:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
-   * contrib/examples/uhttpd/hbmk_b32.bat
-     ! Missed update from previous commit.
+  * contrib/examples/uhttpd/hbmk_b32.bat
+    ! Missed update from previous commit.
 
 2009-01-26 23:32 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
-   + contrib/examples/uhttpd/hbmk_vc.bat
-     + Added MSVC make file.
+  + contrib/examples/uhttpd/hbmk_vc.bat
+    + Added MSVC make file.
 
-   * contrib/examples/uhttpd/socket.c
-     ! Made it compile with MSVC.
-     ! Added SVN header.
+  * contrib/examples/uhttpd/socket.c
+    ! Made it compile with MSVC.
+    ! Added SVN header.
 
-   * contrib/examples/uhttpd/uhttpd.prg
-   + contrib/examples/uhttpd/uhttpdc.c
-     + C level stuff moved to separate file.
+  * contrib/examples/uhttpd/uhttpd.prg
+  + contrib/examples/uhttpd/uhttpdc.c
+    + C level stuff moved to separate file.
 
-   ; NOTE: I'm getting an "Argument error: +" when browse
-           to http://localhost:8082 (using Chrome if that matters).
+  ; NOTE: I'm getting an "Argument error: +" when browse
+          to http://localhost:8082 (using Chrome if that matters).
 
 2009-01-26 22:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rdd/usrrdd/example/exhsx.prg
