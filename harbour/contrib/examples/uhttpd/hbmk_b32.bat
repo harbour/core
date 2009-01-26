@@ -45,7 +45,7 @@ if %UHTTP_INET_SUPPORT%.==no.  SET UHTTP_INET_SOCKET=socket.c
 
 ..\..\..\bin\harbour uhttpd /n /es2 /w3 /i..\..\..\include %UHTTP_GD_DEF% %UHTTP_INET_DEF%
 if errorlevel 1 goto DOERROR
-bcc32 -O2 -tW -d -a8 -I..\..\..\include -L..\..\..\lib uhttpd.c %UHTTP_INET_SOCKET% hbdebug.lib hbvmmt.lib hbrtl.lib gtwvt.lib gtwin.lib gtgui.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbcpage.lib hbsix.lib hbcommon.lib hbpcre.lib hbhsx.lib hbzlib.lib xhb.lib hbct.lib cw32mt.lib %UHTTP_GD_LIBS%
+bcc32 -O2 -tW -d -a8 -I..\..\..\include -L..\..\..\lib uhttpd.c uhttpdc.c %UHTTP_INET_SOCKET% hbdebug.lib hbvmmt.lib hbrtl.lib gtwvt.lib gtwin.lib gtgui.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbcpage.lib hbsix.lib hbcommon.lib hbpcre.lib hbhsx.lib hbzlib.lib xhb.lib hbct.lib cw32mt.lib %UHTTP_GD_LIBS%
 if errorlevel 1 goto DOERROR
 
 :CLEAN
