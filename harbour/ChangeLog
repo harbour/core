@@ -8,6 +8,48 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 21:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/common/hbprintf.c
+    ! Some fixes to make it compile under BCC.
+      Still doesn't compile however.
+      I'll rather disable this code for now, unless someone jumps
+      in an fixes these problems.
+    ; TOFIX: For MSVC, too:
+      source\common\hbprintf.c(213) : error C2061: syntax error : identifier 'intmax_t'
+      source\common\hbprintf.c(214) : error C2061: syntax error : identifier 'as_x_uintmax_t'
+      source\common\hbprintf.c(214) : error C2059: syntax error : ';'
+      source\common\hbprintf.c(222) : error C2059: syntax error : '}'
+      source\common\hbprintf.c(226) : error C2061: syntax error : identifier 'x_type'
+      source\common\hbprintf.c(227) : error C2059: syntax error : '}'
+      source\common\hbprintf.c(379) : error C2146: syntax error : missing ')' before identifier 'value'
+      source\common\hbprintf.c(379) : error C2081: 'uintmax_t' : name in formal parameter list illegal
+      source\common\hbprintf.c(379) : error C2061: syntax error : identifier 'value'
+      source\common\hbprintf.c(379) : error C2059: syntax error : ';'
+      source\common\hbprintf.c(379) : error C2059: syntax error : ','
+      source\common\hbprintf.c(379) : error C2059: syntax error : ')'
+      source\common\hbprintf.c(434) : error C2146: syntax error : missing ')' before identifier 'value'
+      source\common\hbprintf.c(434) : error C2081: 'uintmax_t' : name in formal parameter list illegal
+      source\common\hbprintf.c(434) : error C2061: syntax error : identifier 'value'
+      source\common\hbprintf.c(434) : error C2059: syntax error : ';'
+      source\common\hbprintf.c(434) : error C2059: syntax error : ','
+      source\common\hbprintf.c(435) : error C2059: syntax error : ')'
+      source\common\hbprintf.c(615) : error C2146: syntax error : missing ')' before identifier 'value'
+      source\common\hbprintf.c(615) : error C2081: 'uintmax_t' : name in formal parameter list illegal
+      source\common\hbprintf.c(615) : error C2061: syntax error : identifier 'value'
+      source\common\hbprintf.c(615) : error C2059: syntax error : ';'
+      source\common\hbprintf.c(615) : error C2059: syntax error : ','
+      source\common\hbprintf.c(616) : error C2059: syntax error : ')'
+      source\common\hbprintf.c(700) : error C2059: syntax error : '{'
+      source\common\hbprintf.c(700) : error C2065: 'n' : undeclared identifier
+      source\common\hbprintf.c(700) : error C2059: syntax error : ')'
+      source\common\hbprintf.c(702) : error C2143: syntax error : missing '{' before '-='
+      source\common\hbprintf.c(702) : error C2059: syntax error : '-='
+      source\common\hbprintf.c(703) : error C2059: syntax error : 'if'
+      source\common\hbprintf.c(710) : error C2059: syntax error : 'while'
+      source\common\hbprintf.c(717) : error C2059: syntax error : 'while'
+      source\common\hbprintf.c(725) : error C2059: syntax error : 'return'
+      source\common\hbprintf.c(726) : error C2059: syntax error : '}'
+
 2009-01-26 20:24 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/ChangeLog
     * added missed entry I haven't uploaded and fixed my wrong phrase.

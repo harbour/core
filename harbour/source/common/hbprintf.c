@@ -78,7 +78,7 @@ not support it then it can be eliminated by
    #define __NO_LONGDOUBLE__
 
 If positional parameters are not necessary then support for them can be
-diabled by
+disabled by
    #define __NO_ARGPOS__
 In such case this code neither allocates memory nor extensively use stack
 as memory buffer. All conversions are done "on the fly". If memory
@@ -95,11 +95,21 @@ optimized.
 #  define _GNU_SOURCE
 #endif
 
+#if defined(__DJGPP__)
+#   include <libm/math.h>
+_LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
+#else
+#   include <math.h>
+#endif
+
+#include "hbmath.h"
+
 #include <stdarg.h>
+#if defined( __GNUC__ )
 #include <stdint.h>
+#endif
 #include <stddef.h>
 #include <string.h>
-#include <math.h>
 #ifndef __NO_ARGPOS__
 #  include <stdlib.h>   /* malloc()/realloc()/free() */
 #endif
@@ -110,9 +120,19 @@ optimized.
 #  define _EXTERN_C     extern
 #endif
 
+#if defined( __GNUC__ )
 _EXTERN_C int hb_snprintf_c( char *buffer, size_t bufsize, const char *format, ... )
               __attribute__ (( format (printf, 3, 4)));
+#else
 
+#define strnlen( s, maxlen ) \
+      ( { size_t n = maxlen, size = 0; \
+          while( n < maxlen && s[ size ] ) \
+             ++size; \
+          size; \
+      } )
+
+#endif
 
 #define _F_ALTERNATE    0x01  /* only for: o xX aA eE fF gG  */
 #define _F_ZEROPADED    0x02  /* only for: d i o u xX aA eE fF gG */
@@ -489,7 +509,11 @@ static size_t put_dbl( char *buffer, size_t bufsize, size_t size,
     * platform then it can be replaced by 'value < 0' but in such case
     * -0.0 will be shown as 0.0
     */
+#if defined( __GNUC__ )
    sign = signbit( value );
+#else
+   sign = value < 0;
+#endif
    if( sign )
       value = - value;
 
@@ -1057,3 +1081,4 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
 
    return ( int ) size;
 }
+
