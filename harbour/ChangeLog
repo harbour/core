@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 16:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/darwin/gcc.cf
+    ! changed CCACHE to HB_CCACHE
+  * harbour/include/hbatomic.h
+    ! removed unnecessary volatile casting in Darwin atomic function
+      parameters
+  * harbour/source/compiler/harbour.y
+    ! cleaned one untyped expression assign
+  (by Phil Krylov borrowed from xHarbour)
+
+  * harbour/bin/hb-func.sh
+    * updated contrib library last
+
 2009-01-26 13:11 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/source/rdd/usrrdd/rdds/logrdd.prg
     * changed REQUEST to DYNAMIC HB_LOGRDDINHERIT

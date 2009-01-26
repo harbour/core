@@ -4,21 +4,29 @@
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
+ifeq ($(HB_COMPILER),gpp)
+   HB_CMP = g++
+else
+   # intentionally used 'cc' instead of 'gcc' - I'm not an Darwin user
+   # but the system where I was testing it has GCC 2.95 named 'cc'
+   HB_CMP = cc
+endif
+
 OBJ_EXT = .o
 EXE_EXT =
 LIB_PREF = lib
 LIB_EXT = .a
 
-# intentionally used 'cc' instead of 'gcc' - I'm not an Darwin user
-# but the system where I was testing it has GCC 2.95 named 'cc'
-CC = $(CCACHE) cc
+CC = $(HB_CCACHE) $(HB_CMP)
 CC_IN = -c
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT = -o$(subst x,x, )
 
+CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+
 # -no-cpp-precomp prevents from using buggy precompiled headers
-CPPFLAGS = -no-cpp-precomp -I. -I$(HB_INC_COMPILE)
+CPPFLAGS += -no-cpp-precomp
 
 # -fno-common enables building .dylib files
 CFLAGS = -fno-common -Wall -W -O3

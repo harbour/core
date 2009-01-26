@@ -1390,7 +1390,7 @@ IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1, HB_COMP_
 IfBegin    : IF ExpList
                { ++HB_COMP_PARAM->functions.pLast->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); }
              Crlf
-               { HB_COMP_EXPR_DELETE( hb_compExprGenPush( $2, HB_COMP_PARAM ) ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
+               { HB_COMP_EXPR_DELETE( hb_compExprGenPush( $2, HB_COMP_PARAM ) ); $<iNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
              EmptyStats
                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
            ;

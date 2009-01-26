@@ -308,13 +308,13 @@ HB_EXTERN_BEGIN
 #     undef HB_ATOM_GET
 #     undef HB_ATOM_SET
 #     if HB_COUNTER_SIZE == 8
-#        define HB_ATOM_INC( p )    (OSAtomicIncrement64((volatile int64_t *)(p)))
-#        define HB_ATOM_DEC( p )    (OSAtomicDecrement64((volatile int64_t *)(p)))
+#        define HB_ATOM_INC( p )    (OSAtomicIncrement64((int64_t *)(p)))
+#        define HB_ATOM_DEC( p )    (OSAtomicDecrement64((int64_t *)(p)))
 #        define HB_ATOM_GET( p )    (*(int64_t volatile *)(p))
 #        define HB_ATOM_SET( p, n ) do { *((int64_t volatile *)(p)) = (n); } while(0)
 #     else
-#        define HB_ATOM_INC( p )    (OSAtomicIncrement32((volatile int32_t *)(p)))
-#        define HB_ATOM_DEC( p )    (OSAtomicDecrement32((volatile int32_t *)(p)))
+#        define HB_ATOM_INC( p )    (OSAtomicIncrement32((int32_t *)(p)))
+#        define HB_ATOM_DEC( p )    (OSAtomicDecrement32((int32_t *)(p)))
 #        define HB_ATOM_GET( p )    (*(volatile int32_t *)(p))
 #        define HB_ATOM_SET( p, n ) do { *((volatile int32_t *)(p)) = (n); } while(0)
 #     endif
