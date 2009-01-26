@@ -67,6 +67,11 @@
 
 /*
   TODO:
+      - security check
+        verify to launch .hrb and .exe *only* from cgi-bin
+      - optimize code
+      - add SSL support
+      - check CGIExec() better
 
 */
 
@@ -117,6 +122,7 @@
 
 #define PAGE_STATUS_REFRESH   1
 #define THREAD_MAX_WAIT     ( 60 ) // HOW MUCH TIME THREAD HAS TO WAIT BEFORE FINISH - IN SECONDS
+#define CGI_MAX_EXEC_TIME     30
 
 #define CR_LF    (CHR(13)+CHR(10))
 #define HB_IHASH()   HB_HSETCASEMATCH( {=>}, FALSE )
@@ -148,7 +154,7 @@
 DYNAMIC HRBMAIN
 
 STATIC s_hmtxQueue, s_hmtxServiceThreads, s_hmtxRunningThreads, s_hmtxLog, s_hmtxConsole, s_hmtxBusy
-STATIC s_hmtxHRB
+STATIC s_hmtxHRB, s_hmtxCGIKill
 STATIC s_hfileLogAccess, s_hfileLogError, s_cDocumentRoot, s_lIndexes, s_lConsole, s_nPort
 STATIC s_nThreads, s_nStartThreads, s_nMaxThreads
 STATIC s_nServiceThreads, s_nStartServiceThreads, s_nMaxServiceThreads
@@ -166,6 +172,7 @@ STATIC s_cLocalAddress, s_nLocalPort
 STATIC s_hFileAliases    := { => }
 
 THREAD STATIC t_cResult, t_nStatusCode, t_aHeader, t_cErrorMsg
+THREAD STATIC t_hProc
 
 MEMVAR _SERVER, _GET, _POST, _REQUEST, _HTTP_REQUEST, m_cPost
 
@@ -388,6 +395,7 @@ LOCAL cCmdPort, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
    s_hmtxRunningThreads := hb_mutexCreate()
    s_hmtxServiceThreads := hb_mutexCreate()
    s_hmtxHRB            := hb_mutexCreate()
+   s_hmtxCGIKill        := hb_mutexCreate()
 
    WriteToConsole( "--- Starting " + APP_NAME + " ---" )
 
@@ -631,10 +639,10 @@ RETURN 0
 // --------------------------------------------------------------------------------- //
 // CONNECTIONS
 // --------------------------------------------------------------------------------- //
-STATIC FUNCTION ProcessConnection( nThreadIdRef )
+STATIC FUNCTION ProcessConnection( nThreadId )
 LOCAL hSocket, cBuf, nLen, cRequest, cSend
 LOCAL nMsecs, nParseTime, nPos
-LOCAL nThreadId
+//LOCAL nThreadId
 #ifdef USE_HB_INET
 LOCAL nRcvLen, nContLen
 #else
@@ -642,7 +650,7 @@ LOCAL aI
 #endif
 
   nThreadId    := hb_threadID()
-  nThreadIdRef := nThreadId
+  //nThreadIdRef := nThreadId
 
   WriteToConsole( "Starting ProcessConnections() " + hb_CStr( nThreadId ) )
 
@@ -752,7 +760,7 @@ LOCAL aI
            _SERVER["REMOTE_PORT"] := hb_InetPort( hSocket )
 
            _SERVER["SERVER_ADDR"] := s_cLocalAddress
-           _SERVER["SERVER_PORT"] := s_nLocalPort
+           _SERVER["SERVER_PORT"] := LTrim( Str( s_nLocalPort ) )
 #else
            IF socket_getpeername( hSocket, @aI ) != -1
               _SERVER["REMOTE_ADDR"] := aI[2]
@@ -768,11 +776,11 @@ LOCAL aI
            IF ParseRequest( cRequest )
               //hb_ToOutDebug( "_SERVER = %s,\n\r _GET = %s,\n\r _POST = %s,\n\r _REQUEST = %s,\n\r _HTTP_REQUEST = %s\n\r", hb_ValToExp( _SERVER ), hb_ValToExp( _GET ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ), hb_ValToExp( _HTTP_REQUEST ) )
               define_Env( _SERVER )
-              uproc_default()
+              cSend := uproc_default()
            ELSE
               uSetStatusCode( 400 )
+              cSend := MakeResponse()
            ENDIF
-           cSend := MakeResponse()
 
            //hb_ToOutDebug( "cSend = %s\n\r", cSend )
 
@@ -831,10 +839,10 @@ LOCAL aI
 
 RETURN 0
 
-STATIC FUNCTION ServiceConnection( nThreadIdRef )
+STATIC FUNCTION ServiceConnection( nThreadId )
 LOCAL hSocket, cBuf, nLen, cRequest, cSend
 LOCAL nMsecs, nParseTime, nPos
-LOCAL nThreadId
+//LOCAL nThreadId
 LOCAL nError := 500013
 #ifdef USE_HB_INET
 LOCAL nRcvLen, nContLen
@@ -843,7 +851,7 @@ LOCAL aI
 #endif
 
   nThreadId := hb_threadID()
-  nThreadIdRef := nThreadId
+  //nThreadIdRef := nThreadId
 
   WriteToConsole( "Starting ServiceConnections() " + hb_CStr( nThreadId ) )
 
@@ -951,7 +959,7 @@ LOCAL aI
            _SERVER["REMOTE_PORT"] := hb_InetPort( hSocket )
 
            _SERVER["SERVER_ADDR"] := s_cLocalAddress
-           _SERVER["SERVER_PORT"] := s_nLocalPort
+           _SERVER["SERVER_PORT"] := LTrim( Str( s_nLocalPort ) )
 #else
            IF socket_getpeername( hSocket, @aI ) != -1
               _SERVER["REMOTE_ADDR"] := aI[2]
@@ -1139,12 +1147,13 @@ LOCAL cReq, aVal, cPost
   // Complete _SERVER
   _SERVER[ "SERVER_NAME"       ] = split( ":", _HTTP_REQUEST[ "HOST" ], 1 )[ 1 ]
   _SERVER[ "SERVER_SOFTWARE"   ] = APP_NAME + " " + APP_VERSION + " (" + OS() + ")"
-  _SERVER[ "SERVER_SIGNATURE"  ] = "<address>" + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + LTrim( Str( _SERVER[ "SERVER_PORT" ] ) ) + "</address>"
+  _SERVER[ "SERVER_SIGNATURE"  ] = "<address>" + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + _SERVER[ "SERVER_PORT" ] + "</address>"
   _SERVER[ "DOCUMENT_ROOT"     ] = s_cDocumentRoot
   _SERVER[ "SERVER_ADMIN"      ] = "root"
   _SERVER[ "SCRIPT_FILENAME"   ] = STRTRAN( STRTRAN( _SERVER[ "DOCUMENT_ROOT" ] + _SERVER[ "SCRIPT_NAME" ], "//", "/" ), "\", "/" )
   _SERVER[ "GATEWAY_INTERFACE" ] = "CGI/1.1"
   _SERVER[ "SCRIPT_URL"        ] := _SERVER["SCRIPT_NAME"]
+  _SERVER[ "SCRIPT_URI"        ] := "http://" + _HTTP_REQUEST[ "HOST" ] + _SERVER["SCRIPT_NAME"]
 
   //hb_ToOutDebug( "_SERVER = %s\n\r", hb_ValToExp( _SERVER ) )
   //hb_ToOutDebug( "_GET = %s\n\r", hb_ValToExp( _GET ) )
@@ -1298,6 +1307,97 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
 RETURN
 
+STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
+   LOCAL hOut
+   LOCAL cData, nLen
+   LOCAL nErrorLevel
+   LOCAL pThread
+
+   IF HB_ISSTRING( cProc )
+
+      //hb_toOutDebug( "Launching process: %s\n\r", cProc )
+      // No hIn, hErr == hOut
+      t_hProc := HB_OpenProcess( cProc, , @hOut, @hOut, .T. ) // .T. = Detached Process (Hide Window)
+
+      IF t_hProc > -1
+         //hb_toOutDebug( "Process handler: %s\n\r", t_hProc )
+         //hb_toOutDebug( "Error: %s\n\r", FError() )
+
+         pThread := hb_threadStart( @CGIKill() )
+
+         hb_mutexNotify( s_hmtxCGIKill, .T. )
+
+         // Nothing sent to process
+         //hb_toOutDebug( "Sending: %s\n\r", cSend )
+         //FWrite( hIn, cSend )
+
+         //hb_toOutDebug( "Reading output\n\r" )
+
+         cData := Space( 1000 )
+         cOutPut := ""
+         DO WHILE ( nLen := Fread( hOut, @cData, Len( cData ) ) ) > 0
+            cOutPut += SubStr( cData, 1, nLen )
+            cData := Space( 1000 )
+         ENDDO
+
+         //? "Reading errors"
+         //hb_toOutDebug( "Reading errors\n\r" )
+         //cData := Space( 1000 )
+         //nLen  := Fread( hErr, @cData, 1000 )
+         //hb_toOutDebug( "Received: %i bytes\n\r", nLen )
+         //IF nLen >0 .and. nLen < 200
+         //   hb_toOutDebug( "Dumping them: %s\n\r", SubStr( cData, 1, nLen ) )
+         //ENDIF
+
+         //? "Waiting for process termination"
+         // Return value
+         nErrorLevel := HB_ProcessValue( t_hProc )
+
+         // Notify to CGIKill to terminate
+         hb_mutexNotify( s_hmtxCGIKill, .F. )
+         hb_threadJoin( pThread )
+
+         FClose( t_hProc )
+         FClose( hOut )
+
+      ENDIF
+
+   ELSE
+
+      nErrorLevel := -1 // Error: cProc is not a valid string
+
+   ENDIF
+
+   RETURN nErrorLevel
+
+STATIC PROCEDURE CGIKill()
+   LOCAL lWait
+   LOCAL nStartTime := hb_milliseconds()
+
+   // Kill process after MAX_PROCESS_EXEC_TIME
+   DO WHILE .T.
+
+      hb_mutexSubscribe( s_hmtxCGIKill, 10, @lWait ) // 10 seconds
+
+      IF HB_ISLOGICAL( lWait )
+         IF lWait
+            nStartTime := hb_milliseconds()
+         ELSE
+            EXIT
+         ENDIF
+      ENDIF
+
+      IF ( hb_milliseconds() - nStartTime ) > CGI_MAX_EXEC_TIME
+         // Killing process if still exists
+         IF t_hProc != NIL
+            HB_ProcessClose( t_hProc )
+         ENDIF
+         EXIT
+      ENDIF
+   ENDDO
+
+   RETURN
+
 INIT PROCEDURE SocketInit()
 #ifdef USE_HB_INET
   hb_InetInit()
@@ -1389,7 +1489,7 @@ RETURN
 
 #define XP_SUCCESS                 0
 
-STATIC PROCEDURE uproc_default()
+STATIC FUNCTION uproc_default()
 LOCAL cFileName, nI, cI
 LOCAL cExt, xResult, pHRB, oError
 
@@ -1402,7 +1502,7 @@ LOCAL cExt, xResult, pHRB, oError
   IF ".." $ cFileName
      uSetStatusCode( 403 )
      t_cErrorMsg := "Characters not allowed"
-     RETURN
+     RETURN MakeResponse()
   ENDIF
 
   IF HB_HHasKey( s_hFileAliases, _SERVER[ "SCRIPT_NAME" ] )
@@ -1415,6 +1515,8 @@ LOCAL cExt, xResult, pHRB, oError
      IF ( nI := RAT( ".", cFileName ) ) > 0
         SWITCH ( cExt := LOWER( SUBSTR( cFileName, nI + 1 ) ) )
            CASE "hrb" ;                                 cI := "text/html";                EXIT
+           CASE "exe" ;                                 cI := "text/html";                EXIT
+
            CASE "css" ;                                 cI := "text/css";                 EXIT
            CASE "htm" ;   CASE "html";                  cI := "text/html";                EXIT
            CASE "txt" ;   CASE "text";  CASE "asc"
@@ -1492,6 +1594,22 @@ LOCAL cExt, xResult, pHRB, oError
               uWrite( "<br>ProcLine: "    + hb_cStr( procline( 0 ) ) )
            END
 
+        ELSEIF cExt == "exe"
+
+           // Starting CGI application
+
+           IF ( CGIExec( uOSFileName(cFileName), @xResult ) ) == 0
+
+              //uAddHeader( "Content-Type", cI )
+              //uWrite( xResult )
+              RETURN "HTTP/1.1 200 OK " + CR_LF + xResult
+
+           ELSE
+
+              uAddHeader( "Content-Type", cI )
+              uWrite( "CGI Error" )
+
+           ENDIF
 
         ELSE
            uAddHeader( "Content-Type", cI )
@@ -1507,20 +1625,20 @@ LOCAL cExt, xResult, pHRB, oError
   ELSEIF HB_DirExists( uOSFileName( cFileName ) )
      IF RIGHT( cFileName, 1 ) != "/"
         uAddHeader( "Location", "http://" + _SERVER[ "HTTP_HOST" ] + _SERVER[ "SCRIPT_NAME" ] + "/" )
-        RETURN
+        RETURN MakeResponse()
      ENDIF
      IF ASCAN( { "index.html", "index.htm" }, ;
                {|x| IIF( HB_FileExists( uOSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
         uAddHeader( "Content-Type", "text/html" )
         uWrite( HB_MEMOREAD( uOSFileName( cFileName ) ) )
-        RETURN
+        RETURN MakeResponse()
      ENDIF
 
      // If I'm here it's means that I have no page, so, if it is defined, I will display content folder
      IF !s_lIndexes
         uSetStatusCode( 403 )
         t_cErrorMsg := "Display file list not allowed"
-        RETURN
+        RETURN MakeResponse()
      ENDIF
 
      // ----------------------- display folder content -------------------------------------
@@ -1530,7 +1648,7 @@ LOCAL cExt, xResult, pHRB, oError
      uSetStatusCode( 404 )
      t_cErrorMsg := "File does not exist: " + cFileName
   ENDIF
-RETURN
+RETURN MakeResponse()
 
 // Define environment SET variables - TODO: Actually only for windows, make multiplatform
 STATIC PROCEDURE Define_Env( hmServer )
@@ -1833,7 +1951,7 @@ STATIC FUNCTION ParseIni( cConfig )
 
 
 //------------------------------------------------------------------------------
-// FUNZIONI C
+// C FUNCTIONS
 //------------------------------------------------------------------------------
 #PRAGMA BEGINDUMP
 
