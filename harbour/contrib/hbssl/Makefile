@@ -26,8 +26,10 @@ C_USR += $(foreach d, $(HB_INC_OPENSSL_OK), -I$(d))
 
 C_SOURCES=\
 	ssl.c \
+	sslciph.c \
 	sslctx.c \
 	sslrand.c \
+	sslsess.c \
 
 PRG_HEADERS=\
 	hbssl.ch \

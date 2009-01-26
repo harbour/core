@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * OpenSSL API - C header.
+ * OpenSSL API (SSL_CIPHER) - Harbour interface.
  *
  * Copyright 2009 Viktor Szakats <harbour 01 syenar hu>
  * www - http://www.harbour-project.org
@@ -50,22 +50,52 @@
  *
  */
 
-#ifndef HBSSL_H_
-#define HBSSL_H_
+#include "hbapi.h"
+#include "hbapierr.h"
 
-#include <openssl/ssl.h>
+#include "hbssl.h"
 
-#include "hbssl.ch"
+HB_FUNC( SSL_CIPHER_DESCRIPTION )
+{
+   if( ISPOINTER( 1 ) )
+   {
+      char buffer[ 128 ];
 
-extern SSL_METHOD *  hb_ssl_method_id_to_ptr( int n );
+      hb_retc( hb_parptr( 1 ) ? SSL_CIPHER_description( ( SSL_CIPHER * ) hb_parptr( 1 ), buffer, sizeof( buffer ) ) : NULL );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
 
-extern void *        hb_SSL_CTX_is( int iParam );
-extern SSL_CTX *     hb_SSL_CTX_par( int iParam );
+HB_FUNC( SSL_CIPHER_GET_BITS )
+{
+   if( ISPOINTER( 1 ) )
+   {
+      int alg_bits = 0;
 
-extern void *        hb_SSL_is( int iParam );
-extern SSL *         hb_SSL_par( int iParam );
+      if( hb_parptr( 1 ) )
+         hb_retni( SSL_CIPHER_get_bits( ( SSL_CIPHER * ) hb_parptr( 1 ), &alg_bits ) );
+      else
+         hb_retni( 0 );
 
-extern void *        hb_SSL_SESSION_is( int iParam );
-extern SSL_SESSION * hb_SSL_SESSION_par( int iParam );
+      hb_storni( alg_bits, 2 );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
 
-#endif /* HBSSL_H_ */
+HB_FUNC( SSL_CIPHER_GET_NAME )
+{
+   if( ISPOINTER( 1 ) )
+      hb_retc( hb_parptr( 1 ) ? SSL_CIPHER_get_name( ( SSL_CIPHER * ) hb_parptr( 1 ) ) : NULL );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_CIPHER_GET_VERSION )
+{
+   if( ISPOINTER( 1 ) )
+      hb_retc( hb_parptr( 1 ) ? SSL_CIPHER_get_version( ( SSL_CIPHER * ) hb_parptr( 1 ) ) : NULL );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}

@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 10:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbssl/common.mak
+   * contrib/hbssl/Makefile
+   * contrib/hbssl/hbssl.h
+   + contrib/hbssl/sslsess.c
+   + contrib/hbssl/sslciph.c
+   * contrib/hbssl/ssl.c
+   * contrib/hbssl/sslctx.c
+   * contrib/hbssl/tests/test.prg
+     + More SSL API added.
+
 2009-01-26 01:07 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpd.prg
     + Added CGIExec() function

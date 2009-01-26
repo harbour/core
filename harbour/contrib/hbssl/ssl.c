@@ -268,6 +268,19 @@ HB_FUNC( SSL_RENEGOTIATE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_TOTAL_RENEGOTIATIONS )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retnl( SSL_total_renegotiations( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( SSL_SET_FD )
 {
    if( hb_SSL_is( 1 ) )
@@ -438,3 +451,122 @@ HB_FUNC( SSL_WRITE )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+HB_FUNC( SSL_SET_SSL_METHOD )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_set_ssl_method( ssl, hb_ssl_method_id_to_ptr( hb_parni( 2 ) ) ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( SSL_GET_CURRENT_CIPHER )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retptr( ( void * ) SSL_get_current_cipher( ssl ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/*
+int SSL_add_dir_cert_subjects_to_stack(STACK *stack, const char *dir);
+int SSL_add_file_cert_subjects_to_stack(STACK *stack, const char *file);
+int SSL_add_client_CA(SSL *ssl, X509 *x);
+char *SSL_alert_desc_string(int value);
+char *SSL_alert_desc_string_long(int value);
+char *SSL_alert_type_string(int value);
+char *SSL_alert_type_string_long(int value);
+int SSL_check_private_key(const SSL *ssl);
+long SSL_clear_num_renegotiations(SSL *ssl);
+void SSL_copy_session_id(SSL *t, const SSL *f);
+long SSL_ctrl(SSL *ssl, int cmd, long larg, char *parg);
+STACK *SSL_dup_CA_list(STACK *sk);
+SSL_CTX *SSL_get_SSL_CTX(const SSL *ssl);
+char *SSL_get_app_data(SSL *ssl);
+X509 *SSL_get_certificate(const SSL *ssl);
+int SSL_get_cipher_bits(const SSL *ssl, int *alg_bits);
+char *SSL_get_cipher_list(const SSL *ssl, int n);
+char *SSL_get_cipher_name(const SSL *ssl);
+char *SSL_get_cipher_version(const SSL *ssl);
+STACK *SSL_get_ciphers(const SSL *ssl);
+STACK *SSL_get_client_CA_list(const SSL *ssl);
+long SSL_get_default_timeout(const SSL *ssl);
+int SSL_get_error(const SSL *ssl, int i);
+char *SSL_get_ex_data(const SSL *ssl, int idx);
+int SSL_get_ex_data_X509_STORE_CTX_idx(void);
+int SSL_get_ex_new_index(long argl, char *argp, int (*new_func);(void), int (*dup_func)(void), void (*free_func)(void))
+int SSL_get_fd(const SSL *ssl);
+void (*SSL_get_info_callback(const SSL *ssl);)()
+STACK *      SSL_get_peer_cert_chain(const SSL *ssl);
+X509 *       SSL_get_peer_certificate(const SSL *ssl);
+EVP_PKEY *   SSL_get_privatekey(SSL *ssl);
+int          SSL_get_quiet_shutdown(const SSL *ssl);
+BIO *        SSL_get_rbio(const SSL *ssl);
+int          SSL_get_read_ahead(const SSL *ssl);
+SSL_SESSION *SSL_get_session(const SSL *ssl);
+char *      SSL_get_shared_ciphers(const SSL *ssl, char *buf, int len);
+int         SSL_get_shutdown(const SSL *ssl);
+const SSL_METHOD *SSL_get_ssl_method(SSL *ssl);
+int         SSL_get_state(const SSL *ssl);
+int (*SSL_get_verify_callback(const SSL *ssl))(int,X509_STORE_CTX *)
+int         SSL_get_verify_mode(const SSL *ssl);
+long        SSL_get_verify_result(const SSL *ssl);
+BIO *       SSL_get_wbio(const SSL *ssl);
+int         SSL_in_accept_init(SSL *ssl);
+int         SSL_in_before(SSL *ssl);
+int         SSL_in_connect_init(SSL *ssl);
+int         SSL_in_init(SSL *ssl);
+int         SSL_is_init_finished(SSL *ssl);
+STACK *     SSL_load_client_CA_file(char *file);
+void        SSL_load_error_strings(void);
+long        SSL_num_renegotiations(SSL *ssl);
+char *      SSL_rstate_string(SSL *ssl);
+char *      SSL_rstate_string_long(SSL *ssl);
+long        SSL_session_reused(SSL *ssl);
+void        SSL_set_accept_state(SSL *ssl);
+void        SSL_set_app_data(SSL *ssl, char *arg);
+void        SSL_set_bio(SSL *ssl, BIO *rbio, BIO *wbio);
+int         SSL_set_cipher_list(SSL *ssl, char *str);
+void        SSL_set_client_CA_list(SSL *ssl, STACK *list);
+void        SSL_set_connect_state(SSL *ssl);
+int         SSL_set_ex_data(SSL *ssl, int idx, char *arg);
+int         SSL_set_fd(SSL *ssl, int fd);
+void        SSL_set_info_callback(SSL *ssl, void (*cb);(void))
+void        SSL_set_msg_callback(SSL *ctx, void (*cb)(int write_p, int version, int content_type, const void *buf, size_t len, SSL *ssl, void *arg));
+void        SSL_set_msg_callback_arg(SSL *ctx, void *arg);
+void        SSL_set_options(SSL *ssl, unsigned long op);
+void        SSL_set_quiet_shutdown(SSL *ssl, int mode);
+void        SSL_set_read_ahead(SSL *ssl, int yes);
+int         SSL_set_rfd(SSL *ssl, int fd);
+int         SSL_set_session(SSL *ssl, SSL_SESSION *session);
+void        SSL_set_shutdown(SSL *ssl, int mode);
+void        SSL_set_verify(SSL *ssl, int mode, int (*callback);(void))
+void        SSL_set_verify_result(SSL *ssl, long arg);
+int         SSL_set_wfd(SSL *ssl, int fd);
+char *      SSL_state_string(const SSL *ssl);
+char *      SSL_state_string_long(const SSL *ssl);
+int         SSL_use_PrivateKey(SSL *ssl, EVP_PKEY *pkey);
+int         SSL_use_PrivateKey_ASN1(int type, SSL *ssl, unsigned char *d, long len);
+int         SSL_use_PrivateKey_file(SSL *ssl, char *file, int type);
+int         SSL_use_RSAPrivateKey(SSL *ssl, RSA *rsa);
+int         SSL_use_RSAPrivateKey_ASN1(SSL *ssl, unsigned char *d, long len);
+int         SSL_use_RSAPrivateKey_file(SSL *ssl, char *file, int type);
+int         SSL_use_certificate(SSL *ssl, X509 *x);
+int         SSL_use_certificate_ASN1(SSL *ssl, int len, unsigned char *d);
+int         SSL_use_certificate_file(SSL *ssl, char *file, int type);
+void        SSL_set_psk_client_callback(SSL *ssl, unsigned int (*callback)(SSL *ssl, const char *hint, char *identity, unsigned int max_identity_len, unsigned char *psk, unsigned int max_psk_len));
+int         SSL_use_psk_identity_hint(SSL *ssl, const char *hint);
+void        SSL_set_psk_server_callback(SSL *ssl, unsigned int (*callback)(SSL *ssl, const char *identity, unsigned char *psk, int max_psk_len));
+const char *SSL_get_psk_identity_hint(SSL *ssl);
+const char *SSL_get_psk_identity(SSL *ssl);
+*/
