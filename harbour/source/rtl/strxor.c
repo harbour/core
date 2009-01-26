@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * OpenSSL API (SSL_CIPHER) - Harbour interface.
+ * HB_STRXOR()
  *
- * Copyright 2009 Viktor Szakats <harbour 01 syenar hu>
+ * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,49 +52,65 @@
 
 #include "hbapi.h"
 #include "hbapierr.h"
+#include "hbapiitm.h"
 
-#include "hbssl.h"
-
-HB_FUNC( SSL_CIPHER_DESCRIPTION )
+HB_FUNC( HB_STRXOR )
 {
-   if( ISPOINTER( 1 ) )
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
+   if( pItem )
    {
-      char buffer[ 128 ];
+      PHB_ITEM     pItem2;
+      ULONG        ulLen1, ulLen2, ul, ul2;
+      const char * pStr1;
+      const char * pStr2;
+      char *       pRet;
 
-      buffer[ 0 ] = '\0';
+      pStr1 = hb_itemGetCPtr( pItem );
+      ulLen1 = hb_itemGetCLen( pItem );
 
-      hb_retc( hb_parptr( 1 ) ? SSL_CIPHER_description( ( SSL_CIPHER * ) hb_parptr( 1 ), buffer, sizeof( buffer ) ) : NULL );
+      if( ( pItem2 = hb_param( 2, HB_IT_STRING ) ) != NULL )
+      {
+         ulLen2 = hb_itemGetCLen( pItem2 );
+         if( ulLen2 )
+         {
+            pStr2 = hb_itemGetCPtr( pItem2 );
+
+            pRet = ( char * ) hb_xgrab( ulLen1 + 1 );
+            memcpy( pRet, pStr1, ulLen1 + 1 );
+            ul2 = 0;
+            for( ul = 0; ul < ulLen1; ul++ )
+            {
+               pRet[ ul ] ^= pStr2[ ul2 ];
+               if( ++ul2 == ulLen2 )
+                  ul2 = 0;
+            }
+            hb_retclen_buffer( pRet, ulLen1 );
+         }
+         else
+            hb_itemReturn( pItem );
+
+         return;
+      }
+      else if( ( pItem2 = hb_param( 2, HB_IT_NUMERIC ) ) != NULL )
+      {
+         char bChar = ( char ) hb_itemGetNI( pItem2 );
+
+         if( bChar )
+         {
+            pRet = ( char * ) hb_xgrab( ulLen1 + 1 );
+            memcpy( pRet, pStr1, ulLen1 + 1 );
+            for( ul = 0; ul < ulLen1; ul++ )
+               pRet[ ul ] ^= bChar;
+
+            hb_retclen_buffer( pRet, ulLen1 );
+         }
+         else
+            hb_itemReturn( pItem );
+
+         return;
+      }
    }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
 
-HB_FUNC( SSL_CIPHER_GET_BITS )
-{
-   if( ISPOINTER( 1 ) )
-   {
-      int alg_bits = 0;
-
-      hb_retni( hb_parptr( 1 ) ? SSL_CIPHER_get_bits( ( SSL_CIPHER * ) hb_parptr( 1 ), &alg_bits ) : 0 );
-
-      hb_storni( alg_bits, 2 );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( SSL_CIPHER_GET_NAME )
-{
-   if( ISPOINTER( 1 ) )
-      hb_retc( hb_parptr( 1 ) ? SSL_CIPHER_get_name( ( SSL_CIPHER * ) hb_parptr( 1 ) ) : NULL );
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( SSL_CIPHER_GET_VERSION )
-{
-   if( ISPOINTER( 1 ) )
-      hb_retc( hb_parptr( 1 ) ? SSL_CIPHER_get_version( ( SSL_CIPHER * ) hb_parptr( 1 ) ) : NULL );
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

@@ -8,6 +8,36 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 17:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * include/hbextern.ch
+   * source/rtl/Makefile
+   + source/rtl/strxor.c
+     + Added HB_STRXOR() (work of Mindaugas Kavaliauskas)
+
+   * common.mak
+   * source/common/Makefile
+   + source/common/hbprintf.c
+     + Added hb_snprintf_c() (temp name, untested) (work of Przemyslaw Czerpak)
+       [ I've added a normal Harbour license, as per your permission
+       on the list. Pls give me feedback is this is wrong. ]
+
+   * source/rdd/usrrdd/example/exlog.prg
+     ! Fixed missing #includes.
+
+   * source/rdd/usrrdd/example/hbmk_b32.bat
+   + source/rdd/usrrdd/example/hbmk_vc.bat
+     + Added MSVC make file.
+     ! Added EOL to the last line to hbmk_b32.bat.
+     ! xhb.lib dependency removed. It was not needed anyway.
+     ; TOFIX: When compiling exhsx.prg, this happens:
+              exhsx.obj : error LNK2001: unresolved external symbol _HB_FUN_HSXRDD
+
+   * contrib/hbssl/sslsess.c
+   * contrib/hbssl/sslctx.c
+   * contrib/hbssl/sslciph.c
+     * Minor changes.
+
 2009-01-26 16:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/darwin/gcc.cf
     ! changed CCACHE to HB_CCACHE

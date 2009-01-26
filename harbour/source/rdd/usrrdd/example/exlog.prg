@@ -2,7 +2,9 @@
  * $Id: exfcm.prg 9551 2008-10-05 18:13:15Z vszakats $
  */
 
+#include "common.ch"
 #include "dbinfo.ch"
+#include "hbusrrdd.ch"
 
 // Request for LOGRDD rdd driver
 REQUEST LOGRDD
@@ -40,7 +42,8 @@ PROCEDURE Main()
    CLOSE
 
    // Open a table without logging
-   USE test DRIVER "DBFCDX"
+
+   USE test VIA "DBFCDX"
    APPEND BLANK
    field->name := "Francesco"
 

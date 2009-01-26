@@ -175,10 +175,11 @@ HB_FUNC( SSL_SESSION_HASH )
 }
 
 /*
-void SSL_SESSION_set_app_data(SSL_SESSION *s, char *a);
 char *SSL_SESSION_get_app_data(SSL_SESSION *s);
-int SSL_SESSION_set_ex_data(SSL_SESSION *s, int idx, char *arg);
 char *SSL_SESSION_get_ex_data(const SSL_SESSION *s, int idx);
+void SSL_SESSION_set_app_data(SSL_SESSION *s, char *a);
+int SSL_SESSION_set_ex_data(SSL_SESSION *s, int idx, char *arg);
+
 int SSL_SESSION_get_ex_new_index(long argl, char *argp, int (*new_func)(void), int (*dup_func)(void), void (*free_func)(void))
 int SSL_SESSION_print(BIO *bp, const SSL_SESSION *x);
 int SSL_SESSION_print_fp(FILE *fp, const SSL_SESSION *x);

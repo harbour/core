@@ -372,6 +372,7 @@ COMMON_LIB_OBJS = \
     $(OBJ_DIR)\hbgete$(OBJEXT)   \
     $(OBJ_DIR)\hbhash$(OBJEXT)   \
     $(OBJ_DIR)\hbmem$(OBJEXT)    \
+    $(OBJ_DIR)\hbprintf$(OBJEXT) \
     $(OBJ_DIR)\hbstr$(OBJEXT)    \
     $(OBJ_DIR)\hbtrace$(OBJEXT)  \
     $(OBJ_DIR)\hbver$(OBJEXT)    \
@@ -621,6 +622,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\strpeek$(OBJEXT)  \
     $(OBJ_DIR)\strtoexp$(OBJEXT) \
     $(OBJ_DIR)\strtran$(OBJEXT)  \
+    $(OBJ_DIR)\strxor$(OBJEXT)   \
     $(OBJ_DIR)\strzero$(OBJEXT)  \
     $(OBJ_DIR)\stuff$(OBJEXT)    \
     $(OBJ_DIR)\substr$(OBJEXT)   \

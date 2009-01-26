@@ -138,6 +138,7 @@ C_SOURCES=\
 	strpeek.c    \
 	strtoexp.c   \
 	strtran.c    \
+	strxor.c     \
 	strzero.c    \
 	stuff.c      \
 	substr.c     \

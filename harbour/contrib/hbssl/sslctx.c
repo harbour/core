@@ -575,9 +575,23 @@ X509_STORE *SSL_CTX_get_cert_store(const SSL_CTX *);
 void SSL_CTX_set_cert_store(SSL_CTX *,X509_STORE *);
 int SSL_CTX_add_client_CA(SSL_CTX *ctx, X509 *x);
 long SSL_CTX_add_extra_chain_cert(SSL_CTX *ctx, X509 *x509);
+void SSL_CTX_set_cert_store(SSL_CTX *ctx, X509_STORE *cs);
+void SSL_CTX_set_app_data(SSL_CTX *ctx, void *arg);
+int SSL_CTX_set_ex_data(SSL_CTX *s, int idx, char *arg);
+int SSL_CTX_set_cipher_list(SSL_CTX *ctx, char *str);
+int  SSL_CTX_use_PrivateKey(SSL_CTX *ctx, EVP_PKEY *pkey);
+int  SSL_CTX_use_PrivateKey_ASN1(int type, SSL_CTX *ctx, unsigned char *d, long len);
+int  SSL_CTX_use_PrivateKey_file(SSL_CTX *ctx, char *file, int type);
+int  SSL_CTX_use_RSAPrivateKey(SSL_CTX *ctx, RSA *rsa);
+int  SSL_CTX_use_RSAPrivateKey_ASN1(SSL_CTX *ctx, unsigned char *d, long len);
+int  SSL_CTX_use_RSAPrivateKey_file(SSL_CTX *ctx, char *file, int type);
+int  SSL_CTX_use_certificate(SSL_CTX *ctx, X509 *x);
+int  SSL_CTX_use_certificate_ASN1(SSL_CTX *ctx, int len, unsigned char *d);
+int  SSL_CTX_use_certificate_file(SSL_CTX *ctx, char *file, int type);
+int  SSL_CTX_use_psk_identity_hint(SSL_CTX *ctx, const char *hint);
 long SSL_CTX_ctrl(SSL_CTX *ctx, int cmd, long larg, char *parg);
-X509_STORE *SSL_CTX_get_cert_store(SSL_CTX *ctx);
 STACK *SSL_CTX_get_client_CA_list(const SSL_CTX *ctx);
+
 int (*SSL_CTX_get_client_cert_cb(SSL_CTX *ctx))(SSL *ssl, X509 **x509, EVP_PKEY **pkey);
 int SSL_CTX_get_ex_new_index(long argl, char *argp, int (*new_func);(void), int (*dup_func)(void), void (*free_func)(void))
 void (*SSL_CTX_get_info_callback(SSL_CTX *ctx))(SSL *ssl, int cb, int ret);
@@ -590,14 +604,10 @@ void SSL_CTX_sess_set_get_cb(SSL_CTX *ctx, SSL_SESSION *(*cb)(SSL *ssl, unsigned
 void SSL_CTX_sess_set_new_cb(SSL_CTX *ctx, int (*cb)(SSL *ssl, SSL_SESSION *sess));
 void SSL_CTX_sess_set_remove_cb(SSL_CTX *ctx, void (*cb)(SSL_CTX *ctx, SSL_SESSION *sess));
 LHASH *SSL_CTX_sessions(SSL_CTX *ctx);
-void SSL_CTX_set_app_data(SSL_CTX *ctx, void *arg);
-void SSL_CTX_set_cert_store(SSL_CTX *ctx, X509_STORE *cs);
 void SSL_CTX_set_cert_verify_cb(SSL_CTX *ctx, int (*cb)(), char *arg)
-int SSL_CTX_set_cipher_list(SSL_CTX *ctx, char *str);
 void SSL_CTX_set_client_CA_list(SSL_CTX *ctx, STACK *list);
 void SSL_CTX_set_client_cert_cb(SSL_CTX *ctx, int (*cb)(SSL *ssl, X509 **x509, EVP_PKEY **pkey));
 void SSL_CTX_set_default_passwd_cb(SSL_CTX *ctx, int (*cb);(void))
-int SSL_CTX_set_ex_data(SSL_CTX *s, int idx, char *arg);
 void SSL_CTX_set_info_callback(SSL_CTX *ctx, void (*cb)(SSL *ssl, int cb, int ret));
 void SSL_CTX_set_msg_callback(SSL_CTX *ctx, void (*cb)(int write_p, int version, int content_type, const void *buf, size_t len, SSL *ssl, void *arg));
 void SSL_CTX_set_msg_callback_arg(SSL_CTX *ctx, void *arg);
@@ -606,23 +616,11 @@ long SSL_CTX_set_tmp_dh_callback(SSL_CTX *ctx, DH *(*cb)(void));
 long SSL_CTX_set_tmp_rsa(SSL_CTX *ctx, RSA *rsa);
 SSL_CTX_set_tmp_rsa_callback
 long <STRONG>SSL_CTX_set_tmp_rsa_callback</STRONG>(SSL_CTX *<STRONG>ctx</STRONG>, RSA *(*<STRONG>cb</STRONG>)(SSL *<STRONG>ssl</STRONG>, int <STRONG>export</STRONG>, int <STRONG>keylength</STRONG>));
-
 Sets the callback which will be called when a temporary private key is required. The export flag will be set if the reason for needing a temp key is that an export ciphersuite is in use, in which case, keylength will contain the required keylength in bits. Generate a key of appropriate size (using ???) and return it.
 SSL_set_tmp_rsa_callback
 long SSL_set_tmp_rsa_callback(SSL *ssl, RSA *(*cb)(SSL *ssl, int export, int keylength));
-
 The same as SSL_CTX_set_tmp_rsa_callback, except it operates on an SSL session instead of a context.
 void SSL_CTX_set_verify(SSL_CTX *ctx, int mode, int (*cb);(void))
-int SSL_CTX_use_PrivateKey(SSL_CTX *ctx, EVP_PKEY *pkey);
-int SSL_CTX_use_PrivateKey_ASN1(int type, SSL_CTX *ctx, unsigned char *d, long len);
-int SSL_CTX_use_PrivateKey_file(SSL_CTX *ctx, char *file, int type);
-int SSL_CTX_use_RSAPrivateKey(SSL_CTX *ctx, RSA *rsa);
-int SSL_CTX_use_RSAPrivateKey_ASN1(SSL_CTX *ctx, unsigned char *d, long len);
-int SSL_CTX_use_RSAPrivateKey_file(SSL_CTX *ctx, char *file, int type);
-int SSL_CTX_use_certificate(SSL_CTX *ctx, X509 *x);
-int SSL_CTX_use_certificate_ASN1(SSL_CTX *ctx, int len, unsigned char *d);
-int SSL_CTX_use_certificate_file(SSL_CTX *ctx, char *file, int type);
 void SSL_CTX_set_psk_client_callback(SSL_CTX *ctx, unsigned int (*callback)(SSL *ssl, const char *hint, char *identity, unsigned int max_identity_len, unsigned char *psk, unsigned int max_psk_len));
-int SSL_CTX_use_psk_identity_hint(SSL_CTX *ctx, const char *hint);
 void SSL_CTX_set_psk_server_callback(SSL_CTX *ctx, unsigned int (*callback)(SSL *ssl, const char *identity, unsigned char *psk, int max_psk_len));
 */

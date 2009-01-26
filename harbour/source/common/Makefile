@@ -10,6 +10,7 @@ C_SOURCES=\
 	hbgete.c \
 	hbwince.c \
 	hbhash.c \
+	hbprintf.c \
 	hbstr.c \
 	hbdate.c \
 	hbmem.c \
