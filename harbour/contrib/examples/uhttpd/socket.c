@@ -1,21 +1,31 @@
-#include <windows.h>
+/*
+ * $Id$
+ */
+
 #include "hbapi.h"
 #include "hbapiitm.h"
+
+#if defined( HB_OS_WIN_32 )
+   #define _WINSOCKAPI_  /* Prevents inclusion of winsock.h in windows.h */
+   #define HB_SOCKET_T SOCKET
+   #include <winsock2.h>
+   #include <windows.h>
+#endif
 
 /*
 
   Function naming:
     The intention of this library is to be as close as possible to the original
-    socket implementation. This supposed to be valid for function names also, 
-    but some of the names are very platform dependent, ex., WSA*() functions. 
-    select() function name is reserved for standard Harbour's function, so, 
+    socket implementation. This supposed to be valid for function names also,
+    but some of the names are very platform dependent, ex., WSA*() functions.
+    select() function name is reserved for standard Harbour's function, so,
     socket_*() prefix was used:
       socket_init()    - WSAStartup()
       socket_exit()    - WSACleanup()
       socket_error()   - WSALastError()
       socket_select()  - select()
-    Finally I renamed all functions to have socket_*() prefix to be more "prefix 
-    compatible" and not to occupy a general function names like send(), bind(),  
+    Finally I renamed all functions to have socket_*() prefix to be more "prefix
+    compatible" and not to occupy a general function names like send(), bind(),
     accept(), listen(), etc.:
       socket_create()       - socket()
       socket_close()        - closesocket()
@@ -31,11 +41,11 @@
 
 
   Types mapping:
-    SOCKET     
-      UINT_PTR in Windows, let's map it to pointer type, and INVALID_SOCKET value to NIL 
+    SOCKET
+      UINT_PTR in Windows, let's map it to pointer type, and INVALID_SOCKET value to NIL
 
-    struct sockaddr 
-      It is not only IP addresses, also can be IPX, etc. All network-host byte order 
+    struct sockaddr
+      It is not only IP addresses, also can be IPX, etc. All network-host byte order
       conversion should be hidden from Harbour API. So, let's map to:
         { adress_familly, ... }
           AF_INET: { AF_INET, cAddr, nPort }
@@ -121,7 +131,7 @@ static PHB_ITEM hb_itemPutSockaddr( PHB_ITEM pItem, const struct sockaddr* saddr
    {
       hb_arrayNew( pItem, 3 );
       hb_arraySetNI( pItem, 1, saddr->sa_family );
-      hb_arraySetC( pItem, 2, inet_ntoa( ( ( struct sockaddr_in* ) saddr )->sin_addr ) ); 
+      hb_arraySetC( pItem, 2, inet_ntoa( ( ( struct sockaddr_in* ) saddr )->sin_addr ) );
       hb_arraySetNI( pItem, 3, ntohs( ( ( struct sockaddr_in* ) saddr )->sin_port ) );
    }
    else
@@ -134,7 +144,7 @@ static PHB_ITEM hb_itemPutSockaddr( PHB_ITEM pItem, const struct sockaddr* saddr
 }
 
 
-HB_FUNC ( SOCKET_INIT )  
+HB_FUNC ( SOCKET_INIT )
 {
    WSADATA  wsad;
 
@@ -143,33 +153,33 @@ HB_FUNC ( SOCKET_INIT )
 }
 
 
-HB_FUNC ( SOCKET_EXIT )  
+HB_FUNC ( SOCKET_EXIT )
 {
    hb_retni( WSACleanup() );
 }
 
 
-HB_FUNC ( SOCKET_ERROR ) 
+HB_FUNC ( SOCKET_ERROR )
 {
    hb_retni( WSAGetLastError() );
 }
 
 
-HB_FUNC ( SOCKET_CREATE )  
+HB_FUNC ( SOCKET_CREATE )
 {
-   hb_retsocket( socket( hb_parnidef( 1, PF_INET ), 
-                         hb_parnidef( 2, SOCK_STREAM ), 
+   hb_retsocket( socket( hb_parnidef( 1, PF_INET ),
+                         hb_parnidef( 2, SOCK_STREAM ),
                          hb_parnidef( 3, IPPROTO_TCP ) ) );
 }
 
 
-HB_FUNC ( SOCKET_CLOSE )  
+HB_FUNC ( SOCKET_CLOSE )
 {
    hb_retni( closesocket( hb_parsocket( 1 ) ) );
 }
 
 
-HB_FUNC ( SOCKET_BIND )  
+HB_FUNC ( SOCKET_BIND )
 {
    struct sockaddr   sa;
 
@@ -178,13 +188,13 @@ HB_FUNC ( SOCKET_BIND )
 }
 
 
-HB_FUNC ( SOCKET_LISTEN )  
+HB_FUNC ( SOCKET_LISTEN )
 {
    hb_retni( listen( hb_parsocket( 1 ), hb_parnidef( 2, 10 ) ) );
 }
 
 
-HB_FUNC ( SOCKET_ACCEPT )  
+HB_FUNC ( SOCKET_ACCEPT )
 {
    struct sockaddr   saddr;
    int               iSize = sizeof( struct sockaddr );
@@ -198,20 +208,20 @@ HB_FUNC ( SOCKET_ACCEPT )
 }
 
 
-HB_FUNC ( SOCKET_SHUTDOWN )  
+HB_FUNC ( SOCKET_SHUTDOWN )
 {
    hb_retni( shutdown( hb_parsocket( 1 ), hb_parnidef( 2, SD_BOTH ) ) );
 }
 
 
-HB_FUNC ( SOCKET_RECV )  
+HB_FUNC ( SOCKET_RECV )
 {
    int     iLen, iRet;
    char*   pBuf;
-  
+
    iLen = hb_parni( 3 );
 
-   if( iLen > 65536 || iLen <= 0 )  
+   if( iLen > 65536 || iLen <= 0 )
       iLen = 4096;
 
    pBuf = ( char* ) hb_xgrab( ( ULONG ) iLen );
@@ -222,13 +232,13 @@ HB_FUNC ( SOCKET_RECV )
 }
 
 
-HB_FUNC ( SOCKET_SEND )  
+HB_FUNC ( SOCKET_SEND )
 {
    hb_retni( send( hb_parsocket( 1 ), hb_parc( 2 ), hb_parclen( 2 ), hb_parni( 3, 0 ) ) );
 }
 
 
-HB_FUNC ( SOCKET_SELECT )  
+HB_FUNC ( SOCKET_SELECT )
 {
    fd_set             setread, setwrite, seterror;
    BOOL               bRead = 0, bWrite = 0, bError = 0;
@@ -302,14 +312,14 @@ HB_FUNC ( SOCKET_SELECT )
 
    if( lTimeout == -1 )
    {
-      iRet = select( maxsocket + 1, bRead ? &setread : NULL, bWrite ? &setwrite: NULL, 
+      iRet = select( maxsocket + 1, bRead ? &setread : NULL, bWrite ? &setwrite: NULL,
                      bError ? &seterror : NULL, NULL );
    }
    else
    {
       tv.tv_sec = lTimeout / 1000;
       tv.tv_usec = ( lTimeout % 1000 ) * 1000;
-      iRet = select( maxsocket + 1, bRead ? &setread : NULL, bWrite ? &setwrite: NULL, 
+      iRet = select( maxsocket + 1, bRead ? &setread : NULL, bWrite ? &setwrite: NULL,
                      bError ? &seterror : NULL, &tv );
    }
 
@@ -325,7 +335,7 @@ HB_FUNC ( SOCKET_SELECT )
          socket = hb_itemGetSocket( hb_arrayGetItemPtr( pArray, ulIndex ) );
          if( socket != INVALID_SOCKET )
          {
-            if( FD_ISSET( socket, &setread ) ) 
+            if( FD_ISSET( socket, &setread ) )
             {
                hb_arraySetForward( pItem, ++ulCount, hb_itemPutSocket( NULL, socket ) );
             }
@@ -346,7 +356,7 @@ HB_FUNC ( SOCKET_SELECT )
          socket = hb_itemGetSocket( hb_arrayGetItemPtr( pArray, ulIndex ) );
          if( socket != INVALID_SOCKET )
          {
-            if( FD_ISSET( socket, &setwrite ) ) 
+            if( FD_ISSET( socket, &setwrite ) )
             {
                hb_arraySetForward( pItem, ++ulCount, hb_itemPutSocket( NULL, socket ) );
             }
@@ -367,7 +377,7 @@ HB_FUNC ( SOCKET_SELECT )
          socket = hb_itemGetSocket( hb_arrayGetItemPtr( pArray, ulIndex ) );
          if( socket != INVALID_SOCKET )
          {
-            if( FD_ISSET( socket, &seterror ) ) 
+            if( FD_ISSET( socket, &seterror ) )
             {
                hb_arraySetForward( pItem, ++ulCount, hb_itemPutSocket( NULL, socket ) );
             }
@@ -380,11 +390,11 @@ HB_FUNC ( SOCKET_SELECT )
 }
 
 
-HB_FUNC ( SOCKET_GETSOCKNAME )  
+HB_FUNC ( SOCKET_GETSOCKNAME )
 {
    struct sockaddr   saddr;
    int               iSize = sizeof( struct sockaddr );
- 
+
    hb_retni( getsockname( hb_parsocket( 1 ), &saddr, &iSize ) );
    if( ISBYREF( 2 ) )
    {
@@ -393,11 +403,11 @@ HB_FUNC ( SOCKET_GETSOCKNAME )
 }
 
 
-HB_FUNC ( SOCKET_GETPEERNAME )  
+HB_FUNC ( SOCKET_GETPEERNAME )
 {
    struct sockaddr   saddr;
    int               iSize = sizeof( struct sockaddr );
- 
+
    hb_retni( getpeername( hb_parsocket( 1 ), &saddr, &iSize ) );
    if( ISBYREF( 2 ) )
    {
@@ -406,11 +416,10 @@ HB_FUNC ( SOCKET_GETPEERNAME )
 }
 
 
-HB_FUNC ( CONNECT )  
+HB_FUNC ( CONNECT )
 {
    struct sockaddr   sa;
 
    hb_itemGetSockaddr( hb_param( 2, HB_IT_ANY ), &sa );
    hb_retni( connect( hb_parsocket( 1 ), &sa, sizeof( struct sockaddr ) ) );
 }
-

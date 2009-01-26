@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 23:32 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/examples/uhttpd/hbmk_vc.bat
+     + Added MSVC make file.
+
+   * contrib/examples/uhttpd/socket.c
+     ! Made it compile with MSVC.
+     ! Added SVN header.
+
+   * contrib/examples/uhttpd/uhttpd.prg
+   + contrib/examples/uhttpd/uhttpdc.c
+     + C level stuff moved to separate file.
+
+   ; NOTE: I'm getting an "Argument error: +" when browse
+           to http://localhost:8082 (using Chrome if that matters).
+
 2009-01-26 22:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rdd/usrrdd/example/exhsx.prg
     ! Removed HSXRDD references. It seems to work without them.
