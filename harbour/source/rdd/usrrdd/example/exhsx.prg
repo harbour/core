@@ -4,13 +4,10 @@
 
 #include "dbinfo.ch"
 
-REQUEST HSXRDD
-
 PROCEDURE MAIN()
    FIELD FIRST, LAST, STREET, CITY
    LOCAL n, hs
 
-   rddSetDefault("HSXRDD")
    dbCreate("_tst", {{"FIRST",       "C", 20,  0},;
                      {"LAST",        "C", 20,  0},;
                      {"STREET",      "C", 30,  0},;

@@ -976,15 +976,15 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
             IF !Empty( acFiles )
                IF AScan( acFiles, nPos ) > 0 .OR. ;
                   AScan( acFiles, {| cMask | hb_FileMatch( cZipName, cMask ) } ) > 0
-                  lExtract := .t.
+                  lExtract := .T.
                ELSE
-                  lExtract := .f.
+                  lExtract := .F.
                ENDIF
             ELSE
-               lExtract := .t.
+               lExtract := .T.
             ENDIF
 
-            IF lExtract    
+            IF lExtract
                IF hb_isBlock( bUpdate )
                   Eval( bUpdate, cZipName, nPos )
                ENDIF

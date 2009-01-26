@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 22:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rdd/usrrdd/example/exhsx.prg
+    ! Removed HSXRDD references. It seems to work without them.
+
+  * contrib/hbssl/ssl.c
+    * Comment changes.
+
 2009-01-26 22:45 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/source/rdd/usrrdd/rdds/arrayrdd.prg
     * fixed AR_CREATE() to be compatible with dbCreate() extension
@@ -104,6 +111,7 @@
      ! xhb.lib dependency removed. It was not needed anyway.
      ; TOFIX: When compiling exhsx.prg, this happens:
               exhsx.obj : error LNK2001: unresolved external symbol _HB_FUN_HSXRDD
+              [DONE]
 
    * contrib/hbssl/sslsess.c
    * contrib/hbssl/sslctx.c
