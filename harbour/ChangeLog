@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-26 21:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbprintf.c
+  * harbour/source/codepage/cpeswinm.c
+  * harbour/source/rdd/usrrdd/example/exlog.prg
+  * harbour/source/rdd/usrrdd/rdds/logrdd.prg
+  * harbour/contrib/xhb/dbgfx.prg
+  * harbour/contrib/xhb/xhb.h
+  * harbour/contrib/xhb/sprintf.prg
+  * harbour/contrib/xhb/dbgfxc.c
+  * harbour/contrib/xhb/hbstruct.prg
+  * harbour/contrib/xhb/hbstruct.ch
+  * harbour/contrib/hbmsql/tests/hbmk_b32.bat
+  * harbour/contrib/hbmsql/tests/hbmk_vc.bat
+    ! fixed hardcoded CRLF and svn:eol-style attribute
+
 2009-01-26 21:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbprintf.c
     ! Some fixes to make it compile under BCC.
