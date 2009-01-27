@@ -102,8 +102,8 @@
   #define APP_INET_SUPPORT ""
 #endif
 
-#define APP_NAME      "uhttpd_inet"
-#define APP_VER_NUM   "0.3"
+#define APP_NAME      "uhttpd"
+#define APP_VER_NUM   "0.4"
 #define APP_VERSION   APP_VER_NUM + APP_GD_SUPPORT + APP_INET_SUPPORT
 
 #define AF_INET         2
@@ -268,6 +268,8 @@ LOCAL cCmdPort, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
    ENDIF
 
    // ----------------- Parse ini file ----------------------------------------
+
+   //hb_toOutDebug( "cConfig = %s\n\r", cConfig )
 
    hDefault := ParseIni( cConfig )
 
@@ -1517,6 +1519,8 @@ LOCAL cExt, xResult, pHRB, oError
   IF HB_HHasKey( s_hFileAliases, _SERVER[ "SCRIPT_NAME" ] )
      cFileName := _SERVER[ "DOCUMENT_ROOT" ] +  hb_hGet( s_hFileAliases, _SERVER[ "SCRIPT_NAME" ] )
   ENDIF
+
+  //hb_toOutDebug( "cFileName = %s, uOSFileName( cFileName ) = %s,\n\r s_hFileAliases = %s\n\r", cFileName, uOSFileName( cFileName ), hb_ValToExp( s_hFileAliases ) )
 
   IF Upper( _SERVER[ "SCRIPT_NAME" ] ) == "/SERVERSTATUS"
      ShowServerStatus()

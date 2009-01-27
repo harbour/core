@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-27 10:14 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/contrib/examples/uhttpd/uhttpd.prg
+    * Fixed APP_NAME that causes wrong ini file name and than error
+      loading aliases from uhttpd.ini
+
 2009-01-27 09:38 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbssl/sslctx.c
   * contrib/hbssl/ssl.c
