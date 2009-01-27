@@ -26,9 +26,9 @@ else  # bash
 INSTALL_DIRSH = $(subst \,/,$(INSTALL_DIR))
 INSTALL_OBJSH = $(subst \,/,$(INSTALL_OBJS))
 INSTALL_RULE =\
-	@if [ ! -d $(INSTALL_DIRSH) ]; \
+	@sh -c 'if [ ! -d $(INSTALL_DIRSH) ]; \
 	then \
-	  echo "! Can't install, path not found: $(INSTALL_DIRSH)" 1>&2; \
+	  echo "! Cannot install, path not found: $(INSTALL_DIRSH)" 1>&2; \
 	else \
 	  for i in $(INSTALL_OBJSH); \
 	  do \
@@ -37,10 +37,10 @@ INSTALL_RULE =\
 	      echo "! Installing $$i on $(INSTALL_DIRSH)"; \
 	      $(CP) $$i $(INSTALL_DIRSH); \
 	    else \
-	      echo "! Can't install $$i, not found" 1>&2; \
+	      echo "! Cannot install $$i, not found" 1>&2; \
 	    fi \
 	  done \
-	fi
+	fi'
 
 endif
 
