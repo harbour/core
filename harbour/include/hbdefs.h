@@ -63,10 +63,13 @@
 #include "hbtrace.h"
 #include "hbver.h"
 
-#if defined( __XCC__ ) || defined( __MINGW32__ ) || \
+#if defined( __XCC__ ) || defined( __POCC__ ) || defined( __LCC__ ) || \
+    defined( __MINGW32__ ) || defined(__DMC__) || \
     ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 ) || \
+    ( defined( __WATCOMC__ ) && __WATCOMC__ >= 1270 ) || \
     ( defined( __GNUC__ ) && \
-      ( defined( HB_OS_LINUX ) || defined( HB_OS_DARWIN ) ) )
+      ( defined( _ISOC99_SOURCE ) || \
+        defined( HB_OS_LINUX ) || defined( HB_OS_DARWIN ) ) )
    #include <stdint.h>
    /* workaround for BCC 5.8 bug */
    #if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 )
@@ -454,13 +457,17 @@
 #if defined( __BORLANDC__ )
 #  if __BORLANDC__ >= 1328
 #     define HB_LL( num )           num##i64
+#     define HB_ULL( num )          num##ui64
 #  else
 #     define HB_LL( num )           num
+#     define HB_ULL( num )          num
 #  endif
 #elif defined( _MSC_VER )
 #  define HB_LL( num )           num
+#  define HB_ULL( num )          num
 #else
 #  define HB_LL( num )           num##LL
+#  define HB_ULL( num )          num##ULL
 #endif
 
 

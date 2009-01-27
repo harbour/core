@@ -50,7 +50,7 @@
  *
  */
 
-#if 0
+#if 1
 
 /*
 patterm format:
@@ -90,59 +90,150 @@ optimized.
 
 /* #define __NO_DOUBLE__ */
 /* #define __NO_LONGDOUBLE__ */
-/* #define __NO_ARGPOS__ */
 /* #define __NO_LONGLONG__ */
+/* #define __NO_ARGPOS__ */
 
 #ifndef _GNU_SOURCE
 #  define _GNU_SOURCE
 #endif
 
-#if defined(__DJGPP__)
-#   include <libm/math.h>
-_LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
-#else
-#   include <math.h>
-#endif
+#include <stddef.h>
 
+#include "hbapi.h"
 #include "hbmath.h"
 
-#include <stdarg.h>
-#if defined( __GNUC__ )
-#include <stdint.h>
-#endif
-#include <stddef.h>
-#include <string.h>
-#ifndef __NO_ARGPOS__
-#  include <stdlib.h>   /* malloc()/realloc()/free() */
+#if defined( __BORLANDC__ ) || defined( __WATCOMC__ )
+#  include <float.h>
+#elif defined(__DJGPP__)
+   _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
 #endif
 
-#if defined(__cplusplus)
-#  define _EXTERN_C     extern "C"
+HB_EXTERN_BEGIN
+
+int hb_snprintf_c( char *buffer, size_t bufsize, const char *format, ... )
+    HB_PRINTF_FORMAT( 3, 4 );
+
+HB_EXTERN_END
+
+#if defined( HB_LONG_DOUBLE_OFF ) && !defined( __NO_LONGDOUBLE__ )
+#  define __NO_LONGDOUBLE__
+#endif
+
+#if defined( HB_LONG_LONG_OFF ) && !defined( __NO_LONGLONG__ )
+#  define __NO_LONGLONG__
+#endif
+
+/* few macros for some platform dependent floating point functions/macros */
+
+#define _HB_NUM_NAN     1
+#define _HB_NUM_PINF    2
+#define _HB_NUM_NINF    4
+
+#if defined( __BORLANDC__ )
+   /* use Borland C _fpclass[l]() function */
+#  ifdef __NO_LONGDOUBLE__
+#     define hb_fpclassify( d )     _fpclass( d )
+#  else
+#     define hb_fpclassify( d )     _fpclassl( d )
+#  endif
+#endif
+
+#if ( defined( __BORLANDC__ ) && __BORLANDC__ < 1410 ) || \
+    ( defined( __WATCOMC__ ) && __WATCOMC__ < 1270 )
+#  define intmax_t      _x_longlong
+#  define uintmax_t     _x_ulonglong
+#endif
+
+/* signbit() needs _GNU_SOURCE defined. If it's not available on given
+ * platform then it can be replaced by 'value < 0' but in such case
+ * -0.0 will be shown as 0.0
+ */
+#if defined( __GNUC__ ) && defined( _ISOC99_SOURCE )
+   /* use C99 macros */
+#  define hb_signbit( d )     signbit( d )
+
+#elif defined( __BORLANDC__ )
+
+#  define hb_signbit( d )     ( ( hb_fpclassify( d ) & ( _FPCLASS_NINF | _FPCLASS_NZ ) ) != 0 )
+
+#elif 0 /* TODO: add other C compilers here (check their version number) */
 #else
-#  define _EXTERN_C     extern
+
+#  define hb_signbit( d )     ( d < 0 )
+
 #endif
 
-#if defined( __GNUC__ )
-_EXTERN_C int hb_snprintf_c( char *buffer, size_t bufsize, const char *format, ... )
-              __attribute__ (( format (printf, 3, 4)));
+
+#if defined( __GNUC__ ) && defined( _ISOC99_SOURCE )
+
+   /* use C99 macros */
+#  define HB_NUMTYPE( v, d )  do { \
+                                 v = ( isfinite( d ) ? 0 : \
+                                       ( isnan( d ) ? _HB_NUM_NAN : \
+                                         ( isinf( d ) < 0 ? _HB_NUM_NINF : \
+                                           _HB_NUM_PINF ) ) ); \
+                              } while( 0 )
+
+#elif defined( __GNUC__ ) && \
+      ( defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
+        defined( _XOPEN_SOURCE ) )
+
+   /* use BSD floating point functions */
+#  ifdef __NO_LONGDOUBLE__
+#     define HB_NUMTYPE( v, d )  do { \
+                                    v = ( finite( d ) ? 0 : \
+                                          ( isnan( d ) ? _HB_NUM_NAN : \
+                                            ( isinf( d ) < 0 ? _HB_NUM_NINF : \
+                                              _HB_NUM_PINF ) ) ); \
+                                 } while( 0 )
+#  else
+#     define HB_NUMTYPE( v, d )  do { \
+                                    v = ( finitel( d ) ? 0 : \
+                                          ( isnanl( d ) ? _HB_NUM_NAN : \
+                                            ( isinfl( d ) < 0 ? _HB_NUM_NINF : \
+                                              _HB_NUM_PINF ) ) ); \
+                                 } while( 0 )
+#  endif
+
+#elif defined( __BORLANDC__ )
+
+#  define HB_NUMTYPE( v, d )  do { \
+                                 int t = hb_fpclassify( d ); \
+                                 v = ( ( t & ( _FPCLASS_UNSUP | _FPCLASS_SNAN | _FPCLASS_QNAN ) ) ? _HB_NUM_NAN : \
+                                       ( ( t & _FPCLASS_NINF ) ? _HB_NUM_NINF : \
+                                         ( ( t & _FPCLASS_PINF ) ? _HB_NUM_PINF : 0 ) ) ); \
+                              } while( 0 )
+#elif 0 /* TODO: add other C compilers here (check their version number) */
 #else
 
-#define strnlen( s, maxlen ) \
-      ( { size_t n = maxlen, size = 0; \
-          while( n < maxlen && s[ size ] ) \
-             ++size; \
-          size; \
-      } )
+#  if defined(__RSXNT__) || defined(__EMX__) || \
+      defined(__XCC__) || defined(__POCC__) || \
+      defined(HB_OS_HPUX)
+#     define hb_isfinite( d )       isfinite( d )
+#  elif defined(__WATCOMC__) || defined(__BORLANDC__) || defined(_MSC_VER)
+#     define hb_isfinite( d )       _finite( d )
+#  elif defined(__GNUC__) || defined(__DJGPP__) || defined(__MINGW32__) || \
+        defined(__LCC__)
+#     define hb_isfinite( d )       finite( d )
+#  else
+#     define hb_isfinite( d )       FALSE
+#  endif
+
+#  define HB_NUMTYPE( v, d )  do { \
+                                 v = hb_isfinite( d ) ? 0 : _HB_NUM_NAN ; \
+                              } while( 0 )
 
 #endif
+
+
+#define _ARGBUF_SIZE    16
+#define _ARGBUF_ALLOC   16
 
 #define _F_ALTERNATE    0x01  /* only for: o xX aA eE fF gG  */
 #define _F_ZEROPADED    0x02  /* only for: d i o u xX aA eE fF gG */
 #define _F_LEFTADJUSTED 0x04  /* clears _F_ZEROPADED */
 #define _F_SPACE        0x08  /* only for signed num conversions: d i fF aA eE gG */
 #define _F_SIGN         0x10  /* only for signed num conversions: d i fF aA eE gG, clears _F_SPACE */
-
-#define _ARGBUF_SIZE    16
 
 #define _L_UNDEF_       0
 #define _L_CHAR_        1
@@ -156,14 +247,17 @@ _EXTERN_C int hb_snprintf_c( char *buffer, size_t bufsize, const char *format, .
 #define _L_LONGDOUBLE_  9
 
 #ifndef __NO_DOUBLE__
-#  ifndef __NO_LONGDOUBLE__
-#     define _x_long_dbl      long double
-#     define _POWD( x, y )    powl( x, y )
-#     define _MODFD( x, p )   modfl( x, p )
-#  else
+#  ifdef __NO_LONGDOUBLE__
 #     define _x_long_dbl      double
-#     define _POWD( x, y )    pow( x, y )
 #     define _MODFD( x, p )   modf( x, p )
+#  else
+#     define _x_long_dbl      long double
+#     if defined( __WATCOMC__ ) || defined( __MINGW32CE__ )
+#        define _HB_WRAP_MODFL_
+#        define _MODFD( x, p )   _hb_modfl( x, p )
+#     else
+#        define _MODFD( x, p )   modfl( x, p )
+#     endif
 #  endif
 #  define _x_double           double
 #else
@@ -171,8 +265,8 @@ _EXTERN_C int hb_snprintf_c( char *buffer, size_t bufsize, const char *format, .
 #  define _x_double           int
 #endif
 #ifndef __NO_LONGLONG__
-#  define _x_longlong         long long
-#  define _x_ulonglong        unsigned long long
+#  define _x_longlong         LONGLONG
+#  define _x_ulonglong        ULONGLONG
 #else
 #  define _x_longlong         long
 #  define _x_ulonglong        unsigned long
@@ -228,6 +322,13 @@ typedef struct {
    x_type   value;
 } v_param;
 
+typedef struct {
+   int         maxarg;
+   int         size;
+   BOOL        repeat;
+   v_param *   arglst;
+} v_paramlst;
+
 #ifdef __NO_ARGPOS__
 
 /* this version does not support positional parameters (f.e. '%1$d')
@@ -267,105 +368,103 @@ typedef struct {
 #else
 
 #define va_arg_n( va, type, n )     \
-   ( { \
-      type result; \
-      if( n == 0 ) \
-      { \
-         result = va_arg( va, type ); \
-      } \
-      else \
-      { \
-         if( maxarg == 0 ) \
-         { \
-            repeat = 1; \
-            memset( argbuf, 0, sizeof( argbuf ) ); \
-         } \
-         if( repeat ) \
-         { \
-            if( n > maxarg ) \
-               maxarg = n; \
-            if( n > argbuf_size ) \
-            { \
-               int prev_size = argbuf_size; \
-               argbuf_size = n + _ARGBUF_SIZE; \
-               if( argbuf_size == _ARGBUF_SIZE ) \
-                  arglst = memcpy( malloc( argbuf_size * sizeof( v_param ) ), \
-                                   argbuf,  sizeof( argbuf ) ); \
-               else \
-                  arglst = realloc( arglst, argbuf_size * sizeof( v_param ) ); \
-               memset( &arglst[ prev_size ], 0, ( argbuf_size - prev_size ) * \
-                                                sizeof( v_param ) ); \
-               argbuf_size += _ARGBUF_SIZE; \
-            } \
-            arglst[ n - 1 ].id = (v##type); \
-            result = ( type ) 0; \
-         } \
-         else \
-         { \
-            result = arglst[ n - 1 ].value.as##type; \
-         } \
-      } \
-      result; \
-   } )
+               ( n == 0 ? va_arg( va, type ) : \
+                          va_arg_get( n, &params, v##type )->value.as##type )
 
-#define va_arg_fill( va ) \
-   do { \
-      int iArg; \
-      va_start( va, format ); \
-      for( iArg = 0; iArg < maxarg; ++iArg ) \
-      { \
-         switch( arglst[ iArg ].id ) \
-         { \
-            case v_x_uint: \
-                arglst[ iArg ].value.as_x_uint = va_arg( va, _x_uint ); \
-                break; \
-            case v_x_long: \
-                arglst[ iArg ].value.as_x_long = va_arg( va, _x_long ); \
-                break; \
-            case v_x_ulong: \
-                arglst[ iArg ].value.as_x_ulong = va_arg( va, _x_ulong ); \
-                break; \
-            case v_x_longlong: \
-                arglst[ iArg ].value.as_x_longlong = va_arg( va, _x_longlong ); \
-                break; \
-            case v_x_ulonglong: \
-                arglst[ iArg ].value.as_x_ulonglong = va_arg( va, _x_ulonglong ); \
-                break; \
-            case v_x_intmax_t: \
-                arglst[ iArg ].value.as_x_intmax_t = va_arg( va, _x_intmax_t ); \
-                break; \
-            case v_x_uintmax_t: \
-                arglst[ iArg ].value.as_x_uintmax_t = va_arg( va, _x_uintmax_t ); \
-                break; \
-            case v_x_size_t: \
-                arglst[ iArg ].value.as_x_size_t = va_arg( va, _x_size_t ); \
-                break; \
-            case v_x_ptrdiff_t: \
-                arglst[ iArg ].value.as_x_ptrdiff_t = va_arg( va, _x_ptrdiff_t ); \
-                break; \
-            case v_x_ptr: \
-                arglst[ iArg ].value.as_x_ptr = va_arg( va, _x_ptr ); \
-                break; \
-            case v_x_str: \
-                arglst[ iArg ].value.as_x_str = va_arg( va, _x_str ); \
-                break; \
-            case v_x_intptr: \
-                arglst[ iArg ].value.as_x_intptr = va_arg( va, _x_intptr ); \
-                break; \
-            case v_x_double: \
-                arglst[ iArg ].value.as_x_double = va_arg( va, _x_double ); \
-                break; \
-            case v_x_long_dbl: \
-                arglst[ iArg ].value.as_x_long_dbl = va_arg( va, _x_long_dbl ); \
-                break; \
-            default: \
-                arglst[ iArg ].value.as_x_int = va_arg( va, _x_int ); \
-                break; \
-         } \
-      } \
-      va_end( va ); \
-   } while( 0 )
+static v_param * va_arg_get( int iArg, v_paramlst * plst, int iType )
+{
+   if( plst->maxarg == 0 )
+   {
+      plst->repeat = TRUE;
+      memset( plst->arglst, 0, plst->size * sizeof( v_param ) );
+   }
+   if( plst->repeat )
+   {
+      if( iArg > plst->maxarg )
+         plst->maxarg = iArg;
+      if( iArg > plst->size )
+      {
+         int prev_size = plst->size;
 
+         plst->size = iArg + _ARGBUF_ALLOC;
+         if( prev_size == _ARGBUF_SIZE )
+            plst->arglst = ( v_param * ) memcpy( hb_xgrab( plst->size * sizeof( v_param ) ),
+                                                 plst->arglst, _ARGBUF_SIZE * sizeof( v_param ) );
+         else
+            plst->arglst = ( v_param * ) hb_xrealloc( plst->arglst, plst->size * sizeof( v_param ) );
+         memset( &plst->arglst[ prev_size ], 0, ( plst->size - prev_size ) *
+                                                  sizeof( v_param ) );
+      }
+      plst->arglst[ iArg - 1 ].id = iType;
+   }
+   return &plst->arglst[ iArg - 1 ];
+}
+
+static void va_arg_fill( v_paramlst * plst, va_list va )
+{
+   int iArg;
+   for( iArg = 0; iArg < plst->maxarg; ++iArg )
+   {
+      switch( plst->arglst[ iArg ].id )
+      {
+         case v_x_uint:
+             plst->arglst[ iArg ].value.as_x_uint = va_arg( va, _x_uint );
+             break;
+         case v_x_long:
+             plst->arglst[ iArg ].value.as_x_long = va_arg( va, _x_long );
+             break;
+         case v_x_ulong:
+             plst->arglst[ iArg ].value.as_x_ulong = va_arg( va, _x_ulong );
+             break;
+         case v_x_longlong:
+             plst->arglst[ iArg ].value.as_x_longlong = va_arg( va, _x_longlong );
+             break;
+         case v_x_ulonglong:
+             plst->arglst[ iArg ].value.as_x_ulonglong = va_arg( va, _x_ulonglong );
+             break;
+         case v_x_intmax_t:
+             plst->arglst[ iArg ].value.as_x_intmax_t = va_arg( va, _x_intmax_t );
+             break;
+         case v_x_uintmax_t:
+             plst->arglst[ iArg ].value.as_x_uintmax_t = va_arg( va, _x_uintmax_t );
+             break;
+         case v_x_size_t:
+             plst->arglst[ iArg ].value.as_x_size_t = va_arg( va, _x_size_t );
+             break;
+         case v_x_ptrdiff_t:
+             plst->arglst[ iArg ].value.as_x_ptrdiff_t = va_arg( va, _x_ptrdiff_t );
+             break;
+         case v_x_ptr:
+             plst->arglst[ iArg ].value.as_x_ptr = va_arg( va, _x_ptr );
+             break;
+         case v_x_str:
+             plst->arglst[ iArg ].value.as_x_str = va_arg( va, _x_str );
+             break;
+         case v_x_intptr:
+             plst->arglst[ iArg ].value.as_x_intptr = va_arg( va, _x_intptr );
+             break;
+         case v_x_double:
+             plst->arglst[ iArg ].value.as_x_double = va_arg( va, _x_double );
+             break;
+         case v_x_long_dbl:
+             plst->arglst[ iArg ].value.as_x_long_dbl = va_arg( va, _x_long_dbl );
+             break;
+         default:
+             plst->arglst[ iArg ].value.as_x_int = va_arg( va, _x_int );
+             break;
+      }
+   }
+}
+#endif
+
+#ifdef _HB_WRAP_MODFL_
+_x_long_dbl _hb_modfl( _x_long_dbl x, _x_long_dbl * p )
+{
+   _x_double pd = *p;
+   _x_long_dbl r = modf( x, &pd );
+   *p = pd;
+   return r;
+}
 #endif
 
 static char get_decimal( char c, const char **format, int *result )
@@ -507,15 +606,7 @@ static size_t put_dbl( char *buffer, size_t bufsize, size_t size,
 
    if( precision < 0 )
       precision = 6;
-   /* signbit() needs _GNU_SOURCE defined. If it's not available on given
-    * platform then it can be replaced by 'value < 0' but in such case
-    * -0.0 will be shown as 0.0
-    */
-#if defined( __GNUC__ )
-   sign = signbit( value );
-#else
-   sign = value < 0;
-#endif
+   sign = hb_signbit( value );
    if( sign )
       value = - value;
 
@@ -688,18 +779,7 @@ static size_t put_str( char *buffer, size_t bufsize, size_t size,
    if( precision < 0 )
       precision = ( int ) strlen( str );
    else if( precision > 0 )
-      /* strnlen() is GNU extension. It needs _GNU_SOURCE
-       * macro defined before including header files. If this
-       * function does not exist on some platform then can be
-       * easy replaced by this macro:
-       * #define strnlen( s, maxlen ) \
-       *       ( { size_t n = maxlen, size = 0; \
-       *           while( n < maxlen && s[ size ] ) \
-       *              ++size; \
-       *           size; \
-       *       } )
-       */
-      precision = ( int ) strnlen( str, precision );
+      precision = ( int ) hb_strnlen( str, precision );
 
    width -= precision;
    if( ( flags & _F_LEFTADJUSTED ) == 0 ) while( width > 0 )
@@ -735,19 +815,25 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
 #ifndef __NO_ARGPOS__
    const char * fmt_start = format;
    v_param argbuf[ _ARGBUF_SIZE ];
-   v_param * arglst = argbuf;
-   int argbuf_size = _ARGBUF_SIZE;
-   int repeat = 1;
-   int maxarg = 0;
+   v_paramlst params;
+
+   params.size = _ARGBUF_SIZE;
+   params.maxarg = 0;
+   params.arglst = argbuf;
+   params.repeat = TRUE;
 #endif
 
 
 #ifndef __NO_ARGPOS__
-   while( repeat )
+   while( params.repeat )
    {
-      repeat = 0;
-      if( maxarg > 0 )
-         va_arg_fill( args );
+      params.repeat = 0;
+      if( params.maxarg > 0 )
+      {
+         va_start( args, format );
+         va_arg_fill( &params, args );
+         va_end( args );
+      }
       format = fmt_start;
 #endif
       va_start( args, format );
@@ -764,22 +850,24 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
             if( c != 0 && c != '%' )
             {
                /* decode pattern */
-               int param = 0, flags = 0, width = -1, precision = -1, length,
-                   value = 0, stop = 0;
                v_param argval;
+               int param = 0, flags = 0, width = -1, precision = -1, length,
+                   value, stop = 0;
 
                /* parameter position */
-               if( c >= '1' && c <= '9' )
+               if( c >= '0' && c <= '9' )
                {
                   c = get_decimal( c, &format, &value );
                   if( c == '$' )
                   {
                      param = value;
-                     value = 0;
                      c = *format++;
                   }
                   else
-                     stop = 1;
+                  {
+                     format = pattern;
+                     c = *format++;
+                  }
                }
 
                /* flags */
@@ -816,9 +904,7 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
                }
 
                /* field width */
-               if( value != 0 )
-                  width = value;
-               else if( c == '*' )
+               if( c == '*' )
                {
                   c = *format++;
                   if( c >= '0' && c <= '9' )
@@ -928,19 +1014,20 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
                         argval.value.as_x_long_dbl = va_arg_n( args, _x_long_dbl, param );
                      else
                         argval.value.as_x_long_dbl = va_arg_n( args, _x_double, param );
-                     if( isnan( argval.value.as_x_long_dbl ) )
+                     HB_NUMTYPE( value, argval.value.as_x_long_dbl );
+                     if( value & _HB_NUM_NAN )
                         size = put_str( buffer, bufsize, size,
                                         c == 'f' ?
                                         ( flags & _F_SIGN ? "+nan": "nan" ) :
                                         ( flags & _F_SIGN ? "+NAN": "NAN" ) ,
                                         flags, width, -1 );
-                     else if( isinf( argval.value.as_x_long_dbl ) > 0 )
+                     else if( value & _HB_NUM_PINF )
                         size = put_str( buffer, bufsize, size,
                                         c == 'f' ?
                                         ( flags & _F_SIGN ? "+inf": "inf" ) :
                                         ( flags & _F_SIGN ? "+INF": "INF" ),
                                         flags, width, -1 );
-                     else if( isinf( argval.value.as_x_long_dbl ) < 0 )
+                     else if( value & _HB_NUM_NINF )
                         size = put_str( buffer, bufsize, size,
                                         c == 'f' ? "-inf" : "-INF",
                                         flags, width, -1 );
@@ -1073,8 +1160,8 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
 
 #ifndef __NO_ARGPOS__
    }
-   if( arglst != argbuf )
-      free( argbuf );
+   if( params.arglst != argbuf )
+      hb_xfree( params.arglst );
 #endif
 
    /* always set trailing \0 !!! */
