@@ -91,20 +91,21 @@ HB_FUNC( HB_VERSION )
          char szDate[ 9 ];
          int iMonth;
 
-         memcpy( szDate, pszBuildDate + 7, 4 );
          szDate[ 4 ] = szDate[ 5 ] = '0';
-         szDate[ 6 ] = pszBuildDate[ 4 ] == ' ' ? '0' : pszBuildDate[ 4 ];
-         szDate[ 7 ] = pszBuildDate[ 5 ];
-         szDate[ 8 ] = '\0';
 
          for( iMonth = 11; iMonth >= 0; iMonth-- )
          {
             if( memcmp( pszBuildDate, s_months[ iMonth ], 3 ) == 0 )
             {
-               hb_snprintf( szDate + 4, 2, "%02d", iMonth + 1 );
+               hb_snprintf( szDate + 4, 3, "%02d", iMonth + 1 );
                break;
             }
          }
+
+         memcpy( szDate, pszBuildDate + 7, 4 );
+         szDate[ 6 ] = pszBuildDate[ 4 ] == ' ' ? '0' : pszBuildDate[ 4 ];
+         szDate[ 7 ] = pszBuildDate[ 5 ];
+         szDate[ 8 ] = '\0';
 
          hb_retds( szDate );
       }

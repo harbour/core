@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-27 02:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/version.c
+    ! Fixed hb_version( HB_VERSION_BUILD_DATE ).
+
 2009-01-27 00:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/uhttpd/uhttpd.prg
     ! Fixed RTE when in socket.c mode.
