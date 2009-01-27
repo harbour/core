@@ -621,19 +621,6 @@ HB_FUNC( SSL_ALERT_TYPE_STRING_LONG )
    hb_retc( SSL_alert_type_string_long( hb_parni( 1 ) ) );
 }
 
-HB_FUNC( SSL_GET_EX_DATA )
-{
-   if( hb_SSL_is( 1 ) )
-   {
-      SSL * ssl = hb_SSL_par( 1 );
-
-      if( ssl )
-         hb_retc( SSL_get_ex_data( ssl, hb_parni( 1 ) ) );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
 HB_FUNC( SSL_RSTATE_STRING )
 {
    if( hb_SSL_is( 1 ) )
@@ -1068,9 +1055,7 @@ HB_FUNC( SSL_SET_VERIFY_RESULT )
 }
 
 /*
-void         SSL_set_app_data(SSL *ssl, char *arg);
 int          SSL_set_cipher_list(SSL *ssl, char *str);
-int          SSL_set_ex_data(SSL *ssl, int idx, char *arg);
 int          SSL_use_PrivateKey(SSL *ssl, EVP_PKEY *pkey);
 int          SSL_use_PrivateKey_ASN1(int type, SSL *ssl, unsigned char *d, long len);
 int          SSL_use_PrivateKey_file(SSL *ssl, char *file, int type);
@@ -1082,13 +1067,17 @@ int          SSL_use_certificate_ASN1(SSL *ssl, int len, unsigned char *d);
 int          SSL_use_certificate_file(SSL *ssl, char *file, int type);
 int          SSL_use_psk_identity_hint(SSL *ssl, const char *hint);
 
+void         SSL_set_app_data(SSL *ssl, char *arg);
+int          SSL_set_ex_data(SSL *ssl, int idx, char *arg);
+char *       SSL_get_app_data(SSL *ssl);
+char *       SSL_get_ex_data( ssl, int );
+
 int          SSL_add_dir_cert_subjects_to_stack(STACK *stack, const char *dir);
 int          SSL_add_file_cert_subjects_to_stack(STACK *stack, const char *file);
 int          SSL_add_client_CA(SSL *ssl, X509 *x);
 long         SSL_ctrl(SSL *ssl, int cmd, long larg, char *parg);
 STACK *      SSL_dup_CA_list(STACK *sk);
 SSL_CTX *    SSL_get_SSL_CTX(const SSL *ssl);
-char *       SSL_get_app_data(SSL *ssl);
 X509 *       SSL_get_certificate(const SSL *ssl);
 STACK *      SSL_get_ciphers(const SSL *ssl);
 STACK *      SSL_get_client_CA_list(const SSL *ssl);

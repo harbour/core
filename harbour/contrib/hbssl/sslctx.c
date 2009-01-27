@@ -258,32 +258,6 @@ HB_FUNC( SSL_CTX_SET_SESSION_CACHE_MODE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SSL_CTX_GET_APP_DATA )
-{
-   if( hb_SSL_CTX_is( 1 ) )
-   {
-      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
-
-      if( ctx )
-         hb_retc( SSL_CTX_get_app_data( ctx ) );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( SSL_CTX_GET_EX_DATA )
-{
-   if( hb_SSL_CTX_is( 1 ) )
-   {
-      SSL_CTX * ctx = hb_SSL_CTX_par( 1 );
-
-      if( ctx )
-         hb_retc( SSL_CTX_get_ex_data( ctx, hb_parni( 2 ) ) );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
 HB_FUNC( SSL_CTX_CHECK_PRIVATE_KEY )
 {
    if( hb_SSL_CTX_is( 1 ) )
@@ -576,8 +550,6 @@ void SSL_CTX_set_cert_store(SSL_CTX *,X509_STORE *);
 int SSL_CTX_add_client_CA(SSL_CTX *ctx, X509 *x);
 long SSL_CTX_add_extra_chain_cert(SSL_CTX *ctx, X509 *x509);
 void SSL_CTX_set_cert_store(SSL_CTX *ctx, X509_STORE *cs);
-void SSL_CTX_set_app_data(SSL_CTX *ctx, void *arg);
-int SSL_CTX_set_ex_data(SSL_CTX *s, int idx, char *arg);
 int SSL_CTX_set_cipher_list(SSL_CTX *ctx, char *str);
 int  SSL_CTX_use_PrivateKey(SSL_CTX *ctx, EVP_PKEY *pkey);
 int  SSL_CTX_use_PrivateKey_ASN1(int type, SSL_CTX *ctx, unsigned char *d, long len);
@@ -591,6 +563,11 @@ int  SSL_CTX_use_certificate_file(SSL_CTX *ctx, char *file, int type);
 int  SSL_CTX_use_psk_identity_hint(SSL_CTX *ctx, const char *hint);
 long SSL_CTX_ctrl(SSL_CTX *ctx, int cmd, long larg, char *parg);
 STACK *SSL_CTX_get_client_CA_list(const SSL_CTX *ctx);
+
+void SSL_CTX_set_app_data(SSL_CTX *ctx, void *arg);
+int SSL_CTX_set_ex_data(SSL_CTX *s, int idx, char *arg);
+char * SSL_CTX_get_app_data( ctx );
+char * SSL_CTX_get_ex_data( ctx, int );
 
 int (*SSL_CTX_get_client_cert_cb(SSL_CTX *ctx))(SSL *ssl, X509 **x509, EVP_PKEY **pkey);
 int SSL_CTX_get_ex_new_index(long argl, char *argp, int (*new_func);(void), int (*dup_func)(void), void (*free_func)(void))
