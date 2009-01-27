@@ -725,12 +725,12 @@ static size_t put_hex( char *buffer, size_t bufsize, size_t size,
       width -= 2;
    width -= nums;
 
-   if( ( flags & _F_LEFTADJUSTED ) == 0 )
+   if( ( flags & ( _F_LEFTADJUSTED | _F_ZEROPADED ) ) == 0 )
    {
       while( width > 0 )
       {
          if( size < bufsize )
-            buffer[ size ] = ( flags & _F_ZEROPADED ) ? '0' : ' ';
+            buffer[ size ] = ' ';
          ++size;
          --width;
       }
@@ -743,6 +743,16 @@ static size_t put_hex( char *buffer, size_t bufsize, size_t size,
       if( size < bufsize )
          buffer[ size ] = upper ? 'X' : 'x';
       ++size;
+   }
+   if( ( flags & _F_LEFTADJUSTED ) == 0 )
+   {
+      while( width > 0 )
+      {
+         if( size < bufsize )
+            buffer[ size ] = ( flags & _F_ZEROPADED ) ? '0' : ' ';
+         ++size;
+         --width;
+      }
    }
    if( nums )
    {
@@ -1054,10 +1064,11 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
                         argval.value.as_x_intmax_t = va_arg_n( args, _x_ptrdiff_t, param );
                      else
                         argval.value.as_x_intmax_t = va_arg_n( args, _x_int, param );
-                     argval.value.as_x_uintmax_t = argval.value.as_x_intmax_t < 0
-                        ? -argval.value.as_x_intmax_t : argval.value.as_x_intmax_t;
+                     value = argval.value.as_x_intmax_t < 0;
+                     argval.value.as_x_uintmax_t = value ? -argval.value.as_x_intmax_t :
+                                                            argval.value.as_x_intmax_t;
                      size = put_dec( buffer, bufsize, size, argval.value.as_x_uintmax_t,
-                                     flags, width, precision, argval.value.as_x_intmax_t < 0 );
+                                     flags, width, precision, value );
                      continue;
                   case 'o':   /* unsigned int octal conversion */
                   case 'u':   /* unsigned int decimal conversion */
