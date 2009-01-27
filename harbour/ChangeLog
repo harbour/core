@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-27 17:23 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/dos/owatcom.cf
+    * increased max library page size (-p=32 => -p=64)
+
 2009-01-27 17:03 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/dos/dir.cf
   * harbour/config/dos/install.cf

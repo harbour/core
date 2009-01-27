@@ -111,7 +111,7 @@ endef
 
 
 AR = wlib
-ARFLAGS = -p=32 -c -n $(A_USR)
+ARFLAGS = -p=64 -c -n $(A_USR)
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf
