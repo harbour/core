@@ -569,7 +569,7 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
 {
    int TODO; /* TODO: for given platform */
 
-   HB_SYMBOL_UNUSED( pszFileName );
+   HB_SYMBOL_UNUSED( pszFilename );
    HB_SYMBOL_UNUSED( phStdin );
    HB_SYMBOL_UNUSED( phStdout );
    HB_SYMBOL_UNUSED( phStderr );

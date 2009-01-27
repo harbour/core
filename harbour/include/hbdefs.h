@@ -69,6 +69,9 @@
     ( defined( __WATCOMC__ ) && __WATCOMC__ >= 1270 ) || \
     ( defined( __GNUC__ ) && \
       ( defined( _ISOC99_SOURCE ) || \
+        ( defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L ) || \
+        ( defined( __DJGPP__ ) && \
+          ( __DJGPP__ > 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ >= 4 ) ) ) || \
         defined( HB_OS_LINUX ) || defined( HB_OS_DARWIN ) ) )
    #include <stdint.h>
    /* workaround for BCC 5.8 bug */

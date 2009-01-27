@@ -1115,6 +1115,7 @@ ULONG hb_snprintf( char * buffer, ULONG nSize, const char * format, ... )
    /* Use vsprintf() for DJGPP <= 2.03.
       This is a temporary hack, should implement a C99 snprintf() ourselves. */
    result = vsprintf( buffer, format, arglist );
+   #define _HB_SNPRINTF_ADD_EOS
 #elif defined( _MSC_VER ) && _MSC_VER >= 1400
    result = _vsnprintf_s( buffer, nSize, _TRUNCATE, format, arglist );
 #elif ( defined( _MSC_VER ) || defined( __DMC__ ) ) && !defined( __XCC__ )

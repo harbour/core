@@ -93,8 +93,8 @@ MDP = mkdir -p
 RANLIB = ranlib
 
 dirbase::
-	@[ -d $(ARCH_DIR) ] || $(MDP) $(ARCH_DIR)
-	@[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
+	@sh -c "[ -d $(ARCH_DIR) ] || $(MDP) $(ARCH_DIR)"
+	@sh -c "[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)"
 
 clean::
 	-$(RD) $(ARCH_DIR) $(LIB_ARCH)
