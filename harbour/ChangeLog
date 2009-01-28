@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-28 14:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbprintf.c
+    ! include float.h in MSVC builds
+    * changed code a little bit to pacify MSVC warning
+
 2009-01-28 13:29 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbprintf.c
     * redefine [u]intmax_t as [U]LONGLONG in MSVC builds.

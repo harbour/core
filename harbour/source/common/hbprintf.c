@@ -102,7 +102,7 @@ optimized.
 #include "hbapi.h"
 #include "hbmath.h"
 
-#if defined( __BORLANDC__ ) || defined( __WATCOMC__ )
+#if defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || defined( _MSC_VER )
 #  include <float.h>
 #elif defined(__DJGPP__)
    _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
@@ -219,7 +219,7 @@ HB_EXTERN_END
       defined(__XCC__) || defined(__POCC__) || \
       defined(HB_OS_HPUX)
 #     define hb_isfinite( d )       isfinite( d )
-#  elif defined(__WATCOMC__) || defined(__BORLANDC__) || defined(_MSC_VER)
+#  elif defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || defined( _MSC_VER )
 #     define hb_isfinite( d )       _finite( d )
 #  elif defined(__GNUC__) || defined(__DJGPP__) || defined(__MINGW32__) || \
         defined(__LCC__)
@@ -839,14 +839,13 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
    params.size = _ARGBUF_SIZE;
    params.maxarg = 0;
    params.arglst = argbuf;
-   params.repeat = TRUE;
 #endif
 
 
 #ifndef __NO_ARGPOS__
-   while( params.repeat )
+   do
    {
-      params.repeat = 0;
+      params.repeat = FALSE;
       if( params.maxarg > 0 )
       {
          va_start( args, format );
@@ -1180,6 +1179,8 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
 
 #ifndef __NO_ARGPOS__
    }
+   while( params.repeat );
+
    if( params.arglst != argbuf )
       hb_xfree( params.arglst );
 #endif
