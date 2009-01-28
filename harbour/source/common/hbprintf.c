@@ -142,6 +142,11 @@ HB_EXTERN_END
     ( defined( __WATCOMC__ ) && __WATCOMC__ < 1270 ) || \
     ( defined( __DJGPP__ ) && \
       ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ <= 3 ) ) )
+   /* TODO: add other C compilers which does not support [u]intmax_t
+    *       definitions (check C compiler version number).
+    *       If compiler supports stdint.h then it should be added
+    *       to hbdefs.h.
+    */
 #  define intmax_t      _x_longlong
 #  define uintmax_t     _x_ulonglong
 #endif
