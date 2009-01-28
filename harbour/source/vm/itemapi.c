@@ -2496,29 +2496,21 @@ char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
       case HB_IT_POINTER:
       {
          int size = ( sizeof( void * ) << 1 ) + 3; /* n bytes for address + 0x + \0 */
-         int n;
-         BOOL bFail = TRUE; 
+         HB_PTRDIFF addr = ( HB_PTRDIFF ) hb_itemGetPtr( pItem );
 
+         * ulLen = size - 1;
+         * bFreeReq = TRUE;
          buffer = ( char * ) hb_xgrab( size );
+         buffer[ 0 ] = '0';
+         buffer[ 1 ] = 'x';
+         buffer[ --size ] = '\0';
          do
          {
-            n = hb_snprintf( buffer, size, "%p", hb_itemGetPtr( pItem ) );
-            if( (n > -1) && (n < size) )
-            {
-               bFail = FALSE;
-            }
-            else
-            {
-               if( n > -1 )
-                  size = n + 1;
-               else
-                  size *= 2;
-               buffer = ( char * ) hb_xrealloc( buffer, size );
-            }
+            UCHAR uc = ( UCHAR ) ( addr & 0xf );
+            buffer[ --size ] = ( char ) ( uc + ( uc < 10 ? '0' : 'A' - 10 ) );
+            addr >>= 4;
          }
-         while( bFail );
-         * ulLen = strlen( buffer );
-         * bFreeReq = TRUE;
+         while( size > 2 );
          break;
       }
       default:

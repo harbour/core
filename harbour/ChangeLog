@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-28 22:28 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/itemapi.c
+    % eliminated hb_snpritf() from HB_IT_POINTER conversion in
+      hb_itemString()
+
+  * harbour/source/common/hbprintf.c
+    ! fixed return value - it should be one less. Thanks to Xavi.
+    + added support for I64, I32 and I16 length specifiers - it's
+      MS-Windows only extension but it should help in replacing
+      native C *printf() calls with Harbour version.
+
 2009-01-28 19:03 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbprintf.c
     * disabled _finitel() in MSVC builds, added casting to double instead

@@ -1012,6 +1012,27 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
                      length = _L_PTRDIFF_;
                      c = *format++;
                      break;
+                  case 'I':   /* MS-Windows extension */
+                     if( format[ 0 ] == '6' && format[ 1 ] == '4' )
+                     {
+                        length = _L_LONGLONG_;
+                        format += 2;
+                        c = *format++;
+                        break;
+                     }
+                     else if( format[ 0 ] == '1' && format[ 1 ] == '6' )
+                     {
+                        length = _L_SHORT_;
+                        format += 2;
+                        c = *format++;
+                        break;
+                     }
+                     else if( format[ 0 ] == '3' && format[ 1 ] == '2' )
+                     {
+                        format += 2;
+                        c = *format++;
+                     }
+                     /* no break; */
                   default:
                      length = _L_UNDEF_;
                      break;
@@ -1196,7 +1217,7 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
    if( bufsize )
       buffer[ bufsize - 1 ] = 0;
 
-   return ( int ) size;
+   return ( int ) ( size - 1 );
 }
 
 #endif
