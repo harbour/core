@@ -129,8 +129,11 @@ HB_EXTERN_END
 #define _HB_NUM_PINF    2
 #define _HB_NUM_NINF    4
 
-#if defined( __BORLANDC__ )
-   /* use Borland C _fpclass[l]() function */
+#if defined( __BORLANDC__ ) && 0
+   /* do not use Borland C _fpclass[l]() function.
+    * it switches internal logic used for floating point calculation
+    * in this compiler reducing the precision to 'float' type.
+    */
 #  ifdef __NO_LONGDOUBLE__
 #     define hb_fpclassify( d )     _fpclass( d )
 #  else
@@ -161,7 +164,7 @@ HB_EXTERN_END
    /* use C99 macros */
 #  define hb_signbit( d )     signbit( d )
 
-#elif defined( __BORLANDC__ )
+#elif defined( __BORLANDC__ ) && defined( hb_fpclassify )
 
 #  define hb_signbit( d )     ( ( hb_fpclassify( d ) & ( _FPCLASS_NINF | _FPCLASS_NZ ) ) != 0 )
 
@@ -204,7 +207,7 @@ HB_EXTERN_END
                                  } while( 0 )
 #  endif
 
-#elif defined( __BORLANDC__ )
+#elif defined( __BORLANDC__ ) && defined( hb_fpclassify )
 
 #  define HB_NUMTYPE( v, d )  do { \
                                  int t = hb_fpclassify( d ); \
@@ -219,6 +222,9 @@ HB_EXTERN_END
       defined(__XCC__) || defined(__POCC__) || \
       defined(HB_OS_HPUX)
 #     define hb_isfinite( d )       isfinite( d )
+#  elif !defined( __NO_LONGDOUBLE__ ) && \
+        ( defined( __BORLANDC__ ) || defined( _MSC_VER ) )
+#     define hb_isfinite( d )       _finitel( d )
 #  elif defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || defined( _MSC_VER )
 #     define hb_isfinite( d )       _finite( d )
 #  elif defined(__GNUC__) || defined(__DJGPP__) || defined(__MINGW32__) || \

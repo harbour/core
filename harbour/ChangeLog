@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-28 17:41 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbprintf.c
+    ! do not use _fpclass() in BCC builds - it breaks FL arithmetic
+    * use _finitel() instead of _finite() in MSVC builds
+
 2009-01-28 14:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbprintf.c
     ! include float.h in MSVC builds
