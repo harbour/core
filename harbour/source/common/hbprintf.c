@@ -222,10 +222,11 @@ HB_EXTERN_END
       defined(__XCC__) || defined(__POCC__) || \
       defined(HB_OS_HPUX)
 #     define hb_isfinite( d )       isfinite( d )
-#  elif !defined( __NO_LONGDOUBLE__ ) && \
-        ( defined( __BORLANDC__ ) || defined( _MSC_VER ) )
+#  elif !defined( __NO_LONGDOUBLE__ ) && defined( __BORLANDC__ )
 #     define hb_isfinite( d )       _finitel( d )
-#  elif defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || defined( _MSC_VER )
+#  elif defined( _MSC_VER )
+#     define hb_isfinite( d )       _finite( ( double ) d )
+#  elif defined( __BORLANDC__ ) || defined( __WATCOMC__ )
 #     define hb_isfinite( d )       _finite( d )
 #  elif defined(__GNUC__) || defined(__DJGPP__) || defined(__MINGW32__) || \
         defined(__LCC__)

@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-28 19:03 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbprintf.c
+    * disabled _finitel() in MSVC builds, added casting to double instead
+
 2009-01-28 17:41 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbprintf.c
     ! do not use _fpclass() in BCC builds - it breaks FL arithmetic
