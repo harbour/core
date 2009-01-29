@@ -8,6 +8,36 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-29 19:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/postinst.sh
+    ! added missing export in envvar setting.
+
+  * harbour/config/linux/install.cf
+    * added error message when install directory is not set.
+
+  * harbour/config/lib.cf
+  * harbour/config/bin.cf
+  * harbour/config/dir.cf
+    + added explicit support for make recursive calls.
+      Question: why we use $(MK) instead of $(MAKE) so it necessary
+      to mark recursive make calls manually?
+
+  * harbour/config/dir.cf
+    * rewritten DIR_RUL to use only GNU make commands instead of
+      OS scripts. Now config/<arch>/dir.cf files are not longer used.
+      Please make build tests on different platforms. If all will
+      be correct then we remove these files.
+
+  * harbour/source/common/Makefile
+  * harbour/source/vm/Makefile
+  * harbour/source/vm/vmmt/Makefile
+    * moved biggest files to begin of file list for better parallel
+      compilation utilization.
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * accept invalid string key expression if codeblock key expression
+      is given.
+
 2009-01-29 14:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/gtwvt/gtwvt.c
     ! Fixed to #undef _WIN32_WINNT before setting it.

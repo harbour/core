@@ -7458,17 +7458,26 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 
    if( SELF_COMPILE( (AREAP) pArea, ( BYTE * ) hb_itemGetCPtr( pOrderInfo->abExpr ) ) == FAILURE )
    {
-      hb_cdxErrorRT( pArea, EG_DATATYPE, EDBF_INVALIDKEY, NULL, 0, 0, NULL );
-      return FAILURE;
+      if( pOrderInfo->itmCobExpr )
+      {
+         pKeyExp = hb_itemNew( pOrderInfo->itmCobExpr );
+      }
+      else
+      {
+         hb_cdxErrorRT( pArea, EG_DATATYPE, EDBF_INVALIDKEY, NULL, 0, 0, NULL );
+         return FAILURE;
+      }
    }
-
-   pKeyExp = pArea->valResult;
-   pArea->valResult = NULL;
-   /* If we have a codeblock for the expression, use it */
-   if( pOrderInfo->itmCobExpr )
+   else
    {
-      hb_vmDestroyBlockOrMacro( pKeyExp );
-      pKeyExp = hb_itemNew( pOrderInfo->itmCobExpr );
+      pKeyExp = pArea->valResult;
+      pArea->valResult = NULL;
+      /* If we have a codeblock for the expression, use it */
+      if( pOrderInfo->itmCobExpr )
+      {
+         hb_vmDestroyBlockOrMacro( pKeyExp );
+         pKeyExp = hb_itemNew( pOrderInfo->itmCobExpr );
+      }
    }
 
    /* Get a blank record before testing expression */

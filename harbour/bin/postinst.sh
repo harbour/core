@@ -83,7 +83,7 @@ then
     fi
     # build hbfm lib with memory statistic
     (cd ${hb_root}/source/vm
-    C_USR="${C_USR//-DHB_FM_STATISTICS_OFF/} -DHB_FM_STATISTICS"
+    export C_USR="${C_USR//-DHB_FM_STATISTICS_OFF/} -DHB_FM_STATISTICS"
     rm -f fm.o
     ${MAKE} -r fm.o
     ${AR} ${AR_OPT} ${HB_LIB_INSTALL}/libhbfm.a fm.o

@@ -5,6 +5,8 @@
 ROOT = ../../
 
 C_SOURCES=\
+	expropt1.c \
+	expropt2.c \
 	hbfsapi.c \
 	hbfopen.c \
 	hbgete.c \
@@ -19,8 +21,6 @@ C_SOURCES=\
 	hbverdsp.c \
 	hbarch.c \
 	reserved.c \
-	expropt1.c \
-	expropt2.c \
 
 PRG_SOURCES=\
 

@@ -25,6 +25,7 @@ else
 endif
 
 C_SOURCES=\
+	hvm.c \
 	arrays.c \
 	arrayshb.c \
 	asort.c \
@@ -45,7 +46,6 @@ C_SOURCES=\
 	garbage.c \
 	hashes.c \
 	hashfunc.c \
-	hvm.c \
 	initexit.c \
 	initsymb.c \
 	itemapi.c \
