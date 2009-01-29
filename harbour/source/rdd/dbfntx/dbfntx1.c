@@ -1972,6 +1972,7 @@ static void hb_ntxIndexFlush( LPNTXINDEX pIndex )
       {
          hb_ntxPageSave( pIndex, pPage );
          ++pPage->iUsed;
+         /* hack */
          hb_ntxPageRelease( pIndex->lpTags[0], pPage );
       }
       else
@@ -1988,7 +1989,7 @@ static void hb_ntxIndexFlush( LPNTXINDEX pIndex )
       if( pIndex->Changed )
          hb_ntxIndexHeaderSave( pIndex );
    }
-   else
+   else if( pIndex->iTags )
    {
       if( pIndex->Changed || pIndex->lpTags[ 0 ]->HdrChanged )
          hb_ntxTagHeaderSave( pIndex->lpTags[ 0 ] );

@@ -123,6 +123,14 @@ HB_EXTERN_END
 #  define __NO_LONGLONG__
 #endif
 
+#ifndef va_copy
+#  ifdef __va_copy
+#     define va_copy( dst, src )    __va_copy( dst, src )
+#  else
+#     define va_copy( dst, src )    ( (dst) = (src) )
+#  endif
+#endif
+
 /* few macros for some platform dependent floating point functions/macros */
 
 #define _HB_NUM_NAN     1
@@ -943,7 +951,7 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
                      /* else error, wrong format */
                   }
                   else
-                     width = va_arg( args, int );
+                     width = va_arg_n( args, _x_int, 0 );
                }
                else if( c >= '0' && c <= '9' )
                   c = get_decimal( c, &format, &width );
@@ -967,7 +975,7 @@ int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
                         /* else error, wrong format */
                      }
                      else
-                        precision = va_arg( args, int );
+                        precision = va_arg_n( args, _x_int, 0 );
                   }
                   else if( c >= '0' && c <= '9' )
                      c = get_decimal( c, &format, &precision );

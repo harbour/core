@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-29 02:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbprintf.c
+    * minor modification for easier future updating
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    ! fixed possible GPF caused by corrupted indexes
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    ! fixed possible GPF caused by missing RT error
+    ! added RT errors for invalid KEY or FOR expressions
+
 2009-01-28 22:28 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/itemapi.c
     % eliminated hb_snpritf() from HB_IT_POINTER conversion in
