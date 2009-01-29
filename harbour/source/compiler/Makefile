@@ -13,6 +13,7 @@ ROOT = ../../
 
 #YACC_FLAGS = -p hb_comp
 YACC_SOURCE=harbour.y
+YACC_DEPEND=complex.c
 YACC_HEADERS=\
 	hbcomp.h \
 	hbcompdf.h \

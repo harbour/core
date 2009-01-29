@@ -23,6 +23,7 @@ ROOT = ../../
 
 #YACC_FLAGS = -p hb_macro
 YACC_SOURCE=macro.y
+YACC_DEPEND=macrolex.c
 YACC_HEADERS=\
 	hbmacro.h \
 	hbsetup.h \

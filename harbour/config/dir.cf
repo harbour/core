@@ -8,6 +8,7 @@ ifneq ($(HB_COMPILER),)
 include $(TOP)$(ROOT)config/global.cf
 #include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dir.cf
 
+ifeq ($(DIR_RULE),)
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define dir_mk
@@ -17,6 +18,7 @@ endef
 
 DIRS_MK = $(foreach d, $(DIRS), $(if $(wildcard $(d)/Makefile),$(d),))
 DIR_RULE = $(foreach dir, $(DIRS_MK), $(dir_mk))
+endif
 
 all : first
 
