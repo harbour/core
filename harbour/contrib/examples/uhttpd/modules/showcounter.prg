@@ -1,4 +1,3 @@
-
 /*
  * $Id$
  */
@@ -216,4 +215,3 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
 //RETURN cFile
 RETURN oI:ToStringGif()
-

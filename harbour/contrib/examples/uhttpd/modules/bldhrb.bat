@@ -1,4 +1,8 @@
 @echo off
+rem
+rem $Id$
+rem
+
 rem Saving current HB_MT state
 set OLDENVMT=%HB_MT%
 set OLDENVGT=%HB_GT_LIB%
@@ -25,7 +29,7 @@ GOTO COMPILEOK
 echo.
 echo.Error on compiling ...
 echo.
-echo.Running notepad, please close to end this batch file ...
+echo.Running Notepad, please close to end this batch file ...
 echo.
 notepad bldtest.log
 echo.
@@ -60,4 +64,3 @@ set BLDDEFAULT=
 set OLD_HB_ARCHITECTURE=
 set OLD_HB_COMPILER=
 set OLD_HB_USER_LIBS=
-

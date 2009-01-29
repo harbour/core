@@ -1,8 +1,9 @@
 @echo off
-cls
 rem
 rem $Id$
 rem
+
+cls
 
 SET UHTTP_INET_SUPPORT=no
 SET UHTTP_INET_DEF=

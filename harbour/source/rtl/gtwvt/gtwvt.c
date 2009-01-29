@@ -84,6 +84,7 @@
 
 #define HB_OS_WIN_32_USED
 
+#undef _WIN32_WINNT
 #define _WIN32_WINNT   0x0500 /* Set to Windows 2000 for WS_EX_LAYERED */
 
 #include "gtwvt.h"

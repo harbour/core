@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-29 14:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/gtwvt/gtwvt.c
+    ! Fixed to #undef _WIN32_WINNT before setting it.
+    ; TOFIX: hbwhat has this problem in almost all of its source
+             files.
+
+  * contrib/examples/uhttpd/modules/bldhrb.bat
+  * contrib/examples/uhttpd/modules/showcounter.prg
+  * contrib/examples/uhttpd/hbmk_b32.bat
+  * contrib/examples/uhttpd/hbmk_vc.bat
+    * Minor.
+
 2009-01-29 02:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbprintf.c
     * minor modification for easier future updating
