@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-30 08:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+    ! Typos in former ChangeLog entries.
+      (testing commit notification)
+
 2009-01-30 08:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
     ! Typos in former ChangeLog entries.
@@ -270,7 +275,7 @@
   + contrib/examples/uhttpd/uhttpdc.c
     + C level stuff moved to separate file.
 
-  ; NOTE: I'm getting an "Argument error: +" when browse
+  ; NOTE: I'm getting an "Argument error: +" when browsing
           to http://localhost:8082 (using Chrome if that matters).
 
 2009-01-26 22:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
