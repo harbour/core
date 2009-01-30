@@ -65,27 +65,27 @@ MEMVAR _REQUEST // defined in uHTTPD
 
 FUNCTION HRBMAIN()
   LOCAL cHtml
-  LOCAL cBaseImage
+  //LOCAL cBaseImage
 
   IF HB_HHasKey( _REQUEST, "w" )
 
      cHtml := CreateCounter( AllTrim( Str( Val( _REQUEST[ "w" ] ) ) ) )
      //hb_ToOutDebug( hb_sprintf( "CreateCounter = %s", cHtml ) )
      IF !Empty( cHtml )
-        uAddHeader( "Content-Type", "image/gif" )
-        uAddHeader( "Pragma", "no-cache" )
-        uAddHeader( "Content-Disposition", "inline; filename=counter" + LTrim( Str( hb_randomint( 100 ) ) ) + ".gif" )
-        uWrite( cHtml )
+        uhttpd_AddHeader( "Content-Type", "image/gif" )
+        uhttpd_AddHeader( "Pragma", "no-cache" )
+        uhttpd_AddHeader( "Content-Disposition", "inline; filename=counter" + LTrim( Str( hb_randomint( 100 ) ) ) + ".gif" )
+        uhttpd_Write( cHtml )
      ELSE
-        uAddHeader( "Content-Type", "text/html" )
-        uWrite( "<h1>Error: No image created</h1>" )
+        uhttpd_AddHeader( "Content-Type", "text/html" )
+        uhttpd_Write( "<h1>Error: No image created</h1>" )
      ENDIF
 
 
   ELSE
 
-     uAddHeader( "Content-Type", "text/html" )
-     uWrite( "<h1>Error: no parameters passed</h1>" )
+     uhttpd_AddHeader( "Content-Type", "text/html" )
+     uhttpd_Write( "<h1>Error: no parameters passed</h1>" )
 
   ENDIF
 
@@ -95,10 +95,10 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
    LOCAL oI, oIDigits, nWidth, nHeight, nDigits, nNumWidth, oTemp
    //LOCAL black, white, blue, red, green, cyan, gray
-   LOCAL white
+   //LOCAL white
    LOCAL aNumberImages := {}
    LOCAL n, nValue
-   LOCAL cFile
+   //LOCAL cFile
 
    // A value if not passed
    DEFAULT cValue     TO Str( hb_RandomInt( 1, 10^DISPLAY_NUM ), DISPLAY_NUM )
@@ -158,7 +158,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
       CASE nWidth % 13 == 0   // 0..9 : am pm
            nDigits := 13
       OTHERWISE
-           uWrite( "Error on digits image" )
+           uhttpd_Write( "Error on digits image" )
    ENDCASE
    nNumWidth := nWidth / nDigits
 
@@ -178,7 +178,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    //? "Image dimensions: ", oI:Width(), oI:Height()
 
    /* Allocate background */
-   white := oI:SetColor( 255, 255, 255 )
+   //white := oI:SetColor( 255, 255, 255 )
 
    /* Allocate drawing color */
    //black := oI:SetColor( 0, 0, 0 )
@@ -203,7 +203,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    NEXT
 
    /* Write Final Counter Image */
-   cFile := "counter" + StrZero( hb_RandomInt( 1, 99 ), 2 ) + ".gif"
+   //cFile := "counter" + StrZero( hb_RandomInt( 1, 99 ), 2 ) + ".gif"
    //oI:SaveGif( IMAGES_OUT + cFile )
 
    /* Destroy images in memory */

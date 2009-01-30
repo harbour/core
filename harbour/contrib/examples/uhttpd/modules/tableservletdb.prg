@@ -107,18 +107,18 @@ FUNCTION HRBMAIN()
 
    IF !Empty( cXml )
 
-      uAddHeader("Content-Type", "text/xml")
+      uhttpd_AddHeader("Content-Type", "text/xml")
       // cache control
-      uAddHeader( "Cache-Control", "no-cache, must-revalidate" )
-      uAddHeader( "Expires", "Mon, 26 Jul 1997 05:00:00 GMT" )
+      uhttpd_AddHeader( "Cache-Control", "no-cache, must-revalidate" )
+      uhttpd_AddHeader( "Expires", "Mon, 26 Jul 1997 05:00:00 GMT" )
 
-      uWrite( cXml )
+      uhttpd_Write( cXml )
 
    ELSE
 
-      uAddHeader("Content-Type", "text/xml")
-      uWrite( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
-      uWrite( '<pages><page>No Data</page></pages>' )
+      uhttpd_AddHeader("Content-Type", "text/xml")
+      uhttpd_Write( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
+      uhttpd_Write( '<pages><page>No Data</page></pages>' )
 
    ENDIF
 

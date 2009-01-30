@@ -48,13 +48,19 @@ if exist uhttpd.exe uhttpd -s
 
 ..\..\..\bin\harbour uhttpd /n /es2 /w3 /i..\..\..\include %UHTTP_GD_DEF% %UHTTP_INET_DEF%
 if errorlevel 1 goto DOERROR
-bcc32 -O2 -tW -d -a8 -I..\..\..\include -L..\..\..\lib uhttpd.c uhttpdc.c %UHTTP_INET_SOCKET% hbdebug.lib hbvmmt.lib hbrtl.lib gtwvt.lib gtwin.lib gtgui.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbcpage.lib hbsix.lib hbcommon.lib hbpcre.lib hbhsx.lib hbzlib.lib xhb.lib hbct.lib cw32mt.lib %UHTTP_GD_LIBS%
+..\..\..\bin\harbour cgifunc /n /es2 /w3 /i..\..\..\include %UHTTP_GD_DEF% %UHTTP_INET_DEF%
+if errorlevel 1 goto DOERROR
+..\..\..\bin\harbour cookie /n /es2 /w3 /i..\..\..\include %UHTTP_GD_DEF% %UHTTP_INET_DEF%
+if errorlevel 1 goto DOERROR
+bcc32 -O2 -tW -d -a8 -I..\..\..\include -L..\..\..\lib uhttpd.c cgifunc.c cookie.c uhttpdc.c %UHTTP_INET_SOCKET% hbdebug.lib hbvmmt.lib hbrtl.lib gtwvt.lib gtwin.lib gtgui.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbcpage.lib hbsix.lib hbcommon.lib hbpcre.lib hbhsx.lib hbzlib.lib xhb.lib hbct.lib cw32mt.lib %UHTTP_GD_LIBS%
 if errorlevel 1 goto DOERROR
 
 :CLEAN
 del *.obj
 del *.tds
 del uhttpd.c
+del cgifunc.c
+del cookie.c
 
 if not exist uhttpd.exe goto :EXIT
 if %UHTTP_GD_SUPPORT%.==no. goto BUILD_OK

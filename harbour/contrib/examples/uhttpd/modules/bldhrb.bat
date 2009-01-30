@@ -19,7 +19,7 @@ SET HB_BIN_INSTALL=%HB_INSTALL%\bin
 set HB_INC_INSTALL=include;%HB_INSTALL%\include
 set HB_LIB_INSTALL=%HB_INSTALL%\lib
 
-%HB_BIN_INSTALL%\harbour %1.prg -n -q0 -w -es2 -gh -i%HB_INC_INSTALL% %2 %3 %HARBOURFLAGS% > bldtest.log
+%HB_BIN_INSTALL%\harbour %1.prg -n -q0 -w3 -es2 -gh -i%HB_INC_INSTALL% %2 %3 %HARBOURFLAGS% > bldtest.log
 
 IF ERRORLEVEL 1 GOTO SHOWERROR
 

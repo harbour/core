@@ -59,7 +59,7 @@
 #include "common.ch"
 #include "hbclass.ch"
 
-MEMVAR _SERVER, _REQUEST, _GET, _POST
+MEMVAR _SERVER, _REQUEST, _GET, _POST, _COOKIE, _HTTP_REQUEST
 
 FUNCTION HRBMAIN()
   LOCAL cHtml
@@ -70,21 +70,34 @@ FUNCTION HRBMAIN()
 
 STATIC FUNCTION ShowServerInfo()
   LOCAL cHtml := ""
+  //LOCAL oCookie
+
+  cHtml += "<BIG>Server Info</BIG>"
+  //cHtml += "<br><br>If it is first time you see this page reload it to see cookies<br><br>"
+  cHtml += '<br><br>Return to <a href="/">Main Page</a><br><br>'
 
   cHtml += DisplayVars( _Server , "SERVER Vars" )
+  cHtml += "<br>"
+  cHtml += DisplayVars( _HTTP_REQUEST , "HTTP Headers" )
   cHtml += "<br>"
   cHtml += DisplayVars( _Get    , "GET Vars" )
   cHtml += "<br>"
   cHtml += DisplayVars( _Post   , "POST Vars" )
   cHtml += "<br>"
-  //cHtml += DisplayVars( _Cookie , "COOKIE Vars" )
-  //cHtml += "<br>"
+  cHtml += DisplayVars( _Cookie , "COOKIE Vars" )
+  cHtml += "<br>"
   //cHtml += DisplayVars( _Files  , "FILE Vars" )
   //cHtml += "<br>"
   cHtml += DisplayVars( _Request, "REQUEST Vars" )
   cHtml += "<br>"
   //cHtml += DisplayVars( _Session, "SESSION Vars" )
   //cHtml += "<br>"
+
+  // Set a simple cookie
+  //oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
+  //oCookie:SetCookie( "samplecookie", "test" )
+  //oCookie:SetCookie( "samplecookie2", "test2" )
+
   RETURN cHtml
 
 STATIC FUNCTION DisplayVars( hHash, cTitle )
@@ -101,12 +114,26 @@ RETURN cHtml
 
 STATIC FUNCTION DisplayHash( hHash )
   LOCAL cHtml := ""
-  LOCAL cKey, cSubKey
+  LOCAL cKey, cSubKey, xValue
 
   FOR EACH cKey IN hHash:Keys
      cHtml += "<tr>"
-     cHtml += "<td>" + hb_cStr( cKey ) + "</td>"
-     cHtml += "<td>" + hb_cStr( hHash[ cKey ] ) + "</td>"
+     IF HB_ISHASH( hHash[ cKey ] )
+        cHtml += "<td>" + hb_cStr( cKey ) + "</td>"
+        cHtml += "<td>-------</td>"
+        FOR EACH cSubKey IN hHash[ cKey ]:Keys
+            xValue := hHash[ cKey ][ cSubKey ]
+            cHtml += "<tr>"
+            cHtml += "<td>" + hb_cStr( cSubKey ) + "</td>"
+            cHtml += "<td>" + IIF( Empty( xValue ), "<i>no value</i>", hb_cStr( xValue ) ) + "</td>"
+            cHtml += "</tr>"
+        NEXT
+     ELSE
+        xValue := hHash[ cKey ]
+        cHtml += "<td>" + hb_cStr( cKey ) + "</td>"
+        cHtml += "<td>" + IIF( Empty( xValue ), "<i>no value</i>", hb_cStr( xValue ) ) + "</td>"
+     ENDIF
      cHtml += "</tr>"
   NEXT
+
 RETURN cHtml
