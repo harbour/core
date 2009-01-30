@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-30 08:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+    ! Typos in former ChangeLog entries.
+
 2009-01-30 03:24 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpd.prg
     * Updated uHTTPD (Work in progress)
@@ -360,7 +364,7 @@
    + source/common/hbprintf.c
      + Added hb_snprintf_c() (temp name, untested) (work of Przemyslaw Czerpak)
        [ I've added a normal Harbour license, as per your permission
-       on the list. Pls give me feedback is this is wrong. ]
+       on the list. Pls give me feedback if this is wrong. ]
 
    * source/rdd/usrrdd/example/exlog.prg
      ! Fixed missing #includes.
@@ -548,7 +552,7 @@
   * contrib/hbhpdf/harupdf.ch
   * contrib/hbhpdf/harupdf.c
     + Added HPDF_VERSION_TEXT() function which returns the
-      libharu version hbhpdf was linked against.
+      libharu version hbhpdf was compiled against.
     - Removed #define HPDF_VERSION_TEXT with hard-wired libharu
       version.
 
@@ -741,7 +745,7 @@
       - HB_HMAC_SHA512( <cMessage>, <cKey> ) -> <cMAC>
     ; TODO: Add C level wrappers in Harbour namespace.
     ; TODO: Add .prg level wrappers for SHA1 functions + tests.
-    ; TODO: Convert HB_MD5() work on binary data, rather than
+    ; TODO: Convert HB_MD5() to work on binary data, rather than
             doing hexadecimal conversion accessible using
             standard Harbour functions anyway.
     ; TODO: Add other crypt functions (AES, ...).
@@ -752,7 +756,7 @@
   * contrib/hbhpdf/harupdf.c
     ! HPDF_SETINFODATEATTR() fixed taking date/time from the wrong
       parameter.
-    ! HPDF_SETINFODATEATTR() fixed to initialize the date structure
+    ! HPDF_SETINFODATEATTR() fixed to fully initialize the date structure
       passed to libharu.
 
     ; NOTE: I've changed my editor config to automatically clean line
