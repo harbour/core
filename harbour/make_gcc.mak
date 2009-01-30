@@ -432,15 +432,15 @@ $(HBTEST_EXE)   :: StdLibs
 $(HBTEST_EXE)   :: $(HBTEST_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBI18N_EXE)   :: MinLibs
+$(HBI18N_EXE)   :: StdLibs
 $(HBI18N_EXE)   :: $(HBI18N_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBDOC_EXE)    :: MinLibs
+$(HBDOC_EXE)    :: StdLibs
 $(HBDOC_EXE)    :: $(HBDOC_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBMAKE_EXE)   :: MinLibs
+$(HBMAKE_EXE)   :: StdLibs
 $(HBMAKE_EXE)   :: $(HBMAKE_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
@@ -484,13 +484,17 @@ $(DLL_OBJ_DIR)/pptable.c : $(HBPP) $(INCLUDE_DIR)/hbstdgen.ch $(INCLUDE_DIR)/std
 
 #**********************************************************
 
+# additional dependencies for parallel execution
+$(OBJ_DIR)/macrolex$(OBJEXT) : $(OBJ_DIR)/macroy.c
+$(OBJ_DIR)/complex$(OBJEXT) : $(OBJ_DIR)/harboury.c
+
 ifeq ("$(HB_REBUILD_PARSER)","yes")
 
 $(OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.y
-	bison --no-line -d $^ -o$@
+	bison --no-line -d $< -o$@
 
 $(OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.y
-	bison --no-line -d $^ -o$@
+	bison --no-line -d $< -o$@
 
 else
 
@@ -507,23 +511,27 @@ endif
 #**********************************************************
 
 #$(OBJ_DIR)/macrol.c : $(MACRO_DIR)/macro.l
-#	flex -Phb_macro -i -8 -o$@ $^
+#	flex -Phb_macro -i -8 -o$@ $<
 
 #$(OBJ_DIR)/harbourl.c : $(COMPILER_DIR)/harbour.l
-#	flex -Phb_comp -i -8 -o$@ $^
+#	flex -Phb_comp -i -8 -o$@ $<
 
 #$(OBJ_DIR)/harbourl$(OBJEXT) : $(OBJ_DIR)/harbourl.c
 #$(OBJ_DIR)/macrol$(OBJEXT)   : $(OBJ_DIR)/macrol.c
 
 #**********************************************************
 
+# additional dependencies for parallel execution
+$(DLL_OBJ_DIR)/macrolex$(OBJEXT) : $(DLL_OBJ_DIR)/macroy.c
+$(DLL_OBJ_DIR)/complex$(OBJEXT) : $(DLL_OBJ_DIR)/harboury.c
+
 ifeq ("$(HB_REBUILD_PARSER)","yes")
 
 $(DLL_OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.y
-	bison --no-line -d $^ -o$@
+	bison --no-line -d $< -o$@
 
 $(DLL_OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.y
-	bison --no-line -d $^ -o$@
+	bison --no-line -d $< -o$@
 
 else
 
@@ -540,10 +548,10 @@ endif
 #**********************************************************
 
 #$(DLL_OBJ_DIR)/macrol.c : $(MACRO_DIR)/macro.l
-#	flex -Phb_macro -i -8 -o$@ $^
+#	flex -Phb_macro -i -8 -o$@ $<
 
 #$(DLL_OBJ_DIR)/harbourl.c : $(COMPILER_DIR)/harbour.l
-#	flex -Phb_comp -i -8 -o$@ $^
+#	flex -Phb_comp -i -8 -o$@ $<
 
 #$(DLL_OBJ_DIR)/harbourl$(OBJEXT) : $(DLL_OBJ_DIR)/harbourl.c
 #$(DLL_OBJ_DIR)/macrol$(OBJEXT)   : $(DLL_OBJ_DIR)/macrol.c
@@ -562,9 +570,7 @@ Clean: doClean
 CLEAN: doClean
 
 doClean:
-	-$(DEL) $(HB_BUILD_TARGETS)
-	-$(DEL) $(HB_DLL_IMPLIB)
-	-$(DEL) $(HB_DLL_IMPLIBMT)
+	-$(DEL) $(HB_BUILD_TARGETS) $(HB_DLL_IMPLIB) $(HB_DLL_IMPLIBMT)
 	-$(DEL) $(OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(OBJ_DIR)/*.c
 	-$(DEL) $(OBJ_DIR)/*.h

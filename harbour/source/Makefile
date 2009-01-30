@@ -8,33 +8,33 @@ ifeq ($(HB_HOST_BUILD),yes)
 
 DIRS=\
 	common \
-	pp \
-	compiler \
-	main \
+	pp{common} \
+	compiler{pp} \
+	main{compiler} \
 
 else
 
 ifeq ($(HB_HOST_BUILD),lib)
 HB_COMP_DIR=
 else
-HB_COMP_DIR=main
+HB_COMP_DIR=main{compiler}
 endif
 
 DIRS=\
 	common \
-	pp \
-	compiler \
+	pp{common} \
+	compiler{pp} \
 	$(HB_COMP_DIR) \
-	rtl \
-	vm \
+	rtl{main} \
+	vm{main} \
 	macro \
 	codepage \
 	lang \
-	rdd \
-	hbextern \
+	rdd{main} \
+	hbextern{main} \
 	hbpcre \
 	hbzlib \
-	debug \
+	debug{main} \
 
 endif
 

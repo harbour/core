@@ -14,7 +14,7 @@ else
 ifeq ($(HB_HOST_BUILD),lib)
 HB_UTIL_DIR=
 else
-HB_UTIL_DIR=utils
+HB_UTIL_DIR=utils{source}
 endif
 
 DIRS=\
@@ -22,7 +22,7 @@ DIRS=\
 	include \
 	source \
 	$(HB_UTIL_DIR) \
-	contrib \
+	contrib{source} \
 
 endif
 

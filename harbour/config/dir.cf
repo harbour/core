@@ -9,6 +9,7 @@ include $(TOP)$(ROOT)config/global.cf
 #include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dir.cf
 
 ifeq ($(DIR_RULE),)
+
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every commands will be separated by LF
 define dir_mk
@@ -16,14 +17,55 @@ $(MK) -C $(dir) $@
 
 endef
 
-DIRS_MK = $(foreach d, $(DIRS), $(if $(wildcard $(d)/Makefile),$(d),))
+DIRS_PURE = $(filter-out {%},$(subst {, {,$(DIRS)))
+DIRS_DEP  = $(filter-out $(DIRS_PURE),$(DIRS))
+DIRS_MK   = $(foreach d, $(DIRS_PURE), $(if $(wildcard $(d)/Makefile),$(d),))
 DIR_RULE = $(foreach dir, $(DIRS_MK), $(dir_mk))
+MULTI_DEPS = yes
+
+else
+
+DIRS := $(filter-out {%},$(subst {, {,$(DIRS)))
+MULTI_DEPS = no
+
 endif
 
 all : first
 
+ifneq ($(MULTI_DEPS),yes)
+
 first clean install::
 	+$(DIR_RULE)
+
+else
+
+DIRS_CLEAN = $(foreach dir, $(DIRS_MK), $(dir).clean)
+DIRS_INST  = $(foreach dir, $(DIRS_MK), $(dir).inst)
+
+first   :: $(DIRS_MK)
+install :: $(DIRS_INST)
+clean   :: $(DIRS_CLEAN)
+
+comma=,
+define dep_rule
+$(subst $(comma),$(2) ,$(subst },$(2),$(subst {,$(2)::|,$(1))))
+endef
+
+$(foreach dep, $(DIRS_DEP), $(eval $(call dep_rule,$(dep),.clean)))
+$(foreach dep, $(DIRS_DEP), $(eval $(call dep_rule,$(dep),.inst)))
+$(foreach dep, $(DIRS_DEP), $(eval $(call dep_rule,$(dep),)))
+
+$(DIRS_CLEAN) ::
+	+$(MK) -C $(@:.clean=) clean
+
+$(DIRS_INST) ::
+	+$(MK) -C $(@:.inst=) install
+
+$(DIRS_MK) ::
+	+$(MK) -C $(@)
+
+endif
+
 
 ifneq ($(HB_POSTINST),)
 install::

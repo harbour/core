@@ -8,6 +8,40 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-01-30 20:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gcc.mak
+    ! added additional rules to fix time conditions in parallel compilation
+
+  * harbour/config/dos/dir.cf
+  * harbour/config/w32/dir.cf
+    * changed simple assignments to recursive ones
+
+  * harbour/config/dir.cf
+    + added support for dependencies between build directories for
+      parallel execution. If compilation of dirX needs results of
+      dirY and dirZ compilation then it hsould be declared as:
+         dirX{dirY,dirZ}
+    % process directories defined in DIRS simultaneously when -j<N>
+      GNU make switch is used - it gives additional speed improvement
+      on multi CPU machines
+
+  * harbour/Makefile
+  * harbour/source/Makefile
+    * set directory dependencies for parallel compilation
+
+   The parallel compilation can be enabled by using -j<n> GNU make
+   switch on multiprocess platforms, f.e.:
+      ./gnu_make.sh -j3
+   It should give some speed improvement even on single CPU machines.
+   These are results of clean Harbour compilation on my 3 phantom CPU
+   computer:
+
+      1. leaner compilation without -j<n>                6m29.895s
+      2. parallel compilation with -j5 but without
+         parallel directory processing                   3m20.163s
+      3. parallel compilation with -j5 and with new
+         parallel directory processing                   2m6.168s
+
 2009-01-30 08:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
     ! Typos in former ChangeLog entries.
