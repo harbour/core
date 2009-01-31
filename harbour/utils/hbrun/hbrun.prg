@@ -77,11 +77,7 @@ STATIC s_aIncDir := {}
 /* ********************************************************************** */
 
 PROCEDURE _APPMAIN( cFile, ... )
-   LOCAL GetList
-   LOCAL cLine, cCommand, cPath, cExt
-   LOCAL nMaxRow, nMaxCol
-   LOCAL aHistory, nHistIndex
-   LOCAL bKeyUP, bKeyDown, bKeyIns
+   LOCAL cPath, cExt
 
 #ifdef _DEFAULT_INC_DIR
    AADD( s_aIncDir, "-I" + _DEFAULT_INC_DIR )
@@ -114,84 +110,103 @@ PROCEDURE _APPMAIN( cFile, ... )
                ELSE
                   hb_hrbRun( cFile, ... )
                ENDIF
+            ELSEIF Lower( cExt ) == ".dbf"
+               HB_DotPrompt( "USE " + cFile )
             ELSE
                hb_hrbRun( cFile, ... )
             ENDIF
       ENDSWITCH
    ELSE
-
-      CLEAR SCREEN
-      SET SCOREBOARD OFF
-      GetList := {}
-      cCommand := ""
-      aHistory := { padr( "quit", HB_LINE_LEN ) }
-      nHistIndex := 2
-
-      DO WHILE .T.
-
-         IF cLine == NIL
-            cLine := Space( HB_LINE_LEN )
-         ENDIF
-
-         HB_DotInfo( cCommand )
-
-         nMaxRow := MaxRow()
-         nMaxCol := MaxCol()
-         @ nMaxRow, 0 SAY HB_PROMPT
-         @ nMaxRow, Col() GET cLine ;
-                          PICTURE "@KS" + hb_NToS( nMaxCol - Col() + 1 )
-
-         SetCursor( IIF( ReadInsert(), SC_INSERT, SC_NORMAL ) )
-
-         bKeyIns  := SetKey( K_INS, ;
-            {|| SetCursor( IIF( ReadInsert( !ReadInsert() ), ;
-                             SC_NORMAL, SC_INSERT ) ) } )
-         bKeyUp   := SetKey( K_UP, ;
-            {|| IIF( nHistIndex >  1, ;
-                     cLine := aHistory[ --nHistIndex ], ) } )
-         bKeyDown := SetKey( K_DOWN, ;
-            {|| cLine := IIF( nHistIndex < LEN( aHistory ), ;
-                aHistory[ ++nHistIndex ], ;
-                ( nHistIndex := LEN( aHistory ) + 1, Space( HB_LINE_LEN ) ) ) } )
-
-         READ
-
-         SetKey( K_DOWN, bKeyDown )
-         SetKey( K_UP,   bKeyUp   )
-         SetKey( K_INS,  bKeyIns  )
-
-         IF LastKey() == K_ESC .OR. EMPTY( cLine )
-            cLine := NIL
-            IF nMaxRow != MaxRow() .OR. nMaxCol != MaxCol()
-               @ nMaxRow, 0 CLEAR
-            ENDIF
-            LOOP
-         ENDIF
-
-         IF EMPTY( aHistory ) .OR. ! ATAIL( aHistory ) == cLine
-            IF LEN( aHistory ) < HB_HISTORY_LEN
-               AADD( aHistory, cLine )
-            ELSE
-               ADEL( aHistory, 1 )
-               aHistory[ LEN( aHistory ) ] := cLine
-            ENDIF
-         ENDIF
-         nHistIndex := LEN( aHistory ) + 1
-
-         cCommand := AllTrim( cLine, " " )
-         cLine := NIL
-         @ nMaxRow, 0 CLEAR
-         HB_DotInfo( cCommand )
-
-         HB_DotExec( cCommand )
-
-         IF s_nRow >= MaxRow()
-            Scroll( 2, 0, MaxRow(), MaxCol(), 1 )
-            s_nRow := MaxRow() - 1
-         ENDIF
-
-      ENDDO
+      HB_DotPrompt()
    ENDIF
+
+   RETURN
+
+STATIC PROCEDURE HB_DotPrompt( cCommand )
+   LOCAL GetList
+   LOCAL cLine
+   LOCAL nMaxRow, nMaxCol
+   LOCAL aHistory, nHistIndex
+   LOCAL bKeyUP, bKeyDown, bKeyIns
+
+   CLEAR SCREEN
+   SET SCOREBOARD OFF
+   GetList := {}
+   aHistory := { padr( "quit", HB_LINE_LEN ) }
+   nHistIndex := 2
+
+   IF ISCHARACTER( cCommand )
+      AADD( aHistory, PadR( cCommand, HB_LINE_LEN ) )
+      HB_DotInfo( cCommand )
+      HB_DotExec( cCommand )
+   ELSE
+      cCommand := ""
+   ENDIF
+
+   DO WHILE .T.
+
+      IF cLine == NIL
+         cLine := Space( HB_LINE_LEN )
+      ENDIF
+
+      HB_DotInfo( cCommand )
+
+      nMaxRow := MaxRow()
+      nMaxCol := MaxCol()
+      @ nMaxRow, 0 SAY HB_PROMPT
+      @ nMaxRow, Col() GET cLine ;
+                       PICTURE "@KS" + hb_NToS( nMaxCol - Col() + 1 )
+
+      SetCursor( IIF( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+
+      bKeyIns  := SetKey( K_INS, ;
+         {|| SetCursor( IIF( ReadInsert( !ReadInsert() ), ;
+                          SC_NORMAL, SC_INSERT ) ) } )
+      bKeyUp   := SetKey( K_UP, ;
+         {|| IIF( nHistIndex >  1, ;
+                  cLine := aHistory[ --nHistIndex ], ) } )
+      bKeyDown := SetKey( K_DOWN, ;
+         {|| cLine := IIF( nHistIndex < LEN( aHistory ), ;
+             aHistory[ ++nHistIndex ], ;
+             ( nHistIndex := LEN( aHistory ) + 1, Space( HB_LINE_LEN ) ) ) } )
+
+      READ
+
+      SetKey( K_DOWN, bKeyDown )
+      SetKey( K_UP,   bKeyUp   )
+      SetKey( K_INS,  bKeyIns  )
+
+      IF LastKey() == K_ESC .OR. EMPTY( cLine )
+         cLine := NIL
+         IF nMaxRow != MaxRow() .OR. nMaxCol != MaxCol()
+            @ nMaxRow, 0 CLEAR
+         ENDIF
+         LOOP
+      ENDIF
+
+      IF EMPTY( aHistory ) .OR. ! ATAIL( aHistory ) == cLine
+         IF LEN( aHistory ) < HB_HISTORY_LEN
+            AADD( aHistory, cLine )
+         ELSE
+            ADEL( aHistory, 1 )
+            aHistory[ LEN( aHistory ) ] := cLine
+         ENDIF
+      ENDIF
+      nHistIndex := LEN( aHistory ) + 1
+
+      cCommand := AllTrim( cLine, " " )
+      cLine := NIL
+      @ nMaxRow, 0 CLEAR
+      HB_DotInfo( cCommand )
+
+      HB_DotExec( cCommand )
+
+      IF s_nRow >= MaxRow()
+         Scroll( 2, 0, MaxRow(), MaxCol(), 1 )
+         s_nRow := MaxRow() - 1
+      ENDIF
+
+   ENDDO
 
    RETURN
 

@@ -46,9 +46,9 @@ if %UHTTP_INET_SUPPORT%.==no.  SET UHTTP_INET_SOCKET=socket.c
 
 if exist uhttpd.exe uhttpd -s
 
-..\..\..\bin\harbour uhttpd /n /es2 /w3 /i..\..\..\include %UHTTP_GD_DEF% %UHTTP_INET_DEF%
+..\..\..\bin\harbour uhttpd cgifunc cookie /n /es2 /w3 /i..\..\..\include %UHTTP_GD_DEF% %UHTTP_INET_DEF%
 if errorlevel 1 goto DOERROR
-cl -nologo -O2 -W3 -I..\..\..\include uhttpd.c uhttpdc.c %UHTTP_INET_SOCKET% /link /subsystem:windows /libpath:..\..\..\lib hbcpage.lib hbdebug.lib hbvmmt.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib hbct.lib gdi32.lib hbwin.lib hbhsx.lib gtwvt.lib %UHTTP_GD_LIBS% xhb.lib
+cl -nologo -O2 -W3 -I..\..\..\include uhttpd.c cgifunc.c cookie.c uhttpdc.c %UHTTP_INET_SOCKET% /link /subsystem:windows /libpath:..\..\..\lib hbcpage.lib hbdebug.lib hbvmmt.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib hbct.lib gdi32.lib hbwin.lib hbhsx.lib gtwvt.lib %UHTTP_GD_LIBS% xhb.lib
 if errorlevel 1 goto DOERROR
 
 :CLEAN
