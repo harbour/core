@@ -778,7 +778,7 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
          else if( hb_stricmp( "no", buffer ) == 0 )
             s_fStatistic = FALSE;
       }
-#ifdef HB_FM_STATISTICS_DYN_OFF
+#ifndef HB_FM_STATISTICS_DYN_OFF
       else
          s_fStatistic = TRUE;  /* enabled by default */
 #endif /* HB_FM_STATISTICS_DYN_OFF */

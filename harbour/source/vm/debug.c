@@ -57,6 +57,54 @@
 #include "hbapierr.h"
 #include "hbstack.h"
 
+
+/* Existing debug functions
+ * from debug.c:
+ *    __DBGVMSTKGCOUNT()
+ *    __DBGVMSTKGLIST()
+ *    __DBGVMSTKLCOUNT()
+ *    __DBGVMPARLLIST()
+ * for locals:
+ *    __DBGVMVARLGET()              (debugger.prg)
+ *    __DBGVMVARLSET()              (debugger.prg)
+ *    hb_dbg_vmVarLGet(int,int)     (dbgentry.c)
+ *
+ * form classes.c:
+ *    hb_dbg_objSendMessage(...)    (dbgentry.c)
+ *
+ * form hvm.c
+ * general:
+ *    __DBGINVOKEDEBUG()            (debugger.prg)
+ *    __DBGPROCLEVEL()              (debugger.prg)
+ *    hb_dbg_InvokeDebug(BOOL)      (dbgentry.c)
+ *    hb_dbg_ProcLevel()            (dbgentry.c)
+ *    hb_dbg_SetEntry(*ENTRY_FUNC)  (dbgentry.c)
+ * for statics:
+ *    __DBGVMVARSLIST()
+ *    __DBGVMVARSLEN()
+ *    __DBGVMVARSGET()              (debugger.prg)
+ *    __DBGVMVARSSET()              (debugger.prg)
+ *    hb_dbg_vmVarSGet(int,int)     (dbgentry.c)
+ * for globals (unused):
+ *    __DBGVMVARGLIST()
+ *    __DBGVMVARGGET()              (debugger.prg)
+ *    __DBGVMVARGSET()              (debugger.prg)
+ *    hb_dbg_vmVarGCount()          (dbgentry.c)
+ *    hb_dbg_vmVarGGet(int,int)     (dbgentry.c)
+ *
+ *
+ * Information from HVM send to debugger by __DBGENTRY()
+ *    HB_DBG_MODULENAME, cName
+ *    HB_DBG_STATICNAME, nBase,  nIndex, cName
+ *    HB_DBG_LOCALNAME,  nIndex, cName
+ *    HB_DBG_SHOWLINE,   nLine
+ *    HB_DBG_ENDPROC
+ *    HB_DBG_GETENTRY
+ *    HB_DBG_VMQUIT
+ */
+
+
+
 /* $Doc$
  * $FuncName$     AddToArray( <pItem>, <pReturn>, <uiPos> )
  * $Description$  Add <pItem> to array <pReturn> at pos <uiPos>

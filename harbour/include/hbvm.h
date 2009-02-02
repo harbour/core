@@ -78,6 +78,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, USHORT u
    {
       PHB_SYMB pModuleSymbols;      /* pointer to module symbol table */
       USHORT   uiModuleSymbols;     /* number of symbols on that table */
+      USHORT   uiStaticsOffset;     /* ofset of statics base symbol */
       struct _HB_SYMBOLS * pNext;   /* pointer to the next SYMBOLS structure */
       HB_SYMBOLSCOPE hScope;        /* scope collected from all symbols in module used to speed initialization code */
       void *   hDynLib;             /* handler to dynamic library */

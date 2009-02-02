@@ -221,7 +221,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
    pCBlock->pDefSymb  = pBase->item.asSymbol.stackstate->uiClass ?
                         hb_clsMethodSym( pBase ) : pBase->item.asSymbol.value;
    pCBlock->pSymbols  = pSymbols;
-   pCBlock->lStatics  = hb_stackGetStaticsBase();
+   pCBlock->pStatics  = hb_stackGetStaticsBase();
    pCBlock->uiLocals  = uiLocals;
    pCBlock->pLocals   = pLocals;
 
@@ -259,7 +259,7 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const BYTE * pBuffer, ULONG ulLen )
    pCBlock->pDefSymb  = pBase->item.asSymbol.stackstate->uiClass ?
                         hb_clsMethodSym( pBase ) : pBase->item.asSymbol.value;
    pCBlock->pSymbols  = NULL; /* macro-compiled codeblock cannot acces a local symbol table */
-   pCBlock->lStatics  = hb_stackGetStaticsBase();
+   pCBlock->pStatics  = hb_stackGetStaticsBase();
    pCBlock->uiLocals  = 0;
    pCBlock->pLocals   = NULL;
 
@@ -278,7 +278,7 @@ void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockEvaluate(%p)", pItem));
 
-   hb_stackSetStaticsBase( pItem->item.asBlock.value->lStatics );
+   hb_stackSetStaticsBase( pItem->item.asBlock.value->pStatics );
    hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
 }
 

@@ -8,6 +8,41 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-02 11:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/fm.c
+    ! fixed typo in default FM module setting/
+
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/classes.c
+  * harbour/source/debug/dbgentry.c
+    * renamed hb_dbgObjSendMessage() to hb_dbg_objSendMessage() to keep
+      naming convention used for other C debugger functions
+
+  * harbour/source/vm/debug.c
+    * added information about existing debugger functions and where they
+      are used.
+
+  * harbour/include/hbvm.h
+  * harbour/include/hbapidbg.h
+  * harbour/include/hbvmpub.h
+  * harbour/include/hbstack.h
+  * harbour/include/hbapi.h
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/debug/dbgentry.c
+    * changed the method of static variable handling. Now we do not
+      have centralized array of all statics used by application (s_aStatics)
+      but each module uses it's own array to keep statics. The old
+      s_aStatics has been removed. It means that loading new PCODE module
+      from .hrb file or shared/dynamic library does not cause any static
+      table reallocation so it does not creates potential GPF trap for MT
+      code which may operate on static vars.
+      This modification changed a little bit the debugger interface.
+      I also updated some unused by us debug functions like __DBGVMVARSLIST()
+      or __DBGVMVARSLEN() anyhow any 3-rd party debuggers should be
+      updated for new API and modified hb_dbgEntry() syntax.
+
 2009-02-01 10:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + doc/inet.txt
     + Added from xhb.

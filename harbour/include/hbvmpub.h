@@ -201,7 +201,7 @@ typedef struct _HB_SYMB
    {
       PHB_FUNC       pFunPtr;       /* machine code function address for function symbol table entries */
       PHB_PCODEFUNC  pCodeFunc;     /* PCODE function address */
-      LONG           lStaticsBase;  /* base offset to array of statics */
+      void *         pStaticsBase;  /* base offset to array of statics */
    } value;
    PHB_DYNS       pDynSym;          /* pointer to its dynamic symbol if defined */
 } HB_SYMB, * PHB_SYMB;
@@ -230,6 +230,7 @@ typedef struct _HB_FUNC_LIST
 #define HB_FS_LOCAL     ( ( HB_SYMBOLSCOPE ) 0x0200 )
 #define HB_FS_DYNCODE   ( ( HB_SYMBOLSCOPE ) 0x0400 )
 #define HB_FS_DEFERRED  ( ( HB_SYMBOLSCOPE ) 0x0800 )
+#define HB_FS_FRAME     ( ( HB_SYMBOLSCOPE ) 0x1000 )
 
 #define HB_FS_INITEXIT ( HB_FS_INIT | HB_FS_EXIT )
 

@@ -158,7 +158,6 @@ typedef struct
    PHB_ITEM * pBase;          /* stack frame position for the current function call */
    HB_ITEM    Return;         /* latest returned value */
    LONG       wItems;         /* total items that may be holded on the stack */
-   LONG       lStatics;       /* statics base for the current function call */
    LONG       lWithObject;    /* stack offset to base current WITH OBJECT item */
    LONG       lRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */
    USHORT     uiActionRequest;/* request for some action - stop processing of opcodes */
@@ -172,6 +171,7 @@ typedef struct
    void *     hGT;            /* current GT module */
    int        iTSD;           /* number of allocated TSD holders */
    PHB_TSD_HOLDER pTSD;       /* thread specific data holder */
+   void *     pStatics;       /* statics base for the current function call */
    HB_PRIVATE_STACK privates; /* private variables stack */
    HB_SET_STRUCT set;
    int        iKeyPoll;       /* counter for GT/keyboard polling */
@@ -306,8 +306,8 @@ extern void        hb_stackSetRecoverBase( LONG lBase );
 extern USHORT      hb_stackGetActionRequest( void );
 extern void        hb_stackSetActionRequest( USHORT uiAction );
 
-extern void        hb_stackSetStaticsBase( LONG lBase );
-extern LONG        hb_stackGetStaticsBase( void );
+extern void        hb_stackSetStaticsBase( void * pBase );
+extern void *      hb_stackGetStaticsBase( void );
 
 extern PHB_ITEM    hb_stackWithObjectItem( void );
 extern LONG        hb_stackWithObjectOffset( void );
@@ -359,8 +359,8 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
 #define hb_stackReturnItem( )       ( &hb_stack.Return )
 #define hb_stackDateBuffer( )       ( hb_stack.szDate )
 #define hb_stackItemBasePtr( )      ( &hb_stack.pItems )
-#define hb_stackGetStaticsBase( )   ( hb_stack.lStatics )
-#define hb_stackSetStaticsBase( n ) do { hb_stack.lStatics = ( n ); } while ( 0 )
+#define hb_stackGetStaticsBase( )   ( hb_stack.pStatics )
+#define hb_stackSetStaticsBase( p ) do { hb_stack.pStatics = ( p ); } while ( 0 )
 #define hb_stackGetRecoverBase( )   ( hb_stack.lRecoverBase )
 #define hb_stackSetRecoverBase( n ) do { hb_stack.lRecoverBase = ( n ); } while( 0 )
 #define hb_stackGetActionRequest( ) ( hb_stack.uiActionRequest )

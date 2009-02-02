@@ -650,7 +650,8 @@ HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, USHORT uiParams )
    }
 
    pFrame->lBaseItem = hb_stack.pBase - hb_stack.pItems;
-   pFrame->lStatics = hb_stack.lStatics;
+   pFrame->pStatics = hb_stack.pStatics;
+   /* as some type of protection we can set hb_stack.pStatics to NULL here */
    pFrame->ulPrivateBase = hb_memvarGetPrivatesBase();
    pFrame->uiClass = pFrame->uiMethod = pFrame->uiLineNo = 0;
    pFrame->fDebugging = FALSE;
@@ -681,7 +682,7 @@ void hb_stackOldFrame( PHB_STACK_STATE pFrame )
    while( hb_stack.pPos > hb_stack.pBase );
 
    hb_stack.pBase = hb_stack.pItems + pFrame->lBaseItem;
-   hb_stack.lStatics = pFrame->lStatics;
+   hb_stack.pStatics = pFrame->pStatics;
    hb_memvarSetPrivatesBase( pFrame->ulPrivateBase );
 }
 
@@ -854,17 +855,17 @@ PHB_STACKRDD hb_stackRDD( void )
 
 
 #undef hb_stackGetStaticsBase
-LONG hb_stackGetStaticsBase( void )
+void * hb_stackGetStaticsBase( void )
 {
    HB_STACK_TLS_PRELOAD
-   return hb_stack.lStatics;
+   return hb_stack.pStatics;
 }
 
 #undef hb_stackSetStaticsBase
-void hb_stackSetStaticsBase( LONG lBase )
+void hb_stackSetStaticsBase( void * pBase )
 {
    HB_STACK_TLS_PRELOAD
-   hb_stack.lStatics = lBase;
+   hb_stack.pStatics = pBase;
 }
 
 #undef hb_stackGetRecoverBase

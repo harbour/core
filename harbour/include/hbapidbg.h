@@ -60,17 +60,17 @@ HB_EXTERN_BEGIN
 /*Debugger API */
 
 /* HVM debugger function */
-typedef void (*HB_DBGENTRY_FUNC) ( int , int , char *, int , int );
+typedef void (*HB_DBGENTRY_FUNC) ( int , int , char *, int , PHB_ITEM );
 HB_EXPORT extern HB_DBGENTRY_FUNC hb_dbg_SetEntry( HB_DBGENTRY_FUNC pFunDbgEntry );
 HB_EXPORT extern BOOL hb_dbg_InvokeDebug( BOOL bInvoke );
 HB_EXPORT extern ULONG hb_dbg_ProcLevel( void );
-HB_EXPORT extern PHB_ITEM hb_dbg_vmVarSGet( int nStatic, int nOffset );
+HB_EXPORT extern PHB_ITEM hb_dbg_vmVarSGet( PHB_ITEM pStaticsBase, int nOffset );
 HB_EXPORT extern PHB_ITEM hb_dbg_vmVarLGet( int iLevel, int iLocal );
 HB_EXPORT extern ULONG hb_dbg_vmVarGCount( void );
 HB_EXPORT extern PHB_ITEM hb_dbg_vmVarGGet( int nGlobal, int nOffset );
 
 /* internal debugger function */
-HB_EXPORT extern void hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame );
+HB_EXPORT extern void hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, PHB_ITEM pFrame );
 HB_EXPORT extern void hb_dbgAddBreak( void *handle, char *cModule, int nLine, char *szFunction );
 HB_EXPORT extern void hb_dbgAddWatch( void *handle, char *szExpr, BOOL bTrace );
 HB_EXPORT extern void hb_dbgDelBreak( void *handle, int nBreak );

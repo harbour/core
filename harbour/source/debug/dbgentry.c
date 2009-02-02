@@ -107,7 +107,10 @@ typedef struct
 {
    char *szName;
    char cType;
-   int nFrame;
+   union {
+      int num;
+      PHB_ITEM ptr;
+   } frame;
    int nIndex;
 } HB_VARINFO;
 
@@ -181,9 +184,9 @@ static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO *aVars );
 static void     hb_dbgAddLocal( HB_DEBUGINFO *info, char *szName, int nIndex, int nFrame );
 static void     hb_dbgAddModule( HB_DEBUGINFO *info, char *szName );
 static void     hb_dbgAddStack( HB_DEBUGINFO *info, char *szName, int nProcLevel );
-static void     hb_dbgAddStatic( HB_DEBUGINFO *info, char *szName, int nIndex, int nFrame );
+static void     hb_dbgAddStatic( HB_DEBUGINFO *info, char *szName, int nIndex, PHB_ITEM pFrame );
+static void     hb_dbgAddVar( int *nVars, HB_VARINFO **aVars, char *szName, char cType, int nIndex, int nFrame, PHB_ITEM pFrame );
 static void     hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem );
-static void     hb_dbgAddVar( int *nVars, HB_VARINFO **aVars, char *szName, char cType, int nIndex, int nFrame );
 static void     hb_dbgEndProc( HB_DEBUGINFO *info );
 static PHB_ITEM hb_dbgEval( HB_DEBUGINFO *info, HB_WATCHPOINT *watch );
 static PHB_ITEM hb_dbgEvalMacro( char *szExpr, PHB_ITEM pItem );
@@ -323,7 +326,10 @@ static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO *aVars )
       hb_arraySetC( aVar, 1, aVars[ i ].szName );
       hb_arraySetNL( aVar, 2, aVars[ i ].nIndex );
       hb_arraySetCL( aVar, 3, &aVars[ i ].cType, 1 );
-      hb_arraySetNL( aVar, 4, aVars[ i ].nFrame );
+      if( aVars[ i ].cType == 'S' )
+         hb_arraySet( aVar, 4, aVars[ i ].frame.ptr );
+      else
+         hb_arraySetNL( aVar, 4, aVars[ i ].frame.num );
 
       hb_arraySet( pArray, i + 1, aVar );
       hb_itemRelease( aVar );
@@ -332,7 +338,7 @@ static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO *aVars )
 }
 
 
-void hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame )
+void hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, PHB_ITEM pFrame )
 {
    int i;
    ULONG nProcLevel;
@@ -396,9 +402,9 @@ void hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame )
          return;
 
       case HB_DBG_STATICNAME:
-         HB_TRACE( HB_TR_DEBUG, ( "STATICNAME %s index %d frame %d", szName, nIndex, nFrame ) );
+         HB_TRACE( HB_TR_DEBUG, ( "STATICNAME %s index %d frame %p", szName, nIndex, pFrame ) );
 
-         hb_dbgAddStatic( info, szName, nIndex, nFrame );
+         hb_dbgAddStatic( info, szName, nIndex, pFrame );
          return;
 
       case HB_DBG_SHOWLINE:
@@ -574,13 +580,13 @@ static void hb_dbgAddLocal( HB_DEBUGINFO *info, char *szName, int nIndex, int nF
    {
       HB_MODULEINFO *module = &info->aModules[ info->nModules - 1 ];
 
-      hb_dbgAddVar( &module->nGlobals, &module->aGlobals, szName, 'G', nIndex, hb_dbg_vmVarGCount() );
+      hb_dbgAddVar( &module->nGlobals, &module->aGlobals, szName, 'G', nIndex, hb_dbg_vmVarGCount(), NULL );
    }
    else
    {
       HB_CALLSTACKINFO *top = &info->aCallStack[ info->nCallStackLen - 1 ];
 
-      hb_dbgAddVar( &top->nLocals, &top->aLocals, szName, 'L', nIndex, nFrame );
+      hb_dbgAddVar( &top->nLocals, &top->aLocals, szName, 'L', nIndex, nFrame, NULL );
    }
 }
 
@@ -659,26 +665,26 @@ static void hb_dbgAddStack( HB_DEBUGINFO *info, char *szName, int nProcLevel )
 }
 
 
-static void hb_dbgAddStatic( HB_DEBUGINFO *info, char *szName, int nIndex, int nFrame )
+static void hb_dbgAddStatic( HB_DEBUGINFO *info, char *szName, int nIndex, PHB_ITEM pFrame )
 {
    if ( info->bInitGlobals )
    {
       HB_MODULEINFO *module = &info->aModules[ info->nModules - 1 ];
 
       hb_dbgAddVar( &module->nExternGlobals, &module->aExternGlobals, szName,
-                    'G', nIndex, hb_dbg_vmVarGCount() );
+                    'G', nIndex, hb_dbg_vmVarGCount(), NULL );
    }
    else if ( info->bInitStatics )
    {
       HB_MODULEINFO *module = &info->aModules[ info->nModules - 1 ];
 
-      hb_dbgAddVar( &module->nStatics, &module->aStatics, szName, 'S', nIndex, nFrame );
+      hb_dbgAddVar( &module->nStatics, &module->aStatics, szName, 'S', nIndex, 0, pFrame );
    }
    else
    {
       HB_CALLSTACKINFO *top = &info->aCallStack[ info->nCallStackLen - 1 ];
 
-      hb_dbgAddVar( &top->nStatics, &top->aStatics, szName, 'S', nIndex, nFrame );
+      hb_dbgAddVar( &top->nStatics, &top->aStatics, szName, 'S', nIndex, 0, pFrame );
    }
 }
 
@@ -763,7 +769,7 @@ static void hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem )
 }
 
 
-static void hb_dbgAddVar( int *nVars, HB_VARINFO **aVars, char *szName, char cType, int nIndex, int nFrame )
+static void hb_dbgAddVar( int *nVars, HB_VARINFO **aVars, char *szName, char cType, int nIndex, int nFrame, PHB_ITEM pFrame )
 {
    HB_VARINFO *var;
 
@@ -771,7 +777,10 @@ static void hb_dbgAddVar( int *nVars, HB_VARINFO **aVars, char *szName, char cTy
    var->szName = szName;
    var->cType = cType;
    var->nIndex = nIndex;
-   var->nFrame = nFrame;
+   if( cType == 'S' )
+      var->frame.ptr = pFrame;
+   else
+      var->frame.num = nFrame;
 }
 
 
@@ -1223,7 +1232,7 @@ static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO *info, HB_WATCHPOINT *watch )
          if ( !strcmp( name, var->szName ) )
          {
             scopes[ i ].cType = 'L';
-            scopes[ i ].nFrame = nProcLevel - var->nFrame;
+            scopes[ i ].frame.num = nProcLevel - var->frame.num;
             scopes[ i ].nIndex = var->nIndex;
             hb_itemArrayPut( aVars, i + 1, hb_dbgVarGet( &scopes[ i ] ) );
             break;
@@ -1238,7 +1247,7 @@ static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO *info, HB_WATCHPOINT *watch )
          if ( !strcmp( name, var->szName ) )
          {
             scopes[ i ].cType = 'S';
-            scopes[ i ].nFrame = var->nFrame;
+            scopes[ i ].frame.ptr = var->frame.ptr;
             scopes[ i ].nIndex = var->nIndex;
             hb_itemArrayPut( aVars, i + 1, hb_dbgVarGet( &scopes[ i ] ) );
             break;
@@ -1255,7 +1264,7 @@ static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO *info, HB_WATCHPOINT *watch )
             if ( !strcmp( name, var->szName ) )
             {
                scopes[ i ].cType = 'S';
-               scopes[ i ].nFrame = var->nFrame;
+               scopes[ i ].frame.ptr = var->frame.ptr;
                scopes[ i ].nIndex = var->nIndex;
                hb_itemArrayPut( aVars, i + 1, hb_dbgVarGet( &scopes[ i ] ) );
                break;
@@ -1270,7 +1279,7 @@ static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO *info, HB_WATCHPOINT *watch )
             if ( !strcmp( name, var->szName ) )
             {
                scopes[ i ].cType = 'G';
-               scopes[ i ].nFrame = var->nFrame;
+               scopes[ i ].frame.num = var->frame.num;
                scopes[ i ].nIndex = var->nIndex;
                hb_itemArrayPut( aVars, i + 1, hb_dbgVarGet( &scopes[ i ] ) );
                break;
@@ -1285,7 +1294,7 @@ static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO *info, HB_WATCHPOINT *watch )
             if ( !strcmp( name, var->szName ) )
             {
                scopes[ i ].cType = 'G';
-               scopes[ i ].nFrame = var->nFrame;
+               scopes[ i ].frame.num = var->frame.num;
                scopes[ i ].nIndex = var->nIndex;
                hb_itemArrayPut( aVars, i + 1, hb_dbgVarGet( &scopes[ i ] ) );
                break;
@@ -1541,11 +1550,11 @@ static PHB_ITEM hb_dbgVarGet( HB_VARINFO *scope )
    switch ( scope->cType )
    {
       case 'G':
-         return hb_dbg_vmVarGGet( scope->nFrame, scope->nIndex );
+         return hb_dbg_vmVarGGet( scope->frame.num, scope->nIndex );
       case 'L':
-         return hb_dbg_vmVarLGet( scope->nFrame, scope->nIndex );
+         return hb_dbg_vmVarLGet( scope->frame.num, scope->nIndex );
       case 'S':
-         return hb_dbg_vmVarSGet( scope->nFrame, scope->nIndex );
+         return hb_dbg_vmVarSGet( scope->frame.ptr, scope->nIndex );
       case 'M':
       {
          PHB_DYNS pDyn;
@@ -1724,6 +1733,6 @@ HB_FUNC( __DBGSETWATCH )
 
 HB_FUNC( __DBGSENDMSG )
 {
-   hb_dbgObjSendMessage( hb_parnl( 1 ), hb_param( 2, HB_IT_ANY ),
-                         hb_param( 3, HB_IT_ANY ), 4 );
+   hb_dbg_objSendMessage( hb_parnl( 1 ), hb_param( 2, HB_IT_ANY ),
+                          hb_param( 3, HB_IT_ANY ), 4 );
 }

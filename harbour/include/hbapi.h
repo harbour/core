@@ -242,8 +242,8 @@ struct _HB_EXTREF;
 typedef struct _HB_STACK_STATE
 {
    LONG     lBaseItem;        /* stack base offset of previous func/proc */
-   LONG     lStatics;         /* statics offset of previous func/proc */
    ULONG    ulPrivateBase;    /* memvars base offset of previous func/proc */
+   void *   pStatics;         /* statics frame of previous func/proc */
    USHORT   uiClass;          /* class when message is sent */
    USHORT   uiMethod;         /* number of class method */
    USHORT   uiLineNo;         /* current line number */
@@ -410,7 +410,7 @@ typedef struct _HB_CODEBLOCK
    PHB_SYMB    pSymbols;     /* codeblocks symbols */
    PHB_SYMB    pDefSymb;     /* symbol where the codeblock was created */
    PHB_ITEM    pLocals;      /* table with referenced local variables */
-   LONG        lStatics;     /* STATICs base address */
+   void *      pStatics;     /* STATICs base frame */
    USHORT      uiLocals;     /* number of referenced local variables */
    SHORT       dynBuffer;    /* is pcode buffer allocated dynamically, SHORT used instead of BOOL intentionally to force optimal alignment */
 } HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;

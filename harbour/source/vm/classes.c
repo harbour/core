@@ -2377,7 +2377,7 @@ static PHB_SYMB hb_objGetFuncSym( PHB_ITEM pItem )
 }
 
 /* send message which allows to set execution context for debugger */
-void hb_dbgObjSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage, int iParamOffset )
+void hb_dbg_objSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage, int iParamOffset )
 {
    PHB_DYNS pMsgSym;
 
@@ -2441,7 +2441,7 @@ void hb_dbgObjSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage, 
       hb_vmSend( uiParams );
    }
    else
-      hb_errRT_BASE( EG_ARG, 3000, NULL, "hb_dbgObjSendMessage()", 2, pObject, pMsgSym );
+      hb_errRT_BASE( EG_ARG, 3000, NULL, "hb_dbg_objSendMessage()", 2, pObject, pMsgSym );
 }
 
 static USHORT hb_clsUpdateScope( USHORT uiScope, BOOL fAssign )
