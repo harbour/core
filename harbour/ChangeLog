@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-02 23:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbct/keysec.prg
+  * contrib/hbct/keytime.prg
+  * contrib/hbct/showtime.prg
+  * contrib/hbct/ctdummy.prg
+    * STATICs converted to THREAD STATICs.
+
+  * contrib/xhb/hblognet.prg
+  * contrib/xhb/hblog.prg
+    + Permanently enabled conditional HB_THREAD_SUPPORT.
+
+  ; TOFIX: - hbwhat/wincore.prg
+           - xhb/cstruct.prg
+           Needs reviewing and either mutex protection
+           for STATICs or conversion to THREAD STATIC.
+
+  ; TOFIX: C code uses much more statics, some of these make
+           code clearly broken for MT.
+
+           Shouldn't we add core support for thread specific
+           cargo (user defined data) area available for 3rd
+           party libs/apps?
+           Same could be added to GT structure to hold
+           GT instance specific user defined data.
+
 2009-02-02 22:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbct/fcopy.prg
   * contrib/hbtpathy/telepath.prg

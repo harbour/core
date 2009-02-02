@@ -52,14 +52,14 @@
 
 #include "common.ch"
 
-STATIC s_hIdle
+THREAD STATIC t_hIdle
 
 FUNCTION KeyTime( nKey, cClockTime )
    LOCAL nHour, nMin, nSec, nLast
 
-   IF s_hIdle != NIL
-      HB_IDLEDEL( s_hIdle )
-      s_hIdle := NIL
+   IF t_hIdle != NIL
+      HB_IDLEDEL( t_hIdle )
+      t_hIdle := NIL
    ENDIF
 
    IF ISNUMBER( nKey ) .AND. ISCHARACTER( cClockTime )
@@ -67,7 +67,7 @@ FUNCTION KeyTime( nKey, cClockTime )
       nMin  := VAL( SUBSTR( cClockTime, 4, 2 ) )
       nSec  := VAL( SUBSTR( cClockTime, 7, 2 ) )
       nLast := -1
-      s_hIdle := HB_IDLEADD( {|| doKeyTime( nKey, cClockTime, nHour, nMin, nSec, ;
+      t_hIdle := HB_IDLEADD( {|| doKeyTime( nKey, cClockTime, nHour, nMin, nSec, ;
                                             @nLast ) } )
       RETURN .T.
    ENDIF
@@ -84,8 +84,8 @@ STATIC PROCEDURE doKeyTime( nKey, cClockTime, nHour, nMin, nSec, nLast )
          __KEYBOARD( nKey )
          nLast := nHr
          IF nHr == 23
-            HB_IDLEDEL( s_hIdle )
-            s_hIdle := NIL
+            HB_IDLEDEL( t_hIdle )
+            t_hIdle := NIL
          ENDIF
       ENDIF
    ELSEIF nMin == 99 .AND. nHr == nHour
@@ -93,8 +93,8 @@ STATIC PROCEDURE doKeyTime( nKey, cClockTime, nHour, nMin, nSec, nLast )
          __KEYBOARD( nKey )
          nLast := nMn
          IF nMn == 59
-            HB_IDLEDEL( s_hIdle )
-            s_hIdle := NIL
+            HB_IDLEDEL( t_hIdle )
+            t_hIdle := NIL
          ENDIF
       ENDIF
    ELSEIF nSec == 99 .AND. nHr == nHour .AND. nMn == nMin
@@ -102,13 +102,13 @@ STATIC PROCEDURE doKeyTime( nKey, cClockTime, nHour, nMin, nSec, nLast )
          __KEYBOARD( nKey )
          nLast := nSc
          IF nSc == 59
-            HB_IDLEDEL( s_hIdle )
-            s_hIdle := NIL
+            HB_IDLEDEL( t_hIdle )
+            t_hIdle := NIL
          ENDIF
       ENDIF
    ELSEIF ccTime > cClockTime
       __KEYBOARD( nKey )
-      HB_IDLEDEL( s_hIdle )
-      s_hIdle := NIL
+      HB_IDLEDEL( t_hIdle )
+      t_hIdle := NIL
    ENDIF
    RETURN

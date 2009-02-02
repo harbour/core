@@ -53,6 +53,8 @@
 #include "hbclass.ch"
 #include "common.ch"
 
+#define HB_THREAD_SUPPORT
+
 CLASS HB_LogEmail FROM HB_LogChannel
    DATA cServer
    DATA cAddress        INIT "log@xharbour.org"

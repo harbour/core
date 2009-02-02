@@ -52,14 +52,14 @@
 
 #include "common.ch"
 
-STATIC s_hIdle
+THREAD STATIC t_hIdle
 
 FUNCTION KeySec( nKey, nTime, nCounter, lMode )
    LOCAL nSeconds
 
-   IF s_hIdle != NIL
-      HB_IDLEDEL( s_hIdle )
-      s_hIdle := NIL
+   IF t_hIdle != NIL
+      HB_IDLEDEL( t_hIdle )
+      t_hIdle := NIL
    ENDIF
 
    IF ISNUMBER( nKey )
@@ -76,7 +76,7 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
       ENDIF
 
       nSeconds := SECONDS()
-      s_hIdle := HB_IDLEADD( {|| doKeySec( nKey, nTime, lMode, ;
+      t_hIdle := HB_IDLEADD( {|| doKeySec( nKey, nTime, lMode, ;
                                            @nCounter, @nSeconds ) } )
       RETURN .T.
    ENDIF
@@ -94,8 +94,8 @@ STATIC PROCEDURE doKeySec( nKey, nTime, lMode, nCounter, nSeconds )
          nCounter--
       ENDIF
       IF nCounter == 0
-         HB_IDLEDEL( s_hIdle )
-         s_hIdle := NIL
+         HB_IDLEDEL( t_hIdle )
+         t_hIdle := NIL
       ELSE
          nSeconds := nSec
       ENDIF

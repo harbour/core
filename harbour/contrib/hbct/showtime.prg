@@ -54,16 +54,16 @@
 #include "common.ch"
 
 FUNCTION SHOWTIME( nRow, nCol, lNoSec, cColor, l12, lAmPm )
-   STATIC s_hTimer := NIL
+   THREAD STATIC t_hTimer := NIL
 
    IF ISNUMBER( nRow ) .AND. nRow >= 0 .AND. nRow <= MAXROW( .T. )
-      IF s_hTimer != NIL
-         HB_IDLEDEL( s_hTimer )
+      IF t_hTimer != NIL
+         HB_IDLEDEL( t_hTimer )
       ENDIF
-      s_hTimer := HB_IDLEADD( {|| _HB_CTDSPTIME( nRow, nCol, lNoSec, cColor, ;
+      t_hTimer := HB_IDLEADD( {|| _HB_CTDSPTIME( nRow, nCol, lNoSec, cColor, ;
                                                  l12, lAmPm ) } )
-   ELSEIF s_hTimer != NIL
-      HB_IDLEDEL( s_hTimer )
-      s_hTimer := NIL
+   ELSEIF t_hTimer != NIL
+      HB_IDLEDEL( t_hTimer )
+      t_hTimer := NIL
    ENDIF
 RETURN ""

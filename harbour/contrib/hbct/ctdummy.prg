@@ -64,8 +64,8 @@ FUNCTION setkxlat( nOrgKeyValue, nNewKeyValue )
    RETURN lAccepted
 
 FUNCTION dsetkbios( lNewKeyboardMode )
-   STATIC s_lKeyboardMode := .T.
+   THREAD STATIC t_lKeyboardMode := .T.
 
    HB_SYMBOL_UNUSED( lNewKeyboardMode )
 
-   RETURN s_lKeyboardMode
+   RETURN t_lKeyboardMode
