@@ -14,10 +14,10 @@ optimized at compile time:
    - Clipper compatible:
 
       AT( <cConst1>, <cConst2> ) // Clipper wrongly calculates
-                                 // "" $ <cConst> as .T.
+                                 // AT( "", <cConst> ) as 1
       CHR( <nConst> )
       UPPER( <cConst> ) // <cConst> cannot contain characters different then
-                           [0-9A-Za-z]
+                           [0-9A-Za-z ]
 
    - Harbour extension:
 
