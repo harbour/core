@@ -30,7 +30,7 @@
 //PUBLIC lPrevInstance
 //PUBLIC hThisInstance
 
-THREAD STATIC s_hWndActive := 0
+THREAD STATIC t_hWndActive := 0
 
 STATIC s_aClass:={}  // cClass,nType,{{anWM,bAction,nProc,0}}
 STATIC s_aWindow:={} // hWnd, nType, {{anWM,bAction,nProc,nOldProc}}
@@ -323,7 +323,7 @@ Function __KillWindow( hWnd )
 // to the codeblock
 //
 Function WHT__ProcessDlgMsg( hDlg, nMsg, nwParam, nlParam )
-   Local nIndex 
+   Local nIndex
    Local nResult
    Local n
 
@@ -659,10 +659,10 @@ Function WHT_WinProcCount( hWnd, nProc )
 
 Function WHT_SelectWindow( hNewWnd )
 
-   Local hOldActive := s_hWndActive
+   Local hOldActive := t_hWndActive
 
    If hNewWnd != NIL .AND. VWN_IsWindow( hNewWnd )
-      s_hWndActive := hNewWnd
+      t_hWndActive := hNewWnd
    EndIf
 
    Return( hOldActive )

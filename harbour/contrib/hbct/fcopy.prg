@@ -21,7 +21,7 @@
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  *    added FILECDATI() and rewritten above functions for CT3 compatibility
- *    and some problems fixing, 
+ *    and some problems fixing,
  *
  * www - http://www.harbour-project.org
  *
@@ -72,10 +72,10 @@
 
 #define  F_BLOCK   512
 
-THREAD STATIC s_hSrcFile := -1
-THREAD STATIC s_lSetDaTi := .T.
-THREAD STATIC s_fileDate
-THREAD STATIC s_fileTime
+THREAD STATIC t_hSrcFile := -1
+THREAD STATIC t_lSetDaTi := .T.
+THREAD STATIC t_fileDate
+THREAD STATIC t_fileTime
 
 /*
  * FileCopy()
@@ -91,15 +91,15 @@ FUNCTION FILECOPY( cSource, cDest, lMode )
    IF !ISLOGICAL( lMode )
       lMode := .F.
    ENDIF
-   IF s_hSrcFile != -1
-      FCLOSE( s_hSrcFile )
+   IF t_hSrcFile != -1
+      FCLOSE( t_hSrcFile )
    ENDIF
-   s_hSrcFile := FOPEN( cSource, FO_READ )
-   IF s_hSrcFile != -1
+   t_hSrcFile := FOPEN( cSource, FO_READ )
+   IF t_hSrcFile != -1
       hDstFile := FCREATE( cDest )
       IF hDstFile != -1
          DO WHILE !lDone
-            nSrcBytes := FREAD( s_hSrcFile, @cBuffer, F_BLOCK )
+            nSrcBytes := FREAD( t_hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0
                lDone := .T.
                EXIT
@@ -114,30 +114,30 @@ FUNCTION FILECOPY( cSource, cDest, lMode )
          ENDDO
          FCLOSE( hDstFile )
          IF lDone .OR. !lMode
-            FCLOSE( s_hSrcFile )
-            s_hSrcFile := -1
+            FCLOSE( t_hSrcFile )
+            t_hSrcFile := -1
          ENDIF
-         s_fileDate := FILEDATE( cSource )
-         s_fileTime := FILETIME( cSource )
-         IF s_lSetDaTi
-            SETFDATI( cDest, s_fileDate, s_fileTime )
+         t_fileDate := FILEDATE( cSource )
+         t_fileTime := FILETIME( cSource )
+         IF t_lSetDaTi
+            SETFDATI( cDest, t_fileDate, t_fileTime )
          ENDIF
       ELSE
-         FCLOSE( s_hSrcFile )
-         s_hSrcFile := -1
+         FCLOSE( t_hSrcFile )
+         t_hSrcFile := -1
       ENDIF
    ENDIF
 RETURN nTotBytes
 
 
 FUNCTION FILECOPEN()
-RETURN s_hSrcFile != -1
+RETURN t_hSrcFile != -1
 
 
 FUNCTION FILECDATI( lNewMode )
-   LOCAL lOldMode := s_lSetDaTi
+   LOCAL lOldMode := t_lSetDaTi
    IF ISLOGICAL( lNewMode )
-      s_lSetDaTi := lNewMode
+      t_lSetDaTi := lNewMode
    ENDIF
 RETURN lOldMode
 
@@ -148,11 +148,11 @@ FUNCTION FILECCONT( cDest )
    LOCAL lDone := .F.
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
-   IF s_hSrcFile != -1
+   IF t_hSrcFile != -1
       hDstFile := FCREATE( cDest )
       IF hDstFile != -1
          DO WHILE !lDone
-            nSrcBytes := FREAD( s_hSrcFile, @cBuffer, F_BLOCK )
+            nSrcBytes := FREAD( t_hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0
                lDone := 0
                EXIT
@@ -167,11 +167,11 @@ FUNCTION FILECCONT( cDest )
          ENDDO
          FCLOSE( hDstFile )
          IF lDone
-            FCLOSE( s_hSrcFile )
-            s_hSrcFile := -1
+            FCLOSE( t_hSrcFile )
+            t_hSrcFile := -1
          ENDIF
-         IF s_lSetDaTi
-            SETFDATI( cDest, s_fileDate, s_fileTime )
+         IF t_lSetDaTi
+            SETFDATI( cDest, t_fileDate, t_fileTime )
          ENDIF
       ENDIF
    ENDIF
@@ -179,9 +179,9 @@ RETURN nTotBytes
 
 
 FUNCTION FILECCLOSE()
-   IF s_hSrcFile != -1
-      FCLOSE( s_hSrcFile )
-      s_hSrcFile := -1
+   IF t_hSrcFile != -1
+      FCLOSE( t_hSrcFile )
+      t_hSrcFile := -1
       RETURN .T.
    ENDIF
 RETURN .F.

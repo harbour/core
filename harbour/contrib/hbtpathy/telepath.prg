@@ -64,8 +64,8 @@
 
 
 
-THREAD STATIC s_aPorts               // Array with port info
-THREAD STATIC s_nErrorCode := 0      // Error code from last operation, 0 if no error
+THREAD STATIC t_aPorts               // Array with port info
+THREAD STATIC t_nErrorCode := 0      // Error code from last operation, 0 if no error
 
 
 
@@ -74,7 +74,7 @@ function tp_baud( nPort, nNewBaud )
 
    default nNewBaud to 0
 
-   if ! isport( nPort ) .OR. Empty( s_aPorts[ nPort, TPFP_NAME ] )
+   if ! isport( nPort ) .OR. Empty( t_aPorts[ nPort, TPFP_NAME ] )
       return TE_NOPORT
    endif
 
@@ -83,13 +83,13 @@ function tp_baud( nPort, nNewBaud )
    endif
 
    if nNewBaud > 0
-      if p_InitPortSpeed( s_aPorts[ nPort, TPFP_HANDLE ] ,;
+      if p_InitPortSpeed( t_aPorts[ nPort, TPFP_HANDLE ] ,;
                           nNewBaud,;
-                          s_aPorts[ nPort, TPFP_DBITS  ] ,;
-                          s_aPorts[ nPort, TPFP_PARITY ] ,;
-                          s_aPorts[ nPort, TPFP_SBITS  ] ) == 0
+                          t_aPorts[ nPort, TPFP_DBITS  ] ,;
+                          t_aPorts[ nPort, TPFP_PARITY ] ,;
+                          t_aPorts[ nPort, TPFP_SBITS  ] ) == 0
 
-         s_aPorts[ nPort, TPFP_BAUD ] := nNewBaud
+         t_aPorts[ nPort, TPFP_BAUD ] := nNewBaud
 
 
       else
@@ -97,7 +97,7 @@ function tp_baud( nPort, nNewBaud )
       endif
    endif
 
-return s_aPorts[ nPort, TPFP_BAUD ]
+return t_aPorts[ nPort, TPFP_BAUD ]
 
 
 
@@ -148,16 +148,16 @@ function tp_close( nPort, nTimeout )
       tp_flush( nPort, nTimeout )
    endif
 
-   if s_aPorts[ nPort, TPFP_HANDLE ] >= 0
+   if t_aPorts[ nPort, TPFP_HANDLE ] >= 0
 
-      fClose( s_aPorts[ nPort, TPFP_HANDLE ] )
+      fClose( t_aPorts[ nPort, TPFP_HANDLE ] )
 
       /* Port parameters should stay the same for the case the port
          gets reopened
       */
-      s_aPorts[ nPort, TPFP_OC ] := .F.
-      s_aPorts[ nPort, TPFP_INBUF ] := ""
-      s_aPorts[ nPort, TPFP_HANDLE ] := -1
+      t_aPorts[ nPort, TPFP_OC ] := .F.
+      t_aPorts[ nPort, TPFP_INBUF ] := ""
+      t_aPorts[ nPort, TPFP_HANDLE ] := -1
    endif
 
 return 0
@@ -170,15 +170,15 @@ function tp_reopen( nPort, nInSize, nOutSize )
 
    default nInSize to 1536, nOutSize to 1536
 
-   if ! isport( nPort ) .OR. Empty( s_aPorts[ nPort, TPFP_NAME ] )
+   if ! isport( nPort ) .OR. Empty( t_aPorts[ nPort, TPFP_NAME ] )
       return TE_NOPORT
    endif
 
-   cPortname   := s_aPorts[ nPort, TPFP_NAME ]
-   nBaud       := s_aPorts[ nPort, TPFP_BAUD ]
-   nData       := s_aPorts[ nPort, TPFP_DBITS ]
-   cParity     := s_aPorts[ nPort, TPFP_PARITY ]
-   nStop       := s_aPorts[ nPort, TPFP_SBITS  ]
+   cPortname   := t_aPorts[ nPort, TPFP_NAME ]
+   nBaud       := t_aPorts[ nPort, TPFP_BAUD ]
+   nData       := t_aPorts[ nPort, TPFP_DBITS ]
+   cParity     := t_aPorts[ nPort, TPFP_PARITY ]
+   nStop       := t_aPorts[ nPort, TPFP_SBITS  ]
 
 return tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortName )
 
@@ -230,37 +230,37 @@ function tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
       return TE_NOPORT
    endif
 
-   s_aPorts[ nPort, TPFP_NAME   ] := cPortname
-   s_aPorts[ nPort, TPFP_BAUD   ] := nBaud
-   s_aPorts[ nPort, TPFP_DBITS  ] := nData
-   s_aPorts[ nPort, TPFP_PARITY ] := cParity
-   s_aPorts[ nPort, TPFP_SBITS  ] := nStop
-   s_aPorts[ nPort, TPFP_OC     ] := .F.
-   s_aPorts[ nPort, TPFP_INBUF  ] := ""
-   s_aPorts[ nPort, TPFP_INBUF_SIZE ] := nInSize
+   t_aPorts[ nPort, TPFP_NAME   ] := cPortname
+   t_aPorts[ nPort, TPFP_BAUD   ] := nBaud
+   t_aPorts[ nPort, TPFP_DBITS  ] := nData
+   t_aPorts[ nPort, TPFP_PARITY ] := cParity
+   t_aPorts[ nPort, TPFP_SBITS  ] := nStop
+   t_aPorts[ nPort, TPFP_OC     ] := .F.
+   t_aPorts[ nPort, TPFP_INBUF  ] := ""
+   t_aPorts[ nPort, TPFP_INBUF_SIZE ] := nInSize
 
    #ifdef __PLATFORM__LINUX
    // Maybe we should have a p_Open() on every platform
-   s_aPorts[ nPort, TPFP_HANDLE ] := p_Open( cPortname )
+   t_aPorts[ nPort, TPFP_HANDLE ] := p_Open( cPortname )
    #else
-   s_aPorts[ nPort, TPFP_HANDLE ] := fOpen( cPortname, FO_READWRITE )
+   t_aPorts[ nPort, TPFP_HANDLE ] := fOpen( cPortname, FO_READWRITE )
    #endif
 
-   if s_aPorts[ nPort, TPFP_HANDLE ] >= 0
+   if t_aPorts[ nPort, TPFP_HANDLE ] >= 0
 
       /* low level C functions are prefixed p_ (don't ask me why :)) */
-      if ( nRes := p_InitPortSpeed( s_aPorts[ nPort, TPFP_HANDLE ] ,;
-                                    s_aPorts[ nPort, TPFP_BAUD   ] ,;
-                                    s_aPorts[ nPort, TPFP_DBITS  ] ,;
-                                    s_aPorts[ nPort, TPFP_PARITY ] ,;
-                                    s_aPorts[ nPort, TPFP_SBITS  ] ) ) == 0
+      if ( nRes := p_InitPortSpeed( t_aPorts[ nPort, TPFP_HANDLE ] ,;
+                                    t_aPorts[ nPort, TPFP_BAUD   ] ,;
+                                    t_aPorts[ nPort, TPFP_DBITS  ] ,;
+                                    t_aPorts[ nPort, TPFP_PARITY ] ,;
+                                    t_aPorts[ nPort, TPFP_SBITS  ] ) ) == 0
 
-         s_aPorts[ nPort, TPFP_OC ] := .T.
+         t_aPorts[ nPort, TPFP_OC ] := .T.
          return nRes
 
       else
 
-         tp_Close( s_aPorts[ nPort, TPFP_HANDLE ] )
+         tp_Close( t_aPorts[ nPort, TPFP_HANDLE ] )
          return nRes
 
       endif
@@ -270,15 +270,15 @@ function tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    // set error code to a static var to have tp_error() work as expected
    //cnHandle := ferror()
 
-   s_aPorts[ nPort, TPFP_NAME   ] := ""
-   s_aPorts[ nPort, TPFP_HANDLE ] := -1
-   s_aPorts[ nPort, TPFP_BAUD   ] := 1200
-   s_aPorts[ nPort, TPFP_DBITS  ] := 8
-   s_aPorts[ nPort, TPFP_PARITY ] := "N"
-   s_aPorts[ nPort, TPFP_SBITS  ] := 1
-   s_aPorts[ nPort, TPFP_OC     ] := .F.
-   s_aPorts[ nPort, TPFP_INBUF  ] := ""
-   s_aPorts[ nPort, TPFP_INBUF_SIZE  ] := 0
+   t_aPorts[ nPort, TPFP_NAME   ] := ""
+   t_aPorts[ nPort, TPFP_HANDLE ] := -1
+   t_aPorts[ nPort, TPFP_BAUD   ] := 1200
+   t_aPorts[ nPort, TPFP_DBITS  ] := 8
+   t_aPorts[ nPort, TPFP_PARITY ] := "N"
+   t_aPorts[ nPort, TPFP_SBITS  ] := 1
+   t_aPorts[ nPort, TPFP_OC     ] := .F.
+   t_aPorts[ nPort, TPFP_INBUF  ] := ""
+   t_aPorts[ nPort, TPFP_INBUF_SIZE  ] := 0
 
 return TE_CONFL   // maybe should return something different?
 
@@ -289,14 +289,14 @@ function tp_recv( nPort, nLength, nTimeout )
    local nDone
    local cRet
 
-   default nLength to s_aPorts[ nPort, TPFP_INBUF_SIZE  ]
+   default nLength to t_aPorts[ nPort, TPFP_INBUF_SIZE  ]
    default nTimeout to 0
 
    FetchChars( nPort )
 
    nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
 
-   while Len( s_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND.;
+   while Len( t_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND.;
          ( nTimeout < 0 .OR. Seconds() < nDone )
 
       if ! tp_idle()
@@ -307,12 +307,12 @@ function tp_recv( nPort, nLength, nTimeout )
 
    enddo
 
-   if nLength > Len( s_aPorts[ nPort, TPFP_INBUF ] )
-      cRet := s_aPorts[ nPort, TPFP_INBUF ]
-      s_aPorts[ nPort, TPFP_INBUF ] := ""
+   if nLength > Len( t_aPorts[ nPort, TPFP_INBUF ] )
+      cRet := t_aPorts[ nPort, TPFP_INBUF ]
+      t_aPorts[ nPort, TPFP_INBUF ] := ""
    else
-      cRet := SubStr( s_aPorts[ nPort, TPFP_INBUF ], 1, nLength )
-      s_aPorts[ nPort, TPFP_INBUF ] := SubStr( s_aPorts[ nPort, TPFP_INBUF ], nLength + 1 )
+      cRet := SubStr( t_aPorts[ nPort, TPFP_INBUF ], 1, nLength )
+      t_aPorts[ nPort, TPFP_INBUF ] := SubStr( t_aPorts[ nPort, TPFP_INBUF ], nLength + 1 )
    endif
 
 return cRet
@@ -339,7 +339,7 @@ function tp_send( nPort, cString, nTimeout )
    while nTotWritten < Len( cString ) .AND. ;
          ( nTimeout < 0 .OR. Seconds() <= nDone )
 
-      nWritten := p_WritePort( s_aPorts[ nPort, TPFP_HANDLE ], SubStr( cString, nTotWritten + 1 ) )
+      nWritten := p_WritePort( t_aPorts[ nPort, TPFP_HANDLE ], SubStr( cString, nTotWritten + 1 ) )
 
       if nWritten >= 0
 
@@ -398,7 +398,7 @@ function tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
 
    /* Telepathy ng: [...] If nTimeout is omitted or zero, reads until finding the
                     delimiter or the input buffer is empty. */
-   if nTimeout == 0 .AND. Empty( s_aPorts[ nPort, TPFP_INBUF ] )
+   if nTimeout == 0 .AND. Empty( t_aPorts[ nPort, TPFP_INBUF ] )
       return ""
    endif
 
@@ -408,7 +408,7 @@ function tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
 
       if Len( cDelim ) == 1
 
-         nAt := hb_At( cDelim, s_aPorts[ nPort, TPFP_INBUF ], nStartPos )
+         nAt := hb_At( cDelim, t_aPorts[ nPort, TPFP_INBUF ], nStartPos )
 
          if nAt > 0 .AND. iif( nFirst > 0, nAt < nFirst, .T. )
             nFirst := nAt
@@ -418,7 +418,7 @@ function tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
 
          FOR EACH cChar IN cDelim
 
-            nAt := hb_At( cChar, s_aPorts[ nPort, TPFP_INBUF ], nStartPos )
+            nAt := hb_At( cChar, t_aPorts[ nPort, TPFP_INBUF ], nStartPos )
 
             if nAt > 0 .AND. iif( nFirst > 0, nAt < nFirst, .T. )
                nFirst := nAt
@@ -435,7 +435,7 @@ function tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
       else
          // Next loop I don't need to search that part of the input buffer that
          // I've already just searched for
-         nStartPos := Max( Len( s_aPorts[ nPort, TPFP_INBUF ] ), 1 )
+         nStartPos := Max( Len( t_aPorts[ nPort, TPFP_INBUF ] ), 1 )
 
          // I've read more characters than I'm allowed to, so I exit
          if nStartPos >= nMaxLen
@@ -452,8 +452,8 @@ function tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
    enddo
 
    if nFirst > 0
-      cRet := Left( s_aPorts[ nPort, TPFP_INBUF ], nFirst )
-      s_aPorts[ nPort, TPFP_INBUF ] := SubStr( s_aPorts[ nPort, TPFP_INBUF ], nFirst + 1 )
+      cRet := Left( t_aPorts[ nPort, TPFP_INBUF ], nFirst )
+      t_aPorts[ nPort, TPFP_INBUF ] := SubStr( t_aPorts[ nPort, TPFP_INBUF ], nFirst + 1 )
    endif
 
 return cRet
@@ -474,7 +474,7 @@ function tp_lookfor( nPort, cLookfor )
 
    FetchChars( nPort )
 
-return At( cLookfor, s_aPorts[ nPort, TPFP_INBUF ] )
+return At( cLookfor, t_aPorts[ nPort, TPFP_INBUF ] )
 
 
 
@@ -486,7 +486,7 @@ function tp_inchrs( nPort )
 
    FetchChars( nPort )
 
-return Len( s_aPorts[ nPort, TPFP_INBUF ] )
+return Len( t_aPorts[ nPort, TPFP_INBUF ] )
 
 
 
@@ -496,7 +496,7 @@ function tp_outfree( nPort )
       return 0
    endif
 
-return p_OutFree( s_aPorts[ nPort, TPFP_HANDLE ] )
+return p_OutFree( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 
 
@@ -504,7 +504,7 @@ function tp_clearin( nPort )
 
    if isopenport( nPort )
       FetchChars( nPort )
-      s_aPorts[ nPort, TPFP_INBUF ] := ""
+      t_aPorts[ nPort, TPFP_INBUF ] := ""
    endif
 
 return nil
@@ -567,9 +567,9 @@ function tp_waitfor( ... )
 
       for x := 1 to len( acList )
          if lIgnorecase
-            nAt := at( upper( acList[ x ] ), upper( s_aPorts[ nPort, TPFP_INBUF ] ))
+            nAt := at( upper( acList[ x ] ), upper( t_aPorts[ nPort, TPFP_INBUF ] ))
          else
-            nAt := at( acList[ x ] , s_aPorts[ nPort, TPFP_INBUF ] )
+            nAt := at( acList[ x ] , t_aPorts[ nPort, TPFP_INBUF ] )
          endif
          if nAt > 0 .and. nAt < nFirst
             nFirst := nAt
@@ -608,10 +608,10 @@ function tp_ctrlcts( nPort, nNewCtrl )
    endif
 
    if Valtype( nNewCtrl ) == "U"
-      nCurValue := p_ctrlcts( s_aPorts[ nPort, TPFP_HANDLE ] )
+      nCurValue := p_ctrlcts( t_aPorts[ nPort, TPFP_HANDLE ] )
 
    else
-      nCurValue := p_ctrlcts( s_aPorts[ nPort, TPFP_HANDLE ], nNewCtrl )
+      nCurValue := p_ctrlcts( t_aPorts[ nPort, TPFP_HANDLE ], nNewCtrl )
 
    endif
 
@@ -637,7 +637,7 @@ function tp_ctrldtr( nPort, nParamNewval )
    if ! isopenport( nPort )
       return -1
    endif
-   nph := s_aPorts[ nPort, TPFP_HANDLE ]
+   nph := t_aPorts[ nPort, TPFP_HANDLE ]
 
    _P_CTRLDTR(nph, @nnewval, @noldval)
 
@@ -652,7 +652,7 @@ function tp_isdcd( nPort )
       return .f.
    endif
 
-return p_isdcd( s_aPorts[ nPort, TPFP_HANDLE ] )
+return p_isdcd( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 
 
@@ -662,7 +662,7 @@ function tp_isri( nPort )
       return .f.
    endif
 
-return p_isri( s_aPorts[ nPort, TPFP_HANDLE ] )
+return p_isri( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 
 
@@ -672,7 +672,7 @@ function tp_isdsr( nPort )
       return .f.
    endif
 
-return p_isdsr( s_aPorts[ nPort, TPFP_HANDLE ] )
+return p_isdsr( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 
 
@@ -682,7 +682,7 @@ function tp_iscts( nPort )
       return .f.
    endif
 
-return p_iscts( s_aPorts[ nPort, TPFP_HANDLE ] )
+return p_iscts( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 
 
@@ -700,7 +700,7 @@ function tp_flush( nPort, nTimeout )
       return TE_CLOSED
    endif
 
-   nRes := p_Drain( s_aPorts[ nPort, TPFP_HANDLE ] )
+   nRes := p_Drain( t_aPorts[ nPort, TPFP_HANDLE ] )
 
    // Sleep rest of timeout
    /*
@@ -767,7 +767,7 @@ static function isopenport( nPort )
       return .f.
    endif
 
-return s_aPorts[ nPort, TPFP_OC ]
+return t_aPorts[ nPort, TPFP_OC ]
 
 
 
@@ -789,10 +789,10 @@ static function FetchChars( nPort )
       return 0
    endif
 
-   cStr := p_ReadPort( s_aPorts[ nPort, TPFP_HANDLE ] )
+   cStr := p_ReadPort( t_aPorts[ nPort, TPFP_HANDLE ] )
 
    if ! Empty( cStr )
-      s_aPorts[ nPort, TPFP_INBUF ] += cStr
+      t_aPorts[ nPort, TPFP_INBUF ] += cStr
    endif
 
 return Len( cStr )
@@ -803,11 +803,11 @@ INIT PROCEDURE _tpinit()
 
    local x
 
-   if s_aPorts == nil
-      s_aPorts := array( TP_MAXPORTS )
-      for x := 1 to len( s_aPorts )
+   if t_aPorts == nil
+      t_aPorts := array( TP_MAXPORTS )
+      for x := 1 to len( t_aPorts )
          /// port name, file handle, baud, data bits, parity, stop bits, Open?, input buffer, input buff.size
-         s_aPorts[ x ] := { "", -1, 1200, 8, "N", 1, .F., "", 0 }
+         t_aPorts[ x ] := { "", -1, 1200, 8, "N", 1, .F., "", 0 }
       next
    endif
 

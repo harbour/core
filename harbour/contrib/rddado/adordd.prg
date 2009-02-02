@@ -83,11 +83,11 @@
 
 #ifndef __XHARBOUR__
    #include "hbusrrdd.ch"
-   #xcommand TRY              => s_bError := errorBlock( {|oErr| break( oErr ) } ) ;;
+   #xcommand TRY              => t_bError := errorBlock( {|oErr| break( oErr ) } ) ;;
                                  BEGIN SEQUENCE
-   #xcommand CATCH [<!oErr!>] => errorBlock( s_bError ) ;;
+   #xcommand CATCH [<!oErr!>] => errorBlock( t_bError ) ;;
                                  RECOVER [USING <oErr>] <-oErr-> ;;
-                                 errorBlock( s_bError )
+                                 errorBlock( t_bError )
    #command FINALLY           => ALWAYS
 #else
    #include "usrrdd.ch"
@@ -120,15 +120,15 @@
 
 ANNOUNCE ADORDD
 
-THREAD STATIC s_cTableName
-THREAD STATIC s_cEngine
-THREAD STATIC s_cServer
-THREAD STATIC s_cUserName
-THREAD STATIC s_cPassword
-THREAD STATIC s_cQuery := ""
+THREAD STATIC t_cTableName
+THREAD STATIC t_cEngine
+THREAD STATIC t_cServer
+THREAD STATIC t_cUserName
+THREAD STATIC t_cPassword
+THREAD STATIC t_cQuery := ""
 
 #ifndef __XHARBOUR__
-THREAD STATIC s_bError
+THREAD STATIC t_bError
 #endif
 
 #ifdef __XHARBOUR__
@@ -317,12 +317,12 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
 
    IF Empty( aOpenInfo[ UR_OI_CONNECT ] )
       aWAData[ WA_CONNECTION ] := TOleAuto():New( "ADODB.Connection" )
-      aWAData[ WA_TABLENAME ] := s_cTableName
-      aWAData[ WA_QUERY ]    := s_cQuery
-      aWAData[ WA_USERNAME ] := s_cUserName
-      aWAData[ WA_PASSWORD ] := s_cPassword
-      aWAData[ WA_SERVER ] := s_cServer
-      aWAData[ WA_ENGINE ] := s_cEngine
+      aWAData[ WA_TABLENAME ] := t_cTableName
+      aWAData[ WA_QUERY ]    := t_cQuery
+      aWAData[ WA_USERNAME ] := t_cUserName
+      aWAData[ WA_PASSWORD ] := t_cPassword
+      aWAData[ WA_SERVER ] := t_cServer
+      aWAData[ WA_ENGINE ] := t_cEngine
       aWAData[ WA_CONNOPEN ] := .T.
 
       DO CASE
@@ -372,17 +372,17 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
       ENDCASE
    ELSE
       aWAData[ WA_CONNECTION ] := TOleAuto():New( aOpenInfo[ UR_OI_CONNECT ], "ADODB.Connection" )
-      aWAData[ WA_TABLENAME ] := s_cTableName
-      aWAData[ WA_QUERY ]    := s_cQuery
-      aWAData[ WA_USERNAME ] := s_cUserName
-      aWAData[ WA_PASSWORD ] := s_cPassword
-      aWAData[ WA_SERVER ] := s_cServer
-      aWAData[ WA_ENGINE ] := s_cEngine
+      aWAData[ WA_TABLENAME ] := t_cTableName
+      aWAData[ WA_QUERY ]    := t_cQuery
+      aWAData[ WA_USERNAME ] := t_cUserName
+      aWAData[ WA_PASSWORD ] := t_cPassword
+      aWAData[ WA_SERVER ] := t_cServer
+      aWAData[ WA_ENGINE ] := t_cEngine
       aWAData[ WA_CONNOPEN ] := .F.
    ENDIF
 
    // will be initilized
-   s_cQuery := ""
+   t_cQuery := ""
 
    IF Empty( aWAData[ WA_QUERY ] )
       aWAData[ WA_QUERY ] := "SELECT * FROM "
@@ -1625,31 +1625,31 @@ RETURN nDBFFieldType
 
 function HB_AdoSetTable( cTableName )
 
-   s_cTableName := cTableName
+   t_cTableName := cTableName
 
 return nil
 
 function HB_AdoSetEngine( cEngine )
 
-   s_cEngine := cEngine
+   t_cEngine := cEngine
 
 return nil
 
 function HB_AdoSetServer( cServer )
 
-   s_cServer := cServer
+   t_cServer := cServer
 
 return nil
 
 function HB_AdoSetUser( cUser )
 
-   s_cUserName := cUser
+   t_cUserName := cUser
 
 RETURN NIL
 
 function HB_AdoSetPassword( cPassword )
 
-   s_cPassword := cPassword
+   t_cPassword := cPassword
 
 RETURN NIL
 
@@ -1657,7 +1657,7 @@ FUNCTION HB_AdoSetQuery( cQuery )
 
    DEFAULT cQuery TO "SELECT * FROM "
 
-   s_cQuery := cQuery
+   t_cQuery := cQuery
 
 RETURN NIL
 

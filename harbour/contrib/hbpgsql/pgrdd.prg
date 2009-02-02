@@ -72,7 +72,7 @@
 
 ANNOUNCE PGRDD
 
-THREAD STATIC s_aConnections := {}
+THREAD STATIC t_aConnections := {}
 
 FUNCTION DBPGCONNECTION( cConnString )
 
@@ -90,24 +90,24 @@ FUNCTION DBPGCONNECTION( cConnString )
       alert( oServer:ErrorMsg() )
       RETURN FAILURE
    ELSE
-      aadd( s_aConnections, oServer )
-      nConn := len( s_aConnections )
+      aadd( t_aConnections, oServer )
+      nConn := len( t_aConnections )
    ENDIF
-     
+
 RETURN nConn
 
 FUNCTION DBPGCLEARCONNECTION( nConn )
 
    LOCAL oServer
 
-   oServer := s_aConnections[ nConn ]
+   oServer := t_aConnections[ nConn ]
 
    oServer:Close()
 
-   s_aConnections[ nConn ] := nil
+   t_aConnections[ nConn ] := nil
 
 RETURN SUCCESS
-   
+
 /*
  * non work area methods receive RDD ID as first parameter
  * Methods INIT and EXIT does not have to execute SUPER methods - these is
@@ -137,8 +137,8 @@ STATIC FUNCTION PG_OPEN( nWA, aOpenInfo )
    LOCAL oServer, oQuery, aStruct, aFieldStruct
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
 
-   if !empty( aOpenInfo[ UR_OI_CONNECT ] ) .and. aOpenInfo[ UR_OI_CONNECT ] <= len( s_aConnections )
-      oServer := s_aConnections[ aOpenInfo[ UR_OI_CONNECT ] ]
+   if !empty( aOpenInfo[ UR_OI_CONNECT ] ) .and. aOpenInfo[ UR_OI_CONNECT ] <= len( t_aConnections )
+      oServer := t_aConnections[ aOpenInfo[ UR_OI_CONNECT ] ]
    endif
 
    if !empty( oServer )
@@ -147,7 +147,7 @@ STATIC FUNCTION PG_OPEN( nWA, aOpenInfo )
       lError := oQuery:NetErr()
       cError := oQuery:ErrorMsg()
    else
-      lError := .T. 
+      lError := .T.
       cError := "Invalid connection handle"
    endif
 
@@ -163,7 +163,7 @@ STATIC FUNCTION PG_OPEN( nWA, aOpenInfo )
    ELSE
       aWAData[ AREA_QUERY ] := oQuery
    ENDIF
- 
+
    UR_SUPER_SETFIELDEXTENT( nWA, oQuery:nFields )
 
    aStruct := oQuery:Struct()
@@ -194,11 +194,11 @@ RETURN UR_SUPER_CLOSE( nWA )
 
 STATIC FUNCTION PG_GETVALUE( nWA, nField, xValue )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
-  
+
    if !empty( aWAData[ AREA_ROW ] )
       xValue := aWAData[ AREA_ROW ]:FieldGet( nField )
    else
-      xValue := aWAData[ AREA_QUERY ]:FieldGet( nField )    
+      xValue := aWAData[ AREA_QUERY ]:FieldGet( nField )
    endif
 
 RETURN SUCCESS
@@ -301,13 +301,13 @@ STATIC FUNCTION PG_FLUSH( nWA )
          oError := ErrorNew()
          oError:GenCode     := EG_DATATYPE
          oError:SubCode     := 3000
-         oError:Description := HB_LANGERRMSG( EG_DATATYPE ) + ", " + aWAData[ AREA_QUERY ]:ErrorMsg() 
+         oError:Description := HB_LANGERRMSG( EG_DATATYPE ) + ", " + aWAData[ AREA_QUERY ]:ErrorMsg()
          UR_SUPER_ERROR( nWA, oError )
          RETURN FAILURE
       ENDIF
 
 /*
- * The :Refresh() below costs a lot in term of performance. 
+ * The :Refresh() below costs a lot in term of performance.
  * It redo the select to include inserts and updates.
  * It is the only solution I've found so far to simulate dbf behaviour
  */
@@ -340,7 +340,7 @@ RETURN SUCCESS
 STATIC FUNCTION PG_DELETE( nWA )
    LOCAL oError
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
- 
+
    aWAData[ AREA_ROW ] := aWAData[ AREA_QUERY ]:GetRow()
 
    aWAData[ AREA_QUERY ]:Delete( aWAData[ AREA_ROW ] )
@@ -349,11 +349,11 @@ STATIC FUNCTION PG_DELETE( nWA )
       oError := ErrorNew()
       oError:GenCode     := EG_DATATYPE
       oError:SubCode     := 2000
-      oError:Description := HB_LANGERRMSG( EG_DATATYPE ) + ", " + aWAData[ AREA_QUERY ]:ErrorMsg() 
+      oError:Description := HB_LANGERRMSG( EG_DATATYPE ) + ", " + aWAData[ AREA_QUERY ]:ErrorMsg()
       UR_SUPER_ERROR( nWA, oError )
       RETURN FAILURE
    ENDIF
-     
+
    aWAData[ AREA_ROW ] := nil
 
 RETURN SUCCESS

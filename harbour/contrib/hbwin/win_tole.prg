@@ -67,11 +67,11 @@
 
 #define EG_OLEEXCEPTION 1001
 
-#xcommand TRY              => BEGIN SEQUENCE WITH s_bBreak
+#xcommand TRY              => BEGIN SEQUENCE WITH t_bBreak
 #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
 #xcommand FINALLY          => ALWAYS
 
-THREAD STATIC s_bBreak := { |oErr| break( oErr ) }
+THREAD STATIC t_bBreak := { |oErr| break( oErr ) }
 
 STATIC PROCEDURE THROW( oError )
    LOCAL lError := Eval( ErrorBlock(), oError )
@@ -215,7 +215,7 @@ METHOD New( uObj, cClass, cLicense ) CLASS TOleAuto
    IF ::hObj != NIL
       RETURN HB_ExecFromArray( Self, "_New", HB_aParams() )
    ENDIF
-   
+
    IF ISCHARACTER( uObj )
       ::hObj := CreateOleObject( uObj, , cLicense )
 

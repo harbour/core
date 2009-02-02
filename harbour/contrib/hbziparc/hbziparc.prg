@@ -57,16 +57,15 @@
 #include "directry.ch"
 #include "fileio.ch"
 
-THREAD STATIC s_nReadBuffer := 32768
-THREAD STATIC s_cComment
-THREAD STATIC s_lReadOnly := .F.
-THREAD STATIC s_bProgress
+THREAD STATIC t_nReadBuffer := 32768
+THREAD STATIC t_cComment
+THREAD STATIC t_lReadOnly := .F.
 
 PROCEDURE SetZipReadOnly( lReadOnly )
 
    DEFAULT lReadOnly TO .F.
 
-   s_lReadOnly := lReadOnly
+   t_lReadOnly := lReadOnly
 
    /* TODO: Implement. */
 
@@ -104,7 +103,7 @@ PROCEDURE SetZipReadOnly( lReadOnly )
 PROCEDURE hb_SetZipComment( cComment )
 
    IF cComment == NIL .OR. ISCHARACTER( cComment )
-      s_cComment := cComment
+      t_cComment := cComment
    ENDIF
 
    RETURN
@@ -406,7 +405,7 @@ PROCEDURE hb_SetBuffer( nWriteBuffer, nExtractBuffer, nReadBuffer )
    HB_SYMBOL_UNUSED( nExtractBuffer )
 
    IF !Empty( nReadBuffer )
-      s_nReadBuffer := Min( nReadBuffer, 32768 )
+      t_nReadBuffer := Min( nReadBuffer, 32768 )
    ENDIF
 
    RETURN
@@ -737,7 +736,7 @@ FUNCTION hb_ZipFile( cFileName,;
    LOCAL hZip
    LOCAL hHandle
    LOCAL nLen
-   LOCAL cBuffer := Space( s_nReadBuffer )
+   LOCAL cBuffer := Space( t_nReadBuffer )
    LOCAL cFileToZip
    LOCAL nPos
    LOCAL nRead
@@ -852,7 +851,7 @@ FUNCTION hb_ZipFile( cFileName,;
          ENDIF
       NEXT
 
-      hb_ZipClose( hZip, s_cComment )
+      hb_ZipClose( hZip, t_cComment )
    ELSE
       lRetVal := .F.
    ENDIF

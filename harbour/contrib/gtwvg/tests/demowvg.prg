@@ -108,25 +108,25 @@ MEMVAR cCdxExp, First, Last, City
 
 //-------------------------------------------------------------------//
 
-thread static wvtScreen := {}
-thread static pic_:= { , , , , , , , , , , , , , , , , , , , }
-thread static keys_:= { , , , , , , , , , , , , , , , , , , , }
+thread static t_wvtScreen := {}
+thread static t_pic_:= { , , , , , , , , , , , , , , , , , , , }
+thread static t_keys_:= { , , , , , , , , , , , , , , , , , , , }
 
-thread static ahFonts := {}
-thread static aSlides := {}
-thread static shIcon, shImage
+thread static t_ahFonts := {}
+thread static t_aSlides := {}
+thread static t_hIcon, t_hImage
 
 #ifdef __XCC__
-static paint_:= { { "", {} } }
+static s_paint_:= { { "", {} } }
 #endif
 
-static pGT_:= { NIL,NIL,NIL }
+static s_pGT_:= { NIL,NIL,NIL }
 //-------------------------------------------------------------------//
 EXIT PROCEDURE KillGTs()
 
-   pGT_[ 1 ] := NIL
-   pGT_[ 2 ] := NIL
-   pGT_[ 3 ] := NIL
+   s_pGT_[ 1 ] := NIL
+   s_pGT_[ 2 ] := NIL
+   s_pGT_[ 3 ] := NIL
 
    RETURN
 //----------------------------------------------------------------------//
@@ -173,7 +173,7 @@ PROCEDURE Main()
    hPopup  := Wvt_SetPopupMenu()
    oMenu   := CreateMainMenu()
 
-   pGT_[ 1 ] := hb_gtSelect()
+   s_pGT_[ 1 ] := hb_gtSelect()
 
    //  Force mouse pointer right below the xHarbour label
    //
@@ -297,7 +297,7 @@ PROCEDURE Main()
    Wvt_SetPopupMenu( hPopup )
 
    Popups( 1, .t. )
-   pGT_[ 1 ] := NIL
+   s_pGT_[ 1 ] := NIL
 
    RETURN
 //-------------------------------------------------------------------//
@@ -457,25 +457,25 @@ PROCEDURE WvtNextGets_X()
 FUNCTION WvtSetKeys( lSet )
 
    if lSet
-      keys_[ 2 ] := SetKey( K_F2, {|| WvtNextGets()         } )
-      keys_[ 3 ] := SetKey( K_F3, {|| WvtWindowExpand( 1 )  } )
-      keys_[ 4 ] := SetKey( K_F4, {|| WvtWindowExpand( -1 ) } )
-      keys_[ 5 ] := SetKey( K_F5, {|| WvtMyBrowse()         } )
-      keys_[ 6 ] := SetKey( K_F6, {|| Wvt_Minimize()        } )
-      keys_[ 7 ] := SetKey( K_F7, {|| WvtPartialScreen()    } )
-      keys_[ 8 ] := SetKey( K_F8, {|| WvtLines()            } )
-      keys_[ 9 ] := SetKey( K_F9, {|| Wvt_ChooseFont()      } )
-      keys_[ 10] := SetKey( K_F10,{|| Wvt_ChooseColor()     } )
+      t_keys_[ 2 ] := SetKey( K_F2, {|| WvtNextGets()         } )
+      t_keys_[ 3 ] := SetKey( K_F3, {|| WvtWindowExpand( 1 )  } )
+      t_keys_[ 4 ] := SetKey( K_F4, {|| WvtWindowExpand( -1 ) } )
+      t_keys_[ 5 ] := SetKey( K_F5, {|| WvtMyBrowse()         } )
+      t_keys_[ 6 ] := SetKey( K_F6, {|| Wvt_Minimize()        } )
+      t_keys_[ 7 ] := SetKey( K_F7, {|| WvtPartialScreen()    } )
+      t_keys_[ 8 ] := SetKey( K_F8, {|| WvtLines()            } )
+      t_keys_[ 9 ] := SetKey( K_F9, {|| Wvt_ChooseFont()      } )
+      t_keys_[ 10] := SetKey( K_F10,{|| Wvt_ChooseColor()     } )
    else
-      SetKey( K_F2,  keys_[ 2 ] )
-      SetKey( K_F3,  keys_[ 3 ] )
-      SetKey( K_F4,  keys_[ 4 ] )
-      SetKey( K_F5,  keys_[ 5 ] )
-      SetKey( K_F6,  keys_[ 6 ] )
-      SetKey( K_F7,  keys_[ 7 ] )
-      SetKey( K_F8,  keys_[ 8 ] )
-      SetKey( K_F9,  keys_[ 9 ] )
-      SetKey( K_F10, keys_[ 10] )
+      SetKey( K_F2,  t_keys_[ 2 ] )
+      SetKey( K_F3,  t_keys_[ 3 ] )
+      SetKey( K_F4,  t_keys_[ 4 ] )
+      SetKey( K_F5,  t_keys_[ 5 ] )
+      SetKey( K_F6,  t_keys_[ 6 ] )
+      SetKey( K_F7,  t_keys_[ 7 ] )
+      SetKey( K_F8,  t_keys_[ 8 ] )
+      SetKey( K_F9,  t_keys_[ 9 ] )
+      SetKey( K_F10, t_keys_[ 10] )
    endif
 
    RETURN Nil
@@ -610,12 +610,12 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )
 FUNCTION WvtSetBlocks( a_ )
 
    LOCAL o
-   THREAD STATIC s := {}
+   THREAD STATIC t := {}
 
-   o := aclone( s )
+   o := aclone( t )
 
    IF a_ != nil
-      s := aclone( a_ )
+      t := aclone( a_ )
    ENDIF
 
    RETURN o
@@ -773,7 +773,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
    BrwBuildMenu( oCrt )
    oTBar := ActiveXBuildToolBar( oCrt )
 
-   pGT_[ 2 ] := hb_gtSelect()
+   s_pGT_[ 2 ] := hb_gtSelect()
 
    cRDD       := "DBFCDX"
    cFileDbf   := "test.dbf"
@@ -891,7 +891,7 @@ FUNCTION WvtMyBrowse_X( oCrt )
    DBCloseArea()
    RestScreen( 0, 0, maxrow(), maxcol(), cScr )
    Wvt_setPopupMenu( hPopup )
-   pGT_[ 2 ] := NIL
+   s_pGT_[ 2 ] := NIL
 
    RETURN nil
 //-------------------------------------------------------------------//
@@ -1355,9 +1355,9 @@ FUNCTION Popups( nID, lDestroy )
 FUNCTION WvtPictures( nSlot,cFilePic )
 
    if nSlot != nil .and. nSlot <= 20 .and. file( cFilePic )
-      if pic_[ nSlot ] != cFilePic
+      if t_pic_[ nSlot ] != cFilePic
          if Wvt_LoadPicture( cFilePic, nSlot )
-            pic_[ nSlot ] := cFilePic
+            t_pic_[ nSlot ] := cFilePic
          endif
       endif
    endif
@@ -1366,7 +1366,7 @@ FUNCTION WvtPictures( nSlot,cFilePic )
 //-------------------------------------------------------------------//
 FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
 
-   if pic_[ nSlot ] != nil
+   if t_pic_[ nSlot ] != nil
       Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aOffSet )
    endif
 
@@ -2053,29 +2053,29 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
    case WM_INITDIALOG
       Win_SetTimer( hDlg, 5001, 1000 ) // 1 sec
 
-      if empty( ahFonts )
+      if empty( t_ahFonts )
          if ( hFont := Wvt_CreateFont( "Times New Roman", 18 ) ) != 0
-            aadd( ahFonts, hFont )
+            aadd( t_ahFonts, hFont )
          endif
       endif
 
-      if len( ahFonts ) > 0
-         Win_SendMessage( Win_GetDlgItem( hDlg, ID_MLE ), WM_SETFONT, ahFonts[ 1 ], 0 )
+      if len( t_ahFonts ) > 0
+         Win_SendMessage( Win_GetDlgItem( hDlg, ID_MLE ), WM_SETFONT, t_ahFonts[ 1 ], 0 )
       endif
 
-      if shIcon == nil
-         shIcon := Win_LoadIcon( "vr_1.ico" )
+      if t_hIcon == nil
+         t_hIcon := Win_LoadIcon( "vr_1.ico" )
       endif
-      if shIcon != nil .or. shIcon != 0
-         Win_SendMessage( Win_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, IMAGE_ICON, shIcon )
+      if t_hIcon != nil .or. t_hIcon != 0
+         Win_SendMessage( Win_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, IMAGE_ICON, t_hIcon )
       endif
 
       /*
-      if shImage == nil
-         shImage := Win_LoadImage( "vouch1.bmp", 2 )
+      if t_hImage == nil
+         t_hImage := Win_LoadImage( "vouch1.bmp", 2 )
       endif
-      if shImage != nil .and. shImage != 0
-         Win_SendMessage( Win_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, shImage )
+      if t_hImage != nil .and. t_hImage != 0
+         Win_SendMessage( Win_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, t_hImage )
       endif
       */
       Win_SetDlgItemText( hDlg, ID_MLE      , GetEditText() )
@@ -2153,16 +2153,16 @@ static function GetEditText()
 EXIT PROCEDURE CleanHandles()
    LOCAL i
 
-   for i := 1 to len( ahFonts )
-      Win_DeleteObject( ahFonts[ i ] )
+   for i := 1 to len( t_ahFonts )
+      Win_DeleteObject( t_ahFonts[ i ] )
    next
 
-   if shIcon != nil
-      Win_DeleteObject( shIcon )
+   if t_hIcon != nil
+      Win_DeleteObject( t_hIcon )
    endif
 
-   if shImage != nil
-      Win_DeleteObject( shImage )
+   if t_hImage != nil
+      Win_DeleteObject( t_hImage )
    endif
 
    Return
@@ -2172,7 +2172,7 @@ EXIT PROCEDURE CleanHandles()
 FUNCTION DlgSlideShow()
    LOCAL hDlg, aDlg, nStyle
 
-   aSlides := { "vouch1.bmp", "v_notes.ico", "2000.gif", "v_lock.bmp", "v_help.ico" }
+   t_aSlides := { "vouch1.bmp", "v_notes.ico", "2000.gif", "v_lock.bmp", "v_help.ico" }
 
    nStyle  := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
 
@@ -2203,7 +2203,7 @@ FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
    case WM_TIMER
       nSlide++
-      if nSlide > len( aSlides )
+      if nSlide > len( t_aSlides )
          nSlide := 1
       endif
       DrawSlide( hDlg, nSlide )
@@ -2222,7 +2222,7 @@ FUNCTION DrawSlide( hDlg, nSlide )
 
    Win_Rectangle( hDC, aRect[ 1 ]+10, aRect[ 2 ]+10, aRect[ 3 ]-10, aRect[ 4 ]-10 )
    Win_DrawImage( hDC, aRect[ 1 ]+10, aRect[ 2 ]+10, aRect[ 3 ] - aRect[ 1 ] -20, ;
-                                  aRect[ 4 ] - aRect[ 2 ] - 20, aSlides[ nSlide ] )
+                                  aRect[ 4 ] - aRect[ 2 ] - 20, t_aSlides[ nSlide ] )
 
    Win_ReleaseDC( hDlg,hDC )
 
@@ -2280,7 +2280,7 @@ Static Function DoModalWindow()
    oCrt:Create()
    oCrt:show()
 
-   pGT_[ 3 ] := hb_gtSelect()
+   s_pGT_[ 3 ] := hb_gtSelect()
 
    // Here goes the Clipper Code
    //
@@ -2297,7 +2297,7 @@ Static Function DoModalWindow()
 
    // Cleanup
    //
-   pGT_[ 3 ] := NIL
+   s_pGT_[ 3 ] := NIL
    oCrt:Destroy()
 
    Return nil

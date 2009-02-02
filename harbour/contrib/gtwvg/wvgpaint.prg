@@ -65,9 +65,9 @@
 //-------------------------------------------------------------------//
 
 #if 0  // Until THREAD STATIC is made true thread sttaic
-thread static paint_:= { { '', {} } }
+thread static t_paint_:= { { '', {} } }
 #else
-thread static paint_
+thread static t_paint_
 #endif
 
 //-------------------------------------------------------------------//
@@ -148,16 +148,16 @@ function WvtPaintObjects()
 
 function WvtSetPaint( a_ )
    local o
-   thread static s
+   thread static t
 
-   IF s == nil
-      s := {}
+   IF t == nil
+      t := {}
    ENDIF
 
-   o := s
+   o := t
 
    if a_ <> nil
-      s := a_
+      t := a_
    endif
 
    return o
@@ -167,23 +167,23 @@ function WvtSetPaint( a_ )
 function SetPaint( cID, nAction, xData, aAttr )
    local n, n1, oldData
 
-   IF paint_== NIL
-      paint_:= { { '', {} } }
+   IF t_paint_== NIL
+      t_paint_:= { { '', {} } }
    ENDIF
 
    if xData <> nil
-      if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-         if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
-            oldData := paint_[ n,2,n1,2 ]
-            paint_[ n,2,n1,2 ] := xData
-            paint_[ n,2,n1,3 ] := aAttr
+      if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+         if ( n1 := ascan( t_paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
+            oldData := t_paint_[ n,2,n1,2 ]
+            t_paint_[ n,2,n1,2 ] := xData
+            t_paint_[ n,2,n1,3 ] := aAttr
          else
-            aadd( paint_[ n,2 ], { nAction,xData,aAttr } )
+            aadd( t_paint_[ n,2 ], { nAction,xData,aAttr } )
          endif
       else
-         aadd( paint_, { cID, {} } )
-         n := len( paint_ )
-         aadd( paint_[ n,2 ], { nAction, xData, aAttr } )
+         aadd( t_paint_, { cID, {} } )
+         n := len( t_paint_ )
+         aadd( t_paint_[ n,2 ], { nAction, xData, aAttr } )
       endif
    endif
 
@@ -194,12 +194,12 @@ function SetPaint( cID, nAction, xData, aAttr )
 function GetPaint( cID )
    local n
 
-   IF paint_== NIL
-      paint_:= { { '', {} } }
+   IF t_paint_== NIL
+      t_paint_:= { { '', {} } }
    ENDIF
 
-   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-      return paint_[ n,2 ]
+   if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+      return t_paint_[ n,2 ]
    endif
 
    return {}
@@ -209,14 +209,14 @@ function GetPaint( cID )
 function DelPaint( cID, nAction )
    local xData, n1, n
 
-   IF paint_== NIL
-      paint_:= { { '', {} } }
+   IF t_paint_== NIL
+      t_paint_:= { { '', {} } }
    ENDIF
 
-   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-      if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
-         xData := paint_[ n,2,n1,2 ]
-         paint_[ n,2,n1,2 ] := {|| .t. }
+   if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+      if ( n1 := ascan( t_paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
+         xData := t_paint_[ n,2,n1,2 ]
+         t_paint_[ n,2,n1,2 ] := {|| .t. }
       endif
    endif
 
@@ -229,14 +229,14 @@ function PurgePaint( cID,lDummy )
 
    DEFAULT lDummy TO .f.
 
-   IF paint_== NIL
-      paint_:= { { '', {} } }
+   IF t_paint_== NIL
+      t_paint_:= { { '', {} } }
    ENDIF
 
-   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-      aPaint := paint_[ n ]
-      ADel( paint_, n )
-      aSize( paint_, len( paint_ ) - 1 )
+   if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+      aPaint := t_paint_[ n ]
+      ADel( t_paint_, n )
+      aSize( t_paint_, len( t_paint_ ) - 1 )
    endif
 
    if lDummy
@@ -252,14 +252,14 @@ function InsertPaint( cID, aPaint, lSet )
 
    DEFAULT lSet TO .f.
 
-   IF paint_== NIL
-      paint_:= { { '', {} } }
+   IF t_paint_== NIL
+      t_paint_:= { { '', {} } }
    ENDIF
 
-   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-      paint_[ n ] := aPaint
+   if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+      t_paint_[ n ] := aPaint
    else
-      aadd( paint_, aPaint )
+      aadd( t_paint_, aPaint )
    endif
 
    if lSet
