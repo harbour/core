@@ -59,11 +59,11 @@ FUNCTION ThreadID()
 
 
 FUNCTION ThreadObject( oThread )
-   THREAD STATIC s_oThread
+   THREAD STATIC t_oThread
    IF PCount() > 0
-      s_oThread := oThread
+      t_oThread := oThread
    ENDIF
-   RETURN s_oThread
+   RETURN t_oThread
 
 
 FUNCTION ThreadWait( aThreads, nTimeOut )

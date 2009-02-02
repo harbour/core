@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-02 17:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * doc/cmpopt.txt
+    ! Fixed missing SVN keyword.
+
+  * source/rtl/perfuncs.prg
+  * source/rtl/menuto.prg
+  * source/rtl/getlist.prg
+  * source/rtl/readvar.prg
+  * source/rtl/thfuncx.prg
+  * source/rtl/text.prg
+    * Renamed THREAD STATIC vars to t_* (from s_*).
+
 2009-02-02 17:34 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/doc/cmpopt.txt
     * svn ps svn:keywords "Author Date Id Revision"

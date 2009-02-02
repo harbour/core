@@ -50,15 +50,15 @@
  *
  */
 
-THREAD STATIC s_aObjects
+THREAD STATIC t_aObjects
 
 FUNCTION hb_SetObject( oSelf, bConstructor )
 
-   IF s_aObjects == NIL
-      s_aObjects := {}
-      AAdd( s_aObjects, oSelf )
+   IF t_aObjects == NIL
+      t_aObjects := {}
+      AAdd( t_aObjects, oSelf )
    ELSE
-      AAdd( s_aObjects, oSelf := Eval( bConstructor ) )
+      AAdd( t_aObjects, oSelf := Eval( bConstructor ) )
    ENDIF
 
    RETURN oSelf
@@ -67,12 +67,12 @@ FUNCTION hb_EndObject()
 
    LOCAL oSelf
 
-   IF Len( s_aObjects ) > 1
-      ASize( s_aObjects, Len( s_aObjects ) - 1 )
-      oSelf := ATail( s_aObjects )
+   IF Len( t_aObjects ) > 1
+      ASize( t_aObjects, Len( t_aObjects ) - 1 )
+      oSelf := ATail( t_aObjects )
    ELSE
-      oSelf := s_aObjects[ 1 ]
-      s_aObjects := NIL
+      oSelf := t_aObjects[ 1 ]
+      t_aObjects := NIL
    ENDIF
 
    RETURN oSelf

@@ -21,22 +21,22 @@
 
 #xtranslate COLORARRAY( <x> ) => &( '{"' + StrTran( <x>, ',', '","' ) + '"}' )
 
-THREAD STATIC s_aLevel   := {}
-THREAD STATIC s_nPointer := 1
+THREAD STATIC t_aLevel   := {}
+THREAD STATIC t_nPointer := 1
 
 FUNCTION __AtPrompt( nRow, nCol, cPrompt, cMsg, cColor )
 
-   IF s_nPointer < 1
-      s_nPointer := 1
+   IF t_nPointer < 1
+      t_nPointer := 1
    ENDIF
 
    // add the current level empty array.
-   DO WHILE Len( s_aLevel ) < s_nPointer
-      AAdd( s_aLevel, {} )
+   DO WHILE Len( t_aLevel ) < t_nPointer
+      AAdd( t_aLevel, {} )
    ENDDO
 
    // add to the static array
-   AAdd( s_aLevel[ s_nPointer ], { nRow, nCol, cPrompt, cMsg, cColor } )
+   AAdd( t_aLevel[ t_nPointer ], { nRow, nCol, cPrompt, cMsg, cColor } )
 
    // put this prompt on the screen right now
    DispOutAt( nRow, nCol, cPrompt, cColor )
@@ -79,16 +79,16 @@ FUNCTION __MenuTo( bBlock, cVariable )
 
    // if no prompts were defined, exit with 0
 
-   IF s_nPointer < 1 .OR. s_nPointer > Len( s_aLevel )
+   IF t_nPointer < 1 .OR. t_nPointer > Len( t_aLevel )
 
       n := 0
 
    ELSE
 
-      s_nPointer ++
-      nPointer := s_nPointer
+      t_nPointer ++
+      nPointer := t_nPointer
 
-      nArrLen := Len( s_aLevel[ nPointer - 1 ] )
+      nArrLen := Len( t_aLevel[ nPointer - 1 ] )
 
       // put choice in a valid range
 
@@ -120,7 +120,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
                DispOutAt( nMsgRow, nMsgCol, Space( Len( xMsg ) ) )
             ENDIF
 
-            xMsg := s_aLevel[ nPointer - 1, n, 4 ]
+            xMsg := t_aLevel[ nPointer - 1, n, 4 ]
 
             // Code Block messages ( yes, they are documented! )
             IF ISBLOCK( xMsg )
@@ -142,8 +142,8 @@ FUNCTION __MenuTo( bBlock, cVariable )
          // save the current row
          q := n
 
-         IF s_aLevel[ s_nPointer - 1, n, 5 ] != NIL
-             aColor := COLORARRAY( s_aLevel[ s_nPointer - 1, n, 5 ] )
+         IF t_aLevel[ t_nPointer - 1, n, 5 ] != NIL
+             aColor := COLORARRAY( t_aLevel[ t_nPointer - 1, n, 5 ] )
              cFrontColor := iif( Empty( aColor[ 1 ] ), NIL, aColor[ 1 ] )
              cBackColor  := iif( Len( aColor ) > 1, aColor[ 2 ], NIL )
          ENDIF
@@ -155,9 +155,9 @@ FUNCTION __MenuTo( bBlock, cVariable )
          ENDIF
 
          // highlight the prompt
-         DispOutAt( s_aLevel[ nPointer - 1, n, 1 ],;
-                    s_aLevel[ nPointer - 1, n, 2 ],;
-                    s_aLevel[ nPointer - 1, n, 3 ],;
+         DispOutAt( t_aLevel[ nPointer - 1, n, 1 ],;
+                    t_aLevel[ nPointer - 1, n, 2 ],;
+                    t_aLevel[ nPointer - 1, n, 3 ],;
                     cBackColor )
 
          IF Set( _SET_INTENSITY )
@@ -200,7 +200,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
                EXIT
             CASE K_LBUTTONDOWN
             CASE K_LDBLCLK
-               IF ( nMouseClik := HitTest( s_aLevel[ nPointer - 1 ], ;
+               IF ( nMouseClik := HitTest( t_aLevel[ nPointer - 1 ], ;
                                            MRow(), MCol() ) ) > 0
                   n := nMouseClik
                ENDIF
@@ -238,7 +238,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             OTHERWISE
                // did user hit a hot key?
                FOR y := 1 TO nArrLen
-                  IF Upper( Left( LTrim( s_aLevel[ nPointer - 1, y, 3 ] ), 1 ) ) == Upper( Chr( nKey ) )
+                  IF Upper( Left( LTrim( t_aLevel[ nPointer - 1, y, 3 ] ), 1 ) ) == Upper( Chr( nKey ) )
                      n := y
                      lExit := .T.
                      EXIT
@@ -247,9 +247,9 @@ FUNCTION __MenuTo( bBlock, cVariable )
          ENDSWITCH
 
          IF n != 0
-            DispOutAt( s_aLevel[ nPointer - 1, q, 1 ],;
-                       s_aLevel[ nPointer - 1, q, 2 ],;
-                       s_aLevel[ nPointer - 1, q, 3 ],;
+            DispOutAt( t_aLevel[ nPointer - 1, q, 1 ],;
+                       t_aLevel[ nPointer - 1, q, 2 ],;
+                       t_aLevel[ nPointer - 1, q, 3 ],;
                        cFrontColor )
          ENDIF
 
@@ -258,9 +258,9 @@ FUNCTION __MenuTo( bBlock, cVariable )
       ReadVar( cSaveReadVar )
       SetCursor( nSaveCursor )
 
-      s_nPointer := nPointer
-      s_nPointer --
-      ASize( s_aLevel, s_nPointer - 1 )
+      t_nPointer := nPointer
+      t_nPointer --
+      ASize( t_aLevel, t_nPointer - 1 )
 
    ENDIF
 

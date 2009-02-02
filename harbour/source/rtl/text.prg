@@ -50,31 +50,31 @@
  *
  */
 
-THREAD STATIC s_cFile
-THREAD STATIC s_lOldPrinter
-THREAD STATIC s_lOldExtra
-THREAD STATIC s_cOldExtraFile
+THREAD STATIC t_cFile
+THREAD STATIC t_lOldPrinter
+THREAD STATIC t_lOldExtra
+THREAD STATIC t_cOldExtraFile
 
 PROCEDURE __TextSave( cFile )
 
-   s_cFile := cFile
+   t_cFile := cFile
 
-   IF s_cFile == "PRINTER"
-      s_lOldPrinter := Set( _SET_PRINTER, .T. )
+   IF t_cFile == "PRINTER"
+      t_lOldPrinter := Set( _SET_PRINTER, .T. )
    ELSE
-      s_lOldExtra := Set( _SET_EXTRA, .T. )
-      s_cOldExtraFile := Set( _SET_EXTRAFILE, cFile )
+      t_lOldExtra := Set( _SET_EXTRA, .T. )
+      t_cOldExtraFile := Set( _SET_EXTRAFILE, cFile )
    ENDIF
 
    RETURN
 
 PROCEDURE __TextRestore()
 
-   IF s_cFile == "PRINTER"
-      Set( _SET_PRINTER, s_lOldPrinter )
+   IF t_cFile == "PRINTER"
+      Set( _SET_PRINTER, t_lOldPrinter )
    ELSE
-      Set( _SET_EXTRAFILE, s_cOldExtraFile )
-      Set( _SET_EXTRA, s_lOldExtra )
+      Set( _SET_EXTRAFILE, t_cOldExtraFile )
+      Set( _SET_EXTRA, t_lOldExtra )
    ENDIF
 
    RETURN

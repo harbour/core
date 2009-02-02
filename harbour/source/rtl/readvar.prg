@@ -53,7 +53,7 @@
 #include "common.ch"
 
 FUNCTION ReadVar( cVarName )
-   THREAD STATIC s_cVarName := ""
+   THREAD STATIC t_cVarName := ""
 
    LOCAL cOldVarName
    LOCAL oGetList
@@ -62,10 +62,10 @@ FUNCTION ReadVar( cVarName )
       RETURN oGetList:ReadVar( cVarName )
    ENDIF
 
-   cOldVarName := s_cVarName
+   cOldVarName := t_cVarName
 
    IF ISCHARACTER( cVarName )
-      s_cVarName := cVarName
+      t_cVarName := cVarName
    ENDIF
 
    RETURN cOldVarName

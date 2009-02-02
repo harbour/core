@@ -52,18 +52,18 @@
 
 /* NOTE: Harbour internal function to set and get the active GetList */
 
-THREAD STATIC s_oGetListActive
+THREAD STATIC t_oGetListActive
 
 PROCEDURE __GetListSetActive( oGetList )
 
-   IF s_oGetListActive != NIL
-      s_oGetListActive:HasFocus := .F.
+   IF t_oGetListActive != NIL
+      t_oGetListActive:HasFocus := .F.
    ENDIF
 
-   s_oGetListActive := oGetList
+   t_oGetListActive := oGetList
 
-   IF s_oGetListActive != NIL
-      s_oGetListActive:HasFocus := .T.
+   IF t_oGetListActive != NIL
+      t_oGetListActive:HasFocus := .T.
    ENDIF
 
    RETURN
@@ -71,13 +71,13 @@ PROCEDURE __GetListSetActive( oGetList )
 /* NOTE: Using a separate function for maximum speed */
 
 FUNCTION __GetListActive()
-   RETURN s_oGetListActive
+   RETURN t_oGetListActive
 
 FUNCTION __GetListLast( oGetListLast )
-   THREAD STATIC s_oGetListLast
+   THREAD STATIC t_oGetListLast
 
    IF oGetListLast != NIL
-      s_oGetListLast := oGetListLast
+      t_oGetListLast := oGetListLast
    ENDIF
 
-   RETURN s_oGetListLast
+   RETURN t_oGetListLast
