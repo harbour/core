@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   CT3 string function CHARREPL()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
@@ -83,7 +83,7 @@
  *      and, if successful, replaces them with the corresponding character
  *      of <cReplaceString>. Be aware that if the same characters occur
  *      in both <cSearchString> and <cReplaceString>, the character on a
- *      certain position in <cString> can be replaced multiple times. 
+ *      certain position in <cString> can be replaced multiple times.
  *      if <lMode> is set to .T., the function takes the characters in <cString>
  *      one after the other, searches for them in <cSearchString> and, if
  *      successful, replaces them with the corresponding character of
@@ -95,17 +95,17 @@
  *      One can omit the return value by setting the CSETREF() switch to .T.,
  *      but then one must pass <cString> by reference to get the result.
  *  $EXAMPLES$
- *      ? charrepl ("1234", "1x2y3z", "abcd")            // "axbycz" 
- *      ? charrepl ("abcdefghij", "jhfdb", "1234567890") // "08642"  
- *      ? charrepl ("abcdefghij", "jhfdb", "12345")      // "55542"  
- *      ? charrepl ("1234", "1234", "234A")              // "AAAA"   
- *      ? charrepl ("1234", "1234", "234A", .T.)         // "234A"   
+ *      ? charrepl ("1234", "1x2y3z", "abcd")            // "axbycz"
+ *      ? charrepl ("abcdefghij", "jhfdb", "1234567890") // "08642"
+ *      ? charrepl ("abcdefghij", "jhfdb", "12345")      // "55542"
+ *      ? charrepl ("1234", "1234", "234A")              // "AAAA"
+ *      ? charrepl ("1234", "1234", "234A", .T.)         // "234A"
  *  $TESTS$
- *      charrepl ("1234", "1x2y3z", "abcd") == "axbycz" 
- *      charrepl ("abcdefghij", "jhfdb", "1234567890") == "08642"  
- *      charrepl ("abcdefghij", "jhfdb", "12345") == "55542"  
- *      charrepl ("1234", "1234", "234A") == "AAAA"   
- *      charrepl ("1234", "1234", "234A", .T.) == "234A"   
+ *      charrepl ("1234", "1x2y3z", "abcd") == "axbycz"
+ *      charrepl ("abcdefghij", "jhfdb", "1234567890") == "08642"
+ *      charrepl ("abcdefghij", "jhfdb", "12345") == "55542"
+ *      charrepl ("1234", "1234", "234A") == "AAAA"
+ *      charrepl ("1234", "1234", "234A", .T.) == "234A"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -230,7 +230,7 @@ HB_FUNC( CHARREPL )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_CHARREPL, NULL, "CHARREPL", 0,
+                                  CT_ERROR_CHARREPL, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 

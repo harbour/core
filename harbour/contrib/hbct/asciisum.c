@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   ASCIISUM CT3 string function
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
@@ -78,9 +78,9 @@
  *      ? asciisum ("ABC")  -->  197
  *      ? asciisum ("ACB")  -->  197
  *  $TESTS$
- *      asciisum (replicate ("A", 10000)) == 650000 
- *      asciisum ("0123456789") == 525              
- *      asciisum (nil) == 0                         
+ *      asciisum (replicate ("A", 10000)) == 650000
+ *      asciisum ("0123456789") == 525
+ *      asciisum (nil) == 0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -117,7 +117,7 @@ HB_FUNC( ASCIISUM )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_ASCIISUM, NULL, "ASCIISUM", 0,
+                                  CT_ERROR_ASCIISUM, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 

@@ -15,7 +15,7 @@
  *
  * Copyright 2001  Alejandro de Garate  <alex_degarate@hotmail.com>
  *
- * Documentation and changes concerning error handling Copyright 2001 
+ * Documentation and changes concerning error handling Copyright 2001
  *   IntTec GmbH, Freiburg, Germany, Author: Martin Vogel <vogel@inttec.de>
  *
  * www - http://www.harbour-project.org
@@ -99,7 +99,7 @@
  *  $EXAMPLES$
  *      // Payment of 1000 per year for 10 years at a interest rate
  *      // of 5 per cent per year
- *      
+ *
  *      ? fv (1000, 0.05, 10)  --> 12577.893
  *  $TESTS$
  *      fv (1000, 0.00, 10) == 10000.0
@@ -155,7 +155,7 @@ HB_FUNC( FV )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_FV, NULL, "FV", 0,
+                                  CT_ERROR_FV, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 
@@ -200,7 +200,7 @@ HB_FUNC( FV )
  *      // at a interest rate of 0.5% per month (6% per year), so instead
  *      // of 6000 Dollars (the amount you will pay back) the bank will pay
  *      // you
- *      
+ *
  *      ? pv (100, 0.005, 60)  --> 5172.56
  *  $TESTS$
  *      pv (100, 0.0, 60)   == 6000.0
@@ -256,7 +256,7 @@ HB_FUNC( PV )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_PV, NULL, "PV", 0,
+                                  CT_ERROR_PV, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 
@@ -299,7 +299,7 @@ HB_FUNC( PV )
  *      // You get a loan of 5172.56 at a interest rate of 0.5% per
  *      // month (6% per year).
  *      // For 5 years, you have to pay back every month
- *      
+ *
  *      ? payment (5172.56, 0.005, 60)  --> 100.00
  *  $TESTS$
  *      payment (5172.56, 0.0, 60)   == 86.21
@@ -355,7 +355,7 @@ HB_FUNC( PAYMENT )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_PAYMENT, NULL, "PAYMENT", 0,
+                                  CT_ERROR_PAYMENT, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 
@@ -401,7 +401,7 @@ HB_FUNC( PAYMENT )
  *      // You get a loan of 5172.56 at a interest rate of 0.5% per
  *      // month (6% per year).
  *      // You can afford to pay 100 back every month, so you need
- *      
+ *
  *      ? periods (5172.56, 100, 0.005)  --> 60.0
  *
  *      // months to cancel the loan.
@@ -476,7 +476,7 @@ HB_FUNC( PERIODS )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_PERIODS, NULL, "PERIODS", 0,
+                                  CT_ERROR_PERIODS, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 
@@ -509,14 +509,14 @@ HB_FUNC( PERIODS )
  *      the same equation used in the PAYMENT() or PERIODS() function:
  *
  *      <nPayment> = <nLoan>*(<nInterest>/100)/(1-(1+<nInterest>/100)^(-<nPeriods>))
- *      
+ *
  *      However, this equation can not be solved for <nInterest> in a "closed"
  *      manner, i.e. <nInterest> = ..., so that the result can only be estimated.
  *  $EXAMPLES$
  *      // You get a loan of 5172.56, pay 100 back every month for
  *      // 5 years (60 months). The effective interest rate per
  *      // period (=month) is
- *      
+ *
  *      ? rate (5172.56, 100, 60)  --> 0.005
  *
  *  $TESTS$
@@ -592,7 +592,7 @@ HB_FUNC( RATE )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_RATE, NULL, "RATE", 0,
+                                  CT_ERROR_RATE, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 

@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   CT3 string functions
  *     - TOKENINIT()
  *     - TOKENEXIT()
@@ -322,7 +322,7 @@ static void sTokSet( TOKEN_ENVIRONMENT env )
  *      to be tokenized since the tokenization has to take place only once
  *      whereas the TOKEN() function must always start the tokenizing process
  *      from scratch.
- * 
+ *
  *      Unlike CTIII, this function provides two mechanisms of storing the
  *      resulting token environment. If a variable is passed by reference
  *      as 4th parameter, the token environment is stored in this variable,
@@ -407,7 +407,7 @@ HB_FUNC( TOKENINIT )
          if( iArgErrorMode != CT_ARGERR_IGNORE )
          {
             ct_error( ( USHORT ) iArgErrorMode, EG_MEM, CT_ERROR_TOKENINIT,
-                      NULL, "TOKENINIT", 0, EF_CANDEFAULT,
+                      NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                       HB_ERR_ARGS_BASEPARAMS );
          }
          hb_retl( 0 );
@@ -452,7 +452,7 @@ HB_FUNC( TOKENINIT )
             if( iArgErrorMode != CT_ARGERR_IGNORE )
             {
                ct_error( ( USHORT ) iArgErrorMode, EG_MEM, CT_ERROR_TOKENINIT,
-                         NULL, "TOKENINIT", 0, EF_CANDEFAULT,
+                         NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                          HB_ERR_ARGS_BASEPARAMS );
             }
             sTokEnvDel( sTokenEnvironment );
@@ -503,7 +503,7 @@ HB_FUNC( TOKENINIT )
          if( iArgErrorMode != CT_ARGERR_IGNORE )
          {
             pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                     CT_ERROR_TOKENINIT, NULL, "TOKENINIT", 0,
+                                     CT_ERROR_TOKENINIT, NULL, HB_ERR_FUNCNAME, 0,
                                      EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
          }
          if( pSubst != NULL )
@@ -595,7 +595,7 @@ HB_FUNC( TOKENNEXT )
             if( iArgErrorMode != CT_ARGERR_IGNORE )
             {
                ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENNEXT,
-                         NULL, "TOKENNEXT", 0, EF_CANDEFAULT,
+                         NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                          HB_ERR_ARGS_BASEPARAMS );
             }
             hb_retc( NULL );
@@ -614,7 +614,7 @@ HB_FUNC( TOKENNEXT )
             if( iArgErrorMode != CT_ARGERR_IGNORE )
             {
                ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENNEXT,
-                         NULL, "TOKENNEXT", 0, EF_CANDEFAULT,
+                         NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                          HB_ERR_ARGS_BASEPARAMS );
             }
             hb_retc( NULL );
@@ -643,7 +643,7 @@ HB_FUNC( TOKENNEXT )
          if( iArgErrorMode != CT_ARGERR_IGNORE )
          {
             ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENNEXT, NULL,
-                      "TOKENNEXT", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+                      HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
          if( ISCHAR( 3 ) && ISBYREF( 3 ) )
          {
@@ -677,7 +677,7 @@ HB_FUNC( TOKENNEXT )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_TOKENNEXT, NULL, "TOKENNEXT", 0,
+                                  CT_ERROR_TOKENNEXT, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -709,7 +709,7 @@ HB_FUNC( TOKENNEXT )
  *      otherwise the global TE is used.
  *  $EXAMPLES$
  *      tokeninit ("a.b.c.d", ".", 1)  // initialize global TE
- *      ? tokennum()  // --> 4   
+ *      ? tokennum()  // --> 4
  *  $TESTS$
  *  $STATUS$
  *      Ready
@@ -743,7 +743,7 @@ HB_FUNC( TOKENNUM )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_TOKENNUM, NULL, "TOKENNUM", 0,
+                                  CT_ERROR_TOKENNUM, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -816,7 +816,7 @@ HB_FUNC( TOKENEND )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_TOKENEND, NULL, "TOKENEND", 0,
+                                  CT_ERROR_TOKENEND, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -956,7 +956,7 @@ HB_FUNC( TOKENAT )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENAT,
-                   NULL, "TOKENAT", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+                   NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
       }
       hb_retni( 0 );
       return;
@@ -975,7 +975,7 @@ HB_FUNC( TOKENAT )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENAT, NULL,
-                   "TOKENAT", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+                   HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
       }
       hb_retni( 0 );
       return;
@@ -1085,7 +1085,7 @@ HB_FUNC( RESTTOKEN )
                if( iArgErrorMode != CT_ARGERR_IGNORE )
                {
                   ct_error( ( USHORT ) iArgErrorMode, EG_MEM, CT_ERROR_RESTTOKEN,
-                            NULL, "RESTTOKEN", 0, EF_CANDEFAULT,
+                            NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                             HB_ERR_ARGS_BASEPARAMS );
                }
                hb_retc( NULL );
@@ -1114,7 +1114,7 @@ HB_FUNC( RESTTOKEN )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_RESTTOKEN, NULL, "RESTTOKEN", 0,
+                                  CT_ERROR_RESTTOKEN, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )

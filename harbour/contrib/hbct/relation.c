@@ -153,7 +153,7 @@ HB_FUNC( CHARRELA )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_CHARRELA, NULL, "CHARRELA", 0,
+                                  CT_ERROR_CHARRELA, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 
@@ -171,7 +171,7 @@ HB_FUNC( CHARRELA )
  *  $CATEGORY$
  *      CT3 string functions
  *  $ONELINER$
- *      Relation dependant character replacement 
+ *      Relation dependant character replacement
  *  $SYNTAX$
  *      CHARRELREP (<cStringToMatch1>, <cString1>,
  *                  <cStringToMatch2>, <[@]cString2>,
@@ -313,7 +313,7 @@ HB_FUNC( CHARRELREP )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_CHARRELREP, NULL, "CHARRELREP", 0,
+                                  CT_ERROR_CHARRELREP, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 

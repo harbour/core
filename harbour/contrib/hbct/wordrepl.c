@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   CT3 string function WORDREPL()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
@@ -96,16 +96,16 @@
  *      to .T., but one must then pass <cString> by reference to get a result.
  *  $EXAMPLES$
  *      ? wordrepl("CC", "AABBCCDDEE", "XX") // "AABBXXDDEE"
- *      ? wordrepl("aa", "1aaaa", "ba")      // "1abaa" 
- *      ? wordrepl("aa", "1aaaa", "ba", .T.) // "1baba" 
+ *      ? wordrepl("aa", "1aaaa", "ba")      // "1abaa"
+ *      ? wordrepl("aa", "1aaaa", "ba", .T.) // "1baba"
  *      csetatmupa(.T.)
- *      ? wordrepl("aa", "1aaaa", "ba")      // "1abaa" 
- *      ? wordrepl("aa", "1aaaa", "ba", .T.) // "1bbba" 
+ *      ? wordrepl("aa", "1aaaa", "ba")      // "1abaa"
+ *      ? wordrepl("aa", "1aaaa", "ba", .T.) // "1bbba"
  *  $TESTS$
  *      wordrepl("CC", "AABBCCDDEE", "XX") == "AABBXXDDEE"
- *      wordrepl("aa", "1aaaa", "ba")      == "1abaa" 
- *      wordrepl("aa", "1aaaa", "ba", .T.) == "1baba" 
- *      eval ({||csetatmupa(.T.),wordrepl("aa", "1aaaa", "ba")}) == "1abaa" 
+ *      wordrepl("aa", "1aaaa", "ba")      == "1abaa"
+ *      wordrepl("aa", "1aaaa", "ba", .T.) == "1baba"
+ *      eval ({||csetatmupa(.T.),wordrepl("aa", "1aaaa", "ba")}) == "1abaa"
  *      eval ({||csetatmupa(.T.),wordrepl("aa", "1aaaa", "ba", .T.)}) == "1bbba"
  *  $STATUS$
  *      Ready
@@ -223,7 +223,7 @@ HB_FUNC( WORDREPL )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_WORDREPL, NULL, "WORDREPL", 0,
+                                  CT_ERROR_WORDREPL, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 

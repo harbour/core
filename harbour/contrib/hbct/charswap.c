@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   CT3 string functions
  *     - CHARSWAP()
  *     - WORDSWAP()
@@ -164,14 +164,14 @@ static void do_charswap( int iSwitch )
          {
             pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
                                      CT_ERROR_CHARSWAP,
-                                     NULL, "CHARSWAP", 0, EF_CANSUBSTITUTE,
+                                     NULL, HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                      HB_ERR_ARGS_BASEPARAMS );
          }
          else
          {
             pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
                                      CT_ERROR_WORDSWAP,
-                                     NULL, "WORDSWAP", 0, EF_CANSUBSTITUTE,
+                                     NULL, HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                      HB_ERR_ARGS_BASEPARAMS );
          }
       }

@@ -84,13 +84,13 @@
  *      TODO: add documentation
  *  $EXAMPLES$
  *  $TESTS$
- *      tabexpand("-"+chr(9)+"!")             == "-       !" 
- *      tabexpand("----"+chr(9) +"!")         == "----    !" 
- *      tabexpand("-"+chr(9)+"!",, "+")       == "-+++++++!" 
- *      tabexpand("-"+chr(9)+ "!", 4)         == "-   !"     
- *      tabexpand("----"+chr(9)+ "!", 8)      == "----    !" 
- *      tabexpand("----"+chr(9)+ "!", 8, "+") == "----++++!" 
- *      tabexpand("-"+chr(9)+"!"+hb_osnewline()+"----"+chr(9)+ "!",, "+") == "-+++++++!"+hb_osnewline()+"----++++!" 
+ *      tabexpand("-"+chr(9)+"!")             == "-       !"
+ *      tabexpand("----"+chr(9) +"!")         == "----    !"
+ *      tabexpand("-"+chr(9)+"!",, "+")       == "-+++++++!"
+ *      tabexpand("-"+chr(9)+ "!", 4)         == "-   !"
+ *      tabexpand("----"+chr(9)+ "!", 8)      == "----    !"
+ *      tabexpand("----"+chr(9)+ "!", 8, "+") == "----++++!"
+ *      tabexpand("-"+chr(9)+"!"+hb_osnewline()+"----"+chr(9)+ "!",, "+") == "-+++++++!"+hb_osnewline()+"----++++!"
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -253,7 +253,7 @@ HB_FUNC( TABEXPAND )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_TABEXPAND, NULL, "TABEXPAND", 0,
+                                  CT_ERROR_TABEXPAND, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -272,7 +272,7 @@ HB_FUNC( TABEXPAND )
  *  $ONELINER$
  *      Pack fill characters to appropriate tab characters
  *  $SYNTAX$
- *      TABPACK (<cString>, [<nTabWidth>], [<cFillChar|nFillChar>], 
+ *      TABPACK (<cString>, [<nTabWidth>], [<cFillChar|nFillChar>],
  *               [<cNewLineCharacters>], [<cTabChar|nTabChar>],
  *               [<lIgnore141>]) -> cPackedString
  *  $ARGUMENTS$
@@ -488,7 +488,7 @@ HB_FUNC( TABPACK )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_TABPACK, NULL, "TABPACK", 0,
+                                  CT_ERROR_TABPACK, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )

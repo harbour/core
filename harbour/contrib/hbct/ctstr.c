@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   internal and switch functions for CT3 string functions
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
@@ -281,7 +281,7 @@ char *ct_at_charset_backward( char *pcString, size_t sStrLen,
 }
 
 
-/*  
+/*
  *  CSETREF() stuff
  */
 
@@ -376,7 +376,7 @@ HB_FUNC( CSETREF )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CSETREF,
-                   NULL, "CSETREF", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+                   NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
       }
    }
 }
@@ -419,7 +419,7 @@ int ct_getatmupa( void )
  *                      current state of the switch
  *  $DESCRIPTION$
  *      CSETATMUPA determines how the following CT3 string functions
- *      
+ *
  *      ATNUM()       AFTERATNUM()  BEFORATNUM()
  *      ATREPL()      NUMAT()       ATADJUST()
  *      WORDTOCHAR()  WORDREPL()
@@ -460,7 +460,7 @@ HB_FUNC( CSETATMUPA )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CSETATMUPA, NULL,
-                   "CSETATMUPA", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+                   HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
       }
    }
 }
@@ -538,11 +538,11 @@ char ct_getatlikechar( void )
  *
  *      <nMode> can be one of the following values that are defined
  *      in ct.ch
- * 
+ *
  *      Definition            | Value
  *      ----------------------|------
- *      CT_SETATLIKE_EXACT    |   0 
- *      CT_SETATLIKE_WILDCARD |   1 
+ *      CT_SETATLIKE_EXACT    |   0
+ *      CT_SETATLIKE_WILDCARD |   1
  *
  *  $EXAMPLES$
  *  $TESTS$
@@ -582,7 +582,7 @@ HB_FUNC( SETATLIKE )
          if( iArgErrorMode != CT_ARGERR_IGNORE )
          {
             ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_SETATLIKE,
-                      NULL, "SETATLIKE", 0, EF_CANDEFAULT,
+                      NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                       HB_ERR_ARGS_BASEPARAMS );
          }
       }
@@ -614,7 +614,7 @@ HB_FUNC( SETATLIKE )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_SETATLIKE, NULL,
-                   "SETATLIKE", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+                   HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
       }
    }
 }

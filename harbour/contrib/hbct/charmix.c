@@ -7,7 +7,7 @@
  *   CHARMIX() CT3 function
  *
  * Initial code: Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
- * 
+ *
  * CT3 conformity: Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *                 Author: Martin Vogel <vogel@inttec.de>
  *
@@ -124,7 +124,7 @@ HB_FUNC( CHARMIX )
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
          {
-            ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX, NULL, "CHARMIX", 0,
+            ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX, NULL, HB_ERR_FUNCNAME, 0,
                       EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
          hb_retc( NULL );
@@ -142,7 +142,7 @@ HB_FUNC( CHARMIX )
             if( iArgErrorMode != CT_ARGERR_IGNORE )
             {
                ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX,
-                         NULL, "CHARMIX", 0,
+                         NULL, HB_ERR_FUNCNAME, 0,
                          EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
             }
             hb_retclen( pcString1, sLen1 );
@@ -175,7 +175,7 @@ HB_FUNC( CHARMIX )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_CHARMIX, NULL, "CHARMIX", 0,
+                                  CT_ERROR_CHARMIX, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 

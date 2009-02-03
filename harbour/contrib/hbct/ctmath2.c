@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *
  *   CT3 mathematical functions
  *     - FLOOR
@@ -15,8 +15,8 @@
  * NOTE: All these functions were builded using Borland C++ 5.5 (free version)
  *
  * Copyright 2001  Alejandro de Garate  <alex_degarate@hotmail.com>
- * 
- * Documentation and changes concerning error handling Copyright 2001 
+ *
+ * Documentation and changes concerning error handling Copyright 2001
  *   IntTec GmbH, Freiburg, Germany, Author: Martin Vogel <vogel@inttec.de>
  *
  * www - http://www.harbour-project.org
@@ -59,7 +59,7 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- * 
+ *
  */
 
 
@@ -75,13 +75,13 @@
  *      Rounds down a number to the next integer
  *  $SYNTAX$
  *      FLOOR (nNumber) -> nDownRoundedNumber
- *  $ARGUMENTS$      
+ *  $ARGUMENTS$
  *      <nNumber>             number to round down
  *  $RETURNS$
  *      <nDownRoundedNumber>  the rounded number
  *  $DESCRIPTION$
  *      The function FLOOR() determines the biggest integer that is smaller
- *      than <nNumber>. 
+ *      than <nNumber>.
  *  $EXAMPLES$
  *      ? floor (1.1)   --> 1.0
  *      ? floor (-1.1)  --> -2.0
@@ -128,7 +128,7 @@ HB_FUNC( FLOOR )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst =
-            ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_FLOOR, NULL, "FLOOR", 0,
+            ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_FLOOR, NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -148,13 +148,13 @@ HB_FUNC( FLOOR )
  *      Rounds up a number to the next integer
  *  $SYNTAX$
  *      CEILING (nNumber) -> nUpRoundedNumber
- *  $ARGUMENTS$      
+ *  $ARGUMENTS$
  *      <nNumber>             number to round up
  *  $RETURNS$
  *      <nUpRoundedNumber>    the rounded number
  *  $DESCRIPTION$
  *      The function CEILING() determines the smallest integer that is bigger
- *      than <nNumber>. 
+ *      than <nNumber>.
  *  $EXAMPLES$
  *      ? ceiling (1.1)   --> 2.0
  *      ? ceiling (-1.1)  --> -1.0
@@ -201,7 +201,7 @@ HB_FUNC( CEILING )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_CEILING, NULL, "CEILING", 0,
+                                  CT_ERROR_CEILING, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -221,8 +221,8 @@ HB_FUNC( CEILING )
  *      Sign of a number
  *  $SYNTAX$
  *      SIGN (nNumber) -> nSign
- *  $ARGUMENTS$      
- *      <nNumber>             a number 
+ *  $ARGUMENTS$
+ *      <nNumber>             a number
  *  $RETURNS$
  *      <nSign>               sign of <nNumber>
  *  $DESCRIPTION$
@@ -234,7 +234,7 @@ HB_FUNC( CEILING )
  *      ? sign (1.1)   --> 1
  *      ? sign (-1.1)  --> -1
  *      ? sign (0.0)  --> 0
- *  $TESTS$         
+ *  $TESTS$
  *      sign (1.1)  == 1
  *      sign (-1.1) == -1
  *      sign (0.0)  == 0
@@ -276,7 +276,7 @@ HB_FUNC( SIGN )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_SIGN, NULL, "SIGN", 0,
+                                  CT_ERROR_SIGN, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -293,10 +293,10 @@ HB_FUNC( SIGN )
  *  $CATEGORY$
  *      CT3 math functions
  *  $ONELINER$
- *      Decadic logarithm of a number 
+ *      Decadic logarithm of a number
  *  $SYNTAX$
  *      LOG10 (nNumber) -> nLogarithm
- *  $ARGUMENTS$      
+ *  $ARGUMENTS$
  *      <nNumber>             number to logarithm
  *  $RETURNS$
  *      <nLogarithm>          decadic logarithm of <nNumber>
@@ -361,7 +361,7 @@ HB_FUNC( LOG10 )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_LOG10, NULL, "LOG10", 0,
+                                  CT_ERROR_LOG10, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -378,10 +378,10 @@ HB_FUNC( LOG10 )
  *  $CATEGORY$
  *      CT3 math functions
  *  $ONELINER$
- *      Calculates faculty 
+ *      Calculates faculty
  *  $SYNTAX$
  *      FACT (nNumber) -> nFaculty
- *  $ARGUMENTS$      
+ *  $ARGUMENTS$
  *      <nNumber>          number between 0 and 21
  *  $RETURNS$
  *      <nFaculty>         the faculty of <nNumber>
@@ -435,7 +435,7 @@ HB_FUNC( FACT )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_FACT, NULL, "FACT", 0,
+                                  CT_ERROR_FACT, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )

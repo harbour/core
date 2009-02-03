@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   CT3 string function CHARMIRR()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
@@ -81,11 +81,11 @@
  *      switch to .T., but <cString> must then be passed by reference to get
  *      a result.
  *  $EXAMPLES$
- *      ? charmirr ("racecar")        // "racecar" 
+ *      ? charmirr ("racecar")        // "racecar"
  *      ? charmirr ("racecar  ", .T.) // "racecar  "
  *      ? charmirr ("racecar  ", .F.) // "  racecar"
  *  $TESTS$
- *      charmirr ("racecar") == "racecar" 
+ *      charmirr ("racecar") == "racecar"
  *      charmirr ("racecar  ", .T.) == "racecar  "
  *      charmirr ("racecar  ", .F.) == "  racecar"
  *  $STATUS$
@@ -129,7 +129,7 @@ HB_FUNC( CHARMIRR )
          if( iArgErrorMode != CT_ARGERR_IGNORE )
          {
             ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARMIRR, NULL,
-                      "CHARMIRR", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+                      HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
          if( iNoRet )
             hb_retl( 0 );
@@ -179,7 +179,7 @@ HB_FUNC( CHARMIRR )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_CHARMIRR, NULL, "CHARMIRR", 0,
+                                  CT_ERROR_CHARMIRR, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 

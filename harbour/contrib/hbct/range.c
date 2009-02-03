@@ -75,9 +75,9 @@
  *                                          // and from chr(0) to "0"
  *      ? rangerem ("0","9","yearcurr.dbf") // "yearcurr.dbf", test leaving string untouched
  *  $TESTS$
- *      rangerem ("0","9","year2002.dbf") == "year.dbf"     
- *      rangerem ("9","0","year2002.dbf") == "22"         
- *      rangerem ("0","9","yearcurr.dbf") == "yearcurr.dbf" 
+ *      rangerem ("0","9","year2002.dbf") == "year.dbf"
+ *      rangerem ("9","0","year2002.dbf") == "22"
+ *      rangerem ("0","9","yearcurr.dbf") == "yearcurr.dbf"
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -145,7 +145,7 @@ HB_FUNC( RANGEREM )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_RANGEREM, NULL, "RANGEREM", 0,
+                                  CT_ERROR_RANGEREM, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 
@@ -179,9 +179,9 @@ HB_FUNC( RANGEREM )
  *                                               // and from chr(0) to "0"
  *      ? rangerepl ("0","9","yearcurr.dbf","?") // "yearcurr.dbf", test leaving string untouched
  *  $TESTS$
- *      rangerepl ("0","9","year2002.dbf","?") == "year????.dbf" 
- *      rangerepl ("9","0","year2002.dbf","?") == "????2??2????" 
- *      rangerepl ("0","9","yearcurr.dbf","?") == "yearcurr.dbf" 
+ *      rangerepl ("0","9","year2002.dbf","?") == "year????.dbf"
+ *      rangerepl ("9","0","year2002.dbf","?") == "????2??2????"
+ *      rangerepl ("0","9","yearcurr.dbf","?") == "yearcurr.dbf"
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -273,7 +273,7 @@ HB_FUNC( RANGEREPL )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_RANGEREPL, NULL, "RANGEREPL", 0,
+                                  CT_ERROR_RANGEREPL, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 

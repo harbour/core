@@ -154,7 +154,7 @@ HB_FUNC( STRSWAP )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_STRSWAP, NULL, "STRSWAP", 0,
+                                  CT_ERROR_STRSWAP, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 

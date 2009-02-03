@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   ATREPL() CT3 string function
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
@@ -69,7 +69,7 @@
  *  $ARGUMENTS$
  *      <cStringToMatch>   is the substring searched for in <cString>
  *      <cString>          is the processed string
- *      <cReplacement>     is the replacement for sequences found 
+ *      <cReplacement>     is the replacement for sequences found
  *      [<nCounter>]       specifies the number of replacements
  *                         Default: last occurence
  *      [<lMode>]          if set to .T., only the <nCounter>th sequence
@@ -155,7 +155,7 @@ HB_FUNC( ATREPL )
          if( iArgErrorMode != CT_ARGERR_IGNORE )
          {
             ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ATREPL, NULL,
-                      "ATREPL", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+                      HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
          hb_retclen( pcString, sStrLen );
          return;
@@ -334,7 +334,7 @@ HB_FUNC( ATREPL )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_ATREPL, NULL, "ATREPL", 0,
+                                  CT_ERROR_ATREPL, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 

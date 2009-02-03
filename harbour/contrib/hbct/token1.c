@@ -3,13 +3,13 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   CT3 string functions
  *     - TOKEN()
  *     - NUMTOKEN()
  *     - ATTOKEN()
  *     - TOKENLOWER()
- *     - TOKENUPPER() 
+ *     - TOKENUPPER()
  *     - TOKENSEP()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
@@ -198,7 +198,7 @@ static void do_token1( int iSwitch )
 
          if( sSubStrLen == 0 )
          {
-            /* string ends with tokenizer (null string after tokenizer at 
+            /* string ends with tokenizer (null string after tokenizer at
                end of string is not a token) */
             switch ( iSwitch )
             {
@@ -258,7 +258,7 @@ static void do_token1( int iSwitch )
                break;
 
             case DO_TOKEN1_TOKENUPPER:
-               if( pcSubStr != pc )     /* letters can be tokenizers, too, 
+               if( pcSubStr != pc )     /* letters can be tokenizers, too,
                                            but they should not be uppercase'd */
                   *( pcRet + ( pcSubStr - pcString ) ) = ( char ) hb_charUpper( ( UCHAR ) *pcSubStr );
                break;
@@ -377,7 +377,7 @@ static void do_token1( int iSwitch )
             if( iArgErrorMode != CT_ARGERR_IGNORE )
             {
                pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                        CT_ERROR_TOKEN, NULL, "TOKEN", 0,
+                                        CT_ERROR_TOKEN, NULL, HB_ERR_FUNCNAME, 0,
                                         EF_CANSUBSTITUTE,
                                         HB_ERR_ARGS_BASEPARAMS );
             }
@@ -473,7 +473,7 @@ static void do_token1( int iSwitch )
  *      parameter to a value different than 0, you can specify how many tokenizing
  *      characters are combined at most to one token stop. Be aware that
  *      this can result to empty tokens there the start position is not
- *      defined clearly. Then, ATTOKEN() returns the position there the 
+ *      defined clearly. Then, ATTOKEN() returns the position there the
  *      token WOULD start if its length is larger than 0. To check for
  *      empty tokens, simply look if the character at the returned position
  *      is within the tokenizer list.
@@ -550,15 +550,15 @@ HB_FUNC( ATTOKEN )
  *      Therefore, additional calls to the TOKENSEP() function are not
  *      necessary.
  *  $EXAMPLES$
- *      ? token ("Hello, World!")         -->  "World" 
- *      ? token ("Hello, World!",,2,1)    --> "" 
+ *      ? token ("Hello, World!")         -->  "World"
+ *      ? token ("Hello, World!",,2,1)    --> ""
  *      ? token ("Hello, World!",",",2,1) --> " World!"
- *      ? token ("Hello, World!"," ",2,1) --> "World!" 
+ *      ? token ("Hello, World!"," ",2,1) --> "World!"
  *  $TESTS$
- *      token ("Hello, World!") == "World" 
- *      token ("Hello, World!",,2,1) == "" 
+ *      token ("Hello, World!") == "World"
+ *      token ("Hello, World!",,2,1) == ""
  *      token ("Hello, World!",",",2,1) == " World!"
- *      token ("Hello, World!"," ",2,1) == "World!" 
+ *      token ("Hello, World!"," ",2,1) == "World!"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -594,9 +594,9 @@ HB_FUNC( TOKEN )
  *  $DESCRIPTION$
  *  $EXAMPLES$
  *  $TESTS$
- *      numtoken ("Hello, World!") ==  2 
+ *      numtoken ("Hello, World!") ==  2
  *      numtoken ("This is good. See you! How do you do?",".!?") == 3
- *      numtoken ("one,,three,four,,six",",",1) ==  6 
+ *      numtoken ("one,,three,four,,six",",",1) ==  6
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -653,13 +653,13 @@ HB_FUNC( NUMTOKEN )
  *      the result.
  *  $EXAMPLES$
  *      ? tokenlower("Hello, World, here I am!")       // "hello, world, here i am!"
- *      ? tokenlower("Hello, World, here I am!",,3)    // "hello, world, here I am!" 
- *      ? tokenlower("Hello, World, here I am!",",",3) // "hello, World, here I am!" 
+ *      ? tokenlower("Hello, World, here I am!",,3)    // "hello, world, here I am!"
+ *      ? tokenlower("Hello, World, here I am!",",",3) // "hello, World, here I am!"
  *      ? tokenlower("Hello, World, here I am!"," W")  // "hello, World, here i am!"
  *  $TESTS$
  *      tokenlower("Hello, World, here I am!") == "hello, world, here i am!"
- *      tokenlower("Hello, World, here I am!",,3)    == "hello, world, here I am!" 
- *      tokenlower("Hello, World, here I am!",",",3) == "hello, World, here I am!" 
+ *      tokenlower("Hello, World, here I am!",,3)    == "hello, world, here I am!"
+ *      tokenlower("Hello, World, here I am!",",",3) == "hello, World, here I am!"
  *      tokenlower("Hello, World, here I am!"," W")  == "hello, World, here i am!"
  *  $STATUS$
  *      Ready

@@ -124,7 +124,7 @@ USHORT ct_error( USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
 }
 
 
-/* throwing a CT-subsystem error with value substitution 
+/* throwing a CT-subsystem error with value substitution
    - function adapted from errorapi.c */
 PHB_ITEM ct_error_subst( USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
                          const char *szDescription, const char *szOperation, USHORT uiOsCode, USHORT uiFlags, ULONG ulArgCount, ... )
@@ -227,7 +227,7 @@ int ct_getargerrormode( void )
  *           CT_ARGERR_WARNING       corresponds to ES_WARNING
  *           CT_ARGERR_ERROR         corresponds to ES_ERROR
  *           CT_ARGERR_CATASTROPHIC  corresponds to ES_CATASTROPHIC
- *           CT_ARGERR_IGNORE       
+ *           CT_ARGERR_IGNORE
  *      The last is the default behaviour and switches any argument error
  *      throwing off.
  *  $EXAMPLES$
@@ -267,7 +267,7 @@ HB_FUNC( CSETARGERR )
          if( iArgErrorMode != CT_ARGERR_IGNORE )
          {
             ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CSETARGERR,
-                      NULL, "CSETARGERR", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+                      NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
       }
    }
@@ -278,7 +278,7 @@ HB_FUNC( CSETARGERR )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CSETARGERR, NULL,
-                   "CSETARGERR", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+                   HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
       }
    }
 }

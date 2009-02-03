@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *
  *   CT3 Numeric functions - PART 1
  *     - CELSIUS
@@ -13,8 +13,8 @@
  * NOTE: All these functions were builded using Borland C++ 5.5 (free version)
  *
  * Copyright 2001  Alejandro de Garate  <alex_degarate@hotmail.com>
- * 
- * Documentation and changes concerning error handling Copyright 2001 
+ *
+ * Documentation and changes concerning error handling Copyright 2001
  *   IntTec GmbH, Freiburg, Germany, Author: Martin Vogel <vogel@inttec.de>
  *
  * www - http://www.harbour-project.org
@@ -58,7 +58,7 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- * 
+ *
  */
 
 
@@ -120,7 +120,7 @@ HB_FUNC( CELSIUS )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_CELSIUS, NULL, "CELSIUS", 0,
+                                  CT_ERROR_CELSIUS, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 
@@ -187,7 +187,7 @@ HB_FUNC( FAHRENHEIT )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_FAHRENHEIT, NULL, "FAHRENHEIT", 0,
+                                  CT_ERROR_FAHRENHEIT, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 
@@ -218,7 +218,7 @@ HB_FUNC( FAHRENHEIT )
  *  $RETURNS$
  *      <nLargestNumber>     the largest floating point number available in the system
  *  $DESCRIPTION$
- *      INFINITY() returns the largest floating point number available 
+ *      INFINITY() returns the largest floating point number available
  *      in the system. For platform independance, this is set to DBL_MAX.
  *  $EXAMPLES$
  *  $TESTS$

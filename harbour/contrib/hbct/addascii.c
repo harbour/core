@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   ADDASCII() CT3 string function
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
@@ -93,11 +93,11 @@
  *  $EXAMPLES$
  *      // Add 32 to the ASCII value of the character at the last position
  *      // in the string
- *      
+ *
  *      ? addascii ("SmitH", 32)  --> "Smith"
  *  $TESTS$
  *      addascii ("0000", 1, 1) == "1000"
- *      addascii ("0000", 1) == "0001" 
+ *      addascii ("0000", 1) == "0001"
  *      addascii ("AAAA", -255, 1) == "BAAA"
  *      addascii ("AAAA", -255) == "AAAB"
  *      addascii ("AAAA", 1, 2, .T.) == "ABAA"
@@ -116,7 +116,7 @@
  *  $FILES$
  *      Source is addascii.c, library is ct3.
  *  $SEEALSO$
- *      CSETREF() 
+ *      CSETREF()
  *  $END$
  */
 
@@ -148,7 +148,7 @@ HB_FUNC( ADDASCII )
          if( iArgErrorMode != CT_ARGERR_IGNORE )
          {
             ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ADDASCII, NULL,
-                      "ADDASCII", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+                      HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
          /* return string unchanged */
          if( iNoRet )
@@ -209,7 +209,7 @@ HB_FUNC( ADDASCII )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ADDASCII,
-                                  NULL, "ADDASCII", 0, EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
+                                  NULL, HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 
       if( pSubst != NULL )

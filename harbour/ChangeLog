@@ -8,6 +8,44 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-03 02:07 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbct/strdiff.c
+  * contrib/hbct/token2.c
+  * contrib/hbct/atadjust.c
+  * contrib/hbct/ctmath.c
+  * contrib/hbct/charsort.c
+  * contrib/hbct/charmix.c
+  * contrib/hbct/wordrepl.c
+  * contrib/hbct/charrepl.c
+  * contrib/hbct/strswap.c
+  * contrib/hbct/trig.c
+  * contrib/hbct/charswap.c
+  * contrib/hbct/charop.c
+  * contrib/hbct/num1.c
+  * contrib/hbct/ctstr.c
+  * contrib/hbct/token1.c
+  * contrib/hbct/charmirr.c
+  * contrib/hbct/ctc.c
+  * contrib/hbct/relation.c
+  * contrib/hbct/atnum.c
+  * contrib/hbct/posdiff.c
+  * contrib/hbct/finan.c
+  * contrib/hbct/range.c
+  * contrib/hbct/addascii.c
+  * contrib/hbct/ctmath2.c
+  * contrib/hbct/tab.c
+  * contrib/hbct/asciisum.c
+  * contrib/hbct/pos2.c
+  * contrib/hbct/numat.c
+  * contrib/hbct/atrepl.c
+  * contrib/hbct/wordtoch.c
+    % Using HB_ERR_FUNCNAME.
+
+  * contrib/hbct/charop.c
+    ! Fixed CHARADD(), CHARSUB(), CHARAND(), CHAROR(), CHARXOR()
+      showing wrong function name in error message when first
+      passed parameter is invalid.
+
 2009-02-03 01:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbct/charop.c
     ! Fixed CHARADD(), CHARSUB(), CHARAND(), CHAROR(), CHARXOR()

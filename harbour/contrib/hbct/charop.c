@@ -211,7 +211,7 @@ static void do_charop( int iSwitch )
                if( iArgErrorMode != CT_ARGERR_IGNORE )
                {
                   ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARADD,
-                            NULL, "CHARADD", 0,
+                            NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
                }
                hb_xmemcpy( pucResult, pucString, sStrLen );
@@ -237,7 +237,7 @@ static void do_charop( int iSwitch )
                if( iArgErrorMode != CT_ARGERR_IGNORE )
                {
                   ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARSUB,
-                            NULL, "CHARSUB", 0,
+                            NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
                }
                hb_xmemcpy( pucResult, pucString, sStrLen );
@@ -262,7 +262,7 @@ static void do_charop( int iSwitch )
 
                if( iArgErrorMode != CT_ARGERR_IGNORE )
                {
-                  ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARAND, NULL, "CHARAND", 0,
+                  ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARAND, NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
                }
                hb_xmemcpy( pucResult, pucString, sStrLen );
@@ -287,7 +287,7 @@ static void do_charop( int iSwitch )
 
                if( iArgErrorMode != CT_ARGERR_IGNORE )
                {
-                  ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHAROR, NULL, "CHAROR", 0,
+                  ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHAROR, NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
                }
                hb_xmemcpy( pucResult, pucString, sStrLen );
@@ -312,7 +312,7 @@ static void do_charop( int iSwitch )
 
                if( iArgErrorMode != CT_ARGERR_IGNORE )
                {
-                  ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARXOR, NULL, "CHARXOR", 0,
+                  ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARXOR, NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
                }
                hb_xmemcpy( pucResult, pucString, sStrLen );
@@ -379,7 +379,7 @@ static void do_charop( int iSwitch )
                break;
          }
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG, iError,
-                                  NULL, "CHARRLR", 0, EF_CANSUBSTITUTE,
+                                  NULL, HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                   HB_ERR_ARGS_BASEPARAMS );
       }
 

@@ -3,8 +3,8 @@
  */
 
 /*
- * Harbour Project source code: 
- *   CT3 trigonometric functions 
+ * Harbour Project source code:
+ *   CT3 trigonometric functions
  *     - PI
  *     - SIN
  *     - COS
@@ -24,7 +24,7 @@
  *
  * Copyright 2001  Alejandro de Garate  <alex_degarate@hotmail.com>
  *
- * Documentation and changes concerning error handling Copyright 2001 
+ * Documentation and changes concerning error handling Copyright 2001
  *   IntTec GmbH, Freiburg, Germany, Author: Martin Vogel <vogel@inttec.de>
  *
  * www - http://www.harbour-project.org
@@ -181,7 +181,7 @@ HB_FUNC( SIN )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_SIN, NULL, "SIN", 0,
+                                  CT_ERROR_SIN, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -259,7 +259,7 @@ HB_FUNC( COS )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_COS, NULL, "COS", 0,
+                                  CT_ERROR_COS, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -337,7 +337,7 @@ HB_FUNC( TAN )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_TAN, NULL, "TAN", 0,
+                                  CT_ERROR_TAN, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -410,7 +410,7 @@ HB_FUNC( COT )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_COT, NULL, "COT", 0,
+                                  CT_ERROR_COT, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -440,7 +440,7 @@ HB_FUNC( COT )
  *      The return value is given in radiants (full angle equals 2*Pi -
  *      see DTOR() if you need to convert it into degress).
  *      Note, that <nSine> must be between -1 and 1 and that <nRadiant>
- *      is always between -PI()/2 and PI()/2. 
+ *      is always between -PI()/2 and PI()/2.
  *  $EXAMPLES$
  *      ? asin (0.0) --> 0.0
  *      ? asin (0.5) --> 0.5235...
@@ -489,7 +489,7 @@ HB_FUNC( ASIN )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_ASIN, NULL, "ASIN", 0,
+                                  CT_ERROR_ASIN, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -519,7 +519,7 @@ HB_FUNC( ASIN )
  *      The return value is given in radiants (full angle equals 2*Pi -
  *      see DTOR() if you need to convert it into degress).
  *      Note, that <nCosine> must be between -1 and 1 and that <nRadiant>
- *      is always between 0 and PI(). 
+ *      is always between 0 and PI().
  *  $EXAMPLES$
  *      ? acos (0.0) --> PI()/2
  *      ? acos (0.5) --> 1.04719...
@@ -569,7 +569,7 @@ HB_FUNC( ACOS )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_ACOS, NULL, "ACOS", 0,
+                                  CT_ERROR_ACOS, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -634,7 +634,7 @@ HB_FUNC( ATAN )
          else
          {
             /* atan normally don't error, but it's save to return PI()/2
-               or -PI()/2, respectively, as these 
+               or -PI()/2, respectively, as these
                are the boundary result values */
             if( dArg < 0.0 )
                hb_retnd( -CT_PI / 2.0 );
@@ -653,7 +653,7 @@ HB_FUNC( ATAN )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_ATAN, NULL, "ATAN", 0,
+                                  CT_ERROR_ATAN, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -750,7 +750,7 @@ HB_FUNC( ATN2 )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_ATN2, NULL, "ATN2", 0,
+                                  CT_ERROR_ATN2, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -834,7 +834,7 @@ HB_FUNC( SINH )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_SINH, NULL, "SINH", 0,
+                                  CT_ERROR_SINH, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -913,7 +913,7 @@ HB_FUNC( COSH )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_COSH, NULL, "COSH", 0,
+                                  CT_ERROR_COSH, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -993,7 +993,7 @@ HB_FUNC( TANH )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_TANH, NULL, "TANH", 0,
+                                  CT_ERROR_TANH, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -1057,7 +1057,7 @@ HB_FUNC( RTOD )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_RTOD, NULL, "RTOD", 0,
+                                  CT_ERROR_RTOD, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
@@ -1120,7 +1120,7 @@ HB_FUNC( DTOR )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
-                                  CT_ERROR_DTOR, NULL, "DTOR", 0,
+                                  CT_ERROR_DTOR, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
       if( pSubst != NULL )
