@@ -56,8 +56,8 @@
 
 /* ------------------------------------------------------------------- */
 
-/* Usage: w32_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry ) */
-PROCEDURE w32_regPathSplit( cRegPath, nHKEY, cKey, cEntry )
+/* Usage: win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry ) */
+PROCEDURE win_regPathSplit( cRegPath, nHKEY, cKey, cEntry )
    LOCAL cHKEY
    LOCAL tmp
 
@@ -99,17 +99,17 @@ PROCEDURE w32_regPathSplit( cRegPath, nHKEY, cKey, cEntry )
 
    RETURN
 
-FUNCTION w32_regRead( cRegPath, xDefault )
+FUNCTION win_regRead( cRegPath, xDefault )
    LOCAL nHKEY, cKey, cEntry
 
-   w32_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
+   win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
 
    RETURN GetRegistry( nHKEY, cKey, cEntry, xDefault )
 
-FUNCTION w32_regWrite( cRegPath, xValue )
+FUNCTION win_regWrite( cRegPath, xValue )
    LOCAL nHKEY, cKey, cEntry
 
-   w32_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
+   win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
 
    RETURN SetRegistry( nHKEY, cKey, cEntry, xValue )
 
@@ -168,11 +168,11 @@ FUNCTION GetRegistry( nHKEYHandle, cKeyName, cEntryName, xDefault )
 
    DEFAULT nHKeyHandle TO 0
 
-   IF win32_RegOpenKeyEx( nHKEYHandle, cKeyName, 0, KEY_QUERY_VALUE, @nKeyHandle ) == ERROR_SUCCESS
+   IF win_RegOpenKeyEx( nHKEYHandle, cKeyName, 0, KEY_QUERY_VALUE, @nKeyHandle ) == ERROR_SUCCESS
 
       nValueType := 0
       /* retrieve the length of the value */
-      IF win32_RegQueryValueEx( nKeyHandle, cEntryName, 0, @nValueType, @xRetVal ) > 0
+      IF win_RegQueryValueEx( nKeyHandle, cEntryName, 0, @nValueType, @xRetVal ) > 0
 
          IF nValueType == REG_DWORD .OR. ;
             nValueType == REG_DWORD_LITTLE_ENDIAN .OR. ;
@@ -184,7 +184,7 @@ FUNCTION GetRegistry( nHKEYHandle, cKeyName, cEntryName, xDefault )
          ENDIF
       ENDIF
 
-      win32_RegCloseKey( nKeyHandle )
+      win_RegCloseKey( nKeyHandle )
    ENDIF
 
    RETURN xRetVal
@@ -199,7 +199,7 @@ FUNCTION SetRegistry( nHKEYHandle, cKeyName, cEntryName, xValue )
 
    DEFAULT nHKeyHandle TO 0
 
-   IF win32_RegCreateKeyEx( nHKEYHandle, cKeyName, 0, 0, 0, KEY_SET_VALUE, 0, @nKeyHandle, @nResult ) == ERROR_SUCCESS
+   IF win_RegCreateKeyEx( nHKEYHandle, cKeyName, 0, 0, 0, KEY_SET_VALUE, 0, @nKeyHandle, @nResult ) == ERROR_SUCCESS
 
       /* no support for Arrays, Codeblock ... */
       cType := ValType( xValue )
@@ -220,10 +220,10 @@ FUNCTION SetRegistry( nHKEYHandle, cKeyName, cEntryName, xValue )
       ENDCASE
 
       IF cName != NIL
-         rVal := ( win32_RegSetValueEx( nKeyHandle, cEntryName, 0, nValueType, cName ) == ERROR_SUCCESS )
+         rVal := ( win_RegSetValueEx( nKeyHandle, cEntryName, 0, nValueType, cName ) == ERROR_SUCCESS )
       ENDIF
 
-      win32_RegCloseKey( nKeyHandle )
+      win_RegCloseKey( nKeyHandle )
    ENDIF
 
    RETURN rVal

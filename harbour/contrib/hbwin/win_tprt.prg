@@ -68,7 +68,7 @@
 // I've only done the things that I've found useful over the years, for example I never used the
 // "BREAK" state of a line so I haven't done it here.
 //
-// Really Win32 comms should be done with threads and/or OVERLAPPED I/O - and I haven't.
+// Really Windows comms should be done with threads and/or OVERLAPPED I/O - and I haven't.
 //
 
 CREATE CLASS WinPort

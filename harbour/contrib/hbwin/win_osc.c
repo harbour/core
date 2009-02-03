@@ -52,7 +52,7 @@
 */
 
 /*
- * Operating system functions for Win32
+ * Operating system functions for Windows
  *
  * Program to check and set Windows Registry settings
  * for safe networking - all versions of Windows to XP SP2

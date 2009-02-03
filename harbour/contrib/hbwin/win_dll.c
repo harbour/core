@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Win32 DLL handling function (Xbase++ compatible + proprietary)
+ * Windows DLL handling function (Xbase++ compatible + proprietary)
  *
  * Copyright 2006 Paul Tucker <ptucker@sympatico.ca>
  * Copyright 2002 Vic McClung <vicmcclung@vicmcclung.com>
@@ -54,7 +54,7 @@
  * If you do not wish that, delete this exception notice.
 */
 
-/* NOTE: I'm not totally familiar with how Xbase++ works.  This functionality 
+/* NOTE: I'm not totally familiar with how Xbase++ works.  This functionality
          was derived from the context in which the functions are used. [pt] */
 
 #define _WIN32_WINNT   0x0400 /* QUESTION: Do we need this? */
@@ -146,16 +146,16 @@ char * hb_parcstruct( int iParam, ... )
  * ------------------------------------------------------------------
  *
  *   This part used modified code of Vic McClung.
- *   The modifications were to separate the library loading and 
+ *   The modifications were to separate the library loading and
  *   getting the procedure address from the actual function call.
- *   The parameters have been slightly re-arranged to allow for 
- *   C-like syntax, on function declaration. The changes allow to 
+ *   The parameters have been slightly re-arranged to allow for
+ *   C-like syntax, on function declaration. The changes allow to
  *   load the library and to get the procedure addresses in advance,
- *   which makes it work similarly to C import libraries. From 
- *   experience, when using dynamic libraries, loading the library 
+ *   which makes it work similarly to C import libraries. From
+ *   experience, when using dynamic libraries, loading the library
  *   and getting the address of the procedure part of using the DLL.
- *   Additionally the changes will allow to use standard [x]Harbour 
- *   C type defines, as used with structure types, and defined in 
+ *   Additionally the changes will allow to use standard [x]Harbour
+ *   C type defines, as used with structure types, and defined in
  *   cstruct.ch.
  *
  *   Andrew Wos.
@@ -757,10 +757,10 @@ HB_FUNC( DLLPREPARECALL )
          xec->wOrdinal = ( WORD ) hb_parni( 3 );
 
       xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? ( LPCSTR ) xec->cProc : ( LPCSTR ) ( HB_PTRDIFF ) xec->wOrdinal );
-      
+
       if( ! xec->lpFunc && xec->cProc ) /* try with ANSI suffix? */
          xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, ( LPCSTR ) hb_strncat( xec->cProc, "A", hb_parclen( 3 ) + 1 ) );
-      
+
       if( xec->lpFunc )
       {
          xec->dwType = _DLLEXEC_SIGNATURE;
@@ -829,7 +829,7 @@ HB_FUNC( DLLCALL )
    if( hDLL && ( HB_PTRDIFF ) hDLL >= 32 )
    {
       DllExec( hb_parni( 2 ), 0, hb_getprocaddress( ( HMODULE ) hDLL, 3 ), NULL, hb_pcount(), 4 );
-      
+
       if( ISCHAR( 1 ) )
          FreeLibrary( hDLL );
    }

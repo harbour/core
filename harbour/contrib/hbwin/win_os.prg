@@ -52,7 +52,7 @@
 */
 
 /*
- * Operating system functions for Win32
+ * Operating system functions for Windows
  *
  * Program to check and set Windows Registry settings
  * for safe networking - all versions of Windows to XP SP2
@@ -65,7 +65,7 @@
 #include "directry.ch"
 #include "hbwin.ch"
 
-/* NOTE: To change any of these registry settings 
+/* NOTE: To change any of these registry settings
          Administrator rights are required by default in Windows. [vszakats] */
 
 FUNCTION OS_NETREGOK( lSetIt, lDoVista )
@@ -83,21 +83,21 @@ FUNCTION OS_NETREGOK( lSetIt, lDoVista )
    ELSE
       cKeySrv := "System\CurrentControlSet\Services\LanmanServer\Parameters"
       cKeyWks := "System\CurrentControlSet\Services\LanmanWorkStation\Parameters"
-     
+
       /* Server settings */
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "CachedOpenLimit", 0, lSetIt )
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "EnableOpLocks", 0, lSetIt ) /* Q124916 */
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "EnableOpLockForceClose", 1, lSetIt )
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationDelay", 0, lSetIt )
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationRetries", 0, lSetIt )
-     
+
       /* Workstation settings */
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "UseOpportunisticLocking", 0, lSetIt )
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "EnableOpLocks", 0, lSetIt )
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "EnableOpLockForceClose", 1, lSetIt )
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "UtilizeNtCaching", 0, lSetIt )
       rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, cKeyWks, "UseLockReadUnlock", 0, lSetIt )
-     
+
       IF OS_ISWIN2000_OR_LATER()
          rVal := rVal .AND. QueryRegistry( HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\MRXSmb\Parameters", "OpLocksDisabled", 1, lSetIt )
       ENDIF
@@ -127,5 +127,5 @@ FUNCTION OS_NETVREDIROK( nResult )
          ENDIF
       ENDIF
    ENDIF
-  
+
    RETURN EMPTY( nResult )

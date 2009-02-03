@@ -71,11 +71,11 @@ static HKEY hb_regkeyconv( ULONG nKey )
    case 5:
       return ( HKEY ) HKEY_USERS;
    }
-  
+
    return ( HKEY ) nKey;
 }
 
-HB_FUNC( WIN32_REGCREATEKEYEX )
+HB_FUNC( WIN_REGCREATEKEYEX )
 {
    HKEY hWnd = ( HKEY ) hb_parnl( 8 );
    ULONG nResult = hb_parnl( 9 );
@@ -102,11 +102,11 @@ HB_FUNC( WIN32_REGCREATEKEYEX )
    HB_TCHAR_FREE( lpText );
 }
 
-HB_FUNC( WIN32_REGOPENKEYEX )
+HB_FUNC( WIN_REGOPENKEYEX )
 {
    HKEY hWnd;
    LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 2 ) );
-   
+
    if( RegOpenKeyEx( hb_regkeyconv( hb_parnl( 1 ) ),
                      lpText,
                      0,
@@ -122,7 +122,7 @@ HB_FUNC( WIN32_REGOPENKEYEX )
    HB_TCHAR_FREE( lpText );
 }
 
-HB_FUNC( WIN32_REGQUERYVALUEEX )
+HB_FUNC( WIN_REGQUERYVALUEEX )
 {
    DWORD nType = 0;
    DWORD nSize = 0;
@@ -153,11 +153,11 @@ HB_FUNC( WIN32_REGQUERYVALUEEX )
       }
    }
    HB_TCHAR_FREE( lpKey );
-  
+
    hb_retnl( nSize );
 }
 
-HB_FUNC( WIN32_REGSETVALUEEX )
+HB_FUNC( WIN_REGSETVALUEEX )
 {
    DWORD nType = hb_parnl( 4 );
    LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parc( 2 ) );
@@ -186,7 +186,7 @@ HB_FUNC( WIN32_REGSETVALUEEX )
    HB_TCHAR_FREE( lpKey );
 }
 
-HB_FUNC( WIN32_REGCLOSEKEY )
+HB_FUNC( WIN_REGCLOSEKEY )
 {
    hb_retnl( RegCloseKey( ( HKEY ) hb_parnl( 1 ) ) );
 }

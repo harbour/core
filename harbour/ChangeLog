@@ -8,6 +8,67 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-04 00:29 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbwin/win_reg.prg
+  * contrib/hbwin/win_osc.c
+  * contrib/hbwin/win_os.prg
+  * contrib/hbwin/win_tprn.prg
+  * contrib/hbwin/win_tprt.prg
+  * contrib/hbwin/win_dll.c
+  * contrib/hbwin/win_prn1.c
+  * contrib/hbwin/win_regc.c
+  * contrib/hbwin/tests/testreg.prg
+  * contrib/hbwin/tests/testole.prg
+    * Renaming hbwin lib functions to a common and bitwidth-neutral
+      namespace, which is WIN_*():
+      - W32_REGPATHSPLIT()            -> WIN_REGPATHSPLIT()
+      - W32_REGREAD()                 -> WIN_REGREAD()
+      - W32_REGWRITE()                -> WIN_REGWRITE()
+      - WIN32_REGCREATEKEYEX()        -> WIN_REGCREATEKEYEX()
+      - WIN32_REGOPENKEYEX()          -> WIN_REGOPENKEYEX()
+      - WIN32_REGQUERYVALUEEX()       -> WIN_REGQUERYVALUEEX()
+      - WIN32_REGSETVALUEEX()         -> WIN_REGSETVALUEEX()
+      - WIN32_REGCLOSEKEY()           -> WIN_REGCLOSEKEY()
+
+  * contrib/hbwin/win_tprn.prg
+  * contrib/hbwin/win_prn1.c
+  * contrib/hbwin/tests/testprn.prg
+    * Renaming hbwin lib functions/classes to a common and bitwidth-neutral
+      namespace, which is WIN_*():
+      - WIN32PRN class -> WIN_PRN class.
+      - WIN32BMP class -> WIN_BMP class.
+      - WIN32_ARC()                   -> WIN_ARC()
+      - WIN32_BITMAPSOK()             -> WIN_BITMAPSOK()
+      - WIN32_CREATEDC()              -> WIN_CREATEDC()
+      - WIN32_CREATEFONT()            -> WIN_CREATEFONT()
+      - WIN32_DELETEDC()              -> WIN_DELETEDC()
+      - WIN32_DRAWBITMAP()            -> WIN_DRAWBITMAP()
+      - WIN32_ELLIPSE()               -> WIN_ELLIPSE()
+      - WIN32_ENDDOC()                -> WIN_ENDDOC()
+      - WIN32_ENDPAGE()               -> WIN_ENDPAGE()
+      - WIN32_ENUMFONTS()             -> WIN_ENUMFONTS()
+      - WIN32_FILLRECT()              -> WIN_FILLRECT()
+      - WIN32_GETCHARSIZE()           -> WIN_GETCHARSIZE()
+      - WIN32_GETDEVICECAPS()         -> WIN_GETDEVICECAPS()
+      - WIN32_GETEXEFILENAME()        -> WIN_GETEXEFILENAME()
+      - WIN32_GETPRINTERFONTNAME()    -> WIN_GETPRINTERFONTNAME()
+      - WIN32_GETTEXTSIZE()           -> WIN_GETTEXTSIZE()
+      - WIN32_LINETO()                -> WIN_LINETO()
+      - WIN32_LOADBITMAPFILE()        -> WIN_LOADBITMAPFILE()
+      - WIN32_MULDIV()                -> WIN_MULDIV()
+      - WIN32_OS_ISWIN9X()            -> WIN_OS_ISWIN9X()
+      - WIN32_RECTANGLE()             -> WIN_RECTANGLE()
+      - WIN32_SETBKMODE()             -> WIN_SETBKMODE()
+      - WIN32_SETCOLOR()              -> WIN_SETCOLOR()
+      - WIN32_SETDOCUMENTPROPERTIES() -> WIN_SETDOCUMENTPROPERTIES()
+      - WIN32_SETMAPMODE()            -> WIN_SETMAPMODE()
+      - WIN32_SETPEN()                -> WIN_SETPEN()
+      - WIN32_STARTDOC()              -> WIN_STARTDOC()
+      - WIN32_STARTPAGE()             -> WIN_STARTPAGE()
+      - WIN32_TEXTOUT()               -> WIN_TEXTOUT()
+
+  ; INCOMPATIBLE. Please update your source code.
+
 2009-02-03 18:51 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/thread.c
     * casting to pacify warning. The code is correct.

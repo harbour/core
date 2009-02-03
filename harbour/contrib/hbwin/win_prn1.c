@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Printing subsystem for Win32 using GUI printing
+ * Printing subsystem for Windows using GUI printing
  *     Copyright 2004 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
  *
@@ -87,7 +87,7 @@
 #     define INVALID_FILE_SIZE (DWORD)0xFFFFFFFF
 #  endif
 
-static HB_GARBAGE_FUNC( win32_HDC_release )
+static HB_GARBAGE_FUNC( win_HDC_release )
 {
    void ** phDC = ( void ** ) Cargo;
 
@@ -102,14 +102,14 @@ static HB_GARBAGE_FUNC( win32_HDC_release )
    }
 }
 
-static HDC win32_HDC_par( int iParam )
+static HDC win_HDC_par( int iParam )
 {
-   void ** phDC = ( void ** ) hb_parptrGC( win32_HDC_release, iParam );
+   void ** phDC = ( void ** ) hb_parptrGC( win_HDC_release, iParam );
 
    return phDC ? ( HDC ) * phDC : NULL;
 }
 
-static HB_GARBAGE_FUNC( win32_HPEN_release )
+static HB_GARBAGE_FUNC( win_HPEN_release )
 {
    void ** phPEN = ( void ** ) Cargo;
 
@@ -125,20 +125,20 @@ static HB_GARBAGE_FUNC( win32_HPEN_release )
 }
 
 /*
-static HPEN win32_HPEN_par( int iParam )
+static HPEN win_HPEN_par( int iParam )
 {
-   void ** phPEN = ( void ** ) hb_parptrGC( win32_HPEN_release, iParam );
+   void ** phPEN = ( void ** ) hb_parptrGC( win_HPEN_release, iParam );
 
    return phPEN ? ( HPEN ) * phPEN : NULL;
 }
 */
 
-HB_FUNC( WIN32_CREATEDC )
+HB_FUNC( WIN_CREATEDC )
 {
    if( ISCHAR( 1 ) )
    {
       LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-      void ** phDC = ( void ** ) hb_gcAlloc( sizeof( HDC * ), win32_HDC_release );
+      void ** phDC = ( void ** ) hb_gcAlloc( sizeof( HDC * ), win_HDC_release );
       * phDC = ( void * ) CreateDC( TEXT( "" ), lpText, NULL, NULL );
       hb_retptrGC( phDC );
       HB_TCHAR_FREE( lpText );
@@ -147,9 +147,9 @@ HB_FUNC( WIN32_CREATEDC )
       hb_ret();
 }
 
-HB_FUNC( WIN32_STARTDOC )
+HB_FUNC( WIN_STARTDOC )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
    DOCINFO sDoc;
    BOOL Result = FALSE;
 
@@ -171,10 +171,10 @@ HB_FUNC( WIN32_STARTDOC )
    hb_retl( Result );
 }
 
-HB_FUNC( WIN32_ENDDOC )
+HB_FUNC( WIN_ENDDOC )
 {
    BOOL Result = FALSE;
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
 
    if( hDC )
    {
@@ -187,9 +187,9 @@ HB_FUNC( WIN32_ENDDOC )
    hb_retl( Result );
 }
 
-HB_FUNC( WIN32_DELETEDC )
+HB_FUNC( WIN_DELETEDC )
 {
-   void ** phDC = ( void ** ) hb_parptrGC( win32_HDC_release, 1 );
+   void ** phDC = ( void ** ) hb_parptrGC( win_HDC_release, 1 );
 
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( phDC && * phDC )
@@ -204,24 +204,24 @@ HB_FUNC( WIN32_DELETEDC )
    hb_retni( 0 );               /* Return zero as a new handle even if fails */
 }
 
-HB_FUNC( WIN32_STARTPAGE )
+HB_FUNC( WIN_STARTPAGE )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
 
    hb_retl( hDC && StartPage( hDC ) > 0 );
 }
 
-HB_FUNC( WIN32_ENDPAGE )
+HB_FUNC( WIN_ENDPAGE )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
 
    hb_retl( hDC && EndPage( hDC ) > 0 );
 }
 
-HB_FUNC( WIN32_TEXTOUT )
+HB_FUNC( WIN_TEXTOUT )
 {
    LONG Result = 0;
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
    ULONG ulLen = hb_parclen( 4 );
    SIZE sSize;
 
@@ -274,10 +274,10 @@ HB_FUNC( WIN32_TEXTOUT )
    hb_retnl( Result );
 }
 
-HB_FUNC( WIN32_GETTEXTSIZE )
+HB_FUNC( WIN_GETTEXTSIZE )
 {
    LONG Result = 0;
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
    ULONG ulLen = hb_parclen( 2 );
    SIZE sSize;
 
@@ -305,10 +305,10 @@ HB_FUNC( WIN32_GETTEXTSIZE )
 }
 
 
-HB_FUNC( WIN32_GETCHARSIZE )
+HB_FUNC( WIN_GETCHARSIZE )
 {
    LONG Result = 0;
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
 
    if( hDC )
    {
@@ -324,29 +324,29 @@ HB_FUNC( WIN32_GETCHARSIZE )
    hb_retnl( Result );
 }
 
-HB_FUNC( WIN32_GETDEVICECAPS )
+HB_FUNC( WIN_GETDEVICECAPS )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
 
    hb_retnl( hDC && ISNUM( 2 ) ? ( long ) GetDeviceCaps( hDC, hb_parnl( 2 ) ) : 0 );
 }
 
-HB_FUNC( WIN32_SETMAPMODE )
+HB_FUNC( WIN_SETMAPMODE )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
 
    hb_retnl( hDC && ISNUM( 2 ) ? SetMapMode( hDC, hb_parnl( 2 ) ) : 0 );
 }
 
-HB_FUNC( WIN32_MULDIV )
+HB_FUNC( WIN_MULDIV )
 {
    hb_retnl( MulDiv( hb_parnl( 1 ), hb_parnl( 2 ), hb_parnl( 3 ) ) );
 }
 
-HB_FUNC( WIN32_CREATEFONT )
+HB_FUNC( WIN_CREATEFONT )
 {
    BOOL Result = FALSE;
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
    HFONT hFont, hOldFont;
    char *pszFont = hb_parc( 2 );
    LPTSTR lpFont = pszFont ? HB_TCHAR_CONVTO( pszFont ) : NULL;
@@ -384,9 +384,9 @@ HB_FUNC( WIN32_CREATEFONT )
    hb_retl( Result );
 }
 
-HB_FUNC( WIN32_GETPRINTERFONTNAME )
+HB_FUNC( WIN_GETPRINTERFONTNAME )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
 
    if( hDC )
    {
@@ -400,17 +400,17 @@ HB_FUNC( WIN32_GETPRINTERFONTNAME )
       hb_retc( NULL );
 }
 
-HB_FUNC( WIN32_BITMAPSOK )
+HB_FUNC( WIN_BITMAPSOK )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
 
    hb_retl( hDC && ( GetDeviceCaps( hDC, RASTERCAPS ) & RC_STRETCHDIB ) );
 }
 
-HB_FUNC( WIN32_SETDOCUMENTPROPERTIES )
+HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 {
    BOOL Result = FALSE;
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
 
    if( hDC )
    {
@@ -467,7 +467,7 @@ HB_FUNC( WIN32_SETDOCUMENTPROPERTIES )
 
 /* Functions for Loading & Printing bitmaps */
 
-HB_FUNC( WIN32_LOADBITMAPFILE )
+HB_FUNC( WIN_LOADBITMAPFILE )
 {
    char * pstrFileName = hb_parc( 1 );
    BOOL bSuccess = FALSE;
@@ -512,9 +512,9 @@ HB_FUNC( WIN32_LOADBITMAPFILE )
    }
 }
 
-HB_FUNC( WIN32_DRAWBITMAP )
+HB_FUNC( WIN_DRAWBITMAP )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
    BITMAPFILEHEADER *pbmfh = ( BITMAPFILEHEADER * ) hb_parc( 2 );
    BITMAPINFO *pbmi;
    BYTE *pBits;
@@ -559,9 +559,9 @@ static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm, DWORD 
    return TRUE;
 }
 
-HB_FUNC( WIN32_ENUMFONTS )
+HB_FUNC( WIN_ENUMFONTS )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
 
    if( hDC )
    {
@@ -575,7 +575,7 @@ HB_FUNC( WIN32_ENUMFONTS )
    }
 }
 
-HB_FUNC( WIN32_GETEXEFILENAME )
+HB_FUNC( WIN_GETEXEFILENAME )
 {
    unsigned char pBuf[ 1024 ];
 
@@ -584,9 +584,9 @@ HB_FUNC( WIN32_GETEXEFILENAME )
    hb_retc( ( char * ) pBuf );
 }
 
-HB_FUNC( WIN32_SETCOLOR )
+HB_FUNC( WIN_SETCOLOR )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
 
    SetTextColor( hDC, ( COLORREF ) hb_parnl( 2 ) );
 
@@ -597,12 +597,12 @@ HB_FUNC( WIN32_SETCOLOR )
       SetTextAlign( hDC, hb_parni( 4 ) );
 }
 
-HB_FUNC( WIN32_SETPEN )
+HB_FUNC( WIN_SETPEN )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
    HPEN hOldPen;
 
-   void ** phPEN = ( void ** ) hb_gcAlloc( sizeof( HPEN * ), win32_HPEN_release );
+   void ** phPEN = ( void ** ) hb_gcAlloc( sizeof( HPEN * ), win_HPEN_release );
 
    * phPEN = ( void * ) CreatePen( hb_parni( 2 ),                /* pen style */
                                    hb_parni( 3 ),                /* pen width */
@@ -617,9 +617,9 @@ HB_FUNC( WIN32_SETPEN )
    hb_retptrGC( phPEN );
 }
 
-HB_FUNC( WIN32_FILLRECT )
+HB_FUNC( WIN_FILLRECT )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
    int x1 = hb_parni( 2 );
    int y1 = hb_parni( 3 );
    int x2 = hb_parni( 4 );
@@ -637,9 +637,9 @@ HB_FUNC( WIN32_FILLRECT )
    DeleteObject( hBrush );
 }
 
-HB_FUNC( WIN32_LINETO )
+HB_FUNC( WIN_LINETO )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
    int x1 = hb_parni( 2 );
    int y1 = hb_parni( 3 );
    int x2 = hb_parni( 4 );
@@ -650,9 +650,9 @@ HB_FUNC( WIN32_LINETO )
    hb_retl( LineTo( hDC, x2, y2 ) );
 }
 
-HB_FUNC( WIN32_RECTANGLE )
+HB_FUNC( WIN_RECTANGLE )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
    int x1 = hb_parni( 2 );
    int y1 = hb_parni( 3 );
    int x2 = hb_parni( 4 );
@@ -666,9 +666,9 @@ HB_FUNC( WIN32_RECTANGLE )
       hb_retl( Rectangle( hDC, x1, y1, x2, y2 ) );
 }
 
-HB_FUNC( WIN32_ARC )
+HB_FUNC( WIN_ARC )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
    int x1 = hb_parni( 2 );
    int y1 = hb_parni( 3 );
    int x2 = hb_parni( 4 );
@@ -677,9 +677,9 @@ HB_FUNC( WIN32_ARC )
    hb_retl( Arc( hDC, x1, y1, x2, y2, 0, 0, 0, 0 ) );
 }
 
-HB_FUNC( WIN32_ELLIPSE )
+HB_FUNC( WIN_ELLIPSE )
 {
-   HDC hDC = win32_HDC_par( 1 );
+   HDC hDC = win_HDC_par( 1 );
    int x1 = hb_parni( 2 );
    int y1 = hb_parni( 3 );
    int x2 = hb_parni( 4 );
@@ -688,12 +688,12 @@ HB_FUNC( WIN32_ELLIPSE )
    hb_retl( Ellipse( hDC, x1, y1, x2, y2 ) );
 }
 
-HB_FUNC( WIN32_SETBKMODE )
+HB_FUNC( WIN_SETBKMODE )
 {
-   hb_retnl( SetBkMode( win32_HDC_par( 1 ), hb_parnl( 2 ) ) );
+   hb_retnl( SetBkMode( win_HDC_par( 1 ), hb_parnl( 2 ) ) );
 }
 
-HB_FUNC( WIN32_OS_ISWIN9X )
+HB_FUNC( WIN_OS_ISWIN9X )
 {
    OSVERSIONINFO osvi;
 

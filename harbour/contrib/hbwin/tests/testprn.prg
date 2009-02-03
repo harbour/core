@@ -32,7 +32,7 @@ PROCEDURE Main()
 
    DO WHILE nPrn != 0
       CLS
-      @ 0, 0 SAY "Win32Prn() Class test program. Choose a printer to test"
+      @ 0, 0 SAY "Win_Prn() Class test program. Choose a printer to test"
       @ 1, 0 SAY "Bitmap file name" GET cBMPFile PICT "@!K"
       READ
       @ 2, 0 TO MaxRow(), MaxCol()
@@ -45,7 +45,7 @@ PROCEDURE Main()
    RETURN
 
 STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
-   LOCAL oPrinter := Win32Prn():New( cPrinter )
+   LOCAL oPrinter := Win_Prn():New( cPrinter )
    LOCAL aFonts
    LOCAL x
    LOCAL nColFixed
@@ -59,7 +59,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
    IF !oPrinter:Create()
       Alert( "Cannot Create Printer" )
    ELSE
-      IF !oPrinter:startDoc( "Win32Prn(Doc name in Printer Properties)" )
+      IF !oPrinter:startDoc( "Win_Prn(Doc name in Printer Properties)" )
          Alert( "StartDoc() failed" )
       ELSE
          oPrinter:SetPen(PS_SOLID, 1, RED)
@@ -128,13 +128,13 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
          oPrinter:Arc(200, oPrinter:PosY+100, 300, oPrinter:PosY+200)
          oPrinter:Ellipse(400, oPrinter:PosY+100, 500, oPrinter:PosY+200)
          oPrinter:FillRect(600, oPrinter:PosY+100, 700, oPrinter:PosY+200, RED)
-         
+
 //       To print a barcode;
 //       Replace 'BCod39HN' with your own bar code font or any other font
 //         oPrinter:TextAtFont( oPrinter:MM_TO_POSX( 30 ) , oPrinter:MM_TO_POSY(60 ), "1234567890", "BCod39HN", 24, 0 )
-//       
+//
          PrintBitMap( oPrinter, cBMPFile )
-         
+
          oPrinter:EndDoc()
       ENDIF
       oPrinter:Destroy()
@@ -144,21 +144,21 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile )
 
 STATIC PROCEDURE PrintBitMap( oPrn, cBitFile )
    LOCAL oBMP
- 
+
    IF Empty( cBitFile )
       *
    ELSEIF !File( cBitFile )
       Alert( cBitFile + " not found " )
    ELSE
-      oBMP := Win32BMP():New()
+      oBMP := WinBMP():New()
       IF oBmp:loadFile( cBitFile )
-        
+
          oBmp:Draw( oPrn, { 200, 200, 2000, 1500 } )
-        
+
          // Note: Can also use this method to print bitmap
          //   oBmp:Rect := { 200, 200, 2000, 1500 }
          //   oPrn:DrawBitMap( oBmp )
-        
+
       ENDIF
       oBMP:Destroy()
    ENDIF
