@@ -184,34 +184,42 @@ endif
 
 # OS/2 hacks for missing gcc features
 ifneq ($(HB_ARCHITECTURE),os2)
+ifneq ($(HB_ARCHITECTURE),sunos)
+ifneq ($(HB_ARCHITECTURE),hpux)
+ifneq ($(HB_ARCHITECTURE),darwin)
 __GROUP_LIBS_BEG__=-Wl,--start-group
 __GROUP_LIBS_END__=-Wl,--end-group
+endif
+endif
+endif
 endif
 
 LDFLAGS := $(L_USR) $(__GROUP_LIBS_BEG__) $(STANDARD_STATIC_HBLIBS)
 
+LDFLAGS += $(__GROUP_LIBS_END__)
+
+ifeq ($(__GROUP_LIBS_BEG__),)
+LDFLAGS += $(RTL_LIB) $(VM_LIB)
+LDFLAGS += $(STANDARD_STATIC_HBLIBS)
+endif
+
 # HB_GPM_MOUSE: use gpm mouse driver
 ifeq ($(HB_GPM_MOUSE),yes)
-LDFLAGS += -lgpm
+HB_OS_LIBS += -lgpm
 CFLAGS  += -DHAVE_GPM_H
 endif
 
 # PCRE Regex library
 ifneq ($(findstring -DHB_PCRE_REGEX, $(CFLAGS)),)
-LDFLAGS += -lpcre
+HB_OS_LIBS += -lpcre
 endif
 
 # ZLIB library
 ifneq ($(findstring -DHB_EXT_ZLIB, $(CFLAGS)),)
-LDFLAGS += -lz
+HB_OS_LIBS += -lz
 endif
 
-LDFLAGS += $(__GROUP_LIBS_END__) $(HB_OS_LIBS)
-
-ifeq ($(HB_ARCHITECTURE),os2)
-LDFLAGS += $(STANDARD_STATIC_HBLIBS) $(HB_OS_LIBS)
-#LDFLAGS += $(RTL_LIB) $(VM_LIB)
-endif
+LDFLAGS += $(HB_OS_LIBS)
 
 LDFLAGSDLL := -shared $(L_USR) -L$(LIB_DIR)
 

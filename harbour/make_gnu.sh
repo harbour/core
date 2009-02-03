@@ -71,7 +71,8 @@ if [ -z "${HB_WITHOUT_GTCRS}" ]; then
         linux|bsd|darwin|hpux|sunos)
             for dir in /usr /usr/local /sw /opt/local
             do
-                if [ -f ${dir}/include/ncurses.h ] || \
+                if [ -f ${dir}/include/curses.h ] || \
+                   [ -f ${dir}/include/ncurses.h ] || \
                    [ -f ${dir}/include/ncurses/ncurses.h ]; then
                     HB_WITHOUT_GTCRS=no
                 fi
@@ -107,6 +108,9 @@ then
                 ;;
         esac
     fi
+elif [ "$HB_ARCHITECTURE" = "hpux" ] || [ "$HB_ARCHITECTURE" = "sunos" ]
+then
+    export C_USR="$C_USR -fPIC"
 fi
 
 [ -z "$HB_INSTALL_PREFIX" ] && [ -n "$PREFIX" ] && export HB_INSTALL_PREFIX="$PREFIX"

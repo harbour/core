@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-03 12:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gcc.sh
+    + added some Solaris libraries necessary to link Harbour applications
+      using sockets
+
+  * harbour/make_gnu.sh
+    * look also for pure curses header files for GTCRS compilation.
+      GTCRS can be compiled with CURSES not only NCURSES.
+    * enable -fPIC in SunOS and HPUX builds
+
+  * harbour/mpkg_tgz.sh
+    * enable -fPIC in SunOS builds
+
+  * harbour/make_gcc.mak
+    * do not use -Wl,--start-group/-Wl,--end-group in SunOS, HPUX and Darwin
+      builds
+
+  * harbour/config/hpux/gcc.cf
+    * small cleanup in comment
+
 2009-02-03 11:45 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * contib/xhb/hblognet.prg
     * fixed thread function names

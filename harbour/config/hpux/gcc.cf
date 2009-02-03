@@ -17,7 +17,7 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -Wall -W -O3
 LDFLAGS =
 
-# uncomment this if you want to force relocatable code for .so libs
+# uncomment this if you want to force relocatable code for .sl libs
 # it's necessary on some platforms but can reduce performance
 #CFLAGS += -fPIC
 

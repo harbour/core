@@ -52,7 +52,6 @@ then
    HB_CPU=`uname -m`
    case "$HB_CPU" in
       *[_@]64)
-         export C_USR="$C_USR -fPIC"
          HB_ARCH64="yes"
          ;;
       *)
@@ -84,7 +83,8 @@ case "$HB_ARCHITECTURE" in
          ;;
    bsd)  MAKE="gmake"
          ;;
-   sunos) OS_LIBS="$OS_LIBS -lrt"
+   sunos) MAKE="gmake"
+         OS_LIBS="$OS_LIBS -lrt -lsocket -lnsl -lresolv"
          CRSLIB="curses"
          ;;
    hpux) MAKE="gmake"

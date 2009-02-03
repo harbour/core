@@ -79,7 +79,7 @@ then
         *)
             ;;
     esac
-elif [ "$HB_ARCHITECTURE" = "hpux" ]
+elif [ "$HB_ARCHITECTURE" = "hpux" ] || [ "$HB_ARCHITECTURE" = "sunos" ]
 then
     export C_USR="$C_USR -fPIC"
 fi
