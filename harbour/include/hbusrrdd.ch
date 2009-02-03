@@ -203,23 +203,23 @@
 #endif
 
 /* Flags for DBTRANSINFO */
-#define DBTF_MATCH         0x0001
-#define DBTF_PUTREC        0x0002
+#define DBTF_MATCH            0x0001
+#define DBTF_PUTREC           0x0002
 
 /* Codes for Locking methods */
-#define DBLM_EXCLUSIVE     1
-#define DBLM_MULTIPLE      2
-#define DBLM_FILE          3
+#define DBLM_EXCLUSIVE        1
+#define DBLM_MULTIPLE         2
+#define DBLM_FILE             3
 
 /* Codes for RawLock types */
-#define FILE_LOCK          1
-#define FILE_UNLOCK        2
-#define REC_LOCK           3
-#define REC_UNLOCK         4
-#define HEADER_LOCK        5
-#define HEADER_UNLOCK      6
-#define APPEND_LOCK        7
-#define APPEND_UNLOCK      8
+#define FILE_LOCK             1
+#define FILE_UNLOCK           2
+#define REC_LOCK              3
+#define REC_UNLOCK            4
+#define HEADER_LOCK           5
+#define HEADER_UNLOCK         6
+#define APPEND_LOCK           7
+#define APPEND_UNLOCK         8
 
 
 /* DBOPENINFO */
@@ -356,5 +356,9 @@
 #define UR_ORCR_SIZE          7
 
 
-#define SUCCESS   0
-#define FAILURE   1
+#define HB_SUCCESS            0
+#define HB_FAILURE            1
+
+/* Compatibility #defines */
+#define SUCCESS               HB_SUCCESS
+#define FAILURE               HB_FAILURE

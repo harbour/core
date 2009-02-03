@@ -440,13 +440,14 @@ typedef struct _HB_NESTED_CLONED
 
 
 /* RDD method return codes */
-typedef USHORT ERRCODE;
-#define SUCCESS            0
-#define FAILURE            1
-
 typedef USHORT HB_ERRCODE;
 #define HB_SUCCESS         0
 #define HB_FAILURE         1
+
+/* Compatibility #defines */
+#define ERRCODE            HB_ERRCODE
+#define SUCCESS            HB_SUCCESS
+#define FAILURE            HB_FAILURE
 
 extern HB_SYMB  hb_symEval;
 

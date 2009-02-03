@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-03 14:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbusrrdd.ch
+  * include/hbapi.h
+    + Added HB_SUCCESS, HB_FAILURE on .prg level, too.
+    * SUCCESS, FAILURE, ERRCODE as compatibility.
+    * Minor cleanup.
+
+  ; TODO: Switch to HB_* versions inside Harbour tree.
+
 2009-02-03 14:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/doc/Makefile
   * harbour/doc/es/Makefile
@@ -956,8 +965,8 @@
            XML database (empty boxes in Chrome, empty boxes
            and error messagebox with IE8)
            doesn't work here.
-
            Shall I configure something?
+           [SOLVED]
 
 2009-01-27 00:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/uhttpd/uhttpd.prg
@@ -1036,7 +1045,7 @@
       Still doesn't compile however.
       I'll rather disable this code for now, unless someone jumps
       in an fixes these problems.
-    ; TOFIX: For MSVC, too:
+    ; TOFIX: For MSVC, too: [DONE]
       source\common\hbprintf.c(213) : error C2061: syntax error : identifier 'intmax_t'
       source\common\hbprintf.c(214) : error C2061: syntax error : identifier 'as_x_uintmax_t'
       source\common\hbprintf.c(214) : error C2059: syntax error : ';'
@@ -2055,7 +2064,7 @@
              play well with server side apps (as the app may run for
              months or even longer), and even worse, they
              will lock the passed directory so that they cannot be
-             removed (maybe even renamed), until the app exists.
+             removed (maybe even renamed), until the app exits.
              At least on Windows.
 
   * source/rtl/dirdrive.c
