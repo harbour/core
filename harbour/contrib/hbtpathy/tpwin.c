@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  * Telepathy emulation library
- * C low level module for Win32 serial communication
+ * C low level module for Windows serial communication
  *
  * Copyright 2004 - Maurilio Longo <maurilio.longo@libero.it>
  * www - http://www.harbour-project.org

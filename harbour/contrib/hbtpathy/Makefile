@@ -16,7 +16,7 @@ C_SOURCES=\
 endif
 ifeq ($(HB_ARCHITECTURE),w32)
 C_SOURCES=\
-	tpwin32.c \
+	tpwin.c \
 	tpcommon.c \
 
 endif

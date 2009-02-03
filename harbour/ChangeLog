@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-04 00:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * doc/dirstruc.txt
+  - contrib/hbtpathy/tpwin32.c
+  + contrib/hbtpathy/tpwin.c
+  * contrib/hbtpathy/common.mak
+  * contrib/hbtpathy/Makefile
+    * Cleaned some 'win32'/'w32' to 'win'.
+
 2009-02-04 00:29 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbwin/win_reg.prg
   * contrib/hbwin/win_osc.c

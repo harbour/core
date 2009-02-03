@@ -60,7 +60,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |
 |   |---gtalleg         - GT subsystem based on Allegro with graphic
 |   |                     extensions.
-|   |    
+|   |
 |   +---gtwvg           - GT subsystem for Windows GUI using GDI functions.
 |   |   |
 |   |   +---tests       - Demo program and sample images.
@@ -192,14 +192,14 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |       |
 |   |       +---files   - Sample files for testing.
 |   |
-|   +---hbw32           - Collection of Windows specific utility functions.
+|   +---hbwin           - Collection of Windows specific utility functions.
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
 |   +---hbwhat          - What is a library for ccessing all of Windows API
 |   |                     from PRG level.
 |   |
-|   +---hbziparc        - Compatibility interface with ZipArchive general 
+|   +---hbziparc        - Compatibility interface with ZipArchive general
 |   |   |                 purpose compression library to work with ZIP files.
 |   |   |
 |   |   +---tests       - Test programs.
