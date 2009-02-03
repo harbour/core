@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-03 11:45 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * contib/xhb/hblognet.prg
+    * fixed thread function names
+
 2009-02-03 03:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/mpkg_deb.sh
   * harbour/make_gnu_xmingwce.sh

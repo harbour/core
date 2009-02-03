@@ -259,7 +259,7 @@ METHOD Open( cName ) CLASS HB_LogInetPort
 
 #ifdef HB_THREAD_SUPPORT
    ::mtxBusy := HB_MutexCreate()
-   ::nThread := StartThread( Self, "AcceptCon" )
+   ::nThread := HB_ThreadStart( Self, "AcceptCon" )
 #else
    // If we have not threads, we have to sync accept incoming connection
    // when we log a message
@@ -281,7 +281,7 @@ METHOD Close( cName ) CLASS HB_LogInetPort
 #ifdef HB_THREAD_SUPPORT
    // kind termination request
    ::bTerminate := .T.
-   JoinThread( ::nThread )
+   hb_ThreadJoin( ::nThread )
 #endif
 
    InetClose( ::skIn )
