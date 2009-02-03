@@ -89,7 +89,7 @@ HB_FUNC( HB_DBDETACH )
    }
 
    if( pArea )
-      hb_retl( hb_rddDetachArea( pArea, pCargo ) == SUCCESS );
+      hb_retl( hb_rddDetachArea( pArea, pCargo ) == HB_SUCCESS );
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }

@@ -8,6 +8,39 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-03 15:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapirdd.h
+  * source/rdd/dbcmd.c
+  * source/rdd/dbcmd53.c
+  * source/rdd/dbcmdx.c
+  * source/rdd/dbdetach.c
+  * source/rdd/dbf1.c
+  * source/rdd/dbsql.c
+  * source/rdd/delim1.c
+  * source/rdd/hbdbsort.c
+  * source/rdd/sdf1.c
+  * source/rdd/wacore.c
+  * source/rdd/wafunc.c
+  * source/rdd/workarea.c
+  * source/rdd/dbfcdx/dbfcdx1.c
+  * source/rdd/dbffpt/dbffpt1.c
+  * source/rdd/dbfnsx/dbfnsx1.c
+  * source/rdd/dbfntx/dbfntx1.c
+  * source/rdd/hbsix/sxcrypt.c
+  * source/rdd/hbsix/sxord.c
+  * source/rdd/hbsix/sxtable.c
+  * source/rdd/hsx/hsx.c
+  * source/rdd/nulsys/nulsys.c
+  * source/rdd/usrrdd/rdds/arrayrdd.prg
+  * source/rdd/usrrdd/rdds/fcomma.prg
+  * source/rdd/usrrdd/rdds/hscdx.prg
+  * source/rdd/usrrdd/rdds/logrdd.prg
+  * source/rdd/usrrdd/rdds/rlcdx.prg
+  * source/rdd/usrrdd/usrrdd.c
+    * SUCCESS -> HB_SUCCESS
+    * FAILURE -> HB_FAILURE
+    * ERRCODE -> HB_ERRCODE
+
 2009-02-03 15:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapigt.h
   * contrib/hbct/screen1.c

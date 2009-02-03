@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * 
+ *
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2007 Lorenzo Fiorini <lorenzo.fiorini / at / gmail.com>
@@ -236,7 +236,7 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
    BOOL fEof = TRUE;
    BOOL fNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
 
-   if( SELF_FIELDCOUNT( pArea, &uiFields ) != SUCCESS )
+   if( SELF_FIELDCOUNT( pArea, &uiFields ) != HB_SUCCESS )
       return 0;
 
    if( fInsert && szTable )
@@ -249,17 +249,17 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
    {
       if( pWhile )
       {
-         if( SELF_EVALBLOCK( pArea, pWhile ) != SUCCESS ||
+         if( SELF_EVALBLOCK( pArea, pWhile ) != HB_SUCCESS ||
              ! hb_itemGetL( pArea->valResult ) )
             break;
       }
 
-      if( SELF_EOF( pArea, &fEof ) != SUCCESS || fEof )
+      if( SELF_EOF( pArea, &fEof ) != HB_SUCCESS || fEof )
          break;
 
       if( pFor )
       {
-         if( SELF_EVALBLOCK( pArea, pFor ) != SUCCESS )
+         if( SELF_EVALBLOCK( pArea, pFor ) != HB_SUCCESS )
             break;
       }
       if( !pFor || hb_itemGetL( pArea->valResult ) )
@@ -290,7 +290,7 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
          {
             for( ui = 1; ui <= uiFields; ui ++ )
             {
-               if( SELF_GETVALUE( pArea, ui, pTmp ) != SUCCESS )
+               if( SELF_GETVALUE( pArea, ui, pTmp ) != HB_SUCCESS )
                   break;
                if( fWriteSep )
                   hb_addStrToFBuffer( pFileBuf, szSep );
@@ -310,7 +310,7 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
          fWriteSep = FALSE;
       }
 
-      if( SELF_SKIP( pArea, 1 ) != SUCCESS )
+      if( SELF_SKIP( pArea, 1 ) != HB_SUCCESS )
          break;
 
       if( ( llNext % 10000 ) == 0 )
@@ -350,7 +350,7 @@ HB_FUNC( __DBSQL )
       char * szEsc      = hb_parcx( 15 );
       HB_LONG llNext    = HB_LONG_MAX;
       HB_FHANDLE hFile;
-      ERRCODE errCode;
+      HB_ERRCODE errCode;
 
       if( ! szFileName )
          hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -405,7 +405,7 @@ HB_FUNC( __DBSQL )
             if( fAppend )
                hb_fsSeekLarge( hFile, 0, FS_END );
 
-            errCode = SUCCESS;
+            errCode = HB_SUCCESS;
             if( pRecord )
             {
                errCode = SELF_GOTOID( pArea, pRecord );
@@ -419,7 +419,7 @@ HB_FUNC( __DBSQL )
                errCode = SELF_GOTOP( pArea );
             }
 
-            if( errCode == SUCCESS )
+            if( errCode == HB_SUCCESS )
             {
                hb_retnint( hb_db2Sql( pArea, pFields, llNext, pWhile, pFor,
                                       szDelim, szSep, szEsc,

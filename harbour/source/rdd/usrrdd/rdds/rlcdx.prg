@@ -81,7 +81,7 @@ STATIC FUNCTION RLCDX_NEW( pWA )
 
    USRRDD_AREADATA( pWA, aWData )
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
    LOCAL aWData, nResult, xRecId, i
@@ -100,7 +100,7 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
 
       IF aWData[ 1 ] > 0
          aLockInfo[ UR_LI_RESULT ] := .T.
-         RETURN SUCCESS
+         RETURN HB_SUCCESS
       ENDIF
 
       xRecID := aLockInfo[ UR_LI_RECORD ]
@@ -110,15 +110,15 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
 
       IF aWData[ 1 ] > 0
          aLockInfo[ UR_LI_RESULT ] := .T.
-         RETURN SUCCESS
+         RETURN HB_SUCCESS
       ELSEIF ( i:= ASCAN( aWData[ 2 ], { |x| x[ 1 ] == xRecID } ) ) != 0
          ++aWData[ 2, i, 2 ]
          aLockInfo[ UR_LI_RESULT ] := .T.
-         RETURN SUCCESS
+         RETURN HB_SUCCESS
       ENDIF
 
       nResult := UR_SUPER_LOCK( nWA, aLockInfo )
-      IF nResult == SUCCESS 
+      IF nResult == HB_SUCCESS
          IF aLockInfo[ UR_LI_RESULT ]
             AADD( aWData[ 2 ], { xRecID, 1 } )
          ENDIF
@@ -127,14 +127,14 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
       RETURN nResult
 
    ELSEIF aLockInfo[ UR_LI_METHOD ] == DBLM_FILE      /* FLOCK */
-      
+
       IF aWData[ 1 ] > 0
          ++aWData[ 1 ]
-         RETURN SUCCESS
+         RETURN HB_SUCCESS
       ENDIF
 
       nResult := UR_SUPER_LOCK( nWA, aLockInfo )
-      IF nResult == SUCCESS 
+      IF nResult == HB_SUCCESS
 
          /* FLOCK always first remove all RLOCKs, even if it fails */
          ASIZE( aWData[ 2 ], 0 )
@@ -150,7 +150,7 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
 
    aLockInfo[ UR_LI_RESULT ] := .F.
 
-   RETURN FAILURE
+   RETURN HB_FAILURE
 
 STATIC FUNCTION RLCDX_UNLOCK( nWA, xRecID )
    LOCAL aWData := USRRDD_AREADATA( nWA ), i
@@ -158,17 +158,17 @@ STATIC FUNCTION RLCDX_UNLOCK( nWA, xRecID )
    IF ISNUMBER( xRecID ) .AND. xRecID > 0
       IF ( i:= ASCAN( aWData[ 2 ], { |x| x[ 1 ] == xRecID } ) ) != 0
          IF --aWData[ 2, i, 2 ] > 0
-            RETURN SUCCESS
+            RETURN HB_SUCCESS
          ENDIF
          ADEL( aWData[ 2 ], i )
          ASIZE( aWData[ 2 ], LEN( aWData[ 2 ] ) - 1 )
       ELSE
-         RETURN SUCCESS
+         RETURN HB_SUCCESS
       ENDIF
    ELSE
       IF aWData[ 1 ] > 1
          --aWData[ 1 ]
-         RETURN SUCCESS
+         RETURN HB_SUCCESS
       ENDIF
       aWData[ 1 ] := 0
       ASIZE( aWData[ 2 ], 0 )
@@ -183,7 +183,7 @@ STATIC FUNCTION RLCDX_APPEND( nWA, lUnlockAll )
    lUnlockAll := .F.
 
    nResult := UR_SUPER_APPEND( nWA, lUnlockAll )
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
 
       aWData := USRRDD_AREADATA( nWA )
       IF aWData[ 1 ] == 0

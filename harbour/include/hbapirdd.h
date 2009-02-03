@@ -69,7 +69,7 @@ HB_EXTERN_BEGIN
 /* #define HB_MAX_RDD_FIELDNAME_LEN        32 */
 #define HB_RDD_MAX_AREA_NUM                65535
 
-/* Compatibility #defines. These will be removed, so 
+/* Compatibility #defines. These will be removed, so
    please use the new names in your code. */
 #ifdef HB_LEGACY_LEVEL
    #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH  HB_RDD_MAX_DRIVERNAME_LEN
@@ -1149,90 +1149,90 @@ typedef RDDNODE * LPRDDNODE;
  *  PROTOTYPES
  *  ----------
  */
- 
+
 
 /* internal RDD functions */
 extern void hb_rddCloseDetachedAreas( void );
 
 /* RDD virtual machine integration functions */
-extern HB_EXPORT void    hb_rddShutDown( void );
-extern HB_EXPORT ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern HB_EXPORT ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern HB_EXPORT ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern HB_EXPORT ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern HB_EXPORT int     hb_rddGetCurrentWorkAreaNumber( void );
-extern HB_EXPORT ERRCODE hb_rddSelectWorkAreaNumber( int iArea );
-extern HB_EXPORT ERRCODE hb_rddSelectWorkAreaAlias( const char * szAlias );
-extern HB_EXPORT ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias );
-extern HB_EXPORT ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea );
+extern HB_EXPORT void         hb_rddShutDown( void );
+extern HB_EXPORT HB_ERRCODE   hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
+extern HB_EXPORT HB_ERRCODE   hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
+extern HB_EXPORT HB_ERRCODE   hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
+extern HB_EXPORT HB_ERRCODE   hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
+extern HB_EXPORT int          hb_rddGetCurrentWorkAreaNumber( void );
+extern HB_EXPORT HB_ERRCODE   hb_rddSelectWorkAreaNumber( int iArea );
+extern HB_EXPORT HB_ERRCODE   hb_rddSelectWorkAreaAlias( const char * szAlias );
+extern HB_EXPORT HB_ERRCODE   hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias );
+extern HB_EXPORT HB_ERRCODE   hb_rddGetAliasNumber( const char * szAlias, int * iArea );
 
 /* other functions */
-extern HB_EXPORT void *  hb_rddAllocWorkAreaAlias( const char * szAlias, int iArea );
-extern HB_EXPORT void *  hb_rddGetCurrentWorkAreaPointer( void );
-extern HB_EXPORT void *  hb_rddGetWorkAreaPointer( int iArea );
-extern HB_EXPORT USHORT  hb_rddInsertAreaNode( const char *szDriver );
-extern HB_EXPORT void    hb_rddReleaseCurrentArea( void );
+extern HB_EXPORT void *       hb_rddAllocWorkAreaAlias( const char * szAlias, int iArea );
+extern HB_EXPORT void *       hb_rddGetCurrentWorkAreaPointer( void );
+extern HB_EXPORT void *       hb_rddGetWorkAreaPointer( int iArea );
+extern HB_EXPORT USHORT       hb_rddInsertAreaNode( const char *szDriver );
+extern HB_EXPORT void         hb_rddReleaseCurrentArea( void );
 
-extern HB_EXPORT int       hb_rddRegister( const char * szDriver, USHORT uiType );
-extern HB_EXPORT ERRCODE   hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, RDDFUNCS * pSuperTable, const char * szDrvName );
-extern HB_EXPORT LPRDDNODE hb_rddGetNode( USHORT uiNode );
-extern HB_EXPORT LPRDDNODE hb_rddFindNode( const char * szDriver, USHORT * uiIndex );
-extern HB_EXPORT USHORT    hb_rddFieldIndex( AREAP pArea, const char * szName );
-extern HB_EXPORT USHORT    hb_rddFieldExpIndex( AREAP pArea, const char * szField );
+extern HB_EXPORT int          hb_rddRegister( const char * szDriver, USHORT uiType );
+extern HB_EXPORT HB_ERRCODE   hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, RDDFUNCS * pSuperTable, const char * szDrvName );
+extern HB_EXPORT LPRDDNODE    hb_rddGetNode( USHORT uiNode );
+extern HB_EXPORT LPRDDNODE    hb_rddFindNode( const char * szDriver, USHORT * uiIndex );
+extern HB_EXPORT USHORT       hb_rddFieldIndex( AREAP pArea, const char * szName );
+extern HB_EXPORT USHORT       hb_rddFieldExpIndex( AREAP pArea, const char * szField );
 extern HB_EXPORT const char * hb_rddDefaultDrv( const char * szDriver );
-extern HB_EXPORT ERRCODE   hb_rddSelectFirstAvailable( void );
-extern HB_EXPORT ERRCODE   hb_rddVerifyAliasName( const char * szAlias );
-extern HB_EXPORT void *    hb_rddNewAreaNode( LPRDDNODE pRddNode, USHORT uiRddID );
-extern HB_EXPORT PHB_ITEM  hb_rddList( USHORT uiType );
-extern HB_EXPORT void      hb_rddCloseAll( void );
-extern HB_EXPORT void      hb_rddFlushAll( void );
-extern HB_EXPORT void      hb_rddUnLockAll( void );
-extern HB_EXPORT BOOL      hb_rddGetNetErr( void );
-extern HB_EXPORT void      hb_rddSetNetErr( BOOL fNetErr );
+extern HB_EXPORT HB_ERRCODE   hb_rddSelectFirstAvailable( void );
+extern HB_EXPORT HB_ERRCODE   hb_rddVerifyAliasName( const char * szAlias );
+extern HB_EXPORT void *       hb_rddNewAreaNode( LPRDDNODE pRddNode, USHORT uiRddID );
+extern HB_EXPORT PHB_ITEM     hb_rddList( USHORT uiType );
+extern HB_EXPORT void         hb_rddCloseAll( void );
+extern HB_EXPORT void         hb_rddFlushAll( void );
+extern HB_EXPORT void         hb_rddUnLockAll( void );
+extern HB_EXPORT BOOL         hb_rddGetNetErr( void );
+extern HB_EXPORT void         hb_rddSetNetErr( BOOL fNetErr );
 
-extern HB_EXPORT ERRCODE   hb_rddOpenTable( 
-                              const char * szFileName, const char * szDriver,
-                              USHORT uiArea, const char *szAlias,
-                              BOOL fShared, BOOL fReadonly,
-                              const char * szCpId, ULONG ulConnection,
-                              PHB_ITEM pStruct, PHB_ITEM pDelim );
-extern HB_EXPORT ERRCODE   hb_rddCreateTable(
-                              const char * szFileName, const char * szDriver,
-                              USHORT uiArea, const char *szAlias,
-                              BOOL fKeepOpen,
-                              const char * szCpId, ULONG ulConnection,
-                              PHB_ITEM pStruct, PHB_ITEM pDelim );
-extern HB_EXPORT ERRCODE   hb_dbTransStruct(
-                              AREAP lpaSource, AREAP lpaDest,
-                              LPDBTRANSINFO lpdbTransInfo,
-                              PHB_ITEM *pStruct, PHB_ITEM pFields );
-extern HB_EXPORT ERRCODE   hb_rddTransRecords(
-                              AREAP pArea,
-                              const char *szFileName, const char *szDriver,
-                              ULONG ulConnection,
-                              PHB_ITEM pFields, BOOL fExport,
-                              PHB_ITEM pCobFor, PHB_ITEM pStrFor,
-                              PHB_ITEM pCobWhile, PHB_ITEM pStrWhile,
-                              PHB_ITEM pNext, PHB_ITEM pRecID,
-                              PHB_ITEM pRest,
-                              const char *szCpId,
-                              PHB_ITEM pDelim );
-extern HB_EXPORT void      hb_tblStructure( AREAP pArea, PHB_ITEM pStruct, USHORT uiSize );
-extern HB_EXPORT ERRCODE   hb_rddCloseAllParentRelations( AREAP pArea );
+extern HB_EXPORT HB_ERRCODE   hb_rddOpenTable(
+                                 const char * szFileName, const char * szDriver,
+                                 USHORT uiArea, const char *szAlias,
+                                 BOOL fShared, BOOL fReadonly,
+                                 const char * szCpId, ULONG ulConnection,
+                                 PHB_ITEM pStruct, PHB_ITEM pDelim );
+extern HB_EXPORT HB_ERRCODE   hb_rddCreateTable(
+                                 const char * szFileName, const char * szDriver,
+                                 USHORT uiArea, const char *szAlias,
+                                 BOOL fKeepOpen,
+                                 const char * szCpId, ULONG ulConnection,
+                                 PHB_ITEM pStruct, PHB_ITEM pDelim );
+extern HB_EXPORT HB_ERRCODE   hb_dbTransStruct(
+                                 AREAP lpaSource, AREAP lpaDest,
+                                 LPDBTRANSINFO lpdbTransInfo,
+                                 PHB_ITEM *pStruct, PHB_ITEM pFields );
+extern HB_EXPORT HB_ERRCODE   hb_rddTransRecords(
+                                 AREAP pArea,
+                                 const char *szFileName, const char *szDriver,
+                                 ULONG ulConnection,
+                                 PHB_ITEM pFields, BOOL fExport,
+                                 PHB_ITEM pCobFor, PHB_ITEM pStrFor,
+                                 PHB_ITEM pCobWhile, PHB_ITEM pStrWhile,
+                                 PHB_ITEM pNext, PHB_ITEM pRecID,
+                                 PHB_ITEM pRest,
+                                 const char *szCpId,
+                                 PHB_ITEM pDelim );
+extern HB_EXPORT void         hb_tblStructure( AREAP pArea, PHB_ITEM pStruct, USHORT uiSize );
+extern HB_EXPORT HB_ERRCODE   hb_rddCloseAllParentRelations( AREAP pArea );
 
-extern HB_EXPORT ERRCODE   hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo );
-extern HB_EXPORT AREAP     hb_rddRequestArea( char * szAlias, PHB_ITEM pCargo,
-                                              BOOL fNewArea, BOOL fWait );
+extern HB_EXPORT HB_ERRCODE   hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo );
+extern HB_EXPORT AREAP        hb_rddRequestArea( char * szAlias, PHB_ITEM pCargo,
+                                                 BOOL fNewArea, BOOL fWait );
 
 #if 0
-extern HB_EXPORT ERRCODE   hb_rddDisinherit( const char * drvName );
-extern HB_EXPORT USHORT    hb_rddGetCurrentFieldPos( const char * szName );
-extern HB_EXPORT USHORT    hb_rddExtendType( HB_TYPE fieldType );
-extern HB_EXPORT HB_TYPE   hb_rddFieldType( USHORT extendType );
+extern HB_EXPORT HB_ERRCODE   hb_rddDisinherit( const char * drvName );
+extern HB_EXPORT USHORT       hb_rddGetCurrentFieldPos( const char * szName );
+extern HB_EXPORT USHORT       hb_rddExtendType( HB_TYPE fieldType );
+extern HB_EXPORT HB_TYPE      hb_rddFieldType( USHORT extendType );
 #endif
-typedef ERRCODE ( * WACALLBACK )( AREAP, void * );
-extern HB_EXPORT ERRCODE   hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo );
-extern HB_EXPORT ERRCODE   hb_rddGetTempAlias( char * szAliasTmp );
+typedef HB_ERRCODE ( * WACALLBACK )( AREAP, void * );
+extern HB_EXPORT HB_ERRCODE   hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo );
+extern HB_EXPORT HB_ERRCODE   hb_rddGetTempAlias( char * szAliasTmp );
 
 HB_EXTERN_END
 

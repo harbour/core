@@ -405,7 +405,7 @@ HB_FUNC( DBFIELDINFO )
 
       pType = hb_param( 1 , HB_IT_NUMERIC );
       uiIndex = hb_parni( 2 );
-      if( pType && SELF_FIELDCOUNT( pArea, &uiFields ) == SUCCESS &&
+      if( pType && SELF_FIELDCOUNT( pArea, &uiFields ) == HB_SUCCESS &&
           uiIndex > 0 && uiIndex <= uiFields )
       {
          PHB_ITEM pInfo = hb_itemNew( hb_param( 3, HB_IT_ANY ) );
@@ -464,11 +464,11 @@ HB_FUNC( DBFILEGET )
 
       pMode = hb_param( 3, HB_IT_NUMERIC );
       if( uiIndex > 0 && pMode && hb_parclen( 2 ) > 0 &&
-          SELF_FIELDCOUNT( pArea, &uiFields ) == SUCCESS &&
+          SELF_FIELDCOUNT( pArea, &uiFields ) == HB_SUCCESS &&
           uiIndex <= uiFields )
       {
          hb_retl( SELF_GETVALUEFILE( pArea, uiIndex, hb_parc( 2 ),
-                                     hb_itemGetNI( pMode ) ) == SUCCESS );
+                                     hb_itemGetNI( pMode ) ) == HB_SUCCESS );
       }
       else
          hb_errRT_DBCMD( EG_ARG, EDBCMD_DBFILEGETBADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -494,11 +494,11 @@ HB_FUNC( DBFILEPUT )
       else
          uiIndex = hb_parni( 1 );
       if( uiIndex > 0 && hb_parclen( 2 ) > 0 &&
-          SELF_FIELDCOUNT( pArea, &uiFields ) == SUCCESS &&
+          SELF_FIELDCOUNT( pArea, &uiFields ) == HB_SUCCESS &&
           uiIndex <= uiFields )
       {
          hb_retl( SELF_PUTVALUEFILE( pArea, uiIndex, hb_parc( 2 ),
-                                     hb_parni( 3 ) ) == SUCCESS );
+                                     hb_parni( 3 ) ) == HB_SUCCESS );
       }
       else
          hb_errRT_DBCMD( EG_ARG, EDBCMD_DBFILEPUTBADPARAMETER, NULL, HB_ERR_FUNCNAME );

@@ -81,7 +81,7 @@ STATIC FUNCTION FCM_INIT( nRDD )
    AFILL( aRData, -1 )
    USRRDD_RDDDATA( nRDD, aRData )
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 /*
  * methods: NEW and RELEASE receive pointer to work area structure
@@ -101,7 +101,7 @@ STATIC FUNCTION FCM_NEW( pWA )
     */
    USRRDD_AREADATA( pWA, aWData )
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_CREATE( nWA, aOpenInfo )
    LOCAL oError := ErrorNew()
@@ -113,7 +113,7 @@ STATIC FUNCTION FCM_CREATE( nWA, aOpenInfo )
    oError:FileName    := aOpenInfo[ UR_OI_NAME ]
    oError:CanDefault  := .T.
    UR_SUPER_ERROR( nWA, oError )
-   RETURN FAILURE
+   RETURN HB_FAILURE
 
 STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
    LOCAL cName, nMode, nSlot, nHandle, aRData, aWData, aField, oError, nResult
@@ -139,7 +139,7 @@ STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       oError:CanDefault  := .T.
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
    ENDIF
 
    HB_FSELECT( nSlot )
@@ -154,7 +154,7 @@ STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
       oError:CanDefault  := .T.
 
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
    ENDIF
    aRData[ nSlot ] := nHandle
    aWData[ 1 ] := nSlot
@@ -173,7 +173,7 @@ STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
    /* Call SUPER OPEN to finish allocating work area (f.e.: alias settings) */
    nResult := UR_SUPER_OPEN( nWA, aOpenInfo )
 
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       FCM_GOTOP( nWA )
    ENDIF
 
@@ -201,9 +201,9 @@ STATIC FUNCTION FCM_GETVALUE( nWA, nField, xValue )
          HB_FSELECT( aWData[ 1 ] )
          xValue := HB_FREADLN()
       ENDIF
-      RETURN SUCCESS
+      RETURN HB_SUCCESS
    ENDIF
-   RETURN FAILURE
+   RETURN HB_FAILURE
 
 STATIC FUNCTION FCM_GOTO( nWA, nRecord )
    LOCAL aWData := USRRDD_AREADATA( nWA )
@@ -220,7 +220,7 @@ STATIC FUNCTION FCM_GOTO( nWA, nRecord )
       aWData[ 2 ] := HB_FRECNO() == 0
       aWData[ 3 ] := HB_FEOF()
    ENDIF
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_GOTOID( nWA, nRecord )
    RETURN FCM_GOTO( nWA, nRecord )
@@ -230,7 +230,7 @@ STATIC FUNCTION FCM_GOTOP( nWA )
    HB_FSELECT( aWData[ 1 ] )
    HB_FGOTOP()
    aWData[ 2 ] := aWData[ 3 ] := HB_FEOF()
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_GOBOTTOM( nWA )
    LOCAL aWData := USRRDD_AREADATA( nWA )
@@ -243,7 +243,7 @@ STATIC FUNCTION FCM_GOBOTTOM( nWA )
       HB_FGOBOTTOM()
       aWData[ 2 ] := aWData[ 3 ] := .F.
    ENDIF
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_SKIPRAW( nWA, nRecords )
    LOCAL aWData
@@ -253,7 +253,7 @@ STATIC FUNCTION FCM_SKIPRAW( nWA, nRecords )
       HB_FSELECT( aWData[ 1 ] )
       IF aWData[ 3 ]
          IF nRecords > 0
-            RETURN SUCCESS
+            RETURN HB_SUCCESS
          ENDIF
          FCM_GOBOTTOM( nWA )
          ++nRecords
@@ -268,22 +268,22 @@ STATIC FUNCTION FCM_SKIPRAW( nWA, nRecords )
          aWData[ 3 ] := HB_FEOF()
       ENDIF
    ENDIF
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_BOF( nWA, lBof )
    LOCAL aWData := USRRDD_AREADATA( nWA )
    lBof := aWData[ 2 ]
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_EOF( nWA, lEof )
    LOCAL aWData := USRRDD_AREADATA( nWA )
    lEof := aWData[ 3 ]
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_DELETED( nWA, lDeleted )
    HB_SYMBOL_UNUSED( nWA )
    lDeleted := .F.
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_RECID( nWA, nRecNo )
    LOCAL aWData := USRRDD_AREADATA( nWA )
@@ -293,12 +293,12 @@ STATIC FUNCTION FCM_RECID( nWA, nRecNo )
    ELSE
       nRecNo := HB_FRECNO()
    ENDIF
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_RECCOUNT( nWA, nRecords )
    HB_FSELECT( USRRDD_AREADATA( nWA )[ 1 ] )
    nRecords := HB_FLASTREC()
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 /*
  * This function have to exist in all RDD and then name have to be in

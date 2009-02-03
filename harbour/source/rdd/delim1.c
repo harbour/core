@@ -236,7 +236,7 @@ static int hb_delimNextChar( DELIMAREAP pArea )
 /*
  * Read record, decode it to buffer and set next record offset
  */
-static ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
+static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
 {
    USHORT uiField, uiLen, uiSize;
    HB_TYPE uiType;
@@ -365,10 +365,10 @@ static ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
       pArea->fPositioned = TRUE;
    }
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
-static ERRCODE hb_delimNextRecord( DELIMAREAP pArea )
+static HB_ERRCODE hb_delimNextRecord( DELIMAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimNextRecord(%p)", pArea));
 
@@ -387,7 +387,7 @@ static ERRCODE hb_delimNextRecord( DELIMAREAP pArea )
          return hb_delimReadRecord( pArea );
       }
    }
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
@@ -397,20 +397,20 @@ static ERRCODE hb_delimNextRecord( DELIMAREAP pArea )
 /*
  * Position cursor at the first record.
  */
-static ERRCODE hb_delimGoTop( DELIMAREAP pArea )
+static HB_ERRCODE hb_delimGoTop( DELIMAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimGoTop(%p)", pArea));
 
-   if( SELF_GOCOLD( ( AREAP ) pArea ) != SUCCESS )
-      return FAILURE;
+   if( SELF_GOCOLD( ( AREAP ) pArea ) != HB_SUCCESS )
+      return HB_FAILURE;
 
    pArea->fTop = TRUE;
    pArea->fBottom = FALSE;
 
    pArea->ulRecordOffset = 0;
    pArea->ulRecNo = 1;
-   if( hb_delimReadRecord( pArea ) != SUCCESS )
-      return FAILURE;
+   if( hb_delimReadRecord( pArea ) != HB_SUCCESS )
+      return HB_FAILURE;
 
    return SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
 }
@@ -418,15 +418,15 @@ static ERRCODE hb_delimGoTop( DELIMAREAP pArea )
 /*
  * Reposition cursor, regardless of filter.
  */
-static ERRCODE hb_delimSkipRaw( DELIMAREAP pArea, LONG lToSkip )
+static HB_ERRCODE hb_delimSkipRaw( DELIMAREAP pArea, LONG lToSkip )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimSkipRaw(%p,%ld)", pArea, lToSkip));
 
-   if( SELF_GOCOLD( ( AREAP ) pArea ) != SUCCESS )
-      return FAILURE;
+   if( SELF_GOCOLD( ( AREAP ) pArea ) != HB_SUCCESS )
+      return HB_FAILURE;
 
    if( lToSkip != 1 )
-      return FAILURE;
+      return HB_FAILURE;
    else
       return hb_delimNextRecord( pArea );
 }
@@ -434,7 +434,7 @@ static ERRCODE hb_delimSkipRaw( DELIMAREAP pArea, LONG lToSkip )
 /*
  * Determine deleted status for a record.
  */
-static ERRCODE hb_delimDeleted( DELIMAREAP pArea, BOOL * pDeleted )
+static HB_ERRCODE hb_delimDeleted( DELIMAREAP pArea, BOOL * pDeleted )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimDeleted(%p,%p)", pArea, pDeleted));
 
@@ -442,39 +442,39 @@ static ERRCODE hb_delimDeleted( DELIMAREAP pArea, BOOL * pDeleted )
 
    * pDeleted = FALSE;
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Obtain number of records in WorkArea.
  */
-static ERRCODE hb_delimRecCount( DELIMAREAP pArea, ULONG * pRecCount )
+static HB_ERRCODE hb_delimRecCount( DELIMAREAP pArea, ULONG * pRecCount )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimRecCount(%p,%p)", pArea, pRecCount));
 
    * pRecCount = pArea->ulRecCount;
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Obtain physical row number at current WorkArea cursor position.
  */
-static ERRCODE hb_delimRecNo( DELIMAREAP pArea, ULONG * pulRecNo )
+static HB_ERRCODE hb_delimRecNo( DELIMAREAP pArea, ULONG * pulRecNo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimRecNo(%p,%p)", pArea, pulRecNo));
 
    *pulRecNo = pArea->ulRecNo;
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Obtain physical row ID at current WorkArea cursor position.
  */
-static ERRCODE hb_delimRecId( DELIMAREAP pArea, PHB_ITEM pRecNo )
+static HB_ERRCODE hb_delimRecId( DELIMAREAP pArea, PHB_ITEM pRecNo )
 {
-   ERRCODE errCode;
+   HB_ERRCODE errCode;
    ULONG ulRecNo;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimRecId(%p,%p)", pArea, pRecNo));
@@ -501,17 +501,17 @@ static ERRCODE hb_delimRecId( DELIMAREAP pArea, PHB_ITEM pRecNo )
 /*
  * Append a record to the WorkArea.
  */
-static ERRCODE hb_delimAppend( DELIMAREAP pArea, BOOL fUnLockAll )
+static HB_ERRCODE hb_delimAppend( DELIMAREAP pArea, BOOL fUnLockAll )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimAppend(%p,%d)", pArea, (int) fUnLockAll));
 
    HB_SYMBOL_UNUSED( fUnLockAll );
 
-   if( SELF_GOCOLD( ( AREAP ) pArea ) != SUCCESS )
-      return FAILURE;
+   if( SELF_GOCOLD( ( AREAP ) pArea ) != HB_SUCCESS )
+      return HB_FAILURE;
 
-   if( SELF_GOHOT( ( AREAP ) pArea ) != SUCCESS )
-      return FAILURE;
+   if( SELF_GOHOT( ( AREAP ) pArea ) != HB_SUCCESS )
+      return HB_FAILURE;
 
    pArea->ulRecordOffset = pArea->ulFileSize;
    pArea->ulRecNo = ++pArea->ulRecCount;
@@ -519,13 +519,13 @@ static ERRCODE hb_delimAppend( DELIMAREAP pArea, BOOL fUnLockAll )
    pArea->fPositioned = TRUE;
    hb_delimClearRecordBuffer( pArea );
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Delete a record.
  */
-static ERRCODE hb_delimDeleteRec( DELIMAREAP pArea )
+static HB_ERRCODE hb_delimDeleteRec( DELIMAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimDeleteRec(%p)", pArea));
 
@@ -537,13 +537,13 @@ static ERRCODE hb_delimDeleteRec( DELIMAREAP pArea )
       hb_delimClearRecordBuffer( pArea );
    }
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Obtain the current value of a field.
  */
-static ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD pField;
 
@@ -635,32 +635,32 @@ static ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
          hb_errPutSubCode( pError, EDBF_DATATYPE );
          SELF_ERROR( ( AREAP ) pArea, pError );
          hb_itemRelease( pError );
-         return FAILURE;
+         return HB_FAILURE;
       }
    }
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Assign a value to a field.
  */
-static ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    char szBuffer[ 256 ];
-   ERRCODE uiError;
+   HB_ERRCODE uiError;
    LPFIELD pField;
    USHORT uiSize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimPutValue(%p,%hu,%p)", pArea, uiIndex, pItem));
 
    if( !pArea->fPositioned )
-      return SUCCESS;
+      return HB_SUCCESS;
 
    if( !pArea->fRecordChanged )
-      return FAILURE;
+      return HB_FAILURE;
 
-   uiError = SUCCESS;
+   uiError = HB_SUCCESS;
    --uiIndex;
    pField = pArea->lpFields + uiIndex;
    if( pField->uiType != HB_FT_MEMO && pField->uiType != HB_FT_NONE )
@@ -723,7 +723,7 @@ static ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
          uiError = EDBF_DATATYPE;
    }
 
-   if( uiError != SUCCESS )
+   if( uiError != HB_SUCCESS )
    {
       PHB_ITEM pError= hb_errNew();
       USHORT uiGenCode = uiError == EDBF_DATAWIDTH ? EG_DATAWIDTH : EDBF_DATATYPE;
@@ -735,47 +735,47 @@ static ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
       hb_errPutFlags( pError, EF_CANDEFAULT );
       uiError = SELF_ERROR( ( AREAP ) pArea, pError );
       hb_itemRelease( pError );
-      return uiError == E_DEFAULT ? SUCCESS : FAILURE;
+      return uiError == E_DEFAULT ? HB_SUCCESS : HB_FAILURE;
    }
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Replace the current record.
  */
-static ERRCODE hb_delimPutRec( DELIMAREAP pArea, BYTE * pBuffer )
+static HB_ERRCODE hb_delimPutRec( DELIMAREAP pArea, BYTE * pBuffer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimPutRec(%p,%p)", pArea, pBuffer));
 
    if( !pArea->fPositioned )
-      return SUCCESS;
+      return HB_SUCCESS;
 
    if( !pArea->fRecordChanged )
-      return FAILURE;
+      return HB_FAILURE;
 
    /* Copy data to buffer */
    memcpy( pArea->pRecord, pBuffer + 1, pArea->uiRecordLen );
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Retrieve current record buffer
  */
-static ERRCODE hb_delimGetRec( DELIMAREAP pArea, BYTE ** pBufferPtr )
+static HB_ERRCODE hb_delimGetRec( DELIMAREAP pArea, BYTE ** pBufferPtr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimGetRec(%p,%p)", pArea, pBufferPtr));
 
    *pBufferPtr = pArea->pRecord - 1;
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Copy one or more records from one WorkArea to another.
  */
-static ERRCODE hb_delimTrans( DELIMAREAP pArea, LPDBTRANSINFO pTransInfo )
+static HB_ERRCODE hb_delimTrans( DELIMAREAP pArea, LPDBTRANSINFO pTransInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimTrans(%p, %p)", pArea, pTransInfo));
 
@@ -788,10 +788,10 @@ static ERRCODE hb_delimTrans( DELIMAREAP pArea, LPDBTRANSINFO pTransInfo )
       else
       {
          PHB_ITEM pPutRec = hb_itemPutL( NULL, FALSE );
-         if( SELF_INFO( ( AREAP ) pTransInfo->lpaDest, DBI_CANPUTREC, pPutRec ) != SUCCESS )
+         if( SELF_INFO( ( AREAP ) pTransInfo->lpaDest, DBI_CANPUTREC, pPutRec ) != HB_SUCCESS )
          {
             hb_itemRelease( pPutRec );
-            return FAILURE;
+            return HB_FAILURE;
          }
          if( hb_itemGetL( pPutRec ) )
             pTransInfo->uiFlags |= DBTF_PUTREC;
@@ -806,7 +806,7 @@ static ERRCODE hb_delimTrans( DELIMAREAP pArea, LPDBTRANSINFO pTransInfo )
 /*
  * Perform a write of WorkArea memory to the data store.
  */
-static ERRCODE hb_delimGoCold( DELIMAREAP pArea )
+static HB_ERRCODE hb_delimGoCold( DELIMAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimGoCold(%p)", pArea));
 
@@ -826,20 +826,20 @@ static ERRCODE hb_delimGoCold( DELIMAREAP pArea )
          hb_errPutFileName( pError, pArea->szFileName );
          SELF_ERROR( ( AREAP ) pArea, pError );
          hb_itemRelease( pError );
-         return FAILURE;
+         return HB_FAILURE;
       }
       pArea->ulFileSize += ulSize;
       pArea->ulNextOffset = pArea->ulFileSize;
       pArea->fRecordChanged = FALSE;
       pArea->fFlush = TRUE;
    }
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Mark the WorkArea data buffer as hot.
  */
-static ERRCODE hb_delimGoHot( DELIMAREAP pArea )
+static HB_ERRCODE hb_delimGoHot( DELIMAREAP pArea )
 {
    PHB_ITEM pError;
 
@@ -853,18 +853,18 @@ static ERRCODE hb_delimGoHot( DELIMAREAP pArea )
       hb_errPutSubCode( pError, EDBF_READONLY );
       SELF_ERROR( ( AREAP ) pArea, pError );
       hb_itemRelease( pError );
-      return FAILURE;
+      return HB_FAILURE;
    }
    pArea->fRecordChanged = TRUE;
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Write data buffer to the data store.
  */
-static ERRCODE hb_delimFlush( DELIMAREAP pArea )
+static HB_ERRCODE hb_delimFlush( DELIMAREAP pArea )
 {
-   ERRCODE uiError;
+   HB_ERRCODE uiError;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimFlush(%p)", pArea));
 
@@ -886,7 +886,7 @@ static ERRCODE hb_delimFlush( DELIMAREAP pArea )
 /*
  * Retrieve information about the current table/driver.
  */
-static ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimInfo(%p,%hu,%p)", pArea, uiIndex, pItem));
 
@@ -1009,13 +1009,13 @@ static ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          return SUPER_INFO( ( AREAP ) pArea, uiIndex, pItem );
    }
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Add a field to the WorkArea.
  */
-static ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
+static HB_ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
 {
    USHORT uiDelim = 0;
 
@@ -1127,12 +1127,12 @@ static ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
 /*
  * Establish the extent of the array of fields for a WorkArea.
  */
-static ERRCODE hb_delimSetFieldExtent( DELIMAREAP pArea, USHORT uiFieldExtent )
+static HB_ERRCODE hb_delimSetFieldExtent( DELIMAREAP pArea, USHORT uiFieldExtent )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimSetFieldExtent(%p,%hu)", pArea, uiFieldExtent));
 
-   if( SUPER_SETFIELDEXTENT( ( AREAP ) pArea, uiFieldExtent ) == FAILURE )
-      return FAILURE;
+   if( SUPER_SETFIELDEXTENT( ( AREAP ) pArea, uiFieldExtent ) == HB_FAILURE )
+      return HB_FAILURE;
 
    /* Alloc field offsets array */
    if( uiFieldExtent )
@@ -1141,18 +1141,18 @@ static ERRCODE hb_delimSetFieldExtent( DELIMAREAP pArea, USHORT uiFieldExtent )
       memset( pArea->pFieldOffset, 0, uiFieldExtent * sizeof( USHORT ) );
    }
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Clear the WorkArea for use.
  */
-static ERRCODE hb_delimNewArea( DELIMAREAP pArea )
+static HB_ERRCODE hb_delimNewArea( DELIMAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimNewArea(%p)", pArea));
 
-   if( SUPER_NEW( ( AREAP ) pArea ) == FAILURE )
-      return FAILURE;
+   if( SUPER_NEW( ( AREAP ) pArea ) == HB_FAILURE )
+      return HB_FAILURE;
 
    pArea->pFile = NULL;
    pArea->fTransRec = TRUE;
@@ -1165,25 +1165,25 @@ static ERRCODE hb_delimNewArea( DELIMAREAP pArea )
    /* set field separator */
    pArea->cSeparator = ',';
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Retrieve the size of the WorkArea structure.
  */
-static ERRCODE hb_delimStructSize( DELIMAREAP pArea, USHORT * uiSize )
+static HB_ERRCODE hb_delimStructSize( DELIMAREAP pArea, USHORT * uiSize )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimStrucSize(%p,%p)", pArea, uiSize));
    HB_SYMBOL_UNUSED( pArea );
 
    * uiSize = sizeof( DELIMAREA );
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Close the table in the WorkArea.
  */
-static ERRCODE hb_delimClose( DELIMAREAP pArea )
+static HB_ERRCODE hb_delimClose( DELIMAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimClose(%p)", pArea));
 
@@ -1223,17 +1223,17 @@ static ERRCODE hb_delimClose( DELIMAREAP pArea )
       pArea->szFileName = NULL;
    }
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Create a data store in the specified WorkArea.
  */
-static ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
+static HB_ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
 {
    PHB_ITEM pError = NULL;
    PHB_FNAME pFileName;
-   ERRCODE errCode;
+   HB_ERRCODE errCode;
    BOOL fRetry;
    BYTE szFileName[ _POSIX_PATH_MAX + 1 ];
 
@@ -1297,10 +1297,10 @@ static ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
       hb_itemRelease( pError );
 
    if( !pArea->pFile )
-      return FAILURE;
+      return HB_FAILURE;
 
    errCode = SUPER_CREATE( ( AREAP ) pArea, pCreateInfo );
-   if( errCode != SUCCESS )
+   if( errCode != HB_SUCCESS )
    {
       SELF_CLOSE( ( AREAP ) pArea );
       return errCode;
@@ -1315,11 +1315,11 @@ static ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
 /*
  * Open a data store in the WorkArea.
  */
-static ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
+static HB_ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    PHB_ITEM pError = NULL;
    PHB_FNAME pFileName;
-   ERRCODE errCode;
+   HB_ERRCODE errCode;
    USHORT uiFlags;
    BOOL fRetry;
    BYTE szFileName[ _POSIX_PATH_MAX + 1 ];
@@ -1395,13 +1395,13 @@ static ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
       hb_itemRelease( pError );
 
    if( !pArea->pFile )
-      return FAILURE;
+      return HB_FAILURE;
 
    errCode = SUPER_OPEN( ( AREAP ) pArea, pOpenInfo );
-   if( errCode != SUCCESS )
+   if( errCode != HB_SUCCESS )
    {
       SELF_CLOSE( ( AREAP ) pArea );
-      return FAILURE;
+      return HB_FAILURE;
    }
 
    hb_delimInitArea( pArea, ( char * ) szFileName );
@@ -1413,7 +1413,7 @@ static ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
 /*
  * Retrieve information about the current driver.
  */
-static ERRCODE hb_delimRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
+static HB_ERRCODE hb_delimRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimRddInfo(%p,%hu,%lu,%p)", pRDD, uiIndex, ulConnect, pItem));
 
@@ -1433,7 +1433,7 @@ static ERRCODE hb_delimRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect,
 
    }
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
@@ -1563,7 +1563,7 @@ HB_FUNC( DELIM_GETFUNCTABLE )
       hb_retni( hb_rddInherit( pTable, &delimTable, &delimSuper, NULL ) );
    }
    else
-      hb_retni( FAILURE );
+      hb_retni( HB_FAILURE );
 }
 
 

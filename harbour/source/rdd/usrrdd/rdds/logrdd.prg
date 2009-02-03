@@ -99,7 +99,7 @@ STATIC FUNCTION LOGRDD_INIT( nRDD )
                         /* cFileName, nHandle, cTag, lActive, cRDDName, bMsgLogBlock, bUserLogBlock */
    USRRDD_RDDDATA( nRDD, { cFileName, NIL, cTag, lActive, cRDDName, NIL, NIL } )
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION LOGRDD_EXIT( nRDD )
    LOCAL aRDDData  := USRRDD_RDDDATA( nRDD )
@@ -110,12 +110,12 @@ STATIC FUNCTION LOGRDD_EXIT( nRDD )
       aRDDData[ ARRAY_FHANDLE ] := NIL
    ENDIF
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 // Create database from current WA fields definition
 STATIC FUNCTION LOGRDD_CREATE( nWA, aOpenInfo )
    LOCAL nResult := UR_SUPER_CREATE( nWA, aOpenInfo )
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       ToLog( "CREATE", nWA, aOpenInfo )
    ENDIF
    RETURN nResult
@@ -123,7 +123,7 @@ STATIC FUNCTION LOGRDD_CREATE( nWA, aOpenInfo )
 // Creating fields for new DBF - dbCreate() in current workarea
 STATIC FUNCTION LOGRDD_CREATEFIELDS( nWA, aStruct )
    LOCAL nResult := UR_SUPER_CREATEFIELDS( nWA, aStruct )
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       ToLog( "CREATEFIELDS", nWA, aStruct )
    ENDIF
    RETURN nResult
@@ -131,7 +131,7 @@ STATIC FUNCTION LOGRDD_CREATEFIELDS( nWA, aStruct )
 // Open workarea
 STATIC FUNCTION LOGRDD_OPEN( nWA, aOpenInfo )
    LOCAL nResult := UR_SUPER_OPEN( nWA, aOpenInfo )
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       ToLog( "OPEN", nWA, aOpenInfo )
    ENDIF
    RETURN nResult
@@ -141,28 +141,28 @@ STATIC FUNCTION LOGRDD_CLOSE( nWA )
    LOCAL cFile   := dbInfo( DBI_FULLPATH )
    LOCAL cAlias  := Alias()
    LOCAL nResult := UR_SUPER_CLOSE( nWA )
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       ToLog( "CLOSE", nWA, cFile, cAlias )
    ENDIF
    RETURN nResult
 
 STATIC FUNCTION LOGRDD_APPEND( nWA, lUnlockAll )
    LOCAL nResult := UR_SUPER_APPEND( nWA, lUnlockAll )
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       ToLog( "APPEND", nWA, lUnlockAll )
    ENDIF
    RETURN nResult
 
 STATIC FUNCTION LOGRDD_DELETE( nWA )
    LOCAL nResult := UR_SUPER_DELETE( nWA )
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       ToLog( "DELETE", nWA )
    ENDIF
    RETURN nResult
 
 STATIC FUNCTION LOGRDD_RECALL( nWA )
    LOCAL nResult := UR_SUPER_RECALL( nWA )
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       ToLog( "RECALL", nWA )
    ENDIF
    RETURN nResult
@@ -179,7 +179,7 @@ STATIC FUNCTION LOGRDD_PUTVALUE( nWA, nField, xValue )
 
 STATIC FUNCTION LOGRDD_ZAP( nWA )
    LOCAL nResult := UR_SUPER_ZAP( nWA )
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       ToLog( "ZAP", nWA )
    ENDIF
    RETURN nResult
@@ -486,4 +486,3 @@ STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
 
    ENDIF
    RETURN
-

@@ -459,7 +459,7 @@ static void hb_hsxHashStr( BYTE * pStr, ULONG ulLen, BYTE * pKey, int iKeySize,
    {
       while( ulLen-- && ( c2 = *pStr++ ) != 0 )
       {
-#else 
+#else
    /* This version can work well with embedded 0 characters */
    if( pStr && ulLen-- )
    {
@@ -550,7 +550,7 @@ static int hb_hsxCompile( char * szExpr, PHB_ITEM * pExpr )
    *pExpr = NULL;
    if( pArea )
    {
-      if( SELF_COMPILE( pArea, ( BYTE * ) szExpr ) == FAILURE )
+      if( SELF_COMPILE( pArea, ( BYTE * ) szExpr ) == HB_FAILURE )
          return HSX_BADPARMS;
       *pExpr = pArea->valResult;
       pArea->valResult = NULL;
@@ -609,7 +609,7 @@ static int hb_hsxEval( int iHandle, PHB_ITEM pExpr, BYTE *pKey, BOOL *fDeleted )
          AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
          if( !pArea )
             *fDeleted = FALSE;
-         else if( SELF_DELETED( pArea, fDeleted ) == FAILURE )
+         else if( SELF_DELETED( pArea, fDeleted ) == HB_FAILURE )
             iResult = HSX_RDDFAILURE;
       }
       if( iArea )
@@ -627,7 +627,7 @@ static int hb_hsxEval( int iHandle, PHB_ITEM pExpr, BYTE *pKey, BOOL *fDeleted )
 
 static void hb_hsxGetRecCount( LPHSXINFO pHSX )
 {
-   pHSX->ulRecCount = ( ULONG ) ( ( hb_fileSize( pHSX->pFile ) - 
+   pHSX->ulRecCount = ( ULONG ) ( ( hb_fileSize( pHSX->pFile ) -
                                     HSXHEADER_LEN ) / pHSX->uiRecordSize );
 }
 
@@ -1217,7 +1217,7 @@ static LPHSXINFO hb_hsxNew( void )
       if( iHandle == pTable->iHandleSize )
       {
          pTable->iHandleSize += HSX_HALLOC;
-         pTable->handleArray = ( LPHSXINFO * ) hb_xrealloc( pTable->handleArray, 
+         pTable->handleArray = ( LPHSXINFO * ) hb_xrealloc( pTable->handleArray,
                                           sizeof( LPHSXINFO ) * pTable->iHandleSize );
          memset( &pTable->handleArray[ iHandle ], 0, sizeof( LPHSXINFO ) * HSX_HALLOC );
       }
@@ -1518,7 +1518,7 @@ static int hb_hsxIndex( char * szFile, PHB_ITEM pExpr, int iKeySize, int iMode,
 {
    int iRetVal = HSX_SUCCESS, iHandle;
    ULONG ulRecNo = 0, ulRecCount = 0, ulNewRec, ulRec;
-   ERRCODE errCode;
+   HB_ERRCODE errCode;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( !pArea )
@@ -1532,15 +1532,15 @@ static int hb_hsxIndex( char * szFile, PHB_ITEM pExpr, int iKeySize, int iMode,
       return iHandle;
 
    errCode = SELF_RECCOUNT( pArea, &ulRecCount );
-   if( errCode != FAILURE && ulRecCount )
+   if( errCode != HB_FAILURE && ulRecCount )
    {
       errCode = SELF_RECNO( pArea, &ulRecNo );
-      if( errCode != FAILURE )
+      if( errCode != HB_FAILURE )
       {
          for( ulRec = 1; ulRec <= ulRecCount; ulRec++ )
          {
             errCode = SELF_GOTO( pArea, ulRec );
-            if( errCode == FAILURE )
+            if( errCode == HB_FAILURE )
                break;
             iRetVal = hb_hsxAdd( iHandle, &ulNewRec, NULL, FALSE );
             if( iRetVal != HSX_SUCCESS )
@@ -1563,7 +1563,7 @@ static int hb_hsxIndex( char * szFile, PHB_ITEM pExpr, int iKeySize, int iMode,
    hb_hsxDestroy( iHandle );
    if( iRetVal != HSX_SUCCESS )
       return iRetVal;
-   if( errCode == FAILURE )
+   if( errCode == HB_FAILURE )
       return HSX_RDDFAILURE;
 
    return hb_hsxOpen( szFile, iBufSize, iMode );
@@ -1576,7 +1576,7 @@ static int hb_hsxFilter( int iHandle, BYTE * pSeek, ULONG ulSeek,
    LPHSXINFO pHSX = hb_hsxGetPointer( iHandle );
    BOOL fDestroyExpr = FALSE, fValid;
    int iResult = HSX_SUCCESS;
-   ERRCODE errCode;
+   HB_ERRCODE errCode;
    ULONG ulRecNo = 0, ulRec;
    PHB_ITEM pItem;
 
@@ -1607,12 +1607,12 @@ static int hb_hsxFilter( int iHandle, BYTE * pSeek, ULONG ulSeek,
    }
 
    errCode = SELF_RECNO( pArea, &ulRecNo );
-   if( errCode != FAILURE )
+   if( errCode != HB_FAILURE )
       iResult = hb_hsxSeekSet( iHandle, pSeek, ulSeek );
 
    fValid = TRUE;
    pItem = hb_itemNew( NULL );
-   while( iResult == HSX_SUCCESS && errCode != FAILURE )
+   while( iResult == HSX_SUCCESS && errCode != HB_FAILURE )
    {
       iResult = hb_hsxNext( iHandle, &ulRec );
       if( iResult != HSX_SUCCESS || ulRec == 0 )
@@ -1620,10 +1620,10 @@ static int hb_hsxFilter( int iHandle, BYTE * pSeek, ULONG ulSeek,
       if( pVerify )
       {
          errCode = SELF_GOTO( pArea, ulRec );
-         if( errCode == FAILURE )
+         if( errCode == HB_FAILURE )
             break;
          errCode = SELF_EVALBLOCK( pArea, pVerify );
-         if( errCode == FAILURE )
+         if( errCode == HB_FAILURE )
             break;
          fValid = hb_hsxVerify( iHandle,
                                 ( BYTE * ) hb_itemGetCPtr( pArea->valResult ),
@@ -1650,7 +1650,7 @@ static int hb_hsxFilter( int iHandle, BYTE * pSeek, ULONG ulSeek,
    if( fDestroyExpr )
       hb_hsxExpDestroy( pVerify );
 
-   return errCode == FAILURE ? HSX_RDDFAILURE : iResult;
+   return errCode == HB_FAILURE ? HSX_RDDFAILURE : iResult;
 }
 
 
@@ -1726,7 +1726,7 @@ HB_FUNC( HS_ADD )
 HB_FUNC( HS_REPLACE )
 {
    if( hb_param( 1, HB_IT_NUMERIC ) && hb_param( 3, HB_IT_NUMERIC ) )
-      hb_retni( hb_hsxReplace( hb_parni( 1 ), hb_parnl( 3 ), 
+      hb_retni( hb_hsxReplace( hb_parni( 1 ), hb_parnl( 3 ),
                                hb_param( 2, HB_IT_BLOCK | HB_IT_STRING ),
                                hb_parl( 4 ) ) );
    else
@@ -1852,7 +1852,7 @@ HB_FUNC( HS_FILTER )
          iResult = HSX_NOTABLE;
       }
       /* create empty workarea RM filter */
-      else if( SELF_INFO( pArea, DBI_RM_CREATE, pItem ) == FAILURE )
+      else if( SELF_INFO( pArea, DBI_RM_CREATE, pItem ) == HB_FAILURE )
          iResult = HSX_RDDFAILURE;
       else
       {
@@ -1882,7 +1882,7 @@ HB_FUNC( HS_FILTER )
       if( iResult == HSX_SUCCESS )
       {
          hb_itemPutNI( pItem, 0 );
-         if( SELF_INFO( pArea, DBI_RM_COUNT, pItem ) == FAILURE )
+         if( SELF_INFO( pArea, DBI_RM_COUNT, pItem ) == HB_FAILURE )
             iResult = HSX_RDDFAILURE;
          else
             ulRecords = hb_itemGetNL( pItem );

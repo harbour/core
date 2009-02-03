@@ -108,7 +108,7 @@ STATIC FUNCTION AR_INIT( nRDD )
    /* Init DBF Hash */
    USRRDD_RDDDATA( nRDD, hb_Hash() )
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_RDDDATAINIT()
    RETURN { ;
@@ -162,12 +162,12 @@ STATIC FUNCTION AR_NEW( pWA )
     */
    USRRDD_AREADATA( pWA, AR_WADATAINIT() )
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 // Creating fields for new DBF - dbCreate() in current workarea
 STATIC FUNCTION AR_CREATEFIELDS( nWA, aStruct )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
-   LOCAL nResult   := SUCCESS
+   LOCAL nResult   := HB_SUCCESS
    LOCAL aFieldStruct, aField
 
 #ifdef ACTIVATE_DEBUG
@@ -256,7 +256,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
       oError:CanDefault  := .T.
       UR_SUPER_ERROR( nWA, oError )
 
-      RETURN FAILURE
+      RETURN HB_FAILURE
 
    ENDIF
    */
@@ -268,7 +268,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    /* Call SUPER OPEN to finish allocating work area (f.e.: alias settings) */
    nResult := UR_SUPER_OPEN( nWA, aOpenInfo )
 
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       /* Add a new open number */
       aDBFData[ DATABASE_OPENNUMBER ]++
       // default values for Records == 0
@@ -313,7 +313,7 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       oError:CanDefault  := .T.
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
 
    ENDIF
 
@@ -356,7 +356,7 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       oError:CanDefault  := .T.
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
 
    ENDIF
 
@@ -373,11 +373,11 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
          oError:FileName    := aOpenInfo[ UR_OI_NAME ]
          oError:CanDefault  := .T.
          UR_SUPER_ERROR( nWA, oError )
-         RETURN FAILURE
+         RETURN HB_FAILURE
       ENDIF
    ENDIF
 
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       AR_GOTOP( nWA )
    ENDIF
 
@@ -421,11 +421,11 @@ STATIC FUNCTION AR_GETVALUE( nWA, nField, xValue )
          xValue := aRecords[ nRecNo ][ nField ]
       ENDIF
 
-      RETURN SUCCESS
+      RETURN HB_SUCCESS
 
    ENDIF
 
-   RETURN FAILURE
+   RETURN HB_FAILURE
 
 STATIC FUNCTION AR_PUTVALUE( nWA, nField, xValue )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -450,11 +450,11 @@ STATIC FUNCTION AR_PUTVALUE( nWA, nField, xValue )
          aRecords[ nRecNo ][ nField ] := xVal
       ENDIF
 
-      RETURN SUCCESS
+      RETURN HB_SUCCESS
 
    ENDIF
 
-   RETURN FAILURE
+   RETURN HB_FAILURE
 
 STATIC FUNCTION AR_GOTO( nWA, nRecord )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -466,8 +466,8 @@ STATIC FUNCTION AR_GOTO( nWA, nRecord )
    hb_ToOutDebug( "AR_GOTO(): nWA = %i, nRecord = %i\n\r", nWA, nRecord )
 #endif
 
-   //if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
-   //   return FAILURE;
+   //if( SELF_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
+   //   return HB_FAILURE;
    //
    //if( pArea->lpdbPendingRel )
    //{
@@ -509,7 +509,7 @@ STATIC FUNCTION AR_GOTO( nWA, nRecord )
 
    ENDIF
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_GOTOID( nWA, nRecord )
 #ifdef ACTIVATE_DEBUG
@@ -544,7 +544,7 @@ STATIC FUNCTION AR_GOTOP( nWA )
       ENDIF
    ENDIF
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_GOBOTTOM( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -573,7 +573,7 @@ STATIC FUNCTION AR_GOBOTTOM( nWA )
 
    ENDIF
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -590,8 +590,8 @@ STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
    IF nToSkip != 0
       DO WHILE !aWAData[ WADATA_BOF ] .AND. !aWAData[ WADATA_EOF ]
          IF SET( _SET_DELETED ) .AND. aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ]
-            IF !( AR_SKIPRAW( nWA, nToSkip ) == SUCCESS )
-               RETURN FAILURE
+            IF !( AR_SKIPRAW( nWA, nToSkip ) == HB_SUCCESS )
+               RETURN HB_FAILURE
             ENDIF
             IF nToSkip < 0 .AND. aWAData[ WADATA_BOF ]
                lBof := TRUE
@@ -614,7 +614,7 @@ STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
 
    ENDIF
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_SKIPRAW( nWA, nRecords )
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
@@ -653,7 +653,7 @@ STATIC FUNCTION AR_SKIPRAW( nWA, nRecords )
 
       ENDIF
 
-   RETURN nResult // SUCCESS
+   RETURN nResult // HB_SUCCESS
 
 STATIC FUNCTION AR_BOF( nWA, lBof )
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
@@ -670,7 +670,7 @@ STATIC FUNCTION AR_BOF( nWA, lBof )
       lBof := aWAData[ WADATA_BOF ]
    ENDIF
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_EOF( nWA, lEof )
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
@@ -681,7 +681,7 @@ STATIC FUNCTION AR_EOF( nWA, lEof )
 
    lEof := aWAData[ WADATA_EOF ]
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_DELETE( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -702,7 +702,7 @@ STATIC FUNCTION AR_DELETE( nWA )
       oError:Description := HB_LANGERRMSG( EG_READONLY )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
 
    ENDIF
 
@@ -714,7 +714,7 @@ STATIC FUNCTION AR_DELETE( nWA )
       oError:Description := HB_LANGERRMSG( EG_UNLOCKED )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
 
    ENDIF
 
@@ -722,7 +722,7 @@ STATIC FUNCTION AR_DELETE( nWA )
       aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ] := .T.
    ENDIF
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_DELETED( nWA, lDeleted )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -740,7 +740,7 @@ STATIC FUNCTION AR_DELETED( nWA, lDeleted )
       lDeleted := .F.
    ENDIF
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_APPEND( nWA, nRecords )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -768,7 +768,7 @@ STATIC FUNCTION AR_APPEND( nWA, nRecords )
       oError:CanDefault  := .T.
       oError:CanRetry    := .T.
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
 
    ENDIF
 
@@ -779,7 +779,7 @@ STATIC FUNCTION AR_APPEND( nWA, nRecords )
 
    /* TODO: SHARED ACCESS */
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_RECID( nWA, nRecNo )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -797,7 +797,7 @@ STATIC FUNCTION AR_RECID( nWA, nRecNo )
       nRecNo := aWAData[ WADATA_RECNO ]
    ENDIF
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_RECCOUNT( nWA, nRecords )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -810,7 +810,7 @@ STATIC FUNCTION AR_RECCOUNT( nWA, nRecords )
 
    nRecords := Len( aRecords )
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_ZAP( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -830,7 +830,7 @@ STATIC FUNCTION AR_ZAP( nWA )
       oError:Description := HB_LANGERRMSG( EG_READONLY )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
 
    ENDIF
 
@@ -842,7 +842,7 @@ STATIC FUNCTION AR_ZAP( nWA )
       oError:Description := HB_LANGERRMSG( EG_SHARED )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
 
    ENDIF
 
@@ -853,7 +853,7 @@ STATIC FUNCTION AR_ZAP( nWA )
    // move to 0 recno
    AR_GOTO( nWA, 0 )
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_ORDINFO( nWA, xMsg, xValue )
    HB_SYMBOL_UNUSED( nWA )
@@ -880,7 +880,7 @@ STATIC FUNCTION AR_ORDINFO( nWA, xMsg, xValue )
       oError:Description := HB_LANGERRMSG( EG_READONLY )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
 
    ENDIF
 
@@ -892,7 +892,7 @@ STATIC FUNCTION AR_ORDINFO( nWA, xMsg, xValue )
       oError:Description := HB_LANGERRMSG( EG_SHARED )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
 
    ENDIF
 
@@ -901,7 +901,7 @@ STATIC FUNCTION AR_ORDINFO( nWA, xMsg, xValue )
    AR_GOTO( nWA, 0 )
    */
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 /*
  * This function have to exist in all RDD and then name have to be in
@@ -951,7 +951,7 @@ INIT PROCEDURE ARRAYRDD_INIT()
 */
 
 FUNCTION hb_EraseArrayRdd( cFullName )
-   LOCAL nReturn := FAILURE
+   LOCAL nReturn := HB_FAILURE
    LOCAL aDBFData, oError
    LOCAL nRDD, aRDDList
    LOCAL hRDDData
@@ -989,13 +989,13 @@ FUNCTION hb_EraseArrayRdd( cFullName )
                   //UR_SUPER_ERROR( 0, oError )
                   Throw( oError )
 
-                  nReturn := FAILURE
+                  nReturn := HB_FAILURE
 
                ELSE
 
                   // Delete database from slot
                   hb_HDel( hRDDData, cFullName )
-                  nReturn := SUCCESS
+                  nReturn := HB_SUCCESS
 
                ENDIF
 
@@ -1015,7 +1015,7 @@ FUNCTION hb_EraseArrayRdd( cFullName )
          //UR_SUPER_ERROR( 0, oError )
          Throw( oError )
 
-         nReturn := FAILURE
+         nReturn := HB_FAILURE
 
       ENDIF
    ELSE
@@ -1031,7 +1031,7 @@ FUNCTION hb_EraseArrayRdd( cFullName )
       //UR_SUPER_ERROR( 0, oError )
       Throw( oError )
 
-      nReturn := FAILURE
+      nReturn := HB_FAILURE
 
    ENDIF
 
@@ -1043,7 +1043,7 @@ FUNCTION hb_EraseArrayRdd( cFullName )
 */
 
 FUNCTION hb_FileArrayRdd( cFullName )
-   LOCAL nReturn := FAILURE
+   LOCAL nReturn := HB_FAILURE
    LOCAL oError
    LOCAL nRDD, aRDDList
    LOCAL hRDDData
@@ -1064,7 +1064,7 @@ FUNCTION hb_FileArrayRdd( cFullName )
             // First search if memory dbf exists
             IF HB_HHasKey( hRDDData, cFullName )
 
-               nReturn := SUCCESS
+               nReturn := HB_SUCCESS
 
             ENDIF
          ENDIF
@@ -1082,7 +1082,7 @@ FUNCTION hb_FileArrayRdd( cFullName )
          //UR_SUPER_ERROR( 0, oError )
          Throw( oError )
 
-         nReturn := FAILURE
+         nReturn := HB_FAILURE
 
       ENDIF
 
@@ -1099,10 +1099,10 @@ FUNCTION hb_FileArrayRdd( cFullName )
       //UR_SUPER_ERROR( 0, oError )
       Throw( oError )
 
-      nReturn := FAILURE
+      nReturn := HB_FAILURE
 
    ENDIF
-   RETURN ( nReturn == SUCCESS )
+   RETURN ( nReturn == HB_SUCCESS )
 
 STATIC FUNCTION BlankRecord( aStruct )
    LOCAL nLenStruct := Len( aStruct )

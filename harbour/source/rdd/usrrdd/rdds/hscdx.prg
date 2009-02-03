@@ -82,7 +82,7 @@ STATIC FUNCTION _HSX_NEW( pWA )
     */
    USRRDD_AREADATA( pWA, aWData )
 
-   RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION _HSX_CLOSE( nWA )
    LOCAL aWData:= USRRDD_AREADATA( nWA ), nHSX
@@ -103,7 +103,7 @@ STATIC FUNCTION _HSX_GOCOLD( nWA )
    LOCAL nResult, aWData, nHSX, nRecNo, nKeyNo
 
    nResult := UR_SUPER_GOCOLD( nWA )
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       aWData:= USRRDD_AREADATA( nWA )
       IF aWData[ 1 ]
          IF !EMPTY( aWData[ 2 ] )
@@ -129,7 +129,7 @@ STATIC FUNCTION _HSX_GOHOT( nWA )
    LOCAL nResult, aWData
 
    nResult := UR_SUPER_GOHOT( nWA )
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       aWData:= USRRDD_AREADATA( nWA )
       aWData[ 1 ] := .T.
    ENDIF
@@ -140,7 +140,7 @@ STATIC FUNCTION _HSX_APPEND( nWA, lUnlockAll )
    LOCAL nResult, aWData
 
    nResult := UR_SUPER_APPEND( nWA, lUnlockAll )
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       aWData:= USRRDD_AREADATA( nWA )
       aWData[ 1 ] := .T.
    ENDIF

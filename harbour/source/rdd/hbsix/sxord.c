@@ -146,7 +146,7 @@ HB_FUNC( SX_TAGNO )
       if( hb_sxOrdParam( &Info ) )
       {
          Info.itmResult = hb_itemPutNI( NULL, 0 );
-         if( SELF_ORDINFO( pArea, DBOI_NUMBER, &Info ) == SUCCESS )
+         if( SELF_ORDINFO( pArea, DBOI_NUMBER, &Info ) == HB_SUCCESS )
          {
             iOrder = hb_itemGetNI( Info.itmResult );
             if( iOrder )
@@ -154,14 +154,14 @@ HB_FUNC( SX_TAGNO )
                Info.itmOrder = hb_itemPutNI( NULL, iOrder );
                Info.atomBagName = NULL;
                hb_itemClear( Info.itmResult );
-               if( SELF_ORDINFO( pArea, DBOI_FULLPATH, &Info ) == SUCCESS &&
+               if( SELF_ORDINFO( pArea, DBOI_FULLPATH, &Info ) == HB_SUCCESS &&
                    hb_itemGetCLen( Info.itmResult ) > 0 )
                {
                   Info.atomBagName = Info.itmResult;
                   Info.itmResult = Info.itmOrder;
                   Info.itmOrder = NULL;
                   hb_itemClear( Info.itmResult );
-                  if( SELF_ORDINFO( pArea, DBOI_BAGORDER, &Info ) == SUCCESS )
+                  if( SELF_ORDINFO( pArea, DBOI_BAGORDER, &Info ) == HB_SUCCESS )
                      iBagOrder = iOrder - hb_itemGetNI( Info.itmResult ) + 1;
                   Info.itmOrder = Info.atomBagName;
                }
@@ -188,7 +188,7 @@ HB_FUNC( SX_FREEZE )
          BOOL fResult = FALSE;
          Info.itmNewVal = hb_itemPutL( NULL, TRUE );
          Info.itmResult = hb_itemNew( NULL );
-         if( SELF_ORDINFO( pArea, DBOI_CUSTOM, &Info ) == SUCCESS )
+         if( SELF_ORDINFO( pArea, DBOI_CUSTOM, &Info ) == HB_SUCCESS )
             fResult = HB_IS_LOGICAL( Info.itmResult ) &&
                       hb_itemGetL( Info.itmResult );
          hb_itemRelease( Info.itmNewVal );
@@ -211,7 +211,7 @@ HB_FUNC( SX_WARM )
          BOOL fResult = FALSE;
          Info.itmNewVal = hb_itemPutL( NULL, FALSE );
          Info.itmResult = hb_itemNew( NULL );
-         if( SELF_ORDINFO( pArea, DBOI_CHGONLY, &Info ) == SUCCESS )
+         if( SELF_ORDINFO( pArea, DBOI_CHGONLY, &Info ) == HB_SUCCESS )
             fResult = HB_IS_LOGICAL( Info.itmResult ) &&
                       !hb_itemGetL( Info.itmResult );
          hb_itemRelease( Info.itmNewVal );
@@ -234,7 +234,7 @@ HB_FUNC( SX_CHILL )
          BOOL fResult = FALSE;
          Info.itmNewVal = hb_itemPutL( NULL, TRUE );
          Info.itmResult = hb_itemNew( NULL );
-         if( SELF_ORDINFO( pArea, DBOI_CHGONLY, &Info ) == SUCCESS )
+         if( SELF_ORDINFO( pArea, DBOI_CHGONLY, &Info ) == HB_SUCCESS )
             fResult = HB_IS_LOGICAL( Info.itmResult ) &&
                       hb_itemGetL( Info.itmResult );
          hb_itemRelease( Info.itmNewVal );
@@ -267,13 +267,13 @@ HB_FUNC( SX_THERMOMETER )
          i = hb_itemGetNI( Info.itmResult );
          if( i )
          {
-            static const USHORT s_iStates[] = 
+            static const USHORT s_iStates[] =
                      { DBOI_CUSTOM, DBOI_CHGONLY, DBOI_PARTIAL };
             iTemperature = 4;
             for( i = 0; i < 3; ++i, --iTemperature )
             {
                hb_itemClear( Info.itmResult );
-               if( SELF_ORDINFO( pArea, s_iStates[i], &Info ) == SUCCESS &&
+               if( SELF_ORDINFO( pArea, s_iStates[i], &Info ) == HB_SUCCESS &&
                    HB_IS_LOGICAL( Info.itmResult ) &&
                    hb_itemGetL( Info.itmResult ) )
                   break;
@@ -467,7 +467,7 @@ HB_FUNC( SX_INDEXTYPE )
             Info.itmOrder = NULL;
          }
          Info.itmResult = hb_itemNew( NULL );
-         if( SELF_ORDINFO( pArea, DBOI_INDEXTYPE, &Info ) == SUCCESS )
+         if( SELF_ORDINFO( pArea, DBOI_INDEXTYPE, &Info ) == HB_SUCCESS )
             iType = hb_itemGetNI( Info.itmResult );
          hb_itemRelease( Info.itmResult );
       }
@@ -485,7 +485,7 @@ HB_FUNC( SX_DESCEND )
       if( hb_sxOrdParam( &Info ) )
       {
          Info.itmResult = hb_itemNew( NULL );
-         if( SELF_ORDINFO( pArea, DBOI_ISDESC, &Info ) == SUCCESS )
+         if( SELF_ORDINFO( pArea, DBOI_ISDESC, &Info ) == HB_SUCCESS )
          {
             Info.itmNewVal = hb_itemPutL( NULL, !hb_itemGetL( Info.itmResult ) );
             SELF_ORDINFO( pArea, DBOI_ISDESC, &Info );
@@ -559,10 +559,10 @@ HB_FUNC( SX_KEYSKIP )
 
    if( pArea )
    {
-      if( SELF_SKIPRAW( pArea, ISNUM( 1 ) ? hb_parnl( 1 ) : 1 ) == SUCCESS )
+      if( SELF_SKIPRAW( pArea, ISNUM( 1 ) ? hb_parnl( 1 ) : 1 ) == HB_SUCCESS )
       {
-         if( SELF_EOF( pArea, &fBEof ) == SUCCESS && !fBEof )
-            fResult = SELF_BOF( pArea, &fBEof ) == SUCCESS && !fBEof;
+         if( SELF_EOF( pArea, &fBEof ) == HB_SUCCESS && !fBEof )
+            fResult = SELF_BOF( pArea, &fBEof ) == HB_SUCCESS && !fBEof;
       }
    }
    hb_retl( fResult );
@@ -654,9 +654,9 @@ HB_FUNC( SX_SEEKLAST )
       PHB_ITEM pKey = hb_param( 1, HB_IT_ANY );
       BOOL bSoftSeek = ISLOG( 2 ) && hb_parl( 2 );
 
-      if( SELF_SEEK( pArea, bSoftSeek, pKey, TRUE ) == SUCCESS )
+      if( SELF_SEEK( pArea, bSoftSeek, pKey, TRUE ) == HB_SUCCESS )
       {
-         if( SELF_FOUND( pArea, &fFound ) != SUCCESS )
+         if( SELF_FOUND( pArea, &fFound ) != HB_SUCCESS )
             fFound = FALSE;
       }
    }
@@ -695,29 +695,29 @@ HB_FUNC( SX_WILDSEEK )
 
       if( szPattern && szPattern[0] )
       {
-         if( SELF_ORDINFO( pArea, DBOI_NUMBER, &Info ) == SUCCESS )
+         if( SELF_ORDINFO( pArea, DBOI_NUMBER, &Info ) == HB_SUCCESS )
             iOrder = hb_itemGetNI( Info.itmResult );
       }
       if( iOrder > 0 )
       {
-         ERRCODE errCode = SUCCESS;
+         HB_ERRCODE errCode = HB_SUCCESS;
          if( !fCont )
          {
             errCode = SELF_GOTOP( pArea );
-            if( errCode == SUCCESS )
+            if( errCode == HB_SUCCESS )
             {
                errCode = SELF_ORDINFO( pArea, DBOI_KEYVAL, &Info );
-               if( errCode == SUCCESS )
+               if( errCode == HB_SUCCESS )
                {
                   char * szKey = hb_itemGetCPtr( Info.itmResult );
                   fFound = hb_strMatchWild( szKey, szPattern );
                }
             }
          }
-         if( !fFound && errCode == SUCCESS )
+         if( !fFound && errCode == HB_SUCCESS )
          {
             Info.itmNewVal = hb_param( 1, HB_IT_STRING );
-            if( SELF_ORDINFO( pArea, DBOI_SKIPWILD, &Info ) == SUCCESS )
+            if( SELF_ORDINFO( pArea, DBOI_SKIPWILD, &Info ) == HB_SUCCESS )
                fFound = HB_IS_LOGICAL( Info.itmResult ) &&
                         hb_itemGetL( Info.itmResult );
          }
@@ -742,7 +742,7 @@ HB_FUNC( SX_ROXLOCK )
       {
          Info.itmNewVal = hb_itemPutL( NULL, TRUE );
          Info.itmResult = hb_itemPutL( NULL, FALSE );
-         if( SELF_ORDINFO( pArea, DBOI_READLOCK, &Info ) == SUCCESS )
+         if( SELF_ORDINFO( pArea, DBOI_READLOCK, &Info ) == HB_SUCCESS )
             fLocked = hb_itemGetL( Info.itmResult );
          hb_itemRelease( Info.itmNewVal );
          hb_itemRelease( Info.itmResult );
@@ -780,7 +780,7 @@ HB_FUNC( SX_ISMYROX )
       if( hb_sxOrdParam( &Info ) )
       {
          Info.itmResult = hb_itemNew( NULL );
-         if( SELF_ORDINFO( pArea, DBOI_READLOCK, &Info ) == SUCCESS )
+         if( SELF_ORDINFO( pArea, DBOI_READLOCK, &Info ) == HB_SUCCESS )
             fLocked = hb_itemGetL( Info.itmResult );
          hb_itemRelease( Info.itmResult );
       }
@@ -799,12 +799,12 @@ HB_FUNC( SX_ISROXLOCK )
       if( hb_sxOrdParam( &Info ) )
       {
          Info.itmResult = hb_itemNew( NULL );
-         if( SELF_ORDINFO( pArea, DBOI_READLOCK, &Info ) == SUCCESS )
+         if( SELF_ORDINFO( pArea, DBOI_READLOCK, &Info ) == HB_SUCCESS )
             fLocked = hb_itemGetL( Info.itmResult );
          if( !fLocked )
          {
             Info.itmNewVal = hb_itemPutL( NULL, TRUE );
-            if( SELF_ORDINFO( pArea, DBOI_READLOCK, &Info ) == SUCCESS )
+            if( SELF_ORDINFO( pArea, DBOI_READLOCK, &Info ) == HB_SUCCESS )
                fLocked = hb_itemGetL( Info.itmResult );
             if( fLocked )
             {
@@ -831,7 +831,7 @@ HB_FUNC( SX_SORTOPTION )
       {
          Info.itmResult = hb_itemNew( NULL );
          Info.itmNewVal = hb_param( 1, HB_IT_LOGICAL );
-         if( SELF_ORDINFO( pArea, DBOI_USECURRENT, &Info ) == SUCCESS )
+         if( SELF_ORDINFO( pArea, DBOI_USECURRENT, &Info ) == HB_SUCCESS )
             fUseCurrent = hb_itemGetL( Info.itmResult );
          hb_itemRelease( Info.itmResult );
       }

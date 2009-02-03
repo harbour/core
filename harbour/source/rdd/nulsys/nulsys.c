@@ -54,25 +54,25 @@
 #include "hbapi.h"
 #include "hbapirdd.h"
 
-ERRCODE hb_rddSelectWorkAreaAlias( const char * szName )
+HB_ERRCODE hb_rddSelectWorkAreaAlias( const char * szName )
 {
    HB_SYMBOL_UNUSED( szName );
 
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
+HB_ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
 {
    HB_SYMBOL_UNUSED( iArea );
 
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
+HB_ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
 {
    HB_SYMBOL_UNUSED( pSymAlias );
 
-   return FAILURE;
+   return HB_FAILURE;
 }
 
 int hb_rddGetCurrentWorkAreaNumber( void )
@@ -80,44 +80,44 @@ int hb_rddGetCurrentWorkAreaNumber( void )
    return 0;
 }
 
-ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
 
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
 
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
 
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
 
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
+HB_ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
 {
    HB_SYMBOL_UNUSED( szAlias );
    HB_SYMBOL_UNUSED( iArea );
 
-   return FAILURE;
+   return HB_FAILURE;
 }
 
 void hb_rddCloseAll( void ) {}
