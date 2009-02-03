@@ -110,7 +110,7 @@ HB_FUNC( SCREENATTR )
    iRow = ISNUM( 1 ) ? ( SHORT ) hb_parni( 1 ) : sRow;
    iCol = ISNUM( 2 ) ? ( SHORT ) hb_parni( 2 ) : sCol;
 
-   if( hb_gtGetChar( iRow, iCol, &bColor, &bAttr, &usChar ) != SUCCESS )
+   if( hb_gtGetChar( iRow, iCol, &bColor, &bAttr, &usChar ) != HB_SUCCESS )
       bColor = 0;
 
    hb_retni( ( int ) bColor );
@@ -173,7 +173,7 @@ HB_FUNC( SCREENMIX )
          i = iCol;
          do
          {
-            if( hb_gtPutChar( iRow, i++, szAttr[ ul ], 0, *szText++ ) != SUCCESS )
+            if( hb_gtPutChar( iRow, i++, szAttr[ ul ], 0, *szText++ ) != HB_SUCCESS )
             {
                if( ++iRow > hb_gtMaxRow() )
                   break;
@@ -247,7 +247,7 @@ HB_FUNC( SAYSCREEN )
          {
             BYTE bColor, bAttr;
             USHORT usChar;
-            if( hb_gtGetChar( iRow, i, &bColor, &bAttr, &usChar ) != SUCCESS )
+            if( hb_gtGetChar( iRow, i, &bColor, &bAttr, &usChar ) != HB_SUCCESS )
             {
                if( ++iRow > hb_gtMaxRow() )
                   break;
@@ -354,9 +354,9 @@ HB_FUNC( CLEARWIN )
  *  $CATEGORY$
  *      CT3 video functions
  *  $ONELINER$
- *     
+ *
  *  $SYNTAX$
- *     
+ *
  *  $ARGUMENTS$
  *  $RETURNS$
  *  $DESCRIPTION$

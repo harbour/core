@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-03 15:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapigt.h
+  * contrib/hbct/screen1.c
+  * source/rtl/console.c
+  * source/rtl/hbrunfun.c
+  * source/rtl/gx.c
+  * source/rtl/gtapi.c
+    * SUCCESS -> HB_SUCCESS
+    * FAILURE -> HB_FAILURE
+    * ERRCODE -> HB_ERRCODE
+
 2009-02-03 14:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbusrrdd.ch
   * include/hbapi.h

@@ -83,7 +83,7 @@
 
 /* gt API functions */
 
-ERRCODE hb_gtInit( HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
+HB_ERRCODE hb_gtInit( HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    PHB_GT pGT;
 
@@ -93,7 +93,7 @@ ERRCODE hb_gtInit( HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE
 
    pGT = hb_gt_Base();
    if( !pGT )
-      return FAILURE;
+      return HB_FAILURE;
 
    HB_GTSELF_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSELF_SETCOLORSTR( pGT, hb_setGetColor() );
@@ -101,10 +101,10 @@ ERRCODE hb_gtInit( HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE
    HB_GTSELF_FLUSH( pGT );
    hb_gt_BaseFree( pGT );
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
-ERRCODE hb_gtExit( void )
+HB_ERRCODE hb_gtExit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtExit()"));
 
@@ -113,12 +113,12 @@ ERRCODE hb_gtExit( void )
    /* clear internal clipboard data */
    hb_gt_setClipboard( NULL, 0 );
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
-ERRCODE hb_gtLock( void )
+HB_ERRCODE hb_gtLock( void )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtLock()"));
@@ -127,15 +127,15 @@ ERRCODE hb_gtLock( void )
    if( pGT )
    {
       if( HB_GTSELF_LOCK( pGT ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-ERRCODE hb_gtUnlock( void )
+HB_ERRCODE hb_gtUnlock( void )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtUnlock()"));
@@ -144,7 +144,7 @@ ERRCODE hb_gtUnlock( void )
    if( pGT )
    {
       HB_GTSELF_UNLOCK( pGT );
-      errCode = SUCCESS;
+      errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
@@ -166,7 +166,7 @@ int hb_gtReadKey( int iEventMask )
    return iKey;
 }
 
-ERRCODE hb_gtBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame )
+HB_ERRCODE hb_gtBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame )
 {
    PHB_GT pGT;
 
@@ -179,12 +179,12 @@ ERRCODE hb_gtBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFr
       HB_GTSELF_SETPOS( pGT, Top + 1, Left + 1 );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtBoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
+HB_ERRCODE hb_gtBoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
 {
    PHB_GT pGT;
 
@@ -197,12 +197,12 @@ ERRCODE hb_gtBoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
       HB_GTSELF_SETPOS( pGT, Top + 1, Left + 1 );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtBoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
+HB_ERRCODE hb_gtBoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
 {
    PHB_GT pGT;
 
@@ -215,12 +215,12 @@ ERRCODE hb_gtBoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
       HB_GTSELF_SETPOS( pGT, Top + 1, Left + 1 );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtDrawBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, int iColor )
+HB_ERRCODE hb_gtDrawBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, int iColor )
 {
    PHB_GT pGT;
 
@@ -235,12 +235,12 @@ ERRCODE hb_gtDrawBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * p
       HB_GTSELF_BOX( pGT, Top, Left, Bottom, Right, pbyFrame, iColor );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtColorSelect( USHORT uiColorIndex )
+HB_ERRCODE hb_gtColorSelect( USHORT uiColorIndex )
 {
    PHB_GT pGT;
 
@@ -251,12 +251,12 @@ ERRCODE hb_gtColorSelect( USHORT uiColorIndex )
    {
       HB_GTSELF_COLORSELECT( pGT, uiColorIndex );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtDispBegin( void )
+HB_ERRCODE hb_gtDispBegin( void )
 {
    PHB_GT pGT;
 
@@ -267,9 +267,9 @@ ERRCODE hb_gtDispBegin( void )
    {
       HB_GTSELF_DISPBEGIN( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
 USHORT hb_gtDispCount( void )
@@ -288,7 +288,7 @@ USHORT hb_gtDispCount( void )
    return uiCount;
 }
 
-ERRCODE hb_gtDispEnd( void )
+HB_ERRCODE hb_gtDispEnd( void )
 {
    PHB_GT pGT;
 
@@ -300,14 +300,14 @@ ERRCODE hb_gtDispEnd( void )
       HB_GTSELF_DISPEND( pGT );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtPreExt( void )
+HB_ERRCODE hb_gtPreExt( void )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtPreExt()"));
@@ -316,15 +316,15 @@ ERRCODE hb_gtPreExt( void )
    if( pGT )
    {
       if( HB_GTSELF_PREEXT( pGT ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-ERRCODE hb_gtPostExt( void )
+HB_ERRCODE hb_gtPostExt( void )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtPostExt()"));
@@ -333,7 +333,7 @@ ERRCODE hb_gtPostExt( void )
    if( pGT )
    {
       if( HB_GTSELF_POSTEXT( pGT ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
@@ -344,7 +344,7 @@ ERRCODE hb_gtPostExt( void )
          That seems like a 127+1 buffer size, plus lazy overflow checking.
          [vszakats] */
 
-ERRCODE hb_gtGetColorStr( char * pszColorString )
+HB_ERRCODE hb_gtGetColorStr( char * pszColorString )
 {
    PHB_GT pGT;
 
@@ -355,10 +355,10 @@ ERRCODE hb_gtGetColorStr( char * pszColorString )
    {
       HB_GTSELF_GETCOLORSTR( pGT, pszColorString );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
    pszColorString[ 0 ] = '\0';
-   return FAILURE;
+   return HB_FAILURE;
 }
 
 int hb_gtColorToN( const char * szColorString )
@@ -377,7 +377,7 @@ int hb_gtColorToN( const char * szColorString )
    return iColor;
 }
 
-ERRCODE hb_gtColorsToString( int * pColors, int iColorCount, char * pszColorString, int iBufSize )
+HB_ERRCODE hb_gtColorsToString( int * pColors, int iColorCount, char * pszColorString, int iBufSize )
 {
    PHB_GT pGT;
 
@@ -388,13 +388,13 @@ ERRCODE hb_gtColorsToString( int * pColors, int iColorCount, char * pszColorStri
    {
       HB_GTSELF_COLORSTOSTRING( pGT, pColors, iColorCount, pszColorString, iBufSize );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
    pszColorString[ 0 ] = '\0';
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtSetColorStr( const char * szColorString )
+HB_ERRCODE hb_gtSetColorStr( const char * szColorString )
 {
    PHB_GT pGT;
 
@@ -405,12 +405,12 @@ ERRCODE hb_gtSetColorStr( const char * szColorString )
    {
       HB_GTSELF_SETCOLORSTR( pGT, szColorString );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtGetCursor( USHORT * uipCursorStyle )
+HB_ERRCODE hb_gtGetCursor( USHORT * uipCursorStyle )
 {
    PHB_GT pGT;
 
@@ -421,13 +421,13 @@ ERRCODE hb_gtGetCursor( USHORT * uipCursorStyle )
    {
       *uipCursorStyle = HB_GTSELF_GETCURSORSTYLE( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
    *uipCursorStyle = SC_NONE;
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtSetCursor( USHORT uiCursorStyle )
+HB_ERRCODE hb_gtSetCursor( USHORT uiCursorStyle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtSetCursor(%hu)", uiCursorStyle));
 
@@ -439,13 +439,13 @@ ERRCODE hb_gtSetCursor( USHORT uiCursorStyle )
          HB_GTSELF_SETCURSORSTYLE( pGT, uiCursorStyle );
          HB_GTSELF_FLUSH( pGT );
          hb_gt_BaseFree( pGT );
-         return SUCCESS;
+         return HB_SUCCESS;
       }
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtGetPos( SHORT * piRow, SHORT * piCol )
+HB_ERRCODE hb_gtGetPos( SHORT * piRow, SHORT * piCol )
 {
    PHB_GT pGT;
 
@@ -460,16 +460,16 @@ ERRCODE hb_gtGetPos( SHORT * piRow, SHORT * piCol )
       *piRow = ( SHORT ) iRow;
       *piCol = ( SHORT ) iCol;
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
    *piRow = *piCol = 0;
-   return FAILURE;
+   return HB_FAILURE;
 }
 
 /* NOTE: Should be exactly the same as hb_gtSetPosContext(), but without the
          additional third parameter. */
 
-ERRCODE hb_gtSetPos( SHORT iRow, SHORT iCol )
+HB_ERRCODE hb_gtSetPos( SHORT iRow, SHORT iCol )
 {
    PHB_GT pGT;
 
@@ -481,9 +481,9 @@ ERRCODE hb_gtSetPos( SHORT iRow, SHORT iCol )
       HB_GTSELF_SETPOS( pGT, iRow, iCol );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
 USHORT hb_gtMaxCol( void )
@@ -518,7 +518,7 @@ USHORT hb_gtMaxRow( void )
    return uiMaxRow;
 }
 
-ERRCODE hb_gtScrDim( USHORT * uipHeight, USHORT * uipWidth )
+HB_ERRCODE hb_gtScrDim( USHORT * uipHeight, USHORT * uipWidth )
 {
    PHB_GT pGT;
 
@@ -533,13 +533,13 @@ ERRCODE hb_gtScrDim( USHORT * uipHeight, USHORT * uipWidth )
       *uipHeight = ( USHORT ) iHeight;
       *uipWidth  = ( USHORT ) iWidth;
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
    *uipHeight = *uipWidth = 0;
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtSetSnowFlag( BOOL fNoSnow )
+HB_ERRCODE hb_gtSetSnowFlag( BOOL fNoSnow )
 {
    PHB_GT pGT;
 
@@ -550,12 +550,12 @@ ERRCODE hb_gtSetSnowFlag( BOOL fNoSnow )
    {
       HB_GTSELF_SETSNOWFLAG( pGT, fNoSnow );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, ULONG * pulBuffSize )
+HB_ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, ULONG * pulBuffSize )
 {
    PHB_GT pGT;
 
@@ -566,10 +566,10 @@ ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, ULONG * pul
    {
       *pulBuffSize = HB_GTSELF_RECTSIZE( pGT, iTop, iLeft, iBottom, iRight );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
    *pulBuffSize = 0;
-   return FAILURE;
+   return HB_FAILURE;
 }
 
 BOOL hb_gtIsColor( void )
@@ -588,7 +588,7 @@ BOOL hb_gtIsColor( void )
    return fColor;
 }
 
-ERRCODE hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
+HB_ERRCODE hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
 {
    PHB_GT pGT;
 
@@ -601,12 +601,12 @@ ERRCODE hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
                            byChar, uiCount );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * pScrBuff )
+HB_ERRCODE hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * pScrBuff )
 {
    PHB_GT pGT;
 
@@ -617,12 +617,12 @@ ERRCODE hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
    {
       HB_GTSELF_SAVE( pGT, uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) pScrBuff );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * pScrBuff )
+HB_ERRCODE hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * pScrBuff )
 {
    PHB_GT pGT;
 
@@ -634,14 +634,14 @@ ERRCODE hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
       HB_GTSELF_REST( pGT, uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) pScrBuff );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtGetChar( USHORT uiRow, USHORT uiCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar )
+HB_ERRCODE hb_gtGetChar( USHORT uiRow, USHORT uiCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtGetChar(%hu, %hu, %p, %p, %p)", uiRow, uiCol, pbColor, pbAttr, pusChar));
@@ -650,15 +650,15 @@ ERRCODE hb_gtGetChar( USHORT uiRow, USHORT uiCol, BYTE * pbColor, BYTE * pbAttr,
    if( pGT )
    {
       if( HB_GTSELF_GETCHAR( pGT, uiRow, uiCol, pbColor, pbAttr, pusChar ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-ERRCODE hb_gtPutChar( USHORT uiRow, USHORT uiCol, BYTE bColor, BYTE bAttr, USHORT usChar )
+HB_ERRCODE hb_gtPutChar( USHORT uiRow, USHORT uiCol, BYTE bColor, BYTE bAttr, USHORT usChar )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtPutChar(%hu, %hu, %hu, %hu, %hu)", uiRow, uiCol, bColor, bAttr, usChar));
@@ -667,15 +667,15 @@ ERRCODE hb_gtPutChar( USHORT uiRow, USHORT uiCol, BYTE bColor, BYTE bAttr, USHOR
    if( pGT )
    {
       if( HB_GTSELF_PUTCHAR( pGT, uiRow, uiCol, bColor, bAttr, usChar ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-ERRCODE hb_gtBeginWrite( void )
+HB_ERRCODE hb_gtBeginWrite( void )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtBeginWrite()"));
@@ -684,14 +684,14 @@ ERRCODE hb_gtBeginWrite( void )
    if( pGT )
    {
       if( HB_GTSELF_LOCK( pGT ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
 
    return errCode;
 }
 
-ERRCODE hb_gtEndWrite( void )
+HB_ERRCODE hb_gtEndWrite( void )
 {
    PHB_GT pGT;
 
@@ -703,12 +703,12 @@ ERRCODE hb_gtEndWrite( void )
       HB_GTSELF_FLUSH( pGT );
       HB_GTSELF_UNLOCK( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtGetBlink( BOOL * bpBlink )
+HB_ERRCODE hb_gtGetBlink( BOOL * bpBlink )
 {
    PHB_GT pGT;
 
@@ -719,13 +719,13 @@ ERRCODE hb_gtGetBlink( BOOL * bpBlink )
    {
       *bpBlink = HB_GTSELF_GETBLINK( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
    *bpBlink = 0;
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtSetBlink( BOOL fBlink )
+HB_ERRCODE hb_gtSetBlink( BOOL fBlink )
 {
    PHB_GT pGT;
 
@@ -736,14 +736,14 @@ ERRCODE hb_gtSetBlink( BOOL fBlink )
    {
       HB_GTSELF_SETBLINK( pGT, fBlink );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtSetMode( USHORT uiRows, USHORT uiCols )
+HB_ERRCODE hb_gtSetMode( USHORT uiRows, USHORT uiCols )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtSetMode(%hu, %hu)", uiRows, uiCols));
@@ -752,13 +752,13 @@ ERRCODE hb_gtSetMode( USHORT uiRows, USHORT uiCols )
    if( pGT )
    {
       if( HB_GTSELF_SETMODE( pGT, uiRows, uiCols ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-ERRCODE hb_gtPutText( USHORT uiRow, USHORT uiCol,
+HB_ERRCODE hb_gtPutText( USHORT uiRow, USHORT uiCol,
                                 BYTE * pStr, ULONG ulLength,
                                 int iColor )
 {
@@ -776,12 +776,12 @@ ERRCODE hb_gtPutText( USHORT uiRow, USHORT uiCol,
       HB_GTSELF_FLUSH( pGT );
 
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pStr, ULONG ulLength )
+HB_ERRCODE hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pStr, ULONG ulLength )
 {
    PHB_GT pGT;
 
@@ -793,12 +793,12 @@ ERRCODE hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pStr, ULONG ulLength )
       HB_GTSELF_WRITEAT( pGT, uiRow, uiCol, pStr, ulLength );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtWrite( BYTE * pStr, ULONG ulLength )
+HB_ERRCODE hb_gtWrite( BYTE * pStr, ULONG ulLength )
 {
    PHB_GT pGT;
 
@@ -810,12 +810,12 @@ ERRCODE hb_gtWrite( BYTE * pStr, ULONG ulLength )
       HB_GTSELF_WRITE( pGT, pStr, ulLength );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtWriteCon( BYTE * pStr, ULONG ulLength )
+HB_ERRCODE hb_gtWriteCon( BYTE * pStr, ULONG ulLength )
 {
    PHB_GT pGT;
 
@@ -827,12 +827,12 @@ ERRCODE hb_gtWriteCon( BYTE * pStr, ULONG ulLength )
       HB_GTSELF_WRITECON( pGT, pStr, ulLength );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols )
+HB_ERRCODE hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtScroll(%hu, %hu, %hu, %hu, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, iRows, iCols));
 
@@ -845,13 +845,13 @@ ERRCODE hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRigh
                            HB_GTSELF_GETCOLOR( pGT ), ' ', iRows, iCols );
          HB_GTSELF_FLUSH( pGT );
          hb_gt_BaseFree( pGT );
-         return SUCCESS;
+         return HB_SUCCESS;
       }
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtScrollUp( USHORT uiRows )
+HB_ERRCODE hb_gtScrollUp( USHORT uiRows )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtScrollUp(%hd)", uiRows));
 
@@ -863,13 +863,13 @@ ERRCODE hb_gtScrollUp( USHORT uiRows )
          HB_GTSELF_SCROLLUP( pGT, uiRows, HB_GTSELF_GETCOLOR( pGT ), ' ' );
          HB_GTSELF_FLUSH( pGT );
          hb_gt_BaseFree( pGT );
-         return SUCCESS;
+         return HB_SUCCESS;
       }
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr )
+HB_ERRCODE hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr )
 {
    PHB_GT pGT;
 
@@ -881,12 +881,12 @@ ERRCODE hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT ui
       HB_GTSELF_DRAWSHADOW( pGT, uiTop, uiLeft, uiBottom, uiRight, byAttr );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtTone( double dFrequency, double dDuration )
+HB_ERRCODE hb_gtTone( double dFrequency, double dDuration )
 {
    PHB_GT pGT;
 
@@ -897,9 +897,9 @@ ERRCODE hb_gtTone( double dFrequency, double dDuration )
    {
       HB_GTSELF_TONE( pGT, dFrequency, dDuration );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
 const char * hb_gtVersion( int iType )
@@ -918,7 +918,7 @@ const char * hb_gtVersion( int iType )
    return szVersion;
 }
 
-ERRCODE hb_gtSetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr )
+HB_ERRCODE hb_gtSetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr )
 {
    PHB_GT pGT;
 
@@ -930,15 +930,15 @@ ERRCODE hb_gtSetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT 
       HB_GTSELF_SETATTRIBUTE( pGT, uiTop, uiLeft, uiBottom, uiRight, byAttr );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
 /* prepare the terminal for system call */
-ERRCODE hb_gtSuspend( void )
+HB_ERRCODE hb_gtSuspend( void )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtSuspend()"));
@@ -947,15 +947,15 @@ ERRCODE hb_gtSuspend( void )
    if( pGT )
    {
       if( HB_GTSELF_SUSPEND( pGT ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-ERRCODE hb_gtResume( void )
+HB_ERRCODE hb_gtResume( void )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtResume()"));
@@ -964,13 +964,13 @@ ERRCODE hb_gtResume( void )
    if( pGT )
    {
       if( HB_GTSELF_RESUME( pGT ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-ERRCODE hb_gtOutStd( BYTE * pbyStr, ULONG ulLen )
+HB_ERRCODE hb_gtOutStd( BYTE * pbyStr, ULONG ulLen )
 {
    PHB_GT pGT;
 
@@ -985,10 +985,10 @@ ERRCODE hb_gtOutStd( BYTE * pbyStr, ULONG ulLen )
    else
       hb_fsWriteLarge( ( HB_FHANDLE ) HB_STDOUT_HANDLE, pbyStr, ulLen );
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
-ERRCODE hb_gtOutErr( BYTE * pbyStr, ULONG ulLen )
+HB_ERRCODE hb_gtOutErr( BYTE * pbyStr, ULONG ulLen )
 {
    PHB_GT pGT;
 
@@ -1003,12 +1003,12 @@ ERRCODE hb_gtOutErr( BYTE * pbyStr, ULONG ulLen )
    else
       hb_fsWriteLarge( ( HB_FHANDLE ) HB_STDERR_HANDLE, pbyStr, ulLen );
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
-ERRCODE hb_gtSetDispCP( const char * pszTermCDP, const char * pszHostCDP, BOOL fBox )
+HB_ERRCODE hb_gtSetDispCP( const char * pszTermCDP, const char * pszHostCDP, BOOL fBox )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtSetDispCP(%s, %s, %d)", pszTermCDP, pszHostCDP, fBox));
@@ -1017,15 +1017,15 @@ ERRCODE hb_gtSetDispCP( const char * pszTermCDP, const char * pszHostCDP, BOOL f
    if( pGT )
    {
       if( HB_GTSELF_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-ERRCODE hb_gtSetKeyCP( const char * pszTermCDP, const char * pszHostCDP )
+HB_ERRCODE hb_gtSetKeyCP( const char * pszTermCDP, const char * pszHostCDP )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtSetKeyCP(%s, %s)", pszTermCDP, pszHostCDP));
@@ -1034,15 +1034,15 @@ ERRCODE hb_gtSetKeyCP( const char * pszTermCDP, const char * pszHostCDP )
    if( pGT )
    {
       if( HB_GTSELF_SETKEYCP( pGT, pszTermCDP, pszHostCDP ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo )
+HB_ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtInfo(%d, %p)", iType, pInfo));
@@ -1051,7 +1051,7 @@ ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo )
    if( pGT )
    {
       if( HB_GTSELF_INFO( pGT, iType, pInfo ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
@@ -1123,7 +1123,7 @@ int hb_gtGetClearColor( void )
    return iColor;
 }
 
-ERRCODE hb_gtSetClearColor( int iColor )
+HB_ERRCODE hb_gtSetClearColor( int iColor )
 {
    PHB_GT pGT;
 
@@ -1134,9 +1134,9 @@ ERRCODE hb_gtSetClearColor( int iColor )
    {
       HB_GTSELF_SETCLEARCOLOR( pGT, iColor );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
 int hb_gtGetClearChar( void )
@@ -1155,7 +1155,7 @@ int hb_gtGetClearChar( void )
    return iChar;
 }
 
-ERRCODE hb_gtSetClearChar( int iChar )
+HB_ERRCODE hb_gtSetClearChar( int iChar )
 {
    PHB_GT pGT;
 
@@ -1166,14 +1166,14 @@ ERRCODE hb_gtSetClearChar( int iChar )
    {
       HB_GTSELF_SETCLEARCHAR( pGT, iChar );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtGetScrChar( int iRow, int iCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar )
+HB_ERRCODE hb_gtGetScrChar( int iRow, int iCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtScrGetChar(%d, %d, %p, %p, %p)", iRow, iCol, pbColor, pbAttr, pusChar));
@@ -1182,15 +1182,15 @@ ERRCODE hb_gtGetScrChar( int iRow, int iCol, BYTE * pbColor, BYTE * pbAttr, USHO
    if( pGT )
    {
       if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, pbColor, pbAttr, pusChar ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-ERRCODE hb_gtPutScrChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usChar )
+HB_ERRCODE hb_gtPutScrChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usChar )
 {
-   ERRCODE errCode = FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
    PHB_GT pGT;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtPutScrChar(%d, %d, %d, %d, %hu)", iRow, iCol, bColor, bAttr, usChar));
@@ -1199,13 +1199,13 @@ ERRCODE hb_gtPutScrChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usC
    if( pGT )
    {
       if( HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, bColor, bAttr, usChar ) )
-         errCode = SUCCESS;
+         errCode = HB_SUCCESS;
       hb_gt_BaseFree( pGT );
    }
    return errCode;
 }
 
-ERRCODE hb_gtFlush( void )
+HB_ERRCODE hb_gtFlush( void )
 {
    PHB_GT pGT;
 
@@ -1216,12 +1216,12 @@ ERRCODE hb_gtFlush( void )
    {
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtGetPosEx( int * piRow, int * piCol )
+HB_ERRCODE hb_gtGetPosEx( int * piRow, int * piCol )
 {
    PHB_GT pGT;
 
@@ -1232,13 +1232,13 @@ ERRCODE hb_gtGetPosEx( int * piRow, int * piCol )
    {
       HB_GTSELF_GETPOS( pGT, piRow, piCol );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
    *piRow = *piCol = 0;
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtScrollEx( int iTop, int iLeft, int iBottom, int iRight, int iColor, int iChar, int iRows, int iCols )
+HB_ERRCODE hb_gtScrollEx( int iTop, int iLeft, int iBottom, int iRight, int iColor, int iChar, int iRows, int iCols )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtScrollEx(%d, %d, %d, %d, %d, %hd, %d, %d)", iTop, iLeft, iBottom, iRight, iColor, iChar, iRows, iCols));
 
@@ -1255,13 +1255,13 @@ ERRCODE hb_gtScrollEx( int iTop, int iLeft, int iBottom, int iRight, int iColor,
                            iColor, iChar, iRows, iCols );
          HB_GTSELF_FLUSH( pGT );
          hb_gt_BaseFree( pGT );
-         return SUCCESS;
+         return HB_SUCCESS;
       }
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
-ERRCODE hb_gtBoxEx( int iTop, int iLeft, int iBottom, int iRight, BYTE * pbyFrame, int iColor )
+HB_ERRCODE hb_gtBoxEx( int iTop, int iLeft, int iBottom, int iRight, BYTE * pbyFrame, int iColor )
 {
    PHB_GT pGT;
 
@@ -1276,9 +1276,9 @@ ERRCODE hb_gtBoxEx( int iTop, int iLeft, int iBottom, int iRight, BYTE * pbyFram
       HB_GTSELF_SETPOS( pGT, iTop + 1, iLeft + 1 );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }
 
 int hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
@@ -1298,7 +1298,7 @@ int hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, 
    return iResult;
 }
 
-ERRCODE hb_gtGfxText( int iTop, int iLeft, const char * cBuf, int iColor, int iSize, int iWidth )
+HB_ERRCODE hb_gtGfxText( int iTop, int iLeft, const char * cBuf, int iColor, int iSize, int iWidth )
 {
    PHB_GT pGT;
 
@@ -1310,7 +1310,7 @@ ERRCODE hb_gtGfxText( int iTop, int iLeft, const char * cBuf, int iColor, int iS
       HB_GTSELF_GFXTEXT( pGT, iTop, iLeft, cBuf, iColor, iSize, iWidth );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
-   return FAILURE;
+   return HB_FAILURE;
 }

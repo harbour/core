@@ -63,7 +63,7 @@ HB_FUNC( HB_RUN )
    {
       int iResult = -1;
 
-      if( hb_gtSuspend() == SUCCESS )
+      if( hb_gtSuspend() == HB_SUCCESS )
       {
          char * pszCommand = hb_itemGetC( pCommand );
          BOOL fFree;

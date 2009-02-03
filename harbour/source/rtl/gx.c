@@ -85,5 +85,5 @@ HB_FUNC( SETMODE )
    if( ISNUM( 2 ) )
       uiCols = ( USHORT ) hb_parni( 2 );
 
-   hb_retl( hb_gtSetMode( uiRows, uiCols ) == SUCCESS );
+   hb_retl( hb_gtSetMode( uiRows, uiCols ) == HB_SUCCESS );
 }
