@@ -88,14 +88,14 @@ typedef int my_socket;
 #endif
 
 
-static ERRCODE mysqlConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
-static ERRCODE mysqlDisconnect( SQLDDCONNECTION* pConnection );
-static ERRCODE mysqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
-static ERRCODE mysqlOpen( SQLBASEAREAP pArea );
-static ERRCODE mysqlClose( SQLBASEAREAP pArea );
-static ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
-static ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-static ERRCODE mysqlGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
+static HB_ERRCODE mysqlConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
+static HB_ERRCODE mysqlDisconnect( SQLDDCONNECTION* pConnection );
+static HB_ERRCODE mysqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
+static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea );
+static HB_ERRCODE mysqlClose( SQLBASEAREAP pArea );
+static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
+static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+static HB_ERRCODE mysqlGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
 
 
 static SDDNODE mysqldd =
@@ -176,36 +176,36 @@ static USHORT hb_errRT_MySQLDD( ULONG ulGenCode, ULONG ulSubCode, const char * s
 
 /*============= SDD METHODS =============================================================*/
 
-static ERRCODE mysqlConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
+static HB_ERRCODE mysqlConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 {
    MYSQL*   pMySql;
 
 /*   TraceLog( NULL, "mysqlConnect type:%04X s2:%s s3:%s s4:%s s5:%s\n", pItem->type, hb_arrayGetCPtr( pItem, 2 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ), hb_arrayGetCPtr( pItem, 5 ) ); */
-   
+
    pMySql = mysql_init( NULL );
-   if ( ! mysql_real_connect( pMySql, hb_arrayGetCPtr( pItem, 2 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ), 
-                              hb_arrayGetCPtr( pItem, 5 ), 0 /* port */, NULL /* pipe */, 0 /* flags*/ ) )  
+   if ( ! mysql_real_connect( pMySql, hb_arrayGetCPtr( pItem, 2 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ),
+                              hb_arrayGetCPtr( pItem, 5 ), 0 /* port */, NULL /* pipe */, 0 /* flags*/ ) )
    {
       mysql_close( pMySql );
-      return FAILURE;
+      return HB_FAILURE;
    }
    pConnection->hConnection = (void*) pMySql;
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE mysqlDisconnect( SQLDDCONNECTION* pConnection )
+static HB_ERRCODE mysqlDisconnect( SQLDDCONNECTION* pConnection )
 {
    mysql_close( ( MYSQL * ) pConnection->hConnection );
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE mysqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
+static HB_ERRCODE mysqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 {
    MYSQL_RES*   pResult;
 
-   if ( mysql_real_query( (MYSQL*) pConnection->hConnection, hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) ) 
+   if ( mysql_real_query( (MYSQL*) pConnection->hConnection, hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) )
    {
       const char*    szError;
 
@@ -216,7 +216,7 @@ static ERRCODE mysqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
       else
          pConnection->szError = ( char * ) hb_xgrab( strlen( szError ) + 1 );
       hb_strncpy( pConnection->szError, szError, strlen( szError ) );
-      return FAILURE;
+      return HB_FAILURE;
    }
 
    pResult = mysql_store_result( (MYSQL*) pConnection->hConnection );
@@ -231,12 +231,12 @@ static ERRCODE mysqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
       {
          pConnection->ulAffectedRows = (ULONG) mysql_affected_rows( (MYSQL*) pConnection->hConnection );
          if ( mysql_insert_id( (MYSQL*) pConnection->hConnection ) != 0 )
-            hb_itemPutNInt( pConnection->pNewID, mysql_insert_id( (MYSQL*) pConnection->hConnection ) ); 
+            hb_itemPutNInt( pConnection->pNewID, mysql_insert_id( (MYSQL*) pConnection->hConnection ) );
       }
       else /* error */
       {
          const char*    szError;
-     
+
          pConnection->iError = (int) mysql_errno( (MYSQL*) pConnection->hConnection );
          szError = mysql_error( (MYSQL*) pConnection->hConnection );
          if ( pConnection->szError )
@@ -244,14 +244,14 @@ static ERRCODE mysqlExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
          else
             pConnection->szError = ( char * ) hb_xgrab( strlen( szError ) + 1 );
          hb_strncpy( pConnection->szError, szError, strlen( szError ) );
-         return FAILURE;
+         return HB_FAILURE;
       }
    }
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE mysqlOpen( SQLBASEAREAP pArea )
+static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 {
    PHB_ITEM      pItemEof, pItem;
    ULONG         ulIndex;
@@ -261,41 +261,41 @@ static ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    DBFIELDINFO   pFieldInfo;
    MYSQL_FIELD*  pMyField;
    void**        pRow;
- 
-   if ( mysql_real_query( (MYSQL*) pArea->pConnection->hConnection, pArea->szQuery, strlen( pArea->szQuery ) ) ) 
+
+   if ( mysql_real_query( (MYSQL*) pArea->pConnection->hConnection, pArea->szQuery, strlen( pArea->szQuery ) ) )
    {
-      hb_errRT_MySQLDD( EG_OPEN, ESQLDD_INVALIDQUERY, (char*) mysql_error( (MYSQL*) pArea->pConnection->hConnection ), pArea->szQuery, 
+      hb_errRT_MySQLDD( EG_OPEN, ESQLDD_INVALIDQUERY, (char*) mysql_error( (MYSQL*) pArea->pConnection->hConnection ), pArea->szQuery,
                         mysql_errno( (MYSQL*) pArea->pConnection->hConnection ) );
-      return FAILURE;
+      return HB_FAILURE;
    }
-  
-   if ( ( pArea->pResult = mysql_store_result( (MYSQL*) pArea->pConnection->hConnection ) ) == NULL ) 
+
+   if ( ( pArea->pResult = mysql_store_result( (MYSQL*) pArea->pConnection->hConnection ) ) == NULL )
    {
-      hb_errRT_MySQLDD( EG_MEM, ESQLDD_INVALIDQUERY, (char*) mysql_error( (MYSQL*) pArea->pConnection->hConnection ), pArea->szQuery, 
+      hb_errRT_MySQLDD( EG_MEM, ESQLDD_INVALIDQUERY, (char*) mysql_error( (MYSQL*) pArea->pConnection->hConnection ), pArea->szQuery,
                         mysql_errno( (MYSQL*) pArea->pConnection->hConnection ) );
-      return FAILURE;
+      return HB_FAILURE;
    }
 
    uiFields = mysql_num_fields( (MYSQL_RES*) pArea->pResult );
    SELF_SETFIELDEXTENT( (AREAP) pArea, uiFields );
-   
+
    pItemEof = hb_itemArrayNew( uiFields );
 
    pBuffer = (BYTE*) hb_xgrab( 256 );
-   
+
    bError = FALSE;
    for ( uiCount = 0; uiCount < uiFields; uiCount++  )
    {
       pMyField = mysql_fetch_field_direct( (MYSQL_RES*) pArea->pResult, uiCount );
-     
+
       hb_strncpy( ( char * ) pBuffer, pMyField->name, 256 - 1 );
       pFieldInfo.atomName = pBuffer;
       pFieldInfo.atomName[ MAX_FIELD_NAME ] = '\0';
       hb_strUpper( (char *) pFieldInfo.atomName, MAX_FIELD_NAME + 1 );
-     
+
       pFieldInfo.uiLen = pMyField->length;
       pFieldInfo.uiDec = 0;
-     
+
       switch( pMyField->type )
       {
          case MYSQL_TYPE_TINY:
@@ -308,7 +308,7 @@ static ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          case MYSQL_TYPE_INT24:
            pFieldInfo.uiType = HB_FT_LONG;
            break;
-       
+
          case MYSQL_TYPE_DECIMAL:
          case MYSQL_TYPE_NEWDECIMAL:
          case MYSQL_TYPE_FLOAT:
@@ -316,25 +316,25 @@ static ERRCODE mysqlOpen( SQLBASEAREAP pArea )
            pFieldInfo.uiType = HB_FT_DOUBLE;
            pFieldInfo.uiDec = pMyField->decimals;
            break;
-       
+
          case MYSQL_TYPE_STRING:
          case MYSQL_TYPE_VAR_STRING:
          case MYSQL_TYPE_ENUM:
          case MYSQL_TYPE_DATETIME:
            pFieldInfo.uiType = HB_FT_STRING;
            break;
-       
+
          case MYSQL_TYPE_DATE:
            pFieldInfo.uiType = HB_FT_DATE;
            break;
-       
+
          case MYSQL_TYPE_TINY_BLOB:
          case MYSQL_TYPE_MEDIUM_BLOB:
          case MYSQL_TYPE_LONG_BLOB:
          case MYSQL_TYPE_BLOB:
            pFieldInfo.uiType = HB_FT_MEMO;
            break;
-       
+
 /*
          case MYSQL_TYPE_TIMESTAMP:
          case MYSQL_TYPE_TIME:
@@ -351,7 +351,7 @@ static ERRCODE mysqlOpen( SQLBASEAREAP pArea )
            pFieldInfo.uiType = 0;
            break;
       }
-     
+
       if ( ! bError )
       {
          switch ( pFieldInfo.uiType )
@@ -404,22 +404,22 @@ static ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          }*/
 
          if ( ! bError )
-            bError = ( SELF_ADDFIELD( (AREAP) pArea, &pFieldInfo ) == FAILURE );
+            bError = ( SELF_ADDFIELD( (AREAP) pArea, &pFieldInfo ) == HB_FAILURE );
       }
-     
+
       if ( bError )
          break;
    }
-   
+
    hb_xfree( pBuffer );
-   
+
    if ( bError )
    {
      hb_itemRelease( pItemEof );
      hb_errRT_MySQLDD( EG_CORRUPTION, ESQLDD_INVALIDFIELD, "Invalid field type", pArea->szQuery, uiError );
-     return FAILURE;
+     return HB_FAILURE;
    }
- 
+
    pArea->ulRecCount = (ULONG) mysql_num_rows( (MYSQL_RES*) pArea->pResult );
 
    pArea->pRow = (void**) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void* ) );
@@ -433,26 +433,26 @@ static ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
 
    pRow++;
-   for ( ulIndex = 1; ulIndex <= pArea->ulRecCount; ulIndex++ ) 
+   for ( ulIndex = 1; ulIndex <= pArea->ulRecCount; ulIndex++ )
    {
      *pRow++ = (void*) mysql_row_tell( (MYSQL_RES*) pArea->pResult );
      mysql_fetch_row( (MYSQL_RES*) pArea->pResult );
    }
    pArea->fFetched = 1;
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE mysqlClose( SQLBASEAREAP pArea )
+static HB_ERRCODE mysqlClose( SQLBASEAREAP pArea )
 {
    if ( pArea->pResult )
       mysql_free_result( (MYSQL_RES*) pArea->pResult );
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
+static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 {
    if ( ulRecNo <= 0 || ulRecNo > pArea->ulRecCount )
    {
@@ -475,11 +475,11 @@ static ERRCODE mysqlGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 
       pArea->fPositioned = TRUE;
    }
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD   pField;
    char*     pValue;
@@ -494,34 +494,34 @@ static ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
 
    pValue = ( (MYSQL_ROW) ( pArea->pNatRecord ) ) [ uiIndex ];
    ulLen = ( (unsigned long*) ( pArea->pNatLength ) ) [ uiIndex ];
-   
+
    /* NULL => NIL (?) */
    if ( ! pValue )
    {
       hb_itemClear( pItem );
-      return SUCCESS;
+      return HB_SUCCESS;
    }
 
    switch( pField->uiType )
    {
-      case HB_FT_STRING: 
+      case HB_FT_STRING:
       {
-#if 0        
+#if 0
          char*  pStr;
 
          /* Do NOT trim strings */
          pStr = (char*) hb_xgrab( pField->uiLen + 1 );
-         if ( pValue )  
+         if ( pValue )
             memcpy( pStr, pValue, ulLen );
-        
-         if ( (ULONG)pField->uiLen > ulLen )  
+
+         if ( (ULONG)pField->uiLen > ulLen )
             memset( pStr + ulLen, ' ', pField->uiLen - ulLen );
-        
+
          pStr[ pField->uiLen ] = '\0';
          hb_itemPutCRaw( pItem, pStr, pField->uiLen );
 #else
          /* Trim strings */
-         if ( pValue )  
+         if ( pValue )
             hb_itemPutCL( pItem, pValue, ulLen );
          else
             hb_itemPutCL( pItem, "", 0 );
@@ -530,21 +530,21 @@ static ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
       }
 
       case HB_FT_MEMO:
-         if ( pValue )  
+         if ( pValue )
             hb_itemPutCL( pItem, pValue, ulLen );
          else
             hb_itemPutCL( pItem, "", 0 );
-       
+
          hb_itemSetCMemo( pItem );
          break;
 
       case HB_FT_INTEGER:
       case HB_FT_LONG:
       case HB_FT_DOUBLE:
-         if ( pValue ) 
+         if ( pValue )
          {
             hb_strncpy( szBuffer, pValue, sizeof( szBuffer ) - 1 );
-        
+
             if ( pField->uiDec )
             {
                hb_itemPutNDLen( pItem, atof( szBuffer ),
@@ -553,22 +553,22 @@ static ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
             }
             else
                   hb_itemPutNLLen( pItem, atol( szBuffer ), (int) pField->uiLen );
-         } 
-         else 
+         }
+         else
          {
             if ( pField->uiDec )
                hb_itemPutNDLen( pItem, 0.0,
                                 (int) pField->uiLen - ( (int) pField->uiDec + 1 ),
                                 (int) pField->uiDec );
-            else 
+            else
                   hb_itemPutNLLen( pItem, 0, (int) pField->uiLen );
          }
          break;
-        
-      case HB_FT_DATE: 
+
+      case HB_FT_DATE:
       {
          char  szDate[ 9 ];
-        
+
          szDate[ 0 ] = pValue[ 0 ];
          szDate[ 1 ] = pValue[ 1 ];
          szDate[ 2 ] = pValue[ 2 ];
@@ -591,20 +591,20 @@ static ERRCODE mysqlGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
    {
       pError = hb_errNew();
       hb_errPutGenCode( pError, EG_DATATYPE );
-      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) ); 
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
       hb_errPutSubCode( pError, EDBF_DATATYPE );
       SELF_ERROR( ( AREAP ) pArea, pError );
       hb_itemRelease( pError );
-      return FAILURE;
+      return HB_FAILURE;
    }
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE mysqlGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength )
+static HB_ERRCODE mysqlGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength )
 {
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( uiIndex );
    HB_SYMBOL_UNUSED( pLength );
-   return SUCCESS;
+   return HB_SUCCESS;
 }

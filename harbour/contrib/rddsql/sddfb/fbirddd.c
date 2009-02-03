@@ -65,14 +65,14 @@
 
 #define DIALECT                1
 
-static ERRCODE fbConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
-static ERRCODE fbDisconnect( SQLDDCONNECTION* pConnection );
-static ERRCODE fbExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
-static ERRCODE fbOpen( SQLBASEAREAP pArea );
-static ERRCODE fbClose( SQLBASEAREAP pArea );
-static ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
-static ERRCODE fbGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-static ERRCODE fbGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
+static HB_ERRCODE fbConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
+static HB_ERRCODE fbDisconnect( SQLDDCONNECTION* pConnection );
+static HB_ERRCODE fbExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
+static HB_ERRCODE fbOpen( SQLBASEAREAP pArea );
+static HB_ERRCODE fbClose( SQLBASEAREAP pArea );
+static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo );
+static HB_ERRCODE fbGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+static HB_ERRCODE fbGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
 
 
 static SDDNODE firebirddd = {
@@ -152,7 +152,7 @@ static USHORT hb_errRT_FireBirdDD( ULONG ulGenCode, ULONG ulSubCode, const char 
 
 /* ============= SDD METHODS ============================================================= */
 
-static ERRCODE fbConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
+static HB_ERRCODE fbConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 {
    ISC_STATUS       status[ 5 ];
    isc_db_handle    db = NULL;
@@ -177,35 +177,35 @@ static ERRCODE fbConnect( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
    memcpy( parambuf + i, hb_arrayGetCPtr( pItem, 4 ), ul );
    i += ul;
 
-   if ( isc_attach_database( status, hb_arrayGetCLen( pItem, 5 ), hb_arrayGetCPtr( pItem, 5 ), 
+   if ( isc_attach_database( status, hb_arrayGetCLen( pItem, 5 ), hb_arrayGetCPtr( pItem, 5 ),
                              & db, (short) i, parambuf ) )
    {
       /* TODO: error code in status[1]; */
-      return FAILURE;
+      return HB_FAILURE;
    }
    pConnection->hConnection = (void*) db;
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE fbDisconnect( SQLDDCONNECTION* pConnection )
+static HB_ERRCODE fbDisconnect( SQLDDCONNECTION* pConnection )
 {
    ISC_STATUS       status[ 5 ];
 
    isc_detach_database( status, (isc_db_handle*) &pConnection->hConnection );
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE fbExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
+static HB_ERRCODE fbExecute( SQLDDCONNECTION* pConnection, PHB_ITEM pItem )
 {
    HB_SYMBOL_UNUSED( pConnection );
    HB_SYMBOL_UNUSED( pItem );
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE fbOpen( SQLBASEAREAP pArea )
+static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 {
    ISC_STATUS       status[ 5 ];
    isc_tr_handle    pTrans = NULL;
@@ -223,7 +223,7 @@ static ERRCODE fbOpen( SQLBASEAREAP pArea )
    if ( isc_start_transaction ( status, &pTrans, 1, (isc_db_handle*) &pArea->pConnection->hConnection, 0, NULL ) )
    {
       hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_START, "Start transaction failed", NULL, status[ 1 ] );
-      return FAILURE;
+      return HB_FAILURE;
    }
 
    pSqlda = (XSQLDA*) hb_xgrab( XSQLDA_LENGTH( 1 ) );
@@ -235,7 +235,7 @@ static ERRCODE fbOpen( SQLBASEAREAP pArea )
       hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTALLOC, "Allocate statement failed", NULL, status[ 1 ] );
       isc_rollback_transaction( status, &pTrans );
       hb_xfree( pSqlda );
-      return FAILURE;
+      return HB_FAILURE;
    }
 
    if ( isc_dsql_prepare( status, &pTrans, &pStmt, 0, pArea->szQuery, DIALECT, pSqlda ) )
@@ -244,7 +244,7 @@ static ERRCODE fbOpen( SQLBASEAREAP pArea )
       isc_dsql_free_statement( status, &pStmt, DSQL_drop );
       isc_rollback_transaction( status, &pTrans );
       hb_xfree( pSqlda );
-      return FAILURE;
+      return HB_FAILURE;
    }
 
    if ( pSqlda->sqld > pSqlda->sqln ) {
@@ -260,7 +260,7 @@ static ERRCODE fbOpen( SQLBASEAREAP pArea )
          isc_dsql_free_statement( status, &pStmt, DSQL_drop );
          isc_rollback_transaction( status, &pTrans );
          hb_xfree( pSqlda );
-         return FAILURE;
+         return HB_FAILURE;
       }
    }
 
@@ -283,7 +283,7 @@ static ERRCODE fbOpen( SQLBASEAREAP pArea )
       pFieldInfo.uiDec = 0;
 
       iType = pVar->sqltype & ~1;
-      switch ( iType ) 
+      switch ( iType )
       {
          case SQL_TEXT:
             pFieldInfo.uiType = HB_FT_STRING;
@@ -331,7 +331,7 @@ static ERRCODE fbOpen( SQLBASEAREAP pArea )
             break;
       }
 
-      if ( pVar->sqltype & 1 ) 
+      if ( pVar->sqltype & 1 )
          pVar->sqlind = (short*) hb_xgrab( sizeof( short ) );
 
       if ( ! bError )
@@ -390,7 +390,7 @@ static ERRCODE fbOpen( SQLBASEAREAP pArea )
          }
 */
          if ( ! bError )
-            bError = ( SELF_ADDFIELD( (AREAP) pArea, &pFieldInfo ) == FAILURE );
+            bError = ( SELF_ADDFIELD( (AREAP) pArea, &pFieldInfo ) == HB_FAILURE );
       }
 
       if ( bError )
@@ -408,7 +408,7 @@ static ERRCODE fbOpen( SQLBASEAREAP pArea )
       hb_itemClear( pItemEof );
       hb_itemRelease( pItemEof );
       hb_errRT_FireBirdDD( EG_CORRUPTION, ESQLDD_INVALIDFIELD, "Invalid field type", pArea->szQuery, 0 );
-      return FAILURE;
+      return HB_FAILURE;
    }
 
    pArea->ulRecCount = 0;
@@ -421,11 +421,11 @@ static ERRCODE fbOpen( SQLBASEAREAP pArea )
    * pArea->pRow = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE fbClose( SQLBASEAREAP pArea )
+static HB_ERRCODE fbClose( SQLBASEAREAP pArea )
 {
    ISC_STATUS       status[ 5 ];
 
@@ -445,11 +445,11 @@ static ERRCODE fbClose( SQLBASEAREAP pArea )
       isc_rollback_transaction( status, &pArea->pTrans );
       pArea->pTrans = NULL;
    }
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
+static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
 {
    ISC_STATUS      status[ 5 ];
    XSQLVAR*        pVar;
@@ -470,7 +470,7 @@ static ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
             pVar = (XSQLVAR *) pArea->pResult;
             pVar += ( ui - 1 );
 
-            if ( ( pVar->sqltype & 1 ) && ( * pVar->sqlind < 0 ) ) 
+            if ( ( pVar->sqltype & 1 ) && ( * pVar->sqlind < 0 ) )
                continue;  /* NIL value */
 
             iType = pVar->sqltype;
@@ -525,14 +525,14 @@ static ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
          if ( isc_dsql_free_statement( status, & pArea->pStmt, DSQL_drop ) )
          {
             hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTFREE, "Statement free error", NULL, status[ 1 ] );
-            return FAILURE;
+            return HB_FAILURE;
          }
          pArea->pStmt = NULL;
 
          if ( isc_commit_transaction( status, & pArea->pTrans ) )
          {
             hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_COMMIT, "Transaction commit error", NULL, status[ 1 ] );
-            return FAILURE;
+            return HB_FAILURE;
          }
          pArea->pTrans = NULL;
 
@@ -543,7 +543,7 @@ static ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
       else
       {
          hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_FETCH, "Fetch error", NULL, ( USHORT ) lErr );
-         return FAILURE;
+         return HB_FAILURE;
       }
    }
 
@@ -559,23 +559,23 @@ static ERRCODE fbGoTo( SQLBASEAREAP pArea, ULONG ulRecNo )
       pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
       pArea->fPositioned = TRUE;
    }
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE fbGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE fbGetValue( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( uiIndex );
    HB_SYMBOL_UNUSED( pItem );
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
-static ERRCODE fbGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength )
+static HB_ERRCODE fbGetVarLen( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength )
 {
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( uiIndex );
    HB_SYMBOL_UNUSED( pLength );
-   return SUCCESS;
+   return HB_SUCCESS;
 }

@@ -81,8 +81,8 @@
 
 #define MAX_FIELD_NAME          64
 
-#define SQLDD_ROWSET_INIT      256 
-#define SQLDD_ROWSET_RESIZE     64 
+#define SQLDD_ROWSET_INIT      256
+#define SQLDD_ROWSET_RESIZE     64
 
 #define SQLDD_FLAG_DELETED       1
 #define SQLDD_FLAG_CACHED        2
@@ -122,16 +122,16 @@ typedef struct _SQLBASEAREA
 
    ULONG                      ulConnection;
    struct _SQLDDCONNECTION*   pConnection;
-   struct _SDDNODE*           pSDD;     
+   struct _SDDNODE*           pSDD;
 
    char*                      szQuery;       /* SQL query */
-                             
+
    ULONG                      ulRecNo;       /* Current record number */
    ULONG                      ulRecCount;    /* Total records */
    ULONG                      ulRecMax;      /* Size of pRow, pRowFlags buffer */
-                             
+
    void**                     pRow;          /* array of native pointers or cached PHB_ITEM */
-   BYTE*                      pRowFlags;     
+   BYTE*                      pRowFlags;
 
    void*                      pRecord;
    BYTE                       bRecordFlags;
@@ -140,8 +140,8 @@ typedef struct _SQLBASEAREA
    void*                      pStmt;            /* SQL statement */
    void*                      pTrans;           /* SQL transaction */
 
-   void*                      pNatRecord;    
-   void*                      pNatLength;    
+   void*                      pNatRecord;
+   void*                      pNatLength;
 
    BOOL                       fFetched;
    BOOL                       fPositioned;
@@ -209,24 +209,24 @@ typedef struct _MIXTAG
    char*                szForExpr;
    PHB_ITEM             pKeyItem;
    PHB_ITEM             pForItem;
-                       
+
    BYTE                 bType;
    UINT                 uiKeyLen;            /* Length of key */
    UINT                 uiTotalLen;          /* Total length of key structure */
-                       
+
    BOOL                 fEof;
    BOOL                 fBof;
    BOOL                 fCustom;
-                       
+
    PMIXNODE             Root;
-                       
+
    PMIXKEY              CurKey;
    PMIXNODE             CurNode;
    UINT                 CurPos;
-                       
+
    PMIXKEY              HotKey;
    BOOL                 HotFor;
-                       
+
    BYTE*                pSortTable;  /* National sorttable for character key tags, NULL otherwise */
 } MIXTAG, *PMIXTAG;
 
@@ -265,16 +265,16 @@ typedef struct _SQLMIXAREA
 
    ULONG                      ulConnection;
    struct _SQLDDCONNECTION*   pConnection;
-   struct _SDDNODE*           pSDD;     
+   struct _SDDNODE*           pSDD;
 
    char*                      szQuery;       /* SQL query */
-                             
+
    ULONG                      ulRecNo;       /* Current record number */
    ULONG                      ulRecCount;    /* Total records */
    ULONG                      ulRecMax;      /* Size of pRow, pRowFlags buffer */
-                             
+
    void**                     pRow;          /* array of native pointers or cached PHB_ITEM */
-   BYTE*                      pRowFlags;     
+   BYTE*                      pRowFlags;
 
    void*                      pRecord;
    BYTE                       bRecordFlags;
@@ -283,8 +283,8 @@ typedef struct _SQLMIXAREA
    void*                      pStmt;            /* SQL statement */
    void*                      pTrans;           /* SQL transaction */
 
-   void*                      pNatRecord;    
-   void*                      pNatLength;    
+   void*                      pNatRecord;
+   void*                      pNatLength;
 
    BOOL                       fFetched;
    BOOL                       fPositioned;
@@ -309,14 +309,14 @@ typedef struct _SQLMIXAREA
 ====================================================================
 */
 
-typedef   ERRCODE   (* SDDFUNC_CONNECT    )( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
-typedef   ERRCODE   (* SDDFUNC_DISCONNECT )( SQLDDCONNECTION* pConnection );
-typedef   ERRCODE   (* SDDFUNC_EXECUTE    )( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
-typedef   ERRCODE   (* SDDFUNC_OPEN       )( SQLBASEAREAP pArea );
-typedef   ERRCODE   (* SDDFUNC_CLOSE      )( SQLBASEAREAP pArea );
-typedef   ERRCODE   (* SDDFUNC_GOTO       )( SQLBASEAREAP pArea, ULONG ulRecNo );
-typedef   ERRCODE   (* SDDFUNC_GETVALUE   )( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-typedef   ERRCODE   (* SDDFUNC_GETVARLEN  )( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
+typedef   HB_ERRCODE   (* SDDFUNC_CONNECT    )( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
+typedef   HB_ERRCODE   (* SDDFUNC_DISCONNECT )( SQLDDCONNECTION* pConnection );
+typedef   HB_ERRCODE   (* SDDFUNC_EXECUTE    )( SQLDDCONNECTION* pConnection, PHB_ITEM pItem );
+typedef   HB_ERRCODE   (* SDDFUNC_OPEN       )( SQLBASEAREAP pArea );
+typedef   HB_ERRCODE   (* SDDFUNC_CLOSE      )( SQLBASEAREAP pArea );
+typedef   HB_ERRCODE   (* SDDFUNC_GOTO       )( SQLBASEAREAP pArea, ULONG ulRecNo );
+typedef   HB_ERRCODE   (* SDDFUNC_GETVALUE   )( SQLBASEAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+typedef   HB_ERRCODE   (* SDDFUNC_GETVARLEN  )( SQLBASEAREAP pArea, USHORT uiIndex, ULONG * pLength );
 
 
 typedef struct _SDDNODE

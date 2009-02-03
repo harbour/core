@@ -147,7 +147,7 @@ STATIC FUNCTION ADO_INIT( nRDD )
 
    USRRDD_RDDDATA( nRDD, aRData )
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_NEW( nWA )
 
@@ -158,7 +158,7 @@ STATIC FUNCTION ADO_NEW( nWA )
 
    USRRDD_AREADATA( nWA, aWAData )
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
 
@@ -251,7 +251,7 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
 
    oConnection:Close()
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_CREATEFIELDS( nWA, aStruct )
 
@@ -301,7 +301,7 @@ STATIC FUNCTION ADO_CREATEFIELDS( nWA, aStruct )
      ENDCASE
   NEXT
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
 
@@ -400,7 +400,7 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
       oError:CanDefault  := .T.
 
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
    ENDIF
    oRecordSet:CursorType     := adOpenDynamic
    oRecordSet:CursorLocation := adUseClient
@@ -447,7 +447,7 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
 
    nResult := UR_SUPER_OPEN( nWA, aOpenInfo )
 
-   IF nResult == SUCCESS
+   IF nResult == HB_SUCCESS
       ADO_GOTOP( nWA )
    ENDIF
 
@@ -516,7 +516,7 @@ STATIC FUNCTION ADO_GETVALUE( nWA, nField, xValue )
       ENDIF
    END WITH
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_GOTO( nWA, nRecord )
 
@@ -530,7 +530,7 @@ STATIC FUNCTION ADO_GOTO( nWA, nRecord )
       ADO_RECID( nWA, @nRecNo )
    END WITH
 
-RETURN iif( nRecord == nRecNo, SUCCESS, FAILURE )
+RETURN iif( nRecord == nRecNo, HB_SUCCESS, HB_FAILURE )
 
 STATIC FUNCTION ADO_GOTOID( nWA, nRecord )
    LOCAL nRecNo
@@ -543,7 +543,7 @@ STATIC FUNCTION ADO_GOTOID( nWA, nRecord )
       ADO_RECID( nWA, @nRecNo )
    END WITH
 
-RETURN iif( nRecord == nRecNo, SUCCESS, FAILURE )
+RETURN iif( nRecord == nRecNo, HB_SUCCESS, HB_FAILURE )
 
 STATIC FUNCTION ADO_GOTOP( nWA )
 
@@ -557,7 +557,7 @@ STATIC FUNCTION ADO_GOTOP( nWA )
    aWAData[ WA_BOF ] := .F.
    aWAData[ WA_EOF ] := .F.
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_GOBOTTOM( nWA )
 
@@ -569,24 +569,24 @@ STATIC FUNCTION ADO_GOBOTTOM( nWA )
    aWAData[ WA_BOF ] := .F.
    aWAData[ WA_EOF ] := .F.
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_SKIPRAW( nWA, nToSkip )
 
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
    LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
-   LOCAL nResult    := SUCCESS
+   LOCAL nResult    := HB_SUCCESS
 
    IF ! Empty( aWAData[ WA_PENDINGREL ] )
-      IF ADO_FORCEREL( nWA ) != SUCCESS
-         RETURN FAILURE
+      IF ADO_FORCEREL( nWA ) != HB_SUCCESS
+         RETURN HB_FAILURE
       ENDIF
    ENDIF
 
    IF nToSkip != 0
       IF aWAData[ WA_EOF ]
          IF nToSkip > 0
-            RETURN SUCCESS
+            RETURN HB_SUCCESS
          ENDIF
          ADO_GOBOTTOM( nWA )
          ++nToSkip
@@ -603,10 +603,10 @@ STATIC FUNCTION ADO_SKIPRAW( nWA, nToSkip )
                aWAData[ WA_EOF ] := oRecordSet:EOF
             ENDIF
          ELSE
-            nResult := FAILURE
+            nResult := HB_FAILURE
          ENDIF
       CATCH
-         nResult := FAILURE
+         nResult := HB_FAILURE
       END
    ENDIF
 
@@ -619,19 +619,19 @@ STATIC FUNCTION ADO_BOF( nWA, lBof )
 
    lBof := aWAData[ WA_BOF ]
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_EOF( nWA, lEof )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
-   LOCAL nResult    := SUCCESS
+   LOCAL nResult    := HB_SUCCESS
 
    TRY
       IF USRRDD_AREADATA( nWA )[WA_CONNECTION]:State != adStateClosed
          lEof := ( oRecordSet:AbsolutePosition == -3 )
       ENDIF
    CATCH
-      nResult := FAILURE
+      nResult := HB_FAILURE
    END
 
 RETURN nResult
@@ -650,7 +650,7 @@ STATIC FUNCTION ADO_DELETED( nWA, lDeleted )
       lDeleted := .F.
    END TRY
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_DELETE( nWA )
 
@@ -660,12 +660,12 @@ STATIC FUNCTION ADO_DELETE( nWA )
 
    ADO_SKIPRAW( nWA, 1 )
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_RECNO( nWA, nRecNo )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
-   LOCAL nResult    := SUCCESS
+   LOCAL nResult    := HB_SUCCESS
 
    TRY
       IF USRRDD_AREADATA( nWA )[WA_CONNECTION]:State != adStateClosed
@@ -673,11 +673,11 @@ STATIC FUNCTION ADO_RECNO( nWA, nRecNo )
 
       ELSE
          nRecno  := 0
-         nResult := FAILURE
+         nResult := HB_FAILURE
       ENDIF
    CATCH
       nRecNo  := 0
-      nResult := FAILURE
+      nResult := HB_FAILURE
    END
 
 RETURN nResult
@@ -691,7 +691,7 @@ STATIC FUNCTION ADO_RECCOUNT( nWA, nRecords )
 
    nRecords := oRecordSet:RecordCount()
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_PUTVALUE( nWA, nField, xValue )
 
@@ -706,7 +706,7 @@ STATIC FUNCTION ADO_PUTVALUE( nWA, nField, xValue )
       END
    ENDIF
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_APPEND( nWA, lUnLockAll )
 
@@ -721,7 +721,7 @@ STATIC FUNCTION ADO_APPEND( nWA, lUnLockAll )
         CATCH
    END
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_FLUSH( nWA )
 
@@ -732,13 +732,13 @@ STATIC FUNCTION ADO_FLUSH( nWA )
    CATCH
    END
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_ORDINFO( nWA, nIndex, aOrderInfo )
 
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
    LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
-   LOCAL nResult := SUCCESS
+   LOCAL nResult := HB_SUCCESS
 
         DO CASE
    CASE nIndex == DBOI_EXPRESSION
@@ -780,21 +780,21 @@ STATIC FUNCTION ADO_ORDINFO( nWA, nIndex, aOrderInfo )
          ADO_RECID( nWA, @aOrderInfo[ UR_ORI_RESULT ] )
       ELSE
          aOrderInfo[ UR_ORI_RESULT ] := 0
-         nResult := FAILURE
+         nResult := HB_FAILURE
       ENDIF
    CASE nIndex == DBOI_RECNO
       IF aWAData[ WA_CONNECTION ]:State != adStateClosed
          ADO_RECID( nWA, @aOrderInfo[ UR_ORI_RESULT ] )
       ELSE
          aOrderInfo[ UR_ORI_RESULT ] := 0
-         nResult := FAILURE
+         nResult := HB_FAILURE
       ENDIF
    CASE nIndex == DBOI_KEYCOUNT
       IF aWAData[ WA_CONNECTION ]:State != adStateClosed
          aOrderInfo[ UR_ORI_RESULT ] := oRecordSet:RecordCount
       ELSE
          aOrderInfo[ UR_ORI_RESULT ] := 0
-         nResult := FAILURE
+         nResult := HB_FAILURE
       ENDIF
         ENDCASE
 
@@ -802,7 +802,7 @@ RETURN nResult
 
 STATIC FUNCTION ADO_RECINFO( nWA, nRecord, nInfoType, uInfo )
 
-   LOCAL nResult := SUCCESS
+   LOCAL nResult := HB_SUCCESS
    //LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
    HB_SYMOL_USED( nWA )
 #ifdef UR_DBRI_DELETED
@@ -835,14 +835,14 @@ STATIC FUNCTION ADO_RECINFO( nWA, nRecord, nInfoType, uInfo )
 RETURN nResult
 
 STATIC FUNCTION ADO_FIELDNAME( nWA, nField, cFieldName )
-   LOCAL nResult := SUCCESS
+   LOCAL nResult := HB_SUCCESS
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    TRY
       cFieldName := oRecordSet:Fields( nField - 1 ):Name
    CATCH
       cFieldName := ''
-      nResult    := FAILURE
+      nResult    := HB_FAILURE
    END TRY
 
 RETURN nResult
@@ -922,10 +922,10 @@ STATIC FUNCTION ADO_FIELDINFO( nWA, nField, nInfoType, uInfo )
         uInfo := 0
 #endif
    OTHERWISE
-       RETURN FAILURE
+       RETURN HB_FAILURE
    ENDCASE
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_ORDLSTFOCUS( nWA, aOrderInfo )
 
@@ -952,14 +952,14 @@ STATIC FUNCTION ADO_ORDLSTFOCUS( nWA, aOrderInfo )
       ADO_GOTO( nWA, nRecNo )
    END WITH
 */
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_PACK( nWA )
 
    //LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
    HB_SYMOL_USED( nWA )
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_RAWLOCK( nWA, nAction, nRecNo )
 
@@ -970,7 +970,7 @@ STATIC FUNCTION ADO_RAWLOCK( nWA, nAction, nRecNo )
    HB_SYMBOL_UNUSED( nWA )
    HB_SYMBOL_UNUSED( nAction )
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_LOCK( nWA, aLockInfo  )
 
@@ -981,7 +981,7 @@ STATIC FUNCTION ADO_LOCK( nWA, aLockInfo  )
    aLockInfo[ UR_LI_RECORD ] := RECNO()
    aLockInfo[ UR_LI_RESULT ] := .T.
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_UNLOCK( nWA, xRecID )
 
@@ -991,7 +991,7 @@ STATIC FUNCTION ADO_UNLOCK( nWA, xRecID )
    HB_SYMBOL_UNUSED( xRecId )
    HB_SYMBOL_UNUSED( nWA )
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_SETFILTER( nWA, aFilterInfo )
 
@@ -999,7 +999,7 @@ STATIC FUNCTION ADO_SETFILTER( nWA, aFilterInfo )
 
    oRecordSet:Filter := SQLTranslate( aFilterInfo[ UR_FRI_CEXPR ] )
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_CLEARFILTER( nWA )
 
@@ -1010,7 +1010,7 @@ STATIC FUNCTION ADO_CLEARFILTER( nWA )
    CATCH
    END
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_ZAP( nWA )
 
@@ -1026,7 +1026,7 @@ STATIC FUNCTION ADO_ZAP( nWA )
       oRecordSet:Requery()
    ENDIF
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_SETLOCATE( nWA, aScopeInfo )
 
@@ -1036,7 +1036,7 @@ STATIC FUNCTION ADO_SETLOCATE( nWA, aScopeInfo )
 
    aWAData[ WA_SCOPEINFO ] := aScopeInfo
 
-return SUCCESS
+return HB_SUCCESS
 
 STATIC FUNCTION ADO_LOCATE( nWA, lContinue )
 
@@ -1047,7 +1047,7 @@ STATIC FUNCTION ADO_LOCATE( nWA, lContinue )
    aWAData[ WA_FOUND ] := ! oRecordSet:EOF
    aWAData[ WA_EOF ] := oRecordSet:EOF
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_CLEARREL( nWA )
 
@@ -1066,7 +1066,7 @@ STATIC FUNCTION ADO_CLEARREL( nWA )
       ENDIF
    ENDIF
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_RELAREA( nWA, nRelNo, nRelArea )
 
@@ -1079,7 +1079,7 @@ STATIC FUNCTION ADO_RELAREA( nWA, nRelNo, nRelArea )
       nRelArea := 0
    END TRY
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_RELTEXT( nWA, nRelNo, cExpr )
 
@@ -1093,7 +1093,7 @@ STATIC FUNCTION ADO_RELTEXT( nWA, nRelNo, cExpr )
       cExpr := ''
    END TRY
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_SETREL( nWA, aRelInfo )
 
@@ -1109,7 +1109,7 @@ STATIC FUNCTION ADO_SETREL( nWA, aRelInfo )
       // raise error for can't create relation
    END
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_FORCEREL( nWA )
 
@@ -1124,31 +1124,31 @@ STATIC FUNCTION ADO_FORCEREL( nWA )
       RETURN ADO_RELEVAL( nWA, aPendingRel )
    ENDIF
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_RELEVAL( nWA, aRelInfo )
    LOCAL aInfo, nReturn, nOrder, uResult
 
    nReturn := ADO_EVALBLOCK( aRelInfo[UR_RI_PARENT], aRelInfo[UR_RI_BEXPR], @uResult )
 
-   IF  nReturn == SUCCESS
+   IF  nReturn == HB_SUCCESS
       /*
        *  Check the current order
        */
       aInfo := Array( UR_ORI_SIZE )
       nReturn := ADO_ORDINFO( nWA, DBOI_NUMBER, @aInfo )
 
-      IF nReturn == SUCCESS
+      IF nReturn == HB_SUCCESS
          nOrder := aInfo[UR_ORI_RESULT]
          IF nOrder != 0
             IF aRelInfo[UR_RI_SCOPED]
                aInfo[UR_ORI_NEWVAL] := uResult
                nReturn := ADO_ORDINFO( nWA, DBOI_SCOPETOP, @aInfo )
-               IF nReturn == SUCCESS
+               IF nReturn == HB_SUCCESS
                   nReturn := ADO_ORDINFO( nWA, DBOI_SCOPEBOTTOM, @aInfo )
                ENDIF
             ENDIF
-            IF nReturn == SUCCESS
+            IF nReturn == HB_SUCCESS
                nReturn := ADO_SEEK( nWA, .F., uResult, .F. )
             ENDIF
          ELSE
@@ -1169,7 +1169,7 @@ STATIC FUNCTION ADO_ORDLSTADD( nWA, aOrderInfo )
    CATCH
    END
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_ORDLSTCLEAR( nWA )
 
@@ -1180,7 +1180,7 @@ STATIC FUNCTION ADO_ORDLSTCLEAR( nWA )
    CATCH
    END
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
 
@@ -1217,7 +1217,7 @@ STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
       UR_SUPER_ERROR( nWA, oError )
    END
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_ORDDESTROY( nWA, aOrderInfo )
 
@@ -1232,7 +1232,7 @@ STATIC FUNCTION ADO_ORDDESTROY( nWA, aOrderInfo )
       NEXT
    ENDIF
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_EVALBLOCK( nArea, bBlock, uResult )
 
@@ -1251,11 +1251,11 @@ STATIC FUNCTION ADO_EVALBLOCK( nArea, bBlock, uResult )
       DbSelectArea( nCurrArea )
    ENDIF
 
-RETURN SUCCESS
+RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
    //LOCAL n
-   LOCAL lRet := FAILURE
+   LOCAL lRet := HB_FAILURE
    LOCAL aRData := USRRDD_RDDDATA( nRDD )
 
    HB_SYMBOL_UNUSED( ulConnect )
@@ -1263,13 +1263,13 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
    IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
       TRY
          //n := aRData[ WA_CATALOG ]:Tables( cTable )
-         lRet := SUCCESS
+         lRet := HB_SUCCESS
       CATCH
       END TRY
       IF ! Empty( cIndex )
          TRY
             //n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes( cIndex )
-            lRet := SUCCESS
+            lRet := HB_SUCCESS
          CATCH
          END TRY
       ENDIF
@@ -1279,7 +1279,7 @@ RETURN lRet
 
 STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
    //LOCAL n
-   LOCAL lRet := FAILURE
+   LOCAL lRet := HB_FAILURE
    LOCAL aRData := USRRDD_RDDDATA( nRDD )
 
    HB_SYMBOL_UNUSED( ulConnect )
@@ -1287,13 +1287,13 @@ STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
    IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
       TRY
          //n := aRData[ WA_CATALOG ]:Tables:Delete( cTable )
-         lRet := SUCCESS
+         lRet := HB_SUCCESS
       CATCH
       END TRY
       IF ! Empty( cIndex )
          TRY
             //n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes:Delete( cIndex )
-            lRet := SUCCESS
+            lRet := HB_SUCCESS
          CATCH
          END TRY
       ENDIF
@@ -1312,12 +1312,12 @@ STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
 
    LPCDXTAG pTag;
 
-   if ( FAST_GOCOLD( ( AREAP ) pArea ) == FAILURE )
-      return FAILURE;
+   if ( FAST_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
+      return HB_FAILURE;
 
 //oRecordSet:Find( aWAData[ WA_SCOPEINFO ][ UR_SI_CFOR ], iif( lContinue, 1, 0 ) )
    LPCDXKEY pKey;
-   ERRCODE retval = SUCCESS;
+   ERRCODE retval = HB_SUCCESS;
    BOOL  fEOF = FALSE, fLast;
    ULONG ulRec;
 
@@ -1356,10 +1356,10 @@ STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
    if ( !fEOF )
    {
       retval = SELF_GOTO( ( AREAP ) pArea, pTag->CurKey->rec );
-      if ( retval != FAILURE && pArea->fPositioned )
+      if ( retval != HB_FAILURE && pArea->fPositioned )
       {
          retval = SELF_SKIPFILTER( ( AREAP ) pArea, fFindLast ? -1 : 1 );
-         if ( retval != FAILURE && ulRec && pArea->fPositioned )
+         if ( retval != HB_FAILURE && ulRec && pArea->fPositioned )
          {
             pArea->fFound = ( ulRec == pArea->ulRecNo ||
                      hb_cdxValCompare( pTag, pKey->val, pKey->len,
@@ -1369,7 +1369,7 @@ STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
          }
       }
    }
-   if ( retval != FAILURE &&
+   if ( retval != HB_FAILURE &&
         ( fEOF || ! hb_cdxTopScope( pTag ) ||
                   ! hb_cdxBottomScope( pTag ) ) )
    {
@@ -1379,7 +1379,7 @@ STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
    hb_cdxKeyFree( pKey );
    return retval;
 */
-RETURN FAILURE
+RETURN HB_FAILURE
 
 static function ADO_FOUND( nWA, lFound )
 
@@ -1387,7 +1387,7 @@ static function ADO_FOUND( nWA, lFound )
 
    lFound := aWAData[ WA_FOUND ]
 
-return SUCCESS
+return HB_SUCCESS
 
 FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 

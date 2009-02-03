@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-03 16:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbrddcdx.h
+  * contrib/rddsql/sddmy/mysqldd.c
+  * contrib/rddsql/sddpg/pgsqldd.c
+  * contrib/rddsql/sddfb/fbirddd.c
+  * contrib/rddsql/hbrddsql.h
+  * contrib/rddsql/sqlbase.c
+  * contrib/rddsql/sqlmix.c
+  * contrib/rddado/adordd.prg
+  * contrib/rddads/rddads.h
+  * contrib/rddads/adsfunc.c
+  * contrib/rddads/ads1.c
+  * contrib/hbbmcdx/bmdbfcdx.c
+  * contrib/hbbmcdx/hbbmcdx.h
+    * SUCCESS -> HB_SUCCESS
+    * FAILURE -> HB_FAILURE
+    * ERRCODE -> HB_ERRCODE
+
 2009-02-03 15:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapirdd.h
   * source/rdd/dbcmd.c

@@ -88,8 +88,8 @@
 
 #if 0
 /* Compatibility ACE version override.
-   Usage is discouraged and unnecessary unless we want to 
-   override autodetection. For the latter, ADS_LIB_VERSION 
+   Usage is discouraged and unnecessary unless we want to
+   override autodetection. For the latter, ADS_LIB_VERSION
    is recommended. If ADS_LIB_VERSION is #defined,
    ADS_REQUIRE_VERSION will be ignored. [vszakats] */
 #if !defined( ADS_LIB_VERSION )
@@ -107,7 +107,7 @@
 #endif
 #endif
 
-/* Make sure to not allow a manual override requesting 
+/* Make sure to not allow a manual override requesting
    a higher version than the one of ACE. [vszakats] */
 #if !defined( ADS_LIB_VERSION )
    #define ADS_LIB_VERSION _ADS_LIB_VERSION
@@ -238,7 +238,7 @@ extern int hb_ads_iCharType;
 extern BOOL hb_ads_bTestRecLocks;
 extern ADSHANDLE hb_ads_hConnect;
 
-extern ERRCODE hb_adsCloseCursor( ADSAREAP pArea );
+extern HB_ERRCODE hb_adsCloseCursor( ADSAREAP pArea );
 extern ADSAREAP hb_adsGetWorkAreaPointer( void );
 
 #ifdef ADS_USE_OEM_TRANSLATION
