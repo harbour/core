@@ -6,27 +6,30 @@ ROOT = ../
 
 DOC_FILES=\
 	c_std.txt \
-	cmpopt.txt \
 	class_tp.txt \
 	cmdline.txt \
+	cmpopt.txt \
 	codebloc.txt \
 	codestyl.txt \
+	destruct.txt \
 	dirstruc.txt \
 	funclist.txt \
-	genhtm.bat \
-	genhtm.lnk \
-	genhtm.rsp \
 	gmake.txt \
 	gtapi.txt \
 	hbmake.txt \
 	hdr_tpl.txt \
+	howtobld.txt \
 	howtobsd.txt \
-	howtosvn.txt \
 	howtomak.txt \
+	howtorel.txt \
+	howtosvn.txt \
 	hrb_faq.txt \
+	inet.txt \
 	lang_id.txt \
 	license.txt \
+	linux1st.txt \
 	pcode.txt \
+	pp.txt \
 	pragma.txt \
 	readme.txt \
 	statics.txt \

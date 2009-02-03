@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-03 14:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/doc/Makefile
+  * harbour/doc/es/Makefile
+    * updated file list
+
+  * harbour/debian/rules
+    ! changed to use documentation files installed by harbour install phase
+      Please test.
+
 2009-02-03 12:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gcc.sh
     + added some Solaris libraries necessary to link Harbour applications
