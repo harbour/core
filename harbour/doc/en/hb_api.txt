@@ -4366,7 +4366,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ) --> ( ERRCODE )hResult
+ *      hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ) --> ( HB_ERRCODE )hResult
  *  $ARGUMENTS$
  *      <pItem>
  *
@@ -7094,4 +7094,3 @@
  *
  *  $END$
  */
-

@@ -401,7 +401,7 @@ HB_FUNC( ADSSETDELETED )
    hb_retl( pbShowDeleted == 0 );
 
    if( ISLOG( 1 ) )
-      AdsShowDeleted( !hb_parl( 1 ) /* usShowDeleted */ );
+      AdsShowDeleted( ( UNSIGNED16 ) !hb_parl( 1 ) /* usShowDeleted */ );
 }
 
 HB_FUNC( ADSSETEXACT )

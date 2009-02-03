@@ -1317,7 +1317,7 @@ STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
 
 //oRecordSet:Find( aWAData[ WA_SCOPEINFO ][ UR_SI_CFOR ], iif( lContinue, 1, 0 ) )
    LPCDXKEY pKey;
-   ERRCODE retval = HB_SUCCESS;
+   HB_ERRCODE retval = HB_SUCCESS;
    BOOL  fEOF = FALSE, fLast;
    ULONG ulRec;
 

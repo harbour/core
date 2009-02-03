@@ -357,10 +357,10 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
       hb_errInternal( HB_EI_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
 }
 
-ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
+HB_ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 {
    PHB_DYNS pDyn;
-   ERRCODE bSuccess = FAILURE;
+   HB_ERRCODE bSuccess = HB_FAILURE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarGet(%p, %p)", pItem, pMemvarSymb));
 
@@ -382,7 +382,7 @@ ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
             hb_itemCopy( pItem, hb_itemUnRef( pMemvar ) );
          else
             hb_itemCopy( pItem, pMemvar );
-         bSuccess = SUCCESS;
+         bSuccess = HB_SUCCESS;
       }
    }
    else
@@ -395,7 +395,7 @@ void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetValue(%p, %p)", pItem, pMemvarSymb));
 
-   if( hb_memvarGet( pItem, pMemvarSymb ) == FAILURE )
+   if( hb_memvarGet( pItem, pMemvarSymb ) == HB_FAILURE )
    {
       /* Generate an error with retry possibility
        * (user created error handler can create this variable)
@@ -407,7 +407,7 @@ void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 
       while( hb_errLaunch( pError ) == E_RETRY )
       {
-         if( hb_memvarGet( pItem, pMemvarSymb ) == SUCCESS )
+         if( hb_memvarGet( pItem, pMemvarSymb ) == HB_SUCCESS )
             break;
       }
 

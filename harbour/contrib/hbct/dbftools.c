@@ -85,13 +85,13 @@ HB_FUNC( DBFSIZE )
       PHB_ITEM pSize = hb_itemNew( NULL );
       ULONG ulRecSize, ulRecCount;
 
-      if( SELF_INFO( pArea, DBI_GETHEADERSIZE, pSize ) == SUCCESS )
+      if( SELF_INFO( pArea, DBI_GETHEADERSIZE, pSize ) == HB_SUCCESS )
       {
          llSize = hb_itemGetNL( pSize ) + 1;
-         if( SELF_INFO( pArea, DBI_GETRECSIZE, pSize ) == SUCCESS )
+         if( SELF_INFO( pArea, DBI_GETRECSIZE, pSize ) == HB_SUCCESS )
          {
             ulRecSize = hb_itemGetNL( pSize );
-            if( SELF_RECCOUNT( pArea, &ulRecCount ) == SUCCESS )
+            if( SELF_RECCOUNT( pArea, &ulRecCount ) == HB_SUCCESS )
             {
                llSize += ( HB_LONG ) ulRecCount *ulRecSize;
             }

@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-03 18:24 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * doc/en/hb_api.txt
+  * doc/en/hb_apird.txt
+  * include/hbrdddbf.h
+  * include/hbrddcdx.h
+  * include/hbapi.h
+  * include/hbrddfpt.h
+  * include/hbrddntx.h
+  * contrib/hbct/dbftools.c
+  * contrib/rddado/adordd.prg
+  * contrib/hbpgsql/pgrdd.prg
+  * contrib/rddads/adsx.c
+  * contrib/rddads/adsfunc.c
+  * contrib/examples/rdddbt/hbrdddbt.h
+  * contrib/examples/rdddbt/dbfdbt1.c
+  * source/vm/hvm.c
+  * source/vm/memvars.c
+  * source/debug/dbgentry.c
+    * SUCCESS -> HB_SUCCESS
+    * FAILURE -> HB_FAILURE
+    * ERRCODE -> HB_ERRCODE
+    ; Migration finished.
+
 2009-02-03 17:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/gtwvt/gtwvt.c
     ! Fixed for OpenWatcom 1.8. (SM_REMOTESESSION wasn't defined)

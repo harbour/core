@@ -934,7 +934,7 @@ extern void             hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a
 /* memvars subsystem */
 extern void       hb_memvarsClear( void ); /* clear all PUBLIC and PRIVATE variables */
 extern void       hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); /* copy an item into a symbol */
-extern ERRCODE    hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
+extern HB_ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
 extern void       hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
 extern void       hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy a reference to a symbol value into an item, with error trapping */
 extern ULONG      hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */

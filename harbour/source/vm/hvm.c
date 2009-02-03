@@ -151,8 +151,8 @@ static void    hb_vmMacroArrayGen( USHORT uiArgSets );   /* generate array from 
 static void    hb_vmMacroPushIndex( void );              /* push macro array index {...}[ &var ] */
 
 /* Database */
-static ERRCODE hb_vmSelectWorkarea( PHB_ITEM, PHB_SYMB );  /* select the workarea using a given item or a substituted value */
-static void    hb_vmSwapAlias( void );           /* swaps items on the eval stack and pops the workarea number */
+static HB_ERRCODE hb_vmSelectWorkarea( PHB_ITEM, PHB_SYMB );  /* select the workarea using a given item or a substituted value */
+static void       hb_vmSwapAlias( void );           /* swaps items on the eval stack and pops the workarea number */
 
 /* Execution */
 static HARBOUR hb_vmDoBlock( void );             /* executes a codeblock */
@@ -2336,7 +2336,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             if( pSymbol->pDynSym && hb_dynsymGetMemvar( pSymbol->pDynSym ) )
                /* If exist a memory symbol with this name use it */
                hb_memvarSetValue( pSymbol, hb_stackItemFromTop(-1) );
-            else if( hb_rddFieldPut( hb_stackItemFromTop(-1), pSymbol ) == FAILURE )
+            else if( hb_rddFieldPut( hb_stackItemFromTop(-1), pSymbol ) == HB_FAILURE )
                /* Try with a field and after create a memvar */
                hb_memvarSetValue( pSymbol, hb_stackItemFromTop(-1) );
 #else
@@ -5288,10 +5288,10 @@ static void hb_vmPushVParams( void )
 /* Database                        */
 /* ------------------------------- */
 
-static ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias, PHB_SYMB pField )
+static HB_ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias, PHB_SYMB pField )
 {
    HB_STACK_TLS_PRELOAD
-   ERRCODE errCode;
+   HB_ERRCODE errCode;
    BOOL fRepeat;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSelectWorkArea(%p,%p)", pAlias, pField));
@@ -5302,7 +5302,7 @@ static ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias, PHB_SYMB pField )
    do
    {
       fRepeat = FALSE;
-      errCode = SUCCESS;
+      errCode = HB_SUCCESS;
 
       switch( HB_ITEM_TYPE( pAlias ) )
       {
@@ -5380,7 +5380,7 @@ static ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias, PHB_SYMB pField )
                else
                {
                   hb_itemSetNil( pAlias );
-                  errCode = FAILURE;
+                  errCode = HB_FAILURE;
                }
             }
             else
@@ -6518,7 +6518,7 @@ static void hb_vmPushAliasedField( PHB_SYMB pSym )
    /*
     * NOTE: hb_vmSelecWorkarea clears passed item
     */
-   if( hb_vmSelectWorkarea( pAlias, pSym ) == SUCCESS )
+   if( hb_vmSelectWorkarea( pAlias, pSym ) == HB_SUCCESS )
       hb_rddGetFieldValue( pAlias, pSym );
 
    hb_rddSelectWorkAreaNumber( iCurrArea );
@@ -6662,12 +6662,12 @@ static void hb_vmPushVariable( PHB_SYMB pVarSymb )
    do
    {
       /* First try if passed symbol is a name of field
-         * in a current workarea - if it is not a field (FAILURE)
+         * in a current workarea - if it is not a field (HB_FAILURE)
          * then try the memvar variable
          */
-      if( hb_rddFieldGet( pItem, pVarSymb ) != SUCCESS )
+      if( hb_rddFieldGet( pItem, pVarSymb ) != HB_SUCCESS )
       {
-         if( hb_memvarGet( pItem, pVarSymb ) != SUCCESS )
+         if( hb_memvarGet( pItem, pVarSymb ) != HB_SUCCESS )
          {
             HB_ITEM_PTR pError;
 
@@ -6805,7 +6805,7 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPopAliasedField(%p)", pSym));
 
    iCurrArea = hb_rddGetCurrentWorkAreaNumber();
-   if( hb_vmSelectWorkarea( hb_stackItemFromTop( -1 ), pSym ) == SUCCESS )
+   if( hb_vmSelectWorkarea( hb_stackItemFromTop( -1 ), pSym ) == HB_SUCCESS )
       hb_rddPutFieldValue( hb_stackItemFromTop( -2 ), pSym );
 
    hb_rddSelectWorkAreaNumber( iCurrArea );
@@ -7403,7 +7403,7 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols,
          fInitStatics = TRUE;
       }
 
-      if( ( hSymScope & ( HB_FS_PCODEFUNC | HB_FS_LOCAL | HB_FS_FRAME ) ) == 
+      if( ( hSymScope & ( HB_FS_PCODEFUNC | HB_FS_LOCAL | HB_FS_FRAME ) ) ==
           ( HB_FS_PCODEFUNC | HB_FS_LOCAL ) && ( fRecycled || fClone ) )
       {
          pSymbol->value.pCodeFunc->pSymbols = pNewSymbols->pModuleSymbols;
@@ -8688,7 +8688,7 @@ BOOL hb_xvmPopVariable( PHB_SYMB pSymbol )
 #if 0
    if( pSymbol->pDynSym && hb_dynsymGetMemvar( pSymbol->pDynSym ) )
       hb_memvarSetValue( pSymbol, hb_stackItemFromTop(-1) );
-   else if( hb_rddFieldPut( hb_stackItemFromTop(-1), pSymbol ) == FAILURE )
+   else if( hb_rddFieldPut( hb_stackItemFromTop(-1), pSymbol ) == HB_FAILURE )
 #endif
       hb_memvarSetValue( pSymbol, hb_stackItemFromTop(-1) );
    hb_stackPop();

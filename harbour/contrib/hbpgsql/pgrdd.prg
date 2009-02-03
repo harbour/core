@@ -88,13 +88,13 @@ FUNCTION DBPGCONNECTION( cConnString )
 
    IF oServer:NetErr()
       alert( oServer:ErrorMsg() )
-      RETURN FAILURE
+      RETURN HB_FAILURE
    ELSE
       aadd( t_aConnections, oServer )
       nConn := len( t_aConnections )
    ENDIF
 
-RETURN nConn
+   RETURN nConn
 
 FUNCTION DBPGCLEARCONNECTION( nConn )
 
@@ -106,7 +106,7 @@ FUNCTION DBPGCLEARCONNECTION( nConn )
 
    t_aConnections[ nConn ] := nil
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 /*
  * non work area methods receive RDD ID as first parameter
@@ -117,7 +117,7 @@ STATIC FUNCTION PG_INIT( nRDD )
 
    USRRDD_RDDDATA( nRDD )
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 /*
  * methods: NEW and RELEASE receive pointer to work area structure
@@ -130,7 +130,7 @@ STATIC FUNCTION PG_NEW( pWA )
 
    USRRDD_AREADATA( pWA, array( AREA_LEN ) )
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_OPEN( nWA, aOpenInfo )
    LOCAL aField, oError, lError, cError, nResult
@@ -159,7 +159,7 @@ STATIC FUNCTION PG_OPEN( nWA, aOpenInfo )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       oError:CanDefault  := .T.
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
    ELSE
       aWAData[ AREA_QUERY ] := oQuery
    ENDIF
@@ -183,14 +183,14 @@ STATIC FUNCTION PG_OPEN( nWA, aOpenInfo )
    /* Call SUPER OPEN to finish allocating work area (f.e.: alias settings) */
    nResult := UR_SUPER_OPEN( nWA, aOpenInfo )
 
-RETURN nResult
+   RETURN nResult
 
 STATIC FUNCTION PG_CLOSE( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
 
    aWAData[ AREA_QUERY ]:Close()
 
-RETURN UR_SUPER_CLOSE( nWA )
+   RETURN UR_SUPER_CLOSE( nWA )
 
 STATIC FUNCTION PG_GETVALUE( nWA, nField, xValue )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -201,7 +201,7 @@ STATIC FUNCTION PG_GETVALUE( nWA, nField, xValue )
       xValue := aWAData[ AREA_QUERY ]:FieldGet( nField )
    endif
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_PUTVALUE( nWA, nField, xValue )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -212,7 +212,7 @@ STATIC FUNCTION PG_PUTVALUE( nWA, nField, xValue )
 
    aWAData[ AREA_ROW ]:FieldPut( nField, xValue )
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_SKIP( nWA, nRecords )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -223,16 +223,16 @@ STATIC FUNCTION PG_SKIP( nWA, nRecords )
 
    aWAData[ AREA_QUERY ]:Skip( nRecords )
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_GOTOP( nWA )
-RETURN PG_GOTO( nWA, 1 )
+   RETURN PG_GOTO( nWA, 1 )
 
 STATIC FUNCTION PG_GOBOTTOM( nWA )
-RETURN PG_GOTO( nWA, -1 )
+   RETURN PG_GOTO( nWA, -1 )
 
 STATIC FUNCTION PG_GOTOID( nWA, nRecord )
-RETURN PG_GOTO( nWA, nRecord )
+   RETURN PG_GOTO( nWA, nRecord )
 
 STATIC FUNCTION PG_GOTO( nWA, nRecord )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -249,40 +249,40 @@ STATIC FUNCTION PG_GOTO( nWA, nRecord )
 
    aWAData[ AREA_QUERY ]:Goto( nRecord )
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_RECCOUNT( nWA, nRecords )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
 
    nRecords := aWAData[ AREA_QUERY ]:nLastRec
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_BOF( nWA, lBof )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
 
    lBof := aWAData[ AREA_QUERY ]:lBof
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_EOF( nWA, lEof )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
 
    lEof := aWAData[ AREA_QUERY ]:lEof
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_RECID( nWA, nRecNo )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
 
    nRecno := aWAData[ AREA_QUERY ]:nRecNo
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_DELETED( nWA, lDeleted )
    HB_SYMBOL_UNUSED( nWA )
    lDeleted := .F.
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_FLUSH( nWA )
    LOCAL oError
@@ -303,7 +303,7 @@ STATIC FUNCTION PG_FLUSH( nWA )
          oError:SubCode     := 3000
          oError:Description := HB_LANGERRMSG( EG_DATATYPE ) + ", " + aWAData[ AREA_QUERY ]:ErrorMsg()
          UR_SUPER_ERROR( nWA, oError )
-         RETURN FAILURE
+         RETURN HB_FAILURE
       ENDIF
 
 /*
@@ -324,7 +324,7 @@ STATIC FUNCTION PG_FLUSH( nWA )
 
    endif
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_APPEND( nWA, nRecords )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
@@ -335,7 +335,7 @@ STATIC FUNCTION PG_APPEND( nWA, nRecords )
 
    aWAData[ AREA_APPEND ] := .T.
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 STATIC FUNCTION PG_DELETE( nWA )
    LOCAL oError
@@ -351,12 +351,12 @@ STATIC FUNCTION PG_DELETE( nWA )
       oError:SubCode     := 2000
       oError:Description := HB_LANGERRMSG( EG_DATATYPE ) + ", " + aWAData[ AREA_QUERY ]:ErrorMsg()
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
+      RETURN HB_FAILURE
    ENDIF
 
    aWAData[ AREA_ROW ] := nil
 
-RETURN SUCCESS
+   RETURN HB_SUCCESS
 
 /*
  * This function have to exist in all RDD and then name have to be in
@@ -386,9 +386,9 @@ FUNCTION PGRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_DELETE       ] := ( @PG_DELETE()       )
    aMyFunc[ UR_CLOSE        ] := ( @PG_CLOSE()        )
 
-RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
+   RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
                             cSuperRDD, aMyFunc )
 
 INIT PROC PG_INIT()
    rddRegister( "PGRDD", RDT_FULL )
-RETURN
+   RETURN

@@ -557,14 +557,14 @@ typedef CDXAREA * LPCDXAREA;
 #define hb_cdxBof                                  NULL
 #define hb_cdxEof                                  NULL
 #define hb_cdxFound                                NULL
-static ERRCODE hb_cdxGoBottom( CDXAREAP pArea );
+static HB_ERRCODE hb_cdxGoBottom( CDXAREAP pArea );
 #define hb_cdxGoTo                                 NULL
 #define hb_cdxGoToId                               NULL
-static ERRCODE hb_cdxGoTop( CDXAREAP pArea );
-static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
-static ERRCODE hb_cdxSkip( CDXAREAP pArea, LONG lToSkip );
+static HB_ERRCODE hb_cdxGoTop( CDXAREAP pArea );
+static HB_ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
+static HB_ERRCODE hb_cdxSkip( CDXAREAP pArea, LONG lToSkip );
 #define hb_cdxSkipFilter                           NULL
-static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip );
+static HB_ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip );
 #define hb_cdxAddField                             NULL
 #define hb_cdxAppend                               NULL
 #define hb_cdxCreateFields                         NULL
@@ -574,12 +574,12 @@ static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip );
 #define hb_cdxFieldDisplay                         NULL
 #define hb_cdxFieldInfo                            NULL
 #define hb_cdxFieldName                            NULL
-static ERRCODE hb_cdxFlush( CDXAREAP pArea );
+static HB_ERRCODE hb_cdxFlush( CDXAREAP pArea );
 #define hb_cdxGetRec                               NULL
 #define hb_cdxGetValue                             NULL
 #define hb_cdxGetVarLen                            NULL
-static ERRCODE hb_cdxGoCold( CDXAREAP pArea );
-static ERRCODE hb_cdxGoHot( CDXAREAP pArea );
+static HB_ERRCODE hb_cdxGoCold( CDXAREAP pArea );
+static HB_ERRCODE hb_cdxGoHot( CDXAREAP pArea );
 #define hb_cdxPutRec                               NULL
 #define hb_cdxPutValue                             NULL
 #define hb_cdxRecall                               NULL
@@ -589,21 +589,21 @@ static ERRCODE hb_cdxGoHot( CDXAREAP pArea );
 #define hb_cdxRecId                                NULL
 #define hb_cdxSetFieldExtent                       NULL
 #define hb_cdxAlias                                NULL
-static ERRCODE hb_cdxClose( CDXAREAP pArea );
+static HB_ERRCODE hb_cdxClose( CDXAREAP pArea );
 #define hb_cdxCreate                               NULL
 #define hb_cdxInfo                                 NULL
 #define hb_cdxNewArea                              NULL
-static ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo );
+static HB_ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo );
 #define hb_cdxRelease                              NULL
-static ERRCODE hb_cdxStructSize( CDXAREAP pArea, USHORT * uiSize );
+static HB_ERRCODE hb_cdxStructSize( CDXAREAP pArea, USHORT * uiSize );
 #define hb_cdxSysName                              NULL
 #define hb_cdxEval                                 NULL
-static ERRCODE hb_cdxPack ( CDXAREAP pArea );
+static HB_ERRCODE hb_cdxPack ( CDXAREAP pArea );
 #define hb_cdxPackRec                              NULL
 #define hb_cdxSort                                 NULL
 #define hb_cdxTrans                                NULL
 #define hb_cdxTransRec                             NULL
-static ERRCODE hb_cdxZap ( CDXAREAP pArea );
+static HB_ERRCODE hb_cdxZap ( CDXAREAP pArea );
 #define hb_cdxChildEnd                             NULL
 #define hb_cdxChildStart                           NULL
 #define hb_cdxChildSync                            NULL
@@ -614,22 +614,22 @@ static ERRCODE hb_cdxZap ( CDXAREAP pArea );
 #define hb_cdxRelEval                              NULL
 #define hb_cdxRelText                              NULL
 #define hb_cdxSetRel                               NULL
-static ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static ERRCODE hb_cdxOrderListClear( CDXAREAP pArea );
-static ERRCODE hb_cdxOrderListDelete( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static ERRCODE hb_cdxOrderListRebuild( CDXAREAP pArea );
+static HB_ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
+static HB_ERRCODE hb_cdxOrderListClear( CDXAREAP pArea );
+static HB_ERRCODE hb_cdxOrderListDelete( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
+static HB_ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
+static HB_ERRCODE hb_cdxOrderListRebuild( CDXAREAP pArea );
 #define hb_cdxOrderCondition                       NULL
-static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
-static ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo );
-static ERRCODE hb_cdxClearFilter( CDXAREAP pArea );
+static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
+static HB_ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
+static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo );
+static HB_ERRCODE hb_cdxClearFilter( CDXAREAP pArea );
 #define hb_cdxClearLocate                          NULL
 #define hb_cdxClearScope                           NULL
-static ERRCODE hb_cdxCountScope( CDXAREAP pArea, void * pPtr, LONG * plRec );
+static HB_ERRCODE hb_cdxCountScope( CDXAREAP pArea, void * pPtr, LONG * plRec );
 #define hb_cdxFilterText                           NULL
 #define hb_cdxScopeInfo                            NULL
-static ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo );
+static HB_ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo );
 #define hb_cdxSetLocate                            NULL
 #define hb_cdxSetScope                             NULL
 #define hb_cdxSkipScope                            NULL
@@ -651,7 +651,7 @@ static ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo );
 #define hb_cdxExit                                 NULL
 #define hb_cdxDrop                                 NULL
 #define hb_cdxExists                               NULL
-static ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
+static HB_ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 #define hb_cdxWhoCares                             NULL
 
 HB_EXTERN_END

@@ -272,16 +272,16 @@ typedef FPTAREA * LPFPTAREA;
 #define hb_fptDeleted                              NULL
 #define hb_fptFieldCount                           NULL
 #define hb_fptFieldDisplay                         NULL
-static ERRCODE hb_fptFieldInfo( FPTAREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM pItem );
+static HB_ERRCODE hb_fptFieldInfo( FPTAREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM pItem );
 #define hb_fptFieldName                            NULL
 #define hb_fptFlush                                NULL
 #define hb_fptGetRec                               NULL
-static ERRCODE hb_fptGetValue( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-static ERRCODE hb_fptGetVarLen( FPTAREAP pArea, USHORT uiIndex, ULONG * pLength );
+static HB_ERRCODE hb_fptGetValue( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+static HB_ERRCODE hb_fptGetVarLen( FPTAREAP pArea, USHORT uiIndex, ULONG * pLength );
 #define hb_fptGoCold                               NULL
 #define hb_fptGoHot                                NULL
 #define hb_fptPutRec                               NULL
-static ERRCODE hb_fptPutValue( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+static HB_ERRCODE hb_fptPutValue( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 #define hb_fptRecall                               NULL
 #define hb_fptRecCount                             NULL
 #define hb_fptRecInfo                              NULL
@@ -291,15 +291,15 @@ static ERRCODE hb_fptPutValue( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 #define hb_fptAlias                                NULL
 #define hb_fptClose                                NULL
 #define hb_fptCreate                               NULL
-static ERRCODE hb_fptInfo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+static HB_ERRCODE hb_fptInfo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 #define hb_fptNewArea                              NULL
 #define hb_fptOpen                                 NULL
 #define hb_fptRelease                              NULL
-static ERRCODE hb_fptStructSize( FPTAREAP pArea, USHORT * uiSize );
+static HB_ERRCODE hb_fptStructSize( FPTAREAP pArea, USHORT * uiSize );
 #define hb_fptSysName                              NULL
 #define hb_fptEval                                 NULL
-static ERRCODE hb_fptPack( FPTAREAP pArea );
-static ERRCODE hb_fptPackRec( FPTAREAP pArea, ULONG ulRecNo, BOOL *pfWritten );
+static HB_ERRCODE hb_fptPack( FPTAREAP pArea );
+static HB_ERRCODE hb_fptPackRec( FPTAREAP pArea, ULONG ulRecNo, BOOL *pfWritten );
 #define hb_fptSort                                 NULL
 #define hb_fptTrans                                NULL
 #define hb_fptTransRec                             NULL
@@ -341,17 +341,17 @@ static ERRCODE hb_fptPackRec( FPTAREAP pArea, ULONG ulRecNo, BOOL *pfWritten );
 #define hb_fptLock                                 NULL
 #define hb_fptUnLock                               NULL
 #define hb_fptCloseMemFile                         NULL
-static ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo );
-static ERRCODE hb_fptGetValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
-static ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo );
-static ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
+static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo );
+static HB_ERRCODE hb_fptGetValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
+static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo );
+static HB_ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
 #define hb_fptReadDBHeader                         NULL
 #define hb_fptWriteDBHeader                        NULL
 #define hb_fptInit                                 NULL
 #define hb_fptExit                                 NULL
 #define hb_fptDrop                                 NULL
 #define hb_fptExists                               NULL
-static ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
+static HB_ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 #define hb_fptWhoCares                             NULL
 
 HB_EXTERN_END

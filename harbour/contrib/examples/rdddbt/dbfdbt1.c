@@ -429,7 +429,7 @@ static BOOL hb_dbtPutMemo( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
  * Obtain the length of a field value.
  * ( DBENTRYP_SVL )   hb_dbtGetVarLen
  */
-static ERRCODE hb_dbtGetVarLen( DBTAREAP pArea, USHORT uiIndex, ULONG * pLength )
+static HB_ERRCODE hb_dbtGetVarLen( DBTAREAP pArea, USHORT uiIndex, ULONG * pLength )
 {
    BOOL bDeleted;
 
@@ -438,8 +438,8 @@ static ERRCODE hb_dbtGetVarLen( DBTAREAP pArea, USHORT uiIndex, ULONG * pLength 
    if( pArea->fHasMemo && pArea->hMemoFile != FS_ERROR )
    {
       /* Force read record */
-      if( SELF_DELETED( ( AREAP ) pArea, &bDeleted ) == FAILURE )
-         return FAILURE;
+      if( SELF_DELETED( ( AREAP ) pArea, &bDeleted ) == HB_FAILURE )
+         return HB_FAILURE;
 
       if( pArea->lpFields[ uiIndex - 1 ].uiType == HB_FT_MEMO )
       {
@@ -452,7 +452,7 @@ static ERRCODE hb_dbtGetVarLen( DBTAREAP pArea, USHORT uiIndex, ULONG * pLength 
          {
             * pLength = 0;
          }
-         return SUCCESS;
+         return HB_SUCCESS;
       }
    }
 
@@ -463,7 +463,7 @@ static ERRCODE hb_dbtGetVarLen( DBTAREAP pArea, USHORT uiIndex, ULONG * pLength 
  * Retrieve information about the current driver.
  * ( DBENTRYP_SI )    hb_dbtInfo
  */
-static ERRCODE hb_dbtInfo( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_dbtInfo( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbtInfo(%p, %hu, %p)", pArea, uiIndex, pItem));
 
@@ -505,27 +505,27 @@ static ERRCODE hb_dbtInfo( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          return SUPER_INFO( ( AREAP ) pArea, uiIndex, pItem );
    }
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Retrieve the size of the WorkArea structure.
  * ( DBENTRYP_SP )    hb_dbtStructSize
  */
-static ERRCODE hb_dbtStructSize( DBTAREAP pArea, USHORT * uiSize )
+static HB_ERRCODE hb_dbtStructSize( DBTAREAP pArea, USHORT * uiSize )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbtStrucSize(%p, %p)", pArea, uiSize));
    HB_SYMBOL_UNUSED( pArea );
 
    * uiSize = sizeof( DBTAREA );
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 /*
  * Obtain the current value of a field.
  * ( DBENTRYP_SI )    hb_dbtGetValue
  */
-static ERRCODE hb_dbtGetValue( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_dbtGetValue( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    BOOL bDeleted;
 
@@ -535,8 +535,8 @@ static ERRCODE hb_dbtGetValue( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
        pArea->lpFields[ uiIndex - 1 ].uiType == HB_FT_MEMO )
    {
       /* Force read record */
-      if( SELF_DELETED( ( AREAP ) pArea, &bDeleted ) == FAILURE )
-         return FAILURE;
+      if( SELF_DELETED( ( AREAP ) pArea, &bDeleted ) == HB_FAILURE )
+         return HB_FAILURE;
 
       if( hb_dbtFileLockSh( pArea ) )
       {
@@ -553,9 +553,9 @@ static ERRCODE hb_dbtGetValue( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_errPutFlags( pError, EF_CANDEFAULT );
          SELF_ERROR( ( AREAP ) pArea, pError );
          hb_itemRelease( pError );
-         return FAILURE;
+         return HB_FAILURE;
       }
-      return SUCCESS;
+      return HB_SUCCESS;
    }
    else
       return SUPER_GETVALUE( ( AREAP ) pArea, uiIndex, pItem );
@@ -565,11 +565,11 @@ static ERRCODE hb_dbtGetValue( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
  * Assign a value to a field.
  * ( DBENTRYP_SI )    hb_dbtPutValue
  */
-static ERRCODE hb_dbtPutValue( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static HB_ERRCODE hb_dbtPutValue( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    BOOL bDeleted;
    PHB_ITEM pError;
-   ERRCODE uiError, uiErrorG;
+   HB_ERRCODE uiError, uiErrorG;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbtPutValue(%p, %hu, %p)", pArea, uiIndex, pItem));
 
@@ -579,19 +579,19 @@ static ERRCODE hb_dbtPutValue( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       if( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) )
       {
          /* Force read record */
-         if( SELF_DELETED( ( AREAP ) pArea, &bDeleted ) == FAILURE )
-            return FAILURE;
+         if( SELF_DELETED( ( AREAP ) pArea, &bDeleted ) == HB_FAILURE )
+            return HB_FAILURE;
 
          if( !pArea->fPositioned )
-            return SUCCESS;
+            return HB_SUCCESS;
 
          /* Buffer is hot? */
-         if( !pArea->fRecordChanged && SELF_GOHOT( ( AREAP ) pArea ) == FAILURE )
-            return FAILURE;
+         if( !pArea->fRecordChanged && SELF_GOHOT( ( AREAP ) pArea ) == HB_FAILURE )
+            return HB_FAILURE;
 
          if( hb_dbtFileLockEx( pArea ) )
          {
-            uiError = hb_dbtPutMemo( pArea, uiIndex -1, pItem ) ? SUCCESS : EDBF_DATAWIDTH;
+            uiError = hb_dbtPutMemo( pArea, uiIndex -1, pItem ) ? HB_SUCCESS : EDBF_DATAWIDTH;
             hb_dbtFileUnLock( pArea );
          }
          else
@@ -604,7 +604,7 @@ static ERRCODE hb_dbtPutValue( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       else
          uiError = EDBF_DATATYPE;
 
-      if( uiError != SUCCESS )
+      if( uiError != HB_SUCCESS )
       {
          uiErrorG = uiError == EDBF_DATAWIDTH ? EG_DATAWIDTH :
                   ( uiError == EDBF_LOCK      ? EG_LOCK : EG_DATATYPE );
@@ -615,9 +615,9 @@ static ERRCODE hb_dbtPutValue( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_errPutFlags( pError, EF_CANDEFAULT );
          SELF_ERROR( ( AREAP ) pArea, pError );
          hb_itemRelease( pError );
-         return FAILURE;
+         return HB_FAILURE;
       }
-      return SUCCESS;
+      return HB_SUCCESS;
    }
    return SUPER_PUTVALUE( ( AREAP ) pArea, uiIndex, pItem);
 }
@@ -629,7 +629,7 @@ static ERRCODE hb_dbtPutValue( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
  * Create a memo file in the WorkArea.
  * ( DBENTRYP_VP )    hb_dbtCreateMemFile
  */
-static ERRCODE hb_dbtCreateMemFile( DBTAREAP pArea, LPDBOPENINFO pCreateInfo )
+static HB_ERRCODE hb_dbtCreateMemFile( DBTAREAP pArea, LPDBOPENINFO pCreateInfo )
 {
    BYTE pBlock[ DBT_BLOCKSIZE ];
    BOOL bRetry;
@@ -669,7 +669,7 @@ static ERRCODE hb_dbtCreateMemFile( DBTAREAP pArea, LPDBOPENINFO pCreateInfo )
          hb_itemRelease( pError );
 
       if( pArea->hMemoFile == FS_ERROR )
-         return FAILURE;
+         return HB_FAILURE;
    }
    else /* For zap file */
       hb_fsSeek( pArea->hMemoFile, 0, FS_SET );
@@ -677,11 +677,11 @@ static ERRCODE hb_dbtCreateMemFile( DBTAREAP pArea, LPDBOPENINFO pCreateInfo )
    memset( pBlock, 0, DBT_BLOCKSIZE );
    * ( ( LONG * ) pBlock ) = 1;
    if( hb_fsWrite( pArea->hMemoFile, pBlock, DBT_BLOCKSIZE ) != DBT_BLOCKSIZE )
-      return FAILURE;
+      return HB_FAILURE;
    hb_fsWrite( pArea->hMemoFile, NULL, 0 );
    pArea->fMemoFlush = TRUE;
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
@@ -691,7 +691,7 @@ static ERRCODE hb_dbtCreateMemFile( DBTAREAP pArea, LPDBOPENINFO pCreateInfo )
  * Open a memo file in the specified WorkArea.
  * ( DBENTRYP_VP )    hb_dbtOpenMemFile
  */
-static ERRCODE hb_dbtOpenMemFile( DBTAREAP pArea, LPDBOPENINFO pOpenInfo )
+static HB_ERRCODE hb_dbtOpenMemFile( DBTAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    USHORT uiFlags;
    BOOL bRetry;
@@ -731,7 +731,7 @@ static ERRCODE hb_dbtOpenMemFile( DBTAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
    pArea->uiMemoBlockSize = DBT_BLOCKSIZE;
 
-   return ( pArea->hMemoFile == FS_ERROR ? FAILURE : SUCCESS );
+   return ( pArea->hMemoFile == FS_ERROR ? HB_FAILURE : HB_SUCCESS );
 }
 
 /* ( DBENTRYP_SVPB )  hb_dbtPutValueFile    : NULL */
@@ -740,7 +740,7 @@ static ERRCODE hb_dbtOpenMemFile( DBTAREAP pArea, LPDBOPENINFO pOpenInfo )
  * Retrieve (set) information about RDD
  * ( DBENTRYP_RSLV )   hb_dbtFieldInfo
  */
-static ERRCODE hb_dbtRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
+static HB_ERRCODE hb_dbtRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbtRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
 
@@ -785,7 +785,7 @@ static ERRCODE hb_dbtRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
          return SUPER_RDDINFO( pRDD, uiIndex, ulConnect, pItem );
    }
 
-   return SUCCESS;
+   return HB_SUCCESS;
 }
 
 
@@ -808,7 +808,7 @@ HB_FUNC( DBFDBT_GETFUNCTABLE )
       hb_retni( hb_rddInherit( pTable, &dbtTable, &dbtSuper, "DBF" ) );
    }
    else
-      hb_retni( FAILURE );
+      hb_retni( HB_FAILURE );
 }
 
 

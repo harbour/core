@@ -450,16 +450,16 @@ typedef NTXAREA * LPNTXAREA;
 #define ntxBof                   NULL
 #define ntxEof                   NULL
 #define ntxFound                 NULL
-static ERRCODE ntxGoBottom( NTXAREAP pArea );
+static HB_ERRCODE ntxGoBottom( NTXAREAP pArea );
 #define ntxGoTo                  NULL
 #define ntxGoToId                NULL
-static ERRCODE ntxGoTop( NTXAREAP pArea );
-static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
+static HB_ERRCODE ntxGoTop( NTXAREAP pArea );
+static HB_ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
 #define ntxSkip                  NULL
 #define ntxSkipFilter            NULL
-static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip );
+static HB_ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip );
 #define ntxAddField              NULL
-/* static ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll ); */
+/* static HB_ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll ); */
 #define ntxAppend                NULL
 #define ntxCreateFields          NULL
 #define ntxDeleteRec             NULL
@@ -468,12 +468,12 @@ static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip );
 #define ntxFieldDisplay          NULL
 #define ntxFieldInfo             NULL
 #define ntxFieldName             NULL
-static ERRCODE ntxFlush( NTXAREAP pArea );
+static HB_ERRCODE ntxFlush( NTXAREAP pArea );
 #define ntxGetRec                NULL
 #define ntxGetValue              NULL
 #define ntxGetVarLen             NULL
-static ERRCODE ntxGoCold( NTXAREAP pArea );
-static ERRCODE ntxGoHot( NTXAREAP pArea );
+static HB_ERRCODE ntxGoCold( NTXAREAP pArea );
+static HB_ERRCODE ntxGoHot( NTXAREAP pArea );
 #define ntxPutRec                NULL
 #define ntxPutValue              NULL
 #define ntxRecall                NULL
@@ -483,23 +483,23 @@ static ERRCODE ntxGoHot( NTXAREAP pArea );
 #define ntxRecId                 NULL
 #define ntxSetFieldsExtent       NULL
 #define ntxAlias                 NULL
-static ERRCODE ntxClose( NTXAREAP pArea );
+static HB_ERRCODE ntxClose( NTXAREAP pArea );
          /* Close workarea - at first we mus close all indexes and than close
             workarea */
 #define ntxCreate                NULL
 #define ntxInfo                  NULL
 #define ntxNewArea               NULL
-static ERRCODE ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo );
+static HB_ERRCODE ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo );
 #define ntxRelease               NULL
-static ERRCODE ntxStructSize( NTXAREAP pArea, USHORT * uiSize );
+static HB_ERRCODE ntxStructSize( NTXAREAP pArea, USHORT * uiSize );
 #define ntxSysName               NULL
 #define ntxEval                  NULL
-static ERRCODE ntxPack( NTXAREAP pArea );
+static HB_ERRCODE ntxPack( NTXAREAP pArea );
 #define ntPackRec                NULL
 #define ntxSort                  NULL
 #define ntxTrans                 NULL
 #define ntxTransRec              NULL
-static ERRCODE ntxZap( NTXAREAP pArea );
+static HB_ERRCODE ntxZap( NTXAREAP pArea );
 #define ntxchildEnd              NULL
 #define ntxchildStart            NULL
 #define ntxchildSync             NULL
@@ -510,19 +510,19 @@ static ERRCODE ntxZap( NTXAREAP pArea );
 #define ntxrelEval               NULL
 #define ntxrelText               NULL
 #define ntxsetRel                NULL
-static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static ERRCODE ntxOrderListClear( NTXAREAP pArea );
-static ERRCODE ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static ERRCODE ntxOrderListRebuild( NTXAREAP pArea );
+static HB_ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
+static HB_ERRCODE ntxOrderListClear( NTXAREAP pArea );
+static HB_ERRCODE ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
+static HB_ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
+static HB_ERRCODE ntxOrderListRebuild( NTXAREAP pArea );
 #define ntxOrderCondition        NULL
-static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
-static ERRCODE ntxOrderDestroy( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
-static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo );
+static HB_ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
+static HB_ERRCODE ntxOrderDestroy( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
+static HB_ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo );
 #define ntxClearFilter           NULL
 #define ntxClearLocate           NULL
 #define ntxClearScope            NULL
-static ERRCODE ntxCountScope( NTXAREAP pArea, void * pPtr, LONG * plRecNo );
+static HB_ERRCODE ntxCountScope( NTXAREAP pArea, void * pPtr, LONG * plRecNo );
 #define ntxFilterText            NULL
 #define ntxScopeInfo             NULL
 #define ntxSetFilter             NULL
@@ -543,11 +543,11 @@ static ERRCODE ntxCountScope( NTXAREAP pArea, void * pPtr, LONG * plRecNo );
 #define ntxPutValueFile          NULL
 #define ntxReadDBHeader          NULL
 #define ntxWriteDBHeader         NULL
-static ERRCODE ntxInit( LPRDDNODE pRDD );
+static HB_ERRCODE ntxInit( LPRDDNODE pRDD );
 #define ntxExit                  NULL
 #define ntxDrop                  NULL
 #define ntxExists                NULL
-static ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
+static HB_ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 #define ntxWhoCares              NULL
 
 HB_EXTERN_END

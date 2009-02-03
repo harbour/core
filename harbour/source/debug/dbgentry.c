@@ -1566,7 +1566,7 @@ static PHB_ITEM hb_dbgVarGet( HB_VARINFO *scope )
             if( !pItem )
             {
                pItem = hb_itemNew( NULL );
-               if ( hb_rddFieldGet( pItem, hb_dynsymSymbol( pDyn ) ) == SUCCESS )
+               if ( hb_rddFieldGet( pItem, hb_dynsymSymbol( pDyn ) ) == HB_SUCCESS )
                {
                   scope->cType = 'F';
                }

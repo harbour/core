@@ -257,62 +257,62 @@ typedef DBFAREA * LPDBFAREA;
 
 #define SUPERTABLE                         ( &dbfSuper )
 
-static ERRCODE hb_dbfBof( DBFAREAP pArea, BOOL * pBof );
-static ERRCODE hb_dbfEof( DBFAREAP pArea, BOOL * pEof );
-static ERRCODE hb_dbfFound( DBFAREAP pArea, BOOL * pFound );
-static ERRCODE hb_dbfGoBottom( DBFAREAP pArea );
-static ERRCODE hb_dbfGoTo( DBFAREAP pArea, ULONG ulRecNo );
-static ERRCODE hb_dbfGoToId( DBFAREAP pArea, PHB_ITEM pItem );
-static ERRCODE hb_dbfGoTop( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfBof( DBFAREAP pArea, BOOL * pBof );
+static HB_ERRCODE hb_dbfEof( DBFAREAP pArea, BOOL * pEof );
+static HB_ERRCODE hb_dbfFound( DBFAREAP pArea, BOOL * pFound );
+static HB_ERRCODE hb_dbfGoBottom( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfGoTo( DBFAREAP pArea, ULONG ulRecNo );
+static HB_ERRCODE hb_dbfGoToId( DBFAREAP pArea, PHB_ITEM pItem );
+static HB_ERRCODE hb_dbfGoTop( DBFAREAP pArea );
 #define hb_dbfSeek                                 NULL
-static ERRCODE hb_dbfSkip( DBFAREAP pArea, LONG lToSkip );
+static HB_ERRCODE hb_dbfSkip( DBFAREAP pArea, LONG lToSkip );
 #define hb_dbfSkipFilter                           NULL
-static ERRCODE hb_dbfSkipRaw( DBFAREAP pArea, LONG lToSkip );
-static ERRCODE hb_dbfAddField( DBFAREAP pArea, LPDBFIELDINFO pFieldInfo );
-static ERRCODE hb_dbfAppend( DBFAREAP pArea, BOOL bUnLockAll );
+static HB_ERRCODE hb_dbfSkipRaw( DBFAREAP pArea, LONG lToSkip );
+static HB_ERRCODE hb_dbfAddField( DBFAREAP pArea, LPDBFIELDINFO pFieldInfo );
+static HB_ERRCODE hb_dbfAppend( DBFAREAP pArea, BOOL bUnLockAll );
 #define hb_dbfCreateFields                         NULL
-static ERRCODE hb_dbfDeleteRec( DBFAREAP pArea );
-static ERRCODE hb_dbfDeleted( DBFAREAP pArea, BOOL * pDeleted );
+static HB_ERRCODE hb_dbfDeleteRec( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfDeleted( DBFAREAP pArea, BOOL * pDeleted );
 #define hb_dbfFieldCount                           NULL
 #define hb_dbfFieldDisplay                         NULL
 #define hb_dbfFieldInfo                            NULL
 #define hb_dbfFieldName                            NULL
-static ERRCODE hb_dbfFlush( DBFAREAP pArea );
-static ERRCODE hb_dbfGetRec( DBFAREAP pArea, BYTE ** pBuffer );
-static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-static ERRCODE hb_dbfGetVarLen( DBFAREAP pArea, USHORT uiIndex, ULONG * pLength );
-static ERRCODE hb_dbfGoCold( DBFAREAP pArea );
-static ERRCODE hb_dbfGoHot( DBFAREAP pArea );
-static ERRCODE hb_dbfPutRec( DBFAREAP pArea, BYTE * pBuffer );
-static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-static ERRCODE hb_dbfRecall( DBFAREAP pArea );
-static ERRCODE hb_dbfRecCount( DBFAREAP pArea, ULONG * pRecCount );
-static ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType, PHB_ITEM pInfo );
-static ERRCODE hb_dbfRecNo( DBFAREAP pArea, ULONG * pRecNo );
-static ERRCODE hb_dbfRecId( DBFAREAP pArea, PHB_ITEM pRecNo );
-static ERRCODE hb_dbfSetFieldExtent( DBFAREAP pArea, USHORT uiFieldExtent );
+static HB_ERRCODE hb_dbfFlush( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfGetRec( DBFAREAP pArea, BYTE ** pBuffer );
+static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+static HB_ERRCODE hb_dbfGetVarLen( DBFAREAP pArea, USHORT uiIndex, ULONG * pLength );
+static HB_ERRCODE hb_dbfGoCold( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfGoHot( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfPutRec( DBFAREAP pArea, BYTE * pBuffer );
+static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+static HB_ERRCODE hb_dbfRecall( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfRecCount( DBFAREAP pArea, ULONG * pRecCount );
+static HB_ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType, PHB_ITEM pInfo );
+static HB_ERRCODE hb_dbfRecNo( DBFAREAP pArea, ULONG * pRecNo );
+static HB_ERRCODE hb_dbfRecId( DBFAREAP pArea, PHB_ITEM pRecNo );
+static HB_ERRCODE hb_dbfSetFieldExtent( DBFAREAP pArea, USHORT uiFieldExtent );
 #define hb_dbfAlias                                NULL
-static ERRCODE hb_dbfClose( DBFAREAP pArea );
-static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo );
-static ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-static ERRCODE hb_dbfNewArea( DBFAREAP pArea );
-static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo );
+static HB_ERRCODE hb_dbfClose( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo );
+static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+static HB_ERRCODE hb_dbfNewArea( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo );
 #define hb_dbfRelease                              NULL
-static ERRCODE hb_dbfStructSize( DBFAREAP pArea, USHORT * uiSize );
+static HB_ERRCODE hb_dbfStructSize( DBFAREAP pArea, USHORT * uiSize );
 #define hb_dbfSysName                              NULL
 #define hb_dbfEval                                 NULL
-static ERRCODE hb_dbfPack( DBFAREAP pArea );
-static ERRCODE hb_dbfPackRec( DBFAREAP pArea, ULONG ulRecNo, BOOL *fWritten );
-static ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo );
-static ERRCODE hb_dbfTrans( DBFAREAP pArea, LPDBTRANSINFO pTransInfo );
+static HB_ERRCODE hb_dbfPack( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfPackRec( DBFAREAP pArea, ULONG ulRecNo, BOOL *fWritten );
+static HB_ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo );
+static HB_ERRCODE hb_dbfTrans( DBFAREAP pArea, LPDBTRANSINFO pTransInfo );
 #define hb_dbfTransRec                             NULL
-static ERRCODE hb_dbfZap( DBFAREAP pArea );
-static ERRCODE hb_dbfChildEnd( DBFAREAP pArea, LPDBRELINFO pRelInfo );
-static ERRCODE hb_dbfChildStart( DBFAREAP pArea, LPDBRELINFO pRelInfo );
-static ERRCODE hb_dbfChildSync( DBFAREAP pArea, LPDBRELINFO pRelInfo );
+static HB_ERRCODE hb_dbfZap( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfChildEnd( DBFAREAP pArea, LPDBRELINFO pRelInfo );
+static HB_ERRCODE hb_dbfChildStart( DBFAREAP pArea, LPDBRELINFO pRelInfo );
+static HB_ERRCODE hb_dbfChildSync( DBFAREAP pArea, LPDBRELINFO pRelInfo );
 #define hb_dbfSyncChildren                         NULL
 #define hb_dbfClearRel                             NULL
-static ERRCODE hb_dbfForceRel( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfForceRel( DBFAREAP pArea );
 #define hb_dbfRelArea                              NULL
 #define hb_dbfRelEval                              NULL
 #define hb_dbfRelText                              NULL
@@ -332,7 +332,7 @@ static ERRCODE hb_dbfForceRel( DBFAREAP pArea );
 #define hb_dbfCountScope                           NULL
 #define hb_dbfFilterText                           NULL
 #define hb_dbfScopeInfo                            NULL
-static ERRCODE hb_dbfSetFilter( DBFAREAP pArea, LPDBFILTERINFO pFilterInfo );
+static HB_ERRCODE hb_dbfSetFilter( DBFAREAP pArea, LPDBFILTERINFO pFilterInfo );
 #define hb_dbfSetLocate                            NULL
 #define hb_dbfSetScope                             NULL
 #define hb_dbfSkipScope                            NULL
@@ -340,40 +340,40 @@ static ERRCODE hb_dbfSetFilter( DBFAREAP pArea, LPDBFILTERINFO pFilterInfo );
 #define hb_dbfCompile                              NULL
 #define hb_dbfError                                NULL
 #define hb_dbfEvalBlock                            NULL
-static ERRCODE hb_dbfRawLock( DBFAREAP pArea, USHORT uiAction, ULONG lRecNo );
-static ERRCODE hb_dbfLock( DBFAREAP pArea, LPDBLOCKINFO pLockInfo );
-static ERRCODE hb_dbfUnLock( DBFAREAP pArea, PHB_ITEM pRecNo );
+static HB_ERRCODE hb_dbfRawLock( DBFAREAP pArea, USHORT uiAction, ULONG lRecNo );
+static HB_ERRCODE hb_dbfLock( DBFAREAP pArea, LPDBLOCKINFO pLockInfo );
+static HB_ERRCODE hb_dbfUnLock( DBFAREAP pArea, PHB_ITEM pRecNo );
 #define hb_dbfCloseMemFile                         NULL
-static ERRCODE hb_dbfCreateMemFile( DBFAREAP pArea, LPDBOPENINFO pCreateInfo );
-static ERRCODE hb_dbfGetValueFile( DBFAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
-static ERRCODE hb_dbfOpenMemFile( DBFAREAP pArea, LPDBOPENINFO pOpenInfo );
-static ERRCODE hb_dbfPutValueFile( DBFAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
+static HB_ERRCODE hb_dbfCreateMemFile( DBFAREAP pArea, LPDBOPENINFO pCreateInfo );
+static HB_ERRCODE hb_dbfGetValueFile( DBFAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
+static HB_ERRCODE hb_dbfOpenMemFile( DBFAREAP pArea, LPDBOPENINFO pOpenInfo );
+static HB_ERRCODE hb_dbfPutValueFile( DBFAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
 
-static ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea );
-static ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea );
+static HB_ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea );
 
-static ERRCODE hb_dbfInit( LPRDDNODE pRDD );
-static ERRCODE hb_dbfExit( LPRDDNODE pRDD );
-static ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, ULONG ulConnect );
-static ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, ULONG ulConnect );
-static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
+static HB_ERRCODE hb_dbfInit( LPRDDNODE pRDD );
+static HB_ERRCODE hb_dbfExit( LPRDDNODE pRDD );
+static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, ULONG ulConnect );
+static HB_ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, ULONG ulConnect );
+static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 
 #define hb_dbfWhoCares                             NULL
 
 #endif /* HB_EXTERNAL_RDDDBF_USE */
 
-extern HB_EXPORT ULONG   hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex );
-extern HB_EXPORT void    hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex,
-                                             ULONG ulBlock );
-extern HB_EXPORT ERRCODE hb_dbfGetMemoData( DBFAREAP pArea, USHORT uiIndex,
-                                            ULONG * pulBlock, ULONG * pulSize,
-                                            ULONG * pulType );
-extern HB_EXPORT ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, USHORT uiIndex,
-                                            ULONG ulBlock, ULONG ulSize,
-                                            ULONG ulType );
-extern HB_EXPORT ERRCODE hb_dbfGetEGcode( ERRCODE errCode );
-extern HB_EXPORT BOOL    hb_dbfLockIdxFile( PHB_FILE pFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos );
-extern HB_EXPORT BOOL    hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool );
+extern HB_EXPORT ULONG      hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex );
+extern HB_EXPORT void       hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex,
+                                                ULONG ulBlock );
+extern HB_EXPORT HB_ERRCODE hb_dbfGetMemoData( DBFAREAP pArea, USHORT uiIndex,
+                                               ULONG * pulBlock, ULONG * pulSize,
+                                               ULONG * pulType );
+extern HB_EXPORT HB_ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, USHORT uiIndex,
+                                               ULONG ulBlock, ULONG ulSize,
+                                               ULONG ulType );
+extern HB_EXPORT HB_ERRCODE hb_dbfGetEGcode( HB_ERRCODE errCode );
+extern HB_EXPORT BOOL       hb_dbfLockIdxFile( PHB_FILE pFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos );
+extern HB_EXPORT BOOL       hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool );
 
 #ifndef HB_CDP_SUPPORT_OFF
 extern HB_EXPORT void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest );
