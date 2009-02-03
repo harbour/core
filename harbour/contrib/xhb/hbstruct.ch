@@ -1,5 +1,5 @@
 /*
- * $Id: hbstruct.ch 9505 2008-09-25 11:16:49Z toninhofwi $
+ * $Id$
  */
 
 /*

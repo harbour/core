@@ -1,6 +1,6 @@
 @echo off
 rem
-rem $Id: bld_b32.bat 8411 2008-05-14 06:41:01Z vszakats $
+rem $Id$
 rem
 
 if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=..\..\..\bin

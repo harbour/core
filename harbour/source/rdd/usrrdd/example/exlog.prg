@@ -1,5 +1,5 @@
 /*
- * $Id: exfcm.prg 9551 2008-10-05 18:13:15Z vszakats $
+ * $Id$
  */
 
 #include "common.ch"

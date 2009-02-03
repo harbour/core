@@ -1,5 +1,5 @@
 /*
- * $Id: sprintf.prg 9693 2008-10-20 06:47:13Z vszakats $
+ * $Id$
  */
 
 /*
