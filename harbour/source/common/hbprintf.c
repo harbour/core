@@ -106,6 +106,8 @@ optimized.
 #  include <float.h>
 #elif defined(__DJGPP__)
    _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
+#elif defined( HB_OS_SUNOS )
+#  include <ieeefp.h>    // for finite()    
 #endif
 
 HB_EXTERN_BEGIN

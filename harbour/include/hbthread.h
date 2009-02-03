@@ -57,7 +57,7 @@
 #include "hbset.h"
 
 #if ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \
-    defined( HB_OS_DARWIN )
+    defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS )
 #  include <pthread.h>
 #  define HB_PTHREAD_API
 #elif defined( HB_OS_WIN_32 )
