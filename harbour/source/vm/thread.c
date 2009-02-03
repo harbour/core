@@ -917,7 +917,7 @@ static int hb_threadWait( PHB_THREADSTATE * pThreads, int iThreads,
          if( timer <= curr )
             fExit = TRUE;
          else
-            ulMilliSec = timer - curr;
+            ulMilliSec = ( ULONG ) ( timer - curr );
       }
 #endif
 
