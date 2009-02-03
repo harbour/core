@@ -3,14 +3,14 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   CT3 string functions
  *     - CHARADD()
  *     - CHARSUB()  (NEW)
  *     - CHARAND()
  *     - CHARNOT()
  *     - CHAROR()
- *     - CHARXOR()  
+ *     - CHARXOR()
  *     - CHARSHL()  (NEW)
  *     - CHARSHR()  (NEW)
  *     - CHARRLL()  (NEW)
@@ -202,7 +202,7 @@ static void do_charop( int iSwitch )
                size_t sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
-                  pucResult[sPos] = ( char ) ( pucString[sPos] + pucString2[sPos % sStrLen2] );
+                  pucResult[sPos] = ( char ) ( pucString[sPos] + pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
             }
             else
             {
@@ -228,7 +228,7 @@ static void do_charop( int iSwitch )
                size_t sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
-                  pucResult[sPos] = ( char ) ( pucString[sPos] - pucString2[sPos % sStrLen2] );
+                  pucResult[sPos] = ( char ) ( pucString[sPos] - pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
             }
             else
             {
@@ -254,7 +254,7 @@ static void do_charop( int iSwitch )
                size_t sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
-                  pucResult[sPos] = ( char ) ( pucString[sPos] & pucString2[sPos % sStrLen2] );
+                  pucResult[sPos] = ( char ) ( pucString[sPos] & pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
             }
             else
             {
@@ -279,7 +279,7 @@ static void do_charop( int iSwitch )
                size_t sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
-                  pucResult[sPos] = ( char ) ( pucString[sPos] | pucString2[sPos % sStrLen2] );
+                  pucResult[sPos] = ( char ) ( pucString[sPos] | pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
             }
             else
             {
@@ -304,7 +304,7 @@ static void do_charop( int iSwitch )
                size_t sStrLen2 = hb_parclen( 2 );
 
                for( sPos = 0; sPos < sStrLen; sPos++ )
-                  pucResult[sPos] = ( char ) ( pucString[sPos] ^ pucString2[sPos % sStrLen2] );
+                  pucResult[sPos] = ( char ) ( pucString[sPos] ^ pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
             }
             else
             {
@@ -435,8 +435,8 @@ static void do_charop( int iSwitch )
  *      Source is charop.c, library is ct3.
  *  $SEEALSO$
  *      CHARSUB()   CHARAND()   CHARNOT()
- *      CHAROR()    CHARXOR()   CHARSHL()  
- *      CHARSHR()   CHARRLL()   CHARRLR()  
+ *      CHAROR()    CHARXOR()   CHARSHL()
+ *      CHARSHR()   CHARRLL()   CHARRLR()
  *      CSETREF()
  *  $END$
  */
@@ -491,8 +491,8 @@ HB_FUNC( CHARADD )
  *      Source is charop.c, library is ct3.
  *  $SEEALSO$
  *      CHARADD()   CHARAND()   CHARNOT()
- *      CHAROR()    CHARXOR()   CHARSHL()  
- *      CHARSHR()   CHARRLL()   CHARRLR()  
+ *      CHAROR()    CHARXOR()   CHARSHL()
+ *      CHARSHR()   CHARRLL()   CHARRLR()
  *      CSETREF()
  *  $END$
  */
@@ -530,7 +530,7 @@ HB_FUNC( CHARSUB )
  *      <cString2> has been processed, the function restarts with the first
  *      character of <cString2>.
  *  $EXAMPLES$
- *      // clear the LSB 
+ *      // clear the LSB
  *      ? charand ("012345678", chr(254)) --> "002244668"
  *      ? charand ("012345678", chr(254)+chr(252)) --> "002044648"
  *  $TESTS$
@@ -546,8 +546,8 @@ HB_FUNC( CHARSUB )
  *      Source is charop.c, library is ct3.
  *  $SEEALSO$
  *      CHARADD()   CHARSUB()   CHARNOT()
- *      CHAROR()    CHARXOR()   CHARSHL()  
- *      CHARSHR()   CHARRLL()   CHARRLR()  
+ *      CHAROR()    CHARXOR()   CHARSHL()
+ *      CHARSHR()   CHARRLL()   CHARRLR()
  *      CSETREF()
  *  $END$
  */
@@ -597,8 +597,8 @@ HB_FUNC( CHARAND )
  *      Source is charop.c, library is ct3.
  *  $SEEALSO$
  *      CHARADD()   CHARSUB()   CHARAND()
- *      CHAROR()    CHARXOR()   CHARSHL()  
- *      CHARSHR()   CHARRLL()   CHARRLR()  
+ *      CHAROR()    CHARXOR()   CHARSHL()
+ *      CHARSHR()   CHARRLL()   CHARRLR()
  *      CSETREF()
  *  $END$
  */
@@ -636,7 +636,7 @@ HB_FUNC( CHARNOT )
  *      <cString2> has been processed, the function restarts with the first
  *      character of <cString2>.
  *  $EXAMPLES$
- *      // set the LSB 
+ *      // set the LSB
  *      ? charor ("012345678", chr(1)) --> "113355779"
  *      ? charor ("012345678", chr(1)+chr(3)) --> "133357779"
  *  $TESTS$
@@ -652,8 +652,8 @@ HB_FUNC( CHARNOT )
  *      Source is charop.c, library is ct3.
  *  $SEEALSO$
  *      CHARADD()   CHARSUB()   CHARNOT()
- *      CHARAND()   CHARXOR()   CHARSHL()  
- *      CHARSHR()   CHARRLL()   CHARRLR()  
+ *      CHARAND()   CHARXOR()   CHARSHL()
+ *      CHARSHR()   CHARRLL()   CHARRLR()
  *      CSETREF()
  *  $END$
  */
@@ -691,7 +691,7 @@ HB_FUNC( CHAROR )
  *      <cString2> has been processed, the function restarts with the first
  *      character of <cString2>.
  *  $EXAMPLES$
- *      // easy encryption 
+ *      // easy encryption
  *      ? charxor ("This is top secret !", "My Password") --> <encrypted sentence>
  *  $TESTS$
  *      charxor (charxor ("This is top secret !", "My Password"), "My Password") == "This is top secret !"
@@ -705,8 +705,8 @@ HB_FUNC( CHAROR )
  *      Source is charop.c, library is ct3.
  *  $SEEALSO$
  *      CHARADD()   CHARSUB()   CHARNOT()
- *      CHARAND()   CHAROR()    CHARSHL()  
- *      CHARSHR()   CHARRLL()   CHARRLR()  
+ *      CHARAND()   CHAROR()    CHARSHL()
+ *      CHARSHR()   CHARRLL()   CHARRLR()
  *      CSETREF()
  *  $END$
  */
@@ -757,8 +757,8 @@ HB_FUNC( CHARXOR )
  *      Source is charop.c, library is ct3.
  *  $SEEALSO$
  *      CHARADD()   CHARSUB()   CHARAND()
- *      CHAROR()    CHARXOR()   CHARNOT()  
- *      CHARSHR()   CHARRLL()   CHARRLR()  
+ *      CHAROR()    CHARXOR()   CHARNOT()
+ *      CHARSHR()   CHARRLL()   CHARRLR()
  *      CSETREF()
  *  $END$
  */
@@ -809,8 +809,8 @@ HB_FUNC( CHARSHL )
  *      Source is charop.c, library is ct3.
  *  $SEEALSO$
  *      CHARADD()   CHARSUB()   CHARAND()
- *      CHAROR()    CHARXOR()   CHARNOT()  
- *      CHARSHL()   CHARRLL()   CHARRLR()  
+ *      CHAROR()    CHARXOR()   CHARNOT()
+ *      CHARSHL()   CHARRLL()   CHARRLR()
  *      CSETREF()
  *  $END$
  */
@@ -861,8 +861,8 @@ HB_FUNC( CHARSHR )
  *      Source is charop.c, library is ct3.
  *  $SEEALSO$
  *      CHARADD()   CHARSUB()   CHARAND()
- *      CHAROR()    CHARXOR()   CHARNOT()  
- *      CHARSHL()   CHARSHR()   CHARRLR()  
+ *      CHAROR()    CHARXOR()   CHARNOT()
+ *      CHARSHL()   CHARSHR()   CHARRLR()
  *      CSETREF()
  *  $END$
  */
@@ -913,8 +913,8 @@ HB_FUNC( CHARRLL )
  *      Source is charop.c, library is ct3.
  *  $SEEALSO$
  *      CHARADD()   CHARSUB()   CHARAND()
- *      CHAROR()    CHARXOR()   CHARNOT()  
- *      CHARSHL()   CHARSHR()   CHARRLL()  
+ *      CHAROR()    CHARXOR()   CHARNOT()
+ *      CHARSHL()   CHARSHR()   CHARRLL()
  *      CSETREF()
  *  $END$
  */
