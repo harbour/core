@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-03 01:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/xhb/cstruct.prg
+    ! One STATIC converted to THREAD STATIC.
+    + TOFIX added for the rest of them.
+    * Some formatting.
+
 2009-02-03 01:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbprintf.c
     ! Comment corrected to be ANSI.
