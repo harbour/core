@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-03 01:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/common/hbprintf.c
+    ! Comment corrected to be ANSI.
+
 2009-02-03 00:55 UTC+0100 Maurilio Longo (maurilio.longo@libero.it)
   * include/hbdefs.h
   * include/hbthread.h
