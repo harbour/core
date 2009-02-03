@@ -89,6 +89,10 @@
 
 #include "gtwvt.h"
 
+#if !defined( SM_REMOTESESSION )
+   #define SM_REMOTESESSION        0x1000
+#endif
+
 static int           s_GtId;
 static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
