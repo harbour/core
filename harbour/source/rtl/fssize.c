@@ -59,7 +59,7 @@
 #include "hbapifs.h"
 #include "hbvm.h"
 
-#if !defined(HB_WINCE)
+#if !defined(HB_OS_WIN_CE)
 #  include <sys/types.h>
 #  include <sys/stat.h>
 #endif
@@ -82,7 +82,7 @@ HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
 {
    if( bUseDirEntry )
    {
-#if defined(HB_WINCE)
+#if defined(HB_OS_WIN_CE)
       BOOL fFree;
       PHB_FFIND ffind;
       pszFileName = hb_fsNameConv( pszFileName, &fFree );

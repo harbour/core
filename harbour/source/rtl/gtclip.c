@@ -58,7 +58,7 @@
 
 #if defined( __CYGWIN__ )
    #include <wchar.h>
-#elif defined( __POCC__ ) && defined( HB_WINCE )
+#elif defined( __POCC__ ) && defined( HB_OS_WIN_CE )
    #ifndef GMEM_MOVEABLE
       #define GMEM_MOVEABLE       2
    #endif

@@ -53,7 +53,7 @@
 #include "hbsetup.h"
 
 #if defined(HB_OS_WIN) && \
-    !( defined(__RSXNT__) || defined(__CYGWIN__) || defined(HB_WINCE) )
+    !( defined(__RSXNT__) || defined(__CYGWIN__) || defined(HB_OS_WIN_CE) )
 
 #include <windows.h>
 

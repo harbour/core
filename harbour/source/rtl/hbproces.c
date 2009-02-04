@@ -192,7 +192,7 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
 #if defined( HB_IO_WIN )
 {
 
-#if defined( HB_WINCE )
+#if defined( HB_OS_WIN_CE )
 #  define CreatePipe( hIn, hOut, sa, flags )    ( FALSE )
 #endif
 

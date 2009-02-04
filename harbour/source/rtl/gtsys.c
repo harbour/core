@@ -61,7 +61,7 @@
 
 #if defined(HB_GT_LIB)
    HB_GT_REQUEST( HB_GT_LIB )
-#elif defined(HB_WINCE)
+#elif defined(HB_OS_WIN_CE)
    HB_GT_REQUEST( WVT )
 #elif defined(HB_OS_WIN)
    HB_GT_REQUEST( WIN )

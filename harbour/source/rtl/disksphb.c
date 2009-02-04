@@ -177,7 +177,7 @@ HB_FUNC( HB_DISKSPACE )
          UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
          BOOL fResult;
 
-#if defined(HB_WINCE)
+#if defined(HB_OS_WIN_CE)
          LPTSTR lpPath = HB_TCHAR_CONVTO( szPath );
 
          fResult = GetDiskFreeSpaceEx( lpPath,

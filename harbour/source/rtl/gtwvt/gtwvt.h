@@ -79,7 +79,7 @@
 #define WVT_MAX_ROWS          256
 #define WVT_MAX_COLS          256
 #define WVT_MAX_WINDOWS       256
-#if defined( HB_WINCE )
+#if defined( HB_OS_WIN_CE )
 #  define WVT_DEFAULT_ROWS          15
 #  define WVT_DEFAULT_COLS          50
 #  define WVT_DEFAULT_FONT_HEIGHT   12

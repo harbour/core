@@ -622,6 +622,6 @@ int main( int argc, char * argv[] )
    return iResult;
 }
 
-#if defined( HB_WINCE ) && !defined( __CEGCC__ )
+#if defined( HB_OS_WIN_CE ) && !defined( __CEGCC__ )
 #  include "hbwmain.c"
 #endif

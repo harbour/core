@@ -84,7 +84,7 @@
 #  endif
 #endif
 
-#if defined(HB_OS_WIN) && !defined(HB_WINCE)
+#if defined(HB_OS_WIN) && !defined(HB_OS_WIN_CE)
 #  include <tlhelp32.h>
    /* BCC and MinGW doesn't seem to #define this */
 #  ifndef TH32CS_SNAPMODULE32
@@ -96,7 +96,7 @@
    static BYTE * s_signal_stack[ SIGSTKSZ ];
 #endif
 
-#if defined(HB_OS_WIN) && !defined(HB_WINCE)
+#if defined(HB_OS_WIN) && !defined(HB_OS_WIN_CE)
 
 LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
 {
@@ -358,7 +358,7 @@ static void hb_signalExceptionHandler( int sig, siginfo_t * si, void * ucp )
 
 void hb_vmSetExceptionHandler( void )
 {
-#if defined(HB_OS_WIN) && !defined(HB_WINCE)
+#if defined(HB_OS_WIN) && !defined(HB_OS_WIN_CE)
    {
       LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_win32ExceptionHandler );
       HB_SYMBOL_UNUSED( ef );

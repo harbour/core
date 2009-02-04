@@ -221,7 +221,7 @@
 
 #if !defined( HB_NO_DEFAULT_INET )
 
-#if !defined( HB_WINCE )
+#if !defined( HB_OS_WIN_CE )
    #include <fcntl.h>
    #include <errno.h>
 #endif

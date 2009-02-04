@@ -8,6 +8,49 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-04 23:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbwince.h
+  * include/hb_io.h
+  * include/hbwmain.c
+  * include/hbthread.h
+  * include/hbsetup.h
+  * include/hbmath.h
+  * include/hbassert.h
+  * contrib/gtwvg/gtwvg.c
+  * contrib/gtwvg/gtwvg.h
+  * contrib/gtwvg/wvggui.c
+  * contrib/gtwvg/wvggui.h
+  * contrib/gtwvg/wvgutils.c
+  * contrib/hbwin/win_prn2.c
+  * contrib/hbwin/win_dll.c
+  * contrib/hbwin/win_prn1.c
+  * contrib/examples/pp/pp.c
+  * contrib/examples/pp/hbppcore.c
+  * source/pp/hbpp.c
+  * source/vm/fm.c
+  * source/vm/extrap.c
+  * source/main/harbour.c
+  * source/common/hbver.c
+  * source/common/hbwince.c
+  * source/rtl/diskspac.c
+  * source/rtl/hbgtcore.c
+  * source/rtl/gtclip.c
+  * source/rtl/gtstd/gtstd.c
+  * source/rtl/disksphb.c
+  * source/rtl/gtpca/gtpca.c
+  * source/rtl/seconds.c
+  * source/rtl/filebuf.c
+  * source/rtl/hbproces.c
+  * source/rtl/gtwvt/gtwvt.h
+  * source/rtl/gtwvt/gtwvt.c
+  * source/rtl/fssize.c
+  * source/rtl/hbinet.c
+  * source/rtl/gtsys.c
+  * source/rtl/filesys.c
+    * HB_WINCE -> HB_OS_WIN_CE.
+      Now all OS branching #defines are in the HB_OS_* namespace.
+      Please use the new name from now on.
+
 2009-02-04 23:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/tget.prg
   * source/rtl/tgetx.prg

@@ -55,12 +55,12 @@
 
 #include "hbapi.h"
 
-#if defined( HB_WINCE ) && defined( _MSC_VER )
+#if defined( HB_OS_WIN_CE ) && defined( _MSC_VER )
    #ifndef assert
       #define assert(exp)     ((void)0)
    #endif
 #else
    #include <assert.h>
-#endif /* HB_WINCE */
+#endif /* HB_OS_WIN_CE */
 
 #endif /* HB_ASSERT_H_ */

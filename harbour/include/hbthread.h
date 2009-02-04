@@ -123,7 +123,7 @@ HB_EXTERN_BEGIN
 #     define HB_COND_INITVAL           { }
 #  endif
 
-#elif defined( HB_OS_WIN ) && ! defined( HB_WINCE )
+#elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 
 # define HB_MAX_THREAD  32768
 

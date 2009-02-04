@@ -243,7 +243,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
    /* Call the specified function with the given parameters. Build a
       proper stack and take care of correct return value processing. */
    RESULT  Res = { 0 };
-#if defined(HB_WINCE) || defined(HB_OS_WIN_64)
+#if defined(HB_OS_WIN_CE) || defined(HB_OS_WIN_64)
    HB_SYMBOL_UNUSED( iFlags );
    HB_SYMBOL_UNUSED( lpFunction );
    HB_SYMBOL_UNUSED( nArgs );
@@ -707,7 +707,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
 /* ------------------------------------------------------------------ */
 
-#if !defined(HB_WINCE)
+#if !defined(HB_OS_WIN_CE)
 static HB_GARBAGE_FUNC( _DLLUnload )
 {
    PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) Cargo;
@@ -732,7 +732,7 @@ static HB_GARBAGE_FUNC( _DLLUnload )
 
 HB_FUNC( DLLPREPARECALL )
 {
-#if !defined(HB_WINCE)
+#if !defined(HB_OS_WIN_CE)
    PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) hb_gcAlloc( sizeof( XPP_DLLEXEC ), _DLLUnload );
    char * pszErrorText;
 
@@ -803,7 +803,7 @@ HB_FUNC( DLLEXECUTECALL )
 
 static LPVOID hb_getprocaddress( HMODULE hDLL, int i )
 {
-#if defined(HB_WINCE)
+#if defined(HB_OS_WIN_CE)
    HB_SYMBOL_UNUSED( hDLL );
    HB_SYMBOL_UNUSED( i );
    return NULL;

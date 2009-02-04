@@ -213,7 +213,7 @@ char * hb_verPlatform( void )
 
          if( hntdll )
          {
-#if defined(HB_WINCE)
+#if defined(HB_OS_WIN_CE)
             if( GetProcAddress( hntdll, TEXT( "wine_get_version" ) ) )
 #else
             if( GetProcAddress( hntdll, "wine_get_version" ) )
@@ -238,7 +238,7 @@ char * hb_verPlatform( void )
 
                if( osVer.dwMajorVersion == 6 )
                {
-#if !defined(HB_WINCE) && !defined(__DMC__) && (!defined(_MSC_VER) || _MSC_VER >= 1400)
+#if !defined(HB_OS_WIN_CE) && !defined(__DMC__) && (!defined(_MSC_VER) || _MSC_VER >= 1400)
                   OSVERSIONINFOEXA osVerEx;
 
                   osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
@@ -347,7 +347,7 @@ BOOL hb_iswinnt( void )
 
 BOOL hb_iswince( void )
 {
-#if defined(HB_WINCE)
+#if defined(HB_OS_WIN_CE)
    return TRUE;
 #else
    return FALSE;

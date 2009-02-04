@@ -122,7 +122,7 @@ HB_FUNC( DISKSPACE )
       USHORT uiDrive = uiParam == 0 ? hb_fsCurDrv() + 1 : uiParam;
       UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
 
-#if defined(HB_WINCE)
+#if defined(HB_OS_WIN_CE)
       TCHAR lpPath[ 4 ];
 
       lpPath[ 0 ] = ( TCHAR ) uiDrive + 'A' - 1;

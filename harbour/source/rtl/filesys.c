@@ -130,7 +130,7 @@
 #if ( defined(__DMC__) || defined(__BORLANDC__) || \
       defined(__IBMCPP__) || defined(_MSC_VER) || \
       defined(__MINGW32__) || defined(__WATCOMC__) ) && \
-      !defined( HB_OS_UNIX ) && !defined( HB_WINCE )
+      !defined( HB_OS_UNIX ) && !defined( HB_OS_WIN_CE )
    #include <sys/stat.h>
    #include <fcntl.h>
    #include <process.h>
@@ -874,7 +874,7 @@ BOOL hb_fsSetDevMode( HB_FHANDLE hFileHandle, USHORT uiDevMode )
    return iRet != -1;
 }
 #elif ( defined(_MSC_VER) || defined(__MINGW32__) || defined(__DMC__) ) && \
-      !defined(HB_WINCE)
+      !defined(HB_OS_WIN_CE)
 {
    int iRet = 0;
 
@@ -900,7 +900,7 @@ BOOL hb_fsSetDevMode( HB_FHANDLE hFileHandle, USHORT uiDevMode )
 
    return iRet != -1;
 }
-#elif defined( HB_OS_UNIX ) || defined( HB_WINCE )
+#elif defined( HB_OS_UNIX ) || defined( HB_OS_WIN_CE )
 
    HB_SYMBOL_UNUSED( hFileHandle );
 
@@ -2740,7 +2740,7 @@ USHORT hb_fsIsDrv( BYTE nDrive )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDrv(%d)", (int) nDrive));
 
-#if defined(HB_OS_WIN) && !defined(HB_WINCE)
+#if defined(HB_OS_WIN) && !defined(HB_OS_WIN_CE)
    {
       char buffer[ 4 ];
       UINT type;
@@ -3053,7 +3053,7 @@ BOOL hb_fsEof( HB_FHANDLE hFileHandle )
    hb_vmUnlock();
 
 #if defined(__DJGPP__) || defined(__CYGWIN__) || \
-    defined(HB_IO_WIN) || defined(HB_WINCE) || \
+    defined(HB_IO_WIN) || defined(HB_OS_WIN_CE) || \
     defined(HB_OS_UNIX_COMPATIBLE)
 {
    HB_FOFFSET curPos;

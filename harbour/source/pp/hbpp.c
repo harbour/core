@@ -286,7 +286,7 @@ static int hb_pp_preprocesfile( PHB_PP_STATE pState, const char * szRuleFile )
       foutr = hb_fopen( szRuleFile, "w" );
       if( !foutr )
       {
-#if !defined(HB_WINCE)
+#if !defined(HB_OS_WIN_CE)
          perror( szRuleFile );
 #endif
          iResult = 1;
@@ -345,7 +345,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
    fout = hb_fopen( szVerFile, "w" );
    if( !fout )
    {
-#if !defined(HB_WINCE)
+#if !defined(HB_OS_WIN_CE)
       perror( szVerFile );
 #endif
       iResult = 1;
@@ -439,7 +439,7 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
    {
          if( iQuiet < 2 )
          {
-#if !defined(HB_WINCE)
+#if !defined(HB_OS_WIN_CE)
             perror( pszFile );
 #else
             fprintf( stderr, "Cannot open the %s file.\n", pszFile );
@@ -750,6 +750,6 @@ int main( int argc, char * argv[] )
    return iResult;
 }
 
-#if defined( HB_WINCE ) && !defined( __CEGCC__ )
+#if defined( HB_OS_WIN_CE ) && !defined( __CEGCC__ )
 #  include "hbwmain.c"
 #endif

@@ -79,7 +79,7 @@
 #include "hbcomp.h"
 #include "hbdate.h"
 
-#if !defined(__MINGW32CE__) && !( defined( _MSC_VER ) && defined( HB_WINCE ) )
+#if !defined(__MINGW32CE__) && !( defined( _MSC_VER ) && defined( HB_OS_WIN_CE ) )
 #  include <errno.h>
 #endif
 
@@ -560,7 +560,7 @@ int hb_pp_ParseDirective_( char *sLine )
                hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_TOO_MANY_INCLUDES, sLine, NULL );
             else
             {
-#if defined(__CYGWIN__) || defined(__IBMCPP__) || defined(__LCC__) || defined( HB_WINCE )
+#if defined(__CYGWIN__) || defined(__IBMCPP__) || defined(__LCC__) || defined( HB_OS_WIN_CE )
                hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, "" );
 #else
                hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, strerror( errno ) );
@@ -4732,7 +4732,7 @@ static BOOL OpenInclude( char *szFileName, HB_PATHNAMES * pSearch, PHB_FNAME pMa
 
    HB_TRACE( HB_TR_DEBUG, ( "OpenInclude(%s, %p, %p, %d, %s)", szFileName, pSearch, pMainFileName, ( int ) bStandardOnly, szInclude ) );
 
-#if !defined(__MINGW32CE__) && !( defined( _MSC_VER ) && defined( HB_WINCE ) )
+#if !defined(__MINGW32CE__) && !( defined( _MSC_VER ) && defined( HB_OS_WIN_CE ) )
    errno = 0;
 #endif
    if( bStandardOnly )

@@ -57,7 +57,7 @@
 static int    s_argc = 0;
 static char * s_argv[ HB_MAX_ARGS ];
 
-#if defined( HB_WINCE )
+#if defined( HB_OS_WIN_CE )
 #  define HB_LPSTR      LPWSTR
 #else
 #  define HB_LPSTR      LPSTR
@@ -79,7 +79,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    pArg = NULL;
 
-#if defined( HB_WINCE )
+#if defined( HB_OS_WIN_CE )
    pSrc = pFree = hb_wctomb( lpCmdLine );
 #else
    pSrc = pFree = lpCmdLine;
@@ -119,7 +119,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
       s_argv[ s_argc++ ] = pArg;
    }
 
-#if defined( HB_WINCE )
+#if defined( HB_OS_WIN_CE )
    HB_TCHAR_FREE( pFree );
 #endif
 

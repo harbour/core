@@ -62,7 +62,7 @@
 
 #if ( defined( HB_OS_BSD ) || defined( HB_OS_LINUX ) ) && !defined( __WATCOMC__ )
    #include <sys/time.h>
-#elif !( defined( HB_WINCE ) && defined( _MSC_VER ) )
+#elif !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) )
    #include <sys/timeb.h>
 #endif
 #if defined( HB_OS_UNIX_COMPATIBLE )

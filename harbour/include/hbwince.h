@@ -57,7 +57,7 @@
 
 HB_EXTERN_BEGIN
 
-#if defined(HB_WINCE)
+#if defined(HB_OS_WIN_CE)
 #  undef  HB_OS_HAS_DRIVE_LETTER
 
 /* defined(__CEGCC__) || defined(__MINGW32CE__) */
@@ -178,7 +178,7 @@ extern char *strerror( int errnum );
    #endif
 #endif /* HB_OS_WIN_USED && _MSC_VER */
 
-#endif /* HB_WINCE */
+#endif /* HB_OS_WIN_CE */
 
 extern wchar_t * hb_mbtowc( const char *srcA );
 extern char * hb_wctomb( const wchar_t *srcW );

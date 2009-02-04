@@ -128,7 +128,7 @@ void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
    WideCharToMultiByte( CP_ACP, 0, srcW, ulLen, dstA, ulLen, NULL, NULL );
 }
 
-#if defined(HB_WINCE)
+#if defined(HB_OS_WIN_CE)
 
 int remove( const char *filename )
 {
@@ -808,6 +808,6 @@ BOOL WINAPI GetDiskFreeSpaceA( LPCSTR path, PDWORD pdwSectorsPerCluster,
 
 #endif /* 0 */
 
-#endif /* HB_WINCE */
+#endif /* HB_OS_WIN_CE */
 
 #endif /* HB_OS_WIN */

@@ -3080,7 +3080,7 @@ static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
 
 #if defined(HB_GT_LIB)
    const char * hb_gt_szNameDefault = HB_GT_DRVNAME( HB_GT_LIB );
-#elif defined(HB_WINCE)
+#elif defined(HB_OS_WIN_CE)
    const char * hb_gt_szNameDefault = "wvt";
 #elif defined(HB_OS_WIN)
    const char * hb_gt_szNameDefault = "win";
