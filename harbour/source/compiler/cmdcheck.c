@@ -208,8 +208,8 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                szOption[i] = '\0';
 
                if( strcmp( szOption, "CREDITS" ) == 0 ||
-                   strcmp( szOption, "CREDIT" ) == 0 || 
-                   strcmp( szOption, "CREDI" ) == 0 || 
+                   strcmp( szOption, "CREDIT" ) == 0 ||
+                   strcmp( szOption, "CREDI" ) == 0 ||
                    strcmp( szOption, "CRED" ) == 0 )
                   HB_COMP_PARAM->fCredits = TRUE;
                else
@@ -317,7 +317,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                      HB_COMP_PARAM->iLanguage = HB_LANG_PORT_OBJ;
                      break;
 
-#ifdef HB_GEN_W32_OBJ
+#ifdef HB_GEN_OBJ32
                   case 'w':
                   case 'W':
                      HB_COMP_PARAM->iLanguage = HB_LANG_OBJ32;

@@ -214,7 +214,7 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, const char * szRspName )
          ch = fgetc( inFile );
 
          /*
-          * '"' - quoting file names is Harbour extension - 
+          * '"' - quoting file names is Harbour extension -
           * Clipper does not serve it, [druzus]
           */
          if( ch == '"' )
@@ -381,7 +381,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
    PVAR pVar;
    BOOL bFreeVar = TRUE;
-   
+
    if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 &&
        ( HB_COMP_PARAM->iVarScope == VS_LOCAL ||
          HB_COMP_PARAM->iVarScope == ( VS_PRIVATE | VS_PARAMETER ) ) )
@@ -921,7 +921,7 @@ BOOL hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, ULONG ulLen )
                break;
             ++ul;
          }
-   
+
          if( iSize )
          {
             szSymName[ iSize ] = '\0';
@@ -1004,7 +1004,7 @@ PCOMCLASS hb_compClassAdd( HB_COMP_DECL, const char * szClassName, const char * 
    pDeclared = hb_compDeclaredAdd( HB_COMP_PARAM, szClassFunc ? szClassFunc : szClassName );
    pDeclared->cType = 'S';
    pDeclared->pClass = pClass;
-   
+
    return pClass;
 }
 
@@ -1859,7 +1859,7 @@ static PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION pFunc )
    {
       pEVar = pFunc->pEnum;
       pFunc->pEnum = pEVar->pNext;
-      hb_xfree( pEVar );      
+      hb_xfree( pEVar );
    }
 
    /* Release the NOOP array. */
@@ -2472,7 +2472,7 @@ static void hb_compGenFieldPCode( HB_COMP_DECL, BYTE bPCode, PVAR pField )
 }
 
 /* sends a message to an object */
-/* bIsObject = TRUE if we are sending a message to real object 
+/* bIsObject = TRUE if we are sending a message to real object
    bIsObject is FALSE if we are sending a message to an object specified
    with WITH OBJECT statement.
 */
@@ -2480,7 +2480,7 @@ void hb_compGenMessage( const char * szMsgName, BOOL bIsObject, HB_COMP_DECL )
 {
    USHORT wSym;
    PCOMSYMBOL pSym;
-   
+
    if( szMsgName )
    {
       pSym = hb_compSymbolFind( HB_COMP_PARAM, szMsgName, &wSym, HB_SYM_MSGNAME );
@@ -3492,7 +3492,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
       ++wLocals;
    }
    wLocalsCnt = wLocals;
-   
+
    ulSize = pCodeblock->lPCodePos + 2;
    if( HB_COMP_PARAM->fDebugInfo )
    {
@@ -3672,7 +3672,7 @@ static void hb_compGenOutput( HB_COMP_DECL, int iLanguage )
          hb_compGenCCode( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
          break;
 
-#ifdef HB_GEN_W32_OBJ
+#ifdef HB_GEN_OBJ32
       case HB_LANG_OBJ32:
          hb_compGenObj32( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
          break;
@@ -3927,7 +3927,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
          {
             char*  pBuf;
             ULONG  ulLen = strlen( szFileName );
-       
+
             pBuf = ( char* ) hb_xgrab( ulLen + 3 );
             pBuf[ 0 ] = '"';
             memcpy( pBuf + 1, szFileName, ulLen );
@@ -4119,7 +4119,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
                {
                   hb_compOptimizeFrames( HB_COMP_PARAM, *pFunPtr );
 
-                  if( szFirstFunction == NULL && 
+                  if( szFirstFunction == NULL &&
                      ! ( ( *pFunPtr )->cScope & (HB_FS_INIT | HB_FS_EXIT) ) )
                   {
                      szFirstFunction = ( *pFunPtr )->szName;
@@ -4317,11 +4317,11 @@ static int hb_compAutoOpen( HB_COMP_DECL, const char * szPrg, BOOL * pbSkipGen, 
 PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char* szFromClass )
 {
    PHB_VARTYPE   pVT = HB_COMP_PARAM->pVarType;
-   PHB_VARTYPE*  ppVT = &( HB_COMP_PARAM->pVarType ); 
+   PHB_VARTYPE*  ppVT = &( HB_COMP_PARAM->pVarType );
 
    while( pVT )
    {
-      if( pVT->cVarType == cVarType && 
+      if( pVT->cVarType == cVarType &&
           ( ( ! pVT->szFromClass && ! szFromClass ) ||
             ( pVT->szFromClass && szFromClass && ! strcmp( pVT->szFromClass, szFromClass ) ) ) )
          return pVT;
@@ -4330,7 +4330,7 @@ PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char* szFromCl
       pVT = pVT->pNext;
    }
 
-   /* Add to the end of list. I hope it will help the most usual type (' ', NULL) 
+   /* Add to the end of list. I hope it will help the most usual type (' ', NULL)
       to be in the begining of the list, and it will be found faster. [Mindaugas] */
    pVT = ( PHB_VARTYPE ) hb_xgrab( sizeof( HB_VARTYPE ) );
    pVT->pNext = NULL;

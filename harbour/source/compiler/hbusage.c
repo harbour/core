@@ -74,7 +74,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
            "\n                           <type>: 0=compact (default) 1=normal 2=verbose",
            "\n                                   3=generate real C code",
            "\n          %cgo              output type: Platform dependant object module",
-#ifdef HB_GEN_W32_OBJ
+#ifdef HB_GEN_OBJ32
            "\n          %cgw              output type: Windows/DOS OBJ32 (.obj)",
 #endif
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
