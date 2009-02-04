@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-04 02:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbwin/win_prn1.c
+    + Added support to pass HDCs as numeric parameters
+      to all Harbour level functions.
+      This allows them to behave as generic Windows API wrappers,
+      and makes WIN_MULDIV(), WIN_RECTANGLE(), WIN_SETBKMODE()
+      fully compatible with parallel GTWVG implementations, so
+      duplicated can now be removed from there.
+
 2009-02-04 01:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/arrays.c
     ! protection against possible GPF in hb_rAscan() if user block

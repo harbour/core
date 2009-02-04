@@ -104,9 +104,16 @@ static HB_GARBAGE_FUNC( win_HDC_release )
 
 static HDC win_HDC_par( int iParam )
 {
-   void ** phDC = ( void ** ) hb_parptrGC( win_HDC_release, iParam );
+   if( ISNUM( iParam ) )
+   {
+      return ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   }
+   else
+   {
+      void ** phDC = ( void ** ) hb_parptrGC( win_HDC_release, iParam );
 
-   return phDC ? ( HDC ) * phDC : NULL;
+      return phDC ? ( HDC ) * phDC : NULL;
+   }
 }
 
 static HB_GARBAGE_FUNC( win_HPEN_release )
@@ -123,15 +130,6 @@ static HB_GARBAGE_FUNC( win_HPEN_release )
       * phPEN = NULL;
    }
 }
-
-/*
-static HPEN win_HPEN_par( int iParam )
-{
-   void ** phPEN = ( void ** ) hb_parptrGC( win_HPEN_release, iParam );
-
-   return phPEN ? ( HPEN ) * phPEN : NULL;
-}
-*/
 
 HB_FUNC( WIN_CREATEDC )
 {
