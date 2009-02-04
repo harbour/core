@@ -182,7 +182,7 @@ static BOOL is_devicename( const char * szFileName )
 {
    if( szFileName && *szFileName )
    {
-#if defined(HB_OS_OS2) || defined(HB_OS_W32) || defined(HB_OS_DOS)
+#if defined(HB_OS_OS2) || defined(HB_OS_WIN) || defined(HB_OS_DOS)
       int iLen = ( int ) strlen( szFileName );
       if( ( iLen == 3 &&
             ( hb_stricmp( szFileName, "PRN" ) == 0 ||
@@ -235,7 +235,7 @@ static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL
 
       if( is_devicename( file_name ) )
       {
-#if defined(HB_OS_OS2) || defined(HB_OS_W32) || defined(HB_OS_DOS)
+#if defined(HB_OS_OS2) || defined(HB_OS_WIN) || defined(HB_OS_DOS)
          hb_strupr( ( char * ) pFilename->szName );
 #endif
       }
