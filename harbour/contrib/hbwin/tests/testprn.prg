@@ -150,7 +150,7 @@ STATIC PROCEDURE PrintBitMap( oPrn, cBitFile )
    ELSEIF !File( cBitFile )
       Alert( cBitFile + " not found " )
    ELSE
-      oBMP := WinBMP():New()
+      oBMP := Win_BMP():New()
       IF oBmp:loadFile( cBitFile )
 
          oBmp:Draw( oPrn, { 200, 200, 2000, 1500 } )

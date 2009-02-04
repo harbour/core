@@ -106,7 +106,7 @@ HB_FUNC( WIN_RUNDETACHED )
          &pi )                                                 /* Pointer to PROCESS_INFORMATION structure */
       )
    {
-      hb_stornl( pi.dwProcessId, 2 );
+      hb_stornl( pi.dwProcessId, 3 );
       hb_retl( TRUE );
 
       /* Close process and thread handles. */

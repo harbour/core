@@ -89,45 +89,43 @@
 
 static HB_GARBAGE_FUNC( win_HDC_release )
 {
-   void ** phDC = ( void ** ) Cargo;
+   void ** ph = ( void ** ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( phDC && * phDC )
+   if( ph && *ph )
    {
       /* Destroy the object */
-      DeleteDC( ( HDC ) * phDC );
+      DeleteDC( ( HDC ) *ph );
 
       /* set pointer to NULL to avoid multiple freeing */
-      * phDC = NULL;
+      *ph = NULL;
    }
 }
 
 static HDC win_HDC_par( int iParam )
 {
    if( ISNUM( iParam ) )
-   {
       return ( HDC ) ( HB_PTRDIFF ) hb_parnint( iParam );
-   }
    else
    {
-      void ** phDC = ( void ** ) hb_parptrGC( win_HDC_release, iParam );
+      void ** ph = ( void ** ) hb_parptrGC( win_HDC_release, iParam );
 
-      return phDC ? ( HDC ) * phDC : NULL;
+      return ph ? ( HDC ) * ph : hb_parptr( iParam );
    }
 }
 
 static HB_GARBAGE_FUNC( win_HPEN_release )
 {
-   void ** phPEN = ( void ** ) Cargo;
+   void ** ph = ( void ** ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( phPEN && * phPEN )
+   if( ph && * ph )
    {
       /* Destroy the object */
-      DeleteObject( ( HDC ) * phPEN );
+      DeleteObject( ( HDC ) * ph );
 
       /* set pointer to NULL to avoid multiple freeing */
-      * phPEN = NULL;
+      * ph = NULL;
    }
 }
 
@@ -136,9 +134,9 @@ HB_FUNC( WIN_CREATEDC )
    if( ISCHAR( 1 ) )
    {
       LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-      void ** phDC = ( void ** ) hb_gcAlloc( sizeof( HDC * ), win_HDC_release );
-      * phDC = ( void * ) CreateDC( TEXT( "" ), lpText, NULL, NULL );
-      hb_retptrGC( phDC );
+      void ** ph = ( void ** ) hb_gcAlloc( sizeof( HDC * ), win_HDC_release );
+      *ph = ( void * ) CreateDC( TEXT( "" ), lpText, NULL, NULL );
+      hb_retptrGC( ph );
       HB_TCHAR_FREE( lpText );
    }
    else
@@ -183,6 +181,13 @@ HB_FUNC( WIN_ENDDOC )
    }
 
    hb_retl( Result );
+}
+
+HB_FUNC( WIN_ABORTDOC )
+{
+   HDC hDC = win_HDC_par( 1 );
+
+   hb_retl( hDC && ( AbortDoc( hDC ) > 0 ) );
 }
 
 HB_FUNC( WIN_DELETEDC )
@@ -600,19 +605,19 @@ HB_FUNC( WIN_SETPEN )
    HDC hDC = win_HDC_par( 1 );
    HPEN hOldPen;
 
-   void ** phPEN = ( void ** ) hb_gcAlloc( sizeof( HPEN * ), win_HPEN_release );
+   void ** ph = ( void ** ) hb_gcAlloc( sizeof( HPEN * ), win_HPEN_release );
 
-   * phPEN = ( void * ) CreatePen( hb_parni( 2 ),                /* pen style */
-                                   hb_parni( 3 ),                /* pen width */
-                                   ( COLORREF ) hb_parnl( 4 )    /* pen color */
-                                 );
+   * ph = ( void * ) CreatePen( hb_parni( 2 ),                /* pen style */
+                                hb_parni( 3 ),                /* pen width */
+                                ( COLORREF ) hb_parnl( 4 )    /* pen color */
+                              );
 
-   hOldPen = ( HPEN ) SelectObject( hDC, ( HPEN ) * phPEN );
+   hOldPen = ( HPEN ) SelectObject( hDC, ( HPEN ) * ph );
 
    if( hOldPen )
       DeleteObject( hOldPen );
 
-   hb_retptrGC( phPEN );
+   hb_retptrGC( ph );
 }
 
 HB_FUNC( WIN_FILLRECT )
