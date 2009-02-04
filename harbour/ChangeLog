@@ -8,6 +8,43 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-04 14:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+  * common.mak
+  * source/rtl/Makefile
+  + source/rtl/tgetx.prg
+  * source/rtl/tget.prg
+  * source/rtl/tgetint.prg
+    + CA-Cl*pper compatible GET class renamed to HBGet and
+      is now always available regardless of feature settings.
+    * Xbase++ compatible GET class named Get(), moved to separate
+      file and now inherits from HBGet, plus implements
+      additional functionality also in the separate file.
+    * GetNew() moved to tget.prg from tgetint.prg.
+    * Code changed to use HBGet():New() instead of Get():New().
+    ; TOFIX: After above changes, Xbase++ compatiblity
+             methods are no longer available for regular
+             GETs, only if they are explicitly created
+             using Get():New(). If this is a problem for someone
+             we can start thinking of a solution.
+    ; TODO: Do the same with TBrowse() and TColumn().
+
+2009-02-04 09:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbwin/win_tprn.prg
+    * Formatting.
+
+  * contrib/hbwin/win_prn1.c
+  * contrib/hbwin/win_prn2.c
+    * Cleanups, formatting.
+    + Added WIN_ABORTDOC()
+      (Windows API compatible equivalent of WIN_ENDDOC( .T. ))
+
+  * contrib/hbwin/win_misc.c
+    ! Fixed returning handle from WIN_RUNDETACHED().
+
+  * contrib/hbwin/tests/testprn.prg
+    ! Fix to prev commit.
+
 2009-02-04 02:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbwin/win_prn1.c
     ! Typo in prev commit.

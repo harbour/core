@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Get Class helpers
+ * Get Class (Xbase++ compatible)
  *
- * Copyright 2000 Ron Pinkas <Ron@Profit-Master.com>
+ * Copyright 2007-2009 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,48 +50,46 @@
  *
  */
 
-REQUEST HB_PVALUE
-REQUEST PCOUNT
+#include "hbclass.ch"
 
-FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
+#include "common.ch"
 
-   LOCAL oGet
+#ifdef HB_COMPAT_XPP
 
-   IF bSetGet == NIL
-      IF FieldPos( cVarName ) > 0
-         bSetGet := hb_macroBlock( "iif(PCount()==0,FIELD->" + cVarName + ",FIELD->" + cVarName + ":=hb_PValue(1))" )
-      ELSEIF __MVEXIST( cVarName )
-         bSetGet := {| _1 | iif( _1 == NIL, __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
-      ELSE
-         bSetGet := hb_macroBlock( "iif(PCount()==0," + cVarName + "," + cVarName + ":=hb_PValue(1))" )
-      ENDIF
+CREATE CLASS Get INHERIT HBGet
+
+   EXPORTED:
+
+   METHOD posInBuffer( nRow, nCol )
+
+   METHOD _end()
+   METHOD _assign()
+   METHOD _delete()
+
+ENDCLASS
+
+/* NOTE: Not tested or compared to Xbase++. [vszakats] */
+/* TOFIX: To make it work when @S was used. [vszakats] */
+
+METHOD posInBuffer( nRow, nCol ) CLASS Get
+
+   IF ::hasFocus .AND. ;
+      nRow == ::nRow .AND. ;
+      nCol >= ::nCol + ::nPos - 1 .AND. ;
+      nCol <= ::nCol + ::nDispLen
+
+      RETURN nCol - ::nCol + 1
    ENDIF
 
-   oGet := HBGet():New( , , bSetGet, cVarName, cPicture )
+   RETURN 0
 
-   oGet:PreBlock := bWhen
-   oGet:PostBlock := bValid
+METHOD _end() CLASS Get
+   RETURN ::end()
 
-   RETURN oGet
+METHOD _assign() CLASS Get
+   RETURN ::assign()
 
-FUNCTION __GETA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
+METHOD _delete() CLASS Get
+   RETURN ::delete()
 
-   LOCAL oGet
-
-   IF bGetArray == NIL
-      IF FieldPos( cVarName ) > 0
-         bGetArray := hb_macroBlock( "FIELD->" + cVarName )
-      ELSEIF __MVEXIST( cVarName )
-         bGetArray := {|| __MVGET( cVarName ) }
-      ELSE
-         bGetArray := hb_macroBlock( cVarName )
-      ENDIF
-   ENDIF
-
-   oGet := HBGet():New( , , bGetArray, cVarName, cPicture )
-   oGet:SubScript := aIndex
-
-   oGet:PreBlock := bWhen
-   oGet:PostBlock := bValid
-
-   RETURN oGet
+#endif

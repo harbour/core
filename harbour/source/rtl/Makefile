@@ -217,6 +217,7 @@ PRG_SOURCES=\
 	tget.prg     \
 	tgetint.prg  \
 	tgetlist.prg \
+	tgetx.prg    \
 	thfuncx.prg  \
 	tlabel.prg   \
 	tmenuitm.prg \

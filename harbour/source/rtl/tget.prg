@@ -68,15 +68,9 @@
 #define GET_CLR_CAPTION         2
 #define GET_CLR_ACCEL           3
 
-/* NOTE: In CA-Cl*pper TGET class does not inherit from any other classes
-         and there is no public class function like Get(). There is 
-         in XPP though. */ 
+/* NOTE: In CA-Cl*pper, TGET class does not inherit from any other classes. */
 
-#if defined( HB_C52_STRICT ) .AND. !defined( HB_COMPAT_XPP )
-CREATE CLASS Get STATIC
-#else
-CREATE CLASS Get
-#endif
+CREATE CLASS HBGet
 
    PROTECTED:
 
@@ -144,9 +138,6 @@ CREATE CLASS Get
    METHOD picture( cPicture ) SETGET
    ACCESS pos METHOD getPos()
    ASSIGN pos METHOD setPos( nPos )
-#ifdef HB_COMPAT_XPP
-   METHOD posInBuffer( nRow, nCol )
-#endif
 #ifdef HB_C52_UNDOC
    METHOD reform()
 #endif
@@ -242,20 +233,20 @@ CREATE CLASS Get
 
 ENDCLASS
 
-METHOD assign() CLASS Get
+METHOD assign() CLASS HBGet
    LOCAL xValue
 
    IF ::hasFocus
       xValue := ::unTransform()
       IF ::cType == "C"
          xValue += SubStr( ::original, Len( xValue ) + 1 )
-      ENDIF   
+      ENDIF
       ::varPut( xValue )
    ENDIF
 
    RETURN Self
 
-METHOD updateBuffer() CLASS Get
+METHOD updateBuffer() CLASS HBGet
 
    IF ::hasFocus
       ::cBuffer := ::PutMask( ::varGet() )
@@ -267,7 +258,7 @@ METHOD updateBuffer() CLASS Get
 
    RETURN Self
 
-METHOD display() CLASS Get
+METHOD display() CLASS HBGet
 
    LOCAL nOldCursor := SetCursor( SC_NONE )
    LOCAL cBuffer
@@ -382,14 +373,14 @@ METHOD display() CLASS Get
 
 /* ------------------------------------------------------------------------- */
 
-METHOD colorDisp( cColorSpec ) CLASS Get
+METHOD colorDisp( cColorSpec ) CLASS HBGet
 
    ::colorSpec := cColorSpec
    ::display()
 
    RETURN Self
 
-METHOD end() CLASS Get
+METHOD end() CLASS HBGet
 
    LOCAL nLastCharPos
    LOCAL nPos
@@ -416,7 +407,7 @@ METHOD end() CLASS Get
 
    RETURN Self
 
-METHOD home() CLASS Get
+METHOD home() CLASS HBGet
 
    IF ::hasFocus
       ::pos := ::FirstEditable()
@@ -428,7 +419,7 @@ METHOD home() CLASS Get
 
    RETURN Self
 
-METHOD reset() CLASS Get
+METHOD reset() CLASS HBGet
 
    IF ::hasFocus
       ::cBuffer  := ::PutMask( ::varGet(), .F. )
@@ -445,7 +436,7 @@ METHOD reset() CLASS Get
 
    RETURN Self
 
-METHOD undo() CLASS Get
+METHOD undo() CLASS HBGet
 
    IF ::hasFocus
       IF ::original != NIL
@@ -457,30 +448,30 @@ METHOD undo() CLASS Get
 
    RETURN Self
 
-METHOD setFocus() CLASS Get
+METHOD setFocus() CLASS HBGet
 
    LOCAL xVarGet
 
    IF !::hasFocus
 
       xVarGet := ::xVarGet := ::varGet()
-      
+
       ::hasFocus := .T.
       ::rejected := .F.
-      
+
       ::original := xVarGet
       ::cType    := ValType( xVarGet )
       ::picture  := ::cPicture
       ::cBuffer  := ::PutMask( xVarGet, .F. )
-      
+
       ::lChanged := .F.
       ::lClear   := ( "K" $ ::cPicFunc .OR. ::cType == "N" )
       ::lEdit    := .F.
       ::pos      := 1
-      
+
       ::lMinusPrinted := .F.
       ::lMinus        := .F.
-      
+
       IF ::cType == "N"
          ::decPos := At( iif( "E" $ ::cPicFunc, ",", "." ), ::cBuffer )
          IF ::decPos == 0
@@ -490,13 +481,13 @@ METHOD setFocus() CLASS Get
       ELSE
          ::decPos := 0 /* ; CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
       ENDIF
-      
+
       ::display()
    ENDIF
 
    RETURN Self
 
-METHOD killFocus() CLASS Get
+METHOD killFocus() CLASS HBGet
 
    LOCAL lHadFocus := ::hasFocus
 
@@ -518,7 +509,7 @@ METHOD killFocus() CLASS Get
 
    RETURN Self
 
-METHOD varPut( xValue ) CLASS Get
+METHOD varPut( xValue ) CLASS HBGet
 
    LOCAL aSubs
    LOCAL nLen
@@ -527,7 +518,7 @@ METHOD varPut( xValue ) CLASS Get
 
    IF ISBLOCK( ::bBlock ) .AND. ValType( xValue ) $ "CNDLU"
       aSubs := ::xSubScript
-      IF ISARRAY( aSubs ) .AND. ! Empty( aSubs ) 
+      IF ISARRAY( aSubs ) .AND. ! Empty( aSubs )
          nLen := Len( aSubs )
          aValue := Eval( ::bBlock )
          FOR i := 1 TO nLen - 1
@@ -549,7 +540,7 @@ METHOD varPut( xValue ) CLASS Get
 
    RETURN xValue
 
-METHOD varGet() CLASS Get
+METHOD varGet() CLASS HBGet
 
    LOCAL aSubs
    LOCAL nLen
@@ -558,7 +549,7 @@ METHOD varGet() CLASS Get
 
    IF ISBLOCK( ::bBlock )
       aSubs := ::xSubScript
-      IF ISARRAY( aSubs ) .AND. ! Empty( aSubs ) 
+      IF ISARRAY( aSubs ) .AND. ! Empty( aSubs )
          nLen := Len( aSubs )
          xValue := Eval( ::bBlock )
          FOR i := 1 TO nLen
@@ -577,48 +568,48 @@ METHOD varGet() CLASS Get
 
    RETURN xValue
 
-/* NOTE: CA-Cl*pper will corrupt memory if cChar contains 
+/* NOTE: CA-Cl*pper will corrupt memory if cChar contains
          multiple chars. [vszakats] */
 
-METHOD overStrike( cChar ) CLASS Get
+METHOD overStrike( cChar ) CLASS HBGet
 
    IF ::hasFocus
 
       IF ::cType == "N" .AND. ! ::lEdit .AND. ::lClear
          ::pos := ::FirstEditable()
       ENDIF
-      
+
       IF ::pos <= ::nMaxEdit
-      
+
          cChar := ::Input( cChar )
-         
+
          IF cChar == ""
             ::rejected := .T.
          ELSE
             ::rejected := .F.
-         
+
             IF ::lClear .AND. ::nPos == ::FirstEditable()
                ::DeleteAll()
                ::lClear := .F.
             ENDIF
-            
+
             ::lEdit := .T.
-            
+
             IF ::nPos == 0
                ::pos := 1
             ENDIF
-            
+
             DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
                ::pos++
             ENDDO
-            
+
             IF ::nPos > ::nMaxEdit
                ::pos := ::FirstEditable()
             ENDIF
             ::cBuffer := SubStr( ::cBuffer, 1, ::nPos - 1 ) + cChar + SubStr( ::cBuffer, ::nPos + 1 )
-            
+
             ::lChanged := .T.
-            
+
             ::rightLow()
          ENDIF
       ENDIF
@@ -628,10 +619,10 @@ METHOD overStrike( cChar ) CLASS Get
 
    RETURN Self
 
-/* NOTE: CA-Cl*pper will corrupt memory if cChar contains 
+/* NOTE: CA-Cl*pper will corrupt memory if cChar contains
          multiple chars. [vszakats] */
 
-METHOD insert( cChar ) CLASS Get
+METHOD insert( cChar ) CLASS HBGet
 
    LOCAL nFor
    LOCAL nMaxEdit
@@ -639,39 +630,39 @@ METHOD insert( cChar ) CLASS Get
    IF ::hasFocus
 
       nMaxEdit := ::nMaxEdit
-      
+
       IF ::cType == "N" .AND. ! ::lEdit .AND. ::lClear
          ::pos := ::FirstEditable()
       ENDIF
-      
+
       IF ::nPos <= ::nMaxEdit
-      
+
          cChar := ::Input( cChar )
-         
+
          IF cChar == ""
             ::rejected := .T.
          ELSE
             ::rejected := .F.
-         
+
             IF ::lClear .AND. ::nPos == ::FirstEditable()
                ::DeleteAll()
                ::lClear := .F.
             ENDIF
-            
+
             ::lEdit := .T.
-            
+
             IF ::nPos == 0
                ::pos := 1
             ENDIF
-            
+
             DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
                ::pos++
             ENDDO
-            
+
             IF ::nPos > ::nMaxEdit
                ::pos := ::FirstEditable()
             ENDIF
-            
+
             IF ::lPicComplex
                /* Calculating different nMaxEdit for ::lPicComplex */
                FOR nFor := ::nPos TO nMaxEdit
@@ -686,9 +677,9 @@ METHOD insert( cChar ) CLASS Get
             ELSE
                ::cBuffer := Left( SubStr( ::cBuffer, 1, ::nPos - 1 ) + cChar + SubStr( ::cBuffer, ::nPos ), ::nMaxEdit )
             ENDIF
-            
+
             ::lChanged := .T.
-            
+
             ::rightLow()
          ENDIF
       ENDIF
@@ -698,7 +689,7 @@ METHOD insert( cChar ) CLASS Get
 
    RETURN Self
 
-METHOD right() CLASS Get
+METHOD right() CLASS HBGet
 
    IF ::hasFocus .AND. ;
       ::rightLow()
@@ -709,7 +700,7 @@ METHOD right() CLASS Get
 
    RETURN Self
 
-METHOD left() CLASS Get
+METHOD left() CLASS HBGet
 
    IF ::hasFocus .AND. ;
       ::leftLow()
@@ -720,21 +711,21 @@ METHOD left() CLASS Get
 
    RETURN Self
 
-METHOD wordLeft() CLASS Get
+METHOD wordLeft() CLASS HBGet
 
    LOCAL nPos
 
    IF ::hasFocus
 
       ::lClear := .F.
-      
+
       IF ::nPos == ::FirstEditable()
          ::typeOut := .T.
       ELSE
          ::typeOut := .F.
-      
+
          nPos := ::nPos - 1
-         
+
          DO WHILE nPos > 0
             IF SubStr( ::cBuffer, nPos, 1 ) == " "
                DO WHILE nPos > 0 .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
@@ -750,15 +741,15 @@ METHOD wordLeft() CLASS Get
             ENDIF
             nPos--
          ENDDO
-         
+
          IF nPos < 1
             nPos := 1
          ENDIF
-         
+
          IF nPos > 0
             ::pos := nPos
          ENDIF
-         
+
          ::lSuppDisplay := .T.
          ::display()
       ENDIF
@@ -766,21 +757,21 @@ METHOD wordLeft() CLASS Get
 
    RETURN Self
 
-METHOD wordRight() CLASS Get
+METHOD wordRight() CLASS HBGet
 
    LOCAL nPos
 
    IF ::hasFocus
 
       ::lClear := .F.
-      
+
       IF ::nPos == ::nMaxEdit
          ::typeOut := .T.
       ELSE
          ::typeOut := .F.
-         
+
          nPos := ::nPos + 1
-         
+
          DO WHILE nPos <= ::nMaxEdit
             IF SubStr( ::cBuffer, nPos, 1 ) == " "
                DO WHILE nPos <= ::nMaxEdit .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
@@ -790,15 +781,15 @@ METHOD wordRight() CLASS Get
             ENDIF
             nPos++
          ENDDO
-         
+
          IF nPos > ::nMaxEdit
             nPos := ::nMaxEdit
          ENDIF
-         
+
          IF nPos <= ::nMaxEdit
             ::pos := nPos
          ENDIF
-         
+
          ::lSuppDisplay := .T.
          ::display()
       ENDIF
@@ -806,7 +797,7 @@ METHOD wordRight() CLASS Get
 
    RETURN Self
 
-METHOD toDecPos() CLASS Get
+METHOD toDecPos() CLASS HBGet
 
    IF ::hasFocus
 
@@ -828,7 +819,7 @@ METHOD toDecPos() CLASS Get
 
    RETURN Self
 
-METHOD backSpace() CLASS Get
+METHOD backSpace() CLASS HBGet
 
    IF ::hasFocus .AND. ;
       ::backSpaceLow()
@@ -838,7 +829,7 @@ METHOD backSpace() CLASS Get
 
    RETURN Self
 
-METHOD delete() CLASS Get
+METHOD delete() CLASS HBGet
 
    IF ::hasFocus
       ::deleteLow()
@@ -847,7 +838,7 @@ METHOD delete() CLASS Get
 
    RETURN Self
 
-METHOD delEnd() CLASS Get
+METHOD delEnd() CLASS HBGet
 
    LOCAL nPos
 
@@ -855,18 +846,18 @@ METHOD delEnd() CLASS Get
 
       nPos := ::nPos
       ::pos := ::nMaxEdit
-      
+
       ::deleteLow()
       DO WHILE ::nPos > nPos
          ::backSpaceLow()
       ENDDO
-      
+
       ::display()
    ENDIF
 
    RETURN Self
 
-METHOD delLeft() CLASS Get
+METHOD delLeft() CLASS HBGet
 
    ::leftLow()
    ::deleteLow()
@@ -874,7 +865,7 @@ METHOD delLeft() CLASS Get
 
    RETURN Self
 
-METHOD delRight() CLASS Get
+METHOD delRight() CLASS HBGet
 
    ::rightLow()
    ::deleteLow()
@@ -885,7 +876,7 @@ METHOD delRight() CLASS Get
 /* ::wordLeft()
    ::delWordRight() */
 
-METHOD delWordLeft() CLASS Get
+METHOD delWordLeft() CLASS HBGet
 
    IF ::hasFocus
 
@@ -897,39 +888,39 @@ METHOD delWordLeft() CLASS Get
             ::left()
          ENDIF
       ENDIF
-      
+
       IF SubStr( ::cBuffer, ::nPos, 1 ) == " "
          ::deleteLow()
       ENDIF
-      
+
       DO WHILE ::nPos > 1 .AND. !( SubStr( ::cBuffer, ::nPos - 1, 1 ) == " " )
          ::backSpaceLow()
       ENDDO
-      
+
       ::display()
    ENDIF
 
    RETURN Self
 
-METHOD delWordRight() CLASS Get
+METHOD delWordRight() CLASS HBGet
 
    IF ::hasFocus
 
       ::lClear := .F.
-      
+
       IF ::nPos == ::nMaxEdit
          ::typeOut := .T.
       ELSE
          ::typeOut := .F.
-      
+
          DO WHILE ::nPos <= ::nMaxEdit .AND. !( SubStr( ::cBuffer, ::nPos, 1 ) == " " )
             ::deleteLow()
          ENDDO
-         
+
          IF ::nPos <= ::nMaxEdit
             ::deleteLow()
          ENDIF
-         
+
          ::display()
       ENDIF
    ENDIF
@@ -943,10 +934,10 @@ METHOD delWordRight() CLASS Get
  * be used for GET_CLR_UNSELECTED and GET_CLR_ENHANCED.
  */
 
-METHOD getColorSpec() CLASS Get
+METHOD getColorSpec() CLASS HBGet
    RETURN ::cColorSpec
 
-METHOD setColorSpec( cColorSpec ) CLASS Get
+METHOD setColorSpec( cColorSpec ) CLASS HBGet
 
    LOCAL nClrUns
    LOCAL nClrOth
@@ -969,18 +960,18 @@ METHOD setColorSpec( cColorSpec ) CLASS Get
       RETURN NIL
 
 #ifdef HB_COMPAT_C53
-   /* NOTE: This code doesn't seem to make any sense, but seems to 
+   /* NOTE: This code doesn't seem to make any sense, but seems to
             replicate some original C5.3 behaviour. */
    ELSE
       IF Set( _SET_INTENSITY )
-         ::cColorSpec := hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +; 
-                         hb_ColorIndex( SetColor(), CLR_ENHANCED ) + "," +;   
-                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;   
+         ::cColorSpec := hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +;
+                         hb_ColorIndex( SetColor(), CLR_ENHANCED ) + "," +;
+                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;
                          hb_ColorIndex( SetColor(), CLR_BACKGROUND )
       ELSE
-         ::cColorSpec := hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +; 
-                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;   
-                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;   
+         ::cColorSpec := hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;
+                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;
+                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;
                          hb_ColorIndex( SetColor(), CLR_STANDARD )
       ENDIF
 #endif
@@ -988,10 +979,10 @@ METHOD setColorSpec( cColorSpec ) CLASS Get
 
    RETURN cColorSpec
 
-METHOD getPos() CLASS Get
+METHOD getPos() CLASS HBGet
    RETURN ::nPos
 
-METHOD setPos( nPos ) CLASS Get
+METHOD setPos( nPos ) CLASS HBGet
 
    LOCAL tmp
 
@@ -1009,7 +1000,7 @@ METHOD setPos( nPos ) CLASS Get
 
          CASE nPos > 0
 
-            /* NOTE: CA-Cl*pper has a bug where negative nPos value will be translated to 16bit unsigned int, 
+            /* NOTE: CA-Cl*pper has a bug where negative nPos value will be translated to 16bit unsigned int,
                      so the behaviour will be different in this case. [vszakats] */
 
             FOR tmp := nPos TO ::nMaxLen
@@ -1024,7 +1015,7 @@ METHOD setPos( nPos ) CLASS Get
                   RETURN nPos
                ENDIF
             NEXT
-            
+
             ::nPos := ::nMaxLen + 1
             ::typeOut := .T.
 
@@ -1046,7 +1037,7 @@ METHOD setPos( nPos ) CLASS Get
  * several tasks to adjust the internal data of the object.
  */
 
-METHOD picture( cPicture ) CLASS Get
+METHOD picture( cPicture ) CLASS HBGet
 
    LOCAL nAt
    LOCAL nFor
@@ -1061,15 +1052,15 @@ METHOD picture( cPicture ) CLASS Get
          ::cPicFunc      := ""
          ::cPicMask      := ""
          ::lPicBlankZero := .F.
-         
+
          IF ISCHARACTER( cPicture )
-         
+
             cNum := ""
-            
+
             IF Left( cPicture, 1 ) == "@"
-            
+
                nAt := At( " ", cPicture )
-            
+
                IF nAt == 0
                   ::cPicFunc := Upper( cPicture )
                   ::cPicMask := ""
@@ -1077,9 +1068,9 @@ METHOD picture( cPicture ) CLASS Get
                   ::cPicFunc := Upper( SubStr( cPicture, 1, nAt - 1 ) )
                   ::cPicMask := SubStr( cPicture, nAt + 1 )
                ENDIF
-            
+
                IF "D" $ ::cPicFunc
-            
+
                   ::cPicMask := Set( _SET_DATEFORMAT )
                   ::cPicMask := StrTran( ::cPicmask, "y", "9" )
                   ::cPicMask := StrTran( ::cPicmask, "Y", "9" )
@@ -1087,9 +1078,9 @@ METHOD picture( cPicture ) CLASS Get
                   ::cPicMask := StrTran( ::cPicmask, "M", "9" )
                   ::cPicMask := StrTran( ::cPicmask, "d", "9" )
                   ::cPicMask := StrTran( ::cPicmask, "D", "9" )
-            
+
                ENDIF
-            
+
                IF ( nAt := At( "S", ::cPicFunc ) ) > 0
                   FOR nFor := nAt + 1 TO Len( ::cPicFunc )
                      IF IsDigit( SubStr( ::cPicFunc, nFor, 1 ) )
@@ -1103,32 +1094,32 @@ METHOD picture( cPicture ) CLASS Get
                   ENDIF
                   ::cPicFunc := SubStr( ::cPicFunc, 1, nAt - 1 ) + SubStr( ::cPicFunc, nFor )
                ENDIF
-            
+
                IF "Z" $ ::cPicFunc
                   ::lPicBlankZero := .T.
                   ::cPicFunc := StrTran( ::cPicFunc, "Z", "" )
                ENDIF
-            
+
                IF ::cPicFunc == "@"
                   ::cPicFunc := ""
                ENDIF
             ELSE
                ::cPicMask := cPicture
             ENDIF
-            
+
             IF ::cType == "D"
                ::cPicMask := LTrim( ::cPicMask )
             ENDIF
          ENDIF
       ENDIF
-         
+
       /* Generate default picture mask if not specified. */
-      
+
       IF Empty( ::cPicMask ) .OR. ::cPicture == NIL
-      
+
          DO CASE
          CASE ::cType == "D"
-      
+
             ::cPicMask := Set( _SET_DATEFORMAT )
             ::cPicMask := StrTran( ::cPicmask, "y", "9" )
             ::cPicMask := StrTran( ::cPicmask, "Y", "9" )
@@ -1136,9 +1127,9 @@ METHOD picture( cPicture ) CLASS Get
             ::cPicMask := StrTran( ::cPicmask, "M", "9" )
             ::cPicMask := StrTran( ::cPicmask, "d", "9" )
             ::cPicMask := StrTran( ::cPicmask, "D", "9" )
-      
+
          CASE ::cType == "N"
-      
+
             cNum := Str( ::xVarGet )
             IF ( nAt := At( ".", cNum ) ) > 0
                ::cPicMask := Replicate( "9", nAt - 1 ) + "."
@@ -1146,18 +1137,18 @@ METHOD picture( cPicture ) CLASS Get
             ELSE
                ::cPicMask := Replicate( "9", Len( cNum ) )
             ENDIF
-      
+
          CASE ::cType == "C" .AND. ::cPicFunc == "@9"
-      
+
             ::cPicMask := Replicate( "9", Len( ::xVarGet ) )
             ::cPicFunc := ""
-      
+
          ENDCASE
-      
+
       ENDIF
-      
+
       /* To verify if it has non-modifiable embedded characters in the group. */
-      
+
       ::lPicComplex := .F.
       IF ! Empty( ::cPicMask )
          FOR nFor := 1 TO Len( ::cPicMask )
@@ -1171,7 +1162,7 @@ METHOD picture( cPicture ) CLASS Get
 
    RETURN ::cPicture
 
-METHOD PutMask( xValue, lEdit ) CLASS Get
+METHOD PutMask( xValue, lEdit ) CLASS HBGet
 
    LOCAL cChar
    LOCAL cBuffer
@@ -1253,7 +1244,7 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
 
    RETURN cBuffer
 
-METHOD unTransform() CLASS Get
+METHOD unTransform() CLASS HBGet
 
    LOCAL cBuffer
    LOCAL xValue
@@ -1264,12 +1255,12 @@ METHOD unTransform() CLASS Get
    IF ::hasFocus
 
       cBuffer := ::cBuffer
-      
-      IF ISCHARACTER( cBuffer ) 
-      
+
+      IF ISCHARACTER( cBuffer )
+
          DO CASE
          CASE ::cType == "C"
-         
+
             IF "R" $ ::cPicFunc
                xValue := ""
                FOR nFor := 1 TO Len( ::cPicMask )
@@ -1280,9 +1271,9 @@ METHOD unTransform() CLASS Get
             ELSE
                xValue := cBuffer
             ENDIF
-         
+
          CASE ::cType == "N"
-         
+
             lMinus := .F.
             IF "X" $ ::cPicFunc
                IF Right( cBuffer, 2 ) == "DB"
@@ -1301,7 +1292,7 @@ METHOD unTransform() CLASS Get
                NEXT
             ENDIF
             cBuffer := Space( ::FirstEditable() - 1 ) + SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 )
-         
+
             IF "D" $ ::cPicFunc
                FOR nFor := ::FirstEditable() TO ::LastEditable()
                   IF !::IsEditable( nFor )
@@ -1310,7 +1301,7 @@ METHOD unTransform() CLASS Get
                NEXT
             ELSE
                IF "E" $ ::cPicFunc
-                  cBuffer := Left( cBuffer, ::FirstEditable() - 1 ) +; 
+                  cBuffer := Left( cBuffer, ::FirstEditable() - 1 ) +;
                              StrTran( StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ".", " " ), ",", "." ) +;
                              SubStr( cBuffer, ::LastEditable() + 1 )
                ELSE
@@ -1318,7 +1309,7 @@ METHOD unTransform() CLASS Get
                                       StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ",", " " ) +;
                              SubStr( cBuffer, ::LastEditable() + 1 )
                ENDIF
-         
+
                lHasDec := .F.
                FOR nFor := ::FirstEditable() TO ::LastEditable()
                   IF ::IsEditable( nFor )
@@ -1334,17 +1325,17 @@ METHOD unTransform() CLASS Get
                   ENDIF
                NEXT
             ENDIF
-         
+
             cBuffer := StrTran( cBuffer, Chr( 1 ), "" )
-         
+
             cBuffer := StrTran( cBuffer, "$", " " )
             cBuffer := StrTran( cBuffer, "*", " " )
             cBuffer := StrTran( cBuffer, "-", " " )
             cBuffer := StrTran( cBuffer, "(", " " )
             cBuffer := StrTran( cBuffer, ")", " " )
-         
+
             cBuffer := PadL( StrTran( cBuffer, " ", "" ), Len( cBuffer ) )
-         
+
             IF lMinus
                FOR nFor := 1 TO Len( cBuffer )
                   IF IsDigit( SubStr( cBuffer, nFor, 1 ) ) .OR. SubStr( cBuffer, nFor, 1 ) == "."
@@ -1358,23 +1349,23 @@ METHOD unTransform() CLASS Get
                   cBuffer := "-" + cBuffer
                ENDIF
             ENDIF
-         
+
             xValue := Val( cBuffer )
-         
+
          CASE ::cType == "L"
-         
+
             cBuffer := Upper( cBuffer )
                xValue := "T" $ cBuffer .OR. ;
                          "Y" $ cBuffer .OR. ;
                          hb_LangMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) $ cBuffer
-         
+
          CASE ::cType == "D"
-         
+
             IF "E" $ ::cPicFunc
                cBuffer := SubStr( cBuffer, 4, 3 ) + SubStr( cBuffer, 1, 3 ) + SubStr( cBuffer, 7 )
             ENDIF
             xValue := CToD( cBuffer )
-         
+
          ENDCASE
 
       ELSE
@@ -1387,7 +1378,7 @@ METHOD unTransform() CLASS Get
 
    RETURN xValue
 
-METHOD type() CLASS Get
+METHOD type() CLASS HBGet
 
    RETURN ::cType := ValType( iif( ::hasFocus, ::xVarGet, ::varGet() ) )
 
@@ -1400,7 +1391,7 @@ METHOD type() CLASS Get
  * to display correctly.
  */
 
-METHOD block( bBlock ) CLASS Get
+METHOD block( bBlock ) CLASS HBGet
 
    IF PCount() == 0 .OR. bBlock == NIL
       RETURN ::bBlock
@@ -1412,7 +1403,7 @@ METHOD block( bBlock ) CLASS Get
 
    RETURN bBlock
 
-METHOD firstEditable() CLASS Get
+METHOD firstEditable() CLASS HBGet
 
    LOCAL nFor
 
@@ -1432,7 +1423,7 @@ METHOD firstEditable() CLASS Get
 
    RETURN 0
 
-METHOD lastEditable() CLASS Get
+METHOD lastEditable() CLASS HBGet
 
    LOCAL nFor
 
@@ -1448,7 +1439,7 @@ METHOD lastEditable() CLASS Get
 
    RETURN 0
 
-METHOD badDate() CLASS Get
+METHOD badDate() CLASS HBGet
 
    LOCAL xValue
 
@@ -1459,7 +1450,7 @@ METHOD badDate() CLASS Get
 
 #ifdef HB_C52_UNDOC
 
-METHOD reform() CLASS Get
+METHOD reform() CLASS HBGet
 
    IF ::hasFocus
       ::cBuffer := ::PutMask( ::unTransform(), .F. )
@@ -1472,7 +1463,7 @@ METHOD reform() CLASS Get
 
 #ifdef HB_COMPAT_C53
 
-METHOD hitTest( nMRow, nMCol ) CLASS Get
+METHOD hitTest( nMRow, nMCol ) CLASS HBGet
 
    IF ISOBJECT( ::oControl )
       RETURN ::oControl:hitTest( nMRow, nMCol )
@@ -1491,7 +1482,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS Get
 
    RETURN HTNOWHERE
 
-METHOD control( oControl ) CLASS Get
+METHOD control( oControl ) CLASS HBGet
 
    IF PCount() == 1 .AND. ( oControl == NIL .OR. ISOBJECT( oControl ) )
       ::oControl := oControl
@@ -1499,7 +1490,7 @@ METHOD control( oControl ) CLASS Get
 
    RETURN ::oControl
 
-METHOD caption( cCaption ) CLASS Get
+METHOD caption( cCaption ) CLASS HBGet
 
    IF ISCHARACTER( cCaption )
       ::cCaption := cCaption
@@ -1507,7 +1498,7 @@ METHOD caption( cCaption ) CLASS Get
 
    RETURN ::cCaption
 
-METHOD capRow( nCapRow ) CLASS Get
+METHOD capRow( nCapRow ) CLASS HBGet
 
    IF ISNUMBER( nCapRow )
       ::nCapRow := Int( nCapRow )
@@ -1515,7 +1506,7 @@ METHOD capRow( nCapRow ) CLASS Get
 
    RETURN ::nCapRow
 
-METHOD capCol( nCapCol ) CLASS Get
+METHOD capCol( nCapCol ) CLASS HBGet
 
    IF ISNUMBER( nCapCol )
       ::nCapCol := Int( nCapCol )
@@ -1523,7 +1514,7 @@ METHOD capCol( nCapCol ) CLASS Get
 
    RETURN ::nCapCol
 
-METHOD message( cMessage ) CLASS Get
+METHOD message( cMessage ) CLASS HBGet
 
    IF ISCHARACTER( cMessage )
       ::cMessage := cMessage
@@ -1533,54 +1524,35 @@ METHOD message( cMessage ) CLASS Get
 
 #endif
 
-#ifdef HB_COMPAT_XPP
-
-/* NOTE: Not tested or compared to Xbase++. [vszakats] */
-/* TOFIX: To make it work when @S was used. [vszakats] */
-
-METHOD posInBuffer( nRow, nCol ) CLASS Get
-
-   IF ::hasFocus .AND. ;
-      nRow == ::nRow .AND. ;
-      nCol >= ::nCol + ::nPos - 1 .AND. ;
-      nCol <= ::nCol + ::nDispLen
-
-      RETURN nCol - ::nCol + 1
-   ENDIF
-
-   RETURN 0
-
-#endif
-
 /* ------------------------------------------------------------------------- */
 
-METHOD rightLow() CLASS Get
+METHOD rightLow() CLASS HBGet
 
    LOCAL nPos
-   
+
    ::typeOut := .F.
    ::lClear  := .F.
-   
+
    IF ::nPos == ::nMaxEdit
       ::typeOut := .T.
       RETURN .F.
    ENDIF
-   
+
    nPos := ::nPos + 1
-   
+
    DO WHILE ! ::IsEditable( nPos ) .AND. nPos <= ::nMaxEdit
       nPos++
    ENDDO
-   
+
    IF nPos <= ::nMaxEdit
       ::pos := nPos
    ELSE
       ::typeOut := .T.
    ENDIF
-   
+
    RETURN .T.
 
-METHOD leftLow() CLASS Get
+METHOD leftLow() CLASS HBGet
 
    LOCAL nPos
 
@@ -1606,7 +1578,7 @@ METHOD leftLow() CLASS Get
 
    RETURN .T.
 
-METHOD backSpaceLow() CLASS Get
+METHOD backSpaceLow() CLASS HBGet
 
    LOCAL nMinus
    LOCAL nPos := ::nPos
@@ -1638,7 +1610,7 @@ METHOD backSpaceLow() CLASS Get
 
    RETURN .F.
 
-METHOD deleteLow() CLASS Get
+METHOD deleteLow() CLASS HBGet
 
    LOCAL nMaxLen := ::nMaxLen
    LOCAL n
@@ -1668,14 +1640,14 @@ METHOD deleteLow() CLASS Get
 
    RETURN NIL
 
-METHOD DeleteAll() CLASS Get
+METHOD DeleteAll() CLASS HBGet
 
    LOCAL xValue
 
    IF ::hasFocus
 
       ::lEdit := .T.
-      
+
       DO CASE
       CASE ::cType == "C"
          xValue := Space( ::nMaxlen )
@@ -1687,14 +1659,14 @@ METHOD DeleteAll() CLASS Get
       CASE ::cType == "L"
          xValue := .F.
       ENDCASE
-      
+
       ::cBuffer := ::PutMask( xValue )
       ::pos     := ::FirstEditable()
    ENDIF
 
    RETURN Self
 
-METHOD IsEditable( nPos ) CLASS Get
+METHOD IsEditable( nPos ) CLASS HBGet
 
    LOCAL cChar
 
@@ -1703,8 +1675,8 @@ METHOD IsEditable( nPos ) CLASS Get
    ENDIF
 
    /* ; This odd behaviour helps to be more compatible with CA-Cl*pper in some rare situations.
-        xVar := 98 ; o := _GET_( xVar, "xVar" ) ; o:SetFocus() ; o:picture := "99999" ; o:UnTransform() -> result 
-        We're still not 100% compatible in slighly different situations because the CA-Cl*pper 
+        xVar := 98 ; o := _GET_( xVar, "xVar" ) ; o:SetFocus() ; o:picture := "99999" ; o:UnTransform() -> result
+        We're still not 100% compatible in slighly different situations because the CA-Cl*pper
         behaviour is pretty much undefined here. [vszakats] */
    IF nPos > Len( ::cPicMask ) .AND. nPos <= ::nMaxLen
       RETURN .T.
@@ -1725,7 +1697,7 @@ METHOD IsEditable( nPos ) CLASS Get
 
    RETURN .F.
 
-METHOD Input( cChar ) CLASS Get
+METHOD Input( cChar ) CLASS HBGet
 
    LOCAL cPic
 
@@ -1820,18 +1792,18 @@ METHOD Input( cChar ) CLASS Get
 
 /* ------------------------------------------------------------------------- */
 
-METHOD getBuffer() CLASS Get
+METHOD getBuffer() CLASS HBGet
    RETURN ::cBuffer
 
-METHOD setBuffer( cBuffer ) CLASS Get
+METHOD setBuffer( cBuffer ) CLASS HBGet
    RETURN iif( ::hasFocus, ::cBuffer := cBuffer, cBuffer )
 
 /* NOTE: In contrary to CA-Cl*pper docs, this var is assignable. [vszakats] */
 
-METHOD getChanged() CLASS Get
+METHOD getChanged() CLASS HBGet
    RETURN ::lChanged
 
-METHOD setChanged( lChanged ) CLASS Get
+METHOD setChanged( lChanged ) CLASS HBGet
 
    IF ISLOGICAL( lChanged )
       RETURN iif( ::hasFocus, ::lChanged := lChanged, lChanged )
@@ -1839,10 +1811,10 @@ METHOD setChanged( lChanged ) CLASS Get
 
    RETURN .F.
 
-METHOD getClear() CLASS Get
+METHOD getClear() CLASS HBGet
    RETURN ::lClear
 
-METHOD setClear( lClear ) CLASS Get
+METHOD setClear( lClear ) CLASS HBGet
 
    IF ISLOGICAL( lClear )
       RETURN iif( ::hasFocus, ::lClear := lClear, lClear )
@@ -1850,10 +1822,10 @@ METHOD setClear( lClear ) CLASS Get
 
    RETURN .F.
 
-METHOD getMinus() CLASS Get
+METHOD getMinus() CLASS HBGet
    RETURN ::lMinus
 
-METHOD setMinus( lMinus ) CLASS Get
+METHOD setMinus( lMinus ) CLASS HBGet
 
    IF ISLOGICAL( lMinus )
       RETURN iif( ::hasFocus, ::lMinus := lMinus, lMinus )
@@ -1861,25 +1833,25 @@ METHOD setMinus( lMinus ) CLASS Get
 
    RETURN .F.
 
-/* NOTE: CA-Cl*pper has a bug where negative nRow value will be translated to 16bit unsigned int, 
+/* NOTE: CA-Cl*pper has a bug where negative nRow value will be translated to 16bit unsigned int,
          so the behaviour will be different in this case. [vszakats] */
 
-METHOD getRow() CLASS Get
+METHOD getRow() CLASS HBGet
    RETURN ::nRow
 
-METHOD setRow( nRow ) CLASS Get
+METHOD setRow( nRow ) CLASS HBGet
    RETURN ::nRow := iif( ISNUMBER( nRow ), Int( nRow ), 0 )
 
-/* NOTE: CA-Cl*pper has a bug where negative nCol value will be translated to 16bit unsigned int, 
+/* NOTE: CA-Cl*pper has a bug where negative nCol value will be translated to 16bit unsigned int,
          so the behaviour will be different in this case. [vszakats] */
 
-METHOD getCol() CLASS Get
+METHOD getCol() CLASS HBGet
    RETURN ::nCol
 
-METHOD setCol( nCol ) CLASS Get
+METHOD setCol( nCol ) CLASS HBGet
    RETURN ::nCol := iif( ISNUMBER( nCol ), Int( nCol ), 0 )
 
-METHOD name( cName ) CLASS Get
+METHOD name( cName ) CLASS HBGet
 
    IF PCount() > 0 .AND. cName != NIL
       ::cName := cName
@@ -1887,7 +1859,7 @@ METHOD name( cName ) CLASS Get
 
    RETURN ::cName
 
-METHOD SubScript( xValue ) CLASS Get
+METHOD SubScript( xValue ) CLASS HBGet
 
    IF xValue != NIL
       ::xSubScript := xValue
@@ -1895,7 +1867,7 @@ METHOD SubScript( xValue ) CLASS Get
 
    RETURN ::xSubScript
 
-METHOD PostBlock( xValue ) CLASS Get
+METHOD PostBlock( xValue ) CLASS HBGet
 
    IF xValue != NIL
       ::bPostBlock := xValue
@@ -1903,7 +1875,7 @@ METHOD PostBlock( xValue ) CLASS Get
 
    RETURN ::bPostBlock
 
-METHOD PreBlock( xValue ) CLASS Get
+METHOD PreBlock( xValue ) CLASS HBGet
 
    IF xValue != NIL
       ::bPreBlock := xValue
@@ -1911,7 +1883,7 @@ METHOD PreBlock( xValue ) CLASS Get
 
    RETURN ::bPreBlock
 
-METHOD Cargo( xValue ) CLASS Get
+METHOD Cargo( xValue ) CLASS HBGet
 
    IF xValue != NIL
       ::xCargo := xValue
@@ -1919,7 +1891,7 @@ METHOD Cargo( xValue ) CLASS Get
 
    RETURN ::xCargo
 
-METHOD ExitState( xValue ) CLASS Get
+METHOD ExitState( xValue ) CLASS HBGet
 
    IF xValue != NIL
       ::xExitState := xValue
@@ -1927,7 +1899,7 @@ METHOD ExitState( xValue ) CLASS Get
 
    RETURN ::xExitState
 
-METHOD Reader( xValue ) CLASS Get
+METHOD Reader( xValue ) CLASS HBGet
 
    IF xValue != NIL
       ::bReader := xValue
@@ -1937,7 +1909,7 @@ METHOD Reader( xValue ) CLASS Get
 
 #ifdef HB_EXTENSION
 
-METHOD hideInput( lHideInput ) CLASS Get
+METHOD hideInput( lHideInput ) CLASS HBGet
 
    IF lHideInput != NIL
       ::lHideInput := __eInstVar53( Self, "HIDEINPUT", lHideInput, "L", 1001 )
@@ -1945,7 +1917,7 @@ METHOD hideInput( lHideInput ) CLASS Get
 
    RETURN ::lHideInput
 
-METHOD style( cStyle ) CLASS Get
+METHOD style( cStyle ) CLASS HBGet
 
    IF cStyle != NIL
       ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 1 } )
@@ -1957,7 +1929,7 @@ METHOD style( cStyle ) CLASS Get
 
 /* ------------------------------------------------------------------------- */
 
-METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
+METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS HBGet
 
    DEFAULT nRow       TO Row()
    DEFAULT nCol       TO Col() + iif( Set( _SET_DELIMITERS ), 1, 0 )
@@ -1981,3 +1953,6 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::colorSpec := cColorSpec
 
    RETURN Self
+
+FUNCTION GetNew( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
+   RETURN HBGet():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
