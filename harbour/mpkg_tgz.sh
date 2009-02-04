@@ -42,7 +42,7 @@ if [ -z "$HB_ARCHITECTURE" ]; then
     else
         hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
         case "$hb_arch" in
-            *windows*|*mingw32*|msys*) hb_arch="w32" ;;
+            *windows*|*mingw32*|msys*) hb_arch="win" ;;
             *os/2*)                    hb_arch="os2" ;;
             *dos)                      hb_arch="dos" ;;
             *bsd)                      hb_arch="bsd" ;;
@@ -53,7 +53,7 @@ fi
 
 if [ -z "$HB_COMPILER" ]; then
     case "$HB_ARCHITECTURE" in
-        w32) HB_COMPILER="mingw" ;;
+        win) HB_COMPILER="mingw" ;;
         dos) HB_COMPILER="djgpp" ;;
         *)   HB_COMPILER="gcc" ;;
     esac
@@ -103,7 +103,7 @@ case "$HB_ARCHITECTURE" in
         [ -d "$HB_INSTALL_PREFIX/lib64" ] && [ "${HB_ARCH64}" = yes ] && HB_LIBDIRNAME="lib64"
         HB_INSTALL_GROUP=root
         ;;
-    w32)
+    win)
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
         HB_INSTALL_GROUP=0
         hb_sysdir="no"
@@ -179,7 +179,7 @@ case "$HB_ARCHITECTURE" in
         fi
         [ -z "$HB_WITHOUT_X11" ] && export HB_WITHOUT_X11=yes
         ;;
-    dos|w32)
+    dos|win)
         [ -z "$HB_WITHOUT_X11" ] && export HB_WITHOUT_X11=yes
         ;;
     *)
@@ -263,10 +263,10 @@ if [ "${hb_lnkso}" = yes ]
 then
     case $HB_ARCHITECTURE in
         darwin)     ADD_LIBS="$ADD_LIBS -lncurses -L/opt/local/lib -L/sw/lib" ;;
-        dos|w32)    ADD_LIBS="" ;;
+        dos|win)    ADD_LIBS="" ;;
         sunos)      ADD_LIBS="$ADD_LIBS -lcurses" ;;
         *)          ADD_LIBS="$ADD_LIBS -lncurses" ;;
-    esac 
+    esac
     [ "${HB_GPM_MOUSE}" = yes ] && ADD_LIBS="$ADD_LIBS -lgpm"
     [ "${HB_WITHOUT_GTSLN}" != yes ] && ADD_LIBS="$ADD_LIBS -lslang"
     [ "${HB_WITHOUT_X11}" != yes ] && ADD_LIBS="$ADD_LIBS -L/usr/X11R6/$HB_LIBDIRNAME -lX11"

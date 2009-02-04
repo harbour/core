@@ -7,7 +7,7 @@ vpath %.prg ../
 
 ROOT = ../../../
 
-ifeq ($(HB_ARCHITECTURE),w32)
+ifeq ($(HB_ARCHITECTURE),win)
 	ifeq ($(HB_COMPILER),mingw)
 		C_MAIN = mainwin.c
 	else

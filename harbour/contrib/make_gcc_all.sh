@@ -16,7 +16,7 @@ if [ -z "$HB_ARCHITECTURE" ]; then
    else
       hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
       case "$hb_arch" in
-         *windows*|*mingw32*|msys*) hb_arch="w32" ;;
+         *windows*|*mingw32*|msys*) hb_arch="win" ;;
          *cygwin*)                  hb_arch="cyg" ;;
          *dos)                      hb_arch="dos" ;;
          *bsd)                      hb_arch="bsd" ;;
@@ -29,7 +29,7 @@ fi
 
 if [ -z "$HB_CC_NAME" ]; then
    case "$HB_ARCHITECTURE" in
-      w32) HB_CC_NAME="mingw" ;;
+      win) HB_CC_NAME="mingw" ;;
       dos) HB_CC_NAME="djgpp" ;;
       *)   HB_CC_NAME="gcc" ;;
    esac
@@ -44,7 +44,7 @@ else
    _HB_DIRS="hbbmcdx hbbtree hbclipsm hbcrypt hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit3 hbtpathy hbvpdf hbziparc xhb"
 
    case "$HB_ARCHITECTURE" in
-      w32|cyg|os2)
+      win|cyg|os2)
            _HB_DIRS="${_HB_DIRS} gtwvg hbole hbodbc hbwin hbwhat rddado"
            ;;
       *)
@@ -64,11 +64,11 @@ else
    if [ "${HB_INC_MYSQL}"     != "" ]; then _HB_DIRS="${_HB_DIRS} rddsql"  ; fi;
 fi
 
-# Revert Cygwin architecture to w32.
+# Revert Cygwin architecture to 'win'.
 # After all it's under Windows OS.
 if [ "$HB_ARCHITECTURE" == "cyg" ]
 then
-   export HB_ARCHITECTURE=w32
+   export HB_ARCHITECTURE=win
 fi
 
 _HB_DIRS="${_HB_DIRS} ${HB_CONTRIB_ADDONS}"

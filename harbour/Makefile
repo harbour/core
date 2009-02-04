@@ -37,7 +37,7 @@ else
 ifeq ($(HB_ARCHITECTURE),dos)
 HB_POSTINST = $(subst /,\,$(TOP)$(ROOT)bin/postinst.bat) $(HB_POSTINSTPARAM)
 else
-ifeq ($(HB_ARCHITECTURE),w32)
+ifeq ($(HB_ARCHITECTURE),win)
 HB_POSTINST = $(subst /,\,$(TOP)$(ROOT)bin/postinst.bat) $(HB_POSTINSTPARAM)
 endif
 endif

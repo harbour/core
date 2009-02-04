@@ -12,8 +12,8 @@
 ######################################################################
 # Conditional build:
 # --with mysql       - build mysql lib
-# --with pgsql       - build pgsql lib 
-# --with gd          - build gd lib 
+# --with pgsql       - build pgsql lib
+# --with gd          - build gd lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build ADS RDD
 # --with odbc        - build odbc lib
@@ -93,7 +93,7 @@ export C_USR="-O2 -DHB_FM_STATISTICS_OFF"
 make -r
 
 export HB_HOST_BUILD=lib
-export HB_ARCHITECTURE=w32
+export HB_ARCHITECTURE=win
 export HB_COMPILER=mingwce
 
 mkdir -p source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}
@@ -138,7 +138,7 @@ export CCPREFIX="%{hb_ccpref}"
 export PATH="$CCPATH$PATH"
 
 export HB_HOST_BUILD=lib
-export HB_ARCHITECTURE=w32
+export HB_ARCHITECTURE=win
 export HB_COMPILER=mingwce
 export HB_XBUILD=wce
 export HB_BIN_INSTALL=%{_bindir}

@@ -10,7 +10,7 @@ ifeq ($(HB_COMPILER),rsxnt)
 HB_WITHOUT_ODBC=yes
 endif
 
-ifneq ($(HB_ARCHITECTURE),w32)
+ifneq ($(HB_ARCHITECTURE),win)
 ifeq ($(HB_WITHOUT_ODBC),)
 
 ifeq ($(HB_INC_ODBC),)

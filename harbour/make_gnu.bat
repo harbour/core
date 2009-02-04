@@ -1,13 +1,13 @@
 @echo off
-rem 
+rem
 rem $Id$
-rem 
+rem
 
 rem ---------------------------------------------------------------
-rem This is a generic template file, if it doesn't fit your own needs 
+rem This is a generic template file, if it doesn't fit your own needs
 rem please DON'T MODIFY IT.
 rem
-rem Instead, make a local copy and modify that one, or make a call to 
+rem Instead, make a local copy and modify that one, or make a call to
 rem this batch file from your customized one. [vszakats]
 rem ---------------------------------------------------------------
 
@@ -22,11 +22,11 @@ rem Copyright 1999-2001 Viktor Szakats (viktor.szakats@syenar.hu)
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 
-if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=w32
+if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=win
 if "%HB_COMPILER%" == "" set HB_COMPILER=mingw
 
-rem set PRG_USR= 
-rem set C_USR= 
+rem set PRG_USR=
+rem set C_USR=
 rem set L_USR=
 
 rem Set to constant value to be consistent with the non-GNU make files.
@@ -58,23 +58,23 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%/include
    echo     The following values are currently supported:
    echo.
    echo     HB_ARCHITECTURE:
-   echo       - dos  
-   echo       - w32  
+   echo       - dos
+   echo       - win
    echo       - linux
-   echo       - os2  
-   echo.   
-   pause   
+   echo       - os2
+   echo.
+   pause
    echo     HB_COMPILER:
    echo       - When HB_ARCHITECTURE=dos
    echo         - bcc16   (Borland C++ 3.x, 4.x, 5.0x, DOS 16-bit)
    echo         - djgpp   (Delorie GNU C, DOS 32-bit)
    echo         - rxs32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)
    echo         - watcom  (Watcom C++ 9.x, 10.x, 11.x, DOS 32-bit)
-   echo       - When HB_ARCHITECTURE=w32
+   echo       - When HB_ARCHITECTURE=win
    echo         - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)
    echo         - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)
    echo         - mingw   (MinGW GNU C, Windows 32-bit)
-   echo         - rxsnt   (EMX/RSXNT/Win32 GNU C, Windows 32-bit)
+   echo         - rxsnt   (EMX/RSXNT/Windows GNU C, Windows 32-bit)
    echo         - icc     (IBM Visual Age C++, Windows 32-bit)
    echo         - msvc    (Microsoft Visual C++, Windows 32-bit)
    echo       - When HB_ARCHITECTURE=linux
@@ -82,7 +82,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%/include
    echo       - When HB_ARCHITECTURE=os2
    echo         - gcc     (EMX GNU C, OS/2 32-bit)
    echo         - icc     (IBM Visual Age C++ 3.0, OS/2 32-bit)
-   echo.   
+   echo.
    echo   - Use these optional envvars to configure the make process
    echo     when using the 'all' command:
    echo.

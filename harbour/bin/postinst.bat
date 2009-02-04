@@ -19,7 +19,7 @@ rem DOS post install part
 goto end
 
 
-:inst_w32
+:inst_win
 rem Windows post install part
 
 goto end

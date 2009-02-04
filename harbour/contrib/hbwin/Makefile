@@ -6,7 +6,7 @@ ROOT = ../../
 
 LIBNAME=hbwin
 
-ifeq ($(HB_ARCHITECTURE),w32)
+ifeq ($(HB_ARCHITECTURE),win)
 
 C_SOURCES=\
 	win_dll.c \

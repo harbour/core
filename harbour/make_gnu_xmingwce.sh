@@ -17,7 +17,7 @@ UNAME=`uname`
 UNAMEL=`echo "$UNAME"|tr A-Z a-z`
 UNAMEU=`echo "$UNAME"|tr a-z A-Z`
 
-export HB_ARCHITECTURE=w32
+export HB_ARCHITECTURE=win
 export HB_COMPILER=mingwce
 
 if [ "$OSTYPE" = "msdosdjgpp" ]; then
@@ -27,14 +27,14 @@ else
     HB_HOST_ARCH="${UNAMEL}"
     HB_HOST_CC="gcc"
     case "$HB_HOST_ARCH" in
-        *windows*|*mingw32*|msys*)  HB_HOST_ARCH="w32"; HB_HOST_CC="mingw" ;;
+        *windows*|*mingw32*|msys*)  HB_HOST_ARCH="win"; HB_HOST_CC="mingw" ;;
         *dos)    HB_HOST_ARCH="dos" ;;
         *bsd)    HB_HOST_ARCH="bsd" ;;
     esac
 fi
 
 CC_PRG_USR="-D__PLATFORM__WINCE"
-if [ "$HB_HOST_ARCH" != "w32" ]; then
+if [ "$HB_HOST_ARCH" != "win" ]; then
     CC_PRG_USR="$CC_PRG_USR -D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAMEU"
 fi
 

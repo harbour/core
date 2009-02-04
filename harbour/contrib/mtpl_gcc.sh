@@ -30,7 +30,7 @@ if [ -z "$HB_ARCHITECTURE" ]; then
    else
       hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
       case "$hb_arch" in
-         *windows*|*mingw32*|msys*) hb_arch="w32" ;;
+         *windows*|*mingw32*|msys*) hb_arch="win" ;;
          *dos)                      hb_arch="dos" ;;
          *bsd)                      hb_arch="bsd" ;;
       esac
@@ -46,7 +46,7 @@ export _HB_MAKEFILE=${HB_MAKEFILE}
 
 if [ -z "$_HB_CC_NAME" ]; then
    case "$HB_ARCHITECTURE" in
-      w32) _HB_CC_NAME="mingw" ;;
+      win) _HB_CC_NAME="mingw" ;;
       dos) _HB_CC_NAME="djgpp" ;;
       *)   _HB_CC_NAME="gcc" ;;
    esac

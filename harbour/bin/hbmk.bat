@@ -206,7 +206,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
 :A_WIN
 
    rem ; Compatibility. Please use 'win'.
-   if "%HB_ARCHITECTURE%" == "win" set HB_ARCHITECTURE=w32
+   if "%HB_ARCHITECTURE%" == "w32" set HB_ARCHITECTURE=win
 
    if not "%HB_ARCHITECTURE%" == "win" goto END
 

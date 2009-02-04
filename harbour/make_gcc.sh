@@ -9,9 +9,9 @@
 # ---------------------------------------------------------------
 
 # Compatibility. Please use 'win'.
-if [ "$HB_ARCHITECTURE" == "win" ]
+if [ "$HB_ARCHITECTURE" == "w32" ]
 then
-    export HB_ARCHITECTURE=w32
+    export HB_ARCHITECTURE=win
 fi
 
 if [ -z "$HB_ARCHITECTURE" ]; then
@@ -20,7 +20,7 @@ if [ -z "$HB_ARCHITECTURE" ]; then
     else
         hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
         case "$hb_arch" in
-            *windows*|*mingw32*|msys*)   hb_arch="w32" ;;
+            *windows*|*mingw32*|msys*)   hb_arch="win" ;;
             *cygwin*)                    hb_arch="cyg" ;;
             *os/2*)                      hb_arch="os2" ;;
             *dos)                        hb_arch="dos" ;;
@@ -32,7 +32,7 @@ fi
 
 if [ -z "$HB_CC_NAME" ]; then
     case "$HB_ARCHITECTURE" in
-        w32) HB_CC_NAME="mingw" ;;
+        win) HB_CC_NAME="mingw" ;;
         dos) HB_CC_NAME="djgpp" ;;
         *)   HB_CC_NAME="gcc" ;;
     esac
@@ -74,7 +74,7 @@ OS_LIBS="-lm"
 GT_LIST="TRM"
 
 case "$HB_ARCHITECTURE" in
-    w32)  GT_LIST="WIN WVT GUI"
+    win)  GT_LIST="WIN WVT GUI"
           OS_LIBS="-luser32 -lwinspool -lwsock32 -lgdi32"
           ;;
     cyg)  GT_LIST="${GT_LIST} WIN WVT GUI"
@@ -174,11 +174,11 @@ mkdir -p obj/$HB_CC_NAME/mt obj/$HB_CC_NAME/mt_dll obj/$HB_CC_NAME/dll \
 
 # Convert common.mak (for BCC/VC) to common.cf (GCC)
 
-# Revert Cygwin architecture to w32.
+# Revert Cygwin architecture to 'win'.
 # After all it's under Windows OS.
 if [ "$HB_ARCHITECTURE" == "cyg" ]
 then
-    export HB_ARCHITECTURE=w32
+    export HB_ARCHITECTURE=win
 fi
 
 sed -e 's/;/ /g'             \

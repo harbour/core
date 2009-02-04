@@ -120,7 +120,7 @@ mk_hbtools()
         hb_static="yes"
         hb_static_default=" (default)"
         hb_exesuf=".exe"
-    elif [ "${HB_ARCHITECTURE}" = "w32" ]; then
+    elif [ "${HB_ARCHITECTURE}" = "win" ]; then
         hb_tool="$1/${hb_pref}-build"
         hb_path_separator=":"
         if [ "${HB_MK_STATIC}" = "yes" ]; then
@@ -383,7 +383,7 @@ SYSTEM_LIBS="${HB_SYS_LIBS}"
 # use pthread system library for MT programs
 if [ "\${HB_MT}" = "MT" ]; then
     case "\${HB_ARCHITECTURE}" in
-        dos|w32|os2)
+        dos|win|os2)
             ;;
         *)
             SYSTEM_LIBS="-lpthread \${SYSTEM_LIBS}"
@@ -464,7 +464,7 @@ else
         pref="lib"
         ext=".dylib"
         LN_OPT="\${LN_OPT} -bind_at_load -multiply_defined suppress"
-    elif [ "\${HB_ARCHITECTURE}" = "w32" ]; then
+    elif [ "\${HB_ARCHITECTURE}" = "win" ]; then
         pref=""
         ext=".dll"
         HB_LNK_ATTR="__attribute__ ((dllimport))"
@@ -725,7 +725,7 @@ mk_hblibso()
         full_lib_name="lib${name}.${hb_ver}${lib_ext}"
         full_lib_name_mt="lib${name}mt.${hb_ver}${lib_ext}"
         linker_options="-L/sw/lib -L/opt/local/lib $linker_options"
-    elif [ "${HB_ARCHITECTURE}" = "w32" ]; then
+    elif [ "${HB_ARCHITECTURE}" = "win" ]; then
         lib_ext=".dll"
         full_lib_name="${name}${lib_ext}"
         full_lib_name_mt="${name}mt${lib_ext}"
@@ -753,7 +753,7 @@ mk_hblibso()
     do
         if [ -f $l ]
         then
-            if [ "${HB_ARCHITECTURE}" = "w32" ]; then
+            if [ "${HB_ARCHITECTURE}" = "win" ]; then
                 if [ "${HB_XBUILD}" = "" ]; then
                    (cd "$dir"
                    mv "${HB_LIB_INSTALL}/$l" "${HB_BIN_INSTALL}")

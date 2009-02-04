@@ -69,7 +69,7 @@ hb_collect_all_svn()
 
 hb_collect_all_tree()
 {
-  exclude="/obj/|/lib/|/bin/.*/|\.tar|\.zip|\.exe|\.log|/linux/|/w32|/config/"
+  exclude="/obj/|/lib/|/bin/.*/|\.tar|\.zip|\.exe|\.log|/linux/|/win|/config/"
   for f in `find -type f | grep -vE ${exclude}`
   do
      echo ${f:2}

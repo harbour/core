@@ -81,8 +81,8 @@ endif
 # *before* common.cf is included
 
 OBJEXT=.o
-EXEEXT=$(if $(findstring $(HB_ARCHITECTURE),w32 dos os2),.exe)
-DLLEXT=$(if $(findstring $(HB_ARCHITECTURE),w32 dos os2),.dll,.so)
+EXEEXT=$(if $(findstring $(HB_ARCHITECTURE),win dos os2),.exe)
+DLLEXT=$(if $(findstring $(HB_ARCHITECTURE),win dos os2),.dll,.so)
 LIBEXT=.a
 LIBPREF=lib
 
@@ -103,7 +103,7 @@ include common.cf
 # building CONSOLE programs. Otherwise we're building
 # GUI programs without console. Please note IT IS A
 # DIRTY HACK and any better solution is HIGHLY WELCOME
-ifneq ($(findstring $(HB_ARCHITECTURE),w32 os2),)
+ifneq ($(findstring $(HB_ARCHITECTURE),win os2),)
 MAIN_LIB      = $(LIB_DIR)/$(LIBPREF)hbmainstd$(LIBEXT)
 MAIN_LIB_OBJS = $(OBJ_DIR)/mainstd$(OBJEXT)
 
@@ -141,7 +141,7 @@ endif
 
 # DLLs on Windows require IMPORT lib
 # and an additional compiler phase
-ifneq ($(findstring $(HB_ARCHITECTURE),w32),)
+ifneq ($(findstring $(HB_ARCHITECTURE),win),)
 HB_DLL_IMPLIB := $(HARBOUR_DLL:%$(DLLEXT)=%$(LIBEXT))
 HB_IMPLIB_PART := -Wl,--out-implib,$(HB_DLL_IMPLIB)
 HB_DLL_IMPLIBMT := $(HARBOURMT_DLL:%$(DLLEXT)=%$(LIBEXT))
@@ -156,7 +156,7 @@ CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) -I$(OBJ_DIR)
 CFLAGSMT       := -DHB_MT_VM
 #-----------
 ifneq ($(HB_BUILD_OPTIM),no)
-ifeq ($(HB_ARCHITECTURE),w32)
+ifeq ($(HB_ARCHITECTURE),win)
 CFLAGS         := -march=i586 $(CFLAGS)
 endif
 CFLAGS         := -O3 $(CFLAGS)
@@ -172,7 +172,7 @@ CEXEFLAGSDLL   := $(CFLAGS)
 
 # Under architectures other than "DOS based" add -fPIC
 # to gcc compiler flags for compiling shared libraries
-ifeq ($(findstring $(HB_ARCHITECTURE),w32 os2),)
+ifeq ($(findstring $(HB_ARCHITECTURE),win os2),)
 ifeq ($(findstring -fPIC,$(CLIBFLAGSDLL)),)
 CLIBFLAGSDLL   := -fPIC $(CLIBFLAGSDLL)
 endif
@@ -326,7 +326,7 @@ $(VM_LIB)       : $(VM_LIB_OBJS)
 $(VMMT_LIB)     : $(VMMT_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-ifneq ($(findstring $(HB_ARCHITECTURE),w32 os2),)
+ifneq ($(findstring $(HB_ARCHITECTURE),win os2),)
 $(MAIN_LIB)     : $(MAIN_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 endif

@@ -33,7 +33,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |
 |   +---sunos           - Configutation files specific to SunOS.
 |   |
-|   +---w32             - Configutation files specific to MS Windows.
+|   +---win             - Configutation files specific to MS Windows.
 |
 +---contrib             - Miscellaneous contribution files. Those are not
 |   |                     part of the official Harbour project.

@@ -25,7 +25,7 @@ fi
 linker_options=""
 
 case "$hb_arch" in
-    *windows*|*mingw32*|msys*) hb_arch="w32" ;;
+    *windows*|*mingw32*|msys*) hb_arch="win" ;;
     *os/2*)                    hb_arch="os2" ;;
     *dos)                      hb_arch="dos" ;;
     *bsd)                      hb_arch="bsd" ;;
@@ -33,7 +33,7 @@ esac
 
 case "$hb_arch" in
     darwin) SLIB_EXT=".dylib" ;;
-    w32)    SLIB_EXT=".dll" ;;
+    win)    SLIB_EXT=".dll" ;;
     os2)    SLIB_EXT=".dll" ;;
     hpux)   SLIB_EXT=".sl" ;;
     *)      SLIB_EXT=".so" ;;

@@ -6,7 +6,7 @@ ROOT = ../../
 
 LIBNAME=hbwhat
 
-ifeq ($(HB_ARCHITECTURE),w32)
+ifeq ($(HB_ARCHITECTURE),win)
 ifneq ($(HB_COMPILER),dm)
 
 C_SOURCES = \
@@ -81,7 +81,7 @@ PRG_HEADERS= \
 	winstruc.ch \
 	winuser.ch \
 
-# This lib needs xhb headers to compile, and this is 
+# This lib needs xhb headers to compile, and this is
 # the hack to help Harbour find them.
 PRG_USR += -I../../../xhb
 

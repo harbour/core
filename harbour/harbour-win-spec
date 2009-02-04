@@ -12,8 +12,8 @@
 ######################################################################
 # Conditional build:
 # --with mysql       - build mysql lib
-# --with pgsql       - build pgsql lib 
-# --with gd          - build gd lib 
+# --with pgsql       - build pgsql lib
+# --with gd          - build gd lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build ADS RDD
 # --with odbc        - build odbc lib
@@ -68,7 +68,7 @@ GCC port.
 %description -l pl
 Harbour to kompatybilny z jêzykiem CA-Cl*pper kompilator rozwijany na
 wielu ró¿nych platformach. Ten pakiet zawiera kompilator, preprocesor,
-zbiory nag³ówkowe, wirtualn± maszynê oraz biblioteki pozwalaj±ce na
+zbiory nag³ówkowe, wirtualn+ maszynê oraz biblioteki pozwalaj+ce na
 tworzenie aplikacji dla MS-Windows przy u¿yciu MinGW GCC.
 
 
@@ -93,7 +93,7 @@ export C_USR="-O2 -DHB_FM_STATISTICS_OFF"
 make -r
 
 export HB_HOST_BUILD=lib
-export HB_ARCHITECTURE=w32
+export HB_ARCHITECTURE=win
 export HB_COMPILER=mingw
 
 mkdir -p source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}
@@ -111,7 +111,7 @@ export CCPATH="%{hb_ccpath}:"
 export CCPREFIX="%{hb_ccpref}"
 export PATH="$CCPATH$PATH"
 
-export HB_XBUILD=w32
+export HB_XBUILD=win
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}
@@ -138,9 +138,9 @@ export CCPREFIX="%{hb_ccpref}"
 export PATH="$CCPATH$PATH"
 
 export HB_HOST_BUILD=lib
-export HB_ARCHITECTURE=w32
+export HB_ARCHITECTURE=win
 export HB_COMPILER=mingw
-export HB_XBUILD=w32
+export HB_XBUILD=win
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}

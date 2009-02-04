@@ -115,7 +115,7 @@ endif
 # C Compiler Flags
 
 ifneq ($(HB_BUILD_OPTIM),no)
-ifeq ($(HB_ARCHITECTURE),w32)
+ifeq ($(HB_ARCHITECTURE),win)
 CFLAGS         := -march=i586 $(CFLAGS)
 endif
 CFLAGS         := -O3 $(CFLAGS)

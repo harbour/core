@@ -4,7 +4,7 @@
 
 ROOT = ../../
 
-ifeq ($(HB_ARCHITECTURE),w32)
+ifeq ($(HB_ARCHITECTURE),win)
 DIRS = hbgfwin
 endif
 

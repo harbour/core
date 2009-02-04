@@ -110,11 +110,11 @@ Now. let's take a look at the rules themselves. They all live in the
 config/ directory, with the following structure:
 
   config/: The generic configuration files.
-  config/w32: Configuration files for Windows platforms.
+  config/win: Configuration files for Windows platforms.
 
 
 Finally, you will notice one thing: the build system compiles
-everything into a subdirectory (for example, w32/gcc for Windows 
+everything into a subdirectory (for example, win/gcc for Windows
 files compiled with gcc). This has two advantages:
 
 1. It allows you to compile for multiple platforms/compilers at the
@@ -139,7 +139,7 @@ For gcc on Win95/WinNT with the Cygwin library:
   Notes: The CYGWIN environment variable must include "noglob" in order
          to avoid having Harbour or programs created with Harbour expand
          wildcard command line arguments (this is checked at run-time!)
-  HB_ARCHITECTURE   w32
+  HB_ARCHITECTURE   win
   HB_COMPILER       gcc
   HB_GT_LIB         gtwin
   CYGWIN            noglob
@@ -147,7 +147,7 @@ For gcc on Win95/WinNT with the Cygwin library:
   L_USR             -mwin32
 
 For gcc on Win95/WinNT with the MinGW library:
-  HB_ARCHITECTURE   w32
+  HB_ARCHITECTURE   win
   HB_COMPILER       mingw
   HB_GT_LIB         gtwin
 
@@ -159,7 +159,7 @@ For MSVC on Win95/WinNT:
          not set to unix
 
          For best results, in your copy of make_gnu.bat, also set:
-  HB_ARCHITECTURE   w32
+  HB_ARCHITECTURE   win
   HB_COMPILER       msvc
   HB_GT_LIB         gtwin
 
@@ -218,7 +218,7 @@ For IBM Visual Age C++ on OS/2 for PM mode:
   HB_GT_LIB         os2pm
 
 For Borland C++ 5.5
-  HB_ARCHITECTURE   w32
+  HB_ARCHITECTURE   win
   HB_COMPILER       bcc32
   HB_GT_LIB         gtwin
 
@@ -294,4 +294,3 @@ can also be used for modules that aren't in the Makefile. You can also
 pass parameters to the program. For example, 'build readfile harbour.ini'
 will rebuild the readfile.prg program and run it with 'harbour.ini' as a
 command line parameter.
-

@@ -8,6 +8,51 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-04 23:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-func.sh
+  * bin/hb-mkslib.sh
+  * bin/hbmk.bat
+  * bin/hbmk_b32.bat
+  * bin/hbmk_vc.bat
+  * bin/pack_src.sh
+  * bin/postinst.bat
+  * contrib/examples/uhttpd/modules/bldhrb.bat
+  * contrib/gtwvg/Makefile
+  * contrib/hbct/ctflist.txt
+  * contrib/hbgf/hbgfwin/Makefile
+  * contrib/hbgf/Makefile
+  * contrib/hbodbc/Makefile
+  * contrib/hbole/Makefile
+  * contrib/hbtpathy/Makefile
+  * contrib/hbwhat/Makefile
+  * contrib/hbwin/Makefile
+  * contrib/make_gcc_all.sh
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_gcc.mak
+  * contrib/mtpl_gcc.sh
+  * contrib/mtpl_vc.mak
+  * doc/dirstruc.txt
+  * doc/es/dirstruc.txt
+  * doc/funclist.txt
+  * doc/gmake.txt
+  * harbour-wce-spec
+  * harbour-win-spec
+  * make_b32.mak
+  * make_gcc.mak
+  * make_gcc.sh
+  * make_gnu.bat
+  * make_gnu.sh
+  * make_gnu_xmingw.sh
+  * make_gnu_xmingwce.sh
+  * make_vc.mak
+  * Makefile
+  * mpkg_tgz.sh
+  * source/vm/Makefile
+  * source/vm/vmmt/Makefile
+  - config/w32
+  + config/win
+    * HB_ARCHITECTURE w32 -> win transition. Pass 1.
+
 2009-02-04 22:11 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hbmk.bat
   * make_gcc.sh

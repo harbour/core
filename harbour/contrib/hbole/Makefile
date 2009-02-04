@@ -6,7 +6,7 @@ ROOT = ../../
 
 LIBNAME=hbole
 
-ifeq ($(HB_ARCHITECTURE),w32)
+ifeq ($(HB_ARCHITECTURE),win)
 
 C_SOURCES=\
 	ole2.c \

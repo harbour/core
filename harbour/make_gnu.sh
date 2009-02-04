@@ -16,9 +16,9 @@
 # ---------------------------------------------------------------
 
 # Compatibility. Please use 'win'.
-if [ "$HB_ARCHITECTURE" == "win" ]
+if [ "$HB_ARCHITECTURE" == "w32" ]
 then
-    export HB_ARCHITECTURE=w32
+    export HB_ARCHITECTURE=win
 fi
 
 if [ -z "$HB_ARCHITECTURE" ]; then
@@ -27,7 +27,7 @@ if [ -z "$HB_ARCHITECTURE" ]; then
     else
         hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
         case "$hb_arch" in
-            *windows*|*mingw32*|msys*) hb_arch="w32" ;;
+            *windows*|*mingw32*|msys*) hb_arch="win" ;;
             *os/2*)                    hb_arch="os2" ;;
             *dos)                      hb_arch="dos" ;;
             *bsd)                      hb_arch="bsd" ;;
@@ -38,7 +38,7 @@ fi
 
 if [ -z "$HB_COMPILER" ]; then
     case "$HB_ARCHITECTURE" in
-        w32) HB_COMPILER="mingw" ;;
+        win) HB_COMPILER="mingw" ;;
         dos) HB_COMPILER="djgpp" ;;
         *)   HB_COMPILER="gcc" ;;
     esac
@@ -162,7 +162,7 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
     echo
     echo "    HB_ARCHITECTURE:"
     echo "      - dos"
-    echo "      - w32"
+    echo "      - win"
     echo "      - os2"
     echo "      - linux"
     echo "      - bsd"
@@ -177,7 +177,7 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
     echo "        - djgpp   (Delorie GNU C, DOS 32-bit)"
     echo "        - rsx32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)"
     echo "        - owatcom (Watcom C++ 9.x, 10.x, 11.x, DOS 32-bit)"
-    echo "      - When HB_ARCHITECTURE=w32"
+    echo "      - When HB_ARCHITECTURE=win"
     echo "        - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)"
     echo "        - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)"
     echo "        - mingw   (MinGW GNU C, Windows 32-bit)"

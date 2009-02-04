@@ -12,17 +12,17 @@
 ; <platform> - dos[-bcc16]
 ;              dos[-djgpp]
 ;              dos[-watcom]
-;              w32[-bcc32][+T]
-;              w32[-gcc][+T]
-;              w32[-icc][+T]
-;              w32[-mingw32][+T]
-;              w32[-msvc][+T]
+;              win[-bcc32][+T]
+;              win[-gcc][+T]
+;              win[-icc][+T]
+;              win[-mingw][+T]
+;              win[-msvc][+T]
 ;              os2[-gcc][+T]
 ;              os2[-icc][+T]
 ;              lin[-gcc][+T]
 ;              mac[-mpw][+T]
 ;
-;              Examples: w32-gcc+T, w32, w32-icc
+;              Examples: win-gcc+T, win, win-icc
 ;              (+T means multithreading ready)
 ;
 ; Use ';' for comments
