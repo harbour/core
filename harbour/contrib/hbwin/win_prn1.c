@@ -106,7 +106,7 @@ static HDC win_HDC_par( int iParam )
 {
    if( ISNUM( iParam ) )
    {
-      return ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 );
+      return ( HDC ) ( HB_PTRDIFF ) hb_parnint( iParam );
    }
    else
    {
