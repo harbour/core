@@ -56,15 +56,9 @@
 #include "common.ch"
 #include "tbrowse.ch"
 
-/* NOTE: In CA-Cl*pper TBCOLUMN class does not inherit from any other classes
-         and there is no public class function like TBColumn(). There is 
-         in XPP though. */ 
+/* NOTE: In CA-Cl*pper TBCOLUMN class does not inherit from any other classes. */
 
-#if defined( HB_C52_STRICT ) .AND. !defined( HB_COMPAT_XPP )
-CREATE CLASS TBColumn STATIC
-#else
-CREATE CLASS TBColumn
-#endif
+CREATE CLASS TBCOLUMN FUNCTION HBBColumn
 
    EXPORTED:
 
@@ -96,17 +90,17 @@ CREATE CLASS TBColumn
    METHOD headSep( cHeadSep ) SETGET                 /* Heading separator character */
    METHOD footSep( cFootSep ) SETGET                 /* Footing separator character */
    METHOD width( nWidth ) SETGET                     /* Column display width */
-#ifdef HB_COMPAT_C53                                 
+#ifdef HB_COMPAT_C53
    METHOD preBlock( bPreBlock ) SETGET               /* Code block determining editing */
    METHOD postBlock( bPostBlock ) SETGET             /* Code block validating values */
-   METHOD setStyle( nStyle, lSetting )               
-#endif                                               
-                                                     
+   METHOD setStyle( nStyle, lSetting )
+#endif
+
    METHOD New( cHeading, bBlock )                    /* NOTE: This method is a Harbour extension [vszakats] */
 
 ENDCLASS
 
-METHOD block( bBlock ) CLASS TBColumn
+METHOD block( bBlock ) CLASS TBCOLUMN
 
    IF bBlock != NIL
       ::bBlock := __eInstVar53( Self, "BLOCK", bBlock, "B", 1001 )
@@ -114,7 +108,7 @@ METHOD block( bBlock ) CLASS TBColumn
 
    RETURN ::bBlock
 
-METHOD colorBlock( bColorBlock ) CLASS TBColumn
+METHOD colorBlock( bColorBlock ) CLASS TBCOLUMN
 
    IF bColorBlock != NIL
       ::bColorBlock := __eInstVar53( Self, "COLORBLOCK", bColorBlock, "B", 1001 )
@@ -122,7 +116,7 @@ METHOD colorBlock( bColorBlock ) CLASS TBColumn
 
    RETURN ::bColorBlock
 
-METHOD defColor( aDefColor ) CLASS TBColumn
+METHOD defColor( aDefColor ) CLASS TBCOLUMN
 
    IF aDefColor != NIL
       ::aDefColor := __eInstVar53( Self, "DEFCOLOR", aDefColor, "A", 1001 )
@@ -130,7 +124,7 @@ METHOD defColor( aDefColor ) CLASS TBColumn
 
    RETURN ::aDefColor
 
-METHOD colSep( cColSep ) CLASS TBColumn
+METHOD colSep( cColSep ) CLASS TBCOLUMN
 
    IF cColSep != NIL
       ::cColSep := __eInstVar53( Self, "COLSEP", cColSep, "C", 1001 )
@@ -138,7 +132,7 @@ METHOD colSep( cColSep ) CLASS TBColumn
 
    RETURN ::cColSep
 
-METHOD heading( cHeading ) CLASS TBColumn
+METHOD heading( cHeading ) CLASS TBCOLUMN
 
    IF cHeading != NIL
       ::cHeading := __eInstVar53( Self, "HEADING", cHeading, "C", 1001 )
@@ -146,7 +140,7 @@ METHOD heading( cHeading ) CLASS TBColumn
 
    RETURN ::cHeading
 
-METHOD footing( cFooting ) CLASS TBColumn
+METHOD footing( cFooting ) CLASS TBCOLUMN
 
    IF cFooting != NIL
       ::cFooting := __eInstVar53( Self, "FOOTING", cFooting, "C", 1001 )
@@ -154,7 +148,7 @@ METHOD footing( cFooting ) CLASS TBColumn
 
    RETURN ::cFooting
 
-METHOD headSep( cHeadSep ) CLASS TBColumn
+METHOD headSep( cHeadSep ) CLASS TBCOLUMN
 
    IF cHeadSep != NIL
       ::cHeadSep := __eInstVar53( Self, "HEADSEP", cHeadSep, "C", 1001 )
@@ -162,7 +156,7 @@ METHOD headSep( cHeadSep ) CLASS TBColumn
 
    RETURN ::cHeadSep
 
-METHOD footSep( cFootSep ) CLASS TBColumn
+METHOD footSep( cFootSep ) CLASS TBCOLUMN
 
    IF cFootSep != NIL
       ::cFootSep := __eInstVar53( Self, "FOOTSEP", cFootSep, "C", 1001 )
@@ -170,7 +164,7 @@ METHOD footSep( cFootSep ) CLASS TBColumn
 
    RETURN ::cFootSep
 
-METHOD width( nWidth ) CLASS TBColumn
+METHOD width( nWidth ) CLASS TBCOLUMN
 
    IF nWidth != NIL
       ::nWidth := __eInstVar53( Self, "WIDTH", nWidth, "N", 1001 )
@@ -180,7 +174,7 @@ METHOD width( nWidth ) CLASS TBColumn
 
 #ifdef HB_COMPAT_C53
 
-METHOD preBlock( bPreBlock ) CLASS TBColumn
+METHOD preBlock( bPreBlock ) CLASS TBCOLUMN
 
    IF bPreBlock != NIL
       ::bPreBlock := __eInstVar53( Self, "PREBLOCK", bPreBlock, "B", 1001 )
@@ -188,7 +182,7 @@ METHOD preBlock( bPreBlock ) CLASS TBColumn
 
    RETURN ::bPreBlock
 
-METHOD postBlock( bPostBlock ) CLASS TBColumn
+METHOD postBlock( bPostBlock ) CLASS TBCOLUMN
 
    IF bPostBlock != NIL
       ::bPostBlock := __eInstVar53( Self, "POSTBLOCK", bPostBlock, "B", 1001 )
@@ -196,15 +190,15 @@ METHOD postBlock( bPostBlock ) CLASS TBColumn
 
    RETURN ::bPostBlock
 
-METHOD setStyle( nStyle, lNewValue ) CLASS TBColumn
+METHOD setStyle( nStyle, lNewValue ) CLASS TBCOLUMN
 
-   /* NOTE: CA-Cl*pper 5.3 does no checks on the value of nStyle, so in case 
+   /* NOTE: CA-Cl*pper 5.3 does no checks on the value of nStyle, so in case
             it is zero or non-numeric, a regular RTE will happen. [vszakats] */
-  
+
    IF nStyle > Len( ::aSetStyle ) .AND. nStyle <= 4096 /* Some reasonable limit for maximum number of styles */
       ASize( ::aSetStyle, nStyle )
    ENDIF
-  
+
    IF ISLOGICAL( lNewValue )
       ::aSetStyle[ nStyle ] := lNewValue
    ENDIF
@@ -213,7 +207,7 @@ METHOD setStyle( nStyle, lNewValue ) CLASS TBColumn
 
 #endif
 
-METHOD New( cHeading, bBlock ) CLASS TBColumn
+METHOD New( cHeading, bBlock ) CLASS TBCOLUMN
 
    ::cHeading := cHeading /* NOTE: CA-Cl*pper will allow any types for the heading here. [vszakats] */
    ::bBlock := bBlock /* NOTE: CA-Cl*pper allows any types here. [vszakats] */
@@ -221,4 +215,11 @@ METHOD New( cHeading, bBlock ) CLASS TBColumn
    RETURN Self
 
 FUNCTION TBColumnNew( cHeading, bBlock )
-   RETURN TBColumn():New( cHeading, bBlock )
+   RETURN HBBColumn():New( cHeading, bBlock )
+
+#ifdef HB_COMPAT_XPP
+
+CREATE CLASS xpp_TBColumn INHERIT HBBColumn
+ENDCLASS
+
+#endif

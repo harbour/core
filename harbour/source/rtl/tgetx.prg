@@ -56,7 +56,7 @@
 
 #ifdef HB_COMPAT_XPP
 
-CREATE CLASS Get INHERIT HBGet
+CREATE CLASS xpp_Get INHERIT HBGet
 
    EXPORTED:
 
@@ -71,7 +71,7 @@ ENDCLASS
 /* NOTE: Not tested or compared to Xbase++. [vszakats] */
 /* TOFIX: To make it work when @S was used. [vszakats] */
 
-METHOD posInBuffer( nRow, nCol ) CLASS Get
+METHOD posInBuffer( nRow, nCol ) CLASS xpp_Get
 
    IF ::hasFocus .AND. ;
       nRow == ::nRow .AND. ;
@@ -83,13 +83,13 @@ METHOD posInBuffer( nRow, nCol ) CLASS Get
 
    RETURN 0
 
-METHOD _end() CLASS Get
+METHOD _end() CLASS xpp_Get
    RETURN ::end()
 
-METHOD _assign() CLASS Get
+METHOD _assign() CLASS xpp_Get
    RETURN ::assign()
 
-METHOD _delete() CLASS Get
+METHOD _delete() CLASS xpp_Get
    RETURN ::delete()
 
 #endif

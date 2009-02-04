@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    TBrowse Class
+ * TBrowse Class
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * This implementation contains code and notes by:
@@ -67,7 +67,7 @@
 /* HB_BRW_STATICMOUSE controls if mouse position is static
  * and set by call to hitTest() method or dynamic calculated
  * by calls to MPOS() / MCOL(). CL53 uses dynamic mouse but
- * I guess that some Harbour GUI libraries inherit from TBROWSE()
+ * I guess that some Harbour GUI libraries inherit from TBROWSE
  * and because they do not support MCOL()/MROW() (when someone
  * will create GUI library integrated with GT system?) then they
  * need static mouse with positions passed by GUI code. [druzus]
@@ -109,14 +109,7 @@
 
 #define _TBR_COORD( n )       Int( n )
 
-/* NOTE: In CA-Cl*pper TBROWSE class does not inherit from any other classes
-         and there is no public class function like TBrowse(). There is
-         in XPP though. */
-#if defined( HB_C52_STRICT ) .AND. !defined( HB_COMPAT_XPP )
-CREATE CLASS TBrowse STATIC
-#else
-CREATE CLASS TBrowse
-#endif
+CREATE CLASS TBROWSE FUNCTION HBBrowse
 
 /* The first 18 instance variables are exactly the same as in Clipper
  * so also some code which access them directly by array indexes should work
@@ -317,7 +310,7 @@ ENDCLASS
 
 FUNCTION TBrowseNew( nTop, nLeft, nBottom, nRight )
 
-   RETURN TBrowse():new( nTop, nLeft, nBottom, nRight )
+   RETURN HBBrowse():new( nTop, nLeft, nBottom, nRight )
 
 
 METHOD new( nTop, nLeft, nBottom, nRight ) CLASS TBROWSE
@@ -2762,4 +2755,62 @@ FUNCTION TBMouse( oBrw, nMRow, nMCol )
    ENDIF
 
    RETURN TBR_EXCEPTION
+#endif
+
+#ifdef HB_COMPAT_XPP
+
+CREATE CLASS xpp_TBrowse INHERIT HBBrowse
+
+EXPORTED:
+
+   METHOD viewArea()
+   METHOD firstScrCol()
+
+   METHOD _left()
+   METHOD _right()
+   METHOD _end()
+
+ENDCLASS
+
+METHOD viewArea() CLASS xpp_TBrowse
+
+   LOCAL nWidth, nFrozenWidth
+
+   IF ::nConfigure != 0
+      ::doConfigure()
+   ENDIF
+
+   // TOFIX
+
+   nWidth := nFrozenWidth := _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1
+   _MAXFREEZE( ::nFrozen, ::aColData, @nWidth )
+   nFrozenWidth -= nWidth
+
+   RETURN { ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ),;
+            ::n_Left,;
+            ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ),;
+            ::n_Right,;
+            nFrozenWidth }
+
+/* NOTE: Returns the left margin relative column position of the first
+         non-frozen column. Xbase++ compatible method. */
+METHOD firstScrCol() CLASS xpp_TBrowse
+
+   IF ::nConfigure != 0
+      ::doConfigure()
+   ENDIF
+
+   // TOFIX
+
+   RETURN iif( ::leftVisible == 0, 0, ::aColData[ ::leftVisible ][ _TBCI_COLPOS ] )
+
+METHOD _left() CLASS xpp_TBrowse
+   RETURN ::left()
+
+METHOD _right() CLASS xpp_TBrowse
+   RETURN ::right()
+
+METHOD _end() CLASS xpp_TBrowse
+   RETURN ::end()
+
 #endif

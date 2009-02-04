@@ -8,6 +8,44 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-04 19:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbextern.ch
+   * source/rtl/tbcolumn.prg
+   * source/rtl/tbrowse.prg
+   * source/rtl/tget.prg
+   * source/rtl/tgetx.prg
+     ! Using new method to solve the GET()/TBROWSE()/TBCOLUMN()
+       symbol problem (these aren't public symbols in Clipper).
+       The method used is the one already implemented for other
+       C53 CUI classes.
+       This allows inheritance, doesn't mess up the class name,
+       and won't declare above public symbols.
+     * Moved Xbase++ compatible GET()/TBROWSE()/TBCOLUMN()
+       functionality into separate classes, all inheriting from
+       original Harbour classes. This means that Xbase++
+       compatible methods are only accessible when using the
+       derived classes. The separation will allow us to
+       move XPP (and other HB_COMPAT_*) compatible functionality
+       into a separate libraries in the future, allowing more
+       freedom to resolve clashing features, symbol names, etc..
+     * Xbase++ compatible classes are named: xpp_Get(),
+       xpp_TBrowse(), xpp_TBColumn(). This is a slight
+       incompatibility compared to Xbase++ and also to
+       previous Harbour. Technically it seems possible
+       to give them the names GET()/TBROWSE()/TBCOLUMN(), if
+       the class is defined in a different file, but let's first
+       discuss it.
+
+   * source/rtl/tgetint.prg
+     * Using GetNew() instead of Get():New().
+
+     ; Finally I didn't use '( ... )' to pass parameters in GetNew(),
+       as it's a tiny bit less efficient with -gc3.
+
+   * include/hbusrrdd.ch
+   * include/hbapi.h
+     + Comment.
+
 2009-02-04 14:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
   * common.mak
