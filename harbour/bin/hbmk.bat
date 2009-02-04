@@ -20,7 +20,7 @@ rem Copyright 1999-2008 Viktor Szakats (viktor.szakats@syenar.hu)
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 
-rem if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=w32
+rem if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=win
 rem if "%HB_COMPILER%" == "" set HB_COMPILER=mingw
 
 if "%HB_INSTALL_PREFIX%" == "" set HB_INSTALL_PREFIX=..
@@ -87,20 +87,20 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
    echo.
    echo     HB_ARCHITECTURE:
    echo       - dos
-   echo       - w32
+   echo       - win
    echo.
    echo     HB_COMPILER:
    echo       - When HB_ARCHITECTURE=dos
    echo         - djgpp   (Delorie GNU C, DOS 32-bit)
    echo         - owatcom (OpenWatcom, DOS 32-bit)
    echo         - rxs32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)
-   echo       - When HB_ARCHITECTURE=w32
+   echo       - When HB_ARCHITECTURE=win
    echo         - msvc    (Microsoft Visual C++, Windows 32/64-bit)
    echo         - mingw   (MinGW GNU C, Windows 32-bit)
    echo         - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)
    echo         - bcc32   (Borland C++ 4.x, 5.x, 6.x, Windows 32-bit)
    echo         - owatcom (OpenWatcom, Windows 32-bit)
-   echo         - rxsnt   (EMX/RSXNT/Win32 GNU C, Windows 32-bit)
+   echo         - rxsnt   (EMX/RSXNT/Windows GNU C, Windows 32-bit)
    goto END
 
 :NO_ARCH
@@ -132,7 +132,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
 
 :A_DOS
 
-   if not "%HB_ARCHITECTURE%" == "dos" goto A_W32
+   if not "%HB_ARCHITECTURE%" == "dos" goto A_WIN
 
    if not "%HB_COMPILER%" == "djgpp" goto A_DOS_DJGPP_NOT
 
@@ -203,9 +203,12 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
       del _hb_mk.tmp
       goto CLEANUP
 
-:A_W32
+:A_WIN
 
-   if not "%HB_ARCHITECTURE%" == "w32" goto END
+   rem ; Compatibility. Please use 'win'.
+   if "%HB_ARCHITECTURE%" == "win" set HB_ARCHITECTURE=w32
+
+   if not "%HB_ARCHITECTURE%" == "win" goto END
 
    if not "%HB_COMPILER%" == "bcc32" goto A_WIN_BCC_NOT
 

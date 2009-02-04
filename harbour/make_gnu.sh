@@ -15,6 +15,12 @@
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
+# Compatibility. Please use 'win'.
+if [ "$HB_ARCHITECTURE" == "win" ]
+then
+    export HB_ARCHITECTURE=w32
+fi
+
 if [ -z "$HB_ARCHITECTURE" ]; then
     if [ "$OSTYPE" = "msdosdjgpp" ]; then
         hb_arch="dos"
@@ -86,8 +92,8 @@ if [ -z "$HB_COMMERCE" ]; then export HB_COMMERCE=no; fi
 
 if [ "$HB_COMMERCE" = yes ]
 then
-   export HB_GPM_MOUSE=no
-   export HB_WITHOUT_GTSLN=yes
+    export HB_GPM_MOUSE=no
+    export HB_WITHOUT_GTSLN=yes
 fi
 
 # export PRG_USR=
@@ -133,78 +139,78 @@ if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL=$HB_INSTALL_PREFIX/inclu
 
 
 if [ -z "$HB_ARCHITECTURE" ]; then
-   echo "Error: HB_ARCHITECTURE is not set."
+    echo "Error: HB_ARCHITECTURE is not set."
 fi
 if [ -z "$HB_COMPILER" ]; then
-   echo "Error: HB_COMPILER is not set."
+    echo "Error: HB_COMPILER is not set."
 fi
 
 if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
 
-   echo
-   echo "Usage: make_gnu.sh [command]"
-   echo
-   echo "The following commands are supported:"
-   echo "  - all (default)"
-   echo "  - clean"
-   echo "  - install"
-   echo
-   echo "Notes:"
-   echo
-   echo "  - HB_ARCHITECTURE and HB_COMPILER envvars must be set."
-   echo "    The following values are currently supported:"
-   echo
-   echo "    HB_ARCHITECTURE:"
-   echo "      - dos"
-   echo "      - w32"
-   echo "      - os2"
-   echo "      - linux"
-   echo "      - bsd"
-   echo "      - darwin"
-   echo "      - sunos"
-   echo "      - hpux"
-   echo
-   read
-   echo "    HB_COMPILER:"
-   echo "      - When HB_ARCHITECTURE=dos"
-   echo "        - bcc16   (Borland C++ 3.x, 4.x, 5.0x, DOS 16-bit)"
-   echo "        - djgpp   (Delorie GNU C, DOS 32-bit)"
-   echo "        - rsx32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)"
-   echo "        - owatcom (Watcom C++ 9.x, 10.x, 11.x, DOS 32-bit)"
-   echo "      - When HB_ARCHITECTURE=w32"
-   echo "        - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)"
-   echo "        - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)"
-   echo "        - mingw   (MinGW GNU C, Windows 32-bit)"
-   echo "        - rsxnt   (EMX/RSXNT/Win32 GNU C, Windows 32-bit)"
-   echo "        - icc     (IBM Visual Age C++, Windows 32-bit)"
-   echo "        - msvc    (Microsoft Visual C++, Windows 32-bit)"
-   echo "      - When HB_ARCHITECTURE=linux"
-   echo "        - gcc     (GNU C, 32-bit)"
-   echo "      - When HB_ARCHITECTURE=os2"
-   echo "        - gcc     (EMX GNU C, OS/2 32-bit)"
-   echo "        - icc     (IBM Visual Age C++ 3.0, OS/2 32-bit)"
-   echo
-   echo "  - Use these optional envvars to configure the make process"
-   echo "    when using the 'all' target:"
-   echo
-   echo "    PRG_USR - Extra Harbour compiler options"
-   echo "    C_USR   - Extra C compiler options"
-   echo "    L_USR   - Extra linker options"
-   exit
+    echo
+    echo "Usage: make_gnu.sh [command]"
+    echo
+    echo "The following commands are supported:"
+    echo "  - all (default)"
+    echo "  - clean"
+    echo "  - install"
+    echo
+    echo "Notes:"
+    echo
+    echo "  - HB_ARCHITECTURE and HB_COMPILER envvars must be set."
+    echo "    The following values are currently supported:"
+    echo
+    echo "    HB_ARCHITECTURE:"
+    echo "      - dos"
+    echo "      - w32"
+    echo "      - os2"
+    echo "      - linux"
+    echo "      - bsd"
+    echo "      - darwin"
+    echo "      - sunos"
+    echo "      - hpux"
+    echo
+    read
+    echo "    HB_COMPILER:"
+    echo "      - When HB_ARCHITECTURE=dos"
+    echo "        - bcc16   (Borland C++ 3.x, 4.x, 5.0x, DOS 16-bit)"
+    echo "        - djgpp   (Delorie GNU C, DOS 32-bit)"
+    echo "        - rsx32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)"
+    echo "        - owatcom (Watcom C++ 9.x, 10.x, 11.x, DOS 32-bit)"
+    echo "      - When HB_ARCHITECTURE=w32"
+    echo "        - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)"
+    echo "        - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)"
+    echo "        - mingw   (MinGW GNU C, Windows 32-bit)"
+    echo "        - rsxnt   (EMX/RSXNT/Windows GNU C, Windows 32-bit)"
+    echo "        - icc     (IBM Visual Age C++, Windows 32-bit)"
+    echo "        - msvc    (Microsoft Visual C++, Windows 32-bit)"
+    echo "      - When HB_ARCHITECTURE=linux"
+    echo "        - gcc     (GNU C, 32-bit)"
+    echo "      - When HB_ARCHITECTURE=os2"
+    echo "        - gcc     (EMX GNU C, OS/2 32-bit)"
+    echo "        - icc     (IBM Visual Age C++ 3.0, OS/2 32-bit)"
+    echo
+    echo "  - Use these optional envvars to configure the make process"
+    echo "    when using the 'all' target:"
+    echo
+    echo "    PRG_USR - Extra Harbour compiler options"
+    echo "    C_USR   - Extra C compiler options"
+    echo "    L_USR   - Extra linker options"
+    exit
 
 else
 
-   # ---------------------------------------------------------------
-   # Start the GNU make system
+    # ---------------------------------------------------------------
+    # Start the GNU make system
 
-   if [ "$HB_ARCHITECTURE" = "bsd" ] || [ "$HB_ARCHITECTURE" = "hpux" ]
-   then
-      gmake $MK_USR $*
-   else
-      make $MK_USR $*
-   fi
+    if [ "$HB_ARCHITECTURE" = "bsd" ] || [ "$HB_ARCHITECTURE" = "hpux" ]
+    then
+       gmake $MK_USR $*
+    else
+       make $MK_USR $*
+    fi
 
-   if [ "$*" = "clean" ]; then
-      find . -type d -name "$HB_ARCHITECTURE" | xargs rmdir 2> /dev/null
-   fi
+    if [ "$*" = "clean" ]; then
+       find . -type d -name "$HB_ARCHITECTURE" | xargs rmdir 2> /dev/null
+    fi
 fi

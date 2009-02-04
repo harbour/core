@@ -147,9 +147,9 @@ if [ -z "${HB_PPGEN_PATH}" ]; then
     fi
 fi
 if [ -d "${HB_PPGEN_PATH}" ]; then
-   if [ -x "${HB_PPGEN_PATH}/hbpp" ]; then
-      HB_PPGEN_PATH="${HB_PPGEN_PATH}/hbpp"
-   fi
+    if [ -x "${HB_PPGEN_PATH}/hbpp" ]; then
+        HB_PPGEN_PATH="${HB_PPGEN_PATH}/hbpp"
+    fi
 fi
 if [ -x "${HB_PPGEN_PATH}" ] && [ -f "${HB_PPGEN_PATH}" ]; then
     ln -s ${HB_PPGEN_PATH} ${HB_BIN_COMPILE}/hbpp.exe
