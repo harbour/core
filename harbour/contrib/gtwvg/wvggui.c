@@ -1381,7 +1381,7 @@ static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
    HB_SYMBOL_UNUSED( pGT );
 
-   hb_gt_w32_tone( dFrequency, dDuration );
+   hb_gt_winapi_tone( dFrequency, dDuration );
 }
 
 /* ********************************************************************** */
@@ -1681,27 +1681,27 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
       case HB_GTI_KBDSHIFTS:
       {
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_w32_getKbdState() );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_winapi_getKbdState() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-            hb_gt_w32_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
+            hb_gt_winapi_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;
       }
       case HB_GTI_CLIPBOARDDATA:
       {
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            hb_gt_w32_setClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                    CF_OEMTEXT : CF_TEXT,
-                                    hb_itemGetCPtr( pInfo->pNewVal ),
-                                    hb_itemGetCLen( pInfo->pNewVal ) );
+            hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
+                                       CF_OEMTEXT : CF_TEXT,
+                                       hb_itemGetCPtr( pInfo->pNewVal ),
+                                       hb_itemGetCLen( pInfo->pNewVal ) );
          }
          else
          {
             char * szClipboardData;
             ULONG ulLen;
-            if( hb_gt_w32_getClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                        CF_OEMTEXT : CF_TEXT,
-                                        &szClipboardData, &ulLen ) )
+            if( hb_gt_winapi_getClipboard( pWVT->CodePage == OEM_CHARSET ?
+                                           CF_OEMTEXT : CF_TEXT,
+                                           &szClipboardData, &ulLen ) )
             {
                pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
                                                  szClipboardData,
@@ -2213,5 +2213,3 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
    static HB_$INITSYM hb_vm_auto__hb_startup_gt_Init_ = _hb_startup_gt_Init_;
    #pragma data_seg()
 #endif
-
-

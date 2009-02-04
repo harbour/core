@@ -53,12 +53,13 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
+
 #define HB_OS_WIN_USED
 #include "hbgtcore.h"
 
 #if defined( HB_OS_WIN )
 
-int hb_gt_w32_getKbdState( void )
+int hb_gt_winapi_getKbdState( void )
 {
    BYTE kbState[256];
    int iKbdState = 0;
@@ -79,7 +80,7 @@ int hb_gt_w32_getKbdState( void )
    return iKbdState;
 }
 
-void hb_gt_w32_setKbdState( int iKbdState )
+void hb_gt_winapi_setKbdState( int iKbdState )
 {
    BYTE kbState[256];
 
@@ -98,6 +99,5 @@ void hb_gt_w32_setKbdState( int iKbdState )
 
    SetKeyboardState( kbState );
 }
-
 
 #endif /* HB_OS_WIN */

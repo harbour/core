@@ -231,9 +231,9 @@ static void hb_gt_wNtTone( double dFreq, double dDurat )
 
 /* *********************************************************************** */
 /* dDuration is in 'Ticks' (18.2 per second) */
-void hb_gt_w32_tone( double dFrequency, double dDuration )
+void hb_gt_winapi_tone( double dFrequency, double dDuration )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_w32_tone(%lf, %lf)", dFrequency, dDuration));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_winapi_tone(%lf, %lf)", dFrequency, dDuration));
 
    /*
     * According to the Clipper NG, the duration in 'ticks' is truncated to the

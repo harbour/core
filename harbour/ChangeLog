@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-04 21:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbgtcore.h
+  * contrib/gtwvg/gtwvg.c
+  * contrib/gtwvg/wvggui.c
+  * source/rtl/gtclip.c
+  * source/rtl/gttone.c
+  * source/rtl/gtkbstat.c
+  * source/rtl/gtgui/gtgui.c
+  * source/rtl/gtwin/gtwin.c
+  * source/rtl/gtwvt/gtwvt.c
+    * hb_gt_w32_*() internal functions renamed to hb_gt_winapi_*().
+
 2009-02-04 21:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/rddado/tests/hbmk_b32.bat
   * contrib/rddado/tests/hbmk_vc.bat

@@ -110,7 +110,7 @@ BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen )
 
 #if defined( HB_OS_WIN )
 
-BOOL hb_gt_w32_setClipboard( UINT uFormat, const char * szClipData, ULONG ulLen )
+BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, ULONG ulLen )
 {
    BOOL fResult = FALSE;
 
@@ -149,7 +149,7 @@ BOOL hb_gt_w32_setClipboard( UINT uFormat, const char * szClipData, ULONG ulLen 
    return fResult;
 }
 
-BOOL hb_gt_w32_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )
+BOOL hb_gt_winapi_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )
 {
    *pulLen = 0;
    *pszClipData = NULL;

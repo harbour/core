@@ -594,11 +594,11 @@ extern int  hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, BOOL fSetACS
 extern BOOL hb_gt_setClipboard( const char * szClipData, ULONG ulLen );
 extern BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen );
 #if defined( HB_OS_WIN )
-extern BOOL hb_gt_w32_setClipboard( UINT uFormat, const char * szClipData, ULONG ulLen );
-extern BOOL hb_gt_w32_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen );
-extern int  hb_gt_w32_getKbdState( void );
-extern void hb_gt_w32_setKbdState( int kbdShifts );
-extern void hb_gt_w32_tone( double dFrequency, double dDuration );
+extern BOOL hb_gt_winapi_setClipboard( UINT uFormat, const char * szClipData, ULONG ulLen );
+extern BOOL hb_gt_winapi_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen );
+extern int  hb_gt_winapi_getKbdState( void );
+extern void hb_gt_winapi_setKbdState( int kbdShifts );
+extern void hb_gt_winapi_tone( double dFrequency, double dDuration );
 #endif /* HB_OS_WIN */
 #if defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
 extern int hb_gt_dos_keyCodeTranslate( int iKey );
