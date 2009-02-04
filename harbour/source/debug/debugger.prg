@@ -2770,7 +2770,7 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
       ENDIF
    ENDIF
 
-   ::oBrwText:RefreshCurrent()
+   ::oBrwText:RefreshCurrent():ForceStable()
 
    RETURN NIL
 

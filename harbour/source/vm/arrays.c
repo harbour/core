@@ -1072,7 +1072,10 @@ ULONG hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG
                {
                   hb_vmPushSymbol( &hb_symEval );
                   hb_vmPush( pValue );
-                  hb_vmPush( pBaseArray->pItems + ulStart );
+                  if( ulStart < pBaseArray->ulLen )
+                     hb_vmPush( pBaseArray->pItems + ulStart );
+                  else
+                     hb_vmPushNil();
                   hb_vmPushLong( ulStart + 1 );
                   hb_vmDo( 2 );
 

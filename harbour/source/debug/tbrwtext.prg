@@ -245,12 +245,14 @@ METHOD GetLineColor() CLASS HBBrwText
 
    lBreak := AScan( ::aBreakPoints, ::nRow ) > 0
 
-   IF lBreak
-      aColor := { 3, 2 }
-   ELSEIF ::nRow == ::nActiveLine
+   IF lBreak .AND. ::nRow == ::nActiveLine
       aColor := { 4, 4 }
+   ELSEIF lBreak
+      aColor := { 3, 3 }
+   ELSEIF ::nRow == ::nActiveLine
+      aColor := { 2, 2 }
    ELSE
-      aColor := { 1, 2 }
+      aColor := { 1, 1 }
    ENDIF
 
    RETURN aColor

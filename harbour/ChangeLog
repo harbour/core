@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-04 01:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/arrays.c
+    ! protection against possible GPF in hb_rAscan() if user block
+      reduces the array size
+
+  * harbour/source/debug/tbrwtext.prg
+    ! fixed source color text to be more Clipper compatible.
+      Borrowed from xHarbour by Phil Krylov
+
+  * harbour/source/debug/debugger.prg
+    ! added missing :forceStable() to refresh the screen after break point
+      setting
+
 2009-02-04 01:09 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/extend.api
   * include/hbgtcore.h
