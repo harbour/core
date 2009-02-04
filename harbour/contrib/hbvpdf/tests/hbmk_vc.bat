@@ -11,7 +11,7 @@ set HB_BIN_INSTALL=..\..\..\bin
 set HB_INC_INSTALL=..\..\..\include
 set HB_LIB_INSTALL=..\..\..\lib
 
-set HB_ARCHITECTURE=w32
+set HB_ARCHITECTURE=win
 set HB_COMPILER=msvc
 set HB_USER_LIBS=hbvpdf.lib
 
