@@ -16,7 +16,7 @@ Modified and non-API functions:
 
 */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 #define _WIN32_WINNT   0x0400
 
 #include "hbwhat.h"

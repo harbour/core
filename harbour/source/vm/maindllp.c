@@ -55,7 +55,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbtypes.h"
 
@@ -66,7 +66,7 @@
 #define HB_DLL_NAME2 "harbour-vc.dll"
 #endif
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 HB_EXTERN_BEGIN
 
 static FARPROC hb_getProcAddress( LPCSTR szProcName )

@@ -214,7 +214,7 @@
   * Makefile
     using standard config/*.cf to support more C compilers
   * tiputils.c
-    windows.h included for HB_OS_WIN_32
+    windows.h included for HB_OS_WIN
 
 2004-03-23 11:05 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
   * Rules.make

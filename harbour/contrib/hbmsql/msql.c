@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#if defined( HB_OS_WIN_32 ) && !defined( _OS_WIN32 )
+#if defined( HB_OS_WIN ) && !defined( _OS_WIN32 )
    /* This is needed by msql.h to indicate the platform. */
    #define _OS_WIN32
 #endif

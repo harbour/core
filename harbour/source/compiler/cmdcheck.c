@@ -47,7 +47,7 @@
 
 #include "hbcomp.h"
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 #include <windows.h>
 #else
 #include <time.h>
@@ -80,7 +80,7 @@ static ULONG PackDateTime( void )
    BYTE szString[4];
    BYTE nValue;
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
    SYSTEMTIME st;
 
    GetLocalTime( &st );

@@ -88,12 +88,12 @@
 #include "hbset.h"
 #include "hbapierr.h"
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
 #   include <windows.h>
 #   include <winnetwk.h>
 
-#   define HB_OS_WIN_32_USED
+#   define HB_OS_WIN_USED
 
 BOOL WINAPI WNetErrorHandler( DWORD dwErrorCode, LPSTR lpszFunction )
 {

@@ -61,10 +61,10 @@
 /* NOTE: User programs should never call this layer directly! */
 
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 #include "hbgtcore.h"
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
 
 #if defined( HB_ARCH_32BIT ) && !defined( _M_ARM ) && \
     ( defined(__BORLANDC__) || defined(_MSC_VER) || \
@@ -264,4 +264,4 @@ void hb_gt_w32_tone( double dFrequency, double dDuration )
    }
 }
 
-#endif /* HB_OS_WIN_32 */
+#endif /* HB_OS_WIN */

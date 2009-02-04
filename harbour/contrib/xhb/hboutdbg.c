@@ -56,7 +56,7 @@
    debug window.
 */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -219,7 +219,7 @@ void hb_OutDebug( const char * szMsg, ULONG ulMsgLen )
       }
    }
 
-#elif defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_WIN )
 
    {
       LPTSTR lpMsg = HB_TCHAR_CONVTO( szMsg );

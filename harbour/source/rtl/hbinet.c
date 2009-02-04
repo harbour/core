@@ -67,7 +67,7 @@
 
 /* Compile in Unix mode under Cygwin */
 #if defined( HB_OS_UNIX_COMPATIBLE )
-   #undef HB_OS_WIN_32
+   #undef HB_OS_WIN
 #endif
 
 /* HB_INET_H_ */
@@ -81,7 +81,7 @@
 
    #include <string.h>
 
-   #if defined( HB_OS_WIN_32 )
+   #if defined( HB_OS_WIN )
       #define _WINSOCKAPI_  /* Prevents inclusion of winsock.h in windows.h */
       #define HB_SOCKET_T SOCKET
       #include <winsock2.h>
@@ -146,7 +146,7 @@
          s->errorDesc = ""; \
       } while( 0 )
 
-   #if defined( HB_OS_WIN_32 )
+   #if defined( HB_OS_WIN )
       #if defined( _MSC_VER ) && _MSC_VER >= 1400
          #define HB_SOCKET_SET_ERROR( s )   \
             do { \
@@ -231,7 +231,7 @@
 #endif
 
 
-#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN_32 )
+#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
    /* NET_SIZE_T exists because of shortsightedness on the POSIX committee.  BSD
     * systems used "int *" as the parameter to accept(), getsockname(),
     * getpeername() et al.  Consequently many unixes took an int * for that
@@ -344,7 +344,7 @@ static int hb_selectWriteSocket( HB_SOCKET_STRUCT *Socket )
    return iResult > 0 ? FD_ISSET( Socket->com, &set ) : 0;
 }
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 static int hb_selectWriteExceptSocket( HB_SOCKET_STRUCT *Socket )
 {
    fd_set set, eset;
@@ -390,7 +390,7 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
    /* TOFIX: make it MT safe */
 
    /* let's see if name is an IP address; not necessary on Linux */
-#if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
+#if defined(HB_OS_WIN) || defined(HB_OS_OS2)
    {
       ULONG ulAddr;
 
@@ -416,7 +416,7 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
 
    if( Host == NULL && Socket )
    {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
       HB_SOCKET_SET_ERROR2( Socket, WSAGetLastError() , "Generic error in gethostbyname()" );
       WSASetLastError( 0 );
 #elif defined(HB_OS_OS2) || defined(HB_OS_HPUX) || defined(__WATCOMC__)
@@ -436,7 +436,7 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
 
 static void hb_socketSetNonBlocking( HB_SOCKET_STRUCT *Socket )
 {
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    ULONG mode = 1;
    ioctlsocket( Socket->com, FIONBIO, &mode );
 #elif defined( O_NONBLOCK )
@@ -456,7 +456,7 @@ static void hb_socketSetNonBlocking( HB_SOCKET_STRUCT *Socket )
 
 static void hb_socketSetBlocking( HB_SOCKET_STRUCT *Socket )
 {
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    ULONG mode = 0;
    ioctlsocket( Socket->com, FIONBIO, &mode );
 #elif defined( O_NONBLOCK )
@@ -476,7 +476,7 @@ static void hb_socketSetBlocking( HB_SOCKET_STRUCT *Socket )
 static int hb_socketConnect( HB_SOCKET_STRUCT *Socket )
 {
    int iErr1;
-   #if ! defined(HB_OS_WIN_32)
+   #if ! defined(HB_OS_WIN)
       int iErrval;
       socklen_t iErrvalLen;
    #endif
@@ -492,7 +492,7 @@ static int hb_socketConnect( HB_SOCKET_STRUCT *Socket )
    iErr1 = connect( Socket->com, (struct sockaddr *) &Socket->remote, sizeof(Socket->remote) );
    if( iErr1 != 0 )
    {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
       if( WSAGetLastError() != WSAEWOULDBLOCK )
 #else
       if( errno != EINPROGRESS )
@@ -504,7 +504,7 @@ static int hb_socketConnect( HB_SOCKET_STRUCT *Socket )
       {
          /* Now we wait for socket connection or timeout */
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
          iErr1 = hb_selectWriteExceptSocket( Socket );
          if( iErr1 == 2 )
          {
@@ -559,7 +559,7 @@ static HB_GARBAGE_FUNC( hb_inetSocketFinalize )
 
    if( Socket->com != ( HB_SOCKET_T ) -1 )
    {
-      #if defined( HB_OS_WIN_32 )
+      #if defined( HB_OS_WIN )
          shutdown( Socket->com, SD_BOTH );
       #elif defined(HB_OS_OS2)
          shutdown( Socket->com, SO_RCV_SHUTDOWN + SO_SND_SHUTDOWN );
@@ -590,7 +590,7 @@ HB_FUNC( HB_INETINIT )
    }
    else
    {
-      #if defined(HB_OS_WIN_32)
+      #if defined(HB_OS_WIN)
          #define HB_MKWORD( l, h )  ((WORD)(((BYTE)(l)) | (((WORD)((BYTE)(h))) << 8)))
          WSADATA wsadata;
          WSAStartup( HB_MKWORD(1,1), &wsadata );
@@ -605,7 +605,7 @@ HB_FUNC( HB_INETCLEANUP )
 {
    if( --s_iSessions == 0 )
    {
-      #if defined(HB_OS_WIN_32)
+      #if defined(HB_OS_WIN)
          WSACleanup();
       #endif
    }
@@ -636,7 +636,7 @@ HB_FUNC( HB_INETCLOSE )
    {
       hb_vmUnlock();
 
-      #if defined( HB_OS_WIN_32 )
+      #if defined( HB_OS_WIN )
          shutdown( Socket->com, SD_BOTH );
       #elif defined(HB_OS_OS2)
          shutdown( Socket->com, SO_RCV_SHUTDOWN + SO_SND_SHUTDOWN );
@@ -869,7 +869,7 @@ HB_FUNC( HB_INETGETSNDBUFSIZE )
    {
       int value;
       socklen_t len = sizeof( value );
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
       getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( char * ) &value, &len );
 #else
       getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( void * ) &value, &len );
@@ -890,7 +890,7 @@ HB_FUNC( HB_INETGETRCVBUFSIZE )
    {
       int value;
       socklen_t len = sizeof( value );
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
       getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, ( char * ) &value, &len );
 #else
       getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, ( void * ) &value, &len );
@@ -910,7 +910,7 @@ HB_FUNC( HB_INETSETSNDBUFSIZE )
    else
    {
       int value = hb_parni( 2 );
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
       setsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( char * ) &value, sizeof( value ) );
 #else
       setsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( void * ) &value, sizeof( value ) );
@@ -930,7 +930,7 @@ HB_FUNC( HB_INETSETRCVBUFSIZE )
    else
    {
       int value = hb_parni( 2 );
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
       setsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, ( char * ) &value, sizeof( value ) );
 #else
       setsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, ( void * ) &value, sizeof( value ) );
@@ -1670,7 +1670,7 @@ HB_FUNC( HB_INETSERVER )
       HB_SOCKET_INIT( Socket, pSocket );
 
    /* Creates comm socket */
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
    Socket->com = socket( AF_INET, SOCK_STREAM, 0 );
 #else
    Socket->com = socket( PF_INET, SOCK_STREAM, 0 );
@@ -1771,7 +1771,7 @@ HB_FUNC( HB_INETACCEPT )
 
          if( incoming == ( HB_SOCKET_T ) -1 )
          {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
             iError = WSAGetLastError();
 #else
             iError = errno;
@@ -1845,7 +1845,7 @@ HB_FUNC( HB_INETCONNECT )
    if( Host )
    {
       /* Creates comm socket */
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
       Socket->com = socket( AF_INET, SOCK_STREAM, 0);
 #else
       Socket->com = socket( PF_INET, SOCK_STREAM, 0);
@@ -1902,7 +1902,7 @@ HB_FUNC( HB_INETCONNECTIP )
    }
 
    /* Creates comm socket */
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
    Socket->com = socket( AF_INET, SOCK_STREAM, 0);
 #else
    Socket->com = socket( PF_INET, SOCK_STREAM, 0);
@@ -1951,7 +1951,7 @@ HB_FUNC( HB_INETDGRAMBIND )
    HB_SOCKET_INIT( Socket, pSocket );
 
    /* Creates comm socket */
-   #if defined(HB_OS_WIN_32)
+   #if defined(HB_OS_WIN)
       Socket->com = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
    #else
       Socket->com = socket( PF_INET, SOCK_DGRAM, 0 );
@@ -2039,7 +2039,7 @@ HB_FUNC( HB_INETDGRAM )
    HB_SOCKET_INIT( Socket, pSocket );
 
    /* Creates comm socket */
-   #if defined(HB_OS_WIN_32)
+   #if defined(HB_OS_WIN)
       Socket->com = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
    #else
       Socket->com = socket( PF_INET, SOCK_DGRAM, 0 );

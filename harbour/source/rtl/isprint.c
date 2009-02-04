@@ -95,7 +95,7 @@ BOOL hb_printerIsReady( char * pszPrinterName )
          bIsPrinter = FALSE;
    }
 
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
 
    /* NOTE: Platform independent method, at least it will compile and run
             on any platform, but the result may not be the expected one,

@@ -593,16 +593,16 @@ extern HB_EXPORT PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUN
 extern int  hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, BOOL fSetACSC );
 extern BOOL hb_gt_setClipboard( const char * szClipData, ULONG ulLen );
 extern BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen );
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
 extern BOOL hb_gt_w32_setClipboard( UINT uFormat, const char * szClipData, ULONG ulLen );
 extern BOOL hb_gt_w32_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen );
 extern int  hb_gt_w32_getKbdState( void );
 extern void hb_gt_w32_setKbdState( int kbdShifts );
 extern void hb_gt_w32_tone( double dFrequency, double dDuration );
-#endif /* HB_OS_WIN_32 */
-#if defined( HB_OS_DOS ) || defined( HB_OS_WIN_32 ) || defined( HB_OS_OS2 )
+#endif /* HB_OS_WIN */
+#if defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
 extern int hb_gt_dos_keyCodeTranslate( int iKey );
-#endif /* HB_OS_DOS || HB_OS_WIN_32 || HB_OS_OS2 */
+#endif /* HB_OS_DOS || HB_OS_WIN || HB_OS_OS2 */
 
 HB_EXTERN_END
 

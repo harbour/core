@@ -54,7 +54,7 @@
 #define INCL_BASE
 #define INCL_DOSERRORS
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include <ctype.h>
 
@@ -150,7 +150,7 @@ HB_FUNC( HB_DISKSPACE )
          break;
       }
    }
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
    {
 #if defined(_MSC_VER) || defined(__LCC__) || \
     ( defined(__GNUC__) && !defined(__RSXNT__) )

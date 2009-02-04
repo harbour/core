@@ -56,7 +56,7 @@
 
 #define HB_GT_NAME   GUI
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 #include "hbgtcore.h"
 #include "hbinit.h"
 #include "hbapiitm.h"
@@ -88,7 +88,7 @@ static void hb_gt_gui_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_gui_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    HB_SYMBOL_UNUSED( pGT );
    hb_gt_w32_tone( dFrequency, dDuration );
 #else
@@ -104,7 +104,7 @@ static BOOL hb_gt_gui_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch( iType )
    {
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
       case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {

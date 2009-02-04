@@ -57,11 +57,11 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
 
 BOOL win_SysRefresh( int iMsec )
 {

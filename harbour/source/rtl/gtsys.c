@@ -63,7 +63,7 @@
    HB_GT_REQUEST( HB_GT_LIB )
 #elif defined(HB_WINCE)
    HB_GT_REQUEST( WVT )
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
    HB_GT_REQUEST( WIN )
 #elif defined(HB_OS_DOS)
    HB_GT_REQUEST( DOS )

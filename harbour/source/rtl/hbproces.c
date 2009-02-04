@@ -53,7 +53,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 /* #define HB_IO_WIN_OFF */
 
@@ -69,14 +69,14 @@
 #  include <fcntl.h>
 #  include <signal.h>
 #elif defined( HB_OS_OS2 ) || defined( HB_OS_UNIX ) || \
-      ( defined( HB_OS_WIN_32 ) && !defined( HB_IO_WIN ) )
+      ( defined( HB_OS_WIN ) && !defined( HB_IO_WIN ) )
 #  include <io.h>
 #  include <process.h>
 #  include <fcntl.h>
 #endif
 
 #if defined( HB_OS_OS2 ) || defined( HB_OS_UNIX ) || \
-    ( defined( HB_OS_WIN_32 ) && !defined( HB_IO_WIN ) )
+    ( defined( HB_OS_WIN ) && !defined( HB_IO_WIN ) )
 
 /* convert command to argument list using standard bourne shell encoding:
  * "" and '' can be used to group parameters with blank characters,
@@ -426,10 +426,10 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
          close( hPipeErr[ 1 ] );
    }
 }
-#elif defined( HB_OS_OS2 ) || defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
 {
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
 
 #  define pid_t               int
 #  define _hb_pipe( e, p )    do { \
@@ -637,7 +637,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, BOOL fWait )
    else
       hb_fsSetError( ( USHORT ) FS_ERROR );
 }
-#elif defined( HB_OS_OS2 ) || defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
 {
    int iPid = ( int ) hProcess;
 
@@ -705,7 +705,7 @@ BOOL hb_fsProcessClose( HB_FHANDLE hProcess, BOOL fGentle )
    else
       hb_fsSetError( ( USHORT ) FS_ERROR );
 }
-#elif defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_WIN )
 {
    HANDLE hProc = OpenProcess( PROCESS_TERMINATE, FALSE, hProcess );
 

@@ -116,21 +116,21 @@
 
 /* ***********************************************************************
  * Use system PCRE library instead of build in. I'm setting it sometimes
- * when I want to use exactly the same PCRE version as installed in     
- * a system.                                                            
+ * when I want to use exactly the same PCRE version as installed in
+ * a system.
  */
 /* #define HB_PCRE_REGEX */
 
 /* ***********************************************************************
- * Use old PCRE library which is part of BCC CRTL used to emulate 
+ * Use old PCRE library which is part of BCC CRTL used to emulate
  * POSIX regex.
  */
 /* #define HB_PCRE_REGEX_BCC */
 
 /* ***********************************************************************
  * Use POSIX regex library which should be part of each POSIX compatible
- * system / C compiler I also use this when I want to support exactly   
- * the same regular expressions as other tools installed in the system  
+ * system / C compiler I also use this when I want to support exactly
+ * the same regular expressions as other tools installed in the system
  */
 /* #define HB_POSIX_REGEX */
 
@@ -164,7 +164,7 @@
 /* #define HB_YYDEBUG */
 
 /* ***********************************************************************
- * Use native Windows memory allocation functions (HB_OS_WIN_32)
+ * Use native Windows memory allocation functions (HB_OS_WIN)
  * This option can disable compiler memory allocation optimization
  * so you should really have a good reason to enable it
  */
@@ -254,7 +254,7 @@
    #if defined(__OS2__)
       #define HB_OS_OS2
    #elif defined(__NT__) || defined(__WINDOWS_386__) || defined(__WINDOWS__)
-      #define HB_OS_WIN_32
+      #define HB_OS_WIN
    #elif defined(__LINUX__)
       #define HB_OS_LINUX
    #elif defined(__386__)
@@ -286,20 +286,22 @@
    #endif
 #endif
 
-#ifndef HB_OS_WIN_32
+#ifndef HB_OS_WIN
    #if defined(WINNT) || defined(_Windows) || defined(__NT__) || defined(_WIN32) || defined(_WINDOWS_) || defined(__WINDOWS_386__) || defined(__WIN32__) || defined(__CYGWIN__)
+      #define HB_OS_WIN
+      /* Compatibility. Do not use this. */
       #define HB_OS_WIN_32
    #endif
 #endif
 
-/* Sub-option inside HB_OS_WIN_32 */
+/* Sub-option inside HB_OS_WIN */
 #ifndef HB_OS_WIN_64
    #if defined(_WIN64)
       #define HB_OS_WIN_64
    #endif
 #endif
 
-/* Sub-option inside HB_OS_WIN_32 */
+/* Sub-option inside HB_OS_WIN */
 #ifndef HB_WINCE
    #if defined(_WINCE) || defined(__CEGCC__) || defined(__MINGW32CE__) || (defined(__POCC_TARGET__) && __POCC_TARGET__ == 2)
       #define HB_WINCE
@@ -360,7 +362,7 @@
    #define HB_OS_EOL_LEN 2
 #endif
 
-/* Compatibility #defines. These will be removed, so 
+/* Compatibility #defines. These will be removed, so
    please use the new names in your code. */
 #ifdef HB_LEGACY_LEVEL
    #define OS_PATH_DELIMITER            HB_OS_PATH_DELIM_CHR

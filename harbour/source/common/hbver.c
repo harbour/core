@@ -72,12 +72,12 @@
 /* NOTE: For OS/2. Must be ahead of any and all #include statements */
 #define INCL_DOSMISC
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbmemory.ch"
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
    #include <ctype.h>
    #ifndef VER_PLATFORM_WIN32_WINDOWS
@@ -196,7 +196,7 @@ char * hb_verPlatform( void )
          hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "OS/2" );
    }
 
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
 
    {
       OSVERSIONINFOA osVer;
@@ -327,7 +327,7 @@ char * hb_verPlatform( void )
 
 BOOL hb_iswinnt( void )
 {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
    static BOOL s_fWinNT = FALSE;
    static BOOL s_fInited = FALSE;
 

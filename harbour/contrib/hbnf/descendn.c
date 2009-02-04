@@ -50,7 +50,7 @@
 
 HB_FUNC( FT_DESCEND )
 {
-#if defined(HB_OS_DOS) || defined(HB_OS_WIN_32)
+#if defined(HB_OS_DOS) || defined(HB_OS_WIN)
    {
 
       auto PHB_ITEM iP = hb_itemParam( 1 );

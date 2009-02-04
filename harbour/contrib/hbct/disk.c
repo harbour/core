@@ -70,13 +70,13 @@
 #include "hbapifs.h"
 #include "ctstrfil.h"
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
 #   include <windows.h>
 #   include <winbase.h>
 #   include <shellapi.h>
 
-#   define HB_OS_WIN_32_USED
+#   define HB_OS_WIN_USED
 
 #elif defined(HB_OS_DOS)
 
@@ -124,7 +124,7 @@ HB_FUNC( DIRNAME )
 
 HB_FUNC( DRIVETYPE )
 {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
    ULONG ulSize = hb_parclen( 1 ) + 2;  /* allow space for '\0' & ":\" */
    char *pszDrive = ( char * ) hb_xgrab( ulSize + 1 );
    LPTSTR lpDrive;
@@ -183,7 +183,7 @@ HB_FUNC( NUMDISKL )
    /* should be easily implementable somehow similar to DJGPP */
    hb_retni( 26 );
 #endif
-#elif defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_WIN )
    /* LASTDRIVE does not affect Win32 apps, they always have 26 letters avail */
    hb_retni( 26 );
 #else
@@ -249,7 +249,7 @@ HB_FUNC( VOLUME )
          if( fFree )
             hb_xfree( sDiskName );
       }
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
       {
          LPTSTR lpRoot, lpVolName;
          lpRoot = sRoot ? HB_TCHAR_CONVTO( sRoot ) : NULL;
@@ -273,7 +273,7 @@ HB_FUNC( VOLUME )
  */
 HB_FUNC( GETVOLINFO )
 {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
    int iretval;
    char *sDrive = hb_parcx( 1 ), *sVolName;
    TCHAR lpVolName[256];
@@ -310,7 +310,7 @@ HB_FUNC( GETVOLINFO )
 
 HB_FUNC( VOLSERIAL )
 {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
    int retval;
    char *sDrive = hb_parcx( 1 );
    LPTSTR lpDrive;
@@ -341,7 +341,7 @@ HB_FUNC( TRUENAME )
 
    if( szFile )
    {
-#ifdef HB_OS_WIN_32
+#ifdef HB_OS_WIN
       char *szBuffRet;
       TCHAR buffer[MAX_PATH + 1] = { 0 };
       LPTSTR lpFile;

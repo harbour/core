@@ -69,7 +69,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"

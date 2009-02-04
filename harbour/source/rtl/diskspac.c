@@ -58,7 +58,7 @@
 #define INCL_BASE
 #define INCL_DOSERRORS
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbapierr.h"
@@ -97,7 +97,7 @@ HB_FUNC( DISKSPACE )
                   ( double ) regs.HB_XREGS.ax *
                   ( double ) regs.HB_XREGS.cx;
    }
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
    {
 #if defined(_MSC_VER) || defined(__LCC__) || \
     ( defined(__GNUC__) && !defined(__RSXNT__) )

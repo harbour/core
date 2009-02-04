@@ -53,7 +53,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 #include "hbgtcore.h"
 
 #if defined( __CYGWIN__ )
@@ -108,7 +108,7 @@ BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen )
    return s_ulClipboardLen != 0;
 }
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
 
 BOOL hb_gt_w32_setClipboard( UINT uFormat, const char * szClipData, ULONG ulLen )
 {
@@ -197,4 +197,4 @@ BOOL hb_gt_w32_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )
    return *pulLen != 0;
 }
 
-#endif /* HB_OS_WIN_32 */
+#endif /* HB_OS_WIN */

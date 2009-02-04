@@ -71,14 +71,14 @@
 
 */
 
-#ifndef HB_OS_WIN_32_USED
-#  define HB_OS_WIN_32_USED
+#ifndef HB_OS_WIN_USED
+#  define HB_OS_WIN_USED
 #endif
 
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
+#if defined(HB_OS_WIN) && !defined(HB_WINCE)
 
 #  include <windows.h>
 #  include <winspool.h>

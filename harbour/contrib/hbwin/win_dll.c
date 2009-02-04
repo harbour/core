@@ -59,14 +59,14 @@
 
 #define _WIN32_WINNT   0x0400 /* QUESTION: Do we need this? */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbvm.h"
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
 
-#if !defined( HB_NO_ASM ) && defined( HB_OS_WIN_32 ) && !defined(__CYGWIN__)
+#if !defined( HB_NO_ASM ) && defined( HB_OS_WIN ) && !defined(__CYGWIN__)
 
 #ifdef __XHARBOUR__
 

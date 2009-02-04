@@ -105,7 +105,7 @@
 #define INCL_DOSDATETIME  /* DATETIME functions  */
 
 /* W32 */
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include <string.h>
 #include <ctype.h>
@@ -1008,7 +1008,7 @@ BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
    fResult = FALSE;
    pszFileName = hb_fsNameConv( pszFileName, &fFree );
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    {
       DWORD dwAttr;
 
@@ -1094,7 +1094,7 @@ BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )
    hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
    hb_timeStampDecode( lMillisec, &iHour, &iMinute, &iSecond, &iMSec );
 
-#if defined( HB_OS_WIN_32 ) && !defined( __CYGWIN__ )
+#if defined( HB_OS_WIN ) && !defined( __CYGWIN__ )
    {
       HB_FHANDLE hFile = hb_fsOpen( pszFileName, FO_READWRITE | FO_SHARED );
 
@@ -1261,7 +1261,7 @@ BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
 
    pszFileName = hb_fsNameConv( pszFileName, &fFree );
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    {
       DWORD dwFlags = FILE_ATTRIBUTE_ARCHIVE;
 
@@ -1805,7 +1805,7 @@ void hb_fsCommit( HB_FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCommit(%p)", ( void * ) ( HB_PTRDIFF ) hFileHandle));
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
    {
       hb_vmUnlock();
       #if defined(HB_IO_WIN)
@@ -2368,7 +2368,7 @@ BOOL hb_fsDelete( BYTE * pFilename )
 
    pFilename = hb_fsNameConv( pFilename, &fFree );
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
    hb_vmUnlock();
    bResult = DeleteFileA( ( char * ) pFilename );
@@ -2405,7 +2405,7 @@ BOOL hb_fsRename( BYTE * pOldName, BYTE * pNewName )
    pOldName = hb_fsNameConv( pOldName, &fFreeOld );
    pNewName = hb_fsNameConv( pNewName, &fFreeNew );
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
    hb_vmUnlock();
    bResult = MoveFileA( ( char * ) pOldName, ( char * ) pNewName );
@@ -2445,7 +2445,7 @@ BOOL hb_fsMkDir( BYTE * pDirname )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsMkDir(%s)", (char*) pDirname));
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
    hb_vmUnlock();
    bResult = CreateDirectoryA( ( char * ) pDirname, NULL );
@@ -2487,7 +2487,7 @@ BOOL hb_fsChDir( BYTE * pDirname )
 
    pDirname = hb_fsNameConv( pDirname, &fFree );
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
    hb_vmUnlock();
    bResult = SetCurrentDirectoryA( ( char * ) pDirname );
@@ -2523,7 +2523,7 @@ BOOL hb_fsRmDir( BYTE * pDirname )
 
    pDirname = hb_fsNameConv( pDirname, &fFree );
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
    hb_vmUnlock();
    bResult = RemoveDirectoryA( ( char * ) pDirname );
@@ -2591,7 +2591,7 @@ USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
    }
 #endif
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
    hb_vmUnlock();
    fResult = GetCurrentDirectoryA( ulLen, ( char * ) pbyBuffer );
@@ -2740,7 +2740,7 @@ USHORT hb_fsIsDrv( BYTE nDrive )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDrv(%d)", (int) nDrive));
 
-#if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
+#if defined(HB_OS_WIN) && !defined(HB_WINCE)
    {
       char buffer[ 4 ];
       UINT type;
@@ -2798,7 +2798,7 @@ BOOL hb_fsIsDevice( HB_FHANDLE hFileHandle )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDevice(%p)", ( void * ) ( HB_PTRDIFF ) hFileHandle));
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
    hb_vmUnlock();
    bResult = GetFileType( DosToWinHandle( hFileHandle ) ) == FILE_TYPE_CHAR;

@@ -50,13 +50,13 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbwhat.h"
 
 #include "hbapi.h"
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
 // don't not use GETINSTANCE(), because it is an API, which means something else
 HB_FUNC( VWN_HINSTANCE )

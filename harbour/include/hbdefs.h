@@ -63,6 +63,11 @@
 #include "hbtrace.h"
 #include "hbver.h"
 
+/* Compatibility. Do not use HB_OS_WIN_32_USED anymore. */
+#if defined( HB_OS_WIN_32_USED ) && ! defined( HB_OS_WIN_USED )
+   #define HB_OS_WIN_USED
+#endif
+
 #if defined( __XCC__ ) || defined( __POCC__ ) || defined( __LCC__ ) || \
     defined( __MINGW32__ ) || defined(__DMC__) || \
     ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 ) || \
@@ -90,29 +95,29 @@
 #define HB_LONG_LONG_OFF
 */
 
-#if defined( HB_OS_WIN_32 ) || defined( HB_OS_WIN_64 )
+#if defined( HB_OS_WIN ) || defined( HB_OS_WIN_64 )
    #if defined( HB_OS_WIN_64 )
       #undef HB_LONG_LONG_OFF
       #define HB_STRICT_ALIGNMENT
-      #if !defined( HB_OS_WIN_32 )
-         #define HB_OS_WIN_32
+      #if !defined( HB_OS_WIN )
+         #define HB_OS_WIN
       #endif
    #endif
 
    #if !defined( HB_IO_WIN_OFF )
       #define HB_IO_WIN
    #endif
-   #if defined( HB_IO_WIN ) && !defined( HB_OS_WIN_32_USED )
+   #if defined( HB_IO_WIN ) && !defined( HB_OS_WIN_USED )
       /* disabled to avoid problems with windows.h */
-      /* #define HB_OS_WIN_32_USED */
+      /* #define HB_OS_WIN_USED */
    #endif
 #else
    #undef HB_IO_WIN
-   #undef HB_OS_WIN_32_USED
+   #undef HB_OS_WIN_USED
 #endif
 
 /* Include windows.h if applicable and requested */
-#if defined( HB_OS_WIN_32_USED ) && defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN_USED ) && defined( HB_OS_WIN )
 
    #include <windows.h>
    #if defined( __GNUC__ )
@@ -179,7 +184,7 @@
 
 #endif
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    #include "hbwince.h"
 #endif
 
@@ -1195,7 +1200,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
          in the RSXNT doc/ directory for more information. */
       #define HB_EXPORT
 
-   #elif defined( __GNUC__ ) && defined( HB_OS_WIN_32 )
+   #elif defined( __GNUC__ ) && defined( HB_OS_WIN )
       #define HB_EXPORT __attribute__ (( dllexport ))
 
    #elif defined( __GNUC__ ) && defined( HB_OS_LINUX )
@@ -1210,7 +1215,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
    #elif defined( ASANLM ) || defined( ASANT )
       #define HB_EXPORT
 
-   #elif defined( HB_OS_WIN_32 )
+   #elif defined( HB_OS_WIN )
       #define HB_EXPORT _declspec( dllexport )
 
    #else
@@ -1229,7 +1234,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
       in the RSXNT doc/ directory for more information. */
    #define HB_IMPORT
 
-#elif defined( __GNUC__ ) && defined( HB_OS_WIN_32 )
+#elif defined( __GNUC__ ) && defined( HB_OS_WIN )
    #define HB_IMPORT __attribute__ (( dllimport ))
 
 #elif defined( __BORLANDC__ )
@@ -1241,7 +1246,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
 #elif defined( ASANLM ) || defined( ASANT )
    #define HB_IMPORT
 
-#elif defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_WIN )
    #define HB_IMPORT _declspec( dllimport )
 
 #else

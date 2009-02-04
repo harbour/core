@@ -61,7 +61,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 
@@ -146,7 +146,7 @@ char * hb_netname( void )
       return regs.h.ch == 0 ? hb_strdup( "" ) : pszValue;
 #  endif
 
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
 
    DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
    char * pszValue = ( char * ) hb_xgrab( ulLen );
@@ -175,7 +175,7 @@ char * hb_username( void )
       return pwd ? hb_strdup( pwd->pw_name ) : hb_getenv( "USER" );
 #  endif
 
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
 
    DWORD ulLen = 256;
    char * pszValue = ( char * ) hb_xgrab( ulLen );

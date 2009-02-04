@@ -75,7 +75,7 @@
  * See doc/license.txt for licensing terms.
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 
@@ -141,7 +141,7 @@ HB_FUNC( SQLDRIVERC ) /* HB_SQLDRIVERCONNECT( hDbc, @ cConnectString ) --> nRetC
    SWORD  wLen;
    RETCODE ret;
 
-#if defined( HB_OS_WIN_32 ) && defined( UNICODE )
+#if defined( HB_OS_WIN ) && defined( UNICODE )
 
    LPTSTR lpStr = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    TCHAR buffer[ 1024 ];
@@ -180,7 +180,7 @@ HB_FUNC( SQLDRIVERC ) /* HB_SQLDRIVERCONNECT( hDbc, @ cConnectString ) --> nRetC
 HB_FUNC( SQLCONNECT ) /* HB_SQLCONNECT( hDbc, cDSN, cUseName, cPassword ) --> nRetCode */
 {
    RETCODE ret;
-#if defined( HB_OS_WIN_32 ) && defined( UNICODE )
+#if defined( HB_OS_WIN ) && defined( UNICODE )
    LPTSTR lpDSN      = HB_TCHAR_CONVTO( hb_parcx( 2 ) ),
           lpUseName  = HB_TCHAR_CONVTO( hb_parcx( 3 ) ),
           lpPassword = HB_TCHAR_CONVTO( hb_parcx( 4 ) );
@@ -238,7 +238,7 @@ HB_FUNC( SQLFREESTM ) /* HB_SQLFREESTMT( hStmt, nType ) --> nRetCode */
 
 HB_FUNC( SQLEXECDIR )  /* HB_SQLEXECDIRECT( hStmt, cStatement ) --> nRetCode */
 {
-#if defined( HB_OS_WIN_32 ) && defined( UNICODE )
+#if defined( HB_OS_WIN ) && defined( UNICODE )
    LPTSTR lpStr = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    hb_retni( SQLExecDirect( ( HSTMT ) hb_parptr( 1 ), lpStr, hb_parclen( 2 ) ) );
    HB_TCHAR_FREE( lpStr );
@@ -339,7 +339,7 @@ HB_FUNC( SQLDESCRIB )
    SQLULEN     wColSize  = hb_parni( 7 );
    SQLSMALLINT wDecimals = ( SQLUSMALLINT ) hb_parni( 8 );
    SQLSMALLINT wNullable = ( SQLUSMALLINT ) hb_parni( 9 );
-#if defined( HB_OS_WIN_32 ) && defined( UNICODE )
+#if defined( HB_OS_WIN ) && defined( UNICODE )
    LPTSTR      buffer    = ( LPTSTR ) hb_xgrab( lLen * sizeof( TCHAR ) );
 #else
    SQLCHAR *   buffer    = ( SQLCHAR * ) hb_xgrab( lLen * sizeof( SQLCHAR ) );
@@ -360,7 +360,7 @@ HB_FUNC( SQLDESCRIB )
    {
       if( ISBYREF( 3 ) )
       {
-#if defined( HB_OS_WIN_32 ) && defined( UNICODE )
+#if defined( HB_OS_WIN ) && defined( UNICODE )
          char * szStr = HB_TCHAR_CONVFROM( buffer );
          hb_storc( szStr, 3 );
          HB_TCHAR_FREE( szStr );
@@ -445,7 +445,7 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg */
 {
    SQLINTEGER lError;
    SWORD      wLen;
-#if defined( HB_OS_WIN_32 ) && defined( UNICODE )
+#if defined( HB_OS_WIN ) && defined( UNICODE )
    TCHAR      buffer[ 256 ], szErrorMsg[ 256 ];
 #else
    BYTE       buffer[ 256 ], szErrorMsg[ 256 ];
@@ -461,7 +461,7 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg */
 
    if( ISBYREF( 4 ) )
    {
-#if defined( HB_OS_WIN_32 ) && defined( UNICODE )
+#if defined( HB_OS_WIN ) && defined( UNICODE )
       char * szStr = HB_TCHAR_CONVFROM( buffer );
       hb_storc( szStr, 4 );
       HB_TCHAR_FREE( szStr );
@@ -472,7 +472,7 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg */
    hb_stornl( ( LONG ) lError, 5 );
    if( ISBYREF( 6 ) )
    {
-#if defined( HB_OS_WIN_32 ) && defined( UNICODE )
+#if defined( HB_OS_WIN ) && defined( UNICODE )
       char * szStr = HB_TCHAR_CONVFROM( szErrorMsg );
       hb_storc( szStr, 6 );
       HB_TCHAR_FREE( szStr );
@@ -597,7 +597,7 @@ HB_FUNC( SETNUMLEN )  /* SETNUMLEN( nValue, nSize, nDecimals ) ==> nValue (nSize
 
 HB_FUNC( SQLPREPARE )  /* HB_SQLPREPARE( hStmt, cStatement ) --> nRetCode */
 {
-#if defined( HB_OS_WIN_32 ) && defined( UNICODE )
+#if defined( HB_OS_WIN ) && defined( UNICODE )
    LPTSTR lpStr = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    hb_retni( SQLPrepare( ( HSTMT ) hb_parptr( 1 ), lpStr, SQL_NTS ) );
    HB_TCHAR_FREE( lpStr );
@@ -622,7 +622,7 @@ HB_FUNC( SQLEXECUTESCALAR )
 
    if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO )
    {
-#if defined( HB_OS_WIN_32 ) && defined( UNICODE )
+#if defined( HB_OS_WIN ) && defined( UNICODE )
       LPTSTR lpStr = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
       wResult = SQLExecDirect( ( HSTMT ) hStmt, lpStr, SQL_NTS );
       HB_TCHAR_FREE( lpStr );

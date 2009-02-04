@@ -58,12 +58,12 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbdate.h"
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
 void hb_mbtowccpy( wchar_t *dstW, const char *srcA, ULONG ulLen )
 {
@@ -810,4 +810,4 @@ BOOL WINAPI GetDiskFreeSpaceA( LPCSTR path, PDWORD pdwSectorsPerCluster,
 
 #endif /* HB_WINCE */
 
-#endif /* HB_OS_WIN_32 */
+#endif /* HB_OS_WIN */

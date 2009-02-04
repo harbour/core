@@ -67,7 +67,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include <time.h>
 
@@ -259,7 +259,7 @@ int hb_dateDOW( int iYear, int iMonth, int iDay )
 
 void hb_dateToday( int * piYear, int * piMonth, int * piDay )
 {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
    SYSTEMTIME st;
    GetLocalTime( &st );
@@ -299,7 +299,7 @@ void hb_dateToday( int * piYear, int * piMonth, int * piDay )
 
 void hb_dateTimeStr( char * pszTime )
 {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
    {
       SYSTEMTIME st;
       GetLocalTime( &st );

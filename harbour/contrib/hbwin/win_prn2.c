@@ -52,7 +52,7 @@
 
 #include "hbsetup.h"
 
-#if defined(HB_OS_WIN_32) && \
+#if defined(HB_OS_WIN) && \
     !( defined(__RSXNT__) || defined(__CYGWIN__) || defined(HB_WINCE) )
 
 #include <windows.h>
@@ -61,7 +61,7 @@
 #   include <winspool.h>
 #endif
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 #include "hbapi.h"
 #include "hbapiitm.h"
 

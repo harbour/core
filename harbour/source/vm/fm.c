@@ -64,7 +64,7 @@
 /* NOTE: This definitions must be ahead of any and all #include statements */
 
 /* For MS-Win builds */
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 /* For Linux and mremap() function */
 #ifndef _GNU_SOURCE
@@ -151,7 +151,7 @@
 #     define realloc( p, n )     dlrealloc( ( p ), ( n ) )
 #     define free( p )           dlfree( ( p ) )
 #  endif
-#elif defined( HB_FM_WIN32_ALLOC ) && defined( HB_OS_WIN_32 )
+#elif defined( HB_FM_WIN32_ALLOC ) && defined( HB_OS_WIN )
 #  if defined( HB_FM_LOCALALLOC )
 #     define malloc( n )      ( void * ) LocalAlloc( LMEM_FIXED, ( n ) )
 #     define realloc( p, n )  ( void * ) LocalReAlloc( ( HLOCAL ) ( p ), ( n ), LMEM_MOVEABLE )
@@ -930,7 +930,7 @@ ULONG hb_xquery( USHORT uiMode )
    switch( uiMode )
    {
    case HB_MEM_CHAR:       /*               (Free Variable Space [KB]) */
-      #if defined(HB_OS_WIN_32)
+      #if defined(HB_OS_WIN)
       {
          MEMORYSTATUS memorystatus;
          GlobalMemoryStatus( &memorystatus );
@@ -951,7 +951,7 @@ ULONG hb_xquery( USHORT uiMode )
       break;
 
    case HB_MEM_BLOCK:      /*               (Largest String [KB]) */
-      #if defined(HB_OS_WIN_32)
+      #if defined(HB_OS_WIN)
       {
          MEMORYSTATUS memorystatus;
          GlobalMemoryStatus( &memorystatus );
@@ -972,7 +972,7 @@ ULONG hb_xquery( USHORT uiMode )
       break;
 
    case HB_MEM_RUN:        /*               (RUN Memory [KB]) */
-      #if defined(HB_OS_WIN_32)
+      #if defined(HB_OS_WIN)
       {
          MEMORYSTATUS memorystatus;
          GlobalMemoryStatus( &memorystatus );
@@ -993,7 +993,7 @@ ULONG hb_xquery( USHORT uiMode )
       break;
 
    case HB_MEM_VM:         /* UNDOCUMENTED! (Virtual Memory [KB]) */
-      #if defined(HB_OS_WIN_32)
+      #if defined(HB_OS_WIN)
       {
          MEMORYSTATUS memorystatus;
          GlobalMemoryStatus( &memorystatus );
@@ -1014,7 +1014,7 @@ ULONG hb_xquery( USHORT uiMode )
       break;
 
    case HB_MEM_EMS:        /* UNDOCUMENTED! (Free Expanded Memory [KB]) (?) */
-      #if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
+      #if defined(HB_OS_WIN) || defined(HB_OS_OS2)
          ulResult = 0;
       #else
          ulResult = 9999;
@@ -1022,7 +1022,7 @@ ULONG hb_xquery( USHORT uiMode )
       break;
 
    case HB_MEM_FM:         /* UNDOCUMENTED! (Fixed Memory/Heap [KB]) (?) */
-      #if defined(HB_OS_WIN_32)
+      #if defined(HB_OS_WIN)
       {
          MEMORYSTATUS memorystatus;
          GlobalMemoryStatus( &memorystatus );
@@ -1043,7 +1043,7 @@ ULONG hb_xquery( USHORT uiMode )
       break;
 
    case HB_MEM_FMSEGS:     /* UNDOCUMENTED! (Segments in Fixed Memory/Heap) (?) */
-      #if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
+      #if defined(HB_OS_WIN) || defined(HB_OS_OS2)
          ulResult = 1;
       #else
          ulResult = 9999;
@@ -1051,7 +1051,7 @@ ULONG hb_xquery( USHORT uiMode )
       break;
 
    case HB_MEM_SWAP:       /* UNDOCUMENTED! (Free Swap Memory [KB]) */
-      #if defined(HB_OS_WIN_32)
+      #if defined(HB_OS_WIN)
       {
          MEMORYSTATUS memorystatus;
          GlobalMemoryStatus( &memorystatus );
@@ -1070,7 +1070,7 @@ ULONG hb_xquery( USHORT uiMode )
       break;
 
    case HB_MEM_CONV:       /* UNDOCUMENTED! (Free Conventional [KB]) */
-      #if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
+      #if defined(HB_OS_WIN) || defined(HB_OS_OS2)
          ulResult = 0;
       #else
          ulResult = 9999;

@@ -59,7 +59,7 @@
 #include "hbvm.h"
 #include "hbdate.h"
 
-#ifndef HB_OS_WIN_32
+#ifndef HB_OS_WIN
    #include <time.h>
 #else
    #include <windows.h>
@@ -74,7 +74,7 @@
 */
 
 /* sadly, many strftime windows implementations are broken */
-#ifdef HB_OS_WIN_32
+#ifdef HB_OS_WIN
 
 HB_FUNC( TIP_TIMESTAMP )
 {

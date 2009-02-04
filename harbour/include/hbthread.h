@@ -60,7 +60,7 @@
     defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS )
 #  include <pthread.h>
 #  define HB_PTHREAD_API
-#elif defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_WIN )
 #  include <windows.h>
 #  include <process.h>
 #elif defined( HB_OS_OS2 )
@@ -123,7 +123,7 @@ HB_EXTERN_BEGIN
 #     define HB_COND_INITVAL           { }
 #  endif
 
-#elif defined( HB_OS_WIN_32 ) && ! defined( HB_WINCE )
+#elif defined( HB_OS_WIN ) && ! defined( HB_WINCE )
 
 # define HB_MAX_THREAD  32768
 
@@ -363,7 +363,7 @@ extern void hb_threadMutexUnlockAll( void );
 #     define hb_tls_init(k)   pthread_key_create( &k, NULL )
 #     define hb_tls_set(k,v)  pthread_setspecific( k, ( void * ) (v) )
 #     define hb_tls_get(k)    pthread_getspecific( k )
-#  elif defined( HB_OS_WIN_32 )
+#  elif defined( HB_OS_WIN )
 #     define HB_TLS_KEY       DWORD
 #     define hb_tls_init(k)   do { k = TlsAlloc(); } while( 0 )
 #     define hb_tls_set(k,v)  TlsSetValue( k, ( void * ) (v) )

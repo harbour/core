@@ -61,7 +61,7 @@
 #include "zip.h"
 #include "unzip.h"
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    #include "windows.h"
 #elif defined( HB_OS_UNIX )
    #include <sys/types.h>
@@ -709,7 +709,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
    memset( &zfi, 0, sizeof( zfi ) );
    fError = FALSE;
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    {
       ulExtAttr = GetFileAttributesA( szFileName );
 
@@ -864,7 +864,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
 
       if( hFile != FS_ERROR )
       {
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
          {
             FILETIME    ftutc, ft;
             SYSTEMTIME  st;
@@ -1075,7 +1075,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
          }
          hb_xfree( pString );
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
          {
             FILETIME    ftutc, ft;
             SYSTEMTIME  st;
@@ -1106,7 +1106,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
    unzCloseCurrentFile( hUnzip );
 
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    {
       SetFileAttributesA( szName, ufi.external_fa & 0xFF );
    }
@@ -1248,7 +1248,7 @@ static int hb_unzipExtractCurrentFileToHandle( unzFile hUnzip, HB_FHANDLE hFile,
 
          hb_xfree( pString );
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
          {
             FILETIME    ftutc, ft;
             SYSTEMTIME  st;

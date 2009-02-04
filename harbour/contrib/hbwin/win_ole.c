@@ -49,7 +49,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #ifndef CINTERFACE
    #define CINTERFACE 1

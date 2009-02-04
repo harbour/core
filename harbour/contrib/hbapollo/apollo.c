@@ -60,7 +60,7 @@
    #define _declspec __declspec
 #endif
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #define MAX_STR_LEN 255
 

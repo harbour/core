@@ -53,10 +53,10 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 #include "hbgtcore.h"
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
 
 int hb_gt_w32_getKbdState( void )
 {
@@ -100,4 +100,4 @@ void hb_gt_w32_setKbdState( int iKbdState )
 }
 
 
-#endif /* HB_OS_WIN_32 */
+#endif /* HB_OS_WIN */

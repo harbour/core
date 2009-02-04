@@ -5,7 +5,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    #define _WINSOCKAPI_  /* Prevents inclusion of winsock.h in windows.h */
    #define HB_SOCKET_T SOCKET
    #include <winsock2.h>

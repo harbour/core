@@ -9,7 +9,7 @@
  * Copyright 2004 Marcos Antonio Gambeta <marcosgambeta@uol.com.br>
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 #define _WIN32_WINNT   0x0400
 
 #include "hbapi.h"

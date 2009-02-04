@@ -55,7 +55,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 /* NOTE: Ugly hack to avoid this error when compiler with BCC 5.8.2 and above:
          Error E2238 C:\...\Firebird-2.1.1\include\ibase.h 82: Multiple declaration for 'intptr_t' */

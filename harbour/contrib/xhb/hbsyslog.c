@@ -9,7 +9,7 @@
 #include "hbapi.h"
 #include "hblogdef.ch"
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
 #include "windows.h"
 
 static HANDLE s_RegHandle;
@@ -22,7 +22,7 @@ static HANDLE s_RegHandle;
 
 HB_FUNC( HB_SYSLOGOPEN )
 {
-   #if defined( HB_OS_WIN_32 )
+   #if defined( HB_OS_WIN )
       #if (WINVER >= 0x0400)
       /* Ok, we compiled under NT, but we must not use this function
          when RUNNING on a win98. */
@@ -48,7 +48,7 @@ HB_FUNC( HB_SYSLOGOPEN )
 
 HB_FUNC( HB_SYSLOGCLOSE )
 {
-   #if defined( HB_OS_WIN_32 )
+   #if defined( HB_OS_WIN )
       #if (WINVER >= 0x0400)
       if( hb_iswinnt() )
       {
@@ -72,7 +72,7 @@ HB_FUNC( HB_SYSLOGCLOSE )
 
 HB_FUNC( HB_SYSLOGMESSAGE )
 {
-   #if defined( HB_OS_WIN_32 )
+   #if defined( HB_OS_WIN )
       #if (WINVER >= 0x0400)
       WORD logval;
       if( hb_iswinnt() )

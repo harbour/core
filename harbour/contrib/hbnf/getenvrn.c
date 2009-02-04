@@ -91,7 +91,7 @@
  *  $END$
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 #include "hbapi.h"
 
 #if defined(HB_OS_UNIX_COMPATIBLE)
@@ -105,7 +105,7 @@ extern char **environ;
 #elif defined(HB_OS_DOS)
 #   define environ _environ
 extern char **_environ;
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
 #   include <windows.h>
 #endif
 
@@ -172,7 +172,7 @@ HB_FUNC( FT_GETE )
       /* return number of strings found */
       hb_retni( x );
    }
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
    {
       char *buffer = NULL;
       LPTCH lpEnviron = GetEnvironmentStrings();

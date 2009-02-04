@@ -62,7 +62,7 @@
  * and if the correct patch file is found - run it.
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapiitm.h"
 

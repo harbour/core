@@ -7,7 +7,7 @@
    Last change:  WN   27 May 2002    8:41 pm
 */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 #define _WIN32_WINNT   0x0400
 
 #include "hbwhat.h"

@@ -141,7 +141,7 @@ HB_FUNC( HB_VERSION )
          hb_retc_const( "DOS" );
       #elif defined( HB_OS_OS2 )
          hb_retc_const( "OS2" );
-      #elif defined( HB_OS_WIN_32 )
+      #elif defined( HB_OS_WIN )
          hb_retc_const( "WINDOWS" );
       #elif defined( HB_OS_LINUX )
          hb_retc_const( "LINUX" );

@@ -8,6 +8,146 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-04 01:09 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/extend.api
+  * include/hbgtcore.h
+  * include/hbwince.h
+  * include/hbthread.h
+  * include/hbdefs.h
+  * include/hbsetup.h
+  * include/hbapi.h
+  * include/clipdefs.h
+  * include/hbatomic.h
+  * contrib/hbmysql/mysql.c
+  * contrib/hbct/ctnet.c
+  * contrib/hbct/files.c
+  * contrib/hbct/dattime3.c
+  * contrib/hbct/disk.c
+  * contrib/hbodbc/odbc.c
+  * contrib/xhb/hboutdbg.c
+  * contrib/xhb/hbsyslog.c
+  * contrib/xhb/filestat.c
+  * contrib/hbmsql/msql.c
+  * contrib/hbole/ole2.c
+  * contrib/hbmzip/hbmzip.c
+  * contrib/hbapollo/apollo.c
+  * contrib/hbfbird/firebird.c
+  * contrib/hbnf/descendn.c
+  * contrib/hbnf/getenvrn.c
+  * contrib/rddsql/sqlmix.c
+  * contrib/gtwvg/gtwvg.c
+  * contrib/gtwvg/wvggui.c
+  * contrib/gtwvg/wvgwin.c
+  * contrib/gtwvg/wvgutils.c
+  * contrib/gtwvg/wvgcore.c
+  * contrib/rddads/adsx.c
+  * contrib/rddads/rddads.h
+  * contrib/rddads/adsmgmnt.c
+  * contrib/rddads/adsfunc.c
+  * contrib/rddads/ads1.c
+  * contrib/hbfimage/fi_winfu.c
+  * contrib/hbfimage/fi_wrp.c
+  * contrib/hbgd/gd.ch
+  * contrib/hbgd/gdwrp.c
+  * contrib/hbgf/hbgfwin/winapi.c
+  * contrib/hbtip/utils.c
+  * contrib/hbtip/ChangeLog
+  * contrib/hbwin/win_prn2.c
+  * contrib/hbwin/win_osc.c
+  * contrib/hbwin/win_misc.c
+  * contrib/hbwin/win_prt.c
+  * contrib/hbwin/win_dll.c
+  * contrib/hbwin/win_ole.c
+  * contrib/hbwin/win_prn1.c
+  * contrib/hbwin/win_regc.c
+  * contrib/hbssl/sslsess.c
+  * contrib/hbssl/sslrand.c
+  * contrib/hbwhat/whtdate.c
+  * contrib/hbwhat/whtini.c
+  * contrib/hbwhat/whtcret.c
+  * contrib/hbwhat/whthead.c
+  * contrib/hbwhat/whtilst.c
+  * contrib/hbwhat/whtreg.c
+  * contrib/hbwhat/whtclpb.c
+  * contrib/hbwhat/whtmous.c
+  * contrib/hbwhat/whtrgn.c
+  * contrib/hbwhat/whtmeta.c
+  * contrib/hbwhat/whttbar.c
+  * contrib/hbwhat/whtrect.c
+  * contrib/hbwhat/whtbrsh.c
+  * contrib/hbwhat/whtgdi.c
+  * contrib/hbwhat/whtdlg.c
+  * contrib/hbwhat/whtview.c
+  * contrib/hbwhat/whtsys.c
+  * contrib/hbwhat/whtmain.c
+  * contrib/hbwhat/whtwnd.c
+  * contrib/hbwhat/whtmmcap.c
+  * contrib/hbwhat/whtfont.c
+  * contrib/hbwhat/whtdir.c
+  * contrib/hbwhat/whtbmp.c
+  * contrib/hbwhat/whtkbrd.c
+  * contrib/hbwhat/whtpen.c
+  * contrib/hbwhat/whttext.c
+  * contrib/hbwhat/whtdc.c
+  * contrib/hbwhat/whtdraw.c
+  * contrib/examples/uhttpd/socket.c
+  * contrib/examples/uhttpd/uhttpdc.c
+  * source/vm/mainwin.c
+  * source/vm/maindll.c
+  * source/vm/maindllh.c
+  * source/vm/hvm.c
+  * source/vm/cmdarg.c
+  * source/vm/maindllp.c
+  * source/vm/fm.c
+  * source/vm/extrap.c
+  * source/vm/thread.c
+  * source/vm/dynlibhb.c
+  * source/vm/set.c
+  * source/common/hbgete.c
+  * source/common/hbver.c
+  * source/common/hbfsapi.c
+  * source/common/hbwince.c
+  * source/common/hbdate.c
+  * source/rtl/diskspac.c
+  * source/rtl/console.c
+  * source/rtl/gtwin/gtwin.c
+  * source/rtl/fserror.c
+  * source/rtl/hbgtcore.c
+  * source/rtl/gtclip.c
+  * source/rtl/fstemp.c
+  * source/rtl/idle.c
+  * source/rtl/oemansi.c
+  * source/rtl/disksphb.c
+  * source/rtl/net.c
+  * source/rtl/gtgui/gtgui.c
+  * source/rtl/seconds.c
+  * source/rtl/gttone.c
+  * source/rtl/hbproces.c
+  * source/rtl/gtkeycod.c
+  * source/rtl/version.c
+  * source/rtl/gtwvt/gtwvt.c
+  * source/rtl/hbrandom.c
+  * source/rtl/hbinet.c
+  * source/rtl/hbffind.c
+  * source/rtl/gtsys.c
+  * source/rtl/filesys.c
+  * source/rtl/gtkbstat.c
+  * source/rtl/isprint.c
+  * source/compiler/cmdcheck.c
+  * utils/hbmake/hbmlang.c
+    * #defines renamed to be bitwidth-independent.
+      - HB_OS_WIN_32_USED -> HB_OS_WIN_USED
+      - HB_OS_WIN_32      -> HB_OS_WIN
+    ; Please modify your code accordingly.
+
+  * include/hbdefs.h
+  * include/hbsetup.h
+    + Added compatibility to still understand HB_OS_WIN_32_USED,
+      and to #define HB_OS_WIN_32 in addition to HB_OS_WIN.
+      This means that old code will still work, but these
+      compatibility features will be removed in the future,
+      so it's recommended to change the code as above.
+
 2009-02-04 00:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * doc/dirstruc.txt
   - contrib/hbtpathy/tpwin32.c

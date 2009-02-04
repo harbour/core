@@ -52,7 +52,7 @@
 
 #include "hbapirdd.h"
 
-#if defined( HB_OS_WIN_32 ) && !defined( WIN32 )
+#if defined( HB_OS_WIN ) && !defined( WIN32 )
    #define WIN32
 #endif
 #if !defined( unix ) && ( defined( __LINUX__ ) || defined( HB_OS_LINUX ) )
@@ -218,7 +218,7 @@ typedef ADSAREA * ADSAREAP;
 
 #define HB_RDD_ADS_VERSION_STRING "ADS RDD 1.4"
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
 #  define ADS_USE_OEM_TRANSLATION
 #else
 #  undef ADS_USE_OEM_TRANSLATION

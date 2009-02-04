@@ -50,7 +50,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #define INCL_DOS
 #define INCL_DOSPROFILE
@@ -69,7 +69,7 @@
    #include <sys/times.h>
    #include <unistd.h>
 #endif
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    #include <windows.h>
 #elif defined(_MSC_VER)
    #define timeb _timeb
@@ -85,7 +85,7 @@
 
 void hb_dateTimeStamp( LONG * plJulian, LONG * plMilliSec )
 {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
    SYSTEMTIME st;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dateTimeStamp(%p,%p)", plJulian, plMilliSec));
@@ -140,7 +140,7 @@ void hb_dateTimeStamp( LONG * plJulian, LONG * plMilliSec )
 
 HB_ULONG hb_dateMilliSeconds( void )
 {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
    SYSTEMTIME st;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dateMilliSeconds()"));
@@ -171,7 +171,7 @@ HB_ULONG hb_dateMilliSeconds( void )
 
 double hb_dateSeconds( void )
 {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
    SYSTEMTIME SystemTime;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dateSeconds()"));
@@ -264,7 +264,7 @@ HB_FUNC( HB_CLOCKS2SECS )
 double hb_secondsCPU( int n )
 {
    double d = 0.0;
-#if defined( HB_OS_WIN_32 ) && !defined( HB_OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_WIN ) && !defined( HB_OS_UNIX_COMPATIBLE )
    FILETIME Create, Exit, Kernel, User;
 #endif
 
@@ -303,7 +303,7 @@ double hb_secondsCPU( int n )
 #else
    if( n > 10 )
       n -= 10;
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    if( hb_iswinnt() &&
        GetProcessTimes( GetCurrentProcess(), &Create, &Exit, &Kernel, &User ) )
    {

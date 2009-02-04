@@ -50,7 +50,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbvmopt.h"
 #include "hbapi.h"
@@ -64,12 +64,12 @@
 static int     s_argc = 0;
 static char ** s_argv = NULL;
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
 static char    s_szAppName[ MAX_PATH ];
 static TCHAR   s_lpAppName[ MAX_PATH ];
 #endif
 
-#if defined( HB_OS_WIN_32 ) && defined( HB_OS_WIN_32_USED )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED )
 
 HB_EXTERN_BEGIN
 
@@ -120,7 +120,7 @@ void hb_cmdargInit( int argc, char * argv[] )
    s_argc = argc;
    s_argv = argv;
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
 
    /* NOTE: Manually setup the executable name in Windows,
             because in console apps the name may be truncated

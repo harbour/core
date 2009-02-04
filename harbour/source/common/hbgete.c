@@ -56,7 +56,7 @@
 /* For OS/2 */
 #define INCL_DOSMISC
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 
@@ -69,7 +69,7 @@ char * hb_getenv( const char * szName )
 {
    char * pszBuffer = NULL;
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
    {
       DWORD size = GetEnvironmentVariableA( szName, NULL, 0 );
@@ -109,7 +109,7 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 {
    BOOL bRetVal;
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
    bRetVal = GetEnvironmentVariableA( szName, szBuffer, nSize ) != 0;
 

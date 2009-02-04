@@ -50,7 +50,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #define INCL_DOSSEMAPHORES
 #define INCL_DOSPROCESS
@@ -476,7 +476,7 @@ HB_THREAD_HANDLE hb_threadCreate( HB_THREAD_ID * th_id, PHB_THREAD_STARTFUNC sta
    if( pthread_create( th_id, NULL, start_func, Cargo ) != 0 )
       *th_id = ( HB_THREAD_ID ) 0;
    th_h = *th_id;
-#elif defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_WIN )
    th_h = ( HANDLE ) _beginthreadex( NULL, 0, start_func, Cargo, 0, th_id );
    if( !th_h )
       *th_id = ( HB_THREAD_ID ) 0;
@@ -499,7 +499,7 @@ BOOL hb_threadJoin( HB_THREAD_HANDLE th_h )
    return FALSE;
 #elif defined( HB_PTHREAD_API )
    return pthread_join( th_h, NULL ) == 0;
-#elif defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_WIN )
    if( WaitForSingleObject( th_h, INFINITE ) != WAIT_FAILED )
    {
       CloseHandle( th_h );
@@ -526,7 +526,7 @@ BOOL hb_threadDetach( HB_THREAD_HANDLE th_h )
    return FALSE;
 #elif defined( HB_PTHREAD_API )
    return pthread_detach( th_h ) == 0;
-#elif defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_WIN )
    return CloseHandle( th_h ) != 0;
 #elif defined( HB_OS_OS2 )
    APIRET rc = DosWaitThread( &th_h, DCWW_NOWAIT );

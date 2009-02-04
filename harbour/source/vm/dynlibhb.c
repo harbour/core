@@ -55,7 +55,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 #define INCL_DOSMODULEMGR
 
 #include "hbvmopt.h"
@@ -94,7 +94,7 @@ HB_FUNC( HB_LIBLOAD )
       {
          /* use stack address as first level marker */
          hb_vmBeginSymbolGroup( ( void * ) hb_stackId(), TRUE );
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
          hDynLib = ( void * ) LoadLibraryA( hb_parc( 1 ) );
 #elif defined( HB_OS_OS2 )
          {
@@ -140,7 +140,7 @@ HB_FUNC( HB_LIBFREE )
       {
          *pDynLibPtr = NULL;
          hb_vmExitSymbolGroup( hDynLib );
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
          fResult = FreeLibrary( ( HMODULE ) hDynLib );
 #elif defined( HB_OS_OS2 )
          fResult = DosFreeModule( ( HMODULE ) hDynLib ) == NO_ERROR;

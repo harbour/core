@@ -67,7 +67,7 @@
 #define INCL_DOSDATETIME  /* DATETIME functions  */
 
 /* W32 */
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbapifs.h"
@@ -236,7 +236,7 @@ HB_FUNC( SETFDATI )
       if( pTime )
          hb_timeStrGet( hb_itemGetCPtr( pTime ), &hour, &minute, &second, NULL );
 
-#if defined( HB_OS_WIN_32 ) && !defined( __CYGWIN__ )
+#if defined( HB_OS_WIN ) && !defined( __CYGWIN__ )
       {
          FILETIME ft, local_ft;
          SYSTEMTIME st;

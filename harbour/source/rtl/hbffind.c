@@ -58,7 +58,7 @@
 
 #define INCL_DOSFILEMGR
 #define INCL_DOSERRORS
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbapifs.h"
@@ -122,7 +122,7 @@
       ULONG           findCount;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
 
    typedef struct
    {
@@ -202,7 +202,7 @@ ULONG hb_fsAttrFromRaw( ULONG raw_attr )
    if( raw_attr & FILE_READONLY )  ulAttr |= HB_FA_READONLY;
    if( raw_attr & FILE_SYSTEM )    ulAttr |= HB_FA_SYSTEM;
 
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
 
    ulAttr = 0;
    if( raw_attr & FILE_ATTRIBUTE_ARCHIVE )   ulAttr |= HB_FA_ARCHIVE;
@@ -286,7 +286,7 @@ ULONG hb_fsAttrToRaw( ULONG ulAttr )
    if( ulAttr & HB_FA_READONLY )  raw_attr |= FILE_READONLY;
    if( ulAttr & HB_FA_SYSTEM )    raw_attr |= FILE_SYSTEM;
 
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
 
    raw_attr = 0;
 
@@ -546,7 +546,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       hb_fsSetIOError( bFound, 0 );
    }
 
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
 
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
@@ -872,7 +872,7 @@ void hb_fsFindClose( PHB_FFIND ffind )
             DosFindClose( info->hFindFile );
          }
 
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN)
 
          if( info->hFindFile != INVALID_HANDLE_VALUE )
          {

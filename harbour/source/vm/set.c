@@ -1114,7 +1114,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_PRINTFILE = hb_strdup( "|lpr" );
 #elif defined(HB_OS_DOS)
    pSet->HB_SET_PRINTFILE = hb_strdup( "PRN" );
-#elif defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
+#elif defined(HB_OS_WIN) || defined(HB_OS_OS2)
    pSet->HB_SET_PRINTFILE = hb_strdup( "LPT1" );
 #else
    pSet->HB_SET_PRINTFILE = hb_strdup( "PRN" ); /* TOFIX */

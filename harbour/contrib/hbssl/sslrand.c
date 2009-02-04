@@ -50,7 +50,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbapierr.h"
@@ -74,7 +74,7 @@ HB_FUNC( SSL_RAND_STATUS )
 
 HB_FUNC( SSL_RAND_EVENT )
 {
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    hb_retni( RAND_event( hb_parni( 1 ), ( WPARAM ) hb_parnint( 2 ), ( LPARAM ) hb_parnint( 3 ) ) );
 #else
    hb_retni( 0 );
@@ -83,7 +83,7 @@ HB_FUNC( SSL_RAND_EVENT )
 
 HB_FUNC( SSL_RAND_SCREEN )
 {
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN )
    RAND_screen();
 #endif
 }

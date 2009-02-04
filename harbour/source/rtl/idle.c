@@ -64,7 +64,7 @@
 /* NOTE: For OS/2. Must be ahead of any and all #include statements */
 #define INCL_DOSPROCESS
 #define INCL_NOPMAPI
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 
 #include "hbapi.h"
@@ -118,7 +118,7 @@ void hb_releaseCPU( void )
 
    /* TODO: Add code to release time slices on all platforms */
 
-#if defined(HB_OS_WIN_32) || defined(__CYGWIN__)
+#if defined(HB_OS_WIN) || defined(__CYGWIN__)
    /* Forfeit the remainder of the current time slice. */
    Sleep( 20 );
 

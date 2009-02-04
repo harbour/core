@@ -50,7 +50,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -59,7 +59,7 @@
 #include "hbapifs.h"
 #include "hbvm.h"
 
-#if defined(HB_OS_WIN_32) && !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) ) || defined(__WATCOMC__)
+#if defined(HB_OS_WIN) && !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) ) || defined(__WATCOMC__)
    #define _WINDOWS_
 #endif
 
@@ -76,7 +76,7 @@
 /* -------------------------------------------------------------------------- */
 /* Convert from FreeImage to HBITMAP ---------------------------------------- */
 /* -------------------------------------------------------------------------- */
-#if ( defined(HB_OS_WIN_32) || defined(__WIN32__) )
+#if ( defined(HB_OS_WIN) || defined(__WIN32__) )
 
 /* implementation: HBITMAP bitmap = FI_FiToBitmap( FIBITMAP *dib ); */
 HB_FUNC( FI_FITOBITMAP )
@@ -227,4 +227,4 @@ HB_FUNC( FI_WINDRAW )
 
 /* -------------------------------------------------------------------------- */
 
-#endif /* ( defined(HB_OS_WIN_32) || defined(__WIN32__) ) */
+#endif /* ( defined(HB_OS_WIN) || defined(__WIN32__) ) */

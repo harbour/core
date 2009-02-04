@@ -53,7 +53,7 @@
 
 #define _WIN32_WINNT 0x0400
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbvm.h"

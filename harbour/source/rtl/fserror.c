@@ -50,13 +50,13 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbstack.h"
 #include "hb_io.h"
-#if !(defined(HB_IO_WIN) || defined(HB_OS_WIN_32))
+#if !(defined(HB_IO_WIN) || defined(HB_OS_WIN))
 #  include <errno.h>
 #endif
 
@@ -144,7 +144,7 @@ static int hb_errnoToDosError( int ErrCode )
 }
 #endif
 
-#if defined(HB_IO_WIN) || defined(HB_OS_WIN_32)
+#if defined(HB_IO_WIN) || defined(HB_OS_WIN)
 static int hb_WinToDosError( ULONG ulError )
 {
    int iResult;
@@ -235,7 +235,7 @@ void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
    }
    else
    {
-#if defined(HB_IO_WIN) || defined(HB_OS_WIN_32)
+#if defined(HB_IO_WIN) || defined(HB_OS_WIN)
       uiOsErrorLast = ( USHORT ) GetLastError();
       uiErrorLast = ( USHORT ) hb_WinToDosError( uiOsErrorLast );
 #elif defined(_MSC_VER) || defined(__DMC__)

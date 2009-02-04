@@ -53,7 +53,7 @@
 #ifndef HB_WINCE_H_
 #define HB_WINCE_H_
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN)
 
 HB_EXTERN_BEGIN
 
@@ -71,7 +71,7 @@ extern int remove( const char *filename );
 extern int system( const char *string );
 extern char *strerror( int errnum );
 
-#if defined( HB_OS_WIN_32_USED ) && defined( _MSC_VER )
+#if defined( HB_OS_WIN_USED ) && defined( _MSC_VER )
 
    #ifndef MAX_COMPUTERNAME_LENGTH
       #define MAX_COMPUTERNAME_LENGTH           31
@@ -176,7 +176,7 @@ extern char *strerror( int errnum );
       #define GlobalFlags(lp)             LocalFlags(lp)
    #endif
    #endif
-#endif /* HB_OS_WIN_32_USED && _MSC_VER */
+#endif /* HB_OS_WIN_USED && _MSC_VER */
 
 #endif /* HB_WINCE */
 
@@ -216,6 +216,6 @@ extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
 
 HB_EXTERN_END
 
-#endif /* HB_OS_WIN_32 */
+#endif /* HB_OS_WIN */
 
 #endif /* HB_WINCE_H_ */
