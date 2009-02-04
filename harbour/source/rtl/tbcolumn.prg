@@ -58,7 +58,7 @@
 
 /* NOTE: In CA-Cl*pper TBCOLUMN class does not inherit from any other classes. */
 
-CREATE CLASS TBCOLUMN FUNCTION HBBColumn
+CREATE CLASS TBCOLUMN
 
    EXPORTED:
 
@@ -215,11 +215,11 @@ METHOD New( cHeading, bBlock ) CLASS TBCOLUMN
    RETURN Self
 
 FUNCTION TBColumnNew( cHeading, bBlock )
-   RETURN HBBColumn():New( cHeading, bBlock )
+   RETURN TBColumn():New( cHeading, bBlock )
 
 #ifdef HB_COMPAT_XPP
 
-CREATE CLASS xpp_TBColumn INHERIT HBBColumn
+CREATE CLASS xpp_TBColumn INHERIT TBColumn
 ENDCLASS
 
 #endif

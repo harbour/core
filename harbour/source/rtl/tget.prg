@@ -70,7 +70,7 @@
 
 /* NOTE: In CA-Cl*pper, TGET class does not inherit from any other classes. */
 
-CREATE CLASS GET FUNCTION HBGet
+CREATE CLASS GET
 
    PROTECTED:
 
@@ -1955,4 +1955,4 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS GET
    RETURN Self
 
 FUNCTION GetNew( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
-   RETURN HBGet():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
+   RETURN Get():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )

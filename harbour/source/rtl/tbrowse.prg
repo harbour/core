@@ -109,7 +109,7 @@
 
 #define _TBR_COORD( n )       Int( n )
 
-CREATE CLASS TBROWSE FUNCTION HBBrowse
+CREATE CLASS TBROWSE
 
 /* The first 18 instance variables are exactly the same as in Clipper
  * so also some code which access them directly by array indexes should work
@@ -310,7 +310,7 @@ ENDCLASS
 
 FUNCTION TBrowseNew( nTop, nLeft, nBottom, nRight )
 
-   RETURN HBBrowse():new( nTop, nLeft, nBottom, nRight )
+   RETURN TBrowse():new( nTop, nLeft, nBottom, nRight )
 
 
 METHOD new( nTop, nLeft, nBottom, nRight ) CLASS TBROWSE
@@ -2759,7 +2759,7 @@ FUNCTION TBMouse( oBrw, nMRow, nMCol )
 
 #ifdef HB_COMPAT_XPP
 
-CREATE CLASS xpp_TBrowse INHERIT HBBrowse
+CREATE CLASS xpp_TBrowse INHERIT TBrowse
 
 EXPORTED:
 

@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-04 23:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/tget.prg
+  * source/rtl/tgetx.prg
+  * source/rtl/tbcolumn.prg
+  * source/rtl/tbrowse.prg
+    * Reset internal name of GET(), TBROWSE(), TBCOLUMN(),
+      because even if Clipper doesn't have such public
+      symbols, Class(y) has them, and we want to maintain
+      compatibility.
+
+  * include/hbextern.ch
+    + Added GET, TBROWSE, TBCOLUMN.
+
 2009-02-04 23:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/hbsqlit2/tests/hbmk_b32.bat
   * contrib/examples/hbsqlit2/tests/hbmk_vc.bat
