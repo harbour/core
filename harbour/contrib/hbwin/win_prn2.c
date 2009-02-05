@@ -160,9 +160,7 @@ BOOL hb_GetDefaultPrinter( char * pPrinterName, LPDWORD pdwBufferSize )
          fnGetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool, "GetDefaultPrinterA" );
 
          if( fnGetDefaultPrinter )
-         {
             Result = ( *fnGetDefaultPrinter )( pPrinterName, pdwBufferSize );
-         }
 
          FreeLibrary( hWinSpool );
       }

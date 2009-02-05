@@ -91,19 +91,19 @@ do
 done
 
 if test_reqrpm "MySQL-devel" || test_reqrpm "mysql-devel"
-then 
+then
     INST_PARAM="${INST_PARAM} --with mysql"
 fi
 if test_reqrpm "postgresql-devel"
-then 
+then
     INST_PARAM="${INST_PARAM} --with pgsql"
 fi
 if test_reqrpm "firebird-devel"
-then 
+then
     INST_PARAM="${INST_PARAM} --with fbsql"
 fi
 if test_reqrpm "gd-devel"
-then 
+then
     v=`rpm -q gd|sed -e "s/[^0-9]*\([0-9]*\).*/\1/g"`
     [ "$v" -ge 2 ] && INST_PARAM="${INST_PARAM} --with gd"
 fi
@@ -125,7 +125,7 @@ then
 fi
 if [ -f /usr/include/hpdf.h ] || [ -f /usr/local/include/hpdf.h ]
 then
-    INST_PARAM="${INST_PARAM} --with hbhpdf"
+    INST_PARAM="${INST_PARAM} --with libharu"
 fi
 if [ "${HB_COMMERCE}" = "yes" ]
 then
@@ -140,11 +140,11 @@ then
     INST_PARAM="${INST_PARAM} --without X11"
 fi
 if ! test_reqrpm ncurses || ! test_reqrpm ncurses-devel
-then 
+then
     INST_PARAM="${INST_PARAM} --without gtcrs"
 fi
 if ! test_reqrpm slang || ! test_reqrpm slang-devel
-then 
+then
     INST_PARAM="${INST_PARAM} --without gtsln"
 fi
 

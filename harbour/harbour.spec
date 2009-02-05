@@ -16,12 +16,12 @@
 # --with mysql       - build hbmysql lib and sddmy for sqlrdd
 # --with pgsql       - build hbpgsql lib and sddpg for sqlrdd
 # --with fbsql       - build hbfbird lib and sddfb for sqlrdd
-# --with gd          - build hbgd lib 
+# --with gd          - build hbgd lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build rddads RDD
 # --with odbc        - build hbodbc lib
 # --with curl        - build hbcurl lib
-# --with hbhpdf      - build hbhpdf lib
+# --with libharu     - build hbhpdf lib
 # --without nf       - do not build nanforum lib
 # --without gpllib   - do not build libs which needs GPL 3-rd party code
 # --without x11      - do not build GTXWC
@@ -81,7 +81,7 @@
 %define hb_idir  export HB_INC_INSTALL=%{_includedir}/%{name}
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbsqlit3 hbtip hbtpathy hbvpdf hbziparc xhb rddsql %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_hbhpdf:hbhpdf} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_fbsql:hbfbird} %{?_with_allegro:gtalleg}"
+%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbsqlit3 hbtip hbtpathy hbvpdf hbziparc xhb rddsql %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_libharu:hbhpdf} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_fbsql:hbfbird} %{?_with_allegro:gtalleg}"
 %define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host  www.harbour-project.org
 %define readme   README.RPM
@@ -133,8 +133,8 @@ uma maquina virtual e documentação.
 ÍÁÛÉÎÕ É ÄÏËÕÍÅÎÔÁÃÉÀ.
 
 %description -l hu
-%{dname} egy több platformon is mûködõ CA-Cl*pper kompatibilis 
-fordítóprogram. A csomag része a fordító maga, az elõfordító, fejléc 
+%{dname} egy több platformon is mûködõ CA-Cl*pper kompatibilis
+fordítóprogram. A csomag része a fordító maga, az elõfordító, fejléc
 állományok, a virtuális gép és függvénykönyvtárak, valamint a dokumentáció.
 
 ######################################################################
@@ -171,7 +171,7 @@ linkados dinamicamente.
 
 %description -l hu lib
 A(z) %{dname} egy Clipper kompatibilis fordítóprogram.
-Ez a csomag biztosítja a dinamikusan szerkesztett %{dname} 
+Ez a csomag biztosítja a dinamikusan szerkesztett %{dname}
 programokhoz szükséges megosztott (dinamikus) futtatókönyvtárakat.
 
 ######################################################################
@@ -208,7 +208,7 @@ dos os programas
 
 %description -l hu lib
 A(z) %{dname} egy Clipper kompatibilis fordítóprogram.
-Ez a csomag biztosítja a statikusan szerkesztett %{dname} 
+Ez a csomag biztosítja a statikusan szerkesztett %{dname}
 programokhoz szükséges statikus futtatókönyvtárakat.
 
 
@@ -241,7 +241,7 @@ dos programas.
 
 %description -l hu lib
 A(z) %{dname} egy Clipper kompatibilis fordítóprogram.
-Ez a csomag kiegészítõ (contrib) könyvtárakat biztosít 
+Ez a csomag kiegészítõ (contrib) könyvtárakat biztosít
 statikus szerkesztéshez.
 
 ## odbc library
@@ -274,20 +274,20 @@ statikus szerkesztéshez.
 %{?_with_curl:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
 %{?_with_curl:Ten pakiet udostêpnia statyczn± biliotekê CURL dla kompilatora %{dname}.}
 
-## hbhpdf library
-%{?_with_hbhpdf:%package hbhpdf}
-%{?_with_hbhpdf:Summary:        hbhpdf libarary for %{dname} compiler}
-%{?_with_hbhpdf:Summary(pl):    Bilioteka hbhpdf dla kompilatora %{dname}}
-%{?_with_hbhpdf:Group:          Development/Languages}
-%{?_with_hbhpdf:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+## libharu library
+%{?_with_libharu:%package libharu}
+%{?_with_libharu:Summary:        hbhpdf libarary for %{dname} compiler}
+%{?_with_libharu:Summary(pl):    Bilioteka hbhpdf dla kompilatora %{dname}}
+%{?_with_libharu:Group:          Development/Languages}
+%{?_with_libharu:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
 
-%{?_with_hbhpdf:%description hbhpdf}
-%{?_with_hbhpdf:%{dname} is a Clipper compatible compiler.}
-%{?_with_hbhpdf:This package provides %{dname} hbhpdf library for program linking.}
+%{?_with_libharu:%description libharu}
+%{?_with_libharu:%{dname} is a Clipper compatible compiler.}
+%{?_with_libharu:This package provides %{dname} hbhpdf library for program linking.}
 
-%{?_with_hbhpdf:%description -l pl hbhpdf}
-%{?_with_hbhpdf:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_hbhpdf:Ten pakiet udostêpnia statyczn+ biliotekê hbhpdf dla kompilatora %{dname}.}
+%{?_with_libharu:%description -l pl libharu}
+%{?_with_libharu:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
+%{?_with_libharu:Ten pakiet udostêpnia statyczn+ biliotekê hbhpdf dla kompilatora %{dname}.}
 
 ## ADS RDD
 %{?_with_ads:%package ads}
@@ -686,10 +686,10 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_curl:%dir %{_libdir}/%{name}}
 %{?_with_curl:%{_libdir}/%{name}/libhbcurl.a}
 
-%{?_with_hbhpdf:%files hbhpdf}
-%{?_with_hbhpdf:%defattr(644,root,root,755)}
-%{?_with_hbhpdf:%dir %{_libdir}/%{name}}
-%{?_with_hbhpdf:%{_libdir}/%{name}/libhbhpdf.a}
+%{?_with_libharu:%files libharu}
+%{?_with_libharu:%defattr(644,root,root,755)}
+%{?_with_libharu:%dir %{_libdir}/%{name}}
+%{?_with_libharu:%{_libdir}/%{name}/libhbhpdf.a}
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}

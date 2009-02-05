@@ -242,15 +242,12 @@ HB_FUNC( WIN_TEXTOUT )
          int iWidth = ISNUM( 6 ) ? ( int ) hb_parnl( 6 ) : 0;
          LPTSTR lpData = HB_TCHAR_CONVNTO( hb_parc( 4 ), iLen );
 
-         if( ISNUM( 7 ) && ( hb_parnl( 7 ) == 1 || hb_parnl( 7 ) == 2 ) )
-         {
-            if( hb_parnl( 7 ) == 1 )
-               SetTextAlign( ( HDC ) hDC, TA_BOTTOM | TA_RIGHT | TA_NOUPDATECP );
-            else
-               SetTextAlign( ( HDC ) hDC, TA_BOTTOM | TA_CENTER | TA_NOUPDATECP );
-         }
+         if( hb_parnl( 7 ) == 1 )
+            SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | TA_BOTTOM | TA_RIGHT );
+         else if( hb_parnl( 7 ) == 2 )
+            SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | TA_BOTTOM | TA_CENTER );
          else
-            SetTextAlign( ( HDC ) hDC, TA_BOTTOM | TA_LEFT | TA_NOUPDATECP );
+            SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | TA_BOTTOM | TA_LEFT );
 
          if( iWidth < 0 && iLen < 1024 )
          {
@@ -282,12 +279,12 @@ HB_FUNC( WIN_GETTEXTSIZE )
    LONG Result = 0;
    HDC hDC = win_HDC_par( 1 );
    ULONG ulLen = hb_parclen( 2 );
-   SIZE sSize;
 
    if( hDC && ulLen )
    {
       int iLen = ( int ) hb_parnl( 3 );
       LPTSTR lpData;
+      SIZE sSize;
 
       if( ( ULONG ) iLen > ulLen )
          iLen = ulLen;
@@ -350,7 +347,7 @@ HB_FUNC( WIN_CREATEFONT )
 {
    BOOL Result = FALSE;
    HDC hDC = win_HDC_par( 1 );
-   HFONT hFont, hOldFont;
+   HFONT hFont;
    char *pszFont = hb_parc( 2 );
    LPTSTR lpFont = pszFont ? HB_TCHAR_CONVTO( pszFont ) : NULL;
    int iHeight = ( int ) hb_parnl( 3 );
@@ -377,11 +374,12 @@ HB_FUNC( WIN_CREATEFONT )
 
    if( hFont )
    {
-      Result = TRUE;
-      hOldFont = ( HFONT ) SelectObject( hDC, hFont );
+      HFONT hOldFont = ( HFONT ) SelectObject( hDC, hFont );
 
       if( hOldFont )
          DeleteObject( hOldFont );
+
+      Result = TRUE;
    }
 
    hb_retl( Result );
