@@ -47,7 +47,6 @@ if "%1" == "INSTALL" goto POST_INSTALL
 :POST_BUILD
 
    rem Use supplied .lib file.
-   echo on
    if not exist ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib copy "%HB_DIR_FBSQL%\lib\fbclient_bor.lib" ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib > nul
    goto POST_EXIT
 
