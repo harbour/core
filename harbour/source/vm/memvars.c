@@ -97,10 +97,9 @@ struct mv_PUBLIC_var_info
 struct mv_memvarArray_info
 {
    PHB_ITEM pArray;
-   ULONG ulPos;
+   PHB_DYNS * pDyns;
    ULONG ulCount;
    int iScope;
-   BOOL fCopy;
 };
 
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
@@ -774,6 +773,7 @@ int hb_memvarScope( char * szVarName, ULONG ulLength )
       return HB_MV_NOT_FOUND;
 }
 
+#if !defined( HB_MT_VM )
 /* Releases memory occupied by a variable
  */
 static HB_DYNS_FUNC( hb_memvarClear )
@@ -785,16 +785,26 @@ static HB_DYNS_FUNC( hb_memvarClear )
 
    return TRUE;
 }
+#endif
 
 /* Clear all memvar variables */
 void hb_memvarsClear( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarsClear()"));
 
-   hb_stackClearMevarsBase();
+   hb_stackClearMemvarsBase();
    hb_stackGetPrivateStack()->base = 0;
    hb_memvarSetPrivatesBase( 0 );
+#if !defined( HB_MT_VM )
    hb_dynsymEval( hb_memvarClear, NULL );
+#else
+   /* this is a little bit hacked but many times faster version
+    * of memvars clearing because it scans only given thread stack
+    * not global dynamic symbol table. It noticeable reduce the cost
+    * of HVM thread releasing.
+    */
+   hb_stackClearMemvars();
+#endif
 }
 
 /* Checks passed dynamic symbol if it is a PUBLIC variable and
@@ -902,27 +912,48 @@ static HB_DYNS_FUNC( hb_memvarCountVisible )
       if( !pMVInfo->iScope ||
           ( hb_memvarScopeGet( pDynSymbol ) & pMVInfo->iScope ) != 0 )
       {
-         ++pMVInfo->ulCount;
+         pMVInfo->pDyns[ pMVInfo->ulCount++ ] = pDynSymbol;
       }
    }
    return TRUE;
 }
 
-static HB_DYNS_FUNC( hb_memvarStoreInArray )
+PHB_ITEM hb_memvarSaveInArray( int iScope, BOOL fCopy )
 {
-   PHB_ITEM pMemvar = hb_dynsymGetMemvar( pDynSymbol );
+   struct mv_memvarArray_info MVInfo;
+   PHB_ITEM pArray, pItem, pMemvar;
+   PHB_DYNS pDynSymbol;
 
-   if( pMemvar )
+   pArray = NULL;
+
+   iScope &= HB_MV_PUBLIC | HB_MV_PRIVATE;
+   if( iScope == ( HB_MV_PUBLIC | HB_MV_PRIVATE ) )
+      iScope = 0;
+
+#if !defined( HB_MT_VM )
+   MVInfo.pDyns = ( PHB_DYNS * ) hb_xgrab( hb_dynsymCount() *
+                                           sizeof( PHB_DYNS ) );
+#else
+   MVInfo.pDyns = ( PHB_DYNS * ) hb_xgrab( hb_stackDynHandlesCount() *
+                                           sizeof( PHB_DYNS ) );
+#endif
+   MVInfo.ulCount = 0;
+   MVInfo.iScope = iScope;
+
+   hb_dynsymProtectEval( hb_memvarCountVisible, ( void * ) &MVInfo );
+   if( MVInfo.ulCount > 0 )
    {
-      struct mv_memvarArray_info *pMVInfo = ( struct mv_memvarArray_info * ) Cargo;
-      if( !pMVInfo->iScope ||
-          ( hb_memvarScopeGet( pDynSymbol ) & pMVInfo->iScope ) != 0 )
+      pArray = hb_itemArrayNew( MVInfo.ulCount );
+      do
       {
-         PHB_ITEM pItem = hb_arrayGetItemPtr( pMVInfo->pArray, ++pMVInfo->ulPos );
+         pItem = hb_arrayGetItemPtr( pArray, MVInfo.ulCount );
+         pDynSymbol = MVInfo.pDyns[ --MVInfo.ulCount ];
+         pMemvar = hb_dynsymGetMemvar( pDynSymbol ),
+
          hb_arrayNew( pItem, 2 );
          hb_arraySetSymbol( pItem, 1, pDynSymbol->pSymbol );
          pItem = hb_arrayGetItemPtr( pItem, 2 );
-         if( pMVInfo->fCopy )
+         if( fCopy )
          {
             hb_itemCopy( pItem, pMemvar );
             hb_memvarDetachLocal( pItem );
@@ -933,34 +964,12 @@ static HB_DYNS_FUNC( hb_memvarStoreInArray )
             pItem->item.asMemvar.value = pMemvar;
             hb_xRefInc( pMemvar );
          }
-         /* stop execution if all symbols are saved */
-         if( pMVInfo->ulPos >= pMVInfo->ulCount )
-            return FALSE;
       }
+      while( MVInfo.ulCount );
    }
-   return TRUE;
-}
+   hb_xfree( MVInfo.pDyns );
 
-PHB_ITEM hb_memvarSaveInArray( int iScope, BOOL fCopy )
-{
-   struct mv_memvarArray_info MVInfo;
-
-   iScope &= HB_MV_PUBLIC | HB_MV_PRIVATE;
-   if( iScope == ( HB_MV_PUBLIC | HB_MV_PRIVATE ) )
-      iScope = 0;
-
-   MVInfo.pArray = NULL;
-   MVInfo.ulPos = MVInfo.ulCount = 0;
-   MVInfo.iScope = iScope;
-   MVInfo.fCopy = fCopy;
-
-   hb_dynsymProtectEval( hb_memvarCountVisible, ( void * ) &MVInfo );
-   if( MVInfo.ulCount > 0 )
-   {
-      MVInfo.pArray = hb_itemArrayNew( MVInfo.ulCount );
-      hb_dynsymEval( hb_memvarStoreInArray, ( void * ) &MVInfo );
-   }
-   return MVInfo.pArray;
+   return pArray;
 }
 
 void hb_memvarRestoreFromArray( PHB_ITEM pArray )

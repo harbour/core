@@ -391,6 +391,12 @@ void hb_stackIdSetActionRequest( void * pStackId, USHORT uiAction )
    ( ( PHB_STACK ) pStackId )->uiActionRequest = uiAction;
 }
 
+#undef hb_stackDynHandlesCount
+int hb_stackDynHandlesCount( void )
+{
+   return hb_stack.iDynH;
+}
+
 PHB_DYN_HANDLES hb_stackGetDynHandle( PHB_DYNS pDynSym )
 {
    HB_STACK_TLS_PRELOAD
@@ -409,6 +415,25 @@ PHB_DYN_HANDLES hb_stackGetDynHandle( PHB_DYNS pDynSym )
    }
 
    return &hb_stack.pDynH[ iDynSym - 1 ];
+}
+
+void hb_stackClearMemvars( void )
+{
+   HB_STACK_TLS_PRELOAD
+   int iDynSym;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackClearMemvars()"));
+
+   iDynSym = hb_stack.iDynH;
+   while( --iDynSym >= 0 )
+   {
+      if( hb_stack.pDynH[ iDynSym ].pMemvar )
+      {
+         PHB_ITEM pMemvar = ( PHB_ITEM ) hb_stack.pDynH[ iDynSym ].pMemvar;
+         hb_stack.pDynH[ iDynSym ].pMemvar = NULL;
+         hb_memvarValueDecRef( pMemvar );
+      }
+   }
 }
 
 #undef hb_stackQuitState
@@ -967,12 +992,12 @@ PHB_ITEM ** hb_stackItemBasePtr( void )
    return &hb_stack.pItems;
 }
 
-void hb_stackClearMevarsBase( void )
+void hb_stackClearMemvarsBase( void )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pBase;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stackClearMevarsBase()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackClearMemvarsBase()"));
 
    pBase = * hb_stack.pBase;
 

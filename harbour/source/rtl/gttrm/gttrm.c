@@ -1729,85 +1729,96 @@ static BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol,
    if( pTerm->fPosAnswer )
    {
       char rdbuf[ 64 ];
-      int i, n, y, x;
+      int i, j, n, d, y, x;
+      HB_ULONG end_timer, time;
 
       hb_gt_trm_termOut( pTerm, ( BYTE * ) "\x1B[6n", 4 );
       if( szPost )
          hb_gt_trm_termOut( pTerm, ( BYTE * ) szPost, strlen( szPost ) );
       hb_gt_trm_termFlush( pTerm );
 
-      *iRow = *iCol = -1;
-      n = 0;
+      n = j = x = y = 0;
       pTerm->fPosAnswer = FALSE;
 
-#ifdef HB_OS_UNIX_COMPATIBLE
+      /* wait up to 2 seconds for answer */
+      end_timer = hb_dateMilliSeconds() + 2000;
+      for( ; ; )
       {
-         struct timeval tv;
-         fd_set rdfds;
-
-         FD_ZERO( &rdfds );
-         FD_SET( pTerm->hFilenoStdin, &rdfds );
-         tv.tv_sec = 2;
-         tv.tv_usec = 0;
-
-         while( select( pTerm->hFilenoStdin + 1, &rdfds, NULL, NULL, &tv ) > 0 )
+         /* loking for cursor position in "\033[%d;%dR" */
+         while( j < n && rdbuf[ j ] != '\033' )
+            ++j;
+         if( n - j >= 6 )
          {
-            i = read( pTerm->hFilenoStdin, rdbuf + n, sizeof( rdbuf ) - 1 - n );
-            if( i <= 0 )
-               break;
-            if( n == 0 )
+            i = j + 1;
+            if( rdbuf[ i ] == '[' )
             {
-               while( i > 0 && rdbuf[0] != '\033' )
+               y = 0;
+               d = ++i;
+               while( i < n && rdbuf[ i ] >= '0' && rdbuf[ i ] <= '9' )
+                  y = y * 10 + ( rdbuf[ i++ ] - '0' );
+               if( i < n && i > d && rdbuf[ i ] == ';' )
                {
-                  if( szPost && i >= 5 && hb_strnicmp( rdbuf, "PuTTY", 5 ) == 0 )
+                  x = 0;
+                  d = ++i;
+                  while( i < n && rdbuf[ i ] >= '0' && rdbuf[ i ] <= '9' )
+                     x = x * 10 + ( rdbuf[ i++ ] - '0' );
+                  if( i < n && i > d && rdbuf[ i ] == 'R' )
                   {
-                     pTerm->terminal_ext |= TERM_PUTTY;
-                     memmove( rdbuf, rdbuf + 5, i -= 5 );
-                  }
-                  else
-                     memmove( rdbuf, rdbuf + 1, i-- );
-               }
-            }
-            n += i;
-            if( n >= 6 )
-            {
-               rdbuf[ n ] = '\0';
-               if( sscanf( rdbuf, "\033[%d;%dR", &y, &x ) == 2 )
-               {
-                  pTerm->fPosAnswer = TRUE;
-                  break;
-               }
-               else if( n == sizeof( rdbuf ) )
-                  break;
-            }
-         }
-      }
-#else
-      {
-         double dTime = hb_dateSeconds(), d;
-
-         do
-         {
-            i = getc( stdin );
-            if( i != EOF && ( n || i == '\033' ) )
-            {
-               rdbuf[ n++ ] = ( char ) i;
-               if( n >= 6 && i == 'R' )
-               {
-                  rdbuf[ n ] = '\0';
-                  if( sscanf( rdbuf, "\033[%d;%dR", &y, &x ) == 2 )
-                  {
+                     if( szPost )
+                     {
+                        while( j >= 5 )
+                        {
+                           if( hb_strnicmp( rdbuf + j - 5, "PuTTY", 5 ) == 0 )
+                           {
+                              pTerm->terminal_ext |= TERM_PUTTY;
+                              break;
+                           }
+                           --j;
+                        }
+                     }
                      pTerm->fPosAnswer = TRUE;
                      break;
                   }
-                  n = 0;
                }
             }
-            d = hb_dateSeconds();
+            if( i < n )
+            {
+               j = i;
+               continue;
+            }
          }
-         while( d <= dTime + 2.0 && d > dTime );
-      }
+         if( n == sizeof( rdbuf ) )
+            break;
+         time = hb_dateMilliSeconds();
+         if( time > end_timer )
+            break;
+         else
+         {
+#ifdef HB_OS_UNIX_COMPATIBLE
+            struct timeval tv;
+            fd_set rdfds;
+            int iMilliSec;
+
+            FD_ZERO( &rdfds );
+            FD_SET( pTerm->hFilenoStdin, &rdfds );
+            iMilliSec = ( int ) ( end_timer - time );
+            tv.tv_sec = iMilliSec / 1000;
+            tv.tv_usec = ( iMilliSec % 1000 ) * 1000;
+
+            if( select( pTerm->hFilenoStdin + 1, &rdfds, NULL, NULL, &tv ) <= 0 )
+               break;
+            i = read( pTerm->hFilenoStdin, rdbuf + n, sizeof( rdbuf ) - n );
+#else
+            int iTODO;
+            break;
 #endif
+
+            if( i <= 0 )
+               break;
+            n += i;
+         }
+      }
+
       if( pTerm->fPosAnswer )
       {
          *iRow = y - 1;

@@ -16,8 +16,10 @@ else
 
 ifeq ($(HB_HOST_BUILD),lib)
 HB_COMP_DIR=
+HB_COMP_REF=
 else
 HB_COMP_DIR=main{compiler}
+HB_COMP_REF={main}
 endif
 
 DIRS=\
@@ -25,16 +27,16 @@ DIRS=\
 	pp{common} \
 	compiler{pp} \
 	$(HB_COMP_DIR) \
-	rtl{main} \
-	vm{main} \
+	rtl$(HB_COMP_REF) \
+	vm$(HB_COMP_REF) \
 	macro \
 	codepage \
 	lang \
-	rdd{main} \
-	hbextern{main} \
+	rdd$(HB_COMP_REF) \
+	hbextern$(HB_COMP_REF) \
 	hbpcre \
 	hbzlib \
-	debug{main} \
+	debug$(HB_COMP_REF) \
 
 endif
 

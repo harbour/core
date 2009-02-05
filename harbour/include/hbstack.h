@@ -296,7 +296,7 @@ extern void **     hb_stackDebugInfo( void );
 extern void        hb_stackDecrease( ULONG ulItems );
 extern HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, USHORT uiParams );
 extern void        hb_stackOldFrame( PHB_STACK_STATE pFrame );
-extern void        hb_stackClearMevarsBase( void );
+extern void        hb_stackClearMemvarsBase( void );
 
 extern HB_ITEM_PTR hb_stackLocalVariable( int *piFromBase );
 extern PHB_ITEM ** hb_stackItemBasePtr( void );
@@ -333,6 +333,8 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
    extern void             hb_stackListSet( void * pStackLst );
    extern void             hb_stackIdSetActionRequest( void * pStackID, USHORT uiAction );
    extern PHB_DYN_HANDLES  hb_stackGetDynHandle( PHB_DYNS pDynSym );
+   extern int              hb_stackDynHandlesCount( void );
+   extern void             hb_stackClearMemvars( void );
    extern BOOL             hb_stackQuitState( void );
    extern void             hb_stackSetQuitState( USHORT uiState );
    extern int              hb_stackUnlock( void );
@@ -377,8 +379,9 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
 
 #define hb_stackId( )               ( ( void * ) &hb_stack )
 #if defined( HB_MT_VM )
-#  define hb_stackList( )           ( hb_stack.pStackLst )
+#  define hb_stackList()            ( hb_stack.pStackLst )
 #  define hb_stackListSet( p )      do { hb_stack.pStackLst = ( p ); } while ( 0 )
+#  define hb_stackDynHandlesCount() ( hb_stack.iDynH )
 #  define hb_stackQuitState( )      ( hb_stack.uiQuitState != 0 )
 #  define hb_stackSetQuitState( n ) do { hb_stack.uiQuitState = ( n ); } while( 0 )
 #  define hb_stackUnlock()          ( ++hb_stack.iUnlocked )

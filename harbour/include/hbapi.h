@@ -904,6 +904,7 @@ extern HB_EXPORT void      hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea )
 #ifdef _HB_API_INTERNAL_
 extern           PHB_ITEM  hb_dynsymGetMemvar( PHB_DYNS pDynSym ); /* return memvar handle number bound with given dynamic symbol */
 extern           void      hb_dynsymSetMemvar( PHB_DYNS pDynSym, PHB_ITEM pMemvar ); /* set memvar handle for a given dynamic symbol */
+extern           long      hb_dynsymCount( void ); /* number of dynamic symbols */
 #endif
 
 /* Symbol management */

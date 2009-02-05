@@ -63,6 +63,7 @@
 #include "hbapiitm.h"
 #include "inkey.ch"
 #include "hbapicdp.h"
+#include "hbdate.h"
 
 #if defined(HB_OS_DARWIN) || ( defined(HB_OS_LINUX) && defined(__WATCOMC__) )
 #define REAL_UNIX_SYSTEM /* this is for slang.h to include some defs */

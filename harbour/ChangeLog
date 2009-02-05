@@ -8,6 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-06 00:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+    ! fixed typo in one internal function name
+
+  * harbour/include/hbapi.h
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/dynsym.c
+  * harbour/source/vm/memvars.c
+    % changed code used for memvars clear in MT mode - it greatly 
+      reduce the cost of HVM thread exit
+    % changed code for memvars copping/sharing when thread is started
+      it greatly reduce the time of thread creation when existing memvars
+      are shared or copied
+   Both modifications reduced the cost of simple
+      hb_threadJoin( hb_threadCreate( {|| NIL } ) )
+   few times depending on number of symbols and memvars.
+
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtsln/gtsln.h
+  * harbour/source/rtl/gtpca/gtpca.c
+    % added better initial cursor position detection and eliminated sscanf()
+
+  * harbour/source/Makefile
+    ! fixed concurrent dependencies in cross builds
+
 2009-02-05 10:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/rddado/adordd.prg
     ! Fixed HB_SYMOL_USED() -> HB_SYMBOL_UNUSED()

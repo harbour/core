@@ -537,27 +537,71 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
 {
    if( isatty( iStdOut ) && isatty( iStdIn ) )
    {
-      const char * szBuf = "\r\303\255\033[6n";
-      struct timeval tv;
-      fd_set rdfds;
+      const char * szBuf = "\r\303\255\033[6n  \r";
+      char rdbuf[ 64 ];
+      int i, j, n, d, y, x;
+      HB_ULONG end_timer, time;
 
       write( iStdOut, szBuf, strlen( szBuf ) );
-      FD_ZERO( &rdfds );
-      FD_SET( iStdIn, &rdfds );
-      tv.tv_sec = 2;
-      tv.tv_usec = 0;
-      if( select( iStdIn + 1, &rdfds, NULL, NULL, &tv ) > 0 )
+
+      n = j = x = y = 0;
+      /* wait up to 2 seconds for answer */
+      end_timer = hb_dateMilliSeconds() + 2000;
+      for( ; ; )
       {
-         char rdbuf[ 100 ];
-         int n, y, x;
-         n = read( iStdIn, rdbuf, sizeof( rdbuf ) - 1 );
-         if( n >= 6 )
+         /* loking for cursor position in "\033[%d;%dR" */
+         while( j < n && rdbuf[ j ] != '\033' )
+            ++j;
+         if( n - j >= 6 )
          {
-            rdbuf[ n ] = '\0';
-            if( sscanf( rdbuf, "\033[%d;%dR", &y, &x ) == 2 )
+            i = j + 1;
+            if( rdbuf[ i ] == '[' )
             {
-               return x == 2 ? 1 : 0;
+               y = 0;
+               d = ++i;
+               while( i < n && rdbuf[ i ] >= '0' && rdbuf[ i ] <= '9' )
+                  y = y * 10 + ( rdbuf[ i++ ] - '0' );
+               if( i < n && i > d && rdbuf[ i ] == ';' )
+               {
+                  x = 0;
+                  d = ++i;
+                  while( i < n && rdbuf[ i ] >= '0' && rdbuf[ i ] <= '9' )
+                     x = x * 10 + ( rdbuf[ i++ ] - '0' );
+                  if( i < n && i > d && rdbuf[ i ] == 'R' )
+                  {
+                     return x == 2 ? 1 : 0;
+                  }
+               }
             }
+            if( i < n )
+            {
+               j = i;
+               continue;
+            }
+         }
+         if( n == sizeof( rdbuf ) )
+            break;
+         time = hb_dateMilliSeconds();
+         if( time > end_timer )
+            break;
+         else
+         {
+            struct timeval tv;
+            fd_set rdfds;
+            int iMilliSec;
+
+            FD_ZERO( &rdfds );
+            FD_SET( iStdIn, &rdfds );
+            iMilliSec = ( int ) ( end_timer - time );
+            tv.tv_sec = iMilliSec / 1000;
+            tv.tv_usec = ( iMilliSec % 1000 ) * 1000;
+
+            if( select( iStdIn + 1, &rdfds, NULL, NULL, &tv ) <= 0 )
+               break;
+            i = read( iStdIn, rdbuf + n, sizeof( rdbuf ) - n );
+            if( i <= 0 )
+               break;
+            n += i;
          }
       }
    }

@@ -514,6 +514,13 @@ static PHB_DYNS hb_dynsymGetByIndex( long lIndex )
    return pDynSym;
 }
 
+long hb_dynsymCount( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymCount()"));
+
+   return s_uiDynSymbols;
+}
+
 void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
 {
    PHB_DYNS pDynSym = NULL;

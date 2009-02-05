@@ -230,67 +230,94 @@ static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
 
    if( s_fIsAnswer && s_bStdinConsole && s_bStdoutConsole )
    {
+      char rdbuf[ 64 ];
+      int i, j, n, d, y, x;
+      HB_ULONG end_timer, time;
+
       hb_gt_pca_termOut( ( BYTE * ) "\x1B[6n", 4 );
       hb_gt_pca_termFlush();
 
-#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+      n = j = x = y = 0;
+
+      /* wait up to 2 seconds for answer */
+      end_timer = hb_dateMilliSeconds() + 2000;
+      for( ; ; )
       {
-         char rdbuf[ 64 ];
-         int i, n, y, x;
-         struct timeval tv;
-         fd_set rdfds;
-
-         FD_ZERO( &rdfds );
-         FD_SET( s_hFilenoStdin, &rdfds );
-         tv.tv_sec = 2;
-         tv.tv_usec = 0;
-
-         *iRow = *iCol = -1;
-         n = 0;
-         s_fIsAnswer = FALSE;
-
-         while( select( s_hFilenoStdin + 1, &rdfds, NULL, NULL, &tv ) > 0 )
+         /* loking for cursor position in "\033[%d;%dR" */
+         while( j < n && rdbuf[ j ] != '\033' )
+            ++j;
+         if( n - j >= 6 )
          {
-            i = read( s_hFilenoStdin, rdbuf + n, sizeof( rdbuf ) - 1 - n );
+            i = j + 1;
+            if( rdbuf[ i ] == '[' )
+            {
+               y = 0;
+               d = ++i;
+               while( i < n && rdbuf[ i ] >= '0' && rdbuf[ i ] <= '9' )
+                  y = y * 10 + ( rdbuf[ i++ ] - '0' );
+               if( i < n && i > d && rdbuf[ i ] == ';' )
+               {
+                  x = 0;
+                  d = ++i;
+                  while( i < n && rdbuf[ i ] >= '0' && rdbuf[ i ] <= '9' )
+                     x = x * 10 + ( rdbuf[ i++ ] - '0' );
+                  if( i < n && i > d && rdbuf[ i ] == 'R' )
+                  {
+                     s_fIsAnswer = TRUE;
+                     break;
+                  }
+               }
+            }
+            if( i < n )
+            {
+               j = i;
+               continue;
+            }
+         }
+         if( n == sizeof( rdbuf ) )
+            break;
+         time = hb_dateMilliSeconds();
+         if( time > end_timer )
+            break;
+         else
+         {
+#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+            struct timeval tv;
+            fd_set rdfds;
+            int iMilliSec;
+
+            FD_ZERO( &rdfds );
+            FD_SET( s_hFilenoStdin, &rdfds );
+            iMilliSec = ( int ) ( end_timer - time );
+            tv.tv_sec = iMilliSec / 1000;
+            tv.tv_usec = ( iMilliSec % 1000 ) * 1000;
+
+            if( select( s_hFilenoStdin + 1, &rdfds, NULL, NULL, &tv ) <= 0 )
+               break;
+            i = read( s_hFilenoStdin, rdbuf + n, sizeof( rdbuf ) - n );
+#else
+            i = getc( stdin );
+            if( i > 0 )
+            {
+               rdbuf[ n ] = ( char ) i;
+               i = 1;
+            }
+#endif
             if( i <= 0 )
                break;
             n += i;
-            if( n >= 6 )
-            {
-               rdbuf[ n ] = '\0';
-               if( sscanf( rdbuf, "\033[%d;%dR", &y, &x ) == 2 )
-               {
-                  *iRow = y;
-                  *iCol = x;
-                  s_fIsAnswer = TRUE;
-                  break;
-               }
-            }
          }
-         if( !s_fIsAnswer )
-            *iRow = *iCol = -1;
       }
-#else
+
+      if( s_fIsAnswer )
       {
-         USHORT ch, value = 0, index = 0;
-         do
-         {
-            ch = ( USHORT ) getc( stdin );
-            if( isdigit( ch ) )
-            {
-               value = ( value * 10 ) + ( ch - '0' );
-            }
-            else if( ch == ';' )
-            {
-               *iRow = value - 1;
-               value = 0;
-            }
-         }
-         while( ch != 'R' && index < 10 );
-         *iCol = value - 1;
-         s_fIsAnswer = ch == 'R' && *iCol != -1 && *iRow != -1;
+         *iRow = y - 1;
+         *iCol = x - 1;
       }
-#endif
+      else
+      {
+         *iRow = *iCol = -1;
+      }
    }
 }
 
