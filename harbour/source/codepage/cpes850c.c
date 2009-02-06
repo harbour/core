@@ -55,7 +55,6 @@
 /* ISO language code (2 chars): ES */
 /* Codepage: 850 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
@@ -84,9 +83,9 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "ES850C", 
+static HB_CODEPAGE s_codepage = { "ES850C",
     HB_CPID_850, HB_UNITB_850, NUMBER_OF_CHARACTERS,
-    "AµBCDEêFGHI÷JKLMN•O‡PQRSTUÈöVWXYZ", 
+    "AuBCDE_FGHI÷JKLMN•O‡PQRSTUÈöVWXYZ",
     "a†bcdeÇfghi°jklmn§o¢pqrstu£Åvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 

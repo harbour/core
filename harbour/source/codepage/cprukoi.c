@@ -54,7 +54,6 @@
 /* ISO language code (2 chars): RU */
 /* Codepage: KOI-8 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 

@@ -54,7 +54,6 @@
 /* ISO language code (2 chars): UA */
 /* Codepage: 866 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
@@ -76,4 +75,3 @@ HB_CODEPAGE_INIT( UA866 )
    static HB_$INITSYM hb_vm_auto_hb_codepage_Init_UA866 = hb_codepage_Init_UA866;
    #pragma data_seg()
 #endif
-

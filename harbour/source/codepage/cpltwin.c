@@ -56,7 +56,6 @@
 /* ISO language code (2 chars): LT */
 /* Codepage: Windows-1257 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
@@ -103,4 +102,3 @@ HB_CODEPAGE_INIT( LTWIN )
    static HB_$INITSYM hb_vm_auto_hb_codepage_Init_LTWIN = hb_codepage_Init_LTWIN;
    #pragma data_seg()
 #endif
-

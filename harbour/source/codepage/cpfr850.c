@@ -56,7 +56,6 @@
 /* ISO language code (2 chars): FR */
 /* Codepage: 850 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 

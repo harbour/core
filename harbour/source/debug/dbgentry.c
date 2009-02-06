@@ -49,8 +49,6 @@
  *
  */
 
-#include <ctype.h>
-
 #include "hbapidbg.h"
 #include "hbapiitm.h"
 #include "hbapicls.h"

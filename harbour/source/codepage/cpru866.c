@@ -54,7 +54,6 @@
 /* ISO language code (2 chars): RU */
 /* Codepage: 866 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 

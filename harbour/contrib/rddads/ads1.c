@@ -68,8 +68,6 @@
 #include "rddsys.ch"
 #include "rddads.h"
 
-#include <ctype.h>
-
 static int s_iSetListenerHandle = 0;
 
 static USHORT s_uiRddCount = 0;
@@ -1390,7 +1388,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
       dbFieldInfo.uiDec = 0;
       szFieldType = hb_arrayGetCPtr( pFieldDesc, 2 );
       iNameLen = strlen( szFieldType );
-      iData = toupper( szFieldType[ 0 ] );
+      iData = HB_TOUPPER( szFieldType[ 0 ] );
       switch( iData )
       {
          case 'C':

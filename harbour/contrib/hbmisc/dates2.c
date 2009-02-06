@@ -61,7 +61,6 @@
  *
  */
 
-#include <ctype.h>
 #include <time.h>
 
 #include "hbapi.h"
@@ -84,7 +83,7 @@ int hb_daysinmonth( int iYear, int iMonth )
    HB_TRACE(HB_TR_DEBUG, ("hb_daysinmonth(%d, %d)", iYear, iMonth));
 
    if( iMonth > 0 && iMonth < 13 )
-      return s_daysinmonth[ iMonth - 1 ] + 
+      return s_daysinmonth[ iMonth - 1 ] +
              ( ( iMonth == 2 && hb_isleapyear( iYear ) ) ? 1 : 0 );
    else
       return 0;

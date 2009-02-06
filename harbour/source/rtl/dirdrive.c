@@ -52,8 +52,6 @@
 
 /* NOTE: Clipper 5.3 functions */
 
-#include <ctype.h>
-
 #include "hbapi.h"
 #include "hbapifs.h"
 

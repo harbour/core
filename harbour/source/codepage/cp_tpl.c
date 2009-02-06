@@ -54,13 +54,12 @@
 /* ISO language code (2 chars): (please look it up in /doc/lang_id.txt) */
 /* Codepage: <Your codepage> */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-/* NOTE: In order to codepage translate work in Harbour, you must 
-         ensure that the NUMBER_OF_CHARACTERS and the order of the 
-         lowercase/uppercase chars are exactly matching in every 
+/* NOTE: In order to codepage translate work in Harbour, you must
+         ensure that the NUMBER_OF_CHARACTERS and the order of the
+         lowercase/uppercase chars are exactly matching in every
          codepage that belong to the same language.
          [vszakats] */
 
@@ -69,13 +68,13 @@
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
+#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
                                        sort after their unaccented counterparts
-                                       only if the unaccented versions of all 
-                                       characters being compared are the same 
+                                       only if the unaccented versions of all
+                                       characters being compared are the same
                                        ( interleaving ) */
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the

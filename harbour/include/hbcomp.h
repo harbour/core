@@ -57,7 +57,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include <ctype.h>
 #if defined(__WATCOMC__)
 #include <malloc.h>     /* alloca prototype */
 #endif

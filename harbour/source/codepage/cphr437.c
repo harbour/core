@@ -54,7 +54,6 @@
 /* ISO language code (2 chars): HR */
 /* Codepage: 437 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
@@ -101,4 +100,3 @@ HB_CODEPAGE_INIT( HR437 )
    static HB_$INITSYM hb_vm_auto_hb_codepage_Init_HR437 = hb_codepage_Init_HR437;
    #pragma data_seg()
 #endif
-

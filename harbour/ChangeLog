@@ -8,6 +8,120 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-06 19:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbdefs.h
+    + Added HB_ISALNUM() macro.
+    + Added HB_ISSPACE() macro. Please review.
+
+  * source/contrib/hbver.c
+    * isspace() -> HB_ISSPACE().
+
+  * contrib/rddads/ads1.c
+    ! toupper() -> HB_TOUPPER()
+
+  * contrib/xhb/hbxml.c
+    + Readded #include <ctype.h> because this one still uses isspace().
+
+  * include/hbcomp.h
+  * include/hbmacro.h
+  * contrib/hbct/token1.c
+  * contrib/hbodbc/odbc.c
+  * contrib/xhb/freadlin.c
+  * contrib/rddsql/sqlmix.c
+  * contrib/gtwvg/gtwvg.h
+  * contrib/gtwvg/wvggui.h
+  * contrib/rddads/adsx.c
+  * contrib/rddads/ads1.c
+  * contrib/hbclipsm/time.c
+  * contrib/hbclipsm/status.c
+  * contrib/hbmisc/dates2.c
+  * contrib/hbwin/win_ole.c
+  * contrib/examples/pp/pp.c
+  * source/debug/dbgentry.c
+  * source/common/hbver.c
+  * source/rtl/chrasc.c
+  * source/rtl/philes.c
+  * source/rtl/dirdrive.c
+  * source/rtl/dateshb.c
+  * source/rtl/philesx.c
+  * source/rtl/disksphb.c
+  * source/rtl/soundex.c
+  * source/rtl/gtapi.c
+  * source/rtl/filesys.c
+  * source/codepage/cppt850.c
+  * source/codepage/cpuawin.c
+  * source/codepage/cpde850.c
+  * source/codepage/cpsv850.c
+  * source/codepage/cpeswinc.c
+  * source/codepage/cptr857.c
+  * source/codepage/cpru866.c
+  * source/codepage/cproiso.c
+  * source/codepage/cprowin.c
+  * source/codepage/cpeswinm.c
+  * source/codepage/cpes850.c
+  * source/codepage/cpcs852.c
+  * source/codepage/cpitisb.c
+  * source/codepage/cphu852.c
+  * source/codepage/cpsk852.c
+  * source/codepage/cpplmaz.c
+  * source/codepage/cpesisoc.c
+  * source/codepage/cppliso.c
+  * source/codepage/cpbgmik.c
+  * source/codepage/cpplwin.c
+  * source/codepage/cpbg866.c
+  * source/codepage/cpltwin.c
+  * source/codepage/cphu852s.c
+  * source/codepage/cpptiso.c
+  * source/codepage/cpel737.c
+  * source/codepage/cpsrwin.c
+  * source/codepage/cpsviso.c
+  * source/codepage/cpdeiso.c
+  * source/codepage/cpfr850.c
+  * source/codepage/cpsvwin.c
+  * source/codepage/cpdewin.c
+  * source/codepage/cphr437.c
+  * source/codepage/cpes850c.c
+  * source/codepage/cphr852.c
+  * source/codepage/cpua866.c
+  * source/codepage/cpit850.c
+  * source/codepage/cpit437.c
+  * source/codepage/cpsl437.c
+  * source/codepage/cpsl852.c
+  * source/codepage/cphuwins.c
+  * source/codepage/cpcsiso.c
+  * source/codepage/cpesiso.c
+  * source/codepage/cpcswin.c
+  * source/codepage/cpeswin.c
+  * source/codepage/cphuiso.c
+  * source/codepage/cpskiso.c
+  * source/codepage/cprukoi.c
+  * source/codepage/cphuwin.c
+  * source/codepage/cpskwin.c
+  * source/codepage/cp_tpl.c
+  * source/codepage/cpruiso.c
+  * source/codepage/cpruwin.c
+  * source/codepage/cphuisos.c
+  * source/codepage/cpelwin.c
+  * source/codepage/cpro852.c
+  * source/codepage/cpfriso.c
+  * source/codepage/cpfrwin.c
+  * source/codepage/cpitiso.c
+  * source/codepage/cphrwin.c
+  * source/codepage/cpsliso.c
+  * source/codepage/cpitwin.c
+  * source/codepage/cpslwin.c
+  * source/codepage/cpcskam.c
+  * source/codepage/cpsvclip.c
+  * source/codepage/cpbgiso.c
+  * source/codepage/cptrwin.c
+  * source/codepage/cpskkam.c
+  * source/codepage/cpbgwin.c
+  * source/codepage/cpuakoi.c
+  * source/codepage/cppl852.c
+  * utils/hbdoc/hbdfrdln.c
+  * utils/hbmake/hbmfrdln.c
+    % Removed #include <ctype.h>. Most of these didn't need it anyway.
+
 2009-02-06 18:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbdefs.h
     + Added HB_ISALNUM() macro.
@@ -55,12 +169,14 @@
     ! Fixed typo in recently added hb_charIsUpper()/hb_charIsLower()
       functions.
 
-  ; TODO: Remove DJGPP to*() hack.
+  ; TODO: Remove DJGPP to*() hack. (or should we keep it to
+          support foreign code, like hbpcre and hbzlib?)
   ; TODO: Replace HB_PP_UPPER(), HB_PP_ISDIGIT() with equivalent
           new macros.
+  ; TODO: Remove remaining #include <ctype.h> lines. [DONE]
+
   ; TOFIX: Some of the above macros should better be replaced
            by CP sensitive versions. F.e. the one in hbtip.
-  ; TOFIX: Remove remaining #include <ctype.h> lines.
 
 2009-02-06 17:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbdefs.h
@@ -2903,7 +3019,7 @@
            duplicated here; if this isn't by intent, this function
            could be much simplified.
 
-  ; TOFIX: Avoid using C level toupper()/tolower()/islower()/isupper()
+  ; TOFIX: Avoid using C level toupper()/tolower()/islower()/isupper() [DONE]
 
   ; TOFIX: hb_regexMatch()'s 3rd parameter has a double meaning.
            It controls case-sensitivity (in sync with the documentation),

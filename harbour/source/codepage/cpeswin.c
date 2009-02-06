@@ -55,7 +55,6 @@
 /* ISO language code (2 chars): ES */
 /* Codepage: Windows-1252 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 

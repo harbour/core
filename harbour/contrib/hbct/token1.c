@@ -60,7 +60,6 @@
 
 
 #include "ct.h"
-#include <ctype.h>
 
 
 /* static const data */

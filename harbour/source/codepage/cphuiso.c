@@ -54,7 +54,6 @@
 /* ISO language code (2 chars): HU */
 /* Codepage: ISO-8859-2 (ntxhu852 flavour) */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
@@ -63,13 +62,13 @@
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
+#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
                                        sort after their unaccented counterparts
-                                       only if the unaccented versions of all 
-                                       characters being compared are the same 
+                                       only if the unaccented versions of all
+                                       characters being compared are the same
                                        ( interleaving ) */
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
@@ -83,16 +82,16 @@
    same excepting the characters case, of course.
  */
 
-/* NOTE: Several chars have been added above the standard 852 Hungarian 
+/* NOTE: Several chars have been added above the standard 852 Hungarian
          ones to make it 100% compatible with ntxhu852.obj for CA-Cl*pper 5.x.
-         Moreover the extra chars had to be replicated in the alternative 
-         codepages (WIN, ISO) too, to keep the Harbour codepage translation 
+         Moreover the extra chars had to be replicated in the alternative
+         codepages (WIN, ISO) too, to keep the Harbour codepage translation
          work. [vszakats] */
 
-/* NOTE: Since there is no possibility in Harbour to have different number 
-         of uppercase and lowercase accented chars, a simple workaround 
-         was used to solve the problem; notice that some uppercase chars 
-         have the same lowercase values. Testing showed that both the 
+/* NOTE: Since there is no possibility in Harbour to have different number
+         of uppercase and lowercase accented chars, a simple workaround
+         was used to solve the problem; notice that some uppercase chars
+         have the same lowercase values. Testing showed that both the
          ordering and Lower()/Upper() functions worked alright.
          [20070410] [vszakats] */
 

@@ -50,8 +50,6 @@
  *
  */
 
-#include <ctype.h>
-
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbset.h"
@@ -177,10 +175,10 @@ HB_FUNC( HB_FREADLINE )
 
    if( ( !ISBYREF( 2 ) ) || ( !ISNUM( 1 ) ) )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 4, 
-         hb_paramError( 1 ), 
-         hb_paramError( 2 ), 
-         hb_paramError( 3 ), 
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 4,
+         hb_paramError( 1 ),
+         hb_paramError( 2 ),
+         hb_paramError( 3 ),
          hb_paramError( 4 ) );
       return;
    }
@@ -195,9 +193,9 @@ HB_FUNC( HB_FREADLINE )
          if( iTerms <= 0 )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 4,
-               hb_paramError( 1 ), 
-               hb_paramError( 2 ), 
-               hb_paramError( 3 ), 
+               hb_paramError( 1 ),
+               hb_paramError( 2 ),
+               hb_paramError( 3 ),
                hb_paramError( 4 ) );
             return;
          }

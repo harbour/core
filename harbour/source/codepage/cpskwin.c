@@ -54,7 +54,6 @@
 /* ISO language code (2 chars): SK */
 /* Codepage: Windows-1250 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
@@ -68,8 +67,8 @@
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   1    /* Should be 1, if accented characters
                                        sort after their unaccented counterparts
-                                       only if the unaccented versions of all 
-                                       characters being compared are the same 
+                                       only if the unaccented versions of all
+                                       characters being compared are the same
                                        ( interleaving ) */
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the

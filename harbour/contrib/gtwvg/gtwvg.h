@@ -80,7 +80,6 @@
 #include <shlobj.h>
 
 #include <time.h>
-#include <ctype.h>
 
 #include "hbset.h"
 #include "hbgtcore.h"

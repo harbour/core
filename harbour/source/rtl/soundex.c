@@ -50,8 +50,6 @@
  *
  */
 
-#include <ctype.h>
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 

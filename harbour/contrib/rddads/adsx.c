@@ -64,8 +64,6 @@
 #include "hbvm.h"
 #include "rddsys.ch"
 
-#include <ctype.h>
-
 #ifndef SUPER_ORDDESTROY
 #define SUPER_ORDDESTROY(w, ip)          ((*(SUPERTABLE)->orderDestroy)(w, ip))
 #endif

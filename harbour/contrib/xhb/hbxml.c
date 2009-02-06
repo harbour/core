@@ -68,6 +68,7 @@
 * Giancarlo Niccolai <giancarlo@niccolai.org>
 */
 
+#include <ctype.h>
 #include <stdio.h>
 
 #include "hbapi.h"

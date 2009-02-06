@@ -55,7 +55,6 @@
 /* ISO language code (2 chars): SV */
 /* Codepage: ISO-8859-1 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 

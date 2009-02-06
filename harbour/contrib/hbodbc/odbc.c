@@ -84,7 +84,6 @@
 #include <limits.h>
 #include <math.h>
 #include <stdlib.h>
-#include <ctype.h>
 
 #if defined(HB_OS_LINUX) && defined(__WATCOMC__)
 #include "/usr/include/sql.h"
@@ -351,7 +350,7 @@ HB_FUNC( SQLDESCRIB )
                              buffer,
                              ( SQLSMALLINT ) lLen,
                              &wBufLen,
-                             &wDataType, 
+                             &wDataType,
                              &wColSize,
                              &wDecimals,
                              &wNullable );
@@ -393,8 +392,8 @@ HB_FUNC( SQLCOLATTRIBUTE )
    WORD        wResult   = SQLColAttribute( ( HSTMT ) hb_parptr( 1 ),
                                             ( SQLUSMALLINT ) hb_parni( 2 ),
                                             ( SQLUSMALLINT ) hb_parni( 3 ),
-                                            ( unsigned char * ) bBuffer, 
-                                            ( SQLUSMALLINT ) hb_parni( 5 ), 
+                                            ( unsigned char * ) bBuffer,
+                                            ( SQLUSMALLINT ) hb_parni( 5 ),
                                             &wBufLen,
                                             &wNumPtr );
 
@@ -500,7 +499,7 @@ HB_FUNC( SQLGETINFO ) /* hDbc, nType, @cResult */
    BYTE bBuffer[ 512 ];
    SQLSMALLINT wLen;
    WORD wResult = SQLGetInfo( ( HDBC ) hb_parptr( 1 ),
-                              ( UWORD ) hb_parnl( 2 ), 
+                              ( UWORD ) hb_parnl( 2 ),
                               bBuffer,
                               sizeof( bBuffer ),
                               &wLen );
@@ -514,7 +513,7 @@ HB_FUNC( SQLSETCONNECTOPTION ) /* hDbc, nOption, uOption */
 #if (ODBCVER >= 0x0300)
    hb_retni( SQLSetConnectAttr( ( SQLHDBC ) hb_parptr( 1 ),
                                 ( SQLINTEGER ) hb_parnl( 2 ),
-                                ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) hb_parnl( 3 ), 
+                                ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) hb_parnl( 3 ),
                                 ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
    hb_retni( SQLSetConnectOption( ( HDBC ) hb_parptr( 1 ),
@@ -528,7 +527,7 @@ HB_FUNC( SQLSETSTMTOPTION ) /* hStmt, nOption, uOption )  --> nRetCode */
 #if (ODBCVER >= 0x0300)
    hb_retni( SQLSetStmtAttr( ( SQLHSTMT ) hb_parptr( 1 ),
                              ( SQLINTEGER ) hb_parnl( 2 ),
-                             ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) hb_parnl( 3 ), 
+                             ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) hb_parnl( 3 ),
                              ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
    hb_retni( SQLSetStmtOption( ( SQLHSTMT ) hb_parptr( 1 ),
@@ -542,8 +541,8 @@ HB_FUNC( SQLGETCONNECTOPTION ) /* hDbc, nOption, @cOption */
 #if (ODBCVER >= 0x0300)
    SQLPOINTER buffer[ 512 ];
    SQLINTEGER len;
-   SQLRETURN result = SQLGetConnectAttr( ( SQLHDBC ) hb_parptr( 1 ), 
-                                         ( SQLINTEGER ) hb_parni( 2 ), 
+   SQLRETURN result = SQLGetConnectAttr( ( SQLHDBC ) hb_parptr( 1 ),
+                                         ( SQLINTEGER ) hb_parni( 2 ),
                                          buffer,
                                          ( SQLINTEGER ) sizeof( buffer ),
                                          &len );
@@ -563,8 +562,8 @@ HB_FUNC( SQLGETSTMTOPTION ) /* hStmt, nOption, @cOption */
 #if (ODBCVER >= 0x0300)
    SQLPOINTER buffer[ 512 ];
    SQLINTEGER len;
-   SQLRETURN result = SQLGetStmtAttr( ( SQLHSTMT ) hb_parptr( 1 ), 
-                                      ( SQLINTEGER ) hb_parni( 2 ), 
+   SQLRETURN result = SQLGetStmtAttr( ( SQLHSTMT ) hb_parptr( 1 ),
+                                      ( SQLINTEGER ) hb_parni( 2 ),
                                       buffer,
                                       ( SQLINTEGER ) sizeof( buffer ),
                                       &len );

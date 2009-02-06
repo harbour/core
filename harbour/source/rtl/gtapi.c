@@ -77,7 +77,6 @@
  *
  */
 
-#include <ctype.h>
 #include "hbgtcore.h"
 #include "hbset.h"
 

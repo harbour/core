@@ -54,8 +54,6 @@
  *
  */
 
-#include <ctype.h>
-
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapierr.h"

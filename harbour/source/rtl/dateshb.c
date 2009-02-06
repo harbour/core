@@ -71,8 +71,6 @@
  *
  */
 
-#include <ctype.h>
-
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"

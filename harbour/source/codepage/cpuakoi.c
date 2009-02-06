@@ -54,7 +54,6 @@
 /* ISO language code (2 chars): UA */
 /* Codepage: KOI8-U */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 

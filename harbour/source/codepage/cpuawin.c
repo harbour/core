@@ -54,7 +54,6 @@
 /* ISO language code (2 chars): UA */
 /* Codepage: Windows-1251 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
@@ -76,4 +75,3 @@ HB_CODEPAGE_INIT( UA1251 )
    static HB_$INITSYM hb_vm_auto_hb_codepage_Init_UA1251 = hb_codepage_Init_UA1251;
    #pragma data_seg()
 #endif
-

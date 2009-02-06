@@ -65,8 +65,6 @@
 
 #include "hbrddsql.h"
 
-#include <ctype.h>
-
 #define SUPERTABLE ( &sqlmixSuper )
 
 

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * National Collation Support Module ( Turkish -- Win )
  *
- * Copyright 2006 Bicahi Esgici <esgici@yahoo.com> 
+ * Copyright 2006 Bicahi Esgici <esgici@yahoo.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -54,7 +54,6 @@
 /* ISO language code TR : (please look it up in /doc/lang_id.txt) */
 /* Codepage: 1254 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
@@ -63,13 +62,13 @@
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
+#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
                                        sort after their unaccented counterparts
-                                       only if the unaccented versions of all 
-                                       characters being compared are the same 
+                                       only if the unaccented versions of all
+                                       characters being compared are the same
                                        ( interleaving ) */
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
@@ -85,8 +84,8 @@
 
 static HB_CODEPAGE s_codepage = { "TRWIN",
     HB_CPID_1254,HB_UNITB_1254,NUMBER_OF_CHARACTERS,
-    "AÂBCÇDEÊFGÐHIÝÎJKLMNOÔÖPRSÞTUÛÜVYZ", 
-    "aâbcçdeêfgðhýiîjklmnoôöprsþtuûüvyz", 
+    "AÂBCÇDEÊFGÐHIÝÎJKLMNOÔÖPRSÞTUÛÜVYZ",
+    "aâbcçdeêfgðhýiîjklmnoôöprsþtuûüvyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( TRWIN )

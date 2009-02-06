@@ -54,7 +54,6 @@
 /* ISO language code (2 chars): RU */
 /* Codepage: Windows-1251 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 

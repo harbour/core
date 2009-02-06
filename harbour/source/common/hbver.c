@@ -79,7 +79,6 @@
 
 #if defined(HB_OS_WIN)
 
-   #include <ctype.h>
    #ifndef VER_PLATFORM_WIN32_WINDOWS
       #define VER_PLATFORM_WIN32_WINDOWS 1
    #endif
@@ -288,7 +287,7 @@ char * hb_verPlatform( void )
             int i;
 
             /* Skip the leading spaces (Win95B, Win98) */
-            for( i = 0; osVer.szCSDVersion[ i ] != '\0' && isspace( ( int ) osVer.szCSDVersion[ i ] ); i++ ) {};
+            for( i = 0; osVer.szCSDVersion[ i ] != '\0' && HB_ISSPACE( ( int ) osVer.szCSDVersion[ i ] ); i++ ) {};
 
             if( osVer.szCSDVersion[ i ] != '\0' )
             {

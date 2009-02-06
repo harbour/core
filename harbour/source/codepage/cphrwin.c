@@ -56,7 +56,6 @@
 /* ISO language code (2 chars): HR */
 /* Codepage: Windows-1250 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 

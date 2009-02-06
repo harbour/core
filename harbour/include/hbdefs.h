@@ -1161,6 +1161,7 @@ typedef unsigned long HB_COUNTER;
 
 #define HB_SIZEOFARRAY( var )       ( sizeof( var ) / sizeof( *var ) )
 
+#define HB_ISSPACE( c )             ( ( c ) == ' ' || ( c ) == '\t' || ( c ) == '\n' || ( c ) == '\r' )
 #define HB_ISUPPER( c )             ( ( c ) >= 'A' && ( c ) <= 'Z' )
 #define HB_ISLOWER( c )             ( ( c ) >= 'a' && ( c ) <= 'z' )
 #define HB_TOUPPER( c )             ( ( c ) >= 'a' && ( c ) <= 'z' ? ( c ) - ( 'a' - 'A' ) : ( c ) )

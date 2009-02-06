@@ -56,8 +56,6 @@
 
 #define HB_OS_WIN_USED
 
-#include <ctype.h>
-
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapifs.h"

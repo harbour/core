@@ -54,7 +54,6 @@
 /* ISO language code (2 chars): SV */
 /* Codepage: 437 */
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
@@ -96,7 +95,7 @@
    if data is shared between Clipper and Harbour. Upper()/Lower() converson
    of those characters as well as all accented characters must be done
    programatically just like in Clipper.
-   
+
    For sharing data with Clipper, assuming that the chr(146) and chr(145)
    problem is properly taken care of in your code, this codepage version
    must be used. For correct collation according to the book "Svenska
