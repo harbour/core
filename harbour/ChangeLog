@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-06 13:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-win-spec
+    ! fixed CRLF=>LF
+
+  * harbour/harbour-win-spec
+  * harbour/harbour-wce-spec
+  * harbour/harbour.spec
+    * set svn attributes
+
 2009-02-06 12:29 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbprintf.c
     * pacified warning
