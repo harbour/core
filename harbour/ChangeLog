@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-06 10:55 UTC+0100 Maurilio Longo (maurilio.longo@libero.it)
+  * config/os2/dir.cf
+    * use $(COMSPEC) instead of calling cmd.exe directly
+  * config/os2/gcc.cf
+    * rewrote create_library rule to work with make -jn without
+      breaking shell environment/command line size.
+  * source/rtl/hbproces.c
+    * included sys/waith.h in OS/2 build. I think that initial
+      #defines can be simplified a bit.
+  * config/os2/install.cf
+    * rewrote install_rule to work with make -jn without
+      breaking shell environment/command line size.
+  * config/lib.cf
+    * removed unnecessary double quotes around TOP definition
+
+
 2009-02-06 00:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbstack.h
   * harbour/source/vm/estack.c
@@ -18,7 +34,7 @@
   * harbour/source/vm/estack.c
   * harbour/source/vm/dynsym.c
   * harbour/source/vm/memvars.c
-    % changed code used for memvars clear in MT mode - it greatly 
+    % changed code used for memvars clear in MT mode - it greatly
       reduce the cost of HVM thread exit
     % changed code for memvars copping/sharing when thread is started
       it greatly reduce the time of thread creation when existing memvars

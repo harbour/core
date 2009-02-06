@@ -73,6 +73,9 @@
 #  include <io.h>
 #  include <process.h>
 #  include <fcntl.h>
+#if defined( HB_OS_OS2 )
+#  include <sys/wait.h>
+#endif
 #endif
 
 #if defined( HB_OS_OS2 ) || defined( HB_OS_UNIX ) || \

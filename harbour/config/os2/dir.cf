@@ -12,7 +12,7 @@ DIR_RULE =\
 else
 DIR_MAKE = $(subst /,\,$(MK))
 DIR_LIST = $(subst /,\,$(DIRS))
-DIR_RULE = CMD.EXE /C FOR %d IN ($(DIR_LIST)) DO $(DIR_MAKE) -C %d $@
+DIR_RULE = $(COMSPEC) /C FOR %d IN ($(DIR_LIST)) DO $(DIR_MAKE) -C %d $@
 endif
 
 else  # bash
