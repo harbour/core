@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-06 22:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/make_b32_all.bat
+  * contrib/make_gcc_all.sh
+  * contrib/make_vc_all.bat
+    * Corrected to always build rddsql (not just when MYSQL
+      is configured).
+
+  * contrib/rddsql/make_b32.bat
+  * contrib/rddsql/make_vc.bat
+  * contrib/rddsql/make_gcc.sh
+    + Added logic to build sdds.
+      (logic copied from contrib/make_*_all.* files)
+
+  * contrib/rddsql/sddfb/make_b32.bat
+  * contrib/rddsql/sddfb/make_vc.bat
+  * contrib/rddsql/sddfb/Makefile
+    * FBIRD -> FIREBIRD to be in sync with hbfbird setup.
+
+  * contrib/rddsql/sddfb/fbirddd.c
+    + Added hack (from hbfbird) to make it work with latest
+      FB and BCC versions.
+
 2009-02-06 21:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbdefs.h
     - Removed HB_ISSPACE(). It was already defined.

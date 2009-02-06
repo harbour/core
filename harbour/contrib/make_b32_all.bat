@@ -51,7 +51,7 @@ for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 
 set _HB_DIRS=hbtip hbtpathy hbvpdf hbwin hbwhat hbziparc
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set _HB_DIRS=rddado xhb
+set _HB_DIRS=rddado rddsql xhb
 if not "%HB_INC_ALLEGRO%%HB_DIR_ALLEGRO%"     == "" set _HB_DIRS=%_HB_DIRS% gtalleg
 if not "%HB_INC_APOLLO%%HB_DIR_APOLLO%"       == "" set _HB_DIRS=%_HB_DIRS% hbapollo
 if not "%HB_INC_CURL%%HB_DIR_CURL%"           == "" set _HB_DIRS=%_HB_DIRS% hbcurl
@@ -63,7 +63,6 @@ if not "%HB_INC_MYSQL%%HB_DIR_MYSQL%"         == "" set _HB_DIRS=%_HB_DIRS% hbmy
 if not "%HB_INC_PGSQL%%HB_DIR_PGSQL%"         == "" set _HB_DIRS=%_HB_DIRS% hbpgsql
 if not "%HB_INC_OPENSSL%%HB_DIR_OPENSSL%"     == "" set _HB_DIRS=%_HB_DIRS% hbssl
 if not "%HB_INC_ADS%%HB_DIR_ADS%"             == "" set _HB_DIRS=%_HB_DIRS% rddads
-if not "%HB_INC_MYSQL%%HB_DIR_MYSQL%"         == "" set _HB_DIRS=%_HB_DIRS% rddsql
 :OVERRIDE
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 

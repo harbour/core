@@ -3,26 +3,26 @@ rem
 rem $Id$
 rem
 
-if not "%HB_INC_FBSQL%%HB_DIR_FBSQL%" == "" goto DIR_OK
+if not "%HB_INC_FIREBIRD%%HB_DIR_FIREBIRD%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need Firebird package and this envvar
 echo            to be set to successfully build this library:
-echo            set HB_INC_FBSQL=C:\firebird\include
+echo            set HB_INC_FIREBIRD=C:\Firebird\include
 echo            or
-echo            set HB_DIR_FBSQL=C:\firebird
+echo            set HB_DIR_FIREBIRD=C:\Firebird
 echo            if you want to generate .lib for the .dll.
 echo ---------------------------------------------------------------
 goto POST_EXIT
 
 :DIR_OK
 
-if "%HB_INC_FBSQL%" == "" set HB_INC_FBSQL=%HB_DIR_FBSQL%\include
-set CFLAGS=-I"%HB_INC_FBSQL%"
+if "%HB_INC_FIREBIRD%" == "" set HB_INC_FIREBIRD=%HB_DIR_FIREBIRD%\include
+set CFLAGS=-I"%HB_INC_FIREBIRD%"
 set _HB_DLL_NAME=fbclient
 set HB_MAKEFILE=..\..\mtpl_b32.mak
 set HB_ROOT = ..\..\..
-set CFLAGS=-I"%HB_INC_FBSQL%";..\..\..\include
+set CFLAGS=-I"%HB_INC_FIREBIRD%";..\..\..\include
 
 rem ---------------------------------------------------------------
 
@@ -30,7 +30,7 @@ call ..\..\mtpl_vc.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem ---------------------------------------------------------------
 
-if "%HB_DIR_FBSQL%" == "" goto POST_EXIT
+if "%HB_DIR_FIREBIRD%" == "" goto POST_EXIT
 
 set _HB_INSTALL_PREFIX=%HB_INSTALL_PREFIX%
 if "%_HB_INSTALL_PREFIX%" == "" set _HB_INSTALL_PREFIX=..\..\..
@@ -47,7 +47,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 :POST_BUILD
 
    rem Use supplied .lib file.
-   if not exist ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib copy "%HB_DIR_FBSQL%\lib\fbclient_ms.lib" ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib > nul
+   if not exist ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib copy "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib" ..\..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib > nul
    goto POST_EXIT
 
 :POST_CLEAN

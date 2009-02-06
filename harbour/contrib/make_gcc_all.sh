@@ -41,7 +41,7 @@ fi
 if [ "$HB_CONTRIBLIBS" != "" ]; then
    _HB_DIRS="${HB_CONTRIBLIBS}"
 else
-   _HB_DIRS="hbbmcdx hbbtree hbclipsm hbcrypt hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit3 hbtpathy hbvpdf hbziparc xhb"
+   _HB_DIRS="hbbmcdx hbbtree hbclipsm hbcrypt hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit3 hbtpathy hbvpdf hbziparc rddsql xhb"
 
    case "$HB_ARCHITECTURE" in
       win|cyg|os2)
@@ -61,7 +61,6 @@ else
    if [ "${HB_INC_PGSQL}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbpgsql" ; fi;
    if [ "${HB_INC_OPENSSL}"   != "" ]; then _HB_DIRS="${_HB_DIRS} hbssl"   ; fi;
    if [ "${HB_INC_ADS}"       != "" ]; then _HB_DIRS="${_HB_DIRS} rddads"  ; fi;
-   if [ "${HB_INC_MYSQL}"     != "" ]; then _HB_DIRS="${_HB_DIRS} rddsql"  ; fi;
 fi
 
 # Revert Cygwin architecture to 'win'.

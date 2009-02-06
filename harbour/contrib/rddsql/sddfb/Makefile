@@ -6,7 +6,7 @@ ROOT = ../../../
 
 LIBNAME=sddfb
 
-ifeq ($(HB_INC_FBSQL),)
+ifeq ($(HB_INC_FIREBIRD),)
 ifeq ($(HB_XBUILD),)
 HB_INC_FIREBIRD = /usr/include /opt/firebird/include
 endif
