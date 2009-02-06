@@ -29,7 +29,6 @@ C_HEADERS=\
 	hbdefs.h     \
 	hberrors.h   \
 	hbexprop.h   \
-	hbfixdj.h    \
 	hbgtcore.h   \
 	hbhash.h     \
 	hbinit.h     \

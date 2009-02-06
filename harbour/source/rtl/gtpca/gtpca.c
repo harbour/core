@@ -68,7 +68,6 @@
 #include "hb_io.h"
 #include "inkey.ch"
 
-#include <ctype.h>
 #include <string.h>
 
 #if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )

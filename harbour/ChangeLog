@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-07 00:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/Makefile
+  - include/hbfixdj.h
+  * include/hbsetup.h
+    - Removed file no longer needed. Harbour no longer uses
+      is*()/toupper()/tolower() calls, or <ctype.h>.
+
+  * source/rtl/gtpca/gtpca.c
+    % Removed #include <ctype.h>.
+
 2009-02-07 00:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbdefs.h
   * harbour/include/hbapi.h
@@ -355,7 +365,7 @@
       functions.
 
   ; TODO: Remove DJGPP to*() hack. (or should we keep it to
-          support foreign code, like hbpcre and hbzlib?)
+          support foreign code, like hbpcre and hbzlib?) [DONE]
   ; TODO: Replace HB_PP_UPPER(), HB_PP_ISDIGIT() with equivalent
           new macros. [CANCELLED]
   ; TODO: Remove remaining #include <ctype.h> lines. [DONE]

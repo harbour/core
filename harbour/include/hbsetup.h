@@ -382,15 +382,6 @@
  */
 
 /* ***********************************************************************
- * some fixes in compiler header files
- */
-
-#if defined( __DJGPP__ )
-   /* Fix DJGPP in call to: toupper(), tolower(), is...() */
-   #include "hbfixdj.h"
-#endif
-
-/* ***********************************************************************
  * Extern "C" detection
  */
 
