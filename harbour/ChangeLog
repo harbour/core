@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-06 23:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbpp.h
+    * Minor rearrangement of previous state.
+      Still referencing HB_ISDIGIT() and HB_TOUPPER(), one time
+      each.
+
+  * contrib/xhb/hbxml.c
+    * isspace() -> HB_ISSPACE(). HB_ISSPACE() should be
+      revised in the future if Unicode is used, but until
+      then this is fine here.
+
+  * ChangeLog
+    * Marked one TODO as [CANCELLED].
+
 2009-02-06 22:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/make_b32_all.bat
   * contrib/make_gcc_all.sh
@@ -213,7 +227,7 @@
   ; TODO: Remove DJGPP to*() hack. (or should we keep it to
           support foreign code, like hbpcre and hbzlib?)
   ; TODO: Replace HB_PP_UPPER(), HB_PP_ISDIGIT() with equivalent
-          new macros.
+          new macros. [CANCELLED]
   ; TODO: Remove remaining #include <ctype.h> lines. [DONE]
 
   ; TOFIX: Some of the above macros should better be replaced

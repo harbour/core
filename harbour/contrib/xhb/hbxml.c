@@ -68,7 +68,6 @@
 * Giancarlo Niccolai <giancarlo@niccolai.org>
 */
 
-#include <ctype.h>
 #include <stdio.h>
 
 #include "hbapi.h"
@@ -848,7 +847,7 @@ static void mxml_node_read_data( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM doc, 
    }
 
    /* trimming unneded spaces */
-   while ( iPos >1 && isspace( (BYTE) buf[iPos-1] ) )
+   while ( iPos >1 && HB_ISSPACE( (BYTE) buf[iPos-1] ) )
    {
       iPos--;
    }
