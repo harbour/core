@@ -92,24 +92,44 @@ HB_FUNC( DIRREMOVE )
 
 HB_FUNC( ISDISK )
 {
-   hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-            hb_fsIsDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) == 0 :
-            FALSE );
+   BOOL fResult = FALSE;
+   char * szDrive = hb_parc( 1 );
+
+   if( szDrive )
+   {
+      if( *szDrive >= 'A' && *szDrive <= 'Z' )
+         fResult = hb_fsIsDrv( *szDrive - 'A' );
+      else if( *szDrive >= 'a' && *szDrive <= 'z' )
+         fResult = hb_fsIsDrv( *szDrive - 'a' );
+   }
+   hb_retl( fResult );
 }
 
 HB_FUNC( DISKCHANGE )
 {
-   hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-            hb_fsChDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) == 0 :
-            FALSE );
+   BOOL fResult = FALSE;
+   char * szDrive = hb_parc( 1 );
+
+   if( szDrive )
+   {
+      if( *szDrive >= 'A' && *szDrive <= 'Z' )
+         fResult = hb_fsChDrv( *szDrive - 'A' );
+      else if( *szDrive >= 'a' && *szDrive <= 'z' )
+         fResult = hb_fsChDrv( *szDrive - 'a' );
+   }
+   hb_retl( fResult );
 }
 
 HB_FUNC( DISKNAME )
 {
+#if defined(HB_OS_HAS_DRIVE_LETTER)
    char szDrive[ 1 ];
 
    szDrive[ 0 ] = ( ( char ) hb_fsCurDrv() ) + 'A';
    hb_retclen( szDrive, 1 );
+#else
+   hb_retc_null();
+#endif
 }
 
 #endif

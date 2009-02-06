@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-06 11:26 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/philes.c
+  * harbour/source/rtl/dirdrive.c
+  * harbour/source/rtl/philesx.c
+  * harbour/source/rtl/filesys.c
+    ! fixed CURDRIVE() and DISKNAME() to not return "A" in OS-es which
+      does not use drive letters
+    ! eliminated toupper()
+    % minor cleanup and speed improvement
+
+  * harbour/config/bin.cf
+  * harbour/config/test.cf
+    * removed quoting for TOP=$(GRANDP) nested GNU make call parameters
+
 2009-02-06 10:55 UTC+0100 Maurilio Longo (maurilio.longo@libero.it)
   * config/os2/dir.cf
     * use $(COMSPEC) instead of calling cmd.exe directly

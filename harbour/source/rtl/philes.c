@@ -273,9 +273,18 @@ HB_FUNC( FREADSTR )
 HB_FUNC( CURDIR )
 {
    BYTE byBuffer[ _POSIX_PATH_MAX + 1 ];
+   USHORT uiDrive = 0;
+   char * szDrive;
 
-   hb_fsCurDirBuff( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0, byBuffer, sizeof( byBuffer ) );
+   szDrive = hb_parc( 1 );
+   if( szDrive )
+   {
+      if( *szDrive >= 'A' && *szDrive <= 'Z' )
+         uiDrive = *szDrive - ( 'A' - 1 );
+      else if( *szDrive >= 'a' && *szDrive <= 'z' )
+         uiDrive = *szDrive - ( 'a' - 1 );
+   }
+   hb_fsCurDirBuff( uiDrive, byBuffer, sizeof( byBuffer ) );
 
    hb_retc( ( char * ) byBuffer );
 }

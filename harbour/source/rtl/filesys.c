@@ -2730,6 +2730,31 @@ USHORT hb_fsChDrv( BYTE nDrive )
 
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
 
+BYTE hb_fsCurDrv( void )
+{
+   UINT uiResult;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDrv()"));
+
+#if defined(HB_OS_HAS_DRIVE_LETTER)
+
+   hb_vmUnlock();
+   HB_FS_GETDRIVE( uiResult );
+   hb_fsSetError( 0 );
+   hb_vmLock();
+
+#else
+
+   uiResult = 0;
+   hb_fsSetError( ( USHORT ) FS_ERROR );
+
+#endif
+
+   return ( BYTE ) uiResult; /* Return the drive number, base 0. */
+}
+
+/* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
+
 /* TOFIX: This isn't fully compliant because CA-Cl*pper doesn't access
           the drive before checking. hb_fsIsDrv only returns TRUE
           if there is a disk in the drive. */
@@ -2825,30 +2850,6 @@ BOOL hb_fsIsDevice( HB_FHANDLE hFileHandle )
 #endif
 
    return bResult;
-}
-
-/* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
-
-BYTE hb_fsCurDrv( void )
-{
-   UINT uiResult;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDrv()"));
-
-#if defined(HB_OS_HAS_DRIVE_LETTER)
-
-   hb_vmUnlock();
-   HB_FS_GETDRIVE( uiResult );
-   hb_vmLock();
-
-#else
-
-   uiResult = 0;
-   hb_fsSetError( ( USHORT ) FS_ERROR );
-
-#endif
-
-   return ( BYTE ) uiResult; /* Return the drive number, base 0. */
 }
 
 /* convert file name for hb_fsExtOpen
