@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-06 11:52 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbproces.c
+    * removed always false condition for #if expression
+
 2009-02-06 11:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/estack.c
     ! added missing HB_STACK_TLS_PRELOAD

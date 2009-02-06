@@ -68,8 +68,7 @@
 #  include <sys/stat.h>
 #  include <fcntl.h>
 #  include <signal.h>
-#elif defined( HB_OS_OS2 ) || defined( HB_OS_UNIX ) || \
-      ( defined( HB_OS_WIN ) && !defined( HB_IO_WIN ) )
+#elif defined( HB_OS_OS2 ) || ( defined( HB_OS_WIN ) && !defined( HB_IO_WIN ) )
 #  include <io.h>
 #  include <process.h>
 #  include <fcntl.h>
