@@ -394,6 +394,10 @@ void hb_stackIdSetActionRequest( void * pStackId, USHORT uiAction )
 #undef hb_stackDynHandlesCount
 int hb_stackDynHandlesCount( void )
 {
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackDynHandlesCount()"));
+
    return hb_stack.iDynH;
 }
 
