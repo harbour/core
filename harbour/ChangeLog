@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-07 00:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+  * harbour/include/hbapi.h
+    * moved HB_ISSPACE(), HB_ISFIRSTIDCHAR() and HB_ISNEXTIDCHAR() from
+      hbapi.h to hbdefs.h
+    + HB_ISXDIGIT() macro
+
+  * harbour/include/hbpp.h
+    * updated other HB_PP_IS*() macros definitions to internally use HB_IS*()
+      ones
+
+  * harbour/source/rtl/fstemp.c
+    ! fixed unterminated ASCIIZ string
+
+   TODO: new macros HB_CHARVAL( c ), HB_CHARXVAL( c ),
+                    HB_VALDIGIT( i ), HB_VALXDIGIT( i )
+
 2009-02-06 23:47 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * common.mak
   * harbour-wce-spec

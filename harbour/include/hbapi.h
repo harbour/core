@@ -808,16 +808,6 @@ extern void hb_hashRefGrabage( PHB_ITEM pHash );
 
 /* string management */
 
-#define HB_ISSPACE( c ) ( ( c ) == ' ' || \
-                          ( c ) == HB_CHAR_HT || \
-                          ( c ) == HB_CHAR_LF || \
-                          ( c ) == HB_CHAR_CR )
-
-#define HB_ISFIRSTIDCHAR(c)   ( ( (c) >= 'A' && (c) <= 'Z' ) || \
-                                ( (c) >= 'a' && (c) <= 'z' ) || (c) == '_' )
-#define HB_ISNEXTIDCHAR(c)    ( HB_ISFIRSTIDCHAR(c) || \
-                                ( ( (c) >= '0' && (c) <= '9' ) ) )
-
 extern const char * hb_szAscii[ 256 ];      /* array of 1 character length strings */
 
 extern HB_EXPORT int       hb_stricmp( const char * s1, const char * s2 ); /* compare two strings without regards to case */

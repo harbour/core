@@ -241,6 +241,7 @@ HB_FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, ULONG u
             d = modf( d, &x );
             pszName[ iLen++ ] = n + ( n > 9 ? 'a' - 10 : '0' );
          }
+         pszName[ iLen ] = '\0';
          hb_fsNameConv( pszName, NULL );
          fd = hb_fsCreateEx( pszName, ulAttr, FO_EXCLUSIVE | FO_EXCL );
       }
