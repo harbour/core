@@ -486,7 +486,7 @@ static void va_arg_fill( v_paramlst * plst, va_list va )
 #ifdef _HB_WRAP_MODFL_
 _x_long_dbl _hb_modfl( _x_long_dbl x, _x_long_dbl * p )
 {
-   _x_double pd = *p;
+   _x_double pd;
    _x_long_dbl r = modf( x, &pd );
    *p = pd;
    return r;
