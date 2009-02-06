@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-07 00:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/debug/dbgentry.c
+    % Using HB_ISFIRSTIDCHAR() and HB_ISNEXTIDCHAR() macros.
+
 2009-02-07 00:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/Makefile
   - include/hbfixdj.h
