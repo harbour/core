@@ -8,6 +8,60 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-06 18:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbdefs.h
+    + Added HB_ISALNUM() macro.
+
+  * include/hbpp.h
+  * include/hbapicdp.h
+  * contrib/hbct/pos1.c
+  * contrib/hbct/ascpos.c
+  * contrib/xhb/hbxml.c
+  * contrib/hbtip/utils.c
+  * contrib/examples/pp/hbppcore.c
+  * source/vm/itemapi.c
+  * source/vm/memvars.c
+  * source/vm/set.c
+  * source/vm/classes.c
+  * source/debug/dbgentry.c
+  * source/common/hbstr.c
+  * source/common/expropt2.c
+  * source/rtl/strcase.c
+  * source/rtl/cdpapi.c
+  * source/rtl/is.c
+  * source/rtl/transfrm.c
+  * source/rtl/dates.c
+  * source/rtl/natmsg.c
+  * source/rtl/soundex.c
+  * source/rtl/hbffind.c
+  * source/rdd/workarea.c
+  * source/compiler/hbmain.c
+  * source/compiler/harbour.yyc
+  * source/compiler/harbour.y
+    * Replaced:
+      isdigit() -> HB_ISDIGIT()
+      isalpha() -> HB_ISALPHA()
+      isalnum() -> HB_ISALNUM()
+      isupper() -> HB_ISUPPER()
+      islower() -> HB_ISLOWER()
+      tolower() -> HB_TOLOWER()
+      toupper() -> HB_TOUPPER()
+
+  * source/rtl/natmsg.c
+    ! Fixed to use CP sensitive case conversion in
+      __NATISNEGATIVE() and __NATISAFFIRM().
+
+  * source/rtl/is.c
+    ! Fixed typo in recently added hb_charIsUpper()/hb_charIsLower()
+      functions.
+
+  ; TODO: Remove DJGPP to*() hack.
+  ; TODO: Replace HB_PP_UPPER(), HB_PP_ISDIGIT() with equivalent
+          new macros.
+  ; TOFIX: Some of the above macros should better be replaced
+           by CP sensitive versions. F.e. the one in hbtip.
+  ; TOFIX: Remove remaining #include <ctype.h> lines.
+
 2009-02-06 17:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbdefs.h
     + Added macros:

@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   CT3 string function
  *     - ASCPOS
  *     - VALPOS
@@ -55,7 +55,6 @@
  */
 
 
-#include <ctype.h>
 #include "ct.h"
 
 
@@ -85,7 +84,7 @@ static void do_ascpos( int iSwitch )
       {
          if( iSwitch == DO_ASCPOS_VALPOS )
          {
-            if( isdigit( ( size_t ) pcString[sPos - 1] ) )
+            if( HB_ISDIGIT( ( size_t ) pcString[sPos - 1] ) )
                hb_retnl( pcString[sPos - 1] - 48 );
             else
                hb_retni( 0 );

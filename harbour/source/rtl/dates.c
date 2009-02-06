@@ -50,8 +50,6 @@
  *
  */
 
-#include <ctype.h>
-
 #include "hbapi.h"
 #include "hbdate.h"
 #include "hbset.h"
@@ -85,10 +83,10 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
 
       while( format_count < size )
       {
-         digit = toupper( ( UCHAR ) *szPtr );
+         digit = HB_TOUPPER( ( UCHAR ) *szPtr );
          szPtr++;
          digit_count = 1;
-         while( toupper( ( UCHAR ) *szPtr ) == digit && format_count < size )
+         while( HB_TOUPPER( ( UCHAR ) *szPtr ) == digit && format_count < size )
          {
             szPtr++;
             if( format_count + digit_count < size )
@@ -296,7 +294,7 @@ long hb_dateUnformat( const char * szDate, const char * szDateFormat )
       for( count = 0; count < size; count++ )
       {
          digit = szDate[ count ];
-         if( isdigit( digit ) )
+         if( HB_ISDIGIT( digit ) )
          {
             /* Process the digit for the current date field */
             if( d_pos == 1 )

@@ -61,8 +61,6 @@
  *
  */
 
-#include <ctype.h>
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -306,7 +304,7 @@ HB_FUNC( TRANSFORM )
                      default:
                         szResult[ ulResultPos++ ] = *szPic;
                   }
-#endif                  
+#endif
                }
 
                szPic++;
@@ -554,7 +552,7 @@ HB_FUNC( TRANSFORM )
                }
                else if( cPic == ',' && i && iCount < iWidth )
                {
-                  if( isdigit( ( UCHAR ) szResult[ i - 1 ] ) )
+                  if( HB_ISDIGIT( ( UCHAR ) szResult[ i - 1 ] ) )
                      szResult[ i ] = ( uiPicFlags & PF_EXCHANG ) ? '.' : ',';
                   else
                   {

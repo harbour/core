@@ -68,8 +68,6 @@
 
 /* ------------------------------------------------------------- */
 
-#include <ctype.h>
-
 #if defined(HB_OS_DOS)
 
    #if defined(__DJGPP__) || defined(__RSX32__)
@@ -344,7 +342,7 @@ ULONG hb_fsAttrEncode( const char * szAttr )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrEncode(%p)", szAttr));
 
-   while( ( ch = ( char ) toupper( *pos ) ) != '\0' )
+   while( ( ch = ( char ) HB_TOUPPER( *pos ) ) != '\0' )
    {
       switch( ch )
       {

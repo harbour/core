@@ -439,8 +439,8 @@ HB_PP_TOKEN, * PHB_PP_TOKEN;
 #endif
 #define HB_PP_ISTEXTCHAR(c)      ( (unsigned char) (c) >= 128 )
 #define HB_PP_ISBLANK(c)         ( (c) == ' ' || (c) == '\t' )
-#define HB_PP_ISDIGIT(c)         ( (c) >= '0' && (c) <= '9' )
-#define HB_PP_ISHEX(c)           ( HB_PP_ISDIGIT(c) || \
+#define HB_PP_ISDIGIT(c)         HB_ISDIGIT( c )
+#define HB_PP_ISHEX(c)           ( HB_ISDIGIT(c) || \
                                    ( (c) >= 'A' && (c) <= 'F' ) || \
                                    ( (c) >= 'a' && (c) <= 'f' ) )
 #define HB_PP_ISTRUE(c)          ( (c) == 'T' || (c) == 't' || \
@@ -449,9 +449,9 @@ HB_PP_TOKEN, * PHB_PP_TOKEN;
                                    (c) == 'N' || (c) == 'n' )
 #define HB_PP_ISFIRSTIDCHAR(c)   ( ( (c) >= 'A' && (c) <= 'Z' ) || \
                                    ( (c) >= 'a' && (c) <= 'z' ) || (c) == '_' )
-#define HB_PP_ISNEXTIDCHAR(c)    ( HB_PP_ISFIRSTIDCHAR(c) || HB_PP_ISDIGIT(c) )
-#define HB_PP_UPPER(c)           ( (c) >= 'a' && (c) <= 'z' ? \
-                                   (c) - ( 'a' - 'A' ) : (c) )
+#define HB_PP_ISNEXTIDCHAR(c)    ( HB_PP_ISFIRSTIDCHAR(c) || HB_ISDIGIT(c) )
+#define HB_PP_UPPER(c)           HB_TOUPPER( c )
+
 typedef struct _HB_PP_RESULT
 {
    struct _HB_PP_RESULT * pNext;

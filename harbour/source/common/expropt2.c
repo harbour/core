@@ -1366,7 +1366,7 @@ HB_EXPR_PTR hb_compExprReduceEQ( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          }
 
          case HB_ET_STRING:
-            /* NOTE: when not exact comparison (==) is used 
+            /* NOTE: when not exact comparison (==) is used
              * the result depends on SET EXACT setting then it
              * cannot be optimized except the case when NULL string are
              * compared - "" = "" is always TRUE regardless of EXACT
@@ -2048,7 +2048,7 @@ BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          {
             if( pArg->ulLength == 1 )
             {
-               szValue = ( char * ) hb_szAscii[ toupper( ( unsigned char )
+               szValue = ( char * ) hb_szAscii[ HB_TOUPPER( ( unsigned char )
                                           pArg->value.asString.string[ 0 ] ) ];
                fDealloc = FALSE;
             }
@@ -2067,7 +2067,7 @@ BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                   fDealloc = TRUE;
                }
                do
-                  szValue[ ulLen ] = ( char ) toupper( ( unsigned char ) szValue[ ulLen ] );
+                  szValue[ ulLen ] = ( char ) HB_TOUPPER( ( unsigned char ) szValue[ ulLen ] );
                while( ++ulLen < pArg->ulLength );
             }
          }

@@ -457,7 +457,7 @@ typedef union YYSTYPE
    struct
    {
       BOOL bMacro;
-      union 
+      union
       {
          char * string;
          HB_EXPR_PTR macro;
@@ -4778,14 +4778,14 @@ yyreduce:
 #line 497 "harbour.y"
     { if( HB_COMP_PARAM->ilastLineErr && HB_COMP_PARAM->ilastLineErr == HB_COMP_PARAM->currLine )
                              {
-                                 yyclearin; 
+                                 yyclearin;
                              }
                              else
                              {
                                  yyerrok;
                                  HB_COMP_PARAM->ilastLineErr = HB_COMP_PARAM->currLine;
                              }
-                             (yyval.lNumber) = 0; 
+                             (yyval.lNumber) = 0;
                            ;}
     break;
 
@@ -6122,13 +6122,13 @@ yyreduce:
                {
                  HB_COMP_PARAM->pLastDeclared->cType = (yyvsp[(7) - (8)].asVarType)->cVarType;
 
-                 if ( toupper( (yyvsp[(7) - (8)].asVarType)->cVarType ) == 'S' )
+                 if ( HB_TOUPPER( (yyvsp[(7) - (8)].asVarType)->cVarType ) == 'S' )
                  {
                    HB_COMP_PARAM->pLastDeclared->pClass = hb_compClassFind( HB_COMP_PARAM, (yyvsp[(7) - (8)].asVarType)->szFromClass );
                    if( ! HB_COMP_PARAM->pLastDeclared->pClass )
                    {
                      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, (yyvsp[(7) - (8)].asVarType)->szFromClass, HB_COMP_PARAM->pLastDeclared->szName );
-                     HB_COMP_PARAM->pLastDeclared->cType = ( isupper( ( UCHAR ) (yyvsp[(7) - (8)].asVarType)->cVarType ) ? 'O' : 'o' );
+                     HB_COMP_PARAM->pLastDeclared->cType = ( HB_ISUPPER( ( UCHAR ) (yyvsp[(7) - (8)].asVarType)->cVarType ) ? 'O' : 'o' );
                    }
                  }
                }
@@ -6183,13 +6183,13 @@ yyreduce:
                if( HB_COMP_PARAM->pLastMethod )
                {
                  HB_COMP_PARAM->pLastMethod->cType = (yyvsp[(6) - (6)].asVarType)->cVarType;
-                 if ( toupper( (yyvsp[(6) - (6)].asVarType)->cVarType ) == 'S' )
+                 if ( HB_TOUPPER( (yyvsp[(6) - (6)].asVarType)->cVarType ) == 'S' )
                  {
                    HB_COMP_PARAM->pLastMethod->pClass = hb_compClassFind( HB_COMP_PARAM, (yyvsp[(6) - (6)].asVarType)->szFromClass );
                    if( ! HB_COMP_PARAM->pLastMethod->pClass )
                    {
                      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, (yyvsp[(6) - (6)].asVarType)->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
-                     HB_COMP_PARAM->pLastMethod->cType = ( isupper( ( UCHAR ) (yyvsp[(6) - (6)].asVarType)->cVarType ) ? 'O' : 'o' );
+                     HB_COMP_PARAM->pLastMethod->cType = ( HB_ISUPPER( ( UCHAR ) (yyvsp[(6) - (6)].asVarType)->cVarType ) ? 'O' : 'o' );
                    }
                  }
                }
@@ -6213,18 +6213,18 @@ yyreduce:
                   char      cVarType = (yyvsp[(3) - (3)].asVarType)->cVarType;
 
                   /* List Type overrides if exists. */
-                  if( HB_COMP_PARAM->cDataListType ) 
+                  if( HB_COMP_PARAM->cDataListType )
                      cVarType = HB_COMP_PARAM->cDataListType;
 
                   HB_COMP_PARAM->pLastMethod->cType = cVarType;
-                  if ( toupper( cVarType ) == 'S' )
+                  if ( HB_TOUPPER( cVarType ) == 'S' )
                   {
                      pClass = hb_compClassFind( HB_COMP_PARAM, (yyvsp[(3) - (3)].asVarType)->szFromClass );
                      HB_COMP_PARAM->pLastMethod->pClass = pClass;
                      if( ! HB_COMP_PARAM->pLastMethod->pClass )
                      {
                         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, (yyvsp[(3) - (3)].asVarType)->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
-                        HB_COMP_PARAM->pLastMethod->cType = ( isupper( ( UCHAR ) cVarType ) ? 'O' :'o' );
+                        HB_COMP_PARAM->pLastMethod->cType = ( HB_ISUPPER( ( UCHAR ) cVarType ) ? 'O' :'o' );
                      }
                   }
                   else
@@ -6248,7 +6248,7 @@ yyreduce:
                   HB_COMP_PARAM->pLastMethod->cParamTypes[0] = cVarType;
                   HB_COMP_PARAM->pLastMethod->pParamClasses[0] = pClass;
 
-                  if ( toupper( cVarType ) == 'S' )
+                  if ( HB_TOUPPER( cVarType ) == 'S' )
                   {
                      HB_COMP_PARAM->pLastMethod->pClass = pClass;
                   }
@@ -6405,7 +6405,7 @@ yyreduce:
 #line 1424 "harbour.y"
     {
                   if( HB_COMP_PARAM->functions.pLast->wIfCounter )
-                     --HB_COMP_PARAM->functions.pLast->wIfCounter; 
+                     --HB_COMP_PARAM->functions.pLast->wIfCounter;
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                ;}
     break;
@@ -6521,7 +6521,7 @@ yyreduce:
   case 544:
 #line 1517 "harbour.y"
     {
-                  hb_compGenJumpHere( ( ULONG ) (yyvsp[(4) - (7)].lNumber), HB_COMP_PARAM ); 
+                  hb_compGenJumpHere( ( ULONG ) (yyvsp[(4) - (7)].lNumber), HB_COMP_PARAM );
                   if( HB_COMP_PARAM->functions.pLast->wWhileCounter )
                      --HB_COMP_PARAM->functions.pLast->wWhileCounter;
                   hb_compLoopEnd( HB_COMP_PARAM );
@@ -6761,14 +6761,14 @@ yyreduce:
 #line 1712 "harbour.y"
     {
                   if( HB_COMP_PARAM->functions.pLast->wSwitchCounter )
-                     --HB_COMP_PARAM->functions.pLast->wSwitchCounter; 
+                     --HB_COMP_PARAM->functions.pLast->wSwitchCounter;
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                ;}
     break;
 
   case 582:
 #line 1724 "harbour.y"
-    { ++HB_COMP_PARAM->functions.pLast->wSwitchCounter; 
+    { ++HB_COMP_PARAM->functions.pLast->wSwitchCounter;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                ;}
     break;
@@ -7522,7 +7522,7 @@ void hb_compLoopKill( PFUNCTION pFunc )
 {
    HB_LOOPEXIT_PTR pLoop, pFree;
 
-   while( pFunc->pLoops )   
+   while( pFunc->pLoops )
    {
       pLoop = pFunc->pLoops;
       while( pLoop->pExitList )
@@ -7787,7 +7787,7 @@ BOOL hb_compForEachVarError( HB_COMP_DECL, const char *szVarName )
          {
             if( pEnumVar->bForEach )
             {
-               /* only if it is FOR EACH enumerator 
+               /* only if it is FOR EACH enumerator
                 * generate warning if it is FOR/NEXT loop
                */
                return FALSE;
@@ -8136,4 +8136,3 @@ void yyerror( HB_COMP_DECL, const char * s )
    else
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, HB_COMP_PARAM->pLex->lasttok );
 }
-

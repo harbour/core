@@ -1167,6 +1167,7 @@ typedef unsigned long HB_COUNTER;
 #define HB_TOLOWER( c )             ( ( c ) >= 'A' && ( c ) <= 'Z' ? ( c ) + ( 'a' - 'A' ) : ( c ) )
 #define HB_ISDIGIT( c )             ( ( c ) >= '0' && ( c ) <= '9' )
 #define HB_ISALPHA( c )             ( HB_ISUPPER( c ) || HB_ISLOWER( c ) )
+#define HB_ISALNUM( c )             ( HB_ISALPHA( c ) || HB_ISDIGIT( c ) )
 
 #if defined( __POCC__ ) || defined( __XCC__ )
    #define HB_SYMBOL_UNUSED( symbol )  do if( symbol ) {;} while( 0 )

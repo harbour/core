@@ -113,13 +113,13 @@ static BOOL set_logical( PHB_ITEM pItem, BOOL bDefault )
       ULONG ulLen = hb_itemGetCLen( pItem );
 
       if( ulLen >= 2
-       && toupper( ( UCHAR ) szString[ 0 ] ) == 'O'
-       && toupper( ( UCHAR ) szString[ 1 ] ) == 'N' )
+       && ( ( UCHAR ) szString[ 0 ] == 'O' || ( UCHAR ) szString[ 0 ] == 'o' )
+       && ( ( UCHAR ) szString[ 1 ] == 'N' || ( UCHAR ) szString[ 1 ] == 'n' ) )
          bLogical = TRUE;
       else if( ulLen >= 3
-       && toupper( ( UCHAR ) szString[ 0 ] ) == 'O'
-       && toupper( ( UCHAR ) szString[ 1 ] ) == 'F'
-       && toupper( ( UCHAR ) szString[ 2 ] ) == 'F' )
+       && ( ( UCHAR ) szString[ 0 ] == 'O' || ( UCHAR ) szString[ 0 ] == 'o' )
+       && ( ( UCHAR ) szString[ 1 ] == 'F' || ( UCHAR ) szString[ 1 ] == 'f' )
+       && ( ( UCHAR ) szString[ 2 ] == 'F' || ( UCHAR ) szString[ 2 ] == 'f' ) )
          bLogical = FALSE;
    }
 
@@ -383,7 +383,7 @@ BOOL hb_setSetCentury( BOOL new_century_setting )
       size = strlen( szDateFormat );
       for( count = 0; count < size; count++ )
       {
-         digit = toupper( ( UCHAR ) szDateFormat[ count ] );
+         digit = HB_TOUPPER( ( UCHAR ) szDateFormat[ count ] );
          if( digit == 'Y' )
          {
             if( y_start == -1 )

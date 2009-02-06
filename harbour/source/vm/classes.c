@@ -148,8 +148,6 @@
 #include "hbthread.h"
 #include "hboo.ch"
 
-#include <ctype.h>             /* For toupper() */
-
 /* DEBUG only*/
 /* #include <windows.h> */
 

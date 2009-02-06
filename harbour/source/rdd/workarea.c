@@ -56,8 +56,6 @@
  *
  */
 
-#include <ctype.h>
-
 #include "hbapi.h"
 #include "hbapirdd.h"
 #include "hbapiitm.h"
@@ -305,7 +303,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 #else
       pFieldInfo.uiFlags = 0;
 #endif
-      iData = toupper( hb_arrayGetCPtr( pFieldDesc, DBS_TYPE )[ 0 ] );
+      iData = HB_TOUPPER( hb_arrayGetCPtr( pFieldDesc, DBS_TYPE )[ 0 ] );
       switch( iData )
       {
          case 'C':

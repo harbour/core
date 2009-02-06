@@ -1507,7 +1507,7 @@ void hb_itemCopyFromRef( PHB_ITEM pDest, PHB_ITEM pSource )
 }
 
 /*
- * copy (transfer) the value of item without increasing 
+ * copy (transfer) the value of item without increasing
  * a reference counters, the pSource item is cleared
  */
 void hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
@@ -1822,7 +1822,7 @@ PHB_ITEM hb_itemUnRefWrite( PHB_ITEM pItem, PHB_ITEM pSource )
    return pItem;
 }
 
-/* Unreference passed variable 
+/* Unreference passed variable
  * Do not unreference the last reference stored
  */
 PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem )
@@ -2059,8 +2059,8 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
       {
          do
          {
-            int i1 = toupper( ( UCHAR ) *szFirst );
-            int i2 = toupper( ( UCHAR ) *szSecond );
+            int i1 = HB_TOUPPER( ( UCHAR ) *szFirst );
+            int i2 = HB_TOUPPER( ( UCHAR ) *szSecond );
             if( i1 != i2 )
             {
                iRet = ( i1 < i2 ) ? -1 : 1;

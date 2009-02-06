@@ -51,7 +51,17 @@
  *
  */
 
-#include <ctype.h>
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ *    hb_strAtI()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -401,7 +411,7 @@ static EXT_MIME_ENTRY s_extMimeTable[EXT_MIME_TABLE_SIZE] =
 
    /* Java */
    /* 15*/ { "class", "application/java", 0 }, /* case sensitive! */
-   /* 16*/ { "java", "text/java", 0 }, 
+   /* 16*/ { "java", "text/java", 0 },
 
    /* RTF file */
    /* 17*/ { "rtf", "application/rtf", MIME_FLAG_CASEINSENS },
@@ -764,7 +774,7 @@ static ULONG hb_strAtI( const char * szSub, ULONG ulSubLen, const char * szText,
 
       while( ulPos < ulLen && ulSubPos < ulSubLen )
       {
-         if( tolower( (BYTE) szText[ ulPos ] ) == tolower( (BYTE) szSub[ ulSubPos ] ) )
+         if( HB_TOLOWER( (BYTE) szText[ ulPos ] ) == HB_TOLOWER( (BYTE) szSub[ ulSubPos ] ) )
          {
             ulSubPos++;
             ulPos++;
@@ -860,7 +870,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
    char *cRet;
    int nPos = 0, nPosRet = 0;
    BYTE cElem;
-   
+
    if ( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
@@ -888,21 +898,21 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          cRet[ nPosRet++ ] = 'p';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem == '<' )      
+      else if ( cElem == '<' )
       {
-         cRet[ nPosRet++ ] = '&';         
+         cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = 'l';
          cRet[ nPosRet++ ] = 't';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem == '>' )      
+      else if ( cElem == '>' )
       {
          cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = 'g';
          cRet[ nPosRet++ ] = 't';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem == '"' )      
+      else if ( cElem == '"' )
       {
          cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = 'q';
@@ -911,7 +921,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          cRet[ nPosRet++ ] = 't';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem == '\'' )      
+      else if ( cElem == '\'' )
       {
          cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = '#';
@@ -920,7 +930,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          cRet[ nPosRet++ ] = '9';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem == '\r' )      
+      else if ( cElem == '\r' )
       {
          cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = '#';
@@ -928,8 +938,8 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          cRet[ nPosRet++ ] = '1';
          cRet[ nPosRet++ ] = '3';
          cRet[ nPosRet++ ] = ';';
-      }        
-      else if ( cElem == '\n' )      
+      }
+      else if ( cElem == '\n' )
       {
          cRet[ nPosRet++ ] = '&';
          cRet[ nPosRet++ ] = '#';
@@ -938,7 +948,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          cRet[ nPosRet++ ] = '0';
          cRet[ nPosRet++ ] = ';';
       }
-      else if ( cElem >= ' ' )     
+      else if ( cElem >= ' ' )
       {
          cRet[ nPosRet ] = cElem;
          nPosRet++;

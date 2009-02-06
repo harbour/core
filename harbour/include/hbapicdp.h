@@ -53,8 +53,6 @@
 #ifndef HB_APICDP_H_
 #define HB_APICDP_H_
 
-#include <ctype.h>
-
 #ifndef HB_CDP_SUPPORT_OFF
 
 #include "hbapi.h"
@@ -188,13 +186,13 @@ typedef struct _HB_CODEPAGE
 #define HB_UNITB_8859_1    &hb_uniTbl_8859_1
 #define HB_UNITB_8859_1B   &hb_uniTbl_8859_1b
 #define HB_UNITB_8859_2    &hb_uniTbl_8859_2
-#define HB_UNITB_8859_3    &hb_uniTbl_8859_3 
-#define HB_UNITB_8859_4    &hb_uniTbl_8859_4 
+#define HB_UNITB_8859_3    &hb_uniTbl_8859_3
+#define HB_UNITB_8859_4    &hb_uniTbl_8859_4
 #define HB_UNITB_8859_5    &hb_uniTbl_8859_5
-#define HB_UNITB_8859_6    &hb_uniTbl_8859_6 
-#define HB_UNITB_8859_7    &hb_uniTbl_8859_7 
-#define HB_UNITB_8859_8    &hb_uniTbl_8859_8 
-#define HB_UNITB_8859_9    &hb_uniTbl_8859_9 
+#define HB_UNITB_8859_6    &hb_uniTbl_8859_6
+#define HB_UNITB_8859_7    &hb_uniTbl_8859_7
+#define HB_UNITB_8859_8    &hb_uniTbl_8859_8
+#define HB_UNITB_8859_9    &hb_uniTbl_8859_9
 #define HB_UNITB_8859_10   &hb_uniTbl_8859_10
 #define HB_UNITB_8859_11   &hb_uniTbl_8859_11
 #define HB_UNITB_8859_13   &hb_uniTbl_8859_13

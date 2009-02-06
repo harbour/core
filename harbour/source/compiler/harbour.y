@@ -140,7 +140,7 @@ static void hb_compDebugStart( void ) { };
    struct
    {
       BOOL bMacro;
-      union 
+      union
       {
          char * string;
          HB_EXPR_PTR macro;
@@ -496,14 +496,14 @@ LineStat   : Crlf          { $<lNumber>$ = 0; }
            | ControlError  { $<lNumber>$ = 0; hb_compCheckUnclosedStru( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast ); }
            | error         { if( HB_COMP_PARAM->ilastLineErr && HB_COMP_PARAM->ilastLineErr == HB_COMP_PARAM->currLine )
                              {
-                                 yyclearin; 
+                                 yyclearin;
                              }
                              else
                              {
                                  yyerrok;
                                  HB_COMP_PARAM->ilastLineErr = HB_COMP_PARAM->currLine;
                              }
-                             $<lNumber>$ = 0; 
+                             $<lNumber>$ = 0;
                            }
            ;
 
@@ -1108,11 +1108,11 @@ IfInlineAlias : IfInline ALIASOP
               ;
 
 VarDefs  : LOCAL { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_COMP_PARAM ); }
-           VarList Crlf 
+           VarList Crlf
          | STATIC { HB_COMP_PARAM->iVarScope = VS_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
-           VarList Crlf 
+           VarList Crlf
          | THREAD STATIC { HB_COMP_PARAM->iVarScope = VS_TH_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
-           VarList Crlf 
+           VarList Crlf
          | PARAMETERS { if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
                         else
@@ -1238,13 +1238,13 @@ Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( HB_COMP_PARAM, $2 ); HB
                {
                  HB_COMP_PARAM->pLastDeclared->cType = $7->cVarType;
 
-                 if ( toupper( $7->cVarType ) == 'S' )
+                 if ( HB_TOUPPER( $7->cVarType ) == 'S' )
                  {
                    HB_COMP_PARAM->pLastDeclared->pClass = hb_compClassFind( HB_COMP_PARAM, $7->szFromClass );
                    if( ! HB_COMP_PARAM->pLastDeclared->pClass )
                    {
                      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, $7->szFromClass, HB_COMP_PARAM->pLastDeclared->szName );
-                     HB_COMP_PARAM->pLastDeclared->cType = ( isupper( ( UCHAR ) $7->cVarType ) ? 'O' : 'o' );
+                     HB_COMP_PARAM->pLastDeclared->cType = ( HB_ISUPPER( ( UCHAR ) $7->cVarType ) ? 'O' : 'o' );
                    }
                  }
                }
@@ -1273,13 +1273,13 @@ DecMethod  : IdentName '(' { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_C
                if( HB_COMP_PARAM->pLastMethod )
                {
                  HB_COMP_PARAM->pLastMethod->cType = $6->cVarType;
-                 if ( toupper( $6->cVarType ) == 'S' )
+                 if ( HB_TOUPPER( $6->cVarType ) == 'S' )
                  {
                    HB_COMP_PARAM->pLastMethod->pClass = hb_compClassFind( HB_COMP_PARAM, $6->szFromClass );
                    if( ! HB_COMP_PARAM->pLastMethod->pClass )
                    {
                      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, $6->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
-                     HB_COMP_PARAM->pLastMethod->cType = ( isupper( ( UCHAR ) $6->cVarType ) ? 'O' : 'o' );
+                     HB_COMP_PARAM->pLastMethod->cType = ( HB_ISUPPER( ( UCHAR ) $6->cVarType ) ? 'O' : 'o' );
                    }
                  }
                }
@@ -1297,18 +1297,18 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                   char      cVarType = $3->cVarType;
 
                   /* List Type overrides if exists. */
-                  if( HB_COMP_PARAM->cDataListType ) 
+                  if( HB_COMP_PARAM->cDataListType )
                      cVarType = HB_COMP_PARAM->cDataListType;
 
                   HB_COMP_PARAM->pLastMethod->cType = cVarType;
-                  if ( toupper( cVarType ) == 'S' )
+                  if ( HB_TOUPPER( cVarType ) == 'S' )
                   {
                      pClass = hb_compClassFind( HB_COMP_PARAM, $3->szFromClass );
                      HB_COMP_PARAM->pLastMethod->pClass = pClass;
                      if( ! HB_COMP_PARAM->pLastMethod->pClass )
                      {
                         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, $3->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
-                        HB_COMP_PARAM->pLastMethod->cType = ( isupper( ( UCHAR ) cVarType ) ? 'O' :'o' );
+                        HB_COMP_PARAM->pLastMethod->cType = ( HB_ISUPPER( ( UCHAR ) cVarType ) ? 'O' :'o' );
                      }
                   }
                   else
@@ -1332,7 +1332,7 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                   HB_COMP_PARAM->pLastMethod->cParamTypes[0] = cVarType;
                   HB_COMP_PARAM->pLastMethod->pParamClasses[0] = pClass;
 
-                  if ( toupper( cVarType ) == 'S' )
+                  if ( HB_TOUPPER( cVarType ) == 'S' )
                   {
                      HB_COMP_PARAM->pLastMethod->pClass = pClass;
                   }
@@ -1423,7 +1423,7 @@ IfElseIf   : ELSEIF { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE
 EndIf      : EndIfID
                {
                   if( HB_COMP_PARAM->functions.pLast->wIfCounter )
-                     --HB_COMP_PARAM->functions.pLast->wIfCounter; 
+                     --HB_COMP_PARAM->functions.pLast->wIfCounter;
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                }
            ;
@@ -1515,7 +1515,7 @@ DoWhile    : WhileBegin ExpList Crlf
                }
              EndWhile
                {
-                  hb_compGenJumpHere( ( ULONG ) $<lNumber>4, HB_COMP_PARAM ); 
+                  hb_compGenJumpHere( ( ULONG ) $<lNumber>4, HB_COMP_PARAM );
                   if( HB_COMP_PARAM->functions.pLast->wWhileCounter )
                      --HB_COMP_PARAM->functions.pLast->wWhileCounter;
                   hb_compLoopEnd( HB_COMP_PARAM );
@@ -1711,7 +1711,7 @@ DoSwitch    : SwitchBegin
 EndSwitch   : EndSwitchID
                {
                   if( HB_COMP_PARAM->functions.pLast->wSwitchCounter )
-                     --HB_COMP_PARAM->functions.pLast->wSwitchCounter; 
+                     --HB_COMP_PARAM->functions.pLast->wSwitchCounter;
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                }
             ;
@@ -1720,8 +1720,8 @@ EndSwitchID : ENDSWITCH
             | END
             ;
 
-SwitchStart : DOSWITCH 
-               { ++HB_COMP_PARAM->functions.pLast->wSwitchCounter; 
+SwitchStart : DOSWITCH
+               { ++HB_COMP_PARAM->functions.pLast->wSwitchCounter;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                }
               Expression Crlf
@@ -2211,7 +2211,7 @@ void hb_compLoopKill( PFUNCTION pFunc )
 {
    HB_LOOPEXIT_PTR pLoop, pFree;
 
-   while( pFunc->pLoops )   
+   while( pFunc->pLoops )
    {
       pLoop = pFunc->pLoops;
       while( pLoop->pExitList )
@@ -2476,7 +2476,7 @@ BOOL hb_compForEachVarError( HB_COMP_DECL, const char *szVarName )
          {
             if( pEnumVar->bForEach )
             {
-               /* only if it is FOR EACH enumerator 
+               /* only if it is FOR EACH enumerator
                 * generate warning if it is FOR/NEXT loop
                */
                return FALSE;

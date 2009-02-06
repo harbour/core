@@ -335,8 +335,8 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
 
                   for( i = 0; i < 256; i++ )
                   {
-                     cdpage->s_upper[i] = ( char ) toupper( ( UCHAR ) i );
-                     cdpage->s_lower[i] = ( char ) tolower( ( UCHAR ) i );
+                     cdpage->s_upper[i] = ( char ) HB_TOUPPER( ( UCHAR ) i );
+                     cdpage->s_lower[i] = ( char ) HB_TOLOWER( ( UCHAR ) i );
                   }
                   if( strpbrk( cdpage->CharsUpper, "~." ) != NULL )
                   {

@@ -85,7 +85,7 @@ HB_FUNC( SOUNDEX )
                   differently for accented and national characters. It's also
                   faster this way. [vszakats] */
 
-         /* Convert to uppercase: toupper() */
+         /* Convert to uppercase: HB_TOUPPER() */
          if( cChar >= 'a' && cChar <= 'z' )
             cChar -= ( 'a' - 'A' );
 
@@ -110,4 +110,3 @@ HB_FUNC( SOUNDEX )
 
    hb_retc( szResult );
 }
-

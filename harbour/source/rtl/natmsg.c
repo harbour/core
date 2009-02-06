@@ -62,8 +62,6 @@
  *
  */
 
-#include <ctype.h>
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapilng.h"
@@ -97,14 +95,14 @@ HB_FUNC( __NATISAFFIRM )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
-   hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == ( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + _LF_YN - 1 ) )[ 0 ] );
+   hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && hb_charUpper( hb_itemGetCPtr( pItem )[ 0 ] ) == ( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + _LF_YN - 1 ) )[ 0 ] );
 }
 
 HB_FUNC( __NATISNEGATIVE )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
-   hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == ( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + _LF_YN - 1 ) )[ 2 ] );
+   hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && hb_charUpper( hb_itemGetCPtr( pItem )[ 0 ] ) == ( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + _LF_YN - 1 ) )[ 2 ] );
 }
 
 HB_FUNC( __NATMSG )

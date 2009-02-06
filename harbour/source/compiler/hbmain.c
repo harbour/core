@@ -464,7 +464,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
    pVar->pNext = NULL;
    pVar->iDeclLine = HB_COMP_PARAM->currLine;
 
-   if( toupper( pVarType->cVarType ) == 'S' )
+   if( HB_TOUPPER( pVarType->cVarType ) == 'S' )
    {
       /* printf( "\nVariable %s is of Class: %s\n", szVarName, pVarType->szFromClass ); */
       pVar->pClass = hb_compClassFind( HB_COMP_PARAM, pVarType->szFromClass );
@@ -1165,7 +1165,7 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, PHB_VART
 
          pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = pVarType->cVarType;
 
-         if( toupper( pVarType->cVarType ) == 'S' )
+         if( HB_TOUPPER( pVarType->cVarType ) == 'S' )
          {
             pDeclared->pParamClasses[ pDeclared->iParamCount - 1 ] = hb_compClassFind( HB_COMP_PARAM, pVarType->szFromClass );
          }
@@ -1190,7 +1190,7 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, PHB_VART
 
       HB_COMP_PARAM->pLastMethod->cParamTypes[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ] = pVarType->cVarType;
 
-      if( toupper( pVarType->cVarType ) == 'S' )
+      if( HB_TOUPPER( pVarType->cVarType ) == 'S' )
       {
          HB_COMP_PARAM->pLastMethod->pParamClasses[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ] = hb_compClassFind( HB_COMP_PARAM, pVarType->szFromClass );
 

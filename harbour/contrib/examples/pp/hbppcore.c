@@ -355,7 +355,7 @@ void hb_pp_Free( void )
       hb_pp_aCondCompile = NULL;
    }
    hb_pp_InternalFree();
-   
+
    if( s_expreal )
    {
       hb_xfree( ( void *) s_expreal );
@@ -871,9 +871,9 @@ static COMMANDS *ComSearch( char *cmdname, COMMANDS * stcmdStart )
    {
       int j;
 
-      for( j = 0; ( *( stcmd->name + j ) == toupper( *( cmdname + j ) ) ) &&
+      for( j = 0; ( *( stcmd->name + j ) == HB_TOUPPER( *( cmdname + j ) ) ) &&
            ( *( stcmd->name + j ) != '\0' ) && ( ( stcmd->com_or_xcom ) ? 1 : ( j < 4 || ISNAME( ( BYTE ) * ( cmdname + j + 1 ) ) ) ); j++ ) ;
-      if( ( *( stcmd->name + j ) == toupper( *( cmdname + j ) ) )
+      if( ( *( stcmd->name + j ) == HB_TOUPPER( *( cmdname + j ) ) )
           || ( !stcmd->com_or_xcom && j >= 4 && *( stcmd->name + j ) != '\0' && *( cmdname + j ) == '\0' ) )
          break;
 
@@ -892,9 +892,9 @@ static COMMANDS *TraSearch( char *cmdname, COMMANDS * sttraStart )
 
    while( sttra != NULL )
    {
-      for( j = 0; *( sttra->name + j ) == toupper( *( cmdname + j ) ) &&
+      for( j = 0; *( sttra->name + j ) == HB_TOUPPER( *( cmdname + j ) ) &&
            *( sttra->name + j ) != '\0' && ( ( sttra->com_or_xcom ) ? 1 : ( j < 4 || ISNAME( ( BYTE ) * ( cmdname + j + 1 ) ) ) ); j++ ) ;
-      if( *( sttra->name + j ) == toupper( *( cmdname + j ) )
+      if( *( sttra->name + j ) == HB_TOUPPER( *( cmdname + j ) )
           || ( !sttra->com_or_xcom && j >= 4 && *( sttra->name + j ) != '\0' && *( cmdname + j ) == '\0' ) )
          break;
       sttra = sttra->last;
@@ -1226,7 +1226,7 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
             i++;
             continue;
          }
-         
+
          /* Drag match marker, determine it type */
          explen = 0;
          ipos = i;
@@ -1917,7 +1917,7 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
             /* Store start position of outermost optional in pattern */
             strtopti = ptrmp;
          }
-         if( !s_numBrackets && strtopti && strtptri != ptri && 
+         if( !s_numBrackets && strtopti && strtptri != ptri &&
              ( ISNAME( ( BYTE ) * ptri ) || *ptri == '&' ) )
          {
             /* Input stream starts with a word or macro -store the position
@@ -2072,7 +2072,7 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
                   {
                      SkipOptional( &ptrmp );
                   }
-                  else 
+                  else
                      return -1;
                }
          }
@@ -2175,11 +2175,11 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
 
    HB_TRACE( HB_TR_DEBUG, ( "WorkMarkers(%p, %p, %s, %p)", ptrmp, ptri, ptro, lenres ) );
 
-   
+
    maxlenreal = HB_PP_STR_SIZE;
    if( s_expreal == NULL )
       s_expreal = ( char * ) hb_xgrab( maxlenreal + 1 );
-      
+
    /* Copying a match pattern to 'exppatt' */
    lenpatt = stroncpy( exppatt, *ptrmp, 4 );
    *ptrmp += 4;
@@ -2335,13 +2335,13 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
          if( *ptr == '&' )
          {
             /* rglab: Thu Sep  2 21:30:07 2004
-             * Special Clipper undocumented restricted match marker: 
+             * Special Clipper undocumented restricted match marker:
              * <x:&>
              * Clipper accepts the macro variable only here.
              * eg.
-             * SET FILTER TO &var. 
+             * SET FILTER TO &var.
              * SET FILTER TO &var.foo
-             * SET FILTER TO &(var) 
+             * SET FILTER TO &(var)
              *
              * Notice that any expression that starts from the macro
              * variable is not valid for this marker
@@ -2353,7 +2353,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
             if( **ptri == '&' )
             {
                char * ptrmacro = *ptri; /* save current position */
-               
+
                *ptri += 1;
                HB_SKIPTABSPACES( *ptri );
                if( **ptri == '(' )      /* macro expression &( expr )  */
@@ -2388,7 +2388,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
                      {
                         char * ptmp = *ptri + lenreal;
                         HB_SKIPTABSPACES( ptmp );
-                        if( ! IsInStr( *ptmp, ":/+*-%^=<>[{.," ) || 
+                        if( ! IsInStr( *ptmp, ":/+*-%^=<>[{.," ) ||
                             (*ptmp && ptmp[0]=='+' && ptmp[1]=='+') ||
                            (*ptmp && ptmp[0]=='-' && ptmp[1]=='-') )
                         {
@@ -2550,12 +2550,12 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL
       prlist = TRUE;
    }
    State = ( **ptri == '\'' || **ptri == '\"' || **ptri == '[' ) ? STATE_EXPRES : STATE_ID;
-      
+
    while( **ptri != '\0' && !rez && lens < maxrez )
    {
       if( State == STATE_EXPRES || ( cLastChar && strchr( "({[.|,$!#=<>^%*/+-", cLastChar ) ) )
-         /* Ron Pinkas added if on State 2001-05-02 to avoid 
-            multiple strings concatination. 
+         /* Ron Pinkas added if on State 2001-05-02 to avoid
+            multiple strings concatination.
           */
       {
          if( **ptri == '"' )
@@ -2643,8 +2643,8 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL
             continue;
          }
          else if( **ptri == '[' )
-            /* ( see below 5-2-2001 
-               && ( State == STATE_EXPRES || ( strchr( ")]}.", cLastChar ) == NULL 
+            /* ( see below 5-2-2001
+               && ( State == STATE_EXPRES || ( strchr( ")]}.", cLastChar ) == NULL
                && ! ISNAME( ( BYTE ) cLastChar ) ) )
              */
          {
@@ -2702,8 +2702,8 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL
             State = ( StBr1 == 0 && StBr2 == 0 && StBr3 == 0 ) ? STATE_ID_END : STATE_BRACKET;
             continue;
          }
-         /* Added by Ron Pinkas 2001-05-02 
-            ( removed lots of related scattered logic below! 
+         /* Added by Ron Pinkas 2001-05-02
+            ( removed lots of related scattered logic below!
           */
       }
       else if( strchr( "'\"", **ptri ) )
@@ -3281,7 +3281,7 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro, int
 
    if( s_expcopy == NULL )
       s_expcopy = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
-   
+
    if( *( exppatt + 1 ) == '\0' )
       *( ptro + *lenres ) = '\0';
 
@@ -3387,7 +3387,7 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro, int
                   ptrOut = ptrOut + ifou;
                   continue;
                }
-               
+
                *lenres += ReplacePattern( exppatt[2], expreal, lenreal, ptrOut + ifou - 1, *lenres - ifou + 1 );
                ptrOut = ptrOut + ifou;
             }
@@ -3438,7 +3438,7 @@ static BOOL ScanMacro( char *expreal, int lenitem, int *pNewLen )
       *pNewLen = lenitem - 1;
       return TRUE;
    }
-   else if( isalpha( ( BYTE ) expreal[i] ) || expreal[i] == '_' )
+   else if( HB_ISALPHA( ( BYTE ) expreal[i] ) || expreal[i] == '_' )
    {
       i++;
       while( ISNAME( ( BYTE ) expreal[i] ) )
@@ -3624,7 +3624,7 @@ static int ReplacePattern( char patttype, char *expreal, int lenreal, char *ptro
                if( *expreal != '\0' )
                {
                   int i;
-                  
+
                   i = ( ifou ) ? 6 : 5;
                   hb_pp_Stuff( "{|| },", ptro, i, 0, lenres );
                   hb_pp_Stuff( expreal, ptro + 4, lenitem, 0, lenres + i );
@@ -4052,25 +4052,25 @@ static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword, BOO
             }
             else if( szText[lPos] == '.' && szSub[0] != '.' )
             {
-               if( toupper( szText[lPos + 1] ) == 'T' && szText[lPos + 2] == '.' )
+               if( HB_TOUPPER( szText[lPos + 1] ) == 'T' && szText[lPos + 2] == '.' )
                {
                   lPos += 3;
                }
-               else if( toupper( szText[lPos + 1] ) == 'F' && szText[lPos + 2] == '.' )
+               else if( HB_TOUPPER( szText[lPos + 1] ) == 'F' && szText[lPos + 2] == '.' )
                {
                   lPos += 3;
                }
-               else if( toupper( szText[lPos + 1] ) == 'O' && toupper( szText[lPos + 2] ) == 'R' && szText[lPos + 4] == '.' )
+               else if( HB_TOUPPER( szText[lPos + 1] ) == 'O' && HB_TOUPPER( szText[lPos + 2] ) == 'R' && szText[lPos + 4] == '.' )
                {
                   lPos += 4;
                }
-               else if( toupper( szText[lPos + 1] ) == 'A'
-                        && toupper( szText[lPos + 2] ) == 'N' && toupper( szText[lPos + 3] ) == 'D' && szText[lPos + 4] == '.' )
+               else if( HB_TOUPPER( szText[lPos + 1] ) == 'A'
+                        && HB_TOUPPER( szText[lPos + 2] ) == 'N' && HB_TOUPPER( szText[lPos + 3] ) == 'D' && szText[lPos + 4] == '.' )
                {
                   lPos += 5;
                }
-               else if( toupper( szText[lPos + 1] ) == 'N'
-                        && toupper( szText[lPos + 2] ) == 'O' && toupper( szText[lPos + 3] ) == 'T' && szText[lPos + 4] == '.' )
+               else if( HB_TOUPPER( szText[lPos + 1] ) == 'N'
+                        && HB_TOUPPER( szText[lPos + 2] ) == 'O' && HB_TOUPPER( szText[lPos + 3] ) == 'T' && szText[lPos + 4] == '.' )
                {
                   lPos += 5;
                }
@@ -4104,7 +4104,7 @@ static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword, BOO
          }
 
          if( ( lCase
-               && toupper( *( szText + lPos ) ) == toupper( *( szSub + lSubPos ) ) ) || ( !lCase && *( szText + lPos ) == *( szSub + lSubPos ) ) )
+               && HB_TOUPPER( *( szText + lPos ) ) == HB_TOUPPER( *( szSub + lSubPos ) ) ) || ( !lCase && *( szText + lPos ) == *( szSub + lSubPos ) ) )
          {
             lSubPos++;
             cLastChar = *( szText + lPos );
@@ -4243,20 +4243,20 @@ static int stroncpy( char *ptro, char *ptri, int lens )
 static BOOL truncmp( char **ptro, char **ptri, BOOL lTrunc )
 {
    char *ptrb = *ptro, co, ci;
-   
+
    HB_TRACE( HB_TR_DEBUG, ( "truncmp(%p, %p, %d)", ptro, ptri, lTrunc ) );
 
-      
+
    for( ;
         **ptri != ' ' && **ptri != '\t' && **ptri != ','
         && **ptri != HB_PP_OPT_START && **ptri != HB_PP_OPT_END
-        && **ptri != HB_PP_MATCH_MARK && **ptri != '\0' && toupper( **ptri ) == toupper( **ptro ); ( *ptro )++, ( *ptri )++ ) ;
+        && **ptri != HB_PP_MATCH_MARK && **ptri != '\0' && HB_TOUPPER( **ptri ) == HB_TOUPPER( **ptro ); ( *ptro )++, ( *ptri )++ ) ;
    co = *( *ptro - 1 );
    ci = **ptri;
-   
+
    if( ( ( ci == ' ' || ci == ',' || ci == HB_PP_OPT_START ||
            ci == HB_PP_OPT_END || ci == HB_PP_MATCH_MARK || ci == '\0' ) &&
-         ( ( !ISNAME( ( BYTE ) ** ptro ) && ISNAME( ( BYTE ) co ) ) || 
+         ( ( !ISNAME( ( BYTE ) ** ptro ) && ISNAME( ( BYTE ) co ) ) ||
          ( !ISNAME( ( BYTE ) co ) ) ) ) )
       return FALSE;
    else if( lTrunc && *ptro - ptrb >= 4 && ISNAME( ( BYTE ) ci ) && !ISNAME( ( BYTE ) ** ptro ) && ISNAME( ( BYTE ) co ) )
@@ -4276,7 +4276,7 @@ static BOOL strincmp( char *ptro, char **ptri, BOOL lTrunc )
 
    for( ;
         **ptri != ',' && **ptri != HB_PP_OPT_START && **ptri != HB_PP_OPT_END
-        && **ptri != HB_PP_MATCH_MARK && **ptri != '\0' && toupper( **ptri ) == toupper( *ptro ); ptro++, ( *ptri )++ ) ;
+        && **ptri != HB_PP_MATCH_MARK && **ptri != '\0' && HB_TOUPPER( **ptri ) == HB_TOUPPER( *ptro ); ptro++, ( *ptri )++ ) ;
    co = *( ptro - 1 );
    ci = **ptri;
    if( ( ( ci == ' ' || ci == ',' || ci == HB_PP_OPT_START ||
@@ -4384,7 +4384,7 @@ static int NextWord( char **sSource, char *sDest, BOOL lLower )
 
    while( **sSource != '\0' && **sSource != ' ' && **sSource != '\t' && **sSource != '(' )
    {
-      *sDest++ = ( lLower ) ? tolower( **sSource ) : **sSource;
+      *sDest++ = ( lLower ) ? HB_TOLOWER( **sSource ) : **sSource;
       ( *sSource )++;
       i++;
    }
@@ -4468,34 +4468,34 @@ static int NextName( char **sSource, char *sDest )
          State = STATE_NORMAL;
       }
       /* Ron Pinkas added 2001-02-21 */
-      else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'A'
-               && toupper( ( *sSource )[2] ) == 'N' && toupper( ( *sSource )[3] ) == 'D' && ( *sSource )[4] == '.' )
+      else if( ( *sSource )[0] == '.' && HB_TOUPPER( ( *sSource )[1] ) == 'A'
+               && HB_TOUPPER( ( *sSource )[2] ) == 'N' && HB_TOUPPER( ( *sSource )[3] ) == 'D' && ( *sSource )[4] == '.' )
       {
          ( *sSource ) += 5;
          cLastChar = ' ';
          continue;
       }
-      else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'N'
-               && toupper( ( *sSource )[2] ) == 'O' && toupper( ( *sSource )[3] ) == 'T' && ( *sSource )[4] == '.' )
+      else if( ( *sSource )[0] == '.' && HB_TOUPPER( ( *sSource )[1] ) == 'N'
+               && HB_TOUPPER( ( *sSource )[2] ) == 'O' && HB_TOUPPER( ( *sSource )[3] ) == 'T' && ( *sSource )[4] == '.' )
       {
          ( *sSource ) += 5;
          cLastChar = ' ';
          continue;
       }
-      else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'O' && toupper( ( *sSource )[2] ) == 'R' && ( *sSource )[3] == '.' )
+      else if( ( *sSource )[0] == '.' && HB_TOUPPER( ( *sSource )[1] ) == 'O' && HB_TOUPPER( ( *sSource )[2] ) == 'R' && ( *sSource )[3] == '.' )
       {
          ( *sSource ) += 4;
          cLastChar = ' ';
          continue;
       }
       /* End - Ron Pinkas added 2001-02-21 */
-      else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'T' && ( *sSource )[2] == '.' )
+      else if( ( *sSource )[0] == '.' && HB_TOUPPER( ( *sSource )[1] ) == 'T' && ( *sSource )[2] == '.' )
       {
          ( *sSource ) += 3;
          cLastChar = ' ';
          continue;
       }
-      else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'F' && ( *sSource )[2] == '.' )
+      else if( ( *sSource )[0] == '.' && HB_TOUPPER( ( *sSource )[1] ) == 'F' && ( *sSource )[2] == '.' )
       {
          ( *sSource ) += 3;
          cLastChar = ' ';
@@ -4668,7 +4668,7 @@ static int NextParm( char **sSource, char *sDest )
 
 static BOOL IsIdentifier( char *szProspect )
 {
-   if( isalpha( ( BYTE ) szProspect[0] ) || szProspect[0] == '_' )
+   if( HB_ISALPHA( ( BYTE ) szProspect[0] ) || szProspect[0] == '_' )
    {
       int i = 1;
 
@@ -4692,15 +4692,15 @@ static int IsMacroVar( char *szText, BOOL isCommand )
 {
    int len = 0;
 
-   if( isalpha( ( BYTE ) szText[0] ) || szText[0] == '_' )
+   if( HB_ISALPHA( ( BYTE ) szText[0] ) || szText[0] == '_' )
    {
       int i = 1;
 
-      while( ISNAME( ( BYTE ) szText[i] ) || isdigit( ( BYTE ) szText[i] ) || szText[i] == '&' || szText[i] == '.' )
+      while( ISNAME( ( BYTE ) szText[i] ) || HB_ISDIGIT( ( BYTE ) szText[i] ) || szText[i] == '&' || szText[i] == '.' )
       {
          i++;
       }
-/*         
+/*
       while( ISNAME( ( BYTE ) szText[i] ) || szText[i] == '&' )
       {
          i++;
@@ -4708,7 +4708,7 @@ static int IsMacroVar( char *szText, BOOL isCommand )
       if( szText[i] == '.' || szText[i] == '&' )
       {
          i++;
-         while( ISNAME(( BYTE ) szText[i]) || isdigit( ( BYTE ) szText[i] ) || szText[i] == '&' || szText[i] == '.' )
+         while( ISNAME(( BYTE ) szText[i]) || HB_ISDIGIT( ( BYTE ) szText[i] ) || szText[i] == '&' || szText[i] == '.' )
          {
             i++;
          }

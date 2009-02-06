@@ -50,19 +50,17 @@
  *
  */
 
-#include <ctype.h>
-
 #include "hbapi.h"
 #include "hbapicdp.h"
 
 BOOL hb_charIsDigit( int iChar )
 {
-   return isdigit( ( unsigned char ) iChar );
+   return HB_ISDIGIT( ( unsigned char ) iChar );
 }
 
 BOOL hb_charIsAlpha( int iChar )
 {
-   if( isalpha( ( unsigned char ) iChar ) )
+   if( HB_ISALPHA( ( unsigned char ) iChar ) )
       hb_retl( TRUE );
 #ifndef HB_CDP_SUPPORT_OFF
    else
@@ -80,7 +78,7 @@ BOOL hb_charIsAlpha( int iChar )
 
 BOOL hb_charIsLower( int iChar )
 {
-   if( isupper( ( unsigned char ) iChar ) )
+   if( HB_ISLOWER( ( unsigned char ) iChar ) )
       return TRUE;
 #ifndef HB_CDP_SUPPORT_OFF
    else
@@ -97,7 +95,7 @@ BOOL hb_charIsLower( int iChar )
 
 BOOL hb_charIsUpper( int iChar )
 {
-   if( islower( ( unsigned char ) iChar ) )
+   if( HB_ISUPPER( ( unsigned char ) iChar ) )
       return TRUE;
 #ifndef HB_CDP_SUPPORT_OFF
    else
@@ -120,7 +118,7 @@ HB_FUNC( ISALPHA )
 
    if( szString )
    {
-      if( isalpha( ( unsigned char ) *szString ) )
+      if( HB_ISALPHA( ( unsigned char ) *szString ) )
          hb_retl( TRUE );
       else
       {
@@ -145,7 +143,7 @@ HB_FUNC( ISDIGIT )
 {
    char * szString = hb_parc( 1 );
 
-   hb_retl( szString && isdigit( ( unsigned char ) *szString ) );
+   hb_retl( szString && HB_ISDIGIT( ( unsigned char ) *szString ) );
 }
 
 /* determines if first char of string is upper-case */
@@ -156,7 +154,7 @@ HB_FUNC( ISUPPER )
 
    if( szString )
    {
-      if( isupper( ( unsigned char ) *szString ) )
+      if( HB_ISUPPER( ( unsigned char ) *szString ) )
          hb_retl( TRUE );
       else
       {
@@ -182,7 +180,7 @@ HB_FUNC( ISLOWER )
 
    if( szString )
    {
-      if( islower( ( unsigned char ) *szString ) )
+      if( HB_ISLOWER( ( unsigned char ) *szString ) )
          hb_retl( TRUE );
       else
       {
