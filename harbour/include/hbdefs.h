@@ -1161,6 +1161,13 @@ typedef unsigned long HB_COUNTER;
 
 #define HB_SIZEOFARRAY( var )       ( sizeof( var ) / sizeof( *var ) )
 
+#define HB_ISUPPER( c )             ( ( c ) >= 'A' && ( c ) <= 'Z' )
+#define HB_ISLOWER( c )             ( ( c ) >= 'a' && ( c ) <= 'z' )
+#define HB_TOUPPER( c )             ( ( c ) >= 'a' && ( c ) <= 'z' ? ( c ) - ( 'a' - 'A' ) : ( c ) )
+#define HB_TOLOWER( c )             ( ( c ) >= 'A' && ( c ) <= 'Z' ? ( c ) + ( 'a' - 'A' ) : ( c ) )
+#define HB_ISDIGIT( c )             ( ( c ) >= '0' && ( c ) <= '9' )
+#define HB_ISALPHA( c )             ( HB_ISUPPER( c ) || HB_ISLOWER( c ) )
+
 #if defined( __POCC__ ) || defined( __XCC__ )
    #define HB_SYMBOL_UNUSED( symbol )  do if( symbol ) {;} while( 0 )
 #else

@@ -2779,7 +2779,7 @@ static HB_ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_itemPutC( pItem, adsTableExt( pArea->iFileType ) );
          break;
 
-      case DBI_FULLPATH :
+      case DBI_FULLPATH:
          {
             UNSIGNED8  aucBuffer[ MAX_STR_LEN + 1 ];
             UNSIGNED16 pusLen = MAX_STR_LEN;

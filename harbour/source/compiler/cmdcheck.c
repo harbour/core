@@ -590,8 +590,10 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
             case 'u':
             case 'U':
-               if( s[1] && toupper( s[1] ) == 'N'
-                   && s[2] && toupper( s[2] ) == 'D' && s[3] && toupper( s[3] ) == 'E' && s[4] && toupper( s[4] ) == 'F' && s[5] == ':' )
+               if( s[1] && ( s[1] == 'N' || s[1] == 'n' ) &&
+                   s[2] && ( s[2] == 'D' || s[2] == 'd' ) &&
+                   s[3] && ( s[3] == 'E' || s[3] == 'e' ) &&
+                   s[4] && ( s[4] == 'F' || s[4] == 'f' ) && s[5] == ':' )
                {
                   /* NOTE: Ignore these -undef: switches will be processed separately */
                   break;
@@ -709,10 +711,10 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char * const Args[] )
                   {
                      case 'b':
                      case 'B':
-                        if( szSwitch[j + 1] && toupper( ( BYTE ) szSwitch[j + 1] ) == 'U' &&
-                            szSwitch[j + 2] && toupper( ( BYTE ) szSwitch[j + 2] ) == 'I' &&
-                            szSwitch[j + 3] && toupper( ( BYTE ) szSwitch[j + 3] ) == 'L' &&
-                            szSwitch[j + 4] && toupper( ( BYTE ) szSwitch[j + 4] ) == 'D' )
+                        if( szSwitch[j + 1] && ( szSwitch[j + 1] == 'U' || szSwitch[j + 1] == 'u' ) &&
+                            szSwitch[j + 2] && ( szSwitch[j + 2] == 'I' || szSwitch[j + 2] == 'i' ) &&
+                            szSwitch[j + 3] && ( szSwitch[j + 3] == 'L' || szSwitch[j + 3] == 'l' ) &&
+                            szSwitch[j + 4] && ( szSwitch[j + 4] == 'D' || szSwitch[j + 4] == 'd' ) )
                         {
                            Switch[2] = 'U';
                            Switch[3] = 'I';
@@ -736,9 +738,9 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char * const Args[] )
 
                      case 'c':
                      case 'C':
-                        if( szSwitch[j + 1] && toupper( ( BYTE ) szSwitch[j + 1] ) == 'R' &&
-                            szSwitch[j + 2] && toupper( ( BYTE ) szSwitch[j + 2] ) == 'E' &&
-                            szSwitch[j + 3] && toupper( ( BYTE ) szSwitch[j + 3] ) == 'D' )
+                        if( szSwitch[j + 1] && ( szSwitch[j + 1] == 'R' || szSwitch[j + 1] == 'r' ) &&
+                            szSwitch[j + 2] && ( szSwitch[j + 2] == 'E' || szSwitch[j + 2] == 'e' ) &&
+                            szSwitch[j + 3] && ( szSwitch[j + 3] == 'D' || szSwitch[j + 3] == 'd' ) )
                         {
                            Switch[2] = 'R';
                            Switch[3] = 'E';
@@ -747,13 +749,13 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char * const Args[] )
 
                            j += 4;
 
-                           if( szSwitch[j] && toupper( ( BYTE ) szSwitch[j] ) == 'I' )
+                           if( szSwitch[j] && ( szSwitch[j] == 'I' || szSwitch[j] == 'i' ) )
                            {
                               j++;
-                              if( szSwitch[j] && toupper( ( BYTE ) szSwitch[j] ) == 'T' )
+                              if( szSwitch[j] && ( szSwitch[j] == 'T' || szSwitch[j] == 't' ) )
                               {
                                  j++;
-                                 if( szSwitch[j] && toupper( ( BYTE ) szSwitch[j] ) == 'S' )
+                                 if( szSwitch[j] && ( szSwitch[j] == 'S' || szSwitch[j] == 's' ) )
                                  {
                                     j++;
                                  }
@@ -779,7 +781,8 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char * const Args[] )
 
                      case 'e':
                      case 'E':
-                        if( toupper( ( BYTE ) szSwitch[j + 1] ) == 'S' && isdigit( ( BYTE ) szSwitch[j + 2] ) )
+                        if( ( szSwitch[j + 1] == 'S' || szSwitch[j + 1] == 's' ) &&
+                              HB_ISDIGIT( szSwitch[j + 2] ) )
                         {
                            Switch[2] = 'S';
                            Switch[3] = szSwitch[j + 2];
@@ -801,7 +804,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char * const Args[] )
                         Switch[2] = szSwitch[j + 1];
                         if( Switch[2] )
                         {
-                           if( isdigit( ( BYTE ) szSwitch[j + 2] ) )
+                           if( HB_ISDIGIT( szSwitch[j + 2] ) )
                            {
                               /* Optional argument */
                               Switch[3] = szSwitch[j + 2];
@@ -893,7 +896,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char * const Args[] )
 
                      case 'q':
                      case 'Q':
-                        if( szSwitch[j + 1] && isdigit( ( BYTE ) szSwitch[j + 1] ) )
+                        if( szSwitch[j + 1] && HB_ISDIGIT( szSwitch[j + 1] ) )
                         {
                            Switch[2] = szSwitch[j + 1];
                            Switch[3] = '\0';
@@ -928,7 +931,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char * const Args[] )
 
                      case 'w':
                      case 'W':
-                        if( szSwitch[j + 1] && isdigit( ( BYTE ) szSwitch[j + 1] ) )
+                        if( szSwitch[j + 1] && HB_ISDIGIT( szSwitch[j + 1] ) )
                         {
                            Switch[2] = szSwitch[j + 1];
                            Switch[3] = '\0';
@@ -1078,11 +1081,11 @@ static void hb_compChkDefineSwitch( HB_COMP_DECL, const char *pszSwitch )
             hb_xfree( szDefText );
          }
       }
-      else if( pszSwitch[1] && toupper( pszSwitch[1] ) == 'U' &&
-               pszSwitch[2] && toupper( pszSwitch[2] ) == 'N' &&
-               pszSwitch[3] && toupper( pszSwitch[3] ) == 'D' &&
-               pszSwitch[4] && toupper( pszSwitch[4] ) == 'E' &&
-               pszSwitch[5] && toupper( pszSwitch[5] ) == 'F' &&
+      else if( pszSwitch[1] && ( pszSwitch[1] == 'U' || pszSwitch[1] == 'u' ) &&
+               pszSwitch[2] && ( pszSwitch[2] == 'N' || pszSwitch[2] == 'n' ) &&
+               pszSwitch[3] && ( pszSwitch[3] == 'D' || pszSwitch[3] == 'd' ) &&
+               pszSwitch[4] && ( pszSwitch[4] == 'E' || pszSwitch[4] == 'e' ) &&
+               pszSwitch[5] && ( pszSwitch[5] == 'F' || pszSwitch[5] == 'f' ) &&
                pszSwitch[6] == ':' )
       {
          char *szDefText = hb_strdup( pszSwitch + 7 );

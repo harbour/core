@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-06 17:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbdefs.h
+    + Added macros:
+      HB_TOUPPER(), HB_TOLOWER(), HB_ISUPPER(), HB_ISLOWER(),
+      HB_ISALPHA(), HB_ISDIGIT().
+
+  * source/rtl/strcase.c
+  * source/compiler/cmdcheck.c
+    * Replaced tolower()/toupper()/isdigit() with macros or other
+      constructs.
+
+  * source/rtl/tmenusys.prg
+    % Changed to use Inkey() second parameter instead of
+      tweaking Set( _SET_EVENTMASK ).
+
+  * contrib/rddads/ads1.c
+    * Minor formatting.
+
 2009-02-06 13:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-win-spec
     ! fixed CRLF=>LF

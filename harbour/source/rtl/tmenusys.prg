@@ -119,7 +119,6 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
    LOCAL lLeftDown
    LOCAL oNewMenu
    LOCAL nNewLevel
-   LOCAL nEvent
    LOCAL oMenuItem
    LOCAL nMenuItem
    LOCAL nTemp
@@ -161,9 +160,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
       DO WHILE nSelection <= 0
 
-         nEvent := Set( _SET_EVENTMASK, INKEY_KEYBOARD + INKEY_LDOWN )
-         nKey := Inkey( 0 )
-         Set( _SET_EVENTMASK, nEvent )
+         nKey := Inkey( 0, INKEY_KEYBOARD + INKEY_LDOWN )
 
          IF nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
             nSelection := oTopMenu:hitTest( MRow(), MCol() )
@@ -642,7 +639,7 @@ METHOD ShowMsg( lMode ) CLASS HBMenuSys
 
    RETURN .T.
 
-/* NOTE: Generates the somewhat internal, yet widely used message line format of CA-Cl*pper 5.3 
+/* NOTE: Generates the somewhat internal, yet widely used message line format of CA-Cl*pper 5.3
          This format contradicts the one in the official docs. */
 
 METHOD GetMsgArray() CLASS HBMenuSys
