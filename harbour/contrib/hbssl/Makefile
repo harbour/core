@@ -22,7 +22,7 @@ endif
 
 ifneq ($(strip $(HB_INC_OPENSSL_OK)),)
 
-C_USR += $(foreach d, $(HB_INC_OPENSSL_OK), -I$(d))
+HB_USER_CFLAGS += $(foreach d, $(HB_INC_OPENSSL_OK), -I$(d))
 
 C_SOURCES=\
 	ssl.c \

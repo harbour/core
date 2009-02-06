@@ -19,8 +19,8 @@ endif
 
 ifneq ($(strip $(HB_INC_GTK_OK)),)
 
-C_USR += $(foreach d, $(HB_INC_GTK_OK), -I$(d))
-C_USR += `pkg-config --cflags gtk+-2.0`
+HB_USER_CFLAGS += $(foreach d, $(HB_INC_GTK_OK), -I$(d))
+HB_USER_CFLAGS += `pkg-config --cflags gtk+-2.0`
 
 C_SOURCES=\
 	creawin.c \

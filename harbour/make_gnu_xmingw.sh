@@ -33,17 +33,17 @@ else
     esac
 fi
 
-CC_PRG_USR=""
+CC_HB_USER_PRGFLAGS=""
 if [ "$HB_HOST_ARCH" != "win" ]; then
-    CC_PRG_USR="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAMEU"
+    CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAMEU"
 fi
 
 [ -z "$HB_INSTALL_PREFIX" ] && \
 export HB_INSTALL_PREFIX="/usr/local/mingw32-harbour"
-export CC_C_USR=""
-export C_USR="$CC_C_USR $C_USR"
-export CC_PRG_USR
-export PRG_USR="$CC_PRG_USR $PRG_USR"
+export CC_HB_USER_CFLAGS=""
+export HB_USER_CFLAGS="$CC_HB_USER_CFLAGS $HB_USER_CFLAGS"
+export CC_HB_USER_PRGFLAGS
+export HB_USER_PRGFLAGS="$CC_HB_USER_PRGFLAGS $HB_USER_PRGFLAGS"
 
 # try to detect MinGW cross-compiler location
 # using some default platform settings

@@ -69,7 +69,7 @@ $(LD) $(LDFLAGS) @__link__.tmp
 endef
 
 LD = link.exe
-LDFLAGS = /NOMAP /EXETYPE:NT /SUBSYSTEM:CONSOLE $(LINKPATHS) $(L_USR)
+LDFLAGS = /NOMAP /EXETYPE:NT /SUBSYSTEM:CONSOLE $(LINKPATHS) $(HB_USER_LDFLAGS)
 ifeq ($(SHLVL),)
 LNKLIBS=$(subst /,\,$(LINKLIBS))
 else
@@ -84,7 +84,7 @@ $(AR) $(ARFLAGS) @__lib__.tmp
 endef
 
 AR = lib.exe
-ARFLAGS = -c $(A_USR)
+ARFLAGS = -c $(HB_USER_AFLAGS)
 AROBJS = $(foreach file, $(^F), $(file))
 AR_RULE = $(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(AROBJS)
 

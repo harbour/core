@@ -21,7 +21,7 @@ endif
 
 ifneq ($(strip $(HB_INC_FREEIMAGE_OK)),)
 
-C_USR += $(foreach d, $(HB_INC_FREEIMAGE_OK), -I$(d))
+HB_USER_CFLAGS += $(foreach d, $(HB_INC_FREEIMAGE_OK), -I$(d))
 
 C_SOURCES = \
 	fi_winfu.c \

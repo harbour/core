@@ -382,29 +382,29 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
          hb_xfree( pszEscaped );
       }
 
-      pszEnv = hb_getenv( "C_USR" );
+      pszEnv = hb_getenv( "HB_USER_CFLAGS" );
       if( pszEnv )
       {
          pszEscaped = hb_pp_escapeString( pszEnv );
-         fprintf( fout, "\n#define HB_VER_C_USR    \"%s\"\n", pszEscaped );
+         fprintf( fout, "\n#define HB_VER_HB_USER_CFLAGS    \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }
 
-      pszEnv = hb_getenv( "L_USR" );
+      pszEnv = hb_getenv( "HB_USER_LDFLAGS" );
       if( pszEnv )
       {
          pszEscaped = hb_pp_escapeString( pszEnv );
-         fprintf( fout, "\n#define HB_VER_L_USR    \"%s\"\n", pszEscaped );
+         fprintf( fout, "\n#define HB_VER_HB_USER_LDFLAGS    \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }
 
-      pszEnv = hb_getenv( "PRG_USR" );
+      pszEnv = hb_getenv( "HB_USER_PRGFLAGS" );
       if( pszEnv )
       {
          pszEscaped = hb_pp_escapeString( pszEnv );
-         fprintf( fout, "\n#define HB_VER_PRG_USR  \"%s\"\n", pszEscaped );
+         fprintf( fout, "\n#define HB_VER_HB_USER_PRGFLAGS  \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }

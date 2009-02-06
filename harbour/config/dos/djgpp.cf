@@ -62,7 +62,7 @@ echo. $(file) >> __link__.tmp
 endef
 
 define link_exe_file
-echo. $(LDFLAGS) $(L_USR) $(LD_OUT)$@ > __link__.tmp
+echo. $(LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$@ > __link__.tmp
 $(foreach file, $(^F), $(link_file))
 $(foreach file, $(LINKPATHS), $(link_file))
 echo. -Wl,--start-group >> __link__.tmp
@@ -73,7 +73,7 @@ echo. $(LDLIBS) >> __link__.tmp
 endef
 
 AR = ar
-ARFLAGS = $(A_USR)
+ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(create_library)
 
 LD_RULE = $(link_exe_file)

@@ -58,7 +58,7 @@ LDFLAGS += /SUBSYSTEM:WINDOWS
 endif
 
 AR = xlib.exe
-ARFLAGS = $(A_USR)
+ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(AR) $(ARFLAGS) /out:$(LIB_DIR)/$@ $(^F)
 
 include $(TOP)$(ROOT)config/rules.cf

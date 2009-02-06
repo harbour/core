@@ -113,18 +113,18 @@ $(foreach file, $(subst -L,,$(LINKPATHS)), $(search_dir))
 echo. GROUP( >> __link__.tmp
 $(foreach file, $(SYSLIBS), $(link_file))
 echo. ) >> __link__.tmp
--$(LD) $(LDFLAGS) $(L_USR) $(LD_OUT)$@ __link__.tmp
+-$(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$@ __link__.tmp
 endef
 
 LDFLAGS =
 
 AR = $(CCPREFIX)ar
-ARFLAGS = $(A_USR)
+ARFLAGS = $(HB_USER_AFLAGS)
 
 RANLIB = $(CCPREFIX)ranlib
 
 AR = $(CCPREFIX)ar
-ARFLAGS = $(A_USR)
+ARFLAGS = $(HB_USER_AFLAGS)
 
 ifeq ($(SHLVL),) # COMMAND.COM - length of command line is limited
 ifneq ($(OS),Windows_NT)

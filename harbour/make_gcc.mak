@@ -21,9 +21,9 @@
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
 #
-#       C_USR             - Extra C compiler options for libraries and for executables
-#       L_USR             - Extra linker options for libraries
-#       PRG_USR           - Extra Harbour compiler options
+#       HB_USER_CFLAGS             - Extra C compiler options for libraries and for executables
+#       HB_USER_LDFLAGS             - Extra linker options for libraries
+#       HB_USER_PRGFLAGS           - Extra Harbour compiler options
 #
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build (currently not working)
@@ -130,7 +130,7 @@ VMMT_LIB_OBJS = $(subst $(OBJ_DIR),$(MT_OBJ_DIR),$(VM_LIB_OBJS))
 
 # Do not perform an extra compilation phase for shared libraries
 # if gcc -fPIC compilation flag is already passed to a makefile
-ifneq ($(findstring -fPIC,$(C_USR)),)
+ifneq ($(findstring -fPIC,$(HB_USER_CFLAGS)),)
 DLL_OBJS = $(TMP_DLL_OBJS) $(VM_DLL_OBJS)
 MTDLL_OBJS = $(TMP_DLL_OBJS) $(VM_DLL_OBJS:$(OBJ_DIR)/%=$(MT_OBJ_DIR)/%)
 else
@@ -152,7 +152,7 @@ endif
 # C compiler flags
 #**********************************************************
 
-CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) -I$(OBJ_DIR)
+CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(HB_USER_CFLAGS) -I$(OBJ_DIR)
 CFLAGSMT       := -DHB_MT_VM
 #-----------
 ifneq ($(HB_BUILD_OPTIM),no)
@@ -194,7 +194,7 @@ endif
 endif
 endif
 
-LDFLAGS := $(L_USR) $(__GROUP_LIBS_BEG__) $(STANDARD_STATIC_HBLIBS)
+LDFLAGS := $(HB_USER_LDFLAGS) $(__GROUP_LIBS_BEG__) $(STANDARD_STATIC_HBLIBS)
 
 LDFLAGS += $(__GROUP_LIBS_END__)
 
@@ -221,13 +221,13 @@ endif
 
 LDFLAGS += $(HB_OS_LIBS)
 
-LDFLAGSDLL := -shared $(L_USR) -L$(LIB_DIR)
+LDFLAGSDLL := -shared $(HB_USER_LDFLAGS) -L$(LIB_DIR)
 
 #**********************************************************
 # Library manager Flags
 #**********************************************************
 
-ARFLAGS = rc $(A_USR)
+ARFLAGS = rc $(HB_USER_AFLAGS)
 
 #**********************************************************
 # COMPILE Rules

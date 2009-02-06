@@ -66,11 +66,11 @@ endif
 
 endif
 
-ifneq ($(findstring -DHB_PCRE_REGEX, $(C_USR)),)
+ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
 LINKLIBS += -lpcre
 endif
 
-ifneq ($(findstring -DHB_EXT_ZLIB, $(C_USR)),)
+ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
 LINKLIBS += -lz
 endif
 
@@ -80,7 +80,7 @@ LINKLIBS += -lsocket -lnsl -lresolv
 LDFLAGS = $(LINKPATHS)
 
 AR = ar
-ARFLAGS = $(A_USR)
+ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 include $(TOP)$(ROOT)config/rules.cf

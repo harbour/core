@@ -16,7 +16,7 @@ HB_INC_GD_OK += $(foreach d, $(HB_INC_GD), $(if $(wildcard $(d)/gd.h),$(d),))
 
 ifneq ($(strip $(HB_INC_GD_OK)),)
 
-C_USR += $(foreach d, $(HB_INC_GD_OK), -I$(d))
+HB_USER_CFLAGS += $(foreach d, $(HB_INC_GD_OK), -I$(d))
 
 C_SOURCES=\
 	gdwrp.c \

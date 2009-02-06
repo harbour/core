@@ -68,7 +68,7 @@ LIBNAME=hbvm
 
 ifeq ($(HB_MT),)
    HB_MT=MT
-   C_USR:=$(subst -DHB_MT_VM,,$(C_USR))
+   HB_USER_CFLAGS:=$(subst -DHB_MT_VM,,$(HB_USER_CFLAGS))
 endif
 ifeq ($(HB_MT),MT)
 ifneq ($(HB_ARCHITECTURE),dos)

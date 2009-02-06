@@ -86,7 +86,7 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
    endif
 endif
 
-LD_RULE = $(link_exe_file) $(L_USR)
+LD_RULE = $(link_exe_file) $(HB_USER_LDFLAGS)
 
 #Note: The empty line below HAVE TO exist!
 define lib_object
@@ -101,7 +101,7 @@ $(AR) $(ARFLAGS) @__lib__.tmp
 endef
 
 AR = wlib
-ARFLAGS = -p=64 -c -n $(A_USR)
+ARFLAGS = -p=64 -c -n $(HB_USER_AFLAGS)
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf

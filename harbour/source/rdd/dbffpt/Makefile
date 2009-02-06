@@ -3,7 +3,7 @@
 #
 
 ifeq ($(HB_COMPILER),xcc)
-C_USR:=$(subst -Ox,,$(subst -Ot,,$(C_USR)))
+HB_USER_CFLAGS:=$(subst -Ox,,$(subst -Ot,,$(HB_USER_CFLAGS)))
 endif
 
 ROOT = ../../../

@@ -28,16 +28,16 @@ LIBS=\
 	hbcplr \
 	hbcommon \
 
-ifeq ($(findstring -DHB_PCRE_REGEX, $(C_USR)),)
-ifeq ($(findstring -DHB_POSIX_REGEX, $(C_USR)),)
+ifeq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
+ifeq ($(findstring -DHB_POSIX_REGEX, $(HB_USER_CFLAGS)),)
 LIBS += hbpcre
 endif
 endif
 
-ifeq ($(findstring -DHB_EXT_ZLIB, $(C_USR)),)
+ifeq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
 LIBS += hbzlib
 endif
 
-PRG_USR += -gc0
+HB_USER_PRGFLAGS += -gc0
 
 include $(TOP)$(ROOT)config/bin.cf

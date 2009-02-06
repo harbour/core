@@ -83,7 +83,7 @@ PRG_HEADERS= \
 
 # This lib needs xhb headers to compile, and this is
 # the hack to help Harbour find them.
-PRG_USR += -I../../../xhb
+HB_USER_PRGFLAGS += -I../../../xhb
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

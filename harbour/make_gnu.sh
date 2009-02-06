@@ -96,18 +96,18 @@ then
     export HB_WITHOUT_GTSLN=yes
 fi
 
-# export PRG_USR=
-# export C_USR=
-# export L_USR=
+# export HB_USER_PRGFLAGS=
+# export HB_USER_CFLAGS=
+# export HB_USER_LDFLAGS=
 
 if [ "$HB_ARCHITECTURE" = "linux" ]
 then
-    if [ "${C_USR}" == "${C_USR//-fPIC/}" ]
+    if [ "${HB_USER_CFLAGS}" == "${HB_USER_CFLAGS//-fPIC/}" ]
     then
         HB_CPU=`uname -m`
         case "$HB_CPU" in
             *[@_]64)
-                export C_USR="$C_USR -fPIC"
+                export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
                 HB_ARCH64="yes"
                 ;;
             *)
@@ -116,7 +116,7 @@ then
     fi
 elif [ "$HB_ARCHITECTURE" = "hpux" ] || [ "$HB_ARCHITECTURE" = "sunos" ]
 then
-    export C_USR="$C_USR -fPIC"
+    export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
 fi
 
 [ -z "$HB_INSTALL_PREFIX" ] && [ -n "$PREFIX" ] && export HB_INSTALL_PREFIX="$PREFIX"
@@ -193,9 +193,9 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
     echo "  - Use these optional envvars to configure the make process"
     echo "    when using the 'all' target:"
     echo
-    echo "    PRG_USR - Extra Harbour compiler options"
-    echo "    C_USR   - Extra C compiler options"
-    echo "    L_USR   - Extra linker options"
+    echo "    HB_USER_PRGFLAGS - Extra Harbour compiler options"
+    echo "    HB_USER_CFLAGS   - Extra C compiler options"
+    echo "    HB_USER_LDFLAGS   - Extra linker options"
     exit
 
 else
@@ -205,9 +205,9 @@ else
 
     if [ "$HB_ARCHITECTURE" = "bsd" ] || [ "$HB_ARCHITECTURE" = "hpux" ]
     then
-       gmake $MK_USR $*
+       gmake $HB_USER_MAKEFLAGS $*
     else
-       make $MK_USR $*
+       make $HB_USER_MAKEFLAGS $*
     fi
 
     if [ "$*" = "clean" ]; then

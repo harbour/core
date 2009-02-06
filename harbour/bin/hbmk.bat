@@ -128,7 +128,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
    if     "%OS%" == "Windows_NT" set _HB_PRG_NAME=%~n1
    if not "%OS%" == "Windows_NT" set _HB_PRG_NAME=%1
 
-   %HB_BIN_INSTALL%\harbour %_HB_PRG_NAME%.prg -n -q0 -i%HB_INC_INSTALL% %2 %3 %PRG_USR%
+   %HB_BIN_INSTALL%\harbour %_HB_PRG_NAME%.prg -n -q0 -i%HB_INC_INSTALL% %2 %3 %HB_USER_PRGFLAGS%
 
 :A_DOS
 
@@ -137,7 +137,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
    if not "%HB_COMPILER%" == "djgpp" goto A_DOS_DJGPP_NOT
 
       echo %_HB_PRG_NAME%.c > _hb_mk.tmp
-      echo -o%_HB_PRG_NAME%.exe -O3 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% >> _hb_mk.tmp
+      echo -o%_HB_PRG_NAME%.exe -O3 %HB_USER_CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% >> _hb_mk.tmp
       echo -lhbcpage >> _hb_mk.tmp
       echo -lhbdebug >> _hb_mk.tmp
       echo -lhbvm >> _hb_mk.tmp
@@ -168,15 +168,15 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
 
    if not "%HB_COMPILER%" == "rsx32" goto A_DOS_RSX32_NOT
 
-      gcc %_HB_PRG_NAME%.c -O3 -Zrsx32 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -lgtdos -lgtcgi -lgtstd -lgtpca -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddnsx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+      gcc %_HB_PRG_NAME%.c -O3 -Zrsx32 %HB_USER_CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -lgtdos -lgtcgi -lgtstd -lgtpca -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddnsx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
       goto CLEANUP
 
 :A_DOS_RSX32_NOT
 
    if not "%HB_COMPILER%" == "owatcom" goto END
 
-      wpp386 -j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS %C_USR% %_HB_PRG_NAME%.c -fo=%_HB_PRG_NAME%.obj
-      echo OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe %L_USR% NAME %_HB_PRG_NAME%.exe > _hb_mk.tmp
+      wpp386 -j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS %HB_USER_CFLAGS% %_HB_PRG_NAME%.c -fo=%_HB_PRG_NAME%.obj
+      echo OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe %HB_USER_LDFLAGS% NAME %_HB_PRG_NAME%.exe > _hb_mk.tmp
       echo FILE %_HB_PRG_NAME%.obj >> _hb_mk.tmp
       echo LIB hbcpage.lib >> _hb_mk.tmp
       echo LIB hbdebug.lib >> _hb_mk.tmp
@@ -216,8 +216,8 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
 
       if "%_HB_GUI%" == "yes" set _HB_USR_C=%_HB_USR_C% -tW
 
-      if not "%_HB_SHARED%" == "yes" bcc32 -q -tWM -O2 -OS -Ov -Oi -Oc -d %C_USR% %_HB_USR_C% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %_HB_PRG_NAME%.c %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm%_HB_MT%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddfpt.lib rddntx.lib rddnsx.lib rddcdx.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib
-      if     "%_HB_SHARED%" == "yes" bcc32 -q -tWM -O2 -OS -Ov -Oi -Oc -d %C_USR% %_HB_USR_C% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %_HB_PRG_NAME%.c %HB_USER_LIBS% harbour%_HB_MT%-11-b32.lib hbmainstd.lib hbmainwin.lib hbcommon.lib
+      if not "%_HB_SHARED%" == "yes" bcc32 -q -tWM -O2 -OS -Ov -Oi -Oc -d %HB_USER_CFLAGS% %_HB_USR_C% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %_HB_PRG_NAME%.c %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm%_HB_MT%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddfpt.lib rddntx.lib rddnsx.lib rddcdx.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib
+      if     "%_HB_SHARED%" == "yes" bcc32 -q -tWM -O2 -OS -Ov -Oi -Oc -d %HB_USER_CFLAGS% %_HB_USR_C% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %_HB_PRG_NAME%.c %HB_USER_LIBS% harbour%_HB_MT%-11-b32.lib hbmainstd.lib hbmainwin.lib hbcommon.lib
 
       goto CLEANUP
 
@@ -230,8 +230,8 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
       if not "%_HB_GUI%" == "yes" set _HB_USR_L=/subsystem:console
       if     "%_HB_GUI%" == "yes" set _HB_USR_L=/subsystem:windows
 
-      if not "%_HB_SHARED%" == "yes" cl -nologo -W3 %C_USR% %_HB_USR_C% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /libpath:%HB_LIB_INSTALL% %L_USR% %_HB_USR_L% %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm%_HB_MT%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddnsx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
-      if     "%_HB_SHARED%" == "yes" cl -nologo -W3 %C_USR% %_HB_USR_C% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /libpath:%HB_LIB_INSTALL% %L_USR% %_HB_USR_L% %HB_USER_LIBS% harbour%_HB_MT%-11-vc.lib hbmainstd.lib hbmainwin.lib hbcommon.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
+      if not "%_HB_SHARED%" == "yes" cl -nologo -W3 %HB_USER_CFLAGS% %_HB_USR_C% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /libpath:%HB_LIB_INSTALL% %HB_USER_LDFLAGS% %_HB_USR_L% %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm%_HB_MT%.lib hbrtl.lib gtcgi.lib gtgui.lib gtpca.lib gtstd.lib gtwin.lib gtwvt.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddnsx.lib rddcdx.lib rddfpt.lib hbhsx.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
+      if     "%_HB_SHARED%" == "yes" cl -nologo -W3 %HB_USER_CFLAGS% %_HB_USR_C% -I%HB_INC_INSTALL% %_HB_PRG_NAME%.c /link /libpath:%HB_LIB_INSTALL% %HB_USER_LDFLAGS% %_HB_USR_L% %HB_USER_LIBS% harbour%_HB_MT%-11-vc.lib hbmainstd.lib hbmainwin.lib hbcommon.lib user32.lib wsock32.lib advapi32.lib gdi32.lib
       goto CLEANUP
 
 :A_WIN_MSVC_NOT
@@ -239,22 +239,22 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
    if "%HB_COMPILER%" == "gcc" set HB_COMPILER=mingw
    if not "%HB_COMPILER%" == "mingw" goto A_WIN_MINGW_NOT
 
-      gcc %_HB_PRG_NAME%.c -O3 -o%_HB_PRG_NAME%.exe %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm%_HB_MT% -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -lhbvm%_HB_MT% -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddnsx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+      gcc %_HB_PRG_NAME%.c -O3 -o%_HB_PRG_NAME%.exe %HB_USER_CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm%_HB_MT% -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -lhbvm%_HB_MT% -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddnsx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
       goto CLEANUP
 
 :A_WIN_MINGW_NOT
 
    if not "%HB_COMPILER%" == "rsxnt" goto A_WIN_RSXNT_NOT
 
-      gcc %_HB_PRG_NAME%.c -O3 -Zwin32 %C_USR% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm%_HB_MT% -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -lhbvm%_HB_MT% -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddnsx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+      gcc %_HB_PRG_NAME%.c -O3 -Zwin32 %HB_USER_CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm%_HB_MT% -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -lhbvm%_HB_MT% -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddnsx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
       goto CLEANUP
 
 :A_WIN_RSXNT_NOT
 
    if not "%HB_COMPILER%" == "owatcom" goto END
 
-      wpp386 -j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT %C_USR% %_HB_PRG_NAME%.c -fo=%_HB_PRG_NAME%.obj
-      echo OP osn=NT OP stack=65536 OP CASEEXACT %L_USR% NAME %_HB_PRG_NAME%.exe > _hb_mk.tmp
+      wpp386 -j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT %HB_USER_CFLAGS% %_HB_PRG_NAME%.c -fo=%_HB_PRG_NAME%.obj
+      echo OP osn=NT OP stack=65536 OP CASEEXACT %HB_USER_LDFLAGS% NAME %_HB_PRG_NAME%.exe > _hb_mk.tmp
       echo FILE %_HB_PRG_NAME%.obj >> _hb_mk.tmp
       echo LIB hbcpage.lib >> _hb_mk.tmp
       echo LIB hbdebug.lib >> _hb_mk.tmp

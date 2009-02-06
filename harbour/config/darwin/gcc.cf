@@ -92,24 +92,24 @@ endif
 
 endif
 
-ifneq ($(findstring -DHB_PCRE_REGEX, $(C_USR)),)
+ifneq ($(findstring -DHB_PCRE_REGEX, $(HB_USER_CFLAGS)),)
 LINKLIBS += -lpcre
 endif
 
-ifneq ($(findstring -DHB_EXT_ZLIB, $(C_USR)),)
+ifneq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
 LINKLIBS += -lz
 endif
 
 LINKLIBS += -lm
 
 LDFLAGS = $(LINKPATHS)
-LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $@ $(^F) $(LDFLAGS) $(L_USR) $(LINKLIBS) $(LINKLIBS)
+LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS) $(LINKLIBS)
 
 #AR = ar
-#ARFLAGS = $(A_USR)
+#ARFLAGS = $(HB_USER_AFLAGS)
 #AR_RULE = $(AR) $(ARFLAGS) r $@ $(^F) || $(RM) $@
 LIBTOOL = libtool
-LIBTOOLFLAGS = $(LIBTOOL_USR)
+LIBTOOLFLAGS = $(LIBTOOHB_USER_LDFLAGS)
 AR_RULE = $(LIBTOOL) -static $(LIBTOOLFLAGS) -o $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 RANLIB = ranlib
 

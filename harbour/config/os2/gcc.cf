@@ -68,7 +68,7 @@ LDFLAGS += $(LINKPATHS)
 ifeq ($(C_MAIN),)
 ifeq ($(HB_GT_LIB),os2pm)
 # Override the default link rule in order to add a call to emxbind
-LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $(^F) $(LDFLAGS) $(L_USR) $(LINKLIBS) & emxbind -ep $@
+LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS) & emxbind -ep $@
 endif
 endif
 
@@ -93,7 +93,7 @@ endef
 
 # Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is &
 AR = ar
-ARFLAGS = $(A_USR)
+ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(create_library) & $(RM) __lib__.tmp
 
 include $(TOP)$(ROOT)config/rules.cf

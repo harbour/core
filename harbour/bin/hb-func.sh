@@ -165,13 +165,13 @@ mk_hbtools()
     HB_SYS_LIBS="-lm"
     HB_CRS_LIB=""
     HB_SLN_LIB=""
-    if [ "${C_USR//-DHB_PCRE_REGEX/}" != "${C_USR}" ]; then
+    if [ "${HB_USER_CFLAGS//-DHB_PCRE_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
         HB_SYS_LIBS="-lpcre ${HB_SYS_LIBS}"
         hb_libs="${hb_libs//hbpcre/}"
-    elif [ "${C_USR//-DHB_POSIX_REGEX/}" != "${C_USR}" ]; then
+    elif [ "${HB_USER_CFLAGS//-DHB_POSIX_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
         hb_libs="${hb_libs//hbpcre/}"
     fi
-    if [ "${C_USR//-DHB_EXT_ZLIB/}" != "${C_USR}" ]; then
+    if [ "${HB_USER_CFLAGS//-DHB_EXT_ZLIB/}" != "${HB_USER_CFLAGS}" ]; then
         HB_SYS_LIBS="-lz ${HB_SYS_LIBS}"
         hb_libs="${hb_libs//hbzlib/}"
     fi
@@ -201,24 +201,24 @@ mk_hbtools()
         fi
         HB_SLN_LIB="slang"
     fi
-    CC_C_USR="-O3 ${CC_C_USR}"
-    if [ "${C_USR//-mlp64/}" != "${C_USR}" ]; then
-        CC_C_USR="${CC_C_USR} -mlp64"
-        CC_L_USR="${CC_L_USR} -mlp64"
-    elif [ "${C_USR//-mlp32/}" != "${C_USR}" ]; then
-        CC_C_USR="${CC_C_USR} -mlp32"
-        CC_L_USR="${CC_L_USR} -mlp32"
-    elif [ "${C_USR//-m64/}" != "${C_USR}" ]; then
-        CC_C_USR="${CC_C_USR} -m64"
-        CC_L_USR="${CC_L_USR} -m64"
-    elif [ "${C_USR//-m32/}" != "${C_USR}" ]; then
-        CC_C_USR="${CC_C_USR} -m32"
-        CC_L_USR="${CC_L_USR} -m32"
+    CC_HB_USER_CFLAGS="-O3 ${CC_HB_USER_CFLAGS}"
+    if [ "${HB_USER_CFLAGS//-mlp64/}" != "${HB_USER_CFLAGS}" ]; then
+        CC_HB_USER_CFLAGS="${CC_HB_USER_CFLAGS} -mlp64"
+        CC_HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} -mlp64"
+    elif [ "${HB_USER_CFLAGS//-mlp32/}" != "${HB_USER_CFLAGS}" ]; then
+        CC_HB_USER_CFLAGS="${CC_HB_USER_CFLAGS} -mlp32"
+        CC_HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} -mlp32"
+    elif [ "${HB_USER_CFLAGS//-m64/}" != "${HB_USER_CFLAGS}" ]; then
+        CC_HB_USER_CFLAGS="${CC_HB_USER_CFLAGS} -m64"
+        CC_HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} -m64"
+    elif [ "${HB_USER_CFLAGS//-m32/}" != "${HB_USER_CFLAGS}" ]; then
+        CC_HB_USER_CFLAGS="${CC_HB_USER_CFLAGS} -m32"
+        CC_HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} -m32"
     fi
-    if [ "${C_USR//-fPIC/}" != "${C_USR}" ]; then
-        CC_C_USR="${CC_C_USR} -fPIC"
-    elif [ "${C_USR//-fpic/}" != "${C_USR}" ]; then
-        CC_C_USR="${CC_C_USR} -fpic"
+    if [ "${HB_USER_CFLAGS//-fPIC/}" != "${HB_USER_CFLAGS}" ]; then
+        CC_HB_USER_CFLAGS="${CC_HB_USER_CFLAGS} -fPIC"
+    elif [ "${HB_USER_CFLAGS//-fpic/}" != "${HB_USER_CFLAGS}" ]; then
+        CC_HB_USER_CFLAGS="${CC_HB_USER_CFLAGS} -fpic"
     fi
 
     echo "Generating ${hb_tool}... "
@@ -321,9 +321,9 @@ HB_USRLIBS=""
 HB_USRLPATH=""
 HB_GEN=""
 HB_MODE=""
-LN_OPT="${CC_L_USR}"
-CC_OPT="${CC_C_USR}"
-HB_OPT="${CC_PRG_USR}"
+LN_OPT="${CC_HB_USER_LDFLAGS}"
+CC_OPT="${CC_HB_USER_CFLAGS}"
+HB_OPT="${CC_HB_USER_PRGFLAGS}"
 
 [ -n "\$TMPDIR" ] || TMPDIR="\$TMP"
 [ -n "\$TMPDIR" ] || TMPDIR="\$TEMP"

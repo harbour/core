@@ -67,8 +67,8 @@ PRG_SOURCES=\
 
 LIBNAME=hbvmmt
 
-ifeq ($(C_USR),$(subst -DHB_MT_VM,,$(C_USR)))
-   C_USR += -DHB_MT_VM
+ifeq ($(HB_USER_CFLAGS),$(subst -DHB_MT_VM,,$(HB_USER_CFLAGS)))
+   HB_USER_CFLAGS += -DHB_MT_VM
 endif
 
 include $(TOP)$(ROOT)config/lib.cf

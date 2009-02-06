@@ -98,8 +98,8 @@ HBFLAGSPLT     = -D__PLATFORM__WINCE
 !else
 HBFLAGSPLT     = -gc3
 !endif
-HARBOURFLAGSLIB= -n1 $(HBFLAGSCMN) $(HBFLAGSDBG) $(HBFLAGSPLT) $(PRG_USR)
-HARBOURFLAGSEXE= -n  $(HBFLAGSCMN) $(HBFLAGSDBG) $(HBFLAGSPLT) -gc0 $(PRG_USR)
+HARBOURFLAGSLIB= -n1 $(HBFLAGSCMN) $(HBFLAGSDBG) $(HBFLAGSPLT) $(HB_USER_PRGFLAGS)
+HARBOURFLAGSEXE= -n  $(HBFLAGSCMN) $(HBFLAGSDBG) $(HBFLAGSPLT) -gc0 $(HB_USER_PRGFLAGS)
 
 #**********************************************************
 # Directory macros. These should never have to change.

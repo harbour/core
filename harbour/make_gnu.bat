@@ -25,9 +25,9 @@ rem ---------------------------------------------------------------
 if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=win
 if "%HB_COMPILER%" == "" set HB_COMPILER=mingw
 
-rem set PRG_USR=
-rem set C_USR=
-rem set L_USR=
+rem set HB_USER_PRGFLAGS=
+rem set HB_USER_CFLAGS=
+rem set HB_USER_LDFLAGS=
 
 rem Set to constant value to be consistent with the non-GNU make files.
 
@@ -86,9 +86,9 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%/include
    echo   - Use these optional envvars to configure the make process
    echo     when using the 'all' command:
    echo.
-   echo     PRG_USR - Extra Harbour compiler options
-   echo     C_USR   - Extra C compiler options
-   echo     L_USR   - Extra linker options
+   echo     HB_USER_PRGFLAGS - Extra Harbour compiler options
+   echo     HB_USER_CFLAGS   - Extra C compiler options
+   echo     HB_USER_LDFLAGS   - Extra linker options
    goto END
 
 :BAD_ARCH
@@ -106,7 +106,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%/include
    rem ---------------------------------------------------------------
    rem Start the GNU make system
 
-   make -r %MK_USR% %1 %2 %3 %4 %5 %6 %7 %8 %9 > make_gnu.log
+   make -r %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9 > make_gnu.log
    goto END
 
 :END

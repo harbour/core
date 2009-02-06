@@ -71,8 +71,8 @@
 %define hb_pref  hb
 %define hb_arch  export HB_ARCHITECTURE=linux
 %define hb_cc    export HB_COMPILER=gcc
-%define hb_cflag export C_USR="-DHB_FM_STATISTICS_OFF"
-%define hb_lflag export L_USR="${CC_L_USR} %{?_with_static:-static}"
+%define hb_cflag export HB_USER_CFLAGS="-DHB_FM_STATISTICS_OFF"
+%define hb_lflag export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} %{?_with_static:-static}"
 %define hb_gpm   export HB_GPM_MOUSE=%{!?_without_gpm:yes}
 %define hb_crs   export HB_WITHOUT_GTCRS=%{?_without_gtcrs:yes}
 %define hb_sln   export HB_WITHOUT_GTSLN=%{?_without_gtsln:yes}
@@ -380,7 +380,7 @@ rm -rf $RPM_BUILD_ROOT
 %{hb_env}
 case "`uname -m`" in
     *[_@]64)
-        export C_USR="$C_USR -fPIC"
+        export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
         ;;
 esac
 
@@ -397,7 +397,7 @@ make -r
 %{hb_env}
 case "`uname -m`" in
     *[_@]64)
-        export C_USR="$C_USR -fPIC"
+        export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
         ;;
 esac
 
@@ -438,8 +438,8 @@ EOF
 # check if we should rebuild tools with shared libs
 if [ "%{!?_with_static:1}" ]
 then
-    export L_USR="${CC_L_USR} -L${HB_LIB_INSTALL} -l%{name} %{!?_without_gtcrs:-lncurses} %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11}"
-    export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${PRG_USR}"
+    export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} -L${HB_LIB_INSTALL} -l%{name} %{!?_without_gtcrs:-lncurses} %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11}"
+    export HB_USER_PRGFLAGS="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${HB_USER_PRGFLAGS}"
 
     for utl in hbmake hbrun hbi18n hbdoc
     do
@@ -736,7 +736,7 @@ rm -rf $RPM_BUILD_ROOT
 - removed bison and flex from dependences list
 
 * Sat Aug 09 2003 Przemyslaw Czerpak <druzus@polbox.com>
-- removed ${RPM_OPT_FLAGS} from C_USR
+- removed ${RPM_OPT_FLAGS} from HB_USER_CFLAGS
 
 * Wed Jul 23 2003 Przemyslaw Czerpak <druzus@polbox.com>
 - fixed file (user and group) owner for RPMs builded from non root account

@@ -505,31 +505,31 @@ const char * hb_verSvnLastEntry( void )
    return HB_VER_LENTRY;
 }
 
-/* build time C compiler flags in C_USR envvar */
+/* build time C compiler flags in HB_USER_CFLAGS envvar */
 const char * hb_verFlagsC( void )
 {
-#ifdef HB_VER_C_USR
-   return HB_VER_C_USR;
+#ifdef HB_VER_HB_USER_CFLAGS
+   return HB_VER_HB_USER_CFLAGS;
 #else
    return "";
 #endif
 }
 
-/* build time linker flags in L_USR envvar */
+/* build time linker flags in HB_USER_LDFLAGS envvar */
 const char * hb_verFlagsL( void )
 {
-#ifdef HB_VER_L_USR
-   return HB_VER_L_USR;
+#ifdef HB_VER_HB_USER_LDFLAGS
+   return HB_VER_HB_USER_LDFLAGS;
 #else
    return "";
 #endif
 }
 
-/* build time Harbour compiler flags in PRG_USR envvar */
+/* build time Harbour compiler flags in HB_USER_PRGFLAGS envvar */
 const char * hb_verFlagsPRG( void )
 {
-#ifdef HB_VER_PRG_USR
-   return HB_VER_PRG_USR;
+#ifdef HB_VER_HB_USER_PRGFLAGS
+   return HB_VER_HB_USER_PRGFLAGS;
 #else
    return "";
 #endif

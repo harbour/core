@@ -21,9 +21,9 @@
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
 #
-#       C_USR             - Extra C compiler options for libraries and for executables
-#       L_USR             - Extra linker options for libraries
-#       PRG_USR           - Extra Harbour compiler options
+#       HB_USER_CFLAGS             - Extra C compiler options for libraries and for executables
+#       HB_USER_LDFLAGS             - Extra linker options for libraries
+#       HB_USER_PRGFLAGS           - Extra Harbour compiler options
 #
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build
@@ -82,7 +82,7 @@ MTDLL_OBJS = $(TMP_DLL_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR)) $(VMMTDLL_LIB_OBJS)
 #**********************************************************
 
 # C Compiler Flags
-CFLAGS = -I$(INCLUDE_DIR) -I$(OBJ_DIR) $(C_USR)
+CFLAGS = -I$(INCLUDE_DIR) -I$(OBJ_DIR) $(HB_USER_CFLAGS)
 CFLAGSMT = -DHB_MT_VM
 
 #-----------
@@ -108,8 +108,8 @@ CEXEFLAGSDLL   = $(HB_BCCDLL_DYNRT) $(CLIBFLAGS)
 #**********************************************************
 
 # Linker Flags
-LDFLAGS        = -Gn -C -ap -Tpe -L$(LIB_DIR) -L$(BIN_DIR) $(L_USR)
-LDFLAGSDLL     = -Gn -C -aa -Tpd -Gi -L$(LIB_DIR) $(L_USR)
+LDFLAGS        = -Gn -C -ap -Tpe -L$(LIB_DIR) -L$(BIN_DIR) $(HB_USER_LDFLAGS)
+LDFLAGSDLL     = -Gn -C -aa -Tpd -Gi -L$(LIB_DIR) $(HB_USER_LDFLAGS)
 !if "$(HB_BUILD_DEBUG)" == "yes"
     LDFLAGS = -v $(LDFLAGS)
     LDFLAGSDLL = -v $(LDFLAGSDLL)
@@ -121,7 +121,7 @@ STANDARD_STATIC_CLIBS = cw32mt$(RTLIBSUFFIX).lib
 
 # This is needed, otherwise the libs may overflow
 # when debug info is requested with -v -y
-ARFLAGS = /P64 $(A_USR)
+ARFLAGS = /P64 $(HB_USER_AFLAGS)
 
 #**********************************************************
 #**********************************************************

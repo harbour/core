@@ -201,7 +201,7 @@
 
 2004-05-04 16:45 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
   * Rules.make
-    + added C_USR=-DTCPV40HDRS to use 16/32 tcp/ip stack on OS/2 (standard on OS/2 until eComStation and v5.x)
+    + added HB_USER_CFLAGS=-DTCPV40HDRS to use 16/32 tcp/ip stack on OS/2 (standard on OS/2 until eComStation and v5.x)
   * ticlientpop.prg
     * changed the way a mail gets ::Retreived(), so much faster now.
     + Added Top(), Noop() and UIDL() methods

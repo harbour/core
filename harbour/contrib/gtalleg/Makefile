@@ -21,7 +21,7 @@ HB_INC_ALLEGRO_OK += $(foreach d, $(HB_INC_ALLEGRO), $(if $(wildcard $(d)/allegr
 
 ifneq ($(strip $(HB_INC_ALLEGRO_OK)),)
 
-C_USR += $(foreach d, $(HB_INC_ALLEGRO_OK), -I$(d))
+HB_USER_CFLAGS += $(foreach d, $(HB_INC_ALLEGRO_OK), -I$(d))
 
 C_SOURCES=\
 	gtalleg.c \

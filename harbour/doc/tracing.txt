@@ -91,13 +91,13 @@ HB_TR_LEVEL_WARNING             they have no performance effect; only
                                 a lower tracing level.
 
 For example, I compile Harbour on WinNT with gcc (MINGW32), so I
-usually set the C_USR environment variable like this:
+usually set the HB_USER_CFLAGS environment variable like this:
 
-  export C_USR='-DHARBOUR_USE_WIN_GTAPI -DHB_TR_LEVEL=HB_TR_INFO'
+  export HB_USER_CFLAGS='-DHARBOUR_USE_WIN_GTAPI -DHB_TR_LEVEL=HB_TR_INFO'
 
 or for other OS (eg: DOS, WIN9x)
 
-  SET C_USR=-DHARBOUR_USR_WIN_GTAPI -DHB_TR_LEVEL_INFO
+  SET HB_USER_CFLAGS=-DHARBOUR_USR_WIN_GTAPI -DHB_TR_LEVEL_INFO
 
 and make sure I have all the tracing for the INFO, WARNING, ERROR,
 FATAL and ALWAYS levels. If I get too much information, at run-time I

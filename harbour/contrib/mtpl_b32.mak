@@ -14,8 +14,8 @@
 
 # NOTE: You can use these optional envvars to configure the make process:
 #
-#       C_USR        - Extra C compiler options for libraries
-#       PRG_USR      - Extra Harbour compiler options
+#       HB_USER_CFLAGS        - Extra C compiler options for libraries
+#       HB_USER_PRGFLAGS      - Extra Harbour compiler options
 #
 
 .AUTODEPEND
@@ -105,7 +105,7 @@ MKLIB  = tlib.exe
 
 #**********************************************************
 
-CFLAGS = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)
+CFLAGS = -I$(INCLUDE_DIR) $(HB_USER_CFLAGS) $(CFLAGS)
 
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
@@ -120,17 +120,17 @@ CFLAGS = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)
 #**********************************************************
 
 CLIBFLAGS      = -c -q -d -Q -w -w-sig- $(CFLAGS) $(CLIBFLAGS)
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -km -l $(PRG_USR) $(HARBOURFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -km -l $(HB_USER_PRGFLAGS) $(HARBOURFLAGS)
 !if "$(HB_BUILD_DEBUG)" == "yes"
 HARBOURFLAGS   = $(HARBOURFLAGS) -l-
 !endif
-LDFLAGS        = $(LDFLAGS) $(L_USR)
+LDFLAGS        = $(LDFLAGS) $(HB_USER_LDFLAGS)
 
 #**********************************************************
 
 # This is needed, otherwise the libs may overflow when
 # debug info is requested with -v -y
-ARFLAGS = /P64 $(A_USR)
+ARFLAGS = /P64 $(HB_USER_AFLAGS)
 
 #**********************************************************
 # COMPILE Rules

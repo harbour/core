@@ -69,7 +69,7 @@ endif
 LDFLAGS = $(LINKPATHS)
 
 AR = tlib.exe
-ARFLAGS = $(A_USR)
+ARFLAGS = $(HB_USER_AFLAGS)
 AROBJS = $(foreach file, $(^F), -+$(file))
 AR_RULE = $(AR) $(ARFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(AROBJS),,
 

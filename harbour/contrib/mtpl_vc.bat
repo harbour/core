@@ -12,7 +12,7 @@ rem this batch file from your customized one. [vszakats]
 rem
 rem Set any of the below settings to customize your build process:
 rem    set HB_MAKE_PROGRAM=
-rem    set MK_USR=
+rem    set HB_USER_MAKEFLAGS=
 rem ---------------------------------------------------------------
 
 set _HB_CC_NAME=%HB_CC_NAME%
@@ -37,14 +37,14 @@ if "%1" == "INSTALL" goto INSTALL
 
 :BUILD
 
-   %_HB_MAKE_PROGRAM% %MK_USR% -nologo -f %_HB_MAKEFILE% %1 %2 %3 > %_HB_MAKELOG%
+   %_HB_MAKE_PROGRAM% %HB_USER_MAKEFLAGS% -nologo -f %_HB_MAKEFILE% %1 %2 %3 > %_HB_MAKELOG%
    if errorlevel 1 set HB_EXIT_LEVEL=1
    if errorlevel 1 if not "%HB_SHOW_ERRORS%" == "no" notepad %_HB_MAKELOG%
    goto EXIT
 
 :CLEAN
 
-   %_HB_MAKE_PROGRAM% %MK_USR% -nologo -f %_HB_MAKEFILE% CLEAN > %_HB_MAKELOG%
+   %_HB_MAKE_PROGRAM% %HB_USER_MAKEFLAGS% -nologo -f %_HB_MAKEFILE% CLEAN > %_HB_MAKELOG%
    if errorlevel 1 set HB_EXIT_LEVEL=1
    if errorlevel 1 goto EXIT
 
@@ -53,7 +53,7 @@ if "%1" == "INSTALL" goto INSTALL
 
 :INSTALL
 
-   %_HB_MAKE_PROGRAM% %MK_USR% -nologo -f %_HB_MAKEFILE% INSTALL > nul
+   %_HB_MAKE_PROGRAM% %HB_USER_MAKEFLAGS% -nologo -f %_HB_MAKEFILE% INSTALL > nul
    if errorlevel 1 set HB_EXIT_LEVEL=1
    goto EXIT
 

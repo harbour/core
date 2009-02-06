@@ -28,7 +28,7 @@ CPPFLAGS = -I$($(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP) -I$(_HB_INC_COMPILE)
 CFLAGS = -i48 -O2 -mh -d -DHB_LONG_LONG_OFF
 
 # BCC (at least version 3.1) requires that the output file be listed ahead of the input file
-CC_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
+CC_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<
 
 
 #Note: The empty line below HAVE TO exist!
@@ -46,7 +46,7 @@ $(foreach file, $(LINKLIBS), $(link_file))
 endef
 
 LD = bcc
-LDFLAGS = -i48 -O2 -mh $(L_USR)
+LDFLAGS = -i48 -O2 -mh $(HB_USER_LDFLAGS)
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS += $(foreach lib, $(CONTRIBS), $(LIB_DIR)/$(lib)$(LIB_EXT))
 LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib)$(LIB_EXT))
@@ -86,7 +86,7 @@ del __lib__.tmp
 endef
 
 AR = tlib
-ARFLAGS = /C $(A_USR)
+ARFLAGS = /C $(HB_USER_AFLAGS)
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf

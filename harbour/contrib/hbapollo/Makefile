@@ -12,7 +12,7 @@ HB_INC_APOLLO_OK += $(foreach d, $(HB_INC_APOLLO), $(if $(wildcard $(d)/Sde61.h)
 
 ifneq ($(strip $(HB_INC_APOLLO_OK)),)
 
-C_USR += $(foreach d, $(HB_INC_APOLLO_OK), -I$(d))
+HB_USER_CFLAGS += $(foreach d, $(HB_INC_APOLLO_OK), -I$(d))
 
 C_SOURCES=\
 	apollo.c \

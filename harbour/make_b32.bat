@@ -18,7 +18,7 @@ rem    set HB_BUILD_OPTIM=no
 rem    set HB_REBUILD_PARSER=yes
 rem    set HB_MAKE_PROGRAM=
 rem    set HB_SHOW_ERRORS=
-rem    set MK_USR=
+rem    set HB_USER_MAKEFLAGS=
 rem ---------------------------------------------------------------
 
 set _HB_CC_NAME=%HB_CC_NAME%
@@ -48,14 +48,14 @@ if "%1" == "INSTALL" goto INSTALL
 
 :BUILD
 
-   %_HB_MAKE_PROGRAM% %MK_USR% -f %_HB_MAKEFILE% %1 %2 %3 > make_%_HB_CC_NAME%.log
+   %_HB_MAKE_PROGRAM% %HB_USER_MAKEFLAGS% -f %_HB_MAKEFILE% %1 %2 %3 > make_%_HB_CC_NAME%.log
    if errorlevel 1 set HB_EXIT_LEVEL=1
    if errorlevel 1 if not "%HB_SHOW_ERRORS%" == "no" notepad make_%_HB_CC_NAME%.log
    goto EXIT
 
 :CLEAN
 
-   %_HB_MAKE_PROGRAM% %MK_USR% -f %_HB_MAKEFILE% CLEAN > make_%_HB_CC_NAME%.log
+   %_HB_MAKE_PROGRAM% %HB_USER_MAKEFLAGS% -f %_HB_MAKEFILE% CLEAN > make_%_HB_CC_NAME%.log
    if errorlevel 1 set HB_EXIT_LEVEL=1
    if errorlevel 1 goto EXIT
    if exist make_%_HB_CC_NAME%.log del make_%_HB_CC_NAME%.log > nul
@@ -64,7 +64,7 @@ if "%1" == "INSTALL" goto INSTALL
 
 :INSTALL
 
-   %_HB_MAKE_PROGRAM% %MK_USR% -f %_HB_MAKEFILE% INSTALL > nul
+   %_HB_MAKE_PROGRAM% %HB_USER_MAKEFLAGS% -f %_HB_MAKEFILE% INSTALL > nul
    if errorlevel 1 set HB_EXIT_LEVEL=1
    goto EXIT
 

@@ -106,10 +106,10 @@ do
     if [ "$GTSLN" != yes ]; then
         if [ "$GTSLN" != no ]; then
             if [ -f $dir/include/slang.h ]; then
-               [ $dir = /usr ] || C_USR="$C_USR -I$dir/include"
+               [ $dir = /usr ] || HB_USER_CFLAGS="$HB_USER_CFLAGS -I$dir/include"
                 GTSLN=yes
             elif [ -f $dir/include/slang/slang.h ]; then
-                C_USR="$C_USR -I$dir/include/slang"
+                HB_USER_CFLAGS="$HB_USER_CFLAGS -I$dir/include/slang"
                 GTSLN=yes
             fi
         fi
@@ -117,10 +117,10 @@ do
     if [ "$GTCRS" != yes ]; then
         if [ "$GTCRS" != no ]; then
             if [ -f ${dir}/include/curses.h ]; then
-               [ $dir = /usr ] || C_USR="$C_USR -I$dir/include"
+               [ $dir = /usr ] || HB_USER_CFLAGS="$HB_USER_CFLAGS -I$dir/include"
                 GTCRS=yes
             elif [ -f ${dir}/include/${CRSLIB}/curses.h ]; then
-                C_USR="$C_USR -I$dir/include/${CRSLIB}"
+                HB_USER_CFLAGS="$HB_USER_CFLAGS -I$dir/include/${CRSLIB}"
                 GTCRS=yes
             fi
         fi
@@ -131,7 +131,7 @@ do
                [ -f ${dir}/include/X11/Xcms.h ] && \
                [ -f ${dir}/include/X11/Xutil.h ] && \
                [ -f ${dir}/include/X11/keysym.h ]; then
-               [ $dir = /usr ] || C_USR="$C_USR -I$dir/include"
+               [ $dir = /usr ] || HB_USER_CFLAGS="$HB_USER_CFLAGS -I$dir/include"
                 GTXWC=yes
             fi
         fi
@@ -193,5 +193,5 @@ sed -e 's/;/ /g'             \
     -e 's/^!include/include/g'                                          \
     common.mak > common.cf
 
-$MAKE -r -f make_gcc.mak $MK_USR $*
+$MAKE -r -f make_gcc.mak $HB_USER_MAKEFLAGS $*
 rm -f common.cf

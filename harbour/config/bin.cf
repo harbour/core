@@ -31,7 +31,7 @@ ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 first:: dirbase descend
 
 descend:: dirbase
-	+@$(MK) -C $(ARCH_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(EXE_NAME) $(MK_USR)
+	+@$(MK) -C $(ARCH_DIR) -f $(GRANDP)Makefile TOP=$(GRANDP) $(EXE_NAME) $(HB_USER_MAKEFLAGS)
 
 $(EXE_NAME) : $(ALL_OBJS)
 	$(LD_RULE)

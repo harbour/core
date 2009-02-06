@@ -101,9 +101,9 @@ HB_TR_WARNING  HB_TR_INFO     Todas las llamadaa con niveles HB_INFO y
                               compilado con un menor nivel de rastreo.
 
 Por ejemplo, Yo compilo Harbour en WinNT con gcc (MINGW32), as¡
-usualmente establezco la variable de entorno C_USR a algo as¡:
+usualmente establezco la variable de entorno HB_USER_CFLAGS a algo as¡:
 
-  export C_USR="-DHARBOUR_USE_WIN_GTAPI -DHB_TR_LEVEL=HB_TR_INFO"
+  export HB_USER_CFLAGS="-DHARBOUR_USE_WIN_GTAPI -DHB_TR_LEVEL=HB_TR_INFO"
 
 y me aseguro que tengo todo el seguimiento para los niveles INFO,
 WARNING, ERROR, FATAL y ALWAYS. Si obtengo demasiada informaci¢n,

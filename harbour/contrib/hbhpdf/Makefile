@@ -18,7 +18,7 @@ HB_INC_LIBHARU_OK += $(foreach d, $(HB_INC_LIBHARU), $(if $(wildcard $(d)/hpdf.h
 
 ifneq ($(strip $(HB_INC_LIBHARU_OK)),)
 
-C_USR += $(foreach d, $(HB_INC_LIBHARU_OK), -I$(d))
+HB_USER_CFLAGS += $(foreach d, $(HB_INC_LIBHARU_OK), -I$(d))
 
 C_SOURCES=\
 	harupdf.c \

@@ -10,5 +10,6 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\..\..\include
 set HB_ARCHITECTURE=win
 set HB_COMPILER=msvc
 set HB_USER_LIBS=hbwhat.lib gtwvg.lib xhb.lib comdlg32.lib comctl32.lib shell32.lib ole32.lib oleaut32.lib
+set HB_GUI=yes
 
 call %HB_BIN_INSTALL%\hbmk.bat %1 %2 %3 %4 %5 %6 %7 %8 %9

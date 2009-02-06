@@ -8,6 +8,119 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-06 23:47 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * common.mak
+  * harbour-wce-spec
+  * harbour-win-spec
+  * harbour.spec
+  * make_b32.bat
+  * make_b32.mak
+  * make_gcc.mak
+  * make_gcc.sh
+  * make_gnu.bat
+  * make_gnu.sh
+  * make_gnu_os2.cmd
+  * make_gnu_xmingw.sh
+  * make_gnu_xmingwce.sh
+  * make_vc.bat
+  * make_vc.mak
+  * mpkg_tgz.sh
+  * bin/hb-func.sh
+  * bin/hb-mkslib.sh
+  * bin/hbmk.bat
+  * bin/hbmk_os2.cmd
+  * bin/postinst.sh
+  * config/bin.cf
+  * config/bsd/gcc.cf
+  * config/darwin/gcc.cf
+  * config/dos/bcc16.cf
+  * config/dos/djgpp.cf
+  * config/dos/owatcom.cf
+  * config/dos/rsx32.cf
+  * config/hpux/gcc.cf
+  * config/lib.cf
+  * config/linux/gcc.cf
+  * config/linux/owatcom.cf
+  * config/os2/gcc.cf
+  * config/os2/icc.cf
+  * config/rules.cf
+  * config/sunos/gcc.cf
+  * config/win/bcc32.cf
+  * config/win/dm.cf
+  * config/win/gcc.cf
+  * config/win/icc.cf
+  * config/win/mingw.cf
+  * config/win/mingwce.cf
+  * config/win/msvc.cf
+  * config/win/msvcce.cf
+  * config/win/owatcom.cf
+  * config/win/pocc.cf
+  * config/win/pocc64.cf
+  * config/win/poccce.cf
+  * config/win/rsxnt.cf
+  * config/win/xcc.cf
+  * contrib/gtalleg/Makefile
+  * contrib/hbapollo/Makefile
+  * contrib/hbcurl/Makefile
+  * contrib/hbfbird/Makefile
+  * contrib/hbfimage/Makefile
+  * contrib/hbgd/Makefile
+  * contrib/hbgd/tests/hbmk_b32.bat
+  * contrib/hbgd/tests/hbmk_vc.bat
+  * contrib/hbgf/hbgfgtk/Makefile
+  * contrib/hbhpdf/Makefile
+  * contrib/hbmysql/Makefile
+  * contrib/hbodbc/Makefile
+  * contrib/hbpgsql/Makefile
+  * contrib/hbssl/Makefile
+  * contrib/hbtip/ChangeLog
+  * contrib/hbwhat/Makefile
+  * contrib/hbwhat/tests/hbmk_b32.bat
+  * contrib/hbwhat/tests/hbmk_vc.bat
+  * contrib/mtpl_b32.bat
+  * contrib/mtpl_b32.mak
+  * contrib/mtpl_gcc.mak
+  * contrib/mtpl_gcc.sh
+  * contrib/mtpl_vc.bat
+  * contrib/mtpl_vc.mak
+  * contrib/rddads/Makefile
+  * contrib/rddsql/sddfb/Makefile
+  * contrib/rddsql/sddmy/Makefile
+  * contrib/rddsql/sddpg/Makefile
+  * doc/es/tracing.txt
+  * doc/gmake.txt
+  * doc/tracing.txt
+  * include/hbapi.h
+  * source/main/harbour.c
+  * source/pp/hbpp.c
+  * source/rdd/dbffpt/Makefile
+  * source/vm/cmdarg.c
+  * source/vm/Makefile
+  * source/vm/vmmt/Makefile
+  * tests/multifnc/Makefile
+  * tests/testid.prg
+  * utils/hbdoc/Makefile
+  * utils/hbi18n/Makefile
+  * utils/hbmake/hbmake.prg
+  * utils/hbmake/Makefile
+  * utils/hbrun/Makefile
+  * utils/hbtest/Makefile
+    * Renamed remaining build configration envvars:
+      - PRG_USR -> HB_USER_PRGFLAGS
+      - C_USR   -> HB_USER_CFLAGS
+      - L_USR   -> HB_USER_LDFLAGS
+      - A_USR   -> HB_USER_AFLAGS
+      - MK_USR  -> HB_USER_MAKEFLAGS
+      (finally settled with HB_USER* instead of HB_USR*,
+      this also means that HB_USER_LIBS was kept unchanged.)
+    ; Please update your environment.
+      You may use these commands to make it easy:
+      gsar -o -sPRG_USR -rHB_USER_PRGFLAGS  *
+      gsar -o -sC_USR   -rHB_USER_CFLAGS    *
+      gsar -o -sL_USR   -rHB_USER_LDFLAGS   *
+      gsar -o -sA_USR   -rHB_USER_AFLAGS    *
+      gsar -o -sMK_USR  -rHB_USER_MAKEFLAGS *
+
 2009-02-06 23:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbpp.h
     * Minor rearrangement of previous state.

@@ -74,7 +74,7 @@ endif
 LDFLAGS += $(LINKPATHS)
 
 AR = ar
-ARFLAGS = $(A_USR)
+ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(AR) $(ARFLAGS) r $(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 include $(TOP)$(ROOT)config/rules.cf

@@ -22,7 +22,7 @@ endif
 HB_INC_ODBC_OK += $(foreach d, $(HB_INC_ODBC), $(if $(wildcard $(d)/sql.h),$(d),))
 
 ifneq ($(strip $(HB_INC_ODBC_OK)),)
-C_USR += $(foreach d, $(HB_INC_ODBC_OK), -I$(d))
+HB_USER_CFLAGS += $(foreach d, $(HB_INC_ODBC_OK), -I$(d))
 else
 HB_WITHOUT_ODBC=yes
 endif

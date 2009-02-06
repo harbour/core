@@ -14,8 +14,8 @@
 
 # NOTE: You can use these optional envvars to configure the make process:
 #
-#       C_USR        - Extra C compiler options for libraries
-#       PRG_USR      - Extra Harbour compiler options
+#       HB_USER_CFLAGS        - Extra C compiler options for libraries
+#       HB_USER_PRGFLAGS      - Extra Harbour compiler options
 #
 
 #**********************************************************
@@ -121,9 +121,9 @@ endif
 CFLAGS         := -O3 $(CFLAGS)
 endif
 
-CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)
+CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(HB_USER_CFLAGS) $(CFLAGS)
 CLIBFLAGS      := -c $(CFLAGS) $(CLIBFLAGS)
-HARBOURFLAGS   := -i$(INCLUDE_DIR) -n1 -q0 -w3 -es2 -km -l $(PRG_USR) $(HARBOURFLAGS)
+HARBOURFLAGS   := -i$(INCLUDE_DIR) -n1 -q0 -w3 -es2 -km -l $(HB_USER_PRGFLAGS) $(HARBOURFLAGS)
 ifeq ($(HB_BUILD_DEBUG),yes)
 HARBOURFLAGS   := $(HARBOURFLAGS) -l-
 endif

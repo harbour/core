@@ -21,7 +21,7 @@
 #
 # export any of the below settings to customize your build process:
 #    export HB_MAKE_PROGRAM=
-#    export MK_USR=
+#    export HB_USER_MAKEFLAGS=
 # ---------------------------------------------------------------
 
 if [ -z "$HB_ARCHITECTURE" ]; then
@@ -63,7 +63,7 @@ export HB_EXIT_LEVEL=
 [ -z "$CC" ] && export CC="gcc"
 [ -z "$LD" ] && export LD="gcc"
 
-${_HB_MAKE_PROGRAM} ${MK_USR} -f ${_HB_MAKEFILE} $1 $2 $3 || export HB_EXIT_LEVEL=1
+${_HB_MAKE_PROGRAM} ${HB_USER_MAKEFLAGS} -f ${_HB_MAKEFILE} $1 $2 $3 || export HB_EXIT_LEVEL=1
 
 # ---------------------------------------------------------------
 

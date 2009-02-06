@@ -21,9 +21,9 @@
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
 #
-#       C_USR             - Extra C compiler options for libraries and for executables
-#       L_USR             - Extra linker options for libraries
-#       PRG_USR           - Extra Harbour compiler options
+#       HB_USER_CFLAGS             - Extra C compiler options for libraries and for executables
+#       HB_USER_LDFLAGS             - Extra linker options for libraries
+#       HB_USER_PRGFLAGS           - Extra Harbour compiler options
 #
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build
@@ -98,7 +98,7 @@ MTDLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll) $(VMMTDLL_LIB_OBJS)
 # C compiler, Harbour compiler and Linker flags.
 #**********************************************************
 
-ARFLAGS = /nologo $(A_USR)
+ARFLAGS = /nologo $(HB_USER_AFLAGS)
 
 # C Compiler Flags
 !if "$(HB_BUILD_WINCE)" == "yes"
@@ -117,7 +117,7 @@ CFLAGS         = -nologo -W3 -I$(INCLUDE_DIR) -I$(CFLAGS_VER) \
                  -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -DWIN32_PLATFORM_PSPC \
                  -DWINCE -D_WINCE -D_WINDOWS -DARM -D_ARM_ -DARMV4 \
                  -DPOCKETPC2003_UI_MODEL -D_M_ARM -DUNICODE -D_UNICODE \
-                 $(C_USR) -D_UWIN -I$(OBJ_DIR)
+                 $(HB_USER_CFLAGS) -D_UWIN -I$(OBJ_DIR)
 
 #-----------
 !ifndef HB_WINCE_COMPILE_WITH_GTWIN
@@ -141,7 +141,7 @@ CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX
 !endif
 
 CFLAGS         = -nologo -W4 -wd4127 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) \
-                 $(C_USR) -I$(OBJ_DIR)
+                 $(HB_USER_CFLAGS) -I$(OBJ_DIR)
 
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
@@ -175,17 +175,17 @@ CEXEFLAGSDLL   = $(CEXEFLAGSDLL) -MT$(DBGMARKER)
 LDFLAGS        = /nologo /subsystem:windowsce,4.20 /machine:arm /armpadcode \
                  /stack:65536,4096 /nodefaultlib:"oldnames.lib" \
                  /nodefaultlib:"kernel32.lib" /align:4096 /opt:ref /opt:icf \
-                 /libpath:$(LIB_DIR) $(L_USR)
+                 /libpath:$(LIB_DIR) $(HB_USER_LDFLAGS)
 !if $(HB_VISUALC_VER) >= 80
 LDFLAGS        = $(LDFLAGS) /manifest:no
 !endif
 LDFLAGSDLL     = /dll \
                  /nologo /subsystem:windowsce,4.20 /machine:arm /armpadcode \
                  /stack:65536,4096 /nodefaultlib:"oldnames.lib" \
-                 /libpath:$(LIB_DIR) $(L_USR)
+                 /libpath:$(LIB_DIR) $(HB_USER_LDFLAGS)
 STANDARD_SYSLIBS = coredll.lib corelibc.lib winsock.lib ws2.lib
 !else
-LDFLAGS        = /nologo /libpath:$(LIB_DIR) $(L_USR)
+LDFLAGS        = /nologo /libpath:$(LIB_DIR) $(HB_USER_LDFLAGS)
 LDFLAGSDLL     = /dll $(LDFLAGS)
 !if $(HB_VISUALC_VER) >= 80
 LDFLAGS        = $(LDFLAGS) /nxcompat

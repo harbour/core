@@ -3,22 +3,22 @@
 #
 
 ifeq ($(HB_COMPILER),gcc)
-L_USR += -Wl,--allow-multiple-definition
+HB_USER_LDFLAGS += -Wl,--allow-multiple-definition
 else
 ifeq ($(HB_COMPILER),gpp)
-L_USR += -Wl,--allow-multiple-definition
+HB_USER_LDFLAGS += -Wl,--allow-multiple-definition
 else
 ifeq ($(HB_COMPILER),djgpp)
-L_USR += -Wl,--allow-multiple-definition
+HB_USER_LDFLAGS += -Wl,--allow-multiple-definition
 else
 ifeq ($(HB_COMPILER),mingw)
-L_USR += -Wl,--allow-multiple-definition
+HB_USER_LDFLAGS += -Wl,--allow-multiple-definition
 else
 ifeq ($(HB_COMPILER),xcc)
-L_USR += /FORCE:MULTIPLE
+HB_USER_LDFLAGS += /FORCE:MULTIPLE
 else
 ifeq ($(HB_COMPILER),pocc)
-L_USR += /FORCE:MULTIPLE
+HB_USER_LDFLAGS += /FORCE:MULTIPLE
 endif
 endif
 endif

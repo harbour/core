@@ -89,7 +89,7 @@ rm -fR $RPM_BUILD_ROOT
 export HB_HOST_BUILD=yes
 export HB_ARCHITECTURE=linux
 export HB_COMPILER=gcc
-export C_USR="-O2 -DHB_FM_STATISTICS_OFF"
+export HB_USER_CFLAGS="-O2 -DHB_FM_STATISTICS_OFF"
 make -r
 
 export HB_HOST_BUILD=lib
@@ -101,11 +101,11 @@ ln -s ../../linux/gcc/hbpp source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}/hbpp.exe
 mkdir -p source/main/${HB_ARCHITECTURE}/${HB_COMPILER}
 ln -s ../../linux/gcc/harbour source/main/${HB_ARCHITECTURE}/${HB_COMPILER}/harbour.exe
 
-export CC_C_USR=""
-export C_USR="$CC_C_USR -O2 -DHB_FM_STATISTICS_OFF"
-export CC_PRG_USR="-D__PLATFORM__WINDOWS -D__PLATFORM__WINCE -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
-export PRG_USR="$CC_PRG_USR"
-export L_USR="${CC_L_USR}"
+export CC_HB_USER_CFLAGS=""
+export HB_USER_CFLAGS="$CC_HB_USER_CFLAGS -O2 -DHB_FM_STATISTICS_OFF"
+export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -D__PLATFORM__WINCE -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
+export HB_USER_PRGFLAGS="$CC_HB_USER_PRGFLAGS"
+export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS}"
 
 export CCPATH="%{hb_ccpath}:"
 export CCPREFIX="%{hb_ccpref}"
@@ -127,11 +127,11 @@ make -r
 
 # Install harbour itself.
 
-export CC_C_USR=""
-export C_USR="$CC_C_USR -O2 -DHB_FM_STATISTICS_OFF"
-export CC_PRG_USR="-D__PLATFORM__WINDOWS -D__PLATFORM__WINCE -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
-export PRG_USR="$CC_PRG_USR"
-export L_USR="${CC_L_USR}"
+export CC_HB_USER_CFLAGS=""
+export HB_USER_CFLAGS="$CC_HB_USER_CFLAGS -O2 -DHB_FM_STATISTICS_OFF"
+export CC_HB_USER_PRGFLAGS="-D__PLATFORM__WINDOWS -D__PLATFORM__WINCE -undef:__PLATFORM__UNIX -undef:__PLATFORM__LINUX"
+export HB_USER_PRGFLAGS="$CC_HB_USER_PRGFLAGS"
+export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS}"
 
 export CCPATH="%{hb_ccpath}:"
 export CCPREFIX="%{hb_ccpref}"

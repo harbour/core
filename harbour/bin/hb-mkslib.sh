@@ -138,7 +138,7 @@ elif [ "${SLIB_EXT}" = ".dll" ]; then
         SYSLIBS="-luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32"
         SYSLIBS="${SYSLIBS} -loleaut32 -luuid -lmpr -lwsock32 -lws2_32 -lmapi32"
     fi
-    ${CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${L_USR} ${SYSLIBS} ${HB_DLLIBS} && \
+    ${CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${HB_USER_LDFLAGS} ${SYSLIBS} ${HB_DLLIBS} && \
         cd "${dir}" && \
         rm -f "${DSTDIR}${FULLNAME}" && \
         mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"
@@ -146,7 +146,7 @@ else
     #FULLNAME="${BASE}-${VERSION}${SLIB_EXT}"
     #FULLNAME="${BASE}{SLIB_EXT}.${VERSION}"
     FULLNAME="${LIB_NAME}${SLIB_EXT}"
-    ${CCPREFIX}gcc -shared -fPIC -o "${FULLNAME}" $OBJLST ${linker_options} ${L_USR} && \
+    ${CCPREFIX}gcc -shared -fPIC -o "${FULLNAME}" $OBJLST ${linker_options} ${HB_USER_LDFLAGS} && \
         cd "${dir}" && \
         mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"
 fi

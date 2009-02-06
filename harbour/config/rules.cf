@@ -28,19 +28,19 @@ HB_FLAGS := -n -i$(HB_INC_COMPILE) -q0 -w3 -es2 -gc$(HB_GCMODE) -km -l
 # The rule to link an executable.
 ifeq ($(LD_RULE),)
 # Use default rule if architecture/compiler specific rule is not defined
-LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $(^F) $(LDFLAGS) $(L_USR) $(LINKLIBS)
+LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $(^F) $(LDFLAGS) $(HB_USER_LDFLAGS) $(LINKLIBS)
 endif
 
 # The rule to compile a C source file.
 ifeq ($(CC_RULE),)
 # Use default rule if architecture/compiler specific rule is not defined
-CC_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_IN) $< $(CC_OUT)$(<F:.c=$(OBJ_EXT))
+CC_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(HB_USER_CFLAGS) $(CC_IN) $< $(CC_OUT)$(<F:.c=$(OBJ_EXT))
 endif
 
 # The rule to compile a C++ source file.
 ifeq ($(CPP_RULE),)
 # Use default rule if architecture/compiler specific rule is not defined
-CPP_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_IN) $< $(CC_OUT)$(<F:.cpp=$(OBJ_EXT))
+CPP_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(HB_USER_CFLAGS) $(CC_IN) $< $(CC_OUT)$(<F:.cpp=$(OBJ_EXT))
 endif
 
 
@@ -80,7 +80,7 @@ endif
 
 # Rule to generate a C file from a PRG file.
 %.c : $(GRANDP)%.prg
-	$(HB) $? $(HB_FLAGS) $(PRG_USR)
+	$(HB) $? $(HB_FLAGS) $(HB_USER_PRGFLAGS)
 
 ifeq ($(SHLVL),) # COMMAND.COM
 # Do nothing. the $(hb_architecture)/global.cf will handle clean up.

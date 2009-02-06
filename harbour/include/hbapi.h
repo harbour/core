@@ -1027,9 +1027,9 @@ extern HB_EXPORT void         hb_verBuildInfo( void );       /* display harbour,
 extern HB_EXPORT int          hb_verSvnID( void );           /* retrieves ChangeLog SVN revision number */
 extern HB_EXPORT const char * hb_verSvnChangeLogID( void );  /* retrieves a static buffer containing ChangeLog ID string */
 extern HB_EXPORT const char * hb_verSvnLastEntry( void );    /* retrieves a static buffer containing ChangeLog last entry string */
-extern HB_EXPORT const char * hb_verFlagsC( void );          /* retrieves a static buffer containing build time C compiler flags in C_USR envvar */
-extern HB_EXPORT const char * hb_verFlagsL( void );          /* retrieves a static buffer containing build time linker flags in L_USR envvar */
-extern HB_EXPORT const char * hb_verFlagsPRG( void );        /* retrieves a static buffer containing build time Harbour compiler flags in PRG_USR envvar */
+extern HB_EXPORT const char * hb_verFlagsC( void );          /* retrieves a static buffer containing build time C compiler flags in HB_USER_CFLAGS envvar */
+extern HB_EXPORT const char * hb_verFlagsL( void );          /* retrieves a static buffer containing build time linker flags in HB_USER_LDFLAGS envvar */
+extern HB_EXPORT const char * hb_verFlagsPRG( void );        /* retrieves a static buffer containing build time Harbour compiler flags in HB_USER_PRGFLAGS envvar */
 
 extern HB_EXPORT BOOL   hb_iswinnt( void ); /* return .T. if OS == Windows NT, 2000, XP */
 extern HB_EXPORT BOOL   hb_iswince( void ); /* return .T. if OS is Windows CE or Windows Mobile */

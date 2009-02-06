@@ -29,7 +29,7 @@ hb_pref="hb"
 hb_contrib=""
 hb_sysdir="yes"
 hb_exesuf=""
-export C_USR="$C_USR -DHB_FM_STATISTICS_OFF"
+export HB_USER_CFLAGS="$HB_USER_CFLAGS -DHB_FM_STATISTICS_OFF"
 
 [ -z "$HB_INSTALL_PREFIX" ] && [ -n "$PREFIX" ] && export HB_INSTALL_PREFIX="$PREFIX"
 
@@ -73,7 +73,7 @@ then
     HB_CPU=`uname -m`
     case "$HB_CPU" in
         *[_@]64)
-            export C_USR="$C_USR -fPIC"
+            export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
             HB_ARCH64="yes"
             ;;
         *)
@@ -81,7 +81,7 @@ then
     esac
 elif [ "$HB_ARCHITECTURE" = "hpux" ] || [ "$HB_ARCHITECTURE" = "sunos" ]
 then
-    export C_USR="$C_USR -fPIC"
+    export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
 fi
 
 # Select the platform-specific installation prefix and ownership
@@ -271,8 +271,8 @@ then
     [ "${HB_WITHOUT_GTSLN}" != yes ] && ADD_LIBS="$ADD_LIBS -lslang"
     [ "${HB_WITHOUT_X11}" != yes ] && ADD_LIBS="$ADD_LIBS -L/usr/X11R6/$HB_LIBDIRNAME -lX11"
 
-    export L_USR="-L${HB_LIB_INSTALL} -l${name} ${ADD_LIBS} ${L_USR}"
-    export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${PRG_USR}"
+    export HB_USER_LDFLAGS="-L${HB_LIB_INSTALL} -l${name} ${ADD_LIBS} ${HB_USER_LDFLAGS}"
+    export HB_USER_PRGFLAGS="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${HB_USER_PRGFLAGS}"
 
     for utl in hbmake hbrun hbi18n hbdoc hbtest
     do

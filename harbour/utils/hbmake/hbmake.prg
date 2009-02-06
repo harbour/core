@@ -2710,7 +2710,7 @@ Endif // Create and compile
    ELSEIF s_lMSVcc
 
       FWrite( s_nMakeFileHandle, ;
-         "CFLAG1 =  -I$(INCLUDE_DIR) -W3 -nologo $(C_USR) $(SHELL) $(CFLAGS)" +IIF( s_lMt, " -DHB_THREAD_SUPPORT " , "" ) + s_cEOL +;
+         "CFLAG1 =  -I$(INCLUDE_DIR) -W3 -nologo $(HB_USER_CFLAGS) $(SHELL) $(CFLAGS)" +IIF( s_lMt, " -DHB_THREAD_SUPPORT " , "" ) + s_cEOL +;
          "CFLAG2 =  -c" +" -I" + ALLTRIM( s_cUserInclude ) + " " + s_cEOL +;
          "RFLAGS = " + s_cEOL +;
          "LFLAGS = /LIBPATH:$(CC_DIR)\lib /LIBPATH1:$(HB_DIR)\lib /LIBPATH2:$(C4W)\lib"  +IIF(s_lMt, " /Nodefaultlib:LIBC "," /Nodefaultlib:LIBCMT " ) + s_cEOL +;
@@ -2724,7 +2724,7 @@ Endif // Create and compile
    ELSEIF s_lPocc
 
       FWrite( s_nMakeFileHandle, ;
-         "CFLAG1 = $(SHELL)  /Ze /Go /Ot /Tx86-coff /I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)" +IIF( s_lMt, ' /D"HB_THREAD_SUPPORT" /MT' , "" ) + s_cEOL +;
+         "CFLAG1 = $(SHELL)  /Ze /Go /Ot /Tx86-coff /I$(INCLUDE_DIR) $(HB_USER_CFLAGS) $(CFLAGS)" +IIF( s_lMt, ' /D"HB_THREAD_SUPPORT" /MT' , "" ) + s_cEOL +;
          "CFLAG2 = " + s_cEOL +;
          "RFLAGS = " + s_cEOL +;
          "LFLAGS = /LIBPATH:$(CC_DIR)\lib /LIBPATH:$(CC_DIR)\lib\win /LIBPATH:$(HB_DIR)\lib /MACHINE:IX86"+IIF(!s_lGui," /SUBSYSTEM:CONSOLE"," /SUBSYSTEM:WINDOWS") + s_cEOL +;
@@ -3883,7 +3883,7 @@ FUNCTION CreateLibMakeFile( cFile )
    ELSEIF s_lMSVcc
 
       FWrite( s_nMakeFileHandle, ;
-         "CFLAG1 =  -I$(INCLUDE_DIR) -W3 -nologo $(C_USR) $(SHELL) $(CFLAGS)" + s_cEOL +;
+         "CFLAG1 =  -I$(INCLUDE_DIR) -W3 -nologo $(HB_USER_CFLAGS) $(SHELL) $(CFLAGS)" + s_cEOL +;
          "CFLAG2 =  -c -I" + ALLTRIM( s_cUserInclude ) + s_cEOL +;
          "RFLAGS = " + s_cEOL +;
          "LFLAGS = " + s_cEOL +;

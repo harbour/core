@@ -14,8 +14,8 @@
 
 # NOTE: You can use these optional envvars to configure the make process:
 #
-#       C_USR        - Extra C compiler options for libraries
-#       PRG_USR      - Extra Harbour compiler options
+#       HB_USER_CFLAGS        - Extra C compiler options for libraries
+#       HB_USER_PRGFLAGS      - Extra Harbour compiler options
 #
 
 #**********************************************************
@@ -107,7 +107,7 @@ MKLIB  = lib.exe
 HB_VISUALC_VER = 80
 !endif
 
-ARFLAGS = /nologo $(A_USR)
+ARFLAGS = /nologo $(HB_USER_AFLAGS)
 
 # C Compiler Flags
 !if "$(HB_BUILD_OPTIM)" != "no"
@@ -120,7 +120,7 @@ CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX
 #-----------
 
 CFLAGS         = -nologo -W4 -wd4127 -Gs -I$(INCLUDE_DIR) $(CFLAGS_VER) \
-                 $(C_USR) $(CFLAGS)
+                 $(HB_USER_CFLAGS) $(CFLAGS)
 
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
@@ -131,11 +131,11 @@ CFLAGS         = -Zi $(CFLAGS)
 #**********************************************************
 
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -km -l $(PRG_USR) $(HARBOURFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -km -l $(HB_USER_PRGFLAGS) $(HARBOURFLAGS)
 !if "$(HB_BUILD_DEBUG)" == "yes"
 HARBOURFLAGS   = $(HARBOURFLAGS) -l-
 !endif
-LDFLAGS        = $(LDFLAGS) $(L_USR)
+LDFLAGS        = $(LDFLAGS) $(HB_USER_LDFLAGS)
 
 #**********************************************************
 # COMPILE Rules

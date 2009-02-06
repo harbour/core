@@ -56,7 +56,7 @@ then
         # We must build an archive index on Darwin
         #AR="${CCPREFIX}ar -crs"
         AR="libtool"
-        AR_OPT="-static ${LIBTOOL_USR} -o "
+        AR_OPT="-static ${LIBTOOHB_USER_LDFLAGS} -o "
     fi
 
     if [ -n "${HB_TOOLS_PREF}" ]; then
@@ -83,7 +83,7 @@ then
     fi
     # build hbfm lib with memory statistic
     (cd ${hb_root}/source/vm
-    export C_USR="${C_USR//-DHB_FM_STATISTICS_OFF/} -DHB_FM_STATISTICS"
+    export HB_USER_CFLAGS="${HB_USER_CFLAGS//-DHB_FM_STATISTICS_OFF/} -DHB_FM_STATISTICS"
     rm -f fm.o
     ${MAKE} -r fm.o
     ${AR} ${AR_OPT} ${HB_LIB_INSTALL}/libhbfm.a fm.o

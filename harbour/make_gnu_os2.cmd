@@ -19,9 +19,9 @@ rem sure usr/lib/tcpipv4 is searched before usr/lib (this is to
 rem get the right libsocket). It is recommended to use the -D
 rem compiler option for the define and either the LIBRARY_PATH or
 rem the -L compiler/linker option for the library.
-rem For building Harbour you can also use L_USR environment variable,
+rem For building Harbour you can also use HB_USER_LDFLAGS environment variable,
 rem f.e.
-rem         SET L_USR=-Le:\usr\lib\tcpipv4
+rem         SET HB_USER_LDFLAGS=-Le:\usr\lib\tcpipv4
 rem 
 rem If you are using newer OS2 version with tcp/ip stack >= 4.1
 rem (eComStation, for example) and you do not need backward binary
@@ -31,7 +31,7 @@ rem         SET HB_OS2_TCP32=yes
 
 if "%HB_OS2_TCP32%" == "yes" goto tcp32
 if "%HB_OS2_TCP32%" == "YES" goto tcp32
-   set C_USR=-DTCPV40HDRS %C_USR%
+   set HB_USER_CFLAGS=-DTCPV40HDRS %HB_USER_CFLAGS%
 :tcp32
 
 make -r %1 %2 %3 %4 %5 %6 %7 %8 %9 > make_gnu.log
