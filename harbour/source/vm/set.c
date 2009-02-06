@@ -331,8 +331,8 @@ static void hb_set_OSCODEPAGE( PHB_SET_STRUCT pSet )
 
    for( i = 0; i < 256; ++i )
    {
-      pSet->hb_set_oscptransto[ i ] = ( BYTE ) i;
-      pSet->hb_set_oscptransfrom[ i ] = ( BYTE ) i;
+      pSet->hb_set_oscptransto[ i ] = ( UCHAR ) i;
+      pSet->hb_set_oscptransfrom[ i ] = ( UCHAR ) i;
    }
 
 #ifndef HB_CDP_SUPPORT_OFF
@@ -351,10 +351,10 @@ static void hb_set_OSCODEPAGE( PHB_SET_STRUCT pSet )
          {
             for( i = 0; i < cdpHost->nChars; ++i )
             {
-               pSet->hb_set_oscptransto[ ( BYTE ) cdpHost->CharsUpper[ i ] ] = ( BYTE ) cdpFile->CharsUpper[ i ];
-               pSet->hb_set_oscptransto[ ( BYTE ) cdpHost->CharsLower[ i ] ] = ( BYTE ) cdpFile->CharsLower[ i ];
-               pSet->hb_set_oscptransfrom[ ( BYTE ) cdpFile->CharsUpper[ i ] ] = ( BYTE ) cdpHost->CharsUpper[ i ];
-               pSet->hb_set_oscptransfrom[ ( BYTE ) cdpFile->CharsLower[ i ] ] = ( BYTE ) cdpHost->CharsLower[ i ];
+               pSet->hb_set_oscptransto[ ( UCHAR ) cdpHost->CharsUpper[ i ] ] = ( UCHAR ) cdpFile->CharsUpper[ i ];
+               pSet->hb_set_oscptransto[ ( UCHAR ) cdpHost->CharsLower[ i ] ] = ( UCHAR ) cdpFile->CharsLower[ i ];
+               pSet->hb_set_oscptransfrom[ ( UCHAR ) cdpFile->CharsUpper[ i ] ] = ( UCHAR ) cdpHost->CharsUpper[ i ];
+               pSet->hb_set_oscptransfrom[ ( UCHAR ) cdpFile->CharsLower[ i ] ] = ( UCHAR ) cdpHost->CharsLower[ i ];
             }
          }
       }
@@ -2593,7 +2593,7 @@ char *  hb_setGetOSCODEPAGE( void )
    return hb_stackSetStruct()->HB_SET_OSCODEPAGE;
 }
 
-BYTE * hb_osEncode( BYTE * szFileName, BOOL * pfFree )
+UCHAR * hb_osEncode( UCHAR * szFileName, BOOL * pfFree )
 {
    *pfFree = FALSE;
 
@@ -2605,12 +2605,12 @@ BYTE * hb_osEncode( BYTE * szFileName, BOOL * pfFree )
 
       if( bCPConv )
       {
-         BYTE * p = szFileName;
-         BYTE * pCPTrans = hb_stackSetStruct()->hb_set_oscptransto;
+         UCHAR * p = szFileName;
+         UCHAR * pCPTrans = hb_stackSetStruct()->hb_set_oscptransto;
 
          while( *p )
          {
-            *p = pCPTrans[ ( BYTE ) *p ];
+            *p = pCPTrans[ ( UCHAR ) *p ];
             p++;
          }
       }
@@ -2619,7 +2619,7 @@ BYTE * hb_osEncode( BYTE * szFileName, BOOL * pfFree )
    return szFileName;
 }
 
-BYTE * hb_osDecode( BYTE * szFileName, BOOL * pfFree )
+UCHAR * hb_osDecode( UCHAR * szFileName, BOOL * pfFree )
 {
    *pfFree = FALSE;
 
@@ -2631,12 +2631,12 @@ BYTE * hb_osDecode( BYTE * szFileName, BOOL * pfFree )
 
       if( bCPConv )
       {
-         BYTE * p = szFileName;
-         BYTE * pCPTrans = hb_stackSetStruct()->hb_set_oscptransfrom;
+         UCHAR * p = szFileName;
+         UCHAR * pCPTrans = hb_stackSetStruct()->hb_set_oscptransfrom;
 
          while( *p )
          {
-            *p = pCPTrans[ ( BYTE ) *p ];
+            *p = pCPTrans[ ( UCHAR ) *p ];
             p++;
          }
       }

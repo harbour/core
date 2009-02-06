@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-06 21:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbdefs.h
+    - Removed HB_ISSPACE(). It was already defined.
+
+  * include/hbset.h
+  * contrib/hbct/ctwin.c
+  * contrib/hbct/ctwin.h
+  * source/vm/set.c
+    * BYTE -> UCHAR
+
 2009-02-06 20:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/codepage/cptr857.c
   * source/codepage/cphu852s.c
