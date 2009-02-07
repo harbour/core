@@ -19,6 +19,7 @@
       hb_fsCreateTemp().
     + Added hb_fileCreateTempEx(). See above.
     + Added Harbour level HB_FTEMPCREATEEX(). See above.
+      HB_FTEMPCREATEEX( @<cName>, <cDir>, <cPrefix>, <cExt> ) -> <nHandle>
     ; Please review & test.
 
 2009-02-07 00:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
