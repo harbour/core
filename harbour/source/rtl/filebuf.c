@@ -500,3 +500,19 @@ PHB_FILE hb_fileCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix,
 
    return pFile;
 }
+
+PHB_FILE hb_fileCreateTempEx( UCHAR * pszName,
+                              const UCHAR * pszDir,
+                              const UCHAR * pszPrefix,
+                              const UCHAR * pszExt,
+                              ULONG ulAttr )
+{
+   PHB_FILE pFile = NULL;
+   HB_FHANDLE hFile;
+
+   hFile = hb_fsCreateTempEx( pszName, pszDir, pszPrefix, pszExt, ulAttr );
+   if( hFile != FS_ERROR )
+      pFile = hb_fileNew( hFile, FALSE, 0, 0, FALSE );
+
+   return pFile;
+}
