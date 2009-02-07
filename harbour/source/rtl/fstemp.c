@@ -157,7 +157,7 @@ static HB_FHANDLE hb_fsCreateTempLow( const BYTE * pszDir, const BYTE * pszPrefi
       {
          hb_strncat( ( char * ) pszName, "XXXXXX", _POSIX_PATH_MAX );
          if( pszExt )
-            hb_strncat( ( char * ) pszName, pszExt, _POSIX_PATH_MAX );
+            hb_strncat( ( char * ) pszName, ( const char * ) pszExt, _POSIX_PATH_MAX );
          hb_vmUnlock();
          fd = ( HB_FHANDLE ) mkstemp( ( char * ) pszName );
          hb_fsSetIOError( fd != ( HB_FHANDLE ) -1, 0 );
