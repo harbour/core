@@ -5232,8 +5232,8 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
    hb_fsFNameMerge( szFileName, pFileName );
    hb_xfree( pFileName );
 
-   /* Use hb_spFile first to locate table which can be in differ path */
-   if( hb_spFile( ( BYTE * ) szFileName, ( BYTE * ) szFileName ) )
+   /* Use hb_spFileExists first to locate table which can be in differ path */
+   if( hb_spFileExists( ( BYTE * ) szFileName, ( BYTE * ) szFileName ) )
    {
       fResult = hb_fsDelete( ( BYTE * ) szFileName );
       if( fResult && fTable )
@@ -5243,7 +5243,7 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
           * supported and if yes then try to delete memo file if it exists
           * in the same directory as table file
           * hb_fsFNameSplit() repeated intentionally to respect
-          * the path set by hb_spFile()
+          * the path set by hb_spFileExists()
           */
          pFileName = hb_fsFNameSplit( szFileName );
          pFileExt = hb_itemPutC( pFileExt, NULL );
@@ -5316,7 +5316,7 @@ static HB_ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
       hb_itemRelease( pFileExt );
    }
 
-   return hb_spFile( ( BYTE * ) szFileName, NULL ) ? HB_SUCCESS : HB_FAILURE;
+   return hb_spFileExists( ( BYTE * ) szFileName, NULL ) ? HB_SUCCESS : HB_FAILURE;
 }
 
 static void hb_dbfInitTSD( void * Cargo )

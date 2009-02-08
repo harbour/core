@@ -62,19 +62,15 @@ BOOL hb_spFile( BYTE * pFilename, BYTE * pRetPath )
    HB_TRACE(HB_TR_DEBUG, ("hb_spFile(%s, %p)", (char*) pFilename, pRetPath));
 
    if( pRetPath )
-   {
       Path = pRetPath;
-   }
    else
-   {
-      Path = (BYTE *) hb_xgrab( _POSIX_PATH_MAX + 1 );
-   }
+      Path = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
 
-   pFilepath = hb_fsFNameSplit( (char*) pFilename );
+   pFilepath = hb_fsFNameSplit( ( char * ) pFilename );
 
    if( pFilepath->szPath )
    {
-      hb_fsFNameMerge( (char*) Path, pFilepath );
+      hb_fsFNameMerge( ( char * ) Path, pFilepath );
       bIsFile = hb_fsFile( Path );
    }
    else
@@ -83,18 +79,18 @@ BOOL hb_spFile( BYTE * pFilename, BYTE * pRetPath )
       if( szDefault )
       {
          pFilepath->szPath = szDefault;
-         hb_fsFNameMerge( (char*) Path, pFilepath );
+         hb_fsFNameMerge( ( char * ) Path, pFilepath );
          bIsFile = hb_fsFile( Path );
       }
 
       if( !bIsFile && hb_setGetPath() )
       {
-         HB_PATHNAMES *NextPath = hb_setGetFirstSetPath();
+         HB_PATHNAMES * NextPath = hb_setGetFirstSetPath();
 
          while( bIsFile == FALSE && NextPath )
          {
             pFilepath->szPath = NextPath->szPath;
-            hb_fsFNameMerge( (char*) Path, pFilepath );
+            hb_fsFNameMerge( ( char * ) Path, pFilepath );
             bIsFile = hb_fsFile( Path );
             NextPath = NextPath->pNext;
          }
@@ -109,16 +105,78 @@ BOOL hb_spFile( BYTE * pFilename, BYTE * pRetPath )
       if( ! bIsFile )
       {
          pFilepath->szPath = szDefault ? szDefault : ( char * ) ".";
-         hb_fsFNameMerge( (char*) Path, pFilepath );
+         hb_fsFNameMerge( ( char * ) Path, pFilepath );
       }
    }
 
    hb_xfree( pFilepath );
 
    if( pRetPath == NULL )
-   {
       hb_xfree( Path );
+
+   return bIsFile;
+}
+
+BOOL hb_spFileExists( BYTE * pFilename, BYTE * pRetPath )
+{
+   BYTE *Path;
+   BOOL bIsFile = FALSE;
+   PHB_FNAME pFilepath;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_spFile(%s, %p)", (char*) pFilename, pRetPath));
+
+   if( pRetPath )
+      Path = pRetPath;
+   else
+      Path = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+
+   pFilepath = hb_fsFNameSplit( ( char * ) pFilename );
+
+   if( pFilepath->szPath )
+   {
+      hb_fsFNameMerge( ( char * ) Path, pFilepath );
+      bIsFile = hb_fsFileExists( ( const char * ) Path );
    }
+   else
+   {
+      char * szDefault = hb_setGetDefault();
+      if( szDefault )
+      {
+         pFilepath->szPath = szDefault;
+         hb_fsFNameMerge( ( char * ) Path, pFilepath );
+         bIsFile = hb_fsFileExists( ( const char * ) Path );
+      }
+
+      if( !bIsFile && hb_setGetPath() )
+      {
+         HB_PATHNAMES * NextPath = hb_setGetFirstSetPath();
+
+         while( bIsFile == FALSE && NextPath )
+         {
+            pFilepath->szPath = NextPath->szPath;
+            hb_fsFNameMerge( ( char * ) Path, pFilepath );
+            bIsFile = hb_fsFileExists( ( const char * ) Path );
+            NextPath = NextPath->pNext;
+         }
+      }
+
+      /*
+       * This code is intentional. To eliminate race condition,
+       * in pending hb_spCreate()/hb_spOpen() call when we have to know
+       * real path and file name we have to set its deterministic value
+       * here. If it's not necessary the caller may drop this value.
+       */
+      if( ! bIsFile )
+      {
+         pFilepath->szPath = szDefault ? szDefault : ( char * ) ".";
+         hb_fsFNameMerge( ( char * ) Path, pFilepath );
+      }
+   }
+
+   hb_xfree( pFilepath );
+
+   if( pRetPath == NULL )
+      hb_xfree( Path );
 
    return bIsFile;
 }
@@ -142,11 +200,11 @@ HB_FHANDLE hb_spCreate( BYTE * pFilename, ULONG ulAttr )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_spCreate(%p, %lu)", pFilename, ulAttr));
 
-   pFilepath = hb_fsFNameSplit( (char*) pFilename );
+   pFilepath = hb_fsFNameSplit( ( char * ) pFilename );
    if( ! pFilepath->szPath )
       pFilepath->szPath = hb_setGetDefault();
 
-   hb_fsFNameMerge( (char*) path, pFilepath );
+   hb_fsFNameMerge( ( char * ) path, pFilepath );
    hb_xfree( pFilepath );
 
    return hb_fsCreate( path, ulAttr );
@@ -159,11 +217,11 @@ HB_FHANDLE hb_spCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFlags )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_spCreateEx(%p, %lu, %hu)", pFilename, ulAttr, uiFlags));
 
-   pFilepath = hb_fsFNameSplit( (char*) pFilename );
+   pFilepath = hb_fsFNameSplit( ( char * ) pFilename );
    if( ! pFilepath->szPath )
       pFilepath->szPath = hb_setGetDefault();
 
-   hb_fsFNameMerge( (char*) path, pFilepath );
+   hb_fsFNameMerge( ( char * ) path, pFilepath );
    hb_xfree( pFilepath );
 
    return hb_fsCreateEx( path, ulAttr, uiFlags );

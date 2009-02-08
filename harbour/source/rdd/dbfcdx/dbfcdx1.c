@@ -7081,7 +7081,7 @@ static HB_ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
 
       pArea->fHasTags = FALSE;
       hb_cdxCreateFName( pArea, NULL, NULL, szFileName, NULL );
-      if ( hb_spFile( ( BYTE * ) szFileName, NULL ) ||
+      if ( hb_spFileExists( ( BYTE * ) szFileName, NULL ) ||
            DBFAREA_DATA( pArea )->fStrictStruct )
       {
          DBORDERINFO pOrderInfo;

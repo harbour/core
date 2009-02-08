@@ -34,7 +34,7 @@ General
 - hbrun will now open .dbf files when passed on the command line.
 - Added web-server written in Harbour: uHTTPD
 - POCC WinCE builds are now supported.
-- OpenWatcom 1.8 (RC) compiler is now supported.
+- Open Watcom 1.8 (RC3) compiler is now supported.
 
 Core
 =============================
@@ -143,16 +143,16 @@ Contrib
 - hbct other fixes.
 - Added hbcrypt, hbssl and rddsql (with mysql, pgsql, fbsql plugins)
   to contribs.
-- Extended hbct windowing with new low level API, better shadow
+- hbct windowing extended with new low level API, better shadow
   handling.
 - gtwvg improvements. Xbase++ compatible UI objects.
 - hbw32 library renamed to hbwin.
-- Added WIN_ABORTDOC(), WIN_RUNDETACHED(), WIN_SHELLEXECUTE(),
-  WIN_LOADRESOURCE() to hbwin.
+- hbwin added WIN_ABORTDOC(), WIN_RUNDETACHED(), WIN_SHELLEXECUTE(),
+  WIN_LOADRESOURCE().
 - dbu patch now adds SET DATE ANSI and SET CENTURY ON.
-- Extended WIN_MULDIV(), WIN_RECTANGLE(), WIN_SETBKMODE() to
-  accept handles passed using different methods.
-- Changed functions named below in hbwin:
+- hbwin WIN_MULDIV(), WIN_RECTANGLE(), WIN_SETBKMODE() extended to
+  accept handles passed using alternate methods.
+- hbwin function names changed as below:
   - W32_REGPATHSPLIT()            -> WIN_REGPATHSPLIT()
   - W32_REGREAD()                 -> WIN_REGREAD()
   - W32_REGWRITE()                -> WIN_REGWRITE()
@@ -190,9 +190,9 @@ Contrib
   - WIN32_STARTDOC()              -> WIN_STARTDOC()
   - WIN32_STARTPAGE()             -> WIN_STARTPAGE()
   - WIN32_TEXTOUT()               -> WIN_TEXTOUT()
-  - WIN32PRN class -> WIN_PRN class.
-  - WIN32BMP class -> WIN_BMP class.
-- GPF and wrong RTE message fixed in hbct:
+  - WIN32PRN class                -> WIN_PRN class
+  - WIN32BMP class                -> WIN_BMP class
+- hbct GPF and wrong RTE message fixed in:
   CHARADD(), CHARSUB(), CHARAND(), CHAROR(), CHARXOR()
 - hbct string optimizations in thrown RTEs.
 - hbziparc fixed <acFiles> behavior if the parameter is not passed.

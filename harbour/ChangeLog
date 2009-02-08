@@ -8,6 +8,37 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-08 22:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapifs.h
+  * source/rtl/spfiles.c
+    + Added hb_spFileExists(). Same as hb_spFile(), but uses
+      the more efficient (especially on networks) hb_fsFileExists()
+      call to check for file exitance.
+      [ not very elegant solution, as I've just copied the
+      whole function, and changed the file existance call, maybe
+      a worker function + passing the check function pointer
+      could help, but the hb_fsFile() and hb_fsFileExists() workings
+      differ slightly. ]
+
+  * source/rdd/dbfntx/dbfntx1.c
+  * source/rdd/dbfnsx/dbfnsx1.c
+  * source/rdd/dbfcdx/dbfcdx1.c
+  * source/rdd/dbf1.c
+    % Using hb_spFileExists() instead of hb_spFile().
+      This API also works for dirs where use doesn't have file listing
+      rights, which may create a slight incompatibility by finding
+      files which weren't found by former method (and by Clipper).
+      C:\WINDOWS\TEMP\*.* were such when logged in as non-admin user,
+      but this dir is only used as a default TEMP dir for DOS programs.
+      Please speak up if you find this issue (or something else) to
+      be problem.
+
+  * source/rtl/file.c
+    * File naming standardized.
+
+  * doc/whatsnew.txt
+    * Minor updates.
+
 2009-02-08 20:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * doc/whatsnew.txt
     + Started 1.1.0 whatsnew section. Incomplete.

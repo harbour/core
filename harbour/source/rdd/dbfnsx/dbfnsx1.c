@@ -6480,7 +6480,7 @@ static HB_ERRCODE hb_nsxOpen( NSXAREAP pArea, LPDBOPENINFO pOpenInfo )
       char szFileName[ _POSIX_PATH_MAX + 1 ];
 
       hb_nsxCreateFName( pArea, NULL, NULL, szFileName, NULL );
-      if( hb_spFile( ( BYTE * ) szFileName, NULL ) ||
+      if( hb_spFileExists( ( BYTE * ) szFileName, NULL ) ||
           DBFAREA_DATA( pArea )->fStrictStruct )
       {
          DBORDERINFO pOrderInfo;
