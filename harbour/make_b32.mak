@@ -21,9 +21,9 @@
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
 #
-#       HB_USER_CFLAGS             - Extra C compiler options for libraries and for executables
-#       HB_USER_LDFLAGS             - Extra linker options for libraries
-#       HB_USER_PRGFLAGS           - Extra Harbour compiler options
+#       HB_USER_CFLAGS    - Extra C compiler options for libraries and for executables
+#       HB_USER_LDFLAGS   - Extra linker options for libraries
+#       HB_USER_PRGFLAGS  - Extra Harbour compiler options
 #
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build

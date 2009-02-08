@@ -2355,6 +2355,23 @@ int  hb_ctwSwapWindows( int iWindow1, int iWindow2 )
    return iResult;
 }
 
+int  hb_ctwGetPosWindow( int iRow, int iCol )
+{
+   int iResult = -1;
+   PHB_GTCTW pCTW = hb_ctw_base();
+   if( pCTW )
+   {
+      if( iRow >= pCTW->iBoardTop  && iRow <= pCTW->iBoardBottom &&
+          iCol >= pCTW->iBoardLeft && iCol <= pCTW->iBoardRight )
+      {
+         long lIndex = ( long ) iRow * pCTW->iMapWidth + iCol;
+         iResult = pCTW->pWindowMap[ lIndex ];
+      }
+      hb_gt_BaseFree( pCTW->pGT );
+   }
+   return iResult;
+}
+
 int  hb_ctwLastKey( void )
 {
    /* keyread() in CT3 uses 64512 bytes length buffer

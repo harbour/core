@@ -100,7 +100,7 @@ struct mv_memvarArray_info
    int iScope;
 };
 
-static void hb_memvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
+static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITEM pValue );
 
 static PHB_ITEM hb_memvarValueNew( void )
 {

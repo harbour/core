@@ -124,7 +124,7 @@ static void    hb_vmInstring( void );        /* check whether string 1 is contai
 static void    hb_vmForTest( void );         /* test for end condition of for */
 static void    hb_vmSeqBlock( void );        /* set begin sequence WITH codeblock */
 static void    hb_vmWithObjectStart( void ); /* prepare WITH OBJECT block */
-static void    hb_vmEnumStart( BYTE, BYTE ); /* prepare FOR EACH loop */
+static void    hb_vmEnumStart( BYTE nVars, BYTE nDescend ); /* prepare FOR EACH loop */
 static void    hb_vmEnumNext( void );        /* increment FOR EACH loop counter */
 static void    hb_vmEnumPrev( void );        /* decrement FOR EACH loop counter */
 static void    hb_vmEnumEnd( void );         /* rewind the stack after FOR EACH loop counter */

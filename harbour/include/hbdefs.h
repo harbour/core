@@ -1288,6 +1288,7 @@ typedef SHORT HB_SYMBOLSCOPE;   /* stores symbol's scope */
 
 typedef BYTE HB_CHAR;
 typedef BYTE HB_ATTR;
+typedef BYTE HB_COLOR;
 
 /* Some common character constants */
 
@@ -1310,21 +1311,21 @@ typedef BYTE HB_ATTR;
 #define HB_CHAR_SOFT1           ( ( char ) 141 )
 #define HB_CHAR_SOFT2           ( ( char ) HB_CHAR_LF )
 
-#define HB_ISUPPER( c )             ( ( c ) >= 'A' && ( c ) <= 'Z' )
-#define HB_ISLOWER( c )             ( ( c ) >= 'a' && ( c ) <= 'z' )
-#define HB_TOUPPER( c )             ( ( c ) >= 'a' && ( c ) <= 'z' ? ( c ) - ( 'a' - 'A' ) : ( c ) )
-#define HB_TOLOWER( c )             ( ( c ) >= 'A' && ( c ) <= 'Z' ? ( c ) + ( 'a' - 'A' ) : ( c ) )
-#define HB_ISDIGIT( c )             ( ( c ) >= '0' && ( c ) <= '9' )
-#define HB_ISALPHA( c )             ( HB_ISUPPER( c ) || HB_ISLOWER( c ) )
-#define HB_ISALNUM( c )             ( HB_ISALPHA( c ) || HB_ISDIGIT( c ) )
-#define HB_ISXDIGIT( c )            ( HB_ISDIGIT(c) || \
-                                      ( (c) >= 'A' && (c) <= 'F' ) || \
-                                      ( (c) >= 'a' && (c) <= 'f' ) )
-#define HB_ISSPACE( c )             ( ( c ) == ' ' || \
-                                      ( c ) == HB_CHAR_HT || \
-                                      ( c ) == HB_CHAR_LF || \
-                                      ( c ) == HB_CHAR_CR )
-#define HB_ISFIRSTIDCHAR( c )       ( HB_ISALPHA( c ) || ( c ) == '_' )
-#define HB_ISNEXTIDCHAR( c )        ( HB_ISFIRSTIDCHAR(c) || HB_ISDIGIT( c ) )
+#define HB_ISUPPER( c )         ( ( c ) >= 'A' && ( c ) <= 'Z' )
+#define HB_ISLOWER( c )         ( ( c ) >= 'a' && ( c ) <= 'z' )
+#define HB_TOUPPER( c )         ( ( c ) >= 'a' && ( c ) <= 'z' ? ( c ) - ( 'a' - 'A' ) : ( c ) )
+#define HB_TOLOWER( c )         ( ( c ) >= 'A' && ( c ) <= 'Z' ? ( c ) + ( 'a' - 'A' ) : ( c ) )
+#define HB_ISDIGIT( c )         ( ( c ) >= '0' && ( c ) <= '9' )
+#define HB_ISALPHA( c )         ( HB_ISUPPER( c ) || HB_ISLOWER( c ) )
+#define HB_ISALNUM( c )         ( HB_ISALPHA( c ) || HB_ISDIGIT( c ) )
+#define HB_ISXDIGIT( c )        ( HB_ISDIGIT(c) || \
+                                  ( (c) >= 'A' && (c) <= 'F' ) || \
+                                  ( (c) >= 'a' && (c) <= 'f' ) )
+#define HB_ISSPACE( c )         ( ( c ) == ' ' || \
+                                  ( c ) == HB_CHAR_HT || \
+                                  ( c ) == HB_CHAR_LF || \
+                                  ( c ) == HB_CHAR_CR )
+#define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) || ( c ) == '_' )
+#define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) || HB_ISDIGIT( c ) )
 
 #endif /* HB_DEFS_H_ */

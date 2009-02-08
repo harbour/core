@@ -91,6 +91,7 @@ extern int  hb_ctwMoveWindow( int iWindow, int iRow, int iCol );
 extern int  hb_ctwCenterWindow( int iWindow, BOOL fCenter );
 extern int  hb_ctwAddWindowBox( int iWindow, UCHAR * szBox, int iColor );
 extern int  hb_ctwSwapWindows( int iWindow1, int iWindow2 );
+extern int  hb_ctwGetPosWindow( int iRow, int iCol );
 extern int  hb_ctwLastKey( void );
 
 HB_EXTERN_END
