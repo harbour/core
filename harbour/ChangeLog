@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-08 20:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * doc/whatsnew.txt
+    + Started 1.1.0 whatsnew section. Incomplete.
+      Please, review, extend, reorder, proofread, etc.
+
 2009-02-08 18:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/gtwvt/gtwvt.c
     * BYTE -> CHAR (Windows)

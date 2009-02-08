@@ -2,6 +2,223 @@
  * $Id$
  */
 
+Version 1.1.0 (2009-0?-??)
+
+[ Incomplete, unordered.
+  Processed from now until 2008-12-19 19:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl) ]
+
+General
+=============================
+- Build configuration changes:
+  - PRG_USR             -> HB_USER_PRGFLAGS
+  - C_USR               -> HB_USER_CFLAGS
+  - L_USR               -> HB_USER_LDFLAGS
+  - A_USR               -> HB_USER_AFLAGS
+  - MK_USR              -> HB_USER_MAKEFLAGS
+  - HB_ARCHITECTURE=w32 -> HB_ARCHITECTURE=win
+- GNU-make system revised to give optimal support -j<n>
+  multi-threaded parallel builds, which can dramatically
+  increase build speed in multi-core/multi-CPU systems.
+- HB_WINCE          -> HB_OS_WIN_CE
+- HB_OS_WIN_32_USED -> HB_OS_WIN_USED
+- HB_OS_WIN_32      -> HB_OS_WIN
+- Cleaned references of '32' in context of Windows and
+  Windows API.
+- New macro names introduced:
+  - SUCCESS -> HB_SUCCESS
+  - FAILURE -> HB_FAILURE
+  - ERRCODE -> HB_ERRCODE
+  (old ones still work for compatibility, but please
+  switch your code to use the new ones)
+- Fixed dynamic library creation on Solaris OSes.
+- hbrun will now open .dbf files when passed on the command line.
+- Added web-server written in Harbour: uHTTPD
+- POCC WinCE builds are now supported.
+- OpenWatcom 1.8 (RC) compiler is now supported.
+
+Core
+=============================
+- Added MT (Multi thread) support.
+- Added complete i18n support with API and tool to compile .po
+  files (hbi18n).
+- Added hb_fsCreateTempEx(), hb_fileCreateTempEx() C level APIs.
+- Fixed to not use C RTL CP dependent character functions
+  in Harbour code. (islower(), toupper(), etc)
+  Added new macros instead.
+- __NATISNEGATIVE() and __NATISAFFIRM() are now using
+  CP sensitive case conversion.
+- Added hb_charIsUpper()/hb_charIsLower() APIs.
+- CURDRIVE() and DISKNAME() fixed for systems that don't support
+  drive letters.
+- Xbase++ compatible TBROWSE()/TBCOLUMN()/GET() related methods
+  moved to derived classes xpp_TBrowse()/xpp_TBColumn()/xpp_Get().
+- Fixed potential GPF in HB_RASCAN().
+- Debugger improvements and fixes.
+- Most Harbour level code prepared for MT.
+- Fixed few potential GPFs in RDDNTX, RDDCDX code.
+- Added own hb_snprintf() implementation.
+- Fixed HB_VERSION( HB_VERSION_BUILD_DATE )
+- Added hbuddall library holding all core supplied user RDDs.
+- Fixed to successfully build all user RDD examples.
+- Fixed dbCreate() behaviour in arrayrdd user RDD.
+- Added new LOGRDD user RDD.
+- Added DBFNSX RDD.
+- Fixed FWRITE() potential GPF and security hole.
+- Added __FILE__ support for .prg code.
+- Added:
+  HB_MILLISECONDS()
+  HB_FTEMPCREATEEX( @<cName>, <cDir>, <cPrefix>, <cExt> ) -> <nHandle>
+  HB_STRDECODESCAPE( <cEscSeqStr> ) -> <cStr>
+  HB_STRCDECODE( <cStr> [, @<lCont> ] ) -> <cResult> | NIL
+  HB_STRXOR( <cStr1>, <cStr2> | <nNum> ) -> <cResult>
+  HB_PROGNAME() -> <cProgramNameWithPath>
+  HB_DISPOUTATBOX() similar to HB_DISPOUTAT() but for drawing chars.
+  HB_FGETATTR( <cFileName>, @<nAttr> ) -> <lSuccess>
+  HB_FSETATTR( <cFileName>, <nAttr> ) -> <lSuccess>
+  HB_FSETDATETIME( <cFileName>, [<dDate>], [<cTime HH:MM:SS>] ) -> <lSuccess>
+  HB_WILDMATCHI() like HB_WILDMATCH() but case-insentitive.
+  HB_CDPSELECT() same as HB_SETCODEPAGE() (please upgrade to new function name).
+  HB_CDPUNIID( <cHarbourCP> ) -> <cCPName>
+- Fixed UNSELECTED color updating in SetColor().
+- GTWVT, GTWIN HB_GTI_CODEPAGE support.
+- GTWVT now supports drawing chars even if the selected codepage
+  doesn't support them.
+- GTWVT HB_GTI_BOXCP support.
+- Fixed TBROWSE() to display drawing chars properly.
+- Fixed DISKSPACE() and HB_DISKSPACE() to return proper values
+  on Darwin.
+- Fixed DIRECTORY() when called with "V" (label) parameter (on Windows).
+- New HB_SIZEOFARRAY() macro.
+- Added C APIs:
+  hb_charIsDigit(), hb_charIsAlpha(), hb_charIsLower(), hb_charIsUpper()
+- Added support to specify OS codepage:
+  Set( _SET_OSCODEPAGE[, <cCPID> ] ) -> <cOldCPID>
+  C level: hb_setGetOSCODEPAGE()
+  Conversion is done automatically in existing functions.
+- Added hb_osDecode(), hb_osEncode() C APIs.
+- HB_GETENV() extended with 3rd parameter to control OS codepage
+  conversion (on by default).
+- Added CPU dump support for AMD64/x64.
+- Added module listing on GPF for x86 and x64.
+- GTXWC potential GPF fixed.
+- Added process handling:
+  HB_PROCESSOPEN(), HB_PROCESSVALUE(), HB_PROCESSCLOSE()
+- Added HB_GTI_BOXCP to control box drawing CP for GTs.
+- Using Heap instead of Local memory when HB_FM_WIN32_ALLOC is set.
+- Added __objHasMsgAssigned( object, "msgName" )
+- File find API fixes for OS/2.
+- DBOI_BAGNAME made compatible for RDDCDX, RDDNSX.
+- Added Intel C compiler and Wine detection.
+- Codepage fixes and cleanups (BGMIK).
+- Fixed cursor handling in TEDITOR/MemoEdit().
+- Now GTXWC generates HB_K_RESIZE on resize.
+- GTWIN fixed HB_GTI_KBDSHIFTS handling.
+- GTWVT added 'layered window' support (always enabled, except
+  when in Terminal mode).
+- New compiler expression optimizations, and some fixes for rare
+  cases.
+- Some compiler optimizations are now enabled using new -ko switch.
+- Added array preallocation on AADD().
+- Optimization to string reallocation.
+- Added detection of unused variable assigments. Code cleaned
+  in all Harbour for such warnings.
+- Fixed possible problem with _SET_PRINTFILE, _SET_DEFAULT, _SET_EXTRAFILE.
+
+Contrib
+=============================
+- hbmzip fixed GPF in HB_ZIPDELETEFILE() when file has comment.
+- hbmzip fixed handling attributes in HB_ZIPFILECREATE().
+- hbmzip fixed timestamps stored in .zip files.
+- hbmzip added HB_ZIPSTOREFILEHANDLE(),
+  HB_UNZIPEXTRACTCURRENTFILETOHANDLE() functions.
+- hbwin WIN_REGREAD()/GETREGISTRY() got new parameter to supply
+  a default value when the entry isn't found.
+- hbtip FTP handling fixed some accidental typos.
+- hbtip new MIME types.
+- hbtip fixes and optimization to HB_BASE64().
+- rddads now autodetects version 9.10.
+- hbct XTOC(), FTOC() and CTOF() fixed to be properly multiplatform.
+- hbct unbuffered drawing speed improvement in windowing code.
+- hbct DIRNAME() fixed.
+- hbct other fixes.
+- Added hbcrypt, hbssl and rddsql (with mysql, pgsql, fbsql plugins)
+  to contribs.
+- Extended hbct windowing with new low level API, better shadow
+  handling.
+- gtwvg improvements. Xbase++ compatible UI objects.
+- hbw32 library renamed to hbwin.
+- Added WIN_ABORTDOC(), WIN_RUNDETACHED(), WIN_SHELLEXECUTE(),
+  WIN_LOADRESOURCE() to hbwin.
+- dbu patch now adds SET DATE ANSI and SET CENTURY ON.
+- Extended WIN_MULDIV(), WIN_RECTANGLE(), WIN_SETBKMODE() to
+  accept handles passed using different methods.
+- Changed functions named below in hbwin:
+  - W32_REGPATHSPLIT()            -> WIN_REGPATHSPLIT()
+  - W32_REGREAD()                 -> WIN_REGREAD()
+  - W32_REGWRITE()                -> WIN_REGWRITE()
+  - WIN32_REGCREATEKEYEX()        -> WIN_REGCREATEKEYEX()
+  - WIN32_REGOPENKEYEX()          -> WIN_REGOPENKEYEX()
+  - WIN32_REGQUERYVALUEEX()       -> WIN_REGQUERYVALUEEX()
+  - WIN32_REGSETVALUEEX()         -> WIN_REGSETVALUEEX()
+  - WIN32_REGCLOSEKEY()           -> WIN_REGCLOSEKEY()
+  - WIN32_ARC()                   -> WIN_ARC()
+  - WIN32_BITMAPSOK()             -> WIN_BITMAPSOK()
+  - WIN32_CREATEDC()              -> WIN_CREATEDC()
+  - WIN32_CREATEFONT()            -> WIN_CREATEFONT()
+  - WIN32_DELETEDC()              -> WIN_DELETEDC()
+  - WIN32_DRAWBITMAP()            -> WIN_DRAWBITMAP()
+  - WIN32_ELLIPSE()               -> WIN_ELLIPSE()
+  - WIN32_ENDDOC()                -> WIN_ENDDOC()
+  - WIN32_ENDPAGE()               -> WIN_ENDPAGE()
+  - WIN32_ENUMFONTS()             -> WIN_ENUMFONTS()
+  - WIN32_FILLRECT()              -> WIN_FILLRECT()
+  - WIN32_GETCHARSIZE()           -> WIN_GETCHARSIZE()
+  - WIN32_GETDEVICECAPS()         -> WIN_GETDEVICECAPS()
+  - WIN32_GETEXEFILENAME()        -> WIN_GETEXEFILENAME()
+  - WIN32_GETPRINTERFONTNAME()    -> WIN_GETPRINTERFONTNAME()
+  - WIN32_GETTEXTSIZE()           -> WIN_GETTEXTSIZE()
+  - WIN32_LINETO()                -> WIN_LINETO()
+  - WIN32_LOADBITMAPFILE()        -> WIN_LOADBITMAPFILE()
+  - WIN32_MULDIV()                -> WIN_MULDIV()
+  - WIN32_OS_ISWIN9X()            -> WIN_OS_ISWIN9X()
+  - WIN32_RECTANGLE()             -> WIN_RECTANGLE()
+  - WIN32_SETBKMODE()             -> WIN_SETBKMODE()
+  - WIN32_SETCOLOR()              -> WIN_SETCOLOR()
+  - WIN32_SETDOCUMENTPROPERTIES() -> WIN_SETDOCUMENTPROPERTIES()
+  - WIN32_SETMAPMODE()            -> WIN_SETMAPMODE()
+  - WIN32_SETPEN()                -> WIN_SETPEN()
+  - WIN32_STARTDOC()              -> WIN_STARTDOC()
+  - WIN32_STARTPAGE()             -> WIN_STARTPAGE()
+  - WIN32_TEXTOUT()               -> WIN_TEXTOUT()
+  - WIN32PRN class -> WIN_PRN class.
+  - WIN32BMP class -> WIN_BMP class.
+- GPF and wrong RTE message fixed in hbct:
+  CHARADD(), CHARSUB(), CHARAND(), CHAROR(), CHARXOR()
+- hbct string optimizations in thrown RTEs.
+- hbziparc fixed <acFiles> behavior if the parameter is not passed.
+- hbhpdf added HPDF_VERSION_TEXT() to replace former macro
+  with the same name.
+- hbhpdf fixed HPDF_SETINFODATEATTR() function.
+
+Known build issues
+=============================
+- Windows 64-bit builds may generate a large amount of type
+  conversion warnings. This is currently normal and will be
+  addressed in a future version.
+- Contrib hbfimage won't currently compile on Linux systems.
+  This will be addressed in a future version.
+- Contrib hbsqlit3 will not embed foreign sqlite3 library code
+  for Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems.
+  For these compilers you will have to supply sqlite3 library
+  yourself. For other compilers, some warnings are expected and
+  normal in this non-Harbour code.
+- Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions
+  won't work.
+- gtalleg, hbwhat contrib may not compile on all platforms/compilers.
+- hbcurl won't build when using DMC and libcurl 7.19.0.
+  Earlier versions build okay.
+
+
 Version 1.0.1 (2008-09-10)
 
 General
@@ -10,77 +227,77 @@ General
 - Debian, RPM packaging fixes.
 - Several code quality enhancements, warning fixes.
 - Doc quality fixes, formatting.
-- Fixed so that build-time PRG_USR always overrides default 
+- Fixed so that build-time PRG_USR always overrides default
   options in GNU-make.
 - Added openSUSE package requirements to doc/linux1st.txt.
-- Unnecessary compiler options and lib dependencies cleaned 
+- Unnecessary compiler options and lib dependencies cleaned
   from build processes.
-- Fixed Darwin (OS X) builds broken due to a change shortly 
+- Fixed Darwin (OS X) builds broken due to a change shortly
   before 1.0.0.
 - Non-critical filename casing related cleanups.
-- Non-ASCII chars stripped from several source files for 
+- Non-ASCII chars stripped from several source files for
   better portability.
 - Added RDD regression test code.
-- Fixed potential buffer overruns in PP, GTCRS, GTPCA, 
+- Fixed potential buffer overruns in PP, GTCRS, GTPCA,
   GTSTD, hbfbird, hbwhat32.
 - Eliminated remaining non-safe string manipulation calls:
   strncpy(), strcpy() -> hb_strncpy()
   strncat(), strcat() -> hb_strncat()
 - Some contrib name collisions fixed in non-GNU builds.
-- gtalleg GT moved to the contrib area to enable it for 
+- gtalleg GT moved to the contrib area to enable it for
   non-GNU builds and non-*nix builds in general.
-  Use HB_INC_ALLEGRO or HB_DIR_ALLEGRO (for non-GNU make only) 
-  to specify the location of the headers or the package 
+  Use HB_INC_ALLEGRO or HB_DIR_ALLEGRO (for non-GNU make only)
+  to specify the location of the headers or the package
   (respectively).
-- Harbour compiler now defaults to -gc0 switch (was -gc2) to 
+- Harbour compiler now defaults to -gc0 switch (was -gc2) to
   generate the smallest possible .c output by default.
 - Fixed to compile under Cygwin.
-- -mno-cygwin option removed from MinGW builds. You may 
-  need to readd this to C_USR if you use very old MinGW compilers, 
+- -mno-cygwin option removed from MinGW builds. You may
+  need to readd this to C_USR if you use very old MinGW compilers,
   like Cygnus MinGW32 2.95.
 - Fixed WinCE harbour.dll generation in non-GNU builds.
 - Fixed WinCE build warnings in non-GNU builds.
-- Synced build options between BCC/MSVC GNU make and 
+- Synced build options between BCC/MSVC GNU make and
   non-GNU make.
-- Default HB_VISUALC_VER envvar value changed uniformly 
+- Default HB_VISUALC_VER envvar value changed uniformly
   to 80 for both core and contrib and WinCE build in non-GNU make.
   You may need change your environment if you relied on the default.
-- Non-GNU MSVC WinCE builds are now integrated into mainstream 
-  non-GNU MSVC make. make_vcce.bat was removed. Please read 
+- Non-GNU MSVC WinCE builds are now integrated into mainstream
+  non-GNU MSVC make. make_vcce.bat was removed. Please read
   instructions in make_vc.bat, how to initiate a WinCE build.
-- Now Harbour is able to build and run properly in MSVC C mode 
+- Now Harbour is able to build and run properly in MSVC C mode
   in AMD64 (64-bit) mode.
-- Added experimental Pelles C WinCE GNU-make file. It doesn't 
+- Added experimental Pelles C WinCE GNU-make file. It doesn't
   yet work properly.
-- Post batch file called from core non-GNU make files was 
+- Post batch file called from core non-GNU make files was
   renamed, please update your system if you're using them:
   exit_err.bat -> hbmkpost.bat
 - Added experimental MSVC WinCE GNU-make file.
 - Added Darwin autodetection to non-GNU .sh make files.
-- Changed GNU-make name of MinGW WinCE compiler (HB_COMPILER) 
-  from 'cemgw' to 'mingwce'. Please update your system, if 
+- Changed GNU-make name of MinGW WinCE compiler (HB_COMPILER)
+  from 'cemgw' to 'mingwce'. Please update your system, if
   you've been using this directly (and not via make_*ce.sh scripts).
-- Memory statistics module now turned off by default for optimal 
-  performance. It can be turned on by setting HB_FM_STATISTICS 
+- Memory statistics module now turned off by default for optimal
+  performance. It can be turned on by setting HB_FM_STATISTICS
   macro.
 
 Core
 =============================
-- Added HB_LEGACY_LEVEL macro to control inclusion of 
-  certain deprecated Harbour elements. This macro is 
-  enabled by default, and will be disabled (and legacy 
-  parts probably removed) in Harbour 1.1. You can disable it 
-  now manually by #defining HB_LEGACY_LEVEL_OFF, in order to 
-  check what elements needs to be changed, and if they were 
+- Added HB_LEGACY_LEVEL macro to control inclusion of
+  certain deprecated Harbour elements. This macro is
+  enabled by default, and will be disabled (and legacy
+  parts probably removed) in Harbour 1.1. You can disable it
+  now manually by #defining HB_LEGACY_LEVEL_OFF, in order to
+  check what elements needs to be changed, and if they were
   properly and fully changed in your local code.
-- HB_DBG_*() internal functions moved to the internal 
-  function namespace __DBG*(). Some of these - potentially 
-  used by 3rd party packages - are still accessible under 
+- HB_DBG_*() internal functions moved to the internal
+  function namespace __DBG*(). Some of these - potentially
+  used by 3rd party packages - are still accessible under
   the old name, when HB_LEGACY_LEVEL is #defined.
 - Removed old __VM*() macros which were aliased to __DBG*()
   functions.
 - Macro name change __EXPORT__ -> HB_DYNLIB
-  This shouldn't normally affect users, but if you happen 
+  This shouldn't normally affect users, but if you happen
   to use it, please update it.
 - Some internal macro names changed as follows:
   OS_UNIX_COMPATIBLE *                -> HB_OS_UNIX_COMPATIBLE
@@ -101,11 +318,11 @@ Core
   HARBOUR_MAX_RDD_DRIVERNAME_LENGTH * -> HB_RDD_MAX_DRIVERNAME_LEN
   HARBOUR_MAX_RDD_ALIAS_LENGTH *      -> HB_RDD_MAX_ALIAS_LEN
   HARBOUR_MAX_RDD_AREA_NUM            -> HB_RDD_MAX_AREA_NUM
-  If you happen to use these, please update your code to use 
-  the new names. The more commonly used ones (marked with '*') 
+  If you happen to use these, please update your code to use
+  the new names. The more commonly used ones (marked with '*')
   are still available under the old name, covered with HB_LEGACY_LEVEL.
-- hbmake and hbdoc tools reduction in size, several 
-  fixes, better multiplaform support and lots of code cleanups, 
+- hbmake and hbdoc tools reduction in size, several
+  fixes, better multiplaform support and lots of code cleanups,
   especially in hbmake (still a long way to go though).
 - Some names deprecated and replaced with new ones:
   FHANDLE      -> HB_FHANDLE
@@ -115,35 +332,35 @@ Core
   CLR_STRLEN   -> HB_CLRSTR_LEN
   All of these are marked with HB_LEGACY_LEVEL.
   Important to note that legacy Clipper compatible C
-  sources may continue to use Clipper compatible symbols, 
-  regardless of the HB_LEGACY_LEVEL setting. It's advised 
-  to change these to Harbour-only C sources in preparation 
+  sources may continue to use Clipper compatible symbols,
+  regardless of the HB_LEGACY_LEVEL setting. It's advised
+  to change these to Harbour-only C sources in preparation
   to the next Harbour major version (1.1).
-- Marked hb_fileNameConv() as HB_LEGACY_LEVEL. 3rd party 
+- Marked hb_fileNameConv() as HB_LEGACY_LEVEL. 3rd party
   and app developers should switch to hb_fsNameConv().
-- GTI_*, GFX_* macros marked as HB_LEGACY_LEVEL. Please use 
+- GTI_*, GFX_* macros marked as HB_LEGACY_LEVEL. Please use
   HB_GTI_*, HB_GFX_* equivalents.
 - Fixed potential buffer overrun in hb_fsTempName().
   This got introduced shortly before 1.0.0.
 - Debugger: Strip function name from module name used to initialize
-  global and file wide variables. It fixes presenting file wide 
+  global and file wide variables. It fixes presenting file wide
   static variables in debugger.
-- Removed hb_hInstance, hb_hPrevInstance, s_iCmdShow, s_WinMainParam 
-  old undocumented public variables. 3rd parties should use 
+- Removed hb_hInstance, hb_hPrevInstance, s_iCmdShow, s_WinMainParam
+  old undocumented public variables. 3rd parties should use
   official hb_winmainArgGet() API to get these values.
-  This feature is also HB_LEGACY_LEVEL dependent, therefore it will 
+  This feature is also HB_LEGACY_LEVEL dependent, therefore it will
   be finalized in 1.1, until then, old symbols will still work.
 - Fixed _FIELD indirectly used as alias to generate the right RTE:
   ? ("_FIELD")->NAME, or:
   M->var := "_FIELD"; ? ("&var")->NAME
-- Fixed OS() to detect Vista/Windows 2008. This bug got 
+- Fixed OS() to detect Vista/Windows 2008. This bug got
   introduced in 1.0.0rc2.
 - Fixed OS() string when run on Windows XP 64-bit Edition.
-- Changed HB_COMPILER() to always show 32/64-bit in the 
+- Changed HB_COMPILER() to always show 32/64-bit in the
   returned string.
 - Fixed GPFs and leaks when using Harbour compiler -w3 switch.
-- Bad workaround added for Pelles C 5.00.1 in AMD64 mode to 
-  compile the Harbour 'inet' subsystem. It won't properly 
+- Bad workaround added for Pelles C 5.00.1 in AMD64 mode to
+  compile the Harbour 'inet' subsystem. It won't properly
   work, but it lets build the rest of Harbour (like hbrun.exe).
 - PCRE lib upgraded to 7.8 (from 7.7)
 - Fixed dbInfo( DBI_POSITIONED ) returned value.
@@ -159,77 +376,77 @@ Contrib
 - hbmzip potential GPF fixed in executable type detection.
 - General code style fixes in certain contribs.
 - Harbour -km switch enabled for contribs.
-- hbmysql SQLFETCHR() function updated to allow fetching 
+- hbmysql SQLFETCHR() function updated to allow fetching
   binary (BLOB) fields.
 - hbclipsm GAUGE*() function fixes.
 - gtalleg fixed to compile under several non-*nix platforms
   (still needs more work).
 - xhb: HB_ARRAYBLOCK() compatibility function added.
-- hbnf FT_GETE() function bad leak fixed on Win32 systems, 
+- hbnf FT_GETE() function bad leak fixed on Win32 systems,
   and potential GPF on all systems.
-- hbwhat32 removed wintypes.ch header. Header with the same 
+- hbwhat32 removed wintypes.ch header. Header with the same
   name and identical content can be found in xhb contrib.
 - hbct VOLUME() buffer overrun fixed.
 - hbole GPF fixed. This bug got introduced in 1.0.0rc2.
-- hbole, hbw32 64-bit fix for MESSAGEBOX() functions. It now 
-  allows for both pointer and numeric types to be passed as 
+- hbole, hbw32 64-bit fix for MESSAGEBOX() functions. It now
+  allows for both pointer and numeric types to be passed as
   a window handle.
-- hbwhat32 fixed to not define WinMain() and also not to 
+- hbwhat32 fixed to not define WinMain() and also not to
   collide with certain Harbour public symbols.
-- hbw32 unnecessary memory allocation hacks removed from 
+- hbw32 unnecessary memory allocation hacks removed from
   OLE support.
 - Using ANSI C comments more consistently in contribs.
-- hbct / atnum.c changed to workaround a compiler bug in 
+- hbct / atnum.c changed to workaround a compiler bug in
   Pelles C 5.00.1 in AMD64 mode.
 - hbole modified to generate RTE when OLE object cannot
-  be found, to be in sync with hbw32 OLE implementation.  
+  be found, to be in sync with hbw32 OLE implementation.
 - hbbtree fixed scope problem in class, causing an RTE.
   Added build batch files for its tests.
-- Remaining code (hbwhat32, hbnf) fixed to always use 
+- Remaining code (hbwhat32, hbnf) fixed to always use
   Harbour C API, instead of legacy Clipper C API (*.api,
   clipdefs.h and extend.h).
-- hbsqlit2 lib was moved to examples and sqlite2 sources 
+- hbsqlit2 lib was moved to examples and sqlite2 sources
   removed. Please use hbsqlit3 instead.
-- hbziparch heavy rework/refactor/reduce/fixing effort, 
-  what resulted in hbziparc, which implements the same old 
-  ZipArchive interface with similar functionality (except 
-  progress codeblock callbacks unzip functions and .zip 
-  spanning feature), now rewritten in Harbour. If you need 
-  to use this API, please change hbziparch to hbziparc and 
-  link in hbmzip library, too. In contrary to old 
-  implementation, this new one is completely portable and 
-  fixes some potential leaks and GPFs. This code could use 
+- hbziparch heavy rework/refactor/reduce/fixing effort,
+  what resulted in hbziparc, which implements the same old
+  ZipArchive interface with similar functionality (except
+  progress codeblock callbacks unzip functions and .zip
+  spanning feature), now rewritten in Harbour. If you need
+  to use this API, please change hbziparch to hbziparc and
+  link in hbmzip library, too. In contrary to old
+  implementation, this new one is completely portable and
+  fixes some potential leaks and GPFs. This code could use
   some more testing, be aware.
 - hbbmcdx fixed internal error in dirty index reading.
 - hbcurl added support for libcurl 7.19.0 features.
 - hbhpdf added support for libharu 2.1.0.
-- Fixed so that contrib source files cannot collide with each 
+- Fixed so that contrib source files cannot collide with each
   other when building them using the non-GNU make system.
-- Former hbwhat32 lib added to the default contrib list 
-  under the name of hbwhat, compilation was fully cleaned 
-  and fixed to support Win64 platform. INTERNETREADFILE(), 
-  INTERNETWRITEFILE() functions were fixed. what32.ch renamed 
+- Former hbwhat32 lib added to the default contrib list
+  under the name of hbwhat, compilation was fully cleaned
+  and fixed to support Win64 platform. INTERNETREADFILE(),
+  INTERNETWRITEFILE() functions were fixed. what32.ch renamed
   to hbwhat.ch.
 - hbhpdf fixed HPDF_ADDPAGELABEL().
 - hbw32 got a new COM port handling class and API.
 - gtwvg got some enhancements and 64-bit compatibility fixes.
-  A critical 1.0.0 bug was also fixed, which could cause 
+  A critical 1.0.0 bug was also fixed, which could cause
   dialogs to not appear.
 - hbfimage fixed to compile with Watcom compilers.
 
 Known build issues
 =============================
-- Windows 64-bit builds may generate a large amount of type 
-  conversion warnings. This is currently normal and will be 
+- Windows 64-bit builds may generate a large amount of type
+  conversion warnings. This is currently normal and will be
   addressed in a future version.
 - Contrib hbfimage won't currently compile on Linux systems.
   This will be addressed in a future version.
-- Contrib hbsqlit3 will not embed foreign sqlite3 library code 
-  for Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems. 
-  For these compilers you will have to supply sqlite3 library 
-  yourself. For other compilers, some warnings are expected and 
+- Contrib hbsqlit3 will not embed foreign sqlite3 library code
+  for Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems.
+  For these compilers you will have to supply sqlite3 library
+  yourself. For other compilers, some warnings are expected and
   normal in this non-Harbour code.
-- Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions 
+- Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions
   won't work.
 - gtalleg, hbwhat contrib may not compile on all platforms/compilers.
 - hbcurl won't build when using DMC and libcurl 7.19.0.
@@ -246,7 +463,7 @@ General
 - Cleanup of MSVC C mode static initialization code.
 - Changed internal representation for file attributes from USHORT to ULONG.
 - Fixed memory leak in -gw mode.
-- Portability fixes (Unicode, 64-bit, Pelles C 32/64-bit, WinCE, eVC4, XCC, 
+- Portability fixes (Unicode, 64-bit, Pelles C 32/64-bit, WinCE, eVC4, XCC,
   Linux mouse detection, OpenWatcom).
 - Deployment fixes.
 - harbour.dll related fixes.
@@ -262,11 +479,11 @@ Core
 - Added passing non-string parameters to .hrb functions.
 - Fixed casting for indexes with key length greater than 196 bytes
   created on tables with record number smaller than 256 in rddcdx.
-- New FS API functions: hb_fsSetFileTime(), hb_fsGetFileTime(), hb_fsSetAttr(), 
+- New FS API functions: hb_fsSetFileTime(), hb_fsGetFileTime(), hb_fsSetAttr(),
   hb_fsGetAttr().
 - New date API function: hb_timeStampEncode().
 - Fixed printing under OS/2.
-- Implemented DBEDIT() DE_APPEND mode plus some other features and 
+- Implemented DBEDIT() DE_APPEND mode plus some other features and
   compatibility fixes.
 - MD5 calculation fixes.
 - Added C level hb_hashAddNew().
@@ -301,14 +518,14 @@ Core
 Contrib
 =============================
 - Better cross-build support for contribs with external dependencies.
-- hbmzip OS/2 support, Unix .zip header fix, using Harbour memory 
-  management functions, global and file comment support, HB_ZIPDELETEFILE() 
+- hbmzip OS/2 support, Unix .zip header fix, using Harbour memory
+  management functions, global and file comment support, HB_ZIPDELETEFILE()
   function.
 - hbziparch fixes and better portability.
-- hbcurl fixes, now using Harbour memory allocation functions, 
-  now older libcurl versions are supported as well, CURL_EASY_GETINFO() 
+- hbcurl fixes, now using Harbour memory allocation functions,
+  now older libcurl versions are supported as well, CURL_EASY_GETINFO()
   fixed for unsupported info types.
-- 64-bit compatibility fixes. hbmysql/SQLLISTF() function now 
+- 64-bit compatibility fixes. hbmysql/SQLLISTF() function now
   uses pointer instead of numeric type.
 - Fixed adordd to be _SET_EXACT independent.
 - Fixed hbodbc tests to work out of the box.
@@ -326,19 +543,19 @@ Known build issues
 =============================
 - Harbour with MSVC in 64-bit will only build in C++ mode.
   Use 'set HB_BUILD_MODE=cpp' and 'make_vc.bat'.
-- Windows 64-bit builds may generate a large amount of type 
-  conversion warnings. This is currently normal and will be 
+- Windows 64-bit builds may generate a large amount of type
+  conversion warnings. This is currently normal and will be
   addressed in a future version.
-- Contrib hbfimage won't currently compile on Linux systems 
-  and with Open Watcom compilers. This will be addressed in 
+- Contrib hbfimage won't currently compile on Linux systems
+  and with Open Watcom compilers. This will be addressed in
   a future version.
-- Contrib hbsqlit3 will not embed foreign sqlite3 library code 
-  for Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems. 
-  For these compilers you will have to supply sqlite3 library 
-  yourself. For other compilers, some warnings are expected and 
+- Contrib hbsqlit3 will not embed foreign sqlite3 library code
+  for Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems.
+  For these compilers you will have to supply sqlite3 library
+  yourself. For other compilers, some warnings are expected and
   normal in this non-Harbour code.
-- Digital Mars C compiler compiles properly, but linking Harbour 
-  executables doesn't currently work. This may be addressed in 
+- Digital Mars C compiler compiles properly, but linking Harbour
+  executables doesn't currently work. This may be addressed in
   a future revision.
 
 
@@ -347,26 +564,26 @@ Version 1.0.0 rc2 (2008-07-01) tag: 1.0.0rc2
 General
 =============================
 - SVN repository cleanup in /tags and /branches
-- GNU and non-GNU make system configuration moved closer to each 
+- GNU and non-GNU make system configuration moved closer to each
   other.
-- Reviewed and fixed platforms issues and compiler warnings 
+- Reviewed and fixed platforms issues and compiler warnings
   for the contrib area in most part.
 - Enhanced contrib 64-bit Windows compatibility.
 
 Core
 =============================
-- __HARBOUR__ macro will now contain value in 0xAABBCC form, where 
+- __HARBOUR__ macro will now contain value in 0xAABBCC form, where
   AA, BB and CC are the major, minor and revision numbers in hex.
-  This is incompatible, as in previous version .c level __HARBOUR__ 
+  This is incompatible, as in previous version .c level __HARBOUR__
   did return 0xAABB, while on .prg level it had no value.
 - Deprecated hb_itemPutCPtr(). Please use hb_itemPutCLPtr() instead.
-- Deprecated hb_errFuncName public var. Please use HB_ERR_FUNCNAME macro instead. 
+- Deprecated hb_errFuncName public var. Please use HB_ERR_FUNCNAME macro instead.
 - Added hb_itemPutCPtr2().
-- GTWVT enhancements (mark&copy, resize with mouse, palette handling, 
+- GTWVT enhancements (mark&copy, resize with mouse, palette handling,
   some event callbacks, close button control)
 - Changed SetCancel() interpretation in GTWVT.
 - hbpp now uses the same engine as the Harbour compiler.
-- Added Set( _SET_HBOUTLOG[, <cFileName>] ), Set( _SET_HBOUTLOGINFO[, <cInfo>] ) 
+- Added Set( _SET_HBOUTLOG[, <cFileName>] ), Set( _SET_HBOUTLOGINFO[, <cInfo>] )
   to customize GPF and memory leak logging.
 - Added better GPF dumps for Windows.
 - Fixed clipboard handling on Windows under certain situations.
@@ -375,7 +592,7 @@ Core
 Contrib
 =============================
 - Reviewed and fixed bugs and potential security issues in contribs.
-- hbziparch updated, bugs fixed and ZipArchive library 
+- hbziparch updated, bugs fixed and ZipArchive library
   updated to latest version.
 - Added DLL call functionality to hbw32 contrib.
 - Added HB_FREADLINE(), HB_CRYPT(), HB_DECRYPT() to xhb contrib.
@@ -384,13 +601,13 @@ Contrib
 - Added SQL_SPRINTF() to hbmisc contrib.
 - Enhanced STRFORMAT() in hbmisc contrib.
 - Enabled hbgf contrib for all (Linux, OS/2, Windows) platforms.
-- Due to fixing 64-bit portability problems, some functions became 
-  incompatible, because numeric addresses have been converted to 
+- Due to fixing 64-bit portability problems, some functions became
+  incompatible, because numeric addresses have been converted to
   pointer types:
   - hbwhat32: wndproc/dlgproc parameters in related functions.
   - hbmysql: SQLCONNECT(), SQLSTORER(), SQLUSERES()
   - hbmsql: MSQLSTORER(), MSQLLISTFI()
-- Removed function CEIL() from hbmisc. Please use CEILING() from hbct 
+- Removed function CEIL() from hbmisc. Please use CEILING() from hbct
   instead.
 - Optimizations and minor fixes.
 
@@ -650,7 +867,7 @@ Contrib
 =============================
 - renamed contrib libraries
 - TIP library borrowed from xHarbour and adopted to Harbour
-- added HBCURL - libcurl interface library. (rooted from the 
+- added HBCURL - libcurl interface library. (rooted from the
   xHarbour version, but heavily fixed and further developed.)
 - added HBSQLIT3 - SQLite 3.x Harbour callable library.
 - fixes in MySQL and PGSQL library
@@ -673,7 +890,7 @@ Contrib
 - added hbcompat.ch file which hides many differences between Harbour
   and xHarbour compilers using PP directives.
 - added hbmzip library - it's wrapper to MINIZIP library which
-  allows for compress and decompress streams, character variables, 
+  allows for compress and decompress streams, character variables,
   .gz and .zip files
 - fixes and extensions in ADORDD
 - added automatic ACE version detection during building ADSRDD
