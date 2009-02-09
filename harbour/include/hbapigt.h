@@ -153,6 +153,7 @@ typedef struct
    PHB_ITEM pNewVal;
    PHB_ITEM pResult;
    PHB_ITEM pNewVal2;
+   int      nPCount;
 } HB_GT_INFO, * PHB_GT_INFO;
 
 /* Public interface. These should never change, only be added to. */

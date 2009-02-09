@@ -135,6 +135,8 @@
 
 #define HB_GTI_BOXCP            57  /* Codepage used for box drawing */
 
+#define HB_GTI_CARGO            58  /* Storage of any user defined value */
+
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
 #define HB_GTI_FONTW_NORMAL     2

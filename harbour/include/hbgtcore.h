@@ -332,6 +332,7 @@ typedef struct _HB_GT_BASE
    ULONG          StrBufferPos;
 
    PHB_ITEM       pNotifierBlock;
+   PHB_ITEM       pCargo;
 
    void *         pGTData[HB_GT_MAX_];    /* local GT data */
 

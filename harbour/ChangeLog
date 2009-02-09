@@ -8,6 +8,25 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-10 00:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapigt.h
+  * source/rtl/gtfunc.c
+    + Extended HB_GT_INFO structure with nPCount member.
+
+  * include/hbgtinfo.ch
+  * include/hbgtcore.h
+  * source/rtl/hbgtcore.c
+    + Added HB_GTI_CARGO. This can be used to store whatever
+      user defined value on a per GT basis.
+      HB_GTINFO( HB_GTI_CARGO[, <xValue ] ) -> <xPrevValue>
+
+  * source/rtl/hbgtcore.c
+    ! hb_gt_def_Alert() fixed to also initialize pNewVal2 with NULL.
+      (didn't cause any real-world harm).
+
+  * contrib/hbwin/win_tprn.prg
+    % Minor optimizations.
+
 2009-02-09 15:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/hsx/hsx.c
     * keep HSX indexes in global table synced by mutex instead of

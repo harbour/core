@@ -164,6 +164,8 @@ static void hb_gt_def_Free( PHB_GT pGT )
 
    if( pGT->pNotifierBlock )
       hb_itemRelease( pGT->pNotifierBlock );
+   if( pGT->pCargo )
+      hb_itemRelease( pGT->pCargo );
 
    if( pGT->pMutex )
       hb_itemRelease( pGT->pMutex );
@@ -1584,6 +1586,25 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+      case HB_GTI_CARGO:
+         if( pGT->pCargo )
+         {
+            if( pInfo->pResult )
+               hb_itemCopy( pInfo->pResult, pGT->pCargo );
+            else
+               pInfo->pResult = hb_itemNew( pGT->pCargo );
+         }
+         if( pInfo->nPCount )
+         {
+            if( pGT->pCargo )
+            {
+               hb_itemRelease( pGT->pCargo );
+               pGT->pCargo = NULL;
+            }
+            pGT->pCargo = hb_itemNew( pInfo->pNewVal );
+         }
+         break;
+
       case HB_GTI_RESIZEMODE:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, HB_GTI_RESIZEMODE_FONT );
          break;
@@ -1611,7 +1632,8 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       BYTE * pBuffer = NULL;
       HB_GT_INFO gtInfo;
 
-      gtInfo.pNewVal = gtInfo.pResult = NULL;
+      gtInfo.pNewVal = gtInfo.pNewVal2 = gtInfo.pResult = NULL;
+      gtInfo.nPCount = 0;
 
       HB_GTSELF_INFO( pGT, HB_GTI_FULLSCREEN, &gtInfo );
       if( gtInfo.pResult )
@@ -3428,4 +3450,3 @@ HB_FUNC( HB_GTSELECT )
       hb_retptrGC( gtHolder );
    }
 }
-

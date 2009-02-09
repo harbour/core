@@ -332,9 +332,9 @@ METHOD Destroy() CLASS WIN_PRN
 
 METHOD StartDoc( cDocName ) CLASS WIN_PRN
    LOCAL lResult
-   IF cDocName == NIL
-      cDocName := win_GetExeFileName() + " [" + DTOC( DATE() ) + ' - ' + TIME() + "]"
-   ENDIF
+
+   DEFAULT cDocName TO win_GetExeFileName() + " [" + DToC( Date() ) + ' - ' + Time() + "]"
+
    IF ( lResult := win_StartDoc( ::hPrinterDc, cDocName ) )
       IF !( lResult := ::StartPage( ::hPrinterDc ) )
          ::EndDoc( .T. )
@@ -397,9 +397,9 @@ METHOD StartPage() CLASS WIN_PRN
    RETURN .T.
 
 METHOD EndPage( lStartNewPage ) CLASS WIN_PRN
-   IF lStartNewPage == NIL
-      lStartNewPage := .T.
-   ENDIF
+
+   DEFAULT lStartNewPage TO .T.
+
    win_EndPage( ::hPrinterDC )
    IF lStartNewPage
       ::StartPage()
@@ -407,6 +407,7 @@ METHOD EndPage( lStartNewPage ) CLASS WIN_PRN
          ::SetFont()
       ENDIF
    ENDIF
+
    RETURN .T.
 
 METHOD NewLine() CLASS WIN_PRN
@@ -538,16 +539,13 @@ METHOD SetPos(nPosX, nPosY) CLASS WIN_PRN
 
 METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
    LOCAL nPosX
-   IF nAlign == NIL
-      nAlign := 0
-   ENDIF
-   IF lUpdatePosX == NIL
-      lUpdatePosX := .T.
-   ENDIF
-   IF lNewLine == NIL
-      lNewLine := .F.
-   ENDIF
+
    IF cString != NIL
+
+      DEFAULT lNewLine TO .F.
+      DEFAULT lUpdatePosX TO .T.
+      DEFAULT nAlign TO 0
+
       nPosX := win_TextOut( ::hPrinterDC, ::PosX, ::PosY, cString, LEN( cString ), ::fCharWidth, nAlign )
       ::HavePrinted := .T.
       IF lUpdatePosX
@@ -560,12 +558,6 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
    RETURN .T.
 
 METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
-   IF lNewLine == NIL
-      lNewLine := .F.
-   ENDIF
-   IF lUpdatePosX == NIL
-      lUpdatePosX := .T.
-   ENDIF
    ::SetPos( nPosX, nPosY )
    ::TextOut( cString, lNewLine, lUpdatePosX, nAlign )
    RETURN .T.
