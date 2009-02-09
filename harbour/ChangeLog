@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-10 00:50 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+    * Updated [DONE] statuses.
+
 2009-02-10 00:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapigt.h
   * source/rtl/gtfunc.c
@@ -892,7 +896,7 @@
              GETs, only if they are explicitly created
              using Get():New(). If this is a problem for someone
              we can start thinking of a solution.
-    ; TODO: Do the same with TBrowse() and TColumn().
+    ; TODO: Do the same with TBrowse() and TColumn(). [DONE]
 
 2009-02-04 09:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbwin/win_tprn.prg
@@ -1245,7 +1249,7 @@
     * SUCCESS, FAILURE, ERRCODE as compatibility.
     * Minor cleanup.
 
-  ; TODO: Switch to HB_* versions inside Harbour tree.
+  ; TODO: Switch to HB_* versions inside Harbour tree. [DONE]
 
 2009-02-03 14:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/doc/Makefile
@@ -1842,11 +1846,12 @@
   ; TOFIX: C code uses much more statics, some of these make
            code clearly broken for MT.
 
-           Shouldn't we add core support for thread specific
-           cargo (user defined data) area available for 3rd
-           party libs/apps?
-           Same could be added to GT structure to hold
-           GT instance specific user defined data.
+  ; TODO: Shouldn't we add core support for C-level thread
+          specific cargo (user defined data) area available for
+          3rd party libs/apps?
+
+  ; TODO: Same could be added to GT structure to hold
+          GT instance specific user defined data. [DONE]
 
 2009-02-02 22:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbct/fcopy.prg
