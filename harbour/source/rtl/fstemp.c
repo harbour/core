@@ -174,7 +174,7 @@ static HB_FHANDLE hb_fsCreateTempLow( const BYTE * pszDir, const BYTE * pszPrefi
             d = d * 36;
             n = ( int ) d;
             d = modf( d, &x );
-            pszName[ iLen++ ] = n + ( n > 9 ? 'a' - 10 : '0' );
+            pszName[ iLen++ ] = ( BYTE ) ( n + ( n > 9 ? 'a' - 10 : '0' ) );
          }
          pszName[ iLen ] = '\0';
          if( pszExt )
@@ -288,19 +288,19 @@ HB_FUNC( HB_FTEMPCREATE )
    hb_storc( ( char * ) szName, 4 );
 }
 
-HB_FHANDLE hb_fsCreateTempEx( UCHAR * pszName, const UCHAR * pszDir, const UCHAR * pszPrefix, const UCHAR * pszExt, ULONG ulAttr )
+HB_FHANDLE hb_fsCreateTempEx( BYTE * pszName, const BYTE * pszDir, const BYTE * pszPrefix, const BYTE * pszExt, ULONG ulAttr )
 {
    return hb_fsCreateTempLow( pszDir, pszPrefix, ulAttr, pszName, pszExt );
 }
 
 HB_FUNC( HB_FTEMPCREATEEX )
 {
-   UCHAR szName[ _POSIX_PATH_MAX + 1 ];
+   BYTE szName[ _POSIX_PATH_MAX + 1 ];
 
    hb_retnint( ( HB_NHANDLE ) hb_fsCreateTempEx( szName,
-                                                 ( UCHAR * ) hb_parc( 2 ),
-                                                 ( UCHAR * ) hb_parc( 3 ),
-                                                 ( UCHAR * ) hb_parc( 4 ),
+                                                 ( BYTE * ) hb_parc( 2 ),
+                                                 ( BYTE * ) hb_parc( 3 ),
+                                                 ( BYTE * ) hb_parc( 4 ),
                                                  ( ULONG ) ( ISNUM( 5 ) ? ( ULONG ) hb_parnl( 5 ) : FC_NORMAL ) ) );
 
    hb_storc( ( char * ) szName, 1 );

@@ -161,7 +161,7 @@ extern HB_EXPORT void       hb_fsCommit      ( HB_FHANDLE hFileHandle ); /* comm
 extern HB_EXPORT HB_FHANDLE hb_fsCreate      ( BYTE * pszFileName, ULONG ulAttr ); /* create a file */
 extern HB_EXPORT HB_FHANDLE hb_fsCreateEx    ( BYTE * pszFilename, ULONG ulAttr, USHORT uiFlags ); /* create a file, with specific open mode */
 extern HB_EXPORT HB_FHANDLE hb_fsCreateTemp  ( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName ); /* create a temporary file from components */
-extern HB_EXPORT HB_FHANDLE hb_fsCreateTempEx( UCHAR * pszName, const UCHAR * pszDir, const UCHAR * pszPrefix, const UCHAR * pszExt, ULONG ulAttr ); /* create a temporary file from components */
+extern HB_EXPORT HB_FHANDLE hb_fsCreateTempEx( BYTE * pszName, const BYTE * pszDir, const BYTE * pszPrefix, const BYTE * pszExt, ULONG ulAttr ); /* create a temporary file from components */
 extern HB_EXPORT BYTE *     hb_fsCurDir      ( USHORT uiDrive ); /* retrieve a static pointer containing current directory for specified drive */
 extern HB_EXPORT USHORT     hb_fsCurDirBuff  ( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen ); /* copy current directory for given drive into a buffer */
 extern HB_EXPORT void       hb_fsBaseDirBuff ( BYTE * pbyBuffer ); /* retrieve the base dir of the executable */
@@ -319,10 +319,10 @@ HB_EXPORT PHB_FILE   hb_fileExtOpen( BYTE * pFilename, BYTE * pDefExt,
                                      PHB_ITEM pError );
 HB_EXPORT PHB_FILE   hb_fileCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix,
                                         ULONG ulAttr, BYTE * pszName );
-HB_EXPORT PHB_FILE   hb_fileCreateTempEx( UCHAR * pszName,
-                                          const UCHAR * pszDir,
-                                          const UCHAR * pszPrefix,
-                                          const UCHAR * pszExt,
+HB_EXPORT PHB_FILE   hb_fileCreateTempEx( BYTE * pszName,
+                                          const BYTE * pszDir,
+                                          const BYTE * pszPrefix,
+                                          const BYTE * pszExt,
                                           ULONG ulAttr );
 HB_EXPORT void       hb_fileClose( PHB_FILE pFile );
 HB_EXPORT BOOL       hb_fileLock( PHB_FILE pFile, HB_FOFFSET ulStart, HB_FOFFSET ulLen, int iType );

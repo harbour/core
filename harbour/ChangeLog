@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-09 12:43 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/fstemp.c
+    ! Added cast for MSVC warning. (this code part was
+      formerly only active for non-Windows builds)
+
+  * include/hbapifs.h
+  * source/rtl/fstemp.c
+  * source/rtl/filebuf.c
+    * UCHAR -> BYTE in new FS functions, for consistency.
+
 2009-02-08 22:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapifs.h
   * source/rtl/spfiles.c

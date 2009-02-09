@@ -501,10 +501,10 @@ PHB_FILE hb_fileCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix,
    return pFile;
 }
 
-PHB_FILE hb_fileCreateTempEx( UCHAR * pszName,
-                              const UCHAR * pszDir,
-                              const UCHAR * pszPrefix,
-                              const UCHAR * pszExt,
+PHB_FILE hb_fileCreateTempEx( BYTE * pszName,
+                              const BYTE * pszDir,
+                              const BYTE * pszPrefix,
+                              const BYTE * pszExt,
                               ULONG ulAttr )
 {
    PHB_FILE pFile = NULL;
