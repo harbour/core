@@ -225,7 +225,7 @@
 #include "hbapirdd.h"
 #include "hbapierr.h"
 #include "hbvm.h"
-#include "hbstack.h"
+#include "hbthread.h"
 #include "hbset.h"
 #ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"
@@ -349,6 +349,13 @@ typedef struct
 }
 HSXTABLE, * LPHSXTABLE;
 
+#if defined( HB_HSX_TSDSTORE )
+
+#include "hbstack.h"
+
+#define HB_HSX_LOCK
+#define HB_HSX_UNLOCK
+
 static int hb_hsxDestroy( int iHandle );
 
 static void hb_hsxTableRelease( void * Cargo )
@@ -369,6 +376,16 @@ static LPHSXTABLE hb_hsxTable( void )
 {
    return ( LPHSXTABLE ) hb_stackGetTSD( &s_hsxTable );
 }
+#else
+
+static HSXTABLE s_hsxTable;
+#define hb_hsxTable()   ( &s_hsxTable )
+
+static HB_CRITICAL_NEW( s_hsxMtx );
+#define HB_HSX_LOCK      hb_threadEnterCriticalSection( &s_hsxMtx );
+#define HB_HSX_UNLOCK    hb_threadLeaveCriticalSection( &s_hsxMtx );
+
+#endif
 
 /* the conversion table for ASCII alpha pairs */
 static const BYTE hb_hsxHashArray[] = {
@@ -537,10 +554,17 @@ static int hb_hsxStrCmp( BYTE * pSub, ULONG ulSub, BYTE * pStr, ULONG ulLen,
 
 static LPHSXINFO hb_hsxGetPointer( int iHandle )
 {
-   LPHSXTABLE pTable = hb_hsxTable();
+   LPHSXINFO pHSX = NULL;
 
-   return ( iHandle >=0 && iHandle < pTable->iHandleSize ) ?
-          pTable->handleArray[ iHandle ] : NULL;
+   HB_HSX_LOCK
+   {
+      LPHSXTABLE pTable = hb_hsxTable();
+      if( iHandle >=0 && iHandle < pTable->iHandleSize )
+         pHSX = pTable->handleArray[ iHandle ];
+   }
+   HB_HSX_UNLOCK
+
+   return pHSX;
 }
 
 static int hb_hsxCompile( char * szExpr, PHB_ITEM * pExpr )
@@ -1198,8 +1222,11 @@ static LPHSXINFO hb_hsxNew( void )
 {
    LPHSXINFO pHSX;
    int iHandle = 0;
-   LPHSXTABLE pTable = hb_hsxTable();
+   LPHSXTABLE pTable;
 
+   HB_HSX_LOCK
+
+   pTable = hb_hsxTable();
    if( pTable->iHandleSize == 0 )
    {
       pTable->iHandleSize = HSX_HALLOC;
@@ -1227,6 +1254,8 @@ static LPHSXINFO hb_hsxNew( void )
    memset( pHSX, 0, sizeof( HSXINFO ) );
    pHSX->iHandle = iHandle;
    pHSX->pFile = NULL;
+
+   HB_HSX_UNLOCK
 
    return pHSX;
 }
@@ -1311,19 +1340,33 @@ static int hb_hsxVerify( int iHandle, BYTE * szText, ULONG ulLen,
 
 static int hb_hsxDestroy( int iHandle )
 {
-   LPHSXTABLE pTable = hb_hsxTable();
+   LPHSXINFO pHSX = NULL;
+   int iRetVal;
 
-   if( iHandle >=0 && iHandle < pTable->iHandleSize && pTable->handleArray[ iHandle ] != NULL )
+   iRetVal = hb_hsxFlushAll( iHandle );
+
+   HB_HSX_LOCK
    {
-      LPHSXINFO pHSX = pTable->handleArray[ iHandle ];
-      int iRetVal = HSX_SUCCESS;
-
-      if( pHSX->pFile )
+      LPHSXTABLE pTable = hb_hsxTable();
+      if( iHandle >=0 && iHandle < pTable->iHandleSize &&
+          pTable->handleArray[ iHandle ] != NULL )
       {
-         iRetVal = hb_hsxFlushAll( iHandle );
-         hb_fileClose( pHSX->pFile );
+         pHSX = pTable->handleArray[ iHandle ];
+         pTable->handleArray[ iHandle ] = NULL;
+         if( --pTable->iHandleCount == 0 )
+         {
+            hb_xfree( pTable->handleArray );
+            pTable->iHandleSize = 0;
+            pTable->handleArray = NULL;
+         }
       }
+   }
+   HB_HSX_UNLOCK
 
+   if( pHSX )
+   {
+      if( pHSX->pFile )
+         hb_fileClose( pHSX->pFile );
       if( pHSX->szFileName )
          hb_xfree( pHSX->szFileName );
       if( pHSX->pSearchVal )
@@ -1337,17 +1380,8 @@ static int hb_hsxDestroy( int iHandle )
       if( pHSX->pKeyItem )
          hb_hsxExpDestroy( pHSX->pKeyItem );
       hb_xfree( pHSX );
-
-      pTable->handleArray[ iHandle ] = NULL;
-      if( --pTable->iHandleCount == 0 )
-      {
-         hb_xfree( pTable->handleArray );
-         pTable->iHandleSize = 0;
-         pTable->handleArray = NULL;
-      }
-      return iRetVal;
    }
-   return HSX_BADHANDLE;
+   return iRetVal;
 }
 
 static int hb_hsxCreate( char * szFile, int iBufSize, int iKeySize,
@@ -1409,14 +1443,14 @@ static int hb_hsxCreate( char * szFile, int iBufSize, int iKeySize,
    }
 
    pHSX = hb_hsxNew();
-   pHSX->uiRecordSize = uiRecordSize;
-   pHSX->fIgnoreCase = fIgnoreCase;
-   pHSX->iFilterType = iFilter;
-   pHSX->fUseHash = fIgnoreCase && iKeySize == 2 && iFilter != 3;
    pHSX->pFile = pFile;
    pHSX->szFileName = hb_strdup( szFileName );
    pHSX->fShared = FALSE;
    pHSX->fReadonly = FALSE;
+   pHSX->uiRecordSize = uiRecordSize;
+   pHSX->fIgnoreCase = fIgnoreCase;
+   pHSX->iFilterType = iFilter;
+   pHSX->fUseHash = fIgnoreCase && iKeySize == 2 && iFilter != 3;
    if( szExpr )
       pHSX->szKeyExpr = hb_strdup( szExpr );
    pHSX->pKeyItem = pKeyExpr;

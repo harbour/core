@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-09 15:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/hsx/hsx.c
+    * keep HSX indexes in global table synced by mutex instead of
+      using thread storage data (TSD) on HVM stack. It allows to
+      move HSX indexes between threads, f.e. when workarea is moved
+      by HB_DEATCH()/HB_REQUEST()
+
 2009-02-09 12:43 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/fstemp.c
     ! Added cast for MSVC warning. (this code part was
