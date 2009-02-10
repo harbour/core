@@ -3216,17 +3216,53 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 /* NOTE: pbyBuffer must be _POSIX_PATH_MAX + 1 long. */
 void hb_fsBaseDirBuff( BYTE * pbyBuffer )
 {
-   /* TOFIX: In *NIX systems, this will return the dir specified in the
-             program invocation command line. Some suggest that cwd
-             should be prepended, although this doesn't solve the
-             problem if the program is executed from the path. [vszakats] */
-   PHB_FNAME pFName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
+#if defined( HB_OS_UNIX_COMPATIBLE )
+   {
+      /* Assemble the full path of the program by taking the
+         current dir and appending the name of the program,
+         as specified on the command-line.
+         HB_OS_UNIX_COMPATIBLE might be too rough to decide
+         for this method, pls test on other platforms and refine.
+         [vszakats] */
 
-   pFName->szName = NULL;
-   pFName->szExtension = NULL;
+      char byCurDir[ _POSIX_PATH_MAX + 1 ];
+      char byBinDir[ _POSIX_PATH_MAX + 1 ];
 
-   hb_fsFNameMerge( ( char * ) pbyBuffer, pFName );
-   hb_xfree( pFName );
+      PHB_FNAME pFName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
+
+      pFName->szName = NULL;
+      pFName->szExtension = NULL;
+
+      hb_fsFNameMerge( ( char * ) byBinDir, pFName );
+      hb_xfree( pFName );
+
+      /* Skip 'current dir' if present, and replace with cwd. */
+      if( byBinDir[ 0 ] == '.' && byBinDir[ 1 ] == HB_OS_PATH_DELIM_CHR )
+      {
+         byBinDir += 2;
+
+         hb_fsCurDirBuff( 0, ( BYTE * ) byCurDir, sizeof( byCurDir ) );
+
+         hb_strncpy( byBuffer, HB_OS_PATH_DELIM_CHR_STRING, sizeof( byBuffer ) - 1 );
+         if( byCurDir[ 0 ] != '\0' )
+         {
+            hb_strncat( byBuffer, byCurDir, sizeof( byBuffer ) - 1 );
+            hb_strncat( byBuffer, HB_OS_PATH_DELIM_CHR_STRING, sizeof( byBuffer ) - 1 );
+         }
+      }
+      hb_strncat( byBuffer, byBinDir, sizeof( byBuffer ) - 1 );
+   }
+#else
+   {
+      PHB_FNAME pFName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
+
+      pFName->szName = NULL;
+      pFName->szExtension = NULL;
+
+      hb_fsFNameMerge( ( char * ) pbyBuffer, pFName );
+      hb_xfree( pFName );
+   }
+#endif
 
    /* Convert from OS codepage */
    {

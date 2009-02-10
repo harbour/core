@@ -2268,6 +2268,24 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+#if defined( UNICODE )
+      case HB_GTI_BOXCP:
+      {
+         const char * szVal;
+
+         pInfo->pResult = hb_itemPutC( pInfo->pResult,
+                                       pWVT->boxCDP ? pWVT->boxCDP->id : NULL );
+         szVal = hb_itemGetCPtr( pInfo->pNewVal );
+         if( szVal && *szVal )
+         {
+            PHB_CODEPAGE cdpBox = hb_cdpFind( szVal );
+            if( cdpBox )
+               pWVT->boxCDP = cdpBox;
+         }
+         break;
+      }
+#endif
+
       case HB_GTI_ICONFILE:
       {
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) )

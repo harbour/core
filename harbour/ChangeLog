@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-10 03:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbssl/Makefile
+    + Added new detection dir.
+
+  * source/rtl/gtwvt/gtwvt.c
+    + Added support for HB_GTI_BOXCP.
+      (available for UNICODE builds only).
+
+  * source/rtl/filesys.c
+    + Added (untested) support for *NIX system to
+      hb_fsBaseDirBuff() / HB_DIRBASE().
+
 2009-02-10 04:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/classes.c
     * covered some old functions marked as deprecated long time ago
@@ -2555,7 +2567,7 @@
      + Added Harbour bindings to OpenSSL.
        Work in progress, but it's theoretically already functional.
        To build, set your HB_DIR_OPENSSL or HB_INC_OPENSSL envvar.
-     ; TOFIX: Makefile openssl autodetection should be adjusted.
+     ; TOFIX: Makefile openssl autodetection should be adjusted. [DONE]
 
    * contrib/examples/uhttpd
      ! Fixed SVN attributes. (except for /home dir)
@@ -3235,7 +3247,7 @@
             always available.
     ; NOTE: This solution doesn't go as far as (GTWXC) to
             graphically draw / emulate these chars.
-    ; TODO: Add HB_GTI_BOXCP support to change hard-wired "EN" CP.
+    ; TODO: Add HB_GTI_BOXCP support to change hard-wired "EN" CP. [DONE]
 
   * include/hbapigt.h
   * include/hbgtcore.h

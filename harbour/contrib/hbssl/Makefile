@@ -12,7 +12,7 @@ ifneq ($(HB_ARCHITECTURE),dos)
 
 ifeq ($(HB_INC_OPENSSL),)
 ifeq ($(HB_XBUILD),)
-HB_INC_OPENSSL = /usr/include
+HB_INC_OPENSSL = /usr/include /usr/local/ssl/include
 endif
 endif
 
