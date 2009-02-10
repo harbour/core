@@ -19,8 +19,8 @@ goto POST_EXIT
 
 if "%HB_INC_FIREBIRD%" == "" set HB_INC_FIREBIRD=%HB_DIR_FIREBIRD%\include
 set _HB_DLL_NAME=fbclient
+set HB_ROOT=..\..\..
 set HB_MAKEFILE=..\..\mtpl_b32.mak
-set HB_ROOT = ..\..\..
 set CFLAGS=-I"%HB_INC_FIREBIRD%";..\..\..\include
 
 rem ---------------------------------------------------------------

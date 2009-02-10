@@ -8,6 +8,22 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-10 02:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+  * contrib/rddsql/sddmy/common.mak
+  * contrib/rddsql/sddmy/make_b32.bat
+  * contrib/rddsql/sddmy/make_vc.bat
+  * contrib/rddsql/sddpg/common.mak
+  * contrib/rddsql/sddpg/make_b32.bat
+  * contrib/rddsql/sddpg/make_vc.bat
+  * contrib/rddsql/sddfb/common.mak
+  * contrib/rddsql/sddfb/make_b32.bat
+  * contrib/rddsql/sddfb/make_vc.bat
+    ! Fixed HB_ROOT setting. This fixes a former TOFIX
+      in ChangeLog.
+      'set HB_ROOT = ..\..\..' was right, but spaces
+      aren't accepted around '=', so it wasn't executed.
+
 2009-02-10 02:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbapigt.h
   * source/rtl/hbgtcore.c
@@ -3996,7 +4012,7 @@
          sddmy  - MySQL database driver
          sddpg  - Postgre SQL database driver
          ...
-    ; TOFIX: I was unable to manage build files.
+    ; TOFIX: I was unable to manage build files. [DONE]
       contrib/sqlrdd/sddmy/make_b32.bat sets HB_ROOT variable:
         set HB_ROOT = ..\..\..
       but this variable is lost and contrib/make_b32.mak reassign it:
