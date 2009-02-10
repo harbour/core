@@ -37,7 +37,8 @@ General
 - Open Watcom 1.8 (RC3) compiler is now supported.
 - Removed HB_LEGACY_LEVEL support.
 - Protected incompatible changes with HB_LEGACY_LEVEL2.
-  (HB_SUCCESS, HB_FAILURE, HB_ERRCODE, HB_WINCE, HB_OS_WIN_32*)
+  (HB_SUCCESS, HB_FAILURE, HB_ERRCODE, HB_WINCE, HB_OS_WIN_32*,
+  __RDDGETTEMPALIAS(), __HRB*())
   These features are still available, and will be removed
   in next major version (Harbour 1.2). To test your code for
   compatibility, you can turn it off manually by #defining
@@ -131,6 +132,10 @@ Core
 - Added detection of unused variable assigments. Code cleaned
   in all Harbour for such warnings.
 - Fixed possible problem with _SET_PRINTFILE, _SET_DEFAULT, _SET_EXTRAFILE.
+- __HRB*() functions marked as compatibility, please update your
+  code to use HB_HRB*().
+- __RDDGETTEMPALIAS() marked as compatibility, please update your
+  code to use HB_RDDGETTEMPALIAS().
 
 Contrib
 =============================

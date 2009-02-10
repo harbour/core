@@ -8,6 +8,28 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-10 02:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * doc/whatsnew.txt
+  * include/hbextern.ch
+  * source/vm/runner.c
+  * source/rdd/dbcmd.c
+    * __HRB*() functions marked as HB_LEGACY_LEVEL2 compatibility,
+      please update your code to use HB_HRB*().
+    * __RDDGETTEMPALIAS() marked as HB_LEGACY_LEVEL2 compatibility,
+      please update your code to use HB_RDDGETTEMPALIAS().
+    ; I've permanently remove these symbols from hbextern.ch, so
+      regardless of the legacy setting, hbrun won't have them
+      anymore. This is merely technical, as it would need some
+      hacks in the make system to push through HB_LEGACY_OFF
+      to pptable.c generation. If someone wants to deal with
+      this, even better.
+
+  * include/hbstdgen.ch
+    * Added #undef __FILE__.
+
+  * include/hbsetup.ch
+    * Minor.
+
 2009-02-10 01:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * doc/whatsnew.txt
   * include/clipdefs.h

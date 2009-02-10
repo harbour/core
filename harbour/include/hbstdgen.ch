@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * 
+ *
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -66,6 +66,7 @@
 
 #undef __DATE__
 #undef __TIME__
+#undef __FILE__
 #undef __HB_MAIN__
 #undef __ARCH16BIT__
 #undef __ARCH32BIT__

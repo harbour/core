@@ -771,6 +771,8 @@ HB_FUNC( HB_HRBGETFUNSYM )
 
 /* NOTE: Deprecated compatibility functions. */
 
+#ifdef HB_LEGACY_LEVEL2
+
 HB_FUNC( __HRBRUN )
 {
    HB_FUNC_EXEC( HB_HRBRUN );
@@ -795,3 +797,5 @@ HB_FUNC( __HRBGETFU )
 {
    HB_FUNC_EXEC( HB_HRBGETFUNSYM );
 }
+
+#endif
