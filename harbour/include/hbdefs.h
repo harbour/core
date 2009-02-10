@@ -64,8 +64,10 @@
 #include "hbver.h"
 
 /* Compatibility. Do not use HB_OS_WIN_32_USED anymore. */
-#if defined( HB_OS_WIN_32_USED ) && ! defined( HB_OS_WIN_USED )
-   #define HB_OS_WIN_USED
+#ifdef HB_LEGACY_LEVEL2
+   #if defined( HB_OS_WIN_32_USED ) && ! defined( HB_OS_WIN_USED )
+      #define HB_OS_WIN_USED
+   #endif
 #endif
 
 #if defined( __XCC__ ) || defined( __POCC__ ) || defined( __LCC__ ) || \
@@ -573,10 +575,6 @@ typedef unsigned long HB_COUNTER;
    typedef int HB_FHANDLE;
    typedef int HB_NHANDLE;
 #  define hb_numToHandle( h )   ( ( int ) ( h ) )
-#endif
-
-#ifdef HB_LEGACY_LEVEL
-   #define FHANDLE                 HB_FHANDLE
 #endif
 
 /* maximum length of double number in decimal representation:

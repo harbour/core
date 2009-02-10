@@ -57,10 +57,8 @@
 
 #include "hbapiitm.h"
 
-#ifndef HB_LEGACY_LEVEL
 #define EVALINFO        HB_EVALINFO
 #define PEVALINFO       PHB_EVALINFO
-#endif
 
 typedef PEVALINFO EVALINFOP;
 

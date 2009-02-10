@@ -65,12 +65,6 @@ typedef struct
    PHB_ITEM pItems[ HB_EVAL_PARAM_MAX_ + 1 ];
 } HB_EVALINFO, * PHB_EVALINFO;
 
-#ifdef HB_LEGACY_LEVEL
-   #define EVALINFO            HB_EVALINFO
-   #define PEVALINFO           PHB_EVALINFO
-   #define EVALINFO_PTR        PHB_EVALINFO
-#endif
-
 extern HB_EXPORT PHB_ITEM   hb_evalLaunch    ( PHB_EVALINFO pEvalInfo );
 extern HB_EXPORT BOOL       hb_evalNew       ( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem );
 extern HB_EXPORT BOOL       hb_evalPutParam  ( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem );

@@ -336,11 +336,6 @@ HB_EXPORT HB_FHANDLE hb_fileHandle( PHB_FILE pFile );
 /* wrapper to fopen() which calls hb_fsNameConv() */
 extern FILE * hb_fopen( const char *path, const char *mode );
 
-#ifdef HB_LEGACY_LEVEL
-/* Compatibility. Obsolete. */
-extern HB_EXPORT BYTE *    hb_fileNameConv( char * str );
-#endif
-
 HB_EXTERN_END
 
 #endif /* HB_APIFS_H_ */

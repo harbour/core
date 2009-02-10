@@ -96,35 +96,4 @@
 #define HB_GFX_MODE_ALPHA      3  /* Use alpha for transluced effect (SLOW) */
 /* TODO: add patterned mode drawings */
 
-/* Compatibility #defines.
-   These codes are deprecated, _don't use them_. Please upgrade to the above versions. 
-   For developers: Don't add any more new codes to this section. */
-
-#ifdef HB_LEGACY_LEVEL
-
-#define GFX_ACQUIRESCREEN   HB_GFX_ACQUIRESCREEN
-#define GFX_RELEASESCREEN   HB_GFX_RELEASESCREEN
-#define GFX_MAKECOLOR       HB_GFX_MAKECOLOR
-#define GFX_CLIPTOP         HB_GFX_CLIPTOP
-#define GFX_CLIPLEFT        HB_GFX_CLIPLEFT
-#define GFX_CLIPBOTTOM      HB_GFX_CLIPBOTTOM
-#define GFX_CLIPRIGHT       HB_GFX_CLIPRIGHT
-#define GFX_SETCLIP         HB_GFX_SETCLIP
-#define GFX_DRAWINGMODE     HB_GFX_DRAWINGMODE
-#define GFX_GETPIXEL        HB_GFX_GETPIXEL
-#define GFX_PUTPIXEL        HB_GFX_PUTPIXEL
-#define GFX_LINE            HB_GFX_LINE
-#define GFX_RECT            HB_GFX_RECT
-#define GFX_FILLEDRECT      HB_GFX_FILLEDRECT
-#define GFX_CIRCLE          HB_GFX_CIRCLE
-#define GFX_FILLEDCIRCLE    HB_GFX_FILLEDCIRCLE
-#define GFX_ELLIPSE         HB_GFX_ELLIPSE
-#define GFX_FILLEDELLIPSE   HB_GFX_FILLEDELLIPSE
-#define GFX_FLOODFILL       HB_GFX_FLOODFILL
-#define GFX_MODE_SOLID      HB_GFX_MODE_SOLID
-#define GFX_MODE_XOR        HB_GFX_MODE_XOR
-#define GFX_MODE_ALPHA      HB_GFX_MODE_ALPHA
-
-#endif
-
 #endif /* _HBGFXDEF_CH_ */

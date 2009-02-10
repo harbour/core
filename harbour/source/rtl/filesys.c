@@ -3213,25 +3213,6 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
    return szFileName;
 }
 
-#ifdef HB_LEGACY_LEVEL
-
-BYTE * hb_fileNameConv( char * szFileName )
-{
-   BOOL fFree;
-   BYTE * szNew;
-
-   szNew = hb_fsNameConv( ( BYTE * ) szFileName, &fFree );
-   if( fFree )
-   {
-      hb_strncpy( szFileName, ( char * ) szNew, strlen( szFileName ) );
-      hb_xfree( szNew );
-   }
-
-   return ( BYTE * ) szFileName;
-}
-
-#endif
-
 /* NOTE: pbyBuffer must be _POSIX_PATH_MAX + 1 long. */
 void hb_fsBaseDirBuff( BYTE * pbyBuffer )
 {

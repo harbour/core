@@ -33,7 +33,6 @@ C_SOURCES=\
 	classes.c \
 	cmdarg.c \
 	debug.c \
-	debugold.c \
 	dynlibhb.c \
 	dynsym.c \
 	codebloc.c \

@@ -84,10 +84,6 @@ HB_EXTERN_BEGIN
 /* maximum length of color string */
 #define HB_CLRSTR_LEN           64
 
-#ifdef HB_LEGACY_LEVEL
-   #define CLR_STRLEN              HB_CLRSTR_LEN
-#endif
-
 /* attributes for color strings, these are the same as the ones in color.ch
    but prefixed with HB_ to avoid collision. */
 #define HB_CLR_STANDARD         0

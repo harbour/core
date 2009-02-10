@@ -290,7 +290,9 @@
    #if defined(WINNT) || defined(_Windows) || defined(__NT__) || defined(_WIN32) || defined(_WINDOWS_) || defined(__WINDOWS_386__) || defined(__WIN32__) || defined(__CYGWIN__)
       #define HB_OS_WIN
       /* Compatibility. Do not use this. */
-      #define HB_OS_WIN_32
+      #ifdef HB_LEGACY_LEVEL2
+         #define HB_OS_WIN_32
+      #endif
    #endif
 #endif
 
@@ -305,6 +307,10 @@
 #ifndef HB_OS_WIN_CE
    #if defined(_WINCE) || defined(__CEGCC__) || defined(__MINGW32CE__) || (defined(__POCC_TARGET__) && __POCC_TARGET__ == 2)
       #define HB_OS_WIN_CE
+      /* Compatibility. Do not use this. */
+      #ifdef HB_LEGACY_LEVEL2
+         #define HB_WINCE
+      #endif
    #endif
 #endif
 
@@ -360,15 +366,6 @@
 #ifdef HB_EOL_CRLF
    #undef HB_OS_EOL_LEN
    #define HB_OS_EOL_LEN 2
-#endif
-
-/* Compatibility #defines. These will be removed, so
-   please use the new names in your code. */
-#ifdef HB_LEGACY_LEVEL
-   #define OS_PATH_DELIMITER            HB_OS_PATH_DELIM_CHR
-   #ifdef HB_OS_UNIX_COMPATIBLE
-      #define OS_UNIX_COMPATIBLE
-   #endif
 #endif
 
 #if defined(HB_OS_WIN_CE) && defined(HB_MT_VM)

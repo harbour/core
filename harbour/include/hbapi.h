@@ -445,9 +445,11 @@ typedef USHORT HB_ERRCODE;
 #define HB_FAILURE         1
 
 /* Compatibility #defines. Don't use them with new code and in Harbour sources. */
-#define ERRCODE            HB_ERRCODE
-#define SUCCESS            HB_SUCCESS
-#define FAILURE            HB_FAILURE
+#ifdef HB_LEGACY_LEVEL2
+   #define ERRCODE            HB_ERRCODE
+   #define SUCCESS            HB_SUCCESS
+   #define FAILURE            HB_FAILURE
+#endif
 
 extern HB_SYMB  hb_symEval;
 

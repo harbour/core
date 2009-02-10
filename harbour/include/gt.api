@@ -58,9 +58,7 @@
 #include "clipdefs.h"
 #include "hbapigt.h"
 
-#ifndef HB_LEGACY_LEVEL
 #define CLR_STRLEN      HB_CLRSTR_LEN
-#endif
 
 #define _gtBox          hb_gtBox
 #define _gtBoxD         hb_gtBoxD

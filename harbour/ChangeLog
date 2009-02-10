@@ -8,6 +8,42 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-10 01:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * doc/whatsnew.txt
+  * include/clipdefs.h
+  * include/filesys.api
+  * include/gt.api
+  * include/hbapi.h
+  * include/hbapierr.h
+  * include/hbapifs.h
+  * include/hbapigt.h
+  * include/hbapiitm.h
+  * include/hbapirdd.h
+  * include/hbdefs.h
+  * include/hbgfxdef.ch
+  * include/hbgtinfo.ch
+  * include/hbsetup.ch
+  * include/hbsetup.h
+  * include/item.api
+  * include/rdd.api
+  * source/rtl/errorapi.c
+  * source/rtl/filesys.c
+  * source/vm/cmdarg.c
+  * common.mak
+  - source/vm/debugold.c
+  * source/vm/Makefile
+  * source/vm/vmmt/Makefile
+    - Permanently disabled HB_LEGACY_LEVEL support.
+    + Added HB_LEGACY_LEVEL2 support to protect some
+      recently made incompatible changes. Old methods
+      are supported until Harbour 1.2. Please update
+      your code until then. To test your code for
+      compatibility with recent changes, you can turn
+      off legacy support manually by #defining HB_LEGACY_OFF.
+      (HB_USER_CFLAGS=-DHB_LEGACY_OFF)
+      This is recommended on local systems for all
+      Harbour developers.
+
 2009-02-10 01:38 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpd.prg
     * Updated uHTTPD (Work in progress)

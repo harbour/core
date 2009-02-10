@@ -122,6 +122,10 @@ typedef NEARP * NEARPP;
    typedef HB_VMHANDLE HANDLE;
 #endif
 
+#ifndef HB_LEGACY_LEVEL2
+   #define ERRCODE     HB_ERRCODE
+#endif
+
 typedef ERRCODE IHELP;
 typedef ERRCODE ICODE;
 

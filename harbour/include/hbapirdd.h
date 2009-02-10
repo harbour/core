@@ -69,13 +69,6 @@ HB_EXTERN_BEGIN
 /* #define HB_MAX_RDD_FIELDNAME_LEN        32 */
 #define HB_RDD_MAX_AREA_NUM                65535
 
-/* Compatibility #defines. These will be removed, so
-   please use the new names in your code. */
-#ifdef HB_LEGACY_LEVEL
-   #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH  HB_RDD_MAX_DRIVERNAME_LEN
-   #define HARBOUR_MAX_RDD_ALIAS_LENGTH       HB_RDD_MAX_ALIAS_LEN
-#endif
-
 
 /* DBCMD errors */
 

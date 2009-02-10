@@ -111,11 +111,6 @@
 
 HB_FUNC_EXTERN( ERRORNEW );
 
-#ifdef HB_LEGACY_LEVEL
-/* pseudo function name in operation description
-   (deprecated, kept for compatibility, use HB_ERR_FUNCNAME instead) */
-const char hb_errFuncName = 1;
-#endif
 
 static PHB_ITEM s_pError = NULL;
 
