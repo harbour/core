@@ -3227,6 +3227,7 @@ void hb_fsBaseDirBuff( BYTE * pbyBuffer )
 
       char byCurDir[ _POSIX_PATH_MAX + 1 ];
       char byBinDir[ _POSIX_PATH_MAX + 1 ];
+      int nBinDirOffset = 0;
 
       PHB_FNAME pFName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
 
@@ -3239,18 +3240,18 @@ void hb_fsBaseDirBuff( BYTE * pbyBuffer )
       /* Skip 'current dir' if present, and replace with cwd. */
       if( byBinDir[ 0 ] == '.' && byBinDir[ 1 ] == HB_OS_PATH_DELIM_CHR )
       {
-         byBinDir += 2;
+         nBinDirOffset += 2;
 
          hb_fsCurDirBuff( 0, ( BYTE * ) byCurDir, sizeof( byCurDir ) );
 
-         hb_strncpy( byBuffer, HB_OS_PATH_DELIM_CHR_STRING, sizeof( byBuffer ) - 1 );
+         hb_strncpy( byBuffer, HB_OS_PATH_DELIM_CHR_STRING, _POSIX_PATH_MAX );
          if( byCurDir[ 0 ] != '\0' )
          {
             hb_strncat( byBuffer, byCurDir, sizeof( byBuffer ) - 1 );
-            hb_strncat( byBuffer, HB_OS_PATH_DELIM_CHR_STRING, sizeof( byBuffer ) - 1 );
+            hb_strncat( byBuffer, HB_OS_PATH_DELIM_CHR_STRING, _POSIX_PATH_MAX );
          }
       }
-      hb_strncat( byBuffer, byBinDir, sizeof( byBuffer ) - 1 );
+      hb_strncat( pbyBuffer, byBinDir + nBinDirOffset, _POSIX_PATH_MAX );
    }
 #else
    {
