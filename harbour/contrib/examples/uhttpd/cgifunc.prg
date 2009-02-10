@@ -59,6 +59,7 @@
 
 #define CRLF (Chr(13)+Chr(10))
 #xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
+#define HB_IHASH()   HB_HSETCASEMATCH( {=>}, FALSE )
 
 MEMVAR _SERVER, _GET, _POST, _COOKIE, _REQUEST, _HTTP_REQUEST
 
@@ -130,7 +131,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
 
 */
 FUNCTION uhttpd_SplitUrl( cUrl )
-   LOCAL hUrl := Hash()
+   LOCAL hUrl := hb_Hash()
    LOCAL nPos, cTemp, cUserNamePassword, cHostnamePort
    LOCAL cProto, cHost, cPort, nPort, cUser, cPass, cPath, cQuery, cFragment
 
@@ -240,16 +241,14 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    ENDIF
 
    // Assemble hash
-   WITH OBJECT hUrl
-        :SCHEME   := cProto
-        :HOST     := cHost
-        :PORT     := nPort
-        :USER     := cUser
-        :PASS     := cPass
-        :PATH     := cPath
-        :QUERY    := cQuery
-        :FRAGMENT := cFragment
-   END
+   hb_hSet( hUrl, "SCHEME"  , cProto    )
+   hb_hSet( hUrl, "HOST"    , cHost     )
+   hb_hSet( hUrl, "PORT"    , nPort     )
+   hb_hSet( hUrl, "USER"    , cUser     )
+   hb_hSet( hUrl, "PASS"    , cPass     )
+   hb_hSet( hUrl, "PATH"    , cPath     )
+   hb_hSet( hUrl, "QUERY"   , cQuery    )
+   hb_hSet( hUrl, "FRAGMENT", cFragment )
 
    // Prevents externals to add something else to this Hash
    HSetAutoAdd( hUrl, FALSE )
@@ -319,6 +318,8 @@ FUNCTION uhttpd_URLEncode( cString, lComplete )
    RETURN TIPENCODERURL_ENCODE( cString, lComplete )
 #else
    LOCAL cRet := "", i, nVal, cChar
+
+   DEFAULT lComplete TO TRUE
 
    FOR i := 1 TO Len( cString )
       cChar := SubStr( cString, i, 1)
@@ -857,3 +858,4 @@ FUNCTION uhttpd_HGetValue( hHash, cKey )
    ENDIF
    //RETURN IIF( cKey IN hHash:Keys, hHash[ cKey ], NIL )
    RETURN xVal
+

@@ -161,13 +161,14 @@ STATIC s_hmtxQueue, s_hmtxServiceThreads, s_hmtxRunningThreads, s_hmtxLog, s_hmt
 STATIC s_hmtxHRB, s_hmtxCGIKill
 
 STATIC s_hfileLogAccess, s_hfileLogError, s_cDocumentRoot, s_lIndexes, s_lConsole, s_nPort
+STATIC s_cSessionPath
 STATIC s_nThreads, s_nStartThreads, s_nMaxThreads
 STATIC s_nServiceThreads, s_nStartServiceThreads, s_nMaxServiceThreads
 STATIC s_nConnections, s_nMaxConnections, s_nTotConnections
 STATIC s_nServiceConnections, s_nMaxServiceConnections, s_nTotServiceConnections
 STATIC s_aRunningThreads := {}
 STATIC s_aServiceThreads := {}
-STATIC s_hHRBModules := {=>}
+STATIC s_hHRBModules     := {=>}
 
 #ifdef USE_HB_INET
 STATIC s_cLocalAddress, s_nLocalPort
@@ -177,10 +178,10 @@ STATIC s_cLocalAddress, s_nLocalPort
 //STATIC s_hScriptAliases    := { "/info" => "/cgi-bin/info.hrb" }
 STATIC s_hScriptAliases    := { => }
 
-THREAD STATIC t_cResult, t_nStatusCode, t_aHeader, t_cErrorMsg
+THREAD STATIC t_cResult, t_nStatusCode, t_aHeader, t_cErrorMsg, t_oSession
 THREAD STATIC t_hProc
 
-MEMVAR _SERVER, _GET, _POST, _COOKIE, _REQUEST, _HTTP_REQUEST, m_cPost
+MEMVAR _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, m_cPost
 
 ANNOUNCE ERRORSYS
 
@@ -189,9 +190,9 @@ FUNCTION MAIN( ... )
    LOCAL aThreads, nStartThreads, nMaxThreads, nStartServiceThreads
    LOCAL i, cPar, lStop
    LOCAL cGT, cDocumentRoot, lIndexes, cConfig
-   LOCAL lConsole
+   LOCAL lConsole, lScriptAliasMixedCase
    LOCAL nProgress := 0
-   LOCAL hDefault, cLogAccess, cLogError
+   LOCAL hDefault, cLogAccess, cLogError, cSessionPath
    LOCAL cCmdPort, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
 
    IF !HB_MTVM()
@@ -274,25 +275,30 @@ FUNCTION MAIN( ... )
 
    // ----------------- Parse ini file ----------------------------------------
 
-   //hb_toOutDebug( "cConfig = %s\n\r", cConfig )
+   //hb_ToOutDebug( "cConfig = %s\n\r", cConfig )
 
    hDefault := ParseIni( cConfig )
 
    // ------------------- Parameters changeable from ini file ----------------
 
-   nPort                := hDefault[ "MAIN" ][ "Port" ]
-   cDocumentRoot        := hDefault[ "MAIN" ][ "Document_root" ]
-   lIndexes             := hDefault[ "MAIN" ][ "Show_indexes" ]
+   // All key values MUST be in uppercase
+   nPort                 := hDefault[ "MAIN" ][ "PORT" ]
+   cDocumentRoot         := hDefault[ "MAIN" ][ "DOCUMENT_ROOT" ]
+   lIndexes              := hDefault[ "MAIN" ][ "SHOW_INDEXES" ]
+   lScriptAliasMixedCase := hDefault[ "MAIN" ][ "SCRIPTALIASMIXEDCASE" ]
+   cSessionPath          := hDefault[ "MAIN" ][ "SESSIONPATH" ]
 
-   cLogAccess           := hDefault[ "LOGFILES" ][ "access" ]
-   cLogError            := hDefault[ "LOGFILES" ][ "error" ]
+   cLogAccess            := hDefault[ "LOGFILES" ][ "ACCESS" ]
+   cLogError             := hDefault[ "LOGFILES" ][ "ERROR" ]
 
-   nStartThreads        := hDefault[ "THREADS" ][ "start_num" ]
-   nMaxThreads          := hDefault[ "THREADS" ][ "max_num" ]
+   nStartThreads         := hDefault[ "THREADS" ][ "START_NUM" ]
+   nMaxThreads           := hDefault[ "THREADS" ][ "MAX_NUM" ]
 
+   // ATTENTION: aliases can be in mixed case
+   // i.e. we can have /info or /Info that will be different unless lScriptAliasMixedCase will be FALSE
    FOR EACH xVal IN hDefault[ "ALIASES" ]
        IF HB_ISSTRING( xVal )
-          hb_HSet( s_hScriptAliases, xVal:__enumKey(), xVal )
+          hb_HSet( s_hScriptAliases, IIF( lScriptAliasMixedCase, xVal:__enumKey(), Upper( xVal:__enumKey() ) ), xVal )
        ENDIF
    NEXT
 
@@ -350,6 +356,8 @@ FUNCTION MAIN( ... )
       RETURN 3
    ENDIF
 
+   //hb_ToOutDebug( "s_cDocumentRoot = %s, cDocumentRoot = %s\n\r", s_cDocumentRoot, cDocumentRoot )
+
    IF nMaxThreads <= 0
       nMaxThreads := MAX_RUNNING_THREADS
    ENDIF
@@ -377,6 +385,7 @@ FUNCTION MAIN( ... )
    s_nServiceConnections    := 0
    s_nMaxServiceConnections := 0
    s_nTotServiceConnections := 0
+   s_cSessionPath           := cSessionPath
 
    // --------------------- Open log files -------------------------------------
 
@@ -721,7 +730,8 @@ STATIC FUNCTION ProcessConnection( /*@*/ nThreadId )
 
             //hb_ToOutDebug( "cRequest -- INIZIO --\n\r%s\n\rcRequest -- FINE --\n\r", cRequest )
 
-            PRIVATE _SERVER := HB_IHASH(), _GET := HB_IHASH(), _POST := HB_IHASH(), _COOKIE := HB_IHASH(), _REQUEST := HB_IHASH(), _HTTP_REQUEST := HB_IHASH(), m_cPost
+            PRIVATE _SERVER := HB_IHASH(), _GET := HB_IHASH(), _POST := HB_IHASH(), _COOKIE := HB_IHASH(), _SESSION := HB_IHASH()
+            PRIVATE _REQUEST := HB_IHASH(), _HTTP_REQUEST := HB_IHASH(), m_cPost
             t_cResult     := ""
             t_aHeader     := {}
             t_nStatusCode := 200
@@ -846,7 +856,8 @@ STATIC FUNCTION ServiceConnection( /*@*/ nThreadId )
 
             //hb_ToOutDebug( "cRequest -- INIZIO --\n\r%s\n\rcRequest -- FINE --\n\r", cRequest )
 
-            PRIVATE _SERVER := HB_IHASH(), _GET := HB_IHASH(), _POST := HB_IHASH(), _COOKIE := HB_IHASH(), _REQUEST := HB_IHASH(), _HTTP_REQUEST := HB_IHASH(), m_cPost
+            PRIVATE _SERVER := HB_IHASH(), _GET := HB_IHASH(), _POST := HB_IHASH(), _COOKIE := HB_IHASH(), _SESSION := HB_IHASH()
+            PRIVATE _REQUEST := HB_IHASH(), _HTTP_REQUEST := HB_IHASH(), m_cPost
             t_cResult     := ""
             t_aHeader     := {}
             t_nStatusCode := 200
@@ -1000,7 +1011,7 @@ STATIC FUNCTION ParseRequest( cRequest )
          hb_HMerge( _POST, hVars )
          hb_HMerge( _REQUEST, hVars )
       ENDIF
-      m_cPost := cFields
+      m_cPost := cFields  // TOFIX: Who needs this ?
    ENDIF
 
    //hb_toOutDebug( "POST: cFields = %s, hVars = %s, _POST = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ) )
@@ -1014,35 +1025,6 @@ STATIC FUNCTION ParseRequest( cRequest )
    ENDIF
    //hb_toOutDebug( "COOKIE: cFields = %s, hVars = %s, _COOKIE = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _COOKIE ), hb_ValToExp( _REQUEST ) )
 
-
-   /*
-   // GET vars
-   FOR EACH cI IN uhttpd_split( "&", _SERVER[ "QUERY_STRING" ] )
-      IF ( nI := AT( "=", cI ) ) > 0
-         _GET[ LEFT( cI, nI - 1 )] := SUBSTR( cI, nI + 1 )
-         _REQUEST[ LEFT( cI, nI - 1 )] := SUBSTR( cI, nI + 1 )
-      ELSE
-         _GET[ cI ] := ""
-         _REQUEST[ cI ] := ""
-      ENDIF
-   NEXT
-
-   // POST vars
-   IF "POST" $ Upper( _SERVER[ 'REQUEST_METHOD' ] )
-      //hb_ToOutDebug( "POST: %s\n\r", aTail( aRequest ) )
-      cPost := aTail( aRequest )
-      FOR EACH cI IN uhttpd_split( "&", cPost )
-         IF ( nI := AT( "=", cI ) ) > 0
-            _POST[ LEFT( cI, nI - 1 ) ]    := SUBSTR( cI, nI + 1 )
-            _REQUEST[ LEFT( cI, nI - 1 ) ] := SUBSTR( cI, nI + 1 )
-         ELSE
-            _POST[ cI ] := ""
-            _REQUEST[ cI ] := ""
-         ENDIF
-      NEXT
-      m_cPost := cPost
-   ENDIF
-   */
 
    // Complete _SERVER
    _SERVER[ "SERVER_NAME"       ] := uhttpd_split( ":", _HTTP_REQUEST[ "HOST" ], 1 )[ 1 ]
@@ -1060,6 +1042,12 @@ STATIC FUNCTION ParseRequest( cRequest )
    //hb_ToOutDebug( "_POST = %s\n\r", hb_ValToExp( _POST ) )
    //hb_ToOutDebug( "_COOKIE = %s\n\r", hb_ValToExp( _COOKIE ) )
    //hb_ToOutDebug( "_HTTP_REQUEST = %s\n\r", hb_ValToExp( _HTTP_REQUEST ) )
+
+   // After defined all SERVER vars we can define a session
+   // SESSION - sessions ID is stored as a cookie value, normally as SESSIONID var name (this can be user defined)
+   t_oSession := uhttpd_SessionNew( "SESSION", s_cSessionPath )
+   t_oSession:Start()
+
 
    RETURN .T.
 
@@ -1105,6 +1093,12 @@ STATIC FUNCTION MakeResponse()
           cReturnCode := "403 Forbidden"
           t_cResult := "<html><body><h1>" + cReturnCode + "</h1></body></html>"
    ENDSWITCH
+
+   //hb_ToOutDebug( "_SESSION = %s\n\r", hb_ValToExp( _SESSION ) )
+
+   // Close session - Autodestructor will NOT close it, because t_oSession is destroyed only at end of Thread
+   t_oSession:Close()
+   // t_oSession := NIL
 
    WriteToConsole( cReturnCode )
    cRet += cReturnCode + CR_LF
@@ -1916,39 +1910,57 @@ STATIC PROCEDURE WriteToConsole( ... )
    RETURN
 
 STATIC FUNCTION ParseIni( cConfig )
-   LOCAL hIni := HB_ReadIni( cConfig )
-   LOCAL cSection, hSect, cKey, xVal, cVal
+   LOCAL hIni := hb_IniRead( cConfig, TRUE ) // TRUE = load all keys in MixedCase, redundant as it is default, but to remember
+   LOCAL cSection, hSect, cKey, xVal, cVal, nPos
    LOCAL hDefault
 
-   // Define here what attributes I can have in ini config file and their defaults
-   hDefault := { ;
-                 "MAIN"     => { ;
-                                 "Port"          => LISTEN_PORT          ,;
-                                 "Document_root" => EXE_Path() + "\home" ,;
-                                 "Show_indexes" => FALSE                  ;
-                               },;
-                 "LOGFILES" => { ;
-                                 "access"     => FILE_ACCESS_LOG          ,;
-                                 "error"      => FILE_ERROR_LOG            ;
-                               },;
-                 "THREADS"  => { ;
-                                 "Max_Wait"   => THREAD_MAX_WAIT         ,;
-                                 "start_num"  => START_RUNNING_THREADS   ,;
-                                 "max_num"    => MAX_RUNNING_THREADS      ;
-                               },;
-                 "ALIASES"  => { => } ;
-               }
+   //hb_ToOutDebug( "cConfig = %s,\n\rhIni = %s\n\r", cConfig, hb_ValToExp( hIni ) )
+
+   // Define here what attributes we can have in ini config file and their defaults
+   // Please add all keys in uppercase. hDefaults is Case Insensitive
+   hDefault := hb_HSetCaseMatch( ;
+   { ;
+     "MAIN"     => { ;
+                     "PORT"                 => LISTEN_PORT              ,;
+                     "DOCUMENT_ROOT"        => EXE_Path() + "\home"     ,;
+                     "SHOW_INDEXES"         => FALSE                    ,;
+                     "SCRIPTALIASMIXEDCASE" => TRUE                     ,;
+                     "SESSIONPATH"          => EXE_Path() + "\sessions"  ;
+                   },;
+     "LOGFILES" => { ;
+                     "ACCESS"               => FILE_ACCESS_LOG          ,;
+                     "ERROR"                => FILE_ERROR_LOG            ;
+                   },;
+     "THREADS"  => { ;
+                     "MAX_WAIT"             => THREAD_MAX_WAIT          ,;
+                     "START_NUM"            => START_RUNNING_THREADS    ,;
+                     "MAX_NUM"              => MAX_RUNNING_THREADS       ;
+                   },;
+     "ALIASES"  => { => } ;
+   }, FALSE )
+
+   //hb_ToOutDebug( "hDefault = %s\n\r", hb_ValToExp( hDefault ) )
 
    // Now read changes from ini file and modify only admited keys
    IF !Empty( hIni )
       FOR EACH cSection IN hIni:Keys
 
+          cSection := Upper( cSection )
+
+          //hb_ToOutDebug( "cSection = %s\n\r", cSection )
+
           IF cSection $ hDefault
 
              hSect := hIni[ cSection ]
 
+             //hb_ToOutDebug( "hSect = %s\n\r", hb_ValToExp( hSect ) )
+
              IF HB_IsHash( hSect )
                 FOR EACH cKey IN hSect:Keys
+
+                    // Please, below check values MUST be uppercase
+
+                    //hb_ToOutDebug( "cKey = %s\n\r", cKey )
 
                     IF cSection == "ALIASES"
                        xVal := hSect[ cKey ]
@@ -1956,39 +1968,51 @@ STATIC FUNCTION ParseIni( cConfig )
                           hDefault[ cSection ][ cKey ] := xVal
                        ENDIF
 
-                    ELSEIF cKey $ hDefault[ cSection ]
-                       cVal := hSect[ cKey ]
+                    ELSEIF ( cKey := Upper( cKey ) ) $ hDefault[ cSection ]  // force cKey to be uppercase
 
-                       DO CASE
-                          CASE cSection == "MAIN"
-                               DO CASE
-                                  CASE cKey == "Port"
-                                       xVal := Val( cVal )
-                                  CASE cKey == "Document_root"
-                                       IF !Empty( cVal )
-                                          // Change APP_DIR macro with current exe path
-                                          xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
-                                       ENDIF
-                               ENDCASE
-                          CASE cSection == "LOGFILES"
-                               DO CASE
-                                  CASE cKey == "access"
-                                       xVal := cVal
-                                  CASE cKey == "error"
-                                       xVal := cVal
-                               ENDCASE
-                          CASE cSection == "THREADS"
-                               DO CASE
-                                  CASE cKey == "Max_Wait"
-                                       xVal := Val( cVal )
-                                  CASE cKey == "start_num"
-                                       xVal := Val( cVal )
-                                  CASE cKey == "max_num"
-                                       xVal := Val( cVal )
-                               ENDCASE
-                       ENDCASE
-                       IF xVal <> NIL
-                          hDefault[ cSection ][ cKey ] := xVal
+                       IF ( nPos := hb_HScan( hSect, {|k| Upper( k ) == cKey } ) ) > 0
+                          cVal := hb_HValueAt( hSect, nPos )
+
+                          //hb_ToOutDebug( "cVal = %s\n\r", cVal )
+
+                          DO CASE
+                             CASE cSection == "MAIN"
+                                  DO CASE
+                                     CASE cKey == "PORT"
+                                          xVal := Val( cVal )
+                                     CASE cKey == "DOCUMENT_ROOT"
+                                          IF !Empty( cVal )
+                                             // Change APP_DIR macro with current exe path
+                                             xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
+                                          ENDIF
+                                     CASE cKey == "SCRIPTALIASMIXEDCASE"
+                                          xVal := cVal
+                                     CASE cKey == "SESSIONPATH"
+                                          IF !Empty( cVal )
+                                             // Change APP_DIR macro with current exe path
+                                             xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
+                                          ENDIF
+                                  ENDCASE
+                             CASE cSection == "LOGFILES"
+                                  DO CASE
+                                     CASE cKey == "ACCESS"
+                                          xVal := cVal
+                                     CASE cKey == "ERROR"
+                                          xVal := cVal
+                                  ENDCASE
+                             CASE cSection == "THREADS"
+                                  DO CASE
+                                     CASE cKey == "MAX_WAIT"
+                                          xVal := Val( cVal )
+                                     CASE cKey == "START_NUM"
+                                          xVal := Val( cVal )
+                                     CASE cKey == "MAX_NUM"
+                                          xVal := Val( cVal )
+                                  ENDCASE
+                          ENDCASE
+                          IF xVal <> NIL
+                             hDefault[ cSection ][ cKey ] := xVal
+                          ENDIF
                        ENDIF
 
                     ENDIF
@@ -2066,6 +2090,10 @@ STATIC FUNCTION uhttpd_DefError( oError )
    ENDIF
 
    // Show alert box
+
+#ifdef DEBUG_ACTIVE
+   hb_ToOutDebug( "ERROR: %s\n\r", cMessage + " " + cCallstack )
+#endif
 
    nChoice := 0
    DO WHILE nChoice == 0

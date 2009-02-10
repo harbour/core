@@ -59,7 +59,7 @@
 #include "common.ch"
 #include "hbclass.ch"
 
-MEMVAR _SERVER, _REQUEST, _GET, _POST, _COOKIE, _HTTP_REQUEST
+MEMVAR _SERVER, _REQUEST, _GET, _POST, _COOKIE, _SESSION, _HTTP_REQUEST
 
 FUNCTION HRBMAIN()
   LOCAL cHtml
@@ -90,13 +90,16 @@ STATIC FUNCTION ShowServerInfo()
   //cHtml += "<br>"
   cHtml += DisplayVars( _Request, "REQUEST Vars" )
   cHtml += "<br>"
-  //cHtml += DisplayVars( _Session, "SESSION Vars" )
-  //cHtml += "<br>"
+  cHtml += DisplayVars( _Session, "SESSION Vars" )
+  cHtml += "<br>"
 
   // Set a simple cookie
   //oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
   //oCookie:SetCookie( "samplecookie", "test" )
   //oCookie:SetCookie( "samplecookie2", "test2" )
+
+  _SESSION[ "Session_Var1" ] := "Test1"
+  _SESSION[ "Session_Var2" ] := "Test2"
 
   RETURN cHtml
 
