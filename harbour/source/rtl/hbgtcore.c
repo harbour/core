@@ -1594,7 +1594,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             else
                pInfo->pResult = hb_itemNew( pGT->pCargo );
          }
-         if( pInfo->nPCount )
+         if( pInfo->pNewVal )
          {
             if( pGT->pCargo )
             {
@@ -1633,7 +1633,6 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       HB_GT_INFO gtInfo;
 
       gtInfo.pNewVal = gtInfo.pNewVal2 = gtInfo.pResult = NULL;
-      gtInfo.nPCount = 0;
 
       HB_GTSELF_INFO( pGT, HB_GTI_FULLSCREEN, &gtInfo );
       if( gtInfo.pResult )

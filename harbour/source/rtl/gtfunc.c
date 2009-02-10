@@ -103,10 +103,6 @@ HB_FUNC( HB_GTINFO )
       gtInfo.pNewVal  = hb_param( 2, HB_IT_ANY );
       gtInfo.pNewVal2 = hb_param( 3, HB_IT_ANY );
       gtInfo.pResult  = NULL;
-      gtInfo.nPCount  = hb_pcount() - 1;
-
-      if( gtInfo.nPCount > 2 )
-         gtInfo.nPCount = 2;
 
       hb_gtInfo( hb_parni( 1 ), &gtInfo );
       if( gtInfo.pResult )

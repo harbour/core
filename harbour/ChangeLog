@@ -8,6 +8,12 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-10 02:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapigt.h
+  * source/rtl/hbgtcore.c
+  * source/rtl/gtfunc.c
+    - Removed unnecessary extension to HB_GT_INFO.
+
 2009-02-10 02:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * doc/whatsnew.txt
   * include/hbextern.ch
