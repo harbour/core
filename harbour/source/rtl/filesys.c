@@ -3244,11 +3244,11 @@ void hb_fsBaseDirBuff( BYTE * pbyBuffer )
 
          hb_fsCurDirBuff( 0, ( BYTE * ) byCurDir, sizeof( byCurDir ) );
 
-         hb_strncpy( byBuffer, HB_OS_PATH_DELIM_CHR_STRING, _POSIX_PATH_MAX );
+         hb_strncpy( pbyBuffer, HB_OS_PATH_DELIM_CHR_STRING, _POSIX_PATH_MAX );
          if( byCurDir[ 0 ] != '\0' )
          {
-            hb_strncat( byBuffer, byCurDir, sizeof( byBuffer ) - 1 );
-            hb_strncat( byBuffer, HB_OS_PATH_DELIM_CHR_STRING, _POSIX_PATH_MAX );
+            hb_strncat( pbyBuffer, byCurDir, _POSIX_PATH_MAX );
+            hb_strncat( pbyBuffer, HB_OS_PATH_DELIM_CHR_STRING, _POSIX_PATH_MAX );
          }
       }
       hb_strncat( pbyBuffer, byBinDir + nBinDirOffset, _POSIX_PATH_MAX );
