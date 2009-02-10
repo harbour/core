@@ -1815,7 +1815,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       else
       {
          HB_GT_INFO gtInfo;
-         gtInfo.pNewVal = gtInfo.pResult = NULL;
+         memset( &gtInfo, 0, sizeof( gtInfo ) );
          HB_GTSELF_INFO( pGT, HB_GTI_FULLSCREEN, &gtInfo );
          fScreen = gtInfo.pResult && hb_itemGetL( gtInfo.pResult );
          HB_GTSELF_INFO( pGT, HB_GTI_KBDSUPPORT, &gtInfo );

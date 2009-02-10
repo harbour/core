@@ -8,6 +8,24 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-10 04:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    * covered some old functions marked as deprecated long time ago
+      by HB_LEGACY_LEVEL2 macro
+
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/contrib/hbct/ctwin.c
+  * harbour/contrib/hbct/keyset.c
+  * harbour/contrib/hbct/misc3.c
+  * harbour/contrib/hbnf/numlock.c
+  * harbour/contrib/hbnf/shift.c
+  * harbour/contrib/hbnf/alt.c
+  * harbour/contrib/hbnf/ctrl.c
+  * harbour/contrib/hbnf/caplock.c
+    * use memset( &gtInfo, 0, sizeof( gtInfo ) ); to initialize
+      HB_GT_INFO structure - it also fixes possible problems with
+      uninitialized pNewVal2 member in few cases.
+
 2009-02-10 02:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
   * contrib/rddsql/sddmy/common.mak

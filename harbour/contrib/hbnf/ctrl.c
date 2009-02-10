@@ -66,7 +66,7 @@ HB_FUNC( FT_CTRL )
 {
    HB_GT_INFO gtInfo;
 
-   gtInfo.pNewVal = gtInfo.pResult = NULL;
+   memset( &gtInfo, 0, sizeof( gtInfo ) );
    hb_gtInfo( HB_GTI_KBDSHIFTS, &gtInfo );
    hb_retl( ( hb_itemGetNI( gtInfo.pResult ) & HB_GTI_KBD_CTRL ) != 0 );
    if( gtInfo.pResult )

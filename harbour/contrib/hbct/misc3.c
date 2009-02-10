@@ -59,8 +59,7 @@ HB_FUNC( KBDSTAT )
    int iRet = 0;
    HB_GT_INFO gtInfo;
 
-   gtInfo.pNewVal = NULL;
-   gtInfo.pResult = NULL;
+   memset( &gtInfo, 0, sizeof( gtInfo ) );
 
    hb_gtInfo( HB_GTI_KBDSHIFTS, &gtInfo );
 

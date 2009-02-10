@@ -81,7 +81,7 @@ HB_FUNC( FT_NUMLOCK )
    int iState = 0, iNewState;
    HB_GT_INFO gtInfo;
 
-   gtInfo.pNewVal = gtInfo.pResult = NULL;
+   memset( &gtInfo, 0, sizeof( gtInfo ) );
    hb_gtInfo( HB_GTI_KBDSHIFTS, &gtInfo );
    if( gtInfo.pResult )
    {

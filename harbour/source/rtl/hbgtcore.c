@@ -1632,7 +1632,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       BYTE * pBuffer = NULL;
       HB_GT_INFO gtInfo;
 
-      gtInfo.pNewVal = gtInfo.pNewVal2 = gtInfo.pResult = NULL;
+      memset( &gtInfo, 0, sizeof( gtInfo ) );
 
       HB_GTSELF_INFO( pGT, HB_GTI_FULLSCREEN, &gtInfo );
       if( gtInfo.pResult )

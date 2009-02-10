@@ -4832,7 +4832,7 @@ void hb_clsAssociate( USHORT usClassH )
       hb_itemReturnRelease( pSelf );
 }
 
-#if 1
+#ifdef HB_LEGACY_LEVEL2
 /*
  * __CLS_PARAM() and __CLS_PAR00() functions are only for backward binary
  * compatibility. They will be removed in the future so please do not use
@@ -4884,7 +4884,6 @@ BOOL hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 {
    return hb_objHasMessage( pObject, pMessage->pDynSym );
 }
-
 #endif
 
 #if 0
