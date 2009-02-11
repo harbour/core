@@ -2207,7 +2207,7 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       {
          typedef BOOL ( WINAPI * P_SLWA )( HWND, COLORREF, BYTE, DWORD );
 
-#if defined(HB_OS_WIN_CE)
+#if defined( UNICODE ) && defined( GetProcAddress )
          P_SLWA pSetLayeredWindowAttributes = ( P_SLWA )
                   GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
                                   TEXT( "SetLayeredWindowAttributes" ) );

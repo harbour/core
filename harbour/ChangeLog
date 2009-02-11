@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-11 15:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/set.c
+    ! fixed casting in hb_fsFileExists()
+
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/gtwvg/wvgsink.c
+    ! fixed WinCE (Unicode) compilation
+
 2009-02-11 14:51 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/gtwvg/wvgwin.c
   * harbour/contrib/gtwvg/wvgsink.c

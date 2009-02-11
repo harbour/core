@@ -754,7 +754,11 @@ HB_FUNC( HB_AX_ATLAXWININIT )
 
       if( hLib )
       {
+#if defined( UNICODE ) && defined( GetProcAddress )
+         AtlAxWinInit = ( PATLAXWININIT ) GetProcAddressW( hLib, TEXT( "AtlAxWinInit" ) );
+#else
          AtlAxWinInit = ( PATLAXWININIT ) GetProcAddress( hLib, "AtlAxWinInit" );
+#endif
          if ( AtlAxWinInit )
          {
             if ( ( AtlAxWinInit )() )
@@ -798,7 +802,11 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
    int   Style    = ISNIL(  9 ) ? WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS : hb_parni( 9 );
    int   Exstyle  = ISNIL( 10 ) ? 0 : hb_parni( 10 );
 
+#if defined( UNICODE ) && defined( GetProcAddress )
+   AtlAxCreateControl = ( PATLAXCREATECONTROL ) GetProcAddressW( hLib, TEXT( "AtlAxCreateControl" ) );
+#else
    AtlAxCreateControl = ( PATLAXCREATECONTROL ) GetProcAddress( hLib, "AtlAxCreateControl" );
+#endif
    if ( AtlAxCreateControl )
    {
       LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
@@ -861,7 +869,11 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
    int   Style     = ISNIL(  9 ) ? WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS : hb_parni( 9 );
    int   Exstyle   = ISNIL( 10 ) ? 0 : hb_parni( 10 );
 
+#if defined( UNICODE ) && defined( GetProcAddress )
+   AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddressW( hLib, TEXT( "AtlAxGetControl" ) );
+#else
    AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddress( hLib, "AtlAxGetControl" );
+#endif
    if( AtlAxGetControl )
    {
       LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
@@ -918,7 +930,11 @@ HB_FUNC( HB_AX_ATLAXWINTERM )
 
    if( hLib )
    {
+#if defined( UNICODE ) && defined( GetProcAddress )
+      AtlAxWinTerm = ( PATLAXWINTERM ) GetProcAddressW( hLib, TEXT( "AtlAxWinTerm" ) );
+#else
       AtlAxWinTerm = ( PATLAXWINTERM ) GetProcAddress( hLib, "AtlAxWinTerm" );
+#endif
       if( AtlAxWinTerm )
       {
          if( AtlAxWinTerm() )

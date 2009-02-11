@@ -267,7 +267,7 @@ static HB_FHANDLE open_handle( PHB_SET_STRUCT pSet, const char * file_name, BOOL
       {
          if( bAppend )
          {  /* Append mode */
-            if( hb_fsFileExists( ( BYTE * ) path ) )
+            if( hb_fsFileExists( path ) )
             {  /* If the file already exists, open it (in read-write mode, in
                   case of non-Unix and text modes). */
                handle = hb_fsOpen( ( BYTE * ) path, FO_READWRITE | FO_DENYWRITE );
