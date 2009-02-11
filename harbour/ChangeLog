@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-11 22:36 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/contrib/rddsql/sddfb/make_vc.bat
+    * fixed typo
+      ; NOTE: Viktor pls check me, this is my first build with MSVC.
+
 2009-02-11 20:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/binnumx.c
     * Added rewritten versions of these functions:
