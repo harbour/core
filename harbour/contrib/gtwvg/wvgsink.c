@@ -589,10 +589,10 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
       ( ( MyRealIEventHandler * ) thisobj )->count = 0;
       ( ( MyRealIEventHandler * ) thisobj )->iID_riid = 0;
 
-      hr = thisobj->lpVtbl->QueryInterface( thisobj, &IID_IUnknown, (void**) &pIUnknown);
+      hr = thisobj->lpVtbl->QueryInterface( thisobj, &IID_IUnknown, (void **) (void*) &pIUnknown );
       if (hr == S_OK && pIUnknown)
       {
-         hr = pdevice_interface->lpVtbl->QueryInterface( pdevice_interface, &IID_IConnectionPointContainer, (void**) &pIConnectionPointContainerTemp);
+         hr = pdevice_interface->lpVtbl->QueryInterface( pdevice_interface, &IID_IConnectionPointContainer, (void**) (void*) &pIConnectionPointContainerTemp);
          if ( hr == S_OK && pIConnectionPointContainerTemp )
          {
             hr = pIConnectionPointContainerTemp->lpVtbl->EnumConnectionPoints( pIConnectionPointContainerTemp, &m_pIEnumConnectionPoints );
@@ -644,7 +644,7 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
 //----------------------------------------------------------------------//
 HB_FUNC( HB_AX_SHUTDOWNCONNECTIONPOINT )
 {
-   MyRealIEventHandler* hSink = ( MyRealIEventHandler * ) hb_parnint( 1 );
+   MyRealIEventHandler* hSink = ( MyRealIEventHandler * ) ( HB_PTRDIFF ) hb_parnint( 1 );
 
 //hb_ToOutDebug( "---------------------------------------------" );
    #if 1
@@ -674,7 +674,7 @@ HB_FUNC( HB_AX_SHUTDOWNCONNECTIONPOINT )
 //----------------------------------------------------------------------//
 HB_FUNC( HB_AX_RELEASEOBJECT )
 {
-   IDispatch * pDisp = ( IDispatch * ) hb_parnint( 1 );
+   IDispatch * pDisp = ( IDispatch * ) ( HB_PTRDIFF ) hb_parnint( 1 );
    s_nOleError = pDisp->lpVtbl->Release( pDisp );
 }
 //---------------------------------------------------------------------------//
@@ -683,9 +683,9 @@ HB_FUNC( HB_AX_SETUPCONNECTIONPOINT )
    HRESULT              hr;
    MyRealIEventHandler* hSink = NULL;
    LPIID                riid  = ( LPIID ) &IID_IDispatch;
-   int                  n;
+   int                  n = 0;
 
-   hr = SetupConnectionPoint( ( device_interface* ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( REFIID ) riid, ( void** ) &hSink, &n ) ;
+   hr = SetupConnectionPoint( ( device_interface* ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( REFIID ) riid, ( void** ) (void*) &hSink, &n ) ;
 
    hSink->pEvents = hb_itemNew( hb_param( 4, HB_IT_ANY ) );
 
@@ -785,7 +785,7 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
    BSTR  wString;
    UINT  uLen;
    PATLAXCREATECONTROL AtlAxCreateControl;
-   HWND  hContainer;
+   HWND  hContainer = NULL;
    RECT  rc;
    char  *class   = hb_parc( 1 );
    HWND  hParent  = ( HWND ) hb_parnl(2);
@@ -819,7 +819,7 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
 
          free( wString );
 
-         pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void** ) &obj );
+         pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void** ) (void*) &obj );
          pUnk->lpVtbl->Release( pUnk );
          hb_retnl( ( long ) obj );
 
@@ -880,7 +880,7 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
 
          if( pUnk )
          {
-            pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void** ) &obj );
+            pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void** ) (void*) &obj );
             pUnk->lpVtbl->Release( pUnk );
             GetClientRect( hParent, &rc );
             MoveWindow( GetDlgItem( hParent, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );

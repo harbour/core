@@ -1617,7 +1617,7 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
                           TVIS_EXPANDEDONCE | TVIS_SELECTED | TVIS_EXPANDPARTIAL |
                           TVIS_OVERLAYMASK | TVIS_STATEIMAGEMASK | TVIS_USERMASK ;
 
-   tvis.item.state      = NULL;       // TVI_BOLD
+   tvis.item.state      = 0;        // TVI_BOLD
    tvis.hParent         = ISNIL( 2 ) ? NULL : wvg_parhandle( 2 );
    tvis.item.pszText    = text;
 
@@ -1750,7 +1750,11 @@ HB_FUNC( WIN_ISZOOMED )
 //
 HB_FUNC( WIN_SETDCBRUSHCOLOR )
 {
+#if ( _WIN32_WINNT >= 0x0500 )
    wvg_rethandle( SetDCBrushColor( wvg_parhdc( 1 ), wvg_parcolor( 2 ) ) );
+#else
+   wvg_rethandle( NULL );
+#endif
 }
 
 //----------------------------------------------------------------------//
@@ -1758,7 +1762,11 @@ HB_FUNC( WIN_SETDCBRUSHCOLOR )
 //
 HB_FUNC( WIN_SETDCPENCOLOR )
 {
+#if ( _WIN32_WINNT >= 0x0500 )
    wvg_rethandle( SetDCPenColor( wvg_parhdc( 1 ), wvg_parcolor( 2 ) ) );
+#else
+   wvg_rethandle( NULL );
+#endif
 }
 
 //----------------------------------------------------------------------//
@@ -1805,7 +1813,7 @@ HB_FUNC( WIN_SETWINDOWPOSTOTOP )
 
 HB_FUNC( WIN_SETWINDOWSIZE )
 {
-   hb_retl( SetWindowPos( wvg_parhwnd( 1 ), NULL, NULL, NULL, hb_parni( 2 ), hb_parni( 3 ),
+   hb_retl( SetWindowPos( wvg_parhwnd( 1 ), NULL, 0, 0, hb_parni( 2 ), hb_parni( 3 ),
                  hb_parl( 4 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE  ) );
 }
 

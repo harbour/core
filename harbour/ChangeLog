@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-11 14:51 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/gtwvg/wvgwin.c
+  * harbour/contrib/gtwvg/wvgsink.c
+    * pacified MinGW warnings. This one:
+      ../../wvgsink.c:368: warning: comparison of unsigned expression < 0
+                                    is always false
+      Should be checked by author. Pritpal can you look at it?
+      'count' is declared as WORD so it cannot be negative.
+
 2009-02-11 13:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
     * add missing information about optimized hb_fsExtName() in previous
