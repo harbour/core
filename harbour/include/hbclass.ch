@@ -207,9 +207,6 @@
    #xtranslate __HB_CLS_ERR([<msg,...>]) => ;#error [ <msg>] ; #line
 #endif
 
-/* Please keep it synced with the similar #define in common.ch */
-#define __HB_CLS_SYMBOL_UNUSED( symbol )  ( ( symbol ) )
-
 #xtranslate __HB_CLS_VARERR(<var>) => __HB_CLS_ERR( Invalid instance variable name: <var> )
 
 DECLARE HBClass ;
@@ -272,7 +269,7 @@ DECLARE HBClass ;
       local nScope, oClass, oInstance ;;
       if s_oClass == NIL .and. __clsLockDef( @s_oClass ) ;;
          begin sequence ;;
-            nScope := HB_OO_CLSTP_EXPORTED ; __HB_CLS_SYMBOL_UNUSED( nScope ) ;;
+            nScope := HB_OO_CLSTP_EXPORTED ; HB_SYMBOL_UNUSED( nScope ) ;;
             oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR( [ @<SuperClass1>() ] [ , @<SuperClassN>() ] ), @__HB_CLS_OPT([__HB_CLS_ASID(<FuncName>),] <ClassName>)() [, <.modulfriend.> ] ) ) ;;
    #undef  _CLASS_NAME_ ; #define _CLASS_NAME_ <ClassName> ;;
    #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_DECLARATION_ ;
@@ -358,7 +355,7 @@ DECLARE HBClass ;
 
 /* Operator overloading */
 #xcommand OPERATOR <op> [<arg: ARG, ARGS> <Args,...>] [LOCAL <Locals,...>] INLINE <Code,...> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<sync: SYNC>] => ;
-   oClass:AddInline( <(op)>, {|Self [,<Args>] [,<Locals>]| __HB_CLS_SYMBOL_UNUSED(Self), <Code>}, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.sync.>, HB_OO_CLSTP_SYNC, 0 ) )
+   oClass:AddInline( <(op)>, {|Self [,<Args>] [,<Locals>]| HB_SYMBOL_UNUSED(Self), <Code>}, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.sync.>, HB_OO_CLSTP_SYNC, 0 ) )
 
 #xcommand METHOD <MethodName> [ AS <type> ] OPERATOR <op> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<sync: SYNC>] => ;
    _HB_MEMBER __HB_CLS_ASFUNC(<MethodName>) [ AS <type> ];;
@@ -400,7 +397,7 @@ DECLARE HBClass ;
    oClass:AddInline( __HB_CLS_ASSTRING(<MessageName>), <CodeBlock>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ctor.>, HB_OO_CLSTP_CTOR, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ) + iif( <.sync.>, HB_OO_CLSTP_SYNC, 0 ) )
 
 #xcommand MESSAGE <MessageName> [ AS <type> ] [LOCAL <Locals,...>] INLINE <Code,...> [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
-   MESSAGE <MessageName> [ AS <type> ] BLOCK {|Self __HB_CLS_ASARGSOPT(<MessageName>) [,<Locals>]| __HB_CLS_SYMBOL_UNUSED(Self), <Code>} <ctor> <export> <protect> <hidde> <persistent> <sync>
+   MESSAGE <MessageName> [ AS <type> ] BLOCK {|Self __HB_CLS_ASARGSOPT(<MessageName>) [,<Locals>]| HB_SYMBOL_UNUSED(Self), <Code>} <ctor> <export> <protect> <hidde> <persistent> <sync>
 
 #xcommand MESSAGE <MessageName> [ AS <type> ] <arg: ARG, ARGS> <Args,...> [LOCAL <Locals,...>] INLINE <Code,...> [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
    MESSAGE __HB_CLS_ASID(<MessageName>)(<Args>) [ AS <type> ] [LOCAL <Locals>] INLINE <Code> <ctor> <export> <protect> <hidde> <persistent> <sync>
@@ -482,19 +479,19 @@ DECLARE HBClass ;
    #xtranslate _HB_MEMBER {AS Char     => _HB_MEMBER {AS Character
    #xtranslate _HB_MEMBER {AS Block    => _HB_MEMBER {AS CodeBlock
 
-   #xcommand EXPORTED:   =>    nScope := HB_OO_CLSTP_EXPORTED ; __HB_CLS_SYMBOL_UNUSED( nScope )
-   #xcommand EXPORT:     =>    nScope := HB_OO_CLSTP_EXPORTED ; __HB_CLS_SYMBOL_UNUSED( nScope )
-   #xcommand VISIBLE:    =>    nScope := HB_OO_CLSTP_EXPORTED ; __HB_CLS_SYMBOL_UNUSED( nScope )
-   #xcommand HIDDEN:     =>    nScope := HB_OO_CLSTP_HIDDEN   ; __HB_CLS_SYMBOL_UNUSED( nScope )
-   #xcommand PROTECTED:  =>    nScope := HB_OO_CLSTP_PROTECTED; __HB_CLS_SYMBOL_UNUSED( nScope )
+   #xcommand EXPORTED:   =>    nScope := HB_OO_CLSTP_EXPORTED ; HB_SYMBOL_UNUSED( nScope )
+   #xcommand EXPORT:     =>    nScope := HB_OO_CLSTP_EXPORTED ; HB_SYMBOL_UNUSED( nScope )
+   #xcommand VISIBLE:    =>    nScope := HB_OO_CLSTP_EXPORTED ; HB_SYMBOL_UNUSED( nScope )
+   #xcommand HIDDEN:     =>    nScope := HB_OO_CLSTP_HIDDEN   ; HB_SYMBOL_UNUSED( nScope )
+   #xcommand PROTECTED:  =>    nScope := HB_OO_CLSTP_PROTECTED; HB_SYMBOL_UNUSED( nScope )
 
 
    /* Classy compatibility... Added By JF Lefebvre (mafact) 2006/11/07 */
    #xcommand METHOD <MethodName> [ AS <type> ] INLINE [Local <v>,] <Code,...> [<other>] => ;
-             MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [,<v>] | __HB_CLS_SYMBOL_UNUSED(Self), <Code>} [ <other>]
+             MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [,<v>] | HB_SYMBOL_UNUSED(Self), <Code>} [ <other>]
 
    #xcommand METHOD <MethodName>( [<params,...>] ) [ AS <type> ] INLINE [Local <v>,] <Code,...> [<other>] => ;
-             MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [, <params>] [, <v>] | __HB_CLS_SYMBOL_UNUSED(Self), <Code> } [ <other>]
+             MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [, <params>] [, <v>] | HB_SYMBOL_UNUSED(Self), <Code> } [ <other>]
 
 
    /* These definitions are not Class(y) compatible - I'm leaving them as is now */

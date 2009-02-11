@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * 
+ *
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -54,6 +54,11 @@
 #define HB_STD_CH_
 
 #include "set.ch"
+
+/* To suppress unused variable -w2 warnings. The code snippet will be
+   optimized out by the compiler, so it won't cause any overhead.
+   It can be used in codeblocks, too. */
+#define HB_SYMBOL_UNUSED( symbol )  ( ( symbol ) )
 
 #ifdef HB_C52_STRICT
    #command END SEQUENCE      => end
@@ -677,6 +682,6 @@
 #command SET DBFLOCKSCHEME TO          => Set( _SET_DBFLOCKSCHEME, 0 )
 #command SET HARDCOMMIT <x:ON,OFF,&>   => Set( _SET_HARDCOMMIT, <(x)> )
 #command SET HARDCOMMIT (<x>)          => Set( _SET_HARDCOMMIT, <x> )
-#command SET EOL <x>                   => Set( _SET_EOL, <x> )                         
+#command SET EOL <x>                   => Set( _SET_EOL, <x> )
 
 #endif /* HB_STD_CH_ */
