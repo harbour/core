@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * OEM <-> ANSI string conversion functions (Win32 specific, Xbase++ ext.)
+ * OEM <-> ANSI string conversion functions (Windows specific, Xbase++ ext.)
  *
  * Copyright 1999-2007 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
@@ -50,7 +50,7 @@
  *
  */
 
-/* NOTE: These are Win32 specific, for other platforms it will return the
+/* NOTE: These are Windows specific, for other platforms it will return the
          passed parameter unchanged. */
 
 #define HB_OS_WIN_USED

@@ -199,10 +199,10 @@ function tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    #ifdef __PLATFORM__LINUX
    default cPortName to "/dev/ttyS"
    #else
-   default cPortName to "COM"          // Ok for Win32 and OS/2
+   default cPortName to "COM"          // Ok for Windows and OS/2
    #endif
 
-   /* This way compatibility is retained for ports 1-4 on Win32 and Linux, but,
+   /* This way compatibility is retained for ports 1-4 on Windows and Linux, but,
       should necessity arise, it is possible to simply pass a NIL on nPort and
       a full name on cPortName
    */

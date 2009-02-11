@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *    demonstration code for FOR EACH used for OLE objects
- *    this code needs HBWIN32 library
+ *    this code needs HBWIN library
  *
  * Copyright 2007 Enrico Maria Giordano e.m.giordano at emagsoftware.it
  * www - http://www.harbour-project.org
@@ -74,20 +74,20 @@ STATIC PROCEDURE Exm_CDO()
       BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
 
          oCDOConf := CreateObject( "CDO.Configuration" )
-         
+
          oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/sendusing") := 2 // ; cdoSendUsingPort
          oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserver") := "localhost"
          oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserverport") := 25
          oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout") := 120
          oCDOConf:Fields:Update()
-         
+
          oCDOMsg:Configuration := oCDOConf
          oCDOMsg:BodyPart:Charset := "iso-8859-2" // "iso-8859-1" "utf-8"
          oCDOMsg:To := "test@localhost"
          oCDOMsg:From := "sender@localhost"
          oCDOMsg:Subject := "Test message"
          oCDOMsg:TextBody := "Test message body"
-         
+
          BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
             oCDOMsg:Send()
          RECOVER
@@ -132,63 +132,63 @@ STATIC PROCEDURE Exm_MSExcel()
    BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
       oExcel := CreateObject( "Excel.Application" )
       BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-   
+
          oWorkBook := oExcel:WorkBooks:Add()
-         
+
          FOR EACH oWorkSheet IN oWorkBook:WorkSheets
             ? oWorkSheet:Name
          NEXT
-         
+
          oAS := oExcel:ActiveSheet()
-         
+
          oAS:Cells:Font:Name := "Arial"
          oAS:Cells:Font:Size := 12
-         
+
          // Explicit use of DEFAULT method by means of #xtranslate above!!!
          oAS:Cells( 3, 1 ) := "Explict DEFAULT Method Text:"
-         
+
          // Array notation seem to have REVERSED indexs for the Cells Collections!!!
          // Implicitly using DEFAULT Method
          oAS:Cells[ 2, 3 ] := "Implicit DEFAULT Method using *reversed* array index notation"
-         
+
          // Operator overloading will attempt explict resolutin using :OleValue
          oAS:Cells[ 2, 3 ] += "!"
-         
+
          oAS:Cells( 4, 1 ):Value := "Numeric:"
          oAS:Cells( 4, 2 ):NumberFormat := "#.##0,00"
-         
+
          oAS:Cells[ 2, 4 ] := 1234.50
          oAS:Cells[ 2, 4 ] *= 4
          ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
          oAS:Cells[ 2, 4 ] /= 2
          ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
-         
+
          oAS:Cells[ 2, 4 ]++
          ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
          oAS:Cells[ 2, 4 ]--
          ? oAS:Cells[ 2, 4 ], oAS:Cells[ 2, 4 ]:Value
-         
+
          oAS:Cells( 5, 1 ):Value := "Logical:"
          oAS:Cells( 5, 2 ):Value := .T.
          oAS:Cells( 6, 1 ):Value := "Date:"
          oAS:Cells( 6, 2 ):Value := DATE()
-         
+
          oAS:Columns( 1 ):Font:Bold := .T.
          oAS:Columns( 2 ):HorizontalAlignment := -4152  // xlRight
-         
+
          oAS:Columns( 1 ):AutoFit()
          oAS:Columns( 2 ):AutoFit()
-         
+
          oAS:Cells( 1, 1 ):Value := "OLE from Harbour"
          oAS:Cells( 1, 1 ):Font:Size := 16
          oAS:Range( "A1:B1" ):HorizontalAlignment := 7
-         
+
          oAS:Cells( 1, 1 ):Select()
-         
+
          oExcel:Visible := .T.
-   
+
          oExcel:Quit()
-   
+
       END SEQUENCE
    RECOVER
       Alert( "Error: MS Excel not available. [" + Ole2TxtError()+ "]" )
@@ -206,14 +206,14 @@ STATIC PROCEDURE Exm_MSWord()
       BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
 
          oWord:Documents:Add()
-         
+
          oText := oWord:Selection()
-         
+
          oText:Text := "OLE from Harbour" + hb_OSNewLine()
          oText:Font:Name := "Arial"
          oText:Font:Size := 48
          oText:Font:Bold := .T.
-         
+
          oWord:Visible := .T.
          oWord:WindowState := 1 // ; Maximize
 
@@ -298,10 +298,10 @@ STATIC PROCEDURE Exm_OpenOffice()
          oOO_Doc := oOO_Desktop:loadComponentFromURL( OO_ConvertToURL( hb_FNameMerge( cDir, "sample.odt" ) ), "_blank", 0, { oOO_PropVal01 } )
 
          // ...
-         
+
          oOO_Doc:Close( .T. )
          oOO_Doc := NIL
-         
+
          oOO_Desktop:Terminate()
          oOO_Desktop := NIL
          oOO_PropVal01 := NIL

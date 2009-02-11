@@ -20,7 +20,7 @@ test.prg    :  a little test program which wont work for you :-) since it uses a
                provided. Use it as a small tutorial of tmysql.prg provided functions.
 Makefile    :  my makefile for OS/2 gcc, you'll surely need to change it to adapt to your needs/platform.
 makefile.bc,
-make_b32.bat:  batch file and makefile to build mysql.lib on win32
+make_b32.bat:  batch file and makefile to build mysql.lib on Windows
 
 You will also need all .h files from include subdir of your installed MySQL server, at a bare minimum
 they are:
@@ -30,7 +30,7 @@ they are:
 (under OS/2 with OS/2 port of MySql you need to use the ones from 3.21.33b build which is the only one with
 a single threaded libmysqlclient.a client library and works ok even with latest MySQL/2 availble).
 
-To build this library on win32 (using freely available Borland C++ compiler) you
+To build this library on Windows (using freely available Borland C++ compiler) you
 need to follow these steps:
 
 1) go to www.mysql.com and download any version you like of mysql.

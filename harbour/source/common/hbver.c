@@ -100,7 +100,7 @@
 /* NOTE: The caller must free the returned buffer. [vszakats] */
 
 /* NOTE: Must be larger than 128, which is the maximum size of
-         osVer.szCSDVersion (Win32). [vszakats] */
+         osVer.szCSDVersion (Windows). [vszakats] */
 #define PLATFORM_BUF_SIZE 255
 
 char * hb_verPlatform( void )

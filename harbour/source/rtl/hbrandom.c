@@ -61,13 +61,13 @@
 
 /* Globally available data, no need to MT it */
 static volatile int s_fInit = 0;
- 
+
 /*
  * HB_RANDOM
  *
  * HB_RANDOM() --> returns a real value n so that 0 <= n < 1
- * HB_RANDOM( x ) --> returns a real number n so that 0 <= n < x 
- * HB_RANDOM( x, y) --> Returns a  real number n so that  x <= n < y 
+ * HB_RANDOM( x ) --> returns a real number n so that 0 <= n < x
+ * HB_RANDOM( x, y) --> Returns a  real number n so that  x <= n < y
  */
 HB_FUNC( HB_RANDOM )
 {
@@ -141,7 +141,7 @@ double hb_random_num()
    d1 = ( double ) rand();
    d2 = ( double ) RAND_MAX;
 #if defined( HB_OS_WIN )
-   /* It seems that on win32 platform there some weirdness about EPSILON value so
+   /* It seems that on Windows platform there some weirdness about EPSILON value so
       that a float division using an epsilon smaller than 1e-10 may be rounded.
       Must dig if it's a borland lib bug or a windows problem.
     */

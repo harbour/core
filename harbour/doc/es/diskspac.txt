@@ -71,12 +71,10 @@
  *      de punto flotante con 0 decimales si el disco es > 2 gigabytes.
  *      <nTipo> es una extensi¢n de Harbour.
  *  $PLATFORMS$
- *      Dos, Win32, OS/2, Unix
+ *      Dos, Windows, OS/2, Unix
  *  $FILES$
  *      El c¢digo fuente est  en diskspac.c
  *      La librer¡a asociada es rtl
  *      El archivo de cabecera es fileio.ch
  *  $END$
  */
-
-

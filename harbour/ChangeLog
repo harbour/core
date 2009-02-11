@@ -8,6 +8,37 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-11 19:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * doc/en/diskspac.txt
+  * doc/en/terminal.txt
+  * doc/en/setmode.txt
+  * doc/es/diskspac.txt
+  * doc/es/dirstruc.txt
+  * doc/inet.txt
+  * contrib/hbmysql/readme.txt
+  * contrib/hbct/disk.c
+  * contrib/hbtpathy/telepath.prg
+  * contrib/hbole/tests/testole.prg
+  * contrib/gtwvg/gtwvg.c
+  * contrib/gtwvg/wvgclass.prg
+  * contrib/gtwvg/gtwvg.h
+  * contrib/gtwvg/wvggui.c
+  * contrib/gtwvg/wvggui.h
+  * contrib/gtwvg/wvgwin.c
+  * contrib/gtwvg/wvgutils.c
+  * contrib/gtwvg/wvgcore.c
+  * contrib/hbgf/hbgfos2/winctrl.prg
+  * contrib/hbgf/hbgfos2/tform.prg
+  * source/common/hbver.c
+  * source/rtl/run.c
+  * source/rtl/gtwin/gtwin.c
+  * source/rtl/oemansi.c
+  * source/rtl/gtwvt/gtwvt.h
+  * source/rtl/gtwvt/gtwvt.c
+  * source/rtl/hbrandom.c
+  * source/rtl/filesys.c
+    * Win32 -> Windows. In comments / docs.
+
 2009-02-11 19:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * COPYING
   * source/rtl/philes.c

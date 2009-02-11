@@ -44,7 +44,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
- *      Dos,Win32,OS/2
+ *      Dos,Windows,OS/2
  *  $FILES$
  *      Library is rtl
  *      Header is fileio.ch
@@ -104,7 +104,7 @@
  *      floating point value with 0 decimals if the disk is > 2 gigabytes.
  *      <nType> is a Harbour extension.
  *  $PLATFORMS$
- *      Dos,Win32,OS/2,Unix
+ *      Dos,Windows,OS/2,Unix
  *  $FILES$
  *      Library is rtl
  *      Header is fileio.ch

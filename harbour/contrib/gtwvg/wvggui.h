@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header File for Video subsystem for Win32 using GUI windows instead of Console
+ * Header File for Video subsystem for Windows using GUI windows instead of Console
  * Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                Rees Software & Systems Ltd
  * www - http://www.harbour-project.org

@@ -184,7 +184,7 @@ HB_FUNC( NUMDISKL )
    hb_retni( 26 );
 #endif
 #elif defined( HB_OS_WIN )
-   /* LASTDRIVE does not affect Win32 apps, they always have 26 letters avail */
+   /* LASTDRIVE does not affect Windows apps, they always have 26 letters avail */
    hb_retni( 26 );
 #else
    /* For Unix, return the most harmless value... or not? */

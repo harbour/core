@@ -54,7 +54,7 @@ busca de remover directorios vac¡os)
 |   |
 |   +---os2            - Archivos de Configuraci¢n espec¡ficos para OS/2.
 |   |
-|   +---win            - Archivos de Config. espec¡ficos para MS-Win32.
+|   +---win            - Archivos de Config. espec¡ficos para Windows.
 |
 |
 +---contrib            - Archivos Miscelaneos de contribuci¢n.
@@ -96,7 +96,7 @@ busca de remover directorios vac¡os)
 |   |   |
 |   |   +---tests      - Programas de Testeo
 |   |   |
-|   |   +---win32      - Implementaci¢n para entorno Win32
+|   |   +---hbgfwin    - Implementaci¢n para entorno Windows
 |   |
 |   +---htmllib        - HTMLLIB (HTML classes) para Harbour
 |   |
@@ -220,7 +220,7 @@ busca de remover directorios vac¡os)
 |   |   |
 |   |   +---gtstd      - Subsistema GT para ANSI C stream IO.
 |   |   |
-|   |   +---gtwin      - Subsistema GT para compiladores Win32
+|   |   +---gtwin      - Subsistema GT para compiladores Windows
 |   |   |
 |   |   +---gt_tpl     - Subsistema GT modelo base
 |   |
@@ -259,4 +259,3 @@ directorio est  vac¡o ¢ no contiene todos los archivos.
      si Ud. construye el compilador Harbour.
 
 (#3) (.hrb), Archivos de formato Harbour Portable Object
-

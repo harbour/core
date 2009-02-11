@@ -9,7 +9,7 @@
  * Copyright 2007 Pritpal Bedi <pritpal@vouchcac.com>
  * Based On:
  *
- * Video subsystem for Win32 using GUI windows instead of Console
+ * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
  *
@@ -3573,4 +3573,3 @@ METHOD SetVisible() CLASS TBrowseWVG
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
-

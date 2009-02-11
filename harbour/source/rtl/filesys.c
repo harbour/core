@@ -74,7 +74,7 @@
  *
  * Copyright 2001 Jose Gimenez (JFG) <jfgimenez@wanadoo.es>
  *                                   <tecnico.sireinsa@ctv.es>
- *    Added __WIN32__ check for any compiler to use the Win32
+ *    Added platform check for any compiler to use the Windows
  *    API calls to allow openning an unlimited number of files
  *    simultaneously.
  *

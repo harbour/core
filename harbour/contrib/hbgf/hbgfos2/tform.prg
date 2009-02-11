@@ -58,7 +58,7 @@
 #include "os2pm.ch"   // Needed to store some OS/2 PM constant values
 
 
-// Win32 compatibility Message redefinition
+// Windows compatibility Message redefinition
 #define WM_LBUTTONDOWN  WM_BUTTON1DOWN
 
 

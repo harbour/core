@@ -55,7 +55,7 @@
 #include "hbapigt.h"
 #include "hbapiitm.h"
 
-/* TOFIX: The screen buffer handling is not right for all platforms (Win32)
+/* TOFIX: The screen buffer handling is not right for all platforms (Windows)
           The output of the launched (DOS?) app is not visible. */
 
 HB_FUNC( __RUN )

@@ -58,7 +58,7 @@
 #include "common.ch"
 #include "hbclass.ch"
 
-// NOTE: What does this define do under Win32?
+// NOTE: What does this define do under Windows?
 #define SW_SHOWNA      8
 
 

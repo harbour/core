@@ -41,7 +41,7 @@
  *
  *
  *      hb_InetCleanup() -->NIL
- *        Closes Inet support; mainly used for win32. Put it at the end of any program
+ *        Closes Inet support; mainly used for Windows. Put it at the end of any program
  *        using Inet functions, just before the program exits.
  *
  *      hb_InetCreate() --> SOCKET
