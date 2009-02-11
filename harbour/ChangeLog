@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-11 19:30 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/include/hbextern.ch
+  * harbour/source/rtl/philes.c
+    + added HB_FGETDATETIME(). A "brother" of function HB_FGETDATETIME().
+    ; TODO: BTW, hb_fs*() functions can get a better precision 
+      (milliseconds). It would be nice to support it also at .prg level.
+
 2009-02-11 18:30 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/vm/proc.c
     * hb_procname() support for symbol evaluation

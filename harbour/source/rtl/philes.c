@@ -402,6 +402,29 @@ HB_FUNC( HB_FSETDATETIME )
       ISCHAR( 3 ) ? hb_timeStampEncode( iHour, iMinutes, iSeconds, 0 ) : -1 ) );
 }
 
+HB_FUNC( HB_FGETDATETIME )
+{
+   LONG   lJulian, lMillisec;
+   BOOL   fRet;
+
+   if( hb_fsGetFileTime( ( UCHAR * ) hb_parcx( 1 ), &lJulian, &lMillisec ) )
+   {
+      char  buf[ 13 ];
+
+      hb_stordl( lJulian, 2 );
+
+      hb_timeStampStr( buf, lMillisec );
+      buf[ 8 ] = '\0';
+      hb_storc( buf, 3 );
+
+      /* hb_stornl( lMillisec, 4 ); */
+
+      hb_retl( 1 );
+   }
+   else
+      hb_retl( 0 );
+}
+
 HB_FUNC( HB_OSERROR )
 {
    hb_retni( hb_fsOsError() );
