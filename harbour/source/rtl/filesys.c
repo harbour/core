@@ -2672,11 +2672,10 @@ USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
          BOOL fFree;
          BYTE * pbyResult = hb_osDecode( pbyBuffer, &fFree );
 
-         if( fFree )
-         {
+         if( pbyResult != pbyBuffer )
             hb_strncpy( ( char * ) pbyBuffer, ( char * ) pbyResult, ulLen - 1 );
+         if( fFree )
             hb_xfree( pbyResult );
-         }
       }
    }
 
@@ -2882,7 +2881,7 @@ BYTE * hb_fsExtName( BYTE * pFilename, BYTE * pDefExt,
       {
          pFilepath->szPath = szDefault;
          hb_fsFNameMerge( ( char * ) szPath, pFilepath );
-         fIsFile = hb_fsFile( szPath );
+         fIsFile = hb_fsFileExists( ( const char * ) szPath );
       }
       if( !fIsFile &&
           ( uiExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) ) == 0 &&
@@ -2893,7 +2892,7 @@ BYTE * hb_fsExtName( BYTE * pFilename, BYTE * pDefExt,
          {
             pFilepath->szPath = pNextPath->szPath;
             hb_fsFNameMerge( ( char * ) szPath, pFilepath );
-            fIsFile = hb_fsFile( szPath );
+            fIsFile = hb_fsFileExists( ( const char * ) szPath );
             pNextPath = pNextPath->pNext;
          }
       }
@@ -2912,7 +2911,7 @@ BYTE * hb_fsExtName( BYTE * pFilename, BYTE * pDefExt,
       {
          pFilepath->szPath = pNextPath->szPath;
          hb_fsFNameMerge( ( char * ) szPath, pFilepath );
-         fIsFile = hb_fsFile( szPath );
+         fIsFile = hb_fsFileExists( ( const char * ) szPath );
          pNextPath = pNextPath->pNext;
       }
       hb_fsFreeSearchPath( pSearchPath );
@@ -3216,65 +3215,25 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 /* NOTE: pbyBuffer must be _POSIX_PATH_MAX + 1 long. */
 void hb_fsBaseDirBuff( BYTE * pbyBuffer )
 {
-#if defined( HB_OS_UNIX_COMPATIBLE )
+   const char * szBaseName = hb_cmdargARGVN( 0 );
+
+   if( szBaseName )
    {
-      /* Assemble the full path of the program by taking the
-         current dir and appending the name of the program,
-         as specified on the command-line.
-         HB_OS_UNIX_COMPATIBLE might be too rough to decide
-         for this method, pls test on other platforms and refine.
-         [vszakats] */
-
-      char byCurDir[ _POSIX_PATH_MAX + 1 ];
-      char byBinDir[ _POSIX_PATH_MAX + 1 ];
-      int nBinDirOffset = 0;
-
-      PHB_FNAME pFName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
+      PHB_FNAME pFName = hb_fsFNameSplit( szBaseName );
+      BYTE * pbyResult;
+      BOOL fFree;
 
       pFName->szName = NULL;
       pFName->szExtension = NULL;
-
-      hb_fsFNameMerge( ( char * ) byBinDir, pFName );
-      hb_xfree( pFName );
-
-      /* Skip 'current dir' if present, and replace with cwd. */
-      if( byBinDir[ 0 ] == '.' && byBinDir[ 1 ] == HB_OS_PATH_DELIM_CHR )
-      {
-         nBinDirOffset += 2;
-
-         hb_fsCurDirBuff( 0, ( BYTE * ) byCurDir, sizeof( byCurDir ) );
-
-         hb_strncpy( pbyBuffer, HB_OS_PATH_DELIM_CHR_STRING, _POSIX_PATH_MAX );
-         if( byCurDir[ 0 ] != '\0' )
-         {
-            hb_strncat( pbyBuffer, byCurDir, _POSIX_PATH_MAX );
-            hb_strncat( pbyBuffer, HB_OS_PATH_DELIM_CHR_STRING, _POSIX_PATH_MAX );
-         }
-      }
-      hb_strncat( pbyBuffer, byBinDir + nBinDirOffset, _POSIX_PATH_MAX );
-   }
-#else
-   {
-      PHB_FNAME pFName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
-
-      pFName->szName = NULL;
-      pFName->szExtension = NULL;
-
       hb_fsFNameMerge( ( char * ) pbyBuffer, pFName );
       hb_xfree( pFName );
-   }
-#endif
 
-   /* Convert from OS codepage */
-   {
-      BOOL fFree;
-      BYTE * pbyResult = hb_osDecode( pbyBuffer, &fFree );
-
-      if( fFree )
-      {
+      /* Convert from OS codepage */
+      pbyResult = hb_osDecode( pbyBuffer, &fFree );
+      if( pbyResult != pbyBuffer )
          hb_strncpy( ( char * ) pbyBuffer, ( char * ) pbyResult, _POSIX_PATH_MAX );
+      if( fFree )
          hb_xfree( pbyResult );
-      }
    }
 }
 

@@ -350,7 +350,7 @@ LONG hb_timeStampEncode( int iHour, int iMinutes, int iSeconds, int iMSec )
 }
 
 void hb_timeStampDecode( LONG lMillisec, int * piHour, int * piMinutes,
-                                   int * piSeconds, int * piMSec )
+                                         int * piSeconds, int * piMSec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_timeStampDecode(%ld, %p, %p, %p, %p)", lMillisec, piHour, piMinutes, piSeconds, piMSec));
 
@@ -384,7 +384,7 @@ char * hb_timeStampStr( char * szTime, LONG lMillisec )
 
    hb_timeStampDecode( lMillisec, &iHour, &iMinutes, &iSeconds, &iMSec );
    hb_snprintf( szTime, 13, "%02d:%02d:%02d.%03d",
-             iHour, iMinutes, iSeconds, iMSec );
+                iHour, iMinutes, iSeconds, iMSec );
    szTime[ 12 ] = '\0';
 
    return szTime;
@@ -409,7 +409,7 @@ char * hb_dateTimeStampStr( char * szDateTime, LONG lJulian, LONG lMillisec )
 }
 
 void hb_timeStrGet( const char * szTime, int * piHour, int * piMinutes,
-                              int * piSeconds, int * piMSec )
+                                         int * piSeconds, int * piMSec )
 {
    int iHour, iMinutes, iSeconds, iMSec;
 

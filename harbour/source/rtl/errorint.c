@@ -93,7 +93,7 @@ void hb_errInternalRaw( ULONG ulIntCode, const char * szText, const char * szPar
       hb_dateToday( &iYear, &iMonth, &iDay );
       hb_dateTimeStr( szTime );
 
-      fprintf( hLog, HB_I_("Application Internal Error - %s\n"), hb_cmdargARGV()[0] );
+      fprintf( hLog, HB_I_("Application Internal Error - %s\n"), hb_cmdargARGVN( 0 ) );
       fprintf( hLog, HB_I_("Terminated at: %04d.%02d.%02d %s\n"), iYear, iMonth, iDay, szTime );
       if( *hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) )
          fprintf( hLog, HB_I_("Info: %s\n"), hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) );

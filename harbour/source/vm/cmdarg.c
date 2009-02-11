@@ -55,6 +55,7 @@
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapifs.h"
 #include "hbvm.h"
 #include "hbmemory.ch"
 #include "hbstack.h"
@@ -64,8 +65,9 @@
 static int     s_argc = 0;
 static char ** s_argv = NULL;
 
-#if defined( HB_OS_WIN )
-
+#if !defined( HB_OS_WIN )
+static char    s_szAppName[ _POSIX_PATH_MAX + 1 ];
+#else
 static char    s_szAppName[ MAX_PATH ];
 static TCHAR   s_lpAppName[ MAX_PATH ];
 
@@ -114,7 +116,75 @@ void hb_cmdargInit( int argc, char * argv[] )
       HB_TCHAR_GETFROM( s_szAppName, s_lpAppName, MAX_PATH );
       s_argv[ 0 ] = s_szAppName;
    }
+#else
+   /* NOTE: try to create absolute path from s_argv[ 0 ] if necessary */
+   {
+      PHB_FNAME pFName = hb_fsFNameSplit( s_argv[ 0 ] );
+      BOOL fInPath = FALSE;
 
+      if( !pFName->szPath )
+      {
+         char * pszPATH = hb_getenv( "PATH" );
+
+         if( pszPATH && *pszPATH )
+         {
+            HB_PATHNAMES * pSearchPath = NULL, * pNextPath;
+            hb_fsAddSearchPath( pszPATH, &pSearchPath );
+            pNextPath = pSearchPath;
+            while( pNextPath )
+            {
+               pFName->szPath = pNextPath->szPath;
+               hb_fsFNameMerge( s_szAppName, pFName );
+               if( hb_fsFileExists( s_szAppName ) )
+               {
+                  /* even if the file is located using PATH then it does
+                   * not mean we will have absolute path here. It's not
+                   * good idea but PATH envvar can also contain relative
+                   * directories, f.e. "." or "bin" so we should add
+                   * current directory if necessary in code below.
+                   */
+                  hb_xfree( pFName );
+                  pFName = hb_fsFNameSplit( s_szAppName );
+                  fInPath = TRUE;
+                  break;
+               }
+               pNextPath = pNextPath->pNext;
+            }
+            hb_fsFreeSearchPath( pSearchPath );
+            if( !fInPath )
+               pFName->szPath = NULL;
+         }
+         if( pszPATH )
+            hb_xfree( pszPATH );
+      }
+      if( pFName->szPath )
+      {
+#if defined(HB_OS_HAS_DRIVE_LETTER)
+         if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR && !pFName->szDrive )
+#else
+         if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR )
+#endif
+         {
+            if( pFName->szPath[ 0 ] == '.' &&
+                pFName->szPath[ 1 ] == HB_OS_PATH_DELIM_CHR )
+               pFName->szPath += 2;
+            s_szAppName[ 0 ] = HB_OS_PATH_DELIM_CHR;
+            hb_fsCurDirBuff( 0, ( BYTE * ) ( s_szAppName + 1 ), _POSIX_PATH_MAX );
+            if( s_szAppName[ 1 ] != 0 )
+            {
+               hb_strncat( s_szAppName, HB_OS_PATH_DELIM_CHR_STRING, _POSIX_PATH_MAX );
+               hb_strncat( s_szAppName, pFName->szPath, _POSIX_PATH_MAX );
+               pFName->szPath = hb_strdup( s_szAppName );
+               hb_fsFNameMerge( s_szAppName, pFName );
+               hb_xfree( ( void * ) pFName->szPath );
+               s_argv[ 0 ] = s_szAppName;
+            }
+         }
+         else if( fInPath )
+            s_argv[ 0 ] = s_szAppName;
+      }
+      hb_xfree( pFName );
+   }
 #endif
 }
 
@@ -126,6 +196,11 @@ int hb_cmdargARGC( void )
 char ** hb_cmdargARGV( void )
 {
    return s_argv;
+}
+
+const char * hb_cmdargARGVN( int argc )
+{
+   return argc >= 0 && argc < s_argc ? s_argv[ argc ] : NULL;
 }
 
 BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )

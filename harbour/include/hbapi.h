@@ -904,13 +904,14 @@ extern HB_EXPORT PHB_SYMB  hb_symbolNew( const char * szName ); /* create a new 
 
 /* Command line and environment argument management */
 extern HB_EXPORT void hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */
-extern int       hb_cmdargARGC( void ); /* retrieve command line argument count */
-extern char **   hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
-extern BOOL      hb_cmdargIsInternal( const char * szArg, int * piLen ); /* determine if a string is an internal setting */
-extern BOOL      hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
-extern char *    hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
-extern int       hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
-extern ULONG     hb_cmdargProcessVM( int*, int* ); /* Check for command line internal arguments */
+extern int           hb_cmdargARGC( void ); /* retrieve command line argument count */
+extern char **       hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
+extern const char *  hb_cmdargARGVN( int argc ); /* retrieve given command line argument */
+extern BOOL          hb_cmdargIsInternal( const char * szArg, int * piLen ); /* determine if a string is an internal setting */
+extern BOOL          hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
+extern char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
+extern int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
+extern ULONG         hb_cmdargProcessVM( int*, int* ); /* Check for command line internal arguments */
 #if defined( HB_OS_WIN ) && defined( HB_OS_WIN_USED )
 extern HB_EXPORT void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
 extern HB_EXPORT BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */

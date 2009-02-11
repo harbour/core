@@ -289,50 +289,21 @@ HB_FUNC( CURDIR )
 
 HB_FUNC( HB_PROGNAME )
 {
-   char byBuffer[ _POSIX_PATH_MAX + 1 ];
+   const char * szBaseName = hb_cmdargARGVN( 0 );
 
-#if defined( HB_OS_UNIX_COMPATIBLE )
+   if( szBaseName )
    {
-      /* Assemble the full path of the program by taking the
-         current dir and appending the name of the program,
-         as specified on the command-line.
-         HB_OS_UNIX_COMPATIBLE might be too rough to decide
-         for this method, pls test on other platforms and refine.
-         [vszakats] */
-
-      char byCurDir[ _POSIX_PATH_MAX + 1 ];
-      char * pbyARGV0 = hb_cmdargARGV()[ 0 ];
-
-      /* Skip 'current dir' if present, and replace with cwd. */
-      if( pbyARGV0[ 0 ] == '.' && pbyARGV0[ 1 ] == HB_OS_PATH_DELIM_CHR )
-      {
-         pbyARGV0 += 2;
-
-         hb_fsCurDirBuff( 0, ( BYTE * ) byCurDir, sizeof( byCurDir ) );
-
-         hb_strncpy( byBuffer, HB_OS_PATH_DELIM_CHR_STRING, sizeof( byBuffer ) - 1 );
-         if( byCurDir[ 0 ] != '\0' )
-         {
-            hb_strncat( byBuffer, byCurDir, sizeof( byBuffer ) - 1 );
-            hb_strncat( byBuffer, HB_OS_PATH_DELIM_CHR_STRING, sizeof( byBuffer ) - 1 );
-         }
-      }
-      hb_strncat( byBuffer, pbyARGV0, sizeof( byBuffer ) - 1 );
-   }
-#else
-   hb_strncpy( byBuffer, hb_cmdargARGV()[ 0 ], sizeof( byBuffer ) - 1 );
-#endif
-
-   /* Convert from OS codepage */
-   {
+      /* Convert from OS codepage */
       BOOL fFree;
-      char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) byBuffer, &fFree );
+      char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) szBaseName, &fFree );
 
       if( fFree )
          hb_retc_buffer( pbyResult );
       else
-         hb_retc( byBuffer );
+         hb_retc( pbyResult );
    }
+   else
+      hb_retc( NULL );
 }
 
 HB_FUNC( HB_DIRBASE )

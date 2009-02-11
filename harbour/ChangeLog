@@ -8,6 +8,27 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-11 02:38 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/cmdarg.c
+    + added const char * hb_cmdargARGVN( int argc )
+
+  * harbour/source/vm/cmdarg.c
+    * try to convert executable file name argument in argv[0] to
+      absolute path if it's relative one. Respect PATH envvar it necessary.
+
+  * harbour/source/common/hbdate.c
+    * formatting
+
+  * harbour/source/rtl/philes.c
+  * harbour/source/rtl/errorint.c
+  * harbour/source/rtl/filesys.c
+    ! use hb_cmdargARGVN(n) instead of hb_cmdargARGV()[n] to avoid
+      possible GPF if some function will be called before argument
+      initialization
+    * removed additional logic which tries to convert relative paths
+      in file name from hb_fsBaseDirBuff() and HB_PROGNAME() functions
+
 2009-02-10 10:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/filesys.c
     ! Fixes for *NIX compilation to latest change.
