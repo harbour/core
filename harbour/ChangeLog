@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-11 20:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/binnumx.c
+    * Added rewritten versions of these functions:
+      a proper license: BIN2U(), W2BIN(), U2BIN()
+    ; Work of Przemek.
+
+  * source/rtl/binnum.c
+    ! Readded old copyright holder as co-holder.
+
 2009-02-11 20:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * COPYING
   * doc/license.txt

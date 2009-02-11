@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * BIN2U(), W2BIN(), U2BIN() functions
  *
+ * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
@@ -52,72 +53,45 @@
 
 /* NOTE: Xbase++ compatible functions */
 
+#ifdef HB_COMPAT_XPP
+
 #include "hbapi.h"
 #include "hbapiitm.h"
-
-#ifdef HB_COMPAT_XPP
 
 HB_FUNC( BIN2U )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+   UINT32 uiResult = 0;
 
    if( pItem )
    {
-      char * pszString = hb_itemGetCPtr( pItem );
       ULONG ulLen = hb_itemGetCLen( pItem );
-
-      hb_retnint( HB_MKULONG( ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0,
-                              ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0,
-                              ( ulLen >= 3 ) ? ( BYTE ) pszString[ 2 ] : 0,
-                              ( ulLen >= 4 ) ? ( BYTE ) pszString[ 3 ] : 0 ) );
+      if( ulLen )
+      {
+         const char * pszString = hb_itemGetCPtr( pItem );
+         if( ulLen >= 3 )
+            iResult = HB_GET_LE_UINT32( pszString );
+         else
+            iResult = HB_GET_LE_UINT16( pszString );
+      }
    }
-   else
-      hb_retnl( 0 );
-}
-
-HB_FUNC( W2BIN )
-{
-   char szString[ 2 ];
-
-   if( ISNUM( 1 ) )
-   {
-      USHORT uiValue = ( USHORT ) hb_parni( 1 );
-
-      szString[ 0 ] = ( uiValue & 0x00FF );
-      szString[ 1 ] = ( uiValue & 0xFF00 ) >> 8;
-   }
-   else
-   {
-      szString[ 0 ] =
-      szString[ 1 ] = '\0';
-   }
-
-   hb_retclen( szString, 2 );
+   hb_retnint( uiResult );
 }
 
 HB_FUNC( U2BIN )
 {
-   char szString[ 4 ];
+   char szResult[ 4 ];
+   UINT32 iValue = ( UINT32 ) hb_parnint( 1 );
+   HB_PUT_LE_UINT32( szResult, iValue );
+   hb_retclen( szResult, 4 );
+}
 
-   if( ISNUM( 1 ) )
-   {
-      ULONG ulValue = ( ULONG ) hb_parnl( 1 );
-
-      szString[ 0 ] = ( char ) ( ulValue & 0x000000FF );
-      szString[ 1 ] = ( char ) ( ( ulValue & 0x0000FF00 ) >> 8 );
-      szString[ 2 ] = ( char ) ( ( ulValue & 0x00FF0000 ) >> 16 );
-      szString[ 3 ] = ( char ) ( ( ulValue & 0xFF000000 ) >> 24 );
-   }
-   else
-   {
-      szString[ 0 ] =
-      szString[ 1 ] =
-      szString[ 2 ] =
-      szString[ 3 ] = '\0';
-   }
-
-   hb_retclen( szString, 4 );
+HB_FUNC( W2BIN )
+{
+   char szResult[ 2 ];
+   UINT16 uiValue = ( UINT16 ) hb_parni( 1 );
+   HB_PUT_LE_UINT16( szResult, uiValue );
+   hb_retclen( szResult, 4 );
 }
 
 #endif
-
