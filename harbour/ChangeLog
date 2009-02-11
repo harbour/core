@@ -8,6 +8,36 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-11 09:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * source/rtl/gtwvt/gtwvt.c
+    * BYTE -> CHAR (Windows) - UNDONE.
+
+  * include/hbdefs.h
+    + Added (commented) new types. Work in progress, incomplete.
+
+  * contrib/hbssl/ssl.c
+    - Temporary disabled SSL_GET_READ_AHEAD() as a workaround for
+      BCC linking problem with SSL_get_read_ahead() OpenSSL
+      library function (symbol is unresolved due to missing
+      leading underscore in implib generated ssleay32.lib file).
+
+  * source/vm/set.c
+    % hb_fsFile() -> hb_fsFileExists()
+
+  * source/rtl/hbffind.c
+    * HB_WIN_32_MATCH -> HB_WIN_MATCH
+
+  * doc/whatsnew.txt
+  * include/hbsetup.h
+  * source/vm/fm.c
+    * #define HB_FM_WIN32_ALLOC renamed to HB_FM_WIN_ALLOC.
+    ; INCOMPATIBLE: For those who are using this switch, please
+                    update your make files.
+
+  * source/rtl/tpopup.prg
+    ! Fixed to draw separator lines with BOX GT attributes,
+      so that they appear properly.
+
 2009-02-11 02:38 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/source/vm/cmdarg.c

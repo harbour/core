@@ -36,6 +36,7 @@ General
 - POCC WinCE builds are now supported.
 - Open Watcom 1.8 (RC3) compiler is now supported.
 - Removed HB_LEGACY_LEVEL support.
+- #define HB_FM_WIN32_ALLOC renamed to HB_FM_WIN_ALLOC.
 - Protected incompatible changes with HB_LEGACY_LEVEL2.
   (HB_SUCCESS, HB_FAILURE, HB_ERRCODE, HB_WINCE, HB_OS_WIN_32*,
   __RDDGETTEMPALIAS(), __HRB*())

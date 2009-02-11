@@ -169,7 +169,7 @@
  * so you should really have a good reason to enable it
  */
 
-/* #define HB_FM_WIN32_ALLOC */
+/* #define HB_FM_WIN_ALLOC */
 
 /* ***********************************************************************
  * You can select here, what type of main entry will be used in the

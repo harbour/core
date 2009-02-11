@@ -57,11 +57,11 @@
 #include "color.ch"
 #include "common.ch"
 
-/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
 
-/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*() 
-         functions to generate screen output. Harbour uses Disp*() 
+/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*()
+         functions to generate screen output. Harbour uses Disp*()
          functions only. [vszakats] */
 
 #ifdef HB_COMPAT_C53
@@ -104,7 +104,7 @@ CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
    METHOD width() SETGET
 
    METHOD New( nTop, nLeft, nBottom, nRight ) /* NOTE: This method is a Harbour extension [vszakats] */
-   
+
 #ifdef HB_EXTENSION
    METHOD setCoors( nRow, nCol, lTop )        /* NOTE: This method is a Harbour extension [vszakats] */
    METHOD isShortCut( nKey, nID )             /* NOTE: This method is a Harbour extension [vszakats] */
@@ -235,7 +235,7 @@ METHOD display() CLASS POPUPMENU
 
          IF aItems[ nPos ]:caption == MENU_SEPARATOR
 
-            hb_dispOutAt( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), hb_ColorIndex( ::cColorSpec, 5 ) )
+            hb_dispOutAtBox( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), hb_ColorIndex( ::cColorSpec, 5 ) )
 
          ELSE
             cCaption := PadR( aItems[ nPos ]:caption, nWidth - 1 )

@@ -129,7 +129,7 @@
       DWORD             dwAttr;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
-   #define HB_WIN_32_MATCH() \
+   #define HB_WIN_MATCH() \
       ( \
         ( ( info->pFindFileData.dwFileAttributes & ( FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM ) ) == 0 ) || \
         ( ( info->dwAttr & info->pFindFileData.dwFileAttributes & ( FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM ) ) != 0 ) \
@@ -570,7 +570,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             info->hFindFile = FindFirstFileA( ffind->pszFileMask, &info->pFindFileData );
             info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( ffind->attrmask );
 
-            if( ( info->hFindFile != INVALID_HANDLE_VALUE ) && HB_WIN_32_MATCH() )
+            if( ( info->hFindFile != INVALID_HANDLE_VALUE ) && HB_WIN_MATCH() )
                bFound = TRUE;
          }
 
@@ -578,7 +578,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          {
             while( FindNextFileA( info->hFindFile, &info->pFindFileData ) )
             {
-               if( HB_WIN_32_MATCH() )
+               if( HB_WIN_MATCH() )
                {
                   bFound = TRUE;
                   break;

@@ -99,8 +99,8 @@
 
 #if defined( HB_FM_STD_ALLOC )
    #undef HB_FM_DL_ALLOC
-   #undef HB_FM_WIN32_ALLOC
-#elif !defined( HB_FM_DL_ALLOC ) && !defined( HB_FM_WIN32_ALLOC )
+   #undef HB_FM_WIN_ALLOC
+#elif !defined( HB_FM_DL_ALLOC ) && !defined( HB_FM_WIN_ALLOC )
    #if defined( _MSC_VER ) || defined( __BORLANDC__ ) || defined( __MINGW32__ )
       #define HB_FM_DL_ALLOC
    #else
@@ -113,7 +113,7 @@
 #endif
 
 
-/* #define HB_FM_WIN32_ALLOC */
+/* #define HB_FM_WIN_ALLOC */
 /* #define HB_FM_STATISTICS */
 /* #define HB_PARANOID_MEM_CHECK */
 
@@ -151,7 +151,7 @@
 #     define realloc( p, n )     dlrealloc( ( p ), ( n ) )
 #     define free( p )           dlfree( ( p ) )
 #  endif
-#elif defined( HB_FM_WIN32_ALLOC ) && defined( HB_OS_WIN )
+#elif defined( HB_FM_WIN_ALLOC ) && defined( HB_OS_WIN )
 #  if defined( HB_FM_LOCALALLOC )
 #     define malloc( n )      ( void * ) LocalAlloc( LMEM_FIXED, ( n ) )
 #     define realloc( p, n )  ( void * ) LocalReAlloc( ( HLOCAL ) ( p ), ( n ), LMEM_MOVEABLE )

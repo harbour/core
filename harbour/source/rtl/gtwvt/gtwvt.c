@@ -534,8 +534,8 @@ static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int a
 
 static int hb_gt_wvt_key_ansi_to_oem( int c )
 {
-   CHAR pszAnsi[ 2 ];
-   CHAR pszOem[ 2 ];
+   BYTE pszAnsi[ 2 ];
+   BYTE pszOem[ 2 ];
 
    pszAnsi[ 0 ] = ( CHAR ) c;
    pszAnsi[ 1 ] = 0;

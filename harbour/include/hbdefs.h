@@ -443,6 +443,46 @@
 #  define PFHL                   "l"
 #endif
 
+#if 0
+
+/* New Harbour types (Planning stage, don't use these yet) */
+
+/* TODO: Remove dependence on old types */
+
+typedef char                hbChar;           /* TOFIX */
+typedef SCHAR               hbSChar;
+typedef UCHAR               hbUChar;
+typedef short               hbShort;
+typedef unsigned short      hbUShort;
+typedef int                 hbInt;
+typedef unsigned int        hbUInt;
+typedef long                hbLong;
+typedef unsigned long       hbULong;
+typedef LONGLONG            hbLongLong;
+typedef ULONGLONG           hbULongLong;
+typedef double              hbDouble;
+typedef                     hbMaxInt;         /* TOFIX */
+typedef                     hbMaxDouble;      /* TOFIX */
+typedef unsigned short      hbCounter;
+typedef long                hbSize;
+typedef HB_PTRDIFF          hbPtrDiff;
+typedef void *              hbPtrVal;         /* TOFIX */
+typedef                     hbPointer;        /* TOFIX */
+typedef                     hbWChar;          /* TOFIX */
+
+typedef char                hbI8;             /* TOFIX */
+typedef UCHAR               hbU8;             /* TOFIX */
+typedef INT16               hbI16;
+typedef UINT16              hbU16;
+typedef INT32               hbI32;
+typedef UINT32              hbU32;
+typedef INT64               hbI64;
+typedef UINT64              hbI64;
+
+typedef long                hbMaxVMInt;       /* TOFIX */
+
+#endif
+
 #define HB_DBL_LIM_INT(d)     ( HB_INT_MIN <= (d) && (d) <= HB_INT_MAX )
 #define HB_DBL_LIM_LONG(d)    ( (HB_MAXDBL) HB_LONG_MIN <= (HB_MAXDBL) (d) && (HB_MAXDBL) (d) <= (HB_MAXDBL) HB_LONG_MAX )
 #define HB_LIM_INT(l)         ( HB_INT_MIN <= (l) && (l) <= HB_INT_MAX )
