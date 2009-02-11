@@ -53,10 +53,10 @@
 
 /* NOTE: Xbase++ compatible functions */
 
-#ifdef HB_COMPAT_XPP
-
 #include "hbapi.h"
 #include "hbapiitm.h"
+
+#ifdef HB_COMPAT_XPP
 
 HB_FUNC( BIN2U )
 {
