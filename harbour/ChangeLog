@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-11 16:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtwvg/wvgutils.c
+    ! Applied fixes done to WIN_APPENDMENU() to the exact
+      same function named WVT_APPENDMENU().
+    % Converted WVT_APPENDMENU() to a simple stub redirecting
+      the call to WIN_APPENDMENU().
+
 2009-02-11 15:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/gtwvg/wvgwin.c
     ! Fixed to use hb_snprintf() instead of unsafe sprintf().

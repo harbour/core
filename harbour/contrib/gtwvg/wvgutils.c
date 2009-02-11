@@ -733,77 +733,11 @@ HB_FUNC( WVT_CREATEPOPUPMENU )
 
 //-------------------------------------------------------------------//
 
+HB_FUNC_EXTERN( WIN_APPENDMENU );
+
 HB_FUNC( WVT_APPENDMENU )
 {
-   #if 0
-   char    ucBuf[ 256 ];
-   int     i,iLen;
-   LPTSTR  lpszCaption;
-
-   if ( ISCHAR( 4 ) )
-   {
-     iLen = hb_parclen( 4 );
-     if ( iLen > 0 && iLen < 256 )   // Translate '~' to '&'
-     {
-       lpszCaption = HB_TCHAR_CONVTO( hb_parc( 4 ) );
-       for ( i = 0; i < iLen; i++ )
-       {
-         ucBuf[ i ] = ( *lpszCaption == '~' ) ? '&' : ( char ) *lpszCaption;
-         lpszCaption++;
-       }
-       ucBuf[ iLen ]= '\0';
-
-       lpszCaption = HB_TCHAR_CONVTO( ucBuf );
-       hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), ( LPCTSTR ) lpszCaption ) ) ;
-       HB_TCHAR_FREE( lpszCaption );
-     }
-     else
-     {
-        lpszCaption = HB_TCHAR_CONVTO( hb_parc( 4 ) );
-        hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), ( LPCTSTR ) lpszCaption ) ) ;
-        HB_TCHAR_FREE( lpszCaption );
-     }
-   }
-   else
-   {
-     lpszCaption = ( LPTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 ) ; // It is a SEPARATOR or Submenu
-     hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), ( LPCTSTR ) lpszCaption ) ) ;
-   }
-   #endif
-
-   LPTSTR  buffer;
-   int     i,iLen ;
-
-   if ( ISCHAR( 4 ) )
-   {
-      iLen = hb_parclen( 4 );
-      if ( iLen > 0 && iLen < 256 )   // Translate '~' to '&'
-      {
-         LPTSTR pDest;
-
-         buffer = HB_TCHAR_CONVTO( hb_parc( 4 ) );
-         pDest = buffer;
-         for ( i = 0; i < iLen; i++ )
-         {
-            pDest[ i ] = ( *buffer == '~' ) ? '&' : ( char ) *buffer;
-            buffer++;
-         }
-         buffer = pDest;
-         hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), buffer ) ) ;
-         HB_TCHAR_FREE( buffer );
-      }
-      else
-      {
-         buffer = HB_TCHAR_CONVTO( hb_parc( 4 ) );
-         hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), buffer ) ) ;
-         HB_TCHAR_FREE( buffer );
-      }
-   }
-   else
-   {  // It is a SEPARATOR or Submenu
-      LPCTSTR lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 ) ;
-      hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), ( LPCTSTR ) lpszCaption ) ) ;
-   }
+   HB_FUNC_EXEC( WIN_APPENDMENU );
 }
 
 //-------------------------------------------------------------------//
