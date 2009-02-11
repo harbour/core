@@ -71,7 +71,6 @@ THE OLD HARBOUR PROJECT LIBRARY LICENSE
 
 Note: This license only applies to the following files:
 
-   source\rtl\binnum.c
    source\lang\msgeu.c
    source\lang\msgsl437.c
    source\lang\msgsl852.c
