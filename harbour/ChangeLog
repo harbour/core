@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-11 13:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+    * add missing information about optimized hb_fsExtName() in previous
+      commit
+
 2009-02-11 10:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
     ! Fixed wrong name/e-mail in previous changelog header of mine.
@@ -62,6 +67,9 @@
       initialization
     * removed additional logic which tries to convert relative paths
       in file name from hb_fsBaseDirBuff() and HB_PROGNAME() functions
+    % use hb_fsFileExists() instead of hb_fsFile() in hb_fsExtName()
+      hb_fsExtName() is used by hb_fsExtOpen() and hb_fileExtOpen()
+      which are used by RDD code.
 
 2009-02-10 10:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/filesys.c
