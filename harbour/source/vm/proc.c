@@ -195,6 +195,8 @@ char * hb_procname( int iLevel, char * szName, BOOL fMethodName )
          else if( HB_IS_BLOCK( pSelf ) )
             hb_strncat( szName, pSelf->item.asBlock.value->pDefSymb->szName,
                         HB_PROCBUF_LEN );
+         else if( HB_IS_SYMBOL( pSelf ) )
+            hb_strncpy( szName, pSelf->item.asSymbol.value->szName, HB_PROCBUF_LEN );
          else
             hb_strncat( szName, pBase->item.asSymbol.value->szName, HB_PROCBUF_LEN );
       }
