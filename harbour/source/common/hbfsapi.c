@@ -54,7 +54,7 @@
 #define INCL_DOSFILEMGR   /* File Manager values */
 #define INCL_DOSERRORS    /* DOS error values    */
 
-/* W32 */
+/* Windows */
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
@@ -80,7 +80,7 @@
    #include <errno.h>
 #endif
 
-/* NOTE: Not really belongs here, but until we can't find a better place 
+/* NOTE: Not really belongs here, but until we can't find a better place
          it will do it. [vszakats] */
 extern void hb_fhnd_ForceLink( void );
 
@@ -237,7 +237,7 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameMerge(%p, %p)", pszFileName, pFileName));
 
-   /* dir separator set by user */ 
+   /* dir separator set by user */
    cDirSep = ( char ) hb_setGetDirSeparator();
 
    /* Set the result to an empty string */

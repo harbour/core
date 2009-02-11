@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-11 19:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbct/files.c
+  * source/common/hbfsapi.c
+  * source/rtl/gtgui/gtgui.c
+  * source/rtl/gttone.c
+    * W32 -> Windows. In comments.
+
 2009-02-11 19:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * doc/en/diskspac.txt
   * doc/en/terminal.txt

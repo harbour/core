@@ -66,7 +66,7 @@
 #define INCL_DOSERRORS    /* DOS error values    */
 #define INCL_DOSDATETIME  /* DATETIME functions  */
 
-/* W32 */
+/* Windows */
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"

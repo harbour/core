@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *    Mini GT for GUI programs.
- *    Now it supports only low level TONE and CLIPBOARD code for W32
+ *    Now it supports only low level TONE and CLIPBOARD code for Windows
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org

@@ -9,7 +9,7 @@
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
- * the body of TONE function from W32 taken from GTWIN created by
+ * the body of TONE function from Windows taken from GTWIN created by
  * the following authors:
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * Copyright 1999-2006 Paul Tucker <ptucker@sympatico.ca>
