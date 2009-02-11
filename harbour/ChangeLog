@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-11 15:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtwvg/wvgwin.c
+    ! Fixed to use hb_snprintf() instead of unsafe sprintf().
+    ! Fixed WIN_APPENDMENU() to not directly modify Harbour string buffer
+      (when compiled in non-Unicode mode).
+    ! Fixed WIN_APPENDMENU() to modify string _before_ converting it to Unicode.
+      (when compiled in Unicode mode).
+    ; This clears the GPF previously reported by me.
+
 2009-02-11 15:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/set.c
     ! fixed casting in hb_fsFileExists()

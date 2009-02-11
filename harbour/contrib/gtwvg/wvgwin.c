@@ -785,30 +785,32 @@ HB_FUNC( WIN_APPENDMENU )
       iLen = hb_parclen( 4 );
       if ( iLen > 0 && iLen < 256 )   // Translate '~' to '&'
       {
-         LPTSTR pDest;
+         char * text = ( char * ) hb_xgrab( iLen + 1 );
 
-         buffer = HB_TCHAR_CONVTO( hb_parc( 4 ) );
-         pDest = buffer;
+         memcpy( text, hb_parc( 4 ), iLen + 1 );
+
          for ( i = 0; i < iLen; i++ )
          {
-            pDest[ i ] = ( *buffer == '~' ) ? '&' : ( char ) *buffer;
-            buffer++;
+            if( text[ i ] == '~' )
+               text[ i ] = '&';
          }
-         buffer = pDest;
-         hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), buffer ) ) ;
+
+         buffer = HB_TCHAR_CONVTO( text );
+         hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), buffer ) );
          HB_TCHAR_FREE( buffer );
+         hb_xfree( text );
       }
       else
       {
          buffer = HB_TCHAR_CONVTO( hb_parc( 4 ) );
-         hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), buffer ) ) ;
+         hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), buffer ) );
          HB_TCHAR_FREE( buffer );
       }
    }
    else
    {  // It is a SEPARATOR or Submenu
-      LPCTSTR lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 ) ;
-      hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), ( LPCTSTR ) lpszCaption ) ) ;
+      LPCTSTR lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );
+      hb_retl( AppendMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parnint( 3 ), ( LPCTSTR ) lpszCaption ) );
    }
 }
 
@@ -1171,7 +1173,7 @@ static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
       UINT uiOptions = bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR;
       char szResname[ MAX_PATH + 1 ];
 
-      sprintf( szResname, "?%u", uiBitmap );
+      hb_snprintf( szResname, sizeof( szResname ), "?%u", uiBitmap );
 
       hBitmap = ( HBITMAP ) LoadImage(
                                   wvg_hInstance(),
