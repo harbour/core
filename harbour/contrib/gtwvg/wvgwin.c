@@ -1654,31 +1654,31 @@ HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
    hroot = TreeView_GetRoot( hwnd );
    if( hroot )
    {
-      TreeView_Expand( hwnd, hroot, iExpand );
+      ( void ) TreeView_Expand( hwnd, hroot, iExpand );
       if( iLevels >= 2 )
       {
          hitem = TreeView_GetNextItem( hwnd, hroot, TVGN_CHILD );
          while( hitem )
          {
-            TreeView_Expand( hwnd, hitem, iExpand );
+            ( void ) TreeView_Expand( hwnd, hitem, iExpand );
             if( iLevels >= 3 )
             {
                hitem1 = TreeView_GetNextItem( hwnd, hitem, TVGN_CHILD );
                while( hitem1 )
                {
-                  TreeView_Expand( hwnd, hitem1, iExpand );
+                  ( void ) TreeView_Expand( hwnd, hitem1, iExpand );
                   if( iLevels >= 4 )
                   {
                      hitem2 = TreeView_GetNextItem( hwnd, hitem1, TVGN_CHILD );
                      while( hitem2 )
                      {
-                        TreeView_Expand( hwnd, hitem2, iExpand );
+                        ( void ) TreeView_Expand( hwnd, hitem2, iExpand );
                         if( iLevels >= 5 )
                         {
                            hitem3 = TreeView_GetNextItem( hwnd, hitem2, TVGN_CHILD );
                            while( hitem3 )
                            {
-                              TreeView_Expand( hwnd, hitem3, iExpand );
+                              ( void ) TreeView_Expand( hwnd, hitem3, iExpand );
                               hitem3 = TreeView_GetNextItem( hwnd, hitem3, TVGN_NEXT );
                            }
                         }

@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-12 01:17 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/extend.c
+    * formatting
+
+  * harbour/contrib/gtwvg/wvgwin.c
+    * pacified few warnings
+
 2009-02-11 22:36 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/rddsql/sddfb/make_vc.bat
     * fixed typo

@@ -128,7 +128,7 @@ BOOL hb_extIsArray( int iParam )
       pItem = hb_stackItemFromBase( iParam );
    else
       return FALSE;
-   
+
    if( HB_IS_BYREF( pItem ) )
       pItem = hb_itemUnRef( pItem );
 
