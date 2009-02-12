@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-12 11:23 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  + harbour/include/hbwapi.h
+
+    As this header will be required fot many libraries in contrib
+    I have placed it in core folder. It will pave me the way to 
+    isolated WINAPI wrappers as discussed earlier. Before I begin to
+    shift functions in harbour/contrib/hbwin please feel free to
+    include in this header whatever you feel will be required
+    for such transition.
+
 2009-02-12 12:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/lang/msgrukoi.c
   * source/lang/msgruwin.c
