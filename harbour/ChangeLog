@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-12 11:43 UTC+0200 Petr Chornyj (myorg63 at mail.ru)
+  * /source/lang/msguawin.c
+  * /source/lang/msgua866.c
+  * /source/lang/msguakoi.c
+    * Minor changes.
+
+2009-02-12 10:49 UTC+0200 Petr Chornyj (myorg63 at mail.ru)
+  * /source/lang/msguawin.c
+  * /source/lang/msgua866.c
+  * /source/lang/msguakoi.c
+    * Corrected bad Ukrainian localization 
+
 2009-12-11 18:09 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgwin.c
     - #include "hbwapi.h"

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (UAWIN)
+ * Language Support Module (UA866)
  *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://www.xharbour.org
@@ -52,7 +52,7 @@
 
 /* Language name: Ukrainian */
 /* ISO language code (2 chars): UA */
-/* Codepage: Windows-1251 */
+/* Codepage: 866 */
 
 #include "hbapilng.h"
 
