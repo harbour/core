@@ -74,17 +74,15 @@
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 
-#define HB_OS_WIN_USED
+#define HB_OS_WIN_32_USED
 
 #include "gtwvg.h"
+#include "hbwapi.h"
 #include <windowsx.h>
 
 #define WIN_STATUSBAR_MAX_PARTS         256
 
 //----------------------------------------------------------------------//
-
-//#define wvg_parwparam( n )  ( ( WPARAM ) hb_parnint( n ) )
-//#define wvg_parlparam( n )  ( ( LPARAM ) hb_parnint( n ) )
 
 #define wvg_parwparam( n )  ( ( WPARAM )  ( HB_PTRDIFF ) hb_parnint( n ) )
 #define wvg_parlparam( n )  ( ( LPARAM )  ( HB_PTRDIFF ) hb_parnint( n ) )
@@ -206,12 +204,12 @@ HB_FUNC( WIN_SETBKCOLOR )
 }
 
 //-------------------------------------------------------------------//
-
+#if 0
 HB_FUNC( WIN_SETBKMODE )
 {
    hb_retni( ( int ) SetBkMode( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ) );
 }
-
+#endif
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_GETSTOCKOBJECT )
@@ -248,12 +246,12 @@ HB_FUNC( WIN_HIWORD )
 }
 
 //-------------------------------------------------------------------//
-
+#if 0
 HB_FUNC( WIN_MULDIV )
 {
    hb_retni( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
-
+#endif
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_GETDIALOGBASEUNITS )
@@ -454,12 +452,12 @@ HB_FUNC( WIN_RELEASEDC )
 }
 
 //-------------------------------------------------------------------//
-
+#if 0
 HB_FUNC( WIN_RECTANGLE )
 {
    Rectangle( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
 }
-
+#endif
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_CREATEBRUSH )
@@ -658,11 +656,21 @@ HB_FUNC( WIN_TRACKPOPUPMENU )
 {
    HMENU hMenu  = ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 );
    UINT  uFlags = ISNIL( 2 ) ? TPM_CENTERALIGN | TPM_RETURNCMD : hb_parnl( 2 );
-   HWND  hWnd   = ISNIL( 3 ) ? GetActiveWindow() : ( HWND ) ( HB_PTRDIFF ) hb_parnint( 3 );
+   int   x      = ISNIL( 3 ) ? 0 : hb_parni( 3 );
+   int   y      = ISNIL( 4 ) ? 0 : hb_parni( 4 );
+   HWND  hWnd   = ISNIL( 5 ) ? GetActiveWindow() : ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 );
 
    POINT xy = { 0,0 };
 
-   GetCursorPos( &xy );
+   if( ISNIL( 3 ) )
+   {
+      GetCursorPos( &xy );
+   }
+   else
+   {
+      xy.x = x;
+      xy.y = y;
+   }
 
    hb_retnl( TrackPopupMenu( hMenu, uFlags, xy.x, xy.y, 0, hWnd, NULL ) );
 }
@@ -736,18 +744,17 @@ HB_FUNC( WIN_SETMENU )
    BOOL bSet;
    RECT wi = { 0, 0, 0, 0 };
    RECT ci = { 0, 0, 0, 0 };
-   USHORT height, width;
+   int height, width;
 
    bSet = SetMenu( hWnd, ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
 
    GetWindowRect( hWnd, &wi );
    GetClientRect( hWnd, &ci );
+   height = ( ci.bottom - ci.top );
+   width  = ( ci.right - ci.left );
 
-   height = ( USHORT ) ( ci.bottom - ci.top );
-   width  = ( USHORT ) ( ci.right - ci.left );
-
-   width  += ( USHORT ) ( wi.right - wi.left - ci.right );
-   height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+   width  += ( wi.right - wi.left - ci.right );
+   height += ( wi.bottom - wi.top - ci.bottom );
 
    SetWindowPos( hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
 
@@ -1057,10 +1064,15 @@ static BYTE * PackedDibGetBitsPtr( BITMAPINFO * pPackedDib )
 static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
                                int iExpWidth, int iExpHeight,
                                BOOL bMap3Dcolors,
-                               HWND hCtrl )
+                               HWND hCtrl,
+                               int  iMode )
 {
    HBITMAP hBitmap = NULL;
 
+   switch( iMode )
+   {
+   case 0:
+   {
    if( szBitmapX )
    {
       int iWidth, iHeight;
@@ -1168,7 +1180,30 @@ static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
          }
       }
    }
-   else  /* loading from resources */
+   }
+   break;
+   case 1:
+   {
+      UINT uiOptions = bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR;
+      TCHAR *      szBitmap;
+
+      szBitmap = HB_TCHAR_CONVTO( szBitmapX );
+
+      hBitmap = ( HBITMAP ) LoadImage(
+                                  wvg_hInstance(),
+                                  ( LPCTSTR ) szBitmap,
+                                  IMAGE_BITMAP,
+                                  iExpWidth,
+                                  iExpHeight,
+                                  uiOptions );
+      HB_TCHAR_FREE( szBitmap );
+      if( hBitmap == NULL )
+      {
+         return NULL;
+      }
+   }
+   break;
+   case 2: /* loading from resourceid */
    {
       UINT uiOptions = bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR;
       char szResname[ MAX_PATH + 1 ];
@@ -1187,6 +1222,8 @@ static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
          return NULL;
       }
    }     /* loading from resources */
+   break;
+   }
 
    return hBitmap;
 }
@@ -1197,7 +1234,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
    HBITMAP hBitmap;
 
    hBitmap = hPrepareBitmap( hb_parc( 1 ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                             ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ) );
+                             ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 0 );
 
    hb_retnint( ( HB_PTRDIFF ) hBitmap );
 }
@@ -1209,7 +1246,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
    HBITMAP hBitmap;
 
    hBitmap = hPrepareBitmap( ( char * ) NULL, hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                             ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ) );
+                             ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 2 );
 
    hb_retnint( ( HB_PTRDIFF ) hBitmap );
 }
@@ -1221,7 +1258,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
    HBITMAP hBitmap;
 
    hBitmap = hPrepareBitmap( hb_parc( 1 ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                             ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ) );
+                             ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 1 );
 
    hb_retnint( ( HB_PTRDIFF ) hBitmap );
 }
@@ -2055,4 +2092,9 @@ HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
       ReleaseDC( GetDesktopWindow(), hdc );
 }
 
+//----------------------------------------------------------------------//
+HB_FUNC( WVG_SETCURRENTBRUSH )
+{
+   SetClassLong( wvg_parhwnd( 1 ), GCL_HBRBACKGROUND, ( DWORD ) hb_parnint( 2 ) );
+}
 //----------------------------------------------------------------------//

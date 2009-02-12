@@ -415,6 +415,10 @@ METHOD setColorBG( nRGB ) CLASS WvgWindow
       IF hBrush <> 0
          ::clr_BG := nRGB
          ::hBrushBG := hBrush
+
+         IF ::className == 'WVGDIALOG'
+            Wvg_SetCurrentBrush( ::hWnd, ::hBrushBG )
+         ENDIF
       ENDIF
    ENDIF
 

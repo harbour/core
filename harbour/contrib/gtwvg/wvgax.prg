@@ -90,6 +90,7 @@ CLASS WvgActiveXControl FROM TOleAuto, WvgWindow
    DATA   visible                            INIT .T.
    DATA   default                            INIT .F.
    DATA   cancel                             INIT .F.
+   DATA   hObj
 
    DATA   interface
    DATA   interfaceName
@@ -99,6 +100,9 @@ CLASS WvgActiveXControl FROM TOleAuto, WvgWindow
    DATA   hEvents                            INIT hb_hash()
    DATA   hContainer
    DATA   hSink
+
+
+   DATA   hhOBJ
 
    METHOD New()
    METHOD Create()
@@ -141,7 +145,7 @@ METHOD New( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgActiv
    RETURN Self
 //----------------------------------------------------------------------//
 METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLicense ) CLASS WvgActiveXControl
-   LOCAL hx
+   LOCAL hx, pUnk
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -164,14 +168,27 @@ METHOD Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLic
 
    ::nID := ::oParent:GetControlId()
 
+   #if 1
    ::hObj := HB_AX_AtlAxGetControl( "ATLAXWin", ::hContainer, ::CLSID, ::nID, ;
-                   ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ::style, ::exStyle, @hx )
+                                    ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ;
+                                    ::style, ::exStyle, NIL, @hx, @pUnk )
+   #else
+   ::hObj := HB_AX_AtlAxCreateControl( "ATLAXWin", ::hContainer, ::CLSID, ::nID, ;
+                                    ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ;
+                                    ::style, ::exStyle, NIL, @hx, @pUnk )
+   #endif
    if ::hObj == 0
       Return NIL
    endif
 
+   // Required as to AddRef() to self
+   //
+   TOleAuto():New( ::hObj )
+
    ::oParent:addChild( SELF )
    ::hWnd := hx
+
+   HB_AX_AtlSetVerb( ::hWnd, pUnk, -4 )
 
    IF ::hObj <> 0  .AND. !Empty( ::hEvents )
       ::AdviseEvents()

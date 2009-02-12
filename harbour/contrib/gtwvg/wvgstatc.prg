@@ -91,6 +91,7 @@ CLASS WvgStatic  INHERIT  WvgWindow
    DATA     options                               INIT -1//WVGSTATIC_TEXT_LEFT
    DATA     type                                  INIT -1//WVGSTATIC_TYPE_TEXT
 
+   DATA     hBitmap
 
    METHOD   new()
    METHOD   create()
@@ -169,7 +170,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
    CASE WVGSTATIC_TYPE_BITMAP
       ::style += SS_BITMAP
       IF     ::options == WVGSTATIC_BITMAP_TILED
-
+         ::style += SS_CENTERIMAGE
       ELSEIF ::options == WVGSTATIC_BITMAP_SCALED
 
       ELSE
@@ -286,6 +287,10 @@ METHOD destroy() CLASS WvgStatic
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
    ::WvgWindow:destroy()
+   IF ::hBitmap <> nil
+      Win_DeleteObject( ::hBitmap )
+   ENDIF
+
    #if 0
    IF len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
@@ -317,6 +322,15 @@ METHOD setCaption( xCaption, cDll )
    DO CASE
    CASE ::type == WVGSTATIC_TYPE_TEXT
       Win_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+
+   CASE ::type == WVGSTATIC_TYPE_BITMAP
+      IF ::hBitmap <> nil
+         Win_DeleteObject( ::hBitmap )
+      ENDIF
+
+      ::hBitmap := Win_LoadImage( ::caption, 2 )
+//hb_toOutDebug( "setCaption %s %i %s",::caption, ::hBitmap, IF( file( ::caption ),'Yes','No') )
+      Win_SendMessage( ::hWnd, STM_SETIMAGE, IMAGE_BITMAP, ::hBitmap )
 
    ENDCASE
 

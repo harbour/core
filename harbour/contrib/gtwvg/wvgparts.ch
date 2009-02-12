@@ -183,6 +183,8 @@
 #define WVGSLE_RIGHT                              2
 #define WVGSLE_CENTER                             3
 
+#define WVGMENUBAR_MIS_SEPARATOR                  4
+#define WVGMENUBAR_MIS_BUTTONSEPARATOR            512
 
 
 #endif // #ifndef _WVG_CH

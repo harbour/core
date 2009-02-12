@@ -8,6 +8,22 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-12-11 17:00 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvgwin.c
+  * harbour/contrib/gtwvg/wvgsink.c
+  * harbour/contrib/gtwvg/wvgax.prg
+  * harbour/contrib/gtwvg/wvgdlg.prg
+  * harbour/contrib/gtwvg/wvgmenub.prg
+  * harbour/contrib/gtwvg/wvgparts.ch
+  * harbour/contrib/gtwvg/wvgphdlr.prg
+  * harbour/contrib/gtwvg/wvgstatc.prg
+  * harbour/contrib/gtwvg/wvgtoolb.prg
+  * harbour/contrib/gtwvg/wvgwnd.prg
+    ! Numerous enhancements and fixes, difficult to remember as 
+      most are spread over a long time and where I had no means
+      to update them. But all are synchronized with changes
+      effected till date by others.
+
 2009-02-12 01:17 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/extend.c
     * formatting

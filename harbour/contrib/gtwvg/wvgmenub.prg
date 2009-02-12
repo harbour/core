@@ -582,8 +582,20 @@ METHOD setTitle( cTitle )
 
 //----------------------------------------------------------------------//
 
-METHOD popUp() CLASS wvgMenu
+METHOD popUp( oXbp, aPos, nDefaultItem, nControl ) CLASS wvgMenu
+   LOCAL nCmd, aMenuItem
 
-   RETURN Self
+   HB_SYMBOL_UNUSED( nDefaultItem )
+   HB_SYMBOL_UNUSED( nControl     )
+
+   nCmd := Win_TrackPopupMenu( ::hMenu, TPM_LEFTALIGN + TPM_TOPALIGN + TPM_RETURNCMD, aPos[ 1 ], aPos[ 2 ], oXbp:hWnd )
+
+   aMenuItem := ::findMenuItemById( nCmd )
+   IF hb_isArray( aMenuItem ) .and. hb_isBlock( aMenuItem[ 2 ] )
+      Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
+   ENDIF
+
+   RETURN 0
 
 //----------------------------------------------------------------------//
+

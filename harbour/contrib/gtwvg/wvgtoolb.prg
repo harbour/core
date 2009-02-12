@@ -277,19 +277,30 @@ METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey 
    oBtn:command := 100 + oBtn:index
 
    cType := valtype( xImage )
+   hBitmap := 0
 
    DO CASE
 
    CASE cType == 'C'
-      hBitmap = Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
-
-      IF hBitmap <> 0
-         oBtn:image := hBitmap
-         Wvg_AddToolbarButton( ::hWnd, oBtn:image, oBtn:caption, oBtn:command, 1 )
-
+      IF ( '.' $ xImage ) .or. ( '/' $ xImage ) .or. ( '\' $ xImage ) .or. ( ':' $ xImage ) .or. file( xImage )
+         hBitmap := Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
+      ELSE
+         hBitmap := Wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
       ENDIF
 
+   CASE cType == 'N'
+      hBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
+
    ENDCASE
+
+   IF hBitmap <> 0
+      oBtn:image := hBitmap
+      Wvg_AddToolbarButton( ::hWnd, oBtn:image, oBtn:caption, oBtn:command, 1 )
+
+   ELSE
+      Wvg_AddToolbarButton( ::hWnd, , , oBtn:command, 3 )
+
+   ENDIF
 
    aadd( ::aItems, { oBtn:command, oBtn } )
 

@@ -124,6 +124,7 @@ typedef BOOL    ( CALLBACK *PATLAXWINTERM )( void );
 typedef HRESULT ( CALLBACK *PATLAXGETCONTROL )( HWND, IUnknown** );
 typedef HRESULT ( CALLBACK *PATLAXATTACHCONTROL )( HWND, IUnknown** );
 typedef HRESULT ( CALLBACK *PATLAXCREATECONTROL )( LPCOLESTR, HWND, IStream*, IUnknown** );
+typedef HRESULT ( CALLBACK *PATLAXCREATECONTROLEX )( LPCOLESTR, HWND, IStream*, IUnknown**, IUnknown**, REFIID, IUnknown* );
 //----------------------------------------------------------------------//
 HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem );
 
@@ -265,7 +266,7 @@ typedef struct {
 
 typedef struct {
    IEventHandler*          lpVtbl;
-   DWORD                   count;
+   int                     count;
    IConnectionPoint*       pIConnectionPoint;  // Ref counted of course.
    DWORD                   dwEventCookie;
    char*                   parent_on_invoke;
@@ -363,9 +364,9 @@ hb_ToOutDebug( "static ULONG STDMETHODCALLTYPE Release( IEventHandler *this )->c
          GlobalFree( ( MyRealIEventHandler * ) this );
       }
 //hb_ToOutDebug( "       ULONG STDMETHODCALLTYPE Release( IEventHandler *this )->this" );
-      return( (ULONG) 0 );
+      return( ( ULONG ) 0 );
    }
-   return( ( ( MyRealIEventHandler * ) this )->count < 0 ? ( ( MyRealIEventHandler * ) this )->count : 0 );
+   return( ( ULONG ) ( ( MyRealIEventHandler * ) this )->count < 0 ? ( ( MyRealIEventHandler * ) this )->count : 0 );
 }
 //----------------------------------------------------------------------//
 //
@@ -473,7 +474,7 @@ static ULONG STDMETHODCALLTYPE Invoke( IEventHandler *this, DISPID dispid, REFII
          for( i = 1; i <= iArg; i++ )
          {
             pItem = hb_itemNew( NULL );
-            hb_oleVariantToItem( pItem, &( params->rgvarg[ iArg-i ] ) ); // VARIANT *pVariant )
+            hb_oleVariantToItem( pItem, &( params->rgvarg[ iArg-i ] ) );
             pItemArray[ i-1 ] = pItem;
             ulRefMask |= ( 1L << (i-1) );                                // set bit i
          }
@@ -782,6 +783,17 @@ HB_FUNC( HB_AX_ATLAXWININIT )
    hb_retl( bRet );
 }
 //---------------------------------------------------------------------------//
+/*
+ATLAPI AtlAxCreateControlEx(
+   LPCOLESTR lpszName,
+   HWND hWnd,
+   IStream* pStream,
+   IUnknown** ppUnkContainer,
+   IUnknown** ppUnkControl,
+   REFIID iidSink = IID_NULL,
+   IUnknown* punkSink = NULL
+);
+*/
 HB_FUNC( HB_AX_ATLAXCREATECONTROL )
 {
    IUnknown  *pUnk;
@@ -802,6 +814,11 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
    int   Style    = ISNIL(  9 ) ? WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS : hb_parni( 9 );
    int   Exstyle  = ISNIL( 10 ) ? 0 : hb_parni( 10 );
 
+   //char *lpLic    = ISNIL( 11 ) ? NULL : hb_parc( 11 );
+   //REFIID *iidSink = IID_NULL;
+   //IUnknown  *pUnk, *pUnkCtrl, pUnkSink;
+
+
 #if defined( UNICODE ) && defined( GetProcAddress )
    AtlAxCreateControl = ( PATLAXCREATECONTROL ) GetProcAddressW( hLib, TEXT( "AtlAxCreateControl" ) );
 #else
@@ -811,28 +828,55 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
    {
       LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
       LPTSTR cClass = HB_TCHAR_CONVTO( class );
-      hContainer = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id, GetModuleHandle( NULL ), NULL );
+      #if 0
+      hContainer = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h,
+                                            hParent, id, GetModuleHandle( NULL ), NULL );
+      #else
+      hContainer = ( HWND ) CreateWindowEx( Exstyle, cClass, TEXT(""), Style, x, y, w, h,
+                                            hParent, id, GetModuleHandle( NULL ), NULL );
+      #endif
       HB_TCHAR_FREE( cCaption );
-      HB_TCHAR_FREE( cClass );
+      HB_TCHAR_FREE( cClass   );
 
       if( hContainer )
       {
          LPARAM lParam = MAKELPARAM( FALSE, 0 );
          SendMessage( ( HWND ) hContainer, ( UINT ) WM_SETFONT, ( WPARAM ) GetStockObject( DEFAULT_GUI_FONT ), lParam );
+
          uLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, Caption, strlen( Caption )+1, NULL, 0 );
          wString = ( BSTR ) malloc( uLen * sizeof( WCHAR ) );
          MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, Caption, strlen( Caption )+1, wString, uLen );
 
+         //( AtlAxCreateControl ) ( wString, hContainer, NULL, &pUnk, &pUnkCtrl, NULL, &pUnkSink );
          ( AtlAxCreateControl ) ( wString, hContainer, NULL, &pUnk );
 
          free( wString );
 
-         pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void** ) (void*) &obj );
-         pUnk->lpVtbl->Release( pUnk );
-         hb_retnl( ( long ) obj );
+         #if 1
+         if( pUnk )
+         {
+            pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void** ) (void*) &obj );
+            pUnk->lpVtbl->Release( pUnk );
+            hb_retnint( ( long ) obj );
 
-         GetClientRect( hContainer, &rc );
-         MoveWindow( GetDlgItem( hContainer, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
+            GetClientRect( hContainer, &rc );
+            MoveWindow( GetDlgItem( hContainer, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
+         }
+         #else
+         if( pUnkCtrl )
+         {
+            pUnkCtrl->lpVtbl->QueryInterface( pUnkCtrl, &IID_IDispatch, ( void** ) (void*) &obj );
+            pUnkCtrl->lpVtbl->Release( pUnkCtrl );
+            hb_retnint( ( long ) obj );
+
+            GetClientRect( hContainer, &rc );
+            MoveWindow( GetDlgItem( hContainer, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
+         }
+         #endif
+         else
+         {
+            hb_retnint( 0 );
+         }
       }
       else
       {
@@ -845,12 +889,15 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
    }
 
    // return the container handle
-   if ISBYREF( 11 )
+   if ISBYREF( 12 )
    {
-      hb_stornl( ( long ) hContainer, 11 );
+      hb_stornl( ( long ) hContainer, 12 );
    }
 }
 //---------------------------------------------------------------------------//
+//    ::hObj := HB_AX_AtlAxGetControl( "ATLAXWin", ::hContainer, ::CLSID, ::nID, ;
+//                   ::aPos[ 1 ], ::aPos[ 2 ], ::aSize[ 1 ], ::aSize[ 2 ], ::style, ::exStyle, @hx )
+//
 HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container window
 {
    IUnknown  *pUnk = NULL;
@@ -868,6 +915,7 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
    int   h         = ISNIL(  8 ) ? 0 : hb_parni( 8 );
    int   Style     = ISNIL(  9 ) ? WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS : hb_parni( 9 );
    int   Exstyle   = ISNIL( 10 ) ? 0 : hb_parni( 10 );
+   char *lpLic     = ISNIL( 11 ) ? NULL : hb_parc( 11 );
 
 #if defined( UNICODE ) && defined( GetProcAddress )
    AtlAxGetControl = ( PATLAXGETCONTROL ) GetProcAddressW( hLib, TEXT( "AtlAxGetControl" ) );
@@ -878,9 +926,18 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
    {
       LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
       LPTSTR cClass = HB_TCHAR_CONVTO( lpcclass );
-      hWnd = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id, GetModuleHandle( NULL ), NULL );
+      LPTSTR cLic = HB_TCHAR_CONVTO( lpLic );
+
+      if( ISNIL( 11 ) )
+         hWnd = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id,
+                                      GetModuleHandle( NULL ), NULL );
+      else
+         hWnd = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h, hParent, id,
+                                      GetModuleHandle( NULL ), NULL /*cLic*/ );
+
       HB_TCHAR_FREE( cCaption );
       HB_TCHAR_FREE( cClass );
+      HB_TCHAR_FREE( cLic );
 
       if( hWnd )
       {
@@ -888,38 +945,74 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
                       ( ( UINT ) WM_SETFONT ),
                       ( ( WPARAM ) GetStockObject( DEFAULT_GUI_FONT ) ),
                       ( ( LPARAM ) ( MAKELPARAM( FALSE, 0 ) ) ) );
+
          ( AtlAxGetControl )( hWnd, &pUnk );
 
          if( pUnk )
          {
             pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void** ) (void*) &obj );
             pUnk->lpVtbl->Release( pUnk );
-            GetClientRect( hParent, &rc );
+            GetClientRect( hWnd, &rc );
             MoveWindow( GetDlgItem( hParent, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
             hb_retnint( ( long ) obj );
          }
          else
          {
-            hb_retnl( 0 );
+            hb_retnint( 0 );
          }
       }
       else
       {
-         hb_retnl( 0 );
+         hb_retnint( 0 );
       }
    }
    else
    {
-      hb_retnl( 0 );
+      hb_retnint( 0 );
    }
 
    // return the control handle
-   if ISBYREF( 11 )
+   if ISBYREF( 12 )
    {
-      hb_stornint( ( long ) hWnd, 11 );
+      hb_stornint( ( long ) hWnd, 12 );
+   }
+   if ISBYREF( 13 )
+   {
+      hb_stornint( ( long ) pUnk, 13 );
    }
 }
+
 //---------------------------------------------------------------------------//
+
+HB_FUNC( HB_AX_ATLSETVERB )
+{
+   HWND hwnd = ( HWND ) hb_parnint( 1 );
+
+   if( hwnd )
+   {
+      IUnknown *pUnk = ( IUnknown* ) hb_parnint( 2 );
+
+      IOleObject *lpOleObject = NULL;
+      if( SUCCEEDED( pUnk->lpVtbl->QueryInterface( pUnk, &IID_IOleObject, ( void** ) &lpOleObject ) ) );
+      {
+         IOleClientSite* lpOleClientSite;
+
+         pUnk->lpVtbl->Release( pUnk );
+
+         if( SUCCEEDED( lpOleObject->lpVtbl->GetClientSite( lpOleObject, &lpOleClientSite ) ) )
+         {
+            MSG Msg;
+            RECT rct;
+
+            memset( &Msg, 0, sizeof( MSG ) );
+            GetClientRect( hwnd, &rct );
+
+            lpOleObject->lpVtbl->DoVerb( lpOleObject, hb_parni( 3 ), &Msg, lpOleClientSite, 0, hwnd, &rct );
+         }
+      }
+   }
+}
+//----------------------------------------------------------------------//
 //
 // terminate activex suport, free the library
 //
@@ -947,6 +1040,7 @@ HB_FUNC( HB_AX_ATLAXWINTERM )
    }
    hb_retl( bRet );
 }
+
 //----------------------------------------------------------------------//
 //                           Load Type Info
 //----------------------------------------------------------------------//
@@ -964,7 +1058,11 @@ typedef struct  {
 } DispInfo;
 
 //----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
 #if 0
+
+
 //=================================================
 // BUGGY experimental, untested and unfinished code
 //=================================================
@@ -983,58 +1081,48 @@ int LoadTypeInformation( IDispatch* pDisp ) // pass dispatch interface
    ITypeInfo*   pTypeInfo;
    TYPEATTR*    pTypeAttr;
    HRESULT      hr;
-   int          i=0,j;
+   int          i,j;
    unsigned int nCount;
    int          m_nMethodCount;
    int          m_nVarCount;
    int          m_nDispInfoCount;
    DispInfo*    m_pDispInfo;
+   UINT         ui;
 
-   char       cBuffer[128];
+   char         cBuffer[128];
 
    //pDisp->lpVtbl->GetTypeInfoCount(pDisp, &i );  // i should be 1, otherwise no typeinfo present
    //wsprintf( cBuffer, "typeinfocount: %i", i );
    //OutputDebugString( cBuffer);
 
-
-hb_ToOutDebug( "looking for type info" );
+   hb_ToOutDebug( "---------------- start ------------------" );
 
    hr = pDisp->lpVtbl->GetTypeInfo( pDisp, 0, LOCALE_SYSTEM_DEFAULT, &pTypeInfo );
-   if(hr != S_OK || pTypeInfo == NULL )
+   if( hr != S_OK || pTypeInfo == NULL )
    {
       return 0;
    }
 
-
-   hr = pDisp->lpVtbl->GetTypeInfoCount( pDisp, &i );
-   wsprintf( cBuffer, "typeinfocount: %i, returned: %i", i, hr );
-   OutputDebugString( cBuffer);
-
-   OutputDebugString("got type info");
+   hr = pDisp->lpVtbl->GetTypeInfoCount( pDisp, &ui );
+   hb_ToOutDebug( "typeinfocount: %i, returned: %i", ui, hr );
 
    hr = pTypeInfo->lpVtbl->GetTypeAttr( pTypeInfo, &pTypeAttr );
    if( hr != S_OK )
    {
-      pTypeInfo->lpVtbl->Release(pTypeInfo);
+      pTypeInfo->lpVtbl->Release( pTypeInfo );
       return 0;
    }
-
-   OutputDebugString("got type attributes");
+   hb_ToOutDebug( "------------ got type attributes -------------" );
 
    if( pTypeAttr->typekind != TKIND_DISPATCH && pTypeAttr->typekind != TKIND_COCLASS && pTypeAttr->typekind != TKIND_INTERFACE )
    {
-
-      wsprintf( cBuffer, "typekind: %i", pTypeAttr->typekind );
-      OutputDebugString( cBuffer);
-
+      hb_ToOutDebug( "typekind: %i", pTypeAttr->typekind );
 
       pTypeInfo->lpVtbl->ReleaseTypeAttr( pTypeInfo, pTypeAttr );
-      pTypeInfo->lpVtbl->Release(pTypeInfo);
+      pTypeInfo->lpVtbl->Release( pTypeInfo );
       hr = S_FALSE;
-      //return pTypeAttr->typekind; //0;
    }
-
-   OutputDebugString("got type kind");
+   hb_ToOutDebug( "------------ got type kind -------------" );
 
    if( pTypeAttr->typekind == TKIND_COCLASS )
    {
@@ -1043,7 +1131,7 @@ hb_ToOutDebug( "looking for type info" );
       ITypeInfo* pTempInfo;
       TYPEATTR* pTempAttr = NULL;
 
-      for ( i=0 ; i < pTypeAttr->cImplTypes ; i++)
+      for ( i=0 ; i < pTypeAttr->cImplTypes ; i++ )
       {
          if( pTypeInfo->lpVtbl->GetImplTypeFlags( pTypeInfo, i, &nFlags ) == S_OK && ( nFlags & IMPLTYPEFLAG_FDEFAULT ))
          {
@@ -1057,7 +1145,7 @@ hb_ToOutDebug( "looking for type info" );
                hr = pTempInfo->lpVtbl->GetTypeAttr( pTempInfo, &pTempAttr );
                if( hr != S_OK )
                {
-                  pTempInfo->lpVtbl->Release(pTempInfo);
+                  pTempInfo->lpVtbl->Release( pTempInfo );
                   pTempInfo = NULL;
                   break;
                }
@@ -1083,54 +1171,47 @@ hb_ToOutDebug( "looking for type info" );
          pTypeAttr = pTempAttr;
       }
    }
-
-
-   OutputDebugString("allocating memory");
+   //hb_ToOutDebug( "------------------ allocating memory ---------------" );
 
    m_nMethodCount = pTypeAttr->cFuncs;
    m_nVarCount = pTypeAttr->cVars;
    m_nDispInfoCount = m_nMethodCount+2*m_nVarCount;
    // allocate <m_nDispInfoCount> structures of DispInfo
-   m_pDispInfo = (DispInfo *) hb_xgrab( sizeof(DispInfo) * m_nDispInfoCount);
+   m_pDispInfo = ( DispInfo * ) hb_xgrab( sizeof( DispInfo ) * m_nDispInfoCount );
 
-   wsprintf( cBuffer, "methods: %i vars: %i  DispInfo: %i", m_nMethodCount, m_nVarCount, m_nDispInfoCount );
-   hb_ToOutDebug( cBuffer);
+   hb_ToOutDebug( "methods: %i vars: %i  DispInfo: %i", m_nMethodCount, m_nVarCount, m_nDispInfoCount );
 
-
-   hb_ToOutDebug( "looping through methods");
+   hb_ToOutDebug( "--------------- looping through methods ----------------");
 
    for( i=0; i < m_nMethodCount; i++ )
    {
       FUNCDESC* pFuncDesc;
-      hr = pTypeInfo->lpVtbl->GetFuncDesc(pTypeInfo, i, &pFuncDesc );
+      hr = pTypeInfo->lpVtbl->GetFuncDesc( pTypeInfo, i, &pFuncDesc );
       if( hr != S_OK )
       {
-         pTypeInfo->lpVtbl->ReleaseTypeAttr(pTypeInfo, pTypeAttr);
-         pTypeInfo->lpVtbl->Release(pTypeInfo);
+         pTypeInfo->lpVtbl->ReleaseTypeAttr( pTypeInfo, pTypeAttr );
+         pTypeInfo->lpVtbl->Release( pTypeInfo );
          //m_nMethodCount = m_nVarCount = m_nDispInfoCount = 0;
-         hb_xfree( m_pDispInfo);
+         hb_xfree( m_pDispInfo );
          return 0;
       }
 
       m_pDispInfo[i].m_dispID = pFuncDesc->memid;
-
-      wsprintf( cBuffer, "   id: %i kind: %i", pFuncDesc->memid, pFuncDesc->invkind );
-      hb_ToOutDebug( cBuffer);
 
       hr = pTypeInfo->lpVtbl->GetNames( pTypeInfo, m_pDispInfo[i].m_dispID ,&m_pDispInfo[i].m_bstrName, 1, &nCount );
       if( hr != S_OK )
       {
          pTypeInfo->lpVtbl->ReleaseFuncDesc( pTypeInfo, pFuncDesc );
          pTypeInfo->lpVtbl->ReleaseTypeAttr( pTypeInfo, pTypeAttr );
-         pTypeInfo->lpVtbl->Release(pTypeInfo);
+         pTypeInfo->lpVtbl->Release( pTypeInfo );
          //m_nMethodCount = m_nVarCount = m_nDispInfoCount = 0;
          // free memory
-         hb_xfree( m_pDispInfo);
+         hb_xfree( m_pDispInfo );
          return 0;
       }
 
       // kind of entry
-      switch(pFuncDesc->invkind)
+      switch( pFuncDesc->invkind )
       {
       case INVOKE_PROPERTYGET:
          m_pDispInfo[i].m_wFlag = DISPATCH_PROPERTYGET;
@@ -1150,20 +1231,14 @@ hb_ToOutDebug( "looking for type info" );
 
       m_pDispInfo[i].m_oVft = pFuncDesc->oVft;
       m_pDispInfo[i].m_callconv = pFuncDesc->callconv;
-      m_pDispInfo[i].m_pOutput = (VARIANT*) hb_xgrab( sizeof(VARIANT));
+      m_pDispInfo[i].m_pOutput = ( VARIANT* ) hb_xgrab( sizeof( VARIANT ) );
 
       VariantInit( m_pDispInfo[i].m_pOutput );
       m_pDispInfo[i].m_vtOutputType = pFuncDesc->elemdescFunc.tdesc.vt;
-      if(m_pDispInfo[i].m_vtOutputType==VT_VOID||m_pDispInfo[i].m_vtOutputType==VT_NULL)
+      if( m_pDispInfo[i].m_vtOutputType==VT_VOID||m_pDispInfo[i].m_vtOutputType==VT_NULL )
       {
          m_pDispInfo[i].m_vtOutputType = VT_EMPTY;
       }
-
-
-
-      wsprintf( cBuffer, "   id: %i kind: %i", pFuncDesc->memid, pFuncDesc->invkind );
-      hb_ToOutDebug( cBuffer);
-
 
       WideCharToMultiByte(  CP_ACP,        // code page
                             0,             // performance and mapping flags
@@ -1175,23 +1250,22 @@ hb_ToOutDebug( "looking for type info" );
                             NULL           // set when default char used
                          );
 
+      hb_ToOutDebug( "%s   [id: %i kind: %i params: %i]", cBuffer, pFuncDesc->memid, pFuncDesc->invkind, pFuncDesc->cParams );
+      //hb_ToOutDebug( cBuffer );   // name of the function
+      //hb_ToOutDebug( m_pDispInfo[i].m_bstrName );
 
-
-      hb_ToOutDebug( cBuffer);
-      //OutputDebugString( m_pDispInfo[i].m_bstrName);
-
-      hb_ToOutDebug( "looping paremeters");
+      //hb_ToOutDebug( "------------- looping paremeters ---------------");
 
       // parameters
       m_pDispInfo[i].m_nParamCount = pFuncDesc->cParams;
       m_pDispInfo[i].m_pParamTypes = (WORD*) hb_xgrab( sizeof(WORD) * (m_pDispInfo[i].m_nParamCount+1));
       for( j=0; j<m_pDispInfo[i].m_nParamCount; j++ )
       {
-         if(pFuncDesc->lprgelemdescParam[j].tdesc.vt==VT_SAFEARRAY)
+         if( pFuncDesc->lprgelemdescParam[j].tdesc.vt==VT_SAFEARRAY )
          {
             m_pDispInfo[i].m_pParamTypes[j] = (pFuncDesc->lprgelemdescParam[j].tdesc.lptdesc->vt)|VT_ARRAY;
          }
-         else if(pFuncDesc->lprgelemdescParam[j].tdesc.vt==VT_PTR)
+         else if( pFuncDesc->lprgelemdescParam[j].tdesc.vt==VT_PTR )
          {
             m_pDispInfo[i].m_pParamTypes[j] = (pFuncDesc->lprgelemdescParam[j].tdesc.lptdesc->vt)|VT_BYREF;
          }
@@ -1204,8 +1278,7 @@ hb_ToOutDebug( "looking for type info" );
       pTypeInfo->lpVtbl->ReleaseFuncDesc( pTypeInfo, pFuncDesc );
    }
 
-
-   hb_ToOutDebug( "looping through var count");
+   hb_ToOutDebug( "--------------- looping through var count -------------------");
 
    for( i=m_nMethodCount; i<m_nMethodCount+m_nVarCount; i++ )
    {
@@ -1222,7 +1295,7 @@ hb_ToOutDebug( "looking for type info" );
       m_pDispInfo[i].m_dispID = pVarDesc->memid;
       m_pDispInfo[i+m_nVarCount].m_dispID = m_pDispInfo[i].m_dispID;
 
-      hr = pTypeInfo->lpVtbl->GetNames(pTypeInfo, m_pDispInfo[i].m_dispID ,&m_pDispInfo[i].m_bstrName,1,&nCount);
+      hr = pTypeInfo->lpVtbl->GetNames( pTypeInfo, m_pDispInfo[i].m_dispID ,&m_pDispInfo[i].m_bstrName,1,&nCount );
       if( hr != S_OK )
       {
          pTypeInfo->lpVtbl->ReleaseVarDesc(pTypeInfo, pVarDesc);
@@ -1232,9 +1305,9 @@ hb_ToOutDebug( "looking for type info" );
          // free memory
          return 0;
       }
-      m_pDispInfo[i+m_nVarCount].m_bstrName = SysAllocString(m_pDispInfo[i].m_bstrName);
+      m_pDispInfo[i+m_nVarCount].m_bstrName = SysAllocString( m_pDispInfo[i].m_bstrName );
 
-      switch(pVarDesc->varkind)
+      switch( pVarDesc->varkind )
       {
       case VAR_DISPATCH:
          m_pDispInfo[i].m_wFlag = DISPATCH_PROPERTYGET;
@@ -1251,23 +1324,93 @@ hb_ToOutDebug( "looking for type info" );
          m_pDispInfo[i+m_nVarCount].m_wFlag = 0;
          break;
       }
-      m_pDispInfo[i].m_pOutput = (VARIANT*) hb_xgrab(sizeof(VARIANT));// new VARIANT;
-      ::VariantInit(m_pDispInfo[i].m_pOutput);
-      m_pDispInfo[i+m_nVarCount].m_pOutput = (VARIANT*) hb_xgrab(sizeof(VARIANT)); // new VARIANT;
-      VariantInit(m_pDispInfo[i+m_nVarCount].m_pOutput);
+      m_pDispInfo[i].m_pOutput = ( VARIANT* ) hb_xgrab( sizeof( VARIANT ) );// new VARIANT;
+      ::VariantInit( m_pDispInfo[i].m_pOutput );
+      m_pDispInfo[i+m_nVarCount].m_pOutput = ( VARIANT* ) hb_xgrab( sizeof( VARIANT ) ); // new VARIANT;
+      VariantInit( m_pDispInfo[i+m_nVarCount].m_pOutput );
       pTypeInfo->lpVtbl->ReleaseVarDesc( pTypeInfo, pVarDesc );
    }
 
-   hb_ToOutDebug( "end");
+   hb_ToOutDebug( "---------------- end ------------------" );
 
    pTypeInfo->lpVtbl->ReleaseTypeAttr( pTypeInfo, pTypeAttr );
    pTypeInfo->lpVtbl->Release( pTypeInfo );
+
    return m_nDispInfoCount;
 }
 //----------------------------------------------------------------------//
 HB_FUNC( HB_AX_LOADTYPEINFO )
 {
    hb_retni( LoadTypeInformation( ( IDispatch* ) hb_parnint( 1 ) ) );
+}
+#endif
+//----------------------------------------------------------------------//
+#if 0
+//
+//  AdviseEvents( hObj, IID_* {...-...-.........}, @hSink, hashEvents )
+//
+HB_FUNC( HB_AX_ADVISEEVENTS )
+{
+   IConnectionPointContainer*  pCPC = NULL;
+   IConnectionPoint*           pCP = NULL;
+   IUnknown*                   pIUnknown;
+   HRESULT                     hr;
+   DWORD                       dwCookie = 0;
+   device_interface*           pdevice_interface = ( device_interface* ) hb_parnint( 1 );
+   IID                         iid;
+   BSTR                        bstrClassID;
+   register IEventHandler*     thisobj;
+
+   bstrClassID = hb_oleAnsiToSysString( hb_parcx( 2 ) );
+   hr = IIDFromString( bstrClassID, ( LPIID ) &iid );
+   SysFreeString( bstrClassID );
+   if ( hr == S_OK )
+   {
+hb_ToOutDebug( "<<<<<<<<<<<<<<<  1  >>>>>>>>>>>>" );
+      thisobj = ( IEventHandler * ) GlobalAlloc( GMEM_FIXED, sizeof(MyRealIEventHandler ) );
+      if ( !( thisobj ) )
+      {
+         hr = E_OUTOFMEMORY;
+      }
+      else
+      {
+hb_ToOutDebug( "<<<<<<<<<<<<<<<  2  >>>>>>>>>>>>" );
+         thisobj->lpVtbl = (IEventHandlerVtbl *) &IEventHandler_Vtbl;
+         ((MyRealIEventHandler *) thisobj)->count = 0;
+
+         hr = thisobj->lpVtbl->QueryInterface( thisobj, &IID_IUnknown, (void**) &pIUnknown );
+         if( hr == S_OK )
+         {
+hb_ToOutDebug( "<<<<<<<<<<<<<<<  3  >>>>>>>>>>>>");
+            hr = pdevice_interface->lpVtbl->QueryInterface( pdevice_interface, &IID_IConnectionPointContainer, (void**)&pCPC);
+            if( hr == S_OK )
+            {
+hb_ToOutDebug( "<<<<<<<<<<<<<<<  4  >>>>>>>>>>>>");
+               hr = pCPC->lpVtbl->FindConnectionPoint( pCPC, (REFIID)&iid, &pCP );
+               if ( hr == S_OK )
+               {
+hb_ToOutDebug( "<<<<<<<<<<<<<<<  5  >>>>>>>>>>>>");
+                  hr = pCP->lpVtbl->Advise( pCP, pIUnknown, &dwCookie );
+                  if ( hr == S_OK )
+                  {
+hb_ToOutDebug( "<<<<<<<<<<<<<<<  6  >>>>>>>>>>>>");
+                     ((MyRealIEventHandler *) thisobj)->device_event_interface_iid = iid;
+                     ((MyRealIEventHandler *) thisobj)->pIConnectionPoint = pCP;
+                     ((MyRealIEventHandler *) thisobj)->dwEventCookie     = dwCookie;
+                     ((MyRealIEventHandler *) thisobj)->pEvents           = hb_itemNew( hb_param( 4, HB_IT_ANY ) );
+
+                     hb_stornl( (LONG) thisobj, 3 );
+                  }
+               }
+               pCPC->lpVtbl->Release( pCPC );
+               pCPC = NULL;
+            }
+            pIUnknown->lpVtbl->Release(pIUnknown);
+            pIUnknown = NULL;
+         }
+      }
+   }
+   hb_retnl( hr );
 }
 #endif
 //----------------------------------------------------------------------//

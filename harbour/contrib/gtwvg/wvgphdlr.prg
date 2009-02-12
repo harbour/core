@@ -357,12 +357,12 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
             ENDIF
          ENDIF
 
-      CASE xParams[ 1 ] == 1  // enter menu loop
+      CASE xParams[ 1 ] == 1 .and. hb_isObject( ::oMenu ) // enter menu loop
          IF hb_isBlock( ::oMenu:sl_beginMenu )
             Eval( ::oMenu:sl_beginMenu, NIL, NIL, Self )
          ENDIF
 
-      CASE xParams[ 1 ] == 2  // exit menu loop
+      CASE xParams[ 1 ] == 2 .and. hb_isObject( ::oMenu ) // exit menu loop
          IF hb_isBlock( ::oMenu:sl_endMenu )
             Eval( ::oMenu:sl_endMenu, NIL, NIL, Self )
          ENDIF

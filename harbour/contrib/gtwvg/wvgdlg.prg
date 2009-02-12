@@ -81,6 +81,7 @@ CLASS WvgDialog FROM WvgWindow
    DATA     aRect
 
    DATA     drawingArea
+   DATA     tasklist                              INIT  .t.
 
    METHOD   init()
    METHOD   create()
@@ -99,7 +100,6 @@ CLASS WvgDialog FROM WvgWindow
    METHOD   calcFrameRect()                       INLINE ::aRect := Win_GetWindowRect( ::hWnd ),;
                                                          { ::aRect[ 1 ], ::aRect[ 2 ], ;
                                                          ::aRect[ 3 ]-::aRect[ 1 ], ::aRect[ 4 ]-::aRect[ 2 ] }
-
    ENDCLASS
 //----------------------------------------------------------------------//
 METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDialog
@@ -113,7 +113,7 @@ METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDial
 
    ::style       := WS_THICKFRAME+WS_OVERLAPPED+WS_CAPTION+WS_SYSMENU+WS_MINIMIZEBOX+WS_MAXIMIZEBOX;
 
-   ::drawingArea := Self
+   //::drawingArea := Self
 
    RETURN Self
 //----------------------------------------------------------------------//
@@ -134,7 +134,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDi
 
    if ::visible
       hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
-   else
+   ELSE
       hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_HIDE   )
    endif
 
@@ -162,6 +162,12 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDi
       ::lHasInputFocus := .t.
    endif
 
+   #if 0
+   ::drawingArea := WvgStatic():New( self, , {0,0}, {self:currentSize()[1],self:currentSize()[2]}, , .t. )
+   ::drawingArea:create()
+   #else
+   ::drawingArea := Self
+   #endif
    hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| ::notifier( nEvent, ... ) } )
 
    RETURN Self
@@ -224,4 +230,5 @@ METHOD menuBar() CLASS WvgDialog
 
    RETURN ::oMenu
 //----------------------------------------------------------------------//
+
 
