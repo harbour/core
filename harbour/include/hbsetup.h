@@ -55,6 +55,7 @@
 
 #include <limits.h>
 
+#define HB__USE_OWN_SNPRINTF /* temp, for initial live testing */
 
 /* ***********************************************************************
  * Include settings common for .prg and .c files

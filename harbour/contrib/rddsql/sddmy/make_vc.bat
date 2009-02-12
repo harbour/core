@@ -20,8 +20,8 @@ goto POST_EXIT
 if "%HB_INC_MYSQL%" == "" set HB_INC_MYSQL=%HB_DIR_MYSQL%\include
 set _HB_DLL_NAME=libmySQL
 set HB_ROOT=..\..\..
-set HB_MAKEFILE=..\..\mtpl_b32.mak
-set CFLAGS=-I"%HB_INC_MYSQL%";..\..\..\include
+set HB_MAKEFILE=..\..\mtpl_vc.mak
+set CFLAGS=-I"%HB_INC_MYSQL%"
 
 rem ---------------------------------------------------------------
 

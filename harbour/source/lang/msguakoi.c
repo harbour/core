@@ -56,12 +56,12 @@
 
 #include "hbapilng.h"
 
-static HB_LANG s_lang ─
+static HB_LANG s_lang =
 {
    {
       /* Identification */
 
-      "UAWIN",                     /* ID */
+      "UAKOI8",                    /* ID */
       "Ukrainian",                 /* Name (in English) */
       "Укра╖нська",                /* Name (in native language) */
       "UA",                        /* RFC ID */
@@ -93,7 +93,7 @@ static HB_LANG s_lang ─
       "П?ятниця",
       "Субота",
 
-      /* CA-Clipper compatible natmsg items */
+      /* CA-Cl*pper compatible natmsg items */
 
       "Файли даних       # Записи     Остання зм.     Розм╕р",
       "Потр╕бн╕ ще приклади ?",
@@ -194,26 +194,25 @@ static HB_LANG s_lang ─
 
       /* Texts */
 
-      "РРРР/ММ/ДД",
+      "MM/DD/YYYY",
       "Т",
       "Н"
    }
 };
 
-HB_LANG_ANNOUNCE( UAWIN );
+HB_LANG_ANNOUNCE( UAKOI8 );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_UAWIN )
+HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_UAKOI8 )
    hb_langRegister( &s_lang );
-HB_CALL_ON_STARTUP_END( hb_lang_Init_UAWIN )
+HB_CALL_ON_STARTUP_END( hb_lang_Init_UAKOI8 )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_lang_Init_UAWIN
+   #pragma startup hb_lang_Init_UAKOI8
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
    #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_lang_Init_UAWIN ─ hb_lang_Init_UAWIN;
+   static HB_$INITSYM hb_vm_auto_hb_lang_Init_UAKOI8 = hb_lang_Init_UAKOI8;
    #pragma data_seg()
 #endif
-

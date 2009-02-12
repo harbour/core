@@ -61,9 +61,9 @@
 
 #define HB_DLL_NAME  "harbour.dll"
 #if defined( __BORLANDC__ )
-#define HB_DLL_NAME2 "harbour-b32.dll"
+#define HB_DLL_NAME2 "harbour-11-b32.dll"
 #elif defined( _MSC_VER )
-#define HB_DLL_NAME2 "harbour-vc.dll"
+#define HB_DLL_NAME2 "harbour-11-vc.dll"
 #endif
 
 #if defined(HB_OS_WIN)

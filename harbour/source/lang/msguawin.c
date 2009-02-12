@@ -93,7 +93,7 @@ static HB_LANG s_lang =
       "П’ятниця",
       "Субота",
 
-      /* CA-Clipper compatible natmsg items */
+      /* CA-Cl*pper compatible natmsg items */
 
       "Файли даних       # Записи     Остання зм.     Розмір",
       "Потрібні ще приклади ?",
@@ -194,7 +194,7 @@ static HB_LANG s_lang =
 
       /* Texts */
 
-      "РРРР/ММ/ДД",
+      "MM/DD/YYYY",
       "Т",
       "Н"
    }
@@ -216,4 +216,3 @@ HB_CALL_ON_STARTUP_END( hb_lang_Init_UAWIN )
    static HB_$INITSYM hb_vm_auto_hb_lang_Init_UAWIN = hb_lang_Init_UAWIN;
    #pragma data_seg()
 #endif
-

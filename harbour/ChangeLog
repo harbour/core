@@ -8,6 +8,35 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-12 10:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbsetup.h
+  * include/hbapi.h
+  * source/common/hbprintf.c
+  * source/common/hbstr.c
+    + Temporarily enabled local hb_snprintf() implementation.
+    ; Please test. If it's okay, we can enable it permanently.
+
+  * contrib/rddsql/sddmy/make_b32.bat
+  * contrib/rddsql/sddmy/make_vc.bat
+  * contrib/rddsql/sddpg/make_b32.bat
+  * contrib/rddsql/sddpg/make_vc.bat
+  * contrib/rddsql/sddfb/make_b32.bat
+  * contrib/rddsql/sddfb/make_vc.bat
+    ! Fixed typos for VC flavours.
+    % Removed unnecessary INCLUDE path.
+
+  * source/vm/maindllp.c
+    ! Updated dll name for Borland and MSVC.
+
+  * source/lang/msguawin.c
+  * source/lang/msgua866.c
+  * source/lang/msguakoi.c
+    ! Fixed corrupted equal char in code.
+    ! Fixed date format.
+    ! Fixed CP IDs and descriptions in UA866 and UAKOI.
+    ! Restored 'CA-Cl*pper' in comment.
+    ; Please verify me.
+
 2009-02-12 11:43 UTC+0200 Petr Chornyj (myorg63 at mail.ru)
   * /source/lang/msguawin.c
   * /source/lang/msgua866.c
@@ -18,7 +47,7 @@
   * /source/lang/msguawin.c
   * /source/lang/msgua866.c
   * /source/lang/msguakoi.c
-    * Corrected bad Ukrainian localization 
+    * Corrected bad Ukrainian localization
 
 2009-12-11 18:09 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgwin.c
@@ -35,7 +64,7 @@
   * harbour/contrib/gtwvg/wvgstatc.prg
   * harbour/contrib/gtwvg/wvgtoolb.prg
   * harbour/contrib/gtwvg/wvgwnd.prg
-    ! Numerous enhancements and fixes, difficult to remember as 
+    ! Numerous enhancements and fixes, difficult to remember as
       most are spread over a long time and where I had no means
       to update them. But all are synchronized with changes
       effected till date by others.

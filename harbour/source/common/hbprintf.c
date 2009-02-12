@@ -50,8 +50,6 @@
  *
  */
 
-#if 1
-
 /*
 patterm format:
    '%' [<flags>*] [<field width>] [.<precision>] [<length modifier>]
@@ -102,6 +100,8 @@ optimized.
 #include "hbapi.h"
 #include "hbmath.h"
 
+#if defined( HB__USE_OWN_SNPRINTF )
+
 #if defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || defined( _MSC_VER )
 #  include <float.h>
 #elif defined(__DJGPP__)
@@ -109,13 +109,6 @@ optimized.
 #elif defined( HB_OS_SUNOS )
 #  include <ieeefp.h>    /* for finite() */
 #endif
-
-HB_EXTERN_BEGIN
-
-int hb_snprintf_c( char *buffer, size_t bufsize, const char *format, ... )
-    HB_PRINTF_FORMAT( 3, 4 );
-
-HB_EXTERN_END
 
 #if defined( HB_LONG_DOUBLE_OFF ) && !defined( __NO_LONGDOUBLE__ )
 #  define __NO_LONGDOUBLE__
@@ -843,7 +836,7 @@ static size_t put_str( char *buffer, size_t bufsize, size_t size,
    return size;
 }
 
-int hb_snprintf_c( char * buffer, size_t bufsize, const char * format, ... )
+int hb_snprintf( char * buffer, size_t bufsize, const char * format, ... )
 {
    va_list args;
    size_t size;

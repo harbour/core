@@ -20,8 +20,8 @@ goto POST_EXIT
 if "%HB_INC_PGSQL%" == "" set HB_INC_PGSQL=%HB_DIR_PGSQL%\include
 set _HB_DLL_NAME=libpq
 set HB_ROOT=..\..\..
-set HB_MAKEFILE=..\..\mtpl_b32.mak
-set CFLAGS=-I"%HB_INC_PGSQL%";..\..\..\include
+set HB_MAKEFILE=..\..\mtpl_vc.mak
+set CFLAGS=-I"%HB_INC_PGSQL%"
 
 rem ---------------------------------------------------------------
 
