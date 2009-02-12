@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-12 12:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/lang/msgrukoi.c
+  * source/lang/msgruwin.c
+  * source/lang/msguakoi.c
+  * source/lang/msguawin.c
+  * source/lang/msgru866.c
+  * source/lang/msgua866.c
+    ! Fixed date format to be DD.MM.YYYY.
+
 2009-02-12 10:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbsetup.h
   * include/hbapi.h
