@@ -74,10 +74,9 @@
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 
-#define HB_OS_WIN_32_USED
+#define HB_OS_WIN_USED
 
 #include "gtwvg.h"
-#include "hbwapi.h"
 #include <windowsx.h>
 
 #define WIN_STATUSBAR_MAX_PARTS         256
