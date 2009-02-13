@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 22:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  + utils/hbmk
+  + utils/hbmk/hbmk.prg
+  + utils/hbmk/Makefile
+    + Added hbmk .prg implementation. First pass, work in progress,
+      unfinished. It aims to fully replace hbmk.bat, hbmk_os2.cmd
+      and possibly/eventually hbmk bash script, with similar
+      functionality. Beyond that it's meant to support all
+      compiler/platform combination we happen to have under /config.
+
 2009-02-13 21:57 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/bin/hbmk.bat
     * added more temp envvar cleanup
@@ -52,7 +62,7 @@
           HB_USER_LIBS. Change HB_USER_LIBS settings to
           contain the raw lib list without extensions.
           This is where batch capabilities end, so this
-          might need a .prg rewrite.
+          might need a .prg rewrite. [CANCELLED]
 
 2009-02-13 19:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hbmk.bat
