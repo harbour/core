@@ -55,8 +55,8 @@ if not "%HB_ARCHITECTURE%" == "win" goto _SKP_WIN_COMP_DETECTION
    set _PATH=%PATH%
    :_SP_GCC
    for /F "delims=; tokens=1,2*" %%p in ("%_PATH%") do (
-      if exist "%%p\%_HB_APP%" set HB_COMPILER=%_HB_COMPILER%
-      if exist "%%p%_HB_APP%"  set HB_COMPILER=%_HB_COMPILER%
+      if exist "%%p\%_HB_APP%" ( set HB_COMPILER=%_HB_COMPILER%&& goto _SP_DONE )
+      if exist "%%p%_HB_APP%"  ( set HB_COMPILER=%_HB_COMPILER%&& goto _SP_DONE )
       set _PATH=%%~q;%%~r
    )
    if not "%_PATH%"==";" goto _SP_GCC
@@ -68,8 +68,8 @@ if not "%HB_ARCHITECTURE%" == "win" goto _SKP_WIN_COMP_DETECTION
    set _PATH=%PATH%
    :_SP_CL
    for /F "delims=; tokens=1,2*" %%p in ("%_PATH%") do (
-      if exist "%%p\%_HB_APP%" set HB_COMPILER=%_HB_COMPILER%
-      if exist "%%p%_HB_APP%"  set HB_COMPILER=%_HB_COMPILER%
+      if exist "%%p\%_HB_APP%" ( set HB_COMPILER=%_HB_COMPILER%&& goto _SP_DONE )
+      if exist "%%p%_HB_APP%"  ( set HB_COMPILER=%_HB_COMPILER%&& goto _SP_DONE )
       set _PATH=%%~q;%%~r
    )
    if not "%_PATH%"==";" goto _SP_CL
@@ -81,8 +81,8 @@ if not "%HB_ARCHITECTURE%" == "win" goto _SKP_WIN_COMP_DETECTION
    set _PATH=%PATH%
    :_SP_BCC32
    for /F "delims=; tokens=1,2*" %%p in ("%_PATH%") do (
-      if exist "%%p\%_HB_APP%" set HB_COMPILER=%_HB_COMPILER%
-      if exist "%%p%_HB_APP%"  set HB_COMPILER=%_HB_COMPILER%
+      if exist "%%p\%_HB_APP%" ( set HB_COMPILER=%_HB_COMPILER%&& goto _SP_DONE )
+      if exist "%%p%_HB_APP%"  ( set HB_COMPILER=%_HB_COMPILER%&& goto _SP_DONE )
       set _PATH=%%~q;%%~r
    )
    if not "%_PATH%"==";" goto _SP_BCC32
@@ -94,8 +94,8 @@ if not "%HB_ARCHITECTURE%" == "win" goto _SKP_WIN_COMP_DETECTION
    set _PATH=%PATH%
    :_SP_WPP386
    for /F "delims=; tokens=1,2*" %%p in ("%_PATH%") do (
-      if exist "%%p\%_HB_APP%" set HB_COMPILER=%_HB_COMPILER%
-      if exist "%%p%_HB_APP%"  set HB_COMPILER=%_HB_COMPILER%
+      if exist "%%p\%_HB_APP%" ( set HB_COMPILER=%_HB_COMPILER%&& goto _SP_DONE )
+      if exist "%%p%_HB_APP%"  ( set HB_COMPILER=%_HB_COMPILER%&& goto _SP_DONE )
       set _PATH=%%~q;%%~r
    )
    if not "%_PATH%"==";" goto _SP_WPP386

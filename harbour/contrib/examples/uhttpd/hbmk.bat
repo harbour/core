@@ -47,7 +47,7 @@ if %UHTTP_INET_SUPPORT%.==no.  SET UHTTP_INET_SOCKET=socket.c
 if exist uhttpd.exe uhttpd -s
 
 set HB_USER_PRGFLAGS=%UHTTP_GD_DEF% %UHTTP_INET_DEF%
-set HB_USER_LIBS=xhb.lib hbct.lib cw32mt.lib %UHTTP_GD_LIBS%
+set HB_USER_LIBS=xhb.lib hbct.lib %UHTTP_GD_LIBS%
 
 @..\..\..\bin\%~nx0 -mt -gui %* uhttpd.prg cgifunc.prg cookie.prg session.prg uhttpdc.c %UHTTP_INET_SOCKET%
 if errorlevel 1 goto DOERROR

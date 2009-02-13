@@ -8,6 +8,45 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 19:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hbmk.bat
+    % Compiler detection made faster.
+    ; TOFIX: MinGW requires different library names than the rest
+             of compilers, so it currently won't work for hbmk.bat
+             files where HB_USER_LIBS is set.
+
+  + contrib/examples/pp/hbmk.bat
+  - contrib/examples/pp/hbmk_b32.bat
+  - contrib/examples/pp/hbmk_vc.bat
+  + contrib/examples/guestbk/hbmk.bat
+  - contrib/examples/guestbk/hbmk_b32.bat
+  - contrib/examples/guestbk/hbmk_vc.bat
+  + contrib/examples/pe/hbmk.bat
+  - contrib/examples/pe/hbmk_b32.bat
+  - contrib/examples/pe/hbmk_vc.bat
+  + contrib/examples/hbsqlit2/tests/hbmk.bat
+  - contrib/examples/hbsqlit2/tests/hbmk_b32.bat
+  - contrib/examples/hbsqlit2/tests/hbmk_vc.bat
+  + contrib/examples/uhttpd/hbmk.bat
+  - contrib/examples/uhttpd/hbmk_b32.bat
+  - contrib/examples/uhttpd/hbmk_vc.bat
+  + contrib/examples/terminal/hbmk.bat
+  - contrib/examples/terminal/hbmk_b32.bat
+  - contrib/examples/terminal/hbmk_vc.bat
+  + contrib/examples/terminal/hbmk_trm_appn.bat
+  - contrib/examples/terminal/hbmk_b32_trm_appn.bat
+  - contrib/examples/terminal/hbmk_vc_trm_appn.bat
+  + contrib/examples/rl/hbmk.bat
+  - contrib/examples/rl/hbmk_b32.bat
+  - contrib/examples/rl/hbmk_vc.bat
+  + utils/hbdoc/hbmk.bat
+  - utils/hbdoc/hbmk_b32.bat
+  - utils/hbdoc/hbmk_vc.bat
+  + utils/hbmake/hbmk.bat
+  - utils/hbmake/hbmk_b32.bat
+  - utils/hbmake/hbmk_vc.bat
+    % Changed to generic make files.
+
 2009-02-13 18:43 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + contrib/examples/dbu/hbmk.bat
   - contrib/examples/dbu/hbmk_b32.bat
