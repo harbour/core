@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 12:09 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  + contrib/examples/terminal/hbmk_b32.bat
+  + contrib/examples/terminal/hbmk_b32_trm_appn.bat
+  + contrib/examples/terminal/hbmk_vc.bat
+  + contrib/examples/terminal/hbmk_vc_trm_appn.bat
+    + Added build batches, one generic for client and server,
+      and one special for trm_appn.
+    ; NOTE: Turn off Unicode when building these apps.
+
 2009-02-13 11:15 UTC+0100 Maurilio Longo (maurilio.longo@libero.it)
   * harbour/include/hbthread.h
   * harbour/source/vm/thread.c
