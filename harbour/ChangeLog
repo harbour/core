@@ -8,6 +8,25 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 16:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hbmk.bat
+    + Added detection for .PRG written in uppercase.
+      (needed for DBU original sources.)
+    ! Fixed to set 'echo off'
+
+  * contrib/examples/guestbk/hbmk_b32.bat
+  * contrib/examples/guestbk/hbmk_vc.bat
+  * contrib/examples/dbu/hbmk_b32.bat
+  * contrib/examples/dbu/hbmk_vc.bat
+  * utils/hbdoc/hbmk_b32.bat
+  * utils/hbdoc/hbmk_vc.bat
+  * utils/hbmake/hbmk_b32.bat
+  * utils/hbmake/hbmk_vc.bat
+    % Switched to use hbmk instead of using local logic.
+
+  * ChangeLog
+    + Added one item to previous entry.
+
 2009-02-13 16:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hbmk.bat
     + Added autodetection of Harbour dirs. So this batch will
@@ -23,6 +42,7 @@
       The first will be the main program.
     + Added support to supply .c files on the command line.
       [these features need Windows NT or upper]
+    - Removed compatibility support for HB_MT=mt. Use HB_MT=yes.
     ; TODO: Test OpenWatcom. I had to remove -fo and FILE
             directives from script, if this was required we
             need to find a solution to support multiple

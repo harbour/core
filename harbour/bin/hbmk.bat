@@ -1,4 +1,4 @@
-rem @echo off
+@echo off
 rem
 rem $Id$
 rem
@@ -159,7 +159,9 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
       set _HB_P_OPT=
 
       :_P_SORT_R
-      if not "%~x1" == ".prg" goto _P_SORT_NP
+      set _HB_P_TMP=%~x1
+      if "%_HB_P_TMP%" == ".PRG" set _HB_P_TMP=.prg
+      if not "%_HB_P_TMP%" == ".prg" goto _P_SORT_NP
          if "%_HB_P_PRG_MAIN%" == "" set _HB_P_PRG_MAIN=%~dpn1
          set _HB_P_PRG=%_HB_P_PRG% %1
          set _HB_P_PRG_C=%_HB_P_PRG_C% %~dpn1.c
