@@ -260,7 +260,7 @@ HB_FUNC( SETFDATI )
             }
             SystemTimeToFileTime( &st, &local_ft );
             LocalFileTimeToFileTime( &local_ft, &ft );
-            hb_retl( SetFileTime( f, NULL, &ft, &ft ) );
+            hb_retl( SetFileTime( f, NULL, &ft, &ft ) != 0 );
             _lclose( ( HFILE ) f );
             return;
          }

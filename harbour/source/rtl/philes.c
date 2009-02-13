@@ -391,14 +391,18 @@ HB_FUNC( HB_FSETATTR )
 
 HB_FUNC( HB_FSETDATETIME )
 {
-   int iHour, iMinutes, iSeconds;
+   const char * szTime = hb_parc( 3 );
+   LONG lTime = -1;
 
-   hb_timeStrGet( hb_parcx( 3 ), &iHour, &iMinutes, &iSeconds, NULL );
+   if( szTime )
+   {
+      int iHour, iMinutes, iSeconds, iMSec;
+      hb_timeStrGet( szTime, &iHour, &iMinutes, &iSeconds, &iMSec );
+      lTime = hb_timeStampEncode( iHour, iMinutes, iSeconds, iMSec );
+   }
 
-   hb_retl( hb_fsSetFileTime(
-      ( UCHAR * ) hb_parcx( 1 ),
-      ISDATE( 2 ) ? hb_pardl( 2 ) : -1,
-      ISCHAR( 3 ) ? hb_timeStampEncode( iHour, iMinutes, iSeconds, 0 ) : -1 ) );
+   hb_retl( hb_fsSetFileTime( ( UCHAR * ) hb_parcx( 1 ),
+                              ISDATE( 2 ) ? hb_pardl( 2 ) : -1, lTime ) );
 }
 
 HB_FUNC( HB_FGETDATETIME )
@@ -412,7 +416,8 @@ HB_FUNC( HB_FGETDATETIME )
       hb_stordl( lJulian, 2 );
 
       hb_timeStampStr( buf, lMillisec );
-      buf[ 8 ] = '\0';
+      if( lMillisec % 1000 == 0 )
+         buf[ 8 ] = '\0';
       hb_storc( buf, 3 );
 
       /* hb_stornl( lMillisec, 4 ); */

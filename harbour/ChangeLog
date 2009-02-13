@@ -8,6 +8,27 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 11:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbpp.h
+  * harbour/source/pp/hbpp.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/compiler/hbmain.c
+    + added support for dynamically calculated #define results
+    ! removed old code which was adding __FILE__ #define constant
+      It was not working correctly like in other compilers ignoring
+      #include
+    + added __FILE__ and __LINE__ #define directives using dynamically
+      calculated results - now it works as expected respecting #include
+      directives and the implementation is local to PP without any hacks
+      in core compiler code.
+
+  * harbour/contrib/hbct/files.c
+    * added support for optional milliseconds part in HB_FSETDATETIME()/
+      HB_FGETDATETIME().
+
+  * harbour/source/rtl/philes.c
+    ! minor fix in return value
+
 2009-02-13 10:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbdefs.h
   * contrib/gtwvg/gtwvg.h

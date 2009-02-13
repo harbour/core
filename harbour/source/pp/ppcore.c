@@ -208,6 +208,8 @@ static const HB_PP_OPERATOR s_operators[] =
 /* illegal in Clipper: ~ */
 };
 
+static const char s_pp_dynamicResult = 0;
+
 static void hb_pp_disp( PHB_PP_STATE pState, const char * szMessage )
 {
    if( !pState->pDispFunc )
@@ -4028,6 +4030,26 @@ static PHB_PP_TOKEN *  hb_pp_patternStuff( PHB_PP_STATE pState,
                                              pResultPtr );
          }
       }
+      else if( HB_PP_TOKEN_TYPE( pResultPattern->type ) == HB_PP_RMARKER_DYNVAL )
+      {
+         if( hb_pp_tokenValueCmp( pResultPattern, "__FILE__", HB_PP_CMP_CASE ) )
+         {
+            const char * szFileName = pState->pFile ? pState->pFile->szFileName : NULL;
+            if( !szFileName )
+               szFileName = "";
+            * pResultPtr = hb_pp_tokenNew( szFileName, strlen( szFileName ), 0,
+                                           HB_PP_TOKEN_STRING );
+            pResultPtr = &( * pResultPtr )->pNext;
+         }
+         else if( hb_pp_tokenValueCmp( pResultPattern, "__LINE__", HB_PP_CMP_CASE ) )
+         {
+            char line[ 16 ];
+            hb_snprintf( line, sizeof( line ), "%d", pState->pFile ? pState->pFile->iCurrentLine : 0 );
+            * pResultPtr = hb_pp_tokenNew( line, strlen( line ), 0,
+                                           HB_PP_TOKEN_NUMBER );
+            pResultPtr = &( * pResultPtr )->pNext;
+         }
+      }
       else
       {
          * pResultPtr = hb_pp_tokenClone( pResultPattern );
@@ -5295,28 +5317,8 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
    szResult[ 9 ] = '"';
    szResult[ 10 ] = '\0';
    hb_pp_addDefine( pState, "__TIME__", szResult );
-
-   /* __FILE__ */
-   if( pState->pFile )
-   {
-      char*  pBuf;
-      ULONG  ulLen = strlen( pState->pFile->szFileName );
-
-      pBuf = ( char* ) hb_xgrab( ulLen + 3 );
-      pBuf[ 0 ] = '"';
-      memcpy( pBuf + 1, pState->pFile->szFileName, ulLen );
-      pBuf[ ulLen + 1 ] = '"';
-      pBuf[ ulLen + 2 ] = '\0';
-      hb_pp_addDefine( pState, "__FILE__", pBuf );
-      hb_xfree( pBuf );
-   }
-   else
-   {
-      szResult[ 0 ] = '"';
-      szResult[ 1 ] = '"';
-      szResult[ 2 ] = '\0';
-      hb_pp_addDefine( pState, "__FILE__", szResult );
-   }
+   hb_pp_addDefine( pState, "__FILE__", &s_pp_dynamicResult );
+   hb_pp_addDefine( pState, "__LINE__", &s_pp_dynamicResult );
 
    hb_snprintf( szResult, sizeof( szResult ), "%d", ( int ) sizeof( void * ) );
 #if defined( HB_ARCH_16BIT )
@@ -5568,13 +5570,21 @@ void hb_pp_addDefine( PHB_PP_STATE pState, const char * szDefName,
 
    if( szDefValue && !pState->fError )
    {
-      pFile->pLineBuf = szDefValue;
-      pFile->ulLineBufLen = strlen( szDefValue );
-      hb_pp_getLine( pState );
-      pResult = pState->pFile->pTokenList;
-      pState->pFile->pTokenList = NULL;
-      pToken = hb_pp_tokenResultEnd( &pResult, TRUE );
-      hb_pp_tokenListFree( &pToken );
+      if( szDefValue == &s_pp_dynamicResult )
+      {
+         pResult = hb_pp_tokenNew( szDefName, strlen( szDefName ), 0,
+                                   HB_PP_RMARKER_DYNVAL | HB_PP_TOKEN_STATIC );
+      }
+      else
+      {
+         pFile->pLineBuf = szDefValue;
+         pFile->ulLineBufLen = strlen( szDefValue );
+         hb_pp_getLine( pState );
+         pResult = pState->pFile->pTokenList;
+         pState->pFile->pTokenList = NULL;
+         pToken = hb_pp_tokenResultEnd( &pResult, TRUE );
+         hb_pp_tokenListFree( &pToken );
+      }
    }
    else
       pResult = NULL;

@@ -136,6 +136,7 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 #define HB_PP_RMARKER_LOGICAL    16
 #define HB_PP_RMARKER_NUL        17
 #define HB_PP_RMARKER_OPTIONAL   18
+#define HB_PP_RMARKER_DYNVAL     19
 
 /* keywords, pseudo keywords and PP only tokens */
 #define HB_PP_TOKEN_KEYWORD      21
