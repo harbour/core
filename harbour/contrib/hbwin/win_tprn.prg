@@ -351,7 +351,7 @@ METHOD EndDoc( lAbortDoc ) CLASS WIN_PRN
       lAbortDoc := .T.
    ENDIF
    IF lAbortDoc
-      win_AbordDoc( ::hPrinterDC )
+      win_AbortDoc( ::hPrinterDC )
    ELSE
       ::EndPage( .F. )
       win_EndDoc( ::hPrinterDC )

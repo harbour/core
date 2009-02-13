@@ -11,7 +11,7 @@
 @rem ---------------------------------------------------------------
 
 @set HB_ARCHITECTURE=win
-@set HB_COMPILER=msvc
+@set HB_COMPILER=gcc
 
 @if     "%OS%" == "Windows_NT" call "%~dp0hbmk.bat" %*
 @if not "%OS%" == "Windows_NT" call hbmk.bat %1 %2 %3 %4 %5 %6 %7 %8 %9

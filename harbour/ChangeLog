@@ -8,6 +8,52 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 16:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hbmk.bat
+    + Added autodetection of Harbour dirs. So this batch will
+      now work when called from any directories, and even if
+      '/bin' dir is added to the PATH. IOW, it's not anymore
+      necessary to supply these envvars in normal cases:
+      HB_INSTALL_PREFIX, HB_BIN_INSTALL, HB_LIB_INSTALL,
+      HB_INC_INSTALL. If someone moves this batch file away
+      from its original place, these envvars can still be used
+      to point to the Harbour tree, but support for this may
+      be removed in the future to keep things simple.
+    + Added support for multiple .prg files on the command line.
+      The first will be the main program.
+    + Added support to supply .c files on the command line.
+      [these features need Windows NT or upper]
+    ; TODO: Test OpenWatcom. I had to remove -fo and FILE
+            directives from script, if this was required we
+            need to find a solution to support multiple
+            input files.
+
+  * bin/hbmk_b32.bat
+  * bin/hbmk_vc.bat
+    + Now these files can be called from any directories and even
+      when '/bin' dir is added to the PATH.
+    + Added support for unlimited number of command line parameters.
+      [these features need Windows NT or upper]
+    * Changed to not interfere with 'echo off' setting of the
+      caller.
+
+  ; NOTE: After this change it's possible to get rid of all
+          non-customized version of hbmk_b32.bat/hbmk_vc.bat
+          files in the source tree. I plan to remove these in
+          the near future. The rest can be simplified in most
+          places. This will only cause some inconvenience
+          for developers still using Win95/98/ME.
+
+  + bin/hbmk_gcc.bat
+  + bin/hbmk_ow.bat
+    + Added make batch files to MingW/GCC and OpenWatcom.
+
+  * contrib/hbwin/win_tprn.prg
+    ! Fixed recent typo.
+
+  * include/hbstdgen.ch
+    - Removed #undef __FILE__. I understand this isn't needed anymore.
+
 2009-02-13 13:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbver.c
     + Added Windows 7 and Windows Server 2008 R2 detection.
@@ -57,7 +103,7 @@
   * contrib/gtwvg/gtwvg.h
   * contrib/gtwvg/wvggui.h
   * contrib/examples/terminal/trm_client.prg
-    + Added HB_EXTERN_START/END.
+    + Added HB_EXTERN_BEGIN/END.
 
   * include/hbdefs.h
     + Added some comments from the original mail from Przemek.
