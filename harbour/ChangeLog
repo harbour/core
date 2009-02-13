@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 11:15 UTC+0100 Maurilio Longo (maurilio.longo@libero.it)
+  * harbour/include/hbthread.h
+  * harbour/source/vm/thread.c
+    ! fixed a bug on OS/2 MT implementation adding a new function,
+      _hb_cond_timed_wait() because when a semaphore gets posted it has
+      to be reset, otherwise it does not stop new threads entering it in a wait.
+
 2009-02-13 11:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbpp.h
   * harbour/source/pp/hbpp.c

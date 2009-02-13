@@ -185,6 +185,18 @@ void hb_threadExit( void )
 }
 
 #if defined( HB_OS_OS2 )
+BOOL _hb_cond_timed_wait( HEV v, ULONG n )
+{
+   ULONG ulPostCount = 0;
+   APIRET rc;
+
+   rc = DosWaitEventSem( v, n );
+   DosResetEventSem( v, &ulPostCount );
+
+   return rc == NO_ERROR;
+}
+
+
 ULONG _hb_gettid( void )
 {
    ULONG tid = 0;

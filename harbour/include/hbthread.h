@@ -193,8 +193,8 @@ HB_EXTERN_BEGIN
 #  define HB_COND_DESTROY(v)        DosCloseEventSem( v )
 #  define HB_COND_SIGNAL(v)         DosPostEventSem( v )
 #  define HB_COND_SIGNALN(v,n)      do { int i = (n); while( --i >= 0 ) DosPostEventSem( v ); } while(0)
-#  define HB_COND_WAIT(v)           ( DosWaitEventSem( (v), SEM_INDEFINITE_WAIT ) == NO_ERROR )
-#  define HB_COND_TIMEDWAIT(v,n)    ( DosWaitEventSem( (v), (n) ) == NO_ERROR )
+#  define HB_COND_WAIT(v)           _hb_cond_timed_wait( (v), SEM_INDEFINITE_WAIT )
+#  define HB_COND_TIMEDWAIT(v,n)    _hb_cond_timed_wait( (v), (n) )
 
 #  undef  HB_COND_OS_SUPPORT
 #  define HB_CRITICAL_NEED_INIT
