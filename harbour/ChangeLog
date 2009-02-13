@@ -8,6 +8,43 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 17:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hbmk.bat
+    + Added support for pure .c projects. (like pp)
+
+  * contrib/examples/pp/hbmk_b32.bat
+  * contrib/examples/pp/hbmk_vc.bat
+  * contrib/examples/guestbk/hbmk_b32.bat
+  * contrib/examples/guestbk/hbmk_vc.bat
+  * contrib/examples/pe/hbmk_b32.bat
+  * contrib/examples/pe/hbmk_vc.bat
+  * contrib/examples/hbsqlit2/tests/hbmk_b32.bat
+  * contrib/examples/hbsqlit2/tests/hbmk_vc.bat
+  * contrib/examples/uhttpd/hbmk_b32.bat
+  * contrib/examples/uhttpd/hbmk_vc.bat
+  * contrib/examples/dbu/hbmk_b32.bat
+  * contrib/examples/dbu/hbmk_vc.bat
+  * contrib/examples/terminal/hbmk_b32.bat
+  * contrib/examples/terminal/hbmk_b32_trm_appn.bat
+  * contrib/examples/terminal/hbmk_vc.bat
+  * contrib/examples/terminal/hbmk_vc_trm_appn.bat
+  * contrib/examples/hscript/hbmk_b32.bat
+  * contrib/examples/hscript/hbmk_vc.bat
+  * contrib/examples/rl/hbmk_b32.bat
+  * contrib/examples/rl/hbmk_vc.bat
+  * utils/hbdoc/hbmk_b32.bat
+  * utils/hbdoc/hbmk_vc.bat
+  * utils/hbmake/hbmk_b32.bat
+  * utils/hbmake/hbmk_vc.bat
+    % Much simplified batch files. Actually the content of vc
+      and b32 are fully identical, so you can easily create new
+      flavours for GCC and OpenWatcom by simply making a copy by
+      the name hbmk_gcc.bat or hbmk_ow.bat. Et voila.
+    ; NOTE: As indicated, these won't work with Win9x anymore.
+
+  * contrib/examples/pp/hbppcore.c
+    + Added <ctype.h> to make it compile with recent Harbour.
+
 2009-02-13 16:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hbmk.bat
     + Added detection for .PRG written in uppercase.

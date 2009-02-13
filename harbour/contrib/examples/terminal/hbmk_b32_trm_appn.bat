@@ -1,11 +1,7 @@
-@echo off
-rem
-rem $Id$
-rem
+@rem
+@rem $Id$
+@rem
 
-..\..\..\bin\harbour /n /i..\..\..\include\ trm_appn terminal
+@set HB_USER_LIBS=gtwvg.lib hbwin.lib xhb.lib
 
-bcc32 -O2 -tW -I..\..\..\include -L..\..\..\lib trm_appn.c terminal.c hbdebug.lib hbvm.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib hbzlib.lib gtwvg.lib hbwin.lib xhb.lib
-
-del *.obj
-del trm_appn.c terminal.c
+@..\..\..\bin\%~nx0 -mt -gui %* trm_appn.prg terminal.prg

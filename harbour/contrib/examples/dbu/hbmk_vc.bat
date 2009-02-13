@@ -23,8 +23,6 @@ if exist hb_dbu.dif patch -N -i hb_dbu.dif
 
 :DIR_OK
 
-..\..\..\bin\hbmk_vc %HB_DIR_DBU%\dbu.prg %HB_DIR_DBU%\dbucopy.prg %HB_DIR_DBU%\dbuedit.prg %HB_DIR_DBU%\dbuhelp.prg %HB_DIR_DBU%\dbuindx.prg %HB_DIR_DBU%\dbunet.prg %HB_DIR_DBU%\dbustru.prg %HB_DIR_DBU%\dbuutil.prg %HB_DIR_DBU%\dbuview.prg
-
-dbu
+..\..\..\bin\%~nx0 %* %HB_DIR_DBU%\DBU.PRG %HB_DIR_DBU%\DBUCOPY.PRG %HB_DIR_DBU%\DBUEDIT.PRG %HB_DIR_DBU%\DBUHELP.PRG %HB_DIR_DBU%\DBUINDX.PRG %HB_DIR_DBU%\DBUNET.PRG %HB_DIR_DBU%\DBUSTRU.PRG %HB_DIR_DBU%\DBUUTIL.PRG %HB_DIR_DBU%\DBUVIEW.PRG
 
 :EXIT

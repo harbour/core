@@ -46,18 +46,11 @@ if %UHTTP_INET_SUPPORT%.==no.  SET UHTTP_INET_SOCKET=socket.c
 
 if exist uhttpd.exe uhttpd -s
 
-..\..\..\bin\harbour uhttpd cgifunc cookie session /n /es2 /w3 /i..\..\..\include %UHTTP_GD_DEF% %UHTTP_INET_DEF%
-if errorlevel 1 goto DOERROR
-bcc32 -O2 -tW -d -a8 -I..\..\..\include -L..\..\..\lib uhttpd.c cgifunc.c cookie.c session.c uhttpdc.c %UHTTP_INET_SOCKET% hbdebug.lib hbvmmt.lib hbrtl.lib gtwvt.lib gtwin.lib gtgui.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbcpage.lib hbsix.lib hbcommon.lib hbpcre.lib hbhsx.lib hbzlib.lib xhb.lib hbct.lib cw32mt.lib %UHTTP_GD_LIBS%
-if errorlevel 1 goto DOERROR
+set HB_USER_PRGFLAGS=%UHTTP_GD_DEF% %UHTTP_INET_DEF%
+set HB_USER_LIBS=xhb.lib hbct.lib cw32mt.lib %UHTTP_GD_LIBS%
 
-:CLEAN
-del *.obj
-del *.tds
-del uhttpd.c
-del cgifunc.c
-del cookie.c
-del session.c
+@..\..\..\bin\%~nx0 -mt -gui %* uhttpd.prg cgifunc.prg cookie.prg session.prg uhttpdc.c %UHTTP_INET_SOCKET%
+if errorlevel 1 goto DOERROR
 
 if not exist uhttpd.exe goto :EXIT
 if %UHTTP_GD_SUPPORT%.==no. goto BUILD_OK

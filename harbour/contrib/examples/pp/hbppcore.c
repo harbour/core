@@ -75,6 +75,8 @@
 #endif
 #endif
 
+#include <ctype.h>
+
 #include "hbppdef.h"
 #include "hbcomp.h"
 #include "hbdate.h"

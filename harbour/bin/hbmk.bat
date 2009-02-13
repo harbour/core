@@ -139,7 +139,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
 
    if "%OS%" == "Windows_NT" goto _P_WINNT
 
-      set _HB_P_PRG_MAIN=%1
+      set _HB_P_MAIN=%1
       set _HB_P_PRG=%1.prg
       set _HB_P_PRG_C=%1.c
       set _HB_P_C=
@@ -150,7 +150,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
 
    :_P_WINNT
 
-      set _HB_P_PRG_MAIN=
+      set _HB_P_MAIN=
       set _HB_P_PRG=
       set _HB_P_PRG_C=
       set _HB_P_C=
@@ -162,7 +162,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
       set _HB_P_TMP=%~x1
       if "%_HB_P_TMP%" == ".PRG" set _HB_P_TMP=.prg
       if not "%_HB_P_TMP%" == ".prg" goto _P_SORT_NP
-         if "%_HB_P_PRG_MAIN%" == "" set _HB_P_PRG_MAIN=%~dpn1
+         if "%_HB_P_MAIN%" == "" set _HB_P_MAIN=%~dpn1
          set _HB_P_PRG=%_HB_P_PRG% %1
          set _HB_P_PRG_C=%_HB_P_PRG_C% %~dpn1.c
          set _HB_P_O=%_HB_P_O% %~dpn1.o
@@ -172,6 +172,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
       :_P_SORT_NP
 
       if not "%~x1" == ".c" goto _P_SORT_NC
+         if "%_HB_P_MAIN%" == "" set _HB_P_MAIN=%~dpn1
          set _HB_P_C=%_HB_P_C% %1
          set _HB_P_O=%_HB_P_O% %~dpn1.o
          set _HB_P_OBJ=%_HB_P_OBJ% %~dpn1.obj
@@ -188,7 +189,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
 
    :_P_END
 
-   %HB_BIN_INSTALL%\harbour %_HB_P_PRG% -n -q0 -i%HB_INC_INSTALL% %HB_USER_PRGFLAGS% %_HB_P_OPT%
+   if not "%_HB_P_PRG%" == "" %HB_BIN_INSTALL%\harbour %_HB_P_PRG% -n -q0 -i%HB_INC_INSTALL% %HB_USER_PRGFLAGS% %_HB_P_OPT%
 
 :A_DOS
 
@@ -197,7 +198,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
    if not "%HB_COMPILER%" == "djgpp" goto A_DOS_DJGPP_NOT
 
       echo %_HB_P_PRG_C% %_HB_P_C% > _hb_mk.tmp
-      echo -o%_HB_P_PRG_MAIN%.exe -O3 %HB_USER_CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% >> _hb_mk.tmp
+      echo -o%_HB_P_MAIN%.exe -O3 %HB_USER_CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% >> _hb_mk.tmp
       echo -lhbcpage >> _hb_mk.tmp
       echo -lhbdebug >> _hb_mk.tmp
       echo -lhbvm >> _hb_mk.tmp
@@ -236,7 +237,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
    if not "%HB_COMPILER%" == "owatcom" goto END
 
       wpp386 -j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS %HB_USER_CFLAGS% %_HB_P_PRG_C% %_HB_P_C%
-      echo OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe %HB_USER_LDFLAGS% NAME %_HB_P_PRG_MAIN%.exe > _hb_mk.tmp
+      echo OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe %HB_USER_LDFLAGS% NAME %_HB_P_MAIN%.exe > _hb_mk.tmp
       echo LIB hbcpage.lib >> _hb_mk.tmp
       echo LIB hbdebug.lib >> _hb_mk.tmp
       echo LIB hbvm.lib >> _hb_mk.tmp
@@ -298,7 +299,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
    if "%HB_COMPILER%" == "gcc" set HB_COMPILER=mingw
    if not "%HB_COMPILER%" == "mingw" goto A_WIN_MINGW_NOT
 
-      gcc %_HB_P_PRG_C% %_HB_P_C% -O3 -o%_HB_P_PRG_MAIN%.exe %HB_USER_CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm%_HB_MT% -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -lhbvm%_HB_MT% -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddnsx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
+      gcc %_HB_P_PRG_C% %_HB_P_C% -O3 -o%_HB_P_MAIN%.exe %HB_USER_CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm%_HB_MT% -lhbrtl -lgtcgi -lgtgui -lgtpca -lgtstd -lgtwin -lgtwvt -lhblang -lhbrdd -lhbrtl -lhbvm%_HB_MT% -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddnsx -lrddcdx -lhbhsx -lhbsix -lhbcommon -lhbpcre -lhbzlib
       set _HB_P_OBJ=
       if not "%_HB_P_O%" == "" del %_HB_P_O%
       goto CLEANUP
@@ -317,7 +318,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
    if not "%HB_COMPILER%" == "owatcom" goto END
 
       wpp386 -j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT %HB_USER_CFLAGS% %_HB_P_PRG_C% %_HB_P_C%
-      echo OP osn=NT OP stack=65536 OP CASEEXACT %HB_USER_LDFLAGS% NAME %_HB_P_PRG_MAIN%.exe > _hb_mk.tmp
+      echo OP osn=NT OP stack=65536 OP CASEEXACT %HB_USER_LDFLAGS% NAME %_HB_P_MAIN%.exe > _hb_mk.tmp
       echo LIB hbcpage.lib >> _hb_mk.tmp
       echo LIB hbdebug.lib >> _hb_mk.tmp
       echo LIB hbvm%_HB_MT%.lib >> _hb_mk.tmp
@@ -353,7 +354,7 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
    if not "%_HB_P_PRG_C%" == "" del %_HB_P_PRG_C%
    if not "%_HB_P_OBJ%" == "" del %_HB_P_OBJ%
    rem Borland stuff
-   if not "%_HB_DEBUG%" == "yes" if exist %_HB_P_PRG_MAIN%.tds del %_HB_P_PRG_MAIN%.tds
+   if not "%_HB_DEBUG%" == "yes" if exist %_HB_P_MAIN%.tds del %_HB_P_MAIN%.tds
 
 :END
 
