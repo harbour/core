@@ -95,6 +95,8 @@
 
 #include "hbgtwvg.ch"
 
+HB_EXTERN_BEGIN
+
 //----------------------------------------------------------------------//
 
 #define WVT_CHAR_QUEUE_SIZE         128
@@ -536,5 +538,7 @@ extern PHB_ITEM wvt_Size2Array( SIZE *siz  );
 extern void     wvt_Rect2ArrayEx( RECT *rc ,PHB_ITEM aRect );
 extern void     wvt_Point2ArrayEx( POINT *pt  , PHB_ITEM aPoint);
 extern void     wvt_Size2ArrayEx( SIZE *siz ,PHB_ITEM aSize );
+
+HB_EXTERN_END
 
 #endif /* HB_WVT_H_ */

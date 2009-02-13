@@ -447,8 +447,16 @@
 
 /* New Harbour types (Planning stage, don't use these yet) */
 
+/*
+  ANSI C types:
+     void,
+     [ [un]signed ] char, [ [un]signed ] short, [ [un]signed ] int,
+     [ [un]signed ] long, double
+*/
+
 /* TODO: Remove dependence on old types */
 
+/* Harbour overloaded types: */
 typedef char                hbChar;           /* TOFIX */
 typedef SCHAR               hbSChar;
 typedef UCHAR               hbUChar;
@@ -470,6 +478,7 @@ typedef void *              hbPtrVal;         /* TOFIX */
 typedef                     hbPointer;        /* TOFIX */
 typedef                     hbWChar;          /* TOFIX */
 
+/* Harbour strict bit types: */
 typedef char                hbI8;             /* TOFIX */
 typedef UCHAR               hbU8;             /* TOFIX */
 typedef INT16               hbI16;
@@ -479,6 +488,13 @@ typedef UINT32              hbU32;
 typedef INT64               hbI64;
 typedef UINT64              hbI64;
 
+/* Types which depends on internal HVM/compilation settings: */
+/* NOTE: hbMaxVMInt - maximal integer which can be storred in HVM item
+                      (HB_IT_LONG). It's current HB_LONG, usually will be
+                      the same as hbMaxInt unless for some reasons it will
+                      not be reduced, f.e. compiler may support 128bit
+                      integers as hbMaxInt but we may don't use it for
+                      HB_IT_LONG due to performance reduction. */
 typedef long                hbMaxVMInt;       /* TOFIX */
 
 #endif

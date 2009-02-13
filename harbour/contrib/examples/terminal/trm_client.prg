@@ -108,8 +108,12 @@ static aDat              := { {'',''} }
 #include "hbapi.h"
 #include "hbapigt.h"
 
+HB_EXTERN_BEGIN
+
 extern void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib );
 extern void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib );
+
+HB_EXTERN_END
 
 #include <windows.h>
 HB_FUNC( OUTPUTDEBUGSTRING )
@@ -853,4 +857,3 @@ Static Function dbgTraceLog( cString, cFile  )
    Return lRet
 
 //----------------------------------------------------------------------//
-
