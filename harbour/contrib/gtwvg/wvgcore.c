@@ -112,7 +112,7 @@ void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT righ
          BYTE bColor, bAttr;
          USHORT usChar;
 
-         if( !hb_gtGetScrChar( irow, icol, &bColor, &bAttr, &usChar ) )
+         if( hb_gtGetScrChar( irow, icol, &bColor, &bAttr, &usChar ) == HB_FAILURE )
             break;
 
          sBuffer[ j ] = ( BYTE ) usChar;
@@ -135,7 +135,7 @@ void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT righ
    {
       for( icol = left; icol <= right; icol++ )
       {
-         if( !hb_gtPutScrChar( irow, icol, sAttrib[ j ], 0, sBuffer[ j ] ) )
+         if( hb_gtPutScrChar( irow, icol, sAttrib[ j ], 0, sBuffer[ j ] ) == HB_FAILURE )
             break;
          j++;
       }
