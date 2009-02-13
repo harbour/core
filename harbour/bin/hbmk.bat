@@ -44,40 +44,6 @@ if "%OS%" == "Windows_NT" goto _S_WINNT
 set _HB_USR_C=
 set _HB_USR_L=
 
-set _HB_MT=%HB_MT%
-set _HB_GUI=%HB_GUI%
-set _HB_SHARED=%HB_SHARED%
-set _HB_DEBUG=%HB_DEBUG%
-
-:REPEAT
-
-if not "%1" == "-mt" goto NO_MT
-   set _HB_MT=yes
-   shift
-   goto REPEAT
-:NO_MT
-
-if not "%1" == "-gui" goto NO_GUI
-   set _HB_GUI=yes
-   shift
-   goto REPEAT
-:NO_GUI
-
-if not "%1" == "-shared" goto NO_SHARED
-   set _HB_SHARED=yes
-   shift
-   goto REPEAT
-:NO_SHARED
-
-if not "%1" == "-debug" goto NO_DEBUG
-   set _HB_DEBUG=yes
-   shift
-   goto REPEAT
-:NO_DEBUG
-
-if not "%_HB_MT%" == "yes" set _HB_MT=
-if     "%_HB_MT%" == "yes" set _HB_MT=mt
-
 :START
 
    if "%HB_ARCHITECTURE%" == "" goto NO_ARCH
@@ -146,6 +112,38 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
       set _HB_P_O=%1.o
       set _HB_P_OBJ=%1.obj
       set _HB_P_OPT=%2 %3
+
+      set _HB_MT=%HB_MT%
+      set _HB_GUI=%HB_GUI%
+      set _HB_SHARED=%HB_SHARED%
+      set _HB_DEBUG=%HB_DEBUG%
+
+      :REPEAT
+
+      if not "%1" == "-mt" goto NO_MT
+         set _HB_MT=yes
+         shift
+         goto REPEAT
+      :NO_MT
+
+      if not "%1" == "-gui" goto NO_GUI
+         set _HB_GUI=yes
+         shift
+         goto REPEAT
+      :NO_GUI
+
+      if not "%1" == "-shared" goto NO_SHARED
+         set _HB_SHARED=yes
+         shift
+         goto REPEAT
+      :NO_SHARED
+
+      if not "%1" == "-debug" goto NO_DEBUG
+         set _HB_DEBUG=yes
+         shift
+         goto REPEAT
+      :NO_DEBUG
+
       goto _P_END
 
    :_P_WINNT
@@ -180,6 +178,30 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
          goto _P_SORT_R
       :_P_SORT_NC
 
+      if not "%1" == "-mt" goto _P_SORT_NO_MT
+         set _HB_MT=yes
+         shift
+         goto _P_SORT_R
+      :_P_SORT_NO_MT
+
+      if not "%1" == "-gui" goto _P_SORT_NO_GUI
+         set _HB_GUI=yes
+         shift
+         goto _P_SORT_R
+      :_P_SORT_NO_GUI
+
+      if not "%1" == "-shared" goto _P_SORT_NO_SHARED
+         set _HB_SHARED=yes
+         shift
+         goto _P_SORT_R
+      :_P_SORT_NO_SHARED
+
+      if not "%1" == "-debug" goto _P_SORT_NO_DEBUG
+         set _HB_DEBUG=yes
+         shift
+         goto _P_SORT_R
+      :_P_SORT_NO_DEBUG
+
       if "%1" == "" goto _P_SORT_E
          set _HB_P_OPT=%_HB_P_OPT%
          shift
@@ -188,6 +210,9 @@ if     "%_HB_MT%" == "yes" set _HB_MT=mt
       goto _P_END
 
    :_P_END
+
+   if not "%_HB_MT%" == "yes" set _HB_MT=
+   if     "%_HB_MT%" == "yes" set _HB_MT=mt
 
    if not "%_HB_P_PRG%" == "" %HB_BIN_INSTALL%\harbour %_HB_P_PRG% -n -q0 -i%HB_INC_INSTALL% %HB_USER_PRGFLAGS% %_HB_P_OPT%
 

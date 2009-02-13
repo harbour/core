@@ -8,6 +8,12 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 17:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hbmk.bat
+    + Allow mixing -mt, -gui, -shared, -debug switches
+      with the input files.
+      So 'hbmk_vc testapp -gui' will now work.
+
 2009-02-13 17:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hbmk.bat
     + Added support for pure .c projects. (like pp)
