@@ -1,4 +1,4 @@
-@echo off
+rem @echo off
 rem
 rem $Id$
 rem
@@ -33,6 +33,10 @@ if "%OS%" == "Windows_NT" goto _S_WINNT
 
 :_S_WINNT
 
+   rem ; Autodetect architecture
+   if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=win
+   echo Autodetected HB_ARCHITECTURE: %HB_ARCHITECTURE%
+
    if "%HB_INSTALL_PREFIX%" == "" set HB_INSTALL_PREFIX=%~dp0..
    if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
    if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
@@ -40,6 +44,69 @@ if "%OS%" == "Windows_NT" goto _S_WINNT
    goto _S_END
 
 :_S_END
+
+rem ; Autodetect compiler
+if not "%HB_COMPILER%" == "" goto _SKP_WIN_COMP_DETECTION
+if not "%HB_ARCHITECTURE%" == "win" goto _SKP_WIN_COMP_DETECTION
+
+   set _HB_APP=gcc.exe
+   set _HB_COMPILER=mingw
+   if exist "%_HB_APP%" set HB_COMPILER=%_HB_COMPILER%
+   set _PATH=%PATH%
+   :_SP_GCC
+   for /F "delims=; tokens=1,2*" %%p in ("%_PATH%") do (
+      if exist "%%p\%_HB_APP%" set HB_COMPILER=%_HB_COMPILER%
+      if exist "%%p%_HB_APP%"  set HB_COMPILER=%_HB_COMPILER%
+      set _PATH=%%~q;%%~r
+   )
+   if not "%_PATH%"==";" goto _SP_GCC
+   if not "%HB_COMPILER%" == "" goto _SP_DONE
+
+   set _HB_APP=cl.exe
+   set _HB_COMPILER=msvc
+   if exist "%_HB_APP%" set HB_COMPILER=%_HB_COMPILER%
+   set _PATH=%PATH%
+   :_SP_CL
+   for /F "delims=; tokens=1,2*" %%p in ("%_PATH%") do (
+      if exist "%%p\%_HB_APP%" set HB_COMPILER=%_HB_COMPILER%
+      if exist "%%p%_HB_APP%"  set HB_COMPILER=%_HB_COMPILER%
+      set _PATH=%%~q;%%~r
+   )
+   if not "%_PATH%"==";" goto _SP_CL
+   if not "%HB_COMPILER%" == "" goto _SP_DONE
+
+   set _HB_APP=bcc32.exe
+   set _HB_COMPILER=bcc32
+   if exist "%_HB_APP%" set HB_COMPILER=%_HB_COMPILER%
+   set _PATH=%PATH%
+   :_SP_BCC32
+   for /F "delims=; tokens=1,2*" %%p in ("%_PATH%") do (
+      if exist "%%p\%_HB_APP%" set HB_COMPILER=%_HB_COMPILER%
+      if exist "%%p%_HB_APP%"  set HB_COMPILER=%_HB_COMPILER%
+      set _PATH=%%~q;%%~r
+   )
+   if not "%_PATH%"==";" goto _SP_BCC32
+   if not "%HB_COMPILER%" == "" goto _SP_DONE
+
+   set _HB_APP=wpp386.exe
+   set _HB_COMPILER=owatcom
+   if exist "%_HB_APP%" set HB_COMPILER=%_HB_COMPILER%
+   set _PATH=%PATH%
+   :_SP_WPP386
+   for /F "delims=; tokens=1,2*" %%p in ("%_PATH%") do (
+      if exist "%%p\%_HB_APP%" set HB_COMPILER=%_HB_COMPILER%
+      if exist "%%p%_HB_APP%"  set HB_COMPILER=%_HB_COMPILER%
+      set _PATH=%%~q;%%~r
+   )
+   if not "%_PATH%"==";" goto _SP_WPP386
+   if not "%HB_COMPILER%" == "" goto _SP_DONE
+
+   :_SP_DONE
+
+   echo %HB_COMPILER%
+   if not "%HB_COMPILER%" == "" echo Autodetected HB_COMPILER: %HB_COMPILER%
+
+:_SKP_WIN_COMP_DETECTION
 
 set _HB_USR_C=
 set _HB_USR_L=
@@ -380,6 +447,7 @@ set _HB_USR_L=
    if not "%_HB_P_OBJ%" == "" del %_HB_P_OBJ%
    rem Borland stuff
    if not "%_HB_DEBUG%" == "yes" if exist %_HB_P_MAIN%.tds del %_HB_P_MAIN%.tds
+   goto END
 
 :END
 

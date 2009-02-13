@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 18:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hbmk.bat
+    + Added automatic architecture detection on Windows NT and above.
+    + Added automatic compiler detection on Windows NT and above.
+      (mingw, msvc, bcc32 and owatcom are detected - in that order)
+      The given compiler should be properly setup, with compiler
+      executable in PATH or current dir.
+
+    ; NOTE: This makes it possible to get rid of all hbmk_b32.bat and
+            hbmk_vc.bat files and at the same time automatically
+            add support for OpenWatcom and MinGW for all our tests,
+            examples, etc. I'll replace all special hbmk_b32.bat
+            and hbmk_vc.bat files with generic local hbmk.bat files,
+            which can be used with any supported compilers.
+
 2009-02-13 17:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hbmk.bat
     + Allow mixing -mt, -gui, -shared, -debug switches
