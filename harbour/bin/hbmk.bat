@@ -451,6 +451,8 @@ set _HB_USR_L=
 
 :END
 
+set _HB_APP=
+set _HB_COMPILER=
 set _HB_MT=
 set _HB_GUI=
 set _HB_SHARED=
@@ -458,3 +460,13 @@ set _HB_DEBUG=
 set _HBVM_LIB=
 set _HB_USR_C=
 set _HB_USR_L=
+set _PATH=
+
+set _HB_P_MAIN=
+set _HB_P_PRG=
+set _HB_P_PRG_C=
+set _HB_P_C=
+set _HB_P_O=
+set _HB_P_OBJ=
+set _HB_P_OPT=
+set _HB_P_TMP=

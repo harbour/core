@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 21:57 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/bin/hbmk.bat
+    * added more temp envvar cleanup
+
 2009-02-13 20:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.bat
   * tests/rddtest/make_c52.bat
