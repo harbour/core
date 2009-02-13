@@ -1,7 +1,8 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem
-rem $Id$
-rem
 
 rem ; TOFIX: Add compilation for C sources
 set HB_CLIPOPT=%HB_CLIPOPT% /DRT_NO_C

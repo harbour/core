@@ -1,7 +1,8 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem 
-rem $Id$
-rem 
 
 ..\bin\harbour %1 -n -i..\include -gh
 ..\bin\hbrun %1

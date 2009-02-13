@@ -8,12 +8,51 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 20:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.bat
+  * tests/rddtest/make_c52.bat
+  * tests/run_prg.bat
+  * tests/hbmk_gnu.bat
+  * tests/hbmk_vc.bat
+  * tests/hbmk_b32.bat
+  * tests/run_prg_all.bat
+  * bin/hbmk.bat
+  * bin/hbmk_os2.cmd
+  * bin/postinst.bat
+  * make_vc.bat
+  * make_gnu_os2.cmd
+  * make_gnu.bat
+  * contrib/make_b32_all.bat
+  * contrib/mtpl_b32.bat
+  * contrib/make_vc_all.bat
+  * contrib/mtpl_vc.bat
+  * contrib/examples/pp/hbmk.bat
+  * contrib/examples/guestbk/hbmk.bat
+  * contrib/examples/pe/hbmk.bat
+  * contrib/examples/hbsqlit2/tests/hbmk.bat
+  * contrib/examples/uhttpd/hbmk.bat
+  * contrib/examples/dbu/hbmk.bat
+  * contrib/examples/terminal/hbmk.bat
+  * contrib/examples/terminal/hbmk_trm_appn.bat
+  * contrib/examples/hscript/hbmk.bat
+  * contrib/examples/rl/hbmk.bat
+  * utils/hbdoc/hbmk.bat
+  * utils/hbextern/make_c5x.bat
+  * utils/hbmake/hbmk.bat
+  * utils/hbtest/make_c5x.bat
+  * utils/hbtest/make_xpp.bat
+    * Minor formatting.
+    * Cleanups to refer to simply 'hbmk'.
+
+  ; TODO: Add support for other than bcc/msvc compiler for
+          HB_USER_LIBS. Change HB_USER_LIBS settings to
+          contain the raw lib list without extensions.
+          This is where batch capabilities end, so this
+          might need a .prg rewrite.
+
 2009-02-13 19:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hbmk.bat
     % Compiler detection made faster.
-    ; TOFIX: MinGW requires different library names than the rest
-             of compilers, so it currently won't work for hbmk.bat
-             files where HB_USER_LIBS is set.
 
   + contrib/examples/pp/hbmk.bat
   - contrib/examples/pp/hbmk_b32.bat

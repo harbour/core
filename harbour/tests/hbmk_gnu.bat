@@ -1,7 +1,8 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem 
-rem $Id$
-rem 
 
 if %HB_ARCHITECTURE%.==. goto BAD_ARCH
 if %HB_COMPILER%.==. goto BAD_COMP

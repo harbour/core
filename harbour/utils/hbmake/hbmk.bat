@@ -2,4 +2,4 @@
 @rem $Id$
 @rem
 
-@..\..\bin\%~nx0 hbmake.prg hbmfrdln.c hbmgauge.c hbmlang.c
+@..\..\bin\hbmk hbmake.prg hbmfrdln.c hbmgauge.c hbmlang.c

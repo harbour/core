@@ -1,7 +1,8 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem
-rem $Id$
-rem
 
 if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=..\bin
 if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=..\lib

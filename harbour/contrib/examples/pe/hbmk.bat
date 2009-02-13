@@ -2,4 +2,4 @@
 @rem $Id$
 @rem
 
-@..\..\..\bin\%~nx0 %* pe.prg editorhi.prg editorlo.c
+@..\..\..\bin\hbmk %* pe.prg editorhi.prg editorlo.c

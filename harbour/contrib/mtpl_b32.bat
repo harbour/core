@@ -1,7 +1,8 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem
-rem $Id$
-rem
 
 rem ---------------------------------------------------------------
 rem This is a generic template file, if it doesn't fit your own needs

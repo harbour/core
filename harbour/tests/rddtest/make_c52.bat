@@ -1,7 +1,8 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem
-rem $Id$
-rem
 
 rem DBFCDX
 clipper rddmktst /m/n/w/es2/d_TEST_CMPDIDX_

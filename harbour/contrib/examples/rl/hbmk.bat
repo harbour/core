@@ -1,7 +1,8 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem
-rem $Id$
-rem
 
 set HB_DIR_RL=%CLIPPER_DIR%\SOURCE\RL
 if exist "%HB_DIR_RL%\RLFRONT.PRG" goto DIR_OK
@@ -23,6 +24,6 @@ if exist hb_rl.dif patch -N -i hb_rl.dif
 
 :DIR_OK
 
-..\..\..\bin\%~nx0 %* %HB_DIR_RL%\RLBACK.PRG %HB_DIR_RL%\RLDIALG.PRG %HB_DIR_RL%\RLFRONT.PRG
+..\..\..\bin\hbmk %* %HB_DIR_RL%\RLBACK.PRG %HB_DIR_RL%\RLDIALG.PRG %HB_DIR_RL%\RLFRONT.PRG
 
 :EXIT

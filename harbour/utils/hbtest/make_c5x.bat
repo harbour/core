@@ -1,10 +1,11 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem
-rem $Id$
-rem
 
 rem ---------------------------------------------------------------
-rem ; NOTE: To compile for CA-Cl*pper 5.3, please use the 
+rem ; NOTE: To compile for CA-Cl*pper 5.3, please use the
 rem         command line parameter "53" (without quotes).
 rem ---------------------------------------------------------------
 

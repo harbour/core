@@ -1,7 +1,8 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem 
-rem $Id$
-rem 
 
 rem Minimal initialization of environment variables for OS2 GCC build
 rem for further information about see make_gnu.bat
@@ -22,7 +23,7 @@ rem the -L compiler/linker option for the library.
 rem For building Harbour you can also use HB_USER_LDFLAGS environment variable,
 rem f.e.
 rem         SET HB_USER_LDFLAGS=-Le:\usr\lib\tcpipv4
-rem 
+rem
 rem If you are using newer OS2 version with tcp/ip stack >= 4.1
 rem (eComStation, for example) and you do not need backward binary
 rem compatibility then you can disable it by setting HB_OS2_TCP32

@@ -1,7 +1,8 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem
-rem $Id$
-rem
 
 rem *******************************************************
 rem Bat file for creating (almost all) contrib libs

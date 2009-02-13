@@ -2,4 +2,4 @@
 @rem $Id$
 @rem
 
-@..\..\..\bin\%~nx0 %* guestbk.prg inifiles.prg testcgi.prg
+@..\..\..\bin\hbmk %* guestbk.prg inifiles.prg testcgi.prg

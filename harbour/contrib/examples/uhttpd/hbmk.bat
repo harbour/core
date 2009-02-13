@@ -1,7 +1,8 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem
-rem $Id$
-rem
 
 cls
 
@@ -49,7 +50,7 @@ if exist uhttpd.exe uhttpd -s
 set HB_USER_PRGFLAGS=%UHTTP_GD_DEF% %UHTTP_INET_DEF%
 set HB_USER_LIBS=xhb.lib hbct.lib %UHTTP_GD_LIBS%
 
-@..\..\..\bin\%~nx0 -mt -gui %* uhttpd.prg cgifunc.prg cookie.prg session.prg uhttpdc.c %UHTTP_INET_SOCKET%
+@..\..\..\bin\hbmk -mt -gui %* uhttpd.prg cgifunc.prg cookie.prg session.prg uhttpdc.c %UHTTP_INET_SOCKET%
 if errorlevel 1 goto DOERROR
 
 if not exist uhttpd.exe goto :EXIT

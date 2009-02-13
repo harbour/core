@@ -1,7 +1,8 @@
+@rem
+@rem $Id$
+@rem
+
 @echo off
-rem
-rem $Id$
-rem
 
 rem ---------------------------------------------------------------
 rem Copyright 2003 Przemyslaw Czerpak (druzus / at / priv.onet.pl)
