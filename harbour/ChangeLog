@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-13 13:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/common/hbver.c
+    + Added Windows 7 and Windows Server 2008 R2 detection.
+
+  * source/rtl/dateshb.c
+    * Minor formatting.
+
 2009-02-13 12:09 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + contrib/examples/terminal/hbmk_b32.bat
   + contrib/examples/terminal/hbmk_b32_trm_appn.bat

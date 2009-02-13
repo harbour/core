@@ -244,10 +244,22 @@ char * hb_verPlatform( void )
 
                   if( GetVersionExA( ( OSVERSIONINFOA * ) &osVerEx ) )
                   {
-                     if( osVerEx.wProductType == VER_NT_WORKSTATION )
-                        pszName = " Vista";
+                     if( osVer.dwMinorVersion == 1 )
+                     {
+                        if( osVerEx.wProductType == VER_NT_WORKSTATION )
+                           pszName = " 7";
+                        else
+                           pszName = " Server 2008 R2";
+                     }
+                     else if( osVer.dwMinorVersion == 0 )
+                     {
+                        if( osVerEx.wProductType == VER_NT_WORKSTATION )
+                           pszName = " Vista";
+                        else
+                           pszName = " Server 2008";
+                     }
                      else
-                        pszName = " Server 2008";
+                        pszName = "";
                   }
                   else
 #endif

@@ -186,9 +186,7 @@ HB_FUNC( DOW )
    PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
 
    if( pDate )
-   {
       hb_retnilen( hb_dateJulianDOW( hb_itemGetDL( pDate ) ), 3 );
-   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1115, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
