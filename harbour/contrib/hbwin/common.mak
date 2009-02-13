@@ -7,6 +7,7 @@ LIBNAME = $(LIBPREF)hbwin
 LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 
 C_HEADERS = \
+    hbwapi.h \
     hbwin.h \
 
 PRG_HEADERS = \

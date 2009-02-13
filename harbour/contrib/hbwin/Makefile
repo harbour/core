@@ -26,6 +26,7 @@ PRG_SOURCES=\
 	win_tprt.prg \
 
 C_HEADERS = \
+	hbwapi.h \
 	hbwin.h \
 
 PRG_HEADERS = \
