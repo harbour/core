@@ -1,4 +1,4 @@
-rem @echo off
+@echo off
 rem
 rem $Id$
 rem
@@ -16,7 +16,7 @@ rem Template to build a final Harbour executable, using Harbour
 rem with the C code generation feature, then calling the proper C
 rem linker/compiler.
 rem
-rem Copyright 1999-2008 Viktor Szakats (viktor.szakats@syenar.hu)
+rem Copyright 1999-2009 Viktor Szakats (viktor.szakats@syenar.hu)
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 
@@ -103,7 +103,6 @@ if not "%HB_ARCHITECTURE%" == "win" goto _SKP_WIN_COMP_DETECTION
 
    :_SP_DONE
 
-   echo %HB_COMPILER%
    if not "%HB_COMPILER%" == "" echo Autodetected HB_COMPILER: %HB_COMPILER%
 
 :_SKP_WIN_COMP_DETECTION
