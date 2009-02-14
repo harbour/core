@@ -566,6 +566,20 @@ $(STANDARD_STATIC_CLIBS)
 $(MINIMAL_STATIC_HBLIBS)
 !
 #**********************************************************
+# HBMK build rule
+#**********************************************************
+$(HBMK_EXE) :: BasicLibs BasicExes StdLibs
+$(HBMK_EXE) :: $(HBMK_EXE_OBJS)
+    @if exist "$(HBMK_EXE)" $(DEL) "$(HBMK_EXE)" > NUL
+    $(CC) @&&!
+$(CFLAGS)
+-e$(HBMK_EXE)
+$(**: = ^
+)
+$(STANDARD_STATIC_CLIBS)
+$(MINIMAL_STATIC_HBLIBS)
+!
+#**********************************************************
 
 #**********************************************************
 # DLL Targets

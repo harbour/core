@@ -169,6 +169,7 @@ HBTEST_DIR   = utils\hbtest
 HBI18N_DIR   = utils\hbi18n
 HBDOC_DIR    = utils\hbdoc
 HBMAKE_DIR   = utils\hbmake
+HBMK_DIR     = utils\hbmk
 
 #**********************************************************
 
@@ -216,7 +217,8 @@ $(HBRUN_DIR);\
 $(HBTEST_DIR);\
 $(HBI18N_DIR);\
 $(HBDOC_DIR);\
-$(HBMAKE_DIR)\
+$(HBMAKE_DIR);\
+$(HBMK_DIR)\
 
 ALL_SRC_DIRS_TMP=\
 $(ALL_LIB_SRC_DIRS_TMP);\
@@ -283,6 +285,7 @@ HBTEST_EXE   = $(BIN_DIR)\hbtest$(EXEEXT)
 HBI18N_EXE   = $(BIN_DIR)\hbi18n$(EXEEXT)
 HBDOC_EXE    = $(BIN_DIR)\hbdoc$(EXEEXT)
 HBMAKE_EXE   = $(BIN_DIR)\hbmake$(EXEEXT)
+HBMK_EXE     = $(BIN_DIR)\hbmk$(EXEEXT)
 
 HB_DLLVER    = 11
 HARBOUR_DLL  = $(BIN_DIR)\$(LIBPREF)harbour-$(HB_DLLVER)-$(HB_CC_NAME)$(DLLEXT)
@@ -1210,6 +1213,11 @@ HBMAKE_EXE_OBJS = \
     $(OBJ_DIR)\hbmlang$(OBJEXT)  \
 
 #**********************************************************
+
+HBMK_EXE_OBJS = \
+    $(OBJ_DIR)\hbmk$(OBJEXT) \
+
+#**********************************************************
 #**********************************************************
 #**********************************************************
 
@@ -1310,6 +1318,7 @@ HB_BUILD_TARGETS_MAIN = \
     $(HBI18N_EXE)           \
     $(HBDOC_EXE)            \
     $(HBMAKE_EXE)           \
+    $(HBMK_EXE)             \
 
 # DLL Target is disabled by default
 # It can be enabled by setting env

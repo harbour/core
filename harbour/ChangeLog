@@ -8,6 +8,20 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-14 13:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+  * common.mak
+  * utils/Makefile
+    + Added hbmk to make systems.
+
+  * utils/hbmk/hbmk.prg
+    + Update. Second pass, it's now ready for testing. I've
+      only tried with BCC yet.
+      Please test and if possible update internal setup
+      for various platforms/compilers.
+
 2009-02-14 10:49 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/memvars.c
     % small optimization in __MVSAVE()
