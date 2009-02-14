@@ -8,6 +8,27 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-14 13:32 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  + harbour/contrib/hbwin/wapi_commctrl.c
+    + Added WAPI_Image*() functions.
+
+  * harbour/contrib/hbwin/hbwapi.h
+    + Added more _par and _ret defines.
+    
+    ; The idea is to encapsulate Harbour API for WINAPI 
+      parameters and return values. Now wapi_commctrl.c 
+      looks very clean and easy to understand code.
+      Also I have contained all those functions which are
+      either not required on normal programming level 
+      OR I could not convert, with #if 0 / #endif blocks.
+      But the header definitions are pulled from MSDN and 
+      have been kept alongwith. This ensures that whenever
+      someone will try to implement them, all info will be
+      handy.
+
+    ; Please approve the above implementation so that I 
+      include these files in the build batches.
+
 2009-02-14 19:50 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk.prg
     + Added -strip/nostrip switch and implemented for GCC/GPP.

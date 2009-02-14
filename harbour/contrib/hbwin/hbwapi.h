@@ -66,23 +66,31 @@
        #define wapi_par_WPARAM( n )    ( ( WPARAM ) ( ISNUM( n ) ? ( HB_PTRDIFF ) hb_parnint( n ) : hb_parptr( n ) ) )
    */
 
-   #define wapi_par_WNDPROC( n )   ( ( WNDPROC   ) ( HB_PTRDIFF ) hb_parnint( n ) )
-   #define wapi_par_WPARAM( n )    ( ( WPARAM    ) ( HB_PTRDIFF ) hb_parnint( n ) )
-   #define wapi_par_LPARAM( n )    ( ( LPARAM    ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_WNDPROC( n )    ( ( WNDPROC    ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_WPARAM( n )     ( ( WPARAM     ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_LPARAM( n )     ( ( LPARAM     ) ( HB_PTRDIFF ) hb_parnint( n ) )
 
-   #define wapi_par_HWND( n )      ( ( HWND      ) ( HB_PTRDIFF ) hb_parnint( n ) )
-   #define wapi_par_HDC( n )       ( ( HDC       ) ( HB_PTRDIFF ) hb_parnint( n ) )
-   #define wapi_par_HANDLE( n )    ( ( HANDLE    ) ( HB_PTRDIFF ) hb_parnint( n ) )
-   #define wapi_par_HGDIOBJ( n )   ( ( HGDIOBJ   ) ( HB_PTRDIFF ) hb_parnint( n ) )
-   #define wapi_par_HBITMAP( n )   ( ( HBITMAP   ) ( HB_PTRDIFF ) hb_parnint( n ) )
-   #define wapi_par_HFONT( n )     ( ( HFONT     ) ( HB_PTRDIFF ) hb_parnint( n ) )
-   #define wapi_par_HINSTANCE( n ) ( ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_HWND( n )       ( ( HWND       ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_HDC( n )        ( ( HDC        ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_HANDLE( n )     ( ( HANDLE     ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_HGDIOBJ( n )    ( ( HGDIOBJ    ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_HBITMAP( n )    ( ( HBITMAP    ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_HICON( n )      ( ( HICON      ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_HIMAGELIST( n ) ( ( HIMAGELIST ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_HFONT( n )      ( ( HFONT      ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_HINSTANCE( n )  ( ( HINSTANCE  ) ( HB_PTRDIFF ) hb_parnint( n ) )
 
-   #define wapi_par_COLORREF( n )  ( ( COLORREF  ) ( HB_PTRDIFF ) hb_parnint( n ) )
-   #define wapi_par_STRUCT( n )    ( hb_parc( n ) )
+   #define wapi_par_COLORREF( n )   ( ( COLORREF   ) ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wapi_par_STRUCT( n )     ( hb_parc( n ) )
 
-   #define wapi_ret_HANDLE( n )    ( hb_retnint( ( HB_PTRDIFF ) n ) )
-   #define wapi_ret_HRESULT( hr )  ( hb_retnint( ( HB_PTRDIFF ) hr ) )
+   #define wapi_par_INT( n )        ( hb_parni( n ) )
+   #define wapi_par_UINT( n )       ( ( UINT ) hb_parni( n ) )
+
+   #define wapi_ret_NI( i )         ( hb_retni( i ) )
+   #define wapi_ret_L( b )          ( hb_retl( b ) )
+   #define wapi_ret_HANDLE( n )     ( hb_retnint( ( HB_PTRDIFF ) n ) )
+   #define wapi_ret_HRESULT( hr )   ( hb_retnint( ( HB_PTRDIFF ) hr ) )
+   #define wapi_ret_COLORREF( n )   ( hb_retnint( ( HB_PTRDIFF ) n ) )
 
 
 #endif //__HBWAPI_H
