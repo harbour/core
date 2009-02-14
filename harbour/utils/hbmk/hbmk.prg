@@ -366,14 +366,15 @@ FUNCTION Main()
 
    /* Command macros:
 
-      {C}    list of C files,
-      {O}    list of object files,
-      {L}    list of lib files,
-      {OPTC} C compiler flags (user + automatic),
-      {OPTL} linker flags (user + automatic),
-      {B}    binary name,
-      {I}    include path,
-      {A}    lib path
+      {C}      list of C files,
+      {O}      list of object files,
+      {L}      list of lib files,
+      {OPTC}   C compiler flags (user + automatic),
+      {OPTL}   linker flags (user + automatic),
+      {B}      binary name,
+      {I}      include path,
+      {A}      lib path,
+      {SCRIPT} save command line to script and pass it to command as @<filename>
    */
 
    DO CASE
@@ -472,7 +473,7 @@ FUNCTION Main()
       cLibExt := ".lib"
       cObjExt := ".obj"
       cBin_CompC := "bcc32"
-      cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {OPTC} -I{I} -L{A} {C} {L}"
+      cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {OPTC} -e{B}.exe -I{I} -L{A} {C} {L}"
       /* TOFIX: The two build systems should generate the same .dll name, otherwise
                 we can only be compatible with one of them. non-GNU is the common choice here. */
       s_aLIBSHARED := { iif( s_lMT, "harbourmt-11-b32", "harbour-11-b32" ), "hbmainstd", "hbmainwin", "hbcommon" }

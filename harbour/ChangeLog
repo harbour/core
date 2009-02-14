@@ -8,6 +8,116 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-14 14:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk.prg
+    - Added support for -o option for win/bcc32.
+
+  - tests/hbmk_vc.bat
+  - tests/hbmk_b32.bat
+  + contrib/hbmysql/utils/hbmk.bat
+  - contrib/hbmysql/utils/hbmk_b32.bat
+  - contrib/hbmysql/utils/hbmk_vc.bat
+  + contrib/hbmysql/tests/hbmk.bat
+  - contrib/hbmysql/tests/hbmk_b32.bat
+  - contrib/hbmysql/tests/hbmk_vc.bat
+  + contrib/hbct/tests/hbmk.bat
+  - contrib/hbct/tests/hbmk_b32.bat
+  - contrib/hbct/tests/hbmk_vc.bat
+  + contrib/hbodbc/tests/hbmk.bat
+  - contrib/hbodbc/tests/hbmk_b32.bat
+  - contrib/hbodbc/tests/hbmk_vc.bat
+  + contrib/xhb/tests/hbmk.bat
+  - contrib/xhb/tests/hbmk_b32.bat
+  - contrib/xhb/tests/hbmk_vc.bat
+  + contrib/hbtpathy/tests/hbmk.bat
+  - contrib/hbtpathy/tests/hbmk_b32.bat
+  - contrib/hbtpathy/tests/hbmk_vc.bat
+  + contrib/hbmsql/tests/hbmk.bat
+  - contrib/hbmsql/tests/hbmk_b32.bat
+  - contrib/hbmsql/tests/hbmk_vc.bat
+  + contrib/hbsqlit3/tests/hbmk.bat
+  - contrib/hbsqlit3/tests/hbmk_b32.bat
+  - contrib/hbsqlit3/tests/hbmk_vc.bat
+  + contrib/hbole/tests/hbmk.bat
+  - contrib/hbole/tests/hbmk_b32.bat
+  - contrib/hbole/tests/hbmk_vc.bat
+  + contrib/hbmzip/tests/hbmk.bat
+  - contrib/hbmzip/tests/hbmk_b32.bat
+  - contrib/hbmzip/tests/hbmk_vc.bat
+  + contrib/hbapollo/tests/hbmk.bat
+  - contrib/hbapollo/tests/hbmk_b32.bat
+  - contrib/hbapollo/tests/hbmk_vc.bat
+  + contrib/hbfbird/tests/hbmk.bat
+  - contrib/hbfbird/tests/hbmk_b32.bat
+  - contrib/hbfbird/tests/hbmk_vc.bat
+  + contrib/hbziparc/tests/hbmk.bat
+  - contrib/hbziparc/tests/hbmk_b32.bat
+  - contrib/hbziparc/tests/hbmk_vc.bat
+  + contrib/hbnf/tests/hbmk.bat
+  - contrib/hbnf/tests/hbmk_b32.bat
+  - contrib/hbnf/tests/hbmk_vc.bat
+  + contrib/hbcurl/tests/hbmk.bat
+  - contrib/hbcurl/tests/hbmk_b32.bat
+  - contrib/hbcurl/tests/hbmk_vc.bat
+  + contrib/rddsql/tests/hbmk.bat
+  - contrib/rddsql/tests/hbmk_b32.bat
+  - contrib/rddsql/tests/hbmk_vc.bat
+  + contrib/hbhpdf/tests/hbmk.bat
+  - contrib/hbhpdf/tests/hbmk_b32.bat
+  - contrib/hbhpdf/tests/hbmk_vc.bat
+  + contrib/rddado/tests/hbmk.bat
+  - contrib/rddado/tests/hbmk_b32.bat
+  - contrib/rddado/tests/hbmk_vc.bat
+  + contrib/gtwvg/tests/hbmk.bat
+  - contrib/gtwvg/tests/hbmk_b32.bat
+  - contrib/gtwvg/tests/hbmk_vc.bat
+  + contrib/hbpgsql/tests/hbmk.bat
+  - contrib/hbpgsql/tests/hbmk_b32.bat
+  - contrib/hbpgsql/tests/hbmk_vc.bat
+  + contrib/rddads/tests/hbmk.bat
+  - contrib/rddads/tests/hbmk_b32.bat
+  - contrib/rddads/tests/hbmk_vc.bat
+  + contrib/hbclipsm/tests/hbmk.bat
+  - contrib/hbclipsm/tests/hbmk_b32.bat
+  - contrib/hbclipsm/tests/hbmk_vc.bat
+  + contrib/hbfimage/tests/hbmk.bat
+  - contrib/hbfimage/tests/hbmk_b32.bat
+  - contrib/hbfimage/tests/hbmk_vc.bat
+  + contrib/hbgd/tests/hbmk.bat
+  - contrib/hbgd/tests/hbmk_b32.bat
+  - contrib/hbgd/tests/hbmk_vc.bat
+  + contrib/hbmisc/tests/hbmk.bat
+  - contrib/hbmisc/tests/hbmk_b32.bat
+  - contrib/hbmisc/tests/hbmk_vc.bat
+  + contrib/hbgf/tests/hbmk.bat
+  - contrib/hbgf/tests/hbmk_b32.bat
+  - contrib/hbgf/tests/hbmk_vc.bat
+  + contrib/hbtip/tests/hbmk.bat
+  - contrib/hbtip/tests/hbmk_b32.bat
+  - contrib/hbtip/tests/hbmk_vc.bat
+  + contrib/hbwin/tests/hbmk.bat
+  - contrib/hbwin/tests/hbmk_b32.bat
+  - contrib/hbwin/tests/hbmk_vc.bat
+  + contrib/hbvpdf/tests/hbmk.bat
+  - contrib/hbvpdf/tests/hbmk_b32.bat
+  - contrib/hbvpdf/tests/hbmk_vc.bat
+  + contrib/hbbtree/tests/hbmk.bat
+  - contrib/hbbtree/tests/hbmk_djg.bat
+  - contrib/hbbtree/tests/hbmk_b32.bat
+  - contrib/hbbtree/tests/hbmk_vc.bat
+  + contrib/hbcrypt/tests/hbmk.bat
+  - contrib/hbcrypt/tests/hbmk_b32.bat
+  - contrib/hbcrypt/tests/hbmk_vc.bat
+  + contrib/hbssl/tests/hbmk.bat
+  - contrib/hbssl/tests/hbmk_b32.bat
+  - contrib/hbssl/tests/hbmk_vc.bat
+  + contrib/hbwhat/tests/hbmk.bat
+  - contrib/hbwhat/tests/hbmk_b32.bat
+  - contrib/hbwhat/tests/hbmk_vc.bat
+  - source/rdd/usrrdd/example/hbmk_b32.bat
+  - source/rdd/usrrdd/example/hbmk_vc.bat
+    % Updated for new hbmk.bat and hbmk.exe.
+
 2009-02-14 13:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk.prg
     + Added linux/owatcom, os2/icc support. (completely untested)
