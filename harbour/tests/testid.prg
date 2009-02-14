@@ -19,7 +19,7 @@ function Main()
    #ifdef TEST
       QOut( "Fine, you have just tested the /d compiler flag" )
    #else
-      QOut( "Please change hb32.bat and include /dTEST compiler flag" )
+      QOut( "Please use /dTEST compiler flag" )
       QOut( "Or run 'SET HB_USER_PRGFLAGS=/dTEST' if you are using the GNU Make System" )
    #endif
 

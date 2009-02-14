@@ -62,6 +62,7 @@ FUNCTION Main()
       "hblang" ,;
       "hbcommon" }
 
+   /* NOTE: All base GTs should come here. */
    LOCAL aLIB_BASE2 := {;
       "hbrtl" ,;
       "hbpp" ,;
@@ -97,6 +98,8 @@ FUNCTION Main()
 
    LOCAL s_cCOMP
    LOCAL s_cARCH
+   LOCAL s_cGT
+   LOCAL s_cGTPRG
 
    LOCAL s_cHB_INSTALL_PREFIX
    LOCAL s_cHB_BIN_INSTALL
@@ -126,6 +129,8 @@ FUNCTION Main()
    LOCAL s_lSHARED := .F.
    LOCAL s_lDEBUG := .F.
    LOCAL s_lNULRDD := .F.
+   LOCAL s_lSTRIP := .F.
+   LOCAL s_lTRACE := .F.
 
    LOCAL aCOMPDET
    LOCAL aCOMPSUP
@@ -183,7 +188,6 @@ FUNCTION Main()
    DO CASE
    CASE s_cARCH == "bsd"
       aCOMPSUP := { "gcc" }
-      s_lSHARED := .T.
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
    CASE s_cARCH == "darwin"
@@ -192,17 +196,14 @@ FUNCTION Main()
       s_aLIBHBGT := { "gttrm", "gtxwc" }
    CASE s_cARCH == "hpux"
       aCOMPSUP := { "gcc" }
-      s_lSHARED := .T.
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
    CASE s_cARCH == "linux"
       aCOMPSUP := { "gcc", "gpp", "owatcom" }
-      s_lSHARED := .T.
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
    CASE s_cARCH == "sunos"
       aCOMPSUP := { "gcc" }
-      s_lSHARED := .T.
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
    CASE s_cARCH == "dos"
@@ -258,12 +259,40 @@ FUNCTION Main()
    /* Autodetect Harbour environment */
 
    IF Empty( GetEnv( "HB_INSTALL_PREFIX" ) )
+
       DO CASE
-      /* TOFIX: On *NIXes use installed location if the installed binary is run, otherwise use the local dirs */
-/*    CASE hb_ProgName() == "/....." */
-      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG ) ; s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".."
-      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + "bin" + hb_osPathSeparator() + cBin_CompPRG ) ; s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() )
-      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG ) ; s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".."
+      CASE hb_ProgName() == "/opt/harbour/hbmk"
+
+         s_cHB_INSTALL_PREFIX := "/opt/harbour"
+
+         /* Build shared libs by default, if we're installed to default system locations. */
+         IF s_cARCH $ "bsd|hpux|sunos|linux|darwin"
+            s_lSHARED := .T.
+         ENDIF
+
+      CASE hb_ProgName() == "/usr/local/bin/hbmk"
+
+         IF Empty( GetEnv( "HB_BIN_INSTALL" ) )
+            s_cHB_BIN_INSTALL := "/usr/local/bin"
+         ENDIF
+         IF Empty( GetEnv( "HB_LIB_INSTALL" ) )
+            s_cHB_LIB_INSTALL := "/usr/local/include/harbour"
+         ENDIF
+         IF Empty( GetEnv( "HB_INC_INSTALL" ) )
+            s_cHB_INC_INSTALL := "/usr/local/lib/harbour"
+         ENDIF
+
+         /* Build shared libs by default, if we're installed to default system locations. */
+         IF s_cARCH $ "bsd|hpux|sunos|linux|darwin"
+            s_lSHARED := .T.
+         ENDIF
+
+      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG )
+         s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".."
+      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + "bin" + hb_osPathSeparator() + cBin_CompPRG )
+         s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() )
+      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG )
+         s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".."
       OTHERWISE
          OutErr( "hbmk: Error: HB_INSTALL_PREFIX not set, failed to autodetect." + hb_osNewLine() )
          RETURN 3
@@ -300,11 +329,18 @@ FUNCTION Main()
 
       DO CASE
       CASE Lower( hb_PValue( tmp ) ) == "-gui"             ; s_lGUI    := .T.
+      CASE Lower( hb_PValue( tmp ) ) == "-std"             ; s_lGUI    := .F.
       CASE Lower( hb_PValue( tmp ) ) == "-mt"              ; s_lMT     := .T.
+      CASE Lower( hb_PValue( tmp ) ) == "-st"              ; s_lMT     := .F.
       CASE Lower( hb_PValue( tmp ) ) == "-shared"          ; s_lSHARED := .T.
       CASE Lower( hb_PValue( tmp ) ) == "-static"          ; s_lSHARED := .F.
       CASE Lower( hb_PValue( tmp ) ) == "-debug"           ; s_lDEBUG  := .T.
+      CASE Lower( hb_PValue( tmp ) ) == "-nodebug"         ; s_lDEBUG  := .F.
       CASE Lower( hb_PValue( tmp ) ) == "-nulrdd"          ; s_lNULRDD := .T.
+      CASE Lower( hb_PValue( tmp ) ) == "-strip"           ; s_lSTRIP  := .T.
+      CASE Lower( hb_PValue( tmp ) ) == "-nostrip"         ; s_lSTRIP  := .F.
+      CASE Lower( hb_PValue( tmp ) ) == "-trace"           ; s_lTRACE  := .T.
+      CASE Lower( Left( hb_PValue( tmp ), 3 ) ) == "-gt"   ; s_cGT := SubStr( hb_PValue( tmp ), 2 )
       CASE Left( hb_PValue( tmp ), 2 ) == "-o"             ; s_cPROGNAME := SubStr( hb_PValue( tmp ), 3 )
       CASE Left( hb_PValue( tmp ), 2 ) == "-l" .AND. ;
            Len( hb_PValue( tmp ) ) > 2                     ; AAdd( s_aLIBUSER, SubStr( hb_PValue( tmp ), 3 ) )
@@ -322,6 +358,18 @@ FUNCTION Main()
       RETURN 4
    ENDIF
 
+   IF ! Empty( s_cGT )
+      fhnd := hb_FTempCreateEx( @s_cGTPRG, ".", "hbmkgt$", ".prg" )
+      IF fhnd != F_ERROR
+         FWrite( fhnd, "ANNOUNCE HB_GTSYS" + hb_osNewLine() +;
+                       "REQUEST HB_GT_" + Upper( SubStr( s_cGT, 3 ) ) + "_DEFAULT" + hb_osNewLine() )
+         FClose( fhnd )
+      ELSE
+         OutErr( "hbmk: Warning: C compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
+      ENDIF
+      AAdd( s_aPRG, s_cGTPRG )
+   ENDIF
+
    /* Merge user libs from command line and envvar. Command line has priority. */
    s_aLIBUSER := ArrayAJoin( { s_aLIBUSER, ListToArray( GetEnv( "HB_USER_LIBS" ) ) } )
 
@@ -331,8 +379,10 @@ FUNCTION Main()
 
    /* TOFIX: s_aLIBSHARED to be fixed for some *IX platforms. */
    DO CASE
-   CASE s_cARCH $ "bsd|hpux|linux|sunos"
+   CASE s_cARCH $ "bsd|linux|sunos"
       s_aLIBSHARED := { iif( s_lMT, "harbourmt.so", "harbour.so" ) }
+   CASE s_cARCH == "hpux"
+      s_aLIBSHARED := { iif( s_lMT, "harbourmt.sl", "harbour.sl" ) }
    CASE s_cARCH == "darwin"
       s_aLIBSHARED := { iif( s_lMT, "harbourmt.dylib", "harbour.dylib" ) }
    CASE s_cARCH $ "os2|win"
@@ -355,8 +405,15 @@ FUNCTION Main()
                   iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
                   iif( ! Empty( s_aOPTP ), " " + ArrayToList( s_aOPTP ), "" )
 
+      IF s_lTRACE
+         OutErr( "hbmk: Harbour compiler command: '" + cCommand + "'" + hb_osNewLine() )
+      ENDIF
+
       IF ( tmp := hb_run( cCommand ) ) != 0
          OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ": '" + cCommand + "'" + hb_osNewLine() )
+         IF ! Empty( s_cGTPRG )
+            FErase( s_cGTPRG )
+         ENDIF
          RETURN 5
       ENDIF
    ENDIF
@@ -388,20 +445,30 @@ FUNCTION Main()
    s_aLIBVM := iif( s_lMT, aLIB_BASE_MT, aLIB_BASE_ST )
    aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, s_aLIBHBGT } )
 
+   IF AScan( aLIB_BASE2, {|tmp| Upper( tmp ) == Upper( s_cGT ) } ) == 0
+      AAdd( aLIB_BASE2, s_cGT )
+   ENDIF
+
    DO CASE
    /* GCC family */
    CASE ( s_cARCH == "bsd"    .AND. s_cCOMP == "gcc" ) .OR. ;
         ( s_cARCH == "darwin" .AND. s_cCOMP == "gcc" ) .OR. ;
         ( s_cARCH == "hpux"   .AND. s_cCOMP == "gcc" ) .OR. ;
-        ( s_cARCH == "linux"  .AND. s_cCOMP == "gcc" ) .OR. ;
+        ( s_cARCH == "linux"  .AND. s_cCOMP $ "gcc|gpp" ) .OR. ;
         ( s_cARCH == "sunos"  .AND. s_cCOMP == "gcc" )
 
       cLibPrefix := "-l"
       cLibExt := NIL
       cObjExt := ".o"
-      cBin_CompC := "gcc"
+      cBin_CompC := iif( s_cCOMP == "gpp", "g++", "gcc" )
       cOpt_CompC := "{C} -O3 -o{E} {OPTC} -I{I} -L{A} {L}"
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+      IF s_cARCH == "darwin"
+         AAdd( s_aOPTC, "-no-cpp-precomp -Wno-long-double" )
+      ENDIF
+      IF s_lSTRIP .AND. !( s_cARCH == "sunos" )
+         AAdd( s_aOPTC, "-s" )
+      ENDIF
 
    CASE ( s_cARCH == "win" .AND. s_cCOMP == "gcc" ) .OR. ;
         ( s_cARCH == "win" .AND. s_cCOMP == "mingw" ) .OR. ;
@@ -417,6 +484,9 @@ FUNCTION Main()
       ENDIF
       cOpt_CompC += " {L}"
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+      IF s_lSTRIP
+         AAdd( s_aOPTC, "-s" )
+      ENDIF
 
    CASE s_cARCH == "dos" .AND. s_cCOMP == "djgpp"
 
@@ -427,6 +497,9 @@ FUNCTION Main()
       cOpt_CompC := "{C} -O3 -o{E}.exe {OPTC} -I{I} -L{A} {L}{SCRIPT}"
       s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+      IF s_lSTRIP
+         AAdd( s_aOPTC, "-s" )
+      ENDIF
 
    CASE s_cARCH == "dos" .AND. s_cCOMP == "rsx32"
 
@@ -436,6 +509,9 @@ FUNCTION Main()
       cBin_CompC := "gcc"
       cOpt_CompC := "{C} -O3 -Zrsx32 -o{E}.exe {OPTC} -I{I} -L{A} {L}"
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+      IF s_lSTRIP
+         AAdd( s_aOPTC, "-s" )
+      ENDIF
 
    /* Watcom family */
    CASE s_cARCH == "dos" .AND. s_cCOMP == "owatcom"
@@ -583,11 +659,18 @@ FUNCTION Main()
             FClose( fhnd )
             cOpt_CompC := "@" + cScriptFile
          ELSE
-            OutErr( "hbmk: Error: C compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
+            OutErr( "hbmk: Warning: C compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
          ENDIF
       ENDIF
 
       cCommand := cBin_CompC + " " + cOpt_CompC
+
+      IF s_lTRACE
+         OutErr( "hbmk: C compiler command: '" + cCommand + "'" + hb_osNewLine() )
+         IF ! Empty( cScriptFile )
+            OutErr( "hbmk: C compiler script: '" + hb_MemoRead( cScriptFile ) + "'" + hb_osNewLine() )
+         ENDIF
+      ENDIF
 
       IF ( tmp := hb_run( cCommand ) ) != 0
          OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ": '" + cCommand + "'" + hb_osNewLine() )
@@ -625,6 +708,13 @@ FUNCTION Main()
 
          cCommand := cBin_Link + " " + cOpt_Link
 
+         IF s_lTRACE
+            OutErr( "hbmk: Linker command: '" + cCommand + "'" + hb_osNewLine() )
+            IF ! Empty( cScriptFile )
+               OutErr( "hbmk: Linker script: '" + hb_MemoRead( cScriptFile ) + "'" + hb_osNewLine() )
+            ENDIF
+         ENDIF
+
          IF ( tmp := hb_run( cCommand ) ) != 0
             OutErr( "hbmk: Error: Running linker. " + hb_ntos( tmp ) + ": '" + cCommand + "'" + hb_osNewLine() )
             nErrorLevel := 7
@@ -641,6 +731,9 @@ FUNCTION Main()
 
    /* Cleanup */
 
+   IF ! Empty( s_cGTPRG )
+      FErase( s_cGTPRG )
+   ENDIF
    AEval( ListCook( s_aPRG, NIL, ".c" ), {|tmp| FErase( tmp ) } )
    AEval( s_aOBJ, {|tmp| FErase( tmp ) } )
    AEval( s_aCLEAN, {|tmp| FErase( tmp ) } )
@@ -805,13 +898,18 @@ STATIC PROCEDURE ShowHelp()
       "" ,;
       "Options:" ,;
       "  -o<outputfilename>  output file name" ,;
-      "  -static|-shared     link with static/shared libs" ,;
-      "  -mt                 link with multi-thread libs" ,;
       "  -l<libname>         link with <libname> library" ,;
       "  -L<libpath>         additional path to search for libraries" ,;
+      "  -static|-shared     link with static/shared libs" ,;
+      "  -mt|-st             link with multi-thread/single-thread libs" ,;
+      "  -gui|-std           create GUI/console executable" ,;
+      "  -gt<name>           link with GT<name> GT driver, can be repeated to" ,;
+      "                      link with more GTs. The first one will be" ,;
+      "                      the default at runtime" ,;
       "  -nulrdd             link with nulrdd" ,;
-      "  -gui                create GUI executable" ,;
-      "  -debug              add debug info" ,;
+      "  -debug|-nodebug     add/exclude debug info" ,;
+      "  -strip|-nostrip     strip (no strip) binaries" ,;
+      "  -trace              show commands executed" ,;
       "" ,;
       "Notes:" ,;
       "" ,;

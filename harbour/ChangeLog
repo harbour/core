@@ -8,6 +8,49 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-14 19:50 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk.prg
+    + Added -strip/nostrip switch and implemented for GCC/GPP.
+    + Added -trace switch to see executed commands.
+    + Added negative switches: -std, -st, -nodebug
+    + Added detection whether Harbour is installed in default system
+      locations on *NIX systems. If it is, turn on shared libraries
+      by default for all *NIX systems.
+    + Added support for GT selection with -gt??? switch.
+      (using .prg method, not .c as in hbmk bash script)
+    + Added support for linux/gpp.
+    ; NOTE: Some things still missing:
+      - details of *NIX stuff, systems libs, switches,
+        etc, etc.
+      - -fullstatic not yet supported.
+      - fmstat/nofmstat. It would be good to find a
+        more easily manageable way to influence that.
+        Current one is make system dependent and a bit hackish.
+      - handling 3rd party libs. These should be supported
+        by supplying proper parameter, and we can provide
+        example scripts for these libs. Hard-wiring them
+        into core Harbour is quite dangerous.
+      - "MAIN" function override. I'd rather leave this out,
+        and clear up the situation with entry procs.
+      - gtsln and gtcrs support.
+      - Watcom, OS/2, *NIX not tested.
+      - Built-in support for our contribs. For clear
+        separation of components contribs shouldn't be
+        referred to in this core component.
+      - Filtering foreign system libs passed on the command
+        line for platforms not needing them. The goal is to
+        be able to use as simple and _portable_ hbmk command
+        lines as possible.
+      - Support for POCC, DM.
+    ; TODO:
+      - Switch to portable command lines in hbmk.bat files.
+        (Win9x will be supported again).
+      - Remove bin/hbmk*.bat, bin/hbmk*.cmd, util/hbmake/*.
+      - Cleanup on variable names in hbmk.prg.
+
+  * tests/testid.prg
+    * Minor cleanup.
+
 2009-02-14 17:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk.prg
     ! Fixes after testing with MSVC and MINGW both static and dynamic mode.
