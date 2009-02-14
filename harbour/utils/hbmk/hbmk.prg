@@ -447,7 +447,16 @@ FUNCTION Main()
       cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {B}.exe {L}"
 
    CASE s_cARCH == "linux" .AND. s_cCOMP == "owatcom"
-      /* TODO */
+      cLibPrefix := "LIB "
+      cLibExt := ".lib"
+      cObjExt := ".obj"
+      cBin_CompC := "wpp386"
+      cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=LINUX {OPTC} {C}"
+      cBin_Link := "wlink"
+      cOpt_Link := "ALL SYS LINUX OP CASEEXACT {OPTL} NAME {B} {L}"
+      IF s_lDEBUG
+         cOpt_Link := "DEBUG " + cOpt_Link
+      ENDIF
 
    /* Misc */
    CASE s_cARCH == "win" .AND. s_cCOMP == "bcc32"
@@ -487,6 +496,13 @@ FUNCTION Main()
                 we can only be compatible with one of them. non-GNU is the common choice here. */
       s_aLIBSHARED := { iif( s_lMT, "harbourmt-11-vc", "harbour-11-vc" ), "hbmainstd", "hbmainwin", "hbcommon" }
 
+   CASE s_cARCH == "os2" .AND. s_cCOMP == "icc"
+      cLibPrefix := "{A}\"
+      cLibExt := ".lib"
+      cObjExt := ".obj"
+      cBin_CompC := "icc"
+      cOpt_CompC := "/Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp {OPTC} -I{I} {C}"
+
    /* TODO */
    CASE s_cARCH == "win" .AND. s_cCOMP == "dm"
    CASE s_cARCH == "win" .AND. s_cCOMP == "icc"
@@ -497,7 +513,6 @@ FUNCTION Main()
    CASE s_cARCH == "win" .AND. s_cCOMP == "poccce"
    CASE s_cARCH == "win" .AND. s_cCOMP == "rsxnt"
    CASE s_cARCH == "win" .AND. s_cCOMP == "xcc"
-   CASE s_cARCH == "os2" .AND. s_cCOMP == "icc"
    ENDCASE
 
    IF s_lSHARED .AND. ! Empty( s_aLIBSHARED )
