@@ -57,13 +57,15 @@
 
 FUNCTION Main()
 
-   LOCAL aLIB_BASE := {;
-      "hbcommon" ,;
-      "hbrtl" ,;
-      "hbmacro" ,;
-      "hbpp" ,;
+   LOCAL aLIB_BASE1 := {;
       "hbcpage" ,;
       "hblang" ,;
+      "hbcommon" }
+
+   LOCAL aLIB_BASE2 := {;
+      "hbrtl" ,;
+      "hbpp" ,;
+      "hbmacro" ,;
       "hbpcre" ,;
       "hbzlib" ,;
       "hbextern" ,;
@@ -71,10 +73,13 @@ FUNCTION Main()
       "gtstd" ,;
       "gtpca" }
 
-   LOCAL aLIB_BASE_DEBUG := { "hbdebug" }
+   LOCAL aLIB_BASE_DEBUG := {;
+      "hbdebug" }
 
-   LOCAL aLIB_BASE_ST := { "hbvm" }
-   LOCAL aLIB_BASE_MT := { "hbvmmt" }
+   LOCAL aLIB_BASE_ST := {;
+      "hbvm" }
+   LOCAL aLIB_BASE_MT := {;
+      "hbvmmt" }
 
    LOCAL aLIB_BASE_NULRDD := {;
       "hbnulrdd" }
@@ -102,6 +107,7 @@ FUNCTION Main()
    LOCAL s_aC
    LOCAL s_aLIBSHARED
    LOCAL s_aLIB
+   LOCAL s_aLIBVM
    LOCAL s_aLIBUSER
    LOCAL s_aLIBHB
    LOCAL s_aLIBHBGT
@@ -300,12 +306,13 @@ FUNCTION Main()
       CASE Lower( hb_PValue( tmp ) ) == "-debug"           ; s_lDEBUG  := .T.
       CASE Lower( hb_PValue( tmp ) ) == "-nulrdd"          ; s_lNULRDD := .T.
       CASE Left( hb_PValue( tmp ), 2 ) == "-o"             ; s_cPROGNAME := SubStr( hb_PValue( tmp ), 3 )
-      CASE Left( hb_PValue( tmp ), 2 ) == "-l"             ; AAdd( s_aLIBUSER, SubStr( hb_PValue( tmp ), 3 ) )
+      CASE Left( hb_PValue( tmp ), 2 ) == "-l" .AND. ;
+           Len( hb_PValue( tmp ) ) > 2                     ; AAdd( s_aLIBUSER, SubStr( hb_PValue( tmp ), 3 ) )
       CASE Left( hb_PValue( tmp ), 1 ) == "-"              ; AAdd( s_aOPTP   , hb_PValue( tmp ) )
       CASE Lower( ExtGet( hb_PValue( tmp ) ) ) == ".prg"   ; AAdd( s_aPRG    , hb_PValue( tmp ) ) ; DEFAULT s_cPROGNAME TO hb_PValue( tmp )
       CASE Lower( ExtGet( hb_PValue( tmp ) ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, hb_PValue( tmp ) )
       CASE Lower( ExtGet( hb_PValue( tmp ) ) ) $ ".c|.cpp" ; AAdd( s_aC      , hb_PValue( tmp ) ) ; DEFAULT s_cPROGNAME TO hb_PValue( tmp )
-      CASE Lower( ExtGet( hb_PValue( tmp ) ) ) $ ".lib|.a" ; AAdd( s_aLIBUSER, hb_PValue( tmp ) )
+      CASE Lower( ExtGet( hb_PValue( tmp ) ) ) $ ".a|.lib" ; AAdd( s_aLIBUSER, hb_PValue( tmp ) )
       OTHERWISE                                            ; AAdd( s_aPRG    , hb_PValue( tmp ) ) ; DEFAULT s_cPROGNAME TO hb_PValue( tmp )
       ENDCASE
    NEXT
@@ -328,7 +335,7 @@ FUNCTION Main()
       s_aLIBSHARED := { iif( s_lMT, "harbourmt.so", "harbour.so" ) }
    CASE s_cARCH == "darwin"
       s_aLIBSHARED := { iif( s_lMT, "harbourmt.dylib", "harbour.dylib" ) }
-   CASE s_cARCH == "os2|win"
+   CASE s_cARCH $ "os2|win"
       s_aLIBSHARED := { iif( s_lMT, "harbourmt", "harbour" ) }
    OTHERWISE
       s_aLIBSHARED := NIL
@@ -371,11 +378,15 @@ FUNCTION Main()
       {L}      list of lib files,
       {OPTC}   C compiler flags (user + automatic),
       {OPTL}   linker flags (user + automatic),
-      {B}      binary name,
+      {E}      binary name,
+      {B}      binary path,
       {I}      include path,
       {A}      lib path,
       {SCRIPT} save command line to script and pass it to command as @<filename>
    */
+
+   s_aLIBVM := iif( s_lMT, aLIB_BASE_MT, aLIB_BASE_ST )
+   aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, s_aLIBHBGT } )
 
    DO CASE
    /* GCC family */
@@ -389,7 +400,8 @@ FUNCTION Main()
       cLibExt := NIL
       cObjExt := ".o"
       cBin_CompC := "gcc"
-      cOpt_CompC := "{C} -O3 -o{B} {OPTC} -I{I} -L{A} {L}"
+      cOpt_CompC := "{C} -O3 -o{E} {OPTC} -I{I} -L{A} {L}"
+      aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
 
    CASE ( s_cARCH == "win" .AND. s_cCOMP == "gcc" ) .OR. ;
         ( s_cARCH == "win" .AND. s_cCOMP == "mingw" ) .OR. ;
@@ -399,7 +411,12 @@ FUNCTION Main()
       cLibExt := NIL
       cObjExt := ".o"
       cBin_CompC := "gcc"
-      cOpt_CompC := "{C} -O3 -mno-cygwin -o{B}.exe {OPTC} -I{I} -L{A} {L}"
+      cOpt_CompC := "{C} -O3 -mno-cygwin -o{E}.exe {OPTC} -I{I} -L{A}"
+      IF s_lSHARED
+           cOpt_CompC += " -L{B}"
+      ENDIF
+      cOpt_CompC += " {L}"
+      aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
 
    CASE s_cARCH == "dos" .AND. s_cCOMP == "djgpp"
 
@@ -407,8 +424,9 @@ FUNCTION Main()
       cLibExt := NIL
       cObjExt := ".o"
       cBin_CompC := "gcc"
-      cOpt_CompC := "{C} -O3 -o{B}.exe {OPTC} -I{I} -L{A} {L}{SCRIPT}"
+      cOpt_CompC := "{C} -O3 -o{E}.exe {OPTC} -I{I} -L{A} {L}{SCRIPT}"
       s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
+      aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
 
    CASE s_cARCH == "dos" .AND. s_cCOMP == "rsx32"
 
@@ -416,7 +434,8 @@ FUNCTION Main()
       cLibExt := NIL
       cObjExt := ".o"
       cBin_CompC := "gcc"
-      cOpt_CompC := "{C} -O3 -Zrsx32 -o{B}.exe {OPTC} -I{I} -L{A} {L}"
+      cOpt_CompC := "{C} -O3 -Zrsx32 -o{E}.exe {OPTC} -I{I} -L{A} {L}"
+      aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
 
    /* Watcom family */
    CASE s_cARCH == "dos" .AND. s_cCOMP == "owatcom"
@@ -426,7 +445,7 @@ FUNCTION Main()
       cBin_CompC := "wpp386"
       cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {OPTC} {C}"
       cBin_Link := "wlink"
-      cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {OPTL} NAME {B}.exe {L}"
+      cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {OPTL} NAME {E}.exe {L}"
 
    CASE s_cARCH == "win" .AND. s_cCOMP == "owatcom"
       cLibPrefix := "LIB "
@@ -435,7 +454,7 @@ FUNCTION Main()
       cBin_CompC := "wpp386"
       cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT {OPTC} {C}"
       cBin_Link := "wlink"
-      cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {OPTL} NAME {B}.exe {L}"
+      cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {OPTL} NAME {E}.exe {L}"
       s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32" } )
 
    CASE s_cARCH == "os2" .AND. s_cCOMP == "owatcom"
@@ -445,7 +464,7 @@ FUNCTION Main()
       cBin_CompC := "wpp386"
       cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {OPTC} {C}"
       cBin_Link := "wlink"
-      cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {B}.exe {L}"
+      cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {E}.exe {L}"
 
    CASE s_cARCH == "linux" .AND. s_cCOMP == "owatcom"
       cLibPrefix := "LIB "
@@ -454,7 +473,7 @@ FUNCTION Main()
       cBin_CompC := "wpp386"
       cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=LINUX {OPTC} {C}"
       cBin_Link := "wlink"
-      cOpt_Link := "ALL SYS LINUX OP CASEEXACT {OPTL} NAME {B} {L}"
+      cOpt_Link := "ALL SYS LINUX OP CASEEXACT {OPTL} NAME {E} {L}"
       IF s_lDEBUG
          cOpt_Link := "DEBUG " + cOpt_Link
       ENDIF
@@ -473,7 +492,7 @@ FUNCTION Main()
       cLibExt := ".lib"
       cObjExt := ".obj"
       cBin_CompC := "bcc32"
-      cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {OPTC} -e{B}.exe -I{I} -L{A} {C} {L}"
+      cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {OPTC} -e{E}.exe -I{I} -L{A} {C} {L}"
       /* TOFIX: The two build systems should generate the same .dll name, otherwise
                 we can only be compatible with one of them. non-GNU is the common choice here. */
       s_aLIBSHARED := { iif( s_lMT, "harbourmt-11-b32", "harbour-11-b32" ), "hbmainstd", "hbmainwin", "hbcommon" }
@@ -491,6 +510,9 @@ FUNCTION Main()
       cLibExt := ".lib"
       cObjExt := ".obj"
       cBin_CompC := "cl"
+
+      /* odbc32 ole32 oleaut32 comdlg32 comctl32 shell32 winspool user32 wsock32 advapi32 gdi32 */
+
       cOpt_CompC := "-nologo -W3 {OPTC} -I{I} {C} /link /libpath:{A} {OPTL} {L}"
       s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
       /* TOFIX: The two build systems should generate the same .dll name, otherwise
@@ -519,11 +541,11 @@ FUNCTION Main()
    IF s_lSHARED .AND. ! Empty( s_aLIBSHARED )
       s_aLIBHB := s_aLIBSHARED
    ELSE
-      s_aLIBHB := ArrayAJoin( { aLIB_BASE,;
+      s_aLIBHB := ArrayAJoin( { aLIB_BASE1,;
                                 aLIB_BASE_DEBUG,;
-                                iif( s_lMT, aLIB_BASE_MT, aLIB_BASE_ST ),;
+                                s_aLIBVM,;
                                 iif( s_lNULRDD, aLIB_BASE_NULRDD, aLIB_BASE_RDD ),;
-                                s_aLIBHBGT } )
+                                aLIB_BASE2 } )
    ENDIF
 
    /* Merge lib lists. */
@@ -545,7 +567,9 @@ FUNCTION Main()
       cOpt_CompC := StrTran( cOpt_CompC, "{OUSR}", ArrayToList( s_aOBJUSER ) )
       cOpt_CompC := StrTran( cOpt_CompC, "{L}"   , ArrayToList( s_aLIB ) )
       cOpt_CompC := StrTran( cOpt_CompC, "{OPTC}", GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( s_aOPTC ) )
-      cOpt_CompC := StrTran( cOpt_CompC, "{B}"   , s_cPROGNAME )
+      cOpt_CompC := StrTran( cOpt_CompC, "{OPTL}", GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
+      cOpt_CompC := StrTran( cOpt_CompC, "{E}"   , s_cPROGNAME )
+      cOpt_CompC := StrTran( cOpt_CompC, "{B}"   , s_cHB_BIN_INSTALL )
       cOpt_CompC := StrTran( cOpt_CompC, "{I}"   , s_cHB_INC_INSTALL )
       cOpt_CompC := StrTran( cOpt_CompC, "{A}"   , s_cHB_LIB_INSTALL )
 
@@ -581,7 +605,8 @@ FUNCTION Main()
          cOpt_Link := StrTran( cOpt_Link, "{O}"   , ArrayToList( ArrayJoin( s_aOBJ, s_aOBJUSER ) ) )
          cOpt_Link := StrTran( cOpt_Link, "{L}"   , ArrayToList( s_aLIB ) )
          cOpt_Link := StrTran( cOpt_Link, "{OPTL}", GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
-         cOpt_Link := StrTran( cOpt_Link, "{B}"   , s_cPROGNAME )
+         cOpt_Link := StrTran( cOpt_Link, "{E}"   , s_cPROGNAME )
+         cOpt_Link := StrTran( cOpt_Link, "{B}"   , s_cHB_BIN_INSTALL )
          cOpt_Link := StrTran( cOpt_Link, "{A}"   , s_cHB_LIB_INSTALL )
 
          cOpt_Link := AllTrim( cOpt_Link )
@@ -616,6 +641,7 @@ FUNCTION Main()
 
    /* Cleanup */
 
+   AEval( ListCook( s_aPRG, NIL, ".c" ), {|tmp| FErase( tmp ) } )
    AEval( s_aOBJ, {|tmp| FErase( tmp ) } )
    AEval( s_aCLEAN, {|tmp| FErase( tmp ) } )
 
@@ -637,11 +663,13 @@ STATIC FUNCTION FindInPath( cFileName )
 
       FOR tmp := 1 TO nCount
          cDir := hb_TokenGet( cPATH, tmp, hb_osPathListSeparator() )
-         IF Left( cDir, 1 ) == Chr( 34 ) .AND. Right( cDir, 1 ) == Chr( 34 )
-            cDir := SubStr( cDir, 2, Len( cDir ) - 2 )
-         ENDIF
-         IF hb_FileExists( DirAddPathSep( cDir ) + cFileName )
-            RETURN .T.
+         IF ! Empty( cDir )
+            IF Left( cDir, 1 ) == Chr( 34 ) .AND. Right( cDir, 1 ) == Chr( 34 )
+               cDir := SubStr( cDir, 2, Len( cDir ) - 2 )
+            ENDIF
+            IF hb_FileExists( DirAddPathSep( cDir ) + cFileName )
+               RETURN .T.
+            ENDIF
          ENDIF
       NEXT
    ENDIF
@@ -656,25 +684,26 @@ STATIC FUNCTION ArrayJoin( array1, array2 )
 
    RETURN ACopy( array2, array, , , nLen1 + 1 )
 
-STATIC FUNCTION ArrayAJoin( array )
+STATIC FUNCTION ArrayAJoin( arrays )
+   LOCAL array := AClone( arrays[ 1 ] )
    LOCAL tmp
-   LOCAL nLenArray := Len( array )
+   LOCAL nLenArray := Len( arrays )
    LOCAL nLen
-   LOCAL nPos := Len( array[ 1 ] ) + 1
+   LOCAL nPos := Len( array ) + 1
 
    nLen := 0
    FOR tmp := 1 TO nLenArray
-      nLen += Len( array[ tmp ] )
+      nLen += Len( arrays[ tmp ] )
    NEXT
 
-   ASize( array[ 1 ], nLen )
+   ASize( array, nLen )
 
    FOR tmp := 2 TO nLenArray
-      ACopy( array[ tmp ], array[ 1 ], , , nPos )
-      nPos += Len( array[ tmp ] )
+      ACopy( arrays[ tmp ], array, , , nPos )
+      nPos += Len( arrays[ tmp ] )
    NEXT
 
-   RETURN array[ 1 ]
+   RETURN array
 
 STATIC FUNCTION ListDelExt( array )
    LOCAL tmp
@@ -716,15 +745,16 @@ STATIC FUNCTION ArrayToList( array )
 STATIC FUNCTION ListToArray( cList )
    LOCAL array := {}
    LOCAL nCount
+   LOCAL item
    LOCAL tmp
 
    IF ! Empty( cList )
       nCount := hb_TokenCount( cList, " " )
-
-      array := ASize( array, nCount )
-
       FOR tmp := 1 TO nCount
-         array[ tmp ] := hb_TokenGet( cList, tmp, " " )
+         item := hb_TokenGet( cList, tmp, " " )
+         IF ! Empty( item )
+            AAdd( array, item )
+         ENDIF
       NEXT
    ENDIF
 
