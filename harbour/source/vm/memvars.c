@@ -1326,23 +1326,24 @@ static HB_DYNS_FUNC( hb_memvarSave )
          if( HB_IS_STRING( pMemvar ) && ( hb_itemGetCLen( pMemvar ) + 1 ) <= SHRT_MAX )
          {
             /* Store the closing zero byte, too */
-            USHORT uiLength = ( USHORT ) ( hb_itemGetCLen( pMemvar ) + 1 );
+            ULONG ulLen = hb_itemGetCLen( pMemvar );
 
+            /* Clipper support only 64KB strings */
+            if( ulLen > USHRT_MAX )
+               ulLen = USHRT_MAX;
             buffer[ 11 ] = 'C' + 128;
-            buffer[ 16 ] = HB_LOBYTE( uiLength );
-            buffer[ 17 ] = HB_HIBYTE( uiLength );
-
+            HB_PUT_LE_UINT16( &buffer[ 16 ], ulLen );
             hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
-            hb_fsWrite( fhnd, ( BYTE * ) hb_itemGetCPtr( pMemvar ), uiLength );
+            hb_fsWriteLarge( fhnd, ( BYTE * ) hb_itemGetCPtr( pMemvar ), ulLen );
          }
          else if( HB_IS_NUMERIC( pMemvar ) )
          {
-            BYTE byNum[ sizeof( double ) ];
+            double dNumber;
             int iWidth;
             int iDec;
 
+            dNumber = hb_itemGetND( pMemvar );
             hb_itemGetNLen( pMemvar, &iWidth, &iDec );
-
             buffer[ 11 ] = 'N' + 128;
 #ifdef HB_C52_STRICT
 /* NOTE: This is the buggy, but fully CA-Cl*pper compatible method. [vszakats] */
@@ -1352,38 +1353,26 @@ static HB_DYNS_FUNC( hb_memvarSave )
             buffer[ 16 ] = ( BYTE ) iWidth + ( iDec == 0 ? 0 : ( BYTE ) ( iDec + 1 ) );
 #endif
             buffer[ 17 ] = ( BYTE ) iDec;
-
-            HB_PUT_LE_DOUBLE( byNum, hb_itemGetND( pMemvar ) );
-
+            HB_PUT_LE_DOUBLE( &buffer[ HB_MEM_REC_LEN ], dNumber );
             hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
-            hb_fsWrite( fhnd, byNum, sizeof( byNum ) );
          }
          else if( HB_IS_DATE( pMemvar ) )
          {
-            BYTE byNum[ sizeof( double ) ];
             double dNumber = ( double ) hb_itemGetDL( pMemvar );
 
             buffer[ 11 ] = 'D' + 128;
             buffer[ 16 ] = 1;
             buffer[ 17 ] = 0;
-
-            HB_PUT_LE_DOUBLE( byNum, dNumber );
-
-            hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
-            hb_fsWrite( fhnd, byNum, sizeof( byNum ) );
+            HB_PUT_LE_DOUBLE( &buffer[ HB_MEM_REC_LEN ], dNumber );
+            hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN + HB_MEM_NUM_LEN );
          }
          else if( HB_IS_LOGICAL( pMemvar ) )
          {
-            BYTE byLogical[ 1 ];
-
             buffer[ 11 ] = 'L' + 128;
-            buffer[ 16 ] = sizeof( BYTE );
+            buffer[ 16 ] = 1;
             buffer[ 17 ] = 0;
-
-            byLogical[ 0 ] = hb_itemGetL( pMemvar ) ? 1 : 0;
-
-            hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
-            hb_fsWrite( fhnd, byLogical, sizeof( BYTE ) );
+            buffer[ HB_MEM_REC_LEN ] = hb_itemGetL( pMemvar ) ? 1 : 0;
+            hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN + 1 );
          }
       }
    }
@@ -1431,7 +1420,7 @@ HB_FUNC( __MVSAVE )
 
       if( fhnd != FS_ERROR )
       {
-         BYTE buffer[ HB_MEM_REC_LEN ];
+         BYTE buffer[ HB_MEM_REC_LEN + HB_MEM_NUM_LEN ];
          MEMVARSAVE_CARGO msc;
 
          msc.pszMask      = hb_memvarGetMask( 2 );

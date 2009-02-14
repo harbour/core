@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-14 10:49 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/memvars.c
+    % small optimization in __MVSAVE()
+
 2009-02-13 22:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + utils/hbmk
   + utils/hbmk/hbmk.prg
