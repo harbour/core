@@ -8,6 +8,28 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-16 20:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk.prg
+    + Added support for '#' comment lines in .hbm files.
+    + Added support to automatically convert slashes/backslashes
+      in passed libnames and prg options.
+    * Cleanup on computing Harbour location. I didn't test all
+      situations here. This should fix previous versions not
+      honoring explicit HB_*_INSTALL envvars.
+    + Added support for POCC (untested).
+
+   + contrib/hbct/tests/hbct.hbp
+   + contrib/examples/terminal/terminal.hbp
+   + contrib/examples/terminal/trm_appn.hbm
+     + Added new hbmk files to show what it takes to replace
+       the current system, but this time fully supporting
+       all Harbour platforms.
+       To use these just run hbmk, either from the path, or
+       by directly pointing to it:
+       ..\..\..\bin\hbmk.exe <test.prg>
+       ..\..\..\bin\hbmk.exe trm_appn.hbm
+       .exe can be dropped as soon as we delete out hbmk.bat file.
+
 2009-02-16 18:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk.prg
     + Added POCC and DMC autodetection.
@@ -141,7 +163,7 @@
       - Filtering foreign system libs passed on the command
         line for platforms not needing them. The goal is to
         be able to use as simple and _portable_ hbmk command
-        lines as possible.
+        lines as possible. [DONE]
       - Support for POCC, DM.
     ; TODO:
       - Switch to portable command lines in hbmk.bat files.

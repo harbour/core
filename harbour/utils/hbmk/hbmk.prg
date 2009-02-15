@@ -280,6 +280,10 @@ FUNCTION Main( ... )
 
    /* Autodetect Harbour environment */
 
+   s_cHB_BIN_INSTALL := DirAdaptPathSep( GetEnv( "HB_BIN_INSTALL" ) )
+   s_cHB_LIB_INSTALL := DirAdaptPathSep( GetEnv( "HB_LIB_INSTALL" ) )
+   s_cHB_INC_INSTALL := DirAdaptPathSep( GetEnv( "HB_INC_INSTALL" ) )
+
    IF Empty( GetEnv( "HB_INSTALL_PREFIX" ) )
 
       DO CASE
@@ -294,13 +298,13 @@ FUNCTION Main( ... )
 
       CASE hb_ProgName() == "/usr/local/bin/hbmk"
 
-         IF Empty( GetEnv( "HB_BIN_INSTALL" ) )
+         IF Empty( s_cHB_BIN_INSTALL )
             s_cHB_BIN_INSTALL := "/usr/local/bin"
          ENDIF
-         IF Empty( GetEnv( "HB_LIB_INSTALL" ) )
+         IF Empty( s_cHB_LIB_INSTALL )
             s_cHB_LIB_INSTALL := "/usr/local/include/harbour"
          ENDIF
-         IF Empty( GetEnv( "HB_INC_INSTALL" ) )
+         IF Empty( s_cHB_INC_INSTALL )
             s_cHB_INC_INSTALL := "/usr/local/lib/harbour"
          ENDIF
 
@@ -315,23 +319,33 @@ FUNCTION Main( ... )
          s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() )
       CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG )
          s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".."
+      CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG )
+         s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".."
       OTHERWISE
          OutErr( "hbmk: Error: HB_INSTALL_PREFIX not set, failed to autodetect." + hb_osNewLine() )
          PauseForKey()
          RETURN 3
       ENDCASE
    ELSE
-      s_cHB_INSTALL_PREFIX := GetEnv( "HB_INSTALL_PREFIX" )
+      s_cHB_INSTALL_PREFIX := DirAdaptPathSep( GetEnv( "HB_INSTALL_PREFIX" ) )
    ENDIF
-   IF Empty( GetEnv( "HB_BIN_INSTALL" ) )
+   IF Empty( s_cHB_INSTALL_PREFIX ) .AND. ;
+      ( Empty( s_cHB_BIN_INSTALL ) .OR. Empty( s_cHB_LIB_INSTALL ) .OR. Empty( s_cHB_INC_INSTALL ) )
+      OutErr( "hbmk: Error: Harbour locations couldn't be determined." + hb_osNewLine() )
+      PauseForKey()
+      RETURN 3
+   ENDIF
+   IF Empty( s_cHB_BIN_INSTALL )
       s_cHB_BIN_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "bin"
    ENDIF
-   IF Empty( GetEnv( "HB_LIB_INSTALL" ) )
+   IF Empty( s_cHB_LIB_INSTALL )
       s_cHB_LIB_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "lib"
    ENDIF
-   IF Empty( GetEnv( "HB_INC_INSTALL" ) )
+   IF Empty( s_cHB_INC_INSTALL )
       s_cHB_INC_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "include"
    ENDIF
+
+   OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + hb_osNewLine() )
 
    /* Process environment */
 
@@ -424,17 +438,17 @@ FUNCTION Main( ... )
       CASE Lower( cParam ) == "-trace-"          ; s_lTRACE    := .F.
       CASE Lower( cParam ) == "-notrace"         ; s_lTRACE    := .F.
       CASE Lower( Left( cParam, 3 ) ) == "-gt"   ; DEFAULT s_cGT TO SubStr( cParam, 2 )
-      CASE Left( cParam, 2 ) == "-o"             ; s_cPROGNAME := SubStr( cParam, 3 )
+      CASE Left( cParam, 2 ) == "-o"             ; s_cPROGNAME := DirAdaptPathSep( SubStr( cParam, 3 ) )
       CASE Left( cParam, 2 ) == "-l" .AND. ;
-           Len( cParam ) > 2                     ; AAddNotEmpty( s_aLIBUSER, ArchCompFilter( SubStr( cParam, 3 ) ) )
-      CASE Left( cParam, 1 ) == "-"              ; AAdd( s_aOPTPRG , cParam )
-      CASE Lower( ExtGet( cParam ) ) == ".prg"   ; AAdd( s_aPRG    , cParam ) ; DEFAULT s_cPROGNAME TO cParam
-      CASE Lower( ExtGet( cParam ) ) == ".rc"    ; AAdd( s_aRESSRC , cParam )
-      CASE Lower( ExtGet( cParam ) ) == ".res"   ; AAdd( s_aRESCMP , cParam )
-      CASE Lower( ExtGet( cParam ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, cParam )
-      CASE Lower( ExtGet( cParam ) ) $ ".c|.cpp" ; AAdd( s_aC      , cParam ) ; DEFAULT s_cPROGNAME TO cParam
-      CASE Lower( ExtGet( cParam ) ) $ ".a|.lib" ; AAddNotEmpty( s_aLIBUSER, ArchCompFilter( cParam ) )
-      OTHERWISE                                  ; AAdd( s_aPRG    , cParam ) ; DEFAULT s_cPROGNAME TO cParam
+           Len( cParam ) > 2                     ; AAddNotEmpty( s_aLIBUSER, DirAdaptPathSep( ArchCompFilter( SubStr( cParam, 3 ) ) ) )
+      CASE Left( cParam, 1 ) == "-"              ; AAdd( s_aOPTPRG , DirAdaptPathSep( cParam ) )
+      CASE Lower( ExtGet( cParam ) ) == ".prg"   ; AAdd( s_aPRG    , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
+      CASE Lower( ExtGet( cParam ) ) == ".rc"    ; AAdd( s_aRESSRC , DirAdaptPathSep( cParam ) )
+      CASE Lower( ExtGet( cParam ) ) == ".res"   ; AAdd( s_aRESCMP , DirAdaptPathSep( cParam ) )
+      CASE Lower( ExtGet( cParam ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, DirAdaptPathSep( cParam ) )
+      CASE Lower( ExtGet( cParam ) ) $ ".c|.cpp" ; AAdd( s_aC      , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
+      CASE Lower( ExtGet( cParam ) ) $ ".a|.lib" ; AAddNotEmpty( s_aLIBUSER, DirAdaptPathSep( ArchCompFilter( cParam ) ) )
+      OTHERWISE                                  ; AAdd( s_aPRG    , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
       ENDCASE
    NEXT
 
@@ -699,7 +713,7 @@ FUNCTION Main( ... )
       cObjExt := ".obj"
       cBin_CompC := "cl"
 
-      /* odbc32 ole32 oleaut32 comdlg32 comctl32 shell32 winspool user32 wsock32 advapi32 gdi32 */
+      /* kernel32 user32 gdi32 winspool comctl32 comdlg32 advapi32 shell32 ole32 oleaut32 uuid odbc32 odbccp32 mpr winmm wsock32 schannel */
 
       cOpt_CompC := "-nologo -W3 {OPTC} -I{I} {C} -Fe{E} /link /libpath:{A} {OPTL} {L}"
       IF s_lMAP
@@ -719,15 +733,49 @@ FUNCTION Main( ... )
       cObjExt := ".obj"
       cBin_CompC := "icc"
       cOpt_CompC := "/Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp {OPTC} -I{I} {C}"
+      IF s_lDEBUG
+         AAdd( s_aOPTC, "-MTd -Zi" )
+      ENDIF
+      IF s_lGUI
+         AAdd( s_aOPTL, "/subsystem:windows" )
+      ELSE
+         AAdd( s_aOPTL, "/subsystem:console" )
+      ENDIF
+
+   CASE t_cARCH == "win" .AND. t_cCOMP == "pocc"
+      IF s_lGUI
+         AAdd( s_aOPTL, "/subsystem:windows" )
+      ELSE
+         AAdd( s_aOPTL, "/subsystem:console" )
+      ENDIF
+      cLibPrefix := NIL
+      cLibExt := ".lib"
+      cObjExt := ".obj"
+      cBin_CompC := "pocc"
+      cOpt_CompC := "/Ze /Go /Ot /Tx86-coff {OPTC} /I{I} {C}"
+      IF s_lMT
+           AAdd( s_aOPTC, "/MT" )
+      ENDIF
+      cBin_Link := "polink"
+      cOpt_Link := "{O} /libpath:{A} {OPTL} {L}"
+      IF s_lSHARED
+           AAdd( s_aOPTL, "/libpath:{B}" )
+      ENDIF
+      IF s_lMAP
+           AAdd( s_aOPTL, "/map" )
+      ENDIF
+      IF s_lDEBUG
+           AAdd( s_aOPTL, "/debug" )
+      ENDIF
+      s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
 
    /* TODO */
+   CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"
+   CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"
    CASE t_cARCH == "win" .AND. t_cCOMP == "dm"
    CASE t_cARCH == "win" .AND. t_cCOMP == "icc"
    CASE t_cARCH == "win" .AND. t_cCOMP == "mingwce"
    CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"
-   CASE t_cARCH == "win" .AND. t_cCOMP == "pocc"
-   CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"
-   CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"
    CASE t_cARCH == "win" .AND. t_cCOMP == "rsxnt"
    CASE t_cARCH == "win" .AND. t_cCOMP == "xcc"
    ENDCASE
@@ -936,6 +984,14 @@ STATIC FUNCTION AAddNotEmpty( aArray, xItem )
 
    RETURN aArray
 
+STATIC FUNCTION DirAdaptPathSep( cFileName )
+
+   IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP == "mingw" )
+      RETURN StrTran( cFileName, "/", "\" )
+   ENDIF
+
+   RETURN StrTran( cFileName, "\", "/" )
+
 STATIC FUNCTION ListDelExt( array )
    LOCAL tmp
 
@@ -1093,14 +1149,14 @@ STATIC PROCEDURE HBP_ProcessOne( cFile,;
       CASE Lower( Left( cLine, Len( "libs="     ) ) ) == "libs="     ; cLine := SubStr( cLine, Len( "libs="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
             IF AScan( aLIBS, {| tmp | tmp == cItem } ) == 0
-               AAdd( aLIBS, cItem )
+               AAdd( aLIBS, DirAdaptPathSep( cItem ) )
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "prgflags=" ) ) ) == "prgflags=" ; cLine := SubStr( cLine, Len( "prgflags=" ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
             IF AScan( aOPTPRG, {| tmp | tmp == cItem } ) == 0
-               AAdd( aOPTPRG, cItem )
+               AAdd( aOPTPRG, DirAdaptPathSep( cItem ) )
             ENDIF
          NEXT
 
@@ -1187,9 +1243,11 @@ STATIC PROCEDURE HBM_Load( aParams, cFileName )
    ENDIF
 
    FOR EACH cLine IN hb_ATokens( cFile, _EOL )
-      FOR EACH cOption IN hb_ATokens( cLine, " " )
-         AAddNotEmpty( aParams, cOption )
-      NEXT
+      IF !( Left( cLine, 1 ) == "#" )
+         FOR EACH cOption IN hb_ATokens( cLine, " " )
+            AAddNotEmpty( aParams, cOption )
+         NEXT
+      ENDIF
    NEXT
 
    RETURN
