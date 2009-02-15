@@ -36,20 +36,20 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#include "hb_btree.api"
+#include "hb_btree.h"
 
 static void display( const char *cKey, LONG lData, BOOL NewLine )
 {
    int n;
    char buffer[ 80 ];
-  
+
    if( *cKey )
       n = sprintf( buffer, "%s  %ld", cKey, lData );
    else
       n = sprintf( buffer, "%ld", lData );
 
    hb_conOutStd( buffer, n );
-  
+
    if( NewLine )
       hb_conOutStd( hb_conNewLine(), strlen( hb_conNewLine() ) );
 }
@@ -58,7 +58,7 @@ static void display( const char *cKey, LONG lData, BOOL NewLine )
 static void insertdata( struct hb_BTree * pBTree )
 {
    PHB_ITEM data = hb_itemNew( NULL );
-  
+
    hb_BTreeInsert( pBTree, ( BYTE * ) "fuweqgsz", hb_itemPutNL( data,  1 ) );
    hb_BTreeInsert( pBTree, ( BYTE * ) "sjruexrd", hb_itemPutNL( data,  2 ) );
    hb_BTreeInsert( pBTree, ( BYTE * ) "fvveitnz", hb_itemPutNL( data,  3 ) );
@@ -145,7 +145,7 @@ static void insertdata( struct hb_BTree * pBTree )
 HB_FUNC( CTEST )
 {
    struct hb_BTree * pBTree;
-  
+
    display( "Harbour API test", 0, TRUE );
    pBTree = hb_BTreeNew( ( BYTE * ) "test_3.out", 2048, 90, HB_BTREE_UNIQUE, 0 );
    if ( pBTree != NULL )
@@ -159,11 +159,11 @@ HB_FUNC( CTEST )
       display( "Min ", a[ hb_BTreeINFO_MINKEYS  ], FALSE );
       display( "Flag", a[ hb_BTreeINFO_FLAGS    ], FALSE );
       display( "Keys", a[ hb_BTreeINFO_KEYCOUNT ], TRUE );
-*/   
+*/
       insertdata( pBTree );
-/*   
+/*
       display( "Keys", hb_BTreeInfo( pBTree, hb_BTreeINFO_KEYCOUNT ), TRUE );
-*/   
+*/
       display( "Forward traversal", 0, TRUE );
       hb_BTreeGoTop( pBTree );
       while ( TRUE )
@@ -173,7 +173,7 @@ HB_FUNC( CTEST )
          if ( 1 != hb_BTreeSkip( pBTree, 1 ) )
             break;
       }
-     
+
       hb_conOutStd( hb_conNewLine(), strlen( hb_conNewLine() ) );
       display( "Reverse traversal", 0, TRUE );
       hb_BTreeGoBottom( pBTree );
@@ -184,7 +184,7 @@ HB_FUNC( CTEST )
          if ( -1 != hb_BTreeSkip( pBTree, -1 ) )
             break;
       }
-     
+
       hb_conOutStd( hb_conNewLine(), strlen( hb_conNewLine() ) );
       display( "Test SEEK", 0, TRUE );
       display( hb_BTreeSeek( pBTree, ( BYTE * ) "cdntyzrf", 36, FALSE ) == 1 ? ".T." : ".F.", 0, TRUE );
@@ -199,7 +199,7 @@ HB_FUNC( CTEST )
       hb_BTreeSkip( pBTree, 1 );
       display( ( char * ) hb_BTreeKey( pBTree ), hb_BTreeData( pBTree ), FALSE );
       display( " dmfmivqb  ?", 0, TRUE );
-     
+
       hb_conOutStd( hb_conNewLine(), strlen( hb_conNewLine() ) );
       display( "Test soft SEEK of an existing key", 0, TRUE );
       display( hb_BTreeSeek( pBTree, ( BYTE * ) "cdntyzrf", 0, TRUE ) == 1 ? ".T." : ".F.", 0, TRUE );
@@ -207,7 +207,7 @@ HB_FUNC( CTEST )
       hb_BTreeSkip( pBTree, 1 );
       display( ( char * ) hb_BTreeKey( pBTree ), hb_BTreeData( pBTree ), FALSE );
       display( " dmfmivqb  ?", 0, TRUE );
-     
+
       hb_conOutStd( hb_conNewLine(), strlen( hb_conNewLine() ) );
       display( "Test soft SEEK of a missing key, that should force EOF", 0, TRUE );
       display( hb_BTreeSeek( pBTree, ( BYTE * ) "zzzzzz", 0, FALSE ) == 1 ? ".T." : ".F.", 0, TRUE );
@@ -215,7 +215,7 @@ HB_FUNC( CTEST )
       hb_BTreeSkip( pBTree, 1 );
       display( ( char * ) hb_BTreeKey( pBTree ), hb_BTreeData( pBTree ), FALSE );
       display( " dmfmivqb  ?", 0, TRUE );
-     
+
       hb_conOutStd( hb_conNewLine(), strlen( hb_conNewLine() ) );
       hb_BTreeClose( pBTree );
    }

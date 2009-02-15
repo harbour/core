@@ -181,7 +181,7 @@ see ChangeLog 2002-07-14 14:14 UTC+0500 April White <awhite@mail.rosecom.ca>
 #include "hbapierr.h"
 #include "hbinit.h"
 
-#include "hb_btree.api"
+#include "hb_btree.h"
 
 HB_EXTERN_BEGIN
 

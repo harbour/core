@@ -2,6 +2,6 @@
 @rem $Id$
 @rem
 
-@set HB_USER_LIBS=user32.lib hbct.lib hbbtree.lib
+@set HB_USER_LIBS=hbbtree.lib
 
 @..\..\..\bin\hbmk %* test.prg ttest.prg ctest.c

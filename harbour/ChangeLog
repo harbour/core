@@ -8,6 +8,28 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-16 22:28 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  + contrib/gtwvg/tests/gtwvg.hbp
+  + contrib/hbapollo/tests/hbapollo.hbp
+  + contrib/hbbtree/tests/hbbtree.hbp
+  + contrib/hbbtree/tests/test.hbm
+    + Added hbmk files.
+
+  * contrib/hbbtree/tests/hbmk.bat
+  * contrib/hbbtree/tests/test.prg
+    * Cleaned hbct dependency.
+
+  * contrib/hbbtree/Makefile
+  * contrib/hbbtree/common.mak
+  - contrib/hbbtree/hb_btree.api
+  + contrib/hbbtree/hb_btree.h
+  * contrib/hbbtree/hb_btree.c
+  * contrib/hbbtree/tests/ctest.c
+    * Renamed hb_btree.api -> hb_btree.h
+
+  * contrib/examples/terminal/terminal.hbp
+    + Added {win} filter.
+
 2009-02-16 20:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk.prg
     + Added support for '#' comment lines in .hbm files.

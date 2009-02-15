@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+{win}libs=gtwvg hbwin
+gui=yes

@@ -40,9 +40,11 @@
 Procedure Main()
   local n, a
   local c
+  local attr
 
-  if fileattr( "test_1.out") == 1 + 32
-    setfattr( "test_1.out", 32 )
+  hb_FGetAttr( "test_1.out", @attr )
+  if attr == 1 + 32
+    hb_FSetAttr( "test_1.out", 32 )
     ferase( "test_1.out" )
   endif
 

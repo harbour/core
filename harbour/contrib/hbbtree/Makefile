@@ -8,7 +8,7 @@ C_SOURCES=\
 	hb_btree.c \
 
 C_HEADERS=\
-	hb_btree.api \
+	hb_btree.h \
 
 PRG_SOURCES=\
 	tbtree.prg \
