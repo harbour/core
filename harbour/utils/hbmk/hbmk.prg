@@ -54,6 +54,7 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "hbgtinfo.ch"
+#include "hbver.ch"
 
 /* TODO: Add support for more hbmk script features. */
 
@@ -133,6 +134,7 @@ FUNCTION Main( ... )
    LOCAL s_lNULRDD := .F.
    LOCAL s_lSTRIP := .F.
    LOCAL s_lTRACE := .F.
+   LOCAL s_lBLDFLG := .F.
 
    LOCAL aCOMPDET
    LOCAL aCOMPSUP
@@ -155,6 +157,8 @@ FUNCTION Main( ... )
 
    LOCAL aParams
    LOCAL cParam
+
+   LOCAL cDL_Version := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + hb_ntos( hb_Version( HB_VERSION_MINOR ) )
 
    IF PCount() == 0
       ShowHeader()
@@ -382,6 +386,7 @@ FUNCTION Main( ... )
       CASE Lower( cParam ) == "-st"              ; s_lMT     := .F.
       CASE Lower( cParam ) == "-shared"          ; s_lSHARED := .T.
       CASE Lower( cParam ) == "-static"          ; s_lSHARED := .F.
+      CASE Lower( cParam ) == "-bldflags"        ; s_lBLDFLG := .T.
       CASE Lower( cParam ) == "-debug"           ; s_lDEBUG  := .T.
       CASE Lower( cParam ) == "-nodebug"         ; s_lDEBUG  := .F.
       CASE Lower( cParam ) == "-nulrdd"          ; s_lNULRDD := .T.
@@ -427,6 +432,12 @@ FUNCTION Main( ... )
    ListDelExt( s_aLIBUSER )
    ListDelExt( s_aOBJUSER )
 
+   /* Strip extension from output name. */
+   s_cPROGNAME := DirNameGet( s_cPROGNAME )
+   IF s_cARCH $ "os2|win|dos"
+      s_cPROGNAME := ExtSet( s_cPROGNAME, ".exe" )
+   ENDIF
+
    /* TOFIX: s_aLIBSHARED to be fixed for some *IX platforms. */
    DO CASE
    CASE s_cARCH $ "bsd|linux|sunos"
@@ -443,8 +454,6 @@ FUNCTION Main( ... )
 
    /* Harbour compilation */
 
-   s_cPROGNAME := DirNameGet( s_cPROGNAME )
-
    IF Len( s_aPRG ) > 0
 
       cCommand := DirAddPathSep( s_cHB_BIN_INSTALL ) +;
@@ -452,8 +461,11 @@ FUNCTION Main( ... )
                   " " + ArrayToList( s_aPRG ) +;
                   " -n -q0" +;
                   " -i" + s_cHB_INC_INSTALL +;
+                  iif( s_lBLDFLG, " " + hb_Version(HB_VERSION_FLAG_PRG), "" ) +;
                   iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
                   iif( ! Empty( s_aOPTP ), " " + ArrayToList( s_aOPTP ), "" )
+
+      cCommand := AllTrim( cCommand )
 
       IF s_lTRACE
          OutErr( "hbmk: Harbour compiler command: '" + cCommand + "'" + hb_osNewLine() )
@@ -531,7 +543,7 @@ FUNCTION Main( ... )
       cLibExt := NIL
       cObjExt := ".o"
       cBin_CompC := "gcc"
-      cOpt_CompC := "{C} -O3 -mno-cygwin -o{E}.exe {OPTC} -I{I} -L{A}"
+      cOpt_CompC := "{C} -O3 -mno-cygwin -o{E} {OPTC} -I{I} -L{A}"
       IF s_lSHARED
            cOpt_CompC += " -L{B}"
       ENDIF
@@ -547,7 +559,7 @@ FUNCTION Main( ... )
       cLibExt := NIL
       cObjExt := ".o"
       cBin_CompC := "gcc"
-      cOpt_CompC := "{C} -O3 -o{E}.exe {OPTC} -I{I} -L{A} {L}{SCRIPT}"
+      cOpt_CompC := "{C} -O3 -o{E} {OPTC} -I{I} -L{A} {L}{SCRIPT}"
       s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
       IF s_lSTRIP
@@ -560,7 +572,7 @@ FUNCTION Main( ... )
       cLibExt := NIL
       cObjExt := ".o"
       cBin_CompC := "gcc"
-      cOpt_CompC := "{C} -O3 -Zrsx32 -o{E}.exe {OPTC} -I{I} -L{A} {L}"
+      cOpt_CompC := "{C} -O3 -Zrsx32 -o{E} {OPTC} -I{I} -L{A} {L}"
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
       IF s_lSTRIP
          AAdd( s_aOPTC, "-s" )
@@ -574,7 +586,7 @@ FUNCTION Main( ... )
       cBin_CompC := "wpp386"
       cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {OPTC} {C}"
       cBin_Link := "wlink"
-      cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {OPTL} NAME {E}.exe {L}"
+      cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {OPTL} NAME {E} {L}"
 
    CASE s_cARCH == "win" .AND. s_cCOMP == "owatcom"
       cLibPrefix := "LIB "
@@ -583,7 +595,7 @@ FUNCTION Main( ... )
       cBin_CompC := "wpp386"
       cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT {OPTC} {C}"
       cBin_Link := "wlink"
-      cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {OPTL} NAME {E}.exe {L}"
+      cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {L}"
       s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32" } )
 
    CASE s_cARCH == "os2" .AND. s_cCOMP == "owatcom"
@@ -593,7 +605,7 @@ FUNCTION Main( ... )
       cBin_CompC := "wpp386"
       cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {OPTC} {C}"
       cBin_Link := "wlink"
-      cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {E}.exe {L}"
+      cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {L}"
 
    CASE s_cARCH == "linux" .AND. s_cCOMP == "owatcom"
       cLibPrefix := "LIB "
@@ -621,13 +633,13 @@ FUNCTION Main( ... )
       cLibExt := ".lib"
       cObjExt := ".obj"
       cBin_CompC := "bcc32"
-      cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {OPTC} -e{E}.exe -I{I} -L{A} {C} {L}"
+      cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {OPTC} -e{E} -I{I} -L{A} {C} {L}"
       IF s_lSHARED
            cOpt_CompC += " -L{B}"
       ENDIF
       /* TOFIX: The two build systems should generate the same .dll name, otherwise
                 we can only be compatible with one of them. non-GNU is the common choice here. */
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt-11-b32", "harbour-11-b32" ), "hbmainstd", "hbmainwin", "hbcommon" }
+      s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + "-b32", "harbour-" + cDL_Version + "-b32" ), "hbmainstd", "hbmainwin", "hbcommon" }
 
    CASE s_cARCH == "win" .AND. s_cCOMP == "msvc"
       IF s_lDEBUG
@@ -645,14 +657,14 @@ FUNCTION Main( ... )
 
       /* odbc32 ole32 oleaut32 comdlg32 comctl32 shell32 winspool user32 wsock32 advapi32 gdi32 */
 
-      cOpt_CompC := "-nologo -W3 {OPTC} -I{I} {C} -Fe{E}.exe /link /libpath:{A} {OPTL} {L}"
+      cOpt_CompC := "-nologo -W3 {OPTC} -I{I} {C} -Fe{E} /link /libpath:{A} {OPTL} {L}"
       IF s_lSHARED
            AAdd( s_aOPTL, "/libpath:{B}" )
       ENDIF
       s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
       /* TOFIX: The two build systems should generate the same .dll name, otherwise
                 we can only be compatible with one of them. non-GNU is the common choice here. */
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt-11-vc", "harbour-11-vc" ), "hbmainstd", "hbmainwin", "hbcommon" }
+      s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + "-vc", "harbour-" + cDL_Version + "-vc" ), "hbmainstd", "hbmainwin", "hbcommon" }
 
    CASE s_cARCH == "os2" .AND. s_cCOMP == "icc"
       cLibPrefix := "{A}\"
@@ -701,8 +713,10 @@ FUNCTION Main( ... )
       cOpt_CompC := StrTran( cOpt_CompC, "{O}"   , ArrayToList( s_aOBJ ) )
       cOpt_CompC := StrTran( cOpt_CompC, "{OUSR}", ArrayToList( s_aOBJUSER ) )
       cOpt_CompC := StrTran( cOpt_CompC, "{L}"   , ArrayToList( s_aLIB ) )
-      cOpt_CompC := StrTran( cOpt_CompC, "{OPTC}", GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( s_aOPTC ) )
-      cOpt_CompC := StrTran( cOpt_CompC, "{OPTL}", GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
+      cOpt_CompC := StrTran( cOpt_CompC, "{OPTC}", iif( s_lBLDFLG, hb_Version(HB_VERSION_FLAG_C) + " ", "" ) +;
+                                                   GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( s_aOPTC ) )
+      cOpt_CompC := StrTran( cOpt_CompC, "{OPTL}", iif( s_lBLDFLG, hb_Version(HB_VERSION_FLAG_LINKER) + " ", "" ) +;
+                                                   GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
       cOpt_CompC := StrTran( cOpt_CompC, "{E}"   , s_cPROGNAME )
       cOpt_CompC := StrTran( cOpt_CompC, "{B}"   , s_cHB_BIN_INSTALL )
       cOpt_CompC := StrTran( cOpt_CompC, "{I}"   , s_cHB_INC_INSTALL )
@@ -746,7 +760,8 @@ FUNCTION Main( ... )
 
          cOpt_Link := StrTran( cOpt_Link, "{O}"   , ArrayToList( ArrayJoin( s_aOBJ, s_aOBJUSER ) ) )
          cOpt_Link := StrTran( cOpt_Link, "{L}"   , ArrayToList( s_aLIB ) )
-         cOpt_Link := StrTran( cOpt_Link, "{OPTL}", GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
+         cOpt_Link := StrTran( cOpt_Link, "{OPTL}", iif( s_lBLDFLG, hb_Version(HB_VERSION_FLAG_LINKER) + " ", "" ) +;
+                                                    GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
          cOpt_Link := StrTran( cOpt_Link, "{E}"   , s_cPROGNAME )
          cOpt_Link := StrTran( cOpt_Link, "{B}"   , s_cHB_BIN_INSTALL )
          cOpt_Link := StrTran( cOpt_Link, "{A}"   , s_cHB_LIB_INSTALL )
@@ -1125,6 +1140,7 @@ STATIC PROCEDURE ShowHelp()
       "                      link with more GTs. The first one will be" ,;
       "                      the default at runtime" ,;
       "  -nulrdd             link with nulrdd" ,;
+      "  -bldflags           inherit .prg/.c/linker flags from Harbour build" ,;
       "  -debug|-nodebug     add/exclude debug info" ,;
       "  -strip|-nostrip     strip (no strip) binaries" ,;
       "  -trace              show commands executed" ,;
@@ -1141,7 +1157,7 @@ STATIC PROCEDURE ShowHelp()
       "    debug=[yes|no], nulrdd=[yes|no], strip=[yes|no]" ,;
       "  - Defaults and feature support vary by architecture/compiler." ,;
       "" ,;
-      "    HB_COMPILER values supported for each HB_ARCHITECURE:" ,;
+      "    HB_COMPILER values supported for each HB_ARCHITECTURE:" ,;
       "" ,;
       "    bsd, darwin, hbupx, sunos: gcc",;
       "    linux                    : gcc, owatcom" ,;
