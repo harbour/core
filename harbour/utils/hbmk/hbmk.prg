@@ -231,14 +231,16 @@ FUNCTION Main( ... )
       aCOMPDET := { { "gcc.exe", "gcc" },;
                     { "icc.exe", "icc" },;
                     { "wpp386.exe", "owatcom" } }
-      aCOMPSUP := { "gcc", "icc" }
+      aCOMPSUP := { "gcc", "owatcom", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtos2" }
    CASE t_cARCH == "win"
       aCOMPDET := { { "gcc.exe"   , "mingw"   },;
                     { "cl.exe"    , "msvc"    },;
                     { "bcc32.exe" , "bcc32"   },;
-                    { "wpp386.exe", "owatcom" } }
+                    { "wpp386.exe", "owatcom" },;
+                    { "pocc.exe"  , "pocc"    },;
+                    { "dmc.exe"   , "dmc"     } }
       aCOMPSUP := { "bcc32", "dm", "gcc", "icc", "mingw", "mingwce", "msvc", "msvcce", "owatcom", "pocc", "pocc64", "poccce", "rsxnt", "xcc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
@@ -264,6 +266,9 @@ FUNCTION Main( ... )
       ENDIF
       IF ! Empty( t_cCOMP )
          OutStd( "hbmk: Autodetected HB_COMPILER: " + t_cCOMP + hb_osNewLine() )
+      ELSE
+         OutErr( "hbmk: Harbour Make couldn't detect any supported C compilers" + hb_osNewLine() )
+         OutErr( "      on your system. Please setup one and try again." + hb_osNewLine() )
       ENDIF
    ENDIF
 
@@ -1285,7 +1290,6 @@ STATIC PROCEDURE ShowHelp()
       "  -nohbp              do not process .hbp files" ,;
       "" ,;
       "Notes:" ,;
-      "" ,;
       "  - Don't forget to create a MAIN() function in your application." ,;
       "  - Multiple -l, -o, @ parameters are accepted." ,;
       "  - .hbp option files in current dir are automatically processed." ,;
