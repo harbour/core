@@ -8,7 +8,7 @@ LIBNAME=gtalleg
 
 ifneq ($(HB_COMPILER),pocc)
 ifneq ($(HB_COMPILER),xcc)
-ifneq ($(HB_COMPILER),dm)
+ifneq ($(HB_COMPILER),dmc)
 ifneq ($(HB_COMPILER),owatcom)
 
 ifeq ($(HB_INC_ALLEGRO),)

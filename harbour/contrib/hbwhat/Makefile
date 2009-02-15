@@ -7,7 +7,7 @@ ROOT = ../../
 LIBNAME=hbwhat
 
 ifeq ($(HB_ARCHITECTURE),win)
-ifneq ($(HB_COMPILER),dm)
+ifneq ($(HB_COMPILER),dmc)
 
 C_SOURCES = \
 	wincorec.c \

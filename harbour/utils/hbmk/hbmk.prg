@@ -165,6 +165,7 @@ FUNCTION Main( ... )
    LOCAL cScriptFile
    LOCAL fhnd
    LOCAL lNOHBP
+   LOCAL lSysLoc
 
    LOCAL aParams
    LOCAL cParam
@@ -209,11 +210,7 @@ FUNCTION Main( ... )
    /* Setup architecture dependent data */
 
    DO CASE
-   CASE t_cARCH $ "bsd|hpux|sunos"
-      aCOMPSUP := { "gcc" }
-      cBin_CompPRG := "harbour"
-      s_aLIBHBGT := { "gttrm", "gtxwc" }
-   CASE t_cARCH == "darwin"
+   CASE t_cARCH $ "bsd|hpux|sunos" .OR. t_cARCH == "darwin"
       aCOMPSUP := { "gcc" }
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
@@ -241,7 +238,7 @@ FUNCTION Main( ... )
                     { "wpp386.exe", "owatcom" },;
                     { "pocc.exe"  , "pocc"    },;
                     { "dmc.exe"   , "dmc"     } }
-      aCOMPSUP := { "bcc32", "dm", "gcc", "icc", "mingw", "mingwce", "msvc", "msvcce", "owatcom", "pocc", "pocc64", "poccce", "rsxnt", "xcc" }
+      aCOMPSUP := { "bcc32", "dmc", "gcc", "icc", "mingw", "mingwce", "msvc", "msvcce", "owatcom", "pocc", "pocc64", "poccce", "rsxnt", "xcc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
    OTHERWISE
@@ -280,6 +277,8 @@ FUNCTION Main( ... )
 
    /* Autodetect Harbour environment */
 
+   lSysLoc := .F.
+
    s_cHB_BIN_INSTALL := DirAdaptPathSep( GetEnv( "HB_BIN_INSTALL" ) )
    s_cHB_LIB_INSTALL := DirAdaptPathSep( GetEnv( "HB_LIB_INSTALL" ) )
    s_cHB_INC_INSTALL := DirAdaptPathSep( GetEnv( "HB_INC_INSTALL" ) )
@@ -289,14 +288,13 @@ FUNCTION Main( ... )
       DO CASE
       CASE hb_ProgName() == "/opt/harbour/hbmk"
 
+         lSysLoc := .T.
+
          s_cHB_INSTALL_PREFIX := "/opt/harbour"
 
-         /* Build shared libs by default, if we're installed to default system locations. */
-         IF t_cARCH $ "bsd|hpux|sunos|linux|darwin"
-            s_lSHARED := .T.
-         ENDIF
-
       CASE hb_ProgName() == "/usr/local/bin/hbmk"
+
+         lSysLoc := .T.
 
          IF Empty( s_cHB_BIN_INSTALL )
             s_cHB_BIN_INSTALL := "/usr/local/bin"
@@ -306,11 +304,6 @@ FUNCTION Main( ... )
          ENDIF
          IF Empty( s_cHB_INC_INSTALL )
             s_cHB_INC_INSTALL := "/usr/local/lib/harbour"
-         ENDIF
-
-         /* Build shared libs by default, if we're installed to default system locations. */
-         IF t_cARCH $ "bsd|hpux|sunos|linux|darwin"
-            s_lSHARED := .T.
          ENDIF
 
       CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG )
@@ -346,6 +339,12 @@ FUNCTION Main( ... )
    ENDIF
 
    OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + hb_osNewLine() )
+
+   /* Build with shared libs by default, if we're installed to default system locations. */
+
+   IF lSysLoc .AND. ( t_cARCH $ "bsd|hpux|sunos|linux" .OR. t_cARCH == "darwin" )
+      s_lSHARED := .T.
+   ENDIF
 
    /* Process environment */
 
@@ -772,7 +771,7 @@ FUNCTION Main( ... )
    /* TODO */
    CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"
    CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"
-   CASE t_cARCH == "win" .AND. t_cCOMP == "dm"
+   CASE t_cARCH == "win" .AND. t_cCOMP == "dmc"
    CASE t_cARCH == "win" .AND. t_cCOMP == "icc"
    CASE t_cARCH == "win" .AND. t_cCOMP == "mingwce"
    CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"
@@ -1329,42 +1328,44 @@ STATIC PROCEDURE ShowHelp()
       "Syntax:  hbmk [options] [<@s>|<s.hbm>] <src[s][.prg|.c]> [-l<lib>] [-o<obj>]" ,;
       "" ,;
       "Options:" ,;
-      "  -o<outputfilename>  output file name" ,;
-      "  -l<libname>         link with <libname> library" ,;
-      "  -L<libpath>         additional path to search for libraries" ,;
-      "  -static|-shared     link with static/shared libs" ,;
-      "  -mt|-st             link with multi-thread/single-thread libs" ,;
-      "  -gui|-std           create GUI/console executable" ,;
-      "  -gt<name>           link with GT<name> GT driver, can be repeated to" ,;
-      "                      link with more GTs. The first one will be" ,;
-      "                      the default at runtime" ,;
-      "  -nulrdd             link with nulrdd" ,;
-      "  -bldflags           inherit .prg/.c/linker flags from Harbour build" ,;
-      "  -debug|-nodebug     add/exclude debug info" ,;
-      "  -map|-nomap         create (or not) a map file" ,;
-      "  -strip|-nostrip     strip (no strip) binaries" ,;
-      "  -trace              show commands executed" ,;
-      "  -run|-norun         run/don't run the created executable" ,;
-      "  -nohbp              do not process .hbp files" ,;
+      "  -o<outname>      output file name" ,;
+      "  -l<libname>      link with <libname> library" ,;
+      "  -L<libpath>      additional path to search for libraries" ,;
+      "  -static|-shared  link with static/shared libs" ,;
+      "  -mt|-st          link with multi-thread/single-thread libs" ,;
+      "  -gui|-std        create GUI/console executable" ,;
+      "  -gt<name>        link with GT<name> GT driver, can be repeated to link" ,;
+      "                   with more GTs. First one will be the default at runtime" ,;
+      "  -nulrdd[-]       link with nulrdd" ,;
+      "  -bldflags[-]     inherit .prg/.c/linker flags from Harbour build" ,;
+      "  -debug|-nodebug  add/exclude debug info" ,;
+      "  -map|-nomap      create (or not) a map file" ,;
+      "  -strip|-nostrip  strip (no strip) binaries" ,;
+      "  -trace|-notrace  show commands executed" ,;
+      "  -run|-norun      run/don't run the created executable" ,;
+      "  -nohbp           do not process .hbp files" ,;
       "" ,;
       "Notes:" ,;
       "  - Don't forget to create a MAIN() function in your application." ,;
-      "  - Multiple -l, -o, @ parameters are accepted." ,;
+      "  - Multiple -l, -o, @, .hbm parameters are accepted." ,;
       "  - .hbp option files in current dir are automatically processed." ,;
       "  - .hbp options (they should come in separate lines):" ,;
-      "    libs=[<libname[s]>], prgflags=[Harbour flags]," ,;
+      "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
       "    cflags=[C compiler flags], ldflags=[Linker flags]," ,;
-      "    gui=[yes|no], mt=[yes|no], shared=[yes|no], gt=[yes|no], nulrdd=[yes|no]" ,;
-      "    debug=[yes|no], map=[yes|no], strip=[yes|no], run=[yes|no]" ,;
+      "    gui|mt|shared|nulrdd|debug|map|strip|run=[yes|no]" ,;
+      "  - Platform filters are accepted in each .hbp line and with -l options." ,;
+      "    Filter format: {[!][<arch|comp>]}. Filters can be combined " ,;
+      "    using '&', '|' operators and grouped by parantheses." ,;
+      "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!dmc}, {(win|linux)&!owatcom}" ,;
       "  - Defaults and feature support vary by architecture/compiler." ,;
-      "" ,;
-      "    HB_COMPILER values supported for each HB_ARCHITECTURE:" ,;
-      "" ,;
-      "    bsd, darwin, hbupx, sunos: gcc",;
-      "    linux                    : gcc, owatcom" ,;
-      "    win                      : gcc, mingw, msvc, bcc32, owatcom, pocc, dmc" ,;
-      "    os2                      : gcc, owatcom, icc" ,;
-      "    dos                      : gcc, djgpp, owatcom, rsx32" }
+      "  - HB_COMPILER values supported for each HB_ARCHITECTURE:" ,;
+      "    linux  : gcc, gpp, owatcom" ,;
+      "    darwin : gcc" ,;
+      "    win    : gcc, mingw, msvc, bcc32, owatcom, pocc, pocc64," ,;
+      "             poccce, mingwce, msvcce, dmc, rsxnt, xcc, icc" ,;
+      "    os2    : gcc, owatcom, icc" ,;
+      "    dos    : gcc, djgpp, owatcom, rsx32" ,;
+      "    bsd, hpux, sunos: gcc" }
 
    AEval( aText, {|tmp| OutStd( tmp + hb_osNewLine() ) } )
 
