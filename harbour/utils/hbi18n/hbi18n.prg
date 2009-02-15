@@ -52,7 +52,7 @@
 
 #include "hbgtinfo.ch"
 
-#define _HB_I18N_MARGE  1
+#define _HB_I18N_MERGE  1
 #define _HB_I18N_GENHBL 2
 
 PROCEDURE Main( ... )
@@ -77,7 +77,7 @@ PROCEDURE Main( ... )
             IF nMode != 0
                lError := .T.
             ELSE
-               nMode := _HB_I18N_MARGE
+               nMode := _HB_I18N_MERGE
             ENDIF
          ELSEIF param == "g"
             IF nMode != 0
@@ -116,7 +116,7 @@ PROCEDURE Main( ... )
       Logo()
    ENDIF
 
-   IF nMode == _HB_I18N_MARGE
+   IF nMode == _HB_I18N_MERGE
       Merge( aFiles, cFileOut )
    ELSEIF nMode == _HB_I18N_GENHBL
       GenHbl( aFiles, cFileOut, lEmpty )

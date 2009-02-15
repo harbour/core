@@ -51,11 +51,13 @@
  */
 
 #include "common.ch"
+#include "directry.ch"
 #include "fileio.ch"
+#include "hbgtinfo.ch"
 
 /* TODO: Add support for more hbmk script features. */
 
-FUNCTION Main()
+FUNCTION Main( ... )
 
    LOCAL aLIB_BASE1 := {;
       "hbcpage" ,;
@@ -149,13 +151,19 @@ FUNCTION Main()
    LOCAL tmp
    LOCAL cScriptFile
    LOCAL fhnd
+   LOCAL lNOHBP
 
-   ShowHeader()
+   LOCAL aParams
+   LOCAL cParam
 
    IF PCount() == 0
+      ShowHeader()
       ShowHelp()
+      PauseForKey()
       RETURN 9
    ENDIF
+
+   ShowHeader()
 
    /* Autodetect architecture */
 
@@ -229,6 +237,7 @@ FUNCTION Main()
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
    OTHERWISE
       OutErr( "hbmk: Error: Architecture not properly set." + hb_osNewLine() )
+      PauseForKey()
       RETURN 1
    ENDCASE
 
@@ -253,6 +262,7 @@ FUNCTION Main()
 
    IF AScan( aCOMPSUP, {|tmp| tmp == s_cCOMP } ) == 0
       OutErr( "hbmk: Error: Compiler not properly set." + hb_osNewLine() )
+      PauseForKey()
       RETURN 2
    ENDIF
 
@@ -295,6 +305,7 @@ FUNCTION Main()
          s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".."
       OTHERWISE
          OutErr( "hbmk: Error: HB_INSTALL_PREFIX not set, failed to autodetect." + hb_osNewLine() )
+         PauseForKey()
          RETURN 3
       ENDCASE
    ELSE
@@ -312,11 +323,15 @@ FUNCTION Main()
 
    /* Process command line */
 
-   IF Lower( GetEnv( "GUI"    ) ) == "yes" ; s_lGUI    := .T. ; ENDIF
-   IF Lower( GetEnv( "MT"     ) ) == "yes" ; s_lMT     := .T. ; ENDIF
-   IF Lower( GetEnv( "SHARED" ) ) == "yes" ; s_lSHARED := .T. ; ENDIF
-   IF Lower( GetEnv( "DEBUG"  ) ) == "yes" ; s_lDEBUG  := .T. ; ENDIF
-   IF Lower( GetEnv( "NULRDD" ) ) == "yes" ; s_lNULRDD := .T. ; ENDIF
+   IF Lower( GetEnv( "HB_GUI"    ) ) == "yes" ; s_lGUI    := .T. ; ENDIF
+   IF Lower( GetEnv( "HB_MT"     ) ) == "yes" ; s_lMT     := .T. ; ENDIF
+   IF Lower( GetEnv( "HB_SHARED" ) ) == "yes" ; s_lSHARED := .T. ; ENDIF
+   IF Lower( GetEnv( "HB_DEBUG"  ) ) == "yes" ; s_lDEBUG  := .T. ; ENDIF
+   IF Lower( GetEnv( "HB_NULRDD" ) ) == "yes" ; s_lNULRDD := .T. ; ENDIF
+
+   IF Lower( Left( GetEnv( "HB_GT" ), 2 ) ) == "gt"
+      s_cGT := GetEnv( "HB_GT" )
+   ENDIF
 
    s_aPRG := {}
    s_aC := {}
@@ -325,36 +340,63 @@ FUNCTION Main()
    s_aOPTP := {}
    s_cPROGNAME := NIL
 
-   FOR tmp := 1 TO PCount()
+   /* Collect all command line parameters */
+   aParams := {}
+   FOR EACH cParam IN hb_AParams()
+      IF Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@"
+         /* Load parameters from script file */
+         HBM_Load( aParams, SubStr( cParam, 2 ) )
+      ELSE
+         AAdd( aParams, cParam )
+      ENDIF
+   NEXT
+
+   /* Process command line (1st pass) */
+   lNOHBP := .F.
+   FOR EACH cParam IN aParams
+      IF Lower( cParam ) == "-nohbp"
+         lNOHBP := .T.
+      ENDIF
+   NEXT
+
+   IF ! lNOHBP
+      /* Process automatic control files. */
+      HBP_ProcessAll( @s_aLIBUSER, @s_aOPTP, @s_lGUI, @s_lMT, @s_lNULRDD, @s_cGT )
+   ENDIF
+
+   /* Process command line (2nd pass) */
+   FOR EACH cParam IN aParams
 
       DO CASE
-      CASE Lower( hb_PValue( tmp ) ) == "-gui"             ; s_lGUI    := .T.
-      CASE Lower( hb_PValue( tmp ) ) == "-std"             ; s_lGUI    := .F.
-      CASE Lower( hb_PValue( tmp ) ) == "-mt"              ; s_lMT     := .T.
-      CASE Lower( hb_PValue( tmp ) ) == "-st"              ; s_lMT     := .F.
-      CASE Lower( hb_PValue( tmp ) ) == "-shared"          ; s_lSHARED := .T.
-      CASE Lower( hb_PValue( tmp ) ) == "-static"          ; s_lSHARED := .F.
-      CASE Lower( hb_PValue( tmp ) ) == "-debug"           ; s_lDEBUG  := .T.
-      CASE Lower( hb_PValue( tmp ) ) == "-nodebug"         ; s_lDEBUG  := .F.
-      CASE Lower( hb_PValue( tmp ) ) == "-nulrdd"          ; s_lNULRDD := .T.
-      CASE Lower( hb_PValue( tmp ) ) == "-strip"           ; s_lSTRIP  := .T.
-      CASE Lower( hb_PValue( tmp ) ) == "-nostrip"         ; s_lSTRIP  := .F.
-      CASE Lower( hb_PValue( tmp ) ) == "-trace"           ; s_lTRACE  := .T.
-      CASE Lower( Left( hb_PValue( tmp ), 3 ) ) == "-gt"   ; s_cGT := SubStr( hb_PValue( tmp ), 2 )
-      CASE Left( hb_PValue( tmp ), 2 ) == "-o"             ; s_cPROGNAME := SubStr( hb_PValue( tmp ), 3 )
-      CASE Left( hb_PValue( tmp ), 2 ) == "-l" .AND. ;
-           Len( hb_PValue( tmp ) ) > 2                     ; AAdd( s_aLIBUSER, SubStr( hb_PValue( tmp ), 3 ) )
-      CASE Left( hb_PValue( tmp ), 1 ) == "-"              ; AAdd( s_aOPTP   , hb_PValue( tmp ) )
-      CASE Lower( ExtGet( hb_PValue( tmp ) ) ) == ".prg"   ; AAdd( s_aPRG    , hb_PValue( tmp ) ) ; DEFAULT s_cPROGNAME TO hb_PValue( tmp )
-      CASE Lower( ExtGet( hb_PValue( tmp ) ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, hb_PValue( tmp ) )
-      CASE Lower( ExtGet( hb_PValue( tmp ) ) ) $ ".c|.cpp" ; AAdd( s_aC      , hb_PValue( tmp ) ) ; DEFAULT s_cPROGNAME TO hb_PValue( tmp )
-      CASE Lower( ExtGet( hb_PValue( tmp ) ) ) $ ".a|.lib" ; AAdd( s_aLIBUSER, hb_PValue( tmp ) )
-      OTHERWISE                                            ; AAdd( s_aPRG    , hb_PValue( tmp ) ) ; DEFAULT s_cPROGNAME TO hb_PValue( tmp )
+      CASE Lower( cParam ) == "-gui"             ; s_lGUI    := .T.
+      CASE Lower( cParam ) == "-std"             ; s_lGUI    := .F.
+      CASE Lower( cParam ) == "-mt"              ; s_lMT     := .T.
+      CASE Lower( cParam ) == "-st"              ; s_lMT     := .F.
+      CASE Lower( cParam ) == "-shared"          ; s_lSHARED := .T.
+      CASE Lower( cParam ) == "-static"          ; s_lSHARED := .F.
+      CASE Lower( cParam ) == "-debug"           ; s_lDEBUG  := .T.
+      CASE Lower( cParam ) == "-nodebug"         ; s_lDEBUG  := .F.
+      CASE Lower( cParam ) == "-nulrdd"          ; s_lNULRDD := .T.
+      CASE Lower( cParam ) == "-strip"           ; s_lSTRIP  := .T.
+      CASE Lower( cParam ) == "-nostrip"         ; s_lSTRIP  := .F.
+      CASE Lower( cParam ) == "-trace"           ; s_lTRACE  := .T.
+      CASE Lower( Left( cParam, 3 ) ) == "-gt"   ; DEFAULT s_cGT TO SubStr( cParam, 2 )
+      CASE Left( cParam, 2 ) == "-o"             ; s_cPROGNAME := SubStr( cParam, 3 )
+      CASE Left( cParam, 2 ) == "-l" .AND. ;
+           Len( cParam ) > 2                     ; AAdd( s_aLIBUSER, SubStr( cParam, 3 ) )
+      CASE Left( cParam, 1 ) == "-"              ; AAdd( s_aOPTP   , cParam )
+      CASE Lower( ExtGet( cParam ) ) == ".prg"   ; AAdd( s_aPRG    , cParam ) ; DEFAULT s_cPROGNAME TO cParam
+      CASE Lower( ExtGet( cParam ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, cParam )
+      CASE Lower( ExtGet( cParam ) ) $ ".c|.cpp" ; AAdd( s_aC      , cParam ) ; DEFAULT s_cPROGNAME TO cParam
+      CASE Lower( ExtGet( cParam ) ) $ ".a|.lib" ; AAdd( s_aLIBUSER, cParam )
+      OTHERWISE                                  ; AAdd( s_aPRG    , cParam ) ; DEFAULT s_cPROGNAME TO cParam
       ENDCASE
    NEXT
 
+   /* Start doing the make process. */
    IF ( Len( s_aPRG ) + Len( s_aC ) ) == 0
       OutErr( "hbmk: Error: No source files were specified." + hb_osNewLine() )
+      PauseForKey()
       RETURN 4
    ENDIF
 
@@ -414,6 +456,7 @@ FUNCTION Main()
          IF ! Empty( s_cGTPRG )
             FErase( s_cGTPRG )
          ENDIF
+         PauseForKey()
          RETURN 5
       ENDIF
    ENDIF
@@ -445,8 +488,10 @@ FUNCTION Main()
    s_aLIBVM := iif( s_lMT, aLIB_BASE_MT, aLIB_BASE_ST )
    aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, s_aLIBHBGT } )
 
-   IF AScan( aLIB_BASE2, {|tmp| Upper( tmp ) == Upper( s_cGT ) } ) == 0
-      AAdd( aLIB_BASE2, s_cGT )
+   IF ! Empty( s_cGT )
+      IF AScan( aLIB_BASE2, {|tmp| Upper( tmp ) == Upper( s_cGT ) } ) == 0
+         AAdd( aLIB_BASE2, s_cGT )
+      ENDIF
    ENDIF
 
    DO CASE
@@ -569,6 +614,9 @@ FUNCTION Main()
       cObjExt := ".obj"
       cBin_CompC := "bcc32"
       cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {OPTC} -e{E}.exe -I{I} -L{A} {C} {L}"
+      IF s_lSHARED
+           cOpt_CompC += " -L{B}"
+      ENDIF
       /* TOFIX: The two build systems should generate the same .dll name, otherwise
                 we can only be compatible with one of them. non-GNU is the common choice here. */
       s_aLIBSHARED := { iif( s_lMT, "harbourmt-11-b32", "harbour-11-b32" ), "hbmainstd", "hbmainwin", "hbcommon" }
@@ -589,7 +637,10 @@ FUNCTION Main()
 
       /* odbc32 ole32 oleaut32 comdlg32 comctl32 shell32 winspool user32 wsock32 advapi32 gdi32 */
 
-      cOpt_CompC := "-nologo -W3 {OPTC} -I{I} {C} /link /libpath:{A} {OPTL} {L}"
+      cOpt_CompC := "-nologo -W3 {OPTC} -I{I} {C} -Fe{E}.exe /link /libpath:{A} {OPTL} {L}"
+      IF s_lSHARED
+           AAdd( s_aOPTL, "/libpath:{B}" )
+      ENDIF
       s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
       /* TOFIX: The two build systems should generate the same .dll name, otherwise
                 we can only be compatible with one of them. non-GNU is the common choice here. */
@@ -702,7 +753,7 @@ FUNCTION Main()
                FClose( fhnd )
                cOpt_Link := "@" + cScriptFile
             ELSE
-               OutErr( "hbmk: Error: Link script couldn't be created, continuing in command line." + hb_osNewLine() )
+               OutErr( "hbmk: Warning: Link script couldn't be created, continuing in command line." + hb_osNewLine() )
             ENDIF
          ENDIF
 
@@ -737,6 +788,10 @@ FUNCTION Main()
    AEval( ListCook( s_aPRG, NIL, ".c" ), {|tmp| FErase( tmp ) } )
    AEval( s_aOBJ, {|tmp| FErase( tmp ) } )
    AEval( s_aCLEAN, {|tmp| FErase( tmp ) } )
+
+   IF nErrorLevel != 0
+      PauseForKey()
+   ENDIF
 
    RETURN nErrorLevel
 
@@ -891,10 +946,165 @@ STATIC PROCEDURE ShowHeader()
 
    RETURN
 
+STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
+                                 /* @ */ aOPTPRG,;
+                                 /* @ */ lGUI,;
+                                 /* @ */ lMT,;
+                                 /* @ */ lSHARED,;
+                                 /* @ */ lDEBUG,;
+                                 /* @ */ lNULRDD,;
+                                 /* @ */ lSTRIP,;
+                                 /* @ */ cGT )
+   LOCAL aFiles := Directory( "*.hbp" )
+   LOCAL aFile
+
+   FOR EACH aFile IN aFiles
+      OutStd( "hbmk: Processing: " + aFile[ F_NAME ] + hb_osNewLine() )
+      HBP_ProcessOne( hb_MemoRead( aFile[ F_NAME ] ),;
+         @aLIBS,;
+         @aOPTPRG,;
+         @lGUI,;
+         @lMT,;
+         @lSHARED,;
+         @lDEBUG,;
+         @lNULRDD,;
+         @lSTRIP,;
+         @cGT )
+   NEXT
+
+   RETURN
+
+#define _EOL          Chr( 10 )
+
+STATIC PROCEDURE HBP_ProcessOne( cFile,;
+                                 /* @ */ aLIBS,;
+                                 /* @ */ aOPTPRG,;
+                                 /* @ */ lGUI,;
+                                 /* @ */ lMT,;
+                                 /* @ */ lSHARED,;
+                                 /* @ */ lDEBUG,;
+                                 /* @ */ lNULRDD,;
+                                 /* @ */ lSTRIP,;
+                                 /* @ */ cGT )
+   LOCAL aLines
+   LOCAL cLine
+   LOCAL aList
+   LOCAL cItem
+
+   IF ! hb_osNewLine() == _EOL
+      cFile := StrTran( cFile, hb_osNewLine(), _EOL )
+   ENDIF
+   IF ! hb_osNewLine() == Chr( 13 ) + Chr( 10 )
+      cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), _EOL )
+   ENDIF
+   aLines := hb_ATokens( cFile, _EOL )
+
+   FOR EACH cLine IN aLines
+
+      cLine := AllTrim( cLine )
+
+      DO CASE
+      CASE Lower( Left( cLine, Len( "libs="     ) ) ) == "libs="     ; cLine := SubStr( cLine, Len( "libs="     ) + 1 )
+         aList := hb_ATokens( cLine, " " )
+
+         FOR EACH cItem IN aList
+            IF AScan( aLIBS, {| tmp | tmp == cItem } ) == 0
+               AAdd( aLIBS, cItem )
+            ENDIF
+         NEXT
+
+      CASE Lower( Left( cLine, Len( "prgflags=" ) ) ) == "prgflags=" ; cLine := SubStr( cLine, Len( "prgflags=" ) + 1 )
+         aList := hb_ATokens( cLine, " " )
+
+         FOR EACH cItem IN aList
+            IF AScan( aOPTPRG, {| tmp | tmp == cItem } ) == 0
+               AAdd( aOPTPRG, cItem )
+            ENDIF
+         NEXT
+
+      CASE Lower( Left( cLine, Len( "gui="      ) ) ) == "gui="      ; cLine := SubStr( cLine, Len( "gui="      ) + 1 )
+         DO CASE
+         CASE cLine == "yes" ; lGUI := .T.
+         CASE cLine == "no"  ; lGUI := .F.
+         ENDCASE
+
+      CASE Lower( Left( cLine, Len( "mt="       ) ) ) == "mt="       ; cLine := SubStr( cLine, Len( "mt="       ) + 1 )
+         DO CASE
+         CASE cLine == "yes" ; lMT := .T.
+         CASE cLine == "no"  ; lMT := .F.
+         ENDCASE
+
+      CASE Lower( Left( cLine, Len( "shared="   ) ) ) == "shared="   ; cLine := SubStr( cLine, Len( "shared="   ) + 1 )
+         DO CASE
+         CASE cLine == "yes" ; lSHARED := .T.
+         CASE cLine == "no"  ; lSHARED := .F.
+         ENDCASE
+
+      CASE Lower( Left( cLine, Len( "debug="    ) ) ) == "debug="    ; cLine := SubStr( cLine, Len( "debug="    ) + 1 )
+         DO CASE
+         CASE cLine == "yes" ; lDEBUG := .T.
+         CASE cLine == "no"  ; lDEBUG := .F.
+         ENDCASE
+
+      CASE Lower( Left( cLine, Len( "nulrdd="   ) ) ) == "nulrdd="   ; cLine := SubStr( cLine, Len( "nulrdd="   ) + 1 )
+         DO CASE
+         CASE cLine == "yes" ; lNULRDD := .T.
+         CASE cLine == "no"  ; lNULRDD := .F.
+         ENDCASE
+
+      CASE Lower( Left( cLine, Len( "strip="    ) ) ) == "strip="    ; cLine := SubStr( cLine, Len( "strip="    ) + 1 )
+         DO CASE
+         CASE cLine == "yes" ; lSTRIP := .T.
+         CASE cLine == "no"  ; lSTRIP := .F.
+         ENDCASE
+
+      CASE Lower( Left( cLine, Len( "gt="       ) ) ) == "gt="       ; cLine := SubStr( cLine, Len( "gt="       ) + 1 )
+         DEFAULT cGT TO cLine
+
+      ENDCASE
+   NEXT
+
+   RETURN
+
+STATIC PROCEDURE HBM_Load( aParams, cFileName )
+   LOCAL cFile := hb_MemoRead( cFileName )
+   LOCAL aLines
+   LOCAL cLine
+   LOCAL aOptions
+   LOCAL cOption
+
+   IF ! hb_osNewLine() == _EOL
+      cFile := StrTran( cFile, hb_osNewLine(), _EOL )
+   ENDIF
+   IF ! hb_osNewLine() == Chr( 13 ) + Chr( 10 )
+      cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), _EOL )
+   ENDIF
+   aLines := hb_ATokens( cFile, _EOL )
+
+   FOR EACH cLine IN aLines
+      aOptions := hb_ATokens( cLine, " " )
+      FOR EACH cOption IN aOptions
+         IF ! Empty( cOption )
+            AAdd( aParams, cOption )
+         ENDIF
+      NEXT
+   NEXT
+
+   RETURN
+
+STATIC PROCEDURE PauseForKey()
+
+   IF hb_gtInfo( HB_GTI_ISGRAPHIC )
+      OutStd( "Press any key to continue..." )
+      Inkey( 0 )
+   ENDIF
+
+   RETURN
+
 STATIC PROCEDURE ShowHelp()
 
    LOCAL aText := {;
-      "Usage: hbmk [options] <filename[s][.prg|.c]> [-l<libname>] [-o<objname>]" ,;
+      "Usage: hbmk [options] [@script] <filename[s][.prg|.c]> [-l<libname>] [-o<objname>]" ,;
       "" ,;
       "Options:" ,;
       "  -o<outputfilename>  output file name" ,;
@@ -910,12 +1120,18 @@ STATIC PROCEDURE ShowHelp()
       "  -debug|-nodebug     add/exclude debug info" ,;
       "  -strip|-nostrip     strip (no strip) binaries" ,;
       "  -trace              show commands executed" ,;
+      "  -nohbp              do not process .hbp files" ,;
       "" ,;
       "Notes:" ,;
       "" ,;
       "  - Don't forget to create a MAIN() function in your application." ,;
-      "  - Multiple -l, -o parameters are accepted." ,;
-      "  - Defaults and feature support varies by architecture/compiler." ,;
+      "  - Multiple -l, -o, @ parameters are accepted." ,;
+      "  - .hbp option files in current dir are automatically processed." ,;
+      "  - .hbp options (they should come in separate lines):" ,;
+      "    libs=[<libname[s]>], prgflags=[Harbour options]," ,;
+      "    gui=[yes|no], mt=[yes|no], shared=[yes|no], gt=[yes|no]" ,;
+      "    debug=[yes|no], nulrdd=[yes|no], strip=[yes|no]" ,;
+      "  - Defaults and feature support vary by architecture/compiler." ,;
       "" ,;
       "    HB_COMPILER values supported for each HB_ARCHITECURE:" ,;
       "" ,;
