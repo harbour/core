@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 00:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * common.mak
+  * make_b32.mak
+  * make_vc.mak
+  * make_gcc.mak
+  * utils/Makefile
+  - utils/hbmake
+    - Removed hbmake from repository.
+
 2009-02-17 00:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/compiler/hbusage.c
     + Added Vailton Renato to credit list.

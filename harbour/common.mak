@@ -168,7 +168,6 @@ HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
 HBI18N_DIR   = utils\hbi18n
 HBDOC_DIR    = utils\hbdoc
-HBMAKE_DIR   = utils\hbmake
 HBMK_DIR     = utils\hbmk
 
 #**********************************************************
@@ -217,7 +216,6 @@ $(HBRUN_DIR);\
 $(HBTEST_DIR);\
 $(HBI18N_DIR);\
 $(HBDOC_DIR);\
-$(HBMAKE_DIR);\
 $(HBMK_DIR)\
 
 ALL_SRC_DIRS_TMP=\
@@ -284,7 +282,6 @@ HBRUN_EXE    = $(BIN_DIR)\hbrun$(EXEEXT)
 HBTEST_EXE   = $(BIN_DIR)\hbtest$(EXEEXT)
 HBI18N_EXE   = $(BIN_DIR)\hbi18n$(EXEEXT)
 HBDOC_EXE    = $(BIN_DIR)\hbdoc$(EXEEXT)
-HBMAKE_EXE   = $(BIN_DIR)\hbmake$(EXEEXT)
 HBMK_EXE     = $(BIN_DIR)\hbmk$(EXEEXT)
 
 HB_DLLVER    = 11
@@ -1206,14 +1203,6 @@ HBDOC_EXE_OBJS = \
 
 #**********************************************************
 
-HBMAKE_EXE_OBJS = \
-    $(OBJ_DIR)\hbmake$(OBJEXT)   \
-    $(OBJ_DIR)\hbmgauge$(OBJEXT) \
-    $(OBJ_DIR)\hbmfrdln$(OBJEXT) \
-    $(OBJ_DIR)\hbmlang$(OBJEXT)  \
-
-#**********************************************************
-
 HBMK_EXE_OBJS = \
     $(OBJ_DIR)\hbmk$(OBJEXT) \
 
@@ -1317,7 +1306,6 @@ HB_BUILD_TARGETS_MAIN = \
     $(HBTEST_EXE)           \
     $(HBI18N_EXE)           \
     $(HBDOC_EXE)            \
-    $(HBMAKE_EXE)           \
     $(HBMK_EXE)             \
 
 # DLL Target is disabled by default

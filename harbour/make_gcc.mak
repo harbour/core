@@ -448,10 +448,6 @@ $(HBDOC_EXE)    :: StdLibs
 $(HBDOC_EXE)    :: $(HBDOC_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBMAKE_EXE)   :: StdLibs
-$(HBMAKE_EXE)   :: $(HBMAKE_EXE_OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
-#**********************************************************
 $(HBMK_EXE)     :: StdLibs
 $(HBMK_EXE)     :: $(HBMK_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)

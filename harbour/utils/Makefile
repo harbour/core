@@ -9,7 +9,6 @@ DIRS=\
 	hbtest \
 	hbi18n \
 	hbdoc \
-	hbmake \
 	hbmk \
 	$(HB_UTILS) \
 

@@ -552,20 +552,6 @@ $(STANDARD_STATIC_CLIBS)
 $(MINIMAL_STATIC_HBLIBS) $(HBDOC_LIBS)
 !
 #**********************************************************
-# HBMAKE build rule
-#**********************************************************
-$(HBMAKE_EXE) :: BasicLibs BasicExes StdLibs
-$(HBMAKE_EXE) :: $(HBMAKE_EXE_OBJS)
-    @if exist "$(HBMAKE_EXE)" $(DEL) "$(HBMAKE_EXE)" > NUL
-    $(CC) @&&!
-$(CFLAGS)
--e$(HBMAKE_EXE)
-$(**: = ^
-)
-$(STANDARD_STATIC_CLIBS)
-$(MINIMAL_STATIC_HBLIBS)
-!
-#**********************************************************
 # HBMK build rule
 #**********************************************************
 $(HBMK_EXE) :: BasicLibs BasicExes StdLibs
