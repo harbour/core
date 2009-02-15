@@ -361,7 +361,15 @@ FUNCTION Main( ... )
 
    IF ! lNOHBP
       /* Process automatic control files. */
-      HBP_ProcessAll( @s_aLIBUSER, @s_aOPTP, @s_lGUI, @s_lMT, @s_lNULRDD, @s_cGT )
+      HBP_ProcessAll( @s_aLIBUSER,;
+                      @s_aOPTP,;
+                      @s_lGUI,;
+                      @s_lMT,;
+                      @s_lSHARED,;
+                      @s_lDEBUG,;
+                      @s_lNULRDD,;
+                      @s_lSTRIP,;
+                      @s_cGT )
    ENDIF
 
    /* Process command line (2nd pass) */
@@ -1024,38 +1032,38 @@ STATIC PROCEDURE HBP_ProcessOne( cFile,;
 
       CASE Lower( Left( cLine, Len( "gui="      ) ) ) == "gui="      ; cLine := SubStr( cLine, Len( "gui="      ) + 1 )
          DO CASE
-         CASE cLine == "yes" ; lGUI := .T.
-         CASE cLine == "no"  ; lGUI := .F.
+         CASE Lower( cLine ) == "yes" ; lGUI := .T.
+         CASE Lower( cLine ) == "no"  ; lGUI := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "mt="       ) ) ) == "mt="       ; cLine := SubStr( cLine, Len( "mt="       ) + 1 )
          DO CASE
-         CASE cLine == "yes" ; lMT := .T.
-         CASE cLine == "no"  ; lMT := .F.
+         CASE Lower( cLine ) == "yes" ; lMT := .T.
+         CASE Lower( cLine ) == "no"  ; lMT := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "shared="   ) ) ) == "shared="   ; cLine := SubStr( cLine, Len( "shared="   ) + 1 )
          DO CASE
-         CASE cLine == "yes" ; lSHARED := .T.
-         CASE cLine == "no"  ; lSHARED := .F.
+         CASE Lower( cLine ) == "yes" ; lSHARED := .T.
+         CASE Lower( cLine ) == "no"  ; lSHARED := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "debug="    ) ) ) == "debug="    ; cLine := SubStr( cLine, Len( "debug="    ) + 1 )
          DO CASE
-         CASE cLine == "yes" ; lDEBUG := .T.
-         CASE cLine == "no"  ; lDEBUG := .F.
+         CASE Lower( cLine ) == "yes" ; lDEBUG := .T.
+         CASE Lower( cLine ) == "no"  ; lDEBUG := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "nulrdd="   ) ) ) == "nulrdd="   ; cLine := SubStr( cLine, Len( "nulrdd="   ) + 1 )
          DO CASE
-         CASE cLine == "yes" ; lNULRDD := .T.
-         CASE cLine == "no"  ; lNULRDD := .F.
+         CASE Lower( cLine ) == "yes" ; lNULRDD := .T.
+         CASE Lower( cLine ) == "no"  ; lNULRDD := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "strip="    ) ) ) == "strip="    ; cLine := SubStr( cLine, Len( "strip="    ) + 1 )
          DO CASE
-         CASE cLine == "yes" ; lSTRIP := .T.
-         CASE cLine == "no"  ; lSTRIP := .F.
+         CASE Lower( cLine ) == "yes" ; lSTRIP := .T.
+         CASE Lower( cLine ) == "no"  ; lSTRIP := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "gt="       ) ) ) == "gt="       ; cLine := SubStr( cLine, Len( "gt="       ) + 1 )
@@ -1104,7 +1112,7 @@ STATIC PROCEDURE PauseForKey()
 STATIC PROCEDURE ShowHelp()
 
    LOCAL aText := {;
-      "Usage: hbmk [options] [@script] <filename[s][.prg|.c]> [-l<libname>] [-o<objname>]" ,;
+      "Usage: hbmk [options] [@<script>] <source[s][.prg|.c]> [-l<lib>] [-o<obj>]" ,;
       "" ,;
       "Options:" ,;
       "  -o<outputfilename>  output file name" ,;
@@ -1135,14 +1143,11 @@ STATIC PROCEDURE ShowHelp()
       "" ,;
       "    HB_COMPILER values supported for each HB_ARCHITECURE:" ,;
       "" ,;
-      "    bsd    : gcc",;
-      "    darwin : gcc" ,;
-      "    hpux   : gcc" ,;
-      "    sunos  : gcc" ,;
-      "    linux  : gcc, owatcom" ,;
-      "    win    : gcc, mingw, msvc, bcc32, owatcom, rsxnt, pocc, dmc" ,;
-      "    os2    : gcc, owatcom, icc" ,;
-      "    dos    : gcc, djgpp, owatcom, rsx32" }
+      "    bsd, darwin, hbupx, sunos: gcc",;
+      "    linux                    : gcc, owatcom" ,;
+      "    win                      : gcc, mingw, msvc, bcc32, owatcom, pocc, dmc" ,;
+      "    os2                      : gcc, owatcom, icc" ,;
+      "    dos                      : gcc, djgpp, owatcom, rsx32" }
 
    AEval( aText, {|tmp| OutStd( tmp + hb_osNewLine() ) } )
 
