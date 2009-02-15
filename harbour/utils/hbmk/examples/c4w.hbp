@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+# Libs for Clip4Win
+{win}libs=c4wclass wbrowset otabt clip4win

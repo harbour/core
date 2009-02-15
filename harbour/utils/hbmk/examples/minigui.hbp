@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+# Libs for Harbour MiniGUI
+{win}libs=minigui

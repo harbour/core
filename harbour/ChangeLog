@@ -8,6 +8,37 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-16 17:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk.prg
+    + Added support for -map switch to create a map file.
+    + Added support for -run switch to run the created executable.
+    + Script files can be passed without '@' prefix if using the
+      extension '.hbm'. So 'hbmk myscript.hbm' will now also work.
+    + Now possible to negate most switches using a '-' postfix:
+      'hbmk -strip-'
+    + Added '-notrace'/'-trace-' switches to disable tracing.
+    + Some steps towards Windows resource support.
+    + Added support for 'cflags=' and 'ldflags=' in .hbp files.
+    + Added mini architecture/compiler filter which can be used
+      in every line of an .hbp file, and also for every library
+      passed on the command line:
+      hbmk hello.prg -lonlyforlinux{linux}
+      The filter expression can use paranthesis, '&' for AND,
+      '|' for OR and '!' for not. F.e.: {linux&!owatcom}
+    % Minor optimizations.
+
+  + utils/hbmk/examples
+  + utils/hbmk/examples/whoo.hbp
+  + utils/hbmk/examples/c4w.hbp
+  + utils/hbmk/examples/minigui.hbp
+  + utils/hbmk/examples/hwgui.hbp
+  + utils/hbmk/examples/fwh.hbp
+    + Added few example for .hbp files to support 3rd party
+      packages. These may be removed, as it's better if these
+      are supplied by the packages themselves.
+      NOTE: I took these from hbmake, and they are probably
+            obsolete.
+
 2009-02-15 08:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk.prg
     + Added -bldflags option which tells hbmk to also

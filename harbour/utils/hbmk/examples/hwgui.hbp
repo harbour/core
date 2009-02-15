@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+# Libs for HWGUI
+{win}libs=hwgui procmisc hwg_qhtm

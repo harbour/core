@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+# Libs for FiveWin
+{win}libs=fiveh fivehc
