@@ -1280,7 +1280,7 @@ STATIC FUNCTION ArchCompFilter( cItem )
    LOCAL xResult
    LOCAL cValue
 
-   LOCAL cExpr := "( hbm_ARCH() == Lower( '%1' ) .OR. hbm_COMP() == Lower( '%1' ) )"
+   LOCAL cExpr := "( hbm_ARCH() == '%1' .OR. hbm_COMP() == '%1' )"
 
    IF ( nStart := At( "{", cItem ) ) > 0 .AND. ;
       ( nEnd := hb_At( "}", cItem, nStart ) ) > 0

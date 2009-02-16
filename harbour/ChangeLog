@@ -8,6 +8,33 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 12:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbapicdp.h
+   * common.mak
+   * source/codepage/Makefile
+   + source/codepage/ucmacce.c
+   + source/codepage/ucmacice.c
+   + source/codepage/uc424.c
+   + source/codepage/ucmacrom.c
+   + source/codepage/ucmacgrk.c
+   + source/codepage/uc037.c
+   + source/codepage/uc875.c
+   + source/codepage/uc1026.c
+   + source/codepage/ucascii.c
+   + source/codepage/ucatari.c
+   + source/codepage/ucmaccyr.c
+   + source/codepage/uc1006.c
+   + source/codepage/ucnext.c
+   + source/codepage/ucmactrk.c
+   + source/codepage/uc856.c
+   + source/codepage/uc500.c
+     + Added missing codepages. Except for multi-byte ones,
+       which I believe are not supported by the current
+       Harbour infrastructure.
+
+   * utils/hbmk/hbmk.prg
+     ! Minor.
+
 2009-02-17 11:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk.prg
     + Added support to pass .hbp files on the command line.

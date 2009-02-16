@@ -157,6 +157,22 @@ typedef struct _HB_CODEPAGE
 #define HB_CPID_KAM        "kamenicky"
 #define HB_CPID_MAZ        "plmaz"
 #define HB_CPID_MIK        "bg-mik"
+#define HB_CPID_037        "cp037"
+#define HB_CPID_424        "cp424"
+#define HB_CPID_500        "cp500"
+#define HB_CPID_856        "cp856"
+#define HB_CPID_875        "cp875"
+#define HB_CPID_1006       "cp1006"
+#define HB_CPID_1026       "cp1026"
+#define HB_CPID_10000      "macroman"
+#define HB_CPID_10006      "macgreek"
+#define HB_CPID_10007      "maccyrillic"
+#define HB_CPID_10029      "maccentraleurope"
+#define HB_CPID_10079      "maciceland"
+#define HB_CPID_10081      "macturkish"
+#define HB_CPID_ATARIST    "atarist"
+#define HB_CPID_NEXTSTEP   "nextstep"
+#define HB_CPID_USASCII    "us-ascii"
 
 #define HB_UNITB_437       &hb_uniTbl_437
 #define HB_UNITB_737       &hb_uniTbl_737
@@ -204,6 +220,22 @@ typedef struct _HB_CODEPAGE
 #define HB_UNITB_KAM       &hb_uniTbl_kamenicky
 #define HB_UNITB_MAZ       &hb_uniTbl_mazovia
 #define HB_UNITB_MIK       &hb_uniTbl_MIK
+#define HB_UNITB_037       &hb_uniTbl_037
+#define HB_UNITB_424       &hb_uniTbl_424
+#define HB_UNITB_500       &hb_uniTbl_500
+#define HB_UNITB_856       &hb_uniTbl_856
+#define HB_UNITB_875       &hb_uniTbl_875
+#define HB_UNITB_1006      &hb_uniTbl_1006
+#define HB_UNITB_1026      &hb_uniTbl_1026
+#define HB_UNITB_10000     &hb_uniTbl_10000
+#define HB_UNITB_10006     &hb_uniTbl_10006
+#define HB_UNITB_10007     &hb_uniTbl_10007
+#define HB_UNITB_10029     &hb_uniTbl_10029
+#define HB_UNITB_10079     &hb_uniTbl_10079
+#define HB_UNITB_10081     &hb_uniTbl_10081
+#define HB_UNITB_ATARIST   &hb_uniTbl_ATARIST
+#define HB_UNITB_NEXTSTEP  &hb_uniTbl_NEXTSTEP
+#define HB_UNITB_USASCII   &hb_uniTbl_USASCII
 #define HB_UNITB_UNDEF     NULL /* ((PHB_UNITABLE) (-1)) */
 
 extern HB_UNITABLE hb_uniTbl_437;
@@ -252,6 +284,22 @@ extern HB_UNITABLE hb_uniTbl_KOI_8U;
 extern HB_UNITABLE hb_uniTbl_kamenicky;
 extern HB_UNITABLE hb_uniTbl_mazovia;
 extern HB_UNITABLE hb_uniTbl_MIK;
+extern HB_UNITABLE hb_uniTbl_037;
+extern HB_UNITABLE hb_uniTbl_424;
+extern HB_UNITABLE hb_uniTbl_500;
+extern HB_UNITABLE hb_uniTbl_856;
+extern HB_UNITABLE hb_uniTbl_875;
+extern HB_UNITABLE hb_uniTbl_1006;
+extern HB_UNITABLE hb_uniTbl_1026;
+extern HB_UNITABLE hb_uniTbl_10000;
+extern HB_UNITABLE hb_uniTbl_10006;
+extern HB_UNITABLE hb_uniTbl_10007;
+extern HB_UNITABLE hb_uniTbl_10029;
+extern HB_UNITABLE hb_uniTbl_10079;
+extern HB_UNITABLE hb_uniTbl_10081;
+extern HB_UNITABLE hb_uniTbl_ATARIST;
+extern HB_UNITABLE hb_uniTbl_NEXTSTEP;
+extern HB_UNITABLE hb_uniTbl_USASCII;
 
 extern HB_EXPORT PHB_CODEPAGE  hb_vmCDP( void );
 extern HB_EXPORT void          hb_vmSetCDP( PHB_CODEPAGE pCDP );

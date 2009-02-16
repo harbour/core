@@ -971,6 +971,22 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\ucmaz$(OBJEXT)    \
     $(OBJ_DIR)\uckam$(OBJEXT)    \
     $(OBJ_DIR)\ucmik$(OBJEXT)    \
+    $(OBJ_DIR)\uc037$(OBJEXT)    \
+    $(OBJ_DIR)\uc1006$(OBJEXT)   \
+    $(OBJ_DIR)\uc1026$(OBJEXT)   \
+    $(OBJ_DIR)\uc424$(OBJEXT)    \
+    $(OBJ_DIR)\uc500$(OBJEXT)    \
+    $(OBJ_DIR)\uc856$(OBJEXT)    \
+    $(OBJ_DIR)\uc875$(OBJEXT)    \
+    $(OBJ_DIR)\ucascii$(OBJEXT)  \
+    $(OBJ_DIR)\ucatari$(OBJEXT)  \
+    $(OBJ_DIR)\ucmacce$(OBJEXT)  \
+    $(OBJ_DIR)\ucmaccyr$(OBJEXT) \
+    $(OBJ_DIR)\ucmacgrk$(OBJEXT) \
+    $(OBJ_DIR)\ucmacice$(OBJEXT) \
+    $(OBJ_DIR)\ucmacrom$(OBJEXT) \
+    $(OBJ_DIR)\ucmactrk$(OBJEXT) \
+    $(OBJ_DIR)\ucnext$(OBJEXT)   \
 
 #**********************************************************
 

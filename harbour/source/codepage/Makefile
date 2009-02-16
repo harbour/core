@@ -119,6 +119,22 @@ C_SOURCES=\
 	uckoi8u.c  \
 	ucmaz.c    \
 	ucmik.c    \
+	uc037.c    \
+	uc1006.c   \
+	uc1026.c   \
+	uc424.c    \
+	uc500.c    \
+	uc856.c    \
+	uc875.c    \
+	ucascii.c  \
+	ucatari.c  \
+	ucmacce.c  \
+	ucmaccyr.c \
+	ucmacgrk.c \
+	ucmacice.c \
+	ucmacrom.c \
+	ucmactrk.c \
+	ucnext.c   \
 
 LIBNAME=hbcpage
 
