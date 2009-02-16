@@ -8,6 +8,33 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-16 18:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  - contrib/hbct/tests/hbmk.bat
+  - contrib/hbcurl/tests/hbmk.bat
+  + contrib/hbcurl/tests/hbcurl.hbp
+  - contrib/hbclipsm/tests/hbmk.bat
+  + contrib/hbclipsm/tests/hbclipsm.hbp
+  - contrib/hbcrypt/tests/hbmk.bat
+  + contrib/hbcrypt/tests/hbcrypt.hbp
+  - contrib/examples/pp/hbmk.bat
+  + contrib/examples/pp/pp.hbm
+  - contrib/examples/guestbk/hbmk.bat
+  + contrib/examples/guestbk/guestbk.hbm
+  - contrib/examples/pe/hbmk.bat
+  + contrib/examples/pe/pe.hbm
+  - contrib/examples/hbsqlit2/tests/hbmk.bat
+  + contrib/examples/hbsqlit2/tests/hbsqlit2.hbp
+  - contrib/examples/hscript/hbmk.bat
+  + contrib/examples/hscript/hscript.hbm
+  - utils/hbdoc/hbmk.bat
+  + utils/hbdoc/hbdoc.hbm
+    * Converted some DOS/WIN batch files to platform
+      independent .hbm/.hbp files.
+    ; Please test them.
+
+  * ChangeLog
+    + Marked DBCREATETEMP() as DONE.
+
 2009-02-16 18:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
     + Added HB_DBCREATETEMP()
@@ -32,8 +59,8 @@
 
   * harbour/source/rdd/dbcmd.c
     + added .prg function to create temporary files:
-         dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, ;
-                       <cCodePage>, <nConnection> ) -> <lSuccess>
+         hb_dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, ;
+                          <cCodePage>, <nConnection> ) -> <lSuccess>
       Not all RDDs have to support it. It's verified by support for
       DBI_ISTEMPORARY dbInfo() action.
 
@@ -4699,11 +4726,12 @@
       GETE[NV](), HB_GETENV(), __RUN(), HB_RUN(),
       HB_ARGSTRING(), HB_CMDLINE().
 
-  ; TODO: dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, <cDelimArg>, <nConnection> ) -> <lSuccess>
+  ; TODO: hb_dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, <nConnection> ) -> <lSuccess>
           Generates and opens a new dbf with a temporary filename
           in exclusive mode, deletes it automatically when closed.
           All indexes created for this table, should ideally have
           the temporary flag on, so those get deleted too, when closed.
+          [DONE]
 
   ; TOFIX: hb_regex*() functions will not honor Harbour CP setting,
            when case insensitivity is selected.
