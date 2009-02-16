@@ -454,6 +454,23 @@ FUNCTION Main( ... )
       CASE Left( cParam, 2 ) == "-l" .AND. ;
            Len( cParam ) > 2                     ; AAddNotEmpty( s_aLIBUSER, DirAdaptPathSep( ArchCompFilter( SubStr( cParam, 3 ) ) ) )
       CASE Left( cParam, 1 ) == "-"              ; AAdd( s_aOPTPRG , DirAdaptPathSep( cParam ) )
+      CASE Lower( ExtGet( cParam ) ) == ".hbp"
+
+         HBP_ProcessOne( cParam,;
+            @s_aLIB,;
+            @s_aOPTPRG,;
+            @s_aOPTC,;
+            @s_aOPTL,;
+            @s_lGUI,;
+            @s_lMT,;
+            @s_lSHARED,;
+            @s_lDEBUG,;
+            @s_lNULRDD,;
+            @s_lMAP,;
+            @s_lSTRIP,;
+            @s_lRUN,;
+            @s_cGT )
+
       CASE Lower( ExtGet( cParam ) ) == ".prg"   ; AAdd( s_aPRG    , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
       CASE Lower( ExtGet( cParam ) ) == ".rc"    ; AAdd( s_aRESSRC , DirAdaptPathSep( cParam ) )
       CASE Lower( ExtGet( cParam ) ) == ".res"   ; AAdd( s_aRESCMP , DirAdaptPathSep( cParam ) )
@@ -1093,7 +1110,7 @@ STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
       IF ! t_lQuiet
          OutStd( "hbmk: Processing: " + aFile[ F_NAME ] + hb_osNewLine() )
       ENDIF
-      HBP_ProcessOne( hb_MemoRead( aFile[ F_NAME ] ),;
+      HBP_ProcessOne( aFile[ F_NAME ],;
          @aLIBS,;
          @aOPTPRG,;
          @aOPTC,;
@@ -1113,7 +1130,7 @@ STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
 
 #define _EOL          Chr( 10 )
 
-STATIC PROCEDURE HBP_ProcessOne( cFile,;
+STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                                  /* @ */ aLIBS,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
@@ -1127,6 +1144,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFile,;
                                  /* @ */ lSTRIP,;
                                  /* @ */ lRUN,;
                                  /* @ */ cGT )
+   LOCAL cFile := hb_MemoRead( cFileName )
    LOCAL cLine
    LOCAL cItem
 
@@ -1333,7 +1351,7 @@ STATIC PROCEDURE ShowHeader()
 STATIC PROCEDURE ShowHelp()
 
    LOCAL aText := {;
-      "Syntax:  hbmk [options] [<@s>|<s.hbm>] <src[s][.prg|.c]> [-l<lib>] [-o<obj>]" ,;
+      "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c]> [-l<lib>] [-o<obj>]" ,;
       "" ,;
       "Options:" ,;
       "  -o<outname>      output file name" ,;
@@ -1351,12 +1369,13 @@ STATIC PROCEDURE ShowHelp()
       "  -strip|-nostrip  strip (no strip) binaries" ,;
       "  -trace|-notrace  show commands executed" ,;
       "  -run|-norun      run/don't run the created executable" ,;
-      "  -nohbp           do not process .hbp files" ,;
+      "  -nohbp           do not process .hbp files in current dir" ,;
       "  -q               quiet mode" ,;
       "" ,;
       "Notes:" ,;
-      "  - Don't forget to create a MAIN() function in your application." ,;
-      "  - Multiple -l, -o, @, .hbm parameters are accepted." ,;
+      "  - Don't forget to create a MAIN() entry function in your application." ,;
+      "  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>." ,;
+      "  - Multiple -l, -o parameters are accepted." ,;
       "  - .hbp option files in current dir are automatically processed." ,;
       "  - .hbp options (they should come in separate lines):" ,;
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;

@@ -47,7 +47,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #define HB_OS_WIN_USED
 
@@ -67,7 +67,7 @@ HB_FUNC( WAPI_IMAGELIST_ADD )
                                wapi_par_HBITMAP( 2 ),
                                ISNIL( 3 ) ? NULL : wapi_par_HBITMAP( 3 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 int ImageList_AddMasked( HIMAGELIST himl, HBITMAP hbmImage, COLORREF crMask );
 */
@@ -77,7 +77,7 @@ HB_FUNC( WAPI_IMAGELIST_ADDMASKED )
                                      wapi_par_HBITMAP( 2 ),
                                      wapi_par_COLORREF( 3 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_BeginDrag( HIMAGELIST himlTrack, int iTrack, int dxHotspot, int dyHotspot );
 */
@@ -88,7 +88,7 @@ HB_FUNC( WAPI_IMAGELIST_BEGINDRAG )
                                     wapi_par_INT( 3 ),
                                     wapi_par_INT( 4 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 HRESULT ImageList_CoCreateInstance( REFCLSID rclsid, const IUnknown *punkOuter, REFIID riid, void **ppv );
 */
@@ -97,7 +97,7 @@ HB_FUNC( WAPI_IMAGELIST_COCREATEINSTANCE )
 {
 }
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_Copy( HIMAGELIST himlDst, int iDst, HIMAGELIST himlSrc, int iSrc, UINT uFlags );
 */
@@ -109,7 +109,7 @@ HB_FUNC( WAPI_IMAGELIST_COPY )
                                wapi_par_INT( 4 ),
                                wapi_par_UINT( 5 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 HIMAGELIST ImageList_Create( int cx, int cy, UINT flags, int cInitial, int cGrow );
 */
@@ -135,7 +135,7 @@ HB_FUNC( WAPI_IMAGELIST_CREATE )
                                       wapi_par_INT( 5 ) ) );
    #endif
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_Destroy( HIMAGELIST himl );
 */
@@ -143,7 +143,7 @@ HB_FUNC( WAPI_IMAGELIST_DESTROY )
 {
    wapi_ret_L( ImageList_Destroy( wapi_par_HIMAGELIST( 1 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_DragEnter( HWND hwndLock, int x, int y );
 */
@@ -153,7 +153,7 @@ HB_FUNC( WAPI_IMAGELIST_DRAGENTER )
                                     wapi_par_INT( 2 ),
                                     wapi_par_INT( 3 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_DragLeave( HWND hwndLock );
 */
@@ -161,7 +161,7 @@ HB_FUNC( WAPI_IMAGELIST_DRAGLEAVE )
 {
    wapi_ret_L( ImageList_DragLeave( wapi_par_HWND( 1 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_DragMove( int x, int y );
 */
@@ -169,7 +169,7 @@ HB_FUNC( WAPI_IMAGELIST_DRAGMOVE )
 {
    wapi_ret_L( ImageList_DragMove( wapi_par_INT( 1 ), wapi_par_INT( 2 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_DragShowNolock( BOOL fShow );
 */
@@ -177,7 +177,7 @@ HB_FUNC( WAPI_IMAGELIST_DRAGSHOWNOLOCK )
 {
    wapi_ret_L( ImageList_DragShowNolock( hb_parl( 1 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_Draw( HIMAGELIST himl, int i, HDC hdcDst, int x, int y, UINT fStyle );
 */
@@ -190,7 +190,7 @@ HB_FUNC( WAPI_IMAGELIST_DRAW )
                                wapi_par_INT( 5 ),
                                wapi_par_UINT( 6 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_DrawEx( HIMAGELIST himl, int i, HDC hdcDst, int x, int y, int dx, int dy,
                                           COLORREF rgbBk, COLORREF rgbFg, UINT fStyle );
@@ -208,7 +208,7 @@ HB_FUNC( WAPI_IMAGELIST_DRAWEX )
                                  wapi_par_COLORREF( 9 ),
                                  wapi_par_UINT( 10 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_DrawIndirect( IMAGELISTDRAWPARAMS *pimldp );
 */
@@ -217,7 +217,7 @@ HB_FUNC( WAPI_IMAGELIST_DRAWINDIRECT )
 {
 }
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 HIMAGELIST ImageList_Duplicate( HIMAGELIST himl );
 */
@@ -225,7 +225,7 @@ HB_FUNC( WAPI_IMAGELIST_DUPLICATE )
 {
    wapi_ret_HANDLE( ImageList_Duplicate( wapi_par_HIMAGELIST( 1 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 VOID ImageList_EndDrag( VOID );
 */
@@ -235,7 +235,7 @@ HB_FUNC( WAPI_IMAGELIST_ENDDRAG )
    ImageList_EndDrag();
 }
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 COLORREF ImageList_GetBkColor( HIMAGELIST himl );
 */
@@ -243,7 +243,7 @@ HB_FUNC( WAPI_IMAGELIST_GETBKCOLOR )
 {
    wapi_ret_COLORREF( ImageList_GetBkColor( wapi_par_HIMAGELIST( 1 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 HIMAGELIST ImageList_GetDragImage( POINT *ppt, POINT *pptHotspot );
 */
@@ -252,7 +252,7 @@ HB_FUNC( WAPI_IMAGELIST_GETDRAGIMAGE )
 {
 }
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 HICON ImageList_GetIcon( HIMAGELIST himl, int i, UINT flags );
 */
@@ -262,7 +262,7 @@ HB_FUNC( WAPI_IMAGELIST_GETICON )
                                        wapi_par_INT( 2 ),
                                        wapi_par_UINT( 3 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_GetIconSize( HIMAGELIST himl, int *cx, int *cy );
 */
@@ -282,7 +282,7 @@ HB_FUNC( WAPI_IMAGELIST_GETICONSIZE )
      hb_retl( 0 );
    }
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 int ImageList_GetImageCount( HIMAGELIST himl );
 */
@@ -290,7 +290,7 @@ HB_FUNC( WAPI_IMAGELIST_GETIMAGECOUNT )
 {
    wapi_ret_NI( ImageList_GetImageCount( wapi_par_HIMAGELIST( 1 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*                          T O R E V I E W
 
 BOOL ImageList_GetImageInfo( HIMAGELIST himl, int i, IMAGEINFO *pImageInfo );
@@ -304,7 +304,7 @@ HB_FUNC( WAPI_IMAGELIST_GETIMAGEINFO )
       hb_retclen( ( char* ) &ii, sizeof( IMAGEINFO ) );
    }
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 HIMAGELIST ImageList_LoadImage( HINSTANCE hi, LPCTSTR lpbmp, int cx, int cGrow,
                                 COLORREF crMask, UINT uType, UINT uFlags );
@@ -326,7 +326,7 @@ HB_FUNC( WAPI_IMAGELIST_LOADIMAGE )
                                          wapi_par_UINT( 6 ),
                                          wapi_par_UINT( 7 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 HIMAGELIST ImageList_Merge( HIMAGELIST himl1, int i1, HIMAGELIST himl2, int i2, int dx, int dy );
 */
@@ -340,7 +340,7 @@ HB_FUNC( WAPI_IMAGELIST_MERGE )
                                      wapi_par_INT( 6 ) ) );
 
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 HIMAGELIST ImageList_Read( LPSTREAM pstm );
 */
@@ -349,7 +349,7 @@ HB_FUNC( WAPI_IMAGELIST_READ )
 {
 }
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 HRESULT ImageList_ReadEx( DWORD dwFlags, LPSTREAM pstm, REFIID riid, void **ppv );
 */
@@ -358,7 +358,7 @@ HB_FUNC( WAPI_IMAGELIST_READEX )
 {
 }
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_Remove( HIMAGELIST himl, int i );
 */
@@ -367,7 +367,7 @@ HB_FUNC( WAPI_IMAGELIST_REMOVE )
    wapi_ret_L( ImageList_Remove( wapi_par_HIMAGELIST( 1 ),
                                  wapi_par_INT( 2 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_Replace( HIMAGELIST himl, int i, HBITMAP hbmImage, HBITMAP hbmMask );
 */
@@ -378,7 +378,7 @@ HB_FUNC( WAPI_IMAGELIST_REPLACE )
                                   wapi_par_HBITMAP( 3 ),
                                   wapi_par_HBITMAP( 4 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 int ImageList_ReplaceIcon( HIMAGELIST himl, int i, HICON hicon );
 */
@@ -389,7 +389,7 @@ HB_FUNC( WAPI_IMAGELIST_REPLACEICON )
                                        wapi_par_HICON( 3 ) ) );
 
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 COLORREF ImageList_SetBkColor( HIMAGELIST himl, COLORREF clrBk );
 */
@@ -398,7 +398,7 @@ HB_FUNC( WAPI_IMAGELIST_SETBKCOLOR )
    wapi_ret_COLORREF( ImageList_SetBkColor( wapi_par_HIMAGELIST( 1 ),
                                             wapi_par_COLORREF( 2 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 int ImageList_SetColorTable( HIMAGELIST himl, int start, int len, RGBQUAD *prgb );
 */
@@ -410,7 +410,7 @@ HB_FUNC( WAPI_IMAGELIST_SETCOLORTABLE )
                                          wapi_par_INT( 3 ),
 }
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_SetDragCursorImage( HIMAGELIST himlDrag, int iDrag, int dxHotspot, int dyHotspot );
 */
@@ -421,7 +421,7 @@ HB_FUNC( WAPI_IMAGELIST_SETDRAGCURSORIMAGE )
                                              wapi_par_INT( 3 ),
                                              wapi_par_INT( 4 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_SetIconSize( HIMAGELIST himl, int cx, int cy );
 */
@@ -431,7 +431,7 @@ HB_FUNC( WAPI_IMAGELIST_SETICONSIZE )
                                       wapi_par_INT( 2 ),
                                       wapi_par_INT( 3 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_SetImageCount( HIMAGELIST himl, UINT uNewCount );
 */
@@ -440,7 +440,7 @@ HB_FUNC( WAPI_IMAGELIST_SETIMAGECOUNT )
    wapi_ret_L( ImageList_SetImageCount( wapi_par_HIMAGELIST( 1 ),
                                         wapi_par_UINT( 2 ) ) );
 }
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_SetOverlayImage( HIMAGELIST himl, int iImage, int iOverlay );
 */
@@ -449,7 +449,7 @@ HB_FUNC( WAPI_IMAGELIST_SETOVERLAYIMAGE )
 {
 }
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_Write( HIMAGELIST himl, LPSTREAM pstm );
 */
@@ -458,7 +458,7 @@ HB_FUNC( WAPI_IMAGELIST_WRITE )
 {
 }
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 /*
 HRESULT ImageList_WriteEx( HIMAGELIST himl, DWORD dwFlags, LPSTREAM pstm );
 */
@@ -470,4 +470,3 @@ HB_FUNC( WAPI_IMAGELIST_WRITEEX )
 /*----------------------------------------------------------------------//
 //                            END - ImageList_* - API
 //----------------------------------------------------------------------*/
-
