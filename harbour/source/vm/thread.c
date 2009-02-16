@@ -419,7 +419,11 @@ BOOL hb_threadCondWait( HB_COND_T * cond, HB_CRITICAL_T * mutex )
     * even if it returns TRUE
     */
    if( !fResult )
+   {
+      HB_CRITICAL_LOCK( cond->critical );
       cond->waiters--;
+      HB_CRITICAL_UNLOCK( cond->critical );
+   }
 
    return fResult;
 
@@ -468,7 +472,11 @@ BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, ULONG ulMi
     * even if it returns TRUE
     */
    if( !fResult )
+   {
+      HB_CRITICAL_LOCK( cond->critical );
       cond->waiters--;
+      HB_CRITICAL_UNLOCK( cond->critical );
+   }
 
    return fResult;
 
@@ -911,10 +919,12 @@ static int hb_threadWait( PHB_THREADSTATE * pThreads, int iThreads,
 
       s_waiting_for_threads++;
 #if defined( HB_PTHREAD_API )
+      hb_vmUnlock();
       if( ulMilliSec != HB_THREAD_INFINITE_WAIT )
          fExit = pthread_cond_timedwait( &s_thread_cond, &s_thread_mtx, &ts ) != 0;
       else
          fExit = pthread_cond_wait( &s_thread_cond, &s_thread_mtx ) != 0;
+      hb_vmLock();
 #else
       HB_CRITICAL_UNLOCK( s_thread_mtx );
       hb_vmUnlock();
@@ -1452,16 +1462,21 @@ BOOL hb_threadMutexTimedLock( PHB_ITEM pItem, ULONG ulMilliSec )
 
             /* pthread_cond_signal() wakes up at least one thread
              * but it's not guaranteed it's exactly one thread so
-             * we should use while look here.
+             * we should use while loop here.
              */
             pMutex->lockers++;
-            while( pMutex->lock_count == 0 )
+            do
             {
                if( pthread_cond_timedwait( &pMutex->cond_l, &pMutex->mutex, &ts ) != 0 )
                   break;
             }
+            while( pMutex->lock_count != 0 );
             pMutex->lockers--;
 #else
+            /* TODO: on some platforms HB_COND_SIGNAL() may wake up more then
+             *       one thread so we should use while loop to check if wait
+             *       condition is true.
+             */
             pMutex->lockers++;
             HB_CRITICAL_UNLOCK( pMutex->mutex );
             ( void ) HB_COND_TIMEDWAIT( pMutex->cond_l, ulMilliSec );
@@ -1754,6 +1769,10 @@ PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, ULONG ulMilliSec, BOOL fC
          }
 #  else
          {
+            /* TODO: on some platforms HB_COND_SIGNAL() may wake up more then
+             *       one thread so we should use while loop to check if wait
+             *       condition is true.
+             */
             HB_CRITICAL_UNLOCK( pMutex->mutex );
             ( void ) HB_COND_TIMEDWAIT( pMutex->cond_w, ulMilliSec );
             HB_CRITICAL_LOCK( pMutex->mutex );

@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-16 15:03 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/thread.c
+    ! fixed typo in PTHREAD (*nixes) version of hb_threadMutexTimedLock()
+      (.prg HB_MUTEXLOCK() with timeout parameter)
+    ! unlock HVM in *nix version of hb_threadWait()
+    ; added TODO note
+
 2009-02-16 14:02 UTC+0200 Chen Kedem <niki@synel.co.il>
   * doc/dirstruc.txt
     * Updated to reflect current state.
