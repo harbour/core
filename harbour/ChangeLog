@@ -8,6 +8,28 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 02:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  - bin/hbmk.bat
+  - bin/hbmk_gcc.bat
+  - bin/hbmk_os2.cmd
+  - bin/hbmk_ow.bat
+  - bin/hbmk_b32.bat
+  - bin/hbmk_vc.bat
+    - Removed make files obsoleted by new hbmk tool.
+      Old calling convention, features, switches, envvars
+      continue to work.
+      WARNING: If you've called hbmk as hbmk.bat,
+               you'll need to change that to simply hbmk.
+
+  * contrib/hbodbc/odbc.c
+    * Minor formatting.
+
+  * utils/hbmk/hbmk.prg
+    ! Fixed owatcom link commands. (it was also wrong
+      in hbmk.bat)
+    + Added -debug support for owatcom. (untested)
+    + Added rsxnt/rsx32 support in an unobtrusive way.
+
 2009-02-17 00:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * common.mak
   * make_b32.mak

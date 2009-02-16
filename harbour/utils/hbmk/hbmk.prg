@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Harbour Make
  *
- * Copyright 2009 Viktor Szakats <harbour.01 syenar.hu>
+ * Copyright 1999-2009 Viktor Szakats <harbour.01 syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -152,6 +152,7 @@ FUNCTION Main( ... )
 
    LOCAL cLibPrefix
    LOCAL cLibExt
+   LOCAL cObjPrefix
    LOCAL cObjExt
 
    LOCAL cCommand
@@ -588,18 +589,25 @@ FUNCTION Main( ... )
 
    CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
         ( t_cARCH == "win" .AND. t_cCOMP == "mingw" ) .OR. ;
+        ( t_cARCH == "win" .AND. t_cCOMP == "rsxnt" ) .OR. ;
         ( t_cARCH == "os2" .AND. t_cCOMP == "gcc" )
 
       cLibPrefix := "-l"
       cLibExt := NIL
       cObjExt := ".o"
       cBin_CompC := "gcc"
-      cOpt_CompC := "{C} -O3 -mno-cygwin -o{E} {OPTC} -I{I} -L{A}"
+      cOpt_CompC := "{C} -O3 -o{E} {OPTC} -I{I} -L{A}"
       IF s_lMAP
            cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
       ENDIF
       IF s_lSHARED
            cOpt_CompC += " -L{B}"
+      ENDIF
+      IF t_cCOMP == "gcc"
+           cOpt_CompC += " -mno-cygwin"
+      ENDIF
+      IF t_cCOMP == "rsxnt"
+           cOpt_CompC += " -Zwin32"
       ENDIF
       cOpt_CompC += " {L}"
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
@@ -607,26 +615,18 @@ FUNCTION Main( ... )
          AAdd( s_aOPTC, "-s" )
       ENDIF
 
-   CASE t_cARCH == "dos" .AND. t_cCOMP == "djgpp"
+   CASE ( t_cARCH == "dos" .AND. t_cCOMP == "djgpp" ) .OR. ;
+        ( t_cARCH == "dos" .AND. t_cCOMP == "rsx32" )
 
       cLibPrefix := "-l"
       cLibExt := NIL
       cObjExt := ".o"
       cBin_CompC := "gcc"
       cOpt_CompC := "{C} -O3 -o{E} {OPTC} -I{I} -L{A} {L}{SCRIPT}"
-      s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
-      aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
-      IF s_lSTRIP
-         AAdd( s_aOPTC, "-s" )
+      IF t_cCOMP == "rsx32"
+           cOpt_CompC  += " -Zrsx32"
       ENDIF
-
-   CASE t_cARCH == "dos" .AND. t_cCOMP == "rsx32"
-
-      cLibPrefix := "-l"
-      cLibExt := NIL
-      cObjExt := ".o"
-      cBin_CompC := "gcc"
-      cOpt_CompC := "{C} -O3 -Zrsx32 -o{E} {OPTC} -I{I} -L{A} {L}"
+      s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
       IF s_lSTRIP
          AAdd( s_aOPTC, "-s" )
@@ -636,39 +636,52 @@ FUNCTION Main( ... )
    CASE t_cARCH == "dos" .AND. t_cCOMP == "owatcom"
       cLibPrefix := "LIB "
       cLibExt := ".lib"
+      cObjPrefix := "FILE "
       cObjExt := ".obj"
       cBin_CompC := "wpp386"
       cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {OPTC} {C}"
       cBin_Link := "wlink"
-      cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {OPTL} NAME {E} {L}"
+      cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {OPTL} NAME {E} {O} {L}"
+      IF s_lDEBUG
+         cOpt_Link := "DEBUG " + cOpt_Link
+      ENDIF
 
    CASE t_cARCH == "win" .AND. t_cCOMP == "owatcom"
       cLibPrefix := "LIB "
       cLibExt := ".lib"
+      cObjPrefix := "FILE "
       cObjExt := ".obj"
       cBin_CompC := "wpp386"
       cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT {OPTC} {C}"
       cBin_Link := "wlink"
-      cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {L}"
+      cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {L}"
+      IF s_lDEBUG
+         cOpt_Link := "DEBUG " + cOpt_Link
+      ENDIF
       s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32" } )
 
    CASE t_cARCH == "os2" .AND. t_cCOMP == "owatcom"
       cLibPrefix := "LIB "
       cLibExt := ".lib"
+      cObjPrefix := "FILE "
       cObjExt := ".obj"
       cBin_CompC := "wpp386"
       cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {OPTC} {C}"
       cBin_Link := "wlink"
-      cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {L}"
+      cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {L}"
+      IF s_lDEBUG
+         cOpt_Link := "DEBUG " + cOpt_Link
+      ENDIF
 
    CASE t_cARCH == "linux" .AND. t_cCOMP == "owatcom"
       cLibPrefix := "LIB "
       cLibExt := ".lib"
+      cObjPrefix := "FILE "
       cObjExt := ".obj"
       cBin_CompC := "wpp386"
       cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=LINUX {OPTC} {C}"
       cBin_Link := "wlink"
-      cOpt_Link := "ALL SYS LINUX OP CASEEXACT {OPTL} NAME {E} {L}"
+      cOpt_Link := "ALL SYS LINUX OP CASEEXACT {OPTL} NAME {E} {O} {L}"
       IF s_lDEBUG
          cOpt_Link := "DEBUG " + cOpt_Link
       ENDIF
@@ -775,7 +788,6 @@ FUNCTION Main( ... )
    CASE t_cARCH == "win" .AND. t_cCOMP == "icc"
    CASE t_cARCH == "win" .AND. t_cCOMP == "mingwce"
    CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"
-   CASE t_cARCH == "win" .AND. t_cCOMP == "rsxnt"
    CASE t_cARCH == "win" .AND. t_cCOMP == "xcc"
    ENDCASE
 
@@ -803,9 +815,8 @@ FUNCTION Main( ... )
 
       /* Compiling */
 
-      cOpt_CompC := StrTran( cOpt_CompC, "{C}"   , ArrayToList( ArrayJoin( ListCook( s_aPRG, "", ".c" ), s_aC ) ) )
-      cOpt_CompC := StrTran( cOpt_CompC, "{O}"   , ArrayToList( s_aOBJ ) )
-      cOpt_CompC := StrTran( cOpt_CompC, "{OUSR}", ArrayToList( s_aOBJUSER ) )
+      cOpt_CompC := StrTran( cOpt_CompC, "{C}"   , ArrayToList( ArrayJoin( ListCook( s_aPRG, NIL, ".c" ), s_aC ) ) )
+      cOpt_CompC := StrTran( cOpt_CompC, "{O}"   , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
       cOpt_CompC := StrTran( cOpt_CompC, "{L}"   , ArrayToList( s_aLIB ) )
       cOpt_CompC := StrTran( cOpt_CompC, "{OPTC}", iif( s_lBLDFLG, hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
                                                    GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( s_aOPTC ) )
@@ -852,7 +863,7 @@ FUNCTION Main( ... )
 
          /* Linking */
 
-         cOpt_Link := StrTran( cOpt_Link, "{O}"   , ArrayToList( ArrayJoin( s_aOBJ, s_aOBJUSER ) ) )
+         cOpt_Link := StrTran( cOpt_Link, "{O}"   , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
          cOpt_Link := StrTran( cOpt_Link, "{L}"   , ArrayToList( s_aLIB ) )
          cOpt_Link := StrTran( cOpt_Link, "{OPTL}", iif( s_lBLDFLG, hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
                                                     GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
@@ -1068,15 +1079,6 @@ STATIC FUNCTION DirNameGet( cFileName )
    hb_FNameSplit( cFileName, @cDir, @cName )
 
    RETURN hb_FNameMerge( cDir, cName )
-
-STATIC PROCEDURE ShowHeader()
-
-   OutStd( "Harbour Make " + HBRawVersion() + hb_osNewLine() +;
-           "Copyright (c) 2009, Viktor Szakats" + hb_osNewLine() +;
-           "http://www.harbour-project.org/" + hb_osNewLine() +;
-           hb_osNewLine() )
-
-   RETURN
 
 STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
                                  /* @ */ aOPTPRG,;
@@ -1319,6 +1321,15 @@ STATIC PROCEDURE PauseForKey()
       OutStd( "Press any key to continue..." )
       Inkey( 0 )
    ENDIF
+
+   RETURN
+
+STATIC PROCEDURE ShowHeader()
+
+   OutStd( "Harbour Make " + HBRawVersion() + hb_osNewLine() +;
+           "Copyright (c) 1999-2009, Viktor Szakats" + hb_osNewLine() +;
+           "http://www.harbour-project.org/" + hb_osNewLine() +;
+           hb_osNewLine() )
 
    RETURN
 

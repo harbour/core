@@ -4,10 +4,9 @@
 
 /*
  * Harbour Project source code
+ * This file contains source for first ODBC routines.
  *
- * This file contains source for first odbc routines.
- *
- * Copyright 1999  Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -305,15 +304,11 @@ HB_FUNC( SQLGETDATA ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBuffer ) -
          break;
       }
       else
-      {
          break;
-      }
    }
    hb_xfree( ( PTR ) bBuffer );
    if( bOut )
-   {
       hb_xfree( ( PTR ) bOut );
-   }
    hb_retni( wResult );
 }
 
@@ -486,10 +481,9 @@ HB_FUNC( SQLROWCOUN )
     SQLLEN  iRowCountPtr = hb_parni( 2 );
     WORD    wResult      = SQLRowCount( ( HSTMT ) hb_parptr( 1 ),
                                         &iRowCountPtr );
+
     if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO )
-    {
        hb_stornl( ( LONG ) iRowCountPtr, 2 );
-    }
 
     hb_retni( wResult );
 }
@@ -663,9 +657,7 @@ HB_FUNC( SQLSTOD )
       hb_retds( szHrbDate );
    }
    else
-   {
       hb_retds( NULL );
-   }
 }
 
 HB_FUNC( SQLMORERESULTS ) /* hEnv, hDbc */
