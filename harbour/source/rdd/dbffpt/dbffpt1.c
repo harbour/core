@@ -3895,21 +3895,23 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
          pArea->uiMemoBlockSize = hb_itemGetNI( pItem );
       }
 
-      /* create file name */
-      pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
-      if( ! pFileName->szExtension )
+      if( ! pArea->fTemporary )
       {
-         pItem = hb_itemPutC( pItem, NULL );
-         SELF_INFO( ( AREAP ) pArea, DBI_MEMOEXT, pItem );
-         pFileName->szExtension = hb_itemGetCPtr( pItem );
-         hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+         /* create file name */
+         pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
+         if( ! pFileName->szExtension )
+         {
+            pItem = hb_itemPutC( pItem, NULL );
+            SELF_INFO( ( AREAP ) pArea, DBI_MEMOEXT, pItem );
+            pFileName->szExtension = hb_itemGetCPtr( pItem );
+            hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+         }
+         else
+         {
+            hb_strncpy( ( char * ) szFileName, ( char * ) pCreateInfo->abName, sizeof( szFileName ) - 1 );
+         }
+         hb_xfree( pFileName );
       }
-      else
-      {
-         hb_strncpy( ( char * ) szFileName, ( char * ) pCreateInfo->abName, sizeof( szFileName ) - 1 );
-      }
-      hb_xfree( pFileName );
-
 
       if( pItem )
       {
@@ -3919,10 +3921,13 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
       /* Try create */
       do
       {
-         pArea->pMemoFile = hb_fileExtOpen( szFileName, NULL,
-                                            FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
-                                            FXO_DEFAULTS | FXO_SHARELOCK,
-                                            NULL, pError );
+         if( pArea->fTemporary )
+            pArea->pMemoFile = hb_fileCreateTempEx( szFileName, NULL, NULL, NULL, FC_NORMAL );
+         else
+            pArea->pMemoFile = hb_fileExtOpen( szFileName, NULL,
+                                               FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
+                                               FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                               NULL, pError );
          if( !pArea->pMemoFile )
          {
             if( !pError )
@@ -3931,15 +3936,16 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
                hb_errPutGenCode( pError, EG_CREATE );
                hb_errPutSubCode( pError, EDBF_CREATE_MEMO );
                hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CREATE ) );
-               hb_errPutOsCode( pError, hb_fsError() );
                hb_errPutFileName( pError, ( char * ) szFileName );
                hb_errPutFlags( pError, EF_CANRETRY );
             }
+            hb_errPutOsCode( pError, hb_fsError() );
             bRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
          }
          else
             bRetry = FALSE;
       } while( bRetry );
+
       if( pError )
          hb_itemRelease( pError );
 

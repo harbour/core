@@ -2660,6 +2660,9 @@ static HB_ERRCODE hb_dbfClose( DBFAREAP pArea )
    {
       hb_fileClose( pArea->pDataFile );
       pArea->pDataFile = NULL;
+
+      if( pArea->fTemporary )
+         hb_fsDelete( ( BYTE * ) pArea->szDataFileName );
    }
 
    /* Close the memo file */
@@ -2667,7 +2670,12 @@ static HB_ERRCODE hb_dbfClose( DBFAREAP pArea )
    {
       hb_fileClose( pArea->pMemoFile );
       pArea->pMemoFile = NULL;
+
+      if( pArea->fTemporary )
+         hb_fsDelete( ( BYTE * ) pArea->szMemoFileName );
    }
+
+   pArea->fTemporary = FALSE;
 
    /* Free field offset array */
    if( pArea->pFieldOffset )
@@ -2731,26 +2739,29 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    pArea->lpdbOpenInfo = pCreateInfo;
 
-   pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
+   if( ! pArea->fTemporary )
+   {
+      pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
 
-   if( ! pFileName->szExtension && hb_setGetDefExtension() )
-   {
-      pItem = hb_itemPutC( pItem, NULL );
-      if( SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem ) != HB_SUCCESS )
+      if( ! pFileName->szExtension && hb_setGetDefExtension() )
       {
-         hb_itemRelease( pItem );
-         hb_xfree( pFileName );
-         pArea->lpdbOpenInfo = NULL;
-         return HB_FAILURE;
+         pItem = hb_itemPutC( pItem, NULL );
+         if( SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem ) != HB_SUCCESS )
+         {
+            hb_itemRelease( pItem );
+            hb_xfree( pFileName );
+            pArea->lpdbOpenInfo = NULL;
+            return HB_FAILURE;
+         }
+         pFileName->szExtension = hb_itemGetCPtr( pItem );
+         hb_fsFNameMerge( ( char * ) szFileName, pFileName );
       }
-      pFileName->szExtension = hb_itemGetCPtr( pItem );
-      hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+      else
+      {
+         hb_strncpy( ( char * ) szFileName, ( char * ) pCreateInfo->abName, sizeof( szFileName ) - 1 );
+      }
+      hb_xfree( pFileName );
    }
-   else
-   {
-      hb_strncpy( ( char * ) szFileName, ( char * ) pCreateInfo->abName, sizeof( szFileName ) - 1 );
-   }
-   hb_xfree( pFileName );
 
    pItem = hb_itemPutL( pItem, FALSE );
    fRawBlob = SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_BLOB_SUPPORT, pCreateInfo->ulConnection, pItem ) == HB_SUCCESS &&
@@ -2826,10 +2837,13 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       /* Try create */
       do
       {
-         pArea->pDataFile = hb_fileExtOpen( szFileName, NULL,
-                                            FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
-                                            FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                                            NULL, pError );
+         if( pArea->fTemporary )
+            pArea->pDataFile = hb_fileCreateTempEx( szFileName, NULL, NULL, NULL, FC_NORMAL );
+         else
+            pArea->pDataFile = hb_fileExtOpen( szFileName, NULL,
+                                               FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
+                                               FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                               NULL, pError );
          if( ! pArea->pDataFile )
          {
             if( !pError )
@@ -3075,7 +3089,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       }
       pThisField++;
    }
-   pArea->fShared = FALSE;    /* pCreateInfo->fShared; */
+   pArea->fShared = FALSE;    /* pCreateInfo->fShared */
    pArea->fReadonly = FALSE;  /* pCreateInfo->fReadonly */
    pArea->ulRecCount = 0;
    pArea->uiHeaderLen = ( USHORT ) ( sizeof( DBFHEADER ) + ulSize );
@@ -3271,6 +3285,13 @@ static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
       case DBI_ISREADONLY:
          hb_itemPutL( pItem, pArea->fReadonly );
+         break;
+
+      case DBI_ISTEMPORARY:
+         if( !pArea->pDataFile && !pArea->pMemoFile && HB_IS_LOGICAL( pItem ) )
+            pArea->fTemporary = hb_itemGetL( pItem );
+         else
+            hb_itemPutL( pItem, pArea->fTemporary );
          break;
 
       case DBI_VALIDBUFFER:

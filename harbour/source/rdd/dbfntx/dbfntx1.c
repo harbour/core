@@ -6207,6 +6207,9 @@ static HB_ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       }
    }
 
+   if( pArea->fTemporary )
+      fTemporary = TRUE;
+
    /* Test conditional expression */
    if( pForExp )
    {

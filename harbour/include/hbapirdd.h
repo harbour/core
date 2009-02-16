@@ -1195,6 +1195,11 @@ extern HB_EXPORT HB_ERRCODE   hb_rddCreateTable(
                                  BOOL fKeepOpen,
                                  const char * szCpId, ULONG ulConnection,
                                  PHB_ITEM pStruct, PHB_ITEM pDelim );
+extern HB_EXPORT HB_ERRCODE   hb_rddCreateTableTemp(
+                                 const char * szDriver,
+                                 const char * szAlias,
+                                 const char * szCpId, ULONG ulConnection,
+                                 PHB_ITEM pStruct );
 extern HB_EXPORT HB_ERRCODE   hb_dbTransStruct(
                                  AREAP lpaSource, AREAP lpaDest,
                                  LPDBTRANSINFO lpdbTransInfo,

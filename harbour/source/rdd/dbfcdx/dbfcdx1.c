@@ -7565,6 +7565,10 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
          pForExp = hb_itemNew( pArea->lpdbOrdCondInfo->itmCobFor );
       }
    }
+
+   if( pArea->fTemporary )
+      fTemporary = TRUE;
+
    /* Test conditional expression */
    if ( pForExp )
    {

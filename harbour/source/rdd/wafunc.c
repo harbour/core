@@ -583,10 +583,10 @@ HB_ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 }
 
 HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
-                         USHORT uiArea, const char *szAlias,
-                         BOOL fShared, BOOL fReadonly,
-                         const char * szCpId, ULONG ulConnection,
-                         PHB_ITEM pStruct, PHB_ITEM pDelim )
+                            USHORT uiArea, const char *szAlias,
+                            BOOL fShared, BOOL fReadonly,
+                            const char * szCpId, ULONG ulConnection,
+                            PHB_ITEM pStruct, PHB_ITEM pDelim )
 {
    char szDriverBuffer[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
    DBOPENINFO pInfo;
@@ -671,10 +671,10 @@ HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
 }
 
 HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
-                           USHORT uiArea, const char *szAlias,
-                           BOOL fKeepOpen,
-                           const char * szCpId, ULONG ulConnection,
-                           PHB_ITEM pStruct, PHB_ITEM pDelim )
+                              USHORT uiArea, const char *szAlias,
+                              BOOL fKeepOpen,
+                              const char * szCpId, ULONG ulConnection,
+                              PHB_ITEM pStruct, PHB_ITEM pDelim )
 {
    char szDriverBuffer[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
    DBOPENINFO pInfo;
@@ -698,12 +698,7 @@ HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
 
    uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
 
-   /*
-    * 0 means chose first available in hb_rddInsertAreaNode()
-    * This hack is necessary to avoid race condition in MT
-    * mode where workareas are shared between threads and
-    * we don't want to lock whole RDD subsystem, [druzus]
-    */
+   /* 0 means chose first available in hb_rddInsertAreaNode() */
    hb_rddSelectWorkAreaNumber( uiArea );
    if( uiArea )
       hb_rddReleaseCurrentArea();
@@ -740,6 +735,70 @@ HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
    }
 
    if( !fKeepOpen || errCode != HB_SUCCESS )
+   {
+      hb_rddReleaseCurrentArea();
+      hb_rddSelectWorkAreaNumber( uiPrevArea );
+   }
+
+   return errCode;
+}
+
+HB_ERRCODE hb_rddCreateTableTemp( const char * szDriver,
+                                  const char * szAlias,
+                                  const char * szCpId, ULONG ulConnection,
+                                  PHB_ITEM pStruct )
+{
+   char szDriverBuffer[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
+   DBOPENINFO pInfo;
+   PHB_ITEM pItem;
+   HB_ERRCODE errCode;
+   USHORT uiPrevArea;
+   AREAP pArea;
+
+   if( szDriver && szDriver[ 0 ] )
+   {
+      hb_strncpyUpper( szDriverBuffer, szDriver, sizeof( szDriverBuffer ) - 1 );
+      szDriver = szDriverBuffer;
+   }
+   else
+      szDriver = hb_rddDefaultDrv( NULL );
+
+   uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
+
+   /* 0 means chose first available in hb_rddInsertAreaNode() */
+   hb_rddSelectWorkAreaNumber( 0 );
+
+   /* Create a new WorkArea node */
+   if( ! hb_rddInsertAreaNode( szDriver ) )
+   {
+      hb_rddSelectWorkAreaNumber( uiPrevArea );
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+      return HB_FAILURE;
+   }
+   pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   /* Fill pInfo structure */
+   pInfo.uiArea = pArea->uiArea;
+   pInfo.abName = NULL;
+   pInfo.atomAlias = ( BYTE * ) szAlias;
+   pInfo.fShared = FALSE;
+   pInfo.fReadonly = FALSE;
+   pInfo.cdpId = ( BYTE * ) szCpId;
+   pInfo.ulConnection = ulConnection;
+   pInfo.lpdbHeader = NULL;
+
+   pItem = hb_itemPutL( NULL, TRUE );
+   errCode = SELF_INFO( pArea, DBI_ISTEMPORARY, pItem );
+   hb_itemRelease( pItem );
+
+   if( errCode == HB_SUCCESS )
+   {
+      errCode = SELF_CREATEFIELDS( pArea, pStruct );
+      if( errCode == HB_SUCCESS )
+         errCode = SELF_CREATE( pArea, &pInfo );
+   }
+
+   if( errCode != HB_SUCCESS )
    {
       hb_rddReleaseCurrentArea();
       hb_rddSelectWorkAreaNumber( uiPrevArea );

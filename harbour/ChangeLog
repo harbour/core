@@ -8,6 +8,41 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-16 17:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/dbinfo.ch
+    + added DBI_ISTEMPORARY
+
+  * harbour/include/hbapirdd.h
+  * harbour/source/rdd/wafunc.c
+    + added hb_rddCreateTableTemp() C function to create temporary
+      table which are automatically deleted on close. All indexes and
+      memo files for such tables are also in temporary files and
+      automatically deleted on close. Please remember that Harbour uses
+      OS functions to create temporary files so it's installation dependent
+      how much disk space is available for them. Some RDDs may also do
+      not create temporary files but keep everything in memory if they
+      decide it's more efficient.
+
+  * harbour/source/rdd/dbcmd.c
+    + added .prg function to create temporary files:
+         dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, ;
+                       <cCodePage>, <nConnection> ) -> <lSuccess>
+      Not all RDDs have to support it. It's verified by support for
+      DBI_ISTEMPORARY dbInfo() action.
+
+  * harbour/include/hbrdddbf.h
+  * harbour/include/hbrddnsx.h
+  * harbour/include/hbrddcdx.h
+  * harbour/include/hbrddntx.h
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfnsx/dbfnsx1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    + added support for temporary tables in native RDDs.
+
+   Most of above modifications were done by Viktor Szakats.
+
 2009-02-16 15:03 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/thread.c
     ! fixed typo in PTHREAD (*nixes) version of hb_threadMutexTimedLock()

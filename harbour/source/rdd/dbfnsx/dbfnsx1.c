@@ -6647,6 +6647,9 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       }
    }
 
+   if( pArea->fTemporary )
+      fTemporary = TRUE;
+
    /* Test conditional expression */
    if( pForExp )
    {

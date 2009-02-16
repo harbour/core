@@ -400,6 +400,7 @@ typedef struct _NTXAREA
    BOOL     fMemoFlush;             /* data was written to MEMO and not commited */
    BOOL     fShared;                /* Shared file */
    BOOL     fReadonly;              /* Read only file */
+   BOOL     fTemporary;             /* Temporary file */
    BOOL     fValidBuffer;           /* State of buffer */
    BOOL     fPositioned;            /* Positioned record */
    BOOL     fRecordChanged;         /* Record changed */
