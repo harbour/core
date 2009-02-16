@@ -66,6 +66,8 @@ REQUEST hbm_COMP
 THREAD STATIC t_cCOMP
 THREAD STATIC t_cARCH
 
+THREAD STATIC t_lQuiet
+
 FUNCTION Main( ... )
 
    LOCAL aLIB_BASE1 := {;
@@ -180,7 +182,11 @@ FUNCTION Main( ... )
       RETURN 9
    ENDIF
 
-   ShowHeader()
+   t_lQuiet := " -q " $ Lower( " " + hb_cmdline() + " " )
+
+   IF ! t_lQuiet
+      ShowHeader()
+   ENDIF
 
    /* Autodetect architecture */
 
@@ -204,7 +210,9 @@ FUNCTION Main( ... )
       t_cARCH := "win"
 #endif
       IF ! Empty( t_cARCH )
-         OutStd( "hbmk: Autodetected HB_ARCHITECTURE: " + t_cARCH + hb_osNewLine() )
+         IF ! t_lQuiet
+            OutStd( "hbmk: Autodetected HB_ARCHITECTURE: " + t_cARCH + hb_osNewLine() )
+         ENDIF
       ENDIF
    ENDIF
 
@@ -263,7 +271,9 @@ FUNCTION Main( ... )
          NEXT
       ENDIF
       IF ! Empty( t_cCOMP )
-         OutStd( "hbmk: Autodetected HB_COMPILER: " + t_cCOMP + hb_osNewLine() )
+         IF ! t_lQuiet
+            OutStd( "hbmk: Autodetected HB_COMPILER: " + t_cCOMP + hb_osNewLine() )
+         ENDIF
       ELSE
          OutErr( "hbmk: Harbour Make couldn't detect any supported C compilers" + hb_osNewLine() )
          OutErr( "      on your system. Please setup one and try again." + hb_osNewLine() )
@@ -339,7 +349,9 @@ FUNCTION Main( ... )
       s_cHB_INC_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "include"
    ENDIF
 
-   OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + hb_osNewLine() )
+   IF ! t_lQuiet
+      OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + hb_osNewLine() )
+   ENDIF
 
    /* Build with shared libs by default, if we're installed to default system locations. */
 
@@ -474,15 +486,12 @@ FUNCTION Main( ... )
    /* Merge user libs from command line and envvar. Command line has priority. */
    s_aLIBUSER := ArrayAJoin( { s_aLIBUSER, ListToArray( GetEnv( "HB_USER_LIBS" ) ) } )
 
-   /* Strip lib/obj names from extension. */
-   ListDelExt( s_aLIBUSER )
-   ListDelExt( s_aOBJUSER )
-
    /* Strip extension from output name. */
-   s_cPROGNAME := DirNameGet( s_cPROGNAME )
    s_cMAPNAME := ExtSet( s_cPROGNAME, ".map" )
    IF t_cARCH $ "os2|win|dos"
       s_cPROGNAME := ExtSet( s_cPROGNAME, ".exe" )
+   ELSE
+      s_cPROGNAME := ExtSet( s_cPROGNAME )
    ENDIF
 
    DO CASE
@@ -1002,15 +1011,6 @@ STATIC FUNCTION DirAdaptPathSep( cFileName )
 
    RETURN StrTran( cFileName, "\", "/" )
 
-STATIC FUNCTION ListDelExt( array )
-   LOCAL tmp
-
-   FOR tmp := 1 TO Len( array )
-      array[ tmp ] := DirNameGet( array[ tmp ] )
-   NEXT
-
-   RETURN array
-
 /* Append optional prefix and optional extension to all members */
 STATIC FUNCTION ListCook( array, cPrefix, cExt )
    LOCAL tmp
@@ -1073,13 +1073,6 @@ STATIC FUNCTION ExtGet( cFileName )
 
    RETURN cExt
 
-STATIC FUNCTION DirNameGet( cFileName )
-   LOCAL cDir, cName
-
-   hb_FNameSplit( cFileName, @cDir, @cName )
-
-   RETURN hb_FNameMerge( cDir, cName )
-
 STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
@@ -1097,7 +1090,9 @@ STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
    LOCAL aFile
 
    FOR EACH aFile IN aFiles
-      OutStd( "hbmk: Processing: " + aFile[ F_NAME ] + hb_osNewLine() )
+      IF ! t_lQuiet
+         OutStd( "hbmk: Processing: " + aFile[ F_NAME ] + hb_osNewLine() )
+      ENDIF
       HBP_ProcessOne( hb_MemoRead( aFile[ F_NAME ] ),;
          @aLIBS,;
          @aOPTPRG,;
@@ -1150,28 +1145,28 @@ STATIC PROCEDURE HBP_ProcessOne( cFile,;
       CASE Lower( Left( cLine, Len( "libs="     ) ) ) == "libs="     ; cLine := SubStr( cLine, Len( "libs="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
             IF AScan( aLIBS, {| tmp | tmp == cItem } ) == 0
-               AAdd( aLIBS, DirAdaptPathSep( cItem ) )
+               AAddNotEmpty( aLIBS, DirAdaptPathSep( cItem ) )
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "prgflags=" ) ) ) == "prgflags=" ; cLine := SubStr( cLine, Len( "prgflags=" ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
             IF AScan( aOPTPRG, {| tmp | tmp == cItem } ) == 0
-               AAdd( aOPTPRG, DirAdaptPathSep( cItem ) )
+               AAddNotEmpty( aOPTPRG, DirAdaptPathSep( cItem ) )
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "cflags="   ) ) ) == "cflags="   ; cLine := SubStr( cLine, Len( "cflags="   ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
             IF AScan( aOPTC, {| tmp | tmp == cItem } ) == 0
-               AAdd( aOPTC, cItem )
+               AAddNotEmpty( aOPTC, cItem )
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "ldflags="  ) ) ) == "ldflags="  ; cLine := SubStr( cLine, Len( "ldflags="  ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
             IF AScan( aOPTL, {| tmp | tmp == cItem } ) == 0
-               AAdd( aOPTL, cItem )
+               AAddNotEmpty( aOPTL, cItem )
             ENDIF
          NEXT
 
@@ -1224,7 +1219,9 @@ STATIC PROCEDURE HBP_ProcessOne( cFile,;
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "gt="       ) ) ) == "gt="       ; cLine := SubStr( cLine, Len( "gt="       ) + 1 )
-         DEFAULT cGT TO cLine
+         IF ! Empty( cLine )
+            DEFAULT cGT TO cLine
+         ENDIF
 
       ENDCASE
    NEXT
@@ -1355,6 +1352,7 @@ STATIC PROCEDURE ShowHelp()
       "  -trace|-notrace  show commands executed" ,;
       "  -run|-norun      run/don't run the created executable" ,;
       "  -nohbp           do not process .hbp files" ,;
+      "  -q               quiet mode" ,;
       "" ,;
       "Notes:" ,;
       "  - Don't forget to create a MAIN() function in your application." ,;

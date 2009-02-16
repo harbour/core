@@ -8,6 +8,26 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 09:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbapollo/tests/hbapollo.hbp
+    + Added filters.
+    ; TOFIX: hbapollo test doesn't link with MSVC.
+
+  - contrib/hbapollo/tests/hbmk.bat
+  - contrib/gtwvg/tests/hbmk.bat
+  - contrib/hbbtree/tests/hbmk.bat
+  - contrib/examples/terminal/hbmk.bat
+  - contrib/examples/terminal/hbmk_trm_appn.bat
+    - Removed batch versions of make files.
+      Go to the directory the source are located and
+      use the .hbm files where there is one, or just pass
+      the .prg name to hbmk.exe.
+
+  * utils/hbmk/hbmk.prg
+    ! Fixed handling lib/source files with double extensions.
+    ! Fixed to not add empty items to lists in some occasions.
+    + Added -q to suppress informational output + header.
+
 2009-02-17 02:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak

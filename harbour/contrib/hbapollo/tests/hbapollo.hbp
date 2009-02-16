@@ -2,4 +2,5 @@
 # $Id$
 #
 
-libs={!dos}hbapollo {win}sde61
+libs={!dos}hbapollo
+libs={win}sde61
