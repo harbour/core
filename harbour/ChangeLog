@@ -9,45 +9,45 @@
 */
 
 2009-02-16 14:02 UTC+0200 Chen Kedem <niki@synel.co.il>
-   * doc/dirstruc.txt
-     * Updated to reflect current state.
+  * doc/dirstruc.txt
+    * Updated to reflect current state.
 
-   * source/compiler/hbusage.c
-   * source/lang/msghe862.c
-   * source/lang/msghewin.c
-   * source/rtl/tone.c
-   * source/rtl/gtos2/gtos2.c
-     * Update my email on source files
-       (didn't bother to change those under doc).
+  * source/compiler/hbusage.c
+  * source/lang/msghe862.c
+  * source/lang/msghewin.c
+  * source/rtl/tone.c
+  * source/rtl/gtos2/gtos2.c
+    * Update my email on source files
+      (didn't bother to change those under doc).
 
-2009-02-17 12:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
-   * include/hbapicdp.h
-   * common.mak
-   * source/codepage/Makefile
-   + source/codepage/ucmacce.c
-   + source/codepage/ucmacice.c
-   + source/codepage/uc424.c
-   + source/codepage/ucmacrom.c
-   + source/codepage/ucmacgrk.c
-   + source/codepage/uc037.c
-   + source/codepage/uc875.c
-   + source/codepage/uc1026.c
-   + source/codepage/ucascii.c
-   + source/codepage/ucatari.c
-   + source/codepage/ucmaccyr.c
-   + source/codepage/uc1006.c
-   + source/codepage/ucnext.c
-   + source/codepage/ucmactrk.c
-   + source/codepage/uc856.c
-   + source/codepage/uc500.c
-     + Added missing codepages. Except for multi-byte ones,
-       which I believe are not supported by the current
-       Harbour infrastructure.
+2009-02-16 12:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapicdp.h
+  * common.mak
+  * source/codepage/Makefile
+  + source/codepage/ucmacce.c
+  + source/codepage/ucmacice.c
+  + source/codepage/uc424.c
+  + source/codepage/ucmacrom.c
+  + source/codepage/ucmacgrk.c
+  + source/codepage/uc037.c
+  + source/codepage/uc875.c
+  + source/codepage/uc1026.c
+  + source/codepage/ucascii.c
+  + source/codepage/ucatari.c
+  + source/codepage/ucmaccyr.c
+  + source/codepage/uc1006.c
+  + source/codepage/ucnext.c
+  + source/codepage/ucmactrk.c
+  + source/codepage/uc856.c
+  + source/codepage/uc500.c
+    + Added missing codepages. Except for multi-byte ones,
+      which I believe are not supported by the current
+      Harbour infrastructure.
 
-   * utils/hbmk/hbmk.prg
-     ! Minor.
+  * utils/hbmk/hbmk.prg
+    ! Minor.
 
-2009-02-17 11:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-16 11:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk.prg
     + Added support to pass .hbp files on the command line.
 
@@ -96,7 +96,7 @@
       Toolbar window is created with CreateWindowEx() instead of
       CreateToolbarWindow().
 
-2009-02-17 09:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-16 09:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbapollo/tests/hbapollo.hbp
     + Added filters.
     ; TOFIX: hbapollo test doesn't link with MSVC.
@@ -116,12 +116,12 @@
     ! Fixed to not add empty items to lists in some occasions.
     + Added -q to suppress informational output + header.
 
-2009-02-17 02:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-16 02:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.mak
   * make_vc.mak
     - Deleted hbmk*.bat references.
 
-2009-02-17 02:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-16 02:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   - bin/hbmk.bat
   - bin/hbmk_gcc.bat
   - bin/hbmk_os2.cmd
@@ -143,7 +143,7 @@
     + Added -debug support for owatcom. (untested)
     + Added rsxnt/rsx32 support in an unobtrusive way.
 
-2009-02-17 00:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-16 00:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * common.mak
   * make_b32.mak
   * make_vc.mak
@@ -152,7 +152,7 @@
   - utils/hbmake
     - Removed hbmake from repository.
 
-2009-02-17 00:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-16 00:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/compiler/hbusage.c
     + Added Vailton Renato to credit list.
 
@@ -167,7 +167,7 @@
     * Digital Mars C compiler ID changed from dm to dmc.
       (they also have a D compiler f.e.)
 
-2009-02-16 22:28 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-15 22:28 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + contrib/gtwvg/tests/gtwvg.hbp
   + contrib/hbapollo/tests/hbapollo.hbp
   + contrib/hbbtree/tests/hbbtree.hbp
@@ -189,7 +189,7 @@
   * contrib/examples/terminal/terminal.hbp
     + Added {win} filter.
 
-2009-02-16 20:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-15 20:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk.prg
     + Added support for '#' comment lines in .hbm files.
     + Added support to automatically convert slashes/backslashes
@@ -211,7 +211,7 @@
        ..\..\..\bin\hbmk.exe trm_appn.hbm
        .exe can be dropped as soon as we delete out hbmk.bat file.
 
-2009-02-16 18:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-15 18:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk.prg
     + Added POCC and DMC autodetection.
     + Added screen message when no C compiler could be
@@ -219,7 +219,7 @@
     ! owatcom was missing from OS/2 supported compiler
       internal list.
 
-2009-02-16 17:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-15 17:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk.prg
     + Added support for -map switch to create a map file.
     + Added support for -run switch to run the created executable.
