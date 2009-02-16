@@ -7,7 +7,7 @@
  * Language Support Module (HE862)
  *
  * Copyright 2000 Viktor Szakats <viktor.szakats@syenar.hu> (English, from msgen.c)
- * Copyright 2000 Chen Kedem <niki@actcom.co.il> (Hebrew)
+ * Copyright 2000 Chen Kedem <niki@synel.co.il> (Hebrew)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

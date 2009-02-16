@@ -57,7 +57,7 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_os2_ReadKey()
  *
- * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ * Copyright 1999 Chen Kedem <niki@synel.co.il>
  *    hb_gt_os2_mouse_Init()
  *    hb_gt_os2_mouse_Exit()
  *    hb_gt_os2_mouse_IsPresent()

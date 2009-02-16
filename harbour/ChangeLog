@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-16 14:02 UTC+0200 Chen Kedem <niki@synel.co.il>
+   * doc/dirstruc.txt
+     * Updated to reflect current state.
+
+   * source/compiler/hbusage.c
+   * source/lang/msghe862.c
+   * source/lang/msghewin.c
+   * source/rtl/tone.c
+   * source/rtl/gtos2/gtos2.c
+     * Update my email on source files
+       (didn't bother to change those under doc).
+
 2009-02-17 12:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbapicdp.h
    * common.mak

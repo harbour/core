@@ -189,7 +189,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Bill Robertson <arcadia2 sbcglobal.net>\n"
          "Brian Hays <bhays abacuslaw.com>\n"
          "Bruno Cantero <bruno issnet.net>\n"
-         "Chen Kedem <niki actcom.co.il>\n"
+         "Chen Kedem <niki synel.co.il>\n"
          "Dave Pearson <davep davep.org>\n"
          "David Arturo Macias Corona <dmacias mail.udg.mx>\n"
          "David G. Holm <dholm jsd-llc.com>\n"

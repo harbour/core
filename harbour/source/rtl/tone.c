@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * TONE() function
  *
- * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ * Copyright 1999 Chen Kedem <niki@synel.co.il>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

@@ -54,9 +54,33 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---pe          - Editor.
 |   |   |
-|   |   +---hbpp        - Harbour Preprocessor as a standalone module.
+|   |   +---pp          - Harbour Preprocessor as a standalone module.
 |   |   |
 |   |   +---rdddbt      - DBFDBT RDD.
+|   |   |
+|   |   +---rl          - Make files (without source) for CA-Cl*pper RL.
+|   |   |
+|   |   +---terminal    - Harbour terminal server/client.
+|   |   |
+|   |   +---uhttpd      - uHTTPD micro web server.
+|   |       |
+|   |       +-home      - Root directory for the web server.
+|   |       | |
+|   |       | +-cgi-bin - (*)
+|   |       | |
+|   |       | +-css     -
+|   |       | |
+|   |       | +-images  -
+|   |       | |
+|   |       | +-js      -
+|   |       | |
+|   |       | +-xsl     -
+|   |       |
+|   |       +-logs      - Log files. (*)
+|   |       |
+|   |       +-modules   -
+|   |       |
+|   |       +-sessions  - (*)
 |   |
 |   |---gtalleg         - GT subsystem based on Allegro with graphic
 |   |                     extensions.
@@ -79,10 +103,12 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---tests       - HB_BTree api test programs.
 |   |
-|   +---hbclip          - Harbour Compatibility Library (HCL) for
-|   |                     CA-Cl*pper 5.x
-|   |
 |   +---hbclipsm        - Miscellaneous contribution files.
+|   |   |
+|   |   +---tests       - Test programs.
+|   |
+|   +---hbcrypt         - Cryptography library for commonly used algorythms
+|   |   |                 like: SHA1, SHA2, HMAC-SHA1, HMAC-SHA2.
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
@@ -134,6 +160,12 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |       |
 |   |       +---en      - English documentation.
 |   |
+|   +---hbhpdf          - libHaru PDF library wrappers.
+|   |   |
+|   |   +---tests       - Test programs.
+|   |       |
+|   |       +---files   - Sample files for testing.
+|   |
 |   +---hbmisc          - Miscellaneous contribution.
 |   |   |
 |   |   +---doc         - Documents for above contribution.
@@ -178,6 +210,10 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
+|   +---hbssl           - Harbour inteface for OpenSSL API.
+|   |   |
+|   |   +---tests       - Test programs.
+|   |
 |   +---hbtip           - TIP Class oriented Internet Protocol library.
 |   |   |
 |   |   +---tests       - Test programs.
@@ -192,20 +228,19 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |       |
 |   |       +---files   - Sample files for testing.
 |   |
+|   +---hbwhat          - What is a library for ccessing all of Windows API
+|   |   |                 from PRG level.
+|   |   |
+|   |   +---tests       - Test program.
+|   |
 |   +---hbwin           - Collection of Windows specific utility functions.
 |   |   |
 |   |   +---tests       - Test programs.
-|   |
-|   +---hbwhat          - What is a library for ccessing all of Windows API
-|   |                     from PRG level.
 |   |
 |   +---hbziparc        - Compatibility interface with ZipArchive general
 |   |   |                 purpose compression library to work with ZIP files.
 |   |   |
 |   |   +---tests       - Test programs.
-|   |   |
-|   |   +---zlib        - Stub to plug Harbour ZLIB without the need to
-|   |                     modify ZipArchive sources.
 |   |
 |   +---rddado          - ADORDD - RDD to automatically manage Microsoft ADO.
 |   |   |
@@ -219,9 +254,21 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
+|   +---rddsql          - RDD for general SQL database with plugins.
+|   |   |
+|   |   +---sddfb       - Firebird SQL database driver.
+|   |   |
+|   |   +---sddmy       - MySQL database driver.
+|   |   |
+|   |   +---sddpg       - Postgre SQL database driver.
+|   |   |
+|   |   +---tests       - Test programs.
+|   |
 |   +---xhb             - xHarbour compatibility libarary. To allow programs
-|                         which where written using some xHarcour extensions,
-|                         to be complied by Harbour.
+|       |                 which where written using some xHarcour extensions,
+|       |                 to be complied by Harbour.
+|       |
+|       +---tests       - Test programs.
 |
 +---debian              - Packaging information for Debian GNU/Linux.
 |
@@ -271,6 +318,8 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   +---dbfcdx      - DBFCDX RDD.
 |   |   |
 |   |   +---dbffpt      - DBFFPT RDD.
+|   |   |
+|   |   +---dbfnsx      - DBFNSX RDD.
 |   |   |
 |   |   +---dbfntx      - DBFNTX RDD.
 |   |   |
@@ -324,7 +373,9 @@ track of all files (read the FAQ if you don't know what SVN is).
 |       +---mainstd     - mainstd library for MinGW build.
 |       |
 |       +---mainwin     - mainwin library for MinGW build.
-|
+|       |
+|       +---vmmt        - GNU Makefile for creating the multithreaded version
+|                         of the VM library.
 |
 +---tests               - Test programs.
 |   |
@@ -333,7 +384,11 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |
 |   +---hbpptest        - Regression tests for the preprocessor.
 |   |
+|   +---mt              - Various multithreading tests.
+|   |
 |   +---multifnc        - Overloading C functions test.
+|   |
+|   +---rddtest         - RDD tests.
 |
 +---utils               - Utilities and tools that are part of Harbour.
     |
@@ -341,7 +396,11 @@ track of all files (read the FAQ if you don't know what SVN is).
     |
     +---hbextern        - hbextern.ch generator.
     |
-    +---hbmake          - Harbour Make utility.
+    +---hbi18n          - Harbour i18n .pot/.hbl file manger.
+    |
+    +---hbmk            - Harbour Make utility.
+    |   |
+    |   +---examples    - Usage examples.
     |
     +---hbrun           - Standalone Harbour Portable Object file runner,
     |                     and a "dot prompt" console for the Harbour language.
