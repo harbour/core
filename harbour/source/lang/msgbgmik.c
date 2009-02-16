@@ -194,7 +194,7 @@ static HB_LANG s_lang =
 
       /* Texts */
 
-      "ÑÑ/åå/ÉÉÉÉ",
+      "DD.MM.YYYY",
       "Ñ",
       "ç"
    }
@@ -216,4 +216,3 @@ HB_CALL_ON_STARTUP_END( hb_lang_Init_BGMIK )
    static HB_$INITSYM hb_vm_auto_hb_lang_Init_BGMIK = hb_lang_Init_BGMIK;
    #pragma data_seg()
 #endif
-

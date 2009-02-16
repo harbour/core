@@ -194,7 +194,7 @@ static HB_LANG s_lang =
 
       /* Texts */
 
-      "รรรร/ฬฬ/ฤฤ",
+      "DD/MM/YYYY",
       "ฤ",
       "อ"
    }

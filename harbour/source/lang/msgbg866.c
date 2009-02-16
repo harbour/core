@@ -194,7 +194,7 @@ static HB_LANG s_lang =
 
       /* Texts */
 
-      "YYYY/MM/DD",
+      "DD.MM.YYYY",
       "Y",
       "N"
    }

@@ -4,7 +4,7 @@
 
 @echo off
 
-cls
+CLS
 
 SET UHTTP_INET_SUPPORT=no
 SET UHTTP_INET_DEF=
@@ -50,7 +50,7 @@ if exist uhttpd.exe uhttpd -s
 set HB_USER_PRGFLAGS=%UHTTP_GD_DEF% %UHTTP_INET_DEF%
 set HB_USER_LIBS=xhb.lib hbct.lib %UHTTP_GD_LIBS%
 
-@..\..\..\bin\hbmk -mt -gui %* uhttpd.prg cgifunc.prg cookie.prg session.prg uhttpdc.c %UHTTP_INET_SOCKET%
+..\..\..\bin\hbmk -mt -gui %1 %2 %3 %4 uhttpd.prg cgifunc.prg cookie.prg session.prg uhttpdc.c %UHTTP_INET_SOCKET%
 if errorlevel 1 goto DOERROR
 
 if not exist uhttpd.exe goto :EXIT

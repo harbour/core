@@ -8,6 +8,42 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-16 21:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  - tests/hbmk_gnu.bat
+    - Removed.
+
+  * contrib/examples/uhttpd/hbmk.bat
+  * contrib/examples/dbu/hbmk.bat
+  * contrib/examples/rl/hbmk.bat
+    * Made them compatible with Win9x/NT systems again.
+
+  * source/lang/msg_tpl.c
+    + Added NOTE about date format.
+
+  * source/lang/msgbe866.c
+  * source/lang/msgbewin.c
+  * source/lang/msgbg866.c
+  * source/lang/msgbgiso.c
+  * source/lang/msgbgmik.c
+  * source/lang/msgbgwin.c
+  * source/lang/msgit.c
+  * source/lang/msgnl.c
+  * source/lang/msgsl437.c
+  * source/lang/msgsl852.c
+  * source/lang/msgsliso.c
+  * source/lang/msgslwin.c
+    ! Fixed date formats to only contain YYYY MM and DD.
+      Plus the format itself corrected in a few places.
+
+  * utils/hbmk/hbmk.prg
+    + Added TODO
+    % Added ANNOUNCE HB_GTSYS / REQUEST HB_GT_STD_DEFAULT.
+      Since this tools doesn't need anything fullscreen, and
+      this way it's faster smaller, yet portable.
+
+  * ChangeLog
+    * Few old TODO/TOFIX statuses updated.
+
 2009-02-16 18:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   - contrib/hbct/tests/hbmk.bat
   - contrib/hbcurl/tests/hbmk.bat
@@ -424,8 +460,8 @@
       - Support for POCC, DM.
     ; TODO:
       - Switch to portable command lines in hbmk.bat files.
-        (Win9x will be supported again).
-      - Remove bin/hbmk*.bat, bin/hbmk*.cmd, util/hbmake/*.
+        (Win9x will be supported again). [DONE]
+      - Remove bin/hbmk*.bat, bin/hbmk*.cmd, util/hbmake/*. [DONE]
       - Cleanup on variable names in hbmk.prg.
 
   * tests/testid.prg
@@ -764,7 +800,7 @@
     ; TODO: Test OpenWatcom. I had to remove -fo and FILE
             directives from script, if this was required we
             need to find a solution to support multiple
-            input files.
+            input files. [DONE]
 
   * bin/hbmk_b32.bat
   * bin/hbmk_vc.bat
@@ -1168,6 +1204,7 @@
     + added HB_FGETDATETIME(). A "brother" of function HB_FGETDATETIME().
     ; TODO: BTW, hb_fs*() functions can get a better precision
       (milliseconds). It would be nice to support it also at .prg level.
+      [DONE]
 
 2009-02-11 18:30 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/vm/proc.c
@@ -2294,7 +2331,7 @@
              methods are no longer available for regular
              GETs, only if they are explicitly created
              using Get():New(). If this is a problem for someone
-             we can start thinking of a solution.
+             we can start thinking of a solution. [OK]
     ; TODO: Do the same with TBrowse() and TColumn(). [DONE]
 
 2009-02-04 09:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)

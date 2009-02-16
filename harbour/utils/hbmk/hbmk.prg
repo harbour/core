@@ -58,7 +58,11 @@
 
 /* TODO: Add support for more hbmk script features. */
 /* TODO: Add support for Windows resource files. */
+/* TODO: Add support for library creation. */
 /* TODO: Support for more compilers/platforms. */
+
+ANNOUNCE HB_GTSYS
+REQUEST HB_GT_STD_DEFAULT
 
 REQUEST hbm_ARCH
 REQUEST hbm_COMP

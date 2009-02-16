@@ -24,6 +24,6 @@ if exist hb_rl.dif patch -N -i hb_rl.dif
 
 :DIR_OK
 
-..\..\..\bin\hbmk %* %HB_DIR_RL%\RLBACK.PRG %HB_DIR_RL%\RLDIALG.PRG %HB_DIR_RL%\RLFRONT.PRG
+..\..\..\bin\hbmk %1 %2 %3 %4 %HB_DIR_RL%\RLBACK.PRG %HB_DIR_RL%\RLDIALG.PRG %HB_DIR_RL%\RLFRONT.PRG
 
 :EXIT

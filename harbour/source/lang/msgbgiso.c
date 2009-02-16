@@ -191,10 +191,10 @@ static HB_LANG s_lang =
       "hb_xgrab заявено да задели нула байта",
       "hb_xrealloc заявено да промени големината на нула байта",
       "hb_xalloc заявено да задели нула байта",
-      
+
       /* Texts */
 
-      "YYYY/MM/DD",
+      "DD.MM.YYYY",
       "Y",
       "N"
    }
