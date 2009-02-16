@@ -282,15 +282,16 @@ STATIC FUNCTION HB_GTSYS()
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr )
-   LOCAL aCrt, aTBar, aSBar, aStatic, aCom, aTree
+   LOCAL aCrt, aTBar, aSBar
+   //LOCAL aStatic, aCom, aTree
    LOCAL nH, nT
 
    aCrt    := oCrt:currentSize()
    aTBar   := oTBar:currentSize()
    aSBar   := oSBar:currentSize()
-   aStatic := oStatic:currentSize()
-   aTree   := oTree:currentSize()
-   aCom    := oCom:currentSize()
+   //aStatic := oStatic:currentSize()
+   //aTree   := oTree:currentSize()
+   //aCom    := oCom:currentSize()
 
    nT := aTBar[2]
    nH := aCrt[2]-aTBar[2]-aSBar[2]
@@ -421,7 +422,7 @@ Static Function MyFunction( nMode )
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION ExeFontDialog( oCrt )
-   LOCAL oFontDlg, oWvgFont
+   LOCAL oFontDlg
 
    STATIC nMode := 0
 
@@ -441,13 +442,18 @@ STATIC FUNCTION ExeFontDialog( oCrt )
    //oFontDlg:style            := .f.
 
    oFontDlg:create()
-   //  Every 2nd FontDialog will be MODAL
-   oWvgFont := oFontDlg:display( ++nMode % 2 )
-   oFontDlg:destroy()
 
    #if 0
+   //  Every 2nd FontDialog will be MODAL
+   oWvgFont := oFontDlg:display( ++nMode % 2 )
    hb_ToOutDebug( '%s  %i', oWvgFont:compoundName, oWvgFont:nominalPointSize )
    #endif
+
+   oFontDlg:destroy()
+
    RETURN nil
 
 //----------------------------------------------------------------------//
+
+
+

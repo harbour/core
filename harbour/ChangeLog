@@ -8,6 +8,47 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-16 00:10 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/common.mak
+  * harbour/contrib/gtwvg/Makefile
+    + Added wvgdarea.prg
+
+  * harbour/contrib/gtwvg/wvgwin.c
+    + Added more functions.
+
+  + harbour/contrib/gtwvg/wvgdarea.prg
+    + Added WvgDrawingArea(), a helper class to WvgDialog().
+  * harbour/contrib/gtwvg/wvgdlg.prg
+  * harbour/contrib/gtwvg/wvgparts.ch
+  * harbour/contrib/gtwvg/wvgphdlr.prg
+  * harbour/contrib/gtwvg/wvgstatc.prg
+  * harbour/contrib/gtwvg/wvgtoolb.prg
+  * harbour/contrib/gtwvg/wvgwnd.prg
+  * harbour/contrib/gtwvg/wvtwin.ch
+    ! Numerous class structure enhancements. More Xbase++ compatibility
+      XbpDialog:drawingArea concept implemented in greater details.
+      WvgToolbarButtons() now take use of WAPI_ImageList_*() functions.
+
+  * harbour/contrib/hbwin/hbwapi.h
+    ! Defines updated to respect pointers also.
+  + harbour/contrib/hbwin/wapi_commctrl.c
+    + Implemented WAPI ImageList_*() family of functions.
+
+  * harbour/contrib/hbwin/Makefile
+  * harbour/contrib/hbwin/common.mak
+    + Added wapi_commctrl.c
+
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+  * harbour/contrib/gtwvg/tests/demoxbp.prg
+    ! Updated TO respect new changes in class structures.
+      Xbase++ related components are more compatible now.
+
+    ; TODO: Tooltips on Toolbar Buttons. WHILE implemeting
+      XbpDialog:drawingArea concept I have lost track of this
+      feature as buttons are now created via image lists and
+      Toolbar window is created with CreateWindowEx() instead of
+      CreateToolbarWindow().
+
 2009-02-17 09:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbapollo/tests/hbapollo.hbp
     + Added filters.

@@ -77,6 +77,7 @@
 #define HB_OS_WIN_USED
 
 #include "gtwvg.h"
+#include "hbwapi.h"
 #include <windowsx.h>
 
 #define WIN_STATUSBAR_MAX_PARTS         256
@@ -1261,70 +1262,6 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
 
    hb_retnint( ( HB_PTRDIFF ) hBitmap );
 }
-
-//----------------------------------------------------------------------//
-//
-//  Wvg_AddToolbarButton( hWndTB, hBitmap, cCaption, nButtonID, nMode )
-//
-HB_FUNC( WVG_ADDTOOLBARBUTTON )
-{
-   TBBUTTON    tbb;
-   TBADDBITMAP tbab;
-   BOOL        bSuccess;
-   HWND        hWndTB = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
-   int         iCommand = hb_parni( 4 );
-   TCHAR *     szCaption;
-
-   switch( hb_parni( 5 ) )
-   {
-      case 1:  // button from image
-      {
-         HBITMAP hBitmap = ( HBITMAP ) ( HB_PTRDIFF ) hb_parnint( 2 );
-         int iNewBitmap, iNewString;
-
-         // set bitmap
-         tbab.hInst = NULL;
-         tbab.nID   = ( UINT ) hBitmap;
-         iNewBitmap = SendMessage( hWndTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab );
-
-         // set string
-         //
-         szCaption = HB_TCHAR_CONVTO( hb_parc( 3 ) );
-         iNewString = SendMessage( hWndTB, TB_ADDSTRING, ( WPARAM ) 0, ( LPARAM ) szCaption );
-         HB_TCHAR_FREE( szCaption );
-
-         // add button
-         tbb.iBitmap   = iNewBitmap;
-         tbb.idCommand = iCommand;
-         tbb.fsState   = TBSTATE_ENABLED;
-         tbb.fsStyle   = TBSTYLE_BUTTON;
-         tbb.dwData    = 0;
-         tbb.iString   = iNewString;
-
-         bSuccess = SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
-
-         hb_retl( bSuccess );
-         return;
-      }
-
-      case 2:  // system bitmap
-
-
-      case 3:  // separator
-      {
-         tbb.iBitmap   = 0;
-         tbb.idCommand = 0;
-         tbb.fsState   = TBSTATE_ENABLED;
-         tbb.fsStyle   = TBSTYLE_SEP;
-         tbb.dwData    = 0;
-         tbb.iString   = 0;
-
-         bSuccess = SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
-         hb_retl( bSuccess );
-         return;
-      }
-   }
-}
 //----------------------------------------------------------------------//
 
 HB_FUNC( WVG_STATUSBARCREATEPANEL )
@@ -2096,4 +2033,586 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
 {
    SetClassLong( wvg_parhwnd( 1 ), GCL_HBRBACKGROUND, ( DWORD ) hb_parnint( 2 ) );
 }
+//----------------------------------------------------------------------//
+// Win_SetLayeredWindowAttributes( hWnd, nRGB, nOpacityFactor [0-255] )
+//
+HB_FUNC( WIN_SETLAYEREDWINDOWATTRIBUTES )
+{
+#if ( _WIN32_WINNT >= 0x0500 )
+   HINSTANCE   h;
+   wvtSetLayeredWindowAttributes pfnLayered;
+
+   h = LoadLibraryEx( TEXT( "user32.dll" ), NULL, 0 );
+   if( h )
+   {
+#if defined( UNICODE ) && defined( GetProcAddress )
+      pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddressW( h, TEXT( "SetLayeredWindowAttributes" ) );
+#else
+      pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );
+#endif
+      if( pfnLayered )
+      {
+         HWND hWnd = wapi_par_HWND( 1 );
+         COLORREF cr = ISNIL( 2 ) ? RGB( 255,255,255 ) : wapi_par_COLORREF( 2 );
+
+         SetWindowLong( hWnd, GWL_EXSTYLE, GetWindowLong( hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
+
+         if( pfnLayered( hWnd, cr, hb_parni( 3 ),  /*LWA_COLORKEY |*/ LWA_ALPHA ) == 0 );
+         {
+//hb_ToOutDebug( "ysyysys" );
+         }
+      }
+      FreeLibrary( h );
+   }
+#endif
+}
+//----------------------------------------------------------------------//
+//                                IL  | DL
+//  Wvg_AddToolbarButton( hWndTB, nBtn|hBitmap, cCaption, nButtonID, nMode, lIsTooltip )
+//
+HB_FUNC( WVG_ADDTOOLBARBUTTON )
+{
+   TBBUTTON    tbb;
+   TBADDBITMAP tbab;
+   BOOL        bSuccess;
+   HWND        hWndTB = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   int         iCommand = hb_parni( 4 );
+   TCHAR *     szCaption;
+
+   switch( hb_parni( 5 ) )
+   {
+      case 1:  // button from image
+      {
+         int iNewBitmap, iNewString;
+
+         // set bitmap
+         //
+         tbab.hInst = NULL;
+         tbab.nID   = ( UINT ) wapi_par_HBITMAP( 2 );
+         iNewBitmap = SendMessage( hWndTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab );
+
+         // set string
+         //
+         szCaption = HB_TCHAR_CONVTO( hb_parc( 3 ) );
+         iNewString = SendMessage( hWndTB, TB_ADDSTRING, ( WPARAM ) 0, ( LPARAM ) szCaption );
+         HB_TCHAR_FREE( szCaption );
+
+         // add button
+         //
+         tbb.iBitmap   = iNewBitmap;
+         tbb.idCommand = iCommand;
+         tbb.fsState   = TBSTATE_ENABLED;
+         if( ISLOG( 6 ) && hb_parl( 6 ) )
+            tbb.fsStyle   = TBSTYLE_BUTTON;
+         else
+            tbb.fsStyle   = TBSTYLE_BUTTON;// | TBSTYLE_SHOWTEXT;
+
+         tbb.dwData    = 0;
+         tbb.iString   = iNewString;
+
+         bSuccess = SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
+
+         hb_retl( bSuccess );
+         return;
+      }
+
+      case 2:  // system bitmap
+
+
+      case 3:  // separator
+      {
+         tbb.iBitmap   = 0;
+         tbb.idCommand = 0;
+         tbb.fsState   = TBSTATE_ENABLED;
+         tbb.fsStyle   = TBSTYLE_SEP;
+         tbb.dwData    = 0;
+         tbb.iString   = 0;
+
+         bSuccess = SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
+         hb_retl( bSuccess );
+         return;
+      }
+   }
+}
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_SENDTOOLBARMESSAGE )
+{
+   HWND hTB = wapi_par_HWND( 1 );
+   int  msg = wapi_par_INT( 2 );
+
+
+   switch( msg )
+   {
+      case TB_ADDBITMAP            :
+      {
+         TBADDBITMAP tbab;
+         int iBitmap;
+
+         tbab.hInst = NULL;
+         tbab.nID   = ( UINT ) wapi_par_HBITMAP( 3 );
+
+         iBitmap = SendMessage( hTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab );
+
+         wapi_ret_NI( iBitmap );
+      }
+      break;
+      case TB_ADDBUTTONS           :
+      {
+         TBBUTTON tbb;
+
+         tbb.iBitmap   = wapi_par_INT( 3 );
+         tbb.idCommand = wapi_par_INT( 4 );
+         tbb.fsState   = TBSTATE_ENABLED;
+         tbb.fsStyle   = TBSTYLE_BUTTON ;
+         tbb.dwData    = 0;
+         tbb.iString   = wapi_par_INT( 5 );
+
+         wapi_ret_L( SendMessage( hTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb ) );
+      }
+      break;
+      case TB_ADDSTRING            :
+      {
+         int iString;
+         LPTSTR szCaption;
+
+         szCaption = HB_TCHAR_CONVTO( hb_parc( 3 ) );
+         iString = SendMessage( hTB, TB_ADDSTRING, ( WPARAM ) NULL, ( LPARAM ) szCaption );
+         HB_TCHAR_FREE( szCaption );
+
+         wapi_ret_NI( iString );
+      }
+      break;
+      case TB_AUTOSIZE             :
+      {
+         SendMessage( hTB, TB_AUTOSIZE, ( WPARAM ) 0, ( LPARAM ) 0 );
+      }
+      break;
+      case TB_BUTTONCOUNT          :
+      {
+      }
+      break;
+      case TB_BUTTONSTRUCTSIZE     :
+      {
+         SendMessage( hTB, TB_BUTTONSTRUCTSIZE, sizeof( TBBUTTON ), 0 );
+      }
+      break;
+      case TB_CHANGEBITMAP         :
+      {
+      }
+      break;
+      case TB_CHECKBUTTON          :
+      {
+      }
+      break;
+      case TB_COMMANDTOINDEX       :
+      {
+      }
+      break;
+      case TB_CUSTOMIZE            :
+      {
+      }
+      break;
+      case TB_DELETEBUTTON         :
+      {
+      }
+      break;
+      case TB_ENABLEBUTTON         :
+      {
+      }
+      break;
+      case TB_GETANCHORHIGHLIGHT   :
+      {
+      }
+      break;
+      case TB_GETBITMAP            :
+      {
+      }
+      break;
+      case TB_GETBITMAPFLAGS       :
+      {
+      }
+      break;
+      case TB_GETBUTTON            :
+      {
+      }
+      break;
+      case TB_GETBUTTONINFO        :
+      {
+      }
+      break;
+      case TB_GETBUTTONSIZE        :
+      {
+      }
+      break;
+      case TB_GETBUTTONTEXT        :
+      {
+      }
+      break;
+      case TB_GETCOLORSCHEME       :
+      {
+      }
+      break;
+      case TB_GETDISABLEDIMAGELIST :
+      {
+      }
+      break;
+      case TB_GETEXTENDEDSTYLE     :
+      {
+      }
+      break;
+      case TB_GETHOTIMAGELIST      :
+      {
+      }
+      break;
+      case TB_GETHOTITEM           :
+      {
+      }
+      break;
+      #if 0
+      case TB_GETIDEALSIZE         :
+      {
+      }
+      break;
+      #endif
+      case TB_GETIMAGELIST         :
+      {
+      }
+      break;
+      #if 0
+      case TB_GETIMAGELISTCOUNT    :
+      {
+      }
+      break;
+      #endif
+      case TB_GETINSERTMARK        :
+      {
+      }
+      break;
+      case TB_GETINSERTMARKCOLOR   :
+      {
+      }
+      break;
+      #if 0
+      case TB_GETITEMDROPDOWNRECT  :
+      {
+      }
+      break;
+      #endif
+      case TB_GETITEMRECT          :
+      {
+      }
+      break;
+      case TB_GETMAXSIZE           :
+      {
+      }
+      break;
+      #if 0
+      case TB_GETMETRICS           :
+      {
+      }
+      break;
+      #endif
+      case TB_GETOBJECT            :
+      {
+      }
+      break;
+      case TB_GETPADDING           :
+      {
+      }
+      break;
+      #if 0
+      case TB_GETPRESSEDIMAGELIST  :
+      {
+      }
+      break;
+      #endif
+      case TB_GETRECT              :
+      {
+      }
+      break;
+      case TB_GETROWS              :
+      {
+      }
+      break;
+      case TB_GETSTATE             :
+      {
+      }
+      break;
+      #if 0
+      case TB_GETSTRING            :
+      {
+      }
+      break;
+      #endif
+      case TB_GETSTYLE             :
+      {
+      }
+      break;
+      case TB_GETTEXTROWS          :
+      {
+      }
+      break;
+      case TB_GETTOOLTIPS          :
+      {
+      }
+      break;
+      case TB_GETUNICODEFORMAT     :
+      {
+      }
+      break;
+      case TB_HIDEBUTTON           :
+      {
+      }
+      break;
+      case TB_HITTEST              :
+      {
+      }
+      break;
+      case TB_INDETERMINATE        :
+      {
+      }
+      break;
+      case TB_INSERTBUTTON         :
+      {
+      }
+      break;
+      case TB_INSERTMARKHITTEST    :
+      {
+      }
+      break;
+      case TB_ISBUTTONCHECKED      :
+      {
+      }
+      break;
+      case TB_ISBUTTONENABLED      :
+      {
+      }
+      break;
+      case TB_ISBUTTONHIDDEN       :
+      {
+      }
+      break;
+      case TB_ISBUTTONHIGHLIGHTED  :
+      {
+      }
+      break;
+      case TB_ISBUTTONINDETERMINATE:
+      {
+      }
+      break;
+      case TB_ISBUTTONPRESSED      :
+      {
+      }
+      break;
+      case TB_LOADIMAGES           :
+      {
+      }
+      break;
+      case TB_MAPACCELERATOR       :
+      {
+      }
+      break;
+      case TB_MARKBUTTON           :
+      {
+         SendMessage( hTB, TB_MARKBUTTON, ( WPARAM ) wapi_par_INT( 3 ), ( LPARAM ) MAKELONG( hb_parl( 4 ),0 ) );
+      }
+      break;
+      case TB_MOVEBUTTON           :
+      {
+      }
+      break;
+      case TB_PRESSBUTTON          :
+      {
+      }
+      break;
+      case TB_REPLACEBITMAP        :
+      {
+      }
+      break;
+      case TB_SAVERESTORE          :
+      {
+      }
+      break;
+      case TB_SETANCHORHIGHLIGHT   :
+      {
+      }
+      break;
+      case TB_SETBITMAPSIZE        :
+      {
+      }
+      break;
+      case TB_SETBUTTONINFO        :
+      {
+      }
+      break;
+      case TB_SETBUTTONSIZE        :
+      {
+         SendMessage( hTB, TB_SETBUTTONSIZE, ( WPARAM ) 0,
+                      ( LPARAM ) MAKELONG( wapi_par_INT( 3 ), wapi_par_INT( 4 ) ) );
+      }
+      break;
+      case TB_SETBUTTONWIDTH       :
+      {
+      }
+      break;
+      case TB_SETCMDID             :
+      {
+      }
+      break;
+      case TB_SETCOLORSCHEME       :
+      {
+      }
+      break;
+      case TB_SETDISABLEDIMAGELIST :
+      {
+      }
+      break;
+      case TB_SETDRAWTEXTFLAGS     :
+      {
+      }
+      break;
+      case TB_SETEXTENDEDSTYLE     :
+      {
+      }
+      break;
+      case TB_SETHOTIMAGELIST      :
+      {
+      }
+      break;
+      case TB_SETHOTITEM           :
+      {
+      }
+      break;
+      #if 0
+      case TB_SETHOTITEM2          :
+      {
+      }
+      break;
+      #endif
+      case TB_SETIMAGELIST         :
+      {
+         SendMessage( hTB, TB_SETIMAGELIST, ( WPARAM ) 0, ( LPARAM ) wapi_par_HIMAGELIST( 3 ) );
+      }
+      break;
+      case TB_SETINDENT            :
+      {
+      }
+      break;
+      case TB_SETINSERTMARK        :
+      {
+      }
+      break;
+      case TB_SETINSERTMARKCOLOR   :
+      {
+      }
+      break;
+      #if 0
+      case TB_SETLISTGAP           :
+      {
+      }
+      break;
+      #endif
+      case TB_SETMAXTEXTROWS       :
+      {
+         SendMessage( hTB, TB_SETMAXTEXTROWS, ( WPARAM ) wapi_par_INT( 2 ), ( LPARAM ) 0 );
+      }
+      break;
+      #if 0
+      case TB_SETMETRICS           :
+      {
+      }
+      break;
+      #endif
+      case TB_SETPADDING           :
+      {
+      }
+      break;
+      case TB_SETPARENT            :
+      {
+      }
+      break;
+      #if 0
+      case TB_SETPRESSEDIMAGELIST  :
+      {
+      }
+      break;
+      #endif
+      case TB_SETROWS              :
+      {
+      }
+      break;
+      case TB_SETSTATE             :
+      {
+      }
+      break;
+      case TB_SETSTYLE             :
+      {
+      }
+      break;
+      case TB_SETTOOLTIPS          :
+      {
+      }
+      break;
+      case TB_SETUNICODEFORMAT     :
+      {
+      }
+      break;
+      #if 0
+      case TB_SETWINDOWTHEME       :
+      {
+      }
+      break;
+      case TB_TRANSLATEACCELERATOR :
+      {
+      }
+      break;
+      #endif
+   }
+
+}
+
+//----------------------------------------------------------------------//
+// Wvg_RegisterClass( cClassName,
+//
+HB_FUNC( WVG_REGISTERCLASS_BYNAME )
+{
+   WNDCLASS wndclass;
+   LPTSTR  szClass = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+
+   memset( &wndclass, 0, sizeof( WNDCLASS ) );
+   wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+   wndclass.lpfnWndProc   = DefWindowProc;
+   wndclass.hInstance     = wvg_hInstance();
+   wndclass.hIcon         = NULL;
+   wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
+   wndclass.hbrBackground = NULL;
+   wndclass.lpszMenuName  = NULL;
+   wndclass.lpszClassName = szClass;
+
+   if( ! RegisterClass( &wndclass ) )
+   {
+      int iError = GetLastError();
+      if( iError != 1410 )
+      {
+         hb_errInternal( 10001, "Failed to register DA window class", NULL, NULL );
+      }
+   }
+   HB_TCHAR_FREE( szClass );
+}
+
+//----------------------------------------------------------------------//
+
+HB_FUNC( WIN_FILLRECT )
+{
+   RECT rc;
+
+   rc.left   = hb_parni( 2,1 );
+   rc.top    = hb_parni( 2,2 );
+   rc.right  = hb_parni( 2,3 );
+   rc.bottom = hb_parni( 2,4 );
+
+   FillRect( wapi_par_HDC( 1 ), &rc, wapi_par_HBRUSH( 3 ) );
+}
+
 //----------------------------------------------------------------------//

@@ -269,6 +269,8 @@ EXPORTED:
    METHOD   ControlWndProc()
    METHOD   findObjectByHandle( hWnd )
 
+
+   METHOD   isDerivedFrom()
    ENDCLASS
 
 //----------------------------------------------------------------------//
@@ -332,6 +334,9 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 //----------------------------------------------------------------------//
 
 METHOD destroy() CLASS WvgWindow
+   #if 0
+   hb_ToOutDebug( "          %s:destroy() WvgWindow()", __objGetClsName( self ) )
+   #endif
 
    IF Len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
@@ -340,7 +345,9 @@ METHOD destroy() CLASS WvgWindow
    IF Win_IsWindow( ::hWnd )
       Win_DestroyWindow( ::hWnd )
    ENDIF
-   hb_FreeCallBack( ::nWndProc )
+   IF !empty( ::nWndProc )
+      hb_FreeCallBack( ::nWndProc )
+   ENDIF
 
    IF ::hBrushBG <> NIL
       Win_DeleteObject( ::hBrushBG )
@@ -508,6 +515,27 @@ METHOD setSize( aSize, lPaint ) CLASS WvgWindow
       END
    ENDIF
    RETURN Self
+
+//----------------------------------------------------------------------//
+
+METHOD isDerivedFrom( cClassORoObject ) CLASS WvgWindow
+   LOCAL lTrue := .f.
+   LOCAL cCls := __ObjGetClsName( self )
+
+   // Compares without Xbp or Wvg prefixes
+
+   IF hb_isChar( cClassORoObject )
+      IF upper( substr( cClassORoObject,4 ) ) == upper( substr( cCls,4 ) )
+         lTrue := .t.
+      ENDIF
+
+   ELSEIF hb_isObject( cClassORoObject )
+      IF upper( substr( cClassORoObject:className,4 ) ) == upper( substr( cCls,4 ) )
+         lTrue := .t.
+      ENDIF
+   ENDIF
+
+   RETURN lTrue
 
 //----------------------------------------------------------------------//
 
@@ -1024,12 +1052,12 @@ METHOD quit( xParam, xParam1 ) CLASS WvgWindow
 
 METHOD resize( xParam, xParam1 ) CLASS WvgWindow
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_resize )
+   if hb_isArray( xParam ) .and. hb_isArray( xParam1 ) .and. hb_isBlock( ::sl_resize )
       eval( ::sl_resize, xParam, xParam1, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if hb_isBlock( xParam ) //.or. hb_isNil( xParam )
       ::sl_resize := xParam
       RETURN NIL
    endif
@@ -1187,35 +1215,17 @@ METHOD createControl() CLASS WvgWindow
 
    ::nID := ::oParent:GetControlId()
 
-   DO CASE
+   hWnd := Win_CreateWindowEx( ::exStyle, ;
+                               ::className, ;
+                               "", ;                              // window name
+                               ::style, ;
+                               ::aPos[ 1 ], ::aPos[ 2 ],;
+                               ::aSize[ 1 ], ::aSize[ 2 ],;
+                               ::oParent:hWnd,;
+                               ::nID,;                            // hMenu
+                               NIL,;                              // hInstance
+                               NIL )                              // lParam
 
-   CASE ::objType == objTypeToolBar
-
-      hWnd := Win_CreateToolBarEx( ::oParent:hWnd,; // hWnd - window handle hosting the toolbar
-                                   ::style,;        // ws - style of the toolbar
-                                   ::nID,;          // wID - control identifier supplied with WM_COMMAND
-                                   0,;              // nBitmaps - number of button images
-                                   NIL,;            // hBMInst - mudule instance which hosts the bitmap resource
-                                   NIL,;            // wBPID - resource identifier of the bitmap
-                                   NIL,;            // lpButton - TBUTTON structure
-                                   0,;              // number of buttons
-                                   ::buttonWidth,;  //
-                                   ::buttonHeight,;
-                                   ::imageWidth,;
-                                   ::imageHeight )
-   OTHERWISE
-
-      hWnd := Win_CreateWindowEx(  ::exStyle, ;
-                                   ::className, ;
-                                   "", ;                              // window name
-                                   ::style, ;
-                                   ::aPos[ 1 ], ::aPos[ 2 ],;
-                                   ::aSize[ 1 ], ::aSize[ 2 ],;
-                                   ::oParent:hWnd,;
-                                   ::nID,;                            // hMenu
-                                   NIL,;                              // hInstance
-                                   NIL )                              // lParam
-   ENDCASE
 
    IF ( hWnd <> 0 )
       ::hWnd := hWnd
@@ -1233,6 +1243,12 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
    #endif
 
    SWITCH nMessage
+
+   CASE WM_ERASEBKGND
+      IF ::objType == objTypeDA .and. !empty( ::hBrushBG )
+         ::handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
+      ENDIF
+      EXIT
 
    CASE WM_COMMAND
       nCtrlID   := Win_LOWORD( nwParam )
@@ -1254,16 +1270,20 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
          RETURN 0
       ELSE
          IF ( nObj := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
-            RETURN ::aChildren[ nObj ]:handleEvent( HB_GTE_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
-
+            nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
+            IF hb_isNumeric( nReturn ) .and. nReturn == 0
+               RETURN 0
+            ENDIF
          ENDIF
       ENDIF
       EXIT
 
    CASE WM_NOTIFY
       IF ( nObj := ascan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
-         RETURN ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, nlParam } )
-
+         nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, nlParam } )
+         IF hb_isNumeric( nReturn ) .and. nReturn == 0
+            RETURN 0
+         ENDIF
       ENDIF
       EXIT
 
@@ -1285,7 +1305,6 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
             RETURN nReturn
          ENDIF
       ENDIF
-
       EXIT
    END
 

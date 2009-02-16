@@ -59,6 +59,8 @@
 
 //----------------------------------------------------------------------//
 
+#define DA_MODE                                    1  // Experimental
+
 #define objTypeNone                                0
 #define objTypeCrt                                 1
 #define objTypeWindow                              2
@@ -79,6 +81,7 @@
 #define objType3State                             17
 #define objTypeSLE                                18
 #define objTypeMLE                                19
+#define objTypeDA                                 20
 
 //----------------------------------------------------------------------//
 //  NMHDR info

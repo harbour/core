@@ -17,6 +17,7 @@ C_SOURCES=\
 	win_prn2.c \
 	win_prt.c \
 	win_regc.c \
+        wapi_commctrl.c \
 
 PRG_SOURCES=\
 	win_os.prg \

@@ -169,6 +169,7 @@ METHOD status() CLASS WvgPartHandler
 
 METHOD addChild( oWvg ) CLASS WvgPartHandler
 
+   oWvg:nNameID := oWvg:nID
    aadd( ::aChildren, oWvg )
 
    RETURN Self
@@ -176,26 +177,33 @@ METHOD addChild( oWvg ) CLASS WvgPartHandler
 //----------------------------------------------------------------------//
 
 METHOD childFromName( nNameId ) CLASS WvgPartHandler
-   LOCAL oWvg
+   LOCAL i, oWvg
 
-   IF ::hChildren[ nNameId ] <> NIL
-      oWvg := ::hChildren[ nNameId ]           // ???
-   ENDIF
+   FOR i := 1 TO len( ::aChildren )
+      IF ::aChildren[ i ]:nNameID <> NIL .and. ::aChildren[ i ]:nNameID == nNameID
+         oWvg := ::aChildren[ i ]
+      ENDIF
+   NEXT
 
    RETURN oWvg
 
 //----------------------------------------------------------------------//
 
 METHOD childList() CLASS WvgPartHandler
-   LOCAL aChildList := {}
 
-   RETURN aChildList
+   RETURN ::aChildren
 
 //----------------------------------------------------------------------//
 
 METHOD delChild( oWvg ) CLASS WvgPartHandler
+   LOCAL n
 
-   HB_SYMBOL_UNUSED( oWvg )
+   n := ascan( ::aChildren, {|o| o == oWvg } )
+   IF n > 0
+      oWvg:destroy()
+      adel( ::aChildren, n )
+      asize( ::aChildren, len( ::aChildren )-1 )
+   endif
 
    RETURN Self
 
@@ -205,7 +213,7 @@ METHOD setName( nNameId ) CLASS WvgPartHandler
    LOCAL nOldNameId := ::nNameId
 
    IF Valtype( nNameId ) == 'N'
-      ::nNameId := nNameId
+      ::nNameID := nNameId
    ENDIF
 
    RETURN nOldNameId
@@ -370,6 +378,11 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       ENDCASE
 
    CASE nEvent == HB_GTE_RESIZED
+      IF ::objType == objTypeDialog
+         IF ::drawingArea:objType == objTypeDA
+            ::drawingArea:setPosAndSize( {0,0}, ::currentSize(), .f. )
+         ENDIF
+      ENDIF
       IF hb_isBlock( ::sl_resize )
          eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
       ENDIF

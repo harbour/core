@@ -262,6 +262,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgStatic
    CASE nMessage == HB_GTE_RESIZED
       IF hb_isBlock( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
+         aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
          RETURN ( 0 )
       ENDIF
 
@@ -287,19 +288,11 @@ METHOD destroy() CLASS WvgStatic
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
    ::WvgWindow:destroy()
+
    IF ::hBitmap <> nil
       Win_DeleteObject( ::hBitmap )
    ENDIF
 
-   #if 0
-   IF len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
-   ENDIF
-   IF Win_IsWindow( ::hWnd )
-      Win_DestroyWindow( ::hWnd )
-   ENDIF
-   HB_FreeCallback( ::nWndProc )
-   #endif
    RETURN NIL
 
 //----------------------------------------------------------------------//

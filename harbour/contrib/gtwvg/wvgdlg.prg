@@ -113,11 +113,10 @@ METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDial
 
    ::style       := WS_THICKFRAME+WS_OVERLAPPED+WS_CAPTION+WS_SYSMENU+WS_MINIMIZEBOX+WS_MAXIMIZEBOX;
 
-   //::drawingArea := Self
-
    RETURN Self
 //----------------------------------------------------------------------//
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDialog
+   LOCAL oW
 
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -162,11 +161,23 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDi
       ::lHasInputFocus := .t.
    endif
 
-   #if 0
-   ::drawingArea := WvgStatic():New( self, , {0,0}, {self:currentSize()[1],self:currentSize()[2]}, , .t. )
-   ::drawingArea:create()
+   #if 1
+   oW := WvgDrawingArea():new( self ):create( , , {0,0}, self:currentSize(), , .f. )
+   IF !empty( oW:hWnd )
+      //Win_SetLayeredWindowAttributes( oW:hWnd, RGB( 255,255,255 ), 0 )  // transparent
+      ::drawingArea := oW
+   ELSE
+      #if 1
+      ::drawingArea := WvgStatic():New( self, , {0,0}, self:currentSize(), , .f. )
+      ::drawingArea:create()
+      //Win_SetLayeredWindowAttributes( ::drawingArea:hWnd, RGB( 255,255,255 ), 0 )  // transparent
+      #else
+      ::drawingArea := Self
+      #endif
+   ENDIF
+   ::drawingArea:show()
    #else
-   ::drawingArea := Self
+      ::drawingArea := Self
    #endif
    hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| ::notifier( nEvent, ... ) } )
 
@@ -186,6 +197,10 @@ METHOD destroy() CLASS WvgDialog
 
    IF Len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
+   ENDIF
+
+   IF !empty( ::hBrushBG )
+      Win_DeleteObject( ::hBrushBG )
    ENDIF
 
    ::pGT  := NIL

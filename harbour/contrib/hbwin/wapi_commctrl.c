@@ -51,23 +51,13 @@
 
 #define HB_OS_WIN_USED
 
-#ifndef CINTERFACE
-   #define CINTERFACE 1
-#endif
-
-#define _WIN32_WINNT   0x0400
-#define _WIN32_IE      0x0500
-
-#include <windows.h>
-#include <commctrl.h>
 #include "hbapi.h"
 #include "hbwapi.h"
+#include <commctrl.h>
 
-extern BOOL Array2Point( PHB_ITEM aPoint, POINT *pt );
-
-//----------------------------------------------------------------------//
-//                       BEGIN - ImageList_* - API
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------//
+                        BEGIN - ImageList_* - API
+//----------------------------------------------------------------------*/
 /*
 int ImageList_Add( HIMAGELIST himl, HBITMAP hbmImage, HBITMAP hbmMask );
 */
@@ -75,7 +65,7 @@ HB_FUNC( WAPI_IMAGELIST_ADD )
 {
    wapi_ret_NI( ImageList_Add( wapi_par_HIMAGELIST( 1 ),
                                wapi_par_HBITMAP( 2 ),
-                               wapi_par_HBITMAP( 3 ) ) );
+                               ISNIL( 3 ) ? NULL : wapi_par_HBITMAP( 3 ) ) );
 }
 //----------------------------------------------------------------------//
 /*
@@ -125,11 +115,25 @@ HIMAGELIST ImageList_Create( int cx, int cy, UINT flags, int cInitial, int cGrow
 */
 HB_FUNC( WAPI_IMAGELIST_CREATE )
 {
+   #if 0  /* Test */
+   HIMAGELIST il;
+
+   il = ImageList_Create( wapi_par_INT( 1 ),
+                                      wapi_par_INT( 2 ),
+                                      wapi_par_UINT( 3 ),
+                                      wapi_par_INT( 4 ),
+                                      wapi_par_INT( 5 ) );
+   if( il )
+   {
+      wapi_ret_HANDLE( il );
+   }
+   #else
    wapi_ret_HANDLE( ImageList_Create( wapi_par_INT( 1 ),
                                       wapi_par_INT( 2 ),
                                       wapi_par_UINT( 3 ),
                                       wapi_par_INT( 4 ),
                                       wapi_par_INT( 5 ) ) );
+   #endif
 }
 //----------------------------------------------------------------------//
 /*
@@ -463,7 +467,7 @@ HB_FUNC( WAPI_IMAGELIST_WRITEEX )
 {
 }
 #endif
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------//
 //                            END - ImageList_* - API
-//----------------------------------------------------------------------//
+//----------------------------------------------------------------------*/
 

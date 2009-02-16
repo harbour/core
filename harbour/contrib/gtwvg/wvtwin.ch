@@ -1323,6 +1323,7 @@
 #define STATUSCLASSNAME                           "msctls_statusbar32"
 
 /* Toolbar messages */
+#define TB_ADDBITMAP                              (WM_USER + 19)
 #define TB_SAVERESTOREA                           (WM_USER + 26)
 #define TB_SAVERESTOREW                           (WM_USER + 76)
 #define TB_CUSTOMIZE                              (WM_USER + 27)
@@ -1409,7 +1410,6 @@
 
 #define TBBF_LARGE                                1
 
-
 #define TBIF_IMAGE                                1
 #define TBIF_TEXT                                 2
 #define TBIF_STATE                                4
@@ -1442,6 +1442,7 @@
 
 #define TB_INSERTBUTTONW                          (WM_USER + 67)
 #define TB_ADDBUTTONSW                            (WM_USER + 68)
+#define TB_ADDBUTTONSA                            (WM_USER + 20)
 #define TB_HITTEST                                (WM_USER + 69)
 #ifdef UNICODE
 #define TB_INSERTBUTTON                           TB_INSERTBUTTONW
@@ -1454,6 +1455,7 @@
 #define TB_SETDRAWTEXTFLAGS                       (WM_USER + 70)
 #define TB_GETSTRING                              (WM_USER + 92)
 
+#define TBN_FIRST                                 (-700)
 #define TBN_GETBUTTONINFOA                        (TBN_FIRST-0)
 #define TBN_BEGINDRAG                             (TBN_FIRST-1)
 #define TBN_ENDDRAG                               (TBN_FIRST-2)
@@ -1466,6 +1468,18 @@
 #define TBN_CUSTHELP                              (TBN_FIRST-9)
 #define TBN_DROPDOWN                              (TBN_FIRST-10)
 #define TBN_GETOBJECT                             (TBN_FIRST-12)
+#define TBN_HOTITEMCHANGE                         (TBN_FIRST-13)
+#define TBN_DRAGOUT                               (TBN_FIRST-14)
+#define TBN_DELETINGBUTTON                        (TBN_FIRST-15)
+#define TBN_GETDISPINFOA                          (TBN_FIRST-16)
+#define TBN_GETDISPINFOW                          (TBN_FIRST-17)
+#define TBN_GETINFOTIPA                           (TBN_FIRST-18)
+#define TBN_GETINFOTIPW                           (TBN_FIRST-19)
+#define TBN_GETBUTTONINFOW                        (TBN_FIRST-20)
+#define TBN_RESTORE                               (TBN_FIRST-21)
+#define TBN_SAVE                                  (TBN_FIRST-22)
+#define TBN_INITCUSTOMIZE                         (TBN_FIRST-23)
+
 
 /* Toolbar Control Constants */
 #define TBSTATE_CHECKED                           1

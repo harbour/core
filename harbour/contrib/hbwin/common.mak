@@ -22,6 +22,7 @@ LIB_OBJS = \
     $(OBJ_DIR)win_prn2$(OBJEXT) \
     $(OBJ_DIR)win_prt$(OBJEXT) \
     $(OBJ_DIR)win_regc$(OBJEXT) \
+    $(OBJ_DIR)wapi_commctrl$(OBJEXT) \
     \
     $(OBJ_DIR)win_os$(OBJEXT) \
     $(OBJ_DIR)win_reg$(OBJEXT) \

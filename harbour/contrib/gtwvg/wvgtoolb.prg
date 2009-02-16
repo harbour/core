@@ -99,6 +99,7 @@ CLASS WvgToolBar  INHERIT  WvgWindow //WvgActiveXControl
    DATA     transparentColor                      INIT 0
 
    DATA     aItems                                INIT {}
+   DATA     hImageList
 
    METHOD   new()
    METHOD   create()
@@ -125,7 +126,7 @@ CLASS WvgToolBar  INHERIT  WvgWindow //WvgActiveXControl
    METHOD   change()                              SETGET
    METHOD   buttonMenuClick()                     SETGET
    METHOD   buttonDropDown()                      SETGET
-
+   METHOD   sendToolbarMessage()
    METHOD   handleEvent( nMessage, aInfo )
 
    ENDCLASS
@@ -137,9 +138,9 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolB
 
    //::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::style       := WS_CHILD + TBSTYLE_FLAT + CCS_ADJUSTABLE //+ CCS_NODIVIDER    //+CCS_VERT
-   ::exStyle     := TBSTYLE_EX_DOUBLEBUFFER
+   // + TBSTYLE_LIST   caption to the right, otherwise caption to the bottom
+   ::style       := WS_CHILD + TBSTYLE_FLAT + TBSTYLE_TOOLTIPS + CCS_ADJUSTABLE //+ CCS_NODIVIDER    //+CCS_VERT
+   ::exStyle     := TBSTYLE_EX_DOUBLEBUFFER //+ TBSTYLE_EX_MIXEDBUTTONS
    ::className   := TOOLBARCLASSNAME
    ::objType     := objTypeToolBar
 
@@ -172,15 +173,30 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
 
    ::createControl()
 
-   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
+   #if 0
+   // Should not be defined as we only require its notifications
+   // so the parent of toolbar will process them anyway
+   // All other functionality should be default until ownerdraw is introduced.
+   //
+   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
    ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   #endif
+
+   IF !empty( ::hWnd )
+      #define ILC_COLOR8 8
+
+      ::hImageList := WAPI_ImageList_Create( ::imageWidth, ::imageHeight, ILC_COLOR8, 0, 20 )
+      ::SendToolbarMessage( TB_SETIMAGELIST, ::hImageList )
+
+      ::SendToolbarMessage( TB_BUTTONSTRUCTSIZE )
+      ::SendToolbarMessage( TB_SETBUTTONSIZE, ::buttonWidth+20, ::buttonHeight )
+
+      ::SendToolbarMessage( TB_AUTOSIZE )
+   ENDIF
+   ::sendToolbarMessage( TB_SETMAXTEXTROWS, IF( ::showToolTips, 0, 1 ) )
 
    IF ::visible
       ::show()
-   ENDIF
-
-   IF ::showToolTips
-      ::sendMessage( TB_SETMAXTEXTROWS, 0, 0 )
    ENDIF
 
    RETURN Self
@@ -191,7 +207,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
    LOCAL nHandled := 1
    LOCAL nObj, aNMMouse
 
-   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+   //hb_ToOutDebug( "       %s:handleEvent( %i ) %i", __ObjGetClsName( self ), nMessage,  )
 
    SWITCH nMessage
 
@@ -204,6 +220,8 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
 
    CASE HB_GTE_NOTIFY
       aNMMouse := Wvg_GetNMMouseInfo( aNM[ 2 ] )
+hb_ToOutDebug( "       %s:handleEvent( %i ) %i %i", __ObjGetClsName( self ), nMessage,;
+                          aNMMouse[ NMH_code ],  NM_CLICK )
 
       DO CASE
 
@@ -231,7 +249,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
 METHOD destroy() CLASS WvgToolBar
    LOCAL i, nItems
 
-   hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
+   hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
 
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems
@@ -247,10 +265,7 @@ METHOD destroy() CLASS WvgToolBar
       NEXT
    ENDIF
 
-   IF Win_IsWindow( ::hWnd )
-      Win_DestroyWindow( ::hWnd )
-   ENDIF
-   HB_FreeCallback( ::nWndProc )
+   ::WvgWindow:destroy()
 
    RETURN NIL
 
@@ -264,8 +279,14 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
 //----------------------------------------------------------------------//
 
+METHOD sendToolbarMessage( nMsg, p1, p2, p3, p4, p5 ) CLASS WvgToolBar
+
+   RETURN Win_SendToolbarMessage( ::hWnd, nMsg, p1, p2, p3, p4, p5 )
+
+//----------------------------------------------------------------------//
+
 METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey ) CLASS WvgToolBar
-   LOCAL oBtn, hBitmap, cType
+   LOCAL oBtn, hBitmap, cType, nBtn
 
    HB_SYMBOL_UNUSED( xDisabledImage )
    HB_SYMBOL_UNUSED( xHotImage )
@@ -295,10 +316,21 @@ METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey 
 
    IF hBitmap <> 0
       oBtn:image := hBitmap
-      Wvg_AddToolbarButton( ::hWnd, oBtn:image, oBtn:caption, oBtn:command, 1 )
 
+      nBtn := WAPI_ImageList_Add( ::hImageList, hBitmap )
+      //nBtn := WAPI_ImageList_AddMasked( ::hImageList, hBitmap, RGB( 198,198,198 ) )
+      /* Now as we are using ImageList, this will duplicate bitmaps */
+      //nBtn := Win_SendToolbarMessage( ::hWnd, TB_ADDBITMAP, hBitmap      )
+
+      //nStr := ::sendToolbarMessage( TB_ADDSTRING, oBtn:caption )
+
+      //lRet := ::sendToolbarMessage( TB_ADDBUTTONS, nBtn, oBtn:command, nStr )
+
+      Wvg_AddToolbarButton( ::hWnd, nBtn/*hBitmap*/, oBtn:caption, oBtn:command, 1, ::showToolTips )
+
+      ::sendToolbarMessage( TB_AUTOSIZE )
    ELSE
-      Wvg_AddToolbarButton( ::hWnd, , , oBtn:command, 3 )
+      Wvg_AddToolbarButton( ::hWnd, , , oBtn:command, 3, .f. )
 
    ENDIF
 

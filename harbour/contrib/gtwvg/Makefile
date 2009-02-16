@@ -17,6 +17,7 @@ C_SOURCES=\
 	wvggui.c \
 	wincallb.c \
 
+
 PRG_SOURCES=\
 	wvgclass.prg \
 	wvgpaint.prg \
@@ -43,6 +44,8 @@ PRG_SOURCES=\
 	wvgmle.prg \
 	wvghtmlv.prg \
 	wvgsysw.prg \
+	wvgdarea.prg \
+
 
 PRG_HEADERS=\
 	hbgtwvg.ch \

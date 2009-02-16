@@ -1436,6 +1436,8 @@ FUNCTION CreateMainMenu()
    oMenu:AddItem( "ActiveX - RMChart"           , {|| Hb_ThreadStart( {|| ExecuteActiveX(  4 ) } ) } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "ActiveX - Analog Clock"      , {|| Hb_ThreadStart( {|| ExecuteActiveX(  2 ) } ) } )
+   oMenu:AddItem( "-")
+   oMenu:AddItem( "ActiveX - Image Viewer"      , {|| Hb_ThreadStart( {|| ExecuteActiveX(  5 ) } ) } )
    g_oMenuBar:addItem( "",oMenu)
 
    RETURN g_oMenuBar
@@ -2346,7 +2348,7 @@ FUNCTION GoogleMap()
 //
 Function ExecuteActiveX( nActiveX, xParam )
    Local oCrt, oTBar, oSBar, oStatic, oCom, oXbp, oTree, oItem1, oItem2
-   LOCAL oListBox, oCheck, oRadio, oStatic2, oMLE
+   LOCAL oListBox, oCheck, oRadio, oStatic2, oMLE, oDA
    LOCAL oPanel, oPanel1, oPanel2, cText
    LOCAL cVarA  := "Test A", cVarB := "Test B"
    LOCAL aState := {"not selected", "selected", "undefined"}
@@ -2368,6 +2370,8 @@ Function ExecuteActiveX( nActiveX, xParam )
    SetCursor( .f. )
    #endif
 
+   oDA := oCrt:drawingArea
+
    //--------------------------- Menu --------------------------------\\
    ActiveXBuildMenu( oCrt, @oStatic, @oStatic2 )
 
@@ -2375,7 +2379,7 @@ Function ExecuteActiveX( nActiveX, xParam )
    oTBar := ActiveXBuildToolBar( oCrt, nActiveX )
 
    //--------------------------- StatusBar ---------------------------\\
-   oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .t. )
+   oSBar   := WvgStatusBar():new( oDA ):create( , , , , , .t. )
    oSBar:panelClick := {|oPanel| Win_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
    oPanel:caption := 'My Root Panel'
@@ -2385,15 +2389,16 @@ Function ExecuteActiveX( nActiveX, xParam )
    oPanel2:caption := 'Click on any part!'
 
    //--------------------------- Static ------------------------------\\
-   oStatic := WvgStatic():new( oCrt )
+   oStatic := WvgStatic():new( oDA )
    oStatic:type    := WVGSTATIC_TYPE_TEXT
    oStatic:options := WVGSTATIC_TEXT_CENTER
    oStatic:caption := chr(13)+'Implemented   Xbase++ Parts'
    oStatic:create( , , { 0, oTBar:currentSize()[2]+3 }, { 120, oCrt:currentSize()[2]-;
                                oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
+   oStatic:setColorBG( RGB( 198,198,198 ) )
 
    //--------------------------- Static + Radio + Checkbox ----------\\
-   oStatic2:= WvgStatic():New( oCrt, , { 150, 150 }, { 500,310 }, , .f. )
+   oStatic2:= WvgStatic():New( oDA, , { 150, 150 }, { 500,310 }, , .f. )
    //oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
    oStatic2:exStyle += WS_EX_WINDOWEDGE
    //oStatic2:options := WVGSTATIC_FRAMETHICK
@@ -2500,7 +2505,7 @@ Function ExecuteActiveX( nActiveX, xParam )
    oXbp:activate:= {|| oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
    //--------------------------- TreeView ---------------------------\\
-   oTree := WvgTreeView():new( oCrt, , { oCrt:currentSize()[1]-160,oTBar:currentSize()[2]+3 }, ;
+   oTree := WvgTreeView():new( oDA, , { oCrt:currentSize()[1]-160,oTBar:currentSize()[2]+3 }, ;
                                        { 160, oCrt:currentSize()[2]-;
                                oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
    oTree:hasLines   := .T.
@@ -2536,7 +2541,8 @@ Function ExecuteActiveX( nActiveX, xParam )
                                 IF( oBtn:caption == 'Tools', oStatic2:show():toFront(), nil ),;
                                 IF( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ),;
                                  oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
-   oCrt:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree ) }
+   //oCrt:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree ) }
+   oDA:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree ) }
 
    #if 1
    //--------------------------- Active-X ---------------------------\\
@@ -2624,11 +2630,12 @@ STATIC FUNCTION ActiveXBuildToolBar( oCrt, nActiveX )
 
    DEFAULT nActiveX TO 0
 
-   oTBar := WvgToolBar():new( oCrt , , { 0,0 }, { oCrt:currentSize()[ 1 ], 30 }, , .T. )
+   oTBar := WvgToolBar():new( oCrt:drawingArea , , { 0,0 }, { oCrt:currentSize()[ 1 ], 30 }, , .T. )
+   //oTBar := WvgToolBar():new( oCrt, , { 0,0 }, { oCrt:currentSize()[ 1 ], 30 }, , .T. )
 
    oTBar:borderStyle  := WVGFRAME_RECT
 
-   oTBar:buttonWidth  := 28
+   oTBar:buttonWidth  := 40 //28
    oTBar:buttonHeight := 26
 
    oTBar:imageWidth   := 26
@@ -2656,7 +2663,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oCrt )
 
    DEFAULT nActiveX TO 2
 
-   oCom := WvgActiveXControl():New( oCrt, , { 0, 0 }, { 100, 100 }, , .t. )
+   oCom := WvgActiveXControl():New( oCrt:drawingArea, , { 0, 0 }, { 100, 100 }, , .t. )
 
    do case
    case nActiveX == 1
@@ -2704,6 +2711,10 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oCrt )
       // Trying to set it generates GPF.
       // Please download RMChart.ocx from http://www.rmchart.com/ . It is free in everysense.
 
+   case nActiveX == 5
+      hb_gtInfo( HB_GTI_WINTITLE, 'Image Viewer' )
+      oCom:CLSID := 'SCRIBBLE.ScribbleCtrl.1'
+
    endcase
 
    oCom:create()
@@ -2727,6 +2738,16 @@ Static Function ExeActiveX( nActiveX, oCom, xParam )
       oCom:Draw( .t. )
       oCom:Draw2Clipboard()
 
+   elseif nActiveX == 5
+      oCom:loadMultiPage( 'c:\myharu.pdf', 2 )
+      oCom:addGradientBorder( 10, RGB( 12,20,233 ), RGB( 100,255,20 ), 0 )
+      oCom:drawText( 10,10,'Vouch' )
+      //oCom:emboss( 3,0 )
+      oCom:copy2ClipBoard()
+      oCom:view := 11
+      oCom:setBackGroundColor( rgb( 225,225,225 ) )
+      //oCom:rotate90()
+//hb_toOutDebug( str( oCom:getTotalPage() ) )
    endif
 
    do while .t.
