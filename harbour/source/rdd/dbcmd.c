@@ -399,9 +399,9 @@ HB_FUNC( DBCREATE )
 }
 
 /*
- *    dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, <cCodePage>, <nConnection> ) -> <lSuccess>
+ *    hb_dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, <cCodePage>, <nConnection> ) -> <lSuccess>
  */
-HB_FUNC( DBCREATETEMP )
+HB_FUNC( HB_DBCREATETEMP )
 {
    char * szAlias, * szDriver, * szCpId;
    USHORT uiSize, uiLen;

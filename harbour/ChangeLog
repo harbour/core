@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-16 18:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+    + Added HB_DBCREATETEMP()
+
+  * harbour/source/rdd/dbcmd.c
+    * Renamed to HB_DBCREATETEMP().
+
 2009-02-16 17:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/dbinfo.ch
     + added DBI_ISTEMPORARY
