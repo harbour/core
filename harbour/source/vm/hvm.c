@@ -6635,7 +6635,7 @@ static void hb_vmPushStatic( USHORT uiStatic )
 static void hb_vmPushStaticByRef( USHORT uiStatic )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_ITEM pTop, pBase
+   PHB_ITEM pTop, pBase;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushStaticByRef(%hu)", uiStatic));
 
