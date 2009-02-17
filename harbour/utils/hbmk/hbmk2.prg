@@ -1035,7 +1035,7 @@ FUNCTION Main( ... )
          IF nErrorLevel != 0
             PauseForKey()
          ELSEIF s_lRUN
-            #if !( defined( __PLATFORM__WINDOWS ) .OR. defined( __PLATFORM__DOS ) .OR defined( __PLATFORM__OS2 ) )
+            #if !( defined( __PLATFORM__WINDOWS ) .OR. defined( __PLATFORM__DOS ) .OR. defined( __PLATFORM__OS2 ) )
             IF ! Empty( FN_DirGet( s_cPROGNAME ) )
                s_cPROGNAME := "." + hb_osPathSeparator() + s_cPROGNAME
             ENDIF

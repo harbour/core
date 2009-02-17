@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 11:43 UTC+0800 Luis Krause (lkrausem at shaw dot ca)
+  * utils/hbmk/hbmk2.prg
+    ! Fixed typo on line 1038 (missing . in .OR.)
+
 2009-02-17 20:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk2.prg
     ! Fixed -run on *nix systems.
