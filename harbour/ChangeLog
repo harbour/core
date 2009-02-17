@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 17:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk2.prg
+    + Added support for -fullstatic.
+    + Added '-lm' to linux/gcc. Still needs to tweaking, like gpm.
+
+  * bin/hbmk.bat
+    + Added missing '@'.
+
 2009-02-17 16:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * harbour-win-spec
   * harbour-wce-spec
@@ -672,7 +680,7 @@
     ; NOTE: Some things still missing:
       - details of *NIX stuff, systems libs, switches,
         etc, etc.
-      - -fullstatic not yet supported.
+      - -fullstatic not yet supported. [DONE]
       - fmstat/nofmstat. It would be good to find a
         more easily manageable way to influence that.
         Current one is make system dependent and a bit hackish.

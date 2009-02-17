@@ -147,6 +147,7 @@ FUNCTION Main( ... )
    LOCAL s_lGUI := .F.
    LOCAL s_lMT := .F.
    LOCAL s_lSHARED := .F.
+   LOCAL s_lSTATICFULL := .F.
    LOCAL s_lDEBUG := .F.
    LOCAL s_lNULRDD := .F.
    LOCAL s_lMAP := .F.
@@ -387,13 +388,14 @@ FUNCTION Main( ... )
 
    IF lSysLoc .AND. ( t_cARCH $ "bsd|hpux|sunos|linux" .OR. t_cARCH == "darwin" )
       s_lSHARED := .T.
+      s_lSTATICFULL := .F.
    ENDIF
 
    /* Process environment */
 
    IF Lower( GetEnv( "HB_GUI"    ) ) == "yes" ; s_lGUI    := .T. ; ENDIF
    IF Lower( GetEnv( "HB_MT"     ) ) == "yes" ; s_lMT     := .T. ; ENDIF
-   IF Lower( GetEnv( "HB_SHARED" ) ) == "yes" ; s_lSHARED := .T. ; ENDIF
+   IF Lower( GetEnv( "HB_SHARED" ) ) == "yes" ; s_lSHARED := .T. ; s_lSTATICFULL := .F. ; ENDIF
    IF Lower( GetEnv( "HB_DEBUG"  ) ) == "yes" ; s_lDEBUG  := .T. ; ENDIF
    IF Lower( GetEnv( "HB_NULRDD" ) ) == "yes" ; s_lNULRDD := .T. ; ENDIF
 
@@ -459,8 +461,9 @@ FUNCTION Main( ... )
       CASE Lower( cParam ) == "-std"             ; s_lGUI      := .F.
       CASE Lower( cParam ) == "-mt"              ; s_lMT       := .T.
       CASE Lower( cParam ) == "-st"              ; s_lMT       := .F.
-      CASE Lower( cParam ) == "-shared"          ; s_lSHARED   := .T.
-      CASE Lower( cParam ) == "-static"          ; s_lSHARED   := .F.
+      CASE Lower( cParam ) == "-shared"          ; s_lSHARED   := .T. ; s_lSTATICFULL := .F.
+      CASE Lower( cParam ) == "-static"          ; s_lSHARED   := .F. ; s_lSTATICFULL := .F.
+      CASE Lower( cParam ) == "-fullstatic"      ; s_lSHARED   := .F. ; s_lSTATICFULL := .T.
       CASE Lower( cParam ) == "-bldflags"        ; s_lBLDFLG   := .T.
       CASE Lower( cParam ) == "-bldflags-"       ; s_lBLDFLG   := .F.
       CASE Lower( cParam ) == "-debug"           ; s_lDEBUG    := .T.
@@ -500,6 +503,7 @@ FUNCTION Main( ... )
             @s_lGUI,;
             @s_lMT,;
             @s_lSHARED,;
+            @s_lSTATICFULL,;
             @s_lDEBUG,;
             @s_lNULRDD,;
             @s_lMAP,;
@@ -654,6 +658,12 @@ FUNCTION Main( ... )
          ENDIF
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
+         ENDIF
+         IF t_cARCH == "linux"
+            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
+            IF ! s_lSHARED .AND. s_lSTATICFULL
+               s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "pthread", "dl" } )
+            ENDIF
          ENDIF
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
@@ -954,7 +964,7 @@ FUNCTION Main( ... )
          ENDIF
       ENDIF
 
-      IF nErrorLevel == 0 .AND. ! lStopAfterCComp .AND. Len( ArrayJoin( s_aOBJ, s_aOBJUSER ) ) > 0 .AND. ! Empty( cBin_Link )
+      IF nErrorLevel == 0 .AND. ! lStopAfterCComp .AND. ( Len( s_aOBJ ) + Len( s_aOBJUSER ) ) > 0 .AND. ! Empty( cBin_Link )
 
          /* Linking */
 
@@ -1177,6 +1187,7 @@ STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
                                  /* @ */ lGUI,;
                                  /* @ */ lMT,;
                                  /* @ */ lSHARED,;
+                                 /* @ */ lSTATICFULL,;
                                  /* @ */ lDEBUG,;
                                  /* @ */ lNULRDD,;
                                  /* @ */ lMAP,;
@@ -1199,6 +1210,7 @@ STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
          @lGUI,;
          @lMT,;
          @lSHARED,;
+         @lSTATICFULL,;
          @lDEBUG,;
          @lNULRDD,;
          @lMAP,;
@@ -1220,6 +1232,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                                  /* @ */ lGUI,;
                                  /* @ */ lMT,;
                                  /* @ */ lSHARED,;
+                                 /* @ */ lSTATICFULL,;
                                  /* @ */ lDEBUG,;
                                  /* @ */ lNULRDD,;
                                  /* @ */ lMAP,;
@@ -1242,90 +1255,96 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       cLine := ArchCompFilter( AllTrim( cLine ) )
 
       DO CASE
-      CASE Lower( Left( cLine, Len( "libs="     ) ) ) == "libs="     ; cLine := SubStr( cLine, Len( "libs="     ) + 1 )
+      CASE Lower( Left( cLine, Len( "libs="      ) ) ) == "libs="        ; cLine := SubStr( cLine, Len( "libs="       ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
             IF AScan( aLIBS, {| tmp | tmp == cItem } ) == 0
                AAddNotEmpty( aLIBS, DirAdaptPathSep( cItem ) )
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "libpaths=" ) ) ) == "libpaths=" ; cLine := SubStr( cLine, Len( "libpaths=" ) + 1 )
+      CASE Lower( Left( cLine, Len( "libpaths="  ) ) ) == "libpaths="    ; cLine := SubStr( cLine, Len( "libpaths="   ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
             IF AScan( aLIBS, {| tmp | tmp == cItem } ) == 0
                AAddNotEmpty( aLIBPATH, DirAdaptPathSep( cItem ) )
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "prgflags=" ) ) ) == "prgflags=" ; cLine := SubStr( cLine, Len( "prgflags=" ) + 1 )
+      CASE Lower( Left( cLine, Len( "prgflags="  ) ) ) == "prgflags="    ; cLine := SubStr( cLine, Len( "prgflags="   ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
             IF AScan( aOPTPRG, {| tmp | tmp == cItem } ) == 0
                AAddNotEmpty( aOPTPRG, DirAdaptPathSep( cItem ) )
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "cflags="   ) ) ) == "cflags="   ; cLine := SubStr( cLine, Len( "cflags="   ) + 1 )
+      CASE Lower( Left( cLine, Len( "cflags="    ) ) ) == "cflags="      ; cLine := SubStr( cLine, Len( "cflags="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
             IF AScan( aOPTC, {| tmp | tmp == cItem } ) == 0
                AAddNotEmpty( aOPTC, cItem )
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "ldflags="  ) ) ) == "ldflags="  ; cLine := SubStr( cLine, Len( "ldflags="  ) + 1 )
+      CASE Lower( Left( cLine, Len( "ldflags="   ) ) ) == "ldflags="     ; cLine := SubStr( cLine, Len( "ldflags="    ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
             IF AScan( aOPTL, {| tmp | tmp == cItem } ) == 0
                AAddNotEmpty( aOPTL, cItem )
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "gui="      ) ) ) == "gui="      ; cLine := SubStr( cLine, Len( "gui="      ) + 1 )
+      CASE Lower( Left( cLine, Len( "gui="        ) ) ) == "gui="        ; cLine := SubStr( cLine, Len( "gui="        ) + 1 )
          DO CASE
          CASE Lower( cLine ) == "yes" ; lGUI := .T.
          CASE Lower( cLine ) == "no"  ; lGUI := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "mt="       ) ) ) == "mt="       ; cLine := SubStr( cLine, Len( "mt="       ) + 1 )
+      CASE Lower( Left( cLine, Len( "mt="         ) ) ) == "mt="         ; cLine := SubStr( cLine, Len( "mt="         ) + 1 )
          DO CASE
          CASE Lower( cLine ) == "yes" ; lMT := .T.
          CASE Lower( cLine ) == "no"  ; lMT := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "shared="   ) ) ) == "shared="   ; cLine := SubStr( cLine, Len( "shared="   ) + 1 )
+      CASE Lower( Left( cLine, Len( "shared="     ) ) ) == "shared="     ; cLine := SubStr( cLine, Len( "shared="     ) + 1 )
          DO CASE
-         CASE Lower( cLine ) == "yes" ; lSHARED := .T.
-         CASE Lower( cLine ) == "no"  ; lSHARED := .F.
+         CASE Lower( cLine ) == "yes" ; lSHARED := .T. ; lSTATICFULL := .F.
+         CASE Lower( cLine ) == "no"  ; lSHARED := .F. ; lSTATICFULL := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "debug="    ) ) ) == "debug="    ; cLine := SubStr( cLine, Len( "debug="    ) + 1 )
+      CASE Lower( Left( cLine, Len( "fullstatic=" ) ) ) == "fullstatic=" ; cLine := SubStr( cLine, Len( "fullstatic=" ) + 1 )
+         DO CASE
+         CASE Lower( cLine ) == "yes" ; lSHARED := .F. ; lSTATICFULL := .T.
+         CASE Lower( cLine ) == "no"  ; lSHARED := .F. ; lSTATICFULL := .F.
+         ENDCASE
+
+      CASE Lower( Left( cLine, Len( "debug="      ) ) ) == "debug="      ; cLine := SubStr( cLine, Len( "debug="      ) + 1 )
          DO CASE
          CASE Lower( cLine ) == "yes" ; lDEBUG := .T.
          CASE Lower( cLine ) == "no"  ; lDEBUG := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "nulrdd="   ) ) ) == "nulrdd="   ; cLine := SubStr( cLine, Len( "nulrdd="   ) + 1 )
+      CASE Lower( Left( cLine, Len( "nulrdd="     ) ) ) == "nulrdd="     ; cLine := SubStr( cLine, Len( "nulrdd="     ) + 1 )
          DO CASE
          CASE Lower( cLine ) == "yes" ; lNULRDD := .T.
          CASE Lower( cLine ) == "no"  ; lNULRDD := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "map="      ) ) ) == "map="      ; cLine := SubStr( cLine, Len( "map="      ) + 1 )
+      CASE Lower( Left( cLine, Len( "map="        ) ) ) == "map="        ; cLine := SubStr( cLine, Len( "map="        ) + 1 )
          DO CASE
          CASE Lower( cLine ) == "yes" ; lMAP := .T.
          CASE Lower( cLine ) == "no"  ; lMAP := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "strip="    ) ) ) == "strip="    ; cLine := SubStr( cLine, Len( "strip="    ) + 1 )
+      CASE Lower( Left( cLine, Len( "strip="      ) ) ) == "strip="      ; cLine := SubStr( cLine, Len( "strip="      ) + 1 )
          DO CASE
          CASE Lower( cLine ) == "yes" ; lSTRIP := .T.
          CASE Lower( cLine ) == "no"  ; lSTRIP := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "run="      ) ) ) == "run="      ; cLine := SubStr( cLine, Len( "run="      ) + 1 )
+      CASE Lower( Left( cLine, Len( "run="        ) ) ) == "run="        ; cLine := SubStr( cLine, Len( "run="        ) + 1 )
          DO CASE
          CASE Lower( cLine ) == "yes" ; lRUN := .T.
          CASE Lower( cLine ) == "no"  ; lRUN := .F.
          ENDCASE
 
-      CASE Lower( Left( cLine, Len( "gt="       ) ) ) == "gt="       ; cLine := SubStr( cLine, Len( "gt="       ) + 1 )
+      CASE Lower( Left( cLine, Len( "gt="         ) ) ) == "gt="         ; cLine := SubStr( cLine, Len( "gt="         ) + 1 )
          IF ! Empty( cLine )
             DEFAULT cGT TO cLine
          ENDIF
@@ -1447,6 +1466,7 @@ STATIC PROCEDURE ShowHelp()
       "  -l<libname>      link with <libname> library" ,;
       "  -L<libpath>      additional path to search for libraries" ,;
       "  -static|-shared  link with static/shared libs" ,;
+      "  -fullstatic      link with all static libs" ,;
       "  -mt|-st          link with multi-thread/single-thread libs" ,;
       "  -gui|-std        create GUI/console executable" ,;
       "  -gt<name>        link with GT<name> GT driver, can be repeated to link" ,;
