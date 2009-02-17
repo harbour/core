@@ -274,11 +274,12 @@ FUNCTION Main( ... )
                     { "wpp386.exe", "owatcom" },;
                     { "pocc.exe"  , "pocc"    },;
                     { "dmc.exe"   , "dmc"     } }
-      aCOMPSUP := { "bcc32", "dmc", "gcc", "icc", "mingw", "mingwce", "msvc", "msvcce", "owatcom", "pocc", "pocc64", "poccce", "rsxnt", "xcc" }
+      /* TODO: "mingwce", "msvcce", "poccce" */
+      aCOMPSUP := { "gcc", "mingw", "msvc", "bcc32", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
    OTHERWISE
-      OutErr( "hbmk: Error: Architecture not properly set." + hb_osNewLine() )
+      OutErr( "hbmk: Error: HB_ARCHITECTURE value unknown." + hb_osNewLine() )
       PauseForKey()
       RETURN 1
    ENDCASE
@@ -302,15 +303,25 @@ FUNCTION Main( ... )
             OutStd( "hbmk: Autodetected HB_COMPILER: " + t_cCOMP + hb_osNewLine() )
          ENDIF
       ELSE
-         OutErr( "hbmk: Harbour Make couldn't detect any supported C compilers" + hb_osNewLine() )
-         OutErr( "      on your system. Please setup one and try again." + hb_osNewLine() )
+         IF Empty( aCOMPDET )
+            OutErr( "hbmk: Please choose a compiler by setting envvar HB_COMPILER." + hb_osNewLine() )
+            OutErr( "      You have the following choices on your platform: " + hb_osNewLine() )
+            OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
+         ELSE
+            OutErr( "hbmk: Harbour Make couldn't detect any supported C compiler" + hb_osNewLine() )
+            OutErr( "      in your PATH. Please setup one or set envvar HB_COMPILER" + hb_osNewLine() )
+            OutErr( "      to one of these values:" + hb_osNewLine() )
+            OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
+         ENDIF
+         PauseForKey()
+         RETURN 2
       ENDIF
-   ENDIF
-
-   IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
-      OutErr( "hbmk: Error: Compiler not properly set." + hb_osNewLine() )
-      PauseForKey()
-      RETURN 2
+   ELSE
+      IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
+         OutErr( "hbmk: Error: HB_COMPILER value unknown." + hb_osNewLine() )
+         PauseForKey()
+         RETURN 2
+      ENDIF
    ENDIF
 
    /* Autodetect Harbour environment */
@@ -1503,7 +1514,7 @@ STATIC PROCEDURE ShowHelp()
       "    linux  : gcc, gpp, owatcom" ,;
       "    darwin : gcc" ,;
       "    win    : gcc, mingw, msvc, bcc32, owatcom, pocc, pocc64," ,;
-      "             poccce, mingwce, msvcce, dmc, rsxnt, xcc, icc" ,;
+      "             dmc, rsxnt, xcc, icc" ,; /* poccce, mingwce, msvcce */
       "    os2    : gcc, owatcom, icc" ,;
       "    dos    : gcc, djgpp, owatcom, rsx32" ,;
       "    bsd, hpux, sunos: gcc" }
