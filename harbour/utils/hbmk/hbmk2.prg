@@ -246,7 +246,7 @@ FUNCTION Main( ... )
    /* Setup architecture dependent data */
 
    DO CASE
-   CASE t_cARCH $ "bsd|hpux|sunos" .OR. t_cARCH == "darwin"
+   CASE t_cARCH $ "bsd|hpux|sunos" .OR. t_cARCH == "darwin" /* Separated to avoid match with 'win' */
       aCOMPSUP := { "gcc" }
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
@@ -255,15 +255,15 @@ FUNCTION Main( ... )
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
    CASE t_cARCH == "dos"
-      aCOMPDET := { { "gcc.exe", "djgpp" },;
+      aCOMPDET := { { "gcc.exe"   , "djgpp"   },;
                     { "wpp386.exe", "owatcom" } }
       aCOMPSUP := { "djgpp", "gcc", "owatcom", "rsx32" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtdos" }
    CASE t_cARCH == "os2"
-      aCOMPDET := { { "gcc.exe", "gcc" },;
-                    { "icc.exe", "icc" },;
-                    { "wpp386.exe", "owatcom" } }
+      aCOMPDET := { { "gcc.exe"   , "gcc"     },;
+                    { "wpp386.exe", "owatcom" },;
+                    { "icc.exe"   , "icc"     } }
       aCOMPSUP := { "gcc", "owatcom", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtos2" }
@@ -273,7 +273,9 @@ FUNCTION Main( ... )
                     { "bcc32.exe" , "bcc32"   },;
                     { "wpp386.exe", "owatcom" },;
                     { "pocc.exe"  , "pocc"    },;
-                    { "dmc.exe"   , "dmc"     } }
+                    { "dmc.exe"   , "dmc"     },;
+                    { "icc.exe"   , "icc"     },;
+                    { "xcc.exe"   , "xcc"     } }
       /* TODO: "mingwce", "msvcce", "poccce" */
       aCOMPSUP := { "gcc", "mingw", "msvc", "bcc32", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
       cBin_CompPRG := "harbour.exe"
@@ -290,6 +292,8 @@ FUNCTION Main( ... )
    IF Empty( GetEnv( "HB_COMPILER" ) )
       IF Len( aCOMPSUP ) == 1
          t_cCOMP := aCOMPSUP[ 1 ]
+      ELSEIF t_cARCH == "linux"
+         t_cCOMP := "gcc"
       ELSEIF ! Empty( aCOMPDET )
          FOR tmp := 1 TO Len( aCOMPDET )
             IF FindInPath( aCOMPDET[ tmp ][ 1 ] )
@@ -404,11 +408,12 @@ FUNCTION Main( ... )
 
    /* Process environment */
 
-   IF Lower( GetEnv( "HB_GUI"    ) ) == "yes" ; s_lGUI    := .T. ; ENDIF
-   IF Lower( GetEnv( "HB_MT"     ) ) == "yes" ; s_lMT     := .T. ; ENDIF
-   IF Lower( GetEnv( "HB_SHARED" ) ) == "yes" ; s_lSHARED := .T. ; s_lSTATICFULL := .F. ; ENDIF
-   IF Lower( GetEnv( "HB_DEBUG"  ) ) == "yes" ; s_lDEBUG  := .T. ; ENDIF
-   IF Lower( GetEnv( "HB_NULRDD" ) ) == "yes" ; s_lNULRDD := .T. ; ENDIF
+   IF    Lower( GetEnv( "HB_MT"     ) ) == "mt" ; s_lMT     := .T. ; ENDIF /* Compatibility */
+   IF ValueIsT( GetEnv( "HB_MT"     ) )         ; s_lMT     := .T. ; ENDIF
+   IF ValueIsT( GetEnv( "HB_GUI"    ) )         ; s_lGUI    := .T. ; ENDIF
+   IF ValueIsT( GetEnv( "HB_SHARED" ) )         ; s_lSHARED := .T. ; s_lSTATICFULL := .F. ; ENDIF
+   IF ValueIsT( GetEnv( "HB_DEBUG"  ) )         ; s_lDEBUG  := .T. ; ENDIF
+   IF ValueIsT( GetEnv( "HB_NULRDD" ) )         ; s_lNULRDD := .T. ; ENDIF
 
    IF Lower( Left( GetEnv( "HB_GT" ), 2 ) ) == "gt"
       s_cGT := GetEnv( "HB_GT" )
@@ -469,7 +474,9 @@ FUNCTION Main( ... )
 
       DO CASE
       CASE Lower( cParam ) == "-gui"             ; s_lGUI      := .T.
+      CASE Lower( cParam ) == "-mwindows"        ; s_lGUI      := .T. /* Compatibility */
       CASE Lower( cParam ) == "-std"             ; s_lGUI      := .F.
+      CASE Lower( cParam ) == "-mconsole"        ; s_lGUI      := .F. /* Compatibility */
       CASE Lower( cParam ) == "-mt"              ; s_lMT       := .T.
       CASE Lower( cParam ) == "-st"              ; s_lMT       := .F.
       CASE Lower( cParam ) == "-shared"          ; s_lSHARED   := .T. ; s_lSTATICFULL := .F.
@@ -1315,56 +1322,57 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
 
       CASE Lower( Left( cLine, Len( "gui="        ) ) ) == "gui="        ; cLine := SubStr( cLine, Len( "gui="        ) + 1 )
          DO CASE
-         CASE Lower( cLine ) == "yes" ; lGUI := .T.
-         CASE Lower( cLine ) == "no"  ; lGUI := .F.
+         CASE ValueIsT( cLine ) ; lGUI := .T.
+         CASE ValueIsF( cLine ) ; lGUI := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "mt="         ) ) ) == "mt="         ; cLine := SubStr( cLine, Len( "mt="         ) + 1 )
          DO CASE
-         CASE Lower( cLine ) == "yes" ; lMT := .T.
-         CASE Lower( cLine ) == "no"  ; lMT := .F.
+         CASE Lower( cLine ) == "mt" ; lMT := .T. /* Compatibility */
+         CASE ValueIsT( cLine ) ; lMT := .T.
+         CASE ValueIsF( cLine ) ; lMT := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "shared="     ) ) ) == "shared="     ; cLine := SubStr( cLine, Len( "shared="     ) + 1 )
          DO CASE
-         CASE Lower( cLine ) == "yes" ; lSHARED := .T. ; lSTATICFULL := .F.
-         CASE Lower( cLine ) == "no"  ; lSHARED := .F. ; lSTATICFULL := .F.
+         CASE ValueIsT( cLine ) ; lSHARED := .T. ; lSTATICFULL := .F.
+         CASE ValueIsF( cLine ) ; lSHARED := .F. ; lSTATICFULL := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "fullstatic=" ) ) ) == "fullstatic=" ; cLine := SubStr( cLine, Len( "fullstatic=" ) + 1 )
          DO CASE
-         CASE Lower( cLine ) == "yes" ; lSHARED := .F. ; lSTATICFULL := .T.
-         CASE Lower( cLine ) == "no"  ; lSHARED := .F. ; lSTATICFULL := .F.
+         CASE ValueIsT( cLine ) ; lSHARED := .F. ; lSTATICFULL := .T.
+         CASE ValueIsF( cLine ) ; lSHARED := .F. ; lSTATICFULL := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "debug="      ) ) ) == "debug="      ; cLine := SubStr( cLine, Len( "debug="      ) + 1 )
          DO CASE
-         CASE Lower( cLine ) == "yes" ; lDEBUG := .T.
-         CASE Lower( cLine ) == "no"  ; lDEBUG := .F.
+         CASE ValueIsT( cLine ) ; lDEBUG := .T.
+         CASE ValueIsF( cLine ) ; lDEBUG := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "nulrdd="     ) ) ) == "nulrdd="     ; cLine := SubStr( cLine, Len( "nulrdd="     ) + 1 )
          DO CASE
-         CASE Lower( cLine ) == "yes" ; lNULRDD := .T.
-         CASE Lower( cLine ) == "no"  ; lNULRDD := .F.
+         CASE ValueIsT( cLine ) ; lNULRDD := .T.
+         CASE ValueIsF( cLine ) ; lNULRDD := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "map="        ) ) ) == "map="        ; cLine := SubStr( cLine, Len( "map="        ) + 1 )
          DO CASE
-         CASE Lower( cLine ) == "yes" ; lMAP := .T.
-         CASE Lower( cLine ) == "no"  ; lMAP := .F.
+         CASE ValueIsT( cLine ) ; lMAP := .T.
+         CASE ValueIsF( cLine ) ; lMAP := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "strip="      ) ) ) == "strip="      ; cLine := SubStr( cLine, Len( "strip="      ) + 1 )
          DO CASE
-         CASE Lower( cLine ) == "yes" ; lSTRIP := .T.
-         CASE Lower( cLine ) == "no"  ; lSTRIP := .F.
+         CASE ValueIsT( cLine ) ; lSTRIP := .T.
+         CASE ValueIsF( cLine ) ; lSTRIP := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "run="        ) ) ) == "run="        ; cLine := SubStr( cLine, Len( "run="        ) + 1 )
          DO CASE
-         CASE Lower( cLine ) == "yes" ; lRUN := .T.
-         CASE Lower( cLine ) == "no"  ; lRUN := .F.
+         CASE ValueIsT( cLine ) ; lRUN := .T.
+         CASE ValueIsF( cLine ) ; lRUN := .F.
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "gt="         ) ) ) == "gt="         ; cLine := SubStr( cLine, Len( "gt="         ) + 1 )
@@ -1376,6 +1384,16 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
    NEXT
 
    RETURN
+
+STATIC FUNCTION ValueIsT( cString )
+   cString := Lower( cString )
+   RETURN cString == "yes" .OR. ;
+          cString == "1" /* Compatibility */
+
+STATIC FUNCTION ValueIsF( cString )
+   cString := Lower( cString )
+   RETURN cString == "no" .OR. ;
+          cString == "0" /* Compatibility */
 
 STATIC PROCEDURE HBM_Load( aParams, cFileName )
    LOCAL cFile := hb_MemoRead( cFileName )
@@ -1481,6 +1499,8 @@ STATIC PROCEDURE ShowHeader()
 
 STATIC PROCEDURE ShowHelp()
 
+   /* TODO: "  -[no]fmstat      enable/disable runtime memory statistics" ,; */
+
    LOCAL aText := {;
       "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c|[.obj|.o]]>" ,;
       "" ,;
@@ -1496,11 +1516,11 @@ STATIC PROCEDURE ShowHelp()
       "                   with more GTs. First one will be the default at runtime" ,;
       "  -nulrdd[-]       link with nulrdd" ,;
       "  -bldflags[-]     inherit .prg/.c/linker flags from Harbour build" ,;
-      "  -debug|-nodebug  add/exclude debug info" ,;
-      "  -map|-nomap      create (or not) a map file" ,;
-      "  -strip|-nostrip  strip (no strip) binaries" ,;
-      "  -trace|-notrace  show commands executed" ,;
-      "  -run|-norun      run/don't run the created executable" ,;
+      "  -[no]debug       add/exclude debug info" ,;
+      "  -[no]map         create (or not) a map file" ,;
+      "  -[no]strip       strip (no strip) binaries" ,;
+      "  -[no]trace       show commands executed" ,;
+      "  -[no]run         run/don't run the created executable" ,;
       "  -nohbp           do not process .hbp files in current directory" ,;
       "  -cc              stop after creating the .c Harbour output files" ,;
       "                   create link/copy/rename hbmk to hbcc for the same effect" ,;

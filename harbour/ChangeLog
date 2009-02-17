@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 20:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk2.prg
+    + HB_COMPILER now automatically set to gcc for Linux.
+      You can override it if you need gpp or owatcom.
+    + xcc, icc autodetection for win.
+    + Added support for HB_MT=mt|MT for compatibility.
+    + Added support for -mwindows/-mconsole for compatibility.
+    + 0/1 is accepted instead of yes/no for compatibility.
+
 2009-02-17 11:43 UTC+0800 Luis Krause (lkrausem at shaw dot ca)
   * utils/hbmk/hbmk2.prg
     ! Fixed typo on line 1038 (missing . in .OR.)
