@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 01:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/linux/install.cf
+    ! Added hack to ignore copy errors.
+      This probably isn't the ultimate solution, but since a few
+      weeks Harbour cannot be installed in the same dirs where
+      sources are located, since it fails with
+      cp: `file' and `/harbour/include/file' are the same file
+      which causes that no binaries will be installed either.
+
 2009-02-17 01:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/gtwvg/make_b32.bat
   * contrib/gtwvg/make_vc.bat
