@@ -8,6 +8,27 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 23:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  + contrib/gtalleg/tests
+  + contrib/gtalleg/tests/gtalleg-shared.hbp
+  + contrib/gtalleg/tests/gtalleg-static.hbp
+  * utils/hbmk/examples/whoo.hbp
+  * utils/hbmk/examples/c4w.hbp
+  * utils/hbmk/examples/minigui.hbp
+  * utils/hbmk/examples/hwgui.hbp
+  * utils/hbmk/examples/fwh.hbp
+  + utils/hbmk/examples/xbgtk.hbp
+  + utils/hbmk/examples/xhgtk.hbp
+    + Added new hbp files and settings to cover support by current
+      hbmk script features.
+    + Added new gtalleg hbp files for Windows, both static
+      and shared. Added logic from hbmk script for Linux.
+    ; NOTE: This is a work in progress, I'll have to investigate
+            -I support needed for xbgtk, hbmk can't handle that yet.
+            Also pkgconfig notation isn't parsed well yet, there needs
+            to be added syntax to allow spaces inside items.
+            Expect some possible incompatible changes in this area.
+
 2009-02-17 21:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk2.prg
     + Made HB_ARCHITECTURE and HB_COMPILER case-insensitive.

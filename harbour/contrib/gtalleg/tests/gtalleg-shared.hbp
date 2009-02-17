@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+libs=gtalleg
+{win}libs=alleg
+{linux}libs=`allegro-config --libs 2>/dev/null`
