@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 00:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/listbox.prg
+    ! Restored _SET_EXACT dependent code parts to have the
+      same logic as before my modifications a few years ago.
+      Przemek, is it right now? I honestly didn't understand
+      the issue here.
+
 2009-02-17 23:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + contrib/gtalleg/tests
   + contrib/gtalleg/tests/gtalleg-shared.hbp

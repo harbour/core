@@ -59,11 +59,11 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
 
-/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*() 
-         functions to generate screen output. Harbour uses Disp*() 
+/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*()
+         functions to generate screen output. Harbour uses Disp*()
          functions only. [vszakats] */
 
 #ifdef HB_COMPAT_C53
@@ -343,18 +343,30 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    nSize := Len( ::aItems ) - nPos + 1
    nPasses := iif( nPos > 1, 2, 1 )
 
-   FOR nPass := 1 TO nPasses
+   IF Set( _SET_EXACT )
+      FOR nPass := 1 TO nPasses
+         IF ( nPosFound := AScan( ::aItems, iif( lCaseSensitive,;
+                                                 { | aItem | aItem[ _ITEM_cTEXT ] == cText },;
+                                                 { | aItem | Lower( aItem[ _ITEM_cTEXT ] ) == cText } ), nPos, nSize ) ) > 0
+            EXIT
+         ENDIF
 
-      /* NOTE: Intentionally using "=" comparison to honor the _SET_EXACT setting. */
-      IF ( nPosFound := AScan( ::aItems, iif( lCaseSensitive,;
-                                              { | aItem | aItem[ _ITEM_cTEXT ] = cText },;
-                                              { | aItem | Lower( aItem[ _ITEM_cTEXT ] ) = cText } ), nPos, nSize ) ) > 0
-         EXIT
-      ENDIF
+         nSize := nPos - 1
+         nPos := 1
+      NEXT
+   ELSE
+      FOR nPass := 1 TO nPasses
+         /* NOTE: Intentionally using "=" comparison to honor the _SET_EXACT setting. */
+         IF ( nPosFound := AScan( ::aItems, iif( lCaseSensitive,;
+                                                 { | aItem | aItem[ _ITEM_cTEXT ] = cText },;
+                                                 { | aItem | Lower( aItem[ _ITEM_cTEXT ] ) = cText } ), nPos, nSize ) ) > 0
+            EXIT
+         ENDIF
 
-      nSize := nPos - 1
-      nPos := 1
-   NEXT
+         nSize := nPos - 1
+         nPos := 1
+      NEXT
+   ENDIF
 
    IF lOldExact != NIL
       Set( _SET_EXACT, lOldExact )
@@ -389,18 +401,30 @@ METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    nSize := Len( ::aItems ) - nPos + 1
    nPasses := iif( nPos > 1, 2, 1 )
 
-   FOR nPass := 1 TO nPasses
+   IF Set( _SET_EXACT )
+      FOR nPass := 1 TO nPasses
+         IF ( nPosFound := AScan( ::aItems, iif( lCaseSensitive,;
+                                                 { | aItem | _LISTBOX_ITEMDATA( aItem ) == cData },;
+                                                 { | aItem | Lower( _LISTBOX_ITEMDATA( aItem ) ) == cData } ), nPos, nSize ) ) > 0
+            EXIT
+         ENDIF
 
-      /* NOTE: Intentionally using "=" comparison to honor the _SET_EXACT setting. */
-      IF ( nPosFound := AScan( ::aItems, iif( lCaseSensitive,;
-                                              { | aItem | _LISTBOX_ITEMDATA( aItem ) = cData },;
-                                              { | aItem | Lower( _LISTBOX_ITEMDATA( aItem ) ) = cData } ), nPos, nSize ) ) > 0
-         EXIT
-      ENDIF
+         nSize := nPos - 1
+         nPos := 1
+      NEXT
+   ELSE
+      FOR nPass := 1 TO nPasses
+         /* NOTE: Intentionally using "=" comparison to honor the _SET_EXACT setting. */
+         IF ( nPosFound := AScan( ::aItems, iif( lCaseSensitive,;
+                                                 { | aItem | _LISTBOX_ITEMDATA( aItem ) = cData },;
+                                                 { | aItem | Lower( _LISTBOX_ITEMDATA( aItem ) ) = cData } ), nPos, nSize ) ) > 0
+            EXIT
+         ENDIF
 
-      nSize := nPos - 1
-      nPos := 1
-   NEXT
+         nSize := nPos - 1
+         nPos := 1
+      NEXT
+   ENDIF
 
    IF lOldExact != NIL
       Set( _SET_EXACT, lOldExact )
@@ -929,7 +953,7 @@ METHOD dropDown( lDropDown ) CLASS LISTBOX
    RETURN ::lDropDown
 
 METHOD fBlock( bFBlock ) CLASS LISTBOX
-   
+
    IF PCount() > 0
       ::bFBlock := iif( bFBlock == NIL, NIL, __eInstVar53( Self, "FBLOCK", bFBlock, "B", 1001 ) )
    ENDIF
@@ -981,7 +1005,7 @@ METHOD right( nRight ) CLASS LISTBOX
    RETURN ::nRight
 
 METHOD sBlock( bSBlock ) CLASS LISTBOX
-   
+
    IF PCount() > 0
       ::bSBlock := iif( bSBlock == NIL, NIL, __eInstVar53( Self, "SBLOCK", bSBlock, "B", 1001 ) )
    ENDIF
