@@ -200,7 +200,7 @@ FUNCTION Main( ... )
       ShowHeader()
    ENDIF
 
-   SWITCH Lower( NameGet( hb_argv( 0 ) ) )
+   SWITCH Lower( FN_NameGet( hb_argv( 0 ) ) )
    CASE "hbcc"
       lStopAfterHarbour := .T.
       IF ! t_lQuiet
@@ -431,7 +431,7 @@ FUNCTION Main( ... )
       DO CASE
       CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
          HBM_Load( aParams, SubStr( cParam, 2 ) ) /* Load parameters from script file */
-      CASE Lower( ExtGet( cParam ) ) == ".hbm"
+      CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
          HBM_Load( aParams, cParam ) /* Load parameters from script file */
       OTHERWISE
          AAdd( aParams, cParam )
@@ -503,7 +503,7 @@ FUNCTION Main( ... )
       CASE Left( cParam, 2 ) == "-L" .AND. ;
            Len( cParam ) > 2                     ; AAddNotEmpty( s_aLIBPATH, DirAdaptPathSep( ArchCompFilter( SubStr( cParam, 3 ) ) ) )
       CASE Left( cParam, 1 ) == "-"              ; AAdd( s_aOPTPRG , DirAdaptPathSep( cParam ) )
-      CASE Lower( ExtGet( cParam ) ) == ".hbp"
+      CASE Lower( FN_ExtGet( cParam ) ) == ".hbp"
 
          HBP_ProcessOne( cParam,;
             @s_aLIBUSER,;
@@ -522,13 +522,13 @@ FUNCTION Main( ... )
             @s_lRUN,;
             @s_cGT )
 
-      CASE Lower( ExtGet( cParam ) ) == ".prg"   ; AAdd( s_aPRG    , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
-      CASE Lower( ExtGet( cParam ) ) == ".rc"    ; AAdd( s_aRESSRC , DirAdaptPathSep( cParam ) )
-      CASE Lower( ExtGet( cParam ) ) == ".res"   ; AAdd( s_aRESCMP , DirAdaptPathSep( cParam ) )
-      CASE Lower( ExtGet( cParam ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
-      CASE Lower( ExtGet( cParam ) ) $ ".c|.cpp" ; AAdd( s_aC      , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
-      CASE Lower( ExtGet( cParam ) ) $ ".a|.lib" ; AAddNotEmpty( s_aLIBUSER, DirAdaptPathSep( ArchCompFilter( cParam ) ) )
-      OTHERWISE                                  ; AAdd( s_aPRG    , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
+      CASE Lower( FN_ExtGet( cParam ) ) == ".prg"   ; AAdd( s_aPRG    , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
+      CASE Lower( FN_ExtGet( cParam ) ) == ".rc"    ; AAdd( s_aRESSRC , DirAdaptPathSep( cParam ) )
+      CASE Lower( FN_ExtGet( cParam ) ) == ".res"   ; AAdd( s_aRESCMP , DirAdaptPathSep( cParam ) )
+      CASE Lower( FN_ExtGet( cParam ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
+      CASE Lower( FN_ExtGet( cParam ) ) $ ".c|.cpp" ; AAdd( s_aC      , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
+      CASE Lower( FN_ExtGet( cParam ) ) $ ".a|.lib" ; AAddNotEmpty( s_aLIBUSER, DirAdaptPathSep( ArchCompFilter( cParam ) ) )
+      OTHERWISE                                     ; AAdd( s_aPRG    , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
       ENDCASE
    NEXT
 
@@ -555,11 +555,11 @@ FUNCTION Main( ... )
    s_aLIBUSER := ArrayAJoin( { s_aLIBUSER, ListToArray( GetEnv( "HB_USER_LIBS" ) ) } )
 
    /* Strip extension from output name. */
-   s_cMAPNAME := ExtSet( s_cPROGNAME, ".map" )
+   s_cMAPNAME := FN_ExtSet( s_cPROGNAME, ".map" )
    IF t_cARCH $ "os2|win|dos"
-      s_cPROGNAME := ExtSet( s_cPROGNAME, ".exe" )
+      s_cPROGNAME := FN_ExtSet( s_cPROGNAME, ".exe" )
    ELSE
-      s_cPROGNAME := ExtSet( s_cPROGNAME )
+      s_cPROGNAME := FN_ExtSet( s_cPROGNAME )
    ENDIF
 
    DO CASE
@@ -791,7 +791,7 @@ FUNCTION Main( ... )
          IF s_lDEBUG
             AAdd( s_aOPTC, "-y -v" )
          ELSE
-            AAdd( s_aCLEAN, ExtSet( s_cPROGNAME, ".tds" ) )
+            AAdd( s_aCLEAN, FN_ExtSet( s_cPROGNAME, ".tds" ) )
          ENDIF
          IF s_lGUI
             AAdd( s_aOPTC, "-tW" )
@@ -1035,6 +1035,11 @@ FUNCTION Main( ... )
          IF nErrorLevel != 0
             PauseForKey()
          ELSEIF s_lRUN
+            #if !( defined( __PLATFORM__WINDOWS ) .OR. defined( __PLATFORM__DOS ) .OR defined( __PLATFORM__OS2 ) )
+            IF ! Empty( FN_DirGet( s_cPROGNAME ) )
+               s_cPROGNAME := "." + hb_osPathSeparator() + s_cPROGNAME
+            ENDIF
+            #endif
             IF s_lTRACE
                OutStd( "hbmk: Running executable: '" + s_cPROGNAME + "'" + hb_osNewLine() )
             ENDIF
@@ -1128,7 +1133,7 @@ STATIC FUNCTION ListCook( array, cPrefix, cExt )
    FOR tmp := 1 TO Len( array )
       array[ tmp ] := cPrefix + array[ tmp ]
       IF ISCHARACTER( cExt )
-           array[ tmp ] := ExtSet( array[ tmp ], cExt )
+           array[ tmp ] := FN_ExtSet( array[ tmp ], cExt )
       ENDIF
    NEXT
 
@@ -1169,26 +1174,33 @@ STATIC FUNCTION DirAddPathSep( cDir )
 
    RETURN cDir
 
-STATIC FUNCTION NameGet( cFileName )
+STATIC FUNCTION FN_DirGet( cFileName )
+   LOCAL cDir
+
+   hb_FNameSplit( cFileName, @cDir )
+
+   RETURN cDir
+
+STATIC FUNCTION FN_NameGet( cFileName )
    LOCAL cName
 
    hb_FNameSplit( cFileName,, @cName )
 
    RETURN cName
 
-STATIC FUNCTION ExtSet( cFileName, cExt )
-   LOCAL cDir, cName
-
-   hb_FNameSplit( cFileName, @cDir, @cName )
-
-   RETURN hb_FNameMerge( cDir, cName, cExt )
-
-STATIC FUNCTION ExtGet( cFileName )
+STATIC FUNCTION FN_ExtGet( cFileName )
    LOCAL cExt
 
    hb_FNameSplit( cFileName, , , @cExt )
 
    RETURN cExt
+
+STATIC FUNCTION FN_ExtSet( cFileName, cExt )
+   LOCAL cDir, cName
+
+   hb_FNameSplit( cFileName, @cDir, @cName )
+
+   RETURN hb_FNameMerge( cDir, cName, cExt )
 
 STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
                                  /* @ */ aLIBPATH,;
