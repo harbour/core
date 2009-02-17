@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 13:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  - contrib/hbmysql/utils/hbmk.bat
+  + contrib/hbmysql/utils/hbmysql.hbp
+  - contrib/hbblat/tests/hbmk.bat
+  + contrib/hbblat/tests/hbblat.hbp
+    * Switched from WIN/DOS specific to .hbp.
+
+  - contrib/hbgd/tests/hbmk_gnu.sh
+  * contrib/hbgd/tests/hbgd.hbp
+    * Switched from *NIX specific to .hbp.
+
 2009-02-17 11:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbblat/tests/blatcmd.prg
     ! Reverted fix of mine until we properly fix hb_cmdline().
