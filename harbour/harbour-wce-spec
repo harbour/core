@@ -68,7 +68,7 @@ GCC port.
 %description -l pl
 Harbour to kompatybilny z jêzykiem CA-Cl*pper kompilator rozwijany na
 wielu ró¿nych platformach. Ten pakiet zawiera kompilator, preprocesor,
-zbiory nag³ówkowe, wirtualn± maszynê oraz biblioteki pozwalaj±ce na
+zbiory nag³ówkowe, wirtualn+ maszynê oraz biblioteki pozwalaj+ce na
 tworzenie aplikacji dla WinCE-PocketPC przy u¿yciu MinGW-CE GCC.
 
 
@@ -169,7 +169,7 @@ make -r -i install
 ${CCPREFIX}strip --strip-debug $HB_LIB_INSTALL/*
 
 # remove unused files
-rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbdoc,hbmake,hbrun,hbi18n,hbtest}.exe
+rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbdoc,hbmk2,hbrun,hbi18n,hbtest}.exe
 
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF

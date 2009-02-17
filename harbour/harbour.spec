@@ -120,7 +120,7 @@ this RPM distribution.
 %description -l pl
 %{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator rozwijany na
 wielu ró¿nych platformach. Ten pakiet zawiera kompilator, preprocesor,
-zbiory nag³ówkowe, wirtualn± maszynê oraz dokumentacjê.
+zbiory nag³ówkowe, wirtualn+ maszynê oraz dokumentacjê.
 
 %description -l pt_BR
 %{dname} é um compilador Clipper compativel para multiplas plataformas.
@@ -257,7 +257,7 @@ statikus szerkesztéshez.
 
 %{?_with_odbc:%description -l pl odbc}
 %{?_with_odbc:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_odbc:Ten pakiet udostêpnia statyczn± biliotekê ODBC dla kompilatora %{dname}.}
+%{?_with_odbc:Ten pakiet udostêpnia statyczn+ biliotekê ODBC dla kompilatora %{dname}.}
 
 ## CURL library
 %{?_with_curl:%package curl}
@@ -272,7 +272,7 @@ statikus szerkesztéshez.
 
 %{?_with_curl:%description -l pl curl}
 %{?_with_curl:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_curl:Ten pakiet udostêpnia statyczn± biliotekê CURL dla kompilatora %{dname}.}
+%{?_with_curl:Ten pakiet udostêpnia statyczn+ biliotekê CURL dla kompilatora %{dname}.}
 
 ## libharu library
 %{?_with_libharu:%package libharu}
@@ -317,7 +317,7 @@ statikus szerkesztéshez.
 
 %{?_with_mysql:%description -l pl mysql}
 %{?_with_mysql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_mysql:Ten pakiet udostêpnia statyczn± biliotekê MYSQL dla kompilatora %{dname}.}
+%{?_with_mysql:Ten pakiet udostêpnia statyczn+ biliotekê MYSQL dla kompilatora %{dname}.}
 
 ## pgsql library
 %{?_with_pgsql:%package pgsql}
@@ -332,7 +332,7 @@ statikus szerkesztéshez.
 
 %{?_with_pgsql:%description -l pl pgsql}
 %{?_with_pgsql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_pgsql:Ten pakiet udostêpnia statyczn± biliotekê PGSQL dla kompilatora %{dname}.}
+%{?_with_pgsql:Ten pakiet udostêpnia statyczn+ biliotekê PGSQL dla kompilatora %{dname}.}
 
 ## fbird library
 %{?_with_fbsql:%package fbird}
@@ -347,7 +347,7 @@ statikus szerkesztéshez.
 
 %{?_with_fbsql:%description -l pl fbird}
 %{?_with_fbsql:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_fbsql:Ten pakiet udostêpnia statyczn± biliotekê FireBird dla kompilatora %{dname}.}
+%{?_with_fbsql:Ten pakiet udostêpnia statyczn+ biliotekê FireBird dla kompilatora %{dname}.}
 
 ## gd library
 %{?_with_gd:%package gd}
@@ -362,7 +362,7 @@ statikus szerkesztéshez.
 
 %{?_with_gd:%description -l pl gd}
 %{?_with_gd:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
-%{?_with_gd:Ten pakiet udostêpnia statyczn± biliotekê GD dla kompilatora %{dname}.}
+%{?_with_gd:Ten pakiet udostêpnia statyczn+ biliotekê GD dla kompilatora %{dname}.}
 
 ######################################################################
 ## Preperation.
@@ -441,7 +441,7 @@ then
     export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} -L${HB_LIB_INSTALL} -l%{name} %{!?_without_gtcrs:-lncurses} %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11}"
     export HB_USER_PRGFLAGS="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${HB_USER_PRGFLAGS}"
 
-    for utl in hbmake hbrun hbi18n hbdoc
+    for utl in hbmk2 hbrun hbi18n hbdoc
     do
         pushd utils/${utl}
         rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
@@ -615,7 +615,7 @@ rm -rf $RPM_BUILD_ROOT
 #%{_bindir}/hbtest
 %{_bindir}/hbrun
 %{_bindir}/hbi18n
-%{_bindir}/hbmake
+%{_bindir}/hbmk2
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}
 %attr(644,root,root) %{_includedir}/%{name}/*
