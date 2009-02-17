@@ -282,7 +282,7 @@ HBRUN_EXE    = $(BIN_DIR)\hbrun$(EXEEXT)
 HBTEST_EXE   = $(BIN_DIR)\hbtest$(EXEEXT)
 HBI18N_EXE   = $(BIN_DIR)\hbi18n$(EXEEXT)
 HBDOC_EXE    = $(BIN_DIR)\hbdoc$(EXEEXT)
-HBMK_EXE     = $(BIN_DIR)\hbmk$(EXEEXT)
+HBMK_EXE     = $(BIN_DIR)\hbmk2$(EXEEXT)
 
 HB_DLLVER    = 11
 HARBOUR_DLL  = $(BIN_DIR)\$(LIBPREF)harbour-$(HB_DLLVER)-$(HB_CC_NAME)$(DLLEXT)
@@ -1220,7 +1220,7 @@ HBDOC_EXE_OBJS = \
 #**********************************************************
 
 HBMK_EXE_OBJS = \
-    $(OBJ_DIR)\hbmk$(OBJEXT) \
+    $(OBJ_DIR)\hbmk2$(OBJEXT) \
 
 #**********************************************************
 #**********************************************************
