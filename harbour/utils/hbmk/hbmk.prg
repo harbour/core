@@ -481,7 +481,7 @@ FUNCTION Main( ... )
       CASE Lower( cParam ) == "-trace-"          ; s_lTRACE    := .F.
       CASE Lower( cParam ) == "-notrace"         ; s_lTRACE    := .F.
       CASE Lower( cParam ) == "-cc"              ; lStopAfterHarbour := .T.
-      CASE Lower( cParam ) == "-cmp"             ; lStopAfterCComp := .T. ; lStopAfterHarbour := .F.
+      CASE Lower( cParam ) == "-cmp"             ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
       CASE Lower( Left( cParam, 3 ) ) == "-gt"   ; DEFAULT s_cGT TO SubStr( cParam, 2 )
       CASE Left( cParam, 2 ) == "-o"             ; s_cPROGNAME := DirAdaptPathSep( SubStr( cParam, 3 ) )
       CASE Left( cParam, 2 ) == "-l" .AND. ;
@@ -1458,9 +1458,11 @@ STATIC PROCEDURE ShowHelp()
       "  -strip|-nostrip  strip (no strip) binaries" ,;
       "  -trace|-notrace  show commands executed" ,;
       "  -run|-norun      run/don't run the created executable" ,;
-      "  -nohbp           do not process .hbp files in current dir" ,;
+      "  -nohbp           do not process .hbp files in current directory" ,;
       "  -cc              stop after creating the .c Harbour output files" ,;
+      "                   create link/copy/rename hbmk to hbcc for the same effect" ,;
       "  -cmp             stop after creating the object files" ,;
+      "                   create link/copy/rename hbmk to hbcc for the same effect" ,;
       "  -q               quiet mode" ,;
       "" ,;
       "Notes:" ,;
