@@ -35,6 +35,7 @@ DIRS=\
 DIRS +=\
 	gtalleg \
 	hbapollo \
+	hbblat \
 	hbcurl \
 	hbfbird \
 	hbfimage \

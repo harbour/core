@@ -55,7 +55,7 @@
 
 PROCEDURE Main()
 
-   LOCAL cCmd := GetParams()
+   LOCAL cCmd := hb_cmdline()
    LOCAL nRet
 
    ? "Simple BLAT Command interface"
@@ -69,42 +69,3 @@ PROCEDURE Main()
    ENDIF
 
 RETURN
-
-STATIC FUNCTION GetParams()
-   LOCAL cCmd := WAPI_GetCommandLine()
-   LOCAL n
-
-   // Search first space after program name
-   n := AT( " ", cCmd )
-   IF n > 0
-      // remove program name
-      cCmd := SubStr( cCmd, n + 1 )
-   ELSE
-      // empty params list
-      cCmd := ""
-   ENDIF
-
-RETURN cCmd
-
-//-----------------------------------------
-
-// TODO: move to hbwin lib
-#pragma BEGINDUMP
-
-#define HB_OS_WIN_32_USED
-
-#include <windows.h>
-
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbstack.h"
-#include "hbapierr.h"
-#include "hbapifs.h"
-
-/* GetCommandLine() returns entire command line as a single string */
-HB_FUNC( WAPI_GETCOMMANDLINE )
-{
-   hb_retc( GetCommandLine() );
-}
-
-#pragma ENDDUMP

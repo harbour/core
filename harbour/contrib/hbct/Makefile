@@ -4,6 +4,8 @@
 
 ROOT = ../../
 
+LIBNAME=hbct
+
 C_SOURCES =\
 	addascii.c \
 	asciisum.c \
@@ -116,8 +118,6 @@ PRG_HEADERS=\
 	cterror.ch \
 	ctextern.ch \
 	ctvideo.ch \
-
-LIBNAME=hbct
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

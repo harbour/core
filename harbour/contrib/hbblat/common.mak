@@ -7,7 +7,7 @@ LIBNAME = $(LIBPREF)hbblat
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
 PRG_HEADERS = \
-    blat.ch \
+    hbblat.ch \
 
 LIB_OBJS = \
     $(OBJ_DIR)\blatwrp$(OBJEXT) \

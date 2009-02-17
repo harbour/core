@@ -3,19 +3,23 @@ rem
 rem $Id$
 rem
 
-if not "%HB_DIR_BLAT%" == "" goto DIR_OK
+if not "%HB_INC_BLAT%%HB_DIR_BLAT%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need blat dll from here:
 echo            http://blat.sourceforge.net/  (Download section)
 echo            and this envvar to be set to successfully build this library:
-echo            set HB_DIR_BLAT=C:\Blat
+echo            set HB_INC_BLAT=C:\blat\full\source
+echo            or
+echo            set HB_DIR_BLAT=C:\blat
+echo            if you want to generate .lib for the .dll.
 echo ---------------------------------------------------------------
 goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=
+if "%HB_INC_BLAT%" == "" set HB_INC_BLAT=%HB_DIR_BLAT%\full\source
+set CFLAGS=-I"%HB_INC_BLAT%"
 set _HB_DLL_NAME=blat
 set _HB_DLL_DIR=%HB_DIR_BLAT%\full
 

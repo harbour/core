@@ -52,6 +52,7 @@ else
 
    if [ "${HB_INC_ALLEGRO}"   != "" ]; then _HB_DIRS="${_HB_DIRS} gtalleg" ; fi;
    if [ "${HB_INC_APOLLO}"    != "" ]; then _HB_DIRS="${_HB_DIRS} hbapollo"; fi;
+   if [ "${HB_INC_BLAT}"      != "" ]; then _HB_DIRS="${_HB_DIRS} hbblat"  ; fi;
    if [ "${HB_INC_CURL}"      != "" ]; then _HB_DIRS="${_HB_DIRS} hbcurl"  ; fi;
    if [ "${HB_INC_FIREBIRD}"  != "" ]; then _HB_DIRS="${_HB_DIRS} hbfbird" ; fi;
    if [ "${HB_INC_FREEIMAGE}" != "" ]; then _HB_DIRS="${_HB_DIRS} hbfimage"; fi;

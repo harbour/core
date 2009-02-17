@@ -4,15 +4,26 @@
 
 ROOT = ../../
 
+LIBNAME=hbblat
+
+ifeq ($(HB_ARCHITECTURE),win)
+
 C_SOURCES = \
 	blatwrp.c \
 
-PRG_SOURCES= \
-  blatcls.prg \
+PRG_SOURCES = \
+	blatcls.prg \
 
-PRG_HEADERS=\
-	blat.ch \
+PRG_HEADERS = \
+	hbblat.ch \
 
-LIBNAME=hbblat
-
+include $(TOP)$(ROOT)config/header.cf
+INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
+
+install::
+	$(INSTALL_RULE_HEADERS)
+
+else
+include $(TOP)$(ROOT)config/none.cf
+endif

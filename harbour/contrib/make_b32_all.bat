@@ -55,7 +55,7 @@ for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 
 set _HB_DIRS=rddado rddsql xhb
 if not "%HB_INC_ALLEGRO%%HB_DIR_ALLEGRO%"     == "" set _HB_DIRS=%_HB_DIRS% gtalleg
 if not "%HB_INC_APOLLO%%HB_DIR_APOLLO%"       == "" set _HB_DIRS=%_HB_DIRS% hbapollo
-if not "%HB_DIR_BLAT%"                        == "" set _HB_DIRS=%_HB_DIRS% hbblat
+if not "%HB_INC_BLAT%%HB_DIR_BLAT%"           == "" set _HB_DIRS=%_HB_DIRS% hbblat
 if not "%HB_INC_CURL%%HB_DIR_CURL%"           == "" set _HB_DIRS=%_HB_DIRS% hbcurl
 if not "%HB_INC_FIREBIRD%%HB_DIR_FIREBIRD%"   == "" set _HB_DIRS=%_HB_DIRS% hbfbird
 if not "%HB_INC_FREEIMAGE%%HB_DIR_FREEIMAGE%" == "" set _HB_DIRS=%_HB_DIRS% hbfimage

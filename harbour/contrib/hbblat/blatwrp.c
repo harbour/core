@@ -50,20 +50,15 @@
  *
  */
 
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
-
-#define HB_OS_WIN_32_USED
-
 #include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbstack.h"
 #include "hbapierr.h"
-#include "hbapifs.h"
+
+/* NOTE: We're not using the original blat headers, because they
+         contain C++ parts, which we don't need anyway. */
 
 /* ---------------------------------------------------------------------------*/
 
-extern int cSend( char *szCmd );
+extern int cSend( char * szCmd );
 
 /* ---------------------------------------------------------------------------*/
 
@@ -84,12 +79,10 @@ HB_FUNC( HB_BLATSEND ) // void BlatSend( char *szCmd )
 
       /* Return result */
       hb_retni( iRet );
-
    }
    else
-      // Parameter error
+      /* Parameter error */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* ---------------------------------------------------------------------------*/
-

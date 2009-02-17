@@ -8,6 +8,40 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 01:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtwvg/make_b32.bat
+  * contrib/gtwvg/make_vc.bat
+  * contrib/gtwvg/Makefile
+    * Trying new method to point to hbwin, so that
+      we're not relying on hbwin headers being installed.
+    ; Please test.
+
+  * contrib/Makefile
+    + Added hbblat.
+
+  * contrib/make_vc_all.bat
+  * contrib/make_b32_all.bat
+  * contrib/make_gcc_all.sh
+  * contrib/hbblat/Makefile
+  * contrib/hbblat/common.mak
+  * contrib/hbblat/make_b32.bat
+  * contrib/hbblat/make_vc.bat
+  * contrib/hbblat/blatwrp.c
+  * contrib/hbblat/tests/hbmk.bat
+  * contrib/hbblat/tests/blatcmd.prg
+    + Added support for HB_INC_BLAT (needed for releases).
+    * Some EOLs added.
+    * Minor correction to .ch name in make files.
+    % Replaced command line retrieval with hb_cmdline() call.
+    * Cleaned some headers/#defines.
+    * GNU make file got protection to only compile for win,
+      and to install headers.
+
+  * make_gnu.bat
+  * contrib/hbct/Makefile
+  * contrib/hbwin/Makefile
+    * Minor formatting.
+
 2009-02-16 23:55 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   + harbour/contrib/hbblat
   + harbour/contrib/hbblat/blatcls.prg

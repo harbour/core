@@ -2,6 +2,8 @@
 # $Id$
 #
 
+HB_USER_CFLAGS += -I$(TOP)$(ROOT)contrib/hbwin
+
 ROOT = ../../
 
 LIBNAME=gtwvg
@@ -16,7 +18,6 @@ C_SOURCES=\
 	wvgsink.c \
 	wvggui.c \
 	wincallb.c \
-
 
 PRG_SOURCES=\
 	wvgclass.prg \
@@ -45,7 +46,6 @@ PRG_SOURCES=\
 	wvghtmlv.prg \
 	wvgsysw.prg \
 	wvgdarea.prg \
-
 
 PRG_HEADERS=\
 	hbgtwvg.ch \

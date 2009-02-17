@@ -89,7 +89,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%/include
    echo.
    echo     HB_USER_PRGFLAGS - Extra Harbour compiler options
    echo     HB_USER_CFLAGS   - Extra C compiler options
-   echo     HB_USER_LDFLAGS   - Extra linker options
+   echo     HB_USER_LDFLAGS  - Extra linker options
    goto END
 
 :BAD_ARCH

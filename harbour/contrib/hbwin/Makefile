@@ -8,7 +8,7 @@ LIBNAME=hbwin
 
 ifeq ($(HB_ARCHITECTURE),win)
 
-C_SOURCES=\
+C_SOURCES = \
 	win_dll.c \
 	win_misc.c \
 	win_ole.c \
@@ -19,7 +19,7 @@ C_SOURCES=\
 	win_regc.c \
         wapi_commctrl.c \
 
-PRG_SOURCES=\
+PRG_SOURCES = \
 	win_os.prg \
 	win_reg.prg \
 	win_tole.prg \
