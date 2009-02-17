@@ -175,6 +175,9 @@ FUNCTION Main( ... )
    LOCAL lNOHBP
    LOCAL lSysLoc
 
+   LOCAL lStopAfterHarbour := .F.
+   LOCAL lStopAfterCComp := .F.
+
    LOCAL aParams
    LOCAL cParam
 
@@ -454,6 +457,8 @@ FUNCTION Main( ... )
       CASE Lower( cParam ) == "-trace"           ; s_lTRACE    := .T.
       CASE Lower( cParam ) == "-trace-"          ; s_lTRACE    := .F.
       CASE Lower( cParam ) == "-notrace"         ; s_lTRACE    := .F.
+      CASE Lower( cParam ) == "-cc"              ; lStopAfterHarbour := .T.
+      CASE Lower( cParam ) == "-cmp"             ; lStopAfterCComp := .T.
       CASE Lower( Left( cParam, 3 ) ) == "-gt"   ; DEFAULT s_cGT TO SubStr( cParam, 2 )
       CASE Left( cParam, 2 ) == "-o"             ; s_cPROGNAME := DirAdaptPathSep( SubStr( cParam, 3 ) )
       CASE Left( cParam, 2 ) == "-l" .AND. ;
@@ -479,7 +484,7 @@ FUNCTION Main( ... )
       CASE Lower( ExtGet( cParam ) ) == ".prg"   ; AAdd( s_aPRG    , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
       CASE Lower( ExtGet( cParam ) ) == ".rc"    ; AAdd( s_aRESSRC , DirAdaptPathSep( cParam ) )
       CASE Lower( ExtGet( cParam ) ) == ".res"   ; AAdd( s_aRESCMP , DirAdaptPathSep( cParam ) )
-      CASE Lower( ExtGet( cParam ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, DirAdaptPathSep( cParam ) )
+      CASE Lower( ExtGet( cParam ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
       CASE Lower( ExtGet( cParam ) ) $ ".c|.cpp" ; AAdd( s_aC      , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
       CASE Lower( ExtGet( cParam ) ) $ ".a|.lib" ; AAddNotEmpty( s_aLIBUSER, DirAdaptPathSep( ArchCompFilter( cParam ) ) )
       OTHERWISE                                  ; AAdd( s_aPRG    , DirAdaptPathSep( cParam ) ) ; DEFAULT s_cPROGNAME TO DirAdaptPathSep( cParam )
@@ -487,7 +492,7 @@ FUNCTION Main( ... )
    NEXT
 
    /* Start doing the make process. */
-   IF ( Len( s_aPRG ) + Len( s_aC ) ) == 0
+   IF ( Len( s_aPRG ) + Len( s_aC ) + Len( s_aOBJUSER ) ) == 0
       OutErr( "hbmk: Error: No source files were specified." + hb_osNewLine() )
       PauseForKey()
       RETURN 4
@@ -558,339 +563,360 @@ FUNCTION Main( ... )
       ENDIF
    ENDIF
 
-   /* Assemble library list */
+   IF ! lStopAfterHarbour
 
-   /* C compilation/linking */
+      /* Assemble library list */
 
-   s_aLIB3RD := {}
-   s_aLIBSYS := {}
-   s_aOPTC := {}
-   s_aOPTL := {}
-   s_aCLEAN := {}
+      /* C compilation/linking */
 
-   /* Command macros:
+      s_aLIB3RD := {}
+      s_aLIBSYS := {}
+      s_aOPTC := {}
+      s_aOPTL := {}
+      s_aCLEAN := {}
 
-      {C}      list of C files,
-      {O}      list of object files,
-      {L}      list of lib files,
-      {OPTC}   C compiler flags (user + automatic),
-      {OPTL}   linker flags (user + automatic),
-      {E}      binary name,
-      {B}      binary path,
-      {I}      include path,
-      {A}      lib path,
-      {SCRIPT} save command line to script and pass it to command as @<filename>
-   */
+      /* Command macros:
 
-   s_aLIBVM := iif( s_lMT, aLIB_BASE_MT, aLIB_BASE_ST )
-   aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, s_aLIBHBGT } )
+         {C}      list of C files,
+         {O}      list of object files,
+         {L}      list of lib files,
+         {OPTC}   C compiler flags (user + automatic),
+         {OPTL}   linker flags (user + automatic),
+         {E}      binary name,
+         {B}      binary path,
+         {I}      include path,
+         {A}      lib path,
+         {SCRIPT} save command line to script and pass it to command as @<filename>
+      */
 
-   IF ! Empty( s_cGT )
-      IF AScan( aLIB_BASE2, {|tmp| Upper( tmp ) == Upper( s_cGT ) } ) == 0
-         AAdd( aLIB_BASE2, s_cGT )
-      ENDIF
-   ENDIF
+      s_aLIBVM := iif( s_lMT, aLIB_BASE_MT, aLIB_BASE_ST )
+      aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, s_aLIBHBGT } )
 
-   HB_SYMBOL_UNUSED( s_aRESSRC )
-   HB_SYMBOL_UNUSED( s_aRESCMP )
-
-   DO CASE
-   /* GCC family */
-   CASE ( t_cARCH == "bsd"    .AND. t_cCOMP == "gcc" ) .OR. ;
-        ( t_cARCH == "darwin" .AND. t_cCOMP == "gcc" ) .OR. ;
-        ( t_cARCH == "hpux"   .AND. t_cCOMP == "gcc" ) .OR. ;
-        ( t_cARCH == "linux"  .AND. t_cCOMP $ "gcc|gpp" ) .OR. ;
-        ( t_cARCH == "sunos"  .AND. t_cCOMP == "gcc" )
-
-      cLibPrefix := "-l"
-      cLibExt := NIL
-      cObjExt := ".o"
-      cBin_CompC := iif( t_cCOMP == "gpp", "g++", "gcc" )
-      cOpt_CompC := "{C} -O3 -o{E} {OPTC} -I{I} -L{A} {L}"
-      IF s_lMAP
-           cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
-      ENDIF
-      aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
-      IF t_cARCH == "darwin"
-         AAdd( s_aOPTC, "-no-cpp-precomp -Wno-long-double" )
-      ENDIF
-      IF s_lSTRIP .AND. !( t_cARCH == "sunos" )
-         AAdd( s_aOPTC, "-s" )
+      IF ! Empty( s_cGT )
+         IF AScan( aLIB_BASE2, {|tmp| Upper( tmp ) == Upper( s_cGT ) } ) == 0
+            AAdd( aLIB_BASE2, s_cGT )
+         ENDIF
       ENDIF
 
-   CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
-        ( t_cARCH == "win" .AND. t_cCOMP == "mingw" ) .OR. ;
-        ( t_cARCH == "win" .AND. t_cCOMP == "rsxnt" ) .OR. ;
-        ( t_cARCH == "os2" .AND. t_cCOMP == "gcc" )
+      HB_SYMBOL_UNUSED( s_aRESSRC )
+      HB_SYMBOL_UNUSED( s_aRESCMP )
 
-      cLibPrefix := "-l"
-      cLibExt := NIL
-      cObjExt := ".o"
-      cBin_CompC := "gcc"
-      cOpt_CompC := "{C} -O3 -o{E} {OPTC} -I{I} -L{A}"
-      IF s_lMAP
-           cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
-      ENDIF
-      IF s_lSHARED
-           cOpt_CompC += " -L{B}"
-      ENDIF
-      IF t_cCOMP == "gcc"
-           cOpt_CompC += " -mno-cygwin"
-      ENDIF
-      IF t_cCOMP == "rsxnt"
-           cOpt_CompC += " -Zwin32"
-      ENDIF
-      cOpt_CompC += " {L}"
-      aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
-      IF s_lSTRIP
-         AAdd( s_aOPTC, "-s" )
-      ENDIF
+      DO CASE
+      /* GCC family */
+      CASE ( t_cARCH == "bsd"    .AND. t_cCOMP == "gcc" ) .OR. ;
+           ( t_cARCH == "darwin" .AND. t_cCOMP == "gcc" ) .OR. ;
+           ( t_cARCH == "hpux"   .AND. t_cCOMP == "gcc" ) .OR. ;
+           ( t_cARCH == "linux"  .AND. t_cCOMP $ "gcc|gpp" ) .OR. ;
+           ( t_cARCH == "sunos"  .AND. t_cCOMP == "gcc" )
 
-   CASE ( t_cARCH == "dos" .AND. t_cCOMP == "djgpp" ) .OR. ;
-        ( t_cARCH == "dos" .AND. t_cCOMP == "rsx32" )
+         cLibPrefix := "-l"
+         cLibExt := NIL
+         cObjExt := ".o"
+         cBin_CompC := iif( t_cCOMP == "gpp", "g++", "gcc" )
+         cOpt_CompC := "{C} {O} -O3 -o{E} {OPTC} -I{I} -L{A} {L}"
+         IF s_lMAP
+              cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
+         ENDIF
+         aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+         IF t_cARCH == "darwin"
+            AAdd( s_aOPTC, "-no-cpp-precomp -Wno-long-double" )
+         ENDIF
+         IF s_lSTRIP .AND. !( t_cARCH == "sunos" )
+            AAdd( s_aOPTC, "-s" )
+         ENDIF
+         IF lStopAfterCComp
+            AAdd( s_aOPTC, "-c" )
+         ENDIF
 
-      cLibPrefix := "-l"
-      cLibExt := NIL
-      cObjExt := ".o"
-      cBin_CompC := "gcc"
-      cOpt_CompC := "{C} -O3 -o{E} {OPTC} -I{I} -L{A} {L}{SCRIPT}"
-      IF t_cCOMP == "rsx32"
-           cOpt_CompC  += " -Zrsx32"
-      ENDIF
-      s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
-      aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
-      IF s_lSTRIP
-         AAdd( s_aOPTC, "-s" )
-      ENDIF
+      CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
+           ( t_cARCH == "win" .AND. t_cCOMP == "mingw" ) .OR. ;
+           ( t_cARCH == "win" .AND. t_cCOMP == "rsxnt" ) .OR. ;
+           ( t_cARCH == "os2" .AND. t_cCOMP == "gcc" )
 
-   /* Watcom family */
-   CASE t_cARCH == "dos" .AND. t_cCOMP == "owatcom"
-      cLibPrefix := "LIB "
-      cLibExt := ".lib"
-      cObjPrefix := "FILE "
-      cObjExt := ".obj"
-      cBin_CompC := "wpp386"
-      cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {OPTC} {C}"
-      cBin_Link := "wlink"
-      cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {OPTL} NAME {E} {O} {L}"
-      IF s_lDEBUG
-         cOpt_Link := "DEBUG " + cOpt_Link
-      ENDIF
+         cLibPrefix := "-l"
+         cLibExt := NIL
+         cObjExt := ".o"
+         cBin_CompC := "gcc"
+         cOpt_CompC := "{C} {O} -O3 -o{E} {OPTC} -I{I} -L{A}"
+         IF s_lMAP
+              cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
+         ENDIF
+         IF s_lSHARED
+              cOpt_CompC += " -L{B}"
+         ENDIF
+         IF t_cCOMP == "gcc"
+              cOpt_CompC += " -mno-cygwin"
+         ENDIF
+         IF t_cCOMP == "rsxnt"
+              cOpt_CompC += " -Zwin32"
+         ENDIF
+         cOpt_CompC += " {L}"
+         aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+         IF s_lSTRIP
+            AAdd( s_aOPTC, "-s" )
+         ENDIF
+         IF lStopAfterCComp
+            AAdd( s_aOPTC, "-c" )
+         ENDIF
 
-   CASE t_cARCH == "win" .AND. t_cCOMP == "owatcom"
-      cLibPrefix := "LIB "
-      cLibExt := ".lib"
-      cObjPrefix := "FILE "
-      cObjExt := ".obj"
-      cBin_CompC := "wpp386"
-      cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT {OPTC} {C}"
-      cBin_Link := "wlink"
-      cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {L}"
-      IF s_lDEBUG
-         cOpt_Link := "DEBUG " + cOpt_Link
-      ENDIF
-      s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32" } )
+      CASE ( t_cARCH == "dos" .AND. t_cCOMP == "djgpp" ) .OR. ;
+           ( t_cARCH == "dos" .AND. t_cCOMP == "rsx32" )
 
-   CASE t_cARCH == "os2" .AND. t_cCOMP == "owatcom"
-      cLibPrefix := "LIB "
-      cLibExt := ".lib"
-      cObjPrefix := "FILE "
-      cObjExt := ".obj"
-      cBin_CompC := "wpp386"
-      cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {OPTC} {C}"
-      cBin_Link := "wlink"
-      cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {L}"
-      IF s_lDEBUG
-         cOpt_Link := "DEBUG " + cOpt_Link
-      ENDIF
+         cLibPrefix := "-l"
+         cLibExt := NIL
+         cObjExt := ".o"
+         cBin_CompC := "gcc"
+         cOpt_CompC := "{C} {O} -O3 -o{E} {OPTC} -I{I} -L{A} {L}{SCRIPT}"
+         IF t_cCOMP == "rsx32"
+              cOpt_CompC  += " -Zrsx32"
+         ENDIF
+         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
+         aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+         IF s_lSTRIP
+            AAdd( s_aOPTC, "-s" )
+         ENDIF
+         IF lStopAfterCComp
+            AAdd( s_aOPTC, "-c" )
+         ENDIF
 
-   CASE t_cARCH == "linux" .AND. t_cCOMP == "owatcom"
-      cLibPrefix := "LIB "
-      cLibExt := ".lib"
-      cObjPrefix := "FILE "
-      cObjExt := ".obj"
-      cBin_CompC := "wpp386"
-      cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=LINUX {OPTC} {C}"
-      cBin_Link := "wlink"
-      cOpt_Link := "ALL SYS LINUX OP CASEEXACT {OPTL} NAME {E} {O} {L}"
-      IF s_lDEBUG
-         cOpt_Link := "DEBUG " + cOpt_Link
-      ENDIF
+      /* Watcom family */
+      CASE t_cARCH == "dos" .AND. t_cCOMP == "owatcom"
+         cLibPrefix := "LIB "
+         cLibExt := ".lib"
+         cObjPrefix := "FILE "
+         cObjExt := ".obj"
+         cBin_CompC := "wpp386"
+         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {OPTC} {C}"
+         cBin_Link := "wlink"
+         cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {OPTL} NAME {E} {O} {L}"
+         IF s_lDEBUG
+            cOpt_Link := "DEBUG " + cOpt_Link
+         ENDIF
 
-   /* Misc */
-   CASE t_cARCH == "win" .AND. t_cCOMP == "bcc32"
-      IF s_lDEBUG
-         AAdd( s_aOPTC, "-y -v" )
-      ELSE
-         AAdd( s_aCLEAN, ExtSet( s_cPROGNAME, ".tds" ) )
-      ENDIF
-      IF s_lGUI
-         AAdd( s_aOPTC, "-tW" )
-      ENDIF
-      cLibPrefix := NIL
-      cLibExt := ".lib"
-      cObjExt := ".obj"
-      cBin_CompC := "bcc32"
-      cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {OPTC} -e{E} -I{I} -L{A} {C} {L}"
-      IF s_lSHARED
-           cOpt_CompC += " -L{B}"
-      ENDIF
-      IF s_lMAP
-           cOpt_CompC += " -M"
-      ENDIF
-      /* TOFIX: The two build systems should generate the same .dll name, otherwise
-                we can only be compatible with one of them. non-GNU is the common choice here. */
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + "-b32", "harbour-" + cDL_Version + "-b32" ), "hbmainstd", "hbmainwin", "hbcommon" }
+      CASE t_cARCH == "win" .AND. t_cCOMP == "owatcom"
+         cLibPrefix := "LIB "
+         cLibExt := ".lib"
+         cObjPrefix := "FILE "
+         cObjExt := ".obj"
+         cBin_CompC := "wpp386"
+         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT {OPTC} {C}"
+         cBin_Link := "wlink"
+         cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {L}"
+         IF s_lDEBUG
+            cOpt_Link := "DEBUG " + cOpt_Link
+         ENDIF
+         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32" } )
 
-   CASE t_cARCH == "win" .AND. t_cCOMP == "msvc"
-      IF s_lDEBUG
-         AAdd( s_aOPTC, "-MTd -Zi" )
-      ENDIF
-      IF s_lGUI
-         AAdd( s_aOPTL, "/subsystem:windows" )
-      ELSE
-         AAdd( s_aOPTL, "/subsystem:console" )
-      ENDIF
-      cLibPrefix := NIL
-      cLibExt := ".lib"
-      cObjExt := ".obj"
-      cBin_CompC := "cl"
+      CASE t_cARCH == "os2" .AND. t_cCOMP == "owatcom"
+         cLibPrefix := "LIB "
+         cLibExt := ".lib"
+         cObjPrefix := "FILE "
+         cObjExt := ".obj"
+         cBin_CompC := "wpp386"
+         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {OPTC} {C}"
+         cBin_Link := "wlink"
+         cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {L}"
+         IF s_lDEBUG
+            cOpt_Link := "DEBUG " + cOpt_Link
+         ENDIF
 
-      /* kernel32 user32 gdi32 winspool comctl32 comdlg32 advapi32 shell32 ole32 oleaut32 uuid odbc32 odbccp32 mpr winmm wsock32 schannel */
+      CASE t_cARCH == "linux" .AND. t_cCOMP == "owatcom"
+         cLibPrefix := "LIB "
+         cLibExt := ".lib"
+         cObjPrefix := "FILE "
+         cObjExt := ".obj"
+         cBin_CompC := "wpp386"
+         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=LINUX {OPTC} {C}"
+         cBin_Link := "wlink"
+         cOpt_Link := "ALL SYS LINUX OP CASEEXACT {OPTL} NAME {E} {O} {L}"
+         IF s_lDEBUG
+            cOpt_Link := "DEBUG " + cOpt_Link
+         ENDIF
 
-      cOpt_CompC := "-nologo -W3 {OPTC} -I{I} {C} -Fe{E} /link /libpath:{A} {OPTL} {L}"
-      IF s_lMAP
-           AAdd( s_aOPTC, "-Fm" )
-      ENDIF
-      IF s_lSHARED
-           AAdd( s_aOPTL, "/libpath:{B}" )
-      ENDIF
-      s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
-      /* TOFIX: The two build systems should generate the same .dll name, otherwise
-                we can only be compatible with one of them. non-GNU is the common choice here. */
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + "-vc", "harbour-" + cDL_Version + "-vc" ), "hbmainstd", "hbmainwin", "hbcommon" }
-
-   CASE t_cARCH == "os2" .AND. t_cCOMP == "icc"
-      cLibPrefix := "{A}\"
-      cLibExt := ".lib"
-      cObjExt := ".obj"
-      cBin_CompC := "icc"
-      cOpt_CompC := "/Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp {OPTC} -I{I} {C}"
-      IF s_lDEBUG
-         AAdd( s_aOPTC, "-MTd -Zi" )
-      ENDIF
-      IF s_lGUI
-         AAdd( s_aOPTL, "/subsystem:windows" )
-      ELSE
-         AAdd( s_aOPTL, "/subsystem:console" )
-      ENDIF
-
-   CASE t_cARCH == "win" .AND. t_cCOMP == "pocc"
-      IF s_lGUI
-         AAdd( s_aOPTL, "/subsystem:windows" )
-      ELSE
-         AAdd( s_aOPTL, "/subsystem:console" )
-      ENDIF
-      cLibPrefix := NIL
-      cLibExt := ".lib"
-      cObjExt := ".obj"
-      cBin_CompC := "pocc"
-      cOpt_CompC := "/Ze /Go /Ot /Tx86-coff {OPTC} /I{I} {C}"
-      IF s_lMT
-           AAdd( s_aOPTC, "/MT" )
-      ENDIF
-      cBin_Link := "polink"
-      cOpt_Link := "{O} /libpath:{A} {OPTL} {L}"
-      IF s_lSHARED
-           AAdd( s_aOPTL, "/libpath:{B}" )
-      ENDIF
-      IF s_lMAP
-           AAdd( s_aOPTL, "/map" )
-      ENDIF
-      IF s_lDEBUG
-           AAdd( s_aOPTL, "/debug" )
-      ENDIF
-      s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
-
-   /* TODO */
-   CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"
-   CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"
-   CASE t_cARCH == "win" .AND. t_cCOMP == "dmc"
-   CASE t_cARCH == "win" .AND. t_cCOMP == "icc"
-   CASE t_cARCH == "win" .AND. t_cCOMP == "mingwce"
-   CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"
-   CASE t_cARCH == "win" .AND. t_cCOMP == "xcc"
-   ENDCASE
-
-   IF s_lSHARED .AND. ! Empty( s_aLIBSHARED )
-      s_aLIBHB := s_aLIBSHARED
-   ELSE
-      s_aLIBHB := ArrayAJoin( { aLIB_BASE1,;
-                                aLIB_BASE_DEBUG,;
-                                s_aLIBVM,;
-                                iif( s_lNULRDD, aLIB_BASE_NULRDD, aLIB_BASE_RDD ),;
-                                aLIB_BASE2 } )
-   ENDIF
-
-   /* Merge lib lists. */
-   s_aLIB := ArrayAJoin( { s_aLIBHB, s_aLIBUSER, s_aLIB3RD, s_aLIBSYS } )
-   /* Dress lib names. */
-   s_aLIB := ListCook( s_aLIB, cLibPrefix, cLibExt )
-   /* Dress obj names. */
-   s_aOBJ := ListCook( ArrayJoin( s_aPRG, s_aC ), NIL, cObjExt )
-   s_aOBJUSER := ListCook( s_aOBJUSER, NIL, cObjExt )
-
-   nErrorLevel := 0
-
-   IF ! Empty( cOpt_CompC )
-
-      /* Compiling */
-
-      cOpt_CompC := StrTran( cOpt_CompC, "{C}"   , ArrayToList( ArrayJoin( ListCook( s_aPRG, NIL, ".c" ), s_aC ) ) )
-      cOpt_CompC := StrTran( cOpt_CompC, "{O}"   , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
-      cOpt_CompC := StrTran( cOpt_CompC, "{L}"   , ArrayToList( s_aLIB ) )
-      cOpt_CompC := StrTran( cOpt_CompC, "{OPTC}", iif( s_lBLDFLG, hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
-                                                   GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( s_aOPTC ) )
-      cOpt_CompC := StrTran( cOpt_CompC, "{OPTL}", iif( s_lBLDFLG, hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
-                                                   GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
-      cOpt_CompC := StrTran( cOpt_CompC, "{E}"   , s_cPROGNAME )
-      cOpt_CompC := StrTran( cOpt_CompC, "{B}"   , s_cHB_BIN_INSTALL )
-      cOpt_CompC := StrTran( cOpt_CompC, "{I}"   , s_cHB_INC_INSTALL )
-      cOpt_CompC := StrTran( cOpt_CompC, "{A}"   , s_cHB_LIB_INSTALL )
-
-      cOpt_CompC := AllTrim( cOpt_CompC )
-
-      /* Handle moving the whole command line to a script, if requested. */
-      IF "{SCRIPT}" $ cOpt_CompC
-         fhnd := hb_FTempCreateEx( @cScriptFile )
-         IF fhnd != F_ERROR
-            FWrite( fhnd, StrTran( cOpt_CompC, "{SCRIPT}", "" ) )
-            FClose( fhnd )
-            cOpt_CompC := "@" + cScriptFile
+      /* Misc */
+      CASE t_cARCH == "win" .AND. t_cCOMP == "bcc32"
+         IF s_lDEBUG
+            AAdd( s_aOPTC, "-y -v" )
          ELSE
-            OutErr( "hbmk: Warning: C compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
+            AAdd( s_aCLEAN, ExtSet( s_cPROGNAME, ".tds" ) )
+         ENDIF
+         IF s_lGUI
+            AAdd( s_aOPTC, "-tW" )
+         ENDIF
+         cLibPrefix := NIL
+         cLibExt := ".lib"
+         cObjExt := ".obj"
+         cBin_CompC := "bcc32"
+         cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {OPTC} -e{E} -I{I} -L{A} {C} {O} {L}"
+         IF s_lSHARED
+              cOpt_CompC += " -L{B}"
+         ENDIF
+         IF s_lMAP
+              cOpt_CompC += " -M"
+         ENDIF
+         /* TOFIX: The two build systems should generate the same .dll name, otherwise
+                   we can only be compatible with one of them. non-GNU is the common choice here. */
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + "-b32", "harbour-" + cDL_Version + "-b32" ), "hbmainstd", "hbmainwin", "hbcommon" }
+
+      CASE t_cARCH == "win" .AND. t_cCOMP == "msvc"
+         IF s_lDEBUG
+            AAdd( s_aOPTC, "-MTd -Zi" )
+         ENDIF
+         IF s_lGUI
+            AAdd( s_aOPTL, "/subsystem:windows" )
+         ELSE
+            AAdd( s_aOPTL, "/subsystem:console" )
+         ENDIF
+         cLibPrefix := NIL
+         cLibExt := ".lib"
+         cObjExt := ".obj"
+         cBin_CompC := "cl"
+
+         /* kernel32 user32 gdi32 winspool comctl32 comdlg32 advapi32 shell32 ole32 oleaut32 uuid odbc32 odbccp32 mpr winmm wsock32 schannel */
+
+         cOpt_CompC := "-nologo -W3 {OPTC} -I{I} {C} {O} -Fe{E} /link /libpath:{A} {OPTL} {L}"
+         IF s_lMAP
+              AAdd( s_aOPTC, "-Fm" )
+         ENDIF
+         IF lStopAfterCComp
+            AAdd( s_aOPTC, "-c" )
+         ENDIF
+         IF s_lSHARED
+              AAdd( s_aOPTL, "/libpath:{B}" )
+         ENDIF
+         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
+         /* TOFIX: The two build systems should generate the same .dll name, otherwise
+                   we can only be compatible with one of them. non-GNU is the common choice here. */
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + "-vc", "harbour-" + cDL_Version + "-vc" ), "hbmainstd", "hbmainwin", "hbcommon" }
+
+      CASE t_cARCH == "os2" .AND. t_cCOMP == "icc"
+         cLibPrefix := "{A}\"
+         cLibExt := ".lib"
+         cObjExt := ".obj"
+         cBin_CompC := "icc"
+         cOpt_CompC := "/Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp {OPTC} -I{I} {C}"
+         IF s_lDEBUG
+            AAdd( s_aOPTC, "-MTd -Zi" )
+         ENDIF
+         IF s_lGUI
+            AAdd( s_aOPTL, "/subsystem:windows" )
+         ELSE
+            AAdd( s_aOPTL, "/subsystem:console" )
+         ENDIF
+
+      CASE t_cARCH == "win" .AND. t_cCOMP == "pocc"
+         IF s_lGUI
+            AAdd( s_aOPTL, "/subsystem:windows" )
+         ELSE
+            AAdd( s_aOPTL, "/subsystem:console" )
+         ENDIF
+         cLibPrefix := NIL
+         cLibExt := ".lib"
+         cObjExt := ".obj"
+         cBin_CompC := "pocc"
+         cOpt_CompC := "/Ze /Go /Ot /Tx86-coff {OPTC} /I{I} {C}"
+         IF s_lMT
+              AAdd( s_aOPTC, "/MT" )
+         ENDIF
+         cBin_Link := "polink"
+         cOpt_Link := "{O} /libpath:{A} {OPTL} {L}"
+         IF s_lSHARED
+              AAdd( s_aOPTL, "/libpath:{B}" )
+         ENDIF
+         IF s_lMAP
+              AAdd( s_aOPTL, "/map" )
+         ENDIF
+         IF s_lDEBUG
+              AAdd( s_aOPTL, "/debug" )
+         ENDIF
+         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
+
+      /* TODO */
+      CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"
+      CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"
+      CASE t_cARCH == "win" .AND. t_cCOMP == "dmc"
+      CASE t_cARCH == "win" .AND. t_cCOMP == "icc"
+      CASE t_cARCH == "win" .AND. t_cCOMP == "mingwce"
+      CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"
+      CASE t_cARCH == "win" .AND. t_cCOMP == "xcc"
+      ENDCASE
+
+      IF s_lSHARED .AND. ! Empty( s_aLIBSHARED )
+         s_aLIBHB := s_aLIBSHARED
+      ELSE
+         s_aLIBHB := ArrayAJoin( { aLIB_BASE1,;
+                                   aLIB_BASE_DEBUG,;
+                                   s_aLIBVM,;
+                                   iif( s_lNULRDD, aLIB_BASE_NULRDD, aLIB_BASE_RDD ),;
+                                   aLIB_BASE2 } )
+      ENDIF
+
+      /* Merge lib lists. */
+      s_aLIB := ArrayAJoin( { s_aLIBHB, s_aLIBUSER, s_aLIB3RD, s_aLIBSYS } )
+      /* Dress lib names. */
+      s_aLIB := ListCook( s_aLIB, cLibPrefix, cLibExt )
+      /* Dress obj names. */
+      s_aOBJ := ListCook( ArrayJoin( s_aPRG, s_aC ), NIL, cObjExt )
+      s_aOBJUSER := ListCook( s_aOBJUSER, NIL, cObjExt )
+
+      nErrorLevel := 0
+
+      IF ( Len( s_aPRG ) + Len( s_aC ) + iif( Empty( cBin_Link ), Len( s_aOBJUSER ), 0 ) ) > 0
+
+         IF ! Empty( cBin_CompC )
+
+            /* Compiling */
+
+            cOpt_CompC := StrTran( cOpt_CompC, "{C}"   , ArrayToList( ArrayJoin( ListCook( s_aPRG, NIL, ".c" ), s_aC ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{O}"   , ArrayToList( ListCook( s_aOBJUSER, cObjPrefix ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{L}"   , ArrayToList( s_aLIB ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{OPTC}", iif( s_lBLDFLG, hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
+                                                         GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( s_aOPTC ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{OPTL}", iif( s_lBLDFLG, hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
+                                                         GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{E}"   , s_cPROGNAME )
+            cOpt_CompC := StrTran( cOpt_CompC, "{B}"   , s_cHB_BIN_INSTALL )
+            cOpt_CompC := StrTran( cOpt_CompC, "{I}"   , s_cHB_INC_INSTALL )
+            cOpt_CompC := StrTran( cOpt_CompC, "{A}"   , s_cHB_LIB_INSTALL )
+
+            cOpt_CompC := AllTrim( cOpt_CompC )
+
+            /* Handle moving the whole command line to a script, if requested. */
+            IF "{SCRIPT}" $ cOpt_CompC
+               fhnd := hb_FTempCreateEx( @cScriptFile )
+               IF fhnd != F_ERROR
+                  FWrite( fhnd, StrTran( cOpt_CompC, "{SCRIPT}", "" ) )
+                  FClose( fhnd )
+                  cOpt_CompC := "@" + cScriptFile
+               ELSE
+                  OutErr( "hbmk: Warning: C compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
+               ENDIF
+            ENDIF
+
+            cCommand := cBin_CompC + " " + cOpt_CompC
+
+            IF s_lTRACE
+               OutStd( "hbmk: C compiler command: '" + cCommand + "'" + hb_osNewLine() )
+               IF ! Empty( cScriptFile )
+                  OutStd( "hbmk: C compiler script: '" + hb_MemoRead( cScriptFile ) + "'" + hb_osNewLine() )
+               ENDIF
+            ENDIF
+
+            IF ( tmp := hb_run( cCommand ) ) != 0
+               OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ": '" + cCommand + "'" + hb_osNewLine() )
+               nErrorLevel := 6
+            ENDIF
+
+            IF ! Empty( cScriptFile )
+               FErase( cScriptFile )
+            ENDIF
+         ELSE
+            OutErr( "hbmk: Error: This compiler/platform isn't implemented." + hb_osNewLine() )
+            nErrorLevel := 8
          ENDIF
       ENDIF
 
-      cCommand := cBin_CompC + " " + cOpt_CompC
-
-      IF s_lTRACE
-         OutStd( "hbmk: C compiler command: '" + cCommand + "'" + hb_osNewLine() )
-         IF ! Empty( cScriptFile )
-            OutStd( "hbmk: C compiler script: '" + hb_MemoRead( cScriptFile ) + "'" + hb_osNewLine() )
-         ENDIF
-      ENDIF
-
-      IF ( tmp := hb_run( cCommand ) ) != 0
-         OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ": '" + cCommand + "'" + hb_osNewLine() )
-         nErrorLevel := 6
-      ENDIF
-
-      IF ! Empty( cScriptFile )
-         FErase( cScriptFile )
-      ENDIF
-
-      IF ! Empty( cOpt_Link ) .AND. nErrorLevel == 0
+      IF nErrorLevel == 0 .AND. ! lStopAfterCComp .AND. Len( ArrayJoin( s_aOBJ, s_aOBJUSER ) ) > 0 .AND. ! Empty( cBin_Link )
 
          /* Linking */
 
@@ -934,27 +960,28 @@ FUNCTION Main( ... )
             FErase( cScriptFile )
          ENDIF
       ENDIF
-   ELSE
-      OutErr( "hbmk: Error: This compiler/platform isn't implemented." + hb_osNewLine() )
-      nErrorLevel := 8
-   ENDIF
 
-   /* Cleanup */
+      /* Cleanup */
 
-   IF ! Empty( s_cGTPRG )
-      FErase( s_cGTPRG )
-   ENDIF
-   AEval( ListCook( s_aPRG, NIL, ".c" ), {|tmp| FErase( tmp ) } )
-   AEval( s_aOBJ, {|tmp| FErase( tmp ) } )
-   AEval( s_aCLEAN, {|tmp| FErase( tmp ) } )
-
-   IF nErrorLevel != 0
-      PauseForKey()
-   ELSEIF s_lRUN
-      IF s_lTRACE
-         OutStd( "hbmk: Running executable: '" + s_cPROGNAME + "'" + hb_osNewLine() )
+      IF ! Empty( s_cGTPRG )
+         FErase( s_cGTPRG )
       ENDIF
-      nErrorLevel := hb_run( s_cPROGNAME )
+      AEval( ListCook( s_aPRG, NIL, ".c" ), {|tmp| FErase( tmp ) } )
+      IF ! lStopAfterCComp
+         AEval( s_aOBJ, {|tmp| FErase( tmp ) } )
+      ENDIF
+      AEval( s_aCLEAN, {|tmp| FErase( tmp ) } )
+
+      IF ! lStopAfterCComp
+         IF nErrorLevel != 0
+            PauseForKey()
+         ELSEIF s_lRUN
+            IF s_lTRACE
+               OutStd( "hbmk: Running executable: '" + s_cPROGNAME + "'" + hb_osNewLine() )
+            ENDIF
+            nErrorLevel := hb_run( s_cPROGNAME )
+         ENDIF
+      ENDIF
    ENDIF
 
    RETURN nErrorLevel
@@ -1375,6 +1402,8 @@ STATIC PROCEDURE ShowHelp()
       "  -trace|-notrace  show commands executed" ,;
       "  -run|-norun      run/don't run the created executable" ,;
       "  -nohbp           do not process .hbp files in current dir" ,;
+      "  -cc              stop after creating the .c Harbour output files" ,;
+      "  -cmp             stop after creating the object files" ,;
       "  -q               quiet mode" ,;
       "" ,;
       "Notes:" ,;

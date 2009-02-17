@@ -8,6 +8,22 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 14:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk.prg
+    + Added support for -cc switch. This will stop hbmk after creating
+      the Harbour .c outputs to emulate hbcc tool behaviour.
+      'hbcc' -> 'hbmk -cc $*'
+    + Added support for -cmp switch. This will stop hbmk after creating
+      the object outputs from the C compiler.
+      'hbcmp' -> 'hbmk -cmp $*'
+    + From now on objects file passed on the command line will also
+      be considered as final executable name if passed before the other
+      files.
+    * Tweaked internals to cope with some new combinations, like
+      passing object only for a compiler having separate C compiler
+      and link phases. Launching C compiler even if there are only
+      object files.
+
 2009-02-17 13:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   - contrib/hbmysql/utils/hbmk.bat
   + contrib/hbmysql/utils/hbmysql.hbp
