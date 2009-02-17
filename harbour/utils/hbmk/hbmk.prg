@@ -199,6 +199,21 @@ FUNCTION Main( ... )
       ShowHeader()
    ENDIF
 
+   SWITCH Lower( NameGet( hb_argv( 0 ) ) )
+   CASE "hbcc"
+      lStopAfterHarbour := .T.
+      IF ! t_lQuiet
+         OutStd( "hbmk: Enabled -cc option." + hb_osNewLine() )
+      ENDIF
+      EXIT
+   CASE "hbcmp"
+      lStopAfterCComp := .T.
+      IF ! t_lQuiet
+         OutStd( "hbmk: Enabled -cmp option." + hb_osNewLine() )
+      ENDIF
+      EXIT
+   ENDSWITCH
+
    /* Autodetect architecture */
 
    t_cARCH := GetEnv( "HB_ARCHITECTURE" )
@@ -466,7 +481,7 @@ FUNCTION Main( ... )
       CASE Lower( cParam ) == "-trace-"          ; s_lTRACE    := .F.
       CASE Lower( cParam ) == "-notrace"         ; s_lTRACE    := .F.
       CASE Lower( cParam ) == "-cc"              ; lStopAfterHarbour := .T.
-      CASE Lower( cParam ) == "-cmp"             ; lStopAfterCComp := .T.
+      CASE Lower( cParam ) == "-cmp"             ; lStopAfterCComp := .T. ; lStopAfterHarbour := .F.
       CASE Lower( Left( cParam, 3 ) ) == "-gt"   ; DEFAULT s_cGT TO SubStr( cParam, 2 )
       CASE Left( cParam, 2 ) == "-o"             ; s_cPROGNAME := DirAdaptPathSep( SubStr( cParam, 3 ) )
       CASE Left( cParam, 2 ) == "-l" .AND. ;
@@ -1132,6 +1147,13 @@ STATIC FUNCTION DirAddPathSep( cDir )
    ENDIF
 
    RETURN cDir
+
+STATIC FUNCTION NameGet( cFileName )
+   LOCAL cName
+
+   hb_FNameSplit( cFileName,, @cName )
+
+   RETURN cName
 
 STATIC FUNCTION ExtSet( cFileName, cExt )
    LOCAL cDir, cName

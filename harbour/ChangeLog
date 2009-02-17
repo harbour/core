@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 15:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk.prg
+    + Added autodetection of -cc, -cmp options based on argv[0].
+
 2009-02-17 15:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk.prg
     + Added support for multiple -L (lib path) options.
