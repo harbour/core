@@ -1,0 +1,5 @@
+#
+# $Id$
+#
+
+{win}libs=hbwin ole32 oleaut32 winspool

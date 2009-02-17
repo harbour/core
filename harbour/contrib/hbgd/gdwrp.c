@@ -73,6 +73,8 @@
 #include "gdfontl.h"
 #include "gdfontg.h"
 
+#define HB_GD_VERS( ma, mi, re )   ( GD_MAJOR_VERSION >= ma && GD_MINOR_VERSION >= mi && GD_RELEASE_VERSION >= re )
+
 #define IMAGE_JPEG     1
 #define IMAGE_GIF      2
 #define IMAGE_PNG      3
@@ -557,11 +559,11 @@ static void GDImageSaveTo( int nType )
 
 HB_FUNC( GDVERSION )
 {
-#if ( GD_VERS >= 2034 )
+#if HB_GD_VERS( 2, 0, 34 )
    char szVer[ 30 ];
    hb_snprintf( szVer, sizeof( szVer ), "GD Version %s", GD_VERSION_STRING );
    hb_retc( szVer );
-#elif ( GD_VERS >= 2033 )
+#elif HB_GD_VERS( 2, 0, 33 )
    hb_retc( "GD Version 2.0.33" );
 #else
    hb_retc( "GD Version 2.0.28" );
@@ -570,9 +572,9 @@ HB_FUNC( GDVERSION )
 
 HB_FUNC( GDVERSIONNUMBER )
 {
-#if ( GD_VERS >= 2034 )
+#if HB_GD_VERS( 2, 0, 34 )
    hb_retni( GD_MAJOR_VERSION * 1000 + GD_MINOR_VERSION * 100 + GD_RELEASE_VERSION );
-#elif ( GD_VERS >= 2033 )
+#elif HB_GD_VERS( 2, 0, 33 )
    hb_retni( 2033 );
 #else
    hb_retni( 2028 );
@@ -981,7 +983,7 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
 }
 
 /* ---------------------------------------------------------------------------*/
-#if ( GD_VERS >= 2033 )
+#if HB_GD_VERS( 2, 0, 33 )
 HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im, gdPointPtr points, int pointsTotal, int color) */
                               /* implementation: void gdImageOpenPolygon(gdImagePtr im, gdPointPtr points, int color) */
 {
@@ -1427,7 +1429,7 @@ HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x,
 }
 
 /* ---------------------------------------------------------------------------*/
-#if ( GD_VERS >= 2035 )
+#if HB_GD_VERS( 2, 0, 35 )
 HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, int w, int h, int color) */
 {
    if ( hb_pcount() == 6 &&
@@ -3981,7 +3983,7 @@ HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlac
 
 /* ---------------------------------------------------------------------------*/
 
-#if ( GD_VERS >= 2033 )
+#if HB_GD_VERS( 2, 0, 33 )
 
 static void AddImageToFile( char *szFile, void *iptr, int sz )
 {

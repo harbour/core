@@ -56,6 +56,7 @@
 #include "hbgtinfo.ch"
 #include "hbver.ch"
 
+/* TODO: Add support for wildcarded input source. Only if only one source file is specified. */
 /* TODO: Add support for more hbmk script features. */
 /* TODO: Add support for Windows resource files. */
 /* TODO: Add support for library creation. */

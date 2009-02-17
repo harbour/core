@@ -1,0 +1,5 @@
+#
+# $Id$
+#
+
+{win}libs=hbole ole32 oleaut32

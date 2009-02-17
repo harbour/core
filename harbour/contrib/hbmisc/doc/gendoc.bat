@@ -1,7 +1,7 @@
 @echo off
-rem 
+rem
 rem $Id$
-rem 
+rem
 
 if "%1" =="/OS2" goto OS2
 if "%1" =="/os2" goto OS2
@@ -24,7 +24,7 @@ ECHO Assembling input files
 
 ECHO Assembling input files
 :NG
-hbdoc /ngi libmisc.lnk libmisc.rsp
+hbdoc /ngi hbmisc.lnk hbmisc.rsp
 REM Compile the sources
 Echo Compiling the sources
 Echo Processing Input Files
@@ -32,27 +32,27 @@ Copy ngi\funcam.txt+ngi\funcn_.txt overview.ngi
 Echo Compiling Sources
 ngxc overview.ngi
 Echo Linking the Guide
-ngxl libmisc.lnk
+ngxl hbmisc.lnk
 del *.ngi
 del *.ngo
 del ngi\*.txt
 del ngi\*.ngi
-del libmisc.lnk
-ren libmisc.old libmisc.lnk
+del hbmisc.lnk
+ren hbmisc.old hbmisc.lnk
 
 GOTO END
 :OS2
-   hbdoc /OS2 libmisc.lnk libmisc.rsp
+   hbdoc /OS2 hbmisc.lnk hbmisc.rsp
 GOTO END
 :RTF
-   hbdoc /RTF libmisc.lnk libmisc.rsp
+   hbdoc /RTF hbmisc.lnk hbmisc.rsp
    hcw harbour.hpj
-del libmisc.lnk
-ren libmisc.old libmisc.lnk
+del hbmisc.lnk
+ren hbmisc.old hbmisc.lnk
 
 GOTO END
 :HTM
-    hbdoc /HTM libmisc.lnk libmisc.rsp
+    hbdoc /HTM hbmisc.lnk hbmisc.rsp
    GOTO END
 :END
 del ass*.bat
