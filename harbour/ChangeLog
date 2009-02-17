@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 21:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk2.prg
+    + Made HB_ARCHITECTURE and HB_COMPILER case-insensitive.
+      Notice however that other parts of Harbour (notably the
+      GNU-make system) will only accept them in lowercase, so
+      that's the recommended way to setup these values.
+    * One error message made more informative.
+
 2009-02-17 20:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk2.prg
     + HB_COMPILER now automatically set to gcc for Linux.

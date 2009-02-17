@@ -217,7 +217,7 @@ FUNCTION Main( ... )
 
    /* Autodetect architecture */
 
-   t_cARCH := GetEnv( "HB_ARCHITECTURE" )
+   t_cARCH := Lower( GetEnv( "HB_ARCHITECTURE" ) )
    IF Empty( GetEnv( "HB_ARCHITECTURE" ) )
 #if defined( __PLATFORM__BSD )
       t_cARCH := "bsd"
@@ -281,14 +281,14 @@ FUNCTION Main( ... )
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
    OTHERWISE
-      OutErr( "hbmk: Error: HB_ARCHITECTURE value unknown." + hb_osNewLine() )
+      OutErr( "hbmk: Error: HB_ARCHITECTURE value unknown: " + t_cARCH + hb_osNewLine() )
       PauseForKey()
       RETURN 1
    ENDCASE
 
    /* Autodetect compiler */
 
-   t_cCOMP := GetEnv( "HB_COMPILER" )
+   t_cCOMP := Lower( GetEnv( "HB_COMPILER" ) )
    IF Empty( GetEnv( "HB_COMPILER" ) )
       IF Len( aCOMPSUP ) == 1
          t_cCOMP := aCOMPSUP[ 1 ]
