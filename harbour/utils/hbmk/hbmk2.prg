@@ -337,13 +337,13 @@ FUNCTION Main( ... )
    IF Empty( GetEnv( "HB_INSTALL_PREFIX" ) )
 
       DO CASE
-      CASE hb_ProgName() == "/opt/harbour/hbmk"
+      CASE hb_DirBase() == "/opt/harbour/"
 
          lSysLoc := .T.
 
          s_cHB_INSTALL_PREFIX := "/opt/harbour"
 
-      CASE hb_ProgName() == "/usr/local/bin/hbmk"
+      CASE hb_DirBase() == "/usr/local/bin/"
 
          lSysLoc := .T.
 
