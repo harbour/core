@@ -8,81 +8,88 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 11:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbblat/tests/blatcmd.prg
+    ! Reverted fix of mine until we properly fix hb_cmdline().
+    ; TOFIX: Fix hb_cmdline() to work more consistently on Windows.
+
 2009-02-17 11:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
-   - contrib/hbmysql/tests/hbmk.bat
-   + contrib/hbmysql/tests/hbmysql.hbp
-   - contrib/xhb/tests/hbmk.bat
-   + contrib/xhb/tests/xhb.hbp
-   - contrib/hbodbc/tests/hbmk.bat
-   + contrib/hbodbc/tests/hbodbc.hbp
-   - contrib/hbtpathy/tests/hbmk.bat
-   + contrib/hbtpathy/tests/hbtpathy.hbp
-   - contrib/hbmsql/tests/hbmk.bat
-   + contrib/hbmsql/tests/hbmsql.hbp
-   - contrib/hbmzip/tests/hbmk.bat
-   + contrib/hbmzip/tests/hbmzip.hbp
-   - contrib/hbole/tests/hbmk.bat
-   + contrib/hbole/tests/hbole.hbp
-   - contrib/hbsqlit3/tests/hbmk.bat
-   + contrib/hbsqlit3/tests/hbsqlit3.hbp
-   - contrib/hbfbird/tests/hbmk.bat
-   + contrib/hbfbird/tests/hbfbird.hbp
-   - contrib/hbziparc/tests/hbmk.bat
-   + contrib/hbziparc/tests/hbziparc.hbp
-   - contrib/hbnf/tests/hbmk.bat
-   + contrib/hbnf/tests/hbnf.hbp
-   - contrib/rddsql/tests/hbmk.bat
-   + contrib/rddsql/tests/rddsql.hbp
-   - contrib/hbhpdf/tests/hbmk.bat
-   + contrib/hbhpdf/tests/hbhpdf.hbp
-   - contrib/rddado/tests/hbmk.bat
-   + contrib/rddado/tests/rddado.hbp
-   - contrib/hbpgsql/tests/hbmk.bat
-   + contrib/hbpgsql/tests/hbpgsql.hbp
-   - contrib/rddads/tests/hbmk.bat
-   + contrib/rddads/tests/rddads.hbp
-   - contrib/hbfimage/tests/hbmk.bat
-   + contrib/hbfimage/tests/hbfimage.hbp
-   - contrib/hbgd/tests/hbmk.bat
-   + contrib/hbgd/tests/hbgd.hbp
-   - contrib/hbmisc/tests/hbmk.bat
-   + contrib/hbmisc/tests/hbmisc.hbp
-   - contrib/hbtip/tests/hbmk.bat
-   + contrib/hbtip/tests/hbtip.hbp
-   - contrib/hbgf/tests/hbmk.bat
-   + contrib/hbgf/tests/hbgf.hbp
-   - contrib/hbwin/tests/hbmk.bat
-   + contrib/hbwin/tests/hbwin.hbp
-   - contrib/hbvpdf/tests/hbmk.bat
-   + contrib/hbvpdf/tests/hbvpdf.hbp
-   - contrib/hbssl/tests/hbmk.bat
-   + contrib/hbssl/tests/hbssl.hbp
-   - contrib/hbwhat/tests/hbmk.bat
-   + contrib/hbwhat/tests/hbwhat.hbp
-     * Switched from WIN/DOS specific to platform
-       independent .hbp files. These will be automatically
-       picked by hbmk (prg). Some libnames will need tweaking
-       for non-Windows platforms.
-     ! Fixed a few liblists along the way.
+  - contrib/hbmysql/tests/hbmk.bat
+  + contrib/hbmysql/tests/hbmysql.hbp
+  - contrib/xhb/tests/hbmk.bat
+  + contrib/xhb/tests/xhb.hbp
+  - contrib/hbodbc/tests/hbmk.bat
+  + contrib/hbodbc/tests/hbodbc.hbp
+  - contrib/hbtpathy/tests/hbmk.bat
+  + contrib/hbtpathy/tests/hbtpathy.hbp
+  - contrib/hbmsql/tests/hbmk.bat
+  + contrib/hbmsql/tests/hbmsql.hbp
+  - contrib/hbmzip/tests/hbmk.bat
+  + contrib/hbmzip/tests/hbmzip.hbp
+  - contrib/hbole/tests/hbmk.bat
+  + contrib/hbole/tests/hbole.hbp
+  - contrib/hbsqlit3/tests/hbmk.bat
+  + contrib/hbsqlit3/tests/hbsqlit3.hbp
+  - contrib/hbfbird/tests/hbmk.bat
+  + contrib/hbfbird/tests/hbfbird.hbp
+  - contrib/hbziparc/tests/hbmk.bat
+  + contrib/hbziparc/tests/hbziparc.hbp
+  - contrib/hbnf/tests/hbmk.bat
+  + contrib/hbnf/tests/hbnf.hbp
+  - contrib/rddsql/tests/hbmk.bat
+  + contrib/rddsql/tests/rddsql.hbp
+  - contrib/hbhpdf/tests/hbmk.bat
+  + contrib/hbhpdf/tests/hbhpdf.hbp
+  - contrib/rddado/tests/hbmk.bat
+  + contrib/rddado/tests/rddado.hbp
+  - contrib/hbpgsql/tests/hbmk.bat
+  + contrib/hbpgsql/tests/hbpgsql.hbp
+  - contrib/rddads/tests/hbmk.bat
+  + contrib/rddads/tests/rddads.hbp
+  - contrib/hbfimage/tests/hbmk.bat
+  + contrib/hbfimage/tests/hbfimage.hbp
+  - contrib/hbgd/tests/hbmk.bat
+  + contrib/hbgd/tests/hbgd.hbp
+  - contrib/hbmisc/tests/hbmk.bat
+  + contrib/hbmisc/tests/hbmisc.hbp
+  - contrib/hbtip/tests/hbmk.bat
+  + contrib/hbtip/tests/hbtip.hbp
+  - contrib/hbgf/tests/hbmk.bat
+  + contrib/hbgf/tests/hbgf.hbp
+  - contrib/hbwin/tests/hbmk.bat
+  + contrib/hbwin/tests/hbwin.hbp
+  - contrib/hbvpdf/tests/hbmk.bat
+  + contrib/hbvpdf/tests/hbvpdf.hbp
+  - contrib/hbssl/tests/hbmk.bat
+  + contrib/hbssl/tests/hbssl.hbp
+  - contrib/hbwhat/tests/hbmk.bat
+  + contrib/hbwhat/tests/hbwhat.hbp
+    * Switched from WIN/DOS specific to platform
+      independent .hbp files. These will be automatically
+      picked by hbmk (prg). Some libnames will need tweaking
+      for non-Windows platforms.
+    ! Fixed a few liblists along the way.
 
-   * contrib/hbgd/gdwrp.c
-     ! Fixed to properly check GD lib version for conditional
-       compiling. Formerly used GD_VERS isn't defined by the
-       library headers.
+  * contrib/hbgd/gdwrp.c
+    ! Fixed to properly check GD lib version for conditional
+      compiling. Formerly used GD_VERS isn't defined by the
+      library headers.
 
-   - contrib/hbmisc/tests/Makefile
-   * contrib/hbmisc/doc/gendoc.bat
-   - contrib/hbmisc/doc/libmisc.lnk
-   - contrib/hbmisc/doc/libmisc.rsp
-   + contrib/hbmisc/doc/hbmisc.lnk
-   + contrib/hbmisc/doc/hbmisc.rsp
-     * libmisc -> hbmisc
+  - contrib/hbmisc/tests/Makefile
+    - Unnecessary file removed.
 
-   * util/hbmk/hbmk.prg
-     + Added TODO.
+  * contrib/hbmisc/doc/gendoc.bat
+  - contrib/hbmisc/doc/libmisc.lnk
+  - contrib/hbmisc/doc/libmisc.rsp
+  + contrib/hbmisc/doc/hbmisc.lnk
+  + contrib/hbmisc/doc/hbmisc.rsp
+    * libmisc -> hbmisc
 
-   * ChangeLog
-     * TODO marked DONE.
+  * util/hbmk/hbmk.prg
+    + Added TODO.
+
+  * ChangeLog
+    * TODO marked DONE.
 
 2009-02-17 09:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_gcc.sh
