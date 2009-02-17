@@ -66,7 +66,7 @@ fi
 
 # Revert Cygwin architecture to 'win'.
 # After all it's under Windows OS.
-if [ "$HB_ARCHITECTURE" == "cyg" ]
+if [ "$HB_ARCHITECTURE" = "cyg" ]
 then
    export HB_ARCHITECTURE=win
 fi
