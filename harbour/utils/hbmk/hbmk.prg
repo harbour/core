@@ -134,6 +134,7 @@ FUNCTION Main( ... )
    LOCAL s_aLIBHBGT
    LOCAL s_aLIB3RD
    LOCAL s_aLIBSYS
+   LOCAL s_aLIBPATH
    LOCAL s_aOPTPRG
    LOCAL s_aOPTC
    LOCAL s_aOPTL
@@ -161,6 +162,8 @@ FUNCTION Main( ... )
    LOCAL cLibExt
    LOCAL cObjPrefix
    LOCAL cObjExt
+   LOCAL cLibPathPrefix
+   LOCAL cLibPathSep
 
    LOCAL cCommand
    LOCAL cOpt_CompC
@@ -296,6 +299,8 @@ FUNCTION Main( ... )
 
    /* Autodetect Harbour environment */
 
+   s_aLIBPATH := {}
+
    lSysLoc := .F.
 
    s_cHB_BIN_INSTALL := DirAdaptPathSep( GetEnv( "HB_BIN_INSTALL" ) )
@@ -357,6 +362,8 @@ FUNCTION Main( ... )
       s_cHB_INC_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "include"
    ENDIF
 
+   AAddNotEmpty( s_aLIBPATH, s_cHB_LIB_INSTALL )
+
    IF ! t_lQuiet
       OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + hb_osNewLine() )
    ENDIF
@@ -414,6 +421,7 @@ FUNCTION Main( ... )
    IF ! lNOHBP
       /* Process automatic control files. */
       HBP_ProcessAll( @s_aLIBUSER,;
+                      @s_aLIBPATH,;
                       @s_aOPTPRG,;
                       @s_aOPTC,;
                       @s_aOPTC,;
@@ -463,11 +471,14 @@ FUNCTION Main( ... )
       CASE Left( cParam, 2 ) == "-o"             ; s_cPROGNAME := DirAdaptPathSep( SubStr( cParam, 3 ) )
       CASE Left( cParam, 2 ) == "-l" .AND. ;
            Len( cParam ) > 2                     ; AAddNotEmpty( s_aLIBUSER, DirAdaptPathSep( ArchCompFilter( SubStr( cParam, 3 ) ) ) )
+      CASE Left( cParam, 2 ) == "-L" .AND. ;
+           Len( cParam ) > 2                     ; AAddNotEmpty( s_aLIBPATH, DirAdaptPathSep( ArchCompFilter( SubStr( cParam, 3 ) ) ) )
       CASE Left( cParam, 1 ) == "-"              ; AAdd( s_aOPTPRG , DirAdaptPathSep( cParam ) )
       CASE Lower( ExtGet( cParam ) ) == ".hbp"
 
          HBP_ProcessOne( cParam,;
-            @s_aLIB,;
+            @s_aLIBUSER,;
+            @s_aLIBPATH,;
             @s_aOPTPRG,;
             @s_aOPTC,;
             @s_aOPTL,;
@@ -613,7 +624,9 @@ FUNCTION Main( ... )
          cLibExt := NIL
          cObjExt := ".o"
          cBin_CompC := iif( t_cCOMP == "gpp", "g++", "gcc" )
-         cOpt_CompC := "{C} {O} -O3 -o{E} {OPTC} -I{I} -L{A} {L}"
+         cOpt_CompC := "{C} {O} -O3 -o{E} {OPTC} -I{I} {A} {L}"
+         cLibPathPrefix := "-L"
+         cLibPathSep := " "
          IF s_lMAP
               cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
          ENDIF
@@ -637,7 +650,9 @@ FUNCTION Main( ... )
          cLibExt := NIL
          cObjExt := ".o"
          cBin_CompC := "gcc"
-         cOpt_CompC := "{C} {O} -O3 -o{E} {OPTC} -I{I} -L{A}"
+         cOpt_CompC := "{C} {O} -O3 -o{E} {OPTC} -I{I} {A}"
+         cLibPathPrefix := "-L"
+         cLibPathSep := " "
          IF s_lMAP
               cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
          ENDIF
@@ -666,7 +681,9 @@ FUNCTION Main( ... )
          cLibExt := NIL
          cObjExt := ".o"
          cBin_CompC := "gcc"
-         cOpt_CompC := "{C} {O} -O3 -o{E} {OPTC} -I{I} -L{A} {L}{SCRIPT}"
+         cOpt_CompC := "{C} {O} -O3 -o{E} {OPTC} -I{I} {A} {L}{SCRIPT}"
+         cLibPathPrefix := "-L"
+         cLibPathSep := " "
          IF t_cCOMP == "rsx32"
               cOpt_CompC  += " -Zrsx32"
          ENDIF
@@ -748,6 +765,8 @@ FUNCTION Main( ... )
          cObjExt := ".obj"
          cBin_CompC := "bcc32"
          cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {OPTC} -e{E} -I{I} -L{A} {C} {O} {L}"
+         cLibPathPrefix := ""
+         cLibPathSep := ";"
          IF s_lSHARED
               cOpt_CompC += " -L{B}"
          ENDIF
@@ -774,7 +793,9 @@ FUNCTION Main( ... )
 
          /* kernel32 user32 gdi32 winspool comctl32 comdlg32 advapi32 shell32 ole32 oleaut32 uuid odbc32 odbccp32 mpr winmm wsock32 schannel */
 
-         cOpt_CompC := "-nologo -W3 {OPTC} -I{I} {C} {O} -Fe{E} /link /libpath:{A} {OPTL} {L}"
+         cOpt_CompC := "-nologo -W3 {OPTC} -I{I} {C} {O} -Fe{E} /link {A} {OPTL} {L}"
+         cLibPathPrefix := "/libpath:"
+         cLibPathSep := " "
          IF s_lMAP
               AAdd( s_aOPTC, "-Fm" )
          ENDIF
@@ -819,7 +840,9 @@ FUNCTION Main( ... )
               AAdd( s_aOPTC, "/MT" )
          ENDIF
          cBin_Link := "polink"
-         cOpt_Link := "{O} /libpath:{A} {OPTL} {L}"
+         cOpt_Link := "{O} {A} {OPTL} {L}"
+         cLibPathPrefix := "/libpath:"
+         cLibPathSep := " "
          IF s_lSHARED
               AAdd( s_aOPTL, "/libpath:{B}" )
          ENDIF
@@ -877,7 +900,7 @@ FUNCTION Main( ... )
             cOpt_CompC := StrTran( cOpt_CompC, "{E}"   , s_cPROGNAME )
             cOpt_CompC := StrTran( cOpt_CompC, "{B}"   , s_cHB_BIN_INSTALL )
             cOpt_CompC := StrTran( cOpt_CompC, "{I}"   , s_cHB_INC_INSTALL )
-            cOpt_CompC := StrTran( cOpt_CompC, "{A}"   , s_cHB_LIB_INSTALL )
+            cOpt_CompC := StrTran( cOpt_CompC, "{A}"   , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
 
             cOpt_CompC := AllTrim( cOpt_CompC )
 
@@ -926,7 +949,7 @@ FUNCTION Main( ... )
                                                     GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
          cOpt_Link := StrTran( cOpt_Link, "{E}"   , s_cPROGNAME )
          cOpt_Link := StrTran( cOpt_Link, "{B}"   , s_cHB_BIN_INSTALL )
-         cOpt_Link := StrTran( cOpt_Link, "{A}"   , s_cHB_LIB_INSTALL )
+         cOpt_Link := StrTran( cOpt_Link, "{A}"   , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
 
          cOpt_Link := AllTrim( cOpt_Link )
 
@@ -1075,14 +1098,16 @@ STATIC FUNCTION ListCook( array, cPrefix, cExt )
 
    RETURN array
 
-STATIC FUNCTION ArrayToList( array )
+STATIC FUNCTION ArrayToList( array, cSeparator )
    LOCAL cString := ""
    LOCAL tmp
+
+   DEFAULT cSeparator TO " "
 
    FOR tmp := 1 TO Len( array )
       cString += array[ tmp ]
       IF tmp < Len( array )
-         cString += " "
+         cString += cSeparator
       ENDIF
    NEXT
 
@@ -1123,6 +1148,7 @@ STATIC FUNCTION ExtGet( cFileName )
    RETURN cExt
 
 STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
+                                 /* @ */ aLIBPATH,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
                                  /* @ */ aOPTL,;
@@ -1144,6 +1170,7 @@ STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
       ENDIF
       HBP_ProcessOne( aFile[ F_NAME ],;
          @aLIBS,;
+         @aLIBPATH,;
          @aOPTPRG,;
          @aOPTC,;
          @aOPTL,;
@@ -1164,6 +1191,7 @@ STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
 
 STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                                  /* @ */ aLIBS,;
+                                 /* @ */ aLIBPATH,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
                                  /* @ */ aOPTL,;
@@ -1196,6 +1224,13 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
          FOR EACH cItem IN hb_ATokens( cLine, " " )
             IF AScan( aLIBS, {| tmp | tmp == cItem } ) == 0
                AAddNotEmpty( aLIBS, DirAdaptPathSep( cItem ) )
+            ENDIF
+         NEXT
+
+      CASE Lower( Left( cLine, Len( "libpaths=" ) ) ) == "libpaths=" ; cLine := SubStr( cLine, Len( "libpaths=" ) + 1 )
+         FOR EACH cItem IN hb_ATokens( cLine, " " )
+            IF AScan( aLIBS, {| tmp | tmp == cItem } ) == 0
+               AAddNotEmpty( aLIBPATH, DirAdaptPathSep( cItem ) )
             ENDIF
          NEXT
 
@@ -1383,7 +1418,7 @@ STATIC PROCEDURE ShowHeader()
 STATIC PROCEDURE ShowHelp()
 
    LOCAL aText := {;
-      "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c]> [-l<lib>] [-o<obj>]" ,;
+      "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c|[.obj|.o]]>" ,;
       "" ,;
       "Options:" ,;
       "  -o<outname>      output file name" ,;
@@ -1409,11 +1444,11 @@ STATIC PROCEDURE ShowHelp()
       "Notes:" ,;
       "  - Don't forget to create a MAIN() entry function in your application." ,;
       "  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>." ,;
-      "  - Multiple -l, -o parameters are accepted." ,;
+      "  - Multiple -l, -L and <script> parameters are accepted." ,;
       "  - .hbp option files in current dir are automatically processed." ,;
       "  - .hbp options (they should come in separate lines):" ,;
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
-      "    cflags=[C compiler flags], ldflags=[Linker flags]," ,;
+      "    cflags=[C compiler flags], ldflags=[Linker flags], libpaths=[lib paths]" ,;
       "    gui|mt|shared|nulrdd|debug|map|strip|run=[yes|no]" ,;
       "  - Platform filters are accepted in each .hbp line and with -l options." ,;
       "    Filter format: {[!][<arch|comp>]}. Filters can be combined " ,;
