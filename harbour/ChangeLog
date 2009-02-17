@@ -8,6 +8,12 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-17 01:50 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbfimage/Makefile
+    ! Disabled hbfimage on Linux until we solve the type
+      collision problem. Some more platforms may need to
+      be added.
+
 2009-02-17 01:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/linux/install.cf
     ! Added hack to ignore copy errors.
