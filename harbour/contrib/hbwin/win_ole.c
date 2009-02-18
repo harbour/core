@@ -90,7 +90,7 @@
    #define HB_LONG_LONG_OFF
 #endif
 
-#if defined( __cplusplus ) && ( defined( __BORLANDC__ ) || defined( _MSC_VER ) )
+#if defined( __cplusplus ) && ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || ( defined(__WATCOMC__) && ( __WATCOMC__ >= 1280 ) ) )
 #  define HB_ID_REF( type, id )     id
 #else
 #  define HB_ID_REF( type, id )     ( ( type ) &id )

@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 23:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbole/ole2.c
+  * contrib/hbwin/win_ole.c
+  * contrib/hbwin/win_misc.c
+  * contrib/hbwin/win_prn1.c
+    ! Fixed Open Watcom 1.8 related warnings/errors.
+
 2009-02-18 22:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/global.cf
     + Added link to GNU make docs.

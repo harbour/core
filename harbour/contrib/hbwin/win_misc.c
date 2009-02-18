@@ -137,7 +137,7 @@ HB_FUNC( WIN_LOADRESOURCE )
       LPTSTR lpName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
       LPTSTR lpType = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
 
-      HRSRC hRes = FindResource( hInstance, ( LPCTSTR ) lpName, ( LPCTSTR ) lpType );
+      HRSRC hRes = FindResource( ( HMODULE ) hInstance, ( LPCTSTR ) lpName, ( LPCTSTR ) lpType );
 
       if( hRes )
       {

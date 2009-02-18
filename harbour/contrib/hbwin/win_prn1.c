@@ -110,7 +110,7 @@ static HDC win_HDC_par( int iParam )
    {
       void ** ph = ( void ** ) hb_parptrGC( win_HDC_release, iParam );
 
-      return ph ? ( HDC ) * ph : hb_parptr( iParam );
+      return ph ? ( HDC ) * ph : ( HDC ) hb_parptr( iParam );
    }
 }
 

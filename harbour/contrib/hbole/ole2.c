@@ -82,7 +82,7 @@
 #define NONAMELESSUNION
 
 
-#if defined( __cplusplus ) && ( defined( __BORLANDC__ ) || defined( _MSC_VER ) )
+#if defined( __cplusplus ) && ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || ( defined(__WATCOMC__) && ( __WATCOMC__ >= 1280 ) ) )
 #  define HB_ID_REF( type, id )     id
 #else
 #  define HB_ID_REF( type, id )     ( ( type ) &id )
@@ -378,7 +378,7 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
       s_bInitialized = TRUE;
    }
 
-   if( s_nOleError == S_OK || 
+   if( s_nOleError == S_OK ||
        s_nOleError == S_FALSE )
    {
       LPWSTR cCLSID;
