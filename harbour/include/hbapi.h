@@ -354,10 +354,10 @@ struct hb_struSymbol
 
 struct hb_struRecover
 {
-   ULONG    recover;    /* address of recover code */
-   ULONG    base;       /* previous recover base */
-   USHORT   flags;      /* previous recovery state and recover type */
-   USHORT   request;    /* requested action */
+   const BYTE *   recover;    /* address of recover code */
+   ULONG          base;       /* previous recover base */
+   USHORT         flags;      /* previous recovery state and recover type */
+   USHORT         request;    /* requested action */
 };
 
 /* items hold at the virtual machine stack */
