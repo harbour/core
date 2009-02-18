@@ -1954,7 +1954,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    ulLenFirst = pFirst->item.asString.length;
    ulLenSecond = pSecond->item.asString.length;
 
-   if( hb_stackSetStruct()->HB_SET_EXACT && !bForceExact )
+   if( !bForceExact && hb_stackSetStruct()->HB_SET_EXACT )
    {
       /* SET EXACT ON and not using == */
       /* Don't include trailing spaces */
@@ -1962,6 +1962,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
          ulLenFirst--;
       while( ulLenSecond > ulLenFirst && szSecond[ ulLenSecond - 1 ] == ' ' )
          ulLenSecond--;
+      bForceExact = TRUE;
    }
 
    ulMinLen = ulLenFirst < ulLenSecond ? ulLenFirst : ulLenSecond;
@@ -1973,7 +1974,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
       PHB_CODEPAGE cdp = hb_vmCDP();
       if( cdp && cdp->lSort )
          iRet = hb_cdpcmp( szFirst, ulLenFirst, szSecond, ulLenSecond,
-                           cdp, bForceExact || hb_stackSetStruct()->HB_SET_EXACT );
+                           cdp, bForceExact );
       else
 #endif
       {
@@ -1993,8 +1994,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
          if( !iRet && ulLenFirst != ulLenSecond )
          {
             /* Force an exact comparison? */
-            if( bForceExact || ulLenSecond > ulLenFirst ||
-                hb_stackSetStruct()->HB_SET_EXACT )
+            if( bForceExact || ulLenSecond > ulLenFirst )
                iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
          }
       }
@@ -2004,7 +2004,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
       /* Both empty ? */
       if( ulLenFirst != ulLenSecond )
       {
-         if( bForceExact || hb_stackSetStruct()->HB_SET_EXACT )
+         if( bForceExact )
             iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
          else
             iRet = ( ulLenSecond == 0 ) ? 0 : -1;
@@ -2034,7 +2034,7 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    ulLenFirst = pFirst->item.asString.length;
    ulLenSecond = pSecond->item.asString.length;
 
-   if( !bForceExact || hb_stackSetStruct()->HB_SET_EXACT )
+   if( !bForceExact && hb_stackSetStruct()->HB_SET_EXACT )
    {
       /* SET EXACT ON and not using == */
       /* Don't include trailing spaces */
@@ -2042,6 +2042,7 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
          ulLenFirst--;
       while( ulLenSecond > ulLenFirst && szSecond[ ulLenSecond - 1 ] == ' ' )
          ulLenSecond--;
+      bForceExact = TRUE;
    }
 
    ulMinLen = ulLenFirst < ulLenSecond ? ulLenFirst : ulLenSecond;
@@ -2053,7 +2054,7 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
       PHB_CODEPAGE cdp = hb_vmCDP();
       if( cdp && cdp->lSort )
          iRet = hb_cdpicmp( szFirst, ulLenFirst, szSecond, ulLenSecond,
-                            cdp, bForceExact || hb_stackSetStruct()->HB_SET_EXACT );
+                            cdp, bForceExact );
       else
 #endif
       {
@@ -2075,8 +2076,7 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
          if( !iRet && ulLenFirst != ulLenSecond )
          {
             /* Force an exact comparison? */
-            if( bForceExact || ulLenSecond > ulLenFirst ||
-                hb_stackSetStruct()->HB_SET_EXACT )
+            if( bForceExact || ulLenSecond > ulLenFirst )
                iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
          }
       }
@@ -2086,7 +2086,7 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
       /* Both empty ? */
       if( ulLenFirst != ulLenSecond )
       {
-         if( bForceExact || hb_stackSetStruct()->HB_SET_EXACT )
+         if( bForceExact )
             iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
          else
             iRet = ( ulLenSecond == 0 ) ? 0 : -1;
