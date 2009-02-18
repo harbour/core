@@ -218,7 +218,7 @@ FUNCTION Main( ... )
    /* Autodetect architecture */
 
    t_cARCH := Lower( GetEnv( "HB_ARCHITECTURE" ) )
-   IF Empty( GetEnv( "HB_ARCHITECTURE" ) )
+   IF Empty( t_cARCH )
 #if defined( __PLATFORM__BSD )
       t_cARCH := "bsd"
 #elif defined( __PLATFORM__DARWIN )
@@ -289,7 +289,7 @@ FUNCTION Main( ... )
    /* Autodetect compiler */
 
    t_cCOMP := Lower( GetEnv( "HB_COMPILER" ) )
-   IF Empty( GetEnv( "HB_COMPILER" ) )
+   IF Empty( t_cCOMP )
       IF Len( aCOMPSUP ) == 1
          t_cCOMP := aCOMPSUP[ 1 ]
       ELSEIF t_cARCH == "linux"
@@ -338,7 +338,8 @@ FUNCTION Main( ... )
    s_cHB_LIB_INSTALL := DirAdaptPathSep( GetEnv( "HB_LIB_INSTALL" ) )
    s_cHB_INC_INSTALL := DirAdaptPathSep( GetEnv( "HB_INC_INSTALL" ) )
 
-   IF Empty( GetEnv( "HB_INSTALL_PREFIX" ) )
+   s_cHB_INSTALL_PREFIX := DirAdaptPathSep( GetEnv( "HB_INSTALL_PREFIX" ) )
+   IF Empty( s_cHB_INSTALL_PREFIX )
 
       DO CASE
       CASE hb_DirBase() == "/opt/harbour/"
@@ -374,8 +375,6 @@ FUNCTION Main( ... )
          PauseForKey()
          RETURN 3
       ENDCASE
-   ELSE
-      s_cHB_INSTALL_PREFIX := DirAdaptPathSep( GetEnv( "HB_INSTALL_PREFIX" ) )
    ENDIF
    IF Empty( s_cHB_INSTALL_PREFIX ) .AND. ;
       ( Empty( s_cHB_BIN_INSTALL ) .OR. Empty( s_cHB_LIB_INSTALL ) .OR. Empty( s_cHB_INC_INSTALL ) )
@@ -559,7 +558,7 @@ FUNCTION Main( ... )
    ENDIF
 
    /* Merge user libs from command line and envvar. Command line has priority. */
-   s_aLIBUSER := ArrayAJoin( { s_aLIBUSER, ListToArray( GetEnv( "HB_USER_LIBS" ) ) } )
+   s_aLIBUSER := ArrayAJoin( { s_aLIBUSER, ListToArray( DirAdaptPathSep( GetEnv( "HB_USER_LIBS" ) ) ) } )
 
    /* Strip extension from output name. */
    s_cMAPNAME := FN_ExtSet( s_cPROGNAME, ".map" )

@@ -13,7 +13,8 @@ CC = cl.exe
 CC_IN = -c
 CC_OUT = -Fo
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-CFLAGS = -nologo -W4 -Gs -Zi
+CFLAGS = -nologo -W4 -wd4127 -Gs
+# -Zi
 
 ifeq ($(HB_VISUALC_VER_PRE80),)
 CFLAGS += -Ot2b1 -EHs-c-
@@ -43,7 +44,7 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
 
-LDFLAGS = $(LINKPATHS)
+LDFLAGS = $(LINKPATHS) user32.lib wsock32.lib advapi32.lib gdi32.lib
 
 AR = lib.exe
 ARFLAGS = $(HB_USER_AFLAGS)

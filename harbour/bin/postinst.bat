@@ -14,14 +14,32 @@ rem ---------------------------------------------------------------
 
 goto inst_%HB_ARCHITECTURE%
 
-:inst_dos
-rem DOS post install part
+:inst_win
+rem Windows post install part
+
+echo @"%%~dp0hbmk2.exe" -cc  %%*> %HB_BIN_INSTALL%\hbcc.bat
+echo @"%%~dp0hbmk2.exe" -cmp %%*> %HB_BIN_INSTALL%\hbcmp.bat
+echo @"%%~dp0hbmk2.exe"      %%*> %HB_BIN_INSTALL%\hblnk.bat
 
 goto end
 
 
-:inst_win
-rem Windows post install part
+:inst_dos
+rem DOS post install part
+
+echo @hbmk2.exe -cc  %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9> %HB_BIN_INSTALL%\hbcc.bat
+echo @hbmk2.exe -cmp %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9> %HB_BIN_INSTALL%\hbcmp.bat
+echo @hbmk2.exe      %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9> %HB_BIN_INSTALL%\hblnk.bat
+
+goto end
+
+
+:inst_os2
+rem OS/2 post install part
+
+echo @hbmk2.exe -cc  %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9> %HB_BIN_INSTALL%\hbcc.cmd
+echo @hbmk2.exe -cmp %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9> %HB_BIN_INSTALL%\hbcmp.cmd
+echo @hbmk2.exe      %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9> %HB_BIN_INSTALL%\hblnk.cmd
 
 goto end
 

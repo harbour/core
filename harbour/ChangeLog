@@ -8,6 +8,24 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 10:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.bat
+    + Added generation of hbcc[.bat|.cmd], hbcmp[.bat|.cmd]
+      and hblnk[.bat|.cmd].
+    ; NOTE: Available only when using GNU-make to build Harbour.
+
+  * utils/hbmk/hbmk2.prg
+    % Minor optimizations.
+    + HB_USER_LIBS now gets automatic path separator adjustment.
+
+  * config/win/msvc.cf
+    ! Added missing system libs.
+    ! Tweaked C options to be like in non-GNU make.
+
+  * make_gcc.sh
+  * make_gnu.sh
+    - Removed compatibility with HB_ARCHITECTURE = w32.
+
 2009-02-18 10:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/source/vm/cmdarg.c
@@ -1852,7 +1870,7 @@
   * source/rdd/dbfcdx/dbfcdx1.c
   * source/rdd/dbf1.c
     % Using hb_spFileExists() instead of hb_spFile().
-      This API also works for dirs where use doesn't have file listing
+      This API also works for dirs where user doesn't have file listing
       rights, which may create a slight incompatibility by finding
       files which weren't found by former method (and by Clipper).
       C:\WINDOWS\TEMP\*.* were such when logged in as non-admin user,

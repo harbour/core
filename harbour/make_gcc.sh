@@ -8,12 +8,6 @@
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
-# Compatibility. Please use 'win'.
-if [ "$HB_ARCHITECTURE" == "w32" ]
-then
-    export HB_ARCHITECTURE=win
-fi
-
 if [ -z "$HB_ARCHITECTURE" ]; then
     if [ "$OSTYPE" = "msdosdjgpp" ]; then
         hb_arch="dos"
