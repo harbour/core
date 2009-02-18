@@ -8,6 +8,38 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 02:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk2.prg
+    ! Fixed not recognising hbp lines if the filter was at BOL.
+    ! Two minor fixes.
+
+  * utils/hbmk/examples/xbgtk.hbp
+    + Added cflags, it was already supported, just forgot about it.
+
+  * contrib/hbblat/tests/hbblat.hbp
+  * contrib/hbblat/tests/blatcmd.prg
+    % Using WIN_GETCOMMANDLINEPARAM().
+
+  * contrib/hbwin/win_misc.c
+  * contrib/hbwin/tests/testreg.prg
+    + Added WIN_GETCOMMANDLINEPARAM().
+      Similar to WAPI_GETCOMMANDLINE() but returns
+      only the parameter part. Handles UNICODE,
+      _SET_OSCODEPAGE and appnames with spaces.
+
+  * contrib/hbwin/tests/hbwin.hbp
+    ! Fixed to include shell32 lib.
+
+  * contrib/hbwin/Makefile
+  * contrib/hbwin/common.mak
+  + contrib/hbwin/wapi_winbase.c
+  * contrib/hbwin/tests/testreg.prg
+    + Added WAPI_GETCOMMANDLINE().
+      With UNICODE and _SET_OSCODEPAGE support.
+
+  * ChangeLog
+    * TOFIX (hb_cmdline()) marked as POSTPONED with explanation.
+
 2009-02-18 00:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/listbox.prg
     ! Restored _SET_EXACT dependent code parts to have the
@@ -146,6 +178,8 @@
   * contrib/hbblat/tests/blatcmd.prg
     ! Reverted fix of mine until we properly fix hb_cmdline().
     ; TOFIX: Fix hb_cmdline() to work more consistently on Windows.
+             [POSTPONED. It creates incompatibility with behaviour
+             on other platforms.]
 
 2009-02-17 11:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   - contrib/hbmysql/tests/hbmk.bat

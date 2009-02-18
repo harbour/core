@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * HBBLAT sample blat pure command interface
+ * Misc Windows API functions
  *
- * Copyright 2007-2009 Francesco Saverio Giudice <info@fsgiudice.com>
+ * Copyright 2009 Viktor Szakats <harbour.01 syenar hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,24 @@
  *
  */
 
-#include "common.ch"
+#define HB_OS_WIN_USED
 
-PROCEDURE Main()
+#include "hbapi.h"
 
-   LOCAL cCmd := win_GetCommandLineParam()
-   LOCAL nRet
+HB_FUNC( WAPI_GETCOMMANDLINE )
+{
+   char * buffer = HB_TCHAR_CONVFROM( GetCommandLine() );
 
-   ? "Simple BLAT Command interface"
-   ? "Paramenters: ", cCmd
-   IF Empty( cCmd )
-      ? "Try with -? option"
-   ELSE
-      ? "Sending parameters to blat"
-      nRet := hb_BlatSend( cCmd )
-      ? nRet
-   ENDIF
+   {
+      /* Convert from OS codepage */
+      BOOL fFree;
+      char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) buffer, &fFree );
 
-RETURN
+      if( fFree )
+         hb_retc_buffer( pbyResult );
+      else
+         hb_retc( pbyResult );
+   }
+
+   HB_TCHAR_FREE( buffer );
+}

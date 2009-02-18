@@ -156,3 +156,46 @@ HB_FUNC( WIN_LOADRESOURCE )
       HB_TCHAR_FREE( lpType );
    }
 }
+
+HB_FUNC( WIN_GETCOMMANDLINEPARAM )
+{
+   char * buffer = HB_TCHAR_CONVFROM( GetCommandLine() );
+   long pos;
+
+   /* Skip application path */
+   pos = 0;
+   if( buffer[ pos ] == '"' )
+   {
+      /* If it contains spaces, it will be enclosed in quote chars,
+         skip this to get to the command line. */
+      pos++;
+      while( buffer[ pos ] && buffer[ pos ] != '"' )
+         pos++;
+
+      if( buffer[ pos ] == '"' )
+         pos++;
+   }
+   else
+   {
+      /* If not, look for the next space for the beginning of the
+         command line. */
+      while( buffer[ pos ] && buffer[ pos ] != ' ' )
+         pos++;
+   }
+
+   if( buffer[ pos ] == ' ' )
+      pos++;
+
+   {
+      /* Convert from OS codepage */
+      BOOL fFree;
+      char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) buffer + pos, &fFree );
+
+      if( fFree )
+         hb_retc_buffer( pbyResult );
+      else
+         hb_retc( pbyResult );
+   }
+
+   HB_TCHAR_FREE( buffer );
+}

@@ -1287,22 +1287,25 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       DO CASE
       CASE Lower( Left( cLine, Len( "libs="      ) ) ) == "libs="        ; cLine := SubStr( cLine, Len( "libs="       ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
+            cItem := DirAdaptPathSep( cItem )
             IF AScan( aLIBS, {| tmp | tmp == cItem } ) == 0
-               AAddNotEmpty( aLIBS, DirAdaptPathSep( cItem ) )
+               AAddNotEmpty( aLIBS, cItem )
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "libpaths="  ) ) ) == "libpaths="    ; cLine := SubStr( cLine, Len( "libpaths="   ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
-            IF AScan( aLIBS, {| tmp | tmp == cItem } ) == 0
-               AAddNotEmpty( aLIBPATH, DirAdaptPathSep( cItem ) )
+            cItem := DirAdaptPathSep( cItem )
+            IF AScan( aLIBPATH, {| tmp | tmp == cItem } ) == 0
+               AAddNotEmpty( aLIBPATH, cItem )
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "prgflags="  ) ) ) == "prgflags="    ; cLine := SubStr( cLine, Len( "prgflags="   ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine, " " )
+            cItem := DirAdaptPathSep( cItem )
             IF AScan( aOPTPRG, {| tmp | tmp == cItem } ) == 0
-               AAddNotEmpty( aOPTPRG, DirAdaptPathSep( cItem ) )
+               AAddNotEmpty( aOPTPRG, cItem )
             ENDIF
          NEXT
 
@@ -1436,7 +1439,7 @@ STATIC FUNCTION ArchCompFilter( cItem )
 
       /* Separate filter from the rest of the item */
       cFilterSrc := SubStr( cItem, nStart + 1, nEnd - nStart - 1 )
-      cItem := Left( cItem, nStart - 1 ) + " " + SubStr( cItem, nEnd + 1 )
+      cItem := Left( cItem, nStart - 1 ) + SubStr( cItem, nEnd + 1 )
 
       /* Parse filter and convert it to Harbour expression */
       cFilterHarb := ""

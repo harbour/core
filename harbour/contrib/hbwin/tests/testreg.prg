@@ -6,6 +6,9 @@
 
 PROCEDURE Main()
 
+   ? ">" + win_GetCommandLineParam() + "<"
+   ? ">" + wapi_GetCommandLine() + "<"
+
    /* old API */
    ? ">" + hb_ValToStr( GetRegistry( HKEY_CURRENT_USER, "Control Panel\Desktop", "Wallpaper" ) ) + "<"
 
