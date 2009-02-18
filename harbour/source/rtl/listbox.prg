@@ -319,10 +319,8 @@ METHOD display() CLASS LISTBOX
 METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
 
    LOCAL nPosFound
-   LOCAL nPass
-   LOCAL nPasses
-   LOCAL nSize
-   LOCAL lOldExact
+   LOCAL nLen
+   LOCAL bSearch
 
    IF !ISCHARACTER( cText )
       RETURN 0
@@ -333,43 +331,31 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    IF !ISLOGICAL( lCaseSensitive )
       lCaseSensitive := .T.
    ENDIF
-   IF !lCaseSensitive
-      cText := Lower( cText )
-   ENDIF
-   IF ISLOGICAL( lExact )
-      lOldExact := Set( _SET_EXACT, lExact )
+   IF !ISLOGICAL( lExact )
+      lExact := Set( _SET_EXACT )
    ENDIF
 
-   nSize := Len( ::aItems ) - nPos + 1
-   nPasses := iif( nPos > 1, 2, 1 )
-
-   IF Set( _SET_EXACT )
-      FOR nPass := 1 TO nPasses
-         IF ( nPosFound := AScan( ::aItems, iif( lCaseSensitive,;
-                                                 { | aItem | aItem[ _ITEM_cTEXT ] == cText },;
-                                                 { | aItem | Lower( aItem[ _ITEM_cTEXT ] ) == cText } ), nPos, nSize ) ) > 0
-            EXIT
-         ENDIF
-
-         nSize := nPos - 1
-         nPos := 1
-      NEXT
+   IF lExact
+      cText := RTrim( cText )
+      IF lCaseSensitive
+         bSearch := { | aItem | RTrim( aItem[ _ITEM_cTEXT ] ) == cText }
+      ELSE
+         cText := Lower( cText )
+         bSearch := { | aItem | Lower( RTrim( aItem[ _ITEM_cTEXT ] ) ) == cText }
+      ENDIF
    ELSE
-      FOR nPass := 1 TO nPasses
-         /* NOTE: Intentionally using "=" comparison to honor the _SET_EXACT setting. */
-         IF ( nPosFound := AScan( ::aItems, iif( lCaseSensitive,;
-                                                 { | aItem | aItem[ _ITEM_cTEXT ] = cText },;
-                                                 { | aItem | Lower( aItem[ _ITEM_cTEXT ] ) = cText } ), nPos, nSize ) ) > 0
-            EXIT
-         ENDIF
-
-         nSize := nPos - 1
-         nPos := 1
-      NEXT
+      nLen := Len( cText )
+      IF lCaseSensitive
+         bSearch := { | aItem | Left( aItem[ _ITEM_cTEXT ], nLen ) == cText }
+      ELSE
+         cText := Lower( cText )
+         bSearch := { | aItem | Lower( Left( aItem[ _ITEM_cTEXT ], nLen ) ) == cText }
+      ENDIF
    ENDIF
 
-   IF lOldExact != NIL
-      Set( _SET_EXACT, lOldExact )
+   nPosFound := AScan( ::aItems, bSearch, nPos, Len( ::aItems ) - nPos + 1 )
+   IF nPosFound == 0 .AND. nPos > 1
+      nPosFound := AScan( ::aItems, bSearch, 1, nPos - 1 )
    ENDIF
 
    RETURN nPosFound
@@ -377,10 +363,8 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
 METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
 
    LOCAL nPosFound
-   LOCAL nPass
-   LOCAL nPasses
-   LOCAL nSize
-   LOCAL lOldExact
+   LOCAL nLen
+   LOCAL bSearch
 
    IF !ISCHARACTER( cData )
       RETURN 0
@@ -391,43 +375,31 @@ METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    IF !ISLOGICAL( lCaseSensitive )
       lCaseSensitive := .T.
    ENDIF
-   IF !lCaseSensitive
-      cData := Lower( cData )
-   ENDIF
-   IF ISLOGICAL( lExact )
-      lOldExact := Set( _SET_EXACT, lExact )
+   IF !ISLOGICAL( lExact )
+      lExact := Set( _SET_EXACT )
    ENDIF
 
-   nSize := Len( ::aItems ) - nPos + 1
-   nPasses := iif( nPos > 1, 2, 1 )
-
-   IF Set( _SET_EXACT )
-      FOR nPass := 1 TO nPasses
-         IF ( nPosFound := AScan( ::aItems, iif( lCaseSensitive,;
-                                                 { | aItem | _LISTBOX_ITEMDATA( aItem ) == cData },;
-                                                 { | aItem | Lower( _LISTBOX_ITEMDATA( aItem ) ) == cData } ), nPos, nSize ) ) > 0
-            EXIT
-         ENDIF
-
-         nSize := nPos - 1
-         nPos := 1
-      NEXT
+   IF lExact
+      cData := RTrim( cData )
+      IF lCaseSensitive
+         bSearch := { | aItem | RTrim( _LISTBOX_ITEMDATA( aItem ) ) == cData }
+      ELSE
+         cData := Lower( cData )
+         bSearch := { | aItem | Lower( RTrim( _LISTBOX_ITEMDATA( aItem ) ) ) == cData }
+      ENDIF
    ELSE
-      FOR nPass := 1 TO nPasses
-         /* NOTE: Intentionally using "=" comparison to honor the _SET_EXACT setting. */
-         IF ( nPosFound := AScan( ::aItems, iif( lCaseSensitive,;
-                                                 { | aItem | _LISTBOX_ITEMDATA( aItem ) = cData },;
-                                                 { | aItem | Lower( _LISTBOX_ITEMDATA( aItem ) ) = cData } ), nPos, nSize ) ) > 0
-            EXIT
-         ENDIF
-
-         nSize := nPos - 1
-         nPos := 1
-      NEXT
+      nLen := Len( cData )
+      IF lCaseSensitive
+         bSearch := { | aItem | Left( _LISTBOX_ITEMDATA( aItem ), nLen ) == cData }
+      ELSE
+         cData := Lower( cData )
+         bSearch := { | aItem | Lower( Left( _LISTBOX_ITEMDATA( aItem ), nLen ) ) = cData }
+      ENDIF
    ENDIF
 
-   IF lOldExact != NIL
-      Set( _SET_EXACT, lOldExact )
+   nPosFound := AScan( ::aItems, bSearch, nPos, Len( ::aItems ) - nPos + 1 )
+   IF nPosFound == 0 .AND. nPos > 1
+      nPosFound := AScan( ::aItems, bSearch, 1, nPos - 1 )
    ENDIF
 
    RETURN nPosFound
