@@ -8,14 +8,35 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 14:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk2.prg
+    + Added handling of quoted options (with double quotes) for
+      items containing spaces. hb_AToken( , , .T. ) is used, so
+      these rules apply. Outer double quote pair will be stripped
+      from the quoted items.
+      We will probably need extra code to add the quote back
+      when forming the command lines. Anyway this feature mainly
+      targets to support pkg-config options, which have their
+      own special quotes anyway.
+    ! Minor change to not use hb_cmdline() for -q option detection,
+      and also to ignore -q in main option processing loop.
+    ! Fixed explicit .hbp processing.
+
+  * contrib/gtalleg/tests/gtalleg-shared.hbp
+  * contrib/gtalleg/tests/gtalleg-static.hbp
+  * utils/hbmk/examples/xbgtk.hbp
+  * utils/hbmk/examples/hwgui.hbp
+  * utils/hbmk/examples/xhgtk.hbp
+    * Updated pkg-config related lines.
+
 2009-02-18 14:18 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/listbox.prg
     * changed FindText() and FindData() LISTBOX method to work without
       _SET_EXACT modification
 
 2009-02-18 13:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
-   + source/rtl/mousehb.c
-     + Added missing file from previous commit.
+  + source/rtl/mousehb.c
+    + Added missing file from previous commit.
 
 2009-02-18 12:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/itemapi.c

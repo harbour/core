@@ -3,4 +3,4 @@
 #
 
 libs=xhgtk
-{linux}libs=`pkg-config --libs gtk+-2.0 libglade-2.0`
+{linux}ldflags="`pkg-config --libs gtk+-2.0 libglade-2.0`"

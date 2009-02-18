@@ -4,4 +4,4 @@
 
 libs=gtalleg
 {win}libs=alleg
-{linux}libs=`allegro-config --libs 2>/dev/null`
+{linux}ldflags="`allegro-config --libs 2>/dev/null`"

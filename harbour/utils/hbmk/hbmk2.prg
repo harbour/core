@@ -194,7 +194,13 @@ FUNCTION Main( ... )
       RETURN 9
    ENDIF
 
-   t_lQuiet := " -q " $ Lower( " " + hb_cmdline() + " " )
+   t_lQuiet := .F.
+   FOR EACH cParam IN hb_AParams()
+      IF Lower( cParam ) == "-q"
+         t_lQuiet := .T.
+         EXIT
+      ENDIF
+   NEXT
 
    IF ! t_lQuiet
       ShowHeader()
@@ -422,11 +428,13 @@ FUNCTION Main( ... )
 
    s_aPRG := {}
    s_aC := {}
+   s_aOPTPRG := {}
+   s_aOPTC := {}
+   s_aOPTL := {}
    s_aRESSRC := {}
    s_aRESCMP := {}
    s_aLIBUSER := {}
    s_aOBJUSER := {}
-   s_aOPTPRG := {}
    s_cPROGNAME := NIL
 
    /* Collect all command line parameters */
@@ -456,10 +464,11 @@ FUNCTION Main( ... )
                       @s_aLIBPATH,;
                       @s_aOPTPRG,;
                       @s_aOPTC,;
-                      @s_aOPTC,;
+                      @s_aOPTL,;
                       @s_lGUI,;
                       @s_lMT,;
                       @s_lSHARED,;
+                      @s_lSTATICFULL,;
                       @s_lDEBUG,;
                       @s_lNULRDD,;
                       @s_lMAP,;
@@ -472,6 +481,7 @@ FUNCTION Main( ... )
    FOR EACH cParam IN aParams
 
       DO CASE
+      CASE Lower( cParam ) == "-q"               /* Simply ignore */
       CASE Lower( cParam ) == "-gui"             ; s_lGUI      := .T.
       CASE Lower( cParam ) == "-mwindows"        ; s_lGUI      := .T. /* Compatibility */
       CASE Lower( cParam ) == "-std"             ; s_lGUI      := .F.
@@ -618,8 +628,6 @@ FUNCTION Main( ... )
 
       s_aLIB3RD := {}
       s_aLIBSYS := {}
-      s_aOPTC := {}
-      s_aOPTL := {}
       s_aCLEAN := {}
 
       /* Command macros:
@@ -1165,7 +1173,7 @@ STATIC FUNCTION ListToArray( cList )
    LOCAL cItem
 
    IF ! Empty( cList )
-      FOR EACH cItem IN hb_ATokens( cList, " " )
+      FOR EACH cItem IN hb_ATokens( cList )
          AAddNotEmpty( array, cItem )
       NEXT
    ENDIF
@@ -1285,38 +1293,40 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
 
       DO CASE
       CASE Lower( Left( cLine, Len( "libs="      ) ) ) == "libs="        ; cLine := SubStr( cLine, Len( "libs="       ) + 1 )
-         FOR EACH cItem IN hb_ATokens( cLine, " " )
-            cItem := DirAdaptPathSep( cItem )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            cItem := DirAdaptPathSep( StrStripQuote( cItem ) )
             IF AScan( aLIBS, {| tmp | tmp == cItem } ) == 0
                AAddNotEmpty( aLIBS, cItem )
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "libpaths="  ) ) ) == "libpaths="    ; cLine := SubStr( cLine, Len( "libpaths="   ) + 1 )
-         FOR EACH cItem IN hb_ATokens( cLine, " " )
-            cItem := DirAdaptPathSep( cItem )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            cItem := DirAdaptPathSep( StrStripQuote( cItem ) )
             IF AScan( aLIBPATH, {| tmp | tmp == cItem } ) == 0
                AAddNotEmpty( aLIBPATH, cItem )
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "prgflags="  ) ) ) == "prgflags="    ; cLine := SubStr( cLine, Len( "prgflags="   ) + 1 )
-         FOR EACH cItem IN hb_ATokens( cLine, " " )
-            cItem := DirAdaptPathSep( cItem )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            cItem := DirAdaptPathSep( StrStripQuote( cItem ) )
             IF AScan( aOPTPRG, {| tmp | tmp == cItem } ) == 0
                AAddNotEmpty( aOPTPRG, cItem )
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "cflags="    ) ) ) == "cflags="      ; cLine := SubStr( cLine, Len( "cflags="     ) + 1 )
-         FOR EACH cItem IN hb_ATokens( cLine, " " )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            cItem := StrStripQuote( cItem )
             IF AScan( aOPTC, {| tmp | tmp == cItem } ) == 0
                AAddNotEmpty( aOPTC, cItem )
             ENDIF
          NEXT
 
       CASE Lower( Left( cLine, Len( "ldflags="   ) ) ) == "ldflags="     ; cLine := SubStr( cLine, Len( "ldflags="    ) + 1 )
-         FOR EACH cItem IN hb_ATokens( cLine, " " )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            cItem := StrStripQuote( cItem )
             IF AScan( aOPTL, {| tmp | tmp == cItem } ) == 0
                AAddNotEmpty( aOPTL, cItem )
             ENDIF
@@ -1387,6 +1397,11 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
 
    RETURN
 
+STATIC FUNCTION StrStripQuote( cString )
+   RETURN iif( Left( cString, 1 ) == Chr( 34 ) .AND. Right( cString, 1 ) == Chr( 34 ),;
+             SubStr( cString, 2, Len( cString ) - 2 ),;
+             cString )
+
 STATIC FUNCTION ValueIsT( cString )
    cString := Lower( cString )
    RETURN cString == "yes" .OR. ;
@@ -1411,8 +1426,8 @@ STATIC PROCEDURE HBM_Load( aParams, cFileName )
 
    FOR EACH cLine IN hb_ATokens( cFile, _EOL )
       IF !( Left( cLine, 1 ) == "#" )
-         FOR EACH cOption IN hb_ATokens( cLine, " " )
-            AAddNotEmpty( aParams, cOption )
+         FOR EACH cOption IN hb_ATokens( cLine,, .T. )
+            AAddNotEmpty( aParams, StrStripQuote( cOption ) )
          NEXT
       ENDIF
    NEXT
