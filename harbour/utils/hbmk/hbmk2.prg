@@ -691,8 +691,7 @@ FUNCTION Main( ... )
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "mingw" ) .OR. ;
-           ( t_cARCH == "win" .AND. t_cCOMP == "rsxnt" ) .OR. ;
-           ( t_cARCH == "os2" .AND. t_cCOMP == "gcc" )
+           ( t_cARCH == "win" .AND. t_cCOMP == "rsxnt" )
 
          cLibPrefix := "-l"
          cLibExt := NIL
@@ -772,18 +771,63 @@ FUNCTION Main( ... )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32" } )
 
-      CASE t_cARCH == "os2" .AND. t_cCOMP == "owatcom"
-         cLibPrefix := "LIB "
-         cLibExt := ".lib"
-         cObjPrefix := "FILE "
-         cObjExt := ".obj"
-         cBin_CompC := "wpp386"
-         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {OPTC} {C}"
-         cBin_Link := "wlink"
-         cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {L}"
-         IF s_lDEBUG
-            cOpt_Link := "DEBUG " + cOpt_Link
-         ENDIF
+      /* OS/2 compilers */
+      CASE t_cARCH == "os2"
+
+         DO CASE
+         CASE t_cCOMP == "gcc"
+            cLibPrefix := "-l"
+            cLibExt := NIL
+            cObjExt := ".o"
+            cBin_CompC := "gcc"
+            /* OS/2 needs a space between -o and file name following it */
+            cOpt_CompC := "{C} {O} -O3 -o {E} {OPTC} -I{I} {A}"
+            cLibPathPrefix := "-L"
+            cLibPathSep := " "
+            IF s_lMAP
+               cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
+            ENDIF
+            IF s_lSHARED
+               cOpt_CompC += " -L{B}"
+            ENDIF
+            cOpt_CompC += " {L}"
+            aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "socket" } )
+            IF s_lSTRIP
+               AAdd( s_aOPTC, "-s" )
+            ENDIF
+            IF lStopAfterCComp
+               AAdd( s_aOPTC, "-c" )
+            ENDIF
+
+         CASE t_cCOMP == "owatcom"
+            cLibPrefix := "LIB "
+            cLibExt := ".lib"
+            cObjPrefix := "FILE "
+            cObjExt := ".obj"
+            cBin_CompC := "wpp386"
+            cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {OPTC} {C}"
+            cBin_Link := "wlink"
+            cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {L}"
+            IF s_lDEBUG
+               cOpt_Link := "DEBUG " + cOpt_Link
+            ENDIF
+
+         CASE t_cCOMP == "icc"
+            cLibPrefix := "{A}\"
+            cLibExt := ".lib"
+            cObjExt := ".obj"
+            cBin_CompC := "icc"
+            cOpt_CompC := "/Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp {OPTC} -I{I} {C}"
+            IF s_lDEBUG
+               AAdd( s_aOPTC, "-MTd -Zi" )
+            ENDIF
+            IF s_lGUI
+               AAdd( s_aOPTL, "/subsystem:windows" )
+            ELSE
+               AAdd( s_aOPTL, "/subsystem:console" )
+            ENDIF
+         ENDCASE
 
       CASE t_cARCH == "linux" .AND. t_cCOMP == "owatcom"
          cLibPrefix := "LIB "
@@ -855,21 +899,6 @@ FUNCTION Main( ... )
          /* TOFIX: The two build systems should generate the same .dll name, otherwise
                    we can only be compatible with one of them. non-GNU is the common choice here. */
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + "-vc", "harbour-" + cDL_Version + "-vc" ), "hbmainstd", "hbmainwin", "hbcommon" }
-
-      CASE t_cARCH == "os2" .AND. t_cCOMP == "icc"
-         cLibPrefix := "{A}\"
-         cLibExt := ".lib"
-         cObjExt := ".obj"
-         cBin_CompC := "icc"
-         cOpt_CompC := "/Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp {OPTC} -I{I} {C}"
-         IF s_lDEBUG
-            AAdd( s_aOPTC, "-MTd -Zi" )
-         ENDIF
-         IF s_lGUI
-            AAdd( s_aOPTL, "/subsystem:windows" )
-         ELSE
-            AAdd( s_aOPTL, "/subsystem:console" )
-         ENDIF
 
       CASE t_cARCH == "win" .AND. t_cCOMP == "pocc"
          IF s_lGUI

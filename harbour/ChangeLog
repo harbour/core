@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 16:35 UTC+0100 Maurilio Longo (maurilio.longo@libero.it)
+   * source/vm/cmdarg.c
+     * little hack from Przemyslaw to make it work under OS/2 where
+       executable name hasen't got extension if extension was not give when
+       executable was started.
+   * utils/hbmk/hbmk2.prg
+     * Changed to work under OS/2 with GCC; other OS/2 compilers not tested.
+
 2009-02-18 16:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk2.prg
     * '-l-' is now passed to Harbour instead of being considered

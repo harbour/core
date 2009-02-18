@@ -151,6 +151,12 @@ void hb_cmdargUpdate( void )
             HB_PATHNAMES * pSearchPath = NULL, * pNextPath;
             hb_fsAddSearchPath( pszPATH, &pSearchPath );
             pNextPath = pSearchPath;
+
+            #ifdef HB_OS_OS2
+            if( !pFName->szExtension )
+               pFName->szExtension = ".exe";
+            #endif
+
             while( pNextPath )
             {
                pFName->szPath = pNextPath->szPath;
