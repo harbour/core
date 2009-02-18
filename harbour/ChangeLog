@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 22:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+  * utils/hbmk/hbmk2.prg
+    * TODOs moved to source file.
+    + Added hbp comment syntax to help screen.
+
+  * config/win/install.cf
+    ! Reverted previous fix (with xcopy) and replaced with
+      official method to suppress return value.
+
 2009-02-18 20:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbthread.h
   * harbour/source/vm/thread.c
@@ -42,7 +52,7 @@
 2009-02-18 16:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk2.prg
     * '-l-' is now passed to Harbour instead of being considered
-      as a lib spec.
+      a lib spec.
     * Arch/comp is now case-insensitive in filters too.
     * Removed GTSTD usage.
       It caused a stall at startup for BCC, and Ctrl+C had
@@ -142,7 +152,7 @@
              to replace expressions:
              '( key == K_MM*DOWN )' with the compatible:
              '( key == K_MOUSEMOVE .AND. M*DOWN() )' to prepare
-             for the fix.
+             for the fix. [DONE]
 
 2009-02-18 12:17 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
@@ -950,30 +960,32 @@
       - details of *NIX stuff, systems libs, switches,
         etc, etc.
       - -fullstatic not yet supported. [DONE]
-      - fmstat/nofmstat. It would be good to find a
-        more easily manageable way to influence that.
-        Current one is make system dependent and a bit hackish.
       - handling 3rd party libs. These should be supported
         by supplying proper parameter, and we can provide
         example scripts for these libs. Hard-wiring them
-        into core Harbour is quite dangerous.
-      - "MAIN" function override. I'd rather leave this out,
-        and clear up the situation with entry procs.
-      - gtsln and gtcrs support.
-      - Watcom, OS/2, *NIX not tested.
+        into core Harbour is quite dangerous. [DONE]
       - Built-in support for our contribs. For clear
         separation of components contribs shouldn't be
-        referred to in this core component.
+        referred to in this core component. [DONE]
       - Filtering foreign system libs passed on the command
         line for platforms not needing them. The goal is to
         be able to use as simple and _portable_ hbmk command
         lines as possible. [DONE]
+      - "MAIN" function override. I'd rather leave this out,
+        and clear up the situation with entry procs.
+      - fmstat/nofmstat. It would be good to find a
+        more easily manageable way to influence that.
+        Current one is make system dependent and a bit hackish.
+        [MOVED TO hbmk2.prg]
+      - gtsln and gtcrs support. [MOVED TO hbmk2.prg]
+      - Watcom, OS/2, *NIX not tested.
       - Support for POCC, DM.
     ; TODO:
       - Switch to portable command lines in hbmk.bat files. [DONE]
         (Win9x will be supported again). [DONE]
       - Remove bin/hbmk*.bat, bin/hbmk*.cmd, util/hbmake/*. [DONE]
       - Cleanup on variable names in hbmk.prg.
+        [MOVED TO hbmk2.prg]
 
   * tests/testid.prg
     * Minor cleanup.

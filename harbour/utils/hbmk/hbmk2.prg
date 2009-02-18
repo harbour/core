@@ -60,8 +60,12 @@
 /* TODO: Add support for more hbmk script features. */
 /* TODO: Add support for Windows resource files. */
 /* TODO: Add support for library creation. */
+/* TODO: Add support for gtsln and gtcrs. */
+/* TODO: Add support for fmstat and nofmstat. Possibly we need something
+         cleaner than in hbmk (script). */
 /* TODO: msvc/bcc32: Use separate link phase. This allows incremental links. */
 /* TODO: Support for more compilers/platforms. */
+/* TODO: Cleanup on variable names. */
 
 REQUEST hbm_ARCH
 REQUEST hbm_COMP
@@ -1148,14 +1152,6 @@ STATIC FUNCTION AAddNotEmpty( aArray, xItem )
 
    RETURN aArray
 
-STATIC FUNCTION DirAdaptPathSep( cFileName )
-
-   IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP == "mingw" )
-      RETURN StrTran( cFileName, "/", "\" )
-   ENDIF
-
-   RETURN StrTran( cFileName, "\", "/" )
-
 /* Append optional prefix and optional extension to all members */
 STATIC FUNCTION ListCook( array, cPrefix, cExt )
    LOCAL tmp
@@ -1197,6 +1193,14 @@ STATIC FUNCTION ListToArray( cList )
    ENDIF
 
    RETURN array
+
+STATIC FUNCTION DirAdaptPathSep( cFileName )
+
+   IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP == "mingw" )
+      RETURN StrTran( cFileName, "/", "\" )
+   ENDIF
+
+   RETURN StrTran( cFileName, "\", "/" )
 
 STATIC FUNCTION DirAddPathSep( cDir )
 
@@ -1572,6 +1576,7 @@ STATIC PROCEDURE ShowHelp()
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
       "    cflags=[C compiler flags], ldflags=[Linker flags], libpaths=[lib paths]" ,;
       "    gui|mt|shared|nulrdd|debug|map|strip|run=[yes|no]" ,;
+      "    Lines starting with '#' char are ignored" ,;
       "  - Platform filters are accepted in each .hbp line and with -l options." ,;
       "    Filter format: {[!][<arch|comp>]}. Filters can be combined " ,;
       "    using '&', '|' operators and grouped by parantheses." ,;
