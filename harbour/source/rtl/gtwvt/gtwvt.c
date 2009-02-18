@@ -901,7 +901,6 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 {
    POINT xy, colrow;
    SHORT keyCode = 0;
-   SHORT keyState;
 
    HB_SYMBOL_UNUSED( wParam );
 
@@ -1084,7 +1083,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          }
          else
          {
-            keyState = ( SHORT ) wParam;
+#if defined( __HB_GTWVT_GEN_K_MMDOWN_EVENTS )
+            SHORT keyState = ( SHORT ) wParam;
 
             switch( keyState )
             {
@@ -1101,13 +1101,18 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   keyCode = K_MOUSEMOVE;
             }
             break;
+#else
+            keyCode = K_MOUSEMOVE;
+            break;
+#endif
          }
       }
       case WM_MOUSEWHEEL:
-         keyState = HIWORD( wParam );
+      {
+         SHORT keyState = ( SHORT ) HIWORD( wParam );
          keyCode = keyState > 0 ? K_MWFORWARD : K_MWBACKWARD;
          break;
-
+      }
       case WM_NCMOUSEMOVE:
          keyCode = K_NCMOUSEMOVE;
          break;

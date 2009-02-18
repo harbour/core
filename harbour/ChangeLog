@@ -8,6 +8,28 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 16:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/win/bcc32.cf
+    * Synced flags with non-GNU make. This adds MT support.
+
+  * config/win/install.cf
+    ! Install command modified to not give errors and block
+      the whole build process if the target file already exists.
+      The workaround consisted of changing 'copy' to 'xcopy /d /y'.
+
+  * include/inkey.ch
+    + Added comments on K_MM*DOWN codes.
+      These also should be protected, and moved to
+      local the local headers belonging to GTs
+      supporting this feature (GTWVG notably).
+
+  * source/rtl/gtwvt/gtwvt.c
+    + Protected non-Clipper compatible extension regarding
+      K_MM*DOWN with __HB_GTWVT_GEN_K_MMDOWN_EVENTS #define.
+      Also see notes in about app level code modification
+      needed if you want to continue using default Harbour build:
+      2009-02-18 12:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+
 2009-02-18 14:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/gtalleg/tests/gtalleg-static.hbp
     + Added some Windows libs. The libs seem compiler
