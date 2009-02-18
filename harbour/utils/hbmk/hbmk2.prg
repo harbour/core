@@ -60,6 +60,7 @@
 /* TODO: Add support for more hbmk script features. */
 /* TODO: Add support for Windows resource files. */
 /* TODO: Add support for library creation. */
+/* TODO: msvc/bcc32: Use separate link phase. This allows incremental links. */
 /* TODO: Support for more compilers/platforms. */
 
 REQUEST hbm_ARCH
@@ -752,7 +753,7 @@ FUNCTION Main( ... )
          cBin_CompC := "wpp386"
          cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {OPTC} {C}"
          cBin_Link := "wlink"
-         cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {OPTL} NAME {E} {O} {L}"
+         cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {OPTL} NAME {E} {O} {L}{SCRIPT}"
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
          ENDIF
@@ -765,7 +766,7 @@ FUNCTION Main( ... )
          cBin_CompC := "wpp386"
          cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT {OPTC} {C}"
          cBin_Link := "wlink"
-         cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {L}"
+         cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {L}{SCRIPT}"
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
          ENDIF
@@ -808,7 +809,7 @@ FUNCTION Main( ... )
             cBin_CompC := "wpp386"
             cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {OPTC} {C}"
             cBin_Link := "wlink"
-            cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {L}"
+            cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {L}{SCRIPT}"
             IF s_lDEBUG
                cOpt_Link := "DEBUG " + cOpt_Link
             ENDIF
@@ -1091,9 +1092,7 @@ FUNCTION Main( ... )
 
 STATIC FUNCTION FindInPath( cFileName )
    LOCAL cPATH
-   LOCAL nCount
    LOCAL cDir
-   LOCAL tmp
 
    IF hb_FileExists( cFileName )
       RETURN .T.
@@ -1101,15 +1100,9 @@ STATIC FUNCTION FindInPath( cFileName )
 
    cPATH := GetEnv( "PATH" )
    IF ! Empty( cPATH )
-      nCount := hb_TokenCount( cPATH, hb_osPathListSeparator() )
-
-      FOR tmp := 1 TO nCount
-         cDir := hb_TokenGet( cPATH, tmp, hb_osPathListSeparator() )
+      FOR EACH cDir IN hb_ATokens( cPATH, hb_osPathListSeparator(), .T. )
          IF ! Empty( cDir )
-            IF Left( cDir, 1 ) == Chr( 34 ) .AND. Right( cDir, 1 ) == Chr( 34 )
-               cDir := SubStr( cDir, 2, Len( cDir ) - 2 )
-            ENDIF
-            IF hb_FileExists( DirAddPathSep( cDir ) + cFileName )
+            IF hb_FileExists( DirAddPathSep( StrStripQuote( cDir ) ) + cFileName )
                RETURN .T.
             ENDIF
          ENDIF

@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 18:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk2.prg
+    % Optimizations in FindInPath().
+    ! Fixed handling dirs in PATH with embedded path separator
+      in them.
+    ! Possible fix for owatcom compilers by forcing link
+      script instead of passing options on the command line.
+
+  * utils/hbmk/examples/winapi.hbp
+    ! Updated for BCC.
+
 2009-02-18 16:45 UTC+0100 Maurilio Longo (maurilio.longo@libero.it)
    * ChangeLog
      * little correction to previous entry.
