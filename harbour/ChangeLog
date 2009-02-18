@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 00:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk2.prg
+    + Added rest of default *nix system paths.
+    % Minor optimization regarding the above.
+    ! Fix regarding the above (include/lib were swapped).
+
+  * make_gnu.sh
+    * Formatting.
+
 2009-02-18 23:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbole/ole2.c
   * contrib/hbwin/win_ole.c

@@ -189,7 +189,7 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
     echo
     echo "    HB_USER_PRGFLAGS - Extra Harbour compiler options"
     echo "    HB_USER_CFLAGS   - Extra C compiler options"
-    echo "    HB_USER_LDFLAGS   - Extra linker options"
+    echo "    HB_USER_LDFLAGS  - Extra linker options"
     exit
 
 else

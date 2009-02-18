@@ -356,18 +356,21 @@ FUNCTION Main( ... )
 
          s_cHB_INSTALL_PREFIX := "/opt/harbour"
 
-      CASE hb_DirBase() == "/usr/local/bin/"
+      CASE hb_DirBase() == "/usr/local/bin/" .OR. ;
+           hb_DirBase() == "/usr/bin/" .OR. ;
+           hb_DirBase() == "/opt/bin/"
 
          lSysLoc := .T.
 
+         tmp := Left( hb_DirBase(), Len( hb_DirBase() ) - Len( "bin/" ) )
          IF Empty( s_cHB_BIN_INSTALL )
-            s_cHB_BIN_INSTALL := "/usr/local/bin"
+            s_cHB_BIN_INSTALL := tmp + "bin"
          ENDIF
          IF Empty( s_cHB_LIB_INSTALL )
-            s_cHB_LIB_INSTALL := "/usr/local/include/harbour"
+            s_cHB_LIB_INSTALL := tmp + "lib/harbour"
          ENDIF
          IF Empty( s_cHB_INC_INSTALL )
-            s_cHB_INC_INSTALL := "/usr/local/lib/harbour"
+            s_cHB_INC_INSTALL := tmp "include/harbour"
          ENDIF
 
       CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG )
