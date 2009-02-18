@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 13:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   + source/rtl/mousehb.c
+     + Added missing file from previous commit.
+
 2009-02-18 12:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/itemapi.c
     ! fixed wrong exact condition hb_itemStrICmp()
@@ -33,7 +37,7 @@
              generate proper K_MOUSEMOVE events instead. Apps
              using this these incompatible keycodes are encouraged
              to replace expressions:
-             '( key == K_KK*DOWN )' with the compatible:
+             '( key == K_MM*DOWN )' with the compatible:
              '( key == K_MOUSEMOVE .AND. M*DOWN() )' to prepare
              for the fix.
 
