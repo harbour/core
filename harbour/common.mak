@@ -577,6 +577,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\mod$(OBJEXT)      \
     $(OBJ_DIR)\mouse53$(OBJEXT)  \
     $(OBJ_DIR)\mouseapi$(OBJEXT) \
+    $(OBJ_DIR)\mousehb$(OBJEXT)  \
     $(OBJ_DIR)\mousex$(OBJEXT)   \
     $(OBJ_DIR)\mtran$(OBJEXT)    \
     $(OBJ_DIR)\natmsg$(OBJEXT)   \

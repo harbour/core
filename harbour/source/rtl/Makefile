@@ -94,6 +94,7 @@ C_SOURCES=\
 	mod.c        \
 	mouse53.c    \
 	mouseapi.c   \
+	mousehb.c    \
 	mousex.c     \
 	mtran.c      \
 	natmsg.c     \

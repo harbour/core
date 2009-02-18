@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Mouse API
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2009 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -54,11 +54,11 @@
 
 /* HARBOUR callable interface */
 
-#ifdef HB_COMPAT_C53
-
 #define M_BUTTON_LEFT   0
 #define M_BUTTON_RIGHT  1
 #define M_BUTTON_MIDDLE 2
+
+#ifdef HB_COMPAT_C53
 
 HB_FUNC( MPRESENT )
 {
@@ -167,3 +167,8 @@ HB_FUNC( MSETBOUNDS )
 }
 
 #endif
+
+HB_FUNC( HB_MMIDDLEDOWN )
+{
+   hb_retl( hb_mouseButtonState( M_BUTTON_MIDDLE ) );
+}

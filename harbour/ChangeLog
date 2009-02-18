@@ -8,6 +8,30 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 12:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+  * common.mak
+  * source/rtl/Makefile
+  * source/rtl/mouse53.c
+    + Added HB_MMIDDLEDOWN() functions, plus MMIDDLEDOWN() alias.
+      These are always available regardless of the CLIP53
+      compatibility setting.
+
+    ; TOFIX: K_MM*DOWN events _override_ C5.3 compatible
+             K_MOUSEMOVE events (in GTWVT only), which created
+             an unfortunate incompatibility with our target
+             C5.x compiler when using some specific GT. Ideas
+             are welcome how to fix this. We should probably
+             either send out both codes and let the inkey queue
+             do the filtering as requested by app (we need a
+             new filter then), or remove these event code and
+             generate proper K_MOUSEMOVE events instead. Apps
+             using this these incompatible keycodes are encouraged
+             to replace expressions:
+             '( key == K_KK*DOWN )' with the compatible:
+             '( key == K_MOUSEMOVE .AND. M*DOWN() )' to prepare
+             for the fix.
+
 2009-02-18 12:17 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/source/vm/hvm.c
