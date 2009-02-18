@@ -62,9 +62,6 @@
 /* TODO: Add support for library creation. */
 /* TODO: Support for more compilers/platforms. */
 
-ANNOUNCE HB_GTSYS
-REQUEST HB_GT_STD_DEFAULT
-
 REQUEST hbm_ARCH
 REQUEST hbm_COMP
 
@@ -515,7 +512,8 @@ FUNCTION Main( ... )
       CASE Lower( Left( cParam, 3 ) ) == "-gt"   ; DEFAULT s_cGT TO SubStr( cParam, 2 )
       CASE Left( cParam, 2 ) == "-o"             ; s_cPROGNAME := DirAdaptPathSep( SubStr( cParam, 3 ) )
       CASE Left( cParam, 2 ) == "-l" .AND. ;
-           Len( cParam ) > 2                     ; AAddNotEmpty( s_aLIBUSER, DirAdaptPathSep( ArchCompFilter( SubStr( cParam, 3 ) ) ) )
+           Len( cParam ) > 2 .AND. ;
+           !( Left( cParam, 3 ) == "-l-" )       ; AAddNotEmpty( s_aLIBUSER, DirAdaptPathSep( ArchCompFilter( SubStr( cParam, 3 ) ) ) )
       CASE Left( cParam, 2 ) == "-L" .AND. ;
            Len( cParam ) > 2                     ; AAddNotEmpty( s_aLIBPATH, DirAdaptPathSep( ArchCompFilter( SubStr( cParam, 3 ) ) ) )
       CASE Left( cParam, 1 ) == "-"              ; AAdd( s_aOPTPRG , DirAdaptPathSep( cParam ) )
@@ -1444,7 +1442,7 @@ STATIC FUNCTION ArchCompFilter( cItem )
    LOCAL xResult
    LOCAL cValue
 
-   LOCAL cExpr := "( hbm_ARCH() == '%1' .OR. hbm_COMP() == '%1' )"
+   LOCAL cExpr := "( hbm_ARCH() == Lower( '%1' ) .OR. hbm_COMP() == Lower( '%1' ) )"
 
    IF ( nStart := At( "{", cItem ) ) > 0 .AND. ;
       ( nEnd := hb_At( "}", cItem, nStart ) ) > 0

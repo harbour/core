@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 16:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk2.prg
+    * '-l-' is now passed to Harbour instead of being considered
+      as a lib spec.
+    * Arch/comp is now case-insensitive in filters too.
+    * Removed GTSTD usage.
+      It caused a stall at startup for BCC, and Ctrl+C had
+      to be pressed to proceed. I didn't investigate further,
+      maybe it's a local problem.
+
 2009-02-18 16:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/win/bcc32.cf
     * Synced flags with non-GNU make. This adds MT support.
