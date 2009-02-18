@@ -2,6 +2,11 @@
 # $Id$
 #
 
+# See GNU make docs here:
+# http://www.gnu.org/software/automake/manual/make/
+
+.SUFFIXES:
+
 GRANDP = ../../
 HB_ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 

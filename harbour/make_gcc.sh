@@ -187,5 +187,5 @@ sed -e 's/;/ /g'             \
     -e 's/^!include/include/g'                                          \
     common.mak > common.cf
 
-$MAKE -r -f make_gcc.mak $HB_USER_MAKEFLAGS $*
+$MAKE -f make_gcc.mak $HB_USER_MAKEFLAGS $*
 rm -f common.cf

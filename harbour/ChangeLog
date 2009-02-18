@@ -8,6 +8,20 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 22:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/global.cf
+    + Added link to GNU make docs.
+    + Added .SUFFIXES: to delete all built-in rules. This does
+      the same as the -r switch which we were using so far,
+      so this one is no more necessary. Now GNU make can be
+      started by simply running 'make' without parameters.
+
+  * make_gcc.sh
+  * make_gnu_os2.cmd
+  * make_gnu.bat
+    % Removed make -r switches.
+    ; TODO: Do the same in the rest of the scripts.
+
 2009-02-18 22:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
   * utils/hbmk/hbmk2.prg
