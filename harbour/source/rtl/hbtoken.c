@@ -146,7 +146,7 @@ static PHB_ITEM hb_tokenArray( const char * szLine, ULONG ulLen,
    {
       ULONG ul, ulStart, ulToken;
       char cQuote = 0;
-      
+
       for( ul = ulStart = ulToken = 0; ul < ulLen; ++ul )
       {
          if( cQuote )

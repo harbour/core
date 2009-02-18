@@ -104,6 +104,26 @@ void hb_cmdargInit( int argc, char * argv[] )
 
    s_argc = argc;
    s_argv = argv;
+}
+
+int hb_cmdargARGC( void )
+{
+   return s_argc;
+}
+
+char ** hb_cmdargARGV( void )
+{
+   return s_argv;
+}
+
+const char * hb_cmdargARGVN( int argc )
+{
+   return argc >= 0 && argc < s_argc ? s_argv[ argc ] : NULL;
+}
+
+void hb_cmdargUpdate( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_cmdargUpdate()"));
 
 #if defined( HB_OS_WIN )
 
@@ -186,21 +206,6 @@ void hb_cmdargInit( int argc, char * argv[] )
       hb_xfree( pFName );
    }
 #endif
-}
-
-int hb_cmdargARGC( void )
-{
-   return s_argc;
-}
-
-char ** hb_cmdargARGV( void )
-{
-   return s_argv;
-}
-
-const char * hb_cmdargARGVN( int argc )
-{
-   return argc >= 0 && argc < s_argc ? s_argv[ argc ] : NULL;
 }
 
 BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )

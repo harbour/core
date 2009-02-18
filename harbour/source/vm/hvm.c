@@ -681,6 +681,10 @@ static void hb_vmStackRelease( void )
 
    HB_VM_UNLOCK
 
+   /* NOTE: releasing pThItm may force pState freeing if parent
+    *       thread does not keep thread pointer item. So it's
+    *       important to not access it later. [druzus]
+    */
    if( pThItm )
       hb_itemRelease( pThItm );
 
@@ -870,6 +874,8 @@ void hb_vmInit( BOOL bStartMainProc )
       /* _SET_* initialization */
       hb_setInitialize( hb_stackSetStruct() );
    }
+
+   hb_cmdargUpdate();
 
    hb_clsInit();              /* initialize Classy/OO system */
    hb_errInit();

@@ -908,6 +908,7 @@ extern HB_EXPORT PHB_SYMB  hb_symbolNew( const char * szName ); /* create a new 
 
 /* Command line and environment argument management */
 extern HB_EXPORT void hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */
+extern void          hb_cmdargUpdate( void ); /* update arguments after HVM initialization */
 extern int           hb_cmdargARGC( void ); /* retrieve command line argument count */
 extern char **       hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
 extern const char *  hb_cmdargARGVN( int argc ); /* retrieve given command line argument */
