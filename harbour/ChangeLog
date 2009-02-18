@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 20:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbthread.h
+  * harbour/source/vm/thread.c
+    ! added support for conditional variables working like in PTHREADS
+      in OS2 builds - it fixes the problem with possible dead lock or
+      starvation effect which can also cause dead lock in some cases.
+      OS2 users please test current code.
+
 2009-02-18 18:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk2.prg
     % Optimizations in FindInPath().

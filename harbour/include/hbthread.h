@@ -169,9 +169,23 @@ HB_EXTERN_BEGIN
    typedef TID                HB_THREAD_ID;
    typedef TID                HB_THREAD_HANDLE;
    typedef HMTX               HB_RAWCRITICAL_T;
-   typedef HEV                HB_RAWCOND_T;
 
    extern ULONG _hb_gettid( void );
+
+   typedef struct _HB_WAIT_LIST
+   {
+      struct _HB_WAIT_LIST *  prev;
+      struct _HB_WAIT_LIST *  next;
+      HEV                     cond;
+      BOOL                    signaled;
+   } HB_WAIT_LIST, * PHB_WAIT_LIST;
+
+   typedef struct
+   {
+      PHB_WAIT_LIST     waiters;
+   } HB_COND_T, HB_RAWCOND_T;
+
+# define HB_COND_NEW( name )       HB_COND_T name = { NULL }
 
 #  define HB_THREAD_STARTFUNC( func )     void func( void * Cargo )
 #  define HB_THREAD_END                   _endthread(); return;
@@ -189,16 +203,15 @@ HB_EXTERN_BEGIN
 #  define HB_CRITICAL_DESTROY(v)    DosCloseMutexSem( v )
 #  define HB_CRITICAL_LOCK(v)       DosRequestMutexSem( (v), SEM_INDEFINITE_WAIT )
 #  define HB_CRITICAL_UNLOCK(v)     DosReleaseMutexSem( v )
-#  define HB_COND_INIT(v)           DosCreateEventSem( NULL, &(v), 0L, FALSE );
-#  define HB_COND_DESTROY(v)        DosCloseEventSem( v )
-#  define HB_COND_SIGNAL(v)         DosPostEventSem( v )
-#  define HB_COND_SIGNALN(v,n)      do { int i = (n); while( --i >= 0 ) DosPostEventSem( v ); } while(0)
-#  define HB_COND_WAIT(v)           _hb_cond_timed_wait( (v), SEM_INDEFINITE_WAIT )
-#  define HB_COND_TIMEDWAIT(v,n)    _hb_cond_timed_wait( (v), (n) )
+#  define HB_COND_SIGNAL(v)         _hb_thread_cond_signal( &(v) )
+#  define HB_COND_SIGNALN(v,n)      _hb_thread_cond_broadcast( &(v) )
+#  define HB_COND_WAIT(v)           _hb_thread_cond_wait( (v), SEM_INDEFINITE_WAIT )
+#  define HB_COND_TIMEDWAIT(v,n)    _hb_thread_cond_wait( (v), (n) )
 
 #  undef  HB_COND_OS_SUPPORT
+#  undef  HB_COND_NEED_INIT
+#  define HB_COND_HARBOUR_SUPPORT
 #  define HB_CRITICAL_NEED_INIT
-#  define HB_COND_NEED_INIT
 
 #  define HB_THREAD_INFINITE_WAIT   SEM_INDEFINITE_WAIT
 
@@ -243,15 +256,15 @@ HB_EXTERN_BEGIN
 #  if defined( HB_COND_OS_SUPPORT )
       typedef struct
       {
-         BOOL     fInit;
+         BOOL           fInit;
          HB_RAWCOND_T   cond;
       } HB_COND_T;
 #     define HB_COND_NEW( name )       HB_COND_T name = { FALSE, HB_COND_INITVAL }
 #  else
       typedef struct
       {
-         BOOL     fInit;
-         int      waiters;
+         BOOL              fInit;
+         int               waiters;
          HB_RAWCOND_T      cond;
          HB_RAWCRITICAL_T  critical;
       } HB_COND_T;
@@ -289,6 +302,9 @@ typedef struct _HB_THREADSTATE
    HB_THREAD_HANDLE  th_h;
    struct _HB_THREADSTATE * pPrev;
    struct _HB_THREADSTATE * pNext;
+#if defined( HB_COND_HARBOUR_SUPPORT )
+   HB_WAIT_LIST   pWaitList;
+#endif
 } HB_THREADSTATE, * PHB_THREADSTATE;
 
 extern void hb_threadInit( void );
