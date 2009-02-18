@@ -8,6 +8,20 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 14:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtalleg/tests/gtalleg-static.hbp
+    + Added some Windows libs. The libs seem compiler
+      and/or SDK dependent, so pls update this, current state
+      is probably enough to get an idea of it.
+
+  + utils/hbmk/examples/winapi.hbp
+    + Created hbp file for Windows libs.
+
+  * utils/hbmk/hbmk2.prg
+  * utils/hbmk/examples/xbgtk.hbp
+  * utils/hbmk/examples/xhgtk.hbp
+    * Formatting.
+
 2009-02-18 14:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk2.prg
     + Added handling of quoted options (with double quotes) for

@@ -841,8 +841,6 @@ FUNCTION Main( ... )
          cObjExt := ".obj"
          cBin_CompC := "cl"
 
-         /* kernel32 user32 gdi32 winspool comctl32 comdlg32 advapi32 shell32 ole32 oleaut32 uuid odbc32 odbccp32 mpr winmm wsock32 schannel */
-
          cOpt_CompC := "-nologo -W3 {OPTC} -I{I} {C} {O} -Fe{E} /link {A} {OPTL} {L}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
