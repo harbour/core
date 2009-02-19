@@ -8,6 +8,12 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-19 12:49 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/thread.c
+    ! fixed the typo in order of sending signals in _hb_thread_cond_signal()
+      _hb_thread_cond_broadcast() for OS2. By mistake it was LIFO instead of
+      FIFO.
+
 2009-02-18 17:05 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgscrlb.prg
     * Disabled structure support for time being as 

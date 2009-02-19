@@ -199,6 +199,9 @@ static void _hb_thread_wait_add( HB_COND_T * cond, PHB_WAIT_LIST pWaiting )
 {
    ULONG ulPostCount = 0;
 
+   DosResetEventSem( pWaiting->cond, &ulPostCount );
+   pWaiting->signaled = FALSE;
+
    if( cond->waiters == NULL )
    {
       cond->waiters = pWaiting->next = pWaiting->prev = pWaiting;
@@ -209,8 +212,6 @@ static void _hb_thread_wait_add( HB_COND_T * cond, PHB_WAIT_LIST pWaiting )
       pWaiting->prev = cond->waiters->prev;
       cond->waiters->prev = pWaiting->prev->next = pWaiting;
    }
-   pWaiting->signaled = FALSE;
-   DosResetEventSem( pWaiting->cond, &ulPostCount );
 }
 
 static void _hb_thread_wait_del( HB_COND_T * cond, PHB_WAIT_LIST pWaiting )
@@ -240,7 +241,7 @@ static BOOL _hb_thread_cond_signal( HB_COND_T * cond )
             /* signal only single thread */
             break;
          }
-         pWaiting = pWaiting->prev;
+         pWaiting = pWaiting->next;
       }
       while( pWaiting != cond->waiters );
    }
@@ -260,7 +261,7 @@ static BOOL _hb_thread_cond_broadcast( HB_COND_T * cond )
             DosPostEventSem( pWaiting->cond );
             pWaiting->signaled = TRUE;
          }
-         pWaiting = pWaiting->prev;
+         pWaiting = pWaiting->next;
       }
       while( pWaiting != cond->waiters );
    }
