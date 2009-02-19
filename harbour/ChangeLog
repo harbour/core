@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 15:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk2.prg
+    + Added new flags to replace -bldflags[-]:
+      -bldf[-] and -bldf=[p][c][l]. We can pass any combinations
+      to the latter. '-bldf=' is the same as '-bldf-'.
+    + Added hbcplr to liblists (both static and shared).
+    + Added infrastructure to allow for any kind of logic
+      to detect compilers (not just PATH search for .exe).
+      We should however very carefully use such methods
+      to keep detection precize, predictable. For now I'd like
+      to hear about misdetections using current system.
+
 2009-02-19 14:18 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/thread.c
     ! fixed very stupid and also vary bad typo in my last OS2 modification.

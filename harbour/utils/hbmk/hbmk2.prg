@@ -67,8 +67,8 @@
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cleanup on variable names. */
 
-/* +  2. compiler autodetection for two kinds of dir layout. */
-/* *  6. bldflags -> bldflagsC and bldflagsPRG */
+/* +     remove -n from default harbour switches ? */
+/* +  2. compiler autodetection for two kinds of dir layouts. */
 /* *  7. output file name auto detection should respect the compilation
          mode, f.e.  hbmk -cmp a.prg it should generate a.{o,obj} not 'a'
          or 'a.exe'. QUESTION: What to do for multiple .prgs? */
@@ -78,7 +78,6 @@
          Using 'mylib.a' and '-lmylib' as GCC parameters has different
          meaning so mylib.a should not be converted to -lmylib but simply
          passed to GCC as is. */
-/* ! 12. hbcplr to add as a lib both when shared and static. */
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
@@ -112,6 +111,9 @@ FUNCTION Main( ... )
 
    LOCAL aLIB_BASE_DEBUG := {;
       "hbdebug" }
+
+   LOCAL aLIB_BASE_CPLR := {;
+      "hbcplr" }
 
    LOCAL aLIB_BASE_ST := {;
       "hbvm" }
@@ -172,7 +174,9 @@ FUNCTION Main( ... )
    LOCAL s_lMAP := .F.
    LOCAL s_lSTRIP := .F.
    LOCAL s_lTRACE := .F.
-   LOCAL s_lBLDFLG := .F.
+   LOCAL s_lBLDFLGP := .F.
+   LOCAL s_lBLDFLGC := .F.
+   LOCAL s_lBLDFLGL := .F.
    LOCAL s_lRUN := .F.
 
    LOCAL aCOMPDET
@@ -320,29 +324,29 @@ FUNCTION Main( ... )
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
    CASE t_cARCH == "dos"
-      aCOMPDET := { { "gcc.exe"   , "djgpp"   },;
-                    { "wpp386.exe", "owatcom" } } /* TODO: Add full support for wcc386.exe */
+      aCOMPDET := { { {|| FindInPath( "gcc.exe"    ) }, "djgpp"   },;
+                    { {|| FindInPath( "wpp386.exe" ) }, "owatcom" } } /* TODO: Add full support for wcc386.exe */
       aCOMPSUP := { "djgpp", "gcc", "owatcom", "rsx32" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtdos" }
    CASE t_cARCH == "os2"
-      aCOMPDET := { { "gcc.exe"   , "gcc"     },;
-                    { "wpp386.exe", "owatcom" },; /* TODO: Add full support for wcc386.exe */
-                    { "icc.exe"   , "icc"     } }
+      aCOMPDET := { { {|| FindInPath( "gcc.exe"    ) }, "gcc"     },;
+                    { {|| FindInPath( "wpp386.exe" ) }, "owatcom" },; /* TODO: Add full support for wcc386.exe */
+                    { {|| FindInPath( "icc.exe"    ) }, "icc"     } }
       aCOMPSUP := { "gcc", "owatcom", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtos2" }
    CASE t_cARCH == "win"
       /* Ordering is significant.
          owatcom also keeps a cl.exe in it's binary dir. */
-      aCOMPDET := { { "gcc.exe"   , "mingw"   },; /* TODO: Add full support for g++.exe */
-                    { "wpp386.exe", "owatcom" },; /* TODO: Add full support for wcc386.exe */
-                    { "cl.exe"    , "msvc"    },;
-                    { "bcc32.exe" , "bcc32"   },;
-                    { "pocc.exe"  , "pocc"    },;
-                    { "dmc.exe"   , "dmc"     },;
-                    { "icc.exe"   , "icc"     },;
-                    { "xcc.exe"   , "xcc"     } }
+      aCOMPDET := { { {|| FindInPath( "gcc.exe"    ) }, "mingw"   },; /* TODO: Add full support for g++.exe */
+                    { {|| FindInPath( "wpp386.exe" ) }, "owatcom" },; /* TODO: Add full support for wcc386.exe */
+                    { {|| FindInPath( "cl.exe"     ) }, "msvc"    },;
+                    { {|| FindInPath( "bcc32.exe"  ) }, "bcc32"   },;
+                    { {|| FindInPath( "pocc.exe"   ) }, "pocc"    },;
+                    { {|| FindInPath( "dmc.exe"    ) }, "dmc"     },;
+                    { {|| FindInPath( "icc.exe"    ) }, "icc"     },;
+                    { {|| FindInPath( "xcc.exe"    ) }, "xcc"     } }
       /* TODO: "mingwce", "msvcce", "poccce" */
       aCOMPSUP := { "gcc", "mingw", "msvc", "bcc32", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
       cBin_CompPRG := "harbour.exe"
@@ -367,7 +371,7 @@ FUNCTION Main( ... )
          IF !( cSelfCOMP $ "msvc" )
             /* Look for this compiler first */
             FOR tmp := 1 TO Len( aCOMPDET )
-               IF aCOMPDET[ tmp ][ 2 ] == cSelfCOMP .AND. FindInPath( aCOMPDET[ tmp ][ 1 ] )
+               IF aCOMPDET[ tmp ][ 2 ] == cSelfCOMP .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
                   t_cCOMP := aCOMPDET[ tmp ][ 2 ]
                   EXIT
                ENDIF
@@ -378,7 +382,7 @@ FUNCTION Main( ... )
          IF Empty( t_cCOMP )
             /* Check the rest of compilers */
             FOR tmp := 1 TO Len( aCOMPDET )
-               IF !( aCOMPDET[ tmp ][ 2 ] == cSelfCOMP ) .AND. FindInPath( aCOMPDET[ tmp ][ 1 ] )
+               IF !( aCOMPDET[ tmp ][ 2 ] == cSelfCOMP ) .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
                   t_cCOMP := aCOMPDET[ tmp ][ 2 ]
                   EXIT
                ENDIF
@@ -581,8 +585,13 @@ FUNCTION Main( ... )
       CASE Lower( cParam ) == "-shared"          ; s_lSHARED   := .T. ; s_lSTATICFULL := .F.
       CASE Lower( cParam ) == "-static"          ; s_lSHARED   := .F. ; s_lSTATICFULL := .F.
       CASE Lower( cParam ) == "-fullstatic"      ; s_lSHARED   := .F. ; s_lSTATICFULL := .T.
-      CASE Lower( cParam ) == "-bldflags"        ; s_lBLDFLG   := .T.
-      CASE Lower( cParam ) == "-bldflags-"       ; s_lBLDFLG   := .F.
+      CASE Lower( cParam ) == "-bldf"            ; s_lBLDFLGP  := s_lBLDFLGC := s_lBLDFLGL := .T.
+      CASE Lower( cParam ) == "-bldf-"           ; s_lBLDFLGP  := s_lBLDFLGC := s_lBLDFLGL := .F.
+      CASE Lower( Left( cParam, 6 ) ) == "-bldf="
+         cParam := SubStr( cParam, 7 )
+         s_lBLDFLGP := "p" $ cParam
+         s_lBLDFLGC := "c" $ cParam
+         s_lBLDFLGL := "l" $ cParam
       CASE Lower( cParam ) == "-debug"           ; s_lDEBUG    := .T.
       CASE Lower( cParam ) == "-debug-"          ; s_lDEBUG    := .F.
       CASE Lower( cParam ) == "-nodebug"         ; s_lDEBUG    := .F.
@@ -707,7 +716,7 @@ FUNCTION Main( ... )
                   " " + ArrayToList( s_aPRG ) +;
                   " -n -q0" +;
                   " -i" + s_cHB_INC_INSTALL +;
-                  iif( s_lBLDFLG, " " + hb_Version( HB_VERSION_FLAG_PRG ), "" ) +;
+                  iif( s_lBLDFLGP, " " + hb_Version( HB_VERSION_FLAG_PRG ), "" ) +;
                   iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
                   iif( ! Empty( s_aOPTPRG ), " " + ArrayToList( s_aOPTPRG ), "" )
 
@@ -1073,9 +1082,11 @@ FUNCTION Main( ... )
 
       IF s_lSHARED .AND. ! Empty( s_aLIBSHARED )
          s_aLIBHB := ArrayAJoin( { s_aLIBSHARED,;
+                                   aLIB_BASE_CPLR,;
                                    aLIB_BASE_DEBUG } )
       ELSE
          s_aLIBHB := ArrayAJoin( { aLIB_BASE1,;
+                                   aLIB_BASE_CPLR,;
                                    aLIB_BASE_DEBUG,;
                                    s_aLIBVM,;
                                    iif( s_lNULRDD, aLIB_BASE_NULRDD, aLIB_BASE_RDD ),;
@@ -1101,9 +1112,9 @@ FUNCTION Main( ... )
             cOpt_CompC := StrTran( cOpt_CompC, "{C}"   , ArrayToList( ArrayJoin( ListCook( s_aPRG, NIL, ".c" ), s_aC ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{O}"   , ArrayToList( ListCook( s_aOBJUSER, cObjPrefix ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{L}"   , ArrayToList( s_aLIB ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OPTC}", iif( s_lBLDFLG, hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
+            cOpt_CompC := StrTran( cOpt_CompC, "{OPTC}", iif( s_lBLDFLGC, hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
                                                          GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( s_aOPTC ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OPTL}", iif( s_lBLDFLG, hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
+            cOpt_CompC := StrTran( cOpt_CompC, "{OPTL}", iif( s_lBLDFLGL, hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
                                                          GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{E}"   , PathSepToTarget( s_cPROGNAME ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{B}"   , s_cHB_BIN_INSTALL )
@@ -1153,7 +1164,7 @@ FUNCTION Main( ... )
 
          cOpt_Link := StrTran( cOpt_Link, "{O}"   , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
          cOpt_Link := StrTran( cOpt_Link, "{L}"   , ArrayToList( s_aLIB ) )
-         cOpt_Link := StrTran( cOpt_Link, "{OPTL}", iif( s_lBLDFLG, hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
+         cOpt_Link := StrTran( cOpt_Link, "{OPTL}", iif( s_lBLDFLGL, hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
                                                     GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
          cOpt_Link := StrTran( cOpt_Link, "{E}"   , PathSepToTarget( s_cPROGNAME ) )
          cOpt_Link := StrTran( cOpt_Link, "{B}"   , s_cHB_BIN_INSTALL )
@@ -1730,7 +1741,8 @@ STATIC PROCEDURE ShowHelp()
       "  -gt<name>        link with GT<name> GT driver, can be repeated to link" ,;
       "                   with more GTs. First one will be the default at runtime" ,;
       "  -nulrdd[-]       link with nulrdd" ,;
-      "  -bldflags[-]     inherit .prg/.c/linker flags from Harbour build" ,;
+      "  -bldf[-]         inherit all/no (default) flags from Harbour build" ,;
+      "  -bldf=[p][c][l]  inherit .prg/.c/linker flags (or none) from Harbour build" ,;
       "  -[no]debug       add/exclude debug info" ,;
       "  -[no]map         create (or not) a map file" ,;
       "  -[no]strip       strip (no strip) binaries" ,;
