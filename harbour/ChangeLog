@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-19 12:59 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * common.mak
+    * changed HBM_KDIR from "utils\hbmk" to "utils\hbmk2"
+
+  - utils/hbmk
+  + utils/hbmk2
+    * renamed dir name to fix wrong dir change on gnu scripts: mpkg_tgz.sh
+      and the harbour.spec
+    ! Fixed dir name error that avoided to build rpms and tgz files.
+
 2009-02-19 16:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk2.prg
     + Added object archive support for (currently) gcc compilers.

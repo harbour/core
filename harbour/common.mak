@@ -168,7 +168,7 @@ HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
 HBI18N_DIR   = utils\hbi18n
 HBDOC_DIR    = utils\hbdoc
-HBMK_DIR     = utils\hbmk
+HBMK_DIR     = utils\hbmk2
 
 #**********************************************************
 
