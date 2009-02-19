@@ -370,7 +370,7 @@ FUNCTION Main( ... )
             s_cHB_LIB_INSTALL := tmp + "lib/harbour"
          ENDIF
          IF Empty( s_cHB_INC_INSTALL )
-            s_cHB_INC_INSTALL := tmp "include/harbour"
+            s_cHB_INC_INSTALL := tmp + "include/harbour"
          ENDIF
 
       CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG )
