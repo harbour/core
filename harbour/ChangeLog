@@ -8,6 +8,12 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 17:05 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvgscrlb.prg
+    * Disabled structure support for time being as 
+      build process is unable to locate cstruct.c, etc. headers.
+      Viktor?
+
 2009-02-18 01:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + contrib/gtalleg/tests/gtallegs.hbp
   - contrib/gtalleg/tests/gtalleg-shared.hbp

@@ -73,6 +73,7 @@
 #include 'hbgtwvg.ch'
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
+#if 0
 #include 'xhb.ch'
 #include 'cstruct.ch'
 #include 'wintypes.ch'
@@ -103,10 +104,11 @@ typedef struct tagSCROLLBARINFO {;
 } SCROLLBARINFO
 
 #endif
+#endif
 //----------------------------------------------------------------------//
 
 #ifndef __DBG_PARTS__
-//#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 //----------------------------------------------------------------------//
@@ -224,7 +226,6 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ENDIF
 
       nScrollMsg := aNM[ 1 ]
-      nScrPos    := aNM[ 2 ]
       nScrPos    := WAPI_GetScrollPos( ::hWnd, SB_CTL )
 
       DO CASE
@@ -310,7 +311,7 @@ METHOD setRange( aRange ) CLASS WvgScrollBar
 //----------------------------------------------------------------------//
 
 METHOD setScrollBoxSize( nUnits ) CLASS WvgScrollBar
-   LOCAL nOldUnits
+   LOCAL nOldUnits := nUnits
 
    RETURN nOldUnits
 
