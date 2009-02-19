@@ -222,7 +222,7 @@ static void _hb_thread_wait_del( HB_COND_T * cond, PHB_WAIT_LIST pWaiting )
    {
       cond->waiters = pWaiting->next;
       if( pWaiting == cond->waiters )
-         pWaiting = NULL;
+         cond->waiters = NULL;
    }
 }
 
