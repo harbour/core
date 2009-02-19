@@ -8,6 +8,28 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-19 20:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/Makefile
+    ! Fixed broken GNU Make after recent directory rename.
+
+  * utils/hbmk/hbmk2.prg
+    * -q switch changed to -quiet to not collide with harbour option
+      of the same name.
+    + Following C flags will automatically be inheried to
+      *nix/gcc|gpp compilers regardless of -bldf flag:
+      -mlp64, -mlp32, -m64, -m32, -fPIC, -fpic
+    + Following C flags will be automatically processed and
+      relevent system libs added:
+      -DHB_PCRE_REGEX - pcre
+      -DHB_EXT_ZLIB   - z
+      -DHAVE_GPM_H    - gpm
+    ! Stripping 'lib' prefix from lib names for gcc-family compilers.
+    ! Stripping extension from lib names for gcc-family compilers.
+    ; Please review.
+
+  * contrib/examples/uhttpd/hbmk.bat
+    * .lib extensions removed from HB_USER_LIBS.
+
 2009-02-19 20:13 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/thread.c
     * pacified warning

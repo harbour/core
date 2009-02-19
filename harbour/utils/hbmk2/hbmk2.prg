@@ -68,12 +68,11 @@
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cleanup on variable names. */
 
-/* -     remove -n from default harbour switches ? */
+/* -     remove -n?, -q0? from default harbour switches */
 /* +  2. compiler autodetection for two kinds of dir layouts. */
 /* *  7. output file name auto detection should respect the compilation
          mode, f.e.  hbmk -cmp a.prg it should generate a.{o,obj} not 'a'
          or 'a.exe'. QUESTION: What to do for multiple .prgs? */
-/* *  8. Stripping "lib" ".so/.dll/.a" ? */
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
@@ -208,6 +207,10 @@ FUNCTION Main( ... )
 
    LOCAL cDir, cName, cExt
 
+   LOCAL cSelfFlagPRG := hb_Version( HB_VERSION_FLAG_PRG )
+   LOCAL cSelfFlagC   := hb_Version( HB_VERSION_FLAG_C )
+   LOCAL cSelfFlagL   := hb_Version( HB_VERSION_FLAG_LINKER )
+
    LOCAL cDL_Version := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + hb_ntos( hb_Version( HB_VERSION_MINOR ) )
 
    IF PCount() == 0
@@ -219,7 +222,7 @@ FUNCTION Main( ... )
 
    FOR EACH cParam IN hb_AParams()
       DO CASE
-      CASE Lower( cParam )            == "-q"     ; t_lQuiet := .T. ; t_lInfo := .F.
+      CASE Lower( cParam )            == "-quiet" ; t_lQuiet := .T. ; t_lInfo := .F.
       CASE Lower( Left( cParam, 6 ) ) == "-comp=" ; t_cCOMP := SubStr( cParam, 7 )
       CASE Lower( Left( cParam, 6 ) ) == "-arch=" ; t_cARCH := SubStr( cParam, 7 )
       CASE Lower( cParam )            == "-hbcc"  ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .T.
@@ -565,7 +568,7 @@ FUNCTION Main( ... )
    FOR EACH cParam IN aParams
 
       DO CASE
-      CASE Lower( cParam ) == "-q"                .OR. ;
+      CASE Lower( cParam )            == "-quiet" .OR. ;
            Lower( Left( cParam, 6 ) ) == "-comp=" .OR. ;
            Lower( Left( cParam, 6 ) ) == "-arch=" .OR. ;
            Lower( cParam )            == "-hbcc"  .OR. ;
@@ -716,7 +719,7 @@ FUNCTION Main( ... )
                   " " + ArrayToList( s_aPRG ) +;
                   " -n -q0" +;
                   " -i" + s_cHB_INC_INSTALL +;
-                  iif( s_lBLDFLGP, " " + hb_Version( HB_VERSION_FLAG_PRG ), "" ) +;
+                  iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
                   iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
                   iif( ! Empty( s_aOPTPRG ), " " + ArrayToList( s_aOPTPRG ), "" )
 
@@ -783,7 +786,7 @@ FUNCTION Main( ... )
            ( t_cARCH == "linux"  .AND. t_cCOMP == "gpp" )
 
          cLibPrefix := "-l"
-         cLibExt := NIL
+         cLibExt := ""
          cObjExt := ".o"
          cBin_CompC := iif( t_cCOMP == "gpp", "g++", "gcc" )
          cOpt_CompC := "{C} {O} {OA} -O3 -o{E} {OPTC} -I{I} {A}"
@@ -807,7 +810,31 @@ FUNCTION Main( ... )
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
          ENDIF
+
+         /* Always inherit/reproduce some flags from self */
+
+         IF     "-mlp64" $ cSelfFlagC ; AAdd( s_aOPTC, "-mlp64" )
+         ELSEIF "-mlp32" $ cSelfFlagC ; AAdd( s_aOPTC, "-mlp32" )
+         ELSEIF "-m64"   $ cSelfFlagC ; AAdd( s_aOPTC, "-m64" )
+         ELSEIF "-m32"   $ cSelfFlagC ; AAdd( s_aOPTC, "-m32" )
+         ENDIF
+
+         IF     "-fPIC"  $ cSelfFlagC ; AAdd( s_aOPTC, "-fPIC" )
+         ELSEIF "-fpic"  $ cSelfFlagC ; AAdd( s_aOPTC, "-fpic" )
+         ENDIF
+
+         IF "-DHB_PCRE_REGEX" $ cSelfFlagC
+            AAdd( s_aLIBSYS, "pcre" )
+         ENDIF
+         IF "-DHB_EXT_ZLIB" $ cSelfFlagC
+            AAdd( s_aLIBSYS, "z" )
+         ENDIF
+         IF "-DHAVE_GPM_H" $ cSelfFlagC
+            AAdd( s_aLIBSYS, "gpm" )
+         ENDIF
+
          IF t_cARCH == "linux"
+            /* Add system libraries */
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
             IF ! s_lSHARED .AND. s_lSTATICFULL
                s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "pthread", "dl" } )
@@ -854,7 +881,7 @@ FUNCTION Main( ... )
            ( t_cARCH == "dos" .AND. t_cCOMP == "rsx32" )
 
          cLibPrefix := "-l"
-         cLibExt := NIL
+         cLibExt := ""
          cObjExt := ".o"
          cBin_CompC := "gcc"
          cOpt_CompC := "{C} {O} {OA} -O3 -o{E} {OPTC} -I{I} {A}{SCRIPT}"
@@ -915,7 +942,7 @@ FUNCTION Main( ... )
          DO CASE
          CASE t_cCOMP == "gcc"
             cLibPrefix := "-l"
-            cLibExt := NIL
+            cLibExt := ""
             cObjExt := ".o"
             cBin_CompC := "gcc"
             /* OS/2 needs a space between -o and file name following it */
@@ -1098,6 +1125,14 @@ FUNCTION Main( ... )
       s_aLIB := ArrayAJoin( { s_aLIBHB, s_aLIBUSER, s_aLIB3RD, s_aLIBSYS } )
       /* Dress lib names. */
       s_aLIB := ListCook( s_aLIB, cLibPrefix, cLibExt )
+      /* Strip 'lib' prefix when the target is gcc family. */
+      IF t_cCOMP $ "gcc|mingw|djgpp|rsxnt|rsx32"
+         FOR EACH tmp IN s_aLIB
+            IF Left( tmp, 3 ) == "lib"
+               tmp := SubStr( tmp, 4 )
+            ENDIF
+         NEXT
+      ENDIF
       /* Dress obj names. */
       s_aOBJ := ListCook( ArrayJoin( s_aPRG, s_aC ), NIL, cObjExt )
       s_aOBJUSER := ListCook( s_aOBJUSER, NIL, cObjExt )
@@ -1114,9 +1149,9 @@ FUNCTION Main( ... )
             cOpt_CompC := StrTran( cOpt_CompC, "{O}"   , ArrayToList( ListCook( s_aOBJUSER, cObjPrefix ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OA}"  , ArrayToList( s_aOBJA ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{L}"   , ArrayToList( s_aLIB ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OPTC}", iif( s_lBLDFLGC, hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
+            cOpt_CompC := StrTran( cOpt_CompC, "{OPTC}", iif( s_lBLDFLGC, cSelfFlagC + " ", "" ) +;
                                                          GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( s_aOPTC ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OPTL}", iif( s_lBLDFLGL, hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
+            cOpt_CompC := StrTran( cOpt_CompC, "{OPTL}", iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                          GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{E}"   , PathSepToTarget( s_cPROGNAME ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{B}"   , s_cHB_BIN_INSTALL )
@@ -1167,7 +1202,7 @@ FUNCTION Main( ... )
          cOpt_Link := StrTran( cOpt_Link, "{O}"   , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
          cOpt_Link := StrTran( cOpt_Link, "{OA}"  , ArrayToList( s_aOBJA ) )
          cOpt_Link := StrTran( cOpt_Link, "{L}"   , ArrayToList( s_aLIB ) )
-         cOpt_Link := StrTran( cOpt_Link, "{OPTL}", iif( s_lBLDFLGL, hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
+         cOpt_Link := StrTran( cOpt_Link, "{OPTL}", iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                     GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
          cOpt_Link := StrTran( cOpt_Link, "{E}"   , PathSepToTarget( s_cPROGNAME ) )
          cOpt_Link := StrTran( cOpt_Link, "{B}"   , s_cHB_BIN_INSTALL )
@@ -1760,7 +1795,7 @@ STATIC PROCEDURE ShowHelp()
       "  -arch=<arch>     assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
       "  -comp=<comp>     use specific compiler. Same as HB_COMPILER envvar" ,;
       "  -info            turn on informational messages (current default)" ,;
-      "  -q               suppress logo and informational messages" ,;
+      "  -quiet           suppress logo and informational messages" ,;
       "" ,;
       "Notes:" ,;
       "  - Don't forget to create a MAIN() entry function in your application." ,;
