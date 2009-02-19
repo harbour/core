@@ -8,7 +8,7 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
-2009-02-18 15:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-19 15:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk2.prg
     + Added new flags to replace -bldflags[-]:
       -bldf[-] and -bldf=[p][c][l]. We can pass any combinations
@@ -24,7 +24,7 @@
   * harbour/source/vm/thread.c
     ! fixed very stupid and also vary bad typo in my last OS2 modification.
 
-2009-02-18 13:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-19 13:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk2.prg
     + Added new TODOs.
     + Now using GTCGI as the GT.
@@ -111,7 +111,7 @@
       build process is unable to locate cstruct.c, etc. headers.
       Viktor?
 
-2009-02-18 01:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-19 01:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + contrib/gtalleg/tests/gtallegs.hbp
   - contrib/gtalleg/tests/gtalleg-shared.hbp
   + contrib/gtalleg/tests/gtallegd.hbp
@@ -161,7 +161,7 @@
 
     ; NOTE: GTWVG now needs xhb.lib alongwith hbwin.lib.
 
-2009-02-18 00:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-19 00:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk2.prg
     + Added rest of default *nix system paths.
     % Minor optimization regarding the above.
