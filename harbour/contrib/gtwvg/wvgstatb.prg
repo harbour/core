@@ -218,12 +218,6 @@ METHOD destroy() CLASS WvgStatusBar
 
    ::WvgWindow:destroy()
 
-   #if 0
-   IF Win_IsWindow( ::hWnd )
-      Win_DestroyWindow( ::hWnd )
-   ENDIF
-   HB_FreeCallback( ::nWndProc )
-   #endif
    RETURN NIL
 
 //----------------------------------------------------------------------//

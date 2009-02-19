@@ -82,6 +82,7 @@
 #define objTypeSLE                                18
 #define objTypeMLE                                19
 #define objTypeDA                                 20
+#define objTypeScrollBar                          21
 
 //----------------------------------------------------------------------//
 //  NMHDR info
@@ -91,6 +92,11 @@
 #define NMH_hWnd                                  3
 #define NMH_dwItemSpec                            4  // NMHMOUSE
 #define NMH_action                                4  // NMHTREEVIEW
+
+//----------------------------------------------------------------------//
+
+#define EVENT_HANDELLED                           0
+#define EVENT_UNHANDELLED                         1
 
 //----------------------------------------------------------------------//
 
@@ -189,6 +195,19 @@
 #define WVGMENUBAR_MIS_SEPARATOR                  4
 #define WVGMENUBAR_MIS_BUTTONSEPARATOR            512
 
+// SCROLLBAR
+#define WVGSCROLL_HORIZONTAL                      1
+#define WVGSCROLL_VERTICAL                        2
+//
+#define WVGSB_PREVPOS                             1
+#define WVGSB_NEXTPOS                             2
+#define WVGSB_PREVPAGE                            3
+#define WVGSB_NEXTPAGE                            4
+#define WVGSB_SLIDERTRACK                         5
+#define WVGSB_ENDTRACK                            6
+#define WVGSB_ENDSCROLL                           7
+#define WVGSB_TOP                                11
+#define WVGSB_BOTTOM                             12
 
 #endif // #ifndef _WVG_CH
 

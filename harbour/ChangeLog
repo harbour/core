@@ -8,6 +8,46 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 16:25 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/Makefile
+  * harbour/contrib/gtwvg/common.mak
+    + Added wvgscrlb.prg.
+
+  + harbour/contrib/gtwvg/wvgscrlb.prg
+    + Implemented WvgScrollBar() class ( work-in-progress ).
+
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/gtwvg/gtwvg.h
+  * harbour/contrib/gtwvg/hbgtwvg.ch
+  * harbour/contrib/gtwvg/wvgcrt.prg
+  * harbour/contrib/gtwvg/wvgdarea.prg
+  * harbour/contrib/gtwvg/wvgdatar.prg
+  * harbour/contrib/gtwvg/wvgdlg.prg
+  * harbour/contrib/gtwvg/wvggui.c
+  * harbour/contrib/gtwvg/wvggui.h
+  * harbour/contrib/gtwvg/wvgparts.ch
+  * harbour/contrib/gtwvg/wvgphdlr.prg
+  * harbour/contrib/gtwvg/wvgstatb.prg
+  * harbour/contrib/gtwvg/wvgstatc.prg
+  * harbour/contrib/gtwvg/wvgwin.c
+  * harbour/contrib/gtwvg/wvgwnd.prg
+  * harbour/contrib/gtwvg/wvtwin.ch
+    * Numerous changes and fixes and behavioral shifts.
+    ! Started to implement CUI and GUI components in GTWVG.
+    ! Started to use C STRUCTURES.
+
+  * harbour/contrib/hbwin/Makefile
+  * harbour/contrib/hbwin/common.mak
+    + Added wapi_winuser.c
+
+  * harbour/contrib/hbwin/hbwapi.h
+    + added more WAPI macros to accomodate new types.
+
+  + harbour/contrib/hbwin/wapi_winuser.c
+    + Introduced wrapper function to manipulate scrollbars.
+
+    ; NOTE: GTWVG now needs xhb.lib alongwith hbwin.lib.
+
 2009-02-18 00:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk/hbmk2.prg
     + Added rest of default *nix system paths.

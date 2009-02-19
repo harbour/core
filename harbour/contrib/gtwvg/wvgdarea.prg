@@ -106,7 +106,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDrawi
    ::exStyle     := 0
    ::className   := 'DrawingArea'
    ::objType     := objTypeDA
-   ::visible     := .f.
+   ::visible     := .t.
 
    RETURN Self
 
@@ -116,7 +116,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDr
 
    HB_SYMBOL_UNUSED( lVisible )
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, .f. )
+   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, .t. )
 
    ::oParent:addChild( SELF )
 
@@ -127,6 +127,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDr
    ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self, 4 )
    ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
 
+   ::show()
    RETURN Self
 
 //----------------------------------------------------------------------//
@@ -157,9 +158,6 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgDrawingArea
          Win_FillRect( hDC, { 0,0,::currentSize()[1],::currentSize()[1]}, ::hBrushBG )
          RETURN ( 0 )
       ENDIF
-
-   CASE nMessage == HB_GTE_NOTIFY
-
 
    ENDCASE
 

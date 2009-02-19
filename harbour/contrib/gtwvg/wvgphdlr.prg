@@ -334,6 +334,9 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       ENDIF
 
    CASE nEvent == HB_GTE_SETFOCUS
+      //
+      //aeval( ::aChildren, {|o| Win_InvalidateRect( o:hWnd ) } )
+
       IF hb_isBlock( ::sl_setInputFocus )
          eval( ::sl_setInputFocus, NIL, NIL, Self )
       ENDIF
@@ -344,6 +347,14 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
          eval( ::sl_killInputFocus, NIL, NIL, Self )
       ENDIF
       ::lHasInputFocus := .f.
+
+   CASE nEvent == HB_GTE_PAINT
+      //aeval( ::aChildren, {|o| Win_InvalidateRect( o:hWnd ) } )
+
+   CASE nEvent == HB_GTE_GUIPARTS
+      // Eventally every window be checked if it falls within returned rectangle or not
+      // then it will avoid a lot of flickering
+      aeval( ::aChildren, {|o| Win_InvalidateRect( o:hWnd ) } )
 
    CASE nEvent == HB_GTE_CLOSE
       IF hb_isBlock( ::close )
@@ -404,6 +415,26 @@ METHOD notifier( nEvent, xParams ) CLASS WvgPartHandler
       oObj := ::findObjectByHandle( xParams[ 2 ] )
       IF hb_isObject( oObj )
          RETURN oObj:handleEvent( HB_GTE_CTLCOLOR, xParams )
+      ENDIF
+
+   CASE nEvent == HB_GTE_HSCROLL
+      IF xParams[ 3 ] == ::hWnd
+         RETURN ::handleEvent( HB_GTE_VSCROLL, xParams )
+      ELSE
+         oObj := ::findObjectByHandle( xParams[ 3 ] )
+         IF hb_isObject( oObj )
+            RETURN oObj:handleEvent( HB_GTE_VSCROLL, xParams )
+         ENDIF
+      ENDIF
+
+   CASE nEvent == HB_GTE_VSCROLL
+      IF xParams[ 3 ] == ::hWnd
+         RETURN ::handleEvent( HB_GTE_VSCROLL, xParams )
+      ELSE
+         oObj := ::findObjectByHandle( xParams[ 3 ] )
+         IF hb_isObject( oObj )
+            RETURN oObj:handleEvent( HB_GTE_VSCROLL, xParams )
+         ENDIF
       ENDIF
 
    ENDCASE

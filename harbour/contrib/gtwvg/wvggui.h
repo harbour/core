@@ -252,7 +252,7 @@ typedef struct
    BOOL      bVisible;
    BOOL      bRowCols;
    BOOL      bConfigured;
-
+   int       iWndType;
 } HB_GT_PARAMS, * PHB_GT_PARAMS;
 
 typedef struct

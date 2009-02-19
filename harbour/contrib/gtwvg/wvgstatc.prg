@@ -321,7 +321,7 @@ METHOD setCaption( xCaption, cDll )
          Win_DeleteObject( ::hBitmap )
       ENDIF
 
-      ::hBitmap := Win_LoadImage( ::caption, 2 )
+      ::hBitmap := Win_LoadImage( ::caption, IF( hb_isNUmeric( ::caption ), 1, 2 ) )
 //hb_toOutDebug( "setCaption %s %i %s",::caption, ::hBitmap, IF( file( ::caption ),'Yes','No') )
       Win_SendMessage( ::hWnd, STM_SETIMAGE, IMAGE_BITMAP, ::hBitmap )
 

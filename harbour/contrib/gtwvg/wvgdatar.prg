@@ -163,6 +163,8 @@ METHOD setData( xValue, mp2 ) CLASS DataRef
          Win_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
       ENDIF
 
+   CASE ::className == "SCROLLBAR"
+
    ENDCASE
 
    RETURN ::sl_editBuffer

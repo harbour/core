@@ -70,6 +70,10 @@
 #define HB_GTE_NOTIFY                    10
 #define HB_GTE_COMMAND                   11
 #define HB_GTE_CTLCOLOR                  12
+#define HB_GTE_PAINT                     13
+#define HB_GTE_GUIPARTS                  14
+#define HB_GTE_HSCROLL                   15
+#define HB_GTE_VSCROLL                   16
 
 #define HB_GTI_SETFONT                   71
 #define HB_GTI_PRESPARAMS                72
@@ -89,9 +93,12 @@
 #define HB_GTI_PP_PARENT                  7
 #define HB_GTI_PP_VISIBLE                 8
 #define HB_GTI_PP_ROWCOLS                 9
+#define HB_GTI_PP_WNDTYPE                10
 
-#define HB_GTI_PP_SIZE                    9
+#define HB_GTI_PP_SIZE                   10
 
+#define HB_WNDTYPE_CRT                    0
+#define HB_WNDTYPE_DIALOG                 1
 
 #define HB_GTI_SPEC                    1000
 

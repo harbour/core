@@ -77,7 +77,7 @@
 //----------------------------------------------------------------------//
 
 #ifndef __DBG_PARTS__
-//#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+#xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 //----------------------------------------------------------------------//
@@ -1238,7 +1238,7 @@ METHOD createControl() CLASS WvgWindow
 METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
    LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
 
-   #if 0
+   #if 1
    hb_ToOutDebug( "%s:wndProc( %i  %i  %i  %i )", __ObjGetClsName( self ), hWnd, nMessage, nwParam, nlParam )
    #endif
 
@@ -1299,13 +1299,23 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
       IF hb_isObject( oObj )
          nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
 
-         IF nReturn == 0
+         IF nReturn == 1
             RETURN Win_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
          ELSE
             RETURN nReturn
          ENDIF
       ENDIF
       EXIT
+
+   CASE WM_HSCROLL
+      ::handleEvent( HB_GTE_HSCROLL, { Win_LoWord( nwParam ), Win_HiWord( nwParam ), nlParam } )
+      RETURN 0
+
+   CASE WM_VSCROLL
+      nReturn := ::handleEvent( HB_GTE_VSCROLL, { Win_LoWord( nwParam ), Win_HiWord( nwParam ), nlParam } )
+      IF nReturn == EVENT_HANDELLED
+         RETURN 0
+      ENDIF
    END
 
    RETURN Win_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )

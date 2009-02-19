@@ -2121,7 +2121,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 
       case 3:  // separator
       {
-         tbb.iBitmap   = 0;
+         tbb.iBitmap   = 10;
          tbb.idCommand = 0;
          tbb.fsState   = TBSTATE_ENABLED;
          tbb.fsStyle   = TBSTYLE_SEP;

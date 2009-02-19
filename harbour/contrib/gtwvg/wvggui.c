@@ -304,6 +304,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->pPP->bVisible     = FALSE;
    pWVT->pPP->bConfigured  = FALSE;
    pWVT->pPP->bRowCols     = FALSE;
+   pWVT->pPP->iWndType     = 0;
 
 #ifndef HB_CDP_SUPPORT_OFF
    pWVT->hostCDP    = hb_vmCDP();
@@ -974,17 +975,31 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
    if( pWVT ) switch( message )
    {
+      case WM_CREATE:
+      {
+         return 0;
+      }
       case WM_SETFOCUS:
       {
          PHB_ITEM pEvParams = hb_itemNew( NULL );
-         hb_itemPutNL( pEvParams, ( HB_LONG ) ( HB_PTRDIFF ) hWnd   );
+
+         hb_arrayNew( pEvParams, 3 );
+         hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) hWnd );
+         hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
+         hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
+
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_SETFOCUS, pEvParams );
          return 0;
       }
       case WM_KILLFOCUS:
       {
          PHB_ITEM pEvParams = hb_itemNew( NULL );
-         hb_itemPutNL( pEvParams, ( HB_LONG ) ( HB_PTRDIFF ) hWnd   );
+
+         hb_arrayNew( pEvParams, 3 );
+         hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) hWnd );
+         hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
+         hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
+
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_KILLFOCUS, pEvParams );
          return 0;
       }
@@ -1143,10 +1158,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_NOTIFY, pEvParams );
          break;
       }
-      case WM_CREATE:
-      {
-         return 0;
-      }
       case WM_CLOSE:  /* Clicked 'X' on system menu */
       {
          PHB_ITEM pEvParams = hb_itemNew( NULL );
@@ -1183,6 +1194,32 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             break;
          else
             return( iResult );
+      }
+      case WM_HSCROLL:
+      {
+         PHB_ITEM pEvParams = hb_itemNew( NULL );
+
+         hb_arrayNew( pEvParams, 3 );
+
+         hb_arraySetNL( pEvParams, 1, ( HB_LONG ) LOWORD( wParam ) );
+         hb_arraySetNL( pEvParams, 2, ( HB_LONG ) HIWORD( wParam ) );
+         hb_arraySetNInt( pEvParams, 3, ( HB_LONG ) ( HB_PTRDIFF ) lParam );
+
+         hb_gt_wvt_FireEvent( pWVT, HB_GTE_HSCROLL, pEvParams );
+         return( 0 );
+      }
+      case WM_VSCROLL:
+      {
+         PHB_ITEM pEvParams = hb_itemNew( NULL );
+
+         hb_arrayNew( pEvParams, 3 );
+
+         hb_arraySetNL( pEvParams, 1, ( HB_LONG ) LOWORD( wParam ) );
+         hb_arraySetNL( pEvParams, 2, ( HB_LONG ) HIWORD( wParam ) );
+         hb_arraySetNInt( pEvParams, 3, ( HB_LONG ) ( HB_PTRDIFF ) lParam );
+
+         hb_gt_wvt_FireEvent( pWVT, HB_GTE_VSCROLL, pEvParams );
+         return( 0 );
       }
    }
 
@@ -2118,6 +2155,11 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                if( hb_itemType( pSome ) & HB_IT_LOGICAL )
                {
                   pWVT->pPP->bRowCols = hb_itemGetL( pSome );
+               }
+               pSome = hb_arrayGetItemPtr( pInfo->pNewVal, HB_GTI_PP_WNDTYPE );
+               if( hb_itemType( pSome ) & HB_IT_NUMERIC )
+               {
+                  pWVT->pPP->iWndType = hb_itemGetNI( pSome );
                }
 
                /* Flag that caller configured itself */

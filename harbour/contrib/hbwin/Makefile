@@ -19,6 +19,7 @@ C_SOURCES = \
 	win_regc.c \
 	wapi_commctrl.c \
 	wapi_winbase.c \
+	wapi_winuser.c \
 
 PRG_SOURCES = \
 	win_os.prg \

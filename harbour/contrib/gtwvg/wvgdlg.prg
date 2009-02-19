@@ -129,7 +129,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDi
    endif
 
    hb_gtInfo( HB_GTI_PRESPARAMS, { ::exStyle, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
-                                   ::aSize[ 1 ], ::aSize[ 2 ], ::pGTp, .F., .F. } )
+               ::aSize[ 1 ], ::aSize[ 2 ], ::pGTp, .F., .F., HB_WNDTYPE_DIALOG } )
 
    if ::visible
       hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
@@ -161,24 +161,13 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDi
       ::lHasInputFocus := .t.
    endif
 
-   #if 1
    oW := WvgDrawingArea():new( self ):create( , , {0,0}, self:currentSize(), , .f. )
    IF !empty( oW:hWnd )
-      //Win_SetLayeredWindowAttributes( oW:hWnd, RGB( 255,255,255 ), 0 )  // transparent
       ::drawingArea := oW
    ELSE
-      #if 1
-      ::drawingArea := WvgStatic():New( self, , {0,0}, self:currentSize(), , .f. )
-      ::drawingArea:create()
-      //Win_SetLayeredWindowAttributes( ::drawingArea:hWnd, RGB( 255,255,255 ), 0 )  // transparent
-      #else
       ::drawingArea := Self
-      #endif
    ENDIF
-   ::drawingArea:show()
-   #else
-      ::drawingArea := Self
-   #endif
+
    hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| ::notifier( nEvent, ... ) } )
 
    RETURN Self
@@ -245,5 +234,4 @@ METHOD menuBar() CLASS WvgDialog
 
    RETURN ::oMenu
 //----------------------------------------------------------------------//
-
 
