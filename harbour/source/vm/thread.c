@@ -216,14 +216,13 @@ static void _hb_thread_wait_add( HB_COND_T * cond, PHB_WAIT_LIST pWaiting )
 
 static void _hb_thread_wait_del( HB_COND_T * cond, PHB_WAIT_LIST pWaiting )
 {
-   if( pWaiting->next == pWaiting->prev )
-      cond->waiters = NULL;
-   else
+   pWaiting->next->prev = pWaiting->prev;
+   pWaiting->prev->next = pWaiting->next;
+   if( pWaiting == cond->waiters )
    {
-      pWaiting->next->prev = pWaiting->prev;
-      pWaiting->prev->next = pWaiting->next;
+      cond->waiters = pWaiting->next;
       if( pWaiting == cond->waiters )
-         cond->waiters = pWaiting->next;
+         pWaiting = NULL;
    }
 }
 
@@ -1048,19 +1047,19 @@ static int hb_threadWait( PHB_THREADSTATE * pThreads, int iThreads,
 #else
 #  if defined( HB_COND_HARBOUR_SUPPORT )
       hb_vmUnlock();
-      fResult = !_hb_thread_cond_wait( &s_thread_cond, &s_thread_mtx, ulMilliSec );
+      fExit = !_hb_thread_cond_wait( &s_thread_cond, &s_thread_mtx, ulMilliSec );
       hb_vmLock();
 #  else
 
       HB_CRITICAL_UNLOCK( s_thread_mtx );
       hb_vmUnlock();
-      fResult = HB_COND_TIMEDWAIT( s_thread_cond, ulMilliSec );
+      fExit = !HB_COND_TIMEDWAIT( s_thread_cond, ulMilliSec );
       hb_vmLock();
       HB_CRITICAL_LOCK( s_thread_mtx );
-      if( !fResult )
+      if( fExit )
          s_waiting_for_threads--;
 #  endif
-      if( timer )
+      if( !fExit && timer )
       {
          HB_ULONG curr = hb_dateMilliSeconds();
          if( timer <= curr )
@@ -1070,7 +1069,7 @@ static int hb_threadWait( PHB_THREADSTATE * pThreads, int iThreads,
       }
 #endif
 
-      if( hb_vmRequestQuery() != 0 )
+      if( !fExit && hb_vmRequestQuery() != 0 )
          break;
    }
    HB_CRITICAL_UNLOCK( s_thread_mtx );
@@ -1284,6 +1283,7 @@ HB_FUNC( HB_THREADONCE )
 
 typedef struct _HB_MUTEX
 {
+   BOOL                 fSync;
    int                  lock_count;
    int                  lockers;
    int                  waiters;
@@ -1292,7 +1292,6 @@ typedef struct _HB_MUTEX
    HB_RAWCRITICAL_T     mutex;
    HB_RAWCOND_T         cond_l;
    HB_RAWCOND_T         cond_w;
-   BOOL                 fSync;
    struct _HB_MUTEX *   pNext;
    struct _HB_MUTEX *   pPrev;
 }
