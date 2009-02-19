@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-19 20:13 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/thread.c
+    * pacified warning
+
 2009-02-19 12:59 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * common.mak
     * changed HBM_KDIR from "utils\hbmk" to "utils\hbmk2"
