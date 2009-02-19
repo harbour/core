@@ -164,6 +164,9 @@ METHOD setData( xValue, mp2 ) CLASS DataRef
       ENDIF
 
    CASE ::className == "SCROLLBAR"
+      IF ::sl_editBuffer <> NIL
+         WAPI_SetScrollPos( ::hWnd, SB_CTL, ::sl_editBuffer, .t. )
+      ENDIF
 
    ENDCASE
 

@@ -1238,7 +1238,7 @@ METHOD createControl() CLASS WvgWindow
 METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
    LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
 
-   #if 1
+   #if 0
    hb_ToOutDebug( "%s:wndProc( %i  %i  %i  %i )", __ObjGetClsName( self ), hWnd, nMessage, nwParam, nlParam )
    #endif
 
@@ -1316,6 +1316,40 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
       IF nReturn == EVENT_HANDELLED
          RETURN 0
       ENDIF
+      EXIT
+
+   CASE WM_CAPTURECHANGED
+//hb_ToOutDebug( 'wm_CAPTURECHANGED' )
+      EXIT
+
+   CASE WM_MOUSEMOVE
+      IF ::objType == objTypeScrollBar
+         IF !( ::lTracking )
+            ::lTracking := Wvg_BeginMouseTracking( ::hWnd )
+         ENDIF
+//hb_ToOutDebug( 'wm_mouseMOVE' )
+      ENDIF
+      EXIT
+
+   CASE WM_MOUSEHOVER
+      IF ::objType == objTypeScrollBar
+//hb_ToOutDebug( 'wm_mousehover' )
+         IF ::oParent:objType == objTypeCrt
+            WAPI_SetFocus( ::oParent:hWnd )
+         ENDIF
+         RETURN 0
+      ENDIF
+      EXIT
+
+   CASE WM_MOUSELEAVE
+      IF ::objType == objTypeScrollBar
+         ::lTracking := .f.
+         IF ::oParent:objType == objTypeCrt
+//hb_ToOutDebug( 'wm_mouseleave' )
+            WAPI_SetFocus( ::oParent:hWnd )
+         ENDIF
+      ENDIF
+      EXIT
    END
 
    RETURN Win_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )

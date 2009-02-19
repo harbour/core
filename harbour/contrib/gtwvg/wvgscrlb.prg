@@ -73,13 +73,13 @@
 #include 'hbgtwvg.ch'
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
+
+/*----------------------------------------------------------------------*/
 #if 0
+
 #include 'xhb.ch'
 #include 'cstruct.ch'
 #include 'wintypes.ch'
-
-//----------------------------------------------------------------------//
-#if 1
 
 typedef struct tagPOINT {;
     LONG x;
@@ -103,7 +103,16 @@ typedef struct tagSCROLLBARINFO {;
     DWORD x; //rgstate[CCHILDREN_SCROLLBAR+1];
 } SCROLLBARINFO
 
-#endif
+typedef struct tagSCROLLINFO {;
+    UINT cbSize;
+    UINT fMask;
+    int  nMin;
+    int  nMax;
+    UINT nPage;
+    int  nPos;
+    int  nTrackPos;
+}   SCROLLINFO
+
 #endif
 //----------------------------------------------------------------------//
 
@@ -122,6 +131,8 @@ CLASS WvgScrollBar  INHERIT  WvgWindow, DataRef
    DATA     excludeScrollBox                      INIT .f.
 
    DATA     sl_xbeSB_Scroll
+
+   DATA     lTracking                             INIT .f.
 
    METHOD   new()
    METHOD   create()
@@ -176,96 +187,167 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSc
       ::show()
    ENDIF
 
+#if 0
+   si IS SCROLLINFO
+   si:cbSize := si:sizeof
+   cSI := si:value
+   IF WAPI_GetScrollInfo( ::hWnd, SB_CTL, @cSI )
+      si:buffer( cSI )
+hb_ToOutDebug( "scrollinfo nMin=%i nMax=%i", si:nMin, si:nMax )
+   ENDIF
+#endif
    RETURN Self
 
 //----------------------------------------------------------------------//
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
-   LOCAL nScrollMsg, nScrPos, nCommand
+   LOCAL nScrMsg, nScrPos, nCommand
 
-//   hb_ToOutDebug( "       %s:handleEvent( %i ) %i %i %i %i", __ObjGetClsName( self ), nMessage )
+   hb_ToOutDebug( "       %s:handleEvent( %i ) %i %i %i %i", __ObjGetClsName( self ), nMessage )
 
    DO CASE
-
-   CASE nMessage == HB_GTE_HSCROLL
-      IF !hb_isBlock( ::sl_xbeSB_Scroll )
-         RETURN( EVENT_UNHANDELLED )
-      ENDIF
-
-      nScrollMsg    := aNM[ 1 ]
-      nScrPos := aNM[ 2 ]           // To be calculated
-
-      DO CASE
-
-      CASE nScrollMsg == SB_LEFT
-         nCommand := WVGSB_PREVPOS
-      CASE nScrollMsg == SB_RIGHT
-         nCommand := WVGSB_NEXTPOS
-      CASE nScrollMsg == SB_LINELEFT
-         nCommand := WVGSB_PREVPAGE
-      CASE nScrollMsg == SB_LINERIGHT
-         nCommand := WVGSB_NEXTPAGE
-      CASE nScrollMsg == SB_PAGELEFT
-         nCommand := WVGSB_PREVPAGE
-      CASE nScrollMsg == SB_PAGERIGHT
-         nCommand := WVGSB_NEXTPAGE
-      CASE nScrollMsg == SB_THUMBPOSITION
-         nCommand := WVGSB_SLIDERTRACK
-      CASE nScrollMsg == SB_THUMBTRACK
-         nCommand := WVGSB_ENDTRACK
-      CASE nScrollMsg == SB_ENDSCROLL
-         nCommand := WVGSB_ENDSCROLL
-      ENDCASE
-
-      eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, self )
-      RETURN( EVENT_HANDELLED )
-
-   CASE nMessage == HB_GTE_VSCROLL
-      IF !hb_isBlock( ::sl_xbeSB_Scroll )
-         RETURN( EVENT_UNHANDELLED )
-      ENDIF
-
-      nScrollMsg := aNM[ 1 ]
-      nScrPos    := WAPI_GetScrollPos( ::hWnd, SB_CTL )
-
-      DO CASE
-      CASE nScrollMsg == SB_LINEUP
-         nCommand := WVGSB_PREVPOS
-      CASE nScrollMsg == SB_LINEDOWN
-         nCommand := WVGSB_NEXTPOS
-         IF nScrPos < ::range[ 2 ]
-            WAPI_SetScrollPos( ::hWnd, SB_CTL, nScrPos+1, .t. )
-         ENDIF
-
-      CASE nScrollMsg == SB_PAGEUP
-         nCommand := WVGSB_PREVPAGE
-      CASE nScrollMsg == SB_PAGEDOWN
-         nCommand := WVGSB_NEXTPAGE
-      CASE nScrollMsg == SB_TOP
-         nCommand := WVGSB_TOP
-      CASE nScrollMsg == SB_BOTTOM
-         nCommand := WVGSB_BOTTOM
-      CASE nScrollMsg == SB_THUMBPOSITION
-         nCommand := WVGSB_SLIDERTRACK
-      CASE nScrollMsg == SB_THUMBTRACK
-         nCommand := WVGSB_ENDTRACK
-hb_ToOutDebug( "Parent %s", ::oParent:CLASSName )
-      CASE nScrollMsg == SB_ENDSCROLL
-         nCommand := WVGSB_ENDSCROLL
-hb_ToOutDebug( "Parent %s", ::oParent:CLASSName )
-      OTHERWISE
-         nCommand := -99
-      ENDCASE
-
-      eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, self )
-
-      RETURN( EVENT_HANDELLED )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF hb_isNumeric( ::hBrushBG )
          Win_SetBkMode( aNM[ 1 ], 1 )
          RETURN ( ::hBrushBG )
       ENDIF
+
+   CASE nMessage == HB_GTE_HSCROLL
+      IF !hb_isBlock( ::sl_xbeSB_Scroll )
+         RETURN( EVENT_UNHANDELLED )
+      ENDIF
+
+      nScrMsg := aNM[ 1 ]
+      IF nScrMsg == SB_THUMBPOSITION .or. nScrMsg == SB_THUMBTRACK
+         nScrPos := aNM[ 2 ]
+      ELSE
+         nScrPos    := WAPI_GetScrollPos( ::hWnd, SB_CTL )
+      ENDIF
+
+      DO CASE
+      CASE nScrMsg == SB_LEFT
+         nCommand := WVGSB_PREVPOS
+         IF nScrPos > ::range[ 1 ]
+            WAPI_SetScrollPos( ::hWnd, SB_CTL, --nScrPos, .t. )
+         ENDIF
+
+      CASE nScrMsg == SB_RIGHT
+         nCommand := WVGSB_NEXTPOS
+         IF nScrPos < ::range[ 2 ]
+            WAPI_SetScrollPos( ::hWnd, SB_CTL, ++nScrPos, .t. )
+         ENDIF
+
+      CASE nScrMsg == SB_LINELEFT
+         nCommand := WVGSB_PREVPAGE
+         IF nScrPos > ::range[ 1 ]
+            WAPI_SetScrollPos( ::hWnd, SB_CTL, --nScrPos, .t. )
+         ENDIF
+
+      CASE nScrMsg == SB_LINERIGHT
+         nCommand := WVGSB_NEXTPAGE
+         IF nScrPos < ::range[ 2 ]
+            WAPI_SetScrollPos( ::hWnd, SB_CTL, ++nScrPos, .t. )
+         ENDIF
+
+      CASE nScrMsg == SB_PAGELEFT
+         nCommand := WVGSB_PREVPAGE
+         IF nScrPos > ::range[ 1 ]
+            WAPI_SetScrollPos( ::hWnd, SB_CTL, --nScrPos, .t. )
+         ENDIF
+
+      CASE nScrMsg == SB_PAGERIGHT
+         nCommand := WVGSB_NEXTPAGE
+         IF nScrPos < ::range[ 2 ]
+            WAPI_SetScrollPos( ::hWnd, SB_CTL, ++nScrPos, .t. )
+         ENDIF
+
+      CASE nScrMsg == SB_THUMBPOSITION
+         nCommand := WVGSB_SLIDERTRACK
+         WAPI_SetScrollPos( ::hWnd, SB_CTL, nScrPos, .t. )
+
+      CASE nScrMsg == SB_THUMBTRACK
+         nCommand := WVGSB_ENDTRACK
+         WAPI_SetScrollPos( ::hWnd, SB_CTL, nScrPos, .t. )
+
+      CASE nScrMsg == SB_ENDSCROLL
+         nCommand := WVGSB_ENDSCROLL
+         WAPI_SetScrollPos( ::hWnd, SB_CTL, nScrPos, .t. )
+
+      ENDCASE
+
+      ::sl_editBuffer := nScrPos
+      eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, self )
+      RETURN( EVENT_HANDELLED )
+
+
+   CASE nMessage == HB_GTE_VSCROLL
+
+      nScrMsg := aNM[ 1 ]
+      IF nScrMsg == SB_THUMBPOSITION .or. nScrMsg == SB_THUMBTRACK
+         nScrPos := aNM[ 2 ]
+      ELSE
+         nScrPos := WAPI_GetScrollPos( ::hWnd, SB_CTL )
+      ENDIF
+
+      IF !hb_isBlock( ::sl_xbeSB_Scroll )
+         RETURN( EVENT_UNHANDELLED )
+      ENDIF
+
+      DO CASE
+      CASE nScrMsg == SB_TOP
+         nCommand := WVGSB_TOP
+         IF nScrPos > ::range[ 1 ]
+            WAPI_SetScrollPos( ::hWnd, SB_CTL, --nScrPos, .t. )
+         ENDIF
+
+      CASE nScrMsg == SB_BOTTOM
+         nCommand := WVGSB_BOTTOM
+         IF nScrPos < ::range[ 2 ]
+            WAPI_SetScrollPos( ::hWnd, SB_CTL, ++nScrPos, .t. )
+         ENDIF
+
+      CASE nScrMsg == SB_LINEUP
+         nCommand := WVGSB_PREVPOS
+         IF nScrPos > ::range[ 1 ]
+            WAPI_SetScrollPos( ::hWnd, SB_CTL, --nScrPos, .t. )
+         ENDIF
+
+      CASE nScrMsg == SB_LINEDOWN
+         nCommand := WVGSB_NEXTPOS
+         IF nScrPos < ::range[ 2 ]
+            WAPI_SetScrollPos( ::hWnd, SB_CTL, ++nScrPos, .t. )
+         ENDIF
+
+      CASE nScrMsg == SB_PAGEUP
+         nCommand := WVGSB_PREVPAGE
+         IF nScrPos > ::range[ 1 ]
+            WAPI_SetScrollPos( ::hWnd, SB_CTL, --nScrPos, .t. )
+         ENDIF
+
+      CASE nScrMsg == SB_PAGEDOWN
+         nCommand := WVGSB_NEXTPAGE
+         IF nScrPos < ::range[ 2 ]
+            WAPI_SetScrollPos( ::hWnd, SB_CTL, ++nScrPos, .t. )
+         ENDIF
+
+      CASE nScrMsg == SB_THUMBPOSITION
+         nCommand := WVGSB_SLIDERTRACK
+         WAPI_SetScrollPos( ::hWnd, SB_CTL, nScrPos, .t. )
+
+      CASE nScrMsg == SB_THUMBTRACK
+         nCommand := WVGSB_ENDTRACK
+         WAPI_SetScrollPos( ::hWnd, SB_CTL, nScrPos, .t. )
+
+      CASE nScrMsg == SB_ENDSCROLL
+         nCommand := WVGSB_ENDSCROLL
+         WAPI_SetScrollPos( ::hWnd, SB_CTL, nScrPos, .t. )
+
+      ENDCASE
+
+      ::sl_editBuffer := nScrPos
+      eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, self )
+      RETURN( EVENT_HANDELLED )
 
    ENDCASE
 
