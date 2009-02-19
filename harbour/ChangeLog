@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-20 00:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added autodetection of compiler based on build data on linux.
+    + Added '-comp:bld' option to force autodetection based on build
+      data for all other platforms. This way the compiler will be
+      set to the same one as was used to build hbmk2 executable.
+    + Added support to specify object output name using the -o
+      option in conjunction with the -hbcmp parameter. Single
+      and multiple input (c. and .prg->.c) files are also supported,
+      but that's compiler dependent, currently gcc/pocc/msvc/bcc32
+      supports single file and also msvc/bcc32 support multiple files.
+    * os2/icc libprefix reset and TODO added.
+    + Added some cross-platform related markups (comments).
+    ! Fixed not stripping 'lib' from libnames for linux/gpp.
+
 2009-02-19 12:42 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgwin.c
     + More functions.
@@ -15,7 +30,7 @@
   * harbour/contrib/gtwvg/wvgdatar.prg
   * harbour/contrib/gtwvg/wvgscrlb.prg
   * harbour/contrib/gtwvg/wvgwnd.prg
-    ! WvgScrollBar() class now works in toto as per 
+    ! WvgScrollBar() class now works in toto as per
       Xbase++ documentation.
 
     ; TODO: Implementation of WvgScrollBar() in demowvg.prg.

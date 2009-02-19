@@ -56,9 +56,8 @@
 #include "hbgtinfo.ch"
 #include "hbver.ch"
 
-/* TODO: Sync default switches with Harbour build systems. */
+/* TODO: Sync default c/linker switches with Harbour build systems. */
 /* TODO: Add support for wildcarded input source. Only if only one source file is specified. */
-/* TODO: Add support for more hbmk script features. */
 /* TODO: Add support for Windows resource files. */
 /* TODO: Add support for library creation. */
 /* TODO: Add support for gtsln and gtcrs. */
@@ -69,10 +68,8 @@
 /* TODO: Cleanup on variable names. */
 
 /* -     remove -n?, -q0? from default harbour switches */
+/* +     MAIN() detection or override? Someone who's familiar with this issue pls help. */
 /* +  2. compiler autodetection for two kinds of dir layouts. */
-/* *  7. output file name auto detection should respect the compilation
-         mode, f.e.  hbmk -cmp a.prg it should generate a.{o,obj} not 'a'
-         or 'a.exe'. QUESTION: What to do for multiple .prgs? */
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
@@ -82,8 +79,8 @@ REQUEST hbm_COMP
 
 THREAD STATIC t_lQuiet := .F.
 THREAD STATIC t_lInfo := .T. /* Enabled while hbmk gets matured, should later set to .F. */
-THREAD STATIC t_cCOMP
 THREAD STATIC t_cARCH
+THREAD STATIC t_cCOMP
 
 FUNCTION Main( ... )
 
@@ -359,11 +356,14 @@ FUNCTION Main( ... )
 
    /* Autodetect compiler */
 
-   IF Empty( t_cCOMP )
+   IF Empty( t_cCOMP ) .OR. t_cCOMP == "bld"
       IF Len( aCOMPSUP ) == 1
          t_cCOMP := aCOMPSUP[ 1 ]
-      ELSEIF t_cARCH == "linux"
-         t_cCOMP := "gcc"
+      ELSEIF t_cARCH == "linux" .OR. t_cCOMP == "bld"
+         t_cCOMP := SelfCOMP()
+         IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
+            t_cCOMP := NIL
+         ENDIF
       ELSEIF ! Empty( aCOMPDET )
          /* Which compiler was used to compile ourselves? */
          cSelfCOMP := SelfCOMP()
@@ -751,16 +751,18 @@ FUNCTION Main( ... )
 
       /* Command macros:
 
-         {C}      list of C files,
-         {O}      list of object files,
-         {OA}     list of object archive (.a) files,
-         {L}      list of lib files,
-         {OPTC}   C compiler flags (user + automatic),
-         {OPTL}   linker flags (user + automatic),
-         {E}      binary name,
-         {B}      binary path,
-         {I}      include path,
-         {A}      lib path,
+         {LC}     list of C files
+         {LO}     list of object files
+         {LA}     list of object archive (.a) files
+         {LL}     list of lib files
+         {FC}     flags for C compiler (user + automatic)
+         {FL}     flags for linker (user + automatic)
+         {OD}     output dir
+         {OO}     output object (when in -hbcmp mode)
+         {OE}     output executable
+         {DB}     dir for binaries
+         {DI}     dir for includes
+         {DL}     dir for libs
          {SCRIPT} save command line to script and pass it to command as @<filename>
       */
 
@@ -789,13 +791,13 @@ FUNCTION Main( ... )
          cLibExt := ""
          cObjExt := ".o"
          cBin_CompC := iif( t_cCOMP == "gpp", "g++", "gcc" )
-         cOpt_CompC := "{C} {O} {OA} -O3 -o{E} {OPTC} -I{I} {A}"
+         cOpt_CompC := "{LC} {LO} {LA} -O3 {FC} -I{DI} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          IF t_cARCH == "linux"
-            cOpt_CompC += " -Wl,--start-group {L} -Wl,--end-group"
+            cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
          ELSE
-            cOpt_CompC += " {L}"
+            cOpt_CompC += " {LL}"
             aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
          ENDIF
          IF s_lMAP
@@ -809,6 +811,11 @@ FUNCTION Main( ... )
          ENDIF
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
+            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+               AAdd( s_aOPTC, "-o{OO}" )
+            ENDIF
+         ELSE
+            AAdd( s_aOPTC, "-o{OE}" )
          ENDIF
 
          /* Always inherit/reproduce some flags from self */
@@ -849,14 +856,14 @@ FUNCTION Main( ... )
          cLibExt := NIL
          cObjExt := ".o"
          cBin_CompC := "gcc"
-         cOpt_CompC := "{C} {O} {OA} -O3 -o{E} {OPTC} -I{I} {A}"
+         cOpt_CompC := "{LC} {LO} {LA} -O3 {FC} -I{DI} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          IF s_lMAP
             cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
          ENDIF
          IF s_lSHARED
-            cOpt_CompC += " -L{B}"
+            cOpt_CompC += " -L{DB}"
          ENDIF
          IF t_cCOMP == "gcc"
             cOpt_CompC += " -mno-cygwin"
@@ -865,9 +872,9 @@ FUNCTION Main( ... )
             cOpt_CompC += " -Zwin32"
          ENDIF
          IF t_cCOMP == "mingw"
-            cOpt_CompC += " -Wl,--start-group {L} -Wl,--end-group"
+            cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
          ELSE
-            cOpt_CompC += " {L}"
+            cOpt_CompC += " {LL}"
             aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
          ENDIF
          IF s_lSTRIP
@@ -875,6 +882,11 @@ FUNCTION Main( ... )
          ENDIF
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
+            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+               AAdd( s_aOPTC, "-o{OO}" )
+            ENDIF
+         ELSE
+            AAdd( s_aOPTC, "-o{OE}" )
          ENDIF
 
       CASE ( t_cARCH == "dos" .AND. t_cCOMP == "djgpp" ) .OR. ;
@@ -884,16 +896,16 @@ FUNCTION Main( ... )
          cLibExt := ""
          cObjExt := ".o"
          cBin_CompC := "gcc"
-         cOpt_CompC := "{C} {O} {OA} -O3 -o{E} {OPTC} -I{I} {A}{SCRIPT}"
+         cOpt_CompC := "{LC} {LO} {LA} -O3 {FC} -I{DI} {DL}{SCRIPT}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          IF t_cCOMP == "rsx32"
             cOpt_CompC  += " -Zrsx32"
          ENDIF
          IF t_cCOMP == "djgpp"
-            cOpt_CompC += " -Wl,--start-group {L} -Wl,--end-group"
+            cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
          ELSE
-            cOpt_CompC += " {L}"
+            cOpt_CompC += " {LL}"
             aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
@@ -902,6 +914,11 @@ FUNCTION Main( ... )
          ENDIF
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
+            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+               AAdd( s_aOPTC, "-o{OO}" )
+            ENDIF
+         ELSE
+            AAdd( s_aOPTC, "-o{OE}" )
          ENDIF
 
       /* Watcom family */
@@ -913,9 +930,9 @@ FUNCTION Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386"
-         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {OPTC} {C}"
+         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {FC} {LC}"
          cBin_Link := "wlink"
-         cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {OPTL} NAME {E} {O} {A} {L}{SCRIPT}"
+         cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
          ENDIF
@@ -928,9 +945,9 @@ FUNCTION Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386"
-         cOpt_CompC := "-w3 -5s -5r -fp5 -onaehtzr -zq -zt0 -bt=NT -oi+ -s {OPTC} {C}"
+         cOpt_CompC := "-w3 -5s -5r -fp5 -onaehtzr -zq -zt0 -bt=NT -oi+ -s {FC} {LC}"
          cBin_Link := "wlink"
-         cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {A} {L}{SCRIPT}"
+         cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
          ENDIF
@@ -946,16 +963,16 @@ FUNCTION Main( ... )
             cObjExt := ".o"
             cBin_CompC := "gcc"
             /* OS/2 needs a space between -o and file name following it */
-            cOpt_CompC := "{C} {O} -O3 -o {E} {OPTC} -I{I} {A}"
+            cOpt_CompC := "{LC} {LO} -O3 {FC} -I{DI} {DL}"
             cLibPathPrefix := "-L"
             cLibPathSep := " "
             IF s_lMAP
                cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
             ENDIF
             IF s_lSHARED
-               cOpt_CompC += " -L{B}"
+               cOpt_CompC += " -L{DB}"
             ENDIF
-            cOpt_CompC += " {L}"
+            cOpt_CompC += " {LL}"
             aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "socket" } )
             IF s_lSTRIP
@@ -963,6 +980,11 @@ FUNCTION Main( ... )
             ENDIF
             IF lStopAfterCComp
                AAdd( s_aOPTC, "-c" )
+               IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+                  AAdd( s_aOPTC, "-o {OO}" )
+               ENDIF
+            ELSE
+               AAdd( s_aOPTC, "-o {OE}" )
             ENDIF
 
          CASE t_cCOMP == "owatcom"
@@ -973,19 +995,21 @@ FUNCTION Main( ... )
             cLibPathPrefix := "LIBPATH "
             cLibPathSep := " "
             cBin_CompC := "wpp386"
-            cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {OPTC} {C}"
+            cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {FC} {LC}"
             cBin_Link := "wlink"
-            cOpt_Link := "OP stack=65536 OP CASEEXACT {OPTL} NAME {E} {O} {A} {L}{SCRIPT}"
+            cOpt_Link := "OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
             IF s_lDEBUG
                cOpt_Link := "DEBUG " + cOpt_Link
             ENDIF
 
          CASE t_cCOMP == "icc"
-            cLibPrefix := "{A}\"
+            cLibPrefix := ""
             cLibExt := ".lib"
             cObjExt := ".obj"
+            cLibPathPrefix := NIL /* TODO */
+            cLibPathSep := NIL /* TODO */
             cBin_CompC := "icc"
-            cOpt_CompC := "/Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp {OPTC} -I{I} {C}"
+            cOpt_CompC := "/Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp {FC} -I{DI} {LC}" /* TODO: {DL} */
             IF s_lDEBUG
                AAdd( s_aOPTC, "-MTd -Zi" )
             ENDIF
@@ -1004,9 +1028,9 @@ FUNCTION Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386"
-         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=LINUX {OPTC} {C}"
+         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=LINUX {FC} {LC}"
          cBin_Link := "wlink"
-         cOpt_Link := "ALL SYS LINUX OP CASEEXACT {OPTL} NAME {E} {O} {A} {L}{SCRIPT}"
+         cOpt_Link := "ALL SYS LINUX OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
          ENDIF
@@ -1025,11 +1049,21 @@ FUNCTION Main( ... )
          cLibExt := ".lib"
          cObjExt := ".obj"
          cBin_CompC := "bcc32"
-         cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {OPTC} -e{E} -I{I} -L{A} {C} {O} {L}"
+         cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {FC} -I{DI} -L{DL} {LC} {LO} {LL}"
          cLibPathPrefix := ""
          cLibPathSep := ";"
+         IF lStopAfterCComp
+            AAdd( s_aOPTC, "-c" )
+            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+               AAdd( s_aOPTC, "-o{OO}" )
+            ELSE
+               AAdd( s_aOPTC, "-n{OD}" )
+            ENDIF
+         ELSE
+            AAdd( s_aOPTC, "-e{OE}" )
+         ENDIF
          IF s_lSHARED
-            cOpt_CompC += " -L{B}"
+            cOpt_CompC += " -L{DB}"
          ENDIF
          IF s_lMAP
             cOpt_CompC += " -M"
@@ -1052,7 +1086,7 @@ FUNCTION Main( ... )
          cObjExt := ".obj"
          cBin_CompC := "cl"
 
-         cOpt_CompC := "-nologo -W3 {OPTC} -I{I} {C} {O} -Fe{E} /link {A} {OPTL} {L}"
+         cOpt_CompC := "-nologo -W3 {FC} -I{DI} {LC} {LO} /link {DL} {FL} {LL}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF s_lMAP
@@ -1060,9 +1094,16 @@ FUNCTION Main( ... )
          ENDIF
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
+            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+               AAdd( s_aOPTC, "-Fo{OO}" )
+            ELSE
+               AAdd( s_aOPTC, "-Fo{OD}" )
+            ENDIF
+         ELSE
+            AAdd( s_aOPTC, "-Fe{OE}" )
          ENDIF
          IF s_lSHARED
-            AAdd( s_aOPTL, "/libpath:{B}" )
+            AAdd( s_aOPTL, "/libpath:{DB}" )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
          /* TOFIX: The two build systems should generate the same .dll name, otherwise
@@ -1079,16 +1120,23 @@ FUNCTION Main( ... )
          cLibExt := ".lib"
          cObjExt := ".obj"
          cBin_CompC := "pocc"
-         cOpt_CompC := "/Ze /Go /Ot /Tx86-coff {OPTC} /I{I} {C}"
+         cOpt_CompC := "/Ze /Go /Ot /Tx86-coff {FC} /I{DI} {LC}"
          IF s_lMT
             AAdd( s_aOPTC, "/MT" )
          ENDIF
+         IF lStopAfterCComp
+            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+               AAdd( s_aOPTC, "/Fo{OO}" )
+            ENDIF
+         ELSE
+            AAdd( s_aOPTC, "/Fo{OE}" )
+         ENDIF
          cBin_Link := "polink"
-         cOpt_Link := "{O} {A} {OPTL} {L}"
+         cOpt_Link := "{LO} {DL} {FL} {LL}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF s_lSHARED
-            AAdd( s_aOPTL, "/libpath:{B}" )
+            AAdd( s_aOPTL, "/libpath:{DB}" )
          ENDIF
          IF s_lMAP
             AAdd( s_aOPTL, "/map" )
@@ -1099,12 +1147,12 @@ FUNCTION Main( ... )
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
 
       /* TODO */
-      CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"
-      CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"
+      CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"  /* NOTE: Cross-platform: win/amd64 on win/x86 */
+      CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "dmc"
       CASE t_cARCH == "win" .AND. t_cCOMP == "icc"
-      CASE t_cARCH == "win" .AND. t_cCOMP == "mingwce"
-      CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"
+      CASE t_cARCH == "win" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wince/ARM on win/x86 */
+      CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "xcc"
       ENDCASE
 
@@ -1126,7 +1174,7 @@ FUNCTION Main( ... )
       /* Dress lib names. */
       s_aLIB := ListCook( s_aLIB, cLibPrefix, cLibExt )
       /* Strip 'lib' prefix when the target is gcc family. */
-      IF t_cCOMP $ "gcc|mingw|djgpp|rsxnt|rsx32"
+      IF t_cCOMP $ "gcc|gpp|mingw|djgpp|rsxnt|rsx32"
          FOR EACH tmp IN s_aLIB
             IF Left( tmp, 3 ) == "lib"
                tmp := SubStr( tmp, 4 )
@@ -1145,18 +1193,21 @@ FUNCTION Main( ... )
 
             /* Compiling */
 
-            cOpt_CompC := StrTran( cOpt_CompC, "{C}"   , ArrayToList( ArrayJoin( ListCook( s_aPRG, NIL, ".c" ), s_aC ) ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{O}"   , ArrayToList( ListCook( s_aOBJUSER, cObjPrefix ) ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OA}"  , ArrayToList( s_aOBJA ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{L}"   , ArrayToList( s_aLIB ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OPTC}", iif( s_lBLDFLGC, cSelfFlagC + " ", "" ) +;
+            /* Order is significant. */
+            cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListCook( s_aPRG, NIL, ".c" ), s_aC ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LO}"  , ArrayToList( ListCook( s_aOBJUSER, cObjPrefix ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LA}"  , ArrayToList( s_aOBJA ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LL}"  , ArrayToList( s_aLIB ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{FC}"  , iif( s_lBLDFLGC, cSelfFlagC + " ", "" ) +;
                                                          GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( s_aOPTC ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OPTL}", iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
+            cOpt_CompC := StrTran( cOpt_CompC, "{FL}"  , iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                          GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{E}"   , PathSepToTarget( s_cPROGNAME ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{B}"   , s_cHB_BIN_INSTALL )
-            cOpt_CompC := StrTran( cOpt_CompC, "{I}"   , s_cHB_INC_INSTALL )
-            cOpt_CompC := StrTran( cOpt_CompC, "{A}"   , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , PathSepToTarget( FN_DirGet( s_cPROGNAME ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cObjPrefix ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{OE}"  , PathSepToTarget( s_cPROGNAME ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{DB}"  , s_cHB_BIN_INSTALL )
+            cOpt_CompC := StrTran( cOpt_CompC, "{DI}"  , s_cHB_INC_INSTALL )
+            cOpt_CompC := StrTran( cOpt_CompC, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
 
             cOpt_CompC := AllTrim( cOpt_CompC )
 
@@ -1199,14 +1250,15 @@ FUNCTION Main( ... )
 
          /* Linking */
 
-         cOpt_Link := StrTran( cOpt_Link, "{O}"   , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
-         cOpt_Link := StrTran( cOpt_Link, "{OA}"  , ArrayToList( s_aOBJA ) )
-         cOpt_Link := StrTran( cOpt_Link, "{L}"   , ArrayToList( s_aLIB ) )
-         cOpt_Link := StrTran( cOpt_Link, "{OPTL}", iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
+         /* Order is significant. */
+         cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
+         cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( s_aOBJA ) )
+         cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( s_aLIB ) )
+         cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                     GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
-         cOpt_Link := StrTran( cOpt_Link, "{E}"   , PathSepToTarget( s_cPROGNAME ) )
-         cOpt_Link := StrTran( cOpt_Link, "{B}"   , s_cHB_BIN_INSTALL )
-         cOpt_Link := StrTran( cOpt_Link, "{A}"   , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
+         cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( s_cPROGNAME ) )
+         cOpt_Link := StrTran( cOpt_Link, "{DB}"  , s_cHB_BIN_INSTALL )
+         cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
 
          cOpt_Link := AllTrim( cOpt_Link )
 
@@ -1794,7 +1846,9 @@ STATIC PROCEDURE ShowHelp()
       "  -hblnk           act as linker. Currently this is the same as -q" ,;
       "  -arch=<arch>     assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
       "  -comp=<comp>     use specific compiler. Same as HB_COMPILER envvar" ,;
-      "  -info            turn on informational messages (current default)" ,;
+      "                   Special value:" ,;
+      "                    - bld: use original build settings (default on *nix)" ,;
+      "  -info            turn on informational messages (default)" ,;
       "  -quiet           suppress logo and informational messages" ,;
       "" ,;
       "Notes:" ,;
@@ -1812,7 +1866,7 @@ STATIC PROCEDURE ShowHelp()
       "    using '&', '|' operators and grouped by parantheses." ,;
       "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!dmc}, {(win|linux)&!owatcom}" ,;
       "  - Defaults and feature support vary by architecture/compiler." ,;
-      "  - HB_COMPILER values supported for each HB_ARCHITECTURE:" ,;
+      "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, gpp, owatcom" ,;
       "    darwin : gcc" ,;
       "    win    : gcc, mingw, msvc, bcc32, owatcom, pocc, pocc64," ,;
