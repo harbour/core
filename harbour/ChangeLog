@@ -8,6 +8,81 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-18 13:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk2.prg
+    + Added new TODOs.
+    + Now using GTCGI as the GT.
+    + Added -info option to enable informational output.
+      (currently this is the default for testing period)
+    + Added -arch=<arch> command line option. Same as HB_ARCHITECTURE.
+      Added -comp=<comp> command line option. Same as HB_COMPILER.
+      envvars are kept for compatibility.
+    + Added -hblnk option to give plave for hblnk script behaviour
+      emulation.
+    * Changed -cc, -cmp options to -hbcc, -hbcmp respecitvely.
+    + Changed -hbcc, -hbcmp, -hblnk switches to turn off information
+      output and turn on quiet mode by default.
+    + Added autodetection of architecture when unique to
+      architecture compiler is choosen manually. IOW, when
+      -comp=msvc|mingw|pocc|dmc|xcc is passed the architecture will
+      be set to win automatically. When -comp=djgpp is used,
+      dos will be selected.
+    ! Fixed ordering of compiler autodetection because f.e. owatcom
+      bin dir holds a 'cl.exe', which made hbmk2 falsely detect msvc.
+    + Added trick which I'm not sure I like, and may cause problems
+      and seemingly unpredictable behaviour, but could also help
+      in some environments where multiple compilers are setup in
+      parallel (this isn't a recommended scenario for various other
+      reasons, so maybe we shouldn't support it further). So from
+      now on the compiler autodetection will first look for the
+      compiler used to build hbmk2.exe, and check for the rest
+      afterwards. This feature is turned off for msvc builds of
+      hbmk2.exe because it breaks owatcom autodetection.
+    + Added possibility to pass a plain dir by using -odir[\|/]
+      switch. The final name will be determined by first input
+      file name, if this one also has a dir, -o option will be
+      ignored. Added logic to handle separator differences, this
+      wasn't tested to a great deal.
+    + Added -Wl,--start-group support for linux/gcc|gpp, win/mingw,
+      dos/djgpp.
+    ! Fixed owatcom support to setup library paths.
+    ! Fixed linux/owatcom to use link script.
+    * Some adjustments to win/owatcom C compiler settings. I guess
+      the ones in .cf should also need a cleanup.
+    * Few minor indentation problems fixed.
+    ! C compiler and linker scripts now got an extension in
+      the generated temp filename to make some of them happy
+      (owatcom in this case). .cpl is used for compiler scripts,
+      .lnk for linker ones.
+    + Compiler autodetection now also looks in hbmk2 executable
+      dir before looking into the PATH.
+    ! Link script content was wrong due to typo.
+    ! Fixed problem with library paths being wrong (doubly
+      decorated) in the link command. This may also fix some
+      problems with double extensions and final .c file cleanup.
+    ! Fixed to add hbdebug lib when building in shared mode.
+    ! Fixed typo in automatically adding './' on *nix systems.
+    ; Please test, I definitely couldn't retest all scenaros
+      after all these changes.
+
+  * bin/postinst.bat
+    * Adapted change in mode modifier switches, also
+      added new -hblnk one.
+  * utils/hbmk/examples/winapi.hbp
+    + Added mapi32.
+  + utils/hbmk/examples/contrib.hbp
+    + Added .hbp file for popular and portable only contribs.
+  * config/win/owatcom.cf
+    - Removed unnecessary system libs.
+  * contrib/hbvpdf/hbvpdft.prg
+    * hbwhat32 -> hbwhat in comment.
+  * contrib/hbwin/wapi_commctrl.c
+  * contrib/hbwin/wapi_winuser.c
+    ! Fixed harbour-project page link in header.
+  * contrib/hbwin/hbwapi.h
+    * Formatting (indenting the whole file content inside
+      self-guard isn't necessary.)
+
 2009-02-19 12:49 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/thread.c
     ! fixed the typo in order of sending signals in _hb_thread_cond_signal()
@@ -16,7 +91,7 @@
 
 2009-02-18 17:05 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgscrlb.prg
-    * Disabled structure support for time being as 
+    * Disabled structure support for time being as
       build process is unable to locate cstruct.c, etc. headers.
       Viktor?
 

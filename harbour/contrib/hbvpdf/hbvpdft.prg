@@ -4,11 +4,11 @@
 
 //-------------------------\\
 //
-//    Program Cl_Pdf.prg   
+//    Program Cl_Pdf.prg
 //
 //    Original   : Victor K.    . http://www.ihaveparts.com
 //
-//    Class Code : Pritpal Bedi . http://www.vouchcac.com 
+//    Class Code : Pritpal Bedi . http://www.vouchcac.com
 //
 //-------------------------\\
 
@@ -41,13 +41,13 @@
 
 CREATE CLASS tPdf
 
-#ifndef __HARBOUR__   
+#ifndef __HARBOUR__
 EXPORT:
 #endif
 
 VAR aReport
 
-#ifndef __HARBOUR__   
+#ifndef __HARBOUR__
 EXPORT:
 #endif
 
@@ -187,7 +187,7 @@ next
 ::aReport[ DOCLEN       ] := 0
 cTemp                     := "%PDF-1.3" + CRLF
 ::aReport[ DOCLEN       ] += len( cTemp )
-   
+
 fwrite( ::aReport[ HANDLE ], cTemp )
 
 RETURN self
@@ -273,7 +273,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:Normal()
 #else
-METHOD Normal() 
+METHOD Normal()
 #endif
 local cName := ::GetFontInfo( "NAME" )
 
@@ -295,7 +295,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:Italic()
 #else
-METHOD Italic() 
+METHOD Italic()
 #endif
 local cName := ::GetFontInfo( "NAME" )
 
@@ -304,7 +304,7 @@ local cName := ::GetFontInfo( "NAME" )
    ELSEIF cName = "Helvetica"
       ::aReport[ FONTNAME ] := 7
    ELSE
-      ::aReport[ FONTNAME ] := 11  
+      ::aReport[ FONTNAME ] := 11
    ENDIF
    aadd( ::aReport[ PAGEFONTS ], ::aReport[ FONTNAME ] )
    IF ascan( ::aReport[ FONTS ], { |arr| arr[1] == ::aReport[ FONTNAME ] } ) == 0
@@ -317,7 +317,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:Bold()
 #else
-METHOD Bold() 
+METHOD Bold()
 #endif
 local cName := ::GetFontInfo( "NAME" )
 
@@ -341,7 +341,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:BoldItalic()
 #else
-METHOD BoldItalic() 
+METHOD BoldItalic()
 #endif
 local cName := ::GetFontInfo( "NAME" )
 
@@ -365,7 +365,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:BookAdd( cTitle, nLevel, nPage, nLine )
 #else
-METHOD BookAdd( cTitle, nLevel, nPage, nLine ) 
+METHOD BookAdd( cTitle, nLevel, nPage, nLine )
 #endif
 
 aadd( ::aReport[ BOOKMARK ], { nLevel, alltrim( cTitle ), 0, 0, 0, 0, 0, 0, nPage, IIF( nLevel == 1, ::aReport[ PAGEY ], ::aReport[ PAGEY ] - nLine * 72 / ::aReport[ LPI ] ) })
@@ -377,7 +377,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:BookClose( )
 #else
-METHOD BookClose( ) 
+METHOD BookClose( )
 #endif
 
 ::aReport[ BOOKMARK ] := nil
@@ -389,7 +389,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:BookOpen( )
 #else
-METHOD BookOpen( ) 
+METHOD BookOpen( )
 #endif
 
 ::aReport[ BOOKMARK ] := {}
@@ -401,7 +401,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:Box( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId )
 #else
-METHOD Box( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId ) 
+METHOD Box( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId )
 #endif
 
 local cBoxColor
@@ -496,7 +496,7 @@ return nil
 #ifdef __XPP__
 METHOD tPdf:Center( cString, nRow, nCol, cUnits, lExact, cId )
 #else
-METHOD Center( cString, nRow, nCol, cUnits, lExact, cId ) 
+METHOD Center( cString, nRow, nCol, cUnits, lExact, cId )
 #endif
 
 local nLen, nAt
@@ -528,7 +528,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:Close()
 #else
-METHOD Close() 
+METHOD Close()
 #endif
 
 local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
@@ -674,7 +674,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:Image( cFile, nRow, nCol, cUnits, nHeight, nWidth, cId )
 #else
-METHOD Image( cFile, nRow, nCol, cUnits, nHeight, nWidth, cId ) 
+METHOD Image( cFile, nRow, nCol, cUnits, nHeight, nWidth, cId )
 #endif
 
 DEFAULT nRow    TO ::aReport[ REPORTLINE ]
@@ -718,7 +718,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:Length( cString )
 #else
-METHOD Length( cString ) 
+METHOD Length( cString )
 #endif
 
 local nWidth := 0.00, nI, nLen, nArr, nAdd := ( ::aReport[ FONTNAME ] - 1 ) % 4
@@ -745,7 +745,7 @@ RETURN nWidth
 #ifdef __XPP__
 METHOD tPdf:NewLine( n )
 #else
-METHOD NewLine( n ) 
+METHOD NewLine( n )
 #endif
 
 DEFAULT n TO 1
@@ -763,7 +763,7 @@ RETURN ::aReport[ REPORTLINE ]
 #ifdef __XPP__
 METHOD tPdf:NewPage( _cPageSize, _cPageOrient, _nLpi, _cFontName, _nFontType, _nFontSize )
 #else
-METHOD NewPage( _cPageSize, _cPageOrient, _nLpi, _cFontName, _nFontType, _nFontSize ) 
+METHOD NewPage( _cPageSize, _cPageOrient, _nLpi, _cFontName, _nFontType, _nFontSize )
 #endif
 
 
@@ -792,7 +792,7 @@ DEFAULT _nFontSize   TO ::aReport[ FONTSIZE ]
 
    ::DrawHeader()
 
-   ::aReport[ REPORTLINE   ] := 0 
+   ::aReport[ REPORTLINE   ] := 0
    ::aReport[ FONTNAMEPREV ] := 0
    ::aReport[ FONTSIZEPREV ] := 0
 
@@ -803,7 +803,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:PageSize( _cPageSize )
 #else
-METHOD PageSize( _cPageSize ) 
+METHOD PageSize( _cPageSize )
 #endif
 
 local nSize, aSize := { { "LETTER",    8.50, 11.00 }, ;
@@ -847,7 +847,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:PageOrient( _cPageOrient )
 #else
-METHOD PageOrient( _cPageOrient ) 
+METHOD PageOrient( _cPageOrient )
 #endif
 
 DEFAULT _cPageOrient TO "P"
@@ -861,7 +861,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:PageNumber( n )
 #else
-METHOD PageNumber( n ) 
+METHOD PageNumber( n )
 #endif
 
 DEFAULT n TO 0
@@ -875,7 +875,7 @@ RETURN ::aReport[ REPORTPAGE ]
 #ifdef __XPP__
 METHOD tPdf:Reverse( cString )
 #else
-METHOD Reverse( cString ) 
+METHOD Reverse( cString )
 #endif
 
 RETURN cString + chr(255)
@@ -885,7 +885,7 @@ RETURN cString + chr(255)
 #ifdef __XPP__
 METHOD tPdf:RJust( cString, nRow, nCol, cUnits, lExact, cId )
 #else
-METHOD RJust( cString, nRow, nCol, cUnits, lExact, cId ) 
+METHOD RJust( cString, nRow, nCol, cUnits, lExact, cId )
 #endif
 
 local nLen, nAdj := 1.0, nAt
@@ -918,7 +918,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:SetFont( _cFont, _nType, _nSize, cId )
 #else
-METHOD SetFont( _cFont, _nType, _nSize, cId ) 
+METHOD SetFont( _cFont, _nType, _nSize, cId )
 #endif
 
 DEFAULT _cFont TO "Times"
@@ -952,7 +952,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:SetLPI(_nLpi)
 #else
-METHOD SetLPI(_nLpi) 
+METHOD SetLPI(_nLpi)
 #endif
 
 local cLpi := alltrim(str(_nLpi))
@@ -969,7 +969,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:StringB( cString )
 #else
-METHOD StringB( cString ) 
+METHOD StringB( cString )
 #endif
 
 cString := strtran( cString, "(", "\(" )
@@ -982,7 +982,7 @@ RETURN cString
 #ifdef __XPP__
 METHOD tPdf:TextCount( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits )
 #else
-METHOD TextCount( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits ) 
+METHOD TextCount( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits )
 #endif
 
 RETURN ::Text( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, .f. )
@@ -992,7 +992,7 @@ RETURN ::Text( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, .f. )
 #ifdef __XPP__
 METHOD tPdf:Text( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, cColor, lPrint )
 #else
-METHOD Text( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, cColor, lPrint ) 
+METHOD Text( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, cColor, lPrint )
 #endif
 
 local cDelim := chr(0)+chr(9)+chr(10)+chr(13)+chr(26)+chr(32)+chr(138)+chr(141)
@@ -1001,7 +1001,7 @@ local lParagraph, nSpace, nNew, nTokenLen, nCRLF, nTokens, nLen
 
 DEFAULT nTab     TO -1
 DEFAULT cUnits   TO "R"
-DEFAULT nJustify TO 4 
+DEFAULT nJustify TO 4
 DEFAULT lPrint   TO .t.
 DEFAULT cColor   TO ""
 
@@ -1111,7 +1111,7 @@ RETURN nLines
 #ifdef __XPP__
 METHOD tPdf:UnderLine( cString )
 #else
-METHOD UnderLine( cString ) 
+METHOD UnderLine( cString )
 #endif
 
 RETURN cString + chr(254)
@@ -1121,10 +1121,10 @@ RETURN cString + chr(254)
 #ifdef __XPP__
 METHOD tPdf:OpenHeader( cFile )
 #else
-METHOD OpenHeader( cFile ) 
+METHOD OpenHeader( cFile )
 #endif
 
-local nAt, cCmd 
+local nAt, cCmd
 
 DEFAULT cFile TO ""
 
@@ -1134,7 +1134,7 @@ DEFAULT cFile TO ""
          at( " ", cFile ) > 0 .or. ;
          ( at( " ", cFile ) == 0 .and. len( cFile ) > 8 ) .or. ;
          ( ( nAt := at( ".", cFile )) > 0 .and. len( substr( cFile, nAt + 1 )) > 3 )
-         
+
          cCmd := "copy " + cFile + " temp.tmp > nul"
          RunExternal( cCmd )
 
@@ -1154,7 +1154,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:EditOnHeader()
 #else
-METHOD EditOnHeader() 
+METHOD EditOnHeader()
 #endif
 
 ::aReport[ HEADEREDIT ] := .t.
@@ -1167,7 +1167,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:EditOffHeader()
 #else
-METHOD EditOffHeader() 
+METHOD EditOffHeader()
 #endif
 
 ::aReport[ HEADEREDIT ] := .f.
@@ -1180,7 +1180,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:CloseHeader()
 #else
-METHOD CloseHeader() 
+METHOD CloseHeader()
 #endif
 
    ::aReport[ HEADER ] := {}
@@ -1192,7 +1192,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:DeleteHeader( cId )
 #else
-METHOD DeleteHeader( cId ) 
+METHOD DeleteHeader( cId )
 #endif
 
 local nRet := -1, nId
@@ -1211,7 +1211,7 @@ RETURN nRet
 #ifdef __XPP__
 METHOD tPdf:EnableHeader( cId )
 #else
-METHOD EnableHeader( cId ) 
+METHOD EnableHeader( cId )
 #endif
 
 local nId
@@ -1228,7 +1228,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:DisableHeader( cId )
 #else
-METHOD DisableHeader( cId ) 
+METHOD DisableHeader( cId )
 #endif
 
 local nId
@@ -1245,7 +1245,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:SaveHeader( cFile )
 #else
-METHOD SaveHeader( cFile ) 
+METHOD SaveHeader( cFile )
 #endif
 
 local cCmd
@@ -1262,7 +1262,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:Header( cFunction, cId, arr )
 #else
-METHOD Header( cFunction, cId, arr ) 
+METHOD Header( cFunction, cId, arr )
 #endif
 
 local nId, nI, nLen, nIdLen
@@ -1304,7 +1304,7 @@ RETURN cId
 #ifdef __XPP__
 METHOD tPdf:DrawHeader()
 #else
-METHOD DrawHeader() 
+METHOD DrawHeader()
 #endif
 
 local nI, _nFont, _nSize, nLen := len( ::aReport[ HEADER ] )
@@ -1362,7 +1362,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:Margins( nTop, nLeft, nBottom )
 #else
-METHOD Margins( nTop, nLeft, nBottom ) 
+METHOD Margins( nTop, nLeft, nBottom )
 #endif
 
 local nI, nLen := len( ::aReport[ HEADER ] ), nTemp, aTemp, nHeight
@@ -1540,7 +1540,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:CreateHeader( _file, _size, _orient, _lpi, _width )
 #else
-METHOD CreateHeader( _file, _size, _orient, _lpi, _width ) 
+METHOD CreateHeader( _file, _size, _orient, _lpi, _width )
 #endif
 
 local ;
@@ -1640,7 +1640,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:ImageInfo( cFile )
 #else
-METHOD ImageInfo( cFile ) 
+METHOD ImageInfo( cFile )
 #endif
 
 local cTemp := upper(substr( cFile, rat(".", cFile) + 1 )), aTemp := {}
@@ -1657,7 +1657,7 @@ RETURN aTemp
 #ifdef __XPP__
 METHOD tPdf:TIFFInfo( cFile )
 #else
-METHOD TIFFInfo( cFile ) 
+METHOD TIFFInfo( cFile )
 #endif
 
 local c40    := chr(0)+chr(0)+chr(0)+chr(0)
@@ -1832,7 +1832,7 @@ return aTemp
 #ifdef __XPP__
 METHOD tPdf:JPEGInfo( cFile )
 #else
-METHOD JPEGInfo( cFile ) 
+METHOD JPEGInfo( cFile )
 #endif
 
 local c255, nAt, nHandle
@@ -1870,7 +1870,7 @@ return aTemp
 #ifdef __XPP__
 METHOD tPdf:BookCount( nRecno, nCurLevel )
 #else
-METHOD BookCount( nRecno, nCurLevel ) 
+METHOD BookCount( nRecno, nCurLevel )
 #endif
 
 local nTempLevel, nCount := 0, nLen := len( ::aReport[ BOOKMARK ] )
@@ -1893,7 +1893,7 @@ return -1 * nCount
 #ifdef __XPP__
 METHOD tPdf:BookFirst( nRecno, nCurLevel, nObj )
 #else
-METHOD BookFirst( nRecno, nCurLevel, nObj ) 
+METHOD BookFirst( nRecno, nCurLevel, nObj )
 #endif
 
 local nFirst := 0, nLen := len( ::aReport[ BOOKMARK ] )
@@ -1910,7 +1910,7 @@ return IIF( nFirst == 0, nFirst, nObj + nFirst )
 #ifdef __XPP__
 METHOD tPdf:BookLast( nRecno, nCurLevel, nObj )
 #else
-METHOD BookLast( nRecno, nCurLevel, nObj ) 
+METHOD BookLast( nRecno, nCurLevel, nObj )
 #endif
 
 local nLast := 0, nLen := len( ::aReport[ BOOKMARK ] )
@@ -1932,7 +1932,7 @@ return IIF( nLast == 0, nLast, nObj + nLast )
 #ifdef __XPP__
 METHOD tPdf:BookNext( nRecno, nCurLevel, nObj )
 #else
-METHOD BookNext( nRecno, nCurLevel, nObj ) 
+METHOD BookNext( nRecno, nCurLevel, nObj )
 #endif
 
 local nTempLevel, nNext := 0, nLen := len( ::aReport[ BOOKMARK ] )
@@ -1956,7 +1956,7 @@ return IIF( nNext == 0, nNext, nObj + nNext )
 #ifdef __XPP__
 METHOD tPdf:BookParent( nRecno, nCurLevel, nObj )
 #else
-METHOD BookParent( nRecno, nCurLevel, nObj ) 
+METHOD BookParent( nRecno, nCurLevel, nObj )
 #endif
 
 local nTempLevel
@@ -1977,7 +1977,7 @@ return IIF( nParent == 0, nObj - 1, nObj + nParent )
 #ifdef __XPP__
 METHOD tPdf:BookPrev( nRecno, nCurLevel, nObj )
 #else
-METHOD BookPrev( nRecno, nCurLevel, nObj ) 
+METHOD BookPrev( nRecno, nCurLevel, nObj )
 #endif
 
 local nTempLevel
@@ -2002,7 +2002,7 @@ return IIF( nPrev == 0, nPrev, nObj + nPrev )
 #ifdef __XPP__
 METHOD tPdf:CheckLine( nRow )
 #else
-METHOD CheckLine( nRow ) 
+METHOD CheckLine( nRow )
 #endif
 
    IF nRow + ::aReport[ PDFTOP] > ::aReport[ PDFBOTTOM ]
@@ -2017,7 +2017,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:GetFontInfo( cParam )
 #else
-METHOD GetFontInfo( cParam ) 
+METHOD GetFontInfo( cParam )
 #endif
 
 local cRet
@@ -2040,7 +2040,7 @@ return cRet
 #ifdef __XPP__
 METHOD tPdf:M2R( mm )
 #else
-METHOD M2R( mm ) 
+METHOD M2R( mm )
 #endif
 
 return int( ::aReport[ LPI ] * mm / 25.4 )
@@ -2050,7 +2050,7 @@ return int( ::aReport[ LPI ] * mm / 25.4 )
 #ifdef __XPP__
 METHOD tPdf:M2X( n )
 #else
-METHOD M2X( n ) 
+METHOD M2X( n )
 #endif
 
 return n * 72 / 25.4
@@ -2058,9 +2058,9 @@ return n * 72 / 25.4
 //-------------------------\\
 
 #ifdef __XPP__
-METHOD tPdf:M2Y( n ) 
+METHOD tPdf:M2Y( n )
 #else
-METHOD M2Y( n ) 
+METHOD M2Y( n )
 #endif
 
 return ::aReport[ PAGEY ] -  n * 72 / 25.4
@@ -2070,7 +2070,7 @@ return ::aReport[ PAGEY ] -  n * 72 / 25.4
 #ifdef __XPP__
 METHOD tPdf:R2D( nRow )
 #else
-METHOD R2D( nRow ) 
+METHOD R2D( nRow )
 #endif
 
 return ::aReport[ PAGEY ] - nRow * 72 / ::aReport[ LPI ]
@@ -2080,7 +2080,7 @@ return ::aReport[ PAGEY ] - nRow * 72 / ::aReport[ LPI ]
 #ifdef __XPP__
 METHOD tPdf:R2M( nRow )
 #else
-METHOD R2M( nRow ) 
+METHOD R2M( nRow )
 #endif
 
 return 25.4 * nRow / ::aReport[ LPI ]
@@ -2090,7 +2090,7 @@ return 25.4 * nRow / ::aReport[ LPI ]
 #ifdef __XPP__
 METHOD tPdf:X2M( n )
 #else
-METHOD X2M( n ) 
+METHOD X2M( n )
 #endif
 
 return n * 25.4 / 72
@@ -2100,7 +2100,7 @@ return n * 25.4 / 72
 #ifdef __XPP__
 METHOD tPdf:TextPrint( nI, nLeft, lParagraph, nJustify, nSpace, nNew, nLength, nLineLen, nLines, nStart, cString, cDelim, cColor, lPrint )
 #else
-METHOD TextPrint( nI, nLeft, lParagraph, nJustify, nSpace, nNew, nLength, nLineLen, nLines, nStart, cString, cDelim, cColor, lPrint ) 
+METHOD TextPrint( nI, nLeft, lParagraph, nJustify, nSpace, nNew, nLength, nLineLen, nLines, nStart, cString, cDelim, cColor, lPrint )
 #endif
 
 local nFinish, nL, nB, nJ, cToken, nRow
@@ -2151,7 +2151,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:TextNextPara( cString, cDelim, nI )
 #else
-METHOD TextNextPara( cString, cDelim, nI ) 
+METHOD TextNextPara( cString, cDelim, nI )
 #endif
 
 local nAt, cAt, nCRLF, nNew, nRat, nRet := 0
@@ -2171,7 +2171,7 @@ return nRet
 #ifdef __XPP__
 METHOD tPdf:ClosePage()
 #else
-METHOD ClosePage() 
+METHOD ClosePage()
 #endif
 
 local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
@@ -2360,7 +2360,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:FilePrint( cFile )
 #else
-METHOD FilePrint( cFile ) 
+METHOD FilePrint( cFile )
 #endif
 local cPathAcro := "C:\progra~1\Adobe\Acroba~1.0\Reader"
 local cRun := cPathAcro + "\AcroRd32.exe /t " + cFile + " " + ;
@@ -2379,7 +2379,7 @@ RETURN self
 #ifdef __XPP__
 METHOD tPdf:Execute( cFile )
 #else
-METHOD Execute( cFile ) 
+METHOD Execute( cFile )
 #endif
 //  Replace cPathAcro with the path at your system
 local cPathAcro := "C:\progra~1\Adobe\Acroba~1.0\Reader"
@@ -2628,8 +2628,8 @@ local lRet := .t.
 
 #ifdef __HARBOUR__
     if cVerb != nil
-// TOFIX: This requires hbwhat32, which in turns requires xhb.
-//        This has to solved differently.
+// TOFIX: This requires hbwhat, which in turns requires xhb.
+//        This has to be solved differently.
 //      ShellExecute( GetDeskTopWindow(), cVerb, cFile, , , 1 )
         HB_SYMBOL_UNUSED( cFile )
     else
