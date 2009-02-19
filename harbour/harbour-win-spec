@@ -90,7 +90,7 @@ export HB_HOST_BUILD=yes
 export HB_ARCHITECTURE=linux
 export HB_COMPILER=gcc
 export HB_USER_CFLAGS="-O2 -DHB_FM_STATISTICS_OFF"
-make -r
+make
 
 export HB_HOST_BUILD=lib
 export HB_ARCHITECTURE=win
@@ -117,7 +117,7 @@ export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}
 export HB_CONTRIBLIBS="gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbtip hbvpdf hbwin hbziparc rddado xhb %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql} %{?_with_allegro:gtalleg}"
 
-make -r
+make
 
 ######################################################################
 ## Install.
@@ -158,7 +158,7 @@ mkdir -p $HB_BIN_INSTALL
 mkdir -p $HB_INC_INSTALL
 mkdir -p $HB_LIB_INSTALL
 
-make -r -i install
+make -i install
 
 [ "%{?_with_odbc:1}" ]    || rm -f $HB_LIB_INSTALL/libhbodbc.a
 [ "%{?_with_allegro:1}" ] || rm -f $HB_LIB_INSTALL/libgtalleg.a

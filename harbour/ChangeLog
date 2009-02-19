@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-19 16:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk/hbmk2.prg
+    + Added object archive support for (currently) gcc compilers.
+      .a file are gathered like .o files, and they can be added
+      to the internal command line templates using the {OA} macro.
+      I've added these after {O} macros in gcc cmdlines.
+      (Przemek's request #9. Please review.)
+    * Minor internal change to system location detection.
+
+  * harbour-win-spec
+  * harbour-wce-spec
+  * harbour.spec
+  * mpkg_tgz.sh
+    % Removed -r make flags. No longer needed.
+
 2009-02-19 15:37 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/thread.c
     ! fixed yest another stupid typo in new OS2 conditional variable

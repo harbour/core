@@ -56,6 +56,7 @@
 #include "hbgtinfo.ch"
 #include "hbver.ch"
 
+/* TODO: Sync default switches with Harbour build systems. */
 /* TODO: Add support for wildcarded input source. Only if only one source file is specified. */
 /* TODO: Add support for more hbmk script features. */
 /* TODO: Add support for Windows resource files. */
@@ -67,17 +68,12 @@
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cleanup on variable names. */
 
-/* +     remove -n from default harbour switches ? */
+/* -     remove -n from default harbour switches ? */
 /* +  2. compiler autodetection for two kinds of dir layouts. */
 /* *  7. output file name auto detection should respect the compilation
          mode, f.e.  hbmk -cmp a.prg it should generate a.{o,obj} not 'a'
          or 'a.exe'. QUESTION: What to do for multiple .prgs? */
 /* *  8. Stripping "lib" ".so/.dll/.a" ? */
-/* *  9. We should have support for passing object archives (.a) in
-         link file list and then pass it to GCC without -l parameter.
-         Using 'mylib.a' and '-lmylib' as GCC parameters has different
-         meaning so mylib.a should not be converted to -lmylib but simply
-         passed to GCC as is. */
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
@@ -162,6 +158,7 @@ FUNCTION Main( ... )
    LOCAL s_cPROGNAME
    LOCAL s_cMAPNAME
    LOCAL s_aOBJ
+   LOCAL s_aOBJA
    LOCAL s_aOBJUSER
    LOCAL s_aCLEAN
 
@@ -419,8 +416,6 @@ FUNCTION Main( ... )
 
    s_aLIBPATH := {}
 
-   lSysLoc := .F.
-
    s_cHB_BIN_INSTALL := PathSepToTarget( GetEnv( "HB_BIN_INSTALL" ) )
    s_cHB_LIB_INSTALL := PathSepToTarget( GetEnv( "HB_LIB_INSTALL" ) )
    s_cHB_INC_INSTALL := PathSepToTarget( GetEnv( "HB_INC_INSTALL" ) )
@@ -431,15 +426,11 @@ FUNCTION Main( ... )
       DO CASE
       CASE hb_DirBase() == "/opt/harbour/"
 
-         lSysLoc := .T.
-
          s_cHB_INSTALL_PREFIX := "/opt/harbour"
 
       CASE hb_DirBase() == "/usr/local/bin/" .OR. ;
            hb_DirBase() == "/usr/bin/" .OR. ;
            hb_DirBase() == "/opt/bin/"
-
-         lSysLoc := .T.
 
          tmp := Left( hb_DirBase(), Len( hb_DirBase() ) - Len( "bin/" ) )
          IF Empty( s_cHB_BIN_INSTALL )
@@ -482,11 +473,18 @@ FUNCTION Main( ... )
       s_cHB_INC_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "include"
    ENDIF
 
-   AAddNotEmpty( s_aLIBPATH, s_cHB_LIB_INSTALL )
+   /* Detect system locations to enable shared library option by default */
+   lSysLoc := hb_DirBase() == "/usr/local/bin/" .OR. ;
+              hb_DirBase() == "/usr/bin/" .OR. ;
+              hb_DirBase() == "/opt/harbour/" .OR. ;
+              hb_DirBase() == "/opt/bin/"
 
    IF t_lInfo
       OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + hb_osNewLine() )
    ENDIF
+
+   /* Add main Harbour library dir to lib path list */
+   AAddNotEmpty( s_aLIBPATH, s_cHB_LIB_INSTALL )
 
    /* Build with shared libs by default, if we're installed to default system locations. */
 
@@ -519,6 +517,7 @@ FUNCTION Main( ... )
    s_aRESCMP := {}
    s_aLIBUSER := {}
    s_aOBJUSER := {}
+   s_aOBJA := {}
    s_cPROGDIR := NIL
    s_cPROGNAME := NIL
 
@@ -650,15 +649,16 @@ FUNCTION Main( ... )
       CASE Lower( FN_ExtGet( cParam ) ) == ".prg"   ; AAdd( s_aPRG    , PathSepToTarget( cParam ) ) ; DEFAULT s_cPROGNAME TO PathSepToSelf( cParam )
       CASE Lower( FN_ExtGet( cParam ) ) == ".rc"    ; AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
       CASE Lower( FN_ExtGet( cParam ) ) == ".res"   ; AAdd( s_aRESCMP , PathSepToTarget( cParam ) )
+      CASE Lower( FN_ExtGet( cParam ) ) == ".a"     ; AAdd( s_aOBJA   , PathSepToTarget( cParam ) )
       CASE Lower( FN_ExtGet( cParam ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, PathSepToTarget( cParam ) ) ; DEFAULT s_cPROGNAME TO PathSepToSelf( cParam )
       CASE Lower( FN_ExtGet( cParam ) ) $ ".c|.cpp" ; AAdd( s_aC      , PathSepToTarget( cParam ) ) ; DEFAULT s_cPROGNAME TO PathSepToSelf( cParam )
-      CASE Lower( FN_ExtGet( cParam ) ) $ ".a|.lib" ; AAddNotEmpty( s_aLIBUSER, PathSepToTarget( ArchCompFilter( cParam ) ) )
+      CASE Lower( FN_ExtGet( cParam ) ) $ ".lib"    ; AAddNotEmpty( s_aLIBUSER, PathSepToTarget( ArchCompFilter( cParam ) ) )
       OTHERWISE                                     ; AAdd( s_aPRG    , PathSepToTarget( cParam ) ) ; DEFAULT s_cPROGNAME TO PathSepToSelf( cParam )
       ENDCASE
    NEXT
 
    /* Start doing the make process. */
-   IF ( Len( s_aPRG ) + Len( s_aC ) + Len( s_aOBJUSER ) ) == 0
+   IF ( Len( s_aPRG ) + Len( s_aC ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) == 0
       OutErr( "hbmk: Error: No source files were specified." + hb_osNewLine() )
       PauseForKey()
       RETURN 4
@@ -750,6 +750,7 @@ FUNCTION Main( ... )
 
          {C}      list of C files,
          {O}      list of object files,
+         {OA}     list of object archive (.a) files,
          {L}      list of lib files,
          {OPTC}   C compiler flags (user + automatic),
          {OPTL}   linker flags (user + automatic),
@@ -785,7 +786,7 @@ FUNCTION Main( ... )
          cLibExt := NIL
          cObjExt := ".o"
          cBin_CompC := iif( t_cCOMP == "gpp", "g++", "gcc" )
-         cOpt_CompC := "{C} {O} -O3 -o{E} {OPTC} -I{I} {A}"
+         cOpt_CompC := "{C} {O} {OA} -O3 -o{E} {OPTC} -I{I} {A}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          IF t_cARCH == "linux"
@@ -821,7 +822,7 @@ FUNCTION Main( ... )
          cLibExt := NIL
          cObjExt := ".o"
          cBin_CompC := "gcc"
-         cOpt_CompC := "{C} {O} -O3 -o{E} {OPTC} -I{I} {A}"
+         cOpt_CompC := "{C} {O} {OA} -O3 -o{E} {OPTC} -I{I} {A}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          IF s_lMAP
@@ -856,7 +857,7 @@ FUNCTION Main( ... )
          cLibExt := NIL
          cObjExt := ".o"
          cBin_CompC := "gcc"
-         cOpt_CompC := "{C} {O} -O3 -o{E} {OPTC} -I{I} {A}{SCRIPT}"
+         cOpt_CompC := "{C} {O} {OA} -O3 -o{E} {OPTC} -I{I} {A}{SCRIPT}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          IF t_cCOMP == "rsx32"
@@ -1103,7 +1104,7 @@ FUNCTION Main( ... )
 
       nErrorLevel := 0
 
-      IF ( Len( s_aPRG ) + Len( s_aC ) + iif( Empty( cBin_Link ), Len( s_aOBJUSER ), 0 ) ) > 0
+      IF ( Len( s_aPRG ) + Len( s_aC ) + iif( Empty( cBin_Link ), Len( s_aOBJUSER ) + Len( s_aOBJA ), 0 ) ) > 0
 
          IF ! Empty( cBin_CompC )
 
@@ -1111,6 +1112,7 @@ FUNCTION Main( ... )
 
             cOpt_CompC := StrTran( cOpt_CompC, "{C}"   , ArrayToList( ArrayJoin( ListCook( s_aPRG, NIL, ".c" ), s_aC ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{O}"   , ArrayToList( ListCook( s_aOBJUSER, cObjPrefix ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{OA}"  , ArrayToList( s_aOBJA ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{L}"   , ArrayToList( s_aLIB ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OPTC}", iif( s_lBLDFLGC, hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
                                                          GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( s_aOPTC ) )
@@ -1158,11 +1160,12 @@ FUNCTION Main( ... )
          ENDIF
       ENDIF
 
-      IF nErrorLevel == 0 .AND. ! lStopAfterCComp .AND. ( Len( s_aOBJ ) + Len( s_aOBJUSER ) ) > 0 .AND. ! Empty( cBin_Link )
+      IF nErrorLevel == 0 .AND. ! lStopAfterCComp .AND. ( Len( s_aOBJ ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) > 0 .AND. ! Empty( cBin_Link )
 
          /* Linking */
 
          cOpt_Link := StrTran( cOpt_Link, "{O}"   , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
+         cOpt_Link := StrTran( cOpt_Link, "{OA}"  , ArrayToList( s_aOBJA ) )
          cOpt_Link := StrTran( cOpt_Link, "{L}"   , ArrayToList( s_aLIB ) )
          cOpt_Link := StrTran( cOpt_Link, "{OPTL}", iif( s_lBLDFLGL, hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
                                                     GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )

@@ -205,13 +205,13 @@ fi
 
 # build
 umask 022
-$MAKE -r clean
-$MAKE -r
+$MAKE clean
+$MAKE
 for l in ${hb_contrib}
 do
     (cd "contrib/$l"
-     $MAKE -r clean
-     $MAKE -r)
+     $MAKE clean
+     $MAKE )
 done
 
 # install
@@ -227,11 +227,11 @@ export HB_LIB_INSTALL="$HB_INST_PREF$HB_LIB_INSTALL"
 mkdir -p $HB_BIN_INSTALL
 mkdir -p $HB_INC_INSTALL
 mkdir -p $HB_LIB_INSTALL
-$MAKE -r -i install
+$MAKE -i install
 for l in ${hb_contrib}
 do
     (cd "contrib/$l"
-     $MAKE -r -i install)
+     $MAKE -i install)
 done
 
 # Keep the size of the binaries to a minimim.
@@ -278,7 +278,7 @@ then
     do
         (cd "utils/${utl}"
          rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
-         $MAKE -r install
+         $MAKE install
          ${CCPREFIX}strip "${HB_BIN_INSTALL}/${utl}${hb_exesuf}")
     done
 fi

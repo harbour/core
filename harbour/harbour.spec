@@ -384,7 +384,7 @@ case "`uname -m`" in
         ;;
 esac
 
-make -r
+make
 
 ######################################################################
 ## Install.
@@ -412,7 +412,7 @@ mkdir -p $HB_BIN_INSTALL
 mkdir -p $HB_INC_INSTALL
 mkdir -p $HB_LIB_INSTALL
 
-make -r -i install
+make -i install
 
 [ "%{?_with_allegro:1}" ]  || rm -f $HB_LIB_INSTALL/libgtalleg.a
 [ "%{?_without_gtcrs:1}" ] && rm -f $HB_LIB_INSTALL/libgtcrs.a
@@ -445,7 +445,7 @@ then
     do
         pushd utils/${utl}
         rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
-        make -r install
+        make install
         strip ${HB_BIN_INSTALL}/${utl}
         popd
     done
