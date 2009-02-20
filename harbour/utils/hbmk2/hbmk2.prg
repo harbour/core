@@ -66,7 +66,7 @@
 /* TODO: msvc/bcc32: Use separate link phase. This allows incremental links. */
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cleanup on variable names. */
-/* TODO: remove -n? from default harbour switches */
+/* TODO: remove -n from default harbour switches? */
 /* TODO: MAIN() detection or override? Someone who's familiar with this issue pls help. */
 
 #if ! defined( HBMK_NO_GTCGI )
