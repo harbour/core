@@ -1531,6 +1531,8 @@ STATIC FUNCTION FN_ExtSet( cFileName, cExt )
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
+#define HBMK_CFG_NAME  "hbmkcfg.hbp"
+
 STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
                                  /* @ */ aLIBPATH,;
                                  /* @ */ aOPTPRG,;
@@ -1546,29 +1548,60 @@ STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
                                  /* @ */ lSTRIP,;
                                  /* @ */ lRUN,;
                                  /* @ */ cGT )
-   LOCAL aFiles := Directory( "*.hbp" )
    LOCAL aFile
+   LOCAL cDir
+   LOCAL cFileName
 
-   FOR EACH aFile IN aFiles
-      IF t_lInfo
-         OutStd( "hbmk: Processing: " + aFile[ F_NAME ] + hb_osNewLine() )
+   LOCAL aCFGDirs := { DirAddPathSep( hb_DirBase() ) }
+
+   FOR EACH cDir IN aCFGDirs
+      IF hb_FileExists( cFileName := ( cDir + HBMK_CFG_NAME ) )
+         IF t_lInfo
+            OutStd( "hbmk: Processing configuration: " + cFileName + hb_osNewLine() )
+         ENDIF
+         HBP_ProcessOne( cFileName,;
+            @aLIBS,;
+            @aLIBPATH,;
+            @aOPTPRG,;
+            @aOPTC,;
+            @aOPTL,;
+            @lGUI,;
+            @lMT,;
+            @lSHARED,;
+            @lSTATICFULL,;
+            @lDEBUG,;
+            @lNULRDD,;
+            @lMAP,;
+            @lSTRIP,;
+            @lRUN,;
+            @cGT )
+         EXIT
       ENDIF
-      HBP_ProcessOne( aFile[ F_NAME ],;
-         @aLIBS,;
-         @aLIBPATH,;
-         @aOPTPRG,;
-         @aOPTC,;
-         @aOPTL,;
-         @lGUI,;
-         @lMT,;
-         @lSHARED,;
-         @lSTATICFULL,;
-         @lDEBUG,;
-         @lNULRDD,;
-         @lMAP,;
-         @lSTRIP,;
-         @lRUN,;
-         @cGT )
+   NEXT
+
+   FOR EACH aFile IN Directory( "*.hbp" )
+      cFileName := aFile[ F_NAME ]
+      IF !( cFileName == HBMK_CFG_NAME )
+         IF t_lInfo
+            OutStd( "hbmk: Processing: " + cFileName + hb_osNewLine() )
+         ENDIF
+         HBP_ProcessOne( cFileName,;
+            @aLIBS,;
+            @aLIBPATH,;
+            @aOPTPRG,;
+            @aOPTC,;
+            @aOPTL,;
+            @lGUI,;
+            @lMT,;
+            @lSHARED,;
+            @lSTATICFULL,;
+            @lDEBUG,;
+            @lNULRDD,;
+            @lMAP,;
+            @lSTRIP,;
+            @lRUN,;
+            @cGT )
+      ENDIF
    NEXT
 
    RETURN

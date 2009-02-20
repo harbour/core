@@ -8,6 +8,22 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-20 09:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added support for build level (or system level if that's
+      needed in the future) configuration file for hbmk. Currently
+      it will automatically pick the file named hbmkcfg.hbp from
+      the dir where hbmk is located. This file can be used to store
+      build settings so that they can later be used by hbmk,
+      automatically. IOW this is the communication medium
+      between the build process and hbmk. We can store here
+      the selected GT, extra libraries, PRG flags, C flags, linker
+      flags, while keeping hbmk executable free from such burnt-in
+      information. For this to work, the build process needs
+      to generate hbmkcfg.hbp with appropriate content, and this
+      file needs to be added to standard distribution packages.
+      The format is normal .hbp, described on the hbmk help screen.
+
 2009-02-20 09:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added CCPATH + CCPREFIX support for *nix/gcc|gpp.
