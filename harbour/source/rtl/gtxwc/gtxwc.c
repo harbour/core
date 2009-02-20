@@ -281,23 +281,23 @@ static const UnixBoxChar boxTranslate[] ={
 #endif
 
 /* these are standard PC console colors in RGB */
-static const char *rgb_colors[] = {
-   "rgb:00/00/00",   /* black         */
-   "rgb:00/00/AA",   /* blue          */
-   "rgb:00/AA/00",   /* green         */
-   "rgb:00/AA/AA",   /* cyan          */
-   "rgb:AA/00/00",   /* red           */
-   "rgb:AA/00/AA",   /* magenta       */
-   "rgb:AA/55/00",   /* brown         */
-   "rgb:AA/AA/AA",   /* light gray    */
-   "rgb:55/55/55",   /* gray          */
-   "rgb:55/55/FF",   /* light blue    */
-   "rgb:55/FF/55",   /* light green   */
-   "rgb:55/FF/FF",   /* light cyan    */
-   "rgb:FF/55/55",   /* light red     */
-   "rgb:FF/55/FF",   /* light magenta */
-   "rgb:FF/FF/55",   /* yellow        */
-   "rgb:FF/FF/FF"    /* white         */
+static const int rgb_values[] = {
+   0x000000,   /* black         "rgb:00/00/00" */
+   0x0000AA,   /* blue          "rgb:00/00/AA" */
+   0x00AA00,   /* green         "rgb:00/AA/00" */
+   0x00AAAA,   /* cyan          "rgb:00/AA/AA" */
+   0xAA0000,   /* red           "rgb:AA/00/00" */
+   0xAA00AA,   /* magenta       "rgb:AA/00/AA" */
+   0xAA5500,   /* brown         "rgb:AA/55/00" */
+   0xAAAAAA,   /* light gray    "rgb:AA/AA/AA" */
+   0x555555,   /* gray          "rgb:55/55/55" */
+   0x5555FF,   /* light blue    "rgb:55/55/FF" */
+   0x55FF55,   /* light green   "rgb:55/FF/55" */
+   0x55FFFF,   /* light cyan    "rgb:55/FF/FF" */
+   0xFF5555,   /* light red     "rgb:FF/55/55" */
+   0xFF55FF,   /* light magenta "rgb:FF/55/FF" */
+   0xFFFF55,   /* yellow        "rgb:FF/FF/55" */
+   0xFFFFFF    /* white         "rgb:FF/FF/FF" */
 };
 
 static Atom s_atomDelWin;
@@ -331,6 +331,13 @@ typedef struct tag_modifiers
    BOOL bShift;
 } MODIFIERS;
 
+typedef struct
+{
+   HB_GT_PIXELTYPE pixel;
+   int  value;
+   BOOL set;
+} WND_COLORS;
+
 typedef struct tag_x_wnddef
 {
    PHB_GT pGT;
@@ -338,8 +345,8 @@ typedef struct tag_x_wnddef
    Display *dpy;
    Window window;
    GC gc;
-   Colormap colors;
-   HB_GT_PIXELTYPE pixels[16];
+   Colormap colorsmap;
+   WND_COLORS colors[16];
    Pixmap pm;
    Drawable drw;
 
@@ -375,6 +382,7 @@ typedef struct tag_x_wnddef
    char *szFontName;
    char *szFontWeight;
    char *szFontEncoding;
+   char *szFontSel;
    int fontHeight;
    int fontWidth;
    /* if font has bad metric then try to fix it and display only single
@@ -455,6 +463,7 @@ typedef struct tag_x_wnddef
 
 static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd );
 static void hb_gt_xwc_InvalidatePts( PXWND_DEF wnd, int left, int top, int right, int bottom );
+static void hb_gt_xwc_InvalidateChar( PXWND_DEF wnd, int left, int top, int right, int bottom );
 
 /************************ globals ********************************/
 
@@ -2362,7 +2371,7 @@ static BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
    BOOL fOK = FALSE;
    int uiCMapSize;
 
-   if( XAllocColor( wnd->dpy, wnd->colors, pColor ) != 0 )
+   if( XAllocColor( wnd->dpy, wnd->colorsmap, pColor ) != 0 )
    {
       /* the exact color allocated */
       fOK = TRUE;
@@ -2387,7 +2396,7 @@ static BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
          colorTable[i].pixel = (HB_GT_PIXELTYPE) i;
          checkTable[i] = FALSE;
       }
-      XQueryColors ( wnd->dpy, wnd->colors, colorTable, uiCMapSize );
+      XQueryColors ( wnd->dpy, wnd->colorsmap, colorTable, uiCMapSize );
 
       do
       {
@@ -2428,7 +2437,7 @@ static BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
          }
          if( uiClosestColor > 0 )
          {
-            if( XAllocColor( wnd->dpy, wnd->colors, &colorTable[uiClosestColor] ) != 0 )
+            if( XAllocColor( wnd->dpy, wnd->colorsmap, &colorTable[uiClosestColor] ) != 0 )
             {
                *pColor = colorTable[uiClosestColor];
                fOK = TRUE;
@@ -2448,15 +2457,53 @@ static BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
 
 /* *********************************************************************** */
 
+static BOOL hb_gt_xwc_setPalette( PXWND_DEF wnd )
+{
+   char rgb_color[13];
+   XColor color, dummy;
+   BOOL fSet = FALSE;
+   int i;
+
+   /* Set standard colors */
+   wnd->colorsmap = DefaultColormap( wnd->dpy, DefaultScreen( wnd->dpy ) );
+   for( i = 0; i < 16; i++ )
+   {
+      if( !wnd->colors[i].set )
+      {
+         if( wnd->colors[i].pixel )
+            XFreeColors( wnd->dpy, wnd->colorsmap, &wnd->colors[i].pixel, 1, 0 );
+         hb_snprintf( rgb_color, sizeof( rgb_color ),
+                      "rgb:%02X/%02X/%02X",
+                      ( wnd->colors[i].value >> 16 ) & 0xFF,
+                      ( wnd->colors[i].value >> 8 ) & 0xFF,
+                      ( wnd->colors[i].value ) & 0xFF );
+         if( XLookupColor( wnd->dpy, wnd->colorsmap, rgb_color, &dummy, &color ) != 0 )
+         {
+            if( hb_gt_xwc_AllocColor( wnd, &color ) )
+            {
+               wnd->colors[i].pixel = color.pixel;
+#ifdef XWC_DEBUG
+               printf( "hb_gt_xwc_AllocColor[%d]='%x/%x/%x'\r\n", i, color.red, color.green, color.blue ); fflush(stdout);
+#endif
+            }
+         }
+         fSet = wnd->colors[i].set = TRUE;
+      }
+   }
+   return fSet;
+}
+
+/* *********************************************************************** */
+
 static void hb_gt_xwc_DrawString( PXWND_DEF wnd, int col, int row, BYTE color, USHORT *usChBuf, int len )
 {
    if( wnd->fClearBkg )
    {
-      XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color >> 4] );
+      XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
       XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                       col * wnd->fontWidth, row * wnd->fontHeight,
                       wnd->fontWidth * len, wnd->fontHeight );
-      XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color & 0x0F] );
+      XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
       XDrawString16( wnd->dpy, wnd->drw, wnd->gc,
                      col * wnd->fontWidth,
                      row * wnd->fontHeight + wnd->xfs->ascent,
@@ -2464,8 +2511,8 @@ static void hb_gt_xwc_DrawString( PXWND_DEF wnd, int col, int row, BYTE color, U
    }
    else
    {
-      XSetBackground( wnd->dpy, wnd->gc, wnd->pixels[color >> 4] );
-      XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color & 0x0F] );
+      XSetBackground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
+      XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
       XDrawImageString16( wnd->dpy, wnd->drw, wnd->gc,
                           col * wnd->fontWidth,
                           row * wnd->fontHeight + wnd->xfs->ascent,
@@ -2556,15 +2603,15 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   break;
 
                case CH_NONE:
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color >> 4] );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   icol * wnd->fontWidth, irow * wnd->fontHeight,
                                   wnd->fontWidth, wnd->fontHeight );
                   break;
 
                case CH_IMG:
-                  XSetBackground( wnd->dpy, wnd->gc, wnd->pixels[color >> 4] );
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color & 0x0F] );
+                  XSetBackground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XPutImage( wnd->dpy, wnd->drw, wnd->gc,
                              wnd->charTrans[ usCh16 ].u.img, 0, 0,
                              icol * wnd->fontWidth, irow * wnd->fontHeight,
@@ -2575,11 +2622,11 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   /* we use CoordModePrevious so only first point position has to be updated */
                   wnd->charTrans[ usCh16 ].u.pts[0].x = (wnd->charTrans[ usCh16 ].u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
                   wnd->charTrans[ usCh16 ].u.pts[0].y = (wnd->charTrans[ usCh16 ].u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color >> 4] );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   icol * wnd->fontWidth, irow * wnd->fontHeight,
                                   wnd->fontWidth, wnd->fontHeight );
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color & 0x0F] );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XDrawPoints( wnd->dpy, wnd->drw, wnd->gc,
                                wnd->charTrans[ usCh16 ].u.pts,
                                wnd->charTrans[ usCh16 ].size, CoordModePrevious );
@@ -2589,11 +2636,11 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   /* we use CoordModePrevious so only first point position has to be updated */
                   wnd->charTrans[ usCh16 ].u.pts[0].x = (wnd->charTrans[ usCh16 ].u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
                   wnd->charTrans[ usCh16 ].u.pts[0].y = (wnd->charTrans[ usCh16 ].u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color >> 4] );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   icol * wnd->fontWidth, irow * wnd->fontHeight,
                                   wnd->fontWidth, wnd->fontHeight );
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color & 0x0F] );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XDrawLines( wnd->dpy, wnd->drw, wnd->gc,
                                wnd->charTrans[ usCh16 ].u.pts,
                                wnd->charTrans[ usCh16 ].size, CoordModePrevious );
@@ -2603,11 +2650,11 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   /* we use CoordModePrevious so only first point position has to be updated */
                   wnd->charTrans[ usCh16 ].u.pts[0].x = (wnd->charTrans[ usCh16 ].u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
                   wnd->charTrans[ usCh16 ].u.pts[0].y = (wnd->charTrans[ usCh16 ].u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color >> 4] );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   icol * wnd->fontWidth, irow * wnd->fontHeight,
                                   wnd->fontWidth, wnd->fontHeight );
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color & 0x0F] );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XFillPolygon( wnd->dpy, wnd->drw, wnd->gc,
                                 wnd->charTrans[ usCh16 ].u.pts,
                                 wnd->charTrans[ usCh16 ].size,
@@ -2625,10 +2672,10 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                      wnd->charTrans[ usCh16 ].u.seg[i].x2 = (wnd->charTrans[ usCh16 ].u.seg[i].x2 % wnd->fontWidth ) + basex;
                      wnd->charTrans[ usCh16 ].u.seg[i].y2 = (wnd->charTrans[ usCh16 ].u.seg[i].y2 % wnd->fontHeight ) + basey;
                   }
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color >> 4] );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   basex, basey, wnd->fontWidth, wnd->fontHeight );
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color & 0x0F] );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XDrawSegments( wnd->dpy, wnd->drw, wnd->gc,
                                  wnd->charTrans[ usCh16 ].u.seg, nsize );
                   break;
@@ -2642,10 +2689,10 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                      wnd->charTrans[ usCh16 ].u.rect[i].x = (wnd->charTrans[ usCh16 ].u.rect[i].x % wnd->fontWidth ) + basex;
                      wnd->charTrans[ usCh16 ].u.rect[i].y = (wnd->charTrans[ usCh16 ].u.rect[i].y % wnd->fontHeight ) + basey;
                   }
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color >> 4] );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   basex, basey, wnd->fontWidth, wnd->fontHeight );
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color & 0x0F] );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
                   XFillRectangles( wnd->dpy, wnd->drw, wnd->gc,
                                    wnd->charTrans[ usCh16 ].u.rect, nsize );
                   break;
@@ -2783,7 +2830,7 @@ static void hb_gt_xwc_UpdateCursor( PXWND_DEF wnd )
             USHORT usChar;
 
             HB_GTSELF_GETSCRCHAR( wnd->pGT, wnd->row, wnd->col, &color, &attr, &usChar );
-            XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color & 0x0f] );
+            XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0f].pixel );
             XFillRectangle( wnd->dpy, wnd->window, wnd->gc,
                             basex, basey, wnd->fontWidth, size );
          }
@@ -3005,20 +3052,27 @@ static BOOL hb_gt_xwc_SetFont( PXWND_DEF wnd, const char *fontFace,
                                const char *weight, int size,
                                const char *encoding )
 {
-   char fontString[250];
+   char fontString[ 250 ];
    XFontStruct *xfs;
 
+   if( weight )
 /*
-   hb_snprintf( fontString, sizeof(fontString)-1, "-*-%s-%s-r-normal--%d-*-*-*-*-*-%s",
-             fontFace, weight, size, encoding == NULL ? "*-*" : encoding );
+      "-*-%s-%s-r-normal-*-%d-*-*-*-*-*-%s"
 */
-   hb_snprintf( fontString, sizeof(fontString)-1, "-*-%s-%s-r-*--%d-*-*-*-*-*-%s",
-             fontFace, weight, size, encoding == NULL ? "*-*" : encoding );
+      hb_snprintf( fontString, sizeof( fontString ),
+                   "-*-%s-%s-r-*-*-%d-*-*-*-*-*-%s",
+                   fontFace, weight, size, encoding == NULL ? "*-*" : encoding );
+   else
+      hb_strncpy( fontString, fontFace, sizeof( fontString ) - 1 );
 
    xfs = XLoadQueryFont( wnd->dpy, fontString );
 
    if( xfs == NULL )
       return FALSE;
+
+   if( wnd->szFontSel )
+      hb_xfree( wnd->szFontSel );
+   wnd->szFontSel = hb_strdup( fontString );
 
    /* a shortcut for window height and width */
    wnd->fontHeight = xfs->max_bounds.ascent + xfs->max_bounds.descent;
@@ -3034,6 +3088,7 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
 {
    PHB_FNAME pFileName;
    PXWND_DEF wnd = ( PXWND_DEF ) hb_xgrab( sizeof( XWND_DEF ) );
+   int i;
 
    /* clear whole structure */
    memset( wnd, 0, sizeof( XWND_DEF ) );
@@ -3072,6 +3127,9 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->keyModifiers.bAlt   = FALSE;
    wnd->keyModifiers.bAltGr = FALSE;
    wnd->keyModifiers.bShift = FALSE;
+
+   for( i = 0; i < 16; i++ )
+      wnd->colors[i].value = rgb_values[i];
 
    wnd->lastEventTime = CurrentTime;
 
@@ -3185,6 +3243,8 @@ static void hb_gt_xwc_DestroyWndDef( PXWND_DEF wnd )
       hb_xfree( wnd->szFontWeight );
    if( wnd->szFontEncoding )
       hb_xfree( wnd->szFontEncoding );
+   if( wnd->szFontSel )
+      hb_xfree( wnd->szFontSel );
    if( wnd->pCurrScr )
       hb_xfree( wnd->pCurrScr );
    if( wnd->ClipboardData )
@@ -3197,62 +3257,54 @@ static void hb_gt_xwc_DestroyWndDef( PXWND_DEF wnd )
 
 static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
 {
-   int whiteColor, blackColor, i;
+   int whiteColor, blackColor;
    XSizeHints xsize;
-   XColor color, dummy;
 
    HB_XWC_XLIB_LOCK
 
    /* load the standard font */
-   if( ! hb_gt_xwc_SetFont( wnd, wnd->szFontName, wnd->szFontWeight, wnd->fontHeight, wnd->szFontEncoding ) )
+   if( ! wnd->szFontSel )
    {
-      if( ! hb_gt_xwc_SetFont( wnd, XWC_DEFAULT_FONT_NAME, XWC_DEFAULT_FONT_WEIGHT, XWC_DEFAULT_FONT_HEIGHT, XWC_DEFAULT_FONT_ENCODING ) )
+      if( ! hb_gt_xwc_SetFont( wnd, wnd->szFontName, wnd->szFontWeight, wnd->fontHeight, wnd->szFontEncoding ) )
       {
-         HB_XWC_XLIB_UNLOCK
+         if( ! hb_gt_xwc_SetFont( wnd, XWC_DEFAULT_FONT_NAME, XWC_DEFAULT_FONT_WEIGHT, XWC_DEFAULT_FONT_HEIGHT, XWC_DEFAULT_FONT_ENCODING ) )
+         {
+            HB_XWC_XLIB_UNLOCK
 
-         /* TODO: a standard Harbour error should be generated here when
-                  it can run without console!
-         hb_errRT_TERM( EG_CREATE, 10001, NULL, "Can't load 'fixed' font", 0, 0 );
-         return;
-         */
-         s_fNoXServer = TRUE;
-         hb_errInternal( 10001, "Can't load 'fixed' font", NULL, NULL );
+            /* TODO: a standard Harbour error should be generated here when
+                     it can run without console!
+            hb_errRT_TERM( EG_CREATE, 10001, NULL, "Can't load 'fixed' font", 0, 0 );
+            return;
+            */
+            s_fNoXServer = TRUE;
+            hb_errInternal( 10001, "Can't load 'fixed' font", NULL, NULL );
+         }
       }
    }
 
    /* build character translation table (after font selection) */
    hb_gt_xwc_BuildCharTrans( wnd );
 
-   /* Set standard colors */
-   wnd->colors = DefaultColormap( wnd->dpy, DefaultScreen( wnd->dpy ) );
-   for( i = 0; i < 16; i++ )
+   if( !wnd->window )
    {
-      if( XLookupColor( wnd->dpy, wnd->colors, rgb_colors[i], &dummy, &color ) != 0 )
-      {
-         if( hb_gt_xwc_AllocColor( wnd, &color ) )
-         {
-            wnd->pixels[i] = color.pixel;
-#ifdef XWC_DEBUG
-            printf( "hb_gt_xwc_AllocColor[%d]='%x/%x/%x'\r\n", i, color.red, color.green, color.blue ); fflush(stdout);
-#endif
-         }
-      }
+      /* Set standard colors */
+      hb_gt_xwc_setPalette( wnd );
+
+      whiteColor = WhitePixel( wnd->dpy, DefaultScreen( wnd->dpy ) );
+      blackColor = BlackPixel( wnd->dpy, DefaultScreen( wnd->dpy ) );
+      wnd->window = XCreateSimpleWindow( wnd->dpy, DefaultRootWindow( wnd->dpy ),
+                              0, 0,
+                              wnd->fontWidth * wnd->cols,
+                              wnd->fontHeight * wnd->rows,
+                              0, blackColor, blackColor );
+      wnd->gc = XCreateGC( wnd->dpy, wnd->window, 0, NULL );
+
+      /* Line width 2 */
+      XSetLineAttributes( wnd->dpy, wnd->gc, 1, LineSolid, CapRound, JoinBevel );
+      XStoreName( wnd->dpy, wnd->window, wnd->szTitle );
    }
 
-   whiteColor = WhitePixel( wnd->dpy, DefaultScreen( wnd->dpy ) );
-   blackColor = BlackPixel( wnd->dpy, DefaultScreen( wnd->dpy ) );
-   wnd->window = XCreateSimpleWindow( wnd->dpy, DefaultRootWindow( wnd->dpy ),
-                           0, 0,
-                           wnd->fontWidth * wnd->cols,
-                           wnd->fontHeight * wnd->rows,
-                           0, blackColor, blackColor );
-   wnd->gc = XCreateGC( wnd->dpy, wnd->window, 0, NULL );
-
-   /* Line width 2 */
-   XSetLineAttributes( wnd->dpy, wnd->gc, 1, LineSolid, CapRound, JoinBevel );
-
    XSetFont( wnd->dpy, wnd->gc, wnd->xfs->fid );
-   XStoreName( wnd->dpy, wnd->window, wnd->szTitle );
 
    /* wnd->fWinResize = TRUE; */
    hb_gt_xwc_Resize( wnd, wnd->cols, wnd->rows );
@@ -3767,6 +3819,7 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          case HB_GTI_FULLSCREEN:
          case HB_GTI_KBDSUPPORT:
          case HB_GTI_ISGRAPHIC:
+         case HB_GTI_FONTSEL:
             hb_gt_xwc_ConnectX( wnd, FALSE );
             break;
 
@@ -3834,6 +3887,15 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( wnd->szFontName )
                hb_xfree( wnd->szFontName );
             wnd->szFontName = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
+         }
+         break;
+
+      case HB_GTI_FONTSEL:
+         pInfo->pResult = hb_itemPutC( pInfo->pResult, wnd->szFontSel );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         {
+            if( hb_gt_xwc_SetFont( wnd, hb_itemGetCPtr( pInfo->pNewVal ), NULL, 0, NULL ) )
+               hb_gt_xwc_CreateWindow( wnd );
          }
          break;
 
@@ -3918,6 +3980,59 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_KBDSHIFTS:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult,
                                         hb_gt_xwc_getKbdState( wnd ) );
+         break;
+
+      case HB_GTI_PALETTE:
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         {
+            iVal = hb_itemGetNI( pInfo->pNewVal ) - 1;
+            if( iVal >= 0 && iVal < 16 )
+            {
+               pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->colors[ iVal ].value );
+               if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
+               {
+                  int iColor = hb_itemGetNI( pInfo->pNewVal2 );
+                  if( iColor != wnd->colors[ iVal ].value )
+                  {
+                     wnd->colors[ iVal ].value = iColor;
+                     wnd->colors[ iVal ].set = FALSE;
+                     if( hb_gt_xwc_setPalette( wnd ) && wnd->dpy )
+                     {
+                        memset( wnd->pCurrScr, 0xFFFFFFFFL,  wnd->cols * wnd->rows * sizeof( ULONG ) );
+                        hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
+//                        HB_GTSELF_EXPOSEAREA( pGT, 0, 0, wnd->rows - 1, wnd->cols - 1 );
+                     }
+                  }
+               }
+            }
+         }
+         else
+         {
+            if( !pInfo->pResult )
+               pInfo->pResult = hb_itemNew( NULL );
+            hb_arrayNew( pInfo->pResult, 16 );
+            for( iVal = 0; iVal < 16; iVal++ )
+               hb_arraySetNL( pInfo->pResult, iVal + 1, wnd->colors[ iVal ].value );
+            if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY &&
+                hb_arrayLen( pInfo->pNewVal ) == 16 )
+            {
+               for( iVal = 0; iVal < 16; iVal++ )
+               {
+                  int iColor = hb_arrayGetNI( pInfo->pNewVal, iVal + 1 );
+                  if( iColor != wnd->colors[ iVal ].value )
+                  {
+                     wnd->colors[ iVal ].value = iColor;
+                     wnd->colors[ iVal ].set = FALSE;
+                  }
+               }
+               if( hb_gt_xwc_setPalette( wnd ) && wnd->dpy )
+               {
+                  memset( wnd->pCurrScr, 0xFFFFFFFFL,  wnd->cols * wnd->rows * sizeof( ULONG ) );
+                  hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
+//                  HB_GTSELF_EXPOSEAREA( pGT, 0, 0, wnd->rows - 1, wnd->cols - 1 );
+               }
+            }
+         }
          break;
 
       default:

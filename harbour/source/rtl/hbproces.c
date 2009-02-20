@@ -402,7 +402,7 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
             char ** argv;
 
             argv = hb_buildArgs( pszFilename );
-            execv( argv[ 0 ], argv );
+            execvp( argv[ 0 ], argv );
             hb_freeArgs( argv );
 #endif
             exit(1);
