@@ -3985,7 +3985,7 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_PALETTE:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
-            iVal = hb_itemGetNI( pInfo->pNewVal ) - 1;
+            iVal = hb_itemGetNI( pInfo->pNewVal );
             if( iVal >= 0 && iVal < 16 )
             {
                pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->colors[ iVal ].value );
@@ -4000,7 +4000,6 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      {
                         memset( wnd->pCurrScr, 0xFFFFFFFFL,  wnd->cols * wnd->rows * sizeof( ULONG ) );
                         hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
-//                        HB_GTSELF_EXPOSEAREA( pGT, 0, 0, wnd->rows - 1, wnd->cols - 1 );
                      }
                   }
                }
@@ -4012,7 +4011,7 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pInfo->pResult = hb_itemNew( NULL );
             hb_arrayNew( pInfo->pResult, 16 );
             for( iVal = 0; iVal < 16; iVal++ )
-               hb_arraySetNL( pInfo->pResult, iVal + 1, wnd->colors[ iVal ].value );
+               hb_arraySetNI( pInfo->pResult, iVal + 1, wnd->colors[ iVal ].value );
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY &&
                 hb_arrayLen( pInfo->pNewVal ) == 16 )
             {
@@ -4029,7 +4028,6 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                {
                   memset( wnd->pCurrScr, 0xFFFFFFFFL,  wnd->cols * wnd->rows * sizeof( ULONG ) );
                   hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
-//                  HB_GTSELF_EXPOSEAREA( pGT, 0, 0, wnd->rows - 1, wnd->cols - 1 );
                }
             }
          }

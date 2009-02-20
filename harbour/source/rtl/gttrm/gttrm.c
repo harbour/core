@@ -333,6 +333,8 @@ typedef struct _HB_GTTRM
    int        chrattr[ 256 ];
    int        boxattr[ 256 ];
 
+   int        colors[ 16 ];
+
    int        iOutBufSize;
    int        iOutBufIndex;
    BYTE *     pOutBuf;
@@ -399,6 +401,9 @@ static const char * s_szMouseOn  = "\033[?1001s\033[?1002h";
 /* disable mouse tracking & restore old hilit tracking */
 static const char * s_szMouseOff = "\033[?1002l\033[?1001r";
 static const BYTE s_szBell[] = { HB_CHAR_BEL, 0 };
+
+/* conversion table for ANSI color indexes */
+static const int  s_AnsiColors[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
 
 /* The tables below are indexed by internal key value,
  * It cause that we don't have to make any linear scans
@@ -1558,6 +1563,22 @@ static void hb_gt_trm_LinuxSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
    }
 }
 
+static void hb_gt_trm_LinuxSetPalette( PHB_GTTRM pTerm, int iIndex )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_LinuxSetPalette(%p,%d)", pTerm, iIndex));
+
+   if( iIndex >= 0 && iIndex <= 15 )
+   {
+      char szColor[ 11 ];
+      int iAnsiIndex = s_AnsiColors[ iIndex & 0x07 ] | ( iIndex & 0x08 );
+      hb_snprintf( szColor, sizeof( szColor ), "\033]P%X%02X%02X%02X",
+                   iAnsiIndex,
+                   ( pTerm->colors[ iIndex ] >> 16 ) & 0xff,
+                   ( pTerm->colors[ iIndex ] >> 8 ) & 0xff,
+                   ( pTerm->colors[ iIndex ] ) & 0xff );
+      hb_gt_trm_termOut( pTerm, ( BYTE * ) szColor, 10 );
+   }
+}
 
 /*
  * XTERM terminal operations
@@ -1589,8 +1610,6 @@ static BOOL hb_gt_trm_XtermSetMode( PHB_GTTRM pTerm, int * piRows, int * piCols 
 
 static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
 {
-   static const int  s_AnsiColors[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_XtermSetAttributes(%p,%d)", pTerm, iAttr));
 
    if( pTerm->iCurrentSGR != iAttr )
@@ -1860,8 +1879,6 @@ static void hb_gt_trm_AnsiSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
 
 static void hb_gt_trm_AnsiSetAttributes( PHB_GTTRM pTerm, int iAttr )
 {
-   static const int  s_AnsiColors[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiSetAttributes(%p,%d)", pTerm, iAttr));
 
    if( pTerm->iCurrentSGR != iAttr )
@@ -2090,6 +2107,17 @@ static void hb_gt_trm_PutStr( PHB_GTTRM pTerm, int iRow, int iCol, int iAttr, BY
    }
 
    pTerm->iCol += iLen;
+}
+
+static void hb_gt_trm_SetPalette( PHB_GTTRM pTerm, int iIndex )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetPalette(%p,%d)", pTerm, iIndex));
+
+   if( pTerm->terminal_type == TERM_LINUX || 
+       ( pTerm->terminal_ext & TERM_PUTTY ) )
+   {
+      hb_gt_trm_LinuxSetPalette( pTerm, iIndex );
+   }
 }
 
 static void hb_gt_trm_SetKeyTrans( PHB_GTTRM pTerm, char * pSrcChars, char * pDstChars )
@@ -3476,6 +3504,41 @@ static BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          szVal = hb_arrayGetCPtr( pInfo->pNewVal, 2 );
          if( iVal && szVal && *szVal )
             addKeyMap( pTerm, SET_CLIPKEY( iVal ), szVal );
+         break;
+
+      case HB_GTI_PALETTE:
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         {
+            iVal = hb_itemGetNI( pInfo->pNewVal );
+            if( iVal >= 0 && iVal < 16 )
+            {
+               pInfo->pResult = hb_itemPutNI( pInfo->pResult, pTerm->colors[ iVal ] );
+               if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
+               {
+                  pTerm->colors[ iVal ] = hb_itemGetNI( pInfo->pNewVal2 );
+                  hb_gt_trm_SetPalette( pTerm, iVal );
+                  hb_gt_trm_termFlush( pTerm );
+               }
+            }
+         }
+         else
+         {
+            if( !pInfo->pResult )
+               pInfo->pResult = hb_itemNew( NULL );
+            hb_arrayNew( pInfo->pResult, 16 );
+            for( iVal = 0; iVal < 16; iVal++ )
+               hb_arraySetNI( pInfo->pResult, iVal + 1, pTerm->colors[ iVal ] );
+            if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY &&
+                hb_arrayLen( pInfo->pNewVal ) == 16 )
+            {
+               for( iVal = 0; iVal < 16; iVal++ )
+               {
+                  pTerm->colors[ iVal ] = hb_arrayGetNI( pInfo->pNewVal, iVal + 1 );
+                  hb_gt_trm_SetPalette( pTerm, iVal );
+               }
+               hb_gt_trm_termFlush( pTerm );
+            }
+         }
          break;
 
       default:

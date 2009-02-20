@@ -2964,7 +2964,7 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
 }
 
 /*
- * __clsAddMsg( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit], <uiScope>, <xItemType> )
+ * __clsAddMsg( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit], <uiScope> )
  *
  * Add a message to the class.
  *
