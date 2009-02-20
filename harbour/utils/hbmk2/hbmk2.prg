@@ -672,7 +672,7 @@ FUNCTION Main( ... )
    ENDIF
 
    IF ! Empty( s_cGT )
-      fhnd := hb_FTempCreateEx( @s_cGTPRG, ".", "hbmkgt$", ".prg" )
+      fhnd := hb_FTempCreateEx( @s_cGTPRG, ".", "hbmkgt", ".prg" )
       IF fhnd != F_ERROR
          FWrite( fhnd, "ANNOUNCE HB_GTSYS" + hb_osNewLine() +;
                        "REQUEST HB_GT_" + Upper( SubStr( s_cGT, 3 ) ) + "_DEFAULT" + hb_osNewLine() )
@@ -856,7 +856,7 @@ FUNCTION Main( ... )
          ENDIF
 
          /* Add system libraries */
-         s_aLIBSYS := AAdd( s_aLIBSYS, "m" )
+         AAdd( s_aLIBSYS, "m" )
          DO CASE
          CASE t_cARCH == "linux"
             AAdd( s_aLIBSYS, "dl" )

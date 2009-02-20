@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-20 14:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-func.sh
+    + Added gpm lib to config file when mouse is enabled at build time.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed not to use '$' sign in generated temp filename.
+    ! Fixed recent typo causing RTE in *nix.
+    ; After these changes linux/gcc works out of the box, but
+      it still needs tweaking (x11, other libs).
+
 2009-02-20 13:43 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbver.c
     ! Fixed hb_verPlatform() to avoid confusion for other
