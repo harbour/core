@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-19 16:50 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * Fixed not to generate RT if class is already been registered.
+      Useful in cases where multiple windows are implemented.
+
 2009-02-20 00:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added autodetection of compiler based on build data on linux.

@@ -136,7 +136,13 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
    wndclass.lpszClassName = s_szClassName;
 
    if( ! RegisterClass( &wndclass ) )
-      hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
+   {
+      int iError = GetLastError();
+      if( iError != 1410 )
+      {
+         hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
+      }
+   }
 }
 
 static PHB_GTWVT hb_gt_wvt_Find( HWND hWnd )
