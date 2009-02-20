@@ -61,9 +61,10 @@
  *    hb_verPlatform() (support for determining many Windows flavours)
  *    hb_verCompiler() (support for determining some compiler version/revision)
  *
- * Copyright 2000-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 2000-2009 Viktor Szakats <viktor.szakats@syenar.hu>
  *    hb_verPlatform() (support for detecting Windows NT on DOS)
  *    hb_verPlatform() (rearrangment and cleanup)
+ *    hb_verPlatform() (Wine detection and some more)
  *
  * See doc/license.txt for licensing terms.
  *
@@ -98,6 +99,11 @@
          WinNT/2K, Win3x, Win9x, DOSEMU, Desqview, etc. [vszakats] */
 
 /* NOTE: The caller must free the returned buffer. [vszakats] */
+
+/* NOTE: The first word of the returned string must describe
+         the OS family as used in __PLATFORM__*. Latter macro
+         will in fact be formed from the string returned
+         by this function. [vszakats] */
 
 /* NOTE: Must be larger than 128, which is the maximum size of
          osVer.szCSDVersion (Windows). [vszakats] */
@@ -217,7 +223,7 @@ char * hb_verPlatform( void )
 #else
             if( GetProcAddress( hntdll, "wine_get_version" ) )
 #endif
-               pszWine = "Wine ";
+               pszWine = " (Wine)";
          }
 
          switch( osVer.dwPlatformId )
@@ -285,9 +291,9 @@ char * hb_verPlatform( void )
                break;
          }
 
-         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "%sWindows%s %lu.%lu.%04d",
-                   pszWine,
+         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu.%04d",
                    pszName,
+                   pszWine,
                    ( ULONG ) osVer.dwMajorVersion,
                    ( ULONG ) osVer.dwMinorVersion,
                    ( USHORT ) LOWORD( osVer.dwBuildNumber ) );
