@@ -8,6 +8,7 @@
 // Note: functions: SELECT and ACCEPT may collide with Clipper/xHarbour names
 
 
+#undef _WIN32_WINNT
 #define _WIN32_WINNT   0x0400
 
 #define _WINSOCKAPI_  // Prevents inclusion of Winsock.h in Windows.h

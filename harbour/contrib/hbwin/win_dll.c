@@ -54,10 +54,8 @@
  * If you do not wish that, delete this exception notice.
 */
 
-/* NOTE: I'm not totally familiar with how Xbase++ works.  This functionality
+/* NOTE: I'm not totally familiar with how Xbase++ works. This functionality
          was derived from the context in which the functions are used. [pt] */
-
-#define _WIN32_WINNT   0x0400 /* QUESTION: Do we need this? */
 
 #define HB_OS_WIN_USED
 

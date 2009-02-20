@@ -8,6 +8,60 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-20 10:32 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed build compiler detection when GNU C++ was used on Linux.
+
+  * contrib/hbwin/win_dll.c
+    % Removed unncessary (potential build-breaker) #define _WIN32_WINNT.
+
+  * contrib/hbwhat/whtdate.c
+  * contrib/hbwhat/whtini.c
+  * contrib/hbwhat/wincorec.c
+  * contrib/hbwhat/whticon.c
+  * contrib/hbwhat/whtcret.c
+  * contrib/hbwhat/whtsock.c
+  * contrib/hbwhat/whthead.c
+  * contrib/hbwhat/whtseria.c
+  * contrib/hbwhat/whtilst.c
+  * contrib/hbwhat/whtreg.c
+  * contrib/hbwhat/whtmem.c
+  * contrib/hbwhat/whtclpb.c
+  * contrib/hbwhat/whtmous.c
+  * contrib/hbwhat/whtrgn.c
+  * contrib/hbwhat/whtmeta.c
+  * contrib/hbwhat/whttbar.c
+  * contrib/hbwhat/whtrect.c
+  * contrib/hbwhat/whtbrsh.c
+  * contrib/hbwhat/whtgdi.c
+  * contrib/hbwhat/whtscrlb.c
+  * contrib/hbwhat/whtdlg.c
+  * contrib/hbwhat/whtview.c
+  * contrib/hbwhat/whtsys.c
+  * contrib/hbwhat/whtlv.c
+  * contrib/hbwhat/whtmisc.c
+  * contrib/hbwhat/whtcomm.c
+  * contrib/hbwhat/whtmmcap.c
+  * contrib/hbwhat/whtprn.c
+  * contrib/hbwhat/whtinet.c
+  * contrib/hbwhat/whttab.c
+  * contrib/hbwhat/whtfont.c
+  * contrib/hbwhat/whtshell.c
+  * contrib/hbwhat/whtcdlg.c
+  * contrib/hbwhat/whtbmp.c
+  * contrib/hbwhat/whtdir.c
+  * contrib/hbwhat/whtpen.c
+  * contrib/hbwhat/whtkbrd.c
+  * contrib/hbwhat/whttext.c
+  * contrib/hbwhat/whtmsg.c
+  * contrib/hbwhat/whtdc.c
+  * contrib/hbwhat/whtdraw.c
+  * contrib/hbwhat/whtmenu.c
+    ! Added #undef _WIN32_* where needed. This should fix compilation
+      problems if these macros were already #defined by user.
+      It's better however to honor the host setting.
+      This fixed a pending TOFIX.
+
 2009-02-20 09:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added support for build level (or system level if that's
@@ -321,7 +375,7 @@
   * make_gnu_os2.cmd
   * make_gnu.bat
     % Removed make -r switches.
-    ; TODO: Do the same in the rest of the scripts.
+    ; TODO: Do the same in the rest of the scripts. [DONE]
 
 2009-02-18 22:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
@@ -4336,7 +4390,7 @@
   * source/rtl/gtwvt/gtwvt.c
     ! Fixed to #undef _WIN32_WINNT before setting it.
     ; TOFIX: hbwhat has this problem in almost all of its source
-             files.
+             files. [DONE]
 
   * contrib/examples/uhttpd/modules/bldhrb.bat
   * contrib/examples/uhttpd/modules/showcounter.prg

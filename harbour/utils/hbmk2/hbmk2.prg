@@ -1206,7 +1206,7 @@ FUNCTION Main( ... )
 
             /* Compiling */
 
-            /* Order is significant. */
+            /* Order is significant */
             cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListCook( s_aPRG, NIL, ".c" ), s_aC ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LO}"  , ArrayToList( ListCook( s_aOBJUSER, cObjPrefix ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LA}"  , ArrayToList( s_aOBJA ) )
@@ -1263,7 +1263,7 @@ FUNCTION Main( ... )
 
          /* Linking */
 
-         /* Order is significant. */
+         /* Order is significant */
          cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
          cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( s_aOBJA ) )
          cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( s_aLIB ) )
@@ -1339,12 +1339,13 @@ FUNCTION Main( ... )
 STATIC FUNCTION SelfCOMP()
    LOCAL cCompiler := hb_Compiler()
 
+   /* Order is significant */
    IF     "Microsoft Visual C" $ cCompiler ; RETURN "msvc"
    ELSEIF "Borland"            $ cCompiler ; RETURN "bcc32"
    ELSEIF "CodeGear"           $ cCompiler ; RETURN "bcc32"
    ELSEIF "DJGPP"              $ cCompiler ; RETURN "djgpp"
    ELSEIF "MinGW"              $ cCompiler ; RETURN "mingw"
-   ELSEIF "GNU C++"            $ cCompiler ; RETURN "gcc"
+   ELSEIF "GNU C++"            $ cCompiler ; RETURN iif( t_cARCH == "linux", "gpp", "gcc" )
    ELSEIF "GNU C"              $ cCompiler ; RETURN "gcc"
    ELSEIF "Watcom C++"         $ cCompiler ; RETURN "owatcom"
    ELSEIF "Watcom C"           $ cCompiler ; RETURN "owatcom"

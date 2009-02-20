@@ -33,6 +33,7 @@
 
 #define WINVER         0X0400
 #define HB_OS_WIN_USED
+#undef _WIN32_WINNT
 #define _WIN32_WINNT   0x0400
 
 #include "hbwhat.h"
