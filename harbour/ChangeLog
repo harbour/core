@@ -8,6 +8,29 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-20 13:08 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-func.sh
+    + Added generation of hbmkcfg.hbp.
+      gt override, cflags, ldflags and slang/curses libs are
+      currently added.
+    ; TODO: Add this file to distro packages.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed handling of -DHB_EXT_ZLIB.
+    ! Fixed handling of -DHB_PCRE_REGEX.
+    + Added support for -DHB_POSIX_REGEX.
+    ! Removed -mconsole from *nix gccs too.
+    + Added new Linux targets mingw and mingwce for future
+      cross compiling support.
+    + Added remaining system libs for linux, sunos and hpux.
+    + Added a more complete set of win system libs for mingw.
+      TODO: Some more generic solution needs to be developed
+            because currently the win systems libs add by our
+            tools are pretty much random across the different
+            supported compilers.
+    + Added system lib list for mingwce.
+    + Path separator translation for mingwce.
+
 2009-02-20 13:18 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/classes.c
     * cleanup comment

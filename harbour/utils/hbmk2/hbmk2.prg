@@ -97,12 +97,16 @@ FUNCTION Main( ... )
       "hbrtl" ,;
       "hbpp" ,;
       "hbmacro" ,;
-      "hbpcre" ,;
-      "hbzlib" ,;
       "hbextern" ,;
       "gtcgi" ,;
       "gtstd" ,;
       "gtpca" }
+
+   LOCAL aLIB_BASE_PCRE := {;
+      "hbpcre" }
+
+   LOCAL aLIB_BASE_ZLIB := {;
+      "hbzlib" }
 
    LOCAL aLIB_BASE_DEBUG := {;
       "hbdebug" }
@@ -160,6 +164,8 @@ FUNCTION Main( ... )
    LOCAL s_aOBJA
    LOCAL s_aOBJUSER
    LOCAL s_aCLEAN
+   LOCAL s_lHB_PCRE := .T.
+   LOCAL s_lHB_ZLIB := .T.
 
    LOCAL s_lGUI := .F.
    LOCAL s_lMT := .F.
@@ -274,8 +280,6 @@ FUNCTION Main( ... )
                which are supported on one architecture only. In the future this
                should be automatically extracted from a comp/arch matrix. */
       SWITCH t_cCOMP
-      CASE "mingw"
-      CASE "mingwce"
       CASE "msvc"
       CASE "bcc32"
       CASE "xcc"
@@ -320,7 +324,7 @@ FUNCTION Main( ... )
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
    CASE t_cARCH == "linux"
-      aCOMPSUP := { "gcc", "gpp", "owatcom" }
+      aCOMPSUP := { "gcc", "gpp", "owatcom", "mingw", "mingwce" }
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
    CASE t_cARCH == "dos"
@@ -805,8 +809,6 @@ FUNCTION Main( ... )
          ENDIF
          IF s_lGUI
             cOpt_CompC += " -Wl,-mwindows"
-         ELSE
-            cOpt_CompC += " -Wl,-mconsole"
          ENDIF
          IF s_lMAP
             cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
@@ -838,23 +840,38 @@ FUNCTION Main( ... )
          ELSEIF "-fpic"  $ cSelfFlagC ; AAdd( s_aOPTC, "-fpic" )
          ENDIF
 
-         IF "-DHB_PCRE_REGEX" $ cSelfFlagC
+         DO CASE
+         CASE "-DHB_PCRE_REGEX" $ cSelfFlagC
             AAdd( s_aLIBSYS, "pcre" )
-         ENDIF
+            s_lHB_PCRE := .F.
+         CASE "-DHB_POSIX_REGEX" $ cSelfFlagC
+            s_lHB_PCRE := .F.
+         ENDCASE
          IF "-DHB_EXT_ZLIB" $ cSelfFlagC
             AAdd( s_aLIBSYS, "z" )
+            s_lHB_ZLIB := .F.
          ENDIF
          IF "-DHAVE_GPM_H" $ cSelfFlagC
             AAdd( s_aLIBSYS, "gpm" )
          ENDIF
 
-         IF t_cARCH == "linux"
-            /* Add system libraries */
-            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
+         /* Add system libraries */
+         s_aLIBSYS := AAdd( s_aLIBSYS, "m" )
+         DO CASE
+         CASE t_cARCH == "linux"
+            AAdd( s_aLIBSYS, "dl" )
+            AAdd( s_aLIBSYS, "rt" )
             IF ! s_lSHARED .AND. s_lSTATICFULL
-               s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "pthread", "dl" } )
+               AAdd( s_aLIBSYS, "pthread" )
             ENDIF
-         ENDIF
+         CASE t_cARCH == "sunos"
+            AAdd( s_aLIBSYS, "rt" )
+            AAdd( s_aLIBSYS, "socket" )
+            AAdd( s_aLIBSYS, "nsl" )
+            AAdd( s_aLIBSYS, "resolv" )
+         CASE t_cARCH == "hpux"
+            AAdd( s_aLIBSYS, "rt" )
+         ENDCASE
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "mingw" ) .OR. ;
@@ -899,7 +916,7 @@ FUNCTION Main( ... )
          ELSE
             AAdd( s_aOPTC, "-o{OE}" )
          ENDIF
-         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "gdi32" } )
+         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "winspool", "gdi32", "comctl32", "comdlg32", "ole32", "oleaut32", "uuid", "wsock32", "ws2_32" } )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt", "harbour" ) }
 
       CASE ( t_cARCH == "dos" .AND. t_cCOMP == "djgpp" ) .OR. ;
@@ -1164,7 +1181,8 @@ FUNCTION Main( ... )
       CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "dmc"
       CASE t_cARCH == "win" .AND. t_cCOMP == "icc"
-      CASE t_cARCH == "win" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wince/ARM on win/x86 */
+      CASE t_cARCH $ "win|linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wince/ARM on win/x86 */
+         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl", "uuid", "ole32" } )
       CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "xcc"
       ENDCASE
@@ -1179,7 +1197,9 @@ FUNCTION Main( ... )
                                    aLIB_BASE_DEBUG,;
                                    s_aLIBVM,;
                                    iif( s_lNULRDD, aLIB_BASE_NULRDD, aLIB_BASE_RDD ),;
-                                   aLIB_BASE2 } )
+                                   aLIB_BASE2,;
+                                   iif( s_lHB_PCRE, aLIB_BASE_PCRE, {} ),;
+                                   iif( s_lHB_ZLIB, aLIB_BASE_ZLIB, {} ) } )
       ENDIF
 
       /* Merge lib lists. */
@@ -1490,7 +1510,7 @@ STATIC FUNCTION PathSepToSelf( cFileName )
 
 STATIC FUNCTION PathSepToTarget( cFileName )
 
-   IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP == "mingw" )
+   IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP $ "mingw|mingwce" )
       RETURN StrTran( cFileName, "/", "\" )
    ENDIF
 
@@ -1973,7 +1993,7 @@ STATIC PROCEDURE ShowHelp()
       "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!dmc}, {(win|linux)&!owatcom}" ,;
       "  - Defaults and feature support vary by architecture/compiler." ,;
       "  - Supported <comp> values for each supported <arch> value:" ,;
-      "    linux  : gcc, gpp, owatcom" ,;
+      "    linux  : gcc, gpp, owatcom, mingw, mingwce" ,;
       "    darwin : gcc" ,;
       "    win    : gcc, mingw, msvc, bcc32, owatcom, pocc, pocc64," ,;
       "             dmc, rsxnt, xcc, icc" ,; /* poccce, mingwce, msvcce */
