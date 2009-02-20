@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-20 18:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/gttrm/gttrm.c
+    * reverted the RGB numeric color definition to be compatible
+      with Windows GTs which seems to use RGB values directly.
+      Users who use to define RGB colors in hex notation (0xRRGGBB)
+      should now remember that it's BGR definition (0xBBGGRR).
+      Why MS have to make everything in reverted way?
+
 2009-02-20 15:47 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-func.sh
     ! Two typos.

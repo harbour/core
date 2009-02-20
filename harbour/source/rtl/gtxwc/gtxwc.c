@@ -283,20 +283,20 @@ static const UnixBoxChar boxTranslate[] ={
 /* these are standard PC console colors in RGB */
 static const int rgb_values[] = {
    0x000000,   /* black         "rgb:00/00/00" */
-   0x0000AA,   /* blue          "rgb:00/00/AA" */
+   0xAA0000,   /* blue          "rgb:00/00/AA" */
    0x00AA00,   /* green         "rgb:00/AA/00" */
-   0x00AAAA,   /* cyan          "rgb:00/AA/AA" */
-   0xAA0000,   /* red           "rgb:AA/00/00" */
+   0xAAAA00,   /* cyan          "rgb:00/AA/AA" */
+   0x0000AA,   /* red           "rgb:AA/00/00" */
    0xAA00AA,   /* magenta       "rgb:AA/00/AA" */
-   0xAA5500,   /* brown         "rgb:AA/55/00" */
+   0x0055AA,   /* brown         "rgb:AA/55/00" */
    0xAAAAAA,   /* light gray    "rgb:AA/AA/AA" */
    0x555555,   /* gray          "rgb:55/55/55" */
-   0x5555FF,   /* light blue    "rgb:55/55/FF" */
+   0xFF5555,   /* light blue    "rgb:55/55/FF" */
    0x55FF55,   /* light green   "rgb:55/FF/55" */
-   0x55FFFF,   /* light cyan    "rgb:55/FF/FF" */
-   0xFF5555,   /* light red     "rgb:FF/55/55" */
+   0xFFFF55,   /* light cyan    "rgb:55/FF/FF" */
+   0x5555FF,   /* light red     "rgb:FF/55/55" */
    0xFF55FF,   /* light magenta "rgb:FF/55/FF" */
-   0xFFFF55,   /* yellow        "rgb:FF/FF/55" */
+   0x55FFFF,   /* yellow        "rgb:FF/FF/55" */
    0xFFFFFF    /* white         "rgb:FF/FF/FF" */
 };
 
@@ -2474,9 +2474,9 @@ static BOOL hb_gt_xwc_setPalette( PXWND_DEF wnd )
             XFreeColors( wnd->dpy, wnd->colorsmap, &wnd->colors[i].pixel, 1, 0 );
          hb_snprintf( rgb_color, sizeof( rgb_color ),
                       "rgb:%02X/%02X/%02X",
-                      ( wnd->colors[i].value >> 16 ) & 0xFF,
+                      ( wnd->colors[i].value ) & 0xFF,
                       ( wnd->colors[i].value >> 8 ) & 0xFF,
-                      ( wnd->colors[i].value ) & 0xFF );
+                      ( wnd->colors[i].value >> 16 ) & 0xFF );
          if( XLookupColor( wnd->dpy, wnd->colorsmap, rgb_color, &dummy, &color ) != 0 )
          {
             if( hb_gt_xwc_AllocColor( wnd, &color ) )

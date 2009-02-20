@@ -1573,9 +1573,9 @@ static void hb_gt_trm_LinuxSetPalette( PHB_GTTRM pTerm, int iIndex )
       int iAnsiIndex = s_AnsiColors[ iIndex & 0x07 ] | ( iIndex & 0x08 );
       hb_snprintf( szColor, sizeof( szColor ), "\033]P%X%02X%02X%02X",
                    iAnsiIndex,
-                   ( pTerm->colors[ iIndex ] >> 16 ) & 0xff,
+                   ( pTerm->colors[ iIndex ] ) & 0xff,
                    ( pTerm->colors[ iIndex ] >> 8 ) & 0xff,
-                   ( pTerm->colors[ iIndex ] ) & 0xff );
+                   ( pTerm->colors[ iIndex ] >> 16 ) & 0xff );
       hb_gt_trm_termOut( pTerm, ( BYTE * ) szColor, 10 );
    }
 }
