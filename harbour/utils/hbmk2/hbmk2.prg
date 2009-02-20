@@ -66,7 +66,7 @@
 /* TODO: msvc/bcc32: Use separate link phase. This allows incremental links. */
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cleanup on variable names. */
-/* TODO: remove -n?, -q0? from default harbour switches */
+/* TODO: remove -n? from default harbour switches */
 /* TODO: MAIN() detection or override? Someone who's familiar with this issue pls help. */
 
 #if ! defined( HBMK_NO_GTCGI )
@@ -77,8 +77,8 @@
 REQUEST hbm_ARCH
 REQUEST hbm_COMP
 
-THREAD STATIC t_lQuiet := .F.
-THREAD STATIC t_lInfo := .T. /* Enabled while hbmk gets matured, should later set to .F. */
+THREAD STATIC t_lQuiet := .T.
+THREAD STATIC t_lInfo := .F.
 THREAD STATIC t_cARCH
 THREAD STATIC t_cCOMP
 
@@ -235,6 +235,14 @@ FUNCTION Main( ... )
       CASE Lower( cParam )            == "-hbcmp" ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
       CASE Lower( cParam )            == "-hblnk" ; t_lQuiet := .T. ; t_lInfo := .F.
       CASE Lower( cParam )            == "-info"  ; t_lInfo := .T.
+      CASE Lower( cParam ) == "-help" .OR. ;
+           Lower( cParam ) == "--help"
+
+         ShowHeader()
+         ShowHelp( .T. )
+         PauseForKey()
+         RETURN 9
+
       ENDCASE
    NEXT
 
@@ -721,7 +729,7 @@ FUNCTION Main( ... )
       cCommand := DirAddPathSep( s_cHB_BIN_INSTALL ) +;
                   cBin_CompPRG +;
                   " " + ArrayToList( s_aPRG ) +;
-                  " -n -q0" +;
+                  " -n" +;
                   " -i" + s_cHB_INC_INSTALL +;
                   iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
                   iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
@@ -1939,11 +1947,11 @@ STATIC PROCEDURE ShowHeader()
 
    RETURN
 
-STATIC PROCEDURE ShowHelp()
+STATIC PROCEDURE ShowHelp( lLong )
 
    /* TODO: "  -[no]fmstat      enable/disable runtime memory statistics" ,; */
 
-   LOCAL aText := {;
+   LOCAL aText_Basic := {;
       "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c|[.obj|.o]]>" ,;
       "" ,;
       "Options:" ,;
@@ -1955,7 +1963,12 @@ STATIC PROCEDURE ShowHelp()
       "  -mt|-st          link with multi-thread/single-thread libs" ,;
       "  -gui|-std        create GUI/console executable" ,;
       "  -gt<name>        link with GT<name> GT driver, can be repeated to link" ,;
-      "                   with more GTs. First one will be the default at runtime" ,;
+      "                   with more GTs. First one will be the default at runtime" }
+
+   LOCAL aText_Help := {;
+      "  -help            long help" }
+
+   LOCAL aText_Long := {;
       "  -nulrdd[-]       link with nulrdd" ,;
       "  -bldf[-]         inherit all/no (default) flags from Harbour build" ,;
       "  -bldf=[p][c][l]  inherit .prg/.c/linker flags (or none) from Harbour build" ,;
@@ -1974,12 +1987,13 @@ STATIC PROCEDURE ShowHelp()
       "  -comp=<comp>     use specific compiler. Same as HB_COMPILER envvar" ,;
       "                   Special value:" ,;
       "                    - bld: use original build settings (default on *nix)" ,;
-      "  -info            turn on informational messages (default)" ,;
-      "  -quiet           suppress logo and informational messages" ,;
+      "  -info            turn on informational messages" ,;
+      "  -quiet           suppress logo" ,;
       "" ,;
       "Notes:" ,;
       "  - Don't forget to create a MAIN() entry function in your application." ,;
       "  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>." ,;
+      "  - Regular Harbour options are also accepted." ,;
       "  - Multiple -l, -L and <script> parameters are accepted." ,;
       "  - .hbp option files in current dir are automatically processed." ,;
       "  - .hbp options (they should come in separate lines):" ,;
@@ -2001,7 +2015,10 @@ STATIC PROCEDURE ShowHelp()
       "    dos    : gcc, djgpp, owatcom, rsx32" ,;
       "    bsd, hpux, sunos: gcc" }
 
-   AEval( aText, {|tmp| OutStd( tmp + hb_osNewLine() ) } )
+   DEFAULT lLong TO .F.
+
+   AEval( aText_Basic, {|tmp| OutStd( tmp + hb_osNewLine() ) } )
+   AEval( iif( lLong, aText_Long, aText_Help ), {|tmp| OutStd( tmp + hb_osNewLine() ) } )
 
    RETURN
 

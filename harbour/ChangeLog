@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-20 15:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    * Removed -q0 default Harbour option.
+    * Turned off informational messages. (turn it on with -info)
+    * Help screen made shorter.
+    + Added -help option to show the full help.
+    * Showing no logo for normal operation.
+
 2009-02-20 14:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-func.sh
     + Added gpm lib to config file when mouse is enabled at build time.
