@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-20 10:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.sh
+    ! Fixed s&r error (LIBTOOHB_USR_LDFLAGS).
+    * Renamed LIBTOOL_USR to HB_USR_LIBTOOL.
+
 2009-02-20 10:32 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fixed build compiler detection when GNU C++ was used on Linux.

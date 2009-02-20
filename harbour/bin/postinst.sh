@@ -56,7 +56,7 @@ then
         # We must build an archive index on Darwin
         #AR="${CCPREFIX}ar -crs"
         AR="libtool"
-        AR_OPT="-static ${LIBTOOHB_USER_LDFLAGS} -o "
+        AR_OPT="-static ${HB_USR_LIBTOOL} -o "
     fi
 
     if [ -n "${HB_TOOLS_PREF}" ]; then
