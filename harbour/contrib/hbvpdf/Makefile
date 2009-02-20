@@ -4,6 +4,8 @@
 
 ROOT = ../../
 
+LIBNAME=hbvpdf
+
 PRG_SOURCES=\
 	hbvpdf.prg \
 	hbvpdft.prg \
@@ -11,8 +13,6 @@ PRG_SOURCES=\
 
 PRG_HEADERS=\
 	hbvpdf.ch \
-
-LIBNAME=hbvpdf
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

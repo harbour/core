@@ -4,6 +4,8 @@
 
 ROOT = ../../
 
+LIBNAME=xhb
+
 C_SOURCES=\
 	filestat.c \
 	freadlin.c \
@@ -42,8 +44,6 @@ PRG_SOURCES=\
 PRG_HEADERS=\
 	hbcompat.ch \
 	xhb.ch \
-
-LIBNAME=xhb
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

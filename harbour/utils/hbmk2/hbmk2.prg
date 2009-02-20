@@ -50,6 +50,18 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2003 Przemyslaw Czerpak <druzus@priv.onet.pl>
+ *    gcc and *nix configuration elements.
+ *    bash script with similar purpose for gcc family.
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include "common.ch"
 #include "directry.ch"
 #include "fileio.ch"
@@ -61,8 +73,6 @@
 /* TODO: Add support for Windows resource files. */
 /* TODO: Add support for library creation. */
 /* TODO: Add support for gtsln and gtcrs. */
-/* TODO: Add support for fmstat and nofmstat. Possibly we need something
-         cleaner than in hbmk (script). */
 /* TODO: msvc/bcc32: Use separate link phase. This allows incremental links. */
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cleanup on variable names. */
@@ -134,7 +144,7 @@ FUNCTION Main( ... )
       "rddfpt" }
 
    LOCAL s_cGT
-   LOCAL s_cGTPRG
+   LOCAL s_cPRGSTUB
 
    LOCAL s_cHB_INSTALL_PREFIX
    LOCAL s_cHB_BIN_INSTALL
@@ -180,9 +190,11 @@ FUNCTION Main( ... )
    LOCAL s_lBLDFLGC := .F.
    LOCAL s_lBLDFLGL := .F.
    LOCAL s_lRUN := .F.
+   LOCAL s_lFMSTAT := NIL /* NIL = default, .T. = on, .F. = off */
 
    LOCAL aCOMPDET
    LOCAL aCOMPSUP
+   LOCAL cGTDEFAULT
 
    LOCAL cLibPrefix
    LOCAL cLibExt
@@ -217,7 +229,11 @@ FUNCTION Main( ... )
    LOCAL cSelfFlagC   := hb_Version( HB_VERSION_FLAG_C )
    LOCAL cSelfFlagL   := hb_Version( HB_VERSION_FLAG_LINKER )
 
-   LOCAL cDL_Version := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + hb_ntos( hb_Version( HB_VERSION_MINOR ) )
+   LOCAL cDL_Version_NonGNU := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) +;
+                               hb_ntos( hb_Version( HB_VERSION_MINOR ) )
+   LOCAL cDL_Version        := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + "." +;
+                               hb_ntos( hb_Version( HB_VERSION_MINOR ) ) + "." +;
+                               hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
 
    IF PCount() == 0
       ShowHeader()
@@ -246,26 +262,27 @@ FUNCTION Main( ... )
       ENDCASE
    NEXT
 
-   SWITCH Lower( FN_NameGet( hb_argv( 0 ) ) )
-   CASE "hbcc"
+   tmp := Lower( FN_NameGet( hb_argv( 0 ) ) )
+   DO CASE
+   CASE Right( tmp, 4 ) == "hbcc" .OR. ;
+        Left(  tmp, 4 ) == "hbcc"
       t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .T.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hbcc option." + hb_osNewLine() )
       ENDIF
-      EXIT
-   CASE "hbcmp"
+   CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
+        Left(  tmp, 5 ) == "hbcmp"
       t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hbcmp option." + hb_osNewLine() )
       ENDIF
-      EXIT
-   CASE "hblnk"
+   CASE Right( tmp, 5 ) == "hblnk" .OR. ;
+        Left(  tmp, 5 ) == "hblnk"
       t_lQuiet := .T. ; t_lInfo := .F.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hblnk option." + hb_osNewLine() )
       ENDIF
-      EXIT
-   ENDSWITCH
+   ENDCASE
 
    IF ! t_lQuiet
       ShowHeader()
@@ -331,16 +348,19 @@ FUNCTION Main( ... )
       aCOMPSUP := { "gcc" }
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
+      cGTDEFAULT := "gttrm"
    CASE t_cARCH == "linux"
       aCOMPSUP := { "gcc", "gpp", "owatcom", "mingw", "mingwce" }
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
+      cGTDEFAULT := "gtstd"
    CASE t_cARCH == "dos"
       aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "djgpp"   },;
                     { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
       aCOMPSUP := { "djgpp", "gcc", "owatcom", "rsx32" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtdos" }
+      cGTDEFAULT := "gtdos"
    CASE t_cARCH == "os2"
       aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "gcc"     },;
                     { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
@@ -348,6 +368,7 @@ FUNCTION Main( ... )
       aCOMPSUP := { "gcc", "owatcom", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtos2" }
+      cGTDEFAULT := "gtos2"
    CASE t_cARCH == "win"
       /* Ordering is significant.
          owatcom also keeps a cl.exe in it's binary dir. */
@@ -363,6 +384,7 @@ FUNCTION Main( ... )
       aCOMPSUP := { "gcc", "mingw", "msvc", "bcc32", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
+      cGTDEFAULT := "gtwin"
    OTHERWISE
       OutErr( "hbmk: Error: HB_ARCHITECTURE value unknown: " + t_cARCH + hb_osNewLine() )
       PauseForKey()
@@ -558,7 +580,7 @@ FUNCTION Main( ... )
    NEXT
 
    /* Process automatic control files. */
-   HBP_ProcessAll( lNOHBP
+   HBP_ProcessAll( lNOHBP,;
                    @s_aLIBUSER,;
                    @s_aLIBPATH,;
                    @s_aOPTPRG,;
@@ -613,6 +635,9 @@ FUNCTION Main( ... )
       CASE Lower( cParam ) == "-map"             ; s_lMAP      := .T.
       CASE Lower( cParam ) == "-map-"            ; s_lMAP      := .F.
       CASE Lower( cParam ) == "-nomap"           ; s_lMAP      := .F.
+      CASE Lower( cParam ) == "-fmstat"          ; s_lFMSTAT   := .T.
+      CASE Lower( cParam ) == "-fmstat-"         ; s_lFMSTAT   := .F.
+      CASE Lower( cParam ) == "-nofmstat"        ; s_lFMSTAT   := .F.
       CASE Lower( cParam ) == "-strip"           ; s_lSTRIP    := .T.
       CASE Lower( cParam ) == "-strip-"          ; s_lSTRIP    := .F.
       CASE Lower( cParam ) == "-nostrip"         ; s_lSTRIP    := .F.
@@ -622,7 +647,7 @@ FUNCTION Main( ... )
       CASE Lower( cParam ) == "-trace"           ; s_lTRACE    := .T.
       CASE Lower( cParam ) == "-trace-"          ; s_lTRACE    := .F.
       CASE Lower( cParam ) == "-notrace"         ; s_lTRACE    := .F.
-      CASE Lower( Left( cParam, 3 ) ) == "-gt"   ; DEFAULT s_cGT TO SubStr( cParam, 2 )
+      CASE Lower( Left( cParam, 3 ) ) == "-gt"   ; s_cGT := SubStr( cParam, 2 )
       CASE Left( cParam, 2 ) == "-o"
 
          tmp := PathSepToSelf( SubStr( cParam, 3 ) )
@@ -678,16 +703,29 @@ FUNCTION Main( ... )
       RETURN 4
    ENDIF
 
-   IF ! Empty( s_cGT )
-      fhnd := hb_FTempCreateEx( @s_cGTPRG, ".", "hbmkgt", ".prg" )
+   IF t_cCOMP $ "mingwce|poccce"
+      cGTDEFAULT := "gtwvt"
+   ENDIF
+
+   IF ( ! Empty( s_cGT ) .AND. !( s_cGT == cGTDEFAULT ) ) .OR. ;
+     s_lFMSTAT != NIL
+
+      fhnd := hb_FTempCreateEx( @s_cPRGSTUB, ".", "hbstub", ".prg" )
       IF fhnd != F_ERROR
-         FWrite( fhnd, "ANNOUNCE HB_GTSYS" + hb_osNewLine() +;
-                       "REQUEST HB_GT_" + Upper( SubStr( s_cGT, 3 ) ) + "_DEFAULT" + hb_osNewLine() )
+         IF ! Empty( s_cGT )
+            FWrite( fhnd, "ANNOUNCE HB_GTSYS" + hb_osNewLine() +;
+                          "REQUEST HB_GT_" + Upper( SubStr( s_cGT, 3 ) ) + "_DEFAULT" + hb_osNewLine() )
+         ENDIF
+         IF s_lFMSTAT != NIL
+            FWrite( fhnd, "REQUEST " + iif( s_lFMSTAT, "HB_FM_STAT", "HB_FM_NOSTAT" ) + hb_osNewLine() )
+         ENDIF
          FClose( fhnd )
       ELSE
-         OutErr( "hbmk: Warning: C compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
+         OutErr( "hbmk: Warning: Stub helper program couldn't be created." + hb_osNewLine() )
+         PauseForKey()
+         RETURN 5
       ENDIF
-      AAdd( s_aPRG, s_cGTPRG )
+      AAdd( s_aPRG, s_cPRGSTUB )
    ENDIF
 
    /* Merge user libs from command line and envvar. Command line has priority. */
@@ -710,13 +748,17 @@ FUNCTION Main( ... )
 
    DO CASE
    CASE t_cARCH $ "bsd|linux|sunos"
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt.so", "harbour.so" ) }
+      s_aLIBSHARED := { iif( s_lMT, "harbourmt." + cDL_Version + ".so",;
+                                    "harbour." + cDL_Version + ".so" ) }
    CASE t_cARCH == "hpux"
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt.sl", "harbour.sl" ) }
+      s_aLIBSHARED := { iif( s_lMT, "harbourmt." + cDL_Version + ".sl",;
+                                    "harbour." + cDL_Version + ".sl" ) }
    CASE t_cARCH == "darwin"
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt.dylib", "harbour.dylib" ) }
+      s_aLIBSHARED := { iif( s_lMT, "harbourmt." + cDL_Version + ".dylib",;
+                                    "harbour." + cDL_Version + ".dylib" ) }
    CASE t_cARCH $ "os2|win"
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt", "harbour" ) }
+      s_aLIBSHARED := { iif( s_lMT, "harbourmt",;
+                                    "harbour" ) }
    OTHERWISE
       s_aLIBSHARED := NIL
    ENDCASE
@@ -742,18 +784,19 @@ FUNCTION Main( ... )
 
       IF ( tmp := hb_run( cCommand ) ) != 0
          OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ": '" + cCommand + "'" + hb_osNewLine() )
-         IF ! Empty( s_cGTPRG )
-            FErase( s_cGTPRG )
+         IF ! Empty( s_cPRGSTUB )
+            FErase( s_cPRGSTUB )
          ENDIF
          PauseForKey()
-         RETURN 5
+         RETURN 6
       ENDIF
    ENDIF
 
-   IF ! lStopAfterHarbour
-
-      /* Assemble library list */
-
+   IF lStopAfterHarbour
+      IF ! Empty( s_cPRGSTUB )
+         FErase( s_cPRGSTUB )
+      ENDIF
+   ELSE
       /* C compilation/linking */
 
       s_aLIB3RD := {}
@@ -776,6 +819,8 @@ FUNCTION Main( ... )
          {DL}     dir for libs
          {SCRIPT} save command line to script and pass it to command as @<filename>
       */
+
+      /* Assemble library list */
 
       s_aLIBVM := iif( s_lMT, aLIB_BASE_MT, aLIB_BASE_ST )
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, s_aLIBHBGT } )
@@ -808,7 +853,8 @@ FUNCTION Main( ... )
          cOpt_CompC := "{LC} {LO} {LA} -O3 {FC} -I{DI} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
-         IF t_cARCH == "linux"
+         IF t_cARCH == "linux" .OR. ;
+            t_cARCH == "bsd"
             cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
          ELSE
             cOpt_CompC += " {LL}"
@@ -821,7 +867,12 @@ FUNCTION Main( ... )
             cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
          ENDIF
          IF t_cARCH == "darwin"
-            AAdd( s_aOPTC, "-no-cpp-precomp -Wno-long-double" )
+            AAdd( s_aOPTC, "-no-cpp-precomp" )
+            AAdd( s_aOPTC, "-Wno-long-double" )
+            IF s_lSHARED
+               AAdd( s_aOPTC, "-bind_at_load" )
+               AAdd( s_aOPTC, "-multiply_defined suppress" )
+            ENDIF
          ENDIF
          IF s_lSTRIP .AND. !( t_cARCH == "sunos" )
             AAdd( s_aOPTC, "-s" )
@@ -872,13 +923,18 @@ FUNCTION Main( ... )
 
          /* Add system libraries */
          AAdd( s_aLIBSYS, "m" )
+         IF s_lMT
+            AAdd( s_aLIBSYS, "pthread" )
+         ENDIF
          DO CASE
          CASE t_cARCH == "linux"
             AAdd( s_aLIBSYS, "dl" )
             AAdd( s_aLIBSYS, "rt" )
+#if 0
             IF ! s_lSHARED .AND. s_lSTATICFULL
                AAdd( s_aLIBSYS, "pthread" )
             ENDIF
+#endif
          CASE t_cARCH == "sunos"
             AAdd( s_aLIBSYS, "rt" )
             AAdd( s_aLIBSYS, "socket" )
@@ -886,7 +942,18 @@ FUNCTION Main( ... )
             AAdd( s_aLIBSYS, "resolv" )
          CASE t_cARCH == "hpux"
             AAdd( s_aLIBSYS, "rt" )
+         CASE t_cARCH == "darwin"
+            DO CASE
+            CASE s_cGT == "gtcrs"
+               AAdd( s_aLIBSYS, "ncurses" )
+            CASE s_cGT == "gtsln"
+               AAdd( s_aLIBSYS, "slang" )
+            ENDCASE
          ENDCASE
+
+         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
+            AAdd( iif( s_lSHARED, s_aLIBSHARED, s_aLIBUSER ), iif( s_lMT, "hbfmmt", "hbfm" ) )
+         ENDIF
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "mingw" ) .OR. ;
@@ -933,6 +1000,10 @@ FUNCTION Main( ... )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "winspool", "gdi32", "comctl32", "comdlg32", "ole32", "oleaut32", "uuid", "wsock32", "ws2_32" } )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt", "harbour" ) }
+
+         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
+            AAdd( iif( s_lSHARED, s_aLIBSHARED, s_aLIBUSER ), iif( s_lMT, "hbfmmt", "hbfm" ) )
+         ENDIF
 
       CASE ( t_cARCH == "dos" .AND. t_cCOMP == "djgpp" ) .OR. ;
            ( t_cARCH == "dos" .AND. t_cCOMP == "rsx32" )
@@ -1115,7 +1186,11 @@ FUNCTION Main( ... )
          ENDIF
          /* TOFIX: The two build systems should generate the same .dll name, otherwise
                    we can only be compatible with one of them. non-GNU is the common choice here. */
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + "-b32", "harbour-" + cDL_Version + "-b32" ), "hbmainstd", "hbmainwin", "hbcommon" }
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-b32",;
+                                       "harbour-" + cDL_Version_NonGNU + "-b32" ),;
+                           "hbmainstd",;
+                           "hbmainwin",;
+                           "hbcommon" }
 
       CASE t_cARCH == "win" .AND. t_cCOMP == "msvc"
          IF s_lDEBUG
@@ -1153,7 +1228,11 @@ FUNCTION Main( ... )
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
          /* TOFIX: The two build systems should generate the same .dll name, otherwise
                    we can only be compatible with one of them. non-GNU is the common choice here. */
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + "-vc", "harbour-" + cDL_Version + "-vc" ), "hbmainstd", "hbmainwin", "hbcommon" }
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-vc",;
+                                       "harbour-" + cDL_Version_NonGNU + "-vc" ),;
+                           "hbmainstd",;
+                           "hbmainwin",;
+                           "hbcommon" }
 
       CASE t_cARCH == "win" .AND. t_cCOMP == "pocc"
          IF s_lGUI
@@ -1343,8 +1422,8 @@ FUNCTION Main( ... )
 
       /* Cleanup */
 
-      IF ! Empty( s_cGTPRG )
-         FErase( s_cGTPRG )
+      IF ! Empty( s_cPRGSTUB )
+         FErase( s_cPRGSTUB )
       ENDIF
       AEval( ListCook( s_aPRG, NIL, ".c" ), {|tmp| FErase( tmp ) } )
       IF ! lStopAfterCComp
@@ -1676,7 +1755,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
 
    FOR EACH cLine IN hb_ATokens( cFile, _EOL )
 
-      cLine := ArchCompFilter( AllTrim( cLine ) )
+      cLine := AllTrim( ArchCompFilter( AllTrim( cLine ) ) )
 
       DO CASE
       CASE Lower( Left( cLine, Len( "libs="       ) ) ) == "libs="       ; cLine := SubStr( cLine, Len( "libs="       ) + 1 )
@@ -1959,8 +2038,6 @@ STATIC PROCEDURE ShowHeader()
 
 STATIC PROCEDURE ShowHelp( lLong )
 
-   /* TODO: "  -[no]fmstat      enable/disable runtime memory statistics" ,; */
-
    LOCAL aText_Basic := {;
       "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c|[.obj|.o]]>" ,;
       "" ,;
@@ -1979,6 +2056,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -help            long help" }
 
    LOCAL aText_Long := {;
+      "  -[no]fmstat      enable/disable runtime memory statistics" ,;
+      "                   (currently available for gcc compilers)" ,;
       "  -nulrdd[-]       link with nulrdd" ,;
       "  -bldf[-]         inherit all/no (default) flags from Harbour build" ,;
       "  -bldf=[p][c][l]  inherit .prg/.c/linker flags (or none) from Harbour build" ,;

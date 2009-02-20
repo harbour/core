@@ -99,7 +99,7 @@ mk_hbgetlibsctb()
         then
             libs="$libs gtwin"
         fi
-        echo "$libs hbct hbnf hbmzip hbcrypt hbtip xhb hbgd hbfimage rddsql sddfb sddmy sddpg hbodbc hbpgsql hbmysql hbfbird rddads rddado hbhpdf hbvpdf hbcurl hbwin gtwvg hbgtalleg hbsqlit3 hbbtree $HB_USER_LIBS"
+        echo "$libs hbct hbnf hbmzip hbcrypt hbtip xhb hbgd hbfimage rddsql sddfb sddmy sddpg hbodbc hbpgsql hbmysql hbfbird rddads rddado hbhpdf hbvpdf hbcurl hbwin gtwvg gtalleg hbsqlit3 hbbtree $HB_USER_LIBS"
         #"hbgf hbgt hbbmcdx hbmisc hbole hbtpathy hbwhat hbziparc hbmsql"
     else
         echo "$@"
@@ -421,8 +421,6 @@ HB_MAIN_FUNC=\`echo \${HB_MAIN_FUNC}|tr '[a-z]' '[A-Z]'\`
 
 HB_PATHS="-I\${HB_INC_INSTALL}"
 GCC_PATHS="\${HB_PATHS} -L\${HB_LIB_INSTALL}"
-
-[ "\${HB_GEN}" != "" ] || HB_OPT="\${HB_OPT} -gc0"
 
 HB_GPM_LIB=""
 if [ -f "\${HB_LIB_INSTALL}/libgtsln.a" ]; then

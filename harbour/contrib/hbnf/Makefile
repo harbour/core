@@ -4,6 +4,8 @@
 
 ROOT = ../../
 
+LIBNAME=hbnf
+
 C_SOURCES =\
 	alt.c \
 	caplock.c \
@@ -149,8 +151,6 @@ BAD_PRG_SOURCES=\
 
 PRG_HEADERS=\
 	ftmenuto.ch \
-
-LIBNAME=hbnf
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

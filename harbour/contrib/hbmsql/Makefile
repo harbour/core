@@ -4,6 +4,8 @@
 
 ROOT = ../../
 
+LIBNAME=hbmsql
+
 C_SOURCES=\
 	msql.c \
 
@@ -12,8 +14,6 @@ PRG_SOURCES=\
 
 PRG_HEADERS=\
 	msql.ch \
-
-LIBNAME=hbmsql
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

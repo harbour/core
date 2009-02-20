@@ -4,6 +4,8 @@
 
 ROOT = ../../
 
+LIBNAME=hbmisc
+
 C_SOURCES=\
 	dates2.c \
 	hb_f.c \
@@ -18,7 +20,5 @@ PRG_SOURCES=\
 	numtxten.prg \
 	stringp.prg \
 	twirler.prg \
-
-LIBNAME=hbmisc
 
 include $(TOP)$(ROOT)config/lib.cf

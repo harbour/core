@@ -8,6 +8,60 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-20 19:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-func.sh
+    ! Fixed gtalleg lib name.
+    % Removed explicit harbour -gc0 option. This is now the default.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added fmstat/nofmstat support.
+    ! Minor fix to allow more freedom in formatting inside .hbp files.
+    ! Fixed to delete prg stub file when using -hbcc option.
+    + Added Copyright section for Przemek for the ideas I've
+      borrowed from hbmk script and contributed code.
+    + Detect platform default GT and only create stub if the
+      user selected GT is different.
+    + Now using versions shared libs on *nixes.
+    + Mode detection now regards the ending or the beginning
+      of the original name, so prefixed or postfixed names will
+      also be recognized: xhbcmp, hbcmpx, myhbcmp.
+    ! Fixed to multiple -gt options override each other so the
+      last one will be effective.
+    ! Fixed error message text when stub cannot be created.
+      Furthermore in this case hbmk will now quit.
+    + Also using '-Wl,--start-group' for bsd (from hbmk script).
+    + Added '-bind_at_load', '-multiply_defined suppress' gcc
+      options for darwin shared mode (from hbmk script).
+    * Changed stub name to hbstub (from hbmkgt).
+    * pthread lib handling streamlined based on hbmk script,
+      but this probably needs further cleaning as the script
+      isn't clear to me here.
+    + Added fmstat/nofmstat switch. It most probably needs some
+      tweaking, as the conditions seem rather sophisticated here.
+      TODO: For non-*nix/non-gcc platforms (msvc/bcc32/owatcom
+            most importantly).
+    + Added system libs for darwin if gtcrs or gtsln are selected.
+      (nslang isn't a default lib here, so it won't work on plain
+      installations, slang however will).
+    + Missed from previous commit: Fix so that -nohbp doesn't
+      prevent processing the global config .hbp file.
+    ! Fixed typo in prev commit.
+
+  * utils/hbmk2/examples/contrib.hbp
+    - Removed hbtip as it's not fully portable (dos).
+  + utils/hbmk2/examples/contribf.hbp
+    + Added complete database of contrib, with
+      availability information.
+
+  * contrib/xhb/Makefile
+  * contrib/hbmsql/Makefile
+  * contrib/hbmzip/Makefile
+  * contrib/hbziparc/Makefile
+  * contrib/hbnf/Makefile
+  * contrib/hbmisc/Makefile
+  * contrib/hbvpdf/Makefile
+    * Formatting.
+
 2009-02-20 18:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtxwc/gtxwc.c
   * harbour/source/rtl/gttrm/gttrm.c
