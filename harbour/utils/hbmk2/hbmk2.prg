@@ -2056,14 +2056,14 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -help            long help" }
 
    LOCAL aText_Long := {;
-      "  -[no]fmstat      enable/disable runtime memory statistics" ,;
-      "                   (currently available for gcc compilers)" ,;
       "  -nulrdd[-]       link with nulrdd" ,;
       "  -bldf[-]         inherit all/no (default) flags from Harbour build" ,;
       "  -bldf=[p][c][l]  inherit .prg/.c/linker flags (or none) from Harbour build" ,;
       "  -[no]debug       add/exclude debug info" ,;
       "  -[no]map         create (or not) a map file" ,;
       "  -[no]strip       strip (no strip) binaries" ,;
+      "  -[no]fmstat      enable/disable runtime memory statistics" ,;
+      "                   (currently available for gcc builds only)" ,;
       "  -[no]trace       show commands executed" ,;
       "  -[no]run         run/don't run the created executable" ,;
       "  -nohbp           do not process .hbp files in current directory" ,;
@@ -2084,6 +2084,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>." ,;
       "  - Regular Harbour options are also accepted." ,;
       "  - Multiple -l, -L and <script> parameters are accepted." ,;
+      "  - " + HBMK_CFG_NAME + " option file in hbmk directory is always processed if it" ,;
+      "    exists." ,;
       "  - .hbp option files in current dir are automatically processed." ,;
       "  - .hbp options (they should come in separate lines):" ,;
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;

@@ -8,6 +8,20 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-20 22:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbgd/gdwrp.c
+    ! Fixed double implementation of GDIMAGEELLIPSE().
+      The so far inactive .c version got enabled by recently
+      making lib version detection automatic, which made it
+      collide with the existing .prg implementation.
+      Left the .prg one active because it works regardless
+      of the lib gd version. Francesco, please verify me.
+    - Deleted disabled, probably older copy of GDIMAGEELLIPSE()
+      from .c source.
+
+  * utils/hbmk2/hbmk2.prg
+    * Help screen update.
+
 2009-02-20 19:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-func.sh
     ! Fixed gtalleg lib name.
@@ -105,7 +119,7 @@
     ! Fixed not to use '$' sign in generated temp filename.
     ! Fixed recent typo causing RTE in *nix.
     ; After these changes linux/gcc works out of the box, but
-      it still needs tweaking (x11, other libs).
+      it still needs tweaking (X11, other libs).
 
 2009-02-20 13:43 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/common/hbver.c
@@ -134,7 +148,7 @@
     + Added remaining system libs for linux, sunos and hpux.
     + Added a more complete set of win system libs for mingw.
       TODO: Some more generic solution needs to be developed
-            because currently the win systems libs add by our
+            because currently the win systems libs added by our
             tools are pretty much random across the different
             supported compilers.
     + Added system lib list for mingwce.
@@ -269,7 +283,7 @@
 
 2009-02-19 16:50 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/source/rtl/gtwvt/gtwvt.c
-    * Fixed not to generate RT if class is already been registered.
+    * Fixed not to generate RTE if class is already been registered.
       Useful in cases where multiple windows are implemented.
 
 2009-02-20 00:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -327,7 +341,7 @@
 
 2009-02-19 12:59 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * common.mak
-    * changed HBM_KDIR from "utils\hbmk" to "utils\hbmk2"
+    * changed HBMK_DIR from "utils\hbmk" to "utils\hbmk2"
 
   - utils/hbmk
   + utils/hbmk2
@@ -380,7 +394,7 @@
     + Added -arch=<arch> command line option. Same as HB_ARCHITECTURE.
       Added -comp=<comp> command line option. Same as HB_COMPILER.
       envvars are kept for compatibility.
-    + Added -hblnk option to give plave for hblnk script behaviour
+    + Added -hblnk option to give place for hblnk script behaviour
       emulation.
     * Changed -cc, -cmp options to -hbcc, -hbcmp respecitvely.
     + Changed -hbcc, -hbcmp, -hblnk switches to turn off information
@@ -425,7 +439,7 @@
       problems with double extensions and final .c file cleanup.
     ! Fixed to add hbdebug lib when building in shared mode.
     ! Fixed typo in automatically adding './' on *nix systems.
-    ; Please test, I definitely couldn't retest all scenaros
+    ; Please test, I definitely couldn't retest all scenarios
       after all these changes.
 
   * bin/postinst.bat
@@ -607,7 +621,7 @@
   * source/rtl/gtwvt/gtwvt.c
     + Protected non-Clipper compatible extension regarding
       K_MM*DOWN with __HB_GTWVT_GEN_K_MMDOWN_EVENTS #define.
-      Also see notes in about app level code modification
+      Also see notes about app level code modification
       needed if you want to continue using default Harbour build:
       2009-02-18 12:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
 

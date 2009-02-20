@@ -1088,53 +1088,6 @@ HB_FUNC( GDIMAGERECTANGLE ) /* void gdImageRectangle(gdImagePtr im, int x1, int 
 
 /* ---------------------------------------------------------------------------*/
 
-#if 0
-HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, int w, int h, int color) */
-{
-   if ( hb_pcount() == 6 &&
-        hb_parinfo( 1 ) & HB_IT_POINTER &&
-        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
-        hb_parinfo( 6 ) & HB_IT_NUMERIC
-      )
-   {
-      gdImagePtr im;
-      int cx, cy, w, h, color;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve point values */
-      cx = hb_parni( 2 );
-      cy = hb_parni( 3 );
-      /* Retrieve width and height values */
-      w  = hb_parni( 4 );
-      h  = hb_parni( 5 );
-      /* Retrieve color value */
-      color = hb_parni( 6 );
-
-      /* Draw an ellipse */
-      gdImageEllipse(im, cx, cy, w, h, color);
-
-   }
-   else
-   {
-      /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 2,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-            hb_paramError( 5 ), hb_paramError( 6 ) );
-         return;
-      }
-   }
-}
-#endif
-
-/* ---------------------------------------------------------------------------*/
-
 HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePtr im, gdPointPtr points, int pointsTotal, int color) */
                                 /* implementation: void gdImageFilledPolygon(gdImagePtr im, gdPointPtr points, int color) */
 {
@@ -1271,7 +1224,6 @@ HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, i
 
       /* Draw an arc */
       gdImageArc(im, cx, cy, w, h, s, e, color);
-
    }
    else
    {
@@ -1429,6 +1381,9 @@ HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x,
 }
 
 /* ---------------------------------------------------------------------------*/
+/* Disabled, because there is a .prg implementation which
+   works with all gd lib versions. [vszakats] */
+#if 0
 #if HB_GD_VERS( 2, 0, 35 )
 HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, int w, int h, int color) */
 {
@@ -1458,7 +1413,6 @@ HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, 
 
       /* Draw a filled ellipse */
       gdImageEllipse(im, cx, cy, w, h, color);
-
    }
    else
    {
@@ -1473,6 +1427,7 @@ HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, 
    }
 }
 #endif /* ( GD_VERS >= 2035 ) */
+#endif
 
 /* ---------------------------------------------------------------------------*/
 
