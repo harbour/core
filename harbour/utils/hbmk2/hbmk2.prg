@@ -66,13 +66,13 @@
 /* TODO: msvc/bcc32: Use separate link phase. This allows incremental links. */
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cleanup on variable names. */
+/* TODO: remove -n?, -q0? from default harbour switches */
+/* TODO: MAIN() detection or override? Someone who's familiar with this issue pls help. */
 
-/* -     remove -n?, -q0? from default harbour switches */
-/* +     MAIN() detection or override? Someone who's familiar with this issue pls help. */
-/* +  2. compiler autodetection for two kinds of dir layouts. */
-
-ANNOUNCE HB_GTSYS
-REQUEST HB_GT_CGI_DEFAULT
+#if ! defined( HBMK_NO_GTCGI )
+   ANNOUNCE HB_GTSYS
+   REQUEST HB_GT_CGI_DEFAULT
+#endif
 
 REQUEST hbm_ARCH
 REQUEST hbm_COMP
@@ -81,6 +81,9 @@ THREAD STATIC t_lQuiet := .F.
 THREAD STATIC t_lInfo := .T. /* Enabled while hbmk gets matured, should later set to .F. */
 THREAD STATIC t_cARCH
 THREAD STATIC t_cCOMP
+
+THREAD STATIC t_cCCPATH
+THREAD STATIC t_cCCPREFIX
 
 FUNCTION Main( ... )
 
@@ -321,29 +324,29 @@ FUNCTION Main( ... )
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
    CASE t_cARCH == "dos"
-      aCOMPDET := { { {|| FindInPath( "gcc.exe"    ) }, "djgpp"   },;
-                    { {|| FindInPath( "wpp386.exe" ) }, "owatcom" } } /* TODO: Add full support for wcc386.exe */
+      aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "djgpp"   },;
+                    { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
       aCOMPSUP := { "djgpp", "gcc", "owatcom", "rsx32" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtdos" }
    CASE t_cARCH == "os2"
-      aCOMPDET := { { {|| FindInPath( "gcc.exe"    ) }, "gcc"     },;
-                    { {|| FindInPath( "wpp386.exe" ) }, "owatcom" },; /* TODO: Add full support for wcc386.exe */
-                    { {|| FindInPath( "icc.exe"    ) }, "icc"     } }
+      aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "gcc"     },;
+                    { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
+                    { {|| FindInPath( "icc"    ) != NIL }, "icc"     } }
       aCOMPSUP := { "gcc", "owatcom", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtos2" }
    CASE t_cARCH == "win"
       /* Ordering is significant.
          owatcom also keeps a cl.exe in it's binary dir. */
-      aCOMPDET := { { {|| FindInPath( "gcc.exe"    ) }, "mingw"   },; /* TODO: Add full support for g++.exe */
-                    { {|| FindInPath( "wpp386.exe" ) }, "owatcom" },; /* TODO: Add full support for wcc386.exe */
-                    { {|| FindInPath( "cl.exe"     ) }, "msvc"    },;
-                    { {|| FindInPath( "bcc32.exe"  ) }, "bcc32"   },;
-                    { {|| FindInPath( "pocc.exe"   ) }, "pocc"    },;
-                    { {|| FindInPath( "dmc.exe"    ) }, "dmc"     },;
-                    { {|| FindInPath( "icc.exe"    ) }, "icc"     },;
-                    { {|| FindInPath( "xcc.exe"    ) }, "xcc"     } }
+      aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "mingw"   },; /* TODO: Add full support for g++ */
+                    { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
+                    { {|| FindInPath( "cl"     ) != NIL }, "msvc"    },;
+                    { {|| FindInPath( "bcc32"  ) != NIL }, "bcc32"   },;
+                    { {|| FindInPath( "pocc"   ) != NIL }, "pocc"    },;
+                    { {|| FindInPath( "dmc"    ) != NIL }, "dmc"     },;
+                    { {|| FindInPath( "icc"    ) != NIL }, "icc"     },;
+                    { {|| FindInPath( "xcc"    ) != NIL }, "xcc"     } }
       /* TODO: "mingwce", "msvcce", "poccce" */
       aCOMPSUP := { "gcc", "mingw", "msvc", "bcc32", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
       cBin_CompPRG := "harbour.exe"
@@ -419,33 +422,16 @@ FUNCTION Main( ... )
 
    s_aLIBPATH := {}
 
+   t_cCCPATH   := GetEnv( "CCPATH" )
+   t_cCCPREFIX := GetEnv( "CCPREFIX" )
+
    s_cHB_BIN_INSTALL := PathSepToTarget( GetEnv( "HB_BIN_INSTALL" ) )
    s_cHB_LIB_INSTALL := PathSepToTarget( GetEnv( "HB_LIB_INSTALL" ) )
    s_cHB_INC_INSTALL := PathSepToTarget( GetEnv( "HB_INC_INSTALL" ) )
 
    s_cHB_INSTALL_PREFIX := PathSepToTarget( GetEnv( "HB_INSTALL_PREFIX" ) )
    IF Empty( s_cHB_INSTALL_PREFIX )
-
       DO CASE
-      CASE hb_DirBase() == "/opt/harbour/"
-
-         s_cHB_INSTALL_PREFIX := "/opt/harbour"
-
-      CASE hb_DirBase() == "/usr/local/bin/" .OR. ;
-           hb_DirBase() == "/usr/bin/" .OR. ;
-           hb_DirBase() == "/opt/bin/"
-
-         tmp := Left( hb_DirBase(), Len( hb_DirBase() ) - Len( "bin/" ) )
-         IF Empty( s_cHB_BIN_INSTALL )
-            s_cHB_BIN_INSTALL := tmp + "bin"
-         ENDIF
-         IF Empty( s_cHB_LIB_INSTALL )
-            s_cHB_LIB_INSTALL := tmp + "lib/harbour"
-         ENDIF
-         IF Empty( s_cHB_INC_INSTALL )
-            s_cHB_INC_INSTALL := tmp + "include/harbour"
-         ENDIF
-
       CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG )
          s_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".."
       CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + "bin" + hb_osPathSeparator() + cBin_CompPRG )
@@ -459,6 +445,20 @@ FUNCTION Main( ... )
          PauseForKey()
          RETURN 3
       ENDCASE
+      /* Detect special *nix dir layout (/bin, /lib/harbour, /include/harbour) */
+      IF hb_FileExists( s_cHB_INSTALL_PREFIX + hb_osPathSeparator() + "include" +;
+                                               hb_osPathSeparator() + "harbour" +;
+                                               hb_osPathSeparator() + "hbvm.h" )
+         IF Empty( s_cHB_BIN_INSTALL )
+            s_cHB_BIN_INSTALL := tmp + "bin"
+         ENDIF
+         IF Empty( s_cHB_LIB_INSTALL )
+            s_cHB_LIB_INSTALL := tmp + "lib" + hb_osPathSeparator() + "harbour"
+         ENDIF
+         IF Empty( s_cHB_INC_INSTALL )
+            s_cHB_INC_INSTALL := tmp + "include" + hb_osPathSeparator() + "harbour"
+         ENDIF
+      ENDIF
    ENDIF
    IF Empty( s_cHB_INSTALL_PREFIX ) .AND. ;
       ( Empty( s_cHB_BIN_INSTALL ) .OR. Empty( s_cHB_LIB_INSTALL ) .OR. Empty( s_cHB_INC_INSTALL ) )
@@ -790,7 +790,10 @@ FUNCTION Main( ... )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := iif( t_cCOMP == "gpp", "g++", "gcc" )
+         cBin_CompC := t_cCCPREFIX + iif( t_cCOMP == "gpp", "g++", "gcc" )
+         IF ! Empty( t_cCCPATH )
+            cBin_CompC := t_cCCPATH + "/" + cBin_CompC
+         ENDIF
          cOpt_CompC := "{LC} {LO} {LA} -O3 {FC} -I{DI} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
@@ -799,6 +802,11 @@ FUNCTION Main( ... )
          ELSE
             cOpt_CompC += " {LL}"
             aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+         ENDIF
+         IF s_lGUI
+            cOpt_CompC += " -Wl,-mwindows"
+         ELSE
+            cOpt_CompC += " -Wl,-mconsole"
          ENDIF
          IF s_lMAP
             cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
@@ -859,6 +867,9 @@ FUNCTION Main( ... )
          cOpt_CompC := "{LC} {LO} {LA} -O3 {FC} -I{DI} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
+         IF s_lGUI
+            cOpt_CompC += " -Wl,-mwindows"
+         ENDIF
          IF s_lMAP
             cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
          ENDIF
@@ -888,6 +899,8 @@ FUNCTION Main( ... )
          ELSE
             AAdd( s_aOPTC, "-o{OE}" )
          ENDIF
+         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "gdi32" } )
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt", "harbour" ) }
 
       CASE ( t_cARCH == "dos" .AND. t_cCOMP == "djgpp" ) .OR. ;
            ( t_cARCH == "dos" .AND. t_cCOMP == "rsx32" )
@@ -1342,40 +1355,48 @@ STATIC FUNCTION SelfCOMP()
 
    RETURN ""
 
-/* TODO: Add default .exe extension for win|os2|dos */
 STATIC FUNCTION FindInPath( cFileName )
-   LOCAL cPATH
    LOCAL cDir
    LOCAL cName
    LOCAL cExt
 
-   /* Check in current dir. */
-   IF hb_FileExists( cFileName )
-      RETURN .T.
-   ENDIF
-
    hb_FNameSplit( cFileName,, @cName, @cExt )
+   #if defined( __PLATFORM__WINDOWS ) .OR. ;
+       defined( __PLATFORM__DOS ) .OR. ;
+       defined( __PLATFORM__OS2 )
+      IF Empty( cExt )
+         cExt := ".exe"
+      ENDIF
+   #endif
+
+   /* Check in current dir. */
+   IF hb_FileExists( cFileName := hb_FNameMerge( cDir, cName, cExt ) )
+      RETURN cFileName
+   ENDIF
 
    /* Check in the dir of this executable. */
    IF ! Empty( hb_DirBase() )
-      IF hb_FileExists( hb_FNameMerge( hb_DirBase(), cName, cExt ) )
-         RETURN .T.
+      IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirBase(), cName, cExt ) )
+         RETURN cFileName
       ENDIF
    ENDIF
 
    /* Check in the PATH. */
-   cPATH := GetEnv( "PATH" )
-   IF ! Empty( cPATH )
-      FOR EACH cDir IN hb_ATokens( cPATH, hb_osPathListSeparator(), .T. )
-         IF ! Empty( cDir )
-            IF hb_FileExists( hb_FNameMerge( DirAddPathSep( StrStripQuote( cDir ) ), cName, cExt ) )
-               RETURN .T.
-            ENDIF
+   #if defined( __PLATFORM__WINDOWS ) .OR. ;
+       defined( __PLATFORM__DOS ) .OR. ;
+       defined( __PLATFORM__OS2 )
+   FOR EACH cDir IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator(), .T., .T. )
+   #else
+   FOR EACH cDir IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
+   #endif
+      IF ! Empty( cDir )
+         IF hb_FileExists( cFileName := hb_FNameMerge( DirAddPathSep( StrStripQuote( cDir ) ), cName, cExt ) )
+            RETURN cFileName
          ENDIF
-      NEXT
-   ENDIF
+      ENDIF
+   NEXT
 
-   RETURN .F.
+   RETURN NIL
 
 STATIC FUNCTION ArrayJoin( array1, array2 )
    LOCAL array := AClone( array1 )
@@ -1458,7 +1479,9 @@ STATIC FUNCTION ListToArray( cList )
    RETURN array
 
 STATIC FUNCTION PathSepToSelf( cFileName )
-#if defined( __PLATFORM__WINDOWS ) .OR. defined( __PLATFORM__DOS ) .OR. defined( __PLATFORM__OS2 )
+#if defined( __PLATFORM__WINDOWS ) .OR. ;
+    defined( __PLATFORM__DOS ) .OR. ;
+    defined( __PLATFORM__OS2 )
    RETURN StrTran( cFileName, "/", "\" )
 #else
    RETURN StrTran( cFileName, "\", "/" )
@@ -1507,13 +1530,6 @@ STATIC FUNCTION FN_ExtSet( cFileName, cExt )
    hb_FNameSplit( cFileName, @cDir, @cName )
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
-
-STATIC FUNCTION FN_ExtSetDef( cFileName, cExtNew )
-   LOCAL cDir, cName, cExt
-
-   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-
-   RETURN hb_FNameMerge( cDir, cName, iif( Empty( cExt ) .AND. ! Empty( cExtNew ), cExtNew, cExt ) )
 
 STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
                                  /* @ */ aLIBPATH,;
@@ -1591,7 +1607,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       cLine := ArchCompFilter( AllTrim( cLine ) )
 
       DO CASE
-      CASE Lower( Left( cLine, Len( "libs="      ) ) ) == "libs="        ; cLine := SubStr( cLine, Len( "libs="       ) + 1 )
+      CASE Lower( Left( cLine, Len( "libs="       ) ) ) == "libs="       ; cLine := SubStr( cLine, Len( "libs="       ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( StrStripQuote( cItem ) )
             IF AScan( aLIBS, {| tmp | tmp == cItem } ) == 0
@@ -1599,7 +1615,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "libpaths="  ) ) ) == "libpaths="    ; cLine := SubStr( cLine, Len( "libpaths="   ) + 1 )
+      CASE Lower( Left( cLine, Len( "libpaths="   ) ) ) == "libpaths="   ; cLine := SubStr( cLine, Len( "libpaths="   ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( StrStripQuote( cItem ) )
             IF AScan( aLIBPATH, {| tmp | tmp == cItem } ) == 0
@@ -1607,7 +1623,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "prgflags="  ) ) ) == "prgflags="    ; cLine := SubStr( cLine, Len( "prgflags="   ) + 1 )
+      CASE Lower( Left( cLine, Len( "prgflags="   ) ) ) == "prgflags="   ; cLine := SubStr( cLine, Len( "prgflags="   ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( StrStripQuote( cItem ) )
             IF AScan( aOPTPRG, {| tmp | tmp == cItem } ) == 0
@@ -1615,7 +1631,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "cflags="    ) ) ) == "cflags="      ; cLine := SubStr( cLine, Len( "cflags="     ) + 1 )
+      CASE Lower( Left( cLine, Len( "cflags="     ) ) ) == "cflags="     ; cLine := SubStr( cLine, Len( "cflags="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := StrStripQuote( cItem )
             IF AScan( aOPTC, {| tmp | tmp == cItem } ) == 0
@@ -1623,7 +1639,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "ldflags="   ) ) ) == "ldflags="     ; cLine := SubStr( cLine, Len( "ldflags="    ) + 1 )
+      CASE Lower( Left( cLine, Len( "ldflags="    ) ) ) == "ldflags="    ; cLine := SubStr( cLine, Len( "ldflags="    ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := StrStripQuote( cItem )
             IF AScan( aOPTL, {| tmp | tmp == cItem } ) == 0
@@ -1789,6 +1805,60 @@ STATIC FUNCTION ArchCompFilter( cItem )
 
    RETURN cItem
 
+/* in GCC LD (except DJGPP) the order of registering init function
+ * does not depend directly on the order of linked files. If we want
+ * to inform HVM about valid startup function then we should try to
+ * locate it ourselves and pass it to HVM using our startup function
+ * [druzus]
+ */
+STATIC FUNCTION getFirstFunc( cFile )
+   LOCAL cFuncList, cExecNM, cFuncName, cExt, cLine, n, c
+
+   cFuncName := ""
+   IF t_cCOMP $ "gcc|gpp|mingw"
+      hb_FNameSplit( cFile,,, @cExt )
+      IF cExt == ".c"
+         FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
+            cLine := AllTrim( cLine )
+            IF cLine = '{ "' .AND. "HB_FS_FIRST" $ cLine
+               n := 4
+               DO WHILE ( c := SubStr( cLine, n++, 1 ) ) != '"'
+                  cFuncName += c
+               ENDDO
+               EXIT
+            ENDIF
+         NEXT
+      ELSEIF ! Empty( cExecNM := FindInPath( t_cCCPREFIX + "nm" ) )
+         cFuncList := commandResult( cExecNM + " " + cFile + " -g -n --defined-only -C" )
+         IF ( n := At( " T HB_FUN_", cFuncList ) ) != 0
+            n += 10
+            DO WHILE ( c := SubStr( cFuncList, n++, 1 ) ) = "_" .OR. ;
+                  IsDigit( c ) .OR. IsAlpha( c )
+               cFuncName += c
+            ENDDO
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN cFuncName
+
+STATIC FUNCTION commandResult( cCommand, nResult )
+   LOCAL hFile, cFileName, cResult
+
+   hFile := hb_FTempCreateEx( @cFileName )
+
+   IF hFile != F_ERROR
+      FClose( hFile )
+      cCommand += ">" + cFileName
+      nResult := hb_run( cCommand )
+      cResult := hb_MemoRead( cFileName )
+      FErase( cFileName )
+   ELSE
+      OutErr( "hbmk: Error: cannot create temporary file." + hb_osNewLine() )
+   ENDIF
+
+   RETURN cResult
+
 FUNCTION hbm_ARCH()
    RETURN t_cARCH
 
@@ -1797,10 +1867,12 @@ FUNCTION hbm_COMP()
 
 STATIC PROCEDURE PauseForKey()
 
+#if defined( HBMK_NO_GTCGI )
    IF ! t_lQUIET .AND. hb_gtInfo( HB_GTI_ISGRAPHIC )
       OutStd( "Press any key to continue..." )
       Inkey( 0 )
    ENDIF
+#endif
 
    RETURN
 

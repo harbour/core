@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-20 09:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added CCPATH + CCPREFIX support for *nix/gcc|gpp.
+    + Reworked *nix alternative dir layout detection to be generic.
+    + Generating '-Wl,-mwindows', '-Wl,-mconsole' options for gcc, mingw
+      (no -mconsole for mingw). Please review.
+    ! Added missing gdi32 system lib for mingw when GTWVT is used.
+    ! Added -shared support for mingw.
+    + Added Przemek's code to detect entry function on gcc|gpp|mingw.
+      Code not used yet.
+    + Added HBMK_NO_GTCGI macro to disable automatic GTCGI
+      selection for hbmk executable.
+
 2009-02-20 04:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbgtinfo.ch
     + added HB_GTI_FONTSEL
