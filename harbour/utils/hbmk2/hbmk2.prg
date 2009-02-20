@@ -557,24 +557,23 @@ FUNCTION Main( ... )
       ENDIF
    NEXT
 
-   IF ! lNOHBP
-      /* Process automatic control files. */
-      HBP_ProcessAll( @s_aLIBUSER,;
-                      @s_aLIBPATH,;
-                      @s_aOPTPRG,;
-                      @s_aOPTC,;
-                      @s_aOPTL,;
-                      @s_lGUI,;
-                      @s_lMT,;
-                      @s_lSHARED,;
-                      @s_lSTATICFULL,;
-                      @s_lDEBUG,;
-                      @s_lNULRDD,;
-                      @s_lMAP,;
-                      @s_lSTRIP,;
-                      @s_lRUN,;
-                      @s_cGT )
-   ENDIF
+   /* Process automatic control files. */
+   HBP_ProcessAll( lNOHBP
+                   @s_aLIBUSER,;
+                   @s_aLIBPATH,;
+                   @s_aOPTPRG,;
+                   @s_aOPTC,;
+                   @s_aOPTL,;
+                   @s_lGUI,;
+                   @s_lMT,;
+                   @s_lSHARED,;
+                   @s_lSTATICFULL,;
+                   @s_lDEBUG,;
+                   @s_lNULRDD,;
+                   @s_lMAP,;
+                   @s_lSTRIP,;
+                   @s_lRUN,;
+                   @s_cGT )
 
    /* Process command line (2nd pass) */
    FOR EACH cParam IN aParams
@@ -830,10 +829,18 @@ FUNCTION Main( ... )
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
             IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
-               AAdd( s_aOPTC, "-o{OO}" )
+               IF t_cARCH == "darwin"
+                  AAdd( s_aOPTC, "-o {OO}" )
+               ELSE
+                  AAdd( s_aOPTC, "-o{OO}" )
+               ENDIF
             ENDIF
          ELSE
-            AAdd( s_aOPTC, "-o{OE}" )
+            IF t_cARCH == "darwin"
+               AAdd( s_aOPTC, "-o {OE}" )
+            ELSE
+               AAdd( s_aOPTC, "-o{OE}" )
+            ENDIF
          ENDIF
 
          /* Always inherit/reproduce some flags from self */
@@ -1562,7 +1569,8 @@ STATIC FUNCTION FN_ExtSet( cFileName, cExt )
 
 #define HBMK_CFG_NAME  "hbmkcfg.hbp"
 
-STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
+STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
+                                 /* @ */ aLIBS,;
                                  /* @ */ aLIBPATH,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
@@ -1608,30 +1616,32 @@ STATIC PROCEDURE HBP_ProcessAll( /* @ */ aLIBS,;
       ENDIF
    NEXT
 
-   FOR EACH aFile IN Directory( "*.hbp" )
-      cFileName := aFile[ F_NAME ]
-      IF !( cFileName == HBMK_CFG_NAME )
-         IF t_lInfo
-            OutStd( "hbmk: Processing: " + cFileName + hb_osNewLine() )
+   IF ! lConfigOnly
+      FOR EACH aFile IN Directory( "*.hbp" )
+         cFileName := aFile[ F_NAME ]
+         IF !( cFileName == HBMK_CFG_NAME )
+            IF t_lInfo
+               OutStd( "hbmk: Processing: " + cFileName + hb_osNewLine() )
+            ENDIF
+            HBP_ProcessOne( cFileName,;
+               @aLIBS,;
+               @aLIBPATH,;
+               @aOPTPRG,;
+               @aOPTC,;
+               @aOPTL,;
+               @lGUI,;
+               @lMT,;
+               @lSHARED,;
+               @lSTATICFULL,;
+               @lDEBUG,;
+               @lNULRDD,;
+               @lMAP,;
+               @lSTRIP,;
+               @lRUN,;
+               @cGT )
          ENDIF
-         HBP_ProcessOne( cFileName,;
-            @aLIBS,;
-            @aLIBPATH,;
-            @aOPTPRG,;
-            @aOPTC,;
-            @aOPTL,;
-            @lGUI,;
-            @lMT,;
-            @lSHARED,;
-            @lSTATICFULL,;
-            @lDEBUG,;
-            @lNULRDD,;
-            @lMAP,;
-            @lSTRIP,;
-            @lRUN,;
-            @cGT )
-      ENDIF
-   NEXT
+      NEXT
+   ENDIF
 
    RETURN
 

@@ -8,14 +8,23 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
-2009-02-20 15:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
-   * Makefile
-   * bin/postinst.bat
-   + bin/postinst.cmd
-     + Added postinst for OS/2.
+2009-02-20 15:47 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-func.sh
+    ! Two typos.
+    - Disabled slang/ncurses lib stuff.
 
-   * utils/hbmk2/hbmk2.prg
-     * Minor in comment.
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed to put a space after -o gcc option for darwin.
+    ; This makes hbmk2 work under darwin (for basic cases).
+
+2009-02-20 15:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * Makefile
+  * bin/postinst.bat
+  + bin/postinst.cmd
+    + Added postinst for OS/2.
+
+  * utils/hbmk2/hbmk2.prg
+    * Minor in comment.
 
 2009-02-20 15:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
