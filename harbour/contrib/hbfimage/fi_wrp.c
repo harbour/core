@@ -58,6 +58,10 @@
       #define _WINDOWS_
    #endif
 #endif
+/* Hack to workaround FreeImage.h trying to #include <inttypes.h> */
+#if defined(__BORLANDC__)
+   #define _MSC_VER
+#endif
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

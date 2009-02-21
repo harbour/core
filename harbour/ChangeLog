@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 08:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbfimage/fi_wrp.c
+    ! Added hack to trick around FreeImage.h header not to
+      #include <inttypes.h> on Borland compilers. Maybe newers
+      than 5.8.1 versions have it, so this can be made BCC version
+      dependend.
+
 2009-02-21 08:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbdefs.h
     + Added similar to HB_DONT_DEFINE_BOOL hack: HB_DONT_DEFINE_LONG.
