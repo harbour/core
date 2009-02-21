@@ -2071,7 +2071,7 @@ STATIC FUNCTION IsGTRequested( aGT, cGT, cWhichGT )
    ENDIF
 
    /* Checking for user requested default GT. */
-   IF Lower( cGT ) == cWhichGT
+   IF cGT != NIL .AND. Lower( cGT ) == cWhichGT
       RETURN .T.
    ENDIF
 
