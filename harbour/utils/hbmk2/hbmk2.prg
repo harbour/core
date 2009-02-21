@@ -57,6 +57,7 @@
  * Copyright 2003 Przemyslaw Czerpak <druzus@priv.onet.pl>
  *    gcc and *nix configuration elements.
  *    bash script with similar purpose for gcc family.
+ *    entry point override method and detection code for gcc.
  *
  * See doc/license.txt for licensing terms.
  *
@@ -76,8 +77,8 @@
 /* TODO: msvc/bcc32: Use separate link phase. This allows incremental links. */
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cleanup on variable names. */
-/* TODO: remove -n from default harbour switches? */
-/* TODO: MAIN() detection or override? Someone who's familiar with this issue pls help. */
+/* TODO: remove -n from default harbour switches? (can be disabled with -n-)
+         Disable it when using -hbcc, -hbcmp ? */
 
 #if ! defined( HBMK_NO_GTCGI )
    ANNOUNCE HB_GTSYS
@@ -145,6 +146,7 @@ FUNCTION Main( ... )
 
    LOCAL s_cGT
    LOCAL s_cPRGSTUB
+   LOCAL s_cCSTUB
 
    LOCAL s_cHB_INSTALL_PREFIX
    LOCAL s_cHB_BIN_INSTALL
@@ -170,12 +172,14 @@ FUNCTION Main( ... )
    LOCAL s_cPROGDIR
    LOCAL s_cPROGNAME
    LOCAL s_cMAPNAME
+   LOCAL s_cFIRST
    LOCAL s_aOBJ
    LOCAL s_aOBJA
    LOCAL s_aOBJUSER
    LOCAL s_aCLEAN
    LOCAL s_lHB_PCRE := .T.
    LOCAL s_lHB_ZLIB := .T.
+   LOCAL s_cMAIN := NIL
 
    LOCAL s_lGUI := .F.
    LOCAL s_lMT := .F.
@@ -243,6 +247,8 @@ FUNCTION Main( ... )
    ENDIF
 
    FOR EACH cParam IN hb_AParams()
+      /* NOTE: Don't forget to make these ignored in the main
+               option processing loop. */
       DO CASE
       CASE Lower( cParam )            == "-quiet" ; t_lQuiet := .T. ; t_lInfo := .F.
       CASE Lower( Left( cParam, 6 ) ) == "-comp=" ; t_cCOMP := SubStr( cParam, 7 )
@@ -557,6 +563,7 @@ FUNCTION Main( ... )
    s_aOBJA := {}
    s_cPROGDIR := NIL
    s_cPROGNAME := NIL
+   s_cFIRST := NIL
 
    /* Collect all command line parameters */
    aParams := {}
@@ -609,7 +616,7 @@ FUNCTION Main( ... )
            Lower( cParam )            == "-hblnk" .OR. ;
            Lower( cParam )            == "-info"
 
-         /* Simply ignore. The were already processed in the first pass. */
+         /* Simply ignore. They were already processed in the first pass. */
 
       CASE Lower( cParam ) == "-gui"             ; s_lGUI      := .T.
       CASE Lower( cParam ) == "-mwindows"        ; s_lGUI      := .T. /* Compatibility */
@@ -647,6 +654,14 @@ FUNCTION Main( ... )
       CASE Lower( cParam ) == "-trace"           ; s_lTRACE    := .T.
       CASE Lower( cParam ) == "-trace-"          ; s_lTRACE    := .F.
       CASE Lower( cParam ) == "-notrace"         ; s_lTRACE    := .F.
+      CASE Lower( Left( cParam, 6 ) ) == "-main="
+
+         IF IsValidHarbourID( tmp := SubStr( cParam, 7 ) )
+            s_cMAIN := "@" + tmp
+         ELSE
+            OutErr( "hbmk: Warning: Invalid -main value ignored: " + tmp + hb_osNewLine() )
+         ENDIF
+
       CASE Lower( Left( cParam, 3 ) ) == "-gt"   ; s_cGT := SubStr( cParam, 2 )
       CASE Left( cParam, 2 ) == "-o"
 
@@ -685,14 +700,14 @@ FUNCTION Main( ... )
             @s_lRUN,;
             @s_cGT )
 
-      CASE Lower( FN_ExtGet( cParam ) ) == ".prg"   ; AAdd( s_aPRG    , PathSepToTarget( cParam ) ) ; DEFAULT s_cPROGNAME TO PathSepToSelf( cParam )
+      CASE Lower( FN_ExtGet( cParam ) ) == ".prg"   ; AAdd( s_aPRG    , PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
       CASE Lower( FN_ExtGet( cParam ) ) == ".rc"    ; AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
       CASE Lower( FN_ExtGet( cParam ) ) == ".res"   ; AAdd( s_aRESCMP , PathSepToTarget( cParam ) )
       CASE Lower( FN_ExtGet( cParam ) ) == ".a"     ; AAdd( s_aOBJA   , PathSepToTarget( cParam ) )
-      CASE Lower( FN_ExtGet( cParam ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, PathSepToTarget( cParam ) ) ; DEFAULT s_cPROGNAME TO PathSepToSelf( cParam )
-      CASE Lower( FN_ExtGet( cParam ) ) $ ".c|.cpp" ; AAdd( s_aC      , PathSepToTarget( cParam ) ) ; DEFAULT s_cPROGNAME TO PathSepToSelf( cParam )
+      CASE Lower( FN_ExtGet( cParam ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+      CASE Lower( FN_ExtGet( cParam ) ) $ ".c|.cpp" ; AAdd( s_aC      , PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
       CASE Lower( FN_ExtGet( cParam ) ) $ ".lib"    ; AAddNotEmpty( s_aLIBUSER, PathSepToTarget( ArchCompFilter( cParam ) ) )
-      OTHERWISE                                     ; AAdd( s_aPRG    , PathSepToTarget( cParam ) ) ; DEFAULT s_cPROGNAME TO PathSepToSelf( cParam )
+      OTHERWISE                                     ; AAdd( s_aPRG    , PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
       ENDCASE
    NEXT
 
@@ -703,6 +718,10 @@ FUNCTION Main( ... )
       RETURN 4
    ENDIF
 
+   /* If -o with full name wasn't specified, let's
+      make it the first source file specified. */
+   DEFAULT s_cPROGNAME TO s_cFIRST
+
    IF t_cCOMP $ "mingwce|poccce"
       cGTDEFAULT := "gtwvt"
    ENDIF
@@ -710,7 +729,7 @@ FUNCTION Main( ... )
    IF ( ! Empty( s_cGT ) .AND. !( s_cGT == cGTDEFAULT ) ) .OR. ;
      s_lFMSTAT != NIL
 
-      fhnd := hb_FTempCreateEx( @s_cPRGSTUB, ".", "hbstub", ".prg" )
+      fhnd := hb_FTempCreateEx( @s_cPRGSTUB, ".", "hbsp_", ".prg" )
       IF fhnd != F_ERROR
          IF ! Empty( s_cGT )
             FWrite( fhnd, "ANNOUNCE HB_GTSYS" + hb_osNewLine() +;
@@ -721,7 +740,7 @@ FUNCTION Main( ... )
          ENDIF
          FClose( fhnd )
       ELSE
-         OutErr( "hbmk: Warning: Stub helper program couldn't be created." + hb_osNewLine() )
+         OutErr( "hbmk: Warning: Stub helper .prg program couldn't be created." + hb_osNewLine() )
          PauseForKey()
          RETURN 5
       ENDIF
@@ -1281,6 +1300,64 @@ FUNCTION Main( ... )
       CASE t_cARCH == "win" .AND. t_cCOMP == "xcc"
       ENDCASE
 
+      /* Do entry function detection on platform required and supported */
+      IF s_cMAIN == NIL .AND. ! Empty( tmp := getFirstFunc( s_cFIRST ) )
+         s_cMAIN := tmp
+      ENDIF
+
+      /* HACK: Override entry point requested by user or detected by us. */
+      IF s_cMAIN != NIL
+         fhnd := hb_FTempCreateEx( @s_cCSTUB, ".", "hbsc_", ".c" )
+         IF fhnd != F_ERROR
+
+            /* NOTE: This has to be kept synced with Harbour HB_IMPORT values. */
+            DO CASE
+            CASE !( t_cARCH == "win" ) .OR. t_cCOMP == "rsxnt"
+               tmp := ""
+            CASE t_cCOMP $ "gcc|mingw"      ; tmp := "__attribute__ (( dllimport ))"
+            CASE t_cCOMP == "bcc32|owatcom" ; tmp := "__declspec( dllimport )"
+            CASE t_cCOMP == "owatcom"       ; tmp := "__declspec( dllimport )"
+            OTHERWISE                       ; tmp := "_declspec( dllimport )"
+            ENDCASE
+
+            FWrite( fhnd, '#include "hbapi.h"'                                                      + hb_osNewLine() +;
+                          '#include "hbinit.h"'                                                     + hb_osNewLine() +;
+                          ''                                                                        + hb_osNewLine() +;
+                          'HB_EXTERN_BEGIN'                                                         + hb_osNewLine() +;
+                          'extern ' + tmp + ' const char * hb_vm_pszLinkedMain;'                    + hb_osNewLine() +;
+                          'HB_EXTERN_END'                                                           + hb_osNewLine() +;
+                          ''                                                                        + hb_osNewLine() +;
+                          'HB_CALL_ON_STARTUP_BEGIN( _hb_hbmk_setdef_ )'                            + hb_osNewLine() +;
+                          '   hb_vm_pszLinkedMain = "' + Upper( s_cMAIN ) + '";'                    + hb_osNewLine() +;
+                          'HB_CALL_ON_STARTUP_END( _hb_hbmk_setdef_ )'                              + hb_osNewLine() +;
+                          ''                                                                        + hb_osNewLine() +;
+                          '#if defined( HB_PRAGMA_STARTUP )'                                        + hb_osNewLine() +;
+                          '   #pragma startup_hb_lnk_SetDefault_hbmk_'                              + hb_osNewLine() +;
+                          '#elif defined( HB_MSC_STARTUP )'                                         + hb_osNewLine() +;
+                          '   #if defined( HB_OS_WIN_64 )'                                          + hb_osNewLine() +;
+                          '      #pragma section( HB_MSC_START_SEGMENT, long, read )'               + hb_osNewLine() +;
+                          '   #endif'                                                               + hb_osNewLine() +;
+                          '   #pragma data_seg( HB_MSC_START_SEGMENT )'                             + hb_osNewLine() +;
+                          '   static HB_$INITSYM hb_vm_auto_hbmk_setdef_ = _hb_hbmk_setdef_;'       + hb_osNewLine() +;
+                          '   #pragma data_seg()'                                                   + hb_osNewLine() +;
+                          '#endif'                                                                  + hb_osNewLine() )
+
+                       /* 'extern ' + tmp + ' const char * hb_gt_szNameDefault;' + hb_osNewLine() +; */
+                       /* '   hb_gt_szNameDefault = "$gt";'                      + hb_osNewLine() +; */
+            FClose( fhnd )
+         ELSE
+            OutErr( "hbmk: Warning: Stub helper .c program couldn't be created." + hb_osNewLine() )
+            IF ! Empty( s_cPRGSTUB )
+               FErase( s_cPRGSTUB )
+            ENDIF
+            AEval( ListCook( s_aPRG, NIL, ".c" ), {|tmp| FErase( tmp ) } )
+            PauseForKey()
+            RETURN 5
+         ENDIF
+         AAdd( s_aC, s_cCSTUB )
+      ENDIF
+
+      /* Library list assembly */
       IF s_lSHARED .AND. ! Empty( s_aLIBSHARED )
          s_aLIBHB := ArrayAJoin( { s_aLIBSHARED,;
                                    aLIB_BASE_CPLR,;
@@ -1424,6 +1501,9 @@ FUNCTION Main( ... )
 
       IF ! Empty( s_cPRGSTUB )
          FErase( s_cPRGSTUB )
+      ENDIF
+      IF ! Empty( s_cCSTUB )
+         FErase( s_cCSTUB )
       ENDIF
       AEval( ListCook( s_aPRG, NIL, ".c" ), {|tmp| FErase( tmp ) } )
       IF ! lStopAfterCComp
@@ -1956,6 +2036,22 @@ STATIC FUNCTION ArchCompFilter( cItem )
 
    RETURN cItem
 
+#define HB_ISALPHA( c )         ( Upper( c ) >= "A" .AND. Upper( c ) <= "Z" )
+#define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == '_' )
+#define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) .OR. IsDigit( c ) )
+
+STATIC FUNCTION IsValidHarbourID( cName )
+   LOCAL tmp
+   IF HB_ISFIRSTIDCHAR( Left( cName, 1 ) )
+      FOR tmp := 2 TO Len( cName )
+         IF ! HB_ISNEXTIDCHAR( SubStr( cName, tmp, 1 ) )
+            RETURN .F.
+         ENDIF
+      NEXT
+      RETURN .T.
+   ENDIF
+   RETURN .F.
+
 /* in GCC LD (except DJGPP) the order of registering init function
  * does not depend directly on the order of linked files. If we want
  * to inform HVM about valid startup function then we should try to
@@ -2042,42 +2138,42 @@ STATIC PROCEDURE ShowHelp( lLong )
       "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c|[.obj|.o]]>" ,;
       "" ,;
       "Options:" ,;
-      "  -o<outname>      output file name" ,;
-      "  -l<libname>      link with <libname> library" ,;
-      "  -L<libpath>      additional path to search for libraries" ,;
-      "  -static|-shared  link with static/shared libs" ,;
-      "  -fullstatic      link with all static libs" ,;
-      "  -mt|-st          link with multi-thread/single-thread libs" ,;
-      "  -gui|-std        create GUI/console executable" ,;
-      "  -gt<name>        link with GT<name> GT driver, can be repeated to link" ,;
-      "                   with more GTs. First one will be the default at runtime" }
+      "  -o<outname>       output file name" ,;
+      "  -l<libname>       link with <libname> library" ,;
+      "  -L<libpath>       additional path to search for libraries" ,;
+      "  -static|-shared   link with static/shared libs" ,;
+      "  -fullstatic       link with all static libs" ,;
+      "  -mt|-st           link with multi-thread/single-thread libs" ,;
+      "  -gui|-std         create GUI/console executable" ,;
+      "  -gt<name>         link with GT<name> GT driver, can be repeated to link" ,;
+      "                    with more GTs. First one will be the default at runtime" }
 
    LOCAL aText_Help := {;
-      "  -help            long help" }
+      "  -help             long help" }
 
    LOCAL aText_Long := {;
-      "  -nulrdd[-]       link with nulrdd" ,;
-      "  -bldf[-]         inherit all/no (default) flags from Harbour build" ,;
-      "  -bldf=[p][c][l]  inherit .prg/.c/linker flags (or none) from Harbour build" ,;
-      "  -[no]debug       add/exclude debug info" ,;
-      "  -[no]map         create (or not) a map file" ,;
-      "  -[no]strip       strip (no strip) binaries" ,;
-      "  -[no]fmstat      enable/disable runtime memory statistics" ,;
-      "                   (currently available for gcc builds only)" ,;
-      "  -[no]trace       show commands executed" ,;
-      "  -[no]run         run/don't run the created executable" ,;
-      "  -nohbp           do not process .hbp files in current directory" ,;
-      "  -hbcc            stop after creating the .c Harbour output files" ,;
-      "                   create link/copy/rename hbmk to hbcc for the same effect" ,;
-      "  -hbcmp           stop after creating the object files" ,;
-      "                   create link/copy/rename hbmk to hbcc for the same effect" ,;
-      "  -hblnk           act as linker. Currently this is the same as -q" ,;
-      "  -arch=<arch>     assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
-      "  -comp=<comp>     use specific compiler. Same as HB_COMPILER envvar" ,;
-      "                   Special value:" ,;
-      "                    - bld: use original build settings (default on *nix)" ,;
-      "  -info            turn on informational messages" ,;
-      "  -quiet           suppress logo" ,;
+      "  -main=<mainfunc>  override the name of starting function/procedure." ,;
+      "  -nulrdd[-]        link with nulrdd" ,;
+      "  -bldf[-]          inherit all/no (default) flags from Harbour build" ,;
+      "  -bldf=[p][c][l]   inherit .prg/.c/linker flags (or none) from Harbour build" ,;
+      "  -[no]debug        add/exclude debug info" ,;
+      "  -[no]map          create (or not) a map file" ,;
+      "  -[no]strip        strip (no strip) binaries" ,;
+      "  -[no]fmstat       enable/disable runtime memory statistics (gcc builds only)" ,;
+      "  -[no]trace        show commands executed" ,;
+      "  -[no]run          run/don't run the created executable" ,;
+      "  -nohbp            do not process .hbp files in current directory" ,;
+      "  -hbcc             stop after creating the .c Harbour output files" ,;
+      "                    create link/copy/rename hbmk to hbcc for the same effect" ,;
+      "  -hbcmp            stop after creating the object files" ,;
+      "                    create link/copy/rename hbmk to hbcc for the same effect" ,;
+      "  -hblnk            act as linker. Currently this is the same as -q" ,;
+      "  -arch=<arch>      assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
+      "  -comp=<comp>      use specific compiler. Same as HB_COMPILER envvar" ,;
+      "                    Special value:" ,;
+      "                     - bld: use original build settings (default on *nix)" ,;
+      "  -info             turn on informational messages" ,;
+      "  -quiet            suppress logo" ,;
       "" ,;
       "Notes:" ,;
       "  - Don't forget to create a MAIN() entry function in your application." ,;

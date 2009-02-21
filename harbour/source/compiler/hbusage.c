@@ -83,7 +83,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
            "\n          %ck               compilation mode (type -k? for more data)",
            "\n          %cl               suppress line number information",
            "\n          %cm               compile module only",
-           "\n          %cn[<type>]       no implicit starting procedure (default)",
+           "\n          %cn[<type>]       no implicit starting procedure",
            "\n                           <type>: 0=no implicit starting procedure",
            "\n                                   1=no starting procedure at all",
            "\n          %co<path>         object file drive and/or path",

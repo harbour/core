@@ -506,7 +506,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                else if( ( *( s + 1 ) == '0' ) || ( *( s + 1 ) == '\0' ) )
                   HB_COMP_PARAM->fStartProc = FALSE;
                /*
-                  -n- ceates implicit start up procedure
+                  -n- creates implicit start up procedure
                 */
                else if( *( s + 1 ) == '-' )
                   HB_COMP_PARAM->fStartProc = TRUE;

@@ -8,6 +8,31 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 01:11 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/compiler/hbusage.c
+    ! Fixed to not show -n option as '(default)' on help screen.
+      -n isn't the default in Harbour, nor in Clipper.
+      Please review me.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added -main=<id> option to override starting function/procedure
+      name. Using the method from hbmk script, but made portable
+      to all compilers. Can we add somewhat more official method
+      to set this up? Preferably .prg level, but even a function
+      call seems better, as with current method, MSVC complains
+      with this warning:
+      "hbsc_2nwvzg.obj : warning LNK4217: locally defined symbol \
+         _hb_vm_pszLinkedMain imported in function __hb_hbmk_setdef_"
+    + Added code to only accept valid Harbour identified as
+      -main= value.
+    + Added first module detection.
+    + Enabled code to automatically find entry function in first
+      module and make it the app entry point. This is very serious
+      hack dealing with lots of internals.
+
+  * source/compiler/cmdcheck.c
+    * Typo in comment.
+
 2009-02-20 22:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbgd/gdwrp.c
     ! Fixed double implementation of GDIMAGEELLIPSE().
