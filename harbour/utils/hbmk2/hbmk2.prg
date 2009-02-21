@@ -789,14 +789,14 @@ FUNCTION Main( ... )
 
    DO CASE
    CASE t_cARCH $ "bsd|linux|sunos"
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt." + cDL_Version + ".so",;
-                                    "harbour." + cDL_Version + ".so" ) }
+      s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + ".so",;
+                                    "harbour-" + cDL_Version + ".so" ) }
    CASE t_cARCH == "hpux"
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt." + cDL_Version + ".sl",;
-                                    "harbour." + cDL_Version + ".sl" ) }
+      s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + ".sl",;
+                                    "harbour-" + cDL_Version + ".sl" ) }
    CASE t_cARCH == "darwin"
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt." + cDL_Version + ".dylib",;
-                                    "harbour." + cDL_Version + ".dylib" ) }
+      s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + ".dylib",;
+                                    "harbour-" + cDL_Version + ".dylib" ) }
    CASE t_cARCH $ "os2|win"
       s_aLIBSHARED := { iif( s_lMT, "harbourmt",;
                                     "harbour" ) }
