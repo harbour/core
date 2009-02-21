@@ -986,14 +986,14 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
 
 HB_FUNC( HB_AX_ATLSETVERB )
 {
-   HWND hwnd = ( HWND ) hb_parnint( 1 );
+   HWND hwnd = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
 
    if( hwnd )
    {
-      IUnknown *pUnk = ( IUnknown* ) hb_parnint( 2 );
+      IUnknown *pUnk = ( IUnknown* ) ( HB_PTRDIFF ) hb_parnint( 2 );
 
       IOleObject *lpOleObject = NULL;
-      if( SUCCEEDED( pUnk->lpVtbl->QueryInterface( pUnk, &IID_IOleObject, ( void** ) &lpOleObject ) ) );
+      if( SUCCEEDED( pUnk->lpVtbl->QueryInterface( pUnk, &IID_IOleObject, ( void** ) &lpOleObject ) ) )
       {
          IOleClientSite* lpOleClientSite;
 

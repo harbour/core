@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-20 17:23 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvgsink.c
+    ! Fixes as per Przemek's observations.
+      ;TOREVIEW :    return( ( ULONG ) ( ( MyRealIEventHandler * ) this )->count < 0 ? 
+                                      ( ( MyRealIEventHandler * ) this )->count : 0 );
+       Actually I was having some problem with some old active-x 
+       and was trying to fix that, that is why, now I do not remeber...
+
 2009-02-21 01:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbgd/gdwrp.c
     % Deleted #includes not necessary.
