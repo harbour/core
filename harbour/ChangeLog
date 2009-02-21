@@ -8,12 +8,33 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 08:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbdefs.h
+    + Added similar to HB_DONT_DEFINE_BOOL hack: HB_DONT_DEFINE_LONG.
+      (needed until we clear up our types.)
+
+  * contrib/hbfimage/fi_winfu.c
+  * contrib/hbfimage/fi_wrp.c
+  * contrib/hbfimage/Makefile
+  * doc/whatsnew.txt
+    % Deleted #includes/macro checks not necessary.
+    ! Disabled body of fi_winfu.c when not compiled under
+      Windows. This fixes one Linux compilation error.
+    % Replaced HB_OS_WIN_USED with HB_DONT_DEFINE_BOOL and
+      HB_DONT_DEFINE_LONG, moved foreign headers before
+      Harbour headers, added non-Harbour Windows detection
+      in fi_wrp.c (I'm not sure that is necessary), so that
+      it now compiles on both Windows and non-Windows (Linux
+      tested) systems.
+    + Renabled on Linux in Makefile.
+    ; Please review/test these changes.
+
 2009-02-20 17:23 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgsink.c
     ! Fixes as per Przemek's observations.
-      ;TOREVIEW :    return( ( ULONG ) ( ( MyRealIEventHandler * ) this )->count < 0 ? 
+      ;TOREVIEW :    return( ( ULONG ) ( ( MyRealIEventHandler * ) this )->count < 0 ?
                                       ( ( MyRealIEventHandler * ) this )->count : 0 );
-       Actually I was having some problem with some old active-x 
+       Actually I was having some problem with some old active-x
        and was trying to fix that, that is why, now I do not remeber...
 
 2009-02-21 01:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)

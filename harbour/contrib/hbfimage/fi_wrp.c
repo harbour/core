@@ -50,28 +50,25 @@
  *
  */
 
-#define HB_OS_WIN_USED
+#define HB_DONT_DEFINE_BOOL
+#define HB_DONT_DEFINE_LONG
 
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbstack.h"
-#include "hbapierr.h"
-#include "hbapifs.h"
-#include "hbvm.h"
-
-#if defined(HB_OS_WIN) && !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) ) || defined(__WATCOMC__)
-   #define _WINDOWS_
+#if defined(WINNT) || defined(_Windows) || defined(__NT__) || defined(_WIN32) || defined(__WINDOWS_386__) || defined(__WIN32__) || defined(__CYGWIN__)
+   #if !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) ) || defined(__WATCOMC__)
+      #define _WINDOWS_
+   #endif
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
-
 #include "FreeImage.h"
+
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "hbvm.h"
 
 /* ************************* WRAPPED FUNCTIONS ****************************** */
 

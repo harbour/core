@@ -53,13 +53,11 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbstack.h"
 #include "hbapierr.h"
-#include "hbapifs.h"
-#include "hbvm.h"
 
-#if defined(HB_OS_WIN) && !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) ) || defined(__WATCOMC__)
+#if defined(HB_OS_WIN)
+
+#if !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) ) || defined(__WATCOMC__)
    #define _WINDOWS_
 #endif
 
@@ -67,16 +65,11 @@
 #include "config.h"
 #endif
 
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
-
 #include "FreeImage.h"
 
 /* -------------------------------------------------------------------------- */
 /* Convert from FreeImage to HBITMAP ---------------------------------------- */
 /* -------------------------------------------------------------------------- */
-#if ( defined(HB_OS_WIN) || defined(__WIN32__) )
 
 /* implementation: HBITMAP bitmap = FI_FiToBitmap( FIBITMAP *dib ); */
 HB_FUNC( FI_FITOBITMAP )
@@ -106,12 +99,9 @@ HB_FUNC( FI_FITOBITMAP )
    else
    {
       /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 ) );
-         return;
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -128,25 +118,26 @@ HB_FUNC( FI_BITMAPTOFI )
        hb_parinfo( 1 ) & HB_IT_POINTER
      )
    {
-      FIBITMAP *dib;
+      FIBITMAP * dib;
       HBITMAP bitmap;
 
       /* Retrieve parameters */
-      bitmap = (HBITMAP) hb_parptr( 1 );
+      bitmap = ( HBITMAP ) hb_parptr( 1 );
 
       /* run function */
       dib = NULL;
 
-      if( bitmap ) {
-        BITMAP bm;
-        HDC hDC;
+      if( bitmap )
+      {
+         BITMAP bm;
+         HDC hDC;
 
-        GetObject( bitmap, sizeof(BITMAP), (LPSTR) &bm );
-        dib = FreeImage_Allocate(bm.bmWidth, bm.bmHeight, bm.bmBitsPixel, 0, 0, 0);
-        hDC = GetDC( NULL );
-        GetDIBits( hDC, bitmap, 0, FreeImage_GetHeight(dib),
-                   FreeImage_GetBits(dib), FreeImage_GetInfo(dib), DIB_RGB_COLORS);
-        ReleaseDC( NULL, hDC );
+         GetObject( bitmap, sizeof(BITMAP), (LPSTR) &bm );
+         dib = FreeImage_Allocate(bm.bmWidth, bm.bmHeight, bm.bmBitsPixel, 0, 0, 0);
+         hDC = GetDC( NULL );
+         GetDIBits( hDC, bitmap, 0, FreeImage_GetHeight(dib),
+                    FreeImage_GetBits(dib), FreeImage_GetInfo(dib), DIB_RGB_COLORS);
+         ReleaseDC( NULL, hDC );
       }
 
       /* return value */
@@ -156,12 +147,9 @@ HB_FUNC( FI_BITMAPTOFI )
    else
    {
       /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 1,
-            hb_paramError( 1 ) );
-         return;
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 1,
+         hb_paramError( 1 ) );
    }
 }
 
@@ -183,21 +171,21 @@ HB_FUNC( FI_WINDRAW )
        hb_parinfo( 6 ) & HB_IT_NUMERIC
      )
    {
-      FIBITMAP *dib;
+      FIBITMAP * dib;
       HDC hDC;
       RECT rcDest;
       int scanlines;
 
       /* Retrieve parameters */
       dib  = ( FIBITMAP * ) hb_parptr( 1 );
-      hDC  = (HDC) hb_parnl( 2 );
+      hDC  = ( HDC ) hb_parnl( 2 );
       rcDest.top    = hb_parni( 3 );
       rcDest.left   = hb_parni( 4 );
       rcDest.bottom = hb_parni( 5 );
       rcDest.right  = hb_parni( 6 );
 
       /* run function */
-      SetStretchBltMode(hDC, COLORONCOLOR);
+      SetStretchBltMode( hDC, COLORONCOLOR );
 
       scanlines = StretchDIBits(hDC, rcDest.left,
                                      rcDest.top,
@@ -209,22 +197,17 @@ HB_FUNC( FI_WINDRAW )
 
       /* return value */
       hb_retni( scanlines );
-
    }
    else
    {
       /* Parameter error */
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            HB_ERR_FUNCNAME, 6,
-            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ),
-            hb_paramError( 4 ), hb_paramError( 5 ), hb_paramError( 6 )
-         );
-         return;
-      }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+         HB_ERR_FUNCNAME, 6,
+         hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ),
+         hb_paramError( 4 ), hb_paramError( 5 ), hb_paramError( 6 ) );
    }
 }
 
 /* -------------------------------------------------------------------------- */
 
-#endif /* ( defined(HB_OS_WIN) || defined(__WIN32__) ) */
+#endif /* defined(HB_OS_WIN) */

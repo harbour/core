@@ -215,8 +215,10 @@
    #undef USHORT                          /* 2 bytes unsigned */
    typedef unsigned short int USHORT;
 
-   #undef LONG                            /* 4 or 8 bytes signed */
-   typedef long LONG;
+   #if ! defined( HB_DONT_DEFINE_LONG )
+      #undef LONG                         /* 4 or 8 bytes signed */
+      typedef long LONG;
+   #endif
 
    #undef ULONG                           /* 4 or 8 bytes unsigned */
    typedef unsigned long ULONG;
