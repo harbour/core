@@ -8,6 +8,20 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 22:11 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  + contrib/examples/dbu/dbu.hbm
+  - contrib/examples/dbu/hbmk.bat
+  * contrib/examples/dbu/readme.txt
+  + contrib/examples/rl/rl.hbm
+  - contrib/examples/rl/hbmk.bat
+  * contrib/examples/rl/readme.txt
+    + Replace Win/DOS specific batch files with hbmk make
+      file, so now all platforms are equally supported.
+
+  - contrib/examples/dbu/hb_dbu.dif
+  + contrib/examples/dbu/dbu.dif
+    * Renamed.
+
 2009-02-21 13:00 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgsink.c
   * harbour/contrib/gtwvg/wvgutils.c
@@ -189,8 +203,8 @@
 2009-02-21 08:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbfimage/fi_wrp.c
     ! Added hack to trick around FreeImage.h header not to
-      #include <inttypes.h> on Borland compilers. Maybe newers
-      than 5.8.1 versions have it, so this can be made BCC version
+      #include <inttypes.h> on Borland compilers. Maybe newer
+      than 5.8.2 versions have it, so this can be made BCC version
       dependend.
 
 2009-02-21 08:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -242,7 +256,7 @@
       "hbsc_2nwvzg.obj : warning LNK4217: locally defined symbol \
          _hb_vm_pszLinkedMain imported in function __hb_hbmk_setdef_"
          [FIXED]
-    + Added code to only accept valid Harbour identified as
+    + Added code to only accept valid Harbour identifier as
       -main= value.
     + Added first module detection.
     + Enabled code to automatically find entry function in first
