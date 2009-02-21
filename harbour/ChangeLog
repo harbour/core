@@ -8,6 +8,34 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 13:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added internal function to check for linked GTs, so that
+      platform/compiler code can act accordingly.
+    + Added required system libs and paths for gtsln, gtcrs
+      and gtxwc. So now it's 100% hbmk script compatible.
+      This effectively added support for gtsln and gtcrs
+      (for *nix only). ncur194 support is missing though,
+      plus maybe some build-time modifier switches aren't
+      honored (the WITHOUT* ones, but I'm not positive that
+      all of them have to be handled on hbmk2 level).
+      Probably some clever autodetection can be used on
+      hbmk2 level for such cases.
+    ! Fixed to not be case-sensitive when dealing with GT names.
+    + Added NOTE about 3rd party/contrib stuff handling.
+    * Minor formatting.
+
+    ; NOTE: What remains is cross compilation support, which
+            is a new topic. -n support tweak, if needed.
+            And testing, adding missing compilers, fixing
+            existing ones if needed, syncing with build-time
+            switches, clean Win32 system libs.
+
+  * contrib/gtwvg/tests/gtwvg.hbp
+    + Readded gui=yes to better separate compontents.
+  * ChangeLog
+    * Entry marked done.
+
 2009-02-21 11:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/gtwvg/tests/gtwvg.hbp
     * Moved gtwvg from libs= to gt=. gui=yes no longer needed.
@@ -31,7 +59,7 @@
 2009-02-21 09:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added automatic selection of GUI/non-GNU modes for
-      core/contrib GTs. This can be overridden by user by
+      core GTs. This can be overridden by user by
       putting -gui (and related switches) _after_ -gt switch.
       In normal cases this isn't necessary.
     + Invalid GT names are ignored, instead of creating

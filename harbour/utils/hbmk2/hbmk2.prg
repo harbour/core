@@ -69,11 +69,25 @@
 #include "hbgtinfo.ch"
 #include "hbver.ch"
 
+/* NOTE: Keep this code clean from any kind of contribs and Harbour
+         level 3rd party library/tool information. This (the hbmk)
+         component shall only contain hard-wired knowledge on Harbour
+         _core_ (official interfaces preferred), C compilers and OS
+         details on the smallest possible level.
+         Instead, 3rd party Harbour packages are recommended to
+         maintain and provide .hbp files themselves, as part of
+         their standard distribution packages. You can find a few
+         such .hbp examples in the 'examples' directory.
+         For Harbour contribs, the recommended method is to supply
+         and maintain .hbp files in their respective directories,
+         usually under tests (or utils, samples). As of this
+         writing, most of them has one created.
+         Thank you. [vszakats] */
+
 /* TODO: Sync default c/linker switches with Harbour build systems. */
 /* TODO: Add support for wildcarded input source. Only if only one source file is specified. */
 /* TODO: Add support for Windows resource files. */
 /* TODO: Add support for library creation. */
-/* TODO: Add support for gtsln and gtcrs. */
 /* TODO: msvc/bcc32: Use separate link phase. This allows incremental links. */
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cross compilation support. */
@@ -92,6 +106,7 @@ THREAD STATIC t_lInfo := .F.
 THREAD STATIC t_cARCH
 THREAD STATIC t_cCOMP
 THREAD STATIC t_aLIBCOREGT
+THREAD STATIC t_cGTDEFAULT
 
 THREAD STATIC t_cCCPATH
 THREAD STATIC t_cCCPREFIX
@@ -112,8 +127,8 @@ FUNCTION Main( ... )
 
    LOCAL aLIB_BASE_GT := {;
       "gtcgi" ,;
-      "gtstd" ,;
-      "gtpca" }
+      "gtpca" ,;
+      "gtstd" }
 
    LOCAL aLIB_BASE_PCRE := {;
       "hbpcre" }
@@ -200,7 +215,6 @@ FUNCTION Main( ... )
 
    LOCAL aCOMPDET
    LOCAL aCOMPSUP
-   LOCAL cGTDEFAULT
 
    LOCAL cLibPrefix
    LOCAL cLibExt
@@ -356,19 +370,19 @@ FUNCTION Main( ... )
       aCOMPSUP := { "gcc" }
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
-      cGTDEFAULT := "gttrm"
+      t_cGTDEFAULT := "gttrm"
    CASE t_cARCH == "linux"
       aCOMPSUP := { "gcc", "gpp", "owatcom", "mingw", "mingwce" }
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
-      cGTDEFAULT := "gtstd"
+      t_cGTDEFAULT := "gtstd"
    CASE t_cARCH == "dos"
       aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "djgpp"   },;
                     { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
       aCOMPSUP := { "djgpp", "gcc", "owatcom", "rsx32" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtdos" }
-      cGTDEFAULT := "gtdos"
+      t_cGTDEFAULT := "gtdos"
    CASE t_cARCH == "os2"
       aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "gcc"     },;
                     { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
@@ -376,7 +390,7 @@ FUNCTION Main( ... )
       aCOMPSUP := { "gcc", "owatcom", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtos2" }
-      cGTDEFAULT := "gtos2"
+      t_cGTDEFAULT := "gtos2"
    CASE t_cARCH == "win"
       /* Order is significant.
          owatcom also keeps a cl.exe in it's binary dir. */
@@ -392,7 +406,7 @@ FUNCTION Main( ... )
       aCOMPSUP := { "gcc", "mingw", "msvc", "bcc32", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
-      cGTDEFAULT := "gtwin"
+      t_cGTDEFAULT := "gtwin"
    OTHERWISE
       OutErr( "hbmk: Error: HB_ARCHITECTURE value unknown: " + t_cARCH + hb_osNewLine() )
       PauseForKey()
@@ -401,8 +415,8 @@ FUNCTION Main( ... )
 
    t_aLIBCOREGT := ArrayJoin( aLIB_BASE_GT, s_aLIBHBGT )
 
-   /* Setup default state */
-   SetupForGT( cGTDEFAULT, NIL, @s_lGUI )
+   /* Setup GUI state for Harbour default */
+   SetupForGT( t_cGTDEFAULT, NIL, @s_lGUI )
 
    /* Autodetect compiler */
 
@@ -681,8 +695,8 @@ FUNCTION Main( ... )
             ENDIF
          ENDIF
          IF ! Empty( cParam )
-            IF AScan( t_aLIBCOREGT, {| tmp | tmp == cParam } ) == 0 .AND. ;
-               AScan( s_aLIBUSERGT, {| tmp | tmp == cParam } ) == 0
+            IF AScan( t_aLIBCOREGT, {|tmp| Lower( tmp ) == Lower( cParam ) } ) == 0 .AND. ;
+               AScan( s_aLIBUSERGT, {|tmp| Lower( tmp ) == Lower( cParam ) } ) == 0
                AAddNotEmpty( s_aLIBUSERGT, PathSepToTarget( cParam ) )
             ENDIF
          ENDIF
@@ -748,10 +762,10 @@ FUNCTION Main( ... )
    DEFAULT s_cPROGNAME TO s_cFIRST
 
    IF t_cCOMP $ "mingwce|poccce"
-      cGTDEFAULT := "gtwvt"
+      t_cGTDEFAULT := "gtwvt"
    ENDIF
 
-   IF s_cGT == cGTDEFAULT
+   IF s_cGT == t_cGTDEFAULT
       s_cGT := NIL
    ENDIF
 
@@ -847,7 +861,7 @@ FUNCTION Main( ... )
       aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, t_aLIBCOREGT } )
 
       IF ! Empty( s_cGT )
-         IF AScan( aLIB_BASE2, {|tmp| Upper( tmp ) == Upper( s_cGT ) } ) == 0
+         IF AScan( aLIB_BASE2, {|tmp| Lower( tmp ) == Lower( s_cGT ) } ) == 0
             AAdd( aLIB_BASE2, s_cGT )
          ENDIF
       ENDIF
@@ -963,16 +977,30 @@ FUNCTION Main( ... )
             AAdd( s_aLIBSYS, "resolv" )
          CASE t_cARCH == "hpux"
             AAdd( s_aLIBSYS, "rt" )
-         CASE t_cARCH == "darwin"
-            IF s_cGT != NIL
-               DO CASE
-               CASE s_cGT == "gtcrs"
-                  AAdd( s_aLIBSYS, "ncurses" )
-               CASE s_cGT == "gtsln"
-                  AAdd( s_aLIBSYS, "slang" )
-               ENDCASE
-            ENDIF
          ENDCASE
+
+         IF IsGTRequested( s_cGT, s_aLIBUSERGT, "gtcrs" )
+            /* TOFIX: Sometimes 'ncur194' is needed. */
+            AAdd( s_aLIBSYS, "ncurses" )
+         ENDIF
+         IF IsGTRequested( s_cGT, s_aLIBUSERGT, "gtsln" )
+            AAdd( s_aLIBSYS, "slang" )
+            /* Add paths, where this isn't a system component */
+            DO CASE
+            CASE t_cARCH == "darwin"
+               AAdd( s_aLIBPATH, "/sw/lib" )
+               AAdd( s_aLIBPATH, "/opt/local/lib" )
+            CASE t_cARCH == "bsd"
+               AAdd( s_aLIBPATH, "/usr/local/lib" )
+            ENDCASE
+         ENDIF
+         IF IsGTRequested( s_cGT, s_aLIBUSERGT, "gtxvt" )
+            IF hb_DirExists( "/usr/X11R6/lib64" )
+               AAdd( s_aLIBPATH, "/usr/X11R6/lib64" )
+            ENDIF
+            AAdd( s_aLIBPATH, "/usr/X11R6/lib" )
+            AAdd( s_aLIBSYS, "X11" )
+         ENDIF
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
             AAdd( iif( s_lSHARED, s_aLIBSHARED, s_aLIBUSER ), iif( s_lMT, "hbfmmt", "hbfm" ) )
@@ -1579,8 +1607,8 @@ STATIC FUNCTION SetupForGT( cGT, /* @ */ s_cGT, /* @ */ s_lGUI )
 
       s_cGT := cGT
 
-      /* Setup default GUI mode for core/contrib GTs:
-         (please don't add 3rd parties here) */
+      /* Setup default GUI mode for core GTs:
+         (please don't add contrib/3rd parties here) */
       SWITCH Lower( cGT )
       CASE "gtcgi"
       CASE "gtcrs"
@@ -1593,7 +1621,6 @@ STATIC FUNCTION SetupForGT( cGT, /* @ */ s_cGT, /* @ */ s_lGUI )
 
       CASE "gtgui"
       CASE "gtwvt"
-      CASE "gtwvg" /* Harbour contrib */
          s_lGUI := .T.
          EXIT
 
@@ -1919,7 +1946,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       CASE Lower( Left( cLine, Len( "libs="       ) ) ) == "libs="       ; cLine := SubStr( cLine, Len( "libs="       ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( StrStripQuote( cItem ) )
-            IF AScan( aLIBUSER, {| tmp | tmp == cItem } ) == 0
+            IF AScan( aLIBUSER, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aLIBUSER, cItem )
             ENDIF
          NEXT
@@ -1927,7 +1954,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       CASE Lower( Left( cLine, Len( "libpaths="   ) ) ) == "libpaths="   ; cLine := SubStr( cLine, Len( "libpaths="   ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( StrStripQuote( cItem ) )
-            IF AScan( aLIBPATH, {| tmp | tmp == cItem } ) == 0
+            IF AScan( aLIBPATH, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aLIBPATH, cItem )
             ENDIF
          NEXT
@@ -1935,7 +1962,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       CASE Lower( Left( cLine, Len( "prgflags="   ) ) ) == "prgflags="   ; cLine := SubStr( cLine, Len( "prgflags="   ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( StrStripQuote( cItem ) )
-            IF AScan( aOPTPRG, {| tmp | tmp == cItem } ) == 0
+            IF AScan( aOPTPRG, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aOPTPRG, cItem )
             ENDIF
          NEXT
@@ -1943,7 +1970,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       CASE Lower( Left( cLine, Len( "cflags="     ) ) ) == "cflags="     ; cLine := SubStr( cLine, Len( "cflags="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := StrStripQuote( cItem )
-            IF AScan( aOPTC, {| tmp | tmp == cItem } ) == 0
+            IF AScan( aOPTC, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aOPTC, cItem )
             ENDIF
          NEXT
@@ -1951,7 +1978,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       CASE Lower( Left( cLine, Len( "ldflags="    ) ) ) == "ldflags="    ; cLine := SubStr( cLine, Len( "ldflags="    ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := StrStripQuote( cItem )
-            IF AScan( aOPTL, {| tmp | tmp == cItem } ) == 0
+            IF AScan( aOPTL, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aOPTL, cItem )
             ENDIF
          NEXT
@@ -2019,8 +2046,8 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                ENDIF
             ENDIF
             IF ! Empty( cLine )
-               IF AScan( t_aLIBCOREGT, {| tmp | tmp == cLine } ) == 0 .AND. ;
-                  AScan( aLIBUSERGT, {| tmp | tmp == cLine } ) == 0
+               IF AScan( t_aLIBCOREGT, {|tmp| Lower( tmp ) == Lower( cLine ) } ) == 0 .AND. ;
+                  AScan( aLIBUSERGT  , {|tmp| Lower( tmp ) == Lower( cLine ) } ) == 0
                   AAddNotEmpty( aLIBUSERGT, PathSepToTarget( cLine ) )
                ENDIF
             ENDIF
@@ -2030,6 +2057,30 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
    NEXT
 
    RETURN
+
+/* aGT = GTs requested
+   cGT = GT requested for default.
+         Can be NIL, when it's the Harbour default.
+         Isn't necessarily on the aGT list in case it
+         is a _non-default_ core GT. */
+STATIC FUNCTION IsGTRequested( aGT, cGT, cWhichGT )
+
+   /* Checking for the default GT, always requested by core. */
+   IF cGT == NIL .AND. t_cGTDEFAULT == cWhichGT
+      RETURN .T.
+   ENDIF
+
+   /* Checking for user requested default GT. */
+   IF Lower( cGT ) == cWhichGT
+      RETURN .T.
+   ENDIF
+
+   /* Checking for user requested GT. */
+   IF AScan( aGT, {|tmp| Lower( tmp ) == Lower( cWhichGT ) } ) > 0
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
 
 STATIC FUNCTION StrStripQuote( cString )
    RETURN iif( Left( cString, 1 ) == Chr( 34 ) .AND. Right( cString, 1 ) == Chr( 34 ),;
