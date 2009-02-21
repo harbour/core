@@ -205,7 +205,6 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
 //----------------------------------------------------------------------//
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
-   LOCAL nHandled := 1
    LOCAL nObj, aNMMouse
 
    //hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage  )
