@@ -507,17 +507,17 @@ FUNCTION Main( ... )
          RETURN 3
       ENDCASE
       /* Detect special *nix dir layout (/bin, /lib/harbour, /include/harbour) */
-      IF hb_FileExists( s_cHB_INSTALL_PREFIX + hb_osPathSeparator() + "include" +;
-                                               hb_osPathSeparator() + "harbour" +;
-                                               hb_osPathSeparator() + "hbvm.h" )
+      IF hb_FileExists( DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "include" +;
+                                         hb_osPathSeparator() + "harbour" +;
+                                         hb_osPathSeparator() + "hbvm.h" )
          IF Empty( s_cHB_BIN_INSTALL )
-            s_cHB_BIN_INSTALL := tmp + "bin"
+            s_cHB_BIN_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "bin"
          ENDIF
          IF Empty( s_cHB_LIB_INSTALL )
-            s_cHB_LIB_INSTALL := tmp + "lib" + hb_osPathSeparator() + "harbour"
+            s_cHB_LIB_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "lib" + hb_osPathSeparator() + "harbour"
          ENDIF
          IF Empty( s_cHB_INC_INSTALL )
-            s_cHB_INC_INSTALL := tmp + "include" + hb_osPathSeparator() + "harbour"
+            s_cHB_INC_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "include" + hb_osPathSeparator() + "harbour"
          ENDIF
       ENDIF
    ENDIF
