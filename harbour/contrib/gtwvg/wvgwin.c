@@ -2634,8 +2634,9 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
 }
 
 //----------------------------------------------------------------------//
-
-HB_FUNC( WIN_FILLRECT )
+//  Function with Win_FillRect() exists in hbwin:win_parn1.c with different approach.
+//                        **************************************
+HB_FUNC( WVG_FILLRECT )
 {
    RECT rc;
 

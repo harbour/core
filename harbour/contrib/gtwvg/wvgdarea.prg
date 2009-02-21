@@ -155,7 +155,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgDrawingArea
       IF hb_isNumeric( ::hBrushBG )
          Win_SetBkMode( hDC, 1 )
 
-         Win_FillRect( hDC, { 0,0,::currentSize()[1],::currentSize()[1]}, ::hBrushBG )
+         Wvg_FillRect( hDC, { 0,0,::currentSize()[1],::currentSize()[1]}, ::hBrushBG )
          RETURN ( 0 )
       ENDIF
 
