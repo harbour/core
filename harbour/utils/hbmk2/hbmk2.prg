@@ -1018,7 +1018,9 @@ FUNCTION Main( ... )
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          IF s_lGUI
-            cOpt_CompC += " -Wl,-mwindows"
+            cOpt_CompC += " -mwindows"
+         ELSE
+            cOpt_CompC += " -mconsole"
          ENDIF
          IF s_lMAP
             cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
