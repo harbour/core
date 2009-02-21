@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-22 00:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtwvg/wvgtoolb.prg
+    ! Enabled disabling debug calls (requiring xhb) in non-debug mode.
+
+  * contrib/gtwvg/tests/gtwvg.hbp
+    - Removed xhb lib.
+    + Added mt=yes line.
+
+  * source/vm/extrap.c
+    ! Extended line buffer used for module listing. 64 bytes
+      just isn't enough in 64-bit mode.
+
 2009-02-22 00:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fix to -mwindow/-mconsole switch handling for MinGW.

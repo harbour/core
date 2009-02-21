@@ -257,7 +257,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
                   /* Now walk the module list of the process, and display information about each module */
                   do
                   {
-                     char buf[ 64 ];
+                     char buf[ 256 ];
 #if defined( HB_OS_WIN_64 )
                      /* TOFIX: me32.szExePath seemed trashed in some (standalone) tests. */
                      hb_snprintf( buf, sizeof( buf ), "0x%016" PFLL "X 0x%016" PFLL "X %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, me32.szExePath );
