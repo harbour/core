@@ -145,7 +145,6 @@ FUNCTION Main( ... )
       "rddfpt" }
 
    LOCAL s_cGT
-   LOCAL s_cPRGSTUB
    LOCAL s_cCSTUB
 
    LOCAL s_cHB_INSTALL_PREFIX
@@ -214,7 +213,7 @@ FUNCTION Main( ... )
    LOCAL cBin_CompC
    LOCAL cBin_Link
    LOCAL nErrorLevel
-   LOCAL tmp
+   LOCAL tmp, array
    LOCAL cScriptFile
    LOCAL fhnd
    LOCAL lNOHBP
@@ -397,6 +396,9 @@ FUNCTION Main( ... )
       RETURN 1
    ENDCASE
 
+   /* Setup default state */
+   SetupForGT( cGTDEFAULT, @s_cGT, @s_lGUI )
+
    /* Autodetect compiler */
 
    IF Empty( t_cCOMP ) .OR. t_cCOMP == "bld"
@@ -546,7 +548,7 @@ FUNCTION Main( ... )
    IF ValueIsT( GetEnv( "HB_NULRDD" ) )         ; s_lNULRDD := .T. ; ENDIF
 
    IF Lower( Left( GetEnv( "HB_GT" ), 2 ) ) == "gt"
-      s_cGT := GetEnv( "HB_GT" )
+      SetupForGT( GetEnv( "HB_GT" ), @s_cGT, @s_lGUI )
    ENDIF
 
    /* Process command line */
@@ -662,7 +664,12 @@ FUNCTION Main( ... )
             OutErr( "hbmk: Warning: Invalid -main value ignored: " + tmp + hb_osNewLine() )
          ENDIF
 
-      CASE Lower( Left( cParam, 3 ) ) == "-gt"   ; s_cGT := SubStr( cParam, 2 )
+      CASE Lower( Left( cParam, 3 ) ) == "-gt"
+
+         IF ! SetupForGT( SubStr( cParam, 2 ), @s_cGT, @s_lGUI )
+            OutErr( "hbmk: Warning: Invalid -gt value ignored: " + tmp + hb_osNewLine() )
+         ENDIF
+
       CASE Left( cParam, 2 ) == "-o"
 
          tmp := PathSepToSelf( SubStr( cParam, 3 ) )
@@ -726,25 +733,8 @@ FUNCTION Main( ... )
       cGTDEFAULT := "gtwvt"
    ENDIF
 
-   IF ( ! Empty( s_cGT ) .AND. !( s_cGT == cGTDEFAULT ) ) .OR. ;
-     s_lFMSTAT != NIL
-
-      fhnd := hb_FTempCreateEx( @s_cPRGSTUB, ".", "hbsp_", ".prg" )
-      IF fhnd != F_ERROR
-         IF ! Empty( s_cGT )
-            FWrite( fhnd, "ANNOUNCE HB_GTSYS" + hb_osNewLine() +;
-                          "REQUEST HB_GT_" + Upper( SubStr( s_cGT, 3 ) ) + "_DEFAULT" + hb_osNewLine() )
-         ENDIF
-         IF s_lFMSTAT != NIL
-            FWrite( fhnd, "REQUEST " + iif( s_lFMSTAT, "HB_FM_STAT", "HB_FM_NOSTAT" ) + hb_osNewLine() )
-         ENDIF
-         FClose( fhnd )
-      ELSE
-         OutErr( "hbmk: Warning: Stub helper .prg program couldn't be created." + hb_osNewLine() )
-         PauseForKey()
-         RETURN 5
-      ENDIF
-      AAdd( s_aPRG, s_cPRGSTUB )
+   IF s_cGT == cGTDEFAULT
+      s_cGT := NIL
    ENDIF
 
    /* Merge user libs from command line and envvar. Command line has priority. */
@@ -803,19 +793,13 @@ FUNCTION Main( ... )
 
       IF ( tmp := hb_run( cCommand ) ) != 0
          OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ": '" + cCommand + "'" + hb_osNewLine() )
-         IF ! Empty( s_cPRGSTUB )
-            FErase( s_cPRGSTUB )
-         ENDIF
          PauseForKey()
          RETURN 6
       ENDIF
    ENDIF
 
-   IF lStopAfterHarbour
-      IF ! Empty( s_cPRGSTUB )
-         FErase( s_cPRGSTUB )
-      ENDIF
-   ELSE
+   IF ! lStopAfterHarbour
+
       /* C compilation/linking */
 
       s_aLIB3RD := {}
@@ -962,12 +946,14 @@ FUNCTION Main( ... )
          CASE t_cARCH == "hpux"
             AAdd( s_aLIBSYS, "rt" )
          CASE t_cARCH == "darwin"
-            DO CASE
-            CASE s_cGT == "gtcrs"
-               AAdd( s_aLIBSYS, "ncurses" )
-            CASE s_cGT == "gtsln"
-               AAdd( s_aLIBSYS, "slang" )
-            ENDCASE
+            IF s_cGT != NIL
+               DO CASE
+               CASE s_cGT == "gtcrs"
+                  AAdd( s_aLIBSYS, "ncurses" )
+               CASE s_cGT == "gtsln"
+                  AAdd( s_aLIBSYS, "slang" )
+               ENDCASE
+            ENDIF
          ENDCASE
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
@@ -1307,7 +1293,10 @@ FUNCTION Main( ... )
 
       /* HACK: Override entry point requested by user or detected by us,
                and override the GT if requested by user. */
-      IF s_cMAIN != NIL
+      IF s_cMAIN != NIL .OR. ;
+         s_cGT != NIL .OR. ;
+         s_lFMSTAT != NIL
+
          fhnd := hb_FTempCreateEx( @s_cCSTUB, ".", "hbsc_", ".c" )
          IF fhnd != F_ERROR
 
@@ -1324,41 +1313,71 @@ FUNCTION Main( ... )
             OTHERWISE                       ; tmp := "_declspec( dllimport )"
             ENDCASE
 
-            FWrite( fhnd, '#include "hbapi.h"'                                                      + hb_osNewLine() +;
-                          '#include "hbinit.h"'                                                     + hb_osNewLine() +;
-                          ''                                                                        + hb_osNewLine() +;
-                          'HB_EXTERN_BEGIN'                                                         + hb_osNewLine() +;
-                          'extern ' + tmp + ' void hb_vmSetLinkedMain( const char * szMain );'      + hb_osNewLine() +;
-                          'HB_EXTERN_END'                                                           + hb_osNewLine() +;
-                          ''                                                                        + hb_osNewLine() +;
-                          'HB_CALL_ON_STARTUP_BEGIN( _hb_hbmk_setdef_ )'                            + hb_osNewLine() +;
-                          '   hb_vmSetLinkedMain( "' + Upper( s_cMAIN ) + '" );'                    + hb_osNewLine() +;
-                          'HB_CALL_ON_STARTUP_END( _hb_hbmk_setdef_ )'                              + hb_osNewLine() +;
-                          ''                                                                        + hb_osNewLine() +;
-                          '#if defined( HB_PRAGMA_STARTUP )'                                        + hb_osNewLine() +;
-                          '   #pragma startup_hb_lnk_SetDefault_hbmk_'                              + hb_osNewLine() +;
-                          '#elif defined( HB_MSC_STARTUP )'                                         + hb_osNewLine() +;
-                          '   #if defined( HB_OS_WIN_64 )'                                          + hb_osNewLine() +;
-                          '      #pragma section( HB_MSC_START_SEGMENT, long, read )'               + hb_osNewLine() +;
-                          '   #endif'                                                               + hb_osNewLine() +;
-                          '   #pragma data_seg( HB_MSC_START_SEGMENT )'                             + hb_osNewLine() +;
-                          '   static HB_$INITSYM hb_vm_auto_hbmk_setdef_ = _hb_hbmk_setdef_;'       + hb_osNewLine() +;
-                          '   #pragma data_seg()'                                                   + hb_osNewLine() +;
-                          '#endif'                                                                  + hb_osNewLine() )
+            /* Create list of requested symbols */
+            array := {}
+            IF s_cMAIN != NIL
+               /* NOTE: Request this function to generate link error, rather
+                        than starting with the wrong (default) function. */
+               AAdd( array, Upper( iif( Left( s_cMAIN, 1 ) == "@", SubStr( s_cMAIN, 2 ), s_cMAIN ) ) )
+            ENDIF
+            IF s_cGT != NIL
+               AAdd( array, "HB_GT_" + Upper( SubStr( s_cGT, 3 ) ) )
+            ENDIF
+            IF s_lFMSTAT != NIL
+               AAdd( array, iif( s_lFMSTAT, "HB_FM_STAT", "HB_FM_NOSTAT" ) )
+            ENDIF
 
-                       /* 'extern ' + tmp + ' void hb_gtSetDefault( const char * szGtName );'       + hb_osNewLine() +; */
-                       /* '   hb_gtSetDefault( "$gt" );'                                            + hb_osNewLine() +; */
+            /* Build C stub */
+            FWrite( fhnd, '#include "hbapi.h"'                                                      + hb_osNewLine() )
+            IF ! Empty( array )
+               FWrite( fhnd, ''                                                                     + hb_osNewLine() )
+               AEval( array, {|tmp| FWrite( fhnd, 'HB_FUNC_EXTERN( ' + tmp + ' );'                  + hb_osNewLine() ) } )
+               FWrite( fhnd, ''                                                                     + hb_osNewLine() )
+               FWrite( fhnd, 'void _hb_lnk_ForceLink_hbmk( void )'                                  + hb_osNewLine() )
+               FWrite( fhnd, '{'                                                                    + hb_osNewLine() )
+               AEval( array, {|tmp| FWrite( fhnd, '   HB_FUNC_EXEC( ' + tmp + ' );'                 + hb_osNewLine() ) } )
+               FWrite( fhnd, '}'                                                                    + hb_osNewLine() )
+               FWrite( fhnd, ''                                                                     + hb_osNewLine() )
+            ENDIF
+
+            IF s_cGT != NIL .OR. ;
+               s_cMAIN != NIL
+               FWrite( fhnd, '#include "hbinit.h"'                                                  + hb_osNewLine() +;
+                             ''                                                                     + hb_osNewLine() +;
+                             'HB_EXTERN_BEGIN'                                                      + hb_osNewLine() +;
+                             'extern ' + tmp + ' void hb_vmSetLinkedMain( const char * szMain );'   + hb_osNewLine() +;
+                             'extern ' + tmp + ' void hb_gtSetDefault( const char * szGtName );'    + hb_osNewLine() +;
+                             'HB_EXTERN_END'                                                        + hb_osNewLine() +;
+                             ''                                                                     + hb_osNewLine() +;
+                             'HB_CALL_ON_STARTUP_BEGIN( _hb_hbmk_setdef_ )'                         + hb_osNewLine() )
+               IF s_cGT != NIL
+                  FWrite( fhnd, '   hb_gtSetDefault( "' + Upper( SubStr( s_cGT, 3 ) ) + '" );'      + hb_osNewLine() )
+               ENDIF
+               IF s_cMAIN != NIL
+                  FWrite( fhnd, '   hb_vmSetLinkedMain( "' + Upper( s_cMAIN ) + '" );'              + hb_osNewLine() )
+               ENDIF
+               FWrite( fhnd, 'HB_CALL_ON_STARTUP_END( _hb_hbmk_setdef_ )'                           + hb_osNewLine() +;
+                             ''                                                                     + hb_osNewLine() +;
+                             '#if defined( HB_PRAGMA_STARTUP )'                                     + hb_osNewLine() +;
+                             '   #pragma startup_hb_lnk_SetDefault_hbmk_'                           + hb_osNewLine() +;
+                             '#elif defined( HB_MSC_STARTUP )'                                      + hb_osNewLine() +;
+                             '   #if defined( HB_OS_WIN_64 )'                                       + hb_osNewLine() +;
+                             '      #pragma section( HB_MSC_START_SEGMENT, long, read )'            + hb_osNewLine() +;
+                             '   #endif'                                                            + hb_osNewLine() +;
+                             '   #pragma data_seg( HB_MSC_START_SEGMENT )'                          + hb_osNewLine() +;
+                             '   static HB_$INITSYM hb_vm_auto_hbmk_setdef_ = _hb_hbmk_setdef_;'    + hb_osNewLine() +;
+                             '   #pragma data_seg()'                                                + hb_osNewLine() +;
+                             '#endif'                                                               + hb_osNewLine() )
+            ENDIF
             FClose( fhnd )
          ELSE
             OutErr( "hbmk: Warning: Stub helper .c program couldn't be created." + hb_osNewLine() )
-            IF ! Empty( s_cPRGSTUB )
-               FErase( s_cPRGSTUB )
-            ENDIF
             AEval( ListCook( s_aPRG, NIL, ".c" ), {|tmp| FErase( tmp ) } )
             PauseForKey()
             RETURN 5
          ENDIF
          AAdd( s_aC, s_cCSTUB )
+s_cCSTUB := NIL
       ENDIF
 
       /* Library list assembly */
@@ -1503,9 +1522,6 @@ FUNCTION Main( ... )
 
       /* Cleanup */
 
-      IF ! Empty( s_cPRGSTUB )
-         FErase( s_cPRGSTUB )
-      ENDIF
       IF ! Empty( s_cCSTUB )
          FErase( s_cCSTUB )
       ENDIF
@@ -1533,6 +1549,37 @@ FUNCTION Main( ... )
    ENDIF
 
    RETURN nErrorLevel
+
+STATIC FUNCTION SetupForGT( cGT, /* @ */ s_cGT, /* @ */ s_lGUI )
+
+   IF IsValidHarbourID( cGT )
+
+      s_cGT := cGT
+
+      /* Setup default GUI mode for core/contrib GTs:
+         (please don't add 3rd parties here) */
+      SWITCH Lower( cGT )
+      CASE "gtcgi"
+      CASE "gtcrs"
+      CASE "gtpca"
+      CASE "gtsln"
+      CASE "gtstd"
+      CASE "gtwin"
+         s_lGUI := .F.
+         EXIT
+
+      CASE "gtgui"
+      CASE "gtwvt"
+      CASE "gtwvg" /* Harbour contrib */
+         s_lGUI := .T.
+         EXIT
+
+      ENDSWITCH
+
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
 
 STATIC FUNCTION SelfCOMP()
    LOCAL cCompiler := hb_Compiler()

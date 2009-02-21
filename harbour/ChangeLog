@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 09:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added automatic selection of GUI/non-GNU modes for
+      core/contrib GTs. This can be overridden by user by
+      putting -gui (and related switches) _after_ -gt switch.
+      In normal cases this isn't necessary.
+    + Invalid GT names are ignored, instead of creating
+      compile error in the stub.
+    + GTs and FM are now requested from C stub just like they
+      are in hbmk script. This makes it possible to override
+      GT even for apps that already uses an official method
+      to choose a GT. hbmk2 uses function call also to set GT.
+    - Removed .prg stub.
+    ! Fixed recent potential RTE when using darwin.
+
 2009-02-21 00:15 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
   * harbour/contrib/gtwvg/wvggui.c
@@ -24,7 +39,7 @@
   * harbour/contrib/hbwin/wapi_winuser.c
     ! Mostly warning fixes for 64bits.
 
-      ; Viktor, review me and plese send list of warnings 
+      ; Viktor, review me and plese send list of warnings
         left after this.
 
 2009-02-21 08:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
