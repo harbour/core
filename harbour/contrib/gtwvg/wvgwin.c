@@ -918,7 +918,7 @@ HB_FUNC( WIN_CREATETOOLBAREX )
    HWND hWnd;
 
    hWnd = CreateToolbarEx( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
-                           ( HB_PTRDIFF ) hb_parnint( 2 ),
+                           ( DWORD ) hb_parnint( 2 ),
                            hb_parni( 3 ),
                            hb_parni( 4 ),
                            ISNIL( 5 ) ? NULL : ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 5 ),
@@ -1414,7 +1414,7 @@ HB_FUNC( WIN_SETWNDPROC )
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
    oldProc = ( WNDPROC ) SetWindowLong( hWnd, GWL_WNDPROC, ( long ) wndProc ) ;
 #else
-   oldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( long ) wndProc ) ;
+   oldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( HB_PTRDIFF ) wndProc ) ;
 #endif
 
    hb_retnint( ( HB_PTRDIFF ) oldProc );
@@ -1471,7 +1471,7 @@ HB_FUNC( WVG_GETNMMOUSEINFO )
    hb_arraySetNI( pEvParams  , 1, nmh.code );
    hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom   );
    hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) nmh.hwndFrom );
-   hb_arraySetNL( pEvParams  , 4, nmm->dwItemSpec );
+   hb_arraySetNInt( pEvParams, 4, ( HB_PTRDIFF ) nmm->dwItemSpec );//hb_arraySetNL( pEvParams  , 4, nmm->dwItemSpec );
 
    hb_itemReturnRelease( pEvParams );
 }
@@ -2118,7 +2118,11 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          // set bitmap
          //
          tbab.hInst = NULL;
+#if (_WIN32_IE >= 0x0500)
+         tbab.nID   = wapi_par_HBITMAP( 2 );
+#else
          tbab.nID   = ( UINT ) wapi_par_HBITMAP( 2 );
+#endif
          iNewBitmap = ( int ) SendMessage( hWndTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab );
 
          // set string
@@ -2181,14 +2185,14 @@ HB_FUNC( WIN_SENDTOOLBARMESSAGE )
       case TB_ADDBITMAP            :
       {
          TBADDBITMAP tbab;
-         int iBitmap;
 
          tbab.hInst = NULL;
+#if (_WIN32_IE >= 0x0500)
+         tbab.nID   = wapi_par_HBITMAP( 3 );
+#else
          tbab.nID   = ( UINT ) wapi_par_HBITMAP( 3 );
-
-         iBitmap = SendMessage( hTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab );
-
-         wapi_ret_NI( iBitmap );
+#endif
+         wapi_ret_NI( ( int ) SendMessage( hTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab ) );
       }
       break;
       case TB_ADDBUTTONS           :

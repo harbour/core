@@ -802,7 +802,6 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
    UINT  uLen;
    PATLAXCREATECONTROL AtlAxCreateControl;
    HWND  hContainer = NULL;
-   RECT  rc;
    char  *class   = hb_parc( 1 );
    HWND  hParent  = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 2 );
    char  *Caption = ISNIL(  4 ) ? "" : hb_parc( 3 );
@@ -860,13 +859,18 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
             hb_retnint( ( HB_PTRDIFF ) obj );
 
             #if 0
-            GetClientRect( hContainer, &rc );
-            MoveWindow( GetDlgItem( hContainer, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
+            {
+               RECT rc;
+               GetClientRect( hContainer, &rc );
+               MoveWindow( GetDlgItem( hContainer, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
+            }
             #endif
          }
          #else
          if( pUnkCtrl )
          {
+            RECT rc;
+
             pUnkCtrl->lpVtbl->QueryInterface( pUnkCtrl, &IID_IDispatch, ( void** ) (void*) &obj );
             pUnkCtrl->lpVtbl->Release( pUnkCtrl );
             hb_retnint( ( long ) obj );

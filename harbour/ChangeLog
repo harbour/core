@@ -8,6 +8,12 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 13:00 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvgsink.c
+  * harbour/contrib/gtwvg/wvgutils.c
+  * harbour/contrib/gtwvg/wvgwin.c
+    ! Pacified more warnings on 64bits.
+
 2009-02-21 19:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-func.sh
   * harbour.spec
