@@ -690,7 +690,7 @@ HB_FUNC( HB_AX_SETUPCONNECTIONPOINT )
 
    hSink->pEvents = hb_itemNew( hb_param( 4, HB_IT_ANY ) );
 
-   hb_stornint( ( LONG ) hSink, 2 );
+   hb_stornint( ( HB_PTRDIFF ) hSink, 2 );
    hb_storni( n, 3 );
    hb_retnl( hr );
 }
@@ -806,7 +806,7 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
    char  *class   = hb_parc( 1 );
    HWND  hParent  = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 2 );
    char  *Caption = ISNIL(  4 ) ? "" : hb_parc( 3 );
-   HMENU id       = ISNIL(  4 ) ? ( HMENU )-1 : ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 4 );
+   HMENU id       = ISNIL(  4 ) ? ( HMENU ) ( HB_PTRDIFF ) -1 : ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 4 );
    int   x        = ISNIL(  5 ) ? 0 : hb_parni( 5 );
    int   y        = ISNIL(  6 ) ? 0 : hb_parni( 6 );
    int   w        = ISNIL(  7 ) ? 0 : hb_parni( 7 );
@@ -859,8 +859,10 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
             pUnk->lpVtbl->Release( pUnk );
             hb_retnint( ( HB_PTRDIFF ) obj );
 
+            #if 0
             GetClientRect( hContainer, &rc );
             MoveWindow( GetDlgItem( hContainer, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
+            #endif
          }
          #else
          if( pUnkCtrl )
@@ -880,18 +882,18 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
       }
       else
       {
-         hb_retnl( 0 );
+         hb_retnint( 0 );
       }
    }
    else
    {
-      hb_retnl( 0 );
+      hb_retnint( 0 );
    }
 
    // return the container handle
    if ISBYREF( 12 )
    {
-      hb_stornl( ( long ) hContainer, 12 );
+      hb_stornint( ( HB_PTRDIFF ) hContainer, 12 );
    }
 }
 //---------------------------------------------------------------------------//
@@ -908,7 +910,7 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
    char  *lpcclass = hb_parc( 1 );
    HWND  hParent   = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 2 );
    char  *Caption  = ISNIL(  4 ) ? "" : hb_parc( 3 );
-   HMENU id        = ISNIL(  4 ) ? ( HMENU )-1 : ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 4 );
+   HMENU id        = ISNIL(  4 ) ? ( HMENU ) ( HB_PTRDIFF ) -1 : ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 4 );
    int   x         = ISNIL(  5 ) ? 0 : hb_parni( 5 );
    int   y         = ISNIL(  6 ) ? 0 : hb_parni( 6 );
    int   w         = ISNIL(  7 ) ? 0 : hb_parni( 7 );
@@ -953,7 +955,8 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
             pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void** ) (void*) &obj );
             pUnk->lpVtbl->Release( pUnk );
             GetClientRect( hWnd, &rc );
-            MoveWindow( GetDlgItem( hParent, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
+            //MoveWindow( GetDlgItem( hParent, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
+            MoveWindow( hWnd, 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
             hb_retnint( ( HB_PTRDIFF ) obj );
          }
          else
