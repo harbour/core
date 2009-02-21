@@ -202,7 +202,6 @@ mk_hbtools()
         fi
         HB_SLN_LIB="slang"
     fi
-    CC_HB_USER_CFLAGS="-O3 ${CC_HB_USER_CFLAGS}"
     if [ "${HB_USER_CFLAGS//-mlp64/}" != "${HB_USER_CFLAGS}" ]; then
         CC_HB_USER_CFLAGS="${CC_HB_USER_CFLAGS} -mlp64"
         CC_HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} -mlp64"

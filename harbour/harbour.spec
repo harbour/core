@@ -430,7 +430,7 @@ mkdir -p $RPM_BUILD_ROOT/etc/harbour
 install -m644 source/rtl/gtcrs/hb-charmap.def $RPM_BUILD_ROOT/etc/harbour/hb-charmap.def
 cat > $RPM_BUILD_ROOT/etc/harbour.cfg <<EOF
 CC=gcc
-CFLAGS=-c -I$_DEFAULT_INC_DIR -O3
+CFLAGS=-c -I$_DEFAULT_INC_DIR
 VERBOSE=YES
 DELTMP=YES
 EOF

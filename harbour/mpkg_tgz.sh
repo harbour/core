@@ -251,7 +251,7 @@ chmod 644 $HB_INST_PREF$ETC/harbour/hb-charmap.def
 
 cat > $HB_INST_PREF$ETC/harbour.cfg <<EOF
 CC=${CCPREFIX}gcc
-CFLAGS=-c -I$_DEFAULT_INC_DIR -O3
+CFLAGS=-c -I$_DEFAULT_INC_DIR
 VERBOSE=YES
 DELTMP=YES
 EOF
