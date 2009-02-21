@@ -115,6 +115,13 @@ static HANDLE wvg_hInstance( void )
 
 //----------------------------------------------------------------------//
 
+HB_FUNC( WVG_HINSTANCE )
+{
+   wapi_ret_HANDLE( wvg_hInstance() );
+}
+
+/*----------------------------------------------------------------------*/
+
 HB_FUNC( WIN_SENDMESSAGE )
 {
    LPTSTR cText = NULL;
@@ -888,10 +895,10 @@ HB_FUNC( WIN_CREATEWINDOWEX )
    szClassName = HB_TCHAR_CONVTO( hb_parc( 2 ) );
    szWinName = HB_TCHAR_CONVTO( ISNIL( 3 ) ? "" : hb_parc( 3 ) );
 
-   hWnd = CreateWindowEx( hb_parnint( 1 ),
+   hWnd = CreateWindowEx( ( HB_PTRDIFF ) hb_parnint( 1 ),
                           szClassName,
                           szWinName,
-                          hb_parnint( 4 ),
+                          ( HB_PTRDIFF ) hb_parnint( 4 ),
                           hb_parni( 5 ), hb_parni( 6 ),
                           hb_parni( 7 ), hb_parni( 8 ),
                           ( HWND ) ( HB_PTRDIFF ) hb_parnint( 9 ),
@@ -911,7 +918,7 @@ HB_FUNC( WIN_CREATETOOLBAREX )
    HWND hWnd;
 
    hWnd = CreateToolbarEx( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
-                           hb_parnint( 2 ),
+                           ( HB_PTRDIFF ) hb_parnint( 2 ),
                            hb_parni( 3 ),
                            hb_parni( 4 ),
                            ISNIL( 5 ) ? NULL : ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 5 ),
@@ -1464,6 +1471,20 @@ HB_FUNC( WVG_GETNMMOUSEINFO )
    hb_arraySetNL( pEvParams  , 4, nmm->dwItemSpec );
 
    hb_itemReturnRelease( pEvParams );
+}
+/*----------------------------------------------------------------------*/
+// Wvg_SetToolbarButtonTip( nlParam, cToolTip )
+//
+HB_FUNC( WVG_SETTOOLBARBUTTONTIP )
+{
+   LPNMTBGETINFOTIP lptbgit = ( LPNMTBGETINFOTIP ) wapi_par_LPARAM( 1 );
+   LPTSTR pszText = HB_TCHAR_CONVTO( hb_parc( 2 ) );
+
+   lptbgit->cchTextMax = strlen( hb_parc( 2 ) );
+   //memcpy( lptbgit->pszText, pszText, strlen( hb_parc( 2 ) ) );
+   lptbgit->pszText = pszText;
+//hb_ToOutDebug( hb_parc( 2 ) );
+//   HB_TCHAR_FREE( pszText );
 }
 //----------------------------------------------------------------------//
 // Wvg_GetNMTreeViewInfo( nlParam )
@@ -2097,20 +2118,24 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          iNewString = SendMessage( hWndTB, TB_ADDSTRING, ( WPARAM ) 0, ( LPARAM ) szCaption );
          HB_TCHAR_FREE( szCaption );
 
+         #if 1
+         if( ISLOG( 6 ) && ( hb_parl( 6 ) ) )
+         {
+            SendMessage( hWndTB, TB_SETMAXTEXTROWS, ( WPARAM ) 0, ( LPARAM ) 0 );
+         }
+         #endif
          // add button
          //
          tbb.iBitmap   = iNewBitmap;
          tbb.idCommand = iCommand;
          tbb.fsState   = TBSTATE_ENABLED;
-         if( ISLOG( 6 ) && hb_parl( 6 ) )
-            tbb.fsStyle   = TBSTYLE_BUTTON;
-         else
-            tbb.fsStyle   = TBSTYLE_BUTTON;// | TBSTYLE_SHOWTEXT;
-
+         tbb.fsStyle   = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE;
          tbb.dwData    = 0;
          tbb.iString   = iNewString;
 
          bSuccess = SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
+
+         SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10,10 ) );
 
          hb_retl( bSuccess );
          return;
@@ -2121,7 +2146,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 
       case 3:  // separator
       {
-         tbb.iBitmap   = 10;
+         tbb.iBitmap   = 0;  // Can be width of the separator
          tbb.idCommand = 0;
          tbb.fsState   = TBSTATE_ENABLED;
          tbb.fsStyle   = TBSTYLE_SEP;
@@ -2440,6 +2465,8 @@ HB_FUNC( WIN_SENDTOOLBARMESSAGE )
       break;
       case TB_SETBITMAPSIZE        :
       {
+         SendMessage( hTB, TB_SETBITMAPSIZE, ( WPARAM ) 0,
+                      ( LPARAM ) MAKELONG( wapi_par_INT( 3 ), wapi_par_INT( 4 ) ) );
       }
       break;
       case TB_SETBUTTONINFO        :
@@ -2454,6 +2481,8 @@ HB_FUNC( WIN_SENDTOOLBARMESSAGE )
       break;
       case TB_SETBUTTONWIDTH       :
       {
+         SendMessage( hTB, TB_SETBUTTONWIDTH, ( WPARAM ) 0,
+                      ( LPARAM ) MAKELONG( wapi_par_INT( 3 ), wapi_par_INT( 4 ) ) );
       }
       break;
       case TB_SETCMDID             :
@@ -2497,6 +2526,7 @@ HB_FUNC( WIN_SENDTOOLBARMESSAGE )
       break;
       case TB_SETINDENT            :
       {
+         SendMessage( hTB, TB_SETINDENT, ( WPARAM ) wapi_par_INT( 3 ), ( LPARAM ) 0 );
       }
       break;
       case TB_SETINSERTMARK        :
@@ -2526,6 +2556,8 @@ HB_FUNC( WIN_SENDTOOLBARMESSAGE )
       #endif
       case TB_SETPADDING           :
       {
+         SendMessage( hTB, TB_SETPADDING, ( WPARAM ) 0,
+                           ( LPARAM ) MAKELPARAM( wapi_par_INT( 2 ), wapi_par_INT( 3 ) ) );
       }
       break;
       case TB_SETPARENT            :

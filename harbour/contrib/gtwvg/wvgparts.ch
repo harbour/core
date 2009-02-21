@@ -121,6 +121,7 @@
 
 #define WVGTOOLBAR_STYLE_STANDARD                 0
 #define WVGTOOLBAR_STYLE_FLAT                     1
+#define WVGTOOLBAR_STYLE_VERTICAL                 2
 
 #define WVGTOOLBAR_BUTTON_DEFAULT                 0
 

@@ -1626,6 +1626,16 @@
 #define SBS_TOPALIGN                              2
 #define SBS_VERT                                  1
 
+#define ILC_COLOR                                 0
+#define ILC_COLOR4                                4
+#define ILC_COLOR8                                8
+#define ILC_COLOR16                               16
+#define ILC_COLOR24                               24
+#define ILC_COLOR32                               32
+#define ILC_COLORDDB                              254
+#define ILC_MASK                                  1
+#define ILC_PALETTE                               2048
+
 //----------------------------------------------------------------------//
 #endif
 //----------------------------------------------------------------------//

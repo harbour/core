@@ -75,6 +75,7 @@
 #define wapi_par_UINT( n )       ( ( UINT ) hb_parni( n ) )
 #define wapi_par_LONG( n )       ( ( LONG ) hb_parnl( n ) )
 
+#define wapi_ret_NINT( i )       ( hb_retnint( i ) )
 #define wapi_ret_NI( i )         ( hb_retni( i ) )
 #define wapi_ret_L( b )          ( hb_retl( b ) )
 

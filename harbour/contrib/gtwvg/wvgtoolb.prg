@@ -77,7 +77,7 @@
 //----------------------------------------------------------------------//
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+//#xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 //----------------------------------------------------------------------//
@@ -100,6 +100,7 @@ CLASS WvgToolBar  INHERIT  WvgWindow //WvgActiveXControl
 
    DATA     aItems                                INIT {}
    DATA     hImageList
+   DATA     lSized                                INIT .F.
 
    METHOD   new()
    METHOD   create()
@@ -138,9 +139,10 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolB
 
    //::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
    // + TBSTYLE_LIST   caption to the right, otherwise caption to the bottom
-   ::style       := WS_CHILD + TBSTYLE_FLAT + TBSTYLE_TOOLTIPS + CCS_ADJUSTABLE //+ CCS_NODIVIDER    //+CCS_VERT
-   ::exStyle     := TBSTYLE_EX_DOUBLEBUFFER //+ TBSTYLE_EX_MIXEDBUTTONS
+   //::style       := WS_CHILD //+ TBSTYLE_FLAT + CCS_ADJUSTABLE //+ CCS_NODIVIDER    //+CCS_VERT
+   ::exStyle     := TBSTYLE_EX_DOUBLEBUFFER + TBSTYLE_EX_MIXEDBUTTONS
    ::className   := TOOLBARCLASSNAME
    ::objType     := objTypeToolBar
 
@@ -152,9 +154,13 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   IF ::visible
-      ::style += WS_VISIBLE
+   IF ::style == WVGTOOLBAR_STYLE_FLAT
+      ::style := TBSTYLE_FLAT
+   ELSE
+      ::style := 0
    ENDIF
+   ::style += WS_CHILD
+   //
    IF ::wrappable
       ::style += TBSTYLE_WRAPABLE
    ENDIF
@@ -183,17 +189,12 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
    #endif
 
    IF !empty( ::hWnd )
-      #define ILC_COLOR8 8
-
-      ::hImageList := WAPI_ImageList_Create( ::imageWidth, ::imageHeight, ILC_COLOR8, 0, 20 )
+      ::hImageList := WAPI_ImageList_Create( ::imageWidth, ::imageHeight, ILC_COLOR32+ILC_MASK, 0, 50 )
       ::SendToolbarMessage( TB_SETIMAGELIST, ::hImageList )
 
       ::SendToolbarMessage( TB_BUTTONSTRUCTSIZE )
-      ::SendToolbarMessage( TB_SETBUTTONSIZE, ::buttonWidth+20, ::buttonHeight )
-
-      ::SendToolbarMessage( TB_AUTOSIZE )
+      //::SendToolbarMessage( TB_SETINDENT, 10 )
    ENDIF
-   ::sendToolbarMessage( TB_SETMAXTEXTROWS, IF( ::showToolTips, 0, 1 ) )
 
    IF ::visible
       ::show()
@@ -207,7 +208,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
    LOCAL nHandled := 1
    LOCAL nObj, aNMMouse
 
-   //hb_ToOutDebug( "       %s:handleEvent( %i ) %i", __ObjGetClsName( self ), nMessage,  )
+   //hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage  )
 
    SWITCH nMessage
 
@@ -220,9 +221,10 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
 
    CASE HB_GTE_NOTIFY
       aNMMouse := Wvg_GetNMMouseInfo( aNM[ 2 ] )
-hb_ToOutDebug( "       %s:handleEvent( %i ) %i %i", __ObjGetClsName( self ), nMessage,;
-                          aNMMouse[ NMH_code ],  NM_CLICK )
-
+      #if 0
+      hb_ToOutDebug( "       %s:handleEvent( %i ) %i %i", __ObjGetClsName( self ), nMessage,;
+                          aNMMouse[ NMH_code ], TBN_GETINFOTIPA )
+      #endif
       DO CASE
 
       CASE aNMMouse[ NMH_code ] == NM_CLICK
@@ -232,17 +234,25 @@ hb_ToOutDebug( "       %s:handleEvent( %i ) %i %i", __ObjGetClsName( self ), nMe
 
             ENDIF
          ENDIF
-         RETURN 0
+         RETURN EVENT_HANDELLED  //0
+
+      #if 0
+      CASE aNMMouse[ NMH_code ] == TBN_GETINFOTIPA
+         IF ( nObj := ascan( ::aItems, {|e_| e_[ 1 ] == aNMMouse[ NMH_dwItemSpec ] } ) ) > 0
+            Wvg_SetToolbarButtonTip( aNM[ 2 ], 'This is grand tooltip' )
+            RETURN EVENT_HANDELLED
+         ENDIF
+      #endif
 
       OTHERWISE
-         RETURN 1
+         RETURN EVENT_UNHANDELLED
 
       ENDCASE
 
       EXIT
    END
 
-   RETURN nHandled
+   RETURN EVENT_UNHANDELLED
 
 //----------------------------------------------------------------------//
 
@@ -265,6 +275,10 @@ METHOD destroy() CLASS WvgToolBar
       NEXT
    ENDIF
 
+   IF !empty( ::hImageList )
+      WAPI_ImageList_Destroy( ::hImageList )
+   ENDIF
+
    ::WvgWindow:destroy()
 
    RETURN NIL
@@ -279,25 +293,31 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
 //----------------------------------------------------------------------//
 
-METHOD sendToolbarMessage( nMsg, p1, p2, p3, p4, p5 ) CLASS WvgToolBar
-
-   RETURN Win_SendToolbarMessage( ::hWnd, nMsg, p1, p2, p3, p4, p5 )
+METHOD sendToolbarMessage( nMsg, p1, p2 ) CLASS WvgToolBar
+   RETURN Win_SendToolbarMessage( ::hWnd, nMsg, p1, p2 )
 
 //----------------------------------------------------------------------//
 
-METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey ) CLASS WvgToolBar
+METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB ) CLASS WvgToolBar
    LOCAL oBtn, hBitmap, cType, nBtn
 
    HB_SYMBOL_UNUSED( xDisabledImage )
    HB_SYMBOL_UNUSED( xHotImage )
    HB_SYMBOL_UNUSED( cDLL )
 
+   // Issue this at the begining of first item
+   //
+   IF !( ::lSized )
+      //::SendToolbarMessage( TB_SETBUTTONWIDTH, ::buttonWidth, ::buttonWidth )
+      ::lSized := .t.
+   ENDIF
+
    oBtn := WvgToolbarButton():new( cCaption, nStyle, cKey )
 
    oBtn:index   := ::numItems + 1
    oBtn:command := 100 + oBtn:index
 
-   cType := valtype( xImage )
+   cType   := valtype( xImage )
    hBitmap := 0
 
    DO CASE
@@ -314,19 +334,22 @@ METHOD addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey 
 
    ENDCASE
 
-   IF hBitmap <> 0
+   IF !empty( hBitmap )
       oBtn:image := hBitmap
 
-      nBtn := WAPI_ImageList_Add( ::hImageList, hBitmap )
-      //nBtn := WAPI_ImageList_AddMasked( ::hImageList, hBitmap, RGB( 198,198,198 ) )
-      /* Now as we are using ImageList, this will duplicate bitmaps */
-      //nBtn := Win_SendToolbarMessage( ::hWnd, TB_ADDBITMAP, hBitmap      )
+      IF !empty( nMapRGB )
+         nBtn := WAPI_ImageList_AddMasked( ::hImageList, hBitmap, nMapRGB )
+      ELSE
+         nBtn := WAPI_ImageList_Add( ::hImageList, hBitmap )
+      ENDIF
 
-      //nStr := ::sendToolbarMessage( TB_ADDSTRING, oBtn:caption )
+      WVG_AddToolbarButton( ::hWnd, nBtn, oBtn:caption, oBtn:command, 1, ::showToolTips )
 
-      //lRet := ::sendToolbarMessage( TB_ADDBUTTONS, nBtn, oBtn:command, nStr )
+      // Set Button Size
+      ::SendToolbarMessage( TB_SETBUTTONSIZE, ::buttonWidth, ::buttonHeight )
 
-      Wvg_AddToolbarButton( ::hWnd, nBtn/*hBitmap*/, oBtn:caption, oBtn:command, 1, ::showToolTips )
+      //SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10,10 ) );
+      //::sendToolbarMessage( TB_SETPADDING, 10, 10 )
 
       ::sendToolbarMessage( TB_AUTOSIZE )
    ELSE

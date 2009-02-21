@@ -145,7 +145,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
       int iError = GetLastError();
       if( iError != 1410 )
       {
-         hb_errInternal( 10001, "Failed to register WVT window class", NULL, NULL );
+         hb_errInternal( 10001, "Failed to register WGU window class", NULL, NULL );
       }
    }
 }
@@ -1950,7 +1950,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                          hb_arrayGetNI( pInfo->pNewVal2, 2 ),
                                          rect.right - rect.left,
                                          rect.bottom - rect.top,
-                                         SWP_NOSIZE + SWP_NOZORDER ) );
+                                         SWP_NOSIZE | SWP_NOZORDER ) );
                }
                break;
             }
@@ -2041,7 +2041,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                                rect.top,
                                                0,
                                                0,
-                                               SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );
+                                               SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
                         break;
                      }
                      case HB_GTS_WS_SETASNORMAL:
@@ -2053,7 +2053,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                                rect.top,
                                                0,
                                                0,
-                                               SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );
+                                               SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
                         break;
                      }
 
@@ -2114,32 +2114,32 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pSome = hb_arrayGetItemPtr( pInfo->pNewVal, HB_GTI_PP_EXSTYLE );
                if( hb_itemType( pSome ) & HB_IT_NUMERIC )
                {
-                  pWVT->pPP->exStyle = hb_itemGetNInt( pSome );
+                  pWVT->pPP->exStyle = ( DWORD ) hb_itemGetNInt( pSome );
                }
                pSome = hb_arrayGetItemPtr( pInfo->pNewVal, HB_GTI_PP_STYLE );
                if( hb_itemType( pSome ) & HB_IT_NUMERIC )
                {
-                  pWVT->pPP->style = hb_itemGetNInt( pSome );
+                  pWVT->pPP->style = ( DWORD ) hb_itemGetNInt( pSome );
                }
                pSome = hb_arrayGetItemPtr( pInfo->pNewVal, HB_GTI_PP_X );
                if( hb_itemType( pSome ) & HB_IT_NUMERIC )
                {
-                  pWVT->pPP->x = hb_itemGetNInt( pSome );
+                  pWVT->pPP->x = hb_itemGetNI( pSome );
                }
                pSome = hb_arrayGetItemPtr( pInfo->pNewVal, HB_GTI_PP_Y );
                if( hb_itemType( pSome ) & HB_IT_NUMERIC )
                {
-                  pWVT->pPP->y = hb_itemGetNInt( pSome );
+                  pWVT->pPP->y = hb_itemGetNI( pSome );
                }
                pSome = hb_arrayGetItemPtr( pInfo->pNewVal, HB_GTI_PP_WIDTH );
                if( hb_itemType( pSome ) & HB_IT_NUMERIC )
                {
-                  pWVT->pPP->width = hb_itemGetNInt( pSome );
+                  pWVT->pPP->width = hb_itemGetNI( pSome );
                }
                pSome = hb_arrayGetItemPtr( pInfo->pNewVal, HB_GTI_PP_HEIGHT );
                if( hb_itemType( pSome ) & HB_IT_NUMERIC )
                {
-                  pWVT->pPP->height = hb_itemGetNInt( pSome );
+                  pWVT->pPP->height = hb_itemGetNI( pSome );
                }
                pSome = hb_arrayGetItemPtr( pInfo->pNewVal, HB_GTI_PP_PARENT );
                if( hb_itemType( pSome ) & HB_IT_POINTER )

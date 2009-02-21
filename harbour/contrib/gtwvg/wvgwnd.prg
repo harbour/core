@@ -1281,8 +1281,8 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
    CASE WM_NOTIFY
       IF ( nObj := ascan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
          nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, nlParam } )
-         IF hb_isNumeric( nReturn ) .and. nReturn == 0
-            RETURN 0
+         IF hb_isNumeric( nReturn ) .and. nReturn == EVENT_HANDELLED
+            RETURN EVENT_HANDELLED
          ENDIF
       ENDIF
       EXIT

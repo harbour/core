@@ -8,6 +8,25 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 00:15 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/gtwvg/wvggui.c
+  * harbour/contrib/gtwvg/wvgsink.c
+  * harbour/contrib/gtwvg/wvgwin.c
+  * harbour/contrib/gtwvg/wvgutils.c
+  * harbour/contrib/gtwvg/wvgtoolb.prg
+  * harbour/contrib/gtwvg/wvgwnd.prg
+  * harbour/contrib/gtwvg/wvgparts.ch
+  * harbour/contrib/gtwvg/wvtwin.ch
+  * harbour/contrib/hbwin/hbwapi.h
+  * harbour/contrib/hbwin/wapi_commctrl.c
+  * harbour/contrib/hbwin/wapi_winbase.c
+  * harbour/contrib/hbwin/wapi_winuser.c
+    ! Mostly warning fixes for 64bits.
+
+      ; Viktor, review me and plese send list of warnings 
+        left after this.
+
 2009-02-21 08:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/hvm.c
     + Added hb_vmSetLinkedMain() function to replace direct

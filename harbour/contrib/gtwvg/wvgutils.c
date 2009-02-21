@@ -1260,7 +1260,8 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
     p = lpwAlign( p );
 
-    hb_retclen( ( LPSTR ) pdlgtemplate, ( ( HB_PTRDIFF ) p - ( HB_PTRDIFF ) pdlgtemplate ) ) ;
+    //hb_retclen( ( LPSTR ) pdlgtemplate, ( ( HB_PTRDIFF ) p - ( HB_PTRDIFF ) pdlgtemplate ) ) ;
+    hb_retclen( ( LPSTR ) pdlgtemplate, ( ( WORD ) p - ( WORD ) pdlgtemplate ) ) ;
 
     LocalFree( LocalHandle( pdlgtemplate ) );
 }

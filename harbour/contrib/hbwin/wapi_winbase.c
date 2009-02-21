@@ -53,6 +53,9 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbwapi.h"
+
+/*----------------------------------------------------------------------*/
 
 HB_FUNC( WAPI_GETCOMMANDLINE )
 {
@@ -71,3 +74,19 @@ HB_FUNC( WAPI_GETCOMMANDLINE )
 
    HB_TCHAR_FREE( buffer );
 }
+/*----------------------------------------------------------------------*/
+/*
+HMODULE WINAPI GetModuleHandle( __in_opt  LPCTSTR lpModuleName );
+*/
+HB_FUNC( WAPI_GETMODULEHANDLE )
+{
+   LPTSTR lpModuleName = ( LPTSTR ) ISNIL( 1 ) ? 0 : HB_TCHAR_CONVTO( hb_parc( 1 ) );
+
+   wapi_ret_HANDLE( GetModuleHandle( lpModuleName ) );
+
+   if( ISCHAR( 1 ) )
+      HB_TCHAR_FREE( lpModuleName );
+}
+/*----------------------------------------------------------------------*/
+
+

@@ -100,6 +100,7 @@ HB_FUNC( WAPI_IMAGELIST_COCREATEINSTANCE )
 /*
 BOOL ImageList_Copy( HIMAGELIST himlDst, int iDst, HIMAGELIST himlSrc, int iSrc, UINT uFlags );
 */
+#if (_WIN32_IE >= 0x0300)
 HB_FUNC( WAPI_IMAGELIST_COPY )
 {
    wapi_ret_L( ImageList_Copy( wapi_par_HIMAGELIST( 1 ),
@@ -108,31 +109,18 @@ HB_FUNC( WAPI_IMAGELIST_COPY )
                                wapi_par_INT( 4 ),
                                wapi_par_UINT( 5 ) ) );
 }
+#endif
 /*----------------------------------------------------------------------*/
 /*
 HIMAGELIST ImageList_Create( int cx, int cy, UINT flags, int cInitial, int cGrow );
 */
 HB_FUNC( WAPI_IMAGELIST_CREATE )
 {
-   #if 0  /* Test */
-   HIMAGELIST il;
-
-   il = ImageList_Create( wapi_par_INT( 1 ),
-                                      wapi_par_INT( 2 ),
-                                      wapi_par_UINT( 3 ),
-                                      wapi_par_INT( 4 ),
-                                      wapi_par_INT( 5 ) );
-   if( il )
-   {
-      wapi_ret_HANDLE( il );
-   }
-   #else
    wapi_ret_HANDLE( ImageList_Create( wapi_par_INT( 1 ),
                                       wapi_par_INT( 2 ),
                                       wapi_par_UINT( 3 ),
                                       wapi_par_INT( 4 ),
                                       wapi_par_INT( 5 ) ) );
-   #endif
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -220,10 +208,12 @@ HB_FUNC( WAPI_IMAGELIST_DRAWINDIRECT )
 /*
 HIMAGELIST ImageList_Duplicate( HIMAGELIST himl );
 */
+#if (_WIN32_IE >= 0x0400)
 HB_FUNC( WAPI_IMAGELIST_DUPLICATE )
 {
    wapi_ret_HANDLE( ImageList_Duplicate( wapi_par_HIMAGELIST( 1 ) ) );
 }
+#endif
 /*----------------------------------------------------------------------*/
 /*
 VOID ImageList_EndDrag( VOID );
@@ -434,11 +424,13 @@ HB_FUNC( WAPI_IMAGELIST_SETICONSIZE )
 /*
 BOOL ImageList_SetImageCount( HIMAGELIST himl, UINT uNewCount );
 */
+#if (_WIN32_IE >= 0x0400)
 HB_FUNC( WAPI_IMAGELIST_SETIMAGECOUNT )
 {
    wapi_ret_L( ImageList_SetImageCount( wapi_par_HIMAGELIST( 1 ),
                                         wapi_par_UINT( 2 ) ) );
 }
+#endif
 /*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_SetOverlayImage( HIMAGELIST himl, int iImage, int iOverlay );

@@ -104,10 +104,11 @@ BOOL GetScrollInfo( HWND hwnd, int fnBar, LPSCROLLINFO lpsi );
 HB_FUNC( WAPI_GETSCROLLINFO )
 {
    LPSCROLLINFO si = ( LPSCROLLINFO ) wapi_par_STRUCT( 3 );
+   //LPSCROLLINFO si;
    BOOL         bSuccess;
 
-   memset( &si, 0, sizeof( SCROLLINFO ) );
-   si->cbSize = sizeof( SCROLLINFO );
+   //memset( si, 0, sizeof( SCROLLINFO ) );
+   //si->cbSize = sizeof( SCROLLINFO );
 
    bSuccess = GetScrollInfo( wapi_par_HWND( 1 ),
                              wapi_par_INT( 2 ),
@@ -223,3 +224,47 @@ HB_FUNC( WAPI_SHOWSCROLLBAR )
                               wapi_par_BOOL( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
+/*                                                                      */
+/*----------------------------------------------------------------------*/
+/*
+HWND SetFocus( HWND hWnd );
+*/
+HB_FUNC( WAPI_SETFOCUS )
+{
+   wapi_ret_HANDLE( SetFocus( wapi_par_HWND( 1 ) ) );
+}
+/*----------------------------------------------------------------------*/
+#if 0
+HB_FUNC( WAPI_LOADBITMAP )
+{
+   HINSTANCE hinst = wapi_par_HINSTANCE( 1 );
+   LPTSTR lpBmp;
+   HBITMAP hbmp;
+
+   if( ISNUM( 2 ) )
+   {
+      lpBmp = ( LPTSTR ) MAKEINTRESOURCE( wapi_par_INT( 2 ) );
+   }
+   else
+   {
+      lpBmp = ( LPTSTR ) HB_TCHAR_CONVTO( hb_parc( 2 ) );
+   }
+
+   hbmp = LoadBitmap( hinst, lpBmp );
+   if( hbmp )
+   {
+hb_ToOutDebug( "hbmp loaded" );
+      wapi_ret_NINT( (long) hbmp );
+   }
+   else
+      wapi_ret_NI( 0 );
+   //wapi_ret_NINT( ( long ) LoadBitmap( GetModuleHandle( 0 ), lpBmp ) );
+
+   if( !ISNUM( 2 ) )
+   {
+      HB_TCHAR_FREE( lpBmp );
+   }
+}
+#endif
+/*----------------------------------------------------------------------*/
+
