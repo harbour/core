@@ -188,7 +188,7 @@ HB_FUNC( _ASCALLBACK )
       Callback.pParams[ i ] = hb_itemNew( hb_param( i + iParam, HB_IT_ANY ) );
    }
 
-   hb_retnl( ( ULONG ) ( pMem = _GenerateCallback( &Callback ) ) );
+   hb_retnint( ( HB_PTRDIFF ) ( pMem = _GenerateCallback( &Callback ) ) );
 
    // debugging only
    // to see what was generated
@@ -400,7 +400,7 @@ static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
 
 HB_FUNC( _FREECALLBACK )
 {
-   void* ptr = ( void* ) hb_parnl( 1 );
+   void* ptr = ( void* ) ( HB_PTRDIFF ) hb_parnint( 1 );
 
    hb_retl( FuncMemFree( ptr ) );
    return;
@@ -414,9 +414,9 @@ static void _ucp( BYTE * pCode, ULONG ulOffset, void * Address, ULONG ulNext )
    ULONG ulBase;
    ULONG ulRelative;
 
-   ulBase = ( ULONG ) pCode + ulNext;
+   ulBase = ( ULONG ) pCode + ( ULONG ) ulNext;
    // Relative to next instruction
-   ulRelative = ( ULONG ) Address - ulBase;
+   ulRelative = ( ULONG ) Address - ( ULONG ) ulBase;
 
    pCode[ ulOffset     ] = ( BYTE ) ( ( ulRelative       ) & 0xFF );
    pCode[ ulOffset + 1 ] = ( BYTE ) ( ( ulRelative >>  8 ) & 0xFF );
@@ -477,6 +477,7 @@ static LPVOID FuncMemAlloc( void )
    }
 
    k            = 0;
+   j            = 0;
    bFound       = FALSE;
    bError       = FALSE;
    lpReturn     = NULL;
