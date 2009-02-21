@@ -2,5 +2,6 @@
 # $Id$
 #
 
-{win}libs=gtwvg hbwin
-gui=yes
+{win}gt=gtwvg
+{win}libs=hbwin xhb
+{win}libs=winspool comctl32 comdlg32 shell32 ole32 oleaut32

@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 11:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/gtwvg/tests/gtwvg.hbp
+    * Moved gtwvg from libs= to gt=. gui=yes no longer needed.
+    * Added xhb, Windows libs.
+
 2009-02-21 10:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     - Removed HBMK_NO_GTCGI macro.
@@ -74,7 +79,7 @@
   * bin/hb-func.sh
     * Updated for above change.
 
-  ; TODO: Convert GT defaulting to function call too.
+  ; TODO: Convert GT defaulting to function call too. [DONE]
 
 2009-02-21 08:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbfimage/fi_wrp.c
