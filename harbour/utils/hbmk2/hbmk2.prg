@@ -76,14 +76,13 @@
 /* TODO: Add support for gtsln and gtcrs. */
 /* TODO: msvc/bcc32: Use separate link phase. This allows incremental links. */
 /* TODO: Support for more compilers/platforms. */
-/* TODO: Cleanup on variable names. */
+/* TODO: Cross compilation support. */
+/* TODO: Cleanup on variable names and compiler configuration. */
 /* TODO: remove -n from default harbour switches? (can be disabled with -n-)
          Disable it when using -hbcc, -hbcmp ? */
 
-#if ! defined( HBMK_NO_GTCGI )
-   ANNOUNCE HB_GTSYS
-   REQUEST HB_GT_CGI_DEFAULT
-#endif
+ANNOUNCE HB_GTSYS
+REQUEST HB_GT_CGI_DEFAULT
 
 REQUEST hbm_ARCH
 REQUEST hbm_COMP
@@ -92,6 +91,7 @@ THREAD STATIC t_lQuiet := .T.
 THREAD STATIC t_lInfo := .F.
 THREAD STATIC t_cARCH
 THREAD STATIC t_cCOMP
+THREAD STATIC t_aLIBCOREGT
 
 THREAD STATIC t_cCCPATH
 THREAD STATIC t_cCCPREFIX
@@ -108,7 +108,9 @@ FUNCTION Main( ... )
       "hbrtl" ,;
       "hbpp" ,;
       "hbmacro" ,;
-      "hbextern" ,;
+      "hbextern" }
+
+   LOCAL aLIB_BASE_GT := {;
       "gtcgi" ,;
       "gtstd" ,;
       "gtpca" }
@@ -160,6 +162,7 @@ FUNCTION Main( ... )
    LOCAL s_aLIB
    LOCAL s_aLIBVM
    LOCAL s_aLIBUSER
+   LOCAL s_aLIBUSERGT
    LOCAL s_aLIBHB
    LOCAL s_aLIBHBGT
    LOCAL s_aLIB3RD
@@ -375,7 +378,7 @@ FUNCTION Main( ... )
       s_aLIBHBGT := { "gtos2" }
       cGTDEFAULT := "gtos2"
    CASE t_cARCH == "win"
-      /* Ordering is significant.
+      /* Order is significant.
          owatcom also keeps a cl.exe in it's binary dir. */
       aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "mingw"   },; /* TODO: Add full support for g++ */
                     { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
@@ -396,8 +399,10 @@ FUNCTION Main( ... )
       RETURN 1
    ENDCASE
 
+   t_aLIBCOREGT := ArrayJoin( aLIB_BASE_GT, s_aLIBHBGT )
+
    /* Setup default state */
-   SetupForGT( cGTDEFAULT, @s_cGT, @s_lGUI )
+   SetupForGT( cGTDEFAULT, NIL, @s_lGUI )
 
    /* Autodetect compiler */
 
@@ -561,6 +566,7 @@ FUNCTION Main( ... )
    s_aRESSRC := {}
    s_aRESCMP := {}
    s_aLIBUSER := {}
+   s_aLIBUSERGT := {}
    s_aOBJUSER := {}
    s_aOBJA := {}
    s_cPROGDIR := NIL
@@ -591,6 +597,7 @@ FUNCTION Main( ... )
    /* Process automatic control files. */
    HBP_ProcessAll( lNOHBP,;
                    @s_aLIBUSER,;
+                   @s_aLIBUSERGT,;
                    @s_aLIBPATH,;
                    @s_aOPTPRG,;
                    @s_aOPTC,;
@@ -658,16 +665,26 @@ FUNCTION Main( ... )
       CASE Lower( cParam ) == "-notrace"         ; s_lTRACE    := .F.
       CASE Lower( Left( cParam, 6 ) ) == "-main="
 
-         IF IsValidHarbourID( tmp := SubStr( cParam, 7 ) )
-            s_cMAIN := "@" + tmp
+         IF IsValidHarbourID( cParam := SubStr( cParam, 7 ) )
+            s_cMAIN := "@" + cParam
          ELSE
-            OutErr( "hbmk: Warning: Invalid -main value ignored: " + tmp + hb_osNewLine() )
+            OutErr( "hbmk: Warning: Invalid -main value ignored: " + cParam + hb_osNewLine() )
          ENDIF
 
       CASE Lower( Left( cParam, 3 ) ) == "-gt"
 
-         IF ! SetupForGT( SubStr( cParam, 2 ), @s_cGT, @s_lGUI )
-            OutErr( "hbmk: Warning: Invalid -gt value ignored: " + tmp + hb_osNewLine() )
+         cParam := SubStr( cParam, 2 )
+         IF s_cGT == NIL
+            IF ! SetupForGT( cParam, @s_cGT, @s_lGUI )
+               OutErr( "hbmk: Warning: Invalid -gt value ignored: " + cParam + hb_osNewLine() )
+               cParam := NIL
+            ENDIF
+         ENDIF
+         IF ! Empty( cParam )
+            IF AScan( t_aLIBCOREGT, {| tmp | tmp == cParam } ) == 0 .AND. ;
+               AScan( s_aLIBUSERGT, {| tmp | tmp == cParam } ) == 0
+               AAddNotEmpty( s_aLIBUSERGT, PathSepToTarget( cParam ) )
+            ENDIF
          ENDIF
 
       CASE Left( cParam, 2 ) == "-o"
@@ -692,6 +709,7 @@ FUNCTION Main( ... )
 
          HBP_ProcessOne( cParam,;
             @s_aLIBUSER,;
+            @s_aLIBUSERGT,;
             @s_aLIBPATH,;
             @s_aOPTPRG,;
             @s_aOPTC,;
@@ -738,7 +756,7 @@ FUNCTION Main( ... )
    ENDIF
 
    /* Merge user libs from command line and envvar. Command line has priority. */
-   s_aLIBUSER := ArrayAJoin( { s_aLIBUSER, ListToArray( PathSepToTarget( GetEnv( "HB_USER_LIBS" ) ) ) } )
+   s_aLIBUSER := ArrayAJoin( { s_aLIBUSER, s_aLIBUSERGT, ListToArray( PathSepToTarget( GetEnv( "HB_USER_LIBS" ) ) ) } )
 
    /* Combine output dir with output name. */
    IF ! Empty( s_cPROGDIR )
@@ -826,7 +844,7 @@ FUNCTION Main( ... )
       /* Assemble library list */
 
       s_aLIBVM := iif( s_lMT, aLIB_BASE_MT, aLIB_BASE_ST )
-      aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, s_aLIBHBGT } )
+      aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, t_aLIBCOREGT } )
 
       IF ! Empty( s_cGT )
          IF AScan( aLIB_BASE2, {|tmp| Upper( tmp ) == Upper( s_cGT ) } ) == 0
@@ -1231,7 +1249,7 @@ FUNCTION Main( ... )
             AAdd( s_aOPTL, "/libpath:{DB}" )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
-         /* TOFIX: The two build systems should generate the same .dll name, otherwise
+         /* TOFIX: The two build systems should generate the same .dll names, otherwise
                    we can only be compatible with one of them. non-GNU is the common choice here. */
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-vc",;
                                        "harbour-" + cDL_Version_NonGNU + "-vc" ),;
@@ -1294,6 +1312,7 @@ FUNCTION Main( ... )
       /* HACK: Override entry point requested by user or detected by us,
                and override the GT if requested by user. */
       IF s_cMAIN != NIL .OR. ;
+         ! Empty( s_aLIBUSERGT ) .OR. ;
          s_cGT != NIL .OR. ;
          s_lFMSTAT != NIL
 
@@ -1320,11 +1339,15 @@ FUNCTION Main( ... )
                         than starting with the wrong (default) function. */
                AAdd( array, Upper( iif( Left( s_cMAIN, 1 ) == "@", SubStr( s_cMAIN, 2 ), s_cMAIN ) ) )
             ENDIF
-            IF s_cGT != NIL
-               AAdd( array, "HB_GT_" + Upper( SubStr( s_cGT, 3 ) ) )
-            ENDIF
             IF s_lFMSTAT != NIL
                AAdd( array, iif( s_lFMSTAT, "HB_FM_STAT", "HB_FM_NOSTAT" ) )
+            ENDIF
+            IF s_cGT != NIL
+               /* Always request default GT first */
+               AAdd( array, "HB_GT_" + Upper( SubStr( s_cGT, 3 ) ) )
+            ENDIF
+            IF ! Empty( s_aLIBUSERGT )
+               AEval( s_aLIBUSERGT, {|tmp| AAdd( array, "HB_GT_" + Upper( SubStr( tmp, 3 ) ) ) } )
             ENDIF
 
             /* Build C stub */
@@ -1377,6 +1400,7 @@ FUNCTION Main( ... )
             RETURN 5
          ENDIF
          AAdd( s_aC, s_cCSTUB )
+s_cCSTUB := NIL
       ENDIF
 
       /* Library list assembly */
@@ -1779,7 +1803,8 @@ STATIC FUNCTION FN_ExtSet( cFileName, cExt )
 #define HBMK_CFG_NAME  "hbmkcfg.hbp"
 
 STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
-                                 /* @ */ aLIBS,;
+                                 /* @ */ aLIBUSER,;
+                                 /* @ */ aLIBUSERGT,;
                                  /* @ */ aLIBPATH,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
@@ -1806,7 +1831,8 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
             OutStd( "hbmk: Processing configuration: " + cFileName + hb_osNewLine() )
          ENDIF
          HBP_ProcessOne( cFileName,;
-            @aLIBS,;
+            @aLIBUSER,;
+            @aLIBUSERGT,;
             @aLIBPATH,;
             @aOPTPRG,;
             @aOPTC,;
@@ -1833,7 +1859,8 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                OutStd( "hbmk: Processing: " + cFileName + hb_osNewLine() )
             ENDIF
             HBP_ProcessOne( cFileName,;
-               @aLIBS,;
+               @aLIBUSER,;
+               @aLIBUSERGT,;
                @aLIBPATH,;
                @aOPTPRG,;
                @aOPTC,;
@@ -1857,7 +1884,8 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
 #define _EOL          Chr( 10 )
 
 STATIC PROCEDURE HBP_ProcessOne( cFileName,;
-                                 /* @ */ aLIBS,;
+                                 /* @ */ aLIBUSER,;
+                                 /* @ */ aLIBUSERGT,;
                                  /* @ */ aLIBPATH,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
@@ -1891,8 +1919,8 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       CASE Lower( Left( cLine, Len( "libs="       ) ) ) == "libs="       ; cLine := SubStr( cLine, Len( "libs="       ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( StrStripQuote( cItem ) )
-            IF AScan( aLIBS, {| tmp | tmp == cItem } ) == 0
-               AAddNotEmpty( aLIBS, cItem )
+            IF AScan( aLIBUSER, {| tmp | tmp == cItem } ) == 0
+               AAddNotEmpty( aLIBUSER, cItem )
             ENDIF
          NEXT
 
@@ -1985,7 +2013,17 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
 
       CASE Lower( Left( cLine, Len( "gt="         ) ) ) == "gt="         ; cLine := SubStr( cLine, Len( "gt="         ) + 1 )
          IF ! Empty( cLine )
-            DEFAULT cGT TO cLine
+            IF cGT == NIL
+               IF ! SetupForGT( cLine, @cGT, @lGUI )
+                  cLine := NIL
+               ENDIF
+            ENDIF
+            IF ! Empty( cLine )
+               IF AScan( t_aLIBCOREGT, {| tmp | tmp == cLine } ) == 0 .AND. ;
+                  AScan( aLIBUSERGT, {| tmp | tmp == cLine } ) == 0
+                  AAddNotEmpty( aLIBUSERGT, PathSepToTarget( cLine ) )
+               ENDIF
+            ENDIF
          ENDIF
 
       ENDCASE
@@ -2164,12 +2202,10 @@ FUNCTION hbm_COMP()
 
 STATIC PROCEDURE PauseForKey()
 
-#if defined( HBMK_NO_GTCGI )
    IF ! t_lQUIET .AND. hb_gtInfo( HB_GTI_ISGRAPHIC )
       OutStd( "Press any key to continue..." )
       Inkey( 0 )
    ENDIF
-#endif
 
    RETURN
 
@@ -2192,9 +2228,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -l<libname>       link with <libname> library" ,;
       "  -L<libpath>       additional path to search for libraries" ,;
       "  -static|-shared   link with static/shared libs" ,;
-      "  -fullstatic       link with all static libs" ,;
-      "  -mt|-st           link with multi-thread/single-thread libs" ,;
-      "  -gui|-std         create GUI/console executable" ,;
+      "  -mt|-st           link with multi-thread/single-thread VM" ,;
       "  -gt<name>         link with GT<name> GT driver, can be repeated to link" ,;
       "                    with more GTs. First one will be the default at runtime" }
 
@@ -2202,7 +2236,9 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -help             long help" }
 
    LOCAL aText_Long := {;
+      "  -gui|-std         create GUI/console executable" ,;
       "  -main=<mainfunc>  override the name of starting function/procedure." ,;
+      "  -fullstatic       link with all static libs" ,;
       "  -nulrdd[-]        link with nulrdd" ,;
       "  -bldf[-]          inherit all/no (default) flags from Harbour build" ,;
       "  -bldf=[p][c][l]   inherit .prg/.c/linker flags (or none) from Harbour build" ,;
@@ -2226,7 +2262,6 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -quiet            suppress logo" ,;
       "" ,;
       "Notes:" ,;
-      "  - Don't forget to create a MAIN() entry function in your application." ,;
       "  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>." ,;
       "  - Regular Harbour options are also accepted." ,;
       "  - Multiple -l, -L and <script> parameters are accepted." ,;

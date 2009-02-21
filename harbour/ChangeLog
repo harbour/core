@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 10:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    - Removed HBMK_NO_GTCGI macro.
+    * Cleanups and fixes to GT list handling after recent
+      changes.
+    * Minor rearrangement on help screen.
+
 2009-02-21 10:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Debug line removed.
