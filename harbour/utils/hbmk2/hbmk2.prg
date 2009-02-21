@@ -1305,14 +1305,18 @@ FUNCTION Main( ... )
          s_cMAIN := tmp
       ENDIF
 
-      /* HACK: Override entry point requested by user or detected by us. */
+      /* HACK: Override entry point requested by user or detected by us,
+               and override the GT if requested by user. */
       IF s_cMAIN != NIL
          fhnd := hb_FTempCreateEx( @s_cCSTUB, ".", "hbsc_", ".c" )
          IF fhnd != F_ERROR
 
             /* NOTE: This has to be kept synced with Harbour HB_IMPORT values. */
             DO CASE
-            CASE !( t_cARCH == "win" ) .OR. t_cCOMP == "rsxnt"
+            CASE !( t_cARCH == "win" ) .OR. t_cCOMP $ "msvc|rsxnt"
+               /* NOTE: MSVC gives the warning:
+                        "LNK4217: locally defined symbol ... imported in function ..."
+                        if using 'dllimport'. [vszakats] */
                tmp := ""
             CASE t_cCOMP $ "gcc|mingw"      ; tmp := "__attribute__ (( dllimport ))"
             CASE t_cCOMP == "bcc32|owatcom" ; tmp := "__declspec( dllimport )"
@@ -1324,11 +1328,11 @@ FUNCTION Main( ... )
                           '#include "hbinit.h"'                                                     + hb_osNewLine() +;
                           ''                                                                        + hb_osNewLine() +;
                           'HB_EXTERN_BEGIN'                                                         + hb_osNewLine() +;
-                          'extern ' + tmp + ' const char * hb_vm_pszLinkedMain;'                    + hb_osNewLine() +;
+                          'extern ' + tmp + ' void hb_vmSetLinkedMain( const char * szMain );'      + hb_osNewLine() +;
                           'HB_EXTERN_END'                                                           + hb_osNewLine() +;
                           ''                                                                        + hb_osNewLine() +;
                           'HB_CALL_ON_STARTUP_BEGIN( _hb_hbmk_setdef_ )'                            + hb_osNewLine() +;
-                          '   hb_vm_pszLinkedMain = "' + Upper( s_cMAIN ) + '";'                    + hb_osNewLine() +;
+                          '   hb_vmSetLinkedMain( "' + Upper( s_cMAIN ) + '" );'                    + hb_osNewLine() +;
                           'HB_CALL_ON_STARTUP_END( _hb_hbmk_setdef_ )'                              + hb_osNewLine() +;
                           ''                                                                        + hb_osNewLine() +;
                           '#if defined( HB_PRAGMA_STARTUP )'                                        + hb_osNewLine() +;
@@ -1342,8 +1346,8 @@ FUNCTION Main( ... )
                           '   #pragma data_seg()'                                                   + hb_osNewLine() +;
                           '#endif'                                                                  + hb_osNewLine() )
 
-                       /* 'extern ' + tmp + ' const char * hb_gt_szNameDefault;' + hb_osNewLine() +; */
-                       /* '   hb_gt_szNameDefault = "$gt";'                      + hb_osNewLine() +; */
+                       /* 'extern ' + tmp + ' void hb_gtSetDefault( const char * szGtName );'       + hb_osNewLine() +; */
+                       /* '   hb_gtSetDefault( "$gt" );'                                            + hb_osNewLine() +; */
             FClose( fhnd )
          ELSE
             OutErr( "hbmk: Warning: Stub helper .c program couldn't be created." + hb_osNewLine() )

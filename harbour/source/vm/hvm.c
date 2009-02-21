@@ -250,7 +250,7 @@ static BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
 #  define HB_TRACE_PRG( _TRMSG_ )
 #endif
 
-const char * hb_vm_pszLinkedMain = NULL; /* name of startup function set by linker */
+static const char * s_vm_pszLinkedMain = NULL; /* name of startup function set by linker */
 
 /* virtual machine state */
 
@@ -952,14 +952,14 @@ void hb_vmInit( BOOL bStartMainProc )
             in other case it's the name of first public function in
             first linked moudule which is used if there is no
             HB_START_PROCEDURE in code */
-         if( hb_vm_pszLinkedMain && *hb_vm_pszLinkedMain == '@' )
-            pDynSym = hb_dynsymFind( hb_vm_pszLinkedMain + 1 );
+         if( s_vm_pszLinkedMain && *s_vm_pszLinkedMain == '@' )
+            pDynSym = hb_dynsymFind( s_vm_pszLinkedMain + 1 );
          else
          {
             pDynSym = hb_dynsymFind( HB_START_PROCEDURE );
 
-            if( ! ( pDynSym && pDynSym->pSymbol->value.pFunPtr ) && hb_vm_pszLinkedMain )
-               pDynSym = hb_dynsymFind( hb_vm_pszLinkedMain );
+            if( ! ( pDynSym && pDynSym->pSymbol->value.pFunPtr ) && s_vm_pszLinkedMain )
+               pDynSym = hb_dynsymFind( s_vm_pszLinkedMain );
          }
 
          if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
@@ -968,9 +968,9 @@ void hb_vmInit( BOOL bStartMainProc )
             hb_errInternal( HB_EI_VMBADSTARTUP, NULL, HB_START_PROCEDURE, NULL );
       }
 #else
-      else if( hb_vm_pszLinkedMain )
+      else if( s_vm_pszLinkedMain )
       {
-         pDynSym = hb_dynsymFind( hb_vm_pszLinkedMain + ( *hb_vm_pszLinkedMain == '@' ? 1 : 0 ) );
+         pDynSym = hb_dynsymFind( s_vm_pszLinkedMain + ( *s_vm_pszLinkedMain == '@' ? 1 : 0 ) );
          if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
             s_pSymStart = pDynSym->pSymbol;
       }
@@ -11052,6 +11052,12 @@ void hb_vmForceLink( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmForceLink()"));
 
    HB_FUNC_EXEC( SYSINIT );
+}
+
+/* NOTE: Pass string literals only. */
+void hb_vmSetLinkedMain( const char * szMain )
+{
+   s_vm_pszLinkedMain = szMain;
 }
 
 /* Force linking default language and codepage modules */

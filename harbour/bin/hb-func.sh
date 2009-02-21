@@ -644,14 +644,14 @@ hb_lnk_request()
         echo "#include \\"hbinit.h\\""
         echo "HB_EXTERN_BEGIN"
         echo "extern \${HB_LNK_ATTR} const char * hb_gt_szNameDefault;"
-        echo "extern \${HB_LNK_ATTR} const char * hb_vm_pszLinkedMain;"
+        echo "extern \${HB_LNK_ATTR} void hb_vmSetLinkedMain( const char * szMain );"
         echo "HB_EXTERN_END"
         echo "HB_CALL_ON_STARTUP_BEGIN( hb_lnk_SetDefault_build )"
         if [ -n "\$gt" ]; then
             echo "   hb_gt_szNameDefault = \\"\$gt\\";"
         fi
         if [ -n "\${HB_MAIN_FUNC}" ]; then
-            echo "   hb_vm_pszLinkedMain = \\"\${HB_MAIN_FUNC}\\";"
+            echo "   hb_vmSetLinkedMain( \\"\${HB_MAIN_FUNC}\\" );"
         fi
         echo "HB_CALL_ON_STARTUP_END( hb_lnk_SetDefault_build )"
     fi

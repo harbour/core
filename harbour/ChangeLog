@@ -8,6 +8,25 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 08:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/hvm.c
+    + Added hb_vmSetLinkedMain() function to replace direct
+      access to exported variable hb_vm_pszLinkedMain.
+      (it's not a public call and caller should always pass
+      a string literal).
+    * hb_vm_pszLinkedMain -> s_vm_pszLinkedMain and made static.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Not adding 'dllimport' for externs in C stub when
+      MSVC is used, to avoid compiler warning mentioned in
+      previous entry.
+
+  * utils/hbmk2/hbmk2.prg
+  * bin/hb-func.sh
+    * Updated for above change.
+
+  ; TODO: Convert GT defaulting to function call too.
+
 2009-02-21 08:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbfimage/fi_wrp.c
     ! Added hack to trick around FreeImage.h header not to
@@ -63,6 +82,7 @@
       with this warning:
       "hbsc_2nwvzg.obj : warning LNK4217: locally defined symbol \
          _hb_vm_pszLinkedMain imported in function __hb_hbmk_setdef_"
+         [FIXED]
     + Added code to only accept valid Harbour identified as
       -main= value.
     + Added first module detection.
