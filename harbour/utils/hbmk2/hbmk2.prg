@@ -994,7 +994,7 @@ FUNCTION Main( ... )
                AAdd( s_aLIBPATH, "/usr/local/lib" )
             ENDCASE
          ENDIF
-         IF IsGTRequested( s_cGT, s_aLIBUSERGT, "gtxvt" )
+         IF IsGTRequested( s_cGT, s_aLIBUSERGT, "gtxwc" )
             IF hb_DirExists( "/usr/X11R6/lib64" )
                AAdd( s_aLIBPATH, "/usr/X11R6/lib64" )
             ENDIF
@@ -1332,10 +1332,12 @@ FUNCTION Main( ... )
       CASE t_cARCH == "win" .AND. t_cCOMP == "xcc"
       ENDCASE
 
+#if 0
       /* Do entry function detection on platform required and supported */
       IF s_cMAIN == NIL .AND. ! Empty( tmp := getFirstFunc( s_cFIRST ) )
          s_cMAIN := tmp
       ENDIF
+#endif
 
       /* HACK: Override entry point requested by user or detected by us,
                and override the GT if requested by user. */
@@ -1428,7 +1430,6 @@ FUNCTION Main( ... )
             RETURN 5
          ENDIF
          AAdd( s_aC, s_cCSTUB )
-s_cCSTUB := NIL
       ENDIF
 
       /* Library list assembly */
@@ -2038,6 +2039,19 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
          CASE ValueIsF( cLine ) ; lRUN := .F.
          ENDCASE
 
+      CASE Lower( Left( cLine, Len( "gtdef="      ) ) ) == "gtdef="      ; cLine := SubStr( cLine, Len( "gtdef="      ) + 1 )
+         IF ! Empty( cLine )
+            IF ! SetupForGT( cLine, @t_cGTDEFAULT, @lGUI )
+               cLine := NIL
+            ENDIF
+            IF ! Empty( cLine )
+               IF AScan( t_aLIBCOREGT, {|tmp| Lower( tmp ) == Lower( cLine ) } ) == 0 .AND. ;
+                  AScan( aLIBUSERGT  , {|tmp| Lower( tmp ) == Lower( cLine ) } ) == 0
+                  AAddNotEmpty( aLIBUSERGT, PathSepToTarget( cLine ) )
+               ENDIF
+            ENDIF
+         ENDIF
+
       CASE Lower( Left( cLine, Len( "gt="         ) ) ) == "gt="         ; cLine := SubStr( cLine, Len( "gt="         ) + 1 )
          IF ! Empty( cLine )
             IF cGT == NIL
@@ -2063,7 +2077,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
          Can be NIL, when it's the Harbour default.
          Isn't necessarily on the aGT list in case it
          is a _non-default_ core GT. */
-STATIC FUNCTION IsGTRequested( aGT, cGT, cWhichGT )
+STATIC FUNCTION IsGTRequested( cGT, aGT, cWhichGT )
 
    /* Checking for the default GT, always requested by core. */
    IF cGT == NIL .AND. t_cGTDEFAULT == cWhichGT
@@ -2076,7 +2090,7 @@ STATIC FUNCTION IsGTRequested( aGT, cGT, cWhichGT )
    ENDIF
 
    /* Checking for user requested GT. */
-   IF AScan( aGT, {|tmp| Lower( tmp ) == Lower( cWhichGT ) } ) > 0
+   IF AScan( aGT, {|tmp| Lower( tmp ) == cWhichGT } ) > 0
       RETURN .T.
    ENDIF
 

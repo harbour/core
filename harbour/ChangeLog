@@ -8,6 +8,20 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 14:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-func.sh
+  * utils/hbmk2/hbmk2.prg
+    ! Some three bad typos in recent commit.
+    ! Fixed the way build-default GT is supplied via hbmkcfg file.
+      (via gtdef= line)
+    ! Fixed to fill gtdef= line only if GT was overridden at
+      build time. Previously it was filled with gtstd, which
+      is wrong.
+    ! Temporarily disabled automatic entry point detection,
+      as it needs more complicated management because there
+      needs to be a second C compiler pass. We should try
+      to use some other means to implement this feature IMO.
+
 2009-02-21 13:55 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fix to prev.
