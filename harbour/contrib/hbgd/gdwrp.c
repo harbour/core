@@ -50,21 +50,14 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbstack.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
 
 #include "gd.h"
 #include "gdfontt.h"

@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 01:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbgd/gdwrp.c
+    % Deleted #includes not necessary.
+
 2009-02-21 01:11 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/compiler/hbusage.c
     ! Fixed to not show -n option as '(default)' on help screen.
