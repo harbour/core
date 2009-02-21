@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-21 15:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  + source/vm/fm
+  + source/vm/fm/Makefile
+  + source/vm/fmmt
+  + source/vm/fmmt/Makefile
+  * source/vm/Makefile
+    + Added hbfm, hbfmmt lib generation which works for
+      all compilers, not just gcc family.
+    ; Please review.
+    ; TOFIX: For some reason the locally added C flags
+             appear twice. Couldn't find out why.
+
 2009-02-21 14:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-func.sh
   * utils/hbmk2/hbmk2.prg
