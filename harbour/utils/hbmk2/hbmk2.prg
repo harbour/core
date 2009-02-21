@@ -1377,7 +1377,6 @@ FUNCTION Main( ... )
             RETURN 5
          ENDIF
          AAdd( s_aC, s_cCSTUB )
-s_cCSTUB := NIL
       ENDIF
 
       /* Library list assembly */
