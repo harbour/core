@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-22 21:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdll.bat
+    + Added Borland C/C++ .dll building.
+      It has the same requirements as MSVC.
+      NOTE: Due to tlib bug, it won't work if the HB_LIB_INSTALL
+            path contains '.' chars. I can add a workaround,
+            but at the cost of speed.
+
 2009-02-22 21:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-func.sh
   * utils/hbmk2/hbmk2.prg
