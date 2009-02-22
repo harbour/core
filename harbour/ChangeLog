@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-22 22:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_vc.mak
+    ! Added workaround for WinCE mode.
+
+  * config/win/msvcce.cf
+    ! Fixed cl name when building with older MSVC version.
+
 2009-02-22 21:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdll.bat
     + Added Borland C/C++ .dll building.

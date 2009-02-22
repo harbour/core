@@ -14,7 +14,11 @@ LIB_EXT = .lib
 # Favor size for CE builds.
 HB_GCMODE=0
 
+ifeq ($(HB_VISUALC_VER_PRE80),)
 CC = cl.exe
+else
+CC = clarm.exe
+endif
 CC_IN = -c
 CC_OUT = -Fo
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)

@@ -89,10 +89,17 @@ MKLIB  = lib.exe
 # substitution, so we have to hardcode it
 
 # TOFIX: This won't work properly if HB_CC_NAME is overridden by user (f.e. for WinCE builds).
+!if "$(HB_BUILD_WINCE)" == "yes"
+VMMTDLL_LIB_OBJS = $(VM_DLL_OBJS:obj\vcce=obj\vcce\mt_dll)
+VMMT_LIB_OBJS = $(VM_LIB_OBJS:obj\vcce=obj\vcce\mt)
+DLL_OBJS = $(TMP_DLL_OBJS:obj\vcce=obj\vcce\dll) $(VM_DLL_OBJS:obj\vcce=obj\vcce\dll)
+MTDLL_OBJS = $(TMP_DLL_OBJS:obj\vcce=obj\vcce\dll) $(VMMTDLL_LIB_OBJS)
+!else
 VMMTDLL_LIB_OBJS = $(VM_DLL_OBJS:obj\vc=obj\vc\mt_dll)
 VMMT_LIB_OBJS = $(VM_LIB_OBJS:obj\vc=obj\vc\mt)
 DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll) $(VM_DLL_OBJS:obj\vc=obj\vc\dll)
 MTDLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\vc\dll) $(VMMTDLL_LIB_OBJS)
+!endif
 
 #**********************************************************
 # C compiler, Harbour compiler and Linker flags.
@@ -757,7 +764,7 @@ LDFLAGSDLL     = /debug $(LDFLAGSDLL)
 all : $(HB_DEST_DIRS) $(HB_BUILD_TARGETS)
 
 #**********************************************************
-# Helper targets - disabled for Msvc
+# Helper targets - disabled for MSVC
 #**********************************************************
 
 #BasicLibs : $(COMMON_LIB) $(COMPILER_LIB) $(PP_LIB)
