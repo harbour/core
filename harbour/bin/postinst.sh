@@ -81,20 +81,4 @@ then
        [ "$HB_COMPILER" = "mingw" ] || [ "$HB_COMPILER" = "mingwce" ]; then
         mk_hblibso "${hb_root}"
     fi
-    # build hbfm lib with memory statistic
-    (cd ${hb_root}/source/vm
-    export HB_USER_CFLAGS="${HB_USER_CFLAGS//-DHB_FM_STATISTICS_OFF/} -DHB_FM_STATISTICS"
-    rm -f fm.o
-    ${MAKE} -r fm.o
-    ${AR} ${AR_OPT} ${HB_LIB_INSTALL}/libhbfm.a fm.o
-    [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libhbfm.a
-    rm -f fm.o
-    if [ "${HB_ARCHITECTURE}" != "dos" ]; then
-        cd vmmt
-        ${MAKE} -r fm.o
-        ${AR} ${AR_OPT} ${HB_LIB_INSTALL}/libhbfmmt.a fm.o
-        [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libhbfmmt.a
-        rm -f fm.o
-    fi
-    )
 fi
