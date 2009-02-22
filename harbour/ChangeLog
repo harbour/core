@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-22 13:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    ! fixed typo which caused GPF when palette was set before console window
+      initialization
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    * reset console color palette to default on application exist
+
 2009-02-22 00:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/gtwvg/wvgtoolb.prg
     ! Enabled disabling debug calls (requiring xhb) in non-debug mode.

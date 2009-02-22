@@ -1580,6 +1580,13 @@ static void hb_gt_trm_LinuxSetPalette( PHB_GTTRM pTerm, int iIndex )
    }
 }
 
+static void hb_gt_trm_LinuxResetPalette( PHB_GTTRM pTerm )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_LinuxResetPalette(%p)", pTerm));
+
+   hb_gt_trm_termOut( pTerm, ( BYTE * ) "\033]R", 3 );
+}
+
 /*
  * XTERM terminal operations
  */
@@ -2117,6 +2124,17 @@ static void hb_gt_trm_SetPalette( PHB_GTTRM pTerm, int iIndex )
        ( pTerm->terminal_ext & TERM_PUTTY ) )
    {
       hb_gt_trm_LinuxSetPalette( pTerm, iIndex );
+   }
+}
+
+static void hb_gt_trm_ResetPalette( PHB_GTTRM pTerm )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_ResetPalette(%p)", pTerm));
+
+   if( pTerm->terminal_type == TERM_LINUX || 
+       ( pTerm->terminal_ext & TERM_PUTTY ) )
+   {
+      hb_gt_trm_LinuxResetPalette( pTerm );
    }
 }
 
@@ -2987,6 +3005,7 @@ static void hb_gt_trm_Exit( PHB_GT pGT )
          removeAllKeyMap( pTerm, &pTerm->pKeyTab );
 
       pTerm->Exit( pTerm );
+      hb_gt_trm_ResetPalette( pTerm );
       if( pTerm->fOutTTY && pTerm->iCol > 0 )
          hb_gt_trm_termOut( pTerm, ( BYTE * ) "\n\r", 2 );
       hb_gt_trm_termFlush( pTerm );
