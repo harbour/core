@@ -25,7 +25,4 @@ LIBS=\
 	hbmacro \
 	hbcommon \
 
-
-HB_USER_PRGFLAGS += -gc0
-
 include $(TOP)$(ROOT)config/bin.cf

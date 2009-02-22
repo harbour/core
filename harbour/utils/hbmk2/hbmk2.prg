@@ -92,8 +92,6 @@
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cross compilation support. */
 /* TODO: Cleanup on variable names and compiler configuration. */
-/* TODO: remove -n from default harbour switches? (can be disabled with -n-)
-         Disable it when using -hbcc, -hbcmp ? */
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
@@ -811,7 +809,6 @@ FUNCTION Main( ... )
       cCommand := DirAddPathSep( s_cHB_BIN_INSTALL ) +;
                   cBin_CompPRG +;
                   " " + ArrayToList( s_aPRG ) +;
-                  " -n" +;
                   " -i" + s_cHB_INC_INSTALL +;
                   iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
                   iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;

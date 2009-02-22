@@ -38,6 +38,4 @@ ifeq ($(findstring -DHB_EXT_ZLIB, $(HB_USER_CFLAGS)),)
 LIBS += hbzlib
 endif
 
-HB_USER_PRGFLAGS += -gc0
-
 include $(TOP)$(ROOT)config/bin.cf

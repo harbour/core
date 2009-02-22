@@ -2,6 +2,7 @@
 # $Id$
 #
 
+-n
 DBU.PRG
 DBUCOPY.PRG
 DBUEDIT.PRG

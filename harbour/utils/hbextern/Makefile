@@ -3,7 +3,7 @@
 #
 
 ifeq ($(HB_MAIN),)
- HB_MAIN = std
+HB_MAIN = std
 endif
 
 ROOT = ../../

@@ -3,7 +3,7 @@
 #
 
 ifeq ($(HB_MAIN),)
-    HB_MAIN = std
+HB_MAIN = std
 endif
 
 ROOT = ../../
@@ -35,7 +35,5 @@ LIBS=\
 	hbvm \
 	hbmacro \
 	hbcommon \
-
-HB_USER_PRGFLAGS += -gc0
 
 include $(TOP)$(ROOT)config/bin.cf
