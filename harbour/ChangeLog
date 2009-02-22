@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-22 14:59 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    + added support for HB_GTI_CLOSABLE and HB_GTI_RESIZABLE.
+
 2009-02-22 13:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtxwc/gtxwc.c
     ! fixed typo which caused GPF when palette was set before console window

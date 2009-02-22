@@ -373,6 +373,9 @@ typedef struct tag_x_wnddef
    USHORT newWidth;
    USHORT newHeight;
 
+   BOOL fResizable;
+   BOOL fClosable;
+
    /* window title */
    char *szTitle;
    BOOL fDspTitle;
@@ -2142,7 +2145,8 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 #endif
          if( ( Atom ) evt->xclient.data.l[ 0 ] == s_atomDelWin )
          {
-            hb_vmRequestQuit();
+            if( wnd->fClosable )
+               hb_vmRequestQuit();
          }
          break;
 
@@ -3097,6 +3101,8 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->dpy = NULL;
    wnd->fInit = wnd->fData = FALSE;
    hb_gt_xwc_SetScrBuff( wnd, XWC_DEFAULT_COLS, XWC_DEFAULT_ROWS );
+   wnd->fResizable = TRUE;
+   wnd->fClosable = TRUE;
    wnd->fWinResize = FALSE;
 #ifndef HB_CDP_SUPPORT_OFF
    wnd->hostCDP = hb_vmCDP();
@@ -3255,11 +3261,39 @@ static void hb_gt_xwc_DestroyWndDef( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
+static void hb_gt_xwc_SetResizing( PXWND_DEF wnd )
 {
-   int whiteColor, blackColor;
    XSizeHints xsize;
 
+   memset( &xsize, 0, sizeof( xsize ) );
+
+   /* xsize.flags = PWinGravity | PBaseSize | PResizeInc | PMinSize; */
+   xsize.flags = PWinGravity | PResizeInc | PMinSize | PMaxSize | PBaseSize;
+   xsize.win_gravity = CenterGravity;
+   if( wnd->fResizable )
+   {
+      xsize.width_inc = wnd->fontWidth;
+      xsize.height_inc = wnd->fontHeight;
+      xsize.min_width = wnd->fontWidth * XWC_MIN_COLS;
+      xsize.min_height = wnd->fontHeight * XWC_MIN_ROWS;
+      xsize.max_width = wnd->fontWidth * XWC_MAX_COLS;
+      xsize.max_height = wnd->fontHeight * XWC_MAX_ROWS;
+      xsize.base_width = wnd->width;
+      xsize.base_height = wnd->height;
+   }
+   else
+   {
+      xsize.width_inc = xsize.height_inc = 0;
+      xsize.min_width = xsize.max_width = xsize.base_width = wnd->width;
+      xsize.min_height = xsize.max_height = xsize.base_height = wnd->height;
+   }
+   XSetWMNormalHints( wnd->dpy, wnd->window, &xsize );
+}
+
+/* *********************************************************************** */
+
+static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
+{
    HB_XWC_XLIB_LOCK
 
    /* load the standard font */
@@ -3287,6 +3321,8 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
 
    if( !wnd->window )
    {
+      int whiteColor, blackColor;
+
       /* Set standard colors */
       hb_gt_xwc_setPalette( wnd );
 
@@ -3310,19 +3346,9 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
    hb_gt_xwc_Resize( wnd, wnd->cols, wnd->rows );
 
    XMapWindow( wnd->dpy, wnd->window );
+
    /* ok, now we can inform the X manager about our new status: */
-   /* xsize.flags = PWinGravity | PBaseSize | PResizeInc | PMinSize; */
-   xsize.flags = PWinGravity | PResizeInc | PMinSize | PMaxSize;
-   xsize.win_gravity = CenterGravity;
-   xsize.width_inc = wnd->fontWidth;
-   xsize.height_inc = wnd->fontHeight;
-   xsize.min_width = wnd->fontWidth * XWC_MIN_COLS;
-   xsize.min_height = wnd->fontHeight * XWC_MIN_ROWS;
-   xsize.max_width = wnd->fontWidth * XWC_MAX_COLS;
-   xsize.max_height = wnd->fontHeight * XWC_MAX_ROWS;
-   xsize.base_width = wnd->width;
-   xsize.base_height = wnd->height;
-   XSetWMNormalHints( wnd->dpy, wnd->window, &xsize );
+   hb_gt_xwc_SetResizing( wnd );
 
    /* Request WM to deliver destroy event */
    XSetWMProtocols( wnd->dpy, wnd->window, &s_atomDelWin, 1 );
@@ -3894,8 +3920,10 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutC( pInfo->pResult, wnd->szFontSel );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
+            HB_XWC_XLIB_LOCK
             if( hb_gt_xwc_SetFont( wnd, hb_itemGetCPtr( pInfo->pNewVal ), NULL, 0, NULL ) )
                hb_gt_xwc_CreateWindow( wnd );
+            HB_XWC_XLIB_UNLOCK
          }
          break;
 
@@ -3980,6 +4008,30 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_KBDSHIFTS:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult,
                                         hb_gt_xwc_getKbdState( wnd ) );
+         break;
+
+      case HB_GTI_CLOSABLE:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->fClosable );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+            wnd->fClosable = hb_itemGetL( pInfo->pNewVal );
+         break;
+
+      case HB_GTI_RESIZABLE:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->fResizable );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+         {
+            iVal = hb_itemGetL( pInfo->pNewVal );
+            if( wnd->fResizable != ( iVal != 0 ) )
+            {
+               wnd->fResizable = ( iVal != 0 );
+               if( wnd->dpy )
+               {
+                  HB_XWC_XLIB_LOCK
+                  hb_gt_xwc_SetResizing( wnd );
+                  HB_XWC_XLIB_UNLOCK
+               }
+            }
+         }
          break;
 
       case HB_GTI_PALETTE:
