@@ -40,17 +40,14 @@ if %UHTTP_INET_SUPPORT%.==no.  echo.Mindaugas socket
 echo.
 
 if %UHTTP_GD_SUPPORT%.==yes. SET UHTTP_GD_DEF=-DGD_SUPPORT
-if %UHTTP_GD_SUPPORT%.==yes. SET UHTTP_GD_LIBS=hbgd bgd
+if %UHTTP_GD_SUPPORT%.==yes. SET UHTTP_GD_LIBS=-lhbgd -lbgd
 
 if %UHTTP_INET_SUPPORT%.==yes. SET UHTTP_INET_DEF=-DUSE_HB_INET
 if %UHTTP_INET_SUPPORT%.==no.  SET UHTTP_INET_SOCKET=socket.c
 
 if exist uhttpd.exe uhttpd -s
 
-set HB_USER_PRGFLAGS=%UHTTP_GD_DEF% %UHTTP_INET_DEF%
-set HB_USER_LIBS=xhb hbct %UHTTP_GD_LIBS%
-
-..\..\..\bin\hbmk -mt -gui %1 %2 %3 %4 uhttpd.prg cgifunc.prg cookie.prg session.prg uhttpdc.c %UHTTP_INET_SOCKET%
+..\..\..\bin\hbmk uhttpd.hbm %1 %2 %3 %4 %UHTTP_GD_DEF% %UHTTP_INET_DEF% %UHTTP_INET_SOCKET% %UHTTP_GD_LIBS%
 if errorlevel 1 goto DOERROR
 
 if not exist uhttpd.exe goto :EXIT

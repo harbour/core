@@ -2,4 +2,4 @@
 # $Id$
 #
 
-pe.prg editorhi.prg editorlo.c
+-n pe.prg editorhi.prg editorlo.c

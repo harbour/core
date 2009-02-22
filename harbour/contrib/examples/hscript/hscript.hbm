@@ -2,4 +2,4 @@
 # $Id$
 #
 
-hscript.prg -lhbnf
+-n hscript.prg -lhbnf

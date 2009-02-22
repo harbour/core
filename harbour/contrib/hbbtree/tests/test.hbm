@@ -2,4 +2,4 @@
 # $Id$
 #
 
-test.prg ttest.prg ctest.c
+-n test.prg ttest.prg ctest.c

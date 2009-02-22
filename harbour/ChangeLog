@@ -8,57 +8,71 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-22 18:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbbtree/tests/test.hbm
+  * contrib/examples/guestbk/guestbk.hbm
+  * contrib/examples/pe/pe.hbm
+  * contrib/examples/terminal/trm_appn.hbm
+  * contrib/examples/hscript/hscript.hbm
+  * utils/hbdoc/hbdoc.hbm
+  + utils/hbmk2/hbmk2.hbm
+    + Added -n switch to .hbm files.
+
+  * contrib/examples/uhttpd/hbmk.bat
+  + contrib/examples/uhttpd/uhttpd.hbm
+    + Moved most make params to new .hbm file.
+
 2009-02-22 17:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
-   * config/lib.cf
-   * config/bin.cf
-     + Added -n to Harbour flags to bin.cf.
-     + Added -n1 to Harbour flags to lib.cf.
-     ; TOFIX: The former works, the latter doesn't.
-              Could someone please help why is this
-              happening?
+  * config/lib.cf
+  * config/bin.cf
+    + Added -n to Harbour flags to bin.cf.
+    + Added -n1 to Harbour flags to lib.cf.
+    ; TOFIX: The former works, the latter doesn't.
+             Could someone please help why is this
+             happening?
 
-   * utils/hbmk2/hbmk2.prg
-     - Removed -n from default Harbour switches.
-     ; TODO: Add prgflags=-n to all .hbp files.
-     ; TODO: Add -n to all .hbm files.
-     ; TODO: Add .hbp file to dirs where there are .prgs
-             needing -n flag.
+  * utils/hbmk2/hbmk2.prg
+    - Removed -n from default Harbour switches.
+    ; TODO: Add prgflags=-n to all .hbp files.
+    ; TODO: Add -n to all .hbm files. [DONE]
+    ; TODO: Add .hbp file to dirs where there are .prgs
+            needing -n flag.
 
-   + bin/hb-mkdll.bat
-     + Added .dll creation for GNU-make. Not yet enabled,
-       only MSVC supported, and by the nature of the
-       wonderful world of Microsoft, whole Harbour needs
-       to be compiled with HB_USER_CFLAGS=-DHB_DYNLIB to
-       make this work. -DHB_DYNLIB has some drawbacks
-       though: export table will be generated for all
-       executables made from these .libs, .exp/.lib will
-       also be generated for all executables.
-     ; TODO: Solve to compile Harbour lib .prgs using
-             -n1 switch. (needed for .dll, and this
-             one has only befenefits for other scenarios)
-     ; TODO: Add hb-mkdll.bat to postinst.bat.
-     ; TODO: Add BCC support, if possible.
-     ; TODO: Rename hb-mkslib.sh to 8.3 name and sync
-             name with the .bat version (not necessarily
-             mkdll, but something short.)
+  + bin/hb-mkdll.bat
+    + Added .dll creation for GNU-make. Not yet enabled,
+      only MSVC supported, and by the nature of the
+      wonderful world of Microsoft, whole Harbour needs
+      to be compiled with HB_USER_CFLAGS=-DHB_DYNLIB to
+      make this work. -DHB_DYNLIB has some drawbacks
+      though: export table will be generated for all
+      executables made from these .libs, .exp/.lib will
+      also be generated for all executables.
+    ; TODO: Solve to compile Harbour lib .prgs using
+            -n1 switch. (needed for .dll, and this
+            one has only befenefits for other scenarios)
+    ; TODO: Add hb-mkdll.bat to postinst.bat.
+    ; TODO: Add BCC support, if possible.
+    ; TODO: Rename hb-mkslib.sh to 8.3 name and sync
+            name with the .bat version (not necessarily
+            mkdll, but something short.)
 
-   * bin/hb-func.sh
-     ! Added system libs for optional components included
-       in the harbour dynlib. I plan to make some more
-       changes here, but this should fix missing system
-       libs with shared option enabled in hbmk2.
+  * bin/hb-func.sh
+    ! Added system libs for optional components included
+      in the harbour dynlib. I plan to make some more
+      changes here, but this should fix missing system
+      libs with shared option enabled in hbmk2.
 
-   * contrib/examples/dbu/dbu.hbm
-   * contrib/examples/rl/rl.hbm
-     + Added -n.
+  * contrib/examples/dbu/dbu.hbm
+  * contrib/examples/rl/rl.hbm
+    + Added -n.
 
-   * utils/hbdoc/Makefile
-   * utils/hbmk2/Makefile
-   * utils/hbtest/Makefile
-   * utils/hbi18n/Makefile
-   * utils/hbrun/Makefile
-     - Removed explicit -gc0 -n override.
-       Should now be set automatically for all binaries.
+  * utils/hbdoc/Makefile
+  * utils/hbmk2/Makefile
+  * utils/hbtest/Makefile
+  * utils/hbi18n/Makefile
+  * utils/hbrun/Makefile
+    - Removed explicit -gc0 -n override.
+      Should now be set automatically for all binaries.
 
 2009-02-22 14:59 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtxwc/gtxwc.c
