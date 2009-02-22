@@ -181,6 +181,7 @@ FUNCTION Main( ... )
    LOCAL s_aLIB3RD
    LOCAL s_aLIBSYS
    LOCAL s_aLIBPATH
+   LOCAL s_aLIBDYNHAS
    LOCAL s_aOPTPRG
    LOCAL s_aOPTC
    LOCAL s_aOPTL
@@ -579,6 +580,7 @@ FUNCTION Main( ... )
    s_aRESCMP := {}
    s_aLIBUSER := {}
    s_aLIBUSERGT := {}
+   s_aLIBDYNHAS := {}
    s_aOBJUSER := {}
    s_aOBJA := {}
    s_cPROGDIR := NIL
@@ -611,6 +613,7 @@ FUNCTION Main( ... )
                    @s_aLIBUSER,;
                    @s_aLIBUSERGT,;
                    @s_aLIBPATH,;
+                   @s_aLIBDYNHAS,;
                    @s_aOPTPRG,;
                    @s_aOPTC,;
                    @s_aOPTL,;
@@ -723,6 +726,7 @@ FUNCTION Main( ... )
             @s_aLIBUSER,;
             @s_aLIBUSERGT,;
             @s_aLIBPATH,;
+            @s_aLIBDYNHAS,;
             @s_aOPTPRG,;
             @s_aOPTC,;
             @s_aOPTL,;
@@ -976,11 +980,11 @@ FUNCTION Main( ... )
             AAdd( s_aLIBSYS, "rt" )
          ENDCASE
 
-         IF IsGTRequested( s_cGT, s_aLIBUSERGT, "gtcrs" )
+         IF IsGTRequested( s_cGT, s_aLIBUSERGT, s_aLIBDYNHAS, s_lSHARED, "gtcrs" )
             /* TOFIX: Sometimes 'ncur194' is needed. */
             AAdd( s_aLIBSYS, "ncurses" )
          ENDIF
-         IF IsGTRequested( s_cGT, s_aLIBUSERGT, "gtsln" )
+         IF IsGTRequested( s_cGT, s_aLIBUSERGT, s_aLIBDYNHAS, s_lSHARED, "gtsln" )
             AAdd( s_aLIBSYS, "slang" )
             /* Add paths, where this isn't a system component */
             DO CASE
@@ -991,7 +995,7 @@ FUNCTION Main( ... )
                AAdd( s_aLIBPATH, "/usr/local/lib" )
             ENDCASE
          ENDIF
-         IF IsGTRequested( s_cGT, s_aLIBUSERGT, "gtxwc" )
+         IF IsGTRequested( s_cGT, s_aLIBUSERGT, s_aLIBDYNHAS, s_lSHARED, "gtxwc" )
             IF hb_DirExists( "/usr/X11R6/lib64" )
                AAdd( s_aLIBPATH, "/usr/X11R6/lib64" )
             ENDIF
@@ -1833,6 +1837,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                                  /* @ */ aLIBUSER,;
                                  /* @ */ aLIBUSERGT,;
                                  /* @ */ aLIBPATH,;
+                                 /* @ */ aLIBDYNHAS,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
                                  /* @ */ aOPTL,;
@@ -1861,6 +1866,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
             @aLIBUSER,;
             @aLIBUSERGT,;
             @aLIBPATH,;
+            @aLIBDYNHAS,;
             @aOPTPRG,;
             @aOPTC,;
             @aOPTL,;
@@ -1889,6 +1895,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                @aLIBUSER,;
                @aLIBUSERGT,;
                @aLIBPATH,;
+               @aLIBDYNHAS,;
                @aOPTPRG,;
                @aOPTC,;
                @aOPTL,;
@@ -1914,6 +1921,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                                  /* @ */ aLIBUSER,;
                                  /* @ */ aLIBUSERGT,;
                                  /* @ */ aLIBPATH,;
+                                 /* @ */ aLIBDYNHAS,;
                                  /* @ */ aOPTPRG,;
                                  /* @ */ aOPTC,;
                                  /* @ */ aOPTL,;
@@ -1956,6 +1964,18 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             cItem := PathSepToTarget( StrStripQuote( cItem ) )
             IF AScan( aLIBPATH, {|tmp| tmp == cItem } ) == 0
                AAddNotEmpty( aLIBPATH, cItem )
+            ENDIF
+         NEXT
+
+      /* NOTE: This keyword is used in hbmkcfg.hbp and signals whether
+               a given optional module (gtsln, gtcrs, gtxwt) is part of the
+               Harbour shared library, so that we can automatically add
+               the required libs here. [vszakats] */
+      CASE Lower( Left( cLine, Len( "libdynhas="  ) ) ) == "libdynhas="  ; cLine := SubStr( cLine, Len( "libdynhas="  ) + 1 )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            cItem := PathSepToTarget( StrStripQuote( cItem ) )
+            IF AScan( aLIBDYNHAS, {|tmp| tmp == cItem } ) == 0
+               AAddNotEmpty( aLIBDYNHAS, cItem )
             ENDIF
          NEXT
 
@@ -2038,6 +2058,10 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
          CASE ValueIsF( cLine ) ; lRUN := .F.
          ENDCASE
 
+      /* NOTE: This keyword is used to signal the default GT used when
+               building Harbour. It only needs to be filled if this default
+               GT is different from the Harbour default one, IOW when it
+               was overridden by user at Harbour build time. [vszakats] */
       CASE Lower( Left( cLine, Len( "gtdef="      ) ) ) == "gtdef="      ; cLine := SubStr( cLine, Len( "gtdef="      ) + 1 )
          IF ! Empty( cLine )
             IF ! SetupForGT( cLine, @t_cGTDEFAULT, @lGUI )
@@ -2076,7 +2100,14 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
          Can be NIL, when it's the Harbour default.
          Isn't necessarily on the aGT list in case it
          is a _non-default_ core GT. */
-STATIC FUNCTION IsGTRequested( cGT, aGT, cWhichGT )
+STATIC FUNCTION IsGTRequested( cGT, aGT, aLIBDYNHAS, lSHARED, cWhichGT )
+
+   IF lSHARED
+      /* Checking for included in shared lib GT. */
+      IF AScan( aLIBDYNHAS, {|tmp| Lower( tmp ) == cWhichGT } ) > 0
+         RETURN .T.
+      ENDIF
+   ENDIF
 
    /* Checking for the default GT, always requested by core. */
    IF cGT == NIL .AND. t_cGTDEFAULT == cWhichGT

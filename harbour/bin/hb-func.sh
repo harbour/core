@@ -238,18 +238,13 @@ mk_hbtools()
         echo "libs=gpm">> ${hb_hbmkcfg}
     fi
     if [ "${HB_WITHOUT_X11}" != "yes" ]; then
-        [ -d "/usr/X11R6/lib64" ] && echo "libpaths=/usr/X11R6/lib64">> ${hb_hbmkcfg}
-        echo "libpaths=/usr/X11R6/lib">> ${hb_hbmkcfg}
-        echo "libs=X11">> ${hb_hbmkcfg}
-        echo "inlibshared=gtxvc">> ${hb_hbmkcfg}
+        echo "libdynhas=gtxwc">> ${hb_hbmkcfg}
     fi
     if [ "${HB_WITHOUT_GTCRS}" != "yes" ]; then
-        echo "libs=${HB_CRS_LIB}">> ${hb_hbmkcfg}
-        echo "inlibshared=gtcrs">> ${hb_hbmkcfg}
+        echo "libdynhas=gtcrs">> ${hb_hbmkcfg}
     fi
     if [ "${HB_WITHOUT_GTSLN}" != "yes" ]; then
-        echo "libs=${HB_SLN_LIB}">> ${hb_hbmkcfg}
-        echo "inlibshared=gtsln">> ${hb_hbmkcfg}
+        echo "libdynhas=gtsln">> ${hb_hbmkcfg}
     fi
 
     echo "Generating ${hb_tool}... "

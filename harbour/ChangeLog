@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-22 21:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-func.sh
+  * utils/hbmk2/hbmk2.prg
+    + Previous workaround changed to generic solution, keeping
+      all Harbour lib specific external lib knowledge inside
+      hbmk2.
+      Guy, if you can please retest.
+
+  * bin/hb-mkdll.bat
+    * Minor in comment.
+
 2009-02-22 19:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.sh
     % Deleted part generating hbfm/hbfmmt libs. Now this is

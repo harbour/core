@@ -62,7 +62,7 @@ cd ..
 md vmmt
 cd vmmt
 set HB_DLL_LIBS=hbvmmt
-rem ; Extract VM objects
+rem ; Extract VM (MT) objects
 echo.> ..\_hbovmmt.txt
 for %%f in (%HB_DLL_LIBS%) do (
    echo %%f
