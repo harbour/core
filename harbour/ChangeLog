@@ -8,6 +8,57 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-23 14:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed bug which made gtwvt the default GT for mingw.
+    ! Fixed to create final exe in current dir if no output
+      filename was specified and the first input file
+      contained a path.
+    * Changed to use version-less harbour shared lib names
+      on *nixes.
+    ! Fixed to pass full path with harbour.so to gcc.
+      (even when Harbour isn't run from a system location)
+    ! Fixed compilation/linking/cleanup if an input file
+      wasn't in current dir.
+    * Temp stub file is now created in system default temp dir,
+      instead of the current one.
+    + Harbour shared lib path is normalized when Harbour
+      is found on system locations. (so '*/bin/../lib/' becomes
+      '*/lib')
+    * Better I hope handling of .so/.dylib/.sl/.dll files passed
+      on the command line.
+
+  * bin/hb-mkdll.bat
+    ! Fixed typo in Borland MT .dll name.
+    ! Fixed to not include maindll.obj, maindllp.obj in
+      Borland .dlls.
+    * Minor formatting and cleanup on internal names.
+    + Added checking for source lib existence, showing
+      message if not found.
+    + Better user feedback.
+
+  * bin/postinst.bat
+    + Added running hb_mkdll.bat at the end of the build
+      process. For now users have to use 'set HB_DLL=yes'
+      to enable this features. It's experimental yet,
+      see previous comments.
+
+  * source/vm/Makefile
+    + Now generating hbmainstd and hbmainwin for remaining
+      (non-mingw and non-mingwce) compilers. MSVC and BCC
+      need this for -shared linkage, I'm not sure about the
+      rest, anyhow we can disable it for other compilers
+      if it isn't needed in future.
+
+  * bin/hb-func.sh
+    % Refined hbmkcfg.hbp setup to better detect conditions.
+
+  * contrib/hbcurl/hbcurl.c
+    ! Pacified this only one new gcc 4.3.3 warning.
+
+  * config/win/gcc.cf
+  * config/win/mingw.cf
+    + Added -mtune=pentiumpro gcc optimization.
 
 2009-02-22 19:32 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgwin.c
@@ -27,16 +78,16 @@
   * harbour/contrib/gtwvg/wvgtreev.prg
   * harbour/contrib/gtwvg/wvgwnd.prg
     ! Code cleanup.
-    ! Implemented generic callback functionality taking 
-      use of SetProp()/GetProp() functions of WINAPI. It 
-      effectively eliminates the use of AsCallBack() 
+    ! Implemented generic callback functionality taking
+      use of SetProp()/GetProp() functions of WINAPI. It
+      effectively eliminates the use of AsCallBack()
       function which has been discussed as non-scalable
       in multi-processor architect.
 
-    ; TODO: To use hb_gcAlloc() mechanism to hold the 
+    ; TODO: To use hb_gcAlloc() mechanism to hold the
             codeblock. Please review wvgwnd():SetWindowProcCallback()
             and wvgwin:WVG_SetWindowProcBlock( ::hWnd, bBlock ).
-            I did try but could not resolve it properly.  
+            I did try but could not resolve it properly.
 
 2009-02-22 22:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_vc.mak

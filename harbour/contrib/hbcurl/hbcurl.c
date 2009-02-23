@@ -71,8 +71,8 @@
 /* NOTE: Harbour requires libcurl 7.17.0 or upper.
          This was the version where curl_easy_setopt() started to
          make copies of passed strings, which we currently require.
-         Update: This requirement is now sorted out by local string 
-                 buffering logic used with pre-7.17.0 versions of 
+         Update: This requirement is now sorted out by local string
+                 buffering logic used with pre-7.17.0 versions of
                  libcurl.
          [vszakats] */
 
@@ -130,7 +130,7 @@ static HB_HASH_FUNC( hb_curl_HashKey )    /* ULONG func( void * Value, void * Ca
 {
    ULONG ulSum = 0;
    char * szName = ( char * ) Value;
-   
+
    while( *szName )
       ulSum += *szName++;
 
@@ -1671,7 +1671,7 @@ HB_FUNC( CURL_EASY_GETINFO )
          break;
       case HB_CURLINFO_CERTINFO:
 #if LIBCURL_VERSION_NUM >= 0x071301
-         res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_CERTINFO, &ret_ptr );
+         res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_CERTINFO, ( struct curl_slist * ) &ret_ptr );
 #endif
          type = HB_CURL_INFO_TYPE_PTR;
          break;

@@ -221,6 +221,8 @@ FUNCTION Main( ... )
    LOCAL cObjExt
    LOCAL cLibPathPrefix
    LOCAL cLibPathSep
+   LOCAL cDynLibNamePrefix
+   LOCAL cDynLibExt
 
    LOCAL cCommand
    LOCAL cOpt_CompC
@@ -235,6 +237,8 @@ FUNCTION Main( ... )
    LOCAL lNOHBP
    LOCAL lSysLoc
    LOCAL cSelfCOMP
+   LOCAL cPrefix
+   LOCAL cPostfix
 
    LOCAL lStopAfterHarbour := .F.
    LOCAL lStopAfterCComp := .F.
@@ -365,16 +369,21 @@ FUNCTION Main( ... )
    /* Setup architecture dependent data */
 
    DO CASE
-   CASE t_cARCH $ "bsd|hpux|sunos" .OR. t_cARCH == "darwin" /* Separated to avoid match with 'win' */
-      aCOMPSUP := { "gcc" }
+   CASE t_cARCH $ "bsd|hpux|sunos|linux" .OR. t_cARCH == "darwin" /* Separated to avoid match with 'win' */
+      IF t_cARCH == "linux"
+         aCOMPSUP := { "gcc", "gpp", "owatcom", "mingw", "mingwce" }
+      ELSE
+         aCOMPSUP := { "gcc" }
+      ENDIF
       cBin_CompPRG := "harbour"
       s_aLIBHBGT := { "gttrm", "gtxwc" }
       t_cGTDEFAULT := "gttrm"
-   CASE t_cARCH == "linux"
-      aCOMPSUP := { "gcc", "gpp", "owatcom", "mingw", "mingwce" }
-      cBin_CompPRG := "harbour"
-      s_aLIBHBGT := { "gttrm", "gtxwc" }
-      t_cGTDEFAULT := "gtstd"
+      cDynLibNamePrefix := "lib"
+      SWITCH t_cARCH
+      CASE "darwin" ; cDynLibExt := ".dylib" ; EXIT
+      CASE "hpux"   ; cDynLibExt := ".sl" ; EXIT
+      OTHERWISE     ; cDynLibExt := ".so"
+      ENDSWITCH
    CASE t_cARCH == "dos"
       aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "djgpp"   },;
                     { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
@@ -382,6 +391,8 @@ FUNCTION Main( ... )
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtdos" }
       t_cGTDEFAULT := "gtdos"
+      cDynLibNamePrefix := ""
+      cDynLibExt := ""
    CASE t_cARCH == "os2"
       aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "gcc"     },;
                     { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
@@ -390,6 +401,8 @@ FUNCTION Main( ... )
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtos2" }
       t_cGTDEFAULT := "gtos2"
+      cDynLibNamePrefix := ""
+      cDynLibExt := ".dll"
    CASE t_cARCH == "win"
       /* Order is significant.
          owatcom also keeps a cl.exe in it's binary dir. */
@@ -406,6 +419,8 @@ FUNCTION Main( ... )
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
       t_cGTDEFAULT := "gtwin"
+      cDynLibNamePrefix := ""
+      cDynLibExt := ".dll"
    OTHERWISE
       OutErr( "hbmk: Error: HB_ARCHITECTURE value unknown: " + t_cARCH + hb_osNewLine() )
       PauseForKey()
@@ -741,14 +756,15 @@ FUNCTION Main( ... )
             @s_lRUN,;
             @s_cGT )
 
-      CASE Lower( FN_ExtGet( cParam ) ) == ".prg"   ; AAdd( s_aPRG    , PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
-      CASE Lower( FN_ExtGet( cParam ) ) == ".rc"    ; AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
-      CASE Lower( FN_ExtGet( cParam ) ) == ".res"   ; AAdd( s_aRESCMP , PathSepToTarget( cParam ) )
-      CASE Lower( FN_ExtGet( cParam ) ) == ".a"     ; AAdd( s_aOBJA   , PathSepToTarget( cParam ) )
-      CASE Lower( FN_ExtGet( cParam ) ) $ ".o|.obj" ; AAdd( s_aOBJUSER, PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
-      CASE Lower( FN_ExtGet( cParam ) ) $ ".c|.cpp" ; AAdd( s_aC      , PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
-      CASE Lower( FN_ExtGet( cParam ) ) $ ".lib"    ; AAddNotEmpty( s_aLIBUSER, PathSepToTarget( ArchCompFilter( cParam ) ) )
-      OTHERWISE                                     ; AAdd( s_aPRG    , PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+      CASE Lower( FN_ExtGet( cParam ) ) == ".prg"     ; AAdd( s_aPRG    , PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+      CASE Lower( FN_ExtGet( cParam ) ) == ".rc"      ; AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
+      CASE Lower( FN_ExtGet( cParam ) ) == ".res"     ; AAdd( s_aRESCMP , PathSepToTarget( cParam ) )
+      CASE Lower( FN_ExtGet( cParam ) ) == ".a"       ; AAdd( s_aOBJA   , PathSepToTarget( cParam ) )
+      CASE Lower( FN_ExtGet( cParam ) ) $ ".o|.obj"   ; AAdd( s_aOBJUSER, PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+      CASE Lower( FN_ExtGet( cParam ) ) $ ".c|.cpp"   ; AAdd( s_aC      , PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+      CASE Lower( FN_ExtGet( cParam ) ) == ".lib" .OR. ;
+           Lower( FN_ExtGet( cParam ) ) == cDynLibExt ; AAddNotEmpty( s_aLIBUSER, PathSepToTarget( ArchCompFilter( cParam ) ) )
+      OTHERWISE                                       ; AAdd( s_aPRG    , PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
       ENDCASE
    NEXT
 
@@ -761,9 +777,10 @@ FUNCTION Main( ... )
 
    /* If -o with full name wasn't specified, let's
       make it the first source file specified. */
-   DEFAULT s_cPROGNAME TO s_cFIRST
+   DEFAULT s_cPROGNAME TO FN_NameGet( s_cFIRST )
 
-   IF t_cCOMP $ "mingwce|poccce"
+   IF t_cCOMP == "mingwce" .OR. ;
+      t_cCOMP == "poccce"
       t_cGTDEFAULT := "gtwvt"
    ENDIF
 
@@ -789,19 +806,25 @@ FUNCTION Main( ... )
       s_cPROGNAME := FN_ExtSet( s_cPROGNAME )
    ENDIF
 
+   IF lSysLoc
+      cPrefix := PathNormalize( s_cHB_LIB_INSTALL )
+   ELSE
+      cPrefix := DirAddPathSep( s_cHB_LIB_INSTALL )
+   ENDIF
+#if 1
+   cPostfix := ""
+   HB_SYMBOL_UNUSED( cDL_Version )
+#else
+   cPostfix := "-" + cDL_Version
+#endif
+
    DO CASE
-   CASE t_cARCH $ "bsd|linux|sunos"
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + ".so",;
-                                    "harbour-" + cDL_Version + ".so" ) }
-   CASE t_cARCH == "hpux"
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + ".sl",;
-                                    "harbour-" + cDL_Version + ".sl" ) }
-   CASE t_cARCH == "darwin"
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version + ".dylib",;
-                                    "harbour-" + cDL_Version + ".dylib" ) }
+   CASE t_cARCH $ "bsd|linux|hpux|sunos" .OR. t_cARCH == "darwin" /* Separated to avoid match with 'win' */
+      s_aLIBSHARED := { iif( s_lMT, cPrefix + cDynLibNamePrefix + "harbourmt" + cPostfix + cDynLibExt,;
+                                    cPrefix + cDynLibNamePrefix + "harbour"   + cPostfix + cDynLibExt ) }
    CASE t_cARCH $ "os2|win"
-      s_aLIBSHARED := { iif( s_lMT, "harbourmt",;
-                                    "harbour" ) }
+      s_aLIBSHARED := { iif( s_lMT, cDynLibNamePrefix + "harbourmt",;
+                                    cDynLibNamePrefix + "harbour" ) }
    OTHERWISE
       s_aLIBSHARED := NIL
    ENDCASE
@@ -1173,7 +1196,7 @@ FUNCTION Main( ... )
             ENDIF
 
          CASE t_cCOMP == "icc"
-            cLibPrefix := ""
+            cLibPrefix := NIL
             cLibExt := ".lib"
             cObjExt := ".obj"
             cLibPathPrefix := NIL /* TODO */
@@ -1349,7 +1372,7 @@ FUNCTION Main( ... )
          s_cGT != NIL .OR. ;
          s_lFMSTAT != NIL
 
-         fhnd := hb_FTempCreateEx( @s_cCSTUB, ".", "hbsc_", ".c" )
+         fhnd := hb_FTempCreateEx( @s_cCSTUB, NIL, "hbsc_", ".c" )
          IF fhnd != F_ERROR
 
             /* NOTE: This has to be kept synced with Harbour HB_IMPORT values. */
@@ -1428,7 +1451,7 @@ FUNCTION Main( ... )
             FClose( fhnd )
          ELSE
             OutErr( "hbmk: Warning: Stub helper .c program couldn't be created." + hb_osNewLine() )
-            AEval( ListCook( s_aPRG, NIL, ".c" ), {|tmp| FErase( tmp ) } )
+            AEval( ListDirExt( s_aPRG, "", ".c" ), {|tmp| FErase( tmp ) } )
             PauseForKey()
             RETURN 5
          ENDIF
@@ -1454,17 +1477,9 @@ FUNCTION Main( ... )
       /* Merge lib lists. */
       s_aLIB := ArrayAJoin( { s_aLIBHB, s_aLIBUSER, s_aLIB3RD, s_aLIBSYS } )
       /* Dress lib names. */
-      s_aLIB := ListCook( s_aLIB, cLibPrefix, cLibExt )
-      /* Strip 'lib' prefix when the target is gcc family. */
-      IF t_cCOMP $ "gcc|gpp|mingw|djgpp|rsxnt|rsx32"
-         FOR EACH tmp IN s_aLIB
-            IF Left( tmp, 3 ) == "lib"
-               tmp := SubStr( tmp, 4 )
-            ENDIF
-         NEXT
-      ENDIF
+      s_aLIB := ListCookLib( s_aLIB, cDynLibExt, cLibPrefix, cLibExt )
       /* Dress obj names. */
-      s_aOBJ := ListCook( ArrayJoin( s_aPRG, s_aC ), NIL, cObjExt )
+      s_aOBJ := ListDirExt( ArrayJoin( s_aPRG, s_aC ), "", cObjExt )
       s_aOBJUSER := ListCook( s_aOBJUSER, NIL, cObjExt )
 
       nErrorLevel := 0
@@ -1476,7 +1491,7 @@ FUNCTION Main( ... )
             /* Compiling */
 
             /* Order is significant */
-            cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListCook( s_aPRG, NIL, ".c" ), s_aC ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListDirExt( s_aPRG, "", ".c" ), s_aC ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LO}"  , ArrayToList( ListCook( s_aOBJUSER, cObjPrefix ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LA}"  , ArrayToList( s_aOBJA ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LL}"  , ArrayToList( s_aLIB ) )
@@ -1580,7 +1595,7 @@ FUNCTION Main( ... )
       IF ! Empty( s_cCSTUB )
          FErase( s_cCSTUB )
       ENDIF
-      AEval( ListCook( s_aPRG, NIL, ".c" ), {|tmp| FErase( tmp ) } )
+      AEval( ListDirExt( s_aPRG, "", ".c" ), {|tmp| FErase( tmp ) } )
       IF ! lStopAfterCComp
          AEval( s_aOBJ, {|tmp| FErase( tmp ) } )
       ENDIF
@@ -1735,17 +1750,61 @@ STATIC FUNCTION AAddNotEmpty( aArray, xItem )
 
    RETURN aArray
 
-/* Append optional prefix and optional extension to all members */
-STATIC FUNCTION ListCook( arraySrc, cPrefix, cExt )
+STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew )
    LOCAL array := AClone( arraySrc )
-   LOCAL tmp
+   LOCAL cFileName
+   LOCAL cDir, cName, cExt
 
-   DEFAULT cPrefix TO ""
+   FOR EACH cFileName IN array
+      hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+      IF cDirNew != NIL
+         cDir := cDirNew
+      ENDIF
+      IF cExtNew != NIL
+         cExt := cExtNew
+      ENDIF
+      cFileName := hb_FNameMerge( cDir, cName, cExt )
+   NEXT
 
-   FOR tmp := 1 TO Len( array )
-      array[ tmp ] := cPrefix + array[ tmp ]
-      IF ISCHARACTER( cExt )
-           array[ tmp ] := FN_ExtSet( array[ tmp ], cExt )
+   RETURN array
+
+/* Forms the list of libs as to appear on the command line */
+STATIC FUNCTION ListCookLib( arraySrc, cDynLibExt, cPrefix, cExtNew )
+   LOCAL array := AClone( arraySrc )
+   LOCAL cDir, cName, cExt
+   LOCAL cLibName
+
+   FOR EACH cLibName IN array
+      hb_FNameSplit( cLibName, @cDir, @cName, @cExt )
+      IF !( cExt == cDynLibExt )
+         IF cExtNew != NIL
+            cExt := cExtNew
+         ENDIF
+         IF t_cCOMP $ "gcc|gpp|mingw|djgpp|rsxnt|rsx32"
+            IF Left( cName, 3 ) == "lib"
+               cName := SubStr( cName, 4 )
+            ENDIF
+         ENDIF
+         IF cPrefix != NIL
+            cName := cPrefix + cName
+         ENDIF
+         cLibName := hb_FNameMerge( cDir, cName, cExtNew )
+      ENDIF
+   NEXT
+
+   RETURN array
+
+/* Append optional prefix and optional extension to all members */
+STATIC FUNCTION ListCook( arraySrc, cPrefix, cExtNew )
+   LOCAL array := AClone( arraySrc )
+   LOCAL cItem
+
+   FOR EACH cItem IN array
+      IF cPrefix != NIL
+         cItem := cPrefix + cItem
+      ENDIF
+      IF cExtNew != NIL
+         cItem := FN_ExtSet( cItem, cExtNew )
       ENDIF
    NEXT
 
@@ -1777,6 +1836,34 @@ STATIC FUNCTION ListToArray( cList )
    ENDIF
 
    RETURN array
+
+/* NOTE: Can hurt if there are symlinks on the way. */
+/* NOTE: This function also add an ending separator. */
+STATIC FUNCTION PathNormalize( cPath )
+   LOCAL nLastSep
+   LOCAL nNextSep
+
+   cPath := DirAddPathSep( cPath )
+
+   nLastSep := 0
+   DO WHILE ( nNextSep := hb_At( hb_osPathSeparator(), cPath, nLastSep + 1 ) ) > 0
+      SWITCH SubStr( cPath, nLastSep + 1, nNextSep - nLastSep - 1 )
+      CASE ".."
+         nLastSep := hb_Rat( hb_osPathSeparator(), cPath, 1, nLastSep - 1 )
+         IF nLastSep == 0
+            /* Underflow. Return where we are. */
+            RETURN cPath
+         ENDIF
+      CASE "."
+      CASE ""
+         cPath := Left( cPath, nLastSep ) + SubStr( cPath, nNextSep + 1 )
+         EXIT
+      OTHERWISE
+         nLastSep := nNextSep
+      ENDSWITCH
+   ENDDO
+
+   RETURN cPath
 
 STATIC FUNCTION PathSepToSelf( cFileName )
 #if defined( __PLATFORM__WINDOWS ) .OR. ;

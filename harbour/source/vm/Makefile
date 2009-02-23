@@ -14,6 +14,7 @@ ifeq ($(HB_ARCHITECTURE),win)
 			DIRS = mainstd mainwin
 		else
 			C_MAIN = mainstd.c mainwin.c
+			DIRS = mainstd mainwin
 		endif
 	endif
 else

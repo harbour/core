@@ -18,6 +18,8 @@ goto inst_%HB_ARCHITECTURE%
 :inst_win
 rem Windows post install part
 
+if "%HB_DLL%" == "yes" call %~dp0hb-mkdll.bat
+
 echo @"%%~dp0hbmk2.exe" -hbcc  %%*> %HB_BIN_INSTALL%\hbcc.bat
 echo @"%%~dp0hbmk2.exe" -hbcmp %%*> %HB_BIN_INSTALL%\hbcmp.bat
 echo @"%%~dp0hbmk2.exe" -hblnk %%*> %HB_BIN_INSTALL%\hblnk.bat

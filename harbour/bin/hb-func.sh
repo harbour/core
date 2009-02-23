@@ -178,10 +178,13 @@ mk_hbtools()
     fi
     if [ "${HB_COMPILER}" = "mingw" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lwsock32 -lws2_32"
+        HB_WITHOUT_X11="yes"
     elif [ "${HB_COMPILER}" = "mingwce" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32"
+        HB_WITHOUT_X11="yes"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS}"
+        HB_WITHOUT_X11="yes"
     else
         HB_CRS_LIB=""
         if [ "${HB_ARCHITECTURE}" = "linux" ]; then
@@ -240,10 +243,10 @@ mk_hbtools()
     if [ "${HB_WITHOUT_X11}" != "yes" ]; then
         echo "libdynhas=gtxwc">> ${hb_hbmkcfg}
     fi
-    if [ "${HB_WITHOUT_GTCRS}" != "yes" ]; then
+    if [ "${HB_WITHOUT_GTCRS}" != "yes" ] && [ -n "${HB_CRS_LIB}" ]; then
         echo "libdynhas=gtcrs">> ${hb_hbmkcfg}
     fi
-    if [ "${HB_WITHOUT_GTSLN}" != "yes" ]; then
+    if [ "${HB_WITHOUT_GTSLN}" != "yes" ] && [ -n "${HB_SLN_LIB}" ]; then
         echo "libdynhas=gtsln">> ${hb_hbmkcfg}
     fi
 
