@@ -102,13 +102,13 @@ extern void     wvt_Size2ArrayEx( SIZE *siz ,PHB_ITEM aSize );
 HB_EXTERN_END
 #endif
 
-static HANDLE wvg_hInstance( void )
+static HINSTANCE wvg_hInstance( void )
 {
    HANDLE hInstance;
 
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
-   return hInstance;
+   return ( HINSTANCE ) hInstance;
 }
 
 //-------------------------------------------------------------------//

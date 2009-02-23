@@ -104,13 +104,13 @@
 
 //----------------------------------------------------------------------//
 
-static HANDLE wvg_hInstance( void )
+static HINSTANCE wvg_hInstance( void )
 {
    HANDLE hInstance;
 
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
-   return hInstance;
+   return ( HINSTANCE ) hInstance;
 }
 
 //----------------------------------------------------------------------//
@@ -903,7 +903,7 @@ HB_FUNC( WIN_CREATEWINDOWEX )
                           hb_parni( 7 ), hb_parni( 8 ),
                           ( HWND ) ( HB_PTRDIFF ) hb_parnint( 9 ),
                           ISNIL( 10 ) ? NULL : ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 10 ),
-                          ISNIL( 11 ) ? wvg_hInstance() : ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 11 ),
+                          ISNIL( 11 ) ? ( HINSTANCE ) wvg_hInstance() : ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 11 ),
                           NULL );
 
    HB_TCHAR_FREE( szClassName );
@@ -923,7 +923,7 @@ HB_FUNC( WIN_CREATETOOLBAREX )
                            hb_parni( 4 ),
                            ISNIL( 5 ) ? NULL : ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 5 ),
                            ISNIL( 6 ) ? 0 : hb_parnint( 6 ),
-                           ISNIL( 7 ) ? NULL : ( HANDLE ) ( HB_PTRDIFF ) hb_parnint( 7 ),
+                           ISNIL( 7 ) ? NULL : ( LPCTBBUTTON ) ( HB_PTRDIFF ) hb_parnint( 7 ),
                            hb_parni(  8 ),
                            hb_parni(  9 ),
                            hb_parni( 10 ),
@@ -1197,7 +1197,7 @@ static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
       szBitmap = HB_TCHAR_CONVTO( szBitmapX );
 
       hBitmap = ( HBITMAP ) LoadImage(
-                                  wvg_hInstance(),
+                                  ( HINSTANCE ) wvg_hInstance(),
                                   ( LPCTSTR ) szBitmap,
                                   IMAGE_BITMAP,
                                   iExpWidth,
@@ -1218,7 +1218,7 @@ static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
       hb_snprintf( szResname, sizeof( szResname ), "?%u", uiBitmap );
 
       hBitmap = ( HBITMAP ) LoadImage(
-                                  wvg_hInstance(),
+                                  ( HINSTANCE ) wvg_hInstance(),
                                   ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) uiBitmap ),
                                   IMAGE_BITMAP,
                                   iExpWidth,
@@ -1619,7 +1619,7 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
                           TVIS_OVERLAYMASK | TVIS_STATEIMAGEMASK | TVIS_USERMASK ;
 
    tvis.item.state      = 0;        // TVI_BOLD
-   tvis.hParent         = ISNIL( 2 ) ? NULL : wvg_parhandle( 2 );
+   tvis.hParent         = ISNIL( 2 ) ? NULL : ( HTREEITEM ) wvg_parhandle( 2 );
    tvis.item.pszText    = text;
 
    hb_retnint( ( HB_PTRDIFF ) TreeView_InsertItem( wvg_parhwnd( 1 ), &tvis ) );
@@ -2628,7 +2628,7 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
    memset( &wndclass, 0, sizeof( WNDCLASS ) );
    wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
    wndclass.lpfnWndProc   = DefWindowProc;
-   wndclass.hInstance     = wvg_hInstance();
+   wndclass.hInstance     = ( HINSTANCE ) wvg_hInstance();
    wndclass.hIcon         = NULL;
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
    wndclass.hbrBackground = NULL;
@@ -2927,5 +2927,3 @@ HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
 }
 
 /*----------------------------------------------------------------------*/
-
-

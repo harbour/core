@@ -9,10 +9,8 @@ rem Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 
-rem NOTE: .prg files have to be built with -n1
-rem NOTE: .c files have to be built with -DHB_DYNLIB
-rem NOTE: Borland tlib doesn't work if the source library path
-rem       contains '.' char. (as of version 5.8.2)
+rem NOTE: .prg files have to be compiled with -n1
+rem NOTE: .c   files have to be compiled with -DHB_DYNLIB
 
 if not "%OS%" == "Windows_NT" ( echo This script needs Windows NT or newer. && goto END )
 if "%HB_ARCHITECTURE%" == "" ( echo HB_ARCHITECTURE needs to be set. && goto END )
