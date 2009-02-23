@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-23 09:04 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvgwin.c
+    + #define NONAMELESSUNION
+      It may fix OW' few warnings. Please test.
+
 2009-02-23 16:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdll.bat
     - Removed no longer relevant NOTE. BCC tlib can actually
