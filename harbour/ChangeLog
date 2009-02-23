@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-23 22:29 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added -map support for owatcom on all platforms.
+
 2009-02-23 22:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fixed bug in path normalization which stripped leading
@@ -262,7 +266,7 @@
     ; TODO: Add BCC support, if possible. [DONE]
     ; TODO: Rename hb-mkslib.sh to 8.3 name and sync
             name with the .bat version (not necessarily
-            mkdll, but something short.)
+            mkdll, but something short.) [DONE]
 
   * bin/hb-func.sh
     ! Added system libs for optional components included

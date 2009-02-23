@@ -1136,6 +1136,9 @@ FUNCTION Main( ... )
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
          ENDIF
+         IF s_lMAP
+            AAdd( s_aOPTL, "OP MAP" )
+         ENDIF
 
       CASE t_cARCH == "win" .AND. t_cCOMP == "owatcom"
          cLibPrefix := "LIB "
@@ -1150,6 +1153,9 @@ FUNCTION Main( ... )
          cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
+         ENDIF
+         IF s_lMAP
+            AAdd( s_aOPTL, "OP MAP" )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32" } )
 
@@ -1212,6 +1218,9 @@ FUNCTION Main( ... )
             IF s_lDEBUG
                cOpt_Link := "DEBUG " + cOpt_Link
             ENDIF
+            IF s_lMAP
+               AAdd( s_aOPTL, "OP MAP" )
+            ENDIF
 
          CASE t_cCOMP == "icc"
             cLibPrefix := NIL
@@ -1244,6 +1253,9 @@ FUNCTION Main( ... )
          cOpt_Link := "ALL SYS LINUX OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
+         ENDIF
+         IF s_lMAP
+            AAdd( s_aOPTL, "OP MAP" )
          ENDIF
 
       /* Misc */
