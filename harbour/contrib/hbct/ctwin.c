@@ -56,6 +56,7 @@
 #define HB_GT_NAME      CTW
 
 #include "hbgtcore.h"
+#include "hbstack.h"
 #include "hbinit.h"
 #include "hbapiitm.h"
 
@@ -67,6 +68,10 @@ static int           s_GtId;
 #define HB_GTID_PTR           (&s_GtId)
 
 #define HB_GTCTW_GET(p)       ( ( PHB_GTCTW ) HB_GTLOCAL( p ) )
+#define HB_CTW_TSD(p)         ( ( PHB_CTWDATA ) hb_stackGetTSD( &(p)->TSD ) )
+
+#define HB_CTW_GETCURRENT(p)        hb_ctw_CurrentWindow(p)
+#define HB_CTW_SETCURRENT(p,n)      ( HB_CTW_TSD(p)->iCurrWindow = (n) )
 
 #define HB_CTWIN_ALLOC        16
 #define HB_CTWIN_MINROWS      1
@@ -75,6 +80,12 @@ static int           s_GtId;
 #define HB_CTWIN_MAXCOLS      255
 
 #define HB_CTW_SHADOW_MASK    0x8000000
+
+typedef struct
+{
+   int      iCurrWindow;
+}
+HB_CTWDATA, * PHB_CTWDATA;
 
 typedef struct
 {
@@ -116,14 +127,15 @@ typedef struct
 
 typedef struct
 {
-   PHB_GT pGT;
+   PHB_GT   pGT;
    HB_GT_FUNCS SuperTable;
+
+   HB_TSD   TSD;
 
    int iShadowWidth;
    int iShadowAttr;
 
    int iOpenWindows;
-   int iCurrWindow;
    int iMaxWindow;
 
    int fBoardSet;
@@ -365,9 +377,25 @@ static int  hb_ctw_SetBorderMode( PHB_GTCTW pCTW, int iTop, int iLeft, int iBott
 
 static int hb_ctw_CurrentWindow( PHB_GTCTW pCTW )
 {
+   PHB_CTWDATA pTSD;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_CurrentWindow(%p)", pCTW));
 
-   return pCTW->iCurrWindow;
+   pTSD = HB_CTW_TSD( pCTW );
+
+   /* because other threads can close current window we need additional
+    * protection here and we have to check if current handle is still
+    * valid [druzus]
+    */
+   if( pTSD->iCurrWindow > 0 )
+   {
+      if( pTSD->iCurrWindow > pCTW->iMaxWindow ||
+          pCTW->windows[ pTSD->iCurrWindow ] == NULL )
+         pTSD->iCurrWindow = pCTW->iOpenWindows > 0 ?
+                             pCTW->windowStack[ pCTW->iOpenWindows - 1 ] : 0;
+   }
+
+   return pTSD->iCurrWindow;
 }
 
 static int hb_ctw_SelectWindow( PHB_GTCTW pCTW, int iWindow, BOOL fToTop )
@@ -375,11 +403,11 @@ static int hb_ctw_SelectWindow( PHB_GTCTW pCTW, int iWindow, BOOL fToTop )
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_SelectWindow(%p,%d,%d)", pCTW, iWindow, fToTop));
 
    if( iWindow == 0 )
-      pCTW->iCurrWindow = 0;
+      HB_CTW_SETCURRENT( pCTW, 0 );
    else if( iWindow > 0 && iWindow <= pCTW->iMaxWindow &&
             pCTW->windows[ iWindow ] != NULL )
    {
-      pCTW->iCurrWindow = iWindow;
+      HB_CTW_SETCURRENT( pCTW, iWindow );
       if( fToTop )
       {
          int i, iPos;
@@ -414,8 +442,10 @@ static int hb_ctw_SelectWindow( PHB_GTCTW pCTW, int iWindow, BOOL fToTop )
          }
       }
    }
+   else
+      iWindow = HB_CTW_GETCURRENT( pCTW );
 
-   return pCTW->iCurrWindow;
+   return iWindow;
 }
 
 static int hb_ctw_Visible( PHB_GTCTW pCTW, int iWindow, int iVisible )
@@ -676,7 +706,7 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
       --iTmp;
    }
    pCTW->windowStack[ iTmp ] = pWnd->iHandle;
-   pCTW->iCurrWindow = pWnd->iHandle;
+   HB_CTW_SETCURRENT( pCTW, pWnd->iHandle );
    if( !pWnd->fHidden )
    {
       if( iTmp < pCTW->iOpenWindows - 1 )
@@ -716,12 +746,17 @@ static int hb_ctw_CloseWindow( PHB_GTCTW pCTW, int iWindow )
       }
       while( --i >= 0 );
 
-      if( iWindow == pCTW->iCurrWindow )
-         pCTW->iCurrWindow = pCTW->iOpenWindows > 0 ? pCTW->windowStack[ pCTW->iOpenWindows - 1 ] : 0;
+      iLast = HB_CTW_GETCURRENT( pCTW );
+      if( iWindow == iLast )
+      {
+         iLast = pCTW->iOpenWindows > 0 ? pCTW->windowStack[ pCTW->iOpenWindows - 1 ] : 0;
+         HB_CTW_SETCURRENT( pCTW, iLast );
+      }
 
       if( !fHidden )
          hb_ctw_RemapAllWindows( pCTW, 0 );
-      return pCTW->iCurrWindow;
+
+      return iLast;
    }
 
    return -1;
@@ -747,7 +782,8 @@ static int hb_ctw_CloseAllWindows( PHB_GTCTW pCTW )
             hb_xfree( pWnd->piColors );
          hb_xfree( pWnd );
       }
-      pCTW->iOpenWindows = pCTW->iCurrWindow = 0;
+      pCTW->iOpenWindows = 0;
+      HB_CTW_SETCURRENT( pCTW, 0 );
       hb_ctw_RemapAllWindows( pCTW, 0 );
       return 0;
    }
@@ -1057,6 +1093,9 @@ static void hb_ctw_Init( PHB_GTCTW pCTW )
    pCTW->iVerticalStep   = 2;
    pCTW->iHorizontalStep = 5;
 
+   /* initialize thread local storage for current window number */
+   HB_TSD_INIT( &pCTW->TSD, sizeof( HB_CTWDATA ), NULL, NULL );
+
    HB_GTSELF_GETSIZE( pCTW->pGT, &pCTW->iMapHeight, &pCTW->iMapWidth );
 
    /* update cursor position to the rules used by CTWIN */
@@ -1122,6 +1161,8 @@ static void hb_ctw_gt_Exit( PHB_GT pGT )
          hb_xfree( pCTW->pWindowMap );
          hb_xfree( pCTW->pShadowMap );
       }
+      /* release thread local storage for current window number */
+      hb_stackReleaseTSD( &pCTW->TSD );
       hb_xfree( pCTW );
    }
 }
@@ -1129,16 +1170,17 @@ static void hb_ctw_gt_Exit( PHB_GT pGT )
 static int hb_ctw_MouseRow( PHB_GT pGT )
 {
    PHB_GTCTW pCTW;
-   int iRow;
+   int iRow, iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_MouseRow(%p)", pGT));
 
    iRow = HB_GTSUPER_MOUSEROW( pGT );
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
-      iRow -= pCTW->windows[ pCTW->iCurrWindow ]->iFirstRow +
-              pCTW->windows[ pCTW->iCurrWindow ]->iTopMargin;
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
+      iRow -= pCTW->windows[ iWindow ]->iFirstRow +
+              pCTW->windows[ iWindow ]->iTopMargin;
 
    return iRow;
 }
@@ -1146,16 +1188,17 @@ static int hb_ctw_MouseRow( PHB_GT pGT )
 static int hb_ctw_MouseCol( PHB_GT pGT )
 {
    PHB_GTCTW pCTW;
-   int iCol;
+   int iCol, iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_MouseCol(%p)", pGT));
 
    iCol = HB_GTSUPER_MOUSECOL( pGT );
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
-      iCol -= pCTW->windows[ pCTW->iCurrWindow ]->iFirstCol +
-              pCTW->windows[ pCTW->iCurrWindow ]->iLeftMargin;
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
+      iCol -= pCTW->windows[ iWindow ]->iFirstCol +
+              pCTW->windows[ iWindow ]->iLeftMargin;
 
    return iCol;
 }
@@ -1163,14 +1206,16 @@ static int hb_ctw_MouseCol( PHB_GT pGT )
 static void hb_ctw_gt_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
    PHB_GTCTW pCTW;
+   int iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_GetPos(%p,%p,%p)", pGT, piRow, piCol));
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
    {
-      *piRow = pCTW->windows[ pCTW->iCurrWindow ]->iRow;
-      *piCol = pCTW->windows[ pCTW->iCurrWindow ]->iCol;
+      *piRow = pCTW->windows[ iWindow ]->iRow;
+      *piCol = pCTW->windows[ iWindow ]->iCol;
    }
    else
       HB_GTSUPER_GETPOS( pGT, piRow, piCol );
@@ -1184,7 +1229,7 @@ static void hb_ctw_gt_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 static void hb_ctw_gt_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
    PHB_GTCTW pCTW;
-   int iHeight, iWidth;
+   int iHeight, iWidth, iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_GetPos(%p,%d,%d)", pGT, iRow, iCol));
 
@@ -1202,12 +1247,13 @@ static void hb_ctw_gt_SetPos( PHB_GT pGT, int iRow, int iCol )
       iRow = iHeight;
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
    {
-      if( iRow < - pCTW->windows[ pCTW->iCurrWindow ]->iTopMargin )
-         iRow = - pCTW->windows[ pCTW->iCurrWindow ]->iTopMargin;
-      pCTW->windows[ pCTW->iCurrWindow ]->iRow = iRow;
-      pCTW->windows[ pCTW->iCurrWindow ]->iCol = iCol;
+      if( iRow < - pCTW->windows[ iWindow ]->iTopMargin )
+         iRow = - pCTW->windows[ iWindow ]->iTopMargin;
+      pCTW->windows[ iWindow ]->iRow = iRow;
+      pCTW->windows[ iWindow ]->iCol = iCol;
    }
    else
    {
@@ -1220,14 +1266,16 @@ static void hb_ctw_gt_SetPos( PHB_GT pGT, int iRow, int iCol )
 static int hb_ctw_gt_MaxCol( PHB_GT pGT )
 {
    PHB_GTCTW pCTW;
+   int iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_MaxCol(%p)", pGT));
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
-      return pCTW->windows[ pCTW->iCurrWindow ]->iWidth -
-             pCTW->windows[ pCTW->iCurrWindow ]->iLeftMargin -
-             pCTW->windows[ pCTW->iCurrWindow ]->iRightMargin - 1;
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
+      return pCTW->windows[ iWindow ]->iWidth -
+             pCTW->windows[ iWindow ]->iLeftMargin -
+             pCTW->windows[ iWindow ]->iRightMargin - 1;
    else
       return HB_GTSUPER_MAXCOL( pGT );
 }
@@ -1235,14 +1283,16 @@ static int hb_ctw_gt_MaxCol( PHB_GT pGT )
 static int hb_ctw_gt_MaxRow( PHB_GT pGT )
 {
    PHB_GTCTW pCTW;
+   int iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_MaxRow(%p)", pGT));
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
-      return pCTW->windows[ pCTW->iCurrWindow ]->iHeight -
-             pCTW->windows[ pCTW->iCurrWindow ]->iTopMargin -
-             pCTW->windows[ pCTW->iCurrWindow ]->iBottomMargin - 1;
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
+      return pCTW->windows[ iWindow ]->iHeight -
+             pCTW->windows[ iWindow ]->iTopMargin -
+             pCTW->windows[ iWindow ]->iBottomMargin - 1;
    else
       return HB_GTSUPER_MAXROW( pGT );
 }
@@ -1269,8 +1319,9 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, UCHAR * pText, ULONG ulLength )
    /* small hack for scrolling console output when client area is set */
    {
       PHB_GTCTW pCTW = HB_GTCTW_GET( pGT );
-      if( pCTW->iCurrWindow > 0 && pCTW->windows[ pCTW->iCurrWindow ]->fClip )
-         iMaxRow = pCTW->windows[ pCTW->iCurrWindow ]->iCliBottom;
+      int iWindow = HB_CTW_GETCURRENT( pCTW );
+      if( iWindow > 0 && pCTW->windows[ iWindow ]->fClip )
+         iMaxRow = pCTW->windows[ iWindow ]->iCliBottom;
    }
 
    HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
@@ -1381,12 +1432,14 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, UCHAR * pText, ULONG ulLength )
 static int hb_ctw_gt_GetCursorStyle( PHB_GT pGT )
 {
    PHB_GTCTW pCTW;
+   int iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_GetCursorStyle(%p)", pGT));
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
-      return pCTW->windows[ pCTW->iCurrWindow ]->iCursorStyle;
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
+      return pCTW->windows[ iWindow ]->iCursorStyle;
    else
       return HB_GTSUPER_GETCURSORSTYLE( pGT );
 }
@@ -1394,11 +1447,13 @@ static int hb_ctw_gt_GetCursorStyle( PHB_GT pGT )
 static void hb_ctw_gt_SetCursorStyle( PHB_GT pGT, int iStyle )
 {
    PHB_GTCTW pCTW;
+   int iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_SetCursorStyle(%p,%d)", pGT, iStyle));
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
    {
       switch( iStyle )
       {
@@ -1407,10 +1462,10 @@ static void hb_ctw_gt_SetCursorStyle( PHB_GT pGT, int iStyle )
          case SC_INSERT:
          case SC_SPECIAL1:
          case SC_SPECIAL2:
-            pCTW->windows[ pCTW->iCurrWindow ]->iCursorStyle = iStyle;
+            pCTW->windows[ iWindow ]->iCursorStyle = iStyle;
             break;
          default:
-            pCTW->windows[ pCTW->iCurrWindow ]->iCursorStyle = SC_NORMAL;
+            pCTW->windows[ iWindow ]->iCursorStyle = SC_NORMAL;
             break;
       }
    }
@@ -1421,13 +1476,15 @@ static void hb_ctw_gt_SetCursorStyle( PHB_GT pGT, int iStyle )
 static void hb_ctw_gt_GetColorStr( PHB_GT pGT, char * pszColorString )
 {
    PHB_GTCTW pCTW;
+   int iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_GetColorStr(%p,%p)", pGT, pszColorString));
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
    {
-      PHB_CT_WND pWnd = pCTW->windows[ pCTW->iCurrWindow ];
+      PHB_CT_WND pWnd = pCTW->windows[ iWindow ];
       HB_GTSUPER_COLORSTOSTRING( pGT, pWnd->piColors, pWnd->iColorCount, pszColorString, HB_CLRSTR_LEN );
    }
    else
@@ -1437,13 +1494,15 @@ static void hb_ctw_gt_GetColorStr( PHB_GT pGT, char * pszColorString )
 static void hb_ctw_gt_SetColorStr( PHB_GT pGT, const char * szColorString )
 {
    PHB_GTCTW pCTW;
+   int iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_SetColorStr(%p,%s)", pGT, szColorString));
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
    {
-      PHB_CT_WND pWnd = pCTW->windows[ pCTW->iCurrWindow ];
+      PHB_CT_WND pWnd = pCTW->windows[ iWindow ];
       HB_GTSUPER_STRINGTOCOLORS( pGT, szColorString, &pWnd->piColors, &pWnd->iColorCount );
       pWnd->iColorIndex = HB_CLR_STANDARD;
    }
@@ -1454,13 +1513,15 @@ static void hb_ctw_gt_SetColorStr( PHB_GT pGT, const char * szColorString )
 static void hb_ctw_gt_ColorSelect( PHB_GT pGT, int iColorIndex )
 {
    PHB_GTCTW pCTW;
+   int iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_ColorSelect(%p,%d)", pGT, iColorIndex));
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
    {
-      PHB_CT_WND pWnd = pCTW->windows[ pCTW->iCurrWindow ];
+      PHB_CT_WND pWnd = pCTW->windows[ iWindow ];
       if( iColorIndex >= 0 && iColorIndex < pWnd->iColorCount )
          pWnd->iColorIndex = iColorIndex;
    }
@@ -1471,13 +1532,15 @@ static void hb_ctw_gt_ColorSelect( PHB_GT pGT, int iColorIndex )
 static int hb_ctw_gt_GetColor( PHB_GT pGT )
 {
    PHB_GTCTW pCTW;
+   int iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_GetColor(%p)", pGT));
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
    {
-      PHB_CT_WND pWnd = pCTW->windows[ pCTW->iCurrWindow ];
+      PHB_CT_WND pWnd = pCTW->windows[ iWindow ];
       return pWnd->piColors[ pWnd->iColorIndex ];
    }
    else
@@ -1487,13 +1550,15 @@ static int hb_ctw_gt_GetColor( PHB_GT pGT )
 static void hb_ctw_gt_GetColorData( PHB_GT pGT, int ** pColorsPtr, int * piColorCount, int * piColorIndex )
 {
    PHB_GTCTW pCTW;
+   int iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_GetColor(%p,%p,%p,%p)", pGT, pColorsPtr, piColorCount, piColorIndex));
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow > 0 )
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
    {
-      PHB_CT_WND pWnd = pCTW->windows[ pCTW->iCurrWindow ];
+      PHB_CT_WND pWnd = pCTW->windows[ iWindow ];
 
       *pColorsPtr = ( int * ) hb_xgrab( pWnd->iColorCount * sizeof( int ) );
       memcpy( *pColorsPtr, pWnd->piColors, pWnd->iColorCount * sizeof( int ) );
@@ -1507,14 +1572,16 @@ static void hb_ctw_gt_GetColorData( PHB_GT pGT, int ** pColorsPtr, int * piColor
 static void hb_ctw_gt_GetScrCursor( PHB_GT pGT, int * piRow, int * piCol, int * piStyle )
 {
    PHB_GTCTW pCTW;
+   int iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_GetScrCursor(%p,%p,%p,%p)", pGT, piRow, piCol, piStyle));
 
-   pCTW = HB_GTCTW_GET( pGT );
    HB_GTSUPER_GETSCRCURSOR( pGT, piRow, piCol, piStyle );
-   if( pCTW->iCurrWindow > 0 )
+   pCTW = HB_GTCTW_GET( pGT );
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow > 0 )
    {
-      PHB_CT_WND pWnd = pCTW->windows[ pCTW->iCurrWindow ];
+      PHB_CT_WND pWnd = pCTW->windows[ iWindow ];
 
       *piRow += pWnd->iFirstRow +
                 pWnd->iTopMargin;
@@ -1528,7 +1595,7 @@ static void hb_ctw_gt_GetScrCursor( PHB_GT pGT, int * piRow, int * piCol, int * 
          else
          {
             long lIndex = ( long ) *piRow * pCTW->iMapWidth + *piCol;
-            if( pCTW->pWindowMap[ lIndex ] != pCTW->iCurrWindow )
+            if( pCTW->pWindowMap[ lIndex ] != iWindow )
                *piStyle = SC_NONE;
          }
       }
@@ -1598,15 +1665,17 @@ static BOOL hb_ctw_gt_GetChar( PHB_GT pGT, int iRow, int iCol,
 {
    PHB_GTCTW pCTW;
    PHB_CT_WND pWnd;
+   int iWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_GetChar(%p,%d,%d,%p,%p,%p)", pGT, iRow, iCol, pbColor, pbAttr, pusChar));
 
    pCTW = HB_GTCTW_GET( pGT );
-   if( pCTW->iCurrWindow == 0 )
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow == 0 )
       /* TODO: it may badly interacts with character translations */
       return HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, pbColor, pbAttr, pusChar );
 
-   pWnd = pCTW->windows[ pCTW->iCurrWindow ];
+   pWnd = pCTW->windows[ iWindow ];
    iRow += pWnd->iTopMargin;
    iCol += pWnd->iLeftMargin;
 
@@ -1626,12 +1695,12 @@ static BOOL hb_ctw_gt_PutChar( PHB_GT pGT, int iRow, int iCol,
                                BYTE bColor, BYTE bAttr, USHORT usChar )
 {
    PHB_GTCTW pCTW;
-   int iWindow;
+   int iWindow, iCurrWindow;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_PutChar(%p,%d,%d,%d,%d,%hu)", pGT, iRow, iCol, (int)bColor, (int)bAttr, (int)usChar));
 
    pCTW = HB_GTCTW_GET( pGT );
-   iWindow = pCTW->iCurrWindow;
+   iWindow = iCurrWindow = HB_CTW_GETCURRENT( pCTW );
    if( iWindow == 0 && pCTW->iOpenWindows > 0 )
    {
       if( iRow >= pCTW->iBoardTop  && iRow <= pCTW->iBoardBottom &&
@@ -1674,7 +1743,7 @@ static BOOL hb_ctw_gt_PutChar( PHB_GT pGT, int iRow, int iCol,
       int iWndRow, iWndCol, iWndHeight, iWndWidth;
       PHB_CT_WND pWnd = pCTW->windows[ iWindow ];
 
-      if( pCTW->iCurrWindow == 0 )
+      if( iCurrWindow == 0 )
       {
          iWndRow = iRow - pWnd->iFirstRow;
          iWndCol = iCol - pWnd->iFirstCol;
@@ -1704,7 +1773,7 @@ static BOOL hb_ctw_gt_PutChar( PHB_GT pGT, int iRow, int iCol,
          pWnd->screenBuffer[ lIndex ].c.bAttr  = bAttr;
          if( ! pWnd->fHidden )
          {
-            if( pCTW->iCurrWindow == 0 ||
+            if( iCurrWindow == 0 ||
                 ( iRow >= pCTW->iBoardTop  && iRow <= pCTW->iBoardBottom &&
                   iCol >= pCTW->iBoardLeft && iCol <= pCTW->iBoardRight ) )
             {
@@ -1763,15 +1832,19 @@ static BOOL hb_ctw_gt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          fResult = HB_GTSUPER_INFO( pGT, iType, pInfo );
 
          if( fResult && hb_arrayLen( pInfo->pResult ) >= 8 )
-            hb_arraySetNI( pInfo->pResult, 8, HB_GTCTW_GET( pGT )->iCurrWindow );
+         {
+            PHB_GTCTW pCTW = HB_GTCTW_GET( pGT );
+            hb_arraySetNI( pInfo->pResult, 8, HB_CTW_GETCURRENT( pCTW ) );
+         }
          return fResult;
       }
       case HB_GTI_GETWIN:
       {
          BOOL fResult;
-         int iWindow = HB_GTCTW_GET( pGT )->iCurrWindow;
+         PHB_GTCTW pCTW = HB_GTCTW_GET( pGT );
+         int iWindow = HB_CTW_GETCURRENT( pCTW );
 
-         hb_ctw_SelectWindow( HB_GTCTW_GET( pGT ), 0, TRUE );
+         hb_ctw_SelectWindow( pCTW, 0, TRUE );
          fResult = HB_GTSUPER_INFO( pGT, iType, pInfo );
          if( fResult && hb_arrayLen( pInfo->pResult ) >= 8 )
             hb_arraySetNI( pInfo->pResult, 8, iWindow );
@@ -1780,12 +1853,13 @@ static BOOL hb_ctw_gt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SETWIN:
       {
          BOOL fResult;
+         PHB_GTCTW pCTW = HB_GTCTW_GET( pGT );
 
-         hb_ctw_SelectWindow( HB_GTCTW_GET( pGT ), 0, TRUE );
+         hb_ctw_SelectWindow( pCTW, 0, TRUE );
          fResult = HB_GTSUPER_INFO( pGT, iType, pInfo );
          if( fResult && hb_arrayLen( pInfo->pNewVal ) >= 8 )
-            hb_ctw_SelectWindow( HB_GTCTW_GET( pGT ),
-                                 hb_arrayGetNI( pInfo->pNewVal, 8 ), TRUE );
+            hb_ctw_SelectWindow( pCTW, hb_arrayGetNI( pInfo->pNewVal, 8 ),
+                                 TRUE );
          return fResult;
       }
       default:

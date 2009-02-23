@@ -8,6 +8,26 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-23 19:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/estack.c
+    ; added TODO note for TSD handles recovery system to document dynamic
+      (not static) TSD access as public API. Otherwise it's a risk to give
+      such interface for 3-rd party code developers due to potential
+      resource leak.
+
+  * harbour/contrib/hbct/ctwin.c
+    + added support for thread local current window pointer in CT Windows.
+      Warning: each new thread uses window 0 as default.
+
+  * harbour/contrib/hbct/files.c
+    + added MT support FILESEEK(), FILEATTR(), FILESIZE(), FILEDATE().
+      Warning: now each thread operates on it's own directory handle.
+      The directory handle is open until is not scanned to the end by
+      subsequent calls to FILESEEK() without parameters or by explicit
+      call with NIL or empty string "" as file name, f.e.: FILESEEK( NIL ).
+      Such method of closing directory handle is compatible with original
+      CT3 behavior.
+
 2009-02-23 19:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added support for resources on Windows platform.

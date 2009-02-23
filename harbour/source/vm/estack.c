@@ -274,8 +274,8 @@ void * hb_stackGetTSD( PHB_TSD pTSD )
       if( pTSD->iHandle > hb_stack.iTSD )
       {
          hb_stack.pTSD = ( PHB_TSD_HOLDER )
-                        hb_xrealloc( hb_stack.pTSD, ( pTSD->iHandle + 1 ) *
-                                                    sizeof( HB_TSD_HOLDER ) );
+                         hb_xrealloc( hb_stack.pTSD, ( pTSD->iHandle + 1 ) *
+                                                     sizeof( HB_TSD_HOLDER ) );
          memset( &hb_stack.pTSD[hb_stack.iTSD + 1], 0,
                  ( pTSD->iHandle - hb_stack.iTSD ) * sizeof( HB_TSD_HOLDER ) );
          hb_stack.iTSD = pTSD->iHandle;
@@ -334,6 +334,10 @@ void hb_stackReleaseTSD( PHB_TSD pTSD )
       hb_stack.pTSD[pTSD->iHandle].value = NULL;
       hb_stack.pTSD[pTSD->iHandle].pTSD = NULL;
       pTSD->iHandle = 0;
+      /* TODO: add recovery system to not lose TSD handles and
+       *       make this functionality more general and public
+       *       for 3-rd party developers
+       */
    }
 }
 

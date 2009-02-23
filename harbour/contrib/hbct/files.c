@@ -73,6 +73,7 @@
 #include "hbapifs.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
+#include "hbstack.h"
 #include "hbdate.h"
 #include "hb_io.h"
 #include "ctdisk.ch"
@@ -93,73 +94,76 @@
 #  include <stdio.h>
 #endif
 
-static PHB_FFIND s_ffind = NULL;
-static ULONG s_ulAttr = 0;
-static BOOL s_fInit = FALSE;
 
-static void _hb_fileClose( void * cargo )
+typedef struct
 {
-   HB_SYMBOL_UNUSED( cargo );
+   PHB_FFIND   ffind;
+   ULONG       ulAttr;
+} HB_FFDATA, * PHB_FFDATA;
 
-   if( s_ffind )
-   {
-      hb_fsFindClose( s_ffind );
-      s_ffind = NULL;
-   }
+static void hb_fileFindRelease( void * cargo )
+{
+   PHB_FFDATA pFFData = ( PHB_FFDATA ) cargo;
+
+   if( pFFData->ffind )
+      hb_fsFindClose( pFFData->ffind );
 }
+
+static HB_TSD_NEW( s_FFData, sizeof( HB_FFDATA ), NULL, hb_fileFindRelease );
+
+#define HB_GET_FFDATA() ( ( PHB_FFDATA ) hb_stackGetTSD( &s_FFData ) )
+
 
 static PHB_FFIND _hb_fileStart( BOOL fNext, ULONG ulAttr )
 {
+   PHB_FFDATA pFFData = HB_GET_FFDATA();
+
    if( hb_pcount() > 0 )
    {
       char * szFile = hb_parc( 1 );
       BOOL fFree;
 
-      if( s_ffind )
+      if( pFFData->ffind )
       {
-         hb_fsFindClose( s_ffind );
-         s_ffind = NULL;
+         hb_fsFindClose( pFFData->ffind );
+         pFFData->ffind = NULL;
       }
 
       if( szFile )
       {
-         if( !s_fInit )
-         {
-            hb_vmAtExit( _hb_fileClose, NULL );
-            s_fInit = TRUE;
-         }
          szFile = ( char * ) hb_fsNameConv( ( BYTE * ) szFile, &fFree );
          if( ISNUM( 2 ) )
             ulAttr = ( ULONG ) hb_parnl( 2 );
-         s_ulAttr = ISLOG( 3 ) && hb_parl( 3 ) ? ulAttr : 0;
-         s_ffind = hb_fsFindFirst( szFile, ulAttr );
+         pFFData->ulAttr = ISLOG( 3 ) && hb_parl( 3 ) ? ulAttr : 0;
+         pFFData->ffind = hb_fsFindFirst( szFile, ulAttr );
          if( fFree )
             hb_xfree( szFile );
-         while( s_ffind && s_ulAttr && s_ffind->attr != s_ulAttr )
+         while( pFFData->ffind && pFFData->ulAttr &&
+                pFFData->ffind->attr != pFFData->ulAttr )
          {
-            if( !hb_fsFindNext( s_ffind ) )
+            if( !hb_fsFindNext( pFFData->ffind ) )
             {
-               hb_fsFindClose( s_ffind );
-               s_ffind = NULL;
+               hb_fsFindClose( pFFData->ffind );
+               pFFData->ffind = NULL;
             }
          }
       }
    }
-   else if( fNext && s_ffind )
+   else if( fNext && pFFData->ffind )
    {
       do
       {
-         if( !hb_fsFindNext( s_ffind ) )
+         if( !hb_fsFindNext( pFFData->ffind ) )
          {
-            hb_fsFindClose( s_ffind );
-            s_ffind = NULL;
+            hb_fsFindClose( pFFData->ffind );
+            pFFData->ffind = NULL;
             break;
          }
       }
-      while( s_ulAttr && s_ffind->attr != s_ulAttr );
+      while( pFFData->ulAttr && pFFData->ffind->attr != pFFData->ulAttr );
    }
 
-   return s_ffind;
+   return pFFData->ffind;
 }
 
 HB_FUNC( FILESEEK )
@@ -171,7 +175,7 @@ HB_FUNC( FILESEEK )
 
 HB_FUNC( FILEATTR )
 {
-   /* CT3 uses 64 as attribute mask but the idea was setting ALL
+   /* CT3 uses 63 as attribute mask but the idea was setting ALL
     * attributes and because we are supporting more attributes
     * then I decided to use 0xffff value. [druzus]
     */
