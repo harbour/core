@@ -16,9 +16,7 @@
 
   * contrib/gtwvg/gtwvg.h
   * contrib/gtwvg/wvggui.h
-    ! Applied former owatcom fix to GTWVG, too. Please retry,
-      I didn't test it.
-    ! Converted failing declarations to use HB_ID_REF().
+    ! Applied former owatcom fix to GTWVG, too.
     ! Applied more casting fixes shown by owatcom 1.8.
 
     ; Remaining errors and warnings posted on the list.
