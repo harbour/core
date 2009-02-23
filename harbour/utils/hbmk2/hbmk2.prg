@@ -494,6 +494,12 @@ FUNCTION Main( ... )
       ENDIF
    ENDIF
 
+   /* Detect system locations to enable shared library option by default */
+   lSysLoc := hb_DirBase() == "/usr/local/bin/" .OR. ;
+              hb_DirBase() == "/usr/bin/" .OR. ;
+              hb_DirBase() == "/opt/harbour/" .OR. ;
+              hb_DirBase() == "/opt/bin/"
+
    /* Autodetect Harbour environment */
 
    s_aLIBPATH := {}
@@ -526,13 +532,13 @@ FUNCTION Main( ... )
                                          hb_osPathSeparator() + "harbour" +;
                                          hb_osPathSeparator() + "hbvm.h" )
          IF Empty( s_cHB_BIN_INSTALL )
-            s_cHB_BIN_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "bin"
+            s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, lSysLoc ) + "bin"
          ENDIF
          IF Empty( s_cHB_LIB_INSTALL )
-            s_cHB_LIB_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "lib" + hb_osPathSeparator() + "harbour"
+            s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, lSysLoc ) + "lib" + hb_osPathSeparator() + "harbour"
          ENDIF
          IF Empty( s_cHB_INC_INSTALL )
-            s_cHB_INC_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "include" + hb_osPathSeparator() + "harbour"
+            s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, lSysLoc ) + "include" + hb_osPathSeparator() + "harbour"
          ENDIF
       ENDIF
    ENDIF
@@ -543,20 +549,14 @@ FUNCTION Main( ... )
       RETURN 3
    ENDIF
    IF Empty( s_cHB_BIN_INSTALL )
-      s_cHB_BIN_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "bin"
+      s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, t_cARCH $ "win|dos|os2" ) + "bin"
    ENDIF
    IF Empty( s_cHB_LIB_INSTALL )
-      s_cHB_LIB_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "lib"
+      s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, t_cARCH $ "win|dos|os2" ) + "lib"
    ENDIF
    IF Empty( s_cHB_INC_INSTALL )
-      s_cHB_INC_INSTALL := DirAddPathSep( s_cHB_INSTALL_PREFIX ) + "include"
+      s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, t_cARCH $ "win|dos|os2" ) + "include"
    ENDIF
-
-   /* Detect system locations to enable shared library option by default */
-   lSysLoc := hb_DirBase() == "/usr/local/bin/" .OR. ;
-              hb_DirBase() == "/usr/bin/" .OR. ;
-              hb_DirBase() == "/opt/harbour/" .OR. ;
-              hb_DirBase() == "/opt/bin/"
 
    IF t_lInfo
       OutStd( "hbmk: Using Harbour: " + s_cHB_BIN_INSTALL + " " + s_cHB_INC_INSTALL + " " + s_cHB_LIB_INSTALL + hb_osNewLine() )
@@ -807,11 +807,7 @@ FUNCTION Main( ... )
       s_cPROGNAME := FN_ExtSet( s_cPROGNAME )
    ENDIF
 
-   IF lSysLoc
-      cPrefix := PathNormalize( s_cHB_LIB_INSTALL )
-   ELSE
-      cPrefix := DirAddPathSep( s_cHB_LIB_INSTALL )
-   ENDIF
+   cPrefix := PathNormalize( s_cHB_LIB_INSTALL, lSysLoc )
 #if 1
    cPostfix := ""
    HB_SYMBOL_UNUSED( cDL_Version )
@@ -1572,6 +1568,7 @@ FUNCTION Main( ... )
             cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListDirExt( s_aPRG, "", ".c" ), s_aC ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LR}"  , ArrayToList( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LO}"  , ArrayToList( ListCook( s_aOBJUSER, cObjPrefix ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ), cResPrefix ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LA}"  , ArrayToList( s_aOBJA ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LL}"  , ArrayToList( s_aLIB ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{FC}"  , iif( s_lBLDFLGC, cSelfFlagC + " ", "" ) +;
@@ -1924,29 +1921,33 @@ STATIC FUNCTION ListToArray( cList )
 
 /* NOTE: Can hurt if there are symlinks on the way. */
 /* NOTE: This function also add an ending separator. */
-STATIC FUNCTION PathNormalize( cPath )
+STATIC FUNCTION PathNormalize( cPath, lNormalize )
    LOCAL nLastSep
    LOCAL nNextSep
 
+   DEFAULT lNormalize TO .T.
+
    cPath := DirAddPathSep( cPath )
 
-   nLastSep := 0
-   DO WHILE ( nNextSep := hb_At( hb_osPathSeparator(), cPath, nLastSep + 1 ) ) > 0
-      SWITCH SubStr( cPath, nLastSep + 1, nNextSep - nLastSep - 1 )
-      CASE ".."
-         nLastSep := hb_Rat( hb_osPathSeparator(), cPath, 1, nLastSep - 1 )
-         IF nLastSep == 0
-            /* Underflow. Return where we are. */
-            RETURN cPath
-         ENDIF
-      CASE "."
-      CASE ""
-         cPath := Left( cPath, nLastSep ) + SubStr( cPath, nNextSep + 1 )
-         EXIT
-      OTHERWISE
-         nLastSep := nNextSep
-      ENDSWITCH
-   ENDDO
+   IF lNormalize
+      nLastSep := 0
+      DO WHILE ( nNextSep := hb_At( hb_osPathSeparator(), cPath, nLastSep + 1 ) ) > 0
+         SWITCH SubStr( cPath, nLastSep + 1, nNextSep - nLastSep - 1 )
+         CASE ".."
+            nLastSep := hb_Rat( hb_osPathSeparator(), cPath, 1, nLastSep - 1 )
+            IF nLastSep == 0
+               /* Underflow. Return where we are. */
+               RETURN cPath
+            ENDIF
+         CASE "."
+         CASE ""
+            cPath := Left( cPath, nLastSep ) + SubStr( cPath, nNextSep + 1 )
+            EXIT
+         OTHERWISE
+            nLastSep := nNextSep
+         ENDSWITCH
+      ENDDO
+   ENDIF
 
    RETURN cPath
 

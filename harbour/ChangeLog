@@ -8,6 +8,12 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-23 19:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    % Normalizing autodetected paths when system locations
+      are used on *nix and always for win/dos/os2.
+    ! Fix to MSVC resource handling.
+
 2009-02-23 19:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/estack.c
     ; added TODO note for TSD handles recovery system to document dynamic
