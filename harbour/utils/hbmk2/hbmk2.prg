@@ -85,10 +85,7 @@
          Thank you. [vszakats] */
 
 /* TODO: Sync default c/linker switches with Harbour build systems. */
-/* TODO: Add support for wildcarded input source. Only if only one source file is specified. */
-/* TODO: Add support for Windows resource files. */
 /* TODO: Add support for library creation. */
-/* TODO: msvc/bcc32: Use separate link phase. This allows incremental links. */
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cross compilation support. */
 /* TODO: Cleanup on variable names and compiler configuration. */
@@ -223,13 +220,17 @@ FUNCTION Main( ... )
    LOCAL cLibPathSep
    LOCAL cDynLibNamePrefix
    LOCAL cDynLibExt
+   LOCAL cResPrefix
+   LOCAL cResExt
 
    LOCAL cCommand
    LOCAL cOpt_CompC
    LOCAL cOpt_Link
+   LOCAL cOpt_Res
    LOCAL cBin_CompPRG
    LOCAL cBin_CompC
    LOCAL cBin_Link
+   LOCAL cBin_Res
    LOCAL nErrorLevel
    LOCAL tmp, array
    LOCAL cScriptFile
@@ -798,7 +799,7 @@ FUNCTION Main( ... )
    ENDIF
 
    /* Determine map name from output name. */
-   s_cMAPNAME := PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) )
+   s_cMAPNAME := FN_ExtSet( s_cPROGNAME, ".map" )
    /* Set output name extension. */
    IF t_cARCH $ "os2|win|dos"
       s_cPROGNAME := FN_ExtSet( s_cPROGNAME, ".exe" )
@@ -865,6 +866,8 @@ FUNCTION Main( ... )
       /* Command macros:
 
          {LC}     list of C files
+         {LR}     list of resource source files (Windows specific)
+         {LS}     list of resource binary files (Windows specific)
          {LO}     list of object files
          {LA}     list of object archive (.a) files
          {LL}     list of lib files
@@ -873,6 +876,7 @@ FUNCTION Main( ... )
          {OD}     output dir
          {OO}     output object (when in -hbcmp mode)
          {OE}     output executable
+         {OM}     output map name
          {DB}     dir for binaries
          {DI}     dir for includes
          {DL}     dir for libs
@@ -889,9 +893,6 @@ FUNCTION Main( ... )
             AAdd( aLIB_BASE2, s_cGT )
          ENDIF
       ENDIF
-
-      HB_SYMBOL_UNUSED( s_aRESSRC )
-      HB_SYMBOL_UNUSED( s_aRESCMP )
 
       DO CASE
       /* GCC family */
@@ -923,7 +924,7 @@ FUNCTION Main( ... )
             cOpt_CompC += " -Wl,-mwindows"
          ENDIF
          IF s_lMAP
-            cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
+            cOpt_CompC += " -Wl,-Map {OM}"
          ENDIF
          IF t_cARCH == "darwin"
             AAdd( s_aOPTC, "-no-cpp-precomp" )
@@ -1038,7 +1039,7 @@ FUNCTION Main( ... )
          cLibExt := NIL
          cObjExt := ".o"
          cBin_CompC := "gcc"
-         cOpt_CompC := "{LC} {LO} {LA} -O3 {FC} -I{DI} {DL}"
+         cOpt_CompC := "{LC} {LO} {LA} {LR} -O3 {FC} -I{DI} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          IF s_lGUI
@@ -1047,7 +1048,7 @@ FUNCTION Main( ... )
             cOpt_CompC += " -mconsole"
          ENDIF
          IF s_lMAP
-            cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
+            cOpt_CompC += " -Wl,-Map {OM}"
          ENDIF
          IF s_lSHARED
             cOpt_CompC += " -L{DB}"
@@ -1080,6 +1081,16 @@ FUNCTION Main( ... )
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
             AAdd( iif( s_lSHARED, s_aLIBSHARED, s_aLIBUSER ), iif( s_lMT, "hbfmmt", "hbfm" ) )
+         ENDIF
+
+         IF t_cCOMP == "mingw" .AND. Len( s_aRESSRC ) > 0
+            IF Len( s_aRESSRC ) == 1
+               cBin_Res := "windres"
+               cOpt_Res := "{LR} -o {LS}"
+               cResExt := ".o"
+            ELSE
+               OutErr( "hbmk: Warning: Resource files ignored. Multiple ones not support for mingw." + hb_osNewLine() )
+            ENDIF
          ENDIF
 
       CASE ( t_cARCH == "dos" .AND. t_cCOMP == "djgpp" ) .OR. ;
@@ -1140,11 +1151,22 @@ FUNCTION Main( ... )
          cBin_CompC := "wpp386"
          cOpt_CompC := "-w3 -5s -5r -fp5 -onaehtzr -zq -zt0 -bt=NT -oi+ -s {FC} {LC}"
          cBin_Link := "wlink"
-         cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32" } )
+
+         IF Len( s_aRESSRC ) > 0
+            IF Len( s_aRESSRC ) == 1
+               cBin_Res := "wrc"
+               cOpt_Res := "-r -zm {LR} -fo={LS}"
+               cResPrefix := "OP res="
+               cResExt := ".res"
+            ELSE
+               OutErr( "hbmk: Warning: Resource files ignored. Multiple ones not support for owatcom." + hb_osNewLine() )
+            ENDIF
+         ENDIF
 
       /* OS/2 compilers */
       CASE t_cARCH == "os2"
@@ -1160,7 +1182,7 @@ FUNCTION Main( ... )
             cLibPathPrefix := "-L"
             cLibPathSep := " "
             IF s_lMAP
-               cOpt_CompC += " -Wl,-Map " + s_cMAPNAME
+               cOpt_CompC += " -Wl,-Map {OM}"
             ENDIF
             IF s_lSHARED
                cOpt_CompC += " -L{DB}"
@@ -1242,11 +1264,25 @@ FUNCTION Main( ... )
          cLibExt := ".lib"
          cObjExt := ".obj"
          cBin_CompC := "bcc32"
-         cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {FC} -I{DI} -L{DL} {LC} {LO} {LL}"
+         IF ( Len( s_aRESSRC ) + Len( s_aRESCMP ) ) > 0
+            cOpt_CompC := "-c -q -tWM -O2 -OS -Ov -Oi -Oc -d {FC} -I{DI} {LC}"
+            cBin_Res := "brcc32"
+            cOpt_Res := "{LR}"
+            cResExt := ".res"
+            cBin_Link := "ilink32"
+            cOpt_Link := "-Gn -C -ap -Tpe -L{DL} {FL} c0d32.obj {LO}, {OE}, " + iif( s_lMAP, "{OM}", "nul" ) + ", cw32mt.lib {LL} import32.lib,, {LS}{SCRIPT}"
+         ELSE
+            cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {FC} -I{DI} -L{DL} {LC} {LO} {LL}"
+            IF lStopAfterCComp
+               AAdd( s_aOPTC, "-c" )
+            ENDIF
+            IF s_lMAP
+               AAdd( s_aOPTC, "-M" )
+            ENDIF
+         ENDIF
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF lStopAfterCComp
-            AAdd( s_aOPTC, "-c" )
             IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
                AAdd( s_aOPTC, "-o{OO}" )
             ELSE
@@ -1256,10 +1292,7 @@ FUNCTION Main( ... )
             AAdd( s_aOPTC, "-e{OE}" )
          ENDIF
          IF s_lSHARED
-            cOpt_CompC += " -L{DB}"
-         ENDIF
-         IF s_lMAP
-            cOpt_CompC += " -M"
+            AAdd( s_aLIBPATH, "{DB}" )
          ENDIF
          /* TOFIX: The two build systems should generate the same .dll name, otherwise
                    we can only be compatible with one of them. non-GNU is the common choice here. */
@@ -1282,8 +1315,7 @@ FUNCTION Main( ... )
          cLibExt := ".lib"
          cObjExt := ".obj"
          cBin_CompC := "cl"
-
-         cOpt_CompC := "-nologo -W3 {FC} -I{DI} {LC} {LO} /link {DL} {FL} {LL}"
+         cOpt_CompC := "-nologo -W3 {FC} -I{DI} {LC} {LO} /link {DL} {FL} {LL} {LS}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF s_lMAP
@@ -1310,6 +1342,10 @@ FUNCTION Main( ... )
                            "hbmainstd",;
                            "hbmainwin",;
                            "hbcommon" }
+
+         cBin_Res := "rc.exe"
+         cOpt_Res := "/r {LR}"
+         cResExt := ".res"
 
       CASE t_cARCH == "win" .AND. t_cCOMP == "pocc"
          IF s_lGUI
@@ -1484,7 +1520,49 @@ FUNCTION Main( ... )
 
       nErrorLevel := 0
 
-      IF ( Len( s_aPRG ) + Len( s_aC ) + iif( Empty( cBin_Link ), Len( s_aOBJUSER ) + Len( s_aOBJA ), 0 ) ) > 0
+      IF Len( s_aRESSRC ) > 0 .AND. ! Empty( cBin_Res )
+
+         /* Compiling resource */
+
+         cOpt_Res := StrTran( cOpt_Res, "{LR}"  , ArrayToList( s_aRESSRC ) )
+         cOpt_Res := StrTran( cOpt_Res, "{LS}"  , ArrayToList( ListDirExt( s_aRESSRC, "", cResExt ) ) )
+         cOpt_Res := StrTran( cOpt_Res, "{FR}"  , GetEnv( "HB_USER_RESFLAGS" ) )
+         cOpt_Res := StrTran( cOpt_Res, "{DI}"  , s_cHB_INC_INSTALL )
+
+         cOpt_Res := AllTrim( cOpt_Res )
+
+         /* Handle moving the whole command line to a script, if requested. */
+         IF "{SCRIPT}" $ cOpt_Res
+            fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
+            IF fhnd != F_ERROR
+               FWrite( fhnd, StrTran( cOpt_Res, "{SCRIPT}", "" ) )
+               FClose( fhnd )
+               cOpt_Res := "@" + cScriptFile
+            ELSE
+               OutErr( "hbmk: Warning: Resource compiler script couldn't be created, continuing in command line." + hb_osNewLine() )
+            ENDIF
+         ENDIF
+
+         cCommand := cBin_Res + " " + cOpt_Res
+
+         IF s_lTRACE
+            OutStd( "hbmk: Resource compiler command: '" + cCommand + "'" + hb_osNewLine() )
+            IF ! Empty( cScriptFile )
+               OutStd( "hbmk: Resource compiler script: '" + hb_MemoRead( cScriptFile ) + "'" + hb_osNewLine() )
+            ENDIF
+         ENDIF
+
+         IF ( tmp := hb_run( cCommand ) ) != 0
+            OutErr( "hbmk: Error: Running resource compiler. " + hb_ntos( tmp ) + ": '" + cCommand + "'" + hb_osNewLine() )
+            nErrorLevel := 8
+         ENDIF
+
+         IF ! Empty( cScriptFile )
+            FErase( cScriptFile )
+         ENDIF
+      ENDIF
+
+      IF nErrorLevel == 0 .AND. ( Len( s_aPRG ) + Len( s_aC ) + iif( Empty( cBin_Link ), Len( s_aOBJUSER ) + Len( s_aOBJA ), 0 ) ) > 0
 
          IF ! Empty( cBin_CompC )
 
@@ -1492,6 +1570,7 @@ FUNCTION Main( ... )
 
             /* Order is significant */
             cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListDirExt( s_aPRG, "", ".c" ), s_aC ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{LR}"  , ArrayToList( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LO}"  , ArrayToList( ListCook( s_aOBJUSER, cObjPrefix ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LA}"  , ArrayToList( s_aOBJA ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{LL}"  , ArrayToList( s_aLIB ) )
@@ -1502,6 +1581,7 @@ FUNCTION Main( ... )
             cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , PathSepToTarget( FN_DirGet( s_cPROGNAME ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cObjPrefix ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OE}"  , PathSepToTarget( s_cPROGNAME ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{OM}"  , PathSepToTarget( s_cMAPNAME ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{DB}"  , s_cHB_BIN_INSTALL )
             cOpt_CompC := StrTran( cOpt_CompC, "{DI}"  , s_cHB_INC_INSTALL )
             cOpt_CompC := StrTran( cOpt_CompC, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
@@ -1549,11 +1629,13 @@ FUNCTION Main( ... )
 
          /* Order is significant */
          cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
+         cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ), cResPrefix ) ) )
          cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( s_aOBJA ) )
          cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( s_aLIB ) )
          cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                     GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
          cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( s_cPROGNAME ) )
+         cOpt_Link := StrTran( cOpt_Link, "{OM}"  , PathSepToTarget( s_cMAPNAME ) )
          cOpt_Link := StrTran( cOpt_Link, "{DB}"  , s_cHB_BIN_INSTALL )
          cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
 
@@ -1597,6 +1679,9 @@ FUNCTION Main( ... )
       ENDIF
       AEval( ListDirExt( s_aPRG, "", ".c" ), {|tmp| FErase( tmp ) } )
       IF ! lStopAfterCComp
+         IF ! Empty( cResExt )
+            AEval( ListDirExt( s_aRESSRC, "", cResExt ), {|tmp| FErase( tmp ) } )
+         ENDIF
          AEval( s_aOBJ, {|tmp| FErase( tmp ) } )
       ENDIF
       AEval( s_aCLEAN, {|tmp| FErase( tmp ) } )
@@ -2403,7 +2488,7 @@ STATIC PROCEDURE ShowHeader()
 STATIC PROCEDURE ShowHelp( lLong )
 
    LOCAL aText_Basic := {;
-      "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c|[.obj|.o]]>" ,;
+      "Syntax:  hbmk [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res]>" ,;
       "" ,;
       "Options:" ,;
       "  -o<outname>       output file name" ,;

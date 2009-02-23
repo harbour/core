@@ -83,9 +83,9 @@ endif
 	$(HB) $? $(HB_FLAGS) $(HB_USER_PRGFLAGS)
 
 ifeq ($(SHLVL),) # COMMAND.COM
-# Do nothing. the $(hb_architecture)/global.cf will handle clean up.
+# Do nothing. the $(HB_ARCHITECTURE)/global.cf will handle clean up.
 else
 # Generic rule to clean up.
 clean::
-	-$(RM) *.bak *.obj core *.core *~ *.o *.ppo
+	-$(RM) *.bak *.obj core *.core *~ *.o *.ppo *.err
 endif

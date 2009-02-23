@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-23 19:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added support for resources on Windows platform.
+      mingw, owatcom, msvc, bcc32 are supported. mingw and
+      owatcom support single resources only.
+
+  * config/rules.cf
+    + Added owatcom .err files to the clean list. Maybe there
+      is more appropriate place to put this. Please correct it.
+
 2009-02-23 09:04 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgwin.c
     + #define NONAMELESSUNION
