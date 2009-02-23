@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-23 15:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.bat
+    ! Protected command from pre-NT systems.
+
+  * harbour-win-spec
+  * harbour-wce-spec
+  * harbour.spec
+    + hbmkcfg.hbp added to distros (I hope to all of them).
+
+  * ChangeLog
+    * Updated statuses of a few pending items.
+
 2009-02-23 14:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fixed bug which made gtwvt the default GT for mingw.
@@ -170,8 +182,8 @@
     ; TODO: Solve to compile Harbour lib .prgs using
             -n1 switch. (needed for .dll, and this
             one has only befenefits for other scenarios)
-    ; TODO: Add hb-mkdll.bat to postinst.bat.
-    ; TODO: Add BCC support, if possible.
+    ; TODO: Add hb-mkdll.bat to postinst.bat. [DONE]
+    ; TODO: Add BCC support, if possible. [DONE]
     ; TODO: Rename hb-mkslib.sh to 8.3 name and sync
             name with the .bat version (not necessarily
             mkdll, but something short.)
@@ -608,7 +620,7 @@
     + Added generation of hbmkcfg.hbp.
       gt override, cflags, ldflags and slang/curses libs are
       currently added.
-    ; TODO: Add this file to distro packages.
+    ; TODO: Add this file to distro packages. [DONE]
 
   * utils/hbmk2/hbmk2.prg
     ! Fixed handling of -DHB_EXT_ZLIB.
@@ -2000,8 +2012,7 @@
       - Switch to portable command lines in hbmk.bat files. [DONE]
         (Win9x will be supported again). [DONE]
       - Remove bin/hbmk*.bat, bin/hbmk*.cmd, util/hbmake/*. [DONE]
-      - Cleanup on variable names in hbmk.prg.
-        [MOVED TO hbmk2.prg]
+      - Cleanup on variable names in hbmk.prg. [MOVED TO hbmk2.prg]
 
   * tests/testid.prg
     * Minor cleanup.
@@ -4823,7 +4834,7 @@
 
   ; TODO: Shouldn't we add core support for C-level thread
           specific cargo (user defined data) area available for
-          3rd party libs/apps?
+          3rd party libs/apps? [FEATURE ALREADY IMPLEMENTED]
 
   ; TODO: Same could be added to GT structure to hold
           GT instance specific user defined data. [DONE]

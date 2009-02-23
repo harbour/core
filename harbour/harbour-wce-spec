@@ -295,6 +295,7 @@ rm -fR $RPM_BUILD_ROOT
 %{_bindir}/%{hb_pref}cmp
 %{_bindir}/%{hb_pref}lnk
 %{_bindir}/%{hb_pref}mk
+%{_bindir}/hbmkcfg.hbp
 
 %defattr(644,root,root,755)
 %dir %{_includedir}/%{name}
