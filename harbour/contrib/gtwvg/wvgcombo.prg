@@ -105,13 +105,11 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCo
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   IF ::visible
-      ::style += WS_VISIBLE
-   ENDIF
-
    ::oParent:AddChild( SELF )
 
    ::createControl()
+
+   ::SetWindowProcCallback()
 
    IF ::visible
       ::show()
@@ -130,6 +128,8 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 //----------------------------------------------------------------------//
 
 METHOD destroy() CLASS WvgComboBox
+
+   ::wvgWindow:destroy()
 
    RETURN NIL
 

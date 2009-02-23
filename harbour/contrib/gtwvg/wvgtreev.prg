@@ -133,9 +133,7 @@ CLASS WvgTreeView  INHERIT  WvgWindow, DataRef
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTreeView
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + WS_TABSTOP + WS_CLIPSIBLINGS
    ::exStyle     := WS_EX_STATICEDGE //+ TVS_EX_FADEINOUTEXPANDOS
@@ -149,11 +147,8 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTreeV
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTreeView
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   IF ::visible
-      ::style += WS_VISIBLE
-   ENDIF
    IF ::alwaysShowSelection
       ::style += TVS_SHOWSELALWAYS
    ENDIF
@@ -168,8 +163,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTr
 
    ::createControl()
 
-   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   ::SetWindowProcCallback()
 
    IF ::visible
       ::show()
@@ -184,7 +178,6 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTr
 //----------------------------------------------------------------------//
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgTreeView
-   LOCAL nHandled := 1
    LOCAL hItemSelected, hParentOfSelected, n, aNMHdr
    LOCAL cParent := space( 20 )
    LOCAL cText   := space( 20 )
@@ -196,12 +189,12 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTreeView
 
    CASE HB_GTE_RESIZED
       ::sendMessage( WM_SIZE, 0, 0 )
-      RETURN 0
+      RETURN EVENT_HANDELLED
 
    CASE HB_GTE_COMMAND
       IF hb_isBlock( ::sl_lbClick )
          eval( ::sl_lbClick, NIL, NIL, self )
-         nHandled := 0
+         RETURN EVENT_HANDELLED
       ENDIF
       EXIT
 
@@ -247,7 +240,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTreeView
       EXIT
    END
 
-   RETURN nHandled
+   RETURN EVENT_UNHANDELLED
 
 //----------------------------------------------------------------------//
 
@@ -255,18 +248,7 @@ METHOD destroy() CLASS WvgTreeView
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
-   ::WvgWindow:destroy()
-
-   #if 0
-   IF len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
-   ENDIF
-
-   IF Win_IsWindow( ::hWnd )
-      Win_DestroyWindow( ::hWnd )
-   ENDIF
-   HB_FreeCallback( ::nWndProc )
-   #endif
+   ::wvgWindow:destroy()
 
    RETURN NIL
 

@@ -128,7 +128,7 @@ CLASS WvgSLE INHERIT WvgWindow, DataRef
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD
    ::className   := 'EDIT'
@@ -141,14 +141,11 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
    LOCAL es_:= { ES_LEFT, ES_RIGHT, ES_CENTER }
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style += es_[ ::align ]
    ::style += ES_AUTOHSCROLL
 
-   IF ::visible
-      ::style += WS_VISIBLE
-   ENDIF
    IF ::tabStop
       ::style += WS_TABSTOP
    ENDIF
@@ -169,8 +166,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSL
 
    ::createControl()
 
-   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   ::SetWindowProcCallback()
 
    IF ::visible
       ::show()
@@ -233,16 +229,7 @@ METHOD destroy() CLASS WvgSLE
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
 
-   ::WvgWindow:destroy()
-   #if 0
-   IF len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
-   ENDIF
-   IF Win_IsWindow( ::hWnd )
-      Win_DestroyWindow( ::hWnd )
-   ENDIF
-   HB_FreeCallback( ::nWndProc )
-   #endif
+   ::wvgWindow:destroy()
 
    RETURN NIL
 

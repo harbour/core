@@ -98,9 +98,7 @@ CLASS WvgDrawingArea  INHERIT  WvgWindow
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDrawingArea
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD
    ::exStyle     := 0
@@ -116,7 +114,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDr
 
    HB_SYMBOL_UNUSED( lVisible )
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, .t. )
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, .t. )
 
    ::oParent:addChild( SELF )
 
@@ -124,10 +122,10 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgDr
 
    ::createControl()
 
-   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self, 4 )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   ::SetWindowProcCallback()
 
    ::show()
+
    RETURN Self
 
 //----------------------------------------------------------------------//
@@ -169,7 +167,7 @@ METHOD destroy() CLASS WvgDrawingArea
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
 
-   ::WvgWindow:destroy()
+   ::wvgWindow:destroy()
 
    RETURN NIL
 

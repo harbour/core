@@ -107,9 +107,7 @@ CLASS WvgStatic  INHERIT  WvgWindow
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    // SS_NOTIFY  SS_ETCHEDFRAME  SS_SUNKEN  SS_WHITERECT
    //
@@ -124,11 +122,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStati
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatic
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF ::visible
-      ::style += WS_VISIBLE
-   ENDIF
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    #if 0
    SS_ETCHEDFRAME
@@ -234,19 +228,17 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
       ENDIF
    ENDIF
    #endif
-   //------------------- API request to create control ----------------//
+
    ::oParent:addChild( SELF )
 
    ::createControl()
 
-   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self, 4 )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   ::SetWindowProcCallback()
 
    IF ::visible
       ::show()
    ENDIF
 
-   //------------------- After creation settings------------------------//
    ::setCaption( ::caption )
 
    RETURN Self
@@ -287,11 +279,11 @@ METHOD destroy() CLASS WvgStatic
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
-   ::WvgWindow:destroy()
-
    IF ::hBitmap <> nil
       Win_DeleteObject( ::hBitmap )
    ENDIF
+
+   ::wvgWindow:destroy()
 
    RETURN NIL
 

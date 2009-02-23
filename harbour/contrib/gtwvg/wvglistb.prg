@@ -148,9 +148,7 @@ CLASS WvgListBox  INHERIT  WvgWindow, DataRef
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListBox
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + WS_OVERLAPPED + WS_TABSTOP + LBS_NOTIFY
    ::exStyle     := WS_EX_CLIENTEDGE + WS_EX_LEFT + WS_EX_LTRREADING + WS_EX_RIGHTSCROLLBAR
@@ -163,11 +161,8 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListB
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgListBox
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   IF ::visible
-      ::style += WS_VISIBLE
-   ENDIF
    IF ::horizScroll
       ::style += WS_HSCROLL
    ENDIF
@@ -179,11 +174,10 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgLi
    ENDIF
 
    ::oParent:AddChild( SELF )
-
+   //
    ::createControl()
-
-   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   //
+   ::SetWindowProcCallback()
 
    IF ::visible
       ::show()
@@ -249,17 +243,7 @@ METHOD destroy() CLASS WvgListBox
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
    ::WvgWindow:destroy()
-   #if 0
-   IF Len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
-      ::aChildren := {}
-   ENDIF
 
-   IF Win_IsWindow( ::hWnd )
-      Win_DestroyWindow( ::hWnd )
-   ENDIF
-   HB_FreeCallback( ::nWndProc )
-   #endif
    RETURN NIL
 
 //----------------------------------------------------------------------//

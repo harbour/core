@@ -1302,7 +1302,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
          }
          ptArray[ iParts ] = -1;
 
-         if( SendMessage( hWndSB, SB_SETPARTS, iParts + 1, ( LPARAM ) ( LPINT ) ptArray ) )
+         if( SendMessage( hWndSB, SB_SETPARTS, ( WPARAM ) iParts + 1, ( LPARAM ) ( LPINT ) ptArray ) )
          {
             hb_retl( TRUE );
             return;
@@ -1317,7 +1317,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
          {
             ptArray[ 0 ] = rc.right;
 
-            SendMessage( hWndSB, SB_SETPARTS, 1, ( LPARAM ) ( LPINT ) ptArray );
+            SendMessage( hWndSB, SB_SETPARTS, ( WPARAM ) 1, ( LPARAM ) ( LPINT ) ptArray );
 
             hb_retl( TRUE );
             return;
@@ -2681,7 +2681,6 @@ HB_FUNC( WVG_BEGINMOUSETRACKING )
 #include "hbapierr.h"
 #include "hbstack.h"
 
-
 #define HB_MEMSTRU_OSVERSIONINFO                1000001
 #define HB_MEMSTRU_LOGFONT                      1000002
 
@@ -2697,10 +2696,6 @@ extern void hb_memstru_ret( void * pMemAddr, int iType );
 extern void * hb_memstru_param( int iParam, int iType, BOOL fError );
 
 HB_EXTERN_END
-
-/* end of header file */
-
-
 
 typedef struct
 {
@@ -2783,11 +2778,6 @@ BOOL hb_memstru_store( void * pMemAddr, int iType, int iParam )
 }
 
 
-/*
-hb_memstru_*() functions can be used to pass structures between
-C and .prg code.
-*/
-
 HB_FUNC( WAPI_STRUCT_OSVERSIONINFO )
 {
    OSVERSIONINFO * osvi;
@@ -2811,10 +2801,6 @@ HB_FUNC( WAPI_GETVERSIONEX )
 }
 
 
-/*
-You can also define some general functions to access given structure
-members if you will find it useful in some cases.
-*/
 HB_FUNC( WAPI_MEMBER_OSVERSIONINFO )
 {
    OSVERSIONINFO * osvi;
@@ -2842,3 +2828,104 @@ HB_FUNC( WAPI_MEMBER_OSVERSIONINFO )
    }
 }
 /*----------------------------------------------------------------------*/
+
+static HB_GARBAGE_FUNC( WVG_WndProc_release )
+{
+   void ** ph = ( void ** ) Cargo;
+
+   /* Check if pointer is not NULL to avoid multiple freeing */
+   if( ph && * ph )
+   {
+      /* Destroy the object */
+      hb_itemRelease( ( PHB_ITEM ) * ph );
+
+      /* set pointer to NULL to avoid multiple freeing */
+      * ph = NULL;
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+static PHB_ITEM WVG_WndProc_par( int iParam )
+{
+   void ** ph = ( void ** ) hb_parptrGC( WVG_WndProc_release, iParam );
+
+   return ph ? ( PHB_ITEM ) * ph : NULL;
+}
+
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WVG_GETWNDPROCPOINTER )
+{
+   PHB_ITEM pBlock = hb_itemNew( hb_param( 1, HB_IT_BLOCK ) );
+   void **  ph = ( void ** ) hb_gcAlloc( sizeof( PHB_ITEM ), WVG_WndProc_release );
+
+   * ph = ( void * ) pBlock;
+   hb_retptrGC( ph );
+}
+
+/*----------------------------------------------------------------------*/
+
+LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
+{
+   PHB_ITEM pBlock = ( PHB_ITEM ) GetProp( hwnd, TEXT( "BLOCKCALLBACK" ) );
+   long     lRet;
+
+   if( pBlock )
+   {
+      if( hb_itemType( pBlock ) == HB_IT_POINTER )
+      {
+         hb_vmPushSymbol( hb_dynsymSymbol( ( ( PHB_SYMB ) pBlock ) -> pDynSym ) );
+         hb_vmPushNil();
+      }
+      else
+      {
+         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPush( pBlock );
+      }
+      hb_vmPushLong( ( HB_PTRDIFF ) hwnd );
+      hb_vmPushInteger( msg );
+      hb_vmPushLong( ( HB_PTRDIFF ) wParam );
+      hb_vmPushLong( ( HB_PTRDIFF ) lParam );
+      hb_vmDo( 4 );
+      lRet = hb_parnint( -1 );
+      return lRet;
+   }
+   return DefWindowProc( hwnd, msg, wParam, lParam );
+}
+
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WVG_SETWINDOWPROCBLOCK )
+{
+   WNDPROC  oldProc;
+   HWND     hWnd   = wapi_par_HWND( 1 );
+   PHB_ITEM pBlock = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+
+   SetProp( hWnd, TEXT( "BLOCKCALLBACK" ), pBlock );
+
+#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
+   oldProc = ( WNDPROC ) SetWindowLong( hWnd, GWL_WNDPROC, ( long ) ControlWindowProcedure ) ;
+#else
+   oldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( HB_PTRDIFF ) ControlWindowProcedure ) ;
+#endif
+
+   hb_retnint( ( HB_PTRDIFF ) oldProc );
+}
+
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
+{
+   HWND     hWnd   = wapi_par_HWND( 1 );
+   PHB_ITEM pBlock = ( PHB_ITEM ) RemoveProp( hWnd, TEXT( "BLOCKCALLBACK" ) );
+
+   if( pBlock )
+   {
+      hb_itemRelease( pBlock );
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+

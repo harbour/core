@@ -106,7 +106,7 @@ CLASS Wvg3State  INHERIT  WvgWindow, DataRef
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wvg3State
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + BS_AUTO3STATE
    ::className   := 'BUTTON'
@@ -118,18 +118,13 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wvg3Stat
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wvg3State
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF ::visible
-      ::style += WS_VISIBLE
-   ENDIF
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oParent:AddChild( SELF )
 
    ::createControl()
 
-   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   ::SetWindowProcCallback()
 
    IF ::visible
       ::show()
@@ -139,6 +134,10 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wvg3S
 
    IF ::selection
       ::sendMessage( BM_SETCHECK, BST_CHECKED, 0 )
+   ENDIF
+
+   IF ::visible
+      ::show()
    ENDIF
 
    ::editBuffer := Win_Button_GetCheck( ::hWnd )
@@ -185,13 +184,7 @@ METHOD destroy() CLASS Wvg3State
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
-   IF len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
-   ENDIF
-   IF Win_IsWindow( ::hWnd )
-      Win_DestroyWindow( ::hWnd )
-   ENDIF
-   HB_FreeCallback( ::nWndProc )
+   ::WvgWindow:destroy()
 
    RETURN NIL
 

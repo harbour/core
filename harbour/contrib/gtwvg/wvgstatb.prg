@@ -82,7 +82,7 @@
 
 //----------------------------------------------------------------------//
 
-CLASS WvgStatusBar  INHERIT  WvgActiveXControl
+CLASS WvgStatusBar  INHERIT  WvgWindow //WvgActiveXControl
 
    DATA     caption                               INIT ''
    DATA     sizeGrip                              INIT .T.
@@ -110,9 +110,8 @@ CLASS WvgStatusBar  INHERIT  WvgActiveXControl
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatusBar
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   //::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + WS_BORDER + SBARS_TOOLTIPS
    ::className   := STATUSCLASSNAME
@@ -124,11 +123,8 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatu
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgStatusBar
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   IF ::visible
-      ::style += WS_VISIBLE
-   ENDIF
    IF ::sizeGrip
       ::style += SBARS_SIZEGRIP
    ENDIF
@@ -137,8 +133,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSt
 
    ::createControl()
 
-   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   ::SetWindowProcCallback()
 
    IF ::visible
       ::show()
@@ -216,7 +211,7 @@ METHOD destroy() CLASS WvgStatusBar
       NEXT
    ENDIF
 
-   ::WvgWindow:destroy()
+   ::wvgWindow:destroy()
 
    RETURN NIL
 

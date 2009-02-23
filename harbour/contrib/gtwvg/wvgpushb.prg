@@ -113,7 +113,7 @@ CLASS WvgPushButton  INHERIT  WvgWindow
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushButton
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + BS_PUSHBUTTON  //+ BS_NOTIFY + BS_PUSHLIKE
    ::className   := 'BUTTON'
@@ -125,18 +125,13 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushB
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushButton
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF ::visible
-      ::style += WS_VISIBLE
-   ENDIF
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oParent:AddChild( SELF )
-
+   //
    ::createControl()
-
-   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   //
+   ::SetWindowProcCallback()
 
    IF ::visible
       ::show()
@@ -157,13 +152,13 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgPushButton
    CASE nMessage == HB_GTE_RESIZED
       IF hb_isBlock( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
-         RETURN 0
+         RETURN EVENT_HANDELLED
       ENDIF
 
    CASE nMessage == HB_GTE_COMMAND
       IF hb_isBlock( ::sl_lbClick )
          eval( ::sl_lbClick, NIL, NIL, self )
-         RETURN 0
+         RETURN EVENT_HANDELLED
       ENDIF
 
    CASE nMessage == HB_GTE_NOTIFY
@@ -175,13 +170,11 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgPushButton
       IF hb_isNumeric( ::hBrushBG )
          Win_SetBkMode( aNM[ 1 ], 1 )
          RETURN ( ::hBrushBG )
-      ELSE
-         RETURN Win_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    ENDCASE
 
-   RETURN 1
+   RETURN EVENT_UNHANDELLED
 
 //----------------------------------------------------------------------//
 
@@ -189,14 +182,7 @@ METHOD destroy() CLASS WvgPushButton
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
-   IF len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
-   ENDIF
-
-   IF Win_IsWindow( ::hWnd )
-      Win_DestroyWindow( ::hWnd )
-   ENDIF
-   HB_FreeCallback( ::nWndProc )
+   ::wvgWindow:destroy()
 
    RETURN NIL
 

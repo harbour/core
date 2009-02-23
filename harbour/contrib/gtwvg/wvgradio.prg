@@ -106,7 +106,7 @@ CLASS WvgRadioButton  INHERIT  WvgWindow, DataRef
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + BS_AUTORADIOBUTTON
    ::className   := 'BUTTON'
@@ -118,18 +118,13 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadio
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF ::visible
-      ::style += WS_VISIBLE
-   ENDIF
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oParent:addChild( SELF )
-
+   //
    ::createControl()
-
-   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   //
+   ::SetWindowProcCallback()
 
    IF ::visible
       ::show()
@@ -172,13 +167,7 @@ METHOD destroy() CLASS WvgRadioButton
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
 
-   IF len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
-   ENDIF
-   IF Win_IsWindow( ::hWnd )
-      Win_DestroyWindow( ::hWnd )
-   ENDIF
-   HB_FreeCallback( ::nWndProc )
+   ::wvgWindow:destroy()
 
    RETURN NIL
 

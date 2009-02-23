@@ -271,6 +271,8 @@ EXPORTED:
 
 
    METHOD   isDerivedFrom()
+   METHOD   setWindowProcCallback()
+
    ENDCLASS
 
 //----------------------------------------------------------------------//
@@ -342,12 +344,18 @@ METHOD destroy() CLASS WvgWindow
       aeval( ::aChildren, {|o| o:destroy() } )
       ::aChildren := {}
    ENDIF
+
+   WVG_ReleaseWindowProcBlock( ::hWnd )
+
    IF Win_IsWindow( ::hWnd )
       Win_DestroyWindow( ::hWnd )
    ENDIF
+
+   #ifdef __BYASCALLBACK__
    IF !empty( ::nWndProc )
       hb_FreeCallBack( ::nWndProc )
    ENDIF
+   #endif
 
    IF ::hBrushBG <> NIL
       Win_DeleteObject( ::hBrushBG )
@@ -1319,7 +1327,6 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
       EXIT
 
    CASE WM_CAPTURECHANGED
-//hb_ToOutDebug( 'wm_CAPTURECHANGED' )
       EXIT
 
    CASE WM_MOUSEMOVE
@@ -1327,13 +1334,11 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
          IF !( ::lTracking )
             ::lTracking := Wvg_BeginMouseTracking( ::hWnd )
          ENDIF
-//hb_ToOutDebug( 'wm_mouseMOVE' )
       ENDIF
       EXIT
 
    CASE WM_MOUSEHOVER
       IF ::objType == objTypeScrollBar
-//hb_ToOutDebug( 'wm_mousehover' )
          IF ::oParent:objType == objTypeCrt
             WAPI_SetFocus( ::oParent:hWnd )
          ENDIF
@@ -1345,7 +1350,6 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
       IF ::objType == objTypeScrollBar
          ::lTracking := .f.
          IF ::oParent:objType == objTypeCrt
-//hb_ToOutDebug( 'wm_mouseleave' )
             WAPI_SetFocus( ::oParent:hWnd )
          ENDIF
       ENDIF
@@ -1355,6 +1359,25 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
    RETURN Win_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
 
 //----------------------------------------------------------------------//
+
+METHOD SetWindowProcCallback() CLASS WvgWindow
+   LOCAL bBlock := {|h,m,w,l| ::ControlWndProc( h,m,w,l ) }
+
+   #ifdef __BYASCALLBACK__
+   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   #else
+   //LOCAL pBlock
+   //pBlock := Wvg_GetWndProcPointer( bBlock )
+   //::nOldProc := WVG_SetWindowProcBlock( ::hWnd, pBlock )
+
+   ::nOldProc := WVG_SetWindowProcBlock( ::hWnd, bBlock )
+   #endif
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 #if 0
 FUNCTION hb_toOut( ... )
    RETURN hb_ToOutDebug( ... )

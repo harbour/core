@@ -135,9 +135,6 @@ CLASS WvgToolBar  INHERIT  WvgWindow //WvgActiveXControl
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   //::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    // + TBSTYLE_LIST   caption to the right, otherwise caption to the bottom
@@ -152,10 +149,12 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolB
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgToolBar
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF ::style == WVGTOOLBAR_STYLE_FLAT
       ::style := TBSTYLE_FLAT
+   ELSEIF ::style == WVGTOOLBAR_STYLE_VERTICAL
+      ::style := CCS_VERT
    ELSE
       ::style := 0
    ENDIF
@@ -184,8 +183,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
    // so the parent of toolbar will process them anyway
    // All other functionality should be default until ownerdraw is introduced.
    //
-   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   ::SetWindowProcCallback()
    #endif
 
    IF !empty( ::hWnd )
@@ -207,7 +205,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTo
 METHOD handleEvent( nMessage, aNM ) CLASS WvgToolBar
    LOCAL nObj, aNMMouse
 
-   //hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage  )
+   hb_ToOutDebug( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage  )
 
    SWITCH nMessage
 
@@ -278,7 +276,7 @@ METHOD destroy() CLASS WvgToolBar
       WAPI_ImageList_Destroy( ::hImageList )
    ENDIF
 
-   ::WvgWindow:destroy()
+   ::wvgWindow:destroy()
 
    RETURN NIL
 

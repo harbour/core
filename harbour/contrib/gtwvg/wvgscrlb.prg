@@ -152,9 +152,7 @@ CLASS WvgScrollBar  INHERIT  WvgWindow, DataRef
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD  //+ SBS_SIZEBOX //+ SBS_SIZEGRIP
    ::className   := "SCROLLBAR"
@@ -166,7 +164,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrol
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF ::type == WVGSCROLL_VERTICAL
       ::style += SBS_VERT
@@ -178,8 +176,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSc
 
    ::createControl()
 
-   ::nWndProc := HB_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   ::SetWindowProcCallback()
 
    ::setRange( ::range )
 
@@ -359,7 +356,7 @@ METHOD destroy() CLASS WvgScrollBar
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName( self ) )
 
-   ::WvgWindow:destroy()
+   ::wvgWindow:destroy()
 
    RETURN NIL
 

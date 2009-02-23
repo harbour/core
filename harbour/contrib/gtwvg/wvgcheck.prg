@@ -123,16 +123,11 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCh
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   IF ::visible
-      ::style += WS_VISIBLE
-   ENDIF
-
    ::oParent:AddChild( SELF )
 
    ::createControl()
 
-   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   ::SetWindowProcCallback()
 
    IF ::visible
       ::show()
@@ -188,13 +183,7 @@ METHOD destroy() CLASS WvgCheckBox
 
    hb_ToOutDebug( "          %s:destroy()", __objGetClsName() )
 
-   IF len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
-   ENDIF
-   IF Win_IsWindow( ::hWnd )
-      Win_DestroyWindow( ::hWnd )
-   ENDIF
-   HB_FreeCallback( ::nWndProc )
+   ::wvgWindow:destroy()
 
    RETURN NIL
 
