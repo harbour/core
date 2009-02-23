@@ -1930,7 +1930,7 @@ STATIC FUNCTION PathNormalize( cPath, lNormalize )
    cPath := DirAddPathSep( cPath )
 
    IF lNormalize
-      nLastSep := 0
+      nLastSep := iif( Left( cPath, 1 ) == hb_osPathSeparator(), 1, 0 )
       DO WHILE ( nNextSep := hb_At( hb_osPathSeparator(), cPath, nLastSep + 1 ) ) > 0
          SWITCH SubStr( cPath, nLastSep + 1, nNextSep - nLastSep - 1 )
          CASE ".."

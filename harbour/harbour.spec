@@ -606,7 +606,7 @@ rm -rf $RPM_BUILD_ROOT
 %verify(not md5 mtime) %config /etc/harbour/hb-charmap.def
 %{_bindir}/harbour
 %{_bindir}/hbpp
-%{_bindir}/hb-mkslib
+%{_bindir}/hb-mkdyn
 %{_bindir}/%{hb_pref}-build
 %{_bindir}/%{hb_pref}cc
 %{_bindir}/%{hb_pref}cmp

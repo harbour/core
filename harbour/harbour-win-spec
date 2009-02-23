@@ -289,7 +289,7 @@ rm -fR $RPM_BUILD_ROOT
 %defattr(-,root,root,755)
 %doc doc/%{readme}
 
-%{_bindir}/%{hb_pref}-mkslib
+%{_bindir}/%{hb_pref}-mkdyn
 %{_bindir}/%{hb_pref}-build
 %{_bindir}/%{hb_pref}cc
 %{_bindir}/%{hb_pref}cmp

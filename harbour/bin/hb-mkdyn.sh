@@ -80,7 +80,7 @@ trap cleanup EXIT &>/dev/null
 
 if [ "${SLIB_EXT}" != ".dylib" ]; then
 
-    OTMPDIR="/tmp/hb-mkslib-$$"
+    OTMPDIR="/tmp/hb-mkdyn-$$"
     rm -fR "${OTMPDIR}"
     mkdir -p "${OTMPDIR}"
     cd "${OTMPDIR}"

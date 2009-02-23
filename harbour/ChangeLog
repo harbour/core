@@ -8,6 +8,28 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-23 22:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed bug in path normalization which stripped leading
+      (root) path separator. Guy, could you please retest now?
+
+  - bin/hb-mkdll.bat
+  + bin/hb-mkdyn.bat
+  * bin/postinst.bat
+  * harbour-win-spec
+  * harbour-wce-spec
+  * harbour.spec
+  * bin/postinst.sh
+  * bin/hb-func.sh
+  - bin/hb-mkslib.sh
+  + bin/hb-mkdyn.sh
+    * Synced the name of these tools with similar function,
+      name also converted to 8.3.
+    ; NOTE: lib/dll creation functionality (which is the
+            difference now between .sh and .bat flavour) may
+            once in the future be implemented in hbmk2. See
+            existing TODO there.
+
 2009-02-23 19:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     % Normalizing autodetected paths when system locations

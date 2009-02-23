@@ -18,7 +18,7 @@ goto inst_%HB_ARCHITECTURE%
 :inst_win
 rem Windows post install part
 
-if "%OS%" == "Windows_NT" if "%HB_DLL%" == "yes" call %~dp0hb-mkdll.bat
+if "%OS%" == "Windows_NT" if "%HB_DLL%" == "yes" call %~dp0hb-mkdyn.bat
 
 echo @"%%~dp0hbmk2.exe" -hbcc  %%*> %HB_BIN_INSTALL%\hbcc.bat
 echo @"%%~dp0hbmk2.exe" -hbcmp %%*> %HB_BIN_INSTALL%\hbcmp.bat

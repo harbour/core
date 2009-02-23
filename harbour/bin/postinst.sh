@@ -60,21 +60,21 @@ then
     fi
 
     if [ -n "${HB_TOOLS_PREF}" ]; then
-        hb_mkslib="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkslib"
-        rm -f "${hb_mkslib}"
+        hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkdyn"
+        rm -f "${hb_mkdyn}"
         sed -e "s/^# HB_ARCHITECTURE=\"\"\$/HB_ARCHITECTURE=\"${HB_ARCHITECTURE}\"/g" \
             -e "s/^# CCPREFIX=\"\"\$/[ -n \"\${CCPREFIX}\" ] || CCPREFIX=\"${CCPREFIX}\"/g" \
-            "${hb_root}/bin/hb-mkslib.sh" > "${hb_mkslib}" && \
-        chmod 755 "${hb_mkslib}"
+            "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
+        chmod 755 "${hb_mkdyn}"
     elif [ "${HB_ARCHITECTURE}" = "sunos" ] || \
          [ "${HB_ARCHITECTURE}" = "hpux" ] || \
          ! which install &>/dev/null; then
-        rm -f "${HB_BIN_INSTALL}/hb-mkslib"
-        cp "${hb_root}/bin/hb-mkslib.sh" "${HB_BIN_INSTALL}/hb-mkslib" && \
-        chmod 755 "${HB_BIN_INSTALL}/hb-mkslib"
+        rm -f "${HB_BIN_INSTALL}/hb-mkdyn"
+        cp "${hb_root}/bin/hb-mkdyn.sh" "${HB_BIN_INSTALL}/hb-mkdyn" && \
+        chmod 755 "${HB_BIN_INSTALL}/hb-mkdyn"
     elif [ "${HB_ARCHITECTURE}" != "dos" ]; then
         # Without -c some OSes _move_ the file instead of copying it!
-        install -c -m 755 "${hb_root}/bin/hb-mkslib.sh" "${HB_BIN_INSTALL}/hb-mkslib"
+        install -c -m 755 "${hb_root}/bin/hb-mkdyn.sh" "${HB_BIN_INSTALL}/hb-mkdyn"
     fi
     mk_hbtools "${HB_BIN_INSTALL}" "$@"
     if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \

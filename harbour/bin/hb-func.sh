@@ -766,15 +766,15 @@ mk_hblibso()
         full_lib_name_mt="lib${name}mt-${hb_ver}${lib_ext}"
     fi
     if [ -n "${HB_TOOLS_PREF}" ]; then
-        hb_mkslib="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkslib"
+        hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkdyn"
     else
-        hb_mkslib="${HB_BIN_INSTALL}/hb-mkslib"
+        hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
     fi
     echo "Making ${full_lib_name}..."
-    ${hb_mkslib} ${full_lib_name} $LIBS ${linker_options}
+    ${hb_mkdyn} ${full_lib_name} $LIBS ${linker_options}
     if [ "${HB_ARCHITECTURE}" != "dos" ]; then
         echo "Making ${full_lib_name_mt}..."
-        ${hb_mkslib} ${full_lib_name_mt} $LIBSMT ${linker_options}
+        ${hb_mkdyn} ${full_lib_name_mt} $LIBSMT ${linker_options}
     fi
     for l in ${full_lib_name} ${full_lib_name_mt}
     do
