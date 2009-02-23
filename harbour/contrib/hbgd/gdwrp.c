@@ -55,6 +55,12 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 
+/* NOTE: Do some initialization required by the GD headers. */
+#if defined(HB_OS_WIN)
+   #define WIN32
+   #define BGDWIN32
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
