@@ -85,10 +85,11 @@
          Thank you. [vszakats] */
 
 /* TODO: Sync default c/linker switches with Harbour build systems. */
-/* TODO: Add support for library creation. */
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cross compilation support. */
+/* TODO: Add support for library creation. */
 /* TODO: Cleanup on variable names and compiler configuration. */
+/* TODO: Optimizations (speed/memory). */
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
@@ -807,7 +808,11 @@ FUNCTION Main( ... )
       s_cPROGNAME := FN_ExtSet( s_cPROGNAME )
    ENDIF
 
-   cPrefix := PathNormalize( s_cHB_LIB_INSTALL, lSysLoc )
+   IF lSysLoc
+      cPrefix := PathNormalize( s_cHB_LIB_INSTALL, lSysLoc )
+   ELSE
+      cPrefix := ""
+   ENDIF
 #if 1
    cPostfix := ""
    HB_SYMBOL_UNUSED( cDL_Version )
@@ -1032,7 +1037,7 @@ FUNCTION Main( ... )
            ( t_cARCH == "win" .AND. t_cCOMP == "rsxnt" )
 
          cLibPrefix := "-l"
-         cLibExt := NIL
+         cLibExt := ""
          cObjExt := ".o"
          cBin_CompC := "gcc"
          cOpt_CompC := "{LC} {LO} {LA} {LR} -O3 {FC} -I{DI} {DL}"
@@ -1047,7 +1052,7 @@ FUNCTION Main( ... )
             cOpt_CompC += " -Wl,-Map {OM}"
          ENDIF
          IF s_lSHARED
-            cOpt_CompC += " -L{DB}"
+            AAdd( s_aLIBPATH, "{DB}" )
          ENDIF
          IF t_cCOMP == "gcc"
             cOpt_CompC += " -mno-cygwin"
@@ -1187,7 +1192,7 @@ FUNCTION Main( ... )
                cOpt_CompC += " -Wl,-Map {OM}"
             ENDIF
             IF s_lSHARED
-               cOpt_CompC += " -L{DB}"
+               AAdd( s_aLIBPATH, "{DB}" )
             ENDIF
             cOpt_CompC += " {LL}"
             aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
@@ -1521,7 +1526,7 @@ FUNCTION Main( ... )
       /* Merge lib lists. */
       s_aLIB := ArrayAJoin( { s_aLIBHB, s_aLIBUSER, s_aLIB3RD, s_aLIBSYS } )
       /* Dress lib names. */
-      s_aLIB := ListCookLib( s_aLIB, cDynLibExt, cLibPrefix, cLibExt )
+      s_aLIB := ListCookLib( s_aLIB, cLibPrefix, cLibExt )
       /* Dress obj names. */
       s_aOBJ := ListDirExt( ArrayJoin( s_aPRG, s_aC ), "", cObjExt )
       s_aOBJUSER := ListCook( s_aOBJUSER, NIL, cObjExt )
@@ -1591,9 +1596,9 @@ FUNCTION Main( ... )
             cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cObjPrefix ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OE}"  , PathSepToTarget( s_cPROGNAME ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OM}"  , PathSepToTarget( s_cMAPNAME ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{DB}"  , s_cHB_BIN_INSTALL )
             cOpt_CompC := StrTran( cOpt_CompC, "{DI}"  , s_cHB_INC_INSTALL )
-            cOpt_CompC := StrTran( cOpt_CompC, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
 
             cOpt_CompC := AllTrim( cOpt_CompC )
 
@@ -1645,8 +1650,8 @@ FUNCTION Main( ... )
                                                     GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
          cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( s_cPROGNAME ) )
          cOpt_Link := StrTran( cOpt_Link, "{OM}"  , PathSepToTarget( s_cMAPNAME ) )
-         cOpt_Link := StrTran( cOpt_Link, "{DB}"  , s_cHB_BIN_INSTALL )
          cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
+         cOpt_Link := StrTran( cOpt_Link, "{DB}"  , s_cHB_BIN_INSTALL )
 
          cOpt_Link := AllTrim( cOpt_Link )
 
@@ -1863,28 +1868,36 @@ STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew )
    RETURN array
 
 /* Forms the list of libs as to appear on the command line */
-STATIC FUNCTION ListCookLib( arraySrc, cDynLibExt, cPrefix, cExtNew )
+STATIC FUNCTION ListCookLib( arraySrc, cPrefix, cExtNew )
    LOCAL array := AClone( arraySrc )
-   LOCAL cDir, cName, cExt
+   LOCAL cDir
    LOCAL cLibName
 
-   FOR EACH cLibName IN array
-      hb_FNameSplit( cLibName, @cDir, @cName, @cExt )
-      IF !( cExt == cDynLibExt )
-         IF cExtNew != NIL
-            cExt := cExtNew
-         ENDIF
-         IF t_cCOMP $ "gcc|gpp|mingw|djgpp|rsxnt|rsx32"
-            IF Left( cName, 3 ) == "lib"
-               cName := SubStr( cName, 4 )
+   IF t_cCOMP $ "gcc|gpp|mingw|djgpp|rsxnt|rsx32"
+      FOR EACH cLibName IN array
+         hb_FNameSplit( cLibName, @cDir )
+         IF Empty( cDir )
+            IF Left( cLibName, 3 ) == "lib"
+               cLibName := SubStr( cLibName, 4 )
+            ENDIF
+            IF cPrefix != NIL
+               cLibName := cPrefix + cLibName
+            ENDIF
+            IF cExtNew != NIL
+               cLibName := FN_ExtSet( cLibName, cExtNew )
             ENDIF
          ENDIF
+      NEXT
+   ELSE
+      FOR EACH cLibName IN array
          IF cPrefix != NIL
-            cName := cPrefix + cName
+            cLibName := cPrefix + cLibName
          ENDIF
-         cLibName := hb_FNameMerge( cDir, cName, cExtNew )
-      ENDIF
-   NEXT
+         IF cExtNew != NIL
+            cLibName := FN_ExtSet( cLibName, cExtNew )
+         ENDIF
+      NEXT
+   ENDIF
 
    RETURN array
 

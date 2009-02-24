@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 01:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Tweaked to only include path in shared lib name on *nixes,
+      if Harbour is installed in a system location.
+    ! Forgot to add bin dir to lib path in shared mode in gcc/*nix.
+    ! Fixed macro substitution order for {DB}.
+    ! Tweaks for library name forming on gcc family.
+      The applied rule is to prepend -l, delete lib prefix and extension,
+      when the libname doesn't have a path in it, if it has, the libname
+      will be passed as is (without -l, with lib prefix and extension).
+
 2009-02-23 23:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbgd/gdwrp.c
     ! Added required Windows initialization for GD headers.
