@@ -70,6 +70,8 @@
 #define HB_VERSION_BUILD_DATE_STR   11
 #define HB_VERSION_BUILD_DATE       12
 #define HB_VERSION_BUILD_TIME       13
+#define HB_VERSION_BUILD_ARCH       22
+#define HB_VERSION_BUILD_COMP       23 /* Last. Please continue from here. */
 #define HB_VERSION_FLAG_PRG         14
 #define HB_VERSION_FLAG_C           15
 #define HB_VERSION_FLAG_LINKER      16

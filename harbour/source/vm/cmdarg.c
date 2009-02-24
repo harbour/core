@@ -603,3 +603,23 @@ const char * hb_verFlagsPRG( void )
    return "";
 #endif
 }
+
+/* build time Harbour architecture setting */
+const char * hb_verHB_ARCH( void )
+{
+#ifdef HB_ARCHITECTURE
+   return HB_ARCHITECTURE;
+#else
+   return "";
+#endif
+}
+
+/* build time Harbour compiler setting */
+const char * hb_verHB_COMP( void )
+{
+#ifdef HB_COMPILER
+   return HB_COMPILER;
+#else
+   return "";
+#endif
+}

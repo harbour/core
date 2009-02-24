@@ -80,6 +80,8 @@ HB_FUNC( HB_VERSION )
    case HB_VERSION_CHANGELOG_ID:   hb_retc_const( hb_verSvnChangeLogID() ); break;
    case HB_VERSION_PCODE_VER:      hb_retni( HB_PCODE_VER ); break;
    case HB_VERSION_PCODE_VER_STR:  hb_retc_buffer( hb_verPCode() ); break;
+   case HB_VERSION_BUILD_ARCH:     hb_retc_const( hb_verHB_ARCH() ); break;
+   case HB_VERSION_BUILD_COMP:     hb_retc_const( hb_verHB_COMP() ); break;
    case HB_VERSION_BUILD_DATE_STR: hb_retc_buffer( hb_verBuildDate() ); break;
    case HB_VERSION_BUILD_DATE:
    {

@@ -8,6 +8,25 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 21:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbapi.h
+  * source/pp/hbpp.c
+  * source/vm/cmdarg.c
+  * source/main/harbour.c
+    + Added hb_verHB_ARCH(), hb_verHB_COMP() to
+      retrieve build time HB_ARCHITECTURE and HB_COMPILER
+      settings.
+
+  * include/hbver.ch
+  * source/rtl/version.c
+    + Added new hb_version() information:
+      hb_version( HB_VERSION_BUILD_ARCH )
+      hb_version( HB_VERSION_BUILD_COMP )
+
+  * utils/hbmk2/hbmk2.prg
+    + Using above hb_version() values to find out the exact
+      build time architecture/compiler instead of guessing.
+
 2009-02-24 18:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/vm/fm.c
     ! Fixed compilation error in dlmalloc with pocc64.

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * 
+ *
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -605,6 +605,26 @@ const char * hb_verFlagsPRG( void )
 {
 #ifdef HB_VER_HB_USER_PRGFLAGS
    return HB_VER_HB_USER_PRGFLAGS;
+#else
+   return "";
+#endif
+}
+
+/* build time Harbour architecture setting */
+const char * hb_verHB_ARCH( void )
+{
+#ifdef HB_ARCHITECTURE
+   return HB_ARCHITECTURE;
+#else
+   return "";
+#endif
+}
+
+/* build time Harbour compiler setting */
+const char * hb_verHB_COMP( void )
+{
+#ifdef HB_COMPILER
+   return HB_COMPILER;
 #else
    return "";
 #endif

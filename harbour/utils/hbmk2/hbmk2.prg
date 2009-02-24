@@ -241,7 +241,6 @@ FUNCTION Main( ... )
    LOCAL fhnd
    LOCAL lNOHBP
    LOCAL lSysLoc
-   LOCAL cSelfCOMP
    LOCAL cPrefix
    LOCAL cPostfix
 
@@ -253,6 +252,7 @@ FUNCTION Main( ... )
 
    LOCAL cDir, cName, cExt
 
+   LOCAL cSelfCOMP    := hb_Version( HB_VERSION_BUILD_COMP )
    LOCAL cSelfFlagPRG := hb_Version( HB_VERSION_FLAG_PRG )
    LOCAL cSelfFlagC   := hb_Version( HB_VERSION_FLAG_C )
    LOCAL cSelfFlagL   := hb_Version( HB_VERSION_FLAG_LINKER )
@@ -347,23 +347,7 @@ FUNCTION Main( ... )
          t_cARCH := "dos"
          EXIT
       OTHERWISE
-#if defined( __PLATFORM__BSD )
-         t_cARCH := "bsd"
-#elif defined( __PLATFORM__DARWIN )
-         t_cARCH := "darwin"
-#elif defined( __PLATFORM__DOS )
-         t_cARCH := "dos"
-#elif defined( __PLATFORM__HPUX )
-         t_cARCH := "hpux"
-#elif defined( __PLATFORM__LINUX )
-         t_cARCH := "linux"
-#elif defined( __PLATFORM__OS2 )
-         t_cARCH := "os2"
-#elif defined( __PLATFORM__SUNOS )
-         t_cARCH := "sunos"
-#elif defined( __PLATFORM__WINDOWS )
-         t_cARCH := "win"
-#endif
+         t_cARCH := hb_Version( HB_VERSION_BUILD_ARCH )
       ENDSWITCH
       IF ! Empty( t_cARCH )
          IF t_lInfo
@@ -446,13 +430,11 @@ FUNCTION Main( ... )
       IF Len( aCOMPSUP ) == 1
          t_cCOMP := aCOMPSUP[ 1 ]
       ELSEIF t_cARCH == "linux" .OR. t_cCOMP == "bld"
-         t_cCOMP := SelfCOMP()
+         t_cCOMP := cSelfCOMP
          IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
             t_cCOMP := NIL
          ENDIF
       ELSEIF ! Empty( aCOMPDET )
-         /* Which compiler was used to compile ourselves? */
-         cSelfCOMP := SelfCOMP()
          /* Skip it for msvc, as it creates problems for other compilers. */
          IF !( cSelfCOMP $ "msvc|msvc64" )
             /* Look for this compiler first */
@@ -1779,26 +1761,6 @@ STATIC FUNCTION SetupForGT( cGT, /* @ */ s_cGT, /* @ */ s_lGUI )
    ENDIF
 
    RETURN .F.
-
-STATIC FUNCTION SelfCOMP()
-   LOCAL cCompiler := hb_Compiler()
-
-   /* Order is significant */
-   IF     "Microsoft Visual C" $ cCompiler ; RETURN iif( "(64-bit)" $ cCompiler, "msvc64", "msvc" )
-   ELSEIF "Borland"            $ cCompiler ; RETURN "bcc32"
-   ELSEIF "CodeGear"           $ cCompiler ; RETURN "bcc32"
-   ELSEIF "DJGPP"              $ cCompiler ; RETURN "djgpp"
-   ELSEIF "MinGW"              $ cCompiler ; RETURN "mingw"
-   ELSEIF "GNU C++"            $ cCompiler ; RETURN iif( t_cARCH == "linux", "gpp", "gcc" )
-   ELSEIF "GNU C"              $ cCompiler ; RETURN "gcc"
-   ELSEIF "Watcom C++"         $ cCompiler ; RETURN "owatcom"
-   ELSEIF "Watcom C"           $ cCompiler ; RETURN "owatcom"
-   ELSEIF "Pelles ISO C"       $ cCompiler ; RETURN iif( "(64-bit)" $ cCompiler, "pocc64", "pocc" )
-   ELSEIF "Digital Mars"       $ cCompiler ; RETURN "dmc"
-   ELSEIF "(XCC)"              $ cCompiler ; RETURN "xcc"
-   ENDIF
-
-   RETURN ""
 
 STATIC FUNCTION FindInPath( cFileName )
    LOCAL cDir

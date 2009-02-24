@@ -367,19 +367,19 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
          " */\n\n" );
 
       if( iSVNID )
-         fprintf( fout, "\n#define HB_VER_SVNID    %d\n", iSVNID );
+         fprintf( fout, "\n#define HB_VER_SVNID             %d\n", iSVNID );
 
       if( szChangeLogID )
       {
          pszEscaped = hb_pp_escapeString( szChangeLogID );
-         fprintf( fout, "\n#define HB_VER_CHLID    \"%s\"\n", pszEscaped );
+         fprintf( fout, "\n#define HB_VER_CHLID             \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
       }
 
       if( szLastEntry )
       {
          pszEscaped = hb_pp_escapeString( szLastEntry );
-         fprintf( fout, "\n#define HB_VER_LENTRY   \"%s\"\n", pszEscaped );
+         fprintf( fout, "\n#define HB_VER_LENTRY            \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
       }
 
@@ -396,7 +396,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
       if( pszEnv )
       {
          pszEscaped = hb_pp_escapeString( pszEnv );
-         fprintf( fout, "\n#define HB_VER_HB_USER_LDFLAGS    \"%s\"\n", pszEscaped );
+         fprintf( fout, "\n#define HB_VER_HB_USER_LDFLAGS   \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }
@@ -406,6 +406,24 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
       {
          pszEscaped = hb_pp_escapeString( pszEnv );
          fprintf( fout, "\n#define HB_VER_HB_USER_PRGFLAGS  \"%s\"\n", pszEscaped );
+         hb_xfree( pszEscaped );
+         hb_xfree( pszEnv );
+      }
+
+      pszEnv = hb_getenv( "HB_ARCHITECTURE" );
+      if( pszEnv )
+      {
+         pszEscaped = hb_pp_escapeString( pszEnv );
+         fprintf( fout, "\n#define HB_ARCHITECTURE          \"%s\"\n", pszEscaped );
+         hb_xfree( pszEscaped );
+         hb_xfree( pszEnv );
+      }
+
+      pszEnv = hb_getenv( "HB_COMPILER" );
+      if( pszEnv )
+      {
+         pszEscaped = hb_pp_escapeString( pszEnv );
+         fprintf( fout, "\n#define HB_COMPILER              \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }
