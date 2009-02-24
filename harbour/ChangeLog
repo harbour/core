@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 17:07 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.sh
+    + Added 'hb-mkslib' creation for compatibility.
+      NOTE: This name is deprecated and will be removed in next
+            major release (1.2). Update your environment to
+            use the name: 'hb_mkdyn'.
+
 2009-02-24 16:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fixed last minute typo.
