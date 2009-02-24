@@ -842,42 +842,43 @@ FUNCTION Main( ... )
    IF Len( s_aPRG ) > 0
 
 #if defined( HBMK_INTEGRATED_COMPILER )
-         aCommand := ArrayAJoin( { s_aPRG,;
-                                   { "-i" + s_cHB_INC_INSTALL },;
-                                   ListToArray( cSelfFlagPRG ),;
-                                   ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
-                                   s_aOPTPRG } )
+      aCommand := ArrayAJoin( { s_aPRG,;
+                                { "-i" + s_cHB_INC_INSTALL },;
+                                ListToArray( cSelfFlagPRG ),;
+                                ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
+                                s_aOPTPRG } )
 
-         IF s_lTRACE
-            OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() + ArrayToList( aCommand ) + hb_osNewLine() )
-         ENDIF
+      IF s_lTRACE
+         OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() + ArrayToList( aCommand ) + hb_osNewLine() )
+      ENDIF
 
-         IF ( tmp := hb_compile( "", aCommand ) ) != 0
-            OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() + ArrayToList( aCommand ) + hb_osNewLine() )
-            PauseForKey()
-            RETURN 6
-         ENDIF
+      IF ( tmp := hb_compile( "", aCommand ) ) != 0
+         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() + ArrayToList( aCommand ) + hb_osNewLine() )
+         PauseForKey()
+         RETURN 6
+      ENDIF
 #else
-         cCommand := DirAddPathSep( s_cHB_BIN_INSTALL ) +;
-                     cBin_CompPRG +;
-                     " " + ArrayToList( s_aPRG ) +;
-                     " -i" + s_cHB_INC_INSTALL +;
-                     iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
-                     iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
-                     iif( ! Empty( s_aOPTPRG ), " " + ArrayToList( s_aOPTPRG ), "" )
+      cCommand := DirAddPathSep( s_cHB_BIN_INSTALL ) +;
+                  cBin_CompPRG +;
+                  " " + ArrayToList( s_aPRG ) +;
+                  " -i" + s_cHB_INC_INSTALL +;
+                  iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
+                  iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
+                  iif( ! Empty( s_aOPTPRG ), " " + ArrayToList( s_aOPTPRG ), "" )
 
-         cCommand := AllTrim( cCommand )
+      cCommand := AllTrim( cCommand )
 
-         IF s_lTRACE
-            OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
-         ENDIF
+      IF s_lTRACE
+         OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+      ENDIF
 
-         IF ( tmp := hb_run( cCommand ) ) != 0
-            OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
-            PauseForKey()
-            RETURN 6
-         ENDIF
+      IF ( tmp := hb_run( cCommand ) ) != 0
+         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+         PauseForKey()
+         RETURN 6
+      ENDIF
 #endif
+   ENDIF
 
    IF ! lStopAfterHarbour
 
