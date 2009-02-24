@@ -1,13 +1,7 @@
 #
 # $Id$
 #
-# The Harbour Project
-# GNU MAKE file for Pelles ISO C Compiler
-
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/pocc.cf
 
 CPPFLAGS += /Tamd64-coff
-
-include $(TOP)$(ROOT)config/rules.cf

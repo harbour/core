@@ -134,6 +134,8 @@
 #     pragma warn -rch
 #  elif defined( HB_OS_WIN_CE ) && defined( __POCC__ )
 #     define ABORT TerminateProcess( GetCurrentProcess(), 0 )
+#  elif defined( __POCC__ ) && !defined( InterlockedCompareExchangePointer )
+#     define InterlockedCompareExchangePointer
 #  elif defined( _MSC_VER ) && !defined( USE_DL_PREFIX )
 #     define USE_DL_PREFIX
 #  endif

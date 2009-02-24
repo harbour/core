@@ -8,6 +8,27 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 18:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/vm/fm.c
+    ! Fixed compilation error in dlmalloc with pocc64.
+
+  * config/win/pocc64.cf
+  * config/win/msvc64.cf
+    * Cleanup.
+
+  * config/win/gcc.cf
+    ! Added gdi32 to system lib list.
+
+  * config/win/mingw.cf
+  * config/win/mingwce.cf
+    * Minor sync with each other.
+    % Two duplicated lines removed from mingwce. I hope these
+      weren't intentional.
+      ---
+      AR = $(CCPREFIX)ar
+      ARFLAGS = $(HB_USER_AFLAGS)
+      ---
+
 2009-02-24 17:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/win/msvcce.cf
     ! Fixed another cl.exe occurence to be compatible with
@@ -60,7 +81,7 @@
 2009-02-24 13:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/win/msvc.cf
   * config/win/msvc64.cf
-    ! Fixed to previous.
+    ! Fixes to previous.
 
 2009-02-24 13:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.bat

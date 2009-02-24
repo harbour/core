@@ -123,9 +123,6 @@ ARFLAGS = $(HB_USER_AFLAGS)
 
 RANLIB = $(CCPREFIX)ranlib
 
-AR = $(CCPREFIX)ar
-ARFLAGS = $(HB_USER_AFLAGS)
-
 ifeq ($(SHLVL),) # COMMAND.COM - length of command line is limited
 ifneq ($(OS),Windows_NT)
 AR_RULE = $(create_library)
