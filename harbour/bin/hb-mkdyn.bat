@@ -230,4 +230,42 @@ goto END
 
 :NOT_BCC32
 
+if not "%HB_COMPILER%" == "owatcom" goto NOT_OWATCOM
+
+echo Making .dlls for %HB_COMPILER%...
+
+md _dll
+cd _dll
+
+echo.> _hbsst.txt
+echo.> _hbsmt.txt
+for %%f in (%HB_DLL_LIBS%) do (
+   echo FILE '%HB_LIB_INSTALL%\%%f.lib'>> _hbsst.txt
+   echo FILE '%HB_LIB_INSTALL%\%%f.lib'>> _hbsmt.txt
+)
+
+copy /b /y "%HB_LIB_INSTALL%\%HB_DLL_LIBS_ST%.lib" . && wlib -b "%HB_DLL_LIBS_ST%.lib" - mainstd.obj
+copy /b /y "%HB_LIB_INSTALL%\%HB_DLL_LIBS_MT%.lib" . && wlib -b "%HB_DLL_LIBS_MT%.lib" - mainstd.obj
+
+echo FILE '%HB_DLL_LIBS_ST%.lib'>> _hbsst.txt
+echo FILE '%HB_DLL_LIBS_MT%.lib'>> _hbsmt.txt
+
+set _DST_NAME_ST=%HB_BIN_INSTALL%\harbour-%HB_DLL_VERSION%-ow.dll
+set _DST_NAME_MT=%HB_BIN_INSTALL%\harbourmt-%HB_DLL_VERSION%-ow.dll
+
+echo Making %_DST_NAME_ST%... && wlink SYS NT_DLL NAME %_DST_NAME_ST% OP IMPLIB @_hbsst.txt LIB user32.lib, wsock32.lib, advapi32.lib, gdi32.lib > nul
+echo Making %_DST_NAME_MT%... && wlink SYS NT_DLL NAME %_DST_NAME_MT% OP IMPLIB @_hbsmt.txt LIB user32.lib, wsock32.lib, advapi32.lib, gdi32.lib > nul
+
+del %HB_DLL_LIBS_ST%.lib
+del %HB_DLL_LIBS_MT%.lib
+
+del _hbsst.txt
+del _hbsmt.txt
+cd ..
+rmdir _dll
+
+goto END
+
+:NOT_OWATCOM
+
 :END
