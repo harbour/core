@@ -414,6 +414,7 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "ml64"   ) != NIL }, "msvc64"  },;
                     { {|| FindInPath( "cl"     ) != NIL }, "msvc"    },;
                     { {|| FindInPath( "bcc32"  ) != NIL }, "bcc32"   },;
+                    { {|| FindInPath( "porc64" ) != NIL }, "pocc64"  },;
                     { {|| FindInPath( "pocc"   ) != NIL }, "pocc"    },;
                     { {|| FindInPath( "dmc"    ) != NIL }, "dmc"     },;
                     { {|| FindInPath( "icc"    ) != NIL }, "icc"     },;
