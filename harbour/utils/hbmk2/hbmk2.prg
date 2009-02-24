@@ -333,6 +333,7 @@ FUNCTION Main( ... )
                should be automatically extracted from a comp/arch matrix. */
       SWITCH t_cCOMP
       CASE "msvc"
+      CASE "msvc64"
       CASE "bcc32"
       CASE "xcc"
       CASE "pocc"
@@ -410,6 +411,7 @@ FUNCTION Main( ... )
          owatcom also keeps a cl.exe in it's binary dir. */
       aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "mingw"   },; /* TODO: Add full support for g++ */
                     { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
+                    { {|| FindInPath( "ml64"   ) != NIL }, "msvc64"  },;
                     { {|| FindInPath( "cl"     ) != NIL }, "msvc"    },;
                     { {|| FindInPath( "bcc32"  ) != NIL }, "bcc32"   },;
                     { {|| FindInPath( "pocc"   ) != NIL }, "pocc"    },;
@@ -417,7 +419,7 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "icc"    ) != NIL }, "icc"     },;
                     { {|| FindInPath( "xcc"    ) != NIL }, "xcc"     } }
       /* TODO: "mingwce", "msvcce", "poccce" */
-      aCOMPSUP := { "gcc", "mingw", "msvc", "bcc32", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
+      aCOMPSUP := { "gcc", "mingw", "msvc", "msvc64", "bcc32", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
       t_cGTDEFAULT := "gtwin"
@@ -448,7 +450,7 @@ FUNCTION Main( ... )
          /* Which compiler was used to compile ourselves? */
          cSelfCOMP := SelfCOMP()
          /* Skip it for msvc, as it creates problems for other compilers. */
-         IF !( cSelfCOMP $ "msvc" )
+         IF !( cSelfCOMP $ "msvc|msvc64" )
             /* Look for this compiler first */
             FOR tmp := 1 TO Len( aCOMPDET )
                IF aCOMPDET[ tmp ][ 2 ] == cSelfCOMP .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
@@ -1322,7 +1324,7 @@ FUNCTION Main( ... )
                            "hbmainwin",;
                            "hbcommon" }
 
-      CASE t_cARCH == "win" .AND. t_cCOMP == "msvc"
+      CASE t_cARCH == "win" .AND. t_cCOMP $ "msvc|msvc64"
          IF s_lDEBUG
             AAdd( s_aOPTC, "-MTd -Zi" )
          ENDIF
@@ -1433,7 +1435,7 @@ FUNCTION Main( ... )
 
             /* NOTE: This has to be kept synced with Harbour HB_IMPORT values. */
             DO CASE
-            CASE !( t_cARCH == "win" ) .OR. t_cCOMP $ "msvc|rsxnt"
+            CASE !( t_cARCH == "win" ) .OR. t_cCOMP $ "msvc|msvc64|rsxnt"
                /* NOTE: MSVC gives the warning:
                         "LNK4217: locally defined symbol ... imported in function ..."
                         if using 'dllimport'. [vszakats] */
@@ -1760,7 +1762,7 @@ STATIC FUNCTION SelfCOMP()
    LOCAL cCompiler := hb_Compiler()
 
    /* Order is significant */
-   IF     "Microsoft Visual C" $ cCompiler ; RETURN "msvc"
+   IF     "Microsoft Visual C" $ cCompiler ; RETURN iif( "(64-bit)" $ cCompiler, "msvc64", "msvc" )
    ELSEIF "Borland"            $ cCompiler ; RETURN "bcc32"
    ELSEIF "CodeGear"           $ cCompiler ; RETURN "bcc32"
    ELSEIF "DJGPP"              $ cCompiler ; RETURN "djgpp"
@@ -1769,7 +1771,7 @@ STATIC FUNCTION SelfCOMP()
    ELSEIF "GNU C"              $ cCompiler ; RETURN "gcc"
    ELSEIF "Watcom C++"         $ cCompiler ; RETURN "owatcom"
    ELSEIF "Watcom C"           $ cCompiler ; RETURN "owatcom"
-   ELSEIF "Pelles ISO C"       $ cCompiler ; RETURN "pocc"
+   ELSEIF "Pelles ISO C"       $ cCompiler ; RETURN iif( "(64-bit)" $ cCompiler, "pocc64", "pocc" )
    ELSEIF "Digital Mars"       $ cCompiler ; RETURN "dmc"
    ELSEIF "(XCC)"              $ cCompiler ; RETURN "xcc"
    ENDIF
@@ -2581,7 +2583,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, gpp, owatcom, mingw, mingwce" ,;
       "    darwin : gcc" ,;
-      "    win    : gcc, mingw, msvc, bcc32, owatcom, pocc, pocc64," ,;
+      "    win    : gcc, mingw, msvc, msvc64, bcc32, owatcom, pocc, pocc64," ,;
       "             dmc, rsxnt, xcc, icc" ,; /* poccce, mingwce, msvcce */
       "    os2    : gcc, owatcom, icc" ,;
       "    dos    : gcc, djgpp, owatcom, rsx32" ,;

@@ -4,50 +4,6 @@
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
-OBJ_EXT = .obj
-EXE_EXT = .exe
-LIB_PREF =
-LIB_EXT = .lib
-
-CC = cl.exe
-CC_IN = -c
-CC_OUT = -Fo
-CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-CFLAGS = -nologo -W4 -wd4127 -Gs
-# -Zi
-
-ifeq ($(HB_VISUALC_VER_PRE80),)
-CFLAGS += -Ot2b1 -EHs-c-
-else
-CFLAGS += -Ogt2yb1p -GX- -G6 -YX
-endif
-
-LD = cl.exe
-LD_OUT = -Fe
-
-# Add all libraries specified in CONTRIBS and LIBS.
-ifeq ($(HB_LIB_COMPILE),)
-LINKPATHS += /link /libpath:$(LIB_DIR)
-else
-LINKPATHS += /link /libpath:$(HB_LIB_COMPILE)
-endif
-LINKLIBS += $(foreach lib, $(CONTRIBS), $(subst lib,,$(lib))$(LIB_EXT))
-LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
-
-# If LIBS specifies the rdd library, add all DB drivers.
-ifeq ($(findstring rdd,$(LIBS)),rdd)
-LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(drv)$(LIB_EXT))
-endif
-
-# Add the specified GT driver library
-ifeq ($(findstring rtl,$(LIBS)),rtl)
-LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
-endif
-
-LDFLAGS = $(LINKPATHS) user32.lib wsock32.lib advapi32.lib gdi32.lib
-
-AR = lib.exe
-ARFLAGS = $(HB_USER_AFLAGS)
-AR_RULE = $(AR) $(ARFLAGS) /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/msvc.cf
 
 include $(TOP)$(ROOT)config/rules.cf

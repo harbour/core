@@ -8,6 +8,26 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 13:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.bat
+  * make_gnu.bat
+  * make_gnu.sh
+  * utils/hbmk2/hbmk2.prg
+  * config/win/msvc.cf
+  + config/win/msvc64.cf
+    + Added separate HB_COMPILER for msvc x64 mode.
+      This allows to keep both the 32 and 64-bit builds
+      built in parallel.
+      NOTE: This is only supported with GNU Make.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added autodetection of msvc64.
+    + Added pocc64 and msvc64 support in self-detection
+      code.
+
+  * bin/hbmk.bat
+    + Added -n to stay compatible with former hbmk.bat.
+
 2009-02-24 10:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
     * Updates.

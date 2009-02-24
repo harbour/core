@@ -178,6 +178,7 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
     echo "        - rsxnt   (EMX/RSXNT/Windows GNU C, Windows 32-bit)"
     echo "        - icc     (IBM Visual Age C++, Windows 32-bit)"
     echo "        - msvc    (Microsoft Visual C++, Windows 32-bit)"
+    echo "        - msvc64  (Microsoft Visual C++, Windows 64-bit)"
     echo "      - When HB_ARCHITECTURE=linux"
     echo "        - gcc     (GNU C, 32-bit)"
     echo "      - When HB_ARCHITECTURE=os2"
