@@ -30,7 +30,11 @@ else
 CFLAGS += -Oxsb1 -EHsc -YX -GF
 endif
 
+ifeq ($(HB_VISUALC_VER_PRE80),)
 LD = cl.exe
+else
+LD = clarm.exe
+endif
 LD_OUT = -Fe
 
 # Add all libraries specified in CONTRIBS and LIBS.

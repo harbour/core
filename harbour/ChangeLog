@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 17:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/win/msvcce.cf
+    ! Fixed another cl.exe occurence to be compatible with
+      older MSVC versions.
+
 2009-02-24 17:07 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.sh
     + Added 'hb-mkslib' creation for compatibility.
