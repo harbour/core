@@ -607,6 +607,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/harbour
 %{_bindir}/hbpp
 %{_bindir}/hb-mkdyn
+%{_bindir}/hb-mkslib
 %{_bindir}/%{hb_pref}-build
 %{_bindir}/%{hb_pref}cc
 %{_bindir}/%{hb_pref}cmp
