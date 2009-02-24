@@ -326,12 +326,12 @@ static void hb_membufRemove( PHB_MEM_BUFFER pBuffer, ULONG ulLeft )
 }
 #endif
 
-static ULONG hb_membufLen( PHB_MEM_BUFFER pBuffer )
+static ULONG hb_membufLen( const PHB_MEM_BUFFER pBuffer )
 {
    return pBuffer->ulLen;
 }
 
-static char * hb_membufPtr( PHB_MEM_BUFFER pBuffer )
+static char * hb_membufPtr( const PHB_MEM_BUFFER pBuffer )
 {
    return pBuffer->pBufPtr;
 }

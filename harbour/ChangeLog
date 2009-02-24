@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 13:49 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbsetup.h
+    * minor modifications in macros
+    * disabled some GCC function attributes when ICC is used
+
+  * harbour/source/pp/ppcore.c
+    * casting
+
+  * harbour/source/vm/fm.c
+    * destroy dlmalloc mspace in hb_xexit() when USE_DL_PREFIX is used
+      otherwise call malloc_trim(0) to at least reduce allocated memory
+
 2009-02-24 13:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/win/msvc.cf
   * config/win/msvc64.cf

@@ -134,7 +134,7 @@
 #     pragma warn -rch
 #  elif defined( HB_OS_WIN_CE ) && defined( __POCC__ )
 #     define ABORT TerminateProcess( GetCurrentProcess(), 0 )
-#  elif defined( _MSC_VER )
+#  elif defined( _MSC_VER ) && !defined( USE_DL_PREFIX )
 #     define USE_DL_PREFIX
 #  endif
 #  include "dlmalloc.c"
@@ -793,6 +793,25 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
 #endif /* HB_FM_NEED_INIT */
 }
 
+#if defined( HB_FM_DL_ALLOC ) && defined( USE_DL_PREFIX )
+static void dlmalloc_destroy( void )
+{
+   if( ok_magic(gm) )
+   {
+      msegmentptr sp = &gm->seg;
+      while(sp != 0 )
+      {
+         char* base = sp->base;
+         size_t size = sp->size;
+         flag_t flag = sp->sflags;
+         sp = sp->next;
+         if( (flag & IS_MMAPPED_BIT) && !(flag & EXTERN_BIT) )
+            CALL_MUNMAP(base, size);
+      }
+   }
+}
+#endif
+
 /* Returns pointer to string containing printable version
    of pMem memory block */
 
@@ -908,6 +927,14 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
          fclose( hLog );
       }
    }
+
+#if defined( HB_FM_DL_ALLOC )
+#  if defined( USE_DL_PREFIX )
+      dlmalloc_destroy();
+#  else
+      malloc_trim( 0 );
+#  endif
+#endif
 }
 
 #else
@@ -915,6 +942,14 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xexit()"));
+
+#if defined( HB_FM_DL_ALLOC )
+#  if defined( USE_DL_PREFIX )
+      dlmalloc_destroy();
+#  else
+      malloc_trim( 0 );
+#  endif
+#endif
 }
 
 #endif

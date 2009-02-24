@@ -208,8 +208,9 @@
    #define HB_OS_ALLFILE_MASK           "*"
    #undef  HB_OS_DRIVE_DELIM_CHR
    #undef  HB_OS_HAS_DRIVE_LETTER
-   #define HB_OS_OPT_DELIM_LIST         "-"
    #define HB_OS_EOL_LEN                1
+   #define HB_OS_OPT_DELIM_LIST         "-"
+   #define HB_ISOPTSEP( c )             ( ( c ) == '-' )
 #else
    /* we are assuming here the DOS compatible OS */
    #define HB_OS_PATH_LIST_SEP_CHR      ';'
@@ -219,15 +220,14 @@
    #define HB_OS_ALLFILE_MASK           "*.*"
    #define HB_OS_DRIVE_DELIM_CHR        ':'
    #define HB_OS_HAS_DRIVE_LETTER
-   #define HB_OS_OPT_DELIM_LIST         "/-"
    #define HB_OS_EOL_LEN                2  /* # of bytes in End of Line marker */
+   #define HB_OS_OPT_DELIM_LIST         "/-"
+   #define HB_ISOPTSEP( c )             ( ( c ) == '-' || ( c ) == '/' )
 #endif
 
 #ifndef _POSIX_PATH_MAX
    #define _POSIX_PATH_MAX    255
 #endif
-
-#define HB_ISOPTSEP( c ) ( strchr( HB_OS_OPT_DELIM_LIST, ( c ) ) != NULL )
 
 /* NOTE:
    Compiler                                _MSC_VER value
@@ -407,13 +407,15 @@
 #  else
    #define HB_NORETURN_ATTR
 #  endif
-#  if ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1 ) )
+#  if ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1 ) ) && \
+      !defined( __ICC )
    #define HB_FLATTEN_ATTR \
                      __attribute__ (( flatten ))
 #  else
    #define HB_FLATTEN_ATTR
 #  endif
-#  if ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 3 ) )
+#  if ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 3 ) ) && \
+      !defined( __ICC )
    #define HB_ALLOC_SIZE_ATTR( _nParam ) \
                      __attribute__ (( alloc_size (_nParam)))
 #  else
