@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 10:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+    * Updates.
+    ! Correction made to entry:
+      2009-02-24 01:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+
+  * utils/hbmk2/hbmk2.prg
+    * Attempt to add .dll support for win/owatcom.
+    ; TOFIX: This happens:
+             Warning! W1023: no starting address found, using 00401000
+
 2009-02-24 02:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.bat
     + Added Open Watcom .dll building.
@@ -16,8 +27,9 @@
 2009-02-24 01:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Tweaked to only include path in shared lib name on *nixes,
-      if Harbour is installed in a system location.
+      if Harbour is installed on a system location.
     ! Forgot to add bin dir to lib path in shared mode in gcc/*nix.
+      (correction: this wasn't needed, and wasn't finally committed)
     ! Fixed macro substitution order for {DB}.
     ! Tweaks for library name forming on gcc family.
       The applied rule is to prepend -l, delete lib prefix and extension,
@@ -6382,7 +6394,7 @@
     * MemoRead() -> hb_MemoRead()
 
   * contrib/hbct/files.c
-    ; TOFIX: Many functions here are possibly not thread safe.
+    ; TOFIX: Many functions here are possibly not thread safe. [DONE]
     ; TOFIX: Calling hb_fsFindClose() at app exit (and thus keeping
              the FF handles open for the whole app lifetime) doesn't
              play well with server side apps (as the app may run for

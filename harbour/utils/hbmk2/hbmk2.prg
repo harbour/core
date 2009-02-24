@@ -1163,6 +1163,13 @@ FUNCTION Main( ... )
             AAdd( s_aOPTL, "OP MAP" )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32" } )
+         /* TOFIX: The two build systems should generate the same .dll name, otherwise
+                   we can only be compatible with one of them. non-GNU is the common choice here. */
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-ow",;
+                                       "harbour-" + cDL_Version_NonGNU + "-ow" ),;
+                           "hbmainstd",;
+                           "hbmainwin",;
+                           "hbcommon" }
 
          IF Len( s_aRESSRC ) > 0
             IF Len( s_aRESSRC ) == 1
