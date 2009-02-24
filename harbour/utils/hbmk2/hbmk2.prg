@@ -2046,7 +2046,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
    LOCAL cDir
    LOCAL cFileName
 
-   LOCAL aCFGDirs := { hb_DirBase() }
+   LOCAL aCFGDirs
 
    #if defined( __PLATFORM__WINDOWS ) .OR. ;
        defined( __PLATFORM__DOS ) .OR. ;
