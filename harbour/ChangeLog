@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 22:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    * On *nix platform hbmk.cfg is now first checked for
+      in /usr/local/etc, then in /etc and after that in
+      hbmk2's dir. Please advise if there are other such
+      global config dirs to check on different platforms.
+
 2009-02-24 22:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * harbour-win-spec
   * harbour-wce-spec

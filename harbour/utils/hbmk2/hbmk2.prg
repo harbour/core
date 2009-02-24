@@ -2048,6 +2048,14 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
 
    LOCAL aCFGDirs := { hb_DirBase() }
 
+   #if defined( __PLATFORM__WINDOWS ) .OR. ;
+       defined( __PLATFORM__DOS ) .OR. ;
+       defined( __PLATFORM__OS2 )
+      aCFGDirs := { hb_DirBase() }
+   #else
+      aCFGDirs := { "/usr/local/etc", "/etc", hb_DirBase() }
+   #endif
+
    FOR EACH cDir IN aCFGDirs
       IF hb_FileExists( cFileName := ( DirAddPathSep( cDir ) + HBMK_CFG_NAME ) )
          IF t_lInfo
@@ -2552,7 +2560,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - Regular Harbour options are also accepted." ,;
       "  - Multiple -l, -L and <script> parameters are accepted." ,;
       "  - " + HBMK_CFG_NAME + " option file in hbmk directory is always processed if it" ,;
-      "    exists. The format is the same as for .hbp files." ,;
+      "    exists. On *nix platforms, /usr/local/etc then /etc are checked" ,;
+      "    before the hbmk directory. The file format is .hbp." ,;
       "  - .hbp option files in current dir are automatically processed." ,;
       "  - .hbp options (they should come in separate lines):" ,;
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
