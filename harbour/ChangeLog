@@ -8,6 +8,22 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 22:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * harbour-win-spec
+  * harbour-wce-spec
+  * harbour.spec
+  * bin/hb-func.sh
+  * utils/hbmk2/hbmk2.prg
+    * hbmkcfg.hbp file renamed to the clearer: hbmk.cfg
+      Same rules apply, the format is .hbp, which is also
+      made clear on the hbmk2 help screen.
+
+      hbmk2 and hbmk.cfg now effecticely replaces harbour.cfg,
+      which can now be considered obsolete, along with the
+      /go option. If someone knows some real-life tasks
+      which can be done with /go+harbour.cfg, but cannot
+      with hbmk2, please speak up.
+
 2009-02-24 22:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * harbour-win-spec
   * harbour-wce-spec

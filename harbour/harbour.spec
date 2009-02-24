@@ -616,7 +616,7 @@ rm -rf $RPM_BUILD_ROOT
 #%{_bindir}/hbtest
 %{_bindir}/hbrun
 %{_bindir}/hbi18n
-%{_bindir}/hbmkcfg.hbp
+%{_bindir}/hbmk.cfg
 %{_bindir}/hbmk2
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}

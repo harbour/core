@@ -2022,7 +2022,7 @@ STATIC FUNCTION FN_ExtSet( cFileName, cExt )
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
-#define HBMK_CFG_NAME  "hbmkcfg.hbp"
+#define HBMK_CFG_NAME  "hbmk.cfg"
 
 STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
                                  /* @ */ aLIBUSER,;
@@ -2046,10 +2046,10 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
    LOCAL cDir
    LOCAL cFileName
 
-   LOCAL aCFGDirs := { DirAddPathSep( hb_DirBase() ) }
+   LOCAL aCFGDirs := { hb_DirBase() }
 
    FOR EACH cDir IN aCFGDirs
-      IF hb_FileExists( cFileName := ( cDir + HBMK_CFG_NAME ) )
+      IF hb_FileExists( cFileName := ( DirAddPathSep( cDir ) + HBMK_CFG_NAME ) )
          IF t_lInfo
             OutStd( "hbmk: Processing configuration: " + cFileName + hb_osNewLine() )
          ENDIF
@@ -2552,7 +2552,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - Regular Harbour options are also accepted." ,;
       "  - Multiple -l, -L and <script> parameters are accepted." ,;
       "  - " + HBMK_CFG_NAME + " option file in hbmk directory is always processed if it" ,;
-      "    exists." ,;
+      "    exists. The format is the same as for .hbp files." ,;
       "  - .hbp option files in current dir are automatically processed." ,;
       "  - .hbp options (they should come in separate lines):" ,;
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
