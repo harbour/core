@@ -10,6 +10,19 @@
 
 2009-02-24 15:07 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
+  * utils/hbmk2/Makefile
+  * common.mak
+    + Added -DHBMK_INTEGRATED_COMPILER compile time option
+      to enable integrated Harbour compiler. Experimental,
+      please test. This results is bigger executable (obviously)
+      but may be more efficient on some platforms.
+    % Using .exe extension for external commands on non-*nix.
+    * Using slightly different format to echo commands on
+      screen, they are now printed in a new line and they are
+      not put between quotes.
+
+2009-02-24 15:07 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
     + Added autodetection for pocc64.
 
 2009-02-24 13:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)

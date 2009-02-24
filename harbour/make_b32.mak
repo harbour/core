@@ -564,6 +564,8 @@ $(**: = ^
 )
 $(STANDARD_STATIC_CLIBS)
 $(MINIMAL_STATIC_HBLIBS)
+$(COMPILER_LIB)
+$(PP_LIB)
 !
 #**********************************************************
 

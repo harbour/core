@@ -225,6 +225,9 @@ FUNCTION Main( ... )
    LOCAL cResExt
 
    LOCAL cCommand
+#if defined( HBMK_INTEGRATED_COMPILER )
+   LOCAL aCommand
+#endif
    LOCAL cOpt_CompC
    LOCAL cOpt_Link
    LOCAL cOpt_Res
@@ -838,26 +841,43 @@ FUNCTION Main( ... )
 
    IF Len( s_aPRG ) > 0
 
-      cCommand := DirAddPathSep( s_cHB_BIN_INSTALL ) +;
-                  cBin_CompPRG +;
-                  " " + ArrayToList( s_aPRG ) +;
-                  " -i" + s_cHB_INC_INSTALL +;
-                  iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
-                  iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
-                  iif( ! Empty( s_aOPTPRG ), " " + ArrayToList( s_aOPTPRG ), "" )
+#if defined( HBMK_INTEGRATED_COMPILER )
+         aCommand := ArrayAJoin( { s_aPRG,;
+                                   { "-i" + s_cHB_INC_INSTALL },;
+                                   ListToArray( cSelfFlagPRG ),;
+                                   ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
+                                   s_aOPTPRG } )
 
-      cCommand := AllTrim( cCommand )
+         IF s_lTRACE
+            OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() + ArrayToList( aCommand ) + hb_osNewLine() )
+         ENDIF
 
-      IF s_lTRACE
-         OutStd( "hbmk: Harbour compiler command: '" + cCommand + "'" + hb_osNewLine() )
-      ENDIF
+         IF ( tmp := hb_compile( "", aCommand ) ) != 0
+            OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + hb_osNewLine() + ArrayToList( aCommand ) + hb_osNewLine() )
+            PauseForKey()
+            RETURN 6
+         ENDIF
+#else
+         cCommand := DirAddPathSep( s_cHB_BIN_INSTALL ) +;
+                     cBin_CompPRG +;
+                     " " + ArrayToList( s_aPRG ) +;
+                     " -i" + s_cHB_INC_INSTALL +;
+                     iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
+                     iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
+                     iif( ! Empty( s_aOPTPRG ), " " + ArrayToList( s_aOPTPRG ), "" )
 
-      IF ( tmp := hb_run( cCommand ) ) != 0
-         OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ": '" + cCommand + "'" + hb_osNewLine() )
-         PauseForKey()
-         RETURN 6
-      ENDIF
-   ENDIF
+         cCommand := AllTrim( cCommand )
+
+         IF s_lTRACE
+            OutStd( "hbmk: Harbour compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+         ENDIF
+
+         IF ( tmp := hb_run( cCommand ) ) != 0
+            OutErr( "hbmk: Error: Running Harbour compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+            PauseForKey()
+            RETURN 6
+         ENDIF
+#endif
 
    IF ! lStopAfterHarbour
 
@@ -1042,7 +1062,7 @@ FUNCTION Main( ... )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := "gcc"
+         cBin_CompC := "gcc.exe"
          cOpt_CompC := "{LC} {LO} {LA} {LR} -O3 {FC} -I{DI} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
@@ -1103,7 +1123,7 @@ FUNCTION Main( ... )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := "gcc"
+         cBin_CompC := "gcc.exe"
          cOpt_CompC := "{LC} {LO} {LA} -O3 {FC} -I{DI} {DL}{SCRIPT}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
@@ -1137,7 +1157,7 @@ FUNCTION Main( ... )
          cObjExt := ".obj"
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
-         cBin_CompC := "wpp386"
+         cBin_CompC := "wpp386.exe"
          cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {FC} {LC}"
          cBin_Link := "wlink"
          cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
@@ -1155,7 +1175,7 @@ FUNCTION Main( ... )
          cObjExt := ".obj"
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
-         cBin_CompC := "wpp386"
+         cBin_CompC := "wpp386.exe"
          cOpt_CompC := "-w3 -5s -5r -fp5 -onaehtzr -zq -zt0 -bt=NT -oi+ -s {FC} {LC}"
          cBin_Link := "wlink"
          cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
@@ -1193,7 +1213,7 @@ FUNCTION Main( ... )
             cLibPrefix := "-l"
             cLibExt := ""
             cObjExt := ".o"
-            cBin_CompC := "gcc"
+            cBin_CompC := "gcc.exe"
             /* OS/2 needs a space between -o and file name following it */
             cOpt_CompC := "{LC} {LO} -O3 {FC} -I{DI} {DL}"
             cLibPathPrefix := "-L"
@@ -1226,7 +1246,7 @@ FUNCTION Main( ... )
             cObjExt := ".obj"
             cLibPathPrefix := "LIBPATH "
             cLibPathSep := " "
-            cBin_CompC := "wpp386"
+            cBin_CompC := "wpp386.exe"
             cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {FC} {LC}"
             cBin_Link := "wlink"
             cOpt_Link := "OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
@@ -1243,7 +1263,7 @@ FUNCTION Main( ... )
             cObjExt := ".obj"
             cLibPathPrefix := NIL /* TODO */
             cLibPathSep := NIL /* TODO */
-            cBin_CompC := "icc"
+            cBin_CompC := "icc.exe"
             cOpt_CompC := "/Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp {FC} -I{DI} {LC}" /* TODO: {DL} */
             IF s_lDEBUG
                AAdd( s_aOPTC, "-MTd -Zi" )
@@ -1286,7 +1306,7 @@ FUNCTION Main( ... )
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
-         cBin_CompC := "bcc32"
+         cBin_CompC := "bcc32.exe"
          IF ( Len( s_aRESSRC ) + Len( s_aRESCMP ) ) > 0
             cOpt_CompC := "-c -q -tWM -O2 -OS -Ov -Oi -Oc -d {FC} -I{DI} {LC}"
             cBin_Res := "brcc32"
@@ -1337,7 +1357,7 @@ FUNCTION Main( ... )
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
-         cBin_CompC := "cl"
+         cBin_CompC := "cl.exe"
          cOpt_CompC := "-nologo -W3 {FC} -I{DI} {LC} {LO} /link {DL} {FL} {LL} {LS}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
@@ -1379,7 +1399,7 @@ FUNCTION Main( ... )
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
-         cBin_CompC := "pocc"
+         cBin_CompC := "pocc.exe"
          cOpt_CompC := "/Ze /Go /Ot /Tx86-coff {FC} /I{DI} {LC}"
          IF s_lMT
             AAdd( s_aOPTC, "/MT" )
@@ -1569,14 +1589,14 @@ FUNCTION Main( ... )
          cCommand := cBin_Res + " " + cOpt_Res
 
          IF s_lTRACE
-            OutStd( "hbmk: Resource compiler command: '" + cCommand + "'" + hb_osNewLine() )
+            OutStd( "hbmk: Resource compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
             IF ! Empty( cScriptFile )
-               OutStd( "hbmk: Resource compiler script: '" + hb_MemoRead( cScriptFile ) + "'" + hb_osNewLine() )
+               OutStd( "hbmk: Resource compiler script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
             ENDIF
          ENDIF
 
          IF ( tmp := hb_run( cCommand ) ) != 0
-            OutErr( "hbmk: Error: Running resource compiler. " + hb_ntos( tmp ) + ": '" + cCommand + "'" + hb_osNewLine() )
+            OutErr( "hbmk: Error: Running resource compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
             nErrorLevel := 8
          ENDIF
 
@@ -1627,14 +1647,14 @@ FUNCTION Main( ... )
             cCommand := cBin_CompC + " " + cOpt_CompC
 
             IF s_lTRACE
-               OutStd( "hbmk: C compiler command: '" + cCommand + "'" + hb_osNewLine() )
+               OutStd( "hbmk: C compiler command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
                IF ! Empty( cScriptFile )
-                  OutStd( "hbmk: C compiler script: '" + hb_MemoRead( cScriptFile ) + "'" + hb_osNewLine() )
+                  OutStd( "hbmk: C compiler script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
                ENDIF
             ENDIF
 
             IF ( tmp := hb_run( cCommand ) ) != 0
-               OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ": '" + cCommand + "'" + hb_osNewLine() )
+               OutErr( "hbmk: Error: Running C compiler. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
                nErrorLevel := 6
             ENDIF
 
@@ -1680,14 +1700,14 @@ FUNCTION Main( ... )
          cCommand := cBin_Link + " " + cOpt_Link
 
          IF s_lTRACE
-            OutStd( "hbmk: Linker command: '" + cCommand + "'" + hb_osNewLine() )
+            OutStd( "hbmk: Linker command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
             IF ! Empty( cScriptFile )
-               OutStd( "hbmk: Linker script: '" + hb_MemoRead( cScriptFile ) + "'" + hb_osNewLine() )
+               OutStd( "hbmk: Linker script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
             ENDIF
          ENDIF
 
          IF ( tmp := hb_run( cCommand ) ) != 0
-            OutErr( "hbmk: Error: Running linker. " + hb_ntos( tmp ) + ": '" + cCommand + "'" + hb_osNewLine() )
+            OutErr( "hbmk: Error: Running linker. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
             nErrorLevel := 7
          ENDIF
 
@@ -1720,7 +1740,7 @@ FUNCTION Main( ... )
             ENDIF
             #endif
             IF s_lTRACE
-               OutStd( "hbmk: Running executable: '" + PathSepToTarget( s_cPROGNAME ) + "'" + hb_osNewLine() )
+               OutStd( "hbmk: Running executable:" + hb_osNewLine() + PathSepToTarget( s_cPROGNAME ) + hb_osNewLine() )
             ENDIF
             nErrorLevel := hb_run( PathSepToTarget( s_cPROGNAME ) )
          ENDIF
