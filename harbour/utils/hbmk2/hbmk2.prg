@@ -397,9 +397,11 @@ FUNCTION Main( ... )
       /* Order is significant.
          owatcom also keeps a cl.exe in it's binary dir. */
       aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "mingw"   },; /* TODO: Add full support for g++ */
-                    { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
+                    { {|| FindInPath( "wpp386" ) != NIL .AND. ;
+                          ! Empty( GetEnv( "WATCOM" ) ) }, "owatcom" },; /* TODO: Add full support for wcc386 */
                     { {|| FindInPath( "ml64"   ) != NIL }, "msvc64"  },;
-                    { {|| FindInPath( "cl"     ) != NIL }, "msvc"    },;
+                    { {|| FindInPath( "cl"     ) != NIL .AND. ;
+                          FindInPath( "wpp386" ) == NIL }, "msvc"    },;
                     { {|| FindInPath( "bcc32"  ) != NIL }, "bcc32"   },;
                     { {|| FindInPath( "porc64" ) != NIL }, "pocc64"  },;
                     { {|| FindInPath( "pocc"   ) != NIL }, "pocc"    },;
@@ -435,18 +437,13 @@ FUNCTION Main( ... )
             t_cCOMP := NIL
          ENDIF
       ELSEIF ! Empty( aCOMPDET )
-         /* Skip it for msvc, as it creates problems for other compilers. */
-         IF !( cSelfCOMP $ "msvc|msvc64" )
-            /* Look for this compiler first */
-            FOR tmp := 1 TO Len( aCOMPDET )
-               IF aCOMPDET[ tmp ][ 2 ] == cSelfCOMP .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
-                  t_cCOMP := aCOMPDET[ tmp ][ 2 ]
-                  EXIT
-               ENDIF
-            NEXT
-         ELSE
-            cSelfCOMP := ""
-         ENDIF
+         /* Look for this compiler first */
+         FOR tmp := 1 TO Len( aCOMPDET )
+            IF aCOMPDET[ tmp ][ 2 ] == cSelfCOMP .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
+               t_cCOMP := aCOMPDET[ tmp ][ 2 ]
+               EXIT
+            ENDIF
+         NEXT
          IF Empty( t_cCOMP )
             /* Check the rest of compilers */
             FOR tmp := 1 TO Len( aCOMPDET )

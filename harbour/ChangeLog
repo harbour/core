@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 11:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Refined autodetection of msvc to not be confused by
+      watcom binary dir in the path.
+    ! Refined autodetection of owatcom by also checking for
+      WATCOM envvar. Thanks Petr Chornyj for the hint.
+    % Removed hack to not prioritize MSVC compiler detection,
+      so it's now handled just like the others.
+
 2009-02-24 11:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + INSTALL
     + Installation docs kept simple.
