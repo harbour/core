@@ -80,6 +80,7 @@ BOOL GetScrollBarInfo( HWND hwnd, LONG idObject, PSCROLLBARINFO psbi );
  ? strSCROLLINFO:
  $$
 */
+#if 0
 HB_FUNC( WAPI_GETSCROLLBARINFO )
 {
    PSCROLLBARINFO sbi = ( PSCROLLBARINFO ) wapi_par_STRUCT( 3 );
@@ -97,6 +98,7 @@ HB_FUNC( WAPI_GETSCROLLBARINFO )
    }
    wapi_ret_L( bSuccess );
 }
+#endif
 /*----------------------------------------------------------------------*/
 /*
 BOOL GetScrollInfo( HWND hwnd, int fnBar, LPSCROLLINFO lpsi );

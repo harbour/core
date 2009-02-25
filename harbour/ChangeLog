@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-25 15:35 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbwin/wapi_winuser.c
+    ! Commented out WAPI_GETSCROLLBARINFO().
+
 2009-02-25 23:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.cmd
   * bin/postinst.bat
