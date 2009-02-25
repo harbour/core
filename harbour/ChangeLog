@@ -8,6 +8,24 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 10:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.cmd
+  * bin/postinst.bat
+  * bin/hb-func.sh
+    + Added arch= and comp= variables to hbmk.cfg.
+      I plan to use these for autoconfiguration.
+
+  * make_gnu_os2.cmd
+  * make_gnu.bat
+    - Removed built in output redirection to make them in sync
+      with the bash flavour. Users can easily redirect it themselves.
+
+  * utils/hbmk2/hbmk2.prg
+    + Formally added icc.
+
+  * config/win/msvcce.cf
+    ! Untested fixes for msvcce in GNU make.
+
 2009-02-25 03:37 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/config/linux/icc.cf
   * harbour/config/linux/gcc.cf

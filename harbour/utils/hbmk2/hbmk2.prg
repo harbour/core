@@ -361,7 +361,7 @@ FUNCTION Main( ... )
    DO CASE
    CASE t_cARCH $ "bsd|hpux|sunos|linux" .OR. t_cARCH == "darwin" /* Separated to avoid match with 'win' */
       IF t_cARCH == "linux"
-         aCOMPSUP := { "gcc", "gpp", "owatcom", "mingw", "mingwce" }
+         aCOMPSUP := { "gcc", "gpp", "owatcom", "icc", "mingw", "mingwce" }
       ELSE
          aCOMPSUP := { "gcc" }
       ENDIF
@@ -1410,6 +1410,7 @@ FUNCTION Main( ... )
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
 
       /* TODO */
+      CASE t_cARCH == "linux" .AND. t_cCOMP == "icc"
       CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"  /* NOTE: Cross-platform: win/amd64 on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "dmc"
@@ -2574,7 +2575,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!dmc}, {(win|linux)&!owatcom}" ,;
       "  - Defaults and feature support vary by architecture/compiler." ,;
       "  - Supported <comp> values for each supported <arch> value:" ,;
-      "    linux  : gcc, gpp, owatcom, mingw, mingwce" ,;
+      "    linux  : gcc, gpp, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
       "    win    : gcc, mingw, msvc, msvc64, bcc32, owatcom, pocc, pocc64," ,;
       "             dmc, rsxnt, xcc, icc" ,; /* poccce, mingwce, msvcce */

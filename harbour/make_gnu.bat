@@ -23,8 +23,11 @@ rem Copyright 1999-2001 Viktor Szakats (viktor.szakats@syenar.hu)
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 
-if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=win
-if "%HB_COMPILER%" == "" set HB_COMPILER=mingw
+
+if "%HB_ARCHITECTURE%" == "" if not "%WINDIR%" == "" set HB_ARCHITECTURE=win
+if "%HB_ARCHITECTURE%" == ""                         set HB_ARCHITECTURE=dos
+if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" set HB_COMPILER=mingw
+if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
 rem set HB_USER_PRGFLAGS=
 rem set HB_USER_CFLAGS=
@@ -61,8 +64,6 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%/include
    echo     HB_ARCHITECTURE:
    echo       - dos
    echo       - win
-   echo       - linux
-   echo       - os2
    echo.
    pause
    echo     HB_COMPILER:
@@ -79,11 +80,6 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%/include
    echo         - icc     (IBM Visual Age C++, Windows 32-bit)
    echo         - msvc    (Microsoft Visual C++, Windows 32-bit)
    echo         - msvc64  (Microsoft Visual C++, Windows 64-bit)
-   echo       - When HB_ARCHITECTURE=linux
-   echo         - gcc     (GNU C, 32-bit)
-   echo       - When HB_ARCHITECTURE=os2
-   echo         - gcc     (EMX GNU C, OS/2 32-bit)
-   echo         - icc     (IBM Visual Age C++ 3.0, OS/2 32-bit)
    echo.
    echo   - Use these optional envvars to configure the make process
    echo     when using the 'all' command:
@@ -108,7 +104,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%/include
    rem ---------------------------------------------------------------
    rem Start the GNU make system
 
-   make %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9 > make_gnu.log
+   make %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    goto END
 
 :END
