@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-25 21:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/memvars.c
+    + added support for reading FoxPro .mem files - Clipper compatibility
+    ! fixed bug introduced in my recent modifications in .mem files writing
+    ! fixed very old bug which disabled writing to .mem files strings
+      longer then 32Kb
+
 2009-02-25 20:17 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/gtwvg/wvgwin.c
     ! added dirty hack for borland C compiler and #define NONAMELESSUNION

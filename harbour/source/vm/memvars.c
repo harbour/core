@@ -1323,18 +1323,24 @@ static HB_DYNS_FUNC( hb_memvarSave )
          /* NOTE: Save only the first 10 characters of the name */
          hb_strncpy( ( char * ) buffer, pDynSymbol->pSymbol->szName, 10 );
 
-         if( HB_IS_STRING( pMemvar ) && ( hb_itemGetCLen( pMemvar ) + 1 ) <= SHRT_MAX )
+         if( HB_IS_STRING( pMemvar ) )
          {
             /* Store the closing zero byte, too */
-            ULONG ulLen = hb_itemGetCLen( pMemvar );
+            ULONG ulLen = hb_itemGetCLen( pMemvar ) + 1;
+            int iOverFlow = 0;
 
             /* Clipper support only 64KB strings */
             if( ulLen > USHRT_MAX )
+            {
                ulLen = USHRT_MAX;
+               iOverFlow = 1;
+            }
             buffer[ 11 ] = 'C' + 128;
             HB_PUT_LE_UINT16( &buffer[ 16 ], ulLen );
             hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
-            hb_fsWriteLarge( fhnd, ( BYTE * ) hb_itemGetCPtr( pMemvar ), ulLen );
+            hb_fsWriteLarge( fhnd, ( BYTE * ) hb_itemGetCPtr( pMemvar ), ulLen - iOverFlow );
+            if( iOverFlow )
+               hb_fsWrite( fhnd, ( const BYTE * ) "\0", 1 );
          }
          else if( HB_IS_NUMERIC( pMemvar ) )
          {
@@ -1354,7 +1360,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
 #endif
             buffer[ 17 ] = ( BYTE ) iDec;
             HB_PUT_LE_DOUBLE( &buffer[ HB_MEM_REC_LEN ], dNumber );
-            hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
+            hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN + HB_MEM_NUM_LEN );
          }
          else if( HB_IS_DATE( pMemvar ) )
          {
@@ -1518,7 +1524,10 @@ HB_FUNC( __MVRESTORE )
 
          while( hb_fsRead( fhnd, buffer, HB_MEM_REC_LEN ) == HB_MEM_REC_LEN )
          {
-            USHORT uiType = ( USHORT ) ( buffer[ 11 ] - 128 );
+            /* FoxPro does not add 128 to item type: 'N', 'C', 'D', 'L'
+             * CA-Cl*pper respects it and read such files so we also should.
+             */
+            USHORT uiType = ( USHORT ) ( buffer[ 11 ] & 0x7f );
             USHORT uiWidth = ( USHORT ) buffer[ 16 ];
             USHORT uiDec = ( USHORT ) buffer[ 17 ];
 
