@@ -620,7 +620,7 @@ HB_FUNC( HB_DISPOUTATBOX )
    else if( ISNUM( 4 ) )
       iColor = hb_parni( 4 );
    else
-      iColor = -1;
+      iColor = hb_gtGetCurrColor();
 
    while( nStringLen-- )
       hb_gtPutChar( nRow, nCol++, ( BYTE ) iColor, HB_GT_ATTR_BOX, ( USHORT ) *pszString++ );

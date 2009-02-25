@@ -275,6 +275,8 @@ export PATH="\${HB_BIN_INSTALL}${hb_path_separator}${CCPATH}\${PATH}"
 
 if [ "\${HB_COMPILER}" == "gpp" ]; then
    HB_CC="g++"
+elif [ "\${HB_COMPILER}" == "icc" ]; then
+   HB_CC="icc"
 else
    HB_CC="gcc"
 fi

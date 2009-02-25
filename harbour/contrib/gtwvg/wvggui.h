@@ -66,8 +66,6 @@
    #define CINTERFACE 1
 #endif
 
-#define NONAMELESSUNION
-
 //-------------------------------------------------------------------//
 
 #include <windows.h>

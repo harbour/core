@@ -4,11 +4,8 @@
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
-ifeq ($(HB_COMPILER),gpp)
-   HB_CMP = g++
-else
-   HB_CMP = $(HB_COMPILER)
-endif
+# set compiler name to icc or icpc
+HB_CMP = $(HB_COMPILER)
 
 OBJ_EXT = .o
 EXE_EXT =
@@ -20,14 +17,12 @@ CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
-ifeq ($(HB_COMPILER),icc)
+#CFLAGS = -fast
+#CFLAGS = -xHOST
 CFLAGS = -O3 -D_GNU_SOURCE
 #CFLAGS += -std=c99
-#CFLAGS += -xHOST
 #CFLAGS += -w2 -Wall
-else
-CFLAGS = -Wall -W -O3
-endif
+
 
 # uncomment this if you want to force relocateable code for .so libs
 # it's necessary on some platforms but can reduce performance
@@ -95,7 +90,7 @@ LINKLIBS += -lm -lrt -ldl -Wl,--end-group
 
 LDFLAGS = $(LINKPATHS)
 
-AR = ar
+AR = xiar
 ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(AR) $(ARFLAGS) crs $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 

@@ -8,6 +8,35 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-25 03:37 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/config/linux/icc.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/bin/hb-func.sh
+  * harbour/bin/postinst.sh
+  * harbour/source/common/hbver.c
+    + added support for Intel(R) C/C++ compiler
+
+  * harbour/bin/postinst.sh
+    % use hb-mkdyn symlink instead of regenerating it as hb-mkslib
+      It will work also in DOS/Windows (MSys/DJGPP emulates ln -s ...)
+
+  * harbour/source/vm/thread.c
+    * removed all references to HB_THREAD_EQUAL()/HB_THREAD_SELF() in
+      non MT builds
+
+  * harbour/source/rtl/console.c
+    ! fixed default color setting in hb_dispOutAtBox()
+
+  * harbour/contrib/gtwvg/wvggui.h
+  * harbour/contrib/gtwvg/wvgwin.c
+  * harbour/contrib/gtwvg/wincallb.c
+  * harbour/contrib/gtwvg/wvgsink.c
+    ! fixes for C++ compilation:
+      - this is reserved word in C++ - do not use it as variable name
+      - class is reserved word in C++ - do not use it as variable name
+      - use macros to hide differences between C and C++ WinAPI
+      - casting
+
 2009-02-24 23:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fixed warning.

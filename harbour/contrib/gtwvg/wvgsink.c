@@ -80,7 +80,9 @@
 */
 //----------------------------------------------------------------------//
 
-#define NONAMELESSUNION
+#ifndef CINTERFACE
+   #define CINTERFACE 1
+#endif
 
 #ifdef __XHARBOUR__
    #include "hbvmopt.h"
@@ -106,6 +108,14 @@
 #include <oleauto.h>
 
 //#include <strsafe.h>
+
+#if defined( __cplusplus ) && \
+   ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
+     ( defined(__WATCOMC__) && ( __WATCOMC__ >= 1280 ) ) )
+#  define HB_ID_REF( id )     id
+#else
+#  define HB_ID_REF( id )     ( &(id) )
+#endif
 
 //----------------------------------------------------------------------//
 
@@ -231,10 +241,10 @@ DECLARE_INTERFACE_ ( INTERFACE, IDispatch )
    STDMETHOD_ ( ULONG, AddRef )  ( THIS ) PURE;
    STDMETHOD_ ( ULONG, Release ) ( THIS ) PURE;
    // IDispatch functions
-   STDMETHOD_ ( ULONG, GetTypeInfoCount ) ( THIS_ UINT * ) PURE;
-   STDMETHOD_ ( ULONG, GetTypeInfo ) ( THIS_ UINT, LCID, ITypeInfo ** ) PURE;
-   STDMETHOD_ ( ULONG, GetIDsOfNames ) ( THIS_ REFIID, LPOLESTR *, UINT, LCID, DISPID * ) PURE;
-   STDMETHOD_ ( ULONG, Invoke ) ( THIS_ DISPID, REFIID, LCID, WORD, DISPPARAMS *, VARIANT *, EXCEPINFO *, UINT * ) PURE;
+   STDMETHOD ( GetTypeInfoCount ) ( THIS_ UINT * ) PURE;
+   STDMETHOD ( GetTypeInfo ) ( THIS_ UINT, LCID, ITypeInfo ** ) PURE;
+   STDMETHOD ( GetIDsOfNames ) ( THIS_ REFIID, LPOLESTR *, UINT, LCID, DISPID * ) PURE;
+   STDMETHOD ( Invoke ) ( THIS_ DISPID, REFIID, LCID, WORD, DISPPARAMS *, VARIANT *, EXCEPINFO *, UINT * ) PURE;
 };
 //----------------------------------------------------------------------//
 //
@@ -284,7 +294,7 @@ typedef struct {
 // AddRef(), and Release().
 
 // IEventHandler's QueryInterface()
-static HRESULT STDMETHODCALLTYPE QueryInterface( IEventHandler *this, REFIID vTableGuid, void **ppv )
+static HRESULT STDMETHODCALLTYPE QueryInterface( IEventHandler *self, REFIID vTableGuid, void **ppv )
 {
    // Check if the GUID matches IEvenetHandler VTable's GUID. We gave the C variable name
    // IID_IEventHandler to our VTable GUID. We can use an OLE function called
@@ -294,30 +304,30 @@ static HRESULT STDMETHODCALLTYPE QueryInterface( IEventHandler *this, REFIID vTa
    // IDispatch GUID, then we'll return the IExample3, since it can masquerade
    // as an IDispatch too
 
-   if ( IsEqualIID( vTableGuid, &IID_IUnknown ) )
+   if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IUnknown ) ) )
    {
-      *ppv = ( IUnknown * ) this;
-      /* Increment the count of callers who have an outstanding pointer to this object */
-//hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, &IID_IUnknown ) )" );
-      this->lpVtbl->AddRef( this );
+      *ppv = ( IUnknown * ) self;
+      /* Increment the count of callers who have an outstanding pointer to self object */
+//hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IUnknown ) ) )" );
+      self->lpVtbl->AddRef( self );
       return S_OK;
    }
 
-   if ( IsEqualIID( vTableGuid, &IID_IDispatch ) )
+   if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IDispatch ) ) )
    {
-      *ppv = ( IDispatch * ) this;
-//hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, &IID_IDispatch ) )" );
-      this->lpVtbl->AddRef( this );
+      *ppv = ( IDispatch * ) self;
+//hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB_ID_REF( IID_IDispatch ) ) )" );
+      self->lpVtbl->AddRef( self );
       return S_OK;
    }
 
-   if ( IsEqualIID( vTableGuid, &( ( ( MyRealIEventHandler * ) this )->device_event_interface_iid ) ) )
+   if ( IsEqualIID( vTableGuid, HB_ID_REF( ( ( MyRealIEventHandler * ) self )->device_event_interface_iid ) ) )
    {
-      if( ++( ( MyRealIEventHandler * ) this )->iID_riid == 1 )
+      if( ++( ( MyRealIEventHandler * ) self )->iID_riid == 1 )
       {
-         *ppv = ( IDispatch* ) this;
-//hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, &( ( ( MyRealIEventHandler * ) this )->device_event_interface_iid ) ) )" );
-         this->lpVtbl->AddRef( this );
+         *ppv = ( IDispatch* ) self;
+//hb_ToOutDebug( ".................................if ( IsEqualIID( vTableGuid, HB_ID_REF( ( ( MyRealIEventHandler * ) self )->device_event_interface_iid ) ) )" );
+         self->lpVtbl->AddRef( self );
       }
       return S_OK;
    }
@@ -331,7 +341,7 @@ static HRESULT STDMETHODCALLTYPE QueryInterface( IEventHandler *this, REFIID vTa
 //
 // IEventHandler's AddRef()
 
-static ULONG STDMETHODCALLTYPE AddRef( IEventHandler *this )
+static ULONG STDMETHODCALLTYPE AddRef( IEventHandler *self )
 {
    // Increment IEventHandler's reference count, and return the updated value.
    // NOTE: We have to typecast to gain access to any data members. These
@@ -339,81 +349,81 @@ static ULONG STDMETHODCALLTYPE AddRef( IEventHandler *this )
    // Rather they are defined only above in our MyRealIEventHandler
    // struct. So typecast to that in order to access those data members
 
-//hb_ToOutDebug( "AddRef->count=%i", ( ( MyRealIEventHandler * ) this )->count + 1 );
-   return( ++( ( MyRealIEventHandler * ) this )->count );
+//hb_ToOutDebug( "AddRef->count=%i", ( ( MyRealIEventHandler * ) self )->count + 1 );
+   return( ++( ( MyRealIEventHandler * ) self )->count );
 }
 //----------------------------------------------------------------------//
 //
 // IEventHandler's Release()
 
-static ULONG STDMETHODCALLTYPE Release( IEventHandler *this )
+static ULONG STDMETHODCALLTYPE Release( IEventHandler *self )
 {
 #if 0
-hb_ToOutDebug( "static ULONG STDMETHODCALLTYPE Release( IEventHandler *this )->count = %i",
-                                           ( ( MyRealIEventHandler * ) this )->count - 1 );
+hb_ToOutDebug( "static ULONG STDMETHODCALLTYPE Release( IEventHandler *self )->count = %i",
+                                           ( ( MyRealIEventHandler * ) self )->count - 1 );
 #endif
-   if ( --( ( MyRealIEventHandler * ) this )->count == 0 )
+   if ( --( ( MyRealIEventHandler * ) self )->count == 0 )
    {
-      if( ( ( MyRealIEventHandler * ) this)->pSelf )
+      if( ( ( MyRealIEventHandler * ) self)->pSelf )
       {
-         hb_itemRelease( ( ( MyRealIEventHandler * ) this )->pSelf );
+         hb_itemRelease( ( ( MyRealIEventHandler * ) self )->pSelf );
       }
 
-      if( ( MyRealIEventHandler * ) this )
+      if( ( MyRealIEventHandler * ) self )
       {
-         GlobalFree( ( MyRealIEventHandler * ) this );
+         GlobalFree( ( MyRealIEventHandler * ) self );
       }
-//hb_ToOutDebug( "       ULONG STDMETHODCALLTYPE Release( IEventHandler *this )->this" );
+//hb_ToOutDebug( "       ULONG STDMETHODCALLTYPE Release( IEventHandler *self )->self" );
       return( ( ULONG ) 0 );
    }
-   return( ( ULONG ) ( ( MyRealIEventHandler * ) this )->count < 0 ? ( ( MyRealIEventHandler * ) this )->count : 0 );
+   return( ( ULONG ) ( ( MyRealIEventHandler * ) self )->count < 0 ? ( ( MyRealIEventHandler * ) self )->count : 0 );
 }
 //----------------------------------------------------------------------//
 //
 // IEventHandler's GetTypeInfoCount()
 
-static ULONG STDMETHODCALLTYPE GetTypeInfoCount( IEventHandler *this, UINT *pCount )
+static HRESULT STDMETHODCALLTYPE GetTypeInfoCount( IEventHandler *self, UINT *pCount )
 {
-   HB_SYMBOL_UNUSED( this );
+   HB_SYMBOL_UNUSED( self );
    HB_SYMBOL_UNUSED( pCount );
 
-   return ( ULONG ) E_NOTIMPL;
+   return ( HRESULT ) E_NOTIMPL;
 }
 //----------------------------------------------------------------------//
 //
 // IEventHandler's GetTypeInfo()
 
-static ULONG STDMETHODCALLTYPE GetTypeInfo( IEventHandler *this, UINT itinfo, LCID lcid, ITypeInfo **pTypeInfo )
+static HRESULT STDMETHODCALLTYPE GetTypeInfo( IEventHandler *self, UINT itinfo, LCID lcid, ITypeInfo **pTypeInfo )
 {
-   HB_SYMBOL_UNUSED( this );
+   HB_SYMBOL_UNUSED( self );
    HB_SYMBOL_UNUSED( itinfo );
    HB_SYMBOL_UNUSED( lcid );
    HB_SYMBOL_UNUSED( pTypeInfo );
 
-   return ( ULONG ) E_NOTIMPL;
+   return ( HRESULT ) E_NOTIMPL;
 }
 //----------------------------------------------------------------------//
 //
 // IEventHandler's GetIDsOfNames()
 
-static ULONG STDMETHODCALLTYPE GetIDsOfNames( IEventHandler *this, REFIID riid, LPOLESTR *rgszNames, UINT cNames, LCID lcid, DISPID *rgdispid )
+static HRESULT STDMETHODCALLTYPE GetIDsOfNames( IEventHandler *self, REFIID riid, LPOLESTR *rgszNames, UINT cNames, LCID lcid, DISPID *rgdispid )
 {
 
-   HB_SYMBOL_UNUSED( this );
+   HB_SYMBOL_UNUSED( self );
    HB_SYMBOL_UNUSED( riid );
    HB_SYMBOL_UNUSED( rgszNames );
    HB_SYMBOL_UNUSED( cNames );
    HB_SYMBOL_UNUSED( lcid );
    HB_SYMBOL_UNUSED( rgdispid );
 
-   return ( ULONG ) E_NOTIMPL;
+   return ( HRESULT ) E_NOTIMPL;
 }
 
 //------------------------------------------------------------------------------
 
-static ULONG STDMETHODCALLTYPE Invoke( IEventHandler *this, DISPID dispid, REFIID riid,
-                                       LCID lcid, WORD wFlags, DISPPARAMS *params,
-                                       VARIANT *result, EXCEPINFO *pexcepinfo, UINT *puArgErr )
+static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *self, DISPID dispid, REFIID riid,
+                                      LCID lcid, WORD wFlags, DISPPARAMS *params,
+                                      VARIANT *result, EXCEPINFO *pexcepinfo, UINT *puArgErr )
 {
    int        iArg;
    int        i;
@@ -425,9 +435,9 @@ static ULONG STDMETHODCALLTYPE Invoke( IEventHandler *this, DISPID dispid, REFII
    PHB_ITEM   Key;
 //hb_ToOutDebug( "event = %i",(int)dispid );
    // We implement only a "default" interface
-   if ( !IsEqualIID( riid, &IID_NULL ) )
+   if ( !IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
    {
-      return( ( ULONG ) DISP_E_UNKNOWNINTERFACE );
+      return( ( HRESULT ) DISP_E_UNKNOWNINTERFACE );
    }
    HB_SYMBOL_UNUSED( lcid );
    HB_SYMBOL_UNUSED( wFlags );
@@ -436,9 +446,9 @@ static ULONG STDMETHODCALLTYPE Invoke( IEventHandler *this, DISPID dispid, REFII
    HB_SYMBOL_UNUSED( puArgErr );
 
    Key = hb_itemNew( NULL );
-   if ( hb_hashScan( ( ( MyRealIEventHandler * ) this )->pEvents, hb_itemPutNL( Key, dispid ), &ulPos ) )
+   if ( hb_hashScan( ( ( MyRealIEventHandler * ) self )->pEvents, hb_itemPutNL( Key, dispid ), &ulPos ) )
    {
-      PHB_ITEM pArray = hb_hashGetValueAt( ( ( MyRealIEventHandler * ) this )->pEvents, ulPos );
+      PHB_ITEM pArray = hb_hashGetValueAt( ( ( MyRealIEventHandler * ) self )->pEvents, ulPos );
       PHB_ITEM pExec  = hb_arrayGetItemPtr( pArray, 1 );
 
       if ( pExec )
@@ -534,7 +544,7 @@ static ULONG STDMETHODCALLTYPE Invoke( IEventHandler *this, DISPID dispid, REFII
    }
    hb_itemRelease( Key );   // Pritpal
 
-   return ( ULONG ) S_OK;
+   return ( HRESULT ) S_OK;
 }
 
 //----------------------------------------------------------------------//
@@ -590,10 +600,10 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
       ( ( MyRealIEventHandler * ) thisobj )->count = 0;
       ( ( MyRealIEventHandler * ) thisobj )->iID_riid = 0;
 
-      hr = thisobj->lpVtbl->QueryInterface( thisobj, &IID_IUnknown, (void **) (void*) &pIUnknown );
+      hr = thisobj->lpVtbl->QueryInterface( thisobj, HB_ID_REF( IID_IUnknown ), (void **) (void*) &pIUnknown );
       if (hr == S_OK && pIUnknown)
       {
-         hr = pdevice_interface->lpVtbl->QueryInterface( pdevice_interface, &IID_IConnectionPointContainer, (void**) (void*) &pIConnectionPointContainerTemp);
+         hr = pdevice_interface->lpVtbl->QueryInterface( pdevice_interface, HB_ID_REF( IID_IConnectionPointContainer ), (void**) (void*) &pIConnectionPointContainerTemp);
          if ( hr == S_OK && pIConnectionPointContainerTemp )
          {
             hr = pIConnectionPointContainerTemp->lpVtbl->EnumConnectionPoints( pIConnectionPointContainerTemp, &m_pIEnumConnectionPoints );
@@ -802,7 +812,7 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
    UINT  uLen;
    PATLAXCREATECONTROL AtlAxCreateControl;
    HWND  hContainer = NULL;
-   char  *class   = hb_parc( 1 );
+   char  *szClass = hb_parc( 1 );
    HWND  hParent  = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 2 );
    char  *Caption = ISNIL(  4 ) ? "" : hb_parc( 3 );
    HMENU id       = ISNIL(  4 ) ? ( HMENU ) ( HB_PTRDIFF ) -1 : ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 4 );
@@ -826,7 +836,7 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
    if ( AtlAxCreateControl )
    {
       LPTSTR cCaption = HB_TCHAR_CONVTO( Caption );
-      LPTSTR cClass = HB_TCHAR_CONVTO( class );
+      LPTSTR cClass = HB_TCHAR_CONVTO( szClass );
       #if 0
       hContainer = ( HWND ) CreateWindowEx( Exstyle, cClass, cCaption, Style, x, y, w, h,
                                             hParent, id, GetModuleHandle( NULL ), NULL );
@@ -854,7 +864,7 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
          #if 1
          if( pUnk )
          {
-            pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void** ) (void*) &obj );
+            pUnk->lpVtbl->QueryInterface( pUnk, HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
             pUnk->lpVtbl->Release( pUnk );
             hb_retnint( ( HB_PTRDIFF ) obj );
 
@@ -871,7 +881,7 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
          {
             RECT rc;
 
-            pUnkCtrl->lpVtbl->QueryInterface( pUnkCtrl, &IID_IDispatch, ( void** ) (void*) &obj );
+            pUnkCtrl->lpVtbl->QueryInterface( pUnkCtrl, HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
             pUnkCtrl->lpVtbl->Release( pUnkCtrl );
             hb_retnint( ( long ) obj );
 
@@ -956,7 +966,7 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
 
          if( pUnk )
          {
-            pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void** ) (void*) &obj );
+            pUnk->lpVtbl->QueryInterface( pUnk, HB_ID_REF( IID_IDispatch ), ( void** ) (void*) &obj );
             pUnk->lpVtbl->Release( pUnk );
             GetClientRect( hWnd, &rc );
             //MoveWindow( GetDlgItem( hParent, ( int ) id ), 0, 0, rc.right-rc.left, rc.bottom-rc.top, TRUE );
@@ -1000,7 +1010,7 @@ HB_FUNC( HB_AX_ATLSETVERB )
       IUnknown *pUnk = ( IUnknown* ) ( HB_PTRDIFF ) hb_parnint( 2 );
 
       IOleObject *lpOleObject = NULL;
-      if( SUCCEEDED( pUnk->lpVtbl->QueryInterface( pUnk, &IID_IOleObject, ( void** ) &lpOleObject ) ) )
+      if( SUCCEEDED( pUnk->lpVtbl->QueryInterface( pUnk, HB_ID_REF( IID_IOleObject ), ( void** ) ( void* ) &lpOleObject ) ) )
       {
          IOleClientSite* lpOleClientSite;
 

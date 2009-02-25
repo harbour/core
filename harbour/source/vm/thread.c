@@ -1492,7 +1492,7 @@ BOOL hb_threadMutexUnlock( PHB_ITEM pItem )
    if( pMutex )
    {
 #if !defined( HB_MT_VM )
-      if( HB_THREAD_EQUAL( pMutex->owner, HB_THREAD_SELF() ) )
+      if( pMutex->lock_count )
       {
          if( --pMutex->lock_count == 0 )
             pMutex->owner = ( HB_THREAD_ID ) 0;
@@ -1523,6 +1523,11 @@ BOOL hb_threadMutexLock( PHB_ITEM pItem )
 
    if( pMutex )
    {
+#if !defined( HB_MT_VM )
+      pMutex->lock_count++;
+      pMutex->owner = ( HB_THREAD_ID ) 1;
+      fResult = TRUE;
+#else
       if( HB_THREAD_EQUAL( pMutex->owner, HB_THREAD_SELF() ) )
       {
          pMutex->lock_count++;
@@ -1532,11 +1537,6 @@ BOOL hb_threadMutexLock( PHB_ITEM pItem )
       {
          hb_vmUnlock();
 
-#if !defined( HB_MT_VM )
-         pMutex->lock_count = 1;
-         pMutex->owner = HB_THREAD_SELF();
-         fResult = TRUE;
-#else
          HB_CRITICAL_LOCK( pMutex->mutex );
          while( pMutex->lock_count != 0 )
          {
@@ -1556,9 +1556,10 @@ BOOL hb_threadMutexLock( PHB_ITEM pItem )
          pMutex->owner = HB_THREAD_SELF();
          HB_CRITICAL_UNLOCK( pMutex->mutex );
          fResult = TRUE;
-#endif
+
          hb_vmLock();
       }
+#endif
    }
    return fResult;
 }
@@ -1570,6 +1571,12 @@ BOOL hb_threadMutexTimedLock( PHB_ITEM pItem, ULONG ulMilliSec )
 
    if( pMutex )
    {
+#if !defined( HB_MT_VM )
+      HB_SYMBOL_UNUSED( ulMilliSec );
+      pMutex->lock_count++;
+      pMutex->owner = ( HB_THREAD_ID ) 1;
+      fResult = TRUE;
+#else
       if( HB_THREAD_EQUAL( pMutex->owner, HB_THREAD_SELF() ) )
       {
          pMutex->lock_count++;
@@ -1579,12 +1586,6 @@ BOOL hb_threadMutexTimedLock( PHB_ITEM pItem, ULONG ulMilliSec )
       {
          hb_vmUnlock();
 
-#if !defined( HB_MT_VM )
-         HB_SYMBOL_UNUSED( ulMilliSec );
-         pMutex->lock_count = 1;
-         pMutex->owner = HB_THREAD_SELF();
-         fResult = TRUE;
-#else
          HB_CRITICAL_LOCK( pMutex->mutex );
          if( ulMilliSec && pMutex->lock_count != 0 )
          {
@@ -1630,10 +1631,10 @@ BOOL hb_threadMutexTimedLock( PHB_ITEM pItem, ULONG ulMilliSec )
             fResult = TRUE;
          }
          HB_CRITICAL_UNLOCK( pMutex->mutex );
-#endif
 
          hb_vmLock();
       }
+#endif
    }
    return fResult;
 }

@@ -327,7 +327,7 @@ static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
    int           iParVal1;
    int           iParVal2;
 
-   pMem = FuncMemAlloc();
+   pMem = ( byte * ) FuncMemAlloc();
 
    if( pMem )
    {
@@ -400,7 +400,7 @@ static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
 
 HB_FUNC( _FREECALLBACK )
 {
-   void* ptr = ( void* ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   LPBYTE ptr = ( LPBYTE ) ( HB_PTRDIFF ) hb_parnint( 1 );
 
    hb_retl( FuncMemFree( ptr ) );
    return;
@@ -511,7 +511,7 @@ static LPVOID FuncMemAlloc( void )
    //find empty slot
    for( i = 0 ; i < dwReservedLen ; i++ ) // each reservation
    {
-      lpPage = ( pAllAllocs+i )->lpvBase;
+      lpPage = ( char * ) ( pAllAllocs+i )->lpvBase;
 
       for( j = 0 ; j < dwPagesInAlloc ; j++ ) // each reserved page
       {
@@ -543,7 +543,7 @@ static LPVOID FuncMemAlloc( void )
                break;
             }
 
-            ( ( pAllAllocs+i )->MemPages+j )->lpPage    = lpvBase;
+            ( ( pAllAllocs+i )->MemPages+j )->lpPage    = ( LPTSTR ) lpvBase;
             ( ( pAllAllocs+i )->MemPages+j )->bCommited = TRUE;
             ( ( pAllAllocs+i )->MemPages+j )->Functions = ( FuncData* ) malloc( dwFuncsInPage * sizeof( FuncData ) );
 

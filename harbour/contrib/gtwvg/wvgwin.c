@@ -76,8 +76,6 @@
 
 #define HB_OS_WIN_USED
 
-#define NONAMELESSUNION
-
 #include "gtwvg.h"
 #include "hbwapi.h"
 #include <windowsx.h>

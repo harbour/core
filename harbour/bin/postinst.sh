@@ -42,7 +42,7 @@ fi
 
 if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \
    [ "$HB_COMPILER" = "mingw" ] || [ "$HB_COMPILER" = "mingwce" ] || \
-   [ "$HB_COMPILER" = "djgpp" ]
+   [ "$HB_COMPILER" = "djgpp" ] || [ "$HB_COMPILER" = "icc" ]
 then
     RANLIB=""
     MAKE=make
@@ -66,39 +66,35 @@ then
             -e "s/^# CCPREFIX=\"\"\$/[ -n \"\${CCPREFIX}\" ] || CCPREFIX=\"${CCPREFIX}\"/g" \
             "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
         chmod 755 "${hb_mkdyn}"
-    elif [ "${HB_ARCHITECTURE}" = "sunos" ] || \
-         [ "${HB_ARCHITECTURE}" = "hpux" ] || \
-         ! which install &>/dev/null; then
-        rm -f "${HB_BIN_INSTALL}/hb-mkdyn"
-        cp "${hb_root}/bin/hb-mkdyn.sh" "${HB_BIN_INSTALL}/hb-mkdyn" && \
-        chmod 755 "${HB_BIN_INSTALL}/hb-mkdyn"
-    elif [ "${HB_ARCHITECTURE}" != "dos" ]; then
-        # Without -c some OSes _move_ the file instead of copying it!
-        install -c -m 755 "${hb_root}/bin/hb-mkdyn.sh" "${HB_BIN_INSTALL}/hb-mkdyn"
-    fi
-
-    # Compatibility hb-mkslib creation. Please use hb-mkdyn instead.
-    if [ -n "${HB_TOOLS_PREF}" ]; then
-        hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkslib"
+    elif [ "$HB_COMPILER" = "icc" ]; then
+        hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
         rm -f "${hb_mkdyn}"
-        sed -e "s/^# HB_ARCHITECTURE=\"\"\$/HB_ARCHITECTURE=\"${HB_ARCHITECTURE}\"/g" \
-            -e "s/^# CCPREFIX=\"\"\$/[ -n \"\${CCPREFIX}\" ] || CCPREFIX=\"${CCPREFIX}\"/g" \
-            "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
+        sed -e "s/gcc/icc/g" "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
         chmod 755 "${hb_mkdyn}"
     elif [ "${HB_ARCHITECTURE}" = "sunos" ] || \
          [ "${HB_ARCHITECTURE}" = "hpux" ] || \
          ! which install &>/dev/null; then
-        rm -f "${HB_BIN_INSTALL}/hb-mkslib"
-        cp "${hb_root}/bin/hb-mkdyn.sh" "${HB_BIN_INSTALL}/hb-mkslib" && \
-        chmod 755 "${HB_BIN_INSTALL}/hb-mkslib"
+        hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
+        rm -f "${hb_mkdyn}"
+        cp "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}" && \
+        chmod 755 "${hb_mkdyn}"
     elif [ "${HB_ARCHITECTURE}" != "dos" ]; then
+        hb_mkdyn="${HB_BIN_INSTALL}/hb-mkdyn"
         # Without -c some OSes _move_ the file instead of copying it!
-        install -c -m 755 "${hb_root}/bin/hb-mkdyn.sh" "${HB_BIN_INSTALL}/hb-mkslib"
+        install -c -m 755 "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}"
+    fi
+
+    # Compatibility hb-mkslib creation. Please use hb-mkdyn instead.
+    if [ -n "${hb_mkdyn}" ] && [ -f "${hb_mkdyn}" ]; then
+        hb_mkdyn="${hb_mkdyn//-mkdyn/-mkslib}"
+        rm -f "${hb_mkdyn}"
+        ln -s hb-mkdyn "${hb_mkdyn}"
     fi
 
     mk_hbtools "${HB_BIN_INSTALL}" "$@"
     if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \
-       [ "$HB_COMPILER" = "mingw" ] || [ "$HB_COMPILER" = "mingwce" ]; then
+       [ "$HB_COMPILER" = "mingw" ] || [ "$HB_COMPILER" = "mingwce" ] || \
+       [ "$HB_COMPILER" = "icc" ]; then
         mk_hblibso "${hb_root}"
     fi
 fi
