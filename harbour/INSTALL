@@ -1,0 +1,50 @@
+/*
+ * $Id$
+ */
+
+HOW TO BUILD AND INSTALL HARBOUR
+================================
+
+For all platforms you'll need:
+
+* GNU make
+* Supported C compiler
+
+Linux/Darwin/BSD/HP-UX/Solaris
+------------------------------
+   $ export HB_COMPILER=<[gcc]|owatcom|icc|...>
+   $ export HB_INSTALL_PREFIX=<DIR>
+   $ ./make_gnu.sh
+   $ sudo ./make_gnu.sh install
+
+   To test it, go to <DIR>/bin directory and type:
+   $ ./hbmk2 ../tests/hello.prg
+   $ ./hello
+   You should see: 'Hello world!' on screen.
+
+Windows
+-------
+   Make sure to have your C compiler of choice properly
+   installed and GNU Make (with the name make.exe)
+   accessible in the PATH _before_ the compiler tools.
+
+   > set HB_COMPILER=<[mingw]|msvc|bcc32|owatcom|...>
+   > set HB_INSTALL_PREFIX=<DIR>
+   > make_gnu.bat install
+
+   To test it, go to <DIR>\bin directory and type:
+   > hbmk2 ..\tests\hello.prg
+   > hello
+   You should see: 'Hello world!' on screen.
+
+DOS
+---
+   > set HB_COMPILER=<[djgpp]|owatcom>
+   > set HB_INSTALL_PREFIX=<DIR>
+   > make_gnu.bat install
+
+OS/2
+----
+   > set HB_COMPILER=<[gcc]|owatcom|icc>
+   > set HB_INSTALL_PREFIX=<DIR>
+   > make_gnu_os2.cmd install
