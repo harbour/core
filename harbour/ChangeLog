@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-24 10:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.bat
+    + Added dos/windows (djgpp/mingw) autodetection.
+    ! Cleaned help screen.
+      (missed from previous entry)
+    * Other minor cleanups and fixes on help screen.
+
 2009-02-24 10:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.cmd
   * bin/postinst.bat

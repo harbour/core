@@ -29,10 +29,6 @@ if "%HB_ARCHITECTURE%" == ""                         set HB_ARCHITECTURE=dos
 if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" set HB_COMPILER=mingw
 if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
-rem set HB_USER_PRGFLAGS=
-rem set HB_USER_CFLAGS=
-rem set HB_USER_LDFLAGS=
-
 rem Set to constant value to be consistent with the non-GNU make files.
 
 if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%/bin
@@ -62,24 +58,23 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%/include
    echo     The following values are currently supported:
    echo.
    echo     HB_ARCHITECTURE:
-   echo       - dos
    echo       - win
+   echo       - dos
    echo.
    pause
    echo     HB_COMPILER:
-   echo       - When HB_ARCHITECTURE=dos
-   echo         - bcc16   (Borland C++ 3.x, 4.x, 5.0x, DOS 16-bit)
-   echo         - djgpp   (Delorie GNU C, DOS 32-bit)
-   echo         - rxs32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)
-   echo         - watcom  (Watcom C++ 9.x, 10.x, 11.x, DOS 32-bit)
    echo       - When HB_ARCHITECTURE=win
-   echo         - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)
-   echo         - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)
-   echo         - mingw   (MinGW GNU C, Windows 32-bit)
-   echo         - rxsnt   (EMX/RSXNT/Windows GNU C, Windows 32-bit)
-   echo         - icc     (IBM Visual Age C++, Windows 32-bit)
    echo         - msvc    (Microsoft Visual C++, Windows 32-bit)
    echo         - msvc64  (Microsoft Visual C++, Windows 64-bit)
+   echo         - mingw   (MinGW GNU C, Windows 32-bit)
+   echo         - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)
+   echo         - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)
+   echo         - rxsnt   (EMX/RSXNT/Windows GNU C, Windows 32-bit)
+   echo         - icc     (IBM Visual Age C++, Windows 32-bit)
+   echo       - When HB_ARCHITECTURE=dos
+   echo         - djgpp   (Delorie GNU C, DOS 32-bit)
+   echo         - owatcom (Watcom C++ 9.x, 10.x, 11.x, DOS 32-bit)
+   echo         - rxs32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)
    echo.
    echo   - Use these optional envvars to configure the make process
    echo     when using the 'all' command:
