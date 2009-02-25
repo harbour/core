@@ -64,11 +64,7 @@
 
 //-------------------------------------------------------------------//
 
-#if 0  // Until THREAD STATIC is made true thread sttaic
 thread static t_paint_:= { { '', {} } }
-#else
-thread static t_paint_
-#endif
 
 //-------------------------------------------------------------------//
 //
@@ -167,10 +163,6 @@ function WvtSetPaint( a_ )
 function SetPaint( cID, nAction, xData, aAttr )
    local n, n1, oldData
 
-   IF t_paint_== NIL
-      t_paint_:= { { '', {} } }
-   ENDIF
-
    if xData <> nil
       if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
          if ( n1 := ascan( t_paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
@@ -194,10 +186,6 @@ function SetPaint( cID, nAction, xData, aAttr )
 function GetPaint( cID )
    local n
 
-   IF t_paint_== NIL
-      t_paint_:= { { '', {} } }
-   ENDIF
-
    if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
       return t_paint_[ n,2 ]
    endif
@@ -208,10 +196,6 @@ function GetPaint( cID )
 
 function DelPaint( cID, nAction )
    local xData, n1, n
-
-   IF t_paint_== NIL
-      t_paint_:= { { '', {} } }
-   ENDIF
 
    if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
       if ( n1 := ascan( t_paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
@@ -228,10 +212,6 @@ function PurgePaint( cID,lDummy )
    local n, aPaint
 
    DEFAULT lDummy TO .f.
-
-   IF t_paint_== NIL
-      t_paint_:= { { '', {} } }
-   ENDIF
 
    if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
       aPaint := t_paint_[ n ]
@@ -251,10 +231,6 @@ function InsertPaint( cID, aPaint, lSet )
    local n
 
    DEFAULT lSet TO .f.
-
-   IF t_paint_== NIL
-      t_paint_:= { { '', {} } }
-   ENDIF
 
    if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
       t_paint_[ n ] := aPaint
