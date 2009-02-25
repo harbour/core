@@ -49,7 +49,7 @@ for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 
 set _HB_DIRS=hbmsql hbmzip hbnf hbodbc hbole hbsqlit3
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set _HB_DIRS=hbtip hbtpathy hbvpdf hbwin hbwhat hbziparc
+set _HB_DIRS=hbtip hbtpathy hbvpdf hbwin hbziparc
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set _HB_DIRS=rddado rddsql xhb

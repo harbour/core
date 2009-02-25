@@ -91,12 +91,6 @@ then
         ln -s "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}"
     fi
 
-    if [ "$HB_COMPILER" = "mingw" ]; then
-        echo "@\"%~dp0hbmk2.exe\"" -hbcc  %*> ${HB_BIN_INSTALL}/hbcc.bat
-        echo "@\"%~dp0hbmk2.exe\"" -hbcmp %*> ${HB_BIN_INSTALL}/hbcmp.bat
-        echo "@\"%~dp0hbmk2.exe\"" -hblnk %*> ${HB_BIN_INSTALL}/hblnk.bat
-    fi
-
     mk_hbtools "${HB_BIN_INSTALL}" "$@"
     if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \
        [ "$HB_COMPILER" = "mingw" ] || [ "$HB_COMPILER" = "mingwce" ] || \

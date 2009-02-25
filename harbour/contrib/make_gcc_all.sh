@@ -45,7 +45,7 @@ else
 
    case "$HB_ARCHITECTURE" in
       win|cyg|os2)
-           _HB_DIRS="${_HB_DIRS} gtwvg hbole hbodbc hbwin hbwhat rddado"
+           _HB_DIRS="${_HB_DIRS} gtwvg hbole hbodbc hbwin rddado"
            ;;
       *)
    esac

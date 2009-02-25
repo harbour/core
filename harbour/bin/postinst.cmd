@@ -25,11 +25,6 @@ goto inst_%HB_ARCHITECTURE%
 
 :inst_os2
 rem OS/2 post install part
-
-echo @hbmk2.exe -hbcc  %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9> %HB_BIN_INSTALL%\hbcc.cmd
-echo @hbmk2.exe -hbcmp %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9> %HB_BIN_INSTALL%\hbcmp.cmd
-echo @hbmk2.exe -hblnk %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9> %HB_BIN_INSTALL%\hblnk.cmd
-
 goto end
 
 

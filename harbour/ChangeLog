@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-25 23:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.cmd
+  * bin/postinst.bat
+  * bin/postinst.sh
+    - Removed creation of hb*.bat files.
+
+  * contrib/make_b32_all.bat
+  * contrib/make_gcc_all.sh
+  * contrib/make_vc_all.bat
+  * contrib/Makefile
+    * Disabled hbwhat.
+
+  * contrib/gtwvg/wvggui.c
+    ! Fixed a few warnings.
+
 2009-02-25 21:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/memvars.c
     + added support for reading FoxPro .mem files - Clipper compatibility

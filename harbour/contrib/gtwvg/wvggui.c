@@ -1201,8 +1201,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
          hb_arrayNew( pEvParams, 3 );
 
-         hb_arraySetNL( pEvParams, 1, ( HB_LONG ) LOWORD( wParam ) );
-         hb_arraySetNL( pEvParams, 2, ( HB_LONG ) HIWORD( wParam ) );
+         hb_arraySetNL( pEvParams, 1, ( long ) LOWORD( wParam ) );
+         hb_arraySetNL( pEvParams, 2, ( long ) HIWORD( wParam ) );
          hb_arraySetNInt( pEvParams, 3, ( HB_LONG ) ( HB_PTRDIFF ) lParam );
 
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_HSCROLL, pEvParams );
@@ -1214,8 +1214,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
          hb_arrayNew( pEvParams, 3 );
 
-         hb_arraySetNL( pEvParams, 1, ( HB_LONG ) LOWORD( wParam ) );
-         hb_arraySetNL( pEvParams, 2, ( HB_LONG ) HIWORD( wParam ) );
+         hb_arraySetNL( pEvParams, 1, ( long ) LOWORD( wParam ) );
+         hb_arraySetNL( pEvParams, 2, ( long ) HIWORD( wParam ) );
          hb_arraySetNInt( pEvParams, 3, ( HB_LONG ) ( HB_PTRDIFF ) lParam );
 
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_VSCROLL, pEvParams );
