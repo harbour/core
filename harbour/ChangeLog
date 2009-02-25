@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-25 20:17 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/gtwvg/wvgwin.c
+    ! added dirty hack for borland C compiler and #define NONAMELESSUNION
+      in oledlg.h
+
+  * harbour/config/linux/owatcom.cf
+    ! added missing support for HB_USER_LDFLAGS
+
 2009-02-25 09:25 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgpaint.prg
     ! Removed THREAD STATIC implimentation hack introduced

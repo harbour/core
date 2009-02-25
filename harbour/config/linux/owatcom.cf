@@ -64,7 +64,7 @@ endif
 
 LDFILES = $(subst $(space),$(comma) ,$(^F))
 LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS) $(RDDLIBS) $(GTLIBS)))
-LD_RULE = $(LD) $(LDFLAGS) NAME $@ FILE $(LDFILES)
+LD_RULE = $(LD) $(LDFLAGS) $(HB_USER_LDFLAGS) NAME $@ FILE $(LDFILES)
 ifneq ($(LDLIBS),)
    LD_RULE += LIB $(LDLIBS)
 endif

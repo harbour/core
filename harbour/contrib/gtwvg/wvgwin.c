@@ -76,6 +76,15 @@
 
 #define HB_OS_WIN_USED
 
+/* dirty hack for borland C compiler and #define NONAMELESSUNION in oledlg.h */
+#if defined( __BORLANDC__ )
+#  define DUMMYUNIONNAME
+#  define DUMMYUNIONNAME2
+#  define DUMMYUNIONNAME3
+#  define DUMMYUNIONNAME4
+#  define DUMMYUNIONNAME5
+#endif
+
 #include "gtwvg.h"
 #include "hbwapi.h"
 #include <windowsx.h>
