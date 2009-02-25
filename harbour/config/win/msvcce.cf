@@ -42,7 +42,7 @@ LINKPATHS += /subsystem:windowsce,4.20 /machine:arm /armpadcode /stack:65536,409
 LINKPATHS += /nodefaultlib:"kernel32.lib" /align:4096 /opt:ref /opt:icf
 ifeq ($(HB_VISUALC_VER_PRE80),)
 LINKPATHS += /manifest:no
-!endif
+endif
 ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += /libpath:$(LIB_DIR)
 else
