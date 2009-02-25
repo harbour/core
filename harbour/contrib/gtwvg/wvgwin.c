@@ -1592,22 +1592,6 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 //
 HB_FUNC( WVG_TREEVIEW_ADDITEM )
 {
-   #ifdef UNICODE
-   typedef struct tagTVINSERTSTRUCTW
-   {
-     HTREEITEM hParent;
-     HTREEITEM hInsertAfter;
-     TV_ITEMW  item;
-   } TVINSERTSTRUCTW, FAR *LPTVINSERTSTRUCTW;
-   #else
-   typedef struct tagTVINSERTSTRUCTA
-   {
-     HTREEITEM hParent;
-     HTREEITEM hInsertAfter;
-     TV_ITEMA  item;
-   } TVINSERTSTRUCTA, FAR *LPTVINSERTSTRUCTA;
-   #endif
-
    TVINSERTSTRUCT tvis;
    LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
 

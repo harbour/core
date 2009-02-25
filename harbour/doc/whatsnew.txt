@@ -228,7 +228,7 @@ Known build issues
   won't work.
 - gtalleg, hbwhat contrib may not compile on all platforms/compilers.
 - hbcurl won't build when using DMC and libcurl 7.19.0.
-  Earlier versions build okay.
+  Earlier libcurl versions build okay.
 
 
 Version 1.0.1 (2008-09-10)

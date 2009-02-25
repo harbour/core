@@ -351,7 +351,7 @@ FUNCTION Main( ... )
       ENDSWITCH
       IF ! Empty( t_cARCH )
          IF t_lInfo
-            OutStd( "hbmk: Autodetected HB_ARCHITECTURE: " + t_cARCH + hb_osNewLine() )
+            OutStd( "hbmk: Autodetected architecture: " + t_cARCH + hb_osNewLine() )
          ENDIF
       ENDIF
    ENDIF
@@ -416,7 +416,7 @@ FUNCTION Main( ... )
       cDynLibNamePrefix := ""
       cDynLibExt := ".dll"
    OTHERWISE
-      OutErr( "hbmk: Error: HB_ARCHITECTURE value unknown: " + t_cARCH + hb_osNewLine() )
+      OutErr( "hbmk: Error: Architecture value unknown: " + t_cARCH + hb_osNewLine() )
       PauseForKey()
       RETURN 1
    ENDCASE
@@ -456,16 +456,16 @@ FUNCTION Main( ... )
       ENDIF
       IF ! Empty( t_cCOMP )
          IF t_lInfo
-            OutStd( "hbmk: Autodetected HB_COMPILER: " + t_cCOMP + hb_osNewLine() )
+            OutStd( "hbmk: Autodetected compiler: " + t_cCOMP + hb_osNewLine() )
          ENDIF
       ELSE
          IF Empty( aCOMPDET )
-            OutErr( "hbmk: Please choose a compiler by setting envvar HB_COMPILER." + hb_osNewLine() )
+            OutErr( "hbmk: Please choose a compiler by using -comp= option or envvar HB_COMPILER." + hb_osNewLine() )
             OutErr( "      You have the following choices on your platform: " + hb_osNewLine() )
             OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
          ELSE
-            OutErr( "hbmk: Harbour Make couldn't detect any supported C compiler" + hb_osNewLine() )
-            OutErr( "      in your PATH. Please setup one or set envvar HB_COMPILER" + hb_osNewLine() )
+            OutErr( "hbmk: Harbour Make couldn't detect any supported C compiler in your PATH." + hb_osNewLine() )
+            OutErr( "      Please setup one or set -comp= option or envvar HB_COMPILER " + hb_osNewLine() )
             OutErr( "      to one of these values:" + hb_osNewLine() )
             OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
          ENDIF
@@ -474,7 +474,7 @@ FUNCTION Main( ... )
       ENDIF
    ELSE
       IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
-         OutErr( "hbmk: Error: HB_COMPILER value unknown." + hb_osNewLine() )
+         OutErr( "hbmk: Error: Compiler value unknown." + hb_osNewLine() )
          PauseForKey()
          RETURN 2
       ENDIF

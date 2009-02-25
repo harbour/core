@@ -8,11 +8,23 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-25 14:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.sh
+    ! Fixed hb_mkslib link generation.
+  * contrib/gtwvg/wvgwin.c
+    ! Fixed owatcom error. (removed Windows structure redefinition)
+  * utils/hbmk2/hbmk2.prg
+    * Some screen messages slightly refined.
+  * doc/whatsnew.txt
+    * Minor.
+  * ChangeLog
+    * Fixed dates.
+
 2009-02-25 13:54 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
   * contrib/hbbmcdx/bmdbfcdx.c
     ! updated to current rdd subsystem.
 
-2009-02-24 13:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-25 13:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     + Added MinGW + msys specific entry.
 
@@ -29,7 +41,7 @@
     ! Fixed forward slashed to backslashes.
     * Changed default compiler from mingw to msvc.
 
-2009-02-24 11:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-25 11:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Refined autodetection of msvc to not be confused by
       watcom binary dir in the path.
@@ -38,19 +50,19 @@
     % Removed hack to not prioritize MSVC compiler detection,
       so it's now handled just like the others.
 
-2009-02-24 11:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-25 11:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + INSTALL
     + Installation docs kept simple.
     ; TODO: Add it to install packages. Test and extend as needed.
 
-2009-02-24 10:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-25 10:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.bat
     + Added dos/windows (djgpp/mingw) autodetection.
     ! Cleaned help screen.
       (missed from previous entry)
     * Other minor cleanups and fixes on help screen.
 
-2009-02-24 10:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+2009-02-25 10:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.cmd
   * bin/postinst.bat
   * bin/hb-func.sh

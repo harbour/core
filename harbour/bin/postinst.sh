@@ -88,7 +88,7 @@ then
     if [ -n "${hb_mkdyn}" ] && [ -f "${hb_mkdyn}" ]; then
         hb_mkdyn="${hb_mkdyn//-mkdyn/-mkslib}"
         rm -f "${hb_mkdyn}"
-        ln -s hb-mkdyn "${hb_mkdyn}"
+        ln -s "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}"
     fi
 
     if [ "$HB_COMPILER" = "mingw" ]; then
