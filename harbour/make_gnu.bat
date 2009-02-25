@@ -26,14 +26,14 @@ rem ---------------------------------------------------------------
 
 if "%HB_ARCHITECTURE%" == "" if not "%WINDIR%" == "" set HB_ARCHITECTURE=win
 if "%HB_ARCHITECTURE%" == ""                         set HB_ARCHITECTURE=dos
-if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" set HB_COMPILER=mingw
+if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" set HB_COMPILER=msvc
 if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
 rem Set to constant value to be consistent with the non-GNU make files.
 
-if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%/bin
-if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%/lib
-if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%/include
+if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
+if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
+if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
 
 :START
 

@@ -22,13 +22,28 @@ Linux/Darwin/BSD/HP-UX/Solaris
    $ ./hello
    You should see: 'Hello world!' on screen.
 
-Windows
--------
+Windows with MinGW + msys
+-------------------------
+   This is the recommended way to build with MinGW.
+
+   Make sure to have msys and MinGW properly installed
+   and setup. msys should be put in PATH _before_ MinGW.
+
+   > set HB_INSTALL_PREFIX=<DIR> (use forward slashes and msys drive notation: /c/)
+   > sh make_gnu.bat install
+
+   To test it, go to <DIR>/bin directory and type:
+   > hbmk2 ../tests/hello.prg
+   > hello
+   You should see: 'Hello world!' on screen.
+
+Windows with other compilers
+----------------------------
    Make sure to have your C compiler of choice properly
    installed and GNU Make (with the name make.exe)
    accessible in the PATH _before_ the compiler tools.
 
-   > set HB_COMPILER=<[mingw]|msvc|bcc32|owatcom|...>
+   > set HB_COMPILER=<msvc|bcc32|owatcom|...>
    > set HB_INSTALL_PREFIX=<DIR>
    > make_gnu.bat install
 
