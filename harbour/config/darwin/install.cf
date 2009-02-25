@@ -13,6 +13,7 @@ INSTALL_RULE =\
 	    then \
 	      echo "! Installing $$i on $(INSTALL_DIR)"; \
 	      $(CP) $$i $(INSTALL_DIR); \
+	      true; \
 	    else \
 	      echo "! Can't install $$i, not found" 1>&2; \
 	    fi \

@@ -30,7 +30,7 @@ Windows with MinGW + msys
    and setup. msys should be put in PATH _before_ MinGW.
 
    > set HB_INSTALL_PREFIX=<DIR> (use forward slashes and msys drive notation: /c/)
-   > sh make_gnu.bat install
+   > sh make_gnu.sh install
 
    To test it, go to <DIR>/bin directory and type:
    > hbmk2 ../tests/hello.prg

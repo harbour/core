@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-25 15:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    ! Typo in prev.
+
+  * config/darwin/install.cf
+  * config/win/install.cf
+    + Added same as Linux workaround to not let install phase
+      fail because copy on install error.
+
 2009-02-25 14:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.sh
     ! Fixed hb_mkslib link generation.
