@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-26 20:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.bat
+    + Added hbrun-dll.exe generation for msvc64.
+
 2009-02-26 19:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.bat
     * Minor cleanup.

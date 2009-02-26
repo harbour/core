@@ -289,7 +289,11 @@ goto MK_BINDLL
 
 :MK_BINDLL
 
-hbmk2 -q0 -n -shared ..\utils\hbrun\hbrun.prg -o%HB_BIN_INSTALL%\hbrun-dll -lhbcplr -lhbpp -lhbcommon
+set _HB_BIN_INSTALL=%HB_BIN_INSTALL%
+if not "%HB_BIN_COMPILE%" == "" set HB_BIN_INSTALL=%HB_BIN_COMPILE%
+%HB_BIN_INSTALL%\hbmk2 -q0 -n -shared %~dp0\..\utils\hbrun\hbrun.prg -o%_HB_BIN_INSTALL%\hbrun-dll -lhbcplr -lhbpp -lhbcommon
+set HB_BIN_INSTALL=%_HB_BIN_INSTALL%
+
 goto END
 
 :END
