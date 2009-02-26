@@ -199,3 +199,18 @@ HB_FUNC( WIN_GETCOMMANDLINEPARAM )
 
    HB_TCHAR_FREE( buffer );
 }
+
+HB_FUNC( WAPI_GETLASTERROR )
+{
+   hb_retnl( ( long ) GetLastError() );
+}
+
+HB_FUNC( WAPI_SETLASTERROR )
+{
+   SetLastError( ( DWORD ) hb_parnl( 1 ) );
+}
+
+HB_FUNC( WAPI_SETERRORMODE )
+{
+   hb_retni( SetErrorMode( ( UINT ) hb_parni( 1 ) ) );
+}

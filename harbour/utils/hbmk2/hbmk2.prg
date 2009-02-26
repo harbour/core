@@ -84,7 +84,16 @@
          writing, most of them has one created.
          Thank you. [vszakats] */
 
-/* TODO: Sync default c/linker switches with Harbour build systems. */
+/* TODO: Create temporary .c files with mangled names, to
+         avoid incidentally overwriting existing .c file with the
+         same name. Problems to solve: -hbcc compatibility (the
+         feature has to be disabled when this switch is uses).
+         Collision with -o harbour option isn't a problem, since
+         we're overriding it already fo hbmk, but we will need to
+         deal with "/" prefixed variant. Since we need to use -o
+         Harbour switch, it will be a problem also when user tries
+         to use -p option, .ppo files will be generated in temp dir. */
+/* TODO: Sync default c/linker switches with the ones in Harbour GNU make system. */
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cross compilation support. */
 /* TODO: Add support for library creation. */
@@ -94,8 +103,8 @@
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 
-REQUEST hbm_ARCH
-REQUEST hbm_COMP
+REQUEST hbmk_ARCH
+REQUEST hbmk_COMP
 
 THREAD STATIC t_lQuiet := .T.
 THREAD STATIC t_lInfo := .F.
@@ -197,8 +206,8 @@ FUNCTION Main( ... )
 
    LOCAL s_lGUI := .F.
    LOCAL s_lMT := .F.
-   LOCAL s_lSHARED := .F.
-   LOCAL s_lSTATICFULL := .F.
+   LOCAL s_lSHARED := NIL
+   LOCAL s_lSTATICFULL := NIL
    LOCAL s_lDEBUG := .F.
    LOCAL s_lNULRDD := .F.
    LOCAL s_lMAP := .F.
@@ -251,6 +260,8 @@ FUNCTION Main( ... )
    LOCAL cParam
 
    LOCAL cDir, cName, cExt
+
+   LOCAL lNIX := hb_Version( HB_VERSION_UNIX_COMPAT )
 
    LOCAL cSelfCOMP    := hb_Version( HB_VERSION_BUILD_COMP )
    LOCAL cSelfFlagPRG := hb_Version( HB_VERSION_FLAG_PRG )
@@ -551,13 +562,6 @@ FUNCTION Main( ... )
    /* Add main Harbour library dir to lib path list */
    AAddNotEmpty( s_aLIBPATH, s_cHB_LIB_INSTALL )
 
-   /* Build with shared libs by default, if we're installed to default system locations. */
-
-   IF lSysLoc .AND. ( t_cARCH $ "bsd|hpux|sunos|linux" .OR. t_cARCH == "darwin" )
-      s_lSHARED := .T.
-      s_lSTATICFULL := .F.
-   ENDIF
-
    /* Process environment */
 
    IF    Lower( GetEnv( "HB_MT"     ) ) == "mt" ; s_lMT     := .T. ; ENDIF /* Compatibility */
@@ -630,6 +634,18 @@ FUNCTION Main( ... )
                    @s_lRUN,;
                    @s_cGT )
 
+   /* Build with shared libs by default, if we're installed to default system locations. */
+
+   IF s_lSHARED == NIL
+      IF lSysLoc .AND. ( t_cARCH $ "bsd|hpux|sunos|linux" .OR. t_cARCH == "darwin" )
+         s_lSHARED := .T.
+         s_lSTATICFULL := .F.
+      ELSE
+         s_lSHARED := .F.
+         s_lSTATICFULL := .F.
+      ENDIF
+   ENDIF
+
    /* Process command line (2nd pass) */
    FOR EACH cParam IN aParams
 
@@ -643,6 +659,11 @@ FUNCTION Main( ... )
            Lower( cParam )            == "-info"
 
          /* Simply ignore. They were already processed in the first pass. */
+
+      CASE ! lNIX .AND. Left( cParam, 2 ) == "/o"
+
+         /* Swallow this switch. We don't pass it to Harbour, as it may badly
+            interact with hbmk. */
 
       CASE Lower( cParam ) == "-gui"             ; s_lGUI      := .T.
       CASE Lower( cParam ) == "-mwindows"        ; s_lGUI      := .T. /* Compatibility */
@@ -711,9 +732,12 @@ FUNCTION Main( ... )
          IF ! Empty( cDir ) .AND. Empty( cName ) .AND. Empty( cExt )
             /* Only a dir was passed, let's store that and pick a default name later. */
             s_cPROGDIR := cDir
-         ELSE
+         ELSEIF ! Empty( tmp )
             s_cPROGDIR := NIL
             s_cPROGNAME := tmp
+         ELSE
+            s_cPROGDIR := NIL
+            s_cPROGNAME := NIL
          ENDIF
 
       CASE Left( cParam, 2 ) == "-l" .AND. ;
@@ -1803,42 +1827,42 @@ STATIC FUNCTION FindInPath( cFileName )
 
    RETURN NIL
 
-STATIC FUNCTION ArrayJoin( array1, array2 )
-   LOCAL array := AClone( array1 )
-   LOCAL nLen1 := Len( array )
+STATIC FUNCTION ArrayJoin( arraySrc1, arraySrc2 )
+   LOCAL arrayNew := AClone( arraySrc1 )
+   LOCAL nLen1 := Len( arrayNew )
 
-   ASize( array, nLen1 + Len( array2 ) )
+   ASize( arrayNew, nLen1 + Len( arraySrc2 ) )
 
-   RETURN ACopy( array2, array, , , nLen1 + 1 )
+   RETURN ACopy( arraySrc2, arrayNew, , , nLen1 + 1 )
 
-STATIC FUNCTION ArrayAJoin( arrays )
-   LOCAL array := AClone( arrays[ 1 ] )
+STATIC FUNCTION ArrayAJoin( arrayList )
+   LOCAL array := AClone( arrayList[ 1 ] )
    LOCAL tmp
-   LOCAL nLenArray := Len( arrays )
+   LOCAL nLenArray := Len( arrayList )
    LOCAL nLen
    LOCAL nPos := Len( array ) + 1
 
    nLen := 0
    FOR tmp := 1 TO nLenArray
-      nLen += Len( arrays[ tmp ] )
+      nLen += Len( arrayList[ tmp ] )
    NEXT
 
    ASize( array, nLen )
 
    FOR tmp := 2 TO nLenArray
-      ACopy( arrays[ tmp ], array, , , nPos )
-      nPos += Len( arrays[ tmp ] )
+      ACopy( arrayList[ tmp ], array, , , nPos )
+      nPos += Len( arrayList[ tmp ] )
    NEXT
 
    RETURN array
 
-STATIC FUNCTION AAddNotEmpty( aArray, xItem )
+STATIC FUNCTION AAddNotEmpty( array, xItem )
 
    IF ! Empty( xItem )
-      AAdd( aArray, xItem )
+      AAdd( array, xItem )
    ENDIF
 
-   RETURN aArray
+   RETURN array
 
 STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew )
    LOCAL array := AClone( arraySrc )
@@ -2051,7 +2075,11 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
        defined( __PLATFORM__OS2 )
       aCFGDirs := { hb_DirBase() }
    #else
-      aCFGDirs := { "/usr/local/etc", "/etc", hb_DirBase() }
+      aCFGDirs := { GetEnv( "HOME" ) + "/.harbour/",;
+                    "/etc/harbour",;
+                    DirAddPathSep( hb_DirBase() ) + "../etc/harbour",;
+                    DirAddPathSep( hb_DirBase() ) + "../etc",;
+                    hb_DirBase() }
    #endif
 
    FOR EACH cDir IN aCFGDirs
@@ -2213,6 +2241,13 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
          CASE ValueIsF( cLine ) ; lMT := .F.
          ENDCASE
 
+      CASE Lower( Left( cLine, Len( "shareddef="  ) ) ) == "shareddef="  ; cLine := SubStr( cLine, Len( "shareddef="  ) + 1 )
+         IF lSHARED == NIL
+            DO CASE
+            CASE ValueIsT( cLine ) ; lSHARED := .T. ; lSTATICFULL := .F.
+            CASE ValueIsF( cLine ) ; lSHARED := .F. ; lSTATICFULL := .F.
+            ENDCASE
+         ENDIF
       CASE Lower( Left( cLine, Len( "shared="     ) ) ) == "shared="     ; cLine := SubStr( cLine, Len( "shared="     ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; lSHARED := .T. ; lSTATICFULL := .F.
@@ -2372,7 +2407,7 @@ STATIC FUNCTION ArchCompFilter( cItem )
    LOCAL xResult
    LOCAL cValue
 
-   LOCAL cExpr := "( hbm_ARCH() == Lower( '%1' ) .OR. hbm_COMP() == Lower( '%1' ) )"
+   LOCAL cExpr := "( hbmk_ARCH() == Lower( '%1' ) .OR. hbmk_COMP() == Lower( '%1' ) )"
 
    IF ( nStart := At( "{", cItem ) ) > 0 .AND. ;
       ( nEnd := hb_At( "}", cItem, nStart ) ) > 0
@@ -2486,10 +2521,12 @@ STATIC FUNCTION commandResult( cCommand, nResult )
 
    RETURN cResult
 
-FUNCTION hbm_ARCH()
+/* Keep this public, it's used from macro. */
+FUNCTION hbmk_ARCH()
    RETURN t_cARCH
 
-FUNCTION hbm_COMP()
+/* Keep this public, it's used from macro. */
+FUNCTION hbmk_COMP()
    RETURN t_cCOMP
 
 STATIC PROCEDURE PauseForKey()

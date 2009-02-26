@@ -8,6 +8,40 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-26 10:24 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.bat
+    + Moving .lib and .exp (if they are generated) files
+      to LIB dir.
+
+  * source/vm/maindllp.c
+    + Added owatcom flavour of .dll name.
+
+  * contrib/hbwin/win_misc.c
+    + Added WAPI_GETLASTERROR(), WAPI_SETLASTERROR(), WAPI_SETERRORMODE().
+
+  * utils/hbmk2/hbmk2.prg
+    + Added TODO to create temp .c files in temp location.
+      Looks this can create a few problems (-hbcc, .ppo output
+      location when -p is used by user).
+    + '/o' flavour of -o option is now ignored on non-*nix
+      systems to make sure users cannot mess up the hbmk process
+      flow.
+    * -o option modified to reset any previous explicit -o settings.
+    * Some minor internal renames, comments.
+    + Added new hbmk.cfg / .hbp option: 'shareddef='. This can
+      change the default state of shared/static setting, so it
+      can be used by installers or user to override default
+      behaviour. NOTE: HB_SHARED envvar can also be used.
+    * Changed hbmk.cfg lookup preferences to this:
+      1. $HOME/.harbour
+      2. /etc/harbour
+      3. <hbmkdir>/../etc/harbour
+      4. <hbmkdir>/../etc
+      5. <hbmkdir>
+      (NOTE: I've deleted /etc as etc/harbour seems superior
+             and we already store a .def file there.
+             I've also deleted /usr/local/etc)
+
 2009-02-25 18:57 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
   * harbour/contrib/gtwvg/wvgcrt.prg
