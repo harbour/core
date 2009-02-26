@@ -61,11 +61,15 @@
 
 #define HB_DLL_NAME  "harbour.dll"
 #if defined( __BORLANDC__ )
-#define HB_DLL_NAME2 "harbour-11-b32.dll"
+   #define HB_DLL_NAME2 "harbour-11-b32.dll"
 #elif defined( __WATCOMC__ )
-#define HB_DLL_NAME2 "harbour-11-ow.dll"
+   #define HB_DLL_NAME2 "harbour-11-ow.dll"
+#elif defined( _MSC_VER ) && defined( _M_X64 )
+   #define HB_DLL_NAME2 "harbour-11-vc-x64.dll"
+#elif defined( _MSC_VER ) && defined( _M_IA64 )
+   #define HB_DLL_NAME2 "harbour-11-vc-ia64.dll"
 #elif defined( _MSC_VER )
-#define HB_DLL_NAME2 "harbour-11-vc.dll"
+   #define HB_DLL_NAME2 "harbour-11-vc.dll"
 #endif
 
 #if defined(HB_OS_WIN)

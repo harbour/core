@@ -8,6 +8,41 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-26 19:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.bat
+    * Cleaned tool outputs.
+    + Added hbmaindllh lib to included liblist.
+      (dunno what this serves, but we had it in non-GNU make)
+      Do we need this at all?
+    + Added support for msvc64 dll name.
+    * Some tweak to owatcom, but it's just guessing, it still
+      doesn't work.
+    + Added generating hbrun-dll executable.
+
+  * source/vm/hvm.c
+  * source/vm/mainstd.c
+    * Random tweak for owatcom/win dll support without success.
+      Best result so far is:
+      "Unrecoverable error 9012: Can't locate the starting procedure: 'MAIN'"
+
+  * source/vm/Makefile
+    + Added mainddllp generation for msvc, msvc64, bcc32, owatcom.
+
+  * source/vm/maindllp.c
+    + Added msvc64 and msvcia64 .dll names.
+
+  * source/vm/extrap.c
+    * Minor tweak to use alternate (documented) CPU detection macro.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added msvc64 .dll name.
+    * Removed automatic addition of hbcommon lib for shared
+      mode for win compilers.
+
+  * utils/hbtest/hbtest.hbm
+  * utils/hbrun/hbrun.hbm
+    + Added make files.
+
 2009-02-26 12:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/gtwvt/gtwvt.c
     ! Attempt to fix SetMode() always returning FALSE when

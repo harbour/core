@@ -105,7 +105,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
 
    errmsg[ 0 ] = '\0';
 
-#if defined(HB_OS_WIN_64) && defined(_M_AMD64)
+#if defined(HB_OS_WIN_64) && defined(_M_X64)
    {
       PCONTEXT pCtx = pExceptionInfo->ContextRecord;
 

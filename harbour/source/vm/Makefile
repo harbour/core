@@ -25,6 +25,21 @@ else
 	endif
 endif
 
+ifeq ($(HB_ARCHITECTURE),win)
+	ifeq ($(HB_COMPILER),bcc32)
+		DIRS += maindllh
+	endif
+	ifeq ($(HB_COMPILER),msvc)
+		DIRS += maindllh
+	endif
+	ifeq ($(HB_COMPILER),msvc64)
+		DIRS += maindllh
+	endif
+	ifeq ($(HB_COMPILER),owatcom)
+		DIRS += maindllh
+	endif
+endif
+
 C_SOURCES=\
 	hvm.c \
 	arrays.c \

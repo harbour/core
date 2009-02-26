@@ -1195,8 +1195,7 @@ FUNCTION Main( ... )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-ow",;
                                        "harbour-" + cDL_Version_NonGNU + "-ow" ),;
                            "hbmainstd",;
-                           "hbmainwin",;
-                           "hbcommon" }
+                           "hbmainwin" }
 
          IF Len( s_aRESSRC ) > 0
             IF Len( s_aRESSRC ) == 1
@@ -1346,8 +1345,7 @@ FUNCTION Main( ... )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-b32",;
                                        "harbour-" + cDL_Version_NonGNU + "-b32" ),;
                            "hbmainstd",;
-                           "hbmainwin",;
-                           "hbcommon" }
+                           "hbmainwin" }
 
       CASE t_cARCH == "win" .AND. t_cCOMP $ "msvc|msvc64"
          IF s_lDEBUG
@@ -1384,11 +1382,17 @@ FUNCTION Main( ... )
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
          /* TOFIX: The two build systems should generate the same .dll names, otherwise
                    we can only be compatible with one of them. non-GNU is the common choice here. */
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-vc",;
-                                       "harbour-" + cDL_Version_NonGNU + "-vc" ),;
-                           "hbmainstd",;
-                           "hbmainwin",;
-                           "hbcommon" }
+         IF t_cCOMP == "msvc64"
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-vc-x64",;
+                                          "harbour-" + cDL_Version_NonGNU + "-vc-x64" ),;
+                              "hbmainstd",;
+                              "hbmainwin" }
+         ELSE
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-vc",;
+                                          "harbour-" + cDL_Version_NonGNU + "-vc" ),;
+                              "hbmainstd",;
+                              "hbmainwin" }
+         ENDIF
 
          cBin_Res := "rc.exe"
          cOpt_Res := "/r {LR}"
