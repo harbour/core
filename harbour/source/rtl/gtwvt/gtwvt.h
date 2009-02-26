@@ -159,7 +159,7 @@ typedef struct
    PHB_CODEPAGE boxCDP;                   /* CodePage for legacy drawing chars: IBM437 */
 #endif
 
-#if !defined(UNICODE)
+#if !defined( UNICODE )
    BYTE     keyTransTbl[ 256 ];
    BYTE     chrTransTbl[ 256 ];
 #endif
@@ -168,6 +168,9 @@ typedef struct
    BOOL     bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
 
    int      CodePage;                     /* Code page to use for display characters */
+#if ! defined( UNICODE )
+   int      boxCodePage;                  /* Code page to use for display draw line characters */
+#endif
    BOOL     Win9X;                        /* Flag to say if running on Win9X not NT/2000/XP */
    BOOL     AltF4Close;                   /* Can use Alt+F4 to close application */
    BOOL     CentreWindow;                 /* True if window is to be Reset into centre of window */

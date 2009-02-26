@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-26 12:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.h
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    + added support to set codepage for box drawing characters using
+      HB_GTI_BOXCP as numeric value just like in HB_GTI_CODEPAGE for
+      non UNICODE builds. In Windows CP encoding has even higher priority
+      then font name so such functionality is necessary for users who
+      have to keep normal and box font synced
+    % do not allocate separate font handle for BOX drawing characters
+      when they have the same encoding as normal characters
+    ! keep box and normal font handles synced and free then on exit
+    ! respect HB_GTI_RESIZABLE settings when new window is created
+
 2009-02-26 10:24 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.bat
     + Moving .lib and .exp (if they are generated) files
