@@ -281,7 +281,7 @@ typedef struct
    PHB_GT   pGT;                            /* core GT pointer */
    int      iHandle;                        /* window number */
 
-   HINSTANCE hInstance;
+   HINSTANCE hInstance;                     /* parent window instance */
    int       iCmdShow;
 
    USHORT   ROWS;                           /* number of displayable rows in window */
@@ -324,7 +324,7 @@ typedef struct
    PHB_CODEPAGE boxCDP;                   /* CodePage for legacy drawing chars: IBM437 */
 #endif
 
-#if !defined(UNICODE)
+#if !defined( UNICODE )
    BYTE     keyTransTbl[ 256 ];
    BYTE     chrTransTbl[ 256 ];
 #endif
@@ -333,6 +333,9 @@ typedef struct
    BOOL     bIconToFree;                    /* Do we need to free this icon when it's not NULL? */
 
    int      CodePage;                       /* Code page to use for display characters */
+#if ! defined( UNICODE )
+   int      boxCodePage;                  /* Code page to use for display draw line characters */
+#endif
    BOOL     Win9X;                          /* Flag to say if running on Win9X not NT/2000/XP */
    BOOL     AltF4Close;                     /* Can use Alt+F4 to close application */
    BOOL     CentreWindow;                   /* True if window is to be Reset into centre of window */
@@ -506,8 +509,22 @@ typedef struct _tag_HB_GT_COLDEF
 #ifndef WM_MOUSEWHEEL
 #  define WM_MOUSEWHEEL 0x020A
 #endif
+#ifndef WM_ENTERSIZEMOVE
+#  define WM_ENTERSIZEMOVE 561
+#endif
+#ifndef WM_EXITSIZEMOVE
+#  define WM_EXITSIZEMOVE  562
+#endif
 
-//----------------------------------------------------------------------//
+#ifndef SWP_DEFERERASE
+#  define SWP_DEFERERASE 0x2000
+#endif
+#ifndef SW_NORMAL
+#  define SW_NORMAL 1
+#endif
+#ifndef SC_MAXIMIZE
+#  define SC_MAXIMIZE 0xF030
+#endif
 
 POINT       HB_EXPORT   hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row );
 IPicture    HB_EXPORT * hb_wvt_gtLoadPicture( char * image );

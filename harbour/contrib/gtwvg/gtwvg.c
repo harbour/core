@@ -84,7 +84,14 @@
 
 #define HB_OS_WIN_USED
 
+#undef _WIN32_WINNT
+#define _WIN32_WINNT   0x0500 /* Set to Windows 2000 for WS_EX_LAYERED */
+
 #include "gtwvg.h"
+
+#if !defined( SM_REMOTESESSION )
+   #define SM_REMOTESESSION        0x1000
+#endif
 
 static int           s_GtId;
 static HB_GT_FUNCS   SuperTable;
@@ -232,6 +239,13 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    if( pWVT->pszSelectCopy )
       hb_xfree( pWVT->pszSelectCopy );
 
+#if !defined( UNICODE )
+   if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
+      DeleteObject( pWVT->hFontBox );
+#endif
+   if( pWVT->hFont )
+      DeleteObject( pWVT->hFont );
+   
    // Detach PRG callback
    pWVT->pSymWVT_PAINT      = NULL;
    pWVT->pSymWVT_SETFOCUS   = NULL;
@@ -329,6 +343,9 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
    pWVT->CentreWindow      = TRUE;            /* Default is to always display window in centre of screen */
    pWVT->CodePage          = OEM_CHARSET;     /* GetACP(); - set code page to default system */
+#if !defined( UNICODE )
+   pWVT->boxCodePage       = OEM_CHARSET;     /* GetACP(); - set code page to default system */
+#endif
 
    pWVT->Win9X             = ( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
    pWVT->AltF4Close        = FALSE;
@@ -346,6 +363,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
    pWVT->ResizeMode        = HB_GTI_RESIZEMODE_FONT;
 
+   pWVT->bResizing         = FALSE;
+   
    pWVT->pPP               = ( HB_GT_PARAMS * ) hb_xgrab( sizeof( HB_GT_PARAMS ) );
    pWVT->pPP->style        = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
    pWVT->pPP->exStyle      = 0;
@@ -373,8 +392,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 #endif
 #endif
 
-   pWVT->bResizing         = FALSE;
-
+   
    /* GUI Related members initialized */
    hb_wvt_gtCreateObjects( pWVT );
 
@@ -628,7 +646,7 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
    BYTE pszAnsi[ 2 ];
    BYTE pszOem[ 2 ];
 
-   pszAnsi[ 0 ] = ( BYTE ) c;
+   pszAnsi[ 0 ] = ( CHAR ) c;
    pszAnsi[ 1 ] = 0;
    CharToOemBuffA( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
 
@@ -755,14 +773,21 @@ static BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
              tm.tmAveCharWidth >= 3 &&
              tm.tmHeight >= 4 )
          {
-            if( pWVT->hFont )
-               DeleteObject( pWVT->hFont );
 #if ! defined( UNICODE )
-            if( pWVT->hFontBox )
+            if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
                DeleteObject( pWVT->hFontBox );
 
-            pWVT->hFontBox    = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, OEM_CHARSET );
+            if( pWVT->CodePage == pWVT->boxCodePage )
+               pWVT->hFontBox = hFont;
+            else
+            {
+               pWVT->hFontBox = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->boxCodePage );
+               if( !pWVT->hFontBox )
+                  pWVT->hFontBox = hFont;
+            }
 #endif
+            if( pWVT->hFont )
+               DeleteObject( pWVT->hFont );
 
             pWVT->hFont       = hFont;
             pWVT->fontHeight  = tm.tmHeight;
@@ -879,8 +904,15 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 #if ! defined( UNICODE )
    if( pWVT->hFontBox )
       DeleteObject( pWVT->hFontBox );
-   pWVT->hFontBox = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
-                                          pWVT->fontWeight, pWVT->fontQuality, OEM_CHARSET );
+   if( pWVT->CodePage == pWVT->boxCodePage )
+      pWVT->hFontBox = hFont;
+   else
+   {
+      pWVT->hFontBox = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+                                             pWVT->fontWeight, pWVT->fontQuality, pWVT->boxCodePage );
+      if( !pWVT->hFontBox )
+         pWVT->hFontBox = hFont;
+   }
 #endif
 
    hdc      = GetDC( pWVT->hWnd );
@@ -2233,7 +2265,7 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
    return ( width <= maxWidth ) && ( height <= maxHeight );
 }
 
-static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
+static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
 {
    HWND     hWnd, hWndParent;
    LPTSTR   szAppName;
@@ -2317,6 +2349,9 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
          pWVT->CentreWindow = TRUE;
    }
 
+   if( ! bResizable )
+      pWVT->pPP->style = ( pWVT->pPP->style &~ ( WS_THICKFRAME | WS_MAXIMIZEBOX ) | WS_BORDER );
+      
    hWnd = CreateWindowEx(
                pWVT->pPP->exStyle,                          /* extended style */
                s_szClassName,                               /* classname      */
@@ -2342,7 +2377,7 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 
    if( !pWVT->hWnd )
    {
-      pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT );
+      pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT, pWVT->bResizable );
       if( !pWVT->hWnd )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 #if 0
@@ -2388,14 +2423,18 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
          hb_gt_wvt_SetWindowTitle( pWVT->hWnd, pFileName->szName );
          hb_xfree( pFileName );
       }
-      /* Create "Mark" prompt in SysMenu to allow console type copy operation */
+
       {
          HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
          if( hSysMenu )
          {
+            /* Create "Mark" prompt in SysMenu to allow console type copy operation */
             LPTSTR buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
             AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, buffer );
             HB_TCHAR_FREE( buffer );
+
+            if( ! pWVT->bClosable )
+               EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED );
          }
       }
 
@@ -2524,7 +2563,7 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
       }
       else
       {
-         hb_gt_wvt_SetWindowSize( pWVT, iRow, iCol );
+         fResult = hb_gt_wvt_SetWindowSize( pWVT, iRow, iCol );
          HB_GTSELF_SEMICOLD( pGT );
       }
    }
@@ -2788,9 +2827,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_DESKTOPWIDTH:
       {
          RECT rDesk;
-         HWND hDesk;
-
-         hDesk = GetDesktopWindow();
+         HWND hDesk = GetDesktopWindow();
          GetWindowRect( hDesk, &rDesk );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, rDesk.right - rDesk.left );
          break;
@@ -2806,8 +2843,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_DESKTOPCOLS:
       {
          RECT rDesk;
-         HWND hDesk;
-         hDesk = GetDesktopWindow();
+         HWND hDesk = GetDesktopWindow();
          GetClientRect( hDesk, &rDesk );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult,
                               ( rDesk.right - rDesk.left ) / pWVT->PTEXTSIZE.x );
@@ -2816,8 +2852,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_DESKTOPROWS:
       {
          RECT rDesk;
-         HWND hDesk;
-         hDesk = GetDesktopWindow();
+         HWND hDesk = GetDesktopWindow();
          GetClientRect( hDesk, &rDesk );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult,
                               ( rDesk.bottom - rDesk.top ) / pWVT->PTEXTSIZE.y );
@@ -2838,13 +2873,89 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_CODEPAGE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->CodePage );
-         iVal = hb_itemGetNI( pInfo->pNewVal );
-         if( iVal > 0 && iVal != pWVT->CodePage )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
+         iVal = hb_itemGetNI( pInfo->pNewVal );
+            if( iVal != pWVT->CodePage )
+            {
+               if( !pWVT->hWnd )
+               {
+                  pWVT->CodePage = iVal;
+               }
+#if !defined( UNICODE )
+               else if( iVal == pWVT->boxCodePage )
+               {
+                  if( pWVT->hFont != pWVT->hFontBox )
+                  {
+                     if( pWVT->hFont )
+                        DeleteObject( pWVT->hFont );
+                     pWVT->hFont = pWVT->hFontBox;
+                  }
+                  pWVT->CodePage = iVal;
+               }
+#endif
+               else
+               {
+                  HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+                                                   pWVT->fontWeight, pWVT->fontQuality, iVal );
+                  if( hFont )
+         {
+                     if( pWVT->hFont )
+                        DeleteObject( pWVT->hFont );
+                     pWVT->hFont = hFont;
             pWVT->CodePage = iVal;
-            if( pWVT->hWnd )
-               hb_gt_wvt_ResetWindowSize( pWVT );
+                  }
+               }
+            }
          }
+         break;
+
+      case HB_GTI_BOXCP:
+#if defined( UNICODE )
+         pInfo->pResult = hb_itemPutC( pInfo->pResult,
+                                       pWVT->boxCDP ? pWVT->boxCDP->id : NULL );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         {
+            PHB_CODEPAGE cdpBox = hb_cdpFind( hb_itemGetCPtr( pInfo->pNewVal ) );
+            if( cdpBox )
+               pWVT->boxCDP = cdpBox;
+         }
+#else
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->boxCodePage );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         {
+            iVal = hb_itemGetNI( pInfo->pNewVal );
+            if( iVal != pWVT->boxCodePage )
+            {
+               if( !pWVT->hWnd )
+               {
+                  pWVT->boxCodePage = iVal;
+               }
+               else if( iVal == pWVT->CodePage )
+               {
+                  if( pWVT->hFontBox != pWVT->hFont )
+                  {
+                     if( pWVT->hFontBox )
+                        DeleteObject( pWVT->hFontBox );
+                     pWVT->hFontBox = pWVT->hFont;
+                  }
+                  pWVT->boxCodePage = iVal;
+               }
+               else
+               {
+                  HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+                                                   pWVT->fontWeight, pWVT->fontQuality, iVal );
+                  if( hFont )
+                  {
+                     if( pWVT->hFontBox )
+                        DeleteObject( pWVT->hFontBox );
+                     pWVT->hFontBox = hFont;
+                     pWVT->boxCodePage = iVal;
+                  }
+               }
+            }
+         }
+#endif
          break;
 
       case HB_GTI_ICONFILE:
