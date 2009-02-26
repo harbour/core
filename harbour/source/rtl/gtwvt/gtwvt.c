@@ -1965,7 +1965,7 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
       }
       else
       {
-         hb_gt_wvt_SetWindowSize( pWVT, iRow, iCol );
+         fResult = hb_gt_wvt_SetWindowSize( pWVT, iRow, iCol );
          HB_GTSELF_SEMICOLD( pGT );
       }
    }

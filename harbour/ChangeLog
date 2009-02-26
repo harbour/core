@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-26 12:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/gtwvt/gtwvt.c
+    ! Attempt to fix SetMode() always returning FALSE when
+      the window isn't open yet. Please test, I didn't.
+
 2009-02-26 12:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/gtwvt/gtwvt.c
     ! Fixed HB_GTI_CLOSABLE when set before window initialization.
