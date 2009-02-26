@@ -1328,7 +1328,7 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
 
    CASE WM_CAPTURECHANGED
       EXIT
-
+#if 0
    CASE WM_MOUSEMOVE
       IF ::objType == objTypeScrollBar
          IF !( ::lTracking )
@@ -1354,6 +1354,7 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
          ENDIF
       ENDIF
       EXIT
+#endif
    END
 
    RETURN Win_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )

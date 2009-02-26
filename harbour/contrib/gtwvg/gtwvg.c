@@ -1791,7 +1791,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
    if( pWVT ) switch( message )
    {
-      #if 1
       case WM_HSCROLL:
       {
          PHB_ITEM pEvParams = hb_itemNew( NULL );
@@ -1818,7 +1817,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_VSCROLL, pEvParams );
          return( 0 );
       }
-      #endif
       case WM_CREATE:
       {
          if( pWVT->pPP->iWndType == HB_WNDTYPE_CRT )
@@ -2173,34 +2171,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             return( iResult );
          }
       }
-      #if 0
-      case WM_HSCROLL:
-      {
-         PHB_ITEM pEvParams = hb_itemNew( NULL );
-
-         hb_arrayNew( pEvParams, 3 );
-
-         hb_arraySetNL( pEvParams, 1, ( HB_LONG ) LOWORD( wParam ) );
-         hb_arraySetNL( pEvParams, 2, ( HB_LONG ) HIWORD( wParam ) );
-         hb_arraySetNInt( pEvParams, 3, ( HB_LONG ) ( HB_PTRDIFF ) lParam );
-
-         hb_gt_wvt_FireEvent( pWVT, HB_GTE_HSCROLL, pEvParams );
-         return( 0 );
-      }
-      case WM_VSCROLL:
-      {
-         PHB_ITEM pEvParams = hb_itemNew( NULL );
-
-         hb_arrayNew( pEvParams, 3 );
-
-         hb_arraySetNL( pEvParams, 1, ( HB_LONG ) LOWORD( wParam ) );
-         hb_arraySetNL( pEvParams, 2, ( HB_LONG ) HIWORD( wParam ) );
-         hb_arraySetNInt( pEvParams, 3, ( HB_LONG ) ( HB_PTRDIFF ) lParam );
-
-         hb_gt_wvt_FireEvent( pWVT, HB_GTE_VSCROLL, pEvParams );
-         return( 0 );
-      }
-      #endif
    }
 
    return DefWindowProc( hWnd, message, wParam, lParam );
@@ -2314,6 +2284,9 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
             pWVT->pPP->y = pt.y;
 
             bByConf = TRUE;
+
+            //WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
+            pWVT->pPP->style = WS_POPUP|WS_CAPTION|WS_DLGFRAME;
          }
       }
    }
@@ -3023,14 +2996,16 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                if( pWVT->hWnd )
                {
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-                  LONG style;
+                  LONG style = GetWindowLong( pWVT->hWnd, GWL_STYLE );
 #else
-                  LONG_PTR style;
+                  LONG_PTR style = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
 #endif
                   if( pWVT->bResizable )
-                     style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME;
+                     //style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME;
+                     style = style | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME;
                   else
-                     style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
+                     //style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_BORDER;
+                     style = ( style & ~( WS_MAXIMIZEBOX | WS_THICKFRAME ) );
 
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
                   SetWindowLong( pWVT->hWnd, GWL_STYLE, style );

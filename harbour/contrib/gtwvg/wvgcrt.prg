@@ -241,7 +241,7 @@ EXPORTED:
    //  HARBOUR implementation
    DATA     resizable                             INIT  .t.
    DATA     resizeMode                            INIT  HB_GTI_RESIZEMODE_FONT
-   DATA     style                                 INIT  WS_OVERLAPPEDWINDOW
+   DATA     style                                 INIT  (WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_SIZEBOX + WS_MINIMIZEBOX + WS_MAXIMIZEBOX)
    DATA     exStyle                               INIT  0
    DATA     lModal                                INIT  .f.
    DATA     pGTp
@@ -321,6 +321,14 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
       ::pGT := hb_gtSelect()
    endif
 
+   if ::lModal
+      ::style := WS_POPUP + WS_CAPTION
+      if !( ::resizable )
+         //::exStyle := WS_EX_DLGMODALFRAME
+         //::style += WS_DLGFRAME
+      endif
+   endif
+
    hb_gtInfo( HB_GTI_PRESPARAMS, { ::exStyle, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
                            ::maxRow+1, ::maxCol+1, ::pGTp, .F., lRowCol, HB_WNDTYPE_CRT } )
    hb_gtInfo( HB_GTI_SETFONT, { ::fontName, ::fontHeight, ::fontWidth } )
@@ -345,7 +353,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
    endif
 
    if ::lModal
-      //hb_gtInfo( HB_GTI_DISABLE, ::pGTp )
+      hb_gtInfo( HB_GTI_DISABLE, ::pGTp )
    endif
 
    if ::visible
