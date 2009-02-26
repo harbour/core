@@ -9,7 +9,8 @@ include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
 include $(TOP)$(ROOT)config/prg.cf
 
-HB_FLAGS := $(HB_FLAGS) -n -gc0
+HB_GCMODE=0
+HB_NFLAG=-n
 
 EXE_NAME=
 

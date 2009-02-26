@@ -8,6 +8,31 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-26 12:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/rules.cf
+  * config/win/global.cf
+  * config/lib.cf
+  * config/bin.cf
+    * Make files changed to:
+      - add Harbour option -n1 for all lib .prgs.
+      - add Harbour option -n for all binary .prgs.
+      - use HB_GCMODE to override -gc mode for binaries.
+      - add C -DHB_DYNLIB option when HB_DLL envvar is set to 'yes'.
+    ; This means that now 'set HB_DLL=yes' setting works as planned,
+      and will compile Harbour to allow the creation of .dlls
+      and will also create those (msvc, bcc32, owatcom).
+      (MinGW has been covered before these changes already.)
+    ; TOFIX: .dlls still need tweaking to work properly.
+             owatcom doesn't create usable binaries when
+             using HB_DLL=yes f.e., also hbrun-dll cannot be
+             built with msvc/bcc32.
+
+  * config/win/owatcom.cf
+    % Removed DOS hack.
+
+  * bin/hb-mkdyn.bat
+    ! Fixes to recent changes.
+
 2009-02-26 12:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwvt/gtwvt.h
   * harbour/source/rtl/gtwvt/gtwvt.c
@@ -634,7 +659,7 @@
     + Added -n1 to Harbour flags to lib.cf.
     ; TOFIX: The former works, the latter doesn't.
              Could someone please help why is this
-             happening?
+             happening? [DONE]
 
   * utils/hbmk2/hbmk2.prg
     - Removed -n from default Harbour switches.
@@ -654,7 +679,7 @@
       also be generated for all executables.
     ; TODO: Solve to compile Harbour lib .prgs using
             -n1 switch. (needed for .dll, and this
-            one has only befenefits for other scenarios)
+            one has only befenefits for other scenarios) [DONE]
     ; TODO: Add hb-mkdll.bat to postinst.bat. [DONE]
     ; TODO: Add BCC support, if possible. [DONE]
     ; TODO: Rename hb-mkslib.sh to 8.3 name and sync

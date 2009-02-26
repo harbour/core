@@ -120,9 +120,7 @@ rmdir _dll
 
 goto END
 
-:DO_OWATCOM
-
-if not "%HB_COMPILER%" == "bcc32" goto NOT_BCC32
+:DO_BCC32
 
 echo Making .dlls for %HB_COMPILER%...
 
@@ -217,10 +215,10 @@ set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-b32
 set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-b32
 
 echo. , "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll",, cw32mt.lib import32.lib >> _hballst.txt
-echo. , "%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll",, cw32mt.lib import32.lib >> _hballmt.txt
+echo. , "%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll",, cw32mt.lib import32.lib >> _hballmt.txt
 
-echo Making %_DST_NAME_ST%.dll... && ilink32 -Gn -C -aa -Tpd -Gi -x c0d32.obj @_hballst.txt > nul
-echo Making %_DST_NAME_MT%.dll... && ilink32 -Gn -C -aa -Tpd -Gi -x c0d32.obj @_hballmt.txt > nul
+echo Making %_DST_NAME_ST%.dll... && ilink32 -Gn -C -aa -Tpd -Gi -x c0d32.obj @_hballst.txt
+echo Making %_DST_NAME_MT%.dll... && ilink32 -Gn -C -aa -Tpd -Gi -x c0d32.obj @_hballmt.txt
 
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
@@ -246,9 +244,7 @@ rmdir _dll
 
 goto END
 
-:NOT_BCC32
-
-if not "%HB_COMPILER%" == "owatcom" goto NOT_OWATCOM
+:DO_OWATCOM
 
 echo Making .dlls for %HB_COMPILER%...
 

@@ -14,7 +14,7 @@ include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
 include $(TOP)$(ROOT)config/prg.cf
 
-HB_FLAGS := $(HB_FLAGS) -n1
+HB_NFLAG=-n1
 
 LIB_NAME := $(LIB_PREF)$(LIBNAME)$(LIB_EXT)
 

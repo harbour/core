@@ -105,7 +105,3 @@ ARFLAGS = -p=64 -c -n $(HB_USER_AFLAGS)
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf
-
-# work arround to DOS command line size limit
-export HARBOURCMD := $(HB_FLAGS)
-HB_FLAGS =
