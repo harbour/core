@@ -8,13 +8,36 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 08:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Now all dirs of input files referred to through .hbm
+      make files will be adjusted with the .hbm path as passed
+      on the command line. This allows to use .hbm files without
+      switching to their host dirs:
+      'hbmk2 examples/hello/hello.hbm'
+      (internal logic also allows to display error messages
+      pointing to the exact location where the error
+      was detected)
+    + Added simple macro substitution engine. Not used yet.
+    % Minor optimizations.
+
+  * bin/hb-mkdyn.bat
+  * source/vm/Makefile
+  * utils/hbmk2/hbmk2.prg
+  + config/win/msvcia64.cf
+    + Added support for IA64 architecure with MSVC.
+      (actual compilation untested as it needs MSVC Team System)
+
+  * bin/hb-mkdyn.bat
+    % Now using .hbm files.
+
 2009-02-26 22:51 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvgwin.c
     ! Removed TREEVIEWITEM structure definition as it is fixed by Przemek.
 
 2009-02-26 16:10 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
-    ! Some refinements is setting Window's style through 
+    ! Some refinements is setting Window's style through
       SetWindowLong(Ptr)().
 
   * harbour/contrib/gtwvg/wvgwin.c

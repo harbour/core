@@ -22,10 +22,11 @@ set HB_DLL_LIBS=hbcommon hbpp hbrtl hbmacro hblang hbcpage hbpcre hbzlib hbexter
 set HB_DLL_LIBS_ST=hbvm
 set HB_DLL_LIBS_MT=hbvmmt
 
-if "%HB_COMPILER%" == "msvc"    goto DO_MSVC
-if "%HB_COMPILER%" == "msvc64"  goto DO_MSVC
-if "%HB_COMPILER%" == "bcc32"   goto DO_BCC32
-if "%HB_COMPILER%" == "owatcom" goto DO_OWATCOM
+if "%HB_COMPILER%" == "msvc"     goto DO_MSVC
+if "%HB_COMPILER%" == "msvc64"   goto DO_MSVC
+if "%HB_COMPILER%" == "msvcia64" goto DO_MSVC
+if "%HB_COMPILER%" == "bcc32"    goto DO_BCC32
+if "%HB_COMPILER%" == "owatcom"  goto DO_OWATCOM
 
 echo HB_COMPILER %HB_COMPILER% isn't supported.
 goto END
@@ -93,10 +94,12 @@ for %%f in (%HB_DLL_LIBS_MT%) do (
 )
 cd ..
 
-if "%HB_COMPILER%" == "msvc"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-vc
-if "%HB_COMPILER%" == "msvc"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-vc
-if "%HB_COMPILER%" == "msvc64" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-vc-x64
-if "%HB_COMPILER%" == "msvc64" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-vc-x64
+if "%HB_COMPILER%" == "msvc"     set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-vc
+if "%HB_COMPILER%" == "msvc"     set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-vc
+if "%HB_COMPILER%" == "msvc64"   set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-vc-x64
+if "%HB_COMPILER%" == "msvc64"   set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-vc-x64
+if "%HB_COMPILER%" == "msvcia64" set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-vc-ia64
+if "%HB_COMPILER%" == "msvcia64" set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-vc-ia64
 
 echo Making %_DST_NAME_ST%.dll... && link /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
 echo Making %_DST_NAME_MT%.dll... && link /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
@@ -120,7 +123,7 @@ del _hboneut.txt
 cd ..
 rmdir _dll
 
-goto MK_BINDLL
+goto MK_BIN_DLL
 
 :DO_BCC32
 
@@ -224,8 +227,6 @@ echo Making %_DST_NAME_MT%.dll... && ilink32 -q -Gn -C -aa -Tpd -Gi -x c0d32.obj
 
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
-if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.exp" move "%HB_BIN_INSTALL%\%_DST_NAME_ST%.exp" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.exp"
-if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.exp" move "%HB_BIN_INSTALL%\%_DST_NAME_MT%.exp" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.exp"
 
 del _hballst.txt
 del _hballmt.txt
@@ -244,7 +245,7 @@ del _hboneut.txt
 cd ..
 rmdir _dll
 
-goto MK_BINDLL
+goto MK_BIN_DLL
 
 :DO_OWATCOM
 
@@ -269,13 +270,11 @@ echo FILE '%HB_DLL_LIBS_MT%.lib'>> _hbsmt.txt
 set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-ow
 set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-ow
 
-echo Making %_DST_NAME_ST%.dll... && wlink OP QUIET SYS NT_DLL NAME '%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll' OP IMPLIB @_hbsst.txt LIB user32.lib, wsock32.lib, advapi32.lib, gdi32.lib
-echo Making %_DST_NAME_MT%.dll... && wlink OP QUIET SYS NT_DLL NAME '%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll' OP IMPLIB @_hbsmt.txt LIB user32.lib, wsock32.lib, advapi32.lib, gdi32.lib
+echo Making %_DST_NAME_ST%.dll... && wlink OP QUIET SYS NT_DLL NAME '%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll' @_hbsst.txt LIB user32.lib, wsock32.lib, advapi32.lib, gdi32.lib
+echo Making %_DST_NAME_MT%.dll... && wlink OP QUIET SYS NT_DLL NAME '%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll' @_hbsmt.txt LIB user32.lib, wsock32.lib, advapi32.lib, gdi32.lib
 
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_ST%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.lib"
 if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" move "%HB_BIN_INSTALL%\%_DST_NAME_MT%.lib" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.lib"
-if exist "%HB_BIN_INSTALL%\%_DST_NAME_ST%.exp" move "%HB_BIN_INSTALL%\%_DST_NAME_ST%.exp" "%HB_LIB_INSTALL%\%_DST_NAME_ST%.exp"
-if exist "%HB_BIN_INSTALL%\%_DST_NAME_MT%.exp" move "%HB_BIN_INSTALL%\%_DST_NAME_MT%.exp" "%HB_LIB_INSTALL%\%_DST_NAME_MT%.exp"
 
 del %HB_DLL_LIBS_ST%.lib
 del %HB_DLL_LIBS_MT%.lib
@@ -285,14 +284,16 @@ del _hbsmt.txt
 cd ..
 rmdir _dll
 
-goto MK_BINDLL
+goto MK_BIN_DLL
 
-:MK_BINDLL
+:MK_BIN_DLL
 
 set _HB_BIN_INSTALL=%HB_BIN_INSTALL%
 if not "%HB_BIN_COMPILE%" == "" set HB_BIN_INSTALL=%HB_BIN_COMPILE%
-%HB_BIN_INSTALL%\hbmk2 -q0 -n -shared %~dp0\..\utils\hbrun\hbrun.prg -o%_HB_BIN_INSTALL%\hbrun-dll -lhbcplr -lhbpp -lhbcommon
+%HB_BIN_INSTALL%\hbmk2 -q0 -shared -o%_HB_BIN_INSTALL%\hbrun-dll  %~dp0..\utils\hbrun\hbrun.hbm -lhbcplr -lhbpp -lhbcommon
+%HB_BIN_INSTALL%\hbmk2 -q0 -shared -o%_HB_BIN_INSTALL%\hbtest-dll %~dp0..\utils\hbtest\hbtest.hbm
 set HB_BIN_INSTALL=%_HB_BIN_INSTALL%
+set _HB_BIN_INSTALL=
 
 goto END
 

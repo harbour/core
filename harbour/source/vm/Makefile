@@ -35,6 +35,9 @@ ifeq ($(HB_ARCHITECTURE),win)
 	ifeq ($(HB_COMPILER),msvc64)
 		DIRS += maindllh
 	endif
+	ifeq ($(HB_COMPILER),msvcia64)
+		DIRS += maindllh
+	endif
 	ifeq ($(HB_COMPILER),owatcom)
 		DIRS += maindllh
 	endif

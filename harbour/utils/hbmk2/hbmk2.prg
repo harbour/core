@@ -100,6 +100,10 @@
 /* TODO: Cleanup on variable names and compiler configuration. */
 /* TODO: Optimizations (speed/memory). */
 
+/* TOFIX: We should try using the same .dll name format for all compilers/platform.
+          This also means they should be bniary compatible with each other
+          (within a given architecture of course). */
+
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 
@@ -115,6 +119,10 @@ THREAD STATIC t_cGTDEFAULT
 
 THREAD STATIC t_cCCPATH
 THREAD STATIC t_cCCPREFIX
+
+#define _PAR_cParam         1
+#define _PAR_cFileName      2
+#define _PAR_nLine          3
 
 FUNCTION Main( ... )
 
@@ -257,7 +265,9 @@ FUNCTION Main( ... )
    LOCAL lStopAfterCComp := .F.
 
    LOCAL aParams
+   LOCAL aParam
    LOCAL cParam
+   LOCAL cParamL
 
    LOCAL cDir, cName, cExt
 
@@ -268,11 +278,11 @@ FUNCTION Main( ... )
    LOCAL cSelfFlagC   := hb_Version( HB_VERSION_FLAG_C )
    LOCAL cSelfFlagL   := hb_Version( HB_VERSION_FLAG_LINKER )
 
-   LOCAL cDL_Version_NonGNU := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) +;
-                               hb_ntos( hb_Version( HB_VERSION_MINOR ) )
-   LOCAL cDL_Version        := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + "." +;
-                               hb_ntos( hb_Version( HB_VERSION_MINOR ) ) + "." +;
-                               hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
+   LOCAL cDL_Version_Alter := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) +;
+                              hb_ntos( hb_Version( HB_VERSION_MINOR ) )
+   LOCAL cDL_Version       := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + "." +;
+                              hb_ntos( hb_Version( HB_VERSION_MINOR ) ) + "." +;
+                              hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
 
    IF PCount() == 0
       ShowHeader()
@@ -282,18 +292,21 @@ FUNCTION Main( ... )
    ENDIF
 
    FOR EACH cParam IN hb_AParams()
+
+      cParamL := Lower( cParam )
+
       /* NOTE: Don't forget to make these ignored in the main
                option processing loop. */
       DO CASE
-      CASE Lower( cParam )            == "-quiet" ; t_lQuiet := .T. ; t_lInfo := .F.
-      CASE Lower( Left( cParam, 6 ) ) == "-comp=" ; t_cCOMP := SubStr( cParam, 7 )
-      CASE Lower( Left( cParam, 6 ) ) == "-arch=" ; t_cARCH := SubStr( cParam, 7 )
-      CASE Lower( cParam )            == "-hbcc"  ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .T.
-      CASE Lower( cParam )            == "-hbcmp" ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
-      CASE Lower( cParam )            == "-hblnk" ; t_lQuiet := .T. ; t_lInfo := .F.
-      CASE Lower( cParam )            == "-info"  ; t_lInfo := .T.
-      CASE Lower( cParam ) == "-help" .OR. ;
-           Lower( cParam ) == "--help"
+      CASE cParamL            == "-quiet" ; t_lQuiet := .T. ; t_lInfo := .F.
+      CASE Left( cParamL, 6 ) == "-comp=" ; t_cCOMP := SubStr( cParam, 7 )
+      CASE Left( cParamL, 6 ) == "-arch=" ; t_cARCH := SubStr( cParam, 7 )
+      CASE cParamL            == "-hbcc"  ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .T.
+      CASE cParamL            == "-hbcmp" ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      CASE cParamL            == "-hblnk" ; t_lQuiet := .T. ; t_lInfo := .F.
+      CASE cParamL            == "-info"  ; t_lInfo := .T.
+      CASE cParamL == "-help" .OR. ;
+           cParamL == "--help"
 
          ShowHeader()
          ShowHelp( .T. )
@@ -348,6 +361,7 @@ FUNCTION Main( ... )
       SWITCH t_cCOMP
       CASE "msvc"
       CASE "msvc64"
+      CASE "msvcia64"
       CASE "bcc32"
       CASE "xcc"
       CASE "pocc"
@@ -420,7 +434,7 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "icc"    ) != NIL }, "icc"     },;
                     { {|| FindInPath( "xcc"    ) != NIL }, "xcc"     } }
       /* TODO: "mingwce", "msvcce", "poccce" */
-      aCOMPSUP := { "gcc", "mingw", "msvc", "msvc64", "bcc32", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
+      aCOMPSUP := { "gcc", "mingw", "msvc", "msvc64", "msvcia64", "bcc32", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
       t_cGTDEFAULT := "gtwin"
@@ -602,14 +616,14 @@ FUNCTION Main( ... )
       CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
          HBM_Load( aParams, cParam ) /* Load parameters from script file */
       OTHERWISE
-         AAdd( aParams, cParam )
+         AAdd( aParams, { cParam, "", 0 } )
       ENDCASE
    NEXT
 
    /* Process command line (1st pass) */
    lNOHBP := .F.
-   FOR EACH cParam IN aParams
-      IF Lower( cParam ) == "-nohbp"
+   FOR EACH aParam IN aParams
+      IF Lower( aParam[ _PAR_cParam ] ) == "-nohbp"
          lNOHBP := .T.
       ENDIF
    NEXT
@@ -647,61 +661,65 @@ FUNCTION Main( ... )
    ENDIF
 
    /* Process command line (2nd pass) */
-   FOR EACH cParam IN aParams
+   FOR EACH aParam IN aParams
+
+      cParam := aParam[ _PAR_cParam ]
+      cParamL := Lower( cParam )
 
       DO CASE
-      CASE Lower( cParam )            == "-quiet" .OR. ;
-           Lower( Left( cParam, 6 ) ) == "-comp=" .OR. ;
-           Lower( Left( cParam, 6 ) ) == "-arch=" .OR. ;
-           Lower( cParam )            == "-hbcc"  .OR. ;
-           Lower( cParam )            == "-hbcmp" .OR. ;
-           Lower( cParam )            == "-hblnk" .OR. ;
-           Lower( cParam )            == "-info"
+      CASE cParamL            == "-quiet" .OR. ;
+           Left( cParamL, 6 ) == "-comp=" .OR. ;
+           Left( cParamL, 6 ) == "-arch=" .OR. ;
+           cParamL            == "-hbcc"  .OR. ;
+           cParamL            == "-hbcmp" .OR. ;
+           cParamL            == "-hblnk" .OR. ;
+           cParamL            == "-info"
 
          /* Simply ignore. They were already processed in the first pass. */
 
-      CASE ! lNIX .AND. Left( cParam, 2 ) == "/o"
+      CASE ! lNIX .AND. Left( cParamL, 2 ) == "/o"
 
          /* Swallow this switch. We don't pass it to Harbour, as it may badly
             interact with hbmk. */
 
-      CASE Lower( cParam ) == "-gui"             ; s_lGUI      := .T.
-      CASE Lower( cParam ) == "-mwindows"        ; s_lGUI      := .T. /* Compatibility */
-      CASE Lower( cParam ) == "-std"             ; s_lGUI      := .F.
-      CASE Lower( cParam ) == "-mconsole"        ; s_lGUI      := .F. /* Compatibility */
-      CASE Lower( cParam ) == "-mt"              ; s_lMT       := .T.
-      CASE Lower( cParam ) == "-st"              ; s_lMT       := .F.
-      CASE Lower( cParam ) == "-shared"          ; s_lSHARED   := .T. ; s_lSTATICFULL := .F.
-      CASE Lower( cParam ) == "-static"          ; s_lSHARED   := .F. ; s_lSTATICFULL := .F.
-      CASE Lower( cParam ) == "-fullstatic"      ; s_lSHARED   := .F. ; s_lSTATICFULL := .T.
-      CASE Lower( cParam ) == "-bldf"            ; s_lBLDFLGP  := s_lBLDFLGC := s_lBLDFLGL := .T.
-      CASE Lower( cParam ) == "-bldf-"           ; s_lBLDFLGP  := s_lBLDFLGC := s_lBLDFLGL := .F.
-      CASE Lower( Left( cParam, 6 ) ) == "-bldf="
+      CASE cParamL == "-gui" .OR. ;
+           cParamL == "-mwindows"        ; s_lGUI      := .T. /* Compatibility */
+      CASE cParamL == "-std" .OR. ;
+           cParamL == "-mconsole"        ; s_lGUI      := .F. /* Compatibility */
+      CASE cParamL == "-mt"              ; s_lMT       := .T.
+      CASE cParamL == "-st"              ; s_lMT       := .F.
+      CASE cParamL == "-shared"          ; s_lSHARED   := .T. ; s_lSTATICFULL := .F.
+      CASE cParamL == "-static"          ; s_lSHARED   := .F. ; s_lSTATICFULL := .F.
+      CASE cParamL == "-fullstatic"      ; s_lSHARED   := .F. ; s_lSTATICFULL := .T.
+      CASE cParamL == "-bldf"            ; s_lBLDFLGP  := s_lBLDFLGC := s_lBLDFLGL := .T.
+      CASE cParamL == "-bldf-"           ; s_lBLDFLGP  := s_lBLDFLGC := s_lBLDFLGL := .F.
+      CASE Left( cParamL, 6 ) == "-bldf="
          cParam := SubStr( cParam, 7 )
          s_lBLDFLGP := "p" $ cParam
          s_lBLDFLGC := "c" $ cParam
          s_lBLDFLGL := "l" $ cParam
-      CASE Lower( cParam ) == "-debug"           ; s_lDEBUG    := .T.
-      CASE Lower( cParam ) == "-debug-"          ; s_lDEBUG    := .F.
-      CASE Lower( cParam ) == "-nodebug"         ; s_lDEBUG    := .F.
-      CASE Lower( cParam ) == "-nulrdd"          ; s_lNULRDD   := .T.
-      CASE Lower( cParam ) == "-nulrdd-"         ; s_lNULRDD   := .F.
-      CASE Lower( cParam ) == "-map"             ; s_lMAP      := .T.
-      CASE Lower( cParam ) == "-map-"            ; s_lMAP      := .F.
-      CASE Lower( cParam ) == "-nomap"           ; s_lMAP      := .F.
-      CASE Lower( cParam ) == "-fmstat"          ; s_lFMSTAT   := .T.
-      CASE Lower( cParam ) == "-fmstat-"         ; s_lFMSTAT   := .F.
-      CASE Lower( cParam ) == "-nofmstat"        ; s_lFMSTAT   := .F.
-      CASE Lower( cParam ) == "-strip"           ; s_lSTRIP    := .T.
-      CASE Lower( cParam ) == "-strip-"          ; s_lSTRIP    := .F.
-      CASE Lower( cParam ) == "-nostrip"         ; s_lSTRIP    := .F.
-      CASE Lower( cParam ) == "-run"             ; s_lRUN      := .T.
-      CASE Lower( cParam ) == "-run-"            ; s_lRUN      := .F.
-      CASE Lower( cParam ) == "-norun"           ; s_lRUN      := .F.
-      CASE Lower( cParam ) == "-trace"           ; s_lTRACE    := .T.
-      CASE Lower( cParam ) == "-trace-"          ; s_lTRACE    := .F.
-      CASE Lower( cParam ) == "-notrace"         ; s_lTRACE    := .F.
-      CASE Lower( Left( cParam, 6 ) ) == "-main="
+      CASE cParamL == "-debug"           ; s_lDEBUG    := .T.
+      CASE cParamL == "-debug-" .OR. ;
+           cParamL == "-nodebug"         ; s_lDEBUG    := .F.
+      CASE cParamL == "-nulrdd"          ; s_lNULRDD   := .T.
+      CASE cParamL == "-nulrdd-"         ; s_lNULRDD   := .F.
+      CASE cParamL == "-map"             ; s_lMAP      := .T.
+      CASE cParamL == "-map-" .OR. ;
+           cParamL == "-nomap"           ; s_lMAP      := .F.
+      CASE cParamL == "-fmstat"          ; s_lFMSTAT   := .T.
+      CASE cParamL == "-fmstat-" .OR. ;
+           cParamL == "-nofmstat"        ; s_lFMSTAT   := .F.
+      CASE cParamL == "-strip"           ; s_lSTRIP    := .T.
+      CASE cParamL == "-strip-" .OR. ;
+           cParamL == "-nostrip"         ; s_lSTRIP    := .F.
+      CASE cParamL == "-run"             ; s_lRUN      := .T.
+      CASE cParamL == "-run-" .OR. ;
+           cParamL == "-norun"           ; s_lRUN      := .F.
+      CASE cParamL == "-trace"           ; s_lTRACE    := .T.
+      CASE cParamL == "-trace-" .OR. ;
+           cParamL == "-notrace"         ; s_lTRACE    := .F.
+
+      CASE Left( cParamL, 6 ) == "-main="
 
          IF IsValidHarbourID( cParam := SubStr( cParam, 7 ) )
             s_cMAIN := "@" + cParam
@@ -709,7 +727,7 @@ FUNCTION Main( ... )
             OutErr( "hbmk: Warning: Invalid -main value ignored: " + cParam + hb_osNewLine() )
          ENDIF
 
-      CASE Lower( Left( cParam, 3 ) ) == "-gt"
+      CASE Left( cParamL, 3 ) == "-gt"
 
          cParam := SubStr( cParam, 2 )
          IF s_cGT == NIL
@@ -719,8 +737,8 @@ FUNCTION Main( ... )
             ENDIF
          ENDIF
          IF ! Empty( cParam )
-            IF AScan( t_aLIBCOREGT, {|tmp| Lower( tmp ) == Lower( cParam ) } ) == 0 .AND. ;
-               AScan( s_aLIBUSERGT, {|tmp| Lower( tmp ) == Lower( cParam ) } ) == 0
+            IF AScan( t_aLIBCOREGT, {|tmp| Lower( tmp ) == cParamL } ) == 0 .AND. ;
+               AScan( s_aLIBUSERGT, {|tmp| Lower( tmp ) == cParamL } ) == 0
                AAddNotEmpty( s_aLIBUSERGT, PathSepToTarget( cParam ) )
             ENDIF
          ENDIF
@@ -740,13 +758,36 @@ FUNCTION Main( ... )
             s_cPROGNAME := NIL
          ENDIF
 
+      CASE Left( cParam, 2 ) == "-L" .AND. ;
+           Len( cParam ) > 2
+
+         cParam := ArchCompFilter( SubStr( cParam, 3 ) )
+         IF ! Empty( cParam )
+            AAdd( s_aLIBPATH, PathSepToTarget( cParam ) )
+         ENDIF
+
       CASE Left( cParam, 2 ) == "-l" .AND. ;
            Len( cParam ) > 2 .AND. ;
-           !( Left( cParam, 3 ) == "-l-" )       ; AAddNotEmpty( s_aLIBUSER, PathSepToTarget( ArchCompFilter( SubStr( cParam, 3 ) ) ) )
-      CASE Left( cParam, 2 ) == "-L" .AND. ;
-           Len( cParam ) > 2                     ; AAddNotEmpty( s_aLIBPATH, PathSepToTarget( ArchCompFilter( SubStr( cParam, 3 ) ) ) )
-      CASE Left( cParam, 1 ) == "-"              ; AAdd( s_aOPTPRG , PathSepToTarget( cParam ) )
-      CASE Lower( FN_ExtGet( cParam ) ) == ".hbp"
+           !( Left( cParam, 3 ) == "-l-" )
+
+         cParam := ArchCompFilter( SubStr( cParam, 3 ) )
+         IF ! Empty( cParam )
+            AAdd( s_aLIBUSER, PathSepToTarget( PathProc( cParam, aParam[ _PAR_cFileName ] ) ) )
+         ENDIF
+
+      CASE FN_ExtGet( cParamL ) == ".lib" .OR. ;
+           FN_ExtGet( cParamL ) == cDynLibExt
+
+         cParam := ArchCompFilter( cParam )
+         IF ! Empty( cParam )
+            AAdd( s_aLIBUSER, PathSepToTarget( PathProc( cParam, aParam[ _PAR_cFileName ] ) ) )
+         ENDIF
+
+      CASE Left( cParam, 1 ) == "-"
+
+         AAdd( s_aOPTPRG , PathSepToTarget( cParam ) )
+
+      CASE FN_ExtGet( cParamL ) == ".hbp"
 
          HBP_ProcessOne( cParam,;
             @s_aLIBUSER,;
@@ -767,15 +808,47 @@ FUNCTION Main( ... )
             @s_lRUN,;
             @s_cGT )
 
-      CASE Lower( FN_ExtGet( cParam ) ) == ".prg"     ; AAdd( s_aPRG    , PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
-      CASE Lower( FN_ExtGet( cParam ) ) == ".rc"      ; AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
-      CASE Lower( FN_ExtGet( cParam ) ) == ".res"     ; AAdd( s_aRESCMP , PathSepToTarget( cParam ) )
-      CASE Lower( FN_ExtGet( cParam ) ) == ".a"       ; AAdd( s_aOBJA   , PathSepToTarget( cParam ) )
-      CASE Lower( FN_ExtGet( cParam ) ) $ ".o|.obj"   ; AAdd( s_aOBJUSER, PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
-      CASE Lower( FN_ExtGet( cParam ) ) $ ".c|.cpp"   ; AAdd( s_aC      , PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
-      CASE Lower( FN_ExtGet( cParam ) ) == ".lib" .OR. ;
-           Lower( FN_ExtGet( cParam ) ) == cDynLibExt ; AAddNotEmpty( s_aLIBUSER, PathSepToTarget( ArchCompFilter( cParam ) ) )
-      OTHERWISE                                       ; AAdd( s_aPRG    , PathSepToTarget( cParam ) ) ; DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+      CASE FN_ExtGet( cParamL ) == ".prg"
+
+         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+         AAdd( s_aPRG    , PathSepToTarget( cParam ) )
+         DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+
+      CASE FN_ExtGet( cParamL ) == ".rc"
+
+         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+         AAdd( s_aRESSRC , PathSepToTarget( cParam ) )
+
+      CASE FN_ExtGet( cParamL ) == ".res"
+
+         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+         AAdd( s_aRESCMP , PathSepToTarget( cParam ) )
+
+      CASE FN_ExtGet( cParamL ) == ".a"
+
+         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+         AAdd( s_aOBJA   , PathSepToTarget( cParam ) )
+
+      CASE FN_ExtGet( cParamL ) $ ".o|.obj"
+
+         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+         AAdd( s_aOBJUSER, PathSepToTarget( cParam ) )
+         DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+
+      CASE FN_ExtGet( cParamL ) $ ".c|.cpp"
+
+         cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+         AAdd( s_aC      , PathSepToTarget( cParam ) )
+         DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+
+      OTHERWISE
+
+         IF ! Empty( cParam )
+            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+            AAdd( s_aPRG    , PathSepToTarget( cParam ) )
+            DEFAULT s_cFIRST TO PathSepToSelf( cParam )
+         ENDIF
+
       ENDCASE
    NEXT
 
@@ -1190,10 +1263,8 @@ FUNCTION Main( ... )
             AAdd( s_aOPTL, "OP MAP" )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32" } )
-         /* TOFIX: The two build systems should generate the same .dll name, otherwise
-                   we can only be compatible with one of them. non-GNU is the common choice here. */
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-ow",;
-                                       "harbour-" + cDL_Version_NonGNU + "-ow" ),;
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-ow",;
+                                       "harbour-" + cDL_Version_Alter + "-ow" ),;
                            "hbmainstd",;
                            "hbmainwin" }
 
@@ -1340,14 +1411,12 @@ FUNCTION Main( ... )
          IF s_lSHARED
             AAdd( s_aLIBPATH, "{DB}" )
          ENDIF
-         /* TOFIX: The two build systems should generate the same .dll name, otherwise
-                   we can only be compatible with one of them. non-GNU is the common choice here. */
-         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-b32",;
-                                       "harbour-" + cDL_Version_NonGNU + "-b32" ),;
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-b32",;
+                                       "harbour-" + cDL_Version_Alter + "-b32" ),;
                            "hbmainstd",;
                            "hbmainwin" }
 
-      CASE t_cARCH == "win" .AND. t_cCOMP $ "msvc|msvc64"
+      CASE t_cARCH == "win" .AND. t_cCOMP $ "msvc|msvc64|msvcia64"
          IF s_lDEBUG
             AAdd( s_aOPTC, "-MTd -Zi" )
          ENDIF
@@ -1380,19 +1449,23 @@ FUNCTION Main( ... )
             AAdd( s_aOPTL, "/libpath:{DB}" )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
-         /* TOFIX: The two build systems should generate the same .dll names, otherwise
-                   we can only be compatible with one of them. non-GNU is the common choice here. */
-         IF t_cCOMP == "msvc64"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-vc-x64",;
-                                          "harbour-" + cDL_Version_NonGNU + "-vc-x64" ),;
+         DO CASE
+         CASE t_cCOMP == "msvc"
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-vc",;
+                                          "harbour-" + cDL_Version_Alter + "-vc" ),;
                               "hbmainstd",;
                               "hbmainwin" }
-         ELSE
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_NonGNU + "-vc",;
-                                          "harbour-" + cDL_Version_NonGNU + "-vc" ),;
+         CASE t_cCOMP == "msvc64"
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-vc-x64",;
+                                          "harbour-" + cDL_Version_Alter + "-vc-x64" ),;
                               "hbmainstd",;
                               "hbmainwin" }
-         ENDIF
+         CASE t_cCOMP == "msvcia64"
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-vc-ia64",;
+                                          "harbour-" + cDL_Version_Alter + "-vc-ia64" ),;
+                              "hbmainstd",;
+                              "hbmainwin" }
+         ENDCASE
 
          cBin_Res := "rc.exe"
          cOpt_Res := "/r {LR}"
@@ -1465,7 +1538,7 @@ FUNCTION Main( ... )
 
             /* NOTE: This has to be kept synced with Harbour HB_IMPORT values. */
             DO CASE
-            CASE !( t_cARCH == "win" ) .OR. t_cCOMP $ "msvc|msvc64|rsxnt"
+            CASE !( t_cARCH == "win" ) .OR. t_cCOMP $ "msvc|msvc64|msvcia64|rsxnt"
                /* NOTE: MSVC gives the warning:
                         "LNK4217: locally defined symbol ... imported in function ..."
                         if using 'dllimport'. [vszakats] */
@@ -1964,7 +2037,7 @@ STATIC FUNCTION ListToArray( cList )
    RETURN array
 
 /* NOTE: Can hurt if there are symlinks on the way. */
-/* NOTE: This function also add an ending separator. */
+/* NOTE: This function also adds an ending separator. */
 STATIC FUNCTION PathNormalize( cPath, lNormalize )
    LOCAL nLastSep
    LOCAL nNextSep
@@ -1995,6 +2068,28 @@ STATIC FUNCTION PathNormalize( cPath, lNormalize )
 
    RETURN cPath
 
+STATIC FUNCTION PathProc( cPathR, cPathA )
+   LOCAL cDirA
+   LOCAL cDirR, cDriveR, cNameR, cExtR
+
+   IF Empty( cPathA )
+      RETURN cPathR
+   ENDIF
+
+   hb_FNameSplit( cPathR, @cDirR, @cNameR, @cExtR, @cDriveR )
+
+   IF ! Empty( cDriveR ) .OR. ( ! Empty( cDirR ) .AND. Left( cDirR, 1 ) $ hb_osPathDelimiters() )
+      RETURN cPathR
+   ENDIF
+
+   hb_FNameSplit( cPathA, @cDirA )
+
+   IF Empty( cDirA )
+      RETURN cPathR
+   ENDIF
+
+   RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
+
 STATIC FUNCTION PathSepToSelf( cFileName )
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
     defined( __PLATFORM__DOS ) .OR. ;
@@ -2016,6 +2111,21 @@ STATIC FUNCTION DirAddPathSep( cDir )
 
    IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_osPathSeparator() )
       cDir += hb_osPathSeparator()
+   ENDIF
+
+   RETURN cDir
+
+STATIC FUNCTION DirDelPathSep( cDir )
+
+   IF Empty( hb_osDriveSeparator() )
+      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_osPathSeparator()
+         cDir := hb_StrShrink( cDir, 1 )
+      ENDDO
+   ELSE
+      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_osPathSeparator() .AND. ;
+               !( Right( cDir, 2 ) == hb_osDriveSeparator() + hb_osPathSeparator() )
+         cDir := hb_StrShrink( cDir, 1 )
+      ENDDO
    ENDIF
 
    RETURN cDir
@@ -2197,7 +2307,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
          NEXT
 
       /* NOTE: This keyword is used in hbmkcfg.hbp and signals whether
-               a given optional module (gtsln, gtcrs, gtxwt) is part of the
+               a given optional module (gtsln, gtcrs, gtxwc) is part of the
                Harbour shared library, so that we can automatically add
                the required libs here. [vszakats] */
       CASE Lower( Left( cLine, Len( "libdynhas="  ) ) ) == "libdynhas="  ; cLine := SubStr( cLine, Len( "libdynhas="  ) + 1 )
@@ -2392,7 +2502,10 @@ STATIC PROCEDURE HBM_Load( aParams, cFileName )
    FOR EACH cLine IN hb_ATokens( cFile, _EOL )
       IF !( Left( cLine, 1 ) == "#" )
          FOR EACH cOption IN hb_ATokens( cLine,, .T. )
-            AAddNotEmpty( aParams, StrStripQuote( cOption ) )
+            cOption := StrStripQuote( cOption )
+            IF ! Empty( cOption )
+               AAdd( aParams, { cOption, cFileName, cLine:__enumIndex() } )
+            ENDIF
          NEXT
       ENDIF
    NEXT
@@ -2454,6 +2567,38 @@ STATIC FUNCTION ArchCompFilter( cItem )
    ENDIF
 
    RETURN cItem
+
+STATIC FUNCTION MacroProc( cString, cDirParent )
+   LOCAL nStart
+   LOCAL nEnd
+   LOCAL cMacro
+
+   DO WHILE ( nStart := At( "$(", cString ) ) > 0 .AND. ;
+            ( nEnd := hb_At( ")", cString, nStart ) ) > 0
+
+      cMacro := Upper( SubStr( cString, nStart + 2, nEnd - nStart - 1 ) )
+
+      DO CASE
+      CASE cMacro == "HB_ROOT"
+         cMacro := PathSepToSelf( DirAddPathSep( hb_DirBase() ) )
+      CASE cMacro == "HB_PARENT"
+         IF Empty( cDirParent )
+            cMacro := ""
+         ELSE
+            cMacro := PathSepToSelf( DirAddPathSep( cDirParent ) )
+         ENDIF
+      CASE ! Empty( GetEnv( cMacro ) )
+         cMacro := GetEnv( cMacro )
+      OTHERWISE
+         /* NOTE: Macro not found, completely ignore it
+                  (for now without warning) [vszakats] */
+         cMacro := ""
+      ENDCASE
+
+      cString := Left( cString, nStart - 1 ) + cMacro + SubStr( cString, nEnd + 1 )
+   ENDDO
+
+   RETURN cString
 
 #define HB_ISALPHA( c )         ( Upper( c ) >= "A" .AND. Upper( c ) <= "Z" )
 #define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == '_' )
@@ -2615,8 +2760,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, gpp, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
-      "    win    : gcc, mingw, msvc, msvc64, bcc32, owatcom, pocc, pocc64," ,;
-      "             dmc, rsxnt, xcc, icc" ,; /* poccce, mingwce, msvcce */
+      "    win    : gcc, mingw, msvc, bcc32, owatcom, pocc, dmc, rsxnt, xcc, icc" ,;
+      "             mingwce, msvc64, msvcia64, msvcce, pocc64, poccce" ,;
       "    os2    : gcc, owatcom, icc" ,;
       "    dos    : gcc, djgpp, owatcom, rsx32" ,;
       "    bsd, hpux, sunos: gcc" }
