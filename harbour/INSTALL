@@ -43,7 +43,9 @@ Windows with other compilers
    installed and GNU Make (with the name make.exe)
    accessible in the PATH _before_ the compiler tools.
    We recommend using the GNU Make from the MinGW binary
-   distribution.
+   distribution. Use your search engine with 'mingw gnu make'
+   or try this link:
+   http://sourceforge.net/project/showfiles.php?group_id=2435
 
    > set HB_COMPILER=<msvc|bcc32|owatcom|...>
    > set HB_INSTALL_PREFIX=<DIR>
@@ -56,6 +58,11 @@ Windows with other compilers
    > hello
    You should see: 'Hello world!' on screen.
 
+   NOTE: <DIR> is your destination directory where
+         executables, libraries and headers will be
+         created. For a peace of mind, avoid using
+         spaces, quotes in the name.
+
 DOS
 ---
    > set HB_COMPILER=<[djgpp]|owatcom>
@@ -67,3 +74,32 @@ OS/2
    > set HB_COMPILER=<[gcc]|owatcom|icc>
    > set HB_INSTALL_PREFIX=<DIR>
    > make_gnu_os2.cmd install
+
+
+HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
+==============================================
+
+On *nix systems most of these will be automatically picked up if
+installed in some well-known standard system locations.
+
+You only need to use manual setup, if the dependency isn't available
+on your platform on a system location, or you wish to use a non-standard
+location. Typically you need to do that on non-*nix (Windows/DOS/OS/2)
+systems for all packages and for a few packages on *nix which aren't
+available through official package managers (ADS Client f.e.). Please
+see a list of official packages in doc/linux1st.txt.
+
+You can use these environment variables:
+
+HB_INC_ADS=C:\ads\acesdk
+HB_INC_ALLEGRO=C:\allegro\include
+HB_INC_APOLLO=C:\Apollo\include
+HB_INC_BLAT=C:\blat\full\source
+HB_INC_CURL=C:\curl\include
+HB_INC_FIREBIRD=C:\Firebird\include
+HB_INC_FREEIMAGE=C:\FreeImage\Dist
+HB_INC_GD=-IC:\gd\include
+HB_INC_LIBHARU=-IC:\libharu\include
+HB_INC_MYSQL=C:\mysql\include
+HB_INC_OPENSSL=C:\openssl
+HB_INC_PGSQL=C:\pgsql\include

@@ -8,6 +8,41 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 15:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    + Added more information.
+      (everyone trying to build Harbour from source
+      should read this first.)
+
+  * bin/postinst.bat
+    + Added option to copy import libs belonging to
+      external tools for msvc and bcc32 to HB_LIB_INSTALL.
+      This is to keep this debated, but convenient feature
+      for the GNU-make world, until we find some better way
+      to deal with it. Now it's self contained, detached from
+      all important Harbour parts. And most importantly:
+      You don't have to use it, if you don't want to.
+      Now, if you want, set HB_DIR_IMPLIB to "yes" and
+      setup your HB_DIR_* dirs to the roots of the external
+      tool dirs, like this (adjust to your environment):
+      ---
+      set HB_DIR_IMPLIB=yes
+      set HB_DIR_ADS=C:\devl\ADS910\ACESDK
+      set HB_DIR_ALLEGRO=C:\devl\allegro-4.2.2
+      set HB_DIR_APOLLO=C:\devl\Apollo-6.1.0.4
+      set HB_DIR_BLAT=C:\devl\blat-2.6.2
+      set HB_DIR_CURL=C:\devl\curl-7.19.0
+      set HB_DIR_FIREBIRD=C:\devl\Firebird-2.1.1
+      set HB_DIR_FREEIMAGE=C:\devl\FreeImage-3.11.0
+      set HB_DIR_GD=C:\devl\gd-2.0.34
+      set HB_DIR_LIBHARU=C:\devl\libharu-2.1.0
+      set HB_DIR_MYSQL=C:\devl\mysql-5.0.67
+      set HB_DIR_OPENSSL=C:\devl\openssl-0.9.8j
+      set HB_DIR_PGSQL=C:\devl\pgsql-8.3.3
+      ---
+      (This may be tweaked in the future, so I don't
+      guarantee any compatibility for this stuff)
+
 2009-02-27 12:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_b32.bat
   * make_vc.bat
