@@ -145,12 +145,17 @@ if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
    make clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    make install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
 
+   set HB_BUILD_DLL=%_HB_BUILD_DLL_OLD%
+   set _HB_BUILD_DLL=
+   set _HB_BUILD_DLL_OLD=
+
+   goto END
+
 :SKIP_WINDLL
 
    set HB_BUILD_DLL=%_HB_BUILD_DLL_OLD%
    set _HB_BUILD_DLL=
    set _HB_BUILD_DLL_OLD=
-   goto END
 
 :SKIP_WIN
 

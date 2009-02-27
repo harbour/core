@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 17:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_gnu.bat
+    ! Fixed to work when DLLs weren't requested.
+
 2009-02-27 16:52 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/contrib/xhb/xhbcls.ch
     + added header file which xHarbour like OVERRIDE / EXTEND CLASS
