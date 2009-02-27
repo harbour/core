@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 12:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_gnu.bat
+    + Made them accept HB_BUILD_DLL=yes.
+    ! Some typos.
+
 2009-02-27 11:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.bat
   * make_gnu.bat

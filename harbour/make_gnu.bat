@@ -110,10 +110,15 @@ if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
    rem It will automatically build Harbour in two passes, one for
    rem the .dlls and a final pass for the regular version.
 
-   if not "%HB_ARCHITECTURE%" == "win" goto _SKIP_WINDLL
-   if not "%1" == "--install-with-dll" goto _SKIP_WINDLL
+   if not "%HB_ARCHITECTURE%" == "win" goto SKIP_WIN
 
-   shift
+   set _HB_BUILD_DLL_OLD=%HB_BUILD_DLL%
+   set _HB_BUILD_DLL=%HB_BUILD_DLL%
+   if "%1" == "--install-with-dll" set _HB_BUILD_DLL=yes
+   if "%1" == "--install-with-dll" shift
+
+   if not "%_HB_BUILD_DLL%" == "yes" goto SKIP_WINDLL
+
    set HB_BUILD_DLL=yes
    set _HB_CONTRIBLIBS=%HB_CONTRIBLIBS%
    set _HB_CONTRIB_ADDONS=%HB_CONTRIB_ADDONS%
@@ -128,6 +133,12 @@ if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
    set _HB_CONTRIB_ADDONS=
    make clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    make install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+
+:SKIP_WINDLL
+
+   set HB_BUILD_DLL=%_HB_BUILD_DLL_OLD%
+   set _HB_BUILD_DLL=
+   set _HB_BUILD_DLL_OLD=
    goto END
 
 :SKIP_WIN
