@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 20:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    + Added more information to Windows section.
+      This will need a cleanup already.
+    + Added links, header.
+
+  * make_gnu.bat
+    + Added automatic default of HB_INSTALL_PREFIX on NT
+      and above systems. This means this setting is now
+      option. If not set, it will install under the
+      source tree.
+
 2009-02-27 20:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_gnu.bat
     + Added autodetection of mingw32-make.exe. If found in

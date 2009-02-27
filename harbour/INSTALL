@@ -2,6 +2,15 @@
  * $Id$
  */
 
+HARBOUR
+=======
+
+   "The Harbour Project is a Free Open Source Software effort to build
+   a multiplatform Clipper language compiler. Harbour consists of the
+   xBase language compiler and the runtime libraries with different
+   terminal plugins and different databases (not just DBF)"
+
+
 HOW TO BUILD AND INSTALL HARBOUR
 ================================
 
@@ -40,15 +49,22 @@ HOW TO BUILD AND INSTALL HARBOUR
 
    Windows with other compilers
    ----------------------------
-      Make sure to have your C compiler of choice properly
-      installed and GNU Make (with the name make.exe)
-      accessible in the PATH _before_ the compiler tools.
-      We recommend using the GNU Make from the MinGW binary
-      distribution. Use your search engine with 'mingw gnu make'
-      or try this link:
-      http://sourceforge.net/project/showfiles.php?group_id=2435
-      In some packages make.exe is called mingw32-make.exe,
-      just copy/rename it to make.exe then.
+      Platform specific prerequisites:
+
+      1.) Windows NT or compatible system is required to build Harbour.
+      2.) Make sure to have your C compiler of choice properly installed.
+          For the list of supporter compilers, please look up the
+          relevant section in this file.
+      3.) Make sure to have GNU Make, with the name make.exe,
+          accessible in the PATH _before_ the compiler tools.
+          We recommend using the GNU Make from the MinGW binary
+          distribution. Use your search engine with 'mingw gnu make'
+          or try this link:
+          http://sourceforge.net/project/showfiles.php?group_id=2435
+          In some packages make.exe is called mingw32-make.exe,
+          just copy/rename it to make.exe then.
+          Alternatively you can place GNU Make under the name of
+          mingw32-make.exe anywhere in your PATH.
 
       > set HB_COMPILER=<msvc|bcc32|owatcom|...>
       > set HB_INSTALL_PREFIX=<DIR>
@@ -59,10 +75,11 @@ HOW TO BUILD AND INSTALL HARBOUR
       > hello
       You should see: 'Hello world!' on screen.
 
-      NOTE: <DIR> is your destination directory where
-            executables, libraries and headers will be
-            created. For a peace of mind, avoid using
-            spaces, quotes in the name.
+      NOTE: <DIR> is your destination directory where executables,
+            libraries and headers will be created. Use absolute paths
+            only. For a peace of mind, avoid using spaces, quotes
+            in the name. You can leave it empty, in this case the
+            results will be stored under the current directory tree.
 
    DOS
    ---
@@ -91,7 +108,8 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    (ADS Client f.e.). Please see a list of official packages in
    doc/linux1st.txt.
 
-   You can use these environment variables (adjust to your own dirs):
+   You can set these environment variables before starting
+   the build. Make sure to adjust them to your own dirs:
 
    HB_INC_ADS=C:\ads\acesdk
    HB_INC_ALLEGRO=C:\allegro\include
@@ -139,7 +157,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    pocc     - Pelles C 4.5 and above
    pocc64   - Pelles C 5.0 x64
    poccce   - Pelles C 5.0 (Windows CE / ARM)
-   xcc      - Pelles C (xhb)
+   xcc      - Pelles C for xhb
 
    DOS (32-bit)
    ---
@@ -195,5 +213,36 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    a native Harbour build available on your system.
 
 
+FOR MORE INFORMATION
+====================
 
-[ Viktor Szakats <harbour.01 syenar.hu> ]
+   Homepage:
+   http://www.harbour-project.org/
+
+   Mailing lists:
+   http://www.harbour-project.org/mailing.html
+
+   Developer's mail archives:
+   http://lists.harbour-project.org/pipermail/harbour/
+
+   User's mail archives:
+   http://lists.harbour-project.org/pipermail/harbour-users/
+
+   Sourceforge page:
+   http://sourceforge.net/projects/harbour-project/
+
+   Development timeline:
+   http://apps.sourceforge.net/trac/harbour-project/timeline
+
+   Source repository browser:
+   http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/
+
+   Source repository checkout (anonymous):
+   svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project harbour-project
+
+   Miscellaneous documents:
+   /doc directory under this dir.
+
+
+
+[ Copyright 2009 Viktor Szakats <harbour.01 syenar.hu> ]
