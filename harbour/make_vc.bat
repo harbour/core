@@ -2,118 +2,26 @@
 @rem $Id$
 @rem
 
+rem ---------------------------------------------------------------
+rem This file is kept for compatibility with old non-GNU make
+rem system. Please read INSTALL how to migrate to the GNU make
+rem based one.
+rem
+rem ATTENTION: For this to work, you will need the GNU make.exe
+rem            (MinGW build is fine) in your PATH _before_ the
+rem            compiler tools.
+rem ---------------------------------------------------------------
+
 @echo off
 
-rem ---------------------------------------------------------------
-rem This is a generic template file, if it doesn't fit your own needs
-rem please DON'T MODIFY IT.
-rem
-rem Instead, make a local copy and modify that one, or make a call to
-rem this batch file from your customized one. [vszakats]
-rem
-rem Set any of the below settings to customize your build process:
-rem    set HB_BUILD_DLL=no
-rem    set HB_BUILD_DEBUG=yes
-rem    set HB_BUILD_VERBOSE=no
-rem    set HB_BUILD_OPTIM=no
-rem    set HB_REBUILD_PARSER=yes
-rem    set HB_MAKE_PROGRAM=
-rem    set HB_SHOW_ERRORS=
-rem    set HB_USER_MAKEFLAGS=
-rem
-rem To create a WinCE build, use the following settings:
-rem    set HB_BUILD_WINCE=yes
-rem    set HB_CC_NAME=vcce
-rem    set HB=C:\your_harbour_windows_binaries\harbour.exe
-rem    set HBPP=C:\your_harbour_windows_binaries\hbpp.exe
-rem ---------------------------------------------------------------
-
+if "%HB_INSTALL_PREFIX%" == "" set HB_INSTALL_PREFIX=%~dp0
+if "%HB_BUILD_DLL%" == "" set HB_BUILD_DLL=yes
 set _HB_CC_NAME=%HB_CC_NAME%
-set _HB_MAKE_PROGRAM=%HB_MAKE_PROGRAM%
+if     "%HB_BUILD_WINCE%" == "yes" if "%_HB_CC_NAME%" == "" set _HB_CC_NAME=vcce
+if not "%HB_BUILD_WINCE%" == "yes" if "%_HB_CC_NAME%" == "" set _HB_CC_NAME=vc
 
-if "%_HB_CC_NAME%"      == "" set _HB_CC_NAME=vc
-if "%_HB_MAKE_PROGRAM%" == "" set _HB_MAKE_PROGRAM=nmake.exe
-
-set _HB_MAKEFILE=make_vc.mak
-set HB_EXIT_LEVEL=
-
-rem ---------------------------------------------------------------
-
-rem Save the user value, force silent file overwrite with COPY
-rem (not all Windows versions support the COPY /Y flag)
-set HB_ORGENV_COPYCMD=%COPYCMD%
-set COPYCMD=/Y
-
-rem ---------------------------------------------------------------
-
-if "%1" == "clean" goto CLEAN
-if "%1" == "Clean" goto CLEAN
-if "%1" == "CLEAN" goto CLEAN
-if "%1" == "install" goto INSTALL
-if "%1" == "Install" goto INSTALL
-if "%1" == "INSTALL" goto INSTALL
-
-rem ---------------------------------------------------------------
-
-if not "%HB_BUILD_WINCE%" == "yes" goto BUILD
-
-rem Checking if HB and HBPP are set
-
-if not "%HB%" == "" if exist %HB% goto CHECK_HBPP
-   echo.
-   echo *******************************************
-   echo You must set HB environment variable to a
-   echo working copy of Harbour compiler executable
-   echo harbour.exe.
-   echo Example: set HB=C:\harbour\harbour.exe
-   echo *******************************************
-   echo.
-   goto EXIT
-
-:CHECK_HBPP
-if not "%HBPP%" == "" if exist %HBPP% goto BUILD
-   echo.
-   echo **********************************************
-   echo You must set HBPP environment variable to a
-   echo working copy of hbpp.exe helper executable
-   echo Example: set HBPP=C:\harbour\hbpp.exe
-   echo **********************************************
-   echo.
-   goto EXIT
-
-rem ---------------------------------------------------------------
-
-:BUILD
-
-   %_HB_MAKE_PROGRAM% %HB_USER_MAKEFLAGS% -nologo -f %_HB_MAKEFILE% %1 %2 %3 > make_%_HB_CC_NAME%.log
-   if errorlevel 1 set HB_EXIT_LEVEL=1
-   if errorlevel 1 if not "%HB_SHOW_ERRORS%" == "no" notepad make_%_HB_CC_NAME%.log
-   goto EXIT
-
-:CLEAN
-
-   %_HB_MAKE_PROGRAM% %HB_USER_MAKEFLAGS% -nologo -f %_HB_MAKEFILE% CLEAN > make_%_HB_CC_NAME%.log
-   if errorlevel 1 set HB_EXIT_LEVEL=1
-   if errorlevel 1 goto EXIT
-   if exist make_%_HB_CC_NAME%.log del make_%_HB_CC_NAME%.log > nul
-   if exist inst_%_HB_CC_NAME%.log del inst_%_HB_CC_NAME%.log > nul
-   goto EXIT
-
-:INSTALL
-
-   %_HB_MAKE_PROGRAM% %HB_USER_MAKEFLAGS% -nologo -f %_HB_MAKEFILE% INSTALL > nul
-   if errorlevel 1 set HB_EXIT_LEVEL=1
-   goto EXIT
-
-:EXIT
-
-rem ---------------------------------------------------------------
-
-rem Restore user value
-set COPYCMD=%HB_ORGENV_COPYCMD%
+call make_gnu.bat > make_%_HB_CC_NAME%.log
 
 set _HB_CC_NAME=
-set _HB_MAKE_PROGRAM=
-set _HB_MAKEFILE=
 
 if exist hbpostmk.bat call hbpostmk.bat

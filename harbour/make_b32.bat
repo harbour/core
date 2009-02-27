@@ -2,82 +2,27 @@
 @rem $Id$
 @rem
 
+rem ---------------------------------------------------------------
+rem This file is kept for compatibility with old non-GNU make
+rem system. Please read INSTALL how to migrate to the GNU make
+rem based one.
+rem
+rem ATTENTION: For this to work, you will need the GNU make.exe
+rem            (MinGW build is fine) in your PATH _before_ the
+rem            compiler tools.
+rem ---------------------------------------------------------------
+
 @echo off
 
-rem ---------------------------------------------------------------
-rem This is a generic template file, if it doesn't fit your own needs
-rem please DON'T MODIFY IT.
-rem
-rem Instead, make a local copy and modify that one, or make a call to
-rem this batch file from your customized one. [vszakats]
-rem
-rem Set any of the below settings to customize your build process:
-rem    set HB_BUILD_DLL=no
-rem    set HB_BUILD_DEBUG=yes
-rem    set HB_BUILD_VERBOSE=no
-rem    set HB_BUILD_OPTIM=no
-rem    set HB_REBUILD_PARSER=yes
-rem    set HB_MAKE_PROGRAM=
-rem    set HB_SHOW_ERRORS=
-rem    set HB_USER_MAKEFLAGS=
-rem ---------------------------------------------------------------
+set HB_COMPILER=bcc32
 
+if "%HB_INSTALL_PREFIX%" == "" set HB_INSTALL_PREFIX=%~dp0
+if "%HB_BUILD_DLL%" == "" set HB_BUILD_DLL=yes
 set _HB_CC_NAME=%HB_CC_NAME%
-set _HB_MAKE_PROGRAM=%HB_MAKE_PROGRAM%
+if "%_HB_CC_NAME%" == "" set _HB_CC_NAME=b32
 
-if "%_HB_CC_NAME%"      == "" set _HB_CC_NAME=b32
-if "%_HB_MAKE_PROGRAM%" == "" set _HB_MAKE_PROGRAM=make.exe
-
-set _HB_MAKEFILE=make_b32.mak
-set HB_EXIT_LEVEL=
-
-rem ---------------------------------------------------------------
-
-rem Save the user value, force silent file overwrite with COPY
-rem (not all Windows versions support the COPY /Y flag)
-set HB_ORGENV_COPYCMD=%COPYCMD%
-set COPYCMD=/Y
-
-rem ---------------------------------------------------------------
-
-if "%1" == "clean" goto CLEAN
-if "%1" == "Clean" goto CLEAN
-if "%1" == "CLEAN" goto CLEAN
-if "%1" == "install" goto INSTALL
-if "%1" == "Install" goto INSTALL
-if "%1" == "INSTALL" goto INSTALL
-
-:BUILD
-
-   %_HB_MAKE_PROGRAM% %HB_USER_MAKEFLAGS% -f %_HB_MAKEFILE% %1 %2 %3 > make_%_HB_CC_NAME%.log
-   if errorlevel 1 set HB_EXIT_LEVEL=1
-   if errorlevel 1 if not "%HB_SHOW_ERRORS%" == "no" notepad make_%_HB_CC_NAME%.log
-   goto EXIT
-
-:CLEAN
-
-   %_HB_MAKE_PROGRAM% %HB_USER_MAKEFLAGS% -f %_HB_MAKEFILE% CLEAN > make_%_HB_CC_NAME%.log
-   if errorlevel 1 set HB_EXIT_LEVEL=1
-   if errorlevel 1 goto EXIT
-   if exist make_%_HB_CC_NAME%.log del make_%_HB_CC_NAME%.log > nul
-   if exist inst_%_HB_CC_NAME%.log del inst_%_HB_CC_NAME%.log > nul
-   goto EXIT
-
-:INSTALL
-
-   %_HB_MAKE_PROGRAM% %HB_USER_MAKEFLAGS% -f %_HB_MAKEFILE% INSTALL > nul
-   if errorlevel 1 set HB_EXIT_LEVEL=1
-   goto EXIT
-
-:EXIT
-
-rem ---------------------------------------------------------------
-
-rem Restore user value
-set COPYCMD=%HB_ORGENV_COPYCMD%
+call make_gnu.bat > make_%_HB_CC_NAME%.log
 
 set _HB_CC_NAME=
-set _HB_MAKE_PROGRAM=
-set _HB_MAKEFILE=
 
 if exist hbpostmk.bat call hbpostmk.bat

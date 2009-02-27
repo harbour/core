@@ -8,6 +8,22 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 12:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_b32.bat
+  * make_vc.bat
+  * make_gcc.sh
+    * Redirected old "non-GNU" build starters to the mainstream
+      Harbour GNU Make system, with some measures to keep
+      compatibility. It's not 100% compatible, but the most
+      important settings and aspects should be similar.
+      It's recommended for everyone to switch using the GNU
+      make system natively, as the non-GNU one will be removed
+      in the future, the old way is now legacy and not supported.
+
+  * INSTALL
+  * make_gnu.bat
+    + Added some more information.
+
 2009-02-27 12:38 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/postinst.sh
     ! fixed hb-mkslib link. Please test this version in MSys.

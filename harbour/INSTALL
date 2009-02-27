@@ -42,6 +42,8 @@ Windows with other compilers
    Make sure to have your C compiler of choice properly
    installed and GNU Make (with the name make.exe)
    accessible in the PATH _before_ the compiler tools.
+   We recommend using the GNU Make from the MinGW binary
+   distribution.
 
    > set HB_COMPILER=<msvc|bcc32|owatcom|...>
    > set HB_INSTALL_PREFIX=<DIR>

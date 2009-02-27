@@ -23,6 +23,17 @@ rem Copyright 1999-2001 Viktor Szakats (viktor.szakats@syenar.hu)
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 
+rem ---------------------------------------------------------------
+rem Set these envvars for cross compilation:
+rem set HB_BIN_COMPILE=<harbourroot>\bin
+rem set HB_PPGEN_PATH=<harbourroot>\bin
+rem set HB=<harbourroot>\bin\harbour.exe
+rem set HBPP=<harbourroot>\bin\hbpp.exe
+rem
+rem Set this if you need to rebuild the language parser:
+rem set HB_REBUILD_PARSER=yes
+rem ---------------------------------------------------------------
+
 
 if "%HB_ARCHITECTURE%" == "" if not "%WINDIR%" == "" set HB_ARCHITECTURE=win
 if "%HB_ARCHITECTURE%" == ""                         set HB_ARCHITECTURE=dos
