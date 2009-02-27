@@ -63,8 +63,6 @@
  *
  */
 
-#pragma LINENUMBER=ON
-
 #include "common.ch"
 #include "directry.ch"
 #include "fileio.ch"
@@ -204,7 +202,6 @@ FUNCTION Main( ... )
    LOCAL s_aOPTL
    LOCAL s_cPROGDIR
    LOCAL s_cPROGNAME
-   LOCAL s_cMAPNAME
    LOCAL s_cFIRST
    LOCAL s_aOBJ
    LOCAL s_aOBJA
@@ -931,15 +928,6 @@ FUNCTION Main( ... )
       IF ! Empty( s_cPROGDIR )
          hb_FNameSplit( s_cPROGNAME, @cDir, @cName, @cExt )
          s_cPROGNAME := hb_FNameMerge( iif( Empty( cDir ), s_cPROGDIR, cDir ), cName, cExt )
-      ENDIF
-
-      /* Determine map name from output name. */
-      s_cMAPNAME := FN_ExtSet( s_cPROGNAME, ".map" )
-      /* Set output name extension. */
-      IF t_cARCH $ "os2|win|dos"
-         s_cPROGNAME := FN_ExtSet( s_cPROGNAME, ".exe" )
-      ELSE
-         s_cPROGNAME := FN_ExtSet( s_cPROGNAME )
       ENDIF
 
       IF lSysLoc
@@ -1699,6 +1687,9 @@ FUNCTION Main( ... )
          IF ! Empty( cBin_CompC )
 
             /* Compiling */
+            IF s_lTRACE
+               OutStd( "hbmk: C compiler command options:" + hb_osNewLine() + cOpt_CompC + hb_osNewLine() )
+            ENDIF
 
             /* Order is significant */
             cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListDirExt( s_aPRG, "", ".c" ), s_aC ) ) )
@@ -1712,9 +1703,9 @@ FUNCTION Main( ... )
             cOpt_CompC := StrTran( cOpt_CompC, "{FL}"  , iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                          GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , PathSepToTarget( FN_DirGet( s_cPROGNAME ) ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cObjPrefix ) ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OE}"  , PathSepToTarget( s_cPROGNAME ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OM}"  , PathSepToTarget( s_cMAPNAME ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cObjExt ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{OE}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, iif( t_cARCH $ "os2|win|dos", ".exe", NIL ) ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{OM}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{DB}"  , s_cHB_BIN_INSTALL )
             cOpt_CompC := StrTran( cOpt_CompC, "{DI}"  , s_cHB_INC_INSTALL )
@@ -1767,8 +1758,8 @@ FUNCTION Main( ... )
          cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( s_aLIB ) )
          cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                     GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
-         cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( s_cPROGNAME ) )
-         cOpt_Link := StrTran( cOpt_Link, "{OM}"  , PathSepToTarget( s_cMAPNAME ) )
+         cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, iif( t_cARCH $ "os2|win|dos", ".exe", NIL ) ) ) )
+         cOpt_Link := StrTran( cOpt_Link, "{OM}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) ) )
          cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
          cOpt_Link := StrTran( cOpt_Link, "{DB}"  , s_cHB_BIN_INSTALL )
 
@@ -1823,6 +1814,7 @@ FUNCTION Main( ... )
          IF nErrorLevel != 0
             PauseForKey()
          ELSEIF s_lRUN
+            s_cPROGNAME := FN_ExtSet( s_cPROGNAME, iif( t_cARCH $ "os2|win|dos", ".exe", NIL ) )
             #if !( defined( __PLATFORM__WINDOWS ) .OR. defined( __PLATFORM__DOS ) .OR. defined( __PLATFORM__OS2 ) )
             IF Empty( FN_DirGet( s_cPROGNAME ) )
                s_cPROGNAME := "." + hb_osPathSeparator() + s_cPROGNAME

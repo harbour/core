@@ -47,6 +47,8 @@ HOW TO BUILD AND INSTALL HARBOUR
       distribution. Use your search engine with 'mingw gnu make'
       or try this link:
       http://sourceforge.net/project/showfiles.php?group_id=2435
+      In some packages make.exe is called mingw32-make.exe,
+      just copy/rename it to make.exe then.
 
       > set HB_COMPILER=<msvc|bcc32|owatcom|...>
       > set HB_INSTALL_PREFIX=<DIR>

@@ -8,6 +8,20 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 19:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    + Added text to specifically tell to rename mingw32-make.exe
+      to make.exe if the former is found in a distro.
+      BTW most probably mingw32-make.exe would also make it, but
+      our make_gnu.bat file wants make.exe, and there is no
+      easy way to check (but can be done).
+
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed silly typo preventing object files to get their
+      proper extension in -hbcc mode.
+    * Minor internal change to avoid changing extensions twice
+      on the same string, since this may cause loss.
+
 2009-02-27 19:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
   * make_gnu.bat
