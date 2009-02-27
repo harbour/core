@@ -7,7 +7,7 @@ HOW TO BUILD AND INSTALL HARBOUR
 
    For all platforms you'll need:
 
-   * GNU make
+   * GNU Make
    * Supported C compiler
 
    Linux/Darwin/BSD/HP-UX/Solaris
@@ -18,7 +18,7 @@ HOW TO BUILD AND INSTALL HARBOUR
       $ sudo ./make_gnu.sh install
 
       To test it, go to <DIR>/bin directory and type:
-      $ ./hbmk2 ../tests/hello.prg
+      $ ./hbmk2 -n ../tests/hello.prg
       $ ./hello
       You should see: 'Hello world!' on screen.
 
@@ -34,7 +34,7 @@ HOW TO BUILD AND INSTALL HARBOUR
       > sh make_gnu.sh install
 
       To test it, go to <DIR>/bin directory and type:
-      > hbmk2 ../tests/hello.prg
+      > hbmk2 -n ../tests/hello.prg
       > hello
       You should see: 'Hello world!' on screen.
 
@@ -51,11 +51,9 @@ HOW TO BUILD AND INSTALL HARBOUR
       > set HB_COMPILER=<msvc|bcc32|owatcom|...>
       > set HB_INSTALL_PREFIX=<DIR>
       > make_gnu.bat install
-        or
-      > make_gnu.bat --install-with-dll
 
       To test it, go to <DIR>\bin directory and type:
-      > hbmk2 ..\tests\hello.prg
+      > hbmk2 -n ..\tests\hello.prg
       > hello
       You should see: 'Hello world!' on screen.
 
@@ -105,6 +103,95 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_MYSQL=C:\mysql\include
    HB_INC_OPENSSL=C:\openssl
    HB_INC_PGSQL=C:\pgsql\include
+
+
+SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
+===============================================
+
+   Abbreviation below can be used as HB_COMPILER values.
+
+   Linux
+   -----
+   gcc      - GNU C
+   gpp      - GNU C++
+   owatcom  - Open Watcom C++
+   icc      - Intel(R) C/C++
+
+   Darwin/BSD/HP-UX/Solaris
+   ------------------------
+   gcc      - GNU C
+
+   Windows
+   -------
+   mingw    - MinGW GNU C
+   msvc     - Microsoft Visual C++
+   gcc      - Cygwin GNU C
+   bcc32    - Borland/CodeGear C++ 4.x and above
+   rxsnt    - EMX/RSXNT/Windows GNU C
+   icc      - IBM Visual Age C++
+   dmc      - Digital Mars C
+   msvc64   - Microsoft Visual C++ x64
+   msvcia64 - Microsoft Visual C++ ia64
+   mingwce  - MinGW GNU C (Windows CE / ARM)
+   msvcce   - Microsoft Visual C++ (Windows CE / ARM)
+   pocc     - Pelles C 4.5 and above
+   pocc64   - Pelles C 5.0 x64
+   poccce   - Pelles C 5.0 (Windows CE / ARM)
+   xcc      - Pelles C (xhb)
+
+   DOS (32-bit)
+   ---
+   djgpp    - Delorie GNU C
+   owatcom  - Open Watcom C++ 9.x and above
+   rxs32    - EMX/RSXNT/DOS GNU C
+
+   OS/2
+   ----
+   gcc      - EMX GNU C
+   owatcom  - Open Watcom C++
+   icc      - IBM Visual Age C++ 3.0
+
+
+OPTIONS AVAILABLE WHEN BUILDING HARBOUR
+=======================================
+
+   You can fine-tune Harbour builds with below listed
+   environment variables. All of these are optional.
+
+   General
+   -------
+   - HB_USER_PRGFLAGS          User Harbour compiler options
+   - HB_USER_CFLAGS            User C compiler options
+   - HB_USER_LDFLAGS           User linker options for executables
+   - HB_USER_AFLAGS            User linker options for libraries
+   - HB_USER_MAKEFLAGS         User GNU Make options
+
+   - HB_BIN_INSTALL            Target directory to install executables
+   - HB_LIB_INSTALL            Target directory to install libraries
+   - HB_INC_INSTALL            Target directory to install language headers
+   - HB_DOC_INSTALL            Target directory to install documentation
+
+   Special
+   -------
+   - HB_BUILD_DLL=yes          To create a full build with .dlls.
+                               This is only needed and available for
+                               non-GNU Windows compilers.
+   - HB_REBUILD_PARSER=yes     To rebuild the language parses.
+                               This requires GNU Bison.
+   - HB_VISUALC_VER_PRE80=yes  Set this if you're using a pre-8.0
+                               version of MSVC compiler.
+
+   Cross building
+   --------------
+   HB_BIN_COMPILE=<HARBOUR_NATIVE_BUILD_DIR>\bin
+   HB_PPGEN_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin
+   HB=<HARBOUR_NATIVE_BUILD_DIR>\bin\harbour[.exe]
+   HBPP=<HARBOUR_NATIVE_BUILD_DIR>\bin\hbpp[.exe]
+
+   You need these when building for a platform different to host.
+   For this to work, you will need to point above envvars to
+   a native Harbour build available on your system.
+
 
 
 [ Viktor Szakats <harbour.01 syenar.hu> ]

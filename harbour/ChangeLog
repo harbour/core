@@ -8,6 +8,26 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 19:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+  * make_gnu.bat
+  * make_gnu.sh
+    + Added listing of supported C compilers.
+    + Added list of available built-time options.
+      (may be incomplete).
+    ! Added -n options to hbmk2 calls.
+    - Removed similar content from script files.
+
+  * make_gnu.bat
+    - Removed --install-with-dll option.
+      Use set HB_BUILD_DLL=yes instead.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed swapped -hbcc and -hbcmp meaning.
+    + Don't deal with compiler autodetection if called with
+      -hbcmp option. In this mode a C compiler isn't needed
+      at all.
+
 2009-02-27 17:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_gnu.bat
     ! Fixed to work when DLLs weren't requested.

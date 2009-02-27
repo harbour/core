@@ -149,48 +149,8 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
     echo "  - clean"
     echo "  - install"
     echo
-    echo "Notes:"
-    echo
-    echo "  - HB_ARCHITECTURE and HB_COMPILER envvars must be set."
-    echo "    The following values are currently supported:"
-    echo
-    echo "    HB_ARCHITECTURE:"
-    echo "      - dos"
-    echo "      - win"
-    echo "      - os2"
-    echo "      - linux"
-    echo "      - bsd"
-    echo "      - darwin"
-    echo "      - sunos"
-    echo "      - hpux"
-    echo
-    read
-    echo "    HB_COMPILER:"
-    echo "      - When HB_ARCHITECTURE=dos"
-    echo "        - bcc16   (Borland C++ 3.x, 4.x, 5.0x, DOS 16-bit)"
-    echo "        - djgpp   (Delorie GNU C, DOS 32-bit)"
-    echo "        - rsx32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)"
-    echo "        - owatcom (Watcom C++ 9.x, 10.x, 11.x, DOS 32-bit)"
-    echo "      - When HB_ARCHITECTURE=win"
-    echo "        - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)"
-    echo "        - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)"
-    echo "        - mingw   (MinGW GNU C, Windows 32-bit)"
-    echo "        - rsxnt   (EMX/RSXNT/Windows GNU C, Windows 32-bit)"
-    echo "        - icc     (IBM Visual Age C++, Windows 32-bit)"
-    echo "        - msvc    (Microsoft Visual C++, Windows 32-bit)"
-    echo "        - msvc64  (Microsoft Visual C++, Windows 64-bit)"
-    echo "      - When HB_ARCHITECTURE=linux"
-    echo "        - gcc     (GNU C, 32-bit)"
-    echo "      - When HB_ARCHITECTURE=os2"
-    echo "        - gcc     (EMX GNU C, OS/2 32-bit)"
-    echo "        - icc     (IBM Visual Age C++ 3.0, OS/2 32-bit)"
-    echo
-    echo "  - Use these optional envvars to configure the make process"
-    echo "    when using the 'all' target:"
-    echo
-    echo "    HB_USER_PRGFLAGS - Extra Harbour compiler options"
-    echo "    HB_USER_CFLAGS   - Extra C compiler options"
-    echo "    HB_USER_LDFLAGS  - Extra linker options"
+    echo "Please read INSTALL for HOWTOs and description"
+    echo "of available options."
     exit
 
 else

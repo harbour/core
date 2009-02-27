@@ -23,17 +23,6 @@ rem Copyright 1999-2001 Viktor Szakats (viktor.szakats@syenar.hu)
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 
-rem ---------------------------------------------------------------
-rem Set these envvars for cross compilation:
-rem set HB_BIN_COMPILE=<harbourroot>\bin
-rem set HB_PPGEN_PATH=<harbourroot>\bin
-rem set HB=<harbourroot>\bin\harbour.exe
-rem set HBPP=<harbourroot>\bin\hbpp.exe
-rem
-rem Set this if you need to rebuild the language parser:
-rem set HB_REBUILD_PARSER=yes
-rem ---------------------------------------------------------------
-
 
 if "%HB_ARCHITECTURE%" == "" if not "%WINDIR%" == "" set HB_ARCHITECTURE=win
 if "%HB_ARCHITECTURE%" == ""                         set HB_ARCHITECTURE=dos
@@ -69,36 +58,8 @@ if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
    echo   - clean
    echo   - install
    echo.
-   echo Notes:
-   echo.
-   echo   - HB_ARCHITECTURE and HB_COMPILER envvars must be set.
-   echo     The following values are currently supported:
-   echo.
-   echo     HB_ARCHITECTURE:
-   echo       - win
-   echo       - dos
-   echo.
-   pause
-   echo     HB_COMPILER:
-   echo       - When HB_ARCHITECTURE=win
-   echo         - msvc    (Microsoft Visual C++, Windows 32-bit)
-   echo         - msvc64  (Microsoft Visual C++, Windows 64-bit)
-   echo         - mingw   (MinGW GNU C, Windows 32-bit)
-   echo         - gcc     (Cygnus/Cygwin GNU C, Windows 32-bit)
-   echo         - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)
-   echo         - rxsnt   (EMX/RSXNT/Windows GNU C, Windows 32-bit)
-   echo         - icc     (IBM Visual Age C++, Windows 32-bit)
-   echo       - When HB_ARCHITECTURE=dos
-   echo         - djgpp   (Delorie GNU C, DOS 32-bit)
-   echo         - owatcom (Watcom C++ 9.x, 10.x, 11.x, DOS 32-bit)
-   echo         - rxs32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)
-   echo.
-   echo   - Use these optional envvars to configure the make process
-   echo     when using the 'all' command:
-   echo.
-   echo     HB_USER_PRGFLAGS - Extra Harbour compiler options
-   echo     HB_USER_CFLAGS   - Extra C compiler options
-   echo     HB_USER_LDFLAGS  - Extra linker options
+   echo Please read INSTALL for HOWTOs and description
+   echo of available options.
    goto END
 
 :BAD_ARCH
@@ -121,16 +82,9 @@ if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
    rem It will automatically build Harbour in two passes, one for
    rem the .dlls and a final pass for the regular version.
 
-   if not "%HB_ARCHITECTURE%" == "win" goto SKIP_WIN
+   if not "%HB_ARCHITECTURE%" == "win" goto SKIP_WINDLL
+   if not "%HB_BUILD_DLL%" == "yes" goto SKIP_WINDLL
 
-   set _HB_BUILD_DLL_OLD=%HB_BUILD_DLL%
-   set _HB_BUILD_DLL=%HB_BUILD_DLL%
-   if "%1" == "--install-with-dll" set _HB_BUILD_DLL=yes
-   if "%1" == "--install-with-dll" shift
-
-   if not "%_HB_BUILD_DLL%" == "yes" goto SKIP_WINDLL
-
-   set HB_BUILD_DLL=yes
    set _HB_CONTRIBLIBS=%HB_CONTRIBLIBS%
    set _HB_CONTRIB_ADDONS=%HB_CONTRIB_ADDONS%
    set HB_CONTRIBLIBS=no
@@ -144,20 +98,11 @@ if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
    set _HB_CONTRIB_ADDONS=
    make clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    make install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-
-   set HB_BUILD_DLL=%_HB_BUILD_DLL_OLD%
-   set _HB_BUILD_DLL=
-   set _HB_BUILD_DLL_OLD=
+   set HB_BUILD_DLL=yes
 
    goto END
 
 :SKIP_WINDLL
-
-   set HB_BUILD_DLL=%_HB_BUILD_DLL_OLD%
-   set _HB_BUILD_DLL=
-   set _HB_BUILD_DLL_OLD=
-
-:SKIP_WIN
 
    make %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    goto END

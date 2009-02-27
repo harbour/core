@@ -63,6 +63,8 @@
  *
  */
 
+#pragma LINENUMBER=ON
+
 #include "common.ch"
 #include "directry.ch"
 #include "fileio.ch"
@@ -301,8 +303,8 @@ FUNCTION Main( ... )
       CASE cParamL            == "-quiet" ; t_lQuiet := .T. ; t_lInfo := .F.
       CASE Left( cParamL, 6 ) == "-comp=" ; t_cCOMP := SubStr( cParam, 7 )
       CASE Left( cParamL, 6 ) == "-arch=" ; t_cARCH := SubStr( cParam, 7 )
-      CASE cParamL            == "-hbcc"  ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .T.
-      CASE cParamL            == "-hbcmp" ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      CASE cParamL            == "-hbcmp" ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .T.
+      CASE cParamL            == "-hbcc"  ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
       CASE cParamL            == "-hblnk" ; t_lQuiet := .T. ; t_lInfo := .F.
       CASE cParamL            == "-info"  ; t_lInfo := .T.
       CASE cParamL == "-help" .OR. ;
@@ -318,17 +320,17 @@ FUNCTION Main( ... )
 
    tmp := Lower( FN_NameGet( hb_argv( 0 ) ) )
    DO CASE
-   CASE Right( tmp, 4 ) == "hbcc" .OR. ;
-        Left(  tmp, 4 ) == "hbcc"
-      t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .T.
-      IF t_lInfo
-         OutStd( "hbmk: Enabled -hbcc option." + hb_osNewLine() )
-      ENDIF
    CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
         Left(  tmp, 5 ) == "hbcmp"
-      t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .T.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hbcmp option." + hb_osNewLine() )
+      ENDIF
+   CASE Right( tmp, 4 ) == "hbcc" .OR. ;
+        Left(  tmp, 4 ) == "hbcc"
+      t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      IF t_lInfo
+         OutStd( "hbmk: Enabled -hbcc option." + hb_osNewLine() )
       ENDIF
    CASE Right( tmp, 5 ) == "hblnk" .OR. ;
         Left(  tmp, 5 ) == "hblnk"
@@ -453,55 +455,60 @@ FUNCTION Main( ... )
 
    /* Autodetect compiler */
 
-   IF Empty( t_cCOMP ) .OR. t_cCOMP == "bld"
-      IF Len( aCOMPSUP ) == 1
-         t_cCOMP := aCOMPSUP[ 1 ]
-      ELSEIF t_cARCH == "linux" .OR. t_cCOMP == "bld"
-         t_cCOMP := cSelfCOMP
-         IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
-            t_cCOMP := NIL
-         ENDIF
-      ELSEIF ! Empty( aCOMPDET )
-         /* Look for this compiler first */
-         FOR tmp := 1 TO Len( aCOMPDET )
-            IF aCOMPDET[ tmp ][ 2 ] == cSelfCOMP .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
-               t_cCOMP := aCOMPDET[ tmp ][ 2 ]
-               EXIT
+   IF lStopAfterHarbour
+      /* If we're just compiling .prg to .c we don't need a C compiler. */
+      t_cCOMP := ""
+   ELSE
+      IF Empty( t_cCOMP ) .OR. t_cCOMP == "bld"
+         IF Len( aCOMPSUP ) == 1
+            t_cCOMP := aCOMPSUP[ 1 ]
+         ELSEIF t_cARCH == "linux" .OR. t_cCOMP == "bld"
+            t_cCOMP := cSelfCOMP
+            IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
+               t_cCOMP := NIL
             ENDIF
-         NEXT
-         IF Empty( t_cCOMP )
-            /* Check the rest of compilers */
+         ELSEIF ! Empty( aCOMPDET )
+            /* Look for this compiler first */
             FOR tmp := 1 TO Len( aCOMPDET )
-               IF !( aCOMPDET[ tmp ][ 2 ] == cSelfCOMP ) .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
+               IF aCOMPDET[ tmp ][ 2 ] == cSelfCOMP .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
                   t_cCOMP := aCOMPDET[ tmp ][ 2 ]
                   EXIT
                ENDIF
             NEXT
+            IF Empty( t_cCOMP )
+               /* Check the rest of compilers */
+               FOR tmp := 1 TO Len( aCOMPDET )
+                  IF !( aCOMPDET[ tmp ][ 2 ] == cSelfCOMP ) .AND. Eval( aCOMPDET[ tmp ][ 1 ] )
+                     t_cCOMP := aCOMPDET[ tmp ][ 2 ]
+                     EXIT
+                  ENDIF
+               NEXT
+            ENDIF
          ENDIF
-      ENDIF
-      IF ! Empty( t_cCOMP )
-         IF t_lInfo
-            OutStd( "hbmk: Autodetected compiler: " + t_cCOMP + hb_osNewLine() )
+         IF ! Empty( t_cCOMP )
+            IF t_lInfo
+               OutStd( "hbmk: Autodetected compiler: " + t_cCOMP + hb_osNewLine() )
+            ENDIF
+         ELSE
+            IF Empty( aCOMPDET )
+               OutErr( "hbmk: Please choose a compiler by using -comp= option or envvar HB_COMPILER." + hb_osNewLine() )
+               OutErr( "      You have the following choices on your platform: " + hb_osNewLine() )
+               OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
+            ELSE
+               OutErr( "hbmk: Harbour Make couldn't detect any supported C compiler in your PATH." + hb_osNewLine() )
+               OutErr( "      Please setup one or set -comp= option or envvar HB_COMPILER " + hb_osNewLine() )
+               OutErr( "      to one of these values:" + hb_osNewLine() )
+               OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
+            ENDIF
+            PauseForKey()
+            RETURN 2
          ENDIF
       ELSE
-         IF Empty( aCOMPDET )
-            OutErr( "hbmk: Please choose a compiler by using -comp= option or envvar HB_COMPILER." + hb_osNewLine() )
-            OutErr( "      You have the following choices on your platform: " + hb_osNewLine() )
-            OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
-         ELSE
-            OutErr( "hbmk: Harbour Make couldn't detect any supported C compiler in your PATH." + hb_osNewLine() )
-            OutErr( "      Please setup one or set -comp= option or envvar HB_COMPILER " + hb_osNewLine() )
-            OutErr( "      to one of these values:" + hb_osNewLine() )
-            OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
+         IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
+            OutErr( "hbmk: Error: Compiler value unknown." + hb_osNewLine() )
+            PauseForKey()
+            RETURN 2
          ENDIF
-         PauseForKey()
-         RETURN 2
-      ENDIF
-   ELSE
-      IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
-         OutErr( "hbmk: Error: Compiler value unknown." + hb_osNewLine() )
-         PauseForKey()
-         RETURN 2
       ENDIF
    ENDIF
 
@@ -670,8 +677,8 @@ FUNCTION Main( ... )
       CASE cParamL            == "-quiet" .OR. ;
            Left( cParamL, 6 ) == "-comp=" .OR. ;
            Left( cParamL, 6 ) == "-arch=" .OR. ;
-           cParamL            == "-hbcc"  .OR. ;
            cParamL            == "-hbcmp" .OR. ;
+           cParamL            == "-hbcc"  .OR. ;
            cParamL            == "-hblnk" .OR. ;
            cParamL            == "-info"
 
@@ -859,60 +866,6 @@ FUNCTION Main( ... )
       RETURN 4
    ENDIF
 
-   /* If -o with full name wasn't specified, let's
-      make it the first source file specified. */
-   DEFAULT s_cPROGNAME TO FN_NameGet( s_cFIRST )
-
-   IF t_cCOMP == "mingwce" .OR. ;
-      t_cCOMP == "poccce"
-      t_cGTDEFAULT := "gtwvt"
-   ENDIF
-
-   IF s_cGT == t_cGTDEFAULT
-      s_cGT := NIL
-   ENDIF
-
-   /* Merge user libs from command line and envvar. Command line has priority. */
-   s_aLIBUSER := ArrayAJoin( { s_aLIBUSER, s_aLIBUSERGT, ListToArray( PathSepToTarget( GetEnv( "HB_USER_LIBS" ) ) ) } )
-
-   /* Combine output dir with output name. */
-   IF ! Empty( s_cPROGDIR )
-      hb_FNameSplit( s_cPROGNAME, @cDir, @cName, @cExt )
-      s_cPROGNAME := hb_FNameMerge( iif( Empty( cDir ), s_cPROGDIR, cDir ), cName, cExt )
-   ENDIF
-
-   /* Determine map name from output name. */
-   s_cMAPNAME := FN_ExtSet( s_cPROGNAME, ".map" )
-   /* Set output name extension. */
-   IF t_cARCH $ "os2|win|dos"
-      s_cPROGNAME := FN_ExtSet( s_cPROGNAME, ".exe" )
-   ELSE
-      s_cPROGNAME := FN_ExtSet( s_cPROGNAME )
-   ENDIF
-
-   IF lSysLoc
-      cPrefix := PathNormalize( s_cHB_LIB_INSTALL, lSysLoc )
-   ELSE
-      cPrefix := ""
-   ENDIF
-#if 1
-   cPostfix := ""
-   HB_SYMBOL_UNUSED( cDL_Version )
-#else
-   cPostfix := "-" + cDL_Version
-#endif
-
-   DO CASE
-   CASE t_cARCH $ "bsd|linux|hpux|sunos" .OR. t_cARCH == "darwin" /* Separated to avoid match with 'win' */
-      s_aLIBSHARED := { iif( s_lMT, cPrefix + cDynLibNamePrefix + "harbourmt" + cPostfix + cDynLibExt,;
-                                    cPrefix + cDynLibNamePrefix + "harbour"   + cPostfix + cDynLibExt ) }
-   CASE t_cARCH $ "os2|win"
-      s_aLIBSHARED := { iif( s_lMT, cDynLibNamePrefix + "harbourmt",;
-                                    cDynLibNamePrefix + "harbour" ) }
-   OTHERWISE
-      s_aLIBSHARED := NIL
-   ENDCASE
-
    /* Harbour compilation */
 
    IF Len( s_aPRG ) > 0
@@ -957,6 +910,60 @@ FUNCTION Main( ... )
    ENDIF
 
    IF ! lStopAfterHarbour
+
+      /* If -o with full name wasn't specified, let's
+         make it the first source file specified. */
+      DEFAULT s_cPROGNAME TO FN_NameGet( s_cFIRST )
+
+      IF t_cCOMP == "mingwce" .OR. ;
+         t_cCOMP == "poccce"
+         t_cGTDEFAULT := "gtwvt"
+      ENDIF
+
+      IF s_cGT == t_cGTDEFAULT
+         s_cGT := NIL
+      ENDIF
+
+      /* Merge user libs from command line and envvar. Command line has priority. */
+      s_aLIBUSER := ArrayAJoin( { s_aLIBUSER, s_aLIBUSERGT, ListToArray( PathSepToTarget( GetEnv( "HB_USER_LIBS" ) ) ) } )
+
+      /* Combine output dir with output name. */
+      IF ! Empty( s_cPROGDIR )
+         hb_FNameSplit( s_cPROGNAME, @cDir, @cName, @cExt )
+         s_cPROGNAME := hb_FNameMerge( iif( Empty( cDir ), s_cPROGDIR, cDir ), cName, cExt )
+      ENDIF
+
+      /* Determine map name from output name. */
+      s_cMAPNAME := FN_ExtSet( s_cPROGNAME, ".map" )
+      /* Set output name extension. */
+      IF t_cARCH $ "os2|win|dos"
+         s_cPROGNAME := FN_ExtSet( s_cPROGNAME, ".exe" )
+      ELSE
+         s_cPROGNAME := FN_ExtSet( s_cPROGNAME )
+      ENDIF
+
+      IF lSysLoc
+         cPrefix := PathNormalize( s_cHB_LIB_INSTALL, lSysLoc )
+      ELSE
+         cPrefix := ""
+      ENDIF
+#if 1
+      cPostfix := ""
+      HB_SYMBOL_UNUSED( cDL_Version )
+#else
+      cPostfix := "-" + cDL_Version
+#endif
+
+      DO CASE
+      CASE t_cARCH $ "bsd|linux|hpux|sunos" .OR. t_cARCH == "darwin" /* Separated to avoid match with 'win' */
+         s_aLIBSHARED := { iif( s_lMT, cPrefix + cDynLibNamePrefix + "harbourmt" + cPostfix + cDynLibExt,;
+                                       cPrefix + cDynLibNamePrefix + "harbour"   + cPostfix + cDynLibExt ) }
+      CASE t_cARCH $ "os2|win"
+         s_aLIBSHARED := { iif( s_lMT, cDynLibNamePrefix + "harbourmt",;
+                                       cDynLibNamePrefix + "harbour" ) }
+      OTHERWISE
+         s_aLIBSHARED := NIL
+      ENDCASE
 
       /* C compilation/linking */
 
@@ -2727,9 +2734,9 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -[no]trace        show commands executed" ,;
       "  -[no]run          run/don't run the created executable" ,;
       "  -nohbp            do not process .hbp files in current directory" ,;
-      "  -hbcc             stop after creating the .c Harbour output files" ,;
+      "  -hbcmp            stop after creating the .c Harbour output files" ,;
       "                    create link/copy/rename hbmk to hbcc for the same effect" ,;
-      "  -hbcmp            stop after creating the object files" ,;
+      "  -hbcc             stop after creating the object files" ,;
       "                    create link/copy/rename hbmk to hbcc for the same effect" ,;
       "  -hblnk            act as linker. Currently this is the same as -q" ,;
       "  -arch=<arch>      assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
