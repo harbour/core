@@ -239,6 +239,7 @@ FUNCTION Main( ... )
    LOCAL cDynLibExt
    LOCAL cResPrefix
    LOCAL cResExt
+   LOCAL cBinExt
 
    LOCAL cCommand
 #if defined( HBMK_INTEGRATED_COMPILER )
@@ -393,6 +394,7 @@ FUNCTION Main( ... )
       s_aLIBHBGT := { "gttrm", "gtxwc" }
       t_cGTDEFAULT := "gttrm"
       cDynLibNamePrefix := "lib"
+      cBinExt := NIL
       SWITCH t_cARCH
       CASE "darwin" ; cDynLibExt := ".dylib" ; EXIT
       CASE "hpux"   ; cDynLibExt := ".sl" ; EXIT
@@ -407,6 +409,7 @@ FUNCTION Main( ... )
       t_cGTDEFAULT := "gtdos"
       cDynLibNamePrefix := ""
       cDynLibExt := ""
+      cBinExt := ".exe"
    CASE t_cARCH == "os2"
       aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "gcc"     },;
                     { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
@@ -417,6 +420,7 @@ FUNCTION Main( ... )
       t_cGTDEFAULT := "gtos2"
       cDynLibNamePrefix := ""
       cDynLibExt := ".dll"
+      cBinExt := ".exe"
    CASE t_cARCH == "win"
       /* Order is significant.
          owatcom also keeps a cl.exe in it's binary dir. */
@@ -439,6 +443,7 @@ FUNCTION Main( ... )
       t_cGTDEFAULT := "gtwin"
       cDynLibNamePrefix := ""
       cDynLibExt := ".dll"
+      cBinExt := ".exe"
    OTHERWISE
       OutErr( "hbmk: Error: Architecture value unknown: " + t_cARCH + hb_osNewLine() )
       PauseForKey()
@@ -1704,7 +1709,7 @@ FUNCTION Main( ... )
                                                          GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , PathSepToTarget( FN_DirGet( s_cPROGNAME ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cObjExt ) ) )
-            cOpt_CompC := StrTran( cOpt_CompC, "{OE}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, iif( t_cARCH $ "os2|win|dos", ".exe", NIL ) ) ) )
+            cOpt_CompC := StrTran( cOpt_CompC, "{OE}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{OM}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
             cOpt_CompC := StrTran( cOpt_CompC, "{DB}"  , s_cHB_BIN_INSTALL )
@@ -1758,7 +1763,7 @@ FUNCTION Main( ... )
          cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( s_aLIB ) )
          cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
                                                     GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
-         cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, iif( t_cARCH $ "os2|win|dos", ".exe", NIL ) ) ) )
+         cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) ) )
          cOpt_Link := StrTran( cOpt_Link, "{OM}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) ) )
          cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
          cOpt_Link := StrTran( cOpt_Link, "{DB}"  , s_cHB_BIN_INSTALL )
@@ -1814,7 +1819,7 @@ FUNCTION Main( ... )
          IF nErrorLevel != 0
             PauseForKey()
          ELSEIF s_lRUN
-            s_cPROGNAME := FN_ExtSet( s_cPROGNAME, iif( t_cARCH $ "os2|win|dos", ".exe", NIL ) )
+            s_cPROGNAME := FN_ExtSet( s_cPROGNAME, cBinExt )
             #if !( defined( __PLATFORM__WINDOWS ) .OR. defined( __PLATFORM__DOS ) .OR. defined( __PLATFORM__OS2 ) )
             IF Empty( FN_DirGet( s_cPROGNAME ) )
                s_cPROGNAME := "." + hb_osPathSeparator() + s_cPROGNAME

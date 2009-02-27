@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 20:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_gnu.bat
+    + Added autodetection of mingw32-make.exe. If found in
+      PATH, it will be used instead of make.exe.
+      This way the build process is much less resistant of
+      environment configuration. If this works out, I'll
+      lax the rules in INSTALL.
+
+  * utils/hbmk2/hbmk2.prg
+    * Minor internal cleanup to previous.
+
 2009-02-27 19:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     + Added text to specifically tell to rename mingw32-make.exe

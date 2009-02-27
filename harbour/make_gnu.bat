@@ -75,6 +75,27 @@ if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
 :MAKE
 
    rem ---------------------------------------------------------------
+   rem Detect name of GNU Make
+   rem
+   rem Look for mingw32-make.exe and use it if found. Works only
+   rem on Windows NT and upper. [vszakats]
+
+   set _HB_MAKE=make.exe
+   if not "%OS%" == "Windows_NT" goto _FM_DONE
+   set _HB_CHECK=mingw32-make.exe
+   set _HB_PATH=%PATH%
+   :_FM_LOOP
+   for /F "delims=; tokens=1,2*" %%p in ("%_HB_PATH%") do (
+      if exist "%%p\%_HB_CHECK%" ( set _HB_MAKE=%_HB_CHECK%&& goto _FM_DONE )
+      if exist "%%p%_HB_CHECK%"  ( set _HB_MAKE=%_HB_CHECK%&& goto _FM_DONE )
+      set _HB_PATH=%%~q;%%~r
+   )
+   if not "%_HB_PATH%"==";" goto _FM_LOOP
+   :_FM_DONE
+   set _HB_CHECK=
+   set _HB_PATH=
+
+   rem ---------------------------------------------------------------
    rem Start the GNU make system
 
    rem ---------------------------------------------------------------
@@ -89,22 +110,24 @@ if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
    set _HB_CONTRIB_ADDONS=%HB_CONTRIB_ADDONS%
    set HB_CONTRIBLIBS=no
    set HB_CONTRIB_ADDONS=
-   make clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   make install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+   %_HB_MAKE% clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+   %_HB_MAKE% install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    set HB_BUILD_DLL=
    set HB_CONTRIBLIBS=%_HB_CONTRIBLIBS%
    set HB_CONTRIB_ADDONS=%_HB_CONTRIB_ADDONS%
    set _HB_CONTRIBLIBS=
    set _HB_CONTRIB_ADDONS=
-   make clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   make install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+   %_HB_MAKE% clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+   %_HB_MAKE% install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    set HB_BUILD_DLL=yes
 
    goto END
 
 :SKIP_WINDLL
 
-   make %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+   %_HB_MAKE% %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    goto END
 
 :END
+
+set _HB_MAKE=
