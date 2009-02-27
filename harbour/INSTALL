@@ -10,14 +10,17 @@ HARBOUR
    xBase language compiler and the runtime libraries with different
    terminal plugins and different databases (not just DBF)"
 
+                                       http://www.harbour-project.org/
+
 
 HOW TO BUILD AND INSTALL HARBOUR
 ================================
 
    For all platforms you'll need:
 
-   * GNU Make
    * Supported C compiler
+   * GNU Make
+   * GNU Bison (optional)
 
    Linux/Darwin/BSD/HP-UX/Solaris
    ------------------------------
@@ -79,7 +82,7 @@ HOW TO BUILD AND INSTALL HARBOUR
             libraries and headers will be created. Use absolute paths
             only. For a peace of mind, avoid using spaces, quotes
             in the name. You can leave it empty, in this case the
-            results will be stored under the current directory tree.
+            results will be created under the current directory tree.
 
    DOS
    ---
@@ -128,7 +131,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
 ===============================================
 
-   Abbreviation below can be used as HB_COMPILER values.
+   You can use abbreviations below as HB_COMPILER values.
 
    Linux
    -----

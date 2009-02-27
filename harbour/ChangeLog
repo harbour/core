@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 21:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * INSTALL
+     * Minor.
+
+   * make_gnu.bat
+     ! Typo.
+
 2009-02-27 20:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     + Added more information to Windows section.
