@@ -46,6 +46,8 @@ Windows with other compilers
    > set HB_COMPILER=<msvc|bcc32|owatcom|...>
    > set HB_INSTALL_PREFIX=<DIR>
    > make_gnu.bat install
+     or
+   > make_gnu.bat --install-with-dll
 
    To test it, go to <DIR>\bin directory and type:
    > hbmk2 ..\tests\hello.prg

@@ -50,7 +50,9 @@ DIRS +=\
 
 else
 
+ifneq ($(HB_CONTRIBLIBS),no)
 DIRS = $(HB_CONTRIBLIBS)
+endif
 
 endif
 

@@ -16,6 +16,12 @@ if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
 if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
 if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
 
+rem Try to create install dirs.
+
+if not exist %HB_BIN_INSTALL%\*.* md %HB_BIN_INSTALL%
+if not exist %HB_LIB_INSTALL%\*.* md %HB_LIB_INSTALL%
+if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
+
 
 rem In GCC3.2.2 the TCP/IP headers and libraries scheme have been changed.
 rem The default is the current OS/2 tcpip toolkit (BSD 4.4 based).

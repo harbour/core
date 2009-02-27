@@ -8,6 +8,45 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 10:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+  * make_gnu.bat
+    + Added --install-with-dll option. This will build
+      and install Harbour with .dlls. Some examples:
+      --- for msvc:
+      call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_INSTALL_PREFIX=C:\devl\hbvc-1.1
+      call make_gnu.bat --install-with-dll > out.txt 2>&1
+      ---
+      --- for bcc32:
+      set PATH=C:\devl\bcc55\bin;%PATH%
+      set PATH=C:\devl\make-3.81;%PATH%
+      set HB_COMPILER=bcc32
+      set HB_INSTALL_PREFIX=C:\devl\hbb32-1.1
+      call make_gnu.bat --install-with-dll > out.txt 2>&1
+      ---
+
+  * make_gnu.bat
+  * make_gnu_os2.cmd
+    + Will now automatically create the install destination dirs.
+
+    ; TODO: Could someone please add this feature to make_gnu.sh?
+
+  * bin/postinst.bat
+  * bin/hb-mkdyn.bat
+    * Moved building dll flavoured executables to postinst,
+      so they will be rebuilt even if HB_DLL!=yes but .dlls
+      are available.
+
+  * contrib/Makefile
+    + Added support for option: HB_CONTRIBLIBS=no.
+      This will disable building any Harbour contribs.
+      (no need to resort to hacks here anymore)
+
+  * utils/hbmk2/hbmk2.prg
+    * Minor on help screen.
+
 2009-02-27 08:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Now all dirs of input files referred to through .hbm

@@ -35,6 +35,12 @@ if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
 if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
 if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
 
+rem Try to create install dirs.
+
+if not exist %HB_BIN_INSTALL%\*.* md %HB_BIN_INSTALL%
+if not exist %HB_LIB_INSTALL%\*.* md %HB_LIB_INSTALL%
+if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
+
 :START
 
    if "%HB_ARCHITECTURE%" == "" goto BAD_ARCH
@@ -98,6 +104,33 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
 
    rem ---------------------------------------------------------------
    rem Start the GNU make system
+
+   rem ---------------------------------------------------------------
+   rem Special build mode when HB_DLL=yes on Windows platform.
+   rem It will automatically build Harbour in two passes, one for
+   rem the .dlls and a final pass for the regular version.
+
+   if not "%HB_ARCHITECTURE%" == "win" goto _SKIP_WINDLL
+   if not "%1" == "--install-with-dll" goto _SKIP_WINDLL
+
+   shift
+   set HB_DLL=yes
+   set _HB_CONTRIBLIBS=%HB_CONTRIBLIBS%
+   set _HB_CONTRIB_ADDONS=%HB_CONTRIB_ADDONS%
+   set HB_CONTRIBLIBS=no
+   set HB_CONTRIB_ADDONS=
+   make clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+   make install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+   set HB_DLL=
+   set HB_CONTRIBLIBS=%_HB_CONTRIBLIBS%
+   set HB_CONTRIB_ADDONS=%_HB_CONTRIB_ADDONS%
+   set _HB_CONTRIBLIBS=
+   set _HB_CONTRIB_ADDONS=
+   make clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+   make install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
+   goto END
+
+:SKIP_WIN
 
    make %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    goto END

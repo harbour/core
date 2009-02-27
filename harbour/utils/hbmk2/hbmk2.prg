@@ -2741,7 +2741,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "" ,;
       "Notes:" ,;
       "  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>." ,;
-      "  - Regular Harbour options are also accepted." ,;
+      "  - Regular Harbour compiler options are also accepted." ,;
       "  - Multiple -l, -L and <script> parameters are accepted." ,;
       "  - " + HBMK_CFG_NAME + " option file in hbmk directory is always processed if it" ,;
       "    exists. On *nix platforms, /usr/local/etc then /etc are checked" ,;

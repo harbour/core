@@ -123,7 +123,7 @@ del _hboneut.txt
 cd ..
 rmdir _dll
 
-goto MK_BIN_DLL
+goto END
 
 :DO_BCC32
 
@@ -245,7 +245,7 @@ del _hboneut.txt
 cd ..
 rmdir _dll
 
-goto MK_BIN_DLL
+goto END
 
 :DO_OWATCOM
 
@@ -283,17 +283,6 @@ del _hbsst.txt
 del _hbsmt.txt
 cd ..
 rmdir _dll
-
-goto MK_BIN_DLL
-
-:MK_BIN_DLL
-
-set _HB_BIN_INSTALL=%HB_BIN_INSTALL%
-if not "%HB_BIN_COMPILE%" == "" set HB_BIN_INSTALL=%HB_BIN_COMPILE%
-%HB_BIN_INSTALL%\hbmk2 -q0 -shared -o%_HB_BIN_INSTALL%\hbrun-dll  %~dp0..\utils\hbrun\hbrun.hbm -lhbcplr -lhbpp -lhbcommon
-%HB_BIN_INSTALL%\hbmk2 -q0 -shared -o%_HB_BIN_INSTALL%\hbtest-dll %~dp0..\utils\hbtest\hbtest.hbm
-set HB_BIN_INSTALL=%_HB_BIN_INSTALL%
-set _HB_BIN_INSTALL=
 
 goto END
 
