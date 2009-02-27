@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 11:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.bat
+  * make_gnu.bat
+  * config/win/global.cf
+    * Renamed HB_DLL to HB_BUILD_DLL, which makes this GNU make
+      setting compatible with old non-GNU make.
+
 2009-02-27 10:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
   * make_gnu.bat

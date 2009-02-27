@@ -106,7 +106,7 @@ if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
    rem Start the GNU make system
 
    rem ---------------------------------------------------------------
-   rem Special build mode when HB_DLL=yes on Windows platform.
+   rem Special build mode when HB_BUILD_DLL=yes on Windows platform.
    rem It will automatically build Harbour in two passes, one for
    rem the .dlls and a final pass for the regular version.
 
@@ -114,14 +114,14 @@ if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
    if not "%1" == "--install-with-dll" goto _SKIP_WINDLL
 
    shift
-   set HB_DLL=yes
+   set HB_BUILD_DLL=yes
    set _HB_CONTRIBLIBS=%HB_CONTRIBLIBS%
    set _HB_CONTRIB_ADDONS=%HB_CONTRIB_ADDONS%
    set HB_CONTRIBLIBS=no
    set HB_CONTRIB_ADDONS=
    make clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    make install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   set HB_DLL=
+   set HB_BUILD_DLL=
    set HB_CONTRIBLIBS=%_HB_CONTRIBLIBS%
    set HB_CONTRIB_ADDONS=%_HB_CONTRIB_ADDONS%
    set _HB_CONTRIBLIBS=

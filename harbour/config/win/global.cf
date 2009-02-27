@@ -18,7 +18,7 @@ HB_GT_LIST=\
 # verify if GT drivers exist
 HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
 
-ifeq ($(HB_DLL),yes)
+ifeq ($(HB_BUILD_DLL),yes)
    HB_CDYNLIB=-DHB_DYNLIB
 endif
 

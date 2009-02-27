@@ -27,7 +27,7 @@ goto inst_%HB_ARCHITECTURE%
 rem Windows post install part
 if not "%OS%" == "Windows_NT" goto end
 
-if "%HB_DLL%" == "yes" call %~dp0hb-mkdyn.bat
+if "%HB_BUILD_DLL%" == "yes" call %~dp0hb-mkdyn.bat
 
 set _HB_BIN_INSTALL=%HB_BIN_INSTALL%
 if not "%HB_BIN_COMPILE%" == "" set HB_BIN_INSTALL=%HB_BIN_COMPILE%
