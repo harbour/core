@@ -86,9 +86,9 @@ then
 
     # Compatibility hb-mkslib creation. Please use hb-mkdyn instead.
     if [ -n "${hb_mkdyn}" ] && [ -f "${hb_mkdyn}" ]; then
-        hb_mkdyn="${hb_mkdyn//-mkdyn/-mkslib}"
-        rm -f "${hb_mkdyn}"
-        ln -s "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}"
+        hb_mkdyn="${HB_TOOLS_PREF-hb}-mkslib"
+        (cd "${HB_BIN_INSTALL}" && rm -f "${hb_mkdyn}" && \
+         ln -s "hb-mkdyn" "${hb_mkdyn}")
     fi
 
     mk_hbtools "${HB_BIN_INSTALL}" "$@"
