@@ -245,7 +245,7 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 #endif
    if( pWVT->hFont )
       DeleteObject( pWVT->hFont );
-   
+
    // Detach PRG callback
    pWVT->pSymWVT_PAINT      = NULL;
    pWVT->pSymWVT_SETFOCUS   = NULL;
@@ -364,7 +364,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->ResizeMode        = HB_GTI_RESIZEMODE_FONT;
 
    pWVT->bResizing         = FALSE;
-   
+
    pWVT->pPP               = ( HB_GT_PARAMS * ) hb_xgrab( sizeof( HB_GT_PARAMS ) );
    pWVT->pPP->style        = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
    pWVT->pPP->exStyle      = 0;
@@ -392,7 +392,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 #endif
 #endif
 
-   
+
    /* GUI Related members initialized */
    hb_wvt_gtCreateObjects( pWVT );
 
@@ -2024,17 +2024,15 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             pWVT->bMaximized = FALSE;
 
             /* Enable "maximize" button */
-
+            {
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-            SetWindowLong( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME );
+               SetWindowLong( pWVT->hWnd, GWL_STYLE, GetWindowLong( pWVT->hWnd, GWL_STYLE ) | WS_MAXIMIZEBOX  );
 #else
-            SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME );
+               SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, GetWindowLong( pWVT->hWnd, GWL_STYLE ) | WS_MAXIMIZEBOX );
 #endif
-
+            }
             SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                      SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
-            ShowWindow( pWVT->hWnd, SW_HIDE );
-            ShowWindow( pWVT->hWnd, SW_NORMAL );
+                          SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
          }
          pWVT->bResizing = TRUE;
          return 0;
@@ -2053,16 +2051,17 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                hb_gt_wvt_FitSizeRows( pWVT );
 
                /* Disable "maximize" button */
-
+               {
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
-               SetWindowLong( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
+                  DWORD style = GetWindowLong( pWVT->hWnd, GWL_STYLE );
+                  SetWindowLong( pWVT->hWnd, GWL_STYLE, style &~ WS_MAXIMIZEBOX );
 #else
-               SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
+                  LONG_PTR style = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
+                  SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, ( HB_PTRDIFF ) style &~ WS_MAXIMIZEBOX );
 #endif
+               }
                SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                         SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
-               ShowWindow( pWVT->hWnd, SW_HIDE );
-               ShowWindow( pWVT->hWnd, SW_NORMAL );
+                          SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                return 0;
             }
             case SYS_EV_MARK:
@@ -2351,7 +2350,7 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
 
    if( ! bResizable )
       pWVT->pPP->style = ( pWVT->pPP->style &~ ( WS_THICKFRAME | WS_MAXIMIZEBOX ) | WS_BORDER );
-      
+
    hWnd = CreateWindowEx(
                pWVT->pPP->exStyle,                          /* extended style */
                s_szClassName,                               /* classname      */
@@ -3112,21 +3111,16 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   LONG_PTR style = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
 #endif
                   if( pWVT->bResizable )
-                     //style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME;
                      style = style | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME;
                   else
-                     //style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_BORDER;
-                     style = ( style & ~( WS_MAXIMIZEBOX | WS_THICKFRAME ) );
-
+                     style = ( style & ~( WS_MAXIMIZEBOX | WS_THICKFRAME ) ) | WS_BORDER;
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
                   SetWindowLong( pWVT->hWnd, GWL_STYLE, style );
 #else
                   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
 #endif
                   SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
-                  ShowWindow( pWVT->hWnd, SW_HIDE );
-                  ShowWindow( pWVT->hWnd, SW_NORMAL );
+                                SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                }
             }
          }

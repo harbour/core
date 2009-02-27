@@ -1601,6 +1601,22 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 //
 HB_FUNC( WVG_TREEVIEW_ADDITEM )
 {
+   #ifdef UNICODE
+   typedef struct tagTVINSERTSTRUCTW
+   {
+     HTREEITEM hParent;
+     HTREEITEM hInsertAfter;
+     TV_ITEMW  item;
+   } TVINSERTSTRUCTW, FAR *LPTVINSERTSTRUCTW;
+   #else
+   typedef struct tagTVINSERTSTRUCTA
+   {
+     HTREEITEM hParent;
+     HTREEITEM hInsertAfter;
+     TV_ITEMA  item;
+   } TVINSERTSTRUCTA, FAR *LPTVINSERTSTRUCTA;
+   #endif
+
    TVINSERTSTRUCT tvis;
    LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
 
@@ -2820,43 +2836,6 @@ HB_FUNC( WAPI_MEMBER_OSVERSIONINFO )
       }
    }
 }
-/*----------------------------------------------------------------------*/
-
-static HB_GARBAGE_FUNC( WVG_WndProc_release )
-{
-   void ** ph = ( void ** ) Cargo;
-
-   /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
-   {
-      /* Destroy the object */
-      hb_itemRelease( ( PHB_ITEM ) * ph );
-
-      /* set pointer to NULL to avoid multiple freeing */
-      * ph = NULL;
-   }
-}
-
-/*----------------------------------------------------------------------*/
-
-static PHB_ITEM WVG_WndProc_par( int iParam )
-{
-   void ** ph = ( void ** ) hb_parptrGC( WVG_WndProc_release, iParam );
-
-   return ph ? ( PHB_ITEM ) * ph : NULL;
-}
-
-/*----------------------------------------------------------------------*/
-
-HB_FUNC( WVG_GETWNDPROCPOINTER )
-{
-   PHB_ITEM pBlock = hb_itemNew( hb_param( 1, HB_IT_BLOCK ) );
-   void **  ph = ( void ** ) hb_gcAlloc( sizeof( PHB_ITEM ), WVG_WndProc_release );
-
-   * ph = ( void * ) pBlock;
-   hb_retptrGC( ph );
-}
-
 /*----------------------------------------------------------------------*/
 
 LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )

@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-26 16:10 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+    ! Some refinements is setting Window's style through 
+      SetWindowLong(Ptr)().
+
+  * harbour/contrib/gtwvg/wvgwin.c
+    % Removed some test code.
+
 2009-02-25 18:57 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
   * harbour/contrib/gtwvg/gtwvg.h
