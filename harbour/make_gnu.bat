@@ -37,12 +37,14 @@ rem Set to constant value to be consistent with the non-GNU make files.
 if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
 if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
 if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
+if "%HB_DOC_INSTALL%" == "" set HB_DOC_INSTALL=%HB_INSTALL_PREFIX%\doc
 
 rem Try to create install dirs.
 
 if not exist %HB_BIN_INSTALL%\*.* md %HB_BIN_INSTALL%
 if not exist %HB_LIB_INSTALL%\*.* md %HB_LIB_INSTALL%
 if not exist %HB_INC_INSTALL%\*.* md %HB_INC_INSTALL%
+if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
 
 :START
 

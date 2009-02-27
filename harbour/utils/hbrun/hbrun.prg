@@ -100,6 +100,10 @@ PROCEDURE _APPMAIN( cFile, ... )
          CASE "/h"
             HB_DotUsage()
             EXIT
+         CASE "-v"
+         CASE "/v"
+            HB_DotPrompt( "? hb_version()" )
+            EXIT
          OTHERWISE
             hb_FNameSplit( cFile, NIL, NIL, @cExt )
             IF Lower( cExt ) == ".prg"

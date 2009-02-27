@@ -8,6 +8,30 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-27 23:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  + mpkg_win.nsi
+    + Added NSIS Windows installer script.
+      Needs to be inserted into build creation process,
+      which is completely missing yet from SVN. Anyhow
+      it's tested and working well. At this moment it should
+      be run from a freshly created dir created with
+      'make_gnu.bat install'.
+      You can find the result here:
+      http://www.syenar.hu/harbour/harbour-1.1.0dev-win32-msvc.exe
+
+  * utils/hbrun/hbrun.prg
+    + Added -v option which simply runs '? hb_version()' after
+      startup.
+
+  * make_gnu.bat
+    + Added init of HB_DOC_INSTALL.
+
+  * doc/license.txt
+    - Removed SVN header to be in full sync with /COPYING.
+
+  * INSTALL
+    * Minor cleanups.
+
 2009-02-27 22:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added '-Wl,-static' option for gcc/*nix when -fullstatic
