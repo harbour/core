@@ -1027,6 +1027,9 @@ FUNCTION Main( ... )
          IF s_lMAP
             cOpt_CompC += " -Wl,-Map {OM}"
          ENDIF
+         IF s_lSTATICFULL
+            cOpt_CompC += " -Wl,-static"
+         ENDIF
          IF t_cARCH == "darwin"
             AAdd( s_aOPTC, "-no-cpp-precomp" )
             AAdd( s_aOPTC, "-Wno-long-double" )
@@ -1692,9 +1695,6 @@ FUNCTION Main( ... )
          IF ! Empty( cBin_CompC )
 
             /* Compiling */
-            IF s_lTRACE
-               OutStd( "hbmk: C compiler command options:" + hb_osNewLine() + cOpt_CompC + hb_osNewLine() )
-            ENDIF
 
             /* Order is significant */
             cOpt_CompC := StrTran( cOpt_CompC, "{LC}"  , ArrayToList( ArrayJoin( ListDirExt( s_aPRG, "", ".c" ), s_aC ) ) )
