@@ -25,37 +25,31 @@
 #include    "hbgtwvg.ch"
 #include   "wvgparts.ch"
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 FUNCTION Main()
    Local oCrt, oTBar, oSBar, oStatic, oCom, oXbp, oTree, oItem1, oItem2
    LOCAL oListBox, oCheck, oRadio, oStatic2, oMLE, oAddr
-   LOCAL oPanel, oPanel1, oPanel2, cText, cNavigate
+   LOCAL oPanel, oPanel1, oPanel2, cText, cNavigate, oDA
    LOCAL cVarA  := "Test A", cVarB := "Test B"
    LOCAL aState := {"not selected", "selected", "undefined"}
    LOCAL aParts := {}
 
    //--------------------------- Dialog -------------------------------\\
-   #if 1
    oCrt := WvgDialog():new( , , { 30,30 }, { 900,600 }, , .t. )
    oCrt:closable := .t.
    oCrt:icon := "vr_1.ico"
    oCrt:create()
-   #else
-   oCrt := WvgCrt():new( , , { 5,5 }, { 30,60 }, , .t. )
-   oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS
-   oCrt:closable := .t.
-   oCrt:create()
-   SetCursor( .f. )
-   #endif
 
    oCrt:setFontCompoundName( '12.Courier italic' )
 
+   oDA := oCrt:drawingArea
+
    //--------------------------- Menu --------------------------------\\
-   ActiveXBuildMenu( oCrt, @oStatic, @oStatic2 )
+   ActiveXBuildMenuXbp( oCrt, @oStatic, @oStatic2 )
 
    //--------------------------- ToolBar -----------------------------\\
-   oTBar := ActiveXBuildToolBar( oCrt )
+   oTBar := ActiveXBuildToolBarXbp( oDA )
 
    //--------------------------- StatusBar ---------------------------\\
    oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .t. )
@@ -68,16 +62,114 @@ FUNCTION Main()
    oPanel2:caption := 'Click on any part!'
 
    //--------------------------- Static ------------------------------\\
-   oStatic := WvgStatic():new( oCrt )
+   oStatic := WvgStatic():new( oDA )
    oStatic:type    := WVGSTATIC_TYPE_TEXT
    oStatic:options := WVGSTATIC_TEXT_CENTER
    oStatic:caption := chr(13)+'Implemented   Xbase++ Parts'
+
    oStatic:create( , , { 0, oTBar:currentSize()[2]+3 }, { 120, oCrt:currentSize()[2]-;
                                oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
    oStatic:setColorBG( RGB( 200,200,200 ) )
 
-   //--------------------------- Static + Radio + Checkbox ----------\\
-   oStatic2:= WvgStatic():New( oCrt, , { 150, 150 }, { 500,310 }, , .f. )
+   //--------------------------- ListBox -----------------------------\\
+   oListBox := WvgListBox():new()
+   oListBox:create( oStatic, , { 5, 55 }, { 107, 380 } )
+
+   oListBox:setColorFG( RGB( 218,61,34 ) )
+   //oListBox:setColorBG( RGB( 250,244,182 ) )
+
+   aadd( aParts, 'XbpDialog'        )
+   aadd( aParts, 'XbpMenuBar'       )
+   aadd( aParts, 'XbpToolBar'       )
+   aadd( aParts, 'XbpToolBarButton' )
+   aadd( aParts, 'XbpStatusBar'     )
+   aadd( aParts, 'XbpStatic'        )
+   aadd( aParts, 'XbpTreeView'      )
+   aadd( aParts, 'XbpTreeViewItem'  )
+   aadd( aParts, 'XbpActiveXControl')
+   aadd( aParts, 'XbpListBox'       )
+   aadd( aParts, 'XbpPushButton'    )
+   aadd( aParts, 'XbpCheckBox'      )
+   aadd( aParts, 'XbpRadioButton'   )
+   aadd( aParts, 'Xbp3State'        )
+   aadd( aParts, 'XbpSLE'           )
+   aadd( aParts, 'XbpMLE'           )
+   aadd( aParts, 'XbpHTMLViewer'    )
+   aadd( aParts, 'XbpSysWindow'     )
+   aadd( aParts, 'XbpFontDialog'    )
+   aadd( aParts, 'XbpFont'          )
+   aadd( aParts, '-------------'    )
+   aadd( aParts, 'DataRef'          )
+
+   aeval( aParts, {|e| oListBox:addItem( e ) } )
+   oListBox:itemSelected := {|| Win_MessageBox( , oListBox:getCurItem() ) }
+   oListBox:setData( 3 )    // show selected 'XbpToolBar'
+
+   //--------------------------- PushButton --------------------------\\
+   oXbp := WvgPushButton():new( oStatic )
+   oXbp:caption := "Hide"
+   oXbp:create( , , { 20,440 }, {80,30} )
+   oXbp:activate:= {|| oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
+
+   //--------------------------- TreeView ---------------------------\\
+
+   oTree := WvgTreeView():new( oDA, , { oCrt:currentSize()[1]-160,oTBar:currentSize()[2]+3 }, ;
+                                       { 160, oCrt:currentSize()[2]-;
+                               oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
+   oTree:hasLines   := .T.
+   oTree:hasButtons := .T.
+   oTree:alwaysShowSelection := .T.
+   oTree:create()
+   oTree:setColorBG( RGB( 120,15,240 ) )
+   oTree:setColorFG( RGB( 15,240,120 ) )
+   oTree:itemSelected := {|oItem| IF( oItem <> NIL, Win_MessageBox( , oItem:caption ), NIL ) }
+
+   oItem1 := oTree:rootItem:addItem( "First level A" )
+
+   oTree:rootItem:addItem( "First level B" )
+
+   oItem2 := oItem1:addItem( "Second level A" )
+   oItem1:addItem( "Second level B" )
+
+   oItem2:addItem( "Third level A" )
+   oItem2:addItem( "Third level B" )
+   oItem2:addItem( "Third level C" )
+
+   #if 0
+   oItem1:expand( .t. )
+   #else
+   oTree:showExpanded( .t., 2 )
+   #endif
+
+   oTree:setData( oItem2 )
+
+   //--------------------------- Active-X ---------------------------\\
+   hb_gtInfo( HB_GTI_WINTITLE, 'http://www.harbour.vouch.info' )
+   #if 0
+   oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .t. )
+   oCom:CLSID := 'Shell.Explorer.2'
+   oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
+   #else
+   oCom := WvgHTMLViewer():New( oDA, , { 0, 0 }, { 100, 100 }, , .t. )
+   oCom:beforeNavigate := {|cURL, x, oHTML| x := x, oHTML := oHTML, oPanel:caption := cURL }
+   oCom:statusTextChange := {|cText| oPanel:caption := cText }
+   #endif
+   oCom:create()
+   oCom:Navigate( 'http://www.harbour.vouch.info' )
+
+   oAddr := WvgSLE():new()
+   oAddr:bufferLength := 500
+   oAddr:border       := .t.
+   cNavigate          := 'http://www.harbour.vouch.info'
+   oAddr:dataLink     := {|x| iif( x == NIL, cNavigate, cNavigate := x ) }
+   oAddr:setColorFG( RGB( 0,0,255   ) )
+   oAddr:setColorBG( RGB( 0,255,255 ) )
+   oAddr:create( oDA, , { 120, oTBar:currentSize()[2] }, { 500,20 }, , .t. )
+   oAddr:setData()
+   oAddr:killInputFocus := {|m1,m2,oS| m1:=m1, m2:=m2, oS:getData(), oCom:navigate( cNavigate ) }
+
+   //----------------- Panel : Static + Radio + Checkbox ----------\\
+   oStatic2:= WvgStatic():New( oDA, , { 150, 150 }, { 500,310 }, , .f. )
    //oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
    oStatic2:exStyle += WS_EX_WINDOWEDGE
    //oStatic2:options := WVGSTATIC_FRAMETHICK
@@ -85,6 +177,7 @@ FUNCTION Main()
    oStatic2:setColorBG( RGB( 175,175,175 ) )
 
    oXbp    := WvgPushButton():new( oStatic2 )
+   oXbp:caption     := "Hide"
    oXbp:caption     := "Hide"
    oXbp:create( , , { 430,275 }, { 60,25 } )
    oXbp:activate    := {|| oStatic2:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
@@ -140,7 +233,7 @@ FUNCTION Main()
    oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
-   cText   := MemoRead( 'hbmk_b32.bat' )
+   cText   := MemoRead( 'gtwvg.hbp' )
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
    oMLE    := WvgMLE():new()
@@ -151,110 +244,15 @@ FUNCTION Main()
    // Copy text from LOCAL variable into edit buffer via :dataLink
    oMLE:setData()
 
-   //--------------------------- ListBox -----------------------------\\
-   oListBox := WvgListBox():new()
-   oListBox:create( oStatic, , { 5, 55 }, { 107, 380 } )
-
-   oListBox:setColorFG( RGB( 218,61,34 ) )
-   //oListBox:setColorBG( RGB( 250,244,182 ) )
-
-   aadd( aParts, 'XbpDialog'        )
-   aadd( aParts, 'XbpMenuBar'       )
-   aadd( aParts, 'XbpToolBar'       )
-   aadd( aParts, 'XbpToolBarButton' )
-   aadd( aParts, 'XbpStatusBar'     )
-   aadd( aParts, 'XbpStatic'        )
-   aadd( aParts, 'XbpTreeView'      )
-   aadd( aParts, 'XbpTreeViewItem'  )
-   aadd( aParts, 'XbpActiveXControl')
-   aadd( aParts, 'XbpListBox'       )
-   aadd( aParts, 'XbpPushButton'    )
-   aadd( aParts, 'XbpCheckBox'      )
-   aadd( aParts, 'XbpRadioButton'   )
-   aadd( aParts, 'Xbp3State'        )
-   aadd( aParts, 'XbpSLE'           )
-   aadd( aParts, 'XbpMLE'           )
-   aadd( aParts, 'XbpHTMLViewer'    )
-   aadd( aParts, 'XbpSysWindow'     )
-   aadd( aParts, 'XbpFontDialog'    )
-   aadd( aParts, 'XbpFont'          )
-   aadd( aParts, '-------------'    )
-   aadd( aParts, 'DataRef'          )
-
-   aeval( aParts, {|e| oListBox:addItem( e ) } )
-   oListBox:itemSelected := {|| Win_MessageBox( , oListBox:getCurItem() ) }
-   oListBox:setData( 3 )    // show selected 'XbpToolBar'
-
-   //--------------------------- PushButton --------------------------\\
-   oXbp := WvgPushButton():new( oStatic )
-   oXbp:caption := "Hide"
-   oXbp:create( , , { 20,440 }, {80,30} )
-   oXbp:activate:= {|| oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
-
-   //--------------------------- TreeView ---------------------------\\
-   oTree := WvgTreeView():new( oCrt, , { oCrt:currentSize()[1]-160,oTBar:currentSize()[2]+3 }, ;
-                                       { 160, oCrt:currentSize()[2]-;
-                               oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
-   oTree:hasLines   := .T.
-   oTree:hasButtons := .T.
-   oTree:alwaysShowSelection := .T.
-   oTree:create()
-   oTree:setColorBG( RGB( 120,15,240 ) )
-   oTree:setColorFG( RGB( 15,240,120 ) )
-   oTree:itemSelected := {|oItem| IF( oItem <> NIL, Win_MessageBox( , oItem:caption ), NIL ) }
-
-   oItem1 := oTree:rootItem:addItem( "First level A" )
-
-   oTree:rootItem:addItem( "First level B" )
-
-   oItem2 := oItem1:addItem( "Second level A" )
-   oItem1:addItem( "Second level B" )
-
-   oItem2:addItem( "Third level A" )
-   oItem2:addItem( "Third level B" )
-   oItem2:addItem( "Third level C" )
-
-   #if 0
-   oItem1:expand( .t. )
-   #else
-   oTree:showExpanded( .t., 2 )
-   #endif
-
-   oTree:setData( oItem2 )
-
-   //--------------------------- Active-X ---------------------------\\
-   hb_gtInfo( HB_GTI_WINTITLE, 'http://www.harbour.vouch.info' )
-   #if 0
-   oCom := WvgActiveXControl():New( oCrt, , { 0, 0 }, { 100, 100 }, , .t. )
-   oCom:CLSID := 'Shell.Explorer.2'
-   oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
-   #else
-   oCom := WvgHTMLViewer():New( oCrt, , { 0, 0 }, { 100, 100 }, , .t. )
-   oCom:beforeNavigate := {|cURL, x, oHTML| x := x, oHTML := oHTML, oPanel:caption := cURL }
-   oCom:statusTextChange := {|cText| oPanel:caption := cText }
-   #endif
-   oCom:create()
-   oCom:Navigate( 'http://www.harbour.vouch.info' )
-
-   oAddr := WvgSLE():new()
-   oAddr:bufferLength := 500
-   oAddr:border       := .t.
-   cNavigate          := 'http://www.harbour.vouch.info'
-   oAddr:dataLink     := {|x| iif( x == NIL, cNavigate, cNavigate := x ) }
-   oAddr:setColorFG( RGB( 0,0,255   ) )
-   oAddr:setColorBG( RGB( 0,255,255 ) )
-   oAddr:create( oCrt, , { 120, oTBar:currentSize()[2] }, { 500,20 }, , .t. )
-   oAddr:setData()
-   oAddr:killInputFocus := {|m1,m2,oS| m1:=m1, m2:=m2, oS:getData(), oCom:navigate( cNavigate ) }
-
    //--------------------------- Misc Config ------------------------\\
-   oTBar:buttonClick := {|oBtn| IF( oBtn:caption == 'Hide' , oStatic:hide(), nil ),;
-                                IF( oBtn:caption == 'Show' , oStatic:show(), nil ),;
-                                IF( oBtn:caption == 'Tools', oStatic2:show():toFront(), nil ),;
-                                IF( oBtn:caption == 'Font Dlg', ExeFontDialog( oCrt ), nil ),;
+   oTBar:buttonClick := {|oBtn| IF( oBtn:caption == 'Hide'   , oStatic:hide(), nil ),;
+                                IF( oBtn:caption == 'Show'   , oStatic:show(), nil ),;
+                                IF( oBtn:caption == 'Tools'  , oStatic2:show():toFront(), nil ),;
+                                IF( oBtn:caption == 'FontDlg', ExeFontDialog( oCrt ), nil ),;
                                 IF( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ),;
-                                 oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
-   oCrt:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr ) }
+                                    oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
+
+   oCrt:resize := {|| ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr ) }
 
    oCrt:sendMessage( WM_SIZE, 0, 0 )
    oCrt:show()
@@ -270,44 +268,22 @@ FUNCTION Main()
 
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION HB_GTSYS()
-
-   REQUEST HB_GT_GUI_DEFAULT
-   REQUEST HB_GT_WVG
-   REQUEST HB_GT_WVT
-   REQUEST HB_GT_WGU
-
-   RETURN NIL
-
-//----------------------------------------------------------------------//
-
-STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr )
+STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr )
    LOCAL aCrt, aTBar, aSBar
-   //LOCAL aStatic, aCom, aTree
    LOCAL nH, nT
 
    aCrt    := oCrt:currentSize()
    aTBar   := oTBar:currentSize()
    aSBar   := oSBar:currentSize()
-   //aStatic := oStatic:currentSize()
-   //aTree   := oTree:currentSize()
-   //aCom    := oCom:currentSize()
 
    nT := aTBar[2]
-   nH := aCrt[2]-aTBar[2]-aSBar[2]
+   nH := aCrt[2] - aTBar[2] - aSBar[2]
 
    IF oStatic:isVisible
-      #if 1
       oStatic:setPosAndSize( { 0, nT+3 }, { 120, nH-4 }, .t. )
       oAddr:setPosAndSize( { 120, nT+2 }, { aCrt[1]-120-150, 20 }, .t. )
       oCom:setPosAndSize( { 120, nT+2+20 }, { aCrt[1]-120-150, nH-20 }, .t. )
       oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .t. )
-      #else
-      oStatic:setSize( { 120, nH-4 }, .t. )
-      oAddr:setSize( { aCrt[1]-120-150, 20 }, .t. )
-      oCom:setSize( { aCrt[1]-120-150, nH-20 }, .t. )
-      oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .t. )
-      #endif
 
    ELSE
       oAddr:setPosAndSize( { 0, nT+2 }, { aCrt[1]-150, 20 }, .t. )
@@ -320,7 +296,7 @@ STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr )
 
 //----------------------------------------------------------------------//
 
-Static Function ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
+Static Function ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
    Local oMenuBar, oSubMenu
 
    oMenuBar := WvgMenuBar():new( oCrt ):create()
@@ -333,7 +309,7 @@ Static Function ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
    oSubMenu:title := "~Procedural"
    oSubMenu:addItem( { "Play Charge ~1", } )
    oSubMenu:addItem( { "Play Nannyboo ~2", } )
-   oSubMenu:itemSelected := {|mp1| MyFunction( 100+mp1 ) }
+   oSubMenu:itemSelected := {|mp1| MyFunctionXbp( 100+mp1 ) }
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    // Define submenu in the functional style:
@@ -341,17 +317,17 @@ Static Function ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
    // calls a function
    oSubMenu       := WvgMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Functional"
-   oSubMenu:addItem( { "Play Opening ~1", {|| MyFunction( 1 ) } } )
-   oSubMenu:addItem( { "Play Closing ~2", {|| MyFunction( 2 ) } } )
+   oSubMenu:addItem( { "Play Opening ~1", {|| MyFunctionXbp( 1 ) } } )
+   oSubMenu:addItem( { "Play Closing ~2", {|| MyFunctionXbp( 2 ) } } )
    oSubMenu:addItem()
-   oSubMenu:addItem( { "~MessageBox"    , {|| MyFunction( 3 ) } } )
+   oSubMenu:addItem( { "~MessageBox"    , {|| MyFunctionXbp( 3 ) } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    oSubMenu       := WvgMenu():new( oMenuBar ):create()
    oSubMenu:title := "F~eatures"
    oSubMenu:addItem( { "~Hide or Show Left Panel" , {|| IF( oStatic:isVisible, ;
                               oStatic:hide(), oStatic:show() ), oCrt:sendMessage( WM_SIZE,0,0 ) } } )
-   oSubMenu:addItem( { "~Show My Panel" , {|| oStatic2:show() } } )
+   oSubMenu:addItem( { "~Show My Panel" , {|| oStatic2:show():toFront() } } )
    oSubMenu:addItem()
    oSubMenu:addItem( { "~Font Dialog"   , {|| ExeFontDialog( oCrt ) } } )
 
@@ -360,10 +336,12 @@ Static Function ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
    Return nil
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION ActiveXBuildToolBar( oCrt )
+STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
    LOCAL oTBar
 
-   oTBar := WvgToolBar():new( oCrt , , { 0,0 }, { oCrt:currentSize()[ 1 ], 30 }, , .T. )
+   oTBar := WvgToolBar():new( oCrt , , { 0,0 }, { 0,0 }, , .T. )
+
+   oTBar:style        := WVGTOOLBAR_STYLE_FLAT
 
    oTBar:borderStyle  := WVGFRAME_RECT
 
@@ -373,15 +351,17 @@ STATIC FUNCTION ActiveXBuildToolBar( oCrt )
    oTBar:imageWidth   := 26
    oTBar:imageHeight  := 24
 
-   oTBar:showToolTips := .f.
+   oTBar:showToolTips := .t.
 
    oTBar:create()
 
    oTBar:addItem( "New"       , 'c:\harbour\contrib\gtwvg\tests\v_new.bmp'    )
    oTBar:addItem( "Select"    , 'c:\harbour\contrib\gtwvg\tests\v_selct1.bmp' )
-   oTBar:addItem( "Font Dlg"  , 'c:\harbour\contrib\gtwvg\tests\v_calend.bmp' )
+   oTBar:addItem( )
+   oTBar:addItem( "FontDlg"   , 'c:\harbour\contrib\gtwvg\tests\v_calend.bmp' )
    oTBar:addItem( "Tools"     , 'c:\harbour\contrib\gtwvg\tests\v_lock.bmp'   )
    oTBar:addItem( "Index"     , 'c:\harbour\contrib\gtwvg\tests\v_index.bmp'  )
+   oTBar:addItem( )
    oTBar:addItem( "Show"      , 'c:\harbour\contrib\gtwvg\tests\v_clclt.bmp'  )
    oTBar:addItem( "Hide"      , 'c:\harbour\contrib\gtwvg\tests\v_notes1.bmp' )
 
@@ -389,7 +369,7 @@ STATIC FUNCTION ActiveXBuildToolBar( oCrt )
 
 //----------------------------------------------------------------------//
 
-Static Function MyFunction( nMode )
+Static Function MyFunctionXbp( nMode )
 
    #define MUSIC_WAITON          {800, 1600}
 
@@ -422,7 +402,7 @@ Static Function MyFunction( nMode )
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION ExeFontDialog( oCrt )
-   LOCAL oFontDlg
+   LOCAL oFontDlg, oWvgFont
 
    STATIC nMode := 0
 
@@ -443,17 +423,27 @@ STATIC FUNCTION ExeFontDialog( oCrt )
 
    oFontDlg:create()
 
-   #if 0
    //  Every 2nd FontDialog will be MODAL
    oWvgFont := oFontDlg:display( ++nMode % 2 )
-   hb_ToOutDebug( '%s  %i', oWvgFont:compoundName, oWvgFont:nominalPointSize )
-   #endif
+//   hb_ToOutDebug( '%s  %i', oWvgFont:compoundName, oWvgFont:nominalPointSize )
 
    oFontDlg:destroy()
 
    RETURN nil
 
 //----------------------------------------------------------------------//
+
+STATIC FUNCTION HB_GTSYS()
+
+   REQUEST HB_GT_GUI_DEFAULT
+   REQUEST HB_GT_WVG
+   REQUEST HB_GT_WVT
+   REQUEST HB_GT_WGU
+
+   RETURN NIL
+
+//----------------------------------------------------------------------//
+
 
 
 
