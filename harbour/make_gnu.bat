@@ -88,6 +88,7 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
    set _HB_MAKE=make.exe
    if not "%OS%" == "Windows_NT" goto _FM_DONE
    set _HB_CHECK=mingw32-make.exe
+   if exist "%_HB_CHECK%" ( set _HB_MAKE=%_HB_CHECK%&& goto _FM_DONE )
    set _HB_PATH=%PATH%
    :_FM_LOOP
    for /F "delims=; tokens=1,2*" %%p in ("%_HB_PATH%") do (

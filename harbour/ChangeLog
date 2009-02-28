@@ -8,6 +8,26 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-28 10:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    * Cleaned the section dealing with GNU Make on Windows.
+      ---
+      3.) Make sure to have GNU Make. We recommend the one distributed
+          with MinGW. To get it:
+          - Use your search engine with 'mingw gnu make'
+          - Use this link:
+            http://sourceforge.net/project/showfiles.php?group_id=2435
+          If you have it, you have three choices:
+          - Put mingw32-make.exe anywhere in your PATH. (recommended)
+          - Put mingw32-make.exe in Harbour source root dir.
+          - Rename mingw32-make.exe to make.exe and put it in
+            your PATH _before_ your compiler tools.
+      ---
+
+  * make_gnu.bat
+    + mingw32-make.exe is now also accepted in Harbour's source
+      tree root.
+
 2009-02-28 10:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Reenabled and fixed call to entry function autodetection
