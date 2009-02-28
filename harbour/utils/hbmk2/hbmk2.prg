@@ -552,13 +552,13 @@ FUNCTION Main( ... )
                                          hb_osPathSeparator() + "harbour" +;
                                          hb_osPathSeparator() + "hbvm.h" )
          IF Empty( s_cHB_BIN_INSTALL )
-            s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, lSysLoc ) + "bin"
+            s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, .T. ) + "bin"
          ENDIF
          IF Empty( s_cHB_LIB_INSTALL )
-            s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, lSysLoc ) + "lib" + hb_osPathSeparator() + "harbour"
+            s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, .T. ) + "lib" + hb_osPathSeparator() + "harbour"
          ENDIF
          IF Empty( s_cHB_INC_INSTALL )
-            s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, lSysLoc ) + "include" + hb_osPathSeparator() + "harbour"
+            s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, .T. ) + "include" + hb_osPathSeparator() + "harbour"
          ENDIF
       ENDIF
    ENDIF
@@ -569,13 +569,13 @@ FUNCTION Main( ... )
       RETURN 3
    ENDIF
    IF Empty( s_cHB_BIN_INSTALL )
-      s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, t_cARCH $ "win|dos|os2" ) + "bin"
+      s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, .T. ) + "bin"
    ENDIF
    IF Empty( s_cHB_LIB_INSTALL )
-      s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, t_cARCH $ "win|dos|os2" ) + "lib"
+      s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, .T. ) + "lib"
    ENDIF
    IF Empty( s_cHB_INC_INSTALL )
-      s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, t_cARCH $ "win|dos|os2" ) + "include"
+      s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, .T. ) + "include"
    ENDIF
 
    IF t_lInfo
@@ -936,7 +936,7 @@ FUNCTION Main( ... )
       ENDIF
 
       IF lSysLoc
-         cPrefix := PathNormalize( s_cHB_LIB_INSTALL, lSysLoc )
+         cPrefix := PathNormalize( s_cHB_LIB_INSTALL, .T. )
       ELSE
          cPrefix := ""
       ENDIF
@@ -1522,12 +1522,13 @@ FUNCTION Main( ... )
       CASE t_cARCH == "win" .AND. t_cCOMP == "xcc"
       ENDCASE
 
-#if 0
       /* Do entry function detection on platform required and supported */
-      IF s_cMAIN == NIL .AND. ! Empty( tmp := getFirstFunc( s_cFIRST ) )
-         s_cMAIN := tmp
+      IF s_cMAIN == NIL
+         tmp := iif( Lower( FN_ExtGet( s_cFIRST ) ) == ".prg", FN_ExtSet( s_cFIRST, ".c" ), s_cFIRST )
+         IF ! Empty( tmp := getFirstFunc( tmp ) )
+            s_cMAIN := tmp
+         ENDIF
       ENDIF
-#endif
 
       /* HACK: Override entry point requested by user or detected by us,
                and override the GT if requested by user. */
@@ -1536,7 +1537,7 @@ FUNCTION Main( ... )
          s_cGT != NIL .OR. ;
          s_lFMSTAT != NIL
 
-         fhnd := hb_FTempCreateEx( @s_cCSTUB, NIL, "hbsc_", ".c" )
+         fhnd := hb_FTempCreateEx( @s_cCSTUB, NIL, "hbmk_", ".c" )
          IF fhnd != F_ERROR
 
             /* NOTE: This has to be kept synced with Harbour HB_IMPORT values. */
