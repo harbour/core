@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-28 12:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_gnu_os2.cmd
+  * make_gnu.sh
+    + Setting HB_DOC_INSTALL dir.
+      (the .sh sets it only for mingw, please test)
+
+  * INSTALL
+  * contrib/hbhpdf/make_b32.bat
+  * contrib/hbhpdf/make_vc.bat
+  * contrib/hbgd/make_b32.bat
+  * contrib/hbgd/make_vc.bat
+    ! Old typos in two HB_INC_* examples.
+
 2009-02-28 10:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     * Cleaned the section dealing with GNU Make on Windows.

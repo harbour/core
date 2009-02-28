@@ -121,8 +121,8 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_CURL=C:\curl\include
    HB_INC_FIREBIRD=C:\Firebird\include
    HB_INC_FREEIMAGE=C:\FreeImage\Dist
-   HB_INC_GD=-IC:\gd\include
-   HB_INC_LIBHARU=-IC:\libharu\include
+   HB_INC_GD=C:\gd\include
+   HB_INC_LIBHARU=C:\libharu\include
    HB_INC_MYSQL=C:\mysql\include
    HB_INC_OPENSSL=C:\openssl
    HB_INC_PGSQL=C:\pgsql\include

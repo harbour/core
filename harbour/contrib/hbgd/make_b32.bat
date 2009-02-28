@@ -8,9 +8,9 @@ if not "%HB_INC_GD%%HB_DIR_GD%" == "" goto DIR_OK
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need GD lib package from www.libgd.org and this envvar
 echo            to be set to successfully build this library:
-echo            set HB_INC_GD=-IC:\gd\include
+echo            set HB_INC_GD=C:\gd\include
 echo            or
-echo            set HB_DIR_GD=-IC:\gd
+echo            set HB_DIR_GD=C:\gd
 echo            if you want to generate .lib for the .dll.
 echo ---------------------------------------------------------------
 goto POST_EXIT

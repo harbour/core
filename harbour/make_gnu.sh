@@ -130,6 +130,7 @@ esac
 if [ -z "$HB_BIN_INSTALL" ]; then export HB_BIN_INSTALL=$HB_INSTALL_PREFIX/bin; fi
 if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL=$HB_INSTALL_PREFIX/lib$hb_instsubdir; fi
 if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL=$HB_INSTALL_PREFIX/include$hb_instsubdir; fi
+if [ -z "$HB_DOC_INSTALL" ] && [ "${HB_COMPILER}" == "mingw" ]; then export HB_DOC_INSTALL=$HB_INSTALL_PREFIX/doc; fi
 
 
 if [ -z "$HB_ARCHITECTURE" ]; then
