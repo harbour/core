@@ -1028,7 +1028,7 @@ FUNCTION Main( ... )
             cOpt_CompC += " -Wl,-Map {OM}"
          ENDIF
          IF s_lSTATICFULL
-            cOpt_CompC += " -Wl,-static"
+            cOpt_CompC += " -static"
          ENDIF
          IF t_cARCH == "darwin"
             AAdd( s_aOPTC, "-no-cpp-precomp" )

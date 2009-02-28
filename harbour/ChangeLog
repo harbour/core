@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-02-28 09:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed yesterday's -fullstatic patch. Now it should work.
+
+  * make_b32.bat
+  * make_vc.bat
+    - Disabled automatic .dll builds to expose the
+      pure make_gnu.bat interface.
+    * Some refininements to vc version.
+
 2009-02-28 01:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     + Added win/owatcom.

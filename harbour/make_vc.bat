@@ -14,11 +14,14 @@ rem ---------------------------------------------------------------
 
 @echo off
 
+if "%HB_BUILD_WINCE%" == "yes" set HB_COMPILER=msvcce
+
 if "%HB_INSTALL_PREFIX%" == "" set HB_INSTALL_PREFIX=%~dp0
-if "%HB_BUILD_DLL%" == "" set HB_BUILD_DLL=yes
 set _HB_CC_NAME=%HB_CC_NAME%
-if     "%HB_BUILD_WINCE%" == "yes" if "%_HB_CC_NAME%" == "" set _HB_CC_NAME=vcce
-if not "%HB_BUILD_WINCE%" == "yes" if "%_HB_CC_NAME%" == "" set _HB_CC_NAME=vc
+if "%_HB_CC_NAME%" == "" set _HB_CC_NAME=vc
+
+rem ; NOTE: For complete compatibility please uncomment line below:
+rem if "%HB_BUILD_DLL%" == "" set HB_BUILD_DLL=yes
 
 call make_gnu.bat > make_%_HB_CC_NAME%.log
 

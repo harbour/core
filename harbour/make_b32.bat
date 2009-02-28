@@ -17,9 +17,11 @@ rem ---------------------------------------------------------------
 set HB_COMPILER=bcc32
 
 if "%HB_INSTALL_PREFIX%" == "" set HB_INSTALL_PREFIX=%~dp0
-if "%HB_BUILD_DLL%" == "" set HB_BUILD_DLL=yes
 set _HB_CC_NAME=%HB_CC_NAME%
 if "%_HB_CC_NAME%" == "" set _HB_CC_NAME=b32
+
+rem ; NOTE: For complete compatibility please uncomment line below:
+rem if "%HB_BUILD_DLL%" == "" set HB_BUILD_DLL=yes
 
 call make_gnu.bat > make_%_HB_CC_NAME%.log
 
