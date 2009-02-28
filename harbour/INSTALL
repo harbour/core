@@ -148,8 +148,9 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    -------
    mingw    - MinGW GNU C
    msvc     - Microsoft Visual C++
-   gcc      - Cygwin GNU C
+   owatcom  - Open Watcom C++
    bcc32    - Borland/CodeGear C++ 4.x and above
+   gcc      - Cygwin GNU C
    rxsnt    - EMX/RSXNT/Windows GNU C
    icc      - IBM Visual Age C++
    dmc      - Digital Mars C
@@ -199,10 +200,16 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    - HB_BUILD_DLL=yes          To create a full build with .dlls.
                                This is only needed and available for
                                non-GNU Windows compilers.
+   - HB_CONTRIBLIBS=no         Don't build any contrib libraries.
+   - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of
+                               contrib libraries. Build all if
+                               left empty.
+   - HB_CONTRIB_ADDONS=<list>  Build additional libraries stored
+                               in the contrib directory.
    - HB_REBUILD_PARSER=yes     To rebuild the language parses.
                                This requires GNU Bison.
    - HB_VISUALC_VER_PRE80=yes  Set this if you're using a pre-8.0
-                               version of MSVC compiler.
+                               (= pre-MSVS 2005) version of MSVC compiler.
 
    Cross building
    --------------

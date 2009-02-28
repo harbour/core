@@ -58,7 +58,6 @@ if "%HB_DIR_IMPLIB%" == "yes" (
          if exist "%HB_DIR_LIBHARU%\libhpdf.dll"           implib    "%HB_LIB_INSTALL%\libhpdf.lib"            "%HB_DIR_LIBHARU%\libhpdf.dll"
          if exist "%HB_DIR_LIBHARU%\lib_dll\libhpdf.dll"   implib    "%HB_LIB_INSTALL%\libhpdf.lib"            "%HB_DIR_LIBHARU%\lib_dll\libhpdf.dll"
          if exist "%HB_DIR_MYSQL%\bin\libmySQL.dll"        implib    "%HB_LIB_INSTALL%\libmysql.lib"           "%HB_DIR_MYSQL%\bin\libmySQL.dll"
-         if exist "%SystemRoot%\system32\odbc32.dll"       implib    "%HB_LIB_INSTALL%\odbc32.lib"             "%SystemRoot%\system32\odbc32.dll"
          if exist "%HB_DIR_OPENSSL%\out32dll\libeay32.dll" implib -a "%HB_LIB_INSTALL%\libeay32.lib"           "%HB_DIR_OPENSSL%\out32dll\libeay32.dll"
          if exist "%HB_DIR_OPENSSL%\dll\libeay32.dll"      implib -a "%HB_LIB_INSTALL%\libeay32.lib"           "%HB_DIR_OPENSSL%\dll\libeay32.dll"
          if exist "%HB_DIR_OPENSSL%\libeay32.dll"          implib -a "%HB_LIB_INSTALL%\libeay32.lib"           "%HB_DIR_OPENSSL%\libeay32.dll"
@@ -66,6 +65,8 @@ if "%HB_DIR_IMPLIB%" == "yes" (
          if exist "%HB_DIR_OPENSSL%\dll\ssleay32.dll"      implib -a "%HB_LIB_INSTALL%\ssleay32.lib"           "%HB_DIR_OPENSSL%\dll\ssleay32.dll"
          if exist "%HB_DIR_OPENSSL%\ssleay32.dll"          implib -a "%HB_LIB_INSTALL%\ssleay32.lib"           "%HB_DIR_OPENSSL%\ssleay32.dll"
          if exist "%HB_DIR_PGSQL%\lib\libpq.dll"           implib -a "%HB_LIB_INSTALL%\libpq.lib"              "%HB_DIR_PGSQL%\lib\libpq.dll"
+
+         if exist "%SystemRoot%\system32\odbc32.dll"       implib    "%HB_LIB_INSTALL%\odbc32.lib"             "%SystemRoot%\system32\odbc32.dll"
 
          goto END
       )
@@ -76,9 +77,10 @@ if "%HB_DIR_IMPLIB%" == "yes" (
          if exist "%HB_DIR_ADS%\ace32.lib"                 copy /b /y "%HB_DIR_ADS%\ace32.lib"                 "%HB_LIB_INSTALL%\ace32.lib"
          if exist "%HB_DIR_ADS%\32bit\ace32.lib"           copy /b /y "%HB_DIR_ADS%\32bit\ace32.lib"           "%HB_LIB_INSTALL%\ace32.lib"
          if exist "%HB_DIR_ALLEGRO%\lib\alleg.lib"         copy /b /y "%HB_DIR_ALLEGRO%\lib\alleg.lib"         "%HB_LIB_INSTALL%\alleg.lib"
-         call :MK_APOLLO_IMPORT
+         if exist "%HB_DIR_APOLLO%\sde61.dll"              call :P_MSVC_IMPLIB "%HB_DIR_APOLLO%\sde61.dll"     "%HB_LIB_INSTALL%\sde61.lib"
          if exist "%HB_DIR_BLAT%\full\blat.lib"            copy /b /y "%HB_DIR_BLAT%\full\blat.lib"            "%HB_LIB_INSTALL%\blat.lib"
-         call :MK_CURL_IMPORT
+         if exist "%HB_DIR_CURL%\libcurl.dll"              call :P_MSVC_IMPLIB "%HB_DIR_CURL%\libcurl.dll"     "%HB_LIB_INSTALL%\libcurl.lib"
+         if exist "%HB_DIR_CURL%\bin\libcurl.dll"          call :P_MSVC_IMPLIB "%HB_DIR_CURL%\bin\libcurl.dll" "%HB_LIB_INSTALL%\libcurl.lib"
          if exist "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"  copy /b /y "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"  "%HB_LIB_INSTALL%\fbclient.lib"
          if exist "%HB_DIR_FREEIMAGE%\Dist\FreeImage.lib"  copy /b /y "%HB_DIR_FREEIMAGE%\Dist\FreeImage.lib"  "%HB_LIB_INSTALL%\FreeImage.lib"
          if exist "%HB_DIR_GD%\lib\bgd.lib"                copy /b /y "%HB_DIR_GD%\lib\bgd.lib"                "%HB_LIB_INSTALL%\bgd.lib"
@@ -104,51 +106,23 @@ rem ---------------------------------------------------------------
 rem These .dll to .lib conversions need GNU sed.exe in the path
 rem ---------------------------------------------------------------
 
-:MK_APOLLO_IMPORT
-
-   if exist "%HB_DIR_APOLLO%\sde61.dll" set _HB_DLL_NAME=%HB_DIR_APOLLO%\sde61.dll
-   if "%_HB_DLL_NAME%" == "" goto END
+:P_MSVC_IMPLIB
 
    echo /[ \t]*ordinal hint/,/^^[ \t]*Summary/{> _hbtemp.sed
    echo  /^^[ \t]\+[0-9]\+/{>> _hbtemp.sed
    echo    s/^^[ \t]\+[0-9]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+\(.*\)/\1/p>> _hbtemp.sed
    echo  }>> _hbtemp.sed
    echo }>> _hbtemp.sed
-   dumpbin /exports "%_HB_DLL_NAME%" > _dump.tmp
-   echo LIBRARY "%_HB_DLL_NAME%" > _temp.def
+   dumpbin /exports "%1" > _dump.tmp
+   echo LIBRARY "%1" > _temp.def
    echo EXPORTS >> _temp.def
    sed -nf _hbtemp.sed < _dump.tmp >> _temp.def
-   lib /machine:x86 /def:_temp.def /out:"%HB_LIB_INSTALL%\sde61.lib"
+   lib /machine:x86 /def:_temp.def /out:"%2"
    del _dump.tmp
    del _temp.def
    del _hbtemp.sed
    rem ---------------------------------------------------------------
 
-   set _HB_DLL_NAME=
-   goto END
-
-:MK_CURL_IMPORT
-
-   if exist "%HB_DIR_CURL%\libcurl.dll"     set _HB_DLL_NAME=%HB_DIR_CURL%\libcurl.dll
-   if exist "%HB_DIR_CURL%\bin\libcurl.dll" set _HB_DLL_NAME=%HB_DIR_CURL%\bin\libcurl.dll
-   if "%_HB_DLL_NAME%" == "" goto END
-
-   echo /[ \t]*ordinal hint/,/^^[ \t]*Summary/{> _hbtemp.sed
-   echo  /^^[ \t]\+[0-9]\+/{>> _hbtemp.sed
-   echo    s/^^[ \t]\+[0-9]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+\(.*\)/\1/p>> _hbtemp.sed
-   echo  }>> _hbtemp.sed
-   echo }>> _hbtemp.sed
-   dumpbin /exports "%_HB_DLL_NAME%" > _dump.tmp
-   echo LIBRARY "%_HB_DLL_NAME%" > _temp.def
-   echo EXPORTS >> _temp.def
-   sed -nf _hbtemp.sed < _dump.tmp >> _temp.def
-   lib /machine:x86 /def:_temp.def /out:"%HB_LIB_INSTALL%\libcurl.lib"
-   del _dump.tmp
-   del _temp.def
-   del _hbtemp.sed
-   rem ---------------------------------------------------------------
-
-   set _HB_DLL_NAME=
    goto END
 
 goto end
