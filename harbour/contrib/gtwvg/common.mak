@@ -47,6 +47,8 @@ LIB_OBJS = \
    $(OBJ_DIR)wvgwin$(OBJEXT) \
    $(OBJ_DIR)wvggui$(OBJEXT) \
    $(OBJ_DIR)wincallb$(OBJEXT) \
+   $(OBJ_DIR)wvgcuig$(OBJEXT) \
+
 
 all: \
    $(LIB_PATH) \

@@ -242,6 +242,37 @@ typedef BOOL ( WINAPI *wvtSetLayeredWindowAttributes )(
 
 typedef struct
 {
+   int            iTop      ;
+   int            iLeft     ;
+   int            iBottom   ;
+   int            iRight    ;
+} HB_GOBJ_OFFSET ;
+
+#define GOBJ_OBJTYPE_BOXRAISED          1
+#define GOBJ_OBJTYPE_BOXRECESSED        2
+#define GOBJ_OBJTYPE_BOXGET             3
+#define GOBJ_OBJTYPE_BOXGROUP           4
+#define GOBJ_OBJTYPE_BOXGROUPRAISED     5
+
+typedef struct _tag_GOBJS
+{
+   int            iObjType  ;
+   int            iTop      ;
+   int            iLeft     ;
+   int            iBottom   ;
+   int            iRight    ;
+   int            iHeight   ;
+   int            iWidth    ;      // iThick
+   int            iOrient   ;
+   int            iFormat   ;
+   int            iStyle    ;      // iShape
+   HB_GOBJ_OFFSET aOffset   ;
+   COLORREF       crRGB     ;
+   struct _tag_GOBJS * gObjNext ;
+} HB_GOBJS, * PHB_GOBJS     ;
+
+typedef struct
+{
    DWORD     exStyle;
    DWORD     style;
    int       x;
@@ -418,6 +449,8 @@ typedef struct
 
    BOOL      bResizing;                     // To know when it is in resizing mode
 
+   PHB_GOBJS gObjs;                         // Graphic Objects
+
 } HB_GTWVT, * PHB_GTWVT;
 
 //----------------------------------------------------------------------//
@@ -544,6 +577,8 @@ void        HB_EXPORT   hb_wvt_wvtUtils( void );
 PHB_GTWVT   HB_EXPORT   hb_wvt_gtGetWVT( void );
 
 void        HB_EXPORT   hb_ToOutDebug( const char * sTraceMsg, ... );
+
+void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect );
 //----------------------------------------------------------------------//
 
 extern BOOL     wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );

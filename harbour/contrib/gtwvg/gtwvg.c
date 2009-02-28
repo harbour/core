@@ -276,6 +276,18 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    if( pWVT->hIcon && pWVT->bIconToFree )
       DestroyIcon( pWVT->hIcon );
 
+   if( pWVT->gObjs )
+   {
+      PHB_GOBJS gObj;
+
+      while( pWVT->gObjs )
+      {
+        gObj = pWVT->gObjs->gObjNext;
+        hb_xfree( pWVT->gObjs );
+        pWVT->gObjs = gObj;
+     }
+   }
+
    hb_xfree( pWVT );
 }
 
@@ -397,6 +409,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    hb_wvt_gtCreateObjects( pWVT );
 
    pWVT->pGUI              = s_guiData;
+
+   pWVT->gObjs             = NULL;
 
    return pWVT;
 }
@@ -1795,6 +1809,9 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
          }
       }
    }
+
+   /*  Paint Graphic Objects Supporting CUI Elements  */
+   hb_gt_wvt_PaintGObjects( pWVT, &updateRect );
 
    EndPaint( pWVT->hWnd, &ps );
 
