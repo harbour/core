@@ -35,7 +35,7 @@ echo.
 if %UHTTP_GD_SUPPORT%.==yes. echo.Lib GD support enabled
 if %UHTTP_GD_SUPPORT%.==no.  echo.Lib GD support disabled
 echo.
-if %UHTTP_INET_SUPPORT%.==yes. echo.HB_INET socket
+if %UHTTP_INET_SUPPORT%.==yes. echo.Harbour socket
 if %UHTTP_INET_SUPPORT%.==no.  echo.Mindaugas socket
 echo.
 
@@ -43,7 +43,6 @@ if %UHTTP_GD_SUPPORT%.==yes. SET UHTTP_GD_DEF=-DGD_SUPPORT
 if %UHTTP_GD_SUPPORT%.==yes. SET UHTTP_GD_LIBS=-lhbgd -lbgd
 
 if %UHTTP_INET_SUPPORT%.==yes. SET UHTTP_INET_DEF=-DUSE_HB_INET
-if %UHTTP_INET_SUPPORT%.==no.  SET UHTTP_INET_SOCKET=socket.c
 
 if exist uhttpd.exe uhttpd -s
 

@@ -8,6 +8,12 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-01 18:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/examples/uhttpd/hbmk.bat
+  * contrib/examples/uhttpd/uhttpd.hbm
+    + Changed to build without using hbmk.bat.
+      (socket.c is now always linked)
+
 2009-03-01 18:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
   * make_b32.bat
