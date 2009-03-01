@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-01 23:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  + contrib/xhb/regexrpl.prg
+    + Added HB_REGEXREPLACE() from xhb. Work of Francesco.
+      (missed from prev commit)
+
+  * contrib/xhb/common.mak
+    * Updated.
+
 2009-03-01 23:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   - contrib/examples/uhttpd/hbmk.bat
   + contrib/examples/uhttpd/uhttpdgd.hbm

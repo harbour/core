@@ -15,6 +15,7 @@ PRG_HEADERS = \
     xhb.ch \
 
 LIB_OBJS = \
+    $(OBJ_DIR)dbf2txt$(OBJEXT) \
     $(OBJ_DIR)filestat$(OBJEXT) \
     $(OBJ_DIR)freadlin$(OBJEXT) \
     $(OBJ_DIR)hbcrypt$(OBJEXT) \
@@ -43,6 +44,7 @@ LIB_OBJS = \
     $(OBJ_DIR)xhbcomp$(OBJEXT) \
     $(OBJ_DIR)dbgfx$(OBJEXT) \
     $(OBJ_DIR)sprintf$(OBJEXT) \
+    $(OBJ_DIR)regexrpl$(OBJEXT) \
 
 all: \
     $(LIB_PATH) \
