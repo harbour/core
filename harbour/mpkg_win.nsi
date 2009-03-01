@@ -94,7 +94,7 @@ Section "Main components" hb_main
   File "include\*.*"
 
   SetOutPath $INSTDIR\doc
-  File "doc\*.*"
+  File /r "doc\*.*"
 
   ; Write the installation path into the registry
 ; WriteRegStr HKLM "Software\Harbour" "Install_Dir" "$INSTDIR"

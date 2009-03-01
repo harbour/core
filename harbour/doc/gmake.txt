@@ -269,20 +269,16 @@ NOTES
 In order to get a clean build after making source changes or after
 receiving updated source files, you must use the following two steps:
 
-1) make -r clean
-3) make -r
+1) make clean
+3) make
 
 Without the first step, changes to the Harbour compiler and/or various
 include files will not be reflected in any object modules created from
 Harbour source code.
 
-The -r option isn't strictly necessary, but it does signficantly reduce
-the number of rules that make has to evaluate otherwise, which may give
-a performance boost on a slow system.
-
 
 To rebuild only a part of Harbour, go to the appropriate source directory
-and then run 'make -r'. For example, to rebuild all of Harbour, but not
+and then run 'make'. For example, to rebuild all of Harbour, but not
 the test programs, change to the 'source' directory. To rebuild only the
 test programs, change to the 'test' directory.
 

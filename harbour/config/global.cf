@@ -5,6 +5,9 @@
 # See GNU make docs here:
 # http://www.gnu.org/software/automake/manual/make/
 
+# This isn't strictly necessary, but it does signficantly reduce
+# the number of rules that make has to evaluate otherwise, which may give
+# a performance boost on a slow system.
 .SUFFIXES:
 
 GRANDP = ../../

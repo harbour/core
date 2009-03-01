@@ -494,11 +494,11 @@ FUNCTION Main( ... )
          ELSE
             IF Empty( aCOMPDET )
                OutErr( "hbmk: Please choose a compiler by using -comp= option or envvar HB_COMPILER." + hb_osNewLine() )
-               OutErr( "      You have the following choices on your platform: " + hb_osNewLine() )
+               OutErr( "      You have the following choices on your platform:" + hb_osNewLine() )
                OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
             ELSE
                OutErr( "hbmk: Harbour Make couldn't detect any supported C compiler in your PATH." + hb_osNewLine() )
-               OutErr( "      Please setup one or set -comp= option or envvar HB_COMPILER " + hb_osNewLine() )
+               OutErr( "      Please setup one or set -comp= option or envvar HB_COMPILER" + hb_osNewLine() )
                OutErr( "      to one of these values:" + hb_osNewLine() )
                OutErr( "      " + ArrayToList( aCOMPSUP, ", " ) + hb_osNewLine() )
             ENDIF

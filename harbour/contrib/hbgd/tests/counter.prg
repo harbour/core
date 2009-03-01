@@ -14,6 +14,9 @@
 #include "gd.ch"
 #include "common.ch"
 
+/* Some digits images from:
+   http://www.digitmania.holowww.com/all.html */
+
 #define IMAGES_IN  "digits/"
 #define IMAGES_OUT "imgs_out/"
 
@@ -139,4 +142,3 @@ PROCEDURE Main( cValue, cBaseImage )
    ?
 
 RETURN
-

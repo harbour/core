@@ -20,7 +20,7 @@ HOW TO BUILD AND INSTALL HARBOUR
 
    * Supported C compiler
    * GNU Make
-   * GNU Bison (optional)
+   * GNU Bison 1.28 or upper (optional)
 
    Linux/Darwin/BSD/HP-UX/Solaris
    ------------------------------
@@ -56,7 +56,7 @@ HOW TO BUILD AND INSTALL HARBOUR
 
       1.) Windows NT or compatible system is required to build Harbour.
       2.) Make sure to have your C compiler of choice properly installed.
-          For the list of supporter compilers, please look up the
+          For the list of supported compilers, please look up the
           relevant section in this file.
       3.) Make sure to have GNU Make. We recommend the one distributed
           with MinGW. To get it:

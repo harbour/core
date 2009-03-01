@@ -1,12 +1,5 @@
-(sample text)
-
-THE HARBOUR PROJECT CONTRIB LICENSE
-===================================
-
-There is no one single license that applies to the Harbour Project
-contrib files. Some files use the Harbour Project Compiler license.
-Some files use the Harbour Project Library license. Some files use
-the old Harbour Project Library license. Some files may even use other
-types of free software or open source  software licenses. Some files
-have been donated to the public domain. If you use any of the contrib
-files, you need to investigate the license that applies to each file.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum,
+turpis sed tincidunt commodo, quam elit pulvinar nisl, eget ultrices
+purus quam ac quam. Sed a arcu. Donec diam. Nulla lorem felis, accumsan
+suscipit, euismod non, volutpat ac, nibh. Etiam varius turpis id ante.
+Ut ut est semper metus consectetur.
