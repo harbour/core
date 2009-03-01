@@ -68,9 +68,21 @@ endif
 
 LDFLAGS = $(LINKPATHS)
 
+#Note: The empty line below HAVE TO exist!
+define lib_object
+echo -+ $(subst /,\,$(LIB_DIR)/$(file)) ^& >> __lib__.tmp
+
+endef
+
+define create_library
+echo $(subst /,\,$(LIB_DIR)/$@) > __lib__.tmp
+$(foreach file, $(^F), $(lib_object))
+$(AR) $(ARFLAGS) @__lib__.tmp
+endef
+
 AR = tlib.exe
 ARFLAGS = $(HB_USER_AFLAGS)
 AROBJS = $(foreach file, $(^F), -+$(file))
-AR_RULE = $(AR) $(ARFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(AROBJS),,
+AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf

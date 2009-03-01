@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-01 16:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/win/bcc32.cf
+    ! Fixed to use response files with tlib, to avoid command line
+      length limits on some systems.
+
+  - tests/run_prg.bat
+  + tests/run.bat
+  - tests/run_prg_all.bat
+  + tests/run_all.bat
+    * Renamed to short name.
+
 2009-03-01 15:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   - contrib/hbct/ctflist.txt
   - contrib/hbodbc/odbc.txt
