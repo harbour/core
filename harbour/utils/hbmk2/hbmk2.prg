@@ -260,6 +260,7 @@ FUNCTION Main( ... )
    LOCAL lSysLoc
    LOCAL cPrefix
    LOCAL cPostfix
+   LOCAL nEmbedLevel
 
    LOCAL lStopAfterHarbour := .F.
    LOCAL lStopAfterCComp := .F.
@@ -621,9 +622,11 @@ FUNCTION Main( ... )
    FOR EACH cParam IN hb_AParams()
       DO CASE
       CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
-         HBM_Load( aParams, SubStr( cParam, 2 ) ) /* Load parameters from script file */
+         nEmbedLevel := 1
+         HBM_Load( aParams, SubStr( cParam, 2 ), @nEmbedLevel ) /* Load parameters from script file */
       CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
-         HBM_Load( aParams, cParam ) /* Load parameters from script file */
+         nEmbedLevel := 1
+         HBM_Load( aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
       OTHERWISE
          AAdd( aParams, { cParam, "", 0 } )
       ENDCASE
@@ -2492,10 +2495,10 @@ STATIC FUNCTION ValueIsF( cString )
    RETURN cString == "no" .OR. ;
           cString == "0" /* Compatibility */
 
-STATIC PROCEDURE HBM_Load( aParams, cFileName )
+STATIC PROCEDURE HBM_Load( aParams, cFileName, /* @ */ nEmbedLevel )
    LOCAL cFile := hb_MemoRead( cFileName )
    LOCAL cLine
-   LOCAL cOption
+   LOCAL cParam
 
    IF ! hb_osNewLine() == _EOL
       cFile := StrTran( cFile, hb_osNewLine(), _EOL )
@@ -2506,10 +2509,23 @@ STATIC PROCEDURE HBM_Load( aParams, cFileName )
 
    FOR EACH cLine IN hb_ATokens( cFile, _EOL )
       IF !( Left( cLine, 1 ) == "#" )
-         FOR EACH cOption IN hb_ATokens( cLine,, .T. )
-            cOption := StrStripQuote( cOption )
-            IF ! Empty( cOption )
-               AAdd( aParams, { cOption, cFileName, cLine:__enumIndex() } )
+         FOR EACH cParam IN hb_ATokens( cLine,, .T. )
+            cParam := StrStripQuote( cParam )
+            IF ! Empty( cParam )
+               DO CASE
+               CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
+                  IF !( SubStr( cParam, 2 ) == cFileName ) .AND. nEmbedLevel < 3
+                     nEmbedLevel++
+                     HBM_Load( aParams, SubStr( cParam, 2 ), @nEmbedLevel ) /* Load parameters from script file */
+                  ENDIF
+               CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
+                  IF !( cParam == cFileName ) .AND. nEmbedLevel < 3
+                     nEmbedLevel++
+                     HBM_Load( aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
+                  ENDIF
+               OTHERWISE
+                  AAdd( aParams, { cParam, cFileName, cLine:__enumIndex() } )
+               ENDCASE
             ENDIF
          NEXT
       ENDIF

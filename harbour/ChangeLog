@@ -8,6 +8,23 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-01 23:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  - contrib/examples/uhttpd/hbmk.bat
+  + contrib/examples/uhttpd/uhttpdgd.hbm
+  * contrib/examples/uhttpd/uhttpd.prg
+  * contrib/examples/uhttpd/readme.txt
+    * Added separate GD enabled .hbm file.
+    * Remaining hbmk.bat features moved to .prg code and into readme.txt.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added support for @ and .hbm parameters inside .hbm files.
+      Currently three levels deep nesting in allowed.
+
+  * contrib/xhb/Makefile
+  + contrib/xhb/dbf2txt.c
+    + Added DBF2TXT() function from xhb.
+    ; TODO: RPC support and HB_SERVICE*() API ?
+
 2009-03-01 18:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/uhttpd/hbmk.bat
   * contrib/examples/uhttpd/uhttpd.hbm

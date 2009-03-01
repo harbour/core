@@ -7,6 +7,7 @@ ROOT = ../../
 LIBNAME=xhb
 
 C_SOURCES=\
+	dbf2txt.c \
 	filestat.c \
 	freadlin.c \
 	hbcrypt.c \
@@ -40,6 +41,7 @@ PRG_SOURCES=\
 	xhbcomp.prg \
 	dbgfx.prg \
 	sprintf.prg \
+	regexrpl.prg \
 
 PRG_HEADERS=\
 	hbcompat.ch \

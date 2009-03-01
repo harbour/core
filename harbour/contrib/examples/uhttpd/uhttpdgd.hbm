@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+@uhttpd.hbm
+-DGD_SUPPORT -lhbgd -lbgd
