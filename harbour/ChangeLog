@@ -8,6 +8,35 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-01 13:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbstack.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/memvars.c
+    ! fixed __M[V]CLEAR()/ __M[V]RESTORE() to be exactly Clipper compatible
+      and do not release PUBLIC GetList value. Here it's small example
+      which illustrates current behavior and exploits bug in previous
+      version:
+         memvar getlist
+         proc main()
+            getlist:="public:getlist"
+            ? getlist
+            private getlist:="private:getlist"
+            ? getlist
+            CLEAR MEMORY
+            ? getlist
+         return
+
+  * harbour/source/compiler/gencc.c
+    + added Harbour exception to the license - it's mine code with
+      few lines added/modified by Ryszard and Viktor. I hope they do
+      not have anything against.
+
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/hbident.c
+    * minor formatting
+
 2009-02-28 15:51 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/common.mak
   * harbour/contrib/gtwvg/Makefile

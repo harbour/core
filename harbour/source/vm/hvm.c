@@ -817,7 +817,7 @@ void hb_vmThreadQuit( void )
    hb_stackSetActionRequest( 0 );
    hb_rddCloseAll();             /* close all workareas */
    hb_stackRemove( 1 );          /* clear stack items, leave only initial symbol item */
-   hb_memvarsClear();            /* clear all PUBLIC (and PRIVATE if any) variables */
+   hb_memvarsClear( TRUE );      /* clear all PUBLIC (and PRIVATE if any) variables */
    hb_vmSetI18N( NULL );         /* remove i18n translation table */
 #ifndef HB_NO_DEBUG
    hb_vmDebuggerExit( FALSE );   /* deactivate debugger */
@@ -1038,7 +1038,7 @@ int hb_vmQuit( void )
    hb_stackSetActionRequest( 0 );
    hb_rddCloseAll();             /* close all workareas */
    hb_rddShutDown();             /* remove all registered RDD drivers */
-   hb_memvarsClear();            /* clear all PUBLIC (and PRIVATE if any) variables */
+   hb_memvarsClear( TRUE );      /* clear all PUBLIC (and PRIVATE if any) variables */
    hb_vmSetI18N( NULL );         /* remove i18n translation table */
    hb_i18n_exit();               /* unregister i18n module */
 

@@ -334,7 +334,7 @@ extern void        hb_stackIsStackRef( void *, PHB_TSD_FUNC );
    extern void             hb_stackIdSetActionRequest( void * pStackID, USHORT uiAction );
    extern PHB_DYN_HANDLES  hb_stackGetDynHandle( PHB_DYNS pDynSym );
    extern int              hb_stackDynHandlesCount( void );
-   extern void             hb_stackClearMemvars( void );
+   extern void             hb_stackClearMemvars( int );
    extern BOOL             hb_stackQuitState( void );
    extern void             hb_stackSetQuitState( USHORT uiState );
    extern int              hb_stackUnlock( void );

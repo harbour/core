@@ -776,32 +776,35 @@ int hb_memvarScope( char * szVarName, ULONG ulLength )
  */
 static HB_DYNS_FUNC( hb_memvarClear )
 {
-   HB_SYMBOL_UNUSED( Cargo );
-
-   if( hb_dynsymGetMemvar( pDynSymbol ) )
+   if( pDynSymbol != ( PHB_DYNS ) Cargo &&
+       hb_dynsymGetMemvar( pDynSymbol ) )
       hb_memvarDetachDynSym( pDynSymbol, NULL );
 
    return TRUE;
 }
 #endif
 
-/* Clear all memvar variables */
-void hb_memvarsClear( void )
+/* Clear all memvar variables optionally without GetList PUBLIC variable */
+void hb_memvarsClear( BOOL fAll )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarsClear()"));
+   PHB_DYNS pGetList;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarsClear(%d)", ( int ) fAll));
+
+   pGetList = fAll ? NULL : hb_dynsymFind( "GETLIST" );
 
    hb_stackClearMemvarsBase();
    hb_stackGetPrivateStack()->base = 0;
    hb_memvarSetPrivatesBase( 0 );
 #if !defined( HB_MT_VM )
-   hb_dynsymEval( hb_memvarClear, NULL );
+   hb_dynsymEval( hb_memvarClear, ( void * ) pGetList );
 #else
    /* this is a little bit hacked but many times faster version
     * of memvars clearing because it scans only given thread stack
     * not global dynamic symbol table. It noticeable reduce the cost
     * of HVM thread releasing.
     */
-   hb_stackClearMemvars();
+   hb_stackClearMemvars( pGetList ? ( int ) pGetList->uiSymNum : -1 );
 #endif
 }
 
@@ -1129,7 +1132,7 @@ HB_FUNC( __MVSCOPE )
 
 HB_FUNC( __MVCLEAR )
 {
-   hb_memvarsClear();
+   hb_memvarsClear( FALSE );
 }
 
 HB_FUNC( __MVDBGINFO )
@@ -1476,7 +1479,7 @@ HB_FUNC( __MVRESTORE )
       /* Clear all memory variables if not ADDITIVE */
 
       if( ! bAdditive )
-         hb_memvarsClear();
+         hb_memvarsClear( FALSE );
 
       /* Generate filename */
 

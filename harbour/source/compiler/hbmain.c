@@ -4078,9 +4078,9 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
             hb_compOutputFile( HB_COMP_PARAM );
 
             pFunPtr = &HB_COMP_PARAM->functions.pFirst;
+            /* skip first non-startup procedure */
             if( ! HB_COMP_PARAM->fStartProc )
             {
-               /* skip first non-startup procedure */
                hb_compOptimizeFrames( HB_COMP_PARAM, *pFunPtr );
                pFunPtr = &(*pFunPtr)->pNext;
                HB_COMP_PARAM->iFunctionCnt--;

@@ -66,7 +66,7 @@ static HB_HASH_FUNC( hb_comp_IdentKey )    /* ULONG func (void *Value, void *Car
 {
    ULONG ulSum = 0;
    const char *szName = ( char * )Value;
-   
+
    while( *szName )
      ulSum += *szName++;
 

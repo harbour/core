@@ -425,17 +425,17 @@ PHB_DYN_HANDLES hb_stackGetDynHandle( PHB_DYNS pDynSym )
    return &hb_stack.pDynH[ iDynSym - 1 ];
 }
 
-void hb_stackClearMemvars( void )
+void hb_stackClearMemvars( int iExcept )
 {
    HB_STACK_TLS_PRELOAD
    int iDynSym;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stackClearMemvars()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackClearMemvars(%d)", iExcept));
 
    iDynSym = hb_stack.iDynH;
    while( --iDynSym >= 0 )
    {
-      if( hb_stack.pDynH[ iDynSym ].pMemvar )
+      if( hb_stack.pDynH[ iDynSym ].pMemvar && iDynSym != iExcept )
       {
          PHB_ITEM pMemvar = ( PHB_ITEM ) hb_stack.pDynH[ iDynSym ].pMemvar;
          hb_stack.pDynH[ iDynSym ].pMemvar = NULL;
