@@ -70,14 +70,15 @@ LDFLAGS = $(LINKPATHS)
 
 #Note: The empty line below HAVE TO exist!
 define lib_object
-echo -+ $(subst /,\,$(LIB_DIR)/$(file)) ^& >> __lib__.tmp
+echo -+$(subst /,\,$(file)) ^& >> __lib__.tmp
 
 endef
 
 define create_library
-echo $(subst /,\,$(LIB_DIR)/$@) > __lib__.tmp
+if exist __lib__.tmp del __lib__.tmp
 $(foreach file, $(^F), $(lib_object))
-$(AR) $(ARFLAGS) @__lib__.tmp
+echo -+>> __lib__.tmp
+$(AR) $(subst /,\,$(LIB_DIR)/$@) /P64 $(ARFLAGS) @__lib__.tmp
 endef
 
 AR = tlib.exe
