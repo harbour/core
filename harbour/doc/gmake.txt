@@ -143,8 +143,6 @@ For gcc on Win95/WinNT with the Cygwin library:
   HB_COMPILER       gcc
   HB_GT_LIB         gtwin
   CYGWIN            noglob
-  HB_USER_CFLAGS             -mwin32
-  HB_USER_LDFLAGS             -mwin32
 
 For gcc on Win95/WinNT with the MinGW library:
   HB_ARCHITECTURE   win
@@ -219,12 +217,11 @@ For IBM Visual Age C++ on OS/2 for PM mode:
 
 For Borland C++ 5.5
   HB_ARCHITECTURE   win
-  HB_COMPILER       bcc32
+  HB_COMPILER       bcc
   HB_GT_LIB         gtwin
 
 For Borland C++ 3.x
   HB_ARCHITECTURE   dos
-  HB_COMPILER       bcc16
   HB_GT_LIB         gtdos
 
 For DJGPP (GCC port for DOS)

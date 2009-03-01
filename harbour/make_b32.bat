@@ -14,7 +14,7 @@ rem ---------------------------------------------------------------
 
 @echo off
 
-set HB_COMPILER=bcc32
+set HB_COMPILER=bcc
 
 if "%HB_INSTALL_PREFIX%" == "" set HB_INSTALL_PREFIX=%~dp0
 set _HB_CC_NAME=%HB_CC_NAME%

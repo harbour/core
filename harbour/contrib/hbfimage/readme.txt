@@ -21,17 +21,6 @@ FreeImage Project's web site is http://freeimage.sourceforge.net/
 COMPILING
 =========
 
-Actually platforms supported are:
-- Win32 / BCC32
-- GNU systems / GCC
-
-to build library on Win32 with BCC use:
-make_b32.bat
-
-on GNU system use:
-make install
-WARNING: not actually tested
-
   ** requirements: to build FreeImage library: gcc-c++, libstdc++-devel
 
 DOCUMENTATION
@@ -51,8 +40,3 @@ NOTES
 
 WARNING: if you are using Windows platform, download the
          FreeImage.dll in tests before use it.
-
-At this time (28/10/2005 CET) it builds on Windows with last CVS.
-Not tested on GNU system, but it have to run correctly.
-
-

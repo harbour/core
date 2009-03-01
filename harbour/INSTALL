@@ -69,7 +69,7 @@ HOW TO BUILD AND INSTALL HARBOUR
           - Rename mingw32-make.exe to make.exe and put it in
             your PATH _before_ your compiler tools.
 
-      > set HB_COMPILER=<msvc|bcc32|owatcom|...>
+      > set HB_COMPILER=<msvc|bcc|owatcom|...>
       > set HB_INSTALL_PREFIX=<DIR>
       > make_gnu.bat install
 
@@ -149,7 +149,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    mingw    - MinGW GNU C
    msvc     - Microsoft Visual C++
    owatcom  - Open Watcom C++
-   bcc32    - Borland/CodeGear C++ 4.x and above
+   bcc      - Borland/CodeGear C++ 4.x and above
    gcc      - Cygwin GNU C
    rxsnt    - EMX/RSXNT/Windows GNU C
    icc      - IBM Visual Age C++

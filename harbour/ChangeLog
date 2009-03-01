@@ -8,6 +8,32 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-01 18:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+  * make_b32.bat
+  * doc/gmake.txt
+  * bin/postinst.bat
+  * bin/hb-mkdyn.bat
+  * make_gnu.bat
+  * contrib/hbfimage/readme.txt
+  * contrib/examples/uhttpd/modules/bldhrb.bat
+  * source/vm/Makefile
+  * source/rtl/console.c
+  * source/compiler/gencobj.c
+  * utils/hbmk2/hbmk2.prg
+  * utils/hbmk2/examples/winapi.hbp
+  - config/win/bcc32.cf
+  + config/win/bcc.cf
+    * Long time TODO done: Renamed bcc32 compiler name to bcc.
+      bcc32 is still accepted by make_gnu.bat, but will be
+      removed in the future, so it's recommended to update
+      your local settings to use:
+      set HB_COMPILER=bcc
+
+  - config/dos/bcc16.cf
+    - Deleted bcc16 compiler support. I didn't work since ages,
+      and Harbour doesn't support 16-bit compilers anyway.
+
 2009-03-01 17:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/win/bcc32.cf
     ! Fix to prev.

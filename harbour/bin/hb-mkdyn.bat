@@ -25,7 +25,7 @@ set HB_DLL_LIBS_MT=hbvmmt
 if "%HB_COMPILER%" == "msvc"     goto DO_MSVC
 if "%HB_COMPILER%" == "msvc64"   goto DO_MSVC
 if "%HB_COMPILER%" == "msvcia64" goto DO_MSVC
-if "%HB_COMPILER%" == "bcc32"    goto DO_BCC32
+if "%HB_COMPILER%" == "bcc"      goto DO_BCC
 if "%HB_COMPILER%" == "owatcom"  goto DO_OWATCOM
 
 echo HB_COMPILER %HB_COMPILER% isn't supported.
@@ -125,7 +125,7 @@ rmdir _dll
 
 goto END
 
-:DO_BCC32
+:DO_BCC
 
 echo Making .dlls for %HB_COMPILER%...
 

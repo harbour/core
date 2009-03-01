@@ -42,7 +42,7 @@ if "%HB_DIR_IMPLIB%" == "yes" (
 
    if not "%HB_LIB_INSTALL%" == "" (
 
-      if "%HB_COMPILER%" == "bcc32" (
+      if "%HB_COMPILER%" == "bcc" (
 
          if exist "%HB_DIR_ADS%\Redistribute\ace32.dll"    implib    "%HB_LIB_INSTALL%\ace32.lib"              "%HB_DIR_ADS%\Redistribute\ace32.dll"
          if exist "%HB_DIR_ADS%\ace32.dll"                 implib    "%HB_LIB_INSTALL%\ace32.lib"              "%HB_DIR_ADS%\ace32.dll"

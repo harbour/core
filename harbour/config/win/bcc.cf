@@ -1,8 +1,9 @@
 #
 # $Id$
 #
+
 # The Harbour Project
-# GNU MAKE file for Borland C/C++ 32bit (4.x, 5.x)
+# GNU MAKE file for Borland/CodeGear C/C++ 32-bit (4.x-)
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 

@@ -189,12 +189,12 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
             ulLen--;
 
          szStr[ ulLen ] = '\0';
-         /* TODO: Check for comments within macros, i.e: CC=bcc32 #comment */
+         /* TODO: Check for comments within macros, i.e: CC=bcc #comment */
 
          if( *szStr )
          {
             szToken = strchr( szStr, '=' );
-         
+
             if( szToken )
             {
                *szToken++ = '\0';
@@ -278,7 +278,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 #if defined(_MSC_VER)
       hb_strncat( szOutPath, "-Fo", sizeof( szOutPath ) - 1 );
 #elif defined(__WATCOMC__)
-      hb_strncat( szOutPath, "-fo=", sizeof( szOutPath ) - 1 );      
+      hb_strncat( szOutPath, "-fo=", sizeof( szOutPath ) - 1 );
 #else
       hb_strncat( szOutPath, "-o", sizeof( szOutPath ) - 1 );
 #endif

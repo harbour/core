@@ -79,7 +79,7 @@
 #include "hbset.h"
 #include "hb_io.h"
 
-/* NOTE: Some C compilers like BCC32 optimize the call of small static buffers
+/* NOTE: Some C compilers like Borland C optimize the call of small static buffers
  *       into an integer to read it faster. Later, programs like CodeGuard
  *       complain if the given buffer was smaller than an int. [ckedem]
  */

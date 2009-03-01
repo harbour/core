@@ -362,7 +362,7 @@ FUNCTION Main( ... )
       CASE "msvc"
       CASE "msvc64"
       CASE "msvcia64"
-      CASE "bcc32"
+      CASE "bcc"
       CASE "xcc"
       CASE "pocc"
       CASE "dmc"
@@ -430,14 +430,14 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "ml64"   ) != NIL }, "msvc64"  },;
                     { {|| FindInPath( "cl"     ) != NIL .AND. ;
                           FindInPath( "wpp386" ) == NIL }, "msvc"    },;
-                    { {|| FindInPath( "bcc32"  ) != NIL }, "bcc32"   },;
+                    { {|| FindInPath( "bcc32"  ) != NIL }, "bcc"     },;
                     { {|| FindInPath( "porc64" ) != NIL }, "pocc64"  },;
                     { {|| FindInPath( "pocc"   ) != NIL }, "pocc"    },;
                     { {|| FindInPath( "dmc"    ) != NIL }, "dmc"     },;
                     { {|| FindInPath( "icc"    ) != NIL }, "icc"     },;
                     { {|| FindInPath( "xcc"    ) != NIL }, "xcc"     } }
       /* TODO: "mingwce", "msvcce", "poccce" */
-      aCOMPSUP := { "gcc", "mingw", "msvc", "msvc64", "msvcia64", "bcc32", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
+      aCOMPSUP := { "gcc", "mingw", "msvc", "msvc64", "msvcia64", "bcc", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
       t_cGTDEFAULT := "gtwin"
@@ -1371,7 +1371,7 @@ FUNCTION Main( ... )
          ENDIF
 
       /* Misc */
-      CASE t_cARCH == "win" .AND. t_cCOMP == "bcc32"
+      CASE t_cARCH == "win" .AND. t_cCOMP == "bcc"
          IF s_lDEBUG
             AAdd( s_aOPTC, "-y -v" )
          ELSE
@@ -1547,10 +1547,10 @@ FUNCTION Main( ... )
                         "LNK4217: locally defined symbol ... imported in function ..."
                         if using 'dllimport'. [vszakats] */
                tmp := ""
-            CASE t_cCOMP $ "gcc|mingw"      ; tmp := "__attribute__ (( dllimport ))"
-            CASE t_cCOMP == "bcc32|owatcom" ; tmp := "__declspec( dllimport )"
-            CASE t_cCOMP == "owatcom"       ; tmp := "__declspec( dllimport )"
-            OTHERWISE                       ; tmp := "_declspec( dllimport )"
+            CASE t_cCOMP $ "gcc|mingw"    ; tmp := "__attribute__ (( dllimport ))"
+            CASE t_cCOMP == "bcc|owatcom" ; tmp := "__declspec( dllimport )"
+            CASE t_cCOMP == "owatcom"     ; tmp := "__declspec( dllimport )"
+            OTHERWISE                     ; tmp := "_declspec( dllimport )"
             ENDCASE
 
             /* Create list of requested symbols */
@@ -2765,7 +2765,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, gpp, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
-      "    win    : gcc, mingw, msvc, bcc32, owatcom, pocc, dmc, rsxnt, xcc, icc" ,;
+      "    win    : gcc, mingw, msvc, bcc, owatcom, pocc, dmc, rsxnt, xcc, icc" ,;
       "             mingwce, msvc64, msvcia64, msvcce, pocc64, poccce" ,;
       "    os2    : gcc, owatcom, icc" ,;
       "    dos    : gcc, djgpp, owatcom, rsx32" ,;

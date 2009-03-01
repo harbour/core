@@ -26,7 +26,7 @@ else
 endif
 
 ifeq ($(HB_ARCHITECTURE),win)
-	ifeq ($(HB_COMPILER),bcc32)
+	ifeq ($(HB_COMPILER),bcc)
 		DIRS += maindllh
 	endif
 	ifeq ($(HB_COMPILER),msvc)

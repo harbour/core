@@ -30,6 +30,9 @@ if "%HB_ARCHITECTURE%" == ""                         set HB_ARCHITECTURE=dos
 if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" set HB_COMPILER=msvc
 if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
+rem Compatibility
+if "%HB_COMPILER%" == "bcc32" set HB_COMPILER=bcc
+
 if "%HB_INSTALL_PREFIX%" == "" if "%OS%" == "Windows_NT" set HB_INSTALL_PREFIX=%~dp0
 
 rem Set to constant value to be consistent with the non-GNU make files.
