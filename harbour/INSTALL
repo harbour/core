@@ -56,6 +56,9 @@ HOW TO BUILD AND INSTALL HARBOUR
 
       1.) Windows NT or compatible system is required to build Harbour.
       2.) Make sure to have your C compiler of choice properly installed.
+          You should make sure no tools in your PATH belonging to other
+          C compilers are interfering with your setup (put all these
+          _after_ your selected C compiler in PATH).
           For the list of supported compilers, please look up the
           relevant section of this file.
       3.) Make sure to have GNU Make. We recommend the one distributed
@@ -204,7 +207,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                left empty.
    - HB_CONTRIB_ADDONS=<list>  Build additional libraries stored
                                in the contrib directory.
-   - HB_REBUILD_PARSER=yes     To rebuild the language parses.
+   - HB_REBUILD_PARSER=yes     To rebuild the language parsers.
                                This requires GNU Bison.
    - HB_VISUALC_VER_PRE80=yes  Set this if you're using a pre-8.0
                                (= pre-MSVS 2005) version of MSVC compiler.

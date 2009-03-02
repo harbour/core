@@ -2366,7 +2366,7 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
    }
 
    if( ! bResizable )
-      pWVT->pPP->style = ( pWVT->pPP->style &~ ( WS_THICKFRAME | WS_MAXIMIZEBOX ) | WS_BORDER );
+      pWVT->pPP->style = ( ( pWVT->pPP->style &~ ( WS_THICKFRAME | WS_MAXIMIZEBOX ) ) | WS_BORDER );
 
    hWnd = CreateWindowEx(
                pWVT->pPP->exStyle,                          /* extended style */

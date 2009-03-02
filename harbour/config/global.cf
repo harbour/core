@@ -3,7 +3,7 @@
 #
 
 # See GNU make docs here:
-# http://www.gnu.org/software/automake/manual/make/
+# http://www.gnu.org/software/make/manual/make.html
 
 # This isn't strictly necessary, but it does signficantly reduce
 # the number of rules that make has to evaluate otherwise, which may give
