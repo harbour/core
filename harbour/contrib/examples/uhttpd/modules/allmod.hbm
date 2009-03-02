@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+-n -gh -w3
+-o..\home\cgi-bin\
+cookie.prg
+info.prg
+showcounter.prg
+tableservletdb.prg
+testajax.prg

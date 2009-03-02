@@ -687,9 +687,14 @@ FUNCTION Main( ... )
            cParamL            == "-hblnk" .OR. ;
            cParamL            == "-info"
 
+      CASE Left( cParamL, 2 ) == "-gh" .OR. ;
+           ( ! lNIX .AND. Left( cParamL, 2 ) == "/gh" )
+
+           lStopAfterHarbour := .T.
+
          /* Simply ignore. They were already processed in the first pass. */
 
-      CASE ! lNIX .AND. Left( cParamL, 2 ) == "/o"
+      CASE ! lNIX .AND. Left( cParamL, 2 ) == "/o" .AND. ! lStopAfterHarbour
 
          /* Swallow this switch. We don't pass it to Harbour, as it may badly
             interact with hbmk. */
@@ -755,7 +760,7 @@ FUNCTION Main( ... )
             ENDIF
          ENDIF
 
-      CASE Left( cParam, 2 ) == "-o"
+      CASE Left( cParam, 2 ) == "-o" .AND. ! lStopAfterHarbour
 
          tmp := PathSepToSelf( SubStr( cParam, 3 ) )
          hb_FNameSplit( tmp, @cDir, @cName, @cExt )
