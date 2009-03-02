@@ -8,6 +8,198 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-02 16:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  - obj
+  - make_b32.bat
+  - make_b32.mak
+  - make_gcc.sh
+  - make_gcc.mak
+  - make_vc.bat
+  - make_vc.mak
+  - common.mak
+  - contrib/mtpl_b32.mak
+  - contrib/mtpl_b32.bat
+  - contrib/make_b32_all.bat
+  - contrib/mtpl_gcc.mak
+  - contrib/mtpl_gcc.sh
+  - contrib/make_gcc_all.sh
+  - contrib/mtpl_vc.mak
+  - contrib/mtpl_vc.bat
+  - contrib/make_vc_all.bat
+  - contrib/hbmysql/common.mak
+  - contrib/hbmysql/make_gcc.sh
+  - contrib/hbmysql/make_b32.bat
+  - contrib/hbmysql/make_vc.bat
+  - contrib/gtalleg/common.mak
+  - contrib/gtalleg/make_gcc.sh
+  - contrib/gtalleg/make_b32.bat
+  - contrib/gtalleg/make_vc.bat
+  - contrib/hbct/make_b32.bat
+  - contrib/hbct/make_gcc.sh
+  - contrib/hbct/make_vc.bat
+  - contrib/hbct/common.mak
+  - contrib/hbodbc/common.mak
+  - contrib/hbodbc/make_gcc.sh
+  - contrib/hbodbc/make_b32.bat
+  - contrib/hbodbc/make_vc.bat
+  - contrib/xhb/make_b32.bat
+  - contrib/xhb/make_gcc.sh
+  - contrib/xhb/make_vc.bat
+  - contrib/xhb/common.mak
+  - contrib/hbtpathy/common.mak
+  - contrib/hbtpathy/make_gcc.sh
+  - contrib/hbtpathy/make_b32.bat
+  - contrib/hbtpathy/make_vc.bat
+  - contrib/hbgt/make_b32.bat
+  - contrib/hbgt/common.mak
+  - contrib/hbgt/make_gcc.sh
+  - contrib/hbgt/make_vc.bat
+  - contrib/hbmsql/common.mak
+  - contrib/hbmsql/make_gcc.sh
+  - contrib/hbmsql/make_b32.bat
+  - contrib/hbmsql/make_vc.bat
+  - contrib/hbsqlit3/common.mak
+  - contrib/hbsqlit3/make_gcc.sh
+  - contrib/hbsqlit3/make_b32.bat
+  - contrib/hbsqlit3/make_vc.bat
+  - contrib/hbole/common.mak
+  - contrib/hbole/make_gcc.sh
+  - contrib/hbole/make_b32.bat
+  - contrib/hbole/make_vc.bat
+  - contrib/hbmzip/make_b32.bat
+  - contrib/hbmzip/common.mak
+  - contrib/hbmzip/make_gcc.sh
+  - contrib/hbmzip/make_vc.bat
+  - contrib/hbblat/common.mak
+  - contrib/hbblat/make_b32.bat
+  - contrib/hbblat/make_vc.bat
+  - contrib/hbfbird/common.mak
+  - contrib/hbfbird/make_gcc.sh
+  - contrib/hbfbird/make_b32.bat
+  - contrib/hbfbird/make_vc.bat
+  - contrib/hbapollo/common.mak
+  - contrib/hbapollo/make_gcc.sh
+  - contrib/hbapollo/make_b32.bat
+  - contrib/hbapollo/make_vc.bat
+  - contrib/hbziparc/common.mak
+  - contrib/hbziparc/make_gcc.sh
+  - contrib/hbziparc/make_b32.bat
+  - contrib/hbziparc/make_vc.bat
+  - contrib/hbnf/make_b32.bat
+  - contrib/hbnf/make_gcc.sh
+  - contrib/hbnf/make_vc.bat
+  - contrib/hbnf/common.mak
+  - contrib/hbcurl/common.mak
+  - contrib/hbcurl/make_gcc.sh
+  - contrib/hbcurl/make_b32.bat
+  - contrib/hbcurl/make_vc.bat
+  - contrib/rddsql/common.mak
+  - contrib/rddsql/sddmy/common.mak
+  - contrib/rddsql/sddmy/make_gcc.sh
+  - contrib/rddsql/sddmy/make_b32.bat
+  - contrib/rddsql/sddmy/make_vc.bat
+  - contrib/rddsql/sddpg/common.mak
+  - contrib/rddsql/sddpg/make_gcc.sh
+  - contrib/rddsql/sddpg/make_b32.bat
+  - contrib/rddsql/sddpg/make_vc.bat
+  - contrib/rddsql/sddfb/common.mak
+  - contrib/rddsql/sddfb/make_b32.bat
+  - contrib/rddsql/sddfb/make_vc.bat
+  - contrib/rddsql/make_gcc.sh
+  - contrib/rddsql/make_b32.bat
+  - contrib/rddsql/make_vc.bat
+  - contrib/hbhpdf/common.mak
+  - contrib/hbhpdf/make_gcc.sh
+  - contrib/hbhpdf/make_b32.bat
+  - contrib/hbhpdf/make_vc.bat
+  - contrib/rddado/common.mak
+  - contrib/rddado/make_gcc.sh
+  - contrib/rddado/make_b32.bat
+  - contrib/rddado/make_vc.bat
+  - contrib/gtwvg/make_b32.bat
+  - contrib/gtwvg/make_gcc.sh
+  - contrib/gtwvg/make_vc.bat
+  - contrib/gtwvg/common.mak
+  - contrib/hbpgsql/common.mak
+  - contrib/hbpgsql/make_gcc.sh
+  - contrib/hbpgsql/make_b32.bat
+  - contrib/hbpgsql/make_vc.bat
+  - contrib/hbclipsm/make_b32.bat
+  - contrib/hbclipsm/common.mak
+  - contrib/hbclipsm/make_gcc.sh
+  - contrib/hbclipsm/make_vc.bat
+  - contrib/rddads/make_b32.bat
+  - contrib/rddads/common.mak
+  - contrib/rddads/make_gcc.sh
+  - contrib/rddads/make_vc.bat
+  - contrib/hbfimage/common.mak
+  - contrib/hbfimage/make_gcc.sh
+  - contrib/hbfimage/make_b32.bat
+  - contrib/hbfimage/make_vc.bat
+  - contrib/hbgd/make_b32.bat
+  - contrib/hbgd/common.mak
+  - contrib/hbgd/make_gcc.sh
+  - contrib/hbgd/make_vc.bat
+  - contrib/hbmisc/make_b32.bat
+  - contrib/hbmisc/common.mak
+  - contrib/hbmisc/make_gcc.sh
+  - contrib/hbmisc/make_vc.bat
+  - contrib/hbgf/hbgfwin/common.mak
+  - contrib/hbgf/hbgfwin/make_b32.bat
+  - contrib/hbgf/hbgfwin/make_vc.bat
+  - contrib/hbtip/make_b32.bat
+  - contrib/hbtip/common.mak
+  - contrib/hbtip/make_gcc.sh
+  - contrib/hbtip/make_vc.bat
+  - contrib/hbwin/make_b32.bat
+  - contrib/hbwin/common.mak
+  - contrib/hbwin/make_gcc.sh
+  - contrib/hbwin/make_vc.bat
+  - contrib/hbbmcdx/common.mak
+  - contrib/hbbmcdx/make_gcc.sh
+  - contrib/hbbmcdx/make_b32.bat
+  - contrib/hbbmcdx/make_vc.bat
+  - contrib/hbvpdf/common.mak
+  - contrib/hbvpdf/make_gcc.sh
+  - contrib/hbvpdf/make_b32.bat
+  - contrib/hbvpdf/make_vc.bat
+  - contrib/hbssl/common.mak
+  - contrib/hbssl/make_gcc.sh
+  - contrib/hbssl/make_b32.bat
+  - contrib/hbssl/make_vc.bat
+  - contrib/hbbtree/common.mak
+  - contrib/hbbtree/make_gcc.sh
+  - contrib/hbbtree/make_b32.bat
+  - contrib/hbbtree/make_vc.bat
+  - contrib/hbcrypt/make_b32.bat
+  - contrib/hbcrypt/common.mak
+  - contrib/hbcrypt/make_gcc.sh
+  - contrib/hbcrypt/make_vc.bat
+  - contrib/hbwhat/make_b32.bat
+  - contrib/hbwhat/make_gcc.sh
+  - contrib/hbwhat/make_vc.bat
+  - contrib/hbwhat/common.mak
+  - contrib/examples/hbsqlit2/common.mak
+  - contrib/examples/hbsqlit2/make_gcc.sh
+  - contrib/examples/hbsqlit2/make_b32.bat
+  - contrib/examples/hbsqlit2/make_vc.bat
+    - Deleted components of "non-GNU" (MSVC, BCC and GCC
+      specific) make systems. Leaving GNU Make as the
+      unified make platform for Harbour.
+      This also means that Harbour is now much portable
+      in the sense that with a few rare exceptions all tasks should
+      be carried exactly the same way across the OSes.
+      Platform specific script file statistics before:
+      - Bash          54  (end-user oriented: 49 - including package creation)
+      - Windows/DOS  105  (end-user oriented: 90)
+      - OS/2           2  (end-user oriented:  1)
+      Platform specific script file statistics now:
+      - Bash          14  (end-user oriented:  9 - including package creation)
+      - Windows/DOS   19  (end-user oriented:  4)
+      - OS/2           2  (end-user oriented:  1)
+      Some of these will be further cleaned (hbdoc related: 5,
+      hbmk compatibility: 2)
+
 2009-03-02 16:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
   * contrib/hbfbird/readme.txt
