@@ -32,7 +32,7 @@ HOW TO BUILD AND INSTALL HARBOUR
       To test it, go to <DIR>/bin directory and type:
       $ ./hbmk2 -n ../tests/hello.prg
       $ ./hello
-      You should see: 'Hello world!' on screen.
+      You should see 'Hello world!' on screen.
 
    Windows with MinGW + msys
    -------------------------
@@ -42,23 +42,27 @@ HOW TO BUILD AND INSTALL HARBOUR
       and setup. msys should be put in PATH _before_ MinGW.
 
       > set HB_INSTALL_PREFIX=<DIR>
-        (use forward slashes and msys drive notation: /c/)
       > sh make_gnu.sh install
 
       To test it, go to <DIR>/bin directory and type:
       > hbmk2 -n ../tests/hello.prg
       > hello
-      You should see: 'Hello world!' on screen.
+      You should see 'Hello world!' on screen.
+
+      NOTE: You have to use forwards slashes in <DIR>, and
+            msys style drive notation: /c/ (means C:)
 
    Windows with other compilers
    ----------------------------
       Platform specific prerequisites:
 
       1.) Windows NT or compatible system is required to build Harbour.
-      2.) Make sure to have your C compiler of choice properly installed.
-          You should make sure no tools in your PATH belonging to other
-          C compilers are interfering with your setup (put all these
-          _after_ your selected C compiler in PATH).
+      2.) Make sure to have your C compiler of choice properly installed,
+          please refer to your C compiler installation and setup
+          instructions for details. It's recommended to make sure no
+          tools in your PATH belonging to other C compilers are interfering
+          with your setup (put all these _after_ your selected C compiler
+          in PATH).
           For the list of supported compilers, please look up the
           relevant section of this file.
       3.) Make sure to have GNU Make. We recommend the one distributed
@@ -77,7 +81,7 @@ HOW TO BUILD AND INSTALL HARBOUR
       To test it, go to <DIR>\bin directory and type:
       > hbmk2 -n ..\tests\hello.prg
       > hello
-      You should see: 'Hello world!' on screen.
+      You should see 'Hello world!' on screen.
 
       NOTE: <DIR> is your destination directory where executables,
             libraries and headers will be created. Use absolute paths
@@ -200,7 +204,10 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    -------
    - HB_BUILD_DLL=yes          To create a full build with .dlls.
                                This is only needed and available for
-                               non-GNU Windows compilers.
+                               non-GNU Windows compilers. When using this,
+                               full clean + install cycles will automatically
+                               be executed, so you don't have to explicily
+                               pass them to make_gnu.bat.
    - HB_CONTRIBLIBS=no         Don't build any contrib libraries.
    - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of
                                contrib libraries. Build all if

@@ -6,7 +6,7 @@ README 23/12/2003 - Harbour Low Level api for Firebird and Interbase RDBMS
 
 This work is not finished yet. It's to be seem like Harbour TMysql routines.
 
-To use with bcc, you need import library, ex: implib fbclient.lib fbclient.dll or implib gds32.lib gds32.dll. 
+To use with bcc, you need import library, ex: implib fbclient.lib fbclient.dll or implib gds32.lib gds32.dll.
 On Linux you will need link fbclient.so, this can be found usually at /usr/lib.
 
 For full firebird documentation look at:
@@ -18,7 +18,7 @@ Language Reference: http://www.ibphoenix.com/downloads/60LangRef.zip
 Developers guide: http://www.ibphoenix.com/downloads/60DevGuide.zip
 
 The Class implementation has no all implementation like TMysql has, because Firebird it's diferent.
-For example, you can't navigate in records like Mysql do, ex: Getrow( number of row ), in firebird you can 
+For example, you can't navigate in records like Mysql do, ex: Getrow( number of row ), in firebird you can
 just go forward.
 
 You will need ibase.h, it can be found at firebird/include
