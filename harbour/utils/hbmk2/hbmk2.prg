@@ -508,7 +508,7 @@ FUNCTION Main( ... )
          ENDIF
       ELSE
          IF AScan( aCOMPSUP, {|tmp| tmp == t_cCOMP } ) == 0
-            OutErr( "hbmk: Error: Compiler value unknown." + hb_osNewLine() )
+            OutErr( "hbmk: Error: Compiler value unknown: " + t_cCOMP + hb_osNewLine() )
             PauseForKey()
             RETURN 2
          ENDIF
