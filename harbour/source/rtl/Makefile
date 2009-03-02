@@ -73,6 +73,7 @@ C_SOURCES=\
 	hbregex.c    \
 	hbregexc.c   \
 	hbrunfun.c   \
+	hbstrfmt.c   \
 	hbstrsh.c    \
 	hbtoken.c    \
 	hbzlib.c     \

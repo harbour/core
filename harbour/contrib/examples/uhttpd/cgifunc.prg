@@ -50,6 +50,10 @@
  *
  */
 
+#ifdef __XHARBOUR__
+   #include "hbcompat.ch"
+#else
+
 //#include "xhb.ch"
 #include "common.ch"
 #include "error.ch"
@@ -64,7 +68,7 @@
 MEMVAR _SERVER, _GET, _POST, _COOKIE, _REQUEST, _HTTP_REQUEST
 
 FUNCTION uhttpd_GetVars( cFields, cSeparator )
-   LOCAL hHashVars := Hash()
+   LOCAL hHashVars := hb_Hash()
    LOCAL aField, cField, aFields
    LOCAL cName, xValue
    DEFAULT cSeparator TO "&"
@@ -136,7 +140,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    LOCAL cProto, cHost, cPort, nPort, cUser, cPass, cPath, cQuery, cFragment
 
    // Prevents case matching
-   HSetCaseMatch( hUrl, FALSE )
+   hb_HSetCaseMatch( hUrl, FALSE )
 
    cTemp := cUrl
 
@@ -251,7 +255,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    hb_hSet( hUrl, "FRAGMENT", cFragment )
 
    // Prevents externals to add something else to this Hash
-   HSetAutoAdd( hUrl, FALSE )
+   hb_HSetAutoAdd( hUrl, FALSE )
 RETURN hUrl
 
 
@@ -858,4 +862,3 @@ FUNCTION uhttpd_HGetValue( hHash, cKey )
    ENDIF
    //RETURN IIF( cKey IN hHash:Keys, hHash[ cKey ], NIL )
    RETURN xVal
-

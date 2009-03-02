@@ -784,7 +784,7 @@ FUNCTION Main( ... )
 
          cParam := ArchCompFilter( SubStr( cParam, 3 ) )
          IF ! Empty( cParam )
-            AAdd( s_aLIBUSER, PathSepToTarget( PathProc( cParam, aParam[ _PAR_cFileName ] ) ) )
+            AAdd( s_aLIBUSER, PathSepToTarget( cParam ) )
          ENDIF
 
       CASE FN_ExtGet( cParamL ) == ".lib" .OR. ;
@@ -792,7 +792,7 @@ FUNCTION Main( ... )
 
          cParam := ArchCompFilter( cParam )
          IF ! Empty( cParam )
-            AAdd( s_aLIBUSER, PathSepToTarget( PathProc( cParam, aParam[ _PAR_cFileName ] ) ) )
+            AAdd( s_aLIBUSER, PathSepToTarget( cParam ) )
          ENDIF
 
       CASE Left( cParam, 1 ) == "-"
@@ -2514,14 +2514,14 @@ STATIC PROCEDURE HBM_Load( aParams, cFileName, /* @ */ nEmbedLevel )
             IF ! Empty( cParam )
                DO CASE
                CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
-                  IF !( SubStr( cParam, 2 ) == cFileName ) .AND. nEmbedLevel < 3
+                  IF nEmbedLevel < 3
                      nEmbedLevel++
-                     HBM_Load( aParams, SubStr( cParam, 2 ), @nEmbedLevel ) /* Load parameters from script file */
+                     HBM_Load( aParams, PathProc( SubStr( cParam, 2 ), cFileName ), @nEmbedLevel ) /* Load parameters from script file */
                   ENDIF
                CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
-                  IF !( cParam == cFileName ) .AND. nEmbedLevel < 3
+                  IF nEmbedLevel < 3
                      nEmbedLevel++
-                     HBM_Load( aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
+                     HBM_Load( aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
                   ENDIF
                OTHERWISE
                   AAdd( aParams, { cParam, cFileName, cLine:__enumIndex() } )

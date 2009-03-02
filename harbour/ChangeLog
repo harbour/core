@@ -8,6 +8,26 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-02 09:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/Makefile
+  * include/hbextern.ch
+  + source/rtl/hbstrfmt.c
+    + Added HB_STRFORMAT() sprintf()-like formatting.
+    + Added hb_StrFormat() C level function.
+    ; Work of Mindaugas sent to the list, with some minor
+      cleanups applied. Please test on your platform/compiler.
+
+  * contrib/examples/uhttpd/uhttpd.prg
+  * contrib/examples/uhttpd/cgifunc.prg
+  * contrib/examples/uhttpd/session.prg
+  * contrib/examples/uhttpd/uhttpd.hbm
+    * xhb compatibility cleanups.
+    - xhb lib and header dependency removed.
+
+  * utils/hbmk2/hbmk2.prg
+    * Changed so that libs won't inherit their .hbm file paths.
+    + Embedded .hbm files will inherit their parents dir.
+
 2009-03-02 08:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     * Updates.

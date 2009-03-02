@@ -75,11 +75,17 @@
 
 */
 
-// comment out this line to activate hb_toOutDebug()
-#define DEBUG_ACTIVE
+// remove comment to activate hb_toOutDebug()
+//#define DEBUG_ACTIVE
 
-#ifndef _XHARBOUR_
-  #include "hbcompat.ch"
+#ifdef __XHARBOUR__
+   #include "hbcompat.ch"
+   #xtranslate hb_StrFormat( [<x,...>] ) => hb_sprintf( <x> )
+#else
+   /* TRY / CATCH / FINALLY / END */
+   #xcommand TRY  => BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+   #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
+   #xcommand FINALLY => ALWAYS
 #endif
 #include "fileio.ch"
 #include "common.ch"
@@ -135,20 +141,17 @@
 #define CR_LF    (CHR(13)+CHR(10))
 #define HB_IHASH()   HB_HSETCASEMATCH( {=>}, FALSE )
 
-#ifndef _XHARBOUR_
+#ifndef __XHARBOUR__
 
   #ifdef __PLATFORM__WINDOWS
      REQUEST HB_GT_WVT_DEFAULT
      REQUEST HB_GT_WIN
      REQUEST HB_GT_NUL
-     #ifdef HB_MT_VM
-       #define THREAD_GT hb_gtVersion()
-     #endif
   #else
      REQUEST HB_GT_STD_DEFAULT
      REQUEST HB_GT_NUL
-     #define THREAD_GT "XWC"
   #endif
+ #define THREAD_GT hb_gtVersion()
 
 #else
 
@@ -221,7 +224,7 @@ FUNCTION MAIN( ... )
 
    // Check GT version - if I have started app with //GT:NUL then I have to disable
    // console
-   cGT := HB_GT_VERSION()
+   cGT := HB_GTVERSION()
    IF ( cGT == "NUL" )
       lConsole := FALSE
    ENDIF
@@ -510,9 +513,9 @@ FUNCTION MAIN( ... )
             IF hSocket == NIL
 
 #ifdef USE_HB_INET
-               WriteToConsole( hb_sprintf( "accept() error" ) )
+               WriteToConsole( hb_StrFormat( "accept() error" ) )
 #else
-               WriteToConsole( hb_sprintf( "accept() error: %s", socket_error() ) )
+               WriteToConsole( hb_StrFormat( "accept() error: %s", socket_error() ) )
 #endif
 
             ELSE
@@ -919,7 +922,7 @@ STATIC FUNCTION ParseRequest( cRequest )
    // RFC2616
    aRequest := uhttpd_split( CR_LF, cRequest )
 
-   //hb_ToOutDebug( "aRequest = %s\n\r", hb_ValToExp( aRequest ) )
+   //hb_toOutDebug( "aRequest = %s\n\r", hb_ValToExp( aRequest ) )
 
    WriteToConsole( aRequest[1] )
    aLine := uhttpd_split( " ", aRequest[1] )
@@ -1216,7 +1219,7 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
 
       //hb_toOutDebug( "Launching process: %s\n\r", cProc )
       // No hIn, hErr == hOut
-      t_hProc := HB_OpenProcess( cProc, , @hOut, @hOut, .T. ) // .T. = Detached Process (Hide Window)
+      t_hProc := hb_processOpen( cProc, , @hOut, @hOut, .T. ) // .T. = Detached Process (Hide Window)
 
       IF t_hProc > -1
          //hb_toOutDebug( "Process handler: %s\n\r", t_hProc )
@@ -1421,7 +1424,7 @@ STATIC FUNCTION sendReply( hSocket, cSend )
    DO WHILE LEN( cSend ) > 0
       IF ( nLen := hb_InetSendAll( hSocket, cSend ) ) == -1
          ? "send() error:", hb_InetErrorCode( hSocket ), HB_InetErrorDesc( hSocket )
-         WriteToConsole( hb_sprintf( "ProcessConnection() - send() error: %s, cSend = %s, hSocket = %s", hb_InetErrorDesc( hSocket ), cSend, hSocket ) )
+         WriteToConsole( hb_StrFormat( "ProcessConnection() - send() error: %s, cSend = %s, hSocket = %s", hb_InetErrorDesc( hSocket ), cSend, hSocket ) )
          EXIT
       ELSEIF nLen > 0
          cSend := SUBSTR( cSend, nLen + 1 )
@@ -1431,7 +1434,7 @@ STATIC FUNCTION sendReply( hSocket, cSend )
    DO WHILE LEN( cSend ) > 0
       IF ( nLen := socket_send( hSocket, cSend ) ) == -1
          ? "send() error:", socket_error()
-         WriteToConsole( hb_sprintf( "ServiceConnection() - send() error: %s, cSend = %s, hSocket = %s", socket_error(), cSend, hSocket ) )
+         WriteToConsole( hb_StrFormat( "ServiceConnection() - send() error: %s, cSend = %s, hSocket = %s", socket_error(), cSend, hSocket ) )
          EXIT
       ELSEIF nLen > 0
          cSend := SUBSTR( cSend, nLen + 1 )

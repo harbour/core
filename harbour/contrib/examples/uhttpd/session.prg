@@ -50,7 +50,10 @@
  *
  */
 
-//#include "hbcompat.ch"
+#ifdef __XHARBOUR__
+   #include "hbcompat.ch"
+#else
+
 #include "common.ch"
 #include "hbclass.ch"
 #include "fileio.ch"
@@ -637,7 +640,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
   //TraceLog( "SessionDestroy() - cID", cID )
   DEFAULT cID TO ::cSID
 
-  _SESSION := Hash()
+  _SESSION := hb_Hash()
   ::oCookie:DeleteCookie( ::cName )
 
   //TraceLog( "SessionDestroy() - cID, oCGI:h_Session", cID, DumpValue( oCGI:h_Session ) )
@@ -744,14 +747,14 @@ RETURN IIF( !Empty( aSerial ), HB_Serialize( aSerial ), NIL )
 
 METHOD Decode( cData ) CLASS uhttpd_Session
   LOCAL lOk := TRUE
-  LOCAL cSerial := HB_DeserialBegin( cData )
+  LOCAL cSerial := cData
   LOCAL xVal, aElem
   //LOCAL cKey
 
   //TraceLog( "Decode - cSerial", cSerial )
   //::oCGI:ToLogFile( "Decode - cSerial = " + hb_cStr( cSerial ), "/pointtoit/tmp/log.txt" )
 
-  DO WHILE ( xVal := HB_DeserialNext( @cSerial ) ) <> NIL
+  DO WHILE ( xVal := HB_Deserialize( @cSerial ) ) <> NIL
      //TraceLog( "Decode - xVal", DumpValue( xVal ) )
      //::oCGI:ToLogFile( "Decode - xVal = " + hb_cStr( xVal ) + ", ValType( xVal ) = " + ValType( xVal ), "/pointtoit/tmp/log.txt" )
 
@@ -813,4 +816,3 @@ PROCEDURE DestroyObject() CLASS uhttpd_Session
    //::oCGI:ToLogFile( "Session destroyed" )
    //::oCGI := NIL
 RETURN
-
