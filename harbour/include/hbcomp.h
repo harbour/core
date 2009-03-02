@@ -126,7 +126,7 @@ extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 #define VT_OFFSET_OPTIONAL    90
 
 /*
- * flags for bFlags member
+ * flags for funFlags member
  */
 #define FUN_STATEMENTS        0x01  /* Function have at least one executable statement */
 #define FUN_USES_STATICS      0x02  /* Function uses static variables */
@@ -135,6 +135,7 @@ extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 #define FUN_USES_LOCAL_PARAMS 0x10  /* parameters are declared using () */
 #define FUN_WITH_RETURN       0x20  /* there was RETURN statement in previous line */
 #define FUN_EXTBLOCK          0x40  /* it's extended codeblock */
+#define FUN_FILE_DECL         0x80  /* pseudo function with file wide declarations */
 
 extern void      hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 extern PFUNCTION hb_compFunctionFind( HB_COMP_DECL, const char * szFunName ); /* locates a previously defined function */

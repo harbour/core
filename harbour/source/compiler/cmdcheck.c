@@ -492,26 +492,23 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
             case 'n':
             case 'N':
-               /*
-                  -n1 no start up procedure and no implicit start up procedure
-                */
-               if( *( s + 1 ) == '1' )
+               HB_COMP_PARAM->fNoStartUp = s[ 1 ] == '1';
+               switch( s[ 1 ] )
                {
-                  HB_COMP_PARAM->fStartProc = FALSE;
-                  HB_COMP_PARAM->fNoStartUp = TRUE;
+                  case '-':
+                     HB_COMP_PARAM->iStartProc = 0;
+                     break;
+                  case '\0':
+                  case '0':
+                  case '1':
+                     HB_COMP_PARAM->iStartProc = 1;
+                     break;
+                  case '2':
+                     HB_COMP_PARAM->iStartProc = 2;
+                     break;
+                  default:
+                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                }
-               /*
-                  -n or -n0 no implicit start up procedure
-                */
-               else if( ( *( s + 1 ) == '0' ) || ( *( s + 1 ) == '\0' ) )
-                  HB_COMP_PARAM->fStartProc = FALSE;
-               /*
-                  -n- creates implicit start up procedure
-                */
-               else if( *( s + 1 ) == '-' )
-                  HB_COMP_PARAM->fStartProc = TRUE;
-               else
-                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                break;
 
             case 'o':

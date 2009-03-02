@@ -86,6 +86,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
            "\n          %cn[<type>]       no implicit starting procedure",
            "\n                           <type>: 0=no implicit starting procedure",
            "\n                                   1=no starting procedure at all",
+           "\n                                   2=add starting procedure if necessary",
            "\n          %co<path>         object file drive and/or path",
            "\n          %cp[<path>]       generate pre-processed output (.ppo) file",
            "\n          %cp+              generate pre-processor trace (.ppt) file",

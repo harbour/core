@@ -151,7 +151,10 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
 
          case 'n':
          case 'N':
-            HB_COMP_PARAM->fStartProc = iValue != 0;
+            if( iValue >= 0 && iValue <= 2 )
+               HB_COMP_PARAM->iStartProc = iValue;
+            else
+               fError = TRUE;
             break;
 
          case 'p':

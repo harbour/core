@@ -39,7 +39,7 @@
 static PFUNCTION hb_compFirstFunc( HB_COMP_DECL )
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
-   if( ! HB_COMP_PARAM->fStartProc )
+   if( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 )
       pFunc = pFunc->pNext;
    return pFunc;
 }

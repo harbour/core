@@ -220,7 +220,6 @@ HB_COMP_PTR hb_comp_new( void )
 
       pComp->fLongOptimize    = TRUE;
       pComp->fPPO             = FALSE;    /* flag indicating, is ppo output needed */
-      pComp->fStartProc       = TRUE;     /* holds if we need to create the starting procedure */
       pComp->fLineNumbers     = TRUE;     /* holds if we need pcodes with line numbers */
       pComp->fAnyWarning      = FALSE;    /* holds if there was any warning during the compilation process */
       pComp->fAutoMemvarAssume= FALSE;    /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
@@ -234,7 +233,9 @@ HB_COMP_PTR hb_comp_new( void )
       pComp->fAutoOpen        = TRUE;
       pComp->fError           = FALSE;
 
-      pComp->iWarnings  = 0;                    /* enable parse warnings */
+      pComp->iStartProc       = 0;        /* no implicit starting procedure */
+      pComp->iWarnings        = 0;        /* enable parse warnings */
+
       pComp->iGenCOutput= HB_COMPGENC_COMPACT;  /* C code generation default mode */
       pComp->iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
       pComp->iLanguage  = HB_LANG_C;            /* default Harbour generated output language */

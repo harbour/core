@@ -96,7 +96,14 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       hb_xfree( szHrb );
    }
 
-   if( HB_COMP_PARAM->iFunctionCnt )
+   pFunc = HB_COMP_PARAM->functions.pFirst;
+   while( pFunc &&
+          ( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 ||
+            pFunc == HB_COMP_PARAM->pInitFunc ||
+            pFunc == HB_COMP_PARAM->pLineFunc ) )
+      pFunc = pFunc->pNext;
+
+   if( pFunc )
    {
       fprintf( yyc, "#include \"hbvmpub.h\"\n" );
       if( HB_COMP_PARAM->iGenCOutput != HB_COMPGENC_COMPACT )
@@ -110,8 +117,8 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
       /* write functions prototypes for PRG defined functions */
       pFunc = HB_COMP_PARAM->functions.pFirst;
-      if( ! HB_COMP_PARAM->fStartProc )
-         pFunc = pFunc->pNext; /* No implicit starting procedure */
+      if( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 )
+         pFunc = pFunc->pNext;
 
       while( pFunc )
       {
@@ -258,8 +265,8 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       /* Generate functions data
        */
       pFunc = HB_COMP_PARAM->functions.pFirst;
-      if( ! HB_COMP_PARAM->fStartProc )
-         pFunc = pFunc->pNext; /* No implicit starting procedure */
+      if( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 )
+         pFunc = pFunc->pNext;
 
       while( pFunc )
       {

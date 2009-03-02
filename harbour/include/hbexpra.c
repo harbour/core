@@ -60,7 +60,7 @@
 ULONG hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pEval )
 {
    ULONG ulLen = 0;
-  
+
    if( pEval && ((pExpr->ExprType == HB_ET_LIST) || (pExpr->ExprType == HB_ET_ARGLIST)) )
    {
       pExpr = pExpr->value.asList.pExprList;
@@ -79,8 +79,8 @@ ULONG hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2
    ULONG ulLen = 0;
 
    if( !pEval )
-      return ulLen;  
-      
+      return ulLen;
+
    if( (pExpr1->ExprType == HB_ET_LIST || pExpr1->ExprType == HB_ET_ARGLIST) 
        && 
        (pExpr2->ExprType == HB_ET_LIST || pExpr2->ExprType == HB_ET_ARGLIST) )

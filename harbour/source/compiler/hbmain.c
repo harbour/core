@@ -382,12 +382,12 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
    PVAR pVar;
    BOOL bFreeVar = TRUE;
 
-   if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 &&
+   if( ( HB_COMP_PARAM->functions.pLast->funFlags & FUN_FILE_DECL ) != 0 &&
        ( HB_COMP_PARAM->iVarScope == VS_LOCAL ||
          HB_COMP_PARAM->iVarScope == ( VS_PRIVATE | VS_PARAMETER ) ) )
    {
       /* Variable declaration is outside of function/procedure body.
-         In this case only STATIC and PARAMETERS variables are allowed. */
+         In this case only STATICs, MEMVARs and FIELDs declarations are allowed. */
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
       return;
    }
@@ -395,7 +395,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
    /* check if we are declaring local/static variable after some
     * executable statements
     */
-   if( pFunc->bFlags & FUN_STATEMENTS )
+   if( pFunc->funFlags & FUN_STATEMENTS )
    {
       const char * szVarScope;
       switch( HB_COMP_PARAM->iVarScope )
@@ -436,7 +436,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
              HB_COMP_PARAM->iVarScope == VS_PUBLIC ) )
          hb_compCheckDuplVars( HB_COMP_PARAM, pFunc->pMemvars, szVarName );
    }
-   else if( pFunc->bFlags & FUN_EXTBLOCK )
+   else if( pFunc->funFlags & FUN_EXTBLOCK )
    {
       /* variable defined in an extended codeblock */
       hb_compCheckDuplVars( HB_COMP_PARAM, pFunc->pFields, szVarName );
@@ -573,7 +573,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
             if( HB_COMP_PARAM->iVarScope == VS_PARAMETER )
             {
                ++pFunc->wParamCount;
-               pFunc->bFlags |= FUN_USES_LOCAL_PARAMS;
+               pFunc->funFlags |= FUN_USES_LOCAL_PARAMS;
             }
             if( HB_COMP_PARAM->fDebugInfo )
             {
@@ -585,6 +585,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
          case VS_TH_STATIC:
             pVar->uiFlags = VS_THREAD;
          case VS_STATIC:
+            ++HB_COMP_PARAM->iStaticCnt;
             hb_compVarListAdd( &pFunc->pStatics, pVar );
             break;
 
@@ -694,8 +695,8 @@ PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int
 
    /* check current function/codeblock variables */
    pFunc = HB_COMP_PARAM->functions.pLast;
-   pGlobal = ( HB_COMP_PARAM->fStartProc ||
-               HB_COMP_PARAM->functions.pFirst == pFunc )
+   pGlobal = ( HB_COMP_PARAM->functions.pFirst == pFunc ||
+               !( HB_COMP_PARAM->functions.pFirst->funFlags & FUN_FILE_DECL ) )
              ? NULL : HB_COMP_PARAM->functions.pFirst;
 
    while( pFunc )
@@ -805,7 +806,7 @@ PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int
                hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OUTER_VAR, szVarName, NULL );
             }
          }
-         else if( pFunc->bFlags & FUN_EXTBLOCK )
+         else if( pFunc->funFlags & FUN_EXTBLOCK )
          {  /* extended codeblock */
             /* check static variables */
             pVar = hb_compVariableGet( pFunc->pStatics, szVarName, piPos );
@@ -860,7 +861,7 @@ const char * hb_compLocalVariableName( PFUNCTION pFunc, USHORT wVar )
 {
    PVAR pVar;
 
-   if( pFunc->wParamCount && !( pFunc->bFlags & FUN_USES_LOCAL_PARAMS ) )
+   if( pFunc->wParamCount && !( pFunc->funFlags & FUN_USES_LOCAL_PARAMS ) )
       wVar -= pFunc->wParamCount;
    pVar = hb_compVariableGetVar( pFunc->pLocals, wVar );
 
@@ -1555,7 +1556,7 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
       if( pFunc->pCode[ 0 ] == HB_P_STATICS &&
           pFunc->pCode[ 5 ] == HB_P_SFRAME )
       {
-         hb_compSymbolFind( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc->szName, &w, HB_SYM_FUNCNAME );
+         hb_compSymbolFind( HB_COMP_PARAM, pFunc->szName, &w, HB_SYM_FUNCNAME );
          pFunc->pCode[ 1 ] = HB_LOBYTE( w );
          pFunc->pCode[ 2 ] = HB_HIBYTE( w );
          pFunc->pCode[ 6 ] = HB_LOBYTE( w );
@@ -1566,7 +1567,7 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
 
          /* NOTE: For some reason this will not work for the static init
             function, so I'm using an ugly hack instead. [vszakats] */
-/*       if( !( pFunc->bFlags & FUN_USES_STATICS ) ) */
+/*       if( !( pFunc->funFlags & FUN_USES_STATICS ) ) */
          if( pFunc->pCode[ 8 ] == HB_P_ENDPROC )
          {
             pFunc->lPCodePos -= 3;
@@ -1608,7 +1609,7 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
          iLocals++;
       }
 
-      if( pFunc->bFlags & FUN_USES_STATICS )
+      if( pFunc->funFlags & FUN_USES_STATICS )
       {
          hb_compSymbolFind( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc->szName, &w, HB_SYM_FUNCNAME );
          pFunc->pCode[ 4 ] = HB_LOBYTE( w );
@@ -1623,7 +1624,7 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
          /* Parameters declared with PARAMETERS statement are not
           * placed in the local variable list.
           */
-         if( pFunc->bFlags & FUN_USES_LOCAL_PARAMS )
+         if( pFunc->funFlags & FUN_USES_LOCAL_PARAMS )
             iLocals -= pFunc->wParamCount;
 
          if( iLocals > 255 )
@@ -1681,13 +1682,22 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
    }
 }
 
+static void hb_compWarnUnusedVar( HB_COMP_DECL, const char * szFuncName,
+                                  const char * szVarName, int iDeclLine )
+{
+   char szFun[ HB_SYMBOL_NAME_LEN + 17 ];
+   hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", szFuncName, iDeclLine );
+   hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W',
+                      HB_COMP_WARN_VAR_NOT_USED, szVarName, szFun );
+}
+
 static void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined function returns jumps offsets */
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
 
    if( pFunc )
    {
-      if( ( pFunc->bFlags & FUN_WITH_RETURN ) == 0 )
+      if( ( pFunc->funFlags & FUN_WITH_RETURN ) == 0 )
       {
          /* The last statement in a function/procedure was not a RETURN
           * Generate end-of-procedure pcode
@@ -1704,45 +1714,38 @@ static void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined fu
 
       if( HB_COMP_PARAM->iWarnings )
       {
-         PVAR pVar;
-
-         pVar = pFunc->pLocals;
-         while( pVar )
+         if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
          {
-            if( pVar->szName && pFunc->szName && pFunc->szName[0] && (! ( pVar->iUsed & VU_USED )) )
+            PVAR pVar;
+
+            pVar = pFunc->pLocals;
+            while( pVar )
             {
-               char szFun[ 256 ];
-               hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, pVar->iDeclLine );
-               hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
+               if( pVar->szName && ( pVar->iUsed & VU_USED ) == 0 )
+                  hb_compWarnUnusedVar( HB_COMP_PARAM, pFunc->szName, pVar->szName, pVar->iDeclLine );
+               pVar = pVar->pNext;
             }
 
-            pVar = pVar->pNext;
-         }
-
-         pVar = pFunc->pStatics;
-         while( pVar )
-         {
-            if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! ( pVar->iUsed & VU_USED ) )
+            pVar = pFunc->pStatics;
+            while( pVar )
             {
-               char szFun[ 256 ];
-               hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, pVar->iDeclLine );
-               hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
+               if( pVar->szName && ( pVar->iUsed & VU_USED ) == 0 )
+                  hb_compWarnUnusedVar( HB_COMP_PARAM, pFunc->szName, pVar->szName, pVar->iDeclLine );
+               pVar = pVar->pNext;
             }
-
-            pVar = pVar->pNext;
          }
 
          /* Check if the function returned some value
           */
-         if( (pFunc->bFlags & FUN_WITH_RETURN) == 0 &&
-             (pFunc->bFlags & FUN_PROCEDURE) == 0 )
+         if( (pFunc->funFlags & FUN_WITH_RETURN) == 0 &&
+             (pFunc->funFlags & FUN_PROCEDURE) == 0 )
             hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
                                pFunc->szName, NULL );
       }
 
       if( !pFunc->bError )
       {
-         if( pFunc->wParamCount && !( pFunc->bFlags & FUN_USES_LOCAL_PARAMS ) )
+         if( pFunc->wParamCount && ( pFunc->funFlags & FUN_USES_LOCAL_PARAMS ) == 0 )
          {
             /* There was a PARAMETERS statement used.
              * NOTE: This fixes local variables references in a case when
@@ -1956,6 +1959,43 @@ static void hb_compAddFunc( HB_COMP_DECL, PFUNCTION pFunc )
    HB_COMP_PARAM->functions.iCount++;
 }
 
+static BOOL hb_compRegisterFunc( HB_COMP_DECL, const char * szFunName,
+                                 HB_SYMBOLSCOPE cScope, BOOL fError )
+{
+   PFUNCTION pFunc = hb_compFunctionFind( HB_COMP_PARAM, szFunName );
+
+   if( pFunc )
+   {
+      /* The name of a function/procedure is already defined */
+      if( fError )
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_FUNC_DUPL, szFunName, NULL );
+   }
+   else
+   {
+      const char * szFunction = hb_compReservedName( szFunName );
+      if( szFunction )
+      {
+         if( fError )
+            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, szFunName );
+      }
+      else
+      {
+         PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
+         if( ! pSym )
+         {
+            /* there is not a symbol on the symbol table for this function name */
+            pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
+         }
+         if( pSym )
+         {
+            pSym->cScope |= cScope | HB_FS_LOCAL;
+            return TRUE;
+         }
+      }
+   }
+   return FALSE;
+}
+
 /*
  * Stores a Clipper defined function/procedure
  * szFunName - name of a function
@@ -1964,9 +2004,7 @@ static void hb_compAddFunc( HB_COMP_DECL, PFUNCTION pFunc )
  */
 void hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
 {
-   PCOMSYMBOL   pSym;
    PFUNCTION pFunc;
-   const char * szFunction;
 
    hb_compFinalizeFunction( HB_COMP_PARAM );    /* fix all previous function returns offsets */
 
@@ -1983,37 +2021,12 @@ void hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cS
       szNewName[ iLen + 1 ] = '\0';
       szFunName = hb_compIdentifierNew( HB_COMP_PARAM, szNewName, HB_IDENT_COPY );
    }
-   pFunc = hb_compFunctionFind( HB_COMP_PARAM, szFunName );
-   if( pFunc )
-   {
-      /* The name of a function/procedure is already defined */
-      if( pFunc != HB_COMP_PARAM->functions.pFirst || HB_COMP_PARAM->fStartProc )
-         /* it is not a starting procedure that was automatically created */
-         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_FUNC_DUPL, szFunName, NULL );
-   }
 
-   szFunction = hb_compReservedName( szFunName );
-   if( szFunction && !( HB_COMP_PARAM->functions.iCount == 0 && !HB_COMP_PARAM->fStartProc ) )
-   {
-      /* We are ignoring it when it is the name of PRG file and we are
-       * not creating implicit starting procedure
-       */
-      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, szFunName );
-   }
-
-   HB_COMP_PARAM->iFunctionCnt++;
-
-   pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
-   if( ! pSym )
-   {
-      /* there is not a symbol on the symbol table for this function name */
-      pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
-   }
-   if( pSym )
-      pSym->cScope |= cScope | HB_FS_LOCAL;
+   if( ( iType & FUN_FILE_DECL ) == 0 )
+      hb_compRegisterFunc( HB_COMP_PARAM, szFunName, cScope, TRUE );
 
    pFunc = hb_compFunctionNew( HB_COMP_PARAM, szFunName, cScope );
-   pFunc->bFlags |= iType;
+   pFunc->funFlags |= iType;
 
    hb_compAddFunc( HB_COMP_PARAM, pFunc );
 
@@ -2032,7 +2045,7 @@ void hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cS
 PINLINE hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine )
 {
    PINLINE pInline;
-   PCOMSYMBOL   pSym;
+   PCOMSYMBOL pSym;
 
    if( szFunName )
    {
@@ -2089,10 +2102,9 @@ void hb_compAnnounce( HB_COMP_DECL, const char * szFunName )
       pSym->cScope = HB_FS_PUBLIC | HB_FS_LOCAL;
 
       pFunc = hb_compFunctionNew( HB_COMP_PARAM, szFunName, pSym->cScope );
-      pFunc->bFlags |= FUN_PROCEDURE;
+      pFunc->funFlags |= FUN_PROCEDURE;
 
       hb_compAddFunc( HB_COMP_PARAM, pFunc );
-      HB_COMP_PARAM->iFunctionCnt++;
 
       /* this function have a very limited functionality
        */
@@ -2160,7 +2172,8 @@ PFUNCTION hb_compFunctionFind( HB_COMP_DECL, const char * szFunctionName ) /* re
 
    while( pFunc )
    {
-      if( ! strcmp( pFunc->szName, szFunctionName ) )
+      if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 &&
+          ! strcmp( pFunc->szName, szFunctionName ) )
          break;
       pFunc = pFunc->pNext;
    }
@@ -2297,12 +2310,12 @@ void hb_compLinePush( HB_COMP_DECL ) /* generates the pcode with the currently c
       }
    }
 
-   if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_BREAK_CODE )
+   if( HB_COMP_PARAM->functions.pLast->funFlags & FUN_BREAK_CODE )
    {
       /* previous line contained RETURN/BREAK/LOOP/EXIT statement */
       hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_UNREACHABLE, NULL, NULL );
       /* clear RETURN/BREAK flag */
-      HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE );
+      HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE );
    }
 }
 
@@ -2311,16 +2324,20 @@ void hb_compLinePush( HB_COMP_DECL ) /* generates the pcode with the currently c
  */
 void hb_compStatmentStart( HB_COMP_DECL )
 {
-   if( ( HB_COMP_PARAM->functions.pLast->bFlags & FUN_STATEMENTS ) == 0 )
+   if( ( HB_COMP_PARAM->functions.pLast->funFlags & FUN_STATEMENTS ) == 0 )
    {
-      if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 &&
-          HB_COMP_PARAM->functions.pLast != HB_COMP_PARAM->pInitFunc &&
-          HB_COMP_PARAM->functions.pLast->szName )
+      PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+
+      if( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 )
       {
-         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
-         return;
+         if( HB_COMP_PARAM->iStartProc == 2 &&
+             HB_COMP_PARAM->functions.iCount == 1 && pFunc->szName[0] &&
+             hb_compRegisterFunc( HB_COMP_PARAM, pFunc->szName, pFunc->cScope, FALSE ) )
+            pFunc->funFlags &= ~FUN_FILE_DECL;
+         else
+            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
       }
-      HB_COMP_PARAM->functions.pLast->bFlags |= FUN_STATEMENTS;
+      pFunc->funFlags |= FUN_STATEMENTS;
    }
 }
 
@@ -2341,12 +2358,12 @@ void hb_compLinePushIfDebugger( HB_COMP_DECL )
       hb_compLinePush( HB_COMP_PARAM );
    else
    {
-      if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_BREAK_CODE )
+      if( HB_COMP_PARAM->functions.pLast->funFlags & FUN_BREAK_CODE )
       {
          /* previous line contained RETURN/BREAK/LOOP/EXIT statement */
          hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_UNREACHABLE, NULL, NULL );
       }
-      HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE );  /* clear RETURN flag */
+      HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE );  /* clear RETURN flag */
    }
 }
 
@@ -2374,7 +2391,7 @@ void hb_compGenStaticName( const char *szVarName, HB_COMP_DECL )
       PFUNCTION pFunc;
       int iVar;
 
-      if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 )
+      if( ( HB_COMP_PARAM->functions.pLast->funFlags & FUN_FILE_DECL ) != 0 )
       {
          /* Variable declaration is outside of function/procedure body.
             File-wide static variable
@@ -2565,7 +2582,7 @@ void hb_compGenPopVar( const char * szVarName, HB_COMP_DECL ) /* generates the p
              * use 2 bytes for LOCALNEAR
              */
             if( HB_LIM_INT8( iVar ) && !HB_COMP_PARAM->functions.pLast->szName &&
-                !( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
+                !( HB_COMP_PARAM->functions.pLast->funFlags & FUN_EXTBLOCK ) )
                hb_compGenPCode2( HB_P_POPLOCALNEAR, ( BYTE ) iVar, HB_COMP_PARAM );
             else
                hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), HB_COMP_PARAM );
@@ -2584,7 +2601,7 @@ void hb_compGenPopVar( const char * szVarName, HB_COMP_DECL ) /* generates the p
                pFunc = HB_COMP_PARAM->functions.pLast;
                if( ( HB_COMP_PARAM->functions.pLast->cScope & HB_FS_INITEXIT ) == HB_FS_INITEXIT )
                   pFunc = pFunc->pOwner;
-               pFunc->bFlags |= FUN_USES_STATICS;
+               pFunc->funFlags |= FUN_USES_STATICS;
             }
             break;
 
@@ -2649,7 +2666,7 @@ void hb_compGenPushVar( const char * szVarName, BOOL bMacroVar, HB_COMP_DECL )
              * use 2 bytes for LOCALNEAR
              */
             if( HB_LIM_INT8( iVar ) && !HB_COMP_PARAM->functions.pLast->szName &&
-                !( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
+                !( HB_COMP_PARAM->functions.pLast->funFlags & FUN_EXTBLOCK ) )
                hb_compGenPCode2( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar, HB_COMP_PARAM );
             else
                hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), HB_COMP_PARAM );
@@ -2659,7 +2676,7 @@ void hb_compGenPushVar( const char * szVarName, BOOL bMacroVar, HB_COMP_DECL )
          case HB_VS_GLOBAL_STATIC:
             /* Static variable */
             hb_compGenPCode3( HB_P_PUSHSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), HB_COMP_PARAM );
-            HB_COMP_PARAM->functions.pLast->bFlags |= FUN_USES_STATICS;
+            HB_COMP_PARAM->functions.pLast->funFlags |= FUN_USES_STATICS;
             break;
 
          case HB_VS_LOCAL_FIELD:
@@ -2713,7 +2730,7 @@ void hb_compGenPushVarRef( const char * szVarName, HB_COMP_DECL ) /* generates t
          case HB_VS_GLOBAL_STATIC:
             /* Static variable */
             hb_compGenPCode3( HB_P_PUSHSTATICREF, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), HB_COMP_PARAM );
-            HB_COMP_PARAM->functions.pLast->bFlags |= FUN_USES_STATICS;
+            HB_COMP_PARAM->functions.pLast->funFlags |= FUN_USES_STATICS;
             break;
 
          case HB_VS_LOCAL_FIELD:
@@ -3239,14 +3256,14 @@ void hb_compSequenceFinish( HB_COMP_DECL, ULONG ulStartPos, ULONG ulEndPos,
  */
 void hb_compStaticDefStart( HB_COMP_DECL )
 {
-   HB_COMP_PARAM->functions.pLast->bFlags |= FUN_USES_STATICS;
+   HB_COMP_PARAM->functions.pLast->funFlags |= FUN_USES_STATICS;
    if( ! HB_COMP_PARAM->pInitFunc )
    {
       BYTE pBuffer[ 5 ];
 
       HB_COMP_PARAM->pInitFunc = hb_compFunctionNew( HB_COMP_PARAM, "(_INITSTATICS)", HB_FS_INITEXIT );
       HB_COMP_PARAM->pInitFunc->pOwner = HB_COMP_PARAM->functions.pLast;
-      HB_COMP_PARAM->pInitFunc->bFlags = FUN_USES_STATICS | FUN_PROCEDURE;
+      HB_COMP_PARAM->pInitFunc->funFlags = FUN_USES_STATICS | FUN_PROCEDURE;
       HB_COMP_PARAM->pInitFunc->cScope = HB_FS_INITEXIT | HB_FS_LOCAL;
       HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc;
 
@@ -3283,13 +3300,12 @@ void hb_compStaticDefEnd( HB_COMP_DECL, const char * szVarName )
 {
    HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc->pOwner;
    HB_COMP_PARAM->pInitFunc->pOwner = NULL;
-   ++HB_COMP_PARAM->iStaticCnt;
    if( HB_COMP_PARAM->fDebugInfo )
    {
       BYTE bGlobal = 0;
       int iVar;
 
-      if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 )
+      if( ( HB_COMP_PARAM->functions.pLast->funFlags & FUN_FILE_DECL ) != 0 )
       {
          /* Variable declaration is outside of function/procedure body.
           * File-wide static variable
@@ -3381,7 +3397,7 @@ static void hb_compLineNumberDefStart( HB_COMP_DECL )
    {
       HB_COMP_PARAM->pLineFunc = hb_compFunctionNew( HB_COMP_PARAM, "(_INITLINES)", HB_FS_INITEXIT );
       HB_COMP_PARAM->pLineFunc->pOwner = HB_COMP_PARAM->functions.pLast;
-      HB_COMP_PARAM->pLineFunc->bFlags = 0;
+      HB_COMP_PARAM->pLineFunc->funFlags = 0;
       HB_COMP_PARAM->pLineFunc->cScope = HB_FS_INITEXIT | HB_FS_LOCAL;
       HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pLineFunc;
 
@@ -3439,8 +3455,8 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    pCodeblock = HB_COMP_PARAM->functions.pLast;
 
    /* Check if the extended codeblock has return statement */
-   if( ( pCodeblock->bFlags & FUN_EXTBLOCK ) &&
-       !( pCodeblock->bFlags & FUN_WITH_RETURN ) )
+   if( ( pCodeblock->funFlags & FUN_EXTBLOCK ) &&
+       !( pCodeblock->funFlags & FUN_WITH_RETURN ) )
    {
       if( HB_COMP_PARAM->iWarnings >= 1 )
          hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
@@ -3453,7 +3469,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
 
    if( !pCodeblock->bError )
    {
-      if( pCodeblock->wParamCount && !( pCodeblock->bFlags & FUN_USES_LOCAL_PARAMS ) )
+      if( pCodeblock->wParamCount && !( pCodeblock->funFlags & FUN_USES_LOCAL_PARAMS ) )
          /* PARAMETERs were used after LOCALs in extended codeblock
           * fix generated local indexes
           */
@@ -3475,7 +3491,9 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
       if( pFunc->szName && *pFunc->szName )
          pFuncName = pFunc->szName;
    }
-   pFunc->bFlags |= ( pCodeblock->bFlags & FUN_USES_STATICS );
+   if( *pFuncName == 0 )
+      pFuncName = "(_INITSTATICS)";
+   pFunc->funFlags |= ( pCodeblock->funFlags & FUN_USES_STATICS );
 
    /* generate a proper codeblock frame with a codeblock size and with
     * a number of expected parameters
@@ -3558,17 +3576,38 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
       pVar = pCodeblock->pLocals;
       while( pVar )
       {
-         if( HB_COMP_PARAM->iWarnings && pFunc->szName && pVar->szName && ! ( pVar->iUsed & VU_USED ) )
-            hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
+         if( HB_COMP_PARAM->iWarnings && pVar->szName && ! ( pVar->iUsed & VU_USED ) )
+            hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_BLOCKVAR_NOT_USED, pVar->szName, pFuncName );
          pVar = pVar->pNext;
       }
       pVar = pCodeblock->pStatics;
       while( pVar )
       {
-         if( HB_COMP_PARAM->iWarnings && pFunc->szName && pVar->szName && ! ( pVar->iUsed & VU_USED ) )
-            hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, "{||...}" );
+         if( HB_COMP_PARAM->iWarnings && pVar->szName && ! ( pVar->iUsed & VU_USED ) )
+            hb_compWarnUnusedVar( HB_COMP_PARAM, "{||...}", pVar->szName, pVar->iDeclLine );
          pVar = pVar->pNext;
       }
+   }
+
+   /* move static variables to owner */
+   pVar = pFunc->pStatics;
+   if( pVar )
+   {
+      while( pVar->pNext )
+         pVar = pVar->pNext;
+      pVar->pNext = pCodeblock->pStatics;
+   }
+   else
+      pFunc->pStatics = pCodeblock->pStatics;
+   pVar = pCodeblock->pStatics;
+   pCodeblock->pStatics = NULL;
+   /* change stati variables names to avoid conflicts */
+   while( pVar )
+   {
+      char szName[ HB_SYMBOL_NAME_LEN + 4 ];
+      hb_snprintf( szName, sizeof( szName ), "%s(b)", pVar->szName );
+      pVar->szName = hb_compIdentifierNew( HB_COMP_PARAM, szName, HB_IDENT_COPY );
+      pVar = pVar->pNext;
    }
 
    hb_compFunctionKill( HB_COMP_PARAM, pCodeblock );
@@ -3651,7 +3690,6 @@ static void hb_compInitVars( HB_COMP_DECL )
    HB_COMP_PARAM->pLineFunc        = NULL;
    HB_COMP_PARAM->fAnyWarning      = FALSE;
 
-   HB_COMP_PARAM->iFunctionCnt     = 0;
    HB_COMP_PARAM->iErrorCount      = 0;
    HB_COMP_PARAM->lastLinePos      = 0;
    HB_COMP_PARAM->iStaticCnt       = 0;
@@ -3927,7 +3965,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
 
          if( iFileType == HB_COMP_MEMBUFFER )
          {
-            hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE );
+            hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE | FUN_FILE_DECL );
             hb_compparse( HB_COMP_PARAM );
          }
          else if( iFileType == HB_COMP_SINGLEFILE )
@@ -3944,18 +3982,9 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
             }
 
             /* Generate the starting procedure frame */
-            if( HB_COMP_PARAM->fStartProc )
-            {
-               hb_compFunctionAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), HB_IDENT_FREE ), HB_FS_PUBLIC, FUN_PROCEDURE );
-            }
-            else
-            {
-               /* Don't pass the name of module if the code for starting procedure
-               * will be not generated. The name cannot be placed as first symbol
-               * because this symbol can be used as function call or memvar's name.
-               */
-               hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE );
-            }
+            hb_compFunctionAdd( HB_COMP_PARAM,
+                                hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), HB_IDENT_FREE ),
+                                HB_FS_PUBLIC, FUN_PROCEDURE | ( HB_COMP_PARAM->iStartProc == 0 ? 0 : FUN_FILE_DECL ) );
 
             if( !HB_COMP_PARAM->fExit )
             {
@@ -4072,6 +4101,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
              HB_COMP_PARAM->iErrorCount == 0 )
          {
             const char * szFirstFunction = NULL;
+            int iFunctionCount = 0;
             PFUNCTION *pFunPtr;
 
             /* we create the output file name */
@@ -4079,21 +4109,20 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
 
             pFunPtr = &HB_COMP_PARAM->functions.pFirst;
             /* skip first non-startup procedure */
-            if( ! HB_COMP_PARAM->fStartProc )
+            if( (*pFunPtr)->funFlags & FUN_FILE_DECL )
             {
                hb_compOptimizeFrames( HB_COMP_PARAM, *pFunPtr );
                pFunPtr = &(*pFunPtr)->pNext;
-               HB_COMP_PARAM->iFunctionCnt--;
             }
 
             while( *pFunPtr && !HB_COMP_PARAM->fExit )
             {
-               /* remove function frames with no names */
-               if( ! HB_COMP_PARAM->fStartProc && ! (*pFunPtr)->szName[0] )
+               /* remove pseudo function frames used in automatically included
+                  files */
+               if( (*pFunPtr)->funFlags & FUN_FILE_DECL )
                {
                   *pFunPtr = hb_compFunctionKill( HB_COMP_PARAM, *pFunPtr );
                   HB_COMP_PARAM->functions.iCount--;
-                  HB_COMP_PARAM->iFunctionCnt--;
                }
                else
                {
@@ -4104,6 +4133,9 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
                   {
                      szFirstFunction = ( *pFunPtr )->szName;
                   }
+                  if( *pFunPtr != HB_COMP_PARAM->pInitFunc &&
+                      *pFunPtr != HB_COMP_PARAM->pLineFunc )
+                     ++iFunctionCount;
                   pFunPtr = &(*pFunPtr)->pNext;
                }
             }
@@ -4119,9 +4151,9 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
             if( ! HB_COMP_PARAM->fQuiet )
             {
                hb_snprintf( buffer, sizeof( buffer ),
-                         "\rLines %i, Functions/Procedures %i\n",
-                         hb_pp_lineTot( HB_COMP_PARAM->pLex->pPP ),
-                         HB_COMP_PARAM->iFunctionCnt );
+                            "\rLines %i, Functions/Procedures %i\n",
+                            hb_pp_lineTot( HB_COMP_PARAM->pLex->pPP ),
+                            iFunctionCount );
                hb_compOutStd( HB_COMP_PARAM, buffer );
             }
 
@@ -4250,10 +4282,10 @@ static int hb_compAutoOpen( HB_COMP_DECL, const char * szPrg, BOOL * pbSkipGen, 
          }
 
          /* Generate the starting procedure frame */
-         if( HB_COMP_PARAM->fStartProc )
+         if( HB_COMP_PARAM->iStartProc == 0 )
             hb_compFunctionAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), HB_IDENT_FREE ), HB_FS_PUBLIC, FUN_PROCEDURE );
          else if( iFileType != HB_COMP_SINGLEFILE )
-            hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE );
+            hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE | FUN_FILE_DECL );
 
          if( !HB_COMP_PARAM->fExit )
          {

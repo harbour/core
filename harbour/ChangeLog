@@ -8,6 +8,36 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-02 21:28 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexpra.c
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/compiler/hbdbginf.c
+  * harbour/source/compiler/genhrb.c
+  * harbour/source/compiler/hbusage.c
+    ! fixed static variables indexes in the generated PCODE when static
+      variables are declared inside extended codeblocks - in some cases
+      wrong PCODE was generated
+    ! fixed initialization PCODE for thread static variables declared
+      inside extended codeblocks
+    ! fixed modulename generated for debugger to always contain function name
+      part for extended codeblock declared as file wide static variables.
+      In such case "(_INITSTATICS)" is used as function name.
+      Without it debugger does not register entering such codeblocks and
+      GPFs.
+    + added support for automatic adding 1-st function with the same name
+      as compiled .prg file if some code statements are used before 1-st
+      function/procedure declared explicitly in .prg file. Such mode can
+      be enabled by -n2 new harbour compiler switch.
+
 2009-03-02 18:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Compiler value unknown message now shows the actual value.

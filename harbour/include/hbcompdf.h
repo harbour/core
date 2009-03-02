@@ -379,7 +379,7 @@ typedef struct __FUNC
 {
    const char * szName;                   /* name of a defined Clipper function */
    HB_SYMBOLSCOPE cScope;                 /* scope of a defined Clipper function */
-   BYTE         bFlags;                   /* some flags we may need */
+   USHORT       funFlags;                 /* some flags we may need */
    USHORT       wParamCount;              /* number of declared parameters */
    USHORT       wParamNum;                /* current parameter number */
    PVAR         pLocals;                  /* pointer to local variables list */
@@ -674,10 +674,8 @@ typedef struct _HB_COMP
    char              cDataListType;       /* current declared variable list type */
    char              cCastType;           /* current casting type */
 
-   int               iPassByRef;          /* check if it's possible to pass variable be reference, can be removed */
-
    int               iErrorCount;
-   int               iFunctionCnt;
+   BOOL              iStartProc;          /* holds if we need to create the starting procedure */
    int               iMaxTransCycles;     /* maximum translate cycles in PP (-r=<n>) */
    int               iHidden;             /* hide strings */
    int               iWarnings;           /* enable parse warnings */
@@ -693,7 +691,6 @@ typedef struct _HB_COMP
    BOOL              fExit;               /* force breaking compilation process */
    BOOL              fPPO;                /* flag indicating, is ppo output needed */
    BOOL              fPPT;                /* flag indicating, is ppt output needed */
-   BOOL              fStartProc;          /* holds if we need to create the starting procedure */
    BOOL              fLineNumbers;        /* holds if we need pcodes with line numbers */
    BOOL              fAnyWarning;         /* holds if there was any warning during the compilation process */
    BOOL              fAutoMemvarAssume;   /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/

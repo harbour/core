@@ -299,7 +299,7 @@ typedef union YYSTYPE
    struct
    {
       BOOL bMacro;
-      union 
+      union
       {
          char * string;
          HB_EXPR_PTR macro;

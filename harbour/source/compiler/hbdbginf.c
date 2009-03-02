@@ -60,7 +60,7 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
    PFUNCTION pFunc;
 
    pFunc = HB_COMP_PARAM->functions.pFirst;
-   if( ! HB_COMP_PARAM->fStartProc )
+   if( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 )
       pFunc = pFunc->pNext;
 
    while( pFunc )
