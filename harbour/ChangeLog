@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-02 23:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/Makefile
+  - contrib/hbwhat
+  + contrib/examples/hbwhat
+  * contrib/examples/hbwhat/Makefile
+    * Moved hbwhat to contrib/examples.
+
 2009-03-02 23:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     - Removed HB, HBPP envvars as cross-compilation requirements.

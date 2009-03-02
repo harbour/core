@@ -30,8 +30,6 @@ DIRS=\
 	rddado \
 	xhb \
 
-#	hbwhat \
-
 # contribs with external dependencies
 DIRS +=\
 	gtalleg \
