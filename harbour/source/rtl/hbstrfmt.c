@@ -3,7 +3,7 @@
  */
 
 /*
- * HB_STRFORMAT()/hb_StrFormat() functions.
+ * HB_STRFORMAT()/hb_strFormat() functions.
  *
  * Copyright 2008 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://www.harbour-project.org
@@ -72,7 +72,7 @@ static void bufadd( BUFFERTYPE * pBuf, char * pAdd, ULONG ulLen )
    pBuf->pData[ pBuf->ulLen ] = '\0';
 }
 
-PHB_ITEM hb_StrFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, PHB_ITEM * pItemArray )
+PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, PHB_ITEM * pItemArray )
 {
    BUFFERTYPE  buffer;
    PHB_ITEM    pItem;
@@ -469,7 +469,7 @@ HB_FUNC( HB_STRFORMAT )
             pItemArray[ i - 1 ] = hb_param( i + 1, HB_IT_ANY );
       }
 
-      hb_itemReturnRelease( hb_StrFormat( NULL, pFormat, iParams - 1, pItemArray ) );
+      hb_itemReturnRelease( hb_strFormat( NULL, pFormat, iParams - 1, pItemArray ) );
 
       if( iParams > 1 )
          hb_xfree( pItemArray );

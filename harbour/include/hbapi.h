@@ -866,6 +866,7 @@ extern HB_EXPORT double    hb_numRound( double dResult, int iDec ); /* round a n
 extern HB_EXPORT double    hb_numInt( double dNum ); /* take the integer part of the number */
 extern HB_EXPORT double    hb_numDecConv( double dNum, int iDec );
 
+extern HB_EXPORT PHB_ITEM  hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, PHB_ITEM * pItemArray );
 
 /* architecture dependent number conversions */
 extern HB_EXPORT void      hb_put_ieee754( BYTE * ptr, double d );
