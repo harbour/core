@@ -44,12 +44,12 @@ clean:
 
 	-bash make_gnu.sh clean
 
-	dh_clean 
+	dh_clean
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
+	dh_clean -k
 	dh_installdirs
 
 	bash make_gnu.sh install
@@ -70,7 +70,7 @@ binary-arch: build install
 	dh_installdocs
 	dh_installexamples
 #	dh_install
-	dh_installman doc/man/harbour.1 doc/man/hbdoc.1 doc/man/hbmake.1 doc/man/hbpp.1 doc/man/hbrun.1 doc/man/hbtest.1
+	dh_installman doc/man/harbour.1 doc/man/hbdoc.1 doc/man/hbmk.1 doc/man/hbpp.1 doc/man/hbrun.1 doc/man/hbtest.1
 	dh_link
 	dh_strip
 	dh_compress

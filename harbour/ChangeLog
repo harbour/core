@@ -8,6 +8,23 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-02 23:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * debian/rules
+  + doc/man/hbmk.1
+  - doc/man/hbmake.1
+    - Removed hbmake doc.
+    + Added hbmk doc. (bare one)
+
+  - doc/genhtm.rsp
+  - doc/genhtm.lnk
+  - doc/genhtm.bat
+  - doc/genhtm.sh
+  + doc/en/genhtm.lnk
+  + doc/en/genhtm.sh
+  + doc/en/genhtm.rsp
+  + doc/en/genhtm.bat
+    * Moved.
+
 2009-03-02 23:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/Makefile
   - contrib/hbwhat

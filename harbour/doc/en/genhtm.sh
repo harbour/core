@@ -3,7 +3,7 @@
 # $Id$
 #
 
-../bin/hbdoc -htm genhtm.lnk genhtm.rsp
+../../bin/hbdoc -htm genhtm.lnk genhtm.rsp
 cd htm
 #
 echo "renaming harbour.htm to index.htm"

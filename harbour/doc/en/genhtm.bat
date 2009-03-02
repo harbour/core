@@ -1,8 +1,8 @@
 @echo off
-rem 
+rem
 rem $Id$
-rem 
+rem
 
-..\bin\hbdoc -htm genhtm.lnk genhtm.rsp
+..\..\bin\hbdoc -htm genhtm.lnk genhtm.rsp
 cd htm
 ren harbour.htm index.htm
