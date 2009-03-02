@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-02 23:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    - Removed HB, HBPP envvars as cross-compilation requirements.
+
+  * make_gnu_os2.cmd
+    + Now honors HB_USER_MAKEFLAGS setting.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added -n2 Harbour switch as default.
+    ; TODO: If this works out well, we can remove explicit
+            -n switches from .hbm files.
+
+  * config/win/bcc.cf
+    + Suppressing some OS commands to not pollute output.
+
 2009-03-02 21:28 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcomp.h
   * harbour/include/hbcompdf.h

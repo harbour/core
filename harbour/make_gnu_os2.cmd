@@ -49,4 +49,4 @@ if "%HB_OS2_TCP32%" == "YES" goto tcp32
    set HB_USER_CFLAGS=-DTCPV40HDRS %HB_USER_CFLAGS%
 :tcp32
 
-make %1 %2 %3 %4 %5 %6 %7 %8 %9
+make %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9

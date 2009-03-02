@@ -882,6 +882,7 @@ FUNCTION Main( ... )
 
 #if defined( HBMK_INTEGRATED_COMPILER )
       aCommand := ArrayAJoin( { s_aPRG,;
+                                { "-n2" },;
                                 { "-i" + s_cHB_INC_INSTALL },;
                                 ListToArray( cSelfFlagPRG ),;
                                 ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
@@ -899,7 +900,7 @@ FUNCTION Main( ... )
 #else
       cCommand := DirAddPathSep( s_cHB_BIN_INSTALL ) +;
                   cBin_CompPRG +;
-                  " " + ArrayToList( s_aPRG ) +;
+                  " -n2 " + ArrayToList( s_aPRG ) +;
                   " -i" + s_cHB_INC_INSTALL +;
                   iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
                   iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;

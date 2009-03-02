@@ -223,8 +223,6 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    --------------
    HB_BIN_COMPILE=<HARBOUR_NATIVE_BUILD_DIR>\bin
    HB_PPGEN_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin
-   HB=<HARBOUR_NATIVE_BUILD_DIR>\bin\harbour[.exe]
-   HBPP=<HARBOUR_NATIVE_BUILD_DIR>\bin\hbpp[.exe]
 
    You need these when building for a platform different to host.
    For this to work, you will need to point above envvars to
