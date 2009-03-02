@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-02 08:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    * Updates.
+
+  * source/vm/Makefile
+    - Removed sensing HB_MT value and building pure MT version
+      of Harbour. This is to avoid yet another unnecessary
+      variation of Harbour builds. For MT, just simply hbvmmt lib
+      should be linked.
+
 2009-03-01 23:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + contrib/xhb/regexrpl.prg
     + Added HB_REGEXREPLACE() from xhb. Work of Francesco.

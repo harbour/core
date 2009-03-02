@@ -86,14 +86,9 @@ LIBNAME=hbvm
 
 DIRS+= fm
 
-ifeq ($(HB_MT),)
-   HB_MT=MT
-   HB_USER_CFLAGS:=$(subst -DHB_MT_VM,,$(HB_USER_CFLAGS))
-endif
-ifeq ($(HB_MT),MT)
+HB_USER_CFLAGS:=$(subst -DHB_MT_VM,,$(HB_USER_CFLAGS))
 ifneq ($(HB_ARCHITECTURE),dos)
    DIRS+= vmmt fmmt
-endif
 endif
 
 include $(TOP)$(ROOT)config/lib.cf
