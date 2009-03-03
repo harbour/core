@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-03 22:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/speedtst.prg
+    * updated to work with CA-Cl*pper
+
 2009-03-03 20:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     + Extended 'HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD'
