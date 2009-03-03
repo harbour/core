@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-03 19:34 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/dir.cf
+    * disabled parallel execution rules for make 3.79.1
+
 2009-03-03 16:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/Makefile
     ! fixed compilation with C compilers which does not support MT mode

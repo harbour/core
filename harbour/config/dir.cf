@@ -6,7 +6,10 @@ ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
 include $(TOP)$(ROOT)config/global.cf
-#include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dir.cf
+# this make version does not work correctly parallel execution rules below
+ifeq ($(MAKE_VERSION),3.79.1)
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dir.cf
+endif
 
 ifeq ($(DIR_RULE),)
 
