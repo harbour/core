@@ -105,7 +105,7 @@ optimized.
 #if defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || defined( _MSC_VER )
 #  include <float.h>
 #elif defined(__DJGPP__)
-   _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
+   /* _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_; */
 #elif defined( HB_OS_SUNOS )
 #  include <ieeefp.h>    /* for finite() */
 #endif

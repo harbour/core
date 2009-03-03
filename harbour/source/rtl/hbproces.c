@@ -240,9 +240,14 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
       memset( &pi, 0, sizeof( pi ) );
       memset( &si, 0, sizeof( si ) );
       si.cb = sizeof( si );
+#ifdef STARTF_USESTDHANDLES
+      si.dwFlags = STARTF_USESTDHANDLES;
+#endif
       if( fDetach )
       {
-         si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+#ifdef STARTF_USESHOWWINDOW
+         si.dwFlags |= STARTF_USESHOWWINDOW;
+#endif
          si.wShowWindow = SW_HIDE;
          si.hStdInput  = hPipes[ 0 ];
          si.hStdOutput = hPipes[ 3 ];
@@ -253,8 +258,6 @@ HB_FHANDLE hb_fsProcessOpen( const char *pszFilename,
       }
       else
       {
-         si.dwFlags = STARTF_USESTDHANDLES;
-
          si.hStdInput  = phStdin  ? hPipes[ 0 ] : GetStdHandle( STD_INPUT_HANDLE );
          si.hStdOutput = phStdout ? hPipes[ 3 ] : GetStdHandle( STD_OUTPUT_HANDLE );
          si.hStdError  = phStderr ? hPipes[ 5 ] : GetStdHandle( STD_ERROR_HANDLE );

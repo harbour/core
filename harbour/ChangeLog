@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-03 19:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbproces.c
+    * check if some define constants exists before use - it should
+      fix compilation in some WinCE builds, f.e. with MSVC
+
+  * harbour/source/common/hbprintf.c
+    * disabled _LIB_VERSION setting in DJGPP builds - if we need it
+      for some reasons then it should be done in different which does
+      not create multiple instances of this variable
+
 2009-03-03 19:34 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/dir.cf
     * disabled parallel execution rules for make 3.79.1
