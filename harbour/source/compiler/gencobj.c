@@ -29,6 +29,8 @@
 #include "hbcomp.h"
 #include "hb_io.h"
 
+#ifdef HB_LEGACY_LEVEL2
+
 #define HB_CFG_FILENAME    "harbour.cfg"
 
 /* QUESTION: Allocate buffer dynamically ? */
@@ -336,3 +338,5 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 
    hb_xfree( ( void * ) pszCfgFileName );
 }
+
+#endif

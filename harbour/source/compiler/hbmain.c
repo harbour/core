@@ -3724,9 +3724,11 @@ static void hb_compGenOutput( HB_COMP_DECL, int iLanguage )
          hb_compGenBufPortObj( HB_COMP_PARAM, &HB_COMP_PARAM->pOutBuf, &HB_COMP_PARAM->ulOutBufSize );
          break;
 
+#ifdef HB_LEGACY_LEVEL2
       case HB_LANG_OBJ_MODULE:
          hb_compGenCObj( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
          break;
+#endif
    }
 }
 

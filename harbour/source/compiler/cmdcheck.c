@@ -284,6 +284,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                      }
                      break;
 
+#ifdef HB_LEGACY_LEVEL2
                   case 'o':
                   case 'O':
                      HB_COMP_PARAM->iLanguage = HB_LANG_OBJ_MODULE;
@@ -311,6 +312,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                      }
                      break;
+#endif
 
                   case 'h':
                   case 'H':

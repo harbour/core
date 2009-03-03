@@ -73,7 +73,10 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
            "\n          %cgc[<type>]      output type: C source (.c) (default)",
            "\n                           <type>: 0=compact (default) 1=normal 2=verbose",
            "\n                                   3=generate real C code",
+#ifdef HB_LEGACY_LEVEL2
            "\n          %cgo              output type: Platform dependant object module",
+           "\n                           Deprecated. Please use hbmk2",
+#endif
 #ifdef HB_GEN_OBJ32
            "\n          %cgw              output type: Windows/DOS OBJ32 (.obj)",
 #endif

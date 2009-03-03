@@ -1535,7 +1535,7 @@ FUNCTION Main( ... )
 
       /* Do entry function detection on platform required and supported */
       IF s_cMAIN == NIL
-         tmp := iif( Lower( FN_ExtGet( s_cFIRST ) ) == ".prg", FN_ExtSet( s_cFIRST, ".c" ), s_cFIRST )
+         tmp := iif( Lower( FN_ExtGet( s_cFIRST ) ) == ".prg" .OR. Empty( FN_ExtGet( s_cFIRST ) ), FN_ExtSet( s_cFIRST, ".c" ), s_cFIRST )
          IF ! Empty( tmp := getFirstFunc( tmp ) )
             s_cMAIN := tmp
          ENDIF

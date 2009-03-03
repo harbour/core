@@ -2,4 +2,4 @@
 @rem $Id$
 @rem
 
-@"%~dp0hbmk2.exe" -n %*
+@"%~dp0hbmk2.exe" %*

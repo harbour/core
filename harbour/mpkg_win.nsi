@@ -29,14 +29,9 @@ CRCCheck on
 Name "Harbour Project"
 
 ; The file to write
-OutFile "harbour-setup.exe"
+OutFile "harbour-$%HB_VERSION%-$%HB_ARCHITECTURE%-$%HB_COMPILER%.exe"
 
-InstallDir C:\harbour
-
-Var HB_BIN_INSTALL
-Var HB_LIB_INSTALL
-Var HB_INC_INSTALL
-Var HB_DOC_INSTALL
+InstallDir C:\harbour-$%HB_COMPILER%
 
 ;--------------------------------
 ;Interface Settings
@@ -66,7 +61,7 @@ Var HB_DOC_INSTALL
 ;--------------------------------
 ;License Language String
 
-LicenseLangString MUILicense ${LANG_ENGLISH} "doc\license.txt"
+LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_DOC_INSTALL%\license.txt"
 
 ;--------------------------------
 ; The stuff to install
@@ -75,26 +70,21 @@ Section "Main components" hb_main
 
   SectionIn RO
 
-  ReadEnvStr $HB_BIN_INSTALL HB_BIN_INSTALL
-  ReadEnvStr $HB_LIB_INSTALL HB_LIB_INSTALL
-  ReadEnvStr $HB_INC_INSTALL HB_INC_INSTALL
-  ReadEnvStr $HB_DOC_INSTALL HB_DOC_INSTALL
-
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
-  File /oname=COPYING "doc\license.txt"
+  File /oname=COPYING "$%HB_DOC_INSTALL%\license.txt"
 
   SetOutPath $INSTDIR\bin
-  File "bin\*.*"
+  File /x *.tds "$%HB_BIN_INSTALL%\*.*"
 
   SetOutPath $INSTDIR\lib
-  File "lib\*.*"
+  File "$%HB_LIB_INSTALL%\*.*"
 
   SetOutPath $INSTDIR\include
-  File "include\*.*"
+  File "$%HB_INC_INSTALL%\*.*"
 
   SetOutPath $INSTDIR\doc
-  File /r "doc\*.*"
+  File /r "$%HB_DOC_INSTALL%\*.*"
 
   ; Write the installation path into the registry
 ; WriteRegStr HKLM "Software\Harbour" "Install_Dir" "$INSTDIR"

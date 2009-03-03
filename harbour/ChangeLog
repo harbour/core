@@ -8,6 +8,39 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-03 20:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    + Extended 'HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD'
+      section a bit. (HB_DIR_* stuff still not included as it's
+      early to document it yet, refer to the ChangeLog for info
+      on it).
+
+  * bin/hbmk.bat
+    - Removed -n switch.
+
+  + mpkg_win.bat
+    + Added Windows installer creator script.
+    ; TODO: Move all mpkg_*.* and related files to new /package dir.
+
+  * mpkg_win.nsi
+    + Changed to use HB_*_INSTALL envvars for source file locations.
+    ! Fixed to exclude .tds files.
+    + Will now will include version number, architecture and compiler
+      in installer .exe name.
+    + Default install destination will now include compiler name.
+
+  * source/compiler/hbmain.c
+  * source/compiler/cmdcheck.c
+  * source/compiler/gencobj.c
+  * source/compiler/hbusage.c
+    + Marked -go option as HB_LEGACY_LEVEL2. Deprecated text
+      shown on help screen.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed entry func autodetection problem with gcc when
+      source file is passed without .prg extension.
+      Reported by Maurilio.
+
 2009-03-03 19:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbproces.c
     * check if some define constants exists before use - it should
