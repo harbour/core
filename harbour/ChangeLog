@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-04 00:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed problem reported by Istvan Bisz.
+      Wrong function declarations were used in static mode.
+
 2009-03-03 23:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * mpkg_win.bat
     ! Not polluting caller environment vars.

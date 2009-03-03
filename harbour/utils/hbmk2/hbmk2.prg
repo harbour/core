@@ -1553,14 +1553,16 @@ FUNCTION Main( ... )
 
             /* NOTE: This has to be kept synced with Harbour HB_IMPORT values. */
             DO CASE
-            CASE !( t_cARCH == "win" ) .OR. t_cCOMP $ "msvc|msvc64|msvcia64|rsxnt"
+            CASE ! s_lSHARED .OR. ;
+                 !( t_cARCH == "win" ) .OR. ;
+                 t_cCOMP $ "msvc|msvc64|msvcia64|rsxnt"
+
                /* NOTE: MSVC gives the warning:
                         "LNK4217: locally defined symbol ... imported in function ..."
                         if using 'dllimport'. [vszakats] */
                tmp := ""
             CASE t_cCOMP $ "gcc|mingw"    ; tmp := "__attribute__ (( dllimport ))"
             CASE t_cCOMP == "bcc|owatcom" ; tmp := "__declspec( dllimport )"
-            CASE t_cCOMP == "owatcom"     ; tmp := "__declspec( dllimport )"
             OTHERWISE                     ; tmp := "_declspec( dllimport )"
             ENDCASE
 
