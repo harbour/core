@@ -34,7 +34,7 @@ OutFile "harbour-$%HB_VERSION%-$%HB_ARCHITECTURE%-$%HB_COMPILER%.exe"
 InstallDir C:\harbour-$%HB_COMPILER%
 
 ;--------------------------------
-;Interface Settings
+; Interface Settings
 
   !define MUI_ABORTWARNING
 
@@ -54,12 +54,12 @@ InstallDir C:\harbour-$%HB_COMPILER%
   !insertmacro MUI_UNPAGE_FINISH
 
 ;--------------------------------
-;Languages
+; Languages
 
   !insertmacro MUI_LANGUAGE "English"
 
 ;--------------------------------
-;License Language String
+; License Language String
 
 LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_DOC_INSTALL%\license.txt"
 
@@ -131,14 +131,14 @@ Section "Start Menu and Desktop icons" hb_shortcuts
 SectionEnd
 
 ;--------------------------------
-;Descriptions
+; Descriptions
 
-  ;Language strings
+  ; Language strings
   LangString DESC_hb_main ${LANG_ENGLISH} "Main components."
   LangString DESC_hb_shortcuts ${LANG_ENGLISH} "Add icons to Start Menu and Desktop."
   LangString DESC_hb_examples ${LANG_ENGLISH} "Samples and tests"
 
-  ;Assign language strings to sections
+  ; Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_main} $(DESC_hb_main)
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_shortcuts} $(DESC_hb_shortcuts)

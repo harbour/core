@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-03 23:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * mpkg_win.bat
+    ! Not polluting caller environment vars.
+    * Changed to always override HB_INSTALL_PREFIX to a local temp dir.
+      (to avoid picking up any other misc files accidentally present
+      in a user supplied directory)
+    + Added --deltemp option which will delete the temp install dir.
+    + Completed requirement list.
+
+  * mpkg_win.nsi
+    * Formatting.
+
 2009-03-03 23:56 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpd.prg
     * Updated uHTTPD (Work in progress)
