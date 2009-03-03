@@ -60,7 +60,7 @@ typedef struct
    ULONG   ulMax;
 } BUFFERTYPE;
 
-static void bufadd( BUFFERTYPE * pBuf, char * pAdd, ULONG ulLen )
+static void bufadd( BUFFERTYPE * pBuf, const char * pAdd, ULONG ulLen )
 {
    if( pBuf->ulLen + ulLen >= pBuf->ulMax )
    {
@@ -191,7 +191,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
       {
          case 'c':
          {
-            char    buf[ 1 ];
+            char  buf[ 1 ];
 
             buf[ 0 ] = ( char ) hb_itemGetNI( pItem );
             if( fLeftAlign )
@@ -212,8 +212,9 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
 
          case 'd':
          {
-            char      * pStr = NULL, * pStr2;
-            int       iSize, iExtra;
+            char  * pStr = NULL;
+            const char * pStr2;
+            int   iSize, iExtra;
 
             if( HB_IS_NUMERIC( pItem ) )
             {
@@ -312,8 +313,9 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
 
          case 'f':
          {
-            char      * pStr = NULL, * pStr2;
-            int       iSize, iExtra, iD;
+            char  * pStr = NULL;
+            const char * pStr2;
+            int   iSize, iExtra, iD;
 
             if( HB_IS_NUMERIC( pItem ) )
             {

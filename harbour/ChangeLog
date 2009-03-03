@@ -8,6 +8,28 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-03 16:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/Makefile
+    ! fixed compilation with C compilers which does not support MT mode
+      (HB_MT=no) - it's seldom situation but may exists on some platforms,
+      f.e. in *nixes when PTHREADS is not available
+
+  * harbour/config/win/bcc.cf
+    ! fixed compilation in SHELL environment
+      (if exists ... del ...  is COMMAND.COM/CMD.EXE only command)
+
+  * harbour/source/rtl/hbstrfmt.c
+    ! casting for C++ compilation
+
+  * harbour/contrib/xhb/dbf2txt.c
+    ! casting for C++ compilation
+    ! fixed two bad bugs which can cause GPF or some other bad results
+      I'd seen after short check. I haven't analyzed this code carefully
+      for others.
+
+  * harbour/bin/postinst.sh
+    ! fixed hb*-mkslib link in cross builds (MinGW/MinGWCE)
+
 2009-03-03 10:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Now hbmk will show the filename of each processed .hbp file.

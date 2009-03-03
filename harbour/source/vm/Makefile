@@ -88,7 +88,9 @@ DIRS+= fm
 
 HB_USER_CFLAGS:=$(subst -DHB_MT_VM,,$(HB_USER_CFLAGS))
 ifneq ($(HB_ARCHITECTURE),dos)
+ifneq ($(HB_MT),no)
    DIRS+= vmmt fmmt
+endif
 endif
 
 include $(TOP)$(ROOT)config/lib.cf

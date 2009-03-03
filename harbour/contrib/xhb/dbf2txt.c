@@ -59,10 +59,10 @@
 #include "hbvm.h"
 
 /* Escaping delimited strings. Need to be cleaned/optimized/improved */
-static char * hb_strescape( char * szInput, int lLen, char * cDelim )
+static char * hb_strescape( const char * szInput, int lLen, const char * cDelim )
 {
    int     lCnt = 0;
-   char  * szChr;
+   const char * szChr;
    char  * szEscape;
    char  * szReturn;
 
@@ -87,9 +87,9 @@ static char * hb_strescape( char * szInput, int lLen, char * cDelim )
 
 /* Export field values to text file */
 #ifndef HB_CDP_SUPPORT_OFF
-static BOOL hb_ExportVar( int handle, PHB_ITEM pValue, char * cDelim, PHB_CODEPAGE cdp )
+static BOOL hb_ExportVar( int handle, PHB_ITEM pValue, const char * cDelim, PHB_CODEPAGE cdp )
 #else
-static BOOL hb_ExportVar( int handle, PHB_ITEM pValue, char * cDelim )
+static BOOL hb_ExportVar( int handle, PHB_ITEM pValue, const char * cDelim )
 #endif
 {
    switch( hb_itemType( pValue ) )
@@ -104,7 +104,7 @@ static BOOL hb_ExportVar( int handle, PHB_ITEM pValue, char * cDelim )
                                   hb_itemGetCLen( pValue ), cDelim );
 #ifndef HB_CDP_SUPPORT_OFF
          if( cdp )
-            hb_cdpnTranslate( szStrEsc, hb_vmCDP(), cdp, hb_itemGetCLen( pValue ) );
+            hb_cdpnTranslate( szStrEsc, hb_vmCDP(), cdp, strlen( szStrEsc ) );
 #endif
          szString = hb_xstrcpy( NULL, cDelim, szStrEsc, cDelim, NULL );
 
@@ -163,9 +163,9 @@ HB_FUNC( DBF2TEXT )
    PHB_ITEM pFor     = hb_param( 2, HB_IT_BLOCK );
    PHB_ITEM pFields  = hb_param( 3, HB_IT_ARRAY );
 
-   char * cDelim     = hb_parc( 4 );
+   const char * cDelim = hb_parc( 4 );
    HB_FHANDLE handle = ( HB_FHANDLE ) hb_parnl( 5 );
-   BYTE * cSep       = ( BYTE * ) hb_parc( 6 );
+   const char * cSep   = hb_parc( 6 );
    int nCount        = ( int ) hb_parnl( 7 );
 #ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdp  = hb_cdpFind( ( char * ) hb_parc( 8 ) );
@@ -210,7 +210,7 @@ HB_FUNC( DBF2TEXT )
       iSepLen = hb_parclen( 6 );
    else
    {
-      cSep = ( BYTE * ) ',';
+      cSep = ",";
       iSepLen = 1;
    }
 
@@ -236,7 +236,7 @@ HB_FUNC( DBF2TEXT )
             for( ui = 1; ui <= uiFields; ui ++ )
             {
                if( bWriteSep )
-                  hb_fsWriteLarge( handle, cSep, iSepLen );
+                  hb_fsWriteLarge( handle, ( const BYTE * ) cSep, iSepLen );
 
                SELF_GETVALUE( pArea, ui, pTmp );
 #ifndef HB_CDP_SUPPORT_OFF
@@ -263,7 +263,7 @@ HB_FUNC( DBF2TEXT )
                   if( iPos )
                   {
                      if( bWriteSep )
-                        hb_fsWriteLarge( handle, cSep, iSepLen );
+                        hb_fsWriteLarge( handle, ( const BYTE * ) cSep, iSepLen );
 
                      SELF_GETVALUE( pArea, ( USHORT ) iPos, pTmp );
 #ifndef HB_CDP_SUPPORT_OFF

@@ -88,7 +88,7 @@ then
     if [ -n "${hb_mkdyn}" ] && [ -f "${hb_mkdyn}" ]; then
         hb_mkdyn="${HB_TOOLS_PREF-hb}-mkslib"
         (cd "${HB_BIN_INSTALL}" && rm -f "${hb_mkdyn}" && \
-         ln -s "hb-mkdyn" "${hb_mkdyn}")
+         ln -s "${HB_TOOLS_PREF-hb}-mkdyn" "${hb_mkdyn}")
     fi
 
     mk_hbtools "${HB_BIN_INSTALL}" "$@"
