@@ -53,7 +53,6 @@
 #ifdef __XHARBOUR__
    #include "hbcompat.ch"
 #else
-
 //#include "xhb.ch"
 #include "common.ch"
 #include "error.ch"
@@ -718,8 +717,7 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
         nHandle := FOpen( cLog, FO_READWRITE + FO_SHARED)
      ELSE
         nHandle := FCreate( cLog )
-        // Dopo che lo creato, lo richiudo immediatamente e lo riapro in modo condiviso
-        // nel caso arrivasse una nuova scrittura
+        // After creation, I close and reopen it shared
         IF Ferror() == 0 .AND. nHandle > 0
            FClose( nHandle )
            nHandle := FOpen( cLog, FO_READWRITE + FO_SHARED)
@@ -862,3 +860,4 @@ FUNCTION uhttpd_HGetValue( hHash, cKey )
    ENDIF
    //RETURN IIF( cKey IN hHash:Keys, hHash[ cKey ], NIL )
    RETURN xVal
+

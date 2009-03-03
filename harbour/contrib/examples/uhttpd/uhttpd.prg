@@ -122,7 +122,7 @@
 #define START_RUNNING_THREADS   4             // Start threads to serve connections
 #define MAX_RUNNING_THREADS    20             // Max running threads
 
-#define START_SERVICE_THREADS   1             // Initial number for service connections
+#define START_SERVICE_THREADS   0             // Initial number for service connections
 #define MAX_SERVICE_THREADS     3             // Max running threads
 
 #define LISTEN_PORT             8082          // differs from standard 80 port for tests in case
@@ -130,6 +130,7 @@
 #define FILE_STOP               ".uhttpd.stop"
 #define FILE_ACCESS_LOG         "logs\access.log"
 #define FILE_ERROR_LOG          "logs\error.log"
+#define DIRECTORYINDEX_ARRAY    { "index.html", "index.htm" }
 
 #define PAGE_STATUS_REFRESH   5
 #define THREAD_MAX_WAIT     ( 60 ) // HOW MUCH TIME THREAD HAS TO WAIT BEFORE FINISH - IN SECONDS
@@ -176,6 +177,7 @@ STATIC s_nServiceConnections, s_nMaxServiceConnections, s_nTotServiceConnections
 STATIC s_aRunningThreads := {}
 STATIC s_aServiceThreads := {}
 STATIC s_hHRBModules     := {=>}
+STATIC s_aDirectoryIndex
 
 #ifdef USE_HB_INET
 STATIC s_cLocalAddress, s_nLocalPort
@@ -197,7 +199,7 @@ FUNCTION MAIN( ... )
    LOCAL aThreads, nStartThreads, nMaxThreads, nStartServiceThreads
    LOCAL i, cPar, lStop
    LOCAL cGT, cDocumentRoot, lIndexes, cConfig
-   LOCAL lConsole, lScriptAliasMixedCase
+   LOCAL lConsole, lScriptAliasMixedCase, aDirectoryIndex
    LOCAL nProgress := 0
    LOCAL hDefault, cLogAccess, cLogError, cSessionPath
    LOCAL cCmdPort, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
@@ -294,6 +296,7 @@ FUNCTION MAIN( ... )
    lIndexes              := hDefault[ "MAIN" ][ "SHOW_INDEXES" ]
    lScriptAliasMixedCase := hDefault[ "MAIN" ][ "SCRIPTALIASMIXEDCASE" ]
    cSessionPath          := hDefault[ "MAIN" ][ "SESSIONPATH" ]
+   aDirectoryIndex       := hDefault[ "MAIN" ][ "DIRECTORYINDEX" ]
 
    cLogAccess            := hDefault[ "LOGFILES" ][ "ACCESS" ]
    cLogError             := hDefault[ "LOGFILES" ][ "ERROR" ]
@@ -393,6 +396,7 @@ FUNCTION MAIN( ... )
    s_nMaxServiceConnections := 0
    s_nTotServiceConnections := 0
    s_cSessionPath           := cSessionPath
+   s_aDirectoryIndex        := aDirectoryIndex
 
    // --------------------- Open log files -------------------------------------
 
@@ -456,6 +460,8 @@ FUNCTION MAIN( ... )
       WriteToConsole( "Starting AcceptConnection Thread" )
       aThreads := {}
       AADD( aThreads, hb_threadStart( @AcceptConnections() ) )
+      //hb_ToOutDebug( "Len( aThreads ) = %i\n\r", Len( aThreads ) )
+
 
       // --------------------------------------------------------------------------------- //
       // main loop
@@ -478,10 +484,10 @@ FUNCTION MAIN( ... )
 
             // Show application infos
             IF hb_mutexLock( s_hmtxBusy )
-               hb_DispOutAt( 5, 5, "Threads           : " + Transform( s_nThreads, "9999999999" ) )
-               hb_DispOutAt( 6, 5, "Connections       : " + Transform( s_nConnections, "9999999999" ) )
-               hb_DispOutAt( 7, 5, "Max Connections   : " + Transform( s_nMaxConnections, "9999999999" ) )
-               hb_DispOutAt( 8, 5, "Total Connections : " + Transform( s_nTotConnections, "9999999999" ) )
+               hb_DispOutAt( 5,  5, "Threads           : " + Transform( s_nThreads, "9999999999" ) )
+               hb_DispOutAt( 6,  5, "Connections       : " + Transform( s_nConnections, "9999999999" ) )
+               hb_DispOutAt( 7,  5, "Max Connections   : " + Transform( s_nMaxConnections, "9999999999" ) )
+               hb_DispOutAt( 8,  5, "Total Connections : " + Transform( s_nTotConnections, "9999999999" ) )
 
                hb_DispOutAt( 5, 37, "ServiceThreads    : " + Transform( s_nServiceThreads, "9999999999" ) )
                hb_DispOutAt( 6, 37, "Connections       : " + Transform( s_nServiceConnections, "9999999999" ) )
@@ -506,7 +512,7 @@ FUNCTION MAIN( ... )
 
             // Accept a remote connection
 #ifdef USE_HB_INET
-            hSocket := HB_INETACCEPT( hListen )
+            hSocket := hb_InetAccept( hListen )
 #else
             hSocket := socket_accept( hListen, @aRemote )
 #endif
@@ -535,10 +541,13 @@ FUNCTION MAIN( ... )
 
          ENDIF
 
+         // Memory release
+         hb_GCAll( TRUE )  // FSG - memory check
+
       ENDDO
 
       WriteToConsole( "Waiting threads" )
-      // Send to thread that they have to stop
+      // Send to threads that they have to stop
       AEVAL( aThreads, {|| hb_mutexNotify( s_hmtxQueue, NIL ) } )
       // Wait threads to end
       AEVAL( aThreads, {|h| hb_threadJoin( h ) } )
@@ -644,7 +653,7 @@ STATIC FUNCTION AcceptConnections()
             pThread := hb_threadStart( @ServiceConnection(), @nThreadID )
             AADD( s_aServiceThreads, { pThread, nThreadID } )
          ENDIF
-         // Otherwise I send connection to service thread
+         // Otherwise I send connection to current service thread queue
          hb_mutexNotify( s_hmtxServiceThreads, hSocket )
 
          LOOP
@@ -653,9 +662,11 @@ STATIC FUNCTION AcceptConnections()
       ELSEIF nConnections >= nThreads
          // Add one more
          pThread := hb_threadStart( @ProcessConnection(), @nThreadID )
+         //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
          AADD( s_aRunningThreads, { pThread, nThreadID } )
       ENDIF
-      // Otherwise I send connection to running thread
+      // Otherwise I send connection to running thread queue
+      //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
       hb_mutexNotify( s_hmtxRunningThreads, hSocket )
 
    ENDDO
@@ -672,6 +683,8 @@ STATIC FUNCTION ProcessConnection( /*@*/ nThreadId )
    LOCAL nMsecs, nParseTime, nPos
 
    nThreadId    := hb_threadID()
+
+   //hb_ToOutDebug( "nThreadId = %s\r\n", nThreadId )
 
    ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
 
@@ -761,18 +774,23 @@ STATIC FUNCTION ProcessConnection( /*@*/ nThreadId )
 
             WriteToLog( cRequest )
 
+            // Destroy PRIVATE VARIABLES  // FSG - memory check
+            _SERVER := _GET := _POST := _COOKIE := _SESSION := _REQUEST := _HTTP_REQUEST := m_cPost := NIL
+
          ENDIF
 
-#ifdef USE_HB_INET
-         hb_InetClose( hSocket )
-#else
-         socket_shutdown( hSocket )
-         socket_close( hSocket )
-#endif
       END SEQUENCE
 
       nParseTime := hb_milliseconds() - nMsecs
       WriteToConsole( "Page served in : " + Str( nParseTime/1000, 7, 4 ) + " seconds" )
+
+#ifdef USE_HB_INET
+      hb_InetClose( hSocket )
+      hSocket := NIL
+#else
+      socket_shutdown( hSocket )
+      socket_close( hSocket )
+#endif
 
       IF hb_mutexLock( s_hmtxBusy )
          s_nConnections--
@@ -785,6 +803,7 @@ STATIC FUNCTION ProcessConnection( /*@*/ nThreadId )
 
    IF hb_mutexLock( s_hmtxBusy )
       s_nThreads--
+      //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
       IF ( nPos := aScan( s_aRunningThreads, {|h| h[2] == nThreadId } ) > 0 )
          hb_aDel( s_aRunningThreads, nPos, TRUE )
       ENDIF
@@ -884,17 +903,23 @@ STATIC FUNCTION ServiceConnection( /*@*/ nThreadId )
 
             WriteToLog( cRequest )
 
+            // Destroy PRIVATE VARIABLES  // FSG - memory check
+            _SERVER := _GET := _POST := _COOKIE := _SESSION := _REQUEST := _HTTP_REQUEST := m_cPost := NIL
+
          ENDIF
-#ifdef USE_HB_INET
-         hb_InetClose( hSocket )
-#else
-         socket_shutdown( hSocket )
-         socket_close( hSocket )
-#endif
+
       END SEQUENCE
 
       nParseTime := hb_milliseconds() - nMsecs
       WriteToConsole( "Page served in : " + Str( nParseTime/1000, 7, 4 ) + " seconds" )
+
+#ifdef USE_HB_INET
+      hb_InetClose( hSocket )
+      hSocket := NIL
+#else
+      socket_shutdown( hSocket )
+      socket_close( hSocket )
+#endif
 
       IF hb_mutexLock( s_hmtxBusy )
          s_nServiceConnections--
@@ -922,7 +947,7 @@ STATIC FUNCTION ParseRequest( cRequest )
    // RFC2616
    aRequest := uhttpd_split( CR_LF, cRequest )
 
-   //hb_toOutDebug( "aRequest = %s\n\r", hb_ValToExp( aRequest ) )
+   //hb_ToOutDebug( "aRequest = %s\n\r", hb_ValToExp( aRequest ) )
 
    WriteToConsole( aRequest[1] )
    aLine := uhttpd_split( " ", aRequest[1] )
@@ -1384,11 +1409,13 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
    DO WHILE /* AT( CR_LF + CR_LF, cRequest ) == 0 .AND. */ nRcvLen > 0
       cBuf := hb_InetRecvLine( hSocket, @nRcvLen )
       //hb_ToOutDebug( " nRcvLen = %i, cBuf = %s \n\r", nRcvLen, cBuf )
-      cRequest += cBuf + CR_LF
-      nLen += nRcvLen
-      IF nRcvLen > 0 .AND. At( "CONTENT-LENGTH:", Upper( cBuf ) ) == 1
-         cBuf := Substr( cBuf, At( ":", cBuf ) + 1 )
-         nContLen := Val( cBuf )
+      IF nRcvLen > 0
+         cRequest += cBuf + CR_LF
+         nLen += nRcvLen
+         IF At( "CONTENT-LENGTH:", Upper( cBuf ) ) == 1
+            cBuf := Substr( cBuf, At( ":", cBuf ) + 1 )
+            nContLen := Val( cBuf )
+         ENDIF
       ENDIF
    ENDDO
 
@@ -1397,7 +1424,7 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
    IF nLen > 0 .AND. nContLen > 0
       // cPostData is autoAllocated
       cBuf := Space( nContLen )
-      IF InetRecvAll( hSocket, @cBuf, nContLen ) <= 0
+      IF hb_InetRecvAll( hSocket, @cBuf, nContLen ) <= 0
          nLen := -1 // force error check
       ELSE
          cRequest += cBuf
@@ -1502,7 +1529,7 @@ FUNCTION uhttpd_join( cSeparator, aData )
 
 STATIC FUNCTION uproc_default()
    LOCAL cFileName, nI, cI
-   LOCAL cExt, xResult, pHRB, oError, cHRBBody
+   LOCAL cExt
 
    //cFileName := STRTRAN(cRoot + _SERVER["SCRIPT_NAME"], "//", "/")
    cFileName := _SERVER[ "SCRIPT_FILENAME" ]
@@ -1522,14 +1549,21 @@ STATIC FUNCTION uproc_default()
 
    //hb_toOutDebug( "cFileName = %s, uhttpd_OSFileName( cFileName ) = %s,\n\r s_hScriptAliases = %s\n\r", cFileName, uhttpd_OSFileName( cFileName ), hb_ValToExp( s_hScriptAliases ) )
 
+   // Server status request
    IF Upper( _SERVER[ "SCRIPT_NAME" ] ) == "/SERVERSTATUS"
+
       ShowServerStatus()
+
+   // real file request
    ELSEIF HB_FileExists( uhttpd_OSFileName( cFileName ) )
+
       IF ( nI := RAT( ".", cFileName ) ) > 0
          SWITCH ( cExt := LOWER( SUBSTR( cFileName, nI + 1 ) ) )
-            CASE "hrb" ;                                 cI := "text/html";                EXIT
-            CASE "exe" ;                                 cI := "text/html";                EXIT
+            // First filters
+            CASE "hrb" ; EXIT
+            CASE "exe" ; EXIT
 
+            // Then other files
             CASE "css" ;                                 cI := "text/css";                 EXIT
             CASE "htm" ;   CASE "html";                  cI := "text/html";                EXIT
             CASE "txt" ;   CASE "text";  CASE "asc"
@@ -1566,95 +1600,44 @@ STATIC FUNCTION uproc_default()
               cI := "application/octet-stream"
          ENDSWITCH
 
+         // Starting Filters
          IF cExt == "hrb"
 
             // Starting HRB module
-
-            TRY
-               // Lock HRB to avoid MT race conditions
-               IF !HRB_ACTIVATE_CACHE
-                  cHRBBody := HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) )
-               ENDIF
-               IF hb_mutexLock( s_hmtxHRB )
-                  IF HRB_ACTIVATE_CACHE
-                     // caching modules
-                     IF !hb_HHasKey( s_hHRBModules, cFileName )
-                        hb_HSet( s_hHRBModules, cFileName, HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) ) )
-                     ENDIF
-                     cHRBBody := s_hHRBModules[ cFileName ]
-                  ENDIF
-                  IF !EMPTY( pHRB := HB_HRBLOAD( cHRBBody ) )
-
-                      xResult := HRBMAIN()
-
-                      HB_HRBUNLOAD( pHRB )
-                  ELSE
-                      uhttpd_SetStatusCode( 404 )
-                      t_cErrorMsg := "File does not exist: " + cFileName
-                  ENDIF
-                  hb_mutexUnlock( s_hmtxHRB )
-
-               ENDIF
-
-               IF HB_ISSTRING( xResult )
-                  uhttpd_AddHeader( "Content-Type", cI )
-                  uhttpd_Write( xResult )
-               ELSE
-                  // Application in HRB module is responsible to send HTML content
-               ENDIF
-
-            CATCH oError
-
-               WriteToConsole( "Error!" )
-
-               uhttpd_AddHeader( "Content-Type", "text/html" )
-               uhttpd_Write( "Error" )
-               uhttpd_Write( "<br>Description: " + hb_cStr( oError:Description ) )
-               uhttpd_Write( "<br>Filename: "    + hb_cStr( oError:filename ) )
-               uhttpd_Write( "<br>Operation: "   + hb_cStr( oError:operation ) )
-               uhttpd_Write( "<br>OsCode: "      + hb_cStr( oError:osCode ) )
-               uhttpd_Write( "<br>GenCode: "     + hb_cStr( oError:genCode ) )
-               uhttpd_Write( "<br>SubCode: "     + hb_cStr( oError:subCode ) )
-               uhttpd_Write( "<br>SubSystem: "   + hb_cStr( oError:subSystem ) )
-               uhttpd_Write( "<br>Args: "        + hb_cStr( hb_ValToExp( oError:args ) ) )
-               uhttpd_Write( "<br>ProcName: "    + hb_cStr( procname( 0 ) ) )
-               uhttpd_Write( "<br>ProcLine: "    + hb_cStr( procline( 0 ) ) )
-            END
+            RETURN Filter_HRB( cFileName )
 
          ELSEIF cExt == "exe"
 
             // Starting CGI application
-
-            IF ( CGIExec( uhttpd_OSFileName(cFileName), @xResult ) ) == 0
-
-               //uhttpd_AddHeader( "Content-Type", cI )
-               //uhttpd_Write( xResult )
-               RETURN "HTTP/1.1 200 OK " + CR_LF + xResult
-
-            ELSE
-
-               uhttpd_AddHeader( "Content-Type", cI )
-               uhttpd_Write( "CGI Error" )
-
-            ENDIF
+            RETURN Filter_EXE( cFileName )
 
          ELSE
+
+            // Standard file
+
             uhttpd_AddHeader( "Content-Type", cI )
             uhttpd_Write( HB_MEMOREAD( uhttpd_OSFileName( cFileName ) ) )
          ENDIF
 
       ELSE
+         // Unknown file type
+
          cI := "application/octet-stream"
          uhttpd_AddHeader( "Content-Type", cI )
          uhttpd_Write( HB_MEMOREAD( uhttpd_OSFileName( cFileName ) ) )
       ENDIF
 
+   // Directory content request
    ELSEIF HB_DirExists( uhttpd_OSFileName( cFileName ) )
+
+      // if it exists as folder, add trailing slash and redirect to it
       IF RIGHT( cFileName, 1 ) != "/"
          uhttpd_AddHeader( "Location", "http://" + _SERVER[ "HTTP_HOST" ] + _SERVER[ "SCRIPT_NAME" ] + "/" )
          RETURN MakeResponse()
       ENDIF
-      IF ASCAN( { "index.html", "index.htm" }, ;
+
+      // Search for directory index file, i.e.: index.html
+      IF ASCAN( s_aDirectoryIndex, ;
                 {|x| IIF( HB_FileExists( uhttpd_OSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
          uhttpd_AddHeader( "Content-Type", "text/html" )
          uhttpd_Write( HB_MEMOREAD( uhttpd_OSFileName( cFileName ) ) )
@@ -1672,9 +1655,13 @@ STATIC FUNCTION uproc_default()
       ShowFolder( cFileName )
 
    ELSE
+
+      // We cannot handle request
+
       uhttpd_SetStatusCode( 404 )
       t_cErrorMsg := "File does not exist: " + cFileName
    ENDIF
+
    RETURN MakeResponse()
 
 // Define environment SET variables - TODO: Actually only for windows, make multiplatform
@@ -1932,7 +1919,8 @@ STATIC FUNCTION ParseIni( cConfig )
                      "DOCUMENT_ROOT"        => EXE_Path() + "\home"     ,;
                      "SHOW_INDEXES"         => FALSE                    ,;
                      "SCRIPTALIASMIXEDCASE" => TRUE                     ,;
-                     "SESSIONPATH"          => EXE_Path() + "\sessions"  ;
+                     "SESSIONPATH"          => EXE_Path() + "\sessions" ,;
+                     "DIRECTORYINDEX"       => DIRECTORYINDEX_ARRAY      ;
                    },;
      "LOGFILES" => { ;
                      "ACCESS"               => FILE_ACCESS_LOG          ,;
@@ -1998,6 +1986,11 @@ STATIC FUNCTION ParseIni( cConfig )
                                           IF !Empty( cVal )
                                              // Change APP_DIR macro with current exe path
                                              xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
+                                          ENDIF
+                                     CASE cKey == "DIRECTORYINDEX"
+                                          IF !Empty( cVal )
+                                             // Change APP_DIR macro with current exe path
+                                             xVal := uhttpd_split( " ", AllTrim( cVal ) )
                                           ENDIF
                                   ENDCASE
                              CASE cSection == "LOGFILES"
@@ -2135,6 +2128,9 @@ STATIC FUNCTION uhttpd_DefError( oError )
    OutErr( hb_OSNewLine() )
    OutErr( cCallstack )
 
+   // Write to errorlog
+   uhttpd_WriteToLogFile( cMessage + HB_OsPathSeparator() + cCallstack, Exe_Path() + "\error.log" )
+
    ErrorLevel( 1 )
    QUIT
 
@@ -2173,3 +2169,79 @@ STATIC FUNCTION ErrorMessage( oError )
    ENDCASE
 
    RETURN cMessage
+
+// ------------------ FILTERS ---------------------
+STATIC FUNCTION Filter_HRB( cFileName )
+   LOCAL xResult
+   LOCAL cHRBBody, pHRB, oError
+
+   TRY
+      // Lock HRB to avoid MT race conditions
+      IF !HRB_ACTIVATE_CACHE
+         cHRBBody := HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) )
+      ENDIF
+      IF hb_mutexLock( s_hmtxHRB )
+         IF HRB_ACTIVATE_CACHE
+            // caching modules
+            IF !hb_HHasKey( s_hHRBModules, cFileName )
+               hb_HSet( s_hHRBModules, cFileName, HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) ) )
+            ENDIF
+            cHRBBody := s_hHRBModules[ cFileName ]
+         ENDIF
+         IF !EMPTY( pHRB := HB_HRBLOAD( cHRBBody ) )
+
+             xResult := HRBMAIN()
+
+             HB_HRBUNLOAD( pHRB )
+         ELSE
+             uhttpd_SetStatusCode( 404 )
+             t_cErrorMsg := "File does not exist: " + cFileName
+         ENDIF
+         hb_mutexUnlock( s_hmtxHRB )
+
+      ENDIF
+
+      IF HB_ISSTRING( xResult )
+         uhttpd_AddHeader( "Content-Type", "text/html" )
+         uhttpd_Write( xResult )
+      ELSE
+         // Application in HRB module is responsible to send HTML content
+      ENDIF
+
+   CATCH oError
+
+      WriteToConsole( "Error!" )
+
+      uhttpd_AddHeader( "Content-Type", "text/html" )
+      uhttpd_Write( "Error" )
+      uhttpd_Write( "<br>Description: " + hb_cStr( oError:Description ) )
+      uhttpd_Write( "<br>Filename: "    + hb_cStr( oError:filename ) )
+      uhttpd_Write( "<br>Operation: "   + hb_cStr( oError:operation ) )
+      uhttpd_Write( "<br>OsCode: "      + hb_cStr( oError:osCode ) )
+      uhttpd_Write( "<br>GenCode: "     + hb_cStr( oError:genCode ) )
+      uhttpd_Write( "<br>SubCode: "     + hb_cStr( oError:subCode ) )
+      uhttpd_Write( "<br>SubSystem: "   + hb_cStr( oError:subSystem ) )
+      uhttpd_Write( "<br>Args: "        + hb_cStr( hb_ValToExp( oError:args ) ) )
+      uhttpd_Write( "<br>ProcName: "    + hb_cStr( procname( 0 ) ) )
+      uhttpd_Write( "<br>ProcLine: "    + hb_cStr( procline( 0 ) ) )
+   END
+
+   RETURN MakeResponse()
+
+STATIC FUNCTION Filter_EXE( cFileName )
+   LOCAL xResult
+
+   IF ( CGIExec( uhttpd_OSFileName(cFileName), @xResult ) ) == 0
+
+      //uhttpd_AddHeader( "Content-Type", cI )
+      //uhttpd_Write( xResult )
+      RETURN "HTTP/1.1 200 OK " + CR_LF + xResult
+
+   ELSE
+
+      uhttpd_AddHeader( "Content-Type", "text/html" )
+      uhttpd_Write( "CGI Error" )
+
+   ENDIF
+
+   RETURN MakeResponse()

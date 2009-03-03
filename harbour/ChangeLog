@@ -8,6 +8,26 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-03 23:56 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/contrib/examples/uhttpd/uhttpd.prg
+    * Updated uHTTPD (Work in progress)
+      ! Fixing memory usage attempt.
+        Set PRIVATE vars to NIL when not more used and force
+        collect memory with hb_GCAll( .T. )
+      * Set Service Threads initial value to 0
+      + Added support for directory index files
+      + Added support for filters (WIP)
+      * Added creation of error.log file in case of error
+      * Minor changes
+  * harbour/contrib/examples/uhttpd/cgifunc.prg
+    * Fixed comment
+  * harbour/contrib/examples/uhttpd/uhttpd.ini
+    + DirectoryIndex entry
+  ; NOTE: Please check me for memory usage. I have added a comment
+          // FSG - memory check
+          to interested lines. But I'm not sure if this solves the
+          problem.
+
 2009-03-03 22:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/tests/speedtst.prg
     * updated to work with CA-Cl*pper
