@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-03 10:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Now hbmk will show the filename of each processed .hbp file.
+    * Changed -quiet meaning: it will now suppress above messages.
+
+  * ChangeLog
+    + Added new line for previous entry about new --version option.
+
 2009-03-03 10:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     - Bison requirement moved next to the parser related option,
@@ -16,6 +24,7 @@
   * utils/hbmk2/hbmk2.prg
     * Made -hbcc and -hbcmp to behave the same. They'll no both
       generate objects.
+    + Added --version option.
 
 2009-03-02 23:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * debian/rules

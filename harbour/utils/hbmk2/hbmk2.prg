@@ -110,7 +110,7 @@ REQUEST HB_GT_CGI_DEFAULT
 REQUEST hbmk_ARCH
 REQUEST hbmk_COMP
 
-THREAD STATIC t_lQuiet := .T.
+THREAD STATIC t_lQuiet := .F.
 THREAD STATIC t_lInfo := .F.
 THREAD STATIC t_cARCH
 THREAD STATIC t_cCOMP
@@ -302,9 +302,9 @@ FUNCTION Main( ... )
       CASE cParamL            == "-quiet" ; t_lQuiet := .T. ; t_lInfo := .F.
       CASE Left( cParamL, 6 ) == "-comp=" ; t_cCOMP := SubStr( cParam, 7 )
       CASE Left( cParamL, 6 ) == "-arch=" ; t_cARCH := SubStr( cParam, 7 )
-      CASE cParamL            == "-hbcmp" ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
-      CASE cParamL            == "-hbcc"  ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
-      CASE cParamL            == "-hblnk" ; t_lQuiet := .T. ; t_lInfo := .F.
+      CASE cParamL            == "-hbcmp" ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      CASE cParamL            == "-hbcc"  ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      CASE cParamL            == "-hblnk" ; t_lInfo := .F.
       CASE cParamL            == "-info"  ; t_lInfo := .T.
       CASE cParamL == "-help" .OR. ;
            cParamL == "--help"
@@ -327,27 +327,23 @@ FUNCTION Main( ... )
    DO CASE
    CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
         Left(  tmp, 5 ) == "hbcmp"
-      t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hbcmp option." + hb_osNewLine() )
       ENDIF
    CASE Right( tmp, 4 ) == "hbcc" .OR. ;
         Left(  tmp, 4 ) == "hbcc"
-      t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hbcc option." + hb_osNewLine() )
       ENDIF
    CASE Right( tmp, 5 ) == "hblnk" .OR. ;
         Left(  tmp, 5 ) == "hblnk"
-      t_lQuiet := .T. ; t_lInfo := .F.
+      t_lInfo := .F.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hblnk option." + hb_osNewLine() )
       ENDIF
    ENDCASE
-
-   IF ! t_lQuiet
-      ShowHeader()
-   ENDIF
 
    /* Load architecture / compiler settings (compatibility) */
 
@@ -2218,7 +2214,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
 
    FOR EACH cDir IN aCFGDirs
       IF hb_FileExists( cFileName := ( DirAddPathSep( cDir ) + HBMK_CFG_NAME ) )
-         IF t_lInfo
+         IF ! t_lQuiet
             OutStd( "hbmk: Processing configuration: " + cFileName + hb_osNewLine() )
          ENDIF
          HBP_ProcessOne( cFileName,;
@@ -2247,7 +2243,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
       FOR EACH aFile IN Directory( "*.hbp" )
          cFileName := aFile[ F_NAME ]
          IF !( cFileName == HBMK_CFG_NAME )
-            IF t_lInfo
+            IF ! t_lQuiet
                OutStd( "hbmk: Processing: " + cFileName + hb_osNewLine() )
             ENDIF
             HBP_ProcessOne( cFileName,;
