@@ -20,7 +20,6 @@ HOW TO BUILD AND INSTALL HARBOUR
 
    * Supported C compiler
    * GNU Make
-   * GNU Bison 1.28 or upper (optional)
 
    Linux/Darwin/BSD/HP-UX/Solaris
    ------------------------------
@@ -214,10 +213,12 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                left empty.
    - HB_CONTRIB_ADDONS=<list>  Build additional libraries stored
                                in the contrib directory.
-   - HB_REBUILD_PARSER=yes     To rebuild the language parsers.
-                               This requires GNU Bison.
    - HB_VISUALC_VER_PRE80=yes  Set this if you're using a pre-8.0
                                (= pre-MSVS 2005) version of MSVC compiler.
+   - HB_REBUILD_PARSER=yes     To rebuild the language parsers. Typically
+                               you only need this if your are Harbour core
+                               developer modifying the parser.
+                               This requires GNU Bison 1.28 or upper.
 
    Cross building
    --------------

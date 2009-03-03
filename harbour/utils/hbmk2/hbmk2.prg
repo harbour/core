@@ -302,7 +302,7 @@ FUNCTION Main( ... )
       CASE cParamL            == "-quiet" ; t_lQuiet := .T. ; t_lInfo := .F.
       CASE Left( cParamL, 6 ) == "-comp=" ; t_cCOMP := SubStr( cParam, 7 )
       CASE Left( cParamL, 6 ) == "-arch=" ; t_cARCH := SubStr( cParam, 7 )
-      CASE cParamL            == "-hbcmp" ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .T.
+      CASE cParamL            == "-hbcmp" ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
       CASE cParamL            == "-hbcc"  ; t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
       CASE cParamL            == "-hblnk" ; t_lQuiet := .T. ; t_lInfo := .F.
       CASE cParamL            == "-info"  ; t_lInfo := .T.
@@ -314,6 +314,12 @@ FUNCTION Main( ... )
          PauseForKey()
          RETURN 9
 
+      CASE cParamL == "--version"
+
+         ShowHeader()
+         PauseForKey()
+         RETURN 0
+
       ENDCASE
    NEXT
 
@@ -321,7 +327,7 @@ FUNCTION Main( ... )
    DO CASE
    CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
         Left(  tmp, 5 ) == "hbcmp"
-      t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .T.
+      t_lQuiet := .T. ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hbcmp option." + hb_osNewLine() )
       ENDIF
@@ -2754,10 +2760,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -[no]trace        show commands executed" ,;
       "  -[no]run          run/don't run the created executable" ,;
       "  -nohbp            do not process .hbp files in current directory" ,;
-      "  -hbcmp            stop after creating the .c Harbour output files" ,;
-      "                    create link/copy/rename hbmk to hbcc for the same effect" ,;
-      "  -hbcc             stop after creating the object files" ,;
-      "                    create link/copy/rename hbmk to hbcc for the same effect" ,;
+      "  -hbcc, -hbcmp     stop after creating the object files" ,;
+      "                    create link/copy hbmk to hbcc/hbcmp for the same effect" ,;
       "  -hblnk            act as linker. Currently this is the same as -q" ,;
       "  -arch=<arch>      assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
       "  -comp=<comp>      use specific compiler. Same as HB_COMPILER envvar" ,;
