@@ -118,7 +118,12 @@ then
                 export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
                 HB_ARCH64="yes"
                 ;;
+            *[ix]*86)
+                ;;
+            *[ix]*86[^0-9]*)
+                ;;
             *)
+                export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
                 ;;
         esac
     fi
@@ -148,7 +153,7 @@ if [ "$HB_ARCHITECTURE" = "win" ] || \
 fi
 
 [ -z "$HB_INSTALL_PREFIX" ] && [ -n "$PREFIX" ] && export HB_INSTALL_PREFIX="$PREFIX"
-[ -z "$HB_INSTALL_PREFIX" ] && export HB_INSTALL_PREFIX=/usr/local
+[ -z "$HB_INSTALL_PREFIX" ] && export HB_INSTALL_PREFIX="/usr/local"
 
 # Set to constant value to be consistent with the non-GNU make files.
 
@@ -161,18 +166,15 @@ case "$HB_INSTALL_PREFIX" in
         ;;
 esac
 
-if [ -z "$HB_BIN_INSTALL" ]; then export HB_BIN_INSTALL=$HB_INSTALL_PREFIX/bin; fi
-if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL=$HB_INSTALL_PREFIX/lib$hb_instsubdir; fi
-if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL=$HB_INSTALL_PREFIX/include$hb_instsubdir; fi
+if [ -z "$HB_BIN_INSTALL" ]; then export HB_BIN_INSTALL="$HB_INSTALL_PREFIX/bin"; fi
+if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL="$HB_INSTALL_PREFIX/lib$hb_instsubdir"; fi
+if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL="$HB_INSTALL_PREFIX/include$hb_instsubdir"; fi
 
 if [ "$HB_ARCHITECTURE" = "win" ] || \
    [ "$HB_ARCHITECTURE" = "dos" ] || \
    [ "$HB_ARCHITECTURE" = "os2" ]; then
-    if [ -z "$HB_DOC_INSTALL" ]; then export HB_DOC_INSTALL=$HB_INSTALL_PREFIX/doc; fi
-    mkdir -p $HB_BIN_INSTALL
-    mkdir -p $HB_LIB_INSTALL
-    mkdir -p $HB_INC_INSTALL
-    mkdir -p $HB_DOC_INSTALL
+    if [ -z "$HB_DOC_INSTALL" ]; then export HB_DOC_INSTALL="$HB_INSTALL_PREFIX/doc"; fi
+    mkdir -p "$HB_BIN_INSTALL" "$HB_LIB_INSTALL" "$HB_INC_INSTALL" "$HB_DOC_INSTALL"
 fi
 
 if [ -z "$HB_ARCHITECTURE" ]; then
