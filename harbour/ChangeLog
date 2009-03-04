@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-04 12:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * explicitly bind system libraries with harbour shared library.
+      RPM/DEB packages should automatically detect these dependencies.
+      Viktor, now you do not have to pass system libraries like
+      m, dl, rt, pthread, socket, nsl, resolv, curses, slang, x11,
+      wininet, ws2, commdlg, commctrl, uuid, ole32 ... when you create
+      shared binaries by hbmk2 - all bindings are in harbour shared
+      library. They are necessary only for static builds.
+
 2009-03-04 10:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.sh
   * bin/postinst.sh
