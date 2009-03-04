@@ -74,7 +74,7 @@ HB_FUNC( SSL_RAND_STATUS )
 
 HB_FUNC( SSL_RAND_EVENT )
 {
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && ! defined( __CYGWIN__ )
    hb_retni( RAND_event( hb_parni( 1 ), ( WPARAM ) hb_parnint( 2 ), ( LPARAM ) hb_parnint( 3 ) ) );
 #else
    hb_retni( 0 );
@@ -83,7 +83,7 @@ HB_FUNC( SSL_RAND_EVENT )
 
 HB_FUNC( SSL_RAND_SCREEN )
 {
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && ! defined( __CYGWIN__ )
    RAND_screen();
 #endif
 }

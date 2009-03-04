@@ -22,6 +22,7 @@ if [ -z "$HB_ARCHITECTURE" ]; then
         hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
         case "$hb_arch" in
             *windows*|*mingw32*|msys*) hb_arch="win" ;;
+            cygwin*)                   hb_arch="cyg" ;;
             *os/2*)                    hb_arch="os2" ;;
             *dos)                      hb_arch="dos" ;;
             *bsd)                      hb_arch="bsd" ;;
@@ -33,10 +34,16 @@ fi
 if [ -z "$HB_COMPILER" ]; then
     case "$HB_ARCHITECTURE" in
         win) HB_COMPILER="mingw" ;;
+        cyg) HB_COMPILER="cygwin" ;;
         dos) HB_COMPILER="djgpp" ;;
         *)   HB_COMPILER="gcc" ;;
     esac
     export HB_COMPILER
+fi
+
+if [ "$HB_ARCHITECTURE" == "cyg" ]
+then
+    export HB_ARCHITECTURE=win
 fi
 
 if [ -z "$HB_GPM_MOUSE" ]; then
@@ -159,7 +166,6 @@ if [ "$HB_ARCHITECTURE" == "win" ] || \
     mkdir -p $HB_LIB_INSTALL
     mkdir -p $HB_INC_INSTALL
     mkdir -p $HB_DOC_INSTALL
-    echo !!! $HB_BIN_INSTALL
 fi
 
 if [ -z "$HB_ARCHITECTURE" ]; then

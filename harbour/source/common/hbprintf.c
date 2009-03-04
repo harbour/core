@@ -271,7 +271,7 @@ optimized.
 #     define _MODFD( x, p )   modf( x, p )
 #  else
 #     define _x_long_dbl      long double
-#     if defined( __WATCOMC__ ) || defined( __MINGW32CE__ )
+#     if defined( __WATCOMC__ ) || defined( __MINGW32CE__ ) || defined( __CYGWIN__ )
 #        define _HB_WRAP_MODFL_
 #        define _MODFD( x, p )   _hb_modfl( x, p )
 #     else

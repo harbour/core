@@ -8,6 +8,39 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-04 08:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    * HB_INC_OPENSSL sample corrected to point to real-life header dir.
+    + Added cygwin compiler. gcc temply removed from doc list.
+    % Removed unnecessary -n hbmk2 switches.
+    + Added cygwin section.
+
+  * utils/hbmk2/hbmk2.prg
+    + Don't add gtnul as a real library.
+      Please test, I've never used GTNUL.
+    + Added support for cygwin compiler value.
+      (works the same as current 'win/gcc' combination)
+    ! Typo in rare error messages.
+    ! Removed -no-cygwin option from cygwin gcc command line.
+
+  * source/common/hbprintf.c
+  * contrib/hbssl/sslrand.c
+    ! Fixed to compile with cygwin.
+    ; TOFIX:
+      when running hbtest.exe:
+      Error DBFNTX/1011  Write error: _hbtmp_.dbf
+      Called from DBCREATE(0)
+      Called from TEST_BEGIN(0)
+      Called from MAIN(0)
+
+  * make_gnu.sh
+    + Added cygwin detection.
+
+  * config/win/gcc.cf
+  + config/win/cygwin.cf
+    + Added separate cygwin make config.
+      gcc is now just a map to cygwin.
+
 2009-03-04 02:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * mpkg_win.bat
     ! Fixed dirs inside the .zip file.

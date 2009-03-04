@@ -405,8 +405,8 @@ FUNCTION Main( ... )
       OTHERWISE     ; cDynLibExt := ".so"
       ENDSWITCH
    CASE t_cARCH == "dos"
-      aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "djgpp"   },;
-                    { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
+      aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "djgpp"   },;
+                    { {|| FindInPath( "wpp386"   ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
       aCOMPSUP := { "djgpp", "gcc", "owatcom", "rsx32" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtdos" }
@@ -415,9 +415,9 @@ FUNCTION Main( ... )
       cDynLibExt := ""
       cBinExt := ".exe"
    CASE t_cARCH == "os2"
-      aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "gcc"     },;
-                    { {|| FindInPath( "wpp386" ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
-                    { {|| FindInPath( "icc"    ) != NIL }, "icc"     } }
+      aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "gcc"     },;
+                    { {|| FindInPath( "wpp386"   ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
+                    { {|| FindInPath( "icc"      ) != NIL }, "icc"     } }
       aCOMPSUP := { "gcc", "owatcom", "icc" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtos2" }
@@ -428,20 +428,22 @@ FUNCTION Main( ... )
    CASE t_cARCH == "win"
       /* Order is significant.
          owatcom also keeps a cl.exe in it's binary dir. */
-      aCOMPDET := { { {|| FindInPath( "gcc"    ) != NIL }, "mingw"   },; /* TODO: Add full support for g++ */
-                    { {|| FindInPath( "wpp386" ) != NIL .AND. ;
+      aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "mingw"   },; /* TODO: Add full support for g++ */
+                    { {|| FindInPath( "wpp386"   ) != NIL .AND. ;
                           ! Empty( GetEnv( "WATCOM" ) ) }, "owatcom" },; /* TODO: Add full support for wcc386 */
-                    { {|| FindInPath( "ml64"   ) != NIL }, "msvc64"  },;
-                    { {|| FindInPath( "cl"     ) != NIL .AND. ;
-                          FindInPath( "wpp386" ) == NIL }, "msvc"    },;
-                    { {|| FindInPath( "bcc32"  ) != NIL }, "bcc"     },;
-                    { {|| FindInPath( "porc64" ) != NIL }, "pocc64"  },;
-                    { {|| FindInPath( "pocc"   ) != NIL }, "pocc"    },;
-                    { {|| FindInPath( "dmc"    ) != NIL }, "dmc"     },;
-                    { {|| FindInPath( "icc"    ) != NIL }, "icc"     },;
-                    { {|| FindInPath( "xcc"    ) != NIL }, "xcc"     } }
-      /* TODO: "mingwce", "msvcce", "poccce" */
-      aCOMPSUP := { "gcc", "mingw", "msvc", "msvc64", "msvcia64", "bcc", "owatcom", "pocc", "pocc64", "rsxnt", "xcc", "dmc", "icc" }
+                    { {|| FindInPath( "ml64"     ) != NIL }, "msvc64"  },;
+                    { {|| FindInPath( "cl"       ) != NIL .AND. ;
+                          FindInPath( "wpp386"   ) == NIL }, "msvc"    },;
+                    { {|| FindInPath( "bcc32"    ) != NIL }, "bcc"     },;
+                    { {|| FindInPath( "porc64"   ) != NIL }, "pocc64"  },;
+                    { {|| FindInPath( "pocc"     ) != NIL }, "pocc"    },;
+                    { {|| FindInPath( "dmc"      ) != NIL }, "dmc"     },;
+                    { {|| FindInPath( "icc"      ) != NIL }, "icc"     },;
+                    { {|| FindInPath( "cygstart" ) != NIL }, "cygwin"  },;
+                    { {|| FindInPath( "xcc"      ) != NIL }, "xcc"     } }
+      aCOMPSUP := { "gcc", "mingw", "msvc", "bcc", "owatcom", "pocc", "rsxnt", "xcc", "dmc", "icc", "cygwin",;
+                    "msvc64", "msvcia64", "pocc64",;
+                    "mingwce", "msvcce", "poccce" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
       t_cGTDEFAULT := "gtwin"
@@ -756,7 +758,7 @@ FUNCTION Main( ... )
                cParam := NIL
             ENDIF
          ENDIF
-         IF ! Empty( cParam )
+         IF ! Empty( cParam ) .AND. !( Lower( cParam ) == "gtnul" )
             IF AScan( t_aLIBCOREGT, {|tmp| Lower( tmp ) == cParamL } ) == 0 .AND. ;
                AScan( s_aLIBUSERGT, {|tmp| Lower( tmp ) == cParamL } ) == 0
                AAddNotEmpty( s_aLIBUSERGT, PathSepToTarget( cParam ) )
@@ -1149,6 +1151,7 @@ FUNCTION Main( ... )
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "mingw" ) .OR. ;
+           ( t_cARCH == "win" .AND. t_cCOMP == "cygwin" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "rsxnt" )
 
          cLibPrefix := "-l"
@@ -1168,9 +1171,6 @@ FUNCTION Main( ... )
          ENDIF
          IF s_lSHARED
             AAdd( s_aLIBPATH, "{DB}" )
-         ENDIF
-         IF t_cCOMP == "gcc"
-            cOpt_CompC += " -mno-cygwin"
          ENDIF
          IF t_cCOMP == "rsxnt"
             cOpt_CompC += " -Zwin32"
@@ -1205,7 +1205,7 @@ FUNCTION Main( ... )
                cOpt_Res := "{LR} -o {LS}"
                cResExt := ".o"
             ELSE
-               OutErr( "hbmk: Warning: Resource files ignored. Multiple ones not support for mingw." + hb_osNewLine() )
+               OutErr( "hbmk: Warning: Resource files ignored. Multiple ones not supported with mingw." + hb_osNewLine() )
             ENDIF
          ENDIF
 
@@ -1290,7 +1290,7 @@ FUNCTION Main( ... )
                cResPrefix := "OP res="
                cResExt := ".res"
             ELSE
-               OutErr( "hbmk: Warning: Resource files ignored. Multiple ones not support for owatcom." + hb_osNewLine() )
+               OutErr( "hbmk: Warning: Resource files ignored. Multiple ones not supported with owatcom." + hb_osNewLine() )
             ENDIF
          ENDIF
 
@@ -1562,9 +1562,9 @@ FUNCTION Main( ... )
                         "LNK4217: locally defined symbol ... imported in function ..."
                         if using 'dllimport'. [vszakats] */
                tmp := ""
-            CASE t_cCOMP $ "gcc|mingw"    ; tmp := "__attribute__ (( dllimport ))"
-            CASE t_cCOMP == "bcc|owatcom" ; tmp := "__declspec( dllimport )"
-            OTHERWISE                     ; tmp := "_declspec( dllimport )"
+            CASE t_cCOMP $ "gcc|mingw|cygwin" ; tmp := "__attribute__ (( dllimport ))"
+            CASE t_cCOMP == "bcc|owatcom"     ; tmp := "__declspec( dllimport )"
+            OTHERWISE                         ; tmp := "_declspec( dllimport )"
             ENDCASE
 
             /* Create list of requested symbols */
@@ -1984,7 +1984,7 @@ STATIC FUNCTION ListCookLib( arraySrc, cPrefix, cExtNew )
    LOCAL cDir
    LOCAL cLibName
 
-   IF t_cCOMP $ "gcc|gpp|mingw|djgpp|rsxnt|rsx32"
+   IF t_cCOMP $ "gcc|gpp|mingw|djgpp|rsxnt|rsx32|cygwin"
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
@@ -2120,7 +2120,7 @@ STATIC FUNCTION PathSepToSelf( cFileName )
 
 STATIC FUNCTION PathSepToTarget( cFileName )
 
-   IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP $ "mingw|mingwce" )
+   IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP $ "mingw|mingwce|cygwin" )
       RETURN StrTran( cFileName, "/", "\" )
    ENDIF
 
@@ -2432,7 +2432,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             IF ! SetupForGT( cLine, @t_cGTDEFAULT, @lGUI )
                cLine := NIL
             ENDIF
-            IF ! Empty( cLine )
+            IF ! Empty( cLine ) .AND. !( Lower( cLine ) == "gtnul" )
                IF AScan( t_aLIBCOREGT, {|tmp| Lower( tmp ) == Lower( cLine ) } ) == 0 .AND. ;
                   AScan( aLIBUSERGT  , {|tmp| Lower( tmp ) == Lower( cLine ) } ) == 0
                   AAddNotEmpty( aLIBUSERGT, PathSepToTarget( cLine ) )
@@ -2447,7 +2447,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                   cLine := NIL
                ENDIF
             ENDIF
-            IF ! Empty( cLine )
+            IF ! Empty( cLine ) .AND. !( Lower( cLine ) == "gtnul" )
                IF AScan( t_aLIBCOREGT, {|tmp| Lower( tmp ) == Lower( cLine ) } ) == 0 .AND. ;
                   AScan( aLIBUSERGT  , {|tmp| Lower( tmp ) == Lower( cLine ) } ) == 0
                   AAddNotEmpty( aLIBUSERGT, PathSepToTarget( cLine ) )
@@ -2658,7 +2658,7 @@ STATIC FUNCTION getFirstFunc( cFile )
    LOCAL cFuncList, cExecNM, cFuncName, cExt, cLine, n, c
 
    cFuncName := ""
-   IF t_cCOMP $ "gcc|gpp|mingw"
+   IF t_cCOMP $ "gcc|gpp|mingw|cygwin"
       hb_FNameSplit( cFile,,, @cExt )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
@@ -2790,8 +2790,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, gpp, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
-      "    win    : gcc, mingw, msvc, bcc, owatcom, pocc, dmc, rsxnt, xcc, icc" ,;
-      "             mingwce, msvc64, msvcia64, msvcce, pocc64, poccce" ,;
+      "    win    : gcc, mingw, msvc, bcc, owatcom, pocc, dmc, rsxnt, icc, cygwin" ,;
+      "             mingwce, msvc64, msvcia64, msvcce, pocc64, poccce, xcc" ,;
       "    os2    : gcc, owatcom, icc" ,;
       "    dos    : gcc, djgpp, owatcom, rsx32" ,;
       "    bsd, hpux, sunos: gcc" }

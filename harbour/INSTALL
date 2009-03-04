@@ -29,7 +29,7 @@ HOW TO BUILD AND INSTALL HARBOUR
       $ sudo ./make_gnu.sh install
 
       To test it, go to <DIR>/bin directory and type:
-      $ ./hbmk2 -n ../tests/hello.prg
+      $ ./hbmk2 ../tests/hello.prg
       $ ./hello
       You should see 'Hello world!' on screen.
 
@@ -37,16 +37,32 @@ HOW TO BUILD AND INSTALL HARBOUR
    -------------------------
       This is the recommended way to build with MinGW.
 
-      Make sure to have msys and MinGW properly installed
-      and setup. msys should be put in PATH _before_ MinGW.
+      Make sure to have msys and MinGW properly configured.
+      msys should be put in PATH _before_ MinGW.
 
       > set HB_INSTALL_PREFIX=<DIR>
       > sh make_gnu.sh install
 
       To test it, go to <DIR>/bin directory and type:
-      > hbmk2 -n ../tests/hello.prg
+      > hbmk2 ../tests/hello.prg
       > hello
       You should see 'Hello world!' on screen.
+
+   Windows with Cygwin
+   -------------------
+      Make sure to have Cygwin properly properly configured.
+      Make sure to use Harbour sources with LF line termination,
+      if you see a bash error, try 'dos2unix make_gnu.sh'.
+
+      > set HB_INSTALL_PREFIX=<DIR>
+      > sh make_gnu.sh install
+
+      To test it, go to <DIR>/bin directory and type:
+      > hbmk2 ../tests/hello.prg
+      > hello
+      You should see 'Hello world!' on screen.
+
+      NOTE: <DIR> should use Cygwin drive notation: /cygdrive/c/
 
    Windows with other compilers
    ----------------------------
@@ -75,7 +91,7 @@ HOW TO BUILD AND INSTALL HARBOUR
       > make_gnu.bat install
 
       To test it, go to <DIR>\bin directory and type:
-      > hbmk2 -n ..\tests\hello.prg
+      > hbmk2 ..\tests\hello.prg
       > hello
       You should see 'Hello world!' on screen.
 
@@ -131,7 +147,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_GD=C:\gd\include
    HB_INC_LIBHARU=C:\libharu\include
    HB_INC_MYSQL=C:\mysql\include
-   HB_INC_OPENSSL=C:\openssl
+   HB_INC_OPENSSL=C:\openssl\inc32
    HB_INC_PGSQL=C:\pgsql\include
 
 
@@ -157,7 +173,7 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    msvc     - Microsoft Visual C++
    owatcom  - Open Watcom C++
    bcc      - Borland/CodeGear C++ 4.x and above
-   gcc      - Cygwin GNU C
+   cygwin   - Cygwin GNU C
    rxsnt    - EMX/RSXNT/Windows GNU C
    icc      - IBM Visual Age C++
    dmc      - Digital Mars C
