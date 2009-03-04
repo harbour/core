@@ -201,35 +201,44 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
          switch( szSwitch[ 1 ] )
          {
             case 'c':
+            case 'C':
                /* clear all flags - minimal set of features */
                HB_COMP_PARAM->supported &= HB_COMPFLAG_SHORTCUTS;
                HB_COMP_PARAM->supported |= HB_COMPFLAG_OPTJUMP |
                                            HB_COMPFLAG_MACROTEXT;
                break;
             case 'h':
+            case 'H':
                iFlag = HB_COMPFLAG_HARBOUR;
                break;
             case 'o':
+            case 'O':
                iFlag = HB_COMPFLAG_EXTOPT;
                break;
             case 'i':
+            case 'I':
                iFlag = HB_COMPFLAG_HB_INLINE;
                break;
             case 'r':
+            case 'R':
                iFlag = HB_COMPFLAG_RT_MACRO;
                break;
             case 'x':
+            case 'X':
                iFlag = HB_COMPFLAG_XBASE;
                break;
+            case 'j':
             case 'J':
                iFlag = HB_COMPFLAG_OPTJUMP;
                iValue = !iValue;
                break;
+            case 'm':
             case 'M':
                iFlag = HB_COMPFLAG_MACROTEXT;
                iValue = !iValue;
                break;
             case 's':
+            case 'S':
                iFlag = HB_COMPFLAG_ARRSTR;
                break;
             default:

@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-04 19:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/compiler/ppcomp.c
+    ! #pragma -k? options are now case-insensitive like all
+      other Harbour options.
+      This completes this change:
+      2008-08-06 22:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+
 2009-03-04 18:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added warning msg if referenced .hbm file cannot be found.
