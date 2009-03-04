@@ -376,7 +376,8 @@ hb_ToOutDebug( "static ULONG STDMETHODCALLTYPE Release( IEventHandler *self )->c
 //hb_ToOutDebug( "       ULONG STDMETHODCALLTYPE Release( IEventHandler *self )->self" );
       return( ( ULONG ) 0 );
    }
-   return( ( ULONG ) ( ( MyRealIEventHandler * ) self )->count < 0 ? ( ( MyRealIEventHandler * ) self )->count : 0 );
+   //return( ( ULONG ) ( ( MyRealIEventHandler * ) self )->count < 0 ? ( ( MyRealIEventHandler * ) self )->count : 0 );
+   return( ( ULONG ) ( ( MyRealIEventHandler * ) self )->count );
 }
 //----------------------------------------------------------------------//
 //
