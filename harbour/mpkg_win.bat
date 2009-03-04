@@ -42,7 +42,7 @@ rem ; Cleanup
 if exist %HB_INSTALL_BASE% rmdir /q /s %HB_INSTALL_BASE%
 
 rem ; Build
-if     "%HB_COMPILER%" == "mingw" sh make_gnu.sh install
+if     "%HB_COMPILER%" == "mingw" sh make_gnu.sh clean install
 if not "%HB_COMPILER%" == "mingw" set HB_BUILD_DLL=yes
 if not "%HB_COMPILER%" == "mingw" call make_gnu.bat
 
@@ -51,7 +51,10 @@ makensis.exe %~dp0mpkg_win.nsi
 
 rem ; .zip packages
 if exist %HB_PKGNAME%.zip del %HB_PKGNAME%.zip
-zip -X -r -o %HB_PKGNAME%.zip %HB_INSTALL_BASE%\*
+pushd
+cd %HB_INSTALL_BASE%
+zip -X -r -o %~dp0%HB_PKGNAME%.zip *
+popd
 
 rem ; Cleanup
 if "%1" == "--deltemp" rmdir /q /s %HB_INSTALL_BASE%
