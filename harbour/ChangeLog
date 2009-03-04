@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-04 18:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added warning msg if referenced .hbm file cannot be found.
+    + filename without extension referenced with @ prefix
+      will get an .hbm extension added automatically.
+    ! Typo in prev fixed.
+    * Filename updated in comment.
+
 2009-03-04 17:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * doc/man/hbmk.1
     * Updates. Work in progress.

@@ -637,8 +637,12 @@ FUNCTION Main( ... )
    FOR EACH cParam IN hb_AParams()
       DO CASE
       CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
+         cParam := SubStr( cParam, 2 )
+         IF Empty( FN_ExtGet( cParam ) )
+            cParam := FN_ExtSet( cParam, ".hbm" )
+         ENDIF
          nEmbedLevel := 1
-         HBM_Load( aParams, SubStr( cParam, 2 ), @nEmbedLevel ) /* Load parameters from script file */
+         HBM_Load( aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
       CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
          nEmbedLevel := 1
          HBM_Load( aParams, cParam, @nEmbedLevel ) /* Load parameters from script file */
@@ -716,7 +720,7 @@ FUNCTION Main( ... )
 
       CASE lAcceptCFlag .AND. Left( cParamL, 2 ) == "-c"
 
-         lStopAfterCComp := .T
+         lStopAfterCComp := .T.
 
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; s_lGUI      := .T. /* Compatibility */
@@ -2263,7 +2267,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
    NEXT
 
    IF ! lConfigOnly
-      FOR EACH aFile IN Directory( "*.hbp" )
+      FOR EACH aFile IN Directory( "*" + ".hbp" )
          cFileName := aFile[ F_NAME ]
          IF !( cFileName == HBMK_CFG_NAME )
             IF ! t_lQuiet
@@ -2345,7 +2349,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
             ENDIF
          NEXT
 
-      /* NOTE: This keyword is used in hbmkcfg.hbp and signals whether
+      /* NOTE: This keyword is used in hbmk.cfg and signals whether
                a given optional module (gtsln, gtcrs, gtxwc) is part of the
                Harbour shared library, so that we can automatically add
                the required libs here. [vszakats] */
@@ -2514,40 +2518,51 @@ STATIC FUNCTION ValueIsF( cString )
           cString == "0" /* Compatibility */
 
 STATIC PROCEDURE HBM_Load( aParams, cFileName, /* @ */ nEmbedLevel )
-   LOCAL cFile := hb_MemoRead( cFileName )
+   LOCAL cFile
    LOCAL cLine
    LOCAL cParam
 
-   IF ! hb_osNewLine() == _EOL
-      cFile := StrTran( cFile, hb_osNewLine(), _EOL )
-   ENDIF
-   IF ! hb_osNewLine() == Chr( 13 ) + Chr( 10 )
-      cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), _EOL )
-   ENDIF
+   IF hb_FileExists( cFileName )
 
-   FOR EACH cLine IN hb_ATokens( cFile, _EOL )
-      IF !( Left( cLine, 1 ) == "#" )
-         FOR EACH cParam IN hb_ATokens( cLine,, .T. )
-            cParam := StrStripQuote( cParam )
-            IF ! Empty( cParam )
-               DO CASE
-               CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
-                  IF nEmbedLevel < 3
-                     nEmbedLevel++
-                     HBM_Load( aParams, PathProc( SubStr( cParam, 2 ), cFileName ), @nEmbedLevel ) /* Load parameters from script file */
-                  ENDIF
-               CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
-                  IF nEmbedLevel < 3
-                     nEmbedLevel++
-                     HBM_Load( aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
-                  ENDIF
-               OTHERWISE
-                  AAdd( aParams, { cParam, cFileName, cLine:__enumIndex() } )
-               ENDCASE
-            ENDIF
-         NEXT
+      cFile := hb_MemoRead( cFileName )
+
+      IF ! hb_osNewLine() == _EOL
+         cFile := StrTran( cFile, hb_osNewLine(), _EOL )
       ENDIF
-   NEXT
+      IF ! hb_osNewLine() == Chr( 13 ) + Chr( 10 )
+         cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), _EOL )
+      ENDIF
+
+      FOR EACH cLine IN hb_ATokens( cFile, _EOL )
+         IF !( Left( cLine, 1 ) == "#" )
+            FOR EACH cParam IN hb_ATokens( cLine,, .T. )
+               cParam := StrStripQuote( cParam )
+               IF ! Empty( cParam )
+                  DO CASE
+                  CASE ( Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" )
+                     IF nEmbedLevel < 3
+                        cParam := SubStr( cParam, 2 )
+                        IF Empty( FN_ExtGet( cParam ) )
+                           cParam := FN_ExtSet( cParam, ".hbm" )
+                        ENDIF
+                        nEmbedLevel++
+                        HBM_Load( aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
+                     ENDIF
+                  CASE Lower( FN_ExtGet( cParam ) ) == ".hbm"
+                     IF nEmbedLevel < 3
+                        nEmbedLevel++
+                        HBM_Load( aParams, PathProc( cParam, cFileName ), @nEmbedLevel ) /* Load parameters from script file */
+                     ENDIF
+                  OTHERWISE
+                     AAdd( aParams, { cParam, cFileName, cLine:__enumIndex() } )
+                  ENDCASE
+               ENDIF
+            NEXT
+         ENDIF
+      NEXT
+   ELSE
+      OutErr( "hbmk: Warning: File cannot be found: " + cFileName + hb_osNewLine() )
+   ENDIF
 
    RETURN
 
