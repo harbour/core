@@ -42,9 +42,12 @@ rem ; Cleanup
 if exist %HB_INSTALL_BASE% rmdir /q /s %HB_INSTALL_BASE%
 
 rem ; Build
-if     "%HB_COMPILER%" == "mingw" sh make_gnu.sh clean install
-if not "%HB_COMPILER%" == "mingw" set HB_BUILD_DLL=yes
-if not "%HB_COMPILER%" == "mingw" call make_gnu.bat
+if "%HB_COMPILER%" == "mingw"  ( sh make_gnu.sh clean install && goto MK_PKG )
+if "%HB_COMPILER%" == "cygwin" ( sh make_gnu.sh clean install && goto MK_PKG )
+set HB_BUILD_DLL=yes
+call make_gnu.bat
+
+:MK_PKG
 
 rem ; Installer
 makensis.exe %~dp0mpkg_win.nsi

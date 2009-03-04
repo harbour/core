@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-04 08:28 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * mpkg_win.bat
+    + Added cygwin support.
+
+  * utils/hbmk2/hbmk2.prg
+    * Updated some details on the help screen.
+    - Removed gcc as a valid win target.
+
 2009-03-04 08:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     * HB_INC_OPENSSL sample corrected to point to real-life header dir.

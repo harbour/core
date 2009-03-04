@@ -441,7 +441,7 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "icc"      ) != NIL }, "icc"     },;
                     { {|| FindInPath( "cygstart" ) != NIL }, "cygwin"  },;
                     { {|| FindInPath( "xcc"      ) != NIL }, "xcc"     } }
-      aCOMPSUP := { "gcc", "mingw", "msvc", "bcc", "owatcom", "pocc", "rsxnt", "xcc", "dmc", "icc", "cygwin",;
+      aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "pocc", "rsxnt", "xcc", "dmc", "icc", "cygwin",;
                     "msvc64", "msvcia64", "pocc64",;
                     "mingwce", "msvcce", "poccce" }
       cBin_CompPRG := "harbour.exe"
@@ -2774,8 +2774,9 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - Regular Harbour compiler options are also accepted." ,;
       "  - Multiple -l, -L and <script> parameters are accepted." ,;
       "  - " + HBMK_CFG_NAME + " option file in hbmk directory is always processed if it" ,;
-      "    exists. On *nix platforms, /usr/local/etc then /etc are checked" ,;
-      "    before the hbmk directory. The file format is .hbp." ,;
+      "    exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour," ,;
+      "    <base>/etc are checked (in that order) before the hbmk directory." ,;
+      "    The file format is the same as .hbp." ,;
       "  - .hbp option files in current dir are automatically processed." ,;
       "  - .hbp options (they should come in separate lines):" ,;
       "    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]" ,;
@@ -2790,7 +2791,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, gpp, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
-      "    win    : gcc, mingw, msvc, bcc, owatcom, pocc, dmc, rsxnt, icc, cygwin" ,;
+      "    win    : mingw, msvc, bcc, owatcom, pocc, dmc, rsxnt, icc, cygwin" ,;
       "             mingwce, msvc64, msvcia64, msvcce, pocc64, poccce, xcc" ,;
       "    os2    : gcc, owatcom, icc" ,;
       "    dos    : gcc, djgpp, owatcom, rsx32" ,;
