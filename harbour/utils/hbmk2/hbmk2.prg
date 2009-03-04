@@ -1099,27 +1099,24 @@ FUNCTION Main( ... )
          ENDIF
 
          /* Add system libraries */
-         AAdd( s_aLIBSYS, "m" )
-         IF s_lMT
-            AAdd( s_aLIBSYS, "pthread" )
-         ENDIF
-         DO CASE
-         CASE t_cARCH == "linux"
-            AAdd( s_aLIBSYS, "dl" )
-            AAdd( s_aLIBSYS, "rt" )
-#if 0
-            IF ! s_lSHARED .AND. s_lSTATICFULL
+         IF ! s_lSHARED
+            AAdd( s_aLIBSYS, "m" )
+            IF s_lMT
                AAdd( s_aLIBSYS, "pthread" )
             ENDIF
-#endif
-         CASE t_cARCH == "sunos"
-            AAdd( s_aLIBSYS, "rt" )
-            AAdd( s_aLIBSYS, "socket" )
-            AAdd( s_aLIBSYS, "nsl" )
-            AAdd( s_aLIBSYS, "resolv" )
-         CASE t_cARCH == "hpux"
-            AAdd( s_aLIBSYS, "rt" )
-         ENDCASE
+            DO CASE
+            CASE t_cARCH == "linux"
+               AAdd( s_aLIBSYS, "dl" )
+               AAdd( s_aLIBSYS, "rt" )
+            CASE t_cARCH == "sunos"
+               AAdd( s_aLIBSYS, "rt" )
+               AAdd( s_aLIBSYS, "socket" )
+               AAdd( s_aLIBSYS, "nsl" )
+               AAdd( s_aLIBSYS, "resolv" )
+            CASE t_cARCH == "hpux"
+               AAdd( s_aLIBSYS, "rt" )
+            ENDCASE
+         ENDIF
 
          IF IsGTRequested( s_cGT, s_aLIBUSERGT, s_aLIBDYNHAS, s_lSHARED, "gtcrs" )
             /* TOFIX: Sometimes 'ncur194' is needed. */
@@ -1191,7 +1188,9 @@ FUNCTION Main( ... )
          ELSE
             AAdd( s_aOPTC, "-o{OE}" )
          ENDIF
-         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "winspool", "gdi32", "comctl32", "comdlg32", "ole32", "oleaut32", "uuid", "wsock32", "ws2_32" } )
+         IF ! s_lSHARED
+            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "winspool", "gdi32", "comctl32", "comdlg32", "ole32", "oleaut32", "uuid", "wsock32", "ws2_32" } )
+         ENDIF
          s_aLIBSHARED := { iif( s_lMT, "harbourmt", "harbour" ) }
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
@@ -1227,7 +1226,9 @@ FUNCTION Main( ... )
             cOpt_CompC += " {LL}"
             aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
          ENDIF
-         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
+         IF ! s_lSHARED
+            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "m" } )
+         ENDIF
          IF s_lSTRIP
             AAdd( s_aOPTC, "-s" )
          ENDIF
@@ -1314,7 +1315,9 @@ FUNCTION Main( ... )
             ENDIF
             cOpt_CompC += " {LL}"
             aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
-            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "socket" } )
+            IF ! s_lSHARED
+               s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "socket" } )
+            ENDIF
             IF s_lSTRIP
                AAdd( s_aOPTC, "-s" )
             ENDIF
@@ -1528,13 +1531,15 @@ FUNCTION Main( ... )
       CASE t_cARCH == "win" .AND. t_cCOMP == "dmc"
       CASE t_cARCH == "win" .AND. t_cCOMP == "icc"
       CASE t_cARCH $ "win|linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wince/ARM on win/x86 */
-         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl", "uuid", "ole32" } )
+         IF ! s_lSHARED
+            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl", "uuid", "ole32" } )
+         ENDIF
       CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "xcc"
       ENDCASE
 
       /* Do entry function detection on platform required and supported */
-      IF s_cMAIN == NIL
+      IF ! lStopAfterCComp .AND. s_cMAIN == NIL
          tmp := iif( Lower( FN_ExtGet( s_cFIRST ) ) == ".prg" .OR. Empty( FN_ExtGet( s_cFIRST ) ), FN_ExtSet( s_cFIRST, ".c" ), s_cFIRST )
          IF ! Empty( tmp := getFirstFunc( tmp ) )
             s_cMAIN := tmp
@@ -1543,10 +1548,11 @@ FUNCTION Main( ... )
 
       /* HACK: Override entry point requested by user or detected by us,
                and override the GT if requested by user. */
-      IF s_cMAIN != NIL .OR. ;
-         ! Empty( s_aLIBUSERGT ) .OR. ;
-         s_cGT != NIL .OR. ;
-         s_lFMSTAT != NIL
+      IF ! lStopAfterCComp .AND. ;
+         ( s_cMAIN != NIL .OR. ;
+           ! Empty( s_aLIBUSERGT ) .OR. ;
+           s_cGT != NIL .OR. ;
+           s_lFMSTAT != NIL )
 
          fhnd := hb_FTempCreateEx( @s_cCSTUB, NIL, "hbmk_", ".c" )
          IF fhnd != F_ERROR
@@ -2466,26 +2472,13 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
          is a _non-default_ core GT. */
 STATIC FUNCTION IsGTRequested( cGT, aGT, aLIBDYNHAS, lSHARED, cWhichGT )
 
-   IF lSHARED
-      /* Checking for included in shared lib GT. */
-      IF AScan( aLIBDYNHAS, {|tmp| Lower( tmp ) == cWhichGT } ) > 0
-         RETURN .T.
-      ENDIF
-   ENDIF
+   HB_SYMBOL_UNUSED( cGT )
+   HB_SYMBOL_UNUSED( aGT )
+   HB_SYMBOL_UNUSED( aLIBDYNHAS )
 
-   /* Checking for the default GT, always requested by core. */
-   IF cGT == NIL .AND. t_cGTDEFAULT == cWhichGT
-      RETURN .T.
-   ENDIF
-
-   /* Checking for user requested default GT. */
-   IF cGT != NIL .AND. Lower( cGT ) == cWhichGT
-      RETURN .T.
-   ENDIF
-
-   /* Checking for user requested GT. */
-   IF AScan( aGT, {|tmp| Lower( tmp ) == cWhichGT } ) > 0
-      RETURN .T.
+   IF ! lSHARED
+      /* Check if it's a core GT. */
+      RETURN AScan( t_aLIBCOREGT, {|tmp| Lower( tmp ) == cWhichGT } ) > 0
    ENDIF
 
    RETURN .F.
@@ -2766,7 +2759,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "                    Special value:" ,;
       "                     - bld: use original build settings (default on *nix)" ,;
       "  -info             turn on informational messages" ,;
-      "  -quiet            suppress logo" ,;
+      "  -quiet            suppress all screen messages" ,;
       "" ,;
       "Notes:" ,;
       "  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>." ,;

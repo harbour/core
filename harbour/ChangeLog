@@ -8,6 +8,22 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-04 14:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * doc/man/hbmk.1
+    * Updated. Blindly.
+      Do someone know a tool which can render man pages and show
+      it without having to install this file first?
+
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed to not create .c stub if only C compilation is requested.
+      In this case it won't do any entry function detection either.
+    ! Attempt to fix core GT dependencies not automatically linked
+      with gcc/*nix for gtsln/gtcrs/gtxwc (in static mode).
+    % Not adding some (now unnecessary) system libraries when in
+      shared mode for gcc family compilers on all platforms.
+      See: 2009-03-04 12:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+    ; Please test above changes.
+
 2009-03-04 12:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * explicitly bind system libraries with harbour shared library.

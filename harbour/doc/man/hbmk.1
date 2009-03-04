@@ -4,7 +4,7 @@
 hbmk \- Harbour Project Make
 
 .SH SYNOPSIS
-\fBhbmk\fP \fB[options]\fP
+\fBhbmk\fP \fB[options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res]>\fP
 
 .SH DESCRIPTION
 \fBhbmk\fP is the Harbour Project make utility.
@@ -12,6 +12,135 @@ hbmk \- Harbour Project Make
 .SH OPTIONS
 .IP "\fB-help\fP" 10
 Display full help
+
+.IP "\fB-o<outname>\fP" 10
+output file name
+
+.IP "\fB-l<libname>\fP" 10
+link with <libname> library
+
+.IP "\fB-L<libpath>\fP" 10
+additional path to search for libraries
+
+.IP "\fB-static|-shared\fP" 10
+link with static/shared libs
+
+.IP "\fB-mt|-st\fP" 10
+link with multi-thread/single-thread VM
+
+.IP "\fB-gt<name>\fP" 10
+link with GT<name> GT driver, can be repeated to link
+with more GTs. First one will be the default at runtime
+
+.IP "\fB-gui|-std\fP" 10
+create GUI/console executable
+
+.IP "\fB-main=<mainfunc>\fP" 10
+override the name of starting function/procedure.
+
+.IP "\fB-fullstatic\fP" 10
+link with all static libs
+
+.IP "\fB-nulrdd[-]\fP" 10
+link with nulrdd
+
+.IP "\fB-bldf[-]\fP" 10
+inherit all/no (default) flags from Harbour build
+
+.IP "\fB-bldf=[p][c][l]\fP" 10
+inherit .prg/.c/linker flags (or none) from Harbour build
+
+.IP "\fB-[no]debug\fP" 10
+add/exclude debug info
+
+.IP "\fB-[no]map\fP" 10
+create (or not) a map file
+
+.IP "\fB-[no]strip\fP" 10
+strip (no strip) binaries
+
+.IP "\fB-[no]fmstat\fP" 10
+enable/disable runtime memory statistics (gcc builds only)
+
+.IP "\fB-[no]trace\fP" 10
+show commands executed
+
+.IP "\fB-[no]run\fP" 10
+run/don't run the created executable
+
+.IP "\fB-nohbp\fP" 10
+do not process .hbp files in current directory
+
+.IP "\fB-hbcc, -hbcmp\fP" 10
+stop after creating the object files
+create link/copy hbmk to hbcc/hbcmp for the same effect
+
+.IP "\fB-hblnk\fP" 10
+act as linker. Currently this is the same as -q
+
+.IP "\fB-arch=<arch>\fP" 10
+assume specific architecure. Same as HB_ARCHITECTURE envvar
+
+.IP "\fB-comp=<comp>\fP" 10
+use specific compiler. Same as HB_COMPILER envvar
+Special value:
+- bld: use original build settings (default on *nix)
+
+.IP "\fB-info\fP" 10
+turn on informational messages
+
+.IP "\fB-quiet\fP" 10
+suppress all screen messages
+
+Notes:
+  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>.
+  - Regular Harbour compiler options are also accepted.
+  - Multiple -l, -L and <script> parameters are accepted.
+  - hbmk.cfg option file in hbmk directory is always processed if it
+    exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour,
+    <base>/etc are checked (in that order) before the hbmk directory.
+    The file format is the same as .hbp.
+  - .hbp option files in current dir are automatically processed.
+  - .hbp options (they should come in separate lines):
+    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]
+    cflags=[C compiler flags], ldflags=[Linker flags], libpaths=[lib paths]
+    gui|mt|shared|nulrdd|debug|map|strip|run=[yes|no]
+    Lines starting with '#' char are ignored
+  - Platform filters are accepted in each .hbp line and with -l options.
+    Filter format: {[!][<arch|comp>]}. Filters can be combined
+    using '&', '|' operators and grouped by parantheses.
+    Ex.: {win}, {gcc}, {linux|darwin}, {win&!dmc}, {(win|linux)&!owatcom}
+  - Defaults and feature support vary by architecture/compiler.
+  - Supported <comp> values for each supported <arch> value:
+    linux  : gcc, gpp, owatcom, icc, mingw, mingwce
+    darwin : gcc
+    win    : mingw, msvc, bcc, owatcom, pocc, dmc, rsxnt, icc, cygwin
+             mingwce, msvc64, msvcia64, msvcce, pocc64, poccce, xcc
+    os2    : gcc, owatcom, icc
+    dos    : gcc, djgpp, owatcom, rsx32
+    bsd, hpux, sunos: gcc
+
+.SH ENVIRONMENT
+
+.IP "\fBCCPATH\fP" 10
+.IP "\fBCCPREFIX\fP" 10
+.IP "\fBHB_ARCHITECTURE\fP" 10
+.IP "\fBHB_COMPILER\fP" 10
+.IP "\fBHB_BIN_INSTALL\fP" 10
+.IP "\fBHB_INC_INSTALL\fP" 10
+.IP "\fBHB_LIB_INSTALL\fP" 10
+.IP "\fBHB_INSTALL_PREFIX\fP" 10
+.IP "\fBHB_MT\fP" 10
+.IP "\fBHB_GUI\fP" 10
+.IP "\fBHB_SHARED\fP" 10
+.IP "\fBHB_DEBUG\fP" 10
+.IP "\fBHB_NULRDD\fP" 10
+.IP "\fBHB_GT\fP" 10
+.IP "\fBHB_USER_PRGFLAGS\fP" 10
+.IP "\fBHB_USER_LIBS\fP" 10
+.IP "\fBHB_USER_RESFLAGS\fP" 10
+.IP "\fBHB_USER_CFLAGS\fP" 10
+.IP "\fBHB_USER_LDFLAGS\fP" 10
 
 .SH AUTHOR
 
