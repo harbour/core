@@ -62,9 +62,9 @@ HOW TO BUILD AND INSTALL HARBOUR
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTE: <DIR> should use Cygwin drive notation: /cygdrive/c/
+      NOTE: <DIR> should use Cygwin drive notation: /cygdrive/c for C:
 
-   Windows with other compilers
+   Windows with other compilers (MSVC, Watcom, Borland, Pelles, etc.)
    ----------------------------
       Platform specific prerequisites:
 
@@ -86,7 +86,7 @@ HOW TO BUILD AND INSTALL HARBOUR
           - Rename mingw32-make.exe to make.exe and put it in
             your PATH _before_ your compiler tools.
 
-      > set HB_COMPILER=<msvc|bcc|owatcom|...>
+      > set HB_COMPILER=<msvc|owatcom|bcc|pocc|...>
       > set HB_INSTALL_PREFIX=<DIR>
       > make_gnu.bat install
 
@@ -149,6 +149,10 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    HB_INC_MYSQL=C:\mysql\include
    HB_INC_OPENSSL=C:\openssl\inc32
    HB_INC_PGSQL=C:\pgsql\include
+
+   NOTES: - For mingw and cygwin you have to use forward slashes
+            and also cygwin drive notation for cygwin.
+          - Space in dirnames isn't currently supported.
 
 
 SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
