@@ -15,6 +15,13 @@
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
+# ---------------------------------------------------------------
+# See GNU bash docs here:
+#    http://www.gnu.org/software/bash/manual/bashref.html
+# See POSIX shell docs here:
+#    http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
+# ---------------------------------------------------------------
+
 if [ -z "$HB_ARCHITECTURE" ]; then
     if [ "$OSTYPE" = "msdosdjgpp" ]; then
         hb_arch="dos"
@@ -41,7 +48,7 @@ if [ -z "$HB_COMPILER" ]; then
     export HB_COMPILER
 fi
 
-if [ "$HB_ARCHITECTURE" == "cyg" ]
+if [ "$HB_ARCHITECTURE" = "cyg" ]
 then
     export HB_ARCHITECTURE=win
 fi
@@ -120,9 +127,9 @@ then
     export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
 fi
 
-if [ "$HB_ARCHITECTURE" == "win" ] || \
-   [ "$HB_ARCHITECTURE" == "dos" ] || \
-   [ "$HB_ARCHITECTURE" == "os2" ]; then
+if [ "$HB_ARCHITECTURE" = "win" ] || \
+   [ "$HB_ARCHITECTURE" = "dos" ] || \
+   [ "$HB_ARCHITECTURE" = "os2" ]; then
     if [ -n "$HB_INSTALL_PREFIX" ]; then
         export HB_INSTALL_PREFIX="${HB_INSTALL_PREFIX//\\//}"
     fi
@@ -158,9 +165,9 @@ if [ -z "$HB_BIN_INSTALL" ]; then export HB_BIN_INSTALL=$HB_INSTALL_PREFIX/bin; 
 if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL=$HB_INSTALL_PREFIX/lib$hb_instsubdir; fi
 if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL=$HB_INSTALL_PREFIX/include$hb_instsubdir; fi
 
-if [ "$HB_ARCHITECTURE" == "win" ] || \
-   [ "$HB_ARCHITECTURE" == "dos" ] || \
-   [ "$HB_ARCHITECTURE" == "os2" ]; then
+if [ "$HB_ARCHITECTURE" = "win" ] || \
+   [ "$HB_ARCHITECTURE" = "dos" ] || \
+   [ "$HB_ARCHITECTURE" = "os2" ]; then
     if [ -z "$HB_DOC_INSTALL" ]; then export HB_DOC_INSTALL=$HB_INSTALL_PREFIX/doc; fi
     mkdir -p $HB_BIN_INSTALL
     mkdir -p $HB_LIB_INSTALL

@@ -15,7 +15,7 @@ rem    - Windows NT or upper
 rem    - NullSoft Installer installed (NSIS)
 rem      http://nsis.sourceforge.net
 rem    - makensis.exe (part of NSIS) in PATH
-rem    - Info-ZIP zip.exe in PATH.
+rem    - Info-ZIP zip.exe in PATH
 rem    - HB_COMPILER envvar configured (see INSTALL doc)
 rem    - C compiler and GNU Make configured (see INSTALL doc)
 rem ---------------------------------------------------------------
@@ -50,10 +50,10 @@ call make_gnu.bat
 
 :MK_PKG
 
-rem ; Installer
+rem ; Installer package
 makensis.exe %~dp0mpkg_win.nsi
 
-rem ; .zip packages
+rem ; .zip package
 if exist %HB_PKGNAME%.zip del %HB_PKGNAME%.zip
 pushd
 cd %HB_INSTALL_BASE%

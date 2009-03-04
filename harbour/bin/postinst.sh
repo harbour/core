@@ -42,6 +42,7 @@ fi
 
 if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \
    [ "$HB_COMPILER" = "mingw" ] || [ "$HB_COMPILER" = "mingwce" ] || \
+   [ "$HB_COMPILER" = "cygwin" ] || \
    [ "$HB_COMPILER" = "djgpp" ] || [ "$HB_COMPILER" = "icc" ]
 then
     RANLIB=""

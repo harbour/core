@@ -51,8 +51,6 @@ HOW TO BUILD AND INSTALL HARBOUR
    Windows with Cygwin
    -------------------
       Make sure to have Cygwin properly properly configured.
-      Make sure to use Harbour sources with LF line termination,
-      if you see a bash error, try 'dos2unix make_gnu.sh'.
 
       > set HB_INSTALL_PREFIX=<DIR>
       > sh make_gnu.sh install

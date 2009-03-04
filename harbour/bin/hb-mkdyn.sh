@@ -25,10 +25,10 @@ fi
 linker_options=""
 
 case "$hb_arch" in
-    *windows*|*mingw32*|msys*) hb_arch="win" ;;
-    *os/2*)                    hb_arch="os2" ;;
-    *dos)                      hb_arch="dos" ;;
-    *bsd)                      hb_arch="bsd" ;;
+    *windows*|*mingw32*|msys*|cygwin*) hb_arch="win" ;;
+    *os/2*)                            hb_arch="os2" ;;
+    *dos)                              hb_arch="dos" ;;
+    *bsd)                              hb_arch="bsd" ;;
 esac
 
 case "$hb_arch" in
