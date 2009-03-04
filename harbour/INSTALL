@@ -48,9 +48,6 @@ HOW TO BUILD AND INSTALL HARBOUR
       > hello
       You should see 'Hello world!' on screen.
 
-      NOTE: You have to use forwards slashes in <DIR>, and
-            msys style drive notation: /c/ (means C:)
-
    Windows with other compilers
    ----------------------------
       Platform specific prerequisites:
@@ -73,7 +70,7 @@ HOW TO BUILD AND INSTALL HARBOUR
           - Rename mingw32-make.exe to make.exe and put it in
             your PATH _before_ your compiler tools.
 
-      > set HB_COMPILER=<[msvc]|bcc|owatcom|...>
+      > set HB_COMPILER=<msvc|bcc|owatcom|...>
       > set HB_INSTALL_PREFIX=<DIR>
       > make_gnu.bat install
 

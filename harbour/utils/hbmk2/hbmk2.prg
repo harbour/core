@@ -139,6 +139,7 @@ FUNCTION Main( ... )
       "hbextern" }
 
    LOCAL aLIB_BASE_GT := {;
+      "gtnul" ,;
       "gtcgi" ,;
       "gtpca" ,;
       "gtstd" }

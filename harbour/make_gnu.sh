@@ -113,6 +113,26 @@ then
     export HB_USER_CFLAGS="$HB_USER_CFLAGS -fPIC"
 fi
 
+if [ "$HB_ARCHITECTURE" == "win" ] || \
+   [ "$HB_ARCHITECTURE" == "dos" ] || \
+   [ "$HB_ARCHITECTURE" == "os2" ]; then
+    if [ -n "$HB_INSTALL_PREFIX" ]; then
+        export HB_INSTALL_PREFIX="${HB_INSTALL_PREFIX//\\//}"
+    fi
+    if [ -n "$HB_BIN_INSTALL" ]; then
+        export HB_BIN_INSTALL="${HB_BIN_INSTALL//\\//}"
+    fi
+    if [ -n "$HB_LIB_INSTALL" ]; then
+        export HB_LIB_INSTALL="${HB_LIB_INSTALL//\\//}"
+    fi
+    if [ -n "$HB_INC_INSTALL" ]; then
+        export HB_INC_INSTALL="${HB_INC_INSTALL//\\//}"
+    fi
+    if [ -n "$HB_DOC_INSTALL" ]; then
+        export HB_DOC_INSTALL="${HB_DOC_INSTALL//\\//}"
+    fi
+fi
+
 [ -z "$HB_INSTALL_PREFIX" ] && [ -n "$PREFIX" ] && export HB_INSTALL_PREFIX="$PREFIX"
 [ -z "$HB_INSTALL_PREFIX" ] && export HB_INSTALL_PREFIX=/usr/local
 
@@ -130,8 +150,17 @@ esac
 if [ -z "$HB_BIN_INSTALL" ]; then export HB_BIN_INSTALL=$HB_INSTALL_PREFIX/bin; fi
 if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL=$HB_INSTALL_PREFIX/lib$hb_instsubdir; fi
 if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL=$HB_INSTALL_PREFIX/include$hb_instsubdir; fi
-if [ -z "$HB_DOC_INSTALL" ] && [ "${HB_COMPILER}" == "mingw" ]; then export HB_DOC_INSTALL=$HB_INSTALL_PREFIX/doc; fi
 
+if [ "$HB_ARCHITECTURE" == "win" ] || \
+   [ "$HB_ARCHITECTURE" == "dos" ] || \
+   [ "$HB_ARCHITECTURE" == "os2" ]; then
+    if [ -z "$HB_DOC_INSTALL" ]; then export HB_DOC_INSTALL=$HB_INSTALL_PREFIX/doc; fi
+    mkdir -p $HB_BIN_INSTALL
+    mkdir -p $HB_LIB_INSTALL
+    mkdir -p $HB_INC_INSTALL
+    mkdir -p $HB_DOC_INSTALL
+    echo !!! $HB_BIN_INSTALL
+fi
 
 if [ -z "$HB_ARCHITECTURE" ]; then
     echo "Error: HB_ARCHITECTURE is not set."

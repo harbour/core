@@ -29,9 +29,9 @@ CRCCheck on
 Name "Harbour Project"
 
 ; The file to write
-OutFile "harbour-$%HB_VERSION%-$%HB_ARCHITECTURE%-$%HB_COMPILER%.exe"
+OutFile "$%HB_PKGNAME%.exe"
 
-InstallDir C:\harbour-$%HB_COMPILER%
+InstallDir C:\$%HB_DIRNAME%
 
 ;--------------------------------
 ; Interface Settings

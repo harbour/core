@@ -8,6 +8,34 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-04 01:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+  * make_gnu.bat
+    - 'msvc' is no longer the default choice for win.
+      HB_COMPILER must always be specified.
+
+  * mpkg_win.bat
+    + Removes tmp install dir before creating the build.
+    + Added support for MinGW.
+    + Added creation of .zip packages. (Info-ZIP zip.exe
+      is required).
+
+  * make_gnu.sh
+  * INSTALL
+    + on win/dos/os2 systems it will create HB_*_INSTALL dirs
+      automatically (sync with make_gnu.bat).
+    + on dos/os2 it will also automatically set HB_DOC_INSTALL.
+    + on win/dos/os2 it will automatically convert
+      HB_INSTALL_PREFIX and HB_*_INSTALL to use forward slashes.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added gtnul to standard list of GTs.
+      Attempt to solve the problem reported by Barry Jackson.
+      Please test if this solves anything.
+
+  * doc/Makefile
+    ! Deleted files removed.
+
 2009-03-04 00:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fixed problem reported by Istvan Bisz.

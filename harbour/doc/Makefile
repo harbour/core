@@ -13,19 +13,14 @@ DOC_FILES=\
 	codestyl.txt \
 	destruct.txt \
 	dirstruc.txt \
-	funclist.txt \
 	gmake.txt \
 	gtapi.txt \
-	hbmake.txt \
 	hdr_tpl.txt \
 	howtobld.txt \
 	howtobsd.txt \
-	howtomak.txt \
 	howtorel.txt \
 	howtosvn.txt \
-	hrb_faq.txt \
 	inet.txt \
-	lang_id.txt \
 	license.txt \
 	linux1st.txt \
 	pcode.txt \

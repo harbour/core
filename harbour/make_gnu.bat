@@ -27,7 +27,7 @@ rem Setup defaults.
 
 if "%HB_ARCHITECTURE%" == "" if not "%WINDIR%" == "" set HB_ARCHITECTURE=win
 if "%HB_ARCHITECTURE%" == ""                         set HB_ARCHITECTURE=dos
-if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" set HB_COMPILER=msvc
+if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" goto HELP
 if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
 rem Compatibility
