@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-04 17:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * doc/man/hbmk.1
+    * Updates. Work in progress.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added man page, troff/groff links.
+    ! Reversed the logic shared lib paths were included by.
+    * Changed the meaning -hbcc again. Now it will switch hbmk2
+      to a mode where it accept -c option. If -c is sensed, it
+      will stop after calling the C compiler.
+    ! gtwxc removed from default GT list for *nix systems.
+      It should be added there by hbmk.cfg.
+
 2009-03-04 15:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gnu.sh
     * small cleanup

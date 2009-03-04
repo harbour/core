@@ -63,6 +63,16 @@
  *
  */
 
+/*
+   Man page HOWTO:
+      http://www.schweikhardt.net/man_page_howto.html
+   Groff manual:
+      http://www.gnu.org/software/groff/manual/html_node/index.html
+      http://www.gnu.org/software/groff/manual/groff.pdf
+   Troff manual:
+      http://cm.bell-labs.com/sys/doc/troff.pdf
+ */
+
 #include "common.ch"
 #include "directry.ch"
 #include "fileio.ch"
@@ -264,6 +274,7 @@ FUNCTION Main( ... )
 
    LOCAL lStopAfterHarbour := .F.
    LOCAL lStopAfterCComp := .F.
+   LOCAL lAcceptCFlag := .F.
 
    LOCAL aParams
    LOCAL aParam
@@ -302,8 +313,8 @@ FUNCTION Main( ... )
       CASE cParamL            == "-quiet" ; t_lQuiet := .T. ; t_lInfo := .F.
       CASE Left( cParamL, 6 ) == "-comp=" ; t_cCOMP := SubStr( cParam, 7 )
       CASE Left( cParamL, 6 ) == "-arch=" ; t_cARCH := SubStr( cParam, 7 )
-      CASE cParamL            == "-hbcmp" ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
-      CASE cParamL            == "-hbcc"  ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      CASE cParamL            == "-hbcmp" ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lAcceptCFlag := .F.
+      CASE cParamL            == "-hbcc"  ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptCFlag := .T.
       CASE cParamL            == "-hblnk" ; t_lInfo := .F.
       CASE cParamL            == "-info"  ; t_lInfo := .T.
       CASE cParamL == "-help" .OR. ;
@@ -327,13 +338,13 @@ FUNCTION Main( ... )
    DO CASE
    CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
         Left(  tmp, 5 ) == "hbcmp"
-      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lAcceptCFlag := .F.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hbcmp option." + hb_osNewLine() )
       ENDIF
    CASE Right( tmp, 4 ) == "hbcc" .OR. ;
         Left(  tmp, 4 ) == "hbcc"
-      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptCFlag := .T.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hbcc option." + hb_osNewLine() )
       ENDIF
@@ -394,7 +405,7 @@ FUNCTION Main( ... )
          aCOMPSUP := { "gcc" }
       ENDIF
       cBin_CompPRG := "harbour"
-      s_aLIBHBGT := { "gttrm", "gtxwc" }
+      s_aLIBHBGT := { "gttrm" }
       t_cGTDEFAULT := "gttrm"
       cDynLibNamePrefix := "lib"
       cBinExt := NIL
@@ -703,6 +714,10 @@ FUNCTION Main( ... )
          /* Swallow this switch. We don't pass it to Harbour, as it may badly
             interact with hbmk. */
 
+      CASE lAcceptCFlag .AND. Left( cParamL, 2 ) == "-c"
+
+         lStopAfterCComp := .T
+
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; s_lGUI      := .T. /* Compatibility */
       CASE cParamL == "-std" .OR. ;
@@ -949,9 +964,9 @@ FUNCTION Main( ... )
       ENDIF
 
       IF lSysLoc
-         cPrefix := PathNormalize( s_cHB_LIB_INSTALL, .T. )
-      ELSE
          cPrefix := ""
+      ELSE
+         cPrefix := PathNormalize( s_cHB_LIB_INSTALL, .T. )
       ENDIF
 #if 1
       cPostfix := ""

@@ -9,6 +9,8 @@ hbmk \- Harbour Project Make
 .SH DESCRIPTION
 \fBhbmk\fP is the Harbour Project make utility.
 
+It's a wrapper to the Harbour compiler, a C compiler and linker.
+
 .SH OPTIONS
 .IP "\fB-help\fP" 10
 Display full help
@@ -92,33 +94,41 @@ turn on informational messages
 .IP "\fB-quiet\fP" 10
 suppress all screen messages
 
-Notes:
-  - <script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>.
-  - Regular Harbour compiler options are also accepted.
-  - Multiple -l, -L and <script> parameters are accepted.
-  - hbmk.cfg option file in hbmk directory is always processed if it
-    exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour,
-    <base>/etc are checked (in that order) before the hbmk directory.
-    The file format is the same as .hbp.
-  - .hbp option files in current dir are automatically processed.
-  - .hbp options (they should come in separate lines):
-    libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]
-    cflags=[C compiler flags], ldflags=[Linker flags], libpaths=[lib paths]
-    gui|mt|shared|nulrdd|debug|map|strip|run=[yes|no]
-    Lines starting with '#' char are ignored
-  - Platform filters are accepted in each .hbp line and with -l options.
-    Filter format: {[!][<arch|comp>]}. Filters can be combined
-    using '&', '|' operators and grouped by parantheses.
-    Ex.: {win}, {gcc}, {linux|darwin}, {win&!dmc}, {(win|linux)&!owatcom}
-  - Defaults and feature support vary by architecture/compiler.
-  - Supported <comp> values for each supported <arch> value:
-    linux  : gcc, gpp, owatcom, icc, mingw, mingwce
-    darwin : gcc
-    win    : mingw, msvc, bcc, owatcom, pocc, dmc, rsxnt, icc, cygwin
-             mingwce, msvc64, msvcia64, msvcce, pocc64, poccce, xcc
-    os2    : gcc, owatcom, icc
-    dos    : gcc, djgpp, owatcom, rsx32
-    bsd, hpux, sunos: gcc
+<script> can be <@script> (.hbm file), <script.hbm> or <script.hbp>.
+
+Regular Harbour compiler options are also accepted.
+
+Multiple -l, -L and <script> parameters are accepted.
+
+hbmk.cfg option file in hbmk directory is always processed if it exists.
+On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour,
+<base>/etc are checked (in that order) before the hbmk directory.
+The file format is the same as .hbp.
+
+.hbp option files in current dir are automatically processed.
+
+.hbp options (they should come in separate lines):
+libs=[<libname[s]>], gt=[gtname], prgflags=[Harbour flags]
+cflags=[C compiler flags], ldflags=[Linker flags], libpaths=[lib paths]
+gui|mt|shared|nulrdd|debug|map|strip|run=[yes|no]
+Lines starting with '#' char are ignored
+
+Platform filters are accepted in each .hbp line and with -l options.
+Filter format: {[!][<arch|comp>]}. Filters can be combined
+using '&', '|' operators and grouped by parantheses.
+Ex.: {win}, {gcc}, {linux|darwin}, {win&!dmc}, {(win|linux)&!owatcom}
+
+Defaults and feature support vary by architecture/compiler.
+
+Supported <comp> values for each supported <arch> value:
+linux: gcc, gpp, owatcom, icc, mingw, mingwce
+darwin: gcc
+win: mingw, msvc, bcc, owatcom, pocc, dmc, rsxnt, icc, cygwin mingwce, msvc64, msvcia64, msvcce, pocc64, poccce, xcc
+os2: gcc, owatcom, icc
+dos: gcc, djgpp, owatcom, rsx32
+bsd, hpux, sunos: gcc
+
+.SH FILES
 
 .SH ENVIRONMENT
 
@@ -126,10 +136,10 @@ Notes:
 .IP "\fBCCPREFIX\fP" 10
 .IP "\fBHB_ARCHITECTURE\fP" 10
 .IP "\fBHB_COMPILER\fP" 10
+.IP "\fBHB_INSTALL_PREFIX\fP" 10
 .IP "\fBHB_BIN_INSTALL\fP" 10
 .IP "\fBHB_INC_INSTALL\fP" 10
 .IP "\fBHB_LIB_INSTALL\fP" 10
-.IP "\fBHB_INSTALL_PREFIX\fP" 10
 .IP "\fBHB_MT\fP" 10
 .IP "\fBHB_GUI\fP" 10
 .IP "\fBHB_SHARED\fP" 10
