@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-05 12:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbgtcore.c
+    * small modification in instruction order as workaround for PellesC bug
+
 2009-03-05 12:04 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/memvars.c
     ! added protection against pushing new private variable on HVM stack

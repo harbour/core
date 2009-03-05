@@ -3389,15 +3389,13 @@ static void * hb_gtParam( int iParam )
 PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT )
 {
    void ** gtHolder = ( void ** ) hb_itemGetPtrGC( pItemGT, hb_gt_Destructor );
-   PHB_GT pGT = NULL;
-
-   if( gtHolder )
-      pGT = ( PHB_GT ) *gtHolder;
-
-   if( pGT && HB_GTSELF_LOCK( pGT ) )
-      return pGT;
-   else
-      return NULL;
+   if( gtHolder && *gtHolder )
+   {
+      PHB_GT pGT = ( PHB_GT ) *gtHolder;
+      if( HB_GTSELF_LOCK( pGT ) )
+         return pGT;
+   }
+   return NULL;
 }
 
 HB_FUNC( HB_GTRELOAD )
