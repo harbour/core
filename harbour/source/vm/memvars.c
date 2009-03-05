@@ -227,33 +227,54 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
 
    pPrivateStack = hb_stackGetPrivateStack();
 
-   /* Allocate the value from the end of table
+   pMemvar = hb_dynsymGetMemvar( pDynSym );
+   /* If the variable with the same name exists already
+    * and it's PRIVATE variable declared in this function then
+    * do not push new memvar on PRIVATEs stack
     */
-   if( pPrivateStack->count == pPrivateStack->size )
+   if( pMemvar )
    {
-      /* No more free values in the table - expand the table
-       */
-      if( pPrivateStack->size == 0 )
+      ULONG ulCount = pPrivateStack->count;
+      while( ulCount > pPrivateStack->base )
       {
-         pPrivateStack->stack = ( PHB_PRIVATE_ITEM )
-               hb_xgrab( sizeof( HB_PRIVATE_ITEM ) * TABLE_INITHB_VALUE );
-         pPrivateStack->size  = TABLE_INITHB_VALUE;
-         pPrivateStack->count = pPrivateStack->base = 0;
+         if( pDynSym == pPrivateStack->stack[ ulCount - 1 ].pDynSym )
+            break;
+         --ulCount;
       }
-      else
-      {
-         pPrivateStack->size += TABLE_EXPANDHB_VALUE;
-         pPrivateStack->stack = ( PHB_PRIVATE_ITEM )
-               hb_xrealloc( pPrivateStack->stack,
-                            sizeof( HB_PRIVATE_ITEM ) * pPrivateStack->size );
-      }
+      if( ulCount <= pPrivateStack->base )
+         pMemvar = NULL;
    }
 
-   pPrivateStack->stack[ pPrivateStack->count ].pDynSym = pDynSym;
-   pPrivateStack->stack[ pPrivateStack->count++ ].pPrevMemvar = hb_dynsymGetMemvar( pDynSym );
+   if( ! pMemvar )
+   {
+      /* Allocate the value from the end of table
+       */
+      if( pPrivateStack->count == pPrivateStack->size )
+      {
+         /* No more free values in the table - expand the table
+          */
+         if( pPrivateStack->size == 0 )
+         {
+            pPrivateStack->stack = ( PHB_PRIVATE_ITEM )
+                  hb_xgrab( sizeof( HB_PRIVATE_ITEM ) * TABLE_INITHB_VALUE );
+            pPrivateStack->size  = TABLE_INITHB_VALUE;
+            pPrivateStack->count = pPrivateStack->base = 0;
+         }
+         else
+         {
+            pPrivateStack->size += TABLE_EXPANDHB_VALUE;
+            pPrivateStack->stack = ( PHB_PRIVATE_ITEM )
+                  hb_xrealloc( pPrivateStack->stack,
+                               sizeof( HB_PRIVATE_ITEM ) * pPrivateStack->size );
+         }
+      }
 
-   pMemvar = hb_memvarValueNew();
-   hb_dynsymSetMemvar( pDynSym, pMemvar );
+      pPrivateStack->stack[ pPrivateStack->count ].pDynSym = pDynSym;
+      pPrivateStack->stack[ pPrivateStack->count++ ].pPrevMemvar = hb_dynsymGetMemvar( pDynSym );
+
+      pMemvar = hb_memvarValueNew();
+      hb_dynsymSetMemvar( pDynSym, pMemvar );
+   }
 
    if( pValue )
    {
@@ -311,6 +332,16 @@ void hb_memvarUpdatePrivatesBase( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarUpdatePrivatesBase()"));
 
    hb_stackGetPrivateStack()->base = hb_stackGetPrivateStack()->count;
+}
+
+/*
+ * Reset PRIVATE base offset to the level of previous function
+ */
+static void hb_memvarResetPrivatesBase( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarResetPrivatesBase()"));
+
+   hb_stackGetPrivateStack()->base = hb_stackBaseItem()->item.asSymbol.stackstate->ulPrivateBase;
 }
 
 /*
@@ -1041,6 +1072,7 @@ HB_FUNC( __MVPRIVATE )
    {
       int i;
 
+      hb_memvarResetPrivatesBase();
       for( i = 1; i <= iCount; i++ )
       {
          PHB_ITEM pMemvar = hb_param( i, HB_IT_ANY );

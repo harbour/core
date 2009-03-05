@@ -8,6 +8,23 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-05 12:04 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/memvars.c
+    ! added protection against pushing new private variable on HVM stack
+      if such private variable is already created by the same function.
+      Clipper also has such protection. This code illustrates it:
+         proc main()
+            memvar var1, var2, var3
+            private var1 := "a", var2 := "b", var3 := "c"
+            ? var1, var2, var3
+            private var1 := "A", var2, var3 := "C"
+            ? var1, var2, var3
+            private var1 := NIL, var2, var3
+            ? var1, var2, var3
+         return
+      compare Clipper and current Harbour results with old Harbour ones or
+      with xHarbour results.
+
 2009-03-05 11:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     + Added -prgflag:, -cflag:, -ldflag: options.
