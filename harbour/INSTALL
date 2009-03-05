@@ -172,17 +172,18 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    Windows
    -------
    mingw    - MinGW GNU C
+   mingwce  - MinGW GNU C (Windows CE / ARM)
    msvc     - Microsoft Visual C++
-   owatcom  - Open Watcom C++
-   bcc      - Borland/CodeGear C++ 4.x and above
    msvc64   - Microsoft Visual C++ x64
    msvcia64 - Microsoft Visual C++ IA64
-   mingwce  - MinGW GNU C (Windows CE / ARM)
    msvcce   - Microsoft Visual C++ (Windows CE / ARM)
    pocc     - Pelles C 4.5 and above
    pocc64   - Pelles C 5.0 x64
    poccce   - Pelles C 5.0 (Windows CE / ARM)
    xcc      - Pelles C for xhb
+   icc      - Intel(R) C/C++
+   bcc      - Borland/CodeGear C++ 4.x and above
+   owatcom  - Open Watcom C++
    cygwin   - Cygwin GNU C
 
    DOS (32-bit)

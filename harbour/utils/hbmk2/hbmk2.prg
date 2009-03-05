@@ -103,7 +103,7 @@
          deal with "/" prefixed variant. Since we need to use -o
          Harbour switch, it will be a problem also when user tries
          to use -p option, .ppo files will be generated in temp dir. */
-/* TODO: Sync default c/linker switches with the ones in Harbour GNU make system. */
+/* TODO: Sync default C/linker switches with the ones in Harbour GNU make system. */
 /* TODO: Support for more compilers/platforms. */
 /* TODO: Cross compilation support. */
 /* TODO: Add support for library creation. */
@@ -454,9 +454,10 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "bcc32"    ) != NIL }, "bcc"     },;
                     { {|| FindInPath( "porc64"   ) != NIL }, "pocc64"  },;
                     { {|| FindInPath( "pocc"     ) != NIL }, "pocc"    },;
+                    { {|| FindInPath( "icl"      ) != NIL }, "icc"     },;
                     { {|| FindInPath( "cygstart" ) != NIL }, "cygwin"  },;
                     { {|| FindInPath( "xcc"      ) != NIL }, "xcc"     } }
-      aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "pocc", "xcc", "cygwin",;
+      aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "icc", "pocc", "xcc", "cygwin",;
                     "msvc64", "msvcia64", "pocc64",;
                     "mingwce", "msvcce", "poccce" }
       cBin_CompPRG := "harbour.exe"
@@ -574,13 +575,13 @@ FUNCTION Main( ... )
                                          hb_osPathSeparator() + "harbour" +;
                                          hb_osPathSeparator() + "hbvm.h" )
          IF Empty( s_cHB_BIN_INSTALL )
-            s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, .T. ) + "bin"
+            s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "bin"
          ENDIF
          IF Empty( s_cHB_LIB_INSTALL )
-            s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, .T. ) + "lib" + hb_osPathSeparator() + "harbour"
+            s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "lib" + hb_osPathSeparator() + "harbour"
          ENDIF
          IF Empty( s_cHB_INC_INSTALL )
-            s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, .T. ) + "include" + hb_osPathSeparator() + "harbour"
+            s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "include" + hb_osPathSeparator() + "harbour"
          ENDIF
       ENDIF
    ENDIF
@@ -591,13 +592,13 @@ FUNCTION Main( ... )
       RETURN 3
    ENDIF
    IF Empty( s_cHB_BIN_INSTALL )
-      s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, .T. ) + "bin"
+      s_cHB_BIN_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "bin"
    ENDIF
    IF Empty( s_cHB_LIB_INSTALL )
-      s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, .T. ) + "lib"
+      s_cHB_LIB_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "lib"
    ENDIF
    IF Empty( s_cHB_INC_INSTALL )
-      s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX, .T. ) + "include"
+      s_cHB_INC_INSTALL := PathNormalize( s_cHB_INSTALL_PREFIX ) + "include"
    ENDIF
 
    IF t_lInfo
@@ -1004,7 +1005,7 @@ FUNCTION Main( ... )
       IF lSysLoc
          cPrefix := ""
       ELSE
-         cPrefix := PathNormalize( s_cHB_LIB_INSTALL, .T. )
+         cPrefix := PathNormalize( s_cHB_LIB_INSTALL )
       ENDIF
 #if 1
       cPostfix := ""
@@ -1257,6 +1258,7 @@ FUNCTION Main( ... )
          ENDIF
 
       CASE t_cARCH == "os2" .AND. t_cCOMP == "gcc"
+
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
@@ -1474,7 +1476,7 @@ FUNCTION Main( ... )
                            "hbmainstd",;
                            "hbmainwin" }
 
-      CASE t_cARCH == "win" .AND. t_cCOMP $ "msvc|msvc64|msvcia64"
+      CASE t_cARCH == "win" .AND. t_cCOMP $ "msvc|msvc64|msvcia64|icc"
          IF s_lDEBUG
             AAdd( s_aOPTC, "-MTd -Zi" )
          ENDIF
@@ -1486,7 +1488,11 @@ FUNCTION Main( ... )
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
-         cBin_CompC := "cl.exe"
+         IF t_cCOMP == "icc"
+            cBin_CompC := "icl.exe"
+         ELSE
+            cBin_CompC := "cl.exe"
+         ENDIF
          cOpt_CompC := "-nologo -W3 {FC} -I{DI} {LC} {LO} /link {DL} {FL} {LL} {LS}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
@@ -1523,11 +1529,18 @@ FUNCTION Main( ... )
                                           "harbour-" + cDL_Version_Alter + "-vc-ia64" ),;
                               "hbmainstd",;
                               "hbmainwin" }
+         CASE t_cCOMP == "icc"
+            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-icc",;
+                                          "harbour-" + cDL_Version_Alter + "-icc" ),;
+                              "hbmainstd",;
+                              "hbmainwin" }
          ENDCASE
 
-         cBin_Res := "rc.exe"
-         cOpt_Res := "/r {LR}"
-         cResExt := ".res"
+         IF !( t_cCOMP == "icc" )
+            cBin_Res := "rc.exe"
+            cOpt_Res := "/r {LR}"
+            cResExt := ".res"
+         ENDIF
 
       CASE t_cARCH == "win" .AND. t_cCOMP == "pocc"
          IF s_lGUI
@@ -1600,7 +1613,7 @@ FUNCTION Main( ... )
             DO CASE
             CASE ! s_lSHARED .OR. ;
                  !( t_cARCH == "win" ) .OR. ;
-                 t_cCOMP $ "msvc|msvc64|msvcia64"
+                 t_cCOMP $ "msvc|msvc64|msvcia64|icc"
 
                /* NOTE: MSVC gives the warning:
                         "LNK4217: locally defined symbol ... imported in function ..."
@@ -1630,7 +1643,10 @@ FUNCTION Main( ... )
             ENDIF
 
             /* Build C stub */
-            FWrite( fhnd, '#include "hbapi.h"'                                                      + hb_osNewLine() )
+            FWrite( fhnd, '/* This temp source file was generated by Harbour Make tool. */'         + hb_osNewLine() +;
+                          '/* You can safely delete it. */'                                         + hb_osNewLine() +;
+                          ''                                                                        + hb_osNewLine() +;
+                          '#include "hbapi.h"'                                                      + hb_osNewLine() )
             IF ! Empty( array )
                FWrite( fhnd, ''                                                                     + hb_osNewLine() )
                AEval( array, {|tmp| FWrite( fhnd, 'HB_FUNC_EXTERN( ' + tmp + ' );'                  + hb_osNewLine() ) } )
@@ -2210,7 +2226,7 @@ STATIC FUNCTION FN_NameGet( cFileName )
 STATIC FUNCTION FN_ExtGet( cFileName )
    LOCAL cExt
 
-   hb_FNameSplit( cFileName, , , @cExt )
+   hb_FNameSplit( cFileName,,, @cExt )
 
    RETURN cExt
 
@@ -2647,8 +2663,8 @@ STATIC FUNCTION MacroProc( cString, cDirParent )
    LOCAL nEnd
    LOCAL cMacro
 
-   DO WHILE ( nStart := At( "$(", cString ) ) > 0 .AND. ;
-            ( nEnd := hb_At( ")", cString, nStart ) ) > 0
+   DO WHILE ( nStart := At( "${", cString ) ) > 0 .AND. ;
+            ( nEnd := hb_At( "}", cString, nStart ) ) > 0
 
       cMacro := Upper( SubStr( cString, nStart + 2, nEnd - nStart - 1 ) )
 
@@ -2739,7 +2755,7 @@ STATIC FUNCTION commandResult( cCommand, nResult )
       cResult := hb_MemoRead( cFileName )
       FErase( cFileName )
    ELSE
-      OutErr( "hbmk: Error: cannot create temporary file." + hb_osNewLine() )
+      OutErr( "hbmk: Error: Cannot create temporary file." + hb_osNewLine() )
    ENDIF
 
    RETURN cResult
@@ -2841,7 +2857,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, gpp, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
-      "    win    : mingw, msvc, bcc, owatcom, pocc, cygwin," ,;
+      "    win    : mingw, msvc, bcc, owatcom, icc, pocc, cygwin," ,;
       "             mingwce, msvc64, msvcia64, msvcce, pocc64, poccce, xcc" ,;
       "    os2    : gcc, owatcom" ,;
       "    dos    : djgpp, owatcom" ,;

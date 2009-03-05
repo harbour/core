@@ -2,4 +2,4 @@
 # $Id$
 #
 
--n -mt -gui uhttpd.prg cgifunc.prg cookie.prg session.prg uhttpdc.c socket.c -lhbct
+-mt -gui uhttpd.prg cgifunc.prg cookie.prg session.prg uhttpdc.c socket.c -lhbct

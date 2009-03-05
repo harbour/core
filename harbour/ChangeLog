@@ -8,6 +8,30 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-05 21:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbextern.ch
+    + Added HB_SETENV()
+
+  * utils/hbmk2/hbmk2.prg
+    * Minor cleanups.
+
+  * contrib/examples/uhttpd/uhttpd.hbm
+    - Removed -n. It's now automatic.
+    ; TODO: Remove the rest.
+
+  * INSTALL
+  * doc/man/hbmk.1
+  + config/win/icc.cf
+  * utils/hbmk2/hbmk2.prg
+    + Added Intel(R) C++ compiler support for Windows.
+    + Added initial support also in hbmk2.
+    ; This compile is actively developed and its famous of
+      generating the fastest running code of all C compilers.
+      It also outputs an extremely detailed warning list.
+      And the best thing: It compiled Harbour without a single
+      hitch. hbtest is also running fine. hbmk2 is able to
+      create executables.
+
 2009-03-05 19:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/include/hbwince.h
