@@ -36,25 +36,13 @@ MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 ifeq ($(COMSPEC),) #location of command.com
    COMSPEC := command.com
 else
-   ifeq ($(HB_COMPILER),bcc16)
+   ifneq ($(HB_COMPILER),owatcom)
       #Use standard dos path, which is already set up.
    else
-      ifeq ($(HB_COMPILER),rsx32)
+      ifeq ($(HB_COMPILER),djgpp)
          #Use standard dos path, which is already set up.
       else
-         ifneq ($(findstring watcom,$(HB_COMPILER)),)
-            #Use standard dos path, which is already set up.
-         else
-            ifeq ($(HB_COMPILER),djgpp)
-               #Use standard dos path, which is already set up.
-            else
-               ifeq ($(HB_COMPILER),emx)
-                  #Use standard dos path, which is already set up.
-               else
-                  COMSPEC := $(subst \,/,$(COMSPEC))
-               endif
-            endif
-         endif
+         COMSPEC := $(subst \,/,$(COMSPEC))
       endif
    endif
 endif

@@ -8,6 +8,29 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-05 14:38 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * doc/man/hbmk.1
+  * INSTALL
+  * utils/hbmk2/hbmk2.prg
+  * config/dos/global.cf
+  - config/dos/rsx32.cf
+  - config/win/rsxnt.cf
+    - Pruned rsx32 and rsxnt compiler support. Both are dead
+      product since long years. Their successor is MinGW on win,
+      and DJGPP on dos.
+    ; NOTE: More candidates for such pruning are:
+            - dmc (buggy and compiler not updated)
+            - xcc (based on very old version of pocc)
+            Any opinions?
+
+  * config/dos/global.cf
+    - Cleaned emx, watcom, rsx, bcc16 related branches.
+
+  * mpkg_win.bat
+  * mpkg_win.nsi
+    ! Exclusion of junk files is now done in batch, so
+      the .zip is now also free from them.
+
 2009-03-05 14:34 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbdefs.h
   * harbour/source/vm/hvm.c

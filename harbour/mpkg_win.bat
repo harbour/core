@@ -50,6 +50,12 @@ call make_gnu.bat
 
 :MK_PKG
 
+rem ; Post build cleanup
+
+if exist "%HB_BIN_INSTALL%\*.tds" del "%HB_BIN_INSTALL%\*.tds"
+if exist "%HB_BIN_INSTALL%\*.lib" del "%HB_BIN_INSTALL%\*.lib"
+if exist "%HB_BIN_INSTALL%\*.exp" del "%HB_BIN_INSTALL%\*.exp"
+
 rem ; Installer package
 makensis.exe %~dp0mpkg_win.nsi
 

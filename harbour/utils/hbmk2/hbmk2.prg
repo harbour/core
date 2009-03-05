@@ -424,7 +424,7 @@ FUNCTION Main( ... )
    CASE t_cARCH == "dos"
       aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "djgpp"   },;
                     { {|| FindInPath( "wpp386"   ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
-      aCOMPSUP := { "djgpp", "gcc", "owatcom", "rsx32" }
+      aCOMPSUP := { "djgpp", "gcc", "owatcom" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtdos" }
       t_cGTDEFAULT := "gtdos"
@@ -460,7 +460,7 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "icc"      ) != NIL }, "icc"     },;
                     { {|| FindInPath( "cygstart" ) != NIL }, "cygwin"  },;
                     { {|| FindInPath( "xcc"      ) != NIL }, "xcc"     } }
-      aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "pocc", "rsxnt", "xcc", "dmc", "icc", "cygwin",;
+      aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "pocc", "xcc", "dmc", "icc", "cygwin",;
                     "msvc64", "msvcia64", "pocc64",;
                     "mingwce", "msvcce", "poccce" }
       cBin_CompPRG := "harbour.exe"
@@ -1204,8 +1204,7 @@ FUNCTION Main( ... )
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "mingw" ) .OR. ;
-           ( t_cARCH == "win" .AND. t_cCOMP == "cygwin" ) .OR. ;
-           ( t_cARCH == "win" .AND. t_cCOMP == "rsxnt" )
+           ( t_cARCH == "win" .AND. t_cCOMP == "cygwin" )
 
          cLibPrefix := "-l"
          cLibExt := ""
@@ -1224,9 +1223,6 @@ FUNCTION Main( ... )
          ENDIF
          IF s_lSHARED
             AAdd( s_aLIBPATH, "{DB}" )
-         ENDIF
-         IF t_cCOMP == "rsxnt"
-            cOpt_CompC += " -Zwin32"
          ENDIF
          IF t_cCOMP == "mingw"
             cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
@@ -1264,8 +1260,7 @@ FUNCTION Main( ... )
             ENDIF
          ENDIF
 
-      CASE ( t_cARCH == "dos" .AND. t_cCOMP == "djgpp" ) .OR. ;
-           ( t_cARCH == "dos" .AND. t_cCOMP == "rsx32" )
+      CASE t_cARCH == "dos" .AND. t_cCOMP == "djgpp"
 
          cLibPrefix := "-l"
          cLibExt := ""
@@ -1274,9 +1269,6 @@ FUNCTION Main( ... )
          cOpt_CompC := "{LC} {LO} {LA} -O3 {FC} -I{DI} {DL}{SCRIPT}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
-         IF t_cCOMP == "rsx32"
-            cOpt_CompC  += " -Zrsx32"
-         ENDIF
          IF t_cCOMP == "djgpp"
             cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
          ELSE
@@ -1636,7 +1628,7 @@ FUNCTION Main( ... )
             DO CASE
             CASE ! s_lSHARED .OR. ;
                  !( t_cARCH == "win" ) .OR. ;
-                 t_cCOMP $ "msvc|msvc64|msvcia64|rsxnt"
+                 t_cCOMP $ "msvc|msvc64|msvcia64"
 
                /* NOTE: MSVC gives the warning:
                         "LNK4217: locally defined symbol ... imported in function ..."
@@ -2064,7 +2056,7 @@ STATIC FUNCTION ListCookLib( arraySrc, cPrefix, cExtNew )
    LOCAL cDir
    LOCAL cLibName
 
-   IF t_cCOMP $ "gcc|gpp|mingw|djgpp|rsxnt|rsx32|cygwin"
+   IF t_cCOMP $ "gcc|gpp|mingw|djgpp|cygwin"
       FOR EACH cLibName IN array
          hb_FNameSplit( cLibName, @cDir )
          IF Empty( cDir )
@@ -2877,10 +2869,10 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, gpp, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
-      "    win    : mingw, msvc, bcc, owatcom, pocc, dmc, rsxnt, icc, cygwin" ,;
+      "    win    : mingw, msvc, bcc, owatcom, pocc, dmc, icc, cygwin" ,;
       "             mingwce, msvc64, msvcia64, msvcce, pocc64, poccce, xcc" ,;
       "    os2    : gcc, owatcom, icc" ,;
-      "    dos    : gcc, djgpp, owatcom, rsx32" ,;
+      "    dos    : gcc, djgpp, owatcom" ,;
       "    bsd, hpux, sunos: gcc" }
 
    DEFAULT lLong TO .F.

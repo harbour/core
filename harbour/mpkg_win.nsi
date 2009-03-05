@@ -75,7 +75,7 @@ Section "Main components" hb_main
   File /oname=COPYING "$%HB_DOC_INSTALL%\license.txt"
 
   SetOutPath $INSTDIR\bin
-  File /x *.tds /x *.lib /x *.exp "$%HB_BIN_INSTALL%\*.*"
+  File "$%HB_BIN_INSTALL%\*.*"
 
   SetOutPath $INSTDIR\lib
   File "$%HB_LIB_INSTALL%\*.*"

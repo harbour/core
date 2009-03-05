@@ -176,7 +176,6 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    owatcom  - Open Watcom C++
    bcc      - Borland/CodeGear C++ 4.x and above
    cygwin   - Cygwin GNU C
-   rxsnt    - EMX/RSXNT/Windows GNU C
    icc      - IBM Visual Age C++
    dmc      - Digital Mars C
    msvc64   - Microsoft Visual C++ x64
@@ -192,7 +191,6 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    ---
    djgpp    - Delorie GNU C
    owatcom  - Open Watcom C++ 9.x and above
-   rxs32    - EMX/RSXNT/DOS GNU C
 
    OS/2
    ----
