@@ -8,6 +8,26 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-05 16:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * doc/man/hbmk.1
+  * INSTALL
+  * utils/hbmk2/hbmk2.prg
+  - config/win/dmc.cf
+  - config/os2/icc.cf
+    - Removed win/dmc (Digital Marc C) C compiler from supported
+      compiler list. The compiler was added last year, but
+      it turned out to be too buggy for any kind of production
+      work, and the compiler's development seem to have been
+      stalled year ago.
+      This is part of the pruning effort to leave here what's
+      really needed and beneficiary for users. This will
+      reduce the test matrix and give way to more important
+      things.
+    - Removed os2/icc. IBM Visual Age isn't available for OS/2
+      since very long, and no one seems to use this compiler
+      on this platform. Harbour support also wasn't tested
+      since long.
+
 2009-03-05 16:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * doc/man/hbmk.1
   * INSTALL

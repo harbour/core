@@ -23,7 +23,7 @@ HOW TO BUILD AND INSTALL HARBOUR
 
    Linux/Darwin/BSD/HP-UX/Solaris
    ------------------------------
-      $ export HB_COMPILER=<[gcc]|owatcom|icc|...>
+      $ export HB_COMPILER=<[gcc]|owatcom|icc|gpp>
       $ export HB_INSTALL_PREFIX=<DIR>
       $ ./make_gnu.sh
       $ sudo ./make_gnu.sh install
@@ -107,7 +107,7 @@ HOW TO BUILD AND INSTALL HARBOUR
 
    OS/2
    ----
-      > set HB_COMPILER=<[gcc]|owatcom|icc>
+      > set HB_COMPILER=<[gcc]|owatcom>
       > set HB_INSTALL_PREFIX=<DIR>
       > make_gnu_os2.cmd install
 
@@ -175,16 +175,15 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    msvc     - Microsoft Visual C++
    owatcom  - Open Watcom C++
    bcc      - Borland/CodeGear C++ 4.x and above
-   cygwin   - Cygwin GNU C
-   dmc      - Digital Mars C
    msvc64   - Microsoft Visual C++ x64
-   msvcia64 - Microsoft Visual C++ ia64
+   msvcia64 - Microsoft Visual C++ IA64
    mingwce  - MinGW GNU C (Windows CE / ARM)
    msvcce   - Microsoft Visual C++ (Windows CE / ARM)
    pocc     - Pelles C 4.5 and above
    pocc64   - Pelles C 5.0 x64
    poccce   - Pelles C 5.0 (Windows CE / ARM)
    xcc      - Pelles C for xhb
+   cygwin   - Cygwin GNU C
 
    DOS (32-bit)
    ---
@@ -195,7 +194,6 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    ----
    gcc      - EMX GNU C
    owatcom  - Open Watcom C++
-   icc      - IBM Visual Age C++ 3.0
 
 
 OPTIONS AVAILABLE WHEN BUILDING HARBOUR

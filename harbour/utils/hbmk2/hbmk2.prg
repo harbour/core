@@ -385,7 +385,6 @@ FUNCTION Main( ... )
       CASE "bcc"
       CASE "xcc"
       CASE "pocc"
-      CASE "dmc"
          t_cARCH := "win"
          EXIT
       CASE "djgpp"
@@ -434,9 +433,8 @@ FUNCTION Main( ... )
       cOptPrefix := "-/"
    CASE t_cARCH == "os2"
       aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "gcc"     },;
-                    { {|| FindInPath( "wpp386"   ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
-                    { {|| FindInPath( "icc"      ) != NIL }, "icc"     } }
-      aCOMPSUP := { "gcc", "owatcom", "icc" }
+                    { {|| FindInPath( "wpp386"   ) != NIL }, "owatcom" } } /* TODO: Add full support for wcc386 */
+      aCOMPSUP := { "gcc", "owatcom" }
       cBin_CompPRG := "harbour.exe"
       s_aLIBHBGT := { "gtos2" }
       t_cGTDEFAULT := "gtos2"
@@ -456,10 +454,9 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "bcc32"    ) != NIL }, "bcc"     },;
                     { {|| FindInPath( "porc64"   ) != NIL }, "pocc64"  },;
                     { {|| FindInPath( "pocc"     ) != NIL }, "pocc"    },;
-                    { {|| FindInPath( "dmc"      ) != NIL }, "dmc"     },;
                     { {|| FindInPath( "cygstart" ) != NIL }, "cygwin"  },;
                     { {|| FindInPath( "xcc"      ) != NIL }, "xcc"     } }
-      aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "pocc", "xcc", "dmc", "cygwin",;
+      aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "pocc", "xcc", "cygwin",;
                     "msvc64", "msvcia64", "pocc64",;
                     "mingwce", "msvcce", "poccce" }
       cBin_CompPRG := "harbour.exe"
@@ -1259,6 +1256,38 @@ FUNCTION Main( ... )
             ENDIF
          ENDIF
 
+      CASE t_cARCH == "os2" .AND. t_cCOMP == "gcc"
+         cLibPrefix := "-l"
+         cLibExt := ""
+         cObjExt := ".o"
+         cBin_CompC := "gcc.exe"
+         /* OS/2 needs a space between -o and file name following it */
+         cOpt_CompC := "{LC} {LO} -O3 {FC} -I{DI} {DL}"
+         cLibPathPrefix := "-L"
+         cLibPathSep := " "
+         IF s_lMAP
+            cOpt_CompC += " -Wl,-Map {OM}"
+         ENDIF
+         IF s_lSHARED
+            AAdd( s_aLIBPATH, "{DB}" )
+         ENDIF
+         cOpt_CompC += " {LL}"
+         aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+         IF ! s_lSHARED
+            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "socket" } )
+         ENDIF
+         IF s_lSTRIP
+            AAdd( s_aOPTC, "-s" )
+         ENDIF
+         IF lStopAfterCComp
+            AAdd( s_aOPTC, "-c" )
+            IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
+               AAdd( s_aOPTC, "-o {OO}" )
+            ENDIF
+         ELSE
+            AAdd( s_aOPTC, "-o {OE}" )
+         ENDIF
+
       CASE t_cARCH == "dos" .AND. t_cCOMP == "djgpp"
 
          cLibPrefix := "-l"
@@ -1354,80 +1383,26 @@ FUNCTION Main( ... )
             ENDIF
          ENDIF
 
-      /* OS/2 compilers */
-      CASE t_cARCH == "os2"
-
-         DO CASE
-         CASE t_cCOMP == "gcc"
-            cLibPrefix := "-l"
-            cLibExt := ""
-            cObjExt := ".o"
-            cBin_CompC := "gcc.exe"
-            /* OS/2 needs a space between -o and file name following it */
-            cOpt_CompC := "{LC} {LO} -O3 {FC} -I{DI} {DL}"
-            cLibPathPrefix := "-L"
-            cLibPathSep := " "
-            IF s_lMAP
-               cOpt_CompC += " -Wl,-Map {OM}"
-            ENDIF
-            IF s_lSHARED
-               AAdd( s_aLIBPATH, "{DB}" )
-            ENDIF
-            cOpt_CompC += " {LL}"
-            aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
-            IF ! s_lSHARED
-               s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "socket" } )
-            ENDIF
-            IF s_lSTRIP
-               AAdd( s_aOPTC, "-s" )
-            ENDIF
-            IF lStopAfterCComp
-               AAdd( s_aOPTC, "-c" )
-               IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
-                  AAdd( s_aOPTC, "-o {OO}" )
-               ENDIF
-            ELSE
-               AAdd( s_aOPTC, "-o {OE}" )
-            ENDIF
-
-         CASE t_cCOMP == "owatcom"
-            cLibPrefix := "LIB "
-            cLibExt := ".lib"
-            cObjPrefix := "FILE "
-            cObjExt := ".obj"
-            cLibPathPrefix := "LIBPATH "
-            cLibPathSep := " "
-            cBin_CompC := "wpp386.exe"
-            cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {FC} {LC}"
-            cBin_Link := "wlink"
-            cOpt_Link := "OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
-            IF s_lDEBUG
-               cOpt_Link := "DEBUG " + cOpt_Link
-            ENDIF
-            IF s_lMT
-               AAdd( s_aOPTC, "-bm" )
-            ENDIF
-            IF s_lMAP
-               AAdd( s_aOPTL, "OP MAP" )
-            ENDIF
-
-         CASE t_cCOMP == "icc"
-            cLibPrefix := NIL
-            cLibExt := ".lib"
-            cObjExt := ".obj"
-            cLibPathPrefix := NIL /* TODO */
-            cLibPathSep := NIL /* TODO */
-            cBin_CompC := "icc.exe"
-            cOpt_CompC := "/Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp {FC} -I{DI} {LC}" /* TODO: {DL} */
-            IF s_lDEBUG
-               AAdd( s_aOPTC, "-MTd -Zi" )
-            ENDIF
-            IF s_lGUI
-               AAdd( s_aOPTL, "/subsystem:windows" )
-            ELSE
-               AAdd( s_aOPTL, "/subsystem:console" )
-            ENDIF
-         ENDCASE
+      CASE t_cARCH == "os2" .AND. t_cCOMP == "owatcom"
+         cLibPrefix := "LIB "
+         cLibExt := ".lib"
+         cObjPrefix := "FILE "
+         cObjExt := ".obj"
+         cLibPathPrefix := "LIBPATH "
+         cLibPathSep := " "
+         cBin_CompC := "wpp386.exe"
+         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {FC} {LC}"
+         cBin_Link := "wlink"
+         cOpt_Link := "OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         IF s_lDEBUG
+            cOpt_Link := "DEBUG " + cOpt_Link
+         ENDIF
+         IF s_lMT
+            AAdd( s_aOPTC, "-bm" )
+         ENDIF
+         IF s_lMAP
+            AAdd( s_aOPTL, "OP MAP" )
+         ENDIF
 
       CASE t_cARCH == "linux" .AND. t_cCOMP == "owatcom"
          cLibPrefix := "LIB "
@@ -1594,7 +1569,6 @@ FUNCTION Main( ... )
       CASE t_cARCH == "linux" .AND. t_cCOMP == "icc"
       CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"  /* NOTE: Cross-platform: win/amd64 on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
-      CASE t_cARCH == "win" .AND. t_cCOMP == "dmc"
       CASE t_cARCH $ "win|linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wince/ARM on win/x86 */
          IF ! s_lSHARED
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl", "uuid", "ole32" } )
@@ -2862,15 +2836,15 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - Platform filters are accepted in each .hbp line and with -l options." ,;
       "    Filter format: {[!][<arch|comp>]}. Filters can be combined " ,;
       "    using '&', '|' operators and grouped by parantheses." ,;
-      "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!dmc}, {(win|linux)&!owatcom}" ,;
+      "    Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}" ,;
       "  - Defaults and feature support vary by architecture/compiler." ,;
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, gpp, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
-      "    win    : mingw, msvc, bcc, owatcom, pocc, dmc, cygwin" ,;
+      "    win    : mingw, msvc, bcc, owatcom, pocc, cygwin," ,;
       "             mingwce, msvc64, msvcia64, msvcce, pocc64, poccce, xcc" ,;
-      "    os2    : gcc, owatcom, icc" ,;
-      "    dos    : gcc, djgpp, owatcom" ,;
+      "    os2    : gcc, owatcom" ,;
+      "    dos    : djgpp, owatcom" ,;
       "    bsd, hpux, sunos: gcc" }
 
    DEFAULT lLong TO .F.

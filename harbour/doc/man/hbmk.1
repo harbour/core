@@ -116,16 +116,16 @@ Lines starting with '#' char are ignored
 Platform filters are accepted in each .hbp line and with -l options.
 Filter format: {[!][<arch|comp>]}. Filters can be combined
 using '&', '|' operators and grouped by parantheses.
-Ex.: {win}, {gcc}, {linux|darwin}, {win&!dmc}, {(win|linux)&!owatcom}
+Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!owatcom}
 
 Defaults and feature support vary by architecture/compiler.
 
 Supported <comp> values for each supported <arch> value:
 linux: gcc, gpp, owatcom, icc, mingw, mingwce
 darwin: gcc
-win: mingw, msvc, bcc, owatcom, pocc, dmc, cygwin mingwce, msvc64, msvcia64, msvcce, pocc64, poccce, xcc
-os2: gcc, owatcom, icc
-dos: gcc, djgpp, owatcom
+win: mingw, msvc, bcc, owatcom, pocc, cygwin, mingwce, msvc64, msvcia64, msvcce, pocc64, poccce
+os2: gcc, owatcom
+dos: djgpp, owatcom
 bsd, hpux, sunos: gcc
 
 .SH FILES
