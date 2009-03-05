@@ -112,13 +112,9 @@ HB_FUNC( GETENV )
                BOOL fFree;
                char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) szValue, &fFree );
 
+               hb_retc_buffer( pbyResult );
                if( fFree )
-               {
-                  hb_retc_buffer( pbyResult );
                   hb_xfree( szValue );
-               }
-               else
-                  hb_retc_buffer( szValue );
             }
          }
          else
@@ -198,13 +194,9 @@ HB_FUNC( HB_GETENV )
                BOOL fFree;
                char * pbyResult = ( char * ) hb_osDecode( ( BYTE * ) szValue, &fFree );
 
+               hb_retc_buffer( pbyResult );
                if( fFree )
-               {
-                  hb_retc_buffer( pbyResult );
                   hb_xfree( szValue );
-               }
-               else
-                  hb_retc_buffer( szValue );
             }
             else
                hb_retc_buffer( szValue );
@@ -223,4 +215,32 @@ HB_FUNC( HB_GETENV )
    }
    else
       hb_retc( NULL );
+}
+
+HB_FUNC( HB_SETENV )
+{
+   char * pszName = hb_parc( 1 );
+   BOOL fResult = FALSE;
+
+   if( pszName )
+   {
+      char * pszValue = hb_parc( 2 );
+      BOOL fFreeName = FALSE, fFreeVal = FALSE;
+
+      if( ( ! ISLOG( 3 ) || hb_parl( 3 ) ) )
+      {
+         pszName = ( char * ) hb_osEncode( ( BYTE * ) pszName, &fFreeName );
+         if( pszValue )
+            pszValue = ( char * ) hb_osEncode( ( BYTE * ) pszValue, &fFreeVal );
+      }
+
+      fResult = hb_setenv( pszName, pszValue );
+
+      if( fFreeName )
+         hb_xfree( pszName );
+      if( fFreeVal )
+         hb_xfree( pszValue );
+   }
+
+   hb_retl( fResult );
 }

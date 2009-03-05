@@ -8,6 +8,25 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-05 19:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbwince.h
+  * harbour/source/common/hbgete.c
+  * harbour/source/common/hbwince.c
+    + added BOOL hb_setenv( const char * szName, const char * szValue )
+      It sets or deletes (szValue==NULL) environment variable.
+      Please add support for other compilers/OS-es or define
+      unsupported platforms to eliminate TODO warning.
+      For sure OS2 version have to be updated.
+
+  * harbour/source/rtl/gete.c
+    + added .prg function:
+         HB_SETENV( <cEnvName>, [<cNewVal>] [, <lOsCP>] ) -> <lOK>
+      which sets or deletes (when <cNewVal> is NIL) process environment
+      variable <cEnvName>. <lOsCP> controls character translation to
+      OS encoding. By default is enabled.
+      TOFIX: <cEnvName> OS character encoding is missing in [HB_]_GETENV()
+
 2009-03-05 18:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbprintf.c
     * do not use modfl() in WinCE POCC builds. If MSVC also does not

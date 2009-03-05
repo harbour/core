@@ -95,6 +95,7 @@ extern char *strerror( int errnum );
    #endif
 
    DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size );
+   BOOL WINAPI SetEnvironmentVariableA( LPCSTR name, LPCSTR value );
    LPSTR WINAPI GetEnvironmentStringsA( void );
    BOOL WINAPI GetProcessTimes( HANDLE hprocess,
                                 LPFILETIME lpCreationTime, LPFILETIME lpExitTime,

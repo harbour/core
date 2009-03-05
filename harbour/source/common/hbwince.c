@@ -228,6 +228,14 @@ DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
    return size;
 }
 
+BOOL WINAPI SetEnvironmentVariableA( LPCSTR name, LPCSTR value )
+{
+   HB_SYMBOL_UNUSED( name );
+   HB_SYMBOL_UNUSED( value );
+
+   /* TODO: */
+}
+
 BOOL WINAPI GetProcessTimes( HANDLE hprocess,
                              LPFILETIME lpCreationTime, LPFILETIME lpExitTime,
                              LPFILETIME lpKernelTime, LPFILETIME lpUserTime )

@@ -146,3 +146,54 @@ BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
 
    return bRetVal;
 }
+
+/* set current process environment variable, if szValue is NULL delete
+ * environment variable
+ */
+BOOL hb_setenv( const char * szName, const char * szValue )
+{
+#if defined(HB_OS_WIN)
+
+   return SetEnvironmentVariableA( szName, szValue ) != 0;
+
+#elif defined( _BSD_SOURCE ) || _POSIX_C_SOURCE >= 200112L || \
+      _XOPEN_SOURCE >= 600 || defined( __WATCOMC__ ) || defined( __DJGPP__ )
+
+   if( szValue )
+      return setenv( szName, szValue, 1 ) == 0;
+   else
+   {
+#  if defined( __DJGPP__ ) && ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ < 4 ) )
+      szValue = getenv( szName );
+      if( szValue && *szValue )
+         return setenv( szName, "", 1 ) == 0;
+      else
+         return TRUE;
+#  else
+      return unsetenv( szName ) == 0;
+#  endif
+   }
+
+#elif defined( _HB_NO_SETENV_ )
+
+   HB_SYMBOL_UNUSED( szName );
+   HB_SYMBOL_UNUSED( szValue );
+
+   return FALSE;
+
+#else
+   /* please add support for other C compilers
+    * if such functionality does not exists for given platform/C compiler
+    * then please simply added C compiler with necessary OS/version checking
+    * to the above #elif ... to eliminate warning [druzus]
+    */
+
+   int TODO;
+
+   HB_SYMBOL_UNUSED( szName );
+   HB_SYMBOL_UNUSED( szValue );
+
+   return FALSE;
+
+#endif
+}
