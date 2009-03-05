@@ -457,10 +457,9 @@ FUNCTION Main( ... )
                     { {|| FindInPath( "porc64"   ) != NIL }, "pocc64"  },;
                     { {|| FindInPath( "pocc"     ) != NIL }, "pocc"    },;
                     { {|| FindInPath( "dmc"      ) != NIL }, "dmc"     },;
-                    { {|| FindInPath( "icc"      ) != NIL }, "icc"     },;
                     { {|| FindInPath( "cygstart" ) != NIL }, "cygwin"  },;
                     { {|| FindInPath( "xcc"      ) != NIL }, "xcc"     } }
-      aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "pocc", "xcc", "dmc", "icc", "cygwin",;
+      aCOMPSUP := { "mingw", "msvc", "bcc", "owatcom", "pocc", "xcc", "dmc", "cygwin",;
                     "msvc64", "msvcia64", "pocc64",;
                     "mingwce", "msvcce", "poccce" }
       cBin_CompPRG := "harbour.exe"
@@ -1596,7 +1595,6 @@ FUNCTION Main( ... )
       CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"  /* NOTE: Cross-platform: win/amd64 on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "dmc"
-      CASE t_cARCH == "win" .AND. t_cCOMP == "icc"
       CASE t_cARCH $ "win|linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wince/ARM on win/x86 */
          IF ! s_lSHARED
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl", "uuid", "ole32" } )
@@ -2869,7 +2867,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  - Supported <comp> values for each supported <arch> value:" ,;
       "    linux  : gcc, gpp, owatcom, icc, mingw, mingwce" ,;
       "    darwin : gcc" ,;
-      "    win    : mingw, msvc, bcc, owatcom, pocc, dmc, icc, cygwin" ,;
+      "    win    : mingw, msvc, bcc, owatcom, pocc, dmc, cygwin" ,;
       "             mingwce, msvc64, msvcia64, msvcce, pocc64, poccce, xcc" ,;
       "    os2    : gcc, owatcom, icc" ,;
       "    dos    : gcc, djgpp, owatcom" ,;

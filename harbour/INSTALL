@@ -50,7 +50,7 @@ HOW TO BUILD AND INSTALL HARBOUR
 
    Windows with Cygwin
    -------------------
-      Make sure to have Cygwin properly properly configured.
+      Make sure to have Cygwin properly configured.
 
       > set HB_INSTALL_PREFIX=<DIR>
       > sh make_gnu.sh install
@@ -133,7 +133,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    doc/linux1st.txt.
 
    You can set these environment variables before starting
-   the build. Make sure to adjust them to your own dirs:
+   the build. Make sure to adjust them to your own directories:
 
    HB_INC_ADS=C:\ads\acesdk
    HB_INC_ALLEGRO=C:\allegro\include
@@ -150,7 +150,7 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 
    NOTES: - For mingw and cygwin you have to use forward slashes
             and also cygwin drive notation for cygwin.
-          - Space in dirnames isn't currently supported.
+          - Space in directory names isn't currently supported.
 
 
 SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
@@ -176,7 +176,6 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    owatcom  - Open Watcom C++
    bcc      - Borland/CodeGear C++ 4.x and above
    cygwin   - Cygwin GNU C
-   icc      - IBM Visual Age C++
    dmc      - Digital Mars C
    msvc64   - Microsoft Visual C++ x64
    msvcia64 - Microsoft Visual C++ ia64
@@ -224,7 +223,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                This is only needed and available for
                                non-GNU Windows compilers. When using this,
                                full clean + install cycles will automatically
-                               be executed, so you don't have to explicily
+                               be executed, so you don't have to explicitly
                                pass them to make_gnu.bat.
    - HB_CONTRIBLIBS=no         Don't build any contrib libraries.
    - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of

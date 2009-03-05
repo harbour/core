@@ -13,9 +13,10 @@ rem
 rem This script requires:
 rem    - Windows NT or upper
 rem    - NullSoft Installer installed (NSIS)
-rem      http://nsis.sourceforge.net
+rem         https://sourceforge.net/project/showfiles.php?group_id=22049&package_id=15374
 rem    - makensis.exe (part of NSIS) in PATH
 rem    - Info-ZIP zip.exe in PATH
+rem         https://sourceforge.net/project/showfiles.php?group_id=118012
 rem    - HB_COMPILER envvar configured (see INSTALL doc)
 rem    - C compiler and GNU Make configured (see INSTALL doc)
 rem ---------------------------------------------------------------
