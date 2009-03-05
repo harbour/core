@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-05 21:24 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbbtree/tests/test.hbm
+  * contrib/examples/guestbk/guestbk.hbm
+  * contrib/examples/pe/pe.hbm
+  * contrib/examples/dbu/dbu.hbm
+  * contrib/examples/terminal/terminal.hbp
+  * contrib/examples/hscript/hscript.hbm
+  * contrib/examples/uhttpd/modules/allmod.hbm
+  * contrib/examples/rl/rl.hbm
+  * utils/hbdoc/hbdoc.hbm
+  * utils/hbmk2/hbmk2.hbm
+  * utils/hbtest/hbtest.hbm
+  * utils/hbrun/hbrun.hbm
+    - Removed -n switches no longer necessary.
+
 2009-03-05 21:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * include/hbextern.ch
     + Added HB_SETENV()
@@ -516,7 +531,7 @@
   * utils/hbmk2/hbmk2.prg
     + Added -n2 Harbour switch as default.
     ; TODO: If this works out well, we can remove explicit
-            -n switches from .hbm files.
+            -n switches from .hbm files. [DONE]
 
   * config/win/bcc.cf
     + Suppressing some OS commands to not pollute output.
@@ -2064,10 +2079,10 @@
 
   * utils/hbmk2/hbmk2.prg
     - Removed -n from default Harbour switches.
-    ; TODO: Add prgflags=-n to all .hbp files.
+    ; TODO: Add prgflags=-n to all .hbp files. [NOT NEEDED ANYMORE]
     ; TODO: Add -n to all .hbm files. [DONE]
     ; TODO: Add .hbp file to dirs where there are .prgs
-            needing -n flag.
+            needing -n flag. [NOT NEEDED ANYMORE]
 
   + bin/hb-mkdll.bat
     + Added .dll creation for GNU-make. Not yet enabled,

@@ -3,6 +3,5 @@
 #
 
 {win}libs=gtwvg hbwin xhb comdlg32 comctl32 shell32 ole32 oleaut32
-prgflags=-n
 mt=yes
 gui=yes

@@ -2,7 +2,6 @@
 # $Id$
 #
 
--n
 hbtest.prg
 rt_array.prg
 rt_date.prg
