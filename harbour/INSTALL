@@ -76,8 +76,8 @@ HOW TO BUILD AND INSTALL HARBOUR
           For the list of supported compilers, please look up the
           relevant section of this file.
       3.) Make sure to have GNU Make. We recommend the one distributed
-          with MinGW. Use this link to get it:
-            http://sourceforge.net/project/showfiles.php?group_id=2435
+          by MinGW team. Use this link to get it:
+            https://sourceforge.net/project/showfiles.php?group_id=2435&package_id=23918
           If you have it, you have three choices:
           - Put mingw32-make.exe anywhere in your PATH. (recommended)
           - Put mingw32-make.exe in Harbour source root dir.
