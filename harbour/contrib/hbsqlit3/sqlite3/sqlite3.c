@@ -38770,6 +38770,13 @@ SQLITE_PRIVATE void sqlite3VdbeChangeP2(Vdbe *p, int addr, int val){
   }
 }
 
+SQLITE_PRIVATE void sqlite3VdbeChangeP2X(Vdbe *p, int addr, int val){
+  assert( p==0 || p->magic==VDBE_MAGIC_INIT );
+  if( p && addr>=0 && p->aOp ){
+    p->aOp[addr].p2 = val;
+  }
+}
+
 /*
 ** Change the value of the P3 operand for a specific instruction.
 */
@@ -47242,7 +47249,7 @@ SQLITE_API int sqlite3_blob_open(
         sqlite3VdbeMakeReady(v, 1, 1, 1, 0);
       }
     }
-   
+
     sqlite3BtreeLeaveAll(db);
     rc = sqlite3SafetyOff(db);
     if( rc!=SQLITE_OK || db->mallocFailed ){
@@ -72449,7 +72456,7 @@ SQLITE_PRIVATE WhereInfo *sqlite3WhereBegin(
         Bitmask b = pTabItem->colUsed;
         int n = 0;
         for(; b; b=b>>1, n++){}
-        sqlite3VdbeChangeP2(v, sqlite3VdbeCurrentAddr(v)-2, n);
+        sqlite3VdbeChangeP2X(v, sqlite3VdbeCurrentAddr(v)-2, n);
         assert( n<=pTab->nCol );
       }
     }else{
