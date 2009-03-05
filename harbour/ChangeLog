@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-05 14:34 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+  * harbour/source/vm/hvm.c
+    * respect HB_START_PROCEDURE in all builds if such public
+      function/procedure exists.
+      Now whole Harbour code can be compiled with -n1 in all builds.
+      Warning for Windows/DOS users:
+         if you have main() function in your .prg code then it will be
+         automatically detected as application startup entry just like
+         in other systems.
+         Otherwise the 1-st linked function will be used like so far.
+    + added HB_START_PROC_STRICT macro which causes that HVM ignores
+      HB_FS_FIRST attribute. Before this modification HB_START_PROCEDURE
+      has such meaning.
+
 2009-03-05 12:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbgtcore.c
     * small modification in instruction order as workaround for PellesC bug

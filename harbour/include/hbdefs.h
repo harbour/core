@@ -1227,16 +1227,12 @@ typedef unsigned long HB_COUNTER;
 /* ***********************************************************************
  * The name of starting procedure
  * Note: You have to define it in case when Harbour cannot find the proper
- * starting procedure (due to incorrect order of static data initialization)
- *
- * The list of compilers that require it:
- * - Watcom C/C++ 10.0
- * - GCC on Linux
- *
- * By default we are using automatic lookup (symbol not defined)
-*/
-#if defined(__WATCOMC__) || defined(__DMC__) || ( defined(__GNUC__) && !defined(__DJGPP__) && !defined(HB_OS_OS2_GCC) )
-   #define HB_START_PROCEDURE "MAIN"
+ * starting procedure (due to unknown order of static data initialization)
+ */
+#define HB_START_PROCEDURE "MAIN"
+#if defined(__WATCOMC__) || defined(__DMC__) || \
+    ( defined(__GNUC__) && !defined(__DJGPP__) && !defined(HB_OS_OS2_GCC) )
+   #define HB_START_PROC_STRICT
 #endif
 
 #if defined(HB_FUNC_CALLCONV)

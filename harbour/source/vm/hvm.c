@@ -944,41 +944,57 @@ void hb_vmInit( BOOL bStartMainProc )
 
       if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
          s_pSymStart = pDynSym->pSymbol;
-#ifdef HB_START_PROCEDURE
       else
       {
          /* if first char is '@' then start procedure were set by
-            programmer explicitly and should have the highest priority
-            in other case it's the name of first public function in
-            first linked moudule which is used if there is no
-            HB_START_PROCEDURE in code */
+          * programmer explicitly and should have the highest priority
+          * otherwise it's the name of first public function in
+          * first linked module which is used if there is no
+          * HB_START_PROCEDURE in code
+          */
+         const char * pszMain;
+
          if( s_vm_pszLinkedMain && *s_vm_pszLinkedMain == '@' )
-            pDynSym = hb_dynsymFind( s_vm_pszLinkedMain + 1 );
+         {
+            pszMain = s_vm_pszLinkedMain + 1;
+            pDynSym = hb_dynsymFind( pszMain );
+         }
          else
          {
-            pDynSym = hb_dynsymFind( HB_START_PROCEDURE );
-
-            if( ! ( pDynSym && pDynSym->pSymbol->value.pFunPtr ) && s_vm_pszLinkedMain )
-               pDynSym = hb_dynsymFind( s_vm_pszLinkedMain );
+#ifndef HB_START_PROCEDURE
+            pszMain = NULL;
+#else
+            pszMain = HB_START_PROCEDURE;
+            pDynSym = hb_dynsymFind( pszMain );
+            if( ! ( pDynSym && pDynSym->pSymbol->value.pFunPtr ) )
+#endif
+            {
+               if( s_vm_pszLinkedMain )
+               {
+                  pszMain = s_vm_pszLinkedMain;
+                  pDynSym = hb_dynsymFind( pszMain );
+               }
+            }
          }
 
          if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
             s_pSymStart = pDynSym->pSymbol;
+#ifdef HB_START_PROC_STRICT
          else
-            hb_errInternal( HB_EI_VMBADSTARTUP, NULL, HB_START_PROCEDURE, NULL );
-      }
-#else
-      else if( s_vm_pszLinkedMain )
-      {
-         pDynSym = hb_dynsymFind( s_vm_pszLinkedMain + ( *s_vm_pszLinkedMain == '@' ? 1 : 0 ) );
-         if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
-            s_pSymStart = pDynSym->pSymbol;
-      }
+            /* clear startup symbol set by initialization code */
+            s_pSymStart = NULL;
+#endif
+
 #ifndef HB_C52_STRICT
-      if( bStartMainProc && ! s_pSymStart )
-         hb_errInternal( HB_EI_VMNOSTARTUP, NULL, NULL, NULL );
+         if( bStartMainProc && ! s_pSymStart )
+         {
+            if( pszMain )
+               hb_errInternal( HB_EI_VMBADSTARTUP, NULL, pszMain, NULL );
+            else
+               hb_errInternal( HB_EI_VMNOSTARTUP, NULL, NULL, NULL );
+         }
 #endif
-#endif
+      }
    }
 
    if( bStartMainProc && s_pSymStart )
@@ -1003,7 +1019,6 @@ void hb_vmInit( BOOL bStartMainProc )
       }
 
       hb_vmDo( ( USHORT ) iArgCount ); /* invoke it with number of supplied parameters */
-
    }
 }
 
