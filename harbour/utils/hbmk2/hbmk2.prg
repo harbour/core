@@ -250,6 +250,7 @@ FUNCTION Main( ... )
    LOCAL cResPrefix
    LOCAL cResExt
    LOCAL cBinExt
+   LOCAL cOptPrefix
 
    LOCAL cCommand
 #if defined( HBMK_INTEGRATED_COMPILER )
@@ -275,6 +276,7 @@ FUNCTION Main( ... )
    LOCAL lStopAfterHarbour := .F.
    LOCAL lStopAfterCComp := .F.
    LOCAL lAcceptCFlag := .F.
+   LOCAL lAcceptLDFlag := .F.
 
    LOCAL aParams
    LOCAL aParam
@@ -313,9 +315,9 @@ FUNCTION Main( ... )
       CASE cParamL            == "-quiet" ; t_lQuiet := .T. ; t_lInfo := .F.
       CASE Left( cParamL, 6 ) == "-comp=" ; t_cCOMP := SubStr( cParam, 7 )
       CASE Left( cParamL, 6 ) == "-arch=" ; t_cARCH := SubStr( cParam, 7 )
-      CASE cParamL            == "-hbcmp" ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lAcceptCFlag := .F.
+      CASE cParamL            == "-hbcmp" ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
       CASE cParamL            == "-hbcc"  ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptCFlag := .T.
-      CASE cParamL            == "-hblnk" ; t_lInfo := .F.
+      CASE cParamL            == "-hblnk" ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDFlag := .T.
       CASE cParamL            == "-info"  ; t_lInfo := .T.
       CASE cParamL == "-help" .OR. ;
            cParamL == "--help"
@@ -334,11 +336,15 @@ FUNCTION Main( ... )
       ENDCASE
    NEXT
 
+   /* Emulate -hbcmp, -hbcc, -hblnk switches when certain
+      self names are detected.
+      For compatibility with hbmk script aliases. */
+
    tmp := Lower( FN_NameGet( hb_argv( 0 ) ) )
    DO CASE
    CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
         Left(  tmp, 5 ) == "hbcmp"
-      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lAcceptCFlag := .F.
+      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hbcmp option." + hb_osNewLine() )
       ENDIF
@@ -350,7 +356,7 @@ FUNCTION Main( ... )
       ENDIF
    CASE Right( tmp, 5 ) == "hblnk" .OR. ;
         Left(  tmp, 5 ) == "hblnk"
-      t_lInfo := .F.
+      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDFlag := .T.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hblnk option." + hb_osNewLine() )
       ENDIF
@@ -409,6 +415,7 @@ FUNCTION Main( ... )
       t_cGTDEFAULT := "gttrm"
       cDynLibNamePrefix := "lib"
       cBinExt := NIL
+      cOptPrefix := "-"
       SWITCH t_cARCH
       CASE "darwin" ; cDynLibExt := ".dylib" ; EXIT
       CASE "hpux"   ; cDynLibExt := ".sl" ; EXIT
@@ -424,6 +431,7 @@ FUNCTION Main( ... )
       cDynLibNamePrefix := ""
       cDynLibExt := ""
       cBinExt := ".exe"
+      cOptPrefix := "-/"
    CASE t_cARCH == "os2"
       aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "gcc"     },;
                     { {|| FindInPath( "wpp386"   ) != NIL }, "owatcom" },; /* TODO: Add full support for wcc386 */
@@ -435,6 +443,7 @@ FUNCTION Main( ... )
       cDynLibNamePrefix := ""
       cDynLibExt := ".dll"
       cBinExt := ".exe"
+      cOptPrefix := "-/"
    CASE t_cARCH == "win"
       /* Order is significant.
          owatcom also keeps a cl.exe in it's binary dir. */
@@ -460,6 +469,7 @@ FUNCTION Main( ... )
       cDynLibNamePrefix := ""
       cDynLibExt := ".dll"
       cBinExt := ".exe"
+      cOptPrefix := "-/"
    OTHERWISE
       OutErr( "hbmk: Error: Architecture value unknown: " + t_cARCH + hb_osNewLine() )
       PauseForKey()
@@ -718,10 +728,6 @@ FUNCTION Main( ... )
          /* Swallow this switch. We don't pass it to Harbour, as it may badly
             interact with hbmk. */
 
-      CASE lAcceptCFlag .AND. Left( cParamL, 2 ) == "-c"
-
-         lStopAfterCComp := .T.
-
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; s_lGUI      := .T. /* Compatibility */
       CASE cParamL == "-std" .OR. ;
@@ -815,6 +821,42 @@ FUNCTION Main( ... )
             AAdd( s_aLIBUSER, PathSepToTarget( cParam ) )
          ENDIF
 
+      CASE Left( cParamL, Len( "-prgflag:" ) ) == "-prgflag:"
+
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-prgflag:" ) + 1 ) )
+         IF Left( cParam, 1 ) $ cOptPrefix
+            AAdd( s_aOPTPRG , PathSepToTarget( cParam, 2 ) )
+         ENDIF
+
+      CASE Left( cParamL, Len( "-cflag:" ) ) == "-cflag:"
+
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-cflag:" ) + 1 ) )
+         IF Left( cParam, 1 ) $ cOptPrefix
+            AAdd( s_aOPTC   , PathSepToTarget( cParam, 2 ) )
+         ENDIF
+
+      CASE Left( cParamL, Len( "-ldflag:" ) ) == "-ldflag:"
+
+         cParam := ArchCompFilter( SubStr( cParam, Len( "-ldflag:" ) + 1 ) )
+         IF Left( cParam, 1 ) $ cOptPrefix
+            AAdd( s_aOPTL   , PathSepToTarget( cParam, 2 ) )
+         ENDIF
+
+      CASE Left( cParam, 1 ) $ cOptPrefix
+
+         DO CASE
+         CASE lAcceptLDFlag
+            AAddNotEmpty( s_aOPTL   , ArchCompFilter( PathSepToTarget( cParam, 2 ) ) )
+         CASE lAcceptCFlag
+            IF SubStr( cParamL, 2 ) == "c"
+               lStopAfterCComp := .T.
+            ELSE
+               AAddNotEmpty( s_aOPTC   , ArchCompFilter( PathSepToTarget( cParam, 2 ) ) )
+            ENDIF
+         OTHERWISE
+            AAddNotEmpty( s_aOPTPRG , PathSepToTarget( cParam, 2 ) )
+         ENDCASE
+
       CASE FN_ExtGet( cParamL ) == ".lib" .OR. ;
            FN_ExtGet( cParamL ) == cDynLibExt
 
@@ -822,10 +864,6 @@ FUNCTION Main( ... )
          IF ! Empty( cParam )
             AAdd( s_aLIBUSER, PathSepToTarget( cParam ) )
          ENDIF
-
-      CASE Left( cParam, 1 ) == "-"
-
-         AAdd( s_aOPTPRG , PathSepToTarget( cParam ) )
 
       CASE FN_ExtGet( cParamL ) == ".hbp"
 
@@ -1290,6 +1328,18 @@ FUNCTION Main( ... )
          cOpt_CompC := "-w3 -5s -5r -fp5 -onaehtzr -zq -zt0 -bt=NT -oi+ -s {FC} {LC}"
          cBin_Link := "wlink"
          cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
+         IF s_lMT
+            AAdd( s_aOPTC, "-bm" )
+         ENDIF
+         IF s_lGUI
+            AAdd( s_aOPTC, "-bg" ) /* TOFIX */
+            AAdd( s_aOPTL, "RU NAT" ) /* TOFIX */
+            AAdd( s_aOPTL, "SYSTEM NT_WIN" ) /* TOFIX */
+         ELSE
+            AAdd( s_aOPTC, "-bc" ) /* TOFIX */
+            AAdd( s_aOPTL, "RU CON" ) /* TOFIX */
+            AAdd( s_aOPTL, "SYSTEM NT" ) /* TOFIX */
+         ENDIF
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
          ENDIF
@@ -1363,6 +1413,9 @@ FUNCTION Main( ... )
             IF s_lDEBUG
                cOpt_Link := "DEBUG " + cOpt_Link
             ENDIF
+            IF s_lMT
+               AAdd( s_aOPTC, "-bm" )
+            ENDIF
             IF s_lMAP
                AAdd( s_aOPTL, "OP MAP" )
             ENDIF
@@ -1396,6 +1449,9 @@ FUNCTION Main( ... )
          cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=LINUX {FC} {LC}"
          cBin_Link := "wlink"
          cOpt_Link := "ALL SYS LINUX OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         IF s_lMT
+            AAdd( s_aOPTC, "-bm" )
+         ENDIF
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
          ENDIF
@@ -2142,13 +2198,13 @@ STATIC FUNCTION PathSepToSelf( cFileName )
    RETURN StrTran( cFileName, "\", "/" )
 #endif
 
-STATIC FUNCTION PathSepToTarget( cFileName )
+STATIC FUNCTION PathSepToTarget( cFileName, nStart )
 
    IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP $ "mingw|mingwce|cygwin" )
-      RETURN StrTran( cFileName, "/", "\" )
+      RETURN StrTran( cFileName, "/", "\", nStart )
    ENDIF
 
-   RETURN StrTran( cFileName, "\", "/" )
+   RETURN StrTran( cFileName, "\", "/", nStart )
 
 STATIC FUNCTION DirAddPathSep( cDir )
 
@@ -2317,7 +2373,7 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
                                  /* @ */ lSTRIP,;
                                  /* @ */ lRUN,;
                                  /* @ */ cGT )
-   LOCAL cFile := hb_MemoRead( cFileName )
+   LOCAL cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
    LOCAL cLine
    LOCAL cItem
 
@@ -2524,7 +2580,7 @@ STATIC PROCEDURE HBM_Load( aParams, cFileName, /* @ */ nEmbedLevel )
 
    IF hb_FileExists( cFileName )
 
-      cFile := hb_MemoRead( cFileName )
+      cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
 
       IF ! hb_osNewLine() == _EOL
          cFile := StrTran( cFile, hb_osNewLine(), _EOL )
@@ -2768,12 +2824,11 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -help             long help" }
 
    LOCAL aText_Long := {;
+      "" ,;
       "  -gui|-std         create GUI/console executable" ,;
-      "  -main=<mainfunc>  override the name of starting function/procedure." ,;
+      "  -main=<mainfunc>  override the name of starting function/procedure" ,;
       "  -fullstatic       link with all static libs" ,;
       "  -nulrdd[-]        link with nulrdd" ,;
-      "  -bldf[-]          inherit all/no (default) flags from Harbour build" ,;
-      "  -bldf=[p][c][l]   inherit .prg/.c/linker flags (or none) from Harbour build" ,;
       "  -[no]debug        add/exclude debug info" ,;
       "  -[no]map          create (or not) a map file" ,;
       "  -[no]strip        strip (no strip) binaries" ,;
@@ -2781,9 +2836,18 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -[no]trace        show commands executed" ,;
       "  -[no]run          run/don't run the created executable" ,;
       "  -nohbp            do not process .hbp files in current directory" ,;
-      "  -hbcc, -hbcmp     stop after creating the object files" ,;
-      "                    create link/copy hbmk to hbcc/hbcmp for the same effect" ,;
-      "  -hblnk            act as linker. Currently this is the same as -q" ,;
+      "" ,;
+      "  -bldf[-]          inherit all/no (default) flags from Harbour build" ,;
+      "  -bldf=[p][c][l]   inherit .prg/.c/linker flags (or none) from Harbour build" ,;
+      "  -prgflag:<f>      pass flag to Harbour" ,;
+      "  -cflag:<f>        pass flag to C compiler" ,;
+      "  -ldflag:<f>       pass flag to linker" ,;
+      "  -hbcmp            stop after creating the object files" ,;
+      "                    create link/copy hbmk to hbcmp for the same effect" ,;
+      "  -hbcc             stop after creating the object files and accept raw C flags" ,;
+      "                    create link/copy hbmk to hbcc for the same effect" ,;
+      "  -hblnk            accept raw linker flags" ,;
+      "" ,;
       "  -arch=<arch>      assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
       "  -comp=<comp>      use specific compiler. Same as HB_COMPILER envvar" ,;
       "                    Special value:" ,;

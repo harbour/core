@@ -8,6 +8,39 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-05 11:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added -prgflag:, -cflag:, -ldflag: options.
+      To lessen the chance to mess up hbmk and underlying
+      tools, only "-" and (on non-*nix) "/" prefixed values
+      are accepted. Values are slash corrected by hbmk and
+      filters can also be used.
+    + -hbcc and -hblnk will now consider raw (unrecognized and
+      prefixed) options as C/linker flags respectively. Values
+      are slash corrected and filters can also be used.
+    ; NOTE: Passing C/linker flags directly to underlying
+            tools isn't a very good idea if you want to stay
+            portable across tools and OSes. The only exception
+            is the '-D' C flag which seems universally available
+            on all C compilers.
+    * "/" prefixed Harbour options will now be recognized
+      in normal mode on non-*nix systems.
+    ! DOS EOL char is now ignored in .hbp/.hbm files.
+    + Added -bm owatcom C compiler switch in -mt mode for win/os2/linux.
+      Pls test on os2/linux.
+    * TOFIX: Attempted to add -gui support for win/owatcom. Harbour
+             still complains about "It's not a GUI app". This compiler
+             is a real bitch with tons of similarly looking options
+             and no adequate online docs, so if someone feels like
+             it, pls correct the TOFIX section in source.
+             Until then GTWVT and GTWVG won't work with owatcom.
+    ; NOTE: Most probably not, but I hope hbmk2 now qualifies for
+            "basic functionality".
+
+  * mpkg_win.nsi
+    ! Fixed to not include some more unnecessary files generated
+      by certain linkers along the build process.
+
 2009-03-04 19:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/compiler/ppcomp.c
     ! #pragma -k? options are now case-insensitive like all
