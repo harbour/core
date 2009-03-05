@@ -234,6 +234,8 @@ BOOL WINAPI SetEnvironmentVariableA( LPCSTR name, LPCSTR value )
    HB_SYMBOL_UNUSED( value );
 
    /* TODO: */
+
+   return FALSE;
 }
 
 BOOL WINAPI GetProcessTimes( HANDLE hprocess,

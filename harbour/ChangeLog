@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-05 21:52 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbwince.c
+    ! added missing return statement
+
 2009-03-05 21:24 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbbtree/tests/test.hbm
   * contrib/examples/guestbk/guestbk.hbm
