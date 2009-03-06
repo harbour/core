@@ -8,6 +8,41 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-06 04:13 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/contrib/examples/uhttpd/uhttpd.prg
+    * Updated uHTTPD (Work in progress)
+      * Updated to work in Linux.
+      * Fixed PRIVATE use and threads as per Przemek suggestions
+      * Marked WIN_SYSREFRESH() with USE_WIN_ADDONS define
+      * Changed WIN_TIMEZONEBIAS() to hb_UTCoffset()
+      * Changed WIN_SETENV() to hb_SetEnv()
+      * Minor changes
+  * harbour/contrib/examples/uhttpd/uhttpdc.c
+    * Marked WIN_SYSREFRESH() as only windows function
+    - Deleted WIN_SETENV()
+    - Deleted WIN_TIMEZONEBIAS()
+    + Added hb_UTCoffset()
+  * harbour/contrib/examples/uhttpd/socket.c
+    * Guarded for only windows build
+  * harbour/contrib/examples/uhttpd/session.prg
+    * Changed FileDate() to hb_FGetDateTime()
+  * harbour/contrib/examples/uhttpd/uhttpd.ini
+    * Minor fixes
+  * harbour/contrib/examples/uhttpd/modules/showcounter.prg
+  * harbour/contrib/examples/uhttpd/modules/tableservletdb.prg
+    * fixed Linux build
+  + harbour/contrib/examples/uhttpd/uhttpd-inet.hbm
+  + harbour/contrib/examples/uhttpd/uhttpdgd-inet.hbm
+    + Added as temporary files to build uhttpd under Linux
+      (they haven't -gui flags that give error as per Przemek
+      note, instead add -gtxwc as standard gui)
+  ; NOTE:
+    Przemek please check if hb_UTCOffSet() it is correct, then we have to move in
+    other place.
+    Tested all samples and they works.
+    Modules build need to be fixed (Viktor?) but hrb are built. Need to be copied
+    manually to ../home/cgi-bin
+
 2009-03-06 02:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbpp.h
   * harbour/include/hbhash.h

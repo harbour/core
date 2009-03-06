@@ -1,0 +1,7 @@
+#
+# $Id: uhttpd.hbm 10546 2009-03-05 20:12:47Z vszakats $
+#
+
+@uhttpd-inet.hbm
+-DGD_SUPPORT -lhbgd -lbgd -lhbct
+

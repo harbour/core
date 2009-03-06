@@ -57,9 +57,13 @@
  *
  */
 
-#define HB_OS_WIN_USED
-
 #include "hbapi.h"
+
+#ifndef HB_OS_WIN
+   #include <time.h>
+#else
+   #define HB_OS_WIN_USED
+#endif
 
 #if defined( HB_OS_WIN )
 
@@ -121,27 +125,53 @@ HB_FUNC( WIN_SYSREFRESH )
    hb_retl( win_SysRefresh( ( ISNIL( 1 ) ? 0 : hb_parni( 1 ) ) ) );
 }
 
-HB_FUNC( WIN_SETENV )
+#else
+
+HB_FUNC( WIN_SYSREFRESH )
 {
-   hb_retl( SetEnvironmentVariable( hb_parc( 1 ), hb_parc( 2 ) ) );
+   hb_retl( TRUE );
 }
+#endif
 
-HB_FUNC( WIN_TIMEZONEBIAS )
+HB_FUNC( HB_UTCOFFSET )
 {
-   TIME_ZONE_INFORMATION tzInfo;
-   int nLen;
    char * szRet = ( char * ) hb_xgrab( 6 );
+   int nLen;
 
-   if( GetTimeZoneInformation( &tzInfo ) == TIME_ZONE_ID_INVALID )
-      tzInfo.Bias = 0;
-   else
-      tzInfo.Bias = -tzInfo.Bias;
+#if defined(HB_OS_WIN)
+   {
+      TIME_ZONE_INFORMATION tzInfo;
 
-   hb_snprintf( szRet, 6, "%+03d%02d",
-             ( int )( tzInfo.Bias / 60 ),
-             ( int )( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
+      if( GetTimeZoneInformation( &tzInfo ) == TIME_ZONE_ID_INVALID )
+         tzInfo.Bias = 0;
+      else
+         tzInfo.Bias = -tzInfo.Bias;
 
-   nLen = strlen( szRet );
+      hb_snprintf( szRet, 6, "%+03d%02d",
+                ( int )( tzInfo.Bias / 60 ),
+                ( int )( tzInfo.Bias % 60 > 0 ? - tzInfo.Bias % 60 : tzInfo.Bias % 60 ) );
+
+      nLen = strlen( szRet );
+   }
+#elif defined( HB_OS_UNIX ) && _POSIX_C_SOURCE >= 199506L && !defined( HB_OS_DARWIN_5 )
+   {
+      struct tm tmTime;
+      time_t current;
+
+      time( &current );
+      localtime_r( &current , &tmTime );
+
+      nLen = strftime( szRet, 6, "%z", &tmTime );
+   }
+#else
+   {
+      struct tm tmTime;
+      time_t current;
+
+      memcpy( (void *) &tmTime, (void *) localtime( &current ), sizeof(tmTime) );
+      nLen = strftime( szRet, 6, "%z", &tmTime );
+   }
+#endif
 
    if( nLen < 6 )
       szRet = ( char * ) hb_xrealloc( szRet, nLen + 1 );
@@ -149,4 +179,3 @@ HB_FUNC( WIN_TIMEZONEBIAS )
    hb_retclen_buffer( szRet, nLen );
 }
 
-#endif

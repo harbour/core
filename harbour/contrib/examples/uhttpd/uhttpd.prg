@@ -91,6 +91,7 @@
 #include "common.ch"
 #include "inkey.ch"
 #include "error.ch"
+#include "hbmemory.ch"
 
 #include "hbextern.ch"   // need this to use with HRB
 
@@ -128,8 +129,8 @@
 #define LISTEN_PORT             8082          // differs from standard 80 port for tests in case
                                               // anyone has a apache/IIS installed
 #define FILE_STOP               ".uhttpd.stop"
-#define FILE_ACCESS_LOG         "logs\access.log"
-#define FILE_ERROR_LOG          "logs\error.log"
+#define FILE_ACCESS_LOG         "logs" + HB_OSPathSeparator() + "access.log"
+#define FILE_ERROR_LOG          "logs" + HB_OSPathSeparator() + "error.log"
 #define DIRECTORYINDEX_ARRAY    { "index.html", "index.htm" }
 
 #define PAGE_STATUS_REFRESH   5
@@ -149,7 +150,7 @@
      REQUEST HB_GT_WIN
      REQUEST HB_GT_NUL
   #else
-     REQUEST HB_GT_STD_DEFAULT
+     REQUEST HB_GT_XWC_DEFAULT
      REQUEST HB_GT_NUL
   #endif
  #define THREAD_GT hb_gtVersion()
@@ -204,6 +205,8 @@ FUNCTION MAIN( ... )
    LOCAL hDefault, cLogAccess, cLogError, cSessionPath
    LOCAL cCmdPort, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
 
+   PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, m_cPost
+
    IF !HB_MTVM()
       ? "I need multhread support. Please, recompile me!"
       WAIT
@@ -220,7 +223,7 @@ FUNCTION MAIN( ... )
 
    // defaults not changeble via ini file
    lStop                := FALSE
-   cConfig              := EXE_Path() + "\" + APP_NAME + ".ini"
+   cConfig              := EXE_Path() + hb_OSPathSeparator() + APP_NAME + ".ini"
    lConsole             := TRUE
    nStartServiceThreads := START_SERVICE_THREADS
 
@@ -312,6 +315,7 @@ FUNCTION MAIN( ... )
        ENDIF
    NEXT
 
+   //hb_ToOutDebug( "cLogAccess = %s, cLogError = %s\n\r", cLogAccess, cLogError )
    //hb_ToOutDebug( "hDefault = %s\n\r", hb_ValToExp( hDefault ) )
    //hb_ToOutDebug( "s_hScriptAliases = %s\n\r", hb_ValToExp( s_hScriptAliases ) )
 
@@ -477,22 +481,25 @@ FUNCTION MAIN( ... )
 
       DO WHILE .T.
 
+#ifdef USE_WIN_ADDONS
          // windows resource releasing - 1 millisecond wait
          WIN_SYSREFRESH( 1 )
+#endif
 
          IF s_lConsole
 
             // Show application infos
             IF hb_mutexLock( s_hmtxBusy )
-               hb_DispOutAt( 5,  5, "Threads           : " + Transform( s_nThreads, "9999999999" ) )
-               hb_DispOutAt( 6,  5, "Connections       : " + Transform( s_nConnections, "9999999999" ) )
-               hb_DispOutAt( 7,  5, "Max Connections   : " + Transform( s_nMaxConnections, "9999999999" ) )
-               hb_DispOutAt( 8,  5, "Total Connections : " + Transform( s_nTotConnections, "9999999999" ) )
+               hb_DispOutAt(  5,  5, "Threads           : " + Transform( s_nThreads, "9999999999" ) )
+               hb_DispOutAt(  6,  5, "Connections       : " + Transform( s_nConnections, "9999999999" ) )
+               hb_DispOutAt(  7,  5, "Max Connections   : " + Transform( s_nMaxConnections, "9999999999" ) )
+               hb_DispOutAt(  8,  5, "Total Connections : " + Transform( s_nTotConnections, "9999999999" ) )
 
-               hb_DispOutAt( 5, 37, "ServiceThreads    : " + Transform( s_nServiceThreads, "9999999999" ) )
-               hb_DispOutAt( 6, 37, "Connections       : " + Transform( s_nServiceConnections, "9999999999" ) )
-               hb_DispOutAt( 7, 37, "Max Connections   : " + Transform( s_nMaxServiceConnections, "9999999999" ) )
-               hb_DispOutAt( 8, 37, "Total Connections : " + Transform( s_nTotServiceConnections, "9999999999" ) )
+               hb_DispOutAt(  5, 37, "ServiceThreads    : " + Transform( s_nServiceThreads, "9999999999" ) )
+               hb_DispOutAt(  6, 37, "Connections       : " + Transform( s_nServiceConnections, "9999999999" ) )
+               hb_DispOutAt(  7, 37, "Max Connections   : " + Transform( s_nMaxServiceConnections, "9999999999" ) )
+               hb_DispOutAt(  8, 37, "Total Connections : " + Transform( s_nTotServiceConnections, "9999999999" ) )
+               hb_DispOutAt( 10, 40, "Memory: " + hb_ntos( memory( HB_MEM_USED ) ) )
                hb_mutexUnlock( s_hmtxBusy )
             ENDIF
 
@@ -542,7 +549,7 @@ FUNCTION MAIN( ... )
          ENDIF
 
          // Memory release
-         hb_GCAll( TRUE )  // FSG - memory check
+         hb_GCAll( TRUE )
 
       ENDDO
 
@@ -580,20 +587,26 @@ STATIC FUNCTION AcceptConnections()
    LOCAL nConnections, nThreads, nMaxThreads, n
    LOCAL nServiceConnections, nServiceThreads, nMaxServiceThreads, nThreadID
    LOCAL pThread
+   LOCAL lCanNotify
+
+   ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
 
    WriteToConsole( "Starting AcceptConnections()" )
 
-   // Starting initial running threads
-   FOR n := 1 TO s_nStartThreads
-       pThread := hb_threadStart( @ProcessConnection(), @nThreadID )
-       AADD( s_aRunningThreads, { pThread, nThreadID } )
-   NEXT
+   IF hb_mutexLock( s_hmtxBusy )
+      // Starting initial running threads
+      FOR n := 1 TO s_nStartThreads
+          pThread := hb_threadStart( @ProcessConnection() )
+          AADD( s_aRunningThreads, pThread )
+      NEXT
 
-   // Starting initial service threads
-   FOR n := 1 TO s_nStartServiceThreads
-       pThread := hb_threadStart( @ServiceConnection(), @nThreadID )
-       AADD( s_aServiceThreads, { pThread, nThreadID } )
-   NEXT
+      // Starting initial service threads
+      FOR n := 1 TO s_nStartServiceThreads
+          pThread := hb_threadStart( @ServiceConnection() )
+          AADD( s_aServiceThreads, pThread )
+      NEXT
+      hb_mutexUnlock( s_hmtxBusy )
+   ENDIF
 
    // Main AcceptConnections loop
    DO WHILE .T.
@@ -601,8 +614,10 @@ STATIC FUNCTION AcceptConnections()
       // reset socket
       hSocket := NIL
 
+#ifdef USE_WIN_ADDONS
       // releasing resources
       WIN_SYSREFRESH( 1 )
+#endif
 
       // Waiting a connection from main application loop
       hb_mutexSubscribe( s_hmtxQueue,, @hSocket )
@@ -613,12 +628,12 @@ STATIC FUNCTION AcceptConnections()
          // Requesting to Running threads to quit (using -1 value)
          AEVAL( s_aRunningThreads, {|| hb_mutexNotify( s_hmtxRunningThreads, -1 ) } )
          // waiting running threads to quit
-         AEVAL( s_aRunningThreads, {|h| hb_threadJoin( h[1] ) } )
+         AEVAL( s_aRunningThreads, {|h| hb_threadJoin( h ) } )
 
          // Requesting to Service threads to quit (using -1 value)
          AEVAL( s_aServiceThreads, {|| hb_mutexNotify( s_hmtxServiceThreads, -1 ) } )
          // waiting service threads to quit
-         AEVAL( s_aServiceThreads, {|h| hb_threadJoin( h[1] ) } )
+         AEVAL( s_aServiceThreads, {|h| hb_threadJoin( h ) } )
 
          EXIT
       ENDIF
@@ -633,6 +648,8 @@ STATIC FUNCTION AcceptConnections()
          nMaxServiceThreads := s_nMaxServiceThreads
          hb_mutexUnlock( s_hmtxBusy )
       ENDIF
+
+      lCanNotify := FALSE
 
       // If I have no more threads to use ...
       IF nConnections > nMaxThreads
@@ -650,24 +667,38 @@ STATIC FUNCTION AcceptConnections()
          // If I have no service threads in use ...
          ELSEIF nServiceConnections >= nServiceThreads
             // Add one more
-            pThread := hb_threadStart( @ServiceConnection(), @nThreadID )
-            AADD( s_aServiceThreads, { pThread, nThreadID } )
+            IF hb_mutexLock( s_hmtxBusy )
+               pThread := hb_threadStart( @ServiceConnection() )
+               AADD( s_aServiceThreads, pThread )
+               lCanNotify := TRUE
+               hb_mutexUnlock( s_hmtxBusy )
+            ENDIF
          ENDIF
+
          // Otherwise I send connection to current service thread queue
-         hb_mutexNotify( s_hmtxServiceThreads, hSocket )
+         IF lCanNotify
+            hb_mutexNotify( s_hmtxServiceThreads, hSocket )
+         ENDIF
 
          LOOP
 
       // If I have no running threads in use ...
       ELSEIF nConnections >= nThreads
          // Add one more
-         pThread := hb_threadStart( @ProcessConnection(), @nThreadID )
-         //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
-         AADD( s_aRunningThreads, { pThread, nThreadID } )
+         IF hb_mutexLock( s_hmtxBusy )
+            pThread := hb_threadStart( @ProcessConnection() )
+            AADD( s_aRunningThreads, pThread )
+            lCanNotify := TRUE
+            hb_mutexUnlock( s_hmtxBusy )
+         ENDIF
+      ELSE
+         lCanNotify := TRUE
       ENDIF
       // Otherwise I send connection to running thread queue
       //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
-      hb_mutexNotify( s_hmtxRunningThreads, hSocket )
+      IF lCanNotify
+         hb_mutexNotify( s_hmtxRunningThreads, hSocket )
+      ENDIF
 
    ENDDO
 
@@ -678,9 +709,9 @@ STATIC FUNCTION AcceptConnections()
 // --------------------------------------------------------------------------------- //
 // CONNECTIONS
 // --------------------------------------------------------------------------------- //
-STATIC FUNCTION ProcessConnection( /*@*/ nThreadId )
+STATIC FUNCTION ProcessConnection()
    LOCAL hSocket, nLen, cRequest, cSend
-   LOCAL nMsecs, nParseTime, nPos
+   LOCAL nMsecs, nParseTime, nPos, nThreadID
 
    nThreadId    := hb_threadID()
 
@@ -688,7 +719,7 @@ STATIC FUNCTION ProcessConnection( /*@*/ nThreadId )
 
    ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
 
-   WriteToConsole( "Starting ProcessConnections() " + hb_CStr( nThreadId ) )
+   WriteToConsole( "Starting ProcessConnections() " + hb_CStr( nThreadID ) )
 
    IF hb_mutexLock( s_hmtxBusy )
       s_nThreads++
@@ -701,8 +732,10 @@ STATIC FUNCTION ProcessConnection( /*@*/ nThreadId )
       // Reset socket
       hSocket := NIL
 
+#ifdef USE_WIN_ADDONS
       // releasing resources
       WIN_SYSREFRESH( 1 )
+#endif
 
       // Waiting a connection from AcceptConnections() but up to defined time
       hb_mutexSubscribe( s_hmtxRunningThreads, THREAD_MAX_WAIT, @hSocket )
@@ -750,8 +783,8 @@ STATIC FUNCTION ProcessConnection( /*@*/ nThreadId )
 
             //hb_ToOutDebug( "cRequest -- INIZIO --\n\r%s\n\rcRequest -- FINE --\n\r", cRequest )
 
-            PRIVATE _SERVER := HB_IHASH(), _GET := HB_IHASH(), _POST := HB_IHASH(), _COOKIE := HB_IHASH(), _SESSION := HB_IHASH()
-            PRIVATE _REQUEST := HB_IHASH(), _HTTP_REQUEST := HB_IHASH(), m_cPost
+            _SERVER := HB_IHASH(); _GET := HB_IHASH(); _POST := HB_IHASH(); _COOKIE := HB_IHASH()
+            _SESSION := HB_IHASH(); _REQUEST := HB_IHASH(); _HTTP_REQUEST := HB_IHASH(); m_cPost := NIL
             t_cResult     := ""
             t_aHeader     := {}
             t_nStatusCode := 200
@@ -774,7 +807,7 @@ STATIC FUNCTION ProcessConnection( /*@*/ nThreadId )
 
             WriteToLog( cRequest )
 
-            // Destroy PRIVATE VARIABLES  // FSG - memory check
+            // Destroy PRIVATE VARIABLES
             _SERVER := _GET := _POST := _COOKIE := _SESSION := _REQUEST := _HTTP_REQUEST := m_cPost := NIL
 
          ENDIF
@@ -797,6 +830,9 @@ STATIC FUNCTION ProcessConnection( /*@*/ nThreadId )
          hb_mutexUnlock( s_hmtxBusy )
       ENDIF
 
+      // Memory release
+      hb_GCAll( TRUE )
+
    ENDDO
 
    WriteToConsole( "Quitting ProcessConnections() " + hb_CStr( nThreadId ) )
@@ -804,7 +840,7 @@ STATIC FUNCTION ProcessConnection( /*@*/ nThreadId )
    IF hb_mutexLock( s_hmtxBusy )
       s_nThreads--
       //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
-      IF ( nPos := aScan( s_aRunningThreads, {|h| h[2] == nThreadId } ) > 0 )
+      IF ( nPos := aScan( s_aRunningThreads, hb_threadSelf() ) > 0 )
          hb_aDel( s_aRunningThreads, nPos, TRUE )
       ENDIF
       hb_mutexUnlock( s_hmtxBusy )
@@ -812,15 +848,14 @@ STATIC FUNCTION ProcessConnection( /*@*/ nThreadId )
 
    RETURN 0
 
-STATIC FUNCTION ServiceConnection( /*@*/ nThreadId )
+STATIC FUNCTION ServiceConnection()
    LOCAL hSocket, nLen, cRequest, cSend
-   LOCAL nMsecs, nParseTime, nPos
+   LOCAL nMsecs, nParseTime, nPos, nThreadId
    LOCAL nError := 500013
 
    ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
 
    nThreadId := hb_threadID()
-   //nThreadIdRef := nThreadId
 
    WriteToConsole( "Starting ServiceConnections() " + hb_CStr( nThreadId ) )
 
@@ -834,8 +869,10 @@ STATIC FUNCTION ServiceConnection( /*@*/ nThreadId )
       // Reset socket
       hSocket := NIL
 
+#ifdef USE_WIN_ADDONS
       // releasing resources
       WIN_SYSREFRESH( 1 )
+#endif
 
       // Waiting a connection from AcceptConnections() but up to defined time
       hb_mutexSubscribe( s_hmtxServiceThreads, THREAD_MAX_WAIT, @hSocket )
@@ -882,8 +919,8 @@ STATIC FUNCTION ServiceConnection( /*@*/ nThreadId )
 
             //hb_ToOutDebug( "cRequest -- INIZIO --\n\r%s\n\rcRequest -- FINE --\n\r", cRequest )
 
-            PRIVATE _SERVER := HB_IHASH(), _GET := HB_IHASH(), _POST := HB_IHASH(), _COOKIE := HB_IHASH(), _SESSION := HB_IHASH()
-            PRIVATE _REQUEST := HB_IHASH(), _HTTP_REQUEST := HB_IHASH(), m_cPost
+            _SERVER := HB_IHASH(); _GET := HB_IHASH(); _POST := HB_IHASH(); _COOKIE := HB_IHASH()
+            _SESSION := HB_IHASH(); _REQUEST := HB_IHASH(); _HTTP_REQUEST := HB_IHASH(); m_cPost := NIL
             t_cResult     := ""
             t_aHeader     := {}
             t_nStatusCode := 200
@@ -903,7 +940,7 @@ STATIC FUNCTION ServiceConnection( /*@*/ nThreadId )
 
             WriteToLog( cRequest )
 
-            // Destroy PRIVATE VARIABLES  // FSG - memory check
+            // Destroy PRIVATE VARIABLES
             _SERVER := _GET := _POST := _COOKIE := _SESSION := _REQUEST := _HTTP_REQUEST := m_cPost := NIL
 
          ENDIF
@@ -926,13 +963,16 @@ STATIC FUNCTION ServiceConnection( /*@*/ nThreadId )
          hb_mutexUnlock( s_hmtxBusy )
       ENDIF
 
+      // Memory release
+      hb_GCAll( TRUE )
+
    ENDDO
 
    WriteToConsole( "Quitting ServiceConnections() " + hb_CStr( nThreadId ) )
 
    IF hb_mutexLock( s_hmtxBusy )
       s_nServiceThreads--
-      IF ( nPos := aScan( s_aServiceThreads, {|h| h[2] == nThreadId } ) > 0 )
+      IF ( nPos := aScan( s_aServiceThreads, hb_threadSelf() ) > 0 )
          hb_aDel( s_aServiceThreads, nPos, TRUE )
       ENDIF
       hb_mutexUnlock( s_hmtxBusy )
@@ -1198,7 +1238,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
       cDate    := DTOS( dDate )
       nSize    := LEN( t_cResult )
       cReferer := _SERVER[ "HTTP_REFERER" ]
-      cBias    := WIN_TIMEZONEBIAS()
+      cBias    := hb_UTCOffset()
 
       cAccess := _SERVER[ "REMOTE_ADDR" ] + " - - [" + RIGHT( cDate, 2 ) + "/" + ;
                        aMonths[ VAL( SUBSTR( cDate, 5, 2 ) ) ] + ;
@@ -1669,7 +1709,7 @@ STATIC PROCEDURE Define_Env( hmServer )
    LOCAL v
 
    FOR EACH v IN hmServer
-       WIN_SETENV( v:__enumKey(), v:__enumValue() )
+       hb_SetEnv( v:__enumKey(), v:__enumValue() )
    NEXT
 
    RETURN
@@ -1677,7 +1717,7 @@ STATIC PROCEDURE Define_Env( hmServer )
 // ------------------------------- DEFAULT PAGES -----------------------------------
 
 STATIC PROCEDURE ShowServerStatus()
-
+   LOCAL cThreads
    uhttpd_AddHeader( "Content-Type", "text/html" )
    uhttpd_Write( '<html><head>' )
    uhttpd_Write( '<META HTTP-EQUIV="Refresh" CONTENT="' + LTrim( Str( PAGE_STATUS_REFRESH ) ) + ';URL=/ServerStatus">' )
@@ -1691,13 +1731,19 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br>Connections: ' + Str( s_nConnections ) )
       uhttpd_Write( '<br>Max Connections: ' + Str( s_nMaxConnections ) )
       uhttpd_Write( '<br>Total Connections: ' + Str( s_nTotConnections ) )
-      uhttpd_Write( '<br>Running Thread: ' + hb_ValToExp( s_aRunningThreads ) )
+      cThreads := ""
+      aEval( s_aRunningThreads, {|e| cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
+      cThreads := "{ " + IIF( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      uhttpd_Write( '<br>Running Threads: ' + cThreads )
 
       uhttpd_Write( '<br>Service Thread: ' + Str( s_nServiceThreads ) )
       uhttpd_Write( '<br>Service Connections: ' + Str( s_nServiceConnections ) )
       uhttpd_Write( '<br>Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
       uhttpd_Write( '<br>Total Service Connections: ' + Str( s_nTotServiceConnections ) )
-      uhttpd_Write( '<br>Service Thread: ' + hb_ValToExp( s_aServiceThreads ) )
+      cThreads := ""
+      aEval( s_aServiceThreads, {|e| cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
+      cThreads := "{ " + IIF( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      uhttpd_Write( '<br>Service Threads: ' + cThreads )
       hb_mutexUnlock( s_hmtxBusy )
    ENDIF
    uhttpd_Write( '<br>Time: ' + Time() )
@@ -1833,7 +1879,7 @@ STATIC PROCEDURE SysSettings()
 
 STATIC FUNCTION Exe_Path()
    LOCAL cPath := hb_argv( 0 )
-   LOCAL nPos  := RAt( "\", cPath )
+   LOCAL nPos  := RAt( HB_OSPathSeparator(), cPath )
    IF nPos == 0
       cPath := ""
    ELSE
@@ -1843,7 +1889,7 @@ STATIC FUNCTION Exe_Path()
 
 STATIC FUNCTION Exe_Name()
    LOCAL cPrg := hb_argv( 0 )
-   LOCAL nPos := RAt( "\", cPrg )
+   LOCAL nPos := RAt( HB_OSPathSeparator(), cPrg )
    IF nPos > 0
       cPrg := SubStr( cPrg, nPos+1 )
    ENDIF
@@ -1916,10 +1962,10 @@ STATIC FUNCTION ParseIni( cConfig )
    { ;
      "MAIN"     => { ;
                      "PORT"                 => LISTEN_PORT              ,;
-                     "DOCUMENT_ROOT"        => EXE_Path() + "\home"     ,;
+                     "DOCUMENT_ROOT"        => EXE_Path() + HB_OSPathSeparator() + "home"     ,;
                      "SHOW_INDEXES"         => FALSE                    ,;
                      "SCRIPTALIASMIXEDCASE" => TRUE                     ,;
-                     "SESSIONPATH"          => EXE_Path() + "\sessions" ,;
+                     "SESSIONPATH"          => EXE_Path() + HB_OSPathSeparator() + "sessions" ,;
                      "DIRECTORYINDEX"       => DIRECTORYINDEX_ARRAY      ;
                    },;
      "LOGFILES" => { ;

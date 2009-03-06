@@ -54,7 +54,11 @@
 #include "hbclass.ch"
 
 #define CRLF ( chr(13)+chr(10) )
+#ifdef __PLATFORM__WINDOWS
 #define TABLE_NAME_PATH "..\..\..\tests\test.dbf"
+#else
+#define TABLE_NAME_PATH "../../../tests/test.dbf"
+#endif
 #define SIMULATE_SLOW_REPLY
 
 MEMVAR _REQUEST // defined in uHTTPD
@@ -157,6 +161,7 @@ METHOD Open() CLASS TableManager
 
       CLOSE ALL
       USE ( cDBF ) ALIAS table SHARED NEW
+      //hb_ToOutDebug( "Used() = %s\n", Used() )
       ::lOpened := USED()
 
    ENDIF

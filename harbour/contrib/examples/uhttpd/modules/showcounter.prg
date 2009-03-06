@@ -58,8 +58,13 @@ MEMVAR _REQUEST // defined in uHTTPD
 //#include "xhb.ch"
 #include "gd.ch"
 
+#ifdef __PLATFORM__WINDOWS
 #define IMAGES_IN  "..\..\hbgd\tests\digits\"
 #define IMAGES_OUT ( _SERVER[ "DOCUMENT_ROOT" ] + "\counter\" )
+#else
+#define IMAGES_IN  "../../hbgd/tests/digits/"
+#define IMAGES_OUT ( _SERVER[ "DOCUMENT_ROOT" ] + "/counter/" )
+#endif
 
 #define DISPLAY_NUM  10
 

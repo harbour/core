@@ -3,4 +3,4 @@
 #
 
 @uhttpd.hbm
--DGD_SUPPORT -lhbgd -lbgd
+-DGD_SUPPORT -lhbgd -lbgd -lhbct

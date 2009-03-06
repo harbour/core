@@ -10,7 +10,6 @@
    #define HB_SOCKET_T SOCKET
    #include <winsock2.h>
    #include <windows.h>
-#endif
 
 /*
 
@@ -429,3 +428,5 @@ HB_FUNC ( CONNECT )
    hb_itemGetSockaddr( hb_param( 2, HB_IT_ANY ), &sa );
    hb_retni( connect( hb_parsocket( 1 ), &sa, sizeof( struct sockaddr ) ) );
 }
+
+#endif

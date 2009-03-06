@@ -789,6 +789,7 @@ METHOD Decode( cData ) CLASS uhttpd_Session
 RETURN lOk
 
 METHOD SendCacheLimiter() CLASS uhttpd_Session
+  LOCAL dDate
   DO CASE
      CASE ::cCache_Limiter == 'nocache'
           //uhttpd_AddHeader( 'Expires', 'Thu, 19 Nov 1981 08:52:00 GMT' )
@@ -800,11 +801,15 @@ METHOD SendCacheLimiter() CLASS uhttpd_Session
      CASE ::cCache_Limiter == 'private'
           uhttpd_AddHeader( 'Expires', 'Thu, 19 Nov 1981 08:52:00 GMT' )
           uhttpd_AddHeader( 'Cache-Control', 'private, max-age=' + LTrim( Str( ::nCache_Expire * 60 ) ) )
-          uhttpd_AddHeader( 'Last-Modified', uhttpd_DateToGMT( FileDate( hb_argv(0) ) ) )
+          IF hb_FGetDateTime( hb_argv(0), @dDate )
+             uhttpd_AddHeader( 'Last-Modified', uhttpd_DateToGMT( dDate ) )
+          ENDIF
      CASE ::cCache_Limiter == 'public'
           uhttpd_AddHeader( 'Expires', uhttpd_DateToGMT( ,,, ::nCache_Expire * 60 ) )
           uhttpd_AddHeader( 'Cache-Control', 'public, max-age=' + LTrim( Str( ::nCache_Expire * 60 ) ) )
-          uhttpd_AddHeader( 'Last-Modified', uhttpd_DateToGMT( FileDate( hb_argv(0) ) ) )
+          IF hb_FGetDateTime( hb_argv(0), @dDate )
+             uhttpd_AddHeader( 'Last-Modified', uhttpd_DateToGMT( dDate ) )
+          ENDIF
      OTHERWISE
           uhttpd_Die( "ERROR: Caching method " + ::cCache_Limiter + " not implemented." )
   ENDCASE
