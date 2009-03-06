@@ -57,12 +57,14 @@
  *
  */
 
+/* #define HB_OS_WIN_USED */ /* Temporaly disabled Viktor could you check it */
+
 #include "hbapi.h"
 
 #ifndef HB_OS_WIN
    #include <time.h>
 #else
-   #define HB_OS_WIN_USED
+   #include <windows.h>
 #endif
 
 #if defined( HB_OS_WIN )
