@@ -96,9 +96,9 @@ HB_FUNC( ISDISK )
    if( szDrive )
    {
       if( *szDrive >= 'A' && *szDrive <= 'Z' )
-         fResult = hb_fsIsDrv( *szDrive - 'A' );
+         fResult = hb_fsIsDrv( *szDrive - 'A' ) == 0;
       else if( *szDrive >= 'a' && *szDrive <= 'z' )
-         fResult = hb_fsIsDrv( *szDrive - 'a' );
+         fResult = hb_fsIsDrv( *szDrive - 'a' ) == 0;
    }
    hb_retl( fResult );
 }
@@ -111,9 +111,9 @@ HB_FUNC( DISKCHANGE )
    if( szDrive )
    {
       if( *szDrive >= 'A' && *szDrive <= 'Z' )
-         fResult = hb_fsChDrv( *szDrive - 'A' );
+         fResult = hb_fsChDrv( *szDrive - 'A' ) == 0;
       else if( *szDrive >= 'a' && *szDrive <= 'z' )
-         fResult = hb_fsChDrv( *szDrive - 'a' );
+         fResult = hb_fsChDrv( *szDrive - 'a' ) == 0;
    }
    hb_retl( fResult );
 }

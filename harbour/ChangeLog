@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-06 21:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/dirdrive.c
+    ! fixed ISDISK() and DISKCHANGE() return value - due to typo the
+      logical value .T./.F. was reverted
+
 2009-03-06 17:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/Makefile
     * Minor reordering.
