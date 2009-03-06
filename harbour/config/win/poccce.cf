@@ -23,7 +23,8 @@ CPPFLAGS = -I.
 CPPFLAGS += -Ze -Go
 
 # optimizations
-CPPFLAGS += -Ot -Ox
+CPPFLAGS += -Ot
+# -Ox: can cause GPF in 4.50/5.00, so it's disabled.
 
 # For Pocket PC and ARM processors (including XScale)
 CPPFLAGS += -Tarm-coff -D_WINCE -DUNICODE -DHB_NO_WIN_CONSOLE
@@ -32,7 +33,7 @@ ifneq ($(HB_INC_COMPILE),)
 CPPFLAGS += -I$(HB_INC_COMPILE)
 endif
 
-CFLAGS = 
+CFLAGS =
 
 LD = polink.exe
 LD_OUT = -OUT:

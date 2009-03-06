@@ -6,10 +6,10 @@ ROOT = ../
 
 DIRS=\
 	hbrun \
-	hbtest \
-	hbi18n \
-	hbdoc \
 	hbmk2 \
+	hbi18n \
+	hbtest \
+	hbdoc \
 	$(HB_UTILS) \
 
 #	hbextern \

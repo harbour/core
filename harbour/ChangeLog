@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-06 17:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/Makefile
+    * Minor reordering.
+
+  * config/win/poccce.cf
+  * config/win/pocc.cf
+    ! Turned off -Ox, left -Ot.
+      "When it comes to optimizations, the -Ot option (in this case) is the much
+       more important than -Ox. The -Ox option will only rarely find things to
+       optimize, and in your case it will cause a GPF. I suggest you skip the -Ox
+       option and just use the -Ot option for now...
+       Pelle"
+
 2009-03-06 17:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbinit.h
     * disabled HB_MSC_STARTUP in C++ MSVC builds.
