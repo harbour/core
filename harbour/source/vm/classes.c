@@ -457,10 +457,7 @@ static BOOL hb_clsDictRealloc( PCLASS pClass )
    {
       ulNewHashKey <<= 1;
       if( ulNewHashKey > HASH_KEYMAX )
-      {
          hb_errInternal( 6002, "Unable to realloc class message in __clsDictRealloc()", NULL, NULL );
-         return FALSE;
-      }
 
 #ifdef HB_MSG_POOL
       puiMsgIdx = ( USHORT * ) hb_xgrab( ( ulNewHashKey << BUCKETBITS ) * sizeof( USHORT ) );
@@ -2937,7 +2934,6 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
          default:
 
             hb_errInternal( HB_EI_CLSINVMETHOD, NULL, "__clsAddMsg()", NULL );
-            return FALSE;
       }
 
       pClass->ulOpFlags |= ulOpFlags;

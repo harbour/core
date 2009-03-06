@@ -8,6 +8,27 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-06 11:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/usrrdd/usrrdd.c
+    ! removed unnecessary declaration
+
+  * harbour/source/compiler/harbour.yyc
+    ! removed unnecessary ";"
+
+  * harbour/source/vm/classes.c
+  * harbour/source/compiler/hbpcode.c
+    * pacified some warnings for compilers which can detect that
+      hb_errInternal() does not returns
+
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfnsx/dbfnsx1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/contrib/rddads/adsx.c
+    * marked all places where we put some link time bindings after
+      hb_errInternal() as: /* not executed, only to force linking ... */
+
 2009-03-06 10:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     ! Fixed -gh switch detection and workings.

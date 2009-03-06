@@ -1561,7 +1561,8 @@ static void hb_adsxRddInit( void * cargo )
       if ( hb_rddRegister( "ADSX", RDT_FULL ) > 1 )
       {
          hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-         HB_FUNC_EXEC( ADS );   /* force ADS linking */
+         /* not executed, only to force linking ADS RDD */
+         HB_FUNC_EXEC( ADS );
       }
    }
 }

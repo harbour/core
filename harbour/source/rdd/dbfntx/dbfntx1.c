@@ -2262,10 +2262,7 @@ static LPPAGEINFO hb_ntxPageTopMove( LPTAGINFO pTag, ULONG ulPage )
          return NULL;
 #ifdef HB_NTX_DEBUG_EXT
       if( pPage->uiKeys == 0 && pTag->stackLevel > 0 )
-      {
          hb_errInternal( 9201, "hb_ntxPageTopMove: index corrupted.", NULL, NULL );
-         return NULL;
-      }
 #endif
       ulPage = hb_ntxGetKeyPage( pPage, 0 );
       hb_ntxTagSetPageStack( pTag, pPage->Page, 0 );
@@ -2291,10 +2288,7 @@ static LPPAGEINFO hb_ntxPageBottomMove( LPTAGINFO pTag, ULONG ulPage )
          return NULL;
 #ifdef HB_NTX_DEBUG_EXT
       if( pPage->uiKeys == 0 && pTag->stackLevel > 0 )
-      {
          hb_errInternal( 9201, "hb_ntxPageBottomMove: index corrupted.", NULL, NULL );
-         return NULL;
-      }
 #endif
       ulPage = hb_ntxGetKeyPage( pPage, pPage->uiKeys );
       hb_ntxTagSetPageStack( pTag, pPage->Page, pPage->uiKeys -
@@ -7779,7 +7773,7 @@ static void hb_dbfntxRddInit( void * cargo )
 
    hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 
-   /* not executed, only to force DBF RDD linking */
+   /* not executed, only to force linking DBF RDD */
    HB_FUNC_EXEC( _DBF );
 }
 

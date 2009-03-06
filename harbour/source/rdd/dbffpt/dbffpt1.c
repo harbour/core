@@ -5164,7 +5164,7 @@ static void hb_dbffptRddInit( void * cargo )
    {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 
-      /* not executed, only to force DBF RDD linking */
+      /* not executed, only to force linking DBF RDD */
       HB_FUNC_EXEC( _DBF );
    }
 }

@@ -3358,7 +3358,7 @@ void hb_gtStartupInit( void )
 
    hb_errInternal( 9998, "Screen driver initialization failure", NULL, NULL );
 
-   /* force linking HB_GTSYS() */
+   /* not executed, only to force linking HB_GTSYS() */
    HB_FUNC_EXEC( HB_GTSYS );
 }
 

@@ -3058,8 +3058,6 @@ static AREAP hb_usrGetAreaParam( int iParams )
 
    if( iParams <= hb_pcount() )
    {
-      AREAP pArea;
-
       if( ISNUM( 1 ) )
          pArea = hb_usrGetAreaPointer( hb_parni( 1 ) );
       else
