@@ -67,12 +67,10 @@ HOW TO BUILD AND INSTALL HARBOUR
       Platform specific prerequisites:
 
       1.) Windows NT or compatible system is required to build Harbour.
-      2.) Make sure to have your C compiler of choice properly installed,
-          please refer to your C compiler installation and setup
-          instructions for details. It's recommended to make sure no
-          tools in your PATH belonging to other C compilers are interfering
-          with your setup (put all these _after_ your selected C compiler
-          in PATH).
+      2.) Make sure to have your C compiler of choice properly installed.
+          Refer to your C compiler installation and setup instructions for
+          details. It's recommended to make sure no tools in your PATH
+          belonging to other C compilers are interfering with your setup.
           For the list of supported compilers, please look up the
           relevant section of this file.
       3.) Make sure to have GNU Make. We recommend the one distributed
@@ -151,6 +149,8 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
    NOTES: - For mingw and cygwin you have to use forward slashes
             and also cygwin drive notation for cygwin.
           - Space in directory names isn't currently supported.
+          - Don't put the dir inside double quotes.
+          - Use absolute paths.
 
 
 SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
@@ -181,9 +181,9 @@ SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
    pocc64   - Pelles C 5.0 x64
    poccce   - Pelles C 5.0 (Windows CE / ARM)
    xcc      - Pelles C for xhb
+   owatcom  - Open Watcom C++
    icc      - Intel(R) C/C++
    bcc      - Borland/CodeGear C++ 4.x and above
-   owatcom  - Open Watcom C++
    cygwin   - Cygwin GNU C
 
    DOS (32-bit)
@@ -244,7 +244,9 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
 
    You need these when building for a platform different to host.
    For this to work, you will need to point above envvars to
-   a native Harbour build available on your system.
+   a native Harbour build available on your system. You don't need
+   a full native build, harbour.exe and hbpp.exe are enough for
+   the process to succeed.
 
 
 FOR MORE INFORMATION

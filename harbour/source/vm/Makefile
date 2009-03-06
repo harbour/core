@@ -29,6 +29,9 @@ ifeq ($(HB_ARCHITECTURE),win)
 	ifeq ($(HB_COMPILER),bcc)
 		DIRS += maindllh
 	endif
+	ifeq ($(HB_COMPILER),icc)
+		DIRS += maindllh
+	endif
 	ifeq ($(HB_COMPILER),msvc)
 		DIRS += maindllh
 	endif

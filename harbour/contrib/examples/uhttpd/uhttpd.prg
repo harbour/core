@@ -96,21 +96,26 @@
 #include "hbextern.ch"   // need this to use with HRB
 
 #ifdef GD_SUPPORT
-  // adding GD support
-  REQUEST GDIMAGE, GDIMAGECHAR, GDCHART
-  #define APP_GD_SUPPORT "_GD"
-  #stdout "Lib GD support enabled"
+   // adding GD support
+   REQUEST GDIMAGE, GDIMAGECHAR, GDCHART
+   #define APP_GD_SUPPORT "_GD"
+   #stdout "Lib GD support enabled"
 #else
-  #define APP_GD_SUPPORT ""
-  #stdout "Lib GD support disabled"
+   #define APP_GD_SUPPORT ""
+   #stdout "Lib GD support disabled"
+#endif
+
+/* Force Harbour socket on non-Window systems */
+#if ! defined( __PLATFORM__WINDOWS ) .AND. ! defined( USE_HB_INET )
+   #define USE_HB_INET
 #endif
 
 #ifdef USE_HB_INET
-  #define APP_INET_SUPPORT "_INET"
-  #stdout "Harbour socket"
+   #define APP_INET_SUPPORT "_INET"
+   #stdout "Harbour socket"
 #else
-  #define APP_INET_SUPPORT ""
-  #stdout "Mindaugas socket"
+   #define APP_INET_SUPPORT ""
+   #stdout "Mindaugas socket"
 #endif
 
 #define APP_NAME      "uhttpd"

@@ -80,10 +80,6 @@
    #include <errno.h>
 #endif
 
-/* NOTE: Not really belongs here, but until we can't find a better place
-         it will do it. [vszakats] */
-extern void hb_fhnd_ForceLink( void );
-
 /*
  * Function that adds zero or more paths to a list of pathnames to search
  */

@@ -57,14 +57,12 @@
  *
  */
 
-/* #define HB_OS_WIN_USED */ /* Temporaly disabled Viktor could you check it */
+#define HB_OS_WIN_USED
 
 #include "hbapi.h"
 
-#ifndef HB_OS_WIN
+#if !defined( HB_OS_WIN )
    #include <time.h>
-#else
-   #include <windows.h>
 #endif
 
 #if defined( HB_OS_WIN )
@@ -133,6 +131,7 @@ HB_FUNC( WIN_SYSREFRESH )
 {
    hb_retl( TRUE );
 }
+
 #endif
 
 HB_FUNC( HB_UTCOFFSET )
@@ -170,7 +169,7 @@ HB_FUNC( HB_UTCOFFSET )
       struct tm tmTime;
       time_t current;
 
-      memcpy( (void *) &tmTime, (void *) localtime( &current ), sizeof(tmTime) );
+      memcpy( ( void * ) &tmTime, ( void * ) localtime( &current ), sizeof( tmTime ) );
       nLen = strftime( szRet, 6, "%z", &tmTime );
    }
 #endif
@@ -180,4 +179,3 @@ HB_FUNC( HB_UTCOFFSET )
 
    hb_retclen_buffer( szRet, nLen );
 }
-

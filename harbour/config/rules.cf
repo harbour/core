@@ -23,11 +23,8 @@ HB := $(HB)harbour$(EXE_EXT)
 ifeq ($(HB_GCMODE),)
    HB_GCMODE=3
 endif
-ifeq ($(HB_NFLAG),)
-   HB_NFLAG=
-endif
 HB_FLAGS := -i$(HB_INC_COMPILE) -q0 -w3 -es2 -km -l
-HB_RULE = $(HB) $? $(HB_NFLAG) $(HB_FLAGS) -gc$(HB_GCMODE) $(HB_USER_PRGFLAGS)
+HB_RULE = $(HB) $? -n1 $(HB_FLAGS) -gc$(HB_GCMODE) $(HB_USER_PRGFLAGS)
 
 # The rule to link an executable.
 ifeq ($(LD_RULE),)

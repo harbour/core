@@ -10,7 +10,6 @@ include $(TOP)$(ROOT)config/c.cf
 include $(TOP)$(ROOT)config/prg.cf
 
 HB_GCMODE=0
-HB_NFLAG=-n
 
 EXE_NAME=
 

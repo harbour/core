@@ -8,6 +8,56 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-06 10:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    ! Fixed -gh switch detection and workings.
+      (Francesco, pls check now allmod.hbm)
+    + -gt switch can now be filtered. (-gtwin{win})
+    ! -gui switch won't anymore add '-Wl,-mwindows' C compiler switch
+      on *nix systems. Someone pls confirm this is right.
+    * icc will use -vc postfixed .dlls. They seem to be binary
+      compatible, but I didn't test.
+    % Using __PLATFORM__UNIX macro where applicable.
+    ! Ignoring -o Harbour option passed using '-prgflag:'
+
+  * INSTALL
+    + Added some details.
+
+  * mpkg_win.bat
+    ! Don't create install files if the make process returned
+      with error.
+
+  * source/lang/msg_tpl.c
+    ! Removed ending ';'.
+
+  * source/vm/Makefile
+    + Added icc to generate maindllh.lib.
+
+  * source/common/hbfsapi.c
+    ! Removed obsolete 'extern hb_fhnd_ForceLink()'.
+
+  * config/rules.cf
+  * config/lib.cf
+  * config/bin.cf
+    % Compiling all .prg files with -n1 switch.
+
+  * contrib/examples/uhttpd/uhttpdc.c
+    * Cleaned Windows headers usage.
+      #define HB_OS_WIN_USED is safe to use on all platforms,
+      it just requests the Windows headers, and if compiled on
+      Windows, it will #include them.
+
+  * contrib/examples/uhttpd/uhttpd.prg
+    + Automatically sets USE_HB_INET on non-Windows platforms.
+
+  - contrib/examples/uhttpd/uhttpd-inet.hbm
+  - contrib/examples/uhttpd/uhttpdgd-inet.hbm
+    - Removed files no longer necessary.
+
+  * contrib/examples/uhttpd/uhttpd.hbm
+    + Added comment about -DUSE_HB_INET option.
+    % Removed -lhbct
+
 2009-03-06 04:25 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpdc.c
     * Fixed error in windows header include
@@ -171,7 +221,7 @@
   * utils/hbmk2/hbmk2.prg
     + Added Intel(R) C++ compiler support for Windows.
     + Added initial support also in hbmk2.
-    ; This compile is actively developed and its famous of
+    ; This compiler is actively developed and its famous of
       generating the fastest running code of all C compilers.
       It also outputs an extremely detailed warning list.
       And the best thing: It compiled Harbour without a single

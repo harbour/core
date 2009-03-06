@@ -1,5 +1,0 @@
-#
-# $Id: uhttpd.hbm 10546 2009-03-05 20:12:47Z vszakats $
-#
-
--mt uhttpd.prg cgifunc.prg cookie.prg session.prg uhttpdc.c -DUSE_HB_INET

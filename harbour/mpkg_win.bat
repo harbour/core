@@ -51,6 +51,8 @@ call make_gnu.bat
 
 :MK_PKG
 
+if errorlevel 1 goto MK_ERROR
+
 rem ; Post build cleanup
 
 if exist "%HB_BIN_INSTALL%\*.tds" del "%HB_BIN_INSTALL%\*.tds"
@@ -66,6 +68,8 @@ pushd
 cd %HB_INSTALL_BASE%
 zip -X -r -o %~dp0%HB_PKGNAME%.zip *
 popd
+
+:MK_ERROR
 
 rem ; Cleanup
 if "%1" == "--deltemp" rmdir /q /s %HB_INSTALL_BASE%

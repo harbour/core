@@ -105,7 +105,11 @@
          to use -p option, .ppo files will be generated in temp dir. */
 /* TODO: Sync default C/linker switches with the ones in Harbour GNU make system. */
 /* TODO: Support for more compilers/platforms. */
-/* TODO: Cross compilation support. */
+/* TODO: Cross compilation support.
+         -D__PLATFORM__WINCE ?
+         -D__PLATFORM__WINDOWS
+         -undef:__PLATFORM__UNIX
+         -undef:__PLATFORM__LINUX */
 /* TODO: Add support for library creation. */
 /* TODO: Cleanup on variable names and compiler configuration. */
 /* TODO: Optimizations (speed/memory). */
@@ -713,17 +717,7 @@ FUNCTION Main( ... )
            cParamL            == "-hblnk" .OR. ;
            cParamL            == "-info"
 
-      CASE Left( cParamL, 2 ) == "-gh" .OR. ;
-           ( ! lNIX .AND. Left( cParamL, 2 ) == "/gh" )
-
-           lStopAfterHarbour := .T.
-
          /* Simply ignore. They were already processed in the first pass. */
-
-      CASE ! lNIX .AND. Left( cParamL, 2 ) == "/o" .AND. ! lStopAfterHarbour
-
-         /* Swallow this switch. We don't pass it to Harbour, as it may badly
-            interact with hbmk. */
 
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; s_lGUI      := .T. /* Compatibility */
@@ -772,7 +766,7 @@ FUNCTION Main( ... )
 
       CASE Left( cParamL, 3 ) == "-gt"
 
-         cParam := SubStr( cParam, 2 )
+         cParam := ArchCompFilter( SubStr( cParam, 2 ) )
          IF s_cGT == NIL
             IF ! SetupForGT( cParam, @s_cGT, @s_lGUI )
                OutErr( "hbmk: Warning: Invalid -gt value ignored: " + cParam + hb_osNewLine() )
@@ -785,6 +779,11 @@ FUNCTION Main( ... )
                AAddNotEmpty( s_aLIBUSERGT, PathSepToTarget( cParam ) )
             ENDIF
          ENDIF
+
+      CASE ! lNIX .AND. Left( cParamL, 2 ) == "/o" .AND. ! lStopAfterHarbour
+
+         /* Swallow this switch. We don't pass it to Harbour, as it may badly
+            interact with hbmk. */
 
       CASE Left( cParam, 2 ) == "-o" .AND. ! lStopAfterHarbour
 
@@ -822,7 +821,12 @@ FUNCTION Main( ... )
 
          cParam := ArchCompFilter( SubStr( cParam, Len( "-prgflag:" ) + 1 ) )
          IF Left( cParam, 1 ) $ cOptPrefix
-            AAdd( s_aOPTPRG , PathSepToTarget( cParam, 2 ) )
+            IF SubStr( cParamL, 2 ) == "gh"
+               lStopAfterHarbour := .T.
+            ENDIF
+            IF !( SubStr( cParamL, 2, 1 ) == "o" )
+               AAdd( s_aOPTPRG , PathSepToTarget( cParam, 2 ) )
+            ENDIF
          ENDIF
 
       CASE Left( cParamL, Len( "-cflag:" ) ) == "-cflag:"
@@ -851,6 +855,9 @@ FUNCTION Main( ... )
                AAddNotEmpty( s_aOPTC   , ArchCompFilter( PathSepToTarget( cParam, 2 ) ) )
             ENDIF
          OTHERWISE
+            IF SubStr( cParamL, 2 ) == "gh"
+               lStopAfterHarbour := .T.
+            ENDIF
             AAddNotEmpty( s_aOPTPRG , PathSepToTarget( cParam, 2 ) )
          ENDCASE
 
@@ -1087,9 +1094,6 @@ FUNCTION Main( ... )
          ELSE
             cOpt_CompC += " {LL}"
             aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
-         ENDIF
-         IF s_lGUI
-            cOpt_CompC += " -Wl,-mwindows"
          ENDIF
          IF s_lMAP
             cOpt_CompC += " -Wl,-Map {OM}"
@@ -1514,7 +1518,7 @@ FUNCTION Main( ... )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
          DO CASE
-         CASE t_cCOMP == "msvc"
+         CASE t_cCOMP $ "msvc|icc"
             s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-vc",;
                                           "harbour-" + cDL_Version_Alter + "-vc" ),;
                               "hbmainstd",;
@@ -1527,11 +1531,6 @@ FUNCTION Main( ... )
          CASE t_cCOMP == "msvcia64"
             s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-vc-ia64",;
                                           "harbour-" + cDL_Version_Alter + "-vc-ia64" ),;
-                              "hbmainstd",;
-                              "hbmainwin" }
-         CASE t_cCOMP == "icc"
-            s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-icc",;
-                                          "harbour-" + cDL_Version_Alter + "-icc" ),;
                               "hbmainstd",;
                               "hbmainwin" }
          ENDCASE
@@ -1895,10 +1894,10 @@ FUNCTION Main( ... )
             PauseForKey()
          ELSEIF s_lRUN
             s_cPROGNAME := FN_ExtSet( s_cPROGNAME, cBinExt )
-            #if !( defined( __PLATFORM__WINDOWS ) .OR. defined( __PLATFORM__DOS ) .OR. defined( __PLATFORM__OS2 ) )
-            IF Empty( FN_DirGet( s_cPROGNAME ) )
-               s_cPROGNAME := "." + hb_osPathSeparator() + s_cPROGNAME
-            ENDIF
+            #if defined( __PLATFORM__UNIX )
+               IF Empty( FN_DirGet( s_cPROGNAME ) )
+                  s_cPROGNAME := "." + hb_osPathSeparator() + s_cPROGNAME
+               ENDIF
             #endif
             IF s_lTRACE
                OutStd( "hbmk: Running executable:" + hb_osNewLine() + PathSepToTarget( s_cPROGNAME ) + hb_osNewLine() )
@@ -2263,16 +2262,14 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
 
    LOCAL aCFGDirs
 
-   #if defined( __PLATFORM__WINDOWS ) .OR. ;
-       defined( __PLATFORM__DOS ) .OR. ;
-       defined( __PLATFORM__OS2 )
-      aCFGDirs := { hb_DirBase() }
-   #else
+   #if defined( __PLATFORM__UNIX )
       aCFGDirs := { GetEnv( "HOME" ) + "/.harbour/",;
                     "/etc/harbour",;
                     DirAddPathSep( hb_DirBase() ) + "../etc/harbour",;
                     DirAddPathSep( hb_DirBase() ) + "../etc",;
                     hb_DirBase() }
+   #else
+      aCFGDirs := { hb_DirBase() }
    #endif
 
    FOR EACH cDir IN aCFGDirs
