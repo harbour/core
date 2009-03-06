@@ -61,26 +61,33 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbo
 extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, const char * szModuleName, ULONG ulID, USHORT uiPcodeVer ); /* module symbols initialization with extended information */
 
 #if defined(_MSC_VER) && \
-    !defined(__LCC__) && !defined(__POCC__) && !defined(__XCC__) && \
-    !defined(HB_STRICT_ANSI_C) && !defined(HB_STATIC_STARTUP) && \
-    !defined(HB_PRAGMA_STARTUP) && !defined(HB_MSC_STARTUP)
+    !defined(__LCC__) && !defined(__POCC__) && !defined(__XCC__)
 
-   /* In order to maintain compatibility with other products, MSVC should
-      always use this startup.  If you know that you can use HB_STATIC_STARTUP
-      below, then all you need to do is define HB_STATIC_STARTUP to the
-      compiler.
+   #if !defined(__cplusplus)
 
-      Sat 07 Maj 2005 02:46:38 CEST
-      This is only necessary when you want to create binary libs using
-      MSC in C++ mode (-TP switch) and later this binaries will be linked
-      by standard C linker with [x]Harbour programs. I strongly suggest
-      to for 3-rd party developers to use MSC in standard C mode to create
-      libraries which can be used with standard C compilers. This will
-      eliminate the problem and we will be able to set C++ initialization
-      as default for MSC in C++ mode. Druzus.
-   */
+      /* we do not have better startup initialization method for pure
+       * C mode in MSC
+       */
+      #define HB_MSC_STARTUP
 
-   #define HB_MSC_STARTUP
+   #elif !defined(HB_STRICT_ANSI_C) && !defined(HB_STATIC_STARTUP) && \
+         !defined(HB_PRAGMA_STARTUP) && !defined(HB_MSC_STARTUP)
+
+      /* Sat 07 Maj 2005 02:46:38 CEST
+       * This is only necessary when you want to create binary libs using
+       * MSC in C++ mode (-TP switch) and later this binaries will be linked
+       * by standard C linker with [x]Harbour programs. I strongly suggest
+       * to for 3-rd party developers to use MSC in standard C mode to create
+       * libraries which can be used with standard C compilers. This will
+       * eliminate the problem and we will be able to set C++ initialization
+       * as default for MSC in C++ mode. Druzus.
+       */
+      /* Fri Mar 06 2009 16:43:26 CET
+       * disabled after nearly four years given for 3-rd party developers
+       */
+      /* #define HB_MSC_STARTUP */
+
+   #endif
 
 #endif
 
