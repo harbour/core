@@ -83,6 +83,7 @@
 #define objTypeMLE                                19
 #define objTypeDA                                 20
 #define objTypeScrollBar                          21
+#define objTypeTabPage                            22
 
 //----------------------------------------------------------------------//
 //  NMHDR info
@@ -209,6 +210,9 @@
 #define WVGSB_ENDSCROLL                           7
 #define WVGSB_TOP                                11
 #define WVGSB_BOTTOM                             12
+
+#define WVGTABPAGE_TAB_BOTTOM                     2
+#define WVGTABPAGE_TAB_TOP                        4
 
 #endif // #ifndef _WVG_CH
 

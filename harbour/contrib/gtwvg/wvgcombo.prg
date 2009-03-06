@@ -308,21 +308,25 @@ Messages
 ========
 
 CB_ADDSTRING
-Adds a string to the list box of a combo box. If the combo box does not have the CBS_SORT style,
-the string is added to the end of the list. Otherwise, the string is inserted into the list,
-and the list is sorted.
+Adds a string to the list box of a combo box. If the combo box does not have
+the CBS_SORT style, the string is added to the end of the list. Otherwise, the
+string is inserted into the list, and the list is sorted.
 
 CB_DELETESTRING
 Deletes a string in the list box of a combo box.
 
 CB_DIR
-Adds names to the list displayed by the combo box. The message adds the names of directories and files that match a specified string and set of file attributes. CB_DIR can also add mapped drive letters to the list.
+Adds names to the list displayed by the combo box. The message adds the names of
+directories and files that match a specified string and set of file attributes.
+CB_DIR can also add mapped drive letters to the list.
 
 CB_FINDSTRING
-Searches the list box of a combo box for an item beginning with the characters in a specified string.
+Searches the list box of a combo box for an item beginning with the characters in
+a specified string.
 
 CB_FINDSTRINGEXACT
-Finds the first list box string in a combo box that matches the string specified in the lParam parameter.
+Finds the first list box string in a combo box that matches the string specified in
+the lParam parameter.
 
 CB_GETCOMBOBOXINFO
 Gets information about the specified combo box.
@@ -335,8 +339,8 @@ Gets the cue banner text displayed in the edit control of a combo box.
 Send this message explicitly or by using the ComboBox_GetCueBannerText macro.
 
 CB_GETCURSEL
-An application sends a CB_GETCURSEL message to retrieve the index of the currently selected item,
-if any, in the list box of a combo box.
+An application sends a CB_GETCURSEL message to retrieve the index of the currently
+selected item, if any, in the list box of a combo box.
 
 CB_GETDROPPEDCONTROLRECT
 An application sends a CB_GETDROPPEDCONTROLRECT message to retrieve the screen coordinates of a
@@ -411,7 +415,8 @@ Sets the cue banner text that is displayed for the edit control of a combo box.
 CB_SETCURSEL
 An application sends a CB_SETCURSEL message to select a string in the list of a combo box.
 If necessary, the list scrolls the string into view. The text in the edit control of the
-   combo box changes to reflect the new selection, and any previous selection in the list is removed.
+combo box changes to reflect the new selection, and any previous selection in the list
+is removed.
 
 CB_SETDROPPEDWIDTH
 An application sends the CB_SETDROPPEDWIDTH message to set the maximum allowable width,

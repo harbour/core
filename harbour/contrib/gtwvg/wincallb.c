@@ -152,9 +152,7 @@ HB_FUNC( _ASCALLBACK )
    else
    {
       if( ISOBJECT( 2 ) )
-      {
          Callback.pSelf = hb_itemNew( hb_param( 2, HB_IT_OBJECT ) );
-      }
       else
          Callback.pSelf = NULL;
 
@@ -320,7 +318,6 @@ LRESULT CALLBACK GeneratedCode( formal params.... )
 static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
 {
    byte *        pMem;
-   //int           nFuncSize;
    PCALLBACKDATA pCallbackRecord;
    int           iOffset;
    int           i;
@@ -337,15 +334,15 @@ static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
       if ( pCallback->iFormalParams == 0 )
       {
 
-         BYTE pFuncBody[] = { 0x68, 0x00, 0x00, 0x00, 0x00, // push long (constant)
-                              0xE8, 0x00, 0x00, 0x00, 0x00, // call function
-                              0x59,                         // pop cx
-                              0xC3, 0x90, 0x90, 0x90 };     // return
+         BYTE pFuncBody[] = { 0x68, 0x00, 0x00, 0x00, 0x00,    // push long (constant)
+                              0xE8, 0x00, 0x00, 0x00, 0x00,    // call function
+                              0x59,                            // pop cx
+                              0xC3, 0x90, 0x90, 0x90 };        // return
                               // size: 15
 
          memcpy( pMem, pFuncBody, 15 );
-         _udp( pMem, 1, pCallbackRecord ) ;           // update callbackdata pointer
-         _ucp( pMem, 6, __CallbackDispatcher, 10 );   // update code pointer
+         _udp( pMem, 1, pCallbackRecord ) ;                     // update callbackdata pointer
+         _ucp( pMem, 6, __CallbackDispatcher, 10 );             // update code pointer
 
       }
       else
@@ -353,12 +350,12 @@ static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
          BYTE pFuncProlog[] = { 0x55,                           // push bp
                                 0x8B, 0xEC };                   // mov bp,sp
 
-         BYTE pFuncEpilog[] = { 0x68, 0x00, 0x00, 0x00, 0x00, // push long (constant)
-                                0xE8, 0x00, 0x00, 0x00, 0x00, // call function
+         BYTE pFuncEpilog[] = { 0x68, 0x00, 0x00, 0x00, 0x00,   // push long (constant)
+                                0xE8, 0x00, 0x00, 0x00, 0x00,   // call function
                                 0x83, 0xC4, 0x00,
-                                0x5D,                            // pop bp
+                                0x5D,                           // pop bp
                                 0xC2, 0x00, 0x00,
-                                0x90, 0x90, 0x90 }; // size: 20
+                                0x90, 0x90, 0x90 };             // size: 20
 
          BYTE pParamData[]  = { 0x8B, 0x00, 0x00, 0x00 };
 
@@ -459,7 +456,6 @@ static LPVOID FuncMemAlloc( void )
 
    SYSTEM_INFO      sSysInfo;         // useful information about the system
    LPVOID           lpvBase;
-   //LPVOID           lpvResult;
    DWORD            i,j,k,l;
    BOOL             bFound;
    char *           lpPage;
@@ -538,7 +534,6 @@ static LPVOID FuncMemAlloc( void )
             if( lpvBase == NULL )
             {
                // error commiting mem page
-//hb_ToOutDebug( "error committing memory" );
                bError = TRUE;
                break;
             }
@@ -584,7 +579,6 @@ static LPVOID FuncMemAlloc( void )
          if( lpvBase == NULL )
          {
             // error commiting mem page
-//hb_ToOutDebug( "error reserving memory" );
             bError = TRUE;
             break;
          }
@@ -636,7 +630,6 @@ static void FreeCallbackRecord( PCALLBACKDATA pCallback )
 static BOOL FuncMemFree( LPBYTE pMem )
 {
    DWORD     i,j,k;
-   //pPageData lpPage;
    BOOL      bSuccess = FALSE;
 
    for( i = 0 ; i < dwReservedLen ; i++ ) // each reservation
@@ -669,7 +662,6 @@ static BOOL FuncMemFree( LPBYTE pMem )
 static void FuncMemFreeAll( void )
 {
    DWORD     i,j,k;
-   //pPageData lpPage;
    LPBYTE    pMem;
 
    if( pAllAllocs != NULL )
@@ -710,5 +702,4 @@ HB_FUNC( _FREEALLCALLBACKS )
    FuncMemFreeAll();
 }
 //----------------------------------------------------------------------//
-
 

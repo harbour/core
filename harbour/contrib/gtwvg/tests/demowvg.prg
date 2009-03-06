@@ -504,6 +504,7 @@ FUNCTION Wvt_Paint()
 //      needs to process messages sent through WM_SETFOCUS message
 //      received by the window.
 //-------------------------------------------------------------------//
+#if 0
 FUNCTION Wvt_SetFocus()
 
    LOCAL nRow := row()
@@ -514,11 +515,13 @@ FUNCTION Wvt_SetFocus()
    DevPos( nRow, nCol )
 
    RETURN nil
+#endif
 //-------------------------------------------------------------------//
 //      Wvt_KillFocus() must be a FUNCTION in your application
 //      needs to process messages sent through WM_KILLFOCUS message
 //      received by the window.
 //-------------------------------------------------------------------//
+#if 0
 FUNCTION Wvt_KillFocus()
 
    LOCAL nRow := row()
@@ -529,6 +532,7 @@ FUNCTION Wvt_KillFocus()
    DevPos( nRow, nCol )
 
    RETURN nil
+#endif
 //-------------------------------------------------------------------//
 //
 //      Wvt_Mouse() must be present if you want to catch and fire
@@ -2288,7 +2292,6 @@ Static Function DoModalWindow()
    oCrt := WvgCrt():New( , , { 4,8 }, { 12,49 }, , .T. )
 
    oCrt:lModal      := .t.
-   oCrt:exStyle     := WS_EX_DLGMODALFRAME
    oCrt:resizable   := .f.
    oCrt:closable    := .f.
    oCrt:title       := 'Information! [R:4 C:8]'
@@ -3419,7 +3422,7 @@ STATIC FUNCTION ExeFontDialog( oCrt )
 
    oFontDlg := WvgFontDialog():new( oCrt )
 
-   oFontDlg:title            := 'Select a Screen Font'
+   oFontDlg:title            := 'Select a Screen Font!'
    oFontDlg:aPos             := { 150,150 }
    oFontDlg:buttonApply      := .t.
    oFontDlg:activateApply    := {|| NIL }
@@ -3454,16 +3457,18 @@ STATIC FUNCTION ExeFontDialog( oCrt )
 PROCEDURE ExecGCUI()
 
    IF hb_mtvm()
-      Hb_ThreadStart( {|oCrt|  oCrt := WvgCrt():New( , , { 2,4 }, { 20,51 }, , .t. ) , ;
+      Hb_ThreadStart( {|oCrt|  oCrt := WvgCrt():New( , , { 2,4 }, { 20,81 }, , .t. ) , ;
                                oCrt:create(), ;
-                               GCUIConsole() , ;
+                               GCUIConsole( oCrt ) , ;
                                oCrt:destroy()     } )
    ENDIF
 
    RETURN
 //----------------------------------------------------------------------//
 
-PROCEDURE GCUIConsole()
+#xTranslate Alert( => MyAlert(
+
+PROCEDURE GCUIConsole( oCrt )
    LOCAL dDate      := ctod( "" )
    LOCAL cName      := Space( 35 )
    LOCAL cAdd1      := Space( 35 )
@@ -3473,23 +3478,37 @@ PROCEDURE GCUIConsole()
    LOCAL nColGet    := 8
    LOCAL GetList    := {}
    LOCAL cLabel     := "VOUCH, that GROWS with you"
+   LOCAL oTab, oStat
 
    SetColor( "N/W,N/GR*,,,N/W*" )
    CLS
    hb_gtInfo( HB_GTI_WINTITLE, "WVG Simplified GUI Console" )
+#if 0
+   oTab := WvgTabPage():New( oCrt, , { 430, 9 }, { 210, 301 }, , .t. )
+   oTab:caption   := 'First'
+   oTab:minimized := .f.
+   oTab:create()
+   oTab:tabActivate := {|mp1,mp2,oTab| oTab:Show() }
 
+   oStat := WvgStatic():New( oTab, , { 10, 30 }, { 190, 50 }, , .t. )
+   oStat:type    := WVGSTATIC_TYPE_TEXT
+   oStat:options := WVGSTATIC_TEXT_CENTER
+   oStat:caption := 'This is first caption'
+   oStat:create()
+   oStat:setColorBG( RGB( 240, 255, 0 ) )
+#endif
    @ MaxRow(), 0 SAY PadC( "GTWVG Simplified GUI Console", maxcol()+1 ) COLOR "W+/B*"
 
    @  2, nColGet SAY "< Date >"
-   @  5, nColGet SAY "<" + PadC( "Name", 33 ) + ">"
-   @  8, nColGet SAY "<" + PadC( "Address", 33) + ">"
+   @  5, nColGet SAY "<" + PadC( "Name"   , 33 ) + ">"
+   @  8, nColGet SAY "<" + PadC( "Address", 33 ) + ">"
    @ 15, nColGet SAY "< Salary >"
 
-   @  3, nColGet GET dDate
-   @  6, nColGet GET cName
-   @  9, nColGet GET cAdd1
-   @ 11, nColGet GET cAdd2
-   @ 13, nColGet GET cAdd3
+   @  3, nColGet GET dDate  Valid {|| Alert( 'How did you like the "Alert" replacement?', { 'WOW','OK','OOps'} ) == 1 }
+   @  6, nColGet GET cName  Valid {|| oTab:hide(), .t. }
+   @  9, nColGet GET cAdd1  Valid {|| oTab:show(), .t. }
+   @ 11, nColGet GET cAdd2  Valid {|| oTab:hide(), .t. }
+   @ 13, nColGet GET cAdd3  Valid {|| oTab:show(), .t. }
    @ 16, nColGet GET nSlry PICTURE "@Z 9999999.99"
 
    // The only additional calls to render your console GUI
@@ -3512,4 +3531,28 @@ PROCEDURE GCUIConsole()
    READ
 
    RETURN
-//-------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+#xUntranslate alert( =>
+
+FUNCTION MyAlert( cMsg, aOpt )
+   LOCAL nSel, oCrt
+
+   oCrt := WvgCrt():New( , , { -1,-1 }, { 9, MaxCol()-4 }, , .t. )
+   oCrt:lModal := .t.
+   oCrt:icon   := "dia_excl.ico"
+   oCrt:create()
+   oCrt:resizable := .t.
+
+   SetColor( 'N/W' )
+   CLS
+   hb_gtInfo( HB_GTI_WINTITLE, cMsg )
+
+   nSel := Alert( cMsg, aOpt )
+
+   oCrt:destroy()
+
+   RETURN nSel
+
+#xTranslate Alert( => MyAlert(
+/*----------------------------------------------------------------------*/
+

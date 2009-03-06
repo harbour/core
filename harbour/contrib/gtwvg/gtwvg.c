@@ -2311,19 +2311,39 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
             RECT rc;
             POINT pt;
 
-            GetClientRect( hWndParent, &rc );
-            if( pWVT->pPP->bRowCols )
+            if( pWVT->pPP->y < 0 )
             {
-               pt.x = rc.left + ( pWVTp->PTEXTSIZE.x * pWVT->pPP->y );
-               pt.y = rc.top  + ( pWVTp->PTEXTSIZE.y * pWVT->pPP->x );
+               GetClientRect( hWndParent, &rc );
+               if( pWVT->pPP->bRowCols )
+               {
+                  pWVT->ROWS = pWVT->pPP->width;
+                  pWVT->COLS = pWVT->pPP->height;
 
-               pWVT->ROWS = pWVT->pPP->width;
-               pWVT->COLS = pWVT->pPP->height;
+                  pt.x = ( rc.right-rc.left + 1 - ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) / 2;
+                  pt.y = ( rc.bottom-rc.top + 1 - ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) / 2;
+               }
+               else
+               {
+                  pt.x = rc.left + pWVT->pPP->x;
+                  pt.y = rc.top  + pWVT->pPP->y;
+               }
             }
             else
             {
-               pt.x = rc.left + pWVT->pPP->x;
-               pt.y = rc.top  + pWVT->pPP->y;
+               GetClientRect( hWndParent, &rc );
+               if( pWVT->pPP->bRowCols )
+               {
+                  pWVT->ROWS = pWVT->pPP->width;
+                  pWVT->COLS = pWVT->pPP->height;
+
+                  pt.x = rc.left + ( pWVTp->PTEXTSIZE.x * pWVT->pPP->y );
+                  pt.y = rc.top  + ( pWVTp->PTEXTSIZE.y * pWVT->pPP->x );
+               }
+               else
+               {
+                  pt.x = rc.left + pWVT->pPP->x;
+                  pt.y = rc.top  + pWVT->pPP->y;
+               }
             }
 
             ClientToScreen( hWndParent, &pt );
@@ -2332,9 +2352,6 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
             pWVT->pPP->y = pt.y;
 
             bByConf = TRUE;
-
-            //WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
-            pWVT->pPP->style = WS_POPUP|WS_CAPTION|WS_DLGFRAME;
          }
       }
    }

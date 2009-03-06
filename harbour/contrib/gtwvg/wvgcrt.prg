@@ -322,7 +322,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
    endif
 
    if ::lModal
-      ::style := WS_POPUP + WS_CAPTION
+      ::style := WS_POPUP + WS_CAPTION + WS_SYSMENU
       if !( ::resizable )
          //::exStyle := WS_EX_DLGMODALFRAME
          //::style += WS_DLGFRAME

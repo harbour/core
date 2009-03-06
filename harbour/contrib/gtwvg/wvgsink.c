@@ -373,10 +373,8 @@ hb_ToOutDebug( "static ULONG STDMETHODCALLTYPE Release( IEventHandler *self )->c
       {
          GlobalFree( ( MyRealIEventHandler * ) self );
       }
-//hb_ToOutDebug( "       ULONG STDMETHODCALLTYPE Release( IEventHandler *self )->self" );
       return( ( ULONG ) 0 );
    }
-   //return( ( ULONG ) ( ( MyRealIEventHandler * ) self )->count < 0 ? ( ( MyRealIEventHandler * ) self )->count : 0 );
    return( ( ULONG ) ( ( MyRealIEventHandler * ) self )->count );
 }
 //----------------------------------------------------------------------//
@@ -501,34 +499,9 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *self, DISPID dispid, REF
 
          for( i=iArg; i > 0; i-- )
          {
-            //if( ( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.vt & VT_BYREF ) == VT_BYREF )
             if( HB_IS_BYREF( pItemArray[ iArg-i ] ) )
             {
                hb_oleItemToVariant( &( params->rgvarg[ iArg-i ] ), pItemArray[ iArg-i ] );
-
-               #if 0
-               switch( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.vt )
-               {
-               case VT_I2|VT_BYREF:
-                  *( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.n3.piVal )    = ( short ) hb_itemGetNI( pItemArray[i-1] );
-                  break;
-               case VT_I4|VT_BYREF:
-                  *( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.n3.plVal )    = ( long ) hb_itemGetNL( pItemArray[i-1] );
-                  break;
-               case VT_R4|VT_BYREF:
-                  *( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.n3.pfltVal )  = ( float ) hb_itemGetND( pItemArray[i-1] );
-                  break;
-               case VT_R8|VT_BYREF:
-                  *( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.n3.pdblVal )  = ( double ) hb_itemGetND( pItemArray[i-1] );
-                  break;
-               case VT_BOOL|VT_BYREF:
-                  *( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.n3.pboolVal ) = hb_itemGetL( pItemArray[i-1] ) ? 0xFFFF : 0;
-                  break;
-               case VT_DATE|VT_BYREF:
-                  *( ( &( params->rgvarg[ iArg-i ] ) )->n1.n2.n3.pdate )    = ( DATE ) ( double ) ( hb_itemGetDL( pItemArray[i-1] )-2415019 );
-                  break;
-               }
-               #endif
             }
          }
 
@@ -618,10 +591,14 @@ static HRESULT SetupConnectionPoint( device_interface* pdevice_interface, REFIID
                      hr = m_pIConnectionPoint->lpVtbl->GetConnectionInterface( m_pIConnectionPoint, &rriid );
                      if ( hr == S_OK )
                      {
-                        ( ( MyRealIEventHandler* ) thisobj )->device_event_interface_iid = rriid;
+                        /**************           This has to be review         *******************
+                               PellesC was generating GPF at this point
+                               After commenting it out, I could not see any difference in objects
+                               I play with. Cannot say why did I retained it so long.
+                                                                                                 */
+                        //( ( MyRealIEventHandler* ) thisobj )->device_event_interface_iid = rriid;
 
                         hr = m_pIConnectionPoint->lpVtbl->Advise( m_pIConnectionPoint, pIUnknown, &dwCookie );
-
                         if ( hr == S_OK )
                         {
                            ( ( MyRealIEventHandler* ) thisobj )->pIConnectionPoint = m_pIConnectionPoint;

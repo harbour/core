@@ -8,6 +8,54 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-06 13:14 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/Makefile
+    + wvgtabpg.prg
+
+  * harbour/contrib/gtwvg/wvtwin.ch
+  * harbour/contrib/gtwvg/wvgparts.ch
+    + Added constants to manage Tab Pages
+
+  * harbour/contrib/gtwvg/gtwvg.c
+    ! Changed the behavior if a GT is child of another GT.
+    
+  * harbour/contrib/gtwvg/wincallb.c
+    ! Cleanups.
+
+  * harbour/contrib/gtwvg/wvgsink.c
+    ! Cleanup.
+    % Fixed a potential nasty bug. Kept it in the code to refer if some
+      problem arises in the future.
+
+  * harbour/contrib/gtwvg/wvgwin.c
+    ! Cleanup. Removed yet unfinished code.
+
+  * harbour/contrib/gtwvg/wvgcombo.prg
+    ! Cleanups and documentation update.
+
+  * harbour/contrib/gtwvg/wvgcrt.prg
+    ! Changed the style of modal GT console.
+
+  * harbour/contrib/gtwvg/wvgwnd.prg
+    % Rearrangement of methods.
+    ! Updated to use either protocol - HB_ASCallBck() or SetProp()
+      controllable by a #define constant.
+
+  + harbour/contrib/gtwvg/wvgtabpg.prg
+    + Started WvgTabPage() compatible with - XbpTabPage() of Xbase++.
+      Unfinished but yet usable as demonstrated in demowvg.prg.
+
+  * harbour/contrib/hbwin/hbwapi.h
+    + Added wapi_par_WORD|DWORD() macros.
+
+  * harbour/contrib/hbwin/wapi_commctrl.c
+    + Added TabCtrl_* WINAPI macros as functions.
+
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    ! Updated to execute pure Xbase++ code in all its fury.
+    + Added WvgTabPage() implementation via CUI+GUI demo in 
+      <Traditional><WVG Console with GCUI> menu option.
+
 2009-03-06 21:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/dirdrive.c
     ! fixed ISDISK() and DISKCHANGE() return value - due to typo the

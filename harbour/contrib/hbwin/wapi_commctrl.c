@@ -51,6 +51,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbwapi.h"
 #include <commctrl.h>
 
@@ -461,3 +462,329 @@ HB_FUNC( WAPI_IMAGELIST_WRITEEX )
 /*----------------------------------------------------------------------//
 //                            END - ImageList_* - API
 //----------------------------------------------------------------------*/
+
+
+/*----------------------------------------------------------------------//
+                             Tab Control Macros
+//----------------------------------------------------------------------*/
+// Wapi_TabCtrl_InsertItem( hWndTab, nInsertPos, cText, iImageListIndex )
+
+HB_FUNC( WAPI_TABCTRL_INSERTITEM )
+{
+   TC_ITEM item;
+   LPTSTR szText = HB_TCHAR_CONVTO( hb_parc( 3 ) );
+
+   item.mask    = TCIF_TEXT | TCIF_IMAGE;
+   item.iImage  = ISNIL( 4 ) ? -1 : wapi_par_INT( 4 );
+   item.pszText = szText;
+
+   wapi_ret_NI( TabCtrl_InsertItem( wapi_par_HWND( 1 ), wapi_par_INT( 3 ), &item ) );
+
+   HB_TCHAR_FREE( szText );
+}
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WAPI_TABCTRL_SETCURSEL )
+{
+   wapi_ret_NI( TabCtrl_SetCurSel( wapi_par_HWND( 1 ) , hb_parni (2) ) );
+}
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WAPI_TABCTRL_GETCURSEL )
+{
+   wapi_ret_NI( TabCtrl_GetCurSel( wapi_par_HWND( 1 ) ) ) ;
+}
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WAPI_TABCTRL_GETITEM )
+{
+   TC_ITEM item;
+   hb_retl( TabCtrl_GetItem( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), &item ) );
+
+   // assign  item to param 3
+}
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WAPI_TABCTRL_GETITEMCOUNT )
+{
+   wapi_ret_NI( TabCtrl_GetItemCount( wapi_par_HWND( 1 ) ) ) ;
+}
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WAPI_TABCTRL_GETITEMRECT )
+{
+   RECT rc;
+   PHB_ITEM aRect = hb_itemArrayNew( 4 );
+   PHB_ITEM temp;
+
+   TabCtrl_GetItemRect( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), &rc );
+
+   temp = hb_itemPutNL( NULL, rc.left );
+   hb_arraySet( aRect, 1, temp );
+   hb_itemRelease( temp );
+
+   temp = hb_itemPutNL( NULL, rc.top );
+   hb_arraySet( aRect, 2, temp );
+   hb_itemRelease( temp );
+
+   temp = hb_itemPutNL( NULL, rc.right );
+   hb_arraySet( aRect, 3, temp );
+   hb_itemRelease( temp );
+
+   temp = hb_itemPutNL( NULL, rc.bottom );
+   hb_arraySet( aRect, 4, temp );
+   hb_itemRelease( temp );
+
+   hb_itemReturnRelease( aRect );
+}
+/*----------------------------------------------------------------------*/
+
+HB_FUNC( WAPI_TABCTRL_GETROWCOUNT )
+{
+   wapi_ret_NI( TabCtrl_GetRowCount( wapi_par_HWND( 1 ) ) ) ;
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_GetImageList(hwnd)
+// (HIMAGELIST)SNDMSG((hwnd), TCM_GETIMAGELIST, 0, 0L)
+
+HB_FUNC( WAPI_TABCTRL_GETIMAGELIST )
+{
+   wapi_ret_NINT( ( LONG ) TabCtrl_GetImageList( wapi_par_HWND( 1 ) ) ) ;
+}
+/*----------------------------------------------------------------------*/
+// #define TabCtrl_SetImageList(hwnd, himl)
+// (HIMAGELIST)SNDMSG((hwnd), TCM_SETIMAGELIST, 0, (LPARAM)(HIMAGELIST)(himl))
+
+HB_FUNC( WAPI_TABCTRL_SETIMAGELIST )
+{
+   wapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_SetImageList( wapi_par_HWND( 1 ),
+                                                       wapi_par_HIMAGELIST( 2 ) ) ) ;
+}
+/*----------------------------------------------------------------------*/
+// Wapi_TabCtrl_SetItem( hWndTab, nInsertPos, cText, iImageListIndex )
+// (BOOL)SNDMSG((hwnd), TCM_SETITEM, (WPARAM)(int)(iItem), (LPARAM)(TC_ITEM FAR*)(pitem))
+
+HB_FUNC( WAPI_TABCTRL_SETITEM )
+{
+   TC_ITEM item;
+   LPTSTR szText = HB_TCHAR_CONVTO( hb_parc( 3 ) );
+
+   item.mask    = TCIF_TEXT | TCIF_IMAGE;
+   item.iImage  = ISNIL( 4 ) ? -1 : wapi_par_INT( 4 );
+   item.pszText = szText;
+
+   wapi_ret_L( TabCtrl_SetItem( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), &item ) ) ;
+
+   HB_TCHAR_FREE( szText );
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_DeleteAllItems(hwnd)
+// (BOOL)SNDMSG((hwnd), TCM_DELETEALLITEMS, 0, 0L)
+
+HB_FUNC( WAPI_TABCTRL_DELETEALLITEMS )
+{
+   wapi_ret_L( TabCtrl_DeleteAllItems( wapi_par_HWND( 1 ) ) );
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_DeleteItem(hwnd, i)
+// (BOOL)SNDMSG((hwnd), TCM_DELETEITEM, (WPARAM)(int)(i), 0L)
+
+HB_FUNC( WAPI_TABCTRL_DELETEITEM )
+{
+   wapi_ret_L( TabCtrl_DeleteItem( wapi_par_HWND( 1 ), ( WPARAM ) wapi_par_INT( 2 ) ) );
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_HitTest(hwndTC, pinfo)
+// (int)SNDMSG((hwndTC), TCM_HITTEST, 0, (LPARAM)(TC_HITTESTINFO FAR*)(pinfo))
+
+// waiting for structures
+
+HB_FUNC( WAPI_TABCTRL_HITTEST )
+{
+   TCHITTESTINFO tcht ;
+
+   hb_parni( TabCtrl_HitTest( wapi_par_HWND( 1 ), &tcht ) ) ;
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_SetItemExtra(hwndTC, cb)
+// (BOOL)SNDMSG((hwndTC), TCM_SETITEMEXTRA, (WPARAM)(cb), 0L)
+
+HB_FUNC( WAPI_TABCTRL_SETITEMEXTRA )
+{
+   wapi_ret_L( TabCtrl_SetItemExtra( wapi_par_HWND( 1 ), wapi_par_INT( 2 ) ) ) ;
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_AdjustRect(hwnd, bLarger, prc)
+// (int)SNDMSG(hwnd, TCM_ADJUSTRECT, (WPARAM)(BOOL)(bLarger), (LPARAM)(RECT FAR *)prc)
+
+HB_FUNC( WAPI_TABCTRL_ADJUSTRECT )
+{
+  RECT rc;
+
+  if ( ISARRAY(3) )
+  {
+     rc.left   = hb_parnl( 3, 1 );
+     rc.top    = hb_parnl( 3, 2 );
+     rc.right  = hb_parnl( 3, 3 );
+     rc.bottom = hb_parnl( 3, 4 );
+
+     TabCtrl_AdjustRect( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ), &rc );
+
+     hb_stornl( rc.left  , 3, 1 );
+     hb_stornl( rc.top   , 3, 2 );
+     hb_stornl( rc.right , 3, 3 );
+     hb_stornl( rc.bottom, 3, 4 );
+  }
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_SetItemSize(hwnd, x, y)
+// (DWORD)SNDMSG((hwnd), TCM_SETITEMSIZE, 0, MAKELPARAM(x,y))
+
+HB_FUNC( WAPI_TABCTRL_SETITEMSIZE )
+{
+   wapi_ret_NINT( TabCtrl_SetItemSize( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), wapi_par_INT( 3 ) ) );
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_RemoveImage(hwnd, i)
+// (void)SNDMSG((hwnd), TCM_REMOVEIMAGE, i, 0L)
+
+HB_FUNC( WAPI_TABCTRL_REMOVEIMAGE )
+{
+   TabCtrl_RemoveImage( wapi_par_HWND( 1 ), wapi_par_INT( 2 ) ) ;
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_SetPadding(hwnd,  cx, cy)
+// (void)SNDMSG((hwnd), TCM_SETPADDING, 0, MAKELPARAM(cx, cy))
+
+HB_FUNC( WAPI_TABCTRL_SETPADDING )
+{
+   TabCtrl_SetPadding( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), wapi_par_INT( 3 ) ) ;
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_GetToolTips(hwnd)
+// (HWND)SNDMSG((hwnd), TCM_GETTOOLTIPS, 0, 0L)
+
+HB_FUNC( WAPI_TABCTRL_GETTOOLTIPS )
+{
+   wapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_GetToolTips( wapi_par_HWND( 1 ) ) );
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_SetToolTips(hwnd, hwndTT)
+// (void)SNDMSG((hwnd), TCM_SETTOOLTIPS, (WPARAM)(hwndTT), 0L)
+
+HB_FUNC( WAPI_TABCTRL_SETTOOLTIPS )
+{
+   TabCtrl_SetToolTips( wapi_par_HWND( 1 ), wapi_par_HWND( 2 ) ) ;
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_GetCurFocus(hwnd)
+// (int)SNDMSG((hwnd), TCM_GETCURFOCUS, 0, 0)
+
+HB_FUNC( WAPI_TABCTRL_GETCURFOCUS )
+{
+   wapi_ret_NI( TabCtrl_GetCurFocus( wapi_par_HWND( 1 ) ) );
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_SetCurFocus(hwnd, i)
+// SNDMSG((hwnd),TCM_SETCURFOCUS, i, 0)
+
+HB_FUNC( WAPI_TABCTRL_SETCURFOCUS )
+{
+   TabCtrl_SetCurFocus( wapi_par_HWND( 1 ), wapi_par_INT( 2 ) );
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_SetMinTabWidth(hwnd, x)
+// (int)SNDMSG((hwnd), TCM_SETMINTABWIDTH, 0, x)
+
+HB_FUNC( WAPI_TABCTRL_SETMINTABWIDTH )
+{
+   //wapi_ret_NI( TabCtrl_SetMinTabWidth( wapi_par_HWND( 1 ), wapi_par_INT( 2 ) ) );
+   wapi_ret_NI( ( int ) SendMessage( wapi_par_HWND( 1 ), TCM_SETMINTABWIDTH, ( WPARAM ) 0, ( LPARAM ) wapi_par_INT( 2 ) ) );
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_DeselectAll(hwnd, fExcludeFocus)
+// (void)SNDMSG((hwnd), TCM_DESELECTALL, fExcludeFocus, 0)
+
+HB_FUNC( WAPI_TABCTRL_DESELECTALL )
+{
+   //TabCtrl_DeselectAll( wapi_par_HWND( 1 ), wapi_par_UINT( 2 ) ) ;
+   SendMessage( wapi_par_HWND( 1 ), TCM_DESELECTALL, ( WPARAM ) wapi_par_UINT( 2 ), ( LPARAM ) 0 ) ;
+}
+/*----------------------------------------------------------------------*/
+#if (_WIN32_IE >= 0x0400)
+// TabCtrl_HighlightItem(hwnd, i, fHighlight)
+// (BOOL)SNDMSG((hwnd), TCM_HIGHLIGHTITEM, (WPARAM)(i), (LPARAM)MAKELONG (fHighlight, 0))
+
+HB_FUNC( WAPI_TABCTRL_HIGHLIGHTITEM )
+{
+   wapi_ret_L( TabCtrl_HighlightItem( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), wapi_par_WORD( 3 ) ) );
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_SetExtendedStyle(hwnd, dw)
+// (DWORD)SNDMSG((hwnd), TCM_SETEXTENDEDSTYLE, 0, dw)
+
+HB_FUNC( WAPI_TABCTRL_SETEXTENDEDSTYLE )
+{
+   wapi_ret_NINT( TabCtrl_SetExtendedStyle( wapi_par_HWND( 1 ), wapi_par_DWORD( 2 ) ) ) ;
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_GetExtendedStyle(hwnd)
+// (DWORD)SNDMSG((hwnd), TCM_GETEXTENDEDSTYLE, 0, 0)
+
+HB_FUNC( WAPI_TABCTRL_GETEXTENDEDSTYLE )
+{
+   wapi_ret_NINT( TabCtrl_GetExtendedStyle( wapi_par_HWND( 1 ) ) ) ;
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_SetUnicodeFormat(hwnd, fUnicode)
+// (BOOL)SNDMSG((hwnd), TCM_SETUNICODEFORMAT, (WPARAM)(fUnicode), 0)
+
+HB_FUNC( WAPI_TABCTRL_SETUNICODEFORMAT )
+{
+   wapi_ret_L( TabCtrl_SetUnicodeFormat( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ) ) );
+}
+/*----------------------------------------------------------------------*/
+// TabCtrl_GetUnicodeFormat(hwnd)
+// (BOOL)SNDMSG((hwnd), TCM_GETUNICODEFORMAT, 0, 0)
+
+HB_FUNC( WAPI_TABCTRL_GETUNICODEFORMAT )
+{
+   wapi_ret_L( TabCtrl_GetUnicodeFormat( wapi_par_HWND( 1 ) ) ) ;
+}
+#endif
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+// not an API
+
+HB_FUNC( WAPI_TABCTRL_CREATE )
+{
+   HWND hwnd;
+   HWND hbutton;
+   LONG hFont;
+   LONG style;
+   style   = ISNIL(6) ? 0 : (LONG) hb_parnl(6);
+   hwnd    = (HWND) hb_parnl (1);
+   hFont   = SendMessage( hwnd, WM_GETFONT, 0, 0);
+   hbutton = CreateWindowEx(0, WC_TABCONTROL, NULL , style, hb_parni(2), hb_parni(3) , hb_parni(4), hb_parni(5) , hwnd,NULL, GetModuleHandle(NULL) , NULL ) ;
+   SendMessage(hbutton,(UINT)WM_SETFONT, (WPARAM) hFont, 1 ) ;
+   hb_retnl ( (LONG) hbutton );
+}
+
+/*----------------------------------------------------------------------*/
+// not an API
+
+HB_FUNC( WAPI_TABCTRL_ADDITEM )
+{
+   int     iCount = TabCtrl_GetItemCount( wapi_par_HWND( 1 ) );
+   LPTSTR  szText = HB_TCHAR_CONVTO( hb_parc( 2 ) );
+   TC_ITEM item;
+
+   item.mask    = TCIF_TEXT | TCIF_IMAGE;
+   item.iImage  = ISNIL( 3 ) ? -1 : wapi_par_INT( 3 );
+   item.pszText = szText;
+
+   wapi_ret_NI( TabCtrl_InsertItem( wapi_par_HWND( 1 ), iCount, &item ) );
+   HB_TCHAR_FREE( szText );
+}
+/*----------------------------------------------------------------------*/
+

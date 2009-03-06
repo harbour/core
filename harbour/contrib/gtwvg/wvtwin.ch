@@ -1636,6 +1636,31 @@
 #define ILC_MASK                                  1
 #define ILC_PALETTE                               2048
 
+/*----------------------------------------------------------------------*/
+//                               Tab Pages
+/*----------------------------------------------------------------------*/
+
+#define TCS_SCROLLOPPOSITE                        0x0001   // assumes multiline tab
+#define TCS_BOTTOM                                0x0002
+#define TCS_RIGHT                                 0x0002
+#define TCS_MULTISELECT                           0x0004  // allow multi-select in button mode
+#define TCS_FLATBUTTONS                           0x0008
+#define TCS_FORCEICONLEFT                         0x0010
+#define TCS_FORCELABELLEFT                        0x0020
+#define TCS_HOTTRACK                              0x0040
+#define TCS_VERTICAL                              0x0080
+#define TCS_TABS                                  0x0000
+#define TCS_BUTTONS                               0x0100
+#define TCS_SINGLELINE                            0x0000
+#define TCS_MULTILINE                             0x0200
+#define TCS_RIGHTJUSTIFY                          0x0000
+#define TCS_FIXEDWIDTH                            0x0400
+#define TCS_RAGGEDRIGHT                           0x0800
+#define TCS_FOCUSONBUTTONDOWN                     0x1000
+#define TCS_OWNERDRAWFIXED                        0x2000
+#define TCS_TOOLTIPS                              0x4000
+#define TCS_FOCUSNEVER                            0x8000
+
 //----------------------------------------------------------------------//
 #endif
 //----------------------------------------------------------------------//

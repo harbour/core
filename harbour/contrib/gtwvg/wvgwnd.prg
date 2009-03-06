@@ -74,10 +74,17 @@
 #include 'wvtwin.ch'
 #include 'wvgparts.ch'
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+// To Switch Over from ASCALLBACK() to SET/GET_Prop() calls
+//
+#if 0
+   #define __BYASCALLBACK__
+#else
+   #define __BYSETPROP__
+#endif
 
 #ifndef __DBG_PARTS__
-#xtranslate hb_ToOutDebug( [<x,...>] ) =>
+   #xtranslate hb_ToOutDebug( [<x,...>] ) =>
 #endif
 
 //----------------------------------------------------------------------//
@@ -345,7 +352,9 @@ METHOD destroy() CLASS WvgWindow
       ::aChildren := {}
    ENDIF
 
+   #ifdef __BYSETPROP__
    WVG_ReleaseWindowProcBlock( ::hWnd )
+   #endif
 
    IF Win_IsWindow( ::hWnd )
       Win_DestroyWindow( ::hWnd )
@@ -365,6 +374,20 @@ METHOD destroy() CLASS WvgWindow
 
 //----------------------------------------------------------------------//
 
+METHOD SetWindowProcCallback() CLASS WvgWindow
+
+   #ifdef __BYASCALLBACK__
+   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
+   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
+   #endif
+
+   #ifdef __BYSETPROP__
+   ::nOldProc := WVG_SetWindowProcBlock( ::hWnd, {|h,m,w,l| ::ControlWndProc( h,m,w,l ) } )
+   #endif
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
 METHOD captureMouse() CLASS WvgWindow
 
    RETURN Self
@@ -565,8 +588,8 @@ METHOD toBack() CLASS WvgWindow
 
 METHOD toFront() CLASS WvgWindow
 
-   RETURN Win_SetForegroundWindow( ::hWnd )
-   //RETURN Win_SetWindowPosToTop( ::hWnd )
+   //RETURN Win_SetForegroundWindow( ::hWnd )
+   RETURN Win_SetWindowPosToTop( ::hWnd )
 
 //----------------------------------------------------------------------//
 
@@ -1360,24 +1383,6 @@ METHOD ControlWndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgWindow
    RETURN Win_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
 
 //----------------------------------------------------------------------//
-
-METHOD SetWindowProcCallback() CLASS WvgWindow
-   LOCAL bBlock := {|h,m,w,l| ::ControlWndProc( h,m,w,l ) }
-
-   #ifdef __BYASCALLBACK__
-   ::nWndProc := hb_AsCallBack( 'CONTROLWNDPROC', Self )
-   ::nOldProc := Win_SetWndProc( ::hWnd, ::nWndProc )
-   #else
-   //LOCAL pBlock
-   //pBlock := Wvg_GetWndProcPointer( bBlock )
-   //::nOldProc := WVG_SetWindowProcBlock( ::hWnd, pBlock )
-
-   ::nOldProc := WVG_SetWindowProcBlock( ::hWnd, bBlock )
-   #endif
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
 
 #if 0
 FUNCTION hb_toOut( ... )
