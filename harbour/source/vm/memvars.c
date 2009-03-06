@@ -713,7 +713,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
                /* reset current value to NIL - the overriden variables will be
                 * visible after exit from current procedure
                 */
-               PHB_ITEM pMemvar = hb_dynsymGetMemvar( pDynSymbol );
+               pMemvar = hb_dynsymGetMemvar( pDynSymbol );
                if( pMemvar )
                   hb_itemClear( pMemvar );
                return;

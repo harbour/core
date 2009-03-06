@@ -200,7 +200,7 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( LTWIN );
+HB_LANG_ANNOUNCE( LTWIN )
 
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_LTWIN )
    hb_langRegister( &s_lang );

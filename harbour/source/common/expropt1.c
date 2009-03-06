@@ -723,20 +723,6 @@ HB_EXPR_PTR hb_compExprNewArgRef( HB_COMP_DECL )
    return pExpr;
 }
 
-/* Creates a list of function call arguments
- */
-HB_EXPR_PTR hb_compExprNewMacroArgList( HB_EXPR_PTR pFirstItem, HB_COMP_DECL )
-{
-   HB_EXPR_PTR pExpr;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewMacroArgList()"));
-
-   pExpr = HB_COMP_EXPR_NEW( HB_ET_MACROARGLIST );
-   pExpr->value.asList.pExprList = pFirstItem;
-   pExpr->value.asList.reference = FALSE;
-   return pExpr;
-}
-
 /* Adds new element to the list
  */
 HB_EXPR_PTR hb_compExprAddListExpr( HB_EXPR_PTR pList, HB_EXPR_PTR pNewItem )

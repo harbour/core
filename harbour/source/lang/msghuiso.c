@@ -200,7 +200,7 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( HUISO );
+HB_LANG_ANNOUNCE( HUISO )
 
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_HUISO )
    hb_langRegister( &s_lang );

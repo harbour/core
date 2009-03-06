@@ -62,8 +62,7 @@ HB_FUNC( SX_SLIMFAST )
 
    if( szExp && *szExp )
    {
-      char * szExp = hb_parc( 1 ), * szDst;
-      char cQuote = 0, c;
+      char * szDst, cQuote = 0, c;
       ULONG ulDst;
 
       szDst = ( char * ) hb_xgrab( hb_parclen( 1 ) + 1 );

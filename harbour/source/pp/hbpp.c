@@ -510,7 +510,6 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
             if( szLine[ 4 ] == '-' && szLine[ 7 ] == '-' &&
                 szLine[ 10 ] == ' ' && szLine[ 13 ] == ':' )
             {
-               int iLen;
                hb_strncpy( szLog, szLine, sizeof( szLog ) - 1 );
                iLen = strlen( szLog );
                while( iLen-- && HB_ISSPACE( szLog[ iLen ] ) )

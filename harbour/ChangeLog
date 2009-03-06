@@ -8,6 +8,89 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-06 02:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbpp.h
+  * harbour/include/hbhash.h
+  * harbour/source/pp/pplib2.c
+  * harbour/source/pp/hbpp.c
+  * harbour/source/lang/msghuiso.c
+  * harbour/source/lang/msgskiso.c
+  * harbour/source/lang/msgrukoi.c
+  * harbour/source/lang/msghuwin.c
+  * harbour/source/lang/msgzhgb.c
+  * harbour/source/lang/msgskwin.c
+  * harbour/source/lang/msgruwin.c
+  * harbour/source/lang/msgelwin.c
+  * harbour/source/lang/msgro.c
+  * harbour/source/lang/msgpt.c
+  * harbour/source/lang/msghriso.c
+  * harbour/source/lang/msghrwin.c
+  * harbour/source/lang/msgsliso.c
+  * harbour/source/lang/msgbe866.c
+  * harbour/source/lang/msghe862.c
+  * harbour/source/lang/msgslwin.c
+  * harbour/source/lang/msgcskam.c
+  * harbour/source/lang/msggl.c
+  * harbour/source/lang/msgtrwin.c
+  * harbour/source/lang/msgeo.c
+  * harbour/source/lang/msgbgiso.c
+  * harbour/source/lang/msgbgwin.c
+  * harbour/source/lang/msgskkam.c
+  * harbour/source/lang/msges.c
+  * harbour/source/lang/msguakoi.c
+  * harbour/source/lang/msgzhb5.c
+  * harbour/source/lang/msgeu.c
+  * harbour/source/lang/msgpl852.c
+  * harbour/source/lang/msgsr852.c
+  * harbour/source/lang/msguawin.c
+  * harbour/source/lang/msgde.c
+  * harbour/source/lang/msgtr857.c
+  * harbour/source/lang/msgru866.c
+  * harbour/source/lang/msgcs852.c
+  * harbour/source/lang/msgfr.c
+  * harbour/source/lang/msgis850.c
+  * harbour/source/lang/msgnl.c
+  * harbour/source/lang/msghu852.c
+  * harbour/source/lang/msgsk852.c
+  * harbour/source/lang/msgplmaz.c
+  * harbour/source/lang/msgca.c
+  * harbour/source/lang/msgpliso.c
+  * harbour/source/lang/msgbgmik.c
+  * harbour/source/lang/msgplwin.c
+  * harbour/source/lang/msgbg866.c
+  * harbour/source/lang/msgid.c
+  * harbour/source/lang/msgltwin.c
+  * harbour/source/lang/msgptiso.c
+  * harbour/source/lang/msgsriso.c
+  * harbour/source/lang/msgel.c
+  * harbour/source/lang/msgsrwin.c
+  * harbour/source/lang/msgbewin.c
+  * harbour/source/lang/msgdewin.c
+  * harbour/source/lang/msghr437.c
+  * harbour/source/lang/msghr852.c
+  * harbour/source/lang/msgko.c
+  * harbour/source/lang/msgua866.c
+  * harbour/source/lang/msghewin.c
+  * harbour/source/lang/msgit.c
+  * harbour/source/lang/msgsl437.c
+  * harbour/source/lang/msgsl852.c
+  * harbour/source/lang/msghucwi.c
+  * harbour/source/lang/msgcsiso.c
+  * harbour/source/lang/msgcswin.c
+  * harbour/source/lang/msgeswin.c
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/hashes.c
+  * harbour/source/vm/memvars.c
+  * harbour/source/common/expropt1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/hbsix/sxutil.c
+  * harbour/source/compiler/harbour.y
+    * minor code cleanup:
+      - pacified some warnings
+      - added some missing declarations
+      - removed redundant ;
+
 2009-03-06 00:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbsqlit3/sqlite3/sqlite3.c
     * pacified one optimization warning

@@ -184,7 +184,7 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( SL437 );
+HB_LANG_ANNOUNCE( SL437 )
 
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_SL437 )
    hb_langRegister( &s_lang );

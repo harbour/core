@@ -202,7 +202,7 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( EO );
+HB_LANG_ANNOUNCE( EO )
 
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_EO )
    hb_langRegister( &s_lang );

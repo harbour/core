@@ -673,6 +673,10 @@ extern PHB_PP_TOKEN hb_pp_lexGet( PHB_PP_STATE pState );
 extern PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState );
 extern BOOL   hb_pp_tokenNextExp( PHB_PP_TOKEN * pTokenPtr );
 
+/* PP lib helper functions */
+extern PHB_PP_STATE hb_pp_Param( int iParam );
+
+
 HB_EXTERN_END
 
 #endif /* HB_PP_H_ */

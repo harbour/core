@@ -4479,14 +4479,14 @@ static HB_ERRCODE hb_fptDoPack( FPTAREAP pArea, USHORT uiBlockSize,
          pArea->pMemoTmpFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, szFile );
          if( pArea->pMemoTmpFile )
          {
-            USHORT uiBlockSize = pArea->uiMemoBlockSize;
+            USHORT uiMemoBlockSize = pArea->uiMemoBlockSize;
             PHB_FILE pFile = pArea->pMemoFile;
 
             pArea->uiMemoBlockSize = pArea->uiNewBlockSize;
             pArea->pMemoFile = pArea->pMemoTmpFile;
             errCode = SELF_CREATEMEMFILE( ( AREAP ) pArea, NULL );
             pArea->pMemoFile = pFile;
-            pArea->uiMemoBlockSize = uiBlockSize;
+            pArea->uiMemoBlockSize = uiMemoBlockSize;
             if( errCode == HB_SUCCESS )
             {
                if( pEvalBlock )

@@ -183,7 +183,7 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( SLISO );
+HB_LANG_ANNOUNCE( SLISO )
 
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_SLISO )
    hb_langRegister( &s_lang );

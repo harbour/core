@@ -200,7 +200,7 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( CSKAM );
+HB_LANG_ANNOUNCE( CSKAM )
 
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_CSKAM )
    hb_langRegister( &s_lang );

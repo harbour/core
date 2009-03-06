@@ -101,7 +101,7 @@ static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr );
 #define HB_PASSBYREF_FUNCALL  1
 #define HB_PASSBYREF_ARRAY    2
 
-static void hb_compDebugStart( void ) { };
+static void hb_compDebugStart( void ) { }
 
 %}
 

@@ -200,7 +200,7 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( CSISO );
+HB_LANG_ANNOUNCE( CSISO )
 
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_CSISO )
    hb_langRegister( &s_lang );

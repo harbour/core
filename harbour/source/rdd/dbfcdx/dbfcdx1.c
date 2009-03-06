@@ -1109,12 +1109,12 @@ static ULONG hb_cdxIndexGetAvailPage( LPCDXINDEX pIndex, BOOL bHeader )
       /* TODO: ### */
       if ( bHeader )
       {
-         BYTE byBuf[CDX_PAGELEN];
+         BYTE byPageBuf[CDX_PAGELEN];
          HB_FOFFSET fOffset = ulPos;
-         memset( byBuf, 0, CDX_PAGELEN );
+         memset( byPageBuf, 0, CDX_PAGELEN );
          do
          {
-            if( hb_fileWriteAt( pFile, byBuf, CDX_PAGELEN, fOffset ) != CDX_PAGELEN )
+            if( hb_fileWriteAt( pFile, byPageBuf, CDX_PAGELEN, fOffset ) != CDX_PAGELEN )
                hb_errInternal( EDBF_WRITE, "Write in index page failed.", NULL, NULL );
             fOffset += CDX_PAGELEN;
          }
@@ -6262,7 +6262,6 @@ static void hb_cdxDBOISetRelKeyPos( CDXAREAP pArea, LPCDXTAG pTag, double dPos )
       {
          LPCDXKEY pKey;
          double dStart, dStop, dFact = 0.0000000000001;
-         BOOL fOK = TRUE;
 
          if( pTag->UsrAscend )
          {

@@ -542,7 +542,7 @@ BOOL hb_hashScan( PHB_ITEM pHash, PHB_ITEM pKey, ULONG * pulPos )
    return FALSE;
 }
 
-BOOL hb_hashClear( PHB_ITEM pHash )
+static BOOL hb_hashClear( PHB_ITEM pHash )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_hashClear(%p)", pHash));
 

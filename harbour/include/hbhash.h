@@ -89,8 +89,10 @@ extern HB_HASH_TABLE_PTR hb_hashTableCreate( ULONG ulSize,
                                    HB_HASH_FUNC_PTR pComp );
 extern void hb_hashTableKill( HB_HASH_TABLE_PTR pTable ); /* release all items and the hash table */
 extern BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, void *pKey, void *pValue ); /* add a new item into the table */
+extern BOOL hb_hashTableDel( HB_HASH_TABLE_PTR pTable, void *pKey ); /* delete an item from the table  */
 extern void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, void *pKey ); /* return the pointer to item's value or NULL if not found */
 extern HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, ULONG ulNewSize ); /* resize the hash table */
+extern ULONG hb_hashTableSize( HB_HASH_TABLE_PTR pTable ); /* return the hash table size */
 
 HB_EXTERN_END
 

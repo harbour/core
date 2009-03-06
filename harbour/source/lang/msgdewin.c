@@ -201,7 +201,7 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( DEWIN );
+HB_LANG_ANNOUNCE( DEWIN )
 
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_DEWIN )
    hb_langRegister( &s_lang );

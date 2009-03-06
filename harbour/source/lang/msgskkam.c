@@ -199,7 +199,7 @@ static HB_LANG s_lang =
    }
 };
 
-HB_LANG_ANNOUNCE( SKKAM );
+HB_LANG_ANNOUNCE( SKKAM )
 
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_SKKAM )
    hb_langRegister( &s_lang );
