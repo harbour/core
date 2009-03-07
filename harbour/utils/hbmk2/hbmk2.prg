@@ -2391,8 +2391,14 @@ STATIC PROCEDURE HBP_ProcessOne( cFileName,;
       CASE Lower( Left( cLine, Len( "libdynhas="  ) ) ) == "libdynhas="  ; cLine := SubStr( cLine, Len( "libdynhas="  ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := PathSepToTarget( StrStripQuote( cItem ) )
-            IF AScan( aLIBDYNHAS, {|tmp| tmp == cItem } ) == 0
-               AAddNotEmpty( aLIBDYNHAS, cItem )
+            IF ! Empty( cItem )
+               IF AScan( aLIBDYNHAS, {|tmp| tmp == cItem } ) == 0
+                  AAdd( aLIBDYNHAS, cItem )
+               ENDIF
+               IF Lower( Left( cItem, 2 ) ) == "gt" .AND. ;
+                  AScan( t_aLIBCOREGT, {|tmp| Lower( tmp ) == Lower( cItem ) } ) == 0
+                  AAdd( t_aLIBCOREGT, cItem )
+               ENDIF
             ENDIF
          NEXT
 
