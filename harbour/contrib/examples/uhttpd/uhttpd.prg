@@ -554,7 +554,7 @@ FUNCTION MAIN( ... )
          ENDIF
 
          // Memory release
-         hb_GCAll( TRUE )
+         //hb_GCAll( TRUE )
 
       ENDDO
 
@@ -843,10 +843,10 @@ STATIC FUNCTION ProcessConnection()
    WriteToConsole( "Quitting ProcessConnections() " + hb_CStr( nThreadId ) )
 
    IF hb_mutexLock( s_hmtxBusy )
-      s_nThreads--
       //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
       IF ( nPos := aScan( s_aRunningThreads, hb_threadSelf() ) > 0 )
          hb_aDel( s_aRunningThreads, nPos, TRUE )
+         s_nThreads := Len( s_aRunningThreads )
       ENDIF
       hb_mutexUnlock( s_hmtxBusy )
    ENDIF
