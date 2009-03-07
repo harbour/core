@@ -139,7 +139,7 @@
 #define DIRECTORYINDEX_ARRAY    { "index.html", "index.htm" }
 
 #define PAGE_STATUS_REFRESH   5
-#define THREAD_MAX_WAIT     ( 60 ) // HOW MUCH TIME THREAD HAS TO WAIT BEFORE FINISH - IN SECONDS
+#define THREAD_MAX_WAIT     ( 30 ) // How much time thread has to wait a new connection before finish - IN SECONDS
 #define CGI_MAX_EXEC_TIME     30
 
 // TOCHECK: Caching of HRB modules (Is this faster than loading HRBBody from file where OS will cache ?)
@@ -552,7 +552,7 @@ FUNCTION MAIN( ... )
          ENDIF
 
          // Memory release
-         hb_GCAll( TRUE )
+         //hb_GCAll( TRUE )
 
       ENDDO
 
@@ -722,6 +722,7 @@ STATIC FUNCTION AcceptConnections()
 STATIC FUNCTION ProcessConnection()
    LOCAL hSocket, nLen, cRequest, cSend
    LOCAL nMsecs, nParseTime, nPos, nThreadID
+   LOCAL lQuitRequest := FALSE
 
    PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, m_cPost
 
@@ -754,10 +755,12 @@ STATIC FUNCTION ProcessConnection()
 
       // received a -1 value, I have to quit
       IF HB_ISNUMERIC( hSocket )
+         lQuitRequest := TRUE
          EXIT
-      // no socket received, thread can graceful quit only if over minimal number
-      ELSEIF hSocket == NIL
+
+      ELSEIF hSocket == NIL   // no socket received, thread can graceful quit, but ...
          IF hb_mutexLock( s_hmtxBusy )
+            // .. not if under minimal number of starting threads
             IF s_nThreads <= s_nStartThreads
                hb_mutexUnlock( s_hmtxBusy )
                LOOP
@@ -849,6 +852,17 @@ STATIC FUNCTION ProcessConnection()
 
    WriteToConsole( "Quitting ProcessConnections() " + hb_CStr( nThreadId ) )
 
+   // Here I remove this thread from thread queue as it is unnecessary, but only if there is not
+   // an external quit request. In this case application is quitting and I cannot resize array
+   // here to avoid race condition
+   IF !lQuitRequest .AND. hb_mutexLock( s_hmtxBusy )
+      //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
+      IF ( nPos := aScan( s_aRunningThreads, hb_threadSelf() ) > 0 )
+         hb_aDel( s_aRunningThreads, nPos, TRUE )
+         s_nThreads := Len( s_aRunningThreads )
+      ENDIF
+      hb_mutexUnlock( s_hmtxBusy )
+   ENDIF
 
    RETURN 0
 
@@ -856,6 +870,7 @@ STATIC FUNCTION ServiceConnection()
    LOCAL hSocket, nLen, cRequest, cSend
    LOCAL nMsecs, nParseTime, nPos, nThreadId
    LOCAL nError := 500013
+   LOCAL lQuitRequest := FALSE
 
    PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, m_cPost
 
@@ -885,10 +900,11 @@ STATIC FUNCTION ServiceConnection()
 
       // received a -1 value, I have to quit
       IF HB_ISNUMERIC( hSocket )
+         lQuitRequest := TRUE
          EXIT
-      // no socket received, thread can graceful quit only if over minimal number
-      ELSEIF hSocket == NIL
+      ELSEIF hSocket == NIL   // no socket received, thread can graceful quit, but ...
          IF hb_mutexLock( s_hmtxBusy )
+            // .. not if under minimal number of starting threads
             IF s_nServiceThreads <= s_nStartServiceThreads
                hb_mutexUnlock( s_hmtxBusy )
                LOOP
@@ -976,8 +992,14 @@ STATIC FUNCTION ServiceConnection()
 
    WriteToConsole( "Quitting ServiceConnections() " + hb_CStr( nThreadId ) )
 
-   IF hb_mutexLock( s_hmtxBusy )
-      s_nServiceThreads--
+   // Here I remove this thread from thread queue as it is unnecessary, but only if there is not
+   // an external quit request. In this case application is quitting and I cannot resize array
+   // here to avoid race condition
+   IF !lQuitRequest .AND. hb_mutexLock( s_hmtxBusy )
+      IF ( nPos := aScan( s_aServiceThreads, hb_threadSelf() ) > 0 )
+         hb_aDel( s_aServiceThreads, nPos, TRUE )
+         s_nServiceThreads := Len( s_aServiceThreads )
+      ENDIF
       hb_mutexUnlock( s_hmtxBusy )
    ENDIF
 

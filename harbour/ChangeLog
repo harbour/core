@@ -8,9 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-08 00:43 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
+  * harbour/contrib/examples/uhttpd/uhttpd.prg
+    - Commented hb_GCAll() in main loop, I got newly one GPF randomly.
+      In meanwhile I will do other tests.
+    ! Reverted and corrected closing threads because with last changes
+      finished threads were not correctly released.
+
 2009-03-07 22:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
-    ! Fixed to recognize GT libs in dynlibhas= lines, 
+    ! Fixed to recognize GT libs in dynlibhas= lines,
       and add them to core GT list.
 
 2009-03-07 19:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
