@@ -320,7 +320,7 @@ HB_FUNC( WINPORTCLOSE )
 HB_FUNC( WINPORTWRITE )
 {
    int Port = hb_parni( 1 );
-   char * lpBuffer = hb_parc( 2 );
+   char * lpBuffer = hb_parcx( 2 );
    LONG NumberofBytesToWrite = hb_parclen( 2 );
    HANDLE hCommPort = s_PortData[ Port ].Port;
    DWORD NumberofBytesWritten;
@@ -340,7 +340,7 @@ HB_FUNC( WINPORTWRITE )
 HB_FUNC( WINPORTREAD )
 {
    int Port = hb_parni( 1 );
-   char * lpBuffer; /* = hb_parc( 2 ); */
+   char * lpBuffer;
    LONG NumberOfBytesToRead = hb_parclen( 2 );
    HANDLE hCommPort = s_PortData[ Port ].Port;
    DWORD NumberOfBytesRead;

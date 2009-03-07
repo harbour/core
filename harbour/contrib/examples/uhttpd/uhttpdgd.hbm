@@ -3,4 +3,6 @@
 #
 
 @uhttpd.hbm
--DGD_SUPPORT -lhbgd -lbgd -lhbct
+-DGD_SUPPORT
+-lhbgd -lhbct
+-lbgd{win} -lgd{!win}
