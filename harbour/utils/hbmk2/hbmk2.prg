@@ -2179,13 +2179,13 @@ STATIC FUNCTION PathSepToSelf( cFileName )
 
 STATIC FUNCTION PathSepToTarget( cFileName, nStart )
 
-   DEFAULT nStart TO 0
+   DEFAULT nStart TO 1
 
    IF t_cARCH $ "win|dos|os2" .AND. !( t_cCOMP $ "mingw|mingwce|cygwin" )
-      RETURN Left( cFileName, nStart ) + StrTran( SubStr( cFileName, nStart + 1 ), "/", "\" )
+      RETURN Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), "/", "\" )
    ENDIF
 
-   RETURN Left( cFileName, nStart ) + StrTran( SubStr( cFileName, nStart + 1 ), "\", "/" )
+   RETURN Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), "\", "/" )
 
 STATIC FUNCTION DirAddPathSep( cDir )
 
