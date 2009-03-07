@@ -2904,6 +2904,7 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
             break;
 
          case HB_OO_MSG_REALCLASS:
+
             pNewMeth->pFuncSym = &s___msgRealClass;
             pNewMeth->uiScope = uiScope;
             break;
@@ -2914,6 +2915,7 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
             break;
 
          case HB_OO_MSG_DELEGATE:
+
             pNewMeth->pFuncSym = &s___msgDelegate;
             pNewMeth->uiScope = uiScope;
             pNewMeth->uiData = uiIndex;
@@ -3525,24 +3527,73 @@ HB_FUNC( __CLSMODMSG )
             {
                hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a DATA item", HB_ERR_FUNCNAME, 0 );
             }
-            else if( pFuncSym == &s___msgEvalInline )
+            else if( pFuncSym == &s___msgSetClsData || pFuncSym == &s___msgGetClsData )
+            {
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a CLASSDATA item", HB_ERR_FUNCNAME, 0 );
+            }
+            else if( pFuncSym == &s___msgSetShrData || pFuncSym == &s___msgGetShrData )
+            {
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a SHARED DATA item", HB_ERR_FUNCNAME, 0 );
+            }
+            else if( pFuncSym == &s___msgSuper || pFuncSym == &s___msgRealClass )
+            {
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a SUPER class casting", HB_ERR_FUNCNAME, 0 );
+            }
+            else if( pFuncSym == &s___msgDestructor )
+            {
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a DESTRUCTOR method", HB_ERR_FUNCNAME, 0 );
+            }
+            else if( pFuncSym == &s___msgOnError )
+            {
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a ONERROR method", HB_ERR_FUNCNAME, 0 );
+            }
+            else if( pFuncSym == &s___msgScopeErr )
+            {
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a SCOPE ERROR method", HB_ERR_FUNCNAME, 0 );
+            }
+            else if( pFuncSym == &s___msgPerform )
+            {
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a PERFORM method", HB_ERR_FUNCNAME, 0 );
+            }
+            else if( pFuncSym == &s___msgDelegate )
+            {
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a DELEGATE method", HB_ERR_FUNCNAME, 0 );
+            }
+            else if( pFuncSym == &s___msgSync )
+            {
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a SYNC method", HB_ERR_FUNCNAME, 0 );
+            }
+            else if( pFuncSym == &s___msgSyncClass )
+            {
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a CLASS SYNC method", HB_ERR_FUNCNAME, 0 );
+            }
+            else
             {
                PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
-
-               if( pBlock == NULL )
-                  hb_errRT_BASE( EG_ARG, 3000, "Cannot modify INLINE method", HB_ERR_FUNCNAME, 0 );
+               if( pBlock )
+               {
+                  if( pFuncSym == &s___msgEvalInline )
+                  {
+                     hb_arraySet( s_pClasses[ pMethod->uiSprClass ]->pInlines,
+                                  pMethod->uiData, pBlock );
+                  }
+                  else
+                  {
+                     hb_arrayAdd( pClass->pInlines, pBlock );
+                     pMethod->uiData = ( USHORT ) hb_arrayLen( pClass->pInlines );
+                  }
+               }
                else
-                  hb_arraySet( s_pClasses[ pMethod->uiSprClass ]->pInlines,
-                               pMethod->uiData, pBlock );
-            }
-            else                                      /* Modify METHOD */
-            {
-               pFuncSym = hb_objGetFuncSym( hb_param( 3, HB_IT_ANY ) );
-
-               if( pFuncSym == NULL )
-                  hb_errRT_BASE( EG_ARG, 3000, NULL, HB_ERR_FUNCNAME, 0 );
-               else
-                  pMethod->pFuncSym = pFuncSym;
+               {
+                  pFuncSym = hb_objGetFuncSym( hb_param( 3, HB_IT_ANY ) );
+                  if( pFuncSym )
+                  {
+                     pMethod->pFuncSym = pFuncSym;
+                     pMethod->uiData = 0;
+                  }
+                  else
+                     hb_errRT_BASE( EG_ARG, 3000, NULL, HB_ERR_FUNCNAME, 0 );
+               }
             }
          }
       }
