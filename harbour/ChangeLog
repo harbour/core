@@ -8,6 +8,58 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-07 19:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbgete.c
+    * added suport for BSD systems
+
+  * harbour/contrib/examples/uhttpd/uhttpd.prg
+    ! fixed private declaration - after last modification they were not
+      declared for threads at all
+    ! fixed close procedure, s_aRunningThreads and s_aServiceThreads
+      where not protected at all in the moment when these variables
+      variables where used inside aeval() and other threads were
+      resizing them removing their pointers. In short word it was
+      in practice impossible to cleanly close uhttpd server without
+      GPF, deadlock or other bad side effects. I changed this code so
+      these arrays are modified only by calling procedure.
+      I do not know why it was written in such way but I guess it
+      was workaround for xHarbour bugs. In xHarbour is race condition
+      inside some functions like ThreadJoin() (RTE if thread finished
+      just before ThreadJoin(<pThID>)). Harbour does not have such
+      problems so I simply cleaned this code making it much simpler.
+    * reactivated hb_gcAll( .T. ) in the main loop for tests.
+      I made some tests with linux and current uhttpd works perfectly
+      without any problems with and without hb_gcAll( .t. ).
+      I haven't noticed any problems. I used this scripts to make
+      tests:
+         #!/bin/sh
+         function GT_UHTTPD()
+         {
+            while curl http://127.0.0.1:8082/ > /dev/null
+            do
+               if ! curl http://127.0.0.1:8082/serverstatus > /dev/null
+               then
+                  exit
+               fi
+               # disable it if you want to increase traffic
+               if ! curl http://127.0.0.1:8082/info > /dev/null
+               then
+                  exit
+               fi
+               if [ -f stop ]
+               then
+                  exit
+               fi
+            done
+         }
+         for i in `seq 10`
+         do
+            GT_UHTTPD &>/dev/null &
+         done
+         wait
+
+      on three CPU machine. Please make some test with other systems.
+
 2009-03-07 13:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/uhttpd/uhttpdgd.hbm
     + Added *nix GD lib name.

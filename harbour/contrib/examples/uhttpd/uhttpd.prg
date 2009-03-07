@@ -210,8 +210,6 @@ FUNCTION MAIN( ... )
    LOCAL hDefault, cLogAccess, cLogError, cSessionPath
    LOCAL cCmdPort, cCmdDocumentRoot, lCmdIndexes, nCmdStartThreads, nCmdMaxThreads
 
-   PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, m_cPost
-
    IF !HB_MTVM()
       ? "I need multhread support. Please, recompile me!"
       WAIT
@@ -554,7 +552,7 @@ FUNCTION MAIN( ... )
          ENDIF
 
          // Memory release
-         //hb_GCAll( TRUE )
+         hb_GCAll( TRUE )
 
       ENDDO
 
@@ -632,13 +630,20 @@ STATIC FUNCTION AcceptConnections()
 
          // Requesting to Running threads to quit (using -1 value)
          AEVAL( s_aRunningThreads, {|| hb_mutexNotify( s_hmtxRunningThreads, -1 ) } )
-         // waiting running threads to quit
-         AEVAL( s_aRunningThreads, {|h| hb_threadJoin( h ) } )
-
          // Requesting to Service threads to quit (using -1 value)
          AEVAL( s_aServiceThreads, {|| hb_mutexNotify( s_hmtxServiceThreads, -1 ) } )
+
+         // waiting running threads to quit
+         AEVAL( s_aRunningThreads, {|h| hb_threadJoin( h ) } )
          // waiting service threads to quit
          AEVAL( s_aServiceThreads, {|h| hb_threadJoin( h ) } )
+
+         IF hb_mutexLock( s_hmtxBusy )
+            //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
+            asize( s_aRunningThreads, 0 )
+            asize( s_aServiceThreads, 0 )
+            hb_mutexUnlock( s_hmtxBusy )
+         ENDIF
 
          EXIT
       ENDIF
@@ -717,6 +722,8 @@ STATIC FUNCTION AcceptConnections()
 STATIC FUNCTION ProcessConnection()
    LOCAL hSocket, nLen, cRequest, cSend
    LOCAL nMsecs, nParseTime, nPos, nThreadID
+
+   PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, m_cPost
 
    nThreadId    := hb_threadID()
 
@@ -842,14 +849,6 @@ STATIC FUNCTION ProcessConnection()
 
    WriteToConsole( "Quitting ProcessConnections() " + hb_CStr( nThreadId ) )
 
-   IF hb_mutexLock( s_hmtxBusy )
-      //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
-      IF ( nPos := aScan( s_aRunningThreads, hb_threadSelf() ) > 0 )
-         hb_aDel( s_aRunningThreads, nPos, TRUE )
-         s_nThreads := Len( s_aRunningThreads )
-      ENDIF
-      hb_mutexUnlock( s_hmtxBusy )
-   ENDIF
 
    RETURN 0
 
@@ -857,6 +856,8 @@ STATIC FUNCTION ServiceConnection()
    LOCAL hSocket, nLen, cRequest, cSend
    LOCAL nMsecs, nParseTime, nPos, nThreadId
    LOCAL nError := 500013
+
+   PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, m_cPost
 
    ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
 
@@ -977,9 +978,6 @@ STATIC FUNCTION ServiceConnection()
 
    IF hb_mutexLock( s_hmtxBusy )
       s_nServiceThreads--
-      IF ( nPos := aScan( s_aServiceThreads, hb_threadSelf() ) > 0 )
-         hb_aDel( s_aServiceThreads, nPos, TRUE )
-      ENDIF
       hb_mutexUnlock( s_hmtxBusy )
    ENDIF
 
