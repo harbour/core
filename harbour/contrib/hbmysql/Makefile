@@ -8,7 +8,7 @@ LIBNAME=hbmysql
 
 ifeq ($(HB_INC_MYSQL),)
 ifeq ($(HB_XBUILD),)
-HB_INC_MYSQL = /usr/include/mysql
+HB_INC_MYSQL = /usr/include/mysql /opt/local/include/mysql5/mysql
 endif
 endif
 

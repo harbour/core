@@ -206,8 +206,10 @@
    #undef UCHAR                           /* 1 byte unsigned */
    typedef unsigned char UCHAR;
 
-   #undef BYTE                            /* 1 byte unsigned */
-   typedef unsigned char BYTE;
+   #if ! defined( HB_DONT_DEFINE_BYTE )
+      #undef BYTE                            /* 1 byte unsigned */
+      typedef unsigned char BYTE;
+   #endif
 
    #undef SHORT                           /* 2 bytes signed */
    typedef short int SHORT;

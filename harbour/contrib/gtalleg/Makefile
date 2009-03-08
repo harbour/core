@@ -13,7 +13,7 @@ ifneq ($(HB_COMPILER),owatcom)
 
 ifeq ($(HB_INC_ALLEGRO),)
 ifeq ($(HB_XBUILD),)
-HB_INC_ALLEGRO = /usr/include
+HB_INC_ALLEGRO = /usr/include /opt/local/include
 endif
 endif
 

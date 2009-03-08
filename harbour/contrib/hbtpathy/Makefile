@@ -14,6 +14,12 @@ C_SOURCES=\
 	tpcommon.c \
 
 endif
+ifeq ($(HB_ARCHITECTURE),darwin)
+C_SOURCES=\
+	tplinux.c \
+	tpcommon.c \
+
+endif
 ifeq ($(HB_ARCHITECTURE),win)
 C_SOURCES=\
 	tpwin.c \

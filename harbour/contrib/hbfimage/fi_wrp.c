@@ -52,6 +52,7 @@
 
 #define HB_DONT_DEFINE_BOOL
 #define HB_DONT_DEFINE_LONG
+#define HB_DONT_DEFINE_BYTE
 
 #if defined(WINNT) || defined(_Windows) || defined(__NT__) || defined(_WIN32) || defined(__WINDOWS_386__) || defined(__WIN32__) || defined(__CYGWIN__)
    #if !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) ) || defined(__WATCOMC__)

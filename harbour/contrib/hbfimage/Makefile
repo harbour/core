@@ -12,7 +12,7 @@ ifneq ($(HB_ARCHITECTURE),dos)
 
 ifeq ($(HB_INC_FREEIMAGE),)
 ifeq ($(HB_XBUILD),)
-HB_INC_FREEIMAGE = /usr/include
+HB_INC_FREEIMAGE = /usr/include /opt/local/include
 endif
 endif
 

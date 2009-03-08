@@ -152,6 +152,12 @@ HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
           - Don't put the dir inside double quotes.
           - Use absolute paths.
 
+   Darwin (OS X)
+   -------------
+   1.) Install MacPorts, follow their instructions:
+       http://www.macports.org/
+   2.) sudo port install allegro freeimage gd2 mysql5-devel postgresql83
+
 
 SUPPORTED C COMPILERS UNDER DIFFERENT PLATFORMS
 ===============================================
