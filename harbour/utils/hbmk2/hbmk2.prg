@@ -551,8 +551,8 @@ FUNCTION Main( ... )
 
    s_aLIBPATH := {}
 
-   t_cCCPATH   := GetEnv( "CCPATH" )
-   t_cCCPREFIX := GetEnv( "CCPREFIX" )
+   t_cCCPATH   := GetEnv( "HB_CCPATH" )
+   t_cCCPREFIX := GetEnv( "HB_CCPREFIX" )
 
    s_cHB_BIN_INSTALL := PathSepToTarget( GetEnv( "HB_BIN_INSTALL" ) )
    s_cHB_LIB_INSTALL := PathSepToTarget( GetEnv( "HB_LIB_INSTALL" ) )
@@ -2275,7 +2275,7 @@ STATIC PROCEDURE HBP_ProcessAll( lConfigOnly,;
    #endif
 
    FOR EACH cDir IN aCFGDirs
-      IF hb_FileExists( cFileName := ( DirAddPathSep( cDir ) + HBMK_CFG_NAME ) )
+      IF hb_FileExists( cFileName := ( PathNormalize( DirAddPathSep( cDir ) ) + HBMK_CFG_NAME ) )
          IF ! t_lQuiet
             OutStd( "hbmk: Processing configuration: " + cFileName + hb_osNewLine() )
          ENDIF

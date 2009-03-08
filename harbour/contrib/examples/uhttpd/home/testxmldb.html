@@ -18,14 +18,14 @@
             function getTableData(pageNum)
             {
                 xslGet( "/xsl/based.xsl" );
-                xmlGet('/cgi-bin/tableservletdb.hrb?page=' + pageNum + "&sid=" + Math.random(), tableResponseHandler);
+                xmlGet( '/cgi-bin/tableservletdb.hrb?page=' + pageNum + "&sid=" + Math.random(), tableResponseHandler);
                 divpart = 'tableSection';
             }
 
             function getTablePages()
             {
                 xslGet( "/xsl/basep.xsl" );
-                xmlGet('/cgi-bin/tableservletdb.hrb?count=true' + "&sid=" + Math.random(), tableResponseHandler);
+                xmlGet( '/cgi-bin/tableservletdb.hrb?count=true' + "&sid=" + Math.random(), tableResponseHandler);
                 divpart = 'pageSection';
             }
 
@@ -76,7 +76,7 @@
     <body onload="getTablePages()">
         <BIG>Simple XML servlet</BIG>
         <br>
-        <br>Tested with IE6+, Firefox 2+ and Opera 9+. Not working with Google Chrome.
+        <br>Tested with IE6+, Firefox 2+ and Opera 9+. Not working with Google Chrome, Safari.
         <br>Please note that tableservletdb.prg simulates a slow reply of 0.5 seconds.
         If you want to check real speed please comment #define SIMULATE_SLOW_REPLY in source.
         <br>Return to <a href="/">Main Page</a>

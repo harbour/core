@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-08 15:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Normalizing paths of cfg files.
+    * CCPREFIX, CCPATH renamed to HB_CCPREFIX, HB_CCPATH
+      (seems these are Harbour specific settings)
+
+  * contrib/examples/uhttpd/home/testxmldb.html
+    * Added Safari as unsupported browser.
+      (BTW, what would it need to support Safari and Chrome, or 
+      WebKit browsers in general?)
+
 2009-03-08 00:43 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpd.prg
     - Commented hb_GCAll() in main loop, I got newly one GPF randomly.
