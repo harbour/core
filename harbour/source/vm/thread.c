@@ -184,7 +184,7 @@ void hb_threadExit( void )
    }
 }
 
-#if defined( HB_OS_OS2 ) && defined( HB_MT_VM )
+#if defined( HB_MT_VM ) && defined( HB_COND_HARBOUR_SUPPORT )
 static PHB_WAIT_LIST _hb_thread_wait_list( void )
 {
    PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) hb_vmThreadState();
@@ -197,9 +197,15 @@ static PHB_WAIT_LIST _hb_thread_wait_list( void )
 
 static void _hb_thread_wait_add( HB_COND_T * cond, PHB_WAIT_LIST pWaiting )
 {
+#if defined( HB_OS_OS2 )
    ULONG ulPostCount = 0;
-
    DosResetEventSem( pWaiting->cond, &ulPostCount );
+#elif defined( HB_OS_WIN )
+   /* It's not necessary becayse we have workaround for possible race
+    * condition inside _hb_thread_cond_wait() function
+    */
+   /* WaitForSingleObject( pWaiting->cond, 0 ); */
+#endif
    pWaiting->signaled = FALSE;
 
    if( cond->waiters == NULL )
@@ -235,7 +241,11 @@ static BOOL _hb_thread_cond_signal( HB_COND_T * cond )
       {
          if( !pWaiting->signaled )
          {
+#if defined( HB_OS_OS2 )
             DosPostEventSem( pWaiting->cond );
+#elif defined( HB_OS_WIN )
+            ReleaseSemaphore( pWaiting->cond, 1, NULL );
+#endif
             pWaiting->signaled = TRUE;
             /* signal only single thread */
             break;
@@ -257,7 +267,11 @@ static BOOL _hb_thread_cond_broadcast( HB_COND_T * cond )
       {
          if( !pWaiting->signaled )
          {
+#if defined( HB_OS_OS2 )
             DosPostEventSem( pWaiting->cond );
+#elif defined( HB_OS_WIN )
+            ReleaseSemaphore( pWaiting->cond, 1, NULL );
+#endif
             pWaiting->signaled = TRUE;
          }
          pWaiting = pWaiting->next;
@@ -277,9 +291,18 @@ static BOOL _hb_thread_cond_wait( HB_COND_T * cond, HB_RAWCRITICAL_T * critical,
    {
       _hb_thread_wait_add( cond, pWaiting );
 
+#if defined( HB_OS_OS2 )
       DosReleaseMutexSem( *critical );
       fResult = DosWaitEventSem( pWaiting->cond, ulMillisec ) == NO_ERROR;
       DosRequestMutexSem( *critical, SEM_INDEFINITE_WAIT );
+#elif defined( HB_OS_WIN )
+      LeaveCriticalSection( critical );
+      fResult = WaitForSingleObject( pWaiting->cond, ulMillisec ) == WAIT_OBJECT_0;
+      EnterCriticalSection( critical );
+      /* workaround for race condition */
+      if( !fResult && pWaiting->signaled )
+         fResult = WaitForSingleObject( pWaiting->cond, 0 ) == WAIT_OBJECT_0;
+#endif
 
       _hb_thread_wait_del( cond, pWaiting );
    }
@@ -519,7 +542,7 @@ BOOL hb_threadCondWait( HB_COND_T * cond, HB_CRITICAL_T * mutex )
    fResult = HB_COND_WAIT( cond->cond );
    HB_CRITICAL_LOCK( mutex->critical );
    /* There is race condition here and user code should always check if
-    * if the wait condition is valid after leaving hb_threadCondWait()
+    * the wait condition is valid after leaving hb_threadCondWait()
     * even if it returns TRUE
     */
    if( !fResult )
@@ -576,7 +599,7 @@ BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, ULONG ulMi
    fResult = HB_COND_TIMEDWAIT( cond->cond, ulMilliSec );
    HB_CRITICAL_LOCK( mutex->critical );
    /* There is race condition here and user code should always check if
-    * if the wait condition is valid after leaving hb_threadCondTimedWait()
+    * the wait condition is valid after leaving hb_threadCondTimedWait()
     * even if it returns TRUE
     */
    if( !fResult )
@@ -711,11 +734,16 @@ static HB_GARBAGE_FUNC( hb_threadDestructor )
       hb_gtRelease( pThread->hGT );
       pThread->hGT = NULL;
    }
-#if defined( HB_OS_OS2 )
+#if defined( HB_COND_HARBOUR_SUPPORT )
    if( pThread->pWaitList.cond )
    {
+#  if defined( HB_OS_OS2 )
       DosCloseEventSem( pThread->pWaitList.cond );
       pThread->pWaitList.cond = ( HEV ) 0;
+#  elif defined( HB_OS_WIM )
+      CloseHandle( pThread->pWaitList.cond );
+      pThread->pWaitList.cond = ( HANDLE ) 0;
+#  endif
    }
 #endif
 }
@@ -815,8 +843,12 @@ PHB_THREADSTATE hb_threadStateNew( void )
    pThread->pThItm  = pThItm;
    pThread->hGT     = hb_gtAlloc( NULL );
 
-#if defined( HB_OS_OS2 )
-   DosCreateEventSem( NULL, &pThread->pWaitList.cond, 0L, FALSE );
+#if defined( HB_COND_HARBOUR_SUPPORT )
+#  if defined( HB_OS_OS2 )
+      DosCreateEventSem( NULL, &pThread->pWaitList.cond, 0L, FALSE );
+#  elif defined( HB_OS_WIM )
+      pThread->pWaitList.cond = CreateSemaphore( NULL, 0, 1, NULL );
+#  endif
 #endif
 
    return pThread;

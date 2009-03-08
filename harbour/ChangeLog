@@ -8,6 +8,26 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-09 00:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbthread.h
+  * harbour/source/vm/thread.c
+    * emulate POSIX thread conditional variables in Windows builds.
+      It should fix some possible bad behavior in MS-Windows Harbour
+      MT programs.
+
+  * harbour/source/rtl/hbinet.c
+    ! fixed typo in HB_INETDATAREADY() - the second parameter (timeout)
+      was ignored.
+
+  * harbour/contrib/examples/uhttpd/uhttpdc.c
+    * fixed typo in conditional iMsec usage.
+
+  * harbour/contrib/examples/uhttpd/uhttpd.prg
+    * set default timeout for socket operations to 3 sec.
+    * use timeout parameter in HB_INETDATAREADY() and
+      increased default timeout for accept to 250 millisecs.
+      Please correct this modification if you prefer different values.
+
 2009-03-08 19:29 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/examples/uhttpd/uhttpdgd.hbm
     + Added Darwin/MacPorts support.

@@ -76,7 +76,7 @@ BOOL win_SysRefresh( int iMsec )
    /* Begin the operation and continue until it is complete
       or until the user clicks the mouse or presses a key. */
 
-   while( MsgWaitForMultipleObjects( 1, &hDummyEvent, FALSE, ( iMsec == 0, INFINITE, iMsec ), QS_ALLINPUT | QS_ALLPOSTMESSAGE) == WAIT_OBJECT_0 + 1 )
+   while( MsgWaitForMultipleObjects( 1, &hDummyEvent, FALSE, ( iMsec == 0 ? INFINITE : ( ULONG ) iMsec ), QS_ALLINPUT | QS_ALLPOSTMESSAGE) == WAIT_OBJECT_0 + 1 )
    {
       MSG msg;
 

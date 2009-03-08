@@ -1453,7 +1453,7 @@ HB_FUNC( HB_INETDATAREADY )
       return;
    }
 
-   if( ISNUM( 1 ) )
+   if( ISNUM( 2 ) )
    {
       iVal = hb_parni( 2 );
       tv.tv_sec = iVal / 1000;

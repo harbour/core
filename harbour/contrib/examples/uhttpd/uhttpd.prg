@@ -449,8 +449,10 @@ FUNCTION MAIN( ... )
       ? "Bind Error"
    ELSE
 
-     s_nLocalPort    := hb_InetPort( hListen )
-     s_cLocalAddress := hb_InetAddress( hListen )
+      s_nLocalPort    := hb_InetPort( hListen )
+      s_cLocalAddress := hb_InetAddress( hListen )
+
+      hb_InetTimeOut( hListen, 3000 )
 
 #else
    hListen   := socket_create()
@@ -512,8 +514,7 @@ FUNCTION MAIN( ... )
 
          // Wait a connection
 #ifdef USE_HB_INET
-         hb_InetTimeOut( hListen, 50 )
-         IF HB_InetDataReady( hListen ) > 0
+         IF HB_InetDataReady( hListen, 250 ) > 0
 #else
          IF socket_select( { hListen },,, 50 ) > 0
 #endif
