@@ -5,4 +5,6 @@
 @uhttpd.hbm
 -DGD_SUPPORT
 -lhbgd -lhbct
--lbgd{win} -lgd{!win}
+-lbgd{win}
+-lgd{!win}
+-L/opt/local/lib{darwin}
