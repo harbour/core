@@ -8,6 +8,23 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-09 17:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/ppcomp.c
+    + added support for extended definition files in Harbour compiler
+      switches: -u+<file>
+      This option can be repeated if user wants to use more then one
+      file with extended definitions. The definitions are added after
+      standard ones and after defines specified by -D<name>[=<value>]
+      Harbour compiler switch.
+      The behavior of -u[<file>] remains unchanged and -u or -u<file>
+      can can be used together with -u+<file>.
+      Note for xHarbour users: it's not exactly the same behavior as
+      in xHarbour compiler.
+    ! fixed memory leak when repeated -u[<file>] options are used.
+
 2009-03-09 16:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_gnu_os2.cmd
   * make_gnu.bat

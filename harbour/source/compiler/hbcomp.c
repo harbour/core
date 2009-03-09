@@ -290,8 +290,18 @@ void hb_comp_free( HB_COMP_PTR pComp )
          hb_pp_free( pComp->pLex->pPP );
       hb_xfree( pComp->pLex );
    }
+
    if( pComp->szStdCh )
       hb_xfree( pComp->szStdCh );
+
+   if( HB_COMP_PARAM->iStdChExt > 0 )
+   {
+      do
+         hb_xfree( HB_COMP_PARAM->szStdChExt[ --HB_COMP_PARAM->iStdChExt ] );
+      while( HB_COMP_PARAM->iStdChExt != 0 );
+      hb_xfree( HB_COMP_PARAM->szStdChExt );
+   }
+
    hb_xfree( pComp );
 }
 

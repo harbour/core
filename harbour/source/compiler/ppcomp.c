@@ -298,6 +298,16 @@ void hb_compInitPP( HB_COMP_DECL, int argc, char * const argv[] )
       /* Add /D and /undef: command line or envvar defines */
       hb_compChkDefines( HB_COMP_PARAM, argc, argv );
 
+      /* add extended definitions files (-u+<file>) */
+      if( HB_COMP_PARAM->iStdChExt > 0 )
+      {
+         int i = 0;
+
+         while( i < HB_COMP_PARAM->iStdChExt )
+            hb_pp_readRules( HB_COMP_PARAM->pLex->pPP,
+                             HB_COMP_PARAM->szStdChExt[ i++ ] );
+      }
+
       /* mark current rules as standard ones */
       hb_pp_setStdBase( HB_COMP_PARAM->pLex->pPP );
    }

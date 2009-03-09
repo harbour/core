@@ -666,10 +666,12 @@ typedef struct _HB_COMP
    const char *      currModule;          /* currently compiled module name */
 
    const char *      szAnnounce;
-   char *            szStdCh;             /* standard definitions file name (-u) */
    const char *      szDeclaredFun;
    const char *      szFile;              /* Source file name of compiled module */
    char              szPrefix[ 20 ];      /* holds the prefix added to the generated symbol init function name (in C output currently) */
+   char *            szStdCh;             /* standard definitions file name (-u) */
+   char **           szStdChExt;          /* extended definitions file names (-u+<file>) */
+   int               iStdChExt;           /* number of extended definition files (-u+<file>) */
 
    char              cDataListType;       /* current declared variable list type */
    char              cCastType;           /* current casting type */

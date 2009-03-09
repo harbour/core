@@ -597,7 +597,28 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                   /* NOTE: Ignore these -undef: switches will be processed separately */
                   break;
                }
-               HB_COMP_PARAM->szStdCh = hb_strdup( s + 1 );
+               /* extended definitions file (-u+<file>) */
+               if( s[1] == '+' )
+               {
+                  if( s[2] )
+                  {
+                     if( HB_COMP_PARAM->iStdChExt == 0 )
+                        HB_COMP_PARAM->szStdChExt = hb_xgrab( sizeof( char * ) );
+                     else
+                        HB_COMP_PARAM->szStdChExt =
+                           hb_xrealloc( HB_COMP_PARAM->szStdChExt,
+                                        ( HB_COMP_PARAM->iStdChExt + 1 ) *
+                                        sizeof( char * ) );
+                     HB_COMP_PARAM->szStdChExt[ HB_COMP_PARAM->iStdChExt++ ] =
+                           hb_strdup( s + 2 );
+                  }
+               }
+               else
+               {
+                  if( HB_COMP_PARAM->szStdCh )
+                     hb_xfree( HB_COMP_PARAM->szStdCh );
+                  HB_COMP_PARAM->szStdCh = hb_strdup( s + 1 );
+               }
                break;
 
             case 'v':
