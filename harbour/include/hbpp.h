@@ -395,7 +395,7 @@ HB_PP_TOKEN, * PHB_PP_TOKEN;
 /* maximum number of single token translations, in Clipper it's 18 + number
    of used rules, we will use also constant but increased by total number
    of rules of given type: define, [x]translate, [x]command */
-#define HB_PP_MAX_REPATS      128
+#define HB_PP_MAX_REPEATS     128
 
 /* Clipper allows only 16 nested includes */
 #define HB_PP_MAX_INCLUDED_FILES    64

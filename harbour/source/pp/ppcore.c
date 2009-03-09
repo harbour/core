@@ -4177,7 +4177,7 @@ static BOOL hb_pp_processDefine( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirstPtr )
                   hb_pp_patternReplace( pState, pRule, pFirstPtr, "define" );
                   fSubst = fRepeat = TRUE;
                   if( ++pState->iCycle > pState->iMaxCycles ||
-                      ++iCycle > HB_PP_MAX_REPATS + pState->iDefinitions )
+                      ++iCycle > HB_PP_MAX_REPEATS + pState->iDefinitions )
                   {
                      pState->iCycle = pState->iMaxCycles + 1;
                      hb_pp_error( pState, 'E', HB_PP_ERR_CYCLIC_DEFINE, pRule->pMatch->value );
@@ -4221,7 +4221,7 @@ static BOOL hb_pp_processTranslate( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirstPt
                   hb_pp_patternReplace( pState, pRule, pTokenPtr, "translate" );
                   fSubst = fRepeat = TRUE;
                   if( ++pState->iCycle > pState->iMaxCycles ||
-                      ++iCycle > HB_PP_MAX_REPATS + pState->iTranslations )
+                      ++iCycle > HB_PP_MAX_REPEATS + pState->iTranslations )
                   {
                      pState->iCycle = pState->iMaxCycles + 1;
                      hb_pp_error( pState, 'E', HB_PP_ERR_CYCLIC_TRANSLATE, pRule->pMatch->value );
@@ -4260,7 +4260,7 @@ static BOOL hb_pp_processCommand( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirstPtr 
             hb_pp_patternReplace( pState, pRule, pFirstPtr, "command" );
             fSubst = fRepeat = TRUE;
             if( ++pState->iCycle > pState->iMaxCycles ||
-                ++iCycle > HB_PP_MAX_REPATS + pState->iCommands )
+                ++iCycle > HB_PP_MAX_REPEATS + pState->iCommands )
             {
                pState->iCycle = pState->iMaxCycles + 1;
                hb_pp_error( pState, 'E', HB_PP_ERR_CYCLIC_COMMAND, pRule->pMatch->value );

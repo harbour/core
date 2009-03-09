@@ -75,7 +75,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
            "\n                                   3=generate real C code",
 #ifdef HB_LEGACY_LEVEL2
            "\n          %cgo              output type: Platform dependant object module",
-           "\n                           Deprecated. Please use hbmk2",
+           "\n                           (deprecated. Please use hbmk2)",
 #endif
 #ifdef HB_GEN_OBJ32
            "\n          %cgw              output type: Windows/DOS OBJ32 (.obj)",
@@ -100,6 +100,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
            "\n          %cs               syntax check only",
 /* TODO:   "\n          %ct<path>         path for temp file creation", */
            "\n          %cu[<file>]       use command def set in <file> (or none)",
+           "\n          %cu+[<file>]      #include <file>",
            "\n          %cundef:<id>      #undef <id>",
            "\n          %cv               variables are assumed M->",
            "\n          %cw[<level>]      set warning level number (0..3, default 1)",
@@ -246,7 +247,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Ryszard Glab <rglab imid.med.pl>\n"
          "Teo Fonrouge <teo windtelsoft.dot.com>\n"
          "Tim Stone <timstone mstrlink.com>\n"
-         "Toma¾ Zupan <tomaz.zupan orpo.si>\n"
+         "Tomaz Zupan <tomaz.zupan orpo.si>\n"
          "Vailton Renato <vailtom gmail.com>\n"
          "Viktor Szakats <harbour.01 syenar.hu>\n"
          "Vladimir Kazimirchik <v_kazimirchik yahoo.com>\n"

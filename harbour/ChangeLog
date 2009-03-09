@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-09 23:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/compiler/hbusage.c
+    + Added -u+ to help screen.
+    * One remaining non-ASCII char cleaned from credit list.
+
+  * include/hbpp.h
+  * source/pp/ppcore.c
+    ! Renamed HB_PP_MAX_REPATS to HB_PP_MAX_REPEATS.
+
+  * ChangeLog
+    * Added one line to my prev entry.
+
 2009-03-09 17:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompdf.h
   * harbour/source/compiler/cmdcheck.c
@@ -29,6 +41,7 @@
   * make_gnu_os2.cmd
   * make_gnu.bat
     + Clearing HARBOUR/CLIPPER envvars while building Harbour.
+    * bcc32 no longer accepted as compatibility HB_COMPILER value.
 
   * utils/hbmk2/hbmk2.prg
     * TODO section update.
