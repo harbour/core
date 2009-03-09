@@ -30,9 +30,6 @@ if "%HB_ARCHITECTURE%" == ""                         set HB_ARCHITECTURE=dos
 if "%HB_COMPILER%"     == "" if not "%WINDIR%" == "" goto HELP
 if "%HB_COMPILER%"     == ""                         set HB_COMPILER=djgpp
 
-rem Compatibility
-if "%HB_COMPILER%" == "bcc32" set HB_COMPILER=bcc
-
 if "%HB_INSTALL_PREFIX%" == "" if "%OS%" == "Windows_NT" set HB_INSTALL_PREFIX=%~dp0
 
 rem Set to constant value to be consistent with the non-GNU make files.
@@ -82,6 +79,11 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
 
 :MAKE
 
+   set _HB_HARBOUR_OLD=%HARBOUR%
+   set _HB_CLIPPER_OLD=%CLIPPER%
+   set HARBOUR=
+   set CLIPPER=
+
    rem ---------------------------------------------------------------
    rem Detect name of GNU Make
    rem
@@ -129,14 +131,19 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
    %_HB_MAKE% clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    %_HB_MAKE% install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    set HB_BUILD_DLL=yes
-
-   goto END
+   goto MAKE_DONE
 
 :SKIP_WINDLL
 
    %_HB_MAKE% %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   goto END
+   goto MAKE_DONE
+
+:MAKE_DONE
+
+   set _HB_MAKE=
+   set HARBOUR=%_HB_HARBOUR_OLD%
+   set CLIPPER=%_HB_CLIPPER_OLD%
+   set _HB_HARBOUR_OLD=
+   set _HB_CLIPPER_OLD=
 
 :END
-
-set _HB_MAKE=

@@ -114,6 +114,20 @@
 /* TODO: Cleanup on variable names and compiler configuration. */
 /* TODO: Optimizations (speed/memory). */
 
+/* PLANNING: 
+   hbgtwvg.hbp
+   ---
+   requires=hbwin xhb
+   prgflags=-DHAS_GTWVG
+   cflags=-DHAS_GTWVG
+   prgincludes=gtwvg.ch
+   cincludes=hbgtwvg.h
+   libs=gtwvg
+   libpaths=C:\libs
+   autodetect=yes
+   ---
+*/
+
 /* TOFIX: We should try using the same .dll name format for all compilers/platform.
           This also means they should be bniary compatible with each other
           (within a given architecture of course). */
