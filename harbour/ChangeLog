@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-09 14:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbpp.h
+    ! changed the NOT operator precedence - it should be bigger then
+      logical .and./.or. operators in #if expressions
+
+  * harbour/source/vm/thread.c
+    ! fixed typo HB_OS_WIM -> HB_OS_WIN - thanks to Francesco.
+
 2009-03-09 00:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbthread.h
   * harbour/source/vm/thread.c

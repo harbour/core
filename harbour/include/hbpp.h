@@ -422,8 +422,8 @@ HB_PP_TOKEN, * PHB_PP_TOKEN;
 
 /* operation precedence for #if calculation */
 #define HB_PP_PREC_NUL  0
-#define HB_PP_PREC_NOT  1
-#define HB_PP_PREC_LOG  2
+#define HB_PP_PREC_LOG  1
+#define HB_PP_PREC_NOT  2
 #define HB_PP_PREC_REL  3
 #define HB_PP_PREC_BIT  4
 #define HB_PP_PREC_PLUS 5

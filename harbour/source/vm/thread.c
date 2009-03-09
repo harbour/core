@@ -201,7 +201,7 @@ static void _hb_thread_wait_add( HB_COND_T * cond, PHB_WAIT_LIST pWaiting )
    ULONG ulPostCount = 0;
    DosResetEventSem( pWaiting->cond, &ulPostCount );
 #elif defined( HB_OS_WIN )
-   /* It's not necessary becayse we have workaround for possible race
+   /* It's not necessary because we have workaround for possible race
     * condition inside _hb_thread_cond_wait() function
     */
    /* WaitForSingleObject( pWaiting->cond, 0 ); */
@@ -740,7 +740,7 @@ static HB_GARBAGE_FUNC( hb_threadDestructor )
 #  if defined( HB_OS_OS2 )
       DosCloseEventSem( pThread->pWaitList.cond );
       pThread->pWaitList.cond = ( HEV ) 0;
-#  elif defined( HB_OS_WIM )
+#  elif defined( HB_OS_WIN )
       CloseHandle( pThread->pWaitList.cond );
       pThread->pWaitList.cond = ( HANDLE ) 0;
 #  endif
@@ -846,7 +846,7 @@ PHB_THREADSTATE hb_threadStateNew( void )
 #if defined( HB_COND_HARBOUR_SUPPORT )
 #  if defined( HB_OS_OS2 )
       DosCreateEventSem( NULL, &pThread->pWaitList.cond, 0L, FALSE );
-#  elif defined( HB_OS_WIM )
+#  elif defined( HB_OS_WIN )
       pThread->pWaitList.cond = CreateSemaphore( NULL, 0, 1, NULL );
 #  endif
 #endif
