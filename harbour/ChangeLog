@@ -408,7 +408,7 @@
 2009-03-06 04:25 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpdc.c
     * Fixed error in windows header include
-    ; TOCHECK: Viktor, could you check if this is correct ?
+    ; TOCHECK: Viktor, could you check if this is correct ? [DONE]
 
 2009-03-06 04:13 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)
   * harbour/contrib/examples/uhttpd/uhttpd.prg
@@ -560,7 +560,7 @@
 
   * contrib/examples/uhttpd/uhttpd.hbm
     - Removed -n. It's now automatic.
-    ; TODO: Remove the rest.
+    ; TODO: Remove the rest. [DONE]
 
   * INSTALL
   * doc/man/hbmk.1
@@ -1842,7 +1842,7 @@
   * make_gnu_os2.cmd
     + Will now automatically create the install destination dirs.
 
-    ; TODO: Could someone please add this feature to make_gnu.sh?
+    ; TODO: Could someone please add this feature to make_gnu.sh? [DONE]
 
   * bin/postinst.bat
   * bin/hb-mkdyn.bat
@@ -1968,8 +1968,7 @@
       (MinGW has been covered before these changes already.)
     ; TOFIX: .dlls still need tweaking to work properly.
              owatcom doesn't create usable binaries when
-             using HB_DLL=yes f.e., also hbrun-dll cannot be
-             built with msvc/bcc32.
+             using HB_DLL=yes.
 
   * config/win/owatcom.cf
     % Removed DOS hack.

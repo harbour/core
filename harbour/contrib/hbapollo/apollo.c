@@ -67,43 +67,25 @@
 #include "hbapi.h"
 #include "Sde61.h"
 
-
-/* -----------------29/12/2001 19:21-----------------
- * sx_AppendBlank()
- * --------------------------------------------------*/
 HB_FUNC( SX_APPENDBLANK )
 {
    sx_AppendBlank();
 }
 
-
-/* -----------------29/12/2001 20:13-----------------
- * sx_Close()
- * --------------------------------------------------*/
 HB_FUNC( SX_CLOSE )
 {
    sx_Close();
 }
 
-
-/* -----------------29/12/2001 19:26-----------------
- * sx_Commit()
- * --------------------------------------------------*/
 HB_FUNC( SX_COMMIT )
 {
    sx_Commit();
 }
 
-
-/* -----------------29/12/2001 19:59-----------------
- * sx_CreateExec()
- *  => NILL.
- * --------------------------------------------------*/
 HB_FUNC( SX_CREATEEXEC )
 {
    sx_CreateExec();
 }
-
 
 /* -----------------29/12/2001 19:18-----------------
  * sx_CreateField()
@@ -115,7 +97,6 @@ HB_FUNC( SX_CREATEFIELD )
                    ( SHORT ) hb_parni( 3 ),   /* Field lenght */
                    ( SHORT ) hb_parni( 4 ) ); /* Field decimals */
 }
-
 
 /* -----------------29/12/2001 19:59-----------------
  * sx_CreateNew()
@@ -130,15 +111,10 @@ HB_FUNC( SX_CREATENEW )
                     ( SHORT ) hb_parni( 4 ) ) ); /* The maximum number of fields to be added to the file structure */
 }
 
-
-/* -----------------29/12/2001 20:13-----------------
- * sx_Eof()
- * --------------------------------------------------*/
 HB_FUNC( SX_EOF )
 {
    hb_retl( sx_Eof() );
 }
-
 
 /* -----------------29/12/2001 20:13-----------------
  * sx_GetDateJulian() => The date expressed as a long integer. Useful for date arithmetic.
@@ -151,7 +127,6 @@ HB_FUNC( SX_GETDATEJULIAN )
    hb_retni( sx_GetDateJulian( ( PBYTE ) hb_parc( 1 ) ) );    /* Field name  */
 }
 
-
 /* -----------------30/12/2001 13:04-----------------
  * sx_GetLogical() => True if the field evaluates as True, and False if not.
  * Determines whether a logical field contains a True or False value.
@@ -161,15 +136,10 @@ HB_FUNC( SX_GETLOGICAL )
    hb_retl( sx_GetLogical( ( PBYTE ) hb_parc( 1 ) ) );       /* Field name  */
 }
 
-
-/* -----------------29/12/2001 20:13-----------------
- * sx_GetString()
- * --------------------------------------------------*/
 HB_FUNC( SX_GETSTRING )
 {
    hb_retc( ( char * ) sx_GetString( ( PBYTE ) hb_parc( 1 ) ) );  /* Field name  */
 }
-
 
 /* -----------------30/12/2001 12:21-----------------
  * sx_GetVariant() => Character fields are returned as untrimmed strings.
@@ -179,37 +149,21 @@ HB_FUNC( SX_GETVARIANT )
    hb_retc( ( char * ) sx_GetVariant( ( PBYTE ) hb_parc( 1 ) ) );  /* Field name  */
 }
 
-
-/* -----------------29/12/2001 20:13-----------------
- * sx_Go()
- * --------------------------------------------------*/
 HB_FUNC( SX_GO )
 {
-   sx_Go( hb_parni( 1 ) );                /* The record number to go */
+   sx_Go( hb_parni( 1 ) );
 }
 
-
-/* -----------------29/12/2001 20:13-----------------
- * sx_GoBottom()
- * --------------------------------------------------*/
 HB_FUNC( SX_GOBOTTOM )
 {
    sx_GoBottom();
 }
 
-
-/* -----------------29/12/2001 20:13-----------------
- * sx_GoTop()
- * --------------------------------------------------*/
 HB_FUNC( SX_GOTOP )
 {
    sx_GoTop();
 }
 
-
-/* -----------------29/12/2001 19:59-----------------
- * sx_IndexTag()
- * --------------------------------------------------*/
 HB_FUNC( SX_INDEXTAG )
 {
    hb_retni(
@@ -221,45 +175,29 @@ HB_FUNC( SX_INDEXTAG )
                    ( PBYTE ) hb_parc( 6) ) ); /* Condition */
 }
 
-
-/* -----------------29/12/2001 20:13-----------------
- * sx_RecCOunt()
- * --------------------------------------------------*/
 HB_FUNC( SX_RECCOUNT )
 {
    hb_retni( sx_RecCount() );
 }
 
-
-/* -----------------29/12/2001 20:13-----------------
- * sx_RecNo()
- * --------------------------------------------------*/
 HB_FUNC( SX_RECNO )
 {
    hb_retni( sx_RecNo() );
 }
 
-
-/* -----------------29/12/2001 20:13-----------------
- * sx_Reindex()
- * --------------------------------------------------*/
 HB_FUNC( SX_REINDEX )
 {
    sx_Reindex();
 }
 
-
-/* -----------------29/12/2001 19:59-----------------
- * sx_Replace()
- * --------------------------------------------------*/
 HB_FUNC( SX_REPLACE )
 {
    switch( hb_parni( 2 ) )
    {
       case R_INTEGER :
-      case R_JULIAN  : sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parni( 3 ) );  break;
-      case R_LOGICAL : sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parni( 3 ) );  break;  /* TODO: somthing is wrong here... */
-      case R_LONG    : sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parnl( 3 ) );  break;
+      case R_JULIAN  : sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parni( 3 ) ); break;
+      case R_LOGICAL : sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parni( 3 ) ); break; /* TODO: somthing is wrong here... */
+      case R_LONG    : sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parnl( 3 ) ); break;
       case R_DOUBLE  :
            {
               double d = hb_parnd( 3 );
@@ -271,29 +209,20 @@ HB_FUNC( SX_REPLACE )
       case R_MEMO    :
       case R_BITMAP  :
       case R_BLOBFILE:
-      case R_BLOBPTR : sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parc( 3 ) );  break;
+      case R_BLOBPTR : sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parc( 3 ) ); break;
       default:         sx_Replace( ( PBYTE ) hb_parc( 1 ), ( SHORT ) hb_parni( 2 ), ( void * ) hb_parc( 3 ) );
    }
 }
 
-
-/* -----------------29/12/2001 20:13-----------------
- * sx_RLock()
- * --------------------------------------------------*/
 HB_FUNC( SX_RLOCK )
 {
    sx_Rlock( hb_parni( 1 ) );             /* The physical record number of the record to be locked. */
 }
 
-
-/* -----------------29/12/2001 20:13-----------------
- * sx_Seek()
- * --------------------------------------------------*/
 HB_FUNC( SX_SEEK )
 {
    hb_retl( sx_Seek( ( PBYTE ) hb_parc( 1 ) ) );            /* The value to search for as a string */
 }
-
 
 /* -----------------20/01/2002 13:36-----------------
  * sx_Select() => The previous select area is returned.
@@ -303,7 +232,6 @@ HB_FUNC( SX_SELECT )
 {
    hb_retni( sx_Seek( ( PBYTE ) hb_parc( 1 ) ) );            /* The work area number returned when the file was opened.  */
 }
-
 
 /* -----------------30/12/2001 12:30-----------------
  * sx_SetCentury() => NILL
@@ -317,7 +245,6 @@ HB_FUNC( SX_SETCENTURY )
                                            * If False, they will not. */
 }
 
-
 /* -----------------30/12/2001 12:32-----------------
  * sx_SetDateFormat() => NILL
  * Defines the format of date strings returned by sx_GetDateString.
@@ -328,10 +255,6 @@ HB_FUNC( SX_SETDATEFORMAT )
                                               * If False, they will not. */
 }
 
-
-/* -----------------29/12/2001 19:59-----------------
- * sx_SetMemoBlockSize()
- * --------------------------------------------------*/
 HB_FUNC( SX_SETMEMOBLOCKSIZE )
 {
    sx_SetMemoBlockSize( ( WORD ) hb_parni( 1 ) ); /* The new default block size.
@@ -347,24 +270,15 @@ HB_FUNC( SX_SETORDER )
    hb_retni( sx_SetOrder( ( SHORT ) hb_parni( 1 ) ) ); /* Selects an existing order as the controlling index order. */
 }
 
-
-/* -----------------29/12/2001 19:59-----------------
- * sx_SetSoftSeek()
- * --------------------------------------------------*/
 HB_FUNC( SX_SETSOFTSEEK )
 {
    sx_SetSoftSeek( hb_parl( 1 ) ? 1 : 0 ); /* True to set softseek ON */
 }
 
-
-/* -----------------29/12/2001 20:13-----------------
- * sx_Skip()
- * --------------------------------------------------*/
 HB_FUNC( SX_SKIP )
 {
    sx_Skip( hb_parnl( 1 ) );              /* Number of records to skip */
 }
-
 
 /* -----------------20/01/2002 14:2-----------------
  * sx_SysProp() => Varies depending on the type of data being requested.
@@ -385,11 +299,6 @@ HB_FUNC( SX_DISABLEAUTOOPEN )
 }
 */
 
-
-
-/* -----------------29/12/2001 19:17-----------------
- * sx_Use()
- * --------------------------------------------------*/
 HB_FUNC( SX_USE )
 {
    hb_retni(
@@ -399,57 +308,12 @@ HB_FUNC( SX_USE )
               ( SHORT ) hb_parni( 4 ) ) ); /* RDE Type */
 }
 
-
-/* -----------------29/12/2001 19:17-----------------
- * sx_Version()
- * --------------------------------------------------*/
 HB_FUNC( SX_VERSION )
 {
    hb_retc( ( char * ) sx_Version() );
 }
 
-
-/* -----------------29/12/2001 19:18-----------------
- * sx_Zap()
- * --------------------------------------------------*/
 HB_FUNC( SX_ZAP )
 {
    sx_Zap();
 }
-
-
-
-/*
-sx_AppendBlank()
-sx_Close()
-sx_Commit()
-sx_CreateExec()
-sx_CreateField()
-sx_CreateNew()
-sx_Eof()
-sx_GetDateJulian()
-sx_GetLogical()
-sx_GetString()
-sx_GetVariant()
-sx_Go()
-sx_GoBottom()
-sx_GoTop()
-sx_IndexTag()
-sx_RecCount()
-sx_RecNo()
-sx_Reindex()
-sx_Replace()
-sx_RLock()
-sx_Seek()
-sx_Select()
-sx_SetDateFormat()
-sx_SetCentury()
-sx_SetMemoBlockSize()
-sx_SetOrder()
-sx_SetSoftSeek()
-sx_Skip()
-sx_SysProp
-sx_Use()
-sx_Version()
-sx_Zap()
-*/

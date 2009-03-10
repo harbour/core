@@ -303,22 +303,22 @@ RETURN Self
 METHOD MatchCriteria( oFound ) CLASS TXmlIteratorRegex
 
    IF ::cName != NIL .and. ;
-         ( oFound:cName == NIL .or. .not. HB_REGEXMATCH( ::cName, oFound:cName, .t. ) )
+         ( oFound:cName == NIL .or. .not. HB_REGEXLIKE( ::cName, oFound:cName, .t. ) )
       RETURN .F.
    ENDIF
 
    IF ::cAttribute != NIL .and. ;
-         hb_hScan( oFound:aAttributes, {|cKey| HB_REGEXMATCH( ::cAttribute, cKey, .t. ) } ) == 0
+         hb_hScan( oFound:aAttributes, {|cKey| HB_REGEXLIKE( ::cAttribute, cKey, .t. ) } ) == 0
       RETURN .F.
    ENDIF
 
    IF ::cValue != NIL .and. ;
-         hb_hScan( oFound:aAttributes, {|xKey, cValue| HB_SYMBOL_UNUSED( xKey ), HB_REGEXMATCH( ::cValue, cValue, .t. ) } ) == 0
+         hb_hScan( oFound:aAttributes, {|xKey, cValue| HB_SYMBOL_UNUSED( xKey ), HB_REGEXLIKE( ::cValue, cValue, .t. ) } ) == 0
       RETURN .F.
    ENDIF
 
    IF ::cData != NIL .and. ;
-         ( oFound:cData == NIL .or. .not. HB_REGEXMATCH( ::cData, oFound:cData, .f. ) )
+         ( oFound:cData == NIL .or. .not. HB_REGEXHAS( ::cData, oFound:cData, .F. ) )
       RETURN .F.
    ENDIF
 

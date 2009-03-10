@@ -156,6 +156,8 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          nPos      := 0
          lFinished := .T.
 
+         DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, 0, nAtTop, nItems, bSelect, nRowsClr )
+
       CASE nKey == K_LDBLCLK .OR. nKey == K_LBUTTONDOWN
          nAux := HitTest( nTop, nLeft, nBottom, nRight, MRow(), MCol() )
          IF nAux != 0 .AND. ( nNewPos := nAtTop + nAux - 1 ) <= nItems
