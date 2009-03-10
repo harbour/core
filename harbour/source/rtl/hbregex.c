@@ -486,9 +486,11 @@ HB_FUNC( HB_REGEX )
 }
 
 /* Returns just .T. if match found or .F. otherwise. */
+/* NOTE: Deprecated compatibility function.
+         Please use HB_REGEXLIKE() and HB_REGEXHAS() instead. */
 HB_FUNC( HB_REGEXMATCH )
 {
-   hb_retl( hb_regex( hb_parl( 3 ) ? 1 /* LIKE */ : 2 /* HAS */ ) );
+   hb_retl( hb_regex( hb_parl( 5 ) ? 1 /* LIKE */ : 2 /* HAS */ ) );
 }
 
 HB_FUNC( HB_REGEXLIKE )

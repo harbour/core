@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-10 17:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/hbregex.c
+    * Fixed HB_REGEXMATCH(). Now the HAS/LIKE mode can be controlled 
+      by 5th logical parameter (was 3rd), so 3rd parameter is solely 
+      controlling case-sensitivity as indicated in the documentation.
+      Users are recommended to use HB_REGEXHAS() and HB_REGEXLIKE() 
+      functions as unambiguous alternatives, which work equally 
+      well on all Harbour versions. HB_REGEXMATCH() is now deprecated, 
+      but kept for compatibility.
+
 2009-03-10 15:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbmk2/hbmk2.prg
     * -debug description extended.
@@ -8772,7 +8782,7 @@
            Maybe this was the intent of the original developers, but
            to me it looks a rather strange behaviour which was added by
            accidentally forgetting about the 3rd parameter already being
-           utilized. This either needs to be fixed, or properly documented.
+           utilized. This either needs to be fixed, or properly documented. [DONE]
 
   ; NOTE: Noteworthy links:
           http://docs.python.org/3.0/whatsnew/3.0.html
