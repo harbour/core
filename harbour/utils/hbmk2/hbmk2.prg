@@ -2965,7 +2965,7 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -main=<mainfunc>  override the name of starting function/procedure" ,;
       "  -fullstatic       link with all static libs" ,;
       "  -nulrdd[-]        link with nulrdd" ,;
-      "  -[no]debug        add/exclude debug info" ,;
+      "  -[no]debug        add/exclude C compiler debug info" ,;
       "  -[no]map          create (or not) a map file" ,;
       "  -[no]strip        strip (no strip) binaries" ,;
       "  -[no]fmstat       enable/disable runtime memory statistics (gcc builds only)" ,;
