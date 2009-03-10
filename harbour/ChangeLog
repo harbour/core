@@ -8,6 +8,23 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-10 18:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+ * ChangeLog
+   * Updates.
+
+ * contrib/xhb/txml.prg
+   * Update HB_REGEXMATCH() calls, to keep old logic.
+   ; TOFIX: Above doesn't mean it's now correct, so
+            someone familiar with this code, please
+            correct it.
+
+ * contrib/hbapollo/apollo.c
+   * Removed essentially empty comments.
+
+ * source/rtl/achoice.prg
+   ! Applied fix from Vladislav Lavrecky.
+     I didn't test it just assumed okay, please do so.
+
 2009-03-10 17:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/hbregex.c
     * Fixed HB_REGEXMATCH(). Now the HAS/LIKE mode can be controlled 
