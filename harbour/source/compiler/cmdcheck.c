@@ -603,9 +603,10 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                   if( s[2] )
                   {
                      if( HB_COMP_PARAM->iStdChExt == 0 )
-                        HB_COMP_PARAM->szStdChExt = hb_xgrab( sizeof( char * ) );
+                        HB_COMP_PARAM->szStdChExt = ( char ** )
+                           hb_xgrab( sizeof( char * ) );
                      else
-                        HB_COMP_PARAM->szStdChExt =
+                        HB_COMP_PARAM->szStdChExt = ( char ** )
                            hb_xrealloc( HB_COMP_PARAM->szStdChExt,
                                         ( HB_COMP_PARAM->iStdChExt + 1 ) *
                                         sizeof( char * ) );

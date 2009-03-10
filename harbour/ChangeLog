@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-11 00:51 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbgete.c
+    ! fixed setenv() usage in some OpenWatcom ports
+
+  * harbour/source/compiler/cmdcheck.c
+    ! fixed casting for C++ compilation
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    * removed some trailing spaces
+
 2009-03-10 18:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
  * ChangeLog
    * Updates.

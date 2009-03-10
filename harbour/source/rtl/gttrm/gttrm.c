@@ -1139,7 +1139,7 @@ static void mouse_init( PHB_GTTRM pTerm )
          /*
           * In recent GPM versions it produce unpleasure noice on the screen
           * so I covered it with this macro, [druzus]
-          */         
+          */
 #ifdef HB_GPM_USE_XTRA
          pTerm->mButtons = Gpm_GetSnapshot( NULL );
 #else

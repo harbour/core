@@ -164,12 +164,17 @@ BOOL hb_setenv( const char * szName, const char * szValue )
       return setenv( szName, szValue, 1 ) == 0;
    else
    {
-#  if defined( __DJGPP__ ) && ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ < 4 ) )
+#  if ( defined( __DJGPP__ ) && \
+        ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ < 4 ) ) ) || \
+      ( defined( __WATCOMC__ ) && defined( HB_OS_LINUX ) )
       szValue = getenv( szName );
       if( szValue && *szValue )
          return setenv( szName, "", 1 ) == 0;
       else
          return TRUE;
+#  elif defined( __WATCOMC__ )
+      unsetenv( szName );
+      return TRUE;
 #  else
       return unsetenv( szName ) == 0;
 #  endif
