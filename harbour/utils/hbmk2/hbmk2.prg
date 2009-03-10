@@ -110,11 +110,12 @@
          -D__PLATFORM__WINDOWS
          -undef:__PLATFORM__UNIX
          -undef:__PLATFORM__LINUX */
-/* TODO: Add support for library creation. */
+/* TODO: Add support for library creation for rest of compilers. */
+/* TODO: Add support for dynamic library creation for rest of compilers. */
 /* TODO: Cleanup on variable names and compiler configuration. */
 /* TODO: Optimizations (speed/memory). */
 
-/* PLANNING: 
+/* PLANNING:
    hbgtwvg.hbp
    ---
    requires=hbwin xhb
@@ -228,6 +229,8 @@ FUNCTION Main( ... )
    LOCAL s_aOPTPRG
    LOCAL s_aOPTC
    LOCAL s_aOPTL
+   LOCAL s_aOPTA
+   LOCAL s_aOPTD
    LOCAL s_cPROGDIR
    LOCAL s_cPROGNAME
    LOCAL s_cFIRST
@@ -261,6 +264,8 @@ FUNCTION Main( ... )
    LOCAL cLibExt
    LOCAL cObjPrefix
    LOCAL cObjExt
+   LOCAL cLibObjPrefix
+   LOCAL cDynObjPrefix := NIL
    LOCAL cLibPathPrefix
    LOCAL cLibPathSep
    LOCAL cDynLibNamePrefix
@@ -277,10 +282,14 @@ FUNCTION Main( ... )
    LOCAL cOpt_CompC
    LOCAL cOpt_Link
    LOCAL cOpt_Res
+   LOCAL cOpt_Lib
+   LOCAL cOpt_Dyn
    LOCAL cBin_CompPRG
    LOCAL cBin_CompC
    LOCAL cBin_Link
    LOCAL cBin_Res
+   LOCAL cBin_Lib
+   LOCAL cBin_Dyn
    LOCAL nErrorLevel
    LOCAL tmp, array
    LOCAL cScriptFile
@@ -295,6 +304,8 @@ FUNCTION Main( ... )
    LOCAL lStopAfterCComp := .F.
    LOCAL lAcceptCFlag := .F.
    LOCAL lAcceptLDFlag := .F.
+   LOCAL lCreateLib := .F.
+   LOCAL lCreateDyn := .F.
 
    LOCAL aParams
    LOCAL aParam
@@ -333,9 +344,11 @@ FUNCTION Main( ... )
       CASE cParamL            == "-quiet" ; t_lQuiet := .T. ; t_lInfo := .F.
       CASE Left( cParamL, 6 ) == "-comp=" ; t_cCOMP := SubStr( cParam, 7 )
       CASE Left( cParamL, 6 ) == "-arch=" ; t_cARCH := SubStr( cParam, 7 )
-      CASE cParamL            == "-hbcmp" ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      CASE cParamL            == "-hbcmp" ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F.
       CASE cParamL            == "-hbcc"  ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptCFlag := .T.
       CASE cParamL            == "-hblnk" ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDFlag := .T.
+      CASE cParamL            == "-hblib" ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .T. ; lCreateDyn := .F.
+      CASE cParamL            == "-hbdyn" ; t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .T.
       CASE cParamL            == "-info"  ; t_lInfo := .T.
       CASE cParamL == "-help" .OR. ;
            cParamL == "--help"
@@ -362,7 +375,7 @@ FUNCTION Main( ... )
    DO CASE
    CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
         Left(  tmp, 5 ) == "hbcmp"
-      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T.
+      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .F.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hbcmp option." + hb_osNewLine() )
       ENDIF
@@ -377,6 +390,18 @@ FUNCTION Main( ... )
       t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; lAcceptLDFlag := .T.
       IF t_lInfo
          OutStd( "hbmk: Enabled -hblnk option." + hb_osNewLine() )
+      ENDIF
+   CASE Right( tmp, 5 ) == "hblib" .OR. ;
+        Left(  tmp, 5 ) == "hblib"
+      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .T. ; lCreateDyn := .F.
+      IF t_lInfo
+         OutStd( "hbmk: Enabled -hblib option." + hb_osNewLine() )
+      ENDIF
+   CASE Right( tmp, 5 ) == "hbdyn" .OR. ;
+        Left(  tmp, 5 ) == "hbdyn"
+      t_lInfo := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; lCreateLib := .F. ; lCreateDyn := .T.
+      IF t_lInfo
+         OutStd( "hbmk: Enabled -hblib option." + hb_osNewLine() )
       ENDIF
    ENDCASE
 
@@ -646,6 +671,8 @@ FUNCTION Main( ... )
    s_aOPTPRG := {}
    s_aOPTC := {}
    s_aOPTL := {}
+   s_aOPTA := {}
+   s_aOPTD := {}
    s_aRESSRC := {}
    s_aRESCMP := {}
    s_aLIBUSER := {}
@@ -729,6 +756,8 @@ FUNCTION Main( ... )
            cParamL            == "-hbcmp" .OR. ;
            cParamL            == "-hbcc"  .OR. ;
            cParamL            == "-hblnk" .OR. ;
+           cParamL            == "-hblib" .OR. ;
+           cParamL            == "-hbdyn" .OR. ;
            cParamL            == "-info"
 
          /* Simply ignore. They were already processed in the first pass. */
@@ -960,8 +989,8 @@ FUNCTION Main( ... )
    IF Len( s_aPRG ) > 0
 
 #if defined( HBMK_INTEGRATED_COMPILER )
-      aCommand := ArrayAJoin( { s_aPRG,;
-                                { "-n2" },;
+      aCommand := ArrayAJoin( { { iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) },;
+                                s_aPRG,;
                                 { "-i" + s_cHB_INC_INSTALL },;
                                 ListToArray( cSelfFlagPRG ),;
                                 ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
@@ -979,7 +1008,8 @@ FUNCTION Main( ... )
 #else
       cCommand := DirAddPathSep( s_cHB_BIN_INSTALL ) +;
                   cBin_CompPRG +;
-                  " -n2 " + ArrayToList( s_aPRG ) +;
+                  " " + iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) +;
+                  " " + ArrayToList( s_aPRG ) +;
                   " -i" + s_cHB_INC_INSTALL +;
                   iif( s_lBLDFLGP, " " + cSelfFlagPRG, "" ) +;
                   iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
@@ -1095,6 +1125,8 @@ FUNCTION Main( ... )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
+         cBin_Lib := t_cCCPREFIX + "ar"
+         cOpt_Lib := ""
          cBin_CompC := t_cCCPREFIX + iif( t_cCOMP == "gpp", "g++", "gcc" )
          IF ! Empty( t_cCCPATH )
             cBin_CompC := t_cCCPATH + "/" + cBin_CompC
@@ -1458,6 +1490,9 @@ FUNCTION Main( ... )
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
+         cBin_Lib := "tlib.exe"
+         cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
+         cLibObjPrefix := "-+ "
          cBin_CompC := "bcc32.exe"
          IF ( Len( s_aRESSRC ) + Len( s_aRESCMP ) ) > 0
             cOpt_CompC := "-c -q -tWM -O2 -OS -Ov -Oi -Oc -d {FC} -I{DI} {LC}"
@@ -1507,15 +1542,22 @@ FUNCTION Main( ... )
          cLibExt := ".lib"
          cObjExt := ".obj"
          IF t_cCOMP == "icc"
+            cBin_Lib := "xilib.exe"
             cBin_CompC := "icl.exe"
+            cBin_Dyn := "xilink.exe"
          ELSE
+            cBin_Lib := "lib.exe"
             cBin_CompC := "cl.exe"
+            cBin_Dyn := "link.exe"
          ENDIF
+         cOpt_Lib := "{FA} /out:{OL} {LO}"
+         cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
          cOpt_CompC := "-nologo -W3 {FC} -I{DI} {LC} {LO} /link {DL} {FL} {LL} {LS}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF s_lMAP
             AAdd( s_aOPTC, "-Fm" )
+            AAdd( s_aOPTD, "-Fm" )
          ENDIF
          IF lStopAfterCComp
             AAdd( s_aOPTC, "-c" )
@@ -1840,53 +1882,148 @@ FUNCTION Main( ... )
          ENDIF
       ENDIF
 
-      IF nErrorLevel == 0 .AND. ! lStopAfterCComp .AND. ( Len( s_aOBJ ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) > 0 .AND. ! Empty( cBin_Link )
+      IF nErrorLevel == 0 .AND. ( Len( s_aOBJ ) + Len( s_aOBJUSER ) + Len( s_aOBJA ) ) > 0
 
-         /* Linking */
+         DO CASE
+         CASE ! lStopAfterCComp .AND. ! Empty( cBin_Link )
 
-         /* Order is significant */
-         cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
-         cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ), cResPrefix ) ) )
-         cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( s_aOBJA ) )
-         cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( s_aLIB ) )
-         cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
-                                                    GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
-         cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) ) )
-         cOpt_Link := StrTran( cOpt_Link, "{OM}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) ) )
-         cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
-         cOpt_Link := StrTran( cOpt_Link, "{DB}"  , s_cHB_BIN_INSTALL )
+            /* Linking */
 
-         cOpt_Link := AllTrim( cOpt_Link )
+            /* Order is significant */
+            cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cObjPrefix ) ) )
+            cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ), cResPrefix ) ) )
+            cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( s_aOBJA ) )
+            cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( s_aLIB ) )
+            cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( s_lBLDFLGL, cSelfFlagL + " ", "" ) +;
+                                                       GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( s_aOPTL ) )
+            cOpt_Link := StrTran( cOpt_Link, "{OE}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cBinExt ) ) )
+            cOpt_Link := StrTran( cOpt_Link, "{OM}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) ) )
+            cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
+            cOpt_Link := StrTran( cOpt_Link, "{DB}"  , s_cHB_BIN_INSTALL )
 
-         /* Handle moving the whole command line to a script, if requested. */
-         IF "{SCRIPT}" $ cOpt_Link
-            fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
-            IF fhnd != F_ERROR
-               FWrite( fhnd, StrTran( cOpt_Link, "{SCRIPT}", "" ) )
-               FClose( fhnd )
-               cOpt_Link := "@" + cScriptFile
-            ELSE
-               OutErr( "hbmk: Warning: Link script couldn't be created, continuing in command line." + hb_osNewLine() )
+            cOpt_Link := AllTrim( cOpt_Link )
+
+            /* Handle moving the whole command line to a script, if requested. */
+            IF "{SCRIPT}" $ cOpt_Link
+               fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
+               IF fhnd != F_ERROR
+                  FWrite( fhnd, StrTran( cOpt_Link, "{SCRIPT}", "" ) )
+                  FClose( fhnd )
+                  cOpt_Link := "@" + cScriptFile
+               ELSE
+                  OutErr( "hbmk: Warning: Link script couldn't be created, continuing in command line." + hb_osNewLine() )
+               ENDIF
             ENDIF
-         ENDIF
 
-         cCommand := cBin_Link + " " + cOpt_Link
+            cCommand := cBin_Link + " " + cOpt_Link
 
-         IF s_lTRACE
-            OutStd( "hbmk: Linker command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+            IF s_lTRACE
+               OutStd( "hbmk: Linker command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               IF ! Empty( cScriptFile )
+                  OutStd( "hbmk: Linker script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+               ENDIF
+            ENDIF
+
+            IF ( tmp := hb_run( cCommand ) ) != 0
+               OutErr( "hbmk: Error: Running linker. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               nErrorLevel := 7
+            ENDIF
+
             IF ! Empty( cScriptFile )
-               OutStd( "hbmk: Linker script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+               FErase( cScriptFile )
             ENDIF
-         ENDIF
 
-         IF ( tmp := hb_run( cCommand ) ) != 0
-            OutErr( "hbmk: Error: Running linker. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
-            nErrorLevel := 7
-         ENDIF
+         CASE lStopAfterCComp .AND. lCreateLib .AND. ! Empty( cBin_Lib )
 
-         IF ! Empty( cScriptFile )
-            FErase( cScriptFile )
-         ENDIF
+            /* Lib creation (static) */
+
+            /* Order is significant */
+            cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cLibObjPrefix ) ) )
+            cOpt_Lib := StrTran( cOpt_Lib, "{LL}"  , ArrayToList( s_aLIB ) )
+            cOpt_Lib := StrTran( cOpt_Lib, "{FA}"  , GetEnv( "HB_USER_AFLAGS" ) + " " + ArrayToList( s_aOPTA ) )
+            cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cLibExt ) ) )
+            cOpt_Lib := StrTran( cOpt_Lib, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
+            cOpt_Lib := StrTran( cOpt_Lib, "{DB}"  , s_cHB_BIN_INSTALL )
+
+            cOpt_Lib := AllTrim( cOpt_Lib )
+
+            /* Handle moving the whole command line to a script, if requested. */
+            IF "{SCRIPT}" $ cOpt_Lib
+               fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
+               IF fhnd != F_ERROR
+                  FWrite( fhnd, StrTran( cOpt_Lib, "{SCRIPT}", "" ) )
+                  FClose( fhnd )
+                  cOpt_Lib := "@" + cScriptFile
+               ELSE
+                  OutErr( "hbmk: Warning: Lib script couldn't be created, continuing in command line." + hb_osNewLine() )
+               ENDIF
+            ENDIF
+
+            cCommand := cBin_Lib + " " + cOpt_Lib
+
+            IF s_lTRACE
+               OutStd( "hbmk: Lib command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               IF ! Empty( cScriptFile )
+                  OutStd( "hbmk: Lib script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+               ENDIF
+            ENDIF
+
+            IF ( tmp := hb_run( cCommand ) ) != 0
+               OutErr( "hbmk: Error: Running lib command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               nErrorLevel := 7
+            ENDIF
+
+            IF ! Empty( cScriptFile )
+               FErase( cScriptFile )
+            ENDIF
+
+         CASE lStopAfterCComp .AND. lCreateDyn .AND. ! Empty( cBin_Dyn )
+
+            /* Lib creation (dynamic) */
+
+            /* Order is significant */
+            cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cDynObjPrefix ) ) )
+            cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ListCook( ArrayJoin( ListDirExt( s_aRESSRC, "", cResExt ), s_aRESCMP ), cResPrefix ) ) )
+            cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( s_aLIB ) )
+            cOpt_Dyn := StrTran( cOpt_Dyn, "{FD}"  , GetEnv( "HB_USER_DFLAGS" ) + " " + ArrayToList( s_aOPTD ) )
+            cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cDynLibExt ) ) )
+            cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, ".map" ) ) )
+            cOpt_Dyn := StrTran( cOpt_Dyn, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
+            cOpt_Dyn := StrTran( cOpt_Dyn, "{DB}"  , s_cHB_BIN_INSTALL )
+
+            cOpt_Dyn := AllTrim( cOpt_Dyn )
+
+            /* Handle moving the whole command line to a script, if requested. */
+            IF "{SCRIPT}" $ cOpt_Dyn
+               fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
+               IF fhnd != F_ERROR
+                  FWrite( fhnd, StrTran( cOpt_Dyn, "{SCRIPT}", "" ) )
+                  FClose( fhnd )
+                  cOpt_Dyn := "@" + cScriptFile
+               ELSE
+                  OutErr( "hbmk: Warning: Dynamic lib link script couldn't be created, continuing in command line." + hb_osNewLine() )
+               ENDIF
+            ENDIF
+
+            cCommand := cBin_Dyn + " " + cOpt_Dyn
+
+            IF s_lTRACE
+               OutStd( "hbmk: Dynamic lib link command:" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               IF ! Empty( cScriptFile )
+                  OutStd( "hbmk: Dynamic lib link script:" + hb_osNewLine() + hb_MemoRead( cScriptFile ) + hb_osNewLine() )
+               ENDIF
+            ENDIF
+
+            IF ( tmp := hb_run( cCommand ) ) != 0
+               OutErr( "hbmk: Error: Running dynamic lib link command. " + hb_ntos( tmp ) + ":" + hb_osNewLine() + cCommand + hb_osNewLine() )
+               nErrorLevel := 7
+            ENDIF
+
+            IF ! Empty( cScriptFile )
+               FErase( cScriptFile )
+            ENDIF
+
+         ENDCASE
       ENDIF
 
       /* Cleanup */
@@ -1895,7 +2032,7 @@ FUNCTION Main( ... )
          FErase( s_cCSTUB )
       ENDIF
       AEval( ListDirExt( s_aPRG, "", ".c" ), {|tmp| FErase( tmp ) } )
-      IF ! lStopAfterCComp
+      IF ! lStopAfterCComp .OR. lCreateLib .OR. lCreateDyn
          IF ! Empty( cResExt )
             AEval( ListDirExt( s_aRESSRC, "", cResExt ), {|tmp| FErase( tmp ) } )
          ENDIF
@@ -2846,6 +2983,8 @@ STATIC PROCEDURE ShowHelp( lLong )
       "  -hbcc             stop after creating the object files and accept raw C flags" ,;
       "                    create link/copy hbmk to hbcc for the same effect" ,;
       "  -hblnk            accept raw linker flags" ,;
+      "  -hblib            create static library (experimental)" ,;
+      "  -hbdyn            create dynamic library (experimental)" ,;
       "" ,;
       "  -arch=<arch>      assume specific architecure. Same as HB_ARCHITECTURE envvar" ,;
       "  -comp=<comp>      use specific compiler. Same as HB_COMPILER envvar" ,;
