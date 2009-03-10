@@ -11,7 +11,7 @@
  *
  */
 
-#define N_TESTS 54
+#define N_TESTS 55
 #define N_LOOPS 1000000
 #define ARR_LEN 16
 
@@ -115,7 +115,7 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
    local nMT, cExclude, lScale, cParam, cMemTests, lSyntax, i, j
 
    lSyntax := lScale := .f.
-   cMemTests := "029 030 023 025 027 040 041 043 052 053 019 022 031 032 054 "
+   cMemTests := "029 030 023 025 027 040 041 043 052 053 019 022 031 032 054 055 "
    cExclude := ""
    nMT := 0
    for j := 1 to len( aParams )
@@ -339,7 +339,9 @@ TEST t052 CODE x := f4()
 
 TEST t053 CODE x := f5()
 
-TEST t054 WITH c := dtos( date() ) CODE f_prv( c )
+TEST t054 CODE x := space(16)
+
+TEST t055 WITH c := dtos( date() ) CODE f_prv( c )
 
 /*** end of tests ***/
 

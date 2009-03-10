@@ -164,7 +164,6 @@ static HB_GARBAGE_EXTERN_PTR s_pSweepExtern = NULL;
 
 static void  hb_gcUnregisterSweep( void * Cargo );
 
-
 static void hb_gcLink( HB_GARBAGE_PTR *pList, HB_GARBAGE_PTR pAlloc )
 {
    if( *pList )
@@ -227,10 +226,7 @@ void hb_gcFree( void *pBlock )
       if( !( pAlloc->used & HB_GC_DELETE ) )
       {
          HB_GC_LOCK
-         if( pAlloc->locked )
-            hb_gcUnlink( &s_pLockedBlock, pAlloc );
-         else
-            hb_gcUnlink( &s_pCurrBlock, pAlloc );
+         hb_gcUnlink( pAlloc->locked ? &s_pLockedBlock : &s_pCurrBlock, pAlloc );
          HB_GC_UNLOCK
 
          if( pAlloc->flags & HB_GC_USERSWEEP )
@@ -282,10 +278,7 @@ void hb_gcRefFree( void * pBlock )
              * if cleanup function activate GC
              */
             HB_GC_LOCK
-            if( pAlloc->locked )
-               hb_gcUnlink( &s_pLockedBlock, pAlloc );
-            else
-               hb_gcUnlink( &s_pCurrBlock, pAlloc );
+            hb_gcUnlink( pAlloc->locked ? &s_pLockedBlock : &s_pCurrBlock, pAlloc );
             HB_GC_UNLOCK
 
             pAlloc->used |= HB_GC_DELETE;
@@ -717,8 +710,8 @@ void hb_gcCollectAll( BOOL fForce )
          if( s_pCurrBlock->used == s_uUsedFlag )
          {
             pDelete = s_pCurrBlock;
-            s_pCurrBlock->used |= HB_GC_DELETE | HB_GC_DELETELST;
-            hb_gcUnlink( &s_pCurrBlock, s_pCurrBlock );
+            pDelete->used |= HB_GC_DELETE | HB_GC_DELETELST;
+            hb_gcUnlink( &s_pCurrBlock, pDelete );
             hb_gcLink( &s_pDeletedBlock, pDelete );
          }
          else
@@ -757,13 +750,13 @@ void hb_gcCollectAll( BOOL fForce )
          do
          {
             pDelete = s_pDeletedBlock;
-            hb_gcUnlink( &s_pDeletedBlock, s_pDeletedBlock );
+            hb_gcUnlink( &s_pDeletedBlock, pDelete );
             if( hb_xRefCount( pDelete ) != 0 )
             {
-               pAlloc->used = s_uUsedFlag;
-               pAlloc->locked = 0;
+               pDelete->used = s_uUsedFlag;
+               pDelete->locked = 0;
                HB_GC_LOCK
-               hb_gcLink( &s_pCurrBlock, pAlloc );
+               hb_gcLink( &s_pCurrBlock, pDelete );
                HB_GC_UNLOCK
                if( hb_vmRequestQuery() == 0 )
                   hb_errRT_BASE( EG_DESTRUCTOR, 1301, NULL, "Reference to freed block", 0 );
@@ -809,7 +802,7 @@ void hb_gcReleaseAll( void )
       {
          HB_TRACE( HB_TR_INFO, ( "Release %p", s_pCurrBlock ) );
          pDelete = s_pCurrBlock;
-         hb_gcUnlink( &s_pCurrBlock, s_pCurrBlock );
+         hb_gcUnlink( &s_pCurrBlock, pDelete );
          HB_GARBAGE_FREE( pDelete );
 
       } while ( s_pCurrBlock );
