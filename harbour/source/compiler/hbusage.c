@@ -100,7 +100,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
            "\n          %cs               syntax check only",
 /* TODO:   "\n          %ct<path>         path for temp file creation", */
            "\n          %cu[<file>]       use command def set in <file> (or none)",
-           "\n          %cu+[<file>]      #include <file>",
+           "\n          %cu+<file>        add command def set from <file>",
            "\n          %cundef:<id>      #undef <id>",
            "\n          %cv               variables are assumed M->",
            "\n          %cw[<level>]      set warning level number (0..3, default 1)",

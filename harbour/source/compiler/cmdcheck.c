@@ -612,6 +612,8 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                      HB_COMP_PARAM->szStdChExt[ HB_COMP_PARAM->iStdChExt++ ] =
                            hb_strdup( s + 2 );
                   }
+                  else
+                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                }
                else
                {

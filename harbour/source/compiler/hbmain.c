@@ -102,13 +102,13 @@ int hb_compMain( int argc, char * const argv[], BYTE ** pBufPtr, ULONG * pulSize
       {
          hb_compOutStd( HB_COMP_PARAM, "\n" );
          hb_verBuildInfo();
-         hb_comp_free( HB_COMP_PARAM );
-         return iStatus;
       }
 
       if( HB_COMP_PARAM->fCredits )
-      {
          hb_compPrintCredits( HB_COMP_PARAM );
+
+      if( HB_COMP_PARAM->fBuildInfo || HB_COMP_PARAM->fCredits )
+      {
          hb_comp_free( HB_COMP_PARAM );
          return iStatus;
       }
@@ -147,7 +147,7 @@ int hb_compMain( int argc, char * const argv[], BYTE ** pBufPtr, ULONG * pulSize
       }
    }
 
-   if( ! bAnyFiles && ! HB_COMP_PARAM->fQuiet )
+   if( ! bAnyFiles && ! HB_COMP_PARAM->fQuiet && ! HB_COMP_PARAM->fExit )
    {
       hb_compPrintUsage( HB_COMP_PARAM, argv[ 0 ] );
       iStatus = EXIT_FAILURE;

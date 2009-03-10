@@ -148,7 +148,7 @@ static const char * hb_pp_szErrors[] =
    "Bad filename in #include",                                          /* C3008 */
    "Too many nested #includes",                                         /* C3009 */
    "Invalid name follows #",                                            /* C3010 */
-   "Can't open standard rule file '%s'"                                 /* C3011 */
+   "Can't open standard rule file '%s'",                                /* C3011 */
    "Write error to intermediate file '%s'"                              /* C3029 */
 };
 
