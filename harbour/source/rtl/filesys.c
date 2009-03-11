@@ -964,13 +964,11 @@ BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plMillisec )
          struct tm ft;
 
          ftime = sStat.st_mtime;
-#   if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-         defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
-       ! defined( HB_OS_DARWIN_5 )
+#  if defined( HB_HAS_LOCALTIME_R )
          localtime_r( &ftime, &ft );
-#   else
+#  else
          ft = *localtime( &ftime );
-#   endif
+#  endif
 
          *plJulian = hb_dateEncode( ft.tm_year + 1900, ft.tm_mon + 1, ft.tm_mday );
          *plMillisec = hb_timeStampEncode( ft.tm_hour, ft.tm_min, ft.tm_sec, 0 );
@@ -1204,13 +1202,11 @@ BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )
             time_t current_time;
 
             current_time = time( NULL );
-#   if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-         defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
-       ! defined( HB_OS_DARWIN_5 )
+#  if defined( HB_HAS_LOCALTIME_R )
             localtime_r( &current_time, &new_value );
-#   else
+#  else
             new_value = *localtime( &current_time );
-#   endif
+#  endif
          }
          else
             memset( &new_value, 0, sizeof( new_value ) );
@@ -1228,13 +1224,11 @@ BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )
             new_value.tm_sec = iSecond;
          }
          tim = mktime( &new_value );
-#   if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-         defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
-       ! defined( HB_OS_DARWIN_5 )
+#  if defined( HB_HAS_LOCALTIME_R )
          gmtime_r( &tim, &new_value );
-#   else
+#  else
          new_value = *gmtime( &tim );
-#   endif
+#  endif
          buf.actime = buf.modtime = mktime( &new_value );
          fResult = utime( ( char * ) pszFileName, &buf ) == 0;
       }

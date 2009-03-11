@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-11 17:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdate.h
+  * harbour/source/common/hbgete.c
+  * harbour/source/common/hbdate.c
+  * harbour/source/rtl/seconds.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/contrib/hbct/files.c
+  * harbour/contrib/xhb/filestat.c
+  * harbour/contrib/hbmzip/hbmzip.c
+  * harbour/contrib/hbtip/utils.c
+  * harbour/contrib/examples/uhttpd/uhttpdc.c
+    * cleaned feature test macros usage
+
 2009-03-11 16:27 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbdate.c
   * harbour/source/compiler/cmdcheck.c

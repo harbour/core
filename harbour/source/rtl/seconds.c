@@ -114,13 +114,11 @@ void hb_dateTimeStamp( LONG * plJulian, LONG * plMilliSec )
       millisecs = tb.millitm;
 #  endif
 
-#if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-      defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
-    ! defined( HB_OS_DARWIN_5 )
+#  if defined( HB_HAS_LOCALTIME_R )
       localtime_r( &seconds, &st );
-#else
+#  else
       st = *localtime( &seconds );
-#endif
+#  endif
       *plJulian = hb_dateEncode( st.tm_year + 1900, st.tm_mon + 1, st.tm_mday );
       *plMilliSec = ( ( st.tm_hour * 60 + st.tm_min ) * 60 + st.tm_sec ) * 1000 +
                     millisecs;
@@ -185,13 +183,11 @@ double hb_dateSeconds( void )
       msecs = ( double ) tb.millitm / 1000.0;
 #  endif
 
-#if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-      defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
-    ! defined( HB_OS_DARWIN_5 )
+#  if defined( HB_HAS_LOCALTIME_R )
       localtime_r( &seconds, &oTime );
-#else
+#  else
       oTime = *localtime( &seconds );
-#endif
+#  endif
       return ( oTime.tm_hour * 3600 ) +
              ( oTime.tm_min * 60 ) +
                oTime.tm_sec + msecs;

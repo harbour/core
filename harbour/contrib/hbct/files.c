@@ -331,9 +331,7 @@ HB_FUNC( SETFDATI )
             time_t current_time;
 
             current_time = time( NULL );
-#if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-      defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
-    ! defined( HB_OS_DARWIN_5 )
+#if defined( HB_HAS_LOCALTIME_R )
             localtime_r( &current_time, &new_value );
 #   else
             new_value = *localtime( &current_time );

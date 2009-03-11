@@ -60,6 +60,7 @@
 #define HB_OS_WIN_USED
 
 #include "hbapi.h"
+#include "hbdate.h"
 
 #if !defined( HB_OS_WIN )
    #include <time.h>
@@ -154,22 +155,17 @@ HB_FUNC( HB_UTCOFFSET )
 
       nLen = strlen( szRet );
    }
-#elif defined( HB_OS_UNIX ) && _POSIX_C_SOURCE >= 199506L && !defined( HB_OS_DARWIN_5 )
-   {
-      struct tm tmTime;
-      time_t current;
-
-      time( &current );
-      localtime_r( &current , &tmTime );
-
-      nLen = strftime( szRet, 6, "%z", &tmTime );
-   }
 #else
    {
       struct tm tmTime;
       time_t current;
 
-      memcpy( ( void * ) &tmTime, ( void * ) localtime( &current ), sizeof( tmTime ) );
+      time( &current );
+#  if defined( HB_HAS_LOCALTIME_R )
+      localtime_r( &current, &tmTime );
+#  else
+      tmTime = *localtime( &current );
+#  endif
       nLen = strftime( szRet, 6, "%z", &tmTime );
    }
 #endif

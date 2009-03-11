@@ -260,40 +260,31 @@ int hb_dateDOW( int iYear, int iMonth, int iDay )
 void hb_dateToday( int * piYear, int * piMonth, int * piDay )
 {
 #if defined(HB_OS_WIN)
+   {
+      SYSTEMTIME st;
 
-   SYSTEMTIME st;
-   GetLocalTime( &st );
+      GetLocalTime( &st );
 
-   *piYear  = st.wYear;
-   *piMonth = st.wMonth;
-   *piDay   = st.wDay;
-
-#elif ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-        defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
-      ! defined( HB_OS_DARWIN_5 )
-
-   time_t t;
-   struct tm st;
-
-   time( &t );
-   localtime_r( &t, &st );
-
-   *piYear  = st.tm_year + 1900;
-   *piMonth = st.tm_mon + 1;
-   *piDay   = st.tm_mday;
-
+      *piYear  = st.wYear;
+      *piMonth = st.wMonth;
+      *piDay   = st.wDay;
+   }
 #else
+   {
+      time_t t;
+      struct tm st;
 
-   time_t t;
-   struct tm * oTime;
+      time( &t );
+#  if defined( HB_HAS_LOCALTIME_R )
+      localtime_r( &t, &st );
+#  else
+      st = *localtime( &t );
+#  endif
 
-   time( &t );
-   oTime = localtime( &t );
-
-   *piYear  = oTime->tm_year + 1900;
-   *piMonth = oTime->tm_mon + 1;
-   *piDay   = oTime->tm_mday;
-
+      *piYear  = st.tm_year + 1900;
+      *piMonth = st.tm_mon + 1;
+      *piDay   = st.tm_mday;
+   }
 #endif
 }
 
@@ -307,26 +298,17 @@ void hb_dateTimeStr( char * pszTime )
       GetLocalTime( &st );
       hb_snprintf( pszTime, 9, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
    }
-#elif ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-        defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
-      ! defined( HB_OS_DARWIN_5 )
-   {
-      time_t t;
-      struct tm st;
-
-      time( &t );
-      localtime_r( &t, &st );
-
-      hb_snprintf( pszTime, 9, "%02d:%02d:%02d", st.tm_hour, st.tm_min, st.tm_sec );
-   }
 #else
    {
       time_t t;
-      struct tm * oTime;
-
+      struct tm st;
       time( &t );
-      oTime = localtime( &t );
-      hb_snprintf( pszTime, 9, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
+#  if defined( HB_HAS_LOCALTIME_R )
+      localtime_r( &t, &st );
+#  else
+      st = *localtime( &t );
+#  endif
+      hb_snprintf( pszTime, 9, "%02d:%02d:%02d", st.tm_hour, st.tm_min, st.tm_sec );
    }
 #endif
 }

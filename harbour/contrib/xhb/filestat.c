@@ -153,7 +153,7 @@ static BOOL hb_fsFileStats(
       *llSize = ( HB_FOFFSET ) statbuf.st_size;
 
       ftime = statbuf.st_mtime;
-#if _POSIX_C_SOURCE >= 199506L && !defined( HB_OS_DARWIN_5 )
+#if defined( HB_HAS_LOCALTIME_R )
       ptms = localtime_r( &ftime, &tms );
 #else
       ptms = localtime( &ftime );
@@ -164,7 +164,7 @@ static BOOL hb_fsFileStats(
       *lcTime = ptms->tm_hour*3600 + ptms->tm_min * 60 + ptms->tm_sec;
 
       ftime = statbuf.st_atime;
-#if _POSIX_C_SOURCE >= 199506L && !defined( HB_OS_DARWIN_5 )
+#if defined( HB_HAS_LOCALTIME_R )
       ptms = localtime_r( &ftime, &tms );
 #else
       ptms = localtime( &ftime );

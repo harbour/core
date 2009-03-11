@@ -709,13 +709,11 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                raw_attr = sStat.st_mode;
 
                ftime = sStat.st_mtime;
-#   if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-         defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
-       ! defined( HB_OS_DARWIN_5 )
+#  if defined( HB_HAS_LOCALTIME_R )
                localtime_r( &ftime, &lt );
-#   else
+#  else
                lt = *localtime( &ftime );
-#   endif
+#  endif
 
                nYear  = lt.tm_year + 1900;
                nMonth = lt.tm_mon + 1;

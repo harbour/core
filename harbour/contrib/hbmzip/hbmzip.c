@@ -755,11 +755,11 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
                       ( ( statbuf.st_mode & S_IWUSR ) ? 0x00800000 : 0 ) |
                       ( ( statbuf.st_mode & S_IRUSR ) ? 0x01000000 : 0 );
 
-#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
-         st = *localtime( &statbuf.st_mtime );
-#   else
+#  if defined( HB_HAS_LOCALTIME_R )
          localtime_r( &statbuf.st_mtime, &st );
-#   endif
+#  else
+         st = *localtime( &statbuf.st_mtime );
+#  endif
 
          zfi.tmz_date.tm_sec = st.tm_sec;
          zfi.tmz_date.tm_min = st.tm_min;
@@ -1144,11 +1144,11 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
       st.tm_year = ufi.tmu_date.tm_year - 1900;
 
       tim = mktime( &st );
-#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
-      st = *gmtime( &tim );
-#   else
+#  if defined( HB_HAS_LOCALTIME_R )
       gmtime_r( &tim, &st );
-#   endif
+#  else
+      st = *gmtime( &tim );
+#  endif
       utim.actime = utim.modtime = mktime( &st );
 
       utime( szName, &utim );

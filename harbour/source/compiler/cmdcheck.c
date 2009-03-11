@@ -106,9 +106,7 @@ static ULONG PackDateTime( void )
    struct tm tm;
 
    time( &t );
-#if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-      defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
-    ! defined( HB_OS_DARWIN_5 )
+#if defined( HB_HAS_LOCALTIME_R )
    localtime_r( &t, &tm );
 #else
    tm = *localtime( &t );

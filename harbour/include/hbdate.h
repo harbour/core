@@ -82,6 +82,14 @@ extern HB_EXPORT void   hb_dateStrGet( const char * szDate, int * piYear, int * 
 extern HB_EXPORT char * hb_dateDecStr( char * szDate, long lJulian );
 extern HB_EXPORT long   hb_dateEncStr( const char * szDate );
 
+#if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
+      defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
+      defined( HB_OS_SUNOS ) ) && \
+   ! defined( HB_OS_DARWIN_5 ) && !defined( HB_HAS_LOCALTIME_R )
+#  define HB_HAS_LOCALTIME_R
+#endif
+
+
 HB_EXTERN_END
 
 #endif /* HB_DATE_H_ */

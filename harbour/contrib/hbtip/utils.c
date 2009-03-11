@@ -171,13 +171,12 @@ HB_FUNC( TIP_TIMESTAMP )
       ulHour = 0;
    }
 
-
    /* init time structure anyway */
    time( &current );
-#if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
-   memcpy( (void *) &tmTime, (void *) localtime( &current ), sizeof(tmTime) );
-#else
+#if defined( HB_HAS_LOCALTIME_R )
    localtime_r( &current , &tmTime );
+#else
+   tmTime = *localtime( &current );
 #endif
 
    if ( pDate )
