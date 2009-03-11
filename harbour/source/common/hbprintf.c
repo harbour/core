@@ -194,7 +194,7 @@ optimized.
         defined( _XOPEN_SOURCE ) )
 
    /* use BSD floating point functions */
-#  ifdef __NO_LONGDOUBLE__
+#  if defined( __NO_LONGDOUBLE__ ) || defined( HB_OS_SUNOS )
 #     define HB_NUMTYPE( v, d )  do { \
                                     v = ( finite( d ) ? 0 : \
                                           ( isnan( d ) ? _HB_NUM_NAN : \

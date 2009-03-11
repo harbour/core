@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-11 22:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbgete.c
+    * disabled unsetenv() from Watcom builds - looks that this function
+      exists only in OpenWatcom header files.
+
+  * harbour/source/common/hbprintf.c
+    * do not use some FL functions which operates on long double values
+      in SunOS builds
+
 2009-03-11 17:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbdate.h
   * harbour/source/common/hbgete.c
