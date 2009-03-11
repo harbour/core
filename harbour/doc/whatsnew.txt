@@ -39,11 +39,56 @@ General
 - #define HB_FM_WIN32_ALLOC renamed to HB_FM_WIN_ALLOC.
 - Protected incompatible changes with HB_LEGACY_LEVEL2.
   (HB_SUCCESS, HB_FAILURE, HB_ERRCODE, HB_WINCE, HB_OS_WIN_32*,
-  __RDDGETTEMPALIAS(), __HRB*())
+  __RDDGETTEMPALIAS(), __HRB*(), some class functions,
+  Harbour -go option)
   These features are still available, and will be removed
   in next major version (Harbour 1.2). To test your code for
   compatibility, you can turn it off manually by #defining
   HB_LEGACY_OFF. (HB_USER_CFLAGS=-DHB_LEGACY_OFF)
+- New Harbour Project homepage, thanks for Vailton Renato.
+  http://www.harbour-project.org/
+- GNU Make system now supports parallel builds.
+  (needs GNU Make newer than 3.79.1)
+- GNU Make system allows to install in Harbour source tree on all platforms.
+- GNU Make system for bcc and msvc options synced with non-GNU build methods.
+- GNU Make system no longer needs -r parameter.
+- GNU Make system will now generate hbfm and hbfmmt lib for all compilers.
+  Added few more similar unification cleanups.
+- Implemented .dll generation for msvc, msvc64, bcc and owatcom when using
+  GNU Make system.
+- Added support for Open Watcom 1.8 (it's recommended over 1.7).
+- Added support for import lib generation when using GNU Make with msvc and vcc.
+  Enable it with 'set HB_DIR_IMPLIB=yes' plus set HB_DIR_* envvars.
+- -mtune=pentiumpro optimization is now default for mingw/cygwin.
+- Cleaned new mingw 4.3.3 warnings.
+- Certain features will require Windows NT or upper when building
+  Harbour on Windows, so this is now a requirement for a proper build.
+- hb-mkslib.sh renamed to hb-mkdyn.sh. Old name stil works, but it's
+  now deprecated.
+- x64 msvc compiler got a distinct HB_COMPILER value: msvc64.
+- msvcce compiler made compatible with older MSVC/WinCE versions.
+- Added support for Intel(R) C++ compiler on Linux and Windows.
+- Added new INSTALL document giving a quick describing of the build
+  process on all supported platforms and compilers.
+- Several steps to make the build process simpler and requiring the
+  less amount of preparation.
+- Fixed missing owatcom support for HB_USER_LDFLAGS.
+- Added support for MSVC IA64 mode. (untested)
+- Added support for HB_CONTRIBLIBS=no to disable building of all contribs.
+- Added ability to generate Windows installer and .zip distribution file.
+- Fully transitioned to GNU Make system for all compilers.
+  Now msvc, msvcce and bcc builds need GNU Make, see INSTALL for more
+  information. "non-GNU" make systems got deleted from the source tree.
+- Cygwin renamed from gcc to cygwin. (NOTE: Cygwin doesn't work since
+  some versions, and support may be removed in the future.)
+- Fixed #pragma -k? options to be case-insensitive.
+- Explicitly bind system libraries with harbour shared library.
+  RPM/DEB packages should automatically detect these dependencies.
+- Warning cleanup (minors) for Intel compiler.
+- Pelles C workarounds for compiler bugs.
+- Added support for extended definition files in Harbour compiler
+  switches: -u+<file>
+- Fixed memory leak when repeated -u[<file>] options are used.
 
 Core
 =============================
@@ -84,17 +129,30 @@ Core
   HB_DISPOUTATBOX() similar to HB_DISPOUTAT() but for drawing chars.
   HB_FGETATTR( <cFileName>, @<nAttr> ) -> <lSuccess>
   HB_FSETATTR( <cFileName>, <nAttr> ) -> <lSuccess>
-  HB_FSETDATETIME( <cFileName>, [<dDate>], [<cTime HH:MM:SS>] ) -> <lSuccess>
+  HB_FSETDATETIME( <cFileName>, [<dDate>], [<cTime HH:MM:SS>], [<nMilliSec>] ) -> <lSuccess>
+  HB_FGETDATETIME()
   HB_WILDMATCHI() like HB_WILDMATCH() but case-insentitive.
   HB_CDPSELECT() same as HB_SETCODEPAGE() (please upgrade to new function name).
   HB_CDPUNIID( <cHarbourCP> ) -> <cCPName>
   HB_GTINFO( HB_GTI_CARGO[, <xValue ] ) -> <xPrevValue>
+  HB_DIRBASE() -> <cBaseDirectory>
+  HB_DBCREATETEMP()/DBCREATETEMP() to create temporary tables.
+  HB_MMIDDLEDOWN/MMIDDLEDOWN() new Harbour function.
+  DBINFO( DBI_ISTEMPORARY )
+  HB_VERSION( HB_VERSION_BUILD_ARCH )
+  HB_VERSION( HB_VERSION_BUILD_COMP )
+  HB_STRFORMAT() C-like string formatting function
+    (also as C level API named hb_StrFormat())
+  HB_SETENV( <cEnvName>, [<cNewVal>] [, <lOsCP>] ) -> <lOK>
+    (also as C level API named hb_setenv())
 - Fixed UNSELECTED color updating in SetColor().
 - GTWVT, GTWIN HB_GTI_CODEPAGE support.
 - GTWVT now supports drawing chars even if the selected codepage
   doesn't support them.
 - GTWVT HB_GTI_BOXCP support.
-- Fixed TBROWSE() to display drawing chars properly.
+- GTWVT disabled K_MM*DOWN non-Clipper (and other GT) compatible mouse
+  events.
+- Fixed TBROWSE(), TPOPUP() to display drawing chars properly.
 - Fixed DISKSPACE() and HB_DISKSPACE() to return proper values
   on Darwin.
 - Fixed DIRECTORY() when called with "V" (label) parameter (on Windows).
@@ -125,8 +183,11 @@ Core
 - GTWIN fixed HB_GTI_KBDSHIFTS handling.
 - GTWVT added 'layered window' support (always enabled, except
   when in Terminal mode).
-- New compiler expression optimizations, and some fixes for rare
-  cases.
+- GTWVT fixed not to generate RTE if class is already been registered.
+- GTXWC added support for HB_GTI_PALETTE, HB_GTI_FONTSEL,
+  HB_GTI_CLOSABLE, HB_GTI_RESIZABLE.
+- GTTRM added support for HB_GTI_PALETTE.
+- New compiler expression optimizations, and some fixes for rare cases.
 - Some compiler optimizations are now enabled using new -ko switch.
 - Added array preallocation on AADD().
 - Optimization to string reallocation.
@@ -137,9 +198,105 @@ Core
   code to use HB_HRB*().
 - __RDDGETTEMPALIAS() marked as compatibility, please update your
   code to use HB_RDDGETTEMPALIAS().
+- Added hb_spFileExists() a more efficient version of hb_spFile().
+  Modified Harbour code to use the new API.
+- HSX index MT support.
+- Fixed potentially uninitialized internal HB_GT_INFO structure.
+- Using more efficient hb_fsFileExists() instead of hb_fsFile() in core.
+- Added char * hb_cmdargARGVN( int argc ).
+- HB_PROCNAME() support for symbol evaluation.
+- HB_SYMBOL_UNUSED() moved to std.ch. NOTE: This macro is no longer
+  present in common.ch so if you're overriding std.ch, make sure to add
+  this macro to your header file.
+- BIN2W(), BIN2I(), BIN2L(), I2BIN(), L2BIN(), BIN2U(), W2BIN(), U2BIN()
+  functions rewritten in a more efficient way. Previous pure GPL
+  license changed to standard Harbour license (including exception).
+- Fixed Ukrainian localization files.
+- Using local implementation of hb_snprintf() for all C level code.
+- Fixed localized date format for RU, UA, IT, BE, BG, NL, SL.
+- Added __FILE__ and __LINE__ predefined dynamic PP macros.
+- Added Windows 7 and Server 2008 R2 version detection.
+- Replaced old hbmk.bat, hbmk bash script and Harbour Make tool with
+  portable make tool written in Harbour: hbmk. This tool can create
+  a Harbour executable on any platforms using minimal effort. It autodetects
+  OS and compiler environment. Support script and parameter files,
+  can act as a linker, C compiler, Harbour compiler, static and dynamic
+  library creator, resource compiler (on Windows). Core features are
+  completed on all major platforms. Some non-mainstream features and
+  platforms may be completed later. All existing features of hbmk
+  bash script (for gcc) and of hbmk.bat are supported in this new tool,
+  and much more. Replaced Win/DOS specific .bat files with portable
+  .hbp and .hbm files.
+- Added all missing non-multibyte codepages.
+- LISTBOX() doesn't modify _SET_EXACT settings anymore in :Find*() methods.
+- HVM pcode evaluation speed improvement.
+- Fixed _SET_EXACT handling in core.
+- hb_gtInfo( HB_GTI_PALLETE ) now uses zero based color indexes in
+  core (GTWVT, GTXWC). This creates a small incompatibility with older
+  version. Also notice that GTWVG still uses 1-based indexes for
+  compatibility.
+- Fixed very old bug showing wrong default status for -n option on
+  Harbour help screen.
+- Added support for reading FoxPro .mem files - Clipper compatibility.
+- Fixed very old bug which disabled writing to .mem files strings
+  longer then 32Kb.
+- hbrun now accepts .dbf file as paramater, which it will open after startup.
+- hbrun now accepts -v option which makes it display its own version after
+  startup.
+- Borland C++ compiler is now called 'bcc' instead of 'bcc32'. Please update
+  your system.
+- Removed almost all DOS/WIN specific build/make batch files.
+- Fixed __M[V]CLEAR()/ __M[V]RESTORE() to be exactly Clipper compatible
+  and do not release PUBLIC GetList value.
+- bcc compiler in GNU Make now supports older Windows NT with limited
+  command line length.
+- Removed support for following compilers:
+  dos/bcc16, dos/rsx32, win/dmc, win/rsxnt, os2/icc, win/icc (IBM).
+- Fixed static variables indexes in the generated PCODE when static
+  variables are declared inside extended codeblocks - in some cases
+  wrong PCODE was generated.
+- Fixed initialization PCODE for thread static variables declared
+  inside extended codeblocks.
+- Fixed modulename generated for debugger to always contain function name
+  part for extended codeblock declared as file wide static variables.
+  In such case "(_INITSTATICS)" is used as function name.
+  Without it debugger does not register entering such codeblocks and
+  GPFs.
+- Added support for automatic adding 1-st function with the same name
+  as compiled .prg file if some code statements are used before 1-st
+  function/procedure declared explicitly in .prg file. Such mode can
+  be enabled by -n2 new harbour compiler switch. This switch is used
+  by default by new hbmk tool.
+- speedtst updated to work with CA-Cl*pper.
+- Added protection against pushing new private variable on HVM stack
+  if such private variable is already created by the same function.
+  Clipper also has such protection.
+- Respect HB_START_PROCEDURE in all builds if such public
+  function/procedure exists.
+- Disabled HB_MSC_STARTUP in C++ MSVC builds.
+- Forbid some usage of __clsModMsg() and unblock some others
+  It should make some xHarbour users using OVERRIDE METHOD happy
+  but please remember it's still undocumented and unsupported
+  functionality - use for your own risk.
+- Fixed typo in HB_INETDATAREADY() - the second parameter (timeout)
+  was ignored.
+- Changed the NOT operator precedence - it should be bigger then
+  logical .and./.or. operators in #if expressions.
+- Fixed HB_REGEXMATCH(). Now the HAS/LIKE mode can be controlled
+  by 5th logical parameter (was 3rd), so 3rd parameter is solely
+  controlling case-sensitivity as indicated in the documentation.
+  Users are recommended to use HB_REGEXHAS() and HB_REGEXLIKE()
+  functions as unambiguous alternatives, which work equally
+  well on all Harbour versions. HB_REGEXMATCH() is now deprecated,
+  but kept for compatibility.
+- ACHOICE() fixed to redisplay itself when exiting with <Esc> or
+  equivalent.
 
 Contrib
 =============================
+- hbfimage fixed to compile on Linux and Darwin.
+- hbblat new Blat interface class for Windows
+  (Contributed by Francesco Saverio Giudice).
 - hbmzip fixed GPF in HB_ZIPDELETEFILE() when file has comment.
 - hbmzip fixed handling attributes in HB_ZIPFILECREATE().
 - hbmzip fixed timestamps stored in .zip files.
@@ -155,11 +312,15 @@ Contrib
 - hbct unbuffered drawing speed improvement in windowing code.
 - hbct DIRNAME() fixed.
 - hbct other fixes.
+- hbct FILESEEK(), FILEATTR(), FILESIZE(), FILEDATE() now MT compatible.
+- hbct added support for thread local current window pointer in CT Windows.
+- hbwin made steps towards creating a unified Windows API wrapper layer.
 - Added hbcrypt, hbssl and rddsql (with mysql, pgsql, fbsql plugins)
   to contribs.
 - hbct windowing extended with new low level API, better shadow
   handling.
-- gtwvg improvements. Xbase++ compatible UI objects.
+- gtwvg lots of improvements.
+- gtwvg Xbase++ compatible UI objects.
 - hbw32 library renamed to hbwin.
 - hbwin added WIN_ABORTDOC(), WIN_RUNDETACHED(), WIN_SHELLEXECUTE(),
   WIN_LOADRESOURCE().
@@ -206,13 +367,33 @@ Contrib
   - WIN32_TEXTOUT()               -> WIN_TEXTOUT()
   - WIN32PRN class                -> WIN_PRN class
   - WIN32BMP class                -> WIN_BMP class
-- hbct GPF and wrong RTE message fixed in:
+- hbct GPF and wrong RTE messages fixed in:
   CHARADD(), CHARSUB(), CHARAND(), CHAROR(), CHARXOR()
 - hbct string optimizations in thrown RTEs.
 - hbziparc fixed <acFiles> behavior if the parameter is not passed.
 - hbhpdf added HPDF_VERSION_TEXT() to replace former macro
   with the same name.
 - hbhpdf fixed HPDF_SETINFODATEATTR() function.
+- Added experimental terminal server written in Harbour. Find it
+  in contrib/examples.
+- hbgt now properly checks for package version and includes
+  feature accordingly.
+- hbwin added WAPI_GETCOMMANDLINE(), WIN_GETCOMMANDLINEPARAM(),
+  WAPI_GETLASTERROR(), WAPI_SETLASTERROR(), WAPI_SETERRORMODE().
+- hbwhat removed from contrib list and moved to examples instead.
+- xhb OVERRIDE / EXTEND CLASS emulation in xhbcls.ch header.
+  (this feature is there to help xhb compatibility, but can break
+  inheritance scheme and internal class definitions in both
+  compilers)
+- xhb added DBF2TXT() with critical fixes.
+- xhb added HB_REGEXREPLACE().
+- hbwin WINPORTWRITE() GPF when wrong parameter type is passed.
+- Added Darwin/MacPorts support for following contribs:
+  gtalleg, hbmysql, hbpgsql, sddmy, sddpg, hbfimage.
+- hbtpathy now builds on Darwin.
+- xhb disabled dangerous bitop compatibility macros in hbcompat.ch.
+  Enable them with #define XHB_BITOP. Or even better to change code
+  to use HB_BIT*() functions natively.
 
 Known build issues
 =============================
@@ -226,9 +407,7 @@ Known build issues
   normal in this non-Harbour code.
 - Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions
   won't work.
-- gtalleg, hbwhat contrib may not compile on all platforms/compilers.
-- hbcurl won't build when using DMC and libcurl 7.19.0.
-  Earlier libcurl versions build okay.
+- gtalleg contrib may not compile on all platforms/compilers.
 
 
 Version 1.0.1 (2008-09-10)
