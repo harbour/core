@@ -268,7 +268,9 @@ void hb_dateToday( int * piYear, int * piMonth, int * piDay )
    *piMonth = st.wMonth;
    *piDay   = st.wDay;
 
-#elif defined( HB_OS_UNIX ) && _POSIX_C_SOURCE >= 199506L && !defined( HB_OS_DARWIN_5 )
+#elif ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
+        defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
+      ! defined( HB_OS_DARWIN_5 )
 
    time_t t;
    struct tm st;
@@ -305,7 +307,9 @@ void hb_dateTimeStr( char * pszTime )
       GetLocalTime( &st );
       hb_snprintf( pszTime, 9, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
    }
-#elif defined( HB_OS_UNIX ) && _POSIX_C_SOURCE >= 199506L && !defined( HB_OS_DARWIN_5 )
+#elif ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
+        defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
+      ! defined( HB_OS_DARWIN_5 )
    {
       time_t t;
       struct tm st;

@@ -95,8 +95,8 @@
 #if !defined( _LARGEFILE64_SOURCE )
 #  define _LARGEFILE64_SOURCE
 #endif
-#if !defined( _XOPEN_SOURCE )
-#  define _XOPEN_SOURCE 500
+#if !defined( _GNU_SOURCE )
+#  define _GNU_SOURCE
 #endif
 
 /* OS2 */
@@ -106,8 +106,6 @@
 
 /* Windows */
 #define HB_OS_WIN_USED
-
-#include <string.h>
 
 #include "hbapi.h"
 #include "hbvm.h"
@@ -205,11 +203,11 @@
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * define and efectively enables lseek64/flock64/ftruncate64 functions
+       * defined and efectively enables lseek64/flock64/ftruncate64 functions
        * on 32bit machines.
        */
       #define HB_USE_LARGEFILE64
-   #elif defined( HB_OS_HPUX ) && defined( O_LARGEFILE )
+   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE ) && ! defined( __WATCOMC__ )
       #define HB_USE_LARGEFILE64
    #endif
 #endif
@@ -966,10 +964,12 @@ BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plMillisec )
          struct tm ft;
 
          ftime = sStat.st_mtime;
-#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
-         ft = *localtime( &ftime );
-#   else
+#   if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
+         defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
+       ! defined( HB_OS_DARWIN_5 )
          localtime_r( &ftime, &ft );
+#   else
+         ft = *localtime( &ftime );
 #   endif
 
          *plJulian = hb_dateEncode( ft.tm_year + 1900, ft.tm_mon + 1, ft.tm_mday );
@@ -1204,10 +1204,12 @@ BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )
             time_t current_time;
 
             current_time = time( NULL );
-#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
-            new_value = *localtime( &current_time );
-#   else
+#   if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
+         defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
+       ! defined( HB_OS_DARWIN_5 )
             localtime_r( &current_time, &new_value );
+#   else
+            new_value = *localtime( &current_time );
 #   endif
          }
          else
@@ -1226,10 +1228,12 @@ BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )
             new_value.tm_sec = iSecond;
          }
          tim = mktime( &new_value );
-#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
-         new_value = *gmtime( &tim );
-#   else
+#   if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
+         defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
+       ! defined( HB_OS_DARWIN_5 )
          gmtime_r( &tim, &new_value );
+#   else
+         new_value = *gmtime( &tim );
 #   endif
          buf.actime = buf.modtime = mktime( &new_value );
          fResult = utime( ( char * ) pszFileName, &buf ) == 0;

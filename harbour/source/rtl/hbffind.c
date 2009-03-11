@@ -137,9 +137,6 @@
 
 #elif defined(HB_OS_UNIX)
 
-   #ifndef __USE_BSD
-      #define __USE_BSD
-   #endif
    #include <sys/types.h>
    #include <sys/stat.h>
    #include <fcntl.h>
@@ -168,7 +165,7 @@
        * on 32bit machines.
        */
       #define HB_USE_LARGEFILE64
-   #elif defined( HB_OS_HPUX ) && defined( O_LARGEFILE )
+   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE ) && ! defined( __WATCOMC__ )
       #define HB_USE_LARGEFILE64
    #endif
 #endif
@@ -712,10 +709,12 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                raw_attr = sStat.st_mode;
 
                ftime = sStat.st_mtime;
-#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
-               lt = *localtime( &ftime );
-#   else
+#   if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
+         defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
+       ! defined( HB_OS_DARWIN_5 )
                localtime_r( &ftime, &lt );
+#   else
+               lt = *localtime( &ftime );
 #   endif
 
                nYear  = lt.tm_year + 1900;

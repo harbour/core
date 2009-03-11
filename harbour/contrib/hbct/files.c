@@ -331,10 +331,12 @@ HB_FUNC( SETFDATI )
             time_t current_time;
 
             current_time = time( NULL );
-#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
-            new_value = *localtime( &current_time );
-#   else
+#if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
+      defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
+    ! defined( HB_OS_DARWIN_5 )
             localtime_r( &current_time, &new_value );
+#   else
+            new_value = *localtime( &current_time );
 #   endif
          }
          else

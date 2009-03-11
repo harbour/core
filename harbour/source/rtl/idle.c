@@ -75,9 +75,6 @@
 #include "hbdate.h"
 #include "error.ch"
 #if defined( HB_OS_UNIX )
-   #ifndef __USE_POSIX199309
-      #define __USE_POSIX199309
-   #endif
    #include <sys/time.h>
    #include <sys/times.h>
    #include <unistd.h>

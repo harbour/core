@@ -103,33 +103,32 @@ static ULONG PackDateTime( void )
    szString[3] |= nValue;
 #else
    time_t t;
-   struct tm *oTime;
-
-#if !defined( HB_OS_UNIX ) || _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
-   time( &t );
-   oTime = localtime( &t );
-#else
    struct tm tm;
+
    time( &t );
-   oTime = &tm;
-   localtime_r( &t, oTime );
+#if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
+      defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
+    ! defined( HB_OS_DARWIN_5 )
+   localtime_r( &t, &tm );
+#else
+   tm = *localtime( &t );
 #endif
 
-   nValue = ( BYTE ) ( ( ( oTime->tm_year + 1900 ) - 1980 ) & ( 2 ^ 6 ) );      /* 6 bits */
+   nValue = ( BYTE ) ( ( ( tm.tm_year + 1900 ) - 1980 ) & ( 2 ^ 6 ) );      /* 6 bits */
    szString[0] = nValue << 2;
-   nValue = ( BYTE ) ( oTime->tm_mon + 1 );     /* 4 bits */
+   nValue = ( BYTE ) ( tm.tm_mon + 1 );     /* 4 bits */
    szString[0] |= nValue >> 2;
    szString[1] = nValue << 6;
-   nValue = ( BYTE ) ( oTime->tm_mday );        /* 5 bits */
+   nValue = ( BYTE ) ( tm.tm_mday );        /* 5 bits */
    szString[1] |= nValue << 1;
 
-   nValue = ( BYTE ) oTime->tm_hour;    /* 5 bits */
+   nValue = ( BYTE ) tm.tm_hour;    /* 5 bits */
    szString[1] = nValue >> 4;
    szString[2] = nValue << 4;
-   nValue = ( BYTE ) oTime->tm_min;     /* 6 bits */
+   nValue = ( BYTE ) tm.tm_min;     /* 6 bits */
    szString[2] |= nValue >> 2;
    szString[3] = nValue << 6;
-   nValue = ( BYTE ) oTime->tm_sec;     /* 6 bits */
+   nValue = ( BYTE ) tm.tm_sec;     /* 6 bits */
    szString[3] |= nValue;
 #endif
 
