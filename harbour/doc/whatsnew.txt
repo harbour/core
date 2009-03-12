@@ -16,6 +16,8 @@ General
   - A_USR               -> HB_USER_AFLAGS
   - MK_USR              -> HB_USER_MAKEFLAGS
   - HB_ARCHITECTURE=w32 -> HB_ARCHITECTURE=win
+  - CCPATH              -> HB_CCPREFIX
+  - CCPREFIX            -> HB_CCPATH
 - GNU-make system revised to give optimal support -j<n>
   multi-threaded parallel builds, which can dramatically
   increase build speed in multi-core/multi-CPU systems.
@@ -67,7 +69,7 @@ General
   now deprecated.
 - x64 msvc compiler got a distinct HB_COMPILER value: msvc64.
 - msvcce compiler made compatible with older MSVC/WinCE versions.
-- Added support for Intel(R) C++ compiler on Linux and Windows.
+- Added support for Intel(R) C++ compiler (icc) on Linux and Windows.
 - Added new INSTALL document giving a quick describing of the build
   process on all supported platforms and compilers.
 - Several steps to make the build process simpler and requiring the

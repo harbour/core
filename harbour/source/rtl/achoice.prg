@@ -399,15 +399,21 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          nMode     := AC_SELECT
          lFinished := .T.
 
+         DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, 0, nAtTop, nItems, bSelect, nRowsClr )
+
       CASE nKey == K_RIGHT .AND. !lUserFunc
 
          nPos      := 0
          lFinished := .T.
 
+         DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, 0, nAtTop, nItems, bSelect, nRowsClr )
+
       CASE nKey == K_LEFT .AND. !lUserFunc
 
          nPos      := 0
          lFinished := .T.
+
+         DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, 0, nAtTop, nItems, bSelect, nRowsClr )
 
       CASE INRANGE( 32, nKey, 255 ) .AND. ( !lUserFunc .OR. nMode == AC_GOTO )
 

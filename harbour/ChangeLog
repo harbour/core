@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-12 10:28 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/achoice.prg
+    ! Fixed to always dehilight active item on exit.
+      (probably could be done more efficiently, feel free to
+      optimize it.)
+      Please test.
+    ; TOFIX: ? gttrm on Darwin changes console color from my
+             default green, to Harbour default gray on exit.
+
+  * doc/whatsnew.txt
+    * Minor.
+
 2009-03-12 03:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.bat
   * mpkg_win.bat
