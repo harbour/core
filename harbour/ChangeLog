@@ -8,6 +8,18 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-12 13:32 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gttrm/gttrm.c
+    + added some missing xterm key sequences
+
+  * harbour/utils/hbmk2/hbmk2.prg
+    ! fixed curses name in SunOS builds (here we are using native curses
+      library not ncurses)
+
+  * harbour/config/hpux/global.cf
+  * harbour/config/sunos/global.cf
+    * enabled GTXWC disabled for default builds
+
 2009-03-12 10:55 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbtpathy/telepath.prg
     ! Fixed to use __PLATFORM__UNIX instead of __PLATFORM__LINUX.

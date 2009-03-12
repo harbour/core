@@ -21,7 +21,7 @@ ifneq ($(HB_WITHOUT_GTSLN),yes)
 endif
 endif
 ifneq ($(HB_WITHOUT_X11),yes)
-#   HB_GT_LIST += gtxwc
+   HB_GT_LIST += gtxwc
 endif
 
 # verify if GT drivers exist

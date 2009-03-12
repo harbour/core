@@ -1224,7 +1224,7 @@ FUNCTION Main( ... )
 
          IF IsGTRequested( s_cGT, s_aLIBUSERGT, s_aLIBDYNHAS, s_lSHARED, "gtcrs" )
             /* TOFIX: Sometimes 'ncur194' is needed. */
-            AAdd( s_aLIBSYS, "ncurses" )
+            AAdd( s_aLIBSYS, IIF( t_cARCH == "sunos", "curses", "ncurses" ) )
          ENDIF
          IF IsGTRequested( s_cGT, s_aLIBUSERGT, s_aLIBDYNHAS, s_lSHARED, "gtsln" )
             AAdd( s_aLIBSYS, "slang" )
