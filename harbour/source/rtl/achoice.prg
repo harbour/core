@@ -152,11 +152,13 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
       CASE ( nKey == K_ESC .OR. nMode == AC_NOITEM ) .AND. !lUserFunc
 
+         IF nPos != 0
+            DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, .T., .F., nNumCols )
+         ENDIF
+
          nMode     := AC_ABORT
          nPos      := 0
          lFinished := .T.
-
-         DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, 0, nAtTop, nItems, bSelect, nRowsClr )
 
       CASE nKey == K_LDBLCLK .OR. nKey == K_LBUTTONDOWN
          nAux := HitTest( nTop, nLeft, nBottom, nRight, MRow(), MCol() )
@@ -396,24 +398,30 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
       CASE nKey == K_ENTER .AND. !lUserFunc
 
+         IF nPos != 0
+            DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, .T., .F., nNumCols )
+         ENDIF
+
          nMode     := AC_SELECT
          lFinished := .T.
 
-         DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, 0, nAtTop, nItems, bSelect, nRowsClr )
-
       CASE nKey == K_RIGHT .AND. !lUserFunc
+
+         IF nPos != 0
+            DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, .T., .F., nNumCols )
+         ENDIF
 
          nPos      := 0
          lFinished := .T.
-
-         DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, 0, nAtTop, nItems, bSelect, nRowsClr )
 
       CASE nKey == K_LEFT .AND. !lUserFunc
 
+         IF nPos != 0
+            DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, .T., .F., nNumCols )
+         ENDIF
+
          nPos      := 0
          lFinished := .T.
-
-         DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, 0, nAtTop, nItems, bSelect, nRowsClr )
 
       CASE INRANGE( 32, nKey, 255 ) .AND. ( !lUserFunc .OR. nMode == AC_GOTO )
 

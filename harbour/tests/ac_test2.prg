@@ -20,38 +20,66 @@
  */
 #include "inkey.ch"
 
+#include "inkey.ch"
+#include "achoice.ch"
+
 function main()
 
-local aMenu1 := {"-Visky-"}
-local aMenu2 := {"-Vodka-"}
-local aMenu3 := {"-Grapa-"}
+//NIL, empty, numeric, and not handled - items
+//must be inaccesible and invisible
+local aMenu1 := {" --Visky--", "", "not handled"}
+local aMenu2 := {" --Vodka--", " --Water--", NIL, "not handled"}
+local aMenu3 := {" --Grapa--", 33, "not handled"}
+
 local lExit := .F.
 local nCounter := 1
 local nKeyPressed
 
 setcolor("W+/N, BG+/B, , , W/N")
 cls
-@ 2,1 SAY "-Visky- -Vodka- -Grapa-"
+@ 2,1 SAY " --Visky--   --Vodka--   --Grapa--"
+@ 3,14 SAY "--Water--"
 do while !lExit
 
- do case
-    case nCounter == 1
-      achoice(2, 1, 2, 7, aMenu1)
-    case nCounter == 2
-      achoice(2, 9, 2, 15, aMenu2)
-    case nCounter == 3
-      achoice(2, 17, 2, 23, aMenu3)
- endcase
+do case
+  case nCounter == 1
+    achoice(2, 1, 3, 11, aMenu1)
+  case nCounter == 2
+    achoice(2, 13, 3, 23, aMenu2, .T., "cUserFunction")
+  case nCounter == 3
+    achoice(2, 25, 3, 35, aMenu3, .T., "cUserFunction")
+endcase
 
- nKeyPressed := lastkey()
- if nKeyPressed == K_ESC
-   lExit := .T.
- elseif nKeyPressed == K_RIGHT
-   nCounter := iif(nCounter == 3, 1, nCounter+1)
- elseif nKeyPressed == K_LEFT
-   nCounter := iif(nCounter == 1, 3, nCounter-1)
- endif
+nKeyPressed := lastkey()
+if nKeyPressed == K_ESC
+ lExit := .T.
+elseif nKeyPressed == K_RIGHT
+ nCounter := iif(nCounter == 3, 1, nCounter+1)
+elseif nKeyPressed == K_LEFT
+ nCounter := iif(nCounter == 1, 3, nCounter-1)
+endif
 
 enddo
 
 return NIL
+
+//do nothing, just for test
+function cUserFunction( nMode, nCurElement, nRowPos )
+
+local nRetVal := AC_CONT
+local nKey := LASTKEY()
+
+//dispbox( 0, 0, maxrow(), maxcol(), repl("#",9), "GR+/G" )
+
+if nMode == AC_NOITEM
+ nRetVal := AC_ABORT
+elseif nMode == AC_EXCEPT
+ do case
+   case nKey == K_RETURN
+     nRetVal := AC_SELECT
+   otherwise
+     nRetVal := AC_ABORT
+ endcase
+endif
+
+return nRetVal
