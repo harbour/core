@@ -31,7 +31,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -d2
 endif
 
-CPPFLAGS += -i. -i$(TOP)include -i$(TOP)$(ROOT)include -iinclude
+CPPFLAGS += -i. -i$(TOP)$(ROOT)include
 ifneq ($(HB_LIB_COMPILE),)
    CPPFLAGS += -i$(HB_INC_COMPILE)
 endif

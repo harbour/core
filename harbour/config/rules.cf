@@ -39,13 +39,13 @@ endif
 # The rule to compile a C source file.
 ifeq ($(CC_RULE),)
 # Use default rule if architecture/compiler specific rule is not defined
-CC_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) ($HB_CDBG) $(HB_USER_CFLAGS) $(HB_CDYNLIB) $(CC_IN) $< $(CC_OUT)$(<F:.c=$(OBJ_EXT))
+CC_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CDYNLIB) $(CC_IN) $< $(CC_OUT)$(<F:.c=$(OBJ_EXT))
 endif
 
 # The rule to compile a C++ source file.
 ifeq ($(CPP_RULE),)
 # Use default rule if architecture/compiler specific rule is not defined
-CPP_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) ($HB_CDBG) $(HB_USER_CFLAGS) $(HB_CDYNLIB) $(CC_IN) $< $(CC_OUT)$(<F:.cpp=$(OBJ_EXT))
+CPP_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(HB_CDBG) $(HB_USER_CFLAGS) $(HB_CDYNLIB) $(CC_IN) $< $(CC_OUT)$(<F:.cpp=$(OBJ_EXT))
 endif
 
 

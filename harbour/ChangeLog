@@ -8,10 +8,27 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-12 03:07 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * ChangeLog
+    * Added comment to previous entry. (-d1 vs -d2 in owatcom)
+
+  * config/rules.cf
+    ! Fixed typo in prev.
+
+  * config/dos/owatcom.cf
+  * config/win/owatcom.cf
+  * config/linux/owatcom.cf
+  * config/os2/owatcom.cf
+    % Removed unnecessary -i C compiler options. (pls check,
+      I've tested with Windows and applied it to other platforms)
+    % Removed DOS cmdline length hack from win/os2.
+
 2009-03-12 02:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/dos/owatcom.cf
   * config/linux/owatcom.cf
     + Added support for HB_BUILD_DEBUG=yes.
+      (using -d2 instead of -d1 to be in sync with win,
+      please correct this if wrong)
 
   + config/os2/owatcom.cf
     + Added os2/owatcom build file. OS/2 users please test.

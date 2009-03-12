@@ -26,7 +26,7 @@ CFLAGS += -5 -fp5
 CFLAGS += -onaehtzr -oi+ -ei -zp8 -s -zt0
 endif
 
-CFLAGS += -i. -i$(TOP)include -i$(TOP)$(ROOT)include -iinclude
+CFLAGS += -i. -i$(TOP)$(ROOT)include
 ifneq ($(HB_LIB_COMPILE),)
 CFLAGS += -i$(HB_INC_COMPILE)
 endif
@@ -34,10 +34,6 @@ endif
 ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -d2
 endif
-
-# work arround to DOS command line size limit
-export WPP386 := $(strip $(CFLAGS))
-CFLAGS =
 
 # Note: The empty line directly before 'endef' HAVE TO exist!
 # It causes that the 'echo' command is separated by LF
