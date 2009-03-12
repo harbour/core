@@ -38,7 +38,7 @@ if exist "%HB_BIN_INSTALL%\*.dll" (
 set HB_BIN_INSTALL=%_HB_BIN_INSTALL%
 set _HB_BIN_INSTALL=
 
-if "%HB_DIR_IMPLIB%" == "yes" (
+if "%HB_BUILD_IMPLIB%" == "yes" (
 
    if not "%HB_LIB_INSTALL%" == "" (
 

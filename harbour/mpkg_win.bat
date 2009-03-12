@@ -45,8 +45,10 @@ if exist %HB_INSTALL_BASE% rmdir /q /s %HB_INSTALL_BASE%
 rem ; Build
 if "%HB_COMPILER%" == "mingw"  ( sh make_gnu.sh clean install && goto MK_PKG )
 if "%HB_COMPILER%" == "cygwin" ( sh make_gnu.sh clean install && goto MK_PKG )
-set HB_DIR_IMPLIB=no
+set HB_BUILD_IMPLIB=no
 set HB_BUILD_DLL=yes
+set HB_BUILD_OPTIM=yes
+set HB_BUILD_DEBUG=no
 call make_gnu.bat
 
 :MK_PKG
