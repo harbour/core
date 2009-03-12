@@ -8,6 +8,10 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-12 03:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/rules.cf
+    + Do not add -l Harbour option when HB_BUILD_DEBUG=yes.
+
 2009-03-12 03:07 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * ChangeLog
     * Added comment to previous entry. (-d1 vs -d2 in owatcom)
