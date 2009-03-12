@@ -18,7 +18,9 @@ CC_OUT = -Fo
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -W4 -Gs
 
+ifneq ($(HB_BUILD_OPTIM),no)
 CFLAGS += -Ogt2yb1p -GX- -G6 -YX
+endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -Zi

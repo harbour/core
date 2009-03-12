@@ -14,8 +14,12 @@ CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
-CFLAGS = -Wall -W -O3
+CFLAGS = -Wall -W
 LDFLAGS =
+
+ifneq ($(HB_BUILD_OPTIM),no)
+CFLAGS += -O3
+endif
 
 # uncomment this if you want to force relocatable code for .sl libs
 # it's necessary on some platforms but can reduce performance

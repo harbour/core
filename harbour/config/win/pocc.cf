@@ -18,9 +18,10 @@ CFLAGS = -I.
 
 CFLAGS += -Ze -Go -MT
 
-# optimizations
+ifneq ($(HB_BUILD_OPTIM),no)
 CFLAGS += -Ot
 # -Ox: can cause GPF in 4.50/5.00, so it's disabled.
+endif
 
 ifneq ($(HB_INC_COMPILE),)
 CFLAGS += -I$(HB_INC_COMPILE)

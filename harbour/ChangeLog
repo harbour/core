@@ -8,6 +8,36 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-12 02:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+  * config/darwin/gcc.cf
+  * config/hpux/gcc.cf
+  * config/dos/owatcom.cf
+  * config/dos/djgpp.cf
+  * config/win/mingwce.cf
+  * config/win/poccce.cf
+  * config/win/icc.cf
+  * config/win/cygwin.cf
+  * config/win/msvc.cf
+  * config/win/owatcom.cf
+  * config/win/xcc.cf
+  * config/win/msvcce.cf
+  * config/win/mingw.cf
+  * config/win/pocc.cf
+  * config/win/bcc.cf
+  * config/linux/owatcom.cf
+  * config/linux/gcc.cf
+  * config/linux/icc.cf
+  * config/os2/gcc.cf
+  * config/sunos/gcc.cf
+  * config/bsd/gcc.cf
+    + Added HB_BUILD_OPTIM=no setting to disable all C compiler
+      optimizations (for quick draft builds, or debugging, testing).
+
+  * config/win/xcc.cf
+    % Cleaned -I options.
+      (please verify)
+
 2009-03-12 02:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/achoice.prg
     ! Fixed handling of empty items.

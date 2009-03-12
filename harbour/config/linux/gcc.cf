@@ -21,12 +21,16 @@ CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 ifeq ($(HB_COMPILER),icc)
-CFLAGS = -O3 -D_GNU_SOURCE
+CFLAGS = -D_GNU_SOURCE
 #CFLAGS += -std=c99
 #CFLAGS += -xHOST
 #CFLAGS += -w2 -Wall
 else
-CFLAGS = -Wall -W -O3
+CFLAGS = -Wall -W
+endif
+
+ifneq ($(HB_BUILD_OPTIM),no)
+CFLAGS += -O3
 endif
 
 # uncomment this if you want to force relocateable code for .so libs

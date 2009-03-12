@@ -29,7 +29,11 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CPPFLAGS += -no-cpp-precomp
 
 # -fno-common enables building .dylib files
-CFLAGS = -fno-common -Wall -W -O3
+CFLAGS = -fno-common -Wall -W
+
+ifneq ($(HB_BUILD_OPTIM),no)
+CFLAGS += -O3
+endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g

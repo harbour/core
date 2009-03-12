@@ -24,10 +24,12 @@ CC_OUT = -Fo
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -nologo -W4 -D"_WIN32_WCE=0x420" -D"UNDER_CE=0x420" -D"WIN32_PLATFORM_PSPC" -D"WINCE" -D"_WINCE" -D"_WINDOWS" -D"ARM" -D"_ARM_" -D"ARMV4" -D"POCKETPC2003_UI_MODEL" -D"_M_ARM" -D"UNICODE" -D"_UNICODE" -D_UWIN
 
+ifneq ($(HB_BUILD_OPTIM),no)
 ifeq ($(HB_VISUALC_VER_PRE80),)
 CFLAGS += -Od -Os -Gy -GS- -EHsc- -Gm -Zi -GR-
 else
 CFLAGS += -Oxsb1 -EHsc -YX -GF
+endif
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)

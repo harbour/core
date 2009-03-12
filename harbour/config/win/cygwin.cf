@@ -13,7 +13,12 @@ CC = gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-CFLAGS = -Wall -W -O3 -march=i586 -mtune=pentiumpro
+CFLAGS = -Wall -W
+
+ifneq ($(HB_BUILD_OPTIM),no)
+CFLAGS += -O3
+CFLAGS += -march=i586 -mtune=pentiumpro
+endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g

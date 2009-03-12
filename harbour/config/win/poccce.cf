@@ -22,9 +22,10 @@ CFLAGS = -I.
 
 CFLAGS += -Ze -Go
 
-# optimizations
+ifneq ($(HB_BUILD_OPTIM),no)
 CFLAGS += -Ot
 # -Ox: can cause GPF in 4.50/5.00, so it's disabled.
+endif
 
 # For Pocket PC and ARM processors (including XScale)
 CFLAGS += -Tarm-coff -D_WINCE -DUNICODE -DHB_NO_WIN_CONSOLE

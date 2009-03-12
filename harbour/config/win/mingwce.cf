@@ -16,8 +16,12 @@ CC = $(CCPREFIX)gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+CFLAGS = -Wall -W
+
+ifneq ($(HB_BUILD_OPTIM),no)
 # Use -O2 instead of -O3 here.
-CFLAGS = -Wall -W -O2
+CFLAGS += -O2
+endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g

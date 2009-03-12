@@ -19,9 +19,13 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 #CFLAGS = -fast
 #CFLAGS = -xHOST
-CFLAGS = -O3 -D_GNU_SOURCE
+CFLAGS = -D_GNU_SOURCE
 #CFLAGS += -std=c99
 #CFLAGS += -w2 -Wall
+
+ifneq ($(HB_BUILD_OPTIM),no)
+CFLAGS += -O3
+endif
 
 
 # uncomment this if you want to force relocateable code for .so libs

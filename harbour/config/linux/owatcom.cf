@@ -7,8 +7,8 @@
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
 OBJ_EXT = .o
-EXE_EXT = 
-LIB_PREF = 
+EXE_EXT =
+LIB_PREF =
 LIB_EXT = .lib
 
 CC = wpp386
@@ -18,12 +18,14 @@ CC_OUT = -fo=
 #CPPFLAGS = -j -w3 -d1 -5s -5r -fp5 -oehtz -s -zq -zt0 -bt=linux
 CPPFLAGS = -w2 -d1 -zq -bt=linux
 
+ifneq ($(HB_BUILD_OPTIM),no)
 #architecture flags
 CPPFLAGS += -5 -fp5
 
 # optimization flags
 # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
 CPPFLAGS += -onaehtzr -oi+ -ei -zp8 -s -zt0
+endif
 
 CPPFLAGS += -i. -i$(TOP)include -i$(TOP)$(ROOT)include -iinclude
 ifneq ($(HB_LIB_COMPILE),)

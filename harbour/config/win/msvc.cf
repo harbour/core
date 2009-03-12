@@ -15,10 +15,12 @@ CC_OUT = -Fo
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -nologo -W4 -wd4127 -Gs
 
+ifneq ($(HB_BUILD_OPTIM),no)
 ifeq ($(HB_VISUALC_VER_PRE80),)
 CFLAGS += -Ot2b1 -EHs-c-
 else
 CFLAGS += -Ogt2yb1p -GX- -G6 -YX
+endif
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
