@@ -188,7 +188,7 @@ function tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
 
    local nRes, lPortExist
 
-   #ifdef __PLATFORM__LINUX
+   #ifdef __PLATFORM__UNIX
    local nFileCase, nDirCase
    #endif
 
@@ -196,7 +196,7 @@ function tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    default nBaud to 1200, nData to 8, cParity to "N", nStop to 1
 
    /* Serial ports name are made up of cPortName + nPort if nPort is not NIL */
-   #ifdef __PLATFORM__LINUX
+   #ifdef __PLATFORM__UNIX
    default cPortName to "/dev/ttyS"
    #else
    default cPortName to "COM"          // Ok for Windows and OS/2
@@ -206,18 +206,18 @@ function tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
       should necessity arise, it is possible to simply pass a NIL on nPort and
       a full name on cPortName
    */
-   #ifdef __PLATFORM__LINUX
+   #ifdef __PLATFORM__UNIX
    cPortname := AllTrim( cPortname ) + iif( ISNUMBER( nPort ), hb_NToS( nPort - 1 ), "" )
    #else
    cPortname := AllTrim( cPortname ) + iif( ISNUMBER( nPort ), hb_NToS( nPort ), "" )
    #endif
 
-   #ifdef __PLATFORM__LINUX
+   #ifdef __PLATFORM__UNIX
    nFileCase := Set( _SET_FILECASE, 0 )
    nDirCase := Set( _SET_DIRCASE, 0 )
    #endif
    lPortExist := File( cPortname )
-   #ifdef __PLATFORM__LINUX
+   #ifdef __PLATFORM__UNIX
    Set( _SET_FILECASE, nFileCase )
    Set( _SET_DIRCASE, nDirCase )
    #endif
@@ -239,7 +239,7 @@ function tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    t_aPorts[ nPort, TPFP_INBUF  ] := ""
    t_aPorts[ nPort, TPFP_INBUF_SIZE ] := nInSize
 
-   #ifdef __PLATFORM__LINUX
+   #ifdef __PLATFORM__UNIX
    // Maybe we should have a p_Open() on every platform
    t_aPorts[ nPort, TPFP_HANDLE ] := p_Open( cPortname )
    #else
@@ -329,7 +329,7 @@ function tp_send( nPort, cString, nTimeout )
       return 0
    endif
 
-   if Empty( cString )
+   if Len( cString ) == 0
       return 0
    endif
 
@@ -386,7 +386,7 @@ function tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
       return ""
    endif
 
-   if ! ISCHARACTER( cDelim ) .OR. Empty( cDelim )
+   if ! ISCHARACTER( cDelim ) .OR. Len( cDelim ) == 0
       return ""
    endif
 
@@ -398,7 +398,7 @@ function tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
 
    /* Telepathy ng: [...] If nTimeout is omitted or zero, reads until finding the
                     delimiter or the input buffer is empty. */
-   if nTimeout == 0 .AND. Empty( t_aPorts[ nPort, TPFP_INBUF ] )
+   if nTimeout == 0 .AND. Len( t_aPorts[ nPort, TPFP_INBUF ] ) == 0
       return ""
    endif
 
@@ -686,7 +686,7 @@ return p_iscts( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 
 
-#ifdef __PLATFORM__LINUX
+#ifdef __PLATFORM__UNIX
 // NB: On linux i don't know how to make a drain with a timeout, so here
 //     I'll wait as long as it takes to drain the port.
 function tp_flush( nPort, nTimeout )
@@ -791,7 +791,7 @@ static function FetchChars( nPort )
 
    cStr := p_ReadPort( t_aPorts[ nPort, TPFP_HANDLE ] )
 
-   if ! Empty( cStr )
+   if Len( cStr ) > 0
       t_aPorts[ nPort, TPFP_INBUF ] += cStr
    endif
 

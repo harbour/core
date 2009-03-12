@@ -201,7 +201,7 @@ METHOD HandleUserKey( nKey, nUserKey ) CLASS HBMemoEditor
          ::super:Edit( nKey )
       ENDIF
 
-   // TOFIX: Not clipper compatible, see teditor.prg
+   // TOFIX: Not CA-Cl*pper compatible, see teditor.prg
    CASE ( nUserKey >= 1 .AND. nUserKey <= 31 ) .OR. nUserKey == K_ALT_W
       IF AScan( aUnHandledKeys, nUserKey ) == 0
          ::super:Edit( nUserKey )
