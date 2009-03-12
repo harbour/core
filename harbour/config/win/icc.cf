@@ -17,9 +17,12 @@ CC_IN = -c
 CC_OUT = -Fo
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -W4 -Gs
-# -Zi
 
 CFLAGS += -Ogt2yb1p -GX- -G6 -YX
+
+ifeq ($(HB_BUILD_DEBUG),yes)
+CFLAGS += -Zi
+endif
 
 LD = icl.exe
 LD_OUT = -Fe

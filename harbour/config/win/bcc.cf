@@ -18,6 +18,10 @@ CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -4 -O2 -OS -Ov -Oi -Oc -q -d -Q -w -w-sig- -tWM
 
+ifeq ($(HB_BUILD_DEBUG),yes)
+CFLAGS += -y -v
+endif
+
 LD = bcc32.exe
 LDFLAGS = -O2
 LD_OUT = -e

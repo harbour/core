@@ -31,6 +31,10 @@ CPPFLAGS += -no-cpp-precomp
 # -fno-common enables building .dylib files
 CFLAGS = -fno-common -Wall -W -O3
 
+ifeq ($(HB_BUILD_DEBUG),yes)
+CFLAGS += -g
+endif
+
 # It's to avoid warning message generated when 'long double' is used
 # remove it if you have newer compiler version
 #CFLAGS += -Wno-long-double

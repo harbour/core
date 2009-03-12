@@ -20,6 +20,10 @@ CFLAGS = -Wall -W -O3
 # it's necessary on some platforms but can reduce performance
 #CFLAGS += -fPIC
 
+ifeq ($(HB_BUILD_DEBUG),yes)
+CFLAGS += -g
+endif
+
 
 LD = $(HB_CCACHE) gcc
 LD_OUT = -o

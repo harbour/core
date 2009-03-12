@@ -581,7 +581,7 @@ STATIC FUNCTION Ach_Limits( nFrstItem, nLastItem, nItems, bSelect, alSelect, acI
    nItems := 0
 
    FOR nCntr := 1 TO Len( acItems )
-      IF ISCHARACTER( acItems[ nCntr ] )
+      IF ISCHARACTER( acItems[ nCntr ] ) .AND. Len( acItems[ nCntr ] ) > 0
          nItems++
       ELSE
          EXIT

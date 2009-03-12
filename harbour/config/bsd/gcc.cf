@@ -15,6 +15,10 @@ CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -Wall -W -O3
 
+ifeq ($(HB_BUILD_DEBUG),yes)
+CFLAGS += -g
+endif
+
 LD = $(HB_CCACHE) gcc
 LD_OUT = -o
 

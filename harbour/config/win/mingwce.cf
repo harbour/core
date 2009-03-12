@@ -19,6 +19,10 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 # Use -O2 instead of -O3 here.
 CFLAGS = -Wall -W -O2
 
+ifeq ($(HB_BUILD_DEBUG),yes)
+CFLAGS += -g
+endif
+
 LD = $(CCPREFIX)gcc
 LD_OUT = -o
 LINKPATHS =

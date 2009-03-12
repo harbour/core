@@ -25,6 +25,10 @@ LDFLAGS =
 #CFLAGS += -mlp64
 #LDFLAGS = -mlp64
 
+ifeq ($(HB_BUILD_DEBUG),yes)
+CFLAGS += -g
+endif
+
 LD = $(HB_CCACHE) gcc
 LD_OUT = -o
 

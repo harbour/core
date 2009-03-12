@@ -14,18 +14,20 @@ LIB_EXT = .lib
 CC = xcc.exe
 CC_IN = -c
 CC_OUT = -Fo
-CPPFLAGS = -I$(TOP) -I$(ROOT) -I$(TOP)$(ROOT)
+CFLAGS = -I$(TOP) -I$(ROOT) -I$(TOP)$(ROOT)
 ifneq ($(HB_INC_COMPILE),)
-CPPFLAGS += -I$(HB_INC_COMPILE)
+CFLAGS += -I$(HB_INC_COMPILE)
 endif
 
 # disabled - it produces bad code
-#CPPFLAGS += -Ot
+#CFLAGS += -Ot
 
 # For Pocket PC and ARM processors (including XScale)
-#CPPFLAGS += /Tarm-coff
+#CFLAGS += /Tarm-coff
 
-CFLAGS = 
+ifeq ($(HB_BUILD_DEBUG),yes)
+CFLAGS += -Zi
+endif
 
 LD = xlink.exe
 LD_OUT = -OUT:

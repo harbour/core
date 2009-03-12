@@ -8,6 +8,40 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-12 02:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * source/rtl/achoice.prg
+    ! Fixed handling of empty items.
+
+  * INSTALL
+  * config/rules.cf
+  * config/darwin/gcc.cf
+  * config/hpux/gcc.cf
+  * config/dos/djgpp.cf
+  * config/win/mingwce.cf
+  * config/win/poccce.cf
+  * config/win/pocc64.cf
+  * config/win/icc.cf
+  * config/win/cygwin.cf
+  * config/win/msvc.cf
+  * config/win/owatcom.cf
+  * config/win/xcc.cf
+  * config/win/msvcce.cf
+  * config/win/mingw.cf
+  * config/win/pocc.cf
+  * config/win/bcc.cf
+  * config/linux/gcc.cf
+  * config/linux/icc.cf
+  * config/os2/gcc.cf
+  * config/sunos/gcc.cf
+  * config/bsd/gcc.cf
+    + Added support HB_BUILD_DEBUG=yes.
+      This will work identically to the former non-GNU make
+      systems.
+    ! Added missing -MT for MSVC. (from non-GNU make)
+    * Changed a few CPPFLAGS to CFLAGS. (these are currently
+      synonyms, and both are utilized without any apparent order).
+      This could use more cleanup.
+
 2009-03-11 22:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbgete.c
     * disabled unsetenv() from Watcom builds - looks that this function
@@ -46,7 +80,7 @@
 2009-03-11 08:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * doc/whatsnew.txt
     + Added new entries since last update. Please review, etc...
-    ; TODO: There is still 500K worth of ChangeLog to process 
+    ; TODO: There is still 500K worth of ChangeLog to process
             for the timeframe 200808/09-20081219.
             Someone pls help.
 
@@ -82,12 +116,12 @@
 
 2009-03-10 17:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/hbregex.c
-    * Fixed HB_REGEXMATCH(). Now the HAS/LIKE mode can be controlled 
-      by 5th logical parameter (was 3rd), so 3rd parameter is solely 
+    * Fixed HB_REGEXMATCH(). Now the HAS/LIKE mode can be controlled
+      by 5th logical parameter (was 3rd), so 3rd parameter is solely
       controlling case-sensitivity as indicated in the documentation.
-      Users are recommended to use HB_REGEXHAS() and HB_REGEXLIKE() 
-      functions as unambiguous alternatives, which work equally 
-      well on all Harbour versions. HB_REGEXMATCH() is now deprecated, 
+      Users are recommended to use HB_REGEXHAS() and HB_REGEXLIKE()
+      functions as unambiguous alternatives, which work equally
+      well on all Harbour versions. HB_REGEXMATCH() is now deprecated,
       but kept for compatibility.
 
 2009-03-10 15:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
@@ -96,7 +130,7 @@
 
   * contrib/xhb/hbcompat.ch
     - Disabled dangerous bitop compatibility macros + comment added.
-      Enabled them with #define XHB_BITOP. Or even better 
+      Enabled them with #define XHB_BITOP. Or even better
       to change code to use HB_BIT*() functions natively.
 
 2009-03-10 12:23 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -231,7 +265,7 @@
 
   * contrib/examples/uhttpd/home/testxmldb.html
     * Added Safari as unsupported browser.
-      (BTW, what would it need to support Safari and Chrome, or 
+      (BTW, what would it need to support Safari and Chrome, or
       WebKit browsers in general?)
 
 2009-03-08 00:43 UTC+0100 Francesco Saverio Giudice (info/at/fsgiudice.com)

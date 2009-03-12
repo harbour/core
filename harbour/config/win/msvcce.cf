@@ -30,6 +30,10 @@ else
 CFLAGS += -Oxsb1 -EHsc -YX -GF
 endif
 
+ifeq ($(HB_BUILD_DEBUG),yes)
+CFLAGS += -Zi
+endif
+
 ifeq ($(HB_VISUALC_VER_PRE80),)
 LD = cl.exe
 else

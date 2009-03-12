@@ -15,6 +15,10 @@ CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -Wall -W -O3
 
+ifeq ($(HB_BUILD_DEBUG),yes)
+CFLAGS += -g
+endif
+
 LD = gcc
 LDFLAGS =
 # NOTE: The ending space after -o is important, please preserve it.
@@ -97,4 +101,3 @@ ARFLAGS = $(HB_USER_AFLAGS)
 AR_RULE = $(create_library) & $(RM) __lib__.tmp
 
 include $(TOP)$(ROOT)config/rules.cf
-

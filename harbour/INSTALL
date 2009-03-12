@@ -230,6 +230,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
                                full clean + install cycles will automatically
                                be executed, so you don't have to explicitly
                                pass them to make_gnu.bat.
+   - HB_BUILD_DEBUG=yes        Create a debug build.
    - HB_CONTRIBLIBS=no         Don't build any contrib libraries.
    - HB_CONTRIBLIBS=[<list>]   Build space separated <list> of
                                contrib libraries. Build all if

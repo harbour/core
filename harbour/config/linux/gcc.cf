@@ -33,6 +33,10 @@ endif
 # it's necessary on some platforms but can reduce performance
 #CFLAGS += -fPIC
 
+ifeq ($(HB_BUILD_DEBUG),yes)
+CFLAGS += -g
+endif
+
 LD = $(HB_CCACHE) $(HB_CMP)
 LD_OUT = -o
 
