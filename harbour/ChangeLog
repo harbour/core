@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-12 02:49 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/dos/owatcom.cf
+  * config/linux/owatcom.cf
+    + Added support for HB_BUILD_DEBUG=yes.
+
+  + config/os2/owatcom.cf
+    + Added os2/owatcom build file. OS/2 users please test.
+
+  * config/win/owatcom.cf
+    * Minor formatting.
+
 2009-03-12 02:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
   * config/darwin/gcc.cf

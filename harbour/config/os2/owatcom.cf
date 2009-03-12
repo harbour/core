@@ -15,8 +15,8 @@ CC = wpp386
 CC_IN =
 CC_OUT = -fo=
 
-#CFLAGS = -j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT
-CFLAGS = -w2 -zq -bt=NT
+#CFLAGS = -j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2
+CFLAGS = -w2 -zq -bt=OS2
 
 ifneq ($(HB_BUILD_OPTIM),no)
 # architecture flags
@@ -58,13 +58,12 @@ $(foreach file, $(^F), $(link_file))
 $(foreach lib, $(LINKLIBS), $(link_lib))
 $(foreach lib, $(RDDLIBS), $(link_lib))
 $(foreach lib, $(GTLIBS), $(link_lib))
-echo @%WATCOM%/binnt/wlink.lnk >> __link__.tmp
-echo LIB kernel32.lib, user32.lib, wsock32.lib >> __link__.tmp
+echo @%WATCOM%/binp/wlink.lnk >> __link__.tmp
 -$(LD) @__link__.tmp
 endef
 
 LD = wlink
-LDFLAGS = OP osn=NT OP stack=65536 OP CASEEXACT
+LDFLAGS = OP stack=65536 OP CASEEXACT
 
 ifeq ($(HB_LIB_COMPILE),)
    LINKLIBS = $(foreach lib, $(CONTRIBS), $(LIB_DIR)/$(lib))
