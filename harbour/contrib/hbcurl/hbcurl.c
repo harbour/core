@@ -1671,9 +1671,9 @@ HB_FUNC( CURL_EASY_GETINFO )
          break;
       case HB_CURLINFO_CERTINFO:
 #if LIBCURL_VERSION_NUM >= 0x071301
-         res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_CERTINFO, ( struct curl_slist * ) &ret_ptr );
+         res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_CERTINFO, &ret_slist );
 #endif
-         type = HB_CURL_INFO_TYPE_PTR;
+         type = HB_CURL_INFO_TYPE_SLIST;
          break;
       }
 

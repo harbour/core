@@ -8,6 +8,24 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-13 23:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_gnu.bat
+  * config/win/global.cf
+    * HB_BUILD_DLL is now processed by make_gnu.bat and another
+      internal envvar is used to request DLL flags from the GNU
+      Make. This way some side effects are avoided when doing a
+      make_gnu.sh launched build.
+
+  * make_gnu.sh
+    + Emptying CLIPPER/HARBOUR envvars before starting the build.
+      (please test)
+
+  * contrib/hbfbird/firebird.c
+    * Minor formatting.
+
+  * contrib/hbcurl/hbcurl.c
+    ! Fixed warning/bug in recently added feature.
+
 2009-03-13 16:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * mpkg_win.bat
     * Cleanup.

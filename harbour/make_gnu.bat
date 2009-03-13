@@ -119,18 +119,18 @@ if not exist %HB_DOC_INSTALL%\*.* md %HB_DOC_INSTALL%
 
    set _HB_CONTRIBLIBS=%HB_CONTRIBLIBS%
    set _HB_CONTRIB_ADDONS=%HB_CONTRIB_ADDONS%
+   set HB_DYNLIB=yes
    set HB_CONTRIBLIBS=no
    set HB_CONTRIB_ADDONS=
    %_HB_MAKE% clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    %_HB_MAKE% install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   set HB_BUILD_DLL=
+   set HB_DYNLIB=no
    set HB_CONTRIBLIBS=%_HB_CONTRIBLIBS%
    set HB_CONTRIB_ADDONS=%_HB_CONTRIB_ADDONS%
    set _HB_CONTRIBLIBS=
    set _HB_CONTRIB_ADDONS=
    %_HB_MAKE% clean   %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
    %_HB_MAKE% install %HB_USER_MAKEFLAGS% %1 %2 %3 %4 %5 %6 %7 %8 %9
-   set HB_BUILD_DLL=yes
    goto MAKE_DONE
 
 :SKIP_WINDLL

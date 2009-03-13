@@ -95,11 +95,11 @@ HB_FUNC( FBCREATEDB )
       int            page    = hb_parni( 4 );
       char *         charset = hb_parcx( 5 );
       unsigned short dialect = ( unsigned short ) hb_parni( 6 );
-       
-      hb_snprintf( create_db, sizeof( create_db ), 
+
+      hb_snprintf( create_db, sizeof( create_db ),
                 "CREATE DATABASE '%s' USER '%s' PASSWORD '%s' PAGE_SIZE = %i DEFAULT CHARACTER SET %s",
                 db_name, user, pass, page, charset );
-      
+
       if( isc_dsql_execute_immediate( status, &newdb, &trans, 0, create_db, dialect, NULL ) )
          hb_retnl( isc_sqlcode( status ) );
       else
@@ -160,7 +160,7 @@ HB_FUNC( FBERROR )
 {
    char msg[ MAX_BUFFER ];
 
-   isc_sql_interprete( ( short ) hb_parni( 1 ) /* sqlcode */, 
+   isc_sql_interprete( ( short ) hb_parni( 1 ) /* sqlcode */,
                        msg,
                        sizeof( msg ) );
 
@@ -558,7 +558,7 @@ HB_FUNC( FBGETDATA )
             {
                ISC_INT64 tens = 1;
                short     i;
-           
+
                for( i = 0; i > dscale; i-- )
                   tens *= 10;
 
@@ -567,7 +567,7 @@ HB_FUNC( FBGETDATA )
                             field_width - 1 + dscale,
                             ( ISC_INT64 ) value / tens,
                             -dscale,
-                            ( ISC_INT64 ) value % tens);
+                            ( ISC_INT64 ) value % tens );
                else if( ( value / tens ) != 0 )
                   hb_snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
                             field_width - 1 + dscale,
@@ -651,11 +651,11 @@ HB_FUNC( FBGETBLOB )
 
          /* p = ( char * ) hb_xgrab( blob_seg_len + 1 ); */
          hb_snprintf( p, sizeof( p ), "%*.*s", blob_seg_len, blob_seg_len, blob_segment );
-      
+
          temp = hb_itemPutC( NULL, p );
          hb_arrayAdd( aNew, temp );
          hb_itemRelease( temp );
-      
+
          /* hb_xfree(p); */
          blob_stat = isc_get_segment( status, &blob_handle,
                                       ( unsigned short * ) &blob_seg_len,
