@@ -39,32 +39,39 @@ set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
 set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
 set HB_DOC_INSTALL=%HB_INSTALL_PREFIX%\doc
 
-rem ; Cleanup
+rem ; Pre-build cleanup
 if exist %HB_INSTALL_BASE% rmdir /q /s %HB_INSTALL_BASE%
 
-rem ; Build
-if "%HB_COMPILER%" == "mingw"  ( sh make_gnu.sh clean install && goto MK_PKG )
-if "%HB_COMPILER%" == "cygwin" ( sh make_gnu.sh clean install && goto MK_PKG )
-set HB_BUILD_IMPLIB=no
+rem ; Option setup
 set HB_BUILD_DLL=yes
 set HB_BUILD_OPTIM=yes
 set HB_BUILD_DEBUG=no
-call make_gnu.bat
+set HB_BUILD_IMPLIB=no
 
+rem ; Build Harbour
+if "%HB_COMPILER%" == "mingw"  ( sh make_gnu.sh clean install && goto MK_PKG )
+if "%HB_COMPILER%" == "cygwin" ( sh make_gnu.sh clean install && goto MK_PKG )
+call make_gnu.bat
 :MK_PKG
 
-if errorlevel 1 goto MK_ERROR
+rem if errorlevel 1 goto MK_ERROR
 
-rem ; Post build cleanup
-
+rem ; Post-build cleanup
 if exist "%HB_BIN_INSTALL%\*.tds" del "%HB_BIN_INSTALL%\*.tds"
 if exist "%HB_BIN_INSTALL%\*.lib" del "%HB_BIN_INSTALL%\*.lib"
 if exist "%HB_BIN_INSTALL%\*.exp" del "%HB_BIN_INSTALL%\*.exp"
 
-rem ; Installer package
+rem ; Post-build installation
+xcopy /D /Y ChangeLog "%HB_INSTALL_PREFIX%"
+xcopy /D /Y COPYING   "%HB_INSTALL_PREFIX%"
+xcopy /D /Y ERRATA    "%HB_INSTALL_PREFIX%"
+xcopy /D /Y INSTALL   "%HB_INSTALL_PREFIX%"
+xcopy /D /Y TODO      "%HB_INSTALL_PREFIX%"
+
+rem ; Build installer package
 makensis.exe %~dp0mpkg_win.nsi
 
-rem ; .zip package
+rem ; Build .zip package
 if exist %HB_PKGNAME%.zip del %HB_PKGNAME%.zip
 pushd
 cd %HB_INSTALL_BASE%

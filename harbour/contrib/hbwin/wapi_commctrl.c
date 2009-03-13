@@ -737,8 +737,8 @@ HB_FUNC( WAPI_TABCTRL_SETEXTENDEDSTYLE )
    wapi_ret_NINT( TabCtrl_SetExtendedStyle( wapi_par_HWND( 1 ), wapi_par_DWORD( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
-/* TabCtrl_GetExtendedStyle(hwnd)
-/* (DWORD)SNDMSG((hwnd), TCM_GETEXTENDEDSTYLE, 0, 0)
+/* TabCtrl_GetExtendedStyle(hwnd) */
+/* (DWORD)SNDMSG((hwnd), TCM_GETEXTENDEDSTYLE, 0, 0) */
 
 HB_FUNC( WAPI_TABCTRL_GETEXTENDEDSTYLE )
 {

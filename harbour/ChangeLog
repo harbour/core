@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-13 16:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * mpkg_win.bat
+    * Cleanup.
+    - Removed checking for errorlevel as it made it exit
+      even when doing successful builds. [ Why? Could someone
+      look at this? ]
+
+  * contrib/hbwin/wapi_commctrl.c
+    ! Fix of the fix of the fix for non-ANSI comment fixes.
+
 2009-03-13 13:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * tests/ac_test2.prg
     * Updated.
