@@ -1819,6 +1819,7 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       if( !pWVT->hWnd )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 
+#if ! defined(HB_OS_WIN_CE)
       if( ! GetSystemMetrics( SM_REMOTESESSION ) )
       {
          typedef BOOL ( WINAPI * P_SLWA )( HWND, COLORREF, BYTE, DWORD );
@@ -1847,6 +1848,7 @@ static BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
                LWA_ALPHA /* DWORD dwFlags */ );
          }
       }
+#endif
 
       hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
 

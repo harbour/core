@@ -72,12 +72,12 @@ HB_FUNC( WINREGISTERCLASS )
    wndclass.cbWndExtra    = 0;
    wndclass.lpfnWndProc   = WndProc;
    wndclass.hInstance     = GetModuleHandle( NULL );
-   wndclass.hIcon         = LoadIcon ( NULL, IDI_APPLICATION );
-   wndclass.hCursor       = LoadCursor (NULL, IDC_ARROW);
-   wndclass.hbrBackground = (HBRUSH)( COLOR_BTNFACE + 1 );
+   wndclass.hIcon         = LoadIcon( NULL, IDI_APPLICATION );
+   wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
+   wndclass.hbrBackground = ( HBRUSH ) ( COLOR_BTNFACE + 1 );
    wndclass.lpszMenuName  = NULL;
 
-   hb_retl( RegisterClass (&wndclass) );
+   hb_retl( RegisterClass( &wndclass ) );
 
    HB_TCHAR_FREE( lpszClassName );
 }
@@ -94,7 +94,7 @@ HB_FUNC( WINCREATESTDWINDOW )
                             CW_USEDEFAULT, CW_USEDEFAULT,
                             ( HWND ) hb_parptr( 7 ),  /* hWndParent */
                             ( HMENU ) hb_parptr( 8 ), /* hMenu or nId */
-                            GetModuleHandle( NULL ), NULL) );
+                            GetModuleHandle( NULL ), NULL ) );
 
    HB_TCHAR_FREE( lpszClassName );
    HB_TCHAR_FREE( lpszCaption );
@@ -102,12 +102,12 @@ HB_FUNC( WINCREATESTDWINDOW )
 
 HB_FUNC( HB_FORMSHOWMODAL )
 {
-   MSG  msg;
+   MSG msg;
 
    ShowWindow( ( HWND ) hb_parptr( 1 ), 1 );
    while( GetMessage( &msg, NULL, 0, 0 ) )
    {
-       TranslateMessage( &msg );
+      TranslateMessage( &msg );
       DispatchMessage( &msg );
    }
 }
@@ -129,7 +129,7 @@ HB_FUNC( WINSETWINDOWTEXT )
 {
    LPTSTR lpszText = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
 
-   hb_retl( SetWindowText( (HWND) hb_parptr( 1 ), lpszText ) );
+   hb_retl( SetWindowText( ( HWND ) hb_parptr( 1 ), lpszText ) );
    
    HB_TCHAR_FREE( lpszText );
 }
@@ -166,19 +166,15 @@ HB_FUNC( WINCREATEMENU )
 }
 
 
-/* Some xBase for C language */
-#define IIF(x,y,z) ((x)?(y):(z))
-
-
 HB_FUNC( WINADDMENUITEM )
 {
    LPTSTR lpszText = NULL;
    MENUITEMINFO mii;
-   HMENU hSubMenu = ( !ISNIL(4) )? (HMENU) hb_parptr( 4 ):0;
+   HMENU hSubMenu = ( ! ISNIL( 4 ) ) ? ( HMENU ) hb_parptr( 4 ) : 0;
 
    mii.cbSize = sizeof( MENUITEMINFO );
-   mii.fMask = MIIM_TYPE | MIIM_STATE | MIIM_ID | ((hSubMenu)? MIIM_SUBMENU:0);
-   mii.fState = IIF( ! hb_parl( 6 ), MFS_DISABLED, 0 );
+   mii.fMask = MIIM_TYPE | MIIM_STATE | MIIM_ID | ( hSubMenu ? MIIM_SUBMENU : 0 );
+   mii.fState = ! hb_parl( 6 ) ? MFS_DISABLED : 0;
    mii.wID = hb_parni( 5 );
    mii.hSubMenu = hSubMenu;
    if( ISCHAR( 2 ) )
@@ -221,16 +217,16 @@ HB_FUNC( SETMENU )
 
 HB_FUNC( SENDMESSAGE )
 {
-   hb_retnl( (LONG) SendMessage(
-                       (HWND) hb_parptr( 1 ),   /* handle of destination window */
-                       (UINT) hb_parni( 2 ),    /* message to send */
-                       (WPARAM) hb_parnint( 3 ),  /* first message parameter */
-                       (LPARAM) hb_parnint( 4 )   /* second message parameter */
+   hb_retnl( ( LONG ) SendMessage(
+                       ( HWND ) hb_parptr( 1 ),   /* handle of destination window */
+                       ( UINT ) hb_parni( 2 ),    /* message to send */
+                       ( WPARAM ) hb_parnint( 3 ),  /* first message parameter */
+                       ( LPARAM ) hb_parnint( 4 )   /* second message parameter */
                      ) );
 }
 
 
-LRESULT CALLBACK WndProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
    static PHB_DYNS pDynSym = NULL;
 
@@ -287,7 +283,7 @@ HB_FUNC( WINSETWIDTH )
    WORD wHeight;
 
    GetWindowRect( hWnd, &rct );
-   wHeight = (WORD) ( rct.bottom - rct.top );
+   wHeight = ( WORD ) ( rct.bottom - rct.top );
 
    if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
    {
@@ -319,7 +315,7 @@ HB_FUNC( WINSETHEIGHT )
    WORD wWidth;
 
    GetWindowRect( hWnd, &rct );
-   wWidth = (WORD) ( rct.right - rct.left );
+   wWidth = ( WORD ) ( rct.right - rct.left );
 
    if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
    {
@@ -361,8 +357,8 @@ HB_FUNC( WINSETTOP )
    WORD wHeight, wWidth;
 
    GetWindowRect( hWnd, &rct );
-   wHeight = (WORD) ( rct.bottom - rct.top );
-   wWidth  = (WORD) ( rct.right - rct.left );
+   wHeight = ( WORD ) ( rct.bottom - rct.top );
+   wWidth  = ( WORD ) ( rct.right - rct.left );
 
    if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
    {
@@ -404,8 +400,8 @@ HB_FUNC( WINSETLEFT )
    WORD wHeight, wWidth;
 
    GetWindowRect( hWnd, &rct );
-   wHeight = (WORD) ( rct.bottom - rct.top );
-   wWidth  = (WORD) ( rct.right - rct.left );
+   wHeight = ( WORD ) ( rct.bottom - rct.top );
+   wWidth  = ( WORD ) ( rct.right - rct.left );
 
    if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
    {

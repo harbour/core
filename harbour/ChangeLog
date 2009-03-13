@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-13 01:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbgf/hbgfwin/winapi.c
+    * Formatting.
+
+  * contrib/hbwin/win_misc.c
+    ! Fixed WIN_SHELLEXECUTE() for WinCE (converted to stub).
+    ! Fixed WIN_RUNDETACHED() to compile with WinCE (4th parameter
+      is ignored and fixed to CREATE_NEW_CONSOLE).
+
+  * contrib/hbwin/win_regc.c
+    ! HKEY_CURRENT_CONFIG disabled for WinCE builds.
+
+  * source/rtl/gtwvt/gtwvt.c
+    ! Complete "layered" window support disabled for WinCE builds.
+
 2009-03-12 16:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * source/rtl/achoice.prg
   * tests/ac_test2.prg

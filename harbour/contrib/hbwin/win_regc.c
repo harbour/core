@@ -63,8 +63,10 @@ static HKEY hb_regkeyconv( ULONG nKey )
       return ( HKEY ) HKEY_CLASSES_ROOT;
    case 2:
       return ( HKEY ) HKEY_CURRENT_USER;
+#if ! defined( HB_OS_WIN_CE )
    case 3:
       return ( HKEY ) HKEY_CURRENT_CONFIG;
+#endif
    case 0:
    case 4:
       return ( HKEY ) HKEY_LOCAL_MACHINE;

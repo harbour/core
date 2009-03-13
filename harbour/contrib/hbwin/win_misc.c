@@ -60,6 +60,9 @@
 
 HB_FUNC( WIN_SHELLEXECUTE )
 {
+#if defined( HB_OS_WIN_CE )
+   hb_retnint( -1 );
+#else
    LPTSTR lpOperation  = ISCHAR( 2 ) ? HB_TCHAR_CONVTO( hb_parc( 2 ) ) : NULL;
    LPTSTR lpFile       =               HB_TCHAR_CONVTO( hb_parcx( 3 ) );
    LPTSTR lpParameters = ISCHAR( 4 ) ? HB_TCHAR_CONVTO( hb_parc( 4 ) ) : NULL;
@@ -79,6 +82,7 @@ HB_FUNC( WIN_SHELLEXECUTE )
       HB_TCHAR_FREE( lpParameters );
    if( lpDirectory )
       HB_TCHAR_FREE( lpDirectory );
+#endif
 }
 
 HB_FUNC( WIN_RUNDETACHED )
@@ -99,7 +103,11 @@ HB_FUNC( WIN_RUNDETACHED )
          NULL,                                                 /* Process handle not inheritable */
          NULL,                                                 /* Thread handle not inheritable */
          FALSE,                                                /* Set handle inheritance to FALSE */
+#if defined( HB_OS_WIN_CE )
+         CREATE_NEW_CONSOLE,                                   /* Creation flags */
+#else
          hb_parl( 4 ) ? CREATE_NO_WINDOW : CREATE_NEW_CONSOLE, /* Creation flags */
+#endif
          NULL,                                                 /* Use parent's environment block */
          NULL,                                                 /* Use parent's starting directory */
          &si,                                                  /* Pointer to STARTUPINFO structure */
