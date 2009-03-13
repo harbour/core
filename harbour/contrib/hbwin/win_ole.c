@@ -69,6 +69,8 @@
 #include "hbdate.h"
 #include "hboo.ch"
 
+#if ! defined( HB_OS_WIN_CE )
+
 #include <windows.h>
 #include <ole2.h>
 #include <oleauto.h>
@@ -1964,3 +1966,5 @@ OleGetID:
    if( bTryDefault == FALSE && pDisp )
       pDisp->lpVtbl->Release( pDisp );
 }
+
+#endif

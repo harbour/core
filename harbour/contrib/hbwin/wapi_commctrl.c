@@ -57,7 +57,7 @@
 #include <commctrl.h>
 
 /*----------------------------------------------------------------------*/
-                        BEGIN - ImageList_* - API
+/*                      BEGIN - ImageList_* - API                       */
 /*----------------------------------------------------------------------*/
 /*
 int ImageList_Add( HIMAGELIST himl, HBITMAP hbmImage, HBITMAP hbmMask );
@@ -466,7 +466,7 @@ HB_FUNC( WAPI_IMAGELIST_WRITEEX )
 
 
 /*----------------------------------------------------------------------*/
-                             Tab Control Macros
+/*                           Tab Control Macros                         */
 /*----------------------------------------------------------------------*/
 /* Wapi_TabCtrl_InsertItem( hWndTab, nInsertPos, cText, iImageListIndex ) */
 
