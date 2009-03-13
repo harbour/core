@@ -380,6 +380,8 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             break;
 
          default:
+            pFieldInfo.uiType = 0;
+            pFieldInfo.uiLen = 0;
             bError = TRUE;
             break;
       }
