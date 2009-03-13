@@ -476,15 +476,22 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
       IF lUserFunc
 
-         nUserFunc := Do( xUserFunc, nMode, nPos, nPos - nAtTop )
+         nUserFunc := iif( nMode != AC_NOITEM,;
+            Do( xUserFunc, nMode, nPos, nPos - nAtTop ), NIL )
 
          IF ISNUMBER( nUserFunc )
 
             DO CASE
             CASE nUserFunc == AC_ABORT .OR. nMode == AC_NOITEM
+               IF nPos != 0
+                  DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, .T., .F., nNumCols )
+               ENDIF
                lFinished := .T.
                nPos      := 0
             CASE nUserFunc == AC_SELECT
+               IF nPos != 0
+                  DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, .T., .F., nNumCols )
+               ENDIF
                lFinished := .T.
             CASE nUserFunc == AC_CONT .OR. nUserFunc == AC_REDRAW
                // Do nothing
@@ -527,6 +534,9 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect, nRowsClr )
             ENDIF
          ELSE
+            IF nPos != 0
+               DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, .T., .F., nNumCols )
+            ENDIF
             nPos      := 0
             lFinished := .T.
          ENDIF

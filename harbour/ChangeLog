@@ -8,6 +8,14 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-13 13:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * tests/ac_test2.prg
+    * Updated.
+  * source/rtl/achoice.prg
+    ! Fixed to not call user func in AC_NOITEM mode.
+    ! Added more visual corrections for better CA-Cl*pper compatibility.
+  ; Thanks to Vladislav Lavrecky for the above.
+
 2009-03-13 12:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     + Further refined GNU Make usage instructions for Windows
