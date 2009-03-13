@@ -2,7 +2,7 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT = ../../../
 
 ifeq ($(HB_ARCHITECTURE),win)
 DIRS = hbgfwin

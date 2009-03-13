@@ -2,22 +2,22 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT = ../../../../
 
-LIBNAME=hbgfwin
+LIBNAME=hbgfos2
 
-ifeq ($(HB_ARCHITECTURE),win)
+ifeq ($(HB_ARCHITECTURE),os2)
 
 C_SOURCES=\
-	winapi.c \
+	os2pm.c \
 
 PRG_SOURCES=\
+	tform.prg \
+	tmenu.prg \
+	tmenuit.prg \
+	winctrl.prg \
 	button.prg \
 	edit.prg \
-	form.prg \
-	menu.prg \
-	menuitem.prg \
-	winctrl.prg \
 
 include $(TOP)$(ROOT)config/lib.cf
 

@@ -8,6 +8,28 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-13 01:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbwin/wapi_commctrl.c
+  * contrib/hbwin/wapi_winuser.c
+    ! Lots of non-ANSI C comments converted to ANSI.
+      (may I please ask to pay attention to this?)
+    ! Fixed WAPI_GETSCROLLRANGE() return value.
+    ! non-WinCE compatible functions converted to stubs
+      when compiled for WinCE.
+    * Formatting.
+
+  * contrib/Makefile
+  - contrib/hbgf
+  + contrib/examples/hbgf
+  * contrib/examples/hbgf/hbgfwin/Makefile
+  * contrib/examples/hbgf/hbgfos2/Makefile
+  * contrib/examples/hbgf/hbgfgtk/Makefile
+  * contrib/examples/hbgf/Makefile
+    * hbgf moved from contrib to examples.
+
+  * contrib/examples/Makefile
+    * Updated.
+
 2009-03-13 01:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/dos/owatcom.cf
   * config/win/poccce.cf

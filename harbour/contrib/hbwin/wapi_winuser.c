@@ -62,9 +62,13 @@ BOOL EnableScrollBar( HWND hWnd, UINT wSBflags, UINT wArrows );
 */
 HB_FUNC( WAPI_ENABLESCROLLBAR )
 {
+#if ! defined(HB_OS_WIN_CE)
    wapi_ret_L( EnableScrollBar( wapi_par_HWND( 1 ),
                                 wapi_par_UINT( 2 ),
                                 wapi_par_UINT( 3 ) ) );
+#else
+   wapi_ret_L( FALSE );
+#endif
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -106,19 +110,14 @@ BOOL GetScrollInfo( HWND hwnd, int fnBar, LPSCROLLINFO lpsi );
 HB_FUNC( WAPI_GETSCROLLINFO )
 {
    LPSCROLLINFO si = ( LPSCROLLINFO ) wapi_par_STRUCT( 3 );
-   //LPSCROLLINFO si;
    BOOL         bSuccess;
-
-   //memset( si, 0, sizeof( SCROLLINFO ) );
-   //si->cbSize = sizeof( SCROLLINFO );
 
    bSuccess = GetScrollInfo( wapi_par_HWND( 1 ),
                              wapi_par_INT( 2 ),
                              si );
    if( bSuccess )
-   {
       hb_storclen( ( char* ) &si, 3, sizeof( SCROLLINFO ) );
-   }
+
    wapi_ret_L( bSuccess );
 }
 /*----------------------------------------------------------------------*/
@@ -127,8 +126,12 @@ int GetScrollPos( HWND hWnd, int nBar );
 */
 HB_FUNC( WAPI_GETSCROLLPOS )
 {
+#if ! defined(HB_OS_WIN_CE)
    wapi_ret_NI( GetScrollPos( wapi_par_HWND( 1 ),
                               wapi_par_INT( 2 ) ) );
+#else
+   wapi_ret_NI( 0 );
+#endif
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -136,18 +139,24 @@ BOOL GetScrollRange( HWND hWnd, int nBar, LPINT lpMinPos, LPINT lpMaxPos );
 */
 HB_FUNC( WAPI_GETSCROLLRANGE )
 {
-   int minPos, maxPos;
-
-   if( GetScrollRange( wapi_par_HWND( 1 ),
-                       wapi_par_INT( 2 ),
-                       &minPos,
-                       &maxPos ) )
+#if ! defined(HB_OS_WIN_CE)
    {
-      hb_storni( minPos, 3 );
-      hb_storni( maxPos, 4 );
+      int minPos, maxPos;
 
-      wapi_ret_L( TRUE );
+      if( GetScrollRange( wapi_par_HWND( 1 ),
+                          wapi_par_INT( 2 ),
+                          &minPos,
+                          &maxPos ) )
+      {
+         hb_storni( minPos, 3 );
+         hb_storni( maxPos, 4 );
+
+         wapi_ret_L( TRUE );
+         return;
+      }
    }
+#endif
+
    wapi_ret_L( FALSE );
 }
 /*----------------------------------------------------------------------*/
@@ -221,9 +230,13 @@ BOOL ShowScrollBar( HWND hWnd, int wBar, BOOL bShow );
 */
 HB_FUNC( WAPI_SHOWSCROLLBAR )
 {
+#if ! defined(HB_OS_WIN_CE)
    wapi_ret_L( ShowScrollBar( wapi_par_HWND( 1 ),
                               wapi_par_INT( 2 ),
                               wapi_par_BOOL( 3 ) ) );
+#else
+   wapi_ret_L( FALSE );
+#endif
 }
 /*----------------------------------------------------------------------*/
 /*                                                                      */
@@ -244,29 +257,21 @@ HB_FUNC( WAPI_LOADBITMAP )
    HBITMAP hbmp;
 
    if( ISNUM( 2 ) )
-   {
       lpBmp = ( LPTSTR ) MAKEINTRESOURCE( wapi_par_INT( 2 ) );
-   }
    else
-   {
       lpBmp = ( LPTSTR ) HB_TCHAR_CONVTO( hb_parc( 2 ) );
-   }
 
    hbmp = LoadBitmap( hinst, lpBmp );
    if( hbmp )
    {
 hb_ToOutDebug( "hbmp loaded" );
-      wapi_ret_NINT( (long) hbmp );
+      wapi_ret_NINT( ( long ) hbmp );
    }
    else
       wapi_ret_NI( 0 );
-   //wapi_ret_NINT( ( long ) LoadBitmap( GetModuleHandle( 0 ), lpBmp ) );
 
-   if( !ISNUM( 2 ) )
-   {
+   if( ! ISNUM( 2 ) )
       HB_TCHAR_FREE( lpBmp );
-   }
 }
 #endif
 /*----------------------------------------------------------------------*/
-

@@ -14,7 +14,6 @@ DIRS=\
 	hbclipsm \
 	hbcrypt \
 	hbct \
-	hbgf \
 	hbgt \
 	hbmisc \
 	hbmzip \
