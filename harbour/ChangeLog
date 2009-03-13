@@ -8,6 +8,20 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-13 01:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * config/dos/owatcom.cf
+  * config/win/poccce.cf
+  * config/win/pocc64.cf
+  * config/win/owatcom.cf
+  * config/win/pocc.cf
+  * config/linux/owatcom.cf
+  * config/os2/owatcom.cf
+    ! Cleanups and fixes after yesterday's changes.
+      Turned out that CFLAGS has an important and strange
+      difference compared to CPPFLAGS: It's also passed to the
+      _linker_ :( This should be cleaned in the future.
+    ! HB_USER_LDFLAGS honored in dos/owatcom.
+
 2009-03-13 01:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbgf/hbgfwin/winapi.c
     * Formatting.

@@ -37,13 +37,13 @@ CPPFLAGS += -5 -fp5
 CPPFLAGS += -onaehtzr -oi+ -ei -zp8 -s -zt0
 endif
 
-ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -d2
-endif
-
 CPPFLAGS += -i. -i$(TOP)$(ROOT)include
 ifneq ($(HB_LIB_COMPILE),)
 CPPFLAGS += -i$(HB_INC_COMPILE)
+endif
+
+ifeq ($(HB_BUILD_DEBUG),yes)
+CPPFLAGS += -d2
 endif
 
 # work arround to DOS command line size limit
@@ -101,7 +101,7 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
    endif
 endif
 
-LD_RULE = $(link_exe_file)
+LD_RULE = $(link_exe_file) $(HB_USER_LDFLAGS)
 
 #Note: The empty line below HAVE TO exist!
 define lib_object

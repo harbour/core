@@ -15,24 +15,24 @@ CC = wpp386
 CC_IN =
 CC_OUT = -fo=
 
-#CFLAGS = -j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT
-CFLAGS = -w2 -zq -bt=NT
+#CPPFLAGS = -j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT
+CPPFLAGS = -w2 -zq -bt=NT
 
 ifneq ($(HB_BUILD_OPTIM),no)
 # architecture flags
-CFLAGS += -5 -fp5
+CPPFLAGS += -5 -fp5
 # optimization flags
 # don't enable -ol optimization in OpenWatcom 1.1 - gives buggy code
-CFLAGS += -onaehtzr -oi+ -ei -zp8 -s -zt0
+CPPFLAGS += -onaehtzr -oi+ -ei -zp8 -s -zt0
 endif
 
-CFLAGS += -i. -i$(TOP)$(ROOT)include
+CPPFLAGS += -i. -i$(TOP)$(ROOT)include
 ifneq ($(HB_LIB_COMPILE),)
-CFLAGS += -i$(HB_INC_COMPILE)
+CPPFLAGS += -i$(HB_INC_COMPILE)
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -d2
+CPPFLAGS += -d2
 endif
 
 # Note: The empty line directly before 'endef' HAVE TO exist!

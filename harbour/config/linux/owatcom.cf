@@ -27,13 +27,14 @@ CPPFLAGS += -5 -fp5
 CPPFLAGS += -onaehtzr -oi+ -ei -zp8 -s -zt0
 endif
 
-ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -d2
-endif
 
 CPPFLAGS += -i. -i$(TOP)$(ROOT)include
 ifneq ($(HB_LIB_COMPILE),)
    CPPFLAGS += -i$(HB_INC_COMPILE)
+endif
+
+ifeq ($(HB_BUILD_DEBUG),yes)
+CPPFLAGS += -d2
 endif
 
 empty:=
