@@ -73,14 +73,17 @@ HOW TO BUILD AND INSTALL HARBOUR
           belonging to other C compilers are interfering with your setup.
           For the list of supported compilers, please look up the
           relevant section of this file.
-      3.) Make sure to have GNU Make. We recommend the one distributed
-          by MinGW team. Use this link to get it:
+      3.) Make sure to have GNU Make. Certain older versions and builds
+          are untested and may not work. We recommend the one distributed
+          by MinGW team. The latest, tested version is 3.81 at the time of
+          this writing. Use this link to get it:
             https://sourceforge.net/project/showfiles.php?group_id=2435&package_id=23918
           If you have it, you have three choices:
-          - Put mingw32-make.exe anywhere in your PATH. (recommended)
+          - Copy mingw32-make.exe or make.exe into a separate directory
+            and add that directory to the beginning of your PATH.
+            (recommended)
+          - Put mingw32-make.exe anywhere in your PATH.
           - Put mingw32-make.exe in Harbour source root dir.
-          - Rename mingw32-make.exe to make.exe and put it in
-            your PATH _before_ your compiler tools.
 
       > set HB_COMPILER=<msvc|owatcom|bcc|pocc|...>
       > set HB_INSTALL_PREFIX=<DIR>
@@ -250,7 +253,7 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
    HB_BIN_COMPILE=<HARBOUR_NATIVE_BUILD_DIR>\bin
    HB_PPGEN_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin
 
-   You need these when building for a platform different to host.
+   You need these when building for a platform different than host.
    For this to work, you will need to point above envvars to
    a native Harbour build available on your system. You don't need
    a full native build, harbour.exe and hbpp.exe are enough for

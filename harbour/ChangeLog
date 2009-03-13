@@ -8,6 +8,17 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-13 12:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    + Further refined GNU Make usage instructions for Windows
+      compilers. The recommended way of setting it up is now
+      stricter and there is mention of recommended build and
+      version number.
+
+  * contrib/hbapollo/apollo.c
+  * contrib/hbapollo/apollo1.prg
+    * Formatting.
+
 2009-03-13 03:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/rddsql/sddpg/pgsqldd.c
     ! MSVC C++ potentially uninit'ed var warning fixed.

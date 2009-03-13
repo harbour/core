@@ -50,12 +50,11 @@
  *
  */
 
-#include "error.ch"
 #include "rddsys.ch"
 
 /* ANNOUNCE APOLLO */
 
-init procedure ApolloInit
+INIT PROCEDURE ApolloInit
 
 /*
    REQUEST _Apollo
@@ -63,20 +62,7 @@ init procedure ApolloInit
    rddRegister( "Apollo", RDT_FULL )
 */
 
-return
+   RETURN
 
-
-
-/* -----------------20/01/2002 13:25-----------------
- * sx_GetVal()
- * --------------------------------------------------*/
-Function sx_GetVal( x )
-RETURN Val( sx_Getvariant( x ) )
-
-
-
-
-/*
-sx_GetVal()
-
-*/
+FUNCTION sx_GetVal( x )
+   RETURN Val( sx_Getvariant( x ) )

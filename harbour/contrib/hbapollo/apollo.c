@@ -54,7 +54,7 @@
  * NOTE: Functions are listed alfabetically
  * --------------------------------------------------*/
 
-/* NOTE: This hack is needed to suppress 'non-ANSI 
+/* NOTE: This hack is needed to suppress 'non-ANSI
          keyword' warnings inside Sde61.h. */
 #if defined( __BORLANDC__ ) || defined( __WATCOMC__ )
    #define _declspec __declspec
@@ -288,8 +288,8 @@ HB_FUNC( SX_SYSPROP )
 {
    int i = hb_parni( 2 );
    hb_retni(
-    sx_SysProp( ( WORD ) hb_parni( 1 ),            /* One of the predefined constant values. See Apollo.ch */
-                ( void * ) &i ) );
+      sx_SysProp( ( WORD ) hb_parni( 1 ),            /* One of the predefined constant values. See Apollo.ch */
+                  ( void * ) &i ) );
 }
 /*
 HB_FUNC( SX_DISABLEAUTOOPEN )
