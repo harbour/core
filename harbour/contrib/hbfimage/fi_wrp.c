@@ -54,9 +54,7 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbstack.h"
 #include "hbapierr.h"
-#include "hbapifs.h"
 #include "hbvm.h"
 
 #if defined(HB_OS_WIN) && !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) ) || defined(__WATCOMC__)

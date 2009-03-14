@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-14 15:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbfimage/fi_winfu.c
+  * contrib/hbfimage/fi_wrp.c
+    % Unnecessary Harbour headers removed.
+
 2009-03-14 14:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_gnu_xmingwce.sh
     - Disabled modifying PATH when host OS is Windows.
