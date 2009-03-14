@@ -50,18 +50,17 @@
  *
  */
 
-#define HB_DONT_DEFINE_BOOL
-#define HB_DONT_DEFINE_LONG
-#define HB_DONT_DEFINE_BYTE
+#define HB_OS_WIN_USED
 
-#if defined(WINNT) || defined(_Windows) || defined(__NT__) || defined(_WIN32) || defined(__WINDOWS_386__) || defined(__WIN32__) || defined(__CYGWIN__)
-   #if !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) ) || defined(__WATCOMC__)
-      #define _WINDOWS_
-   #endif
-#endif
-/* Hack to workaround FreeImage.h trying to #include <inttypes.h> */
-#if defined(__BORLANDC__)
-   #define _MSC_VER
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbstack.h"
+#include "hbapierr.h"
+#include "hbapifs.h"
+#include "hbvm.h"
+
+#if defined(HB_OS_WIN) && !defined(_WINDOWS_) && ( defined(__GNUC__) || defined(__POCC__) || defined(__XCC__) ) || defined(__WATCOMC__)
+   #define _WINDOWS_
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -69,11 +68,6 @@
 #endif
 
 #include "FreeImage.h"
-
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
-#include "hbvm.h"
 
 /* ************************* WRAPPED FUNCTIONS ****************************** */
 

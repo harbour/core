@@ -72,7 +72,12 @@ Section "Main components" hb_main
 
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
+
   File /oname=COPYING "$%HB_DOC_INSTALL%\license.txt"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\ChangeLog"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\ERRATA"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\INSTALL"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\TODO"
 
   SetOutPath $INSTDIR\bin
   File "$%HB_BIN_INSTALL%\*.*"
@@ -153,13 +158,12 @@ Section "Uninstall"
   ; Remove files and uninstaller
   RMDir /r $INSTDIR
 
-  ; Remove shortcuts, if any
-  Delete "$SMPROGRAMS\Harbour Project\*.*"
-
   ; Remove directories used
-  RMDir "$SMPROGRAMS\Harbour Project\Links"
-  RMDir "$SMPROGRAMS\Harbour Project"
-  RMDir "$INSTDIR"
+  Delete "$SMPROGRAMS\Harbour Project\Links\*.*"
+  RMDir  "$SMPROGRAMS\Harbour Project\Links"
+  Delete "$SMPROGRAMS\Harbour Project\*.*"
+  RMDir  "$SMPROGRAMS\Harbour Project"
+  RMDir  "$INSTDIR"
 
   Delete "$DESKTOP\Harbour Project.lnk"
 

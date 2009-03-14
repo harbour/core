@@ -40,7 +40,7 @@ set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
 set HB_DOC_INSTALL=%HB_INSTALL_PREFIX%\doc
 
 rem ; Pre-build cleanup
-if exist %HB_INSTALL_BASE% rmdir /q /s %HB_INSTALL_BASE%
+if exist %HB_INSTALL_PREFIX% rmdir /q /s %HB_INSTALL_PREFIX%
 
 rem ; Option setup
 set HB_BUILD_DLL=yes
@@ -62,11 +62,11 @@ if exist "%HB_BIN_INSTALL%\*.lib" del "%HB_BIN_INSTALL%\*.lib"
 if exist "%HB_BIN_INSTALL%\*.exp" del "%HB_BIN_INSTALL%\*.exp"
 
 rem ; Post-build installation
-xcopy /D /Y ChangeLog "%HB_INSTALL_PREFIX%"
-xcopy /D /Y COPYING   "%HB_INSTALL_PREFIX%"
-xcopy /D /Y ERRATA    "%HB_INSTALL_PREFIX%"
-xcopy /D /Y INSTALL   "%HB_INSTALL_PREFIX%"
-xcopy /D /Y TODO      "%HB_INSTALL_PREFIX%"
+xcopy /D /Y ChangeLog "%HB_INSTALL_PREFIX%\"
+xcopy /D /Y COPYING   "%HB_INSTALL_PREFIX%\"
+xcopy /D /Y ERRATA    "%HB_INSTALL_PREFIX%\"
+xcopy /D /Y INSTALL   "%HB_INSTALL_PREFIX%\"
+xcopy /D /Y TODO      "%HB_INSTALL_PREFIX%\"
 
 rem ; Build installer package
 makensis.exe %~dp0mpkg_win.nsi
@@ -75,13 +75,14 @@ rem ; Build .zip package
 if exist %HB_PKGNAME%.zip del %HB_PKGNAME%.zip
 pushd
 cd %HB_INSTALL_BASE%
-zip -X -r -o %~dp0%HB_PKGNAME%.zip *
+zip -X -r -o %~dp0%HB_PKGNAME%.zip . -i %HB_DIRNAME%\*
 popd
 
 :MK_ERROR
 
 rem ; Cleanup
-if "%1" == "--deltemp" rmdir /q /s %HB_INSTALL_BASE%
+if "%1" == "--deltemp" rmdir /q /s %HB_INSTALL_PREFIX%
+if "%1" == "--deltemp" rmdir /q    %HB_INSTALL_BASE%
 
 endlocal
 

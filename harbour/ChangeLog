@@ -8,6 +8,31 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-14 14:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * make_gnu_xmingwce.sh
+    - Disabled modifying PATH when host OS is Windows.
+    ; NOTE: Hack.
+
+  * include/hbtrace.h
+    + Added HB_EXPORT.
+
+  * doc/whatsnew.txt
+  * contrib/hbfimage/fi_winfu.c
+  * contrib/hbfimage/fi_wrp.c
+  * contrib/hbfimage/Makefile
+    - Restored previous state, because latest changed addressing
+      Linux build failure were causing problems for the Windows
+      platform.
+    ; TOFIX: We must clean our types, to avoid these problems
+             and all bad hacks to work it around.
+
+  * mpkg_win.bat
+  * mpkg_win.nsi
+    + Added files ChangeLog, TODO, ERRATA, INSTALL to root dir.
+    * Some changed to batch targeting robustness for situations
+      which cannot normally happen in normal cases, but it's
+      useful for debugging.
+
 2009-03-13 23:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * make_gnu.bat
   * config/win/global.cf

@@ -9,6 +9,9 @@ LIBNAME=hbfimage
 HB_INC_FREEIMAGE_OK =
 
 ifneq ($(HB_ARCHITECTURE),dos)
+# disabled until a proper solution is found for type collision
+ifneq ($(HB_ARCHITECTURE),linux)
+ifneq ($(HB_ARCHITECTURE),darwin)
 
 ifeq ($(HB_INC_FREEIMAGE),)
 ifeq ($(HB_XBUILD),)
@@ -39,6 +42,12 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

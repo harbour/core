@@ -47,7 +47,10 @@ export HB_USER_PRGFLAGS="$CC_HB_USER_PRGFLAGS $HB_USER_PRGFLAGS"
 
 # default cegcc instalation path
 [ -z "$CCPATH" ] && CCPATH="/opt/mingw32ce/bin"
-export PATH="$CCPATH:$PATH"
+
+if [ "$HB_HOST_ARCH" != "win" ]; then
+    export PATH="$CCPATH:$PATH"
+fi
 
 # cegcc executables prefix - this
 # has changed in cegcc/gcc4.3.0
