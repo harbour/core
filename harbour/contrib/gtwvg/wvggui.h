@@ -73,7 +73,9 @@
 #include <commctrl.h>
 #include <ole2.h>
 #include <oleauto.h>
+#if ! defined( HB_OS_WIN_CE )
 #include <olectl.h>
+#endif
 #include <commdlg.h>
 #include <shlobj.h>
 

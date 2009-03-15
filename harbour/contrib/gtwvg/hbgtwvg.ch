@@ -82,6 +82,8 @@
 #define HB_GTI_SETFOCUS                  75
 #define HB_GTI_DEFERPAINT                76
 #define HB_GTI_ACTIVATESELECTCOPY        77
+#define HB_GTI_SETPOSANDSIZE             78
+#define HB_GTI_REFRESH                   79
 
 /* Presentation Parameters | HB_GTI_PRESPARAMS */
 #define HB_GTI_PP_EXSTYLE                 1
@@ -139,6 +141,25 @@
 #define HB_GTS_SW_MAXIMIZED               5
 
 #define HB_GTI_GUI                     1001
+
+/* Constants to manage CUI-GUI objects  */
+#define GOBJ_OBJSTATE_ENABLED             1
+#define GOBJ_OBJSTATE_DISABLED            2
+#define GOBJ_OBJSTATE_HIDDEN              3
+#define GOBJ_OBJSTATE_HILIGHTED           4
+
+#define GOBJ_OBJDATA_TEXT                 1
+#define GOBJ_OBJDATA_PICTURE              2
+#define GOBJ_OBJDATA_HFONT                3
+#define GOBJ_OBJDATA_HPEN                 4
+#define GOBJ_OBJDATA_HBRUSH               5
+#define GOBJ_OBJDATA_COLORTEXT            6
+#define GOBJ_OBJDATA_COLORBK              7
+#define GOBJ_OBJDATA_IMAGE                8
+
+#define GOBJ_IMAGESOURCE_SLOT             1
+#define GOBJ_IMAGESOURCE_RESOURCE         2
+#define GOBJ_IMAGESOURCE_FILE             3
 
 /*----------------------------------------------------------------------*/
 

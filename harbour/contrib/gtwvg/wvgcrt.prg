@@ -260,6 +260,8 @@ EXPORTED:
    DATA     lHasInputFocus                        INIT  .F.
    DATA     nFrameState                           INIT  0  // normal
 
+   METHOD   showWindow()                          INLINE ::show()
+   METHOD   refresh()                             INLINE ::invalidateRect()
    ENDCLASS
 
 //----------------------------------------------------------------------//
@@ -268,7 +270,6 @@ EXPORTED:
 
 METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCrt
 
-   //::WvgPartHandler:init( oParent, oOwner )
    ::WvgWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    if hb_isArray( aPos )
@@ -310,7 +311,6 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
    ::maxRow := ::aSize[ 1 ]
    ::maxCol := ::aSize[ 2 ]
 
-   //::WvgPartHandler:Create( oParent, oOwner )
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    if ::lModal
@@ -333,6 +333,16 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
                            ::maxRow+1, ::maxCol+1, ::pGTp, .F., lRowCol, HB_WNDTYPE_CRT } )
    hb_gtInfo( HB_GTI_SETFONT, { ::fontName, ::fontHeight, ::fontWidth } )
 
+   IF hb_isNumeric( ::icon )
+      hb_gtInfo( HB_GTI_ICONRES, ::icon )
+   ELSE
+      IF ( '.ico' $ lower( ::icon ) )
+         hb_gtInfo( HB_GTI_ICONFILE, ::icon )
+      ELSE
+         hb_gtInfo( HB_GTI_ICONRES, ::icon )
+      ENDIF
+   ENDIF
+
    /* CreateWindow() be forced to execute */
    ? ' '
    ::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
@@ -342,24 +352,15 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgCr
    hb_gtInfo( HB_GTI_WINTITLE  , ::title     )
    hb_gtInfo( HB_GTI_RESIZEMODE, if( ::resizeMode == HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_FONT ) )
 
-   if !empty( ::icon )
-      if hb_isNumeric( ::icon )
-         hb_gtInfo( HB_GTI_ICONRES, ::icon )
 
-      elseif hb_isChar( ::icon )
-         hb_gtInfo( HB_GTI_ICONFILE, ::icon )
-
-      endif
-   endif
-
-   if ::lModal
+   IF ::lModal
       hb_gtInfo( HB_GTI_DISABLE, ::pGTp )
-   endif
+   ENDIF
 
-   if ::visible
+   IF ::visible
       Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
       ::lHasInputFocus := .t.
-   endif
+   ENDIF
 
    // Drawing Area of oCrt will point to itself
    //
@@ -495,7 +496,14 @@ METHOD hide() CLASS WvgCrt
 
 //----------------------------------------------------------------------//
 
-METHOD invalidateRect() CLASS WvgCrt
+METHOD invalidateRect( nTop, nLeft, nBottom, nRight ) CLASS WvgCrt
+
+   DEFAULT nTop TO 0
+   DEFAULT nLeft TO 0
+   DEFAULT nBottom TO maxrow()
+   DEFAULT nRight TO maxcol()
+
+   Wvt_InvalidateRect( nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
@@ -649,8 +657,8 @@ METHOD toBack() CLASS WvgCrt
 //----------------------------------------------------------------------//
 
 METHOD toFront() CLASS WvgCrt
-
-   RETURN Self
+   //RETURN Self
+   RETURN Win_SetWindowPosToTop( ::hWnd )
 
 //----------------------------------------------------------------------//
 
@@ -1056,10 +1064,13 @@ METHOD quit( xParam, xParam1 ) CLASS WvgCrt
 
 METHOD resize( xParam ) CLASS WvgCrt
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if hb_isBlock( xParam )// .or. hb_isNil( xParam )
       ::sl_resize := xParam
       RETURN NIL
    endif
+   IF empty( xParam )
+      ::sendMessage( WM_SIZE, 0, 0 )
+   ENDIF
 
    RETURN Self
 
@@ -1162,9 +1173,10 @@ METHOD dragDrop( xParam, xParam1 ) CLASS WvgCrt
 //----------------------------------------------------------------------//
 //                          HARBOUR SPECIFIC
 //----------------------------------------------------------------------//
-METHOD setFocus() CLASS WvgCrt
+METHOD SetFocus() CLASS WvgCrt
 
    ::sendMessage( WM_ACTIVATE, 1, 0 )
+   //::sendMessage( WM_SETFOCUS, 0, 0 )
 
    RETURN Self
 //----------------------------------------------------------------------//

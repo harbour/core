@@ -172,7 +172,9 @@ PROCEDURE Main()
    CLS
    Wvt_ShowWindow( SW_RESTORE )
 
-//smain()
+//   EditMemo()
+
+// smain()
 
    SetKey( K_F12        , {|| hb_gtInfo( HB_GTI_ACTIVATESELECTCOPY ) } )
    SetKey( K_CTRL_V     , {|| __KeyBoard( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) ) } )
@@ -774,13 +776,17 @@ FUNCTION WvtMyBrowse_X( oCrt )
    LOCAL nRow    := row()
    LOCAL nCol    := col()
    LOCAL cColor  := SetColor( "N/W*,N/GR*,,,N/W*" )
-   LOCAL cScr    := SaveScreen( 0,0,maxrow(),maxcol() )
    LOCAL aObjects:= WvtSetObjects( {} )
    LOCAL hPopup  := Wvt_SetPopupMenu()
    LOCAL stru_:={}, cFileIndex, cFileDbf, cRDD, nIndex, oTBar
+   LOCAL cScr
 
    STATIC nStyle := 0
    THREAD STATIC nFactor := 200
+
+   IF oCrt == NIL
+      cScr    := SaveScreen( 0,0,maxrow(),maxcol() )
+   ENDIF
 
    BrwBuildMenu( oCrt )
    oTBar := ActiveXBuildToolBar( oCrt )
@@ -908,7 +914,9 @@ FUNCTION WvtMyBrowse_X( oCrt )
    SetCursor( nCursor )
 
    DBCloseArea()
-   RestScreen( 0, 0, maxrow(), maxcol(), cScr )
+   IF oCrt == NIL
+      RestScreen( 0, 0, maxrow(), maxcol(), cScr )
+   ENDIF
    Wvt_setPopupMenu( hPopup )
    s_pGT_[ 2 ] := NIL
 
@@ -3437,7 +3445,7 @@ STATIC FUNCTION ExeFontDialog( oCrt )
    #if 1
    //  Every 2nd FontDialog will be MODAL
    oWvgFont := oFontDlg:display( ++nMode % 2 )
-   hb_ToOutDebug( '%s  %i', oWvgFont:compoundName, oWvgFont:nominalPointSize )
+//   hb_ToOutDebug( '%s  %i', oWvgFont:compoundName, oWvgFont:nominalPointSize )
    #endif
 
    oFontDlg:destroy()
@@ -3861,6 +3869,7 @@ PROCEDURE ExecGCUI()
 
    IF hb_mtvm()
       Hb_ThreadStart( {|oCrt|  oCrt := WvgCrt():New( , , { 2,4 }, { 20,81 }, , .t. ) , ;
+                               oCrt:icon := "dia_excl.ico",;
                                oCrt:create(), ;
                                GCUIConsole( oCrt ) , ;
                                oCrt:destroy()     } )
@@ -3872,66 +3881,78 @@ PROCEDURE ExecGCUI()
 #xTranslate Alert( => MyAlert(
 
 PROCEDURE GCUIConsole( oCrt )
-   LOCAL dDate      := ctod( "" )
-   LOCAL cName      := Space( 35 )
-   LOCAL cAdd1      := Space( 35 )
-   LOCAL cAdd2      := Space( 35 )
-   LOCAL cAdd3      := Space( 35 )
-   LOCAL nSlry      := 0
+   LOCAL dDate      := date()
+   LOCAL cName      := pad( 'Some Usefule Name'   , 35 )
+   LOCAL cAdd1      := pad( 'Linda Goldman Avenue', 35 )
+   LOCAL cAdd2      := pad( 'Excellent Street'    , 35 )
+   LOCAL cAdd3      := pad( 'Suit #415'           , 35 )
+   LOCAL nSlry      := 9000
    LOCAL nColGet    := 8
    LOCAL GetList    := {}
    LOCAL cLabel     := "VOUCH, that GROWS with you"
-   LOCAL oTab, oStat
+   LOCAL oTab, oStat, hBoxR, hTxt
+
+   SET SCOREBOARD OFF
 
    SetColor( "N/W,N/GR*,,,N/W*" )
    CLS
-   hb_gtInfo( HB_GTI_WINTITLE, "WVG Simplified GUI Console" )
+   hb_gtInfo( HB_GTI_WINTITLE, "WVG Simplified yet Powerful CUI-GUI Console!" )
 
-   oTab := WvgTabPage():New( oCrt, , { 430, 9 }, { 210, 301 }, , .t. )
-   oTab:caption   := 'First'
-   oTab:minimized := .f.
-   oTab:create()
-   oTab:tabActivate := {|mp1,mp2,oTab| oTab:Show() }
-
-   oStat := WvgStatic():New( oTab, , { 10, 30 }, { 190, 50 }, , .t. )
-   oStat:type    := WVGSTATIC_TYPE_TEXT
-   oStat:options := WVGSTATIC_TEXT_CENTER
-   oStat:caption := 'This is first caption'
-   oStat:create()
-   oStat:setColorBG( RGB( 240, 255, 0 ) )
-
-   @ MaxRow(), 0 SAY PadC( "GTWVG Simplified GUI Console", maxcol()+1 ) COLOR "W+/B*"
+   @ MaxRow(), 0 SAY PadC( "Navigate the Gets", maxcol()+1 ) COLOR "W+/B"
 
    @  2, nColGet SAY "< Date >"
    @  5, nColGet SAY "<" + PadC( "Name"   , 33 ) + ">"
    @  8, nColGet SAY "<" + PadC( "Address", 33 ) + ">"
    @ 15, nColGet SAY "< Salary >"
 
-   @  3, nColGet GET dDate  Valid {|| Alert( 'How did you like the "Alert" replacement?', { 'WOW','OK','OOps'} ) == 1 }
-   @  6, nColGet GET cName  Valid {|| oTab:hide(), .t. }
-   @  9, nColGet GET cAdd1  Valid {|| oTab:show(), .t. }
-   @ 11, nColGet GET cAdd2  Valid {|| oTab:hide(), .t. }
-   @ 13, nColGet GET cAdd3  Valid {|| oTab:show(), .t. }
-   @ 16, nColGet GET nSlry PICTURE "@Z 9999999.99"
+   @  3, nColGet GET dDate  ;
+                            WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 1 ) ) } ;
+                            Valid {|| Wvg_SetGObjData( hTxt, 6, RGB( 255,0,0 ) ), .t. }
+   @  6, nColGet GET cName  ;
+                            WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 2 ) ) } ;
+                            Valid {|| Wvg_SetGObjData( hTxt, 6, RGB( 255,255,0 ) ), ;
+                                                  Wvg_SetGObjState( hBoxR, 3 ), .t. }
+   @  9, nColGet GET cAdd1  ;
+                            WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 3 ) ) } ;
+                            Valid {|| Wvg_SetGObjData( hTxt, 6, RGB( 255,0,255 ) ), .t. }
+   @ 11, nColGet GET cAdd2  ;
+                            WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 4 ) ) } ;
+                            Valid {|| Wvg_SetGObjData( hTxt, 6, RGB( 255,255,255 ) ), ;
+                                                  Wvg_SetGObjState( hBoxR, 1 ), .t. }
+   @ 13, nColGet GET cAdd3  ;
+                            WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 198,21,140 ) ), .t. }
+   @ 16, nColGet GET nSlry PICTURE "@Z 9999999.99" ;
+                            WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 0,0,0 ) ), .t. }
 
    // The only additional calls to render your console GUI
    //
    // The GETLIST  : This can be embedded via  @ GET preprocessor command
    aEval( GetList, {|oGet| Wvg_BoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } )
    //
-   Wvg_BoxRaised( 1, 2, 18, 49, { -5,-5,5,5 } )
+   hBoxR := Wvg_BoxRaised( 1,2,18,49, {-5,-5,5,5} )
    //
-   Wvg_BoxRecessed( 1, 2, 18, 49 )
+   Wvg_BoxRecessed( 1,2,18,49 )
    //
-   // Wvg_BoxGroup( 2, 4, 17, 47 )
+   // Wvg_BoxGroup( 2,4,17,47 )
    //
-   Wvg_BoxGroupRaised( 2, 4, 17, 47, { -7,-7,7,7 } )
+   Wvg_BoxGroupRaised( 2,4,17,47, {-7,-7,7,7} )
+   //
+   hTxt := Wvg_TextBox( 3,57,16,75, {10,10,-10,-10}, 'This is first TextBox Line!', 2, 2 )
+   //
+   Wvg_Image( 15,36,16,42, {-3,-3,3,3}, GOBJ_IMAGESOURCE_FILE, 'Vouch1.bmp' )
+   Wvg_BoxRaised( 15,36,16,42,{-2,-2,2,2} )
+   //
+   Wvg_ShadedRect( 1,54,18,79, { -5,-5,5,5 }, 0, {65000,21000,7000,56000}, {255,32255,16000,32500} )
+   //
+   Wvg_BoxRaised( 1,54,18,79, {-5,-5,5,5} )
 
    // Instruct GT to Repaint the Screen with GUI elements.
-   Wvt_InvalidateRect( 0, 0, maxrow(), maxcol() )
+   oCrt:refresh()
 
    // Issue the read
    READ
+
+   Alert( 'How did you like the "Alert" replacement?', { 'WOW','OK','OOps'} )
 
    RETURN
 /*----------------------------------------------------------------------*/
@@ -3940,7 +3961,7 @@ PROCEDURE GCUIConsole( oCrt )
 FUNCTION MyAlert( cMsg, aOpt )
    LOCAL nSel, oCrt
 
-   oCrt := WvgCrt():New( , , { -1,-1 }, { 9, MaxCol()-4 }, , .t. )
+   oCrt := WvgCrt():New( , , { -1,-1 }, { 9, MaxCol()-6 }, , .t. )
    oCrt:lModal := .t.
    oCrt:icon   := "dia_excl.ico"
    oCrt:create()
@@ -3958,4 +3979,82 @@ FUNCTION MyAlert( cMsg, aOpt )
 
 #xTranslate Alert( => MyAlert(
 /*----------------------------------------------------------------------*/
+STATIC FUNCTION FetchText( nMode )
+   LOCAL cText
+
+   DO CASE
+   CASE nMode == 1
+      cText := 'Do you know Harbour is gaining a popularity what Clipper enjoyed at one time! '
+      cText += 'Enjoy it.'
+   CASE nMode == 2
+      cText := 'Do you know Harbour can host pure console, cui+gui console, pure gui consoles applications? '
+      cText += 'This demonstration is a proof of that.'
+   CASE nMode == 3
+      cText := 'Do you know Harbour is a multi-gt, multi-window, multi-thread compiler far superior than others in the market! '
+      cText += 'And is FREE.'
+   CASE nMode == 4
+      cText := 'Enjoy and contribute to the project any way you can. Develop, Debug, Support, and spread a word of mouth!'
+   ENDCASE
+
+   RETURN cText
+/*----------------------------------------------------------------------*/
+#if 0
+#include 'memoedit.ch'
+#include 'setcurs.ch'
+#include 'inkey.ch'
+
+Function Editmemo()
+   Local cText := 'This is initial text'
+   Local lEditMode := .f.
+
+   DO WHILE .T.
+      cText := MEMOEDIT( cText, 3,6,20,76, lEditMode, "EditFunc", 50 )
+      if lastkey() == 27
+         exit
+      endif
+   ENDDO
+
+   Return nil
+//----------------------------------------------------------------------//
+Function EditFunc( nMode, nRow, nCol )
+   Local nKey := Lastkey()
+
+   STATIC nLoop := 0
+
+   nLoop++
+
+   DO CASE
+   CASE nMode == ME_INIT
+
+      DO CASE
+      CASE nLoop == 1                         // Set insert mode
+         SetCursor( SC_SPECIAL1 )
+hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_INIT:K_INS' )
+         RETURN K_INS
+
+      OTHERWISE
+hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_INIT:OTHERWISE' )
+         RETURN ME_DEFAULT
+
+      ENDCASE
+
+   CASE nMode == ME_IDLE
+hb_ToOutDebug( 'nLoop %i %s', nLoop, 'ME_IDLE' )
+
+   OTHERWISE
+      IF nKey == K_INS
+         IF ReadInsert()
+            SetCursor(SC_NORMAL)
+         ELSE
+            SetCursor(SC_SPECIAL1)
+         ENDIF
+
+      ENDIF
+hb_ToOutDebug( 'nLoop %i %s %i %i', nLoop, 'OTHERWISE', nKey, nMode )
+
+   ENDCASE
+
+   RETURN ME_DEFAULT
+#endif
+//----------------------------------------------------------------------//
 

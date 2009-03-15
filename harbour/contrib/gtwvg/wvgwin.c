@@ -91,7 +91,13 @@
 
 #define WIN_STATUSBAR_MAX_PARTS         256
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
+
+#define WM_CHOOSEFONT_GETLOGFONT                  (WM_USER + 1)
+#define WM_CHOOSEFONT_SETLOGFONT                  (WM_USER + 101)
+#define WM_CHOOSEFONT_SETFLAGS                    (WM_USER + 102)
+
+/*----------------------------------------------------------------------*/
 
 #define wvg_parwparam( n )  ( ( WPARAM )  ( HB_PTRDIFF ) hb_parnint( n ) )
 #define wvg_parlparam( n )  ( ( LPARAM )  ( HB_PTRDIFF ) hb_parnint( n ) )
@@ -103,7 +109,7 @@
 
 #define wvg_rethandle( n )  ( hb_retnint( ( HB_PTRDIFF ) n ) )
 
-//----------------------------------------------------------------------//
+/*----------------------------------------------------------------------*/
 
 #if defined(__BORLANDC__) && !defined(HB_ARCH_64BIT)
     #undef MAKELONG
@@ -459,21 +465,12 @@ HB_FUNC( WIN_GETDC )
 {
    hb_retnint( ( HB_PTRDIFF ) GetDC( ISNIL( 1 ) ? NULL : ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
 }
-
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_RELEASEDC )
 {
    hb_retl( ReleaseDC( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( HDC ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
 }
-
-//-------------------------------------------------------------------//
-#if 0
-HB_FUNC( WIN_RECTANGLE )
-{
-   Rectangle( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-}
-#endif
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_CREATEBRUSH )
@@ -483,10 +480,12 @@ HB_FUNC( WIN_CREATEBRUSH )
    lb.lbStyle = hb_parni( 1 );
    lb.lbColor = ISNIL( 2 ) ? RGB( 0, 0, 0 ) : ( COLORREF ) hb_parnl( 2 ) ;
    lb.lbHatch = ISNIL( 3 ) ? 0 : hb_parni( 3 );
-
+#if ! defined( HB_OS_WIN_CE )
    hb_retnint( ( HB_PTRDIFF ) CreateBrushIndirect( &lb ) );
+#else
+   hb_retnint( ( HB_PTRDIFF ) CreateSolidBrush( lb.lbColor ) );
+#endif
 }
-
 //-------------------------------------------------------------------//
 //
 //   Win_DrawText( hDC, cText, aRect, nFormat )
@@ -986,6 +985,7 @@ static BITMAPINFO * PackedDibLoad( PTSTR szFileName )
    return pbmi ;
 }
 
+#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetWidth( BITMAPINFO * pPackedDib )
 {
    if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
@@ -993,7 +993,9 @@ static int PackedDibGetWidth( BITMAPINFO * pPackedDib )
    else
       return pPackedDib->bmiHeader.biWidth ;
 }
+#endif
 
+#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetHeight( BITMAPINFO * pPackedDib )
 {
    if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
@@ -1001,7 +1003,9 @@ static int PackedDibGetHeight( BITMAPINFO * pPackedDib )
    else
       return abs( pPackedDib->bmiHeader.biHeight ) ;
 }
+#endif
 
+#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetBitCount( BITMAPINFO * pPackedDib )
 {
    if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
@@ -1009,7 +1013,9 @@ static int PackedDibGetBitCount( BITMAPINFO * pPackedDib )
    else
       return pPackedDib->bmiHeader.biBitCount ;
  }
+#endif
 
+#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetInfoHeaderSize( BITMAPINFO * pPackedDib )
 {
    if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
@@ -1021,7 +1027,9 @@ static int PackedDibGetInfoHeaderSize( BITMAPINFO * pPackedDib )
 
    else return pPackedDib->bmiHeader.biSize ;
 }
+#endif
 
+#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetColorsUsed( BITMAPINFO * pPackedDib )
 {
    if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
@@ -1029,7 +1037,9 @@ static int PackedDibGetColorsUsed( BITMAPINFO * pPackedDib )
    else
       return pPackedDib->bmiHeader.biClrUsed ;
 }
+#endif
 
+#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetNumColors( BITMAPINFO * pPackedDib )
 {
    int iNumColors ;
@@ -1041,7 +1051,9 @@ static int PackedDibGetNumColors( BITMAPINFO * pPackedDib )
 
    return iNumColors ;
 }
+#endif
 
+#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetColorTableSize( BITMAPINFO * pPackedDib )
 {
    if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
@@ -1049,6 +1061,7 @@ static int PackedDibGetColorTableSize( BITMAPINFO * pPackedDib )
    else
       return PackedDibGetNumColors( pPackedDib ) * sizeof( RGBQUAD ) ;
 }
+#endif
 
 #if 0
 static RGBQUAD * PackedDibGetColorTablePtr( BITMAPINFO * pPackedDib )
@@ -1070,13 +1083,13 @@ static RGBQUAD * PackedDibGetColorTableEntry( BITMAPINFO * pPackedDib, int i )
       return PackedDibGetColorTablePtr( pPackedDib ) + i ;
 }
 #endif
-
+#if ! defined( HB_OS_WIN_CE )
 static BYTE * PackedDibGetBitsPtr( BITMAPINFO * pPackedDib )
 {
    return ( ( BYTE * ) pPackedDib ) + PackedDibGetInfoHeaderSize( pPackedDib ) +
                                       PackedDibGetColorTableSize( pPackedDib ) ;
 }
-
+#endif
 static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
                                int iExpWidth, int iExpHeight,
                                BOOL bMap3Dcolors,
@@ -1110,6 +1123,7 @@ static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
 
             if( !bMap3Dcolors )
             {
+#if ! defined( HB_OS_WIN_CE )
                hBitmap = CreateDIBitmap( hdc,
                                          ( PBITMAPINFOHEADER ) pPackedDib,
                                          CBM_INIT,
@@ -1123,6 +1137,9 @@ static HBITMAP hPrepareBitmap( char * szBitmapX, UINT uiBitmap,
 
                iWidth = PackedDibGetWidth( pPackedDib );
                iHeight = PackedDibGetHeight( pPackedDib );
+#else
+               return NULL;
+#endif
             }
             else
             {
@@ -1525,30 +1542,30 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
 
 HB_FUNC( WIN_TREEVIEW_SETTEXTCOLOR )
 {
+#if ! defined( HB_OS_WIN_CE )
    hb_retl( TreeView_SetTextColor( wvg_parhwnd( 1 ), wvg_parcolor( 2 ) ) );
+#endif
 }
-
 //----------------------------------------------------------------------//
 
 HB_FUNC( WIN_TREEVIEW_SETBKCOLOR )
 {
+#if ! defined( HB_OS_WIN_CE )
    hb_retl( TreeView_SetBkColor( wvg_parhwnd( 1 ), wvg_parcolor( 2 ) ) );
+#endif
 }
-
 //----------------------------------------------------------------------//
 
 HB_FUNC( WIN_TREEVIEW_SETLINECOLOR )
 {
    //hb_retl( TreeView_SetLineColor( wvg_parhwnd( 1 ), wvg_parcolor( 2 ) ) );
 }
-
 //----------------------------------------------------------------------//
 
 HB_FUNC( WIN_TREEVIEW_SELECTITEM )
 {
    hb_retl( TreeView_SelectItem( wvg_parhwnd( 1 ), wvg_parhandle( 2 ) ) );
 }
-
 //----------------------------------------------------------------------//
 //  Wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected )
 //
@@ -1724,21 +1741,26 @@ HB_FUNC( WIN_BUTTON_GETCHECK )
 {
    hb_retnl( Button_GetCheck( wvg_parhwnd( 1 ) ) );
 }
-
 //----------------------------------------------------------------------//
 
 HB_FUNC( WIN_ISICONIC )
 {
+#if ! defined( HB_OS_WIN_CE )
    hb_retl( IsIconic( wvg_parhwnd( 1 ) ) );
+#else
+   hb_retl( FALSE );
+#endif
 }
-
 //----------------------------------------------------------------------//
 
 HB_FUNC( WIN_ISZOOMED )
 {
+#if ! defined( HB_OS_WIN_CE )
    hb_retl( IsZoomed( wvg_parhwnd( 1 ) ) );
+#else
+   hb_retl( TRUE );
+#endif
 }
-
 //----------------------------------------------------------------------//
 // Win_SetDCBrushColor( hDC, nRGB )
 //
@@ -1750,7 +1772,6 @@ HB_FUNC( WIN_SETDCBRUSHCOLOR )
    wvg_rethandle( NULL );
 #endif
 }
-
 //----------------------------------------------------------------------//
 // Win_SetDCPenColor( hDC, nRGB )
 //
@@ -1825,7 +1846,7 @@ HB_FUNC( WIN_SETWINDOWPOSANDSIZE )
 {
    hb_retl( SetWindowPos( wvg_parhwnd( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ),
                                                   hb_parni( 4 ), hb_parni( 5 ),
-                hb_parl( 6 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOACTIVATE ) );
+                        ( hb_parl( 6 ) ? 0 : SWP_NOREDRAW ) | SWP_NOZORDER | SWP_NOACTIVATE ) );
 }
 
 //----------------------------------------------------------------------//
@@ -1886,6 +1907,7 @@ PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, BOOL bEmpty )
 //
 HB_FUNC( WVG_CHOOSEFONT )
 {
+#if ! defined( HB_OS_WIN_CE )
    CHOOSEFONT  cf;  // = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
    LOGFONT     lf;  // = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
    DWORD       Flags;
@@ -1964,6 +1986,7 @@ HB_FUNC( WVG_CHOOSEFONT )
       hb_itemReturnRelease( aFont );
       hb_itemRelease( aInfo );
    }
+#endif
 }
 
 //----------------------------------------------------------------------//
@@ -2050,10 +2073,12 @@ HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
 //----------------------------------------------------------------------//
 HB_FUNC( WVG_SETCURRENTBRUSH )
 {
+#if ! defined( HB_OS_WIN_CE )
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_OS_WIN_CE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
    SetClassLong( wvg_parhwnd( 1 ), GCL_HBRBACKGROUND, ( DWORD ) hb_parnint( 2 ) );
 #else
    SetClassLongPtr( wvg_parhwnd( 1 ), GCLP_HBRBACKGROUND, ( LONG_PTR ) hb_parnint( 2 ) );
+#endif
 #endif
 }
 //----------------------------------------------------------------------//
@@ -2140,9 +2165,9 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          tbb.iString   = iNewString;
 
          bSuccess = ( BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
-
+#if ! defined( HB_OS_WIN_CE )
          SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10,10 ) );
-
+#endif
          hb_retl( bSuccess );
          return;
       }
@@ -2169,9 +2194,9 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 
 HB_FUNC( WIN_SENDTOOLBARMESSAGE )
 {
+//#if ! defined( HB_OS_WIN_CE )
    HWND hTB = wapi_par_HWND( 1 );
    int  msg = wapi_par_INT( 2 );
-
 
    switch( msg )
    {
@@ -2186,8 +2211,8 @@ HB_FUNC( WIN_SENDTOOLBARMESSAGE )
          tbab.nID   = ( UINT ) wapi_par_HBITMAP( 3 );
 #endif
          wapi_ret_NI( ( int ) SendMessage( hTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab ) );
+         break;
       }
-      break;
       case TB_ADDBUTTONS           :
       {
          TBBUTTON tbb;
@@ -2200,8 +2225,8 @@ HB_FUNC( WIN_SENDTOOLBARMESSAGE )
          tbb.iString   = wapi_par_INT( 5 );
 
          wapi_ret_L( ( BOOL ) SendMessage( hTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb ) );
+         break;
       }
-      break;
       case TB_ADDSTRING            :
       {
          int iString;
@@ -2212,402 +2237,134 @@ HB_FUNC( WIN_SENDTOOLBARMESSAGE )
          HB_TCHAR_FREE( szCaption );
 
          wapi_ret_NI( iString );
+         break;
       }
-      break;
       case TB_AUTOSIZE             :
-      {
          SendMessage( hTB, TB_AUTOSIZE, ( WPARAM ) 0, ( LPARAM ) 0 );
-      }
-      break;
+         break;
       case TB_BUTTONCOUNT          :
-      {
-      }
-      break;
+         break;
       case TB_BUTTONSTRUCTSIZE     :
-      {
          SendMessage( hTB, TB_BUTTONSTRUCTSIZE, sizeof( TBBUTTON ), 0 );
-      }
-      break;
+         break;
       case TB_CHANGEBITMAP         :
-      {
-      }
-      break;
       case TB_CHECKBUTTON          :
-      {
-      }
-      break;
       case TB_COMMANDTOINDEX       :
-      {
-      }
-      break;
-      case TB_CUSTOMIZE            :
-      {
-      }
-      break;
       case TB_DELETEBUTTON         :
-      {
-      }
-      break;
       case TB_ENABLEBUTTON         :
-      {
-      }
-      break;
-      case TB_GETANCHORHIGHLIGHT   :
-      {
-      }
-      break;
       case TB_GETBITMAP            :
-      {
-      }
-      break;
       case TB_GETBITMAPFLAGS       :
-      {
-      }
-      break;
       case TB_GETBUTTON            :
-      {
-      }
-      break;
       case TB_GETBUTTONINFO        :
-      {
-      }
-      break;
       case TB_GETBUTTONSIZE        :
-      {
-      }
-      break;
       case TB_GETBUTTONTEXT        :
-      {
-      }
-      break;
-      case TB_GETCOLORSCHEME       :
-      {
-      }
-      break;
       case TB_GETDISABLEDIMAGELIST :
-      {
-      }
-      break;
-      case TB_GETEXTENDEDSTYLE     :
-      {
-      }
-      break;
-      case TB_GETHOTIMAGELIST      :
-      {
-      }
-      break;
-      case TB_GETHOTITEM           :
-      {
-      }
-      break;
-      #if 0
-      case TB_GETIDEALSIZE         :
-      {
-      }
-      break;
-      #endif
       case TB_GETIMAGELIST         :
-      {
-      }
-      break;
-      #if 0
-      case TB_GETIMAGELISTCOUNT    :
-      {
-      }
-      break;
-      #endif
-      case TB_GETINSERTMARK        :
-      {
-      }
-      break;
-      case TB_GETINSERTMARKCOLOR   :
-      {
-      }
-      break;
-      #if 0
-      case TB_GETITEMDROPDOWNRECT  :
-      {
-      }
-      break;
-      #endif
       case TB_GETITEMRECT          :
-      {
-      }
-      break;
-      case TB_GETMAXSIZE           :
-      {
-      }
-      break;
-      #if 0
-      case TB_GETMETRICS           :
-      {
-      }
-      break;
-      #endif
-      case TB_GETOBJECT            :
-      {
-      }
-      break;
-      case TB_GETPADDING           :
-      {
-      }
-      break;
-      #if 0
-      case TB_GETPRESSEDIMAGELIST  :
-      {
-      }
-      break;
-      #endif
       case TB_GETRECT              :
-      {
-      }
-      break;
       case TB_GETROWS              :
-      {
-      }
-      break;
       case TB_GETSTATE             :
-      {
-      }
-      break;
-      #if 0
-      case TB_GETSTRING            :
-      {
-      }
-      break;
-      #endif
       case TB_GETSTYLE             :
-      {
-      }
-      break;
       case TB_GETTEXTROWS          :
-      {
-      }
-      break;
       case TB_GETTOOLTIPS          :
-      {
-      }
-      break;
-      case TB_GETUNICODEFORMAT     :
-      {
-      }
-      break;
       case TB_HIDEBUTTON           :
-      {
-      }
-      break;
       case TB_HITTEST              :
-      {
-      }
-      break;
       case TB_INDETERMINATE        :
-      {
-      }
-      break;
       case TB_INSERTBUTTON         :
-      {
-      }
-      break;
-      case TB_INSERTMARKHITTEST    :
-      {
-      }
-      break;
       case TB_ISBUTTONCHECKED      :
-      {
-      }
-      break;
       case TB_ISBUTTONENABLED      :
-      {
-      }
-      break;
       case TB_ISBUTTONHIDDEN       :
-      {
-      }
-      break;
       case TB_ISBUTTONHIGHLIGHTED  :
-      {
-      }
-      break;
       case TB_ISBUTTONINDETERMINATE:
-      {
-      }
-      break;
       case TB_ISBUTTONPRESSED      :
-      {
-      }
-      break;
       case TB_LOADIMAGES           :
-      {
-      }
-      break;
-      case TB_MAPACCELERATOR       :
-      {
-      }
-      break;
-      case TB_MARKBUTTON           :
-      {
-         SendMessage( hTB, TB_MARKBUTTON, ( WPARAM ) wapi_par_INT( 3 ), ( LPARAM ) MAKELONG( hb_parl( 4 ),0 ) );
-      }
-      break;
-      case TB_MOVEBUTTON           :
-      {
-      }
-      break;
       case TB_PRESSBUTTON          :
-      {
-      }
-      break;
       case TB_REPLACEBITMAP        :
-      {
-      }
-      break;
-      case TB_SAVERESTORE          :
-      {
-      }
-      break;
-      case TB_SETANCHORHIGHLIGHT   :
-      {
-      }
-      break;
+         break;
       case TB_SETBITMAPSIZE        :
-      {
          SendMessage( hTB, TB_SETBITMAPSIZE, ( WPARAM ) 0,
                       ( LPARAM ) MAKELONG( wapi_par_INT( 3 ), wapi_par_INT( 4 ) ) );
-      }
-      break;
+         break;
       case TB_SETBUTTONINFO        :
-      {
-      }
-      break;
+         break;
       case TB_SETBUTTONSIZE        :
-      {
          SendMessage( hTB, TB_SETBUTTONSIZE, ( WPARAM ) 0,
                       ( LPARAM ) MAKELONG( wapi_par_INT( 3 ), wapi_par_INT( 4 ) ) );
-      }
-      break;
+         break;
       case TB_SETBUTTONWIDTH       :
-      {
          SendMessage( hTB, TB_SETBUTTONWIDTH, ( WPARAM ) 0,
                       ( LPARAM ) MAKELONG( wapi_par_INT( 3 ), wapi_par_INT( 4 ) ) );
-      }
-      break;
-      case TB_SETCMDID             :
-      {
-      }
-      break;
-      case TB_SETCOLORSCHEME       :
-      {
-      }
-      break;
-      case TB_SETDISABLEDIMAGELIST :
-      {
-      }
-      break;
-      case TB_SETDRAWTEXTFLAGS     :
-      {
-      }
-      break;
-      case TB_SETEXTENDEDSTYLE     :
-      {
-      }
-      break;
-      case TB_SETHOTIMAGELIST      :
-      {
-      }
-      break;
-      case TB_SETHOTITEM           :
-      {
-      }
-      break;
-      #if 0
-      case TB_SETHOTITEM2          :
-      {
-      }
-      break;
-      #endif
+         break;
       case TB_SETIMAGELIST         :
-      {
          SendMessage( hTB, TB_SETIMAGELIST, ( WPARAM ) 0, ( LPARAM ) wapi_par_HIMAGELIST( 3 ) );
-      }
-      break;
+         break;
       case TB_SETINDENT            :
-      {
          SendMessage( hTB, TB_SETINDENT, ( WPARAM ) wapi_par_INT( 3 ), ( LPARAM ) 0 );
-      }
-      break;
-      case TB_SETINSERTMARK        :
-      {
-      }
-      break;
-      case TB_SETINSERTMARKCOLOR   :
-      {
-      }
-      break;
-      #if 0
-      case TB_SETLISTGAP           :
-      {
-      }
-      break;
-      #endif
+         break;
       case TB_SETMAXTEXTROWS       :
-      {
          SendMessage( hTB, TB_SETMAXTEXTROWS, ( WPARAM ) wapi_par_INT( 2 ), ( LPARAM ) 0 );
-      }
-      break;
+         break;
+      case TB_SETPARENT            :
+      case TB_SETROWS              :
+      case TB_SETSTATE             :
+      case TB_SETSTYLE             :
+      case TB_SETTOOLTIPS          :
+      case TB_SETCMDID             :
+      case TB_SETDISABLEDIMAGELIST :
+      case TB_SETDRAWTEXTFLAGS     :
+         break;
+
       #if 0
+      case TB_TRANSLATEACCELERATOR :
+      case TB_SETPRESSEDIMAGELIST  :
+      case TB_SETWINDOWTHEME       :
+      case TB_GETIDEALSIZE         :
+      case TB_GETIMAGELISTCOUNT    :
+      case TB_GETMETRICS           :
+      case TB_GETPRESSEDIMAGELIST  :
+      case TB_GETSTRING            :
+      case TB_SETLISTGAP           :
+      case TB_GETITEMDROPDOWNRECT  :
+      case TB_SETHOTITEM2          :
       case TB_SETMETRICS           :
-      {
-      }
-      break;
+         break;
       #endif
+
+#if ! defined( HB_OS_WIN_CE )
       case TB_SETPADDING           :
-      {
          SendMessage( hTB, TB_SETPADDING, ( WPARAM ) 0,
                            ( LPARAM ) MAKELPARAM( wapi_par_INT( 2 ), wapi_par_INT( 3 ) ) );
-      }
-      break;
-      case TB_SETPARENT            :
-      {
-      }
-      break;
-      #if 0
-      case TB_SETPRESSEDIMAGELIST  :
-      {
-      }
-      break;
-      #endif
-      case TB_SETROWS              :
-      {
-      }
-      break;
-      case TB_SETSTATE             :
-      {
-      }
-      break;
-      case TB_SETSTYLE             :
-      {
-      }
-      break;
-      case TB_SETTOOLTIPS          :
-      {
-      }
-      break;
+         break;
+      case TB_MARKBUTTON           :
+         SendMessage( hTB, TB_MARKBUTTON, ( WPARAM ) wapi_par_INT( 3 ), ( LPARAM ) MAKELONG( hb_parl( 4 ),0 ) );
+         break;
+      case TB_SETINSERTMARK        :
+      case TB_SETINSERTMARKCOLOR   :
+      case TB_SETCOLORSCHEME       :
+      case TB_SETEXTENDEDSTYLE     :
+      case TB_SETHOTIMAGELIST      :
+      case TB_SETHOTITEM           :
+      case TB_INSERTMARKHITTEST    :
+      case TB_MAPACCELERATOR       :
+      case TB_MOVEBUTTON           :
+      case TB_GETINSERTMARK        :
+      case TB_GETCOLORSCHEME       :
+      case TB_CUSTOMIZE            :
+      case TB_GETANCHORHIGHLIGHT   :
+      case TB_GETEXTENDEDSTYLE     :
+      case TB_GETHOTIMAGELIST      :
+      case TB_GETINSERTMARKCOLOR   :
+      case TB_GETHOTITEM           :
+      case TB_GETOBJECT            :
+      case TB_GETUNICODEFORMAT     :
+      case TB_GETMAXSIZE           :
+      case TB_SAVERESTORE          :
+      case TB_SETANCHORHIGHLIGHT   :
       case TB_SETUNICODEFORMAT     :
-      {
-      }
-      break;
-      #if 0
-      case TB_SETWINDOWTHEME       :
-      {
-      }
-      break;
-      case TB_TRANSLATEACCELERATOR :
-      {
-      }
-      break;
-      #endif
+         break;
+#endif
    }
-
+//#endif
 }
 
 //----------------------------------------------------------------------//
@@ -2658,6 +2415,7 @@ HB_FUNC( WVG_FILLRECT )
 
 HB_FUNC( WVG_BEGINMOUSETRACKING )
 {
+#if ! defined( HB_OS_WIN_CE )
    TRACKMOUSEEVENT tmi;
 
    tmi.cbSize      = sizeof( TRACKMOUSEEVENT );
@@ -2665,6 +2423,9 @@ HB_FUNC( WVG_BEGINMOUSETRACKING )
    tmi.hwndTrack   = wapi_par_HWND( 1 );
    tmi.dwHoverTime = 1;
    wapi_ret_L( _TrackMouseEvent( &tmi ) );
+#else
+   wapi_ret_L( FALSE );
+#endif
 }
 
 /*----------------------------------------------------------------------*/

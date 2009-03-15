@@ -75,7 +75,9 @@
 #include <commctrl.h>
 #include <ole2.h>
 #include <oleauto.h>
+#if ! defined( HB_OS_WIN_CE )
 #include <olectl.h>
+#endif
 #include <commdlg.h>
 #include <shlobj.h>
 
@@ -217,7 +219,9 @@ HB_EXTERN_BEGIN
 #ifdef __cplusplus
 extern "C" { STDAPI OleLoadPicture(LPSTREAM,LONG,BOOL,REFIID,PVOID*); }
 #else
+#if ! defined( HB_OS_WIN_CE )
 STDAPI OleLoadPicture(LPSTREAM,LONG,BOOL,REFIID,PVOID*);
+#endif
 #endif
 #endif
 #endif /* __BORLANDC__ */
@@ -253,23 +257,56 @@ typedef struct
 #define GOBJ_OBJTYPE_BOXGET             3
 #define GOBJ_OBJTYPE_BOXGROUP           4
 #define GOBJ_OBJTYPE_BOXGROUPRAISED     5
+#define GOBJ_OBJTYPE_PICTURE            6
+#define GOBJ_OBJTYPE_LINE               7
+#define GOBJ_OBJTYPE_LINEEX             8
+#define GOBJ_OBJTYPE_LABEL              9
+#define GOBJ_OBJTYPE_LABELEX           10
+#define GOBJ_OBJTYPE_OUTLINE           11
+#define GOBJ_OBJTYPE_ELLIPSE           12
+#define GOBJ_OBJTYPE_RECTANGLE         13
+#define GOBJ_OBJTYPE_ROUNDRECT         14
+#define GOBJ_OBJTYPE_COLORRECT         15
+#define GOBJ_OBJTYPE_SHADEDRECT        16
+#define GOBJ_OBJTYPE_TEXTBOX           17
+#define GOBJ_OBJTYPE_OUTLINEEX         18
 
 typedef struct _tag_GOBJS
 {
-   int            iObjType  ;
-   int            iTop      ;
-   int            iLeft     ;
-   int            iBottom   ;
-   int            iRight    ;
-   int            iHeight   ;
-   int            iWidth    ;      // iThick
-   int            iOrient   ;
-   int            iFormat   ;
-   int            iStyle    ;      // iShape
-   HB_GOBJ_OFFSET aOffset   ;
-   COLORREF       crRGB     ;
+   int            iObjType      ;
+   int            iHandle       ;
+   int            iState        ;
+   int            iTop          ;
+   int            iLeft         ;
+   int            iBottom       ;
+   int            iRight        ;
+   HB_GOBJ_OFFSET aOffset       ;
+   int            iHeight       ;
+   int            iWidth        ;      // iThick
+   int            iOrient       ;
+   int            iAlign        ;
+   int            iAlignVert    ;
+   int            iFormat       ;
+   int            iStyle        ;      // iShape
+   int            iData         ;      // iSlot, etc
+   COLORREF       crRGB         ;
+   COLORREF       crRGBText     ;
+   COLORREF       crRGBBk       ;
+   HFONT          hFont         ;
+   HPEN           hPen          ;
+   HBRUSH         hBrush        ;
+#if ! defined( HB_OS_WIN_CE )
+   IPicture     * iPicture      ;
+#endif
+   BOOL           bDestroyFont  ;
+   BOOL           bDestroyPen   ;
+   BOOL           bDestroyBrush ;
+   BOOL           bDestroyPicture ;
+   TRIVERTEX      vert[ 2 ]     ;
+   LPTSTR         lpText        ;
    struct _tag_GOBJS * gObjNext ;
-} HB_GOBJS, * PHB_GOBJS     ;
+
+} HB_GOBJS, * PHB_GOBJS         ;
 
 typedef struct
 {
@@ -297,7 +334,9 @@ typedef struct
    HBRUSH    diagonalBrush;                 // Handle to diaoganl brush to draw scrollbars
    HBRUSH    solidBrush;                    // Handle to solid brush
    HBRUSH    whiteBrush;                    // Wvt specific White colored brush
+#if ! defined( HB_OS_WIN_CE )
    IPicture  *iPicture[ WVT_PICTURES_MAX ]; // Array to hold the Picture Streams to avoid recurring loading and unloading
+#endif
    HFONT     hUserFonts[ WVT_FONTS_MAX ] ;  // User defined font handles
    HPEN      hUserPens[ WVT_PENS_MAX ];     // User defined pens
    HINSTANCE hMSImg32;                      // Handle to the loaded library msimg32.dll
@@ -397,6 +436,7 @@ typedef struct
 
    HDC       hdc;                           // Handle to Windows Device Context
    HDC       hCompDC;                       // Compatible DC to _s.hdc
+   HDC       hWndDC;
 
    int       LastMenuEvent;                 // Last menu item selected
    int       MenuKeyEvent;                  // User definable event number for windows menu command
@@ -450,6 +490,8 @@ typedef struct
    BOOL      bResizing;                     // To know when it is in resizing mode
 
    PHB_GOBJS gObjs;                         // Graphic Objects
+
+   HWND      hWndParent;                    // Parent Window Handle, if any
 
 } HB_GTWVT, * PHB_GTWVT;
 
@@ -559,11 +601,21 @@ typedef struct _tag_HB_GT_COLDEF
 #  define SC_MAXIMIZE 0xF030
 #endif
 
+#if defined( HB_OS_WIN_CE )
+   BOOL SetMenu( HWND hWnd, HMENU hMenu );
+   HMENU GetMenu( HWND hWnd );
+
+   #define LR_LOADMAP3DCOLORS   0
+   #define SWP_NOREDRAW         0
+#endif
+
 POINT       HB_EXPORT   hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row );
+#if ! defined( HB_OS_WIN_CE )
 IPicture    HB_EXPORT * hb_wvt_gtLoadPicture( char * image );
 IPicture    HB_EXPORT * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection );
 BOOL        HB_EXPORT   hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture );
 BOOL        HB_EXPORT   hb_wvt_gtDestroyPicture( IPicture * iPicture );
+#endif
 BOOL        HB_EXPORT   hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image );
 
 LPWORD      HB_EXPORT   lpwAlign( LPWORD lpIn );
@@ -578,7 +630,8 @@ PHB_GTWVT   HB_EXPORT   hb_wvt_gtGetWVT( void );
 
 void        HB_EXPORT   hb_ToOutDebug( const char * sTraceMsg, ... );
 
-void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect );
+void        HB_EXPORT   hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect );
+
 //----------------------------------------------------------------------//
 
 extern BOOL     wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );

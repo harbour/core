@@ -133,8 +133,8 @@ HB_FUNC( WVT_UTILS )
 //
 HB_FUNC( WVT_CHOOSEFONT )
 {
+#if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
-
    CHOOSEFONT  cf;// = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
    LOGFONT     lf;// = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
    LONG        PointSize = 0;
@@ -207,6 +207,7 @@ HB_FUNC( WVT_CHOOSEFONT )
    }
 
    return ;
+#endif
 }
 
 //-------------------------------------------------------------------//

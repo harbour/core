@@ -8,6 +8,194 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-15 16:42 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+
+  * harbour/contrib/gtwvg/hbgtwvg.ch
+    + #define HB_GTI_SETPOSANDSIZE
+    + #define HB_GTI_HB_GTI_REFRESH
+      + Two more events to manage new CUI-GUI objects.
+
+    + #define GOBJ_OBJSTATE_*
+    + #define GOBJ_OBJDATA_*
+    + #define GOBJ_IMAGESOURCE_*
+      + Constants to manage CUI=GUI objects.
+
+  * harbour/contrib/gtwvg/gtwvg.h
+  * harbour/contrib/gtwvg/wvggui.h
+    ! Updated to be compilable for WinCE builds.
+
+  * harbour/contrib/gtwvg/gtwvg.c
+    ! Updated to honor WinCE builds.
+    ! Implemented double-buffering of console. Now flickering
+      should be the topic of the past.
+
+  * harbour/contrib/gtwvg/wvggui.c
+    ! Updated to honor WinCE builds.
+
+  * harbour/contrib/gtwvg/wvgcuig.c
+    + Implemented a highly optimized GUI controls for CUI consoles.
+      Implementation includes auto-destruction, data-substitution,
+      enable/disable feast, etc. These controls are almost identical
+      which are available with Wvt_Draw*() namespace but with a 
+      great difference that these are tied to the urrent GT and 
+      are handelled transparently by the GT itself. Developer 
+      has only to define it. The only requirement is that 
+      SaveScreen()/RestScreen() needs to be changed to new 
+      Modal GT window. Appln screens will never get blurred. It 
+      also employs optimized double-buffering and hence almost 
+      eliminates screen flickering. 
+
+  * harbour/contrib/gtwvg/wvgcore.c
+  * harbour/contrib/gtwvg/wvgsink.c
+  * harbour/contrib/gtwvg/wvgutils.c
+  * harbour/contrib/gtwvg/wvgwin.c
+    ! Updated to honor WinCE builds.
+
+  * harbour/contrib/gtwvg/wvgcrt.prg
+    ! A couple of methods fine-tuned.
+    ! Modal GT's more responsive to user needs.
+
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    ! Demonstrated the latest implemention of CUI-GUI controls. See below.
+      Please try <Traditional><WVG Console with CGUI> option in the main menu.
+      Also note the usage of Modal GT to simulate Alert() in new window.
+      Every GUI object returns a handle to it which may be used to 
+      change its parameters.
+
+    ; TOFIX( WINCE BUILDS ) - GetSystemDirectory()
+
+
+    /*    IMPLEMENTATION OF CUI-GUI CONTROLS - A CODE PREVIEW
+
+
+
+         #xTranslate Alert( => MyAlert(
+
+         PROCEDURE GCUIConsole( oCrt )
+            LOCAL dDate      := date()
+            LOCAL cName      := pad( 'Some Usefule Name'   , 35 )
+            LOCAL cAdd1      := pad( 'Linda Goldman Avenue', 35 )
+            LOCAL cAdd2      := pad( 'Excellent Street'    , 35 )
+            LOCAL cAdd3      := pad( 'Suit #415'           , 35 )
+            LOCAL nSlry      := 9000
+            LOCAL nColGet    := 8
+            LOCAL GetList    := {}
+            LOCAL cLabel     := "VOUCH, that GROWS with you"
+            LOCAL oTab, oStat, hBoxR, hTxt
+
+            SET SCOREBOARD OFF
+
+            SetColor( "N/W,N/GR*,,,N/W*" )
+            CLS
+            hb_gtInfo( HB_GTI_WINTITLE, "WVG Simplified yet Powerful CUI-GUI Console!" )
+
+            @ MaxRow(), 0 SAY PadC( "Navigate the Gets", maxcol()+1 ) COLOR "W+/B"
+
+            @  2, nColGet SAY "< Date >"
+            @  5, nColGet SAY "<" + PadC( "Name"   , 33 ) + ">"
+            @  8, nColGet SAY "<" + PadC( "Address", 33 ) + ">"
+            @ 15, nColGet SAY "< Salary >"
+
+            @  3, nColGet GET dDate  ;
+                                     WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 1 ) ) } ;
+                                     Valid {|| Wvg_SetGObjData( hTxt, 6, RGB( 255,0,0 ) ), .t. }
+            @  6, nColGet GET cName  ;
+                                     WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 2 ) ) } ;
+                                     Valid {|| Wvg_SetGObjData( hTxt, 6, RGB( 255,255,0 ) ), ;
+                                                           Wvg_SetGObjState( hBoxR, 3 ), .t. }
+            @  9, nColGet GET cAdd1  ;
+                                     WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 3 ) ) } ;
+                                     Valid {|| Wvg_SetGObjData( hTxt, 6, RGB( 255,0,255 ) ), .t. }
+            @ 11, nColGet GET cAdd2  ;
+                                     WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 4 ) ) } ;
+                                     Valid {|| Wvg_SetGObjData( hTxt, 6, RGB( 255,255,255 ) ), ;
+                                                           Wvg_SetGObjState( hBoxR, 1 ), .t. }
+            @ 13, nColGet GET cAdd3  ;
+                                     WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 198,21,140 ) ), .t. }
+            @ 16, nColGet GET nSlry PICTURE "@Z 9999999.99" ;
+                                     WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 0,0,0 ) ), .t. }
+
+            // The only additional calls to render your console GUI
+            //
+            // The GETLIST  : This can be embedded via  @ GET preprocessor command
+            aEval( GetList, {|oGet| Wvg_BoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } )
+            //
+            hBoxR := Wvg_BoxRaised( 1,2,18,49, {-5,-5,5,5} )
+            //
+            Wvg_BoxRecessed( 1,2,18,49 )
+            //
+            // Wvg_BoxGroup( 2,4,17,47 )
+            //
+            Wvg_BoxGroupRaised( 2,4,17,47, {-7,-7,7,7} )
+            //
+            hTxt := Wvg_TextBox( 3,57,16,75, {10,10,-10,-10}, 'This is first TextBox Line!', 2, 2 )
+            //
+            Wvg_Image( 15,36,16,42, {-3,-3,3,3}, GOBJ_IMAGESOURCE_FILE, 'Vouch1.bmp' )
+            //
+            Wvg_BoxRaised( 15,36,16,42,{-2,-2,2,2} )
+            //
+            Wvg_ShadedRect( 1,54,18,79, { -5,-5,5,5 }, 0, {65000,21000,7000,56000}, {255,32255,16000,32500} )
+            //
+            Wvg_BoxRaised( 1,54,18,79, {-5,-5,5,5} )
+
+            // Instruct GT to Repaint the Screen with GUI elements.
+            oCrt:refresh()
+
+            // Issue the read
+            READ
+
+            Alert( 'How did you like the "Alert" replacement?', { 'WOW','OK','OOps'} )
+
+            RETURN
+         /*----------------------------------------------------------------------*/
+         #xUntranslate alert( =>
+
+         FUNCTION MyAlert( cMsg, aOpt )
+            LOCAL nSel, oCrt
+
+            oCrt := WvgCrt():New( , , { -1,-1 }, { 9, MaxCol()-6 }, , .t. )
+            oCrt:lModal := .t.
+            oCrt:icon   := "dia_excl.ico"
+            oCrt:create()
+            oCrt:resizable := .t.
+
+            SetColor( 'N/W' )
+            CLS
+            hb_gtInfo( HB_GTI_WINTITLE, cMsg )
+
+            nSel := Alert( cMsg, aOpt )
+
+            oCrt:destroy()
+
+            RETURN nSel
+
+         #xTranslate Alert( => MyAlert(
+         /*----------------------------------------------------------------------*/
+         STATIC FUNCTION FetchText( nMode )
+            LOCAL cText
+
+            DO CASE
+            CASE nMode == 1
+               cText := 'Do you know Harbour is gaining a popularity what Clipper enjoyed at one time! '
+               cText += 'Enjoy it.'
+            CASE nMode == 2
+               cText := 'Do you know Harbour can host pure console, cui+gui console, pure gui consoles applications? '
+               cText += 'This demonstration is a proof of that.'
+            CASE nMode == 3
+               cText := 'Do you know Harbour is a multi-gt, multi-window, multi-thread compiler far superior than others in the market! '
+               cText += 'And is FREE.'
+            CASE nMode == 4
+               cText := 'Enjoy and contribute to the project any way you can. Develop, Debug, Support, and spread a word of mouth!'
+            ENDCASE
+
+            RETURN cText
+         /*----------------------------------------------------------------------*/
+    */
+
+    ;TODO - Write a comprehensive help to exploit CUI-GUI functionality.
+            Will do in a few days.
+
+
 2009-03-16 00:38 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/postinst.bat
     + Added owatcom and pocc support for implib generation.

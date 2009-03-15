@@ -1045,13 +1045,16 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          SendMessage( hWnd, WM_SIZE, 0, 0 );
          return 0;
       }
+#if ! defined( HB_OS_WIN_CE )
       case WM_SIZING:
+#endif
       case WM_SIZE:
       {
          return hb_gt_wvt_SizeChanged( pWVT );
       }
       case WM_SYSCOMMAND:
       {
+#if ! defined( HB_OS_WIN_CE )
          switch( wParam )
          {
             case SC_MAXIMIZE:
@@ -1059,6 +1062,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                // TODO
             }
          }
+#endif
          break;
       }
       case WM_TIMER:
@@ -1093,6 +1097,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_gt_wvt_FireMenuEvent( pWVT, 2, ( int ) wParam );
          return 0;
       }
+#if ! defined( HB_OS_WIN_CE )
       case WM_MOUSEHOVER:
       {
          PHB_ITEM pEvParams = hb_itemNew( NULL );
@@ -1119,6 +1124,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          pWVT->bTracking = FALSE;
          break;
       }
+#endif
       case WM_COMMAND:
       {
          if( ( int ) lParam == 0 )
@@ -1294,7 +1300,7 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
    HB_TCHAR_FREE( szAppName );
 
 
-   ShowWindow( pWVT->hWnd, pWVT->pPP->bVisible ? SW_NORMAL : SW_HIDE );
+   ShowWindow( pWVT->hWnd, pWVT->pPP->bVisible ? SW_SHOWNORMAL : SW_HIDE );
    UpdateWindow( pWVT->hWnd );
 
    return hWnd;
@@ -1807,10 +1813,13 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 #else
                   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
 #endif
+#if defined( HB_OS_WIN_CE )
+   #define SWP_DEFERERASE 0
+#endif
                   SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                 SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                   ShowWindow( pWVT->hWnd, SW_HIDE );
-                  ShowWindow( pWVT->hWnd, SW_NORMAL );
+                  ShowWindow( pWVT->hWnd, SW_SHOWNORMAL );
                }
             }
          }
@@ -2058,12 +2067,18 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      }
 
                      case HB_GTS_WS_MINIMIZED:
+#if ! defined( HB_OS_WIN_CE )
                         SendNotifyMessage( pWVT->hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0 );
+#endif
                         break;
 
                      case HB_GTS_WS_MAXIMIZED:
                         if( pWVT->bResizable )
+                        {
+#if ! defined( HB_OS_WIN_CE )
                            SendNotifyMessage( pWVT->hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0 );
+#endif
+                        }
                         else
                            ShowWindow( pWVT->hWnd, SW_RESTORE );
                         break;

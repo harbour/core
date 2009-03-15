@@ -80,6 +80,8 @@
 */
 //----------------------------------------------------------------------//
 
+#define HB_OS_WIN_USED
+
 #ifndef CINTERFACE
    #define CINTERFACE 1
 #endif
@@ -90,7 +92,7 @@
    #include "hbvmint.h"
 #endif
 
-#include <windows.h>
+//#include <windows.h>
 #include <oaidl.h>
 #include "hbapi.h"
 #include "item.api"
@@ -103,7 +105,9 @@
 #include <shlobj.h>
 #include <objbase.h>
 #include <ocidl.h>
+#if ! defined( HB_OS_WIN_CE )
 #include <olectl.h>
+#endif
 #include <ole2.h>
 #include <oleauto.h>
 
@@ -828,8 +832,11 @@ HB_FUNC( HB_AX_ATLAXCREATECONTROL )
       if( hContainer )
       {
          LPARAM lParam = MAKELPARAM( FALSE, 0 );
+#if ! defined( HB_OS_WIN_CE )
          SendMessage( ( HWND ) hContainer, ( UINT ) WM_SETFONT, ( WPARAM ) GetStockObject( DEFAULT_GUI_FONT ), lParam );
-
+#else
+         SendMessage( ( HWND ) hContainer, ( UINT ) WM_SETFONT, ( WPARAM ) GetStockObject( OEM_FIXED_FONT ), lParam );
+#endif
          uLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, Caption, strlen( Caption )+1, NULL, 0 );
          wString = ( BSTR ) malloc( uLen * sizeof( WCHAR ) );
          MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, Caption, strlen( Caption )+1, wString, uLen );
@@ -935,11 +942,17 @@ HB_FUNC( HB_AX_ATLAXGETCONTROL ) // HWND hWnd = handle of control container wind
 
       if( hWnd )
       {
+#if ! defined( HB_OS_WIN_CE )
          SendMessage( hWnd,
                       ( ( UINT ) WM_SETFONT ),
                       ( ( WPARAM ) GetStockObject( DEFAULT_GUI_FONT ) ),
                       ( ( LPARAM ) ( MAKELPARAM( FALSE, 0 ) ) ) );
-
+#else
+         SendMessage( hWnd,
+                      ( ( UINT ) WM_SETFONT ),
+                      ( ( WPARAM ) GetStockObject( OEM_FIXED_FONT ) ),
+                      ( ( LPARAM ) ( MAKELPARAM( FALSE, 0 ) ) ) );
+#endif
          ( AtlAxGetControl )( hWnd, &pUnk );
 
          if( pUnk )
