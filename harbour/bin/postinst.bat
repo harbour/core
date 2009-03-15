@@ -97,6 +97,60 @@ if "%HB_BUILD_IMPLIB%" == "yes" (
 
          goto END
       )
+
+      if "%HB_COMPILER%" == "pocc" (
+
+         if exist "%HB_DIR_ADS%\Redistribute\ace32.lib"    copy /b /y "%HB_DIR_ADS%\Redistribute\ace32.lib"    "%HB_LIB_INSTALL%\ace32.lib"
+         if exist "%HB_DIR_ADS%\ace32.lib"                 copy /b /y "%HB_DIR_ADS%\ace32.lib"                 "%HB_LIB_INSTALL%\ace32.lib"
+         if exist "%HB_DIR_ADS%\32bit\ace32.lib"           copy /b /y "%HB_DIR_ADS%\32bit\ace32.lib"           "%HB_LIB_INSTALL%\ace32.lib"
+         if exist "%HB_DIR_ALLEGRO%\lib\alleg.lib"         copy /b /y "%HB_DIR_ALLEGRO%\lib\alleg.lib"         "%HB_LIB_INSTALL%\alleg.lib"
+         if exist "%HB_DIR_APOLLO%\sde61.dll"              polib "%HB_DIR_APOLLO%\sde61.dll"              /out:"%HB_LIB_INSTALL%\sde61.lib"
+         if exist "%HB_DIR_BLAT%\full\blat.lib"            copy /b /y "%HB_DIR_BLAT%\full\blat.lib"            "%HB_LIB_INSTALL%\blat.lib"
+         if exist "%HB_DIR_CURL%\libcurl.dll"              polib "%HB_DIR_CURL%\libcurl.dll"              /out:"%HB_LIB_INSTALL%\libcurl.lib"
+         if exist "%HB_DIR_CURL%\bin\libcurl.dll"          polib "%HB_DIR_CURL%\bin\libcurl.dll"          /out:"%HB_LIB_INSTALL%\libcurl.lib"
+         if exist "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"  copy /b /y "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"  "%HB_LIB_INSTALL%\fbclient.lib"
+         if exist "%HB_DIR_FREEIMAGE%\Dist\FreeImage.lib"  copy /b /y "%HB_DIR_FREEIMAGE%\Dist\FreeImage.lib"  "%HB_LIB_INSTALL%\FreeImage.lib"
+         if exist "%HB_DIR_GD%\lib\bgd.lib"                copy /b /y "%HB_DIR_GD%\lib\bgd.lib"                "%HB_LIB_INSTALL%\bgd.lib"
+         if exist "%HB_DIR_LIBHARU%\libhpdf.lib"           copy /b /y "%HB_DIR_LIBHARU%\libhpdf.lib"           "%HB_LIB_INSTALL%\libhpdf.lib"
+         if exist "%HB_DIR_LIBHARU%\lib_dll\libhpdf.lib"   copy /b /y "%HB_DIR_LIBHARU%\lib_dll\libhpdf.lib"   "%HB_LIB_INSTALL%\libhpdf.lib"
+         if exist "%HB_DIR_MYSQL%\lib\opt\libmySQL.lib"    copy /b /y "%HB_DIR_MYSQL%\lib\opt\libmySQL.lib"    "%HB_LIB_INSTALL%\libmySQL.lib"
+         if exist "%HB_DIR_OPENSSL%\out32dll\libeay32.lib" copy /b /y "%HB_DIR_OPENSSL%\out32dll\libeay32.lib" "%HB_LIB_INSTALL%\libeay32.lib"
+         if exist "%HB_DIR_OPENSSL%\dll\libeay32.lib"      copy /b /y "%HB_DIR_OPENSSL%\dll\libeay32.lib"      "%HB_LIB_INSTALL%\libeay32.lib"
+         if exist "%HB_DIR_OPENSSL%\libeay32.lib"          copy /b /y "%HB_DIR_OPENSSL%\libeay32.lib"          "%HB_LIB_INSTALL%\libeay32.lib"
+         if exist "%HB_DIR_OPENSSL%\out32dll\ssleay32.lib" copy /b /y "%HB_DIR_OPENSSL%\out32dll\ssleay32.lib" "%HB_LIB_INSTALL%\ssleay32.lib"
+         if exist "%HB_DIR_OPENSSL%\dll\ssleay32.lib"      copy /b /y "%HB_DIR_OPENSSL%\dll\ssleay32.lib"      "%HB_LIB_INSTALL%\ssleay32.lib"
+         if exist "%HB_DIR_OPENSSL%\ssleay32.lib"          copy /b /y "%HB_DIR_OPENSSL%\ssleay32.lib"          "%HB_LIB_INSTALL%\ssleay32.lib"
+         if exist "%HB_DIR_PGSQL%\lib\libpq.lib"           copy /b /y "%HB_DIR_PGSQL%\lib\libpq.lib"           "%HB_LIB_INSTALL%\libpq.lib"
+
+         goto END
+      )
+
+      if "%HB_COMPILER%" == "owatcom" (
+
+         if exist "%HB_DIR_ADS%\Redistribute\ace32.lib"    wlib.exe -q -o="%HB_LIB_INSTALL%\ace32.lib"     "%HB_DIR_ADS%\Redistribute\ace32.dll"
+         if exist "%HB_DIR_ADS%\ace32.lib"                 wlib.exe -q -o="%HB_LIB_INSTALL%\ace32.lib"     "%HB_DIR_ADS%\ace32.dll"
+         if exist "%HB_DIR_ADS%\32bit\ace32.lib"           wlib.exe -q -o="%HB_LIB_INSTALL%\ace32.lib"     "%HB_DIR_ADS%\32bit\ace32.dll"
+         if exist "%HB_DIR_ALLEGRO%\lib\alleg.lib"         wlib.exe -q -o="%HB_LIB_INSTALL%\alleg.lib"     "%HB_DIR_ALLEGRO%\bin\alleg42.dll"
+         if exist "%HB_DIR_APOLLO%\sde61.dll"              wlib.exe -q -o="%HB_LIB_INSTALL%\sde61.lib"     "%HB_DIR_APOLLO%\sde61.dll"
+         if exist "%HB_DIR_BLAT%\full\blat.lib"            wlib.exe -q -o="%HB_LIB_INSTALL%\blat.lib"      "%HB_DIR_BLAT%\full\blat.dll"
+         if exist "%HB_DIR_CURL%\libcurl.dll"              wlib.exe -q -o="%HB_LIB_INSTALL%\libcurl.lib"   "%HB_DIR_CURL%\libcurl.dll"
+         if exist "%HB_DIR_CURL%\bin\libcurl.dll"          wlib.exe -q -o="%HB_LIB_INSTALL%\libcurl.lib"   "%HB_DIR_CURL%\bin\libcurl.dll"
+         if exist "%HB_DIR_FIREBIRD%\lib\fbclient_ms.lib"  wlib.exe -q -o="%HB_LIB_INSTALL%\fbclient.lib"  "%HB_LIB_INSTALL%\fblient.lib"
+         if exist "%HB_DIR_FREEIMAGE%\Dist\FreeImage.lib"  wlib.exe -q -o="%HB_LIB_INSTALL%\FreeImage.lib" "%HB_DIR_FREEIMAGE%\Dist\FreeImage.dll"
+         if exist "%HB_DIR_GD%\lib\bgd.lib"                wlib.exe -q -o="%HB_LIB_INSTALL%\bgd.lib"       "%HB_DIR_GD%\bin\bgd.dll"
+         if exist "%HB_DIR_LIBHARU%\libhpdf.lib"           wlib.exe -q -o="%HB_LIB_INSTALL%\libhpdf.lib"   "%HB_DIR_LIBHARU%\libhpdf.dll"
+         if exist "%HB_DIR_LIBHARU%\lib_dll\libhpdf.lib"   wlib.exe -q -o="%HB_LIB_INSTALL%\libhpdf.lib"   "%HB_DIR_LIBHARU%\lib_dll\libhpdf.dll"
+         if exist "%HB_DIR_MYSQL%\lib\opt\libmySQL.lib"    wlib.exe -q -o="%HB_LIB_INSTALL%\libmySQL.lib"  "%HB_DIR_MYSQL%\bin\libmySQL.dll"
+         if exist "%HB_DIR_OPENSSL%\out32dll\libeay32.lib" wlib.exe -q -o="%HB_LIB_INSTALL%\libeay32.lib"  "%HB_DIR_OPENSSL%\out32dll\libeay32.dll"
+         if exist "%HB_DIR_OPENSSL%\dll\libeay32.lib"      wlib.exe -q -o="%HB_LIB_INSTALL%\libeay32.lib"  "%HB_DIR_OPENSSL%\dll\libeay32.dll"
+         if exist "%HB_DIR_OPENSSL%\libeay32.lib"          wlib.exe -q -o="%HB_LIB_INSTALL%\libeay32.lib"  "%HB_DIR_OPENSSL%\libeay32.dll"
+         if exist "%HB_DIR_OPENSSL%\out32dll\ssleay32.lib" wlib.exe -q -o="%HB_LIB_INSTALL%\ssleay32.lib"  "%HB_DIR_OPENSSL%\out32dll\ssleay32.dll"
+         if exist "%HB_DIR_OPENSSL%\dll\ssleay32.lib"      wlib.exe -q -o="%HB_LIB_INSTALL%\ssleay32.lib"  "%HB_DIR_OPENSSL%\dll\ssleay32.dll"
+         if exist "%HB_DIR_OPENSSL%\ssleay32.lib"          wlib.exe -q -o="%HB_LIB_INSTALL%\ssleay32.lib"  "%HB_DIR_OPENSSL%\ssleay32.dll"
+         if exist "%HB_DIR_PGSQL%\lib\libpq.lib"           wlib.exe -q -o="%HB_LIB_INSTALL%\libpq.lib"     "%HB_DIR_PGSQL%\lib\libpq.dll"
+
+         goto END
+      )
    )
 )
 

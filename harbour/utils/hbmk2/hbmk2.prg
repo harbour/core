@@ -1624,9 +1624,12 @@ FUNCTION Main( ... )
             cResExt := ".res"
          ENDIF
 
-      CASE t_cARCH == "win" .AND. t_cCOMP == "pocc"
+      CASE ( t_cARCH == "win" .AND. t_cCOMP == "pocc" ) .OR. ;
+           ( t_cARCH == "win" .AND. t_cCOMP == "xcc" )
+
          /* TODO: pocc doesn't support multiple .c input files.
                   This means we need to do the heavy lifting. */
+
          IF s_lGUI
             AAdd( s_aOPTL, "/subsystem:windows" )
          ELSE
@@ -1636,23 +1639,37 @@ FUNCTION Main( ... )
          cLibExt := ".lib"
          cObjExt := ".obj"
          cLibLibExt := cLibExt
-         cBin_CompC := "pocc.exe"
-         cOpt_CompC := "/Ze /Go /Ot /Tx86-coff {FC} /I{DI} {LC}"
-         cBin_Lib := "polib.exe"
+         IF t_cCOMP == "xcc"
+            cBin_CompC := "xcc.exe"
+            cBin_Lib := "xlib.exe"
+            cBin_Link := "xlink.exe"
+            cBin_Res := "xrc.exe"
+         ELSE
+            cBin_CompC := "pocc.exe"
+            cBin_Lib := "polib.exe"
+            cBin_Link := "polink.exe"
+            cBin_Res := "porc.exe"
+         ENDIF
+         cBin_Dyn := cBin_Link
+         cOpt_CompC := "/c /Ze /Go {FC} /I{DI} {LC}"
+         cOpt_Lib := "{FA} /out:{OL} {LO}"
+         cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
+         IF t_cCOMP == "pocc"
+            AAdd( s_aOPTC, "/Ot" )
+            AAdd( s_aOPTC, "/Tx86-coff" )
+         ENDIF
+         cOpt_Res := "{LR}"
+         cResExt := ".res"
          cOpt_Lib := "{FA} /out:{OL} {LO}"
          IF s_lMT
             AAdd( s_aOPTC, "/MT" )
          ENDIF
          IF lStopAfterCComp
-            AAdd( s_aOPTC, "/c" )
             IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
                AAdd( s_aOPTC, "/Fo{OO}" )
             ENDIF
-         ELSE
-            AAdd( s_aOPTC, "/Fo{OE}" )
          ENDIF
-         cBin_Link := "polink.exe"
-         cOpt_Link := "{LO} {DL} {FL} {LL}"
+         cOpt_Link := "{LO} {DL} {FL} {LL} {LS}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
          IF s_lSHARED
@@ -1664,7 +1681,7 @@ FUNCTION Main( ... )
          IF s_lDEBUG
             AAdd( s_aOPTL, "/debug" )
          ENDIF
-         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "wsock32", "advapi32", "gdi32" } )
+         s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32", "advapi32", "gdi32" } )
 
       /* TODO */
       CASE t_cARCH == "linux" .AND. t_cCOMP == "icc"
@@ -1675,8 +1692,11 @@ FUNCTION Main( ... )
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl", "uuid", "ole32" } )
          ENDIF
       CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
-      CASE t_cARCH == "win" .AND. t_cCOMP == "xcc"
       ENDCASE
+
+      IF lCreateDyn .AND. t_cARCH == "win"
+         AAdd( s_aOPTC, "-DHB_DYNLIB" )
+      ENDIF
 
       /* Do entry function detection on platform required and supported */
       IF ! lStopAfterCComp .AND. s_cMAIN == NIL

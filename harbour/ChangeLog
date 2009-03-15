@@ -8,6 +8,20 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-16 00:38 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.bat
+    + Added owatcom and pocc support for implib generation.
+
+  * utils/hbmk2/hbmk2.prg
+    + Fixed win/pocc support.
+    + Added resource support for win/pocc.
+    + Added .dll support for win/pocc.
+    + Added win/xcc support (untested).
+    + -DHB_DYNLIB is passed to C compiler in -hbdyn (.dll) mode
+      for win targets. (still need fixing to create usable .dlls)
+    ; NOTE: pocc support is very limited as pocc compiler doesn't
+            support multiple input files.
+
 2009-03-15 20:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     + Documented cross-build config for minwgce.
