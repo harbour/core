@@ -250,8 +250,13 @@ OPTIONS AVAILABLE WHEN BUILDING HARBOUR
 
    Cross building
    --------------
-   HB_BIN_COMPILE=<HARBOUR_NATIVE_BUILD_DIR>\bin
-   HB_PPGEN_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin
+
+   with mingwce:
+      HB_COMP_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin\harbour.exe
+      HB_PPGEN_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin\hbpp.exe
+   with rest of compilers:
+      HB_BIN_COMPILE=<HARBOUR_NATIVE_BUILD_DIR>\bin
+      HB_PPGEN_PATH=<HARBOUR_NATIVE_BUILD_DIR>\bin
 
    You need these when building for a platform different than host.
    For this to work, you will need to point above envvars to

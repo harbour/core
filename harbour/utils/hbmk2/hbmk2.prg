@@ -264,6 +264,7 @@ FUNCTION Main( ... )
    LOCAL cLibExt
    LOCAL cObjPrefix
    LOCAL cObjExt
+   LOCAL cLibLibExt
    LOCAL cLibObjPrefix
    LOCAL cDynObjPrefix := NIL
    LOCAL cLibPathPrefix
@@ -1126,7 +1127,7 @@ FUNCTION Main( ... )
          cLibExt := ""
          cObjExt := ".o"
          cBin_Lib := t_cCCPREFIX + "ar"
-         cOpt_Lib := ""
+         cOpt_Lib := "{FA} cr {OL} {LO}"
          cBin_CompC := t_cCCPREFIX + iif( t_cCOMP == "gpp", "g++", "gcc" )
          IF ! Empty( t_cCCPATH )
             cBin_CompC := t_cCCPATH + "/" + cBin_CompC
@@ -1134,12 +1135,14 @@ FUNCTION Main( ... )
          cOpt_CompC := "{LC} {LO} {LA} -O3 {FC} -I{DI} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
-         IF t_cARCH == "linux" .OR. ;
-            t_cARCH == "bsd"
-            cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
-         ELSE
-            cOpt_CompC += " {LL}"
-            aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+         IF ! lStopAfterCComp
+            IF t_cARCH == "linux" .OR. ;
+               t_cARCH == "bsd"
+               cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
+            ELSE
+               cOpt_CompC += " {LL}"
+               aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+            ENDIF
          ENDIF
          IF s_lMAP
             cOpt_CompC += " -Wl,-Map {OM}"
@@ -1256,10 +1259,14 @@ FUNCTION Main( ... )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompC := "gcc.exe"
+         cBin_CompC := t_cCCPREFIX + "gcc.exe"
          cOpt_CompC := "{LC} {LO} {LA} {LR} -O3 {FC} -I{DI} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
+         cLibLibExt := ".a"
+         cBin_Lib := t_cCCPREFIX + "ar.exe"
+         cOpt_Lib := "{FA} cr {OL} {LO}"
+         cLibObjPrefix := NIL
          IF s_lGUI
             cOpt_CompC += " -mwindows"
          ELSE
@@ -1271,11 +1278,13 @@ FUNCTION Main( ... )
          IF s_lSHARED
             AAdd( s_aLIBPATH, "{DB}" )
          ENDIF
-         IF t_cCOMP == "mingw"
-            cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
-         ELSE
-            cOpt_CompC += " {LL}"
-            aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+         IF ! lStopAfterCComp
+            IF t_cCOMP == "mingw"
+               cOpt_CompC += " -Wl,--start-group {LL} -Wl,--end-group"
+            ELSE
+               cOpt_CompC += " {LL}"
+               aLIB_BASE2 := ArrayAJoin( { aLIB_BASE2, { "hbcommon", "hbrtl" }, s_aLIBVM } )
+            ENDIF
          ENDIF
          IF s_lSTRIP
             AAdd( s_aOPTC, "-s" )
@@ -1380,8 +1389,12 @@ FUNCTION Main( ... )
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
          cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {FC} {LC}"
-         cBin_Link := "wlink"
+         cBin_Link := "wlink.exe"
          cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         cBin_Lib := "wlib.exe"
+         cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
+         cLibLibExt := cLibExt
+         cLibObjPrefix := "-+ "
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
          ENDIF
@@ -1398,8 +1411,12 @@ FUNCTION Main( ... )
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
          cOpt_CompC := "-w3 -5s -5r -fp5 -onaehtzr -zq -zt0 -bt=NT -oi+ -s {FC} {LC}"
-         cBin_Link := "wlink"
+         cBin_Link := "wlink.exe"
          cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
+         cBin_Lib := "wlib.exe"
+         cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
+         cLibLibExt := cLibExt
+         cLibObjPrefix := "-+ "
          IF s_lMT
             AAdd( s_aOPTC, "-bm" )
          ENDIF
@@ -1444,8 +1461,12 @@ FUNCTION Main( ... )
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
          cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {FC} {LC}"
-         cBin_Link := "wlink"
+         cBin_Link := "wlink.exe"
          cOpt_Link := "OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         cBin_Lib := "wlib.exe"
+         cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
+         cLibLibExt := cLibExt
+         cLibObjPrefix := "-+ "
          IF s_lDEBUG
             cOpt_Link := "DEBUG " + cOpt_Link
          ENDIF
@@ -1467,6 +1488,10 @@ FUNCTION Main( ... )
          cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=LINUX {FC} {LC}"
          cBin_Link := "wlink"
          cOpt_Link := "ALL SYS LINUX OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
+         cBin_Lib := "wlib"
+         cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
+         cLibLibExt := cLibExt
+         cLibObjPrefix := "-+ "
          IF s_lMT
             AAdd( s_aOPTC, "-bm" )
          ENDIF
@@ -1492,14 +1517,15 @@ FUNCTION Main( ... )
          cObjExt := ".obj"
          cBin_Lib := "tlib.exe"
          cOpt_Lib := "{FA} {OL} {LO}{SCRIPT}"
+         cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
          cBin_CompC := "bcc32.exe"
          IF ( Len( s_aRESSRC ) + Len( s_aRESCMP ) ) > 0
             cOpt_CompC := "-c -q -tWM -O2 -OS -Ov -Oi -Oc -d {FC} -I{DI} {LC}"
-            cBin_Res := "brcc32"
+            cBin_Res := "brcc32.exe"
             cOpt_Res := "{LR}"
             cResExt := ".res"
-            cBin_Link := "ilink32"
+            cBin_Link := "ilink32.exe"
             cOpt_Link := "-Gn -C -ap -Tpe -L{DL} {FL} c0d32.obj {LO}, {OE}, " + iif( s_lMAP, "{OM}", "nul" ) + ", cw32mt.lib {LL} import32.lib,, {LS}{SCRIPT}"
          ELSE
             cOpt_CompC := "-q -tWM -O2 -OS -Ov -Oi -Oc -d {FC} -I{DI} -L{DL} {LC} {LO} {LL}"
@@ -1541,6 +1567,7 @@ FUNCTION Main( ... )
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
+         cLibLibExt := cLibExt
          IF t_cCOMP == "icc"
             cBin_Lib := "xilib.exe"
             cBin_CompC := "icl.exe"
@@ -1598,6 +1625,8 @@ FUNCTION Main( ... )
          ENDIF
 
       CASE t_cARCH == "win" .AND. t_cCOMP == "pocc"
+         /* TODO: pocc doesn't support multiple .c input files.
+                  This means we need to do the heavy lifting. */
          IF s_lGUI
             AAdd( s_aOPTL, "/subsystem:windows" )
          ELSE
@@ -1606,19 +1635,23 @@ FUNCTION Main( ... )
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
+         cLibLibExt := cLibExt
          cBin_CompC := "pocc.exe"
          cOpt_CompC := "/Ze /Go /Ot /Tx86-coff {FC} /I{DI} {LC}"
+         cBin_Lib := "polib.exe"
+         cOpt_Lib := "{FA} /out:{OL} {LO}"
          IF s_lMT
             AAdd( s_aOPTC, "/MT" )
          ENDIF
          IF lStopAfterCComp
+            AAdd( s_aOPTC, "/c" )
             IF ( Len( s_aPRG ) + Len( s_aC ) ) == 1
                AAdd( s_aOPTC, "/Fo{OO}" )
             ENDIF
          ELSE
             AAdd( s_aOPTC, "/Fo{OE}" )
          ENDIF
-         cBin_Link := "polink"
+         cBin_Link := "polink.exe"
          cOpt_Link := "{LO} {DL} {FL} {LL}"
          cLibPathPrefix := "/libpath:"
          cLibPathSep := " "
@@ -1675,7 +1708,7 @@ FUNCTION Main( ... )
                         if using 'dllimport'. [vszakats] */
                tmp := ""
             CASE t_cCOMP $ "gcc|mingw|cygwin" ; tmp := "__attribute__ (( dllimport ))"
-            CASE t_cCOMP == "bcc|owatcom"     ; tmp := "__declspec( dllimport )"
+            CASE t_cCOMP $ "bcc|owatcom"      ; tmp := "__declspec( dllimport )"
             OTHERWISE                         ; tmp := "_declspec( dllimport )"
             ENDCASE
 
@@ -1941,7 +1974,7 @@ FUNCTION Main( ... )
             cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ListCook( ArrayJoin( s_aOBJ, s_aOBJUSER ), cLibObjPrefix ) ) )
             cOpt_Lib := StrTran( cOpt_Lib, "{LL}"  , ArrayToList( s_aLIB ) )
             cOpt_Lib := StrTran( cOpt_Lib, "{FA}"  , GetEnv( "HB_USER_AFLAGS" ) + " " + ArrayToList( s_aOPTA ) )
-            cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cLibExt ) ) )
+            cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , PathSepToTarget( FN_ExtSet( s_cPROGNAME, cLibLibExt ) ) )
             cOpt_Lib := StrTran( cOpt_Lib, "{DL}"  , ArrayToList( ListCook( s_aLIBPATH, cLibPathPrefix ), cLibPathSep ) )
             cOpt_Lib := StrTran( cOpt_Lib, "{DB}"  , s_cHB_BIN_INSTALL )
 

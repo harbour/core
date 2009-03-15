@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-15 20:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * INSTALL
+    + Documented cross-build config for minwgce.
+
+  * utils/hbmk2/hbmk2.prg
+    + Added static lib generation support for owatcom compilers on
+      platforms.
+    + Added static lib generation support for gcc family.
+      Please review it's probably incomplete.
+    + Honoring HB_CCPREFIX on win platform for gcc family.
+    ! Fixed typo on .c stub function declaration for bcc/owatcom.
+
+  * contrib/xhb/hbcompat.ch
+    + #xtranslate hb_funcptr(<x>) => __dynsn2sym(<x>)
+
 2009-03-14 16:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * contrib/hbgt/strasint.c
     % Using HB_ISDIGIT()

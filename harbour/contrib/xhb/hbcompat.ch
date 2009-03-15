@@ -181,6 +181,7 @@
    #xtranslate FileSize(<x>)               => hb_FSize(<x>)
    #xtranslate WildMatch([<x,...>])        => hb_WildMatch(<x>)
    #xtranslate hb_DeserialNext(<x>)        => hb_Deserialize(<x>)
+   #xtranslate hb_funcptr(<x>)             => __dynsn2sym(<x>)
 
    #xtranslate HexToNum([<c,...>])         => hb_HexToNum(<c>)
    #xtranslate NumToHex([<n,...>])         => hb_NumToHex(<n>)
