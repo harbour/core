@@ -168,7 +168,7 @@ HB_FUNC( WVG_SETGOBJSTATE )
 {
    PHB_GTWVT pWVT    = hb_wvt_gtGetWVT();
    int       iHandle = hb_parni( 1 );
-   int       iOState;
+   int       iOState = 0;
 
    if( iHandle && pWVT->gObjs )
    {
@@ -203,7 +203,7 @@ HB_FUNC( WVG_SETGOBJDATA )
 {
    PHB_GTWVT pWVT     = hb_wvt_gtGetWVT();
    int       iHandle  = hb_parni( 1 );
-   BOOL      bSuccess;
+   BOOL      bSuccess = FALSE;
 
    if( iHandle )
    {
@@ -232,7 +232,7 @@ HB_FUNC( WVG_SETGOBJDATA )
                break;
             case GOBJ_OBJDATA_IMAGE:
             {
-               IPicture * iPicture;
+               IPicture * iPicture = NULL;
 
                if( ISNUM( 3 ) )
                {
@@ -1184,7 +1184,7 @@ HB_FUNC( WVG_TEXTBOX )
 {
    PHB_GTWVT pWVT = hb_wvt_gtGetWVT();
    HB_GOBJS *gObj = hb_wvg_ObjectNew( pWVT );
-   int iAlignH;
+   int iAlignH = 0;
 
    gObj->iObjType         = GOBJ_OBJTYPE_TEXTBOX;
 
@@ -1291,7 +1291,7 @@ HB_FUNC( WVG_IMAGE )
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT pWVT = hb_wvt_gtGetWVT();
    int       iSource = hb_parni( 6 );
-   IPicture *iPicture;
+   IPicture *iPicture = NULL;
 
    if( iSource == 0 )
    {

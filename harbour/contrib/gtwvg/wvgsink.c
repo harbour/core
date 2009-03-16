@@ -92,7 +92,7 @@
    #include "hbvmint.h"
 #endif
 
-//#include <windows.h>
+#include <windows.h>
 #include <oaidl.h>
 #include "hbapi.h"
 #include "item.api"

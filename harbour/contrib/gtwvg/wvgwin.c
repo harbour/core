@@ -93,12 +93,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#define WM_CHOOSEFONT_GETLOGFONT                  (WM_USER + 1)
-#define WM_CHOOSEFONT_SETLOGFONT                  (WM_USER + 101)
-#define WM_CHOOSEFONT_SETFLAGS                    (WM_USER + 102)
-
-/*----------------------------------------------------------------------*/
-
 #define wvg_parwparam( n )  ( ( WPARAM )  ( HB_PTRDIFF ) hb_parnint( n ) )
 #define wvg_parlparam( n )  ( ( LPARAM )  ( HB_PTRDIFF ) hb_parnint( n ) )
 #define wvg_parhandle( n )  ( ( HANDLE )  ( HB_PTRDIFF ) hb_parnint( n ) )
@@ -1993,6 +1987,7 @@ HB_FUNC( WVG_CHOOSEFONT )
 
 HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 {
+#if ! defined( HB_OS_WIN_CE )
    LOGFONT  lf;
    PHB_ITEM aFont;
 
@@ -2003,6 +1998,7 @@ HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
    aFont = wvg_logfontTOarray( &lf, FALSE );
 
    hb_itemReturnRelease( aFont );
+#endif
 }
 
 //----------------------------------------------------------------------//
