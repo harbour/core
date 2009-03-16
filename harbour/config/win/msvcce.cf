@@ -68,7 +68,7 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
 
-LDFLAGS = $(LINKPATHS) $(HB_USER_LDFLAGS)
+LDFLAGS = $(LINKPATHS)
 
 AR = lib.exe
 ARFLAGS = $(HB_USER_AFLAGS)

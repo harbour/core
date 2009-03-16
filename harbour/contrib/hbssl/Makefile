@@ -9,6 +9,7 @@ LIBNAME=hbssl
 HB_INC_OPENSSL_OK =
 
 ifneq ($(HB_ARCHITECTURE),dos)
+ifneq ($(HB_COMPILER),owatcom)
 
 ifeq ($(HB_INC_OPENSSL),)
 ifeq ($(HB_XBUILD),)
@@ -41,6 +42,9 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

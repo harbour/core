@@ -19,7 +19,7 @@ HOW TO BUILD AND INSTALL HARBOUR
    For all platforms you'll need:
 
    * Supported ANSI C compiler
-   * GNU Make
+   * GNU Make (3.81 or upper)
 
    Linux/Darwin/BSD/HP-UX/Solaris
    ------------------------------
@@ -75,8 +75,7 @@ HOW TO BUILD AND INSTALL HARBOUR
           relevant section of this file.
       3.) Make sure to have GNU Make. Certain older versions and builds
           are untested and may not work. We recommend the one distributed
-          by MinGW team. The latest, tested version is 3.81 at the time of
-          this writing. Use this link to get it:
+          by MinGW team. Use this link to get it:
             https://sourceforge.net/project/showfiles.php?group_id=2435&package_id=23918
           If you have it, you have three choices:
           - Copy mingw32-make.exe or make.exe into a separate directory

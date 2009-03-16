@@ -12,37 +12,36 @@ LIB_EXT = .lib
 CC = cl.exe
 CC_IN = -c
 CC_OUT = -Fo
-CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-CFLAGS = -nologo -W4 -wd4127 -Gs -TP
+CPPFLAGS = -nologo -W4 -wd4127 -Gs -I. -I$(HB_INC_COMPILE) -TP
 
 ifneq ($(HB_BUILD_OPTIM),no)
 ifeq ($(HB_VISUALC_VER_PRE80),)
-CFLAGS += -Ot2b1 -EHs-c-
+CPPFLAGS += -Ot2b1 -EHs-c-
 else
-CFLAGS += -Ogt2yb1p -GX- -G6 -YX
+CPPFLAGS += -Ogt2yb1p -GX- -G6 -YX
 endif
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS += -MTd -Zi
+CPPFLAGS += -MTd -Zi
 else
-CFLAGS += -MT
+CPPFLAGS += -MT
 endif
 
 # # NOTE: -GA flag should be disabled when building MT _.dlls_,
 # #       as it creates bad code according to MS docs [vszakats].
 # ifeq ($(HB_VISUALC_VER_PRE70),)
-# CFLAGS += -GA
+# CPPFLAGS += -GA
 # endif
 
-LD = cl.exe
-LD_OUT = -Fe
+LD = link.exe
+LD_OUT = /out:
 
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
-LINKPATHS += /link /libpath:$(LIB_DIR)
+LINKPATHS += /libpath:$(LIB_DIR)
 else
-LINKPATHS += /link /libpath:$(HB_LIB_COMPILE)
+LINKPATHS += /libpath:$(HB_LIB_COMPILE)
 endif
 LINKLIBS += $(foreach lib, $(CONTRIBS), $(subst lib,,$(lib))$(LIB_EXT))
 LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
@@ -57,7 +56,7 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
 
-LDFLAGS = $(LINKPATHS) user32.lib wsock32.lib advapi32.lib gdi32.lib
+LDFLAGS = /nologo $(LINKPATHS) user32.lib wsock32.lib advapi32.lib gdi32.lib
 
 AR = lib.exe
 ARFLAGS = $(HB_USER_AFLAGS)
