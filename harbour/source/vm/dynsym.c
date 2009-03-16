@@ -528,7 +528,7 @@ void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymEval(%p, %p)", pFunction, Cargo));
 
-   while( TRUE )
+   for( ;; )
    {
 
       HB_DYNSYM_LOCK

@@ -91,7 +91,7 @@ static HB_LANG s_lang =
       "Mercredi",
       "Jeudi",
       "Vendredi",
-      "Samedi"
+      "Samedi",
 
       /* CA-Cl*pper compatible natmsg items */
 
@@ -216,4 +216,3 @@ HB_CALL_ON_STARTUP_END( hb_lang_Init_FR )
    static HB_$INITSYM hb_vm_auto_hb_lang_Init_FR = hb_lang_Init_FR;
    #pragma data_seg()
 #endif
-

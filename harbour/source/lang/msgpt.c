@@ -171,7 +171,7 @@ static HB_LANG s_lang =
       "",
       "acesso de array",
       "array assign",
-      ""
+      "",
       "n∆o Ç um array",
       "condicional",
 

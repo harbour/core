@@ -2427,7 +2427,7 @@ static LPPAGEINFO hb_nsxPageTopMove( LPTAGINFO pTag, ULONG ulPage )
 {
    LPPAGEINFO pPage;
 
-   while( TRUE )
+   for( ;; )
    {
       pPage = hb_nsxPageLoad( pTag, ulPage );
       if( ! pPage )
@@ -2457,7 +2457,7 @@ static LPPAGEINFO hb_nsxPageBottomMove( LPTAGINFO pTag, ULONG ulPage )
 {
    LPPAGEINFO pPage;
 
-   while( TRUE )
+   for( ;; )
    {
       pPage = hb_nsxPageLoad( pTag, ulPage );
       if( ! pPage )
@@ -2547,7 +2547,7 @@ static BOOL hb_nsxTagNextKey( LPTAGINFO pTag )
          pTag->stack[ iLevel ].ikey++;
       else
       {
-         while( TRUE )
+         for( ;; )
          {
             hb_nsxPageRelease( pTag, pPage );
             if( --iLevel < 0 )
@@ -2616,7 +2616,7 @@ static BOOL hb_nsxTagPrevKey( LPTAGINFO pTag )
          pTag->stack[ iLevel ].ikey--;
       else
       {
-         while( TRUE )
+         for( ;; )
          {
             hb_nsxPageRelease( pTag, pPage );
             if( --iLevel < 0 )
@@ -2764,7 +2764,7 @@ static BOOL hb_nsxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, USHORT uiLen )
       return FALSE;
    }
 
-   while( TRUE )
+   for( ;; )
    {
       pPage = hb_nsxPageLoad( pTag, ulPage );
       if( ! pPage )
@@ -3605,7 +3605,7 @@ static void hb_nsxTagGoToRelKeyPos( LPTAGINFO pTag, double dPos )
    if( !ulPage )
       return;
 
-   while( TRUE )
+   for( ;; )
    {
       pPage = hb_nsxPageLoad( pTag, ulPage );
       if( ! pPage )
@@ -5052,7 +5052,7 @@ static void hb_nsxSortAddNodeKey( LPNSXSORTINFO pSort, UCHAR *pKeyVal, ULONG ulR
    ULONG ulPage = 0;
    int iLevel = 0;
 
-   while( TRUE )
+   for( ;; )
    {
       pPage = pSort->NodeList[ iLevel ];
       if( pPage == NULL )

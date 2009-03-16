@@ -404,7 +404,7 @@ static void hb_vmRequestTest( void )
    HB_VM_LOCK
 
    s_iRunningCount--;
-   while( TRUE )
+   for( ;; )
    {
       if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
       {
@@ -466,7 +466,7 @@ void hb_vmLock( void )
       if( hb_stackLock() == 0 )
       {
          HB_VM_LOCK
-         while( TRUE )
+         for( ;; )
          {
             if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
             {
@@ -496,7 +496,7 @@ BOOL hb_vmSuspendThreads( BOOL fWait )
    {
       hb_vmThreadRequest |= HB_THREQUEST_STOP;
       --s_iRunningCount;
-      while( TRUE )
+      for( ;; )
       {
          if( s_iRunningCount <= 0 )
          {

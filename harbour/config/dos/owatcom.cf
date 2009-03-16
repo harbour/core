@@ -26,10 +26,10 @@ CC_IN =
 CC_OUT = -fo=
 
 #CPPFLAGS = -j -w3 -5s -5r -oehtz -s -zq -zt0 -bt=DOS
-CPPFLAGS = -w2 -zq -bt=DOS
+CPPFLAGS = -w3 -zq -bt=DOS
 
 ifneq ($(HB_BUILD_OPTIM),no)
-#architecture flags
+# architecture flags
 CPPFLAGS += -5 -fp5
 
 # optimization flags

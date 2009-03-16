@@ -444,6 +444,9 @@ FUNCTION Main( ... )
       ENDIF
    ENDIF
 
+   t_cCCPATH   := GetEnv( "HB_CCPATH" )
+   t_cCCPREFIX := GetEnv( "HB_CCPREFIX" )
+
    /* Setup architecture dependent data */
 
    DO CASE
@@ -489,7 +492,7 @@ FUNCTION Main( ... )
    CASE t_cARCH == "win"
       /* Order is significant.
          owatcom also keeps a cl.exe in it's binary dir. */
-      aCOMPDET := { { {|| FindInPath( "gcc"      ) != NIL }, "mingw"   },; /* TODO: Add full support for g++ */
+      aCOMPDET := { { {|| FindInPath( t_cCCPREFIX + "gcc" ) != NIL }, "mingw"   },; /* TODO: Add full support for g++ */
                     { {|| FindInPath( "wpp386"   ) != NIL .AND. ;
                           ! Empty( GetEnv( "WATCOM" ) ) }, "owatcom" },; /* TODO: Add full support for wcc386 */
                     { {|| FindInPath( "ml64"     ) != NIL }, "msvc64"  },;
@@ -590,9 +593,6 @@ FUNCTION Main( ... )
    /* Autodetect Harbour environment */
 
    s_aLIBPATH := {}
-
-   t_cCCPATH   := GetEnv( "HB_CCPATH" )
-   t_cCCPREFIX := GetEnv( "HB_CCPREFIX" )
 
    s_cHB_BIN_INSTALL := PathSepToTarget( GetEnv( "HB_BIN_INSTALL" ) )
    s_cHB_LIB_INSTALL := PathSepToTarget( GetEnv( "HB_LIB_INSTALL" ) )
@@ -1388,7 +1388,7 @@ FUNCTION Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
-         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {FC} {LC}"
+         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS {FC} -i{DI} {LC}"
          cBin_Link := "wlink.exe"
          cOpt_Link := "OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib.exe"
@@ -1410,7 +1410,7 @@ FUNCTION Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
-         cOpt_CompC := "-w3 -5s -5r -fp5 -onaehtzr -zq -zt0 -bt=NT -oi+ -s {FC} {LC}"
+         cOpt_CompC := "-w3 -zq -bt=NT -5s -fp5 -onaehtzr -oi+ -ei -zp8 -s -zt0 {FC} -i{DI} {LC}"
          cBin_Link := "wlink.exe"
          cOpt_Link := "OP osn=NT OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL} {LS}{SCRIPT}"
          cBin_Lib := "wlib.exe"
@@ -1460,7 +1460,7 @@ FUNCTION Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386.exe"
-         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {FC} {LC}"
+         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=OS2 {FC} -i{DI} {LC}"
          cBin_Link := "wlink.exe"
          cOpt_Link := "OP stack=65536 OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib.exe"
@@ -1485,7 +1485,7 @@ FUNCTION Main( ... )
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
          cBin_CompC := "wpp386"
-         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=LINUX {FC} {LC}"
+         cOpt_CompC := "-j -w3 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=LINUX {FC} -i{DI} {LC}"
          cBin_Link := "wlink"
          cOpt_Link := "ALL SYS LINUX OP CASEEXACT {FL} NAME {OE} {LO} {DL} {LL}{SCRIPT}"
          cBin_Lib := "wlib"

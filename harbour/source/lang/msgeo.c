@@ -83,7 +83,7 @@ static HB_LANG s_lang =
       "Septembro",
       "Oktobro",
       "Novembro",
-      "Decembro"
+      "Decembro",
 
       /* Day names */
 
@@ -93,7 +93,7 @@ static HB_LANG s_lang =
       "merkredo",
       "jaudo",
       "vendredo",
-      "sabato"
+      "sabato",
 
       /* CA-Cl*pper compatible natmsg items */
 
@@ -208,13 +208,13 @@ HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_EO )
    hb_langRegister( &s_lang );
 HB_CALL_ON_STARTUP_END( hb_lang_Init_EO )
 
-#if defined( HB_PRAGMA_STARTUP )                                         
-   #pragma startup hb_lang_Init_EO                                     
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup hb_lang_Init_EO
 #elif defined( HB_MSC_STARTUP )
    #if defined( HB_OS_WIN_64 )
       #pragma section( HB_MSC_START_SEGMENT, long, read )
-   #endif                                          
+   #endif
    #pragma data_seg( HB_MSC_START_SEGMENT )
-   static HB_$INITSYM hb_vm_auto_hb_lang_Init_EO = hb_lang_Init_EO;    
+   static HB_$INITSYM hb_vm_auto_hb_lang_Init_EO = hb_lang_Init_EO;
    #pragma data_seg()
-#endif                                                                 
+#endif
