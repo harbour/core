@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Header file for runtime configuration, common for Harbour and C level.
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2009 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,16 +59,16 @@
 /* NOTE: You can select here, which features you want to include of the
          different Clipper implementations. */
 
-/* #define HB_EXTENSION */        /* Enable Harbour non-portable extensions */
-#define HB_C52_UNDOC              /* Enable Cl*pper 5.2e/5.3x undocumented features */
 /* #define HB_C52_STRICT */       /* Enable Cl*pper 5.2e/5.3x strict compatibility */
+#define HB_C52_UNDOC              /* Enable Cl*pper 5.2e/5.3x undocumented features */
 #define HB_COMPAT_C53             /* Enable Cl*pper 5.3x extensions */
 #define HB_COMPAT_XPP             /* Enable Xbase++ extensions */
-/* #define HB_COMPAT_VO */        /* Enable VO extensions */
 #define HB_COMPAT_FLAGSHIP        /* Enable Flagship extensions */
+/* #define HB_COMPAT_VO */        /* Enable VO extensions */
 /* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
 /* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
 /* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
+/* #define HB_EXTENSION */        /* Enable Harbour non-portable extensions */
 
 /* ***********************************************************************
  * Leave this #define if you want to allow usage of legacy Harbour 1.0.0/Clipper

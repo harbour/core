@@ -8,6 +8,13 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-16 18:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * utils/hbmk2/hbmk2.prg
+    + Added __PLATFORM__* macro support for cross-compilation situations.
+
+  * include/hbsetup.ch
+    * Minor
+
 2009-03-16 09:39 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
   * harbour/contrib/gtwvg/wincallb.c

@@ -104,12 +104,6 @@
          Harbour switch, it will be a problem also when user tries
          to use -p option, .ppo files will be generated in temp dir. */
 /* TODO: Sync default C/linker switches with the ones in Harbour GNU make system. */
-/* TODO: Support for more compilers/platforms. */
-/* TODO: Cross compilation support.
-         -D__PLATFORM__WINCE ?
-         -D__PLATFORM__WINDOWS
-         -undef:__PLATFORM__UNIX
-         -undef:__PLATFORM__LINUX */
 /* TODO: Add support for library creation for rest of compilers. */
 /* TODO: Add support for dynamic library creation for rest of compilers. */
 /* TODO: Cleanup on variable names and compiler configuration. */
@@ -989,6 +983,8 @@ FUNCTION Main( ... )
 
    IF Len( s_aPRG ) > 0
 
+      PlatformPRGFlags( s_aOPTPRG )
+
 #if defined( HBMK_INTEGRATED_COMPILER )
       aCommand := ArrayAJoin( { { iif( lCreateLib .OR. lCreateDyn, "-n1", "-n2" ) },;
                                 s_aPRG,;
@@ -1700,13 +1696,13 @@ FUNCTION Main( ... )
 
       /* TODO */
       CASE t_cARCH == "linux" .AND. t_cCOMP == "icc"
+      CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"  /* NOTE: Cross-platform: win/amd64 on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
       CASE t_cARCH == "linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wince/ARM on win/x86 */
          IF ! s_lSHARED
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl", "uuid", "ole32" } )
          ENDIF
-      CASE t_cARCH == "win" .AND. t_cCOMP == "msvcce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
       ENDCASE
 
       IF lCreateDyn .AND. t_cARCH == "win"
@@ -2983,6 +2979,67 @@ STATIC FUNCTION commandResult( cCommand, nResult )
    ENDIF
 
    RETURN cResult
+
+PROCEDURE PlatformPRGFlags( aOPTPRG )
+
+   IF !( t_cARCH == hb_Version( HB_VERSION_BUILD_ARCH ) ) .OR. ;
+      t_cCOMP $ "mingwce|poccce|msvcce"
+
+      #if   defined( __PLATFORM__WINDOWS )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__WINDOWS" )
+         #if defined( __PLATFORM__WINCE )
+            AAdd( aOPTPRG, "-undef:__PLATFORM__WINCE" )
+         #endif
+      #elif defined( __PLATFORM__DOS )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__DOS" )
+      #elif defined( __PLATFORM__OS2 )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__OS2" )
+      #elif defined( __PLATFORM__LINUX )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__LINUX" )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__UNIX" )
+      #elif defined( __PLATFORM__DARWIN )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__DARWIN" )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__UNIX" )
+      #elif defined( __PLATFORM__BSD )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__BSD" )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__UNIX" )
+      #elif defined( __PLATFORM__SUNOS )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__SUNOS" )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__UNIX" )
+      #elif defined( __PLATFORM__HPUX )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__HPUX" )
+         AAdd( aOPTPRG, "-undef:__PLATFORM__UNIX" )
+      #endif
+
+      DO CASE
+      CASE t_cCOMP $ "mingwce|poccce|msvcce"
+         AAdd( aOPTPRG, "-D__PLATFORM__WINDOWS" )
+         AAdd( aOPTPRG, "-D__PLATFORM__WINCE" )
+      CASE t_cARCH == "win"
+         AAdd( aOPTPRG, "-D__PLATFORM__WINDOWS" )
+      CASE t_cARCH == "dos"
+         AAdd( aOPTPRG, "-D__PLATFORM__DOS" )
+      CASE t_cARCH == "os2"
+         AAdd( aOPTPRG, "-D__PLATFORM__OS2" )
+      CASE t_cARCH == "linux"
+         AAdd( aOPTPRG, "-D__PLATFORM__LINUX" )
+         AAdd( aOPTPRG, "-D__PLATFORM__UNIX" )
+      CASE t_cARCH == "darwin"
+         AAdd( aOPTPRG, "-D__PLATFORM__DARWIN" )
+         AAdd( aOPTPRG, "-D__PLATFORM__UNIX" )
+      CASE t_cARCH == "bsd"
+         AAdd( aOPTPRG, "-D__PLATFORM__BDS" )
+         AAdd( aOPTPRG, "-D__PLATFORM__UNIX" )
+      CASE t_cARCH == "sunos"
+         AAdd( aOPTPRG, "-D__PLATFORM__SUNOS" )
+         AAdd( aOPTPRG, "-D__PLATFORM__UNIX" )
+      CASE t_cARCH == "hpux"
+         AAdd( aOPTPRG, "-D__PLATFORM__HPUX" )
+         AAdd( aOPTPRG, "-D__PLATFORM__UNIX" )
+      ENDCASE
+   ENDIF
+
+   RETURN
 
 /* Keep this public, it's used from macro. */
 FUNCTION hbmk_ARCH()
