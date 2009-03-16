@@ -27,6 +27,7 @@ if "%HB_COMPILER%" == "msvc64"   goto DO_MSVC
 if "%HB_COMPILER%" == "msvcia64" goto DO_MSVC
 if "%HB_COMPILER%" == "bcc"      goto DO_BCC
 if "%HB_COMPILER%" == "owatcom"  goto DO_OWATCOM
+if "%HB_COMPILER%" == "pocc"     goto DO_POCC
 
 echo HB_COMPILER %HB_COMPILER% isn't supported.
 goto END
@@ -281,6 +282,86 @@ del %HB_DLL_LIBS_MT%.lib
 
 del _hbsst.txt
 del _hbsmt.txt
+cd ..
+rmdir _dll
+
+:DO_POCC
+
+echo Making .dlls for %HB_COMPILER%...
+
+md _dll
+cd _dll
+
+rem ; Extract neutral objects
+echo.> _hboneut.txt
+for %%f in (%HB_DLL_LIBS%) do (
+   if exist "%HB_LIB_INSTALL%\%%f.lib" (
+      echo Processing library: %%f
+      polib "%HB_LIB_INSTALL%\%%f.lib" /list /explode >> _hboneut.txt
+   ) else ( echo Library not found: %HB_LIB_INSTALL%\%%f.lib )
+)
+
+md _st
+cd _st
+rem ; Extract ST objects
+echo.> ..\_hbost.txt
+for %%f in (%HB_DLL_LIBS_ST%) do (
+   if exist "%HB_LIB_INSTALL%\%%f.lib" (
+      echo Processing library: %%f
+      polib "%HB_LIB_INSTALL%\%%f.lib" /list /explode > _hboraw.txt
+      for /F %%p in (_hboraw.txt) do (
+         if not "%%p" == "maindll.obj" (
+         if not "%%p" == "maindllp.obj" (
+            echo _st\%%p>> ..\_hbost.txt
+         )
+         )
+      )
+      del _hboraw.txt
+   ) else ( echo Library not found: %HB_LIB_INSTALL%\%%f.lib )
+)
+cd ..
+
+md _mt
+cd _mt
+rem ; Extract MT objects
+echo.> ..\_hbomt.txt
+for %%f in (%HB_DLL_LIBS_MT%) do (
+   if exist "%HB_LIB_INSTALL%\%%f.lib" (
+      echo Processing library: %%f
+      polib "%HB_LIB_INSTALL%\%%f.lib" /list /explode > _hboraw.txt
+      for /F %%p in (_hboraw.txt) do (
+         if not "%%p" == "maindll.obj" (
+         if not "%%p" == "maindllp.obj" (
+            echo _mt\%%p>> ..\_hbomt.txt
+         )
+         )
+      )
+      del _hboraw.txt
+   ) else ( echo Library not found: %HB_LIB_INSTALL%\%%f.lib )
+)
+cd ..
+
+set _DST_NAME_ST=harbour-%HB_DLL_VERSION%-pocc
+set _DST_NAME_MT=harbourmt-%HB_DLL_VERSION%-pocc
+
+echo Making %_DST_NAME_ST%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_ST%.dll" @_hboneut.txt @_hbost.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
+echo Making %_DST_NAME_MT%.dll... && polink /nologo /dll /out:"%HB_BIN_INSTALL%\%_DST_NAME_MT%.dll" @_hboneut.txt @_hbomt.txt user32.lib wsock32.lib advapi32.lib gdi32.lib
+
+rem ; Cleanup
+for /F %%o in (_hbost.txt) do ( del %%o )
+if exist _st\maindll.obj  del _st\maindll.obj
+if exist _st\maindllp.obj del _st\maindllp.obj
+del _hbost.txt
+rmdir _st
+
+for /F %%o in (_hbomt.txt) do ( del %%o )
+if exist _mt\maindll.obj  del _mt\maindll.obj
+if exist _mt\maindllp.obj del _mt\maindllp.obj
+del _hbomt.txt
+rmdir _mt
+
+for /F %%o in (_hboneut.txt) do ( del %%o )
+del _hboneut.txt
 cd ..
 rmdir _dll
 

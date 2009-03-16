@@ -1652,7 +1652,6 @@ FUNCTION Main( ... )
          ENDIF
          cBin_Dyn := cBin_Link
          cOpt_CompC := "/c /Ze /Go {FC} /I{DI} {LC}"
-         cOpt_Lib := "{FA} /out:{OL} {LO}"
          cOpt_Dyn := "{FD} /dll /out:{OD} {DL} {LO} {LL} {LS}"
          IF t_cCOMP == "pocc"
             AAdd( s_aOPTC, "/Ot" )
@@ -1682,6 +1681,10 @@ FUNCTION Main( ... )
             AAdd( s_aOPTL, "/debug" )
          ENDIF
          s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "kernel32", "user32", "wsock32", "advapi32", "gdi32" } )
+         s_aLIBSHARED := { iif( s_lMT, "harbourmt-" + cDL_Version_Alter + "-pocc",;
+                                       "harbour-" + cDL_Version_Alter + "-pocc" ),;
+                           "hbmainstd",;
+                           "hbmainwin" }
 
       /* TODO */
       CASE t_cARCH == "linux" .AND. t_cCOMP == "icc"

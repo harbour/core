@@ -17,32 +17,12 @@ ifeq ($(HB_ARCHITECTURE),win)
 			DIRS = mainstd mainwin
 		endif
 	endif
+	DIRS += maindllh
 else
 	ifeq ($(HB_ARCHITECTURE),os2)
 		C_MAIN = mainstd.c
 	else
 		C_MAIN = main.c
-	endif
-endif
-
-ifeq ($(HB_ARCHITECTURE),win)
-	ifeq ($(HB_COMPILER),bcc)
-		DIRS += maindllh
-	endif
-	ifeq ($(HB_COMPILER),icc)
-		DIRS += maindllh
-	endif
-	ifeq ($(HB_COMPILER),msvc)
-		DIRS += maindllh
-	endif
-	ifeq ($(HB_COMPILER),msvc64)
-		DIRS += maindllh
-	endif
-	ifeq ($(HB_COMPILER),msvcia64)
-		DIRS += maindllh
-	endif
-	ifeq ($(HB_COMPILER),owatcom)
-		DIRS += maindllh
 	endif
 endif
 

@@ -8,6 +8,19 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-16 01:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/hb-mkdyn.bat
+  * source/vm/maindllp.c
+  * utils/hbmk2/hbmk2.prg
+    + Added .dll generation for pocc.
+    + Added -shared support for pocc.
+
+  * utils/hbmk2/hbmk2.prg
+    ! Warning after prev commit is fixed.
+
+  * source/vm/Makefile
+    * All win targets will generate maindllh lib.
+
 2009-03-15 16:42 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
 
   * harbour/contrib/gtwvg/hbgtwvg.ch
@@ -36,14 +49,14 @@
     + Implemented a highly optimized GUI controls for CUI consoles.
       Implementation includes auto-destruction, data-substitution,
       enable/disable feast, etc. These controls are almost identical
-      which are available with Wvt_Draw*() namespace but with a 
-      great difference that these are tied to the urrent GT and 
-      are handelled transparently by the GT itself. Developer 
-      has only to define it. The only requirement is that 
-      SaveScreen()/RestScreen() needs to be changed to new 
-      Modal GT window. Appln screens will never get blurred. It 
-      also employs optimized double-buffering and hence almost 
-      eliminates screen flickering. 
+      which are available with Wvt_Draw*() namespace but with a
+      great difference that these are tied to the urrent GT and
+      are handelled transparently by the GT itself. Developer
+      has only to define it. The only requirement is that
+      SaveScreen()/RestScreen() needs to be changed to new
+      Modal GT window. Appln screens will never get blurred. It
+      also employs optimized double-buffering and hence almost
+      eliminates screen flickering.
 
   * harbour/contrib/gtwvg/wvgcore.c
   * harbour/contrib/gtwvg/wvgsink.c
@@ -59,7 +72,7 @@
     ! Demonstrated the latest implemention of CUI-GUI controls. See below.
       Please try <Traditional><WVG Console with CGUI> option in the main menu.
       Also note the usage of Modal GT to simulate Alert() in new window.
-      Every GUI object returns a handle to it which may be used to 
+      Every GUI object returns a handle to it which may be used to
       change its parameters.
 
     ; TOFIX( WINCE BUILDS ) - GetSystemDirectory()
