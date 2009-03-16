@@ -2346,8 +2346,8 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
                GetClientRect( hWndParent, &rc );
                if( pWVT->pPP->bRowCols )
                {
-                  pWVT->ROWS = pWVT->pPP->width;
-                  pWVT->COLS = pWVT->pPP->height;
+                  pWVT->ROWS = ( USHORT ) pWVT->pPP->width;
+                  pWVT->COLS = ( USHORT ) pWVT->pPP->height;
 
                   pt.x = ( rc.right-rc.left + 1 - ( pWVTp->PTEXTSIZE.x * pWVT->COLS ) ) / 2;
                   pt.y = ( rc.bottom-rc.top + 1 - ( pWVTp->PTEXTSIZE.y * pWVT->ROWS ) ) / 2;
@@ -2362,8 +2362,8 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
             {
                if( pWVT->pPP->bRowCols )
                {
-                  pWVT->ROWS = pWVT->pPP->width;
-                  pWVT->COLS = pWVT->pPP->height;
+                  pWVT->ROWS = ( USHORT ) pWVT->pPP->width;
+                  pWVT->COLS = ( USHORT ) pWVT->pPP->height;
 
                   pt.x = ( pWVTp->PTEXTSIZE.x * pWVT->pPP->y );
                   pt.y = ( pWVTp->PTEXTSIZE.y * pWVT->pPP->x );
@@ -2397,8 +2397,8 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, BOOL bResizable )
          pt.x = ( pWVT->PTEXTSIZE.x * pWVT->pPP->y );
          pt.y = ( pWVT->PTEXTSIZE.y * pWVT->pPP->x );
 
-         pWVT->ROWS = pWVT->pPP->width;
-         pWVT->COLS = pWVT->pPP->height;
+         pWVT->ROWS = ( USHORT ) pWVT->pPP->width;
+         pWVT->COLS = ( USHORT ) pWVT->pPP->height;
       }
       else
       {
@@ -3558,7 +3558,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
                      s_guiData->pfnLayered( pWVT->hWnd,
                                        RGB( 255,255,255 ),
-                                       hb_itemGetNI( pInfo->pNewVal2 ),
+                                       ( BYTE ) hb_itemGetNI( pInfo->pNewVal2 ),
                                        /*LWA_COLORKEY|*/ LWA_ALPHA );
                   }
 #endif

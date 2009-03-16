@@ -914,7 +914,7 @@ HB_FUNC( WIN_CREATEWINDOWEX )
    hb_retnint( ( HB_PTRDIFF ) hWnd );
 }
 //----------------------------------------------------------------------//
-
+#if 0
 HB_FUNC( WIN_CREATETOOLBAREX )
 {
    HWND hWnd;
@@ -935,6 +935,7 @@ HB_FUNC( WIN_CREATETOOLBAREX )
 
    hb_retnint( ( HB_PTRDIFF ) hWnd );
 }
+#endif
 //----------------------------------------------------------------------//
 //
 //              Bitmap Management Function . Coutesy GTWVW
@@ -1315,7 +1316,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
          iParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) WIN_STATUSBAR_MAX_PARTS, ( LPARAM ) ( LPINT ) ptArray );
 
          GetClientRect( hWndSB, &rc );
-         width = ( USHORT ) rc.right / ( iParts + 1 );
+         width = ( USHORT ) ( rc.right / ( iParts + 1 ) );
          for( n = 0; n < iParts; n++ )
          {
             ptArray[ n ] = ( width * ( n + 1 ) );
@@ -2101,9 +2102,9 @@ HB_FUNC( WIN_SETLAYEREDWINDOWATTRIBUTES )
 
          SetWindowLong( hWnd, GWL_EXSTYLE, GetWindowLong( hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
 
-         if( pfnLayered( hWnd, cr, ( BYTE ) hb_parni( 3 ),  /*LWA_COLORKEY |*/ LWA_ALPHA ) == 0 );
+         if( pfnLayered( hWnd, cr, ( BYTE ) hb_parni( 3 ),  /*LWA_COLORKEY |*/ LWA_ALPHA ) == 0 )
          {
-//hb_ToOutDebug( "ysyysys" );
+            /* Just to supress warning */
          }
       }
       FreeLibrary( h );
@@ -2448,7 +2449,7 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
       hb_vmPushLong( ( HB_PTRDIFF ) wParam );
       hb_vmPushLong( ( HB_PTRDIFF ) lParam );
       hb_vmDo( 4 );
-      lRet = hb_parnint( -1 );
+      lRet = ( long ) hb_parnint( -1 );
       return lRet;
    }
    return DefWindowProc( hwnd, msg, wParam, lParam );

@@ -231,9 +231,9 @@ LRESULT __CallbackDispatcher( PCALLBACKDATA pCallback, ... )
 
    // execute
    if( pCallback->pSelf )
-      hb_vmSend( pCallback->iFormalParams + pCallback->iCargoParams );
+      hb_vmSend( ( USHORT ) ( pCallback->iFormalParams + pCallback->iCargoParams ) );
    else
-      hb_vmDo( pCallback->iFormalParams + pCallback->iCargoParams );
+      hb_vmDo( ( USHORT ) ( pCallback->iFormalParams + pCallback->iCargoParams ) );
 
    lResult = hb_parnl( -1 ) ;
 
@@ -368,9 +368,9 @@ static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
          iParVal2 = 0x50;
          for ( i = 1; i <= pCallback->iFormalParams; i++ )
          {
-            pParamData[1] = iParVal1;
-            pParamData[2] = 0x08 + ( ( pCallback->iFormalParams - i )* 4 );
-            pParamData[3] = iParVal2;
+            pParamData[1] = ( BYTE ) iParVal1;
+            pParamData[2] = ( BYTE ) ( 0x08 + ( ( pCallback->iFormalParams - i )* 4 ) );
+            pParamData[3] = ( BYTE ) iParVal2;
             memcpy( pMem+iOffset, pParamData, 4 );
             iOffset += 4;
 
@@ -386,8 +386,8 @@ static LPVOID _GenerateCallback( CALLBACKDATA * pCallback )
          memcpy( pMem+iOffset, pFuncEpilog, 20 );
          _udp( pMem, iOffset+1, pCallbackRecord ) ;                    // update callbackdata pointer
          _ucp( pMem, iOffset+6, __CallbackDispatcher, iOffset+ 10 );   // update code pointer
-         pMem[ iOffset+12 ] = 0x08 + ( ( pCallback->iFormalParams - 1 )* 4 );
-         pMem[ iOffset+15 ] = pCallback->iFormalParams * 4;
+         pMem[ iOffset+12 ] = ( BYTE ) ( 0x08 + ( ( pCallback->iFormalParams - 1 )* 4 ) );
+         pMem[ iOffset+15 ] = ( BYTE ) ( pCallback->iFormalParams * 4 );
       }
    }
    return pMem;
