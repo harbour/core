@@ -96,6 +96,7 @@ static PHB_GOBJS hb_wvg_ObjectNew( PHB_GTWVT pWVT )
 
    gObj->iHandle = iHandle;
    gObj->iState  = GOBJ_OBJSTATE_ENABLED;
+   gObj->lpText  = NULL;
 
    hb_retni( iHandle );
 
@@ -137,7 +138,11 @@ HB_FUNC( WVG_CLEARGUIOBJECTS )
         gObj = pWVT->gObjs->gObjNext;
 
         if( pWVT->gObjs->lpText != NULL )
+#if defined( UNICODE )
            HB_TCHAR_FREE( pWVT->gObjs->lpText );
+#else
+           hb_xfree( pWVT->gObjs->lpText );
+#endif
         if( pWVT->gObjs->hFont != NULL )
            if( pWVT->gObjs->bDestroyFont )
               DeleteObject( pWVT->gObjs->hFont );
@@ -600,7 +605,12 @@ HB_FUNC( WVG_LABEL )
       gObj->aOffset.iBottom  = hb_parni( 3,3 );
       gObj->aOffset.iRight   = hb_parni( 3,4 );
 
+#if defined( UNICODE )
       gObj->lpText           = HB_TCHAR_CONVTO( hb_parc( 4 ) );
+#else
+      gObj->lpText = hb_xgrab( strlen( hb_parc( 4 ) ) + 1 );
+      HB_TCHAR_CPTO( gObj->lpText, hb_parc( 4 ), strlen( hb_parc( 4 ) ) );
+#endif
 
       gObj->iAlign           = ISNIL( 5 ) ? TA_LEFT : hb_parni( 5 );
       gObj->crRGBText        = ( COLORREF ) hb_parnint( 7 );
@@ -632,7 +642,12 @@ HB_FUNC( WVG_LABELEX )
    gObj->aOffset.iBottom  = hb_parni( 3,3 );
    gObj->aOffset.iRight   = hb_parni( 3,4 );
 
+#if defined( UNICODE )
    gObj->lpText           = HB_TCHAR_CONVTO( hb_parc( 4 ) );
+#else
+   gObj->lpText = hb_xgrab( strlen( hb_parc( 4 ) ) + 1 );
+   HB_TCHAR_CPTO( gObj->lpText, hb_parc( 4 ), strlen( hb_parc( 4 ) ) );
+#endif
 
    gObj->iAlign           = ISNIL( 5 ) ? TA_LEFT : hb_parni( 5 );
    gObj->crRGBText        = ( COLORREF ) hb_parnint( 6 );

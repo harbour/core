@@ -283,7 +283,11 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
         gObj = pWVT->gObjs->gObjNext;
 
         if( pWVT->gObjs->lpText != NULL )
+#if defined( UNICODE )
            HB_TCHAR_FREE( pWVT->gObjs->lpText );
+#else
+           hb_xfree( pWVT->gObjs->lpText );
+#endif
         if( pWVT->gObjs->hFont )
            if( pWVT->gObjs->bDestroyFont )
               DeleteObject( pWVT->gObjs->hFont );
