@@ -214,6 +214,7 @@ FUNCTION Main( ... )
    LOCAL s_aLIBVM
    LOCAL s_aLIBUSER
    LOCAL s_aLIBUSERGT
+   LOCAL s_aLIBFM
    LOCAL s_aLIBHB
    LOCAL s_aLIBHBGT
    LOCAL s_aLIB3RD
@@ -670,6 +671,7 @@ FUNCTION Main( ... )
    s_aOPTD := {}
    s_aRESSRC := {}
    s_aRESCMP := {}
+   s_aLIBFM := {}
    s_aLIBUSER := {}
    s_aLIBUSERGT := {}
    s_aLIBDYNHAS := {}
@@ -1245,7 +1247,7 @@ FUNCTION Main( ... )
          ENDIF
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( iif( s_lSHARED, s_aLIBSHARED, s_aLIBUSER ), iif( s_lMT, "hbfmmt", "hbfm" ) )
+            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
@@ -1310,7 +1312,7 @@ FUNCTION Main( ... )
          s_aLIBSHARED := { iif( s_lMT, "harbourmt", "harbour" ) }
 
          IF s_lFMSTAT != NIL .AND. s_lFMSTAT
-            AAdd( iif( s_lSHARED, s_aLIBSHARED, s_aLIBUSER ), iif( s_lMT, "hbfmmt", "hbfm" ) )
+            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
          IF t_cCOMP == "mingw" .AND. Len( s_aRESSRC ) > 0
@@ -1356,6 +1358,10 @@ FUNCTION Main( ... )
             AAdd( s_aOPTC, "-o {OE}" )
          ENDIF
 
+         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
+            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+         ENDIF
+
       CASE t_cARCH == "dos" .AND. t_cCOMP == "djgpp"
 
          cLibPrefix := "-l"
@@ -1384,6 +1390,10 @@ FUNCTION Main( ... )
             ENDIF
          ELSE
             AAdd( s_aOPTC, "-o{OE}" )
+         ENDIF
+
+         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
+            AAdd( s_aLIBFM, "hbfm" )
          ENDIF
 
       /* Watcom family */
@@ -1459,6 +1469,10 @@ FUNCTION Main( ... )
             ENDIF
          ENDIF
 
+         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
+            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+         ENDIF
+
       CASE t_cARCH == "os2" .AND. t_cCOMP == "owatcom"
          cLibPrefix := "LIB "
          cLibExt := ".lib"
@@ -1484,6 +1498,10 @@ FUNCTION Main( ... )
             AAdd( s_aOPTL, "OP MAP" )
          ENDIF
 
+         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
+            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+         ENDIF
+
       CASE t_cARCH == "linux" .AND. t_cCOMP == "owatcom"
          cLibPrefix := "LIB "
          cLibExt := ".lib"
@@ -1507,6 +1525,10 @@ FUNCTION Main( ... )
          ENDIF
          IF s_lMAP
             AAdd( s_aOPTL, "OP MAP" )
+         ENDIF
+
+         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
+            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
          ENDIF
 
       /* Misc */
@@ -1561,6 +1583,10 @@ FUNCTION Main( ... )
                                        "harbour-" + cDL_Version_Alter + "-b32" ),;
                            "hbmainstd",;
                            "hbmainwin" }
+
+         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
+            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+         ENDIF
 
       CASE t_cARCH == "win" .AND. t_cCOMP $ "msvc|msvc64|msvcia64|icc"
          IF s_lDEBUG
@@ -1631,6 +1657,10 @@ FUNCTION Main( ... )
             cResExt := ".res"
          ENDIF
 
+         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
+            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+         ENDIF
+
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "pocc" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "xcc" )
 
@@ -1692,6 +1722,10 @@ FUNCTION Main( ... )
                                        "harbour-" + cDL_Version_Alter + "-pocc" ),;
                            "hbmainstd",;
                            "hbmainwin" }
+
+         IF s_lFMSTAT != NIL .AND. s_lFMSTAT
+            AAdd( s_aLIBFM, iif( s_lMT, "hbfmmt", "hbfm" ) )
+         ENDIF
 
       /* TODO */
       CASE t_cARCH == "linux" .AND. t_cCOMP == "icc"
@@ -1818,10 +1852,12 @@ FUNCTION Main( ... )
       /* Library list assembly */
       IF s_lSHARED .AND. ! Empty( s_aLIBSHARED )
          s_aLIBHB := ArrayAJoin( { s_aLIBSHARED,;
+                                   s_aLIBFM,;
                                    aLIB_BASE_CPLR,;
                                    aLIB_BASE_DEBUG } )
       ELSE
-         s_aLIBHB := ArrayAJoin( { aLIB_BASE1,;
+         s_aLIBHB := ArrayAJoin( { s_aLIBFM,;
+                                   aLIB_BASE1,;
                                    aLIB_BASE_CPLR,;
                                    aLIB_BASE_DEBUG,;
                                    s_aLIBVM,;
