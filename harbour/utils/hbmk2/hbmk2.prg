@@ -1130,6 +1130,7 @@ FUNCTION Main( ... )
          cOpt_Lib := "{FA} cr {OL} {LO}"
          cBin_CompC := t_cCCPREFIX + iif( t_cCOMP == "gpp", "g++", "gcc" )
          IF ! Empty( t_cCCPATH )
+            cBin_Lib   := t_cCCPATH + "/" + cBin_Lib
             cBin_CompC := t_cCCPATH + "/" + cBin_CompC
          ENDIF
          cOpt_CompC := "{LC} {LO} {LA} -O3 {FC} -I{DI} {DL}"
@@ -1254,6 +1255,7 @@ FUNCTION Main( ... )
 
       CASE ( t_cARCH == "win" .AND. t_cCOMP == "gcc" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "mingw" ) .OR. ;
+           ( t_cARCH == "win" .AND. t_cCOMP == "mingwce" ) .OR. ;
            ( t_cARCH == "win" .AND. t_cCOMP == "cygwin" )
 
          cLibPrefix := "-l"
@@ -1267,10 +1269,16 @@ FUNCTION Main( ... )
          cBin_Lib := t_cCCPREFIX + "ar.exe"
          cOpt_Lib := "{FA} cr {OL} {LO}"
          cLibObjPrefix := NIL
-         IF s_lGUI
-            cOpt_CompC += " -mwindows"
-         ELSE
-            cOpt_CompC += " -mconsole"
+         IF ! Empty( t_cCCPATH )
+            cBin_Lib   := t_cCCPATH + "\" + cBin_Lib
+            cBin_CompC := t_cCCPATH + "\" + cBin_CompC
+         ENDIF
+         IF !( t_cCOMP == "mingwce" )
+            IF s_lGUI
+               cOpt_CompC += " -mwindows"
+            ELSE
+               cOpt_CompC += " -mconsole"
+            ENDIF
          ENDIF
          IF s_lMAP
             cOpt_CompC += " -Wl,-Map {OM}"
@@ -1298,7 +1306,11 @@ FUNCTION Main( ... )
             AAdd( s_aOPTC, "-o{OE}" )
          ENDIF
          IF ! s_lSHARED
-            s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "winspool", "gdi32", "comctl32", "comdlg32", "ole32", "oleaut32", "uuid", "wsock32", "ws2_32" } )
+            IF t_cCOMP == "mingwce"
+               s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl", "uuid", "ole32" } )
+            ELSE
+               s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "user32", "winspool", "gdi32", "comctl32", "comdlg32", "ole32", "oleaut32", "uuid", "wsock32", "ws2_32" } )
+            ENDIF
          ENDIF
          s_aLIBSHARED := { iif( s_lMT, "harbourmt", "harbour" ) }
 
@@ -1690,7 +1702,7 @@ FUNCTION Main( ... )
       CASE t_cARCH == "linux" .AND. t_cCOMP == "icc"
       CASE t_cARCH == "win" .AND. t_cCOMP == "pocc64"  /* NOTE: Cross-platform: win/amd64 on win/x86 */
       CASE t_cARCH == "win" .AND. t_cCOMP == "poccce"  /* NOTE: Cross-platform: wince/ARM on win/x86 */
-      CASE t_cARCH $ "win|linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wince/ARM on win/x86 */
+      CASE t_cARCH == "linux" .AND. t_cCOMP == "mingwce" /* NOTE: Cross-platform: wince/ARM on win/x86 */
          IF ! s_lSHARED
             s_aLIBSYS := ArrayJoin( s_aLIBSYS, { "wininet", "ws2", "commdlg", "commctrl", "uuid", "ole32" } )
          ENDIF
