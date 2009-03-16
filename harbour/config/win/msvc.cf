@@ -13,7 +13,7 @@ CC = cl.exe
 CC_IN = -c
 CC_OUT = -Fo
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-CFLAGS = -nologo -W4 -wd4127 -Gs
+CFLAGS = -nologo -W4 -wd4127 -Gs -TP
 
 ifneq ($(HB_BUILD_OPTIM),no)
 ifeq ($(HB_VISUALC_VER_PRE80),)

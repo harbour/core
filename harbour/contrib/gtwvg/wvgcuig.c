@@ -608,7 +608,7 @@ HB_FUNC( WVG_LABEL )
 #if defined( UNICODE )
       gObj->lpText           = HB_TCHAR_CONVTO( hb_parc( 4 ) );
 #else
-      gObj->lpText = hb_xgrab( strlen( hb_parc( 4 ) ) + 1 );
+      gObj->lpText = ( char * ) hb_xgrab( strlen( hb_parc( 4 ) ) + 1 );
       HB_TCHAR_CPTO( gObj->lpText, hb_parc( 4 ), strlen( hb_parc( 4 ) ) );
 #endif
 
@@ -645,7 +645,7 @@ HB_FUNC( WVG_LABELEX )
 #if defined( UNICODE )
    gObj->lpText           = HB_TCHAR_CONVTO( hb_parc( 4 ) );
 #else
-   gObj->lpText = hb_xgrab( strlen( hb_parc( 4 ) ) + 1 );
+   gObj->lpText = ( char * ) hb_xgrab( strlen( hb_parc( 4 ) ) + 1 );
    HB_TCHAR_CPTO( gObj->lpText, hb_parc( 4 ), strlen( hb_parc( 4 ) ) );
 #endif
 
@@ -1568,3 +1568,4 @@ void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect )
    }
 }
 /*----------------------------------------------------------------------*/
+

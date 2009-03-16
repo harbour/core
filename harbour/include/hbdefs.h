@@ -314,6 +314,11 @@
 #endif
 
 #if USHRT_MAX == 0xffff
+   typedef short int           hbI16;
+   typedef unsigned short int  hbU16;
+   #define hbI16Min            SHRT_MIN
+   #define hbI16Max            SHRT_MAX
+   #define hbU16Max            USHRT_MAX
 #  if !defined( UINT16 )
       typedef USHORT       UINT16;
 #  endif
@@ -329,9 +334,20 @@
 #  if !defined( INT16_MIN )
 #     define INT16_MIN     SHRT_MIN
 #  endif
+#else
+   typedef short int           hbI16;
+   typedef unsigned short int  hbU16;
+   #define hbI16Min            SHRT_MIN
+   #define hbI16Max            SHRT_MAX
+   #define hbU16Max            USHRT_MAX
 #endif
 
 #if UINT_MAX == 0xFFFFFFFF
+   typedef int                 hbI32;
+   typedef unsigned int        hbU32;
+   #define hbI32Min            INT_MIN
+   #define hbI32Max            INT_MAX
+   #define hbU32Max            UINT_MAX
 #  if !defined( UINT32 )
       typedef UINT         UINT32;
 #  endif
@@ -348,6 +364,11 @@
 #     define INT32_MIN     INT_MIN
 #  endif
 #elif ULONG_MAX == 0xFFFFFFFF
+   typedef long                hbI32;
+   typedef unsigned long       hbU32;
+   #define hbI32Min            LONG_MIN
+   #define hbI32Max            LONG_MAX
+   #define hbU32Max            ULONG_MAX
 #  if !defined( UINT32 )
       typedef ULONG        UINT32;
 #  endif
@@ -379,6 +400,11 @@
 #endif
 
 #if defined( HB_ARCH_64BIT ) && !defined( HB_OS_WIN_64 )
+   typedef long                hbI64;
+   typedef unsigned long       hbU64;
+   #define hbI64Min            LONG_MIN
+   #define hbI64Max            LONG_MAX
+   #define hbU64Max            ULONG_MAX
 #  if !defined( UINT64 )
      typedef ULONG        UINT64;
 #  endif
@@ -395,6 +421,11 @@
 #    define INT64_MIN     LONG_MIN
 #  endif
 #elif !defined( HB_LONG_LONG_OFF )
+   typedef LONGLONG            hbI64;
+   typedef ULONGLONG           hbU64;
+   #define hbI64Min            LONGLONG_MIN
+   #define hbI64Max            LONGLONG_MAX
+   #define hbU64Max            ULONGLONG_MAX
 #  if !defined( UINT64 )
      typedef ULONGLONG    UINT64;
 #  endif
@@ -444,62 +475,6 @@
    typedef LONG                  HB_LONG;
    typedef ULONG                 HB_ULONG;
 #  define PFHL                   "l"
-#endif
-
-#if 0
-
-/* New Harbour types (Planning stage, don't use these yet) */
-
-/*
-  ANSI C types:
-     void,
-     [ [un]signed ] char, [ [un]signed ] short, [ [un]signed ] int,
-     [ [un]signed ] long, double
-*/
-
-/* TODO: Remove dependence on old types */
-
-/* Harbour overloaded types: */
-typedef char                hbChar;           /* TOFIX */
-typedef SCHAR               hbSChar;
-typedef UCHAR               hbUChar;
-typedef short               hbShort;
-typedef unsigned short      hbUShort;
-typedef int                 hbInt;
-typedef unsigned int        hbUInt;
-typedef long                hbLong;
-typedef unsigned long       hbULong;
-typedef LONGLONG            hbLongLong;
-typedef ULONGLONG           hbULongLong;
-typedef double              hbDouble;
-typedef                     hbMaxInt;         /* TOFIX */
-typedef                     hbMaxDouble;      /* TOFIX */
-typedef unsigned short      hbCounter;
-typedef long                hbSize;
-typedef HB_PTRDIFF          hbPtrDiff;
-typedef void *              hbPtrVal;         /* TOFIX */
-typedef                     hbPointer;        /* TOFIX */
-typedef                     hbWChar;          /* TOFIX */
-
-/* Harbour strict bit types: */
-typedef char                hbI8;             /* TOFIX */
-typedef UCHAR               hbU8;             /* TOFIX */
-typedef INT16               hbI16;
-typedef UINT16              hbU16;
-typedef INT32               hbI32;
-typedef UINT32              hbU32;
-typedef INT64               hbI64;
-typedef UINT64              hbI64;
-
-/* Types which depends on internal HVM/compilation settings: */
-/* NOTE: hbMaxVMInt - maximal integer which can be storred in HVM item
-                      (HB_IT_LONG). It's current HB_LONG, usually will be
-                      the same as hbMaxInt unless for some reasons it will
-                      not be reduced, f.e. compiler may support 128bit
-                      integers as hbMaxInt but we may don't use it for
-                      HB_IT_LONG due to performance reduction. */
-typedef long                hbMaxVMInt;       /* TOFIX */
-
 #endif
 
 #define HB_DBL_LIM_INT(d)     ( HB_INT_MIN <= (d) && (d) <= HB_INT_MAX )
@@ -698,6 +673,53 @@ typedef unsigned long HB_COUNTER;
 #  endif
 
 #endif
+
+
+/* New Harbour types (Planning stage) */
+
+/*
+  ANSI C types:
+     void,
+     [ [un]signed ] char, [ [un]signed ] short, [ [un]signed ] int,
+     [ [un]signed ] long, double
+*/
+
+/* TODO: Remove dependence on old types */
+
+/* Harbour overloaded types: */
+typedef char                hbChar;           /* TOFIX */
+typedef SCHAR               hbSChar;
+typedef UCHAR               hbUChar;
+typedef short               hbShort;
+typedef unsigned short      hbUShort;
+typedef int                 hbInt;
+typedef unsigned int        hbUInt;
+typedef long                hbLong;
+typedef unsigned long       hbULong;
+typedef LONGLONG            hbLongLong;
+typedef ULONGLONG           hbULongLong;
+typedef double              hbDouble;
+/* typedef                     hbIntMax;     */    /* TOFIX */
+/* typedef                     hbDoubleMax;  */    /* TOFIX */
+typedef unsigned short      hbCounter;
+typedef long                hbSize;
+typedef HB_PTRDIFF          hbPtrDiff;
+typedef void *              hbPtrVal;         /* TOFIX */
+/* typedef                     hbPointer;    */    /* TOFIX */
+/* typedef                     hbWChar;      */    /* TOFIX */
+
+/* Harbour strict bit types: */
+typedef signed char         hbI8;
+typedef unsigned char       hbU8;
+
+/* Types which depends on internal HVM/compilation settings: */
+/* NOTE: hbMaxVMInt - maximal integer which can be storred in HVM item
+                      (HB_IT_LONG). It's current HB_LONG, usually will be
+                      the same as hbIntMax unless for some reasons it will
+                      not be reduced, f.e. compiler may support 128bit
+                      integers as hbIntMax but we may don't use it for
+                      HB_IT_LONG due to performance reduction. */
+typedef long                hbVMIntMax;       /* TOFIX */
 
 
 #define HB_MAX( a, b )          ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) )

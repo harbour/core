@@ -411,6 +411,8 @@ Known build issues
 - Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions
   won't work.
 - gtalleg contrib may not compile on all platforms/compilers.
+- hbssl won't work with owatcom on win platform due to OpenSSL
+  header compatibility problems.
 
 
 Version 1.0.1 (2008-09-10)

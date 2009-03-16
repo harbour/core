@@ -8,6 +8,35 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-16 12:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * include/hbdefs.h
+    + Enabled new Harbour types. Still incomplete, and relying
+      on old unsafe types in places.
+
+  * contrib/gtwvg/gtwvg.c
+    ! Warning.
+
+  * contrib/gtwvg/wvgcuig.c
+    ! Cast errors.
+
+  * config/win/msvc.cf
+    + Enabled C++ mode. This should result in stricter compiler
+      warnings/errors, and also enables to use standard init
+      method (non-C++ method is broken when using LTCG
+      and potentially in other scenarios like IA64). Note, this
+      doesn't mean we'd allow non-ANSI C usage inside Harbour,
+      so no C++ features are allowd. This won't cause any
+      drawbacks for the user AFAIK, if you know otherwise, pls
+      speak up. [Notice that we're using C++ mode for owatcom
+      on all platforms.]
+
+  * doc/whatsnew.txt
+    + Documented win/owatcom and OpenSSL incompatibility.
+      (maybe it can be resolved, I didn't spend time on it)
+
+  * INSTALL
+    * C compiler -> ANSI C compiler.
+
 2009-03-16 11:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.bat
     ! Fixed typo in prev.

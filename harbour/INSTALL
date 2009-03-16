@@ -18,7 +18,7 @@ HOW TO BUILD AND INSTALL HARBOUR
 
    For all platforms you'll need:
 
-   * Supported C compiler
+   * Supported ANSI C compiler
    * GNU Make
 
    Linux/Darwin/BSD/HP-UX/Solaris

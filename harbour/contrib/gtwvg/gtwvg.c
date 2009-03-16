@@ -127,7 +127,6 @@ static void hb_wvt_gtCreateToolTipWindow( PHB_GTWVT pWVT );
 static void hb_wvt_gtHandleMenuSelection( PHB_GTWVT pWVT, int );
 static void hb_wvt_gtSaveGuiState( PHB_GTWVT pWVT );
 static void hb_wvt_gtRestGuiState( PHB_GTWVT pWVT, LPRECT rect );
-static void hb_wvt_gtRestScreen( PHB_GTWVT pWVT );
 static void hb_wvt_gtLoadGuiData( void );
 static void hb_wvt_gtReleaseGuiData( void );
 
