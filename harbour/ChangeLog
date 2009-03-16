@@ -8,6 +8,11 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-16 15:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * bin/postinst.bat
+    ! Typo in bcc / fbclient.
+    % Cleanup for owatcom, fbclient fixed.
+
 2009-03-16 15:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * INSTALL
     + Added 3.81 or upper as GNU Make requirement. Older ones
