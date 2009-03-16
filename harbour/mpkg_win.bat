@@ -47,6 +47,7 @@ set HB_BUILD_DLL=yes
 set HB_BUILD_OPTIM=yes
 set HB_BUILD_DEBUG=no
 set HB_BUILD_IMPLIB=no
+set HB_USER_CFLAGS=%HB_USER_CFLAGS% -DHB_FM_STATISTICS_OFF
 
 rem ; Build Harbour
 if "%HB_COMPILER%" == "mingw"  ( sh make_gnu.sh clean install && goto MK_PKG )

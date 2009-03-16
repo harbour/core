@@ -1961,8 +1961,6 @@ METHOD OSShell() CLASS HBDebugger
 
    LOCAL cImage := SaveScreen()
    LOCAL cColors := SetColor()
-   LOCAL cOs := Upper( OS() )
-   LOCAL cShell
    LOCAL oE
 
    SetColor( "W/N" )
@@ -1972,19 +1970,15 @@ METHOD OSShell() CLASS HBDebugger
 
    BEGIN SEQUENCE WITH { | objErr | Break( objErr ) }
 
-      IF At( "WINDOWS", cOs ) != 0 .OR. ;
-         At( "DOS", cOs ) != 0 .OR. ;
-         At( "OS/2", cOs ) != 0
-         cShell := GetEnv( "COMSPEC" )
-         hb_Run( cShell )
-      ELSEIF At( "LINUX", cOs ) != 0 .OR. ;
-             At( "BSD", cOs ) != 0 .OR. ;
-             At( "DARWIN", cOs ) != 0
-         cShell := GetEnv( "SHELL" )
-         hb_Run( cShell )
-      ELSE
-         __dbgAlert( "Not implemented yet!" )
-      ENDIF
+#if defined( __PLATFORM__WINDOWS ) .OR. ;
+    defined( __PLATFORM__DOS ) .OR. ;
+    defined( __PLATFORM__OS2 )
+      hb_Run( GetEnv( "COMSPEC" ) )
+#elif defined( __PLATFORM__UNIX )
+      hb_Run( GetEnv( "SHELL" ) )
+#else
+      __dbgAlert( "Not implemented yet!" )
+#endif
 
    RECOVER USING oE
 

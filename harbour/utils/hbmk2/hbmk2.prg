@@ -1032,8 +1032,7 @@ FUNCTION Main( ... )
          make it the first source file specified. */
       DEFAULT s_cPROGNAME TO FN_NameGet( s_cFIRST )
 
-      IF t_cCOMP == "mingwce" .OR. ;
-         t_cCOMP == "poccce"
+      IF t_cCOMP == "mingwce|msvcce|poccce"
          t_cGTDEFAULT := "gtwvt"
       ENDIF
 
