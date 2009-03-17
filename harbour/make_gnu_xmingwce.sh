@@ -46,35 +46,35 @@ export CC_HB_USER_PRGFLAGS
 export HB_USER_PRGFLAGS="$CC_HB_USER_PRGFLAGS $HB_USER_PRGFLAGS"
 
 # default cegcc instalation path
-[ -z "$CCPATH" ] && CCPATH="/opt/mingw32ce/bin"
+[ -z "$HB_CCPATH" ] && HB_CCPATH="/opt/mingw32ce/bin"
 
 if [ "$HB_HOST_ARCH" != "win" ]; then
-    export PATH="$CCPATH:$PATH"
+    export PATH="$HB_CCPATH:$PATH"
 fi
 
 # cegcc executables prefix - this
 # has changed in cegcc/gcc4.3.0
-if [ -z "$CCPREFIX" ]; then
-    if [ -x "${CCPATH}/arm-wince-mingw32ce-gcc" ]; then
-        export CCPREFIX="arm-wince-mingw32ce-"
+if [ -z "$HB_CCPREFIX" ]; then
+    if [ -x "${HB_CCPATH}/arm-wince-mingw32ce-gcc" ]; then
+        export HB_CCPREFIX="arm-wince-mingw32ce-"
     else
-        if [ -x "${CCPATH}/arm-mingw32ce-gcc" ]; then
-            export CCPREFIX="arm-mingw32ce-"
+        if [ -x "${HB_CCPATH}/arm-mingw32ce-gcc" ]; then
+            export HB_CCPREFIX="arm-mingw32ce-"
         else
             echo "cegcc compiler executable not found. Ensure you have cegcc package installed in"
-            echo "/opt/mingw32ce dir, or (alternatively) set environment variable CCPATH to a cegcc"
+            echo "/opt/mingw32ce dir, or (alternatively) set environment variable HB_CCPATH to a cegcc"
             echo "installation directory"
             exit 1
         fi
     fi
 fi
 
-export CCPATH="${CCPATH}:"
+export HB_CCPATH="${HB_CCPATH}:"
 export HB_TOOLS_PREF="hbce"
 export HB_XBUILD="wce"
 [ "${HB_HOST_BUILD}" = "all" ] || export HB_HOST_BUILD="lib"
 
-export HB_BIN_COMPILE="/tmp/hb-${CCPREFIX}-$$"
+export HB_BIN_COMPILE="/tmp/hb-${HB_CCPREFIX}-$$"
 rm -fR "${HB_BIN_COMPILE}"
 trap cleanup EXIT >/dev/null 2>&1
 mkdir ${HB_BIN_COMPILE}

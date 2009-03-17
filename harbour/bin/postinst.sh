@@ -47,7 +47,7 @@ if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \
 then
     RANLIB=""
     MAKE=make
-    AR="${CCPREFIX}ar -cr"
+    AR="${HB_CCPREFIX}ar -cr"
     AR_OPT=""
     if [ "${HB_ARCHITECTURE}" = "bsd" ] || \
        [ "${HB_ARCHITECTURE}" = "hpux" ] || \
@@ -55,16 +55,16 @@ then
         MAKE=gmake
     elif [ "${HB_ARCHITECTURE}" = "darwin" ]; then
         # We must build an archive index on Darwin
-        #AR="${CCPREFIX}ar -crs"
+        #AR="${HB_CCPREFIX}ar -crs"
         AR="libtool"
-        AR_OPT="-static ${HB_USER_LIBTOOL} -o "
+        AR_OPT="-static ${HB_USER_AFLAGS} -o "
     fi
 
     if [ -n "${HB_TOOLS_PREF}" ]; then
         hb_mkdyn="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkdyn"
         rm -f "${hb_mkdyn}"
         sed -e "s/^# HB_ARCHITECTURE=\"\"\$/HB_ARCHITECTURE=\"${HB_ARCHITECTURE}\"/g" \
-            -e "s/^# CCPREFIX=\"\"\$/[ -n \"\${CCPREFIX}\" ] || CCPREFIX=\"${CCPREFIX}\"/g" \
+            -e "s/^# HB_CCPREFIX=\"\"\$/[ -n \"\${HB_CCPREFIX}\" ] || HB_CCPREFIX=\"${HB_CCPREFIX}\"/g" \
             "${hb_root}/bin/hb-mkdyn.sh" > "${hb_mkdyn}" && \
         chmod 755 "${hb_mkdyn}"
     elif [ "$HB_COMPILER" = "icc" ]; then

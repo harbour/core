@@ -12,7 +12,7 @@ LIB_EXT = .a
 # Favor size for CE builds.
 HB_GCMODE=0
 
-CC = $(CCPREFIX)gcc
+CC = $(HB_CCPREFIX)gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
@@ -27,7 +27,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
 CFLAGS += -g
 endif
 
-LD = $(CCPREFIX)gcc
+LD = $(HB_CCPREFIX)gcc
 LD_OUT = -o
 LINKPATHS =
 LDLIBS =
@@ -126,10 +126,10 @@ endef
 
 LDFLAGS =
 
-AR = $(CCPREFIX)ar
+AR = $(HB_CCPREFIX)ar
 ARFLAGS = $(HB_USER_AFLAGS)
 
-RANLIB = $(CCPREFIX)ranlib
+RANLIB = $(HB_CCPREFIX)ranlib
 
 ifeq ($(SHLVL),) # COMMAND.COM - length of command line is limited
 ifneq ($(OS),Windows_NT)

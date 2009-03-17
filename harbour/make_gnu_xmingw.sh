@@ -50,7 +50,7 @@ export HB_USER_PRGFLAGS="$CC_HB_USER_PRGFLAGS $HB_USER_PRGFLAGS"
 if [ -f /etc/debian_version ]; then
     MINGW_PREFIX=/usr
     TARGET=i586-mingw32msvc
-    CCPREFIX="$TARGET-"
+    HB_CCPREFIX="$TARGET-"
 elif [ -f /etc/gentoo-release ]; then
     if [ -x /opt/xmingw/bin/i386-mingw32-gcc ]; then
         MINGW_PREFIX=/opt/xmingw
@@ -59,21 +59,21 @@ elif [ -f /etc/gentoo-release ]; then
         MINGW_PREFIX=/usr
         TARGET=i686-mingw32
     fi
-    CCPREFIX="$TARGET-"
+    HB_CCPREFIX="$TARGET-"
 elif [ "$UNAME" = "FreeBSD" ]; then
     MINGW_PREFIX=/usr/local/mingw32
     TARGET="."
-    CCPREFIX=""
+    HB_CCPREFIX=""
     UNAMEL=bsd
 elif [ -x /usr/local/bin/i[3456]86-mingw*-gcc ]; then
     MINGW_PREFIX=/usr/local
     TARGET=`echo /usr/local/bin/i[3456]86-mingw*-gcc|sed -e '1 !d' -e 's/.*\(i[3456]86-mingw[^-]*\).*/\1/g'`
-    CCPREFIX="$TARGET-"
+    HB_CCPREFIX="$TARGET-"
 fi
 
 if [ -z "${MINGW_PREFIX}" ] || \
-   ( [ ! -x ${MINGW_PREFIX}/bin/${CCPREFIX}gcc ] && \
-     [ ! -x ${MINGW_PREFIX}/${TARGET}/bin/${CCPREFIX}gcc ] ); then
+   ( [ ! -x ${MINGW_PREFIX}/bin/${HB_CCPREFIX}gcc ] && \
+     [ ! -x ${MINGW_PREFIX}/${TARGET}/bin/${HB_CCPREFIX}gcc ] ); then
     # MinGW cross-compiler not found in default location
     # scan some usually used locations and names
     for d in /usr /usr/local /usr/local/mingw32 /opt/xmingw; do
@@ -82,30 +82,30 @@ if [ -z "${MINGW_PREFIX}" ] || \
             if [ -x $MINGWGCC ]; then
                 MINGW_PREFIX=$d
                 TARGET=`echo "$MINGWGCC"|sed -e '1 !d' -e 's/.*\(i[3456]86-mingw[^-]*\).*/\1/g'`
-                CCPREFIX="$TARGET-"
+                HB_CCPREFIX="$TARGET-"
             else
                 MINGWGCC=`echo $d/i[3456]86-mingw*/bin/gcc`
                 if [ -x $MINGWGCC ]; then
                    MINGW_PREFIX=$d
                    TARGET=`echo "$MINGWGCC"|sed -e '1 !d' -e 's!.*\(i[3456]86-mingw[^/]*\).*!\1!g'`
-                   CCPREFIX=""
+                   HB_CCPREFIX=""
                 fi
             fi
         fi
     done
 fi
 
-if [ ! -x ${MINGW_PREFIX}/bin/${CCPREFIX}gcc ] && \
-   [ ! -x ${MINGW_PREFIX}/${TARGET}/bin/${CCPREFIX}gcc ]; then
+if [ ! -x ${MINGW_PREFIX}/bin/${HB_CCPREFIX}gcc ] && \
+   [ ! -x ${MINGW_PREFIX}/${TARGET}/bin/${HB_CCPREFIX}gcc ]; then
     echo "Can't determine the location for the MinGW32 cross-compiler."
     echo "Please install it or add your platform to the $0 script."
     exit 1
 fi
 
-CCPATH="$MINGW_PREFIX/bin:$MINGW_PREFIX/$TARGET/bin:"
-PATH="$CCPATH$PATH"
+HB_CCPATH="$MINGW_PREFIX/bin:$MINGW_PREFIX/$TARGET/bin:"
+PATH="$HB_CCPATH$PATH"
 
-export PATH CCPATH CCPREFIX
+export PATH HB_CCPATH HB_CCPREFIX
 
 export HB_TOOLS_PREF="hbw"
 export HB_XBUILD="win"

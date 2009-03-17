@@ -236,11 +236,11 @@ done
 
 # Keep the size of the binaries to a minimim.
 if [ -f $HB_BIN_INSTALL/harbour${hb_exesuf} ]; then
-    ${CCPREFIX}strip $HB_BIN_INSTALL/harbour${hb_exesuf}
+    ${HB_CCPREFIX}strip $HB_BIN_INSTALL/harbour${hb_exesuf}
 fi
 if [ "$HB_ARCHITECTURE" != "hpux" ]; then
     # Keep the size of the libraries to a minimim, but don't try to strip symlinks.
-    ${CCPREFIX}strip -S `find $HB_LIB_INSTALL -type f`
+    ${HB_CCPREFIX}strip -S `find $HB_LIB_INSTALL -type f`
 fi
 
 if [ "${hb_sysdir}" = "yes" ]; then
@@ -250,7 +250,7 @@ cp -f source/rtl/gtcrs/hb-charmap.def $HB_INST_PREF$ETC/harbour/hb-charmap.def
 chmod 644 $HB_INST_PREF$ETC/harbour/hb-charmap.def
 
 cat > $HB_INST_PREF$ETC/harbour.cfg <<EOF
-CC=${CCPREFIX}gcc
+CC=${HB_CCPREFIX}gcc
 CFLAGS=-c -I$_DEFAULT_INC_DIR
 VERBOSE=YES
 DELTMP=YES
@@ -279,7 +279,7 @@ then
         (cd "utils/${utl}"
          rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
          $MAKE install
-         ${CCPREFIX}strip "${HB_BIN_INSTALL}/${utl}${hb_exesuf}")
+         ${HB_CCPREFIX}strip "${HB_BIN_INSTALL}/${utl}${hb_exesuf}")
     done
 fi
 

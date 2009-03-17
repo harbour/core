@@ -65,8 +65,8 @@ then
     exit 1
 fi
 
-CCPREFIX="$TARGET-"
-CCPATH="$MINGW_DIR/bin"
+HB_CCPREFIX="$TARGET-"
+HB_CCPATH="$MINGW_DIR/bin"
 
 
 cd `dirname $0`
@@ -130,8 +130,8 @@ then
         mv ${hb_filename} ${RPMDIR}/SOURCES/
         sed -e "s|^%define version .*$|%define version   ${hb_ver}|g" \
             -e "s|^%define releasen .*$|%define releasen  ${hb_verstat}|g" \
-            -e "s|^%define hb_ccpath .*$|%define hb_ccpath ${CCPATH}|g" \
-            -e "s|^%define hb_ccpref .*$|%define hb_ccpref ${CCPREFIX}|g" \
+            -e "s|^%define hb_ccpath .*$|%define hb_ccpath ${HB_CCPATH}|g" \
+            -e "s|^%define hb_ccpref .*$|%define hb_ccpref ${HB_CCPREFIX}|g" \
             harbour-win-spec > ${RPMDIR}/SPECS/harbour-win.spec
         if which rpmbuild &>/dev/null
         then

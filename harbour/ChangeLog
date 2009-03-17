@@ -8,6 +8,21 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-17 13:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * harbour-win-spec
+  * harbour-wce-spec
+  * make_gnu_xmingw.sh
+  * make_gnu_xmingwce.sh
+  * mpkg_rpm_win.sh
+  * mpkg_tgz.sh
+  * bin/hb-mkdyn.sh
+  * bin/hb-func.sh
+  * bin/postinst.sh
+  * config/win/mingwce.cf
+  * config/win/mingw.cf
+    * CCPATH -> HB_CCPATH
+    * CCPREFIX -> HB_CCPREFIX
+
 2009-03-17 12:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   + tests/server.prg
   * tests/Makefile
