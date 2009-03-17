@@ -1219,6 +1219,7 @@ static void hb_compPCodeEnumSelfifyLocal( PFUNCTION pFunc, SHORT isLocal )
             {
                assert( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHSELF &&
                        ! hb_compHasJump( pFunc, ulPos ) );
+
                hb_compNOOPfill( pFunc, ulLastPos, 1, FALSE, FALSE );
                hb_compNOOPfill( pFunc, ulPos, 2, FALSE, FALSE );
             }
@@ -1576,8 +1577,21 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    while( pVar )
    {
       /* Compiler and optimizer should have the same opinion about variable usage */
+      /* I hope that it will in the future but now compiler does not detect some
+       * dead code before marking variables as used so this conditions fails in
+       * code like:
+       *    proc main()
+       *       local x
+       *       if .f.
+       *          x := 1
+       *       endif
+       *    return
+       * [druzus]
+       */
+#if 0
       assert( ( ! ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags == 0 ) || 
               (   ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags != 0 ) );
+#endif
 
       if( usIndex >= pFunc->wParamCount && pLocals[ usIndex ].bFlags == OPT_LOCAL_FLAG_PUSH )
       {

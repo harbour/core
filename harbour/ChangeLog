@@ -8,6 +8,16 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-18 00:49 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbatomic.h
+    + added atomic inc/dec inline assembler code for 32bit MSVC builds
+      and probably also to other compilers which defines _MSC_VER
+      macro (XCC/POCC). Thanks to Viktor for help. Please make some tests.
+      
+  * harbour/source/compiler/hbopt.c
+    ! disabled one assert() in PCODE optimization code.
+      Mindaugas, I left note which explains why.
+
 2009-03-18 00:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * config/rules.cf
     + Added -ko optimization switch for Harbour.
