@@ -11,7 +11,7 @@
  *
  */
 
-#define N_TESTS 55
+#define N_TESTS 56
 #define N_LOOPS 1000000
 #define ARR_LEN 16
 
@@ -32,7 +32,16 @@
 #endif
 
 #ifdef __XPP__
-   /* xBase++ version for MT performance testing is not read yet */
+   #define __NO_OBJ_ARRAY__
+   /* xBase++ version for MT performance testing is not ready yet */
+   #ifndef __ST__
+      #define __ST__
+   #endif
+#endif
+
+#ifdef __CLIP__
+   #define __NO_OBJ_ARRAY__
+   /* CLIP version for MT performance testing is not ready yet */
    #ifndef __ST__
       #define __ST__
    #endif
@@ -67,12 +76,9 @@
 #command ? <xx,...> => outstd(EOL);outstd(<xx>)
 #command ?? <xx,...> => outstd(<xx>)
 
-#include "common.ch"
-
 #ifdef __HARBOUR__
    #define EOL hb_OSNewLine()
 #else
-   #define HB_SYMBOL_UNUSED( symbol )  ( ( symbol ) )
    #ifndef __CLIP__
       #xtranslate secondsCPU() => seconds()
    #endif
@@ -81,21 +87,29 @@
    #endif
 #endif
 
-#xcommand _( [<cmds,...>] ) => [<cmds>]
-
 #xcommand TEST <testfunc>           ;
           [ WITH <locals,...> ]     ;
+          [ STATIC <statics,...> ]  ;
+          [ FIELD  <fields,...> ]   ;
+          [ MEMVAR <memvars,...> ]  ;
+          [ PRIVATE <privates,...> ];
+          [ PUBLIC <publics,...> ]  ;
           [ INIT <init> ]           ;
           [ EXIT <exit> ]           ;
           [ INFO <info> ]           ;
-          CODE [<*testExp*>] =>     ;
+          CODE [ <testExp,...> ] => ;
    func <testfunc> ;                ;
-      local time, i, x := nil ;     ;
+      local time, i:=nil, x:=nil ;  ;
       [ local <locals> ; ]          ;
+      [ static <statics> ; ]        ;
+      [ field <fields> ; ]          ;
+      [ memvar <memvars> ; ]        ;
+      [ private <privates> ; ]      ;
+      [ public <publics> ; ]        ;
       [ <init> ; ]                  ;
       time := secondscpu() ;        ;
       for i:=1 to N_LOOPS ;         ;
-         [<testExp>;]               ;
+         [ ( <testExp> ) ] ;        ;
       next ;                        ;
       time := secondscpu() - time ; ;
       [ <exit> ; ]                  ;
@@ -115,7 +129,7 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
    local nMT, cExclude, lScale, cParam, cMemTests, lSyntax, i, j
 
    lSyntax := lScale := .f.
-   cMemTests := "029 030 023 025 027 040 041 043 052 053 019 022 031 032 054 055 "
+   cMemTests := "030 031 023 025 027 041 042 044 053 054 019 022 032 033 055 056 "
    cExclude := ""
    nMT := 0
    for j := 1 to len( aParams )
@@ -177,57 +191,63 @@ TEST t002 WITH L_N:=112345.67    CODE x := L_N
 
 TEST t003 WITH L_D:=date()       CODE x := L_D
 
-TEST t004 INIT _( static s_once, S_C ) ;
+TEST t004 STATIC s_once := NIL, S_C ;
           INIT hb_threadOnce( @s_once, {|| S_C := dtos( date() ) } ) ;
           CODE x := S_C
 
-TEST t005 INIT _( static s_once, S_N ) ;
+TEST t005 STATIC s_once := NIL, S_N ;
           INIT hb_threadOnce( @s_once, {|| S_N := 112345.67 } ) ;
           CODE x := S_N
 
-TEST t006 INIT _( static s_once, S_D ) ;
+TEST t006 STATIC s_once := NIL, S_D ;
           INIT hb_threadOnce( @s_once, {|| S_D := date() } ) ;
           CODE x := S_D
 
-TEST t007 INIT _( memvar M_C ) INIT _( private M_C := dtos( date() ) ) ;
-          CODE x := M_C
+TEST t007 MEMVAR M_C ;
+          PRIVATE M_C := dtos( date() ) ;
+          CODE x := M->M_C
 
-TEST t008 INIT _( memvar M_N ) INIT _( private M_N := 112345.67 ) ;
-          CODE x := M_N
+TEST t008 MEMVAR M_N ;
+          PRIVATE M_N := 112345.67 ;
+          CODE x := M->M_N
 
-TEST t009 INIT _( memvar M_D ) INIT _( private M_D := date() ) ;
-          CODE x := M_D
+TEST t009 MEMVAR M_D ;
+          PRIVATE M_D := date() ;
+          CODE x := M->M_D
 
-TEST t010 INIT _( memvar P_C ) ;
-          INIT _( static s_once ) ;
-          INIT _( public P_C ) ;
-          INIT hb_threadOnce( @s_once, {|| P_C := dtos( date() ) } ) ;
-          CODE x := P_C
+TEST t010 STATIC s_once := NIL ;
+          MEMVAR P_C ;
+          PUBLIC P_C ;
+          INIT hb_threadOnce( @s_once, {|| M->P_C := dtos( date() ) } ) ;
+          CODE x := M->P_C
 
-TEST t011 INIT _( memvar P_N ) ;
-          INIT _( static s_once ) ;
-          INIT _( public P_N ) ;
-          INIT hb_threadOnce( @s_once, {|| P_N := 112345.67 } ) ;
-          CODE x := P_N
+TEST t011 STATIC s_once := NIL ;
+          MEMVAR P_N ;
+          PUBLIC P_N ;
+          INIT hb_threadOnce( @s_once, {|| M->P_N := 112345.67 } ) ;
+          CODE x := M->P_N
 
-TEST t012 INIT _( memvar P_D ) ;
-          INIT _( static s_once ) ;
-          INIT _( public P_D ) ;
-          INIT hb_threadOnce( @s_once, {|| P_D := date() } ) ;
-          CODE x := P_D
+TEST t012 STATIC s_once := NIL ;
+          MEMVAR P_D ;
+          PUBLIC P_D ;
+          INIT hb_threadOnce( @s_once, {|| M->P_D := date() } ) ;
+          CODE x := M->P_D
 
-TEST t013 INIT _( field F_C ) INIT use_dbsh() EXIT close_db() ;
+TEST t013 FIELD  F_C ;
+          INIT use_dbsh() EXIT close_db() ;
           CODE x := F_C
 
-TEST t014 INIT _( field F_N ) INIT use_dbsh() EXIT close_db() ;
+TEST t014 FIELD F_N ;
+          INIT use_dbsh() EXIT close_db() ;
           CODE x := F_N
 
-TEST t015 INIT _( field F_D ) INIT use_dbsh() EXIT close_db() ;
+TEST t015 FIELD F_D ;
+          INIT use_dbsh() EXIT close_db() ;
           CODE x := F_D
 
 TEST t016 WITH o := errorNew() CODE x := o:Args
 
-TEST t017 WITH o := errorNew() CODE x := o[2]
+TEST t017 WITH o := errorArray() CODE x := o[2]
 
 TEST t018 CODE round( i / 1000, 2 )
 
@@ -259,89 +279,93 @@ TEST t028 WITH bc := { |x| f1( x ) } ;
           INFO eval( bc := { |x| f1( x ) }, i ) ;
           CODE eval( bc, i )
 
-TEST t029 CODE x := &( "f1(" + str(i) + ")" )
+TEST t029 WITH bc := mkBlock( "{ |x| f1( x ) }" ) ;
+          INFO eval( bc := &("{ |x| f1( x ) }"), i ) ;
+          CODE eval( bc, i )
 
-TEST t030 WITH bc CODE bc := &( "{|x|f1(x)}" ); eval( bc, i )
+TEST t030 CODE x := &( 'f1(' + str(i) + ')' )
 
-TEST t031 CODE x := valtype( x ) +  valtype( i )
+TEST t031 WITH bc CODE bc := &( '{|x|f1(x)}' ), eval( bc, i )
 
-TEST t032 WITH a := afill( array( ARR_LEN ), ;
+TEST t032 CODE x := valtype( x ) +  valtype( i )
+
+TEST t033 WITH a := afill( array( ARR_LEN ), ;
                            stuff( dtos( date() ), 7, 0, "." ) ) ;
           CODE x := strzero( i % 100, 2 ) $ a[ i % ARR_LEN + 1 ]
 
-TEST t033 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
+TEST t034 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
           INIT aeval( a, { |x,i| a[i] := left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] == s
 
-TEST t034 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
+TEST t035 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
           INIT aeval( a, { |x,i| a[i] := left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] = s
 
-TEST t035 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
+TEST t036 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
           INIT aeval( a, { |x,i| a[i] := left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] >= s
 
-TEST t036 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
+TEST t037 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
           INIT aeval( a, { |x,i| a[i] := left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] <= s
 
-TEST t037 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
+TEST t038 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
           INIT aeval( a, { |x,i| a[i] := left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] < s
 
-TEST t038 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
+TEST t039 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
           INIT aeval( a, { |x,i| a[i] := left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] > s
 
-TEST t039 WITH a := array( ARR_LEN ) ;
+TEST t040 WITH a := array( ARR_LEN ) ;
           INIT aeval( a, { |x,i| a[i] := i, x } ) ;
           CODE ascan( a, i % ARR_LEN )
 
-TEST t040 WITH a := array( ARR_LEN ) ;
+TEST t041 WITH a := array( ARR_LEN ) ;
           INIT aeval( a, { |x,i| a[i] := i, x } ) ;
           CODE ascan( a, { |x| x == i % ARR_LEN } )
 
-TEST t041 WITH a := {}, a2 := { 1, 2, 3 }, bc := { |x| f1(x) }, ;
+TEST t042 WITH a := {}, a2 := { 1, 2, 3 }, bc := { |x| f1(x) }, ;
                s := dtos( date() ), s2 := "static text" ;
-          CODE if i%1000==0;a:={};end; aadd(a,{i,1,.t.,s,s2,a2,bc})
+          CODE iif( i%1000==0, a:={}, ) , aadd(a,{i,1,.t.,s,s2,a2,bc})
 
-TEST t042 WITH a := {} CODE x := a
+TEST t043 WITH a := {} CODE x := a
 
-TEST t043 CODE x := {}
+TEST t044 CODE x := {}
 
-TEST t044 CODE f0()
+TEST t045 CODE f0()
 
-TEST t045 CODE f1( i )
+TEST t046 CODE f1( i )
 
-TEST t046 WITH c := dtos( date() ) ;
+TEST t047 WITH c := dtos( date() ) ;
           INFO f2( c[1...8] ) ;
           CODE f2( c )
 
-TEST t047 WITH c := repl( dtos( date() ), 5000 ) ;
+TEST t048 WITH c := repl( dtos( date() ), 5000 ) ;
           INFO f2( c[1...40000] ) ;
           CODE f2( c )
 
-TEST t048 WITH c := repl( dtos( date() ), 5000 ) ;
+TEST t049 WITH c := repl( dtos( date() ), 5000 ) ;
           INFO f2( @c[1...40000] ) ;
           CODE f2( c )
 
-TEST t049 WITH c := repl( dtos( date() ),5000 ), c2 ;
+TEST t050 WITH c := repl( dtos( date() ),5000 ), c2 ;
           INFO "f2( @c[1...40000] ), c2 := c" ;
-          CODE f2( @c ); c2 := c
+          CODE f2( @c ), c2 := c
 
-TEST t050 WITH a := {}, a2 := { 1, 2, 3 }, bc := { |x| f1(x) }, ;
+TEST t051 WITH a := {}, a2 := { 1, 2, 3 }, bc := { |x| f1(x) }, ;
                s := dtos( date() ), s2 := "static text", n := 1.23 ;
           CODE f3( a, a2, s, i, s2, bc, i, n, x )
 
-TEST t051 WITH a := { 1, 2, 3 } CODE f2( a )
+TEST t052 WITH a := { 1, 2, 3 } CODE f2( a )
 
-TEST t052 CODE x := f4()
+TEST t053 CODE x := f4()
 
-TEST t053 CODE x := f5()
+TEST t054 CODE x := f5()
 
-TEST t054 CODE x := space(16)
+TEST t055 CODE x := space(16)
 
-TEST t055 WITH c := dtos( date() ) CODE f_prv( c )
+TEST t056 WITH c := dtos( date() ) CODE f_prv( c )
 
 /*** end of tests ***/
 
@@ -391,7 +415,11 @@ create_db()
 //? "Startup loop to increase CPU clock..."
 //x := seconds() + 5; while x > seconds(); enddo
 
+#ifdef __MT__
 if !hb_mtvm()
+#else
+if .t.
+#endif
    if lScale
       ? "scale test available only in MULTI THREAD mode"
       ?
@@ -432,11 +460,12 @@ endif
 nSeconds := seconds()
 nTimes := secondsCPU()
 
+nTimeTotST := nTimeTotMT := 0
+
 #ifdef __MT__
    if lScale
       mtxJobs := hb_mutexCreate()
       mtxResults := hb_mutexCreate()
-      nTimeTotST := nTimeTotMT := 0
       for i:=1 to nMT
          hb_threadStart( "thTestScale", mtxJobs, mtxResults )
       next
@@ -549,19 +578,9 @@ function f1(x)
 return x
 
 function f2(x)
-HB_SYMBOL_UNUSED( x )
 return nil
 
 function f3(a,b,c,d,e,f,g,h,i)
-HB_SYMBOL_UNUSED( a )
-HB_SYMBOL_UNUSED( b )
-HB_SYMBOL_UNUSED( c )
-HB_SYMBOL_UNUSED( d )
-HB_SYMBOL_UNUSED( e )
-HB_SYMBOL_UNUSED( f )
-HB_SYMBOL_UNUSED( g )
-HB_SYMBOL_UNUSED( h )
-HB_SYMBOL_UNUSED( i )
 return nil
 
 function f4()
@@ -586,6 +605,16 @@ function f_stat(x)
    STAT_C := x
 return nil
 */
+
+static function mkBlock(x)
+return &x
+
+static function errorArray()
+#ifdef __NO_OBJ_ARRAY__
+   return array(16)
+#else
+   return errorNew()
+#endif
 
 static func dsp_result( aResult, nLoopOverHead )
    return padr( "[ " + left( aResult[1], 56 ) + " ]", 60, "." ) + ;

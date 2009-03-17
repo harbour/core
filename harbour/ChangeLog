@@ -8,6 +8,12 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-17 16:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/speedtst.prg
+    + added new tests of dynamic code blocks performance
+    * modified to compile by __XPP__ and __CLIP__ - now for single
+      thread only
+
 2009-03-17 13:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * harbour-win-spec
   * harbour-wce-spec
