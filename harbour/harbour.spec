@@ -441,7 +441,7 @@ then
     export HB_USER_LDFLAGS="${CC_HB_USER_LDFLAGS} -L${HB_LIB_INSTALL} -l%{name} %{!?_without_gtcrs:-lncurses} %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11}"
     export HB_USER_PRGFLAGS="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${HB_USER_PRGFLAGS}"
 
-    for utl in hbmk2 hbrun hbi18n hbdoc
+    for utl in hbmk2 hbrun hbi18n
     do
         pushd utils/${utl}
         rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
@@ -452,7 +452,7 @@ then
 fi
 
 # remove unused files
-rm -f ${HB_BIN_INSTALL}/{hbdoc,hbtest}
+rm -f ${HB_BIN_INSTALL}/{hbtest}
 
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF

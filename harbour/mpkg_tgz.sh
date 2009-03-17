@@ -274,7 +274,7 @@ then
     export HB_USER_LDFLAGS="-L${HB_LIB_INSTALL} -l${name} ${ADD_LIBS} ${HB_USER_LDFLAGS}"
     export HB_USER_PRGFLAGS="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${HB_USER_PRGFLAGS}"
 
-    for utl in hbmk2 hbrun hbi18n hbdoc hbtest
+    for utl in hbmk2 hbrun hbi18n hbtest
     do
         (cd "utils/${utl}"
          rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"

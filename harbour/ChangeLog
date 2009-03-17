@@ -8,6 +8,56 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-17 10:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * debian/rules
+  * harbour-win-spec
+  * harbour-wce-spec
+  * harbour.spec
+  * mpkg_tgz.sh
+    - hbdoc removed from core.
+
+  - doc/Makefile
+  - doc/es
+  + contrib/examples/hbdoc/examples/core_es
+    * Moved.
+
+  - doc/man/hbdoc.1
+  + contrib/examples/hbdoc/hbdoc.1
+    * Moved.
+
+  - doc/en/genhtm.lnk
+  - doc/en/genhtm.sh
+  - doc/en/genhtm.rsp
+  - doc/en/genhtm.bat
+  + contrib/examples/hbdoc/examples/core_en/genhtm.rsp
+  + contrib/examples/hbdoc/examples/core_en/genhtm.lnk
+  + contrib/examples/hbdoc/examples/core_en/genhtm.bat
+  + contrib/examples/hbdoc/examples/core_en/genhtm.sh
+    * Moved.
+
+  - contrib/hbgt/doc/gendoc.bat
+  - contrib/hbgt/doc/libgt.lnk
+  - contrib/hbgt/doc/libgt.rsp
+  - contrib/rddads/doc/gendoc.bat
+  - contrib/rddads/doc/rddads.lnk
+  - contrib/rddads/doc/rddads.rsp
+    - Deleted.
+
+  * utils/Makefile
+  - utils/hbdoc
+  + contrib/examples/hbdoc
+  - contrib/hbmisc/doc/gendoc.bat
+  - contrib/hbmisc/doc/hbmisc.lnk
+  - contrib/hbmisc/doc/hbmisc.rsp
+  + contrib/examples/hbdoc/examples/hbmisc/gendoc.bat
+  + contrib/examples/hbdoc/examples/hbmisc/hbmisc.lnk
+  + contrib/examples/hbdoc/examples/hbmisc/hbmisc.rsp
+    * Moved.
+
+  - contrib/hbgt/doc/en/ht_gt.txt
+  + contrib/hbgt/doc/en/hbgt.txt
+    * Renamed.
+
 2009-03-17 09:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * utils/hbdoc/genos2.prg
   * utils/hbdoc/genng.prg

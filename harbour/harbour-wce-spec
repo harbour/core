@@ -169,7 +169,7 @@ make -i install
 ${CCPREFIX}strip --strip-debug $HB_LIB_INSTALL/*
 
 # remove unused files
-rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbdoc,hbmk2,hbrun,hbi18n,hbtest}.exe
+rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbmk2,hbrun,hbi18n,hbtest}.exe
 
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF

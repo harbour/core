@@ -9,7 +9,6 @@ DIRS=\
 	hbmk2 \
 	hbi18n \
 	hbtest \
-	hbdoc \
 	$(HB_UTILS) \
 
 #	hbextern \

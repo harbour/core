@@ -36,7 +36,6 @@ DOC_FILES=\
 
 DIRS=\
 	en \
-	es \
 
 include $(TOP)$(ROOT)config/doc.cf
 include $(TOP)$(ROOT)config/dir.cf
