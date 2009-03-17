@@ -274,7 +274,6 @@ HB_EXTERN_BEGIN
          {
             unsigned char c;
 
-            __asm xor eax, eax
             __asm lock dec p
             __asm setne c
 
