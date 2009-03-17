@@ -8,6 +8,15 @@
    2009-12-31 13:59 UTC+0100 Foo Bar (foo.bar foobar.org)
 */
 
+2009-03-17 17:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+  * contrib/hbmysql/readme.txt
+  * contrib/hbapollo/readme.txt
+  * contrib/gtwvg/tests/demowvg.prg
+  * contrib/rddads/doc/en/readme.txt
+  * contrib/rddads/readme.txt
+  * contrib/hbbtree/hb_btree.c
+    * Minor updates to make method/b32 references.
+
 2009-03-17 17:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
   * bin/hb-mkdyn.sh
   * bin/hb-mkdyn.bat

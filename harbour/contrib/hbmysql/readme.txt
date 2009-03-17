@@ -18,9 +18,6 @@ mysql.ch    :  clipper level defines of MySQL types
 tmysql.prg  :  MySQL access classes
 test.prg    :  a little test program which wont work for you :-) since it uses a .dbf file not
                provided. Use it as a small tutorial of tmysql.prg provided functions.
-Makefile    :  my makefile for OS/2 gcc, you'll surely need to change it to adapt to your needs/platform.
-makefile.bc,
-make_b32.bat:  batch file and makefile to build mysql.lib on Windows
 
 You will also need all .h files from include subdir of your installed MySQL server, at a bare minimum
 they are:
@@ -41,17 +38,8 @@ need to follow these steps:
    This is very important. You need to use .h files from the package you
    install.
 
-2) Copy inside \contrib\mysql all .h files from mysql include subdir.
-
-3) Do a "make_b32" inside \contrib\mysql to build mysql.lib.
-
-4) Use implib from borland free bcc to create an import library for
-   libmysql.dll and call it libmysql.lib
-
-   implib libmysql.lib libmysql.dll
-
-5) Link mysql.lib and libmysql.lib to your harbour program (you can try to
-   recompile dbf2mysql inside \contrib\mysql just to test everything) and
+2) Link hbmysql.lib and libmysql.lib to your harbour program (you can try to
+   recompile dbf2mysql inside \contrib\hbmysql just to test everything) and
    be sure to have libmysql.dll on your path.
 
 

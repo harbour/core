@@ -1324,7 +1324,7 @@ static BOOL RecDelete( struct hb_BTree * pBTree, hb_KeyData_T *target, ULONG ulN
       if ( RecDeleteDepth > 10 )  { HB_TRACE( HB_TR_ERROR, ( "RecDelete( Exiting 2! )" ) ); exit(0); }
     }
 #endif
-    /* inline assignment & comparision was generating a B32 warning */
+    /* inline assignment & comparision was generating a Borland warning */
     found = SearchNode( pBTree, target, ulNode, &iPosition );
     if ( found )
     {
@@ -1376,7 +1376,7 @@ static BOOL RecDelete( struct hb_BTree * pBTree, hb_KeyData_T *target, ULONG ulN
 
      #define tmpTarget target
 
-     /* inline assignment & comparision was generating a B32 warning */
+     /* inline assignment & comparision was generating a Borland warning */
      found = SearchNode( pBTree, tmpTarget, ulNode, &iPosition )
      if ( found )
      {

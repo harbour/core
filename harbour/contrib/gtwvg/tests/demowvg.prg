@@ -2492,7 +2492,7 @@ Function ExecuteActiveX( nActiveX, xParam )
    oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
-   cText   := MemoRead( 'hbmk_b32.bat' )
+   cText   := MemoRead( 'gtwvg.hbp' )
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
    oMLE    := WvgMLE():new( oStatic2 )
@@ -3132,7 +3132,7 @@ FUNCTION demoxbp()
    oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
-   cText   := MemoRead( 'hbmk_b32.bat' )
+   cText   := MemoRead( 'gtwvg.hbp' )
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
    oMLE    := WvgMLE():new()
@@ -4057,4 +4057,3 @@ hb_ToOutDebug( 'nLoop %i %s %i %i', nLoop, 'OTHERWISE', nKey, nMode )
    RETURN ME_DEFAULT
 #endif
 //----------------------------------------------------------------------//
-
